@@ -1,119 +1,198 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 997A91586D2;
-	Fri,  3 May 2024 18:24:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB68541A80
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 18:26:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714760683; cv=none; b=gqKeEKi+VlO96ydKAZ8CyAYY08CT/qG6bGIN9oV6A9OUuASkvxEWjWXfhWO3thmD6ymxi7Y5o9/9ZwX7q1580ncV01X7hkrCxs2Q4vKsBJ6NI8ITn4XHm/6s0mXD4CdQ8pBhj0RUfAgpaeCMxp6psNHx9E2Q98gQogBj0sudLNA=
+	t=1714760795; cv=none; b=ciC6rNJj1IqvouWdS1POp2eHwmGWZKB59xvynbAlJ7E+9OU9qBcfCrzPEFs28mS91jNFZk+dcFlZJNL+IcQ9ihPOJ1CM16rt5iQs5KjLJaEsM9SCM342Pjb5YIwYa0Au4MUUd7yGX6C8I8FA5Wfr7llvU02C7lFv+H37JVDw28o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714760683; c=relaxed/simple;
-	bh=nHVU+u9gtwqSD7LqYNk6t0SbgUJNB+nI7WkfNcanCyA=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=Ju8HGjWUhJYJOugNTGd7vLprFts0ly3e49Yl3eEz7LVSEfdQkWzaalQ72LS6o6zC0qk+pk8wdXwY6qmvxE7tmiVdq/wN/OOWJNFBfHSa+0NVRCZL4S/gD3DUyQdzQBv/1X56QClnTTUnuIoGwbk3b4/990krrLWr15hRkTY6cgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=iK2UPsdU; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1714760795; c=relaxed/simple;
+	bh=Wuw0XjND+rfJBPzq21zocszfotHkDyVdJzVpWm3AfNA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b8TNv+04J0ZHoj2vkzl2RHGazEa7qgN5dsXTOhT/dLXsXasHFGfGbGAMtc5uvWmbQ8cyiBtLcBN6UFZ2vgPLj0+/Rlk9TsCugx5crzeDjLPU9UExPGyuSO+Dq382+so3K9Yrg5flZBiFuCHbKunmvenmm5Gt3A71p7yY/y2mfvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=M9aS+qkc; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="iK2UPsdU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1714760672;
-	bh=nHVU+u9gtwqSD7LqYNk6t0SbgUJNB+nI7WkfNcanCyA=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=iK2UPsdUeDGgzYC4aPzbt3fpyn39PM/C+qWPGYU+6SkJksSUvzq8USxZ/VRBzGQJF
-	 rG/hzFUiInQOW7DXDPAJyyJ/fHeLzyPugOLmFhxWPvLiLkykEV2kM+PJvZmlnR4r1j
-	 xwOrmZOoFQ0JfgOiMHK//Qr/P5C5LPyeAvnOPiBk=
-Date: Fri, 3 May 2024 20:24:24 +0200 (GMT+02:00)
-From: linux@weissschuh.net
-To: Kees Cook <keescook@chromium.org>
-Cc: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-	Alexander Popov <alex.popov@linux.com>,
-	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-	Joel Granados <j.granados@samsung.com>
-Message-ID: <266bd6e1-d444-43f5-a98f-c7069819029b@weissschuh.net>
-In-Reply-To: <202405031054.9FFA75B@keescook>
-References: <20240503-sysctl-const-stackleak-v1-1-603fecb19170@weissschuh.net> <202405031054.9FFA75B@keescook>
-Subject: Re: [PATCH] stackleak: don't modify ctl_table argument
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M9aS+qkc"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f44dc475f4so9154b3a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 11:26:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1714760793; x=1715365593; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jqBoL43PMGyCqFXn3ehXdH+uWie7AbSm2FUzxDYORqI=;
+        b=M9aS+qkcreF0Yq+Via4wsh9ECoELo5LsqMdjIkxYRdFFs3834dJmEBcqVBDy3YC9dA
+         9Cl0NMBRX/qO+kAXJw4gI8IGiM20H3aVk7DKvhzAnRHjyEBGDpz5RqbhVzuTUJ3emQAM
+         sTrp36RbAklquQmS/09Glw8lYjzH2a7p3P/Yc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714760793; x=1715365593;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jqBoL43PMGyCqFXn3ehXdH+uWie7AbSm2FUzxDYORqI=;
+        b=uYqIngU8Rhl9Ln3veNZpcgPNiLH8t2RmaSnFUNv43xrIvSZT2Q+1NTXkAHNj1BA1th
+         Ab4B46b3iw76mm+uHIGc8bh8R/F0jczQdhzUH18PkaqNL2ugz12Ad0+ECdqghk4jYhQB
+         Ink20uYQv4PHAJCTzVvC4d3oxOyCfH8ge68pvtFK9vVdzZTqS72LdHgck5LW+AC/lcDX
+         Y11xjiULiulk/quHm609/o3ZlfDAUd6dySwPqMi0nJ/pvuuvOqcHn1FoLQDmV773nJhq
+         TNKvoTZbxEwWw4Zd3skn8o5BX1qrQJKF3/QW6WlBCwJ2zes+NCzg66hTv6AtjImtE85z
+         ViXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVz5nmraGsjmgX+mU9+W/HoyistoywNHm6Rj2Z4tFrAmhHVzwBBoVdP5apEsGW4dp4E1sLkWLQK5UI5Jd1ZEaYX9lZO1y3RGnYa+I54
+X-Gm-Message-State: AOJu0YwWBSD94AhRLRrnzIzZ8cYGInld/dWxVx+qnw4FNPfu53Mki/47
+	Z3ajwiDfSVpkpVp78FSje4QTEYU1NIfmr7EUo3km4xFRXTI09pcYlx3avid1uw==
+X-Google-Smtp-Source: AGHT+IGWOc/11Q1zIvnXaqaqAVGNo4zxAI/bv3cFFxYSIO/ngCUn47liMIMHwFEFiX6Gt/zTa/ffcw==
+X-Received: by 2002:a05:6a00:3d06:b0:6e7:20a7:9fc0 with SMTP id lo6-20020a056a003d0600b006e720a79fc0mr3768000pfb.34.1714760793183;
+        Fri, 03 May 2024 11:26:33 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id gp9-20020a056a003b8900b006ea8cc9250bsm3361952pfb.44.2024.05.03.11.26.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 May 2024 11:26:32 -0700 (PDT)
+Date: Fri, 3 May 2024 11:26:32 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Bui Quang Minh <minhquangbui99@gmail.com>,
+	Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>
+Cc: syzbot <syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com>,
+	axboe@kernel.dk, brauner@kernel.org, io-uring@vger.kernel.org,
+	jack@suse.cz, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+	viro@zeniv.linux.org.uk, Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, Laura Abbott <laura@labbott.name>
+Subject: get_file() unsafe under epoll (was Re: [syzbot] [fs?] [io-uring?]
+ general protection fault in __ep_remove)
+Message-ID: <202405031110.6F47982593@keescook>
+References: <0000000000002d631f0615918f1e@google.com>
+ <7c41cf3c-2a71-4dbb-8f34-0337890906fc@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <266bd6e1-d444-43f5-a98f-c7069819029b@weissschuh.net>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7c41cf3c-2a71-4dbb-8f34-0337890906fc@gmail.com>
 
-May 3, 2024 19:55:37 Kees Cook <keescook@chromium.org>:
+On Fri, May 03, 2024 at 06:54:22PM +0700, Bui Quang Minh wrote:
+> [...]
+> Root cause:
+> AFAIK, eventpoll (epoll) does not increase the registered file's reference.
+> To ensure the safety, when the registered file is deallocated in __fput,
+> eventpoll_release is called to unregister the file from epoll. When calling
+> poll on epoll, epoll will loop through registered files and call vfs_poll on
+> these files. In the file's poll, file is guaranteed to be alive, however, as
+> epoll does not increase the registered file's reference, the file may be
+> dying
+> and it's not safe the get the file for later use. And dma_buf_poll violates
+> this. In the dma_buf_poll, it tries to get_file to use in the callback. This
+> leads to a race where the dmabuf->file can be fput twice.
+> 
+> Here is the race occurs in the above proof-of-concept
+> 
+> close(dmabuf->file)
+> __fput_sync (f_count == 1, last ref)
+> f_count-- (f_count == 0 now)
+> __fput
+>                                     epoll_wait
+>                                     vfs_poll(dmabuf->file)
+>                                     get_file(dmabuf->file)(f_count == 1)
+> eventpoll_release
+> dmabuf->file deallocation
+>                                     fput(dmabuf->file) (f_count == 1)
+>                                     f_count--
+>                                     dmabuf->file deallocation
+> 
+> I am not familiar with the dma_buf so I don't know the proper fix for the
+> issue. About the rule that don't get the file for later use in poll callback
+> of
+> file, I wonder if it is there when only select/poll exist or just after
+> epoll
+> appears.
+> 
+> I hope the analysis helps us to fix the issue.
 
-> On Fri, May 03, 2024 at 03:44:09PM +0200, Thomas Wei=C3=9Fschuh wrote:
->> Sysctl handlers are not supposed to modify the ctl_table passed to them.
->> Adapt the logic to work with a temporary
->> variable, similar to how it is done in other parts of the kernel.
->>
->> This is also a prerequisite to enforce the immutability of the argument
->> through the callbacks prototy.
->>
->> Fixes: 964c9dff0091 ("stackleak: Allow runtime disabling of kernel stack=
- erasing")
->> Cc: stable@vger.kernel.org
->
-> I realize I've already Acked, but does this actually need to be CCed
-> to stable?
+Thanks for doing this analysis! I suspect at least a start of a fix
+would be this:
 
-You acked it without the Cc stable.
-I shouldn't have kept your Ack, sorry.
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 8fe5aa67b167..15e8f74ee0f2 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -267,9 +267,8 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
+ 
+ 		if (events & EPOLLOUT) {
+ 			/* Paired with fput in dma_buf_poll_cb */
+-			get_file(dmabuf->file);
+-
+-			if (!dma_buf_poll_add_cb(resv, true, dcb))
++			if (!atomic_long_inc_not_zero(&dmabuf->file) &&
++			    !dma_buf_poll_add_cb(resv, true, dcb))
+ 				/* No callback queued, wake up any other waiters */
+ 				dma_buf_poll_cb(NULL, &dcb->cb);
+ 			else
+@@ -290,9 +289,8 @@ static __poll_t dma_buf_poll(struct file *file, poll_table *poll)
+ 
+ 		if (events & EPOLLIN) {
+ 			/* Paired with fput in dma_buf_poll_cb */
+-			get_file(dmabuf->file);
+-
+-			if (!dma_buf_poll_add_cb(resv, false, dcb))
++			if (!atomic_long_inc_not_zero(&dmabuf->file) &&
++			    !dma_buf_poll_add_cb(resv, false, dcb))
+ 				/* No callback queued, wake up any other waiters */
+ 				dma_buf_poll_cb(NULL, &dcb->cb);
+ 			else
 
-Feel free to drop the Cc, it shouldn't be critical.
-I suspect the bots will pick it up anyways.
 
->> Acked-by: Kees Cook <keescook@chromium.org>
->> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
->> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
->> ---
->> This was split out of my sysctl-const-handler series [0].
->>
->> As that series will take some more time, submit the patch on its own,
->> as it is a generic bugfix that is valuable on its own.
->> And I can get it out of my books.
->>
->> Changelog in contrast to the patch in the series:
->> * Reword commit message to remove strong relation to the constification
->> * Cc stable
->>
->> [0] https://lore.kernel.org/lkml/20240423-sysctl-const-handler-v3-0-e0be=
-ccb836e2@weissschuh.net/
->>
->> Cc: Joel Granados <j.granados@samsung.com>
->> ---
->> kernel/stackleak.c | 7 ++++---
->> 1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/kernel/stackleak.c b/kernel/stackleak.c
->> index 34c9d81eea94..b292e5ca0b7d 100644
->> --- a/kernel/stackleak.c
->> +++ b/kernel/stackleak.c
->> @@ -27,10 +27,11 @@ static int stack_erasing_sysctl(struct ctl_table *ta=
-ble, int write,
->> =C2=A0=C2=A0=C2=A0 int ret =3D 0;
->> =C2=A0=C2=A0=C2=A0 int state =3D !static_branch_unlikely(&stack_erasing_=
-bypass);
->> =C2=A0=C2=A0=C2=A0 int prev_state =3D state;
->> +=C2=A0=C2=A0 struct ctl_table tmp =3D *table;
->>
->> -=C2=A0=C2=A0 table->data =3D &state;
->> -=C2=A0=C2=A0 table->maxlen =3D sizeof(int);
->> -=C2=A0=C2=A0 ret =3D proc_dointvec_minmax(table, write, buffer, lenp, p=
-pos);
->> +=C2=A0=C2=A0 tmp.data =3D &state;
->> +=C2=A0=C2=A0 tmp.maxlen =3D sizeof(int);
->> +=C2=A0=C2=A0 ret =3D proc_dointvec_minmax(&tmp, write, buffer, lenp, pp=
-os);
->> =C2=A0=C2=A0=C2=A0 state =3D !!state;
->> =C2=A0=C2=A0=C2=A0 if (ret || !write || state =3D=3D prev_state)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->
-> I can pick this up; thanks!
+But this ends up leaving "active" non-zero, and at close time it runs
+into:
 
-Thanks!
+        BUG_ON(dmabuf->cb_in.active || dmabuf->cb_out.active);
+
+But the bottom line is that get_file() is unsafe to use in some places,
+one of which appears to be in the poll handler. There are maybe some
+other fragile places too, like in drivers/gpu/drm/vmwgfx/ttm_object.c:
+
+static bool __must_check get_dma_buf_unless_doomed(struct dma_buf *dmabuf)
+{
+	return atomic_long_inc_not_zero(&dmabuf->file->f_count) != 0L;
+}
+
+Which I also note involves a dmabuf...
+
+Due to this issue I've proposed fixing get_file() to detect pathological states:
+https://lore.kernel.org/lkml/20240502222252.work.690-kees@kernel.org/
+
+But that has run into some push-back. I'm hoping that seeing this epoll
+example will help illustrate what needs fixing a little better.
+
+I think the best current proposal is to just WARN sooner instead of a
+full refcount_t implementation:
+
+
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 8dfd53b52744..e09107d0a3d6 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1040,7 +1040,8 @@ struct file_handle {
+ 
+ static inline struct file *get_file(struct file *f)
+ {
+-	atomic_long_inc(&f->f_count);
++	long prior = atomic_long_fetch_inc_relaxed(&f->f_count);
++	WARN_ONCE(!prior, "struct file::f_count incremented from zero; use-after-free condition present!\n");
+ 	return f;
+ }
+ 
+
+
+What's the right way to deal with the dmabuf situation? (And I suspect
+it applies to get_dma_buf_unless_doomed() as well...)
+
+-Kees
+
+-- 
+Kees Cook
