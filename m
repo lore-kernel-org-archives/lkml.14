@@ -1,126 +1,145 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54C5148313;
-	Fri,  3 May 2024 08:20:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5479B148313;
+	Fri,  3 May 2024 08:23:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714724423; cv=none; b=tp5Eb+XRjmQZNjk6tfq+SPdtMzNWmlGIvDbWKNro2Tba3bGZf/R3+nVSCV/dmJhaH5iCnfU2OO6sfRppYG8kvxBJZe31nCTrm8c5iBYV8TVSbR2uCD2G3vQSv+mv6fWI0YNKhkFKbbOUGIy21bAKaFK6dop0YQ1PW+gYfWEH4ao=
+	t=1714724626; cv=none; b=uIVHxBUjEo/78CADI9lv3GhRzbvcX22PRuJWr4sqny8B4s+BlK2imKWQdku2gkNSbpJJz9nlzaRLIVc3bxSzbpY5h1oG6Uhfas9TahZoxGJv/f7FeheH73m3Z1NC2paslB9JF/QVxwa4FAhIj5i7xQW47O32eVKh7Ukpdk64MDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714724423; c=relaxed/simple;
-	bh=MNIFnx2qTxrjZunIYAyHq5H9qZ0uBcjf4J51U8fNhhU=;
+	s=arc-20240116; t=1714724626; c=relaxed/simple;
+	bh=fi9zfNvu7Hehmv5yf396y1MMHBBl915r8w1/oBAejqE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZUYDFnyjdsE5FFthjcIFjA0UwTEkc2yD5O/lpIqtkGE0JTDnvwppO5QybEcCJM313TO3bhsEYSn0JUclB7LoPh8OmD/MoPaZBmz13726YTzvwCIp9w+Q2X/Ui880kfKEdDwZEURZlyAISOUPkZf1meNLdSWupkZxBatR5b8n6Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kcghk5aV; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ycrx32jQEaRhAcruQKu/mNdTyK8L/PGW+Fow9Ng3soE8SFjpR5QjTzbc2gNSuR1qSt9ZE9yXSpjJVZRX5wp/S19uFE65Yi5wqlDANcAshAb5zG4gcvYIemUyQM7FUW3BC0iBoByUKBSCx35gs2mg1oxZNnJTxgJ1y82bWTJsFRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=eKXGJ8b5; arc=none smtp.client-ip=78.32.30.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kcghk5aV"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5aa2bd6f651so5963236eaf.0;
-        Fri, 03 May 2024 01:20:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714724421; x=1715329221; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3hH1YXLlyA1Xepv5zeFpL8G//5XUCXH9AjpKXyKmtRc=;
-        b=Kcghk5aVMyBY1/vaFpDT3trMyEoFIiG2BulFKLaVKsP5FwNn40HTfEWWpK5DDNVTgF
-         QOUWBCwLeV4JcnPbSPpQRr0UlvB60DNVHhXHx8X+DR465UtvA8x4FYtTggC7fb6knK+9
-         mKLocIAZT3+VS+9fS8WCoqD1KeJN2dfUhqzeZ4II+keRIrsSm9tqNTUmppGJQCbwb7gC
-         z/wt8FQq0QdVEA8LueqyEw5TPWdkR5oJo4WQOJwmHpV2C5ImV6DBQywIPGHXEn+RoPPo
-         QnRkGG2UM3/UPUHgKJJvl0IQwhKxlEvwAt6BThFssga22yBzYzCzKswzQHJTjrPvPsLC
-         aCQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714724421; x=1715329221;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3hH1YXLlyA1Xepv5zeFpL8G//5XUCXH9AjpKXyKmtRc=;
-        b=XnvFMubc1BxFZ5Xiga7eCANTA8OdRMWejQXxwcAKEWlOfvX4HpunToPPQ5RXwNrIAB
-         yILqLUfd0g3y2ZEQdkjz6xchtWpSFC0aFTKEO8shfhwIEhbmXGnBkhq/cABPbH59tkF3
-         CFlY7yGQKm/xJlWTN402s1v4A4Eg0DdgsmfwnvlFwYbvNDD+u2e3aNEVOvBnCZqEFYFj
-         3EMm7e3NTK0sFv5m9HXxX4r0ntk74EXYDqwM8EwIXaef+360iUOE8F5vmRe06KjiUxRd
-         1bMdnqyMRw58gbNaoIuE1cujuueXI2qyov2fRV8vfJ8mxF1PP+HArWZ1Wnymx6dayiTw
-         Yomw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmEsR+iyQsb9LrCWA2+nPxK22DdzixRHSTBPtDlodKVtYJgACfUnH+JrBqksULpqjn6bIUJt70dJVzcQLmAhxRxi5M1WWfXx6YrObfUSS8LfU1H2XmOTqTq3wjyC1mWwFdOylpQ8zvAEHDs+DbAw2AZcthQlSsUnvIfnuGZcsOgw==
-X-Gm-Message-State: AOJu0Ywq2Krjtr+zSEIZIXUnQ2NPXOD8M5vmc4elMA2dffNsYj9m2eIX
-	b4IUTIeTs3EdjF0VUccSoyrN2ZNBrTG/SbX/IKnWaLJ/CH4frHFr
-X-Google-Smtp-Source: AGHT+IGX/ND1xY8XwJ5CXNf6LkUuVIkOsSBWoWuk/E0wuSsHPBhj9ByTB65T3ot42p7umDDjfusQnw==
-X-Received: by 2002:a05:6358:5912:b0:18d:7755:8219 with SMTP id g18-20020a056358591200b0018d77558219mr1767900rwf.32.1714724420825;
-        Fri, 03 May 2024 01:20:20 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id bz20-20020a056a02061400b005f7fed76e59sm2283395pgb.78.2024.05.03.01.20.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 01:20:20 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 86C7218462B27; Fri, 03 May 2024 15:20:17 +0700 (WIB)
-Date: Fri, 3 May 2024 15:20:17 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Usama Arif <usamaarif642@gmail.com>, hannes@cmpxchg.org, tj@kernel.org,
-	lizefan.x@bytedance.com, nphamcs@gmail.com, corbet@lwn.net
-Cc: linux-mm@kvack.org, cgroups@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH v2 1/1] cgroup: Add documentation for missing zswap
- memory.stat
-Message-ID: <ZjSeQaPR90gV61xp@archie.me>
-References: <20240502185307.3942173-1-usamaarif642@gmail.com>
- <20240502185307.3942173-2-usamaarif642@gmail.com>
+	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="eKXGJ8b5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=bJqgkSNI0KMYKMaZpLNc2ZcSIXK696qy5pXy2UUEZzk=; b=eKXGJ8b5nugmkV+Y+179pTdmgT
+	XcY5uxNGvhZNQDz6T2nqWlrbPG7nq9xGdUqcruyO/PCL/uXEO4vWgzXonANSMPtmqPDVLX/WA0SPy
+	6TEQXe/YdIX6kUVrD6zaNCWA04XVWL9j+IiG5UDH8oBhGgKQad2wjzAGpBcLioVk2Qa8DHZYk9YbA
+	i4DRNKiE3s4jLoIgmlC1RUkpch1InTudk/EEnt0TufMVdmujUJYFjNaBPKziXWivna/r8kSqtkWGO
+	8KC1EzY63R2JDH17LRJ9M0fSxTjXCYQauSPMts6IESRSieX2GdME8qGiBKqWICPCU6H0bxUYb/uf+
+	QTsYUpGg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35282)
+	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <linux@armlinux.org.uk>)
+	id 1s2oCh-000873-1e;
+	Fri, 03 May 2024 09:23:39 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+	(envelope-from <linux@shell.armlinux.org.uk>)
+	id 1s2oCi-0004Rt-Sp; Fri, 03 May 2024 09:23:40 +0100
+Date: Fri, 3 May 2024 09:23:40 +0100
+From: "Russell King (Oracle)" <linux@armlinux.org.uk>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the arm tree
+Message-ID: <ZjSfDGh+yqndr9ya@shell.armlinux.org.uk>
+References: <20240503101516.09f01e44@canb.auug.org.au>
+ <ZjSduO+MI7EA3O9A@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="crh03WeP2jR7Qlt/"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240502185307.3942173-2-usamaarif642@gmail.com>
+In-Reply-To: <ZjSduO+MI7EA3O9A@shell.armlinux.org.uk>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 
+On Fri, May 03, 2024 at 09:18:01AM +0100, Russell King (Oracle) wrote:
+> On Fri, May 03, 2024 at 10:15:16AM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > After merging the arm tree, today's linux-next build (x86_64 allmodconfig)
+> > failed like this:
+> > 
+> > drivers/clk/clkdev.c: In function 'vclkdev_alloc':
+> > drivers/clk/clkdev.c:195:16: error: assignment to '__va_list_tag (*)[1]' from incompatible pointer type '__va_list_tag **' [-Werror=incompatible-pointer-types]
+> >   195 |         fmt.va = &ap;
+> >       |                ^
+> > cc1: all warnings being treated as errors
+> 
+> This builds perfectly fine for me - this is on debian stable with
+> arm-linux-gnueabihf-gcc (Debian 10.2.1-6) 10.2.1 20210110:
+> 
+>   CC      drivers/clk/clkdev.o
+>   AR      drivers/clk/built-in.a
+>   AR      drivers/built-in.a
+>   AR      built-in.a
+>   AR      vmlinux.a
+>   LD      vmlinux.o
+>   OBJCOPY modules.builtin.modinfo
+>   GEN     modules.builtin
+>   MODPOST Module.symvers
+>   UPD     include/generated/utsversion.h
+>   CC      init/version-timestamp.o
+>   LD      .tmp_vmlinux.kallsyms1
+>   NM      .tmp_vmlinux.kallsyms1.syms
+>   KSYMS   .tmp_vmlinux.kallsyms1.S
+>   AS      .tmp_vmlinux.kallsyms1.S
+>   LD      .tmp_vmlinux.kallsyms2
+>   NM      .tmp_vmlinux.kallsyms2.syms
+>   KSYMS   .tmp_vmlinux.kallsyms2.S
+>   AS      .tmp_vmlinux.kallsyms2.S
+>   LD      vmlinux
+>   NM      System.map
+> 
+> No warnings, no errors.
+> 
+> va_format is defined as:
+> 
+> struct va_format {
+>         const char *fmt;
+>         va_list *va;
+> };
+> 
+> and what we have here is a "va_list ap".
+> 
+> Therefore, the assignment:
+> 
+>         fmt.va = &ap;
+> 
+> is correct.
+> 
+> What certainly won't work is:
+> 
+> 	fmt.va = ap;
+> 
+> and there aren't any other reasonable alternatives.
+> 
+> My conclusion: your compiler is being stupid.
 
---crh03WeP2jR7Qlt/
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+... and even more evidence that your error is strange:
 
-On Thu, May 02, 2024 at 07:50:24PM +0100, Usama Arif wrote:
-> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admi=
-n-guide/cgroup-v2.rst
-> index 17e6e9565156..eaf9e66e472a 100644
-> --- a/Documentation/admin-guide/cgroup-v2.rst
-> +++ b/Documentation/admin-guide/cgroup-v2.rst
-> @@ -1572,6 +1572,15 @@ PAGE_SIZE multiple when read back.
->  	  pglazyfreed (npn)
->  		Amount of reclaimed lazyfree pages
-> =20
-> +	  zswpin
-> +		Number of pages moved in to memory from zswap.
-> +
-> +	  zswpout
-> +		Number of pages moved out of memory to zswap.
-> +
-> +	  zswpwb
-> +		Number of pages written from zswap to swap.
-> +
->  	  thp_fault_alloc (npn)
->  		Number of transparent hugepages which were allocated to satisfy
->  		a page fault. This counter is not present when CONFIG_TRANSPARENT_HUGE=
-PAGE
+void __ext4_error(struct super_block *sb, const char *function,
+                  unsigned int line, bool force_ro, int error, __u64 block,
+                  const char *fmt, ...)
+{
+        struct va_format vaf;
+        va_list args;
 
-LGTM, thanks!
+                vaf.fmt = fmt;
+                vaf.va = &args;
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Now, looking at __ext4_error(), it seems that va_start()..va_end()
+need to be around this - but why this oddity? None of the other printing
+functions like vsnprintf() require it? Why do we have this pitfall?
+Why isn't this oddity documented anywhere?
 
---=20
-An old man doll... just what I always wanted! - Clara
+However, I don't see that lack of va_start() etc would cause a type
+error.
 
---crh03WeP2jR7Qlt/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZjSePQAKCRD2uYlJVVFO
-o66XAQCCDUlqsMuoqiEoVUacN+LWFuXAOwveu8ll93ptMzCLuAD+PmqqrXvbV07D
-GbRC9OsCb8v87evI9zIURxytHAfibw4=
-=No1B
------END PGP SIGNATURE-----
-
---crh03WeP2jR7Qlt/--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
