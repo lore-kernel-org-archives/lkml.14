@@ -1,153 +1,64 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C517B59B71
-	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 22:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1365BAF0;
+	Fri,  3 May 2024 22:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714774623; cv=none; b=Wh1wen2hlzEStnRAe1LwV74Tl1YM5TfOBiGvXKGMGp0qP2Qq1dnbTO8Guarv8ZV3IAJmD989rpQzSWPbs3yI7qfcAlQnnsxALhyEnX42wzAnWXxK5XpkhpTTJi3PXljnKhJg696/S0LYsHH2lfwY9fdDPiwmniGmcU9J8bVrYco=
+	t=1714774623; cv=none; b=BlfirACerwLxyHd2dnVH7ttxB9e5R7M7F8SAk7M9iBueHVyjOjSB7UidE4n3XJY9WSCEQkOJLslwLrTYUvRt4OnYxyKqxw/P88duJjQd3iGCwbRfsECs0wZguYhHlw5uWINcSLv7hJ5NlBGzDYRzwTGxmBfpZZbJMzHPFP6h2pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714774623; c=relaxed/simple;
-	bh=bjrPyd8oi0HdoqaOMudW73dCqeW2eJJ1sam9lCXCaJY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=jgLDv2SLCkogYwGHTXxF/03g5bO2tJ2EobUq8HWjmgsJZbDmOo/1jDXkZuBPIefnXeNBWD4ThTwph4EDilcrZocmitkopLrIEbAIlSE23iwqFIqILvverfCbIhwjeanHvMVCurIo3DeTE5qIt8jCY4OPnfTk33i9uSLXdVCTdKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com; spf=pass smtp.mailfrom=cloudflare.com; dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b=Fj2r+TLs; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cloudflare.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloudflare.com
+	bh=NN+CPZ6b4zKVlSwv0Gl0g3ssQNO+Ma2/acLu1b/klbQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=OXkJoi29wMQsTBGUiwHOdWBM4DTrf0bIo05StUd0J0mV0XG3c+0ody3EBlKvXG5NZRF9dpCho8gSIeV5FYLA5kwC2VC7ZZpfv8GOjijZ8F8dSajXLpJ+skec/i4Xrn80+q4D2sgPn+zNT4Dh61fVx9tHuKVNGM4JFMojmipgoUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QzfgsK0+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Fj2r+TLs"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41b9dff6be8so1812395e9.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 15:17:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google09082023; t=1714774619; x=1715379419; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RwCOw0nc1pOxcjdsWVI1ueYL54XbeJ/hpDJBTzvXAfg=;
-        b=Fj2r+TLsI06YE5Iee9AsJP5geZ4ByaUByi0m41VO/RPSn1fzM/0VbkmvkyF7PXd7fk
-         vG3sOWl7Un7Z+E449WEHvfU+PjeAhqIMqgSpKbs8ibpO3XUM3HSsUZJfI/JN18V8BYOv
-         qcT1RuafUIB9+eJqkdK50R0AoaLG5kldJazZOf/FVw/6+BXzDU6jNvFsInJXTHoaf106
-         jNnvDWOEMCBp01/KPdkp/FnT9kiXOot7FY1tCUSqyM/udVLSZZ+x3PycpoCiHHHU6K9c
-         hzj85iXMZSQdkSVJ8oBvLe9QcRdwfbYA00MSp/9lNIQJLuIcMGDyzk7rfXo3ype2PdH4
-         uRxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714774619; x=1715379419;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RwCOw0nc1pOxcjdsWVI1ueYL54XbeJ/hpDJBTzvXAfg=;
-        b=j3YfLTg5RxJfs8YK+K7yxniwxOi+NfrZrZurGtJraR0YHNEh85wL8/bQap10Mj79BK
-         7H25oLGx40UbpVvVEffz7KuBHsIBhgJ7L99o5xwT1oh46JllhCf8OL0v/lpCcGgy30I7
-         xyJQUXOJlWfVDPpf+WhUSCDIoNHko6q1FcQJ+Kh4PmS9sXXyGGZwqTDfG2YEtfwhkd4Q
-         jbEf+RSuX2/07xOrSmhnQTlY7wX7V1wC0WcLIus+ynjCBm8bUV9hdqCPyAjPuzP5LA9p
-         KPgorB+My1oK44L4G80/9wxMvVK5gi1E8IWWZr9N8AetCCeYcTWXkPWi1sJtK22IvowH
-         zX3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXTTpEy5qRUkE0wjtunhfBx/KzNQ/+Mq15hai3bFkdhgH//xO1XqfjbgSjT9rAqmznBmexlYEQio5OI9clW7999FuNsOaaa6uVbXBmF
-X-Gm-Message-State: AOJu0YwN/AroDvYqtNgarIZXDeXRmius+v19QLiS5BANDkVIV5wJ355j
-	3wKCPr0x2Wbku77IFwcuHd2QPCS4qgn3htoLhzcns+mjBPa0Gl+YVG4ct3hiNZg=
-X-Google-Smtp-Source: AGHT+IH8IaaKjpv39xJ6W/yfMwMMQLl5Ff5DYRJtGnHzBJ5kmUMtt7DNuIuZyWuSjfonfV1sSj+lPA==
-X-Received: by 2002:a05:600c:3b21:b0:418:f5a9:b91c with SMTP id m33-20020a05600c3b2100b00418f5a9b91cmr2954824wms.33.1714774618992;
-        Fri, 03 May 2024 15:16:58 -0700 (PDT)
-Received: from localhost.localdomain ([104.28.200.6])
-        by smtp.gmail.com with ESMTPSA id p9-20020a05600c1d8900b0041563096e15sm10873368wms.5.2024.05.03.15.16.57
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 03 May 2024 15:16:58 -0700 (PDT)
-From: Ignat Korchagin <ignat@cloudflare.com>
-To: James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	serge@hallyn.com,
-	linux-integrity@vger.kernel.org,
-	keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: kernel-team@cloudflare.com,
-	Ignat Korchagin <ignat@cloudflare.com>
-Subject: [RFC PATCH 0/2] TPM derived keys
-Date: Fri,  3 May 2024 23:16:32 +0100
-Message-Id: <20240503221634.44274-1-ignat@cloudflare.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QzfgsK0+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22669C116B1;
+	Fri,  3 May 2024 22:17:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714774623;
+	bh=NN+CPZ6b4zKVlSwv0Gl0g3ssQNO+Ma2/acLu1b/klbQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=QzfgsK0+3yaNMoeJIWnkMCsYFICKkEtnQb9+36M7QyJfJbtkVhNYODmtK+9u61g7V
+	 qidD+2wng8yGGRF1l234lgY9LQKmYE7LpbEqk4VhIdwu2tF4qSWLsbF5L9A4gdWYIQ
+	 yMc1L39vHK8J6M1km1AGZnXIYmRxI/P0S/tJ10pdJuF7d7APa2xuGy6sWSmZnbOC8a
+	 EfTygQC1ke9dsqdOwEtGlx1XSsx4w0kD+5QWQ8IAvovRWfGhfCdm5q46ti1T7vLdMt
+	 QFx7V3eUrAqD192IUHuZtnPBsiHLd+7/aDmYw2/3wJqMfnfJb+H+cE+zUGBrmzfQKp
+	 nr6tIaWP5F4dA==
+Date: Fri, 3 May 2024 17:17:00 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jian-Hong Pan <jhp@endlessos.org>
+Cc: Johan Hovold <johan@kernel.org>,
+	David Box <david.e.box@linux.intel.com>,
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Nirmal Patel <nirmal.patel@linux.intel.com>,
+	Jonathan Derrick <jonathan.derrick@linux.dev>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 0/4] PCI: vmd: Enable PCI PM's L1 substates of
+ remapped PCIe Root Port and NVMe
+Message-ID: <20240503221700.GA1607942@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240424105814.21690-2-jhp@endlessos.org>
 
-TPM derived keys get their payload from an HMAC primary key in the owner
-hierarchy mixed with some metadata from the requesting process.
+On Wed, Apr 24, 2024 at 06:58:15PM +0800, Jian-Hong Pan wrote:
+> Re-send for the version information.
+> 
+> Notice the VMD remapped PCIe Root Port and NVMe have PCI PM L1 substates
+> capability, but they are disabled originally.
 
-They are similar to trusted keys in the sense that the key security is rooted
-in the TPM, but may provide easier key management for some use-cases.
+When you post the next version, can you post the patches as responses
+to the cover letter?  Patchwork and b4 don't know how to deal with
+a series posted as disconnected messages.
 
-One inconvenience with trusted keys is that the cryptographic material should
-be provided externally. This means either wrapping the key to the TPM on the
-executing system (which briefly exposes plaintext cryptographic material to
-userspace) or creating the wrapped blob externally, but then we need to gather
-and transfer the TPM public key to the remote system, which may be a logistical
-problem sometimes.
-
-Moreover, we need to store the wrapped key blob somewhere, and if we lose it,
-the application cannot recover its data anymore.
-
-TPM derived keys may make key management for applications easier, especially on
-stateless systems as the application can always recreate its keys and the
-encrypted data is bound to the device and its TPM. They allow the application
-to wrap/unwrap some data to the device without worrying too much about key
-management and provisioning. They are similar in a sense to device unique keys
-present on many mobile devices and some IoT systems, but even better as every
-application has its own unique device key.
-
-It is also easy to quickly "wipe" all the application keys by just resetting
-the TPM owner hierarchy.
-
-It is worth mentioning that this functionality can be implemented in userspace
-as a /sbin/request-key plugin. However, the advantage of the in-kernel
-implementation is that the derived key material never leaves the kernel space
-(unless explicitly read into userspace with proper permissions).
-
-Current implementation supports two modes (as demonstrated by the keyctl
-userspace tool):
-  1. keyctl add derived test '32 path' - will derive a 32 byte key based on
-     the TPM seed and the filesystem path of the requesting application. That
-     is /usr/bin/keyctl and /opt/bin/keyctl would generate different keys.
-
-  2. keyctl add derived test '32 csum' - will derive a 32 byte key based on the
-     TPM seed and the IMA measurement of the requesting application. That is
-     /usr/bin/keyctl and /opt/bin/keyctl would generate the same key IFF their
-     code exactly matches bit for bit. The implementation does not measure the
-     requesting binary itself, but rather relies on already available
-     measurement. This means for this mode to work IMA needs to be enabled and
-     configured for requesting applications. For example:
-       # echo 'audit func=BPRM_CHECK' > \
-         /sys/kernel/security/integrity/ima/policy
-
-Open questions (apart from the obvious "is this useful?"):
-  * should any other modes/derivation parameters be considered?
-  * apparently in checksum mode, when calling keyring syscalls from scripts,
-    we mix in the measurement of the interpreter, not the script itself. Is
-    there any way to improve this?
-
-
-Ignat Korchagin (2):
-  tpm: add some algorithm and constant definitions from the TPM spec
-  KEYS: implement derived keys
-
- include/linux/tpm.h                     |  16 +-
- security/keys/Kconfig                   |  16 ++
- security/keys/Makefile                  |   1 +
- security/keys/derived-keys/Makefile     |   8 +
- security/keys/derived-keys/derived.c    | 226 +++++++++++++++++++++
- security/keys/derived-keys/derived.h    |   4 +
- security/keys/derived-keys/tpm2_shash.c | 257 ++++++++++++++++++++++++
- 7 files changed, 524 insertions(+), 4 deletions(-)
- create mode 100644 security/keys/derived-keys/Makefile
- create mode 100644 security/keys/derived-keys/derived.c
- create mode 100644 security/keys/derived-keys/derived.h
- create mode 100644 security/keys/derived-keys/tpm2_shash.c
-
--- 
-2.39.2
-
+Bjorn
