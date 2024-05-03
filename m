@@ -1,38 +1,39 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F51215533F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0335B15532A;
 	Fri,  3 May 2024 14:21:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714746084; cv=none; b=kZUyrxAgahzppY4S/d6q7/eXg97X6pMVCPL8H+WMQFybxXdRIpQcf0VFSyaff6TJ13r7oCOj5DxIGjFD74XLbc6Olo9gxtu6Hvd6iDR6TNx7cxk99KoKX8rl9Z49oiHxKo9sGb/cBndUTQ5922UQluvik5ZlgP/yWcu2C/wPga8=
+	t=1714746084; cv=none; b=PDtHmDkXEimB4Ps2o1B6d5l1b+GXzELLp13KDTLGwrxnbMN7mW8C10GJk/AcbXuS1snesGokR21QJi5G1dG5cEhNXOr749Zs/dw5hUOk8V161Spgdj1nSkjcBULb8s4JSBJJ+/5cR946hXnYvUtWCmoI/PN72SVOBYJV5D7qKSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714746084; c=relaxed/simple;
-	bh=GKyULpFQ8XdXBuxIrhlYdZanY0FdS+QQ7EcrusQWFb8=;
+	bh=o812vmTv/37XhnZr89HkXmMz2BjipKgggsVomAsEQrM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cZQC1T1sQJFxLn+uQZSF/w1G8XLX2b7E4qDK5MEqBYX2dGhl5WMyoKlAiSr+zobUo5jbgKQpTYNCY8EBWqDPUgpsC0YRNXqDF99S5sZ2ReH+PiuelPUf1sZ2lRb3lHVzkrOfMTG6pVlLAgb2pRI6ACehi25DM8GizBAluVBDFys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pIR7mFhE; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=dnosNFOuUA7cOr4A1J60i4jOX6bFjyJxvNVB3SS97Pln0y2LbXfXZtBm/cVoUUBc5O4U9Tu7MFcAeEAgt4KexCpaURkUB5jmRzr/hnshS7IomR7J/pJKpmczC07dXm+A7+fzd0cYbASC+Ho9e6a4ulno4mKGfQS307McMIsXugE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TvJvxe0S; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pIR7mFhE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E08FCE0015;
-	Fri,  3 May 2024 14:21:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TvJvxe0S"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B299EE0014;
+	Fri,  3 May 2024 14:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714746073;
+	t=1714746079;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OzhF3QerqK8gGgB0VM7veINqFbrG/m5c23SAtCZCPxg=;
-	b=pIR7mFhEN2TsFj6ass3sIkF8Ho+HSimoByULbPGQJWQIR14DrB6ySpVVNbUrmXK9IDvtJB
-	2rVGfkDT+08jPH8Rf5/CMJBsV2vUhFqt9lnnbpqe9HM9sjX9LHR4AxIE/NZZm0YrA8nlyd
-	H2Se5M1jhq2mHGOjzCBNkB+8Ww817RiMB7Ef+f3v7wICO9ASh4c7KvrCImSHUAppCbb5Hw
-	93ftOr1R9zZs3fypr66M+Ko6gzFZ2rawNBUZGwdEKKp/I3GtD+53o0nMlY9+hWdSjLkqh/
-	UZieEy/zbyA4u28OWeZMRBMswmZFO2VzmDEoxLiOuaQfyR5xK+l0D7Ya4MxOyQ==
+	bh=Ki2wnu9wyJ0LextOX4U/5GKltoJpPAZbH1kGFJvFKMM=;
+	b=TvJvxe0SXp1+3Ny1RJ+ocZJIzLqXHQug0YGuOIDvgoYXU9cuWSRg4YARsKPmUFv8+HgVcv
+	gzwgHTRFpGGKA7nQn8us+E42KLVgpuGOCShkMyXBXY+VusIt9WPtQO2owS5o3dJr8bRcc5
+	GAN8hC0OC2Wr98ke419dOedJmHDke8H4yq82JGyr85Nb2y3bZ+6GpVt9gwZ+mkF5NdpIzx
+	mSEYdSgAmyUC9LJWO1nPXy24vgmo4tjVbY9R0auANllLTuyzkuNGTmB/INtMC+67pEjJuC
+	YpAN9LkvPxfTAeXRaxZPhR4TQbOXR2XhEs1NDpNWSEC3Uid6ooN26lkte9GivQ==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Fri, 03 May 2024 16:20:50 +0200
-Subject: [PATCH v2 05/11] mfd: Add cell device name
+Date: Fri, 03 May 2024 16:20:56 +0200
+Subject: [PATCH v2 11/11] MIPS: mobileye: eyeq5: add OLB system-controller
+ node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240503-mbly-olb-v2-5-95ce5a1e18fe@bootlin.com>
+Message-Id: <20240503-mbly-olb-v2-11-95ce5a1e18fe@bootlin.com>
 References: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
 In-Reply-To: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
 To: Rob Herring <robh@kernel.org>, 
@@ -64,123 +65,366 @@ Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Current device name is picked from pdev->name, coming from cell->name.
-pdev->name is sometimes used to match driver so cannot be changed.
-Add cell->devname field to let MFDs configure their sub-devices names
-using newly introduced platform_device_add_with_name().
+The OLB ("Other Logic Block") is a syscon region hosting clock, reset
+and pin controllers. It contains registers such as I2C speed mode that
+need to be accessible by other nodes.
 
-This comes in handy when MFDs instantiate the same platform driver.
-First solution is to use auto IDs:
-
-	// MFD device A generates sub-device named "foo.0.auto"
-	struct mfd_cell cell = { .name = "foo" };
-	mfd_add_devices(dev, PLATFORM_DEVID_AUTO, &cell, 1, ...);
-
-	// MFD device B generates sub-device named "foo.1.auto"
-	struct mfd_cell cell = { .name = "foo" };
-	mfd_add_devices(dev, PLATFORM_DEVID_AUTO, &cell, 1, ...);
-
-An alternative is to manually pick IDs using cell->id:
-
-	// MFD device A generates sub-device named "foo.0"
-	struct mfd_cell cell = { .name = "foo", .id = 0 };
-	mfd_add_devices(dev, 0, &cell, 1, ...);
-
-	// MFD device B generates sub-device named "foo.1"
-	struct mfd_cell cell = { .name = "foo", .id = 1 };
-	mfd_add_devices(dev, 0, &cell, 1, ...);
-
-Devices still have obscure names. With changes, two MFD devices can do:
-
-	// MFD device A generates sub-device named "foo-a"
-	struct mfd_cell cell = { .name = "foo", .devname = "foo-a" };
-	mfd_add_devices(dev, PLATFORM_DEVID_NONE, &cell, 1, ...);
-
-	// MFD device B generates sub-device named "foo-b"
-	struct mfd_cell cell = { .name = "foo", .devname = "foo-b" };
-	mfd_add_devices(dev, PLATFORM_DEVID_NONE, &cell, 1, ...);
-
-Device names are explicit and facilitate identification.
-Benefit increases with more instances.
-
-No shorthand MFD_CELL_*() macro is created to exploit this field.
+Remove fixed-clocks previously used; replace references.
+Add parent crystal clock, fixed at 30MHz.
+Add pin nodes for all functions.
+Add mobileye,eyeq5-olb compatible node, hosting clk, reset and pinctrl.
+Add reset and pinctrl references to UART nodes.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- drivers/mfd/mfd-core.c   |  2 +-
- include/linux/mfd/core.h | 19 ++++++++++++-------
- 2 files changed, 13 insertions(+), 8 deletions(-)
+ .../{eyeq5-fixed-clocks.dtsi => eyeq5-clocks.dtsi} |  54 +++------
+ arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi        | 125 +++++++++++++++++++++
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi             |  22 +++-
+ 3 files changed, 162 insertions(+), 39 deletions(-)
 
-diff --git a/drivers/mfd/mfd-core.c b/drivers/mfd/mfd-core.c
-index 6ad5c93027af..bdfbe860295a 100644
---- a/drivers/mfd/mfd-core.c
-+++ b/drivers/mfd/mfd-core.c
-@@ -271,7 +271,7 @@ static int mfd_add_device(struct device *parent, int id,
- 	if (ret)
- 		goto fail_res_conflict;
+diff --git a/arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi b/arch/mips/boot/dts/mobileye/eyeq5-clocks.dtsi
+similarity index 88%
+rename from arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi
+rename to arch/mips/boot/dts/mobileye/eyeq5-clocks.dtsi
+index 78f5533a95c6..17a342cc744e 100644
+--- a/arch/mips/boot/dts/mobileye/eyeq5-fixed-clocks.dtsi
++++ b/arch/mips/boot/dts/mobileye/eyeq5-clocks.dtsi
+@@ -3,42 +3,20 @@
+  * Copyright 2023 Mobileye Vision Technologies Ltd.
+  */
  
--	ret = platform_device_add(pdev);
-+	ret = platform_device_add_with_name(pdev, cell->devname);
- 	if (ret)
- 		goto fail_res_conflict;
- 
-diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
-index e8bcad641d8c..a2040372ca91 100644
---- a/include/linux/mfd/core.h
-+++ b/include/linux/mfd/core.h
-@@ -14,7 +14,8 @@
- 
- #define MFD_RES_SIZE(arr) (sizeof(arr) / sizeof(struct resource))
- 
--#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, _of_reg, _use_of_reg, _match) \
-+#define MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat,	\
-+		     _of_reg, _use_of_reg, _match, _devname)		\
- 	{								\
- 		.name = (_name),					\
- 		.resources = (_res),					\
-@@ -26,25 +27,26 @@
- 		.use_of_reg = (_use_of_reg),				\
- 		.acpi_match = (_match),					\
- 		.id = (_id),						\
-+		.devname = (_devname),					\
- 	}
- 
- #define MFD_CELL_OF_REG(_name, _res, _pdata, _pdsize, _id, _compat, _of_reg) \
--	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, _of_reg, true, NULL)
-+	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, _of_reg, true, NULL, NULL)
- 
- #define MFD_CELL_OF(_name, _res, _pdata, _pdsize, _id, _compat) \
--	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, 0, false, NULL)
-+	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, _compat, 0, false, NULL, NULL)
- 
- #define MFD_CELL_ACPI(_name, _res, _pdata, _pdsize, _id, _match) \
--	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, false, _match)
-+	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, false, _match, NULL)
- 
- #define MFD_CELL_BASIC(_name, _res, _pdata, _pdsize, _id) \
--	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, false, NULL)
-+	MFD_CELL_ALL(_name, _res, _pdata, _pdsize, _id, NULL, 0, false, NULL, NULL)
- 
- #define MFD_CELL_RES(_name, _res) \
--	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, false, NULL)
-+	MFD_CELL_ALL(_name, _res, NULL, 0, 0, NULL, 0, false, NULL, NULL)
- 
- #define MFD_CELL_NAME(_name) \
--	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, false, NULL)
-+	MFD_CELL_ALL(_name, NULL, NULL, 0, 0, NULL, 0, false, NULL, NULL)
- 
- #define MFD_DEP_LEVEL_NORMAL 0
- #define MFD_DEP_LEVEL_HIGH 1
-@@ -118,6 +120,9 @@ struct mfd_cell {
- 	 */
- 	int			num_parent_supplies;
- 	const char * const	*parent_supplies;
++#include <dt-bindings/clock/mobileye,eyeq5-clk.h>
 +
-+	/* Optional struct device name. */
-+	const char		*devname;
- };
+ / {
+ 	/* Fixed clock */
+-	pll_cpu: pll-cpu {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <1500000000>;
+-	};
+-
+-	pll_vdi: pll-vdi {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <1280000000>;
+-	};
+-
+-	pll_per: pll-per {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <2000000000>;
+-	};
+-
+-	pll_ddr0: pll-ddr0 {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <1857210000>;
+-	};
+-
+-	pll_ddr1: pll-ddr1 {
++	xtal: xtal {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+-		clock-frequency = <1857210000>;
++		clock-frequency = <30000000>;
+ 	};
  
- /*
+ /* PLL_CPU derivatives */
+ 	occ_cpu: occ-cpu {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_cpu>;
++		clocks = <&olb EQ5C_PLL_CPU>;
+ 		#clock-cells = <0>;
+ 		clock-div = <1>;
+ 		clock-mult = <1>;
+@@ -101,7 +79,7 @@ mem_clk: mem-clk {
+ 	};
+ 	occ_isram: occ-isram {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_cpu>;
++		clocks = <&olb EQ5C_PLL_CPU>;
+ 		#clock-cells = <0>;
+ 		clock-div = <2>;
+ 		clock-mult = <1>;
+@@ -115,7 +93,7 @@ isram_clk: isram-clk { /* gate ClkRstGen_isram */
+ 	};
+ 	occ_dbu: occ-dbu {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_cpu>;
++		clocks = <&olb EQ5C_PLL_CPU>;
+ 		#clock-cells = <0>;
+ 		clock-div = <10>;
+ 		clock-mult = <1>;
+@@ -130,7 +108,7 @@ si_dbu_tp_pclk: si-dbu-tp-pclk { /* gate ClkRstGen_dbu */
+ /* PLL_VDI derivatives */
+ 	occ_vdi: occ-vdi {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_vdi>;
++		clocks = <&olb EQ5C_PLL_VDI>;
+ 		#clock-cells = <0>;
+ 		clock-div = <2>;
+ 		clock-mult = <1>;
+@@ -144,7 +122,7 @@ vdi_clk: vdi-clk { /* gate ClkRstGen_vdi */
+ 	};
+ 	occ_can_ser: occ-can-ser {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_vdi>;
++		clocks = <&olb EQ5C_PLL_VDI>;
+ 		#clock-cells = <0>;
+ 		clock-div = <16>;
+ 		clock-mult = <1>;
+@@ -158,7 +136,7 @@ can_ser_clk: can-ser-clk { /* gate ClkRstGen_can_ser */
+ 	};
+ 	i2c_ser_clk: i2c-ser-clk {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_vdi>;
++		clocks = <&olb EQ5C_PLL_VDI>;
+ 		#clock-cells = <0>;
+ 		clock-div = <20>;
+ 		clock-mult = <1>;
+@@ -166,7 +144,7 @@ i2c_ser_clk: i2c-ser-clk {
+ /* PLL_PER derivatives */
+ 	occ_periph: occ-periph {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&olb EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <16>;
+ 		clock-mult = <1>;
+@@ -225,7 +203,7 @@ gpio_clk: gpio-clk {
+ 	};
+ 	emmc_sys_clk: emmc-sys-clk {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&olb EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <10>;
+ 		clock-mult = <1>;
+@@ -233,7 +211,7 @@ emmc_sys_clk: emmc-sys-clk {
+ 	};
+ 	ccf_ctrl_clk: ccf-ctrl-clk {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&olb EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <4>;
+ 		clock-mult = <1>;
+@@ -241,7 +219,7 @@ ccf_ctrl_clk: ccf-ctrl-clk {
+ 	};
+ 	occ_mjpeg_core: occ-mjpeg-core {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&olb EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <2>;
+ 		clock-mult = <1>;
+@@ -265,7 +243,7 @@ mjpeg_core_clk: mjpeg-core-clk { /* gate ClkRstGen_mjpeg_gen */
+ 	};
+ 	fcmu_a_clk: fcmu-a-clk {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&olb EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <20>;
+ 		clock-mult = <1>;
+@@ -273,7 +251,7 @@ fcmu_a_clk: fcmu-a-clk {
+ 	};
+ 	occ_pci_sys: occ-pci-sys {
+ 		compatible = "fixed-factor-clock";
+-		clocks = <&pll_per>;
++		clocks = <&olb EQ5C_PLL_PER>;
+ 		#clock-cells = <0>;
+ 		clock-div = <8>;
+ 		clock-mult = <1>;
+diff --git a/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi b/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi
+new file mode 100644
+index 000000000000..0b3671013ab4
+--- /dev/null
++++ b/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi
+@@ -0,0 +1,125 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++
++/*
++ * Default pin configuration for Mobileye EyeQ5 boards. We mostly create one
++ * pin configuration node per function.
++ */
++
++&olb {
++	timer0_pins: timer0-pins {
++		function = "timer0";
++		pins = "PA0", "PA1";
++	};
++	timer1_pins: timer1-pins {
++		function = "timer1";
++		pins = "PA2", "PA3";
++	};
++	timer2_pins: timer2-pins {
++		function = "timer2";
++		pins = "PA4", "PA5";
++	};
++	pps0_pins: pps0-pin {
++		function = "timer2";
++		pins = "PA4";
++	};
++	pps1_pins: pps1-pin {
++		function = "timer2";
++		pins = "PA5";
++	};
++	timer5_ext_pins: timer5-ext-pins {
++		function = "timer5";
++		pins = "PA6", "PA7", "PA8", "PA9";
++	};
++	timer5_ext_input_pins: timer5-ext-input-pins {
++		function = "timer5";
++		pins = "PA6", "PA7";
++	};
++	timer5_ext_incap_a_pins: timer5-ext-incap-a-pin {
++		function = "timer5";
++		pins = "PA6";
++	};
++	timer5_ext_incap_b_pins: timer5-ext-incap-b-pin {
++		function = "timer5";
++		pins = "PA7";
++	};
++	can0_pins: can0-pins {
++		function = "can0";
++		pins = "PA14", "PA15";
++	};
++	can1_pins: can1-pins {
++		function = "can1";
++		pins = "PA16", "PA17";
++	};
++	uart0_pins: uart0-pins {
++		function = "uart0";
++		pins = "PA10", "PA11";
++	};
++	uart1_pins: uart1-pins {
++		function = "uart1";
++		pins = "PA12", "PA13";
++	};
++	spi0_pins: spi0-pins {
++		function = "spi0";
++		pins = "PA18", "PA19", "PA20", "PA21", "PA22";
++	};
++	spi1_pins: spi1-pins {
++		function = "spi1";
++		pins = "PA23", "PA24", "PA25", "PA26", "PA27";
++	};
++	spi1_slave_pins: spi1-slave-pins {
++		function = "spi1";
++		pins = "PA24", "PA25", "PA26";
++	};
++	refclk0_pins: refclk0-pin {
++		function = "refclk0";
++		pins = "PA28";
++	};
++	timer3_pins: timer3-pins {
++		function = "timer3";
++		pins = "PB0", "PB1";
++	};
++	timer4_pins: timer4-pins {
++		function = "timer4";
++		pins = "PB2", "PB3";
++	};
++	timer6_ext_pins: timer6-ext-pins {
++		function = "timer6";
++		pins = "PB4", "PB5", "PB6", "PB7";
++	};
++	timer6_ext_input_pins: timer6-ext-input-pins {
++		function = "timer6";
++		pins = "PB4", "PB5";
++	};
++	timer6_ext_incap_a_pins: timer6-ext-incap-a-pin {
++		function = "timer6";
++		pins = "PB4";
++	};
++	timer6_ext_incap_b_pins: timer6-ext-incap-b-pin {
++		function = "timer6";
++		pins = "PB5";
++	};
++	can2_pins: can2-pins {
++		function = "can2";
++		pins = "PB10", "PB11";
++	};
++	uart2_pins: uart2-pins {
++		function = "uart2";
++		pins = "PB8", "PB9";
++	};
++	spi2_pins: spi2-pins {
++		function = "spi2";
++		pins = "PB12", "PB13", "PB14", "PB15", "PB16";
++	};
++	spi3_pins: spi3-pins {
++		function = "spi3";
++		pins = "PB17", "PB18", "PB19", "PB20", "PB21";
++	};
++	spi3_slave_pins: spi3-slave-pins {
++		function = "spi3";
++		pins = "PB18", "PB19", "PB20";
++	};
++	mclk0_pins: mclk0-pin {
++		function = "mclk0";
++		pins = "PB22";
++	};
++};
+diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+index 6cc5980e2fa1..4f80ffdc2e60 100644
+--- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
++++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
+@@ -5,7 +5,7 @@
+ 
+ #include <dt-bindings/interrupt-controller/mips-gic.h>
+ 
+-#include "eyeq5-fixed-clocks.dtsi"
++#include "eyeq5-clocks.dtsi"
+ 
+ / {
+ 	#address-cells = <2>;
+@@ -78,6 +78,9 @@ uart0: serial@800000 {
+ 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks  = <&uart_clk>, <&occ_periph>;
+ 			clock-names = "uartclk", "apb_pclk";
++			resets = <&olb 0 10>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins>;
+ 		};
+ 
+ 		uart1: serial@900000 {
+@@ -88,6 +91,9 @@ uart1: serial@900000 {
+ 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks  = <&uart_clk>, <&occ_periph>;
+ 			clock-names = "uartclk", "apb_pclk";
++			resets = <&olb 0 11>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart1_pins>;
+ 		};
+ 
+ 		uart2: serial@a00000 {
+@@ -98,6 +104,18 @@ uart2: serial@a00000 {
+ 			interrupts = <GIC_SHARED 6 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks  = <&uart_clk>, <&occ_periph>;
+ 			clock-names = "uartclk", "apb_pclk";
++			resets = <&olb 0 12>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart2_pins>;
++		};
++
++		olb: system-controller@e00000 {
++			compatible = "mobileye,eyeq5-olb", "syscon", "simple-mfd";
++			reg = <0 0xe00000 0x0 0x400>;
++			#reset-cells = <2>;
++			#clock-cells = <1>;
++			clocks = <&xtal>;
++			clock-names = "ref";
+ 		};
+ 
+ 		gic: interrupt-controller@140000 {
+@@ -122,3 +140,5 @@ timer {
+ 		};
+ 	};
+ };
++
++#include "eyeq5-pins.dtsi"
 
 -- 
 2.45.0
