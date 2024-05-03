@@ -1,224 +1,143 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 877576FB8;
-	Fri,  3 May 2024 14:31:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834908836
+	for <linux-kernel@vger.kernel.org>; Fri,  3 May 2024 14:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714746697; cv=none; b=e/EvlKw0bJ9txgS1So3HcXb8fFn/1TyaHJwhXkzOdK/DDwOEmE5VASNT7zNiJO94SdLl6rPkN+aaHM2r0esjKBodf/ASXRqLkeGbSerqZwfBebXO8mzwcUbVRTt5AILphyMlG5MwiP7fKpjmGspOU5+77NZ5RNHr7cgr+tpVbf0=
+	t=1714746937; cv=none; b=KFp+t1vPGonfEgh/de44LiOheY/NpT9xkAFRhU9vaFJHDMEiTJP6FmgtdkDSS2/imMgfZ/DIyE3LzOozLLh/IEXkEbGaAeR/swWrp08VmRVbNIoLhtXr7hT6tNTg0iXPmIEYGepMeT0mDiVhKnVuQPxhSbvA7OVHnh5D9krjiZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714746697; c=relaxed/simple;
-	bh=pdlDifNfOWVyf0LbavLtSHKGdmUjQ1u1E01Vx1fRvKQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c6WHsHS/t1xFXOBzcHKN2CXPNm4LXoqK55JMQdlt7BGT7hDvSM90+5o3oF43RKLXzx5h/e8OFHuehf9YKD2crnBiY/Io0G9HGIzeAQRIZuKQANMcEdXgrxY93LWJpCMuGk4S05eNu7v36WjAaY5lNGEXXZC+KcqidCMk2Oh2WiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D57313D5;
-	Fri,  3 May 2024 07:32:00 -0700 (PDT)
-Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0B0B43F73F;
-	Fri,  3 May 2024 07:31:31 -0700 (PDT)
-Message-ID: <f40bd864-1c3d-49ab-b552-e9cd6ba92b3c@arm.com>
-Date: Fri, 3 May 2024 15:31:22 +0100
+	s=arc-20240116; t=1714746937; c=relaxed/simple;
+	bh=jIYHM0VBe1wfaYl5+8QwQz1GG7xLW+t8PT0teQ+g3aw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=eOWjkA6gTuFR4YmiGfPW23HcE4yLFsHdc+xJ6h32Euy40vCygyKNdimqVerGhGzClNj/tmW23tc8WwI9Tx6AwxuATPLtQ7BB1FLNzZ8kDJ8uiDMEqq/9zRT46pTnUnFc/dM/Gy8vloa8UXX37qyqOIVd2T+7FWhTHBNfqRnjY3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7d9d0936d6aso1032372539f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 07:35:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714746935; x=1715351735;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MsSzpfD8lOTtWXQxeFGK18lo4s0V8otbNhT9TpnetXo=;
+        b=dVekNDHsGuRGFiT524OipqXCbyGs7Z5ZHqXomzCfqMMmqMZnJfLKxD8cdfNei362Qw
+         Fn/QATu04o+g2yM9dVM30F6HyvvOpOV29ENQ4c8YzZh1jRaX0fmeZyOJg2yEnB9jw9Y/
+         IOj6kgIjY7rskUVN/yUn+qyS2lKqCWCd8olAYlyuawii1HBN5PuvUtUU0nsPV5q6bMDI
+         iVJUMp4hu9rsmOum8Xn9JK+yGMMzRPRjlQl5z/hhcr1nXS18kGR0HdApjlh53DTLeHe5
+         fTyahsUwZKwUCl+SlM7TaVXqkfF0Vz1HF2LvlYOlwZV3RoPyFm5kP55WhiR9liUlRN5V
+         kkHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRUaYWEU6wF/Dn3iQNcnU4QE989+SxlXffqDExdcDcyfu73YlECt9aohrI2oUAdN+9W7vY2kZiIhWSGprvw2s3Nk27NLN/h/z3rfPx
+X-Gm-Message-State: AOJu0Yxk2+2E5sE6S4b7tPSuYk9mqIyMezCH6dufzvrZI9Mpn3aOfVyp
+	otUHm6T0wx6OzaFBuV1q9kVOpyHccQAXhRRd3TrnebIDLjXc4lGkcrJpSaQFd6YXJQdaSek0HCt
+	1oeZaXeMXRHqy5a+Oim5K0oHOGqx21pKVLwdK6hE8GrkBuWppf7k6TyA=
+X-Google-Smtp-Source: AGHT+IEhC6sNK8T+GpJrYnzOv8q+FwfHkr3Kj7cjLpEYEANPnm3z/Na6NISm5TYfxM0pY3fkZL+zcigix4lxRAkDgL5EK/tcFC4M
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 14/17] coresight: Use per-sink trace ID maps for Perf
- sessions
-To: Mike Leach <mike.leach@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, gankulkarni@os.amperecomputing.com,
- scclevenger@os.amperecomputing.com, coresight@lists.linaro.org,
- suzuki.poulose@arm.com,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, John Garry
- <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20240429152207.479221-1-james.clark@arm.com>
- <20240429152207.479221-16-james.clark@arm.com>
- <CAJ9a7VicoyFAh1m+0wcEdKan_whfXP6cb7GBZvBXCukfyugjgg@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAJ9a7VicoyFAh1m+0wcEdKan_whfXP6cb7GBZvBXCukfyugjgg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6602:158f:b0:7de:e182:ddf1 with SMTP id
+ e15-20020a056602158f00b007dee182ddf1mr106541iow.0.1714746935721; Fri, 03 May
+ 2024 07:35:35 -0700 (PDT)
+Date: Fri, 03 May 2024 07:35:35 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fbce8506178da1e8@google.com>
+Subject: [syzbot] [bcachefs?] WARNING in cleanup_srcu_struct (4)
+From: syzbot <syzbot+6cf577c8ed4e23fe436b@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    f03359bca01b Merge tag 'for-6.9-rc6-tag' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14004498980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3310e643b6ef5d69
+dashboard link: https://syzkaller.appspot.com/bug?extid=6cf577c8ed4e23fe436b
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/1b4deeb2639b/disk-f03359bc.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/f3c3d98db8ef/vmlinux-f03359bc.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/6f79ee1ae20f/bzImage-f03359bc.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6cf577c8ed4e23fe436b@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 32609 at kernel/rcu/srcutree.c:664 cleanup_srcu_struct+0x3d9/0x520 kernel/rcu/srcutree.c:664
+Modules linked in:
+CPU: 1 PID: 32609 Comm: syz-executor.1 Not tainted 6.9.0-rc6-syzkaller-00131-gf03359bca01b #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+RIP: 0010:cleanup_srcu_struct+0x3d9/0x520 kernel/rcu/srcutree.c:664
+Code: c6 00 44 0e 8b 48 c7 c7 80 42 0e 8b 48 8b 8d 80 01 00 00 48 83 c4 20 5b 5d 41 5c 41 5d 83 e1 03 41 5e 41 5f e9 08 68 fa ff 90 <0f> 0b 90 eb aa 90 0f 0b 90 48 b8 00 00 00 00 00 fc ff df 4c 89 f2
+RSP: 0018:ffffc900033cfcb0 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: 0000000000000001 RCX: 0000000000000002
+RDX: 1ffff1100f597531 RSI: ffffffff8158f30a RDI: ffffe8fffed21708
+RBP: ffff88807acba800 R08: 0000000000000000 R09: 0000000000000008
+R10: ffffffff8f9f4fd7 R11: 0000000000000000 R12: ffff8880ae104240
+R13: ffff88807acba980 R14: ffff88807acba988 R15: ffffed1015c20849
+FS:  000055556f23f480(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f3b36579198 CR3: 000000002c59c000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ bch2_fs_btree_iter_exit+0x46e/0x630 fs/bcachefs/btree_iter.c:3279
+ __bch2_fs_free fs/bcachefs/super.c:562 [inline]
+ bch2_fs_release+0xfb/0x670 fs/bcachefs/super.c:610
+ kobject_cleanup lib/kobject.c:689 [inline]
+ kobject_release lib/kobject.c:720 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1fa/0x5b0 lib/kobject.c:737
+ deactivate_locked_super+0xbe/0x1a0 fs/super.c:472
+ deactivate_super+0xde/0x100 fs/super.c:505
+ cleanup_mnt+0x222/0x450 fs/namespace.c:1267
+ task_work_run+0x14e/0x250 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x278/0x2a0 kernel/entry/common.c:218
+ do_syscall_64+0xdc/0x260 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f671907f057
+Code: b0 ff ff ff f7 d8 64 89 01 48 83 c8 ff c3 0f 1f 44 00 00 31 f6 e9 09 00 00 00 66 0f 1f 84 00 00 00 00 00 b8 a6 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 01 c3 48 c7 c2 b0 ff ff ff f7 d8 64 89 02 b8
+RSP: 002b:00007fffcd284548 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 00007f671907f057
+RDX: 0000000000000000 RSI: 0000000000000009 RDI: 00007fffcd284600
+RBP: 00007fffcd284600 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 00007fffcd2856c0
+R13: 00007f67190c93b9 R14: 00000000001e28e3 R15: 0000000000000003
+ </TASK>
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-On 03/05/2024 10:43, Mike Leach wrote:
-> Hi James
-> 
-> On Mon, 29 Apr 2024 at 16:25, James Clark <james.clark@arm.com> wrote:
->>
->> This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
->> as long as there are fewer than that many ETMs connected to each sink.
->>
->> Each sink owns its own trace ID map, and any Perf session connecting to
->> that sink will allocate from it, even if the sink is currently in use by
->> other users. This is similar to the existing behavior where the dynamic
->> trace IDs are constant as long as there is any concurrent Perf session
->> active. It's not completely optimal because slightly more IDs will be
->> used than necessary, but the optimal solution involves tracking the PIDs
->> of each session and allocating ID maps based on the session owner. This
->> is difficult to do with the combination of per-thread and per-cpu modes
->> and some scheduling issues. The complexity of this isn't likely to worth
->> it because even with multiple users they'd just see a difference in the
->> ordering of ID allocations rather than hitting any limits (unless the
->> hardware does have too many ETMs connected to one sink).
->>
->> Signed-off-by: James Clark <james.clark@arm.com>
->> ---
->>  drivers/hwtracing/coresight/coresight-core.c     | 10 ++++++++++
->>  drivers/hwtracing/coresight/coresight-etm-perf.c | 15 ++++++++-------
->>  include/linux/coresight.h                        |  1 +
->>  3 files changed, 19 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
->> index 9fc6f6b863e0..d1adff467670 100644
->> --- a/drivers/hwtracing/coresight/coresight-core.c
->> +++ b/drivers/hwtracing/coresight/coresight-core.c
->> @@ -902,6 +902,7 @@ static void coresight_device_release(struct device *dev)
->>         struct coresight_device *csdev = to_coresight_device(dev);
->>
->>         fwnode_handle_put(csdev->dev.fwnode);
->> +       free_percpu(csdev->perf_id_map.cpu_map);
->>         kfree(csdev);
->>  }
->>
->> @@ -1159,6 +1160,14 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
->>         csdev->dev.fwnode = fwnode_handle_get(dev_fwnode(desc->dev));
->>         dev_set_name(&csdev->dev, "%s", desc->name);
->>
->> +       if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
->> +           csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
->> +               csdev->perf_id_map.cpu_map = alloc_percpu(atomic_t);
->> +               if (!csdev->perf_id_map.cpu_map) {
->> +                       ret = -ENOMEM;
->> +                       goto err_out;
->> +               }
->> +       }
->>         /*
->>          * Make sure the device registration and the connection fixup
->>          * are synchronised, so that we don't see uninitialised devices
->> @@ -1216,6 +1225,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
->>  err_out:
->>         /* Cleanup the connection information */
->>         coresight_release_platform_data(NULL, desc->dev, desc->pdata);
->> +       kfree(csdev);
->>         return ERR_PTR(ret);
->>  }
->>  EXPORT_SYMBOL_GPL(coresight_register);
->> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
->> index 177cecae38d9..86ca1a9d09a7 100644
->> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
->> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
->> @@ -229,10 +229,13 @@ static void free_event_data(struct work_struct *work)
->>                 struct list_head **ppath;
->>
->>                 ppath = etm_event_cpu_path_ptr(event_data, cpu);
->> -               if (!(IS_ERR_OR_NULL(*ppath)))
->> +               if (!(IS_ERR_OR_NULL(*ppath))) {
->> +                       struct coresight_device *sink = coresight_get_sink(*ppath);
->> +
->> +                       coresight_trace_id_put_cpu_id(cpu, &sink->perf_id_map);
->>                         coresight_release_path(*ppath);
->> +               }
->>                 *ppath = NULL;
->> -               coresight_trace_id_put_cpu_id(cpu, coresight_trace_id_map_default());
->>         }
->>
->>         /* mark perf event as done for trace id allocator */
->> @@ -401,8 +404,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
->>                 }
->>
->>                 /* ensure we can allocate a trace ID for this CPU */
->> -               trace_id = coresight_trace_id_get_cpu_id(cpu,
->> -                                                        coresight_trace_id_map_default());
->> +               trace_id = coresight_trace_id_get_cpu_id(cpu, &sink->perf_id_map);
->>                 if (!IS_VALID_CS_TRACE_ID(trace_id)) {
->>                         cpumask_clear_cpu(cpu, mask);
->>                         coresight_release_path(path);
->> @@ -497,7 +499,7 @@ static void etm_event_start(struct perf_event *event, int flags)
->>
->>         /* Finally enable the tracer */
->>         if (source_ops(csdev)->enable(csdev, event, CS_MODE_PERF,
->> -                                     coresight_trace_id_map_default()))
->> +                                     &sink->perf_id_map))
->>                 goto fail_disable_path;
->>
->>         /*
->> @@ -509,8 +511,7 @@ static void etm_event_start(struct perf_event *event, int flags)
->>                 hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK,
->>                                    CS_AUX_HW_ID_CURR_VERSION);
->>                 hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK,
->> -                                   coresight_trace_id_read_cpu_id(cpu,
->> -                                               coresight_trace_id_map_default()));
->> +                                   coresight_trace_id_read_cpu_id(cpu, &sink->perf_id_map));
->>                 perf_report_aux_output_id(event, hw_id);
->>         }
->>
->> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
->> index 3a678e5425dc..8c4c1860c76b 100644
->> --- a/include/linux/coresight.h
->> +++ b/include/linux/coresight.h
->> @@ -290,6 +290,7 @@ struct coresight_device {
->>         bool sysfs_sink_activated;
->>         struct dev_ext_attribute *ea;
->>         struct coresight_device *def_sink;
->> +       struct coresight_trace_id_map perf_id_map;
-> 
-> perhaps this should be sink_id_map? At some point sysfs may use is and
-> naming is sink... is more consistent with other sink attributes in the
-> structure.
-> 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-When we implement this for sysfs I was thinking sysfs would use its own
-per-sink map. One reason is that the global map might be used if the
-sink is in use by a system source (which allocate their IDs on probe).
-Resulting in something like this:
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-  struct coresight_trace_id_map perf_id_map;
-  struct coresight_trace_id_map sysfs_id_map;
-  struct coresight_trace_id_map *sysfs_id_map_in_use;
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-syfs_id_map_in_use could either be &sysfs_id_map or
-coresight_trace_id_map_default()
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-If sysfs did share the same map as Perf, the sink would have to have
-some kind of mechanism of saving and restoring the mappings depending on
-who was currently using the sink. At that point just storing two
-versions of the mappings is easier. I believe there are some scenarios
-for concurrent sysfs and Perf sessions that don't fail immediately, but
-that one will get -EBUSY when trying to use the sink, until the other
-session ends, at which point the other mappings need to be ready to use
-immediately.
-
-Also sysfs might either use the per-sink map or the global map depending
-on the ordering of when the IDs were allocated or if a system source is
-used at the same time, which means sysfs needs to use a reference to a map.
-
-We could also change system sources so that they only allocate IDs when
-the ID is read, rather than on probe. That might remove some of the
-above issues, but maybe not all of them because you can always read the
-ID before enabling the sink, at which point you have no choice but to
-use the global map.
-
->>         /* sysfs links between components */
->>         int nr_links;
->>         bool has_conns_grp;
->> --
->> 2.34.1
->>
-> 
-> Mike
-> 
+If you want to undo deduplication, reply with:
+#syz undup
