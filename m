@@ -1,79 +1,204 @@
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1C6146D4B;
-	Fri,  3 May 2024 09:13:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.230.98
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9744414F113;
+	Fri,  3 May 2024 09:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714727621; cv=none; b=sVdRoV+YQaY5QhuiBwyawOSeB74hVe3+pxySKf6v4ejzGBatqAQv1b5kKb6gEudFovmQ4PoC5yzOPp8lfOJyew6Y6NCLXHRLzBsPNQE89reCDBB4UBSYQOLGKLtdnooBX/jlxnAIkoCRZUOfxdx9OCIQhyHPLvZYB8vb8q5ZcMY=
+	t=1714727667; cv=none; b=NyVSRZUGE9Jh6WTT7g10ya1xie/Qw+qIG/OAfcPdgJog1nyyfjf4i+PVtNAWoJr7cC4jjY4ppEYDP6RmHViSb+I/3wdkMMw97SINTIyXgORdXr+dwltIVj45SUrRzi66OwPZ/6l0ARF5giSIR7MQ2C2JTxiCWa3COj9gnrslX0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714727621; c=relaxed/simple;
-	bh=5kmcDvndxpWJvK1j+kbwiA6maVn0FHPqXzkdAWGp8dg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sWvYW05mU5mZs5fEjHIp6R9XiNUw5c+8iztcT9SW9G9sxr18RddCHkGoI9CAY+FdyvhHgCsqOGzOBuoK+QB8/LPzWN5XM2ZXeNRuOZ/7mSCJ3H0/x5n0SqrO6qVj4kkBQlCFTtPzbmSiOlUAye6YPGO3+VVfFC9GULQ0H6bwgwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de; spf=fail smtp.mailfrom=denx.de; arc=none smtp.client-ip=46.255.230.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=denx.de
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-	id C07031C0093; Fri,  3 May 2024 11:03:55 +0200 (CEST)
-Date: Fri, 3 May 2024 11:03:55 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Daniel Wagner <wagi@monom.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	linux-rt-users <linux-rt-users@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Carsten Emde <C.Emde@osadl.org>, John Kacur <jkacur@redhat.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	Clark Williams <williams@redhat.com>, Pavel Machek <pavel@denx.de>
-Subject: 4.19-rt in May? Re: [ANNOUNCE] 4.19.269-rt119
-Message-ID: <ZjSoeyEnkJPY7ST3@duo.ucw.cz>
-References: <167144069993.3503.13484547425689613996@beryllium.lan>
+	s=arc-20240116; t=1714727667; c=relaxed/simple;
+	bh=4ra0slbfvRchcptOPIK9YRDh4kjzt5cthlclRiu0G1g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rFEGrJuXKbzZYEYw5hncgn5Q3x5Kh59nnIzr+V8FxNWP5tdr6WMCk9j5jHX6Hs8m2zkG8SQADx/y93VHO/O/OgFjcRn4Of+ABSstmzMz02/poYpVMYF7fCeVERGzIT+BQY2PKTLtZmKYH/W+O8nLungBtect+GrZw02KV9UG5gM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 361482F4;
+	Fri,  3 May 2024 02:14:50 -0700 (PDT)
+Received: from [10.163.34.188] (unknown [10.163.34.188])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD2CE3F73F;
+	Fri,  3 May 2024 02:14:18 -0700 (PDT)
+Message-ID: <312ae9b3-e328-410e-9f2f-02e6dccadff2@arm.com>
+Date: Fri, 3 May 2024 14:44:10 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kK4r9iCG4K6XU96T"
-Content-Disposition: inline
-In-Reply-To: <167144069993.3503.13484547425689613996@beryllium.lan>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] arm64: implement raw_smp_processor_id() using
+ thread_info
+Content-Language: en-US
+To: Puranjay Mohan <puranjay@kernel.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Sumit Garg <sumit.garg@linaro.org>, Stephen Boyd <swboyd@chromium.org>,
+ Douglas Anderson <dianders@chromium.org>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org
+Cc: puranjay12@gmail.com
+References: <20240502123449.2690-1-puranjay@kernel.org>
+ <20240502123449.2690-2-puranjay@kernel.org>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20240502123449.2690-2-puranjay@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
---kK4r9iCG4K6XU96T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On 5/2/24 18:04, Puranjay Mohan wrote:
+> Historically, arm64 implemented raw_smp_processor_id() as a read of
+> current_thread_info()->cpu. This changed when arm64 moved thread_info
+> into task struct, as at the time CONFIG_THREAD_INFO_IN_TASK made core
+> code use thread_struct::cpu for the cpu number, and due to header
+> dependencies prevented using this in raw_smp_processor_id(). As a
+> workaround, we moved to using a percpu variable in commit:
+> 
+> commit 57c82954e77f ("arm64: make cpu number a percpu variable")
+> 
+> Since then, thread_info::cpu was reintroduced, and core code was made to
+> use this in commits:
+> 
+> commit 001430c1910d ("arm64: add CPU field to struct thread_info")
+> commit bcf9033e5449 ("sched: move CPU field back into thread_info if
+> THREAD_INFO_IN_TASK=y")
+> 
+> Consequently it is possible to use current_thread_info()->cpu again.
 
-I'd like to do 4.19-cip-rt release "soon". Is there chance to get
-updated -rt tree? Last I see is:
+This captures Mark's earlier suggestion on the commit message.
 
 
-commit 4790d0210f1929d981659cd4e7ecfb34e0a6889c (tag: v4.19.307-rt133-rc1, =
-tag: v4.19.307-rt133, rt/v4.19-rt)
-Author: Daniel Wagner <wagi@monom.org>
-Date:   Tue Feb 27 13:10:41 2024 +0100
+> 
+> This decreases the number of emitted instructions like in the following
+> example:
+> 
+> Dump of assembler code for function bpf_get_smp_processor_id:
+>    0xffff8000802cd608 <+0>:     nop
+>    0xffff8000802cd60c <+4>:     nop
+>    0xffff8000802cd610 <+8>:     adrp    x0, 0xffff800082138000
+>    0xffff8000802cd614 <+12>:    mrs     x1, tpidr_el1
+>    0xffff8000802cd618 <+16>:    add     x0, x0, #0x8
+>    0xffff8000802cd61c <+20>:    ldrsw   x0, [x0, x1]
+>    0xffff8000802cd620 <+24>:    ret
+> 
+> After this patch:
+> 
+> Dump of assembler code for function bpf_get_smp_processor_id:
+>    0xffff8000802c9130 <+0>:     nop
+>    0xffff8000802c9134 <+4>:     nop
+>    0xffff8000802c9138 <+8>:     mrs     x0, sp_el0
+>    0xffff8000802c913c <+12>:    ldr     w0, [x0, #24]
+>    0xffff8000802c9140 <+16>:    ret
+> 
+> A microbenchmark[1] was built to measure the performance improvement
+> provided by this change. It calls the following function given number of
+> times and finds the runtime overhead:
+> 
+> static noinline int get_cpu_id(void)
+> {
+> 	return smp_processor_id();
+> }
+> 
+> Run the benchmark like:
+>  modprobe smp_processor_id nr_function_calls=1000000000
+> 
+>       +--------------------------+------------------------+
+>       |        | Number of Calls |    Time taken          |
+>       +--------+-----------------+------------------------+
+>       | Before |   1000000000    |   1602888401ns         |
+>       +--------+-----------------+------------------------+
+>       | After  |   1000000000    |   1206212658ns         |
+>       +--------+-----------------+------------------------+
+>       |  Difference (decrease)   |   396675743ns (24.74%) |
+>       +---------------------------------------------------+
+> 
+> Remove the percpu variable cpu_number as it is used only in
+> set_smp_ipi_range() as a dummy variable to be passed to ipi_handler().
+> Use irq_stat in place of cpu_number here.
+> 
+> [1] https://github.com/puranjaymohan/linux/commit/77d3fdd
+> 
+> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> ---
+> Changes in v1 -> v2:
+> v1: https://lore.kernel.org/all/20240501154236.10236-1-puranjay@kernel.org/
+> - Remove the percpu variable cpu_number
+> - Add more information to the commit message.
+> ---
+>  arch/arm64/include/asm/smp.h | 13 +------------
+>  arch/arm64/kernel/smp.c      |  9 ++-------
+>  2 files changed, 3 insertions(+), 19 deletions(-)
+> 
+> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+> index efb13112b408..2510eec026f7 100644
+> --- a/arch/arm64/include/asm/smp.h
+> +++ b/arch/arm64/include/asm/smp.h
+> @@ -25,22 +25,11 @@
+>  
+>  #ifndef __ASSEMBLY__
+>  
+> -#include <asm/percpu.h>
+> -
+>  #include <linux/threads.h>
+>  #include <linux/cpumask.h>
+>  #include <linux/thread_info.h>
+>  
+> -DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
+> -
+> -/*
+> - * We don't use this_cpu_read(cpu_number) as that has implicit writes to
+> - * preempt_count, and associated (compiler) barriers, that we'd like to avoid
+> - * the expense of. If we're preemptible, the value can be stale at use anyway.
+> - * And we can't use this_cpu_ptr() either, as that winds up recursing back
+> - * here under CONFIG_DEBUG_PREEMPT=y.
+> - */
+> -#define raw_smp_processor_id() (*raw_cpu_ptr(&cpu_number))
+> +#define raw_smp_processor_id() (current_thread_info()->cpu)
+>  
+>  /*
+>   * Logical CPU mapping.
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index 4ced34f62dab..98d4e352c3d0 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -55,9 +55,6 @@
+>  
+>  #include <trace/events/ipi.h>
+>  
+> -DEFINE_PER_CPU_READ_MOSTLY(int, cpu_number);
+> -EXPORT_PER_CPU_SYMBOL(cpu_number);
+> -
+>  /*
+>   * as from 2.5, kernels no longer have an init_tasks structure
+>   * so we need some other way of telling a new secondary core
+> @@ -742,8 +739,6 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+>  	 */
+>  	for_each_possible_cpu(cpu) {
+>  
+> -		per_cpu(cpu_number, cpu) = cpu;
+> -
+>  		if (cpu == smp_processor_id())
+>  			continue;
+>  
+> @@ -1021,12 +1016,12 @@ void __init set_smp_ipi_range(int ipi_base, int n)
+>  
+>  		if (ipi_should_be_nmi(i)) {
+>  			err = request_percpu_nmi(ipi_base + i, ipi_handler,
+> -						 "IPI", &cpu_number);
+> +						 "IPI", &irq_stat);
+>  			WARN(err, "Could not request IPI %d as NMI, err=%d\n",
+>  			     i, err);
+>  		} else {
+>  			err = request_percpu_irq(ipi_base + i, ipi_handler,
+> -						 "IPI", &cpu_number);
+> +						 "IPI", &irq_stat);
+>  			WARN(err, "Could not request IPI %d as IRQ, err=%d\n",
+>  			     i, err);
+>  		}
 
-    Linux 4.19.307-rt133
+set_smp_ipi_range() now looks similar to what we have on arm32 platform.
 
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---kK4r9iCG4K6XU96T
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZjSoewAKCRAw5/Bqldv6
-8siIAKC5tweAMGwlBuQs+Z56ORnUuQ2C0ACghD4KFUP8cfvm6MJ12TtTz9Lf0m0=
-=RA2y
------END PGP SIGNATURE-----
-
---kK4r9iCG4K6XU96T--
+Besides the arch/arm64/include/asm/smp.h changes (not sure if is just a
+clean up, then might be a stand alone patch on its own) this patch LGTM.
