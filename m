@@ -1,106 +1,112 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0EC2368
-	for <linux-kernel@vger.kernel.org>; Sat,  4 May 2024 04:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 880BFBA42
+	for <linux-kernel@vger.kernel.org>; Sat,  4 May 2024 04:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714798041; cv=none; b=MEB7+v1N8VmYX9u68bzC2Vhyq95ccwva//5lUWtcO7DYY/m5AqYYuMq2YuDIGN/fO8cL38rzVk4E9zjjM/cyvfIRN5NTUbxqlXprPzVMhmBapjLg+ZLP5dkEsuSfkP9frLyOo7srwhKxarXo26oGLm1Il4hJ+HbDd8VBw1FdOtk=
+	t=1714798044; cv=none; b=rdUT5tSHwB9N2UsCMYz52WUD7K2+GP3QTiPR8gzP4GxIAkcsTFiJSAZyxS4VVfvI/qVkHC8ywS+gMaO7Ibj+j+oCbRjkwMxqfoUJC8VrrdKdxtpLmKTWQtdyR4chjPIKxv9+YXJ2dP7v9S1T7RIeqvgY1k1SxfQ9b+bEhOuxCQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714798041; c=relaxed/simple;
-	bh=ogyv2I8i/GbJScBtLB+NEg+dy79yutIqsK7sVGv5AVE=;
+	s=arc-20240116; t=1714798044; c=relaxed/simple;
+	bh=vONpxGkKrgomZ6pmGDAeB+1fSP0EXFfND4CmLyAS5B8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bHdHfAYHq4xpo+2GTTDbigWgADjl62PBAwK8MML89LW0GimsYQwLi6lgrjn+w6rVfAhd1MoPEztpGp+8XNFjimSvNZAe8QCvvB63d8v9RXfOAvpRt6bAG3BSeem3dMJIvsdz+FFxWDUYCYFdsi9OLwhdINQcaWM/P+UzzerELFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=msK0SZct; arc=none smtp.client-ip=209.85.219.170
+	 To:Cc:Content-Type; b=pg+xE5ZKXBhuIxyWwaPydW9U2O+9sqh3gvdh+c0am8NJbtyLxruRKxtOKGPcS2CSgMfN0a03K6bBeR5XlgcU8uUUA3YBbGXjBlo36vUIw6Oty/9vPMxUJjJgd5t3/J/ttJaIzryvaeUzmYtQeC3EMN5WX6h0rIbA3YXqjrhvq3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O4xLK2Yx; arc=none smtp.client-ip=209.85.160.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="msK0SZct"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-de60380c04aso406681276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 21:47:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O4xLK2Yx"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-43a317135a5so2428181cf.0
+        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 21:47:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714798039; x=1715402839; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1714798042; x=1715402842; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vDUY0pEyHcwLGLCcYTguMfsPJMq4nVW4kSPub1k/aNI=;
-        b=msK0SZctZ5xQ3r9DW1gWPzmCPZFpIBEkjvHIdip1grNZkniQO/YESDp6vLu18aeJCy
-         ZteI4jZNMcfOu0+fFqFl3H+nUd82zZGF2NKUC+mxxC3M9s5M+h/PZGaKXG/iZHNQ2LNo
-         Uzg7d/l1qK8mvcY2Wsqj5hPOIL6YUGU2D5O3ahnE1EwjG1JwWQ8uAfcTWolpIdzq8uX+
-         l1hWYMzSwO9cex5CmC+eaQW9wJK2fqoIkIVp/c2jvWFxqtB9vAKrz7yCQCC1M/du+gbS
-         a/VqQgDVRg+pgz18WJieUwuEPuz4F2tF5gDmQaWkAXs+sz1nSguagt0etzSkao22FPed
-         vYaA==
+        bh=yUjw08Dptdko0n6fmP/rOSW9rqkNSjLddnMoD7BoCiE=;
+        b=O4xLK2YxIE7FCiCsBuyjbPqISPjm1CiLorZSkgjBgliAUT2EbekWt2O7mnXuxWtBxY
+         WWzEdqtFlyVMsaleekPns5eHRuqvGEwUIwqlpFO/T2/muVPKTiLZ1/UI78u9mISiuVHc
+         15IBw14vQ92hF+16jz5VD5pyLozkoxTU5b8C/hUPUZ3orzNlyJJPzNqlpIv6LlY3lR5Y
+         2NcrUv+FDGiBA8VB8JIgp9iZODa4yqDZhQGAq/lW+ZFPBceitflu+bPEtHkVlKpIFF4g
+         g2A6bM/u5c1lnKgzi4/ThtuT+9wUJs9JSQleGeP+fJtKxV2ddgBDJaBjKuFjHTmRVgi4
+         qNfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714798039; x=1715402839;
+        d=1e100.net; s=20230601; t=1714798042; x=1715402842;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vDUY0pEyHcwLGLCcYTguMfsPJMq4nVW4kSPub1k/aNI=;
-        b=t3doUCI+f4KFVZq36mFGlZH4XDMKwoXAMk0lNlCKn+9e3EWf/EU+nfdxkuWM2DTttv
-         JbxV/cebUat5WWw7ANUeEs0Z0XdPu2tLpyl3/ZngNi9OfuuTZ5YpWTsAFyHtMTqoaV/E
-         Yp/h7OXcVfIYl6LRUFfEMvICK93VDZXddNDRxpmMk37YcPHp//4HmfqdqF8i2r7K5UEp
-         ZttmujhzKNMiqlnnDC96lSjQudb9fbh+CgxECn4QEuVKSN/Gri+KtE5gX5EBNMt3F6Xr
-         lvZOXLiG8xDmw12yjXLzCL1gz62IsC9njhM3vmEH7mikvTlrwSCDq8Z2J7+qaZx1THqf
-         IcpA==
-X-Forwarded-Encrypted: i=1; AJvYcCW78DuDs3oshB5b9wYw8oCXZPIkqOy+6KK7P0R3ezl7M8s9Xy62jNZqCQKwsgH5kJ4YMBMQfYZeBjIOXFGFwk0NCIzrwQUvnLi5xERs
-X-Gm-Message-State: AOJu0Ywi7IuyIVaPEsu3OmSw4JF1ZtEmtcMp2FFP3WjrfgOG9c719Gje
-	vOhEhlhIzQvB8v57qtdB1O08afKHK6oXfJaMfKOy6A+ZMHlFhmxmCp/wr6gOeIesIGQznoaYAp3
-	UNWw0O+CorNr33mQvkCX880x5Zl8=
-X-Google-Smtp-Source: AGHT+IEyCObDSnKTFetVhKZvIIIM96ux29apOjfs1Jgpir5tJ0Jqi/UV7RbAAlROLZzxT63wEHzGGVUzzDrlIbZ5rZE=
-X-Received: by 2002:a05:6902:e05:b0:de4:613c:a63 with SMTP id
- df5-20020a0569020e0500b00de4613c0a63mr5724837ybb.53.1714798038908; Fri, 03
- May 2024 21:47:18 -0700 (PDT)
+        bh=yUjw08Dptdko0n6fmP/rOSW9rqkNSjLddnMoD7BoCiE=;
+        b=kKmIfL0u1BVVsC1dWauNh6bP5WB70Jobzb0zF4d824nXWyeHqUE2sZef4aqdrJM3hS
+         nRGEYMPQLnELDE5fBe75uzyp4DtJFhJWfjUoe/OKp1zt835IHu/v+kvh5m/SrxIcSrLa
+         6B5KMQhhH174YFYQE53SFesnGGcemoXM/4ywg7pYbaeFmyFL2zeM7xM1syQSYLkL+kFp
+         7kejMsM85bsDlLyfAQgVjzHkiP0lMg+00fkGjOPatuB15AiqpjMHIzLdKVaDDDzCpjo8
+         jgxXSQ8At5q3cqMs48JkmWfJ+WVThejpi8Z/YnQZtZBppQBV4v+wJ/Kq8gybZE2ZN4Hj
+         bA6g==
+X-Gm-Message-State: AOJu0YwFHlWklnHvSyXHG5s9nyQqXjGV73CCuqEJJ8j/mREcaItiGvSM
+	c8Co523omj3RvUBgpm2zdbtsz8ixyJBOm1H8mQ62iJAEN5YLYze6gwYcpXvguWQ53cM4jjO4S6f
+	vVpBJfPMqpj+811Y1A41ZN267FW0=
+X-Google-Smtp-Source: AGHT+IHrD6N4vV5SpoNuG45uUxmKfgmnP2BU2PFr+zeMg8MGxlsJ2hRoAk7/H87Vb079kPsTM5oHlonlLGoayle3T1c=
+X-Received: by 2002:a05:622a:298e:b0:43a:357c:322a with SMTP id
+ hd14-20020a05622a298e00b0043a357c322amr14260508qtb.34.1714798042326; Fri, 03
+ May 2024 21:47:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240503005023.174597-1-21cnbao@gmail.com> <20240503005023.174597-3-21cnbao@gmail.com>
- <e0c1cbb2-da06-4658-a23a-962496e83557@arm.com> <CANeU7QkYXmpmTAVjGqin4Wpg9hydPPYZKho-MwQMMt9uJ8Lu4Q@mail.gmail.com>
- <ZjWzoGg3MRs0yiBR@infradead.org> <CAGsJ_4xdgD8grbW98Gfoc7X-fAVYzFtobczNCWApw-oPhj9dwg@mail.gmail.com>
- <ZjW5h_Ic3k9IlGtV@infradead.org>
-In-Reply-To: <ZjW5h_Ic3k9IlGtV@infradead.org>
-From: Barry Song <21cnbao@gmail.com>
-Date: Sat, 4 May 2024 12:47:06 +0800
-Message-ID: <CAGsJ_4wfeaVeaFXAKz-7U-=ESf2uh9Ow=VDGdRXqnypHhLDJfw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/6] mm: remove swap_free() and always use swap_free_nr()
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Chris Li <chrisl@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, baolin.wang@linux.alibaba.com, david@redhat.com, 
-	hanchuanhua@oppo.com, hannes@cmpxchg.org, hughd@google.com, 
-	kasong@tencent.com, linux-kernel@vger.kernel.org, surenb@google.com, 
-	v-songbaohua@oppo.com, willy@infradead.org, xiang@kernel.org, 
-	ying.huang@intel.com, yosryahmed@google.com, yuzhao@google.com, 
-	ziy@nvidia.com, "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, 
-	Len Brown <len.brown@intel.com>
+References: <20240501195116.62669-1-ppbuk5246@gmail.com>
+In-Reply-To: <20240501195116.62669-1-ppbuk5246@gmail.com>
+From: Yun Levi <ppbuk5246@gmail.com>
+Date: Sat, 4 May 2024 05:47:11 +0100
+Message-ID: <CAM7-yPQMDZ9SZPVQExCd2bqTRTzoBVwQUSgrXp=1WSDDOCajag@mail.gmail.com>
+Subject: Re: [PATCH] time/timgr: Fix wrong reference when level 0 group
+ allocation failed
+To: anna-maria@linutronix.de, frederic@kernel.org, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, May 4, 2024 at 12:29=E2=80=AFPM Christoph Hellwig <hch@infradead.or=
-g> wrote:
+Gentle ping
+
+On Wed, May 1, 2024 at 8:51=E2=80=AFPM Levi Yun <ppbuk5246@gmail.com> wrote=
+:
 >
-> On Sat, May 04, 2024 at 12:27:11PM +0800, Barry Song wrote:
-> > swap_free_nr() isn't separate, after this patch, it is the only one lef=
-t.
-> > there won't be swap_free() any more. it seems you want to directly
-> > "rename" it to swap_free()?
+> When tmigr_setup_groups() failed level 0 group allocation,
+> next do while loop refers wrong local stack array location.
 >
-> Yes.  Avoid the pointless suffix if it is the only variant.
-
-well. it seems you are right. We usually use a suffix to differentiate
-two or more cases, but now, there is only one case left, the suffix
-seems no longer useful.
-
-one more problem is that free_swap_and_cache_nr() and
-swap_free_nr() are not quite aligned.
-
-extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
-
-static inline void free_swap_and_cache(swp_entry_t entry)
-{
-           free_swap_and_cache_nr(entry, 1);
-}
-
-The problem space is the same. I feel like in that case, we can also drop
-free_swap_and_cache_nr() and simply add the nr parameter?
+> Changing group init do while loop with while loop to fix this problem.
+>
+> Signed-off-by: Levi Yun <ppbuk5246@gmail.com>
+> ---
+>  kernel/time/timer_migration.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.=
+c
+> index ccba875d2234..84413114db5c 100644
+> --- a/kernel/time/timer_migration.c
+> +++ b/kernel/time/timer_migration.c
+> @@ -1596,7 +1596,7 @@ static int tmigr_setup_groups(unsigned int cpu, uns=
+igned int node)
+>
+>         } while (i < tmigr_hierarchy_levels);
+>
+> -       do {
+> +       while (i > 0) {
+>                 group =3D stack[--i];
+>
+>                 if (err < 0) {
+> @@ -1645,7 +1645,7 @@ static int tmigr_setup_groups(unsigned int cpu, uns=
+igned int node)
+>                                 tmigr_connect_child_parent(child, group);
+>                         }
+>                 }
+> -       } while (i > 0);
+> +       }
+>
+>         kfree(stack);
+>
+> --
+> 2.41.0
+>
