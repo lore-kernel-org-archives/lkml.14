@@ -1,124 +1,197 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58380111AD;
-	Sat,  4 May 2024 08:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE987BA42
+	for <linux-kernel@vger.kernel.org>; Sat,  4 May 2024 08:08:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714809929; cv=none; b=ExwaOqRG1W2WMXCxUgnqsJyVAa0tqvT/cRQvMTzYlA0ldTNQjDWIP9PRijYf8Lv2zJC3VkO5VUFAEAOWrVIhegF0EFx36pmrtfQZS8CxWInCXa0FuwN4nOcUjbIuz/tcmJqMZxmQ6wQCjiwILqgL3TnJoBWCcUyjX4PJejP1iIE=
+	t=1714810108; cv=none; b=eMhtgl9IHWSyCvdJipjMxiIYZ2MfdNMHAZCTp+evdz3bpyydl3pJjNPIRI80aO5FTJiBTZFvOqzLvAzh1eMIvBKeeCci6SXObbNGtg/BuI/xQKvtSytgAY3XPlryjrqOd5unaAJ0uRAMll1auzRh4Xf0I8CAHUErL2N5+6gxQt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714809929; c=relaxed/simple;
-	bh=eGMDMCeJmKfty2SuJuUWgQ5o5s2iOmSw8sf0drDov6s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JP0KnG13ReNPDPOjReta3Y4UQgX393R1tJfdsDmCpHORsltkhFWXOKAh/Og+EyRqJjyltxNkywdD0p+ssWoCRHp0evAd7xPCr+SYbiqalPl1mnk/c48OZOpMRh07Iq3QOuGMlmO0ZjlB/X8iEtOXS66BC2kB906XvUlsfHv1USo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VWgFd5LRxz4f3jXr;
-	Sat,  4 May 2024 16:05:09 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id CD6321A09F0;
-	Sat,  4 May 2024 16:05:17 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgCXaBE57DVmKbDhLg--.23467S5;
-	Sat, 04 May 2024 16:05:15 +0800 (CST)
-From: libaokun@huaweicloud.com
-To: linux-ext4@vger.kernel.org
-Cc: tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	ritesh.list@gmail.com,
-	linux-kernel@vger.kernel.org,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com,
-	libaokun@huaweicloud.com,
-	Baokun Li <libaokun1@huawei.com>,
-	syzbot+dd43bd0f7474512edc47@syzkaller.appspotmail.com,
-	stable@kernel.org
-Subject: [PATCH 1/2] ext4: fix mb_cache_entry's e_refcnt leak in ext4_xattr_block_cache_find()
-Date: Sat,  4 May 2024 15:55:25 +0800
-Message-Id: <20240504075526.2254349-2-libaokun@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240504075526.2254349-1-libaokun@huaweicloud.com>
-References: <20240504075526.2254349-1-libaokun@huaweicloud.com>
+	s=arc-20240116; t=1714810108; c=relaxed/simple;
+	bh=0hCEqZkQCaNOTmBz4GIo4hUWSZWinRrt3PGUXnoS1+o=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fmMiFmydWFXb5pEdMfD0XTSJEbYnTAfOzGkH8HVOpwljFpBZk3vO/MA43lld69C97PkCAvDozrsfyVi/jaLtJtNx1Q48jjqsz4+IlPsGjWfqxh4EbhM1Q9IIUs+7ZdgaqHfVKlvS0h3IoPhfuAsSTIL9n10MXGjubv1v6jNb2No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ticBPfxu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HO96QoYS; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ticBPfxu; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HO96QoYS; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ticBPfxu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HO96QoYS";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ticBPfxu";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HO96QoYS"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0D0CF34270;
+	Sat,  4 May 2024 08:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714810105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OXpA3ThLOYoWjLP+Ess0XcrkiazJdwL2bihk4FANmH4=;
+	b=ticBPfxux8E6ZoCtKtgyqlWC8TA8h+PiF27+kAJT8ANH1rTIX/c4k0QkrIHp0oNW5SdoEi
+	4LsN/DR2FGzWAtgZUXUFSHPSxnWZ27kTfCkeetAWECoPk7rMXmRD6oXjQIAsbQHUDQZFmu
+	nmfYSoZXl1O29kfzrA9q8szoR9G/Oc4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714810105;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OXpA3ThLOYoWjLP+Ess0XcrkiazJdwL2bihk4FANmH4=;
+	b=HO96QoYShWT6eB8tv4I7LY+0mBWXjie8KE5Bm8m9keb5J40YQuYKtOMRwLmupYZpYiY9uR
+	9/p7/jfV9MUMJpDQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ticBPfxu;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=HO96QoYS
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714810105; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OXpA3ThLOYoWjLP+Ess0XcrkiazJdwL2bihk4FANmH4=;
+	b=ticBPfxux8E6ZoCtKtgyqlWC8TA8h+PiF27+kAJT8ANH1rTIX/c4k0QkrIHp0oNW5SdoEi
+	4LsN/DR2FGzWAtgZUXUFSHPSxnWZ27kTfCkeetAWECoPk7rMXmRD6oXjQIAsbQHUDQZFmu
+	nmfYSoZXl1O29kfzrA9q8szoR9G/Oc4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714810105;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OXpA3ThLOYoWjLP+Ess0XcrkiazJdwL2bihk4FANmH4=;
+	b=HO96QoYShWT6eB8tv4I7LY+0mBWXjie8KE5Bm8m9keb5J40YQuYKtOMRwLmupYZpYiY9uR
+	9/p7/jfV9MUMJpDQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9A1251386E;
+	Sat,  4 May 2024 08:08:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id c1AZJPjsNWZxKgAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Sat, 04 May 2024 08:08:24 +0000
+Date: Sat, 04 May 2024 10:08:38 +0200
+Message-ID: <871q6i9eyh.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: <broonie@kernel.org>,
+	<andriy.shevchenko@linux.intel.com>,
+	<lgirdwood@gmail.com>,
+	<perex@perex.cz>,
+	<pierre-louis.bossart@linux.intel.com>,
+	<13916275206@139.com>,
+	<alsa-devel@alsa-project.org>,
+	<linux-kernel@vger.kernel.org>,
+	<liam.r.girdwood@intel.com>,
+	<bard.liao@intel.com>,
+	<yung-chuan.liao@linux.intel.com>,
+	<kevin-lu@ti.com>,
+	<cameron.berkenpas@gmail.com>,
+	<baojun.xu@ti.com>,
+	<soyer@irl.hu>,
+	<Baojun.Xu@fpt.com>
+Subject: Re: [PATCH v1] ALSA: ASoc/tas2781: Fix an issue reported by robot kernel test
+In-Reply-To: <20240504004704.1738-1-shenghao-ding@ti.com>
+References: <20240504004704.1738-1-shenghao-ding@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgCXaBE57DVmKbDhLg--.23467S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxJrWxXw4DWr45WrWkZrWUJwb_yoW8ZrW8p3
-	s7KryIyrWFq34UAayfKr1Iqw18ua1kGF47J3yxKr1UZa47Xwn3Ka4jqrn8XFyqgrWv9wn0
-	yF1DK343Aw1rG3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPl14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7M4kE6xkIj40Ew7xC0wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC2
-	0s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI
-	0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv2
-	0xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2js
-	IE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZF
-	pf9x0JUhTmDUUUUU=
-X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
+	FREEMAIL_CC(0.00)[kernel.org,linux.intel.com,gmail.com,perex.cz,139.com,alsa-project.org,vger.kernel.org,intel.com,ti.com,irl.hu,fpt.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,intel.com:email]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 0D0CF34270
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -2.01
 
-From: Baokun Li <libaokun1@huawei.com>
+On Sat, 04 May 2024 02:47:03 +0200,
+Shenghao Ding wrote:
+> 
+> Fix an issue reported by robot kernel test and two harmless changes.
 
-Syzbot reports a warning as follows:
+You need to describe more what was actually an issue reported by robot
+kernel test here.  Otherwise it's nothing but a voodoo magic.
 
-============================================
-WARNING: CPU: 0 PID: 5075 at fs/mbcache.c:419 mb_cache_destroy+0x224/0x290
-Modules linked in:
-CPU: 0 PID: 5075 Comm: syz-executor199 Not tainted 6.9.0-rc6-gb947cc5bf6d7
-RIP: 0010:mb_cache_destroy+0x224/0x290 fs/mbcache.c:419
-Call Trace:
- <TASK>
- ext4_put_super+0x6d4/0xcd0 fs/ext4/super.c:1375
- generic_shutdown_super+0x136/0x2d0 fs/super.c:641
- kill_block_super+0x44/0x90 fs/super.c:1675
- ext4_kill_sb+0x68/0xa0 fs/ext4/super.c:7327
-[...]
-============================================
+Also enumerate two harmless changes, too: it's an update of copyright
+year and a correction of the comments.
 
-This is because when finding an entry in ext4_xattr_block_cache_find(), if
-ext4_sb_bread() returns -ENOMEM, the ce's e_refcnt, which has already grown
-in the __entry_find(), won't be put away, and eventually trigger the above
-issue in mb_cache_destroy() due to reference count leakage.
+Last but not least, the subject suffix should be "ASoC: tas2781: ..."
+(not "ASoc", and without "ALSA:")
 
-So call mb_cache_entry_put() on the -ENOMEM error branch as a quick fix.
 
-Reported-by: syzbot+dd43bd0f7474512edc47@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=dd43bd0f7474512edc47
-Fixes: fb265c9cb49e ("ext4: add ext4_sb_bread() to disambiguate ENOMEM cases")
-Cc: stable@kernel.org
-Signed-off-by: Baokun Li <libaokun1@huawei.com>
----
- fs/ext4/xattr.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+thanks,
 
-diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
-index b67a176bfcf9..9fdd13422073 100644
---- a/fs/ext4/xattr.c
-+++ b/fs/ext4/xattr.c
-@@ -3113,8 +3113,10 @@ ext4_xattr_block_cache_find(struct inode *inode,
- 
- 		bh = ext4_sb_bread(inode->i_sb, ce->e_value, REQ_PRIO);
- 		if (IS_ERR(bh)) {
--			if (PTR_ERR(bh) == -ENOMEM)
-+			if (PTR_ERR(bh) == -ENOMEM) {
-+				mb_cache_entry_put(ea_block_cache, ce);
- 				return NULL;
-+			}
- 			bh = NULL;
- 			EXT4_ERROR_INODE(inode, "block %lu read error",
- 					 (unsigned long)ce->e_value);
--- 
-2.39.2
+Takashi
 
+> 
+> Fixes: ef3bcde75d06 ("ASoc: tas2781: Add tas2781 driver")
+> Signed-off-by: Shenghao Ding <shenghao-ding@ti.com>
+> 
+> ---
+> v1:
+>  - Changed the copyright year to 2024
+>  - tasdevice-fmw.c --> tas2781-fmwlib.c
+>  - | Reported-by: kernel test robot <lkp@intel.com>
+>    | Closes: https://lore.kernel.org/oe-kbuild-all/202405021200.YHInjV43-lkp@intel.com/
+> ---
+>  sound/soc/codecs/tas2781-fmwlib.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/tas2781-fmwlib.c b/sound/soc/codecs/tas2781-fmwlib.c
+> index 45760fe19523..a6be81adcb83 100644
+> --- a/sound/soc/codecs/tas2781-fmwlib.c
+> +++ b/sound/soc/codecs/tas2781-fmwlib.c
+> @@ -1,8 +1,8 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  //
+> -// tasdevice-fmw.c -- TASDEVICE firmware support
+> +// tas2781-fmwlib.c -- TASDEVICE firmware support
+>  //
+> -// Copyright 2023 Texas Instruments, Inc.
+> +// Copyright 2023 - 2024 Texas Instruments, Inc.
+>  //
+>  // Author: Shenghao Ding <shenghao-ding@ti.com>
+>  
+> @@ -1878,7 +1878,7 @@ int tas2781_load_calibration(void *context, char *file_name,
+>  {
+>  	struct tasdevice_priv *tas_priv = (struct tasdevice_priv *)context;
+>  	struct tasdevice *tasdev = &(tas_priv->tasdevice[i]);
+> -	const struct firmware *fw_entry;
+> +	const struct firmware *fw_entry = NULL;
+>  	struct tasdevice_fw *tas_fmw;
+>  	struct firmware fmw;
+>  	int offset = 0;
+> -- 
+> 2.34.1
+> 
