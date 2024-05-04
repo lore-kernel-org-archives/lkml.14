@@ -1,86 +1,103 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078CE4F88C;
-	Sat,  4 May 2024 15:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184443C467;
+	Sat,  4 May 2024 15:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714835004; cv=none; b=aNRH6o1yk6pk9Q/fQi+s0tKxL48dmhVfUzNV0TD1h4dD6NflxSojw0Mm4bIrPMnrQIm/YYrYK6OY+VEN1TTkwdRFWBBx/RBAKc1DXAQGRY/S36nZl20tubCr76bHacZv8AcwPkKrn8Ub3730++JJktDTtj0WctvMAiai6D6/jNs=
+	t=1714835750; cv=none; b=Ov9bb709Tg/blT/ltReUSCtvGKITUoz1fTKjhcMF3GDX58MRfUkqpWgFaOBcqLZDKm30AW+Zz2ef/UbN9dwgLJg1DAwNrvSuQ93I1spodAWhCKcI6QBjHltHbvW2pMaGkklBw3Ye1pPGQWn/h7L/S2Jx4AxuV3LlWthT+R58aR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714835004; c=relaxed/simple;
-	bh=kLcNP1M1+W5nk0/OLLoVrMbqlISqkONaxKGslNX8z6Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tCeSgJvnpJKden5mA9GMA14xdpAu50v7XwwPEvXQ/xjNlp2wHoKyhVoSOYslte/FgxV1si3IQohMeCj2G8LLmjqGAWNBfpXpFP1Ur83aWdxFjk4jXKhnsEZjSYtbwdLFZto3eKzWV25bUta6pLCnbZ91n5G1o1N/10SOL7BqkQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=KlFw4HAP; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1714835750; c=relaxed/simple;
+	bh=iL3o9XuOnHVJsXvmQP4e9aYfd/nUlJpHcT3bLgD4qdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMkrs/oiQtrrhM5rBhiJFYWc0TGLL8XqL0sGX+shwUXJifg/NM9aopjQ6DXy/Rwf8bGwbTN21GEXSMc2CklegnGj7qjzoGmOn8zuL5p3xbNnpX4CKTOi6p9fbVH6xeBHBBLT7yHh4Lqixq2JrZtHI31m4cF+C6G8T5BhMWh6eyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Oux8UJYe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="KlFw4HAP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=g0WbdKNjCehdCeRJHZ2paTLwnUugU8MB7EB+xl8jZe4=; b=KlFw4HAPDr7amoLO
-	o3X79WcNRMuVEDhJpBSFJh+7dDVuzz7vh3y3g+0vMkWXF6gWdO1U+T6D5sFXrU1L5+sXFun0z/YVA
-	o2nzWI0MfcBE4/zVd3c56ajdgz1Pc9dIhkRc8uOU0kCksgaertYYmKLAGZOz9zrEH2x/xbgPXHSBo
-	PgA5Mus4PTcAlZyRh5gKeFNxNbgwgShA3pHziOFSy0QyOYFN2Njofdind/6/j337+xOJMfaLSC4tE
-	eGAAj3yB6ZwuKLkQi8Q+cI3vXtaw6YfRXQhTHeO4roYBv/8RAI35vhz95gUU1TZpDy2EKO7TrmM7Z
-	JGIedcKETSpYnwzdAw==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1s3Gv0-004hjR-0Y;
-	Sat, 04 May 2024 15:03:18 +0000
-From: linux@treblig.org
-To: b-liu@ti.com
-Cc: gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Oux8UJYe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 120F4C072AA;
+	Sat,  4 May 2024 15:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1714835749;
+	bh=iL3o9XuOnHVJsXvmQP4e9aYfd/nUlJpHcT3bLgD4qdY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Oux8UJYecQv3LOTu3Hp43ybMV/sYsGdCIUK7vMf3W/Dp8r7uda0pMnvViwo5vKCRr
+	 Hv5tInLdGco5vnGYr34YR6Wt47ojMjZJNRC8ZO274iy/isMm+CkJlgm6Al670VcBhi
+	 M6OkwdePclgDE5qLJieIcIZOJO0m+mxVmvp9BKtE=
+Date: Sat, 4 May 2024 17:15:45 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] usb: musc: Remove unused list 'buffers'
-Date: Sat,  4 May 2024 16:03:15 +0100
-Message-ID: <20240504150315.77598-1-linux@treblig.org>
-X-Mailer: git-send-email 2.45.0
+	Caleb Connolly <caleb.connolly@linaro.org>
+Subject: Re: [PATCH v4] usb: typec: qcom-pmic-typec: split HPD bridge alloc
+ and registration
+Message-ID: <2024050415-retorted-gory-5fa6@gregkh>
+References: <20240424-qc-pmic-typec-hpd-split-v4-1-f7e10d147443@linaro.org>
+ <CAA8EJppCxfrBcctaR2jOrwPuO8ZFQw9vmi-0CH_sSWBm3ts7JQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAA8EJppCxfrBcctaR2jOrwPuO8ZFQw9vmi-0CH_sSWBm3ts7JQ@mail.gmail.com>
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+On Sat, May 04, 2024 at 05:23:20PM +0300, Dmitry Baryshkov wrote:
+> On Wed, 24 Apr 2024 at 05:16, Dmitry Baryshkov
+> <dmitry.baryshkov@linaro.org> wrote:
+> >
+> > If a probe function returns -EPROBE_DEFER after creating another device
+> > there is a change of ending up in a probe deferral loop, (see commit
+> > fbc35b45f9f6 ("Add documentation on meaning of -EPROBE_DEFER"). In case
+> > of the qcom-pmic-typec driver the tcpm_register_port() function looks up
+> > external resources (USB role switch and inherently via called
+> > typec_register_port() USB-C muxes, switches and retimers).
+> >
+> > In order to prevent such probe-defer loops caused by qcom-pmic-typec
+> > driver, use the API added by Johan Hovold and move HPD bridge
+> > registration to the end of the probe function.
+> >
+> > The devm_drm_dp_hpd_bridge_add() is called at the end of the probe
+> > function after all TCPM start functions. This is done as a way to
+> > overcome a different problem, the DRM subsystem can not properly cope
+> > with the DRM bridges being destroyed once the bridge is attached. Having
+> > this function call at the end of the probe function prevents possible
+> > DRM bridge device creation followed by destruction in case one of the
+> > TCPM start functions returns an error.
+> >
+> > Reported-by: Caleb Connolly <caleb.connolly@linaro.org>
+> > Acked-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> > Dependency: https://lore.kernel.org/lkml/20240418145730.4605-2-johan+linaro@kernel.org/
+> > ---
+> > Changes in v4:
+> > - Rebased on top of Johan's patches
+> > - Link to v3: https://lore.kernel.org/r/20240416-qc-pmic-typec-hpd-split-v3-1-fd071e3191a1@linaro.org
+> >
+> > Changes in v3:
+> > - Updated commit message to explain my decisions (Johan).
+> > - Link to v2: https://lore.kernel.org/r/20240408-qc-pmic-typec-hpd-split-v2-1-1704f5321b73@linaro.org
+> >
+> > Changes in v2:
+> > - Fix commit message (Bryan)
+> > - Link to v1: https://lore.kernel.org/r/20240405-qc-pmic-typec-hpd-split-v1-1-363daafb3c36@linaro.org
+> > ---
+> >  drivers/usb/typec/tcpm/qcom/qcom_pmic_typec.c | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> A stupid gracious ping. It would be nice to fix the issue in 6.10
 
-Remove the unused list head 'buffers' and the
-'struct free_record' which is also unused below it.
+Is this a regression?  If so, what commit does it fix?  Or has it always
+just not worked?
 
-To me it looks like this has always been unused, but I've
-not dug into why.
+thanks,
 
-Build test only.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- drivers/usb/musb/musb_gadget.c | 9 ---------
- 1 file changed, 9 deletions(-)
-
-diff --git a/drivers/usb/musb/musb_gadget.c b/drivers/usb/musb/musb_gadget.c
-index 55df0ee413d8e..bdf13911a1e59 100644
---- a/drivers/usb/musb/musb_gadget.c
-+++ b/drivers/usb/musb/musb_gadget.c
-@@ -1156,15 +1156,6 @@ void musb_free_request(struct usb_ep *ep, struct usb_request *req)
- 	kfree(request);
- }
- 
--static LIST_HEAD(buffers);
--
--struct free_record {
--	struct list_head	list;
--	struct device		*dev;
--	unsigned		bytes;
--	dma_addr_t		dma;
--};
--
- /*
-  * Context: controller locked, IRQs blocked.
-  */
--- 
-2.45.0
-
+greg k-h
