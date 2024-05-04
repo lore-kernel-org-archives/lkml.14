@@ -1,109 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ED7A3BBC9;
-	Sat,  4 May 2024 14:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A915D22F00;
+	Sat,  4 May 2024 14:59:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714834528; cv=none; b=ay8yZ0fZ0bNmSInxgbaNl7+a9Ei6mtIILKVa0M5uItP8BzzXkYxoTtbkoRz0FAN/LtXgyck6iZEHGPYDDtCeT1krXL0kSGU5+gK7xLw98J+4ot1Ed22eMCujm0i717fzV0RPrQaa7I7dv9pOvFPYhV/7HAH5Pw/xgf7GLqCqa5s=
+	t=1714834760; cv=none; b=CaC7/lFVjabbGOva0fu6fQQ115JioS46zwLqhWeezzr3P8xsITLRjOOhq+vnDP1kVNhaE/UH6R7A0a2JJ+aQ82s1g7lHXAjFKnn+FBLM2fx2ZDZR5V0rshWMmbmmWfsydZ6lFrCy3UjFUIaoEdb6Fy2mJf0OPWgALkcsb8ntirA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714834528; c=relaxed/simple;
-	bh=QUcRQ6mxQ61MfWGrSxLhyngIDwmEnF8y4sF93JkujGw=;
+	s=arc-20240116; t=1714834760; c=relaxed/simple;
+	bh=ArksyxeeP1MMkr9Ujq3hylvnBGzE09FmLgmsVBEoOTY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hFAf1XxFgjZkj3Ou+H/Zh2/Y+kxcar/FHBFV3TRsXixSeORlWduRYRT0UHY7u9cuq7/vRKthkIUguesHwqmzVx2qaK4OXunHLxdqogGScMs60Knj+8Fm2ckppKIteN0WcbwLhUSzsb+wDurgpO2Khql26C2iVw4LOozi9dcwJGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IRba7BbG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=deB3wDOye1jAPTeh7f9gHuD0Jq6O9GrMRG6+mv6LalUBvmCVmj3U/pvD3OwNwCiLMyN3AcwigSZ2Zfg8pj5lhVkcTtjz0d58G1IrNH10TIB0gz2dR+p2cZYeiQMd2IaKxMt1CrCC8zE3y7FkOML5Z0SNtJy5PgOzWPCVoLvD9Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PnlA5KHS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IRba7BbG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F22B1C072AA;
-	Sat,  4 May 2024 14:55:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PnlA5KHS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80300C072AA;
+	Sat,  4 May 2024 14:59:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714834527;
-	bh=QUcRQ6mxQ61MfWGrSxLhyngIDwmEnF8y4sF93JkujGw=;
+	s=k20201202; t=1714834760;
+	bh=ArksyxeeP1MMkr9Ujq3hylvnBGzE09FmLgmsVBEoOTY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IRba7BbG3moknVhtkmaeLijB90ehLrcZG82jPnBVZxBXaaJuX4SwbHf+oZVD03weN
-	 yCtLVTdcgMmOUNVBUeuI+QzU/umYHJijEK5eOU3AMVYCPUBucWSgQwLsJ7lvNzbasz
-	 1i48TW33XAPMlcvLBtK+p9r5tuL/AiKzmOHqvU0Y6CCevkaaL6RaxkLj9gBJBUXmQr
-	 6TAatLMCJVn4OfTivmMEfKff1ChEuePmQgTlvLnPnoskSqzpBz+5AkE7iVU9nsPaXv
-	 QoA9+TOpIP5t5kfuOcGdyIe8Kxl9opH1CW4ZPonqELk6JwqDnlJiqzLBQ3XyIAsbG8
-	 sZZKN0dZjlWfg==
-Date: Sat, 4 May 2024 15:55:23 +0100
+	b=PnlA5KHSYydjhgfy0HYLGyoss41YwnKtS0SMTVkRtHb63cMXw8buMQ6aWh1ESA7uM
+	 h2R3tck9qOkJgYL02IrI2gPcjcKtPGFU4S0rrFcJp0sc5T+A+MB4T3W4y9NzicJ3Pe
+	 cpa2lfT9Ys6jZMMXFCubLFy4RwhvodELC1HMErtV61gMMSwVr0z8kRjC2S7ojMxdRZ
+	 nO/5lTQUfKlvwTPILPBzaz2ZSyTXig06rtLWhhNeIHgwSGg+4Jat49tsA0pKQFgCjJ
+	 vhcVejOSP4u5BOusxSRQibw19puDQovoVpwZeDR7rlAkpMNcuW5Ewc9GpCQYR/+u3f
+	 ttT2faLJkqwtw==
+Date: Sat, 4 May 2024 15:59:16 +0100
 From: Simon Horman <horms@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Kalle Valo <kvalo@kernel.org>, Jeff Johnson <jjohnson@kernel.org>,
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH wireless-next] wifi: ath12k: allocate dummy net_device
- dynamically
-Message-ID: <20240504145523.GC2279@kernel.org>
-References: <20240503100440.6066-1-leitao@debian.org>
+To: =?utf-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Manish Chopra <manishc@marvell.com>
+Subject: Re: [PATCH net-next 1/3] net: qede: use return from
+ qede_parse_actions() for flow_spec
+Message-ID: <20240504145916.GD2279@kernel.org>
+References: <20240503105505.839342-1-ast@fiberby.net>
+ <20240503105505.839342-2-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240503100440.6066-1-leitao@debian.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240503105505.839342-2-ast@fiberby.net>
 
-On Fri, May 03, 2024 at 03:04:39AM -0700, Breno Leitao wrote:
-> Embedding net_device into structures prohibits the usage of flexible
-> arrays in the net_device structure. For more details, see the discussion
-> at [1].
+On Fri, May 03, 2024 at 10:55:01AM +0000, Asbjørn Sloth Tønnesen wrote:
+> In qede_flow_spec_to_rule(), when calling
+> qede_parse_actions() then the return code
+> was only used for a non-zero check, and then
+> -EINVAL was returned.
 > 
-> Un-embed the net_device from struct ath12k_ext_irq_grp by converting it
-> into a pointer. Then use the leverage alloc_netdev_dummy() to allocate
-> the net_device object at ath12k_pci_ext_irq_config().
+> qede_parse_actions() can currently fail with:
+> * -EINVAL
+> * -EOPNOTSUPP
 > 
-> The free of the device occurs at ath12k_pci_free_ext_irq().
+> Commit 319a1d19471e ("flow_offload: check for
+> basic action hw stats type") broke the implicit
+> assumption that it could only fail with -EINVAL,
+> by changing it to return -EOPNOTSUPP, when hardware
+> stats are requested.
 > 
-> [1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
+> However AFAICT it's not possible to trigger
+> qede_parse_actions() to return -EOPNOTSUPP, when
+> called from qede_flow_spec_to_rule(), as hardware
+> stats can't be requested by ethtool_rx_flow_rule_create().
 > 
-> This is *very* similar to the same changes in ath11k commit
-> bca592ead82528b ("wifi: ath11k: allocate dummy net_device dynamically")
+> This patch changes qede_flow_spec_to_rule() to use
+> the actual return code from qede_parse_actions(),
+> so it's no longer assumed that all errors are -EINVAL.
 > 
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Only compile tested.
+> 
+> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 
-...
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-> diff --git a/drivers/net/wireless/ath/ath12k/pci.c b/drivers/net/wireless/ath/ath12k/pci.c
-
-...
-
-> @@ -577,8 +578,11 @@ static int ath12k_pci_ext_irq_config(struct ath12k_base *ab)
->  
->  		irq_grp->ab = ab;
->  		irq_grp->grp_id = i;
-> -		init_dummy_netdev(&irq_grp->napi_ndev);
-> -		netif_napi_add(&irq_grp->napi_ndev, &irq_grp->napi,
-> +		irq_grp->napi_ndev = alloc_netdev_dummy(0);
-> +		if (!irq_grp->napi_ndev)
-> +			return -ENOMEM;
-
-Hi Breno,
-
-Will returning on error here leak resources allocated by
-alloc_netdev_dummy() in previous iterations of this loop?
-
-If so, I suggest jumping to unwind handling which
-can be shared with the error path in the hunk below.
-
-> +
-> +		netif_napi_add(irq_grp->napi_ndev, &irq_grp->napi,
->  			       ath12k_pci_ext_grp_napi_poll);
->  
->  		if (ab->hw_params->ring_mask->tx[i] ||
-> @@ -611,6 +615,10 @@ static int ath12k_pci_ext_irq_config(struct ath12k_base *ab)
->  			if (ret) {
->  				ath12k_err(ab, "failed request irq %d: %d\n",
->  					   vector, ret);
-> +				for (n = 0; n <= i; n++) {
-> +					irq_grp = &ab->ext_irq_grp[n];
-> +					free_netdev(irq_grp->napi_ndev);
-> +				}
->  				return ret;
->  			}
->  		}
-
--- 
-pw-client: under-review
