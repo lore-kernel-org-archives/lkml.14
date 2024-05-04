@@ -1,35 +1,42 @@
-Received: from sxb1plsmtpa01-03.prod.sxb1.secureserver.net (sxb1plsmtpa01-03.prod.sxb1.secureserver.net [188.121.53.29])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F2E4500E
-	for <linux-kernel@vger.kernel.org>; Sat,  4 May 2024 17:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.121.53.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69F711711;
+	Sat,  4 May 2024 17:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714844564; cv=none; b=vBUI2neL5AWLWSU9pL+b8iqM+ejxzMZBDLMzCgsVCZJ/ZTdI0GZ4MUWf4121Gya5J4F77PNBJfafT4ASTda5W2AllVkhnepypoBAp69d/n3KRn3Wj+cbbdxK4s80SxaCgGjQ736dHs8oRocWbYv14DuwwoFus8ZvwSTwK+2c6ec=
+	t=1714844857; cv=none; b=tjmtFZnnlL2loaqQpSMVAQEfg8Bb1scM5RIvU/68qr/0jMmsd9HcwximMsaIvxhBceyKtCk2eq1bd7NT+RV5mitVJ6ygPBZoDgKqqLrzK/7mlbemJCpDsb9Ke+hQRT0SBFuzxaZ985flF+JbvPDuDbWK8Z47hQpVI2d9D8WxNsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714844564; c=relaxed/simple;
-	bh=Gh536ipTsa3kSRdp4xPrYVoj6w/+qTJK/5whOeeBdfU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bo3MpjlcK1IYjuX1/VQx1VDUx/mOUXTwduu/wtmC5kFFCCrKPxWmH4qmxND+SxDrS9vhySzy8VZp+r6OjGVQAXufLQvQJjjf/AOOzKDhzd/TAj0IfvfLhAQxbPZyjnEbvZQ20AAjSb8vwaLTX4rJaUgt2cDMWZOkjJWYkUoq1nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exordes.com; spf=pass smtp.mailfrom=exordes.com; arc=none smtp.client-ip=188.121.53.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=exordes.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=exordes.com
-Received: from exordes.com ([87.92.66.153])
-	by :SMTPAUTH: with ESMTPSA
-	id 3GrzshGfI169Z3Gs2sJEKg; Sat, 04 May 2024 08:00:15 -0700
-X-CMAE-Analysis: v=2.4 cv=R+jIGsRX c=1 sm=1 tr=0 ts=66364d80
- a=13ZijDARommhillvnyM9pA==:117 a=13ZijDARommhillvnyM9pA==:17 a=eCYXQZmkAAAA:8
- a=C8WjyCjYx6-4fln_c68A:9 a=77AlN4CNbnqoG63BkLSu:22
-X-SECURESERVER-ACCT: dai.lu@exordes.com
-From: Lu Dai <dai.lu@exordes.com>
-To: shuah@kernel.org
-Cc: Lu Dai <dai.lu@exordes.com>,
-	javier.carrasco.cruz@gmail.com,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: kselftest_deps: fix l5_test() empty variable
-Date: Sat,  4 May 2024 18:01:06 +0300
-Message-Id: <20240504150106.265481-1-dai.lu@exordes.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1714844857; c=relaxed/simple;
+	bh=IHtIP0EtQDR9fOyci5/lR8nXQDYsn8u0YXQIcC1Fg1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eazVD6iXd8t5ztueKd190EXV5qHe+t7ocj97HzCjn5ZjglcS3VfWdZ2V8anmR0GbsSm5QjbPpsVQWH1L5eBHZsooOWkx2adUduAqz4niOxJ5sCTfIvsFfGah87moMcc0tRdW8qoE7gKrG5uFtmu0s1iOYIPWpP8scFMmawxVylM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=c1NsdjR/; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="c1NsdjR/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=bXSMtJDvtSCeDVCr5+vqoHO/GdfeLIzdEmzTM6URT2c=; b=c1NsdjR/tJTENPqZ
+	Jkeu1MwZ7pumLejjy9b6wEccx8YL9K4QTPCciyrL0CB8lDZH+9Sln5hbZ/ZEXTP1K4Pe2OTcbvfiu
+	Jfgpn/86cJgwS9eWatpnSX5OdjIKxQNuPKs0BmeN0UAM9d8TiCxv1+7JUxtNCV2GhmRrBu8hWWNnQ
+	5XYLl3nA9sRv8ByfgsFa8LXNDpqR7Pm2JtMagap+WJYYKIQBZOgLuax09TmzIuOeiHVQcyJwf/Aqi
+	uFRQPrfy8AnV1Z3Tw/VXX7V0PMzk4TK1tgiErSJlRDXRbE3XJUzbWlTwkrTxkUGaNPMxHVHGbpUfH
+	YnaVD5JzGjWhsD7YwA==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1s3JTv-004iPA-2H;
+	Sat, 04 May 2024 17:47:31 +0000
+From: linux@treblig.org
+To: fei1.li@intel.com
+Cc: linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] virt: acrn: Remove unusted list 'acrn_irqfd_clients'
+Date: Sat,  4 May 2024 18:47:25 +0100
+Message-ID: <20240504174725.93495-1-linux@treblig.org>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,33 +44,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfKNzjYfLitl7aiLQuyIPRXt3TG++PfnQYp46/ZUycYkdDdafQqAxrYU5sMiaxukYtGuSvBEstHJekNDmJ8QHE4LkPwviwLSsVc5SkJiy3DJ0oJcQxp0j
- PkL7qoRCYzlSC7jIvDC9tdDUCraZXZ8MEtgP0ndjHhAkhJ44/QVOI8uQ21FN0SFJCBAVKGJOU/gAKhX1/UuRKjisSJ+Jh1fZmylVFg2up2/CGQSuUjVBuIIX
- SqRMHm4mCeF7DiHAxu9vrTLG+eYeODXMr7QkzokvgTY27jWBNCJfKePyBoO3UD0lY2XYZPcece9bB3feWBsC//Y0pvHACyg+8uH01vmHarQ=
 
-In the function l5_test(), variable $tests is empty when there is no .mk
-file in the subsystem to be tested. It causes the following grep operation
-stuck.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-This fix check the variable $tests, return when it is empty.
+It doesn't look like this was ever used.
 
-Signed-off-by: Lu Dai <dai.lu@exordes.com>
+Build tested only.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- tools/testing/selftests/kselftest_deps.sh | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/virt/acrn/irqfd.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kselftest_deps.sh b/tools/testing/selftests/kselftest_deps.sh
-index de59cc8f03c3..487e49fdf2a6 100755
---- a/tools/testing/selftests/kselftest_deps.sh
-+++ b/tools/testing/selftests/kselftest_deps.sh
-@@ -244,6 +244,7 @@ l4_test()
- l5_test()
- {
- 	tests=$(find $(dirname "$test") -type f -name "*.mk")
-+	[[ -z "${tests// }" ]] && return
- 	test_libs=$(grep "^IOURING_EXTRA_LIBS +\?=" $tests | \
- 			cut -d "=" -f 2)
+diff --git a/drivers/virt/acrn/irqfd.c b/drivers/virt/acrn/irqfd.c
+index d4ad211dce7a3..346cf0be4aac7 100644
+--- a/drivers/virt/acrn/irqfd.c
++++ b/drivers/virt/acrn/irqfd.c
+@@ -16,8 +16,6 @@
  
+ #include "acrn_drv.h"
+ 
+-static LIST_HEAD(acrn_irqfd_clients);
+-
+ /**
+  * struct hsm_irqfd - Properties of HSM irqfd
+  * @vm:		Associated VM pointer
 -- 
-2.39.2
+2.45.0
 
