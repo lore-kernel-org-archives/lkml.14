@@ -1,112 +1,213 @@
-Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD4DD210EC
-	for <linux-kernel@vger.kernel.org>; Sat,  4 May 2024 11:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504321CFB2;
+	Sat,  4 May 2024 11:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714823320; cv=none; b=sZPmjQ75oPLBGZ0UEkHmHdCIrXHcfi3R3dIM9ISAKlT40FGwGkOXGd+Zky+6L4x5VxMjy6Op/e7hhus9iOoU2zp4ImrU7fJY71KvIC+GomKsv1isORzzlIGaDo9E8sws9sCYZ9DIublIKkeOhe52GUXTQVppBC3AmiNbaU5WexU=
+	t=1714823391; cv=none; b=J0UkRUoAOSdoz2+PoAg2FOgCHnUI9ctRhsAO1ATjQh/476xggFVguG1RnQ9Cm/2OshV1nDq/jY1gB8051stl4wwTCQfuNzMF9qp4bEDR0figS+DVA+OSEck4tPll4sf+DR/Yx4MP/lumEiPLOcKea7sYqxzYXH1egXS6ejM1HZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714823320; c=relaxed/simple;
-	bh=cDHnzaVmZj1P/Yo5aKbOtea9ZLJDWirFLzj/JIj75tw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RjjkeKDeUwHwoOoLt472jJdWc2z48gm8T7PNp21u3ofBH2Q/vg60WUngDOVm7zUkTvsZMdFtnKR+rGE32rimngwI4tpBzDs9oYQQm8aOElDRaczeTutVufo2d4/E6dKjZ2EtvNC6UALHdkpF23jgWnPgLu47HLSz+nX2EAZPqK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=XdSKjOKx; arc=none smtp.client-ip=83.149.199.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+	s=arc-20240116; t=1714823391; c=relaxed/simple;
+	bh=9un71h1CnJjVt8tBJvPZwVsdh4JYlqrTHLazMZbjLiQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CC+nyhBdFMkwF7ixhyeBK58s5bZIHx4eqH411W1k8aqkwKWK6MuN1SS/Ifi2dTsULLVGeq0o4GaoGO0MOrxFlGLMl6dSO8aJqHyxRe+kTmXl+XqrXTXrpJe2KihJejxdBFpUTJCm40b8Is6BOcKAwCP8divXgotlT+BQM/Xf0eo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aJyjbFcy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="XdSKjOKx"
-Received: from localhost.localdomain (unknown [5.228.116.47])
-	by mail.ispras.ru (Postfix) with ESMTPSA id BD9D240737B5;
-	Sat,  4 May 2024 11:48:35 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru BD9D240737B5
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
-	s=default; t=1714823315;
-	bh=RxA857iBR0FODbLGi/CqJrg5YTNv0+6aonrAsG0UTyw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XdSKjOKxtwI6PpBHM1CliTSnQeqoNF+HV7nzw/rD2j9XZKWwXMgw7DqxB8bUBtX1j
-	 T/AZ4xXOs/hptpzKwgFNUWR3DYP2Vm6DuW8jYV6iqNXXB5/XlXWCNY2g8SQp47/iBh
-	 Aqq0eljU1+MkOGPnuGzHWGspTCCyVAS0Rv+voFOg=
-From: Fedor Pchelkin <pchelkin@ispras.ru>
-To: Xiang Chen <chenxiang66@hisilicon.com>,
-	Barry Song <21cnbao@gmail.com>
-Cc: Fedor Pchelkin <pchelkin@ispras.ru>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Alexey Khoroshilov <khoroshilov@ispras.ru>,
-	lvc-project@linuxtesting.org
-Subject: [PATCH v2 4/4] dma-mapping: benchmark: handle NUMA_NO_NODE correctly
-Date: Sat,  4 May 2024 14:47:04 +0300
-Message-ID: <20240504114713.567164-5-pchelkin@ispras.ru>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240504114713.567164-1-pchelkin@ispras.ru>
-References: <20240504114713.567164-1-pchelkin@ispras.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aJyjbFcy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA0F5C072AA;
+	Sat,  4 May 2024 11:49:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714823390;
+	bh=9un71h1CnJjVt8tBJvPZwVsdh4JYlqrTHLazMZbjLiQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aJyjbFcyaMaYDHOCIrP+p0a1e9+lsllBaB4bTlmUsb16OYh9zOhSy1lEtQT2GacEF
+	 TH4a/scM8ke5sv3kru8wTVAR67jXP4pxpzWmuHzF+uPgJWjbB0ykhoAIqeFF9/IwLM
+	 DmIVrZtQ0lIiJaF3Vrt9eQJz1dU+w4p6gctrGF3pc+AV0cfGF3AaxbD2S0zQ6Hhwq4
+	 y4jgo2K3h4kc8J03SL8FCRUu/RxIj/zHRcNj3O3WhjzfbRWjwK+1iTKP3X+/uI75XC
+	 qa+P7Mupl9WOFKgMd9t6GK15eeSuEp+OjCLtpK86H2WXFg+/pgX2OZy9prGEy04Uwe
+	 9AK7zNI79c18Q==
+Date: Sat, 4 May 2024 12:49:39 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <trabarni@gmail.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Danila Tikhonov
+ <danila@jiaxyga.com>
+Subject: Re: [PATCH 1/2] iio: imu: bmi160: add support for bmi120
+Message-ID: <20240504124939.5ba414ec@jic23-huawei>
+In-Reply-To: <20240504-bmi120-v1-1-478470a85058@gmail.com>
+References: <20240504-bmi120-v1-0-478470a85058@gmail.com>
+	<20240504-bmi120-v1-1-478470a85058@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-cpumask_of_node() can be called for NUMA_NO_NODE inside do_map_benchmark()
-resulting in the following sanitizer report:
+On Sat, 04 May 2024 01:45:24 +0200
+Barnab=C3=A1s Cz=C3=A9m=C3=A1n <trabarni@gmail.com> wrote:
 
-UBSAN: array-index-out-of-bounds in ./arch/x86/include/asm/topology.h:72:28
-index -1 is out of range for type 'cpumask [64][1]'
-CPU: 1 PID: 990 Comm: dma_map_benchma Not tainted 6.9.0-rc6 #29
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996)
-Call Trace:
- <TASK>
-dump_stack_lvl (lib/dump_stack.c:117)
-ubsan_epilogue (lib/ubsan.c:232)
-__ubsan_handle_out_of_bounds (lib/ubsan.c:429)
-cpumask_of_node (arch/x86/include/asm/topology.h:72) [inline]
-do_map_benchmark (kernel/dma/map_benchmark.c:104)
-map_benchmark_ioctl (kernel/dma/map_benchmark.c:246)
-full_proxy_unlocked_ioctl (fs/debugfs/file.c:333)
-__x64_sys_ioctl (fs/ioctl.c:890)
-do_syscall_64 (arch/x86/entry/common.c:83)
-entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+> From: Danila Tikhonov <danila@jiaxyga.com>
+>=20
+> Add support for bmi120 low power variant of bmi160.
+>=20
+> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+> Co-developed-by: Barnab=C3=A1s Cz=C3=A9m=C3=A1n <trabarni@gmail.com>
+> Signed-off-by: Barnab=C3=A1s Cz=C3=A9m=C3=A1n <trabarni@gmail.com>
 
-Use cpumask_of_node() in place when binding a kernel thread to a cpuset
-of a particular node.
+Hi. A comment inline that is more about us doing things wrong
+in the past than the changes you are making.  However, I would
+like to fix that up whilst we are here.
 
-Note that the provided node id is checked inside map_benchmark_ioctl().
-It's just a NUMA_NO_NODE case which is not handled properly later.
+Thanks,
 
-Found by Linux Verification Center (linuxtesting.org).
+Jonathan
 
-Fixes: 65789daa8087 ("dma-mapping: add benchmark support for streaming DMA APIs")
-Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
----
- kernel/dma/map_benchmark.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> ---
+>  drivers/iio/imu/bmi160/bmi160_core.c | 24 ++++++++++++++++++++----
+>  drivers/iio/imu/bmi160/bmi160_i2c.c  |  3 +++
+>  drivers/iio/imu/bmi160/bmi160_spi.c  |  3 +++
+>  3 files changed, 26 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi16=
+0/bmi160_core.c
+> index a77f1a8348ff..015801ad4d9a 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_core.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_core.c
+> @@ -26,6 +26,7 @@
+>  #include "bmi160.h"
+> =20
+>  #define BMI160_REG_CHIP_ID	0x00
+> +#define BMI120_CHIP_ID_VAL	0xD3
+>  #define BMI160_CHIP_ID_VAL	0xD1
+> =20
+>  #define BMI160_REG_PMU_STATUS	0x03
+> @@ -112,6 +113,11 @@
+>  	.ext_info =3D bmi160_ext_info,				\
+>  }
+> =20
+> +const u8 bmi_chip_ids[] =3D {
+> +	BMI120_CHIP_ID_VAL,
+> +	BMI160_CHIP_ID_VAL,
+> +};
+> +
+>  /* scan indexes follow DATA register order */
+>  enum bmi160_scan_axis {
+>  	BMI160_SCAN_EXT_MAGN_X =3D 0,
+> @@ -704,6 +710,16 @@ static int bmi160_setup_irq(struct iio_dev *indio_de=
+v, int irq,
+>  	return bmi160_probe_trigger(indio_dev, irq, irq_type);
+>  }
+> =20
+> +static int bmi160_check_chip_id(const u8 chip_id)
+> +{
+> +	for (int i =3D 0; i < ARRAY_SIZE(bmi_chip_ids); i++) {
+> +		if (chip_id =3D=3D bmi_chip_ids[i])
+> +			return 0;
 
-diff --git a/kernel/dma/map_benchmark.c b/kernel/dma/map_benchmark.c
-index 9f6c15f3f168..4950e0b622b1 100644
---- a/kernel/dma/map_benchmark.c
-+++ b/kernel/dma/map_benchmark.c
-@@ -101,7 +101,6 @@ static int do_map_benchmark(struct map_benchmark_data *map)
- 	struct task_struct **tsk;
- 	int threads = map->bparam.threads;
- 	int node = map->bparam.node;
--	const cpumask_t *cpu_mask = cpumask_of_node(node);
- 	u64 loops;
- 	int ret = 0;
- 	int i;
-@@ -124,7 +123,7 @@ static int do_map_benchmark(struct map_benchmark_data *map)
- 		}
- 
- 		if (node != NUMA_NO_NODE)
--			kthread_bind_mask(tsk[i], cpu_mask);
-+			kthread_bind_mask(tsk[i], cpumask_of_node(node));
- 	}
- 
- 	/* clear the old value in the previous benchmark */
--- 
-2.45.0
+This falls into a miss design issue on the original driver based on
+my understanding of what we should do with chip IDs back then.
+
+My current thinking after discussing with DT maintainers is we should
+at most print a warning if we fail to match an ID.
+
+The intent being to allow for cases exactly like this one to work with
+an older kernel if a fallback compatible is in use.
+
+So whilst you are here, please could you relax the below error path
+to just do a dev_warn() or similar and return 0 anyway.
+
+Or better yet, push that warning print to the caller...
+
+> +	}
+> +
+> +	return -ENODEV;
+> +}
+> +
+>  static int bmi160_chip_init(struct bmi160_data *data, bool use_spi)
+>  {
+>  	int ret;
+> @@ -737,10 +753,10 @@ static int bmi160_chip_init(struct bmi160_data *dat=
+a, bool use_spi)
+>  		dev_err(dev, "Error reading chip id\n");
+>  		goto disable_regulator;
+>  	}
+> -	if (val !=3D BMI160_CHIP_ID_VAL) {
+> -		dev_err(dev, "Wrong chip id, got %x expected %x\n",
+> -			val, BMI160_CHIP_ID_VAL);
+> -		ret =3D -ENODEV;
+> +
+> +	ret =3D bmi160_check_chip_id(val);
+> +	if (ret) {
+> +		dev_err(dev, "Wrong chip id %x\n", val);
+>  		goto disable_regulator;
+
+For reasons given above, whilst we are hear I'd like this to change to dev_=
+warn() and
+carry on as if we did have a match.
+
+>  	}
+> =20
+> diff --git a/drivers/iio/imu/bmi160/bmi160_i2c.c b/drivers/iio/imu/bmi160=
+/bmi160_i2c.c
+> index a081305254db..d0ec5301ad9a 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_i2c.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_i2c.c
+> @@ -37,6 +37,7 @@ static int bmi160_i2c_probe(struct i2c_client *client)
+>  }
+> =20
+>  static const struct i2c_device_id bmi160_i2c_id[] =3D {
+> +	{"bmi120", 0},
+>  	{"bmi160", 0},
+>  	{}
+>  };
+> @@ -52,12 +53,14 @@ static const struct acpi_device_id bmi160_acpi_match[=
+] =3D {
+>  	 * the affected devices are from 2021/2022.
+>  	 */
+>  	{"10EC5280", 0},
+> +	{"BMI0120", 0},
+>  	{"BMI0160", 0},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(acpi, bmi160_acpi_match);
+> =20
+>  static const struct of_device_id bmi160_of_match[] =3D {
+> +	{ .compatible =3D "bosch,bmi120" },
+>  	{ .compatible =3D "bosch,bmi160" },
+>  	{ },
+>  };
+> diff --git a/drivers/iio/imu/bmi160/bmi160_spi.c b/drivers/iio/imu/bmi160=
+/bmi160_spi.c
+> index 8b573ea99af2..9f40500132f7 100644
+> --- a/drivers/iio/imu/bmi160/bmi160_spi.c
+> +++ b/drivers/iio/imu/bmi160/bmi160_spi.c
+> @@ -34,18 +34,21 @@ static int bmi160_spi_probe(struct spi_device *spi)
+>  }
+> =20
+>  static const struct spi_device_id bmi160_spi_id[] =3D {
+> +	{"bmi120", 0},
+>  	{"bmi160", 0},
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(spi, bmi160_spi_id);
+> =20
+>  static const struct acpi_device_id bmi160_acpi_match[] =3D {
+> +	{"BMI0120", 0},
+>  	{"BMI0160", 0},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(acpi, bmi160_acpi_match);
+> =20
+>  static const struct of_device_id bmi160_of_match[] =3D {
+> +	{ .compatible =3D "bosch,bmi120" },
+>  	{ .compatible =3D "bosch,bmi160" },
+>  	{ },
+>  };
+>=20
 
