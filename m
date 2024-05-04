@@ -1,87 +1,71 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B4C40C03;
-	Sat,  4 May 2024 16:08:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 371B85A0FD;
+	Sat,  4 May 2024 16:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714838921; cv=none; b=V51RGXuRbjYjXEoSGoMbGnQH43cvm+9yZbVWHEn8HnFclf8vNTwnmIaSdX7EhscnyiEJGOd/M7R/qRphspVRbMbUrtRstoeCRikznY9vHWVLIJvIdrVFUAuIWdqN4Kk9sW7nHD8KZkfPxqUbzEpMjPlYAN0fVZxn6rd3KB4m3iI=
+	t=1714838923; cv=none; b=XMnr61MSks1ZS1H57fA0nb7gnLBuDJj+FISRJYfde4BFCzYqdG7lupAwcq8uf+gaDhLuFv8wOgmkR0DPCGHju/SjwvDVG7uDKK+xaeVRpI3d6HFpQaj8T6StW9YpOOw/rAwJ98A2PVVk8IY3jsM5k7yHP6sWvhTXTrSrv0rfSHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714838921; c=relaxed/simple;
-	bh=CB5nxguzQ/abdMOLQ0vP5QKBOqXDtL8p9+UDyZXBqAo=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=PAKtyWWf3KXPrgjP3gTWu0wK+5+6wJv1s4SY9R87utY1P6LKTzanNwDzDUVC8PKUoF+Wv6RCySx9JVFjHc74BMvSMR9tu3Xkbpx/tgd/il+MfkcfyOldvbhUeiyhpgzLeKAhn/2iQgwa3PJoZtJLyBmAIGZFkq+X9HhcNTOU408=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=YkXYRX+S; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1714838923; c=relaxed/simple;
+	bh=UfoLjGrBm2lN/mmh5+2DWvcNqyPXEVFl9WPA1Hf3pu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IdvEO4PE7u5Qeqq8lJZqOLwRxHxmzQbwgxnVe/XOKwFzFgF0+gdfrExQtpdaDj6+FU/yNoDats2r0eb8TTypgdP1mGSlxAHiHnnIFwpAQKmnIvNwRBiScGiv2AK0BAqQ/2dh6pgHta3A9rsNpvRTILbnpdN2Es93gGVjsuHV7zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=jO5p2qxh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="YkXYRX+S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1714838891; x=1715443691; i=markus.elfring@web.de;
-	bh=CB5nxguzQ/abdMOLQ0vP5QKBOqXDtL8p9+UDyZXBqAo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=YkXYRX+SsalO/beBUJnywGogNd1ud4Uz0iYtyXevIwRfJiSfZtC7iljt629iKEM3
-	 0lLWg6JOs9VAmhbpFKxLIpahRhRSE5hWRoMd5zm/SQ4syuxy8kEsd91OjCtuZNEF8
-	 wgz+rdL9Cgh5FH+QjDPi1lDgdrhqLW1bd3DfJ5e7XutsiTSXduVMj5pIFSsFfOE64
-	 rlNOl1IvOis+xUXxgt8PC07eBbyysI8FNDNKkpZhbvam3myhks234/8p2DfEnMwES
-	 Bp/l58z1b/nplbGw0mK1dMWdVzQC6Bqhf5QGRUzNHML7oeOov95jWqUrGxbXl4LPT
-	 gU9WLQFJ60O5yWFqSg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1MC0LH-1rvsrm2ViP-00CQyk; Sat, 04
- May 2024 18:08:11 +0200
-Message-ID: <321b2cdb-95e1-4bfb-9811-a853245beb17@web.de>
-Date: Sat, 4 May 2024 18:08:08 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="jO5p2qxh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 755A1C072AA;
+	Sat,  4 May 2024 16:08:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1714838923;
+	bh=UfoLjGrBm2lN/mmh5+2DWvcNqyPXEVFl9WPA1Hf3pu0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jO5p2qxhVldXa/ws23/u63WO46a3i1yMzjwt5V/o0PiO6mMry1wn0WML252v/osDX
+	 dMr2uQc0/1pHS4VqdKdssI4hnoHC5lRWCCRYZ2ltpWdPpmzI8+PXcdZR8hMbm5iJ9f
+	 287E1fQUqDrm92SvAtKjf4rnmDw1dGFE4RNBvEWs=
+Date: Sat, 4 May 2024 18:08:40 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Petr Mladek <pmladek@suse.com>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Tony Lindgren <tony@atomide.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Hongyu Xie <xiehongyu1@kylinos.cn>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Lino Sanfilippo <l.sanfilippo@kunbus.com>,
+	linux-serial@vger.kernel.org
+Subject: Re: [PATCH printk v5 09/30] serial: core: Introduce wrapper to set
+ @uart_port->cons
+Message-ID: <2024050433-power-dictation-acce@gregkh>
+References: <20240502213839.376636-1-john.ogness@linutronix.de>
+ <20240502213839.376636-10-john.ogness@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Jorge Harrisonn <jorge.harrisonn@usp.br>, Lais Nuto <laisnuto@usp.br>,
- linux-iio@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <20240501215724.26655-2-jorge.harrisonn@usp.br>
-Subject: Re: [PATCH 1/2] iio: adc: ad7606: using claim_direct_scoped for code
- simplification
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240501215724.26655-2-jorge.harrisonn@usp.br>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:TMeWClk2hCaquekmmyaU5QdHKlXEicCa872NxIwUstjhWnnqzWq
- h9Op9cZuwuie+E6bNvVgFHY4TqerNX1p2YmiRVCCQtqV7ZoLcJIP2XuL/LZK4CzuS/n67la
- 2gnAX6WS4OZAfz4ZWT6PKU6671zx43OIJRxqpEGt73rvwLUDpr6dL5yXtINCcHjbyPk6tIE
- BAuCPcPuaF+AIOPahhEew==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:tt0HV3/HUI0=;BbJtvOtM/nU3xrTiM14k0iuNubn
- ecvSBdxcAetmK438gIkp3W1fY7+EH665/EBHq/WV2Sa7hxhzpbCTKEpE9Sr8pFqg0rFOrTYGF
- 1NU+rvShJz7PTE9IkMxEwaNrey3GerXj/PJQXkAblFoBJamqfwMDrKIaV13/CoKC7YkYKHwhe
- 7C215dMnnlaiJXt+QM4q80oPyYfHDYCLN6RAXA9pTjS+gHmwfYDEPWp52cgP/I2CMuOAJmdeD
- K6vlmDpBWpNBOCYn+LhEtFZY0mv2Qo8J08FGN8DQK7GvPT9Dp/DufBt9Wzyr/Qw2mddHUJbFP
- PR3WKpFUi/t6ZxBxoahDpPM84tq4pC6Ad5P9Uex4RWLt8eKL2aoblm/t0i9I3GqzcruALki0o
- Z38EQ6uGypjtyCt+6G+1/vII3WQnhOxceXy5SrfdxV/ox1ore4wy7v/2VrxUWU0jvwQ/3sMTk
- EbleZSki4mncuIPOpVLomsLZ5m6h7A/gAcp77zwSeJCGrZaN8er7njaqp0uY1I5Rx+eeijx4i
- YBSxHmgvMs4YWgiG1z5x7yzzb4CIbgxIrZ6BSM8vynI+Z0w4Y2yTU7QfpDnlyi7hgAGNm8See
- JpRVCeUJ7vNnQ8oSrNB75hAUKG/WLD4xHQoXKL4BpOjXZ5OSM8Oawagc9J0m8u2otxqVfVfri
- Ain27mFfGw04wYrHqmVScgUriTFfSc9g7mm3StsNu5O/iMOlmnZOC2eouOIsP/PiaZzWLBLKy
- qy2es/nInyzi9ytgbmPEGI+hPVfRQbh2tfKoCYonB4uYhhSB1QyP8SwHVcTw4pqureO4hTCmH
- ZprI9/k31+BIPGpz8KZu4TfQPEVPzme4KLDrLWQ45qXquPsvugkiqC1wQwLvS0gSDt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240502213839.376636-10-john.ogness@linutronix.de>
 
-=E2=80=A6
-> _claim_direct_modeand later callingiio_device_release_direct_mode`
->
-> This should make code cleaner and error handling easier
+On Thu, May 02, 2024 at 11:44:18PM +0206, John Ogness wrote:
+> Introduce uart_port_set_cons() as a wrapper to set @cons of a
+> uart_port. The wrapper sets @cons under the port lock in order
+> to prevent @cons from disappearing while another context is
+> holding the port lock. This is necessary for a follow-up
+> commit relating to the port lock wrappers, which rely on @cons
+> not changing between lock and unlock.
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
 
-* Please avoid typos in such a change description.
-
-* Can imperative wordings be also more desirable here?
-
-
-Regards,
-Markus
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
