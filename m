@@ -1,209 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B074A1C;
-	Sat,  4 May 2024 12:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043AF17736
+	for <linux-kernel@vger.kernel.org>; Sat,  4 May 2024 12:34:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714825875; cv=none; b=XxSEeLK3QtSYjOzFfzntBGc9sARMVFmAbEU1pvYhs2MbcYaVAsA4USZWyn5d3Zqt8ZXI9O0z17DfXx/8XbDe+N8daXcoebgP76WnEYC48L7QyusTWKkH88kFryNEGGTMf6CKNQt1GPNjPVmbnxGvJOms5lQPnYxBtj+iOy2YY2c=
+	t=1714826055; cv=none; b=VMe9iY0e6cuOZygdGnjkKrYTSv13pLw5VHh0Jn/PNG+NKXejNjCCPiFCD11cXeGgyXx7jCAfKgZRSE3jtelbSArGNaGj5oqIt3O7vAV60VM/D7wl7uZbz3x496qkfp4NiJPTrdfYBli//hCmz01Whk8mDT6YGU4CIAvYUWokiXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714825875; c=relaxed/simple;
-	bh=j2dj0tqPrKQ7ksNOF6ysQOcNavYL4bmMIbXzrQp5+E4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t/o9ZPkMTlpuXsASm7f2qxo78WY0JjtRR5LTX9L4yAAVJV2QGTXPMcV9QQPolx7rcnvDXhqeO1QGsi9WM3Hnrm02Tbk1tfxrE1yU302LtU37zaFooSPZgt/y4EXR5ye4VU1DLIqI7uim7er/sg+KRZzhzXnkcbpqJ3DoYy1ThU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cLZSvyuT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714826055; c=relaxed/simple;
+	bh=myLHPIhfgFbkH628RIi8WU1vNSV2EUucph5jsKt/cYg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=XsONu+GAdHMunetDeiLRdwu54ulOl5lHr6NOsRP0o/AoX7dPbeHPmcj+KkMnlVgIj1EQjodNC1vG2IvhEj2ns+URkeWDMP96cxrTRRzyaB5wtQfwIwkrHUA565xzHIQds1UA5poAir3dr9OwbcyokQKVQZxiuv9YTUDrGYeex+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ruubo49M; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cLZSvyuT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEED4C072AA;
-	Sat,  4 May 2024 12:31:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714825874;
-	bh=j2dj0tqPrKQ7ksNOF6ysQOcNavYL4bmMIbXzrQp5+E4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cLZSvyuTS2g3ZZE1MYOdlHcrSvetKU821lU5Ni6ZRhLQ/plVXQ9eL0Ob6tVI2CxFF
-	 gnn0vgseE6rdPV4n2RMRDrcDAB8BRvi5qctOoy6AjkGgXW5ydFcdrHEXuvyBR7E44x
-	 n/EtC02ou+8juiruI48ASyh7cJhIhYNDHKHfZWq9XgKW/b1CVi/SjseFRkyF9hYfw+
-	 jauoMPAH/YQKXVQJqZ8J0giXJjx5xgwdzrQwKpNFCbN81L9u/wS56g0UmCG/XPATTD
-	 IoeACA5aKfW37xnvu9nbV5OErArtwFTlQaCrCAeZ3H8WkbeyLaW/6+3IOS4uoKwSkV
-	 VLAfUU6rJ1I/A==
-Date: Sat, 4 May 2024 13:31:09 +0100
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH 413/437] media/rc: convert to read/write iterators
-Message-ID: <20240504133055.0ca70f7a@sal.lan>
-In-Reply-To: <20240411153126.16201-414-axboe@kernel.dk>
-References: <20240411153126.16201-1-axboe@kernel.dk>
-	<20240411153126.16201-414-axboe@kernel.dk>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ruubo49M"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51ffff16400so462449e87.2
+        for <linux-kernel@vger.kernel.org>; Sat, 04 May 2024 05:34:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714826051; x=1715430851; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=X+lnXbFYNqLaoHCJuLp3bFaYd/ncglZZGKA3FZx3w8M=;
+        b=Ruubo49MlQ3sMnEEjuGJAXNB2FmeOgXd5XVZTOZm5i92HUlw1NQsilKl3MN/Igp4tP
+         UFP85z8M+0knhIOB2hQlFzXF7iic5/3szEhKLuum6hhlqmAO1uuH+phvO1NtriVptyyI
+         aLv8QoGCCc3LpfRV6d0c/pPS88lXvASz0IeyU+x+eTHyu41VBUHVlfHhrCUFv+xyfTES
+         E0hSH4LSDarjDqFudefwI20Z5dZ4WfFF32GJpVWFPDfgcoyp2IJLCDNq35c+m+K1caZQ
+         CVlI9XFV1KlFRMoekYXYzDU9fgUylAYnVFe+xSovc2MLuoMDK0YdkNHU7Gair5+0UElM
+         tAPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714826051; x=1715430851;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=X+lnXbFYNqLaoHCJuLp3bFaYd/ncglZZGKA3FZx3w8M=;
+        b=PpKJJCF9R4AAFFJlJJedUOZgqyEj+nN+eLbDXuahYAakkhE6/9UTp2WabBogbNxrFg
+         tvngWmk75qsq/mNNoBc8rIWYDOzMgDDwdnz4DcRT5lfXqVD7Rj0m9Hrv0JS0OIqtZ1Ht
+         8nE0/HUPgmMUHhJ6+WaeV5zJNtIgtt+e7OAcdhkn78hnLjnqVizMobyVVYfl93O96ZJ/
+         ZuijLrhHxxfQmjXDjkvgGp4oAFRKINhR7WkkOZbXEM0x8v8Asll11GhZLpOWkCvho/PL
+         Q9O7uWMsyH2icBQp9SKdiS+t4pwDwwKLMEVtmLNqYXPlNVpUyXw4BZobIetlplBpFddz
+         bw6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVDkW0vlhJaxOPzCGZMBMMjKGEzALBivV2H9+rFmt7wBFbgVoHksXGJQoQfvxvmYYiCr9cDMInSFVmNhRTNVc3XQ5dyNnbNlCbO5inZ
+X-Gm-Message-State: AOJu0YzfeFneobhqpuJ19oL7t66cbi3Z7cSpO+JA2NIVcJIBH9lhMr5I
+	qKgylX7U7ijX042HX2JYkMO+AAM7CwGLvdq5VTw4igOIKS8Bhn2CgfjqJlT63ZA=
+X-Google-Smtp-Source: AGHT+IHmU8PDCbNVzWFd5gY0TJzPZTQqzGLxQZRkrw3sVNBB+IuvDNEduCEBRyYsD8WQ8jue2na0+w==
+X-Received: by 2002:a05:6512:ea8:b0:51f:9549:9c0d with SMTP id bi40-20020a0565120ea800b0051f95499c0dmr4855636lfb.48.1714826051126;
+        Sat, 04 May 2024 05:34:11 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.16])
+        by smtp.gmail.com with ESMTPSA id c25-20020a170906155900b00a599a2d9a45sm1601557ejd.100.2024.05.04.05.34.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 May 2024 05:34:10 -0700 (PDT)
+Message-ID: <3c2cf6f6-bf57-4fe6-9d79-5419addd6928@linaro.org>
+Date: Sat, 4 May 2024 14:34:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/6] dt-bindings: input: touchscreen: himax,hx83112b: add
+ HX83100A
+To: Felix Kaechele <felix@kaechele.ca>, Job Noorman <job@noorman.info>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240504020745.68525-1-felix@kaechele.ca>
+ <20240504020745.68525-2-felix@kaechele.ca>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240504020745.68525-2-felix@kaechele.ca>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Em Thu, 11 Apr 2024 09:19:13 -0600
-Jens Axboe <axboe@kernel.dk> escreveu:
+On 04/05/2024 04:04, Felix Kaechele wrote:
+> This adds a compatible string for the Himax HX83100A touch controller
 
-> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95
 
-Please add a patch description to media patches. Also, please
-c/c linux-media@vger.kernel.org, as otherwise patchwork.linuxtv.org
-won't track it, and such patches will be silently ignored[1].
-
-[1] I only got aware of this series due to https://lwn.net/Articles/972081/
-
-Regards,
-Mauro
-
-> ---
->  drivers/media/rc/imon.c     | 26 ++++++++++++--------------
->  drivers/media/rc/lirc_dev.c | 15 ++++++++-------
->  2 files changed, 20 insertions(+), 21 deletions(-)
+> including the AVDD and VDD supply nodes used by this chip family.
 > 
-> diff --git a/drivers/media/rc/imon.c b/drivers/media/rc/imon.c
-> index 5719dda6e0f0..cfcf8101164a 100644
-> --- a/drivers/media/rc/imon.c
-> +++ b/drivers/media/rc/imon.c
-> @@ -65,12 +65,10 @@ static int display_open(struct inode *inode, struct file *file);
->  static int display_close(struct inode *inode, struct file *file);
+> Signed-off-by: Felix Kaechele <felix@kaechele.ca>
+> ---
+>  .../bindings/input/touchscreen/himax,hx83112b.yaml       | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/himax,hx83112b.yaml b/Documentation/devicetree/bindings/input/touchscreen/himax,hx83112b.yaml
+> index f42b23d532eb..5809afedb9a2 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/himax,hx83112b.yaml
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/himax,hx83112b.yaml
+> @@ -15,6 +15,7 @@ allOf:
+>  properties:
+>    compatible:
+>      enum:
+> +      - himax,hx83100a
+>        - himax,hx83112b
 >  
->  /* VFD write operation */
-> -static ssize_t vfd_write(struct file *file, const char __user *buf,
-> -			 size_t n_bytes, loff_t *pos);
-> +static ssize_t vfd_write(struct kiocb *iocb, struct iov_iter *from);
+>    reg:
+> @@ -26,6 +27,12 @@ properties:
+>    reset-gpios:
+>      maxItems: 1
 >  
->  /* LCD file_operations override function prototypes */
-> -static ssize_t lcd_write(struct file *file, const char __user *buf,
-> -			 size_t n_bytes, loff_t *pos);
-> +static ssize_t lcd_write(struct kiocb *iocb, struct iov_iter *from);
->  
->  /*** G L O B A L S ***/
->  
-> @@ -179,7 +177,7 @@ struct imon_context {
->  static const struct file_operations vfd_fops = {
->  	.owner		= THIS_MODULE,
->  	.open		= display_open,
-> -	.write		= vfd_write,
-> +	.write_iter	= vfd_write,
->  	.release	= display_close,
->  	.llseek		= noop_llseek,
->  };
-> @@ -188,7 +186,7 @@ static const struct file_operations vfd_fops = {
->  static const struct file_operations lcd_fops = {
->  	.owner		= THIS_MODULE,
->  	.open		= display_open,
-> -	.write		= lcd_write,
-> +	.write_iter	= lcd_write,
->  	.release	= display_close,
->  	.llseek		= noop_llseek,
->  };
-> @@ -938,16 +936,16 @@ static const struct attribute_group imon_rf_attr_group = {
->   * than 32 bytes are provided spaces will be appended to
->   * generate a full screen.
->   */
-> -static ssize_t vfd_write(struct file *file, const char __user *buf,
-> -			 size_t n_bytes, loff_t *pos)
-> +static ssize_t vfd_write(struct kiocb *iocb, struct iov_iter *from)
->  {
->  	int i;
->  	int offset;
->  	int seq;
->  	int retval = 0;
-> -	struct imon_context *ictx = file->private_data;
-> +	struct imon_context *ictx = iocb->ki_filp->private_data;
->  	static const unsigned char vfd_packet6[] = {
->  		0x01, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFF };
-> +	size_t n_bytes = iov_iter_count(from);
->  
->  	if (ictx->disconnected)
->  		return -ENODEV;
-> @@ -967,7 +965,7 @@ static ssize_t vfd_write(struct file *file, const char __user *buf,
->  		goto exit;
->  	}
->  
-> -	if (copy_from_user(ictx->tx.data_buf, buf, n_bytes)) {
-> +	if (!copy_from_iter_full(ictx->tx.data_buf, n_bytes, from)) {
->  		retval = -EFAULT;
->  		goto exit;
->  	}
-> @@ -1023,11 +1021,11 @@ static ssize_t vfd_write(struct file *file, const char __user *buf,
->   * display whatever diacritics you need, and so on), but it's also
->   * a lot more complicated than most LCDs...
->   */
-> -static ssize_t lcd_write(struct file *file, const char __user *buf,
-> -			 size_t n_bytes, loff_t *pos)
-> +static ssize_t lcd_write(struct kiocb *iocb, struct iov_iter *from)
->  {
->  	int retval = 0;
-> -	struct imon_context *ictx = file->private_data;
-> +	struct imon_context *ictx = iocb->ki_filp->private_data;
-> +	size_t n_bytes = iov_iter_count(from);
->  
->  	if (ictx->disconnected)
->  		return -ENODEV;
-> @@ -1047,7 +1045,7 @@ static ssize_t lcd_write(struct file *file, const char __user *buf,
->  		goto exit;
->  	}
->  
-> -	if (copy_from_user(ictx->usb_tx_buf, buf, 8)) {
-> +	if (!copy_from_iter_full(ictx->usb_tx_buf, 8, from)) {
->  		retval = -EFAULT;
->  		goto exit;
->  	}
-> diff --git a/drivers/media/rc/lirc_dev.c b/drivers/media/rc/lirc_dev.c
-> index caad59f76793..e88ba11192ea 100644
-> --- a/drivers/media/rc/lirc_dev.c
-> +++ b/drivers/media/rc/lirc_dev.c
-> @@ -211,10 +211,10 @@ static int lirc_close(struct inode *inode, struct file *file)
->  	return 0;
->  }
->  
-> -static ssize_t lirc_transmit(struct file *file, const char __user *buf,
-> -			     size_t n, loff_t *ppos)
-> +static ssize_t lirc_transmit(struct kiocb *iocb, struct iov_iter *from)
->  {
-> -	struct lirc_fh *fh = file->private_data;
-> +	struct lirc_fh *fh = iocb->ki_filp->private_data;
-> +	size_t n = iov_iter_count(from);
->  	struct rc_dev *dev = fh->rc;
->  	unsigned int *txbuf;
->  	struct ir_raw_event *raw = NULL;
-> @@ -247,7 +247,7 @@ static ssize_t lirc_transmit(struct file *file, const char __user *buf,
->  			goto out_unlock;
->  		}
->  
-> -		if (copy_from_user(&scan, buf, sizeof(scan))) {
-> +		if (!copy_from_iter_full(&scan, sizeof(scan), from)) {
->  			ret = -EFAULT;
->  			goto out_unlock;
->  		}
-> @@ -309,7 +309,7 @@ static ssize_t lirc_transmit(struct file *file, const char __user *buf,
->  			goto out_unlock;
->  		}
->  
-> -		txbuf = memdup_user(buf, n);
-> +		txbuf = iterdup(from, n);
->  		if (IS_ERR(txbuf)) {
->  			ret = PTR_ERR(txbuf);
->  			goto out_unlock;
-> @@ -694,13 +694,14 @@ static ssize_t lirc_read(struct file *file, char __user *buffer, size_t length,
->  	else /* LIRC_MODE_SCANCODE */
->  		return lirc_read_scancode(file, buffer, length);
->  }
-> +FOPS_READ_ITER_HELPER(lirc_read);
->  
->  static const struct file_operations lirc_fops = {
->  	.owner		= THIS_MODULE,
-> -	.write		= lirc_transmit,
-> +	.write_iter	= lirc_transmit,
->  	.unlocked_ioctl	= lirc_ioctl,
->  	.compat_ioctl	= compat_ptr_ioctl,
-> -	.read		= lirc_read,
-> +	.read_iter	= lirc_read_iter,
->  	.poll		= lirc_poll,
->  	.open		= lirc_open,
->  	.release	= lirc_close,
+> +  avdd-supply:
+> +    description: Analog power supply regulator
+> +
+> +  vdd-supply:
+> +    description: Digital power supply regulator
+
+These should not be allowed for other variant, so either you need
+allOf:if:then disallowing them (: false) or just create another binding
+file.
+
+Best regards,
+Krzysztof
+
