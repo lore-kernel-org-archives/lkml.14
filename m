@@ -1,188 +1,230 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF0128EA;
-	Sat,  4 May 2024 08:01:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DBAD29E;
+	Sat,  4 May 2024 08:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714809696; cv=none; b=oBoUMR+nFPxHUGK1RYZHkEtV3WDZbJK56DpaiSNfl5hTOed8W9DauExQNucYLb34cQsXbuT1TLCrx4NffCSKt9862ixlVI19GoR7oldiELzqM95Fs6X8KuBzNhpiJdhWTNPTmG13GhWIHh7Ii71CGPJWFhWfYwoTza5IJOMEa5A=
+	t=1714809869; cv=none; b=Kgr6DSAxNcEM/nEoRD2/QLhSsYbECiMri96BOozGV7tN3HGyv8wGorBCI7HAGhKx7mus9nBLyWP5f61ittUmXfgWzi1O+XGEeGwjP4+IbcJagDMri18JaUNFKGrRvzqtu62Xn7vpnxd4k+x/74nWEbuUPE+Phbt+XJ0YBNd28P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714809696; c=relaxed/simple;
-	bh=U6WZzZKbEA0lnbJAvsjBxMcDOnhoQXC4iJmnwhPM5Z8=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tWCokYGJ3b5B6OJ/Ge2SWw+l/LlIld9sCOPw5nHCO6n/r8sA3uVhQ6fq05XZykT5LJv3gup8gEP6COsTLWCP3qFdyTP4QA5Hr8FFJfRQ0+UHGKp9Wkn4ek9tlqGdvTXKzDzQCoZT1Dhbey2GwK15b4eTI93q90FLXlAPAuuWeGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eyutCsiu; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1714809869; c=relaxed/simple;
+	bh=0hjZIw2e2IuhjYNugxhXSXZpWs5mVXjcsoZo1BqocAs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ue9HDOTCe4j4gjig2I5kW18f3muEpv7ofXLBCkNYbB+0QclQdB4Cqx+eop9AdV3RyWRFpTdcWx/hovEZz0DGnnly0O+dp/E/hyfNkHqbhF6gqEH+hxpPwJh4LQ2YdtrCYJ1fktZT8a1VC0wZEcHeFt1FNVkC2KBVRpp2QD+bw9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j2MPtTQT; arc=none smtp.client-ip=209.85.210.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eyutCsiu"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4447g9xP026432;
-	Sat, 4 May 2024 08:01:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=+6Mbl8PCq39bVOAadjMGu
-	XgFbjxOzCts41TLEvEKtks=; b=eyutCsiuI7hXftSA2MoTIrSkwLwrJcCqWJaLi
-	75MZL4J8F/RQWMytRgRLY7dJiGFuI37p5OEM0tZzb/H87fR9uhy0enQl9/YdzgbB
-	+T2iHLrHDFDKLWpEgYt4Tqfoee+JlmT7UvL2f5Tmwtkd9rOAIjDHZ6lWpo3n0CcQ
-	IClFfPypDGo7zTEFrZJAlHm8m7TiuIok1rZVdg/UiqS0ZSlWxkEewxfaZ14Re7o9
-	xkme5gVacuWoDp9WzYhEkdMSJP1lanJ5O5zoATLknN1rXTN/Ei1DYSnsaEne2hxq
-	7Xpd01DDUKArn1hi6ZLMm8xQ5col7NspmPQ6jy0AjADaga7VA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xwc1c0c1q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 04 May 2024 08:01:29 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44481Sqc028949
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 4 May 2024 08:01:28 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Sat, 4 May 2024 01:01:23 -0700
-Date: Sat, 4 May 2024 13:31:19 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: <andersson@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <konrad.dybcio@linaro.org>, <djakov@kernel.org>,
-        <dmitry.baryshkov@linaro.org>, <quic_anusha@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <bryan.odonoghue@linaro.org>
-Subject: Re: [PATCH v11 0/6] Add interconnect driver for IPQ9574 SoC
-Message-ID: <ZjXrTywO6+iRaEYk@hu-varada-blr.qualcomm.com>
-References: <20240430064214.2030013-1-quic_varada@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2MPtTQT"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so391268b3a.0;
+        Sat, 04 May 2024 01:04:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714809866; x=1715414666; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Lj67rtK1QueWPk7ARNpfvxl9vOgAVWGxhUJDN/QBK8=;
+        b=j2MPtTQTx683nJWgf+VqG/CYiRVqskw/qKRynsLET/BuZX8Gx+lRoPor2Mbw77E/rs
+         f5PVcoklIFNoWE1RWFO5kyJxadfxcHOe93vboEbFAAR6eo1eO/Ojiu2xD1/ZLSYQgZVD
+         dNBAFTYTp+S45ULOfx3Gb5TClMgKwPE6cUWd7KZraDaORWL3p+Zu4h2Su3ynomL8e6LD
+         79/LzoGjVid/dmXwbAQMJIMFL9s8a6R+onCZxCrYzATbVGNaXht4nt62YZv976Bw3bOt
+         EQNcwi76REG8VUUY9c9FJC931NWCEBwxuZVEH7Oz07377xVwvG8hfW/mnCrYjJr9GJoR
+         WQBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714809866; x=1715414666;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3Lj67rtK1QueWPk7ARNpfvxl9vOgAVWGxhUJDN/QBK8=;
+        b=W/9dzpS/lLFJLoXjFbPJnwnrRBB4BRKasFPORn58kgupW5I6D2nCxYpPxGmsIaEBQ/
+         PgY/W+6LNNYNdgRqp7v3k2CR83+eGtgJTjNL77EfWHiWBN1pc1qhf/+AGirZ+T/CkmhJ
+         23TCkpvDGFZGJl0INYpBO2/VkZjI5Ft891YCX9AiugpNjGDGYKSFjDWXdlvInlGm5lIr
+         Ou6KaBBVBXAWwT4JJXzpetcQJjwfholBX+SSc1b8LI1NZ2FDbMlhn16orvoQphinZw57
+         ZB4aZZRCK9notumSDPq1TB3cvs/AkeVebzZ5RPwVtir/PGa1Y9mIjImT4WDg40m0NFyl
+         dRWA==
+X-Forwarded-Encrypted: i=1; AJvYcCXgXjfzAGqpZFd8V4eQ7FPaIReB6gBfvQp8Pd21tKLo97WCvi5PjVJncQsXy6aHX9EbG0gJX3OAOaeVkZASF5jbPRjbPc63YWcIDdDVXt5rBQmW/ax84o4AtD5yKzeFZolBzn0o2zsibhxLWZiVFoOnQopXNZqcLaMvGukLzVACXXbzAspKWKC3paLYd9go/Kp7hR05ZqZsLt3OHf+RuHfN1Klrw0BKRJses52aGIXYnWI6ceZpCiNLDwef7gWtZmENw0R3nBWbLg==
+X-Gm-Message-State: AOJu0YzESvWpYvlndTA/zG1moIQZJ9Zm1Gq3mrp1V9ezJtQHJ0V+o+7t
+	QQ9MI9lwRe27O8mBR6TVZsbkUDrvwJgRwCE4y/Q2XQuESGNMvOcB
+X-Google-Smtp-Source: AGHT+IG0qZqH9zc005lWKjgxwZgqZm5TyMRd8CrRzXUZbRqngw1NpFuolrIDkh7YQEN+G1GdDh8Ciw==
+X-Received: by 2002:a05:6a00:a81:b0:6f3:e9bc:7ed3 with SMTP id b1-20020a056a000a8100b006f3e9bc7ed3mr5704824pfl.17.1714809866257;
+        Sat, 04 May 2024 01:04:26 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id bn12-20020a056a00324c00b006edd05e3751sm4356202pfb.176.2024.05.04.01.04.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 04 May 2024 01:04:25 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id 8A4001847D504; Sat, 04 May 2024 15:04:22 +0700 (WIB)
+Date: Sat, 4 May 2024 15:04:22 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Fan Wu <wufan@linux.microsoft.com>, corbet@lwn.net, zohar@linux.ibm.com,
+	jmorris@namei.org, serge@hallyn.com, tytso@mit.edu,
+	ebiggers@kernel.org, axboe@kernel.dk, agk@redhat.com,
+	snitzer@kernel.org, eparis@redhat.com, paul@paul-moore.com
+Cc: linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+	linux-security-module@vger.kernel.org, fsverity@lists.linux.dev,
+	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
+	audit@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Deven Bowers <deven.desai@linux.microsoft.com>
+Subject: Re: [PATCH v18 20/21] Documentation: add ipe documentation
+Message-ID: <ZjXsBjAFs-qp9xY4@archie.me>
+References: <1714775551-22384-1-git-send-email-wufan@linux.microsoft.com>
+ <1714775551-22384-21-git-send-email-wufan@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="nK/4++6p9aVBG6jQ"
 Content-Disposition: inline
-In-Reply-To: <20240430064214.2030013-1-quic_varada@quicinc.com>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: opBfPShReaSeGuYFaYc3g2cxm-g4KYMV
-X-Proofpoint-ORIG-GUID: opBfPShReaSeGuYFaYc3g2cxm-g4KYMV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-04_04,2024-05-03_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 phishscore=0 suspectscore=0 priorityscore=1501
- malwarescore=0 mlxlogscore=999 adultscore=0 bulkscore=0 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2404010003 definitions=main-2405040057
+In-Reply-To: <1714775551-22384-21-git-send-email-wufan@linux.microsoft.com>
 
-Bjorn,
 
-> On Tue, Apr 30, 2024 at 12:12:08PM +0530, Varadarajan Narayanan wrote:
-> MSM platforms manage NoC related clocks and scaling from RPM.
-> However, in IPQ SoCs, RPM is not involved in managing NoC
-> related clocks and there is no NoC scaling.
->
-> However, there is a requirement to enable some NoC interface
-> clocks for the accessing the peripherals present in the
-> system. Hence add a minimalistic interconnect driver that
-> establishes a path from the processor/memory to those peripherals
-> and vice versa.
->
-> Change icc-clk driver to take master and slave ids instead
-> of auto generating.
->
-> Currently, drivers/clk/qcom/clk-cbf-8996.c is the only user of
-> icc-clk. And, it had exactly one master and one slave node.
-> For this the auto generated master (= 1) and slave (= 0) was
-> enough.
->
-> However, when drivers/clk/qcom/gcc-ipq9574.c wanted to make use
-> of the icc-clk framework, it had more number of master and slave
-> nodes and the auto generated ids did not suit the usage.
->
-> ---
-> v11:	No code changes
-> 	Commit log changed for the first patch
-> 	Added Acked-By: to 3 patches
+--nK/4++6p9aVBG6jQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Can this be included in your driver changes for 6.10?
+On Fri, May 03, 2024 at 03:32:30PM -0700, Fan Wu wrote:
+> +IPE does not mitigate threats arising from malicious but authorized
+> +developers (with access to a signing certificate), or compromised
+> +developer tools used by them (i.e. return-oriented programming attacks).
+> +Additionally, IPE draws hard security boundary between userspace and
+> +kernelspace. As a result, IPE does not provide any protections against a
+> +kernel level exploit, and a kernel-level exploit can disable or tamper
+> +with IPE's protections.
 
-Thanks
-Varada
+So how to mitigate kernel-level exploits then?
 
-> v10:	Set gcc-ipq9574 driver's sync_state to icc_sync_state
-> v9:	Squash icc-clk driver change and cbf-msm8996 change
-> 	Remove HWS_DATA macro
-> v8:	Change icc-clk driver to take master and slave ids instead
-> 	of auto generating
-> 	Remove ICC_xxx defines from dt-bindings header
-> 	Define MASTER/SLAVE_xxx macros from 0 .. n
->
-> v7:	Fix macro names in dt-bindings header
-> 	Do clock get in icc driver
->
-> v6:	Removed 'Reviewed-by: Krzysztof' from dt-bindings patch
-> 	Remove clock get from ICC driver as suggested by Stephen Boyd
-> 	so that the actual peripheral can do the clock get
-> 	first_id -> icc_first_node_id
-> 	Remove tristate from INTERCONNECT_CLK
-> v5:
-> 	Split gcc-ipq9574.c and common.c changes into separate patches
-> 	Introduce devm_icc_clk_register
-> 	Fix error handling
-> v4:
-> gcc-ipq9574.c
-> 	Use clk_hw instead of indices
-> common.c
-> 	Do icc register in qcom_cc_probe() call stream
-> common.h
-> 	Add icc clock info to qcom_cc_desc structure
->
-> v3:
-> qcom,ipq9574.h
-> 	Move 'first id' define to clock driver
-> gcc-ipq9574.c:
-> 	Use indexed identifiers here to avoid confusion
-> 	Fix error messages and move code to common.c as it can be
-> 	shared with future SoCs
->
-> v2:
-> qcom,ipq9574.h
-> 	Fix license identifier
-> 	Rename macros
-> qcom,ipq9574-gcc.yaml
-> 	Include interconnect-cells
-> gcc-ipq9574.c
-> 	Update commit log
-> 	Remove IS_ENABLED(CONFIG_INTERCONNECT) and auto select it from Kconfig
-> ipq9574.dtsi
-> 	Moved to separate patch
-> 	Include interconnect-cells to clock controller node
-> drivers/clk/qcom/Kconfig:
-> 	Auto select CONFIG_INTERCONNECT & CONFIG_INTERCONNECT_CLK
->
-> Varadarajan Narayanan (6):
->   interconnect: icc-clk: Specify master/slave ids
->   dt-bindings: interconnect: Add Qualcomm IPQ9574 support
->   interconnect: icc-clk: Add devm_icc_clk_register
->   clk: qcom: common: Add interconnect clocks support
->   clk: qcom: ipq9574: Use icc-clk for enabling NoC related clocks
->   arm64: dts: qcom: ipq9574: Add icc provider ability to gcc
->
->  .../bindings/clock/qcom,ipq9574-gcc.yaml      |  3 +
->  arch/arm64/boot/dts/qcom/ipq9574.dtsi         |  2 +
->  drivers/clk/qcom/Kconfig                      |  2 +
->  drivers/clk/qcom/clk-cbf-8996.c               |  7 ++-
->  drivers/clk/qcom/common.c                     | 35 ++++++++++-
->  drivers/clk/qcom/common.h                     |  9 +++
->  drivers/clk/qcom/gcc-ipq9574.c                | 33 +++++++++++
->  drivers/interconnect/icc-clk.c                | 24 +++++++-
->  .../dt-bindings/interconnect/qcom,ipq9574.h   | 59 +++++++++++++++++++
->  include/linux/interconnect-clk.h              |  4 ++
->  10 files changed, 173 insertions(+), 5 deletions(-)
->  create mode 100644 include/dt-bindings/interconnect/qcom,ipq9574.h
->
-> --
-> 2.34.1
->
+> +Allow only initramfs
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> <snipped>...
+> +Allow any signed and validated dm-verity volume and the initramfs
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> <snipped>...
+
+htmldocs build reports new warnings:
+
+Documentation/admin-guide/LSM/ipe.rst:694: WARNING: Title underline too sho=
+rt.
+
+Allow any signed and validated dm-verity volume and the initramfs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Documentation/admin-guide/LSM/ipe.rst:694: WARNING: Title underline too sho=
+rt.
+
+Allow any signed and validated dm-verity volume and the initramfs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Documentation/arch/x86/resctrl.rst:577: WARNING: Title underline too short.
+
+I have to match these sections underline length:
+
+---- >8 ----
+diff --git a/Documentation/admin-guide/LSM/ipe.rst b/Documentation/admin-gu=
+ide/LSM/ipe.rst
+index 1a3bf1d8aa23f0..a47e14e024a90d 100644
+--- a/Documentation/admin-guide/LSM/ipe.rst
++++ b/Documentation/admin-guide/LSM/ipe.rst
+@@ -681,7 +681,7 @@ Allow all
+    DEFAULT action=3DALLOW
+=20
+ Allow only initramfs
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++~~~~~~~~~~~~~~~~~~~~
+=20
+ ::
+=20
+@@ -691,7 +691,7 @@ Allow only initramfs
+    op=3DEXECUTE boot_verified=3DTRUE action=3DALLOW
+=20
+ Allow any signed and validated dm-verity volume and the initramfs
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=20
+ ::
+=20
+@@ -725,7 +725,7 @@ Allow only a specific dm-verity volume
+    op=3DEXECUTE dmverity_roothash=3Dsha256:401fcec5944823ae12f62726e818440=
+7a5fa9599783f030dec146938 action=3DALLOW
+=20
+ Allow any fs-verity file with a valid built-in signature
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=20
+ ::
+=20
+@@ -735,7 +735,7 @@ Allow any fs-verity file with a valid built-in signature
+    op=3DEXECUTE fsverity_signature=3DTRUE action=3DALLOW
+=20
+ Allow execution of a specific fs-verity file
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=20
+ ::
+=20
+
+> +Additional Information
+> +----------------------
+> +
+> +- `Github Repository <https://github.com/microsoft/ipe>`_
+> +- Documentation/security/ipe.rst
+
+Link title to both this admin-side and developer docs can be added for
+disambiguation (to avoid confusion on readers):
+
+---- >8 ----
+diff --git a/Documentation/admin-guide/LSM/ipe.rst b/Documentation/admin-gu=
+ide/LSM/ipe.rst
+index a47e14e024a90d..25b17e11559149 100644
+--- a/Documentation/admin-guide/LSM/ipe.rst
++++ b/Documentation/admin-guide/LSM/ipe.rst
+@@ -7,7 +7,8 @@ Integrity Policy Enforcement (IPE)
+=20
+    This is the documentation for admins, system builders, or individuals
+    attempting to use IPE. If you're looking for more developer-focused
+-   documentation about IPE please see Documentation/security/ipe.rst
++   documentation about IPE please see :doc:`the design docs
++   </security/ipe>`.
+=20
+ Overview
+ --------
+@@ -748,7 +749,7 @@ Additional Information
+ ----------------------
+=20
+ - `Github Repository <https://github.com/microsoft/ipe>`_
+-- Documentation/security/ipe.rst
++- :doc:`Developer and design docs for IPE </security/ipe>`
+=20
+ FAQ
+ ---
+diff --git a/Documentation/security/ipe.rst b/Documentation/security/ipe.rst
+index 07e3632241285d..fd1b1a852d2165 100644
+--- a/Documentation/security/ipe.rst
++++ b/Documentation/security/ipe.rst
+@@ -7,7 +7,7 @@ Integrity Policy Enforcement (IPE) - Kernel Documentation
+=20
+    This is documentation targeted at developers, instead of administrators.
+    If you're looking for documentation on the usage of IPE, please see
+-   Documentation/admin-guide/LSM/ipe.rst
++   `IPE admin guide </admin-guide/LSM/ipe.rst>`_.
+=20
+ Historical Motivation
+ ---------------------
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--nK/4++6p9aVBG6jQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZjXsAgAKCRD2uYlJVVFO
+o5rXAQCS3HwJg98sIZ+dvHD4EtrdQXP2AZQEC3nP+kq7cOi47wD+P0ZrOINzS3p5
+azRTQTXUkE+0lznZFyE75YeW2OX1dQs=
+=ebwU
+-----END PGP SIGNATURE-----
+
+--nK/4++6p9aVBG6jQ--
