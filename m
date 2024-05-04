@@ -1,230 +1,77 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DBAD29E;
-	Sat,  4 May 2024 08:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FDBA11182;
+	Sat,  4 May 2024 08:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714809869; cv=none; b=Kgr6DSAxNcEM/nEoRD2/QLhSsYbECiMri96BOozGV7tN3HGyv8wGorBCI7HAGhKx7mus9nBLyWP5f61ittUmXfgWzi1O+XGEeGwjP4+IbcJagDMri18JaUNFKGrRvzqtu62Xn7vpnxd4k+x/74nWEbuUPE+Phbt+XJ0YBNd28P4=
+	t=1714809928; cv=none; b=ecIgG5tmiDkdURk4PFB/a776m4CVe5VbIXX8dIXXQwGbsTWlXYlqgTiuDzmhyXrl3iSHZl/ht8nwymPfX3JumLSmIa70kJs0Tbhd+rjk7E8Z4ZVhLGBVrFQ0oLqmGRRfC3sdTseKemvvBP+EzEJxkBWGZ1uPDFC/DY7lUGJcbjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714809869; c=relaxed/simple;
-	bh=0hjZIw2e2IuhjYNugxhXSXZpWs5mVXjcsoZo1BqocAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ue9HDOTCe4j4gjig2I5kW18f3muEpv7ofXLBCkNYbB+0QclQdB4Cqx+eop9AdV3RyWRFpTdcWx/hovEZz0DGnnly0O+dp/E/hyfNkHqbhF6gqEH+hxpPwJh4LQ2YdtrCYJ1fktZT8a1VC0wZEcHeFt1FNVkC2KBVRpp2QD+bw9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j2MPtTQT; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2MPtTQT"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6ed3cafd766so391268b3a.0;
-        Sat, 04 May 2024 01:04:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714809866; x=1715414666; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3Lj67rtK1QueWPk7ARNpfvxl9vOgAVWGxhUJDN/QBK8=;
-        b=j2MPtTQTx683nJWgf+VqG/CYiRVqskw/qKRynsLET/BuZX8Gx+lRoPor2Mbw77E/rs
-         f5PVcoklIFNoWE1RWFO5kyJxadfxcHOe93vboEbFAAR6eo1eO/Ojiu2xD1/ZLSYQgZVD
-         dNBAFTYTp+S45ULOfx3Gb5TClMgKwPE6cUWd7KZraDaORWL3p+Zu4h2Su3ynomL8e6LD
-         79/LzoGjVid/dmXwbAQMJIMFL9s8a6R+onCZxCrYzATbVGNaXht4nt62YZv976Bw3bOt
-         EQNcwi76REG8VUUY9c9FJC931NWCEBwxuZVEH7Oz07377xVwvG8hfW/mnCrYjJr9GJoR
-         WQBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714809866; x=1715414666;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Lj67rtK1QueWPk7ARNpfvxl9vOgAVWGxhUJDN/QBK8=;
-        b=W/9dzpS/lLFJLoXjFbPJnwnrRBB4BRKasFPORn58kgupW5I6D2nCxYpPxGmsIaEBQ/
-         PgY/W+6LNNYNdgRqp7v3k2CR83+eGtgJTjNL77EfWHiWBN1pc1qhf/+AGirZ+T/CkmhJ
-         23TCkpvDGFZGJl0INYpBO2/VkZjI5Ft891YCX9AiugpNjGDGYKSFjDWXdlvInlGm5lIr
-         Ou6KaBBVBXAWwT4JJXzpetcQJjwfholBX+SSc1b8LI1NZ2FDbMlhn16orvoQphinZw57
-         ZB4aZZRCK9notumSDPq1TB3cvs/AkeVebzZ5RPwVtir/PGa1Y9mIjImT4WDg40m0NFyl
-         dRWA==
-X-Forwarded-Encrypted: i=1; AJvYcCXgXjfzAGqpZFd8V4eQ7FPaIReB6gBfvQp8Pd21tKLo97WCvi5PjVJncQsXy6aHX9EbG0gJX3OAOaeVkZASF5jbPRjbPc63YWcIDdDVXt5rBQmW/ax84o4AtD5yKzeFZolBzn0o2zsibhxLWZiVFoOnQopXNZqcLaMvGukLzVACXXbzAspKWKC3paLYd9go/Kp7hR05ZqZsLt3OHf+RuHfN1Klrw0BKRJses52aGIXYnWI6ceZpCiNLDwef7gWtZmENw0R3nBWbLg==
-X-Gm-Message-State: AOJu0YzESvWpYvlndTA/zG1moIQZJ9Zm1Gq3mrp1V9ezJtQHJ0V+o+7t
-	QQ9MI9lwRe27O8mBR6TVZsbkUDrvwJgRwCE4y/Q2XQuESGNMvOcB
-X-Google-Smtp-Source: AGHT+IG0qZqH9zc005lWKjgxwZgqZm5TyMRd8CrRzXUZbRqngw1NpFuolrIDkh7YQEN+G1GdDh8Ciw==
-X-Received: by 2002:a05:6a00:a81:b0:6f3:e9bc:7ed3 with SMTP id b1-20020a056a000a8100b006f3e9bc7ed3mr5704824pfl.17.1714809866257;
-        Sat, 04 May 2024 01:04:26 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id bn12-20020a056a00324c00b006edd05e3751sm4356202pfb.176.2024.05.04.01.04.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 May 2024 01:04:25 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 8A4001847D504; Sat, 04 May 2024 15:04:22 +0700 (WIB)
-Date: Sat, 4 May 2024 15:04:22 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Fan Wu <wufan@linux.microsoft.com>, corbet@lwn.net, zohar@linux.ibm.com,
-	jmorris@namei.org, serge@hallyn.com, tytso@mit.edu,
-	ebiggers@kernel.org, axboe@kernel.dk, agk@redhat.com,
-	snitzer@kernel.org, eparis@redhat.com, paul@paul-moore.com
-Cc: linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org, fsverity@lists.linux.dev,
-	linux-block@vger.kernel.org, dm-devel@lists.linux.dev,
-	audit@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Deven Bowers <deven.desai@linux.microsoft.com>
-Subject: Re: [PATCH v18 20/21] Documentation: add ipe documentation
-Message-ID: <ZjXsBjAFs-qp9xY4@archie.me>
-References: <1714775551-22384-1-git-send-email-wufan@linux.microsoft.com>
- <1714775551-22384-21-git-send-email-wufan@linux.microsoft.com>
+	s=arc-20240116; t=1714809928; c=relaxed/simple;
+	bh=uyFGRGU+ZvIxQnooGd3ezhmnV4opWQZ8OsdOBFxGldc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XkyxBJrh7W0Z5W31pTN9eivEW/nQaviOiKyB4s34PH1CT7+7t0zy0J5+Oq853klyfvYypMowCR9dWoRyb20XGMEUW+9YgQZfxglOd+oBc5iyPUNVad1rLh3qZeH7PlpzzoHvlG2CBmymFHFzephLDMwfj/dompHoeSYlFQI8mLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VWgFf0h63z4f3jHb;
+	Sat,  4 May 2024 16:05:10 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 47F071A0179;
+	Sat,  4 May 2024 16:05:15 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgCXaBE57DVmKbDhLg--.23467S4;
+	Sat, 04 May 2024 16:05:15 +0800 (CST)
+From: libaokun@huaweicloud.com
+To: linux-ext4@vger.kernel.org
+Cc: tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz,
+	ritesh.list@gmail.com,
+	linux-kernel@vger.kernel.org,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com,
+	libaokun@huaweicloud.com,
+	Baokun Li <libaokun1@huawei.com>
+Subject: [PATCH 0/2] ext4: fix WARNING in mb_cache_destroy
+Date: Sat,  4 May 2024 15:55:24 +0800
+Message-Id: <20240504075526.2254349-1-libaokun@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nK/4++6p9aVBG6jQ"
-Content-Disposition: inline
-In-Reply-To: <1714775551-22384-21-git-send-email-wufan@linux.microsoft.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgCXaBE57DVmKbDhLg--.23467S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYS7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_JFC_Wr1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
+	IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
+	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeV
+	CFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l
+	FIxGxcIEc7CjxVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI48JMxC20s
+	026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_
+	JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14
+	v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xva
+	j40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r
+	1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUm2NtUUUUU=
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 
+From: Baokun Li <libaokun1@huawei.com>
 
---nK/4++6p9aVBG6jQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Baokun Li (2):
+  ext4: fix mb_cache_entry's e_refcnt leak in
+    ext4_xattr_block_cache_find()
+  ext4: propagate errors from ext4_sb_bread() in
+    ext4_xattr_block_cache_find()
 
-On Fri, May 03, 2024 at 03:32:30PM -0700, Fan Wu wrote:
-> +IPE does not mitigate threats arising from malicious but authorized
-> +developers (with access to a signing certificate), or compromised
-> +developer tools used by them (i.e. return-oriented programming attacks).
-> +Additionally, IPE draws hard security boundary between userspace and
-> +kernelspace. As a result, IPE does not provide any protections against a
-> +kernel level exploit, and a kernel-level exploit can disable or tamper
-> +with IPE's protections.
+ fs/ext4/xattr.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
-So how to mitigate kernel-level exploits then?
+-- 
+2.39.2
 
-> +Allow only initramfs
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> <snipped>...
-> +Allow any signed and validated dm-verity volume and the initramfs
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> <snipped>...
-
-htmldocs build reports new warnings:
-
-Documentation/admin-guide/LSM/ipe.rst:694: WARNING: Title underline too sho=
-rt.
-
-Allow any signed and validated dm-verity volume and the initramfs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Documentation/admin-guide/LSM/ipe.rst:694: WARNING: Title underline too sho=
-rt.
-
-Allow any signed and validated dm-verity volume and the initramfs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Documentation/arch/x86/resctrl.rst:577: WARNING: Title underline too short.
-
-I have to match these sections underline length:
-
----- >8 ----
-diff --git a/Documentation/admin-guide/LSM/ipe.rst b/Documentation/admin-gu=
-ide/LSM/ipe.rst
-index 1a3bf1d8aa23f0..a47e14e024a90d 100644
---- a/Documentation/admin-guide/LSM/ipe.rst
-+++ b/Documentation/admin-guide/LSM/ipe.rst
-@@ -681,7 +681,7 @@ Allow all
-    DEFAULT action=3DALLOW
-=20
- Allow only initramfs
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+~~~~~~~~~~~~~~~~~~~~
-=20
- ::
-=20
-@@ -691,7 +691,7 @@ Allow only initramfs
-    op=3DEXECUTE boot_verified=3DTRUE action=3DALLOW
-=20
- Allow any signed and validated dm-verity volume and the initramfs
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-=20
- ::
-=20
-@@ -725,7 +725,7 @@ Allow only a specific dm-verity volume
-    op=3DEXECUTE dmverity_roothash=3Dsha256:401fcec5944823ae12f62726e818440=
-7a5fa9599783f030dec146938 action=3DALLOW
-=20
- Allow any fs-verity file with a valid built-in signature
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-=20
- ::
-=20
-@@ -735,7 +735,7 @@ Allow any fs-verity file with a valid built-in signature
-    op=3DEXECUTE fsverity_signature=3DTRUE action=3DALLOW
-=20
- Allow execution of a specific fs-verity file
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-=20
- ::
-=20
-
-> +Additional Information
-> +----------------------
-> +
-> +- `Github Repository <https://github.com/microsoft/ipe>`_
-> +- Documentation/security/ipe.rst
-
-Link title to both this admin-side and developer docs can be added for
-disambiguation (to avoid confusion on readers):
-
----- >8 ----
-diff --git a/Documentation/admin-guide/LSM/ipe.rst b/Documentation/admin-gu=
-ide/LSM/ipe.rst
-index a47e14e024a90d..25b17e11559149 100644
---- a/Documentation/admin-guide/LSM/ipe.rst
-+++ b/Documentation/admin-guide/LSM/ipe.rst
-@@ -7,7 +7,8 @@ Integrity Policy Enforcement (IPE)
-=20
-    This is the documentation for admins, system builders, or individuals
-    attempting to use IPE. If you're looking for more developer-focused
--   documentation about IPE please see Documentation/security/ipe.rst
-+   documentation about IPE please see :doc:`the design docs
-+   </security/ipe>`.
-=20
- Overview
- --------
-@@ -748,7 +749,7 @@ Additional Information
- ----------------------
-=20
- - `Github Repository <https://github.com/microsoft/ipe>`_
--- Documentation/security/ipe.rst
-+- :doc:`Developer and design docs for IPE </security/ipe>`
-=20
- FAQ
- ---
-diff --git a/Documentation/security/ipe.rst b/Documentation/security/ipe.rst
-index 07e3632241285d..fd1b1a852d2165 100644
---- a/Documentation/security/ipe.rst
-+++ b/Documentation/security/ipe.rst
-@@ -7,7 +7,7 @@ Integrity Policy Enforcement (IPE) - Kernel Documentation
-=20
-    This is documentation targeted at developers, instead of administrators.
-    If you're looking for documentation on the usage of IPE, please see
--   Documentation/admin-guide/LSM/ipe.rst
-+   `IPE admin guide </admin-guide/LSM/ipe.rst>`_.
-=20
- Historical Motivation
- ---------------------
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---nK/4++6p9aVBG6jQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZjXsAgAKCRD2uYlJVVFO
-o5rXAQCS3HwJg98sIZ+dvHD4EtrdQXP2AZQEC3nP+kq7cOi47wD+P0ZrOINzS3p5
-azRTQTXUkE+0lznZFyE75YeW2OX1dQs=
-=ebwU
------END PGP SIGNATURE-----
-
---nK/4++6p9aVBG6jQ--
