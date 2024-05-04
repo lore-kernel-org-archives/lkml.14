@@ -1,42 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34F171CFAF
-	for <linux-kernel@vger.kernel.org>; Sat,  4 May 2024 12:14:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D44122EEF;
+	Sat,  4 May 2024 12:14:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714824863; cv=none; b=q4rhLlx2buSCq/MvfDTBvEDzQp7fLaniKMONZEJ3X7jlAbXQ1DaYLEM59S7UmA78Da7rAXjMKmWGEbaUNtpyB6o+zTmdxVGJzn4q+LBfKsi936WRzhzbGfLjfX2bTHWsFf3isoj04z8YGxoYwNNSQRC6f2iv7ix1ZdY2KdcdNBU=
+	t=1714824874; cv=none; b=FAq+cn7Li20nsxGEdHfo9Ip8liQfpjD12GKMZcBnOosJe1mJkAwaauD1InH71l5cHjPwPXYCtdt5prqEtwef0YfNEwPuFdLQfpTdCA1KGQ7IY/f+U6rS+z8GOj0866q07tPcKMCuOzD1Ob+jNo1+Q3MNRZyAa82gXzoP/sroL5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714824863; c=relaxed/simple;
-	bh=w7n0QpKIzd+FJnDpgW9IsvunqZ0NkMZk0lKoOyuacJQ=;
+	s=arc-20240116; t=1714824874; c=relaxed/simple;
+	bh=z88eMv/xF/Ek+JdWis3jLwaa6vsfEHEFdguAMsCL0PY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=tAna7vsQN3NlcSEUnXrGy/r5ClRmA5vUjsopUKhuxyPOMrLmbBJSC+BuI1jmh7xL+Mmzp2vFfxmkloUHk2n7HtXtHxzlXdn/kBGI4FfIbADwnOb3TzsK+MYQLO7f/vhREW5wA25bgiw3UQ++m6XSkPf/y3K0m/cJfhAP332f0g8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BeEqBrsf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=L5MwSA6IEi2+rT+GOLCGn+JqRD/7xZvLo1ZHh8ZMnWVZuK4bDgR6Ddu483N5BTVF8zaSKGWsoabttIgOe6khwCn0qtdhcqd3045GZPOWhSd1YHY4lK9hfU6K9bF6jqnumlOdSZQUuTmE66dWEgB6TpOPk34PiIu8Ygu3WHg1m0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ekw6rmWk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BeEqBrsf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C749CC072AA;
-	Sat,  4 May 2024 12:14:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ekw6rmWk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6F0EC2BBFC;
+	Sat,  4 May 2024 12:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714824862;
-	bh=w7n0QpKIzd+FJnDpgW9IsvunqZ0NkMZk0lKoOyuacJQ=;
+	s=k20201202; t=1714824874;
+	bh=z88eMv/xF/Ek+JdWis3jLwaa6vsfEHEFdguAMsCL0PY=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=BeEqBrsfEyYXnU9+qu5k0Ys02vl5Lvtc140amWUKVyHwKUFzTx2/D/oOiDBJyK5V7
-	 pCi69Dm+nPZsiHOhYdy3sE5mRWnZEgznnsNc/gUw4nnVxInUTk1AMZeqQvn/sQubuI
-	 6rMg0OHKmHWhwvRwLuwA7ImIgL3ulSVMhsCo0pPWUcIewBD5WvVutXsMTv6e4drNOY
-	 DSPQbgWgaoDroUh1otRxntksJ7HxnUDkxyPVh3Ry+CQ0O9EjW6DcocFaFpnWnPVd7t
-	 nGICAScEpRUGTuhLOBUaJkTX154wp7/mxeQf46/KnX/RG/uO9H1Efv2imCkWNke9x+
-	 xm+G8oygnn6Og==
+	b=Ekw6rmWkVJcy+BVOEnGIME5WWM9XQ1+ivRfRk9l+kM543RgR1zxGCHUjkxhKDAQsb
+	 I3KN1NTzRXGqwGAvBO80EeJi9e1JytcPJVIETMPOZSwuLN2YPULbukE3TtP8xzCHlE
+	 cfuUp02pdiy16N1JKxZdBKuz1GGDQCwiVtghJiD6x74VNVtCnfHhj46ikHV+bkQ8ik
+	 nH1ekHHUJNfN7qCZxCn6DfFr98qAVG/0v2s9HpIiD2z7yFyJovZOirKtjkFax+t1AR
+	 seuwz5mU0OZUC5MJC4hREwV9P0ai9zs04q3LfKS1SCKjsovYim69i57nXycvQr6wUG
+	 Cln8UMr1B/6og==
 From: Vinod Koul <vkoul@kernel.org>
-To: kishon@kernel.org, krzysztof.kozlowski@linaro.org, 
- Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org, 
- tudor.ambarus@linaro.org, andre.draszik@linaro.org, saravanak@google.com, 
- willmcvicker@google.com, kernel-team@android.com
-In-Reply-To: <20240426104129.2211949-1-peter.griffin@linaro.org>
-References: <20240426104129.2211949-1-peter.griffin@linaro.org>
-Subject: Re: [PATCH RESEND 0/2] phy-samsung-ufs fixes
-Message-Id: <171482485731.28322.17976284474709721365.b4-ty@kernel.org>
-Date: Sat, 04 May 2024 17:44:17 +0530
+To: andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+ conor+dt@kernel.org, konrad.dybcio@linaro.org, 
+ manivannan.sadhasivam@linaro.org, Mrinmay Sarkar <quic_msarkar@quicinc.com>
+Cc: quic_shazhuss@quicinc.com, quic_nitegupt@quicinc.com, 
+ quic_ramkri@quicinc.com, quic_nayiluri@quicinc.com, 
+ quic_krichai@quicinc.com, quic_vbadigan@quicinc.com, 
+ quic_schintav@quicinc.com, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Qiang Yu <quic_qianyu@quicinc.com>, Abel Vesa <abel.vesa@linaro.org>, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+In-Reply-To: <1714494089-7917-1-git-send-email-quic_msarkar@quicinc.com>
+References: <1714494089-7917-1-git-send-email-quic_msarkar@quicinc.com>
+Subject: Re: (subset) [PATCH v2 0/2] arm64: qcom: sa8775p: add support for
+ x4 EP PCIe controller
+Message-Id: <171482486317.28322.7019120026005248383.b4-ty@kernel.org>
+Date: Sat, 04 May 2024 17:44:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,23 +58,22 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Fri, 26 Apr 2024 11:41:27 +0100, Peter Griffin wrote:
-> Two minor fixes for the phy-samsung-ufs driver. These were sent previously
-> as part of the v2 of the UFS series [1], but I'm re-sending after
-> splitting the patches out into separate series (clocks, phy, UFS, dts), to
-> hopefully make things clearer and easier for the relevant maintainers.
+On Tue, 30 Apr 2024 21:51:25 +0530, Mrinmay Sarkar wrote:
+> This series updates PHY and add EP PCIe node in dtsi file for
+> ep pcie1 controller that supports gen4 and x4 lane width.
 > 
-> These patches were based on feedback received from Andre and Dan on the ML
-> after the gs101 phy patches were queued [2].
+> Dependency for Patch 2
+> ----------------------
+> 
+> Depends on:
+> https://lore.kernel.org/all/1714492540-15419-1-git-send-email-quic_msarkar@quicinc.com/
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] phy: samsung-ufs: ufs: remove superfluous mfd/syscon.h header
-      commit: 8b19c45ae4c0480ea07ab9f33c43d0fa6ea43aa1
-[2/2] phy: samsung-ufs: ufs: exit on first reported error
-      commit: 2ff6365e2271282bea155541e5e3deb9d9ff1572
+[1/2] phy: qcom-qmp-pcie: add x4 lane EP support for sa8775p
+      commit: 82b7487b8eb93e82ace92866560de3d4952555db
 
 Best regards,
 -- 
