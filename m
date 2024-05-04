@@ -1,103 +1,133 @@
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFF2C36D
-	for <linux-kernel@vger.kernel.org>; Sat,  4 May 2024 00:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16B2C629;
+	Sat,  4 May 2024 00:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714781683; cv=none; b=b9PjvSq2VAhPD2C/4JlQdPV7gmcivqw/C5elgwqZj+L8nB7wcYcVh/mgPkMGwC7sPR3w/1frUgUft288hnawnCpoBR6hrsS+o+GSotq1CL4YSjECdqy9XvVeunnHMFIX4kr3PQmFRi94XxZkCs4weu1Z9TTb5UO+MdBFukDTSuY=
+	t=1714782076; cv=none; b=I8Tc7ZTsBhO67jlQN69jyPzSSeU6gGqdtOzpMOLjG/hOokwNZ9YPLnshGsC8neQQ1dy8PtL0eXc8Nfrl3b+iz5PQboNKTEOYY0tPM50sn9jsJuR3krHi3rR7Qbp6NTwUGR1aqDXwphmDi9TtTmHTDXSgAyZy7zPyc0nVvljfWc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714781683; c=relaxed/simple;
-	bh=T2URmGhyGMl4Ds55r5EmQIdTuhtkYth+3ELjtiIO1/M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gU1dIwsCPSaZgou6exVn/MkhOPXzIYcLDt4sjO4T6ZwVTDUHFfLtDx7OG+UgE5aaNWb/DqL7ddZBRGYbb+7fFVhTJqoOBvO1z8JKx2xTyGkd/5V5yi+hLt+HCpZbL+ys7xuta/DWsHWXdZXV8hzGbC+JHL/aH98UyfSvrYIZWl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=cyxqGlJg; arc=none smtp.client-ip=209.85.167.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1714782076; c=relaxed/simple;
+	bh=yP+2iZaNfuy4VuiXaL0zmGDR2KLSPl+3nYtHp/N/ijs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=ISl8wa9KkEWSEJbtU5FhT37b2pp9OCVeVO18z+O3eZ5tW5aNL8wu62Dz+CliDKF537oCCIfdXzVRp7Ow4LzBUZrnM3J0wJhX1kz3ui9fYW9HJOlS1siOHANQAxJFMQ1scYUGujoJlKZwuHtzy5vphYeN+lGCihv+MSz0CzEtj0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGIDu0fK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="cyxqGlJg"
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-51ab4ee9df8so230874e87.1
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 17:14:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1714781680; x=1715386480; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=7VCzgS+IY0IS064Sorg1TCiXuLWe5FHSNuzBQJmhuYM=;
-        b=cyxqGlJgLUWYlJmIc3ZAzquvdzp9srvmer9LEB5+Pr3IzhqphwKhTN8p5Krp5Fw61g
-         7Dv8XLsb4k5lNY/erMxXbgE5jDpgo9Zwul+hZKhi6bF1DAlKxI2yy1Kapb7zZhZk+lEE
-         8NFhU3SzEfKtGjy/KefcLgWI+VXg9H4/37Uqk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714781680; x=1715386480;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7VCzgS+IY0IS064Sorg1TCiXuLWe5FHSNuzBQJmhuYM=;
-        b=TyDhNrggVouP8AMoys/0fCUayVSuzUlS3LQKD+bblDST7278nWwRygjfratq4sZqxR
-         Q4Yak4IBUaP9r4Z0PDUZIGYDyW87f/YC14EbL9ke3IaR4u0bAFsD/wAiwxC4WjT0R8WY
-         fvmF3EN2MH95jpzAZGj2xje5xha69bRefJfrx4mr7XWH86g9sCSH8F3WCngre08g/t1P
-         q7HQiwswfRjZGEUSZcwKd4E+vitjOe3vThMbBkykQ0JtyzL/RBWk3Dhcl2VhD0FTx7Ru
-         qRCLg157+JhcT5cYDjw6Coy1hK9tcYzmKiqJUJbU5hiQ0cltU/JDeWlyPE+BSDvh1WfW
-         IvBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVbr8S+5/09nMXa3Vbv7tCxuIEcEuubxmCHiT+geUILjaEacyo4H9T8S6e8zsMEYj1oiI2z9TDK7oiDqu2Tfe/Sn9R/qE3yz+eKS/MA
-X-Gm-Message-State: AOJu0YyLRZspzgoIba81p9rWDASejuEIjtG2+iXqy5HNNQgLWGFF0CHp
-	JoYE09FrQmuv4Ey10idRhUJGiE14GjS6nkhsIT49ma1pMCqoQBLpr2Uk4CWCK/dPCMFHPjVVAOM
-	CnabP/A==
-X-Google-Smtp-Source: AGHT+IHSkn2H0+zAl5xy36F6+wCABlTw8GOerjPACZmrRkClZ9bEV5aAHO0Kd3MsCLolOpX5WoI4sA==
-X-Received: by 2002:a05:6512:20c7:b0:516:cc06:fa03 with SMTP id u7-20020a05651220c700b00516cc06fa03mr2337364lfr.56.1714781679956;
-        Fri, 03 May 2024 17:14:39 -0700 (PDT)
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com. [209.85.218.53])
-        by smtp.gmail.com with ESMTPSA id w11-20020a17090652cb00b00a4da28f42f1sm2320592ejn.177.2024.05.03.17.14.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 May 2024 17:14:38 -0700 (PDT)
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a59a64db066so30525766b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 03 May 2024 17:14:38 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXKRWc2x9GCqHfmnRDWU9lIW8W3PIwZaF4AWEvpN6eQdD0Mneqo5H8fdqw728WCc6izr/LP/ofEbvT0I6wvAi0ZoCV47PnkMqv8wwrm
-X-Received: by 2002:a17:906:4a54:b0:a55:41fd:a013 with SMTP id
- a20-20020a1709064a5400b00a5541fda013mr2161357ejv.23.1714781678453; Fri, 03
- May 2024 17:14:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGIDu0fK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63974C116B1;
+	Sat,  4 May 2024 00:21:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714782075;
+	bh=yP+2iZaNfuy4VuiXaL0zmGDR2KLSPl+3nYtHp/N/ijs=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=EGIDu0fKWx1Zl2N92TP+rsDvXkAkhZqdf9GL7Cm+4YShK+WmIMxu7Gl2CL4vWI+ta
+	 KfkXiDzDr4563l3Kggxn4z2UzrdHWp3nLv9X1RY7g94bvy1hRvmoBi2W65hkxFEp0H
+	 T1avmrYlz+DqzgBdzPd1W5fBmGLUUPFbirov00abDPXaVTC2bE8Ti3HzDbRixOmtd3
+	 XCSe2NVnrJdhzjDEyqaRoHUfsAHOkGCI0jlzKgsEXhsnU7uhfYIznZ0bnKmrp4141F
+	 oG8Jr3SggdnA+UpgAXvd3WkCGcR3sfuCj55c9XA3wo6qtjPWxTpD3fPKAuIBn2DII+
+	 /+oUACdlC1O8g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <CAHk-=whnQXNVwuf42Sh2ngBGhBqbJjUfq5ux6e7Si_XSPAt05A@mail.gmail.com>
- <d4de136e-c4e0-45c2-b33e-9a819cb3a791@paulmck-laptop> <CAHk-=wi3iondeh_9V2g3Qz5oHTRjLsOpoy83hb58MVh=nRZe0A@mail.gmail.com>
- <892324fc-9b75-4e8a-b3b6-cf3c5b4c3506@paulmck-laptop> <CANpmjNOY=Qpm3hBu-eN4Xk8n-2VXQRvcQ3_PfwPwNw9MmC8ctw@mail.gmail.com>
- <CAHk-=whTakjVGgBC5OtoZ5Foo=hd4-g+NZ79nkMDVj6Ug7ARKQ@mail.gmail.com>
- <CAHk-=wiGzmJXZwHxCE6P0jVBqU4gHEm=zcfj3v+zM_S_9RF4_Q@mail.gmail.com>
- <1c886023-ae61-46ba-bb3c-b460c30de937@paulmck-laptop> <b3b81374-a19d-4bf5-abb3-15e48c72f01a@paulmck-laptop>
- <ZjPBPWSSdE_VcH_V@boqun-archlinux> <2beaba9f-6f83-4a7c-8835-fe5fe88a006c@paulmck-laptop>
-In-Reply-To: <2beaba9f-6f83-4a7c-8835-fe5fe88a006c@paulmck-laptop>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Fri, 3 May 2024 17:14:22 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wg4iAjQb_Na_1rf_EHxe7rsN24he6cjKgdOAPmn7N9oVw@mail.gmail.com>
-Message-ID: <CAHk-=wg4iAjQb_Na_1rf_EHxe7rsN24he6cjKgdOAPmn7N9oVw@mail.gmail.com>
-Subject: Re: [PATCH v3] tty: tty_io: remove hung_up_tty_fops
-To: paulmck@kernel.org
-Cc: Boqun Feng <boqun.feng@gmail.com>, Marco Elver <elver@google.com>, 
-	Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dmitry Vyukov <dvyukov@google.com>, 
-	syzbot <syzbot+b7c3ba8cdc2f6cf83c21@syzkaller.appspotmail.com>, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Jiri Slaby <jirislaby@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 04 May 2024 03:21:11 +0300
+Message-Id: <D10FIGJ84Q71.2VT5MH1VUDP0R@kernel.org>
+To: "Ignat Korchagin" <ignat@cloudflare.com>, "James Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Mimi Zohar"
+ <zohar@linux.ibm.com>, "David Howells" <dhowells@redhat.com>, "Paul Moore"
+ <paul@paul-moore.com>, "James Morris" <jmorris@namei.org>,
+ <serge@hallyn.com>, <linux-integrity@vger.kernel.org>,
+ <keyrings@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Cc: <kernel-team@cloudflare.com>
+Subject: Re: [RFC PATCH 0/2] TPM derived keys
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+X-Mailer: aerc 0.17.0
+References: <20240503221634.44274-1-ignat@cloudflare.com>
+In-Reply-To: <20240503221634.44274-1-ignat@cloudflare.com>
 
-On Fri, 3 May 2024 at 16:59, Paul E. McKenney <paulmck@kernel.org> wrote:
+On Sat May 4, 2024 at 1:16 AM EEST, Ignat Korchagin wrote:
+> TPM derived keys get their payload from an HMAC primary key in the owner
+> hierarchy mixed with some metadata from the requesting process.
+
+What metadata?
+What is "the requesting process"?
+
 >
-> Hmmm...  Maybe something like this very lightly tested patch?
+> They are similar to trusted keys in the sense that the key security is ro=
+oted
+> in the TPM, but may provide easier key management for some use-cases.
 
-I'm a bit nervous about using the built-in atomics, when it's not
-clear what the compiler will do on various architectures.
+Which use cases?
 
-Gcc documentation talks about __atomic_is_lock_free(), which makes me
-think that on various architectures it might end up doing some "fall
-back to helper functions" cases (possibly for odd architectures).
+Two first paragraphs are confusers not motivators with three undefined asse=
+ts.
 
-IOW: I don't think the patch is wrong, but I do think we need to
-verify that all compilers we support generate the obvious code for
-this, and we don't have some "fall back to function calls".
+> One inconvenience with trusted keys is that the cryptographic material sh=
+ould
+> be provided externally. This means either wrapping the key to the TPM on =
+the
+> executing system (which briefly exposes plaintext cryptographic material =
+to
+> userspace) or creating the wrapped blob externally, but then we need to g=
+ather
+> and transfer the TPM public key to the remote system, which may be a logi=
+stical
+> problem sometimes.
 
-                 Linus
+What are the *existential* issues?
+
+You are start by inconviences with trusted keys without describing for
+what the trusted keys are used for.
+
+
+> Moreover, we need to store the wrapped key blob somewhere, and if we lose=
+ it,
+> the application cannot recover its data anymore.
+
+I don't frankly understand what you are trying to say here. Somewhere is
+not a place. It is an indeterministic entity.
+
+>
+> TPM derived keys may make key management for applications easier, especia=
+lly on
+> stateless systems as the application can always recreate its keys and the
+> encrypted data is bound to the device and its TPM. They allow the applica=
+tion
+> to wrap/unwrap some data to the device without worrying too much about ke=
+y
+> management and provisioning. They are similar in a sense to device unique=
+ keys
+> present on many mobile devices and some IoT systems, but even better as e=
+very
+> application has its own unique device key.
+
+Does it or does it not make it easier? Please decide.
+
+That said hard fine from mainline perspective unless there is an
+existential issue.
+
+>
+> It is also easy to quickly "wipe" all the application keys by just resett=
+ing
+> the TPM owner hierarchy.
+>
+> It is worth mentioning that this functionality can be implemented in user=
+space
+> as a /sbin/request-key plugin. However, the advantage of the in-kernel
+> implementation is that the derived key material never leaves the kernel s=
+pace
+> (unless explicitly read into userspace with proper permissions).
+
+Please describe the implementation with request-key in the context of
+the use case where it is used. That is what this should have started.
+Then the motivation. Then the proposal for solution. And also focus
+only on existential factors.
+
+I have no idea for what the key created with this is even used, which
+makes this impossible to review.
+
+BR, Jarkko
