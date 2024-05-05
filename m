@@ -1,248 +1,176 @@
-Received: from fallback3.i.mail.ru (fallback3.i.mail.ru [79.137.243.69])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2041.outbound.protection.outlook.com [40.107.237.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14EBD6BB30;
-	Sun,  5 May 2024 20:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.137.243.69
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714942675; cv=none; b=i5HkkEFe29CFVJsKzLYKd9aVwwaVSJi7AbcwwyLYD2i4I782VnNoqqFflue5gT+MAXQ030SRC8DIiy5br1uELCPxnNEzTHWd6FXgC7B4i6j9FUz/w1Han4M002BvLuFWH8wXjCiwlArmvOsUpVfsKsyeNxsuPIZfcpxzxU2Ra8A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714942675; c=relaxed/simple;
-	bh=UCAnAAtSuPVWQEsZqwrA6E+E+a+w9YR1nZK0vA5uF7c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HD+e52/GH35S2q5IQ7CLVVF7lDTUjp2QyNOQWl/Y9gE3hdei96wLcGVvIe8CqQu36plAxY1JhLr1Xknx9NOCo0i/Zro+uK7PmHUBNSUMlYPLUtfda0510MXEAZwl5Sp3zRNCLwCR6bDCce3x+3C675f1drGb619wWel7ZhMOb0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=wGK4xhs3; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=zrq1e02/; arc=none smtp.client-ip=79.137.243.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CA1762D2;
+	Sun,  5 May 2024 20:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714942682; cv=fail; b=EiW8M66ce5QsI/QqRgIRevo0AQGUYiI0D+xWGSQgGabD0UVVYGc0ZsbZ9mAN9S2QHTaUuMvCZaRzL4YW7VTAmH0yJHtmET6RXjpk768uyLdsga3H+BHhWfgyYeuIhXcppPuaaSEVNAbQyIG5qWm4aeyPgWvkSjXdHOmFP0U+D4o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714942682; c=relaxed/simple;
+	bh=qwLFyjcQb/7Oa+617wi+8mPBHq237ecKhl9bMMWeYxs=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=KqsycnXkRQtaMghRBQCaAYQAecUvjK8KmWz8Ub3rV61F0hlIyg5PMJ4ocmhj7hz8kvKy+MwFuX2+pa+YbqJco1/xcfqIoT99ZLswWovka8OvtXTcFxxL0HjTVbNxApWJmv/ZslofIFVUMDUHak+SX3tQJuubbe86GO4NBl2462s=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ljDHhCt/; arc=fail smtp.client-ip=40.107.237.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="wGK4xhs3";
-	dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="zrq1e02/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com; s=mailru;
-	h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:From:Subject:Content-Type:Content-Transfer-Encoding:To:Cc; bh=Sq1hRxPihYAm9AttFJqQInvc9/J+1ZCvq0CMmPYhARw=;
-	t=1714942671;x=1715032671; 
-	b=wGK4xhs3wTD6Bub0Fhs9LNBTiTVeFrYptZc5cQyuAWbXsBQLe63ub1XNWIGUR5A5oJ5kzGX8E9iavldUBZxTO7k/FSv5ciz2tVy2QV7U1Uaeamw5c/Gt2B6qDvmCMYPQklxYTBEAVl7jkcbE0SLejMg2vD14BXSxb1nFvACJmSk=;
-Received: from [10.12.4.31] (port=52756 helo=smtp56.i.mail.ru)
-	by fallback3.i.mail.ru with esmtp (envelope-from <danila@jiaxyga.com>)
-	id 1s3iCH-00Gec2-Rl; Sun, 05 May 2024 23:10:58 +0300
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
-	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
-	X-Cloud-Ids:Disposition-Notification-To;
-	bh=Sq1hRxPihYAm9AttFJqQInvc9/J+1ZCvq0CMmPYhARw=; t=1714939857; x=1715029857; 
-	b=zrq1e02/WJRejg7JMCdGpe0srNoEmgKZ/CuiySTpGLTsQfOKZh9eGILLKkgLo96h0En1AEb9uXL
-	F5Tsqpdmtniv38Al1Lwk/Hbz6ubK9L+G/fGuFp1bQAVkrOCDdtk/WIBfyG9Njr/VgwSL3jUdA0tSt
-	R2nAqB1ncdncyEt8rhQ=;
-Received: by smtp56.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
-	id 1s3iC7-00000009RwX-1lle; Sun, 05 May 2024 23:10:47 +0300
-From: Danila Tikhonov <danila@jiaxyga.com>
-To: andersson@kernel.org,
-	konrad.dybcio@linaro.org,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	david@mainlining.org,
-	adrian@travitia.xyz
-Cc: linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Danila Tikhonov <danila@jiaxyga.com>
-Subject: [PATCH v3 3/8] dt-bindings: clock: qcom: Add SM7150 DISPCC clocks
-Date: Sun,  5 May 2024 23:10:33 +0300
-Message-ID: <20240505201038.276047-4-danila@jiaxyga.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240505201038.276047-1-danila@jiaxyga.com>
-References: <20240505201038.276047-1-danila@jiaxyga.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ljDHhCt/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=faiG/vvajdi8uP+M1QtE7/SHScie/FEkeQ5gNZi3re0aE642FhirmmeN0kEGKW56xEKOirBYHfwq1hFbXgPUoEIvo+/sC0RitLt+sEQHoGw6WVO/Mb0td8XLfoFuJivhT+REZ9f9qgJsW3NL/ubI2i+HNrGnp3QHYA2Ro78pHWiRoAfSC5yO1u3MpcNQq5zVvW5SMhts2jr/Ul/D6Isow8X09gPZuKb8JoM6G1MQePtaVsySp6S9tzQ/IxP9QNwtKzZsA1KCosnVMthdBWj1a92xRsZBuxknzurXx9Mb38Vd379yJdUY0Q//NLt2ENh2gi5/alYqVgiXQ6vnj2PEdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=54zZt3o4C0CXb3aD4hvd7Y+aNMuaPsYBw7s37jV6JZk=;
+ b=EJ2WpVt+9MPHoNLZe4uqGH9mVWK/troqMQ7T3eLLagKhUtAx6lOqmFucPERI/DtMtDkKudCAujWn1XjSHg7DeGme62LRMcHdrbMmOajvJL6wzIseC2BAHppM78SmF0LAnFMReRlZM05GEzcEcX4D5XUeryiHXbaLBheIWoP7V7zmzjMrV0GvWlvTGqtDxc4F5y/tALeyaccysTcfoPHkOleLu1+ZDZyOAibFmFB7EphVkMBsjgUAbaFLvyUWX+QbX8F0KMBQwF7hVzzEiNUp9OnMyc5Jkp2YyiZ60eMy2PdQQSMdMEjABAecdrvoSBAZ7pws/ikqN1jklCl0NaF/Dw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=54zZt3o4C0CXb3aD4hvd7Y+aNMuaPsYBw7s37jV6JZk=;
+ b=ljDHhCt/4NW7uWy6c6BfXU+x/ZJLlmr+oyFs1FYO/IL291o4cf8s/m+sVZyQcLOuxdKCILv2+PEIiYo8f4Kdc+n0y09xqvTGS7v2GyPX8T/rfRE6hBfFlGDyJwbP8YFzTy+KWCWHFsk42UKg+mWKpfDbnY8l3+hkFopdqgtWVLiHxrASD+/tT0mrKt9tU0ISF7k81DW1nTqdQvO4N64cqWgDDLHWR3nRH/4fo0UCIEBdShGftpGka+/ZJJKoefBCX7N4sMf6Nlp4npkxCh2KNiqzXuFCAXc7cKL+WqeE6E19KYiw80GC2W7dev1/OhrVp7VDltXvIHWsi6oAW4/wIQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
+ by IA1PR12MB7710.namprd12.prod.outlook.com (2603:10b6:208:422::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41; Sun, 5 May
+ 2024 20:57:57 +0000
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::2cf4:5198:354a:cd07]) by BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::2cf4:5198:354a:cd07%4]) with mapi id 15.20.7544.041; Sun, 5 May 2024
+ 20:57:57 +0000
+Message-ID: <cf87f691-c2db-4a24-bf33-af26adffcafa@nvidia.com>
+Date: Sun, 5 May 2024 13:57:47 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] selftests/alsa: fix a build warning: return a value in
+ all cases
+To: Mark Brown <broonie@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Ivan Orlov <ivan.orlov0322@gmail.com>,
+ linux-sound@vger.kernel.org, Valentin Obst <kernel@valentinobst.de>,
+ linux-kselftest@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ llvm@lists.linux.dev
+References: <20240504021330.33429-1-jhubbard@nvidia.com>
+ <ZjedcAW6ITmo9pXp@finisterre.sirena.org.uk>
+Content-Language: en-US
+From: John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <ZjedcAW6ITmo9pXp@finisterre.sirena.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0069.namprd03.prod.outlook.com
+ (2603:10b6:a03:331::14) To BY5PR12MB4130.namprd12.prod.outlook.com
+ (2603:10b6:a03:20b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mailru-Src: smtp
-X-4EC0790: 10
-X-7564579A: 78E4E2B564C1792B
-X-77F55803: 4F1203BC0FB41BD9C1015E4FDF53778088566B0F8B29AAE8070DD98344CBE1AA182A05F538085040EF8CAC2B77C89A295D1BE6A8D71B10A592F50CCF4FCBE2FCBE7375619A971F143A0542435AA8B4D9
-X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7BB0F1327467DA3D4EA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F79006377845AD97F799C6E88638F802B75D45FF36EB9D2243A4F8B5A6FCA7DBDB1FC311F39EFFDF887939037866D6147AF826D8E24D388591819498965C51F0EA95FD596C1EF769956C495ECC7F00164DA146DAFE8445B8C89999728AA50765F790063773DCDF0198120BE8389733CBF5DBD5E9C8A9BA7A39EFB766F5D81C698A659EA7CC7F00164DA146DA9985D098DBDEAEC82D01283D1ACF37BAF6B57BC7E6449061A352F6E88A58FB86F5D81C698A659EA73AA81AA40904B5D9A18204E546F3947C1DAA61796BF5227B9735652A29929C6C4AD6D5ED66289B523666184CF4C3C14F6136E347CC761E07725E5C173C3A84C37D36EA09806432C2BA3038C0950A5D36B5C8C57E37DE458B330BD67F2E7D9AF16D1867E19FE14079C09775C1D3CA48CF4964A708C60C975A1DD303D21008E298D5E8D9A59859A8B636DA1BED736F932875ECD9A6C639B01B78DA827A17800CE7EBD83694CB3B8CDE731C566533BA786AA5CC5B56E945C8DA
-X-C1DE0DAB: 0D63561A33F958A5212DAD83BAD31A3F5002B1117B3ED696BFBB84414F84C9AE14DB8790748E3E77823CB91A9FED034534781492E4B8EEADB71243024C627CEAC79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
-X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF3FED46C3ACD6F73ED3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CF00564282498EBE5129D3E7C552F55C176DF49D04B65818E8424469C7ADC2F2E34D6C1B221ADCA664643425263F8C9A4E2AB0AB11A7545B88ED97F980A7132E1098F2227382376140146D90F64BF3396102C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj3Gch4W13RDFkVO0WEK/Cbw==
-X-Mailru-Sender: 9EB879F2C80682A09F26F806C739498105F947809758DEDF601A8E04A89F3FFCB7A64390BB7B1D53FCF00596C5E993662C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
-X-Mras: Ok
-X-7564579A: 646B95376F6C166E
-X-77F55803: 6242723A09DB00B476D451B6D5EC6144A35CF194DDD9AEA5A3F18874191C351368F3CF0E9FE49B69A0D2E209AB8FF7E22EE22401F0B294FE4F6D734DE108FC07E8AB790AC4CB01C9
-X-7FA49CB5: 0D63561A33F958A575A7236DFAE4EB97FB8EE0BFD92D6402F3D151E35DD2530E8941B15DA834481FA18204E546F3947CA90F9F3818B5FC68F6B57BC7E64490618DEB871D839B7333395957E7521B51C2DFABB839C843B9C08941B15DA834481F8AA50765F79006374A812122049E91A1389733CBF5DBD5E9B5C8C57E37DE458BD96E472CDF7238E0725E5C173C3A84C325AE611EB865B371089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
-X-87b9d050: 1
-X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2bioj3Gch4W13RDFvZxan6sIvYw==
-X-Mailru-MI: 8000000000000800
-X-Mras: Ok
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR12MB4130:EE_|IA1PR12MB7710:EE_
+X-MS-Office365-Filtering-Correlation-Id: f3e8170e-fde8-4e5c-74b0-08dc6d460a9e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|7416005|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VGwzdUhRSVgyZkVpakRBN25NNFk0L3JRMjBoNkFRTDhyVWNiVjNPRDlCa1Fu?=
+ =?utf-8?B?bE5scmU4WkpXQW9HQ3o1RFRCTWdvaVR5bHdTZUVTcXgyK09rQkVlT0x0emoy?=
+ =?utf-8?B?N3drWE5RWFZWdTlZUjd4RFJJWWdiQURLdUhKMCttRVFydnEyMWRQamhZRURJ?=
+ =?utf-8?B?YS9TUnZIb2hkZGQ2cTNoQmRHZTdSc2NEbXBzWjZyYkRZTXpjell1bC8zZTVB?=
+ =?utf-8?B?cjVySWhYeXc0MGFuVGV5VnVRdUhXVGVwZHdRbmR6UU1yK0x1dXhSako2anJU?=
+ =?utf-8?B?aUl3ODRQd0tjUzJhc3Z6L0RmclVIWGE1ZWg4eGRTbkRadTJTeVorSEliSjU2?=
+ =?utf-8?B?Uk9EY1JOakY3dllJekdSYi9xKzgySHJUcVREaVA4dUtHV2RSU3hZUmJYd3pG?=
+ =?utf-8?B?Nzd3anUxUGdpS2MzY1pUUUVNdDhMSGs1c004SkoxSHlYNEFkUlM0blp0TUJv?=
+ =?utf-8?B?d0w4MS9wZURydnJEZnlyOXdZMkF0eHVwTWRlVVBOazdydXE5OTZONk9SQjlh?=
+ =?utf-8?B?Y0V0NW5TMkpYUXZ6cFZQR25UcVIzK0gweXp5eHp4ZXRreTdhQlpyR292TUZ2?=
+ =?utf-8?B?dzZPQWxqaitlelZ2bUF6VG11MVYzL3JOSjIwOVZENXM1c0h6dGZoYXcvZ0M2?=
+ =?utf-8?B?QlF1MDFhR2NxZGtrZ2ovVGJhUFdtWG1uTFNtdXZWdkh4LzlRSlRmVERSTTcr?=
+ =?utf-8?B?SGNHZkdtREVDTkVoU0Nkc0xPdEExcDBqNGRSaXhFSk9jMXZFdFZ2MmlKVVdD?=
+ =?utf-8?B?MWFFVzVjcHc3N2xkR094R1BTWjZRbndRNUhXMU9qak41ZTU3SUxEZ0xhdlRQ?=
+ =?utf-8?B?WWZTUGl2UkhoZnF1TVYvQVlpNU4wcllJV29uODZ6OE9ZNW15WUlnSk1ublI5?=
+ =?utf-8?B?RUhYaDNiOFhuMkJ1SkRqcHIxT3pkcE9TRXVGdTJ2NXNQNWdlTDV0NFdKNnF6?=
+ =?utf-8?B?TE5NTFd3akY3T3ZEOFdRYTZXQ0xWK2NFL2w0SXJpbHdjYWJjU1ZSVzJ2Mzly?=
+ =?utf-8?B?bWZPV3JoR2w1aVZqaFJzdmVBWTFYV0lNK2lSWG92ckVyZCtBWS92OTVFNUF1?=
+ =?utf-8?B?Z1N3aUR1aitGblhTNXBOb0RYcVphd0hOQmFkK29BTVlsaUpVV0tlNWZtbVI0?=
+ =?utf-8?B?VlBscVJ3MWR2dzIwc1lwUTVPK1NOS2hkR1NPTXRiYzJQVTRYZERLbVhpbGw1?=
+ =?utf-8?B?aDJVLzBmZ2J0SnJuR0FmMTVWMU8za244YlJCZXphVUo3K0lZNWU3ZHBtWDlk?=
+ =?utf-8?B?aG44SjVKNEdmNkk2RTI1T3gvZEhtdmFkVVlJcVdHbXg1VW9ORGRQSVJlTXNa?=
+ =?utf-8?B?ek5xL0xkKzVDL1pXZUNWRWxEcklGVDZVQ0pKb3Vjdk5EZUFiK2Q3QTNOWWxG?=
+ =?utf-8?B?cXRrek5uQUNBSmFnaTdwdjJmK2hsbmdVU29MbC9CTU9sUG5rK2FVV2ZZcElF?=
+ =?utf-8?B?em9nWndxMHZQRUUyYUpnb3p3QXFJaDBzUE9QWWZEaFF3N2VSVVRWemdVTkFM?=
+ =?utf-8?B?by9TSFdLWnRXUFQ5Q2ZvY2xldzJVSEdKeFRJTm9lTm85aXpuRDY1dHhFT2Jp?=
+ =?utf-8?B?Y0ErbWt6ZEZycjZ3Z2c4ZzhpV1MvL0VhYVVDVCsrRnJHL2g5cnpOa0tibHRi?=
+ =?utf-8?B?b2NmSzdQYkN1NU1UVjZ3VUJHdkJUclZHeGhqMkd4OE9TR1Uva29uUUFBQllX?=
+ =?utf-8?B?SG10VGRvOFRnM2U5ZGhmYS8zbCtDZS84S2Z3dWlYcGRPbWloTjQzM0NBPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SGdJWGJJZ2k3ak0wTkQ0UWFENzVmdEdoTHo3bmIwaUdUeEZ1dWZ6R1FlRnRW?=
+ =?utf-8?B?WGJjUXFyMkMyS3NaZGVXYVdlazMxMThRT2hUOFF3NXVtTXJIc2wzMTZIR0ZT?=
+ =?utf-8?B?cDBLT1RtYWFkRks3ZUJlOUM1eGxna1FWRk93cXdVUHNmR1l3c1Y5ZFllNm96?=
+ =?utf-8?B?NjJLbDYrVi9rQUVoVW54cmRjTXVNVWZOQjlZcDZKSGsrV3NUOWJsTkNscTI4?=
+ =?utf-8?B?UHBMb1FsQklJRThGRFJwNUFsVmlUN1VIbzhsK3piMnRCYnpNVUZROHl2czRi?=
+ =?utf-8?B?cFNFaTRZUmZNbVZiVXFYVFZJMEJkV09uYzZlT0hyamQzRmFFalVjTG8rdHJq?=
+ =?utf-8?B?LzB2TitYbHYzYWREM1Z4b3QvS1Z4VkU4RHVBN05IbDNHMlNpc0VpK1FRcmJw?=
+ =?utf-8?B?Qnh1b1UrQTZwRGI2dzh2RDB5WDdpY0ZuTlJ6cTQrajRBYnNTeGo2VUZ6VFdK?=
+ =?utf-8?B?RzdzemI2aEprYk1MamxuYXZrNStxQTVubWlrSlA1cXdjNGxEYy9HYlFWR3VN?=
+ =?utf-8?B?bEhNbmhIUXFhbS9pNmh1UWVSVEtrK1JXTmtWVHFNQXpjWjNLSzU0WUUySjdl?=
+ =?utf-8?B?L0xJbjNSSXBsc0FNZTMrT3VTaElNK3E4ZkxmdklzN2ZGQ0pUSFV2RStidEYy?=
+ =?utf-8?B?Vk1peWlmL1RncVZHakdYT0hwSVZkMHR5Sk05L1BLUDlRWW1WWWcwdlp1aWdz?=
+ =?utf-8?B?eXVPYVRBZ2xkdGRGL3d2dlVjYy9CdGtmRjBCMWlzMzJFNWh0eWtIMUM0Z1RR?=
+ =?utf-8?B?cTljalN5SG9ROGF0ZHU4R3RmRjlNOVAvNng1UTFkNW53b2QwOHQ1K1lPL1lw?=
+ =?utf-8?B?MSt0dU9CM3NOdFhMa2s4Ym5YNk82K0FjTTBaRFZKa3AxSHZRbzRVSUg2aUkv?=
+ =?utf-8?B?UC9vQnJLaGNtdmUxS3UrZ09SNDI3ZzZRdjZ1RGc3T1ZWSkc2S3Z2L3lxVGQ2?=
+ =?utf-8?B?ZWFtUUo0RENJSnhWQlBXbllOdFdmcUs3MHBEeFJjekswaW5MYUpkM3lhT1c0?=
+ =?utf-8?B?Si9TVzFoL1dHVHpRc1hJVXJ4OUlnQy9ZUk5rQmtuL0hMb203aXlHY21IRk9P?=
+ =?utf-8?B?RjlnMktOcWYzYVdjS2htTC9YUEZwWms3ek9VYlI1V0hWM0RWTU1rUjdmZm5a?=
+ =?utf-8?B?WkJWNFBOWkZSbUFqamFJNjkwU0FuelNLNG1tak5ZcUwxQU5HQjJkdmVKKzV4?=
+ =?utf-8?B?QkhZaE94N3c0RDE2YmZGN050L1p0VTFVampRaGRSSzAyMTZHRHFmbUpEdHhB?=
+ =?utf-8?B?WXdLNlVyRllkWVNBOGRVOU9FQlcxcFNINjRuajMwbUJTV1ZyYkN1MWdicGZo?=
+ =?utf-8?B?M3FiZzJmbFE4bGlzYy9GdExDZFN1ODNjMlI4VHA5RFc3NUthb0pJSkp6QjMv?=
+ =?utf-8?B?MHA4WXE0SzNXVXdvd3pCZDJWZDdjNWV4d3N0c1ZjUEdkVklBcjUvVlNQRXJZ?=
+ =?utf-8?B?ZS9XbU52cDl0QnRxbXNOWkkzYS9OSVpxK1FwY0xpYTl2SGdiYzRJSlVabjEx?=
+ =?utf-8?B?QktnQUVPVkRzY0prZU5Yd0xjOG04SUcxcG9KMHJWVWVPVTM1RXpJeVRKdnFZ?=
+ =?utf-8?B?bWc1MTZQcUpoSktZdUI0djFGckJERm1qQmJaOU8vOExuVTM3VkcxZnJuRFM0?=
+ =?utf-8?B?ajdpa0lXU2Y4S1poL094akhybit2azdVVmsweFIxdFU3NXQ0Qm5HRGt2elNq?=
+ =?utf-8?B?ckNWNE5PZXF3dmRnYkVvMlJqUjAxN29SS1NvOTNTZUZ6dE1yOG54VlFQTUd2?=
+ =?utf-8?B?d0pmYnpoNXc3WFlvLzVUYUpQSlBlYi9CL05JRmRLTXF5VHRacmZ1S095RHhi?=
+ =?utf-8?B?VjI2aGxPTGNmYlpHOHgxR0J4b1VkNHB0YkE4eHE2VXpyOXVqY1RBODdReVpR?=
+ =?utf-8?B?VE0wY1REUExpUjN4ckdqYWFvTTJtbWI1ZHNHZFFZQnIzbUE3MEhPVzd4andI?=
+ =?utf-8?B?YlkrZGlmdklOMnhLMWtuSEpUQXo1NWViQ0JjSmxnelJoZGJ2RU9vZHZCMlFo?=
+ =?utf-8?B?Ky9YbXJreXRUNk5TbEJrcUpsby9kNS9rQlcwaW9XN1d0Ujl3SXZoeFRLOXhl?=
+ =?utf-8?B?VThzVi9rMW4wcU1DRmxpYzcvb0dmZWVzWUs0Ymd6SlhNaTR3eDBKYkZXSXhO?=
+ =?utf-8?B?RTNEdlZDZVpPSlgzeEVIM0VRTjJoemFoejFIL21FMlZ4ZHNlUzlUYkFUbDNY?=
+ =?utf-8?B?R1E9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3e8170e-fde8-4e5c-74b0-08dc6d460a9e
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2024 20:57:57.4378
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6V6pMa7FfcEAo5MiE+3wEjQv2sIUzBaDG4xHY4uQCgQ7XPZDpVRYZju1zCR68sMuRt6HHEyhWdL+YCttBDemtg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7710
 
-Add device tree bindings for the display clock controller on Qualcomm
-SM7150 platform.
+On 5/5/24 7:53 AM, Mark Brown wrote:
+> On Fri, May 03, 2024 at 07:13:30PM -0700, John Hubbard wrote:
+>> dump_config_tree() is declared to return an int, but the compiler cannot
+>> prove that it always returns any value at all. This leads to a clang
+>> warning, when building via:
+> 
+> Though given that the function isn't referenced we could also just
+> delete it.
 
-Co-developed-by: David Wronek <david@mainlining.org>
-Signed-off-by: David Wronek <david@mainlining.org>
-Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/clock/qcom,sm7150-dispcc.yaml    | 75 +++++++++++++++++++
- .../dt-bindings/clock/qcom,sm7150-dispcc.h    | 59 +++++++++++++++
- 2 files changed, 134 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm7150-dispcc.yaml
- create mode 100644 include/dt-bindings/clock/qcom,sm7150-dispcc.h
+Even better, thanks for spotting that. I'll send a v2 to delete it.
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sm7150-dispcc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm7150-dispcc.yaml
-new file mode 100644
-index 000000000000..b8d6e1d05ce2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,sm7150-dispcc.yaml
-@@ -0,0 +1,75 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/qcom,sm7150-dispcc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Display Clock & Reset Controller for SM7150
-+
-+maintainers:
-+  - Danila Tikhonov <danila@jiaxyga.com>
-+  - David Wronek <david@mainlining.org>
-+  - Jens Reidel <adrian@travitia.xyz>
-+
-+description: |
-+  Qualcomm display clock control module provides the clocks, resets and power
-+  domains on SM7150.
-+
-+  See also:: include/dt-bindings/clock/qcom,sm7150-dispcc.h
-+
-+properties:
-+  compatible:
-+    const: qcom,sm7150-dispcc
-+
-+  clocks:
-+    items:
-+      - description: Board XO source
-+      - description: Board Always On XO source
-+      - description: GPLL0 source from GCC
-+      - description: Sleep clock source
-+      - description: Byte clock from MDSS DSI PHY0
-+      - description: Pixel clock from MDSS DSI PHY0
-+      - description: Byte clock from MDSS DSI PHY1
-+      - description: Pixel clock from MDSS DSI PHY1
-+      - description: Link clock from DP PHY
-+      - description: VCO DIV clock from DP PHY
-+
-+  power-domains:
-+    maxItems: 1
-+    description:
-+      CX power domain.
-+
-+required:
-+  - compatible
-+  - clocks
-+  - power-domains
-+
-+allOf:
-+  - $ref: qcom,gcc.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,sm7150-gcc.h>
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    #include <dt-bindings/power/qcom,rpmhpd.h>
-+    clock-controller@af00000 {
-+      compatible = "qcom,sm7150-dispcc";
-+      reg = <0x0af00000 0x200000>;
-+      clocks = <&rpmhcc RPMH_CXO_CLK>,
-+               <&rpmhcc RPMH_CXO_CLK_A>,
-+               <&gcc GCC_DISP_GPLL0_CLK_SRC>,
-+               <&sleep_clk>,
-+               <&mdss_dsi0_phy 0>,
-+               <&mdss_dsi0_phy 1>,
-+               <&mdss_dsi1_phy 0>,
-+               <&mdss_dsi1_phy 1>,
-+               <&dp_phy 0>,
-+               <&dp_phy 1>;
-+      power-domains = <&rpmhpd RPMHPD_CX>;
-+      #clock-cells = <1>;
-+      #reset-cells = <1>;
-+      #power-domain-cells = <1>;
-+    };
-+...
-diff --git a/include/dt-bindings/clock/qcom,sm7150-dispcc.h b/include/dt-bindings/clock/qcom,sm7150-dispcc.h
-new file mode 100644
-index 000000000000..fc1fefe8fd72
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,sm7150-dispcc.h
-@@ -0,0 +1,59 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2024, Danila Tikhonov <danila@jiaxyga.com>
-+ * Copyright (c) 2024, David Wronek <david@mainlining.org>
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_QCOM_DISPCC_SM7150_H
-+#define _DT_BINDINGS_CLK_QCOM_DISPCC_SM7150_H
-+
-+/* DISPCC clock registers */
-+#define DISPCC_PLL0				0
-+#define DISPCC_MDSS_AHB_CLK			1
-+#define DISPCC_MDSS_AHB_CLK_SRC			2
-+#define DISPCC_MDSS_BYTE0_CLK			3
-+#define DISPCC_MDSS_BYTE0_CLK_SRC		4
-+#define DISPCC_MDSS_BYTE0_DIV_CLK_SRC		5
-+#define DISPCC_MDSS_BYTE0_INTF_CLK		6
-+#define DISPCC_MDSS_BYTE1_CLK			7
-+#define DISPCC_MDSS_BYTE1_CLK_SRC		8
-+#define DISPCC_MDSS_BYTE1_DIV_CLK_SRC		9
-+#define DISPCC_MDSS_BYTE1_INTF_CLK		10
-+#define DISPCC_MDSS_DP_AUX_CLK			11
-+#define DISPCC_MDSS_DP_AUX_CLK_SRC		12
-+#define DISPCC_MDSS_DP_CRYPTO_CLK		13
-+#define DISPCC_MDSS_DP_CRYPTO_CLK_SRC		14
-+#define DISPCC_MDSS_DP_LINK_CLK			15
-+#define DISPCC_MDSS_DP_LINK_CLK_SRC		16
-+#define DISPCC_MDSS_DP_LINK_INTF_CLK		17
-+#define DISPCC_MDSS_DP_PIXEL1_CLK		18
-+#define DISPCC_MDSS_DP_PIXEL1_CLK_SRC		19
-+#define DISPCC_MDSS_DP_PIXEL_CLK		20
-+#define DISPCC_MDSS_DP_PIXEL_CLK_SRC		21
-+#define DISPCC_MDSS_ESC0_CLK			22
-+#define DISPCC_MDSS_ESC0_CLK_SRC		23
-+#define DISPCC_MDSS_ESC1_CLK			24
-+#define DISPCC_MDSS_ESC1_CLK_SRC		25
-+#define DISPCC_MDSS_MDP_CLK			26
-+#define DISPCC_MDSS_MDP_CLK_SRC			27
-+#define DISPCC_MDSS_MDP_LUT_CLK			28
-+#define DISPCC_MDSS_NON_GDSC_AHB_CLK		29
-+#define DISPCC_MDSS_PCLK0_CLK			30
-+#define DISPCC_MDSS_PCLK0_CLK_SRC		31
-+#define DISPCC_MDSS_PCLK1_CLK			32
-+#define DISPCC_MDSS_PCLK1_CLK_SRC		33
-+#define DISPCC_MDSS_ROT_CLK			34
-+#define DISPCC_MDSS_ROT_CLK_SRC			35
-+#define DISPCC_MDSS_RSCC_AHB_CLK		36
-+#define DISPCC_MDSS_RSCC_VSYNC_CLK		37
-+#define DISPCC_MDSS_VSYNC_CLK			38
-+#define DISPCC_MDSS_VSYNC_CLK_SRC		39
-+#define DISPCC_XO_CLK_SRC			40
-+#define DISPCC_SLEEP_CLK			41
-+#define DISPCC_SLEEP_CLK_SRC			42
-+
-+/* DISPCC GDSCR */
-+#define MDSS_GDSC				0
-+
-+#endif
+thanks,
 -- 
-2.44.0
+John Hubbard
+NVIDIA
 
