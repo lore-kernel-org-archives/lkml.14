@@ -1,74 +1,88 @@
-Received: from fgw22-7.mail.saunalahti.fi (fgw22-7.mail.saunalahti.fi [62.142.5.83])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C355320314
-	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 14:14:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.83
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F728208CA;
+	Sun,  5 May 2024 14:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714918475; cv=none; b=dakslW1SdkqrEdFwuhEKvyp2ikqMTfJUX86glrN6liwx9K1Prv0HSSkrchQkXaZTQ/r7zr8gElrq5fs8eOKnAkYRGv+O9Qwjnpd37Dg/zuNQZBpkYc8QjlfvYCxjLeoJ+Pg9lEPLm/CeT3hJPdInqcQx4w7yVOLLta2GVM9nzS8=
+	t=1714918570; cv=none; b=AMh0Fj/k6gMVaVDRB9+iDBXbXliBe84GQES98y6Jzn2/5no9GTQaOszcXel/Gc5rlo2z/rVwRP78yk/0OB/IjLaT4vxQjxsw++FrbaY8QRdtZum5i6NBMJeoRmOKnLARUmKag6PG+SGlntbp+sx9TJSx8Z5OXBi04R7B/Z/Y6Lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714918475; c=relaxed/simple;
-	bh=S2udcO86AAUOlJqUCaaHKk93tPUQSfKy/zbbJmspVTY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f4kJCBhnTLUEgOFNyNjFUks8iGQMNc4xN+y+GCjXUnnBw/FE2p8JOsaXQ3JHzbFDT/p2iFk/9MK4FFdAhUXVqUjG0jATX8ADCF1Uq4WywWu96tUSM4n1xrawoxH/tgESTirThwPiUkxQbk8vNLa+fPXbVk5C8xZ166gxlORZ21Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-25-208.elisa-laajakaista.fi [88.113.25.208])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id ca24acbc-0ae9-11ef-b3cf-005056bd6ce9;
-	Sun, 05 May 2024 17:14:31 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v1 1/1] gpiolib: Discourage to use formatting strings in line names
-Date: Sun,  5 May 2024 17:14:20 +0300
-Message-ID: <20240505141420.627398-1-andy.shevchenko@gmail.com>
-X-Mailer: git-send-email 2.45.0
+	s=arc-20240116; t=1714918570; c=relaxed/simple;
+	bh=DLchroJz79kbL2e5l1H7RnbQisLdhsuaVztVjGH3kvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vAPqBnXSv7IYrAth9Z261pN6+OXBWbND5YhQa26ZeeHVKgQTNrZaf17OUdXkSiQnUvuNIDXiLR5+AyxY89gbb4PPryEd95DRaQWeI1l8OZzmpKElXBL7bg62tqEYPo68ylF//Oaa7Ezrgzmmm3S2gMuwrwYEVK6iI3Xdq4AZgko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OVTDNHPw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OVTDNHPw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B99C113CC;
+	Sun,  5 May 2024 14:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714918569;
+	bh=DLchroJz79kbL2e5l1H7RnbQisLdhsuaVztVjGH3kvA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OVTDNHPwAr6VpIZAeu3LIunGe1FT2I2+Bc7LitboltauXKb2grFN/LaZDsBpRKXPO
+	 yV9fyMEcDhPJbFtufGoWzz0yuLTUMWR5J1QSPj8LOpda35NqL+InZh4w+J9uTFkKf+
+	 tkJwYWsvWVxl2keiuqyoCN7ZzUHdP8qO6K+JnrrYLaFexP/NvECP1YoNnhOqGzVSiM
+	 RumCcQRFqWSNbrgq5NH57OhjLbBTWw2bXca3W+ABodKXAL64kJlFTOdmrBcgNKfHQz
+	 FBoJh81PUktvgnHjNGLZkpeWfFI8dJ2zB1cKCCMHrbAJY4DT1oB4vqRjgPcZfH5wUW
+	 FNYh8m8PbKVIQ==
+Date: Sun, 5 May 2024 17:16:05 +0300
+From: Leon Romanovsky <leon@kernel.org>
+To: Breno Leitao <leitao@debian.org>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, netdev@vger.kernel.org,
+	"open list:HFI1 DRIVER" <linux-rdma@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next 2/2] IB/hfi1: Remove generic .ndo_get_stats64
+Message-ID: <20240505141605.GF68202@unreal>
+References: <20240503111333.552360-1-leitao@debian.org>
+ <20240503111333.552360-2-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240503111333.552360-2-leitao@debian.org>
 
-Currently the documentation for line names allows to use %u inside
-the alternative name. This is broken in character device approach
-from day 1 and being in use solely in sysfs.
+On Fri, May 03, 2024 at 04:13:32AM -0700, Breno Leitao wrote:
+> Commit 3e2f544dd8a33 ("net: get stats64 if device if driver is
+> configured") moved the callback to dev_get_tstats64() to net core, so,
+> unless the driver is doing some custom stats collection, it does not
+> need to set .ndo_get_stats64.
+> 
+> Since this driver is now relying in NETDEV_PCPU_STAT_TSTATS, then, it
+> doesn't need to set the dev_get_tstats64() generic .ndo_get_stats64
+> function pointer.
+> 
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> ---
+>  drivers/infiniband/hw/hfi1/ipoib_main.c | 1 -
+>  1 file changed, 1 deletion(-)
 
-Character device interface has a line number as a part of its address,
-so the users better rely on it. Hence remove the misleading documentation.
+Dennis,
 
-On top of that, there are no in-kernel users (out of 6, if I'm correct)
-for such names and moreover if one exists it won't help in distinguishing
-lines with the same naming as '%u' will also be in them and we will get
-a warning in gpiochip_set_desc_names() for such cases.
+Please pay attention that 3e2f544dd8a33 ("net: get stats64 if device if
+driver is configured") is not in RDMA tree yet, but we are approaching
+merge window and linux-next is already have it.
 
-Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
- include/linux/gpio/driver.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Thanks
 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index f8617eaf08ba..0032bb6e7d8f 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -376,9 +376,7 @@ struct gpio_irq_chip {
-  * @names: if set, must be an array of strings to use as alternative
-  *      names for the GPIOs in this chip. Any entry in the array
-  *      may be NULL if there is no alias for the GPIO, however the
-- *      array must be @ngpio entries long.  A name can include a single printk
-- *      format specifier for an unsigned int.  It is substituted by the actual
-- *      number of the gpio.
-+ *      array must be @ngpio entries long.
-  * @can_sleep: flag must be set iff get()/set() methods sleep, as they
-  *	must while accessing GPIO expander chips over I2C or SPI. This
-  *	implies that if the chip supports IRQs, these IRQs need to be threaded
--- 
-2.45.0
-
+> 
+> diff --git a/drivers/infiniband/hw/hfi1/ipoib_main.c b/drivers/infiniband/hw/hfi1/ipoib_main.c
+> index 59c6e55f4119..7c9d5203002b 100644
+> --- a/drivers/infiniband/hw/hfi1/ipoib_main.c
+> +++ b/drivers/infiniband/hw/hfi1/ipoib_main.c
+> @@ -96,7 +96,6 @@ static const struct net_device_ops hfi1_ipoib_netdev_ops = {
+>  	.ndo_uninit       = hfi1_ipoib_dev_uninit,
+>  	.ndo_open         = hfi1_ipoib_dev_open,
+>  	.ndo_stop         = hfi1_ipoib_dev_stop,
+> -	.ndo_get_stats64  = dev_get_tstats64,
+>  };
+>  
+>  static int hfi1_ipoib_mcast_attach(struct net_device *dev,
+> -- 
+> 2.43.0
+> 
