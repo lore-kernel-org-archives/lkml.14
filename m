@@ -1,96 +1,94 @@
-Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FF713667B;
-	Sun,  5 May 2024 21:48:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D2C6EB7E
+	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 21:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714945729; cv=none; b=RsWyXqNwDbUEnu+yw1IrGPUE9SpaC8brH6L4rIM6netovT7kdBXI7/fnY8RICQ1EWAAU6xal7l2uLyiGxm0y7k4HrBir4PoN4aR7cdjWPn6wcyjFz/NGbB2Mfpo4h32Of7lxB0wiTmE3y9uZ67Y0/IY4LZea8QCBQblqp8EKc1U=
+	t=1714945831; cv=none; b=iH5VKBRk07LfGnxUo3EnETzYRxn8HzPQd7sQtpv/kg+3/PBrIc3fYwUGbKyIjW+CWb84MsNOW92aHYYLgHYJybHEQFS/wWatILwLctR5au7ET9/NGgLSwSfq6rMtACHWM+vp4k/dZEn86a+2v5q8iPivYtmVqw54yBSbzd8/03Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714945729; c=relaxed/simple;
-	bh=BfcYcy+g5vRGOxT7Eyza/k94pC5vxujBJ5vBukv4+3k=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UhVYDw6++pJJzBQoqj8RDpsEvVlor9Jvw6Luq3cBs7xt79HUIl4XqTwxNJnyk10oFvQH75bbZ321+4dcUfJqezXESyAXx5RNr8WnSJWZbWRLtvL2wYOtUWMvqsNfW9MHM+mbhYpzBTTTiYoVJJmfRGYT8hGWVy+6A1YHhFStCyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=ghfZolh6; arc=none smtp.client-ip=161.97.139.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="ghfZolh6"
-Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
-	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1s3jir-005kk8-00;
-	Sun, 05 May 2024 23:48:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:To:From:Sender:Reply-To:Cc:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=jq4ul0HfMwHbZAQBdcNVCPfCEbXvT0e+cZ1ly+iFADg=; b=ghfZolh67wT6xBtCcovtqzmdV/
-	6rl1mM+e/Wh75bu2sA+cH4mnyabMno7/ruuD2l0+aAAdj/TyEC7UsVe/z3pd20dYnJUOR8pWw30mb
-	ivWoS9TjsEjd330dpgxWHYaH5T3f865CyLjb9PvW37vbi9Oua4Y854rkE8qX9yfwuChKlJSZFqugF
-	zMnybJ8f+cjklMpOhvg4M+HEqMrNr7c00xxnptXx/CLMaQu7Rx5APgNdPRGTfw6x4PUcLElA25H+U
-	R84TyFjktBFSQCqc4CSZFBPBCzvv34JtfuN35mOJp78Cg6zQndUaibam3FdTW6e/+oMNOXWAcb3E0
-	1MrkY4gQ==;
-Received: from p200300c20737c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:737:c200:1a3d:a2ff:febf:d33a] helo=aktux)
-	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1s3jin-000ccB-0D;
-	Sun, 05 May 2024 23:48:38 +0200
-Received: from andi by aktux with local (Exim 4.96)
-	(envelope-from <andreas@kemnade.info>)
-	id 1s3jio-003jyb-0E;
-	Sun, 05 May 2024 23:48:38 +0200
-From: Andreas Kemnade <andreas@kemnade.info>
-To: dmitry.torokhov@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	andreas@kemnade.info,
-	u.kleine-koenig@pengutronix.de,
-	hdegoede@redhat.com,
-	andy.shevchenko@gmail.com,
-	siebren.vroegindeweij@hotmail.com,
-	linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] dt-bindings: touchscreen: elan,ektf2127: Add EKTF2232
-Date: Sun,  5 May 2024 23:47:53 +0200
-Message-Id: <20240505214754.891700-3-andreas@kemnade.info>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240505214754.891700-1-andreas@kemnade.info>
-References: <20240505214754.891700-1-andreas@kemnade.info>
+	s=arc-20240116; t=1714945831; c=relaxed/simple;
+	bh=4x09+TgtkiavXWB8WSF924E+mUO2753WTTrEYG/x2cc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=K6AAfbpQGB1PQkTX5X9Y1Nt5SoMDIdMWf5vY4NNTTJOF4TLAAQDGcSHNUypMnKP7g3UAMWp0rMFE9jbwEAiPrGQq4iML5M+wpoF9+oU+G9KqmyNMWEEA6LHDt2tDpQTBbA8gvlS/4cOUlQRnFQ2eXk6nhZ/DZi0YCoJQfyfyaC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-156-34HP07sTNbyigNAagLM0zQ-1; Sun, 05 May 2024 22:50:20 +0100
+X-MC-Unique: 34HP07sTNbyigNAagLM0zQ-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 5 May
+ 2024 22:49:44 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sun, 5 May 2024 22:49:44 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Yury Norov' <yury.norov@gmail.com>, Kuan-Wei Chiu <visitorckw@gmail.com>
+CC: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
+	"n26122115@gs.ncku.edu.tw" <n26122115@gs.ncku.edu.tw>,
+	"jserv@ccns.ncku.edu.tw" <jserv@ccns.ncku.edu.tw>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 1/2] lib/test_bitops: Add benchmark test for fns()
+Thread-Topic: [PATCH v4 1/2] lib/test_bitops: Add benchmark test for fns()
+Thread-Index: AQHam+S8XBnnR43Z8kaIhRcpvR0+crGIoopwgAB+UQOAABDgEA==
+Date: Sun, 5 May 2024 21:49:44 +0000
+Message-ID: <9108af3e10234c49b6452df245ad3250@AcuMS.aculab.com>
+References: <20240501132047.14536-1-visitorckw@gmail.com>
+ <20240501132047.14536-2-visitorckw@gmail.com>
+ <ZjJt9w2mvdm2P+dM@yury-ThinkPad>
+ <62fdb348791949c08e53936e3bc442b5@AcuMS.aculab.com>
+ <ZjfUbqyYTrVR8E6p@visitorckw-System-Product-Name>
+ <ZjfumT3gv9rzFBxw@yury-ThinkPad>
+In-Reply-To: <ZjfumT3gv9rzFBxw@yury-ThinkPad>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Add a compatible for the EKTF2232, which is similar to other chips in this
-document.
+...
+> He also chose to use random numbers to feed the fns(), and that's a
+> reasonable choice. I see nothing wrong in his approach with the array,
+> as well as what you proposed. But the test is done, and it works. If
+> you think it's worth testing the function with your approach, feel
+> free to submit your test, I'll take it just as well, and we'll have
+> even better coverage.
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- .../devicetree/bindings/input/touchscreen/elan,ektf2127.yaml     | 1 +
- 1 file changed, 1 insertion(+)
+Accessing a very large array is going to be affected by cache line
+and TLB misses.
+It wont really be entirely affected by implementation of the
+function itself.
+This is especially relevant for something that does really apply
+to large memory blocks.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/elan,ektf2127.yaml b/Documentation/devicetree/bindings/input/touchscreen/elan,ektf2127.yaml
-index 5c4c29da0b11d..ff0ec3fd24c5d 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/elan,ektf2127.yaml
-+++ b/Documentation/devicetree/bindings/input/touchscreen/elan,ektf2127.yaml
-@@ -17,6 +17,7 @@ properties:
-     enum:
-       - elan,ektf2127
-       - elan,ektf2132
-+      - elan,ektf2232
- 
-   reg:
-     maxItems: 1
--- 
-2.39.2
+OTOH you don't want to repeatedly call the version that used
+a binary chop with constant data - the branch predictor
+will learn the pattern instead of getting if wrong 50% of the time.
+
+A compromise would be to repeatedly process a short random
+buffer enough times to get something measurable.
+Although it is perfectly possible to use a cycle counter
+(but not the x86 TSC) to time single function calls and
+get repeatable answers that can actually be compared to
+calculated values.
+
+=09David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
