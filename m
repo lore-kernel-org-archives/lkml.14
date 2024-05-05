@@ -1,82 +1,172 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E142D044;
-	Sun,  5 May 2024 14:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 251CF1D555;
+	Sun,  5 May 2024 15:02:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714920819; cv=none; b=KLlcPpyxsGO2FrI6JAOOd4yabzK4c54Wh1DZdpAYCpo3mtCCTsnGLC7OtiSR9vdYaGKvb/KW589Cc5JrxdbpaoWSrff6U+9ZxgdYXcO2gw89qp7qkrunrHzg30mrWa37BAY+Vw9z62ff4SiOgN4eMy3QqdIFspR2gXXO2Pb33TM=
+	t=1714921348; cv=none; b=W3QAgH7ze45Y0vc+A6m3qP9LYCmtWvRZivv5t7nG/ZpTKVKh1yk2wtbvC9GoRSYUm0OvxkViFCKs8y2fobdB7icE3Vqh9RV3Fxd9WiCmqtT2S4A42AvaCndRNeSbe5Y1l4rK1xATmgh0W8WA58C4W8iKFk6fxtNcj6ViPyVal7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714920819; c=relaxed/simple;
-	bh=gfr6J8JaI0FQSBkoFj/QKJrcZ1kMMUOIbnAK47RI06o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EmIsiGw1g9BUHSGWroiNhKYv53WyOcoxvDu4hqXwfCB6Y+jcLqvVzJvQzV03NMk5nIOUKxOlmxLxztU1I1Nw/yreR7jPf5hoMLevMVZ0xPYkDY3SEXjwgGek1wVYC8szULaHDN7qVW+85o76WGyuQBH89D4hMdij5y2wacHEEgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rONx/UNK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714921348; c=relaxed/simple;
+	bh=vo2e+dDUGQPlquOGMwije3nIq/tJ2jZLuO38KYfmmFU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dnXUlwDjZjVSly452EV5EiqYUiECjY519H1Dt0H9yjM7nJh096QO6cE7PHdeMsqRoSXEFgT0zGMJwcxO3eQTTIv4emXCFQ59s0T//Ytn7G54tx6A9XDNTTCDJ3hUdSwxQ28CMbefQefJ64ZUtgJIko+LS0XBR53x4kShN3CH2y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SOm2MoZe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rONx/UNK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 860EDC113CC;
-	Sun,  5 May 2024 14:53:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SOm2MoZe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0087C113CC;
+	Sun,  5 May 2024 15:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714920818;
-	bh=gfr6J8JaI0FQSBkoFj/QKJrcZ1kMMUOIbnAK47RI06o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rONx/UNK4fw/FNu8BIef7/Qx2Wlw4fTdIijYCTe41usY7p1zpLbtpQPrGWntvqCt4
-	 JZrpK422ntuev4jf2Re8uD5+2CSv9rQRsOabscJkzGOD9lav7Gc60718Doxjh6Mfh5
-	 Dq7tAh95kxelOg6WlG+VZ8uaRw4J4AZ8isuh2byflT/yHOoZ0vGmPxgoBIqfA8r9DI
-	 TdrG0ZzlUYLNDRcLO++qP5gHvRJ4iMtUXZF+MeS9/d+PbLM0ok6TtKDKkOXQ6D7/bW
-	 oqz48Ll/XY8wPSvQ0+lZdVAcAXGVHvqHHFiBu5FOl9ArRbhlVQuMk4u3THA/vkPuOq
-	 HBDXDG15zQRRQ==
-Date: Sun, 5 May 2024 23:53:36 +0900
-From: Mark Brown <broonie@kernel.org>
-To: John Hubbard <jhubbard@nvidia.com>
-Cc: Shuah Khan <shuah@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Ivan Orlov <ivan.orlov0322@gmail.com>, linux-sound@vger.kernel.org,
-	Valentin Obst <kernel@valentinobst.de>,
-	linux-kselftest@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev
-Subject: Re: [PATCH] selftests/alsa: fix a build warning: return a value in
- all cases
-Message-ID: <ZjedcAW6ITmo9pXp@finisterre.sirena.org.uk>
-References: <20240504021330.33429-1-jhubbard@nvidia.com>
+	s=k20201202; t=1714921348;
+	bh=vo2e+dDUGQPlquOGMwije3nIq/tJ2jZLuO38KYfmmFU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=SOm2MoZeLHTFZxI4BWo7aGnnfNo6BYnPfPzyxDWhBMkvnygmbGAuR4+dEfHJs+yHk
+	 ZUDhQZnibh+BO+SSiGYt1KwU2nNCc1JM0zTXfZ4XUnVuyAAr9gkwmQgzraat46awQl
+	 fOg6Til2vSA62/tyIf3bVUuF4ON5wTjOqvQ83SHSHcNrv5FoKx2ih9Jiq7PUrPXKwX
+	 n4vCAUHFJhfg2p6IibjIHOyPq3u03emIHhfEwT390jIKcdnoRp/X4FKaycxRXRCtfa
+	 Pl+8sJni1Zw450It2kyYMJ7CKq6Pn1UFK/xc8ePu+den5UVzCeYQf8sNrCcEAgNFBj
+	 87R+RLWqsxS1Q==
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-51ae2e37a87so1500389e87.2;
+        Sun, 05 May 2024 08:02:27 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yw12PaTFfmS6jpAi+uh6q7ZQAdFqjCH6ZNcP/v8zGU3C6zkFrJx
+	m1w1v1f0oajcJ0RSG6OVTNVsQtkyy3oP4w/IFt+TDd7bcuUaEJBoCnxs0CEGX0o7KGihEcV+6KN
+	VHJakTUzkHC+granNBpKzGicnpu8=
+X-Google-Smtp-Source: AGHT+IEBP19xZ4rEa8m9oxMRY79yhMKDB5FM9Vnx1mR80sRZjcajSvvvfADIvOsvpQXbasoA2eGxJcyMwMRrU6ySjgc=
+X-Received: by 2002:a05:6512:10c7:b0:51e:e703:c878 with SMTP id
+ k7-20020a05651210c700b0051ee703c878mr1780465lfg.14.1714921346575; Sun, 05 May
+ 2024 08:02:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="FQLEYbDtCxwwEBJN"
-Content-Disposition: inline
-In-Reply-To: <20240504021330.33429-1-jhubbard@nvidia.com>
-X-Cookie: lisp, v.:
+References: <20240504183333.2031860-1-masahiroy@kernel.org> <20240504183333.2031860-10-masahiroy@kernel.org>
+In-Reply-To: <20240504183333.2031860-10-masahiroy@kernel.org>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 6 May 2024 00:01:50 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARNC0ma5FP8WJ23RP-8K2iEz3vDhoB7mhqaFyLP85zgpw@mail.gmail.com>
+Message-ID: <CAK7LNARNC0ma5FP8WJ23RP-8K2iEz3vDhoB7mhqaFyLP85zgpw@mail.gmail.com>
+Subject: Re: [PATCH 10/10] kconfig: turn defaults and additional prompt for
+ choice members into error
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, May 5, 2024 at 3:34=E2=80=AFAM Masahiro Yamada <masahiroy@kernel.or=
+g> wrote:
+>
+> menu_finalize() warns default properties for choice members and prompts
+> outside the choice block. These should be hard errors.
+>
+> While I was here, I moved the checks to slim down menu_finalize().
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  scripts/kconfig/menu.c   | 10 ----------
+>  scripts/kconfig/parser.y | 39 +++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 39 insertions(+), 10 deletions(-)
+>
+> diff --git a/scripts/kconfig/menu.c b/scripts/kconfig/menu.c
+> index a9b1e451dfe7..bee96c9964fd 100644
+> --- a/scripts/kconfig/menu.c
+> +++ b/scripts/kconfig/menu.c
+> @@ -507,16 +507,6 @@ static void _menu_finalize(struct menu *parent, bool=
+ inside_choice)
+>                     menu->sym && !sym_is_choice_value(menu->sym)) {
+>                         current_entry =3D menu;
+>                         menu->sym->flags |=3D SYMBOL_CHOICEVAL;
+> -                       for (prop =3D menu->sym->prop; prop; prop =3D pro=
+p->next) {
+> -                               if (prop->type =3D=3D P_DEFAULT)
+> -                                       prop_warn(prop, "defaults for cho=
+ice "
+> -                                                 "values not supported")=
+;
+> -                               if (prop->menu =3D=3D menu)
+> -                                       continue;
+> -                               if (prop->type =3D=3D P_PROMPT &&
+> -                                   prop->menu->parent->sym !=3D sym)
+> -                                       prop_warn(prop, "choice value use=
+d outside its choice group");
+> -                       }
+>                         /* Non-tristate choice values of tristate choices=
+ must
+>                          * depend on the choice being set to Y. The choic=
+e
+>                          * values' dependencies were propagated to their
+> diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
+> index ed86869e5ed0..0a9e249b5dcc 100644
+> --- a/scripts/kconfig/parser.y
+> +++ b/scripts/kconfig/parser.y
+> @@ -476,6 +476,37 @@ assign_val:
+>
+>  %%
+>
+> +/**
+> + * choice_check_sanity - check sanity of a choice member
+> + *
+> + * @menu: menu of the choice member
+> + *
+> + * Return: -1 if an error is found, 0 otherwise.
+> + */
+> +static int choice_check_sanity(struct menu *menu)
+> +{
+> +       struct property *prop;
+> +       int ret =3D 0;
+> +
+> +       for (prop =3D menu->sym->prop; prop; prop =3D prop->next) {
+> +               if (prop->type =3D=3D P_DEFAULT) {
+> +                       fprintf(stderr, "%s:%d: error: %s",
+> +                               prop->filename, prop->lineno,
+> +                               "defaults for choice values not supported=
+\n");
+> +                       ret =3D -1;
+> +               }
+> +
+> +               if (prop->menu !=3D menu && prop->type =3D=3D P_PROMPT) {
+> +                       fprintf(stderr, "%s:%d: error: %s",
+> +                               prop->filename, prop->lineno,
+> +                               "choice value has a prompt outside its ch=
+oice group\n");
+> +                       ret =3D -1;
+> +               }
+> +       }
+> +
+> +       return ret;
+> +}
+> +
 
 
---FQLEYbDtCxwwEBJN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, May 03, 2024 at 07:13:30PM -0700, John Hubbard wrote:
-> dump_config_tree() is declared to return an int, but the compiler cannot
-> prove that it always returns any value at all. This leads to a clang
-> warning, when building via:
+I observed an error in powerpc.
 
-Though given that the function isn't referenced we could also just
-delete it.
+I will fix up this as follows:
 
---FQLEYbDtCxwwEBJN
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+diff --git a/scripts/kconfig/parser.y b/scripts/kconfig/parser.y
+index 0a9e249b5dcc..ff709001b1f0 100644
+--- a/scripts/kconfig/parser.y
++++ b/scripts/kconfig/parser.y
+@@ -496,7 +496,8 @@ static int choice_check_sanity(struct menu *menu)
+                        ret =3D -1;
+                }
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmY3nXAACgkQJNaLcl1U
-h9DBvAf/Tmp6oAlXkJLinQYYWlHXd/+lMb0PVv5TalZyil2L+ifp0pZbyknBloWc
-k8NEvKofzBymkugbsGsvrTBN9E4dLl2Nr6XHPBoADVT5IQx0mrXZYd6pdyZXYil0
-WaMGDMEDwMDFAkfTdVvvEntz2CRTUFNPVMzCZVmQYM3m0vCjPRY3ibI04z00SASb
-iHwq6VaX9lkIs4knd1XGb8amrWpABwSiZD6iE6MDmD/7xP309WkOpx9jBhy6607h
-PJsgk3k0mkhSTvKXoIN8HYtfIJlpHKzN9mOV2vhh9IlGG6zKa95rIWnq4iAbkTHF
-sxx38aBbSc9GBcSA4yHJJqFg0n6/9g==
-=lp+W
------END PGP SIGNATURE-----
+-               if (prop->menu !=3D menu && prop->type =3D=3D P_PROMPT) {
++               if (prop->menu !=3D menu && prop->type =3D=3D P_PROMPT &&
++                   prop->menu->parent !=3D menu->parent) {
+                        fprintf(stderr, "%s:%d: error: %s",
+                                prop->filename, prop->lineno,
+                                "choice value has a prompt outside its
+choice group\n");
 
---FQLEYbDtCxwwEBJN--
+
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
