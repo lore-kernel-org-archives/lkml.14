@@ -1,77 +1,104 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644F017F7
-	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 00:15:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06581197
+	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 00:29:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714868131; cv=none; b=fdcb60ZTxGNSLcUvTCrHK9KPzCSRNphYGmCfBrY2tGseDlpM1uzFOAWQvF9HLYfSVo2d1QyDLDe++CzgVHMUpLGQZThVCTooaUJaMTpF0hwWfCg5xz4OugtyWV28DmKDuhN4domw2x+PZz9d6gHRXb8BuiVvxhl4RE7g/A7+9OA=
+	t=1714868946; cv=none; b=clROoi43zh0MmeCLepVKkgJdgIwiMSOv/OPtJhK1sBi7iu4MKjFSqy5Fkr0WsxiYICjf2+kpkVixzlYRRNrPRZxP5dfDc4MLjsONE0lc5cjfvAwoQNrIdg14fTenVLI1SH4iDylFZ2FEkI8OEwDHTeySdvDaUbZwS6gICUHcVGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714868131; c=relaxed/simple;
-	bh=nk/KiriDObB8jrAY4t1yYUr8J9vkeu4uwfBI3E/tlac=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QBkjZB+z5wDoFyp6HF1cdExxMug+Q/tOK8jrz4XyFQ0/jQlodO1+VvGVI4SjGnfUIIVfMdr8PUqQvE1RG/mcyse1vcKawyRIF87410xj/jrlLeixJilKybpL0GfME6cWWOeDViZCIhAZzwKYUyWXazoaRnD4cZca0tM1neYYMew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=Fo8bw0j2; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1714868946; c=relaxed/simple;
+	bh=Oct8tH33jpLG4KPdTu19d2fWb+qb7ZEeQiyQaPrGtmo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o/T+pQL5d67KdGm9gigzz0DrM0uJiprXSijdYWhmtarUS9XmItQJQxuQhphKiTe+NB89/zI/ISlm5M8EHVR1XP4nfr4FYoudKGlXCH08IU7wSN6JP9sc/ryuSl/vqPPbDfrOApDxQfFpqrGenym+yp9kZVpykOHer2XvQ8l4ZUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=X2xoR3v7; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="Fo8bw0j2"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=9tJdhokC07t5AKnNYTYSjj5ZbBWyfN8CQQLC/CMUQK8=; b=Fo8bw0j2JsDDYWQh
-	FPvHs1HYh4xomYTT6G9Rdn6Voo6ryiCiFtJOeVl8wEYYiSurf8ve/gWX2/JuxUU4oAT36WGaNSD8g
-	0ZCxmJce00vFdgc/TtmTPbSS8N++zmksHYFK894nF5gLZHGNEAqaGziObeKZtsvlwLtqPGV6vSnpu
-	/Kcf/dOuprw/ClTAcgh3FrMdav2hNk7E8a2bTC/AFZVW1CLPRSQ/0T9sEHJahgrp9LQsAF22a/gnF
-	wo+vMlnctMQxarWjMR6hy6MVhPoXB5EVEzML3XdHOMEddtvw7YlauXoymFvRHGNo+7YfottsHLpCX
-	129XPP1c+hen0brlUg==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1s3PX5-004kAq-0i;
-	Sun, 05 May 2024 00:15:11 +0000
-From: linux@treblig.org
-To: richard@nod.at,
-	hch@lst.de
-Cc: linux-um@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] ubd: Remove unused mutex 'ubd_mutex'
-Date: Sun,  5 May 2024 01:15:08 +0100
-Message-ID: <20240505001508.255096-1-linux@treblig.org>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="X2xoR3v7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
+	s=201909; t=1714868934;
+	bh=W4X7cR0LaXN5r6M5SrLOReenkryNgmrUe3eXtF0epm8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X2xoR3v7ilzS6yaheJ5VftNMzyZF/jHb2R0/yH0eALLfHVCmi+ZMk1cWP3VC/+ObZ
+	 tVGRQFDCGZVcfLPPkI95IqHuCUKt6pAp2hMl8+GO1WeypZN7Ffo6+u7NxIixNGs5NZ
+	 PaVJCXxhh+jVmdV2h9Jdi9ugVx4eydEVyct863KQDKiLeEsmeUQ1wi8OGiXqO8qoiW
+	 ztuEP3Hh/qGBHxnzZvYTFei1KW04z9Uuk1kyBGwmyC+GTmcWCewOtj+qb6enfV8F08
+	 L1QlFECgk5HJcvMsoPHpL6q7yJx6hIZungC64MZ6VCXdIxr5t42DLWOfe/Q9GCqRBo
+	 S+iHiCtE5LaWA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VX54k4rzwz4wp3;
+	Sun,  5 May 2024 10:28:54 +1000 (AEST)
+From: Michael Ellerman <mpe@ellerman.id.au>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: gbatra@linux.ibm.com, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, nayna@linux.ibm.com, ajd@linux.ibm.com
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-6.9-4 tag
+Date: Sun, 05 May 2024 10:28:53 +1000
+Message-ID: <87fruxumnu.fsf@mail.lhotse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-Commit fb5d1d389c9e ("ubd: open the backing files in ubd_add")
+Hi Linus,
 
-removed the last use of ubd_mutex.
-Remove it.
+Please pull some more powerpc fixes for 6.9:
 
-Build and kernel startup test only.
+The following changes since commit 210cfef579260ed6c3b700e7baeae51a5e183f43:
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- arch/um/drivers/ubd_kern.c | 1 -
- 1 file changed, 1 deletion(-)
+  selftests/powerpc/papr-vpd: Fix missing variable initialization (2024-04-12 14:40:07 +1000)
 
-diff --git a/arch/um/drivers/ubd_kern.c b/arch/um/drivers/ubd_kern.c
-index 63fc062add708..2b855240fbabf 100644
---- a/arch/um/drivers/ubd_kern.c
-+++ b/arch/um/drivers/ubd_kern.c
-@@ -106,7 +106,6 @@ static inline void ubd_set_bit(__u64 bit, unsigned char *data)
- #define DRIVER_NAME "uml-blkdev"
- 
- static DEFINE_MUTEX(ubd_lock);
--static DEFINE_MUTEX(ubd_mutex); /* replaces BKL, might not be needed */
- 
- static int ubd_ioctl(struct block_device *bdev, blk_mode_t mode,
- 		     unsigned int cmd, unsigned long arg);
--- 
-2.45.0
+are available in the git repository at:
 
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-6.9-4
+
+for you to fetch changes up to 49a940dbdc3107fecd5e6d3063dc07128177e058:
+
+  powerpc/pseries/iommu: LPAR panics during boot up with a frozen PE (2024-04-23 14:34:00 +1000)
+
+- ------------------------------------------------------------------
+powerpc fixes for 6.9 #4
+
+ - Fix incorrect delay handling in the plpks (keystore) code.
+
+ - Fix a panic when an LPAR boots with a frozen PE.
+
+Thanks to: Andrew Donnellan, Gaurav Batra, Nageswara R Sastry, Nayna Jain.
+
+- ------------------------------------------------------------------
+Gaurav Batra (1):
+      powerpc/pseries/iommu: LPAR panics during boot up with a frozen PE
+
+Nayna Jain (1):
+      powerpc/pseries: make max polling consistent for longer H_CALLs
+
+
+ arch/powerpc/include/asm/plpks.h       |  5 ++---
+ arch/powerpc/platforms/pseries/iommu.c |  8 ++++++++
+ arch/powerpc/platforms/pseries/plpks.c | 10 +++++-----
+ 3 files changed, 15 insertions(+), 8 deletions(-)
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAmY20ogACgkQUevqPMjh
+pYACiQ/9F0++bTHAbQyWuEE18xmJIbicTWINXyNor9b2hzp4Z7vXFKriXw1PVbLj
+oZXWyNfSfZKmcylRed7+a14Nd5dNKehEJnIYJ0Zvhca3Rh9gfKMtN/CfZgDbIFlL
+5kLpSG1RV834PSu0tguU+lucJf2SSwkYotlKmQZeB1sSY80r2YGXdCJ24g+mZBIf
+ervhfyJE+rd0RPNdxW6SaLxdLcEMcELTu+6H+FU3uNDFpWypstfQHQg6mgLN56hh
+4ZEVWTrlq4SNSxlS0f7YthQHIVYqfSqw0FAnXDQHTsy3rqMDkLCZeYVB60kndigh
+rOAuK+Hbs2XDCvgcNFeHOBaKS9n4t1AqreinYFLYwRTtnbVhOjEws9K1CPllWveo
+2Y+qfOy+NovNUpqfv0xGbbikl8e15DXheA++xjNQqXcwMxl8nJOehjw3BkMQjm48
+dhd0ulJ4naPkKfMKbu9/ifq8Xr54n1Cf0fkbECe12tbasvIrbXO74cf/Ar2Zw83N
+Xbx1vOREKJ6zdvS5HIt5gG6d3CDG9UHP2JhP+9/JFAbjsVF38jWszcEPEfJBUBoY
+3pcNFGNQBUY9me9D2J2wOL2XSA80FT0JQCJ5Dg8zjiJHQh8oBv1yXLT6VgCMjA5y
+jnfrZec/IG7HaRb2m20AUCtrHsO56M42ZG5DjZYdTH976Y7+CLc=
+=3rSG
+-----END PGP SIGNATURE-----
