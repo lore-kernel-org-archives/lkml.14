@@ -1,126 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A0B1B67F;
-	Sun,  5 May 2024 08:46:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE9E6FB6
+	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 08:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714898788; cv=none; b=SdTgAM+92Vm40J6HTXwv5Eqw3GnUguMVQIfHr2n3HuCQa8xWx5MiFGueH+jLLAeYe0dsrzTo7eT4pXXk8tyR4O5UlpOUCFPOE7lg4lfxVGcAIA9pLAi6ngiVg5uQDxwwEsdYbrtFchROkH5VDpUXwaLy8VuKaA5Es8TiFAAYsqI=
+	t=1714899435; cv=none; b=YZgLiLmSy4MPal/MyZXn0RSscLdnJWBw2PV/7HM2ETfXtCYySuIIDgjsS++GX6GlxDHkOuXus70L8ytcWlDS06Sk/8qJgd10saBxa2HmuylYlE5ChgoznLSbY3AfIhy/SJXOR22frQiaLOrOiKjH3paq9EYo+rUPm0V7yu1XMQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714898788; c=relaxed/simple;
-	bh=5YmmNGfbg0xZ8zOB/za0EUDay16V2M1y+3r8YN9H4f0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lrIpBKrccuQpe/Kc44qpSdIgo88Jmxp9kaZolYApOcl6LrRSS0ckmU1Dt7l9Hw97Yy+h36BapRE1jBblkNFsH+ovOj5Q5Ib16L9WbdPDaS0H1KJ9azA70vF5uofLjo83WnztbqDy6XxAppmKoy/iMQDrMTm/EgDrfsY4icIO0fw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BwJRP0bR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714899435; c=relaxed/simple;
+	bh=Ehg8SnP9d1v1mC1FVfoCaxTGw79pUSG6BVMh37zV3DE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sLbHhANB681Qkr/JR50uy9c0gnOFCaLVesSomBYoqDFkoFSUN8HaVLiWOzuC1N9cRKEHxeRj97t0AtqLSWtxeaTVL1l+0j8hBTNIn9TZBAScUFDQTgexiRBFuUCqslXw+ZUAHsWcJ6ZEC8Aq5nilkPcNUuWAHWZ5xt1SjTiUNLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nt3/q5eE; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BwJRP0bR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2BEDC4DDE0;
-	Sun,  5 May 2024 08:46:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714898787;
-	bh=5YmmNGfbg0xZ8zOB/za0EUDay16V2M1y+3r8YN9H4f0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=BwJRP0bRdEaICL4NJXisJzKbVhgRNWWymzAnQ6MPkGzeNQspp6Bh+FZv+Z/Dexn91
-	 nXoRSWnrkoRt71J5Gz+rS4YZDEgNJdpq4O64vj1wnHeERdqszl6n+Yy/lTj8KwSpKB
-	 vxstLxi12N8paICUglEhZtUORvQ1EnE9BIlJkgXJUiC5g9sDbuxdQpTQTH+1zDVq1X
-	 /0cdLp5fzFUMMxAWZmUncbi4aGZiAXqRgzx8RUor/Z22smhobi1IgNnmpyk3sBbSt7
-	 UA4lU1Q6mwEj3MsfOY6nYY8sJp/smnXShlQymasNh92wcsb4CI4ayhzrPQDFsCpDLu
-	 qIxlifWwKtSCA==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-518931f8d23so905672e87.3;
-        Sun, 05 May 2024 01:46:27 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVmYrpPYvlQ37BJ4ntk8NdbcR5ed9iKS+4vQMWCmUJlcqZY/JBSTvjL/+f+pm2c59DHkhe53hDBflrZFmztiTJMYRAUgXcIiQRFuSKKMIapV5bUZKvpgJn4jbTAx5tWhNlOMxBgwdnhYaz6
-X-Gm-Message-State: AOJu0YztiOqUq55yF7lpt+EKWxmHG0ayx1WIdopBAnJ0CvsQd5wtr3m9
-	F8jOl1W01uA7NIfwWnkOFcT09zR2B4IAviP6g0neHeY6IFr52FRNeFC542mj/4pZ8bjBwXj5hBn
-	CqdpkSwCM0PUq1FMxxrDg2IRauPo=
-X-Google-Smtp-Source: AGHT+IFgYJGMIyx/Nk7hWsAZya+78Uc/8M3cOFCqp3BcgOPyaz+ZfswbVsLbyE/uUi8RXwOdB9dLaZXTf4nuKCHQKXI=
-X-Received: by 2002:a19:8c16:0:b0:51f:4a03:a053 with SMTP id
- o22-20020a198c16000000b0051f4a03a053mr4849843lfd.4.1714898786460; Sun, 05 May
- 2024 01:46:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nt3/q5eE"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41ba1ba55ffso4890415e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2024 01:57:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714899432; x=1715504232; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wOJc1LQ/uwTTREZFAQaONK1K4DlXlSIPSYXu4lxduKY=;
+        b=Nt3/q5eEJYR72m3l/74QRWO/IwWb1FAbwdaagztPgR2szD5kryU4QFuX6x/bWQt9Sq
+         oB+n5wWEbTXL9BRr3nn3ob4YwvzveOpPMsevkNp3ukzsS4k8CNAbTaQT9je3D2hMm7pz
+         9TjwtshCuB2OWiB8866cFzMwLt/fyTMAaJ8IU3SXXBuVW3VYdfYO0wvKdJDdjKbNWAda
+         JF+3x4wsoGg4gmYJhFx2zJFcYBrAto/8KCLrFvU2YY+TdjerA+zVl4JAbfo3JJO99Qt+
+         FOMtBeNcEI/uBNKHTtun68DORHgSp0dRKmI4erchfkuB24iw0CTGNsU1sPW9js7nemgM
+         Yh5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714899432; x=1715504232;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wOJc1LQ/uwTTREZFAQaONK1K4DlXlSIPSYXu4lxduKY=;
+        b=HeOfTTGORRko8Fmi6g8tHTCxIcISK/WL7u3elpprn/8JoRsWtR1IF8LlPDRLwG6q5X
+         BTO7TnxK9LrHrszBCI+EeL+gnFouQXUXD41uMvMML1azrVSbbln3cKW2BHQBxfYdkU67
+         2BmplGycqC3QMCWLjr9QCoIVsvx9DWh+4gvqReSEpCCVFDR2ew+e+FTHt5lTPvS98Zxd
+         aRJ6sFutxADvOfAUvhyF/1SPB9/u/cv7EQ5HTJXYcfEr6nR2HZdD00Q3FcrWDYPXaiFG
+         dMEXox32Y50LLsuAbJaMMAkSxjlNWO+uq+4TG3AOfGUKI+QtFg8x4T22mNCZsz569LWn
+         5ydw==
+X-Gm-Message-State: AOJu0YyoShqn2jSs9wrlmLSVmrM/PC/TBMgAiAkNy74v7/8wzZamdEr/
+	e2SJGubUrIFL7yfDy10iqDgD+nqEQwyCQ8Pbw3eik+GSgP0piOxk
+X-Google-Smtp-Source: AGHT+IFkFWzFBXPU8EFJp63RbN72TIii8CCC1G+7/lqJUT/HF82q0mlDjFPTmSjVd5DxGyfdSZG65A==
+X-Received: by 2002:a05:600c:3106:b0:418:5ef3:4a04 with SMTP id g6-20020a05600c310600b004185ef34a04mr6338193wmo.18.1714899432163;
+        Sun, 05 May 2024 01:57:12 -0700 (PDT)
+Received: from localhost.localdomain (host86-177-210-156.range86-177.btcentralplus.com. [86.177.210.156])
+        by smtp.gmail.com with ESMTPSA id fc16-20020a05600c525000b00418d68df226sm15594986wmb.0.2024.05.05.01.57.11
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Sun, 05 May 2024 01:57:11 -0700 (PDT)
+From: Levi Yun <ppbuk5246@gmail.com>
+To: anna-maria@linutronix.de,
+	rederic@kernel.org,
+	tglx@linutronix.de,
+	Markus.Elfring@web.de
+Cc: linux-kernel@vger.kernel.org,
+	Levi Yun <ppbuk5246@gmail.com>
+Subject: [PATCH RESEND] time/timgr: Fix wrong reference when level 0 group allocation failed
+Date: Sun,  5 May 2024 09:57:09 +0100
+Message-ID: <20240505085709.82688-1-ppbuk5246@gmail.com>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20240501195116.62669-1-ppbuk5246@gmail.com>
+References: <20240501195116.62669-1-ppbuk5246@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAK7LNARXef6Myb_Gd4jyGfwujoBAjmjzLZBzgkm4T1KmfHP0MQ@mail.gmail.com>
- <ZjcRPelwZP34N42s@gmail.com> <ZjcSjk0mXYopAvVS@gmail.com> <ZjcaHRjZDdy/6/rn@gmail.com>
- <Zjc0sJWqfMWFD0/p@gmail.com>
-In-Reply-To: <Zjc0sJWqfMWFD0/p@gmail.com>
-From: Masahiro Yamada <masahiroy@kernel.org>
-Date: Sun, 5 May 2024 17:45:49 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASRjczOYLYRYS6OTHkMYe8rpHTP_MHzfLUd0r0bfBgJGg@mail.gmail.com>
-Message-ID: <CAK7LNASRjczOYLYRYS6OTHkMYe8rpHTP_MHzfLUd0r0bfBgJGg@mail.gmail.com>
-Subject: Re: [GIT PULL] Kbuild updates for v6.9-rc1
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 5, 2024 at 4:26=E2=80=AFPM Ingo Molnar <mingo@kernel.org> wrote=
-:
->
->
-> * Ingo Molnar <mingo@kernel.org> wrote:
->
-> >
-> > * Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > >
-> > > * Ingo Molnar <mingo@kernel.org> wrote:
-> > >
-> > > > Notes:
-> > > >
-> > > > - Yes, those weird 'file' and ': No such file or directory' strings=
- are
-> > > >   pasted as-is. No idea what it's about, and the build log doesn't =
-say.
-> > >
-> > > Forgot to mention that I also did a KBUILD_VERBOSE=3D2 build - which =
-isn't
-> > > more verbose for this particular failure:
-> >
-> > Another update - I reverted the 4 most recent commits to
-> > scripts/package/debian/rules:
-> >
-> >  b8d18fee7aa2 Revert "kbuild: deb-pkg: show verbose log for direct pack=
-age builds"
-> >  82ac586caf3d Revert "kbuild: deb-pkg: make debian/rules quiet for 'mak=
-e deb-pkg'"
-> >  0b806eac90d6 Revert "kbuild: deb-pkg: build binary-arch in parallel"
-> >  4b16391dc462 Revert "kbuild: deb-pkg: call more misc debhelper command=
-s"
-> >  f96beb84eff6 kbuild: deb-pkg: call more misc debhelper commands
-> >  1d7bae8f8c85 kbuild: deb-pkg: build binary-arch in parallel
-> >  caf400c8b68a kbuild: deb-pkg: make debian/rules quiet for 'make deb-pk=
-g'
-> >  cc3df32c9f3a kbuild: deb-pkg: show verbose log for direct package buil=
-ds
-> >
-> > And this resolved the issue, the debs are built successfully:
->
-> Update, the bad commit is:
->
->    1d7bae8f8c85 kbuild: deb-pkg: build binary-arch in parallel
->
-> ... and reverting it solves the build bug.
->
-> And my Make-fu is weak, I don't see what's wrong with the commit.
->
-> Thanks,
->
->         Ingo
+When tmigr_setup_groups() failed level 0 group allocation,
+wrong reference happens on local stack array while intializing timer hierarchy.
+
+To prevent this, Check loop condition first before intializing timer hierarchy.
 
 
-"make -j$(nproc) deb-pkg" works fine for me
-on Ubuntu 23.10
+Fixes: 7ee988770326 ("timers: Implement the hierarchical pull model")
+Signed-off-by: Levi Yun <ppbuk5246@gmail.com>
+---
+ kernel/time/timer_migration.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
+index ccba875d2234..84413114db5c 100644
+--- a/kernel/time/timer_migration.c
++++ b/kernel/time/timer_migration.c
+@@ -1596,7 +1596,7 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
 
-If you provide the .config, I will test it on my machine.
+ 	} while (i < tmigr_hierarchy_levels);
 
+-	do {
++	while (i > 0) {
+ 		group = stack[--i];
 
+ 		if (err < 0) {
+@@ -1645,7 +1645,7 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
+ 				tmigr_connect_child_parent(child, group);
+ 			}
+ 		}
+-	} while (i > 0);
++	}
 
---=20
-Best Regards
-Masahiro Yamada
+ 	kfree(stack);
+
+--
+2.41.0
