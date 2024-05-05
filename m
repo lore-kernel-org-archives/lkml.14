@@ -1,99 +1,87 @@
-Received: from mxout4.routing.net (mxout4.routing.net [134.0.28.9])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CECD5FDA5;
-	Sun,  5 May 2024 16:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20B13374F9;
+	Sun,  5 May 2024 17:07:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714927973; cv=none; b=dJn3e5+X97ClGhbTW2/3zZ2g0CKtXPXtSvjWSEaqzUCxK4w40J+7G+7tGPeMAnmTV9E2/itp7CFdKuuMZwVnVX6HqQbH4qo/5/eL6Hy+bVgmpWwgY+wOvk+SpfIIJKRgni/C5uw4a6nPXMRoDZZa0yHPaTQAQQJ6IlHMhPoR4fw=
+	t=1714928860; cv=none; b=XEJjrom/82LpAoQnltblv9l1EnSUf89INqSfM8LDrJURFluQz3C2oCG7hJKFwcR0KVbM6GvtvFEa1zdzVNJriM71ZvMRLjT2BA717u8AwgyCIDQgyQQf3qOC3zu0LN+bOzBBne7R8YwUMg1RuO2Ga06D/vSyaIuP4QEGcascZRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714927973; c=relaxed/simple;
-	bh=QgQcNi0VoUZ9/gVnBoTyFVE0KPU3pf74Zt+RD3W/KVA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lJh3QtUN3vXkQyWCPDc9O0Ho2RGjgoVFmSNAWb6wtrgzpN1hFgF6egXMkdyvhLvq5G3jiotk6BebzvthSjcvq3zqUFI9A+DHeCWcTJy/tbaerFSX8woiGJM51m87y3Q/OOECIoCcmH61qYfvdgOfclqRYDNIrD8KM+U7FXOmAq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=t3cwjSYg; arc=none smtp.client-ip=134.0.28.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1714928860; c=relaxed/simple;
+	bh=yOQq5lOfbTRTdKzZzhEeLcn8HirFBFZ7DekbofJM3WI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A84RvW2VkpE/n7EJ4YL5gjwD2mWtcvNibL0NPdJ8EryL5reygL8th2J8D5wp7vFRZ7umAg+EM1deg+rplPZKf1pi7+EGwaOoIb5G13H81gdA4SLVoWzHsw0YHDd0GWNcfb2GOCG6vKrQQ+R1atIT0DawF1wM0U/zuEWsC/ilXQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=oJ8MXwSb; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="t3cwjSYg"
-Received: from mxbox3.masterlogin.de (unknown [192.168.10.78])
-	by mxout4.routing.net (Postfix) with ESMTP id D22291001BB;
-	Sun,  5 May 2024 16:45:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1714927560;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Zu3t1qGKiCHdEeShUHBMRSBx5w0/UYs7wrInBMlDHyw=;
-	b=t3cwjSYgbuK+d9TwB9w1UPmClSlr65BlMdK3z0HgTDwICHF8su+pk0o+C76fKi9lSjiGa3
-	b9AaN8KwNaYViltpoWnBWVwrptCNgV4ZlDUd4yuY19FYyOKYzDuyI/nkDgdaHfz7SIzeO/
-	wTqcZmqMBWrE1hNH6sn92/Bsc7/5Mgc=
-Received: from frank-G5.. (fttx-pool-217.61.153.24.bambit.de [217.61.153.24])
-	by mxbox3.masterlogin.de (Postfix) with ESMTPSA id ECA573604D6;
-	Sun,  5 May 2024 16:45:58 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	Eric Woudstra <ericwouds@gmail.com>,
-	Tianling Shen <cnsztl@immortalwrt.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [RFC v1 1/5] dt-bindings: leds: add led trigger netdev
-Date: Sun,  5 May 2024 18:45:45 +0200
-Message-Id: <20240505164549.65644-2-linux@fw-web.de>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240505164549.65644-1-linux@fw-web.de>
-References: <20240505164549.65644-1-linux@fw-web.de>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="oJ8MXwSb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1714928828; x=1715533628; i=markus.elfring@web.de;
+	bh=yOQq5lOfbTRTdKzZzhEeLcn8HirFBFZ7DekbofJM3WI=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=oJ8MXwSbjKAJmL0RjnPmnbRwdpEoag0n21v0pOHOJu3oG/RYGpSc120w8X1ImaVx
+	 0O7Y7FcaBPT/L1v0wdZ+Fy8HfyAC4Db1OU8RkFeZrhht6Ms/oyUceEkFf4nmcHY2e
+	 AP5u8ldDgJ3d9i3UdzgbKQbnAOd6GIjaTFhHDwmFSp7cDzAeE4AegETwMyNFJ8s66
+	 QhCsQtSMIK+pzu2IVxOGY40DJe7I1MSc//kKXq+xEkMYXnHGePGfDuEmS+md3GEkQ
+	 RJKhXWCpnvqluappPoqA5gjqF71k50ytLFSswQZTGLZpBjC5wMRb3i2piTyR9dA31
+	 cnAdIBzUIfJxHoylGw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1Melax-1sbLaL2861-00aj7u; Sun, 05
+ May 2024 19:07:08 +0200
+Message-ID: <8f485f3b-1dde-4c49-8860-b4397b1cd75d@web.de>
+Date: Sun, 5 May 2024 19:07:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: 52850480-9ab4-47cd-8ce0-2b51c8b97ef7
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v2] time/timgr: Fix wrong reference when level 0 group
+ allocation failed
+To: Levi Yun <ppbuk5246@gmail.com>, kernel-janitors@vger.kernel.org,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240505085709.82688-1-ppbuk5246@gmail.com>
+ <20240505105426.83553-1-ppbuk5246@gmail.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240505105426.83553-1-ppbuk5246@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:LCdKNS4ygAGsavK6VfIJJAGPk1czhpvc1fsk8QibiwQlb1k1/C9
+ MmfWP1Sr86eXBUQ6wxN9puuZXjsiRDw7mEE3H5XCHyQgujERutoiWm/mxaUB4sAibf2BKaF
+ pOmHqG9HxEfxGS9hJqaLtqQAaKMaUR3Sunp0+eqYrTeg3o3wvGjX4YR9F0+oZFFwRos+Fpe
+ AkevPjVoOceniTl4Lc+Gw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:AlduPhAOPpg=;WOdRe+QuhrmjrAuK0MIEpGzAfQD
+ jj53MT5XyBgRZrsCDmgCQfdsd31GHJd/faWmj8204FrJ1g789PEUeACU/g3/45YvjhPCljI43
+ CHB+1GcEIh42frKI1IDSYiokXU3C2nuylPS/8kWSz5JG9MkQJmB037b/PYEWlbcl0fvs0p1M1
+ L7HhHmnfOlJN9eLQvdLdPkP/+/HUiOXSArj9U8bNVPOsMCmavGgq9+2+kFoOw7dRPU9n5yIp4
+ zQ2p7Ip7YASsXHXG/afTdtb+YSc4xub3JBxNXW+XvRp0IcIEsDKjhlTnpgInIbVtplBGAso0V
+ 2gJxW10qfWXqGz1q2nLGrV2dL3EKRNyG39SzXV9AcC231NVB/PHTeX/kmaGmMn/t92Xfa34gW
+ 2uKPUQzip/w4Ns90fJXKtklpajYwDo74RvdJQ06VIOB7SODuGiGE0d7/EwF1wq5CXVO6nLofN
+ HSOoM5v0KtfJK0SQX3qHgyT0OKFsnQaXf5ByBlkqjqI3qqmXe7pvQAiROZ4LUmMJN5efIzXXk
+ GCp9HLb1vt/6z4BpwBdqGNHtBysnM5dKYLkoLq9mjkTXVMU+a6V4RuHFymXOGhYxVuqUdoyGo
+ ZImIxNnqhlbwCPZgHphU+irpd2C1v7P3bzAbHDwMHtAgMgH2M+OXSfWhiNNEx1kdz1BGHSyON
+ wY6/Et2sG5UlYEmu/KbsSwKF9bwDf3Agm/zTQXwv0gGQowNY3D/LWAgV0Cydf5LRR+4cfauBQ
+ 2LXgCZ+Zp+FcQtWS0gZUxYdqoLzNIR9h0mAgjI3ZRkJTAY5rHBr3iQU001g/UJsaJmQedP23R
+ mjhWbQHLtDxGKjjbnAcvw0YbetsglB7hd9eVjrvZRdj7dYiORmHiXQNnBHzzYyKJ8R
 
-From: Frank Wunderlich <frank-w@public-files.de>
+=E2=80=A6
+> To prevent this, Check loop condition first before intializing timer hie=
+rarchy.
 
-Add led trigger implemented with config-symbol LEDS_TRIGGER_NETDEV to
-binding.
+I suggest to avoid another typo (also in the email address for Frederic We=
+isbecker).
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- Documentation/devicetree/bindings/leds/common.yaml | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/leds/common.yaml b/Documentation/devicetree/bindings/leds/common.yaml
-index 8a3c2398b10c..bf9a101e4d42 100644
---- a/Documentation/devicetree/bindings/leds/common.yaml
-+++ b/Documentation/devicetree/bindings/leds/common.yaml
-@@ -113,6 +113,8 @@ properties:
-             # LED indicates NAND memory activity (deprecated),
-             # in new implementations use "mtd"
-           - nand-disk
-+            # LED indicates network activity
-+          - netdev
-             # No trigger assigned to the LED. This is the default mode
-             # if trigger is absent
-           - none
--- 
-2.34.1
-
+Regards,
+Markus
