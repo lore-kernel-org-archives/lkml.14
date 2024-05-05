@@ -1,113 +1,93 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B67A1E861;
-	Sun,  5 May 2024 17:55:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9119879D2;
+	Sun,  5 May 2024 17:58:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714931706; cv=none; b=j10wrWHHxfiiKm7U1RMNUS9lAMWGIr5whC2ORBJpJcoxafTpJ0usQ9ELagzm4KIK3wJ4pgJq94C8uvmH8u7R5GuUHncW0GYdtX1q/LWWxV24sKMxbl8/zBqzERnpJvQGKsj/fu4aYtjMiutATiEalVl06mj3LE4a5Qi0VMEmLK4=
+	t=1714931901; cv=none; b=mvqQWlfFff0+K1tT4SSO6Q8UHoDmkLKaznBGltY0PYcZQ7jsfsMJ/rDn0ev4ofZyXKVFYDjvU4aRSZIli+iHwIONbMwFsNEgB39oz1cMjyMAW57UIoW+GDBsV8bRn9N8t/RMXihumRpogm+BIt6qHyCuOYI2ACUdav5nIKbvuvQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714931706; c=relaxed/simple;
-	bh=rIgBau9/jOMDPPORyP5ZcAPOLT9dTV9Oi1ob3WkgI2E=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=U2OHY4QY1Y4EwghGq6qnh+s8RR4f7LdHJHnTJx5WpA2NWlHljCXe+dj5nPgLyekTPZj8g2xct/qDMvPNMyZe+vejL57Q/tNVY37mbO0p2D7+S5zaSyxx4jO/QG/jSUNUkGWJixuYk4Q9A1nqaXq7235507axduL6EeDoitpyP3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=holesch.de; spf=pass smtp.mailfrom=holesch.de; dkim=pass (2048-bit key) header.d=holesch.de header.i=simon@holesch.de header.b=woWiK8s0; arc=none smtp.client-ip=217.72.192.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=holesch.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=holesch.de
+	s=arc-20240116; t=1714931901; c=relaxed/simple;
+	bh=3GEudGU7ASMXSyyGWnReK03kwpORCk7RJpxQt9efhqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rDiIdUkTwGtkpyC6NBUJxf6h94CtYGHGo/qvv6oS1gxtiZxZHcibJ9eGF8MX20EgzUNM1bkZj4qhJJNz11TgZnjf3lA4cBxhHpIwp2a7LpJpxlumNtrpk/QKLziOm+8GZtdmw3qSPBw9dfYUAsB/kZnz6mvup0rjbA4o8vzFQFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ItLeR4cH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=holesch.de header.i=simon@holesch.de header.b="woWiK8s0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=holesch.de;
-	s=s1-ionos; t=1714931679; x=1715536479; i=simon@holesch.de;
-	bh=D8yZS40uvjiFal83TDgtbWp7BPRYiBD18deONZm1ueM=;
-	h=X-UI-Sender-Class:Mime-Version:Content-Transfer-Encoding:
-	 Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:cc:content-transfer-encoding:content-type:date:from:
-	 message-id:mime-version:reply-to:subject:to;
-	b=woWiK8s0KrUNO0aG48/OWpRqEDPSs6eIRGhBXxSKyVtCNKG+FNW3VZcJkiPkH9rj
-	 4QuKK5PYttrIpQwybV81Efgve5h/MLxlcKtSILcGEnxzWgnEMj4X0zQciDdbUym4C
-	 HDorMacx50/aduVH4daNFfxCRe3bdS/j0yfe6tyrIfERWhdB1JlbiBI2ICS7PwVTH
-	 FhOX/ISdXZ7WjAqtQuVX8SajdTNcbrkaBgRYcBrPExqxqZp4TKBwFMmy0qCHPHse7
-	 k4A3NkEeZ2TivWvrBBhtRJ6gGnEjy3G/tQUpwBfL47nWSrnb6NFih8h4pYeUW9y+k
-	 2ET7x0+JnC9ui93Qqw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([80.209.217.248]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M5Q6l-1s2IUU0vCv-001Pt6; Sun, 05 May 2024 19:54:39 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ItLeR4cH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0984C113CC;
+	Sun,  5 May 2024 17:58:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714931901;
+	bh=3GEudGU7ASMXSyyGWnReK03kwpORCk7RJpxQt9efhqY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ItLeR4cHWW45OS5rq+aGVndOX8kBINwEtq378D2RjWQiosFtPGJt8kSc7E2r5G4NZ
+	 Rx2Et9IL8XfJlCIC080wi9oq3bR14KyLpG5dsy149Y7VRR+HcjOwvH2xRbXgxSejRy
+	 2+OdkDptJ7Jwl7b/h0q7L5Oo8ZJR+aNFtdWuIe9cL3L6Hs+S/w0AsF4Br5crppyKqg
+	 AZwJkc0eaCmtH/egcnmrO3ARkP/bcg1JlaCSEwRJXnPXCq3gcUsDXpdv1Wqh8vzCt4
+	 KAGZ/K4JkMTy/Y7LstcKHvi9H/CM4h7QwEJspeBgDlpIrNbV6d+h9NbxUn6xtQHeXw
+	 w5tivJtdI4oSA==
+Date: Sun, 5 May 2024 18:58:09 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Petar Stoykov <pd.pstoykov@gmail.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Rob
+ Herring <robh+dt@kernel.org>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Angel Iglesias
+ <ang.iglesiasg@gmail.com>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/3] iio: pressure: Add driver for Sensirion SDP500
+Message-ID: <20240505185809.7636403e@jic23-huawei>
+In-Reply-To: <CADFWO8EF0WxAV=k-ZAJ1McmaYv4SD5G+O4FhoMDsVQaRqe6sdg@mail.gmail.com>
+References: <CADFWO8HOb4zY7rPsCxWe2nvrzd8FjVNw0k8=8s4yB7C_BwS0ig@mail.gmail.com>
+	<20240116170337.00003a02@Huawei.com>
+	<CADFWO8EF0WxAV=k-ZAJ1McmaYv4SD5G+O4FhoMDsVQaRqe6sdg@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 05 May 2024 19:54:36 +0200
-Message-Id: <D11WJK47MBWS.3795S2OL21M7R@holesch.de>
-Cc: "Valentina Manea" <valentina.manea.m@gmail.com>, "Shuah Khan"
- <shuah@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
- "Shuah Khan" <skhan@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] usbip: Don't submit special requests twice
-From: "Simon Holesch" <simon@holesch.de>
-To: "Hongren Zheng" <i@zenithal.me>
-X-Mailer: aerc 0.17.0
-References: <20231217194624.102385-1-simon@holesch.de>
- <ZjemYB6CpAx4Kx5f@Sun>
-In-Reply-To: <ZjemYB6CpAx4Kx5f@Sun>
-X-Provags-ID: V03:K1:mnpNGGOlL2uubD6dyHDJFpsrojJv5/+VtadWqjXFzvosraPoM+F
- Rctx+/V/KdSDDhYsXzvmOcSrOxeq4OC4r3Xc40NIQVFki4CdndC3zN1otiTE2DRps9WVxK9
- sz3X4oDDGsnOiAGTXHLQT5KGeiU5+DkkG+As86/iwMA+pH3QAfUWFvXijRF07PrqrAUOE82
- hnIEdXLWGvsbsgO8ut4BA==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:yk/FWOXkRlA=;iLTnnr1ujQyNqSdircR1HMBB8wu
- v30hocqDdKtgCXQXfZJRb1O3hUoqzL0TnQivT6OxiKpQm+C72DIJFq+q6TvnKWm1Hxb87ZrYu
- P2OTYRKICVMjmvsiMvboFGYml4m7A1V8wXwqC7H3VbeGbCjcvOo6mxulaGEpwiBgGAO9zcW3q
- ZyCizM/68yzzbfj99yQpzuLoihXJ+liD5EOE3XwDgORAtid3MmSzAr36Ro7JTHOl0sDXxFHiT
- gJerevZJfJN787qT/KS2MynBaSqtKfwLipEHdrtzlYblzEfaL8Yn09ZUBg3GEx1WmZkC5b77i
- bovbV07k8BZ1mX7PcZO8vnDfmvdijKZlxThHLb4z3vyrzeH/Nzb1aMfEYjsmcbxiV8ZavCLKD
- 1jlG83o4tv+7tkdS/HrkOS7raV0YtEvQ5KyoKz0VNQ1sMV/scEgN1U5Nv0B2RgY8MyKG/IWLm
- sFQNfw2OygRvyCCPckOp0AmwOpmM7usbBC5r9zNpq2udV/cjnZyX+QwYH5OOTHOc46csfueH9
- 7sv5fXDDSXuuu/g5cWvcu/+MaHIyvCqVwDvnnb9m8lkdc+Tg12RRF/t110/9UUNmVF2hI9a+V
- nfVM7ghEeeL07g5xxpsN4zUYipkpDDMXdp07vwNEUDUdvbR4TnA7LO8P183nucsa0KBIXnQWN
- Y9gN7nHjBeBASl+s5i4xWT9N3F753XLN6YUOB69huziFPiDsiMFGWgKDdGbEDBe2KDSfA6V6u
- CeVXSQgmY1GYtuWNDKUeSKcrMkVaOkK/MevMyhF2pmy/dSwMDUbenI=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sun May 5, 2024 at 5:31 PM CEST, Hongren Zheng wrote:
-> On Sun, Dec 17, 2023 at 08:30:40PM +0100, Simon Holesch wrote:
-> > Skip submitting URBs, when identical requests were already sent in
-> > tweak_special_requests(). Instead call the completion handler directly
-> > to return the result of the URB.
->
-> Reproduced the behavior and this patch fixed the bahavior
 
-Thank you for testing.
+> > > +}
+> > > +
+> > > +static const struct iio_chan_spec sdp500_channels[] = {
+> > > +    {
+> > > +        .type = IIO_PRESSURE,
+> > > +        .info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED),  
+> >
+> > Looks like a simple linear scale.  Would be better to make scaling
+> > a userspace / consumer problem and provide IIO_CHAN_INFO_RAW
+> > and IIO_CHAN_INFO_SCALE.  
+> 
+> I prefer returning the pressure directly because there is no other calculation
+> that the user of this driver can do. If they make the calculation differently
+> then their pressure value would be wrong.
 
-> > @@ -468,6 +477,7 @@ static void stub_recv_cmd_submit(struct stub_device=
- *sdev,
-> >  	int support_sg =3D 1;
-> >  	int np =3D 0;
-> >  	int ret, i;
-> > +	int is_tweaked;
-> > =20
-> >  	if (pipe =3D=3D -1)
-> >  		return;
-> > @@ -580,8 +590,7 @@ static void stub_recv_cmd_submit(struct stub_device=
- *sdev,
-> >  		priv->urbs[i]->pipe =3D pipe;
-> >  		priv->urbs[i]->complete =3D stub_complete;
-> > =20
-> > -		/* no need to submit an intercepted request, but harmless? */
-> > -		tweak_special_requests(priv->urbs[i]);
-> > +		is_tweaked =3D tweak_special_requests(priv->urbs[i]);
->
-> One question though, if there are mutiple urbs and one of them is
-> SET CONFIGURATION, then all of them would not be submitted,
-> as is_tweaked is a *global* flag instead of a per-urb flag.
->
-> Now it is assumed that when the urb is SET CONFIGURATION then
-> num_urbs is 1. I assume it just happens to be the case and I do
-> not know if it holds for all scenario.
+Ah. I missed this and just made the same comment on v2.
+Let me give some more info than in the original review.
 
-To be honest, I didn't fully understand the num_urbs > 1 case. I assumed
-this is for drivers not supporting SG and a long URB is just broken up
-into multiple ones.
+The documentation on how to apply scale is simple and this scaling is
+pretty hard to get wrong.
+
+There are a couple of reasons we prefer to make it a userspace problem
+to do linear scaling and keep the actual channel value raw (if possible).
+1) Logging applications typically store the scale once, and each data
+   point is then much cheaper to store as a u16 than as a floating point
+   number.
+2) If you ever add buffered support, we do not support floating point
+   values in the buffer.  That basically means we have to have both
+   _PROCESSED and _RAW provided so that _SCALE makes sense for the buffer.
+   Horribly messy ABI is the result.
+
+Hence, push the scaling to userspace.
+
+Note that we can't always do this as some conversion functions are
+non linear and very hard to describe.  In those cases _PROCESSED makes
+sense.  That's not true here.
+
+Jonathan
