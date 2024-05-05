@@ -1,56 +1,95 @@
-Received: from mail-a10.ithnet.com (mail-a10.ithnet.com [217.64.83.105])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0D22D054
-	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 15:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.64.83.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760B91CD38;
+	Sun,  5 May 2024 15:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714921582; cv=none; b=b5WZwvx3zCaDEcP5TXjznyfaGXMfu2YxT2kFc5TgRmoTQUxJXflUskvZzksBYasGkcSocYA5LSx4tbp8u5ZRHOJKBXEBMhmZajqhoqgImKAMEezBTOQDXUYhGxdInHDDXAeKfMfsa15YIfvffDJhxqltlYpyoD+/XvPeyil6OKA=
+	t=1714922105; cv=none; b=MdllWUOuVBq+U0j4qkQjkUZwJzAbsFzpXPZzWOoOYWog8n2KXHNUEJTPxChsEAv10XAUv0M2ghdGsqqWswjlbDVeA1xbG2bJx8X9tHqM7D3YJXWEL5z7Qpy699N4HDWnOXTp1ZUXTGGOdyaKBODe7gJkPIij+ZGkoNx8JrU9nPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714921582; c=relaxed/simple;
-	bh=ZsOlA4Ula7eMfe3y9ZuSDs6FAEB3mdrccODG8ln8fNk=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=DLibqAzdPan5QsuMduHCX2h3/7FuI3bt7+VegcbmQQtdDbA/B1JBFy+pC+pSE69J2viQl6P3hYhR/kJ8GQBYplZzXiKDA2QOv+BbEWvv0GveStreUUzITIwtrO2adwlTsQY3jav8/pooM5X1jT5QiWoopa2yGkJeVqEEpUIchj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ithnet.com; spf=pass smtp.mailfrom=ithnet.com; arc=none smtp.client-ip=217.64.83.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ithnet.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ithnet.com
-Received: (qmail 15255 invoked by uid 0); 5 May 2024 14:59:35 -0000
-Received: from skraw.ml@ithnet.com by mail-a10 
- (Processed in 1.962928 secs); 05 May 2024 14:59:35 -0000
-X-Virus-Status: No
-X-ExecutableContent: No
-Received: from dialin014-sr.ithnet.com (HELO ithnet.com) (217.64.64.14)
-  by mail-a10.ithnet.com with ESMTPS (ECDHE-RSA-AES256-GCM-SHA384 encrypted); 5 May 2024 14:59:33 -0000
-X-Sender-Authentication: SMTP AUTH verified <skraw.ml@ithnet.com>
-Date: Sun, 5 May 2024 16:59:32 +0200
-From: Stephan von Krawczynski <skraw.ml@ithnet.com>
-To: linux-kernel@vger.kernel.org
-Subject: How to find out about a new peer connection in wireguard?
-Message-ID: <20240505165932.5efba98e@ithnet.com>
-Organization: ith Kommunikationstechnik GmbH
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.39; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1714922105; c=relaxed/simple;
+	bh=3Y6Ya7aQNSsFwpYMxH3lYUB7Xh+C9ZSem7RoTyTrDho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=msz0VijYbOxRY2uLRyu0UkhT55+d6/LxcL51DqB018SjKGB8TTuuxnC7GbDiUst8LwlgmStavtCQOEOwGrkX+5+KnXjeV0OQw5AEy1uBU/KEexaNDjwdFrcOoASaVTz0ote1+KtzLfrmzRF67wggGTf4sIbwtzSirUpU22TZebo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/ELJ4Lr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/ELJ4Lr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68A44C113CC;
+	Sun,  5 May 2024 15:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714922104;
+	bh=3Y6Ya7aQNSsFwpYMxH3lYUB7Xh+C9ZSem7RoTyTrDho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=k/ELJ4LrM9ORUxUqlCfMupo9YSZBMJECkHdD9BMAJ61a8YQLlQovmZ9IG0suZpLdK
+	 seN/esI+XuR80NrjWv46kFX+1WF5S6x1wHdvh6KWH2FwUn2p6lZc4GLKh72hQgv6yd
+	 qYLulpsOSazFXaMtz7IphDmMB2iJ8zjbIMDHkZuKERPKqYjTYR4eNInve65ppqjuiz
+	 g1FOnhJnfyCXdszGCw3/jKoYtDLyQIT9SpsVrBZR4TOl9DEZcBCOanqnLFVhCcHGPD
+	 X5/BmO1i68hD6mi6Jn6RpxHmt6q4Ox5iRkQInwl0uRJnxQ0I984o/54Qpqe+K3GM+/
+	 a3/ug+jEOxpKw==
+Date: Mon, 6 May 2024 00:15:01 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Karel Balej <balejk@matfyz.cz>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje.mihanovic@skole.hr>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org
+Subject: Re: [PATCH v6 3/5] regulator: add regulators driver for Marvell
+ 88PM886 PMIC
+Message-ID: <ZjeidfoIbjvejphU@finisterre.sirena.org.uk>
+References: <20240504194632.2456-1-balejk@matfyz.cz>
+ <20240504194632.2456-4-balejk@matfyz.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="uRnS6SowswNDaOxE"
+Content-Disposition: inline
+In-Reply-To: <20240504194632.2456-4-balejk@matfyz.cz>
+X-Cookie: lisp, v.:
 
-Hello all,
 
-since I cannot find any information about this pretty simple question I
-thought I present it to a broader audience here.
-Can anyone tell how one can find out that a new peer connection was just made
-to a wireguard interface?
-It is obvious that the wireguard hooks like PostUP are useless because they
-have no relation to peer connections at all.
-So how is some admin informed about a new peer connection - equally about a
-peer connection that just changed endpoint IP? Does the kernel give any hint
-about that?
-Please feel free to cc me in your answer, as else it may be hard to find for
-me. Thank you!
+--uRnS6SowswNDaOxE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Regards,
-Stephan
+On Sat, May 04, 2024 at 09:37:06PM +0200, Karel Balej wrote:
+
+> +static const struct regulator_ops pm886_ldo_ops = {
+> +	.list_voltage = regulator_list_voltage_table,
+> +	.map_voltage = regulator_map_voltage_iterate,
+> +	.set_voltage_sel = regulator_set_voltage_sel_regmap,
+> +	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+> +	.enable = regulator_enable_regmap,
+> +	.disable = regulator_disable_regmap,
+> +	.is_enabled = regulator_is_enabled_regmap,
+> +	.get_current_limit = pm886_regulator_get_ilim,
+
+Do these regulators actually enforce this limit or is this just a spec
+limit beyond which regulation may fail?  If it's just a spec limit I'd
+not expect this operation to be provided, it's more for a hard limit
+where the regulator will detect and act on issues.  I don't see an error
+interrupt or anything and this would be an unusual feature for a LDO.
+
+--uRnS6SowswNDaOxE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmY3onUACgkQJNaLcl1U
+h9BvkQf/TjTKRxV/vksAq6WKXBKwSrc1pWsXIi51Exrv1IpdrCb58IvaAuFOykV8
+NZABo6A/hS4k1XF7IppT4XInmZj31Og0LnSXgF0VMe3NsM+plc1Wd50KogVI6zQw
+S4cyXayPYmuG1tr1MB2saXTsvKhmCLRsr3zfqcLrti77mX+qdr2Z35VC5zepXZdg
++Dmbu8mYqbX6uW1vOn8DS9msb1FXeVAQKiQUoFd1cMe7/3EpzgOGZKE+FdIzBy2D
+Og0MXH689pniCS0lkbzTnnpq+q1GQqeIwgmqRXprHnnJKhbB6bOoRaK8+NAginEv
+8MMfIZqNOxcXrhh08DXhuUEc5mGgbg==
+=R4Zq
+-----END PGP SIGNATURE-----
+
+--uRnS6SowswNDaOxE--
