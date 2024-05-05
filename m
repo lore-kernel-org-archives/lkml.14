@@ -1,157 +1,91 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D09F18C36
-	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 13:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C5218C36
+	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 13:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714914753; cv=none; b=Ox3Z0j2vT+qwwjgxAotyLOVxyHK8CEWRSL/KQlvj9CHLKgVZtPymGWKDHs2snXG9lKSk/eipyItemToxID/U+Mk/u1hqiM1ZSnmG8js1R0zoKTEJNZ+L+q/c9uz0HtNuf1R4PGJ1wXbNnHukhP04BotMnkY0ysn4ByMsi2eVOHI=
+	t=1714915009; cv=none; b=cbCH4B8V+lAvWzwi8XpxNHgEsDC+hGOuyDU2xB1uKcaHhjvTzHswE/IRCOd08uyRTUZnuK1a54WP1TeaO4o3jxxIR8Xk6emplJlUJ9yKrRadXeSEfJd8pGUJBkzgYz+iHthtsuyP9FfhIhor+0jKEMXxT79oa31CDcjIQWMcVaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714914753; c=relaxed/simple;
-	bh=mqI7Lkx9BEEGcIaH2vP7P85Be4RYE/5c4rJo24kmo3o=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=HRKOntTcIoKvYDQqGKyrBso2k7JaIMoH2rqqjbkP7O41Sbcrp+7sk6qqcfBBUNw9wDLy4nky6en8U6VZZiqfqNPCK1akDlpe23EDs5fEX9A9g0hY7Qo5JK7R3xJ8Uq+Ga/Yu+hV7s7mwpjouX72RmZTJNK/4EAIvjTHTnW4C0LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-92--hnA0pcqNy2537LVwsUSTA-1; Sun, 05 May 2024 14:12:28 +0100
-X-MC-Unique: -hnA0pcqNy2537LVwsUSTA-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 5 May
- 2024 14:11:53 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Sun, 5 May 2024 14:11:53 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Yury Norov' <yury.norov@gmail.com>, Kuan-Wei Chiu <visitorckw@gmail.com>
-CC: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"linux@rasmusvillemoes.dk" <linux@rasmusvillemoes.dk>,
-	"n26122115@gs.ncku.edu.tw" <n26122115@gs.ncku.edu.tw>,
-	"jserv@ccns.ncku.edu.tw" <jserv@ccns.ncku.edu.tw>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v4 1/2] lib/test_bitops: Add benchmark test for fns()
-Thread-Topic: [PATCH v4 1/2] lib/test_bitops: Add benchmark test for fns()
-Thread-Index: AQHam+S8XBnnR43Z8kaIhRcpvR0+crGIoopw
-Date: Sun, 5 May 2024 13:11:53 +0000
-Message-ID: <62fdb348791949c08e53936e3bc442b5@AcuMS.aculab.com>
-References: <20240501132047.14536-1-visitorckw@gmail.com>
- <20240501132047.14536-2-visitorckw@gmail.com>
- <ZjJt9w2mvdm2P+dM@yury-ThinkPad>
-In-Reply-To: <ZjJt9w2mvdm2P+dM@yury-ThinkPad>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1714915009; c=relaxed/simple;
+	bh=JUeAkc0VpjizPXONmHIR8AUIb0zyYhhxLFu/R8GLIAg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gVIHG/SkjGO/r8orHEpQCGJ1zzCOISdOMISgB76U6jcQF1fUhfH7kc//+UccGac6KaDTNL3PCfDMHdC/Vh1wfM1gWjXOIu0JHAWSej/re5qCl9gqXqhriyd395r5wH2gYkmIX+CWnVjq1PSO0jWZRq596XCQkO6vdswC7qnPDyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=oa7L/8iL; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="oa7L/8iL"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2b516b36acfso92878a91.2
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2024 06:16:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1714915006; x=1715519806; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p9gsKxFa2cb/3Cv8aGgzqyrtC++fhIDtBe2EGByMdvY=;
+        b=oa7L/8iLZcSq9/zs6B8J7j/VVxqgpjEb4n24EGHZ0E7xVgvS/nmjxb1hgPRhG7X6Qm
+         6WO1I/0d9k0JsdziUXuvIw5k9qhQUYNaDi3+mALOjoKV5pCS6eve297+Si8IIg65Rlqy
+         40Qi8o4E4uRR/QeSVP7g1FvrkJXLQolsXw8ZUzLbMzaOZfuaLSv6Xr7+4cO8ifOczVFG
+         uh79NT6opMcFbYebg3X4JyTxgRpUaTxRVJaOXMGfsuVEVvF7gdDOFreZwU+rJ0N97BId
+         5+QDvNnjM1XgUmht/LsRCL9obOLcj/2i0Sv3aVNhGtdv1BFWCFjFQl2nyujSyrnsfFxF
+         VhoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714915006; x=1715519806;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=p9gsKxFa2cb/3Cv8aGgzqyrtC++fhIDtBe2EGByMdvY=;
+        b=Qj8AyFE4XnWPJf8VhnZ69tm/O9Un85WTeTrW7OP+VNme4vwr2NaNNFRx09ZNTGZUta
+         7d6o9xkLBt4wqQCFgeyoL3owrCcKnOUdsu5VX2RPDyUon0EC+ZUr7qTw7+Mv5ekk0T2w
+         7BD8WHEOkBq8XoNwIxEFeBEcet1ncuoBBVtApItyuBsLgmyE01qrT0UPq4fHGmYw1FQY
+         V4Dwqv6d2eCmd6PUsX4sgXaAKBiHqW4ILBrFcjrANwN9FuINnKF9Iu+f++iPnvjlmn1/
+         NhFKFCjWCXVY360sGsk05j8aeEdPgij70Cc46fs9py3h0jIseOzOKMMDEmk0VDpy36SU
+         9VVA==
+X-Gm-Message-State: AOJu0YwszamKT8ry2Ss4M+4bqucYD9HFu/v0S8lUmDecekSgAOM940GP
+	g9OBwK8ptQStihI0CDM0N2MsvyYS+vbEtw4G39lXs3I0NxWnzm5sJohGXip3yG0=
+X-Google-Smtp-Source: AGHT+IFVYhWBd6jHteuSZMdw9jRtZj/mjMdyHP4zXZreMovDGI55qccUxGeVr3BmjAf0Bb06UPxb2A==
+X-Received: by 2002:a17:90b:4a0a:b0:2af:d64:4887 with SMTP id kk10-20020a17090b4a0a00b002af0d644887mr7186558pjb.4.1714915005545;
+        Sun, 05 May 2024 06:16:45 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.194])
+        by smtp.gmail.com with ESMTPSA id w3-20020a17090a528300b002b4329ec537sm4711379pjh.53.2024.05.05.06.16.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 May 2024 06:16:44 -0700 (PDT)
+Message-ID: <01a5c073-463b-46e7-beae-c5de4eb0ee11@kernel.dk>
+Date: Sun, 5 May 2024 07:16:43 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 413/437] media/rc: convert to read/write iterators
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+References: <20240411153126.16201-1-axboe@kernel.dk>
+ <20240411153126.16201-414-axboe@kernel.dk> <20240504133055.0ca70f7a@sal.lan>
 Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <20240504133055.0ca70f7a@sal.lan>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-From: Yury Norov
-> Sent: 01 May 2024 17:30
->=20
-> On Wed, May 01, 2024 at 09:20:46PM +0800, Kuan-Wei Chiu wrote:
-> > Introduce a benchmark test for the fns(). It measures the total time
-> > taken by fns() to process 1,000,000 test data generated using
-> > get_random_bytes() for each n in the range [0, BITS_PER_LONG).
-> >
-> > example:
-> > test_bitops: fns:          5876762553 ns, 64000000 iterations
->=20
-> So... 5 seconds for a test sounds too much. I see the following patch
-> improves it dramatically, but in general let's stay in a range of
-> milliseconds. On other machines it may run much slower and trigger
-> a stall watchdog.
->=20
-> > Signed-off-by: Kuan-Wei Chiu <visitorckw@gmail.com>
->=20
-> Suggested-by: Yury Norov <yury.norov@gmail.com>
->=20
-> > ---
-> >
-> > Changes in v4:
-> > - Correct get_random_long() -> get_random_bytes() in the commit
-> >   message.
-> >
-> >  lib/test_bitops.c | 22 ++++++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> >
-> > diff --git a/lib/test_bitops.c b/lib/test_bitops.c
-> > index 3b7bcbee84db..ed939f124417 100644
-> > --- a/lib/test_bitops.c
-> > +++ b/lib/test_bitops.c
-> > @@ -50,6 +50,26 @@ static unsigned long order_comb_long[][2] =3D {
-> >  };
-> >  #endif
-> >
-> > +static unsigned long buf[1000000];
->=20
-> Can you make it __init, or allocate with kmalloc_array(), so that 64M
-> of memory will not last forever in the kernel?
->=20
-> > +static int __init test_fns(void)
-> > +{
-> > +=09unsigned int i, n;
-> > +=09ktime_t time;
-> > +
-> > +=09get_random_bytes(buf, sizeof(buf));
-> > +=09time =3D ktime_get();
-> > +
-> > +=09for (n =3D 0; n < BITS_PER_LONG; n++)
-> > +=09=09for (i =3D 0; i < 1000000; i++)
-> > +=09=09=09fns(buf[i], n);
->=20
-> What concerns me here is that fns() is a in fact a const function, and
-> the whole loop may be eliminated. Can you make sure it's not your case
-> because 450x performance boost sounds a bit too much to me.
->=20
-> You can declare a "static volatile __used __init" variable to assign
-> the result of fns(), and ensure that the code is not eliminated
+On 5/4/24 6:31 AM, Mauro Carvalho Chehab wrote:
+> Em Thu, 11 Apr 2024 09:19:13 -0600
+> Jens Axboe <axboe@kernel.dk> escreveu:
+> 
+>> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> 
+> Please add a patch description to media patches. Also, please
+> c/c linux-media@vger.kernel.org, as otherwise patchwork.linuxtv.org
+> won't track it, and such patches will be silently ignored[1].
 
-Yep, without 'c' this compiler to 'return 0'.
+Certainly, it's all just a RFC to get the full picture idea out in the
+open. Any individual patches/series will go out separately to the
+respective lists and maintainers, and it'll have actual commit message
+as well at that point.
 
-static inline unsigned long fns(unsigned long word, unsigned int n)
-{
-=09while (word && n--)
-=09=09word &=3D word - 1;
-=09return word ? __builtin_ffs(word) : 8 * sizeof (long);
-}
-
-unsigned long buf[1000000];
-
-volatile int c;
-
-int  test_fns(void)
-{
-=09unsigned int i, n;
-
-=09for (n =3D 0; n < 8*sizeof (long); n++)
-=09=09for (i =3D 0; i < 1000000; i++)
-=09=09=09c =3D fns(buf[i], n);
-=09return 0;
-}
-
-You are also hitting the random number generator.
-It would be better to use a predictable sequence.
-Then you could, for instance, add up all the fns() results
-and check you get the expected value.
-
-With a really trivial 'RNG' (like step a CRC one bit) you
-could do it inside the loop and not nee a buffer at all.
-
-=09David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-Registration No: 1397386 (Wales)
+-- 
+Jens Axboe
 
