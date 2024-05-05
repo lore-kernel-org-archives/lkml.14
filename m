@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCBC5FDA5;
-	Sun,  5 May 2024 17:12:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FA56CDBF;
+	Sun,  5 May 2024 17:13:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714929177; cv=none; b=F3ngkMJh7mYn6QnxnuOCwnDEiKop9mlJI6j6ZwT1DwJVZHzvbXI2+zG2hT8awqsLB8POTWcJ7sGUPU6EQzyFPvOCWuL5z6cXdZLdfDB+MEgPfq6qYMrwbNK5VuScgtR/LR4zBX52kPn1T8LpdS0/3WJH3MmDhFyWT7UTOkIivs8=
+	t=1714929180; cv=none; b=kUlwUyI3fPPBNaEAvdlgXdw5h1SV+xnof8z5zga7Rl4sJBiqbWx487wVTDMt0e8WawnI9QrYoizgnjp36Txb6RiSpNPeHE/yzDpIUtkNbT70mh2iTup8ZKCcz6XsOJXHNGONkKiIu8jYFX4zLQ+7/KWXHvbEGgECSlJYtTEkkvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714929177; c=relaxed/simple;
-	bh=TLrWxOuOKBiUJEi/ZXLikWqlOdz33+N6Z/idgzgYvOI=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=VOy5HXijKzk5gb+8hKBRy+cso706LIeVgltdMD2KEazER4Fm1kFPotZy34XZFWwjaDV1H2I2aBi+F/kJ8H60z2cGni46GaljqU+wyqHNPd2bJp2WIHZa8emjXh014AjV99+3Wfxd9bgx3FURgz8SdJivF9dm47FJiNW3N0gWNZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jy/qkBh/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714929180; c=relaxed/simple;
+	bh=2e1aqBxsKPf2upJeumsLAWKy0iUSEV0EDKsUal2iC2c=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=cBDcmb9kW1bKYkWDdp5KPRdmlbxoBcGztfy3FHzndIYazehG5VsyspWi7jS83o5zsRYothMCd52RZxm8qvjKGcIJy4d/HC2VDtcdUa33W292+Ho5vQBrv2l4ZK0sJ17+r+g7sSon0x9ZsY3qzLMvQC1tbebmBli3Cp29zVnLseE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gk21tc5O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jy/qkBh/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C971EC113CC;
-	Sun,  5 May 2024 17:12:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gk21tc5O"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8AFA2C4AF18;
+	Sun,  5 May 2024 17:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714929176;
-	bh=TLrWxOuOKBiUJEi/ZXLikWqlOdz33+N6Z/idgzgYvOI=;
+	s=k20201202; t=1714929180;
+	bh=2e1aqBxsKPf2upJeumsLAWKy0iUSEV0EDKsUal2iC2c=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=jy/qkBh/fu97T+DpZvAqnzUYJIws5tgRAQp7Jeu7uqwM1c/8MwmVUthid1MTOMKFj
-	 oKF2cVe5VZQHlTqhIljihBEPxOnkpmCYg1fMa4KvMA1bA89gNyhbw9J/nM0BP23Ukx
-	 Yn/ci0p8Znn76159o47+AEfLzgsn2pRa7UxtNOtcKilWjgKxaVZVta5F9q/fJkWleU
-	 CPkMXlGifzOrcQGbzgblkONjDwKAAJaENXkaCbkTevLKLCgI34Ury5A0HrhFWLGHu7
-	 FOdlJtFBUD3PpdOTDiEemPe0zWJAggJi6mH2yfyMqZhkjnhmCBihpRu93b5KfnZWGz
-	 BqAVzxMuRjGNg==
+	b=gk21tc5OkLuS5UqDng9wB3PJtqapgX2JFQv2Ky7ikAkjiW726dfgta0hJmqgojOV3
+	 cfw1GYWp6Q5LptGPtNUDP1bMV8WtdlHZ/Uk3yQJpN9vWswq/qZJ9PJoPXFnzjIgAAV
+	 alFb6OpZ3HYJDhIiMTfuq1cTDcMdDFOQqb0iScr4JlKapVZ6wNHT/lpfu6W9/Z8kAx
+	 6VQLlG67X+iXjKyprU5dwGgCR/fd8ZLDQRM8n7R8sFuWdP7NYxAWXXi2Yy1EXPuev/
+	 IGhGsB3KodJSxiv0vGphiZeVK15d8Ica3QZqLzZlJfjBrPubiGgGkT4Ta0h872pFBn
+	 XrSjNDKp/ogLA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C0EFBC4339F;
-	Sun,  5 May 2024 17:12:56 +0000 (UTC)
-Subject: Re: [GIT PULL] clk fixes for v6.9-rc6
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 83583C4339F;
+	Sun,  5 May 2024 17:13:00 +0000 (UTC)
+Subject: Re: [GIT PULL] dma-mapping fix for Linux 6.9
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240504030607.999295-1-sboyd@kernel.org>
-References: <20240504030607.999295-1-sboyd@kernel.org>
-X-PR-Tracked-List-Id: <linux-clk.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240504030607.999295-1-sboyd@kernel.org>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
-X-PR-Tracked-Commit-Id: aacb99de1099346244d488bdf7df489a44278574
+In-Reply-To: <ZjW50TUK_CvTAXrj@infradead.org>
+References: <ZjW50TUK_CvTAXrj@infradead.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <ZjW50TUK_CvTAXrj@infradead.org>
+X-PR-Tracked-Remote: git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-6.9-2024-05-04
+X-PR-Tracked-Commit-Id: 75961ffb5cb3e5196f19cae7683f35cc88b50800
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 61ccc8c3e59a8bf0b0ae046bbd72bd23846b5fa2
-Message-Id: <171492917678.31500.16948879549560305604.pr-tracker-bot@kernel.org>
-Date: Sun, 05 May 2024 17:12:56 +0000
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 4fbcf58590a85cdabc48c1541d4f7031b22829f0
+Message-Id: <171492918053.31500.15660514002876369711.pr-tracker-bot@kernel.org>
+Date: Sun, 05 May 2024 17:13:00 +0000
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Fri,  3 May 2024 20:06:06 -0700:
+The pull request you sent on Sat, 4 May 2024 06:30:09 +0200:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git tags/clk-fixes-for-linus
+> git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-6.9-2024-05-04
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/61ccc8c3e59a8bf0b0ae046bbd72bd23846b5fa2
+https://git.kernel.org/torvalds/c/4fbcf58590a85cdabc48c1541d4f7031b22829f0
 
 Thank you!
 
