@@ -1,122 +1,173 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5C5E2B9BE
-	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 18:04:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F26856A352
+	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 18:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714932286; cv=none; b=BPTDZ7BYjUHn6TRKAEAu+NfzTGxqpsIQeI8QdTHTY3ejvmP29emumGjwSYIpygOIH9eg3rCv6trHs+zwMZgKHUTyVrLftqU7gSrmJrwLnTbSE0z8NrEWJ00rAodUGvYp2J9lIRXLkC1RcufxzCOGnz/4GEYTL0L508oUIMIc2p0=
+	t=1714933543; cv=none; b=QR4ncOQAYLffIcLI7gptuN45L0anx2n1livX+AObqA8LyVpshYbCiYOkCrhUscZ82zuM5Ro91K9vgukoUHyX4SE+bbiyw6Rd4O9YbfiU+0ilEr8JxNdSedKUreoAlte3J20hTaRP/OJocXs6n6yvXQdyw5ExRJcGm3NnjyvWjq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714932286; c=relaxed/simple;
-	bh=MvgFEIdHJtRnDvyKBZhufXdImvNjTp+dD0weVzheZjg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YB1mRI8zyOWUUpoH4B/PlqFJilrNbKMhstz0grUW/0RK28AOTV6MApBlx63DbzCAvIKzvI88UrOTdwiNVnMTn/isvGvJ7yWDb4QnmS71XUwzqn1Pj0f9k6RO9zjkPR0cInF5DJMH48MlSPpHVT1U+Abso3aWtwISgUul0T4Q8lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=w4/h85cP; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="w4/h85cP"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1ec4f928c57so3928565ad.3
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2024 11:04:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1714932283; x=1715537083; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mE6ET/wemNoj1wnsoN5H46vn2H9jFrdPiFfXm3O1q/E=;
-        b=w4/h85cPoz9JrKVApFfzhwqyTk3hafzehD2XG7NNtSIJkUN6u2EfIyUUtNpf9SG2yL
-         W6rdALus2jNJXXvwjvuJ2YTV3zYJdblncEoF1uPLQnao+u8nh1XX1PhOUsQmFsR14I4W
-         MC1Umr7tv0fgbJv1+sUuAzexxKG8j0Uj6G57/BMOdrmG69VYAhAmV/BbzdpOTlDReEkf
-         mJx+YNH5SKRZWCOs6stpErBvVEiEsfx7qfzIwwNWCG07N+gsyJtt+usEjJaQFxA8kU3P
-         lZftFf0JTUkH9nuom4Fw3Va4yeUEtyb+U356wx0/ujdiep7C/KvDYPIRxp/cZcrzb9Hy
-         bvVw==
+	s=arc-20240116; t=1714933543; c=relaxed/simple;
+	bh=NYKyYEu/7lseytFA5e/boCGoX0xT3Ah3F/JRcRuUuBY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=SNIApp+1srxCni3YnxLZveLxggqMa2UwGuG0HCnKJaVHqsK7PSBAOFBTdDqTjFsdqyrY04YOiTluvxnFyn7LR/YKZmDXh8EFA3H6iE80Ucl21vVvT2NN1hRgjmaaAeRcmPwqG/QbLSFs4Fn/z4u5Fi+70DosxQA5D6icS5c5SzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-36c5ed3322aso13931865ab.1
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2024 11:25:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714932283; x=1715537083;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mE6ET/wemNoj1wnsoN5H46vn2H9jFrdPiFfXm3O1q/E=;
-        b=NISlWAX1DhyJLtgbmuq2ptuwdnuBjrgM3gGMLzN9En+wVHXjlJkuvPOCnM9EUveT9V
-         LI0X0GSCoRkUoXBMun9ovfCHBv2WCEcc8VzTDu3TUkOBQgsuPFrp/4TVNuwwkFKRngry
-         Vn9kHYM6aXYLApb1N47K0rLpE4tIIKnbRGI3h5Ic4FCjeQM/v+8qwninZ34UuUjIA6Iv
-         fENevnzrrFPD/tUhGxcjq+6U+pGWDpJF3AGIHwMwbNgnPt5oMasxwVgf9pRsY4f+nwEo
-         p0WDFkx1ZfV4AW1McZNBLH4tAkFG7KSFCMPmOaeCJnyQk/+SVVHGUeglqEoSz7pKE7Zo
-         2tog==
-X-Forwarded-Encrypted: i=1; AJvYcCXlaGzzzzHBWez1lt0y9MC8rNt/Gv5mIMwoA24GcfyjJtGhoaV6D5hXI5w/uL/sF2f4XPcTMMqkqrb86fF/SN3b9OqJJj68ay0x7Xyf
-X-Gm-Message-State: AOJu0YwRgQHwEcjkxV+EVS6FOth3Yja8wuQk1KcNTQ9Msn4HxDCt99Nc
-	YBnGHwOYg97EC8TdbCuwuqwWLcMGyZAv4gqtz1rTSIN9kwR7ySWokKUDHHHGeIs=
-X-Google-Smtp-Source: AGHT+IGWjfUE/TDqZn5+tc9zv5WMH1AwiF3VlKR+EV8RVaOEHMWP8GFvz9bqpeX6sGO+oAr45ebqrg==
-X-Received: by 2002:a17:902:d2d0:b0:1e8:4063:6ded with SMTP id n16-20020a170902d2d000b001e840636dedmr11260813plc.1.1714932282996;
-        Sun, 05 May 2024 11:04:42 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id l18-20020a170903121200b001eb03a2bb0asm6700128plh.53.2024.05.05.11.04.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 May 2024 11:04:42 -0700 (PDT)
-Message-ID: <be4fe24b-daa4-40af-806b-40db570e37b2@kernel.dk>
-Date: Sun, 5 May 2024 12:04:40 -0600
+        d=1e100.net; s=20230601; t=1714933541; x=1715538341;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hEtJyfEmamFxD+SWoERpmk2jFMaVBH8IGlwow7gWw8s=;
+        b=Nvzb0/U4zh1aU09oMvRoT4jodPiWev/PpokIoXsu8jkoLoMOGRoieK4CggCEwHWYaC
+         LprKrgv5XEMZRwyxPPd0N09moH2y8XUZeVh4L8sX55WT3u8tfUh3j8JBTr4qVIyxtCDV
+         NOHsT/C4zArI1qXNQBYRy4sbcwQ+hBiCCsQgGM5qx7fUEaU+47kNxHTjrLrzcntS0wip
+         5DjSvMl5j8QA+wkyYbYbjzMGKqnoO4VhXm/IbpuEtbSu5QIdtS/h1fIZypeRcgC/ydfy
+         jMwPTAJ8HWhj6CuSDIANfyrGzd4HnXugYabOVm5092rx0Vo6fx6X+Bt3DNqhRjoYSgTL
+         7fVA==
+X-Forwarded-Encrypted: i=1; AJvYcCXk5P0Q2ex6mLAeHS7X6qZwuI+ehASU3JUhIXrfpLQvno4y1Z5RZIJF49qLFuFJcjuzBhgNuEWvapIJvfkpthVRZlmzk6mjWUJe/uw/
+X-Gm-Message-State: AOJu0YxVZu4YFjEJusc0licils+Vu3eJcI4+6VQ4j785iCzpnvFdy1J2
+	XpB/G/I+ecMSCQ82sGSn5TMQce4SjSbzRCpEbcxI+V5LQnpHHZhATGBsOGq0SkE0CZRKytj2TBh
+	MZl7jx+WimvLZ0KkyUFsY0LQFZ4v6MJ6BEH8t+sC0svmppKsW/7QfoaU=
+X-Google-Smtp-Source: AGHT+IHYg1j+M0cG78YVRANgQ3648Y2qDWuLxLIZMt7nUHQKLHJDxhwKfsCZERicqSxpqq/TPuQhY1/NTfF30lITgBWNSZsXyMep
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] epoll: be better about file lifetimes
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: brauner@kernel.org, christian.koenig@amd.com,
- dri-devel@lists.freedesktop.org, io-uring@vger.kernel.org, jack@suse.cz,
- keescook@chromium.org, laura@labbott.name, linaro-mm-sig@lists.linaro.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, minhquangbui99@gmail.com,
- sumit.semwal@linaro.org,
- syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com,
- syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-References: <CAHk-=wgMzzfPwKc=8yBdXwSkxoZMZroTCiLZTYESYD3BC_7rhQ@mail.gmail.com>
- <20240505175556.1213266-2-torvalds@linux-foundation.org>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20240505175556.1213266-2-torvalds@linux-foundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1d84:b0:36b:f8:e87e with SMTP id
+ h4-20020a056e021d8400b0036b00f8e87emr638066ila.1.1714933541202; Sun, 05 May
+ 2024 11:25:41 -0700 (PDT)
+Date: Sun, 05 May 2024 11:25:41 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000897f760617b91491@google.com>
+Subject: [syzbot] [bcachefs?] [ext4?] WARNING: suspicious RCU usage in bch2_fs_quota_read
+From: syzbot <syzbot+a3a9a61224ed3b7f0010@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-ext4@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/5/24 11:55 AM, Linus Torvalds wrote:
-> epoll can call out to vfs_poll() with a file pointer that may race with
-> the last 'fput()'. That would make f_count go down to zero, and while
-> the ep->mtx locking means that the resulting file pointer tear-down will
-> be blocked until the poll returns, it means that f_count is already
-> dead, and any use of it won't actually get a reference to the file any
-> more: it's dead regardless.
-> 
-> Make sure we have a valid ref on the file pointer before we call down to
-> vfs_poll() from the epoll routines.
-> 
-> Link: https://lore.kernel.org/lkml/0000000000002d631f0615918f1e@google.com/
-> Reported-by: syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com
-> Reviewed-by: Jens Axboe <axboe@kernel.dk>
-> Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-> ---
-> 
-> Changes since v1:
-> 
->  - add Link, Reported-by, and Jens' reviewed-by. And sign off on it
->    because it looks fine to me and we have some testing now.
-> 
->  - move epi_fget() closer to the user
-> 
->  - more comments about the background
-> 
->  - remove the rcu_read_lock(), with the comment explaining why it's not
->    needed
-> 
->  - note about returning zero rather than something like EPOLLERR|POLLHUP
->    for a file that is going away
+Hello,
 
-I did look at that 0 return as well and agreed this is the right choice,
-but adding the comment is a good idea.
+syzbot found the following issue on:
 
-Anyway, patch still looks fine to me. I'd word wrap the comment section
-above epi_fget() wider, but that's just a stylistic choice...
+HEAD commit:    7367539ad4b0 Merge tag 'cxl-fixes-6.9-rc7' of git://git.ke..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=131bb31f180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d2f00edef461175
+dashboard link: https://syzkaller.appspot.com/bug?extid=a3a9a61224ed3b7f0010
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12376338980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16047450980000
 
--- 
-Jens Axboe
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/03bd77f8af70/disk-7367539a.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/eb03a61f9582/vmlinux-7367539a.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e4c5c654b571/bzImage-7367539a.xz
+mounted in repro #1: https://storage.googleapis.com/syzbot-assets/2f53f765589d/mount_0.gz
+mounted in repro #2: https://storage.googleapis.com/syzbot-assets/c67fedea43c0/mount_1.gz
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a3a9a61224ed3b7f0010@syzkaller.appspotmail.com
+
+bcachefs (loop0): mounting version 1.7: mi_btree_bitmap opts=compression=lz4,prjquota,nodiscard,norecovery,nojournal_transaction_names
+bcachefs (loop0): recovering from clean shutdown, journal seq 7
+bcachefs (loop0): alloc_read... done
+bcachefs (loop0): stripes_read... done
+bcachefs (loop0): snapshots_read... done
+bcachefs (loop0): reading quotas
+=============================
+WARNING: suspicious RCU usage
+6.9.0-rc6-syzkaller-00234-g7367539ad4b0 #0 Not tainted
+-----------------------------
+fs/bcachefs/snapshot.h:45 suspicious rcu_dereference_check() usage!
+
+other info that might help us debug this:
+
+
+rcu_scheduler_active = 2, debug_locks = 1
+4 locks held by syz-executor879/5077:
+ #0: ffff888074000278 (&c->state_lock){+.+.}-{3:3}, at: bch2_fs_start+0x45/0x5b0 fs/bcachefs/super.c:1013
+ #1: ffff888074004250 (&c->btree_trans_barrier){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:116 [inline]
+ #1: ffff888074004250 (&c->btree_trans_barrier){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:215 [inline]
+ #1: ffff888074004250 (&c->btree_trans_barrier){.+.+}-{0:0}, at: __bch2_trans_get+0x8c8/0xc90 fs/bcachefs/btree_iter.c:3069
+ #2: ffff88802c42d070 (&dev->mutex){....}-{3:3}, at: six_trylock_type fs/bcachefs/six.h:207 [inline]
+ #2: ffff88802c42d070 (&dev->mutex){....}-{3:3}, at: btree_node_lock fs/bcachefs/btree_locking.h:266 [inline]
+ #2: ffff88802c42d070 (&dev->mutex){....}-{3:3}, at: btree_path_lock_root fs/bcachefs/btree_iter.c:760 [inline]
+ #2: ffff88802c42d070 (&dev->mutex){....}-{3:3}, at: bch2_btree_path_traverse_one+0xa85/0x3250 fs/bcachefs/btree_iter.c:1178
+ #3: ffff88801bef8870 (&dev->mutex){....}-{3:3}, at: six_trylock_type fs/bcachefs/six.h:207 [inline]
+ #3: ffff88801bef8870 (&dev->mutex){....}-{3:3}, at: btree_node_lock fs/bcachefs/btree_locking.h:266 [inline]
+ #3: ffff88801bef8870 (&dev->mutex){....}-{3:3}, at: btree_path_lock_root fs/bcachefs/btree_iter.c:760 [inline]
+ #3: ffff88801bef8870 (&dev->mutex){....}-{3:3}, at: bch2_btree_path_traverse_one+0xa85/0x3250 fs/bcachefs/btree_iter.c:1178
+
+stack backtrace:
+CPU: 0 PID: 5077 Comm: syz-executor879 Not tainted 6.9.0-rc6-syzkaller-00234-g7367539ad4b0 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ lockdep_rcu_suspicious+0x221/0x340 kernel/locking/lockdep.c:6712
+ snapshot_t fs/bcachefs/snapshot.h:45 [inline]
+ bch2_fs_quota_read_inode fs/bcachefs/quota.c:567 [inline]
+ bch2_fs_quota_read+0x195e/0x2770 fs/bcachefs/quota.c:613
+ bch2_fs_recovery+0x4b25/0x6390 fs/bcachefs/recovery.c:828
+ bch2_fs_start+0x356/0x5b0 fs/bcachefs/super.c:1043
+ bch2_fs_open+0xa8d/0xdf0 fs/bcachefs/super.c:2102
+ bch2_mount+0x71d/0x1320 fs/bcachefs/fs.c:1903
+ legacy_get_tree+0xee/0x190 fs/fs_context.c:662
+ vfs_get_tree+0x90/0x2a0 fs/super.c:1779
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3352
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdf4fef3dba
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffdd442cdd8 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007ffdd442ce20 RCX: 00007fdf4fef3dba
+RDX: 0000000020005d80 RSI: 0000000020005dc0 RDI: 00007ffdd442ce20
+RBP: 0000000020005dc0 R08: 00007ffdd442ce60 R09: 0000000000005d58
+R10: 0000000000000000 R11: 0000000000000282 R12: 0000000020005d80
+R13: 0000000000005d5e R14: 00007ffdd442ce60 R15: 0000000000000004
+ </TASK>
+bcachefs (loop0): bch2_fs_quota_read_inode: snapshot tree 0 not found
+bcachefs (loop0): inconsistency detected - emergency read only at journal seq 7
+bcachefs (loop0): bch2_fs_quota_read(): error ENOENT_snapshot_tree
+bcachefs (loop0): bch2_fs_recovery(): error ENOENT_snapshot_tree
+bcachefs (loop0): bch2_fs_start(): error starting filesystem ENOENT_snapshot_tree
+bcachefs (loop0): shutting down
+bcachefs (loop0): shutdown complete
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
