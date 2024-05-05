@@ -1,100 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4766F06A;
-	Sun,  5 May 2024 19:46:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80A506DD0D
+	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 20:02:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714938378; cv=none; b=qycwqr+u2IZYFJX2R0c6D+2wd7dICvVlqarPg/CtDW6tzof0rPUlmjbSvvBfaEtnQrutiTygff8R1sFXXOy3kekBzous67Mtl93IWLcumd/UGGo6r4vF30jWF9YMuCBVKivZvhVTPJ/R7k1t2EYlIiMQOjDsanJwECbQG3mQn+k=
+	t=1714939334; cv=none; b=echbtHxh9G6C0gqdsx0b+zs04ymIjjGPixTaB2iMq5I8+NZV0nj1Vcpe49Gz6c8Oi7IadLhfSMaeyz5egql1TH5+sbRPJq8WURaFztMGBwXv6o13UnnjKau84t7J8g5DQfYIjKl4K6xBCwRSp4ZjlMioXlIEWOlGF2Chj6wuSNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714938378; c=relaxed/simple;
-	bh=0xWVR+hZm1hbLhnVuDoCeCqqADDcUffOxV9wWM5nJTQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FPC7gUBe4DuoBZwMtD4eBrpAIUrlUP8y+stme7myudLiJ1xTmS0B8ZBCsr9TNpmPVOV9uCDdcWi0SvtjzkUD2bCRxh8hC741Efa3r5kGIZ23nG32xi9nTdb2H7oLXqxBa+W98qmvLAW+wa85+U24bpqxmufLBeIx/bLDVb7sCNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E4iEXlVw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E4iEXlVw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27D52C116B1;
-	Sun,  5 May 2024 19:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714938378;
-	bh=0xWVR+hZm1hbLhnVuDoCeCqqADDcUffOxV9wWM5nJTQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=E4iEXlVwv03Q1LXj60ldMa3YKet2nlH76YkVFc6V/+H3oTyRcrtr/hnRfT4zgZtUn
-	 PKfGNdrVT/CDB9d63NfQAMPH/ZARA8WyU5wSqWm9r1S1TyBPpBg1njo4jNvwEUf71A
-	 MUKNRGjwhWP4hxiM/x8/vRKT+FMhCH+61w1ktYgp6yZFAlKuABTmEeV52YNJC7Idn9
-	 Xdcp4dPyJchJ9EolLB5C0HK/RK9gsAS62/txGmeFN/dvX+4UWUFFX9gQ/fWRPOO1Kq
-	 yJxkRtbsWW5MN3cRYbzb1uFpYELxY+59/qO91D5lDlskT2dWReVNfK8ch7zd5gINQU
-	 SFdQT2E8h8fcg==
-Date: Sun, 5 May 2024 20:46:02 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Alisa-Dariana Roman <alisadariana@gmail.com>,
- michael.hennerich@analog.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- alexandru.tachici@analog.com, lars@metafoo.de, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- lgirdwood@gmail.com, broonie@kernel.org, andy@kernel.org,
- nuno.sa@analog.com, marcelo.schmitt@analog.com, bigunclemax@gmail.com,
- dlechner@baylibre.com, okan.sahin@analog.com, fr0st61te@gmail.com,
- alisa.roman@analog.com, marcus.folkesson@gmail.com, schnelle@linux.ibm.com,
- liambeguin@gmail.com
-Subject: Re: [PATCH v7 5/6] dt-bindings: iio: adc: ad7192: Add AD7194
- support
-Message-ID: <20240505204602.5d4cbfa0@jic23-huawei>
-In-Reply-To: <20240430-winnings-wrongness-32328ccfe3b5@spud>
-References: <20240430162946.589423-1-alisa.roman@analog.com>
-	<20240430162946.589423-6-alisa.roman@analog.com>
-	<20240430-winnings-wrongness-32328ccfe3b5@spud>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1714939334; c=relaxed/simple;
+	bh=E3EXz8OizJveGJXsu2m1+CDPXknNWRauEOO9iEs/AhA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 MIME-Version:Content-Type; b=a6jOqWJrrYXpzMsGCh2orXtKkpqR1BsNOnREplKen7MCrKiCZ5kRJMgSk5dxtO9aNUMl8huBr2YzGqs3i7aIHe/BFcQTL5temil5kTtY4kKli0LtWJ4SkdSWcgoI7wutXCFAzI6nMU8AnLKlLrfkfmr7X/AyxVOM+2UixChsz/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-214-jGM-Qg1LN-mdByA-tf6CNA-1; Sun, 05 May 2024 21:02:07 +0100
+X-MC-Unique: jGM-Qg1LN-mdByA-tf6CNA-1
+Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
+ (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Sun, 5 May
+ 2024 21:01:32 +0100
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.048; Sun, 5 May 2024 21:01:32 +0100
+From: David Laight <David.Laight@ACULAB.COM>
+To: 'Linus Torvalds' <torvalds@linux-foundation.org>
+CC: "axboe@kernel.dk" <axboe@kernel.dk>, "brauner@kernel.org"
+	<brauner@kernel.org>, "christian.koenig@amd.com" <christian.koenig@amd.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"io-uring@vger.kernel.org" <io-uring@vger.kernel.org>, "jack@suse.cz"
+	<jack@suse.cz>, "keescook@chromium.org" <keescook@chromium.org>,
+	"laura@labbott.name" <laura@labbott.name>, "linaro-mm-sig@lists.linaro.org"
+	<linaro-mm-sig@lists.linaro.org>, "linux-fsdevel@vger.kernel.org"
+	<linux-fsdevel@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org"
+	<linux-media@vger.kernel.org>, "minhquangbui99@gmail.com"
+	<minhquangbui99@gmail.com>, "sumit.semwal@linaro.org"
+	<sumit.semwal@linaro.org>,
+	"syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com"
+	<syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com>,
+	"syzkaller-bugs@googlegroups.com" <syzkaller-bugs@googlegroups.com>,
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
+Subject: RE: [PATCH v2] epoll: be better about file lifetimes
+Thread-Topic: [PATCH v2] epoll: be better about file lifetimes
+Thread-Index: AQHanxYFUxCiqg1u6ES4w5URbGMRFrGJB6+A
+Date: Sun, 5 May 2024 20:01:32 +0000
+Message-ID: <12120faf79614fc1b9df272394a71550@AcuMS.aculab.com>
+References: <CAHk-=wgMzzfPwKc=8yBdXwSkxoZMZroTCiLZTYESYD3BC_7rhQ@mail.gmail.com>
+ <20240505175556.1213266-2-torvalds@linux-foundation.org>
+In-Reply-To: <20240505175556.1213266-2-torvalds@linux-foundation.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 30 Apr 2024 18:21:01 +0100
-Conor Dooley <conor@kernel.org> wrote:
+From: Linus Torvalds
+> Sent: 05 May 2024 18:56
+>=20
+> epoll can call out to vfs_poll() with a file pointer that may race with
+> the last 'fput()'. That would make f_count go down to zero, and while
+> the ep->mtx locking means that the resulting file pointer tear-down will
+> be blocked until the poll returns, it means that f_count is already
+> dead, and any use of it won't actually get a reference to the file any
+> more: it's dead regardless.
+>=20
+> Make sure we have a valid ref on the file pointer before we call down to
+> vfs_poll() from the epoll routines.
 
-> On Tue, Apr 30, 2024 at 07:29:45PM +0300, Alisa-Dariana Roman wrote:
-> > +      diff-channels:
-> > +        description:
-> > +          Both inputs can be connected to pins AIN1 to AIN16 by choosing the
-> > +          appropriate value from 1 to 16.
-> > +        items:
-> > +          minimum: 1
-> > +          maximum: 16
-> > +
-> > +      single-channel:
-> > +        description:
-> > +          Positive input can be connected to pins AIN1 to AIN16 by choosing the
-> > +          appropriate value from 1 to 16. Negative input is connected to AINCOM.
-> > +        items:
-> > +          minimum: 1
-> > +          maximum: 16  
-> 
-> Up to 16 differential channels and 16 single-ended channels, but only 16
-> pins? Would the number of differential channels not max out at 8?
+How much is the extra pair of atomics going to hurt performance?
+IIRC a lot of work was done to (try to) make epoll lockless.
 
-May not really be limited to 16 differential. Many chips use general purpose
-muxes on both sides so you can do all combinations. In practice that's normally
-pointless.
+Perhaps the 'hook' into epoll (usually) from sys_close should be
+done before any of the references are removed?
+(Which is different from Q6/A6 in man epoll - but that seems to be
+documenting a bug!)
+Then the ->poll() callback can't happen (assuming it is properly
+locked) after the ->release() one.
 
-A more useful case is to do all but one channel as positive inputs and the remaining
-channel as the negative for those 15 differential channels.
-This is effectively the same as doing pseudo differential channels, but
-on more flexible hardware.  This is in contrast to a device that only supports
-pseudo differential where there is a special pin for the negative
-(this device has that as well as full muxes on the other 16 lines).
+It seems better to add extra atomics to the close/final-fput path
+rather than ever ->poll() call epoll makes.
 
-Having said all that.  The ad7194 datasheet says 8 differential channels..
-I have no idea why though... Maybe something to do with the mux switching?
-Or maybe assumption is that if you want to do pseudo differential you'll use
-the pseudo differential mode rather than wasting hardware?
+I can get extra references to a driver by dup() open("/dev/fd/n")
+and mmap() - but epoll is definitely fd based.
+(Which may be why it has the fd number in its data.)
 
-Jonathan
+Is there another race between EPOLL_CTL_ADD and close() (from a
+different thread)?
 
+=09David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
+PT, UK
+Registration No: 1397386 (Wales)
 
