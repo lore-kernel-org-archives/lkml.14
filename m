@@ -1,60 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FA56CDBF;
-	Sun,  5 May 2024 17:13:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C290E6CDB9
+	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 17:13:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714929180; cv=none; b=kUlwUyI3fPPBNaEAvdlgXdw5h1SV+xnof8z5zga7Rl4sJBiqbWx487wVTDMt0e8WawnI9QrYoizgnjp36Txb6RiSpNPeHE/yzDpIUtkNbT70mh2iTup8ZKCcz6XsOJXHNGONkKiIu8jYFX4zLQ+7/KWXHvbEGgECSlJYtTEkkvA=
+	t=1714929180; cv=none; b=lAo5ZsxNj0uecLs0iJNH92KXZ16D+FPNv47kMnkMChOo0595Gqe6ZBISut8V3YvS51XchroxSkQQOGQikHLJQCo4/lsZDtq6WM6NYZXDUQxKe7jZ2hDpD2uzW11re6YmAcptPSrbU36XANrcxFqtS5cgnpbrIyPA6omZnXOrh3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714929180; c=relaxed/simple;
-	bh=2e1aqBxsKPf2upJeumsLAWKy0iUSEV0EDKsUal2iC2c=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=cBDcmb9kW1bKYkWDdp5KPRdmlbxoBcGztfy3FHzndIYazehG5VsyspWi7jS83o5zsRYothMCd52RZxm8qvjKGcIJy4d/HC2VDtcdUa33W292+Ho5vQBrv2l4ZK0sJ17+r+g7sSon0x9ZsY3qzLMvQC1tbebmBli3Cp29zVnLseE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gk21tc5O; arc=none smtp.client-ip=10.30.226.201
+	bh=f0dh1n26/BR5g/MNIz8tJQvXhGxMdA8jPtSnNisxh6U=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=INzbeOOAoIn+oHnCCyg0vPuHC3se9ZDBHiAaO3XN5u52dpGUNxA+SMk42j4xCiR1vc2vRcyhymncv3V6QLo92Nw9K2neJ3x61tvpOt7HgIxdt5ct4SUD7HoJr8s52uoIYIrJKLvn/AlGV4t7Qme9YGUvpTy5vvchFltyUXoMexg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aCdyL183; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gk21tc5O"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8AFA2C4AF18;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aCdyL183"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A073DC113CC;
 	Sun,  5 May 2024 17:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1714929180;
-	bh=2e1aqBxsKPf2upJeumsLAWKy0iUSEV0EDKsUal2iC2c=;
+	bh=f0dh1n26/BR5g/MNIz8tJQvXhGxMdA8jPtSnNisxh6U=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=gk21tc5OkLuS5UqDng9wB3PJtqapgX2JFQv2Ky7ikAkjiW726dfgta0hJmqgojOV3
-	 cfw1GYWp6Q5LptGPtNUDP1bMV8WtdlHZ/Uk3yQJpN9vWswq/qZJ9PJoPXFnzjIgAAV
-	 alFb6OpZ3HYJDhIiMTfuq1cTDcMdDFOQqb0iScr4JlKapVZ6wNHT/lpfu6W9/Z8kAx
-	 6VQLlG67X+iXjKyprU5dwGgCR/fd8ZLDQRM8n7R8sFuWdP7NYxAWXXi2Yy1EXPuev/
-	 IGhGsB3KodJSxiv0vGphiZeVK15d8Ica3QZqLzZlJfjBrPubiGgGkT4Ta0h872pFBn
-	 XrSjNDKp/ogLA==
+	b=aCdyL183Eif/EMhObVeLhnaB1U0xzY2pfINpvT1Xwvd9aDPrT3RzF4020ZohPSiE6
+	 54DEyyNEhZ8M/pcRjY28DQdZpS9uN5GwNafcx/2B88/82NhZYkGoiBOTcq7mQnA2dF
+	 9NGQEfeOKm7eWgyjhMutMd6eIwU9oBqOXkjZ+bc2KPFD5X+0zzL4UnpZNBppg5OyI1
+	 /3mYArhuHezR04dDWg8XA5VoEuioMWD/fnD+9gjn6GTqnxgxhR+h4SgWcjt3X/Sdew
+	 SXXoCVl2xRsTxU25AdfpOF46LUXXh3McKrc2Jev0uh0JrzEZMJVWZhBhxeNJ5cbYyc
+	 nCXGFeXbWZgDw==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 83583C4339F;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 92FFFC433A2;
 	Sun,  5 May 2024 17:13:00 +0000 (UTC)
-Subject: Re: [GIT PULL] dma-mapping fix for Linux 6.9
+Subject: Re: [GIT PULL v2] tracing/tracefs: Fixes for v6.9
 From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZjW50TUK_CvTAXrj@infradead.org>
-References: <ZjW50TUK_CvTAXrj@infradead.org>
+In-Reply-To: <20240504043801.2ca43b92@rorschach.local.home>
+References: <20240504043801.2ca43b92@rorschach.local.home>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZjW50TUK_CvTAXrj@infradead.org>
-X-PR-Tracked-Remote: git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-6.9-2024-05-04
-X-PR-Tracked-Commit-Id: 75961ffb5cb3e5196f19cae7683f35cc88b50800
+X-PR-Tracked-Message-Id: <20240504043801.2ca43b92@rorschach.local.home>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-v6.9-rc6-2
+X-PR-Tracked-Commit-Id: d57cf30c4c07837799edec949102b0adf58bae79
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4fbcf58590a85cdabc48c1541d4f7031b22829f0
-Message-Id: <171492918053.31500.15660514002876369711.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: e92b99ae8216dec2566711dae0a9b7b47591e315
+Message-Id: <171492918059.31500.9576885964803490249.pr-tracker-bot@kernel.org>
 Date: Sun, 05 May 2024 17:13:00 +0000
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, LKML <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Beau Belgrave <beaub@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The pull request you sent on Sat, 4 May 2024 06:30:09 +0200:
+The pull request you sent on Sat, 4 May 2024 04:38:01 -0400:
 
-> git://git.infradead.org/users/hch/dma-mapping.git tags/dma-mapping-6.9-2024-05-04
+> git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git trace-v6.9-rc6-2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4fbcf58590a85cdabc48c1541d4f7031b22829f0
+https://git.kernel.org/torvalds/c/e92b99ae8216dec2566711dae0a9b7b47591e315
 
 Thank you!
 
