@@ -1,260 +1,230 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04olkn2048.outbound.protection.outlook.com [40.92.75.48])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2082.outbound.protection.outlook.com [40.107.237.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DB4208CA;
-	Sun,  5 May 2024 14:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.75.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DA9208CA;
+	Sun,  5 May 2024 14:18:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.82
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714918576; cv=fail; b=nHYjKY/fbzUkm78gVw6xFvtfjvOFw1NG66bv/kL9F2ZYchPEn/Rgzv6+1XQStTmyO8G/gE7W+7T3nPZc12KEBEVjPiJtgqn8v0ekxEoDObZL2CvQm3MQe7O89HevGKJJPy13Wdb02tqDOk9zN0w7np5SGm+4pGcq5ZHpztyALxU=
+	t=1714918687; cv=fail; b=DkrPM3XsBpHolLDM9YQ7xBKUuHSBgSwJ+we+tXk501viuTS8/7KUxPxlbbpZ9WAJVw7bwzXb3jmlPB2YedYnra7tmwk/dzfLQmmf/16kYRrU85/1pP9D9P40euO17+s+6vVv2eqk0/BzkDVwmVbWBi7FAZqd/pIekBYrFWRStJY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714918576; c=relaxed/simple;
-	bh=Rq03aMB0ZF1s4d8P71rdrOD9Hw1HRSrazVwdc6RiUxw=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=aISIw3OPrJ2d/4/d8vVLW2cBV5/RaeJA2ojPnWjZ01m3sKvkao0dLQVrP+Qy006K44EwaOiKLApoQz+q4D1OpifSHtiBnZc6p0e1sTHHddFbVjKzasi0R6vPDEcQ/X/bSR6KYlKOjt55MQKecyo68RjJ1HjAi7339dKk/av5lYI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=mj17Zf9B; arc=fail smtp.client-ip=40.92.75.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	s=arc-20240116; t=1714918687; c=relaxed/simple;
+	bh=nL8PDDWgGQEwWbcv8lPqHrRv1IjtA0JMgwC/nkA6mOA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=MR7ckZgLoPT87fPhuzYpyWCqqklg8wAdby+66ykT5y5X0u+bYedpZqNcZzQMmPQOhiEI33xU4eiqwwljxYAVNbrR6fNr93db44srzeAMLHIaaq9jeKqaDQ55uFVvmJasMTwHTxNGb2Z2Nrgr+9KQ0ipX3dXxeByDffVZT3a7Lsw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=o+H3V08Y; arc=fail smtp.client-ip=40.107.237.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="mj17Zf9B"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="o+H3V08Y"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HR2JZT4q0ECeomnA2L6rKLDDrzejLUlfZvLIoKHfdB6/udF0xp6w0d897Gp1hekLD7C9IJ+AAb9L0fAUNV3GtIymo5cYHEeQ06HbjCOsyAwYzqZtIWAQTtGF4U2hJFr8iLhMHHk9EaUikD+mTUV1OEmFv+jCUfEt1r3sfGHCqp5AiIdL6wZ6ek48okYF5uIEPNzEMFiEQGYCQuZfAR/AKvV1YfSFHFpr3XGm671RBm0Zym9xTh1/92XbsgoTpRhG8LsBwJ0IhMrGq1llA/6VSMmz8IEhjDgsOqU+ugRTEBRzBxzRjxZ0kUlxXPTunGM77yHsDFPTdBgEa57J/hztAg==
+ b=HQEZcx8bZHmlNeR6ka4qIeMo1zr3VZomtGlMq3ypAD248oBvu94F2vAZb3DN6i3BsNvvsBvVbLaEfB690sDxndfXk0Os9yv1dHwFAspt5sbq1uu8oTWRKwX8DFAi6F90lUzysPIUekPJTHOt3wJLmG3znobb9ID3Xa1FHcAyDxdHVz15bt0A4hOsJ5dlPSFiv3aWX2yMjXSl3GnPSbZ4ZCvYsS6T1unZvhhT1OYcEvP0xcgOnMbDMUAfsVAUEH03vaP4gwEit1YiLlX+C9B7pLPl6SefnH8MeqJNB6RoJFwVmKHTCn8zTixatim+U6k0ONO//UbnYbUPHKOH27JnPw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rIi5Dj8newoAsX2e0SmyQqcOFSFVvNz56kOOQPl3FH0=;
- b=DSyDNXpUTBf2LpdAnF9PpCaiTk+d9xLgy2cd+s4v9TWBnMm8vak6833ZepKnMtO2rCTBJCA/3oYbW757TelllpbCyxMCpSUBjAyhnLQlvbkivoOLQAtv7nzXZ63NVBUqyvL63tle2ShzT4ZPf2ToRaEPEiM1Y0vXGCgMkdYu7B1VCjFBl7i+D/in2U+ScWeVqFijqXG4eZ0xtuO0OmpKc8Gcyi2p1RagBbDsI+bbV5QqzQNG0nXa+fWCNpW9YBonIPY104zwwoZeTn6MJorz55ieSa4NhsbwObVinFSs5VYFSsatsZh9EkT92vmJbfdK+Ykr/h851m9bhWtE2dnyuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=A9wRphGIs3DaoweQXYq/YwrDwU0+6FRdnMePEBMWdXU=;
+ b=Tl9f/dum/ren3uonLhZCeUTEnGBhk0qUGccDZ8fbUIdmIJu/vkp9CPudmT4QDRB1lxlWaTpxox1/cWj9tiBFQJSIi3xm5VVOjJhd1AeC1OQ9UPz2FBPNlpe8p6T9ZUn7DJuwRKQd3/+JqABqaJdWDQMXmZ4R5KqGCSEjRDRF3Z+JFNStUcGCVrATjF7wr4PAsSkVBuIORrQLNGXRdvX9xaYnruTM9OhcbdXvAncisC8gDAejRExbinogPVlxfHe5c+X48EQSdEVKjNewFQFfBX/I90viLI2OeGvGaH6fKX6i9UFsBkoMkma7KAQUx7SjL/nNYZLZWvzBHzOAsF2t1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rIi5Dj8newoAsX2e0SmyQqcOFSFVvNz56kOOQPl3FH0=;
- b=mj17Zf9BxrrFLKl1FlU5XqMrzN5vHN7Uh7gLFaDkKPz5smcDjHGT/vcp6X+Ii8XPM3DDWFiCWHt0/YdqEojWeVMRxuVJDU9bKr0aTIThHIQpl9iYUEYIiYyy+oDi2eM95S1n7pDbqLF3uM+5tGJNegqy1UprISq9BVy4S/q0ctlAWTWBCrrFBjf9G/duEWHedF/uMJfoOfB8PnrPQ3VYhK+1D+1UqCSVwDwAEOOHBJP8jIAaU/NSm5mWLHk11islv9DBH5aXoKv2W1GY2BkqOdwPX0DNoUGbrPR/tGdcoc9+3N2Dy/+wq6sb1nMVsgzn5eUyZQ9knRUTNzXI4+0b9Q==
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com (2603:10a6:20b:3f1::10)
- by PAVPR02MB9746.eurprd02.prod.outlook.com (2603:10a6:102:314::21) with
+ bh=A9wRphGIs3DaoweQXYq/YwrDwU0+6FRdnMePEBMWdXU=;
+ b=o+H3V08YJ5x4uLZV6i2Tw/aKePMz8obCD7nZa5MyXGZBQOWJZjnfDO58Xz8XLv1gB3b84tPIr+eMtmhzZKC6MaUjAtfhYpK6777qaw2QSgrFvvnQmU/AfkvgaUUE+INAKzdfk6rTZ9nDi+qeOFRQA+wYqSAUsu0wJduePTjHYLc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by CYYPR12MB8729.namprd12.prod.outlook.com (2603:10b6:930:c2::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.39; Sun, 5 May
- 2024 14:16:11 +0000
-Received: from AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658]) by AS8PR02MB7237.eurprd02.prod.outlook.com
- ([fe80::409b:1407:979b:f658%5]) with mapi id 15.20.7544.036; Sun, 5 May 2024
- 14:16:11 +0000
-From: Erick Archer <erick.archer@outlook.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Kees Cook <keescook@chromium.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Cc: Erick Archer <erick.archer@outlook.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: [PATCH v2] perf/ring_buffer: Prefer struct_size over open coded arithmetic
-Date: Sun,  5 May 2024 16:15:53 +0200
-Message-ID:
- <AS8PR02MB7237569E4FBE0B26F62FDFDB8B1D2@AS8PR02MB7237.eurprd02.prod.outlook.com>
-X-Mailer: git-send-email 2.25.1
+ 2024 14:18:01 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7544.036; Sun, 5 May 2024
+ 14:18:01 +0000
+Message-ID: <c1399f72-e8c8-4474-afee-53e0c6f0d1fa@amd.com>
+Date: Sun, 5 May 2024 09:17:58 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Thunderbolt Host Reset Change Causes eGPU
+ Disconnection from 6.8.7=>6.8.8
+To: Mario Limonciello <superm1@gmail.com>,
+ Linux regressions mailing list <regressions@lists.linux.dev>,
+ Micha Albert <kernel@micha.zone>
+Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <wL3vtEh_zTQSCqS6d5YCJReErDDy_dw-dW5L9TSpp9VFDVHfkSN8lNo8i1ZVUD9NU-eIvF2M84nhfdt2O7spGu2Nv5-oz9FLohYO7SuJzWQ=@micha.zone>
+ <3f1f55cb-d8df-4834-b22f-c195d161cab5@leemhuis.info>
+ <1eb96465-0a81-4187-b8e7-607d85617d5f@gmail.com>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <1eb96465-0a81-4187-b8e7-607d85617d5f@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [8tXJnD8xcTHch++rYm9YlvPNNCIcNidI]
-X-ClientProxiedBy: MA2P292CA0001.ESPP292.PROD.OUTLOOK.COM
- (2603:10a6:250:1::17) To AS8PR02MB7237.eurprd02.prod.outlook.com
- (2603:10a6:20b:3f1::10)
-X-Microsoft-Original-Message-ID:
- <20240505141553.14446-1-erick.archer@outlook.com>
+X-ClientProxiedBy: DS7PR03CA0276.namprd03.prod.outlook.com
+ (2603:10b6:5:3ad::11) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR02MB7237:EE_|PAVPR02MB9746:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3f0305b9-2309-4e11-0749-08dc6d0de9f6
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|1602099003|3412199016|440099019|1710799017;
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|CYYPR12MB8729:EE_
+X-MS-Office365-Filtering-Correlation-Id: 805a4f1f-ccdd-4846-51fc-08dc6d0e2b9f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015;
 X-Microsoft-Antispam-Message-Info:
-	QUchWPzsDXYy99HgrdJOy77tj0E/vU+OwOVSrhcEUF4EtMDQ/W+02ReIrClDrMWcghIEXcDn8+EIh36os3QTt6XLkIcoklpTDmQBNFJrJJnBGHGez7zDxj8Srhzp4aA1hS1nexrxz+NyPq4lbOk59f0X3vmTO9CYPn1nkKyyPkxDE+8zKxOOcxlHBVh6lyF3r0VWy+Kl9XaR2NWM0hCFrWv+VREs8aldyzZjs3uJ1tebgQJgaZ4aqiTA0lJ1raTG19g6+v5egxoO0AeAmkYwfAHwYw6LmiSQNQlpX1EDrTQ/54qnb++V1/NsvRT/8oFgl3ThlhisbOG7LpjSmxz8WMKzcnpkJVOAG4BAu6JOPQ3n63yDiNe4x9lx+tSF6QmeXexTLdjmjtoA0J6ZauT8FMg9JZkGCwRTriJ5YY0wC3bn12VWkPoW28Xn9TvHFcOuO/Wwz4Qqk2zCvr2AP47wcAk4EWS0I3kPDulm0uB03hHOKrBWAYcYUaPcOHdZAucJuClpnhiVAnKVG4e1UxQNhZUSf3FA048zhAGcGhfWAu4q5xMnuv9ppf7frjRp3ESseLUF6694doaxicj/wDhsALGH11A+sEY/qC/LwgkPtSEsssfsSxxuneB45e7APjzC5/gkBLrspZPmZa3yG1koOF3EZLpbF+dYzyrjOFtMxRUuOyMGHPcVrakTtrhxnsEnNUg35wMb7NuAd5SF2YsR3w==
+	=?utf-8?B?S1ZLR1V1Mmo5R0NRNWNmZWtQNkJxYTlIN2N6NHVPQ0FENUhoQ2tJUmxxanJz?=
+ =?utf-8?B?NlZvdHRxbm1rQmg4enlyZmhvLzl4ODRodFdhU2E1enJ3d0dQVTBWL0VLYXZJ?=
+ =?utf-8?B?Zjk5azFlNGZsZWxXdllYTlFjYTZRcjdwMjlCUVhmaEkrcUdndGxtSEFZdHd0?=
+ =?utf-8?B?cTlwakxvTlErOVRPOGVjNnBtRmxkSUNWTm1scllWckQ4aG16YVJtalpIWmd1?=
+ =?utf-8?B?WE1Lb041cTlleTFYSXhiOTZ0YnhjNlFKVUg0SGRKZUFnVkFsNXdkZ2ptRVpl?=
+ =?utf-8?B?ckVrMEcrWFNONEVvNXlnQ0w3clpoRUh3NTZIc1dhaVZPbkdkRi9zaDdYZFZQ?=
+ =?utf-8?B?ZHEvZDg1YkRsUXZrTG5IeEZjV1ZnN0xHUGU3ckc3TEdyYlJJU2t1V1ZlNkdJ?=
+ =?utf-8?B?dDdRajErcDZPd3p4NW4vVkpSV1JSOEJuRXUwQk82SlZIcDc0NFExNmpXSUhS?=
+ =?utf-8?B?UUVjY05HblNPL3hWU2hEK29jd0MrbnpZVnZUTzJ1d2xTSis4WHdSTnF4RTBW?=
+ =?utf-8?B?UUh1UTJKSHZ3OWVoZ3ZTMTgxZlFTWHpSZlZRTnE3cU01Q1pGRVFHK3JWbFQw?=
+ =?utf-8?B?U2JYLzhDcU5STjNYY0EzUGhhSUN6bEw2dzdOalB4bmlObjlHNzl1WkxWZ1FZ?=
+ =?utf-8?B?ckNTZnVFcVZwaklKRUE5NjZVWUlsaFo2Tzh4MHBVQW1nc2F6WmhZY2NHS1NK?=
+ =?utf-8?B?RHAwRGp6ditFRFZ3VjZJcXJGOVF6eDJWVmtGeU44RlpCWE5BOEhlRUUvcVp4?=
+ =?utf-8?B?RlBDQjRHb2JCQUtvWVVjMDRMV1E4RGo2SUVZOE9YSTlJODRUMUxFRnU3ZHdS?=
+ =?utf-8?B?dmtrU3ppRjRuR2J5ZXJ0VGZUT21tL0JtS1E4UFBFQUthNzVTZlF6K1d1T1A4?=
+ =?utf-8?B?Y0JiZlo5cngxSkd1cDhSWm9kdkVKUkJQUnFmSmpONW11S2UvRHE4bktYUjNR?=
+ =?utf-8?B?V2ZOV1VaSndCNHZDYSt1cFJ0V0w5dHFKdTQ5SzdPclM3RC9uaUlEVlNodzFZ?=
+ =?utf-8?B?YytXVzBQNzRZL3hzQXh0cFJYUzFWeTBjSnNlVTBObTJGN2xLdytaRlg0b1N6?=
+ =?utf-8?B?ZTBOYklxTjZiTzlMN0pkOFBMUm5Eak5TK2gzY3Q0WlhkZkoyK256N1VPL21X?=
+ =?utf-8?B?WGZ6N2ZxcTYrQlBoRWx0MjhDNEFEdkVBcldScExmMUNIYzNuVWthdmppM2ZR?=
+ =?utf-8?B?ajRpMS9jQlVndVdZWk5HK08zcm9GdHlQVE5EU3JVbzdlZm9JWndrRGNrYXVj?=
+ =?utf-8?B?UXdqRTJpb1h5RlFBN2IyMTMza0hNek9SaVNlYkUvWHNHZTMwRzM2WWNzcWFz?=
+ =?utf-8?B?dk9vZXNIM3BSQ2hUSXJxK3I4SCtVZUZIVUVCYm5SWm9KQVVXLzFDWGlpaHh1?=
+ =?utf-8?B?YVhsaHVnbGZpK0pDQ3NKMGFHOU1yWjRPTXYxK1RGVU0vNFVWdWtXbnd3eW9q?=
+ =?utf-8?B?WG9TYk95aWZhSWRaR294cTFhais4UnZwdC9lVTNyUkcrR1NoY3VKeVBCOStF?=
+ =?utf-8?B?UUhXMVdXVEM1Z2lPdmxjZXBJVS9qTmRPcVh6dE9hM2wwRElNd3FZMEk0Y3Zs?=
+ =?utf-8?B?TDBkNGYraDdpTXBVSGQwelNEZnNUcE9abU9EcmRZcG9TQ04rK1MrU2tPUEhV?=
+ =?utf-8?Q?m6KTcWbrC4AyClpRFnyKxoCz1trwG3ZVKAqhu2i6kXcQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?fC6LUwK82FmpjXxq5BHpmS+TWW7yQiK8/AEMwUalQJAqVuF6zKtyYdu5NQt1?=
- =?us-ascii?Q?7qW5s3iCZNMRMEX0620Ad4sY9WnBaFLI6fGpINGG6x3fqGFdiNb3BSPrVKEh?=
- =?us-ascii?Q?qg5+FC6SUot30aap1HzgCHM9RlEGIFMi7MDR6C8PUnXFnGradfSH1+Th7Mg1?=
- =?us-ascii?Q?20X413bo6WRHNL+z6HC4+J6L3boiCC4yuRDFlVeLBqoWMflhlbljsp3FN9Ea?=
- =?us-ascii?Q?k8mSUFztUeUfK1vTAaYFCzyurN/CKA+2yBC3nDvCb8IQsvn7AfZwxuLHdMYP?=
- =?us-ascii?Q?sxffa8USWBjfOtvdsNtI9VO0ExJVFVflEHmDNAq46Se+vMFVmuU4E69ut+19?=
- =?us-ascii?Q?hF/JeadYnLyPvn/gDJYMtpjXh3E9VHUGCqXAM/yVEnJN4Ij5RNWRxAQL/HQj?=
- =?us-ascii?Q?DKBhnztg5at0iPvHDsG8XSqBJyQq4RdgdwGtUQqKvjxxJq7y8n7ozktf3n2Z?=
- =?us-ascii?Q?gh5RJQHIdFYDecX74Num/z+B5KNC0dujOpoKQzPnzyLvGazrqLeVpWb6zN7b?=
- =?us-ascii?Q?mVhZ/sO0Yre8LZAb9UMMTh2NOQ6Xt4vjQ8HFGbCgb9syErUJVaRjOIZqvf2l?=
- =?us-ascii?Q?rcMbNKsWcHlYm6mDD0eeS8zlRYJg7VjYoxqSqOt5xCCMT69NEJGltKRaGD+2?=
- =?us-ascii?Q?Lt7U9ELvcDj/EupuyMKPZla2BI2bG/eBwZRosXSO1CHLvYUt28wtVUw5Vk5c?=
- =?us-ascii?Q?cjH8MMO1c9UuK2Na+CoANpeIsynisDbKYegUBwkf009NC0bFdHdNApJ9Q//l?=
- =?us-ascii?Q?5xUvzrkUWEJqUAwOs02P/foozhufnLrZwh9wEDGhL+TsjvCakX9g7wOZx5GU?=
- =?us-ascii?Q?CoeakGXtcsSS6WqmiU/UCnetdgBtL8ceNMgCY2YHBWs20ZiUdr2M+l303dlp?=
- =?us-ascii?Q?LDhdYwuFEkwMYqJtAcZSmoRl4Z8gcMZL+TwGtKYyufs2tG/nnhwJK7qjXMqM?=
- =?us-ascii?Q?a7ogUzMQBbl8DHTaXIe0bFfJX9z5/O5MAZ3CM9pxaEDnUR4puNzb3ILzJ7lL?=
- =?us-ascii?Q?HuX9O1Tc5LfkEx4FVMnDic3H9yePwO0ur1m4SlzZOsl45ZsY2x2qHS+FdeiP?=
- =?us-ascii?Q?Y22nyk5Q4pQs0rmVqZabutVJGxAmA8KzDLf/1piCUUDvGHUQ2ZKwQ1xVDnNw?=
- =?us-ascii?Q?WXR0wbBPmvyAax6XHefE/4a/3V7Z0glVjaYkon0wtWzV4kS0xRKNeZY0kQv4?=
- =?us-ascii?Q?KhQP/JmzGJ/L25sMB1ydwtk0X8x0cljprDYvOCHq3Uf2M99QpMcCuTiA1vzZ?=
- =?us-ascii?Q?POezy8UtpO1I9tFupXEu?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f0305b9-2309-4e11-0749-08dc6d0de9f6
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR02MB7237.eurprd02.prod.outlook.com
+	=?utf-8?B?S3VEcjhJVm9DamlVOUtVS1FsQjNkLytiWC9UNHN6V0ROMTZ2QU1EKzdpaE9n?=
+ =?utf-8?B?YXhlUm15ZDk4ZWhjUU1zWkFwWWhZeGhkSGU5SWg0dklMSC85WjFFNkliOHFv?=
+ =?utf-8?B?ck5tblA2Y1g2SkdOSXBOYlZnNlpVZWpkUTZONGFGRFkyUEpEUWlad0Y1eG40?=
+ =?utf-8?B?SmVwQldOeEZwVFIrenJ5ME5BSUtmYmh4Uys2WUNTNGxTQWRCSGZJbExFY3Fr?=
+ =?utf-8?B?bTNnVGpwV3NWeWlOTEN6SE1sazd0Ly9oYkNTa0FHQktVUTE0bmtFenJEUEJS?=
+ =?utf-8?B?bmh5MnZkTHR6WTF5MS8zRFBPcjBrMUhVbFdYOEYxb2VlN2hEOVgvd1dUcHJO?=
+ =?utf-8?B?ekIrMkRpc3NUT2ZGSUpKeUF4S3k3ZHU0bHRpWnVpeTJwbGE5NVFaZ2gyQSts?=
+ =?utf-8?B?Z0FvTE16dUtsaFZpRTlNSitFek1EV2FqNkUxZ2JaV2N6TEUyUTZiZzh4RVgr?=
+ =?utf-8?B?ckh0SWZGbXFDVDFSV2owdVRJUWtTR05vOXdhYVN3VDU3MHJ2ZUxlb0tBUHZm?=
+ =?utf-8?B?c3N1TldNT2kwT1RSdDFGU2pWYy91TVoyakVLOHFUWDlCa0xMYkJ6MXIyOCtV?=
+ =?utf-8?B?U0V6d2VmN2tFMEN6TGhSM3RoZFZBQnNvcWRNanBMMnpKTWNpdlZTWDZIZ0Ey?=
+ =?utf-8?B?RURmV3B3TE9uMnduamJvNjRaZ2ZxbjNCYXFiaFQyZG45OUdPOW5LUmhseTBE?=
+ =?utf-8?B?R1NHUzQ1dUVHeVorcHcxQ21ya1BRaU9KcnBSek9mMUNNd3VMTXo1Y1hvLzlt?=
+ =?utf-8?B?ekt0czloMjhzV2h2UzFrNUIvRUFmYW94U1dBL3E5NXhyd2xkYXdtbUNlYjRn?=
+ =?utf-8?B?ZjhITUszOWR4eis0OTIvbm11SzhRZ2NZM3gwUk93Q3NoazNVYlgvV2J2SW1B?=
+ =?utf-8?B?OXpubi9oWmVBUXpjNWJhYzZwL2JGRm8vL0ovWlFuV0hZaTAwZkhJL1EwQnpq?=
+ =?utf-8?B?ZDdTRzRKVlEvNTB4SnRkc0VSMHRjMzNEKzRsZEdRUE1FU0d3MDVmaUsxY0pI?=
+ =?utf-8?B?eHN6N2N3WlJrbGpUOGs3RHA3S0EwdENEZEdCajJCK05kN2JjS1JQeERXYWZX?=
+ =?utf-8?B?ejV1TnlFQzJ3N3BsMHMzVzIvdG51L3pzdzNNdkdtc1BjT1UwZzllMWxvTElW?=
+ =?utf-8?B?b2FlL2pFWUUxcWtNY2xLY0hpYS9NYm1NeFU0YlhPVW9Fa1BwUm51ZCtCcWg5?=
+ =?utf-8?B?UWl5MnYzV0c2SGFEWURTbndtUkU2dWtqNVhuaUNEelVDTVAreHhtWXU5SlZl?=
+ =?utf-8?B?N2Z2SE94anNqNkgrNnpoLzc2cy9kZDIxKzBUVXhIL3BMS0oybytDYzhLaEhE?=
+ =?utf-8?B?RWx0d2s1akUxS3VKTnovUjc0U3JhbE8zQmM5SmZEeXhIdXA3OHgxNHByb25W?=
+ =?utf-8?B?MHZYQ2RVMHYxbWMrUUZQMU5xVU9aZFYzMXNVamFoWFdnRCtHUDRzUnVZWUJ0?=
+ =?utf-8?B?eXJyR3dlenNIZnppNFRmQWc4VStlbVp2dzdkb25DM0l0em95N2ZiZHU3N0M5?=
+ =?utf-8?B?TUo5VWdzOXdCMUFQcmt1QzVscTJhREtYMHBBcXErRU1NZ0FoSGNDeVdmN1Z3?=
+ =?utf-8?B?OVlaMFVrdkc4RlBucmJOMi9WTVJKRlpuN3lmOUR0UThITEN3ZU9yT0p0Nzk2?=
+ =?utf-8?B?K2hSSWRJTStNc0FxZFlMQVMzVHZvVFpiNURoT0VXSUx3c0kvQU5RVzFuQ2xR?=
+ =?utf-8?B?K0lCRnJkdUJzVkZWL1BucWUzUjVMeEl0SnlUdUNRVFdEMkFJUVNMN1pTMWEx?=
+ =?utf-8?B?d0VvK1RFWEt5eWdpbis1YlBOTEMwMWYrOEsyWk10Mkg2MXRlNGg1dVRFNEFC?=
+ =?utf-8?B?UmhCK2liN1liVjM2OXlzV3NrSGJDVmx1b0dWWHFGY2xLWllTMFZXaE1iUHlT?=
+ =?utf-8?B?M3NLNkMzQ0owdFFZMTZXOFMyOEVkcmQ1ME9pcEtJdy9mMnNHak5aaDNkUFN3?=
+ =?utf-8?B?dU55MWp2Zlk1K0RWUDMvS0pJUFhaWCthMWV4K2wvS0Q2a3NJMmFKWkRlSkx5?=
+ =?utf-8?B?ZFhGaWFDNlArR2grVFVaUTlHbDhqVVNXcWJObW5aUjBRL0RDVHN3dmc2aDM5?=
+ =?utf-8?B?Qlc2bmg4TCtQOGxIYjExSTFZY1FyejJWRFNNb3JWNzVneE5xQ3NETGNFQmN2?=
+ =?utf-8?Q?Opes0maDEyHCxV3zpqHb9CxzZ?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 805a4f1f-ccdd-4846-51fc-08dc6d0e2b9f
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2024 14:16:11.0313
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 May 2024 14:18:00.9964
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR02MB9746
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TCqvcgO3JfZXwURkItvjeaFBcLAHqrhiVSPidgPBCpR1rR4MI9o3QlF6vcICJNVdSRzQbx76m5P/Wilx0k9BoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8729
 
-This is an effort to get rid of all multiplications from allocation
-functions in order to prevent integer overflows [1][2].
+On 5/5/2024 07:37, Mario Limonciello wrote:
+> 
+> 
+> On 5/4/24 23:59, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> [CCing Mario, who asked for the two suspected commits to be backported]
+>>
+>> On 05.05.24 03:12, Micha Albert wrote:
+>>>
+>>>      I have an AMD Radeon 6600 XT GPU in a cheap Thunderbolt eGPU board.
+>>> In 6.8.7, this works as expected, and my Plymouth screen (including the
+>>> LUKS password prompt) shows on my 2 monitors connected to the GPU as
+>>> well as my main laptop screen. Upon entering the password, I'm put into
+>>> userspace as expected. However, upon upgrading to 6.8.8, I will be
+>>> greeted with the regular password prompt, but after entering my password
+>>> and waiting for it to be accepted, my eGPU will reset and not function.
+>>> I can tell that it resets since I can hear the click of my ATX power
+>>> supply turning off and on again, and the status LED of the eGPU board
+>>> goes from green to blue and back to green, all in less than a second.
+>>>
+>>>     I talked to a friend, and we found out that the kernel parameter
+>>> thunderbolt.host_reset=false fixes the issue. He also thinks that
+>>> commits cc4c94 (59a54c upstream) and 11371c (ec8162 upstream) look
+>>> suspicious. I've attached the output of dmesg when the error was
+>>> occurring, since I'm still able to use my laptop normally when this
+>>> happens, just not with my eGPU and its connected displays.
+>>
+>> Thx for the report. Could you please test if 6.9-rc6 (or a later
+>> snapshot; or -rc7, which should be out in about ~18 hours) is affected
+>> as well? That would be really important to know.
+>>
+>> It would also be great if you could try reverting the two patches you
+>> mentioned and see if they are really what's causing this. There iirc are
+>> two more; maybe you might need to revert some or all of them in the
+>> order they were applied.
+> 
+> There are two other things that I think would be good to understand this 
+> issue.
+> 
+> 1) Is it related to trusted devices handling?
+> 
+> You can try to apply it both to 6.8.y or to 6.9-rc.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git/commit/?h=iommu/fixes&id=0f91d0795741c12cee200667648669a91b568735
+> 
+> 2) Is it because you have amdgpu in your initramfs but not thunderbolt?
+> 
+> If so; there's very likely an ordering issue.
+> 
+> [    2.325788] [drm] GPU posting now...
+> [   30.360701] ACPI: bus type thunderbolt registered
+> 
+> Can you remove amdgpu from your initramfs and wait for it to startup 
+> after you pivot rootfs?  Does this still happen?
+> 
 
-As the "rb" variable is a pointer to "struct perf_buffer" and this
-structure ends in a flexible array:
+One more thought.  When you say it's "not function", is it authorized in 
+thunderbolt sysfs?
 
-struct perf_buffer {
-	[...]
-	void	*data_pages[];
-};
+See 
+https://github.com/torvalds/linux/blob/master/Documentation/admin-guide/thunderbolt.rst
 
-the preferred way in the kernel is to use the struct_size() helper to
-do the arithmetic instead of the calculation "size + count * size" in
-the kzalloc_node() functions.
+Is it showing up in lspci anymore?
 
-In the "rb_alloc" function defined in the else branch of the macro
-
- #ifndef CONFIG_PERF_USE_VMALLOC
-
-the count in the struct_size helper is the literal "1" since only one
-pointer to void is allocated. Also, remove the "size" variable as it
-is no longer needed.
-
-At the same time, prepare for the coming implementation by GCC and Clang
-of the __counted_by attribute. Flexible array members annotated with
-__counted_by can have their accesses bounds-checked at run-time via
-CONFIG_UBSAN_BOUNDS (for array indexing) and CONFIG_FORTIFY_SOURCE (for
-strcpy/memcpy-family functions). In this case, it is important to note
-that the logic needs a little refactoring to ensure that the "nr_pages"
-member is initialized before the first access to the flex array.
-
-In one case, it is only necessary to move the assignment before the
-array-writing loop while in the other case the assignment needs to be
-added.
-
-This way, the code is more safer.
-
-This code was detected with the help of Coccinelle, and audited and
-modified manually.
-
-Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#open-coded-arithmetic-in-allocator-arguments [1]
-Link: https://github.com/KSPP/linux/issues/160 [2]
-Signed-off-by: Erick Archer <erick.archer@outlook.com>
----
-Changes in v2:
-- Annotate "struct perf_buffer" with __counted_by() attribute (Kees Cook).
-- Refactor the logic to gain __counted_by() coverage (Kees Cook).
-
-Previous versions:
-v1 -> https://lore.kernel.org/linux-hardening/AS8PR02MB72372AB065EA8340D960CCC48B1B2@AS8PR02MB7237.eurprd02.prod.outlook.com/
-
-Hi Peter,
-
-I know that you detest the struct_size() helper, however, as Kees
-explained in v1, this change improves the robustness of the code.
-Also, we will gain __counted_by() coverage.
-
-I hope this patch can be applied this time.
-
-Regards,
-Erick
----
- kernel/events/internal.h    |  2 +-
- kernel/events/ring_buffer.c | 14 ++++----------
- 2 files changed, 5 insertions(+), 11 deletions(-)
-
-diff --git a/kernel/events/internal.h b/kernel/events/internal.h
-index 5150d5f84c03..dc8d39b01adb 100644
---- a/kernel/events/internal.h
-+++ b/kernel/events/internal.h
-@@ -55,7 +55,7 @@ struct perf_buffer {
- 	void				*aux_priv;
- 
- 	struct perf_event_mmap_page	*user_page;
--	void				*data_pages[];
-+	void				*data_pages[] __counted_by(nr_pages);
- };
- 
- extern void rb_free(struct perf_buffer *rb);
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 4013408ce012..080537eff69f 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -822,9 +822,7 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
- 	unsigned long size;
- 	int i, node;
- 
--	size = sizeof(struct perf_buffer);
--	size += nr_pages * sizeof(void *);
--
-+	size = struct_size(rb, data_pages, nr_pages);
- 	if (order_base_2(size) > PAGE_SHIFT+MAX_PAGE_ORDER)
- 		goto fail;
- 
-@@ -833,6 +831,7 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
- 	if (!rb)
- 		goto fail;
- 
-+	rb->nr_pages = nr_pages;
- 	rb->user_page = perf_mmap_alloc_page(cpu);
- 	if (!rb->user_page)
- 		goto fail_user_page;
-@@ -843,8 +842,6 @@ struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
- 			goto fail_data_pages;
- 	}
- 
--	rb->nr_pages = nr_pages;
--
- 	ring_buffer_init(rb, watermark, flags);
- 
- 	return rb;
-@@ -916,18 +913,15 @@ void rb_free(struct perf_buffer *rb)
- struct perf_buffer *rb_alloc(int nr_pages, long watermark, int cpu, int flags)
- {
- 	struct perf_buffer *rb;
--	unsigned long size;
- 	void *all_buf;
- 	int node;
- 
--	size = sizeof(struct perf_buffer);
--	size += sizeof(void *);
--
- 	node = (cpu == -1) ? cpu : cpu_to_node(cpu);
--	rb = kzalloc_node(size, GFP_KERNEL, node);
-+	rb = kzalloc_node(struct_size(rb, data_pages, 1), GFP_KERNEL, node);
- 	if (!rb)
- 		goto fail;
- 
-+	rb->nr_pages = nr_pages;
- 	INIT_WORK(&rb->work, rb_free_work);
- 
- 	all_buf = vmalloc_user((nr_pages + 1) * PAGE_SIZE);
--- 
-2.25.1
+>>
+>> Ciao, Thorsten
+>>
+>> P.s.: To be sure the issue doesn't fall through the cracks unnoticed,
+>> I'm adding it to regzbot, the Linux kernel regression tracking bot:
+>>
+>> #regzbot ^introduced v6.8.7..v6.8.8
+>> #regzbot title thunderbolt: eGPU disconnected during boot
+>>
 
