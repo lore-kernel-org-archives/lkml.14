@@ -1,297 +1,152 @@
-Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DFD814A84;
-	Sun,  5 May 2024 11:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from mail2-relais-roc.national.inria.fr (mail2-relais-roc.national.inria.fr [192.134.164.83])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8E2111A8
+	for <linux-kernel@vger.kernel.org>; Sun,  5 May 2024 11:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.83
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714907673; cv=none; b=AGaulBvV7YLg2N7yxYV2MUXazoB7NUOo2qI0LZbA7q4qVjKyfRxwZHeyO9aS3ZMEyJ/l8mVFAGzt6wDQxtCDjL6lPCnTww+0WbO7FM99+3/pFlSmHu/Z4Oi0cqa+I7BqRm217SWXPKZiNBRa1bthSJHY01WB2g4UIGK0stFokyM=
+	t=1714907885; cv=none; b=Aull+9UUWwkYuydRG159bbwATrvFH6rfbAC3DcQtA4ujFbPK3a6mHmNopHiF36gFb73MqYhkkdpTTiU4shTzSj2fdsMQzRKBCuYf96qg5Udbyit3xKPK1x8ZWvW6t8+RroJi4sNueSL0cLdNTT3KHXQW254+po3udVqCMP7adIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714907673; c=relaxed/simple;
-	bh=JnlCDmRuutK/KzCo+rcyudV22smr9ryS2UjA5s2k2eg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GA91eQ8l+YOnCvSpLKhlEh4F+lhFt8kN1fmiDEgQ5puNO10rOMXVnWQGD0T2R2/XvYjN2O1PHByzccwQbFFXXmSRKikleHk1QORWu2e0UfO7pdGN5HH2WCmS5SdyENr9uxA5qMtsWRpyiZ1L5tYcp4mG0APmxckNoqTCXTi7gMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=weErkWGL; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	s=arc-20240116; t=1714907885; c=relaxed/simple;
+	bh=ru7fMimQdej2rZlpz1llHVTGQwDFG6DuHrBFcI9/v7g=;
+	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=RTfkj8ggyrdgjwlCZ2sQuSvfNekdGG7ebwRjoyTEhHeeaX/+3j61dpYxlLd/Y6xSDgMkq0VAE5r1x4DF7+8v6Uyn9TgJnrOkz48cxm+fXuI6tSU9F+XTJzdPlyBHwcHjYi1uPWXIirQwwyoFh6qYKDFjkhAiuj/iVBnLHwYAYfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=OuGIFNRH; arc=none smtp.client-ip=192.134.164.83
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="weErkWGL"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 00DBA14C2DD;
-	Sun,  5 May 2024 13:14:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1714907664;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9tpo+09nwmv+KYpQer08XkkTaUsvh9qO4C4ZH9XHLgc=;
-	b=weErkWGLkv2gh0SVhAYTEyTO3fRq7cyK5W8PvvqtazOPsVjj7QzYZC0TcREbjRvQpMrvJX
-	8SxnlM3a9kCtRSb0Niy2FAjTZvzXUAZ0KeyllrllR63+vlR/gfJOVPgS8xhi66jJ012bXZ
-	rfMmvmMWgdL0BdeXDbaUPvHQ06UeZBEWakXliThPZolBMgVWPvJ7D7Z7yQgJ2PVT/zw6GZ
-	al6qOk9mIM8PbnvaViQvXnpe5lSIo9Fgy2y77uinw7JiramOuVaTW4HupzmRJlEw1yf8Ld
-	7aJYCmE4yYp9atGC0tx7s1C6AtrVvjlgqqRs7ezpLXGQZKTHum2VPo+3ZKWZNw==
-Received: from [127.0.0.1] (localhost.lan [::1])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 2edb31da;
-	Sun, 5 May 2024 11:14:12 +0000 (UTC)
-From: Dominique Martinet <asmadeus@codewreck.org>
-Date: Sun, 05 May 2024 20:13:58 +0900
-Subject: [PATCH v2 2/3] perf parse-events: Add new 'fake_tp' parameter for
- tests
+	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="OuGIFNRH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=inria.fr; s=dc;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=yZOSHiPoDXg5BRuJhBvEzO5qE3MrmYzEHwcoLAo9s4s=;
+  b=OuGIFNRHPgF5RalHmd3KO4xsmAfZlMdLa8ltCv3pTAzCrYz5Wv95uTvm
+   BScMftIndrE1QWY9b54luXrz4pQqAiP4+phHv5CaMvuDaS6F/1owZCFnz
+   2cSiRx3fCiXmXmZH1P6DcA10oPpzL07WjUHBO8gew5aPcY/2XtuL1XU6e
+   s=;
+Authentication-Results: mail2-relais-roc.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
+X-IronPort-AV: E=Sophos;i="6.07,256,1708383600"; 
+   d="scan'208";a="164543578"
+Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2024 13:17:59 +0200
+Date: Sun, 5 May 2024 13:17:59 +0200 (CEST)
+From: Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+cc: Matt Roper <matthew.d.roper@intel.com>, linux-kernel@vger.kernel.org, 
+    oe-kbuild-all@lists.linux.dev
+Subject: drivers/gpu/drm/xe/xe_guc_ads.c:103:21-27: WARNING use flexible-array
+ member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
+ (fwd)
+Message-ID: <alpine.DEB.2.22.394.2405051317090.3397@hadrien>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240505-perf_digit-v2-2-6ece307fdaad@codewreck.org>
-References: <20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org>
-In-Reply-To: <20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Jiri Olsa <jolsa@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
- Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Dominique Martinet <asmadeus@codewreck.org>
-X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8985;
- i=asmadeus@codewreck.org; h=from:subject:message-id;
- bh=JnlCDmRuutK/KzCo+rcyudV22smr9ryS2UjA5s2k2eg=;
- b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBmN2oDEmljyYCHhaiLY64emzyN0yTXYXCZvV9DT
- 9/31pg6q+qJAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZjdqAwAKCRCrTpvsapjm
- cJOeD/4ka/vs1LKPPnlc4GRNvkkgJhUXcu9OmQSMsv0FraCv0dT67K7Kxpy6LR1D0BSuUlXVtmM
- Y1qq22yRGfEozEz5eGiu7ClmnieWZVd0rEMSBJQZd+wBfNWnvh+A8GjWXyopjq3ZeUrDvih2SY9
- zjZNKoiFSyADIgR+2XtQA3qyoo7oQpoZp7JYXQ3MivNtQh1NrzhpcW5rUJagxTgn4oehwc67yw9
- yEuFbjgKrXF9Bb7i8/W/iOfXE8TqFAljSyP/01dIdcQ13Jk7BO/KtgI35jGNJLa8YrZTpAw9exY
- SVC9Myvzwfmg4WdZ3jlyE82KngO6rcEt1Kvq64SlTspuG6BnZUDM5PIbRr41MFr8ZdqSfP5AyNd
- Qr5TGoxZLRrZOydK/6nOBt4UJVNQP2muRO3PZkB6+RnawOEVYa8am9o+v5DCQ8/dnhAS9+y4t3u
- j/RngDpbTOTybN638P+NYWXJ+avklwgPs3lvrHE0nsRXY4XbJ63M7RQp+2VKOP+/5gq4YM7eXaW
- ogI4SmS+Cglubto2AC/ECXZI4zaBvDiHInB0dGbxF7+ZJ/s6zta+1fGkr1bBnjZx7FmtO5Al+bD
- GqaKtvrj602KsCgNMcFn2t3rO+MIe7IgDaCIa4OXJ5W61G6CKHxZ4yQ449UsdUsxPeVjRM/XLxx
- woQF6+pZ79iJG4g==
-X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
- fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
+Content-Type: text/plain; charset=US-ASCII
 
-The next commit will allow tracepoints starting with digits, but most
-systems do not have any available by default so tests should skip the
-actual "check if it exists in /sys/kernel/debug/tracing" step.
+Can a flexible array be used at the end of this structure?
 
-In order to do that, add a new boolean flag specifying if we should
-actually "format" the probe or not.
+julia
 
-Originally-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
----
- tools/perf/tests/parse-events.c |  6 ++++--
- tools/perf/tests/pmu-events.c   |  2 +-
- tools/perf/util/evlist.c        |  3 ++-
- tools/perf/util/evsel.c         | 20 +++++++++++++-------
- tools/perf/util/evsel.h         |  4 ++--
- tools/perf/util/metricgroup.c   |  3 ++-
- tools/perf/util/parse-events.c  |  9 ++++++---
- tools/perf/util/parse-events.h  |  6 ++++--
- 8 files changed, 34 insertions(+), 19 deletions(-)
+---------- Forwarded message ----------
+Date: Sun, 5 May 2024 19:06:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: oe-kbuild@lists.linux.dev
+Cc: lkp@intel.com, Julia Lawall <julia.lawall@inria.fr>
+Subject: drivers/gpu/drm/xe/xe_guc_ads.c:103:21-27: WARNING use flexible-array
+    member instead
+    (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-
+    and-one-element-arrays)
 
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index feb5727584d1..ef056e8740fe 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2504,7 +2504,8 @@ static int test_event(const struct evlist_test *e)
- 		return TEST_FAIL;
- 	}
- 	parse_events_error__init(&err);
--	ret = parse_events(evlist, e->name, &err);
-+	ret = __parse_events(evlist, e->name, /*pmu_filter=*/NULL, &err, /*fake_pmu=*/NULL,
-+			     /*warn_if_reordered=*/true, /*fake_tp=*/true);
- 	if (ret) {
- 		pr_debug("failed to parse event '%s', err %d\n", e->name, ret);
- 		parse_events_error__print(&err, e->name);
-@@ -2532,7 +2533,8 @@ static int test_event_fake_pmu(const char *str)
- 
- 	parse_events_error__init(&err);
- 	ret = __parse_events(evlist, str, /*pmu_filter=*/NULL, &err,
--			     &perf_pmu__fake, /*warn_if_reordered=*/true);
-+			     &perf_pmu__fake, /*warn_if_reordered=*/true,
-+			     /*fake_tp=*/true);
- 	if (ret) {
- 		pr_debug("failed to parse event '%s', err %d\n",
- 			 str, ret);
-diff --git a/tools/perf/tests/pmu-events.c b/tools/perf/tests/pmu-events.c
-index 47a7c3277540..0a1308d84e9e 100644
---- a/tools/perf/tests/pmu-events.c
-+++ b/tools/perf/tests/pmu-events.c
-@@ -842,7 +842,7 @@ static int check_parse_id(const char *id, struct parse_events_error *error,
- 		*cur = '/';
- 
- 	ret = __parse_events(evlist, dup, /*pmu_filter=*/NULL, error, fake_pmu,
--			     /*warn_if_reordered=*/true);
-+			     /*warn_if_reordered=*/true, /*fake_tp=*/false);
- 	free(dup);
- 
- 	evlist__delete(evlist);
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 55a300a0977b..3a719edafc7a 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -298,7 +298,8 @@ struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide)
- #ifdef HAVE_LIBTRACEEVENT
- struct evsel *evlist__add_sched_switch(struct evlist *evlist, bool system_wide)
- {
--	struct evsel *evsel = evsel__newtp_idx("sched", "sched_switch", 0);
-+	struct evsel *evsel = evsel__newtp_idx("sched", "sched_switch", 0,
-+					       /*format=*/true);
- 
- 	if (IS_ERR(evsel))
- 		return evsel;
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 3536404e9447..4f818ab6b662 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -452,7 +452,7 @@ struct evsel *evsel__clone(struct evsel *orig)
-  * Returns pointer with encoded error via <linux/err.h> interface.
-  */
- #ifdef HAVE_LIBTRACEEVENT
--struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx)
-+struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format)
- {
- 	struct evsel *evsel = zalloc(perf_evsel__object.size);
- 	int err = -ENOMEM;
-@@ -469,14 +469,20 @@ struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx)
- 		if (asprintf(&evsel->name, "%s:%s", sys, name) < 0)
- 			goto out_free;
- 
--		evsel->tp_format = trace_event__tp_format(sys, name);
--		if (IS_ERR(evsel->tp_format)) {
--			err = PTR_ERR(evsel->tp_format);
--			goto out_free;
-+		event_attr_init(&attr);
-+
-+		if (format) {
-+			evsel->tp_format = trace_event__tp_format(sys, name);
-+			if (IS_ERR(evsel->tp_format)) {
-+				err = PTR_ERR(evsel->tp_format);
-+				goto out_free;
-+			}
-+			attr.config = evsel->tp_format->id;
-+		} else {
-+			attr.config = (__u64) -1;
- 		}
- 
--		event_attr_init(&attr);
--		attr.config = evsel->tp_format->id;
-+
- 		attr.sample_period = 1;
- 		evsel__init(evsel, &attr, idx);
- 	}
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 517cff431de2..375a38e15cd9 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -234,14 +234,14 @@ void free_config_terms(struct list_head *config_terms);
- 
- 
- #ifdef HAVE_LIBTRACEEVENT
--struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx);
-+struct evsel *evsel__newtp_idx(const char *sys, const char *name, int idx, bool format);
- 
- /*
-  * Returns pointer with encoded error via <linux/err.h> interface.
-  */
- static inline struct evsel *evsel__newtp(const char *sys, const char *name)
- {
--	return evsel__newtp_idx(sys, name, 0);
-+	return evsel__newtp_idx(sys, name, 0, true);
- }
- #endif
- 
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 79ef6095ab28..c21f05f8f255 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -1502,7 +1502,8 @@ static int parse_ids(bool metric_no_merge, struct perf_pmu *fake_pmu,
- 	pr_debug("Parsing metric events '%s'\n", events.buf);
- 	parse_events_error__init(&parse_error);
- 	ret = __parse_events(parsed_evlist, events.buf, /*pmu_filter=*/NULL,
--			     &parse_error, fake_pmu, /*warn_if_reordered=*/false);
-+			     &parse_error, fake_pmu, /*warn_if_reordered=*/false,
-+			     /*fake_tp=*/false);
- 	if (ret) {
- 		parse_events_error__print(&parse_error, events.buf);
- 		goto err_out;
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 6e8cba03f0ac..04508e07569d 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -526,7 +526,8 @@ static int add_tracepoint(struct parse_events_state *parse_state,
- 			  struct parse_events_terms *head_config, void *loc_)
- {
- 	YYLTYPE *loc = loc_;
--	struct evsel *evsel = evsel__newtp_idx(sys_name, evt_name, parse_state->idx++);
-+	struct evsel *evsel = evsel__newtp_idx(sys_name, evt_name, parse_state->idx++,
-+					       !parse_state->fake_tp);
- 
- 	if (IS_ERR(evsel)) {
- 		tracepoint_error(err, PTR_ERR(evsel), sys_name, evt_name, loc->first_column);
-@@ -2126,7 +2127,7 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
- 
- int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filter,
- 		   struct parse_events_error *err, struct perf_pmu *fake_pmu,
--		   bool warn_if_reordered)
-+		   bool warn_if_reordered, bool fake_tp)
- {
- 	struct parse_events_state parse_state = {
- 		.list	  = LIST_HEAD_INIT(parse_state.list),
-@@ -2134,6 +2135,7 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
- 		.error	  = err,
- 		.stoken	  = PE_START_EVENTS,
- 		.fake_pmu = fake_pmu,
-+		.fake_tp  = fake_tp,
- 		.pmu_filter = pmu_filter,
- 		.match_legacy_cache_terms = true,
- 	};
-@@ -2343,7 +2345,8 @@ int parse_events_option(const struct option *opt, const char *str,
- 
- 	parse_events_error__init(&err);
- 	ret = __parse_events(*args->evlistp, str, args->pmu_filter, &err,
--			     /*fake_pmu=*/NULL, /*warn_if_reordered=*/true);
-+			     /*fake_pmu=*/NULL, /*warn_if_reordered=*/true,
-+			     /*fake_tp=*/false);
- 
- 	if (ret) {
- 		parse_events_error__print(&err, str);
-diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
-index fd55a154ceff..b985a821546b 100644
---- a/tools/perf/util/parse-events.h
-+++ b/tools/perf/util/parse-events.h
-@@ -32,14 +32,14 @@ int parse_events_option_new_evlist(const struct option *opt, const char *str, in
- __attribute__((nonnull(1, 2, 4)))
- int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filter,
- 		   struct parse_events_error *error, struct perf_pmu *fake_pmu,
--		   bool warn_if_reordered);
-+		   bool warn_if_reordered, bool fake_tp);
- 
- __attribute__((nonnull(1, 2, 3)))
- static inline int parse_events(struct evlist *evlist, const char *str,
- 			       struct parse_events_error *err)
- {
- 	return __parse_events(evlist, str, /*pmu_filter=*/NULL, err, /*fake_pmu=*/NULL,
--			      /*warn_if_reordered=*/true);
-+			      /*warn_if_reordered=*/true, /*fake_tp=*/false);
- }
- 
- int parse_event(struct evlist *evlist, const char *str);
-@@ -152,6 +152,8 @@ struct parse_events_state {
- 	int			   stoken;
- 	/* Special fake PMU marker for testing. */
- 	struct perf_pmu		  *fake_pmu;
-+	/* Skip actual tracepoint processing for testing. */
-+	bool			   fake_tp;
- 	/* If non-null, when wildcard matching only match the given PMU. */
- 	const char		  *pmu_filter;
- 	/* Should PE_LEGACY_NAME tokens be generated for config terms? */
+BCC: lkp@intel.com
+CC: oe-kbuild-all@lists.linux.dev
+CC: linux-kernel@vger.kernel.org
+TO: Lucas De Marchi <lucas.demarchi@intel.com>
+CC: Matt Roper <matthew.d.roper@intel.com>
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   7367539ad4b0f8f9b396baf02110962333719a48
+commit: 237412e45390805e14a6936fb998d756c4eac9d8 drm/xe: Enable 32bits build
+date:   3 months ago
+:::::: branch date: 2 days ago
+:::::: commit date: 3 months ago
+config: i386-randconfig-054-20240505 (https://download.01.org/0day-ci/archive/20240505/202405051824.AmjAI5Pg-lkp@intel.com/config)
+compiler: clang version 18.1.4 (https://github.com/llvm/llvm-project e6c3289804a67ea0bb6a86fadbe454dd93b8d855)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Reported-by: Julia Lawall <julia.lawall@inria.fr>
+| Closes: https://lore.kernel.org/r/202405051824.AmjAI5Pg-lkp@intel.com/
+
+cocci warnings: (new ones prefixed by >>)
+>> drivers/gpu/drm/xe/xe_guc_ads.c:103:21-27: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
+
+vim +103 drivers/gpu/drm/xe/xe_guc_ads.c
+
+dd08ebf6c3525a Matthew Brost 2023-03-30   53
+dd08ebf6c3525a Matthew Brost 2023-03-30   54  /*
+dd08ebf6c3525a Matthew Brost 2023-03-30   55   * The Additional Data Struct (ADS) has pointers for different buffers used by
+dd08ebf6c3525a Matthew Brost 2023-03-30   56   * the GuC. One single gem object contains the ADS struct itself (guc_ads) and
+dd08ebf6c3525a Matthew Brost 2023-03-30   57   * all the extra buffers indirectly linked via the ADS struct's entries.
+dd08ebf6c3525a Matthew Brost 2023-03-30   58   *
+dd08ebf6c3525a Matthew Brost 2023-03-30   59   * Layout of the ADS blob allocated for the GuC:
+dd08ebf6c3525a Matthew Brost 2023-03-30   60   *
+dd08ebf6c3525a Matthew Brost 2023-03-30   61   *      +---------------------------------------+ <== base
+dd08ebf6c3525a Matthew Brost 2023-03-30   62   *      | guc_ads                               |
+dd08ebf6c3525a Matthew Brost 2023-03-30   63   *      +---------------------------------------+
+dd08ebf6c3525a Matthew Brost 2023-03-30   64   *      | guc_policies                          |
+dd08ebf6c3525a Matthew Brost 2023-03-30   65   *      +---------------------------------------+
+dd08ebf6c3525a Matthew Brost 2023-03-30   66   *      | guc_gt_system_info                    |
+dd08ebf6c3525a Matthew Brost 2023-03-30   67   *      +---------------------------------------+
+dd08ebf6c3525a Matthew Brost 2023-03-30   68   *      | guc_engine_usage                      |
+dd08ebf6c3525a Matthew Brost 2023-03-30   69   *      +---------------------------------------+
+dd08ebf6c3525a Matthew Brost 2023-03-30   70   *      | guc_um_init_params                    |
+dd08ebf6c3525a Matthew Brost 2023-03-30   71   *      +---------------------------------------+ <== static
+dd08ebf6c3525a Matthew Brost 2023-03-30   72   *      | guc_mmio_reg[countA] (engine 0.0)     |
+dd08ebf6c3525a Matthew Brost 2023-03-30   73   *      | guc_mmio_reg[countB] (engine 0.1)     |
+dd08ebf6c3525a Matthew Brost 2023-03-30   74   *      | guc_mmio_reg[countC] (engine 1.0)     |
+dd08ebf6c3525a Matthew Brost 2023-03-30   75   *      |   ...                                 |
+dd08ebf6c3525a Matthew Brost 2023-03-30   76   *      +---------------------------------------+ <== dynamic
+dd08ebf6c3525a Matthew Brost 2023-03-30   77   *      | padding                               |
+dd08ebf6c3525a Matthew Brost 2023-03-30   78   *      +---------------------------------------+ <== 4K aligned
+dd08ebf6c3525a Matthew Brost 2023-03-30   79   *      | golden contexts                       |
+dd08ebf6c3525a Matthew Brost 2023-03-30   80   *      +---------------------------------------+
+dd08ebf6c3525a Matthew Brost 2023-03-30   81   *      | padding                               |
+dd08ebf6c3525a Matthew Brost 2023-03-30   82   *      +---------------------------------------+ <== 4K aligned
+dd08ebf6c3525a Matthew Brost 2023-03-30   83   *      | capture lists                         |
+dd08ebf6c3525a Matthew Brost 2023-03-30   84   *      +---------------------------------------+
+dd08ebf6c3525a Matthew Brost 2023-03-30   85   *      | padding                               |
+dd08ebf6c3525a Matthew Brost 2023-03-30   86   *      +---------------------------------------+ <== 4K aligned
+dd08ebf6c3525a Matthew Brost 2023-03-30   87   *      | UM queues                             |
+dd08ebf6c3525a Matthew Brost 2023-03-30   88   *      +---------------------------------------+
+dd08ebf6c3525a Matthew Brost 2023-03-30   89   *      | padding                               |
+dd08ebf6c3525a Matthew Brost 2023-03-30   90   *      +---------------------------------------+ <== 4K aligned
+dd08ebf6c3525a Matthew Brost 2023-03-30   91   *      | private data                          |
+dd08ebf6c3525a Matthew Brost 2023-03-30   92   *      +---------------------------------------+
+dd08ebf6c3525a Matthew Brost 2023-03-30   93   *      | padding                               |
+dd08ebf6c3525a Matthew Brost 2023-03-30   94   *      +---------------------------------------+ <== 4K aligned
+dd08ebf6c3525a Matthew Brost 2023-03-30   95   */
+dd08ebf6c3525a Matthew Brost 2023-03-30   96  struct __guc_ads_blob {
+dd08ebf6c3525a Matthew Brost 2023-03-30   97  	struct guc_ads ads;
+dd08ebf6c3525a Matthew Brost 2023-03-30   98  	struct guc_policies policies;
+dd08ebf6c3525a Matthew Brost 2023-03-30   99  	struct guc_gt_system_info system_info;
+dd08ebf6c3525a Matthew Brost 2023-03-30  100  	struct guc_engine_usage engine_usage;
+dd08ebf6c3525a Matthew Brost 2023-03-30  101  	struct guc_um_init_params um_init_params;
+dd08ebf6c3525a Matthew Brost 2023-03-30  102  	/* From here on, location is dynamic! Refer to above diagram. */
+dd08ebf6c3525a Matthew Brost 2023-03-30 @103  	struct guc_mmio_reg regset[0];
+dd08ebf6c3525a Matthew Brost 2023-03-30  104  } __packed;
+dd08ebf6c3525a Matthew Brost 2023-03-30  105
+
+:::::: The code at line 103 was first introduced by commit
+:::::: dd08ebf6c3525a7ea2186e636df064ea47281987 drm/xe: Introduce a new DRM driver for Intel GPUs
+
+:::::: TO: Matthew Brost <matthew.brost@intel.com>
+:::::: CC: Rodrigo Vivi <rodrigo.vivi@intel.com>
 
 -- 
-2.44.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
