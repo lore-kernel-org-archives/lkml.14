@@ -1,164 +1,211 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CB71142649
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 11:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E324D142649
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 11:16:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714994188; cv=none; b=rmSMsLjpIudMG8lwoXuraZgqapKN51Mvo1C4tw3VE1xoPa0cdoQyDEPGT6gi6h4pFdjgdikhY6gCT+WLYydGDdxP8yBh7GWuGjz40KrjcENWA363x08UiHtTgiqaK9FwvoiuxDmW8l7I4awtFZqc0yA3SuJd2XLJFwe0IjjGHa4=
+	t=1714994203; cv=none; b=Tmv+fcHd95Pt0cKd/smbx2eC1Knbl4i5+JPNPV3UbAOyRcuZqeVzlq+Lg3yezKGxnmipy/2ox56a3JnY1o3OyX+l/8NmnzoQsRsEYjTgmyinfDD89oHsZg4pfrwOSC5HIyJruSFQLz7ZbDmLS3SFkYQx7QRcCPF3GYVu5I4SRss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714994188; c=relaxed/simple;
-	bh=5Yf4q20EuBHbQYLGxfSZZAolJNYfiPCEO3OlE+r8l1Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C0NovymzpCgewWvsn1S1XA3jazHLmMm9sJnhScTFPSuyrG3YzxAdB46K/gyzyyNS6s7MlZh7P/d9d4o6lUL+B24OZKnCjTQsWFXxe5WTE0egcuM6b4HHtPQLNlUI+A+wfOR/FypCOb3giPN9lcd/qDDe5El8Vl1/qQ6ABK/rcFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ugF9A9mk; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1714994203; c=relaxed/simple;
+	bh=KfeNDZbOMz/5HgirkBw+VH6ZB3AxFQuJi99H4YzeQS4=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KoEqCq8DFyBePNGkAEFsRj4SvmxYKs0scHNv1L3JN9VDtmv4czF43ATLkkccv9o/gQlHXsRYjQQBlRKiIcJaWKxMVYULeiaqNtZdJMzIdubhx0JllOHZh7iFkrEHYTo5Iy06muxuXjfp07CHxxHdN1k8QTXRfvS9+Z89SaO9yBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=H4gk8Kik; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NiHy2b2z; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=H4gk8Kik; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=NiHy2b2z; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ugF9A9mk"
-Received: from [192.168.88.20] (91-152-88-126.elisa-laajakaista.fi [91.152.88.126])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B134D899;
-	Mon,  6 May 2024 13:16:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1714994183;
-	bh=5Yf4q20EuBHbQYLGxfSZZAolJNYfiPCEO3OlE+r8l1Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ugF9A9mkOXeI4Ogv2afJcLxHbTlTqvhLVhMjS8WrtbWjrSI+8FFZ/snCNTL3yj9Hx
-	 m2vjbba+BVvk9/aCd36naKOqhsY0n2ZSdcd2J83mGvB5jwz7jseF0lCvpyc4X0/3e2
-	 X8ivtnW6pYKntEmUYZWLMBUWaBdkYH+rkCA4rVPY=
-Message-ID: <363e6d48-3e40-4578-b6f6-17323395b49b@ideasonboard.com>
-Date: Mon, 6 May 2024 14:16:21 +0300
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="H4gk8Kik";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NiHy2b2z";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="H4gk8Kik";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="NiHy2b2z"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5CDF73823A;
+	Mon,  6 May 2024 11:16:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714994197; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/gowNp2KH7bD8yMa7lH80BTRR2VdWE5qZYTZ/ZrSvuQ=;
+	b=H4gk8KikEta5sS6RD2QgJqZzfKkjM/xAzC9504SWKNtwMfAoNlzfc1oc1domhLyAO8Fs6X
+	EMAUWRpT7Td5NKeLWnQtULCO9sqDf+zV0mmz0Ypk+yymuHNxKFA0gZ5yRnLzdUSYU0QMod
+	vorQd2L1xoTIbSj13K2PvTIEaHjG4ig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714994197;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/gowNp2KH7bD8yMa7lH80BTRR2VdWE5qZYTZ/ZrSvuQ=;
+	b=NiHy2b2z98WM7GLctBBp4CAqsXirFLOU1f1kOOzHEcynge7N8krmCoXQ7e16O/Pg56LlIG
+	xSZcmokcV6L5G/AQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=H4gk8Kik;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=NiHy2b2z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1714994197; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/gowNp2KH7bD8yMa7lH80BTRR2VdWE5qZYTZ/ZrSvuQ=;
+	b=H4gk8KikEta5sS6RD2QgJqZzfKkjM/xAzC9504SWKNtwMfAoNlzfc1oc1domhLyAO8Fs6X
+	EMAUWRpT7Td5NKeLWnQtULCO9sqDf+zV0mmz0Ypk+yymuHNxKFA0gZ5yRnLzdUSYU0QMod
+	vorQd2L1xoTIbSj13K2PvTIEaHjG4ig=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1714994197;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/gowNp2KH7bD8yMa7lH80BTRR2VdWE5qZYTZ/ZrSvuQ=;
+	b=NiHy2b2z98WM7GLctBBp4CAqsXirFLOU1f1kOOzHEcynge7N8krmCoXQ7e16O/Pg56LlIG
+	xSZcmokcV6L5G/AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E2CDD13A25;
+	Mon,  6 May 2024 11:16:36 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id wfuaNRS8OGYOKwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 06 May 2024 11:16:36 +0000
+Date: Mon, 06 May 2024 13:16:51 +0200
+Message-ID: <87r0efgpgc.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: "Xu, Baojun" <baojun.xu@ti.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"robh+dt@kernel.org"
+	<robh+dt@kernel.org>,
+	"lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+	"perex@perex.cz" <perex@perex.cz>,
+	"pierre-louis.bossart@linux.intel.com"
+	<pierre-louis.bossart@linux.intel.com>,
+	"Lu, Kevin" <kevin-lu@ti.com>,
+	"Ding, Shenghao" <shenghao-ding@ti.com>,
+	"Navada Kanyana, Mukund" <navada@ti.com>,
+	"13916275206@139.com" <13916275206@139.com>,
+	"P O, Vijeth" <v-po@ti.com>,
+	"Holalu Yogendra, Niranjan" <niranjan.hy@ti.com>,
+	"alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
+	"yung-chuan.liao@linux.intel.com" <yung-chuan.liao@linux.intel.com>,
+	"broonie@kernel.org" <broonie@kernel.org>,
+	"soyer@irl.hu" <soyer@irl.hu>
+Subject: Re: [EXTERNAL] Re: [PATCH v3 1/3] ALSA: hda/tas2781: Modification for add tas2781 driver for SPI
+In-Reply-To: <d96bea0bacc842e0b30a100f43ff264f@ti.com>
+References: <20240418040240.2337-1-baojun.xu@ti.com>
+	<20240418040240.2337-2-baojun.xu@ti.com>
+	<ZiEKc4OTVlOt8llU@smile.fi.intel.com>
+	<0c7b29075dc347299602668660adb4b6@ti.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [BUG] drm: zynqmp_dp: Lockup in zynqmp_dp_bridge_detect when
- device is unbound
-To: Sean Anderson <sean.anderson@linux.dev>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Michal Simek <michal.simek@amd.com>, dri-devel@lists.freedesktop.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <4d8f4c9b-2efb-4774-9a37-2f257f79b2c9@linux.dev>
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Content-Language: en-US
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <4d8f4c9b-2efb-4774-9a37-2f257f79b2c9@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.01 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FREEMAIL_ENVRCPT(0.00)[139.com,gmail.com];
+	FREEMAIL_CC(0.00)[linux.intel.com,kernel.org,gmail.com,perex.cz,ti.com,139.com,alsa-project.org,vger.kernel.org,intel.com,irl.hu];
+	RCVD_COUNT_TWO(0.00)[2];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DWL_DNSWL_BLOCKED(0.00)[suse.de:dkim];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[dt];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,ti.com:email,suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 5CDF73823A
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Score: -2.01
 
-Hi,
+On Mon, 06 May 2024 09:44:05 +0200,
+Xu, Baojun wrote:
+> 
+> Hi Andy
+> 
+> Thanks for your comments, answer in line:
+> 
+> > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > Sent: 02 May 2024 18:22
+> > To: Xu, Baojun
+> > Cc: tiwai@suse.de; robh+dt@kernel.org; lgirdwood@gmail.com; perex@perex.cz; pierre-louis.bossart@linux.intel.com; Lu, Kevin; Ding, Shenghao; Navada Kanyana, Mukund; 13916275206@139.com; P O, Vijeth; Holalu Yogendra, Niranjan; alsa-devel@alsa-project.org; linux-kernel@vger.kernel.org; liam.r.girdwood@intel.com; yung-chuan.liao@linux.intel.com; broonie@kernel.org; soyer@irl.hu
+> > Subject: Re: [EXTERNAL] Re: [PATCH v3 1/3] ALSA: hda/tas2781: Modification for add tas2781 driver for SPI
+> > 
+> > On Thu, Apr 25, 2024 at 07: 54: 41AM +0000, Xu, Baojun wrote: > > From: Andy Shevchenko <andriy. shevchenko@ linux. intel. com> > > Sent: 18 April 2024 19: 56 > > On Thu, Apr 18, 2024 at 12: 02: 37PM +0800, Baojun Xu wrote: 
+> > ZjQcmQRYFpfptBannerStart
+> > This message was sent from outside of Texas Instruments.
+> > Do not click links or open attachments unless you recognize the source of this email and know the content is safe. If you wish to report this message to IT Security, please forward the message as an attachment to phishing@list.ti.com
+> > 
+> > ZjQcmQRYFpfptBannerEnd
+> > 
+> > On Thu, Apr 25, 2024 at 07:54:41AM +0000, Xu, Baojun wrote:
+> > > > From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > > Sent: 18 April 2024 19:56
+> > > > On Thu, Apr 18, 2024 at 12: 02: 37PM +0800, Baojun Xu wrote:
+> > > > On Thu, Apr 18, 2024 at 12:02:37PM +0800, Baojun Xu wrote:
+> > 
+> > ...
+> > 
+> > > > >  sound/pci/hda/Kconfig                           | 15 +++++++++++++++
+> > > > >  sound/pci/hda/Makefile                          |  2 ++
+> > > >
+> > > Is this correct? You are adding a dead "code", isn't it?
+> > >
+> > > What's mean "dead code"? After add CONFIG_SND_HDA_SCODEC_TAS2781_SPI=m
+> > > in my config file, the whole patch code has worked.
+> > 
+> > Is that file already in the repository?
+> > If not, I don't see it in this patch either --> dead code.
+> 
+> When I integrated CONFIG_SND_HDA_SCODEC_TAS2781_SPI and compiled the whole kernel,
+> it used to popup the following message for TAS2781 SPI module in first compile:
+>  
+>  Build TAS2781 HD-audio side codec support for SPI Bus (SND_HDA_SCODEC_TAS2781_SPI) [N/m/?] (NEW) 
+> 
+> Normally, selected m. And TAS2781 SPI module would be compiled.
 
-On 04/05/2024 00:54, Sean Anderson wrote:
-> Hi,
-> 
-> I have discovered a bug in the displayport driver on drm-misc-next. To
-> trigger it, run
-> 
-> echo fd4a0000.display > /sys/bus/platform/drivers/zynqmp-dpsub/unbind
-> 
-> The system will become unresponsive and (after a bit) splat with a hard
-> LOCKUP. One core will be unresponsive at the first zynqmp_dp_read in
-> zynqmp_dp_bridge_detect.
-> 
-> I believe the issue is due the registers being unmapped and the block
-> put into reset in zynqmp_dp_remove instead of zynqmp_dpsub_release. This
-> could be resolved by deferring things until zynqmp_dpsub_release
-> (requiring us to skip devm_*), or by adding a flag to struct zynqmp_dp
-> and checking it before each callback. A subsystem-level implementation
-> might be better for the latter.
-> 
-> For a better traceback, try applying the below patch and running the
-> following commands before triggering the lockup:
-> 
-> echo 4 > /sys/module/drm/parameters/debug
-> echo 8 > /proc/sys/kernel/printk
+At each patch / commit, the build must be kept successful.
+In your case, in the patch 1, you introduced the new driver stuff to
+Kconfig and Makefile while there is no actual code for that yet (which
+will be added in later patches).  This breaks the build at this
+commit (lacking tas2781_hda_spi.c and co), and it's not acceptable.
 
-I wasn't able to reproduce. Where does the detect call come in your 
-case? Looking at the code, afaics, it shouldn't happen.
+You have to split patches in sensible manners; those to be logically
+split, and yet they must not break builds.
 
-  Tomi
 
-> diff --git a/drivers/gpu/drm/xlnx/zynqmp_dp.c b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> index 9df068a413f3..17b477b14ab5 100644
-> --- a/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> +++ b/drivers/gpu/drm/xlnx/zynqmp_dp.c
-> @@ -296,6 +296,7 @@ struct zynqmp_dp_config {
->    * @train_set: set of training data
->    */
->   struct zynqmp_dp {
-> +       unsigned long long magic;
->          struct device *dev;
->          struct zynqmp_dpsub *dpsub;
->          void __iomem *iomem;
-> @@ -1533,6 +1534,8 @@ static enum drm_connector_status zynqmp_dp_bridge_detect(struct drm_bridge *brid
->          u32 state, i;
->          int ret;
->   
-> +       WARN_ON(dp->magic != 0x0123456789abcdefULL);
-> +
->          /*
->           * This is from heuristic. It takes some delay (ex, 100 ~ 500 msec) to
->           * get the HPD signal with some monitors.
-> @@ -1723,6 +1726,7 @@ int zynqmp_dp_probe(struct zynqmp_dpsub *dpsub)
->          if (!dp)
->                  return -ENOMEM;
->   
-> +       dp->magic = 0x0123456789abcdefULL;
->          dp->dev = &pdev->dev;
->          dp->dpsub = dpsub;
->          dp->status = connector_status_disconnected;
-> @@ -1839,4 +1843,5 @@ void zynqmp_dp_remove(struct zynqmp_dpsub *dpsub)
->   
->          zynqmp_dp_phy_exit(dp);
->          zynqmp_dp_reset(dp, true);
-> +       dp->magic = 0xdeadbeefdeadbeefULL;
->   }
+thanks,
 
+Takashi
