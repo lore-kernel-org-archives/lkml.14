@@ -1,45 +1,47 @@
 Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0361422A2;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FED43AA5;
 	Mon,  6 May 2024 10:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714991067; cv=none; b=KTGXlPwaqDrhym1D8AnzCwfxVgRByP6ElARXuI6I5jJ3ZJnGI6GsQgaoRESYNYj1zpDfl8gtUfZfDmmml5FUCX5xyzXoPJ0/tsmXFxAucNF4N1uDwgEHPeUqadH0SOVz6hbW7u6RMRTlfK4WnJcGtoXoCOo/rlIKVch/zyJXUEA=
+	t=1714991068; cv=none; b=Lko0EHidvelICTKmLcLf5nNCiVM5OVq3oSE/p0B1pHX9JONSEzQZVLlcntb7yuKTx5kMtPDuNmHaUY4jN/rDYSGuFypxQw8U66RHeVFUSE/1iFhjwJmFveZpbGVHpOeBlAHinNdVRnfcMHaLjMpIskEPXrKoZqigdufNPg+kfk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714991067; c=relaxed/simple;
-	bh=M2VUMtNp5P3o890SB2AKCq/Qvl+kHhU87lLXVyDZ834=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bl8a451893J27W4ymCZsrAU9fpWPfJwF2HFxd+7cRtkemkLYAaqLGUfrlG2Z6jiFCF3IQ/2LA11Kppt2V3XwmHynMstOy8loCT5BEjmgx/jei/YgNwkGGzUQtp1s/MEWt9LTnktV45i8XRNCWymKprobWeC2h+51weUdVSIqysI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=pFuFcelH; arc=none smtp.client-ip=188.40.30.78
+	s=arc-20240116; t=1714991068; c=relaxed/simple;
+	bh=A95II0L+2CU8yfg7lhrZG/cyFVKl7bFuDgSv7zTeqt8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Xyl6Rna6FZXm1t4DqcPuiKSNFVLaOLTs1Ie5LaPVN9DBMRCtzPFOWrvEkKez8eDc61VrOtAFaw/3T56xeY5I386tJhBJ2a+1Y5rb5fk4iUXJey9YAG1MGC3gRH+SFE4I5NVOsc+fzbug+cDi6mkJnnNxaIpUAa3LAlzzopMXI2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=tTifO5zD; arc=none smtp.client-ip=188.40.30.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="pFuFcelH"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="tTifO5zD"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
-	s=default2211; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
-	Message-Id:Date:Subject:From:Sender:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References; bh=wmFwpK3N8h26Gty8Cr+tcAz2yNoNekoIKLqBXcgccJE=; b=pF
-	uFcelHy4P+rqcXZYlaes07Jkz/+XlIlCCaw1xTHIfrfDJaaWujw/cM8xSh5Hw6bWwx0OnAnJcr1ZT
-	qPEmkkfunL4hCNrW3HFsllLqArORax/Pd8Xq+9eHSQOZJ0zL3h/p06oUnPhZhuOYKy0SUZEGsZKiR
-	oFvfh2kQvEAf1NghfSHjhHwmhZOzPNp2elxLL96FKjvp7BR2T8FPygAV/l/OgiP8BTToSSao/a9bv
-	e5mwQvZ43NulUKKSyvuCVqO9o926GL4Tw+11/8HLXYSVZ0Dn+La5qqEoLUl5c2SVPoanfGaKH1tYv
-	ohzeqeURXEa3ECh1iZuU9mrijSPsKRBg==;
+	s=default2211; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
+	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
+	:Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=Sr5sE9hhxNCxdk/KUaVoDet/Mj59itaUMZRr+MecJjc=; b=tTifO5zDIqefvel+Axv9aUMb87
+	kOztsW7nbsirxEVyKaWvRL3s2RXObi08MRCgSTPqxBP2jZZAHaPtY3Uet+iQq07F4GwYC/zwH4JCt
+	EZ9RZHMKpX661e2bzhrwyqVyBf6M+Ymghxt6bfOpTKY7msLpv+N5xyz27dW25knqwMaS1gtVs+bUg
+	833l1XiMUB4YU/KWg9/5m/QMj56tSWRqam67GaRbAgFlz5k3a2r4wYFeVX8Dg5V9Weik4mYtbEkve
+	SWfk+Rmc59LS6xUY+mjPombDLirqYNJ83S2SCONFH1ieIf4L3kTz9a7dIoB2KKN7qtkmf+VHKEByo
+	NhQrUMTg==;
 Received: from sslproxy03.your-server.de ([88.198.220.132])
 	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <esben@geanix.com>)
-	id 1s3vVs-0007Xy-Tw; Mon, 06 May 2024 12:24:04 +0200
+	id 1s3vVu-0007YE-5V; Mon, 06 May 2024 12:24:06 +0200
 Received: from [87.49.147.101] (helo=localhost)
 	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <esben@geanix.com>)
-	id 1s3vVr-000Ofo-29;
-	Mon, 06 May 2024 12:24:04 +0200
+	id 1s3vVs-000OnK-30;
+	Mon, 06 May 2024 12:24:05 +0200
 From: Esben Haabendal <esben@geanix.com>
-Subject: [PATCH v2 0/3] ARM: imx: only enable pinctrl as needed
-Date: Mon, 06 May 2024 12:23:52 +0200
-Message-Id: <20240506-imx-pinctrl-optional-v2-0-bdff75085156@geanix.com>
+Date: Mon, 06 May 2024 12:23:54 +0200
+Subject: [PATCH v2 2/3] pinctrl: freescale: Use CONFIG_SOC_IMXRT to guard
+ i.MX RT1xxx drivers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,9 +50,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIALivOGYC/x2MQQqAIBAAvyJ7bkGsJPpKdDDdaqFMVCII/550H
- JiZFxJFpgSjeCHSzYkvX0E1Auxu/EbIrjIoqTrZS418PhjY2xwPvEKuujlQt8a61i3D4CzUNER
- a+fm301zKB2FwNF1mAAAA
+Message-Id: <20240506-imx-pinctrl-optional-v2-2-bdff75085156@geanix.com>
+References: <20240506-imx-pinctrl-optional-v2-0-bdff75085156@geanix.com>
+In-Reply-To: <20240506-imx-pinctrl-optional-v2-0-bdff75085156@geanix.com>
 To: Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, 
  Sascha Hauer <s.hauer@pengutronix.de>, 
  Pengutronix Kernel Team <kernel@pengutronix.de>, 
@@ -65,38 +67,39 @@ X-Mailer: b4 0.13.0
 X-Authenticated-Sender: esben@geanix.com
 X-Virus-Scanned: Clear (ClamAV 0.103.10/27267/Mon May  6 10:24:34 2024)
 
-As not all mach-imx platforms has support for run-time changes of pin
-configurations (such as LS1021A), a more selective approach to enabling
-pinctrl infrastructure makes sense, so that an e.g. an LS1021A only kernel
-could be built without pinctrl support.
-
-This is a very late follow up v1 3 years ago [1]. The situation seems to be
-unchanged since then, and I have tried to incorporate the requested
-changes.
-
-[1] https://lore.kernel.org/linux-arm-kernel/be1c35eb997959b4939b304ef26664dfb9cd2275.1621941451.git.esben@geanix.com/
-
-Changes since v1:
-- Changed all the pinctrl drivers to be user-configurable, allowing disable
-  even for systems with pinctrl.
-- Added fixup of overly generic dependency for i.MX RT pinctrl drivers.
-- Allow compile-testing of i.MX pinctrl drivers using CONFIG_COMPILE_TEST.
+This aligns with the use of SOC_IMX* as dependencies for all the other
+mach-imx pinctrl drivers. Enabling i.MX RT pinctrl drivers for a kernel
+with out i.MX RT SOC support is pointless.
 
 Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
-Esben Haabendal (3):
-      ARM: imx: Allow user to disable pinctrl
-      pinctrl: freescale: Use CONFIG_SOC_IMXRT to guard i.MX RT1xxx drivers
-      pinctrl: freescale: enable use with COMPILE_TEST
+ drivers/pinctrl/freescale/Kconfig | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
- arch/arm/mach-imx/Kconfig         | 16 -------
- drivers/pinctrl/freescale/Kconfig | 89 +++++++++++++++++++++++++++------------
- 2 files changed, 63 insertions(+), 42 deletions(-)
----
-base-commit: dd5a440a31fae6e459c0d6271dddd62825505361
-change-id: 20240506-imx-pinctrl-optional-63acd3db88dc
+diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
+index ef39bb6cf9cb..2b19c40978c2 100644
+--- a/drivers/pinctrl/freescale/Kconfig
++++ b/drivers/pinctrl/freescale/Kconfig
+@@ -193,7 +193,8 @@ config PINCTRL_IMX8ULP
+ 
+ config PINCTRL_IMXRT1050
+ 	bool "IMXRT1050 pinctrl driver"
+-	depends on ARCH_MXC
++	depends on SOC_IMXRT
++	default SOC_IMXRT
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imxrt1050 pinctrl driver
+@@ -228,7 +229,7 @@ config PINCTRL_IMX28
+ 
+ config PINCTRL_IMXRT1170
+ 	bool "IMXRT1170 pinctrl driver"
+-	depends on ARCH_MXC
++	depends on SOC_IMXRT
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imxrt1170 pinctrl driver
 
-Best regards,
 -- 
-Esben Haabendal <esben@geanix.com>
+2.45.0
 
