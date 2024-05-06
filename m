@@ -1,153 +1,101 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F1914265C
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 09:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6FB1422D9
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 09:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714989004; cv=none; b=Ylc8p5NCjU2c7be6savU6kes/Mptn8YhQ5/ynl6RkZbayQQnHrpFq/Tdb3kTb61R+FA5PpXHJtjsAoIa/yv3Qpd4yCG9Fi3zPTAwJH6pstcxXI0n0L4eMFjHTNQgdBDVhJDdIBPKxVpFvYvo58imd7UnL83XggqOPT02vlJq7Rc=
+	t=1714989011; cv=none; b=uAIN2XMDUp9qkisJjfXAoghKhOOCs9yycxBmLbq4MA+R16kEzFCi0ZR7onPhWXGCQb4diEhBq77e+cDCX/euNA3NKjc7/0gD26DiCKwv3LrmmZTMQtbigfhbz+aL7nJRiHpipOdEQDoQ0he2grfE/yDYuy7t/isZDLHyErp2C+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714989004; c=relaxed/simple;
-	bh=oPf4OegCtMS1cWBo4Xy+sDkXlsyJ0PkLaXkNDQj9s1s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CVKWTIRIYh3yn4uHEvrOZZyVvG7zknfn6CWNT3hOQCJQZlCd+cLGoxWt+j/K6Bza+mk8SN6FsroBQeojsQczQT9QaWEE5lmU8edb3Zu2NO0NXbHldQbP5/SCrgnuF1aXfamDVrJk3cW7YE9DMh/t31LlMtfb7MrV663fj1fOh/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1s3uyg-0004td-9s; Mon, 06 May 2024 11:49:46 +0200
-Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1s3uyf-00GEx7-Hn; Mon, 06 May 2024 11:49:45 +0200
-Received: from pengutronix.de (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 1C33F2CB420;
-	Mon, 06 May 2024 09:49:45 +0000 (UTC)
-Date: Mon, 6 May 2024 11:49:44 +0200
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Gregor Herburger <gregor.herburger@ew.tq-group.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-	Thomas Kopp <thomas.kopp@microchip.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux@ew.tq-group.com
-Subject: Re: [PATCH v2 5/6] can: mcp251xfd: add gpio functionality
-Message-ID: <20240506-lean-strange-stork-3f7c67-mkl@pengutronix.de>
-References: <20240506-mcp251xfd-gpio-feature-v2-0-615b16fa8789@ew.tq-group.com>
- <20240506-mcp251xfd-gpio-feature-v2-5-615b16fa8789@ew.tq-group.com>
+	s=arc-20240116; t=1714989011; c=relaxed/simple;
+	bh=9+fA6x3W5sW7wIh5ABpMKfVB98eis5V3TMZpuCukAWs=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aRbctGXi3PRaSLaGe1TCyEwGRSQ/NHaggkzJ9f+oT3YRr2fq5BaUbmYp44RUp27X9QUFt4FZglWomVnc1OlvG47OOUw0vtwnYuj6ZNnAdW4WPbVD/k3vcjVeUJ3rqjUxXsF9inscbxBOo4afpVuJ+Nha7vmhXnn6HvAg+PehMgE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k5HVFWZ6; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z6qKC8gg; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k5HVFWZ6";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z6qKC8gg"
+Date: Mon, 6 May 2024 11:50:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1714989008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QYEcwncX0Z4LxyKRBooyxqYcoYW7DqL7oWZ6VIl81vU=;
+	b=k5HVFWZ6mPRNpjqQ6zkWkw3UHkUjZNoDHgMwI9JLZwOQKa2HR5nSfCnbT8gzEOpuLrxBYz
+	+LkPIL6BQXdJ+Krf4n06xjIdPdBRFSIEfv4G7gBHt8RiQj6I51jtMDBU8Q7xknJlntoyUV
+	sgc84NEO4p0RUsZvkI8tf3jtOEajQuiqlMnKduBnE03sWtc62vAKNLJzAPzIa3SykrHLBw
+	nSPIw5oNlxMuf32VhwJV5rEexOGWmKGF1ZyTOijjtpVgkFSsq/gy34NBnLvLjpYE0pRioG
+	C1T44/2eFqRZYT9ynIe+TikVQSI3dagHvKpZfuakwCyyVUQjOra6yn2zMgqXVA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1714989008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QYEcwncX0Z4LxyKRBooyxqYcoYW7DqL7oWZ6VIl81vU=;
+	b=Z6qKC8gg4n8IC30BHxRgOlFqYg1qBj91w46K8OklO0vyYzwOQPTnkdT4YvrckefUn9+1ur
+	VM/ivxmukLGL2iAA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, kolyshkin@gmail.com,
+	fuyuanli@didiglobal.com, akpm@linux-foundation.org,
+	kent.overstreet@linux.dev, frederic@kernel.org, oleg@redhat.com,
+	hca@linux.ibm.com, paulmck@kernel.org, tj@kernel.org,
+	kuba@kernel.org, CruzZhao@linux.alibaba.com, pabeni@redhat.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched: Introduce task_struct::latency_sensi_flag.
+Message-ID: <20240506095006.W6mrPsML@linutronix.de>
+References: <20240505030615.GA5131@didi-ThinkCentre-M920t-N000>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="w2lqxdcmcssatvzm"
-Content-Disposition: inline
-In-Reply-To: <20240506-mcp251xfd-gpio-feature-v2-5-615b16fa8789@ew.tq-group.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
-
-
---w2lqxdcmcssatvzm
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240505030615.GA5131@didi-ThinkCentre-M920t-N000>
 
-On 06.05.2024 07:59:47, Gregor Herburger wrote:
-> The mcp251xfd devices allow two pins to be configured as gpio. Add this
-> functionality to driver.
->=20
-> Signed-off-by: Gregor Herburger <gregor.herburger@ew.tq-group.com>
-> ---
->  drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c | 173 +++++++++++++++++++=
-++++++
->  drivers/net/can/spi/mcp251xfd/mcp251xfd.h      |   6 +
->  2 files changed, 179 insertions(+)
->=20
-> diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c b/drivers/net=
-/can/spi/mcp251xfd/mcp251xfd-core.c
-> index 4739ad80ef2a..de301f3a2f4e 100644
-> --- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-> +++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-> @@ -16,6 +16,7 @@
->  #include <linux/bitfield.h>
->  #include <linux/clk.h>
->  #include <linux/device.h>
-> +#include <linux/gpio/driver.h>
->  #include <linux/mod_devicetable.h>
->  #include <linux/module.h>
->  #include <linux/pm_runtime.h>
-> @@ -1768,6 +1769,172 @@ static int mcp251xfd_register_check_rx_int(struct=
- mcp251xfd_priv *priv)
->  	return 0;
->  }
-> =20
-> +#ifdef CONFIG_GPIOLIB
-> +static const char * const mcp251xfd_gpio_names[] =3D {"GPIO0", "GPIO1"};
-> +
-> +static int mcp251xfd_gpio_request(struct gpio_chip *chip, unsigned int o=
-ffset)
-> +{
-> +	struct mcp251xfd_priv *priv =3D gpiochip_get_data(chip);
-> +	u32 pin_mask =3D MCP251XFD_REG_IOCON_PM0 << offset;
-> +	int ret;
-> +
-> +	if (priv->rx_int && offset =3D=3D 1) {
-> +		netdev_err(priv->ndev, "Can't use GPIO 1 with RX-INT!\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret =3D pm_runtime_resume_and_get(priv->ndev->dev.parent);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_update_bits(priv->map_reg, MCP251XFD_REG_IOCON,
-> +				  pin_mask, pin_mask);
+On 2024-05-05 11:06:15 [+0800], fuyuanli wrote:
+> In the path local_bh_enable()->__local_bh_enable_ip(), the softirq
+> handlers will be executed in the context of current task. But for some
+> tasks sensitive to running latency, we expect that they will not spend
+> extra time executing softirq. So latency_sensi_flag is introduced in
+> task_struct, when it is set to 1, task only wakes up softirq daemon in
+> __local_bh_enable_ip().
+> 
+> A test has been made in two hosts named A and B. In A, several clients
+> sent udp packets to a single server in B concurrently as fast as
+> possible. In B, the IRQs of these flows were bound to CPU 0 by flow
+> director, so there was always a triggered net_rx softirq on CPU 0. Then
+> a test program was started in B, which was also bound to CPU 0, and
+> keeped calling sendto() in a loop. Sampling with perf, results showed
+> that about 25% of running time of test program was spent executing
+> local_bh_enable() contained in syscall sendto(), but after setting
+> latency_sensi_flag to 1, this proportion had been reduced to 0.5%.
 
-The PM bits _should_ be 1 here, as it's the reset default.
+Is this PREEMPT_RT related or not?
+RT wise I worked hard to get rid of ksoftirqd usage because you use lose
+context, priority and everything once this happens. Plus an innocent
+thread can be forced to do the work instead.
+Non-RT wise your performance can go rapidly down the hill if the wrong
+task/ user is outsourcing the work to ksoftirqd.
 
-But you have to convert mcp251xfd_chip_rx_int_enable() and
-mcp251xfd_chip_rx_int_disable() to from regmap_write() to
-regmap_update_bits(). Please do this in a separate patch before adding
-the gpio support.
+And this is what you are doing: You are outsourcing work to a different
+context and have 25% improvement here and 25% work somewhere else which
+you don't measure. Not to mention that _another_ context could do this
+softirq work if it happens to end up in the section before ksoftirqd had
+a chance to run.
 
-> +}
+So, this does not sound good. If you want to have a low-latency task
+which can send packets and not do the needed softirq part I would
+suggest to have another thread where this is outsourced and the thread
+does the work.
 
-regards,
-Marc
+> Signed-off-by: fuyuanli <fuyuanli@didiglobal.com>
 
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---w2lqxdcmcssatvzm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmY4p7UACgkQKDiiPnot
-vG81OQf/QSbhG3kPD4JlGrR+11bLquKuYWbKLIdlVl8Nbckg4zSuVnYznwyPUvFK
-VCpI/o0W7IqcPN9X8gxGue2as7rBtqyLkBqnQ2k5g4QMGH/8WPo6KIpeLjn9QTTF
-tbn80CiVjtKdyGVDH+NNlb/a5qCLil93lj3PKVAmkX0bIbYIDTigwfea0lC8TUvA
-dzHYAXfRsRQ/QtEv2IIxoTF8bK7jJbLruJhxyHjnp9qAKhSTENzAViuE9FZ15hXK
-Bdadbqz1wSSQ9Sphl43+PPAXRl7N1mUkSlDKUgM5aMyeuTuVIhK0dj2TAzre0spg
-+uQWde21p/FLn45ECXeuh2uYcGcFpA==
-=MRFK
------END PGP SIGNATURE-----
-
---w2lqxdcmcssatvzm--
+Sebastian
