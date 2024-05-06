@@ -1,133 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C55142E8A;
-	Mon,  6 May 2024 15:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E3884D58E;
+	Mon,  6 May 2024 15:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715010865; cv=none; b=r33voeuJL0+mLF9qWrI/+dctKlCBFPnuPPMKta5S4fnrmb/Aj8DYTLIKcgy+9NK9XDewvriXP0JXtwWjZ4HdgrD3mgJ4zPEF3Wk5pKDEJ1KC4kDcuqR1BXVIdbe7E4CbUvAaYLiYcIPBXA5eDMyDE1KRRf9MMlTjbaT6c3mS7PI=
+	t=1715010889; cv=none; b=MvwxsTvAqfAvjOGVU5S1rYcraHxc6e1DGhGRDsfSHo2fyPI/Shq3VkTStwhrmfAgu2EoTYBpGNBh/SSTOju+SkjWa7Z6g6tOHn0q/d9PvfSyfWCt3AwN7dlP5dwWM8GKcKV2QlLIq4BXzu08vGN+ZASen3Xy5SVPaEK6Wc4mz1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715010865; c=relaxed/simple;
-	bh=iMkABcd0DBv9az9njPuwUR8B35ghWS0eM5Q6/tVyFFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PexXVVpcELLsjQwoi4g1iEtrl9OCqPXnswySAhLpC0MGhFjb+CTEzKVRSX20PrHqfp9m4CbBDyGfobRbfGx2acK3barms8bgHXvfbB28c5QC0Zz3xM1RXQ+Ae26npKn1g/fbOPiL+ie2WF005OVaJ0RSV22ZwQw8mRnQNlZormo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DBFmFcWp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715010889; c=relaxed/simple;
+	bh=Crd4eA01Q8OgQOfWxO/qZtC6JCLcKbyjrjCZcY6mXGU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JysOqIjg/0dsNB/NErDcqnBR86sgwCH8qFt7OV23M53goYWfzc6jCCn6u1Th37y7zjXDGreeZzAGjMawVxDA7J23tobv5p/Ze6Gdvq6bLTOuTMPHqm82ZH4bHXgjcko4rn8sgcp3C+bome6JZO52hrfWreF1JzNtJ8XprFzqfyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mvrt3j3G; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DBFmFcWp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F11CC116B1;
-	Mon,  6 May 2024 15:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715010863;
-	bh=iMkABcd0DBv9az9njPuwUR8B35ghWS0eM5Q6/tVyFFk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DBFmFcWpT3kV6HurFA95Zrh/LmeCRaqezdk3DoQYk/aLBYZ+L3gAyVz5NqXKvX+vz
-	 7n0xFXEaXrsRXdlIxcvN7QlT/Rla8dyzXrn9ucwfdQIRHoSODel+ZPgCC+QgVO9S18
-	 u5S40ECc1sn/JIPIwMPf8xJ4lMfowrIXHrC2cjyQORtERne/Xj7l9oeLxatwQ4pnnt
-	 ylO0EvoObjnuc7w0IztkvR2/EzTH9PZg8DcwaavNKs90YF6kmt7RdqyeyQ2UQpPcK+
-	 a9dMh6pI5M4JKRHN6snHWHHI+yI0MiSigOYqAh81tGpDTDiX/dDi5NNlju23f5n6GB
-	 rknbZDEf4aUVA==
-Date: Mon, 6 May 2024 16:54:17 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Alisa-Dariana Roman <alisadariana@gmail.com>,
-	michael.hennerich@analog.com, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	alexandru.tachici@analog.com, lars@metafoo.de, robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	lgirdwood@gmail.com, broonie@kernel.org, andy@kernel.org,
-	nuno.sa@analog.com, marcelo.schmitt@analog.com,
-	bigunclemax@gmail.com, dlechner@baylibre.com, okan.sahin@analog.com,
-	fr0st61te@gmail.com, alisa.roman@analog.com,
-	marcus.folkesson@gmail.com, schnelle@linux.ibm.com,
-	liambeguin@gmail.com
-Subject: Re: [PATCH v7 5/6] dt-bindings: iio: adc: ad7192: Add AD7194 support
-Message-ID: <20240506-evaluate-darkroom-b0f8a7bf4598@spud>
-References: <20240430162946.589423-1-alisa.roman@analog.com>
- <20240430162946.589423-6-alisa.roman@analog.com>
- <20240430-winnings-wrongness-32328ccfe3b5@spud>
- <20240505204602.5d4cbfa0@jic23-huawei>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mvrt3j3G"
+Received: from [100.65.96.57] (unknown [20.236.10.66])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 63A2E20B2C82;
+	Mon,  6 May 2024 08:54:47 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 63A2E20B2C82
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1715010888;
+	bh=sn+I7ADMPSvGvZYIULHrdfmxmoEt29gcieDFLNGehhA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mvrt3j3GirQyL+zNWSUJPrkb94vYe3gRE3gFwpfF/00niIyl3fc+VRb5f4AxuoW6y
+	 kfky6VeELzBpCgzxTreaammrgxgd2SDXZvPOj7nLeVxJzxzGqiRR6ErGuzVari+m/L
+	 Ad5PQJ1lUdbhal6K44JEvCMsC3zo/UFAAL0Irirc=
+Message-ID: <82f5b8e3-45c4-4b59-bc96-4cee2b122e9a@linux.microsoft.com>
+Date: Mon, 6 May 2024 08:54:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3Aufn4Dkbz1VH4dr"
-Content-Disposition: inline
-In-Reply-To: <20240505204602.5d4cbfa0@jic23-huawei>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 10/12] sfc: falcon: Make I2C terminology more inclusive
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Edward Cree <ecree.xilinx@gmail.com>,
+ Martin Habets <habetsm.xilinx@gmail.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ "open list:SFC NETWORK DRIVER" <netdev@vger.kernel.org>,
+ "open list:SFC NETWORK DRIVER" <linux-net-drivers@amd.com>,
+ open list <linux-kernel@vger.kernel.org>,
+ Wolfram Sang <wsa+renesas@sang-engineering.com>,
+ "open list:RADEON and AMDGPU DRM DRIVERS" <amd-gfx@lists.freedesktop.org>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ "open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS"
+ <intel-gfx@lists.freedesktop.org>,
+ "open list:INTEL DRM DISPLAY FOR XE AND I915 DRIVERS"
+ <intel-xe@lists.freedesktop.org>,
+ "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS"
+ <nouveau@lists.freedesktop.org>,
+ "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
+ "open list:BTTV VIDEO4LINUX DRIVER" <linux-media@vger.kernel.org>,
+ "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>
+References: <20240430173812.1423757-1-eahariha@linux.microsoft.com>
+ <20240430173812.1423757-11-eahariha@linux.microsoft.com>
+ <20240503151300.0f202c30@kernel.org>
+Content-Language: en-CA
+From: Easwar Hariharan <eahariha@linux.microsoft.com>
+In-Reply-To: <20240503151300.0f202c30@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 5/3/2024 3:13 PM, Jakub Kicinski wrote:
+> On Tue, 30 Apr 2024 17:38:09 +0000 Easwar Hariharan wrote:
+>> I2C v7, SMBus 3.2, and I3C 1.1.1 specifications have replaced "master/slave"
+>> with more appropriate terms. Inspired by and following on to Wolfram's
+>> series to fix drivers/i2c/[1], fix the terminology for users of
+>> I2C_ALGOBIT bitbanging interface, now that the approved verbiage exists
+>> in the specification.
+>>
+>> Compile tested, no functionality changes intended
+> 
+> FWIW we're assuming someone (Wolfram?) will take all of these,
+> instead of area maintainers picking them individually.
+> Please let us know if that's incorrect.
 
---3Aufn4Dkbz1VH4dr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think, based on the trend in the v2 conversation[1], that's correct. If maintainers of
+other areas disagree, please chime in.
 
-On Sun, May 05, 2024 at 08:46:02PM +0100, Jonathan Cameron wrote:
-> On Tue, 30 Apr 2024 18:21:01 +0100
-> Conor Dooley <conor@kernel.org> wrote:
->=20
-> > On Tue, Apr 30, 2024 at 07:29:45PM +0300, Alisa-Dariana Roman wrote:
-> > > +      diff-channels:
-> > > +        description:
-> > > +          Both inputs can be connected to pins AIN1 to AIN16 by choo=
-sing the
-> > > +          appropriate value from 1 to 16.
-> > > +        items:
-> > > +          minimum: 1
-> > > +          maximum: 16
-> > > +
-> > > +      single-channel:
-> > > +        description:
-> > > +          Positive input can be connected to pins AIN1 to AIN16 by c=
-hoosing the
-> > > +          appropriate value from 1 to 16. Negative input is connecte=
-d to AINCOM.
-> > > +        items:
-> > > +          minimum: 1
-> > > +          maximum: 16 =20
-> >=20
-> > Up to 16 differential channels and 16 single-ended channels, but only 16
-> > pins? Would the number of differential channels not max out at 8?
->=20
-> May not really be limited to 16 differential. Many chips use general purp=
-ose
-> muxes on both sides so you can do all combinations. In practice that's no=
-rmally
-> pointless.
->=20
-> A more useful case is to do all but one channel as positive inputs and th=
-e remaining
-> channel as the negative for those 15 differential channels.
+Thanks,
+Easwar
 
-Yah, 15 is what I had in my head as the highest reasonable number given
-the information given about the AIN# pins.
-
-> This is effectively the same as doing pseudo differential channels, but
-> on more flexible hardware.  This is in contrast to a device that only sup=
-ports
-> pseudo differential where there is a special pin for the negative
-> (this device has that as well as full muxes on the other 16 lines).
->=20
-> Having said all that.  The ad7194 datasheet says 8 differential channels..
-> I have no idea why though... Maybe something to do with the mux switching?
-> Or maybe assumption is that if you want to do pseudo differential you'll =
-use
-> the pseudo differential mode rather than wasting hardware?
-
-I didn't look at the datasheet tbf, I was just asking given the
-description didn't make sense to me and looking for an explanation from
-the author.
-
---3Aufn4Dkbz1VH4dr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjj9KQAKCRB4tDGHoIJi
-0tgjAP0UT0hwLpfAghyxJPc+yxfShQLZbRCoHngwKOZZsGSlDwEAj4SyQghwbeUF
-1Y3RvIXr04WBMoljrmHNA3+f2Vm99QI=
-=f95D
------END PGP SIGNATURE-----
-
---3Aufn4Dkbz1VH4dr--
+[1] https://lore.kernel.org/all/20240503181333.2336999-1-eahariha@linux.microsoft.com/
