@@ -1,57 +1,57 @@
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C24815B553
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:10:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F1215B988
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715029831; cv=none; b=dggaHpAhoGo/gz7o6++R653vQq4JZrUQkW9fGBBvug83DAwvRVcPA17yu0IsErL0FS4+H2t6uwkyGuZDuiC9lACkjNJqDmr1ZEHXtzDGgkasM/5lV/c5wCtqsuKAWDdgMpWZrPYDRaNI+mZ/+OuV7Ew8FVsrXvdFwerC5JdQexA=
+	t=1715029833; cv=none; b=ZdHl2UfxvPS8lUGQaAhnwbQ3wthteMhyS/Sjnt9GQvQE8Y6njv/90yy9nB1NADQnEqUjM+kZ5832bPEDkVUbb2DBIyKM7tk0iF+pc3VgcBJeiG1gxo/Z6qYaQGjRe/ZZ4KP//M9APtDYPkBZ37MwOa0oz9PtoKf6zLcnr22wto8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715029831; c=relaxed/simple;
-	bh=onS8B0M5Jv8Adbn3ETYy2u3f71LcIIwxaG7egh3GMOA=;
+	s=arc-20240116; t=1715029833; c=relaxed/simple;
+	bh=13OxCCXFD0dQ5I30NApvqTwlwhaZmASYM9bf5Kr18JA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=f6qc27BL9SQX/w0v+PIAJO2cd8kZ1HKDDXdrt1hKZ6Z2Q0qE2WQwa7yuWB6Ht39CDrK1s4tfo/hi1LMGtAR+jZwUOd8wmi4eVAkdb3BKF4+DN34YWW1Hy0SYt4nynVtxmoMFmPTstx7AhewPimX53D358Yt7WDhmCA5LH/EgDdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Pj5biK3H; arc=none smtp.client-ip=209.85.210.44
+	 In-Reply-To:To:Cc; b=Zm7wcSShJYGG7/QfMGDiBlV30vxAiu5FBZwmHU1wdes9H7wsstYVuL37If4jnVohtIyjqZSA1yJXKBnBtHUtGYZH/O6P95tE0leaq3sCf5gMns1ghRVdkKIdz46sYyl/zch7E/fjYjtgTaLooAX9Mvsw83+Sl7lMH/jGlGIdmdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=XwKYLAWH; arc=none smtp.client-ip=209.85.222.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Pj5biK3H"
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6f065bc237aso651725a34.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 14:10:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XwKYLAWH"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7928c54e945so208432485a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 14:10:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715029829; x=1715634629; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1715029831; x=1715634631; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=jtUlP6VM7qrXki+A4GKytcg5ATq7Ztpreg61VfyOW+M=;
-        b=Pj5biK3Hq8ko7p5nG3kzeJ2i7QPZ2N2EZ3zrPitj3cDSf4XcQa2TvVhV99Zii1amFV
-         NWN/7Bljo7C06yUa6J6n3XM2cFk/M6D3bYcHimByMxAnvYA6RVgC3RsnffmGEtwxpasN
-         KLFC2hPVApiza4s0QPJmEs6j9D2ataalmC1LM=
+        bh=OkJF7t/M3Ojeyh5RuyGpe29BYnbPsSXvxhXAxpUcSgA=;
+        b=XwKYLAWHKeesNbtDBek7g9IS4gFMiv9eI9W2VBr5egHx5PloHV7HSKt4OlzddnYsH+
+         QBZeHbgd3jXjI7ickZ4evj85OGAlPcfdzHoNL7sBJoAjJ4SBBGUpEK7BMIMjZrP1A7Gd
+         x8GnPM9FZaD0w/uVfEWgbMbcgZvuNDCI25M8M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715029829; x=1715634629;
+        d=1e100.net; s=20230601; t=1715029831; x=1715634631;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jtUlP6VM7qrXki+A4GKytcg5ATq7Ztpreg61VfyOW+M=;
-        b=XNZnNEzUUqk0P0l8zJdG0/ntNLlcAkBhFEeret0zB6JFwBtkznx7PXOFhpPtsPUdht
-         R5DY3c7TqvI/E9eRhJ1cI1KOjay8M6IpTv6PxaNXed+d1wm26A6lOguwkW/UNKlw94aM
-         fjxgHMf9SdGaaJGm3I+g5P6sS682m2Ul7X1xYZMZXV+mAPFQbWDR2w3j2o8MWr4L/ooN
-         8uu6gYL761gZX6RUETEhXHGq5vIJ/1g2qF7+Vk8iT9pACf5M1VVbux87x6lQ2RZ8/pvD
-         7y58FkN6uq+AcEV62ps9zI6JFf248gCtX4otw1vxttomZbFy0iRQulbzspHpFJeJaJoK
-         ptOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMmdCsId+42ZTOBzByev6c3XCxwDTJ0G1jq6okCBicdeXd9Rk2o5UvObSTN9Eqvjv+vVCZJER2aMYoOxyasCzCad59gLD1Nl9Qm7Ug
-X-Gm-Message-State: AOJu0YwLEqDeyxwLjbYKvZ/D3jfmQsNz5N6uNvbFF+Y3LNTeD4SaPVmr
-	49zPsFuV+yzuehtEIyx2UNARON64iKWD5uJEuGVTwF+Kf1WX58jEIo30m0Cwng==
-X-Google-Smtp-Source: AGHT+IF8Sz8E4E8aQminjkh9wNuTyPXbJEfh1IRvEaK9iGF6PZ9aIZftMbIJIZYtGTFlMIVQc4MDfA==
-X-Received: by 2002:a9d:6943:0:b0:6f0:30b8:4f06 with SMTP id p3-20020a9d6943000000b006f030b84f06mr5974830oto.2.1715029829149;
-        Mon, 06 May 2024 14:10:29 -0700 (PDT)
+        bh=OkJF7t/M3Ojeyh5RuyGpe29BYnbPsSXvxhXAxpUcSgA=;
+        b=KHzCNV1T4oXmxB7eqshGftd+8MhSa12vF2fU1XsKC/txWYiaQgKh/wocstd8gXFZ+7
+         hSvVWcQOEzel49gz4ceMxGn/Kvd0W4mqsYPxJmxnc3D+jjoJ9mAEAeRittCmDB/HlSiB
+         J79fWHVAiqaCaFwEZwZ7nJR8PcYIYFo3KWT4NojCM2YcGi1goLxCkjSOia0bxpVWnRkJ
+         gaHmDcw2qO3S7ydZnRCwlTYG4pxcH9VsxBeghOtPMBz+o+ki5GHaoG+Gmr4LxSih3GA/
+         X2BxgeLgwASvVDo68hEIXpsjYfh+musMlj41eFt8TRrRNsSLY8TnGf/PgIRrhM6FH/76
+         mm5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWGEMmitOWeVkO5Smm/huzSKJvxvrrzvf1ze+yrFGrh5ocv6ej0slHgQQ/aw1H0sy77DJmLEn2eKInUZWeEV7RXqkPRKOB1GJ5y3yDo
+X-Gm-Message-State: AOJu0YwdCHaDpWykeZxH2wYkxZdUx7L2CAfyR1PXcJYEolskgBOXr2eP
+	CsH520O2Fb7HP/S9qnGRenAAbwGwVp6A1MBNthFytoYAmRmUHNlrnY0iDcS32w==
+X-Google-Smtp-Source: AGHT+IEHqq8p4xvadiUkZkjltTHuOSmpKAULLj6lKhTtpITVnQwDNjpo5F7If+QRhvKAuXMvz0wKiQ==
+X-Received: by 2002:a05:620a:2481:b0:792:8c4c:375c with SMTP id i1-20020a05620a248100b007928c4c375cmr9980404qkn.11.1715029830998;
+        Mon, 06 May 2024 14:10:30 -0700 (PDT)
 Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
-        by smtp.gmail.com with ESMTPSA id pa20-20020a05620a831400b0078f13e59dc9sm4224921qkn.102.2024.05.06.14.10.28
+        by smtp.gmail.com with ESMTPSA id pa20-20020a05620a831400b0078f13e59dc9sm4224921qkn.102.2024.05.06.14.10.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 14:10:28 -0700 (PDT)
+        Mon, 06 May 2024 14:10:30 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Mon, 06 May 2024 21:10:26 +0000
-Subject: [PATCH 1/5] media: ivtv: Factor out schedule functions
+Date: Mon, 06 May 2024 21:10:28 +0000
+Subject: [PATCH 3/5] media: dvb-frontends/stv090x: Refactor tuner_i2c_lock
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240506-cocci-locks-v1-1-a67952fe5d19@chromium.org>
+Message-Id: <20240506-cocci-locks-v1-3-a67952fe5d19@chromium.org>
 References: <20240506-cocci-locks-v1-0-a67952fe5d19@chromium.org>
 In-Reply-To: <20240506-cocci-locks-v1-0-a67952fe5d19@chromium.org>
 To: Andy Walls <awalls@md.metrocast.net>, 
@@ -70,160 +70,83 @@ Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, linux-media@vger.kernel.org,
  linux-kernel@vger.kernel.org, Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.12.4
 
-Cocci is very confused by unlock-lock a mutex in the middle of a
-function.
+Move the lock logic to it's own function. There is less code duplication
+and cocci is much happier.
 
-Factor the schedules out, avoid code duplication and make cocci a bit
-happier.
-
-Fix the following cocci warnings:
-drivers/media/pci/ivtv/ivtv-fileops.c:223:4-10: preceding lock on line 267
-drivers/media/pci/ivtv/ivtv-fileops.c:230:3-9: preceding lock on line 267
-drivers/media/pci/ivtv/ivtv-fileops.c:236:4-10: preceding lock on line 267
-drivers/media/pci/ivtv/ivtv-fileops.c:245:3-9: preceding lock on line 267
-drivers/media/pci/ivtv/ivtv-fileops.c:251:3-9: preceding lock on line 267
-drivers/media/pci/ivtv/ivtv-fileops.c:257:3-9: preceding lock on line 267
-drivers/media/pci/ivtv/ivtv-fileops.c:272:3-9: preceding lock on line 267
-drivers/media/pci/ivtv/ivtv-fileops.c:598:4-10: preceding lock on line 627
-drivers/media/pci/ivtv/ivtv-fileops.c:598:4-10: preceding lock on line 689
-drivers/media/pci/ivtv/ivtv-fileops.c:606:3-9: preceding lock on line 627
-drivers/media/pci/ivtv/ivtv-fileops.c:606:3-9: preceding lock on line 689
-drivers/media/pci/ivtv/ivtv-fileops.c:648:3-9: preceding lock on line 627
-drivers/media/pci/ivtv/ivtv-fileops.c:648:3-9: preceding lock on line 689
-drivers/media/pci/ivtv/ivtv-fileops.c:692:4-10: preceding lock on line 689
+Fix the following cocci warning:
+drivers/media/dvb-frontends/stv090x.c:799:1-7: preceding lock on line 768
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/pci/ivtv/ivtv-fileops.c | 66 +++++++++++++++++++++--------------
- 1 file changed, 39 insertions(+), 27 deletions(-)
+ drivers/media/dvb-frontends/stv090x.c | 37 ++++++++++++++++++++---------------
+ 1 file changed, 21 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/media/pci/ivtv/ivtv-fileops.c b/drivers/media/pci/ivtv/ivtv-fileops.c
-index 4202c3a47d33..cfa28d035586 100644
---- a/drivers/media/pci/ivtv/ivtv-fileops.c
-+++ b/drivers/media/pci/ivtv/ivtv-fileops.c
-@@ -21,6 +21,7 @@
- #include "ivtv-ioctl.h"
- #include "ivtv-cards.h"
- #include "ivtv-firmware.h"
-+#include <linux/lockdep.h>
- #include <media/v4l2-event.h>
- #include <media/i2c/saa7115.h>
- 
-@@ -190,12 +191,27 @@ static void ivtv_update_pgm_info(struct ivtv *itv)
- 	itv->pgm_info_write_idx = (itv->pgm_info_write_idx + i) % itv->pgm_info_num;
+diff --git a/drivers/media/dvb-frontends/stv090x.c b/drivers/media/dvb-frontends/stv090x.c
+index cc45139057ba..3b02d504941f 100644
+--- a/drivers/media/dvb-frontends/stv090x.c
++++ b/drivers/media/dvb-frontends/stv090x.c
+@@ -748,6 +748,22 @@ static int stv090x_write_reg(struct stv090x_state *state, unsigned int reg, u8 d
+ 	return stv090x_write_regs(state, reg, &tmp, 1);
  }
  
-+static void ivtv_schedule(struct ivtv_stream *s)
++static inline void stv090x_tuner_i2c_lock(struct stv090x_state *state)
 +{
-+	struct ivtv *itv = s->itv;
-+	DEFINE_WAIT(wait);
-+
-+	lockdep_assert_held(&itv->serialize_lock);
-+
-+	mutex_unlock(&itv->serialize_lock);
-+	prepare_to_wait(&s->waitq, &wait, TASK_INTERRUPTIBLE);
-+	/* New buffers might have become free before we were added to the waitqueue */
-+	if (!s->q_free.buffers)
-+		schedule();
-+	finish_wait(&s->waitq, &wait);
-+	mutex_lock(&itv->serialize_lock);
++	if (state->config->tuner_i2c_lock)
++		state->config->tuner_i2c_lock(&state->frontend, 1);
++	else
++		mutex_lock(&state->internal->tuner_lock);
 +}
 +
- static struct ivtv_buffer *ivtv_get_buffer(struct ivtv_stream *s, int non_block, int *err)
++static inline void stv090x_tuner_i2c_unlock(struct stv090x_state *state)
++{
++	if (state->config->tuner_i2c_lock)
++		state->config->tuner_i2c_lock(&state->frontend, 0);
++	else
++		mutex_unlock(&state->internal->tuner_lock);
++}
++
+ static int stv090x_i2c_gate_ctrl(struct stv090x_state *state, int enable)
  {
- 	struct ivtv *itv = s->itv;
- 	struct ivtv_stream *s_vbi = &itv->streams[IVTV_ENC_STREAM_TYPE_VBI];
- 	struct ivtv_buffer *buf;
--	DEFINE_WAIT(wait);
+ 	u32 reg;
+@@ -761,12 +777,8 @@ static int stv090x_i2c_gate_ctrl(struct stv090x_state *state, int enable)
+ 	 * In case of any error, the lock is unlocked and exit within the
+ 	 * relevant operations themselves.
+ 	 */
+-	if (enable) {
+-		if (state->config->tuner_i2c_lock)
+-			state->config->tuner_i2c_lock(&state->frontend, 1);
+-		else
+-			mutex_lock(&state->internal->tuner_lock);
+-	}
++	if (enable)
++		stv090x_tuner_i2c_lock(state);
  
- 	*err = 0;
- 	while (1) {
-@@ -258,13 +274,7 @@ static struct ivtv_buffer *ivtv_get_buffer(struct ivtv_stream *s, int non_block,
- 		}
+ 	reg = STV090x_READ_DEMOD(state, I2CRPT);
+ 	if (enable) {
+@@ -782,20 +794,13 @@ static int stv090x_i2c_gate_ctrl(struct stv090x_state *state, int enable)
+ 			goto err;
+ 	}
  
- 		/* wait for more data to arrive */
--		mutex_unlock(&itv->serialize_lock);
--		prepare_to_wait(&s->waitq, &wait, TASK_INTERRUPTIBLE);
--		/* New buffers might have become available before we were added to the waitqueue */
--		if (!s->q_full.buffers)
--			schedule();
--		finish_wait(&s->waitq, &wait);
--		mutex_lock(&itv->serialize_lock);
-+		ivtv_schedule(s);
- 		if (signal_pending(current)) {
- 			/* return if a signal was received */
- 			IVTV_DEBUG_INFO("User stopped %s\n", s->name);
-@@ -533,6 +543,25 @@ int ivtv_start_decoding(struct ivtv_open_id *id, int speed)
+-	if (!enable) {
+-		if (state->config->tuner_i2c_lock)
+-			state->config->tuner_i2c_lock(&state->frontend, 0);
+-		else
+-			mutex_unlock(&state->internal->tuner_lock);
+-	}
++	if (!enable)
++		stv090x_tuner_i2c_unlock(state);
+ 
  	return 0;
+ err:
+ 	dprintk(FE_ERROR, 1, "I/O error");
+-	if (state->config->tuner_i2c_lock)
+-		state->config->tuner_i2c_lock(&state->frontend, 0);
+-	else
+-		mutex_unlock(&state->internal->tuner_lock);
++	stv090x_tuner_i2c_unlock(state);
+ 	return -1;
  }
  
-+static int ivtv_schedule_dma(struct ivtv_stream *s)
-+{
-+	struct ivtv *itv = s->itv;
-+	int got_sig;
-+	DEFINE_WAIT(wait);
-+
-+	lockdep_assert_held(&itv->serialize_lock);
-+
-+	mutex_unlock(&itv->serialize_lock);
-+	prepare_to_wait(&itv->dma_waitq, &wait, TASK_INTERRUPTIBLE);
-+	while (!(got_sig = signal_pending(current)) &&
-+	       test_bit(IVTV_F_S_DMA_PENDING, &s->s_flags))
-+		schedule();
-+	finish_wait(&itv->dma_waitq, &wait);
-+	mutex_lock(&itv->serialize_lock);
-+
-+	return got_sig;
-+}
-+
- static ssize_t ivtv_write(struct file *filp, const char __user *user_buf, size_t count, loff_t *pos)
- {
- 	struct ivtv_open_id *id = fh2id(filp->private_data);
-@@ -544,7 +573,6 @@ static ssize_t ivtv_write(struct file *filp, const char __user *user_buf, size_t
- 	int bytes_written = 0;
- 	int mode;
- 	int rc;
--	DEFINE_WAIT(wait);
- 
- 	IVTV_DEBUG_HI_FILE("write %zd bytes to %s\n", count, s->name);
- 
-@@ -618,13 +646,7 @@ static ssize_t ivtv_write(struct file *filp, const char __user *user_buf, size_t
- 			break;
- 		if (filp->f_flags & O_NONBLOCK)
- 			return -EAGAIN;
--		mutex_unlock(&itv->serialize_lock);
--		prepare_to_wait(&s->waitq, &wait, TASK_INTERRUPTIBLE);
--		/* New buffers might have become free before we were added to the waitqueue */
--		if (!s->q_free.buffers)
--			schedule();
--		finish_wait(&s->waitq, &wait);
--		mutex_lock(&itv->serialize_lock);
-+		ivtv_schedule(s);
- 		if (signal_pending(current)) {
- 			IVTV_DEBUG_INFO("User stopped %s\n", s->name);
- 			return -EINTR;
-@@ -674,20 +696,10 @@ static ssize_t ivtv_write(struct file *filp, const char __user *user_buf, size_t
- 
- 	if (test_bit(IVTV_F_S_NEEDS_DATA, &s->s_flags)) {
- 		if (s->q_full.length >= itv->dma_data_req_size) {
--			int got_sig;
--
- 			if (mode == OUT_YUV)
- 				ivtv_yuv_setup_stream_frame(itv);
- 
--			mutex_unlock(&itv->serialize_lock);
--			prepare_to_wait(&itv->dma_waitq, &wait, TASK_INTERRUPTIBLE);
--			while (!(got_sig = signal_pending(current)) &&
--					test_bit(IVTV_F_S_DMA_PENDING, &s->s_flags)) {
--				schedule();
--			}
--			finish_wait(&itv->dma_waitq, &wait);
--			mutex_lock(&itv->serialize_lock);
--			if (got_sig) {
-+			if (ivtv_schedule_dma(s)) {
- 				IVTV_DEBUG_INFO("User interrupted %s\n", s->name);
- 				return -EINTR;
- 			}
 
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
