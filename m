@@ -1,103 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CE4A79E4;
-	Mon,  6 May 2024 12:30:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980C4748F;
+	Mon,  6 May 2024 12:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714998624; cv=none; b=a1T09alsP3JazXI6RHbNz2a1aqfD69y4mWq/n41Ud7KEauDX+fIucgAeOeiHa07yngW2p+l7xm/4pM6XqlwA7EdxwVX9WZs21dz3UUpPMjfev8Wkeb/UM9TwCbHI+X29IQ5tQyEPAVzbO4W5cQcp+3c8Opd3P4tixbdl+3PgCVs=
+	t=1714998797; cv=none; b=GrP2ozyHrK5tt22LFqWEZk/5u7QJfgniweu8f8+ebO+ZoL50DDMuZPpXvSA2VJ3FichLBNMKKbLUU+3V3YVbWgwp+IzB3alk8RFc+mgYUyO9DiApWSQDycjZVKN7dg/qqxbtuc3NHv0rIgkWKYcgC31SmDZEELGQwNWGrwqypPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714998624; c=relaxed/simple;
-	bh=c/w6oDfxGpNulUHSEeO1wtt/g7mJwXCklSr6D+lrmzE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=N5B6/6J7QkeAIBPlD9CUZBtQiu45f4zzKP+hix+3zIrIn7kiXc4O652uNzm/ijDmwBttIUE1M+MNlWZKGeHOl2AA6VDmHFltWQE/xdz6IFfEXg/ADV1aUOVcjWr97XvR40WyYmeHGhgmCJRSkUPjBBoUkZVaYXE7ufRCsusclqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UsbqeFpy; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UsbqeFpy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714998623; x=1746534623;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=c/w6oDfxGpNulUHSEeO1wtt/g7mJwXCklSr6D+lrmzE=;
-  b=UsbqeFpyIcVNmZpfQxfaeQLQztG3AuEziPMSAgqr8+mGLLUXK1pd9QGC
-   dg3vUGSHF25MQC5a8B6YqW+nQ3HE/3B73AXlCFX/d35WoxQvdvOXC9/rk
-   hQ6FjsvUEjZ3VbcYWfSEiU5NFIIoMDDniSkqjEO+pO0B1WtjFafujMssj
-   39yPkyySF1FLzElNKxZXhqMvKn/CqXKvXXqFwIEwFhBGydfheIwK9+CUI
-   iE7AcBsdp8Cp08GX3RURbWX9RazBIYrfhs4kvPiWCSivV29NrHSwh4vGC
-   lJOwh324wefWbc3GPqZKtXp45j07LTLYYIeOOicwwV13BPvnRqC89GX1y
-   g==;
-X-CSE-ConnectionGUID: UcCkrZ3hS9aiLiTLwKA/rA==
-X-CSE-MsgGUID: a9IjOYdsSmGSI1afB+rAfg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10900766"
-X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
-   d="scan'208";a="10900766"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 05:30:22 -0700
-X-CSE-ConnectionGUID: yq1AatXqQCW7RV9dETfBMQ==
-X-CSE-MsgGUID: E3JmPibJQDKTJVhIwIqw5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
-   d="scan'208";a="65601028"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.68])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 05:30:17 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 6 May 2024 15:30:11 +0300 (EEST)
-To: Bjorn Helgaas <helgaas@kernel.org>
-cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, 
-    Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-    Rob Herring <robh@kernel.org>, 
-    =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>, 
-    Igor Mammedov <imammedo@redhat.com>, Lukas Wunner <lukas@wunner.de>, 
-    Mika Westerberg <mika.westerberg@linux.intel.com>, 
-    Andy Shevchenko <andriy.shevchenko@intel.com>, 
-    "Rafael J . Wysocki" <rafael@kernel.org>, 
-    LKML <linux-kernel@vger.kernel.org>, 
-    Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v2 2/7] resource: Rename find_resource() to
- find_empty_resource_slot()
-In-Reply-To: <20240503204910.GA1602543@bhelgaas>
-Message-ID: <1dbfc6c4-eeb1-92c1-3371-1b0afa5683ad@linux.intel.com>
-References: <20240503204910.GA1602543@bhelgaas>
+	s=arc-20240116; t=1714998797; c=relaxed/simple;
+	bh=DEA1KM0ghvQd+HuV8xLB5tsfrrm9padoKe5B5fuFlsE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=GR6KNQrJLoxZgefgdSmG4YcIsPXsa2v+8rsSGSoHTNnv8pPDPy/jndbPidrM5xMHVcGImZlXD5/Gp8qAsLBDw/MYOJdTPHxB4zkiEU9ZUeXjSVsighvHE6TkJK16iBveieoj157kHbpZLsO6zVQMennsQ/3hwlwHpUk1o+fBPxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VY15q13XZz4f3l85;
+	Mon,  6 May 2024 20:33:03 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 642991A058D;
+	Mon,  6 May 2024 20:33:08 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP2 (Coremail) with SMTP id Syh0CgDH6w4CzjhmXgPPMA--.59039S3;
+	Mon, 06 May 2024 20:33:08 +0800 (CST)
+Subject: Re: [RFC PATCH v4 27/34] ext4: implement zero_range iomap path
+To: Dave Chinner <david@fromorbit.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
+ adilger.kernel@dilger.ca, jack@suse.cz, ritesh.list@gmail.com,
+ hch@infradead.org, djwong@kernel.org, willy@infradead.org,
+ zokeefe@google.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+ yukuai3@huawei.com, wangkefeng.wang@huawei.com
+References: <20240410142948.2817554-1-yi.zhang@huaweicloud.com>
+ <20240410142948.2817554-28-yi.zhang@huaweicloud.com>
+ <ZjIN9nuV6SaNODfE@dread.disaster.area>
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+Message-ID: <f59c3015-7029-9cd0-f5f0-087dfc1f24d0@huaweicloud.com>
+Date: Mon, 6 May 2024 20:33:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-665360433-1714998611=:1111"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-665360433-1714998611=:1111
+In-Reply-To: <ZjIN9nuV6SaNODfE@dread.disaster.area>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgDH6w4CzjhmXgPPMA--.59039S3
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw1ktFWkGF4ktw15AF45Awb_yoW8Grykpr
+	Z5KFy8Kr12gr97uFZ2gFZrXryFya13Gw48WrW3Jrn8Z343WryxKFyjgF1093W8X3y7A340
+	vF1UW34Igw15AFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
+	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_
+	WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UZ18PUUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On Fri, 3 May 2024, Bjorn Helgaas wrote:
+On 2024/5/1 17:40, Dave Chinner wrote:
+> On Wed, Apr 10, 2024 at 10:29:41PM +0800, Zhang Yi wrote:
+>> From: Zhang Yi <yi.zhang@huawei.com>
+>>
+>> Add ext4_iomap_zero_range() for the zero_range iomap path, it zero out
+>> the mapped blocks, all work have been done in iomap_zero_range(), so
+>> call it directly.
+>>
+>> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+>> ---
+>>  fs/ext4/inode.c | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+>> index 9d694c780007..5af3b8acf1b9 100644
+>> --- a/fs/ext4/inode.c
+>> +++ b/fs/ext4/inode.c
+>> @@ -4144,6 +4144,13 @@ static int __ext4_block_zero_page_range(handle_t *handle,
+>>  	return err;
+>>  }
+>>  
+>> +static int ext4_iomap_zero_range(struct inode *inode,
+>> +				 loff_t from, loff_t length)
+>> +{
+>> +	return iomap_zero_range(inode, from, length, NULL,
+>> +				&ext4_iomap_buffered_read_ops);
+>> +}
+> 
+> Zeroing is a buffered write operation, not a buffered read
+> operation. It runs though iomap_write_begin(), so needs all the
+> stale iomap detection stuff to be set up for correct operation.
+> 
 
-> On Thu, Dec 28, 2023 at 06:57:02PM +0200, Ilpo J=C3=A4rvinen wrote:
-> > Rename find_resource() to find_empty_resource_slot() to better describe
-> > what the functions does. This is a preparation for exposing it beyond
-> > resource.c which is needed by PCI core. Also rename the __ variant to
-> > match the names.
->=20
-> I wonder if "find_resource_space()" or "find_available_resource()"
-> would be better than "_slot"?
->=20
-> "Slot" *is* already used a few times in kernel/resource.c, but in most
-> cases I think it refers to a "resource", and find_resource() basically
-> returns a filled-in struct resource.
->=20
-> And of course "slot" suggests something entirely different in the PCI
-> context.
+Yeah, right, thanks for point this out. Although we can guarantee
+that the zeroing is a partial block overwrite and no need to
+allocate new blocks on ext4, use ext4_iomap_buffered_read_ops is
+not appropriate, I'll use write ops instead.
 
-I picked up it from the existing usage but I've no strong opinion on=20
-this so I'll just rework the series to not add more "slot" wording into=20
-there.
+Thanks,
+Yi.
 
---=20
- i.
---8323328-665360433-1714998611=:1111--
