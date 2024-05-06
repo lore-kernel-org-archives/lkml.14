@@ -1,138 +1,126 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD6080026;
-	Mon,  6 May 2024 13:49:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F338E7FBBA;
+	Mon,  6 May 2024 13:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715003346; cv=none; b=k35EVLpPAIKsaj8hVbZdiLL1B9z4fSskSZwgc69MGTDBiXrgcILBHxH1rtG+nwQy1btCRf4QJGOVtjkLz2/SqlM4F4EUTVRPqXryc8Icr3TCQZVw4QfiZP4RTJay37XVzQov+sgU/NkAS+iJpfltC+vSsDbfFx/eUXu6sSn6LxA=
+	t=1715003379; cv=none; b=E2RytTaEarcHL+KxYE3RkZTU6JVAnIFD0AeCNItG1zSrUdnSk2plgXaLsMFer6/iHTX3gy//5FBXkgwYDthx0PhoRH41zNY6l2igJJuwOu7rUP3ZJvfW8srzNAi2Ly9oIcE9c7dyTSl1oDWiG7NCTMe+6hvSmt4CB24KG4uAdOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715003346; c=relaxed/simple;
-	bh=N+8SlHv+BG10Ed56ABIsCFuAhTqmY99V5r9tlcdPXOk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dTyHKyOeCaFWunj+1w+GVbf46mkQZq31vVHU3D747r5jW2AA/HN/G/62mZ8WCM588haleyNwbQOviklhZW31leK8307GhFnSlwqtq8i1XbvsdedsynGtMX3+OCp9nbD+lGTlfbtqAk0rgUW5+ueQdd7JaImAL8H7Om7kuV4gt0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mauWTkRJ; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1715003379; c=relaxed/simple;
+	bh=VeYTlSC5e0onakW3rKrio1y3PTvEXFB4w3FqeXv54R0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KFouI721ubmmpedz01E0x1SjdMw/dRl864KO6FSUk+y6HgjNU+3wKYORoQauJitgCdKmq00b+PrtLSGAZ70Vu6VpuwbtnwLOjgw5yrXkFNWd599ZK5okR/N+MY7qPSflIIwBSrhNydDozeMuGD1HqVQi4eENqEsE5PGYK0lQSMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R1QhkbCi; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mauWTkRJ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E3A7F1BF20E;
-	Mon,  6 May 2024 13:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715003341;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IiYk/OF8J/A5XkO49NEeG0JReklIrIL4u4kDqBfVQe0=;
-	b=mauWTkRJEwC2lvjJlXWeuOXCeuQOgxLTQoZe+3vo06UVOGbnAcLbx+bNbmOKRWY6N/2LMh
-	ZDPxv8XA2VsvMlJhgiYmdv0114okHcldvzL+KSx6iGlunRr5ydNL7c1Mq0g087+atQRTLh
-	Fcxkxsn0rh1VeFRBkpGPfu7kOn8og+qC/lMfPl6ICDW6CAsuZmoH0jM9hFYKEDUbm7LxvN
-	r/+W7vfKhw7rXY92GmeNbGyQxRdUAINnUkE2S2ksf/xbJYBm/OOO6MkCinkF6tem/bUGTb
-	tYehaTyf0yxIyTjRNJDaA02iiBlYKZzDvBhnU+bDdBPdzk4dlsD1AkVCAv+VZA==
-Date: Mon, 6 May 2024 15:48:58 +0200
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Arseniy Krasnov <avkrasnov@salutedevices.com>
-Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
- <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman
- <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin
- Blumenstingl <martin.blumenstingl@googlemail.com>,
- <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <oxffffaa@gmail.com>, <kernel@sberdevices.ru>
-Subject: Re: [PATCH v5 1/2] dt-bindings: mtd: amlogic,meson-nand: support
- fields for boot ROM code
-Message-ID: <20240506154858.003bab54@xps-13>
-In-Reply-To: <20240416085101.740458-2-avkrasnov@salutedevices.com>
-References: <20240416085101.740458-1-avkrasnov@salutedevices.com>
-	<20240416085101.740458-2-avkrasnov@salutedevices.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R1QhkbCi"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1eb24e3a2d9so18820455ad.1;
+        Mon, 06 May 2024 06:49:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715003377; x=1715608177; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q0tf2qu9Q8Di2qMp5UR/PKhNSbAhcOms4Eni4j4Wu/o=;
+        b=R1QhkbCi0fc3Xjz8OP1ckLFlW/5xarey+CHz41prrImsxYQOuKcX8dlbM0RMhXJEaV
+         pdrn8O1+ue732K/HAWqd0z00pjxwSUOVKG0OzZgJgaFCLRXI+G5ybPU3I5LN/MpeEkut
+         W+qXokBrVHrmTHCSKmFUbZka8nFkduyL8xHg0+9S4+1W6PQKJJpMDmy/q/GZqjbbddY0
+         8S7ba1c8QAyTu0V5+dA76PR3UxzitwkgublPHgAPrW2i8Q1S6JAGXJWZ6rUyBDj5AHbq
+         PoYQFsnzsUSIZF3ChnGdPsEGgsQvQIt6+lG8Yv01aZprJiqaL9gSWRDPoVBtMejytM8G
+         zAzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715003377; x=1715608177;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q0tf2qu9Q8Di2qMp5UR/PKhNSbAhcOms4Eni4j4Wu/o=;
+        b=j5Fi98VmcdOqWd+9qqYcN9TFILuzADoy+J7KlURD21bTl/8wh/g7qSIykN4Ongq5YW
+         mtVirn+PT3fel2y4Bm0JPg60td9bC+Z/PGZyLmri7gYDecDjjcKiOVGqqbhVHu9hKtln
+         hjkFg+qk8/78+z428eZTQVxWxDHCfaUN8uuzqe4oSVupCl8fn2ibsYCDkHGBsIswjhIV
+         +CMHQ8f31Gg/hlsXuGo6o8dfaeR5lB5c44leHu1w7g6wOffdVFb+UHzuRZiqN/UsN7rc
+         H6oCYnDjNsxEHcFlMgsgoExnGLdiHzD+r4GiIidO6mNF70UJTdd51I6t72C4/+oNLLA+
+         BWtg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7JcixGPi31J9JQ9v1A96KCn4SFx5j0fPXwfXALX8fmd5Akj3pER8+i7HJq+17AJzCJQeVKz0EK06/UIDbM8K8Nvn8cEks8n1Q0c2nkR1EIywdBRR03eQm+m/ASoR5cG3TjblYlAnlpSKstwR10Uy/o616SqfrsTPhu/G5gPuV7pFqQak=
+X-Gm-Message-State: AOJu0Yw1LgbxfUsZCA6LOtMB8mWuiok85Worr75N1IfT/G4dLPFESNfa
+	BOoYb1STKhTVC2jIUnVICIsCQqUki5eyNai8y2UQvi/9fwqU5/kd
+X-Google-Smtp-Source: AGHT+IFsSZGL2it7t9nrfAcHqKBBtNdyFp8UV64K//be7jHkwT4m1n655IsAPNPg10zU+pm1Y4qQLQ==
+X-Received: by 2002:a17:902:e947:b0:1e2:8841:8d67 with SMTP id b7-20020a170902e94700b001e288418d67mr14383470pll.32.1715003376608;
+        Mon, 06 May 2024 06:49:36 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w13-20020a170902d3cd00b001ec460b50casm8290294plb.307.2024.05.06.06.49.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 May 2024 06:49:35 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Mon, 6 May 2024 06:49:34 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Naresh Solanki <naresh.solanki@9elements.com>
+Cc: Rob Herring <robh@kernel.org>, krzysztof.kozlowski+dt@linaro.org,
+	u.kleine-koenig@pengutronix.de, Jean Delvare <jdelvare@suse.com>,
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 2/4] hwmon: (max6639) : Utilise pwm subsystem
+Message-ID: <6d424919-70cc-43dc-a5a0-eab24f42f9e8@roeck-us.net>
+References: <20240416171720.2875916-1-naresh.solanki@9elements.com>
+ <20240416171720.2875916-2-naresh.solanki@9elements.com>
+ <ecddd7f3-fc25-4021-9758-b00893ac9622@roeck-us.net>
+ <CABqG17hebvkpvxwGVfp0nT_YMrvgdkEqU2_XjijCpdtgU6C+1A@mail.gmail.com>
+ <1294114a-4509-4c8a-a0a2-39f6e5f83227@roeck-us.net>
+ <CABqG17hamhz9+bZ44FNkoSU5MxHLB13OZWGgzhr6xdDjdb=2xg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABqG17hamhz9+bZ44FNkoSU5MxHLB13OZWGgzhr6xdDjdb=2xg@mail.gmail.com>
 
-Hi Arseniy,
+On Mon, May 06, 2024 at 03:35:40PM +0530, Naresh Solanki wrote:
+> +Rob Herring
+> 
+> Hi Guenter,
+> 
+> 
+> On Mon, 22 Apr 2024 at 18:07, Guenter Roeck <linux@roeck-us.net> wrote:
+> >
+> > On 4/22/24 03:39, Naresh Solanki wrote:
+> > > Hi Guenter,
+> > >
+> > > On Wed, 17 Apr 2024 at 02:52, Guenter Roeck <linux@roeck-us.net> wrote:
+> > >>
+> > >> On Tue, Apr 16, 2024 at 10:47:15PM +0530, Naresh Solanki wrote:
+> > >>> Utilise pwm subsystem for fan pwm handling
+> > >>>
+> > >>> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+> > >>
+> > >> That adds a lot of complexity to the driver. I am missing the benefits.
+> > >> You are supposed to explain why you are making changes, not just that
+> > >> you are making them.
+> > >>
+> > >> Why are you making those changes ?
+> > > Sure.
+> > > This is to align with fan-common.yml wherein chip pwm is exposed.
+> > > I'll update commit message
+> > >
+> >
+> > Adding lots of complexity to a driver just to have it match a yaml file ?
+> > I'll want to see a use case. Explain why you need the pwm exposed.
+> > "because the yaml file demands it" is not a use case.
+> The idea behind this was that this approach provides flexibility with
+> hardware routing i.e., PWM0 might be connected to Fan1 & vise
+> versa instead of assuming 1:1 mapping.
+> 
 
-avkrasnov@salutedevices.com wrote on Tue, 16 Apr 2024 11:51:00 +0300:
+The chip does not support such a configuration. Any hardware implementing
+this would make automatic fan control using the chip's capabilities
+impossible. Also, userspace fan control does not rely on the pwm subsystem.
 
-> Boot ROM code on Meson requires that some pages on NAND must be written
-> in special mode: "short" ECC mode where each block is 384 bytes and
-> scrambling mode is on.
-
-Ok
-
-> Such pages located with the specified interval within specified offset.
-
-I'm sorry I don't get that sentence.
-
-> Both interval and offset are located in the
-> device tree and used by driver if 'nand-is-boot-medium' is set for
-> NAND chip.
-
-This sentence is probably not needed.
-
->=20
-> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
-> ---
->  .../bindings/mtd/amlogic,meson-nand.yaml           | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yam=
-l b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
-> index 57b6957c8415..67b2f7c1259c 100644
-> --- a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
-> +++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
-> @@ -64,11 +64,25 @@ patternProperties:
->          items:
->            maximum: 0
-> =20
-> +      amlogic,boot-pages:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          Number of pages starting from 0, where special ECC
-
-from *offset* 0 I guess?
-
-> +          algorithm will be used by the driver.
-
-"where a special ECC configuration must be used because it is accessed
-by the ROM code"? Maybe you can even detail what are these values if
-they are fixed.
-
-You should probably inform that scrambling shall be on as well.
-=20
-> +
-> +      amlogic,boot-page-step:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          Interval between pages, read/written by the driver with
-> +          special ECC algorithm.
-
-I'm not sure I fully get the description. What is the unit here? can
-you draw a small ascii-art diagram?
-
-> +
->      unevaluatedProperties: false
-> =20
->      dependencies:
->        nand-ecc-strength: [nand-ecc-step-size]
->        nand-ecc-step-size: [nand-ecc-strength]
-> +      amlogic,boot-pages: [nand-is-boot-medium, "amlogic,boot-page-step"]
-> +      amlogic,boot-page-step: [nand-is-boot-medium, "amlogic,boot-pages"]
-> =20
-> =20
->  required:
-
+This would make sense if someone was to use the chip as generic pwm
+controller, which would be very unlikely. A "might be" is not sufficient
+to warrant such an invasive and (in terms of code size) expensive change.
 
 Thanks,
-Miqu=C3=A8l
+Guenter
