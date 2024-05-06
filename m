@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32206153BF9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321C815383A;
 	Mon,  6 May 2024 15:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715008215; cv=none; b=jk8QByY5gDRy/MM46zWGVi+Hi4EdahTJPiWGKFt7qJaVTkHiIB4jn8n07Z+Kq3K2fFh+AYCG1RF9URzSf85YwGlOYD5aHw1cWE3A0F1PytCLA6JMyvotHj871MGTlACn5elCKZb0T+xroE0gbtXIoP1iAQqMvLWgWP1YnOEQHqc=
+	t=1715008215; cv=none; b=rchRXFdH1bzi+C0cf+Gk3KXckXanFqufwHoDfa3vYEertQsiEC/QtkfYkn7uMKc9ylNN8qI3PqYZPmNJpXIWxbVTwVar4WvSF4edvpy1T07E8F2R2XhKrtj8vnNobRG2gTqtUjC+W4MJBAZyLO2o2O26RYnQR/LmhbtNAj1l0eU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715008215; c=relaxed/simple;
-	bh=523LXoj0Pt0fxaIsf7xGgfx1SdV1yqQtWQ+gVfyEBww=;
+	bh=qyD342BqfDOno7Fiw8o0i1cQm2xzwZ7rJO4LeMETBjc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fjzxj1W6XrCthqTfHW9/LmCfnU1LZxGOBGfvsoJyBi9NZKWiw6XX61DC136vYRxOyjR4kIythXQ7UNDEiPjRuS2PKQSVQt3VNzht+AwL2DNqyNjggezdbbavmJKzWpfgA9DC6nurqCOYhOjYX1oI0MuegU7t6fBPBLO2HFUNqUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6jRkwCk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=O6elTOLJstdi/fNiV2uj9Eax9I2mw/6FKwMUsaRDg+NqzSjKBCvmcDSOWk9qJATFSOHv3k4PAvWbO7LlQUEXhuwwM4y9sk9+FOLmI3+d5NKFjrWgQPBErMfmNc8lIOakU0M/2H12FpDNP9y1yEl0+Qedpcokqjk8oPe0qUVVuA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8W9RkQ2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6jRkwCk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B982DC4AF63;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8W9RkQ2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC10EC4AF66;
 	Mon,  6 May 2024 15:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715008214;
-	bh=523LXoj0Pt0fxaIsf7xGgfx1SdV1yqQtWQ+gVfyEBww=;
+	bh=qyD342BqfDOno7Fiw8o0i1cQm2xzwZ7rJO4LeMETBjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=h6jRkwCkjX2psYHpb3IXCM7OIFfYeQtHB0ufepMTkeQhjAwsBv7TmxEdRX5Ih2Jpd
-	 +R38zHB63Qel0c5KyJR1YPPOvtYDWmFiDS7E42W6CjrIy928M1wXwyXI9pPCeH+UMz
-	 IELi3k88Fo7fcouxmZmGAs2SnzAmRPU6kP1qWGACB5qQ0wTCUIN9CIqPS/emnXTxLa
-	 8yb9YwGhtDFUsOxWCv+oNyHdwTAuTxBMNx03d5erLemVMHgCzZn1JhTp6easgHAG6F
-	 iTW7I74SViMUQVgYzpWonMehjlj9LUaVTlZDuXyZXsBsg3v5MfJ3n2tjZ89WRKbAPf
-	 pa8NEZFPWgLww==
+	b=B8W9RkQ2tyKuug618wjKuMW6ToJK9gNNwHMN2hirdxhilHeosoPeUqskvQ8UD9LbF
+	 CF+vojWNHg3nFGEnson136J13nggU+erTA0jsVMaQvySxw26FAi2W2nAZQz6VDw/p4
+	 VzJiebGtUTh2JayQSPLBol/DxGwYl7bc7WqV44euKyE7rjQ2a8p9pnzPy0x4jES4z9
+	 7f3qq33sJYAOx8gLUTMsND5T6f6alcdmaS3+91zaaF/+FMOmlG6WiwACAKs2jR3tmk
+	 7lFLT7T1ou7lHa77WhTbUfmefT3eMSDe0vJvMDCopl5pT2LhTceeMGLLcWfpf51TSd
+	 LUyZcw2tXiLDg==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1s3zyp-000000006C9-3lxB;
-	Mon, 06 May 2024 17:10:15 +0200
+	id 1s3zyq-000000006CN-1uiB;
+	Mon, 06 May 2024 17:10:16 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Lee Jones <lee@kernel.org>,
 	Mark Brown <broonie@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 01/13] dt-bindings: mfd: pm8008: add reset gpio
-Date: Mon,  6 May 2024 17:08:18 +0200
-Message-ID: <20240506150830.23709-2-johan+linaro@kernel.org>
+Subject: [PATCH 08/13] dt-bindings: pinctrl: qcom,pmic-gpio: drop pm8008
+Date: Mon,  6 May 2024 17:08:25 +0200
+Message-ID: <20240506150830.23709-9-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240506150830.23709-1-johan+linaro@kernel.org>
 References: <20240506150830.23709-1-johan+linaro@kernel.org>
@@ -62,44 +62,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Describe the optional reset gpio (which may not be wired up).
+The binding for PM8008 is being reworked so that internal details like
+interrupts and register offsets are no longer described. This
+specifically also involves dropping the gpio child node and its
+compatible string which is no longer needed.
+
+Note that there are currently no users of the upstream binding and
+driver.
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml b/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
-index 0c75d8bde568..e1e05921afb4 100644
---- a/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
-+++ b/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
-@@ -29,6 +29,9 @@ properties:
- 
-     description: Parent interrupt.
- 
-+  reset-gpios:
-+    maxItems: 1
-+
-   "#interrupt-cells":
-     const: 2
- 
-@@ -97,6 +100,7 @@ additionalProperties: false
- 
- examples:
-   - |
-+    #include <dt-bindings/gpio/gpio.h>
-     #include <dt-bindings/mfd/qcom-pm8008.h>
-     #include <dt-bindings/interrupt-controller/irq.h>
- 
-@@ -115,6 +119,8 @@ examples:
-         interrupt-parent = <&tlmm>;
-         interrupts = <32 IRQ_TYPE_EDGE_RISING>;
- 
-+        reset-gpios = <&tlmm 42 GPIO_ACTIVE_LOW>;
-+
-         pm8008_gpios: gpio@c000 {
-           compatible = "qcom,pm8008-gpio", "qcom,spmi-gpio";
-           reg = <0xc000>;
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+index 3f8ad07c7cfd..58807212a601 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+@@ -28,7 +28,6 @@ properties:
+           - qcom,pm7325-gpio
+           - qcom,pm7550ba-gpio
+           - qcom,pm8005-gpio
+-          - qcom,pm8008-gpio
+           - qcom,pm8018-gpio
+           - qcom,pm8019-gpio
+           - qcom,pm8038-gpio
+@@ -122,7 +121,6 @@ allOf:
+         compatible:
+           contains:
+             enum:
+-              - qcom,pm8008-gpio
+               - qcom,pmi8950-gpio
+               - qcom,pmr735d-gpio
+     then:
+@@ -421,7 +419,6 @@ $defs:
+                  - gpio1-gpio10 for pm7325
+                  - gpio1-gpio8 for pm7550ba
+                  - gpio1-gpio4 for pm8005
+-                 - gpio1-gpio2 for pm8008
+                  - gpio1-gpio6 for pm8018
+                  - gpio1-gpio12 for pm8038
+                  - gpio1-gpio40 for pm8058
 -- 
 2.43.2
 
