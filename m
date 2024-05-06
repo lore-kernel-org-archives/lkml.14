@@ -1,322 +1,170 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2079.outbound.protection.outlook.com [40.107.223.79])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09CE15ECFB;
-	Mon,  6 May 2024 22:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715036006; cv=fail; b=Wm2oPLLS2mNkyy/UOhIV+jeGWsnK4NQDMVmg6vQWTUMGHCfQkN8WM1Ghmz2eqv7DPKVD1fgiTJCgSAjNVyBWsEVEZqiP0WEm3QZvdlK3vnPNAYI19A6iTBOQldFmtVVeOuB3FnNkM9lXqtAO+ybyZNs0D3VcZGvg/H6MXxALwQY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715036006; c=relaxed/simple;
-	bh=ZeI9XqjCSfK9WXMGKx6v6jplqyejYpRlrad9i/2p/bQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WS+eCBIwcPXd2Ga9jSBLGA0O5lsvuIXNIpVlD73PdMlEe/ATeKLDfpyDE/kFu0XbnAJjiqxkylv05dQEsAFH4CLaUWEgpVv0OEhHIawlpSD67x4gODwhJxclQhfxEaROrvSx2V7M+48S8AmUrCRoTpLi/a/c+YjEqhN02mU8O7Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aMCW+6vP; arc=fail smtp.client-ip=40.107.223.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5091C15EFC4;
+	Mon,  6 May 2024 22:53:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715036010; cv=none; b=kMYeWSCeTzm9Eyj5BgkglC9FNvGmbpW5SpgqKypfSCoddkSXb8x5c2vNe4aybo5hvQ+t4MCOL20CLXgfuT2/j1OkzYr8tCWV7eH9Fm5OqoiBMjOBe+Lp3n66KgblwNfEi1AMBmhhwwD0yZ45Fg4AA4HGeU6owQqGVvez84bjcz8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715036010; c=relaxed/simple;
+	bh=N83RTlbkk1uWKz5wxtRBpnWXby9KMfSeVUq0AzDvW0Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Z6ztgTWUUoDgE4OVe7nA0stUzGsplWhn7kN17+880Sn2KXXiEnE8WY9pkpILGDvYa4/B77vAHdqT3Gd0Zx1DYFD7An4NoGlM8ySCL87F3rVv0qp4gdgkn/suayjatqANwvu5mDxmADIDWBQ2Gk/5qsxKYeXwH+6dCTfs3rlFtAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=lPnIswQG; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aMCW+6vP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E1Cv5ETl5Ttp4A+2ynftxf8djVjnogWNWMJ4B879w72ApgP17O10NYWsPbsCY6zonfyT4JHe6yXmx72Vf6iFcLPLQzA8qGfdc9HqNnpwvqx4qn8m29NwfUlQuvZIYviRAMWau3YvnsYpsezNVsPXCkICO7WVSgbG7fovtY4qhIu4m+pYQtBXRktrF0p/f+0v2kNWPYKCAEI+MICTaUfF8vwOZ7O+W1x1y+vz64OTnQF8HqahSH22QxEsyaIrtlqzbnb6qP9kv8vQrFHRaYCygWRnfsQ1omuXAw418x3AU3ILT9d9Eq0T/HPS8HdUqhx5Ycg1xGIS9pCGjvu3LJgPHQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Mb6M2vwJVq9iUqseSEHpaC3Cuy5stf4/lv68f4kNEZM=;
- b=kaHv9eLv7f0mkx4MjOye091iRQP5jpXB2ZVT4XvPwlhwyH35JpryaHtMLnJzWcoJ/nSro/vptuzSBrwdA6E8ArgiAtCct1u9LmTB1HREnCCbaASZ4RUy5ybuPbGXtkwhtmBlxRj4t1OIQFqR4rn64wtfuLSXCJA8zWI72U7ZV30Xw5599KEwrRN0967Bv4eSLMVi9hJzgFJKJXjOdE/5CSW1yqB55/M8YEb7KFGDb4zbM+qCtOPuQDiiSFOj+YfAk9u1lU+qCr/eEdeOTXPZF2EUwWZyEnUc8sr7Aq7NfBV2damas9C7IzIGIvf15as3eUUW7hlKEtR81uom2Yampg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mb6M2vwJVq9iUqseSEHpaC3Cuy5stf4/lv68f4kNEZM=;
- b=aMCW+6vP2gPiDXHzraS8ooRTWJ+1Mq/hCUSfe4TUmBaiNcvH3NBaTFy113KIlj563Ef/peTtZ0pTBY5Kdi7gx4cL0fVFTCPPW+5yE9sG5K3rk+lYVE+HPob+c/3MiE8GUOhQG1y8dCEuozeEVs9BS5RxWSO5PoMdly2cR5VYol7P8SYr8EmACigzRxst7jztlCPCcNRdXJAmASmvNmRoWY7wEKdSZUF+p/Gf5+CGBd7/OfyuyXLXSjV5aHDQM902tDzBruIJGl6cJFl/bgDV8e9jHcMOGdv617gf4MZUAkyn5KcOyXjow7+W0WJs92CAc1lb5F5eJKCJCt0DT15bxw==
-Received: from SA9P223CA0006.NAMP223.PROD.OUTLOOK.COM (2603:10b6:806:26::11)
- by CH3PR12MB7593.namprd12.prod.outlook.com (2603:10b6:610:141::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41; Mon, 6 May
- 2024 22:53:20 +0000
-Received: from SN1PEPF00036F3C.namprd05.prod.outlook.com
- (2603:10b6:806:26:cafe::cd) by SA9P223CA0006.outlook.office365.com
- (2603:10b6:806:26::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.40 via Frontend
- Transport; Mon, 6 May 2024 22:53:18 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- SN1PEPF00036F3C.mail.protection.outlook.com (10.167.248.20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7544.18 via Frontend Transport; Mon, 6 May 2024 22:53:18 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 6 May 2024
- 15:53:05 -0700
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 6 May 2024 15:53:05 -0700
-Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.14) by mail.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 6 May 2024 15:53:00 -0700
-From: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-To: <linux-tegra@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-	<linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <thierry.reding@gmail.com>, <jonathanh@nvidia.com>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <corbet@lwn.net>,
-	<andi.shyti@kernel.org>, <wsa+renesas@sang-engineering.com>,
-	<ulf.hansson@linaro.org>, <adrian.hunter@intel.com>, <digetx@gmail.com>,
-	<ldewangan@nvidia.com>, <kyarlagadda@nvidia.com>, <mkumard@nvidia.com>,
-	Prathamesh Shete <pshete@nvidia.com>
-Subject: [RFC PATCH 10/11] mmc: host: tegra: config settings for timing
-Date: Tue, 7 May 2024 04:21:38 +0530
-Message-ID: <20240506225139.57647-11-kyarlagadda@nvidia.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240506225139.57647-1-kyarlagadda@nvidia.com>
-References: <20240506225139.57647-1-kyarlagadda@nvidia.com>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lPnIswQG"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 446MmiNa018450;
+	Mon, 6 May 2024 22:53:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2023-11-20;
+ bh=L03fituX5ED4j0N/+xawJHW+6W8Cf/jN9ak36qucFGQ=;
+ b=lPnIswQGLG0ufbGrw+XQccZULuO42QdqfYXaH+GAKPFKLWdat94fdlwxzzpsolLUbnQW
+ qx3DYAF8vRdwDhj0uN2+h2V/qKAptfg3z2XzXCaaNzth0PWjeQxIiTm8RO6usAO+fyDX
+ yqDHadsrsN/d54WHa93aTytbrDovwawyIQD3r01lisxiAzmP8FjQuzNIUg9N3fHoWKNC
+ 2fEUS4+kgFwYZn2U9YKYCDFG2ilPotwW5fVk333KdYYh0fQFJ2Gh3dLlbjJNumFcJP4U
+ nEBt7cs9zgxdGeIJohNZGcK6pYbjp8APm9xUYh2tI4puMAQWbOy31sKMP4uITw0BPaiO ag== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xwd2duqpx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 06 May 2024 22:53:23 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 446LFKRL027629;
+	Mon, 6 May 2024 22:53:23 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3xwbfdg8nd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 06 May 2024 22:53:23 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 446MrMxC006764;
+	Mon, 6 May 2024 22:53:22 GMT
+Received: from alaljime-dev-e4flex-vm.osdevelopmeniad.oraclevcn.com (alaljime-dev-e4flex-vm.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.249.106])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3xwbfdg8mq-2;
+	Mon, 06 May 2024 22:53:22 +0000
+From: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
+To: kvm@vger.kernel.org, seanjc@google.com, vasant.hegde@amd.com
+Cc: pbonzini@redhat.com, linux-kernel@vger.kernel.org,
+        joao.m.martins@oracle.com, boris.ostrovsky@oracle.com,
+        suravee.suthikulpanit@amd.com, mlevitsk@redhat.com,
+        alejandro.j.jimenez@oracle.com
+Subject: [PATCH v2 1/2] KVM: x86: Print names of apicv inhibit reasons in traces
+Date: Mon,  6 May 2024 22:53:20 +0000
+Message-Id: <20240506225321.3440701-2-alejandro.j.jimenez@oracle.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240506225321.3440701-1-alejandro.j.jimenez@oracle.com>
+References: <20240506225321.3440701-1-alejandro.j.jimenez@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3C:EE_|CH3PR12MB7593:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac4e33bb-829e-4383-5947-08dc6e1f527e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|7416005|1800799015|376005|36860700004|82310400017;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?ey+5dbLuP0jav4Z8IGP0PRqGvjPTPCqcrYmY0z9zivHgNkOGjxkva5n6XKLk?=
- =?us-ascii?Q?uhk824Ka+Ip9L8bIy7RgD5l04mVPLCHrtVZik6fnkyl6bA22yiS/gTWC1yL2?=
- =?us-ascii?Q?UP2IPq+fRFBTqNjfL+VzDBf3zjkN1J15E5IhXWfd7DZEhJZ0pqBrpqDE8EKc?=
- =?us-ascii?Q?UkhAN9PHI+yaHadBUPgovYi6zmy3vRGleLqb+R1vuKwbN46dzAqW0lDyvuFT?=
- =?us-ascii?Q?PVVyFCeVyraeWibsa9JkmdC4nQ3DzADDm7Fe3Yx8UOgQz+KlKYmYfxxHuwp1?=
- =?us-ascii?Q?M4onJ0UeU3CKo7zOwDBuj7fjvW+5pE/o9qId96r5zvF2AVzGDJ4eCeQbM/O5?=
- =?us-ascii?Q?1OdPX6g8jRJbZR48VWLp/hNr+e3xQ3tuovnlfohCSpZPh5ZbNfO5ibOyIWw0?=
- =?us-ascii?Q?ZfIaNL6obAMn9ND+mr7//pYWFY292rtE3g5dWm4V0tf+f7WWPNBbKChxqSP5?=
- =?us-ascii?Q?yJ8IMsYch68TU9kkpRGz6KxvGzbzS1jPKXwbWWanLcZcdA5zN2lOmRqahRN3?=
- =?us-ascii?Q?QO05YzxXmQs8Xix89Zkxuis1V49NUnONkMwnAPff7RoOW3tJwy5gy7qmxvFu?=
- =?us-ascii?Q?00695OTZuQQ/K3nwANbJq2B31JNc2Xs37suq52vaHiP9+uHyiNnzMllGhzsw?=
- =?us-ascii?Q?Zs+QwWJzSXM3IgH8U6GzCWrTUh5N7+0ewHgS60Ux5VmqWux8MdpfwsgrCM1Z?=
- =?us-ascii?Q?Aanj9UMXaevAwgq++vlFFTSGl4tX5JWpYBwXBaNYODeGZWBafuMGPS6HPH43?=
- =?us-ascii?Q?8ZSlcYsTMfzVuprgXqUclej9cMD0asIuZeUGiAME+w8xfCRAxv5twnGQm6vo?=
- =?us-ascii?Q?m7agOIMHr2f35BujRoVhBa3QSx+s8A9BucGLSMPHoEbS+srWh37GdbznK3+Z?=
- =?us-ascii?Q?ds0eMTC2HkX6bvy+f8levd3Dm5GtrJJjX52Swh98bCV/JZGLdatPuivHLpeP?=
- =?us-ascii?Q?dCY4KBMnR1i15zuGfoDrDZOcBlthUdvMtae4Ni6QTQTzsBaOTrRqzaV9/NU5?=
- =?us-ascii?Q?IxGz24Ja6ObkGdGB4yJV+G97INxHT+rQ10Wp2vL7dU6izYbQNHZOB7qrNriy?=
- =?us-ascii?Q?+5LjeCuGQzy+a0Y0hS7gKZyKzXrlzz6GH9xtE+IBZtwDO8kD0wDQ5U5nnX15?=
- =?us-ascii?Q?peIWegkUl262YbXybp8qq01PU/ainOvwQKpuE8aQjIt7d+AqefPW1lAqhuWP?=
- =?us-ascii?Q?TrEYdkMfjir2Iplttt6fAK14ToyZ59sSBk/W2VUZus5DeTVVKsVgM3BIyDzY?=
- =?us-ascii?Q?U/atVveVuKtfQ6Vn2Vhd9y2ErQKVeSUyRr63rrnYIVuF5Y0ZRjXXeZQgWZsm?=
- =?us-ascii?Q?2V9c77OpCAi2dxKT79GjV1uC5pcqmzgX7swfUTdE93tlpLFtMFyobYE3kE5B?=
- =?us-ascii?Q?+/q2xC4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(36860700004)(82310400017);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2024 22:53:18.5571
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac4e33bb-829e-4383-5947-08dc6e1f527e
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F3C.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7593
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-06_17,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=0 malwarescore=0 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2404010000
+ definitions=main-2405060166
+X-Proofpoint-GUID: fhH8LZyyFX6i2M0TQm15-WjQk_lqZCQr
+X-Proofpoint-ORIG-GUID: fhH8LZyyFX6i2M0TQm15-WjQk_lqZCQr
 
-Use config settings framework to initialize Tegra SDHCI
-timing registers
+Use the tracing infrastructure helper __print_flags() for printing flag
+bitfields, to enhance the trace output by displaying a string describing
+each of the inhibit reasons set.
 
-Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-Signed-off-by: Prathamesh Shete <pshete@nvidia.com>
+The kvm_apicv_inhibit_changed tracepoint currently shows the raw bitmap
+value, requiring the user to consult the source file where the inhibit
+reasons are defined to decode the trace output.
+
+Co-developed-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Alejandro Jimenez <alejandro.j.jimenez@oracle.com>
 ---
- drivers/mmc/host/sdhci-tegra.c | 84 ++++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
+ arch/x86/include/asm/kvm_host.h | 19 +++++++++++++++++++
+ arch/x86/kvm/trace.h            |  9 +++++++--
+ arch/x86/kvm/x86.c              |  4 ++++
+ 3 files changed, 30 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 1ad0a6b3a2eb..87fe85991617 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -28,6 +28,7 @@
- #include <linux/reset.h>
- 
- #include <soc/tegra/common.h>
-+#include <soc/tegra/tegra-cfg.h>
- 
- #include "sdhci-cqhci.h"
- #include "sdhci-pltfm.h"
-@@ -64,6 +65,7 @@
- #define SDHCI_TEGRA_DLLCAL_STA_ACTIVE			BIT(31)
- 
- #define SDHCI_VNDR_TUN_CTRL0_0				0x1c0
-+#define SDHCI_VNDR_TUN_CTRL0_CMD_CRC_ERR_EN		BIT(28)
- #define SDHCI_VNDR_TUN_CTRL0_TUN_HW_TAP			0x20000
- #define SDHCI_VNDR_TUN_CTRL0_START_TAP_VAL_MASK		0x03fc0000
- #define SDHCI_VNDR_TUN_CTRL0_START_TAP_VAL_SHIFT	18
-@@ -74,6 +76,7 @@
- #define TRIES_128					2
- #define TRIES_256					4
- #define SDHCI_VNDR_TUN_CTRL0_TUN_WORD_SEL_MASK		0x7
-+#define SDHCI_VNDR_TUN_CTRL0_DIV_N_MASK			GENMASK(5, 3)
- 
- #define SDHCI_TEGRA_VNDR_TUN_CTRL1_0			0x1c4
- #define SDHCI_TEGRA_VNDR_TUN_STATUS0			0x1C8
-@@ -134,6 +137,20 @@
- 					 SDHCI_TRNS_BLK_CNT_EN | \
- 					 SDHCI_TRNS_DMA)
- 
-+static const char * const cfg_device_states[] = {
-+	"default",		/* MMC_TIMING_LEGACY */
-+	"sd-mmc-highspeed",	/* MMC_TIMING_MMC_HS */
-+	"sd-mmc-highspeed",	/* MMC_TIMING_SD_HS */
-+	"uhs-sdr12",		/* MMC_TIMING_UHS_SDR12 */
-+	"uhs-sdr25",		/* MMC_TIMING_UHS_SDR25 */
-+	"uhs-sdr50",		/* MMC_TIMING_UHS_SDR50 */
-+	"uhs-sdr104",		/* MMC_TIMING_UHS_SDR104 */
-+	"uhs-ddr52",		/* MMC_TIMING_UHS_DDR50 */
-+	"uhs-ddr52",		/* MMC_TIMING_MMC_DDR52 */
-+	"mmc-hs200",		/* MMC_TIMING_MMC_HS200 */
-+	"mmc-hs400",		/* MMC_TIMING_MMC_HS400 */
-+};
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 1d13e3cd1dc5..08f83efd12ff 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1273,8 +1273,27 @@ enum kvm_apicv_inhibit {
+ 	 * mapping between logical ID and vCPU.
+ 	 */
+ 	APICV_INHIBIT_REASON_LOGICAL_ID_ALIASED,
 +
- struct sdhci_tegra_soc_data {
- 	const struct sdhci_pltfm_data *pdata;
- 	u64 dma_mask;
-@@ -158,6 +175,18 @@ struct sdhci_tegra_autocal_offsets {
- 	u32 pull_down_hs400;
++	NR_APICV_INHIBIT_REASONS,
  };
  
-+static const struct tegra_cfg_field_desc sdhci_cfg_fields[] = {
-+	TEGRA_CFG_FIELD("nvidia,num-tuning-iter",
-+			SDHCI_VNDR_TUN_CTRL0_0,
-+			SDHCI_VNDR_TUN_CTRL0_TUN_ITER_MASK),
-+};
++#define __APICV_INHIBIT_REASON(reason)			\
++	{ BIT(APICV_INHIBIT_REASON_##reason), #reason }
 +
-+static struct tegra_cfg_desc sdhci_cfg_desc = {
-+	.num_regs = 0,
-+	.num_fields = ARRAY_SIZE(sdhci_cfg_fields),
-+	.fields = sdhci_cfg_fields,
-+};
++#define APICV_INHIBIT_REASONS				\
++	__APICV_INHIBIT_REASON(DISABLE),		\
++	__APICV_INHIBIT_REASON(HYPERV),			\
++	__APICV_INHIBIT_REASON(ABSENT),			\
++	__APICV_INHIBIT_REASON(BLOCKIRQ),		\
++	__APICV_INHIBIT_REASON(PHYSICAL_ID_ALIASED),	\
++	__APICV_INHIBIT_REASON(APIC_ID_MODIFIED),	\
++	__APICV_INHIBIT_REASON(APIC_BASE_MODIFIED),	\
++	__APICV_INHIBIT_REASON(NESTED),			\
++	__APICV_INHIBIT_REASON(IRQWIN),			\
++	__APICV_INHIBIT_REASON(PIT_REINJ),		\
++	__APICV_INHIBIT_REASON(SEV),			\
++	__APICV_INHIBIT_REASON(LOGICAL_ID_ALIASED)
 +
- struct sdhci_tegra {
- 	const struct sdhci_tegra_soc_data *soc_data;
- 	struct gpio_desc *power_gpio;
-@@ -183,6 +212,7 @@ struct sdhci_tegra {
- 	unsigned long curr_clk_rate;
- 	u8 tuned_tap_delay;
- 	u32 stream_id;
-+	struct tegra_cfg_list *list;
- };
+ struct kvm_arch {
+ 	unsigned long n_used_mmu_pages;
+ 	unsigned long n_requested_mmu_pages;
+diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
+index 9d0b02ef307e..f23fb9a6776e 100644
+--- a/arch/x86/kvm/trace.h
++++ b/arch/x86/kvm/trace.h
+@@ -1375,6 +1375,10 @@ TRACE_EVENT(kvm_hv_stimer_cleanup,
+ 		  __entry->vcpu_id, __entry->timer_index)
+ );
  
- static u16 tegra_sdhci_readw(struct sdhci_host *host, int reg)
-@@ -362,6 +392,30 @@ static void tegra_sdhci_set_tap(struct sdhci_host *host, unsigned int tap)
- 	}
- }
++#define kvm_print_apicv_inhibit_reasons(inhibits)	\
++	(inhibits), (inhibits) ? " " : "",		\
++	(inhibits) ? __print_flags(inhibits, "|", APICV_INHIBIT_REASONS) : ""
++
+ TRACE_EVENT(kvm_apicv_inhibit_changed,
+ 	    TP_PROTO(int reason, bool set, unsigned long inhibits),
+ 	    TP_ARGS(reason, set, inhibits),
+@@ -1391,9 +1395,10 @@ TRACE_EVENT(kvm_apicv_inhibit_changed,
+ 		__entry->inhibits = inhibits;
+ 	),
  
-+static void tegra_sdhci_write_cfg_settings(struct sdhci_host *host,
-+					   const char *name)
-+{
-+	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-+	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-+	struct tegra_cfg_reg *regs;
-+	struct tegra_cfg *cfg;
-+	unsigned int i;
-+	u32 val;
-+
-+	cfg = tegra_cfg_get_by_name(mmc_dev(host->mmc),
-+				    tegra_host->list, name);
-+	if (!cfg)
-+		return;
-+
-+	regs = cfg->regs;
-+	for (i = 0; i < cfg->num_regs; ++i) {
-+		val = sdhci_readl(host, regs[i].offset);
-+		val &= ~regs[i].mask;
-+		val |= regs[i].value;
-+		sdhci_writel(host, val, regs[i].offset);
-+	}
-+}
-+
- static void tegra_sdhci_reset(struct sdhci_host *host, u8 mask)
+-	TP_printk("%s reason=%u, inhibits=0x%lx",
++	TP_printk("%s reason=%u, inhibits=0x%lx%s%s",
+ 		  __entry->set ? "set" : "cleared",
+-		  __entry->reason, __entry->inhibits)
++		  __entry->reason,
++		  kvm_print_apicv_inhibit_reasons(__entry->inhibits))
+ );
+ 
+ TRACE_EVENT(kvm_apicv_accept_irq,
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b389129d59a9..597ff748f955 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10011,6 +10011,10 @@ EXPORT_SYMBOL_GPL(kvm_vcpu_apicv_activated);
+ static void set_or_clear_apicv_inhibit(unsigned long *inhibits,
+ 				       enum kvm_apicv_inhibit reason, bool set)
  {
- 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-@@ -374,6 +428,8 @@ static void tegra_sdhci_reset(struct sdhci_host *host, u8 mask)
- 	if (!(mask & SDHCI_RESET_ALL))
- 		return;
- 
-+	tegra_sdhci_write_cfg_settings(host, "common");
++	const struct trace_print_flags apicv_inhibits[] = { APICV_INHIBIT_REASONS };
 +
- 	tegra_sdhci_set_tap(host, tegra_host->default_tap);
- 
- 	misc_ctrl = sdhci_readl(host, SDHCI_TEGRA_VENDOR_MISC_CTRL);
-@@ -1011,6 +1067,7 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
- 	bool set_default_tap = false;
- 	bool set_dqs_trim = false;
- 	bool do_hs400_dll_cal = false;
-+	bool set_config = false;
- 	u8 iter = TRIES_256;
- 	u32 val;
- 
-@@ -1027,6 +1084,7 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
- 		set_dqs_trim = true;
- 		do_hs400_dll_cal = true;
- 		iter = TRIES_128;
-+		set_config = true;
- 		break;
- 	case MMC_TIMING_MMC_DDR52:
- 	case MMC_TIMING_UHS_DDR50:
-@@ -1059,6 +1117,9 @@ static void tegra_sdhci_set_uhs_signaling(struct sdhci_host *host,
++	BUILD_BUG_ON(ARRAY_SIZE(apicv_inhibits) != NR_APICV_INHIBIT_REASONS);
++
+ 	if (set)
+ 		__set_bit(reason, inhibits);
  	else
- 		tegra_sdhci_set_tap(host, tegra_host->default_tap);
- 
-+	if (set_config)
-+		tegra_sdhci_write_cfg_settings(host,
-+					       cfg_device_states[timing]);
- 	if (set_dqs_trim)
- 		tegra_sdhci_set_dqs_trim(host, tegra_host->dqs_trim);
- 
-@@ -1129,6 +1190,29 @@ static int sdhci_tegra_start_signal_voltage_switch(struct mmc_host *mmc,
- static int tegra_sdhci_init_pinctrl_info(struct device *dev,
- 					 struct sdhci_tegra *tegra_host)
- {
-+	unsigned int i, j, count;
-+	const struct tegra_cfg_field_desc *fields;
-+
-+	count = 0;
-+	fields = sdhci_cfg_fields;
-+
-+	for (i = 0; i < sdhci_cfg_desc.num_fields; i++) {
-+		for (j = 0; j < i; j++)
-+			if (fields[i].offset == fields[j].offset)
-+				break;
-+
-+		if (i == j)
-+			count++;
-+	}
-+
-+	sdhci_cfg_desc.num_regs = count;
-+	tegra_host->list = tegra_cfg_get(dev, NULL, &sdhci_cfg_desc);
-+	if (IS_ERR(tegra_host->list)) {
-+		dev_dbg(dev, "Config setting not available, err: %ld\n",
-+			PTR_ERR(tegra_host->list));
-+		tegra_host->list = NULL;
-+	}
-+
- 	tegra_host->pinctrl_sdmmc = devm_pinctrl_get(dev);
- 	if (IS_ERR(tegra_host->pinctrl_sdmmc)) {
- 		dev_dbg(dev, "No pinctrl info, err: %ld\n",
 -- 
-2.43.2
+2.39.3
 
