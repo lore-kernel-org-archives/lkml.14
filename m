@@ -1,146 +1,223 @@
-Received: from mail3-relais-sop.national.inria.fr (mail3-relais-sop.national.inria.fr [192.134.164.104])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-20.smtpout.orange.fr [80.12.242.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 506995FDA5
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 19:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.134.164.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9274158873;
+	Mon,  6 May 2024 19:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715024565; cv=none; b=IRkjqEIVuTScxDXwVYrzthGiNKbE6NKoeUOo/qw3pL8qUmsbYZiMj77+HkQoElRv0MdFooYhD9EYPKKfUAdUFiHC87GGj3c8bLtPG3ZluKsk9uOex9qkpxmYiABIGHf7TH+JJFQMW2IULUOa+Md5EOo515pl2yh92jl4QxspB7M=
+	t=1715024576; cv=none; b=XfD1ZyQY7kJSErWiKSPxqRTjF3YdkH5qdxv5crSSi4n9nHoUnsV0uPH82OrIH+LNg4/cBBkn8L8b7TDj3fMlcQ5Rh7ojnmF+8RYHAf57WkKe8jjWAe+F9tD91vmA2ADJh4BM/8dnNffjH9ign7LShETaprPxwklObDyCtyiuCIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715024565; c=relaxed/simple;
-	bh=tQoz9dS6MzicSe5+SQbJSgBGuPARlB9lb/KxszWyE/U=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=f+96BeeIBUgpKST1obUDlicB6wxcmBTquBtWL3m9xmDZ8G4Qm81MhtDLl0SSSRAYqwchO2UlWCHoiBKot6J2hIu14SS/JkAPgu3v+UpD4acOQGWqSxmVHIts0hqPTBTCB/pxbFEDxsrQqdflb2FNdr2v3gI1dZUBa9F2QG9EaPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr; spf=pass smtp.mailfrom=inria.fr; dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b=NF5FoZQV; arc=none smtp.client-ip=192.134.164.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=inria.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inria.fr
+	s=arc-20240116; t=1715024576; c=relaxed/simple;
+	bh=aSozFxS5LbgNSQ6h1GkeG3vjP/XR4gK6Qeg4TmIXR3s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s12PB6Ujcl9LZDHMGj5ENX/47tgUWSgUuPRf1rpaQmFA5dsUwZ1J/2LcxBC4DVS1SgwXJvkQZJBJciHerWvPIS2jZoxzzxFj/H0biPmYlJQKVCIswKMpN9+3RQUcptwkdSX8z+XMrzMAWBhGvdembzYh83hFLXX5srTb4esqilE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=mUSsGcAp; arc=none smtp.client-ip=80.12.242.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inria.fr header.i=@inria.fr header.b="NF5FoZQV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=inria.fr; s=dc;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=y4WGMO9bryRqHzdvXqX8JHN1xbU3NgS8boIGtDt6Syk=;
-  b=NF5FoZQVHSBu6L3rCTziShyF9iRcUDtTfIWq+LXu/shPNICSD5DSS5yn
-   pTYwl7j9gea38muYWE0OsMjL9UjQUT4g+OsU/4yuY4hWSK9lQoeSCRW+y
-   cp9zMvgA+IUXB5jvVA7Wiv0rTvpYv2sRPoThdddqav5LEcU/+MTDj+AIj
-   0=;
-Authentication-Results: mail3-relais-sop.national.inria.fr; dkim=none (message not signed) header.i=none; spf=SoftFail smtp.mailfrom=julia.lawall@inria.fr; dmarc=fail (p=none dis=none) d=inria.fr
-X-IronPort-AV: E=Sophos;i="6.07,259,1708383600"; 
-   d="scan'208";a="86505903"
-Received: from 231.85.89.92.rev.sfr.net (HELO hadrien) ([92.89.85.231])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 21:42:34 +0200
-Date: Mon, 6 May 2024 21:42:33 +0200 (CEST)
-From: Julia Lawall <julia.lawall@inria.fr>
-X-X-Sender: jll@hadrien
-To: Lukas Wunner <lukas@wunner.de>
-cc: Nicolas Palix <nicolas.palix@imag.fr>, cocci@inria.fr, 
-    linux-kernel@vger.kernel.org
-Subject: Re: coccinelle matching of identifiers
-In-Reply-To: <ZjkZBvuXlZAodPAU@wunner.de>
-Message-ID: <alpine.DEB.2.22.394.2405062136410.3284@hadrien>
-References: <ZjkZBvuXlZAodPAU@wunner.de>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="mUSsGcAp"
+Received: from localhost.localdomain ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 445oszmYtR8o9445os7zWU; Mon, 06 May 2024 21:33:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1715024025;
+	bh=6Hx+nWx8Jayud7dD31s9JZH7LTHEVeGkErZx2PAlqvI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=mUSsGcApRI0TG5SS3UlUyJbC8N+/yGrojRnDC718QSdW+Ibp33bFtxX4F9x9j6heZ
+	 tqG5HvFDs0wDMTobvvxFgIRr7pbUVOZQ80/fVfMC3NBpIzt5/lz7uCXbsf5E0UMubQ
+	 d3/xoAld68Q2L9N61zCg4AzC+PLMdCahbbSrCC0/QLHFzaYRCg9P+y8JnLKb+zOpxr
+	 sICvqdzxrGENOQOs8R/kwH3dINQA79rLgCznLN8BeHKFPyJz8mJkzf6obr1KEH0Zha
+	 /XRXsjG/eBxtpM3fHaBRlrBVSKghMAGPpW7BqZs64ynAUBIsB1+qMNnNXjT5ejHWqR
+	 vSLmtlluxWV3Q==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 06 May 2024 21:33:45 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH v1] regmap: Reorder fields in 'struct regmap_config' to save some memory
+Date: Mon,  6 May 2024 21:33:33 +0200
+Message-ID: <5e039cd8fe415dd7ab3169948c08a5311db9fb9a.1715024007.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
+On x86_64 and allmodconfig, this shrinks the size of 'struct regmap_config'
+from 328 to 312 bytes.
 
+This is usually a win, because this structure is used as a static global
+variable.
 
-On Mon, 6 May 2024, Lukas Wunner wrote:
+When moving the kerneldoc fields, I've tried to keep the layout as
+consistent as possible, which is not really easy!
 
-> Dear coccinelle maintainers,
->
-> Linux kernel commit 5c6ca9d93665 ("X.509: Introduce scope-based
-> x509_certificate allocation"), which is queued for v6.10 in this repo ...
->
->     https://git.kernel.org/herbert/cryptodev-2.6/c/5c6ca9d93665
->
-> ... triggers scripts/coccinelle/null/eno.cocci:
->
->     ./crypto/asymmetric_keys/x509_cert_parser.c:69:9-15: ERROR: allocation function on line 68 returns NULL not ERR_PTR on failure
->     ./fs/gfs2/inode.c:1850:6-12: ERROR: allocation function on line 1842 returns NULL not ERR_PTR on failure
->     ./fs/smb/client/cifsfs.c:1186:6-12: ERROR: allocation function on line 1173 returns NULL not ERR_PTR on failure
->
-> The first of these three errors is newly introduced by the above-linked
-> commit, the other two already existed before.  All are false-positives.
->
-> I would like to silence the newly-introduced false-positive and have
-> attempted to do so using the small patch below.
->
-> However the result is that *only* the newly-introduced false-positive is
-> found and the other two are no longer found.  So the other way round than
-> what I'm aiming for.
->
-> I find this bewildering.  What am I doing wrong?
->
-> FWIW, coccinelle version is 1.1.1.
->
-> The newly introduced false-positive is triggered by the statement:
->
->     assume(!IS_ERR(cert));
->
-> Which is a macro that expands to:
->
->     do { if (!!IS_ERR(cert)) __builtin_unreachable(); } while(0);
->
-> The macro gives the compiler a hint that variable "cert" is not an error
-> pointer, which prevents the compiler from adding an unnecessary check
-> for that condition.
->
-> Thanks!
->
-> Lukas
->
-> -- >8 --
->
-> diff --git a/scripts/coccinelle/null/eno.cocci b/scripts/coccinelle/null/eno.cocci
-> index 7107d6c8db9e..79112d51bee8 100644
-> --- a/scripts/coccinelle/null/eno.cocci
-> +++ b/scripts/coccinelle/null/eno.cocci
-> @@ -26,10 +26,12 @@ x = \(kmalloc\|kzalloc\|kcalloc\|kmem_cache_alloc\|kmem_cache_zalloc\|kmem_cache
->  @r depends on !patch exists@
->  expression x,E;
->  position p1,p2;
-> +identifier assume;
->  @@
->
->  *x = \(kmalloc@p1\|kzalloc@p1\|kcalloc@p1\|kmem_cache_alloc@p1\|kmem_cache_zalloc@p1\|kmem_cache_alloc_node@p1\|kmalloc_node@p1\|kzalloc_node@p1\)(...)
->  ... when != x = E
-> +    when != assume
->  * IS_ERR@p2(x)
+Before:
+	/* size: 328, cachelines: 6, members: 55 */
+	/* sum members: 296, holes: 6, sum holes: 25 */
+	/* padding: 7 */
+	/* last cacheline: 8 bytes */
 
-The problem is that ... is searching along control-flow paths, and
-Coccinelle only considers control-flow at the statement level, not within
-expressions.
+After:
+	/* size: 312, cachelines: 5, members: 55 */
+	/* sum members: 296, holes: 5, sum holes: 16 */
+	/* last cacheline: 56 bytes */
 
-Maybe a reasonable solution would be just to consider that we really just
-want to protect against if tests?  So
+For the records, this is also widely used:
+	$git grep static.*regmap_config | wc -l
+	1327
 
-*x = \(kmalloc@p1\|kzalloc@p1\|kcalloc@p1\|kmem_cache_alloc@p1\|kmem_cache_zalloc@p1\|kmem_cache_alloc_node@p1\|kmalloc_node@p1\|kzalloc_node@p1\)(...)
-... when != x = E
-* if ( <+... IS_ERR@p2(x) ... +> )
-  S1 else S2
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+Built-tested only on several dozens of modified files.
 
-where S1 and S2 are declared as statement metavariables.
+Example of size reduction on drivers/clk/clk-si544.o (randomly chosen)
 
-Another option is:
+Before:
+   text	   data	    bss	    dec	    hex	filename
+   9917	    700	     16	  10633	   2989	drivers/clk/clk-si544.o
 
-x = \(kmalloc@p1\|kzalloc@p1\|kcalloc@p1\|kmem_cache_alloc@p1\|kmem_cache_zalloc@p1\|kmem_cache_alloc_node@p1\|kmalloc_node@p1\|kzalloc_node@p1\)(...)
-... when != x = E
-(
-assume(!IS_ERR(x));
-|
-* IS_ERR(x)
-)
+After:
+   text	   data	    bss	    dec	    hex	filename
+   9885	    700	     16	  10601	   2969	drivers/clk/clk-si544.o
+---
+ include/linux/regmap.h | 62 +++++++++++++++++++++---------------------
+ 1 file changed, 31 insertions(+), 31 deletions(-)
 
-In this case, only the IS_ERR is marked with a *, because if we also
-marked the initial assignment, that would get highlighted regardless of
-which branch of the disjunction was matched.
-
-julia
+diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+index d470303b1bbb..a6bc2980a98b 100644
+--- a/include/linux/regmap.h
++++ b/include/linux/regmap.h
+@@ -297,15 +297,6 @@ typedef void (*regmap_unlock)(void *);
+  *			performed on such table (a register is no increment
+  *			readable if it belongs to one of the ranges specified
+  *			by rd_noinc_table).
+- * @disable_locking: This regmap is either protected by external means or
+- *                   is guaranteed not to be accessed from multiple threads.
+- *                   Don't use any locking mechanisms.
+- * @lock:	  Optional lock callback (overrides regmap's default lock
+- *		  function, based on spinlock or mutex).
+- * @unlock:	  As above for unlocking.
+- * @lock_arg:	  this field is passed as the only argument of lock/unlock
+- *		  functions (ignored in case regular lock/unlock functions
+- *		  are not overridden).
+  * @reg_read:	  Optional callback that if filled will be used to perform
+  *           	  all the reads from the registers. Should only be provided for
+  *		  devices whose read operation cannot be represented as a simple
+@@ -323,6 +314,7 @@ typedef void (*regmap_unlock)(void *);
+  * @write: Same as above for writing.
+  * @max_raw_read: Max raw read size that can be used on the device.
+  * @max_raw_write: Max raw write size that can be used on the device.
++ * @can_sleep:	  Optional, specifies whether regmap operations can sleep.
+  * @fast_io:	  Register IO is fast. Use a spinlock instead of a mutex
+  *	     	  to perform locking. This field is ignored if custom lock/unlock
+  *	     	  functions are used (see fields lock/unlock of struct regmap_config).
+@@ -331,6 +323,15 @@ typedef void (*regmap_unlock)(void *);
+  *		   Use it only for "no-bus" cases.
+  * @io_port:	  Support IO port accessors. Makes sense only when MMIO vs. IO port
+  *		  access can be distinguished.
++ * @disable_locking: This regmap is either protected by external means or
++ *		     is guaranteed not to be accessed from multiple threads.
++ *		     Don't use any locking mechanisms.
++ * @lock:	  Optional lock callback (overrides regmap's default lock
++ *		  function, based on spinlock or mutex).
++ * @unlock:	  As above for unlocking.
++ * @lock_arg:	  This field is passed as the only argument of lock/unlock
++ *		  functions (ignored in case regular lock/unlock functions
++ *		  are not overridden).
+  * @max_register: Optional, specifies the maximum valid register address.
+  * @max_register_is_0: Optional, specifies that zero value in @max_register
+  *                     should be taken into account. This is a workaround to
+@@ -373,21 +374,20 @@ typedef void (*regmap_unlock)(void *);
+  * @reg_defaults_raw: Power on reset values for registers (for use with
+  *                    register cache support).
+  * @num_reg_defaults_raw: Number of elements in reg_defaults_raw.
+- * @reg_format_endian: Endianness for formatted register addresses. If this is
+- *                     DEFAULT, the @reg_format_endian_default value from the
+- *                     regmap bus is used.
+- * @val_format_endian: Endianness for formatted register values. If this is
+- *                     DEFAULT, the @reg_format_endian_default value from the
+- *                     regmap bus is used.
+- *
+- * @ranges: Array of configuration entries for virtual address ranges.
+- * @num_ranges: Number of range configuration entries.
+  * @use_hwlock: Indicate if a hardware spinlock should be used.
+  * @use_raw_spinlock: Indicate if a raw spinlock should be used.
+  * @hwlock_id: Specify the hardware spinlock id.
+  * @hwlock_mode: The hardware spinlock mode, should be HWLOCK_IRQSTATE,
+  *		 HWLOCK_IRQ or 0.
+- * @can_sleep: Optional, specifies whether regmap operations can sleep.
++ * @reg_format_endian: Endianness for formatted register addresses. If this is
++ *		       DEFAULT, the @reg_format_endian_default value from the
++ *		       regmap bus is used.
++ * @val_format_endian: Endianness for formatted register values. If this is
++ *		       DEFAULT, the @reg_format_endian_default value from the
++ *		       regmap bus is used.
++ *
++ * @ranges: Array of configuration entries for virtual address ranges.
++ * @num_ranges: Number of range configuration entries.
+  */
+ struct regmap_config {
+ 	const char *name;
+@@ -406,11 +406,6 @@ struct regmap_config {
+ 	bool (*writeable_noinc_reg)(struct device *dev, unsigned int reg);
+ 	bool (*readable_noinc_reg)(struct device *dev, unsigned int reg);
+ 
+-	bool disable_locking;
+-	regmap_lock lock;
+-	regmap_unlock unlock;
+-	void *lock_arg;
+-
+ 	int (*reg_read)(void *context, unsigned int reg, unsigned int *val);
+ 	int (*reg_write)(void *context, unsigned int reg, unsigned int val);
+ 	int (*reg_update_bits)(void *context, unsigned int reg,
+@@ -422,9 +417,16 @@ struct regmap_config {
+ 	size_t max_raw_read;
+ 	size_t max_raw_write;
+ 
++	bool can_sleep;
++
+ 	bool fast_io;
+ 	bool io_port;
+ 
++	bool disable_locking;
++	regmap_lock lock;
++	regmap_unlock unlock;
++	void *lock_arg;
++
+ 	unsigned int max_register;
+ 	bool max_register_is_0;
+ 	const struct regmap_access_table *wr_table;
+@@ -448,18 +450,16 @@ struct regmap_config {
+ 	bool use_relaxed_mmio;
+ 	bool can_multi_write;
+ 
+-	enum regmap_endian reg_format_endian;
+-	enum regmap_endian val_format_endian;
+-
+-	const struct regmap_range_cfg *ranges;
+-	unsigned int num_ranges;
+-
+ 	bool use_hwlock;
+ 	bool use_raw_spinlock;
+ 	unsigned int hwlock_id;
+ 	unsigned int hwlock_mode;
+ 
+-	bool can_sleep;
++	enum regmap_endian reg_format_endian;
++	enum regmap_endian val_format_endian;
++
++	const struct regmap_range_cfg *ranges;
++	unsigned int num_ranges;
+ };
+ 
+ /**
+-- 
+2.45.0
 
