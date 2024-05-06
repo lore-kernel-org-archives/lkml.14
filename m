@@ -1,38 +1,35 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABF945FB9A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8A644C66
 	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 13:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715000595; cv=none; b=fpPj7EUj8saxVMKuLagyvMciwoVw8YAz5MbEDtBIR9DEJaaV7LNOCI/G2khPJNFnHRgCZ+na0Q+4NSNloCgbfA+6wUR4w4gSh+mx3nax/n3757FVCnEMX+Q/OYgwfaBRrF5q6hJPkxDALNpiI640OXG75nUv+IJwLN3id84ohT0=
+	t=1715000595; cv=none; b=AfzKvA38ExsF/2nfOZsbQK1ruZXRI4qD3c02p4oRWO87V+zbx/bVlNLklxvLCqdI+isrnKX0/7LQOrel9xUg8Kujlcr688V821Ht7iBhwcWfSW9XcQR5mbWjoXPStPUzFOjSE9p2fxPdPA86AOMdzK3mv8QgzAuaVNgSC6JP+ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715000595; c=relaxed/simple;
-	bh=CQyVq+F6jzKSnAUtUnQ3X91KAzPVmn25oCVUP0vkPKY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BvKehR/ffYeRkWZgLfaUB2tUQ65xHi/Bv+abhCAlFzVCrZrewe/Ohg5a7XMLD/IVs4Q/Zu2uvjfa3PTw89sneigl4+h7mf29d7vN2etx7N9+hxgPznKUlaCKjMpkuNA0EC/P0TU0RxVOxEQvTssWmO5Z9WYN7sGHCG3a3mYl1GY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	bh=gwzOxPBdF5rxVG7uYDhrCz5bnRPot0fU5v6oUNhszQo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DylRyEzPxUCVqOMuuY+IqMoXEEQR4AzFmT7XsW/Jm9iVW4yFr8MO4ADT3M3CxaQoO8bo6EatLnhvp0BeM8rezsD4DWMQd4054zkaoVPzd5Ga3BLOX9dCRd01b9nTWLExLeagF47FrMLWIziM/BQcKyUyz5aAVSXL25X/mBX80Kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VY1hB1Yrczcnyt
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 20:59:22 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VY1hb6RJjztTBc
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 20:59:43 +0800 (CST)
 Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
-	by mail.maildlp.com (Postfix) with ESMTPS id 0C92D140158
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:03:10 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id D3866180065
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:03:07 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
  (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 6 May
- 2024 21:03:09 +0800
+ 2024 21:03:07 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH 2/5] genirq/irqdomain: Simplify the checks for irq_default_domain
-Date: Mon, 6 May 2024 21:02:20 +0800
-Message-ID: <20240506130223.317265-3-ruanjinjie@huawei.com>
+Subject: [PATCH 0/5] genirq/irqdomain: Clean up the irqdomain code
+Date: Mon, 6 May 2024 21:02:18 +0800
+Message-ID: <20240506130223.317265-1-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240506130223.317265-1-ruanjinjie@huawei.com>
-References: <20240506130223.317265-1-ruanjinjie@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,78 +41,18 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemi500008.china.huawei.com (7.221.188.139)
 
-Use ternary to check whether assign irq_default_domain, which can simplify
-the code.
+Clean up some irqdomain code to make it more readable.
 
-Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
----
- kernel/irq/irqdomain.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+Jinjie Ruan (5):
+  genirq/irqdomain: Clean up for irq_create_fwspec_mapping()
+  genirq/irqdomain: Simplify the checks for irq_default_domain
+  genirq/irqdomain: Clean code for irq_create_direct_mapping()
+  genirq/irqdomain: Simplify the checks for irq_domain_push/pop_irq()
+  genirq/irqdomain: Clean up for irq_domain_xlate_*
 
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index baa53a9e0cd1..42bdbd04bc3c 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -661,8 +661,7 @@ unsigned int irq_create_direct_mapping(struct irq_domain *domain)
- 	struct device_node *of_node;
- 	unsigned int virq;
- 
--	if (domain == NULL)
--		domain = irq_default_domain;
-+	domain = domain ? : irq_default_domain;
- 
- 	of_node = irq_domain_get_of_node(domain);
- 	virq = irq_alloc_desc_from(1, of_node_to_nid(of_node));
-@@ -734,8 +733,7 @@ unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
- 	int virq;
- 
- 	/* Look for default domain if necessary */
--	if (domain == NULL)
--		domain = irq_default_domain;
-+	domain = domain ? : irq_default_domain;
- 	if (domain == NULL) {
- 		WARN(1, "%s(, %lx) called with NULL domain\n", __func__, hwirq);
- 		return 0;
-@@ -953,8 +951,7 @@ struct irq_desc *__irq_resolve_mapping(struct irq_domain *domain,
- 	struct irq_data *data;
- 
- 	/* Look for default domain if necessary */
--	if (domain == NULL)
--		domain = irq_default_domain;
-+	domain = domain ? : irq_default_domain;
- 	if (domain == NULL)
- 		return desc;
- 
-@@ -1554,11 +1551,9 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
- {
- 	int ret;
- 
--	if (domain == NULL) {
--		domain = irq_default_domain;
--		if (WARN(!domain, "domain is NULL; cannot allocate IRQ\n"))
--			return -EINVAL;
--	}
-+	domain = domain ? : irq_default_domain;
-+	if (WARN(!domain, "domain is NULL; cannot allocate IRQ\n"))
-+		return -EINVAL;
- 
- 	mutex_lock(&domain->root->mutex);
- 	ret = irq_domain_alloc_irqs_locked(domain, irq_base, nr_irqs, node, arg,
-@@ -1962,11 +1957,9 @@ static int irq_domain_debug_show(struct seq_file *m, void *p)
- 	struct irq_domain *d = m->private;
- 
- 	/* Default domain? Might be NULL */
--	if (!d) {
--		if (!irq_default_domain)
--			return 0;
--		d = irq_default_domain;
--	}
-+	d = d ? : irq_default_domain;
-+	if (!d)
-+		return 0;
- 	irq_domain_debug_show_one(m, d, 0);
- 	return 0;
- }
+ kernel/irq/irqdomain.c | 168 +++++++++++++++++++++--------------------
+ 1 file changed, 85 insertions(+), 83 deletions(-)
+
 -- 
 2.34.1
 
