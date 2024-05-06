@@ -1,48 +1,47 @@
 Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A36F79B8E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A34D79B84
 	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 13:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715002474; cv=none; b=jaX0CX03x8AqquJqeV8MxWOLAXRTbBHikxdFGN0WXE1SqfAeTvA5Vs4pxfRakjfRCEUOqT1Nz+4YC5enBNQBvXj/gJq1D8TfgOYNJN+nhugs5gG0jjRxd8jnNqzi2dufJhiOsFofNiqRf12kKymAfZFylaIDJ1kQJ+I9EQPSvKg=
+	t=1715002474; cv=none; b=C4iM5ttLNTzOCKNKR7W3/UwvjrgnbnDoBs21e9NKnbKvbNjb0lhxmkcq2jxbV0XYUydyZrN6LDIMcPqiXirZamU7Z2hr2GDUmxvbQdRGPZHUsjonf+JKROKFC0V+NvsMrvZrRl/TR+Agw3HGFyJfjSutREQGZawxv0bg6srJOEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715002474; c=relaxed/simple;
-	bh=zEBS6JMl3E73sfcFbF9mHYYHU8BUvelv4sHVebvCgno=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R69LgcSJMsxz/UsNrw0ud4jcjAcT7e/T19s8KIBSCHXBTR/mujpHTMa7rN4a2cwqttGX1FBJZQDWS5znA5I1EZeVEnBoqNBelKbcMcIFcrDgeTobrGW1iMQiZhcaY1PyDIiFVesjDxyup7WqfL3IQqhoXKQhfm9o96oueWpllI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=5MpjtPPr; arc=none smtp.client-ip=91.207.212.93
+	bh=tiu9+K7gENDqNros5yNfr9VkYrDwk85C+2yO3//s+LI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qX6bBNvVeXWZUHAUOHBPMFC481xaymDGAi8uUFV9w+lsMxFEMbdRLwcIxDuQLGmEIv2qBbADuReXgjOm+a3qOmEv4wHqFRtP6XwtHYN5EphszxfKk0vYpOYydF7p69pR3UQDKzlPK/h+/x0We1ZVyTdMwk9bZHdYOMOnIjFYd3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=ZHZDAfwR; arc=none smtp.client-ip=91.207.212.93
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="5MpjtPPr"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ZHZDAfwR"
 Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 446Ahw1l029202;
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 446CRWH9030757;
 	Mon, 6 May 2024 15:33:47 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	selector1; bh=yAN5IQlno3nIPY6Uvv6ZYKb/KRQn6JTGU5DkXSWQ1EU=; b=5M
-	pjtPPrL2qzMMyFahcUay3H7yT6VnFDOwj4+ohRl0uVo1RQu0lwnZmwEZbx5EkDgm
-	k/LmFthiZXAlFkKtq2mqsRdPlU089H0LlEh+qik3U971haR0A6roHBWxOck0lni+
-	85Nupbpwu6Z7+28bnonUAMkqboo4ic9TeMFjKQhhSMhcYLyNUkrxrDY0V6Yl7UiX
-	wXxcweuSz1CIzqhpvkDUkeRkuqzUhvR/Iqi5YyDbmBUYsGkzGRphvALgPOioQKn3
-	/Zi4lcoIz4ZXJFy43j327oyQsRjDbeDkzqq+s50aNMZtpuYzYtBmwGOdumJXTAvM
-	8yZdzNK5ccJufhQ0E9ag==
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=selector1; bh=D+XLcTH
+	c8uVuTOX4CdOp7NlzrTvpnKAR5oH6n07VwUE=; b=ZHZDAfwRi8GrWIlOhyMVNZw
+	FOtew/DOxQxtW3riarKA9QSlhAO3C3In6fga+eZudDQm/dgi5s3tZQEnbGG2oj4B
+	vh//3eCz+ZPnNGpQw6zKKxWybiqpSJ1ya4m54F1vH19dqFYZLIABDg4dq3qcltuE
+	0AgmYfKNzBGs1XW/dOVR8bZ4p5LzRhP1UNMRSWBqMaPVEpiBowNBWjdMZde6DE8/
+	QraCUnXO+lISo08XVciqgvVHpEaySjVHE3G+R0UUg5EYlvbbqqeqPIW6HwUShzvS
+	FvodCVB0ZuP/H+xNUzEHTcCyn2jXRdLYpiUb+5AJnqjmJtdekBeI2TjhcbS9pKA=
+	=
 Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xwyyk5cb4-1
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xwyyk5cb5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Mon, 06 May 2024 15:33:47 +0200 (MEST)
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 365A34004D;
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9C62640050;
 	Mon,  6 May 2024 15:33:41 +0200 (CEST)
 Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 2E49C2207A2;
-	Mon,  6 May 2024 15:33:08 +0200 (CEST)
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id ED14C21ADBC;
+	Mon,  6 May 2024 15:33:06 +0200 (CEST)
 Received: from localhost (10.48.87.171) by SHFDAG1NODE1.st.com (10.75.129.69)
  with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 6 May
- 2024 15:33:07 +0200
+ 2024 15:33:06 +0200
 From: Antonio Borneo <antonio.borneo@foss.st.com>
 To: Russell King <linux@armlinux.org.uk>,
         Maxime Coquelin
@@ -54,12 +53,10 @@ CC: Antonio Borneo <antonio.borneo@foss.st.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/8] ARM: stm32: use different EXTI driver on ARMv7m and ARMv7a
-Date: Mon, 6 May 2024 15:32:50 +0200
-Message-ID: <20240506133256.948712-3-antonio.borneo@foss.st.com>
+Subject: [PATCH 0/8] irqchip/stm32-exti: split MCU and MPU code, allow module build
+Date: Mon, 6 May 2024 15:32:48 +0200
+Message-ID: <20240506133256.948712-1-antonio.borneo@foss.st.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240506133256.948712-1-antonio.borneo@foss.st.com>
-References: <20240506133256.948712-1-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,27 +71,60 @@ X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-05-06_08,2024-05-06_02,2023-05-22_02
 
-Build the proper driver by selecting the appropriate config flag.
+The file 'irq-stm32-exti.c' contains two drivers:
+- EXTI for ARMv7m STM32 MCUs;
+- EXTI for ARMv7a & ARMv8a STM32MPxxx MPUs.
 
-Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
----
- arch/arm/mach-stm32/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The current arrangement causes some issue:
+- the growing code for MPUs uses precious space on memory constraint
+  MCUs devices;
+- the driver for MPU cannot be built as module;
+- there are risks to break one of the two drivers while working on
+  the other.
 
-diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
-index 98145031586f1..41bfcf31f8a76 100644
---- a/arch/arm/mach-stm32/Kconfig
-+++ b/arch/arm/mach-stm32/Kconfig
-@@ -11,7 +11,8 @@ menuconfig ARCH_STM32
- 	select CLKSRC_STM32
- 	select PINCTRL
- 	select RESET_CONTROLLER
--	select STM32_EXTI
-+	select STM32MP_EXTI if ARCH_MULTI_V7
-+	select STM32_EXTI if ARM_SINGLE_ARMV7M
- 	help
- 	  Support for STMicroelectronics STM32 processors.
- 
+Since there are only 4 minor functions shared among the two drivers:
+- stm32_exti_set_type();
+- stm32_chip_resume();
+- stm32_chip_suspend();
+- stm32_exti_chip_init();
+
+this series splits the file in two independent files, each containing
+a single driver.
+To guarantee bisect-ability, the series first introduces some hook in
+Kconfig, then splits the file and at the end enables module build on
+MPU while cleaning-up Kconfig.
+The symbols in the MPU file are renamed to better match the new name
+of the driver.
+
+The patches are created with 'git format-patch -C' to correctly show
+the deleted parts and the tiny modifications between the original
+monolithic file and the two extracted ones.
+
+The series is rebased on irq/core branch of tip as it depends on a
+previous series already queued for v6.10 merge window.
+
+
+Antonio Borneo (8):
+  irqchip/stm32-exti: add CONFIG_STM32MP_EXTI
+  ARM: stm32: use different EXTI driver on ARMv7m and ARMv7a
+  arm64: Kconfig: select STM32MP_EXTI on STM32 platforms
+  irqchip/stm32-exti: split MCU and MPU code
+  irqchip/stm32mp-exti: rename internal symbols
+  irqchip/stm32mp-exti: allow build as module
+  ARM: stm32: allow build irq-stm32mp-exti driver as module
+  arm64: Kconfig: allow build irq-stm32mp-exti driver as module
+
+ arch/arm/mach-stm32/Kconfig        |   2 +-
+ arch/arm64/Kconfig.platforms       |   1 -
+ drivers/irqchip/Kconfig            |   9 +
+ drivers/irqchip/Makefile           |   1 +
+ drivers/irqchip/irq-stm32-exti.c   | 670 +-------------------------
+ drivers/irqchip/irq-stm32mp-exti.c | 737 +++++++++++++++++++++++++++++
+ 6 files changed, 752 insertions(+), 668 deletions(-)
+ create mode 100644 drivers/irqchip/irq-stm32mp-exti.c
+
+
+base-commit: 382d2ffe86efb1e2fa803d2cf17e5bfc34e574f3
 -- 
 2.34.1
 
