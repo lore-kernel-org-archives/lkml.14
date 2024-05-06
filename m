@@ -1,317 +1,297 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385E21C695
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:46:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F8B3B782;
+	Mon,  6 May 2024 12:46:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714999561; cv=none; b=XvqKjMChDaouRPZJrq46nKGm1vcZDqML41ENy/g85Ck8tU8//vLrOqNHtIlzDqUsJHNSUX9gYSLd+Ng/teoDq7/8zYu2LJpj3d39zpzI7jyEUXv18qmeWCYhkBSttQp7Xg2FinwiXX4dVkBPQH7ESzFIjZKqOBzuJ0mf4hNBj30=
+	t=1714999612; cv=none; b=epF4Jcyd0RYLNbLg3+bBZtK5sAssA42Y+rAtPjeE1wQertEOwgYFDZlTBqAa34ElMTNc6ZfVZhwBYu7DReL8Y5QCV8e8mnrbeTNbDRla8hSAetLnscERdvkDrOmIK2+031TbmN4HcMIDZa2o24k54ABAHik2ukV9bWKXwZOL5/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714999561; c=relaxed/simple;
-	bh=0JEXGYIioEANUpG6Sn+eEjZ33k9gXN8hruc4JylEN5c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DWAnSez2u0QohoaSBaF8gUPyq8Oypau4R1s5nLw2gCw7UUlNTl5b/FQ2V85A/ycmpsILVP04VrMD7FWlWzbqdJH+6juv8at8Tai6KV/AOT6KkTEnTOwzMPQK/32jWEKREqUoUirYCaZgmlqS18zj2JSiY4j6SytWWUr+o2EK1kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMP0uMdg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714999612; c=relaxed/simple;
+	bh=2+5X5YdRXHQN5cM9cGGaOkH0YnShbzy7xMh8tModicA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NaMS3IUCWPzuVbL8psjn35RQAhl8O7r+/TzRnpJZp5WLlKOWnUc2cavLVxVaSoeRWfmNGTa1NhnHNkeuEJyMrIdTO2sSQpCE8LdE7rvvtAocpFSBbZrdEzPGmlVDNyacdRMJy5wO9B9qJ596piZOGdrxPC3EfQ+v0wC74GQDMcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/vraFal; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMP0uMdg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A95DC116B1;
-	Mon,  6 May 2024 12:46:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/vraFal"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7571C116B1;
+	Mon,  6 May 2024 12:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714999560;
-	bh=0JEXGYIioEANUpG6Sn+eEjZ33k9gXN8hruc4JylEN5c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KMP0uMdgBhs6+JPbGTjsuImO6YTC77SZ2L1O584/Oj7rKo9CjgGU1qU++FHcbPUxk
-	 3ONqkkmt3u8EdWufF+EuUnMvOLFdTcH9imYcFUwVtGX/I9WTGAU5B8gsk7Pl49vqJ8
-	 AkhuJ8cIuVYRNs3mwq/bO3UWAiQl5I/XG4i9UH3KGhb6ML2hbbCt882knNrjIOWBhz
-	 9YbAwVJNugEALwdZSc1F3WeRJvPM4iUy1+YTo5FNQnPoqGkPHaOtJoHwFoXxTRTZM2
-	 mmFtIk/VqM3B0KdkkPzZkcvzRzNk0+0kpGIFqteZ/0CIglld30ZMm88yMQP2cgzcUe
-	 6fZzkAiKma5Aw==
-Date: Mon, 6 May 2024 14:45:58 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Alex Constantino <dreaming.about.electric.sheep@gmail.com>, 
-	Timo Lindfors <timo.lindfors@iki.fi>, Dave Airlie <airlied@redhat.com>, 
-	Gerd Hoffmann <kraxel@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [BUG][v6.9-rc6] Deadlock with: Revert "drm/qxl: simplify
- qxl_fence_wait"
-Message-ID: <20240506-cuddly-elated-agouti-be981d@houat>
-References: <20240502081641.457aa25f@gandalf.local.home>
- <20240504043957.417aa98c@rorschach.local.home>
+	s=k20201202; t=1714999611;
+	bh=2+5X5YdRXHQN5cM9cGGaOkH0YnShbzy7xMh8tModicA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=J/vraFalZgRorHN4T3WKSiTwAjT3MHmBX43JRsWeRewY/K3Q4w0tdB28QlL5GwY38
+	 SzF73LZ1Al5UT6un3QeRu1Pn1YSCtzg8j7pEwibDe98pSlWd7p3Zz/SrKtGyg9gG8Q
+	 FrZMLjXCLIgUTtSj4gyHknid6RzGTNKBeHDM1fo7neYiqTWaxsv3S8xe3PzWP5dF5+
+	 GqRhbCg3MrZShoAvCMpDe6ovl/TRxXP8rUQi2alBrdiMGRCqmF+u8P321mq8tayKEu
+	 /fc3++7c5Wzn+8y6wY74LalbPWgkpfRBnGfFoehxY28VLYKmZky26lsNZeyU7I1mNE
+	 89ZzF+H8JdTQg==
+Date: Mon, 6 May 2024 13:46:38 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: lars@metafoo.de, andriy.shevchenko@linux.intel.com,
+ ang.iglesiasg@gmail.com, mazziesaccount@gmail.com, ak@it-klinger.de,
+ petre.rodan@subdimension.ro, phil@raspberrypi.com, 579lpy@gmail.com,
+ linus.walleij@linaro.org, semen.protsenko@linaro.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v5 06/10] iio: pressure: bmp280: Refactorize reading
+ functions
+Message-ID: <20240506134638.297cfbfd@jic23-huawei>
+In-Reply-To: <20240505234751.GB17986@vamoiridPC>
+References: <20240429190046.24252-1-vassilisamir@gmail.com>
+	<20240429190046.24252-7-vassilisamir@gmail.com>
+	<20240505202106.1c780044@jic23-huawei>
+	<20240505234751.GB17986@vamoiridPC>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="fkvg7keqrgo5ho52"
-Content-Disposition: inline
-In-Reply-To: <20240504043957.417aa98c@rorschach.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 6 May 2024 01:47:51 +0200
+Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
 
---fkvg7keqrgo5ho52
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Sun, May 05, 2024 at 08:21:06PM +0100, Jonathan Cameron wrote:
+> > On Mon, 29 Apr 2024 21:00:42 +0200
+> > Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
+> >   
+> > > For BMP18x, BMP28x, BME280, BMP38x the reading of the pressure
+> > > value requires an update of the t_fine variable which happens
+> > > through reading the temperature value.
+> > > 
+> > > So all the bmpxxx_read_press() functions of the above sensors
+> > > are internally calling the equivalent bmpxxx_read_temp() function
+> > > in order to update the t_fine value. By just looking at the code
+> > > this functionality is a bit hidden and is not easy to understand
+> > > why those channels are not independent.
+> > > 
+> > > This commit tries to clear these things a bit by splitting the
+> > > bmpxxx_{read/compensate}_{temp/press/humid}() to the following:
+> > > 
+> > > i. bmpxxx_read_{temp/press/humid}_adc(): read the raw value from
+> > > the sensor.
+> > > 
+> > > ii. bmpxx_calc_t_fine(): calculate the t_fine variable.
+> > > 
+> > > iii. bmpxxx_get_t_fine(): get the t_fine variable.
+> > > 
+> > > iv. bmpxxx_compensate_{temp/press/humid}(): compensate the adc
+> > > values and return the calculated value.
+> > > 
+> > > v. bmpxxx_read_{temp/press/humid}(): combine calls of the
+> > > aforementioned functions to return the requested value.
+> > > 
+> > > Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > > Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>  
+> > In general looks good, but a few details to consider inline.
+> > 
+> > Jonathan
+> >   
+> > > ---
+> > >  drivers/iio/pressure/bmp280-core.c | 351 ++++++++++++++++++-----------
+> > >  drivers/iio/pressure/bmp280.h      |   6 -
+> > >  2 files changed, 221 insertions(+), 136 deletions(-)
+> > > 
+> > > diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+> > > index 8290028824e9..5ebce38e99f6 100644
+> > > --- a/drivers/iio/pressure/bmp280-core.c
+> > > +++ b/drivers/iio/pressure/bmp280-core.c
+> > > @@ -288,13 +288,33 @@ static int bme280_read_calib(struct bmp280_data *data)
+> > >   *
+> > >   * Taken from BME280 datasheet, Section 4.2.3, "Compensation formula".
+> > >   */
+> > > +static int bme280_read_humid_adc(struct bmp280_data *data, s32 *adc_humidity)  
+> > 
+> > It's an u16, so why use an s32?   I can see using a signed value avoids a cast later,
+> > but it makes this more confusing to read, so I'd push that cast up to the user.
+> >   
+> 
+> Bosch in general has messed up a bit with the signs on their raw values on all
+> of those sensors that we use in this driver. I totally agree with you, that this
+> value does not make any sense to be anything else apart from u16 but in the
+> datasheet [1] in pages 25-26 you can clearly see that they use an s32 for this
+> value...
+> 
+> [1]: https://www.mouser.com/datasheet/2/783/BST-BME280-DS002-1509607.pdf
+I would be tempted to ignore that and use the more appropriate size, but be
+careful that any necessary casts are in place when you use the value.
 
-Hi Steven,
+> 
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	ret = regmap_bulk_read(data->regmap, BME280_REG_HUMIDITY_MSB,
+> > > +			       &data->be16, sizeof(data->be16));
+> > > +	if (ret < 0) {
+> > > +		dev_err(data->dev, "failed to read humidity\n");
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	*adc_humidity = be16_to_cpu(data->be16);  
+> > 
+> > Trivial, but on error return we normally aim for side effect free.
+> > To do that here use an internal variable first.  
+> 
+> I am sorry, but in this part, I cannot fully understand what you mean
+> by side effect free. I can understand the issue of storing a u16 to an
+> s32 might make accidentally the sign to matter but how is this thing
+> that you proposed no side effect free? You also made this comment
+> in various other places in this patch (because the same principle
+> with the SKIPPED is used) and in the other places the values are
+> 20-bit and 24-bit long which confuses me a bit more on what you mean
+> exactly.
+If you get an error, e.g. if (*adc_humidty == BMP280_HUMIDITY_SKIPPED) then you 
+should not set *adc_humidity.  Setting it is the side effect. Normal aim
+is that a function that returns an error should ensure it leave no other
+effects in data it can access.
+This make reasoning about error paths much simpler because you only
+have to deal with the return values.
+Hence the code example I included though I make it more confusing by
+commenting on the types in the middle of the code.
 
-It looks like qxl is not well maintained. Please send the revert, we'll
-merge it.
+Key is I don't want *adc_humidity to be modified if we aren't going to
+return 0.
 
-Maxime
+> 
+> > 	s16 value;
+> > 
+> > ...
+> > 
+> > 	value = be16_to_cpu(data->be16)
+> > 
+> > 	if (value == BMP280_HUMIDITY_SKIPPED) {
+> > 		dev_err(data->dev, "...
+> > 		return -EIO;
+> > 	}
+> > This is the odd bit due to using an s32 to store a u16.
+> > Have to rely on that size mismatch to avoid the sign accidentally mattering.
+> > Which is ugly!
+> > 
+> > 	*adc_humidity = value;
+> > 
+> > 	return 0;
+> > 
+> >   
+> > > +	if (*adc_humidity == BMP280_HUMIDITY_SKIPPED) {
+> > > +		dev_err(data->dev, "reading humidity skipped\n");
+> > > +		return -EIO;
+> > > +	}
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > >  static u32 bme280_compensate_humidity(struct bmp280_data *data,
+> > > -				      s32 adc_humidity)
+> > > +				      s32 adc_humidity, s32 t_fine)
+> > >  {
+> > >  	struct bmp280_calib *calib = &data->calib.bmp280;
+> > >  	s32 var;
+> > >  
+> > > -	var = ((s32)data->t_fine) - (s32)76800;
+> > > +	var = ((s32)t_fine) - (s32)76800;  
+> > 
+> > Casting an s32 to an s32.  For the const it shouldn't matter as it'll be at least
+> > 32 bits and we don't care about the sign.
+> >   
+> 
+> In general, I kept the casting for the t_fine because it was used from before,
+> but I don't see the point since it is already an s32 value. The casting in front
+> of the const, I see it is used in the datasheet [1] in pages 25-26 so maybe they
+> kept it for this reason. Since it will be again a 32 bit value, I don't see the
+> point of casting it but I still kept it as it was, there originally.
+> 
+> [1]: https://www.mouser.com/datasheet/2/783/BST-BME280-DS002-1509607.pdf
 
-On Sat, May 04, 2024 at 04:39:57AM GMT, Steven Rostedt wrote:
->=20
-> Did anyone see this?
->=20
-> -- Steve
->=20
->=20
-> On Thu, 2 May 2024 08:16:41 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
->=20
-> > I went to run my tests on my VMs and the tests hung on boot up.
-> > Unfortunately, the most I ever got out was:
-> >=20
-> > [   93.607888] Testing event system initcall: OK
-> > [   93.667730] Running tests on all trace events:
-> > [   93.669757] Testing all events: OK
-> > [   95.631064] ------------[ cut here ]------------
-> > Timed out after 60 seconds
-> >=20
-> > I ran a bisect and it came up with:
-> >=20
-> >  # first bad commit: [07ed11afb68d94eadd4ffc082b97c2331307c5ea] Revert =
-"drm/qxl: simplify qxl_fence_wait"
-> >=20
-> > I checked out 07ed11afb68d94eadd4ffc082b97c2331307c5ea~1 and it booted
-> > fine. Added back that commit, it failed to boot. I did this twice, and =
-got
-> > the same results.
-> >=20
-> > But the last time I ran it, it did trigger this:
-> >=20
-> >  ------------[ cut here ]------------
-> > =20
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> >  WARNING: possible circular locking dependency detected
-> >  6.9.0-rc1-test-00021-g07ed11afb68d #5 Not tainted
-> >  ------------------------------------------------------
-> >  kworker/u24:3/119 is trying to acquire lock:
-> >  ffffffff95aa4600 (console_owner){....}-{0:0}, at: console_flush_all+0x=
-1f5/0x530
-> > =20
-> >  but task is already holding lock:
-> >  ffff93c4bbd37218 (&pool->lock){-.-.}-{2:2}, at: __flush_work+0xc1/0x440
-> > =20
-> >  which lock already depends on the new lock.
-> > =20
-> > =20
-> >  the existing dependency chain (in reverse order) is:
-> > =20
-> >  -> #1 (&pool->lock){-.-.}-{2:2}: =20
-> >         _raw_spin_lock+0x33/0x40
-> >         __queue_work+0xd6/0x610
-> >         queue_work_on+0x8a/0x90
-> >         soft_cursor+0x1a0/0x230
-> >         bit_cursor+0x386/0x5f0
-> >         hide_cursor+0x27/0xb0
-> >         vt_console_print+0x474/0x490
-> >         console_flush_all+0x22e/0x530
-> >         console_unlock+0x56/0x160
-> >         vprintk_emit+0x160/0x390
-> >         dev_printk_emit+0xa5/0xd0
-> >         _dev_info+0x79/0xa0
-> >         __drm_fb_helper_initial_config_and_unlock+0x3a9/0x5f0
-> >         drm_fbdev_generic_client_hotplug+0x69/0xc0
-> >         drm_client_register+0x7b/0xc0
-> >         qxl_pci_probe+0x107/0x1a0
-> >         local_pci_probe+0x45/0xa0
-> >         pci_device_probe+0xc7/0x240
-> >         really_probe+0xd6/0x390
-> >         __driver_probe_device+0x78/0x150
-> >         driver_probe_device+0x1f/0x90
-> >         __driver_attach+0xd6/0x1d0
-> >         bus_for_each_dev+0x8f/0xe0
-> >         bus_add_driver+0x119/0x220
-> >         driver_register+0x59/0x100
-> >         do_one_initcall+0x76/0x3c0
-> >         kernel_init_freeable+0x3a5/0x5b0
-> >         kernel_init+0x1a/0x1c0
-> >         ret_from_fork+0x34/0x50
-> >         ret_from_fork_asm+0x1a/0x30
-> > =20
-> >  -> #0 (console_owner){....}-{0:0}: =20
-> >         __lock_acquire+0x13e7/0x2180
-> >         lock_acquire+0xd9/0x300
-> >         console_flush_all+0x212/0x530
-> >         console_unlock+0x56/0x160
-> >         vprintk_emit+0x160/0x390
-> >         _printk+0x64/0x80
-> >         __warn_printk+0x8e/0x180
-> >         check_flush_dependency+0xfd/0x120
-> >         __flush_work+0xfa/0x440
-> >         qxl_queue_garbage_collect+0x83/0x90
-> >         qxl_fence_wait+0xa4/0x1a0
-> >         dma_fence_wait_timeout+0x98/0x1e0
-> >         dma_resv_wait_timeout+0x7f/0xe0
-> >         ttm_bo_delayed_delete+0x2b/0x90
-> >         process_one_work+0x228/0x740
-> >         worker_thread+0x1dc/0x3c0
-> >         kthread+0xf2/0x120
-> >         ret_from_fork+0x34/0x50
-> >         ret_from_fork_asm+0x1a/0x30
-> > =20
-> >  other info that might help us debug this:
-> > =20
-> >   Possible unsafe locking scenario:
-> > =20
-> >         CPU0                    CPU1
-> >         ----                    ----
-> >    lock(&pool->lock);
-> >                                 lock(console_owner);
-> >                                 lock(&pool->lock);
-> >    lock(console_owner);
-> > =20
-> >   *** DEADLOCK ***
-> > =20
-> >  6 locks held by kworker/u24:3/119:
-> >   #0: ffff93c440245948 ((wq_completion)ttm){+.+.}-{0:0}, at: process_on=
-e_work+0x43a/0x740
-> >   #1: ffffa01380d83e60 ((work_completion)(&bo->delayed_delete)){+.+.}-{=
-0:0}, at: process_one_work+0x1e2/0x740
-> >   #2: ffffffff95b17880 (rcu_read_lock){....}-{1:2}, at: __flush_work+0x=
-86/0x440
-> >   #3: ffff93c4bbd37218 (&pool->lock){-.-.}-{2:2}, at: __flush_work+0xc1=
-/0x440
-> >   #4: ffffffff95b149c0 (console_lock){+.+.}-{0:0}, at: _printk+0x64/0x80
-> >   #5: ffffffff95b14a10 (console_srcu){....}-{0:0}, at: console_flush_al=
-l+0x7b/0x530
-> > =20
-> >  stack backtrace:
-> >  CPU: 2 PID: 119 Comm: kworker/u24:3 Not tainted 6.9.0-rc1-test-00021-g=
-07ed11afb68d #5
-> >  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian=
--1.16.3-2 04/01/2014
-> >  Workqueue: ttm ttm_bo_delayed_delete
-> >  Call Trace:
-> >   <TASK>
-> >   dump_stack_lvl+0x77/0xb0
-> >   check_noncircular+0x148/0x160
-> >   __lock_acquire+0x13e7/0x2180
-> >   lock_acquire+0xd9/0x300
-> >   ? console_flush_all+0x1f5/0x530
-> >   ? lock_release+0x147/0x2c0
-> >   ? console_flush_all+0x1f5/0x530
-> >   console_flush_all+0x212/0x530
-> >   ? console_flush_all+0x1f5/0x530
-> >   console_unlock+0x56/0x160
-> >   vprintk_emit+0x160/0x390
-> >   _printk+0x64/0x80
-> >   ? __pfx_ttm_bo_delayed_delete+0x10/0x10
-> >   ? __pfx_qxl_gc_work+0x10/0x10
-> >   __warn_printk+0x8e/0x180
-> >   ? __pfx_ttm_bo_delayed_delete+0x10/0x10
-> >   ? __pfx_qxl_gc_work+0x10/0x10
-> >   ? __pfx_qxl_gc_work+0x10/0x10
-> >   check_flush_dependency+0xfd/0x120
-> >   __flush_work+0xfa/0x440
-> >   qxl_queue_garbage_collect+0x83/0x90
-> >   qxl_fence_wait+0xa4/0x1a0
-> >   dma_fence_wait_timeout+0x98/0x1e0
-> >   dma_resv_wait_timeout+0x7f/0xe0
-> >   ttm_bo_delayed_delete+0x2b/0x90
-> >   process_one_work+0x228/0x740
-> >   worker_thread+0x1dc/0x3c0
-> >   ? __pfx_worker_thread+0x10/0x10
-> >   kthread+0xf2/0x120
-> >   ? __pfx_kthread+0x10/0x10
-> >   ret_from_fork+0x34/0x50
-> >   ? __pfx_kthread+0x10/0x10
-> >   ret_from_fork_asm+0x1a/0x30
-> >   </TASK>
-> >  workqueue: WQ_MEM_RECLAIM ttm:ttm_bo_delayed_delete is flushing !WQ_ME=
-M_RECLAIM events:qxl_gc_work
-> >  WARNING: CPU: 2 PID: 119 at kernel/workqueue.c:3728 check_flush_depend=
-ency+0xfd/0x120
-> >  Modules linked in:
-> >  CPU: 2 PID: 119 Comm: kworker/u24:3 Not tainted 6.9.0-rc1-test-00021-g=
-07ed11afb68d #5
-> >  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian=
--1.16.3-2 04/01/2014
-> >  Workqueue: ttm ttm_bo_delayed_delete
-> >  RIP: 0010:check_flush_dependency+0xfd/0x120
-> >  Code: 8b 45 18 48 8d b2 70 01 00 00 49 89 e8 48 8d 8b 70 01 00 00 48 c=
-7 c7 60 46 7b 95 c6 05 48 67 d2 01 01 48 89 c2 e8 63 40 fd ff <0f> 0b e9 1e=
- ff ff ff 80 3d 33 67 d2 01 00 75 93 e9 4a ff ff ff 66
-> >  RSP: 0000:ffffa01380d83c28 EFLAGS: 00010086
-> >  RAX: 0000000000000000 RBX: ffff93c44004ee00 RCX: 0000000000000000
-> >  RDX: 0000000080000003 RSI: 00000000ffffefff RDI: 0000000000000001
-> >  RBP: ffffffff9497b100 R08: 0000000000000000 R09: 0000000000000003
-> >  R10: ffffa01380d83ab8 R11: ffffffff95b14828 R12: ffff93c443980000
-> >  R13: ffff93c440fbe300 R14: 0000000000000001 R15: ffff93c44004ee00
-> >  FS:  0000000000000000(0000) GS:ffff93c4bbd00000(0000) knlGS:0000000000=
-000000
-> >  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >  CR2: 0000000000000000 CR3: 000000007c864001 CR4: 0000000000170ef0
-> >  Call Trace:
-> >   <TASK>
-> >   ? __warn+0x8c/0x180
-> >   ? check_flush_dependency+0xfd/0x120
-> >   ? report_bug+0x191/0x1c0
-> >   ? prb_read_valid+0x1b/0x30
-> >   ? handle_bug+0x3c/0x80
-> >   ? exc_invalid_op+0x17/0x70
-> >   ? asm_exc_invalid_op+0x1a/0x20
-> >   ? __pfx_qxl_gc_work+0x10/0x10
-> >   ? check_flush_dependency+0xfd/0x120
-> >   ? check_flush_dependency+0xfd/0x120
-> >   __flush_work+0xfa/0x440
-> >   qxl_queue_garbage_collect+0x83/0x90
-> >   qxl_fence_wait+0xa4/0x1a0
-> >   dma_fence_wait_timeout+0x98/0x1e0
-> >   dma_resv_wait_timeout+0x7f/0xe0
-> >   ttm_bo_delayed_delete+0x2b/0x90
-> >   process_one_work+0x228/0x740
-> >   worker_thread+0x1dc/0x3c0
-> >   ? __pfx_worker_thread+0x10/0x10
-> >   kthread+0xf2/0x120
-> >   ? __pfx_kthread+0x10/0x10
-> >   ret_from_fork+0x34/0x50
-> >   ? __pfx_kthread+0x10/0x10
-> >   ret_from_fork_asm+0x1a/0x30
-> >   </TASK>
-> >  irq event stamp: 58
-> >  hardirqs last  enabled at (57): [<ffffffff93fede30>] queue_work_on+0x6=
-0/0x90
-> >  hardirqs last disabled at (58): [<ffffffff94ea7f66>] _raw_spin_lock_ir=
-q+0x56/0x60
-> >  softirqs last  enabled at (0): [<ffffffff93fbae27>] copy_process+0xc07=
-/0x2c60
-> >  softirqs last disabled at (0): [<0000000000000000>] 0x0
-> >  ---[ end trace 0000000000000000 ]---
-> >=20
-> > So there's an issue with dma_fence and a workqueue.
-> >=20
-> > -- Steve
-> >=20
->=20
+As you are tidying up the code, drop the unnecessary cast. Good to mention it
+in the patch description though.
 
---fkvg7keqrgo5ho52
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> > >  	var = ((((adc_humidity << 14) - (calib->H4 << 20) - (calib->H5 * var))
+> > >  		+ (s32)16384) >> 15) * (((((((var * calib->H6) >> 10)
+> > >  		* (((var * (s32)calib->H3) >> 11) + (s32)32768)) >> 10)
+> > > @@ -313,8 +333,27 @@ static u32 bme280_compensate_humidity(struct bmp280_data *data,
+> > >   *
+> > >   * Taken from datasheet, Section 3.11.3, "Compensation formula".
+> > >   */
+> > > -static s32 bmp280_compensate_temp(struct bmp280_data *data,
+> > > -				  s32 adc_temp)
+> > > +static int bmp280_read_temp_adc(struct bmp280_data *data, s32 *adc_temp)  
+> > 
+> > As before, sign of the extra variable is confusing. It's not signed
+> > as it's a raw ADC value. So I'd use a u32 for it.
+> >   
+> 
+> Again, as I said before, Bosch has messed this up. I agree (again) with you
+> that this should have been a u16 but according to the datasheet [2] in pages
+> 45-46 it is an s32...
+> 
+> [2]: https://cdn-shop.adafruit.com/datasheets/BST-BMP280-DS001-11.pdf
+> 
+What they have is not incorrect, but it is relaxed in a rather lazy fashion!
 
------BEGIN PGP SIGNATURE-----
+...
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZjjRAQAKCRAnX84Zoj2+
-dgU5AYCpbMS8F0dQyI1IFykzdx3HflOiMlWsrVgHdw99AN59S+xEma/wAtLMAUs1
-Nt5oGqkBgMRvmjUt6tJ8iSHGi2Sq+eFq4xEu5h/H0FJgPck2nuYIx6yeYCm0Sk39
-l3+U63jHBg==
-=3RhG
------END PGP SIGNATURE-----
+> > > @@ -430,30 +481,21 @@ static int bmp280_read_press(struct bmp280_data *data,
+> > >  
+> > >  static int bme280_read_humid(struct bmp280_data *data, int *val, int *val2)
+> > >  {
+> > > +	s32 adc_humidity, t_fine;
+> > >  	u32 comp_humidity;
+> > > -	s32 adc_humidity;
+> > >  	int ret;
+> > >  
+> > > -	/* Read and compensate temperature so we get a reading of t_fine. */
+> > > -	ret = bmp280_read_temp(data, NULL, NULL);
+> > > +	ret = bmp280_get_t_fine(data, &t_fine);
+> > >  	if (ret < 0)
+> > >  		return ret;
+> > >  
+> > > -	ret = regmap_bulk_read(data->regmap, BME280_REG_HUMIDITY_MSB,
+> > > -			       &data->be16, sizeof(data->be16));
+> > > -	if (ret < 0) {
+> > > -		dev_err(data->dev, "failed to read humidity\n");
+> > > +	ret = bme280_read_humid_adc(data, &adc_humidity);
+> > > +	if (ret < 0)
+> > >  		return ret;
+> > > -	}
+> > >  
+> > > -	adc_humidity = be16_to_cpu(data->be16);
+> > > -	if (adc_humidity == BMP280_HUMIDITY_SKIPPED) {
+> > > -		/* reading was skipped */
+> > > -		dev_err(data->dev, "reading humidity skipped\n");
+> > > -		return -EIO;
+> > > -	}
+> > > -	comp_humidity = bme280_compensate_humidity(data, adc_humidity);
+> > > +	comp_humidity = bme280_compensate_humidity(data, adc_humidity, t_fine);
+> > >  
+> > > +	/* IIO units are in 1000 * % */
+> > >  	*val = comp_humidity * 1000 / 1024;
+> > >  
+> > >  	return IIO_VAL_INT;
+> > > @@ -930,9 +972,29 @@ static int bmp380_cmd(struct bmp280_data *data, u8 cmd)
+> > >   * Taken from datasheet, Section Appendix 9, "Compensation formula" and repo
+> > >   * https://github.com/BoschSensortec/BMP3-Sensor-API.
+> > >   */
+> > > -static s32 bmp380_compensate_temp(struct bmp280_data *data, u32 adc_temp)
+> > > +static int bmp380_read_temp_adc(struct bmp280_data *data, u32 *adc_temp)  
+> > 
+> > Interesting this one is unsigned.
+> >   
+> 
+> Yes, and it is also mentioned in the datasheet [3] in page 26.
+> 
+> [3]: https://www.mouser.com/pdfdocs/BST-BMP388-DS001-01.pdf
 
---fkvg7keqrgo5ho52--
+I'd take the datasheet maths as 'an implementation' rather than something
+we have to match.   So go for types that make sense, not what they used!
+
+Jonathan
+
+> 
+> Cheers,
+> Vasilis
