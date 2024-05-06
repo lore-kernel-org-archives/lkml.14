@@ -1,92 +1,178 @@
-Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A901422B4;
-	Mon,  6 May 2024 09:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBAD1422AC
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 09:19:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714987114; cv=none; b=NCdd3sVN6tbOdW38Qpp5xBSy1WkOLrZQ45QT9IhHlCvqfPwDpn6Z28FT42xoOjfWcXx+6lQrUZe91Le+DgNtJ8qyFTIz8kTU2LQedxlHbv+26BZD8QsP02DwEv9Fxwp7VmvnePC2lFT3cl6QuAAGAXj7bWE00PyId9gImQ4d7co=
+	t=1714987162; cv=none; b=R6UAUpNa5JUTVeIBxGpCOiQVK7CKsQETlzmWhGwF4X6kf8oxR4Uys08+iSq3VZL4eDBC/2QuRUjcsFOmjA+kPLVFWWmjKFA/LalwQ3URkKr4u4/3wP60Boqg21NuSVdXOmb0v3W2joWR/t32FmWwyB/ubwGRJCcg63Xwauuabjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714987114; c=relaxed/simple;
-	bh=qvhpFsiuxtwTgo/nq/ldiVZ2ZyxtSiiBfzQN/m6jid8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
-	 References:In-Reply-To; b=juB/A88YglBukwnsNGrPKQ0QrC0W677KXewmQcT6FKd7GlJJFtnUJ7Q7Z1x9fExlAjjJUiUuB4+Jd28M9ApimkCOgHfXMZ9XAbSlGEZhy4riupD1EwaicVlOiWYMbliCiQYjNnVzLTN02/EsEQLcBu0jB2MJWkilVP5bMZT9Kck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=walle.cc; arc=none smtp.client-ip=159.69.201.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
-Received: from localhost (unknown [IPv6:2a02:810b:4340:6430:4685:ff:fe12:5967])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.3ffe.de (Postfix) with ESMTPSA id 782101B1;
-	Mon,  6 May 2024 11:11:36 +0200 (CEST)
+	s=arc-20240116; t=1714987162; c=relaxed/simple;
+	bh=4GJJvVcB67txL6x23xZi79tGkqfJu9ZkapJcsQpj8mc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lv2pqToh3PvG7zzMExuC++TdzTzd/Qgos4rry1UzZgSxqe4AJCQRmTCNPwLJXKTuBOMnmMlui5Bnep1ilxH80v5CXloJGW1oGD/i9D7GZqwU8hijEHLVel8MiG/p6dsrQvflTO1opwt6h2HUd3kleIHCxCDzwxWuocyvHNwGpmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1s3uUt-0007aJ-6R; Mon, 06 May 2024 11:18:59 +0200
+Received: from [2a0a:edc0:0:b01:1d::7b] (helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1s3uUq-00GEqn-Vo; Mon, 06 May 2024 11:18:57 +0200
+Received: from pengutronix.de (unknown [172.20.34.65])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 861EF2CB3C7;
+	Mon, 06 May 2024 09:18:56 +0000 (UTC)
+Date: Mon, 6 May 2024 11:18:55 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Gregor Herburger <gregor.herburger@ew.tq-group.com>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Thomas Kopp <thomas.kopp@microchip.com>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-can@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux@ew.tq-group.com
+Subject: Re: [PATCH v2 4/6] can: mcp251xfd: mcp251xfd_regmap_crc_write():
+ workaround for errata 5
+Message-ID: <20240506-aromatic-dainty-orangutan-f8b57c-mkl@pengutronix.de>
+References: <20240506-mcp251xfd-gpio-feature-v2-0-615b16fa8789@ew.tq-group.com>
+ <20240506-mcp251xfd-gpio-feature-v2-4-615b16fa8789@ew.tq-group.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ltjwktyxpf7yjkxq"
+Content-Disposition: inline
+In-Reply-To: <20240506-mcp251xfd-gpio-feature-v2-4-615b16fa8789@ew.tq-group.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+
+
+--ltjwktyxpf7yjkxq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 06 May 2024 11:11:36 +0200
-Message-Id: <D12G1NPU2H06.3LBLR19XYUAA6@kernel.org>
-Cc: <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
- <conor+dt@kernel.org>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
- <daniel@ffwll.ch>, <maarten.lankhorst@linux.intel.com>,
- <mripard@kernel.org>, <tzimmermann@suse.de>, <matthias.bgg@gmail.com>,
- <shawn.sung@mediatek.com>, <yu-chang.lee@mediatek.com>,
- <ck.hu@mediatek.com>, <jitao.shi@mediatek.com>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
- <linux-arm-kernel@lists.infradead.org>, <wenst@chromium.org>,
- <kernel@collabora.com>
-From: "Michael Walle" <mwalle@kernel.org>
-To: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
- <chunkuang.hu@kernel.org>
-Subject: Re: [PATCH v2 3/3] drm/mediatek: Implement OF graphs support for
- display paths
-X-Mailer: aerc 0.16.0
-References: <20240409120211.321153-1-angelogioacchino.delregno@collabora.com> <20240409120211.321153-4-angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240409120211.321153-4-angelogioacchino.delregno@collabora.com>
 
-Hi Angelo,
+On 06.05.2024 07:59:46, Gregor Herburger wrote:
+> According to Errata DS80000789E 5 writing IOCON register using one SPI
+> write command clears LAT0/LAT1.
+>=20
+> Errata Fix/Work Around suggests to write registers with single byte write
+> instructions. However, it seems that every write to the second byte
+> causes the overwrite of LAT0/LAT1.
+>=20
+> Never write byte 2 of IOCON register to avoid clearing of LAT0/LAT1.
+>=20
+> Signed-off-by: Gregor Herburger <gregor.herburger@ew.tq-group.com>
+> ---
+>  drivers/net/can/spi/mcp251xfd/mcp251xfd-regmap.c | 29 ++++++++++++++++++=
++++++-
+>  1 file changed, 28 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-regmap.c b/drivers/n=
+et/can/spi/mcp251xfd/mcp251xfd-regmap.c
+> index 65150e762007..43fcf7f50591 100644
+> --- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-regmap.c
+> +++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-regmap.c
+> @@ -229,14 +229,41 @@ mcp251xfd_regmap_crc_gather_write(void *context,
+>  	return spi_sync_transfer(spi, xfer, ARRAY_SIZE(xfer));
+>  }
+> =20
+> +static int mcp251xfd_regmap_crc_write_iocon(void *context, const void *d=
+ata)
+> +{
+> +	u16 reg =3D MCP251XFD_REG_IOCON;
 
-On Tue Apr 9, 2024 at 2:02 PM CEST, AngeloGioacchino Del Regno wrote:
-> +static int mtk_drm_of_get_ddp_ep_cid(struct device_node *node,
-> +				     int output_port, enum mtk_drm_crtc_path crtc_path,
+const
 
-Not sure what's your base branch is, but "enum mtk_drm_crtc_path"
-was renamed to "enum mtk_crtc_path" in commit 9e149879038f5
-('drm/mediatek: Rename "mtk_drm_crtc" to "mtk_crtc"').
+> +
+> +	/* Never write to bits 16..23 of IOCON register to avoid clearing of LA=
+T0/LAT1
+> +	 *
+> +	 * According to Errata DS80000789E 5 writing IOCON register using one
 
-> +/**
-> + * mtk_drm_of_ddp_path_build_one - Build a Display HW Pipeline for a CRT=
-C Path
-> + * @dev:          The mediatek-drm device
-> + * @cpath:        CRTC Path relative to a VDO or MMSYS
-> + * @out_path:     Pointer to an array that will contain the new pipeline
-> + * @out_path_len: Number of entries in the pipeline array
-> + *
-> + * MediaTek SoCs can use different DDP hardware pipelines (or paths) dep=
-ending
-> + * on the board-specific desired display configuration; this function wa=
-lks
-> + * through all of the output endpoints starting from a VDO or MMSYS hard=
-ware
-> + * instance and builds the right pipeline as specified in device trees.
-> + *
-> + * Return:
-> + * * %0       - Display HW Pipeline successfully built and validated
-> + * * %-ENOENT - Display pipeline was not specified in device tree
-> + * * %-EINVAL - Display pipeline built but validation failed
-> + * * %-ENOMEM - Failure to allocate pipeline array to pass to the caller
-> + */
-> +static int mtk_drm_of_ddp_path_build_one(struct device *dev, enum mtk_dr=
-m_crtc_path cpath,
+Just for completeness add "mcp2518fd" in front of Errata.
 
-likewise
+> +	 * SPI write command clears LAT0/LAT1.
+> +	 *
+> +	 * Errata Fix/Work Around suggests to write registers with single byte
+> +	 * write instructions. However, it seems that the byte at 0xe06(IOCON[2=
+3:16])
+> +	 * is for read-only access and writing to it causes the clearing of LAT=
+0/LAT1.
+> +	 */
+> +
+> +	/* Write IOCON[15:0] */
+> +	mcp251xfd_regmap_crc_gather_write(context, &reg, 1, data, 2);
+> +	reg +=3D 3;
+> +	/* Write IOCON[31:24] */
+> +	mcp251xfd_regmap_crc_gather_write(context, &reg, 1, data + 3, 1);
 
-> +					 const unsigned int **out_path,
-> +					 unsigned int *out_path_len)
+Please add error handling.
 
--michael
+> +
+> +	return 0;
+> +}
+> +
+>  static int
+>  mcp251xfd_regmap_crc_write(void *context,
+>  			   const void *data, size_t count)
+>  {
+>  	const size_t data_offset =3D sizeof(__be16) +
+>  		mcp251xfd_regmap_crc.pad_bits / BITS_PER_BYTE;
+> +	u16 reg =3D *(u16 *)data;
+> =20
+> -	return mcp251xfd_regmap_crc_gather_write(context,
+> +	if (reg =3D=3D MCP251XFD_REG_IOCON)
+> +		return mcp251xfd_regmap_crc_write_iocon(context, data + data_offset);
+
+Please also check that "count" is sizeof(__le32).
+
+> +	else
+> +		return mcp251xfd_regmap_crc_gather_write(context,
+>  						 data, data_offset,
+>  						 data + data_offset,
+>  						 count - data_offset);
+>=20
+
+Also add the workaround for the nocrc regmap.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--ltjwktyxpf7yjkxq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEUEC6huC2BN0pvD5fKDiiPnotvG8FAmY4oHwACgkQKDiiPnot
+vG/7lQf9Gfl2kI2VZm5ZoPgK5CZ2Qq1vPDA1Z+z3fSaaONgwCW2gyer3aMONMZmP
+R/DMZNdouH6I3GvqCwSS+gxKTlZdciS4Kw3tIeS00EGeV7uquD6VHec5lXgDQ/hA
+CMZxZKu35QCqmos1uzPYkzJcleR5Kyq5zM9z9NP7Mykfa0UwmHoe8BqKZT50VrFx
+enu7bj5ABjai1ZJ7bFh0CebJNa2XZHD2VpUUZXQ8KllW+xgkm6HUNHPFGj3wLYbI
+1hBowLc2WoQkuZGO2WniYLNpg5UTOM4QnHCiznLwRWd8PwtsI7vKXOSHJxk94q42
+IOdRFpzeyJYyQ2x7c7CBK+z4rAnAkA==
+=4dqj
+-----END PGP SIGNATURE-----
+
+--ltjwktyxpf7yjkxq--
