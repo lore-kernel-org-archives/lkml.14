@@ -1,281 +1,387 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15C8B144D1C;
-	Mon,  6 May 2024 09:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA5D142E65;
+	Mon,  6 May 2024 09:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714988990; cv=none; b=sa6Jrh5mCmxnaxZCrR+51UZUV2EmMbOshxUjHjAVxllYoyAyc5uckYRIpevCkF48cK8E2kq0r8TdnHHFH1uRcaIiJyKJzI+zYTaNBNrfEkh4ofLLMZ8wy8pTW9MbnSd/VcQm3jqrAt6SAr5VG3aLOhnEtGztYgjxkg/BJ1F9rYY=
+	t=1714988988; cv=none; b=JCn9dTeAdNjx7qKlevjYl9ynHnmTD/sHqRI33JakkjBP+mP1rY075kAjSO1zCPMu81lpxjCt12581rR7YUYimyrCWqodWXXj+jkva+fJJG9NK7vbTKHZqGUHTiskZiXAY3OzwSolf9e4EBFuKP0L5gqM5WEYxqP0hD3pcD85iec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714988990; c=relaxed/simple;
-	bh=iwHUZTcFO0Bj+sswdGNfI4SFWlUW0XK/svWbnDHhZPM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HfzkCC5AGnsFJc7Ui/I8KnH625XOLnITDJRSrtJEmPrR64txAMIMqRjZItgCOtI4gYEGIxAfB6wD10YXHKaFWHD8e7E6q7GfkQsKa4mvleXdIWD0a07DFZuXIRtV4u32OSA6kX+B7Leb4nkh1AJzsgvrs3KR74Y2DCHftJdSOqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tUrH9Zag; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714988988; c=relaxed/simple;
+	bh=3s0v/NnMwxySahHzIq6tLjw1CpmAfRTu0pxPKOotOUc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O+b4LPJmKGYVpDahtTfSFhxB8HZ3VPxXAeS1AQdP7umihhsLF/ro8fbUW5I8R7yX+iZ3o89IfQ3xVQIxHK4B7hITwn882H+RUqFU6udbmOAYaISey8ik3sFeAf4/G1KjHUVYuHkGVeAwmnHnqJLheRn6GbmQv0VK3fRLVbubTVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NcW97sK/; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tUrH9Zag"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A6830C4DDE0;
-	Mon,  6 May 2024 09:49:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714988989;
-	bh=iwHUZTcFO0Bj+sswdGNfI4SFWlUW0XK/svWbnDHhZPM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=tUrH9ZagczPl9wPW9FeIFw9PYZValohdNW2kzuQOjkZWIR62rSqIZnqYmEgHl/E+U
-	 W1YM1+1QOknuFGcvd1cvDajdxp18QI1V5S06TTFHFAu/GXb62sWOsjwEp9nRh9Ofnv
-	 7ha7KIlle0ESzO18uqQZRXs2C6HUgTCvL02aoVhoC+/u67b1iTsnNapAf0yaj3iYbx
-	 9h2vX3CBhhUrqobhN1/qLP8YbtLMf9r5sX+sdCEzxTcKxWLT9lgjImUa7YH6l2ZRKR
-	 GezIMyhPlbnSWp0qYluK3JCtXY5sgrxdhk3C1HGuh7NI0dF922tXi7ZB/wQet2IBxM
-	 b96388slOX2Qg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9839EC25B5C;
-	Mon,  6 May 2024 09:49:49 +0000 (UTC)
-From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Mon, 06 May 2024 12:49:50 +0300
-Subject: [PATCH RESEND v2 3/4] dt-bindings: soc: Add Cirrus EP93xx
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NcW97sK/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714988986; x=1746524986;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=3s0v/NnMwxySahHzIq6tLjw1CpmAfRTu0pxPKOotOUc=;
+  b=NcW97sK/V1SoqZC4E0NXErOI0trWbln+FuK5pM0kO9uL1hlVqD5VuQYb
+   CpE3CD16rkYqXrmfjvG2DPBRpXLMVG31DidzRn6pFy/kCe521hos5YQsM
+   TLntOgjz77XlfWP6GzIC3gRoB8vJ3tpN5CtT1WyYiUqRPIOsAMRZi05wo
+   A2sI8uFcuO3UPwEmKRoaTHdkPpMyEjLmLnr8rTN69Wm7GNPFymOsgqGsV
+   tLbKT+86phHfLLiP48T24W3x2kZmq1wLfinttDSxphGl7h9Fbhu+ozeYn
+   j6WAc3ufdOyISNfmyLcXx7jvc0Y7v+cn+CrzzJwMxZKDkkLRN+0k/EVq5
+   w==;
+X-CSE-ConnectionGUID: IM28ojiCQmqFd2uWjJFY1A==
+X-CSE-MsgGUID: HYTn6EwWSVWE0M8dfgZYTA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11064"; a="28201071"
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="28201071"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 02:49:45 -0700
+X-CSE-ConnectionGUID: lcARiOnyR0aV2+KOA01SLw==
+X-CSE-MsgGUID: 6dvZt4SdR/G2l/km1XLO0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="58995764"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by orviesa002.jf.intel.com with ESMTP; 06 May 2024 02:49:42 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	bpf@vger.kernel.org,
+	netdev@vger.kernel.org,
+	iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v5 7/7] xsk: use generic DMA sync shortcut instead of a custom one
+Date: Mon,  6 May 2024 11:48:55 +0200
+Message-ID: <20240506094855.12944-8-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <20240506094855.12944-1-aleksander.lobakin@intel.com>
+References: <20240506094855.12944-1-aleksander.lobakin@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240408-ep93xx-clk-v2-3-adcd68c13753@maquefel.me>
-References: <20240408-ep93xx-clk-v2-0-adcd68c13753@maquefel.me>
-In-Reply-To: <20240408-ep93xx-clk-v2-0-adcd68c13753@maquefel.me>
-To: Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, Nikita Shubin <nikita.shubin@maquefel.me>, 
- Arnd Bergmann <arnd@arndb.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.12.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714988988; l=6134;
- i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=rxV5iIpC+Z8YB9Bx/6Nn01nHLk5VTCsvmwXWNV3UZtY=;
- b=dIcRsOfvMOZKdFbZgCwTni6+hfcKPW03vsYT44ZDeK8AJnVlm6/RCvTt9R1A+96pA3Qyp6tOi2Ao
- nVzt+ckgDk88LY+sTexhNQJ5/3uTAciKpU0hV4rqVHWCqJGsdzvB
-X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
- pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
-X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
- with auth_id=65
-X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
-Reply-To: nikita.shubin@maquefel.me
+Content-Transfer-Encoding: 8bit
 
-From: Nikita Shubin <nikita.shubin@maquefel.me>
+XSk infra's been using its own DMA sync shortcut to try avoiding
+redundant function calls. Now that there is a generic one, remove
+the custom implementation and rely on the generic helpers.
+xsk_buff_dma_sync_for_cpu() doesn't need the second argument anymore,
+remove it.
 
-Add device tree bindings for the Cirrus Logic EP93xx SoC.
-
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 ---
- .../bindings/arm/cirrus/cirrus,ep9301.yaml         | 38 +++++++++
- .../bindings/soc/cirrus/cirrus,ep9301-syscon.yaml  | 94 ++++++++++++++++++++++
- include/dt-bindings/clock/cirrus,ep9301-syscon.h   | 46 +++++++++++
- 3 files changed, 178 insertions(+)
+ include/net/xdp_sock_drv.h                    |  7 ++---
+ include/net/xsk_buff_pool.h                   | 14 +++-------
+ drivers/net/ethernet/engleder/tsnep_main.c    |  2 +-
+ .../net/ethernet/freescale/dpaa2/dpaa2-xsk.c  |  2 +-
+ drivers/net/ethernet/intel/i40e/i40e_xsk.c    |  2 +-
+ drivers/net/ethernet/intel/ice/ice_xsk.c      |  2 +-
+ drivers/net/ethernet/intel/igc/igc_main.c     |  2 +-
+ drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c  |  2 +-
+ .../ethernet/mellanox/mlx5/core/en/xsk/rx.c   |  4 +--
+ .../net/ethernet/mellanox/mlx5/core/en_rx.c   |  2 +-
+ drivers/net/ethernet/netronome/nfp/nfd3/xsk.c |  2 +-
+ .../net/ethernet/stmicro/stmmac/stmmac_main.c |  2 +-
+ net/xdp/xsk_buff_pool.c                       | 28 ++-----------------
+ 13 files changed, 20 insertions(+), 51 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/cirrus/cirrus,ep9301.yaml b/Documentation/devicetree/bindings/arm/cirrus/cirrus,ep9301.yaml
-new file mode 100644
-index 000000000000..170aad5dd7ed
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/cirrus/cirrus,ep9301.yaml
-@@ -0,0 +1,38 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/arm/cirrus/cirrus,ep9301.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/include/net/xdp_sock_drv.h b/include/net/xdp_sock_drv.h
+index c9aec9ab6191..0a5dca2b2b3f 100644
+--- a/include/net/xdp_sock_drv.h
++++ b/include/net/xdp_sock_drv.h
+@@ -219,13 +219,10 @@ static inline struct xsk_tx_metadata *xsk_buff_get_metadata(struct xsk_buff_pool
+ 	return meta;
+ }
+ 
+-static inline void xsk_buff_dma_sync_for_cpu(struct xdp_buff *xdp, struct xsk_buff_pool *pool)
++static inline void xsk_buff_dma_sync_for_cpu(struct xdp_buff *xdp)
+ {
+ 	struct xdp_buff_xsk *xskb = container_of(xdp, struct xdp_buff_xsk, xdp);
+ 
+-	if (!pool->dma_need_sync)
+-		return;
+-
+ 	xp_dma_sync_for_cpu(xskb);
+ }
+ 
+@@ -402,7 +399,7 @@ static inline struct xsk_tx_metadata *xsk_buff_get_metadata(struct xsk_buff_pool
+ 	return NULL;
+ }
+ 
+-static inline void xsk_buff_dma_sync_for_cpu(struct xdp_buff *xdp, struct xsk_buff_pool *pool)
++static inline void xsk_buff_dma_sync_for_cpu(struct xdp_buff *xdp)
+ {
+ }
+ 
+diff --git a/include/net/xsk_buff_pool.h b/include/net/xsk_buff_pool.h
+index 99dd7376df6a..bacb33f1e3e5 100644
+--- a/include/net/xsk_buff_pool.h
++++ b/include/net/xsk_buff_pool.h
+@@ -43,7 +43,6 @@ struct xsk_dma_map {
+ 	refcount_t users;
+ 	struct list_head list; /* Protected by the RTNL_LOCK */
+ 	u32 dma_pages_cnt;
+-	bool dma_need_sync;
+ };
+ 
+ struct xsk_buff_pool {
+@@ -82,7 +81,6 @@ struct xsk_buff_pool {
+ 	u8 tx_metadata_len; /* inherited from umem */
+ 	u8 cached_need_wakeup;
+ 	bool uses_need_wakeup;
+-	bool dma_need_sync;
+ 	bool unaligned;
+ 	bool tx_sw_csum;
+ 	void *addrs;
+@@ -155,21 +153,17 @@ static inline dma_addr_t xp_get_frame_dma(struct xdp_buff_xsk *xskb)
+ 	return xskb->frame_dma;
+ }
+ 
+-void xp_dma_sync_for_cpu_slow(struct xdp_buff_xsk *xskb);
+ static inline void xp_dma_sync_for_cpu(struct xdp_buff_xsk *xskb)
+ {
+-	xp_dma_sync_for_cpu_slow(xskb);
++	dma_sync_single_for_cpu(xskb->pool->dev, xskb->dma,
++				xskb->pool->frame_len,
++				DMA_BIDIRECTIONAL);
+ }
+ 
+-void xp_dma_sync_for_device_slow(struct xsk_buff_pool *pool, dma_addr_t dma,
+-				 size_t size);
+ static inline void xp_dma_sync_for_device(struct xsk_buff_pool *pool,
+ 					  dma_addr_t dma, size_t size)
+ {
+-	if (!pool->dma_need_sync)
+-		return;
+-
+-	xp_dma_sync_for_device_slow(pool, dma, size);
++	dma_sync_single_for_device(pool->dev, dma, size, DMA_BIDIRECTIONAL);
+ }
+ 
+ /* Masks for xdp_umem_page flags.
+diff --git a/drivers/net/ethernet/engleder/tsnep_main.c b/drivers/net/ethernet/engleder/tsnep_main.c
+index 4b15af6b7122..44da335d66bd 100644
+--- a/drivers/net/ethernet/engleder/tsnep_main.c
++++ b/drivers/net/ethernet/engleder/tsnep_main.c
+@@ -1587,7 +1587,7 @@ static int tsnep_rx_poll_zc(struct tsnep_rx *rx, struct napi_struct *napi,
+ 		length = __le32_to_cpu(entry->desc_wb->properties) &
+ 			 TSNEP_DESC_LENGTH_MASK;
+ 		xsk_buff_set_size(entry->xdp, length - ETH_FCS_LEN);
+-		xsk_buff_dma_sync_for_cpu(entry->xdp, rx->xsk_pool);
++		xsk_buff_dma_sync_for_cpu(entry->xdp);
+ 
+ 		/* RX metadata with timestamps is in front of actual data,
+ 		 * subtract metadata size to get length of actual data and
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-xsk.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-xsk.c
+index 051748b997f3..a466c2379146 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-xsk.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-xsk.c
+@@ -55,7 +55,7 @@ static u32 dpaa2_xsk_run_xdp(struct dpaa2_eth_priv *priv,
+ 	xdp_set_data_meta_invalid(xdp_buff);
+ 	xdp_buff->rxq = &ch->xdp_rxq;
+ 
+-	xsk_buff_dma_sync_for_cpu(xdp_buff, ch->xsk_pool);
++	xsk_buff_dma_sync_for_cpu(xdp_buff);
+ 	xdp_act = bpf_prog_run_xdp(xdp_prog, xdp_buff);
+ 
+ 	/* xdp.data pointer may have changed */
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_xsk.c b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
+index a85b425794df..4e885df789ef 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_xsk.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_xsk.c
+@@ -482,7 +482,7 @@ int i40e_clean_rx_irq_zc(struct i40e_ring *rx_ring, int budget)
+ 
+ 		bi = *i40e_rx_bi(rx_ring, next_to_process);
+ 		xsk_buff_set_size(bi, size);
+-		xsk_buff_dma_sync_for_cpu(bi, rx_ring->xsk_pool);
++		xsk_buff_dma_sync_for_cpu(bi);
+ 
+ 		if (!first)
+ 			first = bi;
+diff --git a/drivers/net/ethernet/intel/ice/ice_xsk.c b/drivers/net/ethernet/intel/ice/ice_xsk.c
+index aa81d1162b81..7541f223bf4f 100644
+--- a/drivers/net/ethernet/intel/ice/ice_xsk.c
++++ b/drivers/net/ethernet/intel/ice/ice_xsk.c
+@@ -878,7 +878,7 @@ int ice_clean_rx_irq_zc(struct ice_rx_ring *rx_ring, int budget)
+ 				   ICE_RX_FLX_DESC_PKT_LEN_M;
+ 
+ 		xsk_buff_set_size(xdp, size);
+-		xsk_buff_dma_sync_for_cpu(xdp, xsk_pool);
++		xsk_buff_dma_sync_for_cpu(xdp);
+ 
+ 		if (!first) {
+ 			first = xdp;
+diff --git a/drivers/net/ethernet/intel/igc/igc_main.c b/drivers/net/ethernet/intel/igc/igc_main.c
+index 34c257a51ed1..8b2e5b623314 100644
+--- a/drivers/net/ethernet/intel/igc/igc_main.c
++++ b/drivers/net/ethernet/intel/igc/igc_main.c
+@@ -2812,7 +2812,7 @@ static int igc_clean_rx_irq_zc(struct igc_q_vector *q_vector, const int budget)
+ 		}
+ 
+ 		bi->xdp->data_end = bi->xdp->data + size;
+-		xsk_buff_dma_sync_for_cpu(bi->xdp, ring->xsk_pool);
++		xsk_buff_dma_sync_for_cpu(bi->xdp);
+ 
+ 		res = __igc_xdp_run_prog(adapter, prog, bi->xdp);
+ 		switch (res) {
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+index 397cb773fabb..3e3b471e53f0 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_xsk.c
+@@ -303,7 +303,7 @@ int ixgbe_clean_rx_irq_zc(struct ixgbe_q_vector *q_vector,
+ 		}
+ 
+ 		bi->xdp->data_end = bi->xdp->data + size;
+-		xsk_buff_dma_sync_for_cpu(bi->xdp, rx_ring->xsk_pool);
++		xsk_buff_dma_sync_for_cpu(bi->xdp);
+ 		xdp_res = ixgbe_run_xdp_zc(adapter, rx_ring, bi->xdp);
+ 
+ 		if (likely(xdp_res & (IXGBE_XDP_TX | IXGBE_XDP_REDIR))) {
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
+index b8dd74453655..1b7132fa70de 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en/xsk/rx.c
+@@ -270,7 +270,7 @@ struct sk_buff *mlx5e_xsk_skb_from_cqe_mpwrq_linear(struct mlx5e_rq *rq,
+ 	/* mxbuf->rq is set on allocation, but cqe is per-packet so set it here */
+ 	mxbuf->cqe = cqe;
+ 	xsk_buff_set_size(&mxbuf->xdp, cqe_bcnt);
+-	xsk_buff_dma_sync_for_cpu(&mxbuf->xdp, rq->xsk_pool);
++	xsk_buff_dma_sync_for_cpu(&mxbuf->xdp);
+ 	net_prefetch(mxbuf->xdp.data);
+ 
+ 	/* Possible flows:
+@@ -319,7 +319,7 @@ struct sk_buff *mlx5e_xsk_skb_from_cqe_linear(struct mlx5e_rq *rq,
+ 	/* mxbuf->rq is set on allocation, but cqe is per-packet so set it here */
+ 	mxbuf->cqe = cqe;
+ 	xsk_buff_set_size(&mxbuf->xdp, cqe_bcnt);
+-	xsk_buff_dma_sync_for_cpu(&mxbuf->xdp, rq->xsk_pool);
++	xsk_buff_dma_sync_for_cpu(&mxbuf->xdp);
+ 	net_prefetch(mxbuf->xdp.data);
+ 
+ 	prog = rcu_dereference(rq->xdp_prog);
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+index d601b5faaed5..b5333da20e8a 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -917,7 +917,7 @@ INDIRECT_CALLABLE_SCOPE bool mlx5e_post_rx_wqes(struct mlx5e_rq *rq)
+ 
+ 	if (!rq->xsk_pool) {
+ 		count = mlx5e_refill_rx_wqes(rq, head, wqe_bulk);
+-	} else if (likely(!rq->xsk_pool->dma_need_sync)) {
++	} else if (likely(!dma_dev_need_sync(rq->pdev))) {
+ 		mlx5e_xsk_free_rx_wqes(rq, head, wqe_bulk);
+ 		count = mlx5e_xsk_alloc_rx_wqes_batched(rq, head, wqe_bulk);
+ 	} else {
+diff --git a/drivers/net/ethernet/netronome/nfp/nfd3/xsk.c b/drivers/net/ethernet/netronome/nfp/nfd3/xsk.c
+index 45be6954d5aa..01cfa9cc1b5e 100644
+--- a/drivers/net/ethernet/netronome/nfp/nfd3/xsk.c
++++ b/drivers/net/ethernet/netronome/nfp/nfd3/xsk.c
+@@ -184,7 +184,7 @@ nfp_nfd3_xsk_rx(struct nfp_net_rx_ring *rx_ring, int budget,
+ 		xrxbuf->xdp->data += meta_len;
+ 		xrxbuf->xdp->data_end = xrxbuf->xdp->data + pkt_len;
+ 		xdp_set_data_meta_invalid(xrxbuf->xdp);
+-		xsk_buff_dma_sync_for_cpu(xrxbuf->xdp, r_vec->xsk_pool);
++		xsk_buff_dma_sync_for_cpu(xrxbuf->xdp);
+ 		net_prefetch(xrxbuf->xdp->data);
+ 
+ 		if (meta_len) {
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 59bf83904b62..80b7a6451d15 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -5361,7 +5361,7 @@ static int stmmac_rx_zc(struct stmmac_priv *priv, int limit, u32 queue)
+ 
+ 		/* RX buffer is good and fit into a XSK pool buffer */
+ 		buf->xdp->data_end = buf->xdp->data + buf1_len;
+-		xsk_buff_dma_sync_for_cpu(buf->xdp, rx_q->xsk_pool);
++		xsk_buff_dma_sync_for_cpu(buf->xdp);
+ 
+ 		prog = READ_ONCE(priv->xdp_prog);
+ 		res = __stmmac_xdp_run_prog(priv, prog, buf->xdp);
+diff --git a/net/xdp/xsk_buff_pool.c b/net/xdp/xsk_buff_pool.c
+index ce60ecd48a4d..b2cce6dbe6d8 100644
+--- a/net/xdp/xsk_buff_pool.c
++++ b/net/xdp/xsk_buff_pool.c
+@@ -338,7 +338,6 @@ static struct xsk_dma_map *xp_create_dma_map(struct device *dev, struct net_devi
+ 
+ 	dma_map->netdev = netdev;
+ 	dma_map->dev = dev;
+-	dma_map->dma_need_sync = false;
+ 	dma_map->dma_pages_cnt = nr_pages;
+ 	refcount_set(&dma_map->users, 1);
+ 	list_add(&dma_map->list, &umem->xsk_dma_list);
+@@ -424,7 +423,6 @@ static int xp_init_dma_info(struct xsk_buff_pool *pool, struct xsk_dma_map *dma_
+ 
+ 	pool->dev = dma_map->dev;
+ 	pool->dma_pages_cnt = dma_map->dma_pages_cnt;
+-	pool->dma_need_sync = dma_map->dma_need_sync;
+ 	memcpy(pool->dma_pages, dma_map->dma_pages,
+ 	       pool->dma_pages_cnt * sizeof(*pool->dma_pages));
+ 
+@@ -460,8 +458,6 @@ int xp_dma_map(struct xsk_buff_pool *pool, struct device *dev,
+ 			__xp_dma_unmap(dma_map, attrs);
+ 			return -ENOMEM;
+ 		}
+-		if (dma_need_sync(dev, dma))
+-			dma_map->dma_need_sync = true;
+ 		dma_map->dma_pages[i] = dma;
+ 	}
+ 
+@@ -557,11 +553,8 @@ struct xdp_buff *xp_alloc(struct xsk_buff_pool *pool)
+ 	xskb->xdp.data_meta = xskb->xdp.data;
+ 	xskb->xdp.flags = 0;
+ 
+-	if (pool->dma_need_sync) {
+-		dma_sync_single_range_for_device(pool->dev, xskb->dma, 0,
+-						 pool->frame_len,
+-						 DMA_BIDIRECTIONAL);
+-	}
++	xp_dma_sync_for_device(pool, xskb->dma, pool->frame_len);
 +
-+title: Cirrus Logic EP93xx platforms
-+
-+description:
-+  The EP93xx SoC is a ARMv4T-based with 200 MHz ARM9 CPU.
-+
-+maintainers:
-+  - Alexander Sverdlin <alexander.sverdlin@gmail.com>
-+  - Nikita Shubin <nikita.shubin@maquefel.me>
-+
-+properties:
-+  $nodename:
-+    const: '/'
-+  compatible:
-+    oneOf:
-+      - description: The TS-7250 is a compact, full-featured Single Board
-+          Computer (SBC) based upon the Cirrus EP9302 ARM9 CPU
-+        items:
-+          - const: technologic,ts7250
-+          - const: cirrus,ep9301
-+
-+      - description: The Liebherr BK3 is a derivate from ts7250 board
-+        items:
-+          - const: liebherr,bk3
-+          - const: cirrus,ep9301
-+
-+      - description: EDB302 is an evaluation board by Cirrus Logic,
-+          based on a Cirrus Logic EP9302 CPU
-+        items:
-+          - const: cirrus,edb9302
-+          - const: cirrus,ep9301
-+
-+additionalProperties: true
-diff --git a/Documentation/devicetree/bindings/soc/cirrus/cirrus,ep9301-syscon.yaml b/Documentation/devicetree/bindings/soc/cirrus/cirrus,ep9301-syscon.yaml
-new file mode 100644
-index 000000000000..7cb1b4114985
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/cirrus/cirrus,ep9301-syscon.yaml
-@@ -0,0 +1,94 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/cirrus/cirrus,ep9301-syscon.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Cirrus Logic EP93xx Platforms System Controller
-+
-+maintainers:
-+  - Alexander Sverdlin <alexander.sverdlin@gmail.com>
-+  - Nikita Shubin <nikita.shubin@maquefel.me>
-+
-+description: |
-+  Central resources are controlled by a set of software-locked registers,
-+  which can be used to prevent accidental accesses. Syscon generates
-+  the various bus and peripheral clocks and controls the system startup
-+  configuration.
-+
-+  The System Controller (Syscon) provides:
-+  - Clock control
-+  - Power management
-+  - System configuration management
-+
-+  Syscon registers are common for all EP93xx SoC's, through some actual peripheral
-+  may be missing depending on actual SoC model.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - cirrus,ep9302-syscon
-+              - cirrus,ep9307-syscon
-+              - cirrus,ep9312-syscon
-+              - cirrus,ep9315-syscon
-+          - const: cirrus,ep9301-syscon
-+          - const: syscon
-+      - items:
-+          - const: cirrus,ep9301-syscon
-+          - const: syscon
-+
-+  reg:
-+    maxItems: 1
-+
-+  "#clock-cells":
-+    const: 1
-+
-+  clocks:
-+    items:
-+      - description: reference clock
-+
-+patternProperties:
-+  '^pins-':
-+    type: object
-+    description: pin node
-+    $ref: /schemas/pinctrl/pinmux-node.yaml
-+
-+    properties:
-+      function:
-+        enum: [ spi, ac97, i2s, pwm, keypad, pata, lcd, gpio ]
-+
-+      groups:
-+        enum: [ ssp, ac97, i2s_on_ssp, i2s_on_ac97, pwm1, gpio1agrp,
-+                gpio2agrp, gpio3agrp, gpio4agrp, gpio6agrp, gpio7agrp,
-+                rasteronsdram0grp, rasteronsdram3grp, keypadgrp, idegrp ]
-+
-+    required:
-+      - function
-+      - groups
-+
-+    unevaluatedProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#clock-cells"
-+  - clocks
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    syscon@80930000 {
-+      compatible = "cirrus,ep9301-syscon", "syscon";
-+      reg = <0x80930000 0x1000>;
-+
-+      #clock-cells = <1>;
-+      clocks = <&xtali>;
-+
-+      spi_default_pins: pins-spi {
-+        function = "spi";
-+        groups = "ssp";
-+      };
-+    };
-diff --git a/include/dt-bindings/clock/cirrus,ep9301-syscon.h b/include/dt-bindings/clock/cirrus,ep9301-syscon.h
-new file mode 100644
-index 000000000000..6bb8f532e7d0
---- /dev/null
-+++ b/include/dt-bindings/clock/cirrus,ep9301-syscon.h
-@@ -0,0 +1,46 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+#ifndef DT_BINDINGS_CIRRUS_EP93XX_CLOCK_H
-+#define DT_BINDINGS_CIRRUS_EP93XX_CLOCK_H
-+
-+#define EP93XX_CLK_PLL1		0
-+#define EP93XX_CLK_PLL2		1
-+
-+#define EP93XX_CLK_FCLK		2
-+#define EP93XX_CLK_HCLK		3
-+#define EP93XX_CLK_PCLK		4
-+
-+#define EP93XX_CLK_UART		5
-+#define EP93XX_CLK_SPI		6
-+#define EP93XX_CLK_PWM		7
-+#define EP93XX_CLK_USB		8
-+
-+#define EP93XX_CLK_M2M0		9
-+#define EP93XX_CLK_M2M1		10
-+
-+#define EP93XX_CLK_M2P0		11
-+#define EP93XX_CLK_M2P1		12
-+#define EP93XX_CLK_M2P2		13
-+#define EP93XX_CLK_M2P3		14
-+#define EP93XX_CLK_M2P4		15
-+#define EP93XX_CLK_M2P5		16
-+#define EP93XX_CLK_M2P6		17
-+#define EP93XX_CLK_M2P7		18
-+#define EP93XX_CLK_M2P8		19
-+#define EP93XX_CLK_M2P9		20
-+
-+#define EP93XX_CLK_UART1	21
-+#define EP93XX_CLK_UART2	22
-+#define EP93XX_CLK_UART3	23
-+
-+#define EP93XX_CLK_ADC		24
-+#define EP93XX_CLK_ADC_EN	25
-+
-+#define EP93XX_CLK_KEYPAD	26
-+
-+#define EP93XX_CLK_VIDEO	27
-+
-+#define EP93XX_CLK_I2S_MCLK	28
-+#define EP93XX_CLK_I2S_SCLK	29
-+#define EP93XX_CLK_I2S_LRCLK	30
-+
-+#endif /* DT_BINDINGS_CIRRUS_EP93XX_CLOCK_H */
-
+ 	return &xskb->xdp;
+ }
+ EXPORT_SYMBOL(xp_alloc);
+@@ -633,7 +626,7 @@ u32 xp_alloc_batch(struct xsk_buff_pool *pool, struct xdp_buff **xdp, u32 max)
+ {
+ 	u32 nb_entries1 = 0, nb_entries2;
+ 
+-	if (unlikely(pool->dma_need_sync)) {
++	if (unlikely(dma_dev_need_sync(pool->dev))) {
+ 		struct xdp_buff *buff;
+ 
+ 		/* Slow path */
+@@ -693,18 +686,3 @@ dma_addr_t xp_raw_get_dma(struct xsk_buff_pool *pool, u64 addr)
+ 		(addr & ~PAGE_MASK);
+ }
+ EXPORT_SYMBOL(xp_raw_get_dma);
+-
+-void xp_dma_sync_for_cpu_slow(struct xdp_buff_xsk *xskb)
+-{
+-	dma_sync_single_range_for_cpu(xskb->pool->dev, xskb->dma, 0,
+-				      xskb->pool->frame_len, DMA_BIDIRECTIONAL);
+-}
+-EXPORT_SYMBOL(xp_dma_sync_for_cpu_slow);
+-
+-void xp_dma_sync_for_device_slow(struct xsk_buff_pool *pool, dma_addr_t dma,
+-				 size_t size)
+-{
+-	dma_sync_single_range_for_device(pool->dev, dma, 0,
+-					 size, DMA_BIDIRECTIONAL);
+-}
+-EXPORT_SYMBOL(xp_dma_sync_for_device_slow);
 -- 
-2.41.0
-
+2.45.0
 
