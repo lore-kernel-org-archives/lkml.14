@@ -1,83 +1,94 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F156E3E462;
-	Mon,  6 May 2024 07:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97894D9E2
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 07:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714979874; cv=none; b=CBn2tVLy5kjZt61LTj6nKTQAQWsEybdNbUm733XjSnMXHE0caU2vUzc0Ck1uIogfD0euV3z/1JcR3//koOSRvtOYa2qJLsF844D5Lcet2GJL2ScQd2z4DbLIxzQ+sl2rda72nMpqLYnMg+TV/WuZhGffgreY/Ynw2DRKP19kVdY=
+	t=1714979952; cv=none; b=lr51azGeASGxOLdxyADv1U1NTFmdXycqrrly/Urx9ktgQlpZLZ4fm8RePVICPVDdWuEb05qxxDq7I3hNwyAXSzFofKjPqLpC2YXOV0Qjn4Tn2QXv9Yz6EYlGBRkBP4z0CzNMkpOQfX16l6vCt47nLZ9HhtjUiQ7calGICj3H7Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714979874; c=relaxed/simple;
-	bh=R6TiNw7b/eFI6QFHmACKnQ+Lmgs4hhHYmLO5oH7iZKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bxrCcyeJH+cutwSrhm7MzQF6DAYTifCQCKPpKJe0vwreMfZupoSzGUT7bYDY/T1tB1HVcFP0RMYOzyv+wrJJ7XbeeK9IIfNsQlWfiScmIhSZgal5vrVCt3Epymha5s+emBHnguqzC6Cz0LhX2a2MS/NJIKtb6VUhE+ShgUo4q0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lzRZVz0G; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1714979952; c=relaxed/simple;
+	bh=BcjeHuKCFNt3g0xtf3X7hwL26jrEaUX08KPgkWV/Fm0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e11T7PHZhytsCCkcxHKHsyJPj9WOaFli6leW2hxKlggo3e8x9kmoF1wb+ouyPavvEZBM6nNF8RuSZGK1TjinV57c7Czy/s7JhyoaQDkGQPM8CwE9+l6Ju1lgHlQisL1oJL/gL7G90oD5/1wWB0FlBV66vusIv4XOrGRsgF5VzNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ayoeRg8p; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lzRZVz0G"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 49146E0006;
-	Mon,  6 May 2024 07:17:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1714979870;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R6TiNw7b/eFI6QFHmACKnQ+Lmgs4hhHYmLO5oH7iZKc=;
-	b=lzRZVz0GLJ74p8N/yXNAbwpykF1XLxu8H/V9Js14qzM39RB9kJCAuDpmQlhEenmwFS7TjV
-	JSj8VWp1/vVwl0OkoaO2gRSYGxPP0ojRNPo7HEfbT3psARgLBOtqS509Pi44nuJP6lRvLf
-	3w2FpUyTrs7F8ANoNczAOSHuMdy/Bt+rfBfWa6Jpqv+/n87JGnvfRwBaewZxoyOl7RP4is
-	WPeJi+13YO7K6tYgOAao8N6766fP2KYxj/VfQp5lWvN3hj9hVOyX72E7Wqjnoquy2B7cJu
-	FUrWhxcS4fHDgYrTran1/Q9etQUgavYLi8sV5xmMFcrlsWHY+smJTGdZI5KKAQ==
-Date: Mon, 6 May 2024 09:17:48 +0200
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Keguang Zhang via B4 Relay <devnull+keguang.zhang.gmail.com@kernel.org>
-Cc: keguang.zhang@gmail.com, Richard Weinberger <richard@nod.at>, Vignesh
- Raghavendra <vigneshr@ti.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
- devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 2/3] mtd: rawnand: Enable monolithic read when
- reading subpages
-Message-ID: <20240506091748.18c120d5@xps-13>
-In-Reply-To: <20240430-loongson1-nand-v7-2-60787c314fa4@gmail.com>
-References: <20240430-loongson1-nand-v7-0-60787c314fa4@gmail.com>
-	<20240430-loongson1-nand-v7-2-60787c314fa4@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ayoeRg8p"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-de45dba157cso1113666276.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 00:19:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714979949; x=1715584749; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BcjeHuKCFNt3g0xtf3X7hwL26jrEaUX08KPgkWV/Fm0=;
+        b=ayoeRg8plY6k2zAO0hGLqfqQUHiFqYC3XSbQ5n6VYswp/HLe03594rVXUY38ANM1F9
+         XLdnIRilVQ8ketGFiwMW+s5U4NkVyD4WVZjf+TLSmNZAMCd5+Zv9X0X+AdpqhxIjhED9
+         ijtHQ57Ehck/6W36SvkagRR9tu5PPUw5oYgp0pss+Rasv9CxoQHaD+CskIBG/I2tN7TY
+         m7AH6p7DnKTvxGWY0dXBvkCDEBFdwnFszxfahUgCLLIHz6JNltfNz6c3jf0B3g2My8g7
+         rw6fbV+Sfos0PXu3OQSvl2RJ+5om/PrCcioTBQ3TttjYSK+wGUyC+m2OqVzEju4EiTCS
+         Qr+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714979949; x=1715584749;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BcjeHuKCFNt3g0xtf3X7hwL26jrEaUX08KPgkWV/Fm0=;
+        b=etY9vNJNsBf5nDegiW9AHba3w08PJnWpel50o5K67KeM8HxJRQX7lx5yi8iEJTuFjt
+         P+B1py8HYvwA6+DiTosoKnGA5ASn6tfBV0Lqv8XmYtqp4RCjK/N0os5bXfxbFkit3SMs
+         YDzC8Sky0j5hWtYWbQt4zQjYAWED4gC7mrNINNhxWipQlrMw5iu8UsZ8n08AkftfTdu8
+         WPxkTKAedQhyJmEGp49YOtdJK5J3VcTHZ4aLs/SRmNjk+wXdOKXSCE8Apn9uGbVypRaO
+         Z5G9iqhW7b3Gts9hVrmPER8V8CnUQqQeqaqnHX4vwqMBudEXkBZYsWD0Lywd8D0rHXdD
+         Viaw==
+X-Forwarded-Encrypted: i=1; AJvYcCUg3A+f/AqXffzYSU2DNKYA9xSS8qrCRiydlG8mZw/O0SPZrN8uYGBQhRUlO62zWHwDOVAIRGX+v5qGLND8MbZFgT8eyhvzn2dj2x8/
+X-Gm-Message-State: AOJu0YxN2nEqK9eibsGWdAYWjQhx3UmQ6zRTnmK42lDfeENaIiuK8MNF
+	YwXHuehGsgClXyK4JChWOoGXZ5gim1P/2L8P256ktjDhTX70CB3/RQrVTzxvMmflxhvsFZ7VsqF
+	ax/y9aEHRATrfl2tNxLmA/J18832XgcbOioV5Cw==
+X-Google-Smtp-Source: AGHT+IGoDixNoUaDnMBz7LuuCzUKda16Cqz3qmrnX+jMYQez9FjCtQ5nkqPx8YFJMFywsbQfbLrvit76T/JAbCJBsNA=
+X-Received: by 2002:a5b:e92:0:b0:de6:13a2:651a with SMTP id
+ z18-20020a5b0e92000000b00de613a2651amr3365815ybr.39.1714979948907; Mon, 06
+ May 2024 00:19:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20240505141420.627398-1-andy.shevchenko@gmail.com>
+In-Reply-To: <20240505141420.627398-1-andy.shevchenko@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 6 May 2024 09:18:57 +0200
+Message-ID: <CACRpkdap=KXuyoCjWt_v53ArRPynDQndAjjHfvapLUM7VWbbdA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Discourage to use formatting strings in
+ line names
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	=?UTF-8?B?TWFyZWsgQmVow7pu?= <kabel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi,
+On Sun, May 5, 2024 at 4:14=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
 
-devnull+keguang.zhang.gmail.com@kernel.org wrote on Tue, 30 Apr 2024
-19:11:11 +0800:
+> Currently the documentation for line names allows to use %u inside
+> the alternative name. This is broken in character device approach
+> from day 1 and being in use solely in sysfs.
+>
+> Character device interface has a line number as a part of its address,
+> so the users better rely on it. Hence remove the misleading documentation=
+.
+>
+> On top of that, there are no in-kernel users (out of 6, if I'm correct)
+> for such names and moreover if one exists it won't help in distinguishing
+> lines with the same naming as '%u' will also be in them and we will get
+> a warning in gpiochip_set_desc_names() for such cases.
+>
+> Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-> From: Keguang Zhang <keguang.zhang@gmail.com>
->=20
-> nand_read_subpage() reads data and ECC data by two separate
-> operations.
-> This patch allows the NAND controllers who support
-> monolithic page read to do subpage read by a single operation,
-> which is more effective than nand_read_subpage().
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-I am a bit puzzled by this change. Usually nand_read_subpage is used
-for optimizations (when less data than a full page must be retrieved).
-I know it may be used in other cases (because it's easier for the core
-in order to support a wide range of controllers). Can you please show a
-speed test showing the results before I consider merging this patch?
-
-The monolithic thing was not supposed to improve throughput but to help
-with very limited controllers.
-
-Thanks,
-Miqu=C3=A8l
+Yours,
+Linus Walleij
