@@ -1,85 +1,74 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99446CDD0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5CE763F9
 	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 13:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715001515; cv=none; b=IMDew/qho+MtgAGl+ybWIco4hxuPA4DN+7aYBbH3KZDOW5YZChZLSt6LhV+fBYXa84hRyT6QuuGt+TTGQlgGaQ56TVP4xm6LlZcACThz5UoC4MXov22OqbsTWjs4TrTWunT01S3MV3nnQuE3tPaQLSj+Pp3g7nywJUxvy5BpYxU=
+	t=1715001515; cv=none; b=HV+X+DMkDUzAdVeWR06lg6Ru4d65s9qYFhCuQKflMQVCIeamGwN1jFCN2H571LhkqGTRZimJfljpJM/E+ZKy2xjGjSAemYv7PWLCxRGKpsBgBjjg60ktXcMr5rrtYPzRuZrRRXMutKBuqZ2Ty8yl6d7OMvzRVmMK0EuxFSoU7zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715001515; c=relaxed/simple;
-	bh=+TUC9SWXsyjSANIJhcOwf2k55ubxw4wlvbJuCPBnSHo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=TqinPi0Mz6/uye7JeF6fjZTZRYMzqYh+3iiMSeqkPvIhfmN5nBhO89/wfz0YSryKJfyimhfWWKnsjJ6CojqPcJ29XMgIHecEzon5n+cyjANSYMVzc9XON8KC5rh6OJ51s/kJlIhDExycPdGqzQr11WszmDVAiMOEmQlHAYG+oIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+	bh=xMKAHgLWffPEg/68jPEYeY/o4qLcUtR75HNtHwrSP5s=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=U59h+S9HhBwZYRVCT3Xn9E8QkoLMSaLnTJ3wkEUDARegQNo+ckMvML+2uB3IMmTyRrdxBfC/ZmJGLBrlZu5LqFM1aSrUtxGH2VYsVtT47knVkPTYMNBUh6wUyNLUHi5p4+1D17YLoR+P4OeWi6it33AS3ySUAbBMo0WjGbmWddY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-36c5d1c48d3so19098475ab.1
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7ddf08e17e4so153146639f.0
         for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 06:18:33 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1715001513; x=1715606313;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=m7c7YmJFMZ55fSg7XNpDcD9Os2ihwoVxri7SE7ViUc0=;
-        b=e11SJk74yZ74hb4hdPiYSJ/UClg+1j5r399mhfphssBJsA6rCCpVuYF0B5JhLTqWq2
-         8McDfSamUMMTGTPigMtw+4C2zYg5BoTdPUX/51MtuxfSMc5lrok3NbGyaXxJK2MgRzLD
-         6wHjR7hpjD/3W5Ki3kkJea8gMuiqPxMiCEcMe0S9eJGGarSWw4Q7ea99gTwW5HZ9rF+I
-         X0u5F4KdfL65CNM+ARj3cpdcfbQirPwN3vMjauz9hn0rWBJVlvTpRBv5U9RbLOaBvUvT
-         3wcnAVM889+yTJl2aCn/N0mPTjoY+08UCcej2huYpFwV6bOytR60KFdSqfHWe2O1rw1u
-         Yeew==
-X-Forwarded-Encrypted: i=1; AJvYcCU5LQSlg5VFxdiOCUQLpdyiXotRQhfLGxfj/cp+g2/gc480lWwAi/eOBK7Fq0/8Lq9EFvjl8Sola+gyS61ga610PbkQZ0vh6f8ZXplq
-X-Gm-Message-State: AOJu0YyR8wbMeIwSolPo9SYIkcXDFyVnG2aVbz0B3mkBYS6ljPE4EK5N
-	0lO1mgcGOciS540bbJqT23rUf2z13ovln8hed62B7k7ZbwAAQ8qXmIw3jyxE0T9CfUQfwrIWa6w
-	jOxc37JQA/4F8E6VAL4aS4EXb1KptKpsC+W2ooaNWGIX5IOeH/UHsOD0=
-X-Google-Smtp-Source: AGHT+IE1Ro9qu+2Njle1sjA2cJLVkJudsME18R61IwZ4lgFiIPj0JN7vrupYRV9kn5vdZdLi2EpYYZaR3ePIt830GsucvgQq9ZeE
+        bh=9TxmHB0vl67W1+zyEJ27WmnVys+63ysAGw/jZhHVYa4=;
+        b=e/MoteuZhU1I2ovQfsFuAnQQ2Om+Gm9C8lf4YFIvHC9krbvAVnmzcmi8cYcgUQm6nC
+         kqDNPHSG0Xc/s1Q0iFZc9GStB8rqXR9R3dpipNLNqzvLWk0rUZUVLIpxqetDwesCuUDe
+         DOMCgzP31ks6hJH/paWz0Sy4yM52GO0z0d/vRJRCJNChWGtc+2fHAcn/tXUT3AnkagxH
+         AyUiS87Xu+kYFLqGV4GvHqkXr37I5A2qcgfAlgNhy8tODW92yDcnWW7TYOIQnKaBvvLL
+         k8bNvOEs10saaMjEgbDU374StR+LlcWAZb4wXDKjPt8848tel1WfWjXj2mLMDbvlx/lS
+         a3Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCWsUdnMyiV6/NtNyM0XMlwVQm7fR0PqvxdtN2TWFId+6I9gR/usfWCw4DbL9FTZITz6xoXS63NCeel2HEh5dKA9WbfqeiM3F8yTvc9E
+X-Gm-Message-State: AOJu0Yzx0LFbytw/LUjG8HY5wA7olWWrhqWicKAd7x7A/KitKeafxA0j
+	ogmkK4YOIG5d6dMkkfO1jLh92JfkS0nis0roKKzd0MybBhzds+SX754F7mO8Do/dwsWnHtURlII
+	cvtabvbANOcxIanj65ULnMVTKD6aQYlcyAetcNM7PL4tzIw6SmlHjLEc=
+X-Google-Smtp-Source: AGHT+IHGkWCaHpJLl9dzq0QN3kR9qdOorczrF9G3kwxMgooiBGozHiWJRAmpHqOhax011rNPJQiAoVBofoiRpuhW7X96ozD4h239
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c268:0:b0:36c:4c63:9c93 with SMTP id
- h8-20020a92c268000000b0036c4c639c93mr403952ild.3.1715001512900; Mon, 06 May
- 2024 06:18:32 -0700 (PDT)
-Date: Mon, 06 May 2024 06:18:32 -0700
+X-Received: by 2002:a05:6638:8516:b0:488:8715:313 with SMTP id
+ is22-20020a056638851600b0048887150313mr249593jab.0.1715001513193; Mon, 06 May
+ 2024 06:18:33 -0700 (PDT)
+Date: Mon, 06 May 2024 06:18:33 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f748120617c8e723@google.com>
-Subject: [syzbot] Monthly dri report (May 2024)
-From: syzbot <syzbot+list81f184520f9f481c9488@syzkaller.appspotmail.com>
-To: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+Message-ID: <000000000000fbc4600617c8e744@google.com>
+Subject: [syzbot] Monthly nilfs report (May 2024)
+From: syzbot <syzbot+listf1bffba7342098843795@syzkaller.appspotmail.com>
+To: konishi.ryusuke@gmail.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-nilfs@vger.kernel.org, 
 	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-Hello dri maintainers/developers,
+Hello nilfs maintainers/developers,
 
-This is a 31-day syzbot report for the dri subsystem.
+This is a 31-day syzbot report for the nilfs subsystem.
 All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/dri
+https://syzkaller.appspot.com/upstream/s/nilfs
 
-During the period, 0 new issues were detected and 0 were fixed.
-In total, 16 issues are still open and 31 have been fixed so far.
+During the period, 3 new issues were detected and 1 were fixed.
+In total, 7 issues are still open and 42 have been fixed so far.
 
 Some of the still happening issues:
 
 Ref Crashes Repro Title
-<1> 460     Yes   WARNING in drm_syncobj_array_find
-                  https://syzkaller.appspot.com/bug?extid=95416f957d84e858b377
-<2> 258     Yes   inconsistent lock state in sync_timeline_debug_remove
-                  https://syzkaller.appspot.com/bug?extid=7dcd254b8987a29f6450
-<3> 253     Yes   WARNING in vkms_get_vblank_timestamp (2)
-                  https://syzkaller.appspot.com/bug?extid=93bd128a383695391534
-<4> 206     Yes   inconsistent lock state in sync_info_debugfs_show
-                  https://syzkaller.appspot.com/bug?extid=007bfe0f3330f6e1e7d1
-<5> 24      Yes   kernel BUG in vmf_insert_pfn_prot (2)
-                  https://syzkaller.appspot.com/bug?extid=398e17b61dab22cc56bc
-<6> 16      Yes   WARNING in drm_gem_prime_fd_to_handle
-                  https://syzkaller.appspot.com/bug?extid=268d319a7bfd92f4ae01
-<7> 9       Yes   divide error in drm_mode_vrefresh
-                  https://syzkaller.appspot.com/bug?extid=622bba18029bcde672e1
-<8> 4       Yes   WARNING in drm_gem_object_handle_put_unlocked
-                  https://syzkaller.appspot.com/bug?extid=ef3256a360c02207a4cb
-<9> 4       Yes   divide error in drm_mode_debug_printmodeline
-                  https://syzkaller.appspot.com/bug?extid=2e93e6fb36e6fdc56574
+<1> 127     Yes   KMSAN: uninit-value in nilfs_add_checksums_on_logs (2)
+                  https://syzkaller.appspot.com/bug?extid=47a017c46edb25eff048
+<2> 3       No    INFO: task hung in nilfs_segctor_thread (2)
+                  https://syzkaller.appspot.com/bug?extid=c8166c541d3971bf6c87
+<3> 1       No    possible deadlock in nilfs_dirty_inode (3)
+                  https://syzkaller.appspot.com/bug?extid=ca73f5a22aec76875d85
 
 ---
 This report is generated by a bot. It may contain errors.
