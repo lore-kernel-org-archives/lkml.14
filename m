@@ -1,77 +1,165 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B21153597;
-	Mon,  6 May 2024 14:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BD7153BF2
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 14:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715006677; cv=none; b=kejRmT3fS5r9pOb6WGRyxSGRNXrRVOcKMxnVqvWGCKkmyOaxFf9P84m3it8eYd8l1BmSwNcBzyhzejoUA9A0j0sy7QIHP4MnvZbrFXwekuoiJZ7Re0WMsEiLMYc8YmZ4W5MrafLC9RXxVUXw2BnaguvRbdPp0H9zBKXOMkSwrZM=
+	t=1715006681; cv=none; b=qZOR9cwtyxE+Z+nJt3WXPzA+3VyVZ8E6LgfbkBC8MmgVunFIQMi4bLV6EB9MEW6UEFvi6J3dogLqUCsp14JRoqsaej43FMOkWdxO06j3xAOYsLPDccngGC/LS6gULHXrLRFartzXS/msaJhfbrpjT2SklpsBKeWw4bb/5Dp/En4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715006677; c=relaxed/simple;
-	bh=Ke0QY5ldJbt49WMIefdFQkbFTEJLVnNZPXqfdqOaC0M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NMW8KV0OusCGkUfTvPRzVFbRREMSncjCjXWdnGbWi55Jyn03H/fJpnbBsTyt49Li5QBMhlL3DcPIuBeT4RGWC+5+kOJ/cHsT6A6h98pln+piEfb3lSPEqY613MTowh0L2Ab3xiFEYHg4CXZone8qYd/ry8hTfkTYLyCDJ5qrUpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ayj2sEsi; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715006681; c=relaxed/simple;
+	bh=gcmU5KHDsIgDieHwyShq1qbTDOmmXgqU5v7T+celYzc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WzrVBpbBkwylMEjMbwcyUoV6/u6xIR9UTCGZ3TcrY92Ct+SmnDD5FfpfJR0HQOXm5IMhYSgdAKo3xJ3Hn9dw8o5nEYDd3KanwM9JMQsj9NnyyadoKxyjDxuUJ5WsMOeVejfLGrsFUEUZReRY7c62gguanCmvVGyFyAGLcOFclQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vA3nbQRs; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayj2sEsi"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51f74fa2a82so2236426e87.0;
-        Mon, 06 May 2024 07:44:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vA3nbQRs"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e060d49f87so15598341fa.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 07:44:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715006674; x=1715611474; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715006677; x=1715611477; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ke0QY5ldJbt49WMIefdFQkbFTEJLVnNZPXqfdqOaC0M=;
-        b=ayj2sEsiNH/OPyraMffBYF2HjbRAZwahYf5UEsbLu6uhgBShwpSWRFOCThXWMSLpL0
-         JtPCmN25LvikpY3dH8+VMxDyKm2iRD9i9H3Ug7gv7XzP5LVv1uO2RLeSVAjGXseaWk6T
-         vDM8muAKTH5c1H48E7MBoxpIf8Hd4FlAWrrq6mJOtgPXhjEcGraW7bD8VMHAl9ZoORyf
-         Qdd3ogDhLvWA2Iy8Yz8803dxOBFIKNENMNLTWwgQ2P3MhvCI7pVBJJzT0uZkftHFqFd4
-         jYI5jGq2tFfHPKusgtzWCkN/x4h/DhC7M7QKImzWMHLJiTn+baHW2CR8xNknIGFFVtfn
-         mwKQ==
+        bh=JcJFzkfee7mBqZtFVJndFmi3NW8+eQHyeH5MZMzFDxI=;
+        b=vA3nbQRsL7ul/HhZjlTMujvouLngKlIbzmiRj4GkQAhhQLeSu7j84+V1XjRQjKqW66
+         Twd7Em3bAsarV0bStk9vkrSpEX5CK+AEtRqtZXBC95kc2ANgDVgOL1tQ99DG303LHXe1
+         op9tOqk82bh3Aol7qAzdZVihEJHiOxIVMqC1u9y+IY7oEo+fvssLn1zYuRPOj/Fv0dAH
+         4QgN6Sv7Eyps0AhUmkmyBuJI89NYmU9x3hlA8jsHb635G24brpSIKkp1mjqsOh5C/tg3
+         URXEzZP3+v3JOLhY033M+KGA5HSNNLlKF0OOlLhZfs7R1ndKq+7xlKFs4Re6FFAyyeYI
+         Qo0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715006674; x=1715611474;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1715006677; x=1715611477;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ke0QY5ldJbt49WMIefdFQkbFTEJLVnNZPXqfdqOaC0M=;
-        b=cu3g/Pshnn5AZ9UNDFV5HPCceukwvt19kcxACjPtcAxTVipsn4Otze1ftO/4TsmIUN
-         +DXWhqSrTf7Wq+JsX2CLWBzhO0YgXBZnZbJbPzPWVpn/O+E6vUhyH3ToCBE64Ch1ylta
-         gj+U6gq1LzzQ1ReJYByE7DgWmpPfBWsyH+3rXpOdKJbNC7qkl/CC9nskwMNvtGIbXKb3
-         EGksgTQE08Z7jAovRVYXMd44NBBbc8WvH69Pn/I587HA7YEXtcnzm0aiB6ivJZUor/Fp
-         xOJh/VGvO7Q7Hn9/yggCZe+JrJQLQ2hhl1Xs3AwHiJmUuw/Ray6NztE5KB80tLRxhy1O
-         YKMA==
-X-Forwarded-Encrypted: i=1; AJvYcCU7LYw2FYAUGsnYrawSBWna/iy1m16c1L7r2FRbMqUEmZdF6zIgJYUrO8ZIRpJnmL2UnItBqK6CadnfAmGCy+B84cddsSbvtLsg8hUV
-X-Gm-Message-State: AOJu0YyPc/2xw+oh+DORXYyKYAuOsR0NHrv4Cl/lw9diYn2wZWHq0Gvs
-	ColvI4/vfP6M5eGvq7ISXguo3N6x9detT5EGJf12fLxR+vOc+kCOkxn6rQ==
-X-Google-Smtp-Source: AGHT+IHoZFGoykpwAn6Raq+JnNxw5zE3k33rpC3SUZ1+yXPSc/upKVuWVJmDpMD2DRt28mM/k06uqw==
-X-Received: by 2002:a19:914d:0:b0:51d:5ffd:efe4 with SMTP id y13-20020a19914d000000b0051d5ffdefe4mr8372728lfj.1.1715006673256;
-        Mon, 06 May 2024 07:44:33 -0700 (PDT)
-Received: from lpm-pc.appeartv.lan (195-159-183-44.customer.powertech.no. [195.159.183.44])
-        by smtp.gmail.com with ESMTPSA id i5-20020ac25b45000000b005190569dd4asm1681788lfp.298.2024.05.06.07.44.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 07:44:32 -0700 (PDT)
-From: Lars Petter Mostad <larspm@gmail.com>
-X-Google-Original-From: Lars Petter Mostad <lars.petter.mostad@appear.net>
-To: linux@roeck-us.net
-Cc: linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] hwmon: (emc1403) Various improvements
-Date: Mon,  6 May 2024 16:44:12 +0200
-Message-ID: <20240506144412.139300-1-lars.petter.mostad@appear.net>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240503154324.517246-1-linux@roeck-us.net>
-References: <20240503154324.517246-1-linux@roeck-us.net>
+        bh=JcJFzkfee7mBqZtFVJndFmi3NW8+eQHyeH5MZMzFDxI=;
+        b=Kv7lk1MsLcfClnqHLQEM76a6KGbiAAGOvfy/fzeqIIbDvPfP5AqgYN73eXtU7GElfh
+         mGONU9kSntWm75i/yU/cGGPJSLaqbc72N4Ncfr8aIkJROUmYF9f5DK8ltpXIfiENy13B
+         VteLN4wkjJTQmyEIEEu+91SKMf0K21gZtX8qQepVv593VKQ79OZVaeL9CcSHI5AhaSia
+         IzHBT80jid/q1cMyE5jXKAHec+U4RqlJtmLQsz9jl4F8Lwf9ZICxpPoFqZBkbsNXTGjj
+         Ph8fDETbnLRLLZf/ePBOuNh0JLH7pFVzsLss1FL5ABP7xDyW4WdjuaWNLf6MXxRdvxV9
+         YOeg==
+X-Forwarded-Encrypted: i=1; AJvYcCU7p+s8S9/3dzD5y59FsnNIafaNVQd5scA9lzpnsjsyPK36KveHxieYblPkBiOv4oYyfBULAagCLYQqA8EVltp8jysyosl03Xfo16ta
+X-Gm-Message-State: AOJu0YxV7RRjESYrl6jSR69Sl7MGKAGtha9+rNigJjyKIKBHgqt3/Tma
+	Bf7OkZ3vXDk1Oc6+ON7F9IceJIWicKvEoqvJBqS3QGy+wTBQzww976v/NCDILyJCx80f72wTeq2
+	eSAiXbos2RhTU6glUMqW7Rb7htdSEWYRvNvRyXw==
+X-Google-Smtp-Source: AGHT+IE6otZjp+HMHatTlAGvUbU2zdhnxAGZpInuyTDX2RS/6+kqsjoHYSazeUt5BLVh+8RqN+znD2lXAFAwZSwfhe8=
+X-Received: by 2002:a2e:7312:0:b0:2e1:d95b:3735 with SMTP id
+ o18-20020a2e7312000000b002e1d95b3735mr3227506ljc.11.1715006676759; Mon, 06
+ May 2024 07:44:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240501-adding-new-ad738x-driver-v6-0-3c0741154728@baylibre.com>
+ <20240501-adding-new-ad738x-driver-v6-10-3c0741154728@baylibre.com>
+ <a04d8015ea1606ce1eca86f7eaaa85a1c1b46d7a.camel@gmail.com> <20240506144616.0b90664b@jic23-huawei>
+In-Reply-To: <20240506144616.0b90664b@jic23-huawei>
+From: David Lechner <dlechner@baylibre.com>
+Date: Mon, 6 May 2024 09:44:25 -0500
+Message-ID: <CAMknhBHOXaff__QyU-wFSNNENvs23vDX5n_ddH-Dw3s6-sQ9sg@mail.gmail.com>
+Subject: Re: [PATCH RFC v6 10/10] iio: adc: ad7380: add support for resolution boost
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>, 
+	Julien Stephan <jstephan@baylibre.com>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, kernel test robot <lkp@intel.com>, linux-iio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I have tested these patches on EMC1438. This has also worked well for me.
+FYI, Julien is AFK for a bit so I'll try to respond to the non-trivial comm=
+ents.
 
-Regards,
-Lars Petter
+On Mon, May 6, 2024 at 8:46=E2=80=AFAM Jonathan Cameron <jic23@kernel.org> =
+wrote:
+>
+> On Mon, 06 May 2024 10:55:46 +0200
+> Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+>
+> > On Wed, 2024-05-01 at 16:55 +0200, Julien Stephan wrote:
+> > > ad738x chips are able to use an additional 2 bits of resolution when
+> > > using oversampling. The 14-bits chips can have up to 16 bits of
+> > > resolution and the 16-bits chips can have up to 18 bits of resolution=
+.
+> > >
+> > > In order to dynamically allow to enable/disable the resolution boost
+> > > feature, we have to set iio realbits/storagebits to the maximum per c=
+hips.
+> > > This means that for iio, data will always be on the higher resolution
+> > > available, and to cope with that we adjust the iio scale and iio offs=
+et
+> > > depending on the resolution boost status.
+> > >
+> > > The available scales can be displayed using the regular _scale_availa=
+ble
+> > > attributes and can be set by writing the regular _scale attribute.
+> > > The available scales depend on the oversampling status.
+> > >
+> > > Signed-off-by: Julien Stephan <jstephan@baylibre.com>
+> > >
+> > > ---
+> > >
+> > > In order to support the resolution boost (additional 2 bits of resolu=
+tion)
+> > > we need to set realbits/storagebits to the maximum value i.e :
+> > >   - realbits =3D 16 + 2 =3D 18, and storagebits =3D 32 for 16-bits ch=
+ips
+> > >   - realbits =3D 14 + 2 =3D 16, and storagebits =3D 16 for 14-bits ch=
+ips
+> > >
+> > > For 14-bits chips this does not have a major impact, but this
+> > > has the drawback of forcing 16-bits chip users to always use 32-bits
+> > > words in buffers even if they are not using oversampling and resoluti=
+on
+> > > boost. Is there a better way of implementing this? For example
+> > > implementing dynamic scan_type?
+> > >
+> >
+> > Yeah, I don't think it's that bad in this case. But maybe dynamic scan =
+types is
+> > something we may need at some point yes (or IOW that I would like to se=
+e supported
+> > :)). We do some ADCs (eg: ad4630) where we use questionably use FW prop=
+erties to set
+> > a specific operating mode exactly because we have a different data layo=
+ut (scan
+> > elements) depending on the mode.
+>
+> Yeah. Fixed scan modes were somewhat of a bad design decision a long time=
+ back.
+> However, the big advantage is that it got people to think hard about whet=
+her it is
+> worth supporting low precision modes. For slow devices it very rarely is =
+and
+> forcing people to make a decision and the advantage we never supported
+> low precision on those parts.
+>
+> Having said that there are good reasons for dynamic resolution changing
+> (the main one being the storage case you have here) so I'd be happy to
+> see some patches adding it. It might be easier than I've always thought
+> to bolt on.
+>
+> This and inkernel event consumers have been the two significant features
+> where I keep expecting it to happen, but every time people decide they re=
+ally
+> don't care enough to make them work :(
+>
+
+Supposing we knew someone willing and able :-) ...
+
+Do you have any specific requirements for how dynamic resolution
+changing should work? Any particular sticky points we should watch out
+for?
+
+I'm assuming this would just affect the bufferY/*_type attributes,
+i.e. if you write a channel scale attribute to change the resolution,
+then the scan_type info may change and the bufferY/*_type would need
+to be read again.
