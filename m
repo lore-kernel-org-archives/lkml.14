@@ -1,62 +1,103 @@
-Received: from hoggar.fisica.ufpr.br (hoggar.fisica.ufpr.br [200.238.171.242])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6913474BF8;
-	Mon,  6 May 2024 13:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=200.238.171.242
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54CD34642B
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 13:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715002354; cv=none; b=nmyXxTpRgCmWBT28PBfdv142BamutrxvjrmJGCjlXSxRpghpmrSM4QQEMPLZU9Gz4BqA9sSDyuV21npbibGxGKeyZX2KOSvL9Of0PZrgMLrJGEDuGseHTzifpVHjKHATK+P+9PULwSL6564NAXZq5roJ+iUvKNj9DDsQBVf+y8I=
+	t=1715002468; cv=none; b=kKWyWJGxUxs+kBr3ngM6ygOLERG0g28F/5olK3Qva3DKVI/FaqqIl2k+/PQE3Cgl7Mt7ebpCcgyOPiB4EmMMy6ZLXTtnOjj7HsKa8Bns6fo+OVTyXnD55ewsOlBIjSKEbazG7AHpsEgQAC6yz1O5OmlazgFR+EKiSx5XIGPh62g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715002354; c=relaxed/simple;
-	bh=5aPWLNBCt9nnOWvrjzXnoFe/wAdPKeU8CYYqXZeZPZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dZYfuQga1hVO5DrHa2kSVYEKgzPT6JyNL9x+xcPEhpswQL9DiR1doeI8Z6yJHu1L3iP4UEkuCBCEiLYZHV3RdMdtSFHt6bDHlt2FYZ62/AyzVwts6nSfPmtiChOlLxzol1PMH1Ua72GyMP8VmmCQV1DBVWscfdCWUMnAjKSw29g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fisica.ufpr.br; spf=pass smtp.mailfrom=fisica.ufpr.br; dkim=pass (2048-bit key) header.d=fisica.ufpr.br header.i=@fisica.ufpr.br header.b=SaLNdsq2; arc=none smtp.client-ip=200.238.171.242
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fisica.ufpr.br
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fisica.ufpr.br
+	s=arc-20240116; t=1715002468; c=relaxed/simple;
+	bh=7plsvwWt892ug+lOAVg1CmP/z4v5I8cCGR8iMFVxc1g=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TGbOwPclkC4sFG7TUNkJ2wkwSXZt3R/SEmXyFM6iVfY4YKJeWBSrRZth6giasGSVczZb131fiykxE/WAlZa5MC4r447ZJFODJNMwEtiDwL6dbTAJ16UxTIPJIo+TfEocvoN/sQ+GuVbpaXN0z3xkgLqLPsfU/GyHK6XzdU83fIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=m2wuIT+6; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fisica.ufpr.br header.i=@fisica.ufpr.br header.b="SaLNdsq2"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=fisica.ufpr.br;
-	s=201705; t=1715002338;
-	bh=5aPWLNBCt9nnOWvrjzXnoFe/wAdPKeU8CYYqXZeZPZU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SaLNdsq24DmAzv2rf5bj32oN1ZeRCqh1yXkv9KIcIMqs2niaZcdr0dew0kw9XyN6q
-	 OtXL/zdyIwYusDptM8IrNxe1jkWxiUu+V/NA5QJM7jSpKFcqfoS/dbOqjeUuckLFYb
-	 RI2RSjcD75VmEUsnageM0lxENHhqlD6QNoI/fgEPeUZwwhZ6KuepnrJDZJv9EF1sIg
-	 Bx6hFY/B0Pt8tX+0gJTOSGNpYSI2yGPIjjwmLbj5tRW7JhkcIhk9i8rkCtvatxsZq6
-	 2lOMSL2cVsOB6d1So0Zi7NiEWJ2Ire54M7icBYWiTP9TdfZ+WJO8KMmgS/mOxwYL/G
-	 MOvA/1PMyIaew==
-Received: by hoggar.fisica.ufpr.br (Postfix, from userid 577)
-	id BB29D11A7C87; Mon, 06 May 2024 10:32:18 -0300 (-03)
-Date: Mon, 6 May 2024 10:32:18 -0300
-From: Carlos Carvalho <carlos@fisica.ufpr.br>
-To: Holger Kiehl <Holger.Kiehl@dwd.de>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>,
-	linux-raid <linux-raid@vger.kernel.org>,
-	linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-	linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>
-Subject: Re: Massive slowdown in kernels as of 6.x
-Message-ID: <Zjjb4mjcnjxrPUw3@fisica.ufpr.br>
-References: <1ebabc15-51a8-59f3-c813-4e65e897a373@diagnostix.dwd.de>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="m2wuIT+6"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 446DP5XV032357;
+	Mon, 6 May 2024 15:33:47 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=XIk/vz4CZvRDP46S7QF0CjZaFR83xkL+/AG9b+2atfg=; b=m2
+	wuIT+6qcBtMsPsZemGk8e5n+WKLSsOTLRY2sWuyfjzjMR/STD2l46AOpTDqrJfpf
+	d9hUBvYGyMcfiM4SB536Wvw6KW5MIseaCNABMjsuh+Ymhbx0Y2GTNB2QzxJw1UUM
+	djcCaTaLl3MOFoNcZlQzJoQeDEsrvAyWOXZ0OBFvHbm6xfVd7GdVN18CzGhJSQpu
+	PZ+2EIy+K2+4pkX3JQOaPrrGEJB9kYXjdmA5R1sWVABmqfC6PP5k7nXQNoyLAC/K
+	lXHxfRnMGp/R/gvg3ChXteHGxkYbbYn18YhSVt83PRYji/TxKfN+b+PCc711nx9O
+	02KKRqkMDk6t1vM/lkpQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xwcbx781r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 06 May 2024 15:33:47 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9CC4E40051;
+	Mon,  6 May 2024 15:33:41 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8E1F621B537;
+	Mon,  6 May 2024 15:33:07 +0200 (CEST)
+Received: from localhost (10.48.87.171) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 6 May
+ 2024 15:33:07 +0200
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+CC: Antonio Borneo <antonio.borneo@foss.st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/8] irqchip/stm32-exti: add CONFIG_STM32MP_EXTI
+Date: Mon, 6 May 2024 15:32:49 +0200
+Message-ID: <20240506133256.948712-2-antonio.borneo@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240506133256.948712-1-antonio.borneo@foss.st.com>
+References: <20240506133256.948712-1-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1ebabc15-51a8-59f3-c813-4e65e897a373@diagnostix.dwd.de>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE1.st.com (10.75.90.11) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-06_08,2024-05-06_02,2023-05-22_02
 
-Holger Kiehl (Holger.Kiehl@dwd.de) wrote on Mon, May 06, 2024 at 08:31:37AM -03:
-> Mounted as follows:
-> 
->    /dev/md0 on /u2 type ext4 (rw,nodev,noatime,commit=600,stripe=640)
+To guarantee bisect-ability during split of stm32-exti in MCU and
+MPU code, introduce CONFIG_STM32MP_EXTI. It will be used in arch
+configuration.
 
-Sorry, missed that. You can try
+Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+---
+ drivers/irqchip/Kconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-# mount -o remount,stripe=0 /dev/md0
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 14464716bacbb..798bd50f8ab23 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -392,6 +392,10 @@ config LS_SCFG_MSI
+ config PARTITION_PERCPU
+ 	bool
+ 
++config STM32MP_EXTI
++	bool
++	select STM32_EXTI
++
+ config STM32_EXTI
+ 	bool
+ 	select IRQ_DOMAIN
+-- 
+2.34.1
 
-ext4 is known to have a problem with parity raid with the symptoms you
-describe and the above remount works around it. raid10 doesn't have parity but
-is stripped so the workaround might work.
