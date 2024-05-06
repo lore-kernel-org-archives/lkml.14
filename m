@@ -1,135 +1,179 @@
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E808015A5;
-	Mon,  6 May 2024 14:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D807E7C6D5
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 14:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715004002; cv=none; b=huMIUbBXuK/27VDlVLatXQyv97mI2Y61ilB+9H5Z4RlH1SEIr49QMfZnBWhRouEi5FSatdLbs4121RfIxdgvV0q3TfEwyt85/PGtT1ZXg56zwGAHIQjzUw8CICXMgJ9KuK5SXagEezFFcabt7BCZa4Xd8AAR6Jd6rW2f1J/R2qk=
+	t=1715004109; cv=none; b=BGUzM2dszPQcUlkrpnY2xkaJd/d7MKhEk2Q0z40o/xzwxwz7fEDUm8E/vuEf2qiIhULJeSUJ2+s9jURdCvsjDpLdkIXnjmNCyJzlIXL4A7zVvayvI8UKgqmzkz6dWVX7WcuMhwK+xuD7h0mPvD3/NVFLO5dv4FsXMXBhc6kJwRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715004002; c=relaxed/simple;
-	bh=P7hzobG48OrQRhVmRGZvAghTx4JfPFToBDmjqFqNKpI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FjngjOzOW/UegdXZxQvS9bIY6Mrq+kWlnyeAIilH++tXiK5MGLSt9yFQEg6CG/R6csedYUt1yz19woRn72Wis7vYQ1qA5a0NEFULS05Y/EKO2kBhqyQuPcCgXVPmP9ENCc8vGmWoqLeqDuc9N09owkhhVwRiHCprouk4cmOPxLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=fChRnzLO; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1715004109; c=relaxed/simple;
+	bh=QdBWMUSn7gZXmXCHj2RcAdJODiJKBW/D4uMUKrPsQ9E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=lk8xgvMvRZhnKVbpiqE5Uhq0oAHVYR644fy1I6weAAp7Glwyye+wKH2sD+W0tgVt+drFekFOslH4LJprs5yt7Wn3ZV2zpm8C1VG8lU6NA4WlX5Abw0c4230ORKsvNJlJW78foYS8ZTPHSG4OMxhLFQxxmjs9XKAQL2JV67nXP7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iPal3w38; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fChRnzLO"
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 446An4gF027863;
-	Mon, 6 May 2024 13:59:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=l8vsB0YxVyOhCoOR1rq+CzGzcpNzExSdLNP82ssVmCM=;
- b=fChRnzLOkEjRTcdNnI/XUZmQK/PfdYREMS5/ArjpCknWpCIJeTmNpY+G6XfeITRj1g4h
- YwinRki+3j8GY0gsdLC7YMKpTuYzFSD8AqMmxPFSRTZH578/pgs/zyKRXGGpWZQUlrZH
- NXTH4pexaNtzdTVl0Lpy7+vCTlIwYlvICQoiUbke23WKM4IwH6ABEc3uFfSfZ4tW9PZ5
- hDD0mC86ajeTDc6e0Ger4Ha9So3FcHBTf4/IO93W6nfOrHgGp34iadfNm48/A0M8A92X
- Lj761TyNkRDbTAg6F0F2iOzy5Nn60XpAw9UJPSTBo/esAoEtN3xB5WhYJQwkAQ8Nq/Oz lA== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xwd2dtnaq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 06 May 2024 13:59:55 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 446ChRM6014136;
-	Mon, 6 May 2024 13:59:54 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xwbf61983-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 06 May 2024 13:59:54 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 446Dv4n5027456;
-	Mon, 6 May 2024 13:59:53 GMT
-Received: from pkannoju-vm.us.oracle.com (dhcp-10-191-206-220.vpn.oracle.com [10.191.206.220])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3xwbf6195f-1;
-	Mon, 06 May 2024 13:59:53 +0000
-From: Praveen Kumar Kannoju <praveen.kannoju@oracle.com>
-To: jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc: rajesh.sivaramasubramaniom@oracle.com, rama.nichanamatlu@oracle.com,
-        manjunath.b.patil@oracle.com,
-        Praveen Kumar Kannoju <praveen.kannoju@oracle.com>
-Subject: [PATCH v2] net/sched: adjust device watchdog timer to detect stopped queue at right time
-Date: Mon,  6 May 2024 19:29:44 +0530
-Message-Id: <20240506135944.7753-1-praveen.kannoju@oracle.com>
-X-Mailer: git-send-email 2.31.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iPal3w38"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715004106;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oa4YbBmlzkI63abCw2z4fEd9n5o3yLiXeNXHymLCUuE=;
+	b=iPal3w38+4DU6qX+Ax8iDGoxGS1THKcmg2kBY0r+x/tg2cQ5JrX/9tIF3thwJkzOdk//pG
+	Xlg9fgfatbX4s6oc1I0SpPFFQ+ce8tbj4cLeXYeF/6NgCLG4257QCI9VGquvM9MwmN2ztv
+	1Vi4KBdoJNn+fh5Sr6iN1QDUwF6oruc=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-397-KbedAPxNOdSoUoqaBG7FWw-1; Mon, 06 May 2024 10:01:45 -0400
+X-MC-Unique: KbedAPxNOdSoUoqaBG7FWw-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-571bdbca3c8so363688a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 07:01:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715004104; x=1715608904;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oa4YbBmlzkI63abCw2z4fEd9n5o3yLiXeNXHymLCUuE=;
+        b=JIcr2eZNi8X3pCNCFUvEC61tVwzGCuwIQWaKNZa0JSiQM7P0RI4t9Ca46qvLnVUH6d
+         vs6ExvKcytQmprLBlVpkLI34ISbuW1+sWMJNpI79SAcuvhezXu5PyT9cuY9QrIecLyS9
+         JKXAB4oJcChBMbjeBK5wQEUdPiBxuY3ezv1YXD5EK1S0FhrFLWaw6l0PWUtVEr5scYVx
+         zCpQfGx9Q1axIOXPHUu8e4MrRhpEaiKAR5zxsMdVZRyNx5v6r6OkIsF79fyS9R8g3T0T
+         bgPyxfRZlCinglFCFDDFfpP9bw/kY8JaTnq0KvcBDKVq7yNwrDGdkjLC2lC5HroqF3ML
+         EKgw==
+X-Forwarded-Encrypted: i=1; AJvYcCXv0TPgJs8AIxV7Mi3ZcqeSfhUvsZ/yD9/BjcbQCsj68YGI+uycNmLZTDIQek18OYtwrJPaVdpWc//AFGBSj4HVric7MZF61ybppTAO
+X-Gm-Message-State: AOJu0YxDipw5r2hiHy+b92J/d1TB9VvBxilhsurxso6EFUTlC5N2/tLV
+	gC2+wHiN6r2kXDvSMzC1RoK6rJ+wjv1s/GVK5B/XrWK2CF5pyzV3aM54QJxFhGUidNuS2MhukeO
+	cCWLwAvOUxguAdLOMXbRcQHBT1cD30UbVcAkitpVKoVJmsJBYD4Mi07U5GYiS1w==
+X-Received: by 2002:a50:9513:0:b0:570:5b70:3407 with SMTP id u19-20020a509513000000b005705b703407mr8444055eda.10.1715004104189;
+        Mon, 06 May 2024 07:01:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqtTHezMetmGx7QkF/7UHxNmAFJAxewY94xyi4UnLpcMz8eE3WVuF2BLvBhkQkOqr8E1iw4Q==
+X-Received: by 2002:a50:9513:0:b0:570:5b70:3407 with SMTP id u19-20020a509513000000b005705b703407mr8444031eda.10.1715004103794;
+        Mon, 06 May 2024 07:01:43 -0700 (PDT)
+Received: from [10.40.98.157] ([78.108.130.194])
+        by smtp.gmail.com with ESMTPSA id z5-20020aa7c645000000b00572b0a44e42sm5224207edr.26.2024.05.06.07.01.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 06 May 2024 07:01:43 -0700 (PDT)
+Message-ID: <cbe5a743-d8be-4b0e-99c4-e804fbadc099@redhat.com>
+Date: Mon, 6 May 2024 16:01:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-06_08,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0
- mlxlogscore=999 bulkscore=0 mlxscore=0 adultscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405060096
-X-Proofpoint-GUID: TJufH9kkmrhGtnz6M3se9SSQm5zh2ZI8
-X-Proofpoint-ORIG-GUID: TJufH9kkmrhGtnz6M3se9SSQm5zh2ZI8
+User-Agent: Mozilla Thunderbird
+Subject: Re: Safety of opening up /dev/dma_heap/* to physically present users
+ (udev uaccess tag) ?
+To: Maxime Ripard <mripard@redhat.com>, Sumit Semwal
+ <sumit.semwal@linaro.org>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ "T.J. Mercier" <tjmercier@google.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Lennart Poettering <mzxreary@0pointer.de>,
+ Robert Mader <robert.mader@collabora.com>,
+ Sebastien Bacher <sebastien.bacher@canonical.com>,
+ Linux Media Mailing List <linux-media@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ linaro-mm-sig@lists.linaro.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Milan Zamazal <mzamazal@redhat.com>,
+ Andrey Konovalov <andrey.konovalov.ynk@gmail.com>
+References: <bb372250-e8b8-4458-bc99-dd8365b06991@redhat.com>
+ <20240506-dazzling-nippy-rhino-eabccd@houat>
+ <ZjjdUBYYKXJ1EPr5@phenom.ffwll.local>
+Content-Language: en-US
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <ZjjdUBYYKXJ1EPr5@phenom.ffwll.local>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Applications are sensitive to long network latency, particularly
-heartbeat monitoring ones. Longer the tx timeout recovery higher the
-risk with such applications on a production machines. This patch
-remedies, yet honoring device set tx timeout.
+Hi Sima,
 
-Modify watchdog next timeout to be shorter than the device specified.
-Compute the next timeout be equal to device watchdog timeout less the
-how long ago queue stop had been done. At next watchdog timeout tx
-timeout handler is called into if still in stopped state. Either called
-or not called, restore the watchdog timeout back to device specified.
+On 5/6/24 3:38 PM, Daniel Vetter wrote:
+> On Mon, May 06, 2024 at 02:05:12PM +0200, Maxime Ripard wrote:
+>> Hi,
+>>
+>> On Mon, May 06, 2024 at 01:49:17PM GMT, Hans de Goede wrote:
+>>> Hi dma-buf maintainers, et.al.,
+>>>
+>>> Various people have been working on making complex/MIPI cameras work OOTB
+>>> with mainline Linux kernels and an opensource userspace stack.
+>>>
+>>> The generic solution adds a software ISP (for Debayering and 3A) to
+>>> libcamera. Libcamera's API guarantees that buffers handed to applications
+>>> using it are dma-bufs so that these can be passed to e.g. a video encoder.
+>>>
+>>> In order to meet this API guarantee the libcamera software ISP allocates
+>>> dma-bufs from userspace through one of the /dev/dma_heap/* heaps. For
+>>> the Fedora COPR repo for the PoC of this:
+>>> https://hansdegoede.dreamwidth.org/28153.html
+>>
+>> For the record, we're also considering using them for ARM KMS devices,
+>> so it would be better if the solution wasn't only considering v4l2
+>> devices.
+>>
+>>> I have added a simple udev rule to give physically present users access
+>>> to the dma_heap-s:
+>>>
+>>> KERNEL=="system", SUBSYSTEM=="dma_heap", TAG+="uaccess"
+>>>
+>>> (and on Rasperry Pi devices any users in the video group get access)
+>>>
+>>> This was just a quick fix for the PoC. Now that we are ready to move out
+>>> of the PoC phase and start actually integrating this into distributions
+>>> the question becomes if this is an acceptable solution; or if we need some
+>>> other way to deal with this ?
+>>>
+>>> Specifically the question is if this will have any negative security
+>>> implications? I can certainly see this being used to do some sort of
+>>> denial of service attack on the system (1). This is especially true for
+>>> the cma heap which generally speaking is a limited resource.
+>>
+>> There's plenty of other ways to exhaust CMA, like allocating too much
+>> KMS or v4l2 buffers. I'm not sure we should consider dma-heaps
+>> differently than those if it's part of our threat model.
+> 
+> So generally for an arm soc where your display needs cma, your render node
+> doesn't. And user applications only have access to the later, while only
+> the compositor gets a kms fd through logind. At least in drm aside from
+> vc4 there's really no render driver that just gives you access to cma and
+> allows you to exhaust that, you need to be a compositor with drm master
+> access to the display.
+> 
+> Which means we're mostly protected against bad applications, and that's
+> not a threat the "user physically sits in front of the machine accounts
+> for", and which giving cma access to everyone would open up. And with
+> flathub/snaps/... this is very much an issue.
 
-Signed-off-by: Praveen Kumar Kannoju <praveen.kannoju@oracle.com>
----
-v2:
-  - Identify the oldest trans_start from all the queues and use it.
-v1: https://lore.kernel.org/netdev/20240430140010.5005-1-praveen.kannoju@oracle.com/
----
- net/sched/sch_generic.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+I agree that bad applications are an issue, but not for the flathub / snaps
+case. Flatpacks / snaps run sandboxed and don't have access to a full /dev
+so those should not be able to open /dev/dma_heap/* independent of
+the ACLs on /dev/dma_heap/*. The plan is for cameras using the
+libcamera software ISP to always be accessed through pipewire and
+the camera portal, so in this case pipewere is taking the place of
+the compositor in your kms vs render node example.
 
-diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-index 4a2c763e2d11..840b995c7233 100644
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -506,19 +506,22 @@ static void dev_watchdog(struct timer_list *t)
- 			unsigned int timedout_ms = 0;
- 			unsigned int i;
- 			unsigned long trans_start;
-+			unsigned long oldest_start = jiffies;
- 
- 			for (i = 0; i < dev->num_tx_queues; i++) {
- 				struct netdev_queue *txq;
- 
- 				txq = netdev_get_tx_queue(dev, i);
- 				trans_start = READ_ONCE(txq->trans_start);
--				if (netif_xmit_stopped(txq) &&
--				    time_after(jiffies, (trans_start +
--							 dev->watchdog_timeo))) {
-+				if (!netif_xmit_stopped(txq))
-+					continue;
-+				if (time_after(jiffies, (trans_start + dev->watchdog_timeo))) {
- 					timedout_ms = jiffies_to_msecs(jiffies - trans_start);
- 					atomic_long_inc(&txq->trans_timeout);
- 					break;
- 				}
-+				if (time_after(oldest_start, trans_start))
-+					oldest_start = trans_start;
- 			}
- 
- 			if (unlikely(timedout_ms)) {
-@@ -531,7 +534,7 @@ static void dev_watchdog(struct timer_list *t)
- 				netif_unfreeze_queues(dev);
- 			}
- 			if (!mod_timer(&dev->watchdog_timer,
--				       round_jiffies(jiffies +
-+				       round_jiffies(oldest_start +
- 						     dev->watchdog_timeo)))
- 				release = false;
- 		}
--- 
-2.31.1
+So this reduces the problem to bad apps packaged by regular distributions
+and if any of those misbehave the distros should fix that.
+
+So I think that for the denial of service side allowing physical
+present users (but not sandboxed apps running as those users) to
+access /dev/dma_heap/* should be ok.
+
+My bigger worry is if dma_heap (u)dma-bufs can be abused in other
+ways then causing a denial of service.
+
+I guess that the answer there is that causing other security issues
+should not be possible ?
+
+Regards,
+
+Hans
 
