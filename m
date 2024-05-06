@@ -1,73 +1,71 @@
-Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7CA142627
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 09:36:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17BA11422DF;
+	Mon,  6 May 2024 09:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714988167; cv=none; b=UXksVoE7f3NiYsFQFfV23/nBiDdbuXiHgnZY5BdQQdI3f0Rcaur3Aa5pfz9qmlNzg2ICfMe2wq+hpooWMwtac77Q/qBMBbF3SGn6uXAcgzGFHVadAFsqqiiloemBm8Pwuk/nj3O4VaC39uPwv/viDYy6qNgrrYJjSwqpWh4hohQ=
+	t=1714988192; cv=none; b=MbOZu82Ij108xGZ8dthr7ccjslVZCl58b2XFbldSLzCpY0sGlh56m4gqX+3xM1YunmGGV2c+I0QEdU+n4ldJAdOnuG7+junCn/rMxsw0PLUYZBYALtCD70Mr86w8HegDZCn48qXVLbYpdSDJAsRWXOVmv+4HXd2m5uStmv2cue0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714988167; c=relaxed/simple;
-	bh=Mu2C59ma0wmmlwlJbUPb0oxrlPtfrOJgkHqbGqwGNXg=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U8HVnB/tqUC1EWF360EzLB2lB6xCaCE4hgNRAQtCsvPafg5VmsqOCisCLEx4g0NopXSZeMht1c6O7ayubap2XjNRcRAaig9jXSMsFtYwPY717LZtruv1zsQGSehYB5SP2oLOn4BJ2SPxP/HPW1uZcAHLr2jOU0a/dpgCFjIFDq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=fail (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=FuqWHxzh reason="key not found in DNS"; arc=none smtp.client-ip=60.251.196.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
+	s=arc-20240116; t=1714988192; c=relaxed/simple;
+	bh=7R8HvbMKxhvQTD+6WjeeyIDykaL5AbTSf5Sm3F3g0MI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AUZjCUfAn8QZ1QVmOo7BrOqcDw+zFNFXfb8DYLvsVhfCpUXBcDSY23o7Vhm5sBsclOHX7kcyGI4CQJRNy/rZxNP73vkd1YIzOj5mSZlayu2aW2Ea0HmRbYh7y949JmUDo4X09a95+98CGTcl7ALGg3Csc4oB5/LjvQBmlh0NoAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AuNrdVqT; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="FuqWHxzh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AuNrdVqT"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-34dc9065606so876781f8f.1;
+        Mon, 06 May 2024 02:36:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=ite.com.tw; s=dkim;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=FJ0E44CU85BZKUVcO6AUH0IYXzryWFFYUpoZJjpMvu0=;
-  b=FuqWHxzhPUxWiozdvOsPm3qY1w7JSUV1wTpwRXvroNUY21Rgi5c2qZvg
-   xzfv208KB/vi+A7skV9YcOyF3ah1EufbTHi75J/uo/EBUiQh6yeZpNwji
-   SiLif7t4G0JAM0JZFriYltBO9ze2HxoxYwIyMHw6IGCNxWVUF0KbXaWZ1
-   vKcgrQqKhjpnogDWj0Xr4/2VhAQeDAw9yWZhEO+lvVrZBfifMTwLGKvNk
-   GOoieAyBwZRHkErpY4akwQVOpgq8ZEuR481Jz+zRmMYmmx2Bw/ujMilf5
-   arO7dYARqf+i67d5UOHxuIXmfQeFELgqvSopf5RHPeKhMiWxkn9pvYWCM
-   A==;
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 06 May 2024 17:36:00 +0800
-Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL1.internal.ite.com.tw [192.168.65.58])
-	by mse.ite.com.tw with ESMTP id 4469Ztbw076496;
-	Mon, 6 May 2024 17:35:55 +0800 (GMT-8)
-	(envelope-from kuro.chung@ite.com.tw)
-Received: from ite-XPS-13-9360.internal.ite.com.tw (192.168.72.42) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 6 May 2024 17:35:55 +0800
-From: kuro <kuro.chung@ite.com.tw>
-To:
-CC: Allen Chen <allen.chen@ite.com.tw>, Pin-yen Lin <treapking@chromium.org>,
-        Kuro Chung <kuro.chung@ite.com.tw>,
-        Kenneth Haung <kenneth.hung@ite.com.tw>,
-        Kuro Chung <kuro.chung@ite.corp-partner.google.com>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVERS"
-	<dri-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 1/1] drm/bridge: it6505: fix hibernate to resume no display issue
-Date: Mon, 6 May 2024 17:46:44 +0800
-Message-ID: <20240506094644.887842-2-kuro.chung@ite.com.tw>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240506094644.887842-1-kuro.chung@ite.com.tw>
-References: <20240506094644.887842-1-kuro.chung@ite.com.tw>
+        d=gmail.com; s=20230601; t=1714988189; x=1715592989; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UFC6StoIxDlALEXd4nLUmHSyf9IY2MMtGBaOD7tAdoQ=;
+        b=AuNrdVqT2UmBFWV0VaJLAudIHJ70EEfhZ2ElqRSmC3mAi0ItloQVDDDZ5lPv7/j0ZQ
+         FpxXhLy25ioz8ZMCua+6oGWfrZkq410waAtf8SWCSLqaFkhmjyQDG5Yc71Z73ncUnut4
+         YlM5MZortfqceTl6h0uJPV/ndquTjaHJWg9pJZwcxGvGnGRSWqvDTA17FhwrwGr7K94i
+         2c9LK9RcP6y1BaEPqS3Dzt98xCj2zoIGY2A5S2d7e1FiNzuBB6RswfkyGz+2CJqg93qe
+         LnqCHLMupeOCN7etatDtNZqMkSRSApjf11ojmeLl3r9OAlZfhlDtKBYqlkl5vSwV/Z09
+         IvDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714988189; x=1715592989;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UFC6StoIxDlALEXd4nLUmHSyf9IY2MMtGBaOD7tAdoQ=;
+        b=e5mdci64GvQWC+2wJpNE7JzpQsXpMRbe/+2y+imXpW62FTRyJDuc5/kqkJD4Q7bLom
+         yjpP4DFlzWA1ScyC0Hz+wCMJ3hh1tLV8r4LPIxq/GQksr0pD8e71fgi5Hy2Sw71MteX1
+         wFDlX0CPrhXjdxZtb8jDEx+L1VxzTGoFBdIc22aSy2Rz3zp5GmvGd98tNmaao/Dmzd87
+         MV+z9GIlxdhXUSMdGB6qIDvKpncrh7AszAzvgNpPSs2evwSauDYL15yk+8JPYraFIWzt
+         OgXfugkI1qFHvL/xE6DCPUXF4wz2max+2CdBHCnKkM2FjBjCR3ZiwTeUkHF15WrS4IW7
+         e0Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCXSBgnqsjIGjjV2xbugysKY2zojw2cFIiBq/Z+kh0JSEBSrBV0TXoC74E2z5RSJl0zI2N/ejy3egl9C1dX8bWc3bmARoMzoCJc6VQKvi9YL9sWYg6XAzbVB0NRZVsnEKLuEVuEHvzstSQ61CoTkqPrcYf0EMHb8lP6gwzPsRWBbp1hCd0dW
+X-Gm-Message-State: AOJu0YySFE6y6BQlCOJ+GSQ9wdqN9F3xPEBp605TgnDvJHeTsiZbzBrm
+	ZhLHDw5iUii8BUhnZv7r0K1YlFtauZB8AHDFh86lgc5G5+t1cXld
+X-Google-Smtp-Source: AGHT+IGjIrpDBGch+to3JaV8LBAuxxB2Ga3LtyGnnPAJ2JlqrZq8rCBohLuC0CT4tqUcS/qjLx2jlA==
+X-Received: by 2002:adf:b186:0:b0:34a:6fac:6dab with SMTP id q6-20020adfb186000000b0034a6fac6dabmr11603134wra.12.1714988189159;
+        Mon, 06 May 2024 02:36:29 -0700 (PDT)
+Received: from localhost ([146.70.204.204])
+        by smtp.gmail.com with ESMTPSA id m7-20020a05600c4f4700b0041b434e5869sm19100938wmq.43.2024.05.06.02.36.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 May 2024 02:36:28 -0700 (PDT)
+From: Richard Gobert <richardbgobert@gmail.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	willemdebruijn.kernel@gmail.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	dsahern@kernel.org,
+	alobakin@pm.me,
+	shuah@kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: Richard Gobert <richardbgobert@gmail.com>
+Subject: [PATCH net-next v8 0/3] net: gro: remove network_header use, move p->{flush/flush_id} calculations to L4
+Date: Mon,  6 May 2024 11:35:47 +0200
+Message-Id: <20240506093550.128210-1-richardbgobert@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,159 +73,75 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
- CSBMAIL1.internal.ite.com.tw (192.168.65.58)
-X-TM-SNTS-SMTP:
-	963F680051FC04DF6066CDD00CFEFD683CA1B3047FCA81CCC576D59CF02F33492002:8
-X-MAIL:mse.ite.com.tw 4469Ztbw076496
 
-From: Kuro <kuro.chung@ite.com.tw>
+The cb fields network_offset and inner_network_offset are used instead of
+skb->network_header throughout GRO.
 
-ITE added a FIFO reset bit for input video. When system power resume,
-the TTL input of it6505 may get some noise before video signal stable
-and the hardware function reset is required.
-But the input FIFO reset will also trigger error interrupts of output module rising.
-Thus, it6505 have to wait a period can clear those expected error interrupts
-caused by manual hardware reset in one interrupt handler calling to avoid interrupt looping.
+These fields are then leveraged in the next commit to remove flush_id state
+from napi_gro_cb, and stateful code in {ipv6,inet}_gro_receive which may be
+unnecessarily complicated due to encapsulation support in GRO. These fields
+are checked in L4 instead.
 
-Signed-off-by: Kuro Chung <kuro.chung@ite.corp-partner.google.com>
+3rd patch adds tests for different flush_id flows in GRO.
 
----
- drivers/gpu/drm/bridge/ite-it6505.c | 73 +++++++++++++++++++----------
- 1 file changed, 49 insertions(+), 24 deletions(-)
+v7 -> v8:
+ - Remove network_header use in gro
+ - Re-send commits after the dependent patch to net was applied
+ - v7:
+   https://lore.kernel.org/all/20240412155533.115507-1-richardbgobert@gmail.com/
 
-diff --git a/drivers/gpu/drm/bridge/ite-it6505.c b/drivers/gpu/drm/bridge/ite-it6505.c
-index b53da9bb65a16..64e2706e3d0c3 100644
---- a/drivers/gpu/drm/bridge/ite-it6505.c
-+++ b/drivers/gpu/drm/bridge/ite-it6505.c
-@@ -1317,9 +1317,15 @@ static void it6505_video_reset(struct it6505 *it6505)
- 	it6505_link_reset_step_train(it6505);
- 	it6505_set_bits(it6505, REG_DATA_MUTE_CTRL, EN_VID_MUTE, EN_VID_MUTE);
- 	it6505_set_bits(it6505, REG_INFOFRAME_CTRL, EN_VID_CTRL_PKT, 0x00);
--	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET);
-+
-+	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, TX_FIFO_RESET);
-+	it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x00);
-+
- 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, RST_501_FIFO);
- 	it6505_set_bits(it6505, REG_501_FIFO_CTRL, RST_501_FIFO, 0x00);
-+
-+	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, VIDEO_RESET);
-+	usleep_range(1000, 2000);
- 	it6505_set_bits(it6505, REG_RESET_CTRL, VIDEO_RESET, 0x00);
- }
- 
-@@ -2249,12 +2255,11 @@ static void it6505_link_training_work(struct work_struct *work)
- 	if (ret) {
- 		it6505->auto_train_retry = AUTO_TRAIN_RETRY;
- 		it6505_link_train_ok(it6505);
--		return;
- 	} else {
- 		it6505->auto_train_retry--;
-+		it6505_dump(it6505);
- 	}
- 
--	it6505_dump(it6505);
- }
- 
- static void it6505_plugged_status_to_codec(struct it6505 *it6505)
-@@ -2475,31 +2480,53 @@ static void it6505_irq_link_train_fail(struct it6505 *it6505)
- 	schedule_work(&it6505->link_works);
- }
- 
--static void it6505_irq_video_fifo_error(struct it6505 *it6505)
-+static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
- {
--	struct device *dev = &it6505->client->dev;
--
--	DRM_DEV_DEBUG_DRIVER(dev, "video fifo overflow interrupt");
--	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
--	flush_work(&it6505->link_works);
--	it6505_stop_hdcp(it6505);
--	it6505_video_reset(it6505);
-+	return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
- }
- 
--static void it6505_irq_io_latch_fifo_overflow(struct it6505 *it6505)
-+static void it6505_irq_video_handler(struct it6505 *it6505, const int *int_status)
- {
- 	struct device *dev = &it6505->client->dev;
-+	int reg_0d, reg_int03;
- 
--	DRM_DEV_DEBUG_DRIVER(dev, "IO latch fifo overflow interrupt");
--	it6505->auto_train_retry = AUTO_TRAIN_RETRY;
--	flush_work(&it6505->link_works);
--	it6505_stop_hdcp(it6505);
--	it6505_video_reset(it6505);
--}
-+	/*
-+	 * When video SCDT change with video not stable,
-+	 * Or video FIFO error, need video reset
-+	 */
- 
--static bool it6505_test_bit(unsigned int bit, const unsigned int *addr)
--{
--	return 1 & (addr[bit / BITS_PER_BYTE] >> (bit % BITS_PER_BYTE));
-+	if ((!it6505_get_video_status(it6505) &&
-+		(it6505_test_bit(INT_SCDT_CHANGE, (unsigned int *) int_status))) ||
-+		(it6505_test_bit(BIT_INT_IO_FIFO_OVERFLOW, (unsigned int *) int_status)) ||
-+		(it6505_test_bit(BIT_INT_VID_FIFO_ERROR, (unsigned int *) int_status))) {
-+
-+		it6505->auto_train_retry = AUTO_TRAIN_RETRY;
-+		flush_work(&it6505->link_works);
-+		it6505_stop_hdcp(it6505);
-+		it6505_video_reset(it6505);
-+
-+		usleep_range(10000, 11000);
-+
-+		/*
-+		 * Clear FIFO error IRQ to prevent fifo error -> reset loop
-+		 * HW will trigger SCDT change IRQ again when video stable
-+		 */
-+
-+		reg_int03 = it6505_read(it6505, INT_STATUS_03);
-+		reg_0d = it6505_read(it6505, REG_SYSTEM_STS);
-+
-+		reg_int03 &= (BIT(INT_VID_FIFO_ERROR) | BIT(INT_IO_LATCH_FIFO_OVERFLOW));
-+		it6505_write(it6505, INT_STATUS_03, reg_int03);
-+
-+		DRM_DEV_DEBUG_DRIVER(dev, "reg08 = 0x%02x", reg_int03);
-+		DRM_DEV_DEBUG_DRIVER(dev, "reg0D = 0x%02x", reg_0d);
-+
-+		return;
-+	}
-+
-+
-+	if (it6505_test_bit(INT_SCDT_CHANGE, (unsigned int *) int_status))
-+		it6505_irq_scdt(it6505);
- }
- 
- static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
-@@ -2512,15 +2539,12 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
- 	} irq_vec[] = {
- 		{ BIT_INT_HPD, it6505_irq_hpd },
- 		{ BIT_INT_HPD_IRQ, it6505_irq_hpd_irq },
--		{ BIT_INT_SCDT, it6505_irq_scdt },
- 		{ BIT_INT_HDCP_FAIL, it6505_irq_hdcp_fail },
- 		{ BIT_INT_HDCP_DONE, it6505_irq_hdcp_done },
- 		{ BIT_INT_AUX_CMD_FAIL, it6505_irq_aux_cmd_fail },
- 		{ BIT_INT_HDCP_KSV_CHECK, it6505_irq_hdcp_ksv_check },
- 		{ BIT_INT_AUDIO_FIFO_ERROR, it6505_irq_audio_fifo_error },
- 		{ BIT_INT_LINK_TRAIN_FAIL, it6505_irq_link_train_fail },
--		{ BIT_INT_VID_FIFO_ERROR, it6505_irq_video_fifo_error },
--		{ BIT_INT_IO_FIFO_OVERFLOW, it6505_irq_io_latch_fifo_overflow },
- 	};
- 	int int_status[3], i;
- 
-@@ -2550,6 +2574,7 @@ static irqreturn_t it6505_int_threaded_handler(int unused, void *data)
- 			if (it6505_test_bit(irq_vec[i].bit, (unsigned int *)int_status))
- 				irq_vec[i].handler(it6505);
- 		}
-+		it6505_irq_video_handler(it6505, (unsigned int *) int_status);
- 	}
- 
- 	pm_runtime_put_sync(dev);
+v6 -> v7:
+ - Moved bug fixes to a separate submission in net
+ - Added UDP fwd benchmark
+ - v6:
+   https://lore.kernel.org/all/20240410153423.107381-1-richardbgobert@gmail.com/
+
+v5 -> v6:
+ - Write inner_network_offset in vxlan and geneve
+ - Ignore is_atomic when DF=0
+ - v5:
+   https://lore.kernel.org/all/20240408141720.98832-1-richardbgobert@gmail.com/
+
+v4 -> v5:
+ - Add 1st commit - flush id checks in udp_gro_receive segment which can be
+   backported by itself
+ - Add TCP measurements for the 5th commit
+ - Add flush id tests to ensure flush id logic is preserved in GRO
+ - Simplify gro_inet_flush by removing a branch
+ - v4:
+   https://lore.kernel.org/all/202420325182543.87683-1-richardbgobert@gmail.com/
+
+v3 -> v4:
+ - Fix code comment and commit message typos
+ - v3:
+   https://lore.kernel.org/all/f939c84a-2322-4393-a5b0-9b1e0be8ed8e@gmail.com/
+
+v2 -> v3:
+ - Use napi_gro_cb instead of skb->{offset}
+ - v2:
+   https://lore.kernel.org/all/2ce1600b-e733-448b-91ac-9d0ae2b866a4@gmail.com/
+
+v1 -> v2:
+ - Pass p_off in *_gro_complete to fix UDP bug
+ - Remove more conditionals and memory fetches from inet_gro_flush
+ - v1:
+   https://lore.kernel.org/netdev/e1d22505-c5f8-4c02-a997-64248480338b@gmail.com/
+
+Richard Gobert (3):
+  net: gro: use cb instead of skb->network_header
+  net: gro: move L3 flush checks to tcp_gro_receive and udp_gro_receive_segment
+  selftests/net: add flush id selftests
+
+ include/net/gro.h                 |  75 +++++++++++++--
+ net/core/gro.c                    |   3 -
+ net/ipv4/af_inet.c                |  45 +--------
+ net/ipv4/tcp_offload.c            |  18 +---
+ net/ipv4/udp_offload.c            |  10 +-
+ net/ipv6/ip6_offload.c            |  16 +---
+ net/ipv6/tcpv6_offload.c          |   3 +-
+ tools/testing/selftests/net/gro.c | 147 ++++++++++++++++++++++++++++++
+ 8 files changed, 225 insertions(+), 92 deletions(-)
+
 -- 
-2.25.1
+2.36.1
 
