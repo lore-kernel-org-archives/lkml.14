@@ -1,150 +1,76 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE21882497;
-	Mon,  6 May 2024 14:08:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B09882497;
+	Mon,  6 May 2024 14:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715004538; cv=none; b=e7Gnom4NuIUbhGyri+6E7f4SufwmnzMgdLp92mCc8qBM1wxJBPFgZ7UnZ7skz8xVhwSx7diYPn57AI5PClbjGgwIkxqGytYFTwnN1mh3abuxe3rdPbMFh+QI0qiLMUpT8X9tEjQIA5LsO1vESkxQqTZJlNbHLR/Fm9G99FXTGBE=
+	t=1715004549; cv=none; b=BlXxs2ME6Z23oOcp6vPFWzR1pcYqiB54EwK+9dOgPt2J3b6Ik1h/bJAiw3D9UgIg+BGaoMsXnp/22hBraDSO8KyJQ0zHekYhkEOKd0+PvzOolQ6Byv5QuiAjTZxdDCmSkE3z5bnW1lfQeyKaq1lAW1CEpU+wvoCpAtSKFkHbw04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715004538; c=relaxed/simple;
-	bh=D4aRyvqT3grAqmfUGEFS/JdTe7ofhsNbvKny7R+kP+I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JXMGYP4PJ+Qckavx7IVMrkIaY6dcJo+/7CXktZXiSuv0+hweFuHDMU06nOIy1rD3YSoGxARy4ZYCPbCIdtFaEeJ87QEFea988/umT5A0nSpgx/rh2cJ6xtlFilcNN47uxkQ2OVPLSNxjZXCb6pa35PxVj+BWT1FMXnudXXP2PBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RYTxThHK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HVHPEnYV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ejiA94ww; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PQcJp/c8; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RYTxThHK";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HVHPEnYV";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ejiA94ww";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PQcJp/c8"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E70BC3845F;
-	Mon,  6 May 2024 14:08:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1715004535; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=7JBvaGeM3j7DGR7X0tpm2vFdVObPH9J+7TPetXuL2sA=;
-	b=RYTxThHKiL6dWcPvwvnTJc2p8MmqzheAMkfyWQ7SqpSZdpPGkR2aXVGY4blT1lemRiCbbg
-	VrHFKQBkrBBttzGTTs52mlrAuPx2CtvVTo7HBh97hASJQlWX4H94a1s+/Dk0L6UuowEW41
-	ueLPvKTtVUjaHKegclUE/dXpCnIIjng=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1715004535;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=7JBvaGeM3j7DGR7X0tpm2vFdVObPH9J+7TPetXuL2sA=;
-	b=HVHPEnYVAImIWD8KDkPPmXo1hMKvBXZQUn66aPSO0wINMIOTPTDGCAvu2MlqASiTQoSr4I
-	NuZ66PRq3Hds+jAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ejiA94ww;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="PQcJp/c8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1715004534; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=7JBvaGeM3j7DGR7X0tpm2vFdVObPH9J+7TPetXuL2sA=;
-	b=ejiA94ww9Hn+V/0hDDBuMQm2uzeaYBgBG6JDn530fEiuHJ9bXWUP3MdSKKu/gF7o45TSRL
-	Lccx5+BjoTgQV6pqufoyBKBkLGdx7Tbop1kk6IO8JQmeamQcys8cuqigT8o3Y5fslZ27De
-	RA/XWWX9YJVmw3OIUAYDjslLgcpKspI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1715004534;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=7JBvaGeM3j7DGR7X0tpm2vFdVObPH9J+7TPetXuL2sA=;
-	b=PQcJp/c81LySugEG7UqHJBeU9KWO34/drNKQoIXw3Sz32rorJjRMYr66q9R7dBkLE7O5rd
-	/auETibe1iByyBDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BB45013A25;
-	Mon,  6 May 2024 14:08:54 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id mz5yLHbkOGY8aAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Mon, 06 May 2024 14:08:54 +0000
-From: Takashi Iwai <tiwai@suse.de>
-To: "Rafael J . Wysocki" <rafael@kernel.org>
-Cc: Len Brown <lenb@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ACPI: video: Add backlight=native quirk for Lenovo Slim 7 16ARH7
-Date: Mon,  6 May 2024 16:08:50 +0200
-Message-ID: <20240506140906.26034-1-tiwai@suse.de>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1715004549; c=relaxed/simple;
+	bh=xfREskp0aFFmWPukql0qe6jAozQgtsD58tDf97zGEGg=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=eFiN95ZCdY/lDUA91LUlfkDrE75Kt/p5lxgv/mLn6Cpe2Dob8O1949Ag4gUJQxVL/7T0XhXHd8MqhOsvySJxTd85XcZqIgs/8UVFpmp6v08139k5r3JTebN7KImqfVIrulvMCqTvPKGJVcZUZVhmrhSb3+1OI0OxR1+80WxM5Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from ubuntu.localdomain (unknown [221.192.180.207])
+	by mail-app2 (Coremail) with SMTP id by_KCgCXtaRj5DhmI_s4AA--.15255S2;
+	Mon, 06 May 2024 22:08:38 +0800 (CST)
+From: Duoming Zhou <duoming@zju.edu.cn>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-hams@vger.kernel.org,
+	pabeni@redhat.com,
+	kuba@kernel.org,
+	edumazet@google.com,
+	davem@davemloft.net,
+	jreuter@yaina.de,
+	horms@kernel.org,
+	Markus.Elfring@web.de,
+	dan.carpenter@linaro.org,
+	lars@oddbit.com,
+	Duoming Zhou <duoming@zju.edu.cn>
+Subject: [PATCH net v3 0/2] ax25: Fix issues of ax25_dev and net_device
+Date: Mon,  6 May 2024 22:08:33 +0800
+Message-Id: <cover.1715002910.git.duoming@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:by_KCgCXtaRj5DhmI_s4AA--.15255S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrCr4xZw13ZryUCw4xtrW5Wrg_yoWxXwc_uF
+	y8AFW5Zw18JFWDGFW0yF48Jr9rCF4jgw1rXFnIqFZ5try3Zr1UJr4DWr48Xr18WFWjyr4k
+	t3WrAr4fAr13JjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbTAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Xryl42xK82IYc2Ij64vIr4
+	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
+	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
+	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
+	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
+	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOzuWDUUUU
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwINAWY3qokcfgAZsE
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-0.03 / 50.00];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_GOOD(-0.10)[text/plain];
-	BAYES_HAM(-0.02)[51.59%];
-	MX_GOOD(-0.01)[];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,suse.de:dkim,suse.de:email];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Spam-Flag: NO
-X-Spam-Score: -0.03
-X-Spamd-Bar: /
-X-Rspamd-Queue-Id: E70BC3845F
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
 
-Lenovo Slim 7 16ARH7 is a machine with switchable graphics between AMD
-and Nvidia, and the backlight can't be adjusted properly unless
-acpi_backlight=native is passed.  Although nvidia-wmi-backlight is
-present and loaded, this doesn't work as expected at all.
+The first patch fixes reference count leak issues the object of
+"ax25_dev" and "net_device". The second patch uses ax25_dev_put()
+to replace kfree() in ax25_dev_free().
 
-For making it working as default, add the corresponding quirk entry
-with a DMI matching "LENOVO" "82UX".
+You can see the former discussion in the following link:
+https://lore.kernel.org/netdev/20240501060218.32898-1-duoming@zju.edu.cn/
 
-Link: https://bugzilla.suse.com/show_bug.cgi?id=1217750
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
----
- drivers/acpi/video_detect.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Duoming Zhou (2):
+  ax25: Fix reference count leak issues of ax25_dev and net_device
+  ax25: Change kfree() in ax25_dev_free() to ax25_dev_put()
 
-diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
-index 9fdcc620c652..2cc3821b2b16 100644
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -497,6 +497,14 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
- 		DMI_MATCH(DMI_PRODUCT_NAME, "82BK"),
- 		},
- 	},
-+	{
-+	 .callback = video_detect_force_native,
-+	 /* Lenovo Slim 7 16ARH7 */
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "82UX"),
-+		},
-+	},
- 	{
- 	 .callback = video_detect_force_native,
- 	 /* Lenovo ThinkPad X131e (3371 AMD version) */
+ include/net/ax25.h  |  4 ++--
+ net/ax25/ax25_dev.c | 49 ++++++++++++++++-----------------------------
+ 2 files changed, 19 insertions(+), 34 deletions(-)
+
 -- 
-2.43.0
+2.17.1
 
