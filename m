@@ -1,108 +1,111 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B141140E23;
-	Mon,  6 May 2024 07:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F6A014532C;
+	Mon,  6 May 2024 07:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714982384; cv=none; b=airYsZZMiYy60v02OyaA7FZAYtTbqqeznnBwS1VxgFekyaFFIl90/+LxAMU7k2OE+C+wDBCbsyZP2e9McG+Op7zUG6b0p/rFbJYXQ3dDv+Y83X+u4PYO6gKl3JV5VyIqdLjauGPpBBl9R5EfBg38b0v9TdVFiAvBa+ZKTsOq48Q=
+	t=1714982390; cv=none; b=t64ncfZCDDWnaT/zRYQxn//1efFQfaHROpNgr1OBeQ1BEc5uoekIDBnulypZpdm6j6x/eUuS5aFXuxeb87Kk/Dyx4l4srBPydV9LJfq5veIWglW57ZLhnDeiptGWzkhh8XyzsPwia4n6h43DSOJphalYLSqoWyCL0nWM+y0C+qY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714982384; c=relaxed/simple;
-	bh=mrMc4UwV2GXg/vdxlNdq7LIgtP98hWJIuB7PNLcVgqo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l6DI4Wtpb8a1U6L279TqQx2R7ojBdko233953HtxboC7qenhgrxUGrEfs0Cx/NdSMgCrZhsjVbd0tplErDKg700bh/KCCrSoB41kVQFYXgd13Xx+nHFBgh3e5P4ySY2Z9cvG1ncEka0hLdbwVc2wjkGOQfQJ6IlMAIudqaBK7R8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VXtzB4FXSzNw35;
-	Mon,  6 May 2024 15:56:54 +0800 (CST)
-Received: from dggpemm500018.china.huawei.com (unknown [7.185.36.111])
-	by mail.maildlp.com (Postfix) with ESMTPS id 06A7118007C;
-	Mon,  6 May 2024 15:59:39 +0800 (CST)
-Received: from huawei.com (10.175.103.91) by dggpemm500018.china.huawei.com
- (7.185.36.111) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 6 May
- 2024 15:59:38 +0800
-From: liwei <liwei728@huawei.com>
-To: <rafael@kernel.org>, <lenb@kernel.org>, <Pierre.Gondois@arm.com>,
-	<viresh.kumar@linaro.org>
-CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<liwei391@huawei.com>, <liwei728@huawei.com>
-Subject: [PATCH v2] cpufreq/cppc: fix perf_to_khz/khz_to_perf conversion exception
-Date: Mon, 6 May 2024 15:58:16 +0800
-Message-ID: <20240506075816.1325303-1-liwei728@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1714982390; c=relaxed/simple;
+	bh=kXDv39J5t7+acyzhkvD/8KkU35rQ6ddgsltaOx/5nD0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jzxoWMoQJzaIBUC7R7Z7vzIT+3witxWtjVdMYM7lZ8ZtEt+ur9J/3K834C8sJFNzRf3wgXfXDdEr5r4ckZdyb+L014pJiVhSz5sRNFFrpTKVv4SYygTY5u0MZP2Qoaghq1lFlkvIWxMwMeB3mZpISp4S2kk9Ep8CLJOb/DBqhiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cc2PEqMg; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cc2PEqMg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 633A4C116B1;
+	Mon,  6 May 2024 07:59:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714982389;
+	bh=kXDv39J5t7+acyzhkvD/8KkU35rQ6ddgsltaOx/5nD0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cc2PEqMgbdM9UjJMlXDzTrgq5i2alAxqGMK3tmB0AzkrkGRM1wGDkVcKTYqKgaDDu
+	 AjUM3T0lEL+Pa2M8sCJnKJ9g61Sj7+BIaeMydEea1CVjZF4J4uBqC1AvaBGWUEG/8u
+	 wsjXUs1UwexHcGMQuigbb5LfrnekMtA7pjvOCVqfID/ew3m98UD/Q4gyiNPQN+zC+l
+	 rrA3D0A36BeKUlYpMj3DUJJ+iRhmRuDnHLpvnY09HflG0TW7f/uCsrAQ3vX45W28lB
+	 jHLyx94A51D6IsFrKMwEiC5vvO0LFM5KpukPbkkP4e3UJjvgfor5eBGRZMSgce0oPy
+	 rcgySN8F6YU5w==
+Date: Mon, 6 May 2024 09:59:46 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
+	Sandy Huang <hjc@rock-chips.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Hans Verkuil <hverkuil@xs4all.nl>, 
+	Sebastian Wick <sebastian.wick@redhat.com>, Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>, 
+	dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev
+Subject: Re: [PATCH v12 27/28] drm/rockchip: inno_hdmi: Switch to HDMI
+ connector
+Message-ID: <20240506-eccentric-wren-of-peace-819aad@houat>
+References: <20240423-kms-hdmi-connector-state-v12-0-3338e4c0b189@kernel.org>
+ <20240423-kms-hdmi-connector-state-v12-27-3338e4c0b189@kernel.org>
+ <68eba0ec-bf9c-4d76-a362-5304a4cb61d5@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500018.china.huawei.com (7.185.36.111)
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="v4sajugv7aqwu3jz"
+Content-Disposition: inline
+In-Reply-To: <68eba0ec-bf9c-4d76-a362-5304a4cb61d5@rock-chips.com>
 
-When the nominal_freq recorded by the kernel is equal to the lowest_freq,
-and the frequency adjustment operation is triggered externally, there is
-a logic error in cppc_perf_to_khz()/cppc_khz_to_perf(), resulting in perf
-and khz conversion errors.
 
-Fix this by adding the branch processing logic when nominal_freq is equal
-to lowest_freq.
+--v4sajugv7aqwu3jz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Fixes: ec1c7ad47664 ("cpufreq: CPPC: Fix performance/frequency conversion")
-Signed-off-by: liwei <liwei728@huawei.com>
----
-v2:
-    - Fix similar issue in cppc_khz_to_perf()
+Hi Andy,
 
- drivers/acpi/cppc_acpi.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+Thanks a lot for giving it a try
 
-diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
-index a40b6f3946ef..e3a0d6b46b24 100644
---- a/drivers/acpi/cppc_acpi.c
-+++ b/drivers/acpi/cppc_acpi.c
-@@ -1869,9 +1869,15 @@ unsigned int cppc_perf_to_khz(struct cppc_perf_caps *caps, unsigned int perf)
- 	u64 mul, div;
- 
- 	if (caps->lowest_freq && caps->nominal_freq) {
--		mul = caps->nominal_freq - caps->lowest_freq;
-+		/* Avoid special case when nominal_freq is equal to lowest_freq */
-+		if (caps->lowest_freq == caps->nominal_freq) {
-+			mul = caps->nominal_freq;
-+			div = caps->nominal_perf;
-+		} else {
-+			mul = caps->nominal_freq - caps->lowest_freq;
-+			div = caps->nominal_perf - caps->lowest_perf;
-+		}
- 		mul *= KHZ_PER_MHZ;
--		div = caps->nominal_perf - caps->lowest_perf;
- 		offset = caps->nominal_freq * KHZ_PER_MHZ -
- 			 div64_u64(caps->nominal_perf * mul, div);
- 	} else {
-@@ -1892,11 +1898,17 @@ unsigned int cppc_khz_to_perf(struct cppc_perf_caps *caps, unsigned int freq)
- {
- 	s64 retval, offset = 0;
- 	static u64 max_khz;
--	u64  mul, div;
-+	u64 mul, div;
- 
- 	if (caps->lowest_freq && caps->nominal_freq) {
--		mul = caps->nominal_perf - caps->lowest_perf;
--		div = caps->nominal_freq - caps->lowest_freq;
-+		/* Avoid special case when nominal_freq is equal to lowest_freq */
-+		if (caps->lowest_freq == caps->nominal_freq) {
-+			mul = caps->nominal_perf;
-+			div = caps->nominal_freq;
-+		} else {
-+			mul = caps->nominal_perf - caps->lowest_perf;
-+			div = caps->nominal_freq - caps->lowest_freq;
-+		}
- 		/*
- 		 * We don't need to convert to kHz for computing offset and can
- 		 * directly use nominal_freq and lowest_freq as the div64_u64
--- 
-2.25.1
+All the issues you raised in your review are fixed.
 
+On Sat, Apr 27, 2024 at 06:44:54PM GMT, Andy Yan wrote:
+> And after this whole series applied on linux 6.9-rc4, the display on rk3036 kylin is lost, I get
+> the following error:
+> [  178.999421] rockchip-drm display-subsystem: [drm:drm_atomic_check_only] checking 87b7fbde
+> [  178.999471] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CRTC:35:crtc-0] mode changed
+> [  178.999498] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CRTC:35:crtc-0] enable changed
+> [  178.999521] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CRTC:35:crtc-0] active changed
+> [  178.999547] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] Updating routing for [CONNECTOR:37:HDMI-A-1]
+> [  178.999575] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CONNECTOR:37:HDMI-A-1] using [ENCODER:36:TMDS-36] on [CRTC:35:crtc-0]
+> [  178.999604] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] Trying with a 8 bpc output
+> [  178.999636] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] Trying RGB output format
+> [  178.999730] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] RGB Format, checking the constraints.
+> [  178.999757] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] RGB output format not supported with 8 bpc
+> [  178.999783] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] Failed. No Format Supported for that bpc count.
+> [  178.999810] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CONNECTOR:37:HDMI-A-1] driver check failed
+> [  178.999836] rockchip-drm display-subsystem: [drm:drm_atomic_check_only] atomic driver check for 87b7fbde failed: -22
+> [  178.999868] rockchip-drm display-subsystem: [drm:drm_atomic_state_default_clear] Clearing atomic state 87b7fbde
+> [  178.999898] [drm:drm_mode_object_put] OBJ ID: 37 (4)
+> [  178.999922] [drm:drm_mode_object_put] OBJ ID: 37 (3)
+> [  178.999944] [drm:drm_mode_object_put] OBJ ID: 40 (1)
+> [  178.999971] [drm:drm_mode_object_put] OBJ ID: 39 (2)
+
+Which kind of display are you testing with? The only reason it could do
+so is if the display claim it doesn't support RGB in its EDID which is
+contradicting the HDMI spec. Are you using an Analog display by any
+chance? or the built-in EDIDs through the drm.edid_firmware mechanism?
+
+Maxime
+
+--v4sajugv7aqwu3jz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZjiN8gAKCRAnX84Zoj2+
+dj7PAXsF7+5aPmDPt0ja154YvieqqvYikRBh9/V5pDrDw3cYprK2R83EgS3cBHli
+wJnpqsYBf0ew1rxNKgDWA+diKWge0oHO2I7Ul+ScFLDcuz23NHCYlB74/qNhIWaY
+8yng08R+LA==
+=WFGm
+-----END PGP SIGNATURE-----
+
+--v4sajugv7aqwu3jz--
