@@ -1,114 +1,105 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A089815359F
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 15:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32206153BF9;
+	Mon,  6 May 2024 15:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715008166; cv=none; b=eM0IbLt9zm8MhGBrV9e0rj8w2eUpXhqn8HvQnJflVK3GCe7mTxQeZsz1IH15i5rq6185D5NmaeGiZyUbmtFsg0hmvCFeq71+LQUvj4MKISufJ+YwHZ1phadt+UDy/ZxUg8T6UjtAbpJB8awJmssfxf3LkGw8sVCQ5+Hw9Q/sczI=
+	t=1715008215; cv=none; b=jk8QByY5gDRy/MM46zWGVi+Hi4EdahTJPiWGKFt7qJaVTkHiIB4jn8n07Z+Kq3K2fFh+AYCG1RF9URzSf85YwGlOYD5aHw1cWE3A0F1PytCLA6JMyvotHj871MGTlACn5elCKZb0T+xroE0gbtXIoP1iAQqMvLWgWP1YnOEQHqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715008166; c=relaxed/simple;
-	bh=ChkvKKXLsQfoTAngZYFoQe3YF0MVY7h2bQeifwJOfXk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FluCF4zjl2O6rl3jvhuuwuTqsOPPdTw0OoCUEjypx604IEXS81SuzeCjSafAIbdMCXTM7qo/FA5HwEY7M8BF5uFCQRt3Ob5CB9G/80kNfGIMCTFXdQ6l2A3N9kgvymgpM5ZH8Fv2PHc4N8w4ICYcQw4WI9G9xsTdV3UXvY8tXQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=D7cr83Ck; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1715008215; c=relaxed/simple;
+	bh=523LXoj0Pt0fxaIsf7xGgfx1SdV1yqQtWQ+gVfyEBww=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fjzxj1W6XrCthqTfHW9/LmCfnU1LZxGOBGfvsoJyBi9NZKWiw6XX61DC136vYRxOyjR4kIythXQ7UNDEiPjRuS2PKQSVQt3VNzht+AwL2DNqyNjggezdbbavmJKzWpfgA9DC6nurqCOYhOjYX1oI0MuegU7t6fBPBLO2HFUNqUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6jRkwCk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="D7cr83Ck"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ec92e355bfso19677165ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 08:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715008164; x=1715612964; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eqhhV/e5mzK+6hrJY0o8mJ/dhifJ48pvMgC6Mb03m1s=;
-        b=D7cr83CkvLjIWUYEJCkNYrBeNWOSZbxfu1cTC6X0JdHucDTa2sQbimKLYKe6WyEr+w
-         RCWIaJB8/7yifgTAPioVa1+hZn5zdAwHARBTBP6S+3Ok5CZ9WH18RzUU7QNQR8a3iu0l
-         hb0XJGSdyFGR3Q80JmQWX680NnG4iiZqA3T8ptOjaeFtDIq8WIJ424+rakNmWEZe4mpS
-         t7w/ANcwVyxNEVEDxJP5W2Hu7dm8knNvVdchTC6ikP9vCPDDAblddaXLLFMmbjq4gsZd
-         vGdzGvVHHr26EeUA8YVNZYTE+cTHTD2BXAVH+W6nu44cuyOoN43BOfCalXGb0jSA9Ixx
-         g2CA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715008164; x=1715612964;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eqhhV/e5mzK+6hrJY0o8mJ/dhifJ48pvMgC6Mb03m1s=;
-        b=Js3YArz3PuqYiBeRhEK3TxOLa+FdoCnoED4ZhDlIhJXzJ390lFB5ZGpadwEhxFht8R
-         Py2CkXfdRjc8qId7DQcL8BSLBKLqby926OsKTW0Bot8cOdxDtyPmB7B0GvXJStMCHq/C
-         XCt0cR5lw6MziZP6XigA6OgMqq/Xw/6qDSKIeiGAqOYS0EKoIH6C6v7ABcSecgZDnywH
-         ljijAPDjC/lEFizd9XRODUPhV87IQIycze2yy1I8tUdZrVsvDOLRuR8s34SCVzyInVgv
-         QOSCCT0KQWTbzqGvfWlbuRo1rKAj/tvlew0LLx16bGZdMAFkiPp3VlFu4TDKibVfjVoo
-         XQVQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0cO7Knb5ZOqjHWaCSRWFOtDkJ/sM7mAlnGzU79eIcChQ1ne7U2eGGo0KLjxKHk9dji1tRChVD6gkrLVEocdhRlX/b99KvkVfh3LiR
-X-Gm-Message-State: AOJu0YzFMUU8XHQtEOKCFo4C0/7IMoN+9lQE/2Ko4ZpensK/Qduuy74a
-	yoCVZgBIb3Axt8tEts1ISDRgBdswNniqud3QtJ+ssMJ2Are+oJ04/Kabqroqs2P/nWkYQLFYhc4
-	kjOx7w+bKzPFD5ORuBAz7gt3ShxkoF0Ss8/YSHA==
-X-Google-Smtp-Source: AGHT+IFuMxUNzP457b7U27MNOYdMQrjSKz9fzKAVldClapC+zcuPtIK7aQhL5DhJm6xmhclACvVqpG+BxSbRUjZltq8=
-X-Received: by 2002:a17:902:6847:b0:1eb:51fb:de09 with SMTP id
- f7-20020a170902684700b001eb51fbde09mr9967887pln.14.1715008163823; Mon, 06 May
- 2024 08:09:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6jRkwCk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B982DC4AF63;
+	Mon,  6 May 2024 15:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715008214;
+	bh=523LXoj0Pt0fxaIsf7xGgfx1SdV1yqQtWQ+gVfyEBww=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=h6jRkwCkjX2psYHpb3IXCM7OIFfYeQtHB0ufepMTkeQhjAwsBv7TmxEdRX5Ih2Jpd
+	 +R38zHB63Qel0c5KyJR1YPPOvtYDWmFiDS7E42W6CjrIy928M1wXwyXI9pPCeH+UMz
+	 IELi3k88Fo7fcouxmZmGAs2SnzAmRPU6kP1qWGACB5qQ0wTCUIN9CIqPS/emnXTxLa
+	 8yb9YwGhtDFUsOxWCv+oNyHdwTAuTxBMNx03d5erLemVMHgCzZn1JhTp6easgHAG6F
+	 iTW7I74SViMUQVgYzpWonMehjlj9LUaVTlZDuXyZXsBsg3v5MfJ3n2tjZ89WRKbAPf
+	 pa8NEZFPWgLww==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1s3zyp-000000006C9-3lxB;
+	Mon, 06 May 2024 17:10:15 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Lee Jones <lee@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Das Srinagesh <quic_gurus@quicinc.com>,
+	Satya Priya <quic_c_skakit@quicinc.com>,
+	Stephen Boyd <swboyd@chromium.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH 01/13] dt-bindings: mfd: pm8008: add reset gpio
+Date: Mon,  6 May 2024 17:08:18 +0200
+Message-ID: <20240506150830.23709-2-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240506150830.23709-1-johan+linaro@kernel.org>
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240501-adding-new-ad738x-driver-v6-0-3c0741154728@baylibre.com>
- <20240501-adding-new-ad738x-driver-v6-10-3c0741154728@baylibre.com> <a04d8015ea1606ce1eca86f7eaaa85a1c1b46d7a.camel@gmail.com>
-In-Reply-To: <a04d8015ea1606ce1eca86f7eaaa85a1c1b46d7a.camel@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Mon, 6 May 2024 10:09:11 -0500
-Message-ID: <CAMknhBEnJXCRGEUE+7VTfve6aPWZiandvE5xX4FPo17pqhmEeQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v6 10/10] iio: adc: ad7380: add support for resolution boost
-To: =?UTF-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>
-Cc: Julien Stephan <jstephan@baylibre.com>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	kernel test robot <lkp@intel.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 6, 2024 at 3:55=E2=80=AFAM Nuno S=C3=A1 <noname.nuno@gmail.com>=
- wrote:
->
-> On Wed, 2024-05-01 at 16:55 +0200, Julien Stephan wrote:
+Describe the optional reset gpio (which may not be wired up).
 
-...
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> > +     /*
-> > +      * If bits_per_word =3D=3D realbits (resolution boost enabled), w=
-e don't
-> > +      * need to manipulate the raw data, otherwise we may need to fix =
-things
-> > +      * up a bit to fit the scan_type specs
-> > +      */
-> > +     if (bits_per_word < realbits) {
-> > +             if (realbits > 16 && bits_per_word <=3D 16) {
-> > +                     /*
-> > +                      * Here realbits > 16 so storagebits is 32 and
-> > bits_per_word is <=3D 16
-> > +                      * so we need to sign extend u16 to u32 using rev=
-erse
-> > order to
-> > +                      * avoid writing over union data
-> > +                      */
-> > +                     for (i =3D st->chip_info->num_channels - 2; i >=
-=3D 0; i--)
-> > +                             st->scan_data.raw.u32[i] =3D sign_extend3=
-2(st-
-> > >scan_data.raw.u16[i],
-> > +
-> > bits_per_word - 1);
-> > +             } else if (bits_per_word < 16) {
->
-> Can't we have bits_per_word =3D 16 in case realbits <=3D 16?
->
-This case is handled by the outermost if, so can't have that here. (In
-that case, no manipulation is required so the whole big if statement
-is skipped). realbits will never be < bits_per_word.
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml b/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
+index 0c75d8bde568..e1e05921afb4 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
++++ b/Documentation/devicetree/bindings/mfd/qcom,pm8008.yaml
+@@ -29,6 +29,9 @@ properties:
+ 
+     description: Parent interrupt.
+ 
++  reset-gpios:
++    maxItems: 1
++
+   "#interrupt-cells":
+     const: 2
+ 
+@@ -97,6 +100,7 @@ additionalProperties: false
+ 
+ examples:
+   - |
++    #include <dt-bindings/gpio/gpio.h>
+     #include <dt-bindings/mfd/qcom-pm8008.h>
+     #include <dt-bindings/interrupt-controller/irq.h>
+ 
+@@ -115,6 +119,8 @@ examples:
+         interrupt-parent = <&tlmm>;
+         interrupts = <32 IRQ_TYPE_EDGE_RISING>;
+ 
++        reset-gpios = <&tlmm 42 GPIO_ACTIVE_LOW>;
++
+         pm8008_gpios: gpio@c000 {
+           compatible = "qcom,pm8008-gpio", "qcom,spmi-gpio";
+           reg = <0xc000>;
+-- 
+2.43.2
+
