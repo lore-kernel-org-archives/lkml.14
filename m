@@ -1,94 +1,95 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5537B13CFAD;
-	Mon,  6 May 2024 14:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC8F81211;
+	Mon,  6 May 2024 14:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715005112; cv=none; b=VKArqGe++OAbXH8ZmC7Umr/0hOY43idfKUq/dmE7cICzUvZOARiMK78Tyc5iZn+APm+UQEk2K6sQelt9sBM5TmYTIgEQssRkyOyITBw5mi396QC65KrkFoOpKi3iD6nfWRgzP3jFwcUvHmTW2hdawfZDeFiOkqR2ntQ7u9viuTM=
+	t=1715005110; cv=none; b=cj5nSucAr5PYkEPjO6py4POy8sWqP1ZX3x7JgtzIQwrh66DdPF2+/3oU0qzRP2vcW2njFatmxMalPnEqjJKA1RWgfhTmOZV1CgDPIcF3O0S3mXWL0Rs5Viw7apQQcNAuLdUK6RqE4KVxXn7dsd1tiEOntsXJaju/eqzoX4WSP5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715005112; c=relaxed/simple;
-	bh=Zm86qt6RdF+YDOSKq5gre7uYNIr5q4CDZPa9kGDuJIQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G1X106iIrK501kR8bEB17ktDlskLRMPoHkRojYh49zftV6PKG2dhSNd3Huq23PQ0wun2mSNMoVqnHja47Xr9l0BzMTD26qpWex3xTcsGsYX/jq7VHyERWAsFDGFMi/M3z30iuv5jCWtYNNr7Vy6/XWfz2jxbW4VeWyKcAxQdOaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VY3RD1Ljhz4f3n6g;
-	Mon,  6 May 2024 22:18:16 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id EA30B1A0568;
-	Mon,  6 May 2024 22:18:25 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP1 (Coremail) with SMTP id cCh0CgAH2RGu5jhmGgSzLw--.22965S9;
-	Mon, 06 May 2024 22:18:25 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: tytso@mit.edu,
-	jack@suse.com
-Cc: linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 7/9] jbd2: remove dead equality check of j_commit_[sequence/request] in kjournald2
-Date: Mon,  6 May 2024 22:17:59 +0800
-Message-Id: <20240506141801.1165315-8-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240506141801.1165315-1-shikemeng@huaweicloud.com>
-References: <20240506141801.1165315-1-shikemeng@huaweicloud.com>
+	s=arc-20240116; t=1715005110; c=relaxed/simple;
+	bh=Vi05QVSG3iatwDAILN86QUEWJ3fE0RrPn+kvsUCWGws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eCE+H5cWpb/BS1KCngd5EcN28pLLT4azO39bmMf4AMmcJpHhKSQAsryHv5OsLPeXzP/D1MAhibTtS9Fs8OJVPGkujh9ClK0HN+8jAINCwifE3bwXKBQhWIkaQZa8oGDlPIptHtkOIQ0nrqIkycadlQWa/dj9957xzOIykv+pDhM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qZNk2uVI; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qZNk2uVI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1715005106;
+	bh=Vi05QVSG3iatwDAILN86QUEWJ3fE0RrPn+kvsUCWGws=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qZNk2uVI+pZGR3kmAAkImZwSLKE9T+TahIUXH14Y7DA0Pnhl54iALE4oXsJK4KjMq
+	 l3djJ5Ie/y8OAuQJelPxMxPTHk/toXDpEj+cBGquJK5jnoHgZg5RTsXXrsN8/rXtmA
+	 0FTxMdNRP/UOBcTJ2JRvdnjmqjOIM9FXNe35X/pyLiOiQi3u98e+N5EiyRLdbb4qzo
+	 lvVgqpKVoTWeQ39JSe9EJUrwwbL7iP3bIzwK3o2nZNR+xPMAXap5I7bNRijl+zO/e+
+	 ICB9MvXQkAU51lwau8PqYmHqQMG+Le3wdbXBgrYcFS14L6RxnoinEbMJ2PeTQb+zs0
+	 zNGjrTFn187Kw==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 4BD99378020D;
+	Mon,  6 May 2024 14:18:25 +0000 (UTC)
+Message-ID: <2e3e49ff-8ace-498b-b2d0-54500e6f1e70@collabora.com>
+Date: Mon, 6 May 2024 16:18:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAH2RGu5jhmGgSzLw--.22965S9
-X-Coremail-Antispam: 1UD129KBjvdXoWrur4DKw4kZr17Cr4UCw1kAFb_yoWkKwb_Wr
-	WSyrnF9rWftr15Ja1kCw15ur1aqrn7Zrn5J3Z7ta1UKr1jyan2kFWkJay5Wwnru3yFqr45
-	A39akw48trnavjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVkYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l82xGYIkIc2x26280x7IE14v26r126s
-	0DM28IrcIa0xkI8VCY1x0267AKxVW5JVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4AK67xG
-	Y2AK021l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14
-	v26F4UJVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
-	xVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ew
-	Av7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY
-	6r1j6r4UM4x0Y48IcxkI7VAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2Kf
-	nxnUUI43ZEXa7IU13l1DUUUUU==
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] drm/mediatek: Add support for OF graphs
+To: Michael Walle <mwalle@kernel.org>,
+ Alexandre Mergnat <amergnat@baylibre.com>, chunkuang.hu@kernel.org
+Cc: robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ matthias.bgg@gmail.com, shawn.sung@mediatek.com, yu-chang.lee@mediatek.com,
+ ck.hu@mediatek.com, jitao.shi@mediatek.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ wenst@chromium.org, kernel@collabora.com
+References: <20240409120211.321153-1-angelogioacchino.delregno@collabora.com>
+ <1fc23530-89ba-4e36-9e9a-a1289f56a9bc@baylibre.com>
+ <608fdbde-ad06-45ec-9771-18aa9f002f2d@collabora.com>
+ <D12H4GDJJEUF.1Y91H9RMUIX20@kernel.org>
+ <50be68dc-b86a-4334-9f83-43c6fda2c271@collabora.com>
+ <1b8fa907-b48f-4ebe-bc17-3de1d7c0d062@collabora.com>
+ <D12LA0QKEFRQ.68TZEVQZ7FJB@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <D12LA0QKEFRQ.68TZEVQZ7FJB@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-In kjournald2, two equality checks of j_commit_[sequence/request] are
-under the same j_state_lock. As j_commit_[sequence/request] are updated
-concurrently with j_state_lock held during runtime, the second check is
-unnecessary.
-The j_commit_sequence is only updated concurrently in
-jbd2_journal_commit_transaction with j_state_lock held.
-The j_commit_request is only updated concurrently in
-__jbd2_log_start_commit with j_state_lock held.
-Also see comment in struct journal_s about lock rule of j_commit_sequence
-and j_commit_request.
+Il 06/05/24 15:17, Michael Walle ha scritto:
+> Hi Angelo,
+> 
+> On Mon May 6, 2024 at 1:22 PM CEST, AngeloGioacchino Del Regno wrote:
+>>> The problem with this is that you need DDP_COMPONENT_DRM_OVL_ADAPTOR... which is
+>>> a software thing and not HW, so that can't be described in devicetree.
+>>>
+>>> The only thing this series won't deal with is exactly that.
+>>
+>> Sorry, no, I got confused.
+>>
+>> The series *does* already deal with that, as the pipeline is built before the check
+>> for OVL_ADAPTOR components, so that will get probed.
+> 
+> Are you sure? Because who is actually adding the OVL_ADAPTOR to the
+> path? It looks like your patch will walk the graph and add all the
+> components according to their compatible string. And since the
+> OVL_ADAPTOR is virtual and doesn't have a node..
+> 
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
----
- fs/jbd2/journal.c | 2 --
- 1 file changed, 2 deletions(-)
+I shouldn't look at code while having a flu.
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 01e33b643e4d..e8f592fbd6e1 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -224,8 +224,6 @@ static int kjournald2(void *arg)
- 
- 		prepare_to_wait(&journal->j_wait_commit, &wait,
- 				TASK_INTERRUPTIBLE);
--		if (journal->j_commit_sequence != journal->j_commit_request)
--			should_sleep = 0;
- 		transaction = journal->j_running_transaction;
- 		if (transaction && time_after_eq(jiffies,
- 						transaction->t_expires))
--- 
-2.30.0
+	if (mtk_drm_find_mmsys_comp(private, DDP_COMPONENT_DRM_OVL_ADAPTOR)) {
 
+...but yes nothing adds the mmsys_comp for OVL_ADAPTOR.
+
+Needs to be addressed, will do that asap.
