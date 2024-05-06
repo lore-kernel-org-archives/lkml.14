@@ -1,105 +1,102 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232001411CE
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 08:39:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA4D42052;
+	Mon,  6 May 2024 08:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714984790; cv=none; b=jMsLXE03/9Ri8JA538DgXHAgp3XJZzHIKU6M8ID2vA85C4mCJz1VRZ+99RX2Th5Shl9ISmq+iWBuy7QOXg5pph8PjrySQH3y2d0UU1rY6T0nqEzYWF2c/ZpO6KUVF94qPjZJypuvQbg9b48SWnOZttlFt/I2sRFoGQS1Nm2dnNc=
+	t=1714984825; cv=none; b=WS/Z/9oP7w56K5uM0XGhlHXuMm8zqv7Fj8KbHqcVPJmcdtisIxC2jKDEKQNigIZr8EMJ6xHfxjnAYWLzAAUuKkN4wELFKDQ52ItR/Fb36aK6LukrrlEABYPytLbg8a/OCSVltNHN62CqlgqkLG/1TKBOvpkokkA6qvQbCBG6NTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714984790; c=relaxed/simple;
-	bh=dFWNbRzySIjYQnEWTP9mapKbZO69zQWs5KfXcdrl56U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fPPBRhYjTZlpHoQey9wQPraNaa7EwsARVhe8MQXM926dp2JXmTlnB8K/87jf6LDIXilAvcj/X8+0vYDxpvck3q671AFrkfXCDLM1Iqah3N+zmjk9BsMDbsyCWK2LEzQIAjiaoRvc6fSagMRTCVUb0EfP8WiiD95Ojq0jKmBtgDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4VXv1n3MMJz9xGWg
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 15:59:09 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 4B2D9140797
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 16:20:38 +0800 (CST)
-Received: from [10.81.214.173] (unknown [10.81.214.173])
-	by APP1 (Coremail) with SMTP id LxC2BwCnURrAkjhmm36iBw--.33418S2;
-	Mon, 06 May 2024 09:20:37 +0100 (CET)
-Message-ID: <0c07a0dc-542a-48da-a286-280d9c02b353@huaweicloud.com>
-Date: Mon, 6 May 2024 10:20:10 +0200
+	s=arc-20240116; t=1714984825; c=relaxed/simple;
+	bh=IJfokw2N7A5py7k8ePC8gToDa+6No8AkVv40u96rl0U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WtPMYClhr1GB3titST2PluY4nVUV19mhGgq6uVU11oYFVfpYLZxGDCG9HtgRKR0zkzDACoiOVYnupxm4/pkxezXrUjWrUocNz+3WQZ8vLPjAaTTcmuEwfYvva+Ps56aFQiIR+nOuMYik+W0HCOoAtq2bx4hgSGdnsgxKjVTDuk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K04aJ6ld; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K04aJ6ld"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1714984824; x=1746520824;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IJfokw2N7A5py7k8ePC8gToDa+6No8AkVv40u96rl0U=;
+  b=K04aJ6ld41uVsmR3Esi0y6TqzM7C6JfAuiKaHSnk5f8xyWBZtPjdY+nR
+   UIybn3btWd6KvtkYQG6oNx9Ysgi5gGAbleXtCOWIPmphR9RooTwMLEI76
+   10E/bwmQR02Q7+WgBpiiunIyiJAJIx2i394zOvk7LQ2MY4KnkWmFtg3Pl
+   xpN1Jjc+KfrWnqp68VnTy/7FS6d0VntLPEx62wEKky6kkgr/349bSxTrA
+   smMbZSN+yGMtLujoAs8YG8GykYgslPzZ13Jcsj/VobE761JwicMrMu94t
+   aXFUN7D7EOBfUVaO3Wsi0vkpLQu4npPVrTBPc6LUOi49lixfQISjiJrRj
+   A==;
+X-CSE-ConnectionGUID: 6ZfepsbERpir6OrjInoF6w==
+X-CSE-MsgGUID: pfU8bws0TfifXgWD2VIfig==
+X-IronPort-AV: E=McAfee;i="6600,9927,11064"; a="10562711"
+X-IronPort-AV: E=Sophos;i="6.07,257,1708416000"; 
+   d="scan'208";a="10562711"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 01:40:23 -0700
+X-CSE-ConnectionGUID: bBKWrYWJRkaIUPF8fPgWdA==
+X-CSE-MsgGUID: 6R2UT/2ARYKIXMmUR2xudg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,257,1708416000"; 
+   d="scan'208";a="32604461"
+Received: from zwan2-desk1.sh.intel.com ([10.239.160.154])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 01:40:21 -0700
+From: Zhenyu Wang <zhenyuw@linux.intel.com>
+To: peterz@infradead.org
+Cc: kan.liang@linux.intel.com,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Rui Zhang <rui.zhang@intel.com>,
+	Artem Bityutskiy <artem.bityutskiy@intel.com>,
+	Wendy Wang <wendy.wang@intel.com>
+Subject: [PATCH] perf/x86/intel/cstate: Add pkg C2 residency counter for Sierra Forest
+Date: Mon,  6 May 2024 16:48:06 +0800
+Message-ID: <20240506084806.495816-1-zhenyuw@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] arm64: Support the TSO memory model
-To: Marc Zyngier <maz@kernel.org>, Zayd Qumsieh <zayd_qumsieh@apple.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Justin Lu <ih_justin@apple.com>,
- Ryan Houdek <Houdek.Ryan@fex-emu.org>, Mark Brown <broonie@kernel.org>,
- Ard Biesheuvel <ardb@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>,
- Anshuman Khandual <anshuman.khandual@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Miguel Luis <miguel.luis@oracle.com>,
- Joey Gouly <joey.gouly@arm.com>, Christoph Paasch <cpaasch@apple.com>,
- Kees Cook <keescook@chromium.org>, Sami Tolvanen <samitolvanen@google.com>,
- Baoquan He <bhe@redhat.com>, Joel Granados <j.granados@samsung.com>,
- Dawei Li <dawei.li@shingroup.cn>, Andrew Morton <akpm@linux-foundation.org>,
- Florent Revest <revest@chromium.org>, David Hildenbrand <david@redhat.com>,
- Stefan Roesch <shr@devkernel.io>, Andy Chiu <andy.chiu@sifive.com>,
- Josh Triplett <josh@joshtriplett.org>, Oleg Nesterov <oleg@redhat.com>,
- Helge Deller <deller@gmx.de>, Zev Weiss <zev@bewilderbeest.net>,
- Ondrej Mosnacek <omosnace@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Asahi Linux <asahi@lists.linux.dev>
-References: <87zftoqn7u.wl-maz@kernel.org>
- <20240502001035.41083-1-zayd_qumsieh@apple.com>
- <867cgcqrb9.wl-maz@kernel.org>
-From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-In-Reply-To: <867cgcqrb9.wl-maz@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:LxC2BwCnURrAkjhmm36iBw--.33418S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7GFWxWr13tF47ur17WFW3Wrg_yoWDJFg_uF
-	ykAw47Jws8CF93Z3yayw1DAr47ta1jqasxXr95Xw1Iy34IvF4xGryDJ3s3ZF13JrWkuF17
-	GrW5ZFna9w43GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267
-	AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
-	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
-	kEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0E
-	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAkuxUUUUU=
-X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
+Content-Transfer-Encoding: 8bit
 
+Package C2 residency counter is also available on Sierra Forest.
+So add it support in srf_cstates.
 
+Cc: Rui Zhang <rui.zhang@intel.com>
+Cc: Artem Bityutskiy <artem.bityutskiy@intel.com>
+Cc: Wendy Wang <wendy.wang@intel.com>
+Fixes: 3877d55a0db2 ("perf/x86/intel/cstate: Add Sierra Forest support")
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+---
+ arch/x86/events/intel/cstate.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-Am 5/2/2024 um 3:25 PM schrieb Marc Zyngier:
-> although
-> someone would need to start thinking of how this particular TSO
-> implementation composes with the relaxed memory ordering used outside
-> of the VM and show that they actually lead to correct results for
-> something such as virtio, for example
-
-I used to think about this problem space. Composing some kinds of memory
-models (e.g., Arm and TSO) is easy, others is hard.
-
-I don't know much about virtio, so this may show my naivety, but what
-complications could arise from virtio?
-
-Does the "visible behavior" of virtio change depending on the memory
-model of the machine it is running on?
-
-At least internally inside virtio it should not cause any problems, since
-you are effectively adding some barriers inside some of the virtio threads.
-(those that are running in the VM).
-
-But if the VM relies on virtio behaving in a "TSO manner" but its behavior
-is more relaxed on e.g. Arm, then that could cause issues.
-
-have fun, jonas
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index 08bba679678c..cdf44500783e 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -64,7 +64,7 @@
+  *			       perf code: 0x00
+  *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
+  *						KBL,CML,ICL,ICX,TGL,TNT,RKL,ADL,
+- *						RPL,SPR,MTL
++ *						RPL,SPR,MTL,SRF
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
+  *			       perf code: 0x01
+@@ -689,7 +689,8 @@ static const struct cstate_model srf_cstates __initconst = {
+ 	.core_events		= BIT(PERF_CSTATE_CORE_C1_RES) |
+ 				  BIT(PERF_CSTATE_CORE_C6_RES),
+ 
+-	.pkg_events		= BIT(PERF_CSTATE_PKG_C6_RES),
++	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
++				  BIT(PERF_CSTATE_PKG_C6_RES),
+ 
+ 	.module_events		= BIT(PERF_CSTATE_MODULE_C6_RES),
+ };
+-- 
+2.43.0
 
