@@ -1,139 +1,128 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A0F815749A;
-	Mon,  6 May 2024 17:45:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF602156962;
+	Mon,  6 May 2024 17:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715017545; cv=none; b=hoWrSsAq/UkYx6A6p/pZ/OXJvX5xUWVBCDHE6HPHQ68B4JzyQC3QMbs8CjrX+5tlCfDx5XYh8kLYu9NwKuEr4D7R3fovtuEFE27ttJwKk1D4q8J0A8izRtB4UkCA6DHuMS5hyzXPohBZlO4pAfDLh+SfBnetTLbePwX30I9/Gdg=
+	t=1715017585; cv=none; b=KuLtLGu+wD3/tg2frBWuUwB0pS4MHFGV1oKoclmIBjbnx8zytQAyBW9xv0+6cq4TAE5J2aTID6Ikb7/MxJYI2BtXDCh4qqblu3MDUx48/aWda3DQnqnHg04CDOgA0y+ztVq9cpfop/UHPLc7PgvkMOla90Q6kPJrGLlTGKAF7AY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715017545; c=relaxed/simple;
-	bh=SnuVaKANezsK89xhLaJCVZPrBbMHyA1Px7Ry2U4l1t8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Dt1mfcM944rRPyoW74bBq1aZVc3slSlBxY1wrCQ7x8wEgIXFUk6+azrBZkcTx94RKFxGwgJmK0zyNgpVJTB/U8sN+CbROrwLmMYgs90J4bmf94Ac/PN/RUMivKfJLMe2nIxZDP7NB3ytM/hVlg0x8iu5zq8XTfwMGde933/Be/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hM9Ug9rK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=HMILEJsY; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=hM9Ug9rK; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=HMILEJsY; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1715017585; c=relaxed/simple;
+	bh=vqnYuRDE7YAdIfHB4y1v8PCKhpIU6Ck4Nohhh0+FmK0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tpmTVM1JBBPxFiGEnppm8trlczDr+Sv+rczRjZZ0n2Id4X+a0agWSll8zFN2B4FgEq18R3kAsnsr8eynG4e/LcG5xRrtSQYzPfzv+ew2GAcIN6pp4DfKfcGbec93ZXqTKAgZb3KhaBFjFYG8PaWHWDJ2eXf7+V0QCE8LVT4UsCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=H+Au6r4F; arc=none smtp.client-ip=144.76.82.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hM9Ug9rK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="HMILEJsY";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="hM9Ug9rK";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="HMILEJsY"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 874172197F;
-	Mon,  6 May 2024 17:45:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1715017542;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=poHDJP5x9pFXKSGFxv6b+OoTvegRQpkqsTgZ4FwrCws=;
-	b=hM9Ug9rKRsgNpYl++rSDDkd+Grp9WSTCevgoNZGR7+6H0MADW5ZcEylme6CgFuuFoGqmzr
-	7ucZTjP4BTs0WIbMSFxm12cigm16aD8wCLSBgjor90gG9qxJrhTng28rUhJdB/GuUL7JnQ
-	9Xec4kZ49hiDqnaYYhqYERd3taq96es=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1715017542;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=poHDJP5x9pFXKSGFxv6b+OoTvegRQpkqsTgZ4FwrCws=;
-	b=HMILEJsY4oEupbOF+SEgaWaJF+Qazyypsvqo1cgrKzHAarNlrSDGrZetTb8zL/GloYCmuL
-	Uo94IpaLa3HZsGBA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=hM9Ug9rK;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=HMILEJsY
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1715017542;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=poHDJP5x9pFXKSGFxv6b+OoTvegRQpkqsTgZ4FwrCws=;
-	b=hM9Ug9rKRsgNpYl++rSDDkd+Grp9WSTCevgoNZGR7+6H0MADW5ZcEylme6CgFuuFoGqmzr
-	7ucZTjP4BTs0WIbMSFxm12cigm16aD8wCLSBgjor90gG9qxJrhTng28rUhJdB/GuUL7JnQ
-	9Xec4kZ49hiDqnaYYhqYERd3taq96es=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1715017542;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=poHDJP5x9pFXKSGFxv6b+OoTvegRQpkqsTgZ4FwrCws=;
-	b=HMILEJsY4oEupbOF+SEgaWaJF+Qazyypsvqo1cgrKzHAarNlrSDGrZetTb8zL/GloYCmuL
-	Uo94IpaLa3HZsGBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5B17313A25;
-	Mon,  6 May 2024 17:45:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nL2sFUYXOWZsNAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Mon, 06 May 2024 17:45:42 +0000
-Date: Mon, 6 May 2024 19:38:24 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Boris Burkov <boris@bur.io>, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] btrfs: fix array index in qgroup_auto_inherit()
-Message-ID: <20240506173824.GG13977@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <a90a6d6b-64c7-4340-9b3d-7735d7f56037@moroto.mountain>
+	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="H+Au6r4F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+	s=42; h=From:Cc:To:Date:Message-ID;
+	bh=xw3p/mu9rqf4LynApLZg3ICv4KBQ9pI/cT8ZAvWfrvU=; b=H+Au6r4F4x1Z85+DNGjlJceQt6
+	VaCVEcT4DEiGQbGVDh4OFym0kKFZBd86s6uXoJpPJTol6iKXqn0LG0HyJx8lIh8EDuo+2i5hrqN2O
+	vk8Qm3pQwBYOe4xDEpVSHAJ94SfEJi+QIlADWRgaZl2lxVH8SKQJpWHxqdqPKPehOFIM8Su38HTbz
+	tZmG9bvQ+46+S74+Tc+2yjeIEhU2KGEf6hYY0sJQDTqbdzLZTPufeLvN5VPgkNTHPOYPIkOVO0+81
+	syykN+b+56a1Khj1sPfDj2zaRMDolfZReWyrBPwwCMLHxuCZrQqarp8odXqr9D7+gq22C7zDhtgFs
+	CDqB8Lqc9X0g5Di3lkjVsfjGTFg7PxYd9cX9RXsShaBKDeLBvJeTRzcKI1+KkmZWflxdWQiL7szBw
+	xvayOxyIs7UU8VHV51kSkC6VEOl3cP9Ch3jcC1obaPYpZYp8zP/YEf1lCPpQ6pc093IgCA0JBFcfa
+	tXQCy/UeOaoa1sQS6m4mY1a7;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
+	(Exim)
+	id 1s42Pk-00A49V-1t;
+	Mon, 06 May 2024 17:46:12 +0000
+Message-ID: <501ead34-d79f-442e-9b9a-ecd694b3015c@samba.org>
+Date: Mon, 6 May 2024 19:46:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a90a6d6b-64c7-4340-9b3d-7735d7f56037@moroto.mountain>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Flag: NO
-X-Spam-Score: -3.95
-X-Rspamd-Action: no action
-X-Rspamd-Queue-Id: 874172197F
-X-Spam-Level: 
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-3.95 / 50.00];
-	BAYES_HAM(-2.74)[98.88%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+User-Agent: Mozilla Thunderbird
+Subject: Re: get_file() unsafe under epoll (was Re: [syzbot] [fs?] [io-uring?]
+ general protection fault in __ep_remove)
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Al Viro <viro@zeniv.linux.org.uk>
+Cc: Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>,
+ Bui Quang Minh <minhquangbui99@gmail.com>,
+ Christian Brauner <brauner@kernel.org>,
+ syzbot <syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com>,
+ io-uring@vger.kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, Laura Abbott <laura@labbott.name>
+References: <0000000000002d631f0615918f1e@google.com>
+ <7c41cf3c-2a71-4dbb-8f34-0337890906fc@gmail.com>
+ <202405031110.6F47982593@keescook>
+ <64b51cc5-9f5b-4160-83f2-6d62175418a2@kernel.dk>
+ <202405031207.9D62DA4973@keescook>
+ <d6285f19-01aa-49c8-8fef-4b5842136215@kernel.dk>
+ <202405031237.B6B8379@keescook> <202405031325.B8979870B@keescook>
+ <20240503211109.GX2118490@ZenIV>
+ <CAHk-=wj0de-P2Q=Gz2uyrWBHagT25arLbN0Lyg=U6fT7psKnQA@mail.gmail.com>
+Content-Language: en-US, de-DE
+From: Stefan Metzmacher <metze@samba.org>
+In-Reply-To: <CAHk-=wj0de-P2Q=Gz2uyrWBHagT25arLbN0Lyg=U6fT7psKnQA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, May 04, 2024 at 02:38:41PM +0300, Dan Carpenter wrote:
-> The "i++" was accidentally left out so it just sets qgids[0] over and
-> over.
+Am 03.05.24 um 23:24 schrieb Linus Torvalds:
+> On Fri, 3 May 2024 at 14:11, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>>
+>> What we need is
+>>          * promise that ep_item_poll() won't happen after eventpoll_release_file().
+>> AFAICS, we do have that.
+>>          * ->poll() not playing silly buggers.
 > 
-> Fixes: 5343cd9364ea ("btrfs: qgroup: simple quota auto hierarchy for nested subvolumes")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
-> >From static analysis.  Untested.
+> No. That is not enough at all.
+> 
+> Because even with perfectly normal "->poll()", and even with the
+> ep_item_poll() happening *before* eventpoll_release_file(), you have
+> this trivial race:
+> 
+>    ep_item_poll()
+>       ->poll()
+> 
+> and *between* those two operations, another CPU does "close()", and
+> that causes eventpoll_release_file() to be called, and now f_count
+> goes down to zero while ->poll() is running.
+> 
+> So you do need to increment the file count around the ->poll() call, I feel.
+> 
+> Or, alternatively, you'd need to serialize with
+> eventpoll_release_file(), but that would need to be some sleeping lock
+> held over the ->poll() call.
+> 
+>> As it is, dma_buf ->poll() is very suspicious regardless of that
+>> mess - it can grab reference to file for unspecified interval.
+> 
+> I think that's actually much preferable to what epoll does, which is
+> to keep using files without having reference counts to them (and then
+> relying on magically not racing with eventpoll_release_file().
 
-A real bug, thanks. Patch added to for-next.
+I think it's a very important detail that epoll does not take
+real references. Otherwise an application level 'close()' on a socket
+would not trigger a tcp disconnect, when an fd is still registered with
+epoll.
+
+I noticed that some parts of Samba currently rely on this when I tried
+to convert tevent from epoll to IORING_OP_POLL_ADD (which takes a longer term reference)
+
+And I guess there will be other applications also relying on the current epoll
+behavior. That a closed fs automatically removes itself from epoll.
+
+A short term reference just around ->poll() might be fine,
+but please no reference via EPOLL_CTL_ADD.
+
+Changing that can cause security problems in user space.
+
+I haven't followed all details of this thread,
+please ignore me if that's all clear already :-)
+
+Thanks!
+metze
+
+
