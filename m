@@ -1,129 +1,198 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173258594C
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 13:36:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BFCA85953;
+	Mon,  6 May 2024 13:36:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715002587; cv=none; b=I+cJWQhCeGofpXtgP7NjSS9w+LJdrquYDztRW9yVpO6cPxfRPPPsJ6qY7FJgK1egQcZLLUD3ZRHAqQ26n1OeVzzkwgIRJNNbO3I52ym6Hw2KvPrGeM9ewkWlC5yZrPYoE3PqhhlHPzWQYixWvgwbR4cX+eOPrOeCATMOcN8vy48=
+	t=1715002587; cv=none; b=IuGERdwaAUYQJdAq0rWaZj7UZyWsJScNSTFZNE4bWnbvSnVx9c4mKsAsr5/Hkt1mdoa1LqVo8A96lw4PW+nh6PZ49Q3kHvMnQftg2Hd1roh54yK4D8rR3pbDUG0oK31ntUbgWIQI4NDNAoct4FfL8kUmHkFgoIj+eILeqJboLJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715002587; c=relaxed/simple;
-	bh=Hm8IbzH7o86qGsPyzm5DKDFy+pWLYyONwjVqfO4C4rg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BSHSAMt5cXrr5QX0Bv72qpKabv2u7OO41dG3vvhBJywBWcsEgxniKcIC5ZI3YNQExUUw+3s+FVIW0P/9zAF9Dj64veQAaO1Y1YGMxkXEoKtESl9g8w8gJEcirlRJiX6USR+5LSLP77pUDgWSznvzqjW00Xocq/A9wwkyx133rE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9s/WUkz; arc=none smtp.client-ip=10.30.226.201
+	bh=UJcPiw61xTI0GeGTdwGeKs1FkrZi0wwoWTT0pSrYn+M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Q7PhHZRoE1r+kzlqDLINQOaErh6pRALvsCcVIpa7u7A4QWVyaW0P5w0bK9l67DKOzOqtiqVgcLH8T9Wq7gasos0YcweFRUNEgm6T7X4p9Aa3cwDQNVuLcWV1tEGKsXvJ4gCur8bCWjo7aLl5JVCl7oZS+2ooEPER99Didpv2tfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qncIOQlu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9s/WUkz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26C2BC4AF68;
-	Mon,  6 May 2024 13:36:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qncIOQlu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47029C3277B;
+	Mon,  6 May 2024 13:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715002586;
-	bh=Hm8IbzH7o86qGsPyzm5DKDFy+pWLYyONwjVqfO4C4rg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=c9s/WUkzLe0/Gv60ykQuMYisA+qfLshxmw/LYojmokJi/IFRzXPXz3p7WTjXqTUcu
-	 9cO9wxDiJJ7V/gNHD316aargzM6HJ5kQz5tLFxy4b09QtHmY9CGScsnCBH9raaqgg1
-	 ovFY1Lzdq3L8wtWXvB9u6txLzMzgSj7OAApgNpQ7MjR4Q+gv5VBsFB0jo/myaNQ5ep
-	 yyg8txlfAv6PT6aHaUh56acPXe/OiSPLwqS6+rv6rmUM7jbdnhK1aCssHYK1R/wfF7
-	 AhMejO6EnmKXCMlB3MpkvgKwRNXoZhDi9d52bnu5PEsjffWVTT3Bf5rKI+RhyPmL8P
-	 iWTPegQ6Oqw3g==
-From: Michael Walle <mwalle@kernel.org>
-Date: Mon, 06 May 2024 15:34:46 +0200
-Subject: [PATCH 17/20] drm/bridge: tc358775: move bridge power up/down into
- functions
+	s=k20201202; t=1715002587;
+	bh=UJcPiw61xTI0GeGTdwGeKs1FkrZi0wwoWTT0pSrYn+M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qncIOQluY79Qw/5vK9cuYeOsaeGHZWh5iJhlSkuk0AhFlvx45q904/jFgmewC0dO/
+	 sDlStiO5wtvFfCRPsmb6qFR5cC071gHejIJL3F2J40kGO/nwipqAiPx+/m4MAkNLwc
+	 OaG7V6t0ERjpn+D4wekF0Uck7O6G01DVI7lTslvjuWfY+miffm9Vq9EdikZgHyK+6e
+	 Z/VOsswwuhyK4HKJXkE4sq75FMe3gRYzZDsuJ1fP4kZ8qvB3/IarrRJi92bHwlPE5f
+	 GAvNvqbUOZcMYT5zsaj/A68h9wy1SxFdd7cjqoB2mUCMp55DeUSeWEwOBBssbi9TTi
+	 cmyYgz0UKQ6zw==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 1/3] kbuild: provide reasonable defaults for tool coverage
+Date: Mon,  6 May 2024 22:35:42 +0900
+Message-Id: <20240506133544.2861555-2-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240506133544.2861555-1-masahiroy@kernel.org>
+References: <20240506133544.2861555-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240506-tc358775-fix-powerup-v1-17-545dcf00b8dd@kernel.org>
-References: <20240506-tc358775-fix-powerup-v1-0-545dcf00b8dd@kernel.org>
-In-Reply-To: <20240506-tc358775-fix-powerup-v1-0-545dcf00b8dd@kernel.org>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Sam Ravnborg <sam@ravnborg.org>, Vinay Simha BN <simhavcs@gmail.com>, 
- Tony Lindgren <tony@atomide.com>
-Cc: Daniel Semkowicz <dse@thaumatec.com>, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, Michael Walle <mwalle@kernel.org>
-X-Mailer: b4 0.12.4
+Content-Transfer-Encoding: 8bit
 
-Move the bridge power-up and power-down handling into own functions.
-This is a preparation patch to fix the power-up sequencing of the
-bridge. No functional change.
+The objtool, sanitizers (KASAN, UBSAN, etc.), and profilers (GCOV, etc.)
+are intended for kernel space objects. To exclude objects from their
+coverage, you need to set variables such as OBJECT_FILES_NON_STNDARD=y,
+KASAN_SANITIZE=n, etc.
 
-Signed-off-by: Michael Walle <mwalle@kernel.org>
+For instance, the following are not kernel objects, and therefore should
+opt out of coverage:
+
+  - vDSO
+  - purgatory
+  - bootloader (arch/*/boot/)
+
+Kbuild can detect these cases without relying on such variables because
+objects not directly linked to vmlinux or modules are considered
+"non-standard objects".
+
+Detecting objects linked to vmlinux or modules is straightforward:
+
+  - objects added to obj-y are linked to vmlinux
+  - objects added to lib-y are linked to vmlinux
+  - objects added to obj-m are linked to modules
+
+In the past, there was yet another case:
+
+  - object paths added to head-y were linked to vmlinux
+
+Commit ce697ccee1a8 ("kbuild: remove head-y syntax") eliminated this.
+
+There are still some exceptions. For example, arch/s390/boot/Makefile
+needlessly uses obj-y for the bootloader objects, which can be fixed
+later.
+
+Going forward, objects that are not listed in obj-y, lib-y, or obj-m
+will opt out of objtool, sanitizers, and profilers by default.
+
+You can still override the Kbuild decision by explicitly specifying
+OBJECT_FILES_NON_STANDARD, KASAN_SANITIZE, etc. but most of such Make
+variables can be removed.
+
+The next commit will clean up redundant variables.
+
+Note:
+
+The coverage for some objects will be changed:
+
+  - exclude .vmlinux.export.o from UBSAN, KCOV
+  - exclude arch/csky/kernel/vdso/vgettimeofday.o from UBSAN
+  - exclude arch/parisc/kernel/vdso32/vdso32.so from UBSAN
+  - exclude arch/parisc/kernel/vdso64/vdso64.so from UBSAN
+  - exclude arch/x86/um/vdso/um_vdso.o from UBSAN
+  - exclude drivers/misc/lkdtm/rodata.o from UBSAN, KCOV
+  - exclude init/version-timestamp.o from UBSAN, KCOV
+  - exclude lib/test_fortify/*.o from all santizers and profilers
+
+I believe these are positive effects.
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- drivers/gpu/drm/bridge/tc358775.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/bridge/tc358775.c b/drivers/gpu/drm/bridge/tc358775.c
-index c50554ec4b28..d5b3d691d2c1 100644
---- a/drivers/gpu/drm/bridge/tc358775.c
-+++ b/drivers/gpu/drm/bridge/tc358775.c
-@@ -215,6 +215,7 @@ struct tc_data {
- 	struct gpio_desc	*reset_gpio;
- 	struct gpio_desc	*stby_gpio;
- 	bool			lvds_dual_link;
-+	bool			powered;
- 	u8			bpc;
- 
- 	enum tc3587x5_type	type;
-@@ -233,9 +234,8 @@ static inline struct tc_data *bridge_to_tc(struct drm_bridge *b)
- 	return container_of(b, struct tc_data, bridge);
- }
- 
--static void tc_bridge_pre_enable(struct drm_bridge *bridge)
-+static void tc358775_power_up(struct tc_data *tc)
- {
--	struct tc_data *tc = bridge_to_tc(bridge);
- 	struct device *dev = &tc->dsi->dev;
- 	int ret;
- 
-@@ -256,9 +256,8 @@ static void tc_bridge_pre_enable(struct drm_bridge *bridge)
- 	usleep_range(10, 20);
- }
- 
--static void tc_bridge_post_disable(struct drm_bridge *bridge)
-+static void tc358775_power_down(struct tc_data *tc)
- {
--	struct tc_data *tc = bridge_to_tc(bridge);
- 	struct device *dev = &tc->dsi->dev;
- 	int ret;
- 
-@@ -279,6 +278,20 @@ static void tc_bridge_post_disable(struct drm_bridge *bridge)
- 	usleep_range(10000, 11000);
- }
- 
-+static void tc_bridge_pre_enable(struct drm_bridge *bridge)
-+{
-+	struct tc_data *tc = bridge_to_tc(bridge);
-+
-+	tc358775_power_up(tc);
-+}
-+
-+static void tc_bridge_post_disable(struct drm_bridge *bridge)
-+{
-+	struct tc_data *tc = bridge_to_tc(bridge);
-+
-+	tc358775_power_down(tc);
-+}
-+
- /* helper function to access bus_formats */
- static struct drm_connector *get_connector(struct drm_encoder *encoder)
- {
+ scripts/Makefile.build |  2 +-
+ scripts/Makefile.lib   | 20 ++++++++++++--------
+ 2 files changed, 13 insertions(+), 9 deletions(-)
 
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index c9c07a6144eb..56bacd992a09 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -214,7 +214,7 @@ endif # CONFIG_FTRACE_MCOUNT_USE_RECORDMCOUNT
+ # 'OBJECT_FILES_NON_STANDARD_foo.o := 'y': skip objtool checking for a file
+ # 'OBJECT_FILES_NON_STANDARD_foo.o := 'n': override directory skip for a file
+ 
+-is-standard-object = $(if $(filter-out y%, $(OBJECT_FILES_NON_STANDARD_$(target-stem).o)$(OBJECT_FILES_NON_STANDARD)n),y)
++is-standard-object = $(if $(filter-out y%, $(OBJECT_FILES_NON_STANDARD_$(target-stem).o)$(OBJECT_FILES_NON_STANDARD)n),$(is-kernel-object))
+ 
+ $(obj)/%.o: private objtool-enabled = $(if $(is-standard-object),$(if $(delay-objtool),$(is-single-obj-m),y))
+ 
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 5972ec4ee29b..d3180182af47 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -154,7 +154,7 @@ _cpp_flags     = $(KBUILD_CPPFLAGS) $(cppflags-y) $(CPPFLAGS_$(target-stem).lds)
+ #
+ ifeq ($(CONFIG_GCOV_KERNEL),y)
+ _c_flags += $(if $(patsubst n%,, \
+-		$(GCOV_PROFILE_$(target-stem).o)$(GCOV_PROFILE)$(CONFIG_GCOV_PROFILE_ALL)), \
++		$(GCOV_PROFILE_$(target-stem).o)$(GCOV_PROFILE)$(if $(is-kernel-object),$(CONFIG_GCOV_PROFILE_ALL))), \
+ 		$(CFLAGS_GCOV))
+ endif
+ 
+@@ -165,32 +165,32 @@ endif
+ ifeq ($(CONFIG_KASAN),y)
+ ifneq ($(CONFIG_KASAN_HW_TAGS),y)
+ _c_flags += $(if $(patsubst n%,, \
+-		$(KASAN_SANITIZE_$(target-stem).o)$(KASAN_SANITIZE)y), \
++		$(KASAN_SANITIZE_$(target-stem).o)$(KASAN_SANITIZE)$(is-kernel-object)), \
+ 		$(CFLAGS_KASAN), $(CFLAGS_KASAN_NOSANITIZE))
+ endif
+ endif
+ 
+ ifeq ($(CONFIG_KMSAN),y)
+ _c_flags += $(if $(patsubst n%,, \
+-		$(KMSAN_SANITIZE_$(target-stem).o)$(KMSAN_SANITIZE)y), \
++		$(KMSAN_SANITIZE_$(target-stem).o)$(KMSAN_SANITIZE)$(is-kernel-object)), \
+ 		$(CFLAGS_KMSAN))
+ _c_flags += $(if $(patsubst n%,, \
+-		$(KMSAN_ENABLE_CHECKS_$(target-stem).o)$(KMSAN_ENABLE_CHECKS)y), \
++		$(KMSAN_ENABLE_CHECKS_$(target-stem).o)$(KMSAN_ENABLE_CHECKS)$(is-kernel-object)), \
+ 		, -mllvm -msan-disable-checks=1)
+ endif
+ 
+ ifeq ($(CONFIG_UBSAN),y)
+ _c_flags += $(if $(patsubst n%,, \
+-		$(UBSAN_SANITIZE_$(target-stem).o)$(UBSAN_SANITIZE)y), \
++		$(UBSAN_SANITIZE_$(target-stem).o)$(UBSAN_SANITIZE)$(is-kernel-object)), \
+ 		$(CFLAGS_UBSAN))
+ _c_flags += $(if $(patsubst n%,, \
+-		$(UBSAN_SIGNED_WRAP_$(target-stem).o)$(UBSAN_SANITIZE_$(target-stem).o)$(UBSAN_SIGNED_WRAP)$(UBSAN_SANITIZE)y), \
++		$(UBSAN_SIGNED_WRAP_$(target-stem).o)$(UBSAN_SANITIZE_$(target-stem).o)$(UBSAN_SIGNED_WRAP)$(UBSAN_SANITIZE)$(is-kernel-object)), \
+ 		$(CFLAGS_UBSAN_SIGNED_WRAP))
+ endif
+ 
+ ifeq ($(CONFIG_KCOV),y)
+ _c_flags += $(if $(patsubst n%,, \
+-	$(KCOV_INSTRUMENT_$(target-stem).o)$(KCOV_INSTRUMENT)$(CONFIG_KCOV_INSTRUMENT_ALL)), \
++	$(KCOV_INSTRUMENT_$(target-stem).o)$(KCOV_INSTRUMENT)$(if $(is-kernel-object),$(CONFIG_KCOV_INSTRUMENT_ALL))), \
+ 	$(CFLAGS_KCOV))
+ endif
+ 
+@@ -200,7 +200,7 @@ endif
+ #
+ ifeq ($(CONFIG_KCSAN),y)
+ _c_flags += $(if $(patsubst n%,, \
+-	$(KCSAN_SANITIZE_$(target-stem).o)$(KCSAN_SANITIZE)y), \
++	$(KCSAN_SANITIZE_$(target-stem).o)$(KCSAN_SANITIZE)$(is-kernel-object)), \
+ 	$(CFLAGS_KCSAN))
+ # Some uninstrumented files provide implied barriers required to avoid false
+ # positives: set KCSAN_INSTRUMENT_BARRIERS for barrier instrumentation only.
+@@ -219,6 +219,10 @@ _cpp_flags += $(addprefix -I, $(src) $(obj))
+ endif
+ endif
+ 
++# If $(is-kernel-object) is 'y', this object will be linked to vmlinux or modules
++is-kernel-object = $(or $(part-of-builtin),$(part-of-module))
++
++part-of-builtin = $(if $(filter $(basename $@).o, $(real-obj-y) $(lib-y)),y)
+ part-of-module = $(if $(filter $(basename $@).o, $(real-obj-m)),y)
+ quiet_modtag = $(if $(part-of-module),[M],   )
+ 
 -- 
-2.39.2
+2.40.1
 
