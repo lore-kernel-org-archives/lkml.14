@@ -1,47 +1,90 @@
-Received: from sonata.ens-lyon.org (domu-toccata.ens-lyon.fr [140.77.166.138])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8EAF15D5B2;
-	Mon,  6 May 2024 21:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.77.166.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD71815D5B6
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:53:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715032420; cv=none; b=t3NG3KGvkiAMq/7NHMQTIkc/+GU2HjWzaDbUDxa77cL3NhDCj9xJlkVBpQX5lPv2gId1Zt51wzr5Rf9mwM+aO9cqhKA/KcjiWEdS4Hc+/LlXmN1mVOqbTUOWB5yzmHLeUiSKNbToeFPtOaJIjRY7wO1lOtdD541kfV4SCAaSUe0=
+	t=1715032420; cv=none; b=QKw5lXuQM4utpC2rY0CSrpmzjKuW3VnEavoF0tbnRgbqifrwn2nJGjAaXqSquKPqUcfGjr7ktc0mZKYlZwGNClOeXBdCYLyR+mXddgSin6SPkpWMQ3j1GR4+fI7NWy/4xMEdbGtF587f6ZTwjYp2DUZmffFGSu1h2GeFIOC8JsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715032420; c=relaxed/simple;
-	bh=5xqcT/MJ1k3KNGL3OEgnotxtEh49wE6sTfZDKNY7miQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g142zy9gVJP0d6dwyFScVADRC3u9Yi2IvmdDBJPmWczfUlqT23wk09W9rO+I8aZeO26wvwO1t0wokMyEORDcY5TbaEB6MJVYrQ77hlt2isy1fMMmeuULql7tphiSAen6xsGf/I9CvmBAEElOMOWLpUZOwK8zQKb7kaEbJLuMKMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ens-lyon.org; spf=pass smtp.mailfrom=bounce.ens-lyon.org; arc=none smtp.client-ip=140.77.166.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ens-lyon.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bounce.ens-lyon.org
-Received: from localhost (localhost [127.0.0.1])
-	by sonata.ens-lyon.org (Postfix) with ESMTP id BE3D9A02C2;
-	Mon,  6 May 2024 23:53:36 +0200 (CEST)
-Received: from sonata.ens-lyon.org ([127.0.0.1])
-	by localhost (sonata.ens-lyon.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id U6r1Mwcz0gl0; Mon,  6 May 2024 23:53:36 +0200 (CEST)
-Received: from begin.home (aamiens-653-1-111-57.w83-192.abo.wanadoo.fr [83.192.234.57])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by sonata.ens-lyon.org (Postfix) with ESMTPSA id 9CB1EA02A3;
-	Mon,  6 May 2024 23:53:36 +0200 (CEST)
-Received: from samy by begin.home with local (Exim 4.97)
-	(envelope-from <samuel.thibault@ens-lyon.org>)
-	id 1s46HA-00000006AQP-0N5S;
-	Mon, 06 May 2024 23:53:36 +0200
-From: Samuel Thibault <samuel.thibault@ens-lyon.org>
-To: tparkin@katalix.com,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	James Chapman <jchapman@katalix.com>
-Cc: Samuel Thibault <samuel.thibault@ens-lyon.org>,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCHv2] l2tp: Support several sockets with same IP/port quadruple
-Date: Mon,  6 May 2024 23:53:35 +0200
-Message-ID: <20240506215336.1470009-1-samuel.thibault@ens-lyon.org>
-X-Mailer: git-send-email 2.43.0
+	bh=+b5WVE8Zl/oL6yUg8wqjTrG63YhiMX5zZ8A4o/ecnHA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=gFDSdl/EBsu6IHBUJs2mt5LAELGtHEIjYRsNLjm/rI0zC3Oh03FU/tCNPYybrGqUxdcYbgQC6Ncab/iQnAghoy+NkQz4GXfe2S94vfe1aTrCtqfC8rlMsO4D3TqpSQCpq7657rjBbt1hZ7657ZVwu9+hM4rR3J58C0IuB3lL7E8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=PP564QTo; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PP564QTo"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6edc61d0ff6so2310847b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 14:53:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1715032418; x=1715637218; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=unRpkwwh5dJFFHedeUaWdr6DvAi5Mpoz54YPBsP5M3Q=;
+        b=PP564QToJ/RgCPF9pEdEuxzyXNcNpLY1hIfwdi7BELtXdrCb8sFL/oqMJJqv333aaC
+         w3JlotrpSC9lPb6gcfOkJyTn3vhiRW22LuHJHgxHbagngtyIUh6E25bTVtRTHgzY1O2a
+         /B3yZKfcx//UcmI9UX4kq/Ffb32CI0AA8oKfQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715032418; x=1715637218;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=unRpkwwh5dJFFHedeUaWdr6DvAi5Mpoz54YPBsP5M3Q=;
+        b=EYujYAriKwl6HZZ0++U1KSs7AqzTXKYxOspd5h3mlIyIFKQNZ+7goiE4gBVWJMdn2W
+         IxuUxCwmYUXyYGqJUIlKMvJD797fZbzo+YIjOHvV9ZjiZ9al6t87lzSuFEJIiOLwT7np
+         wrfsevsJ6Efe205GgCIDhk2syGJMu9lu1n5H+90jjDLdVUM/jdBUuuk3CeFdo4BQgdgV
+         0HL0nf8c7ELD4o5VfKxmSOT8s0FQFHlUbJF0V5PYQACIknjQAZpD4dE7XUmFQDov5Zm0
+         EBzM5jz2ZZNNRL6VdxLcdsFoBBePhqFMv8MAbYkX4RfSoUlr/TzQYhQyDf3hMTWlchwl
+         KWzw==
+X-Gm-Message-State: AOJu0Yxjy75X1fm5q4Uqqr6ZlSL15+ZUovGpmC5NX072cUG2tDlVzflQ
+	3D3UymFoaECbwpMuKyGD0n9yv3hNszbntI0/bd4JBBSKGKXEWh1L55r109WfKe/BT82J5qvtymY
+	AGhw74mYI5Ot3Qtgmpvrr049U/4cnCgwTLuggR0YcQbN3+u30KPyR3Uykv6pl6E0RRKXMADhhgu
+	GA1vAN8oOPEZqQ8npVVuNGqL5J8LhfYzIt11Kk/MVtZ9jyX7emDTkS
+X-Google-Smtp-Source: AGHT+IFytwDU3QJ4vsK+POJxwu7g3JrCnYNdqTb3FG3oTGvi5HMPEUCb2k8ZGmPzihZ3UGGsQkiLoQ==
+X-Received: by 2002:a05:6a20:7347:b0:1ad:7e66:659a with SMTP id v7-20020a056a20734700b001ad7e66659amr15303766pzc.15.1715032417415;
+        Mon, 06 May 2024 14:53:37 -0700 (PDT)
+Received: from amakhalov-build-vm.eng.vmware.com ([128.177.82.146])
+        by smtp.gmail.com with ESMTPSA id h8-20020a170902f54800b001ed6868e257sm5664008plf.123.2024.05.06.14.53.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 May 2024 14:53:36 -0700 (PDT)
+From: Alexey Makhalov <alexey.makhalov@broadcom.com>
+To: linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev,
+	bp@alien8.de,
+	hpa@zytor.com,
+	dave.hansen@linux.intel.com,
+	mingo@redhat.com,
+	tglx@linutronix.de
+Cc: x86@kernel.org,
+	netdev@vger.kernel.org,
+	richardcochran@gmail.com,
+	linux-input@vger.kernel.org,
+	dmitry.torokhov@gmail.com,
+	zackr@vmware.com,
+	linux-graphics-maintainer@vmware.com,
+	pv-drivers@vmware.com,
+	timothym@vmware.com,
+	akaher@vmware.com,
+	dri-devel@lists.freedesktop.org,
+	daniel@ffwll.ch,
+	airlied@gmail.com,
+	tzimmermann@suse.de,
+	mripard@kernel.org,
+	maarten.lankhorst@linux.intel.com,
+	horms@kernel.org,
+	kirill.shutemov@linux.intel.com,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Nadav Amit <nadav.amit@gmail.com>
+Subject: [PATCH v9 1/8] x86/vmware: Move common macros to vmware.h
+Date: Mon,  6 May 2024 14:52:58 -0700
+Message-Id: <20240506215305.30756-2-alexey.makhalov@broadcom.com>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <20240506215305.30756-1-alexey.makhalov@broadcom.com>
+References: <20240505182829.GBZjfPzeEijTsBUth5@fat_crate.local>
+ <20240506215305.30756-1-alexey.makhalov@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,89 +93,187 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Some l2tp providers will use 1701 as origin port and open several
-tunnels for the same origin and target. On the Linux side, this
-may mean opening several sockets, but then trafic will go to only
-one of them, losing the trafic for the tunnel of the other socket
-(or leaving it up to userland, consuming a lot of cpu%).
+Move VMware hypercall macros to vmware.h. This is a prerequisite for
+the introduction of vmware_hypercall API. No functional changes besides
+exporting vmware_hypercall_mode symbol.
 
-This can also happen when the l2tp provider uses a cluster, and
-load-balancing happens to migrate from one origin IP to another one,
-for which a socket was already established. Managing reassigning
-tunnels from one socket to another would be very hairy for userland.
-
-Lastly, as documented in l2tpconfig(1), as client it may be necessary
-to use 1701 as origin port for odd firewalls reasons, which could
-prevent from establishing several tunnels to a l2tp server, for the
-same reason: trafic would get only on one of the two sockets.
-
-With the V2 protocol it is however easy to route trafic to the proper
-tunnel, by looking up the tunnel number in the network namespace. This
-fixes the three cases altogether.
-
-Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
+Reviewed-by: Nadav Amit <nadav.amit@gmail.com>
 ---
+ arch/x86/include/asm/vmware.h | 72 +++++++++++++++++++++++++++++------
+ arch/x86/kernel/cpu/vmware.c  | 49 +-----------------------
+ 2 files changed, 62 insertions(+), 59 deletions(-)
 
-Diff from v1:
-- do not check for tunnel->l2tp_net != NULL, it cannot not be
-- check for tunnel version
-
- net/l2tp/l2tp_core.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
-index 8d21ff25f160..2ab45e3f48bf 100644
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -794,6 +794,7 @@ static void l2tp_session_queue_purge(struct l2tp_session *session)
- static int l2tp_udp_recv_core(struct l2tp_tunnel *tunnel, struct sk_buff *skb)
+diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
+index ac9fc51e2b18..de2533337611 100644
+--- a/arch/x86/include/asm/vmware.h
++++ b/arch/x86/include/asm/vmware.h
+@@ -8,25 +8,34 @@
+ 
+ /*
+  * The hypercall definitions differ in the low word of the %edx argument
+- * in the following way: the old port base interface uses the port
+- * number to distinguish between high- and low bandwidth versions.
++ * in the following way: the old I/O port based interface uses the port
++ * number to distinguish between high- and low bandwidth versions, and
++ * uses IN/OUT instructions to define transfer direction.
+  *
+  * The new vmcall interface instead uses a set of flags to select
+  * bandwidth mode and transfer direction. The flags should be loaded
+  * into %dx by any user and are automatically replaced by the port
+- * number if the VMWARE_HYPERVISOR_PORT method is used.
+- *
+- * In short, new driver code should strictly use the new definition of
+- * %dx content.
++ * number if the I/O port method is used.
+  */
+ 
+-/* Old port-based version */
+-#define VMWARE_HYPERVISOR_PORT    0x5658
+-#define VMWARE_HYPERVISOR_PORT_HB 0x5659
++#define VMWARE_HYPERVISOR_HB		BIT(0)
++#define VMWARE_HYPERVISOR_OUT		BIT(1)
++
++#define VMWARE_HYPERVISOR_PORT		0x5658
++#define VMWARE_HYPERVISOR_PORT_HB	(VMWARE_HYPERVISOR_PORT | \
++					 VMWARE_HYPERVISOR_HB)
++
++#define VMWARE_HYPERVISOR_MAGIC		0x564d5868U
++
++#define VMWARE_CMD_GETVERSION		10
++#define VMWARE_CMD_GETHZ		45
++#define VMWARE_CMD_GETVCPU_INFO		68
++#define VMWARE_CMD_STEALCLOCK		91
++
++#define CPUID_VMWARE_FEATURES_ECX_VMMCALL	BIT(0)
++#define CPUID_VMWARE_FEATURES_ECX_VMCALL	BIT(1)
+ 
+-/* Current vmcall / vmmcall version */
+-#define VMWARE_HYPERVISOR_HB   BIT(0)
+-#define VMWARE_HYPERVISOR_OUT  BIT(1)
++extern u8 vmware_hypercall_mode;
+ 
+ /* The low bandwidth call. The low word of edx is presumed clear. */
+ #define VMWARE_HYPERCALL						\
+@@ -54,4 +63,43 @@
+ 		      "rep insb",					\
+ 		      "vmcall", X86_FEATURE_VMCALL,			\
+ 		      "vmmcall", X86_FEATURE_VMW_VMMCALL)
++
++#define VMWARE_PORT(cmd, eax, ebx, ecx, edx)				\
++	__asm__("inl (%%dx), %%eax" :					\
++		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
++		"a"(VMWARE_HYPERVISOR_MAGIC),				\
++		"c"(VMWARE_CMD_##cmd),					\
++		"d"(VMWARE_HYPERVISOR_PORT), "b"(UINT_MAX) :		\
++		"memory")
++
++#define VMWARE_VMCALL(cmd, eax, ebx, ecx, edx)				\
++	__asm__("vmcall" :						\
++		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
++		"a"(VMWARE_HYPERVISOR_MAGIC),				\
++		"c"(VMWARE_CMD_##cmd),					\
++		"d"(0), "b"(UINT_MAX) :					\
++		"memory")
++
++#define VMWARE_VMMCALL(cmd, eax, ebx, ecx, edx)				\
++	__asm__("vmmcall" :						\
++		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
++		"a"(VMWARE_HYPERVISOR_MAGIC),				\
++		"c"(VMWARE_CMD_##cmd),					\
++		"d"(0), "b"(UINT_MAX) :					\
++		"memory")
++
++#define VMWARE_CMD(cmd, eax, ebx, ecx, edx) do {		\
++	switch (vmware_hypercall_mode) {			\
++	case CPUID_VMWARE_FEATURES_ECX_VMCALL:			\
++		VMWARE_VMCALL(cmd, eax, ebx, ecx, edx);		\
++		break;						\
++	case CPUID_VMWARE_FEATURES_ECX_VMMCALL:			\
++		VMWARE_VMMCALL(cmd, eax, ebx, ecx, edx);	\
++		break;						\
++	default:						\
++		VMWARE_PORT(cmd, eax, ebx, ecx, edx);		\
++		break;						\
++	}							\
++	} while (0)
++
+ #endif
+diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
+index 11f83d07925e..68d812e12e52 100644
+--- a/arch/x86/kernel/cpu/vmware.c
++++ b/arch/x86/kernel/cpu/vmware.c
+@@ -41,60 +41,14 @@
+ 
+ #define CPUID_VMWARE_INFO_LEAF               0x40000000
+ #define CPUID_VMWARE_FEATURES_LEAF           0x40000010
+-#define CPUID_VMWARE_FEATURES_ECX_VMMCALL    BIT(0)
+-#define CPUID_VMWARE_FEATURES_ECX_VMCALL     BIT(1)
+ 
+-#define VMWARE_HYPERVISOR_MAGIC	0x564D5868
+-
+-#define VMWARE_CMD_GETVERSION    10
+-#define VMWARE_CMD_GETHZ         45
+-#define VMWARE_CMD_GETVCPU_INFO  68
+ #define VMWARE_CMD_LEGACY_X2APIC  3
+ #define VMWARE_CMD_VCPU_RESERVED 31
+-#define VMWARE_CMD_STEALCLOCK    91
+ 
+ #define STEALCLOCK_NOT_AVAILABLE (-1)
+ #define STEALCLOCK_DISABLED        0
+ #define STEALCLOCK_ENABLED         1
+ 
+-#define VMWARE_PORT(cmd, eax, ebx, ecx, edx)				\
+-	__asm__("inl (%%dx), %%eax" :					\
+-		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
+-		"a"(VMWARE_HYPERVISOR_MAGIC),				\
+-		"c"(VMWARE_CMD_##cmd),					\
+-		"d"(VMWARE_HYPERVISOR_PORT), "b"(UINT_MAX) :		\
+-		"memory")
+-
+-#define VMWARE_VMCALL(cmd, eax, ebx, ecx, edx)				\
+-	__asm__("vmcall" :						\
+-		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
+-		"a"(VMWARE_HYPERVISOR_MAGIC),				\
+-		"c"(VMWARE_CMD_##cmd),					\
+-		"d"(0), "b"(UINT_MAX) :					\
+-		"memory")
+-
+-#define VMWARE_VMMCALL(cmd, eax, ebx, ecx, edx)                         \
+-	__asm__("vmmcall" :						\
+-		"=a"(eax), "=c"(ecx), "=d"(edx), "=b"(ebx) :		\
+-		"a"(VMWARE_HYPERVISOR_MAGIC),				\
+-		"c"(VMWARE_CMD_##cmd),					\
+-		"d"(0), "b"(UINT_MAX) :					\
+-		"memory")
+-
+-#define VMWARE_CMD(cmd, eax, ebx, ecx, edx) do {		\
+-	switch (vmware_hypercall_mode) {			\
+-	case CPUID_VMWARE_FEATURES_ECX_VMCALL:			\
+-		VMWARE_VMCALL(cmd, eax, ebx, ecx, edx);		\
+-		break;						\
+-	case CPUID_VMWARE_FEATURES_ECX_VMMCALL:			\
+-		VMWARE_VMMCALL(cmd, eax, ebx, ecx, edx);	\
+-		break;						\
+-	default:						\
+-		VMWARE_PORT(cmd, eax, ebx, ecx, edx);		\
+-		break;						\
+-	}							\
+-	} while (0)
+-
+ struct vmware_steal_time {
+ 	union {
+ 		uint64_t clock;	/* stolen time counter in units of vtsc */
+@@ -108,7 +62,8 @@ struct vmware_steal_time {
+ };
+ 
+ static unsigned long vmware_tsc_khz __ro_after_init;
+-static u8 vmware_hypercall_mode     __ro_after_init;
++u8 vmware_hypercall_mode __ro_after_init;
++EXPORT_SYMBOL_GPL(vmware_hypercall_mode);
+ 
+ static inline int __vmware_platform(void)
  {
- 	struct l2tp_session *session = NULL;
-+	struct l2tp_tunnel *orig_tunnel = tunnel;
- 	unsigned char *ptr, *optr;
- 	u16 hdrflags;
- 	u32 tunnel_id, session_id;
-@@ -845,6 +846,20 @@ static int l2tp_udp_recv_core(struct l2tp_tunnel *tunnel, struct sk_buff *skb)
- 		/* Extract tunnel and session ID */
- 		tunnel_id = ntohs(*(__be16 *)ptr);
- 		ptr += 2;
-+
-+		if (tunnel_id != tunnel->tunnel_id) {
-+			/* We are receiving trafic for another tunnel, probably
-+			 * because we have several tunnels between the same
-+			 * IP/port quadruple, look it up.
-+			 */
-+			struct l2tp_tunnel *alt_tunnel;
-+
-+			alt_tunnel = l2tp_tunnel_get(tunnel->l2tp_net, tunnel_id);
-+			if (!alt_tunnel || alt_tunnel->version != L2TP_HDR_VER_2)
-+				goto pass;
-+			tunnel = alt_tunnel;
-+		}
-+
- 		session_id = ntohs(*(__be16 *)ptr);
- 		ptr += 2;
- 	} else {
-@@ -875,6 +890,9 @@ static int l2tp_udp_recv_core(struct l2tp_tunnel *tunnel, struct sk_buff *skb)
- 	l2tp_recv_common(session, skb, ptr, optr, hdrflags, length);
- 	l2tp_session_dec_refcount(session);
- 
-+	if (tunnel != orig_tunnel)
-+		l2tp_tunnel_dec_refcount(tunnel);
-+
- 	return 0;
- 
- invalid:
-@@ -884,6 +902,9 @@ static int l2tp_udp_recv_core(struct l2tp_tunnel *tunnel, struct sk_buff *skb)
- 	/* Put UDP header back */
- 	__skb_push(skb, sizeof(struct udphdr));
- 
-+	if (tunnel != orig_tunnel)
-+		l2tp_tunnel_dec_refcount(tunnel);
-+
- 	return 1;
- }
- 
 -- 
-2.43.0
+2.39.0
 
