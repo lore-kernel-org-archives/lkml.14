@@ -1,373 +1,130 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CE314389D;
-	Mon,  6 May 2024 12:21:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACEE143899
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:23:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714998095; cv=none; b=ZcCAzXOxmr//7JmTGs9O6Kn+MIcIau5uZDUrbzeHecAK5v1M7LgeJRetzEqh81AOsd0ehyRcqlxg/DWN7lQ5DH7NxKYZgMtIIs3szS/ucEZ2g/8Lafrr6/nQ0K8lVls1aajbpyEInitFxHqHVTUlNPcxRNJhavZEGq92gj4mWHI=
+	t=1714998207; cv=none; b=DXCaeUiw2OJ0sZR/VpuzaT3ywOYRnjdDrLF4DengX4Ht8tuuwd9PxheEZrolccw1Wy72nX4wYyDc+M00JjNcz7kaIXfHEl8XH7Nr8vo9VdIuQcp84on+HoiBPyxCGhzjb2KHaEG3odQFyEoiCod5aI1YJGH0onUcZedplOzSDzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714998095; c=relaxed/simple;
-	bh=ChqIk8gWP941vOkCqIyQXW1Z7QPOFEbtVveIm7aYWg0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=O2LYBjaVGCCci+mTyKoSSrAdZBPyLbKA4ycbvzPp+OfItGwS/gRU8TR/2/Iq9woJxI0WCgMrDmBUT+o48/FXh1jM744yzdc3cs4ofO/rwSZ9lQQFLRlwkPMow8/38/YxFp9f/eMLNrxyJoEeZtI1UV7wFKnwDUfrmTEjALDn1YQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=R3LdgPiA; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1714998207; c=relaxed/simple;
+	bh=CeBSZCyIULZ4lID6ixB6Atv3O7cFtl+byeqy/usUoJA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=hXnbJbcgYPn9eCF6YLw0JZZlIXD1/R4roBmkEK8DiesZXj63hDNR7tn/TyHoih4m9JSEz2cRAruE5s7C01GFOaxqje46jmK/OxL6bmdJ88QK6km+XNedsJXpmoSAKuB6bCqBCsF0u2XhDSbnwX9/boDbr4UlX/geZKLjD9LxxnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=2wHWU+qJ; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="R3LdgPiA"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 446B4FnX014509;
-	Mon, 6 May 2024 12:21:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=0Nn3bWvynJWro2iLFEALu91KWiH53m7FTZBeOTU5hAM=;
- b=R3LdgPiANP3nHi4kD2F0Jn5rKghRFRTTAjOkZsIrQgDe1mpTC2mzLH15l8j5T5v1+8AO
- vcMGP/ncApIIsrEEVeEQxxVFnkY9K3mes5+wAW0k49lM1UaGDohXr2LRsgixpc8ffPIl
- nSmHU7cXmwl1lupPABtrgRWL7r5nvj+bmH7RO2g06FujAk3CuJWhOiR6yUn8mAj0aAvf
- JNgGhidUX5dsf+ttqRopa/vxVON087I9r9R/17aFYB3l263b2+hsqlkNzntAnEKqJR/J
- X08qD4UyF413SCtB6y1f3TLlXT3Qo5eCGLNCf4C5xe6Z3/s3Dc8Gi+nppZzW3frpBEOd sw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xxx0eg68p-1
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="2wHWU+qJ"
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4468VNBQ032357;
+	Mon, 6 May 2024 14:07:47 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=6EJVQ+wMxEHRL14RVOpH9mV9WNJQFrNy5pxAip0Pyy8=; b=2w
+	HWU+qJMRg1YngPQfOl2Y2ECz9cKoNqJYUwSlTSND6V/PbTOT0MsrXLeTeu4HssOT
+	wasRDCloTdPyC97jZm9AFjC/JtAnmD481ohyP5/jZjH01hwzyOlLb2zXsnSAVjTU
+	VjEY5x7+x3IiEegYTgUQXLsQfq0YN0e6zYGPWQGrzh9eUb65Pa8ebxy1BykX7ryc
+	1YzhT/l/BocGomvLB8ulcKVxEq2bzszRDKlm1TlhLzBaJJgT4nEqYEgJOdQa53y2
+	WltLcY8euLHAX704v+gmlpwXXgrScCrwqzpJodRmLLxwJrGx5p8BhdZ6PVlE7IdM
+	6cNahAQMf6Lxhx//AUsg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xwcbx6qg5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 12:21:23 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 446CLMcF004451;
-	Mon, 6 May 2024 12:21:22 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xxx0eg678-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 12:21:22 +0000
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4468tY1F010624;
-	Mon, 6 May 2024 12:19:36 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xx0bnyts6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 12:19:36 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 446CJUhL50070004
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 6 May 2024 12:19:32 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7E7832004D;
-	Mon,  6 May 2024 12:19:30 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 669842004B;
-	Mon,  6 May 2024 12:19:27 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.103.211])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  6 May 2024 12:19:27 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
-        christophe.leroy@csgroup.eu
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-        akanksha@linux.ibm.com
-Subject: [PATCH V2 4/9] tools/perf: Add support to capture and parse raw instruction in objdump
-Date: Mon,  6 May 2024 17:49:01 +0530
-Message-Id: <20240506121906.76639-5-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
-References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
+	Mon, 06 May 2024 14:07:47 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 52CF64002D;
+	Mon,  6 May 2024 14:07:42 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4895B21A239;
+	Mon,  6 May 2024 14:07:11 +0200 (CEST)
+Received: from [10.48.86.107] (10.48.86.107) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 6 May
+ 2024 14:07:08 +0200
+Message-ID: <02e9e9c5-449a-48ae-88a7-0483895cd4bf@foss.st.com>
+Date: Mon, 6 May 2024 14:07:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] checkpatch: use utf-8 match for spell checking
+To: Antonio Borneo <antonio.borneo@foss.st.com>,
+        Andy Whitcroft
+	<apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Dwaipayan Ray
+	<dwaipayanray1@gmail.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+CC: <linux-kernel@vger.kernel.org>,
+        =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?=
+	<clement.leger@bootlin.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20231212094310.3633-1-antonio.borneo@foss.st.com>
+ <20240102161038.22347-1-antonio.borneo@foss.st.com>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <20240102161038.22347-1-antonio.borneo@foss.st.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 9kBmwt75xGKLrLEfGYpgi1JzI1MQhIV7
-X-Proofpoint-GUID: G0wHARXoC0jYWNJuIqZ-YWXW1Bg9e9u7
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-05-06_07,2024-05-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
- mlxscore=0 malwarescore=0 adultscore=0 phishscore=0 mlxlogscore=999
- spamscore=0 lowpriorityscore=0 priorityscore=1501 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405060085
 
-Add support to capture and parse raw instruction in objdump.
-Currently, the perf tool infrastructure uses "--no-show-raw-insn" option
-with "objdump" while disassemble. Example from powerpc with this option
-for an instruction address is:
+Hello,
 
-Snippet from:
-objdump  --start-address=<address> --stop-address=<address>  -d --no-show-raw-insn -C <vmlinux>
+A gentle reminder to review this patch.
 
-c0000000010224b4:	lwz     r10,0(r9)
+Best regards,
 
-This line "lwz r10,0(r9)" is parsed to extract instruction name,
-registers names and offset. Also to find whether there is a memory
-reference in the operands, "memory_ref_char" field of objdump is used.
-For x86, "(" is used as memory_ref_char to tackle instructions of the
-form "mov  (%rax), %rcx".
+Clément
 
-In case of powerpc, not all instructions using "(" are the only memory
-instructions. Example, above instruction can also be of extended form (X
-form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
-and extract the source/target registers, patch adds support to use raw
-instruction. With raw instruction, macros are added to extract opcode
-and register fields.
-
-"struct ins_operands" and "struct ins" is updated to carry opcode and
-raw instruction binary code (raw_insn). Function "disasm_line__parse"
-is updated to fill the raw instruction hex value and opcode in newly
-added fields. There is no changes in existing code paths, which parses
-the disassembled code. The architecture using the instruction name and
-present approach is not altered. Since this approach targets powerpc,
-the macro implementation is added for powerpc as of now.
-
-Example:
-representation using --show-raw-insn in objdump gives result:
-
-38 01 81 e8     ld      r4,312(r1)
-
-Here "38 01 81 e8" is the raw instruction representation. In powerpc,
-this translates to instruction form: "ld RT,DS(RA)" and binary code
-as:
-_____________________________________
-| 58 |  RT  |  RA |      DS       | |
--------------------------------------
-0    6     11    16              30 31
-
-Function "disasm_line__parse" is updated to capture:
-
-line:    38 01 81 e8     ld      r4,312(r1)
-opcode and raw instruction "38 01 81 e8"
-Raw instruction is used later to extract the reg/offset fields.
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- tools/include/linux/string.h              |  2 +
- tools/lib/string.c                        | 13 +++++++
- tools/perf/arch/powerpc/util/dwarf-regs.c | 19 ++++++++++
- tools/perf/util/disasm.c                  | 46 +++++++++++++++++++----
- tools/perf/util/disasm.h                  |  6 +++
- tools/perf/util/include/dwarf-regs.h      |  9 +++++
- 6 files changed, 88 insertions(+), 7 deletions(-)
-
-diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-index db5c99318c79..0acb1fc14e19 100644
---- a/tools/include/linux/string.h
-+++ b/tools/include/linux/string.h
-@@ -46,5 +46,7 @@ extern char * __must_check skip_spaces(const char *);
- 
- extern char *strim(char *);
- 
-+extern void remove_spaces(char *s);
-+
- extern void *memchr_inv(const void *start, int c, size_t bytes);
- #endif /* _TOOLS_LINUX_STRING_H_ */
-diff --git a/tools/lib/string.c b/tools/lib/string.c
-index 8b6892f959ab..21d273e69951 100644
---- a/tools/lib/string.c
-+++ b/tools/lib/string.c
-@@ -153,6 +153,19 @@ char *strim(char *s)
- 	return skip_spaces(s);
- }
- 
-+/*
-+ * remove_spaces - Removes whitespaces from @s
-+ */
-+void remove_spaces(char *s)
-+{
-+	char *d = s;
-+	do {
-+		while (*d == ' ') {
-+			++d;
-+		}
-+	} while ((*s++ = *d++));
-+}
-+
- /**
-  * strreplace - Replace all occurrences of character in string.
-  * @s: The string to operate on.
-diff --git a/tools/perf/arch/powerpc/util/dwarf-regs.c b/tools/perf/arch/powerpc/util/dwarf-regs.c
-index 0c4f4caf53ac..e60a71fd846e 100644
---- a/tools/perf/arch/powerpc/util/dwarf-regs.c
-+++ b/tools/perf/arch/powerpc/util/dwarf-regs.c
-@@ -98,3 +98,22 @@ int regs_query_register_offset(const char *name)
- 			return roff->ptregs_offset;
- 	return -EINVAL;
- }
-+
-+#define	PPC_OP(op)	(((op) >> 26) & 0x3F)
-+#define PPC_RA(a)	(((a) >> 16) & 0x1f)
-+#define PPC_RT(t)	(((t) >> 21) & 0x1f)
-+
-+int get_opcode_insn(unsigned int raw_insn)
-+{
-+	return PPC_OP(raw_insn);
-+}
-+
-+int get_source_reg(unsigned int raw_insn)
-+{
-+	return PPC_RA(raw_insn);
-+}
-+
-+int get_target_reg(unsigned int raw_insn)
-+{
-+	return PPC_RT(raw_insn);
-+}
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 2de66a092cab..85692f73e78f 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -43,7 +43,7 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
- 			   struct ins_operands *ops, int max_ins_name);
- 
- static void ins__sort(struct arch *arch);
--static int disasm_line__parse(char *line, const char **namep, char **rawp);
-+static int disasm_line__parse(char *line, const char **namep, char **rawp, int *opcode, int *rawp_insn);
- 
- static __attribute__((constructor)) void symbol__init_regexpr(void)
- {
-@@ -512,7 +512,7 @@ static int lock__parse(struct arch *arch, struct ins_operands *ops, struct map_s
- 	if (ops->locked.ops == NULL)
- 		return 0;
- 
--	if (disasm_line__parse(ops->raw, &ops->locked.ins.name, &ops->locked.ops->raw) < 0)
-+	if (disasm_line__parse(ops->raw, &ops->locked.ins.name, &ops->locked.ops->raw, &ops->locked.ins.opcode, &ops->locked.ops->raw_insn) < 0)
- 		goto out_free_ops;
- 
- 	ops->locked.ins.ops = ins__find(arch, ops->locked.ins.name);
-@@ -815,11 +815,38 @@ static void disasm_line__init_ins(struct disasm_line *dl, struct arch *arch, str
- 		dl->ins.ops = NULL;
- }
- 
--static int disasm_line__parse(char *line, const char **namep, char **rawp)
-+int __weak get_opcode_insn(unsigned int raw_insn __maybe_unused)
- {
--	char tmp, *name = skip_spaces(line);
-+	return -1;
-+}
-+
-+int __weak get_source_reg(unsigned int raw_insn __maybe_unused)
-+{
-+	return -1;
-+}
-+
-+int __weak get_target_reg(unsigned int raw_insn __maybe_unused)
-+{
-+	return -1;
-+}
-+
-+/*
-+ * Parses the objdump result captured with --show-raw-insn.
-+ * Example, objdump line from powerpc:
-+ * line:    38 01 81 e8     ld      r4,312(r1)
-+ * namep : ld
-+ * rawp  : "ld r4,312(r1)"
-+ * opcode: fetched from arch specific get_opcode_insn
-+ * rawp_insn: e8810138
-+ *
-+ * rawp_insn is used later to extract the reg/offset fields
-+ */
-+static int disasm_line__parse(char *line, const char **namep, char **rawp, int *opcode, int *rawp_insn)
-+{
-+	char tmp, *tmp_opcode, *name_opcode = skip_spaces(line);
-+	char *name = skip_spaces(name_opcode + 11);
- 
--	if (name[0] == '\0')
-+	if (name_opcode[0] == '\0')
- 		return -1;
- 
- 	*rawp = name + 1;
-@@ -829,13 +856,18 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
- 
- 	tmp = (*rawp)[0];
- 	(*rawp)[0] = '\0';
-+	tmp_opcode = strdup(name_opcode);
-+	tmp_opcode[11] = '\0';
-+	remove_spaces(tmp_opcode);
- 	*namep = strdup(name);
-+	*opcode = get_opcode_insn(be32_to_cpu(strtol(tmp_opcode, NULL, 16)));
- 
- 	if (*namep == NULL)
- 		goto out;
- 
- 	(*rawp)[0] = tmp;
- 	*rawp = strim(*rawp);
-+	*rawp_insn = be32_to_cpu(strtol(tmp_opcode, NULL, 16));
- 
- 	return 0;
- 
-@@ -896,7 +928,7 @@ struct disasm_line *disasm_line__new(struct annotate_args *args)
- 		goto out_delete;
- 
- 	if (args->offset != -1) {
--		if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < 0)
-+		if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw, &dl->ins.opcode, &dl->ops.raw_insn) < 0)
- 			goto out_free_line;
- 
- 		disasm_line__init_ins(dl, args->arch, &args->ms);
-@@ -1726,7 +1758,7 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- 		 map__rip_2objdump(map, sym->start),
- 		 map__rip_2objdump(map, sym->end),
- 		 opts->show_linenr ? "-l" : "",
--		 opts->show_asm_raw ? "" : "--no-show-raw-insn",
-+		 opts->show_asm_raw ? "" : "--show-raw-insn",
- 		 opts->annotate_src ? "-S" : "",
- 		 opts->prefix ? "--prefix " : "",
- 		 opts->prefix ? '"' : ' ',
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index 718177fa4775..5c1520010ca7 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -43,14 +43,18 @@ struct arch {
- 
- struct ins {
- 	const char     *name;
-+	int	opcode;
- 	struct ins_ops *ops;
- };
- 
- struct ins_operands {
- 	char	*raw;
-+	int	raw_insn;
- 	struct {
- 		char	*raw;
- 		char	*name;
-+		int	opcode;
-+		int	raw_insn;
- 		struct symbol *sym;
- 		u64	addr;
- 		s64	offset;
-@@ -62,6 +66,8 @@ struct ins_operands {
- 		struct {
- 			char	*raw;
- 			char	*name;
-+			int	opcode;
-+			int	raw_insn;
- 			u64	addr;
- 			bool	multi_regs;
- 		} source;
-diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
-index 01fb25a1150a..2a4e1e16e52c 100644
---- a/tools/perf/util/include/dwarf-regs.h
-+++ b/tools/perf/util/include/dwarf-regs.h
-@@ -31,6 +31,15 @@ static inline int get_dwarf_regnum(const char *name __maybe_unused,
- }
- #endif
- 
-+/*
-+ * get_opcode_insn - Return opcode from raw instruction
-+ * get_source_reg - Return source reg from raw instruction
-+ * get_target_reg - Return target reg from raw instruction
-+ */
-+int get_opcode_insn(unsigned int raw_insn);
-+int get_source_reg(unsigned int raw_insn);
-+int get_target_reg(unsigned int raw_insn);
-+
- #ifdef HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET
- /*
-  * Arch should support fetching the offset of a register in pt_regs
--- 
-2.43.0
-
+On 1/2/24 17:10, Antonio Borneo wrote:
+> The current code that checks for misspelling verifies, in a more
+> complex regex, if $rawline matches [^\w]($misspellings)[^\w]
+> 
+> Being $rawline a byte-string, a utf-8 character in $rawline can
+> match the non-word-char [^\w].
+> E.g.:
+> 	./scripts/checkpatch.pl --git 81c2f059ab9
+> 	WARNING: 'ment' may be misspelled - perhaps 'meant'?
+> 	#36: FILE: MAINTAINERS:14360:
+> 	+M:     Clément Léger <clement.leger@bootlin.com>
+> 	            ^^^^
+> 
+> Use a utf-8 version of $rawline for spell checking.
+> 
+> Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+> Reported-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> ---
+> Changes in v2:
+> - use $rawline_utf8 also in the while-loop's body;
+> - fix path of checkpatch in the commit message.
+> ---
+>   scripts/checkpatch.pl | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 25fdb7fda112..2d122d232c6d 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -3477,9 +3477,10 @@ sub process {
+>   # Check for various typo / spelling mistakes
+>   		if (defined($misspellings) &&
+>   		    ($in_commit_log || $line =~ /^(?:\+|Subject:)/i)) {
+> -			while ($rawline =~ /(?:^|[^\w\-'`])($misspellings)(?:[^\w\-'`]|$)/gi) {
+> +			my $rawline_utf8 = decode("utf8", $rawline);
+> +			while ($rawline_utf8 =~ /(?:^|[^\w\-'`])($misspellings)(?:[^\w\-'`]|$)/gi) {
+>   				my $typo = $1;
+> -				my $blank = copy_spacing($rawline);
+> +				my $blank = copy_spacing($rawline_utf8);
+>   				my $ptr = substr($blank, 0, $-[1]) . "^" x length($typo);
+>   				my $hereptr = "$hereline$ptr\n";
+>   				my $typo_fix = $spelling_fix{lc($typo)};
+> 
+> base-commit: b85ea95d086471afb4ad062012a4d73cd328fa86
