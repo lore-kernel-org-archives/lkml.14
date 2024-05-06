@@ -1,130 +1,51 @@
-Received: from out-184.mta1.migadu.com (out-184.mta1.migadu.com [95.215.58.184])
+Received: from hoggar.fisica.ufpr.br (hoggar.fisica.ufpr.br [200.238.171.242])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04802143C53
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA2B1442FB;
+	Mon,  6 May 2024 12:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=200.238.171.242
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714998544; cv=none; b=FwTD+MT75m50Eqq3ADBqZNC7gWxzGmM5o8Q7HqZmkg6kEbIMUvDZGA0F14y4njzGUgN4dacPVzVub4U1yEVwth3TzI3zYImGPvrj9id0t6Tpe77YrH7AlNrw5Zc9qb+57Z1seNMDnsdfJRPi6gw5uzrjukNwBtHqtbs2+8ZX2zU=
+	t=1714998553; cv=none; b=Kj11E9SY0ltliG3Wr/z4EPhBOODJY7l6r6MFeKEf6DRxWR1Gi38cfrcupHn3KZs9a1qwzT0SpFqiOgYJ21mkf6mE2Gmq+0h1CF/a/4YUbhjSkHZqBMD2VwctXTQ/6HSJfKqgPly/7ZyI2F0Ez9XA47XG/js9fJqegJAWTe6Xej8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714998544; c=relaxed/simple;
-	bh=EGHZPmqvH4r1KctOg6eqewuTMYhyTlB8DsvRBoa8TDs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jJEMrW7kyV8jq405R3pwF1ni9bNJHjL7FPkvrJ7BTUo5ERL6bq7BwFQ2qyw17B3B2eDni2mEWSa3E0/hwQEwXmVd0wp4BqMUFb2Dbvt8r/2fRbRdTDCUvBEKMyYj/uaXB5y2DL4gVB63OUceROQRo8a/QcWV6/XgrVC9ykelnqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org; spf=pass smtp.mailfrom=cknow.org; dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b=SWUc0BpI; arc=none smtp.client-ip=95.215.58.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cknow.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cknow.org
+	s=arc-20240116; t=1714998553; c=relaxed/simple;
+	bh=lxbVZdxtj+/9shnlD7a65467vu1QFnwevDKUl02DnTE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t2j5njziBQIsLhkx450Xv5zvo5g9yYxzr3dyjC6GxBbDiqDW63HfNzJZEcc7vMjFD8V4mKEe33OGaCUrfr9KJzGsE4XT0WXSP3P5zGKZIXBOKdWaZB5CrKdEZH6uzggm/mhuZnc2DjghktJ4/bvnLPZyTmr6vTaFr8JcHPwt/nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fisica.ufpr.br; spf=pass smtp.mailfrom=fisica.ufpr.br; dkim=pass (2048-bit key) header.d=fisica.ufpr.br header.i=@fisica.ufpr.br header.b=lQ3yjiw1; arc=none smtp.client-ip=200.238.171.242
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fisica.ufpr.br
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fisica.ufpr.br
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cknow.org header.i=@cknow.org header.b="SWUc0BpI"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cknow.org; s=key1;
-	t=1714998540;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=adS52XGOjAf9NFDpaofMTlIleiOLUvYtp7jAKoj1FWE=;
-	b=SWUc0BpIni3DNRfn8cUmU/S7IH9xdi7XJ4z+ZZRH7gm/RTzYlhrYmjj2zDCQx466aMGh1F
-	eI503oK8ijiOQj72yq1YfIfqmbSol0BmH+lfpAZr8bt2+SBH3XYmo1MMN7Lw4duS+eObGF
-	rF0+s7RsflXzGqVGP70xnWc57uULqOQX4R2EN0PUEvpCoyvsFTIbgU0qPnah7koyOc4wpI
-	aMWIqWYjKMU1X/hoTMTbpUlS0q47KGEi9iqZM/9Nv3Z698c7nV26ZhCUiVbZ/OiaAnwDKg
-	jFbJa3U3eiF3K6rxcQpD/g8H4VvaqaXoGRu8anaYWVJvzAyRV1CGq0NYyAphrA==
-From: Diederik de Haas <didi.debian@cknow.org>
-To: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Alexey Charkov <alchark@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
- Dragan Simic <dsimic@manjaro.org>, Viresh Kumar <viresh.kumar@linaro.org>,
- Chen-Yu Tsai <wens@kernel.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, Alexey Charkov <alchark@gmail.com>
-Subject:
- Re: [PATCH v4 2/6] arm64: dts: rockchip: enable thermal management on all
- RK3588 boards
-Date: Mon, 06 May 2024 14:28:50 +0200
-Message-ID: <2543817.5xW6y1K4kI@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <20240506-rk-dts-additions-v4-2-271023ddfd40@gmail.com>
-References:
- <20240506-rk-dts-additions-v4-0-271023ddfd40@gmail.com>
- <20240506-rk-dts-additions-v4-2-271023ddfd40@gmail.com>
+	dkim=pass (2048-bit key) header.d=fisica.ufpr.br header.i=@fisica.ufpr.br header.b="lQ3yjiw1"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=fisica.ufpr.br;
+	s=201705; t=1714998212;
+	bh=lxbVZdxtj+/9shnlD7a65467vu1QFnwevDKUl02DnTE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lQ3yjiw1N6NXGVvGLMQDSpwvUqT7Q1Djh42Aw7odiDO24VpZffDsm9wIfx/5t7lfE
+	 XivB6rHohD2OjEhbYf8sqhzHKXa/vjVL9p5B6gvrcB3Nj5z8fnQWZaswCYgY22iTRC
+	 f0khnUswb8zyQvspKW1Zssv9rb1rioijgyGusOOWL2pL48N3+6jYC4vK7gaN8rxtXX
+	 DFqXwIlYexzSJVbVcyeY17EY3Ftli9DE9vuHFkN+dXlrcx4eMD/EePwVf9HRt9GAkU
+	 oztNt47A+yxVEYKmHD3efeRs5yiUHj5AkgaONCX9pOptHkem7UIbbn4sn6KFBIdGIs
+	 EH5NHYnkE6Nqg==
+Received: by hoggar.fisica.ufpr.br (Postfix, from userid 577)
+	id 85DA411A7C5A; Mon, 06 May 2024 09:23:32 -0300 (-03)
+Date: Mon, 6 May 2024 09:23:32 -0300
+From: Carlos Carvalho <carlos@fisica.ufpr.br>
+To: Holger Kiehl <Holger.Kiehl@dwd.de>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-raid <linux-raid@vger.kernel.org>,
+	linux-block@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+	linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>
+Subject: Re: Massive slowdown in kernels as of 6.x
+Message-ID: <ZjjLxLk1E4dGLpLi@fisica.ufpr.br>
+References: <1ebabc15-51a8-59f3-c813-4e65e897a373@diagnostix.dwd.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3764040.TKpFhyqhbS";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1ebabc15-51a8-59f3-c813-4e65e897a373@diagnostix.dwd.de>
 
---nextPart3764040.TKpFhyqhbS
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"; protected-headers="v1"
-From: Diederik de Haas <didi.debian@cknow.org>
-Date: Mon, 06 May 2024 14:28:50 +0200
-Message-ID: <2543817.5xW6y1K4kI@bagend>
-Organization: Connecting Knowledge
-In-Reply-To: <20240506-rk-dts-additions-v4-2-271023ddfd40@gmail.com>
-MIME-Version: 1.0
-
-Hi,
-
-On Monday, 6 May 2024 11:36:33 CEST Alexey Charkov wrote:
-> This enables the on-chip thermal monitoring sensor (TSADC) on all
-> RK3588(s) boards that don't have it enabled yet. It provides temperature
-> monitoring for the SoC and emergency thermal shutdowns, and is thus
-> important to have in place before CPU DVFS is enabled, as high CPU
-> operating performance points can overheat the chip quickly in the
-> absence of thermal management.
-> 
-> Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> ---
->  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts               | 4 ++++
->  8 files changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts index
-> b8e15b76a8a6..21e96c212dd8 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> @@ -742,6 +742,10 @@ regulator-state-mem {
->  	};
->  };
-> 
-> +&tsadc {
-> +	status = "okay";
-> +};
-> +
->  &uart2 {
->  	pinctrl-0 = <&uart2m0_xfer>;
->  	status = "okay";
-
-I built a kernel with v3 of your patch set and someone tested it on a ROCK 5B 
-'for me' and it had the following line in dmesg:
-
-rockchip-thermal fec00000.tsadc: Missing rockchip,grf property
-
-I'm guessing that turned up due to enabling tsadc, but (also) in v4 I didn't 
-see a change wrt "rockchip,grf".
-Should that be done? (asking; I don't know)
-
-Cheers,
-  Diederik
---nextPart3764040.TKpFhyqhbS
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQT1sUPBYsyGmi4usy/XblvOeH7bbgUCZjjNAgAKCRDXblvOeH7b
-bqzGAQD1bM1bOXBrGILEfvogB5p+W1FcHVZbgNHh5ucp7mH02QEAqaUP/WdxYNiG
-IwPC/uXaAjTKHHAb6H06K4aElQrtvwI=
-=Nb8T
------END PGP SIGNATURE-----
-
---nextPart3764040.TKpFhyqhbS--
-
-
-
+Using top do you see something consuming lots of cpu?
