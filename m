@@ -1,82 +1,122 @@
-Received: from relay.hostedemail.com (smtprelay0016.hostedemail.com [216.40.44.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 203BB4779F;
-	Mon,  6 May 2024 05:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE8A40847
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 05:36:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714973614; cv=none; b=fNEqgotFjvCUrQs7zrC01dHLkQdk3Ck0OP7tgQSMjeP6kU+qT0kQ+ayv728JEq0maRB2JmkmVqc7tm2IC6IpDskn9gQXFP8TCVCKtTT1dLcQ3ZoqxPiKuHtPfDt/8lGHtY+fvKsXrhm0qAQ5VqNHtHqlPIPPOP0a3eDBsLNr2OY=
+	t=1714973794; cv=none; b=AcC+ZMKsT0GzW3ByvUs0CYmPamnlwb3YsWq8WYS9SrnSzQtUJrn32pv2xVEcXHWcTVLBlZEa998O66OB0+IHAQLJ0wXlrx2Ll8BVrc6L9B5wRUGbbOMQUKet7MLX65VhCyfCNIYvKyqrSmUKoi4CK+k1MZ40PHbmxs58l4jNaGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714973614; c=relaxed/simple;
-	bh=du+ALvgKFi4Utr9m0V0kOjg/vAiXg0zO+2aWON7wKUk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=G98YZQTnFLqp4Mdbqqdp3LZSypNW/71od3nV62DntOZPwWeJGrm38pGE471AqfR+rT2sBnbU9Q4//57TKkCqX4eGYOauF4GyZwX5c3ILDd451+HB+PVM9ncbH+llVf6DULKlBuMTrpyC4nBr6YHKcwgE/AASacDSqd3f6Gm1Mpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay09.hostedemail.com (Postfix) with ESMTP id D4F468059F;
-	Mon,  6 May 2024 05:33:24 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf20.hostedemail.com (Postfix) with ESMTPA id 3947020027;
-	Mon,  6 May 2024 05:33:19 +0000 (UTC)
-Message-ID: <5e26f82913801050afa4442dfb9a07249895ab98.camel@perches.com>
-Subject: Re: [PATCH RESEND v6 2/2] scripts: checkpatch: check unused
- parameters for function-like macro
-From: Joe Perches <joe@perches.com>
-To: Barry Song <21cnbao@gmail.com>, akpm@linux-foundation.org, 
-	linux-doc@vger.kernel.org
-Cc: apw@canonical.com, broonie@kernel.org, chenhuacai@loongson.cn, 
- chris@zankel.net, corbet@lwn.net, dwaipayanray1@gmail.com, 
- herbert@gondor.apana.org.au, linux-kernel@vger.kernel.org,
- linux@roeck-us.net,  lukas.bulwahn@gmail.com, mac.xxn@outlook.com,
- sfr@canb.auug.org.au,  v-songbaohua@oppo.com, workflows@vger.kernel.org,
- Max Filippov <jcmvbkbc@gmail.com>,  Jeff Johnson
- <quic_jjohnson@quicinc.com>, Charlemagne Lasse <charlemagnelasse@gmail.com>
-Date: Sun, 05 May 2024 22:33:18 -0700
-In-Reply-To: <20240506014606.8638-3-21cnbao@gmail.com>
-References: <20240506014606.8638-1-21cnbao@gmail.com>
-	 <20240506014606.8638-3-21cnbao@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1714973794; c=relaxed/simple;
+	bh=G7CdsgNpfTQRen0iYorRaxR7iwHQ+rJicDUKG3UcIeY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HDo1o/N6H6xTkDe/HWyh7aSRbk5ptYvA0wSI16MUjDfjXigDwLVWzMkiqVxc4k71ceLzGR6WLgsPGXQ54UxJYSr6DbL8gmCZERcshsM/lWHcEvxwFHU7m0sUiig9HxLpzuK1O1C3QbSLaTjo4vtfKGrhfJ/zrx6u9HjUoRvps1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CKVr+cM/; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CKVr+cM/"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a599a298990so364596266b.2
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2024 22:36:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1714973791; x=1715578591; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2GWWRLCvakvhhYyd3WrFl6nbheuV8ncCxq9hNwV1fNc=;
+        b=CKVr+cM/+cVSRoGrSZJWtn+aJxlj5FxmfqbjI6Hbavo4PiFkBHT/5EvOij6zxdaW4f
+         bc4ssRBOO8xi1Cy18zK8ZBDULQuzWfthF6hw5Fv8h/1063RK91FZlWZV3sr1Sc26fOOp
+         z9g/JznlkPcxD/JnLvfc41uidAXkfBYx5SMM3bi7zC7pJ9iOP84HvDvxosUbYEKCQNin
+         BH7qokKpYbWhrGzcbJSh6MAv6q/VAoyk+s6s4vG/+6y71RWryt+2n4bjqaEd+pp2mOgl
+         735tF0ZgLDa9GGiuXAXbhR/JQCAcVL0GuaCCJ7fn6glvxChwY5t10GusXJ8KqG+sJRrZ
+         ZpKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714973791; x=1715578591;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2GWWRLCvakvhhYyd3WrFl6nbheuV8ncCxq9hNwV1fNc=;
+        b=QcECVG+w1EGOUgitd7Hk43/p0crdnPjWUQ+p3WdSze64nPCTkc1N375ORRhbueLeDq
+         Jlzxzh2+3H3KRsxPBEM88qoR/XFZeGW2e9XIuMVUePn/Mnf/AU6jVDkJtqydt/sHE5tj
+         KHOblyhYYoGMLRbzifykNDsDUVrR2yOKYzktu+Hbt/0U8pObmgIfcyTgmZIOQaB2jEtf
+         YbHbWfEOQTj/jNM2y7QcyL9DJDB/cvYjGLfXGKDx3YatyNwgd8byGgMh5ZpHSSNpkEHJ
+         hUsLZugf0KkrwLtGnhlrBQfXRT9OB9OwlPGKf8zIxYH7pe7Tjh20eEyMbi3O1cDpN0wj
+         q9Dg==
+X-Forwarded-Encrypted: i=1; AJvYcCWspfsU+7JqQF0qr/uKpJJmDdqnI3QphOOX/L4aOTPPkeLaT7+aUpHjbdFRlXqGnoFBKzFKxzo2JRHdkotQuoO8mSaGzqsP4wuOC8ko
+X-Gm-Message-State: AOJu0YzOsqo1MLf75z8ZTvb2+tvf396JJcNbC+wYI6dtlk6Z+MxkhPMs
+	iSOvD3xa32H433nLZIloKCenk/8b0UE7nKg7Jrs2MApqKUh0pXZPOTP3vdC752AOBR70Fsg/dZ3
+	mQ5kpmdPPU11/NNq1jRtxtPGkGXAENhbj6gaO
+X-Google-Smtp-Source: AGHT+IFH75j9Jfg4XNOvXjKUn+IO0imz46ymW5Bese8YTjt3itWQfNiQUeA6Kp+fVGIfekoSHg3Y4Xw08O/aZkSMJsE=
+X-Received: by 2002:a17:907:7212:b0:a59:bde5:398 with SMTP id
+ dr18-20020a170907721200b00a59bde50398mr2638397ejc.14.1714973790923; Sun, 05
+ May 2024 22:36:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Rspamd-Queue-Id: 3947020027
-X-Stat-Signature: aargiw53xx4ngbwux9sg9mpkukr7qpmn
-X-Rspamd-Server: rspamout07
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/ciNc0vA18o/tMotMqT2SUzxIzu6KuCyw=
-X-HE-Tag: 1714973599-630367
-X-HE-Meta: U2FsdGVkX1/JqiA/9sG38C80kL0WMT+Wa7HG6VkyYyFiZr2Xmzw9B2TJWcB+1g6q0me1a6639DMhWvjI1KPiPkUYeEqpvBOy8o6AVkTqVhkr2DA0h02dDpSt8YQdfntmWH3jbXzSiMILjBQnqtkX4/xEm6sz2JRWbUXjntie9i12CO0kKAsHtqo9DIfqDPdlkLQ48grgf2A6jcgVeul51D+1unwIEOpUQ67e/4oOAk/qjqdCI+6mdgQ+IjyMhW5Kj+JjFctAoP1sxECwVytbKSt/SS952cNbpCffu2n3UO2G1sw21Gp1QVMgTN6FF9mVf9hbCJbqRNwh1boqQBonOubnHFNc6z/Nf+qJ7d8u6XnaGb6i65gVD+gLL8rSipii4HWpQAhPuOh1/4pEEnzG0s6gkXCmoJREmgLMgV5nrKoMxWd6O6YxDw==
+References: <20240430005239.13527-1-dapeng1.mi@linux.intel.com>
+ <CAL715WK9+aXa53DXM3TP2POwAtA2o40wpojfum+SezdxoOsj1A@mail.gmail.com> <22b52180-27a2-4df8-a949-401f73440641@linux.intel.com>
+In-Reply-To: <22b52180-27a2-4df8-a949-401f73440641@linux.intel.com>
+From: Mingwei Zhang <mizhang@google.com>
+Date: Sun, 5 May 2024 22:35:54 -0700
+Message-ID: <CAL715W+JTyba76u5BdqHi2u7iBObbBp8cEr42oqm6HWthb_4pg@mail.gmail.com>
+Subject: Re: [PATCH 0/2] vPMU code refines
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jim Mattson <jmattson@google.com>, 
+	Xiong Zhang <xiong.y.zhang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, 
+	Like Xu <like.xu.linux@gmail.com>, Jinrong Liang <cloudliang@tencent.com>, 
+	Dapeng Mi <dapeng1.mi@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2024-05-06 at 13:46 +1200, Barry Song wrote:
-> From: Xining Xu <mac.xxn@outlook.com>
->=20
-> If function-like macros do not utilize a parameter, it might result in a
-> build warning.  In our coding style guidelines, we advocate for utilizing
-> static inline functions to replace such macros.  This patch verifies
-> compliance with the new rule.
-[]
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-[]
-> @@ -6040,6 +6040,12 @@ sub process {
->  					CHK("MACRO_ARG_PRECEDENCE",
->  					    "Macro argument '$arg' may be better as '($arg)' to avoid prece=
-dence issues\n" . "$herectx");
->  				}
-> +
-> +# check if this is an unused argument
-> +				if ($define_stmt !~ /\b$arg\b/) {
-> +					WARN("MACRO_ARG_UNUSED",
-> +						"Argument '$arg' is not used in function-like macro\n" . "$herectx=
-");
+On Sun, May 5, 2024 at 6:37=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel.c=
+om> wrote:
+>
+>
+> On 5/1/2024 2:15 AM, Mingwei Zhang wrote:
+> > On Mon, Apr 29, 2024 at 5:45=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.int=
+el.com> wrote:
+> >> This small patchset refines the ambiguous naming in kvm_pmu structure
+> >> and use macros instead of magic numbers to manipulate FIXED_CTR_CTRL M=
+SR
+> >> to increase readability.
+> >>
+> >> No logic change is introduced in this patchset.
+> >>
+> >> Dapeng Mi (2):
+> >>   KVM: x86/pmu: Change ambiguous _mask suffix to _rsvd in kvm_pmu
+> > So, it looks like the 1st patch is also in the upcoming RFCv2 for
+> > mediated passthrough vPMU. I will remove that from my list then.
+>
+> Mingwei, we'd better keep this patch in RFCv2 until the this patchset is
+> merged, then we don't rebase it again when this patch is merged. Thanks.
+>
 
-trivia:  This should be aligned to the open parenthesis.
+yeah. too late. I don't want to have a duplicate patch in LKML. On the
+other hand, you could have waited a little bit before sending this
+one. Next time, coordinate with us before sending.
 
-Otherwise:
-Acked-by: Joe Perches <joe@perches.com>
-
+Thanks.
+-Mingwei
+>
+> > Thanks. Regards
+> > -Mingwei
+> >
+> >>   KVM: x86/pmu: Manipulate FIXED_CTR_CTRL MSR with macros
+> >>
+> >>  arch/x86/include/asm/kvm_host.h | 10 ++++-----
+> >>  arch/x86/kvm/pmu.c              | 26 ++++++++++++------------
+> >>  arch/x86/kvm/pmu.h              |  8 +++++---
+> >>  arch/x86/kvm/svm/pmu.c          |  4 ++--
+> >>  arch/x86/kvm/vmx/pmu_intel.c    | 36 +++++++++++++++++++-------------=
+-
+> >>  5 files changed, 46 insertions(+), 38 deletions(-)
+> >>
+> >>
+> >> base-commit: 7b076c6a308ec5bce9fc96e2935443ed228b9148
+> >> --
+> >> 2.40.1
+> >>
