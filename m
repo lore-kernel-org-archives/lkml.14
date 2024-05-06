@@ -1,240 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340A515A5;
-	Mon,  6 May 2024 14:06:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE21882497;
+	Mon,  6 May 2024 14:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715004372; cv=none; b=Yz0jxRrZqDMRiuapRRQ9r1lkxGpoGtSNX01m1Qg1z6SDeOHvmZ+IU0B0uyNDHqxXTeAFzgpLd7wChotArEj5LwWqNaeI5qL/7hapsNft6Oq7UxQAJCz69FFbflvZbWNedAYqE5bUju2aBD0oLmpXsTHsXP5zC/YQZVMl9BQuhLk=
+	t=1715004538; cv=none; b=e7Gnom4NuIUbhGyri+6E7f4SufwmnzMgdLp92mCc8qBM1wxJBPFgZ7UnZ7skz8xVhwSx7diYPn57AI5PClbjGgwIkxqGytYFTwnN1mh3abuxe3rdPbMFh+QI0qiLMUpT8X9tEjQIA5LsO1vESkxQqTZJlNbHLR/Fm9G99FXTGBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715004372; c=relaxed/simple;
-	bh=cZZmZVxWa908an4uMtHbVpLQV8WR9PbqQyordvaexD4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DFsBCqdDLDXVqv5PUP4lFzm8MfAzmnED6bAObSRI7BPugJgimWxBE0Zgl5hToD/pnSArL/vDhiiknHP684snkVaKoruJoL7g2vLYlVOaL/WHXmqcEVMqOvBEzb+5BtgdY297Mz9RbvNHfmbPrYerQmyy1+UMMjfRQFs1p1/q0Ws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f//CutHQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715004538; c=relaxed/simple;
+	bh=D4aRyvqT3grAqmfUGEFS/JdTe7ofhsNbvKny7R+kP+I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JXMGYP4PJ+Qckavx7IVMrkIaY6dcJo+/7CXktZXiSuv0+hweFuHDMU06nOIy1rD3YSoGxARy4ZYCPbCIdtFaEeJ87QEFea988/umT5A0nSpgx/rh2cJ6xtlFilcNN47uxkQ2OVPLSNxjZXCb6pa35PxVj+BWT1FMXnudXXP2PBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RYTxThHK; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=HVHPEnYV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ejiA94ww; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PQcJp/c8; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f//CutHQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1B06C116B1;
-	Mon,  6 May 2024 14:06:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715004371;
-	bh=cZZmZVxWa908an4uMtHbVpLQV8WR9PbqQyordvaexD4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=f//CutHQaYJsnJznM3/58nHl0guQPZ/BTuELJ+JQt1zui4ZGKeFhABWVDnqbdtPY5
-	 WXOFgbvVu1hIj39YpX4wzuvZaN7BF/EfkSj+TE8BTHtrE1F/+u9ZzPqk24sqXOUlMW
-	 cUsT8oBJEn0GQfkleL7Qf1lB8dXViM/IGzmZ32l130rw8OHti+WWVv/M2pVDkxfZHm
-	 0Th5KrI2LLSsRuktS7ruTgn86T4P2X4sq0PNcEChYqgmWSKSVtd//KW4DGIPR1mG/b
-	 pXa7gYlUR6/Cuu0jO4FvaQAqkLR2i7nYncMbxxlSpV4fHFzl2LqKq2UnV27e2EIFfq
-	 CJSH1q1yB4e9A==
-Date: Mon, 6 May 2024 15:05:57 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Julien Stephan <jstephan@baylibre.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>,
- David Lechner <dlechner@baylibre.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, kernel test robot <lkp@intel.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v6 08/10] iio: adc: ad7380: add oversampling support
-Message-ID: <20240506150557.1149c394@jic23-huawei>
-In-Reply-To: <20240501-adding-new-ad738x-driver-v6-8-3c0741154728@baylibre.com>
-References: <20240501-adding-new-ad738x-driver-v6-0-3c0741154728@baylibre.com>
-	<20240501-adding-new-ad738x-driver-v6-8-3c0741154728@baylibre.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RYTxThHK";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="HVHPEnYV";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ejiA94ww";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PQcJp/c8"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id E70BC3845F;
+	Mon,  6 May 2024 14:08:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1715004535; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7JBvaGeM3j7DGR7X0tpm2vFdVObPH9J+7TPetXuL2sA=;
+	b=RYTxThHKiL6dWcPvwvnTJc2p8MmqzheAMkfyWQ7SqpSZdpPGkR2aXVGY4blT1lemRiCbbg
+	VrHFKQBkrBBttzGTTs52mlrAuPx2CtvVTo7HBh97hASJQlWX4H94a1s+/Dk0L6UuowEW41
+	ueLPvKTtVUjaHKegclUE/dXpCnIIjng=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1715004535;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7JBvaGeM3j7DGR7X0tpm2vFdVObPH9J+7TPetXuL2sA=;
+	b=HVHPEnYVAImIWD8KDkPPmXo1hMKvBXZQUn66aPSO0wINMIOTPTDGCAvu2MlqASiTQoSr4I
+	NuZ66PRq3Hds+jAQ==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ejiA94ww;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b="PQcJp/c8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1715004534; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7JBvaGeM3j7DGR7X0tpm2vFdVObPH9J+7TPetXuL2sA=;
+	b=ejiA94ww9Hn+V/0hDDBuMQm2uzeaYBgBG6JDn530fEiuHJ9bXWUP3MdSKKu/gF7o45TSRL
+	Lccx5+BjoTgQV6pqufoyBKBkLGdx7Tbop1kk6IO8JQmeamQcys8cuqigT8o3Y5fslZ27De
+	RA/XWWX9YJVmw3OIUAYDjslLgcpKspI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1715004534;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=7JBvaGeM3j7DGR7X0tpm2vFdVObPH9J+7TPetXuL2sA=;
+	b=PQcJp/c81LySugEG7UqHJBeU9KWO34/drNKQoIXw3Sz32rorJjRMYr66q9R7dBkLE7O5rd
+	/auETibe1iByyBDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BB45013A25;
+	Mon,  6 May 2024 14:08:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id mz5yLHbkOGY8aAAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Mon, 06 May 2024 14:08:54 +0000
+From: Takashi Iwai <tiwai@suse.de>
+To: "Rafael J . Wysocki" <rafael@kernel.org>
+Cc: Len Brown <lenb@kernel.org>,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPI: video: Add backlight=native quirk for Lenovo Slim 7 16ARH7
+Date: Mon,  6 May 2024 16:08:50 +0200
+Message-ID: <20240506140906.26034-1-tiwai@suse.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Spam-Level: 
+X-Spamd-Result: default: False [-0.03 / 50.00];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_MISSING_CHARSET(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	BAYES_HAM(-0.02)[51.59%];
+	MX_GOOD(-0.01)[];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:url,suse.de:dkim,suse.de:email];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_THREE(0.00)[4];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Flag: NO
+X-Spam-Score: -0.03
+X-Spamd-Bar: /
+X-Rspamd-Queue-Id: E70BC3845F
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
 
-On Wed, 01 May 2024 16:55:41 +0200
-Julien Stephan <jstephan@baylibre.com> wrote:
+Lenovo Slim 7 16ARH7 is a machine with switchable graphics between AMD
+and Nvidia, and the backlight can't be adjusted properly unless
+acpi_backlight=native is passed.  Although nvidia-wmi-backlight is
+present and loaded, this doesn't work as expected at all.
 
-> ad7380x(-4) parts are able to do oversampling to increase accuracy.
-> They support 2 average modes: normal average and rolling overage.
-> This commits focus on enabling normal average oversampling, which is the
-> default one.
+For making it working as default, add the corresponding quirk entry
+with a DMI matching "LENOVO" "82UX".
 
-The other case got me curious.  If you do want to support the rolling average
-in future, it could probably be handled as a low pass filter control rather
-than a form of oversampling.  Anyhow, not relevant here!
+Link: https://bugzilla.suse.com/show_bug.cgi?id=1217750
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+---
+ drivers/acpi/video_detect.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> 
-> Normal averaging involves taking a number of samples, adding them together,
-> and dividing the result by the number of samples taken.
-> This result is then output from the device. The sample data is cleared when
-> the process completes. Because we need more samples to output a value,
-> the data output rate decrease with the oversampling ratio.
-> 
-> Signed-off-by: Julien Stephan <jstephan@baylibre.com>
-Hi Julien.
-
-A few additional comments inline.
-
-Jonathan
-
-> ---
->  drivers/iio/adc/ad7380.c | 115 ++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 114 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-> index 020959759170..1e3869f5e48c 100644
-> --- a/drivers/iio/adc/ad7380.c
-> +++ b/drivers/iio/adc/ad7380.c
-> @@ -88,7 +88,10 @@ struct ad7380_chip_info {
->  	.type = IIO_VOLTAGE,					\
->  	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |		\
->  		((diff) ? 0 : BIT(IIO_CHAN_INFO_OFFSET)),	\
-> -	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |	\
-> +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),		\
-> +	.info_mask_shared_by_type_available =			\
-> +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),		\
->  	.indexed = 1,						\
->  	.differential = (diff),					\
->  	.channel = (diff) ? (2 * (index)) : (index),		\
-> @@ -156,6 +159,16 @@ static const struct ad7380_timing_specs ad7380_4_timing = {
->  	.t_csh_ns = 20,
->  };
->  
-> +/*
-> + * Available oversampling ratios. The indices correspond
-> + * with the bit value expected by the chip.
-> + * The available ratios depend on the averaging mode,
-> + * only normal averaging is supported for now
-> + */
-> +static const int ad7380_normal_average_oversampling_ratios[] = {
-> +	1, 2, 4, 8, 16, 32,
-> +};
-> +
->  static const struct ad7380_chip_info ad7380_chip_info = {
->  	.name = "ad7380",
->  	.channels = ad7380_channels,
-> @@ -231,6 +244,7 @@ static const struct ad7380_chip_info ad7384_4_chip_info = {
->  struct ad7380_state {
->  	const struct ad7380_chip_info *chip_info;
->  	struct spi_device *spi;
-> +	unsigned int oversampling_ratio;
->  	struct regmap *regmap;
->  	unsigned int vref_mv;
->  	unsigned int vcm_mv[MAX_NUM_CHANNELS];
-> @@ -386,6 +400,12 @@ static int ad7380_read_direct(struct ad7380_state *st,
->  	};
->  	int ret;
->  
-> +	/*
-> +	 * In normal average oversampling we need to wait for multiple conversions to be done
-Wrap comment at 80 chars.  Generally I prefer we keep to old limit of 80 unless
-there is a readability advantage.  I don't see such an advantage in this case.
-
-
-> +	 */
-> +	if (st->oversampling_ratio > 1)
-> +		xfers[0].delay.value = T_CONVERT_NS + 500 * st->oversampling_ratio;
-> +
-
-> +
-> +/**
-> + * check_osr - Check the oversampling ratio
-> + * @available_ratio: available ratios's array
-> + * @size: size of the available_ratio array
-> + * ratio: ratio to check
-> + *
-> + * Check if ratio is present in @available_ratio. Check for exact match.
-> + * @available_ratio is an array of the available ratios (depending on the oversampling mode).
-> + * The indices must correspond with the bit value expected by the chip.
-> + */
-> +static inline int check_osr(const int *available_ratio, int size, int ratio)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < size; i++) {
-> +		if (ratio == available_ratio[i])
-> +			return i;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int ad7380_write_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *chan, int val,
-> +			    int val2, long mask)
-> +{
-> +	struct ad7380_state *st = iio_priv(indio_dev);
-> +	int ret, osr;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-> +		osr = check_osr(ad7380_normal_average_oversampling_ratios,
-
-Nuno already pointed out function name should be prefixed.
-
-> +				ARRAY_SIZE(ad7380_normal_average_oversampling_ratios),
-> +				val);
-
-If this is just checking, why does it return osr?  Feels like name needs
-to be ad7380_osr_to_regval() or something like that.
-
-> +
-> +		if (osr < 0)
-> +			return osr;
-> +
-> +		iio_device_claim_direct_scoped(return -EBUSY, indio_dev) {
-> +			ret = regmap_update_bits(st->regmap, AD7380_REG_ADDR_CONFIG1,
-> +						 AD7380_CONFIG1_OSR,
-> +						 FIELD_PREP(AD7380_CONFIG1_OSR, osr));
-> +
-> +			if (ret)
-> +				return ret;
-> +
-> +			st->oversampling_ratio = val;
-> +
-> +			/*
-> +			 * Perform a soft reset.
-> +			 * This will flush the oversampling block and FIFO but will
-> +			 * maintain the content of the configurable registers.
-> +			 */
-> +			ret = regmap_update_bits(st->regmap, AD7380_REG_ADDR_CONFIG2,
-> +						 AD7380_CONFIG2_RESET,
-> +						 FIELD_PREP(AD7380_CONFIG2_RESET,
-> +							    AD7380_CONFIG2_RESET_SOFT));
-> +		}
-> +		return 0;
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -435,6 +540,8 @@ static int ad7380_read_raw(struct iio_dev *indio_dev,
->  
->  static const struct iio_info ad7380_info = {
->  	.read_raw = &ad7380_read_raw,
-> +	.read_avail = &ad7380_read_avail,
-> +	.write_raw = &ad7380_write_raw,
->  	.debugfs_reg_access = &ad7380_debugfs_reg_access,
->  };
->  
-> @@ -458,6 +565,12 @@ static int ad7380_init(struct ad7380_state *st, struct regulator *vref)
->  	if (ret < 0)
->  		return ret;
->  
-> +	/* Disable oversampling by default.
-IIO comment syntax is
-	/*
-	 * Disable oversampling by default.
-
-Also, curiously short lines that could definitely be wrapped nearer 80 chars!
-
-> +	 * This is the default value after reset,
-> +	 * so just initialize internal data
-> +	 */
-> +	st->oversampling_ratio = 1;
-> +
->  	/* SPI 1-wire mode */
->  	return regmap_update_bits(st->regmap, AD7380_REG_ADDR_CONFIG2,
->  				  AD7380_CONFIG2_SDO,
-> 
+diff --git a/drivers/acpi/video_detect.c b/drivers/acpi/video_detect.c
+index 9fdcc620c652..2cc3821b2b16 100644
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -497,6 +497,14 @@ static const struct dmi_system_id video_detect_dmi_table[] = {
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "82BK"),
+ 		},
+ 	},
++	{
++	 .callback = video_detect_force_native,
++	 /* Lenovo Slim 7 16ARH7 */
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "LENOVO"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "82UX"),
++		},
++	},
+ 	{
+ 	 .callback = video_detect_force_native,
+ 	 /* Lenovo ThinkPad X131e (3371 AMD version) */
+-- 
+2.43.0
 
