@@ -1,93 +1,97 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37CB15884B
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 18:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ED85156641;
+	Mon,  6 May 2024 18:15:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715019008; cv=none; b=AzMEsje9VF0Lqw5bY1tvugXgeUfXKwnj/AVbTdjEMmkONcHJQ2CSUY6UHWpyR1w5uK9qnOfj921bqK2QzU7VF0vQvAVZTJdOaWqeOxyuD5p5r9HHRF5bI8Epv1XeCNijm1FBJmrkdZLfKeQjt9wDc9MGrnWLFzq/I8i7M48H4nc=
+	t=1715019315; cv=none; b=h3+ymjmW45lCp+GvN6GKcyrsNL5QsCBLiSeilSszSMDyvqIghA8HEoJ9GOLiN8K2EvjtvQQ+lHNjvOfEQfs+oLXpgOUvWQDHRBiGyUponEeg/ZkJwMPydJU8K5dd2BX+eYzb9ifvl5jERSbTlbh/myPpuYG+Si37qXkVv+IWKfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715019008; c=relaxed/simple;
-	bh=3YT6GoTBD5RTJNZvjWe/gTCDSC9xyl71eW2q74FFQVs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uoeI5ymqGqfacjwplUmJZI7vjnDkKI7DVFgYV9KVK1TJu1FQrNgQAB/mNEbiEkVWwD07Q6IJbikFiXmzJkebivsGLCNFa5c22O/X1a89Kq2DD/VqORGJSGkaKSkD4Zd/wjFeLzjSRkGt/qYe851FfMjaD6404NPEfAB9u9Si2IM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jAZzdo7q; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jAZzdo7q"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6f44a2d1e3dso1903152b3a.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 11:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715019006; x=1715623806; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3YT6GoTBD5RTJNZvjWe/gTCDSC9xyl71eW2q74FFQVs=;
-        b=jAZzdo7qqbPjfCZ79qeE+HRxqUXad4DAS62+gOhBR2XCzx4cShc+KknqKlRUmcHu9J
-         b8yFr4kxn/++cBOEK1pGRM3/dTCy5MV0zbhszmNiFrwaaGy7gdWWY+P/6+Dpnn6Ka9n6
-         2sPJ6llaE/xfFUWIb16wmjaqffM+Lwhtdw0dNbH1aRT/4lR5B6+ibgKm/4Kk3wFjZri0
-         twJlFpNOm7/lpaRZnAop29efyLgRcpa+b3H/UD9lI5AEeASWJ8eIzv/glZj6a3Smd0Y/
-         j0USyXeCUKCth22X5q8YK3R9DgSoSjABxV41sPV8LL9Wo7XshERZKw0C64wd5NhJsb7u
-         yW9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715019006; x=1715623806;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3YT6GoTBD5RTJNZvjWe/gTCDSC9xyl71eW2q74FFQVs=;
-        b=ixhbd9gIVRoet3iszWpALTLf7SiuyTRfTp81KVYdpr6z7MATyD/5GlxrD9i3l1TtGT
-         gOo9YLKdO+3CHvqEiMOb5yrIva4gAqMOeHPo2beFBdWfQt4+tFNikwt+2x/+vEAzWcbM
-         qY10qc8iy97IT9yTP5WbIEvit3hO+tSX4uHANvD3BZ/V3P9DcyXlIxl24jYv54xe0Wg+
-         yrBFSl6aQEBFNBGfxrMBhLWZ5rw50yvSAQUkxOFi3fX+rGf4Pz6fMm9THIVQl/bqXuL3
-         3nBgVXOa5Ooz2/opyoxrJqqrFonZyU2hiYYnjz2SMF74hTRoM1Utnihr1rbtVsVNTViV
-         aUcA==
-X-Forwarded-Encrypted: i=1; AJvYcCV87IppGTKG1u6izs2uw8+s1+UuDdvCGD8GIZ0/lTGpnkpAnv8hn+S0mykPEsi7asCaXmPdDwTZmAw2Ulia9snuwAslGT7u+0tEWO1D
-X-Gm-Message-State: AOJu0YzMyG37w8Q7clhkbssuqFd/cx7eAAUbPevKkSNlNzI3LU9YB/BZ
-	tqwD/7qZOZ4NfNWh7fow5LhvI/T6H9MugCuyiqWg+l8+1KrPlojaR3oiiPB8n1604/3qXajiN11
-	3O9KwTVGBWxmHuyb0T+rzeGJGbYIO8YOe5ew=
-X-Google-Smtp-Source: AGHT+IHX8PagyLuNaCOkfS7Kj0znlYabXOvIdJsimyqynpZ7zYWizoaX3k9aFYgI/STGAH4BqPszoOW+tPGykBsBRdA=
-X-Received: by 2002:a05:6a00:148d:b0:6ed:d68d:948a with SMTP id
- v13-20020a056a00148d00b006edd68d948amr12160424pfu.23.1715019006151; Mon, 06
- May 2024 11:10:06 -0700 (PDT)
+	s=arc-20240116; t=1715019315; c=relaxed/simple;
+	bh=ZhH5iWadclZ9+WfXofPKpyaOZHjgm7/VzbgUngE0oP8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FanQkZg96UguXoIjJosomOTl3sHWhTjfV+Vg5/uElN9flOe52yatyN7YRdjzVCx/X6V51ZD/OWxeAoeLgbMJBBBkcqJxYGfcWGMMrYP9oLl5nrF7Wxhp7HCeClcibsg72o4+mj+DmAXslWlI3vrp/vi/0C1SLgy99q6lliPLErw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4789AC116B1;
+	Mon,  6 May 2024 18:15:10 +0000 (UTC)
+Date: Mon, 6 May 2024 14:15:15 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Alexandre Ghiti <alexghiti@rivosinc.com>,
+ Andrew Morton <akpm@linux-foundation.org>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Christophe
+ Leroy <christophe.leroy@csgroup.eu>, "David S. Miller"
+ <davem@davemloft.net>, Dinh Nguyen <dinguyen@kernel.org>, Donald Dutile
+ <ddutile@redhat.com>, Eric Chanudet <echanude@redhat.com>, Heiko Carstens
+ <hca@linux.ibm.com>, Helge Deller <deller@gmx.de>, Huacai Chen
+ <chenhuacai@kernel.org>, Kent Overstreet <kent.overstreet@linux.dev>, Liviu
+ Dudau <liviu@dudau.co.uk>, Luis Chamberlain <mcgrof@kernel.org>, Mark
+ Rutland <mark.rutland@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nadav Amit <nadav.amit@gmail.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Peter Zijlstra <peterz@infradead.org>,
+ Philippe =?UTF-8?B?TWF0aGlldS1EYXVkw6k=?= <philmd@linaro.org>, Rick
+ Edgecombe <rick.p.edgecombe@intel.com>, Russell King
+ <linux@armlinux.org.uk>, Sam Ravnborg <sam@ravnborg.org>, Song Liu
+ <song@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Thomas
+ Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>,
+ bpf@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+ linux-mm@kvack.org, linux-modules@vger.kernel.org,
+ linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+ netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v8 06/17] mm: introduce execmem_alloc() and
+ execmem_free()
+Message-ID: <20240506141515.10fb2a69@gandalf.local.home>
+In-Reply-To: <20240505142600.2322517-7-rppt@kernel.org>
+References: <20240505142600.2322517-1-rppt@kernel.org>
+	<20240505142600.2322517-7-rppt@kernel.org>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502092443.6845-2-visitorckw@gmail.com> <202405030808.UsoMKFNP-lkp@intel.com>
- <ZjQ/JOpcdgWZXo0y@visitorckw-System-Product-Name> <20240503041701.GA3660305@thelio-3990X>
- <ZjSSylciH+qJeEEG@visitorckw-System-Product-Name> <ZjSUk4vgsQ63wfcn@visitorckw-System-Product-Name>
- <20240503155401.GA3960118@thelio-3990X> <ZjVdbavKgDo8a0CZ@yury-ThinkPad>
- <20240503222338.GA1908482@thelio-3990X> <CANiq72mJPPp=H6qb7sG1K1hxR3uiHA9+WEVAZkvymSt_dW3CbA@mail.gmail.com>
- <20240506175209.GA1425562@thelio-3990X>
-In-Reply-To: <20240506175209.GA1425562@thelio-3990X>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 6 May 2024 20:08:41 +0200
-Message-ID: <CANiq72=mSafSJH1hab57LxYfyj_BD7UOtyAerOT8S41MD-MnAw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/2] lib/test_bitops: Add benchmark test for fns()
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Yury Norov <yury.norov@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Kuan-Wei Chiu <visitorckw@gmail.com>, kernel test robot <lkp@intel.com>, llvm@lists.linux.dev, 
-	oe-kbuild-all@lists.linux.dev, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 6, 2024 at 7:52=E2=80=AFPM Nathan Chancellor <nathan@kernel.org=
-> wrote:
->
-> No, unused can be used with local variables, used cannot.
+On Sun,  5 May 2024 17:25:49 +0300
+Mike Rapoport <rppt@kernel.org> wrote:
 
-Yeah, sorry, I meant `used`, i.e. it is that one the one that
-constraints the combination rather than `unused`.
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 70139d9d2e01..c8ddb7abda7c 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/memory.h>
+>  #include <linux/vmalloc.h>
+>  #include <linux/set_memory.h>
+> +#include <linux/execmem.h>
+>  
+>  #include <trace/syscall.h>
+>  
+> @@ -261,15 +262,14 @@ void arch_ftrace_update_code(int command)
+>  #ifdef CONFIG_X86_64
+>  
+>  #ifdef CONFIG_MODULES
+> -#include <linux/moduleloader.h>
+>  /* Module allocation simplifies allocating memory for code */
+>  static inline void *alloc_tramp(unsigned long size)
+>  {
+> -	return module_alloc(size);
+> +	return execmem_alloc(EXECMEM_FTRACE, size);
+>  }
+>  static inline void tramp_free(void *tramp)
+>  {
+> -	module_memfree(tramp);
+> +	execmem_free(tramp);
+>  }
+>  #else
+>  /* Trampolines can only be created if modules are supported */
+> diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
 
-From a quick look at the links in `compiler_attributes.h`, `unused`
-can also be applied to types, while `used` cannot -- it is another
-difference, but your sentence above already implies it anyway. :)
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Thanks for the correction!
-
-Cheers,
-Miguel
+-- Steve
