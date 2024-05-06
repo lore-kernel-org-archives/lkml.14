@@ -1,126 +1,148 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6682158873;
-	Mon,  6 May 2024 19:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B18615B11F;
+	Mon,  6 May 2024 19:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715024687; cv=none; b=DYKUEhNv1D05kt5+qDwYAq6g5ccqznCSm8OEKK/69afZJS2s2PeyZ4xJqgGURlaKb94C6+XEEIWg8+ENnfRURQjlnXkXTVFz5aqCGyAF6htNqsGKVLGskkdSjJXuWoJA6TaoRQ7iGKfRYweiTgOgq4YlydgA2j7g0IHDfxdxz1k=
+	t=1715024710; cv=none; b=Tz7tqDVW6szs0BnVg91qtqmoSUjSr73ERIcMSsa9HOGvYzfbXl0cyoI/e5jv+sp7mW597pErwxfD92Y2Y2Iq2CFK0OLIkn50MbEi1u5Hq3Kcx5dvTII5MLiF23pXXBJWX804SS0Cqkm2ks5qTtYFC4wGIfBo0gLtYY+H8l+SKR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715024687; c=relaxed/simple;
-	bh=EVmC+rmzDtM9pKjBXpq4pyX1W8rcfyGKY83muBzllg8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rjDljR628XDtkc3DKLXzmftq+sef7VHo/Bi6J0z0e2XuoZB21CRbCPbkI4OCCLVMQVQckPUX6FIvWCuXo6g1sMoP0ZVjE1t6xgRuylHtywpTu09cEzWFaC4Cw3+MTRuXxkCqkBc7wRoKidRujG/BLUGrvIiA4a55mzr0keGgvFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=tfEyuOZN; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=tfEyuOZN; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1715024710; c=relaxed/simple;
+	bh=To7nYm2BMcnJH1PM2TepQnUOGwO5zfd2E4co20N0EZw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kbxTrRB4xqsxoOSraTNiVp7Js8fChMY3Y4Fv2k/LpX03y/j1oE2zNtmKzj1X3Mp4IhKfvhsxwcipJT9zVCUjU7PZ5e4Ei3+CWaXuwSFgdudyVMW3W3tWyAtN2Adxx9+m0Xfy37M27MTvlqDAqrUpcxTDV17qp4pwX1t7PUMW2X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cx14Tv82; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="tfEyuOZN";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="tfEyuOZN"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id E19EC2267A;
-	Mon,  6 May 2024 19:44:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715024683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=17FC+eGvffbugsO1K4XwJPTQVMXeDcHrp3IBonOSLXc=;
-	b=tfEyuOZNwwLOwkcnsDhsTTbiehj/H0hvoMPWn+xQA+KtnKG54C67mtYsbvAKmPlvNE56aW
-	7gYYmrFG6ooa7siI99kUG0IzGJUDssQyQVWyq0C/p0q9RchGMGfhWkMj6cL7NxGcOLxfj7
-	JLf6O5KOxgFUsoTf+ShxFljSmS7WPBw=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715024683; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=17FC+eGvffbugsO1K4XwJPTQVMXeDcHrp3IBonOSLXc=;
-	b=tfEyuOZNwwLOwkcnsDhsTTbiehj/H0hvoMPWn+xQA+KtnKG54C67mtYsbvAKmPlvNE56aW
-	7gYYmrFG6ooa7siI99kUG0IzGJUDssQyQVWyq0C/p0q9RchGMGfhWkMj6cL7NxGcOLxfj7
-	JLf6O5KOxgFUsoTf+ShxFljSmS7WPBw=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DAF2513A25;
-	Mon,  6 May 2024 19:44:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Nx1rNSszOWYaVwAAD6G6ig
-	(envelope-from <dsterba@suse.com>); Mon, 06 May 2024 19:44:43 +0000
-From: David Sterba <dsterba@suse.com>
-To: torvalds@linux-foundation.org
-Cc: David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Btrfs fixes for 6.9-rc8
-Date: Mon,  6 May 2024 21:44:39 +0200
-Message-ID: <cover.1715024051.git.dsterba@suse.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cx14Tv82"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 446JVkA1015673;
+	Mon, 6 May 2024 19:45:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : content-transfer-encoding
+ : mime-version; s=pp1; bh=LXAHwdl927IN4K80jPkXY3UGJ+fhJ0QN817ePcUB7pk=;
+ b=cx14Tv82XA9evZpaOLkj0tyj96BJ/btliV41HEe85RxYXlfu0wG8eL2w2CSGLJ2pBphU
+ MnZ6jny2hnXOsD00PYZCBy5mKqdWzx0waIGOFIHpB+LURhb0avPyLWA8LrtEUooDoNPH
+ mBN9zypq58BEvRPjwLRDyCAN6Qhle4fzSHqsR8tZSA3GbA3DaPNffJqj+9JEWT8wrcHs
+ SG1M9IIbiHrxhpqLM+Ha26mdrAdzjTrCt5d1pLPOlvTM3zbs+zAuCPEorBGL3WZdXvcu
+ rWBf5nhOc46lkg/dwBYZh2swpp+DWWzAkEiFSRWzEJEqxd3E/iYjFP9lvOlGGFAooRyu Uw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xy55n0266-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 06 May 2024 19:45:02 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 446Jj1iP003874;
+	Mon, 6 May 2024 19:45:01 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xy55n0261-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 06 May 2024 19:45:01 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 446HPW8m013942;
+	Mon, 6 May 2024 19:45:00 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xx222sf8k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 06 May 2024 19:45:00 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 446Jitev57344260
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 6 May 2024 19:44:57 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 78F442004F;
+	Mon,  6 May 2024 19:44:55 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 474232004B;
+	Mon,  6 May 2024 19:44:55 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  6 May 2024 19:44:55 +0000 (GMT)
+From: Heiko Carstens <hca@linux.ibm.com>
+To: Nathan Chancellor <nathan@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+        Thomas Huth <thuth@redhat.com>,
+        Alexandra Winter <wintera@linux.ibm.com>,
+        Thorsten Winkler <twinkler@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>, netdev@vger.kernel.org,
+        llvm@lists.linux.dev, patches@lists.linux.dev,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>
+Subject: [PATCH 2/6] s390/vmlogrdr: Make use of iucv_alloc_device()
+Date: Mon,  6 May 2024 21:44:50 +0200
+Message-Id: <20240506194454.1160315-3-hca@linux.ibm.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20240506194454.1160315-1-hca@linux.ibm.com>
+References: <20240506194454.1160315-1-hca@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: iN8eGfXipHWlKpcPp9Hiuqp-TqxyRNK8
+X-Proofpoint-GUID: LPeq1AJB9u4MlSaAAhRSZiqV2_FrgAXT
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_MISSING_CHARSET(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-06_13,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 adultscore=0 phishscore=0
+ spamscore=0 mlxscore=0 priorityscore=1501 clxscore=1011 mlxlogscore=999
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2405060141
 
-Hi,
+Make use of iucv_alloc_device() to get rid of quite some code. In addition
+this also removes a cast to an incompatible function (clang W=1):
 
-please pull two more fixes, both have some visible effects on user
-space.
+  drivers/s390/char/vmlogrdr.c:746:18: error: cast from 'void (*)(const void *)' to 'void (*)(struct device *)' converts to incompatible function type [-Werror,-Wcast-function-type-strict]
+    746 |                 dev->release = (void (*)(struct device *))kfree;
+        |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- add check if quotas are enabled when passing qgroup inheritance info,
-  this affects snapper that could fail to create a snapshot
+Reported-by: Nathan Chancellor <nathan@kernel.org>
+Closes: https://lore.kernel.org/r/20240417-s390-drivers-fix-cast-function-type-v1-1-fd048c9903b0@kernel.org
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+---
+ drivers/s390/char/vmlogrdr.c | 20 +++-----------------
+ 1 file changed, 3 insertions(+), 17 deletions(-)
 
-- do check for leaf/node flag WRITTEN earlier so that nodes are
-  completely validated before access, this used to be done by integrity
-  checker but it's been removed and left an unhandled case
+diff --git a/drivers/s390/char/vmlogrdr.c b/drivers/s390/char/vmlogrdr.c
+index d7e408c8d0b8..c09e1e09fb66 100644
+--- a/drivers/s390/char/vmlogrdr.c
++++ b/drivers/s390/char/vmlogrdr.c
+@@ -728,23 +728,9 @@ static int vmlogrdr_register_device(struct vmlogrdr_priv_t *priv)
+ 	struct device *dev;
+ 	int ret;
+ 
+-	dev = kzalloc(sizeof(struct device), GFP_KERNEL);
+-	if (dev) {
+-		dev_set_name(dev, "%s", priv->internal_name);
+-		dev->bus = &iucv_bus;
+-		dev->parent = iucv_root;
+-		dev->driver = &vmlogrdr_driver;
+-		dev->groups = vmlogrdr_attr_groups;
+-		dev_set_drvdata(dev, priv);
+-		/*
+-		 * The release function could be called after the
+-		 * module has been unloaded. It's _only_ task is to
+-		 * free the struct. Therefore, we specify kfree()
+-		 * directly here. (Probably a little bit obfuscating
+-		 * but legitime ...).
+-		 */
+-		dev->release = (void (*)(struct device *))kfree;
+-	} else
++	dev = iucv_alloc_device(vmlogrdr_attr_groups, &vmlogrdr_driver,
++				priv, priv->internal_name);
++	if (!dev)
+ 		return -ENOMEM;
+ 	ret = device_register(dev);
+ 	if (ret) {
+-- 
+2.40.1
 
-----------------------------------------------------------------
-The following changes since commit 63a6ce5a1a6261e4c70bad2b55c4e0de8da4762e:
-
-  btrfs: set correct ram_bytes when splitting ordered extent (2024-04-30 12:03:44 +0200)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git tags/for-6.9-rc7-tag
-
-for you to fetch changes up to e03418abde871314e1a3a550f4c8afb7b89cb273:
-
-  btrfs: make sure that WRITTEN is set on all metadata blocks (2024-05-02 22:11:13 +0200)
-
-----------------------------------------------------------------
-Josef Bacik (1):
-      btrfs: make sure that WRITTEN is set on all metadata blocks
-
-Qu Wenruo (1):
-      btrfs: qgroup: do not check qgroup inherit if qgroup is disabled
-
- fs/btrfs/qgroup.c       |  2 ++
- fs/btrfs/tree-checker.c | 30 +++++++++++++++---------------
- fs/btrfs/tree-checker.h |  1 +
- 3 files changed, 18 insertions(+), 15 deletions(-)
