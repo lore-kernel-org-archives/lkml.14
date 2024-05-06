@@ -1,121 +1,77 @@
-Received: from ironport.ite.com.tw (60-251-196-230.hinet-ip.hinet.net [60.251.196.230])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B033A6CDCE
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 09:36:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.251.196.230
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B58314263B
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 09:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714988164; cv=none; b=cj1guAZwYNhNjzwya85Ix9E5OtGb2rexzeUTQjVvgraDKrleh7Ch4waYVlm6IdA0ft0WObT5zOQEVDDeCzSlwfzCbFJaANmLEeu4pBM0FTWu69g2vC49+6zYzty/pkYxirOk6oiX7vD5VcXL7JY5ll6doG1OSlVVtnDPo38ROnM=
+	t=1714988166; cv=none; b=O1NokQBQgTvx5hZ8xDgCakajCd9iN4O0JdMUIUCsbzPpiN5BRBVVoIZy9ztOMhZ2n+FR58aXJPQ3LRwE0hQGtbV6YiCY6BRTe3azl0DdItipkGbRi+3vyvK9BFRSZLNEP6xjY1eeU0Meo6m4o8/34dH7BHODgZtJbPS7PuIdEvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714988164; c=relaxed/simple;
-	bh=vSuK5iXH4OTihAgSFb7ysIk2M7lQ6VsXeofRsuYcqCw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tJw1Az78xnD/doH76eecxz+A2gHec9zZhQ9YOiWj55li53MNHZfUAQGhgpd3eJz0x5qKfw3dOJ91Qa1Fo80ANmoDEo2Zy1l1wYpfXiz96HdjaqvpfhsFE6PqNFlXCJMw/2vxaOANUq7dfPqWP4FXV5nsGvpIn6Ymcnz7Lx77X/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw; spf=pass smtp.mailfrom=ite.com.tw; dkim=fail (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b=iC9UhoEb reason="key not found in DNS"; arc=none smtp.client-ip=60.251.196.230
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ite.com.tw
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ite.com.tw
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ite.com.tw header.i=@ite.com.tw header.b="iC9UhoEb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=ite.com.tw; s=dkim;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=8SFYDKm8OC4xUxF8bgpqvbQooZqRTrwAdouVI63ou1w=;
-  b=iC9UhoEbTuhXCmmCiRgAepBQ3ZN7B2oq0/n70XRDhRKpnYokrzq1zIa7
-   5M1y2I6qkIh5kbS8SWbruDnyP15cdw0sRf59RtP9ALdvw+hm9AnzevdGw
-   S8QFFXQM7WS8xyPsFhP6i0+tAOA499aTsIKIzhslyy1Si8g5H/BiXuOll
-   8MUSPNWnqwrFZH52AdjfEF5P5zD3v5RZ6arTNytmRw54VVBtWvNsmtRX6
-   M6xhRc4wCYNeHWYvFTcU6L7XhV4V3RpVBa+VUxYQcRJm/JEZ/uHdX+Azm
-   FQ+1UnOKFIUNCJCC9lPvEEg8Dursf+WoGWpvkgmFsI2UVIWPWt1Zc9uPZ
-   A==;
-Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
-  by ironport.ite.com.tw with ESMTP; 06 May 2024 17:35:59 +0800
-Received: from CSBMAIL1.internal.ite.com.tw (CSBMAIL1.internal.ite.com.tw [192.168.65.58])
-	by mse.ite.com.tw with ESMTP id 4469Ztbv076496;
-	Mon, 6 May 2024 17:35:55 +0800 (GMT-8)
-	(envelope-from kuro.chung@ite.com.tw)
-Received: from ite-XPS-13-9360.internal.ite.com.tw (192.168.72.42) by
- CSBMAIL1.internal.ite.com.tw (192.168.65.58) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Mon, 6 May 2024 17:35:54 +0800
-From: kuro <kuro.chung@ite.com.tw>
-To:
-CC: Allen Chen <allen.chen@ite.com.tw>, Pin-yen Lin <treapking@chromium.org>,
-        Kuro Chung <kuro.chung@ite.com.tw>,
-        Kenneth Haung <kenneth.hung@ite.com.tw>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Jernej Skrabec
-	<jernej.skrabec@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [PATCH v7 0/1] drm/bridge: it6505: fix hibernate to resume no display issue
-Date: Mon, 6 May 2024 17:46:43 +0800
-Message-ID: <20240506094644.887842-1-kuro.chung@ite.com.tw>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1714988166; c=relaxed/simple;
+	bh=AnhUQnMdGrRZOxXZdeozV6MOrXgYCXG31theF87blOg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=czfg8nCHTL/engccWJe/Y77DcjzvZEHWJue1c8ijBpPMcLPXSLd/2nM7zkhRHVoU9Ny6LFlJe+DZ5PZlOn1pck31ZG/LqZkF6Tmu1oW4++df2mhjL6H0HbpXjK15BR9hXgHQ6eTrFc8Ievx1fCIia0LURJqUpwDYKXK3QLfygBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7da41da873bso282761039f.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 02:36:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714988164; x=1715592964;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Zv5x6Nmy7t07YX+YnaK0VGIx5sNBuwgtq9Vcfuj51bA=;
+        b=rlyyK+CoBxQsmQxnbRIKgORJc2tzPgTwwEeQRpIt+Phy1Ld0EHlSEPcawzjP/Yclvu
+         Lyma6OLt7Q33bDslohs0Gulyydk40uvaEaih/TXs3etfvAxp3f9UoEInYnPXroSO+jwl
+         QpXvH0RicY1fS+K5jwTnJxWLfYAe7g4xUAPQOc95L8soHg8VIagx5R5ON6mn67frTXQS
+         bql+Jn8oIijBqgR6Ipx5ih+ebqDvcPAGS8tUhWbsFIaFGDuo31IPfB7u/76k3UnP9WnT
+         SlTz/f7M7H4cqnZWaUtOqdTk1vB/L4q3iZpiRGXyawg/yIljLegu8o0QH64XNRP/Onf6
+         +xdg==
+X-Forwarded-Encrypted: i=1; AJvYcCWnHowFNWC/zwo5XHIlL6LKWve+cPWyvcLF8U0Xs6X//J9S6dJ0GvOjYxvKhviXXHufwehovgP2m5bexamedJy1yRobM6POtpA8MDnp
+X-Gm-Message-State: AOJu0Yz+EKc6oBkaoEU7OwqgvPGffxlCwcDdNKuomxjWyrj0YNckeNAd
+	j8E/YW/6nuk9IuDkMbXX00fZm70YTg4RpePRNs3djl2h1SGXVje5x1domYJ1yl8WKKinYTsu6I1
+	MYde/s5K4nyJx0bfEY0QkYs4rDL0exgiDDQcn5a+zeUiGpvw9YesM1fw=
+X-Google-Smtp-Source: AGHT+IHO4idvgpUvaa9A/19lxtxEAU+Qg+pRM/VhI3hOV9Bck/gnw+u3jLIrwc8UwbOl8L8uFiEpCXGD2usdmZFcNGsYW9LgrsS7
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: CSBMAIL1.internal.ite.com.tw (192.168.65.58) To
- CSBMAIL1.internal.ite.com.tw (192.168.65.58)
-X-TM-SNTS-SMTP:
-	A46FF6935D4B88CF96C74D974E4941A1CFE1E4F05EA5BB26EA581C7F586BC3C22002:8
-X-MAIL:mse.ite.com.tw 4469Ztbv076496
+X-Received: by 2002:a05:6602:6414:b0:7da:6916:b435 with SMTP id
+ gn20-20020a056602641400b007da6916b435mr353342iob.0.1714988164735; Mon, 06 May
+ 2024 02:36:04 -0700 (PDT)
+Date: Mon, 06 May 2024 02:36:04 -0700
+In-Reply-To: <0000000000005c46090617b917e7@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005a730f0617c5cc76@google.com>
+Subject: Re: [syzbot] [bcachefs?] UBSAN: shift-out-of-bounds in __bch2_bkey_invalid
+From: syzbot <syzbot+ae4dc916da3ce51f284f@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Kuro <kuro.chung@ite.com.tw>
+syzbot has bisected this issue to:
 
-New patch description for v7 patch 
-	
-        modify code from
-        it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, 0x02); to 
-        it6505_set_bits(it6505, REG_VID_BUS_CTRL1, TX_FIFO_RESET, TX_FIFO_RESET); for macro define
+commit d789e9a7d5e2799f4d5425b0b620210d2fcad529
+Author: Kent Overstreet <kent.overstreet@linux.dev>
+Date:   Sun Apr 14 03:59:28 2024 +0000
 
-New patch description for v6 patch
+    bcachefs: Interior known are required to have known key types
 
-        remove the unrelated patch change (split into anoter patch)
-        remove extra line
-	
-New patch description for v5 patch
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1070e9df180000
+start commit:   b9158815de52 Merge tag 'char-misc-6.9-rc7' of git://git.ke..
+git tree:       upstream
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=1270e9df180000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1470e9df180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d2f00edef461175
+dashboard link: https://syzkaller.appspot.com/bug?extid=ae4dc916da3ce51f284f
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11a910c4980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15490b54980000
 
-        after customer feedback and test finished, update again, kernel build pass.
+Reported-by: syzbot+ae4dc916da3ce51f284f@syzkaller.appspotmail.com
+Fixes: d789e9a7d5e2 ("bcachefs: Interior known are required to have known key types")
 
-New patch description for v4 patch
-
-        update by reviewer Pin-yen Lin comment, remove function it6505_irq_video_fifo_error/it6505_irq_io_latch_fifo_overflow
-        update by reviewer Pin-yen Lin comment, update Signed-off-by column
-
-New patch description for v3 patch
-
-        update upstream MAINTAINERS mail list
-
-New patch description for v2 patch
-
-        Missing declaration for i variable in function it6505_irq_video_error_handler
-        , add it by this patch
-
-Origianl description for v1 patch
-
-        drm/bridge: it6505: fix hibernate to resume no display issue
-
-        ITE added a FIFO reset bit for input video. When system power resume,
-        the TTL input of it6505 may get some noise before video signal stable
-        and the hardware function reset is required.
-        But the input FIFO reset will also trigger error interrupts of output module rising.
-        Thus, it6505 have to wait a period can clear those expected error interrupts
-        caused by manual hardware reset in one interrupt handler calling to avoid interrupt looping.
-
-
-allen (1):
-  UPSTREAM: drm/bridge: it6505: fix hibernate to resume no display issue
-
- drivers/gpu/drm/bridge/ite-it6505.c | 73 +++++++++++++++++++----------
- 1 file changed, 49 insertions(+), 24 deletions(-)
-
--- 
-2.25.1
-
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
