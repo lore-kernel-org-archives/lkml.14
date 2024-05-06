@@ -1,108 +1,148 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EAB715B0ED
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 23:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F7C158A27
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 23:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715038244; cv=none; b=ZcRxbnwnFoBJcia7iM6PapMb3EG2x6v9IY4ETaQkkFBYg+S2NGePJpTJVi+3OWhkt+H4yG5CbVZiB3Un8ITsgi56IyZ6g2Vs34qSlZVESEsXOdd44hxVLwkpZFZJ0iYxun5zVpAJUM/y1IQH8bZUty6eblTCwx3W4KXO730RdDM=
+	t=1715038402; cv=none; b=ii9DcrhhBwQDpH3EMJ7ElRS0aOQJW0ofcusQOvDVgcWDVxOB2NMxvMQh8NxnX4XpsKYSbS1ROX1BlX22VvaGsk9MJAy8v2GHLEfWSWms4iIzo9j/KOCGB59D1TWoCbAH4hpJoR+emi0hB3EBzCguwhHOYsKZWk2B1ASea+a0xSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715038244; c=relaxed/simple;
-	bh=dC5gmNPxNSH+aIEWUfqlcoUV3/RSi8n3oR46/xve6dA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qi62R9jNJERojl/JXLKWCJ1li7mqltu1r98mQ3W8vRKp2NUGaeH4HpjSsmbvNRTdKlN8ggtsPYGB4elE8jNfnhoUMUT9gGYdCvdjbG4eFG3qeQgGBsl8czlqIyzFc34sh0fdXJQ5Q5yWOWrUZ8lkSXo2LGUz3NPxQoJHKGD/m7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vejhz29H; arc=none smtp.client-ip=209.85.208.45
+	s=arc-20240116; t=1715038402; c=relaxed/simple;
+	bh=eYF/5LBlojZTPQk7R6ARo4QRGpN0U8rhB702OyWsxic=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=LsL0VivX0iVMyA0CDwu8ShVwgvvi5G4BGGTjOsJlhvKVElqUXmN7AH5NNsPrPMcTbYXXcKtBeRW1p8b/LuyXLUrWGf/TSm0qaa9xsyzET/PFe1Kxi/vkn4k6pma8NkvFpBmznyVFTVEnqm7Yl3apb6whvpLFa+nJA/vWGNfV0ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KsFFjHCe; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vejhz29H"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5724736770cso2362a12.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 16:30:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KsFFjHCe"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2b4330e57b6so2947368a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 16:33:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715038241; x=1715643041; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rday+enGpH1mUN4w1iIrCf7IG9Q6aF8QR6lBBrCyZ7g=;
-        b=vejhz29HQj+gKtb2WBiToZaEiReMxu6rMyWsEaQNyrYelzJtXm6QXARFGs+gCMc9uI
-         1bR8A8t7uZb8FSTLnOipGuyAZmNvSCl2NFiAbn4XxXfy1Imvhd7IVqvIN+bib+3w1lg5
-         IPQd+9F7JFynHtvPiJBcLsZxTmMac1vH7Gm2e1xTsVooNKySrtOU+K8dzpYmwKqHaa82
-         0CNs5dMpqqcaWO5Xlv5V0TwvxIYN32LFWPStMApOSn/fJ5Nxj1XPwaooQvf/nQ/JLTvf
-         H+wXXm5iOf+UNGNkM2f30GeWTBQxcMGMYv7L7JHrGMtb3P7m+yGK18wfaU1L5bTxH32p
-         r+ug==
+        d=google.com; s=20230601; t=1715038399; x=1715643199; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=naRWxGi0DISf7tT9GtjLPuvLnh/f9UY/0yCGnr5vVNE=;
+        b=KsFFjHCett/cyiLbo77Bl4y2+hlSJWzdbJK+h9kEUy0IkFkvT8gEdJDnd7wcUbxU5y
+         hGbmmuPSQ9kMkhXnjJ4NQGhtM1NO1JT3UixX4eIrwCN0Fwb3YLUujXa/9uyVwJNBuftK
+         tKAg/TXALwPWJmt24Myx3M0Vthb4Exf8YcUgelqBf134/46yenxU1uCstiliMYgl2y9q
+         rcQzlxFkkkjTZuAQ/T1NjoXTFlvBmx5mVUMggZqxx67vVBPL8dtL//cnK2pZMmI8DWxg
+         Wq7HJyWnbACIAHAyodF22vKlgHlI94QpgflbqQGUH3vrv0XMRvlVcqyl9A2Tv/l4fleC
+         MahQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715038241; x=1715643041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rday+enGpH1mUN4w1iIrCf7IG9Q6aF8QR6lBBrCyZ7g=;
-        b=iaBZys04c2ZZIBzzKnvpZNnP2sibiSgG6yMjcBkSTLlZiiKbTjGf7O1tsWOlGp0ldH
-         dH87vMuywC483nAetBYn75PKp0rDsD8WOkzLk8eIbSIjFarF7wzz1oDH/7KhmJpu5Xdq
-         7A7ZAocphUu/2pDXCfWKkURlHiAWJbrDNmMPg0nhInWQQ7UGY1wUlZD4UDTYV0kR5vec
-         A2N4GgBE3dgfqVaUSRi4TrD+kCIejCkPsF9cG8SZ4276zs+DYSQLq0Jdw2e7eq2YX7YQ
-         zqJ7x36Ekwca1AH0mHSEwL5qV3OHZ4owNmu5YK1C2EAR95BRM4eagiHPduGmyH1snhnQ
-         rtYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVLniFypJWYOgDsUXaT2wbl+0dfGbbngPZUaxth7Tw4gL11f7jKkfXeAmCTxC+daueiJ+BIc6abHsXXYTqmo9WXmLEBKld/6YkqyLEr
-X-Gm-Message-State: AOJu0YwcaKsRnNRT32F13i7YASbw64J/n1Rf+h92gjLNRXRwyj0a6olz
-	RIPJinOkI5wakozAiP2HnO2670EQAvJrI1EYQ2tzsWJTvh977zErX9oRJ1+n2CO+qyPqxzrxlw7
-	Z6GMcTXBQB+k4TT78IMHkOMq7jElvkpjxy54q
-X-Google-Smtp-Source: AGHT+IFPtbSaAcsaOKbHp6npYdFSTUzqld8pO8i1uwvZe0pXCtMxJsE/ukQM7Zz7NLIcHgg7/XYVun1u85SF7+71r+g=
-X-Received: by 2002:aa7:d389:0:b0:572:554b:ec4f with SMTP id
- 4fb4d7f45d1cf-5731316c507mr37653a12.3.1715038240800; Mon, 06 May 2024
- 16:30:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715038399; x=1715643199;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=naRWxGi0DISf7tT9GtjLPuvLnh/f9UY/0yCGnr5vVNE=;
+        b=fWTg1k5jRt4diKi1Kcs5q3biJye1TrR/E8Ud5/T+sdYsLhnWiRT5AY07aE1bMn3JBO
+         rKafvjpuxHOL9vutG3xWlKbVTJHTCWxpMtPOJY451yo18eMGHg2YFORY4v1NktbgLCyy
+         +5z9HXwmomYKa71md8ib/Tc1A9Rgl/f5kCSgEH1ANtpkWvNuIl/90EDt2MsBqgyrAIgE
+         iyWNVQUCv9YhHbohmSnD2X2urhfgHCLI4sol28dH6RoK2YoD6khg6a43fOZaT9aJCXef
+         pjuAjE+6gnC+d5vpZ+i7y7GIBY47z4X6IRgfPhua/YJktDxXtBN+hZAEU1/vAm0x4aY1
+         bt9A==
+X-Forwarded-Encrypted: i=1; AJvYcCWY4PX2wNyhG7mbymjL86Vl/EAdiEIFkejdfVjt6Emv0DjwsVLNCQRiJLHSXnEbk2yGnBk38m8jCC7Hh+pLArtgnDLISaFjvy3bB/Sc
+X-Gm-Message-State: AOJu0YxfpQYtQAElac9ebnlIT1fQMhLuPLiuXNeZJJ9+F8mp9EOfhVyb
+	i9nWKZZVXKN6cWyqcKhQYy5UJfYtspd26l5IKGrMqLV379VafJp8pHWQTQwo1ZGOxI3sSeAGY+y
+	14g==
+X-Google-Smtp-Source: AGHT+IFVdGY0Y8CICjJjkQNm8G7tr0LJBvFQGZgnwAzw3Vs3/H1kG0dT3dJGoY8axS4Ic1zPBmJpOeSP2u8=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:90b:3685:b0:2b2:9855:2852 with SMTP id
+ mj5-20020a17090b368500b002b298552852mr32798pjb.5.1715038399442; Mon, 06 May
+ 2024 16:33:19 -0700 (PDT)
+Date: Mon, 6 May 2024 16:33:17 -0700
+In-Reply-To: <038379acaf26dd942a744290bde0fc772084dbe9.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240416152831.3199999-1-usama.anjum@collabora.com> <202404161027.63F4D4FDEB@keescook>
-In-Reply-To: <202404161027.63F4D4FDEB@keescook>
-From: Fangrui Song <maskray@google.com>
-Date: Mon, 6 May 2024 16:30:27 -0700
-Message-ID: <CAFP8O3Jjkh0U94CbS=epXELMtCBpYt4fGejX3spH4=GdF7zVSw@mail.gmail.com>
-Subject: Re: [PATCH v2] selftests: exec: make binaries position independent
-To: Kees Cook <keescook@chromium.org>, Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: Eric Biederman <ebiederm@xmission.com>, Shuah Khan <shuah@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Yang Yingliang <yangyingliang@huawei.com>, 
-	kernel@collabora.com, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+References: <20240219074733.122080-1-weijiang.yang@intel.com>
+ <20240219074733.122080-25-weijiang.yang@intel.com> <ZjLNEPwXwPFJ5HJ3@google.com>
+ <e39f609f-314b-43c7-b297-5c01e90c023a@intel.com> <038379acaf26dd942a744290bde0fc772084dbe9.camel@intel.com>
+Message-ID: <ZjlovaBlLicFb6Z_@google.com>
+Subject: Re: [PATCH v10 24/27] KVM: x86: Enable CET virtualization for VMX and
+ advertise to userspace
+From: Sean Christopherson <seanjc@google.com>
+To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Weijiang Yang <weijiang.yang@intel.com>, Chao Gao <chao.gao@intel.com>, 
+	Dave Hansen <dave.hansen@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "john.allen@amd.com" <john.allen@amd.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mlevitsk@redhat.com" <mlevitsk@redhat.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 16, 2024 at 10:28=E2=80=AFAM Kees Cook <keescook@chromium.org> =
-wrote:
->
-> On Tue, Apr 16, 2024 at 08:28:29PM +0500, Muhammad Usama Anjum wrote:
-> > The -static overrides the -pie and binaries aren't position independent
-> > anymore. Use -static-pie instead which would produce a static and
-> > position independent binary. This has been caught by clang's warnings:
-> >
-> >   clang: warning: argument unused during compilation: '-pie'
-> >   [-Wunused-command-line-argument]
-> >
-> > Tested with both gcc and clang after this change.
-> >
-> > Fixes: 4d1cd3b2c5c1 ("tools/testing/selftests/exec: fix link error")
-> > Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
->
-> Thanks for this!
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> --
-> Kees Cook
+On Mon, May 06, 2024, Rick P Edgecombe wrote:
+> On Mon, 2024-05-06 at 17:19 +0800, Yang, Weijiang wrote:
+> > On 5/2/2024 7:15 AM, Sean Christopherson wrote:
+> > > On Sun, Feb 18, 2024, Yang Weijiang wrote:
+> > > > @@ -696,6 +697,20 @@ void kvm_set_cpu_caps(void)
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0kvm_cpu_cap_set(X86_FEATURE_INTEL_STIBP);
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (boot_cpu_has(X8=
+6_FEATURE_AMD_SSBD))
+> > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0kvm_cpu_cap_set(X86_FEATURE_SPEC_CTRL_SSBD);
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/*
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Don't use boot_cpu_ha=
+s() to check availability of IBT because
+> > > > the
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * feature bit is cleare=
+d in boot_cpu_data when ibt=3Doff is applied
+> > > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * in host cmdline.
+> > > I'm not convinced this is a good reason to diverge from the host kern=
+el.=C2=A0
+> > > E.g.  PCID and many other features honor the host setup, I don't see =
+what
+> > > makes IBT special.
+> >=20
+> > This is mostly based on our user experience and the hypothesis for clou=
+d
+> > computing: When we evolve host kernels, we constantly encounter issues =
+when
+> > kernel IBT is on, so we have to disable kernel IBT by adding ibt=3Doff.=
+ But
+> > we need to test the CET features in VM, if we just simply refer to host
+> > boot cpuid data, then IBT cannot be enabled in VM which makes CET featu=
+res
+> > incomplete in guest.
+> >=20
+> > I guess in cloud computing, it could run into similar dilemma. In this
+> > case, the tenant cannot benefit the feature just because of host SW
+> > problem. I know currently KVM except LA57 always honors host feature
+> > configurations, but in CET case, there could be divergence wrt honoring
+> > host configuration as long as there's no quirk for the feature.
+> >=20
+> > But I think the issue is still open for discussion...
+>=20
+> I think the back and forth I remembered was actually around SGX IBT, but =
+I did
+> find this thread:
+> https://lore.kernel.org/lkml/20231128085025.GA3818@noisy.programming.kick=
+s-ass.net/
+>=20
+> Disabling kernel IBT enforcement without disabling KVM IBT seems worthwhi=
+le. But
+> the solution is to not to not honor host support. It is to have kernel IB=
+T not
+> clear the feature flag and instead clear something else. This can be done
+> independently of the KVM series.
 
-GCC versions before 8.1 do not support -static-pie,
-while https://www.kernel.org/doc/html/next/process/changes.html says
-the minimal version is GCC 5.1.
-Is this a problem?
+Hmm, I don't disagree, but I'm not sure it makes sense to wait on that disc=
+ussion
+to exempt IBT from the "it must be supported in the host" rule.  I suspect =
+that
+tweaking the handling X86_FEATURE_IBT of will open a much larger can of wor=
+ms,
+as overhauling feature flag handling is very much on the x86 maintainers to=
+do
+list.
 
-If not, and CFLAGS is guaranteed to include -fpie/-fpic/-fPIE/-fPIC
-(PIC), using -static-pie looks good to me.
-
-
---=20
-=E5=AE=8B=E6=96=B9=E7=9D=BF
+IMO, the odds of there being a hardware bug that necessitates hard disablin=
+g IBT
+are lower than the odds of KVM support for CET landing well before the feat=
+ure
+stuff is sorted out.
