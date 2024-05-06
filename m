@@ -1,127 +1,122 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B8413CF8F
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 14:21:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E147513DDBC;
+	Mon,  6 May 2024 14:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715005310; cv=none; b=YxhhFLGYSp5IS36a09PdprHQJ8tokVZx9gidcs8rR0o4rKxyhbNgMZwItpHe4GHl8imZN/20lOQRkHRK8P1bN3F5JBCXzJTD07cfD9ypzdq/THYRL0SL8EHD6LX9yI7THoKH4tr0ZpM86YxHu6LJNcUUKkEPHzzZycufQj8KY7k=
+	t=1715005314; cv=none; b=njgA/nOWsk7pESJSt3ByyKcO4S9DMNZ3SZ2dE5UELbFGmAcjsqWDa1TnoX7E2i3xAs/3WHFmv0PxJIUUmK4tHa5yH4SxLS9L4YSRvv4s4cpazrr9y59n5tgM/DWXQ/rSFpn2Hi427UgGduCoJoWXb1aPiOLz4uIjywQR7jkW9cQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715005310; c=relaxed/simple;
-	bh=ZRr6fPqYoTH0sclRmuJEZqEKQMy0r1Bck1MinrSVNpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kIMOGa+I0FMZtO/OkkpnbtJ6cZQJfFe7Gv1O7DFXgt7n3E83cIi1QJ2ij1fnaLUR9gB/mGQ92cateyv63omV3a5EPEIZV8TR9NtsoBnTV5Wh1FuAoqlsX5RdRpl6tZqGISj/MCfmXQPUS7bbPgVfggQejvRGow2MSBc29iwSSxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=F4Y+fW3Q; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1715005314; c=relaxed/simple;
+	bh=mnVWFiBfYUU2lpuKyQVuWsMjv4lrzOkciv18t8WSb+Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rrcUAnO2TVn2RQQgN/GWA/UrxSbYCWAHiNfPg9sa0/DW6811jX5fYR3lO7N2l+PtnbFUt69zlkXLsCKc1yGcieFa9JIsRe2RLapMBCwS2gl50QfZ6eamkpE5Q2lg1anX4PhBwbsDXPpV1pO15WgPWYTolHkJ97F1vucA8oYe0co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Byk190pG; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="F4Y+fW3Q"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BEB5C40E024D;
-	Mon,  6 May 2024 14:21:46 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id UryTxnO-LRmz; Mon,  6 May 2024 14:21:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1715005303; bh=b+K6cieeRgzZWM9C6IkS52nAd027DkJxG87ZipG8Sho=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F4Y+fW3QTaJ9FV2dDcBUpEOnzrKcNwfhgwOdIB3xCvhdM4huoa4p2KYMwSN2wNmwD
-	 PurLG1CyOa67XmIA7Pxjr2Sq43TnxBriydtwUVv225ZGWLr8aRIerdFKLvNAEki9Ev
-	 QXnergGYbpM8+T3qhaX9/x58MrcWwD71J6vQsKEnlV8KncUGgWfSc0z0LVq8pAhSPA
-	 jhRvlK1uhx3ePYkx9TN9Pnrto+jT1IMuDnXrJB5nW+PpFqOIWkIya0hHmvBcQghQxV
-	 Qpcy4sW0eigQF2LhqQTtyg+uUpaA4mgngA8rRUjITTzYMxjhNPyMZTnIW07xurGum0
-	 EFPpsRZXQJUtWe0+C/HGe/nc6XB0yAZPrv1Vs0Sxr+v1BKJWnv/5mnfPlMEOl9DXQZ
-	 WNWXaDv0Ykm6m+6/KKSSXAT4xuzr7YY8i3V3fOOhqtSIvR8d2wWumKRJLjDrYNUk2H
-	 wsEOEPFJWyHmHsADUmFJY/mHG2hpgpMdKtvSSnaDSQw/dzm+hSfRo6uzIZiqwrD1Y/
-	 1hYGDOpptHLNwXDiEYJSWcNV980028nBBUkVgrWNlt8tJcqln08J8EaS98VWRSAywf
-	 lyf/szhCvZVMfnyBCbRiPEu/QgL4G3rSTsUsaKzxv/5Ezg78hEYQ1docvNMEYS9P6J
-	 FpbHijWXXqLmCFJnbwN3lyRY=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5342240E0187;
-	Mon,  6 May 2024 14:21:21 +0000 (UTC)
-Date: Mon, 6 May 2024 16:21:20 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: adrian.hunter@intel.com, ashish.kalra@amd.com, bhe@redhat.com,
-	dave.hansen@linux.intel.com, elena.reshetova@intel.com,
-	jun.nakajima@intel.com, kai.huang@intel.com,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org, ltao@redhat.com, mingo@redhat.com,
-	nik.borisov@suse.com, peterz@infradead.org, rafael@kernel.org,
-	rick.p.edgecombe@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
-	tglx@linutronix.de, thomas.lendacky@amd.com, x86@kernel.org
-Subject: Re: [PATCHv10.1 09/18] x86/mm: Adding callbacks to prepare encrypted
- memory for kexec
-Message-ID: <20240506142120.GKZjjnYGMcZkuTLlzG@fat_crate.local>
-References: <20240427164747.GCZi0sM6HBCBYtgWqF@fat_crate.local>
- <20240427170634.2397725-1-kirill.shutemov@linux.intel.com>
- <20240502134506.GDZjOY4guvlKH9-73J@fat_crate.local>
- <ch244dd4k5nu5rcryuwqp4pztl4dduhciqunin5drr7a3yls2h@siisliaoc2f6>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Byk190pG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715005313; x=1746541313;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=mnVWFiBfYUU2lpuKyQVuWsMjv4lrzOkciv18t8WSb+Q=;
+  b=Byk190pGGn5QTg9UwNXztsgiSFqSMKonxbz/FZzvu4N81asfEQzbi6Tz
+   yt4qiuaY5q++vf9Yak7qgS4tTKU6N9/A0R+2cE0brhMuf/k7jgJwVIajF
+   vc8UQoaYc1UpRaWidPj6dQGDBjDzXBNqP89aqNQrfiuy1H1g7AD1q3mOu
+   xx/45C6/JjdyXrR16TMPBJJ/dOszNP7IrbIyaXYYxQVlauZMUJSzquJpl
+   I7ZwIdZHFEJC0e7ZzsoFxVBqXTkQhEM0/6gJKQMzUn+Gt9OnvhogzhciX
+   IkJ3tTAmRXJ0DjAz9PtXakUwwJTk2TQJXL/cAYEqCOo39ROvynKEYX4df
+   w==;
+X-CSE-ConnectionGUID: JN9eoUOcQ2OgI88y+3wXyA==
+X-CSE-MsgGUID: iL3D8yjoSKyVKmuootIvzw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10631810"
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="10631810"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 07:21:51 -0700
+X-CSE-ConnectionGUID: v6vxQqJzQgqtr/xtC6HB+Q==
+X-CSE-MsgGUID: FLhmLFrsTPe4VWRVLgvWFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
+   d="scan'208";a="32652260"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 06 May 2024 07:21:44 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 1AACF43E; Mon, 06 May 2024 17:21:43 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-omap@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-amlogic@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-tegra@vger.kernel.org
+Cc: Vignesh Raghavendra <vigneshr@ti.com>,
+	Siddharth Vadapalli <s-vadapalli@ti.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Richard Zhu <hongxing.zhu@nxp.com>,
+	Lucas Stach <l.stach@pengutronix.de>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Yue Wang <yue.wang@Amlogic.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Xiaowei Song <songxiaowei@hisilicon.com>,
+	Binghui Wang <wangbinghui@hisilicon.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	=?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v4 2/5] PCI: aardvark: Remove unused of_gpio.h
+Date: Mon,  6 May 2024 17:20:38 +0300
+Message-ID: <20240506142142.4042810-3-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240506142142.4042810-1-andriy.shevchenko@linux.intel.com>
+References: <20240506142142.4042810-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ch244dd4k5nu5rcryuwqp4pztl4dduhciqunin5drr7a3yls2h@siisliaoc2f6>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 06, 2024 at 04:22:02PM +0300, Kirill A. Shutemov wrote:
-> I do. See comment just above enc_kexec_stop_conversion() call.
+of_gpio.h is deprecated and subject to remove.
+The driver doesn't use it, simply remove the unused header.
 
-If you mean this:
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/pci/controller/pci-aardvark.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-        /*
-         * Call enc_kexec_stop_conversion() while all CPUs are still active and
-         * interrupts are enabled. This will allow all in-flight memory
-         * conversions to finish cleanly.
-         */
-        if (kexec_in_progress)
-                x86_platform.guest.enc_kexec_stop_conversion(false);
-
-then no, this is not enough.
-
-I mean this:
-
-/**
- * struct x86_guest - Functions used by misc guest incarnations like SEV, TDX, etc.
- *
- * @enc_status_change_prepare   Notify HV before the encryption status of a range is changed
- * @enc_status_change_finish    Notify HV after the encryption status of a range is changed
- * @enc_tlb_flush_required      Returns true if a TLB flush is needed before changing page encryption status
- * @enc_cache_flush_required    Returns true if a cache flush is needed before changing page encryption status
- * @enc_kexec_begin		Begin the two-step process of stopping
- * 				page conversion... <insert reason why it
- * 				needs to happen this way, blabla>
- * @enc_kexec_finish		...
- */
-struct x86_guest {
-        int (*enc_status_change_prepare)(unsigned long vaddr, int npages, bool enc);
-        int (*enc_status_change_finish)(unsigned long vaddr, int npages, bool enc);
-        bool (*enc_tlb_flush_required)(bool enc);
-        bool (*enc_cache_flush_required)(void);
-        void (*enc_kexec_begin)(bool crash);
-        void (*enc_kexec_finish)(void);
-
-And calling them a _begin and _finish makes a lot more sense to me:
-_begin starts the kexec process for encrypted guests and _finish
-finishes it.
-
-Just from the names you now know what needs to happen and in which
-order.
-
-Thx.
-
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 71ecd7ddcc8a..8b3e1a079cf3 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -23,7 +23,6 @@
+ #include <linux/platform_device.h>
+ #include <linux/msi.h>
+ #include <linux/of_address.h>
+-#include <linux/of_gpio.h>
+ #include <linux/of_pci.h>
+ 
+ #include "../pci.h"
 -- 
-Regards/Gruss,
-    Boris.
+2.43.0.rc1.1336.g36b5255a03ac
 
-https://people.kernel.org/tglx/notes-about-netiquette
