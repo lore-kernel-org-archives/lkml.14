@@ -1,140 +1,163 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A704CB5B;
-	Mon,  6 May 2024 05:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A90482C3;
+	Mon,  6 May 2024 05:21:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714972875; cv=none; b=fTDzEg5GAvSn33jB9RvGfLdsGwxngynW1l6e9m3sMGMtUE49qwTDGZJGFOa+laG5/ekyYqMz8MMza+oBMH2mm5Cto94n8+wgh6QZfdRWVigCOtMfdyvOvH90/XOpYOY20GAbWWjeBswXN+FCnjIGbEajajk7fRnhMm/n9tO5SwE=
+	t=1714972876; cv=none; b=LHYY/yHn1EMpmKUUIsS7loS/vm8njq5ITML7Ui6hFnSNn+UjcRwyEIZEpzqv55ER+/dYHAn2uG0M61994bE2CBIYdXT4M/bfNvgk920T6guMnabKMsKLuV9Dvj9UWJSce/hluubqEVY7J8T3p2lVPhznsYnIfIdl1LC12GxxWbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714972875; c=relaxed/simple;
-	bh=b8Lf79nn/sA11QBLeJFjS00ogJqDZq+BXggmxF0kNSQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aEfNEfs1IZXV+wJEBrW87z9dW8MjYJosP5H6Gw3V3MwUcBpBAO322NJ+fslOMtJlC1Rf8MKZdbrnta7FYZgDBnc3RJVIBXqYgJJ5SpKaqPPObPTN9TZVR2ZRy2fpsmsVLn1GrnRrMK2ZUjaght+Nq5wtCbMN4/cXewAEkRCf+NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=M04wn5dU; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1714972876; c=relaxed/simple;
+	bh=IKlIvjuBn/H754DI9jvJWcFPcdV3jR8qdRnrj4+WI+E=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gTNkp4lLt5ir7vVD9cX50esZmzprHcolyE25WBUBhthMgi4Yur3iBO0i4DXRuGC5r0xGmvjcjPFUkAWTrisd5914DK8fQp+95pZ0hZEZ9Foe9s10TIZaltM27fs7pxQVSTDxrIgIM+gW36mQ8iJAeQh4GXgN18mjrs2mW6C3aug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tqHS/vGn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="M04wn5dU"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4465KrhI053716;
-	Mon, 6 May 2024 00:20:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1714972853;
-	bh=qPp3TF9mHJrCzGzM0kruJzyCC+H/lKypY5UihYRs34U=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=M04wn5dUGsRMCog7RBZWxvxExgeWRxNfdCOguQdZVtnVUZD8/dMK7LyscC/gFJDMf
-	 7ftF06XQTz1iJufPCGgb66+NTsFukabsWwJDkJdUcehE+8QUUUwwq/j4l29WYAMmL0
-	 jEoFvNROQCvSl2uTx/MzftwZrtm6KvW5J7lySyNI=
-Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4465KqSx009651
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 6 May 2024 00:20:52 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 6
- May 2024 00:20:53 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 6 May 2024 00:20:53 -0500
-Received: from uda0500640.dal.design.ti.com (uda0500640.dhcp.ti.com [172.24.227.88])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4465Kj0g069015;
-	Mon, 6 May 2024 00:20:49 -0500
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <srk@ti.com>, <rogerq@kernel.org>,
-        <r-gunasekaran@ti.com>, <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/2] arm64: dts: ti: k3-j784s4-main: Add support for USB
-Date: Mon, 6 May 2024 10:50:43 +0530
-Message-ID: <20240506052044.8228-2-r-gunasekaran@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240506052044.8228-1-r-gunasekaran@ti.com>
-References: <20240506052044.8228-1-r-gunasekaran@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tqHS/vGn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A56C116B1;
+	Mon,  6 May 2024 05:21:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714972875;
+	bh=IKlIvjuBn/H754DI9jvJWcFPcdV3jR8qdRnrj4+WI+E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=tqHS/vGnvtQgm5ottAK403iYyDc6/kLmsTqJatmTnLywHGL2J4Yx3BQFHn8kIh5py
+	 nAooPFJ/9D/gp80HpsyAE7VLHtgoEXN2oFlLX5jPGy9UcaNhHy63gOMOzCBNTTjYzY
+	 zTp1VSdM3dp9bb6a1cRiUxYBB01w14LtjpGUitKZvmBd////F+XFWc+2WhNuCayL1f
+	 5DKi+xN1JCPwBItgzdC22IH1kLTrDRX9bueAA25gRiT5J7ruCdhav0YQqrZ4kFm33e
+	 GoiquvMi/ejmmVn8rmJXrvcabBTLqBrTOjH9PoG8HDm8g2HgzSTiZfZk5HaOctZgEA
+	 vnVuNTv7yqmXw==
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51f72a29f13so1793397e87.3;
+        Sun, 05 May 2024 22:21:15 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUN5bEpBmEgr3VFQifDqAad5vcxr7JTmsV4nAOzCMOqLiX1hFq62oU34QTfvd32oBL7oElXIcSyMpIwBMX8bQ5cwujIJfjSalv+8gB1cWhJBS3K0zcNCt1MFYZVzDLfe6spJcM3VP8Brrt8P/nHONeTGKHIPrtN+wuF1WDPPeTm57lQfepwgjI=
+X-Gm-Message-State: AOJu0YzaY9FmWx1A2wyhiu7Pe6CI8Rekok3SQkU3tXm1E9qvibdT+EcT
+	yNbbo6DHwUd+C2TMjx45w0KemVURI6FfKMU8vfOdtUJmj6wU4hEsh6fGO4O0aMOZgpQkeoQ24dX
+	G8VpSsnur6at4brRsKVIhwXnV2wg=
+X-Google-Smtp-Source: AGHT+IHQJhS1znz8gVwOUrqUtv4OQz0bCGrfCQ1loRBZocjB8uJP1gVAFiA08qYh/ghUaXKQtWYvCUkCZIIXeKTn4Jg=
+X-Received: by 2002:ac2:4189:0:b0:51d:aaf7:a92e with SMTP id
+ z9-20020ac24189000000b0051daaf7a92emr6626911lfh.47.1714972874359; Sun, 05 May
+ 2024 22:21:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240503091823.3616962-9-senozhatsky@chromium.org>
+ <202405041440.UTBQZAaf-lkp@intel.com> <20240504071416.GH14947@google.com>
+ <20240504161004.f5a0aab5e5aa1033d4696c20@linux-foundation.org>
+ <20240505043957.GA8623@google.com> <20240505051305.GB8623@google.com>
+ <20240505064832.GC8623@google.com> <20240506032207.GD8623@google.com>
+In-Reply-To: <20240506032207.GD8623@google.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Mon, 6 May 2024 14:20:37 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARUBuR3gDtX6GfB7Zv6dydt1+qzBB_XT58wOg3WeCTVvA@mail.gmail.com>
+Message-ID: <CAK7LNARUBuR3gDtX6GfB7Zv6dydt1+qzBB_XT58wOg3WeCTVvA@mail.gmail.com>
+Subject: Re: [PATCH 08/14] zram: check that backends array has at least one backend
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kbuild@vger.kernel.org, 
+	kernel test robot <lkp@intel.com>, Minchan Kim <minchan@kernel.org>, llvm@lists.linux.dev, 
+	oe-kbuild-all@lists.linux.dev, 
+	Linux Memory Management List <linux-mm@kvack.org>, linux-kernel@vger.kernel.org, 
+	linux-block@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Matt Ranostay <mranostay@ti.com>
+On Mon, May 6, 2024 at 12:22=E2=80=AFPM Sergey Senozhatsky
+<senozhatsky@chromium.org> wrote:
+>
+> On (24/05/05 15:48), Sergey Senozhatsky wrote:
+> > On (24/05/05 14:13), Sergey Senozhatsky wrote:
+> > > On (24/05/05 13:39), Sergey Senozhatsky wrote:
+> > > [..]
+> > > > > I guess just pick one if none were selected.
+> > >
+> > > How do I pick one if none were selected? Does Kconfig support
+> > > something like that?
+> >
+> > This triggers Kconfig error:
+> >
+> > config ZRAM_EMPTY_BACKENDS_FIXUP
+> >        bool
+> >        depends on ZRAM && !ZRAM_BACKEND_LZO && !ZRAM_BACKEND_LZ4 && \
+> >                !ZRAM_BACKEND_LZ4HC && !ZRAM_BACKEND_ZSTD && \
+> >                !ZRAM_BACKEND_DEFLATE
+> >        select ZRAM_BACKEND_LZO
+> >
+> >
+> > drivers/block/zram/Kconfig:17:error: recursive dependency detected!
+> > drivers/block/zram/Kconfig:17:  symbol ZRAM_BACKEND_LZO is selected by =
+ZRAM_EMPTY_BACKENDS_FIXUP
+> > drivers/block/zram/Kconfig:52:  symbol ZRAM_EMPTY_BACKENDS_FIXUP depend=
+s on ZRAM_BACKEND_LZO
+> >
+> >
+> > I'm a little surprised by this - EMPTY_BACKENDS_FIXUP does not depend
+> > on ZRAM_BACKEND_LZO, it depends on NOT ZRAM_BACKEND_LZO.
+> >
+> > Let me Cc linux-kbuild. Kbuild folks, how do I workaround this?
+>
+> Is this how one does it?
+>
+> config ZRAM_BACKEND_LZO
+>        bool "lzo and lzo-rle compression support"
+>        depends on ZRAM
+>        default y if !ZRAM_BACKEND_LZ4 && !ZRAM_BACKEND_LZ4HC && \
+>                !ZRAM_BACKEND_ZSTD && !ZRAM_BACKEND_DEFLATE
+>        default n
+>        select LZO_COMPRESS
+>        select LZO_DECOMPRESS
+>
+>
+> User still can select N and then we'll have empty backends, but
+> at least default is Y if none of the algorithms were selected.
+> Is it good enough?
 
-Add support for the USB 3.0 controller
 
-Signed-off-by: Matt Ranostay <mranostay@ti.com>
-Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
----
-Changes since v1:
-----------------
-* No change
+I interpret this sentence into:
 
-v1: https://lore.kernel.org/all/20240502053615.29514-2-r-gunasekaran@ti.com/
+"randconfig will eventually disable all ZRAM_BACKEND_*,
+causing the build error again.
+Is it good enough, Arnd?"
 
- arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-index 6a4554c6c9c1..51cdd0b56a6f 100644
---- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
-@@ -75,6 +75,13 @@
- 				      <J784S4_SERDES4_LANE2_EDP_LANE2>,
- 				      <J784S4_SERDES4_LANE3_EDP_LANE3>;
- 		};
-+
-+		usb_serdes_mux: mux-controller@4000 {
-+			compatible = "reg-mux";
-+			reg = <0x4000 0x4>;
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x0 0x8000000>; /* USB0 to SERDES0 lane 3 mux */
-+		};
- 	};
- 
- 	gic500: interrupt-controller@1800000 {
-@@ -568,6 +575,38 @@
- 		status = "disabled";
- 	};
- 
-+	usbss0: cdns-usb@4104000 {
-+		bootph-all;
-+		compatible = "ti,j721e-usb";
-+		reg = <0x00 0x4104000 0x00 0x100>;
-+		dma-coherent;
-+		power-domains = <&k3_pds 398 TI_SCI_PD_EXCLUSIVE>;
-+		clocks = <&k3_clks 398 21>, <&k3_clks 398 2>;
-+		clock-names = "ref", "lpm";
-+		assigned-clocks = <&k3_clks 398 21>;    /* USB2_REFCLK */
-+		assigned-clock-parents = <&k3_clks 398 22>; /* HFOSC0 */
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		status = "disabled"; /* Needs lane config */
-+
-+		usb0: usb@6000000 {
-+			bootph-all;
-+			compatible = "cdns,usb3";
-+			reg = <0x00 0x6000000 0x00 0x10000>,
-+			      <0x00 0x6010000 0x00 0x10000>,
-+			      <0x00 0x6020000 0x00 0x10000>;
-+			reg-names = "otg", "xhci", "dev";
-+			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,  /* irq.0 */
-+				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>, /* irq.6 */
-+				     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>; /* otgirq.0 */
-+			interrupt-names = "host",
-+					  "peripheral",
-+					  "otg";
-+		};
-+	};
-+
- 	main_i2c0: i2c@2000000 {
- 		compatible = "ti,j721e-i2c", "ti,omap4-i2c";
- 		reg = <0x00 0x02000000 0x00 0x100>;
--- 
-2.17.1
 
+Some possible solutions:
+
+
+
+config ZRAM_BACKEND_FORCE_LZO
+        def_bool !ZRAM_BACKEND_LZ4 && !ZRAM_BACKEND_LZ4HC && \
+                 !ZRAM_BACKEND_ZSTD && !ZRAM_BACKEND_DEFLATE
+        depends on ZRAM
+        select ZRAM_BACKEND_LZO
+
+config ZRAM_BACKEND_LZO
+        bool "lzo and lzo-rle compression support"
+        depends on ZRAM
+        select LZO_COMPRESS
+        select LZO_DECOMPRESS
+
+
+OR
+
+
+config ZRAM_BACKEND_FORCE_LZO
+        def_bool !ZRAM_BACKEND_LZ4 && !ZRAM_BACKEND_LZ4HC && \
+                 !ZRAM_BACKEND_ZSTD && !ZRAM_BACKEND_DEFLATE
+
+config ZRAM_BACKEND_LZO
+        bool "lzo and lzo-rle compression support" if !ZRAM_BACKEND_FORCE_L=
+ZO
+        depends on ZRAM
+        default ZRAM_BACKEND_FORCE_LZO
+        select LZO_COMPRESS
+        select LZO_DECOMPRESS
+
+
+
+
+BTW, "default n" you are adding are redundant.
+
+--=20
+Best Regards
+Masahiro Yamada
