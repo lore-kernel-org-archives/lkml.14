@@ -1,124 +1,202 @@
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C70FE140370
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 07:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 878D942ABE
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 07:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714981537; cv=none; b=G6IrNuk2saz2yi2SYr5JWkpIZkgvfLb4uiZ1KVAkdyJs9VGn5p28bnSJI/a5DqRFMYdot4dtNZjfJvsA18lbivR7NK7koZCJS2hwFOiQ5lpbOg7cCK+/xnxBbdnUpqtkI1jFo0IuTcdWwyBovzqCOGIeULp1YWBPQaJENfTdc3g=
+	t=1714981695; cv=none; b=ZxTtmtEltjVxaBqn6QXsoXKI4w2zv2MOZBii4KSQyyopLbrjAflfXdu5AVdTP3vb2SiNoqVUVJjtRINdUdRW8Dk6UIt3B+EkEe9DKYFy3DZIhs/YObvpSE8BKkvegXREybp2B9suElvuZ3rv2uR/84SiRIq3pWeW2cuZI4q/nqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714981537; c=relaxed/simple;
-	bh=6TAT1+n58JucEKjWCrV75WkhFXklBUPwfthOxea0vBc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HxyvcJ/RixQCOIY/hej1WUgOLxMdt2NdCg9lpGsu26DcpzqL9ZMqzJWfmI/4KgLigXn23BUNL+um840uG9muze+NiHkpZMNDOGjkvcuBvEM3UnWqPxvaNLPlqE3Yw/XIn7UvERomYJz94yhqSw858lWlomedZw86Z7FEHlkRRvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZCDzeUQt; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1714981695; c=relaxed/simple;
+	bh=apURgdu9US9Q6NqpFuYJVO0syEU3Ulxfqt+JjajzVls=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=giX+sEk1JER6HbRQ4TNywfb7ijI7RpYRQff5Pjx50ijoWSCYY6akHFC8GoRGFp/XnfOl6zYKZWaK04u6qa9E9Dx+aL89/y/fsfaGgt9n+TJGO0aDkyrXdWroyNInA7bBES8JYig6qXWbpAXsCy1ix7a82ZbInaeFbkd2xtqIfN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x9dpnCT/; arc=none smtp.client-ip=209.85.210.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZCDzeUQt"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4467ig53095759;
-	Mon, 6 May 2024 02:44:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1714981482;
-	bh=6TAT1+n58JucEKjWCrV75WkhFXklBUPwfthOxea0vBc=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To;
-	b=ZCDzeUQtx/oOXKTf2ZrmL//ClDQ6l0OICmso0wKPdSSCtXB6M478K3ltrlpYOvZSC
-	 ZFfDtmoPUiCRrIGYBlTZyBSkxxOL8OXq0Xc1XEOAWUGy2LKYl7md41Vjq/xUdNgjKh
-	 jMLNplDArbtwMNoDihtZ2tNm+Xgy+lTDEFC/zZho=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4467igug118570
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 6 May 2024 02:44:42 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 6
- May 2024 02:44:41 -0500
-Received: from DLEE100.ent.ti.com ([fe80::ad4d:c227:3f85:880d]) by
- DLEE100.ent.ti.com ([fe80::ad4d:c227:3f85:880d%17]) with mapi id
- 15.01.2507.023; Mon, 6 May 2024 02:44:41 -0500
-From: "Xu, Baojun" <baojun.xu@ti.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Takashi Iwai
-	<tiwai@suse.de>
-CC: "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "lgirdwood@gmail.com"
-	<lgirdwood@gmail.com>,
-        "perex@perex.cz" <perex@perex.cz>,
-        "pierre-louis.bossart@linux.intel.com"
-	<pierre-louis.bossart@linux.intel.com>,
-        "Lu, Kevin" <kevin-lu@ti.com>,
-        "Ding,
- Shenghao" <shenghao-ding@ti.com>,
-        "Navada Kanyana, Mukund" <navada@ti.com>,
-        "13916275206@139.com" <13916275206@139.com>,
-        "P O, Vijeth" <v-po@ti.com>,
-        "Holalu Yogendra, Niranjan" <niranjan.hy@ti.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>,
-        "yung-chuan.liao@linux.intel.com" <yung-chuan.liao@linux.intel.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "soyer@irl.hu" <soyer@irl.hu>
-Subject: Re: [EXTERNAL] Re: [PATCH v4 1/3] ALSA: hda/tas2781: Add tas2781 hda
- driver based on SPI
-Thread-Topic: [EXTERNAL] Re: [PATCH v4 1/3] ALSA: hda/tas2781: Add tas2781 hda
- driver based on SPI
-Thread-Index: AQHams/AyRoBFLmXZEetT//IO/HlOrGBGk0AgAANNwCACLNAfA==
-Date: Mon, 6 May 2024 07:44:41 +0000
-Message-ID: <5832318882b14f5cb171ce2ecde1fc93@ti.com>
-References: <20240430072544.1877-1-baojun.xu@ti.com>
- <20240430072544.1877-2-baojun.xu@ti.com>
- <87jzkfm2hp.wl-tiwai@suse.de>,<ZjD1-NSC3X_7JcQg@smile.fi.intel.com>
-In-Reply-To: <ZjD1-NSC3X_7JcQg@smile.fi.intel.com>
-Accept-Language: en-GB, zh-CN, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-exclaimer-md-config: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x9dpnCT/"
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6f02e1fef90so845081a34.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 00:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1714981692; x=1715586492; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1P6DJY4fN1oYQ+fD1hdKIRR5ynxkJi89nJoIba5ERBM=;
+        b=x9dpnCT/Gf7+ANG8Ty7XnNR/w9Tf4zPoZM0fIFuhJaq4JdcApUFfAzlPdIrLp0mFeW
+         Jo+LtR/esO8W6l9QSI3ZjTOsaj3st5KSEVhdapPsmNjMzxkY1++bWAK7Tx3SVvM3uUcZ
+         liNXYw/BwywOyoanIsicV9lC8FpLSqNvd1bGUOPXRf8HC7Bm98rz17dd3iZ87cGU1aj9
+         Wevvmi2tUGCcUURzWHKjrmsA/lOgM9fwEJMp+1dgld2Vjq8YfIEDjz9tImC4YylVYjtc
+         pYAriUocQbnB0r7U1tC6qcBh//zTWSgh6UTQoZBAVWDw9V7L48ZekItwVEx0P7NOq87A
+         xVPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714981692; x=1715586492;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1P6DJY4fN1oYQ+fD1hdKIRR5ynxkJi89nJoIba5ERBM=;
+        b=a88R+pFKTNAofFyDnU/VDLtAdyd9i1THt+qnHAEYomaInwKLeCMS63zjKsjMUTxw43
+         Ey7WME2VU6tiIm+CMsz96wju8ABWrWPcEO3TTq+bPvt6IZ9g5XQboVgltmtSIuOLrXz1
+         7DId+jRfj4DpDlInqueXDqUWsnf0rwBqH3MLzLxD7wf8oLwP/TXlWvvDLE9QpkS6v9HN
+         +dyIGXjVWcvuLLflUkm9FRJ8opfI514S1uyQO6HZZU86aX5GVyo+hHaobqVk2maRHPlA
+         VlncPeEfOVQDSHom+IAvRZzQea2WdPv//PB6yCDuXPqlLQKa5fs+MUgGKARyGhJYZFo+
+         pb9w==
+X-Forwarded-Encrypted: i=1; AJvYcCXxCBlH9d8hO/kyqoPNbJU2YVd3evpwYjVlJ+cP1jVutBHjzJF9qhYYkIpXoHHZ02ZHnfqSxFOx3dwcWp7z+jTaTjiURHyQIZQEfN6H
+X-Gm-Message-State: AOJu0YyioZS/GQBoCPSA/xN5XcPDZolLp7QTYwClCw8SYroAcCKsbiU8
+	zFP2mmUZLOTU8BUbOeg59dUyHxnypSKgn6OnfTjZ+xhUnuJ0r5Q/XQ+65i+XMjIo4Tzzft9Fpte
+	kmH5QUEInBxaJNYck3WPYNy5467H+vAAavAX/DQ==
+X-Google-Smtp-Source: AGHT+IFRjrDF2z1YHBQ36qKpgseIsHm+fGagHI2wj3a0Y3r/oMNEUJ+ZfENTe8UOBiA8G/22/t3PRwFoWT5+QH7FZWc=
+X-Received: by 2002:a05:6830:3149:b0:6ee:5560:4031 with SMTP id
+ c9-20020a056830314900b006ee55604031mr12325242ots.38.1714981692603; Mon, 06
+ May 2024 00:48:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240502085636.4049-1-gavin.liu@mediatek.com>
+In-Reply-To: <20240502085636.4049-1-gavin.liu@mediatek.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Mon, 6 May 2024 09:48:01 +0200
+Message-ID: <CAHUa44GGzMQjrkFm4JRQ463wqOpZfzoo91TchK=PdH1Rt565pQ@mail.gmail.com>
+Subject: Re: [PATCH v2] optee: add timeout value to optee_notif_wait() to
+ support timeout
+To: "gavin.liu" <gavin.liu@mediatek.com>
+Cc: Sumit Garg <sumit.garg@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgQW5keQ0KDQpUaGFua3MgZm9yIHlvdXIgY29tbWVudHMsIGFuc3dlciBpbiBsaW5lOg0KDQo+
-IEZyb206IEFuZHkgU2hldmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29t
-Pg0KPiBTZW50OiAzMCBBcHJpbCAyMDI0IDIxOjQ1DQo+IFRvOiBUYWthc2hpIEl3YWkNCj4gQ2M6
-IFh1LCBCYW9qdW47IHJvYmgrZHRAa2VybmVsLm9yZzsgbGdpcmR3b29kQGdtYWlsLmNvbTsgcGVy
-ZXhAcGVyZXguY3o7IHBpZXJyZS1sb3Vpcy5ib3NzYXJ0QGxpbnV4LmludGVsLmNvbTsgTHUsIEtl
-dmluOyBEaW5nLCBTaGVuZ2hhbzsgTmF2YWRhIEthbnlhbmEsIE11a3VuZDsgMTM5MTYyNzUyMDZA
-MTM5LmNvbTsgUCBPLCBWaWpldGg7IEhvbGFsdSBZb2dlbmRyYSwgTmlyYW5qYW47IGFsc2EtZGV2
-ZWxAYWxzYS1wcm9qZWN0Lm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGlhbS5y
-LmdpcmR3b29kQGludGVsLmNvbTsgeXVuZy1jaHVhbi5saWFvQGxpbnV4LmludGVsLmNvbTsgYnJv
-b25pZUBrZXJuZWwub3JnOyBzb3llckBpcmwuaHUNCj4gU3ViamVjdDogW0VYVEVSTkFMXSBSZTog
-W1BBVENIIHY0IDEvM10gQUxTQTogaGRhL3RhczI3ODE6IEFkZCB0YXMyNzgxIGhkYSBkcml2ZXIg
-YmFzZWQgb24gU1BJDQo+IA0KPiBPbiBUdWUsIEFwciAzMCwgMjAyNCBhdCAwMjrigIo1ODrigIox
-MFBNICswMjAwLCBUYWthc2hpIEl3YWkgd3JvdGU6ID4gT24gVHVlLCAzMCBBcHIgMjAyNCAwOTri
-gIoyNTrigIo0MiArMDIwMCwgQmFvanVuIFh1IHdyb3RlOiAuLuKAii4gPiA+IHNuZC1oZGEtY3Mt
-ZHNwLWN0bHMtb2JqcyA6PSBoZGFfY3NfZHNwX2N0bC7igIpvID4gPiBzbmQtaGRhLXNjb2RlYy1j
-b21wb25lbnQtb2JqcyA6PSBoZGFfY29tcG9uZW50LuKAim8gPg0KPiBaalFjbVFSWUZwZnB0QmFu
-bmVyU3RhcnQNCj4gVGhpcyBtZXNzYWdlIHdhcyBzZW50IGZyb20gb3V0c2lkZSBvZiBUZXhhcyBJ
-bnN0cnVtZW50cy4NCj4gRG8gbm90IGNsaWNrIGxpbmtzIG9yIG9wZW4gYXR0YWNobWVudHMgdW5s
-ZXNzIHlvdSByZWNvZ25pemUgdGhlIHNvdXJjZSBvZiB0aGlzIGVtYWlsIGFuZCBrbm93IHRoZSBj
-b250ZW50IGlzIHNhZmUuIElmIHlvdSB3aXNoIHRvIHJlcG9ydCB0aGlzIG1lc3NhZ2UgdG8gSVQg
-U2VjdXJpdHksIHBsZWFzZSBmb3J3YXJkIHRoZSBtZXNzYWdlIGFzIGFuIGF0dGFjaG1lbnQgdG8g
-cGhpc2hpbmdAbGlzdC50aS5jb20NCj4gDQo+IFpqUWNtUVJZRnBmcHRCYW5uZXJFbmQNCj4gDQo+
-IE9uIFR1ZSwgQXByIDMwLCAyMDI0IGF0IDAyOjU4OjEwUE0gKzAyMDAsIFRha2FzaGkgSXdhaSB3
-cm90ZToNCj4gPiBPbiBUdWUsIDMwIEFwciAyMDI0IDA5OjI1OjQyICswMjAwLCBCYW9qdW4gWHUg
-d3JvdGU6DQo+IA0KPiAuLi4NCj4gDQo+ID4gPiAgc25kLWhkYS1jcy1kc3AtY3Rscy1vYmpzIDo9
-ICAgICAgICAgICAgICAgIGhkYV9jc19kc3BfY3RsLm8NCj4gPiA+ICBzbmQtaGRhLXNjb2RlYy1j
-b21wb25lbnQtb2JqcyA6PSAgIGhkYV9jb21wb25lbnQubw0KPiA+ID4gIHNuZC1oZGEtc2NvZGVj
-LXRhczI3ODEtaTJjLW9ianMgOj0gdGFzMjc4MV9oZGFfaTJjLm8NCj4gPiA+ICtzbmQtaGRhLXNj
-b2RlYy10YXMyNzgxLXNwaS15IDo9ICAgIHRhczI3ODFfaGRhX3NwaS5vIHRhczI3ODFfc3BpX2Z3
-bGliLm8NCj4gPg0KPiA+IEEgbml0cGlja2luZzogYmV0dGVyIHRvIGFsaWduIHdpdGggb3RoZXIg
-bGluZXMgKGkuZS4gd2l0aCAqLW9ianMNCj4gPiBpbnN0ZWFkIG9mICoteSkuDQo+IA0KPiBJIG9i
-amVjdCB0aGlzLiBUaGUgYmV0dGVyIGFwcHJvYWNoIGlzIHRvIGhhdmUgYSBwcmVjdXJzb3IgcGF0
-Y2ggdGhhdCBzd2l0Y2hlcw0KPiB0byB5IG92ZXIgb2JqcyAodGhlIGxhdHRlciBpcyBmb3IgdXNl
-ciBzcGFjZSBjb2RlIC8gdG9vbHMpLg0KDQpJIGFsc28gZG8gbm90IGZ1bGx5IHVuZGVyc3RhbmQg
-d2h5IHNldCBpdCBhcyAieSIsIGFzIHlvdSBrbm93LCBJIGZvbGxvdw0KQ09ORklHX1NORF9IREFf
-U0NPREVDX1RBUzI3ODFfSTJDLCBhcyBpdCBkbyBub3Qgc2V0IHRvICJ5Ii4NCg0KPiANCj4gLS0N
-Cj4gV2l0aCBCZXN0IFJlZ2FyZHMsDQo+IEFuZHkgU2hldmNoZW5rbw0KPiANCj4gDQo+IA==
+On Thu, May 2, 2024 at 10:56=E2=80=AFAM gavin.liu <gavin.liu@mediatek.com> =
+wrote:
+>
+> From: Gavin Liu <gavin.liu@mediatek.com>
+>
+> Add timeout value to support self waking when timeout to avoid waiting
+> indefinitely.
+>
+> Signed-off-by: Gavin Liu <gavin.liu@mediatek.com>
+> ---
+> Change in v2:
+> Change commit message.
+> Add description for value[0].c in optee_rpc_cmd.h.
+> ---
+> ---
+>  drivers/tee/optee/notif.c         |  9 +++++++--
+>  drivers/tee/optee/optee_private.h |  2 +-
+>  drivers/tee/optee/optee_rpc_cmd.h |  1 +
+>  drivers/tee/optee/rpc.c           | 10 ++++++++--
+>  4 files changed, 17 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/tee/optee/notif.c b/drivers/tee/optee/notif.c
+> index 05212842b0a5..d5e5c0645609 100644
+> --- a/drivers/tee/optee/notif.c
+> +++ b/drivers/tee/optee/notif.c
+> @@ -29,7 +29,7 @@ static bool have_key(struct optee *optee, u_int key)
+>         return false;
+>  }
+>
+> -int optee_notif_wait(struct optee *optee, u_int key)
+> +int optee_notif_wait(struct optee *optee, u_int key, u32 timeout)
+>  {
+>         unsigned long flags;
+>         struct notif_entry *entry;
+> @@ -70,7 +70,12 @@ int optee_notif_wait(struct optee *optee, u_int key)
+>          * Unlock temporarily and wait for completion.
+>          */
+>         spin_unlock_irqrestore(&optee->notif.lock, flags);
+> -       wait_for_completion(&entry->c);
+> +       if (timeout !=3D 0) {
+> +               if (!wait_for_completion_timeout(&entry->c, timeout))
+> +                       rc =3D -ETIMEDOUT;
+> +       } else {
+> +               wait_for_completion(&entry->c);
+> +       }
+>         spin_lock_irqsave(&optee->notif.lock, flags);
+>
+>         list_del(&entry->link);
+> diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_=
+private.h
+> index 7a5243c78b55..da990c4016ec 100644
+> --- a/drivers/tee/optee/optee_private.h
+> +++ b/drivers/tee/optee/optee_private.h
+> @@ -252,7 +252,7 @@ struct optee_call_ctx {
+>
+>  int optee_notif_init(struct optee *optee, u_int max_key);
+>  void optee_notif_uninit(struct optee *optee);
+> -int optee_notif_wait(struct optee *optee, u_int key);
+> +int optee_notif_wait(struct optee *optee, u_int key, u32 timeout);
+>  int optee_notif_send(struct optee *optee, u_int key);
+>
+>  u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_pa=
+rams,
+> diff --git a/drivers/tee/optee/optee_rpc_cmd.h b/drivers/tee/optee/optee_=
+rpc_cmd.h
+> index f3f06e0994a7..99342aa66263 100644
+> --- a/drivers/tee/optee/optee_rpc_cmd.h
+> +++ b/drivers/tee/optee/optee_rpc_cmd.h
+> @@ -41,6 +41,7 @@
+>   * Waiting on notification
+>   * [in]    value[0].a      OPTEE_RPC_NOTIFICATION_WAIT
+>   * [in]    value[0].b      notification value
+> + * [in]    value[0].c      timeout in millisecond or 0 if no timeout
+
+milliseconds
+
+>   *
+>   * Sending a synchronous notification
+>   * [in]    value[0].a      OPTEE_RPC_NOTIFICATION_SEND
+> diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
+> index e69bc6380683..14e6246aaf05 100644
+> --- a/drivers/tee/optee/rpc.c
+> +++ b/drivers/tee/optee/rpc.c
+> @@ -130,6 +130,8 @@ static void handle_rpc_func_cmd_i2c_transfer(struct t=
+ee_context *ctx,
+>  static void handle_rpc_func_cmd_wq(struct optee *optee,
+>                                    struct optee_msg_arg *arg)
+>  {
+> +       int rc =3D 0;
+> +
+>         if (arg->num_params !=3D 1)
+>                 goto bad;
+>
+> @@ -139,7 +141,8 @@ static void handle_rpc_func_cmd_wq(struct optee *opte=
+e,
+>
+>         switch (arg->params[0].u.value.a) {
+>         case OPTEE_RPC_NOTIFICATION_WAIT:
+> -               if (optee_notif_wait(optee, arg->params[0].u.value.b))
+> +               rc =3D optee_notif_wait(optee, arg->params[0].u.value.b, =
+arg->params[0].u.value.c);
+> +               if (rc)
+>                         goto bad;
+>                 break;
+>         case OPTEE_RPC_NOTIFICATION_SEND:
+> @@ -153,7 +156,10 @@ static void handle_rpc_func_cmd_wq(struct optee *opt=
+ee,
+>         arg->ret =3D TEEC_SUCCESS;
+>         return;
+>  bad:
+> -       arg->ret =3D TEEC_ERROR_BAD_PARAMETERS;
+> +       if (rc =3D=3D -ETIMEDOUT)
+> +               arg->ret =3D TEEC_ERROR_BUSY;
+
+TEEC_ERROR_BUSY is confusing. How about TEE_ERROR_TIMEOUT? We normally
+only use TEEC_XXX error codes, but GP doesn't define a
+TEEC_ERROR_TIMEOUT so it's better to use the GP-defined
+TEE_ERROR_TIMEOUT.
+
+Cheers,
+Jens
+
+> +       else
+> +               arg->ret =3D TEEC_ERROR_BAD_PARAMETERS;
+>  }
+>
+>  static void handle_rpc_func_cmd_wait(struct optee_msg_arg *arg)
+> --
+> 2.18.0
+>
