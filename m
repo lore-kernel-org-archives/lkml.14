@@ -1,94 +1,204 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE413D966
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 02:29:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC6B42073;
+	Mon,  6 May 2024 02:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714962553; cv=none; b=pnPkE3s7mu5X7ToIDJiFOwmF8Riok9axA7ZMKLDAfH3q0kH7OotUBNm1LrH/8TGbXmbw8Gi99difzYOvI74s+rNxjk5JGhc3dxd+pFOpqwoUWRSkdJOUKzAQGlOH/QqHYC3wVXhJxeYNsvJPTXbRRTR5bqYaJOPGtDkUHQiw8GM=
+	t=1714962561; cv=none; b=SHMyAmstMJGO14oSi5kqWLY2xmxl7pHjx7KV+SvOoSX4kitdVGoCH+gftfvy7qkcs9ujj6nMLwLPIUb7yBrauYAJJbG2/cfEXuoIovfa6VzycAlNh+3y8CE2ho8uY7XFiBEY4xuUl3nAggyivAWdAHy75UevF26kywHF5lHp9g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714962553; c=relaxed/simple;
-	bh=BiXbc1aIRlL+2+nMpyqZw2TtlPtUUBy/7U6HwAqoeVk=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=WP/7TZyUHK2o85/lPH8n0lrU9Rtg7SXbyVk561lkAlzjLx3ndft9itlibM0UeOiOT/lnWH+EYkm0ckrjRgoBtdQy/8BDYaaJJtwKRBkI4/vE+Aw6ZBUEpy/yBYcfdC4Q66p9D7j6rV3Ao9mM2JkICGLerNIapAhwJ0bNqTBs5nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4VXlHr0jrCz1xmcT;
-	Mon,  6 May 2024 10:10:48 +0800 (CST)
-Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
-	by mail.maildlp.com (Postfix) with ESMTPS id D21971A016C;
-	Mon,  6 May 2024 10:11:54 +0800 (CST)
-Received: from [10.174.178.46] (10.174.178.46) by
- kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 6 May 2024 10:11:54 +0800
-Subject: Re: [PATCH] ubifs: fix kernel-doc warnings
-To: Jeff Johnson <quic_jjohnson@quicinc.com>, Richard Weinberger
-	<richard@nod.at>
-CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20240502-ubifs-kdoc-v1-1-59c35a325141@quicinc.com>
-From: Zhihao Cheng <chengzhihao1@huawei.com>
-Message-ID: <c94ba482-0b3a-e8c0-0990-dcb5507148c6@huawei.com>
-Date: Mon, 6 May 2024 10:11:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+	s=arc-20240116; t=1714962561; c=relaxed/simple;
+	bh=sLQUZMApqqLwfKOmiwgXagVQ77v4zYFltOYi02efLkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uNhR72YBJF0N/vH8m/8Tp3BpXKAZCVI9BPPXhe69+ZN4pdRKXBan0z9qO1/N/0tqkwK387nZG0opmLzaHVrDODLcKAtrG4zVihqilHEKmSsjxBvjB8V1Kh2V4eG9yYk+0y+W52S3yGS5c1Rl70o0JEuHTDMNlXk7gj1IIRbffgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=XCpdRj+6; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XCpdRj+6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1714962556;
+	bh=ne9JTXjWOHaKfsqQqJPT7Xw7twbf75bnHuJTPws1Js8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=XCpdRj+6VU2tLfZoGUT8f+0/jHTC2YkQdm7DtKhti7CL+lxhVtWvq+joI5JTc7l3R
+	 HSxBx0+Df4RISsw5mnJeU884SvB50kqu1Pwnc2g0aBfXL1GmjwdIUGgUXwAteSc68u
+	 /zjmHrXGrIv8VRxKTXqs9z8BXNLCB1UOsPSgY7wPcP/CStkWQxn5+G6AYwJ9+QTg3h
+	 8eODohEa3G1Fm2YR30PtF9jR1JEGjb3SyzFCWpy5jUOWUYR0oe90Az6hGXnGOB5ui6
+	 we379tk3aVVRipgVJryAoB6uxznF1HP3Q7LqJGjQ98Hd6/MXw/6v+SKifkobMFQMW9
+	 w7RcSBLZ+qn+Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VXlj85tfYz4x1H;
+	Mon,  6 May 2024 12:29:16 +1000 (AEST)
+Date: Mon, 6 May 2024 12:29:14 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Rob Clark <robdclark@gmail.com>, Sean Paul <seanpaul@chromium.org>,
+ Masahiro Yamada <masahiroy@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Linux Kernel Mailing
+ List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the drm-msm tree with the kbuild
+ tree
+Message-ID: <20240506122914.2f08c2cc@canb.auug.org.au>
+In-Reply-To: <20240506121308.09de6f33@canb.auug.org.au>
+References: <20240506121308.09de6f33@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240502-ubifs-kdoc-v1-1-59c35a325141@quicinc.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600013.china.huawei.com (7.193.23.68)
+Content-Type: multipart/signed; boundary="Sig_/N6B9A4OMDDwwhp/ysbm=qDh";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-在 2024/5/3 4:16, Jeff Johnson 写道:
-> make C=1 reports the following kernel-doc warnings:
-> 
-> fs/ubifs/compress.c:103: warning: Function parameter or struct member 'c' not described in 'ubifs_compress'
-> fs/ubifs/compress.c:155: warning: Function parameter or struct member 'c' not described in 'ubifs_decompress'
-> fs/ubifs/find.c:353: warning: Excess function parameter 'data' description in 'scan_for_free_cb'
-> fs/ubifs/find.c:353: warning: Function parameter or struct member 'arg' not described in 'scan_for_free_cb'
-> fs/ubifs/find.c:594: warning: Excess function parameter 'data' description in 'scan_for_idx_cb'
-> fs/ubifs/find.c:594: warning: Function parameter or struct member 'arg' not described in 'scan_for_idx_cb'
-> fs/ubifs/find.c:786: warning: Excess function parameter 'data' description in 'scan_dirty_idx_cb'
-> fs/ubifs/find.c:786: warning: Function parameter or struct member 'arg' not described in 'scan_dirty_idx_cb'
-> fs/ubifs/find.c:86: warning: Excess function parameter 'data' description in 'scan_for_dirty_cb'
-> fs/ubifs/find.c:86: warning: Function parameter or struct member 'arg' not described in 'scan_for_dirty_cb'
-> fs/ubifs/journal.c:369: warning: expecting prototype for wake_up_reservation(). Prototype was for add_or_start_queue() instead
-> fs/ubifs/lprops.c:1018: warning: Excess function parameter 'lst' description in 'scan_check_cb'
-> fs/ubifs/lprops.c:1018: warning: Function parameter or struct member 'arg' not described in 'scan_check_cb'
-> fs/ubifs/lpt.c:1938: warning: Function parameter or struct member 'ptr' not described in 'lpt_scan_node'
-> fs/ubifs/replay.c:60: warning: Function parameter or struct member 'hash' not described in 'replay_entry'
-> 
-> Fix them.
-> 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
-> ---
-> Note ubifs still has C=1 warnings from smatch that are not addressed:
+--Sig_/N6B9A4OMDDwwhp/ysbm=qDh
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
-> 
-[...]
-> diff --git a/fs/ubifs/journal.c b/fs/ubifs/journal.c
-> index 74aee92433d7..f997a85bcdce 100644
-> --- a/fs/ubifs/journal.c
-> +++ b/fs/ubifs/journal.c
-> @@ -359,7 +359,7 @@ static void wake_up_reservation(struct ubifs_info *c)
->   }
->   
->   /**
-> - * wake_up_reservation - add current task in queue or start queuing.
-> + * add_or_start_queue - add current task in queue or start queuing.
->    * @c: UBIFS file-system description object
->    *
->    * This function starts queuing if queuing is not started, otherwise adds
+Hi all,
 
-This period of code was modified in previous patch 
-https://patchwork.ozlabs.org/project/linux-mtd/patch/20240227024204.1080739-1-chengzhihao1@huawei.com/ 
-, I'm okay to drop the old patch and apply this one.
+On Mon, 6 May 2024 12:13:08 +1000 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>
+> Today's linux-next merge of the drm-msm tree got a conflict in:
+>=20
+>   drivers/gpu/drm/msm/Makefile
+>=20
+> between commit:
+>=20
+>   7c972986689b ("kbuild: use $(src) instead of $(srctree)/$(src) for sour=
+ce directory")
+>=20
+> from the kbuild tree and commit:
+>=20
+>   0fddd045f88e ("drm/msm: generate headers on the fly")
+>=20
+> from the drm-msm tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
 
+I actually needed the below instead.
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/gpu/drm/msm/Makefile
+index b8cc007fc1b9,c861de58286c..cb9e7adbc4e1
+--- a/drivers/gpu/drm/msm/Makefile
++++ b/drivers/gpu/drm/msm/Makefile
+@@@ -1,10 -1,11 +1,11 @@@
+  # SPDX-License-Identifier: GPL-2.0
+ -ccflags-y :=3D -I $(srctree)/$(src)
+ +ccflags-y :=3D -I $(src)
++ ccflags-y +=3D -I $(obj)/generated
+ -ccflags-y +=3D -I $(srctree)/$(src)/disp/dpu1
+ -ccflags-$(CONFIG_DRM_MSM_DSI) +=3D -I $(srctree)/$(src)/dsi
+ -ccflags-$(CONFIG_DRM_MSM_DP) +=3D -I $(srctree)/$(src)/dp
+ +ccflags-y +=3D -I $(src)/disp/dpu1
+ +ccflags-$(CONFIG_DRM_MSM_DSI) +=3D -I $(src)/dsi
+ +ccflags-$(CONFIG_DRM_MSM_DP) +=3D -I $(src)/dp
+ =20
+- msm-y :=3D \
++ adreno-y :=3D \
+  	adreno/adreno_device.o \
+  	adreno/adreno_gpu.o \
+  	adreno/a2xx_gpu.o \
+@@@ -140,11 -145,61 +145,61 @@@ msm-display-$(CONFIG_DRM_MSM_DSI) +=3D ds
+  			dsi/dsi_manager.o \
+  			dsi/phy/dsi_phy.o
+ =20
+- msm-$(CONFIG_DRM_MSM_DSI_28NM_PHY) +=3D dsi/phy/dsi_phy_28nm.o
+- msm-$(CONFIG_DRM_MSM_DSI_20NM_PHY) +=3D dsi/phy/dsi_phy_20nm.o
+- msm-$(CONFIG_DRM_MSM_DSI_28NM_8960_PHY) +=3D dsi/phy/dsi_phy_28nm_8960.o
+- msm-$(CONFIG_DRM_MSM_DSI_14NM_PHY) +=3D dsi/phy/dsi_phy_14nm.o
+- msm-$(CONFIG_DRM_MSM_DSI_10NM_PHY) +=3D dsi/phy/dsi_phy_10nm.o
+- msm-$(CONFIG_DRM_MSM_DSI_7NM_PHY) +=3D dsi/phy/dsi_phy_7nm.o
++ msm-display-$(CONFIG_DRM_MSM_DSI_28NM_PHY) +=3D dsi/phy/dsi_phy_28nm.o
++ msm-display-$(CONFIG_DRM_MSM_DSI_20NM_PHY) +=3D dsi/phy/dsi_phy_20nm.o
++ msm-display-$(CONFIG_DRM_MSM_DSI_28NM_8960_PHY) +=3D dsi/phy/dsi_phy_28nm=
+_8960.o
++ msm-display-$(CONFIG_DRM_MSM_DSI_14NM_PHY) +=3D dsi/phy/dsi_phy_14nm.o
++ msm-display-$(CONFIG_DRM_MSM_DSI_10NM_PHY) +=3D dsi/phy/dsi_phy_10nm.o
++ msm-display-$(CONFIG_DRM_MSM_DSI_7NM_PHY) +=3D dsi/phy/dsi_phy_7nm.o
++=20
++ msm-y +=3D $(adreno-y) $(msm-display-y)
+ =20
+  obj-$(CONFIG_DRM_MSM)	+=3D msm.o
++=20
++ quiet_cmd_headergen =3D GENHDR  $@
+ -      cmd_headergen =3D mkdir -p $(obj)/generated && $(PYTHON3) $(srctree=
+)/$(src)/registers/gen_header.py --rnn $(srctree)/$(src)/registers --xml $<=
+ c-defines > $@
+++      cmd_headergen =3D mkdir -p $(obj)/generated && $(PYTHON3) $(src)/re=
+gisters/gen_header.py --rnn $(src)/registers --xml $< c-defines > $@
++=20
++ $(obj)/generated/%.xml.h: $(src)/registers/adreno/%.xml \
++ 		$(src)/registers/adreno/adreno_common.xml \
++ 		$(src)/registers/adreno/adreno_pm4.xml \
++ 		$(src)/registers/freedreno_copyright.xml \
++ 		$(src)/registers/gen_header.py \
++ 		$(src)/registers/rules-fd.xsd \
++ 		FORCE
++ 	$(call if_changed,headergen)
++=20
++ $(obj)/generated/%.xml.h: $(src)/registers/display/%.xml \
++ 		$(src)/registers/freedreno_copyright.xml \
++ 		$(src)/registers/gen_header.py \
++ 		$(src)/registers/rules-fd.xsd \
++ 		FORCE
++ 	$(call if_changed,headergen)
++=20
++ ADRENO_HEADERS =3D \
++ 	generated/a2xx.xml.h \
++ 	generated/a3xx.xml.h \
++ 	generated/a4xx.xml.h \
++ 	generated/a5xx.xml.h \
++ 	generated/a6xx.xml.h \
++ 	generated/a6xx_gmu.xml.h \
++ 	generated/adreno_common.xml.h \
++ 	generated/adreno_pm4.xml.h \
++=20
++ DISPLAY_HEADERS =3D \
++ 	generated/dsi_phy_7nm.xml.h \
++ 	generated/dsi_phy_10nm.xml.h \
++ 	generated/dsi_phy_14nm.xml.h \
++ 	generated/dsi_phy_20nm.xml.h \
++ 	generated/dsi_phy_28nm_8960.xml.h \
++ 	generated/dsi_phy_28nm.xml.h \
++ 	generated/dsi.xml.h \
++ 	generated/hdmi.xml.h \
++ 	generated/mdp4.xml.h \
++ 	generated/mdp5.xml.h \
++ 	generated/mdp_common.xml.h \
++ 	generated/sfpb.xml.h
++=20
++ $(addprefix $(obj)/,$(adreno-y)): $(addprefix $(obj)/,$(ADRENO_HEADERS))
++ $(addprefix $(obj)/,$(msm-display-y)): $(addprefix $(obj)/,$(DISPLAY_HEAD=
+ERS))
++=20
++ targets +=3D $(ADRENO_HEADERS) $(DISPLAY_HEADERS)
+
+--Sig_/N6B9A4OMDDwwhp/ysbm=qDh
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmY4QHoACgkQAVBC80lX
+0GxW0Af/dV2NyUNKAo3Ei+eUSYDiolReQNRfKcZWpYjViJQjnuUxELPD8qb2vVzj
+Cyzl4HKHl7goisHqJR0+JBiwIO6F8wiU0v5dp3ifgvPMZ2V2o4+S4n40EB9eB1ST
+ibnF7u/ZhfW4aZYDCpuUGx1P/cXGhQQh8DmUwe0OvTXPcMNQROIRjD5F1q1glaRA
+J/XqBgkCfss2Uaep1rtd2sW8JsThQMUUaaSOU2qPv1rc/cD77lGXuD7lo1HrokoL
+ifKE0dEYvg2pAQ6uPSoLr4+epna3HcJyM+Myag+i5pZp1rzbLf0T8fZT64092gLg
+ewyhpQEomfnttRhOk9iJIrqjjqQ+tg==
+=AAdb
+-----END PGP SIGNATURE-----
+
+--Sig_/N6B9A4OMDDwwhp/ysbm=qDh--
