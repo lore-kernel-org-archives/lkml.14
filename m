@@ -1,146 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9F6143867;
-	Mon,  6 May 2024 12:12:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18992143884
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714997534; cv=none; b=OjJOVTMbxuRxQGxZp3EPtDh8NnE/r9yv/oHFb1vWwAYfqfn0zP1YSTR0B2Y2GnWXv3KcB7jd4urFiDR6aKhyidvIzIL7Z3bjcSDY/10WWvtSHaPjZFLuqEDEx5kE2F2KADvS4nUnBw78CydAZIGJJ3rZUGiAgcX22j7c8jzPFDY=
+	t=1714997568; cv=none; b=UUd+NbRXr5wTRzmTXbjoHQYEGrsonNDtNaP1cMVC9JQPznEKo1ebWltP4PxYZqM9vUqYFwGF55+aLi5gzQi83C35gDXfWVb6+EN9aNo6ZmykVzcs93R29DMpcqJF2Ul4ntnKKyRJuyRGHtELTXki/oZfmEoDGM8xEANYgG8N8Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714997534; c=relaxed/simple;
-	bh=pR0A0OFnPbzgIVFB96xhdR9NeOvLHx9NayqjbsRWiKQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Pvz5z8hQFjHhdVWmiJXZERruu8kYq52miml8iAEpiEnJvqCOCjpmOpvLiR+aR7/3cFnhpXq4eEij1wnYiUczvT/6Ps6v/S0mP+bYpQVM0DgXxfvp+UEPLxLXKigfm39NprWk0EyKDNANyD2LKVdJpnGTHCvaiyQP0W5g+0yNUW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BSsFY31n; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BSsFY31n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714997533; x=1746533533;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=pR0A0OFnPbzgIVFB96xhdR9NeOvLHx9NayqjbsRWiKQ=;
-  b=BSsFY31nW061A/YxhnnNcRN4C2+dsP8pCCeLCR5fPPANPghbn5FKpBP5
-   abtJiv/fbyQvBd5usSk8J2z4iUCtXx5C0gICTvQHJN3FICNCfectsTehL
-   dAh2OwH4Kk3g+hMCyeCtGp01z9cLHnoHq+4E7YkNo0oWyoWtXw8vtdRya
-   j31NeqjcipRAJ09bt026BTxa5+Wa5vE48sqHr/L04CmE3ZNMBGgz4T9vp
-   8EI1Qm/1A8ZaYc/827yGXz9Ivk2MtRSJFS7tsJ1lisULOHjnZeil0prc/
-   ByJ6p9RAYPj4heXxCqc6+2+bVYVzIRyymErryVpKb48jm7UnRG2hLa5yw
-   Q==;
-X-CSE-ConnectionGUID: g01XFkDIRFy7vdumNXeIhw==
-X-CSE-MsgGUID: q3evOQYwR6Sk7fJAFoNWjA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11064"; a="21416122"
-X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
-   d="scan'208";a="21416122"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 05:12:12 -0700
-X-CSE-ConnectionGUID: dHT+7mFiTtWP9PmxJXUe3w==
-X-CSE-MsgGUID: 8jbSaK/PT7ORwp5u80o83Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,258,1708416000"; 
-   d="scan'208";a="28241035"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.68])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 05:12:10 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 1/1] serial: 8250_pnp: Simplify "line" related code
-Date: Mon,  6 May 2024 15:12:02 +0300
-Message-Id: <20240506121202.11253-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1714997568; c=relaxed/simple;
+	bh=q04s1HvnktcJyr1ZfLDdHVvrdmfLfNxlRmGKaPfRWpw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=me4mqT1zOI5eMLEBOocWUZgSj878oOd3L7dxyImyU6G7HudIJfWgh+0uViiFMYtM8qHOiVfLQLzD9IFWMBjs6RDn/sc7MaTktEsJfKZFxnT6q+erzzNmwGldZCZ/Y4rzTNtswn+XwbcuscOFdOIVB3U5wb5hPkJXYuH3lyh5E/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VY0ZR3KxwztT80;
+	Mon,  6 May 2024 20:09:19 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 67E6D1800C7;
+	Mon,  6 May 2024 20:12:43 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Mon, 6 May 2024 20:12:39 +0800
+Message-ID: <91ebac93-099d-9e4a-537b-e2f2c3e7b521@huawei.com>
+Date: Mon, 6 May 2024 20:12:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH v3 1/8] arm64/sysreg: Add definitions for immediate
+ versions of MSR ALLINT
+To: Mark Rutland <mark.rutland@arm.com>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
+	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
+	<yuzenghui@huawei.com>, <tglx@linutronix.de>, <ardb@kernel.org>,
+	<broonie@kernel.org>, <anshuman.khandual@arm.com>, <miguel.luis@oracle.com>,
+	<joey.gouly@arm.com>, <ryan.roberts@arm.com>, <jeremy.linton@arm.com>,
+	<ericchancf@google.com>, <kristina.martsenko@arm.com>, <robh@kernel.org>,
+	<scott@os.amperecomputing.com>, <songshuaishuai@tinylab.org>,
+	<shijie@os.amperecomputing.com>, <akpm@linux-foundation.org>,
+	<bhe@redhat.com>, <horms@kernel.org>, <mhiramat@kernel.org>,
+	<rmk+kernel@armlinux.org.uk>, <shahuang@redhat.com>,
+	<takakura@valinux.co.jp>, <dianders@chromium.org>, <swboyd@chromium.org>,
+	<sumit.garg@linaro.org>, <frederic@kernel.org>, <reijiw@google.com>,
+	<akihiko.odaki@daynix.com>, <ruanjinjie@huawei.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<kvmarm@lists.linux.dev>
+References: <20240415064758.3250209-1-liaochang1@huawei.com>
+ <20240415064758.3250209-2-liaochang1@huawei.com>
+ <ZjUKMWPknEhLYoK8@FVFF77S0Q05N>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <ZjUKMWPknEhLYoK8@FVFF77S0Q05N>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-8250_pnp sets drvdata to line + 1 if the probe is successful. The users
-of drvdata are in remove, suspend and resume callbacks, none of which
-will be called if probe failed. The line acquired from drvdata can
-never be zero in those functions and the checks for that can be
-removed.
 
-Eliminate also +/-1 step because all users of line subtract 1 from the
-value.
 
-These might have been leftover from legacy PM callbacks that could
-be called without probe being successful.
+在 2024/5/4 0:00, Mark Rutland 写道:
+> On Mon, Apr 15, 2024 at 06:47:51AM +0000, Liao Chang wrote:
+>> From: Mark Brown <broonie@kernel.org>
+>>
+>> Encodings are provided for ALLINT which allow setting of ALLINT.ALLINT
+>> using an immediate rather than requiring that a register be loaded with
+>> the value to write. Since these don't currently fit within the scheme we
+>> have for sysreg generation add manual encodings like we currently do for
+>> other similar registers such as SVCR.
+>>
+>> Since it is required that these immediate versions be encoded with xzr
+>> as the source register provide asm wrapper which ensure this is the
+>> case.
+>>
+>> Signed-off-by: Mark Brown <broonie@kernel.org>
+>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
+>> ---
+>>  arch/arm64/include/asm/nmi.h    | 27 +++++++++++++++++++++++++++
+>>  arch/arm64/include/asm/sysreg.h |  2 ++
+>>  2 files changed, 29 insertions(+)
+>>  create mode 100644 arch/arm64/include/asm/nmi.h
+> 
+> We have helpers for manipulating PSTATE bits; AFAICT we only need the three
+> lines below:
+> 
+> ----8<----
+> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+> index 9e8999592f3af..5c209d07ae57e 100644
+> --- a/arch/arm64/include/asm/sysreg.h
+> +++ b/arch/arm64/include/asm/sysreg.h
+> @@ -94,18 +94,21 @@
+>  
+>  #define PSTATE_PAN                     pstate_field(0, 4)
+>  #define PSTATE_UAO                     pstate_field(0, 3)
+> +#define PSTATE_ALLINT                  pstate_field(1, 0)
+>  #define PSTATE_SSBS                    pstate_field(3, 1)
+>  #define PSTATE_DIT                     pstate_field(3, 2)
+>  #define PSTATE_TCO                     pstate_field(3, 4)
+>  
+>  #define SET_PSTATE_PAN(x)              SET_PSTATE((x), PAN)
+>  #define SET_PSTATE_UAO(x)              SET_PSTATE((x), UAO)
+> +#define SET_PSTATE_ALLINT(x)           SET_PSTATE((x), ALLINT)
+>  #define SET_PSTATE_SSBS(x)             SET_PSTATE((x), SSBS)
+>  #define SET_PSTATE_DIT(x)              SET_PSTATE((x), DIT)
+>  #define SET_PSTATE_TCO(x)              SET_PSTATE((x), TCO)
+>  
+>  #define set_pstate_pan(x)              asm volatile(SET_PSTATE_PAN(x))
+>  #define set_pstate_uao(x)              asm volatile(SET_PSTATE_UAO(x))
+> +#define set_pstate_allint(x)           asm volatile(SET_PSTATE_ALLINT(x))
+>  #define set_pstate_ssbs(x)             asm volatile(SET_PSTATE_SSBS(x))
+>  #define set_pstate_dit(x)              asm volatile(SET_PSTATE_DIT(x))
+> ---->8---- 
 
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
+Acked, I strongly prefer reusing existing helpers to introducing new ones.
 
-v2:
-- Rebased on top of tty-next
-- Added historical information Andy provided about legacy PM CBs
-  into commit message
+> 
+> The addition of <asm/nmi.h> and refrences to <linux/cpumask.h> and
+> arm64_supports_nmi() don't seem like they should be part of this patch.
 
- drivers/tty/serial/8250/8250_pnp.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
+Agree, what about to remove the nmi.h completely in this patch?
 
-diff --git a/drivers/tty/serial/8250/8250_pnp.c b/drivers/tty/serial/8250/8250_pnp.c
-index 9188902fa5b3..7c06ae79d8e2 100644
---- a/drivers/tty/serial/8250/8250_pnp.c
-+++ b/drivers/tty/serial/8250/8250_pnp.c
-@@ -435,8 +435,9 @@ static int
- serial_pnp_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
- {
- 	struct uart_8250_port uart, *port;
--	int ret, line, flags = dev_id->driver_data;
-+	int ret, flags = dev_id->driver_data;
- 	unsigned char iotype;
-+	long line;
- 
- 	if (flags & UNKNOWN_DEV) {
- 		ret = serial_pnp_guess_board(dev);
-@@ -494,7 +495,7 @@ serial_pnp_probe(struct pnp_dev *dev, const struct pnp_device_id *dev_id)
- 	if (uart_console(&port->port))
- 		dev->capabilities |= PNP_CONSOLE;
- 
--	pnp_set_drvdata(dev, (void *)((long)line + 1));
-+	pnp_set_drvdata(dev, (void *)line);
- 	return 0;
- }
- 
-@@ -503,17 +504,14 @@ static void serial_pnp_remove(struct pnp_dev *dev)
- 	long line = (long)pnp_get_drvdata(dev);
- 
- 	dev->capabilities &= ~PNP_CONSOLE;
--	if (line)
--		serial8250_unregister_port(line - 1);
-+	serial8250_unregister_port(line);
- }
- 
- static int serial_pnp_suspend(struct device *dev)
- {
- 	long line = (long)dev_get_drvdata(dev);
- 
--	if (!line)
--		return -ENODEV;
--	serial8250_suspend_port(line - 1);
-+	serial8250_suspend_port(line);
- 	return 0;
- }
- 
-@@ -521,9 +519,7 @@ static int serial_pnp_resume(struct device *dev)
- {
- 	long line = (long)dev_get_drvdata(dev);
- 
--	if (!line)
--		return -ENODEV;
--	serial8250_resume_port(line - 1);
-+	serial8250_resume_port(line);
- 	return 0;
- }
- 
+Thanks.
+
+> 
+> Mark.
+> 
+>>
+>> diff --git a/arch/arm64/include/asm/nmi.h b/arch/arm64/include/asm/nmi.h
+>> new file mode 100644
+>> index 000000000000..0c566c649485
+>> --- /dev/null
+>> +++ b/arch/arm64/include/asm/nmi.h
+>> @@ -0,0 +1,27 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * Copyright (C) 2022 ARM Ltd.
+>> + */
+>> +#ifndef __ASM_NMI_H
+>> +#define __ASM_NMI_H
+>> +
+>> +#ifndef __ASSEMBLER__
+>> +
+>> +#include <linux/cpumask.h>
+>> +
+>> +extern bool arm64_supports_nmi(void);
+>> +
+>> +#endif /* !__ASSEMBLER__ */
+>> +
+>> +static __always_inline void _allint_clear(void)
+>> +{
+>> +	asm volatile(__msr_s(SYS_ALLINT_CLR, "xzr"));
+>> +}
+>> +
+>> +static __always_inline void _allint_set(void)
+>> +{
+>> +	asm volatile(__msr_s(SYS_ALLINT_SET, "xzr"));
+>> +}
+>> +
+>> +#endif
+>> +
+>> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+>> index 9e8999592f3a..b105773c57ca 100644
+>> --- a/arch/arm64/include/asm/sysreg.h
+>> +++ b/arch/arm64/include/asm/sysreg.h
+>> @@ -167,6 +167,8 @@
+>>   * System registers, organised loosely by encoding but grouped together
+>>   * where the architected name contains an index. e.g. ID_MMFR<n>_EL1.
+>>   */
+>> +#define SYS_ALLINT_CLR			sys_reg(0, 1, 4, 0, 0)
+>> +#define SYS_ALLINT_SET			sys_reg(0, 1, 4, 1, 0)
+>>  #define SYS_SVCR_SMSTOP_SM_EL0		sys_reg(0, 3, 4, 2, 3)
+>>  #define SYS_SVCR_SMSTART_SM_EL0		sys_reg(0, 3, 4, 3, 3)
+>>  #define SYS_SVCR_SMSTOP_SMZA_EL0	sys_reg(0, 3, 4, 6, 3)
+>> -- 
+>> 2.34.1
+>>
+
 -- 
-2.39.2
-
+BR
+Liao, Chang
