@@ -1,37 +1,38 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A6A155757;
-	Mon,  6 May 2024 16:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8491215625A;
+	Mon,  6 May 2024 16:16:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715012207; cv=none; b=M3bSUls3xf/zNZfE7ONWd1INDCyrRXt+T/fvw+gf+rN80AHmHsC3GZ+QdlKAVx6rniY+mPDLvhEJN95z+A0uJkeOr30V4y6e1DRtOdCf0TyVJsq0hIaYPrdnLf3lsv5Jh1jyV+TRwVfIqCO04oADl9ITPbZKIb42L6Jq2YAFcxc=
+	t=1715012209; cv=none; b=nX0R2aVdq0uh3TmVF2uMn+In8cNvs1LZV4wBxqKz0g0r+vHsAohvCS2h2ZsmMnS395t6khZYFS9SwURsAWJFxWzbxV/bQyeDYBgBG/y3jPmzj7CbYUk+1H2bdfvLkheNrpj5k170ylagzZ1bXElVqsdqA/dzkYsULDGPHhn8xHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715012207; c=relaxed/simple;
-	bh=zZyAr/JVIET1qMTPelI+mJUy4YIQlIMFARhVctDDnrM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=IlhoGOW+Crgihxo0v8aa3urcaySQ/E5fRRx+jtUd98286EdR77p/v3RORLA7xSR2PhaW2ATJSl6PO5uXgj6aDGIx3nVSCiBNv4OdUnySChkd5kBFvglBgLNEJIsOFZEV4MEXN8XYKrPlkWQrl9M23ZWVh35OxEZKwUi3EhX4+Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=F93uVRTS; arc=none smtp.client-ip=217.70.183.197
+	s=arc-20240116; t=1715012209; c=relaxed/simple;
+	bh=Fo6LkXSE2FoO0rNhdf/MoBM6EDP6h8SAqx7v5TDobG8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=R8FSFGOssE8Vc6kzIvwjfkLrHh0c2yuCc0jC/2hKmucncCc/ahQ32ffqyOOSMvbv6ZyY31PKF/LnFUq4SFESXP+yT/5c272irSA6ynPlXij2XzgF/tDE2i08wD2cqzIhBvOko1Gaot8d16wsGMlpWnVuXFxsGdAD79fWk6wZeNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m+kpqjfC; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F93uVRTS"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 66F601C0002;
-	Mon,  6 May 2024 16:16:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m+kpqjfC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2157F40006;
+	Mon,  6 May 2024 16:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715012202;
+	t=1715012204;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ECoO8kUgpclDri0KjQcfY0pQjcpg9p60sgmfiXjbp7Q=;
-	b=F93uVRTSx4Dt+Jxmc7DRTW3JiXagTva6J7tfG5fz51BgWGcWOiS22oT6JjrzCS8dDf3rE7
-	BVoHU9lYpC+7OtfTHqaNaufPltu9+2hzEM6jJZAyFbFPPS1fUuSjldFrNkq6mPfMKeEJuH
-	zvzZhQszBiqeV8Z9PwvrrTHN0b5Pxku7oUlPz3+RO/LXxBC8BDuwItDURodVarKCNF4vP7
-	79Cc6yNkxZv26gbfoHsPwuyqq0s7b2zEARf67FbDkAUmvQPrV5sWtyF1XbIiNnhG6EGryi
-	ZDUudWIBy3OdIU3AX2g5okg93iy134/cjaM6aVhz0q63GIJJqZ5Vr0L9S23EXg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O9WyJ9Gc4EK55pftEVV87sUey9S4c9HcoTPoxa1EZac=;
+	b=m+kpqjfCLpX+QOw32GOyLMRGI2M0FV0tQeJb6SOhWPZJrw9BBm8dJbkbSVkPoNYlsThZ18
+	9JNQSLqe1IHLQJ99ojOQjszL7xKsbMXnl6nAaEmrXAf+mt6UaYg+sanPoidZRCyKqUZPEb
+	sYXQSnJBY0rFU1ziwffJLAzjT9B2xJt9T//M+3Tn6crWyYZFSvfxNYqKr1bhrizK1dFoif
+	DNfpqocrSjmYjmtlmWC3ZI5KnJGr6LXGc+IzBEfMZuiEQepja2fSumLmnQKQEldfXsnhc4
+	Bm432NRRuoEUBM37Q5sy3Fme3RCduY7fMLzjB4CIOPt0RDTEyMAcLriw71iqMA==
 From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: [PATCH 0/3] Add support for the Mobileye EyeQ6H SoC
-Date: Mon, 06 May 2024 18:16:09 +0200
-Message-Id: <20240506-eyeq6h-v1-0-f29b5269cc43@bootlin.com>
+Date: Mon, 06 May 2024 18:16:11 +0200
+Subject: [PATCH 2/3] MIPS: mobileye: Add EyeQ6H device tree
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,9 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAEkCOWYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDUwMz3dTK1EKzDN00k2TTREvTJANLA0sloOKCotS0zAqwQdGxtbUAizI
- xrlgAAAA=
+Message-Id: <20240506-eyeq6h-v1-2-f29b5269cc43@bootlin.com>
+References: <20240506-eyeq6h-v1-0-f29b5269cc43@bootlin.com>
+In-Reply-To: <20240506-eyeq6h-v1-0-f29b5269cc43@bootlin.com>
 To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
  =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
  Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
@@ -54,78 +55,322 @@ Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
  Alexandre Belloni <alexandre.belloni@bootlin.com>, 
  Gregory CLEMENT <gregory.clement@bootlin.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2772;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8484;
  i=gregory.clement@bootlin.com; h=from:subject:message-id;
- bh=zZyAr/JVIET1qMTPelI+mJUy4YIQlIMFARhVctDDnrM=;
- b=owGbwMvMwCTIzSbRJ1JkfZXxtFoSQ5olU2a2I4OdU9GMud8dWLdzJl/saEvw6zTzvHr+9ZRrD
- z5rzwzriGVhEGRikBVTZJFYWXBGvFzfY5td83WYOaxMIEMYuDgFYCLudgzzvb7yOfdnf77+4Nq/
- 6wuX5bcvimjOYVgw79rpzfzvZs/Zy+7wdXtU9dqu00qpAA==
+ bh=Fo6LkXSE2FoO0rNhdf/MoBM6EDP6h8SAqx7v5TDobG8=;
+ b=owGbwMvMwCTIzSbRJ1JkfZXxtFoSQ5olU6buhJ07U5qe+K1db2/w5PV306Naz9tyL2/Uu74sa
+ iLLwwbHjlgWBkEmBlkxRRaJlQVnxMv1PbbZNV+HmcPKBDKEgYtTACay/gfDfP/KigWXogytQrOu
+ dB3SPnZc9W46L8N8F7vKA2t1rcs41pppnf4QZCNfvi8UAA==
 X-Developer-Key: i=gregory.clement@bootlin.com; a=openpgp;
  fpr=18A970CC17772F48B63E83D70B06188E14723BD5
 X-GND-Sasl: gregory.clement@bootlin.com
 
-Hello,
-
-Following the support of the EyeQ5 SoC, this series adds the initial
-support for a newer SoC, the EyeQ6H.
-
-The EyeQ6H (or "High") from Mobileye is still based on the MIPS I6500
-architecture as the EyeQ5. The 2 clusters of this SoC contain 4 cores
-each, which are capable of running 4 threads per core. Besides this,
-it features multiple controllers such as the classic UART, high-speed
+EyeQ6H (or “High”) is an other SoC from Mobileye still based on the
+MIPS I6500 architecture as the EyeQ5. The 2 clusters of this SoC
+contains 4 cores which are capable of running 4 threads. Besides this,
+it features multiple controllers such as the classic UART, high speed
 I2C, SPI, as well as CAN-FD, PCIe Gen4, Octal/Quad SPI Flash
 interface, Gigabit Ethernet, MIPI CSI-2, MIPI DSI, and eMMC 5.1. It
 also includes a Hardware Security Module, Functional Safety Hardware,
-and video encoders, among other features.
+and video encoders and more.
 
-For now, this series just adds initial support with UART and Pinctrl
-support. Another current limitation pointed out in patch 3 is that
-only one CPU is actually running. This limitation will be solved with
-upcoming series.
-
-Regards,
-
-Gregory
-
-To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
-To: Théo Lebrun <theo.lebrun@bootlin.com>
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Conor Dooley <conor+dt@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-cc: Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-CC: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+This commit provides the initial device tree files with support for
+UART, GPIO and pinctrl, as well as fixed clocked.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
-Gregory CLEMENT (3):
-      dt-bindings: mips: Add bindings for a new Mobileye SoC EyeQ6H
-      MIPS: mobileye: Add EyeQ6H device tree
-      MIPS: mobileye: Add EyeQ6H support
+ arch/mips/boot/dts/mobileye/eyeq6h-epm6.dts        | 22 +++++
+ .../boot/dts/mobileye/eyeq6h-fixed-clocks.dtsi     | 52 ++++++++++++
+ arch/mips/boot/dts/mobileye/eyeq6h-pins.dtsi       | 88 +++++++++++++++++++
+ arch/mips/boot/dts/mobileye/eyeq6h.dtsi            | 99 ++++++++++++++++++++++
+ 4 files changed, 261 insertions(+)
 
- .../devicetree/bindings/mips/mobileye.yaml         |   5 +
- arch/mips/Kbuild.platforms                         |   2 +-
- arch/mips/Kconfig                                  |   7 +-
- arch/mips/boot/dts/Makefile                        |   2 +-
- arch/mips/boot/dts/mobileye/Makefile               |   1 +
- arch/mips/boot/dts/mobileye/eyeq6h-epm6.dts        |  22 ++++
- .../boot/dts/mobileye/eyeq6h-fixed-clocks.dtsi     |  52 ++++++++++
- arch/mips/boot/dts/mobileye/eyeq6h-pins.dtsi       |  88 ++++++++++++++++
- arch/mips/boot/dts/mobileye/eyeq6h.dtsi            |  99 ++++++++++++++++++
- arch/mips/configs/eyeq5_defconfig                  |   1 +
- arch/mips/configs/eyeq6_defconfig                  | 111 +++++++++++++++++++++
- arch/mips/mobileye/Kconfig                         |  26 +++++
- arch/mips/mobileye/Platform                        |   1 +
- 13 files changed, 412 insertions(+), 5 deletions(-)
----
-base-commit: 07e6a6d7f1d9fa4685003a195032698ba99577bb
-change-id: 20240506-eyeq6h-f4c5a95b0909
+diff --git a/arch/mips/boot/dts/mobileye/eyeq6h-epm6.dts b/arch/mips/boot/dts/mobileye/eyeq6h-epm6.dts
+new file mode 100644
+index 000000000000..ebc0d363fbf8
+--- /dev/null
++++ b/arch/mips/boot/dts/mobileye/eyeq6h-epm6.dts
+@@ -0,0 +1,22 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++/*
++ * Copyright 2024 Mobileye Vision Technologies Ltd.
++ */
++
++/dts-v1/;
++
++#include "eyeq6h.dtsi"
++
++/ {
++	compatible = "mobileye,eyeq6-epm6", "mobileye,eyeq6";
++	model = "Mobile EyeQ6H MP6 Evaluation board";
++
++	chosen {
++		stdout-path = "serial0:921600n8";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x1 0x00000000 0x1 0x00000000>;
++	};
++};
+diff --git a/arch/mips/boot/dts/mobileye/eyeq6h-fixed-clocks.dtsi b/arch/mips/boot/dts/mobileye/eyeq6h-fixed-clocks.dtsi
+new file mode 100644
+index 000000000000..8bb806eb567e
+--- /dev/null
++++ b/arch/mips/boot/dts/mobileye/eyeq6h-fixed-clocks.dtsi
+@@ -0,0 +1,52 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++/*
++ * Copyright 2023 Mobileye Vision Technologies Ltd.
++ */
++
++#include <dt-bindings/clock/mobileye,eyeq5-clk.h>
++
++/ {
++	xtal: xtal {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <30000000>;
++	};
++
++	pll_west: pll-static-west {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <2000000000>;
++	};
++
++	pll_cpu: pll-static-cpu {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <2000000000>;
++	};
++
++	/* pll-cpu derivatives */
++	occ_cpu: occ-cpu {
++		compatible = "fixed-factor-clock";
++		clocks = <&pll_cpu>;
++		#clock-cells = <0>;
++		clock-div = <1>;
++		clock-mult = <1>;
++	};
++
++	/* pll-west derivatives */
++	occ_periph_w: occ-periph-w {
++		compatible = "fixed-factor-clock";
++		clocks = <&pll_west>;
++		#clock-cells = <0>;
++		clock-div = <10>;
++		clock-mult = <1>;
++	};
++	uart_clk: uart-clk {
++		compatible = "fixed-factor-clock";
++		clocks = <&occ_periph_w>;
++		#clock-cells = <0>;
++		clock-div = <1>;
++		clock-mult = <1>;
++	};
++
++};
+diff --git a/arch/mips/boot/dts/mobileye/eyeq6h-pins.dtsi b/arch/mips/boot/dts/mobileye/eyeq6h-pins.dtsi
+new file mode 100644
+index 000000000000..a3d1b3684893
+--- /dev/null
++++ b/arch/mips/boot/dts/mobileye/eyeq6h-pins.dtsi
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++/*
++ * Copyright 2024 Mobileye Vision Technologies Ltd.
++ */
++
++/*
++ * MUX register structure
++ * bits    | field      | comment
++ * [0]     | MUX_SEL    | 0 - GPIO, 1 - alternative func
++ * [4]     | SW_LOOPBACK|
++ * [5]     | SW_OUT_HZ  |
++ * [7]     | DBG_IN     |
++ * [11:8]  | DS         | drive strength
++ * [13:12] | PUD        | pull-up/pull-down. 0, 3 - no, 1 - PD, 2 - PU
++ * [14]    | OD         | Open drain
++ * [15]    | ST_CFG     | Hysteretic input enable (Schmitt trigger)
++ */
++
++&pinctrl_west {
++	// TODO: use pinctrl-single,bias-pullup
++	// TODO: use pinctrl-single,bias-pulldown
++	// TODO: use pinctrl-single,drive-strength
++	// TODO: use pinctrl-single,input-schmitt
++
++	i2c0_pins: i2c0-pins {
++		pinctrl-single,pins = <
++			0x000 0x200	// I2C0_SCL pin
++			0x004 0x200	// I2C0_SDA pin
++		>;
++	};
++	i2c1_pins: i2c1-pins {
++		pinctrl-single,pins = <
++			0x008 0x200	// I2C1_SCL pin
++			0x00c 0x200	// I2C1_SDA pin
++		>;
++	};
++	eth0_pins: eth0-pins {
++		pinctrl-single,pins = <
++			0x080 1		// GPIO_C4__SMA0_MDC pin
++			0x084 1		// GPIO_C5__SMA0_MDIO pin
++		>;
++	};
++	uart0_pins: uart0-pins {
++		pinctrl-single,pins = <0x0a8 1>; // UART0 pin group
++	};
++	uart1_pins: uart1-pins {
++		pinctrl-single,pins = <0x0a0 1>; // UART1 pin group
++	};
++	spi0_pins: spi0-pins {
++		pinctrl-single,pins = <0x0ac 1>; // SPI0 pin group
++	};
++	spi1_pins: spi1-pins {
++		pinctrl-single,pins = <0x0a4 1>; // SPI1 pin group
++	};
++};
++
++&pinctrl_east {
++	i2c2_pins: i2c2-pins {
++		pinctrl-single,pins = <
++			0x000 0x200	// i2c2_SCL pin
++			0x004 0x200	// i2c2_SDA pin
++		>;
++	};
++	i2c3_pins: i2c3-pins {
++		pinctrl-single,pins = <
++			0x008 0x200	// i2c3_SCL pin
++			0x00c 0x200	// i2c3_SDA pin
++		>;
++	};
++	eth1_pins: eth1-pins {
++		pinctrl-single,pins = <
++			0x080 1	// GPIO_D4__SMA1_MDC pin
++			0x084 1	// GPIO_D5__SMA1_MDIO pin
++		>;
++	};
++	uart2_sel_pins: uart2-pins {
++		pinctrl-single,pins = <0x0a4 1>; // UART2 pin group
++	};
++	uart3_pins: uart3-pins {
++		pinctrl-single,pins = <0x09c 1>; // UART3 pin group
++	};
++	spi2_pins: spi2-pins {
++		pinctrl-single,pins = <0x0a8 1>; // SPI2 pin group
++	};
++	spi3_pins: spi3-pins {
++		pinctrl-single,pins = <0x0a0 1>; // SPI3 pin group
++	};
++};
+diff --git a/arch/mips/boot/dts/mobileye/eyeq6h.dtsi b/arch/mips/boot/dts/mobileye/eyeq6h.dtsi
+new file mode 100644
+index 000000000000..2ebd02c5426c
+--- /dev/null
++++ b/arch/mips/boot/dts/mobileye/eyeq6h.dtsi
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++/*
++ * Copyright 2024 Mobileye Vision Technologies Ltd.
++ */
++
++#include <dt-bindings/interrupt-controller/mips-gic.h>
++
++#include "eyeq6h-fixed-clocks.dtsi"
++
++/ {
++	#address-cells = <2>;
++	#size-cells = <2>;
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "img,i6500";
++			reg = <0>;
++			clocks = <&occ_cpu>;
++		};
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	cpu_intc: interrupt-controller {
++		compatible = "mti,cpu-interrupt-controller";
++		interrupt-controller;
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++	};
++
++	soc: soc {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		compatible = "simple-bus";
++
++		uart0: serial@d3331000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0 0xd3331000 0x0 0x1000>;
++			reg-io-width = <4>;
++			interrupt-parent = <&gic>;
++			interrupts = <GIC_SHARED 43 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&occ_periph_w>, <&occ_periph_w>;
++			clock-names = "uartclk", "apb_pclk";
++		};
++
++		pinctrl_west: pinctrl@d3337000 {
++			compatible = "pinctrl-single";
++			reg = <0x0 0xd3337000 0x0 0xb0>;
++			#pinctrl-cells = <1>;
++			pinctrl-single,register-width = <32>;
++			pinctrl-single,function-mask = <0xffff>;
++		};
++
++		pinctrl_east: pinctrl@d3357000 {
++			compatible = "pinctrl-single";
++			reg = <0x0 0xd3357000 0x0 0xb0>;
++			#pinctrl-cells = <1>;
++			pinctrl-single,register-width = <32>;
++			pinctrl-single,function-mask = <0xffff>;
++		};
++
++		pinctrl_south: pinctrl@d8014000 {
++			compatible = "pinctrl-single";
++			// 0xf8 size is correct? last mentioned reg is 0xe4
++			reg = <0x0 0xd8014000 0x0 0xf8>;
++			#pinctrl-cells = <1>;
++			pinctrl-single,register-width = <32>;
++			pinctrl-single,function-mask = <0xffff>;
++		};
++
++		gic: interrupt-controller@f0920000 {
++			compatible = "mti,gic";
++			reg = <0x0 0xf0920000 0x0 0x20000>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++
++			/*
++			 * Declare the interrupt-parent even though the mti,gic
++			 * binding doesn't require it, such that the kernel can
++			 * figure out that cpu_intc is the root interrupt
++			 * controller & should be probed first.
++			 */
++			interrupt-parent = <&cpu_intc>;
++
++			timer {
++				compatible = "mti,gic-timer";
++				interrupts = <GIC_LOCAL 1 IRQ_TYPE_NONE>;
++				clocks = <&occ_cpu>;
++			};
++		};
++	};
++};
++
++#include "eyeq6h-pins.dtsi"
 
-Best regards,
 -- 
-Gregory CLEMENT <gregory.clement@bootlin.com>
+2.43.0
 
