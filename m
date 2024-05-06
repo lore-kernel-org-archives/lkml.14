@@ -1,19 +1,20 @@
-Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B09882497;
-	Mon,  6 May 2024 14:09:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66E2D83A0D;
+	Mon,  6 May 2024 14:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.237.72.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715004549; cv=none; b=BlXxs2ME6Z23oOcp6vPFWzR1pcYqiB54EwK+9dOgPt2J3b6Ik1h/bJAiw3D9UgIg+BGaoMsXnp/22hBraDSO8KyJQ0zHekYhkEOKd0+PvzOolQ6Byv5QuiAjTZxdDCmSkE3z5bnW1lfQeyKaq1lAW1CEpU+wvoCpAtSKFkHbw04=
+	t=1715004559; cv=none; b=EtZF/SUO425KJdDyPYOtX+E6bU1Y5SG/YdEEnCdaidyvQh+GHxbDjpJ6Qaoo7wBoYBvgLiGXQV2iPSg1zk0R5TjWFlfwRoyvUdp29VHYtj8zm8+vp1DycJd/5FKO/JUqj2/20icNoI36uDA5x3fGbwVEcBVqCOpZylTmQaXnsIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715004549; c=relaxed/simple;
-	bh=xfREskp0aFFmWPukql0qe6jAozQgtsD58tDf97zGEGg=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=eFiN95ZCdY/lDUA91LUlfkDrE75Kt/p5lxgv/mLn6Cpe2Dob8O1949Ag4gUJQxVL/7T0XhXHd8MqhOsvySJxTd85XcZqIgs/8UVFpmp6v08139k5r3JTebN7KImqfVIrulvMCqTvPKGJVcZUZVhmrhSb3+1OI0OxR1+80WxM5Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=206.189.21.223
+	s=arc-20240116; t=1715004559; c=relaxed/simple;
+	bh=bxfEkwEOun2Hqg07t48P+nT/1ZVauFURq6ztCLXnH/A=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 In-Reply-To:References; b=OEiRIYvZZ8cgxvIEMgxBKt+6MpUQ5T13o4KmqjklPOSnXNB6Lh4qz/mstI210hyN26+vy1w8H+WMVoJGKLiQSMGFRFmQ+WezC6P2Z2Cf8/gAZzxiGK4l5pOmzfePfZV/89yyJN+Fch2ftZnLYeXwYPwJJd1SUpwb7qEnBrfaR70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=52.237.72.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
 Received: from ubuntu.localdomain (unknown [221.192.180.207])
-	by mail-app2 (Coremail) with SMTP id by_KCgCXtaRj5DhmI_s4AA--.15255S2;
-	Mon, 06 May 2024 22:08:38 +0800 (CST)
+	by mail-app2 (Coremail) with SMTP id by_KCgCXtaRj5DhmI_s4AA--.15255S4;
+	Mon, 06 May 2024 22:08:44 +0800 (CST)
 From: Duoming Zhou <duoming@zju.edu.cn>
 To: netdev@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -28,49 +29,79 @@ Cc: linux-kernel@vger.kernel.org,
 	dan.carpenter@linaro.org,
 	lars@oddbit.com,
 	Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH net v3 0/2] ax25: Fix issues of ax25_dev and net_device
-Date: Mon,  6 May 2024 22:08:33 +0800
-Message-Id: <cover.1715002910.git.duoming@zju.edu.cn>
+Subject: [PATCH net v3 2/2] ax25: Change kfree() in ax25_dev_free() to ax25_dev_put()
+Date: Mon,  6 May 2024 22:08:35 +0800
+Message-Id: <53925353450dea9a705d67ad225b589e8508042c.1715002910.git.duoming@zju.edu.cn>
 X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID:by_KCgCXtaRj5DhmI_s4AA--.15255S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrCr4xZw13ZryUCw4xtrW5Wrg_yoWxXwc_uF
-	y8AFW5Zw18JFWDGFW0yF48Jr9rCF4jgw1rXFnIqFZ5try3Zr1UJr4DWr48Xr18WFWjyr4k
-	t3WrAr4fAr13JjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbTAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
-	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Xryl42xK82IYc2Ij64vIr4
-	1l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK
-	67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI
-	8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAv
-	wI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14
-	v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOzuWDUUUU
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwINAWY3qokcfgAZsE
+In-Reply-To: <cover.1715002910.git.duoming@zju.edu.cn>
+References: <cover.1715002910.git.duoming@zju.edu.cn>
+In-Reply-To: <cover.1715002910.git.duoming@zju.edu.cn>
+References: <cover.1715002910.git.duoming@zju.edu.cn>
+X-CM-TRANSID:by_KCgCXtaRj5DhmI_s4AA--.15255S4
+X-Coremail-Antispam: 1UD129KBjvJXoW7WF4xCFW5urWxtrWxKw1rWFg_yoW8JFyrpF
+	W3KF43ArWkJr1UJr4DWr1xWr1YyFWDG39rur15u3WfKw1DJ34DJryrtryUGryUJFWfAw4r
+	Cw1UWFyj9F18ZwUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUmK14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Xryl42xK82IYc2Ij64vIr41l4I8I
+	3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
+	WUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
+	wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcI
+	k0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j
+	6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUYCJPDUUUU
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwINAWY3qokcfgAdsA
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-The first patch fixes reference count leak issues the object of
-"ax25_dev" and "net_device". The second patch uses ax25_dev_put()
-to replace kfree() in ax25_dev_free().
+The object "ax25_dev" is managed by reference counting. Thus it should
+not be directly released by a kfree() call in ax25_dev_free(). Replace
+it with a ax25_dev_put() call instead.
 
-You can see the former discussion in the following link:
-https://lore.kernel.org/netdev/20240501060218.32898-1-duoming@zju.edu.cn/
+Fixes: d01ffb9eee4a ("ax25: add refcount in ax25_dev to avoid UAF bugs")
+Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+---
+Changes in v3:
+  - Make commit messages more clearer.
 
-Duoming Zhou (2):
-  ax25: Fix reference count leak issues of ax25_dev and net_device
-  ax25: Change kfree() in ax25_dev_free() to ax25_dev_put()
+ net/ax25/ax25_dev.c | 13 +++++--------
+ 1 file changed, 5 insertions(+), 8 deletions(-)
 
- include/net/ax25.h  |  4 ++--
- net/ax25/ax25_dev.c | 49 ++++++++++++++++-----------------------------
- 2 files changed, 19 insertions(+), 34 deletions(-)
-
+diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
+index fbaaba0351e..8ee028e752f 100644
+--- a/net/ax25/ax25_dev.c
++++ b/net/ax25/ax25_dev.c
+@@ -188,16 +188,13 @@ struct net_device *ax25_fwd_dev(struct net_device *dev)
+  */
+ void __exit ax25_dev_free(void)
+ {
+-	ax25_dev *s, *ax25_dev;
++	ax25_dev *s, *n;
+ 
+ 	spin_lock_bh(&ax25_dev_lock);
+-	ax25_dev = ax25_dev_list;
+-	while (ax25_dev != NULL) {
+-		s        = ax25_dev;
+-		netdev_put(ax25_dev->dev, &ax25_dev->dev_tracker);
+-		ax25_dev = ax25_dev->next;
+-		kfree(s);
++	list_for_each_entry_safe(s, n, &ax25_dev_list, list) {
++		netdev_put(s->dev, &s->dev_tracker);
++		list_del(&s->list);
++		ax25_dev_put(s);
+ 	}
+-	ax25_dev_list = NULL;
+ 	spin_unlock_bh(&ax25_dev_lock);
+ }
 -- 
 2.17.1
 
