@@ -1,114 +1,209 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED3015B56E;
-	Mon,  6 May 2024 20:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7F8D15B549;
+	Mon,  6 May 2024 20:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715028027; cv=none; b=EtOENF0tGUR3OC8D83Rc3QDlNmdSghJqlW3jMtqeD9A6BUP1PVHQFJh4cH3gIBdFW9+8JccitBVEZyynXnPQlOIZthF36eHz+6tYLYLrFJaBtOrhzGq/SKywPVq7Hyp8AitM74SKU8CXn5Vw2T9+bTY/1HuDzSpRbk2wTadKnis=
+	t=1715028028; cv=none; b=YgT10e697C9x6KHDooQIEobSZt2g9nHxT5VRFrAziklNNpzycuWJ7D8kd/gkCwIpZ5sarmwRfH5EpkX6N/SCSHAI7YDinqosYoTygrnEV5PQOqfLAcs2XkQYWpe1rc/MDMcXii4TsnhY9YeL7BeyrOMbpiSjeltU+w/5jLTxo80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715028027; c=relaxed/simple;
-	bh=gp0Hiz0fY4V+2j9w+5I7W4FxOvOzlKPG4eD+czuDYLI=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=Pkf8Sco/sgKXuQqbBFY0P6ryL6IKSvrc0WfBwejNiiETkkcb6BPYkNcbx2qUYsmNk1Dl/PNuWj1xpxs3Drp93W5emfD3Pf2lOlLDMa0SW95//Wwbi3BZIGes59Iz/RNd/UydxKNkIh+lLrU1keM13TReSrjgqcAQ710y+HyK4LE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOI6ctcL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715028028; c=relaxed/simple;
+	bh=bRrCAjz06oRrHO3hwsFHYzBBQ0U89GRMr5rX6rOxpqQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XZ/DzkiqriZofYghp/VIm6g3rtkvkgnrVt9ndi+HlW4LUC06c0GWr9SIt0xykGhOOSVoBmprwjKr5Sswf0ADUgFeVvq499P0fvX2RGeygNcCfU4Lu7OdgMBacYwzqZvmxFbLyQK8LNwcOyYbtRVa9PjttxtlLHiy9s9iiaJWLaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UN2x9JeH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=W9JuPY1B; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=UN2x9JeH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=W9JuPY1B; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOI6ctcL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B8C5C116B1;
-	Mon,  6 May 2024 20:40:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715028027;
-	bh=gp0Hiz0fY4V+2j9w+5I7W4FxOvOzlKPG4eD+czuDYLI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=oOI6ctcL+acwEojD8kAo5S6uwfr6y9MY8/6M1Yy9hP/VbjR3b6w/oo3ezOyID5h3d
-	 dTOg4LZRshKJ1WlLvnD3pWknyeH8JRv0vpBzQsbIeGmdHWrT2sB/Vv/P2g2ArIyCKL
-	 neVt5rxD+ApxK5lg2MYRbgn7+gGNHB52MsDcSpLJkuwYjfvHAnrR0zMjYgz63fT9hs
-	 OHiVDP/Jr/yMjTLGmeAr0MNuNQkjdKXoBoS9oBlW8JHZwA1315kywLzADP80SUIWIp
-	 cRHN9qQJZ7cahrpryaNeZPognEcuQN7YHlxuFjkRrTtSWkDzkV/tHHjPFZLxj8QggL
-	 KXdVY87dg3Zjw==
-Date: Mon, 06 May 2024 15:40:25 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UN2x9JeH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="W9JuPY1B";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="UN2x9JeH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="W9JuPY1B"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 0668221901;
+	Mon,  6 May 2024 20:40:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715028024; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4xZPg8EegazAFh05UDpFoYCCWIO3q0gdW8OkIjEIjWs=;
+	b=UN2x9JeHQu+msfuPtXlQDHwMPlE4Z0fA2u6utIs0yiKJcSw4+ePgOXHnWTWUz7W8hwGkxr
+	vdNoFVUZ3Q3gQvU6DNftgwo/mq8I7pn2uuimVaIplrtVaDNE+WVu2bClF8C01AksHHxmKH
+	NFHxZ1AdEgARMqUE83yLC6gsun0nBGI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715028024;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4xZPg8EegazAFh05UDpFoYCCWIO3q0gdW8OkIjEIjWs=;
+	b=W9JuPY1BS9V6wwG3Y2jogIyPRn68vPaJIs29b8f7p9eN+bn99JbMYjf+AkwfmhOxi+tfi7
+	HWZtIDmEFEqOybDw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=UN2x9JeH;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=W9JuPY1B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715028024; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4xZPg8EegazAFh05UDpFoYCCWIO3q0gdW8OkIjEIjWs=;
+	b=UN2x9JeHQu+msfuPtXlQDHwMPlE4Z0fA2u6utIs0yiKJcSw4+ePgOXHnWTWUz7W8hwGkxr
+	vdNoFVUZ3Q3gQvU6DNftgwo/mq8I7pn2uuimVaIplrtVaDNE+WVu2bClF8C01AksHHxmKH
+	NFHxZ1AdEgARMqUE83yLC6gsun0nBGI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715028024;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4xZPg8EegazAFh05UDpFoYCCWIO3q0gdW8OkIjEIjWs=;
+	b=W9JuPY1BS9V6wwG3Y2jogIyPRn68vPaJIs29b8f7p9eN+bn99JbMYjf+AkwfmhOxi+tfi7
+	HWZtIDmEFEqOybDw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E82241386E;
+	Mon,  6 May 2024 20:40:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 33qpODdAOWYOZwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 06 May 2024 20:40:23 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 362CCA1306; Mon,  6 May 2024 22:40:23 +0200 (CEST)
+Date: Mon, 6 May 2024 22:40:23 +0200
+From: Jan Kara <jack@suse.cz>
+To: libaokun@huaweicloud.com
+Cc: linux-ext4@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+	jack@suse.cz, ritesh.list@gmail.com, linux-kernel@vger.kernel.org,
+	yi.zhang@huawei.com, yangerkun@huawei.com,
+	Baokun Li <libaokun1@huawei.com>
+Subject: Re: [PATCH 2/2] ext4: propagate errors from ext4_sb_bread() in
+ ext4_xattr_block_cache_find()
+Message-ID: <20240506204023.l74kejvjlinufuei@quack3>
+References: <20240504075526.2254349-1-libaokun@huaweicloud.com>
+ <20240504075526.2254349-3-libaokun@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Frank Wunderlich <linux@fw-web.de>
-Cc: Michael Turquette <mturquette@baylibre.com>, 
- Tianling Shen <cnsztl@immortalwrt.org>, 
- linux-arm-kernel@lists.infradead.org, 
- Matthias Brugger <matthias.bgg@gmail.com>, Pavel Machek <pavel@ucw.cz>, 
- linux-clk@vger.kernel.org, Paolo Abeni <pabeni@redhat.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, 
- linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>, 
- linux-mediatek@lists.infradead.org, linux-leds@vger.kernel.org, 
- "David S. Miller" <davem@davemloft.net>, Lee Jones <lee@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Frank Wunderlich <frank-w@public-files.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>, 
- Eric Woudstra <ericwouds@gmail.com>
-In-Reply-To: <20240505164549.65644-1-linux@fw-web.de>
-References: <20240505164549.65644-1-linux@fw-web.de>
-Message-Id: <171502764339.89536.5670988761224031139.robh@kernel.org>
-Subject: Re: [RFC v1 0/5] Add Bananapi R3 Mini
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240504075526.2254349-3-libaokun@huaweicloud.com>
+X-Spam-Flag: NO
+X-Spam-Score: -2.51
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 0668221901
+X-Spam-Level: 
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,mit.edu,dilger.ca,suse.cz,gmail.com,huawei.com];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:email,suse.com:email,huawei.com:email,huaweicloud.com:email]
 
-
-On Sun, 05 May 2024 18:45:44 +0200, Frank Wunderlich wrote:
-> From: Frank Wunderlich <frank-w@public-files.de>
+On Sat 04-05-24 15:55:26, libaokun@huaweicloud.com wrote:
+> From: Baokun Li <libaokun1@huawei.com>
 > 
-> Add mt7986 based BananaPi R3 Mini SBC and fix some related binding errors.
+> In ext4_xattr_block_cache_find(), when ext4_sb_bread() returns an error,
+> we will either continue to find the next ea block or return NULL to try to
+> insert a new ea block. But whether ext4_sb_bread() returns -EIO or -ENOMEM,
+> the next operation is most likely to fail with the same error. So propagate
+> the error returned by ext4_sb_bread() to make ext4_xattr_block_set() fail
+> to reduce pointless operations.
 > 
-> Frank Wunderlich (5):
->   dt-bindings: leds: add led trigger netdev
->   dt-bindings: clock: mediatek: add address-cells and size-cells to
->     ethsys
->   dt-bindings: net: mediatek,net: add reset-cells
->   dt-bindings: arm64: dts: mediatek: add BananaPi R3 Mini
->   arm64: dts: mediatek: Add  mt7986 based Bananapi R3 Mini
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/ext4/xattr.c | 25 ++++++++++++++-----------
+>  1 file changed, 14 insertions(+), 11 deletions(-)
 > 
->  .../devicetree/bindings/arm/mediatek.yaml     |   1 +
->  .../bindings/clock/mediatek,ethsys.yaml       |   6 +
->  .../devicetree/bindings/leds/common.yaml      |   2 +
->  .../devicetree/bindings/net/mediatek,net.yaml |   3 +
->  arch/arm64/boot/dts/mediatek/Makefile         |   1 +
->  .../mediatek/mt7986a-bananapi-bpi-r3-mini.dts | 486 ++++++++++++++++++
->  6 files changed, 499 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-mini.dts
+> diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
+> index 9fdd13422073..11742e1f16d7 100644
+> --- a/fs/ext4/xattr.c
+> +++ b/fs/ext4/xattr.c
+> @@ -2059,8 +2059,13 @@ ext4_xattr_block_set(handle_t *handle, struct inode *inode,
+>  
+>  inserted:
+>  	if (!IS_LAST_ENTRY(s->first)) {
+> -		new_bh = ext4_xattr_block_cache_find(inode, header(s->base),
+> -						     &ce);
+> +		new_bh = ext4_xattr_block_cache_find(inode, header(s->base), &ce);
+> +		if (IS_ERR(new_bh)) {
+> +			error = PTR_ERR(new_bh);
+> +			new_bh = NULL;
+> +			goto cleanup;
+> +		}
+> +
+>  		if (new_bh) {
+>  			/* We found an identical block in the cache. */
+>  			if (new_bh == bs->bh)
+> @@ -3090,8 +3095,8 @@ ext4_xattr_cmp(struct ext4_xattr_header *header1,
+>   *
+>   * Find an identical extended attribute block.
+>   *
+> - * Returns a pointer to the block found, or NULL if such a block was
+> - * not found or an error occurred.
+> + * Returns a pointer to the block found, or NULL if such a block was not
+> + * found, or an error pointer if an error occurred while reading ea block.
+>   */
+>  static struct buffer_head *
+>  ext4_xattr_block_cache_find(struct inode *inode,
+> @@ -3113,13 +3118,11 @@ ext4_xattr_block_cache_find(struct inode *inode,
+>  
+>  		bh = ext4_sb_bread(inode->i_sb, ce->e_value, REQ_PRIO);
+>  		if (IS_ERR(bh)) {
+> -			if (PTR_ERR(bh) == -ENOMEM) {
+> -				mb_cache_entry_put(ea_block_cache, ce);
+> -				return NULL;
+> -			}
+> -			bh = NULL;
+> -			EXT4_ERROR_INODE(inode, "block %lu read error",
+> -					 (unsigned long)ce->e_value);
+> +			if (PTR_ERR(bh) != -ENOMEM)
+> +				EXT4_ERROR_INODE(inode, "block %lu read error",
+> +						 (unsigned long)ce->e_value);
+> +			mb_cache_entry_put(ea_block_cache, ce);
+> +			return bh;
+>  		} else if (ext4_xattr_cmp(header, BHDR(bh)) == 0) {
+>  			*pce = ce;
+>  			return bh;
+> -- 
+> 2.39.2
 > 
-> --
-> 2.34.1
-> 
-> 
-> 
-
-
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
-
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-New warnings running 'make CHECK_DTBS=y mediatek/mt7986a-bananapi-bpi-r3-mini.dtb' for 20240505164549.65644-1-linux@fw-web.de:
-
-arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-mini.dtb: crypto@10320000: interrupts: [[0, 116, 4], [0, 117, 4], [0, 118, 4], [0, 119, 4]] is too short
-	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-mini.dtb: crypto@10320000: interrupt-names: ['ring0', 'ring1', 'ring2', 'ring3'] is too short
-	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-
-
-
-
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
