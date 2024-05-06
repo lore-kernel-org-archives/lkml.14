@@ -1,71 +1,79 @@
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9AF94EB4C
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:49:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58F943687;
+	Mon,  6 May 2024 12:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714999745; cv=none; b=SVXvTSWj3JOaM2RycxxR7YViYF1md69oaeJkIBhQNCdSRaQoroH0icitwXc1HQAGFlz9wReDrZz/x3Mo09yTikMLcHziiYrSSgf/jzYNB9/3jqFjGeXlxlzyVEA/XaOtk1u0OPzpV1VlIUcZx1czt3Z41w71Q7TQxdnD/udLmig=
+	t=1714999744; cv=none; b=BCd3GvBrBmQQOf4DqyNu/qDliSMyutDi5D0SXVlIwTCrZNLXszI9rufSWNurbbodTwgSxMbkBdJ/D83/LodyqvC2SKjPjPtfb+2gdoyPXTq12uv9Krs3NBPZ9R62jYUsn5P0gKmA1xsUs89goHCT3mzxjEAeBSkguGEA3NSVF24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714999745; c=relaxed/simple;
-	bh=VjB2u488WZHw90y1PLR4ye99A/PaYrwu0eueMeEUNeE=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=nP3NzPuuKO8vPj4bRLrMrljXgEXDc6c/g2LJTXlspcqGCPPbaUsW3YYjtKjxQ8INipcbeMRzAriC+4ypg5IUG8TVmfkad6ZndqZCq5rtQq7FEoGv5DN507lHyDO/rL6JscMgHf3IPE5ewGZIZ7FquXUnp1ahwRG7/nhpTp0L+Os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36c5ff9964fso12368425ab.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 05:49:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714999743; x=1715604543;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s+EhjnU0SNpEiQJuByA7SIjeuS8TgOhozIjm6fqpQVU=;
-        b=p9S1+EXraEaVEQHyZfqROjvDIlkpgG97GlEVu8lzP9uKVc6uNFbiNPEx6hT5Jk4lC5
-         dV4lbpNbp4LlFuklmOsvkv5d0zm0MUkfvQUzVwHEEdHGIgs6mmvi7SyoFaZoaaH31ITt
-         0ZLOszeyrwlWf96bZz4cuIEzmFtzPGLTNTXrvQp05VE4AnqfLKXwHv9G7ZGvXDPY6sDN
-         YPW5yy6mcloROnelFT6gSmbPvSYzHdGBOXfn+UW2nU1KktaOGpZyzEnoz+EhDWaEZ3jF
-         3Lc/zcLAUwl+yz0boNNTVTXkYr2f+Vz68KdlTea4HvUV17S5H+VYeXCXu0FwkN63Nzd0
-         80yA==
-X-Forwarded-Encrypted: i=1; AJvYcCW9LLk39tSqeReLO4FunubxDR2OJa7mHxiEDqkFhV7U/m4oAM1khVK3ajv0wBYviJkodw+U5z6uEU7loMPCuQnjWIDqdTmO+nMEiVlX
-X-Gm-Message-State: AOJu0YyM7DmBKNuJZmsxD93TNSyxlDQVMkbrMI93q5+mlZamqTnT8QKn
-	9UCuRBlTkqU7VDP1fLS7yCM4mUvOEkXenOGyh5shynLwCOjFHNwYnaZOsgXnJYf69FRKCg9Wg1s
-	fzReG5BAvTYX+LPdmLqQtrIbzjvCA1woVIX+bFuwOhWriHAiGuVTO+1w=
-X-Google-Smtp-Source: AGHT+IHltGYYkCiN4Cume+iOfB70ZXjCZB4due3cfZJySDGbpEs19Pjqkx3h7BHcZlw6BtLOVJg/94mpI8hW4QlSzQon7mG19PkV
+	s=arc-20240116; t=1714999744; c=relaxed/simple;
+	bh=Qzp0VDoNytX9UV80RHFas/Xph5A4N+2BH6per0kfMpg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C0pt4XtOfIhk7388dDzT2SzROhZc3zeTdXW9MqtaQeLxCyQE61rBmZeIQc387hECeV5w0R3rRaNO1n/5YDd9f9GFPcqEbbgCFzC/oPzoruU8BvzrsTz/tsXkxTAuba5H0REmySP632pkv7BqtZSUYt4HAEq+EVN8CCTIG1L5P1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=agYswDgv; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="agYswDgv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1714999740;
+	bh=Qzp0VDoNytX9UV80RHFas/Xph5A4N+2BH6per0kfMpg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=agYswDgv8RoUcmBs2PASjM+v5Rx8nS1ta5opi768m2wTivO2nPRv17vTk47pMUvjA
+	 KELQlb90kf7IC8eWBXfs2kdjgpdUnCDndNijDh5qdDkTw0oaOullDWdEFH8HUaDGpO
+	 as15Fyfh8txwshR9s07UpKvAbyaessixLCeX5C8P+s8wVBE7vCB7PBqpMVZKMQZcuI
+	 5qX0oKvbd1iJD+4kjzn8bsT9voSy3h/PhOEWMOdi608DyAJ60e4gkd00ek60IkIxUq
+	 SAk/Y9BxbZjxMsn0UkD/+kBtUYEqQMT9pyDSI0euMhCujgleTky0c7yZV99eKzK2pw
+	 Eho4FRIfGuH7g==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 196AB37813E3;
+	Mon,  6 May 2024 12:48:59 +0000 (UTC)
+Message-ID: <a43a076f-7d7e-4c7d-8be1-45569c7b2c16@collabora.com>
+Date: Mon, 6 May 2024 14:48:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:170f:b0:36c:88ca:4871 with SMTP id
- u15-20020a056e02170f00b0036c88ca4871mr461452ill.5.1714999743079; Mon, 06 May
- 2024 05:49:03 -0700 (PDT)
-Date: Mon, 06 May 2024 05:49:03 -0700
-In-Reply-To: <tencent_52A96D03A9A44E1779F766C6CB5378436805@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000079f8bd0617c87e7e@google.com>
-Subject: Re: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in dtReadFirst
-From: syzbot <syzbot+65fa06e29859e41a83f3@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC v1 2/5] dt-bindings: clock: mediatek: add address-cells and
+ size-cells to ethsys
+To: Frank Wunderlich <linux@fw-web.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+ Eric Woudstra <ericwouds@gmail.com>, Tianling Shen <cnsztl@immortalwrt.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-leds@vger.kernel.org,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20240505164549.65644-1-linux@fw-web.de>
+ <20240505164549.65644-3-linux@fw-web.de>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240505164549.65644-3-linux@fw-web.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+Il 05/05/24 18:45, Frank Wunderlich ha scritto:
+> From: Frank Wunderlich <frank-w@public-files.de>
+> 
+> Add missing properties already used in mt7986a.dtsi.
+> 
+> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+Fixes tag? :-)
 
-Reported-and-tested-by: syzbot+65fa06e29859e41a83f3@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         5eb4573e Merge tag 'soc-fixes-6.9-2' of git://git.kern..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-console output: https://syzkaller.appspot.com/x/log.txt?x=145680d4980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3d46aa9d7a44f40d
-dashboard link: https://syzkaller.appspot.com/bug?extid=65fa06e29859e41a83f3
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12c6d86c980000
-
-Note: testing is done by a robot and is best-effort only.
+Cheers,
+Angelo
