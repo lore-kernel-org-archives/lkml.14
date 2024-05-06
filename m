@@ -1,77 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B35C6CDAC;
-	Mon,  6 May 2024 08:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993C91411CE
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 08:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714985135; cv=none; b=lCIbM550VK17YX4egchPYfRsw9cQXAIsl5eFKxsZTALPxKYfGlS5k1c8IIZa1mQZZRSY2b3cbB8MHtHFu3p2rYFwTbIFtKKgqaIxoo/io0orZFAQU2lI+1GXFdMvue6sd4iRalZt6F+0nbi34V8aHImnzzZdbOF2q8A4fDZ0Ato=
+	t=1714985210; cv=none; b=F+MVNNH/wLXNrIR5Fuy/i+9/mZPI0M1XnhFGmgf9lnUlqfBFE9j5Z5MdOt8oog41rcr1lDaZ0V1bEuL+/J+HD4rViTGCraIKkFiwGteePNkfkcNf9WrxDq4dUM3kSwzTYM+Dj+FV+JKVAyHZ2J+ec6UJX0dEyB24IWPN3tlTFRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714985135; c=relaxed/simple;
-	bh=dJ9zuyrdQMElrOzde31P4H08+N2W3DV9j7dWCbVqR4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pn0glFOlCOoWG/hthTj35BPtSPdxAb3AHtVAW5MMWdN0kmrCKQuFQ3HMdgy/5SYgu17es+2jzMYz1g9Pjj5+qVYB1YiQ4N0t/Q1oaMc24LqZi2gI0tSiLVsw6pdvgqX2RSOTSR9RFpvjfEanoMRpPNeSIJ/VH7+DsNyXBxrC/oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WiQEaAXK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714985210; c=relaxed/simple;
+	bh=rApUqYVsVt9Lmm4m+jmthQspAsl2swdyFeKQOkOm8b0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kFdidOZugT8WRNKo0gC4KPnQVAcf0o24YLBf4ugguPWMpd3Af5ezzigrZsnbudLH+AhffdbNJhAWAXZwmF10PLPd0yCuUqVZymiQ4JHZY7gmdzjhUzLEfDEymNO2eQEWiaMSsocJQTTmnNYYNFI2sR2wdkGPcCMOMNrW1V1gF14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=niS9UOjU; arc=none smtp.client-ip=115.124.30.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WiQEaAXK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E24BC116B1;
-	Mon,  6 May 2024 08:45:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714985135;
-	bh=dJ9zuyrdQMElrOzde31P4H08+N2W3DV9j7dWCbVqR4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WiQEaAXK+d3VZO4xZnfaaIE7Sfh/pbjnMpO2gmWdDzHwWYp4rCrmzMwXPbAuSq2D8
-	 fH+uA4HbPL5yqyI2GI4Xc1nJoimiQWf+O2OZbhl4eYWFSaH6g9e91opm+dSgDUUjAo
-	 cG3n3hq8hLlCm6ZsuoLuvkOvcM+NPydIKO2b4EhgiC3t07V0qaT/mPyvfrKo2du0XH
-	 JKiCZbDEcy7JnFsbVJDyor6eEcRM3VC21/p2XQujBcHzxcTTufWj4iOIv1ZXu3TpfD
-	 Gedh6JD88bRDWqWtwfa4IVCiDN3PyGp/pVOTPWZ2724+lohSOjT706b6NsDbMz5iyb
-	 wPCurUHMEdlsw==
-Date: Mon, 6 May 2024 10:45:27 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>, keescook@chromium.org, 
-	axboe@kernel.dk, christian.koenig@amd.com, dri-devel@lists.freedesktop.org, 
-	io-uring@vger.kernel.org, jack@suse.cz, laura@labbott.name, linaro-mm-sig@lists.linaro.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	minhquangbui99@gmail.com, sumit.semwal@linaro.org, 
-	syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com, syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] epoll: try to be a _bit_ better about file lifetimes
-Message-ID: <20240506-injizieren-administration-f5900157566a@brauner>
-References: <202405031110.6F47982593@keescook>
- <20240503211129.679762-2-torvalds@linux-foundation.org>
- <20240503212428.GY2118490@ZenIV>
- <CAHk-=wjpsTEkHgo1uev3xGJ2bQXYShaRf3GPEqDWNgUuKx0JFw@mail.gmail.com>
- <20240504-wohngebiet-restwert-6c3c94fddbdd@brauner>
- <CAHk-=wj_Fu1FkMFrjivQ=MGkwkKXZBuh0f4BEhcZHD5WCvHesw@mail.gmail.com>
- <CAHk-=wirxPSQgRV1u7t4qS1t4ED7w7OeehdUSC-LYZXspqa49w@mail.gmail.com>
- <20240505-gelehnt-anfahren-8250b487da2c@brauner>
- <CAHk-=wgMzzfPwKc=8yBdXwSkxoZMZroTCiLZTYESYD3BC_7rhQ@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="niS9UOjU"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1714985206; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=p4+ojbN485lnDhEdHj7u8+ldhF5xWmY9Y6UtO0qnCFI=;
+	b=niS9UOjU7LndqDhtzwDcEt+Nfw0URVg8yrCSFEALpmc3Vm5xcN/riz/NmlSyJqe7ND5+tiPqsKIzdFgV+vDpQ79KB5m6B03drAkW/amtl07eFjEmIzsvbwN3S0oWNkQzZDEC8NQG86j27UDgMD78jvNe1hRIBb1uP7LXmR7Wk3Q=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R571e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032014031;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0W5weiJg_1714985203;
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W5weiJg_1714985203)
+          by smtp.aliyun-inc.com;
+          Mon, 06 May 2024 16:46:44 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	hughd@google.com
+Cc: willy@infradead.org,
+	david@redhat.com,
+	ioworker0@gmail.com,
+	wangkefeng.wang@huawei.com,
+	ying.huang@intel.com,
+	21cnbao@gmail.com,
+	ryan.roberts@arm.com,
+	shy828301@gmail.com,
+	ziy@nvidia.com,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 1/8] mm: move highest_order() and next_order() out of the THP config
+Date: Mon,  6 May 2024 16:46:25 +0800
+Message-Id: <d9c0ac9df6f6e6176b09fc1ae58146ec4f8d73f5.1714978902.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
+References: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgMzzfPwKc=8yBdXwSkxoZMZroTCiLZTYESYD3BC_7rhQ@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-> The fact is, it's not dma-buf that is violating any rules. It's epoll.
+Move highest_order() and next_order() out of the CONFIG_TRANSPARENT_HUGEPAGE
+macro, which can be common functions to be used.
 
-I agree that epoll() not taking a reference on the file is at least
-unexpected and contradicts the usual code patterns for the sake of
-performance and that it very likely is the case that most callers of
-f_op->poll() don't know this.
+Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+ include/linux/huge_mm.h | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-Note, I cleary wrote upthread that I'm ok to do it like you suggested
-but raised two concerns a) there's currently only one instance of
-prolonged @file lifetime in f_op->poll() afaict and b) that there's
-possibly going to be some performance impact on epoll().
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index 017cee864080..e49b56c40a11 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -106,6 +106,17 @@ extern struct kobj_attribute shmem_enabled_attr;
+ #define HPAGE_PUD_MASK	(~(HPAGE_PUD_SIZE - 1))
+ #define HPAGE_PUD_SIZE	((1UL) << HPAGE_PUD_SHIFT)
+ 
++static inline int highest_order(unsigned long orders)
++{
++	return fls_long(orders) - 1;
++}
++
++static inline int next_order(unsigned long *orders, int prev)
++{
++	*orders &= ~BIT(prev);
++	return highest_order(*orders);
++}
++
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 
+ extern unsigned long transparent_hugepage_flags;
+@@ -138,17 +149,6 @@ static inline bool hugepage_flags_enabled(void)
+ 	       huge_anon_orders_madvise;
+ }
+ 
+-static inline int highest_order(unsigned long orders)
+-{
+-	return fls_long(orders) - 1;
+-}
+-
+-static inline int next_order(unsigned long *orders, int prev)
+-{
+-	*orders &= ~BIT(prev);
+-	return highest_order(*orders);
+-}
+-
+ /*
+  * Do the below checks:
+  *   - For file vma, check if the linear page offset of vma is
+-- 
+2.39.3
 
-So it's at least worth discussing what's more important because epoll()
-is very widely used and it's not that we haven't favored performance
-before.
-
-But you've already said that you aren't concerned with performance on
-epoll() upthread. So afaict then there's really not a lot more to
-discuss other than take the patch and see whether we get any complaints.
