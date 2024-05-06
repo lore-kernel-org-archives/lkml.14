@@ -1,190 +1,337 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2085.outbound.protection.outlook.com [40.107.94.85])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDE015F30D;
-	Mon,  6 May 2024 22:53:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715036013; cv=fail; b=E3SEDRvISe3Tq6TmLyDMQzNQ62qBp+N+85rz1frjhfQkktH0ZsccWyh7She4KgXACjd6ByxKTmMyZxQBq+gB4ErraJ88ZVgoJfx4KQCJ73A3cUkJzJoUetWKzlZhkSGV+oKYyOT0mMaeEdfaXOxzqerxLemxUSC8KECh3Uu20jM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715036013; c=relaxed/simple;
-	bh=FurZBtDayT8KVOQWb5a+JH0WSk8OR04OieKsW5FTv0Q=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Omhp5/ATSP+nAYNarI91xh6u0zpEa8gqSm5plC/6hvUt/C+SCf29EGhXSUNWmPdHllWF+JdjSLG7jsYhtQPDE8gfiWjC0l3jK7Z3LoqwJNL83/Iuj/voyx3TNpJtdK/wmxCIVjYglkuSf71vPcLOxf7U94/q7tIJRfFAh5gGz00=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=iPcmLS2w; arc=fail smtp.client-ip=40.107.94.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 571C1157499
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 22:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715036320; cv=none; b=hRkzS51fKZBh+8/Xu/q6JpGZo4dy+cDVu96t5ZkuTwyDfqtOtTor4InEZicS40nO0QmAzVCq3IpAV74bsXXlZ7TQcevRk4zaUxXqRT/NLKO4130MzzmnQjgBvQYyGcXJQH6sqCdmDO1DLlw6snu7Uu7YFd1OFZsSdRu1vpnW0K4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715036320; c=relaxed/simple;
+	bh=uG2zw3heoV9QpOpZjSTtFU37KbvabkqXgW7P2FR97Bg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pCUOVpXkx55aMN1+c8IB9yr6Xd6qSGm3nAcI9ncx1IVIvPAcOqpDBF0EP7conczonCpyNIuBSmAaiL9ORMTICklYpkdJLifX/M7vhlHgdkaahcAMForj0fXpiUitUJVT5D3Lg9A+nwDtA5l4SDoCwUb1/Q4QPcw7senhO1m2LZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XXnBE2CB; arc=none smtp.client-ip=209.85.217.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="iPcmLS2w"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gPq41I1IF8+FRX3Al+xQ6Azw2ZJc75Dx3xCzBBPCL0LSjleMwbrpSOgGKZfB/ZygbiiK1FkvFsSRiVINP9p4uO12Wq6H639B6R5n9m5/NfqLCSo9RyaagPziJoNcbmRpHKKof0nofX/pynM0IQXCqjn4P7apONeVcG4znuqLvDHa/E99sj6B++32/8jh+nL0YiadgqQIbTpzs4JwVuEy8OkgE28N3SbIvkSJae9QZp73SNDODnI1zzRNi/QR59VFEgjxtpPg6XO94td7BkysmvT23YzSKYx5APtxhjK2SF+M7puLsfQi9fVbUnft9odnfqMTogzLXj+rqgMY5NJF1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jqoTQh6sZkzbBLNA3XYso3LxgeNyoG5U9zc5JxmSyLI=;
- b=k+0DrmMKuwDtECF7QTUvDLDfga7sa8zHj7tq/pf8Nz5wTaJlcGdf6ZL0jbXV4ilqxsKtE2/OLTEGx5ro6bxXba3nEdAAN1CoSWBeH8rXXKbQ/2Xbcx5OEFNBxlwVU77dS2OzCbei1BwKV2+FrJwjDXkohKnLQZggWo3ms3GgU89ZFAs9thW73zNnYwC0kr8Cdq5SyRN8m9fCrytQRhtU8FTGXoAkaKkt7z3vRZHDHr0Set549a/gX2gTqnedfgm7z/UPr+rnHJ9/yG84gI8MGd2KMgrSXzmumrdxQHN6BioC4ED6qDTFzntOglLXnWPFsG+I0Pk5CcmrHNNUWGJi7g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jqoTQh6sZkzbBLNA3XYso3LxgeNyoG5U9zc5JxmSyLI=;
- b=iPcmLS2w+Z/j0u421WKtM+WAROWBKjVqW3QCl5czruKuYvKb3n9CC5BIThwdJoUWbe7sSbM9cP+wHGXRGQ9Qkz9EcUsgKbjXKl1a+91pU17UZula5q78Kybrb1QWBf2dbn4P5lfZvNcAy9omavwkVBtOIPPC9/A5au2Sv4cDCMuBVBDZgDHEyPktvKOuMmJxTtnAOa8obId4h79WuYTc9dj2vuDpYTpWlr9076bwecE9rvPb/3sDfj2OKhHZk28Zjk9xN6msMFywtGYYjeWdXJmvl7aiveIFlg6m1fYw541nO6xDIGRnPgGPrYtOw2eX0bMJqzw3eyiAU2srM/F87w==
-Received: from SA9P223CA0019.NAMP223.PROD.OUTLOOK.COM (2603:10b6:806:26::24)
- by PH7PR12MB7987.namprd12.prod.outlook.com (2603:10b6:510:27c::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41; Mon, 6 May
- 2024 22:53:23 +0000
-Received: from SN1PEPF00036F3C.namprd05.prod.outlook.com
- (2603:10b6:806:26:cafe::43) by SA9P223CA0019.outlook.office365.com
- (2603:10b6:806:26::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42 via Frontend
- Transport; Mon, 6 May 2024 22:53:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- SN1PEPF00036F3C.mail.protection.outlook.com (10.167.248.20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7544.18 via Frontend Transport; Mon, 6 May 2024 22:53:23 +0000
-Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 6 May 2024
- 15:53:11 -0700
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Mon, 6 May 2024 15:53:10 -0700
-Received: from BUILDSERVER-IO-L4T.nvidia.com (10.127.8.14) by mail.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Mon, 6 May 2024 15:53:05 -0700
-From: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-To: <linux-tegra@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
-	<linux-mmc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <thierry.reding@gmail.com>, <jonathanh@nvidia.com>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <corbet@lwn.net>,
-	<andi.shyti@kernel.org>, <wsa+renesas@sang-engineering.com>,
-	<ulf.hansson@linaro.org>, <adrian.hunter@intel.com>, <digetx@gmail.com>,
-	<ldewangan@nvidia.com>, <kyarlagadda@nvidia.com>, <mkumard@nvidia.com>
-Subject: [RFC PATCH 11/11] arm64: tegra: SDHCI timing settings
-Date: Tue, 7 May 2024 04:21:39 +0530
-Message-ID: <20240506225139.57647-12-kyarlagadda@nvidia.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240506225139.57647-1-kyarlagadda@nvidia.com>
-References: <20240506225139.57647-1-kyarlagadda@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XXnBE2CB"
+Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-47ef11b1a31so501528137.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 15:58:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715036317; x=1715641117; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JEzMrpo9xpl1ECD3kombTAPF1tytR8JwyhRQEB9Ne7Q=;
+        b=XXnBE2CBUPXWcwvBHcLDMl9nJht2/uby170iNCmEQcWFiDNFJ2pOZypc4uAE2Kugws
+         XPUsvAN9Yrys4cnVeadsrhtEhx7rBkQpoLvdIzKgqpzyhKHUP/dQ1my908VaKcoOk8qv
+         +v+8sxOdDQ6Z4A/pD0fM+l11wPfdKXOOMeQaC3WByJyPnX98o1Y9RfRSmEvsRGG1up+Z
+         pyKCF+J6zBlZLggHnzqU8tdJkDlKBT0dmk9+z1C7lVNYb38M071BHBDtul3sej//aO6j
+         hSVGMGlZb01GApmOo7xDQ1WACGZifd9oieerioxivG4ji3/rpCWVciT0kNMet/mRcLp/
+         Q2IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715036317; x=1715641117;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JEzMrpo9xpl1ECD3kombTAPF1tytR8JwyhRQEB9Ne7Q=;
+        b=Vc92KTvE64HDkZUyf8ti8lNjme0JHTQyRTIDFP5g9rBG6jK7lU5jQqxigBudsn8N2L
+         SQVB+1/qvm/nyE8NZX6VM+mhZ6/6S63nQjzpec+KplybjVVRbyL1pfTTKrjuhf5M0IoX
+         Y5PKJzFJGDT/ktt8onLjDXaz4fq3OHgBwdykUCT1HG66gzogj5j+1PcHxML6gi59HWtZ
+         4/vSRX/znbvxFtlrnPpx7dRwNXMufaDhpvcI0oSAhX8NULpxOCjiAP1A/l36HeNKHasz
+         7D6ae6qACjgpCmgRx3Ap+kp+A/aefdxXvhk7qhi/MjIcXMZboU1Pr1FUR7gTz/t9EAtX
+         ZK9w==
+X-Forwarded-Encrypted: i=1; AJvYcCUuWd0d7wLP70Ndz7xMpulkHZ31u31T3zYwRALBfP5kSv640mrJkmB4CEt08AL+wllz1EfjZg1q3f3P4pLBQlBSoEykQmAVLUykgCrR
+X-Gm-Message-State: AOJu0YwaSU73Dr+TcJSm2csLwSX0TXAB0btXQxRB4MTKKD/nbhvTqkV2
+	lV7Rud9bUMivxCmoWIBy6bRf93UQeSgQ81+nm0/jZWvyyF30mxx4XaT0CrcEYUu+9fdq2aATm47
+	5EC3saq1kFf12gMLeF3VcZNhfOIo=
+X-Google-Smtp-Source: AGHT+IGolnkqh/0cQmoY1ihS/u6BKEbTqfLlttDItVi1BvrDJ55vkA4yD+lxtzH6jgs1GPeggzymYNaU6QvNglRJQeI=
+X-Received: by 2002:a67:f4d5:0:b0:47c:14eb:5fdd with SMTP id
+ s21-20020a67f4d5000000b0047c14eb5fddmr12813837vsn.29.1715036316957; Mon, 06
+ May 2024 15:58:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NV-OnPremToCloud: ExternallySecured
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN1PEPF00036F3C:EE_|PH7PR12MB7987:EE_
-X-MS-Office365-Filtering-Correlation-Id: 76aa8b6a-121d-4f50-fb05-08dc6e1f5589
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|82310400017|376005|36860700004|1800799015|7416005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?KiGl4lLu4VdN5Uvz7h02jlXCfwl1Aoo/nrdBoedEgDdEUh1IAX0moAMYBask?=
- =?us-ascii?Q?3n/DzBliXFc3c/IsDDO0bhHoekrHT31HkFQ07IQXq6M+/blPWURl5z5E52d8?=
- =?us-ascii?Q?RWLjui5VAN6vnStEmFk37u7XWiGbSkMFl1FJMk0/Lht/icPJ8cF0r4mpjBSk?=
- =?us-ascii?Q?9EFovQ5XEv0gzLhrd9zLfOJ15Iygul4yjI9IL96ZyzmiCtquQqAHuO/Z6oNQ?=
- =?us-ascii?Q?o0z+8KyQXWQ3hPhsrFACw2YXT2PTsDtdq4gCHi1KdDVSo24Dn9fLseiZcGMZ?=
- =?us-ascii?Q?Kd5JqlYwUEyfWglg6Rf9tLnnhvuC3F4ADISZX4xl4Flp9sE6sHhnoPpJLCO2?=
- =?us-ascii?Q?wzC4rumqt7NVa0ZcQ6DEit1rx/Rh8hmURKiU1iqu0mB/BqCDxbY7FgA1Hd8B?=
- =?us-ascii?Q?bxvrmQgf8ZQqM/osUO/Fy9oRN8MAoOOOMrMULw1vtIrYD2p+ftGu4+gyEO/v?=
- =?us-ascii?Q?Xr+j/vze2SlmuRGP/rZkNApBKhGGojM8Ij0id2n+1VKanOSfULClV1AXST8j?=
- =?us-ascii?Q?SdWpS7XfFH1oodHyM1S0BU0TZfDSQXw99jdRpkm8KTOfbBWI5UR0mNDXb0dv?=
- =?us-ascii?Q?7XjRPz0wCvvlrs+hV5t4UAPma1L0vgOermSbWMTWcnVgJ67Aw+O976AcpGGt?=
- =?us-ascii?Q?7aBwrYwhv96266tXIOhIkoWeIlrhKokCWV3770HvtkSBzXAx2RdKoZWGY4m4?=
- =?us-ascii?Q?G1TcSjzMEaz4UfM2hFGtQIv9Jhw6Z4H9ouTaiHsp3nfl/Fd+snOrNk1hkZzZ?=
- =?us-ascii?Q?q+tmOYA3FFZhWQavSDpEAhUt6hkiODKD+ZxGzjLv651e+r1nConb7MuG08oZ?=
- =?us-ascii?Q?ie6Kpqh/PCaQN0RBAlABVuA+qGYE7sK9saosjvkcWU8Hgn/0/n42U4QZ+WIe?=
- =?us-ascii?Q?ol3tcO4n+3vY36pegA8CEE57zybBXy1P86cPl4f02Pm3gFQyu+PuDWdaLHvO?=
- =?us-ascii?Q?zGtJSsnG5csehRUV0uM2WN29ol0KL9CvJthenuw1nIzc0ZzbJYnOsFEv8OXv?=
- =?us-ascii?Q?yKTXNp3wiZCrOCkHKaahWfhDIh6vPGg+QUlhDF1ZxYjfZcEyB1hBswJ8f/Mh?=
- =?us-ascii?Q?7kmvCFfObzP10H7qLAZ4XIb7C56veRYtnY4jXDUAo+xVVjuEi42ZlfW2IBDy?=
- =?us-ascii?Q?kvTveZyPCF7hynAIGxE+EhNewuKUd2tNz0tGc0g9CekPVqWrwLjQwrOrL6ys?=
- =?us-ascii?Q?NqS1Q5k1DVl7KbOHBLpiI50hobzhOTut9RaSdpyk59EKEkm6md+k5pT3U5K1?=
- =?us-ascii?Q?DEEoWGlMRFDjQBL2o3xR9VvF0KC8X9B7LHIe1KmCT3tu4GWvYimeKmHFEfRs?=
- =?us-ascii?Q?PJEt/bUi3AB23M5sRZ5qRFGoSygTD8mlZ5mu+e3M08MZW4WWgjPiyUavK3oy?=
- =?us-ascii?Q?Bo2orpXRb0YIpOdvELolNfxUyXLN?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230031)(82310400017)(376005)(36860700004)(1800799015)(7416005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2024 22:53:23.6665
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76aa8b6a-121d-4f50-fb05-08dc6e1f5589
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SN1PEPF00036F3C.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7987
+References: <20240503005023.174597-1-21cnbao@gmail.com> <20240503005023.174597-7-21cnbao@gmail.com>
+ <0b4d4d4b-91d8-4fd5-af4e-aebe9ee08b89@arm.com> <CAGsJ_4wm6v+xgh4jQ+u2-EzOXCLsz6L6nRJi_=FfWuGDUjxRYg@mail.gmail.com>
+ <ff5b371a-16f6-4d03-b80d-b56af0f488c3@redhat.com> <CAGsJ_4z93FwPZx7w2VuCEkHP_JCwkO0whKwymonRJ9bSiKMVyQ@mail.gmail.com>
+ <CAGsJ_4xssg3CcjifePMmgk4aqLO+iAon0YdT9p=Uq-D8vFMxyQ@mail.gmail.com> <5b770715-7516-42a8-9ea0-3f61572d92af@redhat.com>
+In-Reply-To: <5b770715-7516-42a8-9ea0-3f61572d92af@redhat.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 7 May 2024 10:58:25 +1200
+Message-ID: <CAGsJ_4xP1jPjH-SH7BgnFHiT4m+2gB0tP7ie_cUFynVpD_zpxQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] mm: swap: entirely map large folios found in swapcache
+To: David Hildenbrand <david@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	baolin.wang@linux.alibaba.com, chrisl@kernel.org, hanchuanhua@oppo.com, 
+	hannes@cmpxchg.org, hughd@google.com, kasong@tencent.com, 
+	linux-kernel@vger.kernel.org, surenb@google.com, v-songbaohua@oppo.com, 
+	willy@infradead.org, xiang@kernel.org, ying.huang@intel.com, 
+	yosryahmed@google.com, yuzhao@google.com, ziy@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Set SDHCI timing registers through config settings for
-Tegra234 chip and P3701 board.
+On Tue, May 7, 2024 at 1:16=E2=80=AFAM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 06.05.24 14:58, Barry Song wrote:
+> > On Tue, May 7, 2024 at 12:38=E2=80=AFAM Barry Song <21cnbao@gmail.com> =
+wrote:
+> >>
+> >> On Tue, May 7, 2024 at 12:07=E2=80=AFAM David Hildenbrand <david@redha=
+t.com> wrote:
+> >>>
+> >>> On 04.05.24 01:23, Barry Song wrote:
+> >>>> On Fri, May 3, 2024 at 6:50=E2=80=AFPM Ryan Roberts <ryan.roberts@ar=
+m.com> wrote:
+> >>>>>
+> >>>>> On 03/05/2024 01:50, Barry Song wrote:
+> >>>>>> From: Chuanhua Han <hanchuanhua@oppo.com>
+> >>>>>>
+> >>>>>> When a large folio is found in the swapcache, the current implemen=
+tation
+> >>>>>> requires calling do_swap_page() nr_pages times, resulting in nr_pa=
+ges
+> >>>>>> page faults. This patch opts to map the entire large folio at once=
+ to
+> >>>>>> minimize page faults. Additionally, redundant checks and early exi=
+ts
+> >>>>>> for ARM64 MTE restoring are removed.
+> >>>>>>
+> >>>>>> Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
+> >>>>>> Co-developed-by: Barry Song <v-songbaohua@oppo.com>
+> >>>>>> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+> >>>>>
+> >>>>> With the suggested changes below:
+> >>>>>
+> >>>>> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+> >>>>>
+> >>>>>> ---
+> >>>>>>    mm/memory.c | 60 ++++++++++++++++++++++++++++++++++++++++++----=
+-------
+> >>>>>>    1 file changed, 48 insertions(+), 12 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/mm/memory.c b/mm/memory.c
+> >>>>>> index 22e7c33cc747..940fdbe69fa1 100644
+> >>>>>> --- a/mm/memory.c
+> >>>>>> +++ b/mm/memory.c
+> >>>>>> @@ -3968,6 +3968,10 @@ vm_fault_t do_swap_page(struct vm_fault *vm=
+f)
+> >>>>>>         pte_t pte;
+> >>>>>>         vm_fault_t ret =3D 0;
+> >>>>>>         void *shadow =3D NULL;
+> >>>>>> +     int nr_pages =3D 1;
+> >>>>>> +     unsigned long page_idx =3D 0;
+> >>>>>> +     unsigned long address =3D vmf->address;
+> >>>>>> +     pte_t *ptep;
+> >>>>>
+> >>>>> nit: Personally I'd prefer all these to get initialised just before=
+ the "if
+> >>>>> (folio_test_large()..." block below. That way it is clear they are =
+fresh (incase
+> >>>>> any logic between here and there makes an adjustment) and its clear=
+ that they
+> >>>>> are only to be used after that block (the compiler will warn if usi=
+ng an
+> >>>>> uninitialized value).
+> >>>>
+> >>>> right. I agree this will make the code more readable.
+> >>>>
+> >>>>>
+> >>>>>>
+> >>>>>>         if (!pte_unmap_same(vmf))
+> >>>>>>                 goto out;
+> >>>>>> @@ -4166,6 +4170,36 @@ vm_fault_t do_swap_page(struct vm_fault *vm=
+f)
+> >>>>>>                 goto out_nomap;
+> >>>>>>         }
+> >>>>>>
+> >>>>>> +     ptep =3D vmf->pte;
+> >>>>>> +     if (folio_test_large(folio) && folio_test_swapcache(folio)) =
+{
+> >>>>>> +             int nr =3D folio_nr_pages(folio);
+> >>>>>> +             unsigned long idx =3D folio_page_idx(folio, page);
+> >>>>>> +             unsigned long folio_start =3D vmf->address - idx * P=
+AGE_SIZE;
+> >>>>>> +             unsigned long folio_end =3D folio_start + nr * PAGE_=
+SIZE;
+> >>>>>> +             pte_t *folio_ptep;
+> >>>>>> +             pte_t folio_pte;
+> >>>>>> +
+> >>>>>> +             if (unlikely(folio_start < max(vmf->address & PMD_MA=
+SK, vma->vm_start)))
+> >>>>>> +                     goto check_folio;
+> >>>>>> +             if (unlikely(folio_end > pmd_addr_end(vmf->address, =
+vma->vm_end)))
+> >>>>>> +                     goto check_folio;
+> >>>>>> +
+> >>>>>> +             folio_ptep =3D vmf->pte - idx;
+> >>>>>> +             folio_pte =3D ptep_get(folio_ptep);
+> >>>>>> +             if (!pte_same(folio_pte, pte_move_swp_offset(vmf->or=
+ig_pte, -idx)) ||
+> >>>>>> +                 swap_pte_batch(folio_ptep, nr, folio_pte) !=3D n=
+r)
+> >>>>>> +                     goto check_folio;
+> >>>>>> +
+> >>>>>> +             page_idx =3D idx;
+> >>>>>> +             address =3D folio_start;
+> >>>>>> +             ptep =3D folio_ptep;
+> >>>>>> +             nr_pages =3D nr;
+> >>>>>> +             entry =3D folio->swap;
+> >>>>>> +             page =3D &folio->page;
+> >>>>>> +     }
+> >>>>>> +
+> >>>>>> +check_folio:
+> >>>>>
+> >>>>> Is this still the correct label name, given the checks are now abov=
+e the new
+> >>>>> block? Perhaps "one_page" or something like that?
+> >>>>
+> >>>> not quite sure about this, as the code after one_page can be multipl=
+e_pages.
+> >>>> On the other hand, it seems we are really checking folio after "chec=
+k_folio"
+> >>>> :-)
+> >>>>
+> >>>>
+> >>>> BUG_ON(!folio_test_anon(folio) && folio_test_mappedtodisk(folio));
+> >>>> BUG_ON(folio_test_anon(folio) && PageAnonExclusive(page));
+> >>>>
+> >>>> /*
+> >>>> * Check under PT lock (to protect against concurrent fork() sharing
+> >>>> * the swap entry concurrently) for certainly exclusive pages.
+> >>>> */
+> >>>> if (!folio_test_ksm(folio)) {
+> >>>>
+> >>>>
+> >>>>>
+> >>>>>> +
+> >>>>>>         /*
+> >>>>>>          * PG_anon_exclusive reuses PG_mappedtodisk for anon pages=
+. A swap pte
+> >>>>>>          * must never point at an anonymous page in the swapcache =
+that is
+> >>>>>> @@ -4225,12 +4259,13 @@ vm_fault_t do_swap_page(struct vm_fault *v=
+mf)
+> >>>>>>          * We're already holding a reference on the page but haven=
+'t mapped it
+> >>>>>>          * yet.
+> >>>>>>          */
+> >>>>>> -     swap_free_nr(entry, 1);
+> >>>>>> +     swap_free_nr(entry, nr_pages);
+> >>>>>>         if (should_try_to_free_swap(folio, vma, vmf->flags))
+> >>>>>>                 folio_free_swap(folio);
+> >>>>>>
+> >>>>>> -     inc_mm_counter(vma->vm_mm, MM_ANONPAGES);
+> >>>>>> -     dec_mm_counter(vma->vm_mm, MM_SWAPENTS);
+> >>>>>> +     folio_ref_add(folio, nr_pages - 1);
+> >>>>>> +     add_mm_counter(vma->vm_mm, MM_ANONPAGES, nr_pages);
+> >>>>>> +     add_mm_counter(vma->vm_mm, MM_SWAPENTS, -nr_pages);
+> >>>>>>         pte =3D mk_pte(page, vma->vm_page_prot);
+> >>>>>>
+> >>>>>>         /*
+> >>>>>> @@ -4240,34 +4275,35 @@ vm_fault_t do_swap_page(struct vm_fault *v=
+mf)
+> >>>>>>          * exclusivity.
+> >>>>>>          */
+> >>>>>>         if (!folio_test_ksm(folio) &&
+> >>>>>> -         (exclusive || folio_ref_count(folio) =3D=3D 1)) {
+> >>>>>> +         (exclusive || (folio_ref_count(folio) =3D=3D nr_pages &&
+> >>>>>> +                        folio_nr_pages(folio) =3D=3D nr_pages))) =
+{
+> >>>>>
+> >>>>> I think in practice there is no change here? If nr_pages > 1 then t=
+he folio is
+> >>>>> in the swapcache, so there is an extra ref on it? I agree with the =
+change for
+> >>>>> robustness sake. Just checking my understanding.
+> >>>>
+> >>>> This is the code showing we are reusing/(mkwrite) a folio either
+> >>>> 1. we meet a small folio and we are the only one hitting the small f=
+olio
+> >>>> 2. we meet a large folio and we are the only one hitting the large f=
+olio
+> >>>>
+> >>>> any corner cases besides the above two seems difficult. for example,
+> >>>>
+> >>>> while we hit a large folio in swapcache but if we can't entirely map=
+ it
+> >>>> (nr_pages=3D=3D1) due to partial unmap, we will have folio_ref_count=
+(folio)
+> >>>> =3D=3D nr_pages =3D=3D 1
+> >>>
+> >>> No, there would be other references from the swapcache and
+> >>> folio_ref_count(folio) > 1. See my other reply.
+> >>
+> >> right. can be clearer by:
+> >
+> > Wait, do we still need folio_nr_pages(folio) =3D=3D nr_pages even if we=
+ use
+> > folio_ref_count(folio) =3D=3D 1 and moving folio_ref_add(folio, nr_page=
+s - 1)?
+>
+> I don't think that we will "need" it.
+>
+> >
+> > one case is that we have a large folio with 16 PTEs, and we unmap
+> > 15 swap PTE entries, thus we have only one swap entry left. Then
+> > we hit the large folio in swapcache.  but we have only one PTE thus we =
+will
+> > map only one PTE. lacking folio_nr_pages(folio) =3D=3D nr_pages, we reu=
+se the
+> > large folio for one PTE. with it, do_wp_page() will migrate the large
+> > folio to a small one?
+>
+> We will set PAE bit and do_wp_page() will unconditionally reuse that page=
+.
+>
+> Note that this is the same as if we had pte_swp_exclusive() set and
+> would have run into "exclusive=3Dtrue" here.
+>
+> If we'd want a similar "optimization" as we have in
+> wp_can_reuse_anon_folio(), you'd want something like
+>
+> exclusive || (folio_ref_count(folio) =3D=3D 1 &&
+>               (!folio_test_large(folio) || nr_pages > 1)
 
-Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra234-cfg.dtsi | 32 ++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+I feel like
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234-cfg.dtsi b/arch/arm64/boot/dts/nvidia/tegra234-cfg.dtsi
-index 832538e45797..f9a92853b04a 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234-cfg.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra234-cfg.dtsi
-@@ -442,5 +442,37 @@ standard {
- 			};
- 		};
- 
-+		mmc@3400000 {
-+			config {
-+
-+				mmc-hs200 {
-+					nvidia,num-tuning-iter = <0x2>;
-+				};
-+
-+				uhs-sdr104 {
-+					nvidia,num-tuning-iter = <0x2>;
-+				};
-+
-+				uhs-sdr50 {
-+					nvidia,num-tuning-iter = <0x4>;
-+				};
-+
-+			};
-+		};
-+
-+		mmc@3460000 {
-+			config {
-+
-+				mmc-hs200 {
-+					nvidia,num-tuning-iter = <0x2>;
-+				};
-+
-+				mmc-hs400 {
-+					nvidia,num-tuning-iter = <0x2>;
-+				};
-+
-+			};
-+		};
-+
- 	};
- };
--- 
-2.43.2
+A :   !folio_test_large(folio) || nr_pages > 1
 
+equals
+
+B:    folio_nr_pages(folio) =3D=3D nr_pages
+
+if folio is small,  folio_test_large(folio) is false, both A and B will be =
+true;
+if folio is large, and we map the whole large folio, A will be true
+because of nr_pages > 1;
+B is also true;
+if folio is large, and we map single one PTE, A will be false;
+B is also false, because nr_pages =3D=3D 1 but  folio_nr_pages(folio) > 1;
+
+right?
+
+However, I agree that delving into this complexity might not be necessary
+at the moment.
+
+>
+> ... but I am not sure if that is really worth the complexity here.
+>
+> >
+> > 1AM, tired and sleepy. not quite sure I am correct.
+> > I look forward to seeing your reply tomorrow morning :-)
+>
+> Heh, no need to dream about this ;)
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+
+Thanks
+Barry
