@@ -1,144 +1,94 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A983F9EC
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 02:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AE413D966
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 02:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714962453; cv=none; b=qc4kyX5uRtilB2ghFnrW9WeVs1rHo8Yi/LJ/DoeSd9mZy+eIGkxAAJxt+5PThruEPX7eavmtCE5y1T7y16IpNznOSHLhBGh+pouo45TRbkTmDD+3UK+t96WPtlGjWWIWNgKPpB+um8AU0okSmP4hnEAN6j1uLi31TC7fQFJqnQg=
+	t=1714962553; cv=none; b=pnPkE3s7mu5X7ToIDJiFOwmF8Riok9axA7ZMKLDAfH3q0kH7OotUBNm1LrH/8TGbXmbw8Gi99difzYOvI74s+rNxjk5JGhc3dxd+pFOpqwoUWRSkdJOUKzAQGlOH/QqHYC3wVXhJxeYNsvJPTXbRRTR5bqYaJOPGtDkUHQiw8GM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714962453; c=relaxed/simple;
-	bh=9SFYx28lbOjebzpeT1IaydZg7cFtpjFbVbcTaHrbfVE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Suq/xVr2kKoN+XXm/b6nlISs7jCnM14v3D0q9VQIYeNM29bZb8ngpfjkOFDLyirY3QcCc0a22Vri4JHylctvXXXtx4uMe6WopBpJWCjAVdDbFqgbtTmgowtPokx2CSuotTZ3ThGe0W3RUVRlQmcuaVWSIX9hrVr1j2fQTSbFnZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=2S+pwjKW; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="2S+pwjKW"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f30f69a958so839229b3a.1
-        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2024 19:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1714962451; x=1715567251; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XZcebAj1tOpuNxt9ewLjX4z+yHH+WF19I/SsunPNY+Q=;
-        b=2S+pwjKWYlLbiuBIk3HZlOWpXEc4CXmptIS03eIOnTMcGybp8XBpbKITK9/kFRg/ic
-         LbwRXnBI6CK7hAF8xFT24WlmBjb7YEHwvgMB8Ggb7SDSy0x3eu/shPeQQfnRjZw+NYA1
-         kbaoiqJb4DPFSnUmhmKxZKJvK5gdq8xJbgIMFmsLTQpXTqhNB4KX37OWnqSdir8sL8Lk
-         jNazIC9k+hM6cV7ysWMAa0W5ajuYP+n++sigN4uxDW11dLBcTaZ1TkFS5N1FBdrArOn4
-         no+itV9cHw6eUBXvQYs3wNKVAWMIPnk2zfvrYV89CDyEGP3i5y1La5iWem9GdI0RmOpj
-         9VbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714962451; x=1715567251;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XZcebAj1tOpuNxt9ewLjX4z+yHH+WF19I/SsunPNY+Q=;
-        b=EPNsz9CFP+Bc3OOfcVST+l07dop9qpRu8s+2V+NGulWeyhU+/HtthykqrvGjL1Yh7/
-         3xtNGAr8jvq9Pj/IECDppYTdr0oJBIM52KGmfFB0czSauCo+bsSD+1voCLkJw97QvVOG
-         /NBCV9EzIXWWHrFHm/b6O1yY/RyZUJbNMP+s1jUU71v2kd70G3MAK0RFE5OyE/8bAUVL
-         LPO6AZBkZT2X4b4z5uai35FV07D2DyabwWoLlBSScq031dz+vQ7RAkaLyq7k/immZwhI
-         ShD4JgFqc1cQH9IQQLTsFbX1YsZ5noj0/89PfFeI2WioD9MFDmPBg+FJzUoE8vdk2Fdd
-         Pgaw==
-X-Forwarded-Encrypted: i=1; AJvYcCX69EwgFyr21APqxlQSwoRCcKJDIWKRv1Bl57nfkMIi9gJ0YvXxaggR+gkPC++vSpYOwPIuBqlVR4VQsJSAAU4mKSkLdO7zBRvXyfAn
-X-Gm-Message-State: AOJu0Yy8BMycrKiqlSxgPr5Lou5wcQVDs34ZN1BmbTia/HiluvPM5qBy
-	mEVPVIX7Wa980YFrpn71/xdCSKdwVbx4i293Euevkeo+8zWAc0JMbV2AV/3rzF0=
-X-Google-Smtp-Source: AGHT+IG347eCvhxwYdPwO4e9Eg21UrEgM91mcHSey1ZRxbww3HF95DvYkZM1Vz2e8uSTe7UMyQMSlg==
-X-Received: by 2002:a05:6a20:d80c:b0:1af:7bbc:9f86 with SMTP id iv12-20020a056a20d80c00b001af7bbc9f86mr9359387pzb.0.1714962450620;
-        Sun, 05 May 2024 19:27:30 -0700 (PDT)
-Received: from [192.168.1.15] (174-21-160-85.tukw.qwest.net. [174.21.160.85])
-        by smtp.gmail.com with ESMTPSA id n26-20020a63591a000000b005cf450e91d2sm6955159pgb.52.2024.05.05.19.27.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 May 2024 19:27:30 -0700 (PDT)
-Message-ID: <1d0c553c-18bb-4d0d-8358-eff0b65c6c56@davidwei.uk>
-Date: Sun, 5 May 2024 19:27:29 -0700
+	s=arc-20240116; t=1714962553; c=relaxed/simple;
+	bh=BiXbc1aIRlL+2+nMpyqZw2TtlPtUUBy/7U6HwAqoeVk=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=WP/7TZyUHK2o85/lPH8n0lrU9Rtg7SXbyVk561lkAlzjLx3ndft9itlibM0UeOiOT/lnWH+EYkm0ckrjRgoBtdQy/8BDYaaJJtwKRBkI4/vE+Aw6ZBUEpy/yBYcfdC4Q66p9D7j6rV3Ao9mM2JkICGLerNIapAhwJ0bNqTBs5nQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4VXlHr0jrCz1xmcT;
+	Mon,  6 May 2024 10:10:48 +0800 (CST)
+Received: from kwepemm600013.china.huawei.com (unknown [7.193.23.68])
+	by mail.maildlp.com (Postfix) with ESMTPS id D21971A016C;
+	Mon,  6 May 2024 10:11:54 +0800 (CST)
+Received: from [10.174.178.46] (10.174.178.46) by
+ kwepemm600013.china.huawei.com (7.193.23.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 6 May 2024 10:11:54 +0800
+Subject: Re: [PATCH] ubifs: fix kernel-doc warnings
+To: Jeff Johnson <quic_jjohnson@quicinc.com>, Richard Weinberger
+	<richard@nod.at>
+CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240502-ubifs-kdoc-v1-1-59c35a325141@quicinc.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
+Message-ID: <c94ba482-0b3a-e8c0-0990-dcb5507148c6@huawei.com>
+Date: Mon, 6 May 2024 10:11:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net] net/smc: fix netdev refcnt leak in
- smc_ib_find_route()
-Content-Language: en-GB
-To: Wen Gu <guwen@linux.alibaba.com>, wenjia@linux.ibm.com,
- jaka@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com
-Cc: alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
- linux-s390@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240506015439.108739-1-guwen@linux.alibaba.com>
-From: David Wei <dw@davidwei.uk>
-In-Reply-To: <20240506015439.108739-1-guwen@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20240502-ubifs-kdoc-v1-1-59c35a325141@quicinc.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600013.china.huawei.com (7.193.23.68)
 
-On 2024-05-05 18:54, Wen Gu wrote:
-> A netdev refcnt leak issue was found when unregistering netdev after
-> using SMC. It can be reproduced as follows.
+在 2024/5/3 4:16, Jeff Johnson 写道:
+> make C=1 reports the following kernel-doc warnings:
 > 
-> - run tests based on SMC.
-> - unregister the net device.
+> fs/ubifs/compress.c:103: warning: Function parameter or struct member 'c' not described in 'ubifs_compress'
+> fs/ubifs/compress.c:155: warning: Function parameter or struct member 'c' not described in 'ubifs_decompress'
+> fs/ubifs/find.c:353: warning: Excess function parameter 'data' description in 'scan_for_free_cb'
+> fs/ubifs/find.c:353: warning: Function parameter or struct member 'arg' not described in 'scan_for_free_cb'
+> fs/ubifs/find.c:594: warning: Excess function parameter 'data' description in 'scan_for_idx_cb'
+> fs/ubifs/find.c:594: warning: Function parameter or struct member 'arg' not described in 'scan_for_idx_cb'
+> fs/ubifs/find.c:786: warning: Excess function parameter 'data' description in 'scan_dirty_idx_cb'
+> fs/ubifs/find.c:786: warning: Function parameter or struct member 'arg' not described in 'scan_dirty_idx_cb'
+> fs/ubifs/find.c:86: warning: Excess function parameter 'data' description in 'scan_for_dirty_cb'
+> fs/ubifs/find.c:86: warning: Function parameter or struct member 'arg' not described in 'scan_for_dirty_cb'
+> fs/ubifs/journal.c:369: warning: expecting prototype for wake_up_reservation(). Prototype was for add_or_start_queue() instead
+> fs/ubifs/lprops.c:1018: warning: Excess function parameter 'lst' description in 'scan_check_cb'
+> fs/ubifs/lprops.c:1018: warning: Function parameter or struct member 'arg' not described in 'scan_check_cb'
+> fs/ubifs/lpt.c:1938: warning: Function parameter or struct member 'ptr' not described in 'lpt_scan_node'
+> fs/ubifs/replay.c:60: warning: Function parameter or struct member 'hash' not described in 'replay_entry'
 > 
-> The following error message can be observed.
+> Fix them.
 > 
-> 'unregister_netdevice: waiting for ethx to become free. Usage count = x'
-> 
-> With CONFIG_NET_DEV_REFCNT_TRACKER set, more detailed error message can
-> be provided by refcount tracker:
-> 
->  unregister_netdevice: waiting for eth1 to become free. Usage count = 2
->  ref_tracker: eth%d@ffff9cabc3bf8548 has 1/1 users at
->       ___neigh_create+0x8e/0x420
->       neigh_event_ns+0x52/0xc0
->       arp_process+0x7c0/0x860
->       __netif_receive_skb_list_core+0x258/0x2c0
->       __netif_receive_skb_list+0xea/0x150
->       netif_receive_skb_list_internal+0xf2/0x1b0
->       napi_complete_done+0x73/0x1b0
->       mlx5e_napi_poll+0x161/0x5e0 [mlx5_core]
->       __napi_poll+0x2c/0x1c0
->       net_rx_action+0x2a7/0x380
->       __do_softirq+0xcd/0x2a7
-> 
-> It is because in smc_ib_find_route(), neigh_lookup() takes a netdev
-> refcnt but does not release. So fix it.
-> 
-> Fixes: e5c4744cfb59 ("net/smc: add SMC-Rv2 connection establishment")
-> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 > ---
->  net/smc/smc_ib.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> Note ubifs still has C=1 warnings from smatch that are not addressed:
+
+Reviewed-by: Zhihao Cheng <chengzhihao1@huawei.com>
 > 
-> diff --git a/net/smc/smc_ib.c b/net/smc/smc_ib.c
-> index 97704a9e84c7..b431bd8a5172 100644
-> --- a/net/smc/smc_ib.c
-> +++ b/net/smc/smc_ib.c
-> @@ -210,10 +210,11 @@ int smc_ib_find_route(struct net *net, __be32 saddr, __be32 daddr,
->  		goto out;
->  	if (rt->rt_uses_gateway && rt->rt_gw_family != AF_INET)
->  		goto out;
-> -	neigh = rt->dst.ops->neigh_lookup(&rt->dst, NULL, &fl4.daddr);
-> +	neigh = dst_neigh_lookup(&rt->dst, &fl4.daddr);
+[...]
+> diff --git a/fs/ubifs/journal.c b/fs/ubifs/journal.c
+> index 74aee92433d7..f997a85bcdce 100644
+> --- a/fs/ubifs/journal.c
+> +++ b/fs/ubifs/journal.c
+> @@ -359,7 +359,7 @@ static void wake_up_reservation(struct ubifs_info *c)
+>   }
+>   
+>   /**
+> - * wake_up_reservation - add current task in queue or start queuing.
+> + * add_or_start_queue - add current task in queue or start queuing.
+>    * @c: UBIFS file-system description object
+>    *
+>    * This function starts queuing if queuing is not started, otherwise adds
 
-Of the two implementations of neigh_lookup() I found that do not simply
-return NULL, all of them increment or init struct neighbour::refcnt.
+This period of code was modified in previous patch 
+https://patchwork.ozlabs.org/project/linux-mtd/patch/20240227024204.1080739-1-chengzhihao1@huawei.com/ 
+, I'm okay to drop the old patch and apply this one.
 
-1. ipv4_neigh_lookup()
-2. ip6_dst_neigh_lookup()
-  a. __ipv6_neigh_lookup()
-  b. neigh_create()
-
->  	if (neigh) {
->  		memcpy(nexthop_mac, neigh->ha, ETH_ALEN);
->  		*uses_gateway = rt->rt_uses_gateway;
-> +		neigh_release(neigh);
-
-So releasing it here looks correct.
-
->  		return 0;
->  	}
->  out:
