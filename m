@@ -1,261 +1,129 @@
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7FAD15747A
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 17:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2000341C77
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 17:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715016606; cv=none; b=NPbmqwWOHPcBuqWqUkoBFumtnp/7Y4SJN8hSXtGUB6n4ikGguOkOhXYT1S4uyHt41s+XuIUE8htar6zmS0CXJtcCLGYJld1BANVuH4GZULwQ/aFzd+tvuolEaXSmViykVA7OJ16z7fVAKkJcdo643qTjNcWaWsr89sMQc/NUXPQ=
+	t=1715016839; cv=none; b=B6z2Zd/iWpws7O13cYW/XSjZgdz5anyyWRNEs/kgirgre/Xfk+MJ3NgkvILE6tXRyVfib7rVLQUTrl+OJaI5xVVhAGkUt/V4QBviFOXbLGPGwqQajMxgz1G59XmDQZYF0vz4JHcAwJOus4F1riuaSSgwPbmvBnrfh12bt6MIjfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715016606; c=relaxed/simple;
-	bh=2m0Apzo9xFxDXw8sTML7iaX9VanueAJ0oBXUB2ncRpw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D4mTiZkH3HBN+lhSBF5X8+E2ysSnVbncZXOvDqBJwJkFoPwaskUPV8zasZqqRrVo8Q4zhoVzxsVjPchIb/2+twVpvDV1cfkJpa3XoWaAlGllcBPwj6GYoyFPnqsbqc+9Xb55zNgst+TVQd98YctznCtG+j6yDF9QIL6cBQwZibI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amacapital.net; spf=pass smtp.mailfrom=amacapital.net; dkim=pass (2048-bit key) header.d=amacapital-net.20230601.gappssmtp.com header.i=@amacapital-net.20230601.gappssmtp.com header.b=BUPvsMWm; arc=none smtp.client-ip=209.85.221.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=amacapital.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amacapital.net
+	s=arc-20240116; t=1715016839; c=relaxed/simple;
+	bh=HWPYB78h9OxvGxxz+M/MgrBuGBHcB5iAMPXg/jZFXhc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y7rtSRDUhO53J4CsC/Bt359pmC+iIJfzWA5XNRbclhOxudosC3X95iwatY5OVmeMvFuP7uJ+znU2VgTx6mLBayuxAmofBe/DOqCbjX+azCoXrR9H2gsNNRl1KE/59dc251nG52FUTJE2/zcKDlVH+lctYnMmci+ezz/+zWrOR4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JKBUXY8o; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20230601.gappssmtp.com header.i=@amacapital-net.20230601.gappssmtp.com header.b="BUPvsMWm"
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-4affeacaff9so607911e0c.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 10:30:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20230601.gappssmtp.com; s=20230601; t=1715016604; x=1715621404; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cK5ZIv+/3lQIzy70C0Ibh9w+v+69s0hinhfnxG/B7mw=;
-        b=BUPvsMWmCd4X2qaPPkpGLxsQXM16NTbxbaiVA2WdYwJM9ais3+u7Z+Hcw2xY4N5yJa
-         lLS1yodK7osJcAbc9lGXMPUeRTG9qpf5qYRV0Bz6z4l/1G3EDkXQLwnos9ARNUcdlzm3
-         ebklOdTlswwfC0tu6+fAeBHhZiCfu1Xqo1FGJLTE3geirF1iSvIhtGTkCKSDJWmqTkJP
-         4C+Dnbzx/UcBYRApRz8c4fCQonZsUhcQw/9S952M+jsSs8Ayxpr3ICkWBTUdvy7VUlL+
-         Ni0SiCAUQ6hS8/qN0X2A/2SjMB6TMWNg6L9Lj0Dolnf7C2r+qwWUqU/YmlRckvIGd0t0
-         clHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715016604; x=1715621404;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cK5ZIv+/3lQIzy70C0Ibh9w+v+69s0hinhfnxG/B7mw=;
-        b=ixGmvtwqbfVu149T0FVtYpES43wugDUPHFzM0njfo9IEadU9C2tRAXxhYO5LCjIGdj
-         fvC6eJRpOkcYHF38OCD6xzoK2JnYoykGbEnf0EeDVu6OpXNjCtRBpzQdR1CLFo+HlOmW
-         Ds5RWFJfcK9Bd/ifpGATdW4NiTuW03CR5M4ciVi1jmdu2EnY67dvzgOU1E0OnsfjA2jv
-         DzlkDe2wSMOnKyXLHqgSKNJfpHm9nh1mHlHimJRQ1rXPyxlQN4DMh+ncdi74xVM5frcK
-         v965T8wggS8g+cEokTGSwj6KWobX2AlMWSqhalAuTVAUlx78rUvEwT3whFy7uA1KbPjo
-         i0fg==
-X-Forwarded-Encrypted: i=1; AJvYcCUToXrFTDK/ke63nCLOXI4AFz5bfbNjC8zIbjFRhwnnvmioHsiuRmJz8cZ68k0cyCiDcyljp4KroF0WI/9OGb6vhWBnASRDsLhzA0TC
-X-Gm-Message-State: AOJu0YyJYknndop5q2D8oVGzqPZ2ZehU/xJm1Hr9gih7GEjclt6+RGDu
-	pRjMj3nkh1HXIWEpS7EzxOGPYhEC13BUGXH/hBN/OQDVdE6K7w2d1hvxKQ/lGpiIO71HKkvpV/i
-	SGH2OtywNcPacHHVtW2GusZDPhxvG2eex/+SJ
-X-Google-Smtp-Source: AGHT+IEUiIcy0GOYu8BB1OirIXvX5Yu34V0OsXJvQrj6CB8J0noq/BJOsBMaSMkgqcHRU1CL2GM1OR8B88hj8PARo8U=
-X-Received: by 2002:a05:6122:4105:b0:4df:235b:8ba1 with SMTP id
- ce5-20020a056122410500b004df235b8ba1mr9922482vkb.7.1715016603540; Mon, 06 May
- 2024 10:30:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JKBUXY8o"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715016838; x=1746552838;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=HWPYB78h9OxvGxxz+M/MgrBuGBHcB5iAMPXg/jZFXhc=;
+  b=JKBUXY8o7ScAKhfgo+zhJAXI13M/TlZ56w6xDcrHnASGoj2YXrUkNiT3
+   CfnMhfDN3fj7Zo4916zMx9OXvbxA5wzgwMRWBoSleY97j06JmZn8uuONp
+   zrdXoz7CT0EYNHsAYM9X8oYw9lAC7jQe3uAbKZUY6s9K1h+WL8wUYZ9As
+   Wi60I0lPpsF2sQxHRmZcLZglWgO6tKF5Uudn0ad1Pw6MnIAjy4nXGM7ep
+   lfMokP6Oi86tTei8ie5uCvSLk3SFAw95vUXjPVjywgd8jIRc+UzhUB9YI
+   mlJF17/F2on/Q50rwkmN6RqibWl3CfxXkavx02X2SnvjUsafYlwqw/FJI
+   A==;
+X-CSE-ConnectionGUID: Q41o53nsSo2AhyyLT1Yf9A==
+X-CSE-MsgGUID: 8tewF2rHSVijbbORYUoUiQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="21933060"
+X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
+   d="scan'208";a="21933060"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 10:33:58 -0700
+X-CSE-ConnectionGUID: 4piSjYOET7GjgOk7hwS6wQ==
+X-CSE-MsgGUID: tFfgysrKTdCAbrpVFMpSCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
+   d="scan'208";a="28625668"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 10:33:58 -0700
+Date: Mon, 6 May 2024 10:38:41 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Imran Khan <imran.f.khan@oracle.com>
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, hpa@zytor.com, x86@kernel.org,
+ linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH] x86/irq: use lapic_vector_set_in_irr to check for
+ pending vectors in fixup_irqs.
+Message-ID: <20240506103841.4d838866@jacob-builder>
+In-Reply-To: <20240506111634.121460-1-imran.f.khan@oracle.com>
+References: <20240506111634.121460-1-imran.f.khan@oracle.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240426133310.1159976-1-stsp2@yandex.ru> <CALCETrUL3zXAX94CpcQYwj1omwO+=-1Li+J7Bw2kpAw4d7nsyw@mail.gmail.com>
- <20240428.171236-tangy.giblet.idle.helpline-y9LqufL7EAAV@cyphar.com>
-In-Reply-To: <20240428.171236-tangy.giblet.idle.helpline-y9LqufL7EAAV@cyphar.com>
-From: Andy Lutomirski <luto@amacapital.net>
-Date: Mon, 6 May 2024 10:29:52 -0700
-Message-ID: <CALCETrU2VwCF-o7E5sc8FN_LBs3Q-vNMBf7N4rm0PAWFRo5QWw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] implement OA2_CRED_INHERIT flag for openat2()
-To: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Stas Sergeev <stsp2@yandex.ru>, "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org, 
-	Stefan Metzmacher <metze@samba.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Andy Lutomirski <luto@kernel.org>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>, 
-	Chuck Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, 
-	David Laight <David.Laight@aculab.com>, linux-fsdevel@vger.kernel.org, 
-	linux-api@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
-	=?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Replying to a couple emails at once...
+Hi Imran,
 
-On Mon, May 6, 2024 at 12:14=E2=80=AFAM Aleksa Sarai <cyphar@cyphar.com> wr=
-ote:
->
-> On 2024-04-28, Andy Lutomirski <luto@amacapital.net> wrote:
-> > > On Apr 26, 2024, at 6:39=E2=80=AFAM, Stas Sergeev <stsp2@yandex.ru> w=
-rote:
-> > > =EF=BB=BFThis patch-set implements the OA2_CRED_INHERIT flag for open=
-at2() syscall.
-> > > It is needed to perform an open operation with the creds that were in
-> > > effect when the dir_fd was opened, if the dir was opened with O_CRED_=
-ALLOW
-> > > flag. This allows the process to pre-open some dirs and switch eUID
-> > > (and other UIDs/GIDs) to the less-privileged user, while still retain=
-ing
-> > > the possibility to open/create files within the pre-opened directory =
-set.
-> > >
-> >
-> > I=E2=80=99ve been contemplating this, and I want to propose a different=
- solution.
-> >
-> > First, the problem Stas is solving is quite narrow and doesn=E2=80=99t
-> > actually need kernel support: if I want to write a user program that
-> > sandboxes itself, I have at least three solutions already.  I can make
-> > a userns and a mountns; I can use landlock; and I can have a separate
-> > process that brokers filesystem access using SCM_RIGHTS.
-> >
-> > But what if I want to run a container, where the container can access
-> > a specific host directory, and the contained application is not aware
-> > of the exact technology being used?  I recently started using
-> > containers in anger in a production setting, and =E2=80=9Canger=E2=80=
-=9D was
-> > definitely the right word: binding part of a filesystem in is
-> > *miserable*.  Getting the DAC rules right is nasty.  LSMs are worse.
-> > Podman=E2=80=99s =E2=80=9Cbind,relabel=E2=80=9D feature is IMO utterly =
-disgusting.  I think I
-> > actually gave up on making one of my use cases work on a Fedora
-> > system.
-> >
-> > Here=E2=80=99s what I wanted to do, logically, in production: pick a ho=
-st
-> > directory, pick a host *principal* (UID, GID, label, etc), and have
-> > the *entire container* access the directory as that principal. This is
-> > what happens automatically if I run the whole container as a userns
-> > with only a single UID mapped, but I don=E2=80=99t really want to do th=
-at for
-> > a whole variety and of reasons.
-> >
-> > So maybe reimagining Stas=E2=80=99 feature a bit can actually solve thi=
-s
-> > problem.  Instead of a special dirfd, what if there was a special
-> > subtree (in the sense of open_tree) that captures a set of creds and
-> > does all opens inside the subtree using those creds?
-> >
-> > This isn=E2=80=99t a fully formed proposal, but I *think* it should be
-> > generally fairly safe for even an unprivileged user to clone a subtree
-> > with a specific flag set to do this. Maybe a capability would be
-> > needed (CAP_CAPTURE_CREDS?), but it would be nice to allow delegating
-> > this to a daemon if a privilege is needed, and getting the API right
-> > might be a bit tricky.
->
-> Tying this to an actual mount rather than a file handle sounds like a
-> more plausible proposal than OA2_CRED_INHERIT, but it just seems that
-> this is going to re-create all of the work that went into id-mapped
-> mounts but with the extra-special step of making the generic VFS
-> permissions no longer work normally (unless the idea is that everything
-> would pretend to be owned by current_fsuid()?).
+On Mon,  6 May 2024 21:16:34 +1000, Imran Khan <imran.f.khan@oracle.com>
+wrote:
 
-I was assuming that the owner uid and gid would be show to stat, etc
-as usual.  But the permission checks would be done against the
-captured creds.
+> No functional change, just using readily available helper which
+> uses the same logic, that has been used here.
+> 
+> Signed-off-by: Imran Khan <imran.f.khan@oracle.com>
+> ---
+>  arch/x86/kernel/irq.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+> index 35fde0107901d..71432e42275c4 100644
+> --- a/arch/x86/kernel/irq.c
+> +++ b/arch/x86/kernel/irq.c
+> @@ -339,7 +339,7 @@
+> DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_kvm_posted_intr_nested_ipi) /* A cpu
+> has been removed from cpu_online_mask.  Reset irq affinities. */ void
+> fixup_irqs(void) {
+> -	unsigned int irr, vector;
+> +	unsigned int vector;
+>  	struct irq_desc *desc;
+>  	struct irq_data *data;
+>  	struct irq_chip *chip;
+> @@ -366,8 +366,7 @@ void fixup_irqs(void)
+>  		if (IS_ERR_OR_NULL(__this_cpu_read(vector_irq[vector])))
+>  			continue;
+>  
+> -		irr = apic_read(APIC_IRR + (vector / 32 * 0x10));
+> -		if (irr  & (1 << (vector % 32))) {
+> +		if (lapic_vector_set_in_irr(vector)) {
+>  			desc = __this_cpu_read(vector_irq[vector]);
+>  
+>  			raw_spin_lock(&desc->lock);
+I have a similar refactoring as part of the posted MSI series, but I
+totally missed the existing helper lapic_vector_set_in_irr().
 
->
-> IMHO it also isn't enough to just make open work, you need to make all
-> operations work (which leads to a non-trivial amount of
-> filesystem-specific handling), which is just idmapped mounts. A lot of
-> work was put into making sure that is safe, and collapsing owners seems
-> like it will cause a lot of headaches.
->
-> I also find it somewhat amusing that this proposal is to basically give
-> up on multi-user permissions for this one directory tree because it's
-> too annoying to deal with. In that case, isn't chmod 777 a simpler
-> solution? (I'm being a bit flippant, of course there is a difference,
-> but the net result is that all users in the container would have the
-> same permissions with all of the fun issues that implies.)
->
-> In short, AFAICS idmapped mounts pretty much solve this problem (minus
-> the ability to collapse users, which I suspect is not a good idea in
-> general)?
->
+https://lore.kernel.org/lkml/171448372145.10875.6906928487300074547.tip-bot2@tip-bot2/
 
-With my kernel hat on, maybe I agree.  But with my *user* hat on, I
-think I pretty strongly disagree.  Look, idmapis lousy for
-unprivileged use:
+Let me send out a fix patch against tip tree.
 
-$ install -m 0700 -d test_directory
-$ echo 'hi there' >test_directory/file
-$ podman run -it --rm
---mount=3Dtype=3Dbind,src=3Dtest_directory,dst=3D/tmp,idmap [debian-slim]
-# cat /tmp/file
-hi there
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -505,13 +505,7 @@ static inline bool lapic_vector_set_in_irr(unsigned int vector)
 
-<-- Hey, look, this kind of works!
+ static inline bool is_vector_pending(unsigned int vector)
+ {
+-       unsigned int irr;
+-
+-       irr = apic_read(APIC_IRR + (vector / 32 * 0x10));
+-       if (irr  & (1 << (vector % 32)))
+-               return true;
+-
+-       return pi_pending_this_cpu(vector);
++       return lapic_vector_set_in_irr(vector) || pi_pending_this_cpu(vector);
+ }
 
-# setpriv --reuid=3D1 ls /tmp
-ls: cannot open directory '/tmp': Permission denied
+Thanks,
 
-<-- Gee, thanks, Linux!
-
-
-Obviously this is a made up example.  But it's quite analogous to a
-real example.  Suppose I want to make a directory that will contain
-some MySQL data.  I don't want to share this directory with anyone
-else, so I set its mode to 0700.  Then I want to fire up an
-unprivileged MySQL container, so I build or download it, and then I
-run it and bind my directory to /var/lib/mysql and I run it.  I don't
-need to think about UIDs or anything because it's 2024 and containers
-just work.  Okay, I need to setenforce 0 because I'm on Fedora and
-SELinux makes absolutely no sense in a container world, but I can live
-with that.
-
-Except that it doesn't work!  Because unless I want to manually futz
-with the idmaps to get mysql to have access to the directory inside
-the container, only *root* gets to get in.  But I bet that even
-futzing with the idmap doesn't work, because software like mysql often
-expects that root *and* a user can access data.  And some software
-even does privilege separation and uses more than one UID.
-
-So I want a way to give *an entire container* access to a directory.
-Classic UNIX DAC is just *wrong* for this use case.  Maybe idmaps
-could learn a way to squash multiple ids down to one.  Or maybe
-something like my silly credential-capturing mount proposal could
-work.  But the status quo is not actually amazing IMO.
-
-I haven't looked at the idmap implementation nearly enough to have any
-opinion as to whether squashing UID is practical or whether there's
-any sensible way to specify it in the configuration.
-
-> On Apr 29, 2024, at 2:12=E2=80=AFAM, Christian Brauner <brauner@kernel.or=
-g> wrote:
->
-> Nowadays it's extremely simple due tue open_tree(OPEN_TREE_CLONE) and
-> move_mount(). I rewrote the bind-mount logic in systemd based on that
-> and util-linux uses that as well now.
-> https://brauner.io/2023/02/28/mounting-into-mount-namespaces.html
->
-
-Yep, I remember that.
-
->> Podman=E2=80=99s =E2=80=9Cbind,relabel=E2=80=9D feature is IMO utterly d=
-isgusting.  I think I
->> actually gave up on making one of my use cases work on a Fedora
->> system.
->>
->> Here=E2=80=99s what I wanted to do, logically, in production: pick a hos=
-t
->> directory, pick a host *principal* (UID, GID, label, etc), and have
->> the *entire container* access the directory as that principal. This is
->> what happens automatically if I run the whole container as a userns
->> with only a single UID mapped, but I don=E2=80=99t really want to do tha=
-t for
->> a whole variety and of reasons.
->
-> You're describing idmapped mounts for the most part which are upstream
-> and are used in exactly that way by a lot of userspace.
->
-
-See above...
-
->>
->> So maybe reimagining Stas=E2=80=99 feature a bit can actually solve this
->> problem.  Instead of a special dirfd, what if there was a special
->> subtree (in the sense of open_tree) that captures a set of creds and
->> does all opens inside the subtree using those creds?
->
-> That would mean override creds in the VFS layer when accessing a
-> specific subtree which is a terrible idea imho. Not just because it will
-> quickly become a potential dos when you do that with a lot of subtrees
-> it will also have complex interactions with overlayfs.
-
-I was deliberately talking about semantics, not implementation. This
-may well be impossible to implement straightforwardly.
+Jacob
