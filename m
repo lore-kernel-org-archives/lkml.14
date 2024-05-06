@@ -1,129 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2000341C77
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 17:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451E915746C
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 17:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715016839; cv=none; b=B6z2Zd/iWpws7O13cYW/XSjZgdz5anyyWRNEs/kgirgre/Xfk+MJ3NgkvILE6tXRyVfib7rVLQUTrl+OJaI5xVVhAGkUt/V4QBviFOXbLGPGwqQajMxgz1G59XmDQZYF0vz4JHcAwJOus4F1riuaSSgwPbmvBnrfh12bt6MIjfE=
+	t=1715016869; cv=none; b=GdfVeHrPc73Lez49kxCU7ulGqp1s+re6oEgvCyHA3tMwiDO3hA7FrNsuBWyI4SYmRdIFTHwvvV7yGAGUGgcVfG2nAlMJTJ0pFUqCv1uExUzxpNz/7rhPch/Csb+v2ihoA00U4xP9f/7IMLKYTmT1wy3IYrj/Q2zcVl5qyys1T38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715016839; c=relaxed/simple;
-	bh=HWPYB78h9OxvGxxz+M/MgrBuGBHcB5iAMPXg/jZFXhc=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Y7rtSRDUhO53J4CsC/Bt359pmC+iIJfzWA5XNRbclhOxudosC3X95iwatY5OVmeMvFuP7uJ+znU2VgTx6mLBayuxAmofBe/DOqCbjX+azCoXrR9H2gsNNRl1KE/59dc251nG52FUTJE2/zcKDlVH+lctYnMmci+ezz/+zWrOR4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JKBUXY8o; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715016869; c=relaxed/simple;
+	bh=N/Cl1VgIzjxIHfpr4FV+iTL6dI3E1P0L0sOAp1/Q/tY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZQYLjWiNbQtSdDlxmo7pIgdNiMkndcoU22X+2HZwmG9vliZlk9dvTKieEApLZ/YMZeijn/5XoDDWv671zVylL779CalTsDm/g3KKkXrAWDr+oDTo/6lnmWKluBovFq16Kx5xAvi70jlGYlvS6pgaK6ty/ACq6KEbshIvTda+IoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H8Iudqc/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JKBUXY8o"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715016838; x=1746552838;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HWPYB78h9OxvGxxz+M/MgrBuGBHcB5iAMPXg/jZFXhc=;
-  b=JKBUXY8o7ScAKhfgo+zhJAXI13M/TlZ56w6xDcrHnASGoj2YXrUkNiT3
-   CfnMhfDN3fj7Zo4916zMx9OXvbxA5wzgwMRWBoSleY97j06JmZn8uuONp
-   zrdXoz7CT0EYNHsAYM9X8oYw9lAC7jQe3uAbKZUY6s9K1h+WL8wUYZ9As
-   Wi60I0lPpsF2sQxHRmZcLZglWgO6tKF5Uudn0ad1Pw6MnIAjy4nXGM7ep
-   lfMokP6Oi86tTei8ie5uCvSLk3SFAw95vUXjPVjywgd8jIRc+UzhUB9YI
-   mlJF17/F2on/Q50rwkmN6RqibWl3CfxXkavx02X2SnvjUsafYlwqw/FJI
-   A==;
-X-CSE-ConnectionGUID: Q41o53nsSo2AhyyLT1Yf9A==
-X-CSE-MsgGUID: 8tewF2rHSVijbbORYUoUiQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="21933060"
-X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
-   d="scan'208";a="21933060"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 10:33:58 -0700
-X-CSE-ConnectionGUID: 4piSjYOET7GjgOk7hwS6wQ==
-X-CSE-MsgGUID: tFfgysrKTdCAbrpVFMpSCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
-   d="scan'208";a="28625668"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 10:33:58 -0700
-Date: Mon, 6 May 2024 10:38:41 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Imran Khan <imran.f.khan@oracle.com>
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, x86@kernel.org,
- linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH] x86/irq: use lapic_vector_set_in_irr to check for
- pending vectors in fixup_irqs.
-Message-ID: <20240506103841.4d838866@jacob-builder>
-In-Reply-To: <20240506111634.121460-1-imran.f.khan@oracle.com>
-References: <20240506111634.121460-1-imran.f.khan@oracle.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H8Iudqc/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBE7BC4DDE1
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 17:34:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715016868;
+	bh=N/Cl1VgIzjxIHfpr4FV+iTL6dI3E1P0L0sOAp1/Q/tY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=H8Iudqc/tMmB6Ux07aKW2+nVQIyF2/xi8XFLtbUt4cisTwfIJgMdrGE1TQLvkxT/a
+	 ATYzQpgwLdgFbtNdNbNGqj50VV/FiHJWYrNVZzSFHv+8UTX/bs0w/FxVRp4AStKBqv
+	 oc9m/a6i8+NemFOaHN+fGSWasfHo98tIiHNveOeKgLAIVdH/e785pCvqTy1fskTBKg
+	 pncsNEFIn2o3uM7STR2rMIe2/lVyFJFi7WCmfEuvPttBlPAgEsoNd90aOkd8zeLMnX
+	 MBYk4W94sMZik02mxbsvqC1thGhw3T6SiBE9xZ6fxVpYtyvn+gE7pPMB2zfgC3Z51Y
+	 eOfWHNmPh9zTw==
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6ef98eee195so497228a34.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 10:34:28 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWThGYwc5zbsByw/9RkMAs+4wpzPrIO5C7KXqZV+ZiWz2prbRTp+Fh7i5U2voWlwVwtsgNcPHGMEyTfYmTpzB3FWzx4tzmzxTEUAJCZ
+X-Gm-Message-State: AOJu0YzQbI3CawjBe4i7hVzrzSRklEOvX61GHuQfet+wTk2MBnTCZ9+q
+	YaxlTdx6uDZrUuHLoDwKCjH4KE3lZOUYa6thAI8QCsUDRAi3becryTrPEKv9jU8IuOQlwczl0wt
+	K46djJea3KMlSH1nyX5/NQUBkRWRUv0Pb/5Th
+X-Google-Smtp-Source: AGHT+IGeEkyd9/ecXTKRvSMEhABoiDcgycle+ebD63V9wpAW6Icf2bUBHPTL3WKDxwW/DA9QnCw2BpuJ/GbXWPX4plE=
+X-Received: by 2002:a05:6870:1b0a:b0:23b:c31f:ee76 with SMTP id
+ hl10-20020a0568701b0a00b0023bc31fee76mr12950767oab.52.1715016868026; Mon, 06
+ May 2024 10:34:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20240426133310.1159976-1-stsp2@yandex.ru> <CALCETrUL3zXAX94CpcQYwj1omwO+=-1Li+J7Bw2kpAw4d7nsyw@mail.gmail.com>
+ <20240428.171236-tangy.giblet.idle.helpline-y9LqufL7EAAV@cyphar.com> <CALCETrU2VwCF-o7E5sc8FN_LBs3Q-vNMBf7N4rm0PAWFRo5QWw@mail.gmail.com>
+In-Reply-To: <CALCETrU2VwCF-o7E5sc8FN_LBs3Q-vNMBf7N4rm0PAWFRo5QWw@mail.gmail.com>
+From: Andy Lutomirski <luto@kernel.org>
+Date: Mon, 6 May 2024 10:34:16 -0700
+X-Gmail-Original-Message-ID: <CALCETrUZp2P1PXwJeL7ryda_qSLGsgHf5X0Zpw8piiT58k-cYg@mail.gmail.com>
+Message-ID: <CALCETrUZp2P1PXwJeL7ryda_qSLGsgHf5X0Zpw8piiT58k-cYg@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] implement OA2_CRED_INHERIT flag for openat2()
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Stas Sergeev <stsp2@yandex.ru>, "Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org, 
+	Stefan Metzmacher <metze@samba.org>, Eric Biederman <ebiederm@xmission.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Andy Lutomirski <luto@kernel.org>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, Alexander Aring <alex.aring@gmail.com>, 
+	David Laight <David.Laight@aculab.com>, linux-fsdevel@vger.kernel.org, 
+	linux-api@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	=?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Imran,
-
-On Mon,  6 May 2024 21:16:34 +1000, Imran Khan <imran.f.khan@oracle.com>
+On Mon, May 6, 2024 at 10:29=E2=80=AFAM Andy Lutomirski <luto@amacapital.ne=
+t> wrote:
+>
+> Replying to a couple emails at once...
+>
+> On Mon, May 6, 2024 at 12:14=E2=80=AFAM Aleksa Sarai <cyphar@cyphar.com> =
 wrote:
 
-> No functional change, just using readily available helper which
-> uses the same logic, that has been used here.
-> 
-> Signed-off-by: Imran Khan <imran.f.khan@oracle.com>
-> ---
->  arch/x86/kernel/irq.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
-> index 35fde0107901d..71432e42275c4 100644
-> --- a/arch/x86/kernel/irq.c
-> +++ b/arch/x86/kernel/irq.c
-> @@ -339,7 +339,7 @@
-> DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_kvm_posted_intr_nested_ipi) /* A cpu
-> has been removed from cpu_online_mask.  Reset irq affinities. */ void
-> fixup_irqs(void) {
-> -	unsigned int irr, vector;
-> +	unsigned int vector;
->  	struct irq_desc *desc;
->  	struct irq_data *data;
->  	struct irq_chip *chip;
-> @@ -366,8 +366,7 @@ void fixup_irqs(void)
->  		if (IS_ERR_OR_NULL(__this_cpu_read(vector_irq[vector])))
->  			continue;
->  
-> -		irr = apic_read(APIC_IRR + (vector / 32 * 0x10));
-> -		if (irr  & (1 << (vector % 32))) {
-> +		if (lapic_vector_set_in_irr(vector)) {
->  			desc = __this_cpu_read(vector_irq[vector]);
->  
->  			raw_spin_lock(&desc->lock);
-I have a similar refactoring as part of the posted MSI series, but I
-totally missed the existing helper lapic_vector_set_in_irr().
+> > I also find it somewhat amusing that this proposal is to basically give
+> > up on multi-user permissions for this one directory tree because it's
+> > too annoying to deal with. In that case, isn't chmod 777 a simpler
+> > solution? (I'm being a bit flippant, of course there is a difference,
+> > but the net result is that all users in the container would have the
+> > same permissions with all of the fun issues that implies.)
+> >
+> > In short, AFAICS idmapped mounts pretty much solve this problem (minus
+> > the ability to collapse users, which I suspect is not a good idea in
+> > general)?
+> >
+>
+> With my kernel hat on, maybe I agree.  But with my *user* hat on, I
+> think I pretty strongly disagree.  Look, idmapis lousy for
+> unprivileged use:
+>
+> $ install -m 0700 -d test_directory
+> $ echo 'hi there' >test_directory/file
+> $ podman run -it --rm
+> --mount=3Dtype=3Dbind,src=3Dtest_directory,dst=3D/tmp,idmap [debian-slim]
+> # cat /tmp/file
+> hi there
+>
+> <-- Hey, look, this kind of works!
+>
+> # setpriv --reuid=3D1 ls /tmp
+> ls: cannot open directory '/tmp': Permission denied
+>
+> <-- Gee, thanks, Linux!
 
-https://lore.kernel.org/lkml/171448372145.10875.6906928487300074547.tip-bot2@tip-bot2/
+I should add: this is lousy even for privileged use.  On a normal
+non-containerized system:
 
-Let me send out a fix patch against tip tree.
+$ ls -ld /var/lib/mysql
+drwxr-xr-x. 3 mysql mysql 4096 Sep 20  2023 /var/lib/mysql
 
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -505,13 +505,7 @@ static inline bool lapic_vector_set_in_irr(unsigned int vector)
+This makes perfect sense.
 
- static inline bool is_vector_pending(unsigned int vector)
- {
--       unsigned int irr;
--
--       irr = apic_read(APIC_IRR + (vector / 32 * 0x10));
--       if (irr  & (1 << (vector % 32)))
--               return true;
--
--       return pi_pending_this_cpu(vector);
-+       return lapic_vector_set_in_irr(vector) || pi_pending_this_cpu(vector);
- }
-
-Thanks,
-
-Jacob
+But if I want to run mysql in a container in a sane way, my only real
+choice is either to trust the container manager quite strongly (so it
+only maps this directory into the correct container) or, if I want to
+separate out management of this container into its own UID (which is a
+good practice), then I'm forced to do some kind of fragile hack like
+making a directory only accessible to the correct UID and then
+creating a 0777 directory inside it and bind-mounting *that*.
