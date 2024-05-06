@@ -1,202 +1,160 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D75BC8493;
-	Mon,  6 May 2024 11:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7591DFE4;
+	Mon,  6 May 2024 11:44:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714995793; cv=none; b=d5b3jFGU5YBojZnwsZWS295w7RoQ+Eqenu8MVikmrcFkfZU0JqerzZdQhI+bIFExSaA6PgXv6XeKan0hhbmSCcBAqitOi7xQ2OD1D49GrKGYh/vnJ8BnUPeoOsZ147ycCH98jdMhx2ASPZvfS8DFb9d/Dc9rJ4EOCJL6SFGByDc=
+	t=1714995893; cv=none; b=ggAvtEKVJB1qdvMZQmsA/ciGoIodb5ni+jkZLikm9pWXiiziyRPYtwArSsvm5L5D9a4nTkY6nCtun2W+bbjkm5tn3jRD18Rcs3oLjwB+hVtehWDrFEJqnojNvDPf9ePa1QrC/s9cfztB6KTfaHehonWriKyz9ej3W2oAUZku4fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714995793; c=relaxed/simple;
-	bh=ZnWho8O6CZwmGdd/PoDJp4xFmkWqTSgehRiVSUyT19c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fXB8mldx9DJobDr/hZZhYOq438ZOfd/T3x8o/jiOwtLxE6i1gJAA2lD7n2KKd+u/Kkg+B1r1xULslI+369OP/w2vSEhJEvpltqP+tGwXTUH8PSK+I2a3wlVXjk3Qs66taZEdSOsQqVFcimHHu5HWupel0RwT/G3ZjIe9fusRcxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HfAknvpI; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HfAknvpI"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 446B3dcP014160;
-	Mon, 6 May 2024 11:42:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=rgytEsbWqNR1bCJjGShVMzO/ql3G5tfwhj/K0Hlq5D4=;
- b=HfAknvpIlJYMnNKpBaiclkrJNtAecNT+hosdEaJB6bC6bIQl3ci5jvGxsJ1UNSyk1Rfo
- p6zHOlOM46APBC5inKh95vuui4lZWUmDYHbfN53ACnxg4oUBmlTPzZP4ieU9K4+cDyEm
- JmbHNhiDaNyoQmw/kLL6u30l+f3CokQQhD79XgQEYOEiILO6NY5PXgO43upVxJuq4VUj
- VEzyFu4TH2acFso+840Z4GVg3xNQbNPQSzU6+M3iFyxoUaPIZ6G8ay11ttYma227ZIPW
- MfdGUENWIiTc82q/45mKNXC+Dtmy05Zr+cdwCYN0HywZjN7iiX0aJgRlV1YCoplWl1P0 /A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xxx0eg2xf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 11:42:07 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 446Bg63X005783;
-	Mon, 6 May 2024 11:42:06 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xxx0eg2xb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 11:42:06 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 446B7jXa004998;
-	Mon, 6 May 2024 11:42:06 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xx5ygx911-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 11:42:05 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 446Bg09a54264182
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 6 May 2024 11:42:02 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 54FF12004F;
-	Mon,  6 May 2024 11:42:00 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4BC262004E;
-	Mon,  6 May 2024 11:41:59 +0000 (GMT)
-Received: from [9.171.11.27] (unknown [9.171.11.27])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  6 May 2024 11:41:59 +0000 (GMT)
-Message-ID: <04255fea-c54b-4433-a488-069a86b69cfc@linux.ibm.com>
-Date: Mon, 6 May 2024 13:41:58 +0200
+	s=arc-20240116; t=1714995893; c=relaxed/simple;
+	bh=vVX8ey54S/LNAFujtNUW9wAhLyLI3G3H+odAJkJ87V0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ueJAM5uhJT284QvF+/j0pKBwJVbWUfznpKgHn6cYRkEzhNtlAAY1hS/XFRd649b60Gvgv9w7uL/DRQLXXFOc307srDel5CTik/hUvaodGkPb83zlQB68nPtDvKO5albCjwaZ6cwbKsNy5Kk0cjm0/USbFrARwkHTa38mOwQwD28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VY0215r8Yz4f3m8v;
+	Mon,  6 May 2024 19:44:41 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 148D51A1072;
+	Mon,  6 May 2024 19:44:47 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP2 (Coremail) with SMTP id Syh0CgDH6w6swjhmHsDLMA--.57384S3;
+	Mon, 06 May 2024 19:44:46 +0800 (CST)
+Subject: Re: [RFC PATCH v4 24/34] ext4: implement buffered write iomap path
+To: Dave Chinner <david@fromorbit.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
+ adilger.kernel@dilger.ca, jack@suse.cz, ritesh.list@gmail.com,
+ hch@infradead.org, djwong@kernel.org, willy@infradead.org,
+ zokeefe@google.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
+ yukuai3@huawei.com, wangkefeng.wang@huawei.com
+References: <20240410142948.2817554-1-yi.zhang@huaweicloud.com>
+ <20240410142948.2817554-25-yi.zhang@huaweicloud.com>
+ <ZjH5Ia+dWGss5Duv@dread.disaster.area> <ZjH+QFVXLlcDkSdh@dread.disaster.area>
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+Message-ID: <96bbdb25-b420-67b1-d4c4-b838a5c70f9f@huaweicloud.com>
+Date: Mon, 6 May 2024 19:44:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v5 1/3] KVM: setup empty irq routing when create vm
-To: Yi Wang <up2wing@gmail.com>, seanjc@google.com, pbonzini@redhat.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wanpengli@tencent.com, foxywang@tencent.com, oliver.upton@linux.dev,
-        maz@kernel.org, anup@brainfault.org, atishp@atishpatra.org,
-        frankja@linux.ibm.com, imbrenda@linux.ibm.com, weijiang.yang@intel.com
-References: <20240506101751.3145407-1-foxywang@tencent.com>
- <20240506101751.3145407-2-foxywang@tencent.com>
+In-Reply-To: <ZjH+QFVXLlcDkSdh@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-From: Christian Borntraeger <borntraeger@linux.ibm.com>
-In-Reply-To: <20240506101751.3145407-2-foxywang@tencent.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: T8lHiEttOGkYxWgiLoyVeExgr-RHk7PM
-X-Proofpoint-GUID: TaNWE3iuEiNxaIRg6K9Fk9TFeJEIiZKk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-06_07,2024-05-06_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1011
- mlxscore=0 malwarescore=0 adultscore=0 phishscore=0 mlxlogscore=923
- spamscore=0 lowpriorityscore=0 priorityscore=1501 impostorscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405060080
+X-CM-TRANSID:Syh0CgDH6w6swjhmHsDLMA--.57384S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxZFWxCryDXFyDtw17Cry3Jwb_yoWrJw1kpr
+	Z8KFWUKFsrXr18ur1vvF4UWF1Fk3WxGr17Wr45WryqvFZ8ZFySga48GF1Y9FW7Ars2kF10
+	qFWUuFyxZa4Yy37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvIb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
+	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_
+	WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
+	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf
+	9x07UZ18PUUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
+On 2024/5/1 16:33, Dave Chinner wrote:
+> On Wed, May 01, 2024 at 06:11:13PM +1000, Dave Chinner wrote:
+>> On Wed, Apr 10, 2024 at 10:29:38PM +0800, Zhang Yi wrote:
+>>> From: Zhang Yi <yi.zhang@huawei.com>
+>>>
+>>> Implement buffered write iomap path, use ext4_da_map_blocks() to map
+>>> delalloc extents and add ext4_iomap_get_blocks() to allocate blocks if
+>>> delalloc is disabled or free space is about to run out.
+>>>
+>>> Note that we always allocate unwritten extents for new blocks in the
+>>> iomap write path, this means that the allocation type is no longer
+>>> controlled by the dioread_nolock mount option. After that, we could
+>>> postpone the i_disksize updating to the writeback path, and drop journal
+>>> handle in the buffered dealloc write path completely.
+> .....
+>>> +/*
+>>> + * Drop the staled delayed allocation range from the write failure,
+>>> + * including both start and end blocks. If not, we could leave a range
+>>> + * of delayed extents covered by a clean folio, it could lead to
+>>> + * inaccurate space reservation.
+>>> + */
+>>> +static int ext4_iomap_punch_delalloc(struct inode *inode, loff_t offset,
+>>> +				     loff_t length)
+>>> +{
+>>> +	ext4_es_remove_extent(inode, offset >> inode->i_blkbits,
+>>> +			DIV_ROUND_UP_ULL(length, EXT4_BLOCK_SIZE(inode->i_sb)));
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +static int ext4_iomap_buffered_write_end(struct inode *inode, loff_t offset,
+>>> +					 loff_t length, ssize_t written,
+>>> +					 unsigned int flags,
+>>> +					 struct iomap *iomap)
+>>> +{
+>>> +	handle_t *handle;
+>>> +	loff_t end;
+>>> +	int ret = 0, ret2;
+>>> +
+>>> +	/* delalloc */
+>>> +	if (iomap->flags & IOMAP_F_EXT4_DELALLOC) {
+>>> +		ret = iomap_file_buffered_write_punch_delalloc(inode, iomap,
+>>> +			offset, length, written, ext4_iomap_punch_delalloc);
+>>> +		if (ret)
+>>> +			ext4_warning(inode->i_sb,
+>>> +			     "Failed to clean up delalloc for inode %lu, %d",
+>>> +			     inode->i_ino, ret);
+>>> +		return ret;
+>>> +	}
+>>
+>> Why are you creating a delalloc extent for the write operation and
+>> then immediately deleting it from the extent tree once the write
+>> operation is done?
+> 
+> Ignore this, I mixed up the ext4_iomap_punch_delalloc() code
+> directly above with iomap_file_buffered_write_punch_delalloc().
+> 
+> In hindsight, iomap_file_buffered_write_punch_delalloc() is poorly
+> named, as it is handling a short write situation which requires
+> newly allocated delalloc blocks to be punched.
+> iomap_file_buffered_write_finish() would probably be a better name
+> for it....
+> 
+>> Also, why do you need IOMAP_F_EXT4_DELALLOC? Isn't a delalloc iomap
+>> set up with iomap->type = IOMAP_DELALLOC? Why can't that be used?
+> 
+> But this still stands - the first thing
+> iomap_file_buffered_write_punch_delalloc() is:
+> 
+> 	if (iomap->type != IOMAP_DELALLOC)
+>                 return 0;
+> 
 
+Thanks for the suggestion, the delalloc and non-delalloc write paths
+share the same ->iomap_end() now (i.e. ext4_iomap_buffered_write_end()),
+I use the IOMAP_F_EXT4_DELALLOC to identify the write path. For
+non-delalloc path, If we have allocated more blocks and copied less, we
+should truncate extra blocks that newly allocated by ->iomap_begin().
+If we use IOMAP_DELALLOC, we can't tell if the blocks are pre-existing
+or newly allocated, we can't truncate the pre-existing blocks, so I have
+to introduce IOMAP_F_EXT4_DELALLOC. But if we split the delalloc and
+non-delalloc handler, we could drop IOMAP_F_EXT4_DELALLOC.
 
-Am 06.05.24 um 12:17 schrieb Yi Wang:
-> From: Yi Wang <foxywang@tencent.com>
-> 
-> Add a new function to setup empty irq routing in kvm path, which
-> can be invoded in non-architecture-specific functions. The difference
-> compared to the kvm_setup_empty_irq_routing() is this function just
-> alloc the empty irq routing and does not need synchronize srcu, as
-> we will call it in kvm_create_vm().
-> 
-> Using the new adding function, we can setup empty irq routing when
-> kvm_create_vm(), so that x86 and s390 no longer need to set
-> empty/dummy irq routing when creating an IRQCHIP 'cause it avoid
-> an synchronize_srcu.
-> 
-> Signed-off-by: Yi Wang <foxywang@tencent.com>
-Acked-by: Christian Borntraeger <borntraeger@linux.ibm.com>
+I also checked xfs, IIUC, xfs doesn't free the extra blocks beyond EOF
+in xfs_buffered_write_iomap_end() for non-delalloc case since they will
+be freed by xfs_free_eofblocks in some other inactive paths, like
+xfs_release()/xfs_inactive()/..., is that right?
 
-> ---
->   include/linux/kvm_host.h |  2 ++
->   virt/kvm/irqchip.c       | 23 +++++++++++++++++++++++
->   virt/kvm/kvm_main.c      |  9 ++++++++-
->   3 files changed, 33 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 48f31dcd318a..a5f12b667ca5 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -2100,6 +2100,7 @@ int kvm_set_irq_routing(struct kvm *kvm,
->   			const struct kvm_irq_routing_entry *entries,
->   			unsigned nr,
->   			unsigned flags);
-> +int kvm_init_irq_routing(struct kvm *kvm);
->   int kvm_set_routing_entry(struct kvm *kvm,
->   			  struct kvm_kernel_irq_routing_entry *e,
->   			  const struct kvm_irq_routing_entry *ue);
-> @@ -2108,6 +2109,7 @@ void kvm_free_irq_routing(struct kvm *kvm);
->   #else
->   
->   static inline void kvm_free_irq_routing(struct kvm *kvm) {}
-> +int kvm_init_irq_routing(struct kvm *kvm) {}
->   
->   #endif
->   
-> diff --git a/virt/kvm/irqchip.c b/virt/kvm/irqchip.c
-> index 1e567d1f6d3d..ec1fda7fffea 100644
-> --- a/virt/kvm/irqchip.c
-> +++ b/virt/kvm/irqchip.c
-> @@ -237,3 +237,26 @@ int kvm_set_irq_routing(struct kvm *kvm,
->   
->   	return r;
->   }
-> +
-> +/*
-> + * Alloc empty irq routing.
-> + * Called only during vm creation, because we don't synchronize_srcu here.
-> + */
-> +int kvm_init_irq_routing(struct kvm *kvm)
-> +{
-> +	struct kvm_irq_routing_table *new;
-> +	int chip_size;
-> +
-> +	new = kzalloc(struct_size(new, map, 1), GFP_KERNEL_ACCOUNT);
-> +	if (!new)
-> +		return -ENOMEM;
-> +
-> +	new->nr_rt_entries = 1;
-> +
-> +	chip_size = sizeof(int) * KVM_NR_IRQCHIPS * KVM_IRQCHIP_NUM_PINS;
-> +	memset(new->chip, -1, chip_size);
-> +
-> +	RCU_INIT_POINTER(kvm->irq_routing, new);
-> +
-> +	return 0;
-> +}
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index ff0a20565f90..4100ebdd14fe 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -1233,6 +1233,11 @@ static struct kvm *kvm_create_vm(unsigned long type, const char *fdname)
->   		goto out_err_no_irq_srcu;
->   
->   	refcount_set(&kvm->users_count, 1);
-> +
-> +	r = kvm_init_irq_routing(kvm);
-> +	if (r)
-> +		goto out_err_no_irq_routing;
-> +
->   	for (i = 0; i < kvm_arch_nr_memslot_as_ids(kvm); i++) {
->   		for (j = 0; j < 2; j++) {
->   			slots = &kvm->__memslots[i][j];
-> @@ -1308,9 +1313,11 @@ static struct kvm *kvm_create_vm(unsigned long type, const char *fdname)
->   out_err_no_disable:
->   	kvm_arch_destroy_vm(kvm);
->   out_err_no_arch_destroy_vm:
-> -	WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
->   	for (i = 0; i < KVM_NR_BUSES; i++)
->   		kfree(kvm_get_bus(kvm, i));
-> +	kvm_free_irq_routing(kvm);
-> +out_err_no_irq_routing:
-> +	WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
->   	cleanup_srcu_struct(&kvm->irq_srcu);
->   out_err_no_irq_srcu:
->   	cleanup_srcu_struct(&kvm->srcu);
+Thanks,
+Yi.
+
