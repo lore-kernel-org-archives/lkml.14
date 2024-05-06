@@ -1,134 +1,59 @@
-Received: from mail.thorsis.com (mail.thorsis.com [217.92.40.78])
+Received: from xry111.site (xry111.site [89.208.246.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A031422D6;
-	Mon,  6 May 2024 09:33:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.92.40.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404F11422D6
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 09:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.208.246.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714988042; cv=none; b=kIhgZhOUsp+TcayRJcRfYlIP3crJa/p6VhrKwGC4pQBC5GTEF8I9vTuzw+qaqjuz2JvEXM4ikiKSPZqf+wAHNYCQPQsKnyrCJ9MH7mR04lXnII3JiMqLWxAlzk5Kw6bhR4zUJiYVdv0ebxXg55B1rkZZQxLFSA0LiK+f/tYfpSQ=
+	t=1714988049; cv=none; b=BbAqRptorKlEg8ZxKgwX1MJz3ze8eqZonqu2SXURqLdIUgZOatCCZiz8cpciC9QKaMhv2LVkI29J+EKHXBWsysx5cXuuURumMYGPpkFNFl1kNpUvHCcJ8CCa8MKFJ8XJjDyqUsS/xUHxx4qnJk3ovNX2NZmQlXO6qmx1+m7UVKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714988042; c=relaxed/simple;
-	bh=9C8JvI+7wm2JcAyLDZ0Qc6A4yORKfHgNwrpHXYrv3Zs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EfAid23z/eaUPaTGUQ2ZNQvW7Vn6Y/ZipeOTCrA/C0bVuNubYfI0UGUS32ybUNlEP9oUU6WbXKweTE9wGrFP3iWnohmn/T8XSiY4Bh0G05kuYLzN+oczo2mjl3QJrZ0JCoKp3WkyEZ1vvFSP1n+djpOPDngG03mKdVFjvjbreic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com; spf=pass smtp.mailfrom=thorsis.com; dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b=ruSrxaBq; arc=none smtp.client-ip=217.92.40.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=thorsis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=thorsis.com
+	s=arc-20240116; t=1714988049; c=relaxed/simple;
+	bh=7OF86DztNEgEGP33zEtBbhPkFcoR/Smj1/J4ZnBZc7M=;
+	h=Message-ID:Subject:From:To:Date:Content-Type:MIME-Version; b=hIOO29sdRjxwHvUa/P6UuIaLe/a5qRicFV8Vht0GSHd4p2/JJXUJlWLe+Plsq9oQTAK+xvbeTwSEaYShN1Y5s2t4vqGRZl6WRORjG/HylMhGzndMkWF3RrwaAAWn94gQWOJ2XseaY9wTP1lTsNCnySbsPOrrtqOAeFLHVYy/yRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site; spf=pass smtp.mailfrom=xry111.site; dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b=hyxdcExm; arc=none smtp.client-ip=89.208.246.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=xry111.site
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xry111.site
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=thorsis.com header.i=@thorsis.com header.b="ruSrxaBq"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B84891487F31;
-	Mon,  6 May 2024 11:27:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=thorsis.com; s=dkim;
-	t=1714987639; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=bm2YH55vsuB8a5BzC3OKohaHswSl7MN/90c4mNewII0=;
-	b=ruSrxaBqNLhN8GftpFruP6UxqioezevNCSRs4OcBtZZLcncZKq3bZIknK37Me3heM3sFyF
-	Gdk492Cde0mq9+yFrSe6QtivFsvEBqqCxX24vpDUKdETMzq7xeT40F5szbYrK3K7UB/5/J
-	V5XzUV+6uUeAQSRRilhy9RSJM+nNTEhtUKcrZsm2ra3sEYu2KFJruMxKJ2tPMs1qBX1Km/
-	+Tf20Ia6kOlAx8Sne3PWYSY3Ada7acKlzflpg1tSVpo6c4seKpWLIS3xG7aseHHTdN8LYA
-	9XGRToM4PA4cJKax2UiXIfpRGn2TgxsHNJk4NrQUygRZd3tL65JRgrc6bXUG+A==
-Date: Mon, 6 May 2024 11:27:07 +0200
-From: Alexander Dahl <ada@thorsis.com>
-To: Joseph Strauss <jstrauss@mailbox.org>
-Cc: Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] Add multicolor support to BlinkM LED driver
-Message-ID: <20240506-unfazed-uplifted-3b2abebfc454@thorsis.com>
-Mail-Followup-To: Joseph Strauss <jstrauss@mailbox.org>,
-	Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-References: <20240428162309.32111-1-jstrauss@mailbox.org>
- <20240503085724.GL1227636@google.com>
- <20240503232636.kbygwgo6h2c5evqc@libretux>
+	dkim=pass (1024-bit key) header.d=xry111.site header.i=@xry111.site header.b="hyxdcExm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xry111.site;
+	s=default; t=1714988047;
+	bh=7OF86DztNEgEGP33zEtBbhPkFcoR/Smj1/J4ZnBZc7M=;
+	h=Subject:From:To:Date:From;
+	b=hyxdcExmrUDFeMq08hWkYed6VRfG8qhoogmm1H6UxGUlT7e6aGRIwFZiXcSBbBpsp
+	 9W/g5HwWCG3of2rmq/13G2mRH0iptGjkexi5CsR5ySXJzJydNmpv0vNdk/gqoYN/wU
+	 OvP5tMHgECgkTACyhcIyva2MUvuneJHzglYR4ASI=
+Received: from [127.0.0.1] (unknown [IPv6:2001:470:683e::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-384) server-digest SHA384)
+	(Client did not present a certificate)
+	(Authenticated sender: xry111@xry111.site)
+	by xry111.site (Postfix) with ESMTPSA id 4A5B767052
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 05:34:07 -0400 (EDT)
+Message-ID: <ff46715a28b6810b1582bed386c79cf6f090e21c.camel@xry111.site>
+Subject: Broken mainline kernel tarball download link on kernel.org
+From: Xi Ruoyao <xry111@xry111.site>
+To: linux-kernel@vger.kernel.org
+Date: Mon, 06 May 2024 17:34:04 +0800
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240503232636.kbygwgo6h2c5evqc@libretux>
-User-Agent: Mutt/2.2.12 (2023-09-09)
-X-Last-TLS-Session-Version: TLSv1.3
 
-Hello Joseph,
+Hi,
 
-Am Fri, May 03, 2024 at 06:26:36PM -0500 schrieb Joseph Strauss:
-> On 24/05/03 09:57AM, Lee Jones wrote:
-> > On Sun, 28 Apr 2024, Joseph Strauss wrote:
-> > 
-> > > Add multicolor support to the BlinkM driver, making it easier to control
-> > > from userspace. The BlinkM LED is a programmable RGB LED. The driver
-> > > currently supports only the regular LED sysfs class, resulting in the
-> > > creation of three distinct classes, one for red, green, and blue. The
-> > > user then has to input three values into the three seperate brightness
-> > > files within those classes. The multicolor LED framework makes the
-> > > device easier to control with the multi_intensity file: the user can
-> > > input three values at once to form a color, while still controlling the
-> > > lightness with the brightness file.
-> > > 
-> > > The main struct blinkm_led has changed slightly. The struct led_classdev
-> > > for the regular sysfs classes remain. The blinkm_probe function checks
-> > > CONFIG_LEDS_BLINKM_MULTICOLOR to decide whether to load the seperate
-> > > sysfs classes or the single multicolor one, but never both. The
-> > > blinkm_set_mc_brightness() function had to be added to calculate the
-> > > three color components and then set the fields of the blinkm_data
-> > > structure accordingly.
-> > > 
-> > > Signed-off-by: Joseph Strauss <jstrauss@mailbox.org>
-> > > ---
-> > > Changes in v2:
-> > > - Replaced instances of the constant 3 with NUM_LEDS, where applicable
-> > > - Fixed formatting errors
-> > > - Replaced loop inside of blinkm_set_mc_brightness() with equivalent
-> > >   statements
-> > > - Changed id of multicolor class from 4 to 3
-> > > - Replaced call to devm_kmalloc_array() with devm_kcalloc()
-> > > Changes in v3:
-> > > - Add CONFIG_LEDS_BLINKM_MULTICOLOR to check whether to use multicolor
-> > >   funcitonality
-> > > - Extend well-known-leds.txt to include standard names for RGB and indicator
-> > >   LEDS
-> > > - Change name of Blinkm sysfs class according to well-known-leds.txt
-> > > - Simplify struct blinkm_led and struct blinkm_data
-> > > - Remove magic numbers
-> > > - Fix formatting errors
-> > > - Remove unrelated changes
-> > > Changes in v4:
-> > > - Fix indentation
-> > > - Add default case to switch statement
-> > > Changes in v5:
-> > > - Fix warnings related to snprintf on s390 architecture, reported by
-> > >   0-DAY CI Kernel Test Service
-> > > Changes in v6:
-> > > - Refactored struct blinkm_led to use a union
-> > > - Refactored blinkm_probe()
-> > > - Clarified documentation
-> > > 
-> > >  Documentation/leds/leds-blinkm.rst     |  31 +++-
-> > >  Documentation/leds/well-known-leds.txt |   8 +
-> > >  drivers/leds/Kconfig                   |   8 +
-> > >  drivers/leds/leds-blinkm.c             | 223 +++++++++++++++++--------
-> > >  4 files changed, 198 insertions(+), 72 deletions(-)
-> > 
-> > Just tried to apply this, but checkpatch.pl has some complaints.
-> > 
-> > Please fix them and resubmit, thanks.
-> > 
-> > -- 
-> > Lee Jones [李琼斯]
-> I fixed the errors and warnings that resulted from my patch, but am
-> I correct in assuming I am not responsible for fixing the warnings
-> from other parts of the file? It would make the patch messier is my
-> concern.
+Now on the homepage of kernel.org, the hyperlink for the tarball of the
+mainline kernel links to:
 
-I would say so.  Output somehow depends on what you call checkpatch
-with.  Passing the actual patch (after `git format-patch …`) you
-should only get warnings for parts you touched.  Passing the whole
-file with -f of course you also get warnings for other parts.
+https://git.kernel.org/torvalds/t/linux-6.9-rc7.tar.gz
 
-Greets
-Alex
+But this link results a page saying "Unsupported snapshot format: linux-
+6.9-rc7.tar.gz".
 
+--=20
+Xi Ruoyao <xry111@xry111.site>
+School of Aerospace Science and Technology, Xidian University
