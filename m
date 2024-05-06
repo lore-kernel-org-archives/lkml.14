@@ -1,160 +1,91 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BF032FB6;
-	Mon,  6 May 2024 01:22:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979106FB2;
+	Mon,  6 May 2024 01:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714958548; cv=none; b=I3S5/LGCh9F1lKm4Ma2qNCFNb4yhnbdirE8ui1Or4RSQGwdQAMgx7SI9ubTVERSkylhvIqn1Z9rRJIC0wCGaKEs/XReEXRJAEtyUGlVrrGkLy5/APG6t6PJzC6/+36Z7g+7PACChUn2hw25nU4G7McPZfEX5s4YD0+6800ZFS7g=
+	t=1714958710; cv=none; b=b/4CXmHpMXYNxnLsZpq/gF3PZRxhlBpu4LSzSSP7Uik3YFJ9neFfyhP7rP5ebI2wEjec9F/awMB7s/31+iENLZ/fnzCaGi7qoOIt0o/T+Ac+7OyYGb1aiky7ppbo4KPOkH3jQTDItZbRosdahGK0hk/VSHnJ2hBCYM11QCDVdmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714958548; c=relaxed/simple;
-	bh=JJjxgGZxm6C2oeTjFvqBWbAWhXD8o2kgHv5Kc419p6A=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=POtKkh1YgeVe3sz+KA8nd594hYuTtGIeWOWmmBUSMn3ar4tq99jUaiYromxpSYnpwwzGPr06RwuJZn3NFy3Du07ZO8qydtEN26TQYcMCDEKyPxRCREbELBTDxEMI1dFfP6m+hzE33rwdyNDU75VcNmjRyAKPg9/JVqnalPsUONk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SFi4+NjK; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SFi4+NjK"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a59c5c9c6aeso143974666b.2;
-        Sun, 05 May 2024 18:22:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714958545; x=1715563345; darn=vger.kernel.org;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PXql6pq6gP6PZPKKZA9sUcOpkbTs5kG7qkItMNhcUBg=;
-        b=SFi4+NjKGZ/6DopFdBTtNABksF9E1HjAxsYz8ZG25eqz3nJKl0S+l33ZzTCxGOWf4Q
-         5ACsLqGXSodYAW0qVu6/6alw8KTS2JhuXu6S0gM0ULy6A0CQBLZROGAWfTqEZF0hneBd
-         7wgHC4cDR3JUFQLWc2PDvgUa83C8FAyqD67f5MF4r/TKXy08WOwVwThsqAvjXHojNNhZ
-         rkaaGp6hh7H9yAvj2SfWkS94dhjhaajzA67ZSuBlqyZTlgeqGFNMWtwCOwFK5Fpr6UDE
-         4X3AnoQA455WY3kl2mWg8SCTpBizxLwiqpzNiXobfP6A0ibCglxB+5uoFhLT3TS+mvQv
-         RuQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714958545; x=1715563345;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PXql6pq6gP6PZPKKZA9sUcOpkbTs5kG7qkItMNhcUBg=;
-        b=NywN/J7089A1QHiB4gTA3cLjnWOjXNIAbc/vDb7EnxqniHWgdWV91dROy7nuQtEr3R
-         QRHYe2CgTuFBwG690kxMuibd2Hu/IPFHfPeJIKa1yiIhUYIHvJlGHMGRCy+oM0/17rWn
-         NO4sv8M3ofZpX7934L+EFNUXU5frr/LBb6N82OcAEV4jEeLisf5NNiVWUqKNG+laGqR3
-         Me4QaO4qFkR0KalxNHIOTS3YESytDaireeeX0y/cATkO4VSBBXgkEOgzzYjwWMP6wOHS
-         W/1mi7pGe+iFZedmrFZ/7pRfWenWVbuFbUzS72lYj6KXtj8n4jDmWGsr2gGpUroZiN55
-         zx8w==
-X-Forwarded-Encrypted: i=1; AJvYcCWiONT8mpqiH6DMxrHrfD3cep1oq5Stt3phFICKfvnzuKjETS5Oc+FDzeKRGZx9Os9+5n/vXvC+ogWhdINX8A8c7K5Yu7JewQZLQwoy
-X-Gm-Message-State: AOJu0YxqaUPrSd3iJqk3liRm8DGyFQZE8etk3LAadK7xYonUOD0xfj7f
-	lZkjlWaojdDY3lniEjYBPF2EPzY3l1s6knLjzOLyM1dGgK5zaDk/
-X-Google-Smtp-Source: AGHT+IHX4Q1M1J2QS0feiS/vKJoi8VrwTs5GnXeLGv3vgyeFQks/RZrzr3b3YspBZ68H/t1pBhZMAQ==
-X-Received: by 2002:a17:907:728a:b0:a59:bbd6:bb3b with SMTP id dt10-20020a170907728a00b00a59bbd6bb3bmr2228018ejc.55.1714958545444;
-        Sun, 05 May 2024 18:22:25 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id l12-20020a1709066b8c00b00a59c0ecd559sm1427116ejr.112.2024.05.05.18.22.24
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 05 May 2024 18:22:24 -0700 (PDT)
-From: Wei Yang <richard.weiyang@gmail.com>
-To: arnd@arndb.de,
-	rppt@kernel.org
-Cc: linux-arch@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Wei Yang <richard.weiyang@gmail.com>
-Subject: [PATCH] mm/memblock: discard .text/.data if CONFIG_ARCH_KEEP_MEMBLOCK not set
-Date: Mon,  6 May 2024 01:21:04 +0000
-Message-Id: <20240506012104.10864-1-richard.weiyang@gmail.com>
-X-Mailer: git-send-email 2.11.0
+	s=arc-20240116; t=1714958710; c=relaxed/simple;
+	bh=yHHt4XFiBmrUD2THHdNuaVbruXG2YIA3ZcGwA7X9bwE=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=PmGQCJ2OBXMFg+eZKFjEikeqZmJqg6OWEp57W19Et61sx0M4t4PUz4zaOj9rLV/0fKp08rIp1gK8wQ3f0TIi4qoInVEze4H3P2coyyQzVKhRs5TrWrYBDxjFRf7LveorcFDZDZ5y5uLCQNLL1qkWTkFMIdjRqwUA76YtdCJ9dCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VXkGy3mZyz4f3kpX;
+	Mon,  6 May 2024 09:24:58 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id BEC1E1A104F;
+	Mon,  6 May 2024 09:25:03 +0800 (CST)
+Received: from [10.174.178.129] (unknown [10.174.178.129])
+	by APP1 (Coremail) with SMTP id cCh0CgDn_AVuMThmCHKBLw--.3757S2;
+	Mon, 06 May 2024 09:25:03 +0800 (CST)
+Subject: Re: [PATCH v2 0/4] Fix and cleanups to page-writeback
+To: Tejun Heo <tj@kernel.org>
+Cc: willy@infradead.org, akpm@linux-foundation.org, jack@suse.cz,
+ hcochran@kernelspring.com, axboe@kernel.dk, mszeredi@redhat.com,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20240425131724.36778-1-shikemeng@huaweicloud.com>
+ <ZjJq2uvuXZoZ5aj3@slm.duckdns.org>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <55edec09-b54f-d02a-22ac-7ce90cb1e766@huaweicloud.com>
+Date: Mon, 6 May 2024 09:25:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+In-Reply-To: <ZjJq2uvuXZoZ5aj3@slm.duckdns.org>
+Content-Type: text/plain; charset=gbk
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgDn_AVuMThmCHKBLw--.3757S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Wr4xXF4kCr4xZFy8AFWxtFb_yoWfArb_W3
+	yjkayqkFyDJrW2ganFgrs8WF1xCr48J34DJ34rXr1kt34fAF4DXan0kw1rZr1fJayxJr9x
+	GFWqgw43Gwn7ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbI8YFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
+	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
+	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_
+	GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
+	CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvj
+	xUrR6zUUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-When CONFIG_ARCH_KEEP_MEMBLOCK not set, we expect to discard related
-code and data. But it doesn't until CONFIG_MEMORY_HOTPLUG not set
-neither.
+Hi Tejun,
 
-This patch puts memblock's .text/.data into its own section, so that it
-only depends on CONFIG_ARCH_KEEP_MEMBLOCK to discard related code and
-data. After this, init size increase from 2420K to 2432K.
-
-Signed-off-by: Wei Yang <richard.weiyang@gmail.com>
----
- include/asm-generic/vmlinux.lds.h | 14 +++++++++++++-
- include/linux/memblock.h          |  8 ++++----
- 2 files changed, 17 insertions(+), 5 deletions(-)
-
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index f7749d0f2562..775c5eedb9e6 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -147,6 +147,14 @@
- #define MEM_DISCARD(sec) *(.mem##sec)
- #endif
- 
-+#if defined(CONFIG_ARCH_KEEP_MEMBLOCK)
-+#define MEMBLOCK_KEEP(sec)    *(.mb##sec)
-+#define MEMBLOCK_DISCARD(sec)
-+#else
-+#define MEMBLOCK_KEEP(sec)
-+#define MEMBLOCK_DISCARD(sec) *(.mb##sec)
-+#endif
-+
- #ifndef CONFIG_HAVE_DYNAMIC_FTRACE_NO_PATCHABLE
- #define KEEP_PATCHABLE		KEEP(*(__patchable_function_entries))
- #define PATCHABLE_DISCARDS
-@@ -356,6 +364,7 @@
- 	*(.ref.data)							\
- 	*(.data..shared_aligned) /* percpu related */			\
- 	MEM_KEEP(init.data*)						\
-+	MEMBLOCK_KEEP(init.data*)					\
- 	*(.data.unlikely)						\
- 	__start_once = .;						\
- 	*(.data.once)							\
-@@ -573,6 +582,7 @@
- 		*(.ref.text)						\
- 		*(.text.asan.* .text.tsan.*)				\
- 	MEM_KEEP(init.text*)						\
-+	MEMBLOCK_KEEP(init.text*)					\
- 
- 
- /* sched.text is aling to function alignment to secure we have same
-@@ -680,6 +690,7 @@
- 	KEEP(*(SORT(___kentry+*)))					\
- 	*(.init.data .init.data.*)					\
- 	MEM_DISCARD(init.data*)						\
-+	MEMBLOCK_DISCARD(init.data*)					\
- 	KERNEL_CTORS()							\
- 	MCOUNT_REC()							\
- 	*(.init.rodata .init.rodata.*)					\
-@@ -706,7 +717,8 @@
- #define INIT_TEXT							\
- 	*(.init.text .init.text.*)					\
- 	*(.text.startup)						\
--	MEM_DISCARD(init.text*)
-+	MEM_DISCARD(init.text*)						\
-+	MEMBLOCK_DISCARD(init.text*)
- 
- #define EXIT_DATA							\
- 	*(.exit.data .exit.data.*)					\
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index e2082240586d..3e1f1d42dde7 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -100,13 +100,13 @@ struct memblock {
- 
- extern struct memblock memblock;
- 
-+#define __init_memblock        __section(".mbinit.text") __cold notrace \
-+						  __latent_entropy
-+#define __initdata_memblock    __section(".mbinit.data")
-+
- #ifndef CONFIG_ARCH_KEEP_MEMBLOCK
--#define __init_memblock __meminit
--#define __initdata_memblock __meminitdata
- void memblock_discard(void);
- #else
--#define __init_memblock
--#define __initdata_memblock
- static inline void memblock_discard(void) {}
- #endif
- 
--- 
-2.34.1
+on 5/2/2024 12:16 AM, Tejun Heo wrote:
+> On Thu, Apr 25, 2024 at 09:17:20PM +0800, Kemeng Shi wrote:
+>> v1->v2:
+>> -rebase on up-to-date tree.
+>> -add test result in "mm: correct calculation of wb's bg_thresh in cgroup
+>> domain"
+>> -drop "mm: remove redundant check in wb_min_max_ratio"
+>> -collect RVB from Matthew to "mm: remove stale comment __folio_mark_dirty"
+>>
+>> This series contains some random cleanups and a fix to correct
+>> calculation of wb's bg_thresh in cgroup domain. More details can
+>> be found respective patches. Thanks!
+> 
+> Isn't this series already in -mm? Why is this being reposted? What tree is
+> this based on? Please provide more context to help reviewing the patches.
+> 
+Sorry for late reply as I was on vacation these days. This series is based
+on mm-unstable and was applied into -mm mm-unstable branch after this v2
+series was posted.
+Thanks
+> Thanks.
+> 
 
