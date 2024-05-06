@@ -1,114 +1,235 @@
-Received: from wfhigh6-smtp.messagingengine.com (wfhigh6-smtp.messagingengine.com [64.147.123.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DADC4EB2B;
-	Mon,  6 May 2024 11:30:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E874EB2B;
+	Mon,  6 May 2024 11:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714995009; cv=none; b=FSv5opTY7AAHwI8LnvBa4pC5PsIensYWc68qjlx0RdMPbVzL4GwOUfA681FEuB7pyAyxG0naBPfpG4onQVfRgfrcIqDDQN5KcxlK9FnwGI8pNd6Uavq1RND5FvEg0aqW3J/e1JM/jEneenkVL9hDBvsUZAVeo1k3MlwS80fhvNI=
+	t=1714995194; cv=none; b=nFrwexXyR/1QFac3Qde4p5hjHWmzO/+QI5sGDd8pn7CuL2ITMnLyoThyV/s87X4w6mP5r8+NTH8Zc3RxOvLxEIXivWS1UUKewT2Ag0ft+aODXENSpkih7MN2q6zstHm42yH1oLpq3YY6dYLwD5AX+cqq2ZbqB/m7ZpIVOyqIpx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714995009; c=relaxed/simple;
-	bh=qvCGSoQawQTxwKwTMIcTAx8d5xEdDNJuiCoB8WMClEI=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=HUN0uM7xbuEznalkK+X2EX9ePElcCOQBZC4pS2vJ5C9TruYM0Dozlbc/afo/CllnKYOviaLqBJF16wES7NV/gRdBZALFdlW62wcLOMJx9xDWsU+HoNYYV7An2Ij0I3navReXx89LQt6kvm/KwSMS0WpeXFHgzav5ODBUcO7odTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=AHD0pizr; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LmDhZqq7; arc=none smtp.client-ip=64.147.123.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="AHD0pizr";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LmDhZqq7"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.west.internal (Postfix) with ESMTP id EACC01800139;
-	Mon,  6 May 2024 07:30:05 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 06 May 2024 07:30:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1714995005; x=1715081405; bh=s6x+9FStSk
-	mw7vHjv+iXvtpuGZLNrdWUBFo+scPQRuU=; b=AHD0pizrJgQdHxOS42Q/D4QKdi
-	cukMgjIREaL18jW6eVNU3mtIyiMNJFV0dWbbZwqjz7A9JAI6Q8SRmHDpp3/EHYrN
-	zzfedo+5gcPFmtepD7mWH6dJyBAkImSl28b0R2S529P4QD3gPNoPQXE0GkfJLbni
-	bcHbtznhHXH751bObyWlZVllJcOdc6r6kv2juDiQUxR9GNM7quOoL8HTNYvtEb2x
-	m0CfmibODx9F0D6N3VJ99qwikzWIkgHbRVWsvr2bp+M5Iv5H+bSfZxsDwjIBn++s
-	whqy2Szt7gPoUwTa38Qfw8Sro9kx7f/cMhlq3aMZq3xr0zO+YPIEH+p9N8lQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1714995005; x=1715081405; bh=s6x+9FStSkmw7vHjv+iXvtpuGZLN
-	rdWUBFo+scPQRuU=; b=LmDhZqq7geQ9VNHRILOo3gI5RJvQJGxeL8VVaM5An/rh
-	LtwkpztUwJ392kBYoAaNVWLTYaQw19J3sFYEdSme5Y5YDv7mNGNZl0q0imMTFBPO
-	UIyVnzKx4ksC1fbPKw+JqdVOZCLt9AJMt5/zBbbdHXRQp4vIIuReZwVorC0nBcs1
-	xrGuE8vBurc1hvWVxvDF8idaZsmBU4O7tHVPuQRK8FMmc8+U27/0rT+AL4uBo7y5
-	f+WEhDi0jKB/yneA6LWkgYFCCxwA4lhayxK5aAIn0cxco2alT5yIyTp89h5AqEyG
-	IletbRxaeMKUFqDzOZk3YEjXPJcxoV/sc7VO24xamg==
-X-ME-Sender: <xms:PL84ZhG2CJ47LRvE8Z0f0oI7RS-IFtnFCC95EF-yqkNb8rHH5Q2zkQ>
-    <xme:PL84ZmXn6vpMMB6daj34dsfRhVIzZRgz1AOoC2Lfni8UmPbiZqACo4ooefkh-X-zv
-    gTM3KdvLsDFQqTN5o0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddviedggeduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:PL84ZjKcZcBSYJOyDf-lKjpDwcJR5r_7cWSnzd2f_K9vhXgUq4LTnQ>
-    <xmx:PL84ZnHZk9R4VkiVpThqxonxMYAhPtAuT361zbNj-r0vIUunaIoccQ>
-    <xmx:PL84ZnXfvgYh9t5xO0bUHgrm4-NMynO8_nj9bNnUGmHbvb-e9uvL1Q>
-    <xmx:PL84ZiPfylLJxKa4OeZsppFpdbsmqGHP_KpbYLTOvv1C-8k2ahMeZg>
-    <xmx:Pb84ZkWBosuE-iq_ccMnFYDgkDpdoTT83l6NuSACPF_77-HLv-M_O3El>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id A5F9DB6008F; Mon,  6 May 2024 07:30:04 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-437-gcad818a2a-fm-20240502.001-gcad818a2
+	s=arc-20240116; t=1714995194; c=relaxed/simple;
+	bh=PIxogdcQO/DJOu/Ectik/7m3pQPCs86wpxCJ1na6reo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cjjTGp7c6He6DU2VN3Pd1UsKhMQpJ108e0MFdDQPhZ9Aoy2OIITGlCxwu9K05u04nqNmmwo3PVItseURUJqnTKhwRWt9DB3BSqWga4Zd2KBKZ1G5w7y+orc4uZ/ZtmUWQDsYGNKIRbS4sSfTA6qkW10uklYy8nT7zG91VLQb6oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 446BWdXS22260556, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 446BWdXS22260556
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 6 May 2024 19:32:39 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 6 May 2024 19:32:39 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 6 May 2024 19:32:39 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
+ RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
+ 15.01.2507.035; Mon, 6 May 2024 19:32:39 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: Simon Horman <horms@kernel.org>
+CC: "kuba@kernel.org" <kuba@kernel.org>,
+        "davem@davemloft.net"
+	<davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>,
+        "andrew@lunn.ch" <andrew@lunn.ch>,
+        "jiri@resnulli.us" <jiri@resnulli.us>,
+        Ping-Ke Shih <pkshih@realtek.com>, Larry Chiu <larry.chiu@realtek.com>
+Subject: RE: [PATCH net-next v17 01/13] rtase: Add pci table supported in this module
+Thread-Topic: [PATCH net-next v17 01/13] rtase: Add pci table supported in
+ this module
+Thread-Index: AQHanHHPpu/0OXZUyEWgBGsNOMbxkLGEuuuAgAVa5UA=
+Date: Mon, 6 May 2024 11:32:38 +0000
+Message-ID: <14c200b4573b4a60af14b37861ca1727@realtek.com>
+References: <20240502091847.65181-1-justinlai0215@realtek.com>
+ <20240502091847.65181-2-justinlai0215@realtek.com>
+ <20240503093331.GN2821784@kernel.org>
+In-Reply-To: <20240503093331.GN2821784@kernel.org>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS01.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <8accb26e-c7a8-43aa-90d5-d83d5a1575de@app.fastmail.com>
-In-Reply-To: <20240506-imx-pinctrl-optional-v2-2-bdff75085156@geanix.com>
-References: <20240506-imx-pinctrl-optional-v2-0-bdff75085156@geanix.com>
- <20240506-imx-pinctrl-optional-v2-2-bdff75085156@geanix.com>
-Date: Mon, 06 May 2024 13:29:43 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Esben Haabendal" <esben@geanix.com>,
- "Russell King" <linux@armlinux.org.uk>, "Shawn Guo" <shawnguo@kernel.org>,
- "Sascha Hauer" <s.hauer@pengutronix.de>,
- "Pengutronix Kernel Team" <kernel@pengutronix.de>,
- "Fabio Estevam" <festevam@gmail.com>, "Dong Aisheng" <aisheng.dong@nxp.com>,
- "Jacky Bai" <ping.bai@nxp.com>, "Linus Walleij" <linus.walleij@linaro.org>
-Cc: "Rasmus Villemoes" <rasmus.villemoes@prevas.dk>,
- linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] pinctrl: freescale: Use CONFIG_SOC_IMXRT to guard i.MX
- RT1xxx drivers
-Content-Type: text/plain
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On Mon, May 6, 2024, at 12:23, Esben Haabendal wrote:
-> 
->  config PINCTRL_IMXRT1050
->  	bool "IMXRT1050 pinctrl driver"
-> -	depends on ARCH_MXC
-> +	depends on SOC_IMXRT
-> +	default SOC_IMXRT
->  	select PINCTRL_IMX
->  	help
->  	  Say Y here to enable the imxrt1050 pinctrl driver
+>=20
+>=20
+> On Thu, May 02, 2024 at 05:18:35PM +0800, Justin Lai wrote:
+> > Add pci table supported in this module, and implement pci_driver
+> > function to initialize this driver, remove this driver, or shutdown thi=
+s driver.
+> >
+> > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+>=20
+> ...
+>=20
+> > diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > new file mode 100644
+> > index 000000000000..5ddb5f7abfe9
+> > --- /dev/null
+> > +++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+> > @@ -0,0 +1,618 @@
+> > +// SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+> > +/*
+> > + *  rtase is the Linux device driver released for Realtek Automotive
+> > +Switch
+> > + *  controllers with PCI-Express interface.
+> > + *
+> > + *  Copyright(c) 2023 Realtek Semiconductor Corp.
+> > + *
+> > + *  Below is a simplified block diagram of the chip and its relevant
+> interfaces.
+> > + *
+> > + *               *************************
+> > + *               *                       *
+> > + *               *  CPU network device   *
+> > + *               *                       *
+> > + *               *   +-------------+     *
+> > + *               *   |  PCIE Host  |     *
+> > + *               ***********++************
+> > + *                          ||
+> > + *                         PCIE
+> > + *                          ||
+> > + *      ********************++**********************
+> > + *      *            | PCIE Endpoint |             *
+> > + *      *            +---------------+             *
+> > + *      *                | GMAC |                  *
+> > + *      *                +--++--+  Realtek         *
+> > + *      *                   ||     RTL90xx Series  *
+> > + *      *                   ||                     *
+> > + *      *     +-------------++----------------+    *
+> > + *      *     |           | MAC |             |    *
+> > + *      *     |           +-----+             |    *
+> > + *      *     |                               |    *
+> > + *      *     |     Ethernet Switch Core      |    *
+> > + *      *     |                               |    *
+> > + *      *     |   +-----+           +-----+   |    *
+> > + *      *     |   | MAC |...........| MAC |   |    *
+> > + *      *     +---+-----+-----------+-----+---+    *
+> > + *      *         | PHY |...........| PHY |        *
+> > + *      *         +--++-+           +--++-+        *
+> > + *      *************||****************||***********
+>=20
+> Thanks for the diagram, I like it a lot :)
+>=20
 
-Maybe make this
+Thank you for your like :)
+> > + *
+> > + *  The block of the Realtek RTL90xx series is our entire chip
+> > + architecture,
+> > + *  the GMAC is connected to the switch core, and there is no PHY in
+> between.
+> > + *  In addition, this driver is mainly used to control GMAC, but does
+> > + not
+> > + *  control the switch core, so it is not the same as DSA.
+> > + */
+>=20
+> ...
+>=20
+> > +static int rtase_alloc_msix(struct pci_dev *pdev, struct
+> > +rtase_private *tp) {
+> > +     int ret;
+> > +     u16 i;
+> > +
+> > +     memset(tp->msix_entry, 0x0, RTASE_NUM_MSIX * sizeof(struct
+> > + msix_entry));
+> > +
+> > +     for (i =3D 0; i < RTASE_NUM_MSIX; i++)
+> > +             tp->msix_entry[i].entry =3D i;
+> > +
+> > +     ret =3D pci_enable_msix_exact(pdev, tp->msix_entry, tp->int_nums)=
+;
+> > +     if (!ret) {
+>=20
+> In Linux Networking code it is an idiomatic practice to keep handle error=
+s in
+> branches and use the main path of execution for the non error path.
+>=20
+> In this case I think that would look a bit like this:
+>=20
+>         ret =3D pci_enable_msix_exact(pdev, tp->msix_entry, tp->int_nums)=
+;
+>         if (ret)
+>                 return ret;
+>=20
+>         ...
+>=20
+>         return 0;
+>=20
+> > +
+> > +             for (i =3D 0; i < tp->int_nums; i++)
+> > +                     tp->int_vector[i].irq =3D pci_irq_vector(pdev, i)=
+;
+>=20
+> pci_irq_vector() can fail, should that be handled here?
 
-       depends on SOC_IMXRT || COMPILE_TEST
+Thank you for your feedback, I will confirm this part again.
+>=20
+> > +     }
+> > +
+> > +     return ret;
+> > +}
+> > +
+> > +static int rtase_alloc_interrupt(struct pci_dev *pdev,
+> > +                              struct rtase_private *tp) {
+> > +     int ret;
+> > +
+> > +     ret =3D rtase_alloc_msix(pdev, tp);
+> > +     if (ret) {
+> > +             ret =3D pci_enable_msi(pdev);
+> > +             if (ret)
+> > +                     dev_err(&pdev->dev,
+> > +                             "unable to alloc interrupt.(MSI)\n");
+>=20
+> If an error occurs then it is a good practice to unwind resource allocati=
+ons
+> made within the context of this function call, as this leads to more symm=
+etric
+> unwind paths in callers.
+>=20
+> In this case I think any resources consumed by rtase_alloc_msix() should =
+be
+> released if pci_enable_msi fails. Probably using a goto label is appropri=
+ate
+> here.
+>=20
+> Likewise, I suggest that similar logic applies to errors within
+> rtase_alloc_msix().
+>=20
 
-I see that all the i.MX pinctrl drivers are currently missing
-this, but a lot of other platforms have the ||COMPILE_TEST 
-bit so it gets included in x86 allmodconfig tests that
-often gets run before sending or merging changes.
-
-    Arnd
+Since msi will be enabled only when msix enable fails, when pci_enable_msi =
+fails,
+there will be no problem of msix-related resources needing to be released,
+because the msix interrupt has not been successfully allocated.
+> > +             else
+> > +                     tp->sw_flag |=3D RTASE_SWF_MSI_ENABLED;
+> > +     } else {
+> > +             tp->sw_flag |=3D RTASE_SWF_MSIX_ENABLED;
+> > +     }
+> > +
+> > +     return ret;
+> > +}
+>=20
+> ...
