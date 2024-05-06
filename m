@@ -1,114 +1,105 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7235A788;
-	Mon,  6 May 2024 08:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 232001411CE
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 08:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714984769; cv=none; b=cOn+BSSxBImUAwFhJhRRb/+p0PB4o2QFbEc7y04Qiodpi2GYaPdvyyKAA0IyQZRl8zYWUc3W8z+QY04sGUWT7nLRpiKMkZuOzlxJh+SfOx2OO4aIukq/9p3I9rsZPy/LrC993l+ziTPar/FPWlJikgEdgkrBvH9fEEzdSi0Hke8=
+	t=1714984790; cv=none; b=jMsLXE03/9Ri8JA538DgXHAgp3XJZzHIKU6M8ID2vA85C4mCJz1VRZ+99RX2Th5Shl9ISmq+iWBuy7QOXg5pph8PjrySQH3y2d0UU1rY6T0nqEzYWF2c/ZpO6KUVF94qPjZJypuvQbg9b48SWnOZttlFt/I2sRFoGQS1Nm2dnNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714984769; c=relaxed/simple;
-	bh=pb1Rc+9NPLnwGIT7gD6BTBq7ZC0pDavC8Tc5xj3YZ3g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G3vV+XAmBOZhWWMbV+Mf1HIY2hFEA9lwK7rBPI7GbG0CgP5GHCEQpCPHJbfz3DPyo85ZWwSKQgO+vypm7vInF0Z1F+jmdl/zhCyE2RYn5WQT6ZUxd1/VcmHuiEFg+qPvwCciBcG+egKhPr2lchpwJHVZI2kg06AXuQ0l2HvaWJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JsQlMstm; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JsQlMstm"
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4468O8CS024779;
-	Mon, 6 May 2024 08:38:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=6rw9r746ueif5tDySgJaQPVSe6/wIjUvI1xxkCK72XI=;
- b=JsQlMstmS+HEeLJ6Z+ZRqHTDHaZhs8vuN7DY6OXbvR/WOC/NG3K/74l4iRsg8Fus1jJR
- HvR9msAi4/v2YR7HKPs32TRYmtW5ut82sQax5m4xvm2y9IAxyf/ExJlx0RlT/2i1lvbd
- g6jGxTHzMc9FgXQJ2Q5dToULOsejsUmXaGO9dJv9hfoqMcej+uEIv+zgQjQ3h4i19sCI
- h1om+y1MtJNhVQ50ftCg5hOL2O98JZzXKnvfAwpRkFxjT5zh1LQh3DHjbKVyclF9JjvM
- n+HgOJWb5WX6kvTaJPIvJvp3T6vOkpyzStn6emPL8r2V6GMQnH47A6LiyOvUO9fOs6oH 1w== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xxug6g1sx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 08:38:39 +0000
-Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4468cdoJ014374;
-	Mon, 6 May 2024 08:38:39 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xxug6g1sv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 08:38:39 +0000
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4467YEt4005549;
-	Mon, 6 May 2024 08:38:38 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xx5ygwhha-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 06 May 2024 08:38:38 +0000
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4468cWqb33817258
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 6 May 2024 08:38:34 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8A85E20065;
-	Mon,  6 May 2024 08:38:32 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id BDDE42004D;
-	Mon,  6 May 2024 08:38:31 +0000 (GMT)
-Received: from osiris (unknown [9.171.46.190])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon,  6 May 2024 08:38:31 +0000 (GMT)
-Date: Mon, 6 May 2024 10:38:30 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-        Matthew Wilcox <willy@infradead.org>, Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v2 00/10] s390: PG_arch_1+folio cleanups for uv+hugetlb
-Message-ID: <20240506083830.28332-B-hca@linux.ibm.com>
-References: <20240412142120.220087-1-david@redhat.com>
- <f53a87ed-c3fe-4a60-8723-3eea25189553@redhat.com>
+	s=arc-20240116; t=1714984790; c=relaxed/simple;
+	bh=dFWNbRzySIjYQnEWTP9mapKbZO69zQWs5KfXcdrl56U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fPPBRhYjTZlpHoQey9wQPraNaa7EwsARVhe8MQXM926dp2JXmTlnB8K/87jf6LDIXilAvcj/X8+0vYDxpvck3q671AFrkfXCDLM1Iqah3N+zmjk9BsMDbsyCWK2LEzQIAjiaoRvc6fSagMRTCVUb0EfP8WiiD95Ojq0jKmBtgDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.51])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4VXv1n3MMJz9xGWg
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 15:59:09 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 4B2D9140797
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 16:20:38 +0800 (CST)
+Received: from [10.81.214.173] (unknown [10.81.214.173])
+	by APP1 (Coremail) with SMTP id LxC2BwCnURrAkjhmm36iBw--.33418S2;
+	Mon, 06 May 2024 09:20:37 +0100 (CET)
+Message-ID: <0c07a0dc-542a-48da-a286-280d9c02b353@huaweicloud.com>
+Date: Mon, 6 May 2024 10:20:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f53a87ed-c3fe-4a60-8723-3eea25189553@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: pTLHBXGc69PVC33eUA14E-gUyGICY0ip
-X-Proofpoint-GUID: YK__QwvpgYTeAcFYR5FbguaUC6-_DEUS
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1011,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-06_04,2024-05-03_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- mlxlogscore=676 clxscore=1015 adultscore=0 suspectscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 impostorscore=0 phishscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405060057
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/4] arm64: Support the TSO memory model
+To: Marc Zyngier <maz@kernel.org>, Zayd Qumsieh <zayd_qumsieh@apple.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Justin Lu <ih_justin@apple.com>,
+ Ryan Houdek <Houdek.Ryan@fex-emu.org>, Mark Brown <broonie@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Miguel Luis <miguel.luis@oracle.com>,
+ Joey Gouly <joey.gouly@arm.com>, Christoph Paasch <cpaasch@apple.com>,
+ Kees Cook <keescook@chromium.org>, Sami Tolvanen <samitolvanen@google.com>,
+ Baoquan He <bhe@redhat.com>, Joel Granados <j.granados@samsung.com>,
+ Dawei Li <dawei.li@shingroup.cn>, Andrew Morton <akpm@linux-foundation.org>,
+ Florent Revest <revest@chromium.org>, David Hildenbrand <david@redhat.com>,
+ Stefan Roesch <shr@devkernel.io>, Andy Chiu <andy.chiu@sifive.com>,
+ Josh Triplett <josh@joshtriplett.org>, Oleg Nesterov <oleg@redhat.com>,
+ Helge Deller <deller@gmx.de>, Zev Weiss <zev@bewilderbeest.net>,
+ Ondrej Mosnacek <omosnace@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Asahi Linux <asahi@lists.linux.dev>
+References: <87zftoqn7u.wl-maz@kernel.org>
+ <20240502001035.41083-1-zayd_qumsieh@apple.com>
+ <867cgcqrb9.wl-maz@kernel.org>
+From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+In-Reply-To: <867cgcqrb9.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:LxC2BwCnURrAkjhmm36iBw--.33418S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFWxWr13tF47ur17WFW3Wrg_yoWDJFg_uF
+	ykAw47Jws8CF93Z3yayw1DAr47ta1jqasxXr95Xw1Iy34IvF4xGryDJ3s3ZF13JrWkuF17
+	GrW5ZFna9w43GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Wr0E3s1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267
+	AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0E
+	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Wrv_Gr1UMIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAkuxUUUUU=
+X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
 
-On Tue, Apr 30, 2024 at 08:49:31PM +0200, David Hildenbrand wrote:
-> On 12.04.24 16:21, David Hildenbrand wrote:
-> > This is v2 of [1] with changed subject:
-> >   "[PATCH v1 0/5] s390: page_mapcount(), page_has_private() and PG_arch_1"
-> > 
-> > Rebased on s390x/features which contains the page_mapcount() and
-> > page_has_private() cleanups, and some PG_arch_1 cleanups from Willy. To
-> > compensate, I added some more cleanups ;)
-> > 
-> > One "easy" fix upfront. Another issue I spotted is documented in [1].
-> > 
-> > Once this hits upstream, we can remove HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
-> > from core-mm and s390x, so only the folio variant will remain.
-> 
-> Ping.
 
-Claudio, Janosch, this series requires your review.
+
+Am 5/2/2024 um 3:25 PM schrieb Marc Zyngier:
+> although
+> someone would need to start thinking of how this particular TSO
+> implementation composes with the relaxed memory ordering used outside
+> of the VM and show that they actually lead to correct results for
+> something such as virtio, for example
+
+I used to think about this problem space. Composing some kinds of memory
+models (e.g., Arm and TSO) is easy, others is hard.
+
+I don't know much about virtio, so this may show my naivety, but what
+complications could arise from virtio?
+
+Does the "visible behavior" of virtio change depending on the memory
+model of the machine it is running on?
+
+At least internally inside virtio it should not cause any problems, since
+you are effectively adding some barriers inside some of the virtio threads.
+(those that are running in the VM).
+
+But if the VM relies on virtio behaving in a "TSO manner" but its behavior
+is more relaxed on e.g. Arm, then that could cause issues.
+
+have fun, jonas
+
