@@ -1,48 +1,96 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3EC841C84
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 16:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08913155752
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 16:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715012352; cv=none; b=mcJa4bKxbzeSb9QI1O3rlE4YoyEnLzpgfKx6ZBo7C4YL3AuIPFcOV7qjdMqMijXci6rITmrrT9NC1TuoTwKcWwdyg084grdmqGFbvkuGoFP3AckZTyQox9WKTiINJ9CWe/eW4mXpBKHXO4X7gwWYjWDtgwMH81T5Lpf7Qr/yBJQ=
+	t=1715012482; cv=none; b=pbnG38paFR99Q8DPM9iPPDC1TjoV26Ft9xRddFfGqsFL7hVnTstqmbQqilAnPgbNZe0/ZzXjf55LNwYHKX/DYudBYojLh1y1rM3PWmohYHN5pzPCuqCP8gAHteMEbqO+Eo5idjTycVI154+hsrzUbu+vbs9Ym4l09wOrH47AVjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715012352; c=relaxed/simple;
-	bh=yu2mKKUX6quMfU0Xhpdbju7RJ000UbBgqpaw773JHlw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zsnm9yQbu5U+bBzrxgx79LM72C4Ja+tMH3ydIilVqDgjhiC3ilDagD4UC5xFV5qT9y3f0Pgna0NKaZz8POGAnu+JjvipIMj96PmaMhdCvqaZN6AcBAkxjDA2L+n2KFtQ4nSNNIe+ReaCefacuwALVp2CSy98OBadxY9svqAUrn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id 04247227A87; Mon,  6 May 2024 18:19:07 +0200 (CEST)
-Date: Mon, 6 May 2024 18:19:06 +0200
-From: Christoph Hellwig <hch@lst.de>
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Robin Murphy <robin.murphy@arm.com>, isaacmanjarres@google.com,
-	Catalin Marinas <catalin.marinas@arm.com>, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dma-direct: Set SG_DMA_SWIOTLB flag for dma-direct
-Message-ID: <20240506161906.GA17237@lst.de>
-References: <20240503183713.1557480-1-tjmercier@google.com> <20240506052955.GA4923@lst.de> <CABdmKX1XNTtoPTvfsJRobim8pHdDjPsKx=qVovVZDh5GEbKCfQ@mail.gmail.com> <20240506160244.GA16248@lst.de> <CABdmKX1n98+bw+1kewz=wdqq2Nbpaxao_Lx-Gq8oKGNUEP4ytQ@mail.gmail.com>
+	s=arc-20240116; t=1715012482; c=relaxed/simple;
+	bh=hH4SCqg/pYVdvvdEtlbEHY8w4yezkRxQAu26Sjylr20=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tCc46U+NopkWniPeLF2P/BOZWY9QxhePtl6cGWAZTEnEbDllb4lGhJ0kCCfjJsFfOHKlSNU5/3VlWUJAIbvOS9L7U3VXBSZjcW0t/aA0apNqysaeAcVkq+xgZPdtYPPptSUfGuXllo9dOTUf2paC3G8R5+3j/Ka8PDYYrVieZtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+Received: from i53875b5d.versanet.de ([83.135.91.93] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1s415J-0007im-LL; Mon, 06 May 2024 18:21:01 +0200
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To: dri-devel@lists.freedesktop.org, Maxime Ripard <mripard@kernel.org>,
+ Douglas Anderson <dianders@chromium.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Chris Morgan <macromorgan@hotmail.com>,
+ Yuran Pereira <yuran.pereira@hotmail.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Douglas Anderson <dianders@chromium.org>,
+ Quentin Schulz <quentin.schulz@theobroma-systems.com>,
+ Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@gmail.com>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Sam Ravnborg <sam@ravnborg.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [RFT PATCH v2 15/48] drm/panel: ltk050h3146w: Don't call
+ unprepare+disable at shutdown/remove
+Date: Mon, 06 May 2024 18:21:00 +0200
+Message-ID: <2957706.k3LOHGUjKi@diego>
+In-Reply-To:
+ <20240503143327.RFT.v2.15.Ibeb2e5692e34b136afe4cf55532f0696ab3f5eed@changeid>
+References:
+ <20240503213441.177109-1-dianders@chromium.org>
+ <20240503143327.RFT.v2.15.Ibeb2e5692e34b136afe4cf55532f0696ab3f5eed@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABdmKX1n98+bw+1kewz=wdqq2Nbpaxao_Lx-Gq8oKGNUEP4ytQ@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 
-On Mon, May 06, 2024 at 09:10:40AM -0700, T.J. Mercier wrote:
-> I want to reject mapping a dma_buf for a device if any of the pages
-> that back the buffer require SWIOTLB. AFAICT there's no way to know
-> whether SWIOTLB is used until after calling dma_map_sg, so afterwards
-> I'm trying to check.
+Am Freitag, 3. Mai 2024, 23:32:56 CEST schrieb Douglas Anderson:
+> It's the responsibility of a correctly written DRM modeset driver to
+> call drm_atomic_helper_shutdown() at shutdown time and that should be
+> disabling / unpreparing the panel if needed. Panel drivers shouldn't
+> be calling these functions themselves.
+>=20
+> A recent effort was made to fix as many DRM modeset drivers as
+> possible [1] [2] [3] and most drivers are fixed now.
+>=20
+> Unfortunately, grepping mainline for this panel's compatible string
+> shows no hits, so we can't be 100% sure if the DRM modeset driver used
+> with this panel has been fixed. If it is found that the DRM modeset
+> driver hasn't been fixed then this patch could be temporarily reverted
+> until it is.
+>=20
+> [1] https://lore.kernel.org/r/20230901234015.566018-1-dianders@chromium.o=
+rg
+> [2] https://lore.kernel.org/r/20230901234202.566951-1-dianders@chromium.o=
+rg
+> [3] https://lore.kernel.org/r/20230921192749.1542462-1-dianders@chromium.=
+org
+>=20
+> Cc: "Heiko St=FCbner" <heiko@sntech.de>
+> Cc: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-You should not check, you simply must handle it by doing the proper
-DMA API based ownership management.
+On a rk3588-tiger with WIP DSI patches and this display
+
+Tested-by: Heiko Stuebner <heiko@sntech.de>
+
+Before this patch on reboot the system emits
+[  181.464230] panel-leadtek-ltk050h3146w fde20000.dsi.0: Skipping disable =
+of already disabled panel
+[  181.465056] panel-leadtek-ltk050h3146w fde20000.dsi.0: Skipping unprepar=
+e of already unprepared panel
+
+after applying this patch, those lines are gone.
+
+Also the patch itself looks good
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+
+
