@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E5F15533A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B4F615533B;
 	Mon,  6 May 2024 15:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715008215; cv=none; b=Frs6aNgDPCCTVOGODj2IOLF4ltJDoRTjrNAa0pN/O0yzckQqT9JMOiFjr2ocCjRuoxytoV/5IQMYgsq/ri8hPI6nI4nThuyStpdRr9TEnQHb/EhUWswhnPuvv/rqUJ5pKHCtQxcWXlzchIFrc5sUr8dJ6yvjneA6Jlw6c79KBMA=
+	t=1715008215; cv=none; b=Has7jwBuG0EGIgNHyS5ntO2vab0xhPpkVmF96/dSasTbNc1gshbUcqS9Wx475OnFEyjHh3aLypLarMpbmK3+j2tdU0WqQPqCKa08yuVGoI2QO750j1d7eVGM5137/9G/FnJU9kfuE+xT2//71TryucvOR5kwh26N4s5tO5e9dNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715008215; c=relaxed/simple;
-	bh=3nHjQ8geF8c61rNg0mCqn4/A6dXpqr7qrJ7QmC0179I=;
+	bh=HmGUGhnzq6QWX6rTJF28CKXiwTy0X3WDlAtZACUyhGs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e5AHH2sQQcMGkJ516CXVIK9994Rgp/Pu8zGji6/1408joATsfqoCUYIDcb8nCjjJl3TfFG+zMfCtU7JdA0+huXlYjGa/e5wLMu9jTMCXHlm50lr4v4eNxYZHJQRaTLqo+cXbMWxO7GHoptMZXEyB7JxSnbOjMzZb01VxbxOA+sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cfJ56tuA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rmxVa+OlYYoMMwgNkHKQvARPjCiM3MpHvj3mzSsAbiqRbzep835XY8HgSy1P/jdGaAVnGsFvaS7qcB+lUPCPC6l8G/mwuVpCMi55HANENBmie1l/ST/mqHToFarUDNrf+JBttIGR/QWbX4hnGuaXdHYn1P95r2ijOa9/FCdMXjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cn4l2ry0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cfJ56tuA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF2F7C4DDE2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cn4l2ry0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC291C4DDE3;
 	Mon,  6 May 2024 15:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715008214;
-	bh=3nHjQ8geF8c61rNg0mCqn4/A6dXpqr7qrJ7QmC0179I=;
+	bh=HmGUGhnzq6QWX6rTJF28CKXiwTy0X3WDlAtZACUyhGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cfJ56tuAN5FTksuu5gk/A3vUZlyYzTzIsNZVIsRwPooHWxtQMVjgufOkiYg5njjyq
-	 0Vp4OHdFyLZaeatEIa943wEvB4T2brHNifoYIv0DCncnt3dk8dR69/1mYTTSXsEI4A
-	 +7xLYpHYHyvzSrn2FcXHO72NXW65s23dPmz2ipv5gb5MDdaau4QqF4SgUXxmC7zp0W
-	 MPQOwbl+W0E80PGzGyKP0iWmP12A2QpdktKesXsuXpbhc7BpV1WjSjKTCVU6NTTsvH
-	 qMoZIXrzvrVpIzSZ2GhBOZ96TlRB0P8On3dthqYqt1xHbj8fm0knfO/x9CUYhol+FH
-	 plMro2YdeN7IA==
+	b=Cn4l2ry0hKT6yqFRwCGAXb20eJaRxo8ufaXe1rq3p25aXgXmMSXuQxsFcJVw1EBMi
+	 m/4k1KXL0hfWhHM5Yxohn/ZexZuaIcadzmh/Qp1/jW1vkmaNNbsfVvinsv2OKNznQ8
+	 P2fzeBtQ7miyec2PfOEZ+z95Fpmjj0L0U7Tv+VT4AvA9llvYfkXoAGfGLtuZNt2ITq
+	 m2PaWC9PU8tDkafOWoSfuPhxJPVJmiU/rbzraFwNJDsYiYJXLmAW5LS1TsYgdnu81x
+	 +t5zksOxwU1xMQIhbzIcwBT5Cmh+YI49FWJjn0W4seekphkYUo6lWVvuH9KeRIsP95
+	 M2hTBEhF8TC4A==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1s3zyq-000000006CL-1a1f;
+	id 1s3zyq-000000006CD-0KE4;
 	Mon, 06 May 2024 17:10:16 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Lee Jones <lee@kernel.org>,
@@ -48,9 +48,9 @@ Cc: Konrad Dybcio <konrad.dybcio@linaro.org>,
 	linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH 07/13] mfd: pm8008: drop unused driver data
-Date: Mon,  6 May 2024 17:08:24 +0200
-Message-ID: <20240506150830.23709-8-johan+linaro@kernel.org>
+Subject: [PATCH 03/13] mfd: pm8008: deassert reset on probe
+Date: Mon,  6 May 2024 17:08:20 +0200
+Message-ID: <20240506150830.23709-4-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240506150830.23709-1-johan+linaro@kernel.org>
 References: <20240506150830.23709-1-johan+linaro@kernel.org>
@@ -62,27 +62,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The i2c client driver data pointer has never been used so drop the
-unnecessary assignment.
+Request and deassert any (optional) reset gpio during probe in case it
+has been left asserted by the boot firmware.
+
+Note the reset line is not asserted to avoid reverting to the default
+I2C address in case the firmware has configured an alternate address.
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/mfd/qcom-pm8008.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/mfd/qcom-pm8008.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/mfd/qcom-pm8008.c b/drivers/mfd/qcom-pm8008.c
-index a04bae52a49a..c7a4f8a60cd4 100644
+index d53c987b0d49..d0f190c2ea2b 100644
 --- a/drivers/mfd/qcom-pm8008.c
 +++ b/drivers/mfd/qcom-pm8008.c
-@@ -169,8 +169,6 @@ static int pm8008_probe(struct i2c_client *client)
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
+@@ -4,6 +4,7 @@
+  */
  
--	i2c_set_clientdata(client, regmap);
--
- 	reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
- 	if (IS_ERR(reset))
- 		return PTR_ERR(reset);
+ #include <linux/bitops.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+@@ -158,6 +159,7 @@ static struct regmap_config qcom_mfd_regmap_cfg = {
+ static int pm8008_probe(struct i2c_client *client)
+ {
+ 	struct regmap_irq_chip_data *irq_data;
++	struct gpio_desc *reset;
+ 	int rc;
+ 	struct device *dev;
+ 	struct regmap *regmap;
+@@ -169,6 +171,10 @@ static int pm8008_probe(struct i2c_client *client)
+ 
+ 	i2c_set_clientdata(client, regmap);
+ 
++	reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(reset))
++		return PTR_ERR(reset);
++
+ 	if (of_property_read_bool(dev->of_node, "interrupt-controller")) {
+ 		rc = devm_regmap_add_irq_chip(dev, regmap, client->irq,
+ 				IRQF_SHARED, 0, &pm8008_irq_chip, &irq_data);
 -- 
 2.43.2
 
