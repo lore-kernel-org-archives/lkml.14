@@ -1,44 +1,44 @@
 Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDD66EB76
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97A576919
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:52:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714999950; cv=none; b=lO74op6MwB9RCDl35BIzXjPuWy9nNLc8W8CkBQ60p0vhOzoOuGy8gj3svzJ6NZzvHSK4QnmPsDRuPziWMFkO0kBr3OZL9TBtvzD0LUkmgu6Rpl/JbvAmsY7XEPMb4uz0AceAW7XnzDzObgxYwmnL/6REdcTuw9GVYwenrBjUcHE=
+	t=1714999954; cv=none; b=oz9Alg7+nAbA2vL1jSvUjIDHb8xFGxunWS7cKlBxPrPfAH8prmnowMfbo5kgtoM02QSwE0s0diWvNIGTpnTNVFgfG99KIFDowZ3xnoLK6LLC8XuuI4ELsg2sKkBHYhGVeOWZa6+53x/f6ycSpIrn3csYJNDcnU23SKKysATAwmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714999950; c=relaxed/simple;
-	bh=yIZgR9AN1s1tvcwpLmlmfkFwYGcmPOQxzBSjA1BfrpM=;
+	s=arc-20240116; t=1714999954; c=relaxed/simple;
+	bh=Ce/fP6xScE3aVS8h902sx71LyCkgrk5kieJe+AKc8CI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=roVGlTWiqmFt7EorlEaWYQUnB6SqSafkuR/wtgvVBdutYxzf5X6X57SKzPN9+/ok6anxJvBeHchK0Jr+Bh0nqLdeh42i2axRguViz47+ikWZ6p80w5JHVz8jT3EP4zCxTXdPcOjR4F+eSkolLjZtRu5ZX4xu05fwXjYb6bm4s/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=J2bqEEPc; arc=none smtp.client-ip=150.107.74.76
+	 MIME-Version; b=UwY1+fsHV25uxIwqmHjP0cDREqsc7iL18dQyYb0jGI3KuHRQCX6SpgNNlo/wK2JP4ahz/p5Guo5w2VTT3kra41zg3YcMQO1zK2lNtofemp/cTYlYHpNnsjeuoACxTT3BNDUQXBssaMMVx5BTPLpSdwpawD1+yBZ7sccH4F1V/ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=TtPIt+K0; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="J2bqEEPc"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="TtPIt+K0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1714999943;
-	bh=1wvRhx+ILng7ZlUieiUPpD44w58z88vmRxoM/cF67WM=;
+	s=201909; t=1714999946;
+	bh=GBEPaRZyteJkC6BUvRNboaSanQS3npKz4CeG4H3+xfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=J2bqEEPcjgDryW3OnKXQDdmY3xrpuHMmv3QiVN2FRUTOl3KOi204B1bOASU5gdCDR
-	 2LxkbDtZ07BEfdiEeQy0NJD9RH5pl5lCY0khRPxnH3dh2L7KjDJruA4NNiIhS1KAIO
-	 yl59cSG4yKlkUfW6/oQudOFkj0eHgK+1LSND8iNu+12ACRwX0QIcKgVPRlMr7eYZB7
-	 aw6ymbiOyZf8w7N2ZZE92D42NLzkj5kjntg2sBfkXY3ESxfYDzgNX9kQWx6L1w7H4I
-	 E5P7F528OadBjFFnVk1Vj3gZ66NbuYOdC9rY+RpbHabxAm0eRvrFl/BB+yCbl8N+Ma
-	 KSXYFHFpkuxrA==
+	b=TtPIt+K0SqSoCNTxcJORwMADAGf0tHsQURR0AaDYWDwvQBs1v9f3XfxoKy1V9MhHO
+	 JxVhxprRn9VvuPZmt9Dpcyi4GWItHMOOT8s/1cmt6zSC6D5VCXmBkrTy78a+00euyR
+	 PCbyv/UYqlfG/9nNl1M0Ra+xlSRApuWMWrL7r0vNSFJGRjvk0fyb4dbgJb1uf5zRgv
+	 HB8+sReTuP8KqssK7MPMXPEYY8kmC2TpK37h29W3dEZeDBjq84YUMyZOpPEkCKH/wY
+	 p6QkLYs7BTOGVcOP4qH6Pi0jmCD52bM4aSAsei7GMJrJ7mWX5OH+M4fl17A0RODdYN
+	 G7NhHXU8au7Kw==
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VY1X712nqz4x0x;
-	Mon,  6 May 2024 22:52:23 +1000 (AEST)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VY1XB0rHjz4x2y;
+	Mon,  6 May 2024 22:52:26 +1000 (AEST)
 From: Michael Ellerman <mpe@ellerman.id.au>
 To: <linuxppc-dev@lists.ozlabs.org>
 Cc: <linux-kernel@vger.kernel.org>,
 	<christophe.leroy@csgroup.eu>
-Subject: [PATCH 1/7] powerpc/40x: Remove 40x platforms.
-Date: Mon,  6 May 2024 22:51:46 +1000
-Message-ID: <20240506125152.78174-2-mpe@ellerman.id.au>
+Subject: [PATCH 7/7] powerpc/platforms: Move files from 4xx to 44x
+Date: Mon,  6 May 2024 22:51:52 +1000
+Message-ID: <20240506125152.78174-8-mpe@ellerman.id.au>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240506125152.78174-1-mpe@ellerman.id.au>
 References: <20240506125152.78174-1-mpe@ellerman.id.au>
@@ -52,715 +52,158 @@ Content-Transfer-Encoding: 8bit
 
 From: Christophe Leroy <christophe.leroy@csgroup.eu>
 
-40x platforms have been orphaned for many years.
-
-Remove them.
+Only 44x uses 4xx now, so only keep one directory.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 ---
- MAINTAINERS                                 |  1 -
- arch/powerpc/configs/40x/acadia_defconfig   | 61 ----------------
- arch/powerpc/configs/40x/kilauea_defconfig  | 69 ------------------
- arch/powerpc/configs/40x/klondike_defconfig | 43 ------------
- arch/powerpc/configs/40x/makalu_defconfig   | 59 ----------------
- arch/powerpc/configs/40x/obs600_defconfig   | 69 ------------------
- arch/powerpc/configs/40x/walnut_defconfig   | 55 ---------------
- arch/powerpc/configs/ppc40x_defconfig       | 74 -------------------
- arch/powerpc/platforms/40x/Kconfig          | 78 ---------------------
- arch/powerpc/platforms/40x/Makefile         |  2 -
- arch/powerpc/platforms/40x/ppc40x_simple.c  | 74 -------------------
- arch/powerpc/platforms/Kconfig              |  1 -
- arch/powerpc/platforms/Makefile             |  1 -
- 13 files changed, 587 deletions(-)
- delete mode 100644 arch/powerpc/configs/40x/acadia_defconfig
- delete mode 100644 arch/powerpc/configs/40x/kilauea_defconfig
- delete mode 100644 arch/powerpc/configs/40x/klondike_defconfig
- delete mode 100644 arch/powerpc/configs/40x/makalu_defconfig
- delete mode 100644 arch/powerpc/configs/40x/obs600_defconfig
- delete mode 100644 arch/powerpc/configs/40x/walnut_defconfig
- delete mode 100644 arch/powerpc/configs/ppc40x_defconfig
- delete mode 100644 arch/powerpc/platforms/40x/Kconfig
- delete mode 100644 arch/powerpc/platforms/40x/Makefile
- delete mode 100644 arch/powerpc/platforms/40x/ppc40x_simple.c
+ arch/powerpc/platforms/44x/Makefile           |  6 ++++-
+ arch/powerpc/platforms/{4xx => 44x}/cpm.c     |  0
+ arch/powerpc/platforms/{4xx => 44x}/gpio.c    |  0
+ .../powerpc/platforms/{4xx => 44x}/hsta_msi.c |  0
+ arch/powerpc/platforms/44x/machine_check.c    | 15 ++++++++++++
+ arch/powerpc/platforms/{4xx => 44x}/pci.c     |  0
+ arch/powerpc/platforms/{4xx => 44x}/pci.h     |  0
+ arch/powerpc/platforms/{4xx => 44x}/soc.c     |  0
+ arch/powerpc/platforms/{4xx => 44x}/uic.c     |  0
+ arch/powerpc/platforms/4xx/Makefile           |  7 ------
+ arch/powerpc/platforms/4xx/machine_check.c    | 23 -------------------
+ arch/powerpc/platforms/Makefile               |  1 -
+ 12 files changed, 20 insertions(+), 32 deletions(-)
+ rename arch/powerpc/platforms/{4xx => 44x}/cpm.c (100%)
+ rename arch/powerpc/platforms/{4xx => 44x}/gpio.c (100%)
+ rename arch/powerpc/platforms/{4xx => 44x}/hsta_msi.c (100%)
+ rename arch/powerpc/platforms/{4xx => 44x}/pci.c (100%)
+ rename arch/powerpc/platforms/{4xx => 44x}/pci.h (100%)
+ rename arch/powerpc/platforms/{4xx => 44x}/soc.c (100%)
+ rename arch/powerpc/platforms/{4xx => 44x}/uic.c (100%)
+ delete mode 100644 arch/powerpc/platforms/4xx/Makefile
+ delete mode 100644 arch/powerpc/platforms/4xx/machine_check.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f096c9fff5b3..09857ade8e89 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12520,7 +12520,6 @@ F:	arch/powerpc/platforms/52xx/
- LINUX FOR POWERPC EMBEDDED PPC4XX
- L:	linuxppc-dev@lists.ozlabs.org
- S:	Orphan
--F:	arch/powerpc/platforms/40x/
- F:	arch/powerpc/platforms/44x/
+diff --git a/arch/powerpc/platforms/44x/Makefile b/arch/powerpc/platforms/44x/Makefile
+index 5ba031f57652..ca7b1bb442d9 100644
+--- a/arch/powerpc/platforms/44x/Makefile
++++ b/arch/powerpc/platforms/44x/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+-obj-y	+= misc_44x.o machine_check.o
++obj-y	+= misc_44x.o machine_check.o uic.o soc.o
+ ifneq ($(CONFIG_PPC4xx_CPM),y)
+ obj-y	+= idle.o
+ endif
+@@ -12,3 +12,7 @@ obj-$(CONFIG_CANYONLANDS)+= canyonlands.o
+ obj-$(CONFIG_CURRITUCK)	+= ppc476.o
+ obj-$(CONFIG_AKEBONO)	+= ppc476.o
+ obj-$(CONFIG_FSP2)	+= fsp2.o
++obj-$(CONFIG_PCI)		+= pci.o
++obj-$(CONFIG_PPC4xx_HSTA_MSI)	+= hsta_msi.o
++obj-$(CONFIG_PPC4xx_CPM)	+= cpm.o
++obj-$(CONFIG_PPC4xx_GPIO)	+= gpio.o
+diff --git a/arch/powerpc/platforms/4xx/cpm.c b/arch/powerpc/platforms/44x/cpm.c
+similarity index 100%
+rename from arch/powerpc/platforms/4xx/cpm.c
+rename to arch/powerpc/platforms/44x/cpm.c
+diff --git a/arch/powerpc/platforms/4xx/gpio.c b/arch/powerpc/platforms/44x/gpio.c
+similarity index 100%
+rename from arch/powerpc/platforms/4xx/gpio.c
+rename to arch/powerpc/platforms/44x/gpio.c
+diff --git a/arch/powerpc/platforms/4xx/hsta_msi.c b/arch/powerpc/platforms/44x/hsta_msi.c
+similarity index 100%
+rename from arch/powerpc/platforms/4xx/hsta_msi.c
+rename to arch/powerpc/platforms/44x/hsta_msi.c
+diff --git a/arch/powerpc/platforms/44x/machine_check.c b/arch/powerpc/platforms/44x/machine_check.c
+index 5d19daacd78a..85ff33a8d9b6 100644
+--- a/arch/powerpc/platforms/44x/machine_check.c
++++ b/arch/powerpc/platforms/44x/machine_check.c
+@@ -9,6 +9,21 @@
+ #include <asm/reg.h>
+ #include <asm/cacheflush.h>
  
- LINUX FOR POWERPC EMBEDDED PPC85XX
-diff --git a/arch/powerpc/configs/40x/acadia_defconfig b/arch/powerpc/configs/40x/acadia_defconfig
++int machine_check_4xx(struct pt_regs *regs)
++{
++	unsigned long reason = regs->esr;
++
++	if (reason & ESR_IMCP) {
++		printk("Instruction");
++		mtspr(SPRN_ESR, reason & ~ESR_IMCP);
++	} else
++		printk("Data");
++
++	printk(" machine check in kernel mode.\n");
++
++	return 0;
++}
++
+ int machine_check_440A(struct pt_regs *regs)
+ {
+ 	unsigned long reason = regs->esr;
+diff --git a/arch/powerpc/platforms/4xx/pci.c b/arch/powerpc/platforms/44x/pci.c
+similarity index 100%
+rename from arch/powerpc/platforms/4xx/pci.c
+rename to arch/powerpc/platforms/44x/pci.c
+diff --git a/arch/powerpc/platforms/4xx/pci.h b/arch/powerpc/platforms/44x/pci.h
+similarity index 100%
+rename from arch/powerpc/platforms/4xx/pci.h
+rename to arch/powerpc/platforms/44x/pci.h
+diff --git a/arch/powerpc/platforms/4xx/soc.c b/arch/powerpc/platforms/44x/soc.c
+similarity index 100%
+rename from arch/powerpc/platforms/4xx/soc.c
+rename to arch/powerpc/platforms/44x/soc.c
+diff --git a/arch/powerpc/platforms/4xx/uic.c b/arch/powerpc/platforms/44x/uic.c
+similarity index 100%
+rename from arch/powerpc/platforms/4xx/uic.c
+rename to arch/powerpc/platforms/44x/uic.c
+diff --git a/arch/powerpc/platforms/4xx/Makefile b/arch/powerpc/platforms/4xx/Makefile
 deleted file mode 100644
-index 25eed86ec528..000000000000
---- a/arch/powerpc/configs/40x/acadia_defconfig
+index 7f57c35f8dec..000000000000
+--- a/arch/powerpc/platforms/4xx/Makefile
 +++ /dev/null
-@@ -1,61 +0,0 @@
--CONFIG_40x=y
--CONFIG_SYSVIPC=y
--CONFIG_POSIX_MQUEUE=y
--CONFIG_LOG_BUF_SHIFT=14
--CONFIG_BLK_DEV_INITRD=y
--CONFIG_EXPERT=y
--CONFIG_KALLSYMS_ALL=y
--CONFIG_MODULES=y
--CONFIG_MODULE_UNLOAD=y
--# CONFIG_BLK_DEV_BSG is not set
--CONFIG_ACADIA=y
--CONFIG_PCI=y
--CONFIG_NET=y
--CONFIG_PACKET=y
--CONFIG_UNIX=y
--CONFIG_INET=y
--CONFIG_IP_PNP=y
--CONFIG_IP_PNP_DHCP=y
--CONFIG_IP_PNP_BOOTP=y
--# CONFIG_IPV6 is not set
--CONFIG_CONNECTOR=y
--CONFIG_MTD=y
--CONFIG_MTD_CMDLINE_PARTS=y
--CONFIG_MTD_BLOCK=m
--CONFIG_MTD_CFI=y
--CONFIG_MTD_JEDECPROBE=y
--CONFIG_MTD_CFI_AMDSTD=y
--CONFIG_MTD_PHYSMAP_OF=y
--CONFIG_BLK_DEV_RAM=y
--CONFIG_BLK_DEV_RAM_SIZE=35000
--CONFIG_NETDEVICES=y
--CONFIG_IBM_EMAC=y
--CONFIG_IBM_EMAC_RXB=256
--CONFIG_IBM_EMAC_TXB=256
--CONFIG_IBM_EMAC_DEBUG=y
--# CONFIG_INPUT is not set
--# CONFIG_SERIO is not set
--# CONFIG_VT is not set
--CONFIG_SERIAL_8250=y
--CONFIG_SERIAL_8250_CONSOLE=y
--CONFIG_SERIAL_8250_EXTENDED=y
--CONFIG_SERIAL_8250_SHARE_IRQ=y
--CONFIG_SERIAL_OF_PLATFORM=y
--# CONFIG_HW_RANDOM is not set
--# CONFIG_HWMON is not set
--CONFIG_THERMAL=y
--# CONFIG_USB_SUPPORT is not set
--CONFIG_EXT2_FS=y
--CONFIG_PROC_KCORE=y
--CONFIG_TMPFS=y
--CONFIG_CRAMFS=y
--CONFIG_NFS_FS=y
--CONFIG_ROOT_NFS=y
--CONFIG_DEBUG_FS=y
--CONFIG_MAGIC_SYSRQ=y
--CONFIG_DETECT_HUNG_TASK=y
--CONFIG_CRYPTO_CBC=y
--CONFIG_CRYPTO_ECB=y
--CONFIG_CRYPTO_PCBC=y
--CONFIG_CRYPTO_MD5=y
--CONFIG_CRYPTO_DES=y
-diff --git a/arch/powerpc/configs/40x/kilauea_defconfig b/arch/powerpc/configs/40x/kilauea_defconfig
-deleted file mode 100644
-index 3549c9e950e8..000000000000
---- a/arch/powerpc/configs/40x/kilauea_defconfig
-+++ /dev/null
-@@ -1,69 +0,0 @@
--CONFIG_40x=y
--CONFIG_SYSVIPC=y
--CONFIG_POSIX_MQUEUE=y
--CONFIG_NO_HZ=y
--CONFIG_HIGH_RES_TIMERS=y
--CONFIG_LOG_BUF_SHIFT=14
--CONFIG_BLK_DEV_INITRD=y
--CONFIG_EXPERT=y
--CONFIG_KALLSYMS_ALL=y
--CONFIG_MODULES=y
--CONFIG_MODULE_UNLOAD=y
--# CONFIG_BLK_DEV_BSG is not set
--CONFIG_KILAUEA=y
--CONFIG_PCI=y
--CONFIG_NET=y
--CONFIG_PACKET=y
--CONFIG_UNIX=y
--CONFIG_INET=y
--CONFIG_IP_PNP=y
--CONFIG_IP_PNP_DHCP=y
--CONFIG_IP_PNP_BOOTP=y
--# CONFIG_IPV6 is not set
--CONFIG_CONNECTOR=y
--CONFIG_MTD=y
--CONFIG_MTD_CMDLINE_PARTS=y
--CONFIG_MTD_BLOCK=y
--CONFIG_MTD_CFI=y
--CONFIG_MTD_JEDECPROBE=y
--CONFIG_MTD_CFI_AMDSTD=y
--CONFIG_MTD_PHYSMAP_OF=y
--CONFIG_MTD_RAW_NAND=y
--CONFIG_MTD_NAND_NDFC=y
--CONFIG_BLK_DEV_RAM=y
--CONFIG_BLK_DEV_RAM_SIZE=35000
--CONFIG_NETDEVICES=y
--CONFIG_IBM_EMAC=y
--CONFIG_IBM_EMAC_RXB=256
--CONFIG_IBM_EMAC_TXB=256
--# CONFIG_INPUT is not set
--# CONFIG_SERIO is not set
--# CONFIG_VT is not set
--CONFIG_SERIAL_8250=y
--CONFIG_SERIAL_8250_CONSOLE=y
--CONFIG_SERIAL_8250_EXTENDED=y
--CONFIG_SERIAL_8250_SHARE_IRQ=y
--CONFIG_SERIAL_OF_PLATFORM=y
--# CONFIG_HW_RANDOM is not set
--CONFIG_I2C=y
--CONFIG_I2C_CHARDEV=y
--CONFIG_I2C_IBM_IIC=y
--CONFIG_SENSORS_LM75=y
--CONFIG_THERMAL=y
--# CONFIG_USB_SUPPORT is not set
--CONFIG_RTC_CLASS=y
--CONFIG_RTC_DRV_DS1307=y
--CONFIG_EXT2_FS=y
--CONFIG_PROC_KCORE=y
--CONFIG_TMPFS=y
--CONFIG_CRAMFS=y
--CONFIG_NFS_FS=y
--CONFIG_ROOT_NFS=y
--CONFIG_DEBUG_FS=y
--CONFIG_MAGIC_SYSRQ=y
--CONFIG_DETECT_HUNG_TASK=y
--CONFIG_CRYPTO_CBC=y
--CONFIG_CRYPTO_ECB=y
--CONFIG_CRYPTO_PCBC=y
--CONFIG_CRYPTO_MD5=y
--CONFIG_CRYPTO_DES=y
-diff --git a/arch/powerpc/configs/40x/klondike_defconfig b/arch/powerpc/configs/40x/klondike_defconfig
-deleted file mode 100644
-index a974d1e945cc..000000000000
---- a/arch/powerpc/configs/40x/klondike_defconfig
-+++ /dev/null
-@@ -1,43 +0,0 @@
--CONFIG_40x=y
--CONFIG_SYSVIPC=y
--CONFIG_LOG_BUF_SHIFT=14
--CONFIG_SYSFS_DEPRECATED=y
--CONFIG_SYSFS_DEPRECATED_V2=y
--CONFIG_BLK_DEV_INITRD=y
--CONFIG_EXPERT=y
--CONFIG_MODULES=y
--CONFIG_MODULE_UNLOAD=y
--CONFIG_APM8018X=y
--# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
--CONFIG_MATH_EMULATION=y
--# CONFIG_SUSPEND is not set
--CONFIG_BLK_DEV_RAM=y
--CONFIG_BLK_DEV_RAM_SIZE=35000
--CONFIG_SCSI=y
--CONFIG_BLK_DEV_SD=y
--CONFIG_CHR_DEV_SG=y
--CONFIG_SCSI_SAS_ATTRS=y
--# CONFIG_INPUT is not set
--# CONFIG_SERIO is not set
--# CONFIG_VT is not set
--# CONFIG_UNIX98_PTYS is not set
--# CONFIG_LEGACY_PTYS is not set
--# CONFIG_HW_RANDOM is not set
--# CONFIG_HWMON is not set
--# CONFIG_USB_SUPPORT is not set
--# CONFIG_IOMMU_SUPPORT is not set
--CONFIG_EXT2_FS=y
--CONFIG_EXT4_FS=y
--CONFIG_MSDOS_FS=y
--CONFIG_VFAT_FS=y
--CONFIG_PROC_KCORE=y
--CONFIG_TMPFS=y
--CONFIG_CRAMFS=y
--CONFIG_NLS_CODEPAGE_437=y
--CONFIG_NLS_ASCII=y
--CONFIG_NLS_ISO8859_1=y
--CONFIG_NLS_UTF8=y
--CONFIG_MAGIC_SYSRQ=y
--# CONFIG_SCHED_DEBUG is not set
--# CONFIG_DEBUG_BUGVERBOSE is not set
--# CONFIG_FTRACE is not set
-diff --git a/arch/powerpc/configs/40x/makalu_defconfig b/arch/powerpc/configs/40x/makalu_defconfig
-deleted file mode 100644
-index 4563f88acf0c..000000000000
---- a/arch/powerpc/configs/40x/makalu_defconfig
-+++ /dev/null
-@@ -1,59 +0,0 @@
--CONFIG_40x=y
--CONFIG_SYSVIPC=y
--CONFIG_POSIX_MQUEUE=y
--CONFIG_LOG_BUF_SHIFT=14
--CONFIG_BLK_DEV_INITRD=y
--CONFIG_EXPERT=y
--CONFIG_KALLSYMS_ALL=y
--CONFIG_MODULES=y
--CONFIG_MODULE_UNLOAD=y
--# CONFIG_BLK_DEV_BSG is not set
--CONFIG_MAKALU=y
--CONFIG_NET=y
--CONFIG_PACKET=y
--CONFIG_UNIX=y
--CONFIG_INET=y
--CONFIG_IP_PNP=y
--CONFIG_IP_PNP_DHCP=y
--CONFIG_IP_PNP_BOOTP=y
--# CONFIG_IPV6 is not set
--CONFIG_CONNECTOR=y
--CONFIG_MTD=y
--CONFIG_MTD_CMDLINE_PARTS=y
--CONFIG_MTD_BLOCK=m
--CONFIG_MTD_CFI=y
--CONFIG_MTD_JEDECPROBE=y
--CONFIG_MTD_CFI_AMDSTD=y
--CONFIG_MTD_PHYSMAP_OF=y
--CONFIG_BLK_DEV_RAM=y
--CONFIG_BLK_DEV_RAM_SIZE=35000
--CONFIG_NETDEVICES=y
--CONFIG_IBM_EMAC=y
--CONFIG_IBM_EMAC_RXB=256
--CONFIG_IBM_EMAC_TXB=256
--# CONFIG_INPUT is not set
--# CONFIG_SERIO is not set
--# CONFIG_VT is not set
--CONFIG_SERIAL_8250=y
--CONFIG_SERIAL_8250_CONSOLE=y
--CONFIG_SERIAL_8250_EXTENDED=y
--CONFIG_SERIAL_8250_SHARE_IRQ=y
--CONFIG_SERIAL_OF_PLATFORM=y
--# CONFIG_HW_RANDOM is not set
--# CONFIG_HWMON is not set
--CONFIG_THERMAL=y
--# CONFIG_USB_SUPPORT is not set
--CONFIG_EXT2_FS=y
--CONFIG_PROC_KCORE=y
--CONFIG_TMPFS=y
--CONFIG_CRAMFS=y
--CONFIG_NFS_FS=y
--CONFIG_ROOT_NFS=y
--CONFIG_DEBUG_FS=y
--CONFIG_MAGIC_SYSRQ=y
--CONFIG_DETECT_HUNG_TASK=y
--CONFIG_CRYPTO_CBC=y
--CONFIG_CRYPTO_ECB=y
--CONFIG_CRYPTO_PCBC=y
--CONFIG_CRYPTO_MD5=y
--CONFIG_CRYPTO_DES=y
-diff --git a/arch/powerpc/configs/40x/obs600_defconfig b/arch/powerpc/configs/40x/obs600_defconfig
-deleted file mode 100644
-index 2a2bb3f46847..000000000000
---- a/arch/powerpc/configs/40x/obs600_defconfig
-+++ /dev/null
-@@ -1,69 +0,0 @@
--CONFIG_40x=y
--CONFIG_SYSVIPC=y
--CONFIG_POSIX_MQUEUE=y
--CONFIG_NO_HZ=y
--CONFIG_HIGH_RES_TIMERS=y
--CONFIG_LOG_BUF_SHIFT=14
--CONFIG_BLK_DEV_INITRD=y
--CONFIG_EXPERT=y
--CONFIG_KALLSYMS_ALL=y
--CONFIG_MODULES=y
--CONFIG_MODULE_UNLOAD=y
--# CONFIG_BLK_DEV_BSG is not set
--CONFIG_OBS600=y
--CONFIG_MATH_EMULATION=y
--CONFIG_NET=y
--CONFIG_PACKET=y
--CONFIG_UNIX=y
--CONFIG_INET=y
--CONFIG_IP_PNP=y
--CONFIG_IP_PNP_DHCP=y
--CONFIG_IP_PNP_BOOTP=y
--# CONFIG_IPV6 is not set
--CONFIG_CONNECTOR=y
--CONFIG_MTD=y
--CONFIG_MTD_CMDLINE_PARTS=y
--CONFIG_MTD_BLOCK=y
--CONFIG_MTD_CFI=y
--CONFIG_MTD_JEDECPROBE=y
--CONFIG_MTD_CFI_AMDSTD=y
--CONFIG_MTD_PHYSMAP_OF=y
--CONFIG_MTD_RAW_NAND=y
--CONFIG_MTD_NAND_NDFC=y
--CONFIG_BLK_DEV_RAM=y
--CONFIG_BLK_DEV_RAM_SIZE=35000
--CONFIG_NETDEVICES=y
--CONFIG_IBM_EMAC=y
--CONFIG_IBM_EMAC_RXB=256
--CONFIG_IBM_EMAC_TXB=256
--# CONFIG_INPUT is not set
--# CONFIG_SERIO is not set
--# CONFIG_VT is not set
--CONFIG_SERIAL_8250=y
--CONFIG_SERIAL_8250_CONSOLE=y
--CONFIG_SERIAL_8250_EXTENDED=y
--CONFIG_SERIAL_8250_SHARE_IRQ=y
--CONFIG_SERIAL_OF_PLATFORM=y
--# CONFIG_HW_RANDOM is not set
--CONFIG_I2C=y
--CONFIG_I2C_CHARDEV=y
--CONFIG_I2C_IBM_IIC=y
--CONFIG_SENSORS_LM75=y
--CONFIG_THERMAL=y
--# CONFIG_USB_SUPPORT is not set
--CONFIG_RTC_CLASS=y
--CONFIG_RTC_DRV_DS1307=y
--CONFIG_EXT2_FS=y
--CONFIG_PROC_KCORE=y
--CONFIG_TMPFS=y
--CONFIG_CRAMFS=y
--CONFIG_NFS_FS=y
--CONFIG_ROOT_NFS=y
--CONFIG_DEBUG_FS=y
--CONFIG_MAGIC_SYSRQ=y
--CONFIG_DETECT_HUNG_TASK=y
--CONFIG_CRYPTO_CBC=y
--CONFIG_CRYPTO_ECB=y
--CONFIG_CRYPTO_PCBC=y
--CONFIG_CRYPTO_MD5=y
--CONFIG_CRYPTO_DES=y
-diff --git a/arch/powerpc/configs/40x/walnut_defconfig b/arch/powerpc/configs/40x/walnut_defconfig
-deleted file mode 100644
-index 9eaaf1a1d2c6..000000000000
---- a/arch/powerpc/configs/40x/walnut_defconfig
-+++ /dev/null
-@@ -1,55 +0,0 @@
--CONFIG_40x=y
--CONFIG_SYSVIPC=y
--CONFIG_POSIX_MQUEUE=y
--CONFIG_LOG_BUF_SHIFT=14
--CONFIG_BLK_DEV_INITRD=y
--CONFIG_EXPERT=y
--CONFIG_KALLSYMS_ALL=y
--CONFIG_MODULES=y
--CONFIG_MODULE_UNLOAD=y
--# CONFIG_BLK_DEV_BSG is not set
--CONFIG_NET=y
--CONFIG_PACKET=y
--CONFIG_UNIX=y
--CONFIG_INET=y
--CONFIG_IP_PNP=y
--CONFIG_IP_PNP_DHCP=y
--CONFIG_IP_PNP_BOOTP=y
--# CONFIG_IPV6 is not set
--CONFIG_CONNECTOR=y
--CONFIG_MTD=y
--CONFIG_MTD_CMDLINE_PARTS=y
--CONFIG_MTD_BLOCK=m
--CONFIG_MTD_CFI=y
--CONFIG_MTD_JEDECPROBE=y
--CONFIG_MTD_CFI_AMDSTD=y
--CONFIG_MTD_PHYSMAP_OF=y
--CONFIG_BLK_DEV_RAM=y
--CONFIG_BLK_DEV_RAM_SIZE=35000
--CONFIG_NETDEVICES=y
--CONFIG_IBM_EMAC=y
--# CONFIG_INPUT is not set
--# CONFIG_SERIO is not set
--# CONFIG_VT is not set
--CONFIG_SERIAL_8250=y
--CONFIG_SERIAL_8250_CONSOLE=y
--CONFIG_SERIAL_8250_EXTENDED=y
--CONFIG_SERIAL_8250_SHARE_IRQ=y
--CONFIG_SERIAL_OF_PLATFORM=y
--# CONFIG_HW_RANDOM is not set
--# CONFIG_HWMON is not set
--CONFIG_THERMAL=y
--CONFIG_EXT2_FS=y
--CONFIG_PROC_KCORE=y
--CONFIG_TMPFS=y
--CONFIG_CRAMFS=y
--CONFIG_NFS_FS=y
--CONFIG_ROOT_NFS=y
--CONFIG_DEBUG_FS=y
--CONFIG_MAGIC_SYSRQ=y
--CONFIG_DETECT_HUNG_TASK=y
--CONFIG_CRYPTO_CBC=y
--CONFIG_CRYPTO_ECB=y
--CONFIG_CRYPTO_PCBC=y
--CONFIG_CRYPTO_MD5=y
--CONFIG_CRYPTO_DES=y
-diff --git a/arch/powerpc/configs/ppc40x_defconfig b/arch/powerpc/configs/ppc40x_defconfig
-deleted file mode 100644
-index 7e48693775f4..000000000000
---- a/arch/powerpc/configs/ppc40x_defconfig
-+++ /dev/null
-@@ -1,74 +0,0 @@
--CONFIG_40x=y
--CONFIG_SYSVIPC=y
--CONFIG_POSIX_MQUEUE=y
--CONFIG_LOG_BUF_SHIFT=14
--CONFIG_BLK_DEV_INITRD=y
--CONFIG_EXPERT=y
--CONFIG_KALLSYMS_ALL=y
--CONFIG_MODULES=y
--CONFIG_MODULE_UNLOAD=y
--# CONFIG_BLK_DEV_BSG is not set
--CONFIG_PPC4xx_GPIO=y
--CONFIG_ACADIA=y
--CONFIG_HOTFOOT=y
--CONFIG_KILAUEA=y
--CONFIG_MAKALU=y
--CONFIG_NET=y
--CONFIG_PACKET=y
--CONFIG_UNIX=y
--CONFIG_INET=y
--CONFIG_IP_PNP=y
--CONFIG_IP_PNP_DHCP=y
--CONFIG_IP_PNP_BOOTP=y
--CONFIG_CONNECTOR=y
--CONFIG_MTD=y
--CONFIG_MTD_CMDLINE_PARTS=y
--CONFIG_MTD_BLOCK=m
--CONFIG_MTD_CFI=y
--CONFIG_MTD_JEDECPROBE=y
--CONFIG_MTD_CFI_AMDSTD=y
--CONFIG_MTD_PHYSMAP_OF=y
--CONFIG_MTD_UBI=m
--CONFIG_MTD_UBI_GLUEBI=m
--CONFIG_BLK_DEV_RAM=y
--CONFIG_BLK_DEV_RAM_SIZE=35000
--CONFIG_NETDEVICES=y
--CONFIG_IBM_EMAC=y
--# CONFIG_INPUT is not set
--CONFIG_SERIO=m
--# CONFIG_SERIO_I8042 is not set
--# CONFIG_SERIO_SERPORT is not set
--# CONFIG_VT is not set
--CONFIG_SERIAL_8250=y
--CONFIG_SERIAL_8250_CONSOLE=y
--CONFIG_SERIAL_8250_EXTENDED=y
--CONFIG_SERIAL_8250_SHARE_IRQ=y
--CONFIG_SERIAL_OF_PLATFORM=y
--# CONFIG_HW_RANDOM is not set
--CONFIG_I2C=m
--CONFIG_I2C_CHARDEV=m
--CONFIG_I2C_GPIO=m
--CONFIG_I2C_IBM_IIC=m
--# CONFIG_HWMON is not set
--CONFIG_THERMAL=y
--CONFIG_FB=m
--CONFIG_EXT2_FS=y
--CONFIG_EXT4_FS=m
--CONFIG_VFAT_FS=m
--CONFIG_PROC_KCORE=y
--CONFIG_TMPFS=y
--CONFIG_JFFS2_FS=m
--CONFIG_UBIFS_FS=m
--CONFIG_CRAMFS=y
--CONFIG_NFS_FS=y
--CONFIG_ROOT_NFS=y
--CONFIG_NLS_CODEPAGE_437=m
--CONFIG_NLS_ISO8859_1=m
--CONFIG_DEBUG_FS=y
--CONFIG_MAGIC_SYSRQ=y
--CONFIG_DETECT_HUNG_TASK=y
--CONFIG_CRYPTO_CBC=y
--CONFIG_CRYPTO_ECB=y
--CONFIG_CRYPTO_PCBC=y
--CONFIG_CRYPTO_MD5=y
--CONFIG_CRYPTO_DES=y
-diff --git a/arch/powerpc/platforms/40x/Kconfig b/arch/powerpc/platforms/40x/Kconfig
-deleted file mode 100644
-index b3c466c50535..000000000000
---- a/arch/powerpc/platforms/40x/Kconfig
-+++ /dev/null
-@@ -1,78 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0
--config ACADIA
--	bool "Acadia"
--	depends on 40x
--	select PPC40x_SIMPLE
--	select 405EZ
--	help
--	  This option enables support for the AMCC 405EZ Acadia evaluation board.
--
--config HOTFOOT
--	bool "Hotfoot"
--	depends on 40x
--	select PPC40x_SIMPLE
--	select FORCE_PCI
--	help
--	  This option enables support for the ESTEEM 195E Hotfoot board.
--
--config KILAUEA
--	bool "Kilauea"
--	depends on 40x
--	select 405EX
--	select PPC40x_SIMPLE
--	select PPC4xx_PCI_EXPRESS
--	select FORCE_PCI
--	select PCI_MSI
--	help
--	  This option enables support for the AMCC PPC405EX evaluation board.
--
--config MAKALU
--	bool "Makalu"
--	depends on 40x
--	select 405EX
--	select FORCE_PCI
--	select PPC4xx_PCI_EXPRESS
--	select PPC40x_SIMPLE
--	help
--	  This option enables support for the AMCC PPC405EX board.
--
--config OBS600
--	bool "OpenBlockS 600"
--	depends on 40x
--	select 405EX
--	select PPC40x_SIMPLE
--	help
--	  This option enables support for PlatHome OpenBlockS 600 server
--
--config PPC40x_SIMPLE
--	bool "Simple PowerPC 40x board support"
--	depends on 40x
--	help
--	  This option enables the simple PowerPC 40x platform support.
--
--config 405EX
--	bool
--	select IBM_EMAC_EMAC4 if IBM_EMAC
--	select IBM_EMAC_RGMII if IBM_EMAC
--
--config 405EZ
--	bool
--	select IBM_EMAC_NO_FLOW_CTRL if IBM_EMAC
--	select IBM_EMAC_MAL_CLR_ICINTSTAT if IBM_EMAC
--	select IBM_EMAC_MAL_COMMON_ERR if IBM_EMAC
--
--config PPC4xx_GPIO
--	bool "PPC4xx GPIO support"
--	depends on 40x
--	select GPIOLIB
--	select OF_GPIO_MM_GPIOCHIP
--	help
--	  Enable gpiolib support for ppc40x based boards
--
--config APM8018X
--	bool "APM8018X"
--	depends on 40x
--	select PPC40x_SIMPLE
--	help
--	  This option enables support for the AppliedMicro APM8018X evaluation
--	  board.
-diff --git a/arch/powerpc/platforms/40x/Makefile b/arch/powerpc/platforms/40x/Makefile
-deleted file mode 100644
-index 122de98527c4..000000000000
---- a/arch/powerpc/platforms/40x/Makefile
-+++ /dev/null
-@@ -1,2 +0,0 @@
+@@ -1,7 +0,0 @@
 -# SPDX-License-Identifier: GPL-2.0-only
--obj-$(CONFIG_PPC40x_SIMPLE)		+= ppc40x_simple.o
-diff --git a/arch/powerpc/platforms/40x/ppc40x_simple.c b/arch/powerpc/platforms/40x/ppc40x_simple.c
+-obj-y				+= uic.o machine_check.o
+-obj-$(CONFIG_44x)		+= soc.o
+-obj-$(CONFIG_PCI)		+= pci.o
+-obj-$(CONFIG_PPC4xx_HSTA_MSI)	+= hsta_msi.o
+-obj-$(CONFIG_PPC4xx_CPM)	+= cpm.o
+-obj-$(CONFIG_PPC4xx_GPIO)	+= gpio.o
+diff --git a/arch/powerpc/platforms/4xx/machine_check.c b/arch/powerpc/platforms/4xx/machine_check.c
 deleted file mode 100644
-index 294ab2728588..000000000000
---- a/arch/powerpc/platforms/40x/ppc40x_simple.c
+index a905da1d6f41..000000000000
+--- a/arch/powerpc/platforms/4xx/machine_check.c
 +++ /dev/null
-@@ -1,74 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
+@@ -1,23 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0-or-later
 -/*
-- * Generic PowerPC 40x platform support
-- *
-- * Copyright 2008 IBM Corporation
-- *
-- * This implements simple platform support for PowerPC 44x chips.  This is
-- * mostly used for eval boards or other simple and "generic" 44x boards.  If
-- * your board has custom functions or hardware, then you will likely want to
-- * implement your own board.c file to accommodate it.
 - */
 -
--#include <asm/machdep.h>
--#include <asm/pci-bridge.h>
--#include <asm/ppc4xx.h>
--#include <asm/time.h>
--#include <asm/udbg.h>
--#include <asm/uic.h>
+-#include <linux/kernel.h>
+-#include <linux/printk.h>
+-#include <linux/ptrace.h>
 -
--#include <linux/init.h>
--#include <linux/of_platform.h>
+-#include <asm/reg.h>
 -
--static const struct of_device_id ppc40x_of_bus[] __initconst = {
--	{ .compatible = "ibm,plb3", },
--	{ .compatible = "ibm,plb4", },
--	{ .compatible = "ibm,opb", },
--	{ .compatible = "ibm,ebc", },
--	{ .compatible = "simple-bus", },
--	{},
--};
--
--static int __init ppc40x_device_probe(void)
+-int machine_check_4xx(struct pt_regs *regs)
 -{
--	of_platform_bus_probe(NULL, ppc40x_of_bus, NULL);
+-	unsigned long reason = regs->esr;
+-
+-	if (reason & ESR_IMCP) {
+-		printk("Instruction");
+-		mtspr(SPRN_ESR, reason & ~ESR_IMCP);
+-	} else
+-		printk("Data");
+-	printk(" machine check in kernel mode.\n");
 -
 -	return 0;
 -}
--machine_device_initcall(ppc40x_simple, ppc40x_device_probe);
--
--/* This is the list of boards that can be supported by this simple
-- * platform code.  This does _not_ mean the boards are compatible,
-- * as they most certainly are not from a device tree perspective.
-- * However, their differences are handled by the device tree and the
-- * drivers and therefore they don't need custom board support files.
-- *
-- * Again, if your board needs to do things differently then create a
-- * board.c file for it rather than adding it to this list.
-- */
--static const char * const board[] __initconst = {
--	"amcc,acadia",
--	"amcc,haleakala",
--	"amcc,kilauea",
--	"amcc,makalu",
--	"apm,klondike",
--	"est,hotfoot",
--	"plathome,obs600",
--	NULL
--};
--
--static int __init ppc40x_probe(void)
--{
--	pci_set_flags(PCI_REASSIGN_ALL_RSRC);
--	return 1;
--}
--
--define_machine(ppc40x_simple) {
--	.name = "PowerPC 40x Platform",
--	.compatibles = board,
--	.probe = ppc40x_probe,
--	.progress = udbg_progress,
--	.init_IRQ = uic_init_tree,
--	.get_irq = uic_get_irq,
--	.restart = ppc4xx_reset_system,
--};
-diff --git a/arch/powerpc/platforms/Kconfig b/arch/powerpc/platforms/Kconfig
-index 1fd253f92a77..1112a5831619 100644
---- a/arch/powerpc/platforms/Kconfig
-+++ b/arch/powerpc/platforms/Kconfig
-@@ -18,7 +18,6 @@ source "arch/powerpc/platforms/85xx/Kconfig"
- source "arch/powerpc/platforms/86xx/Kconfig"
- source "arch/powerpc/platforms/embedded6xx/Kconfig"
- source "arch/powerpc/platforms/44x/Kconfig"
--source "arch/powerpc/platforms/40x/Kconfig"
- source "arch/powerpc/platforms/amigaone/Kconfig"
- source "arch/powerpc/platforms/book3s/Kconfig"
- source "arch/powerpc/platforms/microwatt/Kconfig"
 diff --git a/arch/powerpc/platforms/Makefile b/arch/powerpc/platforms/Makefile
-index 94470fb27c99..d1a417b301b6 100644
+index d1a417b301b6..786d374bff31 100644
 --- a/arch/powerpc/platforms/Makefile
 +++ b/arch/powerpc/platforms/Makefile
-@@ -5,7 +5,6 @@ obj-$(CONFIG_FSL_ULI1575)	+= fsl_uli1575.o
+@@ -4,7 +4,6 @@ obj-$(CONFIG_FSL_ULI1575)	+= fsl_uli1575.o
+ 
  obj-$(CONFIG_PPC_PMAC)		+= powermac/
  obj-$(CONFIG_PPC_CHRP)		+= chrp/
- obj-$(CONFIG_4xx)		+= 4xx/
--obj-$(CONFIG_40x)		+= 40x/
+-obj-$(CONFIG_4xx)		+= 4xx/
  obj-$(CONFIG_44x)		+= 44x/
  obj-$(CONFIG_PPC_MPC512x)	+= 512x/
  obj-$(CONFIG_PPC_MPC52xx)	+= 52xx/
