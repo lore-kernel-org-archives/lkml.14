@@ -1,30 +1,30 @@
-Received: from out187-1.us.a.mail.aliyun.com (out187-1.us.a.mail.aliyun.com [47.90.187.1])
+Received: from out187-17.us.a.mail.aliyun.com (out187-17.us.a.mail.aliyun.com [47.90.187.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1249615574E
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 15:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E7D15575D
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 15:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.187.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715011056; cv=none; b=j8yHQSyibTq2JzWoxh1UcKFJLGmCDvCHX2niGq/M5LH4FJg+4VfbnaAWn6JDwx/TrlOYkluPNKiRgW0FWvPGtO8CuH6jxMhStW5h2yc1bbJl60GMS/1wRWKxuw4XNJpshHCbJGX/S7poR0eBOTk86LL5qpaJ3erOh10hhL9MrCw=
+	t=1715011059; cv=none; b=rMT9pAEVbni7JeOlGfrKjkgnDswTxkwWCjeHzF7Nh1iHLoIaZt+DXwAUOVkjaCbqeqTbwj9Zsi0yp6+1Udx+lofa2zjmz5Xu7oQexmTuRGJsLcX3Q1n6eVffSvXe4WUvjJZwn94No8hVF12caEK5e4KG+qmcItJFcqr0A2R6DDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715011056; c=relaxed/simple;
-	bh=icpePUeswEr53u3rw5CGtDkngqPYtbaGrZOhDxsPtc8=;
+	s=arc-20240116; t=1715011059; c=relaxed/simple;
+	bh=HuCGta02kYZoOPnIDyqaTZyalnCbKeZWEKYWZVof4MA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=R9hq0RgvTAyFVQlj4NhdGm2SYxX+/6gKfCiCL2P56mDuoYXAjib2z2YdaSe6/cRT60606lj50pVnF/k6SI9bMQ/AvWqUoEwH4wLWHNOnI5H1wPxNBjSjK5ZtbEBMcuI0+lgG18Ly8/wmHuS+5zJrWvDCSoBgSz2tqoDfP9RTtgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=u6jU+xOc; arc=none smtp.client-ip=47.90.187.1
+	 MIME-Version; b=DD5xtIhLgZo9B1PlLAm5GdlGI5x5wnGasvkJw1p/tJ0MoqBWiORC4ZEE7t/JlUwWhyoyAy9DJkKryp9EWBHZbBszz4DhO6OvxQ5ifQPoi60K5ldcAG5ufkQMKldfViNEcafH5s9xFN4cN1eyALfPRCtIeLmW+Aenkha6oeIWYtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=qDceAnEA; arc=none smtp.client-ip=47.90.187.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="u6jU+xOc"
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="qDceAnEA"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=antgroup.com; s=default;
-	t=1715011043; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=pTrt2D6LnlSlcqnfLWOg4gAqNc+Zz7gJTsSV/QHl4Kk=;
-	b=u6jU+xOcFJ1Q70WH10dGsLlx1HnJrJssmMdS5Lx+lpjN4quxtLIgif1j1sdoLSVLFOmUW7AzFncatfwJjokmtYdwGWexLbcOCQs60BeySP6aPQEhWvAATUPotD0MzZhk6u+HSDrNAYcI57Tv9RI96Eef+XwQkg/ipP0WSKyfyyc=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047199;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---.XTcewE9_1715010723;
-Received: from localhost(mailfrom:libang.li@antgroup.com fp:SMTPD_---.XTcewE9_1715010723)
+	t=1715011046; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=fZLMp0zX1lVO/AMMqpo0KyiatSIXbG3CSPTawlIjnSU=;
+	b=qDceAnEAF3MzzYPlofjvl4gHUhttJKT7L08pjDxKVU0NUEgl8GiKwIkvXDfvHZXdkKhmp8K8KwDvABc6E2o4pd83mAUJ5P0vE91UscupQXZWMldK0PmW3z/pnwEUBkv4isr3Ea4BzxzvxwBoJ7V+NFZ1Az4khL+2vzUWNtgK7AY=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047192;MF=libang.li@antgroup.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---.XTcewEm_1715010727;
+Received: from localhost(mailfrom:libang.li@antgroup.com fp:SMTPD_---.XTcewEm_1715010727)
           by smtp.aliyun-inc.com;
-          Mon, 06 May 2024 23:52:04 +0800
+          Mon, 06 May 2024 23:52:08 +0800
 From: "Bang Li" <libang.li@antgroup.com>
 To: akpm@linux-foundation.org,
 	chenhuacai@kernel.org,
@@ -42,9 +42,9 @@ Cc:  <linux-kernel@vger.kernel.org>,
    <ioworker0@gmail.com>,
    <libang.linux@gmail.com>,
   "Bang Li" <libang.li@antgroup.com>
-Subject: [PATCH v2 2/5] mips: Add update_mmu_tlb_range()
-Date: Mon, 06 May 2024 23:51:17 +0800
-Message-Id: <20240506155120.83105-3-libang.li@antgroup.com>
+Subject: [PATCH v2 4/5] xtensa: Add update_mmu_tlb_range()
+Date: Mon, 06 May 2024 23:51:19 +0800
+Message-Id: <20240506155120.83105-5-libang.li@antgroup.com>
 X-Mailer: git-send-email 2.19.1.6.gb485710b
 In-Reply-To: <20240506155120.83105-1-libang.li@antgroup.com>
 References: <20240506155120.83105-1-libang.li@antgroup.com>
@@ -61,24 +61,42 @@ address range.
 
 Signed-off-by: Bang Li <libang.li@antgroup.com>
 ---
- arch/mips/include/asm/pgtable.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/xtensa/include/asm/pgtable.h | 4 ++++
+ arch/xtensa/mm/tlb.c              | 6 ++++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
-index e27a4c83c548..9416c9b971e5 100644
---- a/arch/mips/include/asm/pgtable.h
-+++ b/arch/mips/include/asm/pgtable.h
-@@ -597,6 +597,10 @@ static inline void update_mmu_cache_range(struct vm_fault *vmf,
- #define	__HAVE_ARCH_UPDATE_MMU_TLB
- #define update_mmu_tlb	update_mmu_cache
+diff --git a/arch/xtensa/include/asm/pgtable.h b/arch/xtensa/include/asm/pgtable.h
+index 9a7e5e57ee9a..57f97e7e06d0 100644
+--- a/arch/xtensa/include/asm/pgtable.h
++++ b/arch/xtensa/include/asm/pgtable.h
+@@ -414,6 +414,10 @@ void update_mmu_tlb(struct vm_area_struct *vma,
+ 		    unsigned long address, pte_t *ptep);
+ #define __HAVE_ARCH_UPDATE_MMU_TLB
  
++void update_mmu_tlb_range(struct vm_area_struct *vma,
++			unsigned long address, pte_t *ptep, unsigned int nr);
 +#define __HAVE_ARCH_UPDATE_MMU_TLB_RANGE
-+#define update_mmu_tlb_range(vma, address, ptep, nr) \
-+	update_mmu_cache_range(NULL, vma, address, ptep, nr)
 +
- static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
- 	unsigned long address, pmd_t *pmdp)
- {
+ #endif /* !defined (__ASSEMBLY__) */
+ 
+ #define __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
+diff --git a/arch/xtensa/mm/tlb.c b/arch/xtensa/mm/tlb.c
+index d8b60d6e50a8..05efba86b870 100644
+--- a/arch/xtensa/mm/tlb.c
++++ b/arch/xtensa/mm/tlb.c
+@@ -169,6 +169,12 @@ void update_mmu_tlb(struct vm_area_struct *vma,
+ 	local_flush_tlb_page(vma, address);
+ }
+ 
++void update_mmu_tlb_range(struct vm_area_struct *vma,
++			unsigned long address, pte_t *ptep, unsigned int nr)
++{
++	local_flush_tlb_range(vma, address, address + PAGE_SIZE * nr);
++}
++
+ #ifdef CONFIG_DEBUG_TLB_SANITY
+ 
+ static unsigned get_pte_for_vaddr(unsigned vaddr)
 -- 
 2.19.1.6.gb485710b
 
