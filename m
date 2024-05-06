@@ -1,186 +1,96 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69455143895
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD55143895;
+	Mon,  6 May 2024 12:13:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714997580; cv=none; b=mZuvXPHkmcUrV12mLsLmn6pw+glqOEncWp4VjGJYR6GKzlp90GiQPegx0Zq09yxsSbZLOTc7gyLRlk5j51cUAF3wO58xs+7nPSVgA4yktFdOpuH3YPkURn37825BmoeLxJQYwn+9I+gjnNVKem9mgOlU/WT8MR9PTsJnrFC+184=
+	t=1714997587; cv=none; b=BH/rFKxlgiwXkTCa14pfEedFwsvm/fIxJSCGEfPV7v3s/ioaqUbJ7IsVs0OcZmK65lzSEb7zOiufo/cPOEyyWytowjBvveXikza0lChhrCm+4CCoVhnDaSAHdPe+lakBPD+9kTdrnXo86/8i9vPUw+4IkPCaoGg28gafT0DmcAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714997580; c=relaxed/simple;
-	bh=Iz5B8F7XltdwEMC2wpjkKK1FHOvCSMw2lG0kBy8i1wI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VPnCWle6VRnow0r6rlqn3zqu84C8TN3J5cS/lDMXvRcVO0H83TeJJ4ZRWp2dS9U9mErNqu5xkb8lrUg58pOxqgBKwwdpvyXGoSvafW5detoPTZJxKQr0R313v/v3C4CDd4gFlTUdNNnrjeMp8TPAgCv4KTUXKVTsbqldNI4UHms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VY0Zh2Pknz1RBXH;
-	Mon,  6 May 2024 20:09:32 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8E3A41800C7;
-	Mon,  6 May 2024 20:12:49 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.28; Mon, 6 May 2024 20:12:46 +0800
-Message-ID: <f301ebb0-adf2-33c9-d548-7738a010ce92@huawei.com>
-Date: Mon, 6 May 2024 20:12:46 +0800
+	s=arc-20240116; t=1714997587; c=relaxed/simple;
+	bh=JG4F5Vliq1cxbKJA3HniZ3sx6UHw/Yf2C1Q65sEsqrE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=noebAiBGYCFTTb7Lqw18RkxD7h3q71srMGz6IBwpebzGTMLubFHCYEWobhkThiMeqdqCFNw8H689W0fK4wqCjBWtpOFZM389Lr5EDnlf7u7WJ8Z+OxMoeHn/ik2kSdakgR4E9pIE439r95StSDt7DwO20BtQ8+SUf+g25t7yc8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=SexplnPz; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SexplnPz"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7971340E01E8;
+	Mon,  6 May 2024 12:13:02 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id rJfRrwpOcMj5; Mon,  6 May 2024 12:12:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1714997579; bh=/of+dyTW6UaI+A6BFaoUs57S0GorDUxHRqObed0VRzE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SexplnPzD845D+0w5+eP+0ESkaUvL6gUYWbrNRIpCCuz4OGDoKbSBa1Tu/U7Xbd+I
+	 mwlut2leWuEoIZU7PdPiKcwoRPab8QMn23dHrBAVLjwE8eA74TFlnAc7wBNiNB6HPn
+	 9oy2JEokTaIY0t11CKL0LVc/JcoKuz3grWqgS+wb6yuYUdhsZtuQ+rWYzhEWY4XhoA
+	 vRLFQByu9+kEWbrbVDJOlfMT4bIsw7cvJGH6S6MtrmuI/upRGNFFcjeUnbuLFD6Ret
+	 p6jBHz0AAt15YEKS+BRLe4wdGFnXXtC9Lmp4Bm9EGcZXWAnfgBWuIuPx56ftf4ZN4/
+	 EXcmUGX0krYdPVweESAWlAeU/nC2l0XHSMhqAg2hW2+Mjg8b6iGaT4GPbdADsglESU
+	 4gjakgghhzSTNU4JcIFOW5XtY3E/+oXc4cD/+YtjUsBJHOLKMxTKz9aAu26Kblqdk0
+	 UZwjxIAxh2nVBvqPuM1VLGGq//APBQc3oOj+Ulzni5YFNQ9pQ9AwJLvsnNMey7AL4b
+	 kwDmsMFt0eQS3y2fRS9LQvtpYlcEj/l22wa3qxIvysJy0Tu4HCUO5DI/YwbpZJScGo
+	 I1+DUWnLGNf2hXdU6etWiuJ1d8e3vOjO2/rlZ4LzmHFVqO5Zc4TpPkG5b493kkzehX
+	 gX6GyQCoALjr5JpNMGI1bXFQ=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2CE9540E0187;
+	Mon,  6 May 2024 12:12:43 +0000 (UTC)
+Date: Mon, 6 May 2024 14:12:37 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Michal Simek <michal.simek@amd.com>,
+	Alexander Stein <alexander.stein@ew.tq-group.com>,
+	Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Robert Richter <rric@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
+	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Sherry Sun <sherry.sun@nxp.com>,
+	Borislav Petkov <bp@suse.de>
+Subject: Re: [PATCH v5 01/20] EDAC/synopsys: Fix ECC status data and IRQ
+ disable race condition
+Message-ID: <20240506121237.GIZjjJNRhtixp7VVHl@fat_crate.local>
+References: <20240222181324.28242-1-fancer.lancer@gmail.com>
+ <20240222181324.28242-2-fancer.lancer@gmail.com>
+ <20240415183616.GDZh1zoFsBzvAEduRo@fat_crate.local>
+ <szcie4giwjykne4su6uu5wsmtsl3e3jd53rjfiwir6hm3ju7as@6eqh2xmj35ie>
+ <20240421100712.GAZiTlUOm1hrLQvaMi@fat_crate.local>
+ <whgp2xx4dv3szezz3bvmgutgazz6kvie3q7rgpr35zqzuzsygk@wppqzusteru4>
+ <20240506102029.GGZjiu7TKP9FVp-2Sb@fat_crate.local>
+ <vugkhnu5c7so7dk3z2cuhlbu66gv6skvicuseblrmkzyttnnlr@lqzqvysk6wbl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH v3 0/8] Rework the DAIF mask, unmask and track API
-To: Mark Rutland <mark.rutland@arm.com>
-CC: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
-	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
-	<yuzenghui@huawei.com>, <tglx@linutronix.de>, <ardb@kernel.org>,
-	<broonie@kernel.org>, <anshuman.khandual@arm.com>, <miguel.luis@oracle.com>,
-	<joey.gouly@arm.com>, <ryan.roberts@arm.com>, <jeremy.linton@arm.com>,
-	<ericchancf@google.com>, <kristina.martsenko@arm.com>, <robh@kernel.org>,
-	<scott@os.amperecomputing.com>, <songshuaishuai@tinylab.org>,
-	<shijie@os.amperecomputing.com>, <akpm@linux-foundation.org>,
-	<bhe@redhat.com>, <horms@kernel.org>, <mhiramat@kernel.org>,
-	<rmk+kernel@armlinux.org.uk>, <shahuang@redhat.com>,
-	<takakura@valinux.co.jp>, <dianders@chromium.org>, <swboyd@chromium.org>,
-	<sumit.garg@linaro.org>, <frederic@kernel.org>, <reijiw@google.com>,
-	<akihiko.odaki@daynix.com>, <ruanjinjie@huawei.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<kvmarm@lists.linux.dev>
-References: <20240415064758.3250209-1-liaochang1@huawei.com>
- <ZjUadl2Kbv-KyveZ@FVFF77S0Q05N>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <ZjUadl2Kbv-KyveZ@FVFF77S0Q05N>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <vugkhnu5c7so7dk3z2cuhlbu66gv6skvicuseblrmkzyttnnlr@lqzqvysk6wbl>
 
+On Mon, May 06, 2024 at 02:27:50PM +0300, Serge Semin wrote:
+> Always welcome. Glad we've settled this.)
 
+Yap, it looks good so far.
 
-在 2024/5/4 1:10, Mark Rutland 写道:
-> Hi,
-> 
-> On Mon, Apr 15, 2024 at 06:47:50AM +0000, Liao Chang wrote:
->> This patch series reworks the DAIF mask, unmask, and track API for the
->> upcoming FEAT_NMI extension added in Armv8.8.
->>
->> As platform and virtualization[1] supports for FEAT_NMI is emerging, and
->> Mark Brown's FEAT_NMI patch series[2] highlighted the need for clean up
->> the existing hacking style approach about DAIF management code before
->> adding NMI functionality, furthermore, we discover some subtle bugs
->> during 'perf' and 'ipi_backtrace' transition from PSEUDO_NMI to
->> FEAT_NMI, in summary, all of these emphasize the importance of rework.
->>
->> This series of reworking patches follows the suggestion from Mark
->> Rutland mentioned in Mark Brown's patchset. In summary, he think the
->> better way for DAIF manangement look likes as following:
->>
->> (a) Adding entry-specific helpers to manipulate abstract exception masks
->>     covering DAIF + PMR + ALLINT. Those need unmask-at-entry and
->>     mask-at-exit behaviour, and today only need to manage DAIF + PMR.
->>
->>     It should be possible to do this ahead of ALLINT / NMI support.
->>
->> (b) Adding new "logical exception mask" helpers that treat DAIF + PMR +
->>     ALLINT as separate elements. 
-> 
-> I've started looking at this in the series. There are some subtleties here, and
-> I don't think the helpers in this series are quite right as-is. I will try to
-> get back to you next week with a description of those; it'll take a short while
-> to write that up correctly and clearly and I don't trust myself to rush that
-> last thing on a Friday.
-> 
-> Thanks,
-> Mark.
+Lemme queue it into urgent and send it Linuswards soon-ish.
 
-Hi，Mark
-
-Thanks for your feedback.I apprecaite your interest in this patch series
-and look forward to receiving additional comments from you and others in
-the community.
-
-I am pleased to inform you that the FEAT_NMI features has been successfully
-merged into the upstream QEMU codebase at the "master" branch recently. This
-allow for initial testing without requiring hardware support for FEAT_NMI.
-
-To ensure minimal regressions introduced by this patch series, i have done
-testing using perf top, hardlokup and ipi nmi for various configurations,
-including (1) no NMI (2) use CONFIG_PSEUDO_NMI (3) use CONFIG_ARM64_NMI.
-
-We encourage further discussion and feedback on the patch series. We are
-particularly interested in hearing from developers who might have experience
-with NMI handling or those using platforms with FEAT_NMI capabilities.
-
-Thank you.
-
-> 
->>
->> This patches cherry-pick a part of Mark Brown' FEAT_NMI series, in order
->> to pass compilation and basic testing, includes perf and ipi_backtrace.
->>
->> [1] https://lore.kernel.org/all/20240407081733.3231820-1-ruanjinjie@huawei.com/
->> [2] https://lore.kernel.org/linux-arm-kernel/Y4sH5qX5bK9xfEBp@lpieralisi/
->>
->> v3->v2:
->> 1. Squash two commits that address two minor issues into Mark Brown's
->>    origin patch for detecting FEAT_NMI.
->> 2. Add one patch resolves the kprobe reenter panic while testing
->>    FEAT_NMI on QEMU.
->>
->> v2->v1:
->> Add SoB tags following the origin author's SoBs.
->>
->> Liao Chang (5):
->>   arm64: daifflags: Add logical exception masks covering DAIF + PMR +
->>     ALLINT
->>   arm64: Unify exception masking at entry and exit of exception
->>   arm64: Deprecate old local_daif_{mask,save,restore}
->>   irqchip/gic-v3: Improve the maintainability of NMI masking in GIC
->>     driver
->>   arm64: kprobe: Keep NMI maskabled while kprobe is stepping xol
->>
->> Mark Brown (3):
->>   arm64/sysreg: Add definitions for immediate versions of MSR ALLINT
->>   arm64/cpufeature: Detect PE support for FEAT_NMI
->>   arm64/nmi: Add Kconfig for NMI
->>
->>  arch/arm64/Kconfig                   |  17 ++
->>  arch/arm64/include/asm/cpufeature.h  |   6 +
->>  arch/arm64/include/asm/daifflags.h   | 298 ++++++++++++++++++++++-----
->>  arch/arm64/include/asm/nmi.h         |  27 +++
->>  arch/arm64/include/asm/sysreg.h      |   2 +
->>  arch/arm64/include/uapi/asm/ptrace.h |   1 +
->>  arch/arm64/kernel/acpi.c             |  10 +-
->>  arch/arm64/kernel/cpufeature.c       |  58 +++++-
->>  arch/arm64/kernel/debug-monitors.c   |   7 +-
->>  arch/arm64/kernel/entry-common.c     |  96 +++++----
->>  arch/arm64/kernel/entry.S            |   2 -
->>  arch/arm64/kernel/hibernate.c        |   6 +-
->>  arch/arm64/kernel/irq.c              |   2 +-
->>  arch/arm64/kernel/machine_kexec.c    |   2 +-
->>  arch/arm64/kernel/probes/kprobes.c   |   4 +-
->>  arch/arm64/kernel/setup.c            |   2 +-
->>  arch/arm64/kernel/smp.c              |   6 +-
->>  arch/arm64/kernel/suspend.c          |   6 +-
->>  arch/arm64/kvm/hyp/vgic-v3-sr.c      |   6 +-
->>  arch/arm64/kvm/hyp/vhe/switch.c      |   4 +-
->>  arch/arm64/mm/mmu.c                  |   6 +-
->>  arch/arm64/tools/cpucaps             |   2 +
->>  drivers/irqchip/irq-gic-v3.c         |   6 +-
->>  23 files changed, 442 insertions(+), 134 deletions(-)
->>  create mode 100644 arch/arm64/include/asm/nmi.h
->>
->> -- 
->> 2.34.1
->>
->>
-> 
+Thx.
 
 -- 
-BR
-Liao, Chang
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
