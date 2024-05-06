@@ -1,46 +1,46 @@
 Received: from www530.your-server.de (www530.your-server.de [188.40.30.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CB0A14265A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CABE1422C5;
 	Mon,  6 May 2024 10:24:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.30.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714991068; cv=none; b=EZD8eb625WesLyUrdcsQrE7Vod8DshhnzcTiGv3qri7tLdUZ4e0t/PLqSB+bTVhQ3jgQs2Kpm1swwNV2vtAgjvyj5FlwzOUWnFRpWnxc2qeFzmJk+IHzBd9R9u7i0P/P2rQj59pklVsxIYYDeUnJYPTNN66v92Cb4clUfTOasj8=
+	t=1714991069; cv=none; b=pWqKKHu7sc5OdJ8fkL84cZ4QSbQCdudP268Z+uKjiU8grPcKLVRPiT75dfGABn/oSyftJP24iBO44Os2Iklh3A2hPDjr6+1Oa15pGH2VPpEcZr+Gs6VPnXLGgh0yXNE+5p7I9F43wboC5T279CVRiFhhl1sKiDwJVZxAe95aNUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714991068; c=relaxed/simple;
-	bh=Q52rUnIGtjWz8uUhLDj0XEvKHoBXONohWF2/CBBsBl0=;
+	s=arc-20240116; t=1714991069; c=relaxed/simple;
+	bh=+iGbmdojo/ysSAYj9+vv3uoYFfIvQYKAAZNiAJ+Gy3M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bEEZCkW64lltp76gimdLMLkBFU2TSZuA/HeG4xgM6nYJeNirmLl7L5qyQQKsDzDjJODCyNi6CRwWukKxC1pwMgyW2rsVJ05c3fjt8j0lkgZx4TN+Pbx5kzG6sZMKdFNNA4PBDggJgNfXC9OKTf8j5Z4UCJfjhle3eNastyitRng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=AqmxWFQ4; arc=none smtp.client-ip=188.40.30.78
+	 In-Reply-To:To:Cc; b=Wz7EiVvTmk7wSb8F4pdl4ctlSykHHYaG8uq2StfEuZQnd5zeuM3exb/3x97vqhRmTBIWfo35eRR1VFUOXE5a0ZdtU/Inou6GcuMRoF3hd8XgHl3yGD9nP863ZbylvkLOMhG2Iu8qmbIp0sQFb4KS5ll5Cy9WHgTbqca1VWZMupk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=XzGdWnUI; arc=none smtp.client-ip=188.40.30.78
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=geanix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="AqmxWFQ4"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="XzGdWnUI"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=geanix.com;
 	s=default2211; h=Cc:To:In-Reply-To:References:Message-Id:
 	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From:Sender:
 	Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender
 	:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=3s0nDwS5JrJFEtce2r05iKq1Vh6FYQrvfcyLxROyL7I=; b=AqmxWFQ46Q0rWCYmJ1Dx3Qn9MW
-	e1fmbq1Hb11Oa620VU8ucTG+L9H/hhI5iNRkwBH97EDRBy1OuiXHU2TNAKjhTW9C6phQIEBvf7y7C
-	zdXBhJGLY2D1VLw0d98et4JVt1pg7CRjbv3WnBu6/dcA7PgZEP93AXLhfIB+SVf5IBjt2Ka1FSpDO
-	VbaphlGdOUZycsHWGM3rLxW0K/UtIXq/1LOqGA4O8iFAAk7juYd+0OXv7hKqC9/uQrCBSRWAq0qhV
-	QznEjd4Ypxs6Zn+KfBoKw8yyYdfknBVU6Fbgx8k4XYOqinvq1Gug2SNGN/ybN9n2U06RO4I8nDqmE
-	zzNUfKqQ==;
+	bh=DQm/agkAtB5qHs0WKvLGfyrGJ7CCayWji+zZYNYTpIk=; b=XzGdWnUIIZZD5TnSkfo3PNVvtI
+	e7FzcSNPzKOjyJA38ahUt3KPEAlgNhZKinpIshQ0oJYhtaGhf1aQyr37JoLyN8jTPX9a3JDhmWU5P
+	M0VMAj8b/WalJGVJKUorOe+kxsn0hloPrTfnFGUlsWHPtAjAN+cR+TT36JRpL1TaDvaMH0fDRpC2t
+	Oid9XJ/FOe1AhQgNZfzbbrcs8tomOxHGDtTnxGYdiHGug5jyyTnkzW17MOrtOoEufo4tps01cNby2
+	IxLqx8M8+nY6CVktwekHUXxVfG5H9FrM9+Nv988jiiCgeFrxTOcrYuKXwMhnclzHTyW0FXl/vNzd9
+	XRHuFztg==;
 Received: from sslproxy03.your-server.de ([88.198.220.132])
 	by www530.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <esben@geanix.com>)
-	id 1s3vVt-0007Y4-Jo; Mon, 06 May 2024 12:24:05 +0200
+	id 1s3vVu-0007YK-Og; Mon, 06 May 2024 12:24:06 +0200
 Received: from [87.49.147.101] (helo=localhost)
 	by sslproxy03.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <esben@geanix.com>)
-	id 1s3vVs-000Ojz-12;
-	Mon, 06 May 2024 12:24:04 +0200
+	id 1s3vVt-000OrS-1l;
+	Mon, 06 May 2024 12:24:05 +0200
 From: Esben Haabendal <esben@geanix.com>
-Date: Mon, 06 May 2024 12:23:53 +0200
-Subject: [PATCH v2 1/3] ARM: imx: Allow user to disable pinctrl
+Date: Mon, 06 May 2024 12:23:55 +0200
+Subject: [PATCH v2 3/3] pinctrl: freescale: enable use with COMPILE_TEST
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240506-imx-pinctrl-optional-v2-1-bdff75085156@geanix.com>
+Message-Id: <20240506-imx-pinctrl-optional-v2-3-bdff75085156@geanix.com>
 References: <20240506-imx-pinctrl-optional-v2-0-bdff75085156@geanix.com>
 In-Reply-To: <20240506-imx-pinctrl-optional-v2-0-bdff75085156@geanix.com>
 To: Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, 
@@ -66,278 +66,266 @@ X-Mailer: b4 0.13.0
 X-Authenticated-Sender: esben@geanix.com
 X-Virus-Scanned: Clear (ClamAV 0.103.10/27267/Mon May  6 10:24:34 2024)
 
-Making pinctrl drivers and subsequently the pinctrl framework
-user-controllable, allows building a kernel without this.
-While in many (most) cases, this could make the system unbootable, it
-does allow building smaller kernels for those situations where picntrl
-is not needed.
-
-One such situation is when building a kernel for NXP LS1021A systems,
-which does not have run-time controllable pinctrl, so pinctrl framework
-and drivers are 100% dead-weight.
-
+Allow compile-testing of i.MX pinctrl drivers using CONFIG_COMPILE_TEST.
 
 Signed-off-by: Esben Haabendal <esben@geanix.com>
 ---
- arch/arm/mach-imx/Kconfig         | 16 ----------------
- drivers/pinctrl/freescale/Kconfig | 15 +++++++++++++++
- 2 files changed, 15 insertions(+), 16 deletions(-)
+ drivers/pinctrl/freescale/Kconfig | 73 +++++++++++++++++++++++++--------------
+ 1 file changed, 47 insertions(+), 26 deletions(-)
 
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index ab767f059929..e4fe059cd861 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -6,7 +6,6 @@ menuconfig ARCH_MXC
- 	select CLKSRC_IMX_GPT
- 	select GENERIC_IRQ_CHIP
- 	select GPIOLIB
--	select PINCTRL
- 	select PM_OPP if PM
- 	select SOC_BUS
- 	select SRAM
-@@ -49,7 +48,6 @@ config SOC_IMX31
- config SOC_IMX35
- 	bool "i.MX35 support"
- 	select MXC_AVIC
--	select PINCTRL_IMX35
- 	help
- 	  This enables support for Freescale i.MX35 processor
- 
-@@ -61,7 +59,6 @@ config SOC_IMX1
- 	bool "i.MX1 support"
- 	select CPU_ARM920T
- 	select MXC_AVIC
--	select PINCTRL_IMX1
- 	help
- 	  This enables support for Freescale i.MX1 processor
- 
-@@ -73,7 +70,6 @@ config SOC_IMX25
- 	bool "i.MX25 support"
- 	select CPU_ARM926T
- 	select MXC_AVIC
--	select PINCTRL_IMX25
- 	help
- 	  This enables support for Freescale i.MX25 processor
- 
-@@ -81,7 +77,6 @@ config SOC_IMX27
- 	bool "i.MX27 support"
- 	select CPU_ARM926T
- 	select MXC_AVIC
--	select PINCTRL_IMX27
- 	help
- 	  This enables support for Freescale i.MX27 processor
- 
-@@ -98,7 +93,6 @@ config SOC_IMX5
- 
- config SOC_IMX50
- 	bool "i.MX50 support"
--	select PINCTRL_IMX50
- 	select SOC_IMX5
- 
- 	help
-@@ -106,14 +100,12 @@ config SOC_IMX50
- 
- config SOC_IMX51
- 	bool "i.MX51 support"
--	select PINCTRL_IMX51
- 	select SOC_IMX5
- 	help
- 	  This enables support for Freescale i.MX51 processor
- 
- config SOC_IMX53
- 	bool "i.MX53 support"
--	select PINCTRL_IMX53
- 	select SOC_IMX5
- 
- 	help
-@@ -137,7 +129,6 @@ config SOC_IMX6Q
- 	select ARM_ERRATA_775420
- 	select HAVE_ARM_SCU if SMP
- 	select HAVE_ARM_TWD
--	select PINCTRL_IMX6Q
- 	select SOC_IMX6
- 
- 	help
-@@ -147,7 +138,6 @@ config SOC_IMX6SL
- 	bool "i.MX6 SoloLite support"
- 	select ARM_ERRATA_754322
- 	select ARM_ERRATA_775420
--	select PINCTRL_IMX6SL
- 	select SOC_IMX6
- 
- 	help
-@@ -157,7 +147,6 @@ config SOC_IMX6SLL
- 	bool "i.MX6 SoloLiteLite support"
- 	select ARM_ERRATA_754322
- 	select ARM_ERRATA_775420
--	select PINCTRL_IMX6SLL
- 	select SOC_IMX6
- 
- 	help
-@@ -167,7 +156,6 @@ config SOC_IMX6SX
- 	bool "i.MX6 SoloX support"
- 	select ARM_ERRATA_754322
- 	select ARM_ERRATA_775420
--	select PINCTRL_IMX6SX
- 	select SOC_IMX6
- 
- 	help
-@@ -175,7 +163,6 @@ config SOC_IMX6SX
- 
- config SOC_IMX6UL
- 	bool "i.MX6 UltraLite support"
--	select PINCTRL_IMX6UL
- 	select SOC_IMX6
- 	select ARM_ERRATA_814220
- 
-@@ -211,7 +198,6 @@ config SOC_IMX7D_CM4
- 
- config SOC_IMX7D
- 	bool "i.MX7 Dual support"
--	select PINCTRL_IMX7D
- 	select SOC_IMX7D_CA7 if ARCH_MULTI_V7
- 	select SOC_IMX7D_CM4 if ARM_SINGLE_ARMV7M
- 	select ARM_ERRATA_814220 if ARCH_MULTI_V7
-@@ -221,7 +207,6 @@ config SOC_IMX7D
- config SOC_IMX7ULP
- 	bool "i.MX7ULP support"
- 	select CLKSRC_IMX_TPM
--	select PINCTRL_IMX7ULP
- 	select SOC_IMX7D_CA7 if ARCH_MULTI_V7
- 	select SOC_IMX7D_CM4 if ARM_SINGLE_ARMV7M
- 	help
-@@ -237,7 +222,6 @@ config SOC_IMXRT
- config SOC_VF610
- 	bool "Vybrid Family VF610 support"
- 	select ARM_GIC if ARCH_MULTI_V7
--	select PINCTRL_VF610
- 
- 	help
- 	  This enables support for Freescale Vybrid VF610 processor.
 diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/Kconfig
-index 27bdc548f3a7..ef39bb6cf9cb 100644
+index 2b19c40978c2..34a4255dfd4c 100644
 --- a/drivers/pinctrl/freescale/Kconfig
 +++ b/drivers/pinctrl/freescale/Kconfig
-@@ -20,6 +20,7 @@ config PINCTRL_IMX1_CORE
+@@ -19,7 +19,8 @@ config PINCTRL_IMX1_CORE
+ 
  config PINCTRL_IMX1
  	bool "IMX1 pinctrl driver"
- 	depends on SOC_IMX1
-+	default SOC_IMX1
+-	depends on SOC_IMX1
++	depends on OF
++	depends on SOC_IMX1 || COMPILE_TEST
+ 	default SOC_IMX1
  	select PINCTRL_IMX1_CORE
  	help
- 	  Say Y here to enable the imx1 pinctrl driver
-@@ -27,6 +28,7 @@ config PINCTRL_IMX1
+@@ -27,7 +28,8 @@ config PINCTRL_IMX1
+ 
  config PINCTRL_IMX27
  	bool "IMX27 pinctrl driver"
- 	depends on SOC_IMX27
-+	default SOC_IMX27
+-	depends on SOC_IMX27
++	depends on OF
++	depends on SOC_IMX27 || COMPILE_TEST
+ 	default SOC_IMX27
  	select PINCTRL_IMX1_CORE
  	help
- 	  Say Y here to enable the imx27 pinctrl driver
-@@ -36,6 +38,7 @@ config PINCTRL_IMX25
+@@ -37,7 +39,7 @@ config PINCTRL_IMX27
+ config PINCTRL_IMX25
  	bool "IMX25 pinctrl driver"
  	depends on OF
- 	depends on SOC_IMX25
-+	default SOC_IMX25
+-	depends on SOC_IMX25
++	depends on SOC_IMX25 || COMPILE_TEST
+ 	default SOC_IMX25
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx25 pinctrl driver
-@@ -43,6 +46,7 @@ config PINCTRL_IMX25
+@@ -45,7 +47,8 @@ config PINCTRL_IMX25
+ 
  config PINCTRL_IMX35
  	bool "IMX35 pinctrl driver"
- 	depends on SOC_IMX35
-+	default SOC_IMX35
+-	depends on SOC_IMX35
++	depends on OF
++	depends on SOC_IMX35 || COMPILE_TEST
+ 	default SOC_IMX35
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx35 pinctrl driver
-@@ -50,6 +54,7 @@ config PINCTRL_IMX35
+@@ -53,7 +56,8 @@ config PINCTRL_IMX35
+ 
  config PINCTRL_IMX50
  	bool "IMX50 pinctrl driver"
- 	depends on SOC_IMX50
-+	default SOC_IMX50
+-	depends on SOC_IMX50
++	depends on OF
++	depends on SOC_IMX50 || COMPILE_TEST
+ 	default SOC_IMX50
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx50 pinctrl driver
-@@ -57,6 +62,7 @@ config PINCTRL_IMX50
+@@ -61,7 +65,8 @@ config PINCTRL_IMX50
+ 
  config PINCTRL_IMX51
  	bool "IMX51 pinctrl driver"
- 	depends on SOC_IMX51
-+	default SOC_IMX51
+-	depends on SOC_IMX51
++	depends on OF
++	depends on SOC_IMX51 || COMPILE_TEST
+ 	default SOC_IMX51
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx51 pinctrl driver
-@@ -64,6 +70,7 @@ config PINCTRL_IMX51
+@@ -69,7 +74,8 @@ config PINCTRL_IMX51
+ 
  config PINCTRL_IMX53
  	bool "IMX53 pinctrl driver"
- 	depends on SOC_IMX53
-+	default SOC_IMX53
+-	depends on SOC_IMX53
++	depends on OF
++	depends on SOC_IMX53 || COMPILE_TEST
+ 	default SOC_IMX53
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx53 pinctrl driver
-@@ -71,6 +78,7 @@ config PINCTRL_IMX53
+@@ -77,7 +83,8 @@ config PINCTRL_IMX53
+ 
  config PINCTRL_IMX6Q
  	bool "IMX6Q/DL pinctrl driver"
- 	depends on SOC_IMX6Q
-+	default SOC_IMX6Q
+-	depends on SOC_IMX6Q
++	depends on OF
++	depends on SOC_IMX6Q || COMPILE_TEST
+ 	default SOC_IMX6Q
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx6q/dl pinctrl driver
-@@ -78,6 +86,7 @@ config PINCTRL_IMX6Q
+@@ -85,7 +92,8 @@ config PINCTRL_IMX6Q
+ 
  config PINCTRL_IMX6SL
  	bool "IMX6SL pinctrl driver"
- 	depends on SOC_IMX6SL
-+	default SOC_IMX6SL
+-	depends on SOC_IMX6SL
++	depends on OF
++	depends on SOC_IMX6SL || COMPILE_TEST
+ 	default SOC_IMX6SL
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx6sl pinctrl driver
-@@ -85,6 +94,7 @@ config PINCTRL_IMX6SL
+@@ -93,7 +101,8 @@ config PINCTRL_IMX6SL
+ 
  config PINCTRL_IMX6SLL
  	bool "IMX6SLL pinctrl driver"
- 	depends on SOC_IMX6SLL
-+	default SOC_IMX6SLL
+-	depends on SOC_IMX6SLL
++	depends on OF
++	depends on SOC_IMX6SLL || COMPILE_TEST
+ 	default SOC_IMX6SLL
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx6sll pinctrl driver
-@@ -92,6 +102,7 @@ config PINCTRL_IMX6SLL
+@@ -101,7 +110,8 @@ config PINCTRL_IMX6SLL
+ 
  config PINCTRL_IMX6SX
  	bool "IMX6SX pinctrl driver"
- 	depends on SOC_IMX6SX
-+	default SOC_IMX6SX
+-	depends on SOC_IMX6SX
++	depends on OF
++	depends on SOC_IMX6SX || COMPILE_TEST
+ 	default SOC_IMX6SX
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx6sx pinctrl driver
-@@ -99,6 +110,7 @@ config PINCTRL_IMX6SX
+@@ -109,7 +119,8 @@ config PINCTRL_IMX6SX
+ 
  config PINCTRL_IMX6UL
  	bool "IMX6UL pinctrl driver"
- 	depends on SOC_IMX6UL
-+	default SOC_IMX6UL
+-	depends on SOC_IMX6UL
++	depends on OF
++	depends on SOC_IMX6UL || COMPILE_TEST
+ 	default SOC_IMX6UL
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx6ul pinctrl driver
-@@ -106,6 +118,7 @@ config PINCTRL_IMX6UL
+@@ -117,7 +128,8 @@ config PINCTRL_IMX6UL
+ 
  config PINCTRL_IMX7D
  	bool "IMX7D pinctrl driver"
- 	depends on SOC_IMX7D
-+	default SOC_IMX7D
+-	depends on SOC_IMX7D
++	depends on OF
++	depends on SOC_IMX7D || COMPILE_TEST
+ 	default SOC_IMX7D
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx7d pinctrl driver
-@@ -113,6 +126,7 @@ config PINCTRL_IMX7D
+@@ -125,7 +137,8 @@ config PINCTRL_IMX7D
+ 
  config PINCTRL_IMX7ULP
  	bool "IMX7ULP pinctrl driver"
- 	depends on SOC_IMX7ULP
-+	default SOC_IMX7ULP
+-	depends on SOC_IMX7ULP
++	depends on OF
++	depends on SOC_IMX7ULP || COMPILE_TEST
+ 	default SOC_IMX7ULP
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the imx7ulp pinctrl driver
-@@ -194,6 +208,7 @@ config PINCTRL_IMX93
+@@ -134,7 +147,7 @@ config PINCTRL_IMX7ULP
+ config PINCTRL_IMX8MM
+ 	tristate "IMX8MM pinctrl driver"
+ 	depends on OF
+-	depends on SOC_IMX8M
++	depends on SOC_IMX8M || COMPILE_TEST
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx8mm pinctrl driver
+@@ -142,7 +155,7 @@ config PINCTRL_IMX8MM
+ config PINCTRL_IMX8MN
+ 	tristate "IMX8MN pinctrl driver"
+ 	depends on OF
+-	depends on SOC_IMX8M
++	depends on SOC_IMX8M || COMPILE_TEST
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx8mn pinctrl driver
+@@ -150,7 +163,7 @@ config PINCTRL_IMX8MN
+ config PINCTRL_IMX8MP
+ 	tristate "IMX8MP pinctrl driver"
+ 	depends on OF
+-	depends on SOC_IMX8M
++	depends on SOC_IMX8M || COMPILE_TEST
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx8mp pinctrl driver
+@@ -158,42 +171,47 @@ config PINCTRL_IMX8MP
+ config PINCTRL_IMX8MQ
+ 	tristate "IMX8MQ pinctrl driver"
+ 	depends on OF
+-	depends on SOC_IMX8M
++	depends on SOC_IMX8M || COMPILE_TEST
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx8mq pinctrl driver
+ 
+ config PINCTRL_IMX8QM
+ 	tristate "IMX8QM pinctrl driver"
+-	depends on IMX_SCU && ARCH_MXC && ARM64
++	depends on OF
++	depends on (IMX_SCU && ARCH_MXC && ARM64) || COMPILE_TEST
+ 	select PINCTRL_IMX_SCU
+ 	help
+ 	  Say Y here to enable the imx8qm pinctrl driver
+ 
+ config PINCTRL_IMX8QXP
+ 	tristate "IMX8QXP pinctrl driver"
+-	depends on IMX_SCU && ARCH_MXC && ARM64
++	depends on OF
++	depends on (IMX_SCU && ARCH_MXC && ARM64) || COMPILE_TEST
+ 	select PINCTRL_IMX_SCU
+ 	help
+ 	  Say Y here to enable the imx8qxp pinctrl driver
+ 
+ config PINCTRL_IMX8DXL
+ 	tristate "IMX8DXL pinctrl driver"
+-	depends on IMX_SCU && ARCH_MXC && ARM64
++	depends on OF
++	depends on (IMX_SCU && ARCH_MXC && ARM64) || COMPILE_TEST
+ 	select PINCTRL_IMX_SCU
+ 	help
+ 	  Say Y here to enable the imx8dxl pinctrl driver
+ 
+ config PINCTRL_IMX8ULP
+ 	tristate "IMX8ULP pinctrl driver"
+-	depends on ARCH_MXC
++	depends on OF
++	depends on ARCH_MXC || COMPILE_TEST
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx8ulp pinctrl driver
+ 
+ config PINCTRL_IMXRT1050
+ 	bool "IMXRT1050 pinctrl driver"
+-	depends on SOC_IMXRT
++	depends on OF
++	depends on SOC_IMXRT || COMPILE_TEST
+ 	default SOC_IMXRT
+ 	select PINCTRL_IMX
+ 	help
+@@ -201,14 +219,16 @@ config PINCTRL_IMXRT1050
+ 
+ config PINCTRL_IMX93
+ 	tristate "IMX93 pinctrl driver"
+-	depends on ARCH_MXC
++	depends on OF
++	depends on ARCH_MXC || COMPILE_TEST
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imx93 pinctrl driver
+ 
  config PINCTRL_VF610
  	bool "Freescale Vybrid VF610 pinctrl driver"
- 	depends on SOC_VF610
-+	default SOC_VF610
+-	depends on SOC_VF610
++	depends on OF
++	depends on SOC_VF610 || COMPILE_TEST
+ 	default SOC_VF610
  	select PINCTRL_IMX
  	help
- 	  Say Y here to enable the Freescale Vybrid VF610 pinctrl driver
+@@ -229,7 +249,8 @@ config PINCTRL_IMX28
+ 
+ config PINCTRL_IMXRT1170
+ 	bool "IMXRT1170 pinctrl driver"
+-	depends on SOC_IMXRT
++	depends on OF
++	depends on SOC_IMXRT || COMPILE_TEST
+ 	select PINCTRL_IMX
+ 	help
+ 	  Say Y here to enable the imxrt1170 pinctrl driver
 
 -- 
 2.45.0
