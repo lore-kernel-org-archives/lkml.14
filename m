@@ -1,155 +1,92 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEE331422B4
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 09:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28A901422B4;
+	Mon,  6 May 2024 09:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.201.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714987108; cv=none; b=GUbvqsRiqr4e2m1DofPWqUjSZ3CORxzhrrycyG5Q1DPMEhdPoYf5Vtfx8Ymgl6WviimaoXYERItOGflXLdiB2Fs4AhdLKA23XNDV9u6xVeQZxMob/ZE6kGZZBgujJoan6gXZisNAc0UFW5XnP5CxAerqApEDQZZahypCZe/Lde8=
+	t=1714987114; cv=none; b=NCdd3sVN6tbOdW38Qpp5xBSy1WkOLrZQ45QT9IhHlCvqfPwDpn6Z28FT42xoOjfWcXx+6lQrUZe91Le+DgNtJ8qyFTIz8kTU2LQedxlHbv+26BZD8QsP02DwEv9Fxwp7VmvnePC2lFT3cl6QuAAGAXj7bWE00PyId9gImQ4d7co=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714987108; c=relaxed/simple;
-	bh=bt9iG5iGEVMzCb9ZV9u/fTEswRCBi1AwDxwb5u/ZEdg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=GpNZDJ+f2WG3DXHr0Y75OpertvSsUeVbvCXDjGr2BDvKg3r9koNr/QxSdGSQc0e6orWmVAnsi+cgTj/nGNdjv2/94d1fC88mLvRRFaKuG2Y8uZ2TfMFawXiRXzbDNMUqi5n2tZmi8OpAtYK0GgKlPp68rby5+TM/JMf61sdCp/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-36c5ed3322aso17943605ab.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 02:18:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714987106; x=1715591906;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uvvsM8qCsWVlgVqdoqbQI/jpRNJ31DPMt8zgavOO3TU=;
-        b=OamY89xludIPUP7FQ0MQQHc2EIdjdkQ3PcGQLCVMvTOQmLviL9/LdIo3+m6CSvLiy5
-         esoVl8YeiuZ9KnrmDho9F+yapzTBGB/SEHh7kFQSQaMmKMR2BvKbLhb6Vg6SOpSz0rx+
-         zmvrlIgXkm9k7fXqolipoOLSDzM12cq3IzplY7wHWkYuqcRDz6J5uzxCaAKxiLd744kc
-         FObcNG5PS5Gvo4P9m6ngBWpHhhf84gApolGH69E3/WXA0C02XJq8Jn4p7eNtfM3HsueP
-         dMaEbLjMimzsThqqsvAyKRv4fbe97loadik1/KvLWWRBqj3wgYwDHrU/qsQ9dXgbSUsN
-         HfmA==
-X-Forwarded-Encrypted: i=1; AJvYcCUkmsG9te0uStxWe6VWBaalFjAdIn/XWyTeIod3KE/8S96Jfk2owJxZP25RVC5iPn3HcjQWhS5Nce6/XAApaQFHoeLY+JmtRGnyJ1B5
-X-Gm-Message-State: AOJu0Yy4AhmbQaoQuowHtllQYImnGOe0glDzM/8TByEIn2dKxT5EfWbo
-	KzI5yXmUurAbR2M6w+UY1PXsoezn2gTS8E/gU9RVsgh56Et97nYuNBAlM4YypXciiAAnbPWEuyx
-	CIcD/bQyGYT+4CBW4HbVrTdiZNHfBTVD2HvY+EvBHnV2ZzzCzV9V/j7k=
-X-Google-Smtp-Source: AGHT+IE0TkiS4w/KJWa6SeXCVNKI6QPz9TkKn+ltO/oCMNBbqPg20zDDbtrb3z+mgJwLmiechhKkg3GV7CKWhwoSzPPL+gM3Hq/J
+	s=arc-20240116; t=1714987114; c=relaxed/simple;
+	bh=qvhpFsiuxtwTgo/nq/ldiVZ2ZyxtSiiBfzQN/m6jid8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:From:To:Subject:
+	 References:In-Reply-To; b=juB/A88YglBukwnsNGrPKQ0QrC0W677KXewmQcT6FKd7GlJJFtnUJ7Q7Z1x9fExlAjjJUiUuB4+Jd28M9ApimkCOgHfXMZ9XAbSlGEZhy4riupD1EwaicVlOiWYMbliCiQYjNnVzLTN02/EsEQLcBu0jB2MJWkilVP5bMZT9Kck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=walle.cc; arc=none smtp.client-ip=159.69.201.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
+Received: from localhost (unknown [IPv6:2a02:810b:4340:6430:4685:ff:fe12:5967])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3ffe.de (Postfix) with ESMTPSA id 782101B1;
+	Mon,  6 May 2024 11:11:36 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a92:c24d:0:b0:36c:4657:bd62 with SMTP id
- k13-20020a92c24d000000b0036c4657bd62mr646998ilo.3.1714987106075; Mon, 06 May
- 2024 02:18:26 -0700 (PDT)
-Date: Mon, 06 May 2024 02:18:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004096100617c58d54@google.com>
-Subject: [syzbot] [mm?] kernel BUG in __vma_reservation_common
-From: syzbot <syzbot+d3fe2dc5ffe9380b714b@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, muchun.song@linux.dev, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 06 May 2024 11:11:36 +0200
+Message-Id: <D12G1NPU2H06.3LBLR19XYUAA6@kernel.org>
+Cc: <robh@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
+ <conor+dt@kernel.org>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
+ <daniel@ffwll.ch>, <maarten.lankhorst@linux.intel.com>,
+ <mripard@kernel.org>, <tzimmermann@suse.de>, <matthias.bgg@gmail.com>,
+ <shawn.sung@mediatek.com>, <yu-chang.lee@mediatek.com>,
+ <ck.hu@mediatek.com>, <jitao.shi@mediatek.com>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
+ <linux-arm-kernel@lists.infradead.org>, <wenst@chromium.org>,
+ <kernel@collabora.com>
+From: "Michael Walle" <mwalle@kernel.org>
+To: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
+ <chunkuang.hu@kernel.org>
+Subject: Re: [PATCH v2 3/3] drm/mediatek: Implement OF graphs support for
+ display paths
+X-Mailer: aerc 0.16.0
+References: <20240409120211.321153-1-angelogioacchino.delregno@collabora.com> <20240409120211.321153-4-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20240409120211.321153-4-angelogioacchino.delregno@collabora.com>
 
-Hello,
+Hi Angelo,
 
-syzbot found the following issue on:
+On Tue Apr 9, 2024 at 2:02 PM CEST, AngeloGioacchino Del Regno wrote:
+> +static int mtk_drm_of_get_ddp_ep_cid(struct device_node *node,
+> +				     int output_port, enum mtk_drm_crtc_path crtc_path,
 
-HEAD commit:    8953285d7bd6 rxrpc: Clients must accept conn from any addr..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=1347a228980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=98d5a8e00ed1044a
-dashboard link: https://syzkaller.appspot.com/bug?extid=d3fe2dc5ffe9380b714b
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+Not sure what's your base branch is, but "enum mtk_drm_crtc_path"
+was renamed to "enum mtk_crtc_path" in commit 9e149879038f5
+('drm/mediatek: Rename "mtk_drm_crtc" to "mtk_crtc"').
 
-Unfortunately, I don't have any reproducer for this issue yet.
+> +/**
+> + * mtk_drm_of_ddp_path_build_one - Build a Display HW Pipeline for a CRT=
+C Path
+> + * @dev:          The mediatek-drm device
+> + * @cpath:        CRTC Path relative to a VDO or MMSYS
+> + * @out_path:     Pointer to an array that will contain the new pipeline
+> + * @out_path_len: Number of entries in the pipeline array
+> + *
+> + * MediaTek SoCs can use different DDP hardware pipelines (or paths) dep=
+ending
+> + * on the board-specific desired display configuration; this function wa=
+lks
+> + * through all of the output endpoints starting from a VDO or MMSYS hard=
+ware
+> + * instance and builds the right pipeline as specified in device trees.
+> + *
+> + * Return:
+> + * * %0       - Display HW Pipeline successfully built and validated
+> + * * %-ENOENT - Display pipeline was not specified in device tree
+> + * * %-EINVAL - Display pipeline built but validation failed
+> + * * %-ENOMEM - Failure to allocate pipeline array to pass to the caller
+> + */
+> +static int mtk_drm_of_ddp_path_build_one(struct device *dev, enum mtk_dr=
+m_crtc_path cpath,
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/5b9c540d7f6b/disk-8953285d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/831b091085cc/vmlinux-8953285d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/97a6dd56102c/bzImage-8953285d.xz
+likewise
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d3fe2dc5ffe9380b714b@syzkaller.appspotmail.com
+> +					 const unsigned int **out_path,
+> +					 unsigned int *out_path_len)
 
- </TASK>
-------------[ cut here ]------------
-kernel BUG at mm/hugetlb.c:813!
-invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
-CPU: 1 PID: 9895 Comm: syz-executor.3 Not tainted 6.9.0-rc5-syzkaller-00192-g8953285d7bd6 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-RIP: 0010:region_abort mm/hugetlb.c:813 [inline]
-RIP: 0010:__vma_reservation_common+0x795/0x7d0 mm/hugetlb.c:2856
-Code: f1 f2 89 09 e8 0c e6 9f ff 90 0f 0b e8 04 e6 9f ff 90 0f 0b e8 fc e5 9f ff 90 0f 0b e8 f4 e5 9f ff 90 0f 0b e8 ec e5 9f ff 90 <0f> 0b e8 e4 e5 9f ff 90 0f 0b e8 dc e5 9f ff 90 0f 0b e8 d4 e5 9f
-RSP: 0018:ffffc90009c17240 EFLAGS: 00010293
-RAX: ffffffff81f61a14 RBX: 0000000000000000 RCX: ffff88806eaf1e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffc90009c17310 R08: ffffffff81f61526 R09: fffff52001382e38
-R10: dffffc0000000000 R11: fffff52001382e38 R12: 0000000000000000
-R13: dffffc0000000000 R14: ffff888064f61408 R15: ffff888064f61400
-FS:  00007fba641616c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055558b067788 CR3: 00000000762e8000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- vma_add_reservation mm/hugetlb.c:2919 [inline]
- __unmap_hugepage_range+0x1257/0x2340 mm/hugetlb.c:5791
- unmap_vmas+0x3cc/0x5f0 mm/memory.c:1883
- unmap_region+0x1ec/0x350 mm/mmap.c:2310
- do_vmi_align_munmap+0x11bf/0x1930 mm/mmap.c:2628
- do_vmi_munmap+0x24e/0x2d0 mm/mmap.c:2696
- mmap_region+0x6af/0x1e50 mm/mmap.c:2747
- do_mmap+0x7af/0xe60 mm/mmap.c:1385
- vm_mmap_pgoff+0x1e3/0x420 mm/util.c:573
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fba6347dea9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 e1 20 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fba641610c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
-RAX: ffffffffffffffda RBX: 00007fba635abf80 RCX: 00007fba6347dea9
-RDX: 0000000000000000 RSI: 00000000001fffff RDI: 0000000020000000
-RBP: 00007fba64161120 R08: ffffffffffffffff R09: 0000000000000000
-R10: 0000000000028031 R11: 0000000000000246 R12: 0000000000000001
-R13: 000000000000000b R14: 00007fba635abf80 R15: 00007ffc5b82e2c8
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:region_abort mm/hugetlb.c:813 [inline]
-RIP: 0010:__vma_reservation_common+0x795/0x7d0 mm/hugetlb.c:2856
-Code: f1 f2 89 09 e8 0c e6 9f ff 90 0f 0b e8 04 e6 9f ff 90 0f 0b e8 fc e5 9f ff 90 0f 0b e8 f4 e5 9f ff 90 0f 0b e8 ec e5 9f ff 90 <0f> 0b e8 e4 e5 9f ff 90 0f 0b e8 dc e5 9f ff 90 0f 0b e8 d4 e5 9f
-RSP: 0018:ffffc90009c17240 EFLAGS: 00010293
-RAX: ffffffff81f61a14 RBX: 0000000000000000 RCX: ffff88806eaf1e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffc90009c17310 R08: ffffffff81f61526 R09: fffff52001382e38
-R10: dffffc0000000000 R11: fffff52001382e38 R12: 0000000000000000
-R13: dffffc0000000000 R14: ffff888064f61408 R15: ffff888064f61400
-FS:  00007fba641616c0(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055558b067788 CR3: 00000000762e8000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-michael
