@@ -1,164 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207FC13CF8F;
-	Mon,  6 May 2024 14:20:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B8413CF8F
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 14:21:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715005251; cv=none; b=j2M+joX0lSd3u5TYR7TaED90JEtEFwYEV5f+BgkPL6b45cKUYqBuIVqjFmYCzEPDSI/TSxwzfs34XpDDvS0TbqmRaW1DOY4noa5sCbkzs4q+QztTYA9z3G3l0XVd/KcPP6K1BN1oKcl0tqn1+swhGNdpl997mGjcSzoU77rGggY=
+	t=1715005310; cv=none; b=YxhhFLGYSp5IS36a09PdprHQJ8tokVZx9gidcs8rR0o4rKxyhbNgMZwItpHe4GHl8imZN/20lOQRkHRK8P1bN3F5JBCXzJTD07cfD9ypzdq/THYRL0SL8EHD6LX9yI7THoKH4tr0ZpM86YxHu6LJNcUUKkEPHzzZycufQj8KY7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715005251; c=relaxed/simple;
-	bh=v35O4MOv00OkD5Eak0/TAE7hgCKO/FarPLabAISIafg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Z+tCc8Bkv1d5feRVJFfRvn7H/KVhz9KIK1l7Canu46q+bAyheD4TrrQujAQRq83FkTDN14H0G4aihqjMe2MMe0vzMEwSPif5ExfUnh8ejC4JqPO/CX30asNXVDPpVyrkBj1dufVvchaN8Fqt0RVefsK+i+hiQeGVPFPY5758+5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCGhf7iC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715005310; c=relaxed/simple;
+	bh=ZRr6fPqYoTH0sclRmuJEZqEKQMy0r1Bck1MinrSVNpg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kIMOGa+I0FMZtO/OkkpnbtJ6cZQJfFe7Gv1O7DFXgt7n3E83cIi1QJ2ij1fnaLUR9gB/mGQ92cateyv63omV3a5EPEIZV8TR9NtsoBnTV5Wh1FuAoqlsX5RdRpl6tZqGISj/MCfmXQPUS7bbPgVfggQejvRGow2MSBc29iwSSxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=F4Y+fW3Q; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCGhf7iC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B91D5C4AF66;
-	Mon,  6 May 2024 14:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715005250;
-	bh=v35O4MOv00OkD5Eak0/TAE7hgCKO/FarPLabAISIafg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CCGhf7iCvrvdO1ATf+Hxvn2NyWfeqH0aIGOcAknXZEOSrM8DVYC33/kmMwu3Bsrbb
-	 M41McHzwU9v75DbupsIzscvoHNrg8AZ31GjhSraOptdgRK1OjsQbqJ/5iDvgwqtQ6D
-	 m6SUsoS2S0tTJP/bFqMY2v+l4df54sD4OoGYJJ2EvK2OaUzL0Ufs0QcVGuQ7T5xXTJ
-	 JjJ/orAMCuHo1X1IgrzL3JmZRRqbvAqBMy53rXkWlPEe0oULCmuyvElgETpM+HTbqE
-	 CKQuStfTfjutV9VirdqFiIrE7X+F9JqviRCEmRlZ0wG7QU1HUAy9m7FeIAAQ/wvJS8
-	 3rexaZSozQ1nw==
-Date: Mon, 6 May 2024 15:20:39 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
-Cc: Julien Stephan <jstephan@baylibre.com>, Lars-Peter Clausen
- <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Nuno
- =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, David Lechner
- <dlechner@baylibre.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- kernel test robot <lkp@intel.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v6 10/10] iio: adc: ad7380: add support for
- resolution boost
-Message-ID: <20240506152022.58794348@jic23-huawei>
-In-Reply-To: <20240506144616.0b90664b@jic23-huawei>
-References: <20240501-adding-new-ad738x-driver-v6-0-3c0741154728@baylibre.com>
-	<20240501-adding-new-ad738x-driver-v6-10-3c0741154728@baylibre.com>
-	<a04d8015ea1606ce1eca86f7eaaa85a1c1b46d7a.camel@gmail.com>
-	<20240506144616.0b90664b@jic23-huawei>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="F4Y+fW3Q"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id BEB5C40E024D;
+	Mon,  6 May 2024 14:21:46 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id UryTxnO-LRmz; Mon,  6 May 2024 14:21:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1715005303; bh=b+K6cieeRgzZWM9C6IkS52nAd027DkJxG87ZipG8Sho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F4Y+fW3QTaJ9FV2dDcBUpEOnzrKcNwfhgwOdIB3xCvhdM4huoa4p2KYMwSN2wNmwD
+	 PurLG1CyOa67XmIA7Pxjr2Sq43TnxBriydtwUVv225ZGWLr8aRIerdFKLvNAEki9Ev
+	 QXnergGYbpM8+T3qhaX9/x58MrcWwD71J6vQsKEnlV8KncUGgWfSc0z0LVq8pAhSPA
+	 jhRvlK1uhx3ePYkx9TN9Pnrto+jT1IMuDnXrJB5nW+PpFqOIWkIya0hHmvBcQghQxV
+	 Qpcy4sW0eigQF2LhqQTtyg+uUpaA4mgngA8rRUjITTzYMxjhNPyMZTnIW07xurGum0
+	 EFPpsRZXQJUtWe0+C/HGe/nc6XB0yAZPrv1Vs0Sxr+v1BKJWnv/5mnfPlMEOl9DXQZ
+	 WNWXaDv0Ykm6m+6/KKSSXAT4xuzr7YY8i3V3fOOhqtSIvR8d2wWumKRJLjDrYNUk2H
+	 wsEOEPFJWyHmHsADUmFJY/mHG2hpgpMdKtvSSnaDSQw/dzm+hSfRo6uzIZiqwrD1Y/
+	 1hYGDOpptHLNwXDiEYJSWcNV980028nBBUkVgrWNlt8tJcqln08J8EaS98VWRSAywf
+	 lyf/szhCvZVMfnyBCbRiPEu/QgL4G3rSTsUsaKzxv/5Ezg78hEYQ1docvNMEYS9P6J
+	 FpbHijWXXqLmCFJnbwN3lyRY=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5342240E0187;
+	Mon,  6 May 2024 14:21:21 +0000 (UTC)
+Date: Mon, 6 May 2024 16:21:20 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: adrian.hunter@intel.com, ashish.kalra@amd.com, bhe@redhat.com,
+	dave.hansen@linux.intel.com, elena.reshetova@intel.com,
+	jun.nakajima@intel.com, kai.huang@intel.com,
+	kexec@lists.infradead.org, linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org, ltao@redhat.com, mingo@redhat.com,
+	nik.borisov@suse.com, peterz@infradead.org, rafael@kernel.org,
+	rick.p.edgecombe@intel.com,
+	sathyanarayanan.kuppuswamy@linux.intel.com, seanjc@google.com,
+	tglx@linutronix.de, thomas.lendacky@amd.com, x86@kernel.org
+Subject: Re: [PATCHv10.1 09/18] x86/mm: Adding callbacks to prepare encrypted
+ memory for kexec
+Message-ID: <20240506142120.GKZjjnYGMcZkuTLlzG@fat_crate.local>
+References: <20240427164747.GCZi0sM6HBCBYtgWqF@fat_crate.local>
+ <20240427170634.2397725-1-kirill.shutemov@linux.intel.com>
+ <20240502134506.GDZjOY4guvlKH9-73J@fat_crate.local>
+ <ch244dd4k5nu5rcryuwqp4pztl4dduhciqunin5drr7a3yls2h@siisliaoc2f6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ch244dd4k5nu5rcryuwqp4pztl4dduhciqunin5drr7a3yls2h@siisliaoc2f6>
 
-On Mon, 6 May 2024 14:46:16 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+On Mon, May 06, 2024 at 04:22:02PM +0300, Kirill A. Shutemov wrote:
+> I do. See comment just above enc_kexec_stop_conversion() call.
 
-> On Mon, 06 May 2024 10:55:46 +0200
-> Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
->=20
-> > On Wed, 2024-05-01 at 16:55 +0200, Julien Stephan wrote: =20
-> > > ad738x chips are able to use an additional 2 bits of resolution when
-> > > using oversampling. The 14-bits chips can have up to 16 bits of
-> > > resolution and the 16-bits chips can have up to 18 bits of resolution.
-> > >=20
-> > > In order to dynamically allow to enable/disable the resolution boost
-> > > feature, we have to set iio realbits/storagebits to the maximum per c=
-hips.
-> > > This means that for iio, data will always be on the higher resolution
-> > > available, and to cope with that we adjust the iio scale and iio offs=
-et
-> > > depending on the resolution boost status.
-> > >=20
-> > > The available scales can be displayed using the regular _scale_availa=
-ble
-> > > attributes and can be set by writing the regular _scale attribute.
-> > > The available scales depend on the oversampling status.
-> > >=20
-> > > Signed-off-by: Julien Stephan <jstephan@baylibre.com>
-> > >=20
-> > > ---
-> > >=20
-> > > In order to support the resolution boost (additional 2 bits of resolu=
-tion)
-> > > we need to set realbits/storagebits to the maximum value i.e :
-> > > =C2=A0 - realbits =3D 16 + 2 =3D 18, and storagebits =3D 32 for 16-bi=
-ts chips
-> > > =C2=A0 - realbits =3D 14 + 2 =3D 16, and storagebits =3D 16 for 14-bi=
-ts chips
-> > >=20
-> > > For 14-bits chips this does not have a major impact, but this
-> > > has the drawback of forcing 16-bits chip users to always use 32-bits
-> > > words in buffers even if they are not using oversampling and resoluti=
-on
-> > > boost. Is there a better way of implementing this? For example
-> > > implementing dynamic scan_type?
-> > >    =20
-> >=20
-> > Yeah, I don't think it's that bad in this case. But maybe dynamic scan =
-types is
-> > something we may need at some point yes (or IOW that I would like to se=
-e supported
-> > :)). We do some ADCs (eg: ad4630) where we use questionably use FW prop=
-erties to set
-> > a specific operating mode exactly because we have a different data layo=
-ut (scan
-> > elements) depending on the mode. =20
->=20
-> Yeah. Fixed scan modes were somewhat of a bad design decision a long time=
- back.
-> However, the big advantage is that it got people to think hard about whet=
-her it is
-> worth supporting low precision modes. For slow devices it very rarely is =
-and
-> forcing people to make a decision and the advantage we never supported
-> low precision on those parts.
->=20
-> Having said that there are good reasons for dynamic resolution changing
-> (the main one being the storage case you have here) so I'd be happy to
-> see some patches adding it. It might be easier than I've always thought
-> to bolt on.
->=20
-> This and inkernel event consumers have been the two significant features
-> where I keep expecting it to happen, but every time people decide they re=
-ally
-> don't care enough to make them work :(
->=20
-> >   =20
-> > > Another issue is the location of the timestamps. I understood the need
-> > > for ts to be consistent between chips, but right now I do not have a
-> > > better solution.. I was thinking of maybe adding the timestamps at the
-> > > beginning? That would imply to change the iio_chan_spec struct and ma=
-ybe
-> > > add a iio_push_to_buffers_with_timestamp_first() wrapper function? Is
-> > > that an option? =20
->=20
-> You have lost me on this one.  Why does the timestamp need to be in a con=
-sistent
-> location?  We have lots of drivers where it moves about between different
-> chips they support, or indeed what channels are currently turned on.
-Maybe I now understand this?
-The concern is the structure used for the iio_push_to_buffers_with_timestam=
-p()
-That doesn't need to be a structure and if you look at drivers where it isn=
-'t
-the most common reason is because the timestamp needs to be able to move ar=
-ound.
+If you mean this:
 
-So do something similar here.
+        /*
+         * Call enc_kexec_stop_conversion() while all CPUs are still active and
+         * interrupts are enabled. This will allow all in-flight memory
+         * conversions to finish cleanly.
+         */
+        if (kexec_in_progress)
+                x86_platform.guest.enc_kexec_stop_conversion(false);
 
-Jonathan
+then no, this is not enough.
 
->=20
-> I haven't actually looked at the latest code yet, so maybe it will become
-> obvious!
->=20
-> Jonathan
->=20
->=20
->=20
+I mean this:
 
+/**
+ * struct x86_guest - Functions used by misc guest incarnations like SEV, TDX, etc.
+ *
+ * @enc_status_change_prepare   Notify HV before the encryption status of a range is changed
+ * @enc_status_change_finish    Notify HV after the encryption status of a range is changed
+ * @enc_tlb_flush_required      Returns true if a TLB flush is needed before changing page encryption status
+ * @enc_cache_flush_required    Returns true if a cache flush is needed before changing page encryption status
+ * @enc_kexec_begin		Begin the two-step process of stopping
+ * 				page conversion... <insert reason why it
+ * 				needs to happen this way, blabla>
+ * @enc_kexec_finish		...
+ */
+struct x86_guest {
+        int (*enc_status_change_prepare)(unsigned long vaddr, int npages, bool enc);
+        int (*enc_status_change_finish)(unsigned long vaddr, int npages, bool enc);
+        bool (*enc_tlb_flush_required)(bool enc);
+        bool (*enc_cache_flush_required)(void);
+        void (*enc_kexec_begin)(bool crash);
+        void (*enc_kexec_finish)(void);
+
+And calling them a _begin and _finish makes a lot more sense to me:
+_begin starts the kexec process for encrypted guests and _finish
+finishes it.
+
+Just from the names you now know what needs to happen and in which
+order.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
