@@ -1,40 +1,75 @@
-Received: from michel.telenet-ops.be (michel.telenet-ops.be [195.130.137.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wfout2-smtp.messagingengine.com (wfout2-smtp.messagingengine.com [64.147.123.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E94140E46
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 08:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC3F140E46
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 08:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714983718; cv=none; b=XP6DU5f8CsMKKJ146lCJ+y9Mlk4tXhPBR0HoqBehYZpfAnM3Cx1R72nZuY5QPyP3ZjiX+mPddynt3L6hIZ9JovCNacCxB5TI9GSMM713BuIT4fsC/aglBk1xFWl5pCvkIBIzqSxoUz4dHDDPfYPNYpVtDY1N+xYAej/FB+eAAA8=
+	t=1714983723; cv=none; b=lDKRekhJ0XZtyjb3YrIyS2OAAa+wU1+n8qTOVsvXZ/pbZw3TROyHsAoxzvHXgTFIYRoyn8DfoZvDD5dh03+f53SfFFvIxXIRup5ILyUiHJzj2E+uIQ5UYxmCju+sX6JdxoeDr0QPX6E7GfdhLTwKrufWvrp1qYd9LF8pFQQ+iBY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714983718; c=relaxed/simple;
-	bh=hhwKMXUzrQ0uPvH/7RhpW1I9RGs7lrXrlwA5/jOYygE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=s3SzIRO0MxgOlLvTIKqWq1tsQl9YzSh4K4K9IQELLJjVQqSxGYBCY0R+y8zXmwrAILKoN3n9OnddVkwJqN8tIPkt+RB3lNQZJCPH2tvSjGGF0aEmBP7l3PnxfltttoULLAF8+zutgNsqiQGG+mwLf5kCxyHOzvXRpXKW6oAgGKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:e8fd:353d:bf09:e9f2])
-	by michel.telenet-ops.be with bizsmtp
-	id KkMm2C0051j6xkh06kMmeg; Mon, 06 May 2024 10:21:48 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1s3tak-009xSO-NL;
-	Mon, 06 May 2024 10:21:46 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1s3sQt-005qJJ-74;
-	Mon, 06 May 2024 09:06:43 +0200
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-m68k@lists.linux-m68k.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] m68k: Move ARCH_HAS_CPU_CACHE_ALIASING
-Date: Mon,  6 May 2024 09:06:41 +0200
-Message-Id: <4574ad6cc1117e4b5d29812c165bf7f6e5b60773.1714978406.git.geert@linux-m68k.org>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1714983723; c=relaxed/simple;
+	bh=t0vkSDTsgla9zTNzdbbcaA+WDWix0pJ42tCnDesWIdI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jsGjCxxsTabaBMgCOD4dJx3YGwPW8xmtDWHL16gx8kNh5B6yHiLSdMwowM8fZKqLOGg3joptgHbs3xLPCWJlXOoWmbAqGwVg5/tFK3uUESdGjhq0f671IbCV4HCHj74lSECtIsccX9E+cvP1Ty7Lhhc5NJpHo4GxUK23paLIhMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=KpnN8kLo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S7L5WXAg; arc=none smtp.client-ip=64.147.123.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="KpnN8kLo";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S7L5WXAg"
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+	by mailfout.west.internal (Postfix) with ESMTP id 3C4C51C000B6;
+	Mon,  6 May 2024 04:22:00 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Mon, 06 May 2024 04:22:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
+	:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to; s=fm3; t=1714983719; x=1715070119; bh=K8f8zaE/5s
+	/YLEFIoVR0uzOmwjq31kQM6GCmXVEQz4A=; b=KpnN8kLoOc3rx88tw5EQXIDU0G
+	3/kooznyeFM5tCAObGT0a5ibiP6E17u+z7hvAq4+mEFA+IQj01tXqa5J+TB9RT31
+	7zidSwbnvZgDnDULCTqw7jxsQQsj3w40ohkC/XMYM6WoBZzWaZUkz3BND82TbQUU
+	aekhKUyfvG5sgnME+Yk4ketOyADGFQKzpFBHagYw7ysy6d7x0sfU3Y5un+pvazkh
+	QsptLQyUscIPiS7/i3HMQqBURuI5gv1AkPMYf1Y1dYRPUq6d05U0/78Z3+1eVG/q
+	yodhhKFpk4vc7VqRs11kl9/DInmYqtEHkW6fkaKLkHjZaLtb//eNA3xTijgg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1714983719; x=1715070119; bh=K8f8zaE/5s/YLEFIoVR0uzOmwjq3
+	1kQM6GCmXVEQz4A=; b=S7L5WXAgH1s5Kx9wJTheAmEJOBSS8UDNumUB4iaSmqMp
+	AAvNyIJTqLiTpjh/lm2U14tnAwRWZYXcQWep8+IwyYCwGxaQEEzeFpYVdsFTnle4
+	Y2L1yJWQnl7AJvI5Ax3p8cenHtjtmt4nUoOTiA1FjVF9eAAJlzus4SlCyhggEb7y
+	bj+v2jQot40mj6EEAvF8+8kirGCmLppuCpIxyhBu5DLims+rzO1QmthAOOzEfUOi
+	yI4MS048YqrRpG8U2LHe0RM9MJVLhqt5vvD59zMRwQ8Qn13QneE3yfPNs0fm5N4K
+	icKKxnectea2pN/S0kjkrxgyAwcwvj/PScNiaKik+Q==
+X-ME-Sender: <xms:J5M4ZoNZ7hy3qMnirsrUqPSSZNIFI5vH_h3OXvV8DAGa8XRdkAZmFA>
+    <xme:J5M4Zu_qodwCJt6SWsYKzmOcJOCBggxpEyhmK1FU7lUy1FtemZq3ecJ-YhnX95rjj
+    V5LqTsexazVLrbLul8>
+X-ME-Received: <xmr:J5M4ZvQZuDeHDF_8GbR_1oFy5vB-G5R_o5LSfgYT8Ntw2tT6zAMSsuIUc4b9gWCuifSDIGIjLVJsZnW90KOinO_e2V0nmCZvcJjNQSCG986Y>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddviedgtdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
+    ertddtnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghkrghs
+    hhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeffvdeuleffve
+    ekudfhteejudffgefhtedtgfeutdfgvdfgueefudehveehveekkeenucevlhhushhtvghr
+    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhisehsrg
+    hkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:J5M4Zguxh-rZAs40zcDcg3dJerG86V_-sO_mRsxvJGP8JB7Hs0C_GQ>
+    <xmx:J5M4ZgcIPsGMhDr42QtJFx7aDZkj_RGOd0xC8Ju1s1Od0VMgO9g5UQ>
+    <xmx:J5M4Zk1R-vsewqrauScrStT7R8AN9oPqKiyOEeXFFfWmWnY3OJ3jfQ>
+    <xmx:J5M4Zk9dOVoW3A8DtvTwQxtrLwsjHMJFCuk765SRcmcI3W8vcPgDwg>
+    <xmx:J5M4Zhpvya7fBGmezxrw4ImgQE0USWV4NThvmX03FRMG6MGPCosVC27g>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 6 May 2024 04:21:58 -0400 (EDT)
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: linux1394-devel@lists.sourceforge.net
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH] firewire: core: fix type of timestamp for async_inbound_template tracepoints events
+Date: Mon,  6 May 2024 17:21:53 +0900
+Message-ID: <20240506082154.396077-1-o-takashi@sakamocchi.jp>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,31 +78,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move the recently added ARCH_HAS_CPU_CACHE_ALIASING to restore
-alphabetical sort order.
+The type of time stamp should be u16, instead of u8.
 
-Fixes: 8690bbcf3b7010b3 ("Introduce cpu_dcache_is_aliasing() across all architectures")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 ---
-To be queued in the m68k tree for v6.10.
-
- arch/m68k/Kconfig | 2 +-
+ include/trace/events/firewire.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/m68k/Kconfig b/arch/m68k/Kconfig
-index c68fbc59787ab59d..e0b4f6e9fe4ce1f4 100644
---- a/arch/m68k/Kconfig
-+++ b/arch/m68k/Kconfig
-@@ -3,8 +3,8 @@ config M68K
- 	bool
- 	default y
- 	select ARCH_32BIT_OFF_T
--	select ARCH_HAS_CPU_CACHE_ALIASING
- 	select ARCH_HAS_BINFMT_FLAT
-+	select ARCH_HAS_CPU_CACHE_ALIASING
- 	select ARCH_HAS_CPU_FINALIZE_INIT if MMU
- 	select ARCH_HAS_CURRENT_STACK_POINTER
- 	select ARCH_HAS_DMA_PREP_COHERENT if M68K_NONCOHERENT_DMA && !COLDFIRE
+diff --git a/include/trace/events/firewire.h b/include/trace/events/firewire.h
+index cd6931b134ee..d695a560673f 100644
+--- a/include/trace/events/firewire.h
++++ b/include/trace/events/firewire.h
+@@ -106,7 +106,7 @@ DECLARE_EVENT_CLASS(async_inbound_template,
+ 		__field(u8, generation)
+ 		__field(u8, scode)
+ 		__field(u8, status)
+-		__field(u8, timestamp)
++		__field(u16, timestamp)
+ 		__array(u32, header, ASYNC_HEADER_QUADLET_COUNT)
+ 		__dynamic_array(u32, data, data_count)
+ 	),
 -- 
-2.34.1
+2.43.0
 
