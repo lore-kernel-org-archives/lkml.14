@@ -1,55 +1,55 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1038E15E218
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7080815E80B
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:53:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715032423; cv=none; b=mIBarPlnG4bE4EWCX3v4CvHi80OgY90hQXYHvHvvDVyl1eM3XmkhKfgEIuE8C+tZViHkq7ceQVGBTUiZ/Mt9uTGM6HiQR8Iw0AOYj9ruaVoLODGM/obCNNByYbYOLr0e2b4wxCUE72ChDrkWnZzQfrWdnhXY1iDmkmmn6InXNJ0=
+	t=1715032428; cv=none; b=oELYVPiT3rOaWZ15PGUP/bkj6Qj9/x3kNB1xxoWZ/Yr0CkeorKN8Lso6R/MlAMGdnWwOviQ7ljUD+SMSzud9mbnw1SyWSADsffmwrwpUG++PFFYuEkld1mLASoN6g+lzjTj9t8mQcBREzU/orMWeTvqzHbSDc3wJEntMhp2nYSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715032423; c=relaxed/simple;
-	bh=36Y3BMpDPZQyyL3FNj9mP3vbrfKi4AzrJYNgKvH4gwU=;
+	s=arc-20240116; t=1715032428; c=relaxed/simple;
+	bh=oNDqfcadVCBv1NHKCDbX55nWD61GnGcAsAeavqpXrsE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TRpDl6OZum0QC9m2/Irj862auyGa+dJPCnL4kfblLFrq1FTnX18+KlUU647xtejYacByJ7Z2O8dkHMJcw/ALSuQe7gmFqEfo/rdxZaU+b0TBgq5Z1Krw6/mB0RJtBhWr9dIVRRX1kQ9+2eC6HStJWZLJlrHi8zypRmnZle+v31s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=W9r2eaGw; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=ixdMArKjREEYySJa96ZKyLnkbZbV9lLGfE7LmuoBU6AGb1rwmU2ORbfnpg0K8I8ki5iP5PWSQvL3IjDb4DpT4SDW5/WXjgMVw5QkAoCIgEhwtpAxXtvlcrtGIwWrgih5wDRbwvIf+tY2/nyOjGO8q5yPE5tPua42c99MKJuBbGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=dIh36Gbt; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="W9r2eaGw"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1ecd3867556so17075105ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 14:53:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="dIh36Gbt"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ecd3867556so17075725ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 14:53:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1715032420; x=1715637220; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1715032426; x=1715637226; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XasMM8RHDoAht3zV8M7CkVA/nSY/Z484OZ0/rKT1mpc=;
-        b=W9r2eaGw7b0CODKbjJ4KDZBQd6fygnxByFwgbXu/i07s4qAO/SVNi2ssgwziM6YdVQ
-         y97MG5tcwjuyPSOYWtNhlMZ01nqt+S5tx2FID1xR6gd3sBAnEQ8Ymmq8WMwqDoHAs/4S
-         UAUs5JjPYsf/vCs9hU5sjW7KoFZk3OcwmUgeY=
+        bh=qbe175V7J4mZKX1qbMhvDPfRMOR41WhVMQTZgQjYbwc=;
+        b=dIh36Gbtu4ES/52Sx3Cp+uv0rkWVj1Eg5vgVZDpvw6aPlmLixWNzmTYgY3rqirY1gu
+         iglBGIg1weqhiW/jJGYsvYBHOHPqGMkkmbyiBCRJ/VTV/rBx5cNfhxYsvw5QcV2lsj4z
+         bVAI9x41T7H1mGh/o0jueWUFgPt9Ed3x15QZg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715032420; x=1715637220;
+        d=1e100.net; s=20230601; t=1715032426; x=1715637226;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XasMM8RHDoAht3zV8M7CkVA/nSY/Z484OZ0/rKT1mpc=;
-        b=CRwpvOjFqM9hDJg8Hrp5B97J7U6urwdlDa9mn64mo13EH8mfjEol4weJco/6tZjeLW
-         2mrWZcepz8+bgQc4iGVQmYB+8eSy4Md5shfplDfFC7tuvN6D+uegMD7356N1BQ2AQIH0
-         xTFsOj0YE+snnDmA4Lc/WuLEwfUi2tAZgCi2K+SyWCrxHNlE8AUXTUjsSMMla0GAyYuu
-         yZ5TaeT0TDd2zbKsOCEiPwejtvtpvf8bZFVGo6EG/rGWnDXTdU940RWxQrPYcTK13ExV
-         3/J8SMEGFQP7wjS0F7DbTVIhT9/+lJQ6VW9SAUx8/UeDgqiGUbf8whZ6aPZ7vyTamJQ9
-         +9Gg==
-X-Gm-Message-State: AOJu0YxdKXQQVFUJ0BVIVkGKTV8QTAgZ5oZjgeIvlU8rshh3Zbog8fgN
-	g1NwQ4AGG4LIznqcwtIiwEn4GiLajYLQs/6q4I+GxDNViKtwUQQJVnSlRESAwD4IUkBa3rjU7C4
-	m0Cl/dPIOavE66kMYUWfL/uE7fOjhfX9Py9Wo3oBMLtHZFhBjxkTsKv4YZeqakAQ9/SrvFEekoS
-	dinggn0b1AaXxBJcgFQBJMnDnYFV2x60fZEIDmVDnk+Bb28xi+80/R
-X-Google-Smtp-Source: AGHT+IENEOGN0tWde3qp/pU38RH6aIHaQEh28095AqfBsIIDAqJikcahIU1wceH2ANpCTzdN1vcY4A==
-X-Received: by 2002:a17:902:d355:b0:1eb:3e13:ca0b with SMTP id l21-20020a170902d35500b001eb3e13ca0bmr9908685plk.37.1715032420197;
-        Mon, 06 May 2024 14:53:40 -0700 (PDT)
+        bh=qbe175V7J4mZKX1qbMhvDPfRMOR41WhVMQTZgQjYbwc=;
+        b=Byb6Gm/oAk2jhCrF8pkbqdhxfk9GJ5YMvjgxbrN7Eq4EL/hKlvABdAlIKPCuIW2Aay
+         Bk2Lx1zBGrIVp5KltJA2X8zEbU39yoaV5SOmEEpMg5uOdaOclY/MAHVsoGOO0viwxcTn
+         tYoFndkovLBzIuRUI7dRXxRtSrtJ/LGLTm9Nrrex9+EQYyrW+DNvkxMmaDeE7tUrJA/E
+         xC+hJXwhA9W4OJDBWzU5ESq+hOqDkzdps9clN8LFcwXbvmseLjiQ9AAky3pSjr4s5ktp
+         p3ikrXFC6RkCkDNZXQMnt9v4x3uJg1VxEvDkUMdqa6kAy3xa4TFroD3oLZ/7ICxK0ynn
+         PuMQ==
+X-Gm-Message-State: AOJu0YznsxWqc6+mKO+xe6xzkxXMUuv3Zjw41I6s/Es5kK8jOxj6dlZ2
+	zhKFbi4EHIxxLsk4u8leXoc1UpdIUt0LqGWoNbrz2ALRFGY8NVbWti3kCf7gjztwaN+aGlpyk1f
+	+9gSBcyE0T1V2RY2huupv60POc2563vjDfbBJLJpWPQ9HgGqAoq5OEua4ay26Npkk9hz3tvXyMC
+	jttsQTTfLzOB6CqMTtzPvgNWpDvShs5gTg00U5xFoiC6zGZEECVlTq
+X-Google-Smtp-Source: AGHT+IF9KGLbu1mYoD5+HNwJ4RqC9puh1gLYMQgkGGUeZcF7dPV+YrdASSz/bi69CBBVXAU8JRj2Fg==
+X-Received: by 2002:a17:902:ab8b:b0:1eb:156f:8d01 with SMTP id f11-20020a170902ab8b00b001eb156f8d01mr9782604plr.40.1715032426230;
+        Mon, 06 May 2024 14:53:46 -0700 (PDT)
 Received: from amakhalov-build-vm.eng.vmware.com ([128.177.82.146])
-        by smtp.gmail.com with ESMTPSA id h8-20020a170902f54800b001ed6868e257sm5664008plf.123.2024.05.06.14.53.37
+        by smtp.gmail.com with ESMTPSA id h8-20020a170902f54800b001ed6868e257sm5664008plf.123.2024.05.06.14.53.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 14:53:39 -0700 (PDT)
+        Mon, 06 May 2024 14:53:45 -0700 (PDT)
 From: Alexey Makhalov <alexey.makhalov@broadcom.com>
 To: linux-kernel@vger.kernel.org,
 	virtualization@lists.linux.dev,
@@ -76,10 +76,12 @@ Cc: x86@kernel.org,
 	maarten.lankhorst@linux.intel.com,
 	horms@kernel.org,
 	kirill.shutemov@linux.intel.com,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>
-Subject: [PATCH v9 2/8] x86/vmware: Correct macro names
-Date: Mon,  6 May 2024 14:52:59 -0700
-Message-Id: <20240506215305.30756-3-alexey.makhalov@broadcom.com>
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Nadav Amit <nadav.amit@gmail.com>,
+	Jeff Sipek <jsipek@vmware.com>
+Subject: [PATCH v9 4/8] ptp/vmware: Use VMware hypercall API
+Date: Mon,  6 May 2024 14:53:01 -0700
+Message-Id: <20240506215305.30756-5-alexey.makhalov@broadcom.com>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <20240506215305.30756-1-alexey.makhalov@broadcom.com>
 References: <20240505182829.GBZjfPzeEijTsBUth5@fat_crate.local>
@@ -92,42 +94,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-VCPU_RESERVED and LEGACY_X2APIC are not VMware hypercall commands.
-These are bits in return value of VMWARE_CMD_GETVCPU_INFO command.
-Change VMWARE_CMD_ prefix to GETVCPU_INFO_ one. And move bit-shift
-operation to the macro body.
+Switch from VMWARE_HYPERCALL macro to vmware_hypercall API.
+Eliminate arch specific code. No functional changes intended.
 
 Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
+Reviewed-by: Nadav Amit <nadav.amit@gmail.com>
+Reviewed-by: Jeff Sipek <jsipek@vmware.com>
 ---
- arch/x86/kernel/cpu/vmware.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/ptp/ptp_vmw.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/vmware.c b/arch/x86/kernel/cpu/vmware.c
-index 68d812e12e52..9d804d60a11f 100644
---- a/arch/x86/kernel/cpu/vmware.c
-+++ b/arch/x86/kernel/cpu/vmware.c
-@@ -42,8 +42,8 @@
- #define CPUID_VMWARE_INFO_LEAF               0x40000000
- #define CPUID_VMWARE_FEATURES_LEAF           0x40000010
+diff --git a/drivers/ptp/ptp_vmw.c b/drivers/ptp/ptp_vmw.c
+index 279d191d2df9..e5bb521b9b82 100644
+--- a/drivers/ptp/ptp_vmw.c
++++ b/drivers/ptp/ptp_vmw.c
+@@ -14,7 +14,6 @@
+ #include <asm/hypervisor.h>
+ #include <asm/vmware.h>
  
--#define VMWARE_CMD_LEGACY_X2APIC  3
--#define VMWARE_CMD_VCPU_RESERVED 31
-+#define GETVCPU_INFO_LEGACY_X2APIC           BIT(3)
-+#define GETVCPU_INFO_VCPU_RESERVED           BIT(31)
+-#define VMWARE_MAGIC 0x564D5868
+ #define VMWARE_CMD_PCLK(nr) ((nr << 16) | 97)
+ #define VMWARE_CMD_PCLK_GETTIME VMWARE_CMD_PCLK(0)
  
- #define STEALCLOCK_NOT_AVAILABLE (-1)
- #define STEALCLOCK_DISABLED        0
-@@ -431,8 +431,8 @@ static bool __init vmware_legacy_x2apic_available(void)
+@@ -24,17 +23,10 @@ static struct ptp_clock *ptp_vmw_clock;
+ 
+ static int ptp_vmw_pclk_read(u64 *ns)
  {
- 	uint32_t eax, ebx, ecx, edx;
- 	VMWARE_CMD(GETVCPU_INFO, eax, ebx, ecx, edx);
--	return !(eax & BIT(VMWARE_CMD_VCPU_RESERVED)) &&
--		(eax & BIT(VMWARE_CMD_LEGACY_X2APIC));
-+	return !(eax & GETVCPU_INFO_VCPU_RESERVED) &&
-+		(eax & GETVCPU_INFO_LEGACY_X2APIC);
- }
+-	u32 ret, nsec_hi, nsec_lo, unused1, unused2, unused3;
+-
+-	asm volatile (VMWARE_HYPERCALL :
+-		"=a"(ret), "=b"(nsec_hi), "=c"(nsec_lo), "=d"(unused1),
+-		"=S"(unused2), "=D"(unused3) :
+-		[port] "i" (VMWARE_HYPERVISOR_PORT),
+-		[mode] "m" (vmware_hypercall_mode),
+-		"a"(VMWARE_MAGIC), "b"(0),
+-		"c"(VMWARE_CMD_PCLK_GETTIME), "d"(0) :
+-		"memory");
++	u32 ret, nsec_hi, nsec_lo;
  
- #ifdef CONFIG_AMD_MEM_ENCRYPT
++	ret = vmware_hypercall3(VMWARE_CMD_PCLK_GETTIME, 0,
++				&nsec_hi, &nsec_lo);
+ 	if (ret == 0)
+ 		*ns = ((u64)nsec_hi << 32) | nsec_lo;
+ 	return ret;
 -- 
 2.39.0
 
