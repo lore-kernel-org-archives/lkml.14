@@ -1,82 +1,95 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5860158219
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 16:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7531A156642;
+	Mon,  6 May 2024 16:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715012144; cv=none; b=RzkG6MLjdlgw56d+Zp64Rm/34m/e7T+lWIxUTXg8IdPYSjs2lPSFRy5S/EllBsySJwUh44Gfvt4U2Wll58nLX83tvM24ZVU56SoVfEnOc63V4BGs5GkFXsjvY7ikAavBtBxGD4kgK4Etu+vCDND4XKzU+LV7TTd71RwW++d3ZMU=
+	t=1715012207; cv=none; b=tflp3f7oa0kJgoInNTxYn0oPxqucQHvn6/Q9hDi7ueluqU9b1VMYwWkSYXFRl5EaPOKM1rFObAJWrFdReESGv4l2GgGkgBc+dcU1gt8oAUMsIGDBNVj3zRTRKhJ8IiV8wFH8fhB9cgsi75jVeI2EnhsQg6p1IDRtkjIiC5wYwOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715012144; c=relaxed/simple;
-	bh=T1+Rbt7S+pNf5q3CRHOo4VcokJLF+gGx7h9sjDgMKpg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R0+mErOB+SNEsq2OR4NCrmOESAJE98CIcO1Bh1D2cqQgIbFcZHobpdpxaKIVo1A1btQCaBNp6t8WyjQ8wo2XAi0DsDG/xblsmjpQ92iyAPBzJx6wxhkpDs6DwpMWL53gxd+cY+eZkn60VHIQkBDpgn3Kg0RxmrKaqVhvVWPN1Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UpPf7Ox7; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1715012207; c=relaxed/simple;
+	bh=jNzjFHwuZOa0k+BeBhpH1REqmnBk4LeQdC8qn+eFxtA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=N14uaM6yuRmGZH21sG1XyZzXg8fYnz2TN67f2lk7RTgXV5gp0oMdPf7hJEX7IaRdLKvsRLwRw+GjOo8qaYyCN6k2QnRIR7s6BtG3/YbHANTTdmSK5wjXoON0KT6d9/aggf3KUVokHRLENupvl2YJhu2tl2OzvRi1zNLhjcMsOsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fagDC5Ws; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UpPf7Ox7"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715012140;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fagDC5Ws"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3F6F6240007;
+	Mon,  6 May 2024 16:16:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715012203;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ck8JgZysAqiIqlF+N+8+WdMTAZK/jkIRufdhwHxvwE4=;
-	b=UpPf7Ox7SFE6/WLTzUKvDVSsuy/M5WEJuFj+ZO70agQ5WPL0K2MGVALnPQTfs09ZEJGbEd
-	HprA8xSjWt++oRwyvMRXQ7ULv9gX/siwXF8ZJJVJlLmBIpKTYbsCyhsWl7B0YtmMuNkDIM
-	yQxX3tO1Qfr0Tvl43E3cmXJ0c8Fm38U=
-From: Sean Anderson <sean.anderson@linux.dev>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>,
-	linux-pci@vger.kernel.org
-Cc: Michal Simek <michal.simek@amd.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Sean Anderson <sean.anderson@linux.dev>
-Subject: [PATCH v2 7/7] arm64: zynqmp: Add PCIe phys
-Date: Mon,  6 May 2024 12:15:10 -0400
-Message-Id: <20240506161510.2841755-8-sean.anderson@linux.dev>
-In-Reply-To: <20240506161510.2841755-1-sean.anderson@linux.dev>
-References: <20240506161510.2841755-1-sean.anderson@linux.dev>
+	bh=MtkU8ulaRyANNJ3DFHdYTh05NSfYT6+fSTvcm7oypUc=;
+	b=fagDC5WstxKQcQyaYTwBxF+B4XZucKnX7q9dNBd0wAs5ateSsv6u92K6xo7SO8TAaINCwj
+	Mvgi5WAqHsIC3fBNNAasM6ADObFB8VoYTiKAzfuOdURLuXYclQZamcxPUiCZ9cIumE7/oc
+	yD/MT8osUo6D4PMfGsz+alSm+8BjxoArh2zP6EDiFPSl/6U46V64kzMUpBZjnOT+fcv1KE
+	qHJQunosezXuLcDg6clTmAcs9wf9W10+nQrVguMruybp62IvPJD6FwoAJ+gSwhZ/EJfHW3
+	jEjYarx9Wx6BP6jq8CF1A6gqfhHBDx7kJxVeSu8KV6Y5vZ6g8hrgKPoYFQhGkg==
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Date: Mon, 06 May 2024 18:16:10 +0200
+Subject: [PATCH 1/3] dt-bindings: mips: Add bindings for a new Mobileye SoC
+ EyeQ6H
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240506-eyeq6h-v1-1-f29b5269cc43@bootlin.com>
+References: <20240506-eyeq6h-v1-0-f29b5269cc43@bootlin.com>
+In-Reply-To: <20240506-eyeq6h-v1-0-f29b5269cc43@bootlin.com>
+To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=850;
+ i=gregory.clement@bootlin.com; h=from:subject:message-id;
+ bh=jNzjFHwuZOa0k+BeBhpH1REqmnBk4LeQdC8qn+eFxtA=;
+ b=owGbwMvMwCTIzSbRJ1JkfZXxtFoSQ5olU+Y529mWaZyGDU5ORx3+JwYG5sYkWy+Z2xgTq8U3f
+ fdu2YkdsSwMgkwMsmKKLBIrC86Il+t7bLNrvg4zh5UJZAgDF6cATCR0OsM8o1/ps5/tXfZjR83O
+ 4EwD1m3nlSffZJgftS05z/2/rcw939+rZr5YcPxW84HrAA==
+X-Developer-Key: i=gregory.clement@bootlin.com; a=openpgp;
+ fpr=18A970CC17772F48B63E83D70B06188E14723BD5
+X-GND-Sasl: gregory.clement@bootlin.com
 
-Add PCIe phy bindings for the ZCU102.
+Add the yaml bindings for a new Mobileye SoC: EyeQ6H.
 
-Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
-Tested-by: thippeswamy.havalige@amd.com
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
+ Documentation/devicetree/bindings/mips/mobileye.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Changes in v2:
-- Remove phy-names
-
- arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-index ad8f23a0ec67..d2175f3dd099 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu102-revA.dts
-@@ -941,6 +941,7 @@ conf-pull-none {
+diff --git a/Documentation/devicetree/bindings/mips/mobileye.yaml b/Documentation/devicetree/bindings/mips/mobileye.yaml
+index 831975f6b479..909ac9fe0b4b 100644
+--- a/Documentation/devicetree/bindings/mips/mobileye.yaml
++++ b/Documentation/devicetree/bindings/mips/mobileye.yaml
+@@ -26,6 +26,11 @@ properties:
+           - enum:
+               - mobileye,eyeq5-epm5
+           - const: mobileye,eyeq5
++      - description: Boards with Mobileye EyeQ6H SoC
++        items:
++          - enum:
++              - mobileye,eyeq6-epm6
++          - const: mobileye,eyeq6
  
- &pcie {
- 	status = "okay";
-+	phys = <&psgtr 0 PHY_TYPE_PCIE 0 0>;
- };
+ additionalProperties: true
  
- &psgtr {
+
 -- 
-2.35.1.1320.gc452695387.dirty
+2.43.0
 
