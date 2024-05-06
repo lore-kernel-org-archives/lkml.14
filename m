@@ -1,142 +1,117 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723F41DA22;
-	Mon,  6 May 2024 12:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5522555B
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714999204; cv=none; b=MTlhxaXxZchbQ3uPzDNrmMze8TV/OdQe5v9/egD0k/yfMb/kF2xjiDhagGLUF55UzlY4bZHiBquZe/D8OU74DjmX2ZWkpAL8fufpT8200QbvPbLMs0KLx3wXwGZxZIM6NWfp4P52mb/1AJj/0w296213RArg0f0bjptMn+65ZI4=
+	t=1714999386; cv=none; b=iIws3W9/IYfcEOSvsHcaELnNX46xSfqQxq0isVlKKh2/slg2DJfVlSkeGHRzE/EU98w+6Gw5CLetEwAkNE53CDXQxHmpVVAkfVhcwTQfYxHoiCe0MG5JVrArSle2IkDmWFhfLeOUSPFz1tce4Oli5iHYeh7R3ME0lLTzrZo1/hc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714999204; c=relaxed/simple;
-	bh=I0aEhq4nU2NqcfNEZMplKejLv864kLLf/BLQOapouH4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LtWsHb78gVwL4QvCznSte40LmO4oU+iHed08J2XQBqWOzrDLjHR+htaQRYmDMQYZJfio/DudAFLvP6PCh/0ZLsCmp7Ut+u7Zwoj7GJrPyPApIiT5bSGrSsgHaTCeCKv5Ob3zimFOT6kFSw3jdvbBsCS6bOtXRYtAFYTf1/oj0MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ei09gRNs; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1714999386; c=relaxed/simple;
+	bh=cfs2ycVTEkuQ3cfqr5nM6QWK12nCn6P1/OxUfMj1naY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DmRxx4ttFxHuShuOqLe8LSORilQgeJLNiz5dNndzS7UneIqs5ACEqsrfV+7uWn/xsiFGiRBUPmaRjJYBRgeFhLByz57uMEHEioXYCAhXP+IRYQ+QjFPC7Jc/SEHxcrshwcF3XkvuVpZT7exV619aMDbHZQO+86Wy4yE1x7S9IoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zQYtVdkN; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ei09gRNs"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41ba1ba55e8so11243485e9.1;
-        Mon, 06 May 2024 05:40:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zQYtVdkN"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-572aad902baso15601a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 05:43:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714999201; x=1715604001; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rxjJb/KzzXIFQHfzAUi7FnhbwHdNprYeBkYOQsJcPKk=;
-        b=ei09gRNspAdb2aqMI3I9Vj7edy3cn++1uV1LjRbzhzHNk2Autqa0iuz1Oed/stdicj
-         pBKCwURcFKjKYvcQ79G/pa+ZD603+7RRTY7WCouQ32FgvAB+krYoBovnbmHKqZSgKFcG
-         0JXwTQYwx5q7nK2Nh61yUDOvOFRTwHO2azzwHp4o/WWg05WByTyqMxwtQSa9vVOSN6gi
-         fGlM9LlMjkyW97fmtLg7oMFpdm0sSr2upJUMYqyPEBr63Hv0FVYrD07U+sbB1ww+8mft
-         3IccpIi0J2HEnPahGRJ8KdqgwF7wODikjdjKxqkpaXRRbW/hXlIOrS9Qp86DrkPRbWlT
-         XVzw==
+        d=google.com; s=20230601; t=1714999383; x=1715604183; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=anw714zKyXDK460Ivdwt+n1g4c7F+zM3eSbBt2Nf1dc=;
+        b=zQYtVdkNN/svr3RnSO3xhBgUkkc/Fywb6Daf7Efb0r+JWfIRzGi/DDs4PWq6GO5exj
+         wxEI8qVva3WZ1ZztB6MQgufHiru2fCpkbYO+hQSZXQJtcKNvbxoX1hsGyqTvnY04YJmq
+         8dMOcJf1ttNIGbWxrHtxbAIi8IFCVdrCmMbplbwWMbTiXomw6dxiH1ZTQnL84SasN+02
+         iHehrxU9LY/P9azdjr6gu2oALreGE3YaHV1C5YytC137bXhUrXF5ZqHPnl0Rj37XLl/e
+         cPWxUMfXSeHhImTc5a2gMETZ9uEbXhgVjqHHX8XjQlfZ0wZwS0lzJikNLDno5IQ6Fy4a
+         91Zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714999201; x=1715604001;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rxjJb/KzzXIFQHfzAUi7FnhbwHdNprYeBkYOQsJcPKk=;
-        b=tX304PVVm0JKpPSHTt+bdVvPBRBuHyehdPwqkSKlz7sXTuqi5daV92EmARiGLka1Sy
-         wkQcYnG7dKIQ0WUtF+riTPRKrJPDt60CDiqZaj/TopWDa6o0r392enqy3IjN0geig0uV
-         J+SrSxmxhClX68LjNdzNp1sHzNR//4EZYkpZxcmVBZu7e2P9qaKIt7lYMOxCFnuWbpN8
-         KsKgJ2WT+PhbkelrXiNxMyZLz0yhzxeJohdagOoFvMFZP5M3U8uI8WoOcbCytUd0468E
-         XoITZTPwle7QHMCsSDpS0bLXAL3c6NEPw1Z46yvaEa1vKXHmKC/gQ+kS5xiuHWxxDg5R
-         d9og==
-X-Forwarded-Encrypted: i=1; AJvYcCUvsmOzSh6mv3E6/DkkzfqYUVEu2D/Bs9+k/mtLn025WnIXXGGToM4n+Ku52kdqpNK1vsH6hOF922WKLB4tS6urU2kQqs8eOICBJkzhQAblAfwQiOhOcKvapND5MqJXXZ/DJEH8
-X-Gm-Message-State: AOJu0Yzb1dxbOD4XdDHcE3wIRukcDwkYYkGCfViqt7kiAYLnwuder3oU
-	RWInOiUh6eGtVFgNgfjvl7ziYIUFPcoXGbJ+bAqaBjSEQVaAv6NO
-X-Google-Smtp-Source: AGHT+IFkCu+JtPeZm2GUtpMORrZzigCeL8aXT4N3/ncy5DZ8TaVMDuXbslHscLBHDWJBFqgIrb6ZgA==
-X-Received: by 2002:a05:600c:1c03:b0:41a:3868:d222 with SMTP id j3-20020a05600c1c0300b0041a3868d222mr7722487wms.0.1714999200464;
-        Mon, 06 May 2024 05:40:00 -0700 (PDT)
-Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id g17-20020adfa491000000b0034de87e81c7sm10714865wrb.23.2024.05.06.05.39.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 05:39:59 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Christian Marangi <ansuelsmth@gmail.com>
-Subject: [net-next PATCH] net: stmmac: dwmac-ipq806x: account for rgmii-txid/rxid/id phy-mode
-Date: Mon,  6 May 2024 14:32:46 +0200
-Message-ID: <20240506123248.17740-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1714999383; x=1715604183;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=anw714zKyXDK460Ivdwt+n1g4c7F+zM3eSbBt2Nf1dc=;
+        b=pxFj8FnVlP1B2MOvlBSv5nLC8GiRww2ZFmXjXzgQfXAvtgz8wUj8y8mNz+j6i2jK+5
+         vHp8ASQ5csQdacBoe3z/XggVySGnmu2tySneFdpa08rLJBMA6if5SjY1Nv37EXY0dmqd
+         cl7Pve/4vpTi+Cqqyx6vf7aELAav1N8FZ1c6vmxYMIl1Ideta/Z/6OLzW43wtfuQtg5t
+         FPeZDV4gFdigpN/JcgsSksJ8iVTNkLBCKy9AQTp+KSxrAY78RtKYZ6mJSsl0VJMDd1lG
+         oEg1cZrEo9Cw3BXwLU6QnotKRU2kqlKck5xCW7Q9j7mjw4UhR8Wctok6Nhn5EXGGb08p
+         IB/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUIf8T+nh2aZTW8s8obPUcwx2t7sDgNq8wscaTSsk/bhqbv2BfYENKd0A4zyFi126im/KSFdEilTcvKQkmTSjPb3/22pmazG8XwxwLn
+X-Gm-Message-State: AOJu0YwUMX5XBE4zcMOq+62z8KnaHY8fOTPFKWWyCfFLSptn689hlhT+
+	3PmA+wUslssNon9tQFMlD2w01icK5oCvtoPDg5urTIae4xZO5PmR6GIzK+Zl0NNsX+RkvV8+nWa
+	afhzWWRNikRQFonb4Q/0bKlHv00dTSaVj+kyP
+X-Google-Smtp-Source: AGHT+IGtSrv2pvTwoBF5UdNJr7FvxT453Udnb24JDuKg9lObH1vQzj7IDUm+HAcq7p4gGsERfgIVrHi4ogILPAkeVjw=
+X-Received: by 2002:a05:6402:1bcc:b0:572:a1b1:1f97 with SMTP id
+ 4fb4d7f45d1cf-572e26945c5mr234715a12.1.1714999382503; Mon, 06 May 2024
+ 05:43:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240506120400.712629-1-horatiu.vultur@microchip.com> <CANn89i+SJiOLLy8azt8NqckUkTLqTS3Wu=16vfTrqCFYLKxTPw@mail.gmail.com>
+In-Reply-To: <CANn89i+SJiOLLy8azt8NqckUkTLqTS3Wu=16vfTrqCFYLKxTPw@mail.gmail.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 6 May 2024 14:42:51 +0200
+Message-ID: <CANn89i+QiQEX3DymsVaRMv-DRmcdwtPZ2U_O2VDxShJ0fKqXkA@mail.gmail.com>
+Subject: Re: [PATCH net] net: tcp: Update the type of scaling_ratio
+To: Horatiu Vultur <horatiu.vultur@microchip.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, soheil@google.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently the ipq806x dwmac driver is almost always used attached to the
-CPU port of a switch and phy-mode was always set to "rgmii" or "sgmii".
+On Mon, May 6, 2024 at 2:35=E2=80=AFPM Eric Dumazet <edumazet@google.com> w=
+rote:
+>
+> On Mon, May 6, 2024 at 2:04=E2=80=AFPM Horatiu Vultur
+> <horatiu.vultur@microchip.com> wrote:
+> >
+> > It was noticed the following issue that sometimes the scaling_ratio was
+> > getting a value of 0, meaning that window space was having a value of 0=
+,
+> > so then the tcp connection was stopping.
+> > The reason why the scaling_ratio was getting a value of 0 is because
+> > when it was calculated, it was truncated from a u64 to a u8. So for
+> > example if it scaling_ratio was supposed to be 256 it was getting a
+> > value of 0.
+> > The fix consists in chaning the type of scaling_ratio from u8 to u16.
+> >
+> > Fixes: dfa2f0483360 ("tcp: get rid of sysctl_tcp_adv_win_scale")
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> > ---
+>
+> This is a wrong patch. We need to fix the root cause instead.
+>
+> By definition, skb->len / skb->truesize must be < 1
+>
+> If not, a driver is lying to us and this is quite bad.
+>
+> Please take a look at the following patch for a real fix.
+>
+> 4ce62d5b2f7aecd4900e7d6115588ad7f9acccca net: usb: ax88179_178a: stop
+> lying about skb->truesize
 
-Some device came up with a special configuration where the PHY is
-directly attached to the GMAC port and in those case phy-mode needs to
-be set to "rgmii-id" to make the PHY correctly work and receive packets.
+Remaining buggy drivers would be these USB drivers:
 
-Since the driver supports only "rgmii" and "sgmii" mode, when "rgmii-id"
-(or variants) mode is set, the mode is rejected and probe fails.
-
-Add support also for these phy-modes to correctly setup PHYs that requires
-delay applied to tx/rx.
-
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
-index 281687d7083b..4ba15873d5b1 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-ipq806x.c
-@@ -171,6 +171,9 @@ static int ipq806x_gmac_set_speed(struct ipq806x_gmac *gmac, unsigned int speed)
- 
- 	switch (gmac->phy_mode) {
- 	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		div = get_clk_div_rgmii(gmac, speed);
- 		clk_bits = NSS_COMMON_CLK_GATE_RGMII_RX_EN(gmac->id) |
- 			   NSS_COMMON_CLK_GATE_RGMII_TX_EN(gmac->id);
-@@ -410,6 +413,9 @@ static int ipq806x_gmac_probe(struct platform_device *pdev)
- 	val |= NSS_COMMON_GMAC_CTL_CSYS_REQ;
- 	switch (gmac->phy_mode) {
- 	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		val |= NSS_COMMON_GMAC_CTL_PHY_IFACE_SEL;
- 		break;
- 	case PHY_INTERFACE_MODE_SGMII:
-@@ -425,6 +431,9 @@ static int ipq806x_gmac_probe(struct platform_device *pdev)
- 	val &= ~(1 << NSS_COMMON_CLK_SRC_CTRL_OFFSET(gmac->id));
- 	switch (gmac->phy_mode) {
- 	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		val |= NSS_COMMON_CLK_SRC_CTRL_RGMII(gmac->id) <<
- 			NSS_COMMON_CLK_SRC_CTRL_OFFSET(gmac->id);
- 		break;
-@@ -442,6 +451,9 @@ static int ipq806x_gmac_probe(struct platform_device *pdev)
- 	val |= NSS_COMMON_CLK_GATE_PTP_EN(gmac->id);
- 	switch (gmac->phy_mode) {
- 	case PHY_INTERFACE_MODE_RGMII:
-+	case PHY_INTERFACE_MODE_RGMII_ID:
-+	case PHY_INTERFACE_MODE_RGMII_RXID:
-+	case PHY_INTERFACE_MODE_RGMII_TXID:
- 		val |= NSS_COMMON_CLK_GATE_RGMII_RX_EN(gmac->id) |
- 			NSS_COMMON_CLK_GATE_RGMII_TX_EN(gmac->id);
- 		break;
--- 
-2.43.0
-
+drivers/net/usb/aqc111.c:1154:          new_skb->truesize =3D
+SKB_TRUESIZE(new_skb->len);
+drivers/net/usb/smsc75xx.c:2237:
+skb->truesize =3D size + sizeof(struct sk_buff);
+drivers/net/usb/smsc75xx.c:2256:
+ax_skb->truesize =3D size + sizeof(struct sk_buff);
+drivers/net/usb/smsc95xx.c:1873:
+skb->truesize =3D size + sizeof(struct sk_buff);
+drivers/net/usb/smsc95xx.c:1891:
+ax_skb->truesize =3D size + sizeof(struct sk_buff);
+drivers/net/usb/sr9700.c:424:                   skb->truesize =3D len +
+sizeof(struct sk_buff);
+drivers/net/usb/sr9700.c:436:           sr_skb->truesize =3D len +
+sizeof(struct sk_buff);
