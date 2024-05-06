@@ -1,75 +1,80 @@
 Received: from wfout2-smtp.messagingengine.com (wfout2-smtp.messagingengine.com [64.147.123.145])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC3F140E46
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 08:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 369361420B7
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 08:22:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714983723; cv=none; b=lDKRekhJ0XZtyjb3YrIyS2OAAa+wU1+n8qTOVsvXZ/pbZw3TROyHsAoxzvHXgTFIYRoyn8DfoZvDD5dh03+f53SfFFvIxXIRup5ILyUiHJzj2E+uIQ5UYxmCju+sX6JdxoeDr0QPX6E7GfdhLTwKrufWvrp1qYd9LF8pFQQ+iBY=
+	t=1714983725; cv=none; b=MJ8TF9OjxqwOZuIlskJzhiXWsyFUONxMw9TiDCyEWZLDix8kmrYN1cPEetIatlvSXE2tR7Zvt/YldJqp8AWcqN89gjh/Pj0IcDOtMFNt+Bf13QhCMnVQd7q1A1UvYuBUCVvwgymdDSgP7WBzvyrnSdyJxY80rRVoWCk+B+PqsFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714983723; c=relaxed/simple;
-	bh=t0vkSDTsgla9zTNzdbbcaA+WDWix0pJ42tCnDesWIdI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jsGjCxxsTabaBMgCOD4dJx3YGwPW8xmtDWHL16gx8kNh5B6yHiLSdMwowM8fZKqLOGg3joptgHbs3xLPCWJlXOoWmbAqGwVg5/tFK3uUESdGjhq0f671IbCV4HCHj74lSECtIsccX9E+cvP1Ty7Lhhc5NJpHo4GxUK23paLIhMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=KpnN8kLo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=S7L5WXAg; arc=none smtp.client-ip=64.147.123.145
+	s=arc-20240116; t=1714983725; c=relaxed/simple;
+	bh=DxALtaneb1zNDaPQg9Cu3NvwTJKu4BPV9aYAg4kaupc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LTN3PP24L891aH9o3bLYKDIPZ40iOvG/f2iCgdPEK66vuSY1lpfBaEMr+AG+vKrp3GfNG4jN1ad4A42dbX5MNkVYMMJ1VhplM3m1y27N93hd/9GGNVMsbXrRRmbOsF2OuVg8x6ZzdNxCZ2c7xHdt/dkqkz4eYQtG0Yklzwn3e+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=ixd3Ssnj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VAnb2qS3; arc=none smtp.client-ip=64.147.123.145
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="KpnN8kLo";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="S7L5WXAg"
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailfout.west.internal (Postfix) with ESMTP id 3C4C51C000B6;
-	Mon,  6 May 2024 04:22:00 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="ixd3Ssnj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="VAnb2qS3"
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+	by mailfout.west.internal (Postfix) with ESMTP id 446281C000CE;
+	Mon,  6 May 2024 04:22:02 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Mon, 06 May 2024 04:22:00 -0400
+  by compute1.internal (MEProxy); Mon, 06 May 2024 04:22:02 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
 	 h=cc:cc:content-transfer-encoding:content-type:date:date:from
-	:from:in-reply-to:message-id:mime-version:reply-to:subject
-	:subject:to:to; s=fm3; t=1714983719; x=1715070119; bh=K8f8zaE/5s
-	/YLEFIoVR0uzOmwjq31kQM6GCmXVEQz4A=; b=KpnN8kLoOc3rx88tw5EQXIDU0G
-	3/kooznyeFM5tCAObGT0a5ibiP6E17u+z7hvAq4+mEFA+IQj01tXqa5J+TB9RT31
-	7zidSwbnvZgDnDULCTqw7jxsQQsj3w40ohkC/XMYM6WoBZzWaZUkz3BND82TbQUU
-	aekhKUyfvG5sgnME+Yk4ketOyADGFQKzpFBHagYw7ysy6d7x0sfU3Y5un+pvazkh
-	QsptLQyUscIPiS7/i3HMQqBURuI5gv1AkPMYf1Y1dYRPUq6d05U0/78Z3+1eVG/q
-	yodhhKFpk4vc7VqRs11kl9/DInmYqtEHkW6fkaKLkHjZaLtb//eNA3xTijgg==
+	:from:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1714983721; x=
+	1715070121; bh=Ac8QBrxyIqupzoU+z/gO0cIeQW48EPxhU6j4BYZsQ94=; b=i
+	xd3Ssnj6oD4Ufp0d3yjJpcz3zSidPCA0ZhZ16HYXIJt8Wftbg/9jCptA64aDkPwJ
+	DVkYTRpLyTtKbCd9Wf25MaSJ+peUyA8leuPH5INICDQdd0gegv++/jGbHT/OOEhG
+	b0I9WZTRVK8PLhZmbenI1e9zua/TeOJ2TSPfsmeTV6iBLAT5kn6/8UOGVr9Wj6y5
+	KuFY2KG+VUuNuBIRGkNs0FeJqZ74bVNFSNpj0zmLTONNkY8jxjAJ3mhZwbGxHA3P
+	k2g6lHvDaN7s0wiLNFZQE/9o/ujVuQy/rKnE7cDg1ZLgI7QAz+pB7RMDp6NIyvxm
+	kxkHxp2tDNSwggYxSko6g==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1714983719; x=1715070119; bh=K8f8zaE/5s/YLEFIoVR0uzOmwjq3
-	1kQM6GCmXVEQz4A=; b=S7L5WXAgH1s5Kx9wJTheAmEJOBSS8UDNumUB4iaSmqMp
-	AAvNyIJTqLiTpjh/lm2U14tnAwRWZYXcQWep8+IwyYCwGxaQEEzeFpYVdsFTnle4
-	Y2L1yJWQnl7AJvI5Ax3p8cenHtjtmt4nUoOTiA1FjVF9eAAJlzus4SlCyhggEb7y
-	bj+v2jQot40mj6EEAvF8+8kirGCmLppuCpIxyhBu5DLims+rzO1QmthAOOzEfUOi
-	yI4MS048YqrRpG8U2LHe0RM9MJVLhqt5vvD59zMRwQ8Qn13QneE3yfPNs0fm5N4K
-	icKKxnectea2pN/S0kjkrxgyAwcwvj/PScNiaKik+Q==
-X-ME-Sender: <xms:J5M4ZoNZ7hy3qMnirsrUqPSSZNIFI5vH_h3OXvV8DAGa8XRdkAZmFA>
-    <xme:J5M4Zu_qodwCJt6SWsYKzmOcJOCBggxpEyhmK1FU7lUy1FtemZq3ecJ-YhnX95rjj
-    V5LqTsexazVLrbLul8>
-X-ME-Received: <xmr:J5M4ZvQZuDeHDF_8GbR_1oFy5vB-G5R_o5LSfgYT8Ntw2tT6zAMSsuIUc4b9gWCuifSDIGIjLVJsZnW90KOinO_e2V0nmCZvcJjNQSCG986Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddviedgtdefucetufdoteggodetrfdotf
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1714983721; x=
+	1715070121; bh=Ac8QBrxyIqupzoU+z/gO0cIeQW48EPxhU6j4BYZsQ94=; b=V
+	Anb2qS3d27d/+39CU67rs5e6Do/e2nd37wTgOpAfwqJY10c6KwVhtPyVR3cU9tIi
+	o/rSU35xLvL6gez77ZzSzn8HDWgrD/qXNlp8WRwlcHYp0JlaeuLhKyvqUiuWdfIz
+	Smespr2ffKKLxgAaeUBfTtMBMEMFp77nBQorQk6mHxLCqqsWloY+nlNV9uLmiNxt
+	H8WqYrqFEcQTpI2xABaonHJpnc9yw4lfGNNbOzcewfV80+NUZc6WCIyeFDZvHWX/
+	oZ2CWpUfsGnV6F2W5Bz6eGR/0CeX4MoIc94eTNhwUskC6I6o/OuVnCT0deFzbYa7
+	FJr8GzI6z6oSVjE9p/mzQ==
+X-ME-Sender: <xms:KZM4Zs3GFnxmm_mHUbDCd87S5WPXj4O6HA7_z3W_9vYJ1qCiuQVhIA>
+    <xme:KZM4ZnHvQJ90QKRxHVC8MkpGARekbBlxQVMeJRHeGAs7bRFDHTzl55i4LwOtxLwMb
+    W0oNmXrAztixD9pziA>
+X-ME-Received: <xmr:KZM4Zk7RUddSHyOCvV1rHTPo7zlEIDRBlfX0-OC9NyqH68QlmAR4vpBhjZbWBnbcl_OL9LetOyBlpb-YHOxDq1xulQ9qPXVp-AM5p7jmqiAm>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddviedgtddvucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffoggfgsedtkeertd
-    ertddtnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghkrghs
-    hhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeffvdeuleffve
-    ekudfhteejudffgefhtedtgfeutdfgvdfgueefudehveehveekkeenucevlhhushhtvghr
-    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhisehsrg
-    hkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:J5M4Zguxh-rZAs40zcDcg3dJerG86V_-sO_mRsxvJGP8JB7Hs0C_GQ>
-    <xmx:J5M4ZgcIPsGMhDr42QtJFx7aDZkj_RGOd0xC8Ju1s1Od0VMgO9g5UQ>
-    <xmx:J5M4Zk1R-vsewqrauScrStT7R8AN9oPqKiyOEeXFFfWmWnY3OJ3jfQ>
-    <xmx:J5M4Zk9dOVoW3A8DtvTwQxtrLwsjHMJFCuk765SRcmcI3W8vcPgDwg>
-    <xmx:J5M4Zhpvya7fBGmezxrw4ImgQE0USWV4NThvmX03FRMG6MGPCosVC27g>
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
+    ertdertddtnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghk
+    rghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpedvjefgje
+    euvdfguddukeelveetgfdtvefhtdfffeeigfevueetffeivdffkedvtdenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhise
+    hsrghkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:KZM4Zl2erQw5f-oqNkvuK2Q_nBTBF2OWWsk-crf8sQpkzpxA4qShrQ>
+    <xmx:KZM4ZvG_M0KPYc_fM8cF1xLxjNN0ETgyED8pi-kS2_x-zwaISzW_Ng>
+    <xmx:KZM4Zu_bjR-vN1OjhgPzHkQ_5SQ9ZrvGzN6TAfm8C8s5jZBiuYEewQ>
+    <xmx:KZM4Zknw8FeHsh0NjKV85bjDcLiGU7Zxoz1FLweqCrK0dpKuzxncug>
+    <xmx:KZM4ZkR6gtaKWCWUKjYqDfB2NSwJ1Q1DFIQxW6dw8SXLZxnUoK-PaGI7>
 Feedback-ID: ie8e14432:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 6 May 2024 04:21:58 -0400 (EDT)
+ 6 May 2024 04:22:00 -0400 (EDT)
 From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 To: linux1394-devel@lists.sourceforge.net
 Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH] firewire: core: fix type of timestamp for async_inbound_template tracepoints events
-Date: Mon,  6 May 2024 17:21:53 +0900
-Message-ID: <20240506082154.396077-1-o-takashi@sakamocchi.jp>
+Subject: [PATCH] firewire: core: remove flag and width from u64 formats of tracepoints events
+Date: Mon,  6 May 2024 17:21:54 +0900
+Message-ID: <20240506082154.396077-2-o-takashi@sakamocchi.jp>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240506082154.396077-1-o-takashi@sakamocchi.jp>
+References: <20240506082154.396077-1-o-takashi@sakamocchi.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,26 +83,48 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The type of time stamp should be u16, instead of u8.
+The pointer to fw_packet structure is passed to ring buffer of tracepoints
+framework as the value of u64 type. '0x%016llx' is used for the print
+format of value, while the flag and width are useless in the case.
+
+This commit removes them.
 
 Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 ---
- include/trace/events/firewire.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/trace/events/firewire.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/include/trace/events/firewire.h b/include/trace/events/firewire.h
-index cd6931b134ee..d695a560673f 100644
+index 4163959be57a..cd6931b134ee 100644
 --- a/include/trace/events/firewire.h
 +++ b/include/trace/events/firewire.h
-@@ -106,7 +106,7 @@ DECLARE_EVENT_CLASS(async_inbound_template,
- 		__field(u8, generation)
- 		__field(u8, scode)
- 		__field(u8, status)
--		__field(u8, timestamp)
-+		__field(u16, timestamp)
- 		__array(u32, header, ASYNC_HEADER_QUADLET_COUNT)
- 		__dynamic_array(u32, data, data_count)
+@@ -221,7 +221,7 @@ TRACE_EVENT(async_phy_outbound_initiate,
+ 		__entry->second_quadlet = second_quadlet
  	),
+ 	TP_printk(
+-		"packet=0x%016llx generation=%u first_quadlet=0x%08x second_quadlet=0x%08x",
++		"packet=0x%llx generation=%u first_quadlet=0x%08x second_quadlet=0x%08x",
+ 		__entry->packet,
+ 		__entry->generation,
+ 		__entry->first_quadlet,
+@@ -245,7 +245,7 @@ TRACE_EVENT(async_phy_outbound_complete,
+ 		__entry->timestamp = timestamp;
+ 	),
+ 	TP_printk(
+-		"packet=0x%016llx generation=%u status=%u timestamp=0x%04x",
++		"packet=0x%llx generation=%u status=%u timestamp=0x%04x",
+ 		__entry->packet,
+ 		__entry->generation,
+ 		__entry->status,
+@@ -273,7 +273,7 @@ TRACE_EVENT(async_phy_inbound,
+ 		__entry->second_quadlet = second_quadlet
+ 	),
+ 	TP_printk(
+-		"packet=0x%016llx generation=%u status=%u timestamp=0x%04x first_quadlet=0x%08x second_quadlet=0x%08x",
++		"packet=0x%llx generation=%u status=%u timestamp=0x%04x first_quadlet=0x%08x second_quadlet=0x%08x",
+ 		__entry->packet,
+ 		__entry->generation,
+ 		__entry->status,
 -- 
 2.43.0
 
