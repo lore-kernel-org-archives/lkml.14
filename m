@@ -1,128 +1,128 @@
-Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF602156962;
-	Mon,  6 May 2024 17:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6C51D52C;
+	Mon,  6 May 2024 17:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715017585; cv=none; b=KuLtLGu+wD3/tg2frBWuUwB0pS4MHFGV1oKoclmIBjbnx8zytQAyBW9xv0+6cq4TAE5J2aTID6Ikb7/MxJYI2BtXDCh4qqblu3MDUx48/aWda3DQnqnHg04CDOgA0y+ztVq9cpfop/UHPLc7PgvkMOla90Q6kPJrGLlTGKAF7AY=
+	t=1715017699; cv=none; b=Aa9PbjIUgkoIwD0t1B9VzW26HeXGvbJdVtfYRmnsj2rl2UYAdfAo5MPolsJotpJeYy4msfq9csm9i7lp156STeWttmXxZ7po/pR6m2jpJ8FBW9/GGK/UDVbvn3YoEjbJV8J8KDbJMq9UbpC0h0wD3gHNazo/qKUhC2JmtQgaLhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715017585; c=relaxed/simple;
-	bh=vqnYuRDE7YAdIfHB4y1v8PCKhpIU6Ck4Nohhh0+FmK0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tpmTVM1JBBPxFiGEnppm8trlczDr+Sv+rczRjZZ0n2Id4X+a0agWSll8zFN2B4FgEq18R3kAsnsr8eynG4e/LcG5xRrtSQYzPfzv+ew2GAcIN6pp4DfKfcGbec93ZXqTKAgZb3KhaBFjFYG8PaWHWDJ2eXf7+V0QCE8LVT4UsCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=H+Au6r4F; arc=none smtp.client-ip=144.76.82.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
+	s=arc-20240116; t=1715017699; c=relaxed/simple;
+	bh=MvU5sKTnLEckHFjZCqkxY/lmg1E8y33V8+9lLbUc2Ro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCvTkI44hmEpE7ER9fw/FDJLw5GXLjLWIWxysk1AdhzKfp/XRaTX6gEQSJ2MiqFduiPWoI7YWFZavFW+PL8ElnPvobDOGSmqCpOcGnxRcW9R2HSZSEMmFwDEt6Zewz75yp0fqQxAr4l3xUYRNWHBXPx4ZE/6PLJ6oj0Ad4uFu8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=gXbYAIfe; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="H+Au6r4F"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-	s=42; h=From:Cc:To:Date:Message-ID;
-	bh=xw3p/mu9rqf4LynApLZg3ICv4KBQ9pI/cT8ZAvWfrvU=; b=H+Au6r4F4x1Z85+DNGjlJceQt6
-	VaCVEcT4DEiGQbGVDh4OFym0kKFZBd86s6uXoJpPJTol6iKXqn0LG0HyJx8lIh8EDuo+2i5hrqN2O
-	vk8Qm3pQwBYOe4xDEpVSHAJ94SfEJi+QIlADWRgaZl2lxVH8SKQJpWHxqdqPKPehOFIM8Su38HTbz
-	tZmG9bvQ+46+S74+Tc+2yjeIEhU2KGEf6hYY0sJQDTqbdzLZTPufeLvN5VPgkNTHPOYPIkOVO0+81
-	syykN+b+56a1Khj1sPfDj2zaRMDolfZReWyrBPwwCMLHxuCZrQqarp8odXqr9D7+gq22C7zDhtgFs
-	CDqB8Lqc9X0g5Di3lkjVsfjGTFg7PxYd9cX9RXsShaBKDeLBvJeTRzcKI1+KkmZWflxdWQiL7szBw
-	xvayOxyIs7UU8VHV51kSkC6VEOl3cP9Ch3jcC1obaPYpZYp8zP/YEf1lCPpQ6pc093IgCA0JBFcfa
-	tXQCy/UeOaoa1sQS6m4mY1a7;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
-	(Exim)
-	id 1s42Pk-00A49V-1t;
-	Mon, 06 May 2024 17:46:12 +0000
-Message-ID: <501ead34-d79f-442e-9b9a-ecd694b3015c@samba.org>
-Date: Mon, 6 May 2024 19:46:08 +0200
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="gXbYAIfe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1715017695;
+	bh=MvU5sKTnLEckHFjZCqkxY/lmg1E8y33V8+9lLbUc2Ro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gXbYAIfeiNBAdErnj8FDrF6BRufNDLS5Sy2vaGpljGRCAJ2kRHckgsEAcrqJcZEfl
+	 bt6LFheWca1yJbPM5sMNaqlAKpFN7xuoBeQZGGd+m/QDRj53JMV85P9WazbjSxkds+
+	 YbB5YliGBGgW8lRpfM36XlLtPLMqFmmmbJg0aaFo=
+Date: Mon, 6 May 2024 19:48:14 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: "Limonciello, Mario" <mario.limonciello@amd.com>
+Cc: Lee Jones <lee@kernel.org>, Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, linux-kernel@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, "Dustin L. Howett" <dustin@howett.net>, 
+	Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 1/2] platform/chrome: cros_ec_framework_laptop: introduce
+ driver
+Message-ID: <7dab7267-a5f2-4b03-bb45-92b836e42c28@t-8ch.de>
+References: <20240505-cros_ec-framework-v1-0-402662d6276b@weissschuh.net>
+ <20240505-cros_ec-framework-v1-1-402662d6276b@weissschuh.net>
+ <84c58078-93a4-406a-8abb-9054854e54a0@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: get_file() unsafe under epoll (was Re: [syzbot] [fs?] [io-uring?]
- general protection fault in __ep_remove)
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Al Viro <viro@zeniv.linux.org.uk>
-Cc: Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>,
- Bui Quang Minh <minhquangbui99@gmail.com>,
- Christian Brauner <brauner@kernel.org>,
- syzbot <syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com>,
- io-uring@vger.kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linaro-mm-sig@lists.linaro.org, Laura Abbott <laura@labbott.name>
-References: <0000000000002d631f0615918f1e@google.com>
- <7c41cf3c-2a71-4dbb-8f34-0337890906fc@gmail.com>
- <202405031110.6F47982593@keescook>
- <64b51cc5-9f5b-4160-83f2-6d62175418a2@kernel.dk>
- <202405031207.9D62DA4973@keescook>
- <d6285f19-01aa-49c8-8fef-4b5842136215@kernel.dk>
- <202405031237.B6B8379@keescook> <202405031325.B8979870B@keescook>
- <20240503211109.GX2118490@ZenIV>
- <CAHk-=wj0de-P2Q=Gz2uyrWBHagT25arLbN0Lyg=U6fT7psKnQA@mail.gmail.com>
-Content-Language: en-US, de-DE
-From: Stefan Metzmacher <metze@samba.org>
-In-Reply-To: <CAHk-=wj0de-P2Q=Gz2uyrWBHagT25arLbN0Lyg=U6fT7psKnQA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <84c58078-93a4-406a-8abb-9054854e54a0@amd.com>
 
-Am 03.05.24 um 23:24 schrieb Linus Torvalds:
-> On Fri, 3 May 2024 at 14:11, Al Viro <viro@zeniv.linux.org.uk> wrote:
->>
->> What we need is
->>          * promise that ep_item_poll() won't happen after eventpoll_release_file().
->> AFAICS, we do have that.
->>          * ->poll() not playing silly buggers.
+On 2024-05-06 08:10:58+0000, Limonciello, Mario wrote:
 > 
-> No. That is not enough at all.
 > 
-> Because even with perfectly normal "->poll()", and even with the
-> ep_item_poll() happening *before* eventpoll_release_file(), you have
-> this trivial race:
+> On 5/5/2024 3:56 PM, Thomas Weißschuh wrote:
+> > Framework Laptops are using embedded controller firmware based on the
+> > ChromeOS EC project.
+> > In addition to the standard upstream commands, some vendor-specific
+> > ones are implemented.
+> > 
+> > Add a driver for those custom EC commands.
+> > 
+> > At first, provide an empty driver that only takes care of scaffolding and
+> > device binding.
+> > Further patches will add functionality to the driver.
+> > 
+> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> > ---
+> >   MAINTAINERS                                        |  5 ++
+> >   drivers/mfd/cros_ec_dev.c                          | 13 ++++++
+> >   drivers/platform/chrome/Kconfig                    | 11 +++++
+> >   drivers/platform/chrome/Makefile                   |  1 +
+> >   drivers/platform/chrome/cros_ec_framework_laptop.c | 53 ++++++++++++++++++++++
+> >   5 files changed, 83 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index c23fda1aa1f0..60699c289757 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -4988,6 +4988,11 @@ S:	Maintained
+> >   F:	Documentation/devicetree/bindings/sound/google,cros-ec-codec.yaml
+> >   F:	sound/soc/codecs/cros_ec_codec.*
+> > +CHROMEOS EC FRAMEWORK LAPTOP EXTENSIONS
+> > +M:	Thomas Weißschuh <linux@weissschuh.net>
+> > +S:	Maintained
+> > +F:	drivers/platform/chrome/cros_ec_framework_laptop.c
+> > +
+> >   CHROMEOS EC SUBDRIVERS
+> >   M:	Benson Leung <bleung@chromium.org>
+> >   R:	Guenter Roeck <groeck@chromium.org>
+> > diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+> > index a52d59cc2b1e..0a36e77e5039 100644
+> > --- a/drivers/mfd/cros_ec_dev.c
+> > +++ b/drivers/mfd/cros_ec_dev.c
+> > @@ -145,6 +145,10 @@ static const struct mfd_cell cros_ec_vbc_cells[] = {
+> >   	{ .name = "cros-ec-vbc", }
+> >   };
+> > +static const struct mfd_cell cros_ec_framework_cells[] = {
+> > +	{ .name = "cros-ec-framework", }
+> > +};
+> > +
+> >   static void cros_ec_class_release(struct device *dev)
+> >   {
+> >   	kfree(to_cros_ec_dev(dev));
+> > @@ -299,6 +303,15 @@ static int ec_device_probe(struct platform_device *pdev)
+> >   				 retval);
+> >   	}
+> > +	 /* The EC on Framework laptops implements some nonstandard features */
 > 
->    ep_item_poll()
->       ->poll()
-> 
-> and *between* those two operations, another CPU does "close()", and
-> that causes eventpoll_release_file() to be called, and now f_count
-> goes down to zero while ->poll() is running.
-> 
-> So you do need to increment the file count around the ->poll() call, I feel.
-> 
-> Or, alternatively, you'd need to serialize with
-> eventpoll_release_file(), but that would need to be some sleeping lock
-> held over the ->poll() call.
-> 
->> As it is, dma_buf ->poll() is very suspicious regardless of that
->> mess - it can grab reference to file for unspecified interval.
-> 
-> I think that's actually much preferable to what epoll does, which is
-> to keep using files without having reference counts to them (and then
-> relying on magically not racing with eventpoll_release_file().
+> I don't think there is a spec really for cros_ec is there?  I think it will
+> depend upon what features you're talking about if this is the right way to
+> go.
 
-I think it's a very important detail that epoll does not take
-real references. Otherwise an application level 'close()' on a socket
-would not trigger a tcp disconnect, when an fd is still registered with
-epoll.
+I equate "standard" with "mainline".
 
-I noticed that some parts of Samba currently rely on this when I tried
-to convert tevent from epoll to IORING_OP_POLL_ADD (which takes a longer term reference)
+> The reason I say this is that maybe some of the same kinds of features will
+> make sense for chromebooks that use cros_ec in the future and thus they
+> should be "generic" cros_ec mfd cells to probe for in some way.
 
-And I guess there will be other applications also relying on the current epoll
-behavior. That a closed fs automatically removes itself from epoll.
+The commands identifiers are just numbers.
+So if multiple vendors use the same numbers there could be collisions.
+By loading the subdriver only for the correct vendors devices we avoid those.
 
-A short term reference just around ->poll() might be fine,
-but please no reference via EPOLL_CTL_ADD.
+If other vendors or mainline CrOS EC implements the same commands we can
+revisit this and move the functionality to a generic mfd cell.
 
-Changing that can cause security problems in user space.
+But after the discussions on the cover letter, let's first see if a
+vendor-specific driver is needed at all.
 
-I haven't followed all details of this thread,
-please ignore me if that's all clear already :-)
-
-Thanks!
-metze
-
-
+Thomas
