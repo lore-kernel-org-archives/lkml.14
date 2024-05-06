@@ -1,44 +1,44 @@
 Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D97A576919
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0CB176410
 	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:52:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714999954; cv=none; b=oz9Alg7+nAbA2vL1jSvUjIDHb8xFGxunWS7cKlBxPrPfAH8prmnowMfbo5kgtoM02QSwE0s0diWvNIGTpnTNVFgfG99KIFDowZ3xnoLK6LLC8XuuI4ELsg2sKkBHYhGVeOWZa6+53x/f6ycSpIrn3csYJNDcnU23SKKysATAwmQ=
+	t=1714999953; cv=none; b=S99NlRxYlw5N2Ei2BoEU3Gj+6MfhPsMOJ0mdKwssfb4e7iYNZxOWl6EKkz9KHBYEcICxM9UUd3MncMdmTCb3qpbDr973CCjHqBp3pUU4r4f+AISR9y6vBb0ynIpUupUkVoa15A6hSfk6/c0dN6NH0Q+q4J7TkeF+xyxCFanT6aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714999954; c=relaxed/simple;
-	bh=Ce/fP6xScE3aVS8h902sx71LyCkgrk5kieJe+AKc8CI=;
+	s=arc-20240116; t=1714999953; c=relaxed/simple;
+	bh=UX/X6BgxbxqVHpi3aqgpoScWzEnd8ZY2CemrBy2jdQg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UwY1+fsHV25uxIwqmHjP0cDREqsc7iL18dQyYb0jGI3KuHRQCX6SpgNNlo/wK2JP4ahz/p5Guo5w2VTT3kra41zg3YcMQO1zK2lNtofemp/cTYlYHpNnsjeuoACxTT3BNDUQXBssaMMVx5BTPLpSdwpawD1+yBZ7sccH4F1V/ak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=TtPIt+K0; arc=none smtp.client-ip=150.107.74.76
+	 MIME-Version; b=unPa4olo1CztBVnpO6mHKVSvFGXN+/BXCs376cFrgPDmngAedHKvLtw3z/UnAQiu1G9tRjSvwtxrCgwqotxj2aSxsmBhXsXIevUW6iXERp99uL9aJhfYj8lrkA6dV7OaRYsD1MTHFGgOs8EA4K3PKxnro+n+Ag5xNU6EvdnTTyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b=kaeJbwk0; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="TtPIt+K0"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="kaeJbwk0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ellerman.id.au;
-	s=201909; t=1714999946;
-	bh=GBEPaRZyteJkC6BUvRNboaSanQS3npKz4CeG4H3+xfY=;
+	s=201909; t=1714999945;
+	bh=zSSR1q1er63pNlX06eSqc6R/Hbur4nByEzyXGVzbcDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TtPIt+K0SqSoCNTxcJORwMADAGf0tHsQURR0AaDYWDwvQBs1v9f3XfxoKy1V9MhHO
-	 JxVhxprRn9VvuPZmt9Dpcyi4GWItHMOOT8s/1cmt6zSC6D5VCXmBkrTy78a+00euyR
-	 PCbyv/UYqlfG/9nNl1M0Ra+xlSRApuWMWrL7r0vNSFJGRjvk0fyb4dbgJb1uf5zRgv
-	 HB8+sReTuP8KqssK7MPMXPEYY8kmC2TpK37h29W3dEZeDBjq84YUMyZOpPEkCKH/wY
-	 p6QkLYs7BTOGVcOP4qH6Pi0jmCD52bM4aSAsei7GMJrJ7mWX5OH+M4fl17A0RODdYN
-	 G7NhHXU8au7Kw==
+	b=kaeJbwk0D2FnAM6/DpWKjlmJQ+pa0ji6VzBjiCg97ffXqavZGutCDNTMW/LJxF8JW
+	 n1zJAm5csVmmeh4XNDh1FK+LKiseQim7mhpV7cL8Tje7OwtX/7CtQ7A5NwMLRnqBgb
+	 MZLUouxpzShWxd3WZwL0pogNJqWmqujsvZvMJlXWljL/DI3fRaiddMuWgRkZcC6TDf
+	 B/L8U+aBiMpN2BlJhHSdjLV/ytaMOM194L7DMdGnOUGbZC2hJv7WtvA5DY3ZYCNBEa
+	 tT/5qhvf665jphZZTBPN7pa9U5HVH8wSq+gTrOckma2yYY9dRkBz6XcvrYGXFQTEor
+	 w/9KsJY72dPyg==
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VY1XB0rHjz4x2y;
-	Mon,  6 May 2024 22:52:26 +1000 (AEST)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VY1X91MTZz4x2s;
+	Mon,  6 May 2024 22:52:25 +1000 (AEST)
 From: Michael Ellerman <mpe@ellerman.id.au>
 To: <linuxppc-dev@lists.ozlabs.org>
 Cc: <linux-kernel@vger.kernel.org>,
 	<christophe.leroy@csgroup.eu>
-Subject: [PATCH 7/7] powerpc/platforms: Move files from 4xx to 44x
-Date: Mon,  6 May 2024 22:51:52 +1000
-Message-ID: <20240506125152.78174-8-mpe@ellerman.id.au>
+Subject: [PATCH 5/7] powerpc/4xx: Remove CONFIG_BOOKE_OR_40x
+Date: Mon,  6 May 2024 22:51:50 +1000
+Message-ID: <20240506125152.78174-6-mpe@ellerman.id.au>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240506125152.78174-1-mpe@ellerman.id.au>
 References: <20240506125152.78174-1-mpe@ellerman.id.au>
@@ -50,163 +50,303 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+Now that 40x is gone, replace CONFIG_BOOKE_OR_40x by CONFIG_BOOKE.
 
-Only 44x uses 4xx now, so only keep one directory.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 ---
- arch/powerpc/platforms/44x/Makefile           |  6 ++++-
- arch/powerpc/platforms/{4xx => 44x}/cpm.c     |  0
- arch/powerpc/platforms/{4xx => 44x}/gpio.c    |  0
- .../powerpc/platforms/{4xx => 44x}/hsta_msi.c |  0
- arch/powerpc/platforms/44x/machine_check.c    | 15 ++++++++++++
- arch/powerpc/platforms/{4xx => 44x}/pci.c     |  0
- arch/powerpc/platforms/{4xx => 44x}/pci.h     |  0
- arch/powerpc/platforms/{4xx => 44x}/soc.c     |  0
- arch/powerpc/platforms/{4xx => 44x}/uic.c     |  0
- arch/powerpc/platforms/4xx/Makefile           |  7 ------
- arch/powerpc/platforms/4xx/machine_check.c    | 23 -------------------
- arch/powerpc/platforms/Makefile               |  1 -
- 12 files changed, 20 insertions(+), 32 deletions(-)
- rename arch/powerpc/platforms/{4xx => 44x}/cpm.c (100%)
- rename arch/powerpc/platforms/{4xx => 44x}/gpio.c (100%)
- rename arch/powerpc/platforms/{4xx => 44x}/hsta_msi.c (100%)
- rename arch/powerpc/platforms/{4xx => 44x}/pci.c (100%)
- rename arch/powerpc/platforms/{4xx => 44x}/pci.h (100%)
- rename arch/powerpc/platforms/{4xx => 44x}/soc.c (100%)
- rename arch/powerpc/platforms/{4xx => 44x}/uic.c (100%)
- delete mode 100644 arch/powerpc/platforms/4xx/Makefile
- delete mode 100644 arch/powerpc/platforms/4xx/machine_check.c
+ arch/powerpc/include/asm/hw_irq.h      | 8 ++++----
+ arch/powerpc/include/asm/irq.h         | 2 +-
+ arch/powerpc/include/asm/kup.h         | 2 +-
+ arch/powerpc/include/asm/processor.h   | 2 +-
+ arch/powerpc/include/asm/ptrace.h      | 2 +-
+ arch/powerpc/include/asm/reg.h         | 2 +-
+ arch/powerpc/kernel/asm-offsets.c      | 2 +-
+ arch/powerpc/kernel/entry_32.S         | 2 +-
+ arch/powerpc/kernel/epapr_hcalls.S     | 2 +-
+ arch/powerpc/kernel/irq.c              | 2 +-
+ arch/powerpc/kernel/kgdb.c             | 4 ++--
+ arch/powerpc/kernel/process.c          | 2 +-
+ arch/powerpc/kernel/setup.h            | 2 +-
+ arch/powerpc/kernel/setup_32.c         | 2 +-
+ arch/powerpc/kernel/time.c             | 2 +-
+ arch/powerpc/mm/mmu_context.c          | 2 +-
+ arch/powerpc/mm/nohash/mmu_context.c   | 2 +-
+ arch/powerpc/platforms/Kconfig.cputype | 5 -----
+ 18 files changed, 21 insertions(+), 26 deletions(-)
 
-diff --git a/arch/powerpc/platforms/44x/Makefile b/arch/powerpc/platforms/44x/Makefile
-index 5ba031f57652..ca7b1bb442d9 100644
---- a/arch/powerpc/platforms/44x/Makefile
-+++ b/arch/powerpc/platforms/44x/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-y	+= misc_44x.o machine_check.o
-+obj-y	+= misc_44x.o machine_check.o uic.o soc.o
- ifneq ($(CONFIG_PPC4xx_CPM),y)
- obj-y	+= idle.o
- endif
-@@ -12,3 +12,7 @@ obj-$(CONFIG_CANYONLANDS)+= canyonlands.o
- obj-$(CONFIG_CURRITUCK)	+= ppc476.o
- obj-$(CONFIG_AKEBONO)	+= ppc476.o
- obj-$(CONFIG_FSP2)	+= fsp2.o
-+obj-$(CONFIG_PCI)		+= pci.o
-+obj-$(CONFIG_PPC4xx_HSTA_MSI)	+= hsta_msi.o
-+obj-$(CONFIG_PPC4xx_CPM)	+= cpm.o
-+obj-$(CONFIG_PPC4xx_GPIO)	+= gpio.o
-diff --git a/arch/powerpc/platforms/4xx/cpm.c b/arch/powerpc/platforms/44x/cpm.c
-similarity index 100%
-rename from arch/powerpc/platforms/4xx/cpm.c
-rename to arch/powerpc/platforms/44x/cpm.c
-diff --git a/arch/powerpc/platforms/4xx/gpio.c b/arch/powerpc/platforms/44x/gpio.c
-similarity index 100%
-rename from arch/powerpc/platforms/4xx/gpio.c
-rename to arch/powerpc/platforms/44x/gpio.c
-diff --git a/arch/powerpc/platforms/4xx/hsta_msi.c b/arch/powerpc/platforms/44x/hsta_msi.c
-similarity index 100%
-rename from arch/powerpc/platforms/4xx/hsta_msi.c
-rename to arch/powerpc/platforms/44x/hsta_msi.c
-diff --git a/arch/powerpc/platforms/44x/machine_check.c b/arch/powerpc/platforms/44x/machine_check.c
-index 5d19daacd78a..85ff33a8d9b6 100644
---- a/arch/powerpc/platforms/44x/machine_check.c
-+++ b/arch/powerpc/platforms/44x/machine_check.c
-@@ -9,6 +9,21 @@
- #include <asm/reg.h>
- #include <asm/cacheflush.h>
+diff --git a/arch/powerpc/include/asm/hw_irq.h b/arch/powerpc/include/asm/hw_irq.h
+index 317659fdeacf..569ac1165b06 100644
+--- a/arch/powerpc/include/asm/hw_irq.h
++++ b/arch/powerpc/include/asm/hw_irq.h
+@@ -63,7 +63,7 @@
  
-+int machine_check_4xx(struct pt_regs *regs)
-+{
-+	unsigned long reason = regs->esr;
-+
-+	if (reason & ESR_IMCP) {
-+		printk("Instruction");
-+		mtspr(SPRN_ESR, reason & ~ESR_IMCP);
-+	} else
-+		printk("Data");
-+
-+	printk(" machine check in kernel mode.\n");
-+
-+	return 0;
-+}
-+
- int machine_check_440A(struct pt_regs *regs)
+ static inline void __hard_irq_enable(void)
  {
- 	unsigned long reason = regs->esr;
-diff --git a/arch/powerpc/platforms/4xx/pci.c b/arch/powerpc/platforms/44x/pci.c
-similarity index 100%
-rename from arch/powerpc/platforms/4xx/pci.c
-rename to arch/powerpc/platforms/44x/pci.c
-diff --git a/arch/powerpc/platforms/4xx/pci.h b/arch/powerpc/platforms/44x/pci.h
-similarity index 100%
-rename from arch/powerpc/platforms/4xx/pci.h
-rename to arch/powerpc/platforms/44x/pci.h
-diff --git a/arch/powerpc/platforms/4xx/soc.c b/arch/powerpc/platforms/44x/soc.c
-similarity index 100%
-rename from arch/powerpc/platforms/4xx/soc.c
-rename to arch/powerpc/platforms/44x/soc.c
-diff --git a/arch/powerpc/platforms/4xx/uic.c b/arch/powerpc/platforms/44x/uic.c
-similarity index 100%
-rename from arch/powerpc/platforms/4xx/uic.c
-rename to arch/powerpc/platforms/44x/uic.c
-diff --git a/arch/powerpc/platforms/4xx/Makefile b/arch/powerpc/platforms/4xx/Makefile
-deleted file mode 100644
-index 7f57c35f8dec..000000000000
---- a/arch/powerpc/platforms/4xx/Makefile
-+++ /dev/null
-@@ -1,7 +0,0 @@
--# SPDX-License-Identifier: GPL-2.0-only
--obj-y				+= uic.o machine_check.o
--obj-$(CONFIG_44x)		+= soc.o
--obj-$(CONFIG_PCI)		+= pci.o
--obj-$(CONFIG_PPC4xx_HSTA_MSI)	+= hsta_msi.o
--obj-$(CONFIG_PPC4xx_CPM)	+= cpm.o
--obj-$(CONFIG_PPC4xx_GPIO)	+= gpio.o
-diff --git a/arch/powerpc/platforms/4xx/machine_check.c b/arch/powerpc/platforms/4xx/machine_check.c
-deleted file mode 100644
-index a905da1d6f41..000000000000
---- a/arch/powerpc/platforms/4xx/machine_check.c
-+++ /dev/null
-@@ -1,23 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-or-later
--/*
-- */
--
--#include <linux/kernel.h>
--#include <linux/printk.h>
--#include <linux/ptrace.h>
--
--#include <asm/reg.h>
--
--int machine_check_4xx(struct pt_regs *regs)
--{
--	unsigned long reason = regs->esr;
--
--	if (reason & ESR_IMCP) {
--		printk("Instruction");
--		mtspr(SPRN_ESR, reason & ~ESR_IMCP);
--	} else
--		printk("Data");
--	printk(" machine check in kernel mode.\n");
--
--	return 0;
--}
-diff --git a/arch/powerpc/platforms/Makefile b/arch/powerpc/platforms/Makefile
-index d1a417b301b6..786d374bff31 100644
---- a/arch/powerpc/platforms/Makefile
-+++ b/arch/powerpc/platforms/Makefile
-@@ -4,7 +4,6 @@ obj-$(CONFIG_FSL_ULI1575)	+= fsl_uli1575.o
+-	if (IS_ENABLED(CONFIG_BOOKE_OR_40x))
++	if (IS_ENABLED(CONFIG_BOOKE))
+ 		wrtee(MSR_EE);
+ 	else if (IS_ENABLED(CONFIG_PPC_8xx))
+ 		wrtspr(SPRN_EIE);
+@@ -75,7 +75,7 @@ static inline void __hard_irq_enable(void)
  
- obj-$(CONFIG_PPC_PMAC)		+= powermac/
- obj-$(CONFIG_PPC_CHRP)		+= chrp/
--obj-$(CONFIG_4xx)		+= 4xx/
- obj-$(CONFIG_44x)		+= 44x/
- obj-$(CONFIG_PPC_MPC512x)	+= 512x/
- obj-$(CONFIG_PPC_MPC52xx)	+= 52xx/
+ static inline void __hard_irq_disable(void)
+ {
+-	if (IS_ENABLED(CONFIG_BOOKE_OR_40x))
++	if (IS_ENABLED(CONFIG_BOOKE))
+ 		wrtee(0);
+ 	else if (IS_ENABLED(CONFIG_PPC_8xx))
+ 		wrtspr(SPRN_EID);
+@@ -87,7 +87,7 @@ static inline void __hard_irq_disable(void)
+ 
+ static inline void __hard_EE_RI_disable(void)
+ {
+-	if (IS_ENABLED(CONFIG_BOOKE_OR_40x))
++	if (IS_ENABLED(CONFIG_BOOKE))
+ 		wrtee(0);
+ 	else if (IS_ENABLED(CONFIG_PPC_8xx))
+ 		wrtspr(SPRN_NRI);
+@@ -99,7 +99,7 @@ static inline void __hard_EE_RI_disable(void)
+ 
+ static inline void __hard_RI_enable(void)
+ {
+-	if (IS_ENABLED(CONFIG_BOOKE_OR_40x))
++	if (IS_ENABLED(CONFIG_BOOKE))
+ 		return;
+ 
+ 	if (IS_ENABLED(CONFIG_PPC_8xx))
+diff --git a/arch/powerpc/include/asm/irq.h b/arch/powerpc/include/asm/irq.h
+index ba1a5974e714..aa3751960ffd 100644
+--- a/arch/powerpc/include/asm/irq.h
++++ b/arch/powerpc/include/asm/irq.h
+@@ -33,7 +33,7 @@ extern int distribute_irqs;
+ 
+ struct pt_regs;
+ 
+-#ifdef CONFIG_BOOKE_OR_40x
++#ifdef CONFIG_BOOKE
+ /*
+  * Per-cpu stacks for handling critical, debug and machine check
+  * level interrupts.
+diff --git a/arch/powerpc/include/asm/kup.h b/arch/powerpc/include/asm/kup.h
+index ad7e8c5aec3f..2bb03d941e3e 100644
+--- a/arch/powerpc/include/asm/kup.h
++++ b/arch/powerpc/include/asm/kup.h
+@@ -20,7 +20,7 @@ static __always_inline bool kuap_is_disabled(void);
+ #include <asm/nohash/32/kup-8xx.h>
+ #endif
+ 
+-#ifdef CONFIG_BOOKE_OR_40x
++#ifdef CONFIG_BOOKE
+ #include <asm/nohash/kup-booke.h>
+ #endif
+ 
+diff --git a/arch/powerpc/include/asm/processor.h b/arch/powerpc/include/asm/processor.h
+index b2c51d337e60..667444da0ba4 100644
+--- a/arch/powerpc/include/asm/processor.h
++++ b/arch/powerpc/include/asm/processor.h
+@@ -159,7 +159,7 @@ struct thread_struct {
+ 	unsigned long	sr0;
+ #endif
+ #endif /* CONFIG_PPC32 */
+-#if defined(CONFIG_BOOKE_OR_40x) && defined(CONFIG_PPC_KUAP)
++#if defined(CONFIG_BOOKE) && defined(CONFIG_PPC_KUAP)
+ 	unsigned long	pid;	/* value written in PID reg. at interrupt exit */
+ #endif
+ 	/* Debug Registers */
+diff --git a/arch/powerpc/include/asm/ptrace.h b/arch/powerpc/include/asm/ptrace.h
+index ea8f91fbc62f..7b9350756875 100644
+--- a/arch/powerpc/include/asm/ptrace.h
++++ b/arch/powerpc/include/asm/ptrace.h
+@@ -310,7 +310,7 @@ static inline void regs_set_return_value(struct pt_regs *regs, unsigned long rc)
+ 
+ static inline bool cpu_has_msr_ri(void)
+ {
+-	return !IS_ENABLED(CONFIG_BOOKE_OR_40x);
++	return !IS_ENABLED(CONFIG_BOOKE);
+ }
+ 
+ static inline bool regs_is_unrecoverable(struct pt_regs *regs)
+diff --git a/arch/powerpc/include/asm/reg.h b/arch/powerpc/include/asm/reg.h
+index 85b98f625053..b2cbd2bc3adf 100644
+--- a/arch/powerpc/include/asm/reg.h
++++ b/arch/powerpc/include/asm/reg.h
+@@ -18,7 +18,7 @@
+ #include <asm/feature-fixups.h>
+ 
+ /* Pickup Book E specific registers. */
+-#ifdef CONFIG_BOOKE_OR_40x
++#ifdef CONFIG_BOOKE
+ #include <asm/reg_booke.h>
+ #endif
+ 
+diff --git a/arch/powerpc/kernel/asm-offsets.c b/arch/powerpc/kernel/asm-offsets.c
+index f029755f9e69..23733282de4d 100644
+--- a/arch/powerpc/kernel/asm-offsets.c
++++ b/arch/powerpc/kernel/asm-offsets.c
+@@ -54,7 +54,7 @@
+ #endif
+ 
+ #ifdef CONFIG_PPC32
+-#ifdef CONFIG_BOOKE_OR_40x
++#ifdef CONFIG_BOOKE
+ #include "head_booke.h"
+ #endif
+ #endif
+diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
+index 070eab8b6a28..1522164b10e4 100644
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -108,7 +108,7 @@ transfer_to_syscall:
+ 	stw	r11, 0(r1)
+ 	mflr	r12
+ 	stw	r12, _LINK(r1)
+-#ifdef CONFIG_BOOKE_OR_40x
++#ifdef CONFIG_BOOKE
+ 	rlwinm	r9,r9,0,14,12		/* clear MSR_WE (necessary?) */
+ #endif
+ 	lis	r12,STACK_FRAME_REGS_MARKER@ha /* exception frame marker */
+diff --git a/arch/powerpc/kernel/epapr_hcalls.S b/arch/powerpc/kernel/epapr_hcalls.S
+index 1a9b5ae8ccb2..6a414ed5a411 100644
+--- a/arch/powerpc/kernel/epapr_hcalls.S
++++ b/arch/powerpc/kernel/epapr_hcalls.S
+@@ -21,7 +21,7 @@ _GLOBAL(epapr_ev_idle)
+ 	ori	r4, r4,_TLF_NAPPING	/* so when we take an exception */
+ 	PPC_STL	r4, TI_LOCAL_FLAGS(r2)	/* it will return to our caller */
+ 
+-#ifdef CONFIG_BOOKE_OR_40x
++#ifdef CONFIG_BOOKE
+ 	wrteei	1
+ #else
+ 	mfmsr	r4
+diff --git a/arch/powerpc/kernel/irq.c b/arch/powerpc/kernel/irq.c
+index 7504ceec5c58..2e1600a8bbbb 100644
+--- a/arch/powerpc/kernel/irq.c
++++ b/arch/powerpc/kernel/irq.c
+@@ -333,7 +333,7 @@ void __init init_IRQ(void)
+ 		static_call_update(ppc_get_irq, ppc_md.get_irq);
+ }
+ 
+-#ifdef CONFIG_BOOKE_OR_40x
++#ifdef CONFIG_BOOKE
+ void   *critirq_ctx[NR_CPUS] __read_mostly;
+ void    *dbgirq_ctx[NR_CPUS] __read_mostly;
+ void *mcheckirq_ctx[NR_CPUS] __read_mostly;
+diff --git a/arch/powerpc/kernel/kgdb.c b/arch/powerpc/kernel/kgdb.c
+index ebe4d1645ca1..7a8bc03a00af 100644
+--- a/arch/powerpc/kernel/kgdb.c
++++ b/arch/powerpc/kernel/kgdb.c
+@@ -45,7 +45,7 @@ static struct hard_trap_info
+ 	{ 0x0800, 0x08 /* SIGFPE */  },		/* fp unavailable */
+ 	{ 0x0900, 0x0e /* SIGALRM */ },		/* decrementer */
+ 	{ 0x0c00, 0x14 /* SIGCHLD */ },		/* system call */
+-#ifdef CONFIG_BOOKE_OR_40x
++#ifdef CONFIG_BOOKE
+ 	{ 0x2002, 0x05 /* SIGTRAP */ },		/* debug */
+ #if defined(CONFIG_PPC_85xx)
+ 	{ 0x2010, 0x08 /* SIGFPE */  },		/* spe unavailable */
+@@ -64,7 +64,7 @@ static struct hard_trap_info
+ 	{ 0x2010, 0x08 /* SIGFPE */  },		/* fp unavailable */
+ 	{ 0x2020, 0x08 /* SIGFPE */  },		/* ap unavailable */
+ #endif
+-#else /* !CONFIG_BOOKE_OR_40x */
++#else /* !CONFIG_BOOKE */
+ 	{ 0x0d00, 0x05 /* SIGTRAP */ },		/* single-step */
+ #if defined(CONFIG_PPC_8xx)
+ 	{ 0x1000, 0x04 /* SIGILL */  },		/* software emulation */
+diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
+index 9452a54d356c..196cfa41ad6e 100644
+--- a/arch/powerpc/kernel/process.c
++++ b/arch/powerpc/kernel/process.c
+@@ -1861,7 +1861,7 @@ int copy_thread(struct task_struct *p, const struct kernel_clone_args *args)
+ #if defined(CONFIG_PPC_BOOK3S_32) && defined(CONFIG_PPC_KUAP)
+ 	p->thread.kuap = KUAP_NONE;
+ #endif
+-#if defined(CONFIG_BOOKE_OR_40x) && defined(CONFIG_PPC_KUAP)
++#if defined(CONFIG_BOOKE) && defined(CONFIG_PPC_KUAP)
+ 	p->thread.pid = MMU_NO_CONTEXT;
+ #endif
+ 
+diff --git a/arch/powerpc/kernel/setup.h b/arch/powerpc/kernel/setup.h
+index 7912bb50a7cb..385a00a2e2ca 100644
+--- a/arch/powerpc/kernel/setup.h
++++ b/arch/powerpc/kernel/setup.h
+@@ -29,7 +29,7 @@ void setup_tlb_core_data(void);
+ static inline void setup_tlb_core_data(void) { }
+ #endif
+ 
+-#ifdef CONFIG_BOOKE_OR_40x
++#ifdef CONFIG_BOOKE
+ void exc_lvl_early_init(void);
+ #else
+ static inline void exc_lvl_early_init(void) { }
+diff --git a/arch/powerpc/kernel/setup_32.c b/arch/powerpc/kernel/setup_32.c
+index b761cc1a403c..e515c1f7d8d3 100644
+--- a/arch/powerpc/kernel/setup_32.c
++++ b/arch/powerpc/kernel/setup_32.c
+@@ -176,7 +176,7 @@ void __init emergency_stack_init(void)
+ }
+ #endif
+ 
+-#ifdef CONFIG_BOOKE_OR_40x
++#ifdef CONFIG_BOOKE
+ void __init exc_lvl_early_init(void)
+ {
+ 	unsigned int i, hw_cpu;
+diff --git a/arch/powerpc/kernel/time.c b/arch/powerpc/kernel/time.c
+index df20cf201f74..d654d3b9cf1f 100644
+--- a/arch/powerpc/kernel/time.c
++++ b/arch/powerpc/kernel/time.c
+@@ -673,7 +673,7 @@ static int __init get_freq(char *name, int cells, unsigned long *val)
+ 
+ static void start_cpu_decrementer(void)
+ {
+-#ifdef CONFIG_BOOKE_OR_40x
++#ifdef CONFIG_BOOKE
+ 	unsigned int tcr;
+ 
+ 	/* Clear any pending timer interrupts */
+diff --git a/arch/powerpc/mm/mmu_context.c b/arch/powerpc/mm/mmu_context.c
+index b24c19078eb1..3e3af29b4523 100644
+--- a/arch/powerpc/mm/mmu_context.c
++++ b/arch/powerpc/mm/mmu_context.c
+@@ -21,7 +21,7 @@ static inline void switch_mm_pgdir(struct task_struct *tsk,
+ #ifdef CONFIG_PPC_BOOK3S_32
+ 	tsk->thread.sr0 = mm->context.sr0;
+ #endif
+-#if defined(CONFIG_BOOKE_OR_40x) && defined(CONFIG_PPC_KUAP)
++#if defined(CONFIG_BOOKE) && defined(CONFIG_PPC_KUAP)
+ 	tsk->thread.pid = mm->context.id;
+ #endif
+ }
+diff --git a/arch/powerpc/mm/nohash/mmu_context.c b/arch/powerpc/mm/nohash/mmu_context.c
+index 92dc028aff1f..0b181da40ddb 100644
+--- a/arch/powerpc/mm/nohash/mmu_context.c
++++ b/arch/powerpc/mm/nohash/mmu_context.c
+@@ -303,7 +303,7 @@ void switch_mmu_context(struct mm_struct *prev, struct mm_struct *next,
+ 	if (IS_ENABLED(CONFIG_BDI_SWITCH))
+ 		abatron_pteptrs[1] = next->pgd;
+ 	set_context(id, next->pgd);
+-#if defined(CONFIG_BOOKE_OR_40x) && defined(CONFIG_PPC_KUAP)
++#if defined(CONFIG_BOOKE) && defined(CONFIG_PPC_KUAP)
+ 	tsk->thread.pid = id;
+ #endif
+ 	raw_spin_unlock(&context_lock);
+diff --git a/arch/powerpc/platforms/Kconfig.cputype b/arch/powerpc/platforms/Kconfig.cputype
+index 2b686ee2dd2b..55337628bf92 100644
+--- a/arch/powerpc/platforms/Kconfig.cputype
++++ b/arch/powerpc/platforms/Kconfig.cputype
+@@ -335,11 +335,6 @@ config BOOKE
+ 	depends on PPC_E500 || 44x
+ 	default y
+ 
+-config BOOKE_OR_40x
+-	bool
+-	depends on BOOKE
+-	default y
+-
+ config PTE_64BIT
+ 	bool
+ 	depends on 44x || PPC_E500 || PPC_86xx
 -- 
 2.45.0
 
