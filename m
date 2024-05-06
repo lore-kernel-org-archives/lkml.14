@@ -1,181 +1,230 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CEE3B18D;
-	Mon,  6 May 2024 03:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD1738DC8;
+	Mon,  6 May 2024 03:35:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714966260; cv=none; b=gerG+rUQZKPUROikEOAYMDmMf6eYz0A0BOU6XJWiimZD+Wa7clpywzy7Fl6LavKVNgjS5nUhZMJOVQSDC2jtwZGt/o3VTwP7CedqLQZ9raE7zg4qj4MDjWOSlEnDa9baQG41oXH+YUsoSqPGvPuLAcn/e2NcPkigMfukUFhxxBo=
+	t=1714966504; cv=none; b=ecwYcoEjvSVpf28g6zKFH+J9KhJLaCS9R3Ps7jE1XtWIRJmX3JCPHqNM+DjbZkfXUcuz50BeC91ad4mB9GDp/yTFLbUjYMJU2HGVdw7ht+Mxjb4LWZpB15scgmG9dPZg5rfG3rDH+chZuI0o6UHl4EWFwVdxc4+8GV1voMpL+9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714966260; c=relaxed/simple;
-	bh=m1jDuqZjVQJd5mp35z+dJbfBfD7b+J3HvypbQqd6YiQ=;
+	s=arc-20240116; t=1714966504; c=relaxed/simple;
+	bh=bd/kel1UuMZLy0E/HQSnHCm4N7IeSChL7qKLK/qeVkA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=X62SevfG2TQYg0cKPhlyjmCdlffrzu40eCRQSbt6Dkz82ZxSCJAbbFrwbhl7A+4V4yKTNysNdzqnOKeBA0DE2t2Ms1IVSrCIcikyx81zqmcqvE1/+N33etPGj5S9WtL7iVhS49iTQzJWOvO3FQl6dFLu2FLkujb6jEBStLhdl0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mSiVSy0A; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mSiVSy0A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1714966259; x=1746502259;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=m1jDuqZjVQJd5mp35z+dJbfBfD7b+J3HvypbQqd6YiQ=;
-  b=mSiVSy0AcrZjc0PScf+o5JoGVCpnnQf/HNP7R2ImPJnQsomqGEMfXMph
-   Q8auig0wk90Ox4PRlVHXj06aaWnsY8oUufv3DOZR/D+0P1x1PltauPwwI
-   bApPvvshME0f7E+8e4XNsOxbwxYaOYd5FM4qvZWxuvE346D7pJyRtIaEb
-   i4FDTda9IVHHtdpFzdcVQkjUxzHro394XU/bZ1gTOJBobm56GA2udrZy4
-   poH5dI6aJu+uDyOiEmdCF05YqLpdKzh2dKcoOePuQQDusuYAQIzR6xFdV
-   SwYYczct7RQC3KLUIR7EJnHHYDpIBR5Z8seoF6yVdTQie+gAsapXFsA53
-   A==;
-X-CSE-ConnectionGUID: 04cegmPATPmsy/mYtnmoHA==
-X-CSE-MsgGUID: XwfNP4OwTR24xE1Y6P91BA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11064"; a="22102955"
-X-IronPort-AV: E=Sophos;i="6.07,257,1708416000"; 
-   d="scan'208";a="22102955"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2024 20:30:58 -0700
-X-CSE-ConnectionGUID: +BBlXY+7RX+F09dTG1qV3Q==
-X-CSE-MsgGUID: QMXkq63ASNuLEaYk+AU5MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,257,1708416000"; 
-   d="scan'208";a="32537492"
-Received: from unknown (HELO [10.238.0.220]) ([10.238.0.220])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 May 2024 20:30:54 -0700
-Message-ID: <fdf2d5fa-64dc-4429-8529-66106632a95b@linux.intel.com>
-Date: Mon, 6 May 2024 11:30:52 +0800
+	 In-Reply-To:Content-Type; b=oI3rpuoYQ33iuTg0G005wXbAJds6UBc+CdFMh+1LtEBfTk+WAzKwzDcT+TvG9Lg7LIUseO2mezFcqNBuvYSKyYxs6GJB1gjGvKvtzO3HN8jO86lLNnF+0CpM1R+ZCHPIZt4DuQrpHDpOOHP6Kikorck18ypSWYOWxi/ScK7jNfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VXn8m0KG2z4f3nTw;
+	Mon,  6 May 2024 11:34:48 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id C1E031A0179;
+	Mon,  6 May 2024 11:34:57 +0800 (CST)
+Received: from [10.174.177.174] (unknown [10.174.177.174])
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g7dTzhmNL6JLw--.30952S3;
+	Mon, 06 May 2024 11:34:57 +0800 (CST)
+Message-ID: <8b6d5c37-69ed-0554-069e-209ce2ead016@huaweicloud.com>
+Date: Mon, 6 May 2024 11:34:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 088/130] KVM: x86: Add a switch_db_regs flag to handle
- TDX's auto-switched behavior
-To: isaku.yamahata@intel.com
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- isaku.yamahata@gmail.com, Paolo Bonzini <pbonzini@redhat.com>,
- erdemaktas@google.com, Sean Christopherson <seanjc@google.com>,
- Sagi Shahar <sagis@google.com>, Kai Huang <kai.huang@intel.com>,
- chen.bo@intel.com, hang.yuan@intel.com, tina.zhang@intel.com,
- Xiaoyao Li <xiaoyao.li@intel.com>,
- Sean Christopherson <sean.j.christopherson@intel.com>,
- Chao Gao <chao.gao@intel.com>, Reinette Chatre <reinette.chatre@intel.com>
-References: <cover.1708933498.git.isaku.yamahata@intel.com>
- <ca5d0399cdbbaa6c7c6528ad85b3560cec0f0752.1708933498.git.isaku.yamahata@intel.com>
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <ca5d0399cdbbaa6c7c6528ad85b3560cec0f0752.1708933498.git.isaku.yamahata@intel.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH 09/12] cachefiles: defer exposing anon_fd until after
+ copy_to_user() succeeds
+Content-Language: en-US
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, netfs@lists.linux.dev
+Cc: dhowells@redhat.com, jlayton@kernel.org, zhujia.zj@bytedance.com,
+ linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
+ libaokun@huaweicloud.com, yangerkun <yangerkun@huawei.com>
+References: <20240424033916.2748488-1-libaokun@huaweicloud.com>
+ <20240424033916.2748488-10-libaokun@huaweicloud.com>
+ <e0fc24d5-49c5-4a75-86f9-43adc763066f@linux.alibaba.com>
+From: Baokun Li <libaokun@huaweicloud.com>
+In-Reply-To: <e0fc24d5-49c5-4a75-86f9-43adc763066f@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgAX5g7dTzhmNL6JLw--.30952S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3Ww4fXryxXFWUWry5Gw1Dtrb_yoW7Cr1fpF
+	ZIkFW3KFy8WFW8ur97AFZ8XFySy3y8AFnrW34Fga4rArnFgr1F9r10kr98uF1rAr97Grs3
+	tF4UC3s3Gr1jyrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl
+	6s0DM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IY64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY
+	04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+	v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+	1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+	AIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyU
+	JwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
+	nIWIevJa73UjIFyTuYvjfUF9a9DUUUU
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 
-
-
-On 2/26/2024 4:26 PM, isaku.yamahata@intel.com wrote:
-> From: Isaku Yamahata <isaku.yamahata@intel.com>
+On 2024/5/6 11:24, Jingbo Xu wrote:
 >
-> Add a flag, KVM_DEBUGREG_AUTO_SWITCHED_GUEST, to skip saving/restoring DRs
-> irrespective of any other flags.  TDX-SEAM unconditionally saves and
-> restores guest DRs and reset to architectural INIT state on TD exit.
-> So, KVM needs to save host DRs before TD enter without restoring guest DRs
-> and restore host DRs after TD exit.
+> On 4/24/24 11:39 AM, libaokun@huaweicloud.com wrote:
+>> From: Baokun Li <libaokun1@huawei.com>
+>>
+>> After installing the anonymous fd, we can now see it in userland and close
+>> it. However, at this point we may not have gotten the reference count of
+>> the cache, but we will put it during colse fd, so this may cause a cache
+>> UAF.
+> Good catch!
 >
-> Opportunistically convert the KVM_DEBUGREG_* definitions to use BIT().
+>> To avoid this, we will make the anonymous fd accessible to the userland by
+>> executing fd_install() after copy_to_user() has succeeded, and by this
+>> point we must have already grabbed the reference count of the cache.
+> Why we must execute fd_install() after copy_to_user() has succeeded?
+> Why not grab a reference to the cache before fd_install()?
+Two things are actually done here:
+1) Grab a reference to the cache before fd_install()
+2) By kernel convention, fd is taken over by the user land after
+fd_install() is executed, and the kernel does not call close_fd() after
+this, so fd_install() is called after everything is ready.
+
+Thanks,
+Baokun
 >
-> Reported-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Co-developed-by: Chao Gao <chao.gao@intel.com>
-> Signed-off-by: Chao Gao <chao.gao@intel.com>
-> Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-> ---
->   arch/x86/include/asm/kvm_host.h | 10 ++++++++--
->   arch/x86/kvm/vmx/tdx.c          |  1 +
->   arch/x86/kvm/x86.c              | 11 ++++++++---
->   3 files changed, 17 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 3ab85c3d86ee..a9df898c6fbd 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -610,8 +610,14 @@ struct kvm_pmu {
->   struct kvm_pmu_ops;
->   
->   enum {
-> -	KVM_DEBUGREG_BP_ENABLED = 1,
-> -	KVM_DEBUGREG_WONT_EXIT = 2,
-> +	KVM_DEBUGREG_BP_ENABLED		= BIT(0),
-> +	KVM_DEBUGREG_WONT_EXIT		= BIT(1),
-> +	/*
-> +	 * Guest debug registers (DR0-3 and DR6) are saved/restored by hardware
-> +	 * on exit from or enter to guest. KVM needn't switch them. Because DR7
-> +	 * is cleared on exit from guest, DR7 need to be saved/restored.
-> +	 */
-> +	KVM_DEBUGREG_AUTO_SWITCH	= BIT(2),
->   };
->   
->   struct kvm_mtrr_range {
-> diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
-> index 7aa9188f384d..ab7403a19c5d 100644
-> --- a/arch/x86/kvm/vmx/tdx.c
-> +++ b/arch/x86/kvm/vmx/tdx.c
-> @@ -586,6 +586,7 @@ int tdx_vcpu_create(struct kvm_vcpu *vcpu)
->   
->   	vcpu->arch.efer = EFER_SCE | EFER_LME | EFER_LMA | EFER_NX;
->   
-> +	vcpu->arch.switch_db_regs = KVM_DEBUGREG_AUTO_SWITCH;
->   	vcpu->arch.cr0_guest_owned_bits = -1ul;
->   	vcpu->arch.cr4_guest_owned_bits = -1ul;
->   
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 1b189e86a1f1..fb7597c22f31 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -11013,7 +11013,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->   	if (vcpu->arch.guest_fpu.xfd_err)
->   		wrmsrl(MSR_IA32_XFD_ERR, vcpu->arch.guest_fpu.xfd_err);
->   
-> -	if (unlikely(vcpu->arch.switch_db_regs)) {
-> +	if (unlikely(vcpu->arch.switch_db_regs & ~KVM_DEBUGREG_AUTO_SWITCH)) {
+>> Suggested-by: Hou Tao <houtao1@huawei.com>
+>> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+>> ---
+>>   fs/cachefiles/ondemand.c | 53 +++++++++++++++++++++++++---------------
+>>   1 file changed, 33 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/fs/cachefiles/ondemand.c b/fs/cachefiles/ondemand.c
+>> index 0cf63bfedc9e..7c2d43104120 100644
+>> --- a/fs/cachefiles/ondemand.c
+>> +++ b/fs/cachefiles/ondemand.c
+>> @@ -4,6 +4,11 @@
+>>   #include <linux/uio.h>
+>>   #include "internal.h"
+>>   
+>> +struct anon_file {
+>> +	struct file *file;
+>> +	int fd;
+>> +};
+>> +
+>>   static inline void cachefiles_req_put(struct cachefiles_req *req)
+>>   {
+>>   	if (refcount_dec_and_test(&req->ref))
+>> @@ -244,14 +249,14 @@ int cachefiles_ondemand_restore(struct cachefiles_cache *cache, char *args)
+>>   	return 0;
+>>   }
+>>   
+>> -static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+>> +static int cachefiles_ondemand_get_fd(struct cachefiles_req *req,
+>> +				      struct anon_file *anon_file)
+>>   {
+>>   	struct cachefiles_object *object;
+>>   	struct cachefiles_cache *cache;
+>>   	struct cachefiles_open *load;
+>> -	struct file *file;
+>>   	u32 object_id;
+>> -	int ret, fd;
+>> +	int ret;
+>>   
+>>   	object = cachefiles_grab_object(req->object,
+>>   			cachefiles_obj_get_ondemand_fd);
+>> @@ -263,16 +268,16 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+>>   	if (ret < 0)
+>>   		goto err;
+>>   
+>> -	fd = get_unused_fd_flags(O_WRONLY);
+>> -	if (fd < 0) {
+>> -		ret = fd;
+>> +	anon_file->fd = get_unused_fd_flags(O_WRONLY);
+>> +	if (anon_file->fd < 0) {
+>> +		ret = anon_file->fd;
+>>   		goto err_free_id;
+>>   	}
+>>   
+>> -	file = anon_inode_getfile("[cachefiles]", &cachefiles_ondemand_fd_fops,
+>> -				  object, O_WRONLY);
+>> -	if (IS_ERR(file)) {
+>> -		ret = PTR_ERR(file);
+>> +	anon_file->file = anon_inode_getfile("[cachefiles]",
+>> +				&cachefiles_ondemand_fd_fops, object, O_WRONLY);
+>> +	if (IS_ERR(anon_file->file)) {
+>> +		ret = PTR_ERR(anon_file->file);
+>>   		goto err_put_fd;
+>>   	}
+>>   
+>> @@ -281,15 +286,14 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+>>   		spin_unlock(&object->ondemand->lock);
+>>   		ret = -EEXIST;
+>>   		/* Avoid performing cachefiles_ondemand_fd_release(). */
+>> -		file->private_data = NULL;
+>> +		anon_file->file->private_data = NULL;
+>>   		goto err_put_file;
+>>   	}
+>>   
+>> -	file->f_mode |= FMODE_PWRITE | FMODE_LSEEK;
+>> -	fd_install(fd, file);
+>> +	anon_file->file->f_mode |= FMODE_PWRITE | FMODE_LSEEK;
+>>   
+>>   	load = (void *)req->msg.data;
+>> -	load->fd = fd;
+>> +	load->fd = anon_file->fd;
+>>   	object->ondemand->ondemand_id = object_id;
+>>   	spin_unlock(&object->ondemand->lock);
+>>   
+>> @@ -298,9 +302,11 @@ static int cachefiles_ondemand_get_fd(struct cachefiles_req *req)
+>>   	return 0;
+>>   
+>>   err_put_file:
+>> -	fput(file);
+>> +	fput(anon_file->file);
+>> +	anon_file->file = NULL;
+>>   err_put_fd:
+>> -	put_unused_fd(fd);
+>> +	put_unused_fd(anon_file->fd);
+>> +	anon_file->fd = ret;
+>>   err_free_id:
+>>   	xa_erase(&cache->ondemand_ids, object_id);
+>>   err:
+>> @@ -357,6 +363,7 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+>>   	struct cachefiles_msg *msg;
+>>   	size_t n;
+>>   	int ret = 0;
+>> +	struct anon_file anon_file;
+>>   	XA_STATE(xas, &cache->reqs, cache->req_id_next);
+>>   
+>>   	xa_lock(&cache->reqs);
+>> @@ -390,7 +397,7 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+>>   	xa_unlock(&cache->reqs);
+>>   
+>>   	if (msg->opcode == CACHEFILES_OP_OPEN) {
+>> -		ret = cachefiles_ondemand_get_fd(req);
+>> +		ret = cachefiles_ondemand_get_fd(req, &anon_file);
+>>   		if (ret)
+>>   			goto out;
+>>   	}
+>> @@ -398,10 +405,16 @@ ssize_t cachefiles_ondemand_daemon_read(struct cachefiles_cache *cache,
+>>   	msg->msg_id = xas.xa_index;
+>>   	msg->object_id = req->object->ondemand->ondemand_id;
+>>   
+>> -	if (copy_to_user(_buffer, msg, n) != 0) {
+>> +	if (copy_to_user(_buffer, msg, n) != 0)
+>>   		ret = -EFAULT;
+>> -		if (msg->opcode == CACHEFILES_OP_OPEN)
+>> -			close_fd(((struct cachefiles_open *)msg->data)->fd);
+>> +
+>> +	if (msg->opcode == CACHEFILES_OP_OPEN) {
+>> +		if (ret < 0) {
+>> +			fput(anon_file.file);
+>> +			put_unused_fd(anon_file.fd);
+>> +			goto out;
+>> +		}
+>> +		fd_install(anon_file.fd, anon_file.file);
+>>   	}
+>>   out:
+>>   	cachefiles_put_object(req->object, cachefiles_obj_put_read_req);
 
-As pointed by Paolo in 
-https://lore.kernel.org/lkml/ea136ac6-53cf-cdc5-a741-acfb437819b1@redhat.com/
-KVM_DEBUGREG_BP_ENABLED could be set in vcpu->arch.switch_db_regs,  by 
-userspace
-kvm_vcpu_ioctl_x86_set_debugregs()  --> kvm_update_dr7()
-
-So it should be fixed as:
-
--       if (unlikely(vcpu->arch.switch_db_regs)) {
-+       if (unlikely(vcpu->arch.switch_db_regs &&
-+                    !(vcpu->arch.switch_db_regs & 
-KVM_DEBUGREG_AUTO_SWITCH))) {
-
-
->   		set_debugreg(0, 7);
->   		set_debugreg(vcpu->arch.eff_db[0], 0);
->   		set_debugreg(vcpu->arch.eff_db[1], 1);
-> @@ -11059,6 +11059,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->   	 */
->   	if (unlikely(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT)) {
->   		WARN_ON(vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP);
-> +		WARN_ON(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH);
->   		static_call(kvm_x86_sync_dirty_debug_regs)(vcpu);
->   		kvm_update_dr0123(vcpu);
->   		kvm_update_dr7(vcpu);
-> @@ -11071,8 +11072,12 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->   	 * care about the messed up debug address registers. But if
->   	 * we have some of them active, restore the old state.
->   	 */
-> -	if (hw_breakpoint_active())
-> -		hw_breakpoint_restore();
-> +	if (hw_breakpoint_active()) {
-> +		if (!(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))
-> +			hw_breakpoint_restore();
-> +		else
-> +			set_debugreg(__this_cpu_read(cpu_dr7), 7);
-> +	}
->   
->   	vcpu->arch.last_vmentry_cpu = vcpu->cpu;
->   	vcpu->arch.last_guest_tsc = kvm_read_l1_tsc(vcpu, rdtsc());
 
