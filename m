@@ -1,96 +1,132 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD55143895;
-	Mon,  6 May 2024 12:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DCC143C52
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714997587; cv=none; b=BH/rFKxlgiwXkTCa14pfEedFwsvm/fIxJSCGEfPV7v3s/ioaqUbJ7IsVs0OcZmK65lzSEb7zOiufo/cPOEyyWytowjBvveXikza0lChhrCm+4CCoVhnDaSAHdPe+lakBPD+9kTdrnXo86/8i9vPUw+4IkPCaoGg28gafT0DmcAY=
+	t=1714997588; cv=none; b=Pz4mbmMqqy27jnP0UsWKOtiNkT06GNHujjpVER3VLUPGZq+8cuWiLZ1VSGfrLijdUmyJiSrOYqpjBlZj4iA0Wej26OI7EZO6IkvLY+Eni9bJ9MqMXgxq7ZyAIR/EbyFDqvXGrfnjJ/LauOHrjdTxbla6YKBb/wDQtp1zb8KRRtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714997587; c=relaxed/simple;
-	bh=JG4F5Vliq1cxbKJA3HniZ3sx6UHw/Yf2C1Q65sEsqrE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=noebAiBGYCFTTb7Lqw18RkxD7h3q71srMGz6IBwpebzGTMLubFHCYEWobhkThiMeqdqCFNw8H689W0fK4wqCjBWtpOFZM389Lr5EDnlf7u7WJ8Z+OxMoeHn/ik2kSdakgR4E9pIE439r95StSDt7DwO20BtQ8+SUf+g25t7yc8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=SexplnPz; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1714997588; c=relaxed/simple;
+	bh=SJorlvBhI60itC7iiQx26RslvUGaX59HbR2ZqMGANGk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FHcfme9mPMGmY+0wnlSMgSkdSgLwvc1gpFdSfN/gCZcQ/0tW1EWLg3Oo0sb2eszKVU5r/54VrHNqxKmSR6UmYRmTgK4yO21vtJtbW6jZkrN5xwzKgI4X+KYwjfKTtLdOlHLh/YmLhvUbpnBFXwa8rE4UKwXSDqfPakLHqZj1btU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XG/A/0RP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SexplnPz"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 7971340E01E8;
-	Mon,  6 May 2024 12:13:02 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id rJfRrwpOcMj5; Mon,  6 May 2024 12:12:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1714997579; bh=/of+dyTW6UaI+A6BFaoUs57S0GorDUxHRqObed0VRzE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SexplnPzD845D+0w5+eP+0ESkaUvL6gUYWbrNRIpCCuz4OGDoKbSBa1Tu/U7Xbd+I
-	 mwlut2leWuEoIZU7PdPiKcwoRPab8QMn23dHrBAVLjwE8eA74TFlnAc7wBNiNB6HPn
-	 9oy2JEokTaIY0t11CKL0LVc/JcoKuz3grWqgS+wb6yuYUdhsZtuQ+rWYzhEWY4XhoA
-	 vRLFQByu9+kEWbrbVDJOlfMT4bIsw7cvJGH6S6MtrmuI/upRGNFFcjeUnbuLFD6Ret
-	 p6jBHz0AAt15YEKS+BRLe4wdGFnXXtC9Lmp4Bm9EGcZXWAnfgBWuIuPx56ftf4ZN4/
-	 EXcmUGX0krYdPVweESAWlAeU/nC2l0XHSMhqAg2hW2+Mjg8b6iGaT4GPbdADsglESU
-	 4gjakgghhzSTNU4JcIFOW5XtY3E/+oXc4cD/+YtjUsBJHOLKMxTKz9aAu26Kblqdk0
-	 UZwjxIAxh2nVBvqPuM1VLGGq//APBQc3oOj+Ulzni5YFNQ9pQ9AwJLvsnNMey7AL4b
-	 kwDmsMFt0eQS3y2fRS9LQvtpYlcEj/l22wa3qxIvysJy0Tu4HCUO5DI/YwbpZJScGo
-	 I1+DUWnLGNf2hXdU6etWiuJ1d8e3vOjO2/rlZ4LzmHFVqO5Zc4TpPkG5b493kkzehX
-	 gX6GyQCoALjr5JpNMGI1bXFQ=
-Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 2CE9540E0187;
-	Mon,  6 May 2024 12:12:43 +0000 (UTC)
-Date: Mon, 6 May 2024 14:12:37 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: Michal Simek <michal.simek@amd.com>,
-	Alexander Stein <alexander.stein@ew.tq-group.com>,
-	Tony Luck <tony.luck@intel.com>, James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
-	Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Sherry Sun <sherry.sun@nxp.com>,
-	Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v5 01/20] EDAC/synopsys: Fix ECC status data and IRQ
- disable race condition
-Message-ID: <20240506121237.GIZjjJNRhtixp7VVHl@fat_crate.local>
-References: <20240222181324.28242-1-fancer.lancer@gmail.com>
- <20240222181324.28242-2-fancer.lancer@gmail.com>
- <20240415183616.GDZh1zoFsBzvAEduRo@fat_crate.local>
- <szcie4giwjykne4su6uu5wsmtsl3e3jd53rjfiwir6hm3ju7as@6eqh2xmj35ie>
- <20240421100712.GAZiTlUOm1hrLQvaMi@fat_crate.local>
- <whgp2xx4dv3szezz3bvmgutgazz6kvie3q7rgpr35zqzuzsygk@wppqzusteru4>
- <20240506102029.GGZjiu7TKP9FVp-2Sb@fat_crate.local>
- <vugkhnu5c7so7dk3z2cuhlbu66gv6skvicuseblrmkzyttnnlr@lqzqvysk6wbl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XG/A/0RP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFD30C4DDE6
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714997587;
+	bh=SJorlvBhI60itC7iiQx26RslvUGaX59HbR2ZqMGANGk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=XG/A/0RPtmpxF8KzxNDsBqtVTipjfffh68vuGTv4CF1NkIzQcAl66ev7nIH4aEVEb
+	 g1v+inLWVqSwUyx7srz68yAnEiqj5LmAuMewDtjCYc2D6a5wK6R132ZZOOnYt75d9L
+	 VglcF7MA6E7+inXJ17Fv/GC9aNZFi54ENR1FixCPQVmJ6iCYksGkmPUeKyhJrnm8Mj
+	 AZWCJCQxfW3epDHCFWqVjOj4Jsu0Y6JxpHjSFHSysdU1gP0pcDv3bNcCWtTEYPDEn4
+	 918uJoFaEWrnGkCQrFejpsj1IMRE50xLkTo74zErAl6kfVr7S2Q85YP0Ud7F9GLi0u
+	 RnfF1iFh/v9QQ==
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dc6dcd9124bso1519198276.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 05:13:07 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWGlXLFxXNwOlIJpGCs1QFF32s/5eJODmH49SAjZJYJEziQYus0kwVQKfcLo9Iay59NAwKiyZ52pK/7KHgQxVctPBhkLATy12DYzvAN
+X-Gm-Message-State: AOJu0YzLWCb/r29NA5bS7tEv7uHRYspKeNblyjkgNDsCulNvFXtA+89z
+	wa6rV2GXOjZ3XcTj9Sak9ksFMnYLaj5nNBqnqPyUQIwv1Jnif9UDcNAgr5W05gFhV0VK9L2enGz
+	YsKCD+MqJ2lOpNvdgYvfQfp+DwJTRcK4NxxWakQ==
+X-Google-Smtp-Source: AGHT+IEdvvzDKPPs35mauLYBPaP2BlZLW/tD4jzIuzbyL2tiOrWFfQ0DbgvnC6EA7OV6cZIuLrHmcp8oSAKySJVe49A=
+X-Received: by 2002:a05:6902:1b01:b0:ddd:7456:d203 with SMTP id
+ eh1-20020a0569021b0100b00ddd7456d203mr11606197ybb.41.1714997586640; Mon, 06
+ May 2024 05:13:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <vugkhnu5c7so7dk3z2cuhlbu66gv6skvicuseblrmkzyttnnlr@lqzqvysk6wbl>
+References: <20240502-anx-tdm-v1-0-894a9f634f44@chromium.org> <20240502-anx-tdm-v1-2-894a9f634f44@chromium.org>
+In-Reply-To: <20240502-anx-tdm-v1-2-894a9f634f44@chromium.org>
+From: Robert Foss <rfoss@kernel.org>
+Date: Mon, 6 May 2024 14:12:55 +0200
+X-Gmail-Original-Message-ID: <CAN6tsi79jNhCybjyX3aQjXAP_J6MpjuCBL5q2aFrgjENPt60kA@mail.gmail.com>
+Message-ID: <CAN6tsi79jNhCybjyX3aQjXAP_J6MpjuCBL5q2aFrgjENPt60kA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/bridge: anx7625: Change TDM setting accroding to
+ dt property
+To: Hsin-Te Yuan <yuanhsinte@chromium.org>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Xin Ji <xji@analogixsemi.com>, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 06, 2024 at 02:27:50PM +0300, Serge Semin wrote:
-> Always welcome. Glad we've settled this.)
+On Thu, May 2, 2024 at 11:03=E2=80=AFAM Hsin-Te Yuan <yuanhsinte@chromium.o=
+rg> wrote:
+>
+> For some SoCs, the TDM setting is not to shift the first audio data bit,
+> which is not the default setting of anx7625. In such cases, the TDM
+> setting should be changed according to the device tree property.
+>
+> Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+> ---
+>  drivers/gpu/drm/bridge/analogix/anx7625.c | 8 ++++++++
+>  drivers/gpu/drm/bridge/analogix/anx7625.h | 1 +
+>  2 files changed, 9 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.c b/drivers/gpu/drm/=
+bridge/analogix/anx7625.c
+> index 29d91493b101a..538edddf313c9 100644
+> --- a/drivers/gpu/drm/bridge/analogix/anx7625.c
+> +++ b/drivers/gpu/drm/bridge/analogix/anx7625.c
+> @@ -1709,6 +1709,9 @@ static int anx7625_parse_dt(struct device *dev,
+>         if (of_property_read_bool(np, "analogix,audio-enable"))
+>                 pdata->audio_en =3D 1;
+>
+> +       if(!of_property_read_bool(np, "no-shift-audio-data"))
+> +               pdata->shift_audio_data =3D 1;
 
-Yap, it looks good so far.
+checkpatch --strict reports this:
 
-Lemme queue it into urgent and send it Linuswards soon-ish.
+ERROR: space required before the open parenthesis '('
+#27: FILE: drivers/gpu/drm/bridge/analogix/anx7625.c:1712:
++    if(!of_property_read_bool(np, "no-shift-audio-data"))
 
-Thx.
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> +
+>         return 0;
+>  }
+>
+> @@ -1866,6 +1869,11 @@ static int anx7625_audio_hw_params(struct device *=
+dev, void *data,
+>                                            ~TDM_SLAVE_MODE,
+>                                            I2S_SLAVE_MODE);
+>
+> +       if (!ctx->pdata.shift_audio_data)
+> +               ret |=3D anx7625_write_or(ctx, ctx->i2c.tx_p2_client,
+> +                                      AUDIO_CONTROL_REGISTER,
+> +                                      TDM_TIMING_MODE);
+> +
+>         /* Word length */
+>         switch (params->sample_width) {
+>         case 16:
+> diff --git a/drivers/gpu/drm/bridge/analogix/anx7625.h b/drivers/gpu/drm/=
+bridge/analogix/anx7625.h
+> index 39ed35d338363..41b395725913a 100644
+> --- a/drivers/gpu/drm/bridge/analogix/anx7625.h
+> +++ b/drivers/gpu/drm/bridge/analogix/anx7625.h
+> @@ -441,6 +441,7 @@ struct anx7625_platform_data {
+>         u8 lane1_reg_data[DP_TX_SWING_REG_CNT];
+>         u32 low_power_mode;
+>         struct device_node *mipi_host_node;
+> +       int shift_audio_data;
+>  };
+>
+>  struct anx7625_i2c_client {
+>
+> --
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
+>
+>
