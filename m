@@ -1,124 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2104B811FE
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 13:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C678120A
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 13:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715002533; cv=none; b=rYJiPjCyFUZVA/kw5KI3TGUkr0Hn6k4gydeQv/uDLM4vC/EJ6C94poA69sdID3PxnTmrvD0907/HbzAblXVdQG4GuHeQvcF7FtoihuzAr6TX8VTGyLIUrsDufTf4o/lZK0T+qRJ0cGdv/2JIWhd/Mrd3pc1FqDJkCs355yWB+EQ=
+	t=1715002536; cv=none; b=VmIHZYYRqtNIxPHOqPSkLRNShTZ9NZINkGMSALXMpfWkuJsS3+u5DUQ/GPzNb1PM/bfAZvsrt952svPwu82U3kRhWpWA717M6kh664IKi4vc54eg8Js4lSS63nDqJQ03F1URfmzKHuO8q6InSY6W490JeYhau9hzjMlTnvQiQkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715002533; c=relaxed/simple;
-	bh=46hAq1PCM2INpFGrPzb+MElX1JVQQ10d/aQq2p0zy48=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=L9Wwro/mFSmpqZrhA3/D70EBf8zOYSzV1sA7nY50H+m4I0SSZ+6oygjOpD0wR+HhFaYFmOWkTMQi0PXkELM01cPh5vTRmWRzlXvyYNVIWVY4mSpbKKe1wXgXiD36DM1OuM/t9hETUA/lX4X9xK0rf00BnwbNosao193i4oygNbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhS1pLRn; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhS1pLRn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38788C116B1;
-	Mon,  6 May 2024 13:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715002532;
-	bh=46hAq1PCM2INpFGrPzb+MElX1JVQQ10d/aQq2p0zy48=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HhS1pLRn3qUNaKrsNVT+K3AvOvWmUzJ0dJTt14Q3gc7LX6ZSjiLZhmPzq9sacIq5P
-	 /RuAtzhq0ZYAnOqzx2hTZ/yk+AZsaWrRdnFmw2WsVQRNx3FfrS5mSPRv6rk9XxiZrf
-	 a9GXaqorKyymQxJ6ML4AW9XWEWW3GSYFu6mVTkvH806yeep8NpVXVyJWtQFuWUdo3f
-	 97KnrhIsWEpmtjcirMjoc1QspIcLEK6NcDmc9JJjfEpY+FH591lsfQeFzko/lZq4az
-	 Jy+6R4jHiSUjuLmQyzHEG+b3lO/XOTDNpdwIHugcjbOIDpggKMW20VEnEYzgY4gvb1
-	 4hlAD6+2n6Yqw==
-From: Michael Walle <mwalle@kernel.org>
-Date: Mon, 06 May 2024 15:34:35 +0200
-Subject: [PATCH 06/20] drm/bridge: tc358775: redefine LV_MX()
+	s=arc-20240116; t=1715002536; c=relaxed/simple;
+	bh=2qVCIVjrXQjhdmjyGyo9eB0vRsHKN3medse5AJKFATI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=m1q3gKHEsBVjlbzY/2PO8gYVa9d/2IUW6m+QOZxcFrw6OYJQkrIM+5f9932jb0dwUf6uYkhwsfNHN/la92NJStnYDDmxNB3xHiLz7qRfRd6wC3odcpq0yLPkGoXT9eOWm8qfceET6YmUjR1mGv1hQee7msYTpKfJ8vopi/Owj9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VY2Tm24sGz4f3lXG
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:35:24 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 886211A0905
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:35:29 +0800 (CST)
+Received: from [10.174.179.247] (unknown [10.174.179.247])
+	by APP2 (Coremail) with SMTP id Syh0CgC32w6a3DhmpivTMA--.53986S3;
+	Mon, 06 May 2024 21:35:29 +0800 (CST)
+Message-ID: <9bad9355-5b5a-de61-8c53-6e65ed3332b1@huaweicloud.com>
+Date: Mon, 6 May 2024 21:35:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240506-tc358775-fix-powerup-v1-6-545dcf00b8dd@kernel.org>
-References: <20240506-tc358775-fix-powerup-v1-0-545dcf00b8dd@kernel.org>
-In-Reply-To: <20240506-tc358775-fix-powerup-v1-0-545dcf00b8dd@kernel.org>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Sam Ravnborg <sam@ravnborg.org>, Vinay Simha BN <simhavcs@gmail.com>, 
- Tony Lindgren <tony@atomide.com>
-Cc: Daniel Semkowicz <dse@thaumatec.com>, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, Michael Walle <mwalle@kernel.org>
-X-Mailer: b4 0.12.4
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH] ubi: block: fix null-pointer-dereference in
+ ubiblock_create()
+To: Zhihao Cheng <chengzhihao1@huawei.com>, richard@nod.at,
+ miquel.raynal@bootlin.com, vigneshr@ti.com, axboe@kernel.dk,
+ chaitanya.kulkarni@wdc.com
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+ yukuai3@huawei.com, yi.zhang@huawei.com, houtao1@huawei.com,
+ yangerkun@huawei.com
+References: <20240428071922.2270892-1-linan666@huaweicloud.com>
+ <98698009-e3a2-5c00-7619-6b6e3422cd1b@huawei.com>
+From: Li Nan <linan666@huaweicloud.com>
+In-Reply-To: <98698009-e3a2-5c00-7619-6b6e3422cd1b@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgC32w6a3DhmpivTMA--.53986S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxur1xAr4DJryruFyUXFW3Awb_yoW5GFyUpF
+	4kWa4jqrWrCrykWF4DJw1UCFy5Xw4UG3Z5Gr47Z3W8ZrWrJr1Igr4qqr1jgr48Jr4xJanI
+	qF1UWrW8uF1xJw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2vYz4IE04k24VAvwVAKI4IrM2AIxVAIcxkEcVAq07x20xvEncxIr21l
+	5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67
+	AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4
+	IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1r
+	MI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJV
+	WUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rW3
+	Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8Jr
+	UvcSsGvfC2KfnxnUUI43ZEXa7IU17DG7UUUUU==
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-Drop the FLD_VAL macro, just use bit shifts. This is a preparation patch
-to switch to regmap and to remove the FLD_VAL().
 
-While at it, reformat the LV_x enum.
 
-Signed-off-by: Michael Walle <mwalle@kernel.org>
----
- drivers/gpu/drm/bridge/tc358775.c | 36 ++++++------------------------------
- 1 file changed, 6 insertions(+), 30 deletions(-)
+在 2024/4/28 15:51, Zhihao Cheng 写道:
+> 在 2024/4/28 15:19, linan666@huaweicloud.com 写道:
+>> From: Li Nan <linan122@huawei.com>
+>>
+>> Similar to commit adbf4c4954e3 ("ubi: block: fix memleak in
+>> ubiblock_create()"), 'dev->gd' is not assigned but dereferenced if
+>> blk_mq_alloc_tag_set() fails, and leading to a null-pointer-dereference.
+>>
+>> Using 'gd' directly here is not a good idea, too. 'gd->part0.bd_device'
+>> is not initialized at this point. The error log will be:
+>>    block (null): block: dynamic minor allocation failed
+>>
+>> Fix it by using pr_err() and print ubi id.
+>>
+>> Fixes: 77567b25ab9f ("ubi: use blk_mq_alloc_disk and blk_cleanup_disk")
+>> Signed-off-by: Li Nan <linan122@huawei.com>
+>> ---
+>>   drivers/mtd/ubi/block.c | 7 ++++---
+>>   1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/mtd/ubi/block.c b/drivers/mtd/ubi/block.c
+>> index f82e3423acb9..bf7308e8ec2f 100644
+>> --- a/drivers/mtd/ubi/block.c
+>> +++ b/drivers/mtd/ubi/block.c
+>> @@ -390,7 +390,8 @@ int ubiblock_create(struct ubi_volume_info *vi)
+>>       ret = blk_mq_alloc_tag_set(&dev->tag_set);
+>>       if (ret) {
+>> -        dev_err(disk_to_dev(dev->gd), "blk_mq_alloc_tag_set failed");
+>> +        pr_err("ubiblock%d_%d: blk_mq_alloc_tag_set failed\n",
+>> +            dev->ubi_num, dev->vol_id);
+>>           goto out_free_dev;
+>>       }
+>> @@ -407,8 +408,8 @@ int ubiblock_create(struct ubi_volume_info *vi)
+>>       gd->minors = 1;
+>>       gd->first_minor = idr_alloc(&ubiblock_minor_idr, dev, 0, 0, 
+>> GFP_KERNEL);
+> 
+> There is no need to modify this place. The device of 'gd' is initialized in 
+> blk_mq_alloc_disk. Refer to nbd_dev_add.
 
-diff --git a/drivers/gpu/drm/bridge/tc358775.c b/drivers/gpu/drm/bridge/tc358775.c
-index 720c0d63fd6a..7ae86e8d4c72 100644
---- a/drivers/gpu/drm/bridge/tc358775.c
-+++ b/drivers/gpu/drm/bridge/tc358775.c
-@@ -124,39 +124,15 @@
- #define LV_MX1619        0x0490  /* Bit 16 to 19 */
- #define LV_MX2023        0x0494  /* Bit 20 to 23 */
- #define LV_MX2427        0x0498  /* Bit 24 to 27 */
--#define LV_MX(b0, b1, b2, b3)	(FLD_VAL(b0, 4, 0) | FLD_VAL(b1, 12, 8) | \
--				FLD_VAL(b2, 20, 16) | FLD_VAL(b3, 28, 24))
-+#define LV_MX(b0, b1, b2, b3) \
-+	(((b3) << 24) | ((b2) << 16) | ((b1) << 8) | (b0))
- 
- /* Input bit numbers used in mux registers */
- enum {
--	LVI_R0,
--	LVI_R1,
--	LVI_R2,
--	LVI_R3,
--	LVI_R4,
--	LVI_R5,
--	LVI_R6,
--	LVI_R7,
--	LVI_G0,
--	LVI_G1,
--	LVI_G2,
--	LVI_G3,
--	LVI_G4,
--	LVI_G5,
--	LVI_G6,
--	LVI_G7,
--	LVI_B0,
--	LVI_B1,
--	LVI_B2,
--	LVI_B3,
--	LVI_B4,
--	LVI_B5,
--	LVI_B6,
--	LVI_B7,
--	LVI_HS,
--	LVI_VS,
--	LVI_DE,
--	LVI_L0
-+	LVI_R0, LVI_R1, LVI_R2, LVI_R3, LVI_R4, LVI_R5, LVI_R6, LVI_R7,
-+	LVI_G0, LVI_G1, LVI_G2, LVI_G3, LVI_G4, LVI_G5, LVI_G6, LVI_G7,
-+	LVI_B0, LVI_B1, LVI_B2, LVI_B3, LVI_B4, LVI_B5, LVI_B6, LVI_B7,
-+	LVI_HS, LVI_VS, LVI_DE, LVI_L0
- };
- 
- #define LVCFG           0x049C  /* LVDS Configuration  */
+
+The print of this dev_err() is:
+   block (null): block: dynamic minor allocation failed
+	~~~~~~
+There is no information about which device failed. dev_err()
+use 'kobject_name(&dev->kobj)' here, which is init in device_add_disk()
+later. So use pr_err() here can print more detail.
+
+I will split the patch into two in v2 to make it clearer.
+
+>>       if (gd->first_minor < 0) {
+>> -        dev_err(disk_to_dev(gd),
+>> -            "block: dynamic minor allocation failed");
+>> +        pr_err("ubiblock%d_%d: block: dynamic minor allocation failed\n",
+>> +            dev->ubi_num, dev->vol_id);
+>>           ret = -ENODEV;
+>>           goto out_cleanup_disk;
+>>       }
+>>
 
 -- 
-2.39.2
+Thanks,
+Nan
 
