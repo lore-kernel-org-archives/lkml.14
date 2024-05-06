@@ -1,159 +1,118 @@
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01olkn2027.outbound.protection.outlook.com [40.92.99.27])
+Received: from mail1.perex.cz (mail1.perex.cz [77.48.224.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3756137747;
-	Mon,  6 May 2024 07:29:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.99.27
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714980593; cv=fail; b=e3WIzta5brzDbwsih1aze8V50MtQTf7BQf+JVWXc3n/BiI9PWFsoZ6WGP57cKj/a04nEgX0AKEG/E8EpyOEoLyKppTIgZtCQUrZNp8vJ9a5BUZQyVbHouYTOGHoy6336jeeJlVHFt+dj9GDAPJEszPz4Zn+gpYEQhkr0ET4BsbM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714980593; c=relaxed/simple;
-	bh=1N1aR7JQCOwYa+dfTwPn3wRV4vy2PH6vJrQmOEnth0I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Mpf1xs7sWcGR+q77UgXqqEgJV1C2gCivxzrxVRLhNomefDnDY9Zj/KWlvPiF7gEGy4ykToM3PE5XqYp5qUikJwhlFOy1j72asnKm1hbBGMzfSSDqEicvCqQkIUqbO0gHuqnJGbGaMzpb+OyhI1tHcQKEiEjPiZNHXwr6jfB02pg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=lRANuV1w; arc=fail smtp.client-ip=40.92.99.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 106171EB36;
+	Mon,  6 May 2024 07:31:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=77.48.224.245
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714980677; cv=none; b=iJBF7OGtWRh6RLMbO1r31ThMky2/PI5xVDIH4GdZWucQxj9LS3i8BUYpnpRBf8dNIMii67U6YjzT3orsA7Jz5xeDWfdPF8CqeJVdghNWa4ErtlyHPbzm1xisxl7pImU0qlIIKjB6fSl9LVROMQkcO5f7iit0IltUgtq4GEOhxLc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714980677; c=relaxed/simple;
+	bh=ofzGDVGOoQJDPdxOBgHuOfXoVAx2dH5KFSKIrOhXV3Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a7LSDAEb5fjkCYIJQ1+gfH7ed8sPuAfpOWCm4zd6YnhQ5uwg4BOYgPiy8UyaQ/S3kZ4YVqAaajCCbThqNeLxEJ3/W8zLwX0+s4lw/HucvXfvXuSd4Z9Ski+1GKGhUGPujxwiGE+jEC86z8chJvCVcXB0QesCW73r0XFc8l4BkWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=perex.cz; spf=pass smtp.mailfrom=perex.cz; dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b=2B6DcBFp; arc=none smtp.client-ip=77.48.224.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=perex.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perex.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="lRANuV1w"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TbGc/XKOJhpmlCwaRYmXxAvAr5BHUN3TKB68u9DL8BxdSHL4njo3HqqSslvRCc+Es4Mim3ZJ4Xbm1UQlW6MQ8QDQcKSpzHPzkaZtj46cuT3CBdUmxkPoPoyJPccs0D5Un6uTESI1uEb7tRtDjHFS3aNvgjjeLjO2EQPj6AFKrWcCqMm7gVdAPcm2lO3bxHOlOH0glcLi5oIzcZHR9q9JH3iMeIb0xojX0BLYPM3CdZXDvd/Xq9KQsu5VFxsKnxcpoAirIpclGKUCSSCSK4YoxBj3ji6f0N5Z79Fc7m7kAGfBNFS1AC+4EQKILvWD1PPQ8aVXyvcbyePgBfvBDhX4Cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c6luzOSUPRdWp3nncD5HM3XEkvoQI0vXxyvSXy0p2u0=;
- b=V/ekIliTtxGOIOiD07i7jvstbk3jB6PuXETSJaL9fkPxnjHoXlHdzE9oxF441n5gdqrC0HyBhdyCu8aF0+IKo9NzDWiyIsolH1ggUtoYztpDtdS5qIxQ4f+y3k8i9NfnD6phDx4EQiWaZYCKJGpc0ji0JQ1JmpvSGTe+F4nkIS60/xmkn8yK1yEOUX0NAYYwDZJxWoKO9GXehvHt4eREvdC3quBAUcp/ixyEtzsPx2VcYZckjX5Rs7A+/EouGkBZHMTs9Qf7jv5vKof14z0P3aBWNk6WQm1vLvkvy1n4gghpB3UYAAHfjRholKpxgO3N89gp/McnroEH5KsTv+M+Mw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c6luzOSUPRdWp3nncD5HM3XEkvoQI0vXxyvSXy0p2u0=;
- b=lRANuV1wnwkEFfkqURisVWtAuJMxoSzocJg/UdWCcOhz7floPIQf5A1ukcDU/8AN7jfK/22wPZkzorn7ns6w2Cde6qT+NdkpEUMxIjMXfbkptJ7obhqtZBiEprmS6TE0/sRgbOyPX3ymtNJT3snOncpwAoazZ+/o/KKJxuDrGPtujiV8zH9fy8nKpjW5a+0JuW6o3NlQtPE3E2Pc55vtdVL1EBLSiVdvSc0bhcKuFgQVEakXIfsAkhIB3VitPZYO9tDZ8oDEX+PtvAkuKBk9kuZdUa0KLGTnspoBmmyYJjRy9Tojh0yyAT0EWiq8h4rC3r0VyVmengpOTk7qBtCwKg==
-Received: from TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:209::11)
- by TYCP286MB2880.JPNP286.PROD.OUTLOOK.COM (2603:1096:400:307::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41; Mon, 6 May
- 2024 07:29:49 +0000
-Received: from TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- ([fe80::f2c3:e53f:2ea9:55c8]) by TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- ([fe80::f2c3:e53f:2ea9:55c8%6]) with mapi id 15.20.7544.041; Mon, 6 May 2024
- 07:29:49 +0000
-From: ArcticLampyrid <ArcticLampyrid@outlook.com>
-To: tiwai@suse.de
-Cc: sbinding@opensource.cirrus.com,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	patches@opensource.cirrus.com,
-	rf@opensource.cirrus.com,
-	ArcticLampyrid <ArcticLampyrid@outlook.com>
-Subject: [PATCH v4 1/1] ALSA: hda/realtek: Fix internal speakers for Legion Y9000X 2022 IAH7
-Date: Mon,  6 May 2024 15:29:39 +0800
-Message-ID:
- <TYCP286MB25352DD7AD08FD3C0F6F01A4C41C2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <TYCP286MB2535F8C34EB5E3D826B74C17C41C2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-References: <TYCP286MB2535F8C34EB5E3D826B74C17C41C2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-TMN: [JXLz9AdoOHaSbjfh4UnyoikYSd+/ch88]
-X-ClientProxiedBy: PU1PR04CA0011.apcprd04.prod.outlook.com
- (2603:1096:803:29::23) To TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:209::11)
-X-Microsoft-Original-Message-ID:
- <20240506072939.38255-1-ArcticLampyrid@outlook.com>
+	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="2B6DcBFp"
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+	by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id 49DD143F5;
+	Mon,  6 May 2024 09:31:12 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz 49DD143F5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+	t=1714980672; bh=sEkJVf1n6hGmby1EAwc5nvnpVwn3MtsVGBjj8LhHGWQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=2B6DcBFpytfhY0EhihieOv0SGvcAte+M2PZZxsSgM0QbdfEESQak2+lEtzpHYtsRn
+	 fiOkhfww1T0FFfZrhz0JDF+Kvwn5w13g8sWooMxrD7FnzFfGnTB7rocuQwpBXizCB0
+	 fRm1zv9RIqkOrAH7uy8vPVoseNMuAjhITw7WeLp0=
+Received: from [192.168.100.98] (unknown [192.168.100.98])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: perex)
+	by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+	Mon,  6 May 2024 09:31:05 +0200 (CEST)
+Message-ID: <05819798-2ac2-4aed-9f4f-0494c4c24159@perex.cz>
+Date: Mon, 6 May 2024 09:31:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYCP286MB2535:EE_|TYCP286MB2880:EE_
-X-MS-Office365-Filtering-Correlation-Id: 372cdca7-e5af-4410-b86d-08dc6d9e4faf
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|461199019|1602099003|440099019|3412199016|1710799017;
-X-Microsoft-Antispam-Message-Info:
-	WsaNzUgXwkU9AScE6FOyuJ/eJFc3i6Ry6STbYUU0KnDOBwmyuJGwRnQhxug1NV1S1RpYPukhVqJfldw70ri0dAzjm5YnY1rM3rciHlHc74mZhrQPFa58ZxU+V+ObGAYBDs4RQ0mwg3rMYQFFtbl7udJCeZof8Esy/GlWmWr7ZCiawA5XqAGvCuT/uWq7hCz9OR/i3ClLnXPCiTBANDWa6udM0zL298ja8WMf1K+4cLDzbHmobqJN6ahaWHGlOQXL/rzfcW8k/WeStqrtLYbQiCr0FnLQ0Lho2/qq1hYeedpBeJJ9yRfoFaL+wXsZcoXoanlnxQZOLpRFzT1tsL8XiX+jy9q9hdvZNF4pY/u9mnYUWZVq75YXxLkfare9wID5wIIKAuaFaImZz90ElPaGfrkXwhBDM58etQmifBckqNtq0tu9KNkiGsg3faE5TY56XZukyqvd8Sa+NcVoho6+FboavYgma+DXnDit5AEmGUIVN6fr20Nn96JU/LzdXUalfXwXJyY5WbtgB49e5D6nnZggz0BJjx6J28H7vEqjfwlKnukboN3c+hL3r6zLtH1vhvodqhOVbrjGtkh6DaJOm8Ry61OT/p3BhAj73LRPijdck+90xV1Y/7sqJmWkhU12lo5S7WeZ58xfjSDmmKmPZ8anaeF6Rfe2go77iQEg5zwQ6SqfTp/pCt40h6/AJHPX
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?TVeWoQEbGErcwlWH5Xz+J5/kAZO1lFWFgW8QVdLqrr2DhjTJP4WbSemjlMga?=
- =?us-ascii?Q?zQyQF/i87kzuTCq1zMnC9UZMUhs3yNQ84mD+tfnBXTjRyZ9WSIvIJt/KWRc0?=
- =?us-ascii?Q?mDmg45t88LEDLFmELgZFi29QoymePDQ5ludNt0JN10RA2zld3i96HMBsmt3E?=
- =?us-ascii?Q?BQgcfvTFX4McIjVqYbsIysTYB9bzfBo5F4FS9eVSw78cYa9aw1k1yN7Z9EAW?=
- =?us-ascii?Q?qtyvep0Y0wOPonNjLWHtYZoiDrxsG0wiA7KhVQh72BhUdQ2ZEwHfrOCWMcRR?=
- =?us-ascii?Q?YY6keJUkWVO7AJDXB8Ho9kiYKUKBPr4+EJ+OeN9kDlJOa0tegCZxMxZMO7no?=
- =?us-ascii?Q?SZDN+GWvh3jTshgx3UNUBZPq26tVREd+iWUSjBbe+NBlJbg17LSVT1cZPLVr?=
- =?us-ascii?Q?A8X8+8aNuPEOWFCYWlLq2Ab9Vra5kAYrg0q/VEJBEnTb4UJocMOF5GFgHGs8?=
- =?us-ascii?Q?QmqdTfQOlL1W+s4BKcYhleH7PvJoixK/VxCV765M7nMqR6t/zNFWOZ4TQ6AZ?=
- =?us-ascii?Q?PE9hymh83ulK8mo4pfE+JeB5Id+nhV+87wG9ng2yENYbRR+Mmvj3gDi65cOG?=
- =?us-ascii?Q?dBwk7Putc48jTjvcccJn+vUN6QdNPJYpJH5fUlVGBd8h22K7ilPMFahIni+4?=
- =?us-ascii?Q?SWrssS7bLr6YCqke2H/83HN+7NcxlzcxiIAXJDCcoKg7ZvdDk8cNBMP7AcVM?=
- =?us-ascii?Q?rLYFM6ZLFi4/B6U3kKJmSOfs2fKFrVK+ATjIjjpdBZXLMM3kJwFdT3cGyWCz?=
- =?us-ascii?Q?6LHLOW6L078SLX+HxrMbOUZEwPphOqxY7pgfHuevxNi7bIKzHw3JdTFxLpPD?=
- =?us-ascii?Q?mr6CsJH0bsxZICOAAMyPJO5QMqyVEYB+ylixMPDWbSNyEdiDn9X4QMpIl/Yn?=
- =?us-ascii?Q?QtEF3/N8oT9JC5NvlM4iSVOYQR8VjR+/y3I3Y4g6uarfY9ehV0TuME4m9cbw?=
- =?us-ascii?Q?EIw7dRX5uk+W9FTYWTivfglzi24eGoW+koeK+3GoX13v9zEYkDMV9W2xPjwC?=
- =?us-ascii?Q?VGzGWVPgx3e4GJPFUoVjvXNqpcJoFFHXuf8KM5D10MYG9a+ac2wOzRcqjeos?=
- =?us-ascii?Q?lXH31y6SXk4du64og4WbzcTZTTewtbjeNz8j1bC25CK+Tjgzu+nYuEQlcHJH?=
- =?us-ascii?Q?XkiZv1ijrZP1kzRnb+8M/f/yn1XOAqaU02HSWxP673HITZUgx5Zac/uVsazD?=
- =?us-ascii?Q?TVNIcTYu6CQ6bN3T2ISgMx40UIo+Pkdvi1hpuHQzNYXrGGI3BzVUKYYcB8uT?=
- =?us-ascii?Q?YN4u/okyngm+IFBsPKzZ?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 372cdca7-e5af-4410-b86d-08dc6d9e4faf
-X-MS-Exchange-CrossTenant-AuthSource: TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2024 07:29:49.0570
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCP286MB2880
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/1] ALSA: hda/realtek: Fix internal speakers for
+ Legion Y9000X 2022 IAH7
+Content-Language: en-US
+To: ArcticLampyrid <ArcticLampyrid@outlook.com>, tiwai@suse.de
+Cc: sbinding@opensource.cirrus.com, linux-kernel@vger.kernel.org,
+ linux-sound@vger.kernel.org, patches@opensource.cirrus.com,
+ rf@opensource.cirrus.com
+References: <TYCP286MB2535F8C34EB5E3D826B74C17C41C2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
+From: Jaroslav Kysela <perex@perex.cz>
+Autocrypt: addr=perex@perex.cz; keydata=
+ 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
+In-Reply-To: <TYCP286MB2535F8C34EB5E3D826B74C17C41C2@TYCP286MB2535.JPNP286.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This fixes the sound not working from internal speakers on
-Lenovo Legion Y9000X 2022 IAH7 models.
+On 06. 05. 24 9:27, ArcticLampyrid wrote:
+> This fixes the sound not working from internal speakers on
+> Lenovo Legion Y9000X 2022 IAH7 models.
+> 
+> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218744
+> 
+> This patch depends on [PATCH v1 1/2] ALSA: hda: cs35l41: Ignore errors when configuring IRQs (by Stefan Binding)
+> See also <https://lore.kernel.org/lkml/20240429154853.9393-2-sbinding@opensource.cirrus.com/>
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218744
-Signed-off-by: Junhao Pei <ArcticLampyrid@outlook.com>
----
- sound/pci/hda/cs35l41_hda_property.c | 2 ++
- sound/pci/hda/patch_realtek.c        | 1 +
- 2 files changed, 3 insertions(+)
+We don't accept commits from anonymous sources. Please, follow 
+Documentation/process/submitting-patches.rst .
 
-diff --git a/sound/pci/hda/cs35l41_hda_property.c b/sound/pci/hda/cs35l41_hda_property.c
-index 8fb688e41414..ee195737d388 100644
---- a/sound/pci/hda/cs35l41_hda_property.c
-+++ b/sound/pci/hda/cs35l41_hda_property.c
-@@ -109,6 +109,7 @@ static const struct cs35l41_config cs35l41_config_table[] = {
- 	{ "10431F1F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, -1, 0, 0, 0, 0 },
- 	{ "10431F62", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 0, 0, 0 },
- 	{ "10433A60", 2, INTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 1, 2, 0, 1000, 4500, 24 },
-+	{ "17AA386E", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 2, -1, 0, 0, 0 },
- 	{ "17AA386F", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, -1, -1, 0, 0, 0 },
- 	{ "17AA3877", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
- 	{ "17AA3878", 2, EXTERNAL, { CS35L41_LEFT, CS35L41_RIGHT, 0, 0 }, 0, 1, -1, 0, 0, 0 },
-@@ -500,6 +501,7 @@ static const struct cs35l41_prop_model cs35l41_prop_model_table[] = {
- 	{ "CSC3551", "10431F1F", generic_dsd_config },
- 	{ "CSC3551", "10431F62", generic_dsd_config },
- 	{ "CSC3551", "10433A60", generic_dsd_config },
-+	{ "CSC3551", "17AA386E", generic_dsd_config },
- 	{ "CSC3551", "17AA386F", generic_dsd_config },
- 	{ "CSC3551", "17AA3877", generic_dsd_config },
- 	{ "CSC3551", "17AA3878", generic_dsd_config },
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index b29739bd330b..5c13af8a11a4 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10496,6 +10496,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x17aa, 0x3853, "Lenovo Yoga 7 15ITL5", ALC287_FIXUP_YOGA7_14ITL_SPEAKERS),
- 	SND_PCI_QUIRK(0x17aa, 0x3855, "Legion 7 16ITHG6", ALC287_FIXUP_LEGION_16ITHG6),
- 	SND_PCI_QUIRK(0x17aa, 0x3869, "Lenovo Yoga7 14IAL7", ALC287_FIXUP_YOGA9_14IAP7_BASS_SPK_PIN),
-+	SND_PCI_QUIRK(0x17aa, 0x386e, "Legion Y9000X 2022 IAH7", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x17aa, 0x386f, "Legion Pro 7/7i", ALC287_FIXUP_LENOVO_LEGION_7),
- 	SND_PCI_QUIRK(0x17aa, 0x3870, "Lenovo Yoga 7 14ARB7", ALC287_FIXUP_YOGA7_14ARB7_I2C),
- 	SND_PCI_QUIRK(0x17aa, 0x3877, "Lenovo Legion 7 Slim 16ARHA7", ALC287_FIXUP_CS35L41_I2C_2),
+					Jaroslav
+
 -- 
-2.45.0
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
 
