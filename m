@@ -1,133 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95473EBB
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602DAEBB;
+	Mon,  6 May 2024 21:28:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715030830; cv=none; b=KDV+M2sz3tQ/6FKG3UH7VI+8dj1NeQqY2AiB8Z7hon9TpiIVWj4mvJFePeGCyqnZ2S7SFljVNIO7fG6XtZ3Znb0PEE0/AzDbvFDT/fJyYsx+bWLfkN9zLdz/4KvnBHNs9vcv9Jka/Y0IwKSuyYF0GApfTlnVZlxrJ2/TtOiJyH8=
+	t=1715030910; cv=none; b=fHGM3qkQB/uBXlEktwTP71i7eUDGZnT0btTv0iJ48FAiKjQAYxgYBgzk3L5UgK0WnXgJKIbODX9T8bwBDG/Kk336S6VzpKxGqomyDA0DEMP/dH+JSE/jZ2INjTD4vRi5GpS2Zdx4kGfsVtRfPiM6UVu1+FJlrK00G6BD08y8z0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715030830; c=relaxed/simple;
-	bh=M7ywp95SVgWD3WJ1kjqmTRxgovRaXyNEKPdOAzkhWtE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=o4I7RCE5+OtaJvVuAbxZXLMH9zj50Q/sv+yha0jxLk/RUoXlO3DHX6lDhtq6pxlCt5HhOy6+/XG5jjpAWhjIdT2r4/7cjMU17hkZjvsVpJqA6hC/57ELv5uwJVdn1iDnqt4rOjzShSuFjWd0gt5icWcNYb6USqdJp4xYt52SU0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hlF0LSl2; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715030910; c=relaxed/simple;
+	bh=JA7evhWLJ0IZ4zTkJf05xGBiQ8YPkHnZLXlcFVlni7w=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=eEQ1kmTa/m4VMPh2ob9IAn8NtVtnfMbb3WttHvkdAPoDhCAQXs++TOOvBYZ1eMHlk1IJiOkojh2kjPX/FWfNzTwcaqsien25YQn9AINlo1lYmr9mlubkE/Sbyuyfv2YhhXlTwz/b9tRbb8iZKFurH9q3aHc2JpK91pinjvrZbKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRVkSZF4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hlF0LSl2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715030829; x=1746566829;
-  h=date:from:to:cc:subject:message-id;
-  bh=M7ywp95SVgWD3WJ1kjqmTRxgovRaXyNEKPdOAzkhWtE=;
-  b=hlF0LSl2OX451w02OZ9LpmosQAKwxHd86zBA/k7uQ5Kpdy8j1aOPF1zr
-   m0av9C2Ad1ohPs1q3d4wop76Rd4lKCBVKq5lAWkWf0XLsrWwJjx4SE6Uu
-   tcS0kcMCr+kcruEHPYms3KzxFaHahzN3eY6Ep0fy/gR4A1YBcudpP/Ir+
-   xfcmXbMLKhDJ+25be/UT24LdrwE2BPF9XntPrWGkqpnxiU5uJjMjVX6SS
-   BIYp7VC7yW4MPjUpoGKilXQTo9nUB68TPfzk0ZVBOu/CWTqCLB9WFR9E1
-   T/+Q5iuAcTnfCfu4mQlUTOrMUqALmojebNC2RzvvXnS86c5bg8v+tS4YA
-   w==;
-X-CSE-ConnectionGUID: sxY3fGQ5RYeYkBYl4g9dHA==
-X-CSE-MsgGUID: xWw6O6PQQi2WFkGrkwDuBQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="22202911"
-X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
-   d="scan'208";a="22202911"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 14:27:08 -0700
-X-CSE-ConnectionGUID: 485EkaneTf+z22/Ogw5Otg==
-X-CSE-MsgGUID: eQ3jxmohQoS2YE15q9TnKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,259,1708416000"; 
-   d="scan'208";a="28259192"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 06 May 2024 14:27:07 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s45rU-00013R-2f;
-	Mon, 06 May 2024 21:27:04 +0000
-Date: Tue, 07 May 2024 05:26:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:x86/microcode] BUILD SUCCESS
- 57f6d0aed7b0a6829044c7f1cea57b1e3ddb9a47
-Message-ID: <202405070523.xB4lPPwR-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRVkSZF4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59602C116B1;
+	Mon,  6 May 2024 21:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715030909;
+	bh=JA7evhWLJ0IZ4zTkJf05xGBiQ8YPkHnZLXlcFVlni7w=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=TRVkSZF4kcolQMYOiDSpr+qCzH4NnNEIuxWXtmMbfte6FQtEWSLtEy2VmA44IfkGI
+	 Aft5AG1IjlkJtVGcl8eGgmtstiCB70Y+AsqcUjlfMnLbPO8iDtZZZ2DQR2CIpvOUTu
+	 wE5EsCKiWZV8Rrh159QeRSPm2wGaIBdcTOl/BJRq71UpBlaYqZUomXytkbmTM+esrf
+	 Ettu0iO/JWyd15W1z3PrfCDFwtBDjIOIde7ZKc+g3gXHDAmJHXp5f4FpUqwgzeU2VZ
+	 poI6x2n0rbCfnVABHiT1gZUsAjmpjQcWCv8N0CBr1r4Kv9OruUWG8n0GX/5s0cswlq
+	 JYNp7s+K3BlzA==
+Date: Mon, 6 May 2024 23:28:27 +0200 (CEST)
+From: Jiri Kosina <jikos@kernel.org>
+To: Kenny Levinsen <kl@kl.wtf>
+cc: Dmitry Torokhov <dtor@chromium.org>, 
+    Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+    Douglas Anderson <dianders@chromium.org>, 
+    Hans de Goede <hdegoede@redhat.com>, Maxime Ripard <mripard@kernel.org>, 
+    Kai-Heng Feng <kai.heng.feng@canonical.com>, 
+    Johan Hovold <johan+linaro@kernel.org>, linux-input@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, Radoslaw Biernacki <rad@chromium.org>, 
+    Lukasz Majczak <lma@chromium.org>
+Subject: Re: [PATCH 0/2] HID: i2c-hid: Unify device wake-up logic
+In-Reply-To: <20240429233924.6453-1-kl@kl.wtf>
+Message-ID: <nycvar.YFH.7.76.2405062327550.16865@cbobk.fhfr.pm>
+References: <20240429233924.6453-1-kl@kl.wtf>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git x86/microcode
-branch HEAD: 57f6d0aed7b0a6829044c7f1cea57b1e3ddb9a47  x86/microcode: Remove unused struct cpu_info_ctx
+On Tue, 30 Apr 2024, Kenny Levinsen wrote:
 
-elapsed time: 733m
+> Third time was not the charm[0]. After Dmitry's comment[1], and after
+> looking some more at the I2C drivers, I have given up on removing the
+> smbus probe for now. We can always revisit this later if the situation
+> improves enough, but there are more important things to fix.
+> 
+> Instead, go all in on the address probe with retry and use it for both
+> initial probe and resume, replacing the previous retry on power on
+> commands. This gives us consistency and a single place to update and
+> document.
+> 
+> [0]: https://lore.kernel.org/all/20240426225739.2166-1-kl@kl.wtf/
+> [1]: https://lore.kernel.org/all/ZixvUNooESC02cJK@google.com/
 
-configs tested: 56
-configs skipped: 134
+I really apologize for belated response to all this, I've been completely 
+swamped for the past two weeks.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This is now queued in hid.git#for-6.10/i2c-hid.
 
-tested configs:
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240506   gcc  
-i386         buildonly-randconfig-002-20240506   clang
-i386         buildonly-randconfig-003-20240506   gcc  
-i386         buildonly-randconfig-004-20240506   gcc  
-i386         buildonly-randconfig-005-20240506   gcc  
-i386         buildonly-randconfig-006-20240506   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240506   gcc  
-i386                  randconfig-002-20240506   clang
-i386                  randconfig-003-20240506   gcc  
-i386                  randconfig-004-20240506   clang
-i386                  randconfig-005-20240506   clang
-i386                  randconfig-006-20240506   gcc  
-i386                  randconfig-011-20240506   gcc  
-i386                  randconfig-012-20240506   gcc  
-i386                  randconfig-013-20240506   gcc  
-i386                  randconfig-014-20240506   clang
-i386                  randconfig-015-20240506   clang
-i386                  randconfig-016-20240506   clang
-s390                             allyesconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                               allyesconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240506   gcc  
-x86_64       buildonly-randconfig-002-20240506   gcc  
-x86_64       buildonly-randconfig-003-20240506   gcc  
-x86_64       buildonly-randconfig-004-20240506   clang
-x86_64       buildonly-randconfig-005-20240506   clang
-x86_64       buildonly-randconfig-006-20240506   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240506   clang
-x86_64                randconfig-002-20240506   clang
-x86_64                randconfig-003-20240506   clang
-x86_64                randconfig-004-20240506   clang
-x86_64                randconfig-005-20240506   clang
-x86_64                randconfig-006-20240506   clang
-x86_64                randconfig-011-20240506   gcc  
-x86_64                randconfig-012-20240506   gcc  
-x86_64                randconfig-013-20240506   gcc  
-x86_64                randconfig-014-20240506   gcc  
-x86_64                randconfig-015-20240506   gcc  
-x86_64                randconfig-016-20240506   gcc  
-x86_64                randconfig-071-20240506   gcc  
-x86_64                randconfig-072-20240506   clang
-x86_64                randconfig-073-20240506   gcc  
-x86_64                randconfig-074-20240506   clang
-x86_64                randconfig-075-20240506   gcc  
-x86_64                randconfig-076-20240506   clang
-x86_64                          rhel-8.3-rust   clang
+Thanks,
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Jiri Kosina
+SUSE Labs
+
