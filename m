@@ -1,16 +1,16 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6104F156C60
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 16:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59E5156678
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 16:30:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715012988; cv=none; b=Fes7HvjU4cO7KBLLFM2SJFJfTtww52kApFfU6/lzHuvRPW+erZ+QhuEy8xiYwpED/KiUhiQHAfolSyWfA51PT7NigCdjwBU/KfeTl1klMmRVyikKN5nxMnFBZX/r+iZ15dcC4+klwNaofsCUoQ2ouHbXHVmCMewqfmZsG9hbCww=
+	t=1715013010; cv=none; b=G6Kt3TIPUMENUIFewUAxI/khsyXFa7Hpf3g6vONSAHzOYBC9FHOYkQU34r4IQLAyMES8ruHAGT8CHarwE0o8+HEDwIsOF7jExEL9GtR8eMbhQQXNgbd8+JMIqYi1+usNHdcjpQ7h/OA7Kimg/mb+dWY9Pw5vdmndUIpLqqPfCmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715012988; c=relaxed/simple;
-	bh=irpWkmoPStzbH23cwBbGY13D9tMbnujUBu94fibKono=;
+	s=arc-20240116; t=1715013010; c=relaxed/simple;
+	bh=8XlQr1oqgw4PmNtbRGVAiWxc42cOpeTfm3v/lJMDO14=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LmfxIxih5wP7QxycJ7EZLoW8OBaTT2IFdcgW5TSFguPDKMz7LhKJEuZqB+eaq/j3rXzxAGRjZ/+fDE3UaJAqsOnDwgWyaChtCjnSfmL/gpmNjzhitZRU1ak5OkmGKVU3e2yeu1iuwtNDPiGU6MNz6zXMbhmB+t+2ObrK85WNN64=
+	 MIME-Version:Content-Type; b=fD1BDV2sh0XuEJeksplCjSpUFu0ecLNJNvZZP+M0tkNZSTtlFSYlju1WnMel8j3Wqn/W6sRtsKQ9jf3Ro7JoIT4lE69zW0KDpdhEmRmd+S+CkAfqbPEpF10N7VVACLz3DacrY2HAiWZg3UgSJwpQxI4g//nVXpIqMbExgAow8NI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
@@ -18,7 +18,7 @@ Received: from i53875b5d.versanet.de ([83.135.91.93] helo=diego.localnet)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1s41Dc-0007nh-IG; Mon, 06 May 2024 18:29:36 +0200
+	id 1s41Du-0007oF-Ng; Mon, 06 May 2024 18:29:54 +0200
 From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
 To: dri-devel@lists.freedesktop.org, Maxime Ripard <mripard@kernel.org>,
  Douglas Anderson <dianders@chromium.org>
@@ -34,15 +34,15 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
  Sam Ravnborg <sam@ravnborg.org>, Thomas Zimmermann <tzimmermann@suse.de>,
  linux-kernel@vger.kernel.org
 Subject:
- Re: [RFT PATCH v2 12/48] drm/panel: kingdisplay-kd097d04: Stop tracking
- prepared/enabled
-Date: Mon, 06 May 2024 18:29:35 +0200
-Message-ID: <3909960.LM0AJKV5NW@diego>
+ Re: [RFT PATCH v2 13/48] drm/panel: kingdisplay-kd097d04: Don't call
+ unprepare+disable at shutdown/remove
+Date: Mon, 06 May 2024 18:29:53 +0200
+Message-ID: <2053441.QkHrqEjB74@diego>
 In-Reply-To:
- <20240503143327.RFT.v2.12.I711d07c4f4738df199697fd534c452cdfa46a21f@changeid>
+ <20240503143327.RFT.v2.13.I6c7c84b1560dd374f6e7e8dc50f419a870d31d31@changeid>
 References:
  <20240503213441.177109-1-dianders@chromium.org>
- <20240503143327.RFT.v2.12.I711d07c4f4738df199697fd534c452cdfa46a21f@changeid>
+ <20240503143327.RFT.v2.13.I6c7c84b1560dd374f6e7e8dc50f419a870d31d31@changeid>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,13 +52,26 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="iso-8859-1"
 
-Am Freitag, 3. Mai 2024, 23:32:53 CEST schrieb Douglas Anderson:
-> As talked about in commit d2aacaf07395 ("drm/panel: Check for already
-> prepared/enabled in drm_panel"), we want to remove needless code from
-> panel drivers that was storing and double-checking the
-> prepared/enabled state. Even if someone was relying on the
-> double-check before, that double-check is now in the core and not
-> needed in individual drivers.
+Am Freitag, 3. Mai 2024, 23:32:54 CEST schrieb Douglas Anderson:
+> It's the responsibility of a correctly written DRM modeset driver to
+> call drm_atomic_helper_shutdown() at shutdown time and that should be
+> disabling / unpreparing the panel if needed. Panel drivers shouldn't
+> be calling these functions themselves.
+>=20
+> A recent effort was made to fix as many DRM modeset drivers as
+> possible [1] [2] [3] and most drivers are fixed now.
+>=20
+> A grep through mainline for compatible strings used by this driver
+> indicates that it is used by Rockchip boards. The Rockchip driver
+> appear to be correctly calling drm_atomic_helper_shutdown() so we can
+> remove the calls.
+>=20
+> [1] https://lore.kernel.org/r/20230901234015.566018-1-dianders@chromium.o=
+rg
+> [2] https://lore.kernel.org/r/20230901234202.566951-1-dianders@chromium.o=
+rg
+> [3] https://lore.kernel.org/r/20230921192749.1542462-1-dianders@chromium.=
+org
 >=20
 > Cc: Brian Norris <briannorris@chromium.org>
 > Cc: Chris Zhong <zyw@rock-chips.com>
