@@ -1,55 +1,55 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A734F15ECD5
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E759E15EFBB
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715032432; cv=none; b=L6B7wfgBQT4PLN9yJUfPsWDmiwY7KIAH+kdiWPDHlF94hS/ohT6OJayud1ZxHBBWSm69w0nGd1gR1E8/OxtEwedi8O3b97GMCAc1pFc/E+IlQ+ge0/Bn7nxDTtT98BtrimVS2++3baCJy41XurueK/4Wgpy4/lHc5fKqy5V3BMs=
+	t=1715032437; cv=none; b=jey3NOu+a8X1TKF+CBYAC+RBjmOoqCuyFzng5J/AlOt4Z1RowaVlsKGqktX5sxbCN2pO8kHKAW4twWNlF6S/2EOXLGHEvVOuSsQb8jNkVqbbCvQnGfndYVKrlwSSXz/dN33lSRoSFsf3q4VW/K5eyzfj2HNubR8beuFDf9yzpF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715032432; c=relaxed/simple;
-	bh=bfFhpQ5EYefCcVR9G/dMzMdiH6v/IsMO66uK+uCQ3MU=;
+	s=arc-20240116; t=1715032437; c=relaxed/simple;
+	bh=BTdB/bKcsgIg8SG05ME4z6NR7Hf/yomiKs5wTQl9JKw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lRDfcbal0gpuVisc1aT2UXZQfVrdk9nZIOk6OU+gFYbC79z5WpxuWAuefBELmaB2aJsL20JF62ooHfaJ0yqPZ8i//2beMRx1Z/mE90QKPnDYGs5mylwkAAyceJE4YD1/cVfX8Nw57E9b3MhgtrI+Sg52/R3sEXLPjtMzM3LZbLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=gfh/j+d+; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=shGQio3ks4F869Mt/D2jjHsPcJQkwFSuyF2Vd3HH9iB57uoABtMrnYSR6pgk9M1q/tJRzCBMeLDs0NuyfvyibkTHAhHuzGHbGe8a4tsjly3QgVFlCeo8E+G/h4CRl8O3nvm2dfFzzTfBrdhfpo69aTCf3UkoyBkh5ZTll2HBv84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=a4wN1GLZ; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="gfh/j+d+"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e4c4fb6af3so13891345ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 14:53:50 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="a4wN1GLZ"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1edfc57ac0cso11788195ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 14:53:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1715032430; x=1715637230; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1715032435; x=1715637235; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fJPGtZqzdd9ZJG8gTToIxNsoCLvLLMCdMU2sH61J3oA=;
-        b=gfh/j+d+tVUodvcXlM8A+t976BMSjpsAUSx4QmbRm/afOWY2pPisBPYuu10n+pUfTq
-         LtHZIGTxw3ovNjHDj3RoBoXm82AogFdl/g5ESoTa3CEeZX6XN9Q2fkxZvyk36kdMQSLR
-         Izx7eBXkL/3tBoCxi/L4e3yvWai3cKX+uaY94=
+        bh=4fIJKpP9PuqIwYQVQAXhh3lvsNULoqRv8W6dHtBpvXk=;
+        b=a4wN1GLZ0WdgTkEGGM6PKlK2FUKcjNwi/vBatFP51Qn3pYlnPXmXgCPlV6g4k5xzmN
+         px/8Vf55cYGszQDh+phlc+otnTBUPJwEWCuiF3v/+o18ly4eimxMc4mBXOo60R8iCAKl
+         ZfHSMytwvKsFNfx+QuGh7u5swww+QfzIE0H4Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715032430; x=1715637230;
+        d=1e100.net; s=20230601; t=1715032435; x=1715637235;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fJPGtZqzdd9ZJG8gTToIxNsoCLvLLMCdMU2sH61J3oA=;
-        b=Q+eFWR0qXoFrERvrxspn5I76uYXW+UVvoVSEk7J8UvfQLgB7vqXppe0AL718JEdLed
-         qQAzUWA6fzfVuHVLWo9IR401vZF3Pa3iOh6PqZ+DPI3U3CrkaNIHo8Ugzi+Tx3TyNxqS
-         Aa3cOv77JuY9SYukZa3tE7gUvJx6Qd0pV+qSSt1VMN+vmpOQprY4NJ9TQgOytx3Xfzjo
-         mLvGCrq9/Fbv6MN6AbbSAfKiSW5iK/+0LKsnD96pA+5PMHVGgThHKKrI6frITa/mRJia
-         TdYEENQoQNL8t3BG5JTU6fHgynOj7bdZJGEICIQprt9NGHzlWKrNQ9x0d4o1cmhCTzRU
-         E7fQ==
-X-Gm-Message-State: AOJu0YwbWKaw/fRf+wmyRPhXJuYs8YA8T5CefYxTKaJ5HbnEoN6g15a+
-	JZEQ/GKhMMc887NvzNytG5pva5KM4xLViRMR3t+qb15gqWxQUgFA5DJOQM+jakCspTRNZyY79L0
-	cEFh24aFqflSQMSOSXOqcYE0XF9J0W5ulzh2x5B5JeJ0hbSJLn4bdQGSczJ+qpUfLt9cyxaD8Vs
-	et7eggS7mLxsF9m8FQ+LOaC49BWr1ToGmMPIfelZtErHB7IUCFNwsx
-X-Google-Smtp-Source: AGHT+IHp56n4WkqeuroFYkCDTt47YS3GRY5F1YA7t3Xu34YvJoknqKPTHgNVxdkIOz1nO5uwUqA+TA==
-X-Received: by 2002:a17:902:e547:b0:1e5:1041:7ed4 with SMTP id d9443c01a7336-1ee63069c04mr14175565ad.14.1715032429112;
-        Mon, 06 May 2024 14:53:49 -0700 (PDT)
+        bh=4fIJKpP9PuqIwYQVQAXhh3lvsNULoqRv8W6dHtBpvXk=;
+        b=k1XOibbiNvYZVAlH8jGPFzSGhaPGP2f0NESEKmKFbkQux4+UNHsh+nx+NSNcpigjC6
+         CGOUSjCWejRVZ00umrTaxpTgYiD1pmvdhOI3fsby7mC/NG8eZXzIrxZw4/ftOMpJZSX5
+         FH+mQDrgddOZ+NZN76HBdhPwEcLKSJMDBPadir0UHrVAUvxegQLn7UFMVzvNxnOBpCEt
+         PgUtQlCLswB53UkSAZTQaGPaJcG8CGORjfGGziQ5uikWmTK2ckQImamUUxE0y52LDW2M
+         yHV74kz8Ge1mupa60LFG/uX6jSDo6HnQ25SV1z0jp8iU22itko9KE9Ux5iOT86yPe12o
+         DMQA==
+X-Gm-Message-State: AOJu0YybLJUGX/06FuFYL5ifgb/zkjwQ41YSresXFxsYSGRbde8WRqf4
+	Z7CMmW1SEAXwQzn9wgCKoBBLGjP2xPmiEGhvjD4HJ+RIXnQBuysyL7ryQuUi4Sd9pmeDDaZE0dG
+	BiugIkASBniAsywD+nL3J1vjAbzMoJBoDNlIWY48t4KQzIPSYXs/ZqqHBk5mHJVgeWpMX3KJGaO
+	loarL528Q4RqLS0r6aCaxpsUKXpAvVCPoQ5mXtx7o+FLrYLO/0P447
+X-Google-Smtp-Source: AGHT+IFyWv+jxb29t05zzSKDmxjDVEWVQ7r5yIdjW5CDcL456PzBbnI/9joeCaGDokUA59UoiPatEg==
+X-Received: by 2002:a17:902:ea0b:b0:1e4:31e9:83ba with SMTP id s11-20020a170902ea0b00b001e431e983bamr13602030plg.1.1715032434870;
+        Mon, 06 May 2024 14:53:54 -0700 (PDT)
 Received: from amakhalov-build-vm.eng.vmware.com ([128.177.82.146])
-        by smtp.gmail.com with ESMTPSA id h8-20020a170902f54800b001ed6868e257sm5664008plf.123.2024.05.06.14.53.46
+        by smtp.gmail.com with ESMTPSA id h8-20020a170902f54800b001ed6868e257sm5664008plf.123.2024.05.06.14.53.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 14:53:48 -0700 (PDT)
+        Mon, 06 May 2024 14:53:54 -0700 (PDT)
 From: Alexey Makhalov <alexey.makhalov@broadcom.com>
 To: linux-kernel@vger.kernel.org,
 	virtualization@lists.linux.dev,
@@ -76,12 +76,10 @@ Cc: x86@kernel.org,
 	maarten.lankhorst@linux.intel.com,
 	horms@kernel.org,
 	kirill.shutemov@linux.intel.com,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Zack Rusin <zack.rusin@broadcom.com>
-Subject: [PATCH v9 5/8] input/vmmouse: Use VMware hypercall API
-Date: Mon,  6 May 2024 14:53:02 -0700
-Message-Id: <20240506215305.30756-6-alexey.makhalov@broadcom.com>
+	Alexey Makhalov <alexey.makhalov@broadcom.com>
+Subject: [PATCH v9 7/8] x86/vmware: Undefine VMWARE_HYPERCALL
+Date: Mon,  6 May 2024 14:53:04 -0700
+Message-Id: <20240506215305.30756-8-alexey.makhalov@broadcom.com>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <20240506215305.30756-1-alexey.makhalov@broadcom.com>
 References: <20240505182829.GBZjfPzeEijTsBUth5@fat_crate.local>
@@ -94,189 +92,24 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Switch from VMWARE_HYPERCALL macro to vmware_hypercall API.
-Eliminate arch specific code. No functional changes intended.
+No more direct use of VMWARE_HYPERCALL macro should be allowed.
 
 Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
-Reviewed-by: Nadav Amit <nadav.amit@gmail.com>
-Reviewed-by: Zack Rusin <zack.rusin@broadcom.com>
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 ---
- drivers/input/mouse/vmmouse.c | 78 ++++++++++-------------------------
- 1 file changed, 22 insertions(+), 56 deletions(-)
+ arch/x86/include/asm/vmware.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/input/mouse/vmmouse.c b/drivers/input/mouse/vmmouse.c
-index ad94c835ee66..fb1d986a6895 100644
---- a/drivers/input/mouse/vmmouse.c
-+++ b/drivers/input/mouse/vmmouse.c
-@@ -21,19 +21,16 @@
- #include "psmouse.h"
- #include "vmmouse.h"
- 
--#define VMMOUSE_PROTO_MAGIC			0x564D5868U
--
- /*
-  * Main commands supported by the vmmouse hypervisor port.
-  */
--#define VMMOUSE_PROTO_CMD_GETVERSION		10
--#define VMMOUSE_PROTO_CMD_ABSPOINTER_DATA	39
--#define VMMOUSE_PROTO_CMD_ABSPOINTER_STATUS	40
--#define VMMOUSE_PROTO_CMD_ABSPOINTER_COMMAND	41
--#define VMMOUSE_PROTO_CMD_ABSPOINTER_RESTRICT   86
-+#define VMWARE_CMD_ABSPOINTER_DATA	39
-+#define VMWARE_CMD_ABSPOINTER_STATUS	40
-+#define VMWARE_CMD_ABSPOINTER_COMMAND	41
-+#define VMWARE_CMD_ABSPOINTER_RESTRICT	86
- 
- /*
-- * Subcommands for VMMOUSE_PROTO_CMD_ABSPOINTER_COMMAND
-+ * Subcommands for VMWARE_CMD_ABSPOINTER_COMMAND
-  */
- #define VMMOUSE_CMD_ENABLE			0x45414552U
- #define VMMOUSE_CMD_DISABLE			0x000000f5U
-@@ -76,30 +73,6 @@ struct vmmouse_data {
- 	char dev_name[128];
- };
- 
--/*
-- * Hypervisor-specific bi-directional communication channel
-- * implementing the vmmouse protocol. Should never execute on
-- * bare metal hardware.
-- */
--#define VMMOUSE_CMD(cmd, in1, out1, out2, out3, out4)	\
--({							\
--	unsigned long __dummy1, __dummy2;		\
--	__asm__ __volatile__ (VMWARE_HYPERCALL :	\
--		"=a"(out1),				\
--		"=b"(out2),				\
--		"=c"(out3),				\
--		"=d"(out4),				\
--		"=S"(__dummy1),				\
--		"=D"(__dummy2) :			\
--         [port] "i" (VMWARE_HYPERVISOR_PORT),		\
--         [mode] "m" (vmware_hypercall_mode),		\
--		"a"(VMMOUSE_PROTO_MAGIC),		\
--		"b"(in1),				\
--		"c"(VMMOUSE_PROTO_CMD_##cmd),		\
--		"d"(0) :			        \
--		"memory");		                \
--})
--
- /**
-  * vmmouse_report_button - report button state on the correct input device
-  *
-@@ -147,14 +120,12 @@ static psmouse_ret_t vmmouse_report_events(struct psmouse *psmouse)
- 	struct input_dev *abs_dev = priv->abs_dev;
- 	struct input_dev *pref_dev;
- 	u32 status, x, y, z;
--	u32 dummy1, dummy2, dummy3;
- 	unsigned int queue_length;
- 	unsigned int count = 255;
- 
- 	while (count--) {
- 		/* See if we have motion data. */
--		VMMOUSE_CMD(ABSPOINTER_STATUS, 0,
--			    status, dummy1, dummy2, dummy3);
-+		status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
- 		if ((status & VMMOUSE_ERROR) == VMMOUSE_ERROR) {
- 			psmouse_err(psmouse, "failed to fetch status data\n");
- 			/*
-@@ -174,7 +145,8 @@ static psmouse_ret_t vmmouse_report_events(struct psmouse *psmouse)
- 		}
- 
- 		/* Now get it */
--		VMMOUSE_CMD(ABSPOINTER_DATA, 4, status, x, y, z);
-+		status = vmware_hypercall4(VMWARE_CMD_ABSPOINTER_DATA, 4,
-+					   &x, &y, &z);
- 
- 		/*
- 		 * And report what we've got. Prefer to report button
-@@ -249,14 +221,10 @@ static psmouse_ret_t vmmouse_process_byte(struct psmouse *psmouse)
- static void vmmouse_disable(struct psmouse *psmouse)
- {
- 	u32 status;
--	u32 dummy1, dummy2, dummy3, dummy4;
--
--	VMMOUSE_CMD(ABSPOINTER_COMMAND, VMMOUSE_CMD_DISABLE,
--		    dummy1, dummy2, dummy3, dummy4);
- 
--	VMMOUSE_CMD(ABSPOINTER_STATUS, 0,
--		    status, dummy1, dummy2, dummy3);
-+	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_DISABLE);
- 
-+	status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
- 	if ((status & VMMOUSE_ERROR) != VMMOUSE_ERROR)
- 		psmouse_warn(psmouse, "failed to disable vmmouse device\n");
+diff --git a/arch/x86/include/asm/vmware.h b/arch/x86/include/asm/vmware.h
+index 2ac87068184a..84a31f579a30 100644
+--- a/arch/x86/include/asm/vmware.h
++++ b/arch/x86/include/asm/vmware.h
+@@ -273,5 +273,6 @@ unsigned long vmware_hypercall_hb_in(unsigned long cmd, unsigned long in2,
  }
-@@ -273,26 +241,24 @@ static void vmmouse_disable(struct psmouse *psmouse)
- static int vmmouse_enable(struct psmouse *psmouse)
- {
- 	u32 status, version;
--	u32 dummy1, dummy2, dummy3, dummy4;
+ #undef VMW_BP_REG
+ #undef VMW_BP_CONSTRAINT
++#undef VMWARE_HYPERCALL
  
- 	/*
- 	 * Try enabling the device. If successful, we should be able to
- 	 * read valid version ID back from it.
- 	 */
--	VMMOUSE_CMD(ABSPOINTER_COMMAND, VMMOUSE_CMD_ENABLE,
--		    dummy1, dummy2, dummy3, dummy4);
-+	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND, VMMOUSE_CMD_ENABLE);
- 
- 	/*
- 	 * See if version ID can be retrieved.
- 	 */
--	VMMOUSE_CMD(ABSPOINTER_STATUS, 0, status, dummy1, dummy2, dummy3);
-+	status = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_STATUS, 0);
- 	if ((status & 0x0000ffff) == 0) {
- 		psmouse_dbg(psmouse, "empty flags - assuming no device\n");
- 		return -ENXIO;
- 	}
- 
--	VMMOUSE_CMD(ABSPOINTER_DATA, 1 /* single item */,
--		    version, dummy1, dummy2, dummy3);
-+	version = vmware_hypercall1(VMWARE_CMD_ABSPOINTER_DATA,
-+				    1 /* single item */);
- 	if (version != VMMOUSE_VERSION_ID) {
- 		psmouse_dbg(psmouse, "Unexpected version value: %u vs %u\n",
- 			    (unsigned) version, VMMOUSE_VERSION_ID);
-@@ -303,11 +269,11 @@ static int vmmouse_enable(struct psmouse *psmouse)
- 	/*
- 	 * Restrict ioport access, if possible.
- 	 */
--	VMMOUSE_CMD(ABSPOINTER_RESTRICT, VMMOUSE_RESTRICT_CPL0,
--		    dummy1, dummy2, dummy3, dummy4);
-+	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_RESTRICT,
-+			  VMMOUSE_RESTRICT_CPL0);
- 
--	VMMOUSE_CMD(ABSPOINTER_COMMAND, VMMOUSE_CMD_REQUEST_ABSOLUTE,
--		    dummy1, dummy2, dummy3, dummy4);
-+	vmware_hypercall1(VMWARE_CMD_ABSPOINTER_COMMAND,
-+			  VMMOUSE_CMD_REQUEST_ABSOLUTE);
- 
- 	return 0;
- }
-@@ -344,7 +310,7 @@ static bool vmmouse_check_hypervisor(void)
-  */
- int vmmouse_detect(struct psmouse *psmouse, bool set_properties)
- {
--	u32 response, version, dummy1, dummy2;
-+	u32 response, version, type;
- 
- 	if (!vmmouse_check_hypervisor()) {
- 		psmouse_dbg(psmouse,
-@@ -353,9 +319,9 @@ int vmmouse_detect(struct psmouse *psmouse, bool set_properties)
- 	}
- 
- 	/* Check if the device is present */
--	response = ~VMMOUSE_PROTO_MAGIC;
--	VMMOUSE_CMD(GETVERSION, 0, version, response, dummy1, dummy2);
--	if (response != VMMOUSE_PROTO_MAGIC || version == 0xffffffffU)
-+	response = ~VMWARE_HYPERVISOR_MAGIC;
-+	version = vmware_hypercall3(VMWARE_CMD_GETVERSION, 0, &response, &type);
-+	if (response != VMWARE_HYPERVISOR_MAGIC || version == 0xffffffffU)
- 		return -ENXIO;
- 
- 	if (set_properties) {
+ #endif
 -- 
 2.39.0
 
