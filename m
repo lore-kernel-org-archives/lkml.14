@@ -1,239 +1,222 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2056.outbound.protection.outlook.com [40.107.243.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED1D815886B
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 18:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715021334; cv=none; b=km1XBsT5yoqHkyaCitXORnIOOxC+Px9AroFtuvyapcGE1OAt/kkn0CLxRtTjnxKH//DjipD9whDcB2mwANU4W0sjTH+MajQXw+SXDsPm9f3Y8O5HJc59nxNhNAvd+88XYWMECgvG4Qjj3Ldti1piZrBoUqfHD7JojOkYVRAlehw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715021334; c=relaxed/simple;
-	bh=DdMY60eWYf7nFd2XjhGOmHWtIFWpG2Vu5/5hhugXBZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MQ9oKyNtFdSIgJqUYH612+nQK03KDEPTID+v0d52vTEyZcOKQ1cRUmqlH0iNutaVPSXiZhgsihfhcFvgERkoM6btoyeoBVCWzW+XuqDYGE188aVddkHmWkSS+Bo5NhoIL7x/WGV8jE5CRA458gsrrBg8AMktOFf+N9WDSdRU0cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YPM15xWb; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7EC4AECA;
+	Mon,  6 May 2024 18:50:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715021460; cv=fail; b=vD2l5O9mMkIHGUo0kvwM7o23bEw7vgZsL5VbFRzs3bV717W+MotbpPvrYTXDFY9pN9Wc9kSxiZKVSKst1mM1vPXr31JyoynFW88a8z/QlFSm9GG/44TOLPaZeaxW9HxjkmzOy7TUUguRXuf89i5sqa3prMNlGi2CpDsdLlyHs6c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715021460; c=relaxed/simple;
+	bh=6TjPXwDHMrKam3heobAM+nTr0wZ3G8FQxnuyGqSXeJ0=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DaSbrHD7zQP53hG+vUDwy5fM/f76rxzrOyMA56Wo8yzo6i4KHGEGwNoqpVvLvCCsvmnds2RthJTG7PhTPZQo27CcLK1IeyFxsbEpIo0Sa2kgZeLNyfqwnmCC7nDsw3FADwEXbGs4Irhut8MVxzD+xQV9P/u9hueMB1E2T+iKmSo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=O358p5mK; arc=fail smtp.client-ip=40.107.243.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YPM15xWb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715021326;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aPOamX9LHTG5t3ZSBhvmzpDMv+bOSB81pKuh6fPgknw=;
-	b=YPM15xWbogDpgXPfE+nJG2wWiSLPr1T6vOalmLBIvuNWTrjEzXv23ggcrZc1YaezJec1ZX
-	y2tFxTdsUvEhEgzTntizr2o3oAMOVF3LkFeFUYpq59Bkrs09xIawtAISaDylnpbAU/u+OR
-	owum3zy1Z6HML3BA29mlYMmHFXwr8Dc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-618-JxgjRRKQNJC9G07zoB7YFg-1; Mon, 06 May 2024 14:48:43 -0400
-X-MC-Unique: JxgjRRKQNJC9G07zoB7YFg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 077BB8032FA;
-	Mon,  6 May 2024 18:48:43 +0000 (UTC)
-Received: from tpad.localdomain (unknown [10.96.133.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F3D42024513;
-	Mon,  6 May 2024 18:48:42 +0000 (UTC)
-Received: by tpad.localdomain (Postfix, from userid 1000)
-	id 0AFB1400DCBB9; Mon,  6 May 2024 15:47:21 -0300 (-03)
-Date: Mon, 6 May 2024 15:47:21 -0300
-From: Marcelo Tosatti <mtosatti@redhat.com>
-To: Leonardo Bras <leobras@redhat.com>
-Cc: Sean Christopherson <seanjc@google.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rcu@vger.kernel.org
-Subject: Re: [RFC PATCH v1 0/2] Avoid rcu_core() if CPU just left guest vcpu
-Message-ID: <ZjkludR5wh0mKZ2H@tpad>
-References: <ZhAN28BcMsfl4gm-@google.com>
- <a7398da4-a72c-4933-bb8b-5bc8965d96d0@paulmck-laptop>
- <ZhQmaEXPCqmx1rTW@google.com>
- <Zh2EQVj5bC0z5R90@tpad>
- <Zh2cPJ-5xh72ojzu@google.com>
- <Zh5w6rAWL+08a5lj@tpad>
- <Zh6GC0NRonCpzpV4@google.com>
- <Zh/1U8MtPWQ/yN2T@tpad>
- <ZiAFSlZwxyKzOTRL@google.com>
- <ZjVMpj7zcSf-JYd_@LeoBras>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="O358p5mK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hzN1dJdyuYUTJsvfVc7ETNFmW+c82qhGKnuyWDjAx4wjE3l3lQ2lV4TiO/g4bJyi0D+gEVu6M4iwa7WDx4Kkj4tRhYzm+4f+zVF+cDi3R0LAAXyPZrLKIn21jZSbPQG8DLawsfoHSvjRjWSVlXPYzR29JHdFcrJmSN41lLViEWbeY1X1lWPSLpqnaWyfe8VMbOa09MgEY4WiDk1iRzFwgVVROXfj9haGylWlOpqUhJUKChUH6es+ILR0rlpU3aR91eK1aAhBGwWw1kn6+GYvszNlUgIpNuYNSXR99b24XwwkpVlit752IEoVVmFI1w5og2pg0fEOtrq5itIs0FkWJw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ShH1y5EJvLyw8L8Y3VMDX0hBH3YYOJ6GcUoiYqKBN0Y=;
+ b=MRUkF7bRgX7ohPDHtfV1qrfIMQuZM7BpU4pQpmijJOfvQlVki6iTCpbSuSviDsuR4yDxovcHxEbIn3A0KE8+evad3NviGMVt283jxmiwX95kb4CThwzzRxGqLemOKucrgnK/Tk9MJ9J+yIrKzfG4dmY33Ff+Py2dPQ7i61C/0CQrHngpQtahWuqK6OrDn3PH2iteUoCDEYKpOds6meXbWT2kLyCIkBZY/XRCNfTJJ5I0hp34BuJwraLFAymKXTc03enh2KPPmucUhSUM2ESf7D4FMrWQdY6LvuyEtKG+Cy8UkUfiHIErIozLBN5+5XjMGiPWlnuVFlxnLWxyS1rfAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ShH1y5EJvLyw8L8Y3VMDX0hBH3YYOJ6GcUoiYqKBN0Y=;
+ b=O358p5mK8ZHZxd1/qFLNJ+XfkRF8vb+WIHQ359kiZLQgUrwajC0c8SrQkgawfeSDRKrZaqBW8O7DOj/8/beCzyF+5pmK3oyqNzXaTQ8o2c5+doledFa7sA953+aFHtpyjOm/yvkFTuvFXYonqhtZFlIXNu9CbkPbHPo3keswf31P7x4yX0kxwL12cpqLDZUkRlj5137nTqicJ2a6MAQ1DbjjIPZ2GxmBLDII7ozAPoVWGW7M8CwrnlO1G3WTYfDtNWbKV5FeHmNoa211s5feif8a5rvIJtw4FxAJlgroAXRHovhCEYbMMKtRzFrdVFK9yoKMO1rNXgeiikO3OpQgiQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
+ by PH7PR12MB6907.namprd12.prod.outlook.com (2603:10b6:510:1b9::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41; Mon, 6 May
+ 2024 18:50:51 +0000
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::2cf4:5198:354a:cd07]) by BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::2cf4:5198:354a:cd07%4]) with mapi id 15.20.7544.041; Mon, 6 May 2024
+ 18:50:51 +0000
+Message-ID: <fd74de9a-4deb-4fb7-9461-65c38ff1443c@nvidia.com>
+Date: Mon, 6 May 2024 11:50:40 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] selftests/net: fix uninitialized variables
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Shuah Khan <shuah@kernel.org>, richardbgobert@gmail.com
+Cc: "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Steffen Klassert <steffen.klassert@secunet.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
+ <afaerber@suse.de>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Matthieu Baerts <matttbe@kernel.org>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Pravin B Shelar <pshelar@ovn.org>,
+ Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+ zhujun2 <zhujun2@cmss.chinamobile.com>, Petr Machata <petrm@nvidia.com>,
+ Ido Schimmel <idosch@nvidia.com>, Hangbin Liu <liuhangbin@gmail.com>,
+ Nikolay Aleksandrov <razor@blackwall.org>,
+ Benjamin Poirier <bpoirier@nvidia.com>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Dmitry Safonov <0x7f454c46@gmail.com>, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org,
+ mptcp@lists.linux.dev, dev@openvswitch.org,
+ Valentin Obst <kernel@valentinobst.de>, linux-kselftest@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev
+References: <20240505222639.70317-1-jhubbard@nvidia.com>
+ <20240505222639.70317-2-jhubbard@nvidia.com>
+ <66391ab83771c_516de294d7@willemb.c.googlers.com.notmuch>
+Content-Language: en-US
+From: John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <66391ab83771c_516de294d7@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR08CA0001.namprd08.prod.outlook.com
+ (2603:10b6:a03:100::14) To BY5PR12MB4130.namprd12.prod.outlook.com
+ (2603:10b6:a03:20b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjVMpj7zcSf-JYd_@LeoBras>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR12MB4130:EE_|PH7PR12MB6907:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5bbd65d5-4849-4563-a88d-08dc6dfd735c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|1800799015|7416005|376005|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?TnJ0RzJocjcyVjVTa3lCWnhBMGVzSlJoaUtEdHExN3JvK2lFcVJwQnZ2S2F1?=
+ =?utf-8?B?N1pyS0NJWXNCdjVHejlBYkRFZjNVeG1kUjhLNTdOTWRpUFZWQVVGOWQ4SGd4?=
+ =?utf-8?B?dHErdVUrOXpoZGNJQ1J4TVJ2MG5GWVVYb21Cc2hZRDhFV1NIK3hlakFkRDVJ?=
+ =?utf-8?B?YUsrVEdnRFg0TlF0aUxZTEJQT01KY1E2bE9kOEZ0aTE1clVSdjZVOUZyTFdo?=
+ =?utf-8?B?MUk0eDZsNkxJRjNYV3N0NmdYQlRSM3dCTUlNdFBTSG1PbTBKY0kzcEV1K2t5?=
+ =?utf-8?B?R2lwQ3lkVnhFOW1yUXp4bENzcGZRbWRLWU9hUWFiYWdKK205QjEweWQyRnJ2?=
+ =?utf-8?B?Y1pySzd1WSs3Q1BxYTJvUTJjdlV6d0pBaVQ4ckNRdHVjelNyQTlDeksrNzRl?=
+ =?utf-8?B?QzVwWkJmbktBbktDM2FRWm1KMU9abUtqazJ0ZUtIOGNTOEZKNnhjdmVxSFZJ?=
+ =?utf-8?B?Sm8vUmQxTFIzd281M3RDVUlReXRVUElXSFJNQ1FRRHBZVGV1cEVuOW9lbnFo?=
+ =?utf-8?B?L3hUNEJTZ05nbm9veko4dWYya2tubHYySnhJa1hkM0traHhpZU92RHBlZmJl?=
+ =?utf-8?B?Q3BMVVovZWF6YlNCNjg5NlFyR3B3aDZKTHJtZkJVRTV0VHdDaEFCam9PSE9F?=
+ =?utf-8?B?OCtmT0hxMUVBdThHNk04dGVnbC9FTDhlcEUyY0ZYTWlxWTdValJOaktNUHhx?=
+ =?utf-8?B?QkpXd0pJR3ViVjRRVlI0aW5scWp3ajcxZURHSjI3aFdpSXQxM2RkZHo3d2NM?=
+ =?utf-8?B?TWZOWTlzSFRrYk9uU1FYTFh3K0ExaElBcTRuallUK1VDUklNUXRiTEI4dnlu?=
+ =?utf-8?B?RzRvaDJvSlh1Y1duMjNxaS9ITTJNaDJDZU5jMGo5aTFEbTlSRFdzYklVZG8w?=
+ =?utf-8?B?dDVxakVBakxLUnU2c2V5bk1WNXRkUmV2bDVUbm1GUDlHSEhnRUIrTWJoTFNt?=
+ =?utf-8?B?elhzVzRKR2lxSFBDTDJ6VW4yZGUwbVl4a2FsZkUwVUJJUUFvRklUQXY5NDdL?=
+ =?utf-8?B?YytrUjNKVlRlb1VNajR1aWxWSjhTRHhIQlZsd2lPVHpRaTF0bGwwT2hEREVo?=
+ =?utf-8?B?Z0s0NG8yb0c5bjVYWFlocHphOTJRMUxQWXZVaWFKd1U5V1UzN3JoVmx5eW1P?=
+ =?utf-8?B?UVVxeGNLVUczMWdoU3FHc0xVeGh2Mi9PUTZ5Z29oUmowR1ZpUGRtNlRIanFo?=
+ =?utf-8?B?YnpCZGUySGJiMnVmVFljdE5NemN2eTRSTG13d0p5c0ZhVy9MQkJZU3hmL01K?=
+ =?utf-8?B?cG14NHNTb0VSTWpycGcrcDJCdzFocXVYQUtCRUdWSEhWbVpYNjkwTUZ0OU51?=
+ =?utf-8?B?cmh6bGpkYllLYmgwMGhBVzFKNHpHWHdrOHA2ZXM4djFjQVNGRnlQdnNjRnZH?=
+ =?utf-8?B?SVZXM29MMG9icDhDK3lrYk4xTDIzblhWWDAzdzFkNFprYmpjTTJ3WnpxSkIr?=
+ =?utf-8?B?cm56ZkRrdjJmWU1tKzlqempmL1o2a1pMUmZGM3EvQ1BrSzFENUh0aXVkMGtn?=
+ =?utf-8?B?TWxaM1ovOHdVUWpINXdGc29NV3ByWXUzUWhWUzJ6SW9ieDAvV3NWRzVMTFll?=
+ =?utf-8?B?UlNtbzBtek5mQ28wa2dPd2trVmlKd0dZUWd6TUdMT2I1bCtLaUlDZjQzOVlM?=
+ =?utf-8?B?WDZCL2pJQjZuUUxhNSt5ZFBQc1BiUThvdU5LTmUzUHp2STlNSDQ3R1pxaGRJ?=
+ =?utf-8?B?ekxGekQxZStrVWhtVVdYRldaejdiOVErMGNIQ0tPRkJPeHBDQXBLNHBnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VVJpSUdGdmRRSWVTZkRpbTNZZEtVNlE0R2NNNnZlZ3ZCWW1pcFlZQno2Y0U1?=
+ =?utf-8?B?cmZnR21PVGFZM3BxeXVUTkE2dkRmY3QwM0dNUU5sM0o4czJtZlgwK1VMbGUy?=
+ =?utf-8?B?U05JTXVHL1Bud3VLUlNRS2xKeGpQTG80UlhkUG1XODVVWE9tanZvR1hEeXRw?=
+ =?utf-8?B?S1NCWHJKRVNoaWlKSWtHUU9WNnphYUhIM1FYQzJLSFN2OEpXTWYyc3RvRy9F?=
+ =?utf-8?B?bk9nNmRaZHpqSjJFVkV4cTVnMGxEcU5kbWNDVVErKzQ0OGFWcDErUjEwdnFk?=
+ =?utf-8?B?My9RMHJNRHpxSTBHc2Vub1d1NDJBb1ZLcSswWU9lbUVkRm83VlkwakVHNGxL?=
+ =?utf-8?B?Qno2c21yT1FHNGhuaHgrS09ub0ZOc3IxWHR6dGU2dkVDWGptOVhQbVRuMDZh?=
+ =?utf-8?B?ZnhEVTRLQVVNZDZBOTUvekRIWkx1eHhsZ2pvSXgwVlBLZjJPN3I3TnNEZ3ph?=
+ =?utf-8?B?SEdtT2g3RGlGaEZsbS9FSHpNMURYMUFHbDRucnY5bnNyNzhseThQVzExNVlq?=
+ =?utf-8?B?N2hnVVh2QmFKSU5zeDYzSWV2dFdDYWxyamxTaTRkdy82YS8rdEZaNnZJT2lQ?=
+ =?utf-8?B?a3lOYnRmcGlvNHREUGExdmhSOHVQdE9meElqTFJwelZILzZZbFIrcjBVM1Jz?=
+ =?utf-8?B?OEN4KzdKelJtNGdvdUZVRmZHbTRVaUZHSXEwZGpUYXhuVElDQUNwd0VkV0ZM?=
+ =?utf-8?B?eU9Cb1A1MGhlTWQzVnBWWS95QXlXV0FiSmczblV1azJOQmtmTnhOMHh0TDVn?=
+ =?utf-8?B?dVdmMVZXV3BoajVzWjdYWlJWWVliOVBHbjVEL2NMTEdid1pnWHZvK3VOcUt0?=
+ =?utf-8?B?QldFOFdqZTdRZk9Pa1AzRUErcFJNK0FRRkVjNHEyd2xyTGNkeFIvbkJRS0kr?=
+ =?utf-8?B?VTQySUJ1Ny81QWdkU1pycHJld04yMm05c2hWcGdheXR2L0ZaVFd3dG8zRXBJ?=
+ =?utf-8?B?RmI3TFNUak4rQ3NaL2ppc21BMXp3MGpVRzNHTDBnMytEbUZxT2Z6RnBPK3NV?=
+ =?utf-8?B?Q0t4UFZsUHV5TGQ0WE05eFg0NEwzVGZNNm9GbjF3VUVxVVNiOCsraUdrOEx1?=
+ =?utf-8?B?dWtLcW42S0ZRSFlFZFpzZ3dDWno4aFplYmQ2MnhHZG5iUUdzYStRcFV0MXRV?=
+ =?utf-8?B?cHFzcHBKdDg1dVhnRzVmTER3VnoweXJmNlhHenM3b0ZGT29ibkx2eVVZL3VR?=
+ =?utf-8?B?aGt6Qkp3MzRSSlhxdXhHQkNHNUh5SGJjTlJrWk0wcXNCTE5xSXhNeFZYL1Vz?=
+ =?utf-8?B?T1dwcVpsQjBEVlM4NzVBS1poa1hDQXRYeXdsY1JRUTZaOXlrcmc1eWYxZkE0?=
+ =?utf-8?B?Tm8zYTVtWDFjTU8yRDBOVmIvNXdBeHVlRmdkZEpBK0hIcGJlc1ZYajZmV3hr?=
+ =?utf-8?B?eld3TmpsbTlTR1UrVmNhVC9SdUVnZ05ZTTJvQzRZTXhTU0o2TW56YkhvU1l2?=
+ =?utf-8?B?UVRCYlN4d3J1a1M2NlFyOFVuRnJjQWE5ZkgvWFYrY0thK1hUaGVOMUV0ZXVV?=
+ =?utf-8?B?Y0JvNlMwcW8wbkF5WE9oZ1dQaWxCc1ViUllZL2JYWG9zQWYwMGtTM3d3RmZL?=
+ =?utf-8?B?WHowVnlSbDNQam9MKzN6Y0lqQ1RXcmRaaWdzWFJZZWZlbHQrYUdZOFkwam81?=
+ =?utf-8?B?TUxtWmxuTndRSDhMeXhWTkI5aVE2b1lJOGVUOFJ6bEtCUTBKQ2xrcmtaVXQw?=
+ =?utf-8?B?MU9Ca1J2dzAyMlVXUUxUNWh0c09CZDVnK0dVZnRCQkdTUWZMaWl3UFV3bHJr?=
+ =?utf-8?B?UTlsc3RSVDRtMGtsRmFQVGhVQitHdUZVV1NROXlHSHdQMzg4RkkwSFYxNDRC?=
+ =?utf-8?B?THloWWFET1gxVVZLSjlvK1VCLzhLTHJ3YWlQUmJ3UWZydzRiTGo0OFM1TVA0?=
+ =?utf-8?B?MmtWYnExSjc4ZkJMSHg4ZW4xR0VtdXZrY21TcG15eGlPcGpyU21od1U3eFRo?=
+ =?utf-8?B?WWF3VGdGYTZaRjdOSVJXTlZTL0JrQmtERDdHSkR3Qm5sbUtpUkVzaDV4S29t?=
+ =?utf-8?B?TWZKYXFpTU1UV2VwOHJXNFF0VURBcjBPZjlHTmY0eE9sUjJKN2F4V2RlT3Nu?=
+ =?utf-8?B?V2dZNk4rVG4vYVZ4QlFkMVZMWnY3YXpNOTMzUmJBOGhQVUxVQjJ5TlhTNXNu?=
+ =?utf-8?B?U0s1TWlFOXVqcWJJUVZuQlZ6Ty95cGpMZkRUaDUySnVUdkdzQWNtL3A3ZGps?=
+ =?utf-8?B?dWc9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5bbd65d5-4849-4563-a88d-08dc6dfd735c
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2024 18:50:51.0532
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2f8NpaO4jd299OLB4e3wBJRlDjcwtczrITcuICw1vmSfGPBjf0Uoecj8fCKtKMcL933qucbdc+o1B18fTon1Rg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6907
 
-On Fri, May 03, 2024 at 05:44:22PM -0300, Leonardo Bras wrote:
-> On Wed, Apr 17, 2024 at 10:22:18AM -0700, Sean Christopherson wrote:
-> > On Wed, Apr 17, 2024, Marcelo Tosatti wrote:
-> > > On Tue, Apr 16, 2024 at 07:07:32AM -0700, Sean Christopherson wrote:
-> > > > On Tue, Apr 16, 2024, Marcelo Tosatti wrote:
-> > > > > > Why not have
-> > > > > > KVM provide a "this task is in KVM_RUN" flag, and then let the existing timeout
-> > > > > > handle the (hopefully rare) case where KVM doesn't "immediately" re-enter the guest?
-> > > > > 
-> > > > > Do you mean something like:
-> > > > > 
-> > > > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > > > > index d9642dd06c25..0ca5a6a45025 100644
-> > > > > --- a/kernel/rcu/tree.c
-> > > > > +++ b/kernel/rcu/tree.c
-> > > > > @@ -3938,7 +3938,7 @@ static int rcu_pending(int user)
-> > > > >                 return 1;
-> > > > >  
-> > > > >         /* Is this a nohz_full CPU in userspace or idle?  (Ignore RCU if so.) */
-> > > > > -       if ((user || rcu_is_cpu_rrupt_from_idle()) && rcu_nohz_full_cpu())
-> > > > > +       if ((user || rcu_is_cpu_rrupt_from_idle() || this_cpu->in_kvm_run) && rcu_nohz_full_cpu())
-> > > > >                 return 0;
-> > > > 
-> > > > Yes.  This, https://lore.kernel.org/all/ZhAN28BcMsfl4gm-@google.com, plus logic
-> > > > in kvm_sched_{in,out}().
-> > > 
-> > > Question: where is vcpu->wants_to_run set? (or, where is the full series
-> > > again?).
-> > 
-> > Precisely around the call to kvm_arch_vcpu_ioctl_run().  I am planning on applying
-> > the patch that introduces the code for 6.10[*], I just haven't yet for a variety
-> > of reasons.
-> > 
-> > [*] https://lore.kernel.org/all/20240307163541.92138-1-dmatlack@google.com
-> > 
-> > > So for guest HLT emulation, there is a window between
-> > > 
-> > > kvm_vcpu_block -> fire_sched_out_preempt_notifiers -> vcpu_put 
-> > > and the idle's task call to ct_cpuidle_enter, where 
-> > > 
-> > > ct_dynticks_nesting() != 0 and vcpu_put has already executed.
-> > > 
-> > > Even for idle=poll, the race exists.
-> > 
-> > Is waking rcuc actually problematic?
+On 5/6/24 11:00 AM, Willem de Bruijn wrote:
+> John Hubbard wrote:
+...
+>> diff --git a/tools/testing/selftests/net/gro.c b/tools/testing/selftests/net/gro.c
+>> index 353e1e867fbb..0eb61edaad83 100644
+>> --- a/tools/testing/selftests/net/gro.c
+>> +++ b/tools/testing/selftests/net/gro.c
+>> @@ -110,7 +110,8 @@ static void setup_sock_filter(int fd)
+>>   	const int dport_off = tcp_offset + offsetof(struct tcphdr, dest);
+>>   	const int ethproto_off = offsetof(struct ethhdr, h_proto);
+>>   	int optlen = 0;
+>> -	int ipproto_off, opt_ipproto_off;
+>> +	int ipproto_off;
+>> +	int opt_ipproto_off = 0;
 > 
-> Yeah, it may introduce a lot (30us) of latency in some cases, causing a 
-> missed deadline.
+> This is only intended to be used in the case where the IP proto is not TCP:
 > 
-> When dealing with RT tasks, missing a deadline can be really bad, so we 
-> need to make sure it will happen as rarely as possible.
+>                          BPF_STMT(BPF_LD  + BPF_B   + BPF_ABS, ipproto_off),
+> +                       BPF_JUMP(BPF_JMP + BPF_JEQ + BPF_K, IPPROTO_TCP, 2, 0),
+> +                       BPF_STMT(BPF_LD  + BPF_B   + BPF_ABS, opt_ipproto_off),
+>                          BPF_JUMP(BPF_JMP + BPF_JEQ + BPF_K, IPPROTO_TCP, 0, 5),
 > 
-> >  I agree it's not ideal, but it's a smallish
-> > window, i.e. is unlikely to happen frequently, and if rcuc is awakened, it will
-> > effectively steal cycles from the idle thread, not the vCPU thread.
+> In that case the test tries again at a different offset that accounts
+> for optional IPv6 extension headers.
 > 
-> It would be fine, but sometimes the idle thread will run very briefly, and 
-> stealing microseconds from it will still steal enough time from the vcpu 
-> thread to become a problem.
+> This is indeed buggy, in that it might accidentally accept packets
+> that should be dropped.
 > 
-> >  If the vCPU
-> > gets a wake event before rcuc completes, then the vCPU could experience jitter,
-> > but that could also happen if the CPU ends up in a deep C-state.
+> Initializing to 0 compares against against the first byte of the
+> Ethernet header. Which is an external argument to the test. So
+> safest is to initialize opt_ipproto_off to ipproto_off and just
+> repeat the previous check. Perhaps:
 > 
-> IIUC, if the scenario calls for a very short HLT, which is kind of usual, 
-> then the CPU will not get into deep C-state. 
-> For the scenarios longer HLT happens, then it would be fine.
+> @@ -118,6 +118,7 @@ static void setup_sock_filter(int fd)
+>          else
+>                  next_off = offsetof(struct ipv6hdr, nexthdr);
+>          ipproto_off = ETH_HLEN + next_off;
+> +       opt_ipproto_off = ipproto_off;  /* overridden later if may have exthdrs */
 
-And it might be that the chosen idle state has low latency.
+OK, thanks for pointing out the right fix, I'll send a v2 that does that.
 
-There is interest from customer in using realtime and saving energy as
-well.
-
-For example:
-
-https://doc.dpdk.org/guides/sample_app_ug/l3_forward_power_man.html
-
-> > And that race exists in general, i.e. any IRQ that arrives just as the idle task
-> > is being scheduled in will unnecessarily wakeup rcuc.
-> 
-> That's a race could be solved with the timeout (snapshot) solution, if we 
-> don't zero last_guest_exit on kvm_sched_out(), right?
-
-Yes.
-
-> > > > >         /* Is the RCU core waiting for a quiescent state from this CPU? */
-> > > > > 
-> > > > > The problem is:
-> > > > > 
-> > > > > 1) You should only set that flag, in the VM-entry path, after the point
-> > > > > where no use of RCU is made: close to guest_state_enter_irqoff call.
-> > > > 
-> > > > Why?  As established above, KVM essentially has 1 second to enter the guest after
-> > > > setting in_guest_run_loop (or whatever we call it).  In the vast majority of cases,
-> > > > the time before KVM enters the guest can probably be measured in microseconds.
-> > > 
-> > > OK.
-> > > 
-> > > > Snapshotting the exit time has the exact same problem of depending on KVM to
-> > > > re-enter the guest soon-ish, so I don't understand why this would be considered
-> > > > a problem with a flag to note the CPU is in KVM's run loop, but not with a
-> > > > snapshot to say the CPU recently exited a KVM guest.
-> > > 
-> > > See the race above.
-> > 
-> > Ya, but if kvm_last_guest_exit is zeroed in kvm_sched_out(), then the snapshot
-> > approach ends up with the same race.  And not zeroing kvm_last_guest_exit is
-> > arguably much more problematic as encountering a false positive doesn't require
-> > hitting a small window.
-> 
-> For the false positive (only on nohz_full) the maximum delay for the  
-> rcu_core() to be run would be 1s, and that would be in case we don't schedule out for 
-> some userspace task or idle thread, in which case we have a quiescent state 
-> without the need of rcu_core().
-> 
-> Now, for not being an userspace nor idle thread, it would need to be one or 
-> more kernel threads, which I suppose aren't usually many, nor usually 
-> take that long for completing, if we consider to be running on an isolated (nohz_full) cpu. 
-> 
-> So, for the kvm_sched_out() case, I don't actually think we are  
-> statistically introducing that much of a delay in the RCU mechanism.
-> 
-> (I may be missing some point, though)
-> 
-> Thanks!
-> Leo
-> 
-> > 
-> > > > > 2) While handling a VM-exit, a host timer interrupt can occur before that,
-> > > > > or after the point where "this_cpu->in_kvm_run" is set to false.
-> > > > >
-> > > > > And a host timer interrupt calls rcu_sched_clock_irq which is going to
-> > > > > wake up rcuc.
-> > > > 
-> > > > If in_kvm_run is false when the IRQ is handled, then either KVM exited to userspace
-> > > > or the vCPU was scheduled out.  In the former case, rcuc won't be woken up if the
-> > > > CPU is in userspace.  And in the latter case, waking up rcuc is absolutely the
-> > > > correct thing to do as VM-Enter is not imminent.
-> > > > 
-> > > > For exits to userspace, there would be a small window where an IRQ could arrive
-> > > > between KVM putting the vCPU and the CPU actually returning to userspace, but
-> > > > unless that's problematic in practice, I think it's a reasonable tradeoff.
-> > > 
-> > > OK, your proposal looks alright except these races.
-> > > 
-> > > We don't want those races to occur in production (and they likely will).
-> > > 
-> > > Is there any way to fix the races? Perhaps cmpxchg?
-> > 
-> > I don't think an atomic switch from the vCPU task to the idle task is feasible,
-> > e.g. KVM would somehow have to know that the idle task is going to run next.
-> > This seems like something that needs a generic solution, e.g. to prevent waking
-> > rcuc if the idle task is in the process of being scheduled in.
-> > 
-> 
-> 
+thanks,
+-- 
+John Hubbard
+NVIDIA
 
