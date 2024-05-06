@@ -1,132 +1,164 @@
-Received: from mail-m19731107.qiye.163.com (mail-m19731107.qiye.163.com [220.197.31.107])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657A513D882;
-	Mon,  6 May 2024 14:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207FC13CF8F;
+	Mon,  6 May 2024 14:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715005216; cv=none; b=qtzmFVqQOHmnvyNIMMBx6ADXQ3Yv0r08QbvvAX5Fa1OKZm0Q9FDc7vtsj/vVSMFiQFhtmXC/q1cHKfRUSxH7RiyH5wqVLiUuHADchNbSfa5Crq978mF627cRA481n1s9/LzPEbIPHWJi33Uev1AbV9+Yn4733h8IYn8veqiqIWs=
+	t=1715005251; cv=none; b=j2M+joX0lSd3u5TYR7TaED90JEtEFwYEV5f+BgkPL6b45cKUYqBuIVqjFmYCzEPDSI/TSxwzfs34XpDDvS0TbqmRaW1DOY4noa5sCbkzs4q+QztTYA9z3G3l0XVd/KcPP6K1BN1oKcl0tqn1+swhGNdpl997mGjcSzoU77rGggY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715005216; c=relaxed/simple;
-	bh=pyfAwvjWpp9yO49mvYPG4/3Ctuy4s/rdglAXCFfPT4k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FnK1Vjgls9XuajwTmkrglwmzh18IH694vYebh31X4dP8vae4f8iBp7etw3W/eGeSvhRxRfVn/y+cMoagozp0LOiBUKNBEwUAK2V+0oAYewqSWcaXkbSwCJnhnPnfby40EVpgeywcZ7ARj52eUX+gQCMv/8dMsq9pds+0PgpMObQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=ZrKQo4LL; arc=none smtp.client-ip=220.197.31.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
+	s=arc-20240116; t=1715005251; c=relaxed/simple;
+	bh=v35O4MOv00OkD5Eak0/TAE7hgCKO/FarPLabAISIafg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z+tCc8Bkv1d5feRVJFfRvn7H/KVhz9KIK1l7Canu46q+bAyheD4TrrQujAQRq83FkTDN14H0G4aihqjMe2MMe0vzMEwSPif5ExfUnh8ejC4JqPO/CX30asNXVDPpVyrkBj1dufVvchaN8Fqt0RVefsK+i+hiQeGVPFPY5758+5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCGhf7iC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="ZrKQo4LL"
-DKIM-Signature: a=rsa-sha256;
-	b=ZrKQo4LLpXHMy8d4LXYD5iTRkQxizuI2VtgsgE+tJYIizoDN242zSfeuyZB6BxBPQMhQ7sm0BOLRbctDuuDGN2P8iej4bSnj/drKmF3/FNT3RqhqTyIlvpEtD8A/Fe6P9zFf5Mb0Hkg6Vj8aO4luGZv0MwCJTidSzkGU/cgb2Ro=;
-	c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
-	bh=GJuF3hTrQtUJMZ2uZFlEfERKTqM4rnSOLJVMQPzCloc=;
-	h=date:mime-version:subject:message-id:from;
-Received: from [172.16.12.141] (unknown [58.22.7.114])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 739F18404C4;
-	Mon,  6 May 2024 16:23:00 +0800 (CST)
-Message-ID: <ed035e25-dd9e-4041-b413-7511544d0aba@rock-chips.com>
-Date: Mon, 6 May 2024 16:22:46 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCGhf7iC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B91D5C4AF66;
+	Mon,  6 May 2024 14:20:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715005250;
+	bh=v35O4MOv00OkD5Eak0/TAE7hgCKO/FarPLabAISIafg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=CCGhf7iCvrvdO1ATf+Hxvn2NyWfeqH0aIGOcAknXZEOSrM8DVYC33/kmMwu3Bsrbb
+	 M41McHzwU9v75DbupsIzscvoHNrg8AZ31GjhSraOptdgRK1OjsQbqJ/5iDvgwqtQ6D
+	 m6SUsoS2S0tTJP/bFqMY2v+l4df54sD4OoGYJJ2EvK2OaUzL0Ufs0QcVGuQ7T5xXTJ
+	 JjJ/orAMCuHo1X1IgrzL3JmZRRqbvAqBMy53rXkWlPEe0oULCmuyvElgETpM+HTbqE
+	 CKQuStfTfjutV9VirdqFiIrE7X+F9JqviRCEmRlZ0wG7QU1HUAy9m7FeIAAQ/wvJS8
+	 3rexaZSozQ1nw==
+Date: Mon, 6 May 2024 15:20:39 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Nuno =?UTF-8?B?U8Oh?= <noname.nuno@gmail.com>
+Cc: Julien Stephan <jstephan@baylibre.com>, Lars-Peter Clausen
+ <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, Nuno
+ =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, David Lechner
+ <dlechner@baylibre.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ kernel test robot <lkp@intel.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v6 10/10] iio: adc: ad7380: add support for
+ resolution boost
+Message-ID: <20240506152022.58794348@jic23-huawei>
+In-Reply-To: <20240506144616.0b90664b@jic23-huawei>
+References: <20240501-adding-new-ad738x-driver-v6-0-3c0741154728@baylibre.com>
+	<20240501-adding-new-ad738x-driver-v6-10-3c0741154728@baylibre.com>
+	<a04d8015ea1606ce1eca86f7eaaa85a1c1b46d7a.camel@gmail.com>
+	<20240506144616.0b90664b@jic23-huawei>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 27/28] drm/rockchip: inno_hdmi: Switch to HDMI
- connector
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>,
- Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?=
- <heiko@sntech.de>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Hans Verkuil <hverkuil@xs4all.nl>,
- Sebastian Wick <sebastian.wick@redhat.com>,
- =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-sunxi@lists.linux.dev
-References: <20240423-kms-hdmi-connector-state-v12-0-3338e4c0b189@kernel.org>
- <20240423-kms-hdmi-connector-state-v12-27-3338e4c0b189@kernel.org>
- <68eba0ec-bf9c-4d76-a362-5304a4cb61d5@rock-chips.com>
- <20240506-eccentric-wren-of-peace-819aad@houat>
-Content-Language: en-US
-From: Andy Yan <andy.yan@rock-chips.com>
-In-Reply-To: <20240506-eccentric-wren-of-peace-819aad@houat>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQhlNTFZOGhpJGk5ITU1IGUlVEwETFh
-	oSFyQUDg9ZV1kYEgtZQVlOQ1VJSVVMVUpKT1lXWRYaDxIVHRRZQVlPS0hVSk1PSU5IVUpLS1VKQk
-	tLWQY+
-X-HM-Tid: 0a8f4cffc4c703a4kunm739f18404c4
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PEk6STo6DDMDFBdDQhojTDg#
-	DkgaCQNVSlVKTEpPQkNITENJS09JVTMWGhIXVRoVHwJVAhoVOwkUGBBWGBMSCwhVGBQWRVlXWRIL
-	WUFZTkNVSUlVTFVKSk9ZV1kIAVlBTU1JSzcG
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Maxime,
+On Mon, 6 May 2024 14:46:16 +0100
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-On 5/6/24 15:59, Maxime Ripard wrote:
-> Hi Andy,
-> 
-> Thanks a lot for giving it a try
-> 
-> All the issues you raised in your review are fixed.
-> 
-> On Sat, Apr 27, 2024 at 06:44:54PM GMT, Andy Yan wrote:
->> And after this whole series applied on linux 6.9-rc4, the display on rk3036 kylin is lost, I get
->> the following error:
->> [  178.999421] rockchip-drm display-subsystem: [drm:drm_atomic_check_only] checking 87b7fbde
->> [  178.999471] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CRTC:35:crtc-0] mode changed
->> [  178.999498] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CRTC:35:crtc-0] enable changed
->> [  178.999521] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CRTC:35:crtc-0] active changed
->> [  178.999547] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] Updating routing for [CONNECTOR:37:HDMI-A-1]
->> [  178.999575] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CONNECTOR:37:HDMI-A-1] using [ENCODER:36:TMDS-36] on [CRTC:35:crtc-0]
->> [  178.999604] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] Trying with a 8 bpc output
->> [  178.999636] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] Trying RGB output format
->> [  178.999730] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] RGB Format, checking the constraints.
->> [  178.999757] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] RGB output format not supported with 8 bpc
->> [  178.999783] rockchip-drm display-subsystem: [drm:drm_atomic_helper_connector_hdmi_check] Failed. No Format Supported for that bpc count.
->> [  178.999810] rockchip-drm display-subsystem: [drm:drm_atomic_helper_check_modeset] [CONNECTOR:37:HDMI-A-1] driver check failed
->> [  178.999836] rockchip-drm display-subsystem: [drm:drm_atomic_check_only] atomic driver check for 87b7fbde failed: -22
->> [  178.999868] rockchip-drm display-subsystem: [drm:drm_atomic_state_default_clear] Clearing atomic state 87b7fbde
->> [  178.999898] [drm:drm_mode_object_put] OBJ ID: 37 (4)
->> [  178.999922] [drm:drm_mode_object_put] OBJ ID: 37 (3)
->> [  178.999944] [drm:drm_mode_object_put] OBJ ID: 40 (1)
->> [  178.999971] [drm:drm_mode_object_put] OBJ ID: 39 (2)
-> 
-> Which kind of display are you testing with? The only reason it could do
-> so is if the display claim it doesn't support RGB in its EDID which is
-> contradicting the HDMI spec. Are you using an Analog display by any
-> chance? or the built-in EDIDs through the drm.edid_firmware mechanism?
+> On Mon, 06 May 2024 10:55:46 +0200
+> Nuno S=C3=A1 <noname.nuno@gmail.com> wrote:
+>=20
+> > On Wed, 2024-05-01 at 16:55 +0200, Julien Stephan wrote: =20
+> > > ad738x chips are able to use an additional 2 bits of resolution when
+> > > using oversampling. The 14-bits chips can have up to 16 bits of
+> > > resolution and the 16-bits chips can have up to 18 bits of resolution.
+> > >=20
+> > > In order to dynamically allow to enable/disable the resolution boost
+> > > feature, we have to set iio realbits/storagebits to the maximum per c=
+hips.
+> > > This means that for iio, data will always be on the higher resolution
+> > > available, and to cope with that we adjust the iio scale and iio offs=
+et
+> > > depending on the resolution boost status.
+> > >=20
+> > > The available scales can be displayed using the regular _scale_availa=
+ble
+> > > attributes and can be set by writing the regular _scale attribute.
+> > > The available scales depend on the oversampling status.
+> > >=20
+> > > Signed-off-by: Julien Stephan <jstephan@baylibre.com>
+> > >=20
+> > > ---
+> > >=20
+> > > In order to support the resolution boost (additional 2 bits of resolu=
+tion)
+> > > we need to set realbits/storagebits to the maximum value i.e :
+> > > =C2=A0 - realbits =3D 16 + 2 =3D 18, and storagebits =3D 32 for 16-bi=
+ts chips
+> > > =C2=A0 - realbits =3D 14 + 2 =3D 16, and storagebits =3D 16 for 14-bi=
+ts chips
+> > >=20
+> > > For 14-bits chips this does not have a major impact, but this
+> > > has the drawback of forcing 16-bits chip users to always use 32-bits
+> > > words in buffers even if they are not using oversampling and resoluti=
+on
+> > > boost. Is there a better way of implementing this? For example
+> > > implementing dynamic scan_type?
+> > >    =20
+> >=20
+> > Yeah, I don't think it's that bad in this case. But maybe dynamic scan =
+types is
+> > something we may need at some point yes (or IOW that I would like to se=
+e supported
+> > :)). We do some ADCs (eg: ad4630) where we use questionably use FW prop=
+erties to set
+> > a specific operating mode exactly because we have a different data layo=
+ut (scan
+> > elements) depending on the mode. =20
+>=20
+> Yeah. Fixed scan modes were somewhat of a bad design decision a long time=
+ back.
+> However, the big advantage is that it got people to think hard about whet=
+her it is
+> worth supporting low precision modes. For slow devices it very rarely is =
+and
+> forcing people to make a decision and the advantage we never supported
+> low precision on those parts.
+>=20
+> Having said that there are good reasons for dynamic resolution changing
+> (the main one being the storage case you have here) so I'd be happy to
+> see some patches adding it. It might be easier than I've always thought
+> to bolt on.
+>=20
+> This and inkernel event consumers have been the two significant features
+> where I keep expecting it to happen, but every time people decide they re=
+ally
+> don't care enough to make them work :(
+>=20
+> >   =20
+> > > Another issue is the location of the timestamps. I understood the need
+> > > for ts to be consistent between chips, but right now I do not have a
+> > > better solution.. I was thinking of maybe adding the timestamps at the
+> > > beginning? That would imply to change the iio_chan_spec struct and ma=
+ybe
+> > > add a iio_push_to_buffers_with_timestamp_first() wrapper function? Is
+> > > that an option? =20
+>=20
+> You have lost me on this one.  Why does the timestamp need to be in a con=
+sistent
+> location?  We have lots of drivers where it moves about between different
+> chips they support, or indeed what channels are currently turned on.
+Maybe I now understand this?
+The concern is the structure used for the iio_push_to_buffers_with_timestam=
+p()
+That doesn't need to be a structure and if you look at drivers where it isn=
+'t
+the most common reason is because the timestamp needs to be able to move ar=
+ound.
 
-It is because there is something wrong(I still don't know why) with the DDC on my board.
-It always failed to read edid when it first bootup, that means inno_hdmi_connector_get_modes
-will return 0.
+So do something similar here.
 
-and in function
+Jonathan
 
-drm_helper_probe_single_connector_modes:
+>=20
+> I haven't actually looked at the latest code yet, so maybe it will become
+> obvious!
+>=20
+> Jonathan
+>=20
+>=20
+>=20
 
-         count = drm_helper_probe_get_modes(connector);
-
-         if (count == 0 && (connector->status == connector_status_connected ||
-                            connector->status == connector_status_unknown)) {
-                 count = drm_add_modes_noedid(connector, 1024, 768);
-
-                 /*
-                  * Section 4.2.2.6 (EDID Corruption Detection) of the DP 1.4a
-                  * Link CTS specifies that 640x480 (the official "failsafe"
-                  * mode) needs to be the default if there's no EDID.
-                  */
-                 if (connector->connector_type == DRM_MODE_CONNECTOR_DisplayPort)
-                         drm_set_preferred_mode(connector, 640, 480);
-         }
-drm_add_modes_noedid will not initialize display_info.
-
-> 
-> Maxime
