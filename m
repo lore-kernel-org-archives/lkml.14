@@ -1,259 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D644381211;
-	Mon,  6 May 2024 14:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715006396; cv=none; b=JTZkTpDyB9GmYytUgi2ZRhrHBshZLTymDNz8QvffLigbu7R0UTB51vuQ0dkksx24w1TQCznJ0dHFqPRgX/9Hs+rzcPXy78fCMLUrcB3fkmRNVzSFmepYaF+bJHngd0yxgEJF8FSe8HiouQC9oDAt1IyADxNsbfcc6sbFLJSb2XE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715006396; c=relaxed/simple;
-	bh=U89OZGncNJqtcKnTD8yZONNz0dl0mlPs8Onkjf2z9oU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l+ObCtyPD/Jomt3tDJxKUrkzMpSzefjAbzCFd+w/A1rtEP7b001UoYIEUhUWrSOxzbO6R0x/bnKKtKCSxH1HUzPhu68punONQlutXolW79etvyJ7IR2ohS1oB3T7VWIA6SBiFlajxbXoggqa2Vpmuvz7ck7PKqMzYb2EDrtKhWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IgDeKL0c; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8541811FE;
+	Mon,  6 May 2024 14:40:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.154.123
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715006443; cv=fail; b=sLhX7wgdKFk33Nz5J4dHylzAp4zKu40ZnSAwrLOekbNTj0uLcYgUKWcbJKJjgE/04BvtRTl0+A6rfdqZ103cQdIoBFnc0JHsUxu9Kgwq4Dh4BXJh5DJIzCupvs6M/MGTriyuvjagazhylmG4ZrJm5b0lW9dJxmlhItVpQ/+JkMk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715006443; c=relaxed/simple;
+	bh=pIPMmjoMjSCFR+ZF7Imfb0WmQcPm00IBp7cYmnJBuyM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=bpxrG81btsZ+df3NHcU6ETHNG8AYhepdjC456L8N5YrJLpghOevg+XeG7KnZYhqWcc+gdK7DJdHimcd59kW9jOyPZH43ol2EuKQHXOF3eKNMltiLXOiPMkWMkQzGYMnPG4XLQG4bVWYd4tKd6NZR+q+q2CnuvjR9kVv67UnbXzU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=PefvTSSy; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=fSgVhlNV; arc=fail smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IgDeKL0c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D173C4AF66;
-	Mon,  6 May 2024 14:39:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715006396;
-	bh=U89OZGncNJqtcKnTD8yZONNz0dl0mlPs8Onkjf2z9oU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IgDeKL0cpjzfJbaNPT86QJ0DsZk9TsOdyIiGBkI8F3OlF+I4N/LbY70guPQWYyTL6
-	 hOuvrFsNl4leSRNNAES06vVxFlXqmfSBV5n+CdkFKBDSQ1jVHTrweNS5hXGJPuWOHe
-	 Pf04vdXEaiOeWQ3jkd+iaBGCsEjeS9RdkluplZkv45lvbvdfQyKSrCGI4cw5jgQq2s
-	 nwlOCMKFvrBfB5jUzWxcDeUb18xSgy/MaM405FkMcO7n0QYEUrk/qjoItmqq+f78BI
-	 9tw+SB6aZceKlc2IxOnDZ/BV+aptewhvWTQzGncpD/Zs9zQ7bA+8lDXuzuPmv3HtRj
-	 XxdcrcpDS71fQ==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5b2013d0090so505165eaf.2;
-        Mon, 06 May 2024 07:39:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUvQli4jcVOGFKABqD5BlefXL9W9p5DKp10FDPMk6C9bStR94ncVgKceAPr2tMbs2meo2loYjZOpgjbYARY4C5J2LUhMTZqT4Acc/SHWZO4I89FJbiiXIUjzrFClJQMa+g7pKvm08I=
-X-Gm-Message-State: AOJu0YxaUcqGcu8XyTHC6Ub3bGaIEmKiHYrRyM1z6mW/adR2FJqiyD19
-	lQaIpj+f+oWl3YC3ZrK70Mgw2xFXmZ+wuw/K32cp7uxQakBr7HzW+XUKkL4z0SkAJTP1SF8wmQF
-	2Pq2/fnJ2LyrK9l5EnR2seNhwznQ=
-X-Google-Smtp-Source: AGHT+IHQb7ROo7x8++ilFyCxyeBFZ0R/kRLgV7Bruzs0BV/uieit4rIL8b2KIH0YXq2Vn6eog2needrZOQNDCw/o2+E=
-X-Received: by 2002:a05:6820:3309:b0:5b1:ff38:5ee0 with SMTP id
- fd9-20020a056820330900b005b1ff385ee0mr6042005oob.1.1715006395650; Mon, 06 May
- 2024 07:39:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PefvTSSy";
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="fSgVhlNV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1715006441; x=1746542441;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=pIPMmjoMjSCFR+ZF7Imfb0WmQcPm00IBp7cYmnJBuyM=;
+  b=PefvTSSycLJPWTu0q+zIon9MMd51XMH2So5j8zS9x/5XLDv3k9e0CaQc
+   es664XIPGWUj2woXOYmJQ+ftChxx7i5rWH8CajWWmUO+vt3wMyPlP5Lne
+   qMv3QS8skCxfQJWoEBCOjJoyD/uTyD6aceI0JJMA/HAG5wL2LbvEkj3F4
+   jna+TUSkP7eaz7lGtyR+0i5MBckJJohEkUJR+cRLkiI13M3YXChHSBcQQ
+   EHaksjRCFBeZCWtSS/J/K49pmFLry0dIvmYhsAy3igwZNhsJJiGAaoW19
+   loo9rckzND29AepABYqSf7B2U/1gO/VzNLjahPO4l/mT88oU3cz6h6lKZ
+   Q==;
+X-CSE-ConnectionGUID: PwOd5NQoS3GbVzFV2X8ihA==
+X-CSE-MsgGUID: gk+WQOZzQnax2jWBsWHbPw==
+X-IronPort-AV: E=Sophos;i="6.07,258,1708412400"; 
+   d="scan'208";a="23796079"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 06 May 2024 07:40:34 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Mon, 6 May 2024 07:40:20 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.10.215.250)
+ by email.microchip.com (10.10.87.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Mon, 6 May 2024 07:40:20 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hUSJgA3R4fawMvren4H9wTIGWxMFdPVh7H5PpsqmOLXKsw01n+Bfj/il4zlMXPwzjkYuhdmYQVebgpfDTqj8P3sw8eDItWn8yN1oyMD8yQ5Y3pvl5BcsUtksWIgJCjUUpXpm2vdXz0KaptludXqSoZK0L2Nw6oK2c708sHKk9rmfup1vQvCZhwAqTRBjMb/5vleINCR8qyEJdsJE0TTG1OkK8ab93M0i82xbeWz2cVr9mQ0QyMWlM8i5fXa0Jq9Y4VAMyRRty34x/MiBk9IyyvJe9/9uxM0b5XsT6XsURHMJmlxelZtC8+S0YgdYoG5e7cWzHz0//kCdcT2i0Cil1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pIPMmjoMjSCFR+ZF7Imfb0WmQcPm00IBp7cYmnJBuyM=;
+ b=TV/2WPnlFy0Kuav1dJNXPh8IJi0/zNHjO3PfP8D8h6i8VIE1IyjnLpgTQmpr5/nVQRzdvCOG5uJ3tTpF8veUWdN0n6UHtC6Js0ThDPG3Ay3sP+D47wvnLOySfENYXwS+d/AklDfQU8abIhRX26FOinnHI2tsrhm7Z6jzNM6EMw4FbzzOV3aFyAblJMG6yVcPqM299P3glx/qngkbtsRllbPbrO+rxSu+Shg5muJOQWthCv6vZhd+A5qCJ13VMTXB3d+JDADEWsl5BwU8PoCDPmdcRW/eGghcDrc7XUHlr8gSth6MhNtj3yPRtaSsdYO5UL/f0iNZ4hwXFk4d6IBgmg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pIPMmjoMjSCFR+ZF7Imfb0WmQcPm00IBp7cYmnJBuyM=;
+ b=fSgVhlNVfHb3ssLUJumS3KjPbQVvhQ90DwxKoj1cMoNJtPZ66wKdD90UwtwG3bjbDFb7b2TVJh3VWznGGXm6sr70otU4zDaqINvhmcWE3tYLbpmJC7stdoEqPcMA0aidbg6e9U+GGxws/cW1BVQWN5gkW9juUVBikOrE6TOJEZedgLDHUOJ/4xeksm1ZREZSesj++VQgXgDBxvv1+9dPV0JTtTQ0uS9cWky/6GQTdnHyMyzc//xewRxNrqf4NeNxKvlX6ArOjtWEj3SRctMrkUsWUcNFqWMAA4XSxTJKFJq8Vc8p131r4yMqraNSxszhDbPjzC4GEbALTJXai6vHAA==
+Received: from PH7PR11MB8033.namprd11.prod.outlook.com (2603:10b6:510:246::12)
+ by SA2PR11MB5194.namprd11.prod.outlook.com (2603:10b6:806:118::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42; Mon, 6 May
+ 2024 14:40:18 +0000
+Received: from PH7PR11MB8033.namprd11.prod.outlook.com
+ ([fe80::22a1:16dd:eea9:330c]) by PH7PR11MB8033.namprd11.prod.outlook.com
+ ([fe80::22a1:16dd:eea9:330c%2]) with mapi id 15.20.7544.041; Mon, 6 May 2024
+ 14:40:18 +0000
+From: <Arun.Ramadoss@microchip.com>
+To: <andrew@lunn.ch>, <olteanv@gmail.com>, <davem@davemloft.net>,
+	<Woojung.Huh@microchip.com>, <pabeni@redhat.com>, <o.rempel@pengutronix.de>,
+	<edumazet@google.com>, <f.fainelli@gmail.com>, <kuba@kernel.org>
+CC: <kernel@pengutronix.de>, <dsahern@kernel.org>, <san@skov.dk>,
+	<willemb@google.com>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <horms@kernel.org>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH net-next v7 08/12] net: dsa: microchip: init predictable
+ IPV to queue mapping for all non KSZ8xxx variants
+Thread-Topic: [PATCH net-next v7 08/12] net: dsa: microchip: init predictable
+ IPV to queue mapping for all non KSZ8xxx variants
+Thread-Index: AQHanVvgXsKMDmqmN0aLo+5ceIvItbGKTGoA
+Date: Mon, 6 May 2024 14:40:17 +0000
+Message-ID: <d4b566e268be215a4dcf0872dc56c75c690369b1.camel@microchip.com>
+References: <20240503131351.1969097-1-o.rempel@pengutronix.de>
+	 <20240503131351.1969097-9-o.rempel@pengutronix.de>
+In-Reply-To: <20240503131351.1969097-9-o.rempel@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.36.5-0ubuntu1 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR11MB8033:EE_|SA2PR11MB5194:EE_
+x-ms-office365-filtering-correlation-id: c30d4257-0044-4bc2-323c-08dc6dda7303
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|1800799015|7416005|376005|366007|38070700009;
+x-microsoft-antispam-message-info: =?utf-8?B?VkQ5d2pBM2tya0FDVFNPaVlCS2N0aVdwRnNwSm40NzBpNnZwMldsR3BPMUFq?=
+ =?utf-8?B?SWxUaE9VN1MvelljUTNMdFdTeXBmMDdnNzFnWk1pTFFhSnpaMkFyV0orbFYw?=
+ =?utf-8?B?aEJzaFMvb3dmU08zNzd5MStzYk5OckxsRTYvc3VXSVkxc2JXUWFGbW80NXVV?=
+ =?utf-8?B?eFpRNUkwZTRTZUR0c0JLVUd1YThoWmNpZlNYbWladGtQbUY4ak84REQrb0Y2?=
+ =?utf-8?B?SThTSkRxSWl2b0VhL2FHZHN3U3NKanRhRmtqTjVwZE8wYmcvYzZPdlNZTVFq?=
+ =?utf-8?B?emVUamVKZjFaTWptdlIydU9zQ2xDNzlEV1dqcXpReGVSVlpjK1I2cGd4ZzNT?=
+ =?utf-8?B?eHA3eFMyYzlBYTZia3VYb1pGODFDVjE0ZUJUL2EzcE4vWmY2OVpLSzljamVB?=
+ =?utf-8?B?Vm1oUlRCditiR2lLbEhIY1VDRENiUHpvUTZORThjdUdWODZVUEJkekhkbEIx?=
+ =?utf-8?B?ZzJ3UmhRWnAvbVVLYWRsemFBZDlhZ3EwRVhDWkRRb0NtRXFMQXRIOFp2VVhF?=
+ =?utf-8?B?RHdhZWxQNE5pT1FRRGV2SllnZDRwTXlNOGx1QWFMVGhrSzVrUnJocWttdE5W?=
+ =?utf-8?B?SDU2eGVEOEFvNTc1VERGRjhhS09SbU5QWVZvc0ZKS2JxaTJJL29vRVQzSVVh?=
+ =?utf-8?B?TXgzZlVnaHFxM2hnQ0Y1Q0dSRWFQMUJ2eXJYUGFuVDVmckhQNjl6K2pWR3lY?=
+ =?utf-8?B?Q0JoekJZenVvYlUza2g5bTQwY1NFT3VEd1ozT2EwTmw3TFdQTUFiVmVORUdv?=
+ =?utf-8?B?ZjlDcCtXcjRxbG1WdjZ0R0pTTWtzRXhESmFzcXdVUm9VV1M0ZXhIa2U0VnV2?=
+ =?utf-8?B?QXFQSXQ1NEt6TDNKTXVhRkN5RW42bmwvS1FCaEowRG45T3NkZHBDcEcrdDlV?=
+ =?utf-8?B?b3FZZGxtN3R3MWd6UU4zamxLNVY5SHVoVU1MVjVkZEg5bXR3WFVCODVFYVcr?=
+ =?utf-8?B?YU9adi95eTJrYW5FT2d4RTc1WWU2ZmZRS1lraGZ2bGhvaStuNVlxZ2o2S1VG?=
+ =?utf-8?B?T2lyT2I5STkxNGNhSnNvditYdkN3UnNDUTRNMStGWHFOYlFNYnNrcWlkeDky?=
+ =?utf-8?B?azlYeVFYdlZCVnduT1hoamVBOHRSbytERVhBNVRiUDAxT3ppYmNwU00xdGhY?=
+ =?utf-8?B?RHZmV2p6aEFrZEkwcXpmd3lPKzh2cEJNWG9KdUd3MnRhZFg3MW9Bc0t2ZXVM?=
+ =?utf-8?B?SEpDY0RiTkZvc0JBVyt3WHE5YWxOSnJORGQ0OGczYkJqN2RqMDVuRnBya3NZ?=
+ =?utf-8?B?aEFKclNIMWFjQmhOSWFzZHNsd2c2L2pBQWlEekI3M085YUdUdEhDVWdDNTho?=
+ =?utf-8?B?djZtdkJrOUNXc296OWRIcDhlbmdOeFNhT2ppU0t2ME43MjNOR0dWN1cwZWlY?=
+ =?utf-8?B?QWxFbDFFUmdQcW12cGdjZlppdDZzMkMwQzQ4S2RJU0xkdiszQ2J0dkhacVVm?=
+ =?utf-8?B?MVRDc0JQVDJMZkFucDZTZkNBNnpwRUR6RFRCdGRlbFRGb053bERVeEpxZVZs?=
+ =?utf-8?B?T3ZydUo4UDhNL0JQakpCWGRETENsSjlZMmRsK2tDT0lZL0tqNFdtckMxcUxa?=
+ =?utf-8?B?cGdzSlo1VFFrRmprNXFHN29xNnQxNU9zLzlmTGU1bWlwcEptZ0NYdFU1TXVH?=
+ =?utf-8?B?TDJNcHZ2eThMbllYVlI3K3pEMnArYlpPaHVDam5vK3hDVzFBay9Vb1BPRjNj?=
+ =?utf-8?B?TXRReWovVDJpNUc4M2NHY2I0YVpSVEREYVJsQW52WnJzb2w2bFBKNkZhVkl4?=
+ =?utf-8?B?MkRtNFpveGlZY0lja3BYY1l4WGNBU2cwS1hSaFdzRUY3c0dTV0d6blVPcjhK?=
+ =?utf-8?B?RDA2N1ZNVW83Tmt1YmNlQT09?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB8033.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(7416005)(376005)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UnV2aERwUHR6N2VJcE5nMnc2aGE3MUtoRDNHeDhPTnlSK3FYTXRWWFdMc3dD?=
+ =?utf-8?B?Y3BXT0dBVE1OZU5Ed25qc21jWVRKQk5zV2NSTm8rMmtpc1p5MXMvTS8rZGp6?=
+ =?utf-8?B?R0lHNnZ3MmtEM1NnRStVa0l2QTI0c01kREdqQkpmeVNOQmEzNUxrNkd5Nk8z?=
+ =?utf-8?B?UWxEMVQ4WFZkTWdEcUVjTE1PRWsybjZUV3l0dlNwUmY2d0FVeUVmc2ZvVW9J?=
+ =?utf-8?B?ZVlSbnJTc05mQk1uSnY4RmI5WDVXZFh3ZXo2S0trOVNVYnhKejhmbWhpN1lB?=
+ =?utf-8?B?MlJydisxUk5sckZ6WXlMNTF0bG55Q2M2Z3NyNWNBOVVFcTRrZFBSVStaVThH?=
+ =?utf-8?B?N3J4ZmhIbUwwTHR5RmVPOWh6MTJtR2ZKbTkrZUhWdENoVDdLM0U0aWR1UUYy?=
+ =?utf-8?B?dTlydHRBcFFDbWE1OEJEVjlscjNoampORDZicTB0ZVgwSjVNalF5TlJRbW5y?=
+ =?utf-8?B?RUhWL3dQQjMyS2RLS1VsMkVLTEF1TS9WcjJiZm4yL0ZtelQ2M3F4Z3c2aFFp?=
+ =?utf-8?B?N3RzbXVtZWxPNEtHM2M4WDN3dDFBbXA0YnpFUkFFclkwYlBxaVZGVE5LTDAx?=
+ =?utf-8?B?azVkVGMwNncyaUYxS2lzVTMvNXdpRVBEb09OUS84M0M5TGN6UTl0UzE1OHI3?=
+ =?utf-8?B?Y2lEcVRkSlZMemRFTnhYZjlCcU9FNkwxRTZ4Z0dDakdEKzU3a1F0RytObEFD?=
+ =?utf-8?B?Yml1SFV2WGJBY0tiblZHMExOM0lNMWE0TVJ5NnNGekZIR3BIbGFWUzNZMS9Z?=
+ =?utf-8?B?ZUxUNW83OHVJaCtLekZldUUxQmMwVkdhVDZHdzJMWTFTc0VTc01mK1NQVlVv?=
+ =?utf-8?B?ZytEOW9nSS9VWHdtaUFHREJTUzVEdXE0TjZJNEN0WmVCT0Q5cG04RlBjc3dI?=
+ =?utf-8?B?dnkyWVZnbExMc2JSb3BYbmFUZWxOQ3R1bTVpL0NKZmtNTjNrakZ1SHVtVFpP?=
+ =?utf-8?B?L2FXRmVyU3o2YkxLNklBczY4RFZoV0tFM0lnVzl1T1FQOWxMMklnOEVCdUN2?=
+ =?utf-8?B?ZElaUE91aXYvS0RMeUlyN1FWUEhTL1pBWHQ2VVVNZTBKZEwrcjZmdkhOaW8x?=
+ =?utf-8?B?eDluWWg1NHZQaTEvQmhCQUw2TXNyZmM5V0kvVXczbXZ2bTdNbEhDcUZ1OEd2?=
+ =?utf-8?B?dXFTNmE0a2RwSDVlVHBwdE5oa3VlTFBlNVlmZTJ2QWRObWJzZlFRMmhyOTk4?=
+ =?utf-8?B?K1F0WUpEUGZoejlwdDBjWTJYdTNwaExSZmYyKytJSWZMeG5uRVdEZ1I0SE1q?=
+ =?utf-8?B?d09VeVh5RklDblZRN1lIVk5JYlBqQkhIRUVadzY4c3IxQjdWdTFOMWVaQlVl?=
+ =?utf-8?B?YXUvMTJJeStkcjN4MlhIZEdPeldaZlkveEFVekdUblRPcUlJVXJrR1pKUW9l?=
+ =?utf-8?B?VlhBbzFtSlRwYXJLNGYxZjFEeXpESWV0cFRhSzZ2cVZUeEtmeEg3Y1Y5QTZ4?=
+ =?utf-8?B?emZCOFZ4K2dEWUl5Y1pJejMyT1lzYkxpTkpSOCt4RzkrMjZiZFVWMXVnNmwy?=
+ =?utf-8?B?Wjh5aDV1VjVkWXRkSUltWGZUNjVvZkplNVhuSTh5aUxiUjVTWi9rR1htbWF5?=
+ =?utf-8?B?d3pwVXpjRHdZaCtGQ1VPM1QrWnFMdk9aUFRsUVRySklZVFRXMWVHVnNocEcx?=
+ =?utf-8?B?VCsvbGcvTFVMWUhDSEZvQld3YWRvMkFSRlJjWlhvSEtCOCs1WkFkcVY3Z25Y?=
+ =?utf-8?B?bktSdklNeDRyQnhZSk1Rclc1Tkpqd1BPdTJrSnZCRUk0L2NPdlRBdDhUOU1t?=
+ =?utf-8?B?amxGdzQ5SkI4bzY3T2FiLzdwVVJNNVZSY1ZBZ0hJN1pFKzUxT0t6QU1uUnA4?=
+ =?utf-8?B?U21FVW0zZmh0RW9DTkVNUlhDdlFTVitQN0tGOGc0Mm5rRFRldndnL1dYUVBn?=
+ =?utf-8?B?eEEyRnZXVlRhN25Cakg1YU4rVFpKKzFhazlnRFNTcEk0ckRkR1FUcG8zRWkz?=
+ =?utf-8?B?NWVSZzJveG1pUXlFNURDbTZsZlZlWHhvclJVOTczNDdKdkhQeC82Wm00MVdD?=
+ =?utf-8?B?blVhRjBNUXQ2NTNVV3I5RjcweE5hdk9sYnJKbXFHUStRd0ttYTlrZStTdDQ3?=
+ =?utf-8?B?a2M5ZnlML0I0MHY1LzJDc3hFQk9KellsaWp5c3JiQU9VTFdUcVluMGphRHlO?=
+ =?utf-8?B?OFlEVW1acHoydkcreTRlMmhtWHNvMTM2eVlJSVZobzdnN2FVbitEbUlkeFJ2?=
+ =?utf-8?B?TVE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AE8FAD1B17FFF8418C3B7AC19A1B946F@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <7663799.EvYhyI6sBW@kreacher> <1799046.VLH7GnMWUR@kreacher> <050c561c-487e-4e89-a7b2-9752cebc9f46@arm.com>
-In-Reply-To: <050c561c-487e-4e89-a7b2-9752cebc9f46@arm.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 6 May 2024 16:39:44 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hGiwoytVmVr=h8JJ1yf5KTcr+p7BrRgSUM-L_X6fciUA@mail.gmail.com>
-Message-ID: <CAJZ5v0hGiwoytVmVr=h8JJ1yf5KTcr+p7BrRgSUM-L_X6fciUA@mail.gmail.com>
-Subject: Re: [RFC][PATCH v1 3/3] cpufreq: intel_pstate: Set asymmetric CPU
- capacity on hybrid systems
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, x86 Maintainers <x86@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Ricardo Neri <ricardo.neri@intel.com>, 
-	Tim Chen <tim.c.chen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB8033.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c30d4257-0044-4bc2-323c-08dc6dda7303
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 May 2024 14:40:17.9243
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bx0itZHAQlq440usVWAo2Kz4lyWnKsVkcNQH3Cwfh9rypcDu0lu29VkXBlGicfa+qBGJswc4+hfkgmsOMbxPtuXP+0FoEXFeL3WSpLj+7dQ=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5194
 
-On Thu, May 2, 2024 at 12:43=E2=80=AFPM Dietmar Eggemann
-<dietmar.eggemann@arm.com> wrote:
->
-> On 25/04/2024 21:06, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Make intel_pstate use the HWP_HIGHEST_PERF values from
-> > MSR_HWP_CAPABILITIES to set asymmetric CPU capacity information
-> > via the previously introduced arch_set_cpu_capacity() on hybrid
-> > systems without SMT.
->
-> Are there such systems around? My i7-13700K has P-cores (CPU0..CPU15)
-> with SMT.
-
-As Ricardo said, nosmt is one way to run without SMT.  Another one is
-to disable SMT in the BIOS setup.
-
-Anyway, the point here is that with SMT, accurate tracking of task
-utilization is rather hopeless.
-
-> > Setting asymmetric CPU capacity is generally necessary to allow the
-> > scheduler to compute task sizes in a consistent way across all CPUs
-> > in a system where they differ by capacity.  That, in turn, should help
-> > to improve task placement and load balancing decisions.  It is also
-> > necessary for the schedutil cpufreq governor to operate as expected
-> > on hybrid systems where tasks migrate between CPUs of different
-> > capacities.
-> >
-> > The underlying observation is that intel_pstate already uses
-> > MSR_HWP_CAPABILITIES to get CPU performance information which is
-> > exposed by it via sysfs and CPU performance scaling is based on it.
-> > Thus using this information for setting asymmetric CPU capacity is
-> > consistent with what the driver has been doing already.  Moreover,
-> > HWP_HIGHEST_PERF reflects the maximum capacity of a given CPU including
-> > both the instructions-per-cycle (IPC) factor and the maximum turbo
-> > frequency and the units in which that value is expressed are the same
-> > for all CPUs in the system, so the maximum capacity ratio between two
-> > CPUs can be obtained by computing the ratio of their HWP_HIGHEST_PERF
-> > values.  Of course, in principle that capacity ratio need not be
-> > directly applicable at lower frequencies, so using it for providing the
-> > asymmetric CPU capacity information to the scheduler is a rough
-> > approximation, but it is as good as it gets.  Also, measurements
-> > indicate that this approximation is not too bad in practice.
->
-> So cpu_capacity has a direct mapping to itmt prio. cpu_capacity is itmt
-> prio with max itmt prio scaled to 1024.
-
-Right.
-
-The choice to make the ITMT prio reflect the capacity is deliberate,
-although this code works with values retrieved via CPPC (which are the
-same as the HWP_CAP values in the majority of cases but not always).
-
-> Running it on i7-13700K (while allowing SMT) gives:
->
-> root@gulliver:~# dmesg | grep sched_set_itmt_core_prio
-> [    3.957826] sched_set_itmt_core_prio() cpu=3D0 prio=3D68
-> [    3.990401] sched_set_itmt_core_prio() cpu=3D1 prio=3D68
-> [    4.015551] sched_set_itmt_core_prio() cpu=3D2 prio=3D68
-> [    4.040720] sched_set_itmt_core_prio() cpu=3D3 prio=3D68
-> [    4.065871] sched_set_itmt_core_prio() cpu=3D4 prio=3D68
-> [    4.091018] sched_set_itmt_core_prio() cpu=3D5 prio=3D68
-> [    4.116175] sched_set_itmt_core_prio() cpu=3D6 prio=3D68
-> [    4.141374] sched_set_itmt_core_prio() cpu=3D7 prio=3D68
-> [    4.166543] sched_set_itmt_core_prio() cpu=3D8 prio=3D69
-> [    4.196289] sched_set_itmt_core_prio() cpu=3D9 prio=3D69
-> [    4.214964] sched_set_itmt_core_prio() cpu=3D10 prio=3D69
-> [    4.239281] sched_set_itmt_core_prio() cpu=3D11 prio=3D69
-
-CPUs 8 - 10 appear to be "favored cores" that can turbo up higher than
-the other P-cores.
-
-> [    4.263438] sched_set_itmt_core_prio() cpu=3D12 prio=3D68
-> [    4.283790] sched_set_itmt_core_prio() cpu=3D13 prio=3D68
-> [    4.308905] sched_set_itmt_core_prio() cpu=3D14 prio=3D68
-> [    4.331751] sched_set_itmt_core_prio() cpu=3D15 prio=3D68
-> [    4.356002] sched_set_itmt_core_prio() cpu=3D16 prio=3D42
-> [    4.381639] sched_set_itmt_core_prio() cpu=3D17 prio=3D42
-> [    4.395175] sched_set_itmt_core_prio() cpu=3D18 prio=3D42
-> [    4.425625] sched_set_itmt_core_prio() cpu=3D19 prio=3D42
-> [    4.449670] sched_set_itmt_core_prio() cpu=3D20 prio=3D42
-> [    4.479681] sched_set_itmt_core_prio() cpu=3D21 prio=3D42
-> [    4.506319] sched_set_itmt_core_prio() cpu=3D22 prio=3D42
-> [    4.523774] sched_set_itmt_core_prio() cpu=3D23 prio=3D42
->
-> root@gulliver:~# dmesg | grep hybrid_set_cpu_capacity
-> [    4.450883] hybrid_set_cpu_capacity() cpu=3D0 cap=3D1009
-> [    4.455846] hybrid_set_cpu_capacity() cpu=3D1 cap=3D1009
-> [    4.460806] hybrid_set_cpu_capacity() cpu=3D2 cap=3D1009
-> [    4.465766] hybrid_set_cpu_capacity() cpu=3D3 cap=3D1009
-> [    4.470730] hybrid_set_cpu_capacity() cpu=3D4 cap=3D1009
-> [    4.475699] hybrid_set_cpu_capacity() cpu=3D5 cap=3D1009
-> [    4.480664] hybrid_set_cpu_capacity() cpu=3D6 cap=3D1009
-> [    4.485626] hybrid_set_cpu_capacity() cpu=3D7 cap=3D1009
-> [    4.490588] hybrid_set_cpu_capacity() cpu=3D9 cap=3D1024
-> [    4.495550] hybrid_set_cpu_capacity() cpu=3D10 cap=3D1024
-> [    4.500598] hybrid_set_cpu_capacity() cpu=3D11 cap=3D1024
-
-And the "favored cores" get the max capacity.
-
-> [    4.505649] hybrid_set_cpu_capacity() cpu=3D12 cap=3D1009
-> [    4.510701] hybrid_set_cpu_capacity() cpu=3D13 cap=3D1009
-> [    4.515749] hybrid_set_cpu_capacity() cpu=3D14 cap=3D1009
-> [    4.520802] hybrid_set_cpu_capacity() cpu=3D15 cap=3D1009
-> [    4.525846] hybrid_set_cpu_capacity() cpu=3D16 cap=3D623
-> [    4.530810] hybrid_set_cpu_capacity() cpu=3D17 cap=3D623
-> [    4.535772] hybrid_set_cpu_capacity() cpu=3D18 cap=3D623
-> [    4.540732] hybrid_set_cpu_capacity() cpu=3D19 cap=3D623
-> [    4.545690] hybrid_set_cpu_capacity() cpu=3D20 cap=3D623
-> [    4.550651] hybrid_set_cpu_capacity() cpu=3D21 cap=3D623
-> [    4.555612] hybrid_set_cpu_capacity() cpu=3D22 cap=3D623
-> [    4.560571] hybrid_set_cpu_capacity() cpu=3D23 cap=3D623
->
-> > If the given system is hybrid and non-SMT, the new code disables ITMT
-> > support in the scheduler (because it may get in the way of asymmetric C=
-PU
-> > capacity code in the scheduler that automatically gets enabled by setti=
-ng
-> > asymmetric CPU capacity) after initializing all online CPUs and finds
-> > the one with the maximum HWP_HIGHEST_PERF value.  Next, it computes the
-> > capacity number for each (online) CPU by dividing the product of its
-> > HWP_HIGHEST_PERF and SCHED_CAPACITY_SCALE by the maximum HWP_HIGHEST_PE=
-RF.
->
-> SO either CAS at wakeup and in load_balance or SIS at wakeup and ITMT in
-> load balance.
-
-Yup, at least for this version of the patch.
-
-> > When a CPU goes offline, its capacity is reset to SCHED_CAPACITY_SCALE
-> > and if it is the one with the maximum HWP_HIGHEST_PERF value, the
-> > capacity numbers for all of the other online CPUs are recomputed.  This
-> > also takes care of a cleanup during driver operation mode changes.
-> >
-> > Analogously, when a new CPU goes online, its capacity number is updated
-> > and if its HWP_HIGHEST_PERF value is greater than the current maximum
-> > one, the capacity numbers for all of the other online CPUs are
-> > recomputed.
-> >
-> > The case when the driver is notified of a CPU capacity change, either
-> > through the HWP interrupt or through an ACPI notification, is handled
-> > similarly to the CPU online case above, except that if the target CPU
-> > is the current highest-capacity one and its capacity is reduced, the
-> > capacity numbers for all of the other online CPUs need to be recomputed
-> > either.
-> >
-> > If the driver's "no_trubo" sysfs attribute is updated, all of the CPU
-> > capacity information is computed from scratch to reflect the new turbo
-> > status.
->
-> So if I do:
->
-> echo 1 > /sys/devices/system/cpu/intel_pstate/no_turbo
->
-> I get:
->
-> [ 1692.801368] hybrid_update_cpu_scaling() called
-> [ 1692.801381] hybrid_update_cpu_scaling() max_cap_perf=3D44, max_perf_cp=
-u=3D0
-> [ 1692.801389] hybrid_set_cpu_capacity() cpu=3D1 cap=3D1024
-> [ 1692.801395] hybrid_set_cpu_capacity() cpu=3D2 cap=3D1024
-> [ 1692.801399] hybrid_set_cpu_capacity() cpu=3D3 cap=3D1024
-> [ 1692.801402] hybrid_set_cpu_capacity() cpu=3D4 cap=3D1024
-> [ 1692.801405] hybrid_set_cpu_capacity() cpu=3D5 cap=3D1024
-> [ 1692.801408] hybrid_set_cpu_capacity() cpu=3D6 cap=3D1024
-> [ 1692.801410] hybrid_set_cpu_capacity() cpu=3D7 cap=3D1024
-> [ 1692.801413] hybrid_set_cpu_capacity() cpu=3D8 cap=3D1024
-> [ 1692.801416] hybrid_set_cpu_capacity() cpu=3D9 cap=3D1024
-> [ 1692.801419] hybrid_set_cpu_capacity() cpu=3D10 cap=3D1024
-> [ 1692.801422] hybrid_set_cpu_capacity() cpu=3D11 cap=3D1024
-> [ 1692.801425] hybrid_set_cpu_capacity() cpu=3D12 cap=3D1024
-> [ 1692.801428] hybrid_set_cpu_capacity() cpu=3D13 cap=3D1024
-> [ 1692.801431] hybrid_set_cpu_capacity() cpu=3D14 cap=3D1024
-> [ 1692.801433] hybrid_set_cpu_capacity() cpu=3D15 cap=3D1024
-> [ 1692.801436] hybrid_set_cpu_capacity() cpu=3D16 cap=3D605
-> [ 1692.801439] hybrid_set_cpu_capacity() cpu=3D17 cap=3D605
-> [ 1692.801442] hybrid_set_cpu_capacity() cpu=3D18 cap=3D605
-> [ 1692.801445] hybrid_set_cpu_capacity() cpu=3D19 cap=3D605
-> [ 1692.801448] hybrid_set_cpu_capacity() cpu=3D20 cap=3D605
-> [ 1692.801451] hybrid_set_cpu_capacity() cpu=3D21 cap=3D605
-> [ 1692.801453] hybrid_set_cpu_capacity() cpu=3D22 cap=3D605
-> [ 1692.801456] hybrid_set_cpu_capacity() cpu=3D23 cap=3D605
->
-> Turbo on this machine stands only for the cpu_capacity diff 1009 vs 1024?
-
-Not really.
-
-The capacity of the fastest CPU is always 1024 and the capacities of
-all of the other CPUs are adjusted to that.
-
-When turbo is disabled, the capacity of the "favored cores" is the
-same as for the other P-cores (i.e. 1024) and the capacity of E-cores
-is relative to that.
-
-Of course, this means that task placement may be somewhat messed up
-after disabling or enabling turbo (which is a global switch), but I
-don't think that there is a way to avoid it.
+T24gRnJpLCAyMDI0LTA1LTAzIGF0IDE1OjEzICswMjAwLCBPbGVrc2lqIFJlbXBlbCB3cm90ZToN
+Cj4gRVhURVJOQUwgRU1BSUw6IERvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRz
+IHVubGVzcyB5b3UNCj4ga25vdyB0aGUgY29udGVudCBpcyBzYWZlDQo+IA0KPiBJbml0IHByaW9y
+aXR5IHRvIHF1ZXVlIG1hcHBpbmcgaW4gdGhlIHdheSBhcyBpdCBzaG93biBpbiBJRUVFIDgwMi4x
+UQ0KPiBtYXBwaW5nIGV4YW1wbGUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBPbGVrc2lqIFJlbXBl
+bCA8by5yZW1wZWxAcGVuZ3V0cm9uaXguZGU+DQoNCkFja2VkLWJ5OiBBcnVuIFJhbWFkb3NzIDxh
+cnVuLnJhbWFkb3NzQG1pY3JvY2hpcC5jb20+DQoNCg==
