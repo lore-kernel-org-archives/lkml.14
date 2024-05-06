@@ -1,210 +1,230 @@
-Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.52])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2134.outbound.protection.partner.outlook.cn [139.219.17.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA07A1C3D;
-	Mon,  6 May 2024 03:46:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=85.215.255.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206364594E
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 03:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.134
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714967190; cv=pass; b=tt9/qp5xdB7IT7RxQAmq5Uqv2snaUKCEoMWK6P1kSO1K1Wz+EbcPWYBih2+qhNAiEPDKDlvQARcwLdWoVMtaciRukGvGBuYaDuD9mwTZUOjCDqUYiFDjQvgYVagBqeVDd849/hHSWGvFSG1zh2AKJGQxKGD7vjOgOet6oiKUCmY=
+	t=1714967209; cv=fail; b=ZdnOxX+6I25OJk9Ea5xLa0h7jhZfl6JSUcl3FqIUk7RrbkQxX/b2odkZ5InQBpuzTmSLqgyw7JRTBjCF1UXRkCFZhVSaZtB3XcXzhYvTTu0I3TCsFOpMp3SCwqzZicFL/ifl5XiNSmTK9CGuwoN9MKB+/zfVH1JBxwgagk1qYL4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714967190; c=relaxed/simple;
-	bh=j+apBh2N438frLoKBOmn0eDGI6AF8wQuiePC67TO9Wk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=XGGBsZnnI2oMiFwDnZtA/Rh5YJk55r8fQcFX92O6jTeYEDNpshMogmKRuaEzvEA2tQUO/u6Ae0OUbXb3cyrVVmRyoB8UGl4jpFjV+fNAxA/DTApYBG3FDHbrpU2RVry4+VxXwaCXJgiimmoHAiOTORBLbhoFNK/B1E5Pd/4sQbo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net; spf=pass smtp.mailfrom=hartkopp.net; dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=FzA3AYl0; dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b=3WmBurrx; arc=pass smtp.client-ip=85.215.255.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hartkopp.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hartkopp.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="FzA3AYl0";
-	dkim=permerror (0-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="3WmBurrx"
-ARC-Seal: i=1; a=rsa-sha256; t=1714966457; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=SZ6SdaMPpAM42cY+/3EtR5+ZJxq6Sof6T9mixOOpSzW3+fe42D1Kc9eZrtV0vq3/dt
-    qpm6SgAyRD7aRXsrgF6nZOqzCeXKzzBcCd39MW0r2tukOSThOVW6DccgXgh8pD3MVzI9
-    Fr7iNSM918EK77rrc2yIMIjF00tTH3S3ABU6uQ81pEDomV+FqTtsj6slbxs7VKA/lrS0
-    EikZ/6d3e6qiZB3o4OiE72oSZaVBPQBy+ItdY8mu8admWPNNc03XF/vxqpnQN2VSlfSR
-    azsLS0VjG6ooa/uEMrQ8UfN8MGtcW7IE36uRADOpaKAWukA+bp93oo8ICgaVLwbZ+HJk
-    zIRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1714966457;
-    s=strato-dkim-0002; d=strato.com;
-    h=In-Reply-To:From:Cc:References:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=Pk97Vo5EVDzQM5Rmi3qC8BLRNsL+4ytAOz0I3pFS7bk=;
-    b=oSfv/vaGvwaT/VPb+iqAzQM5MYg7OMHDX7FCbKcGVbxHU2iBpMJTV5QtjsbPC794Y+
-    l4GCeus3uzleSSvoYaTHI/Tyr6q2ee6/p5X1kYaIH0mz85lbO60xz4B6XjMz4kCP8OTZ
-    uQGi+xod2QHFx7WY9BuBCcUbl9aIk9EgNmsedkB1OX3Ok9A27hSxdYPxGKerUMh5X8Y+
-    6D7uHQq27LQ3WCqyF7iTlppG+dw3Z7VPgQy+41Yb9kOpYXKxvvdOtjSBe8ciKEKSJ5k2
-    ii4Yvzn8N/BwQcpxl+1neYSZJaz2w7ttcwLoHObNvLNW+agu3O4hh/MUVh9wMJ/Yl0zH
-    swyA==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo01
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1714966457;
-    s=strato-dkim-0002; d=hartkopp.net;
-    h=In-Reply-To:From:Cc:References:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=Pk97Vo5EVDzQM5Rmi3qC8BLRNsL+4ytAOz0I3pFS7bk=;
-    b=FzA3AYl0XVONCQedQtVe+dtn9ckLJBWbSgL8J34G6xGxcevKECdqO9CewV986BYA5w
-    F76aYf4vePt4wzEEwq7PF218CfM395kKbvsAn53X7AiMhG/GO5xMwG1poL1IXPc/eT75
-    iRcd9K3lpixZCzOujfOV/j7EOKm8HwhsONUws/VkKK+ry/ssRkCiHU2DszbBuPK0ScFj
-    UX+Re96/bsh0ULB9lXiRVD6ztZ/IMQuq35+GutKUMykfBit5FXSnJ0JfPR74yI6Ypvq9
-    /+bjWnkqlZTJbDaA3LtVfyy0azFP8OIilLYaSprDYUiyy/UQuBm9zaDdbzXcm2Xlq2Dk
-    jh9g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1714966457;
-    s=strato-dkim-0003; d=hartkopp.net;
-    h=In-Reply-To:From:Cc:References:To:Subject:Date:Message-ID:Cc:Date:
-    From:Subject:Sender;
-    bh=Pk97Vo5EVDzQM5Rmi3qC8BLRNsL+4ytAOz0I3pFS7bk=;
-    b=3WmBurrxUrytiSzU9s2BbYVT8wlnmNQleMMq0mOJJCjUMCQMjY9r/qU3j2XpCxj7PY
-    Y8/0gtQQu6hMFf8HmFBQ==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3TMaFqTF1ViO8sG"
-Received: from [192.168.20.87]
-    by smtp.strato.de (RZmta 50.5.0 DYNA|AUTH)
-    with ESMTPSA id Ke140e0463YGeR6
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-	(Client did not present a certificate);
-    Mon, 6 May 2024 05:34:16 +0200 (CEST)
-Message-ID: <504913b1-8da4-403e-9ccc-d3eb41595806@hartkopp.net>
-Date: Mon, 6 May 2024 05:34:10 +0200
+	s=arc-20240116; t=1714967209; c=relaxed/simple;
+	bh=ujm4y3QKcY3L9Cf4hHa/U5fukmMQV74WdYfPnzWkjIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=rEiUeraZgAUB0dAfmNBIFM+hjjG8I2Xac+ZGBgI47zEHjPY3qk1iM4TSOhpifN8wNXvMcnEjO6jx9noExvK6ok7FZ9MMPHOU6tKXuHDnOsnxFCxBZXz/+9OnvPUL+OQfghKtvStwVvjMo4/e5y5P93qaqO6BVoAyk1GvkGxeJF4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dIMltynZ8RjYggWvxf3aJ2ZWfAjlqa8KRdr0nqsoMJ73+AqNPA1HKP+4W0lEO7pUZpjrsWhVU5rKDSE1DPOEhjI7WWduB3GgvDm1HYMzpMM5pqcP+JX+Sr9uENWTTj5Znvh7/BhGySSXw26oB+oyiieq1bFzFQm4AIRuRY9lEpz1MdCVi/6WTnwxnkKukv8tJgOelCqNX9awb+8xK7zkyB4PQrFFxy1UjmBsbaz3OTOtZ2c3UPT6EiznlOBJDsyX679odkK8iUSGXrlFl8MFemXtOMHd0c32gkQGkURQ0zhyncdSBdonfVFPNs+lMkeZ3bUgtJj1CglTi2z7x1YqBg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JRkMAT594ErfcQTEKOQpEEQ0QpyuxVO1GSg6pauvPME=;
+ b=fkTr+ZQ/g+CvXdOAowiYHx1kMTF9lOBKEy2dmVXQJ2bRDfWVlxSFb4wPrdLQefUslQkXUp4gX3ttEbUUrf1Yh8UplAy2719J9PQNHtFTVUeDZ4qotIujiKmMmkLF4HojPXDhNYyWWMzyZY5AeHnVZVnIjFyYPovcwLPiMaW9pKjDf6f1QHB+rwIuSCtIWcs2Poc6xfVn9TmRRcZMhxr/bnCkUxj5WL7emZAPBSJrweyqducq6NxHnR9/pMS8uHMWV1LqpE3UX6HvN5yzrOh6zm2c+Zb50xSa7WhlwOf5c2Gdfo1KchkZ53LRlSyO1ynj+OarWbXdowSmIsvW9XmD4A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::14) by ZQ2PR01MB1227.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Mon, 6 May
+ 2024 03:46:35 +0000
+Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ ([fe80::5de:15b9:3114:4f45]) by ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ ([fe80::5de:15b9:3114:4f45%5]) with mapi id 15.20.7472.044; Mon, 6 May 2024
+ 03:46:35 +0000
+From: Hal Feng <hal.feng@starfivetech.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Albert Ou <aou@eecs.berkeley.edu>
+Cc: Hal Feng <hal.feng@starfivetech.com>,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] riscv: defconfig: Enable StarFive JH7110 drivers
+Date: Mon,  6 May 2024 11:46:27 +0800
+Message-ID: <20240506034627.66765-1-hal.feng@starfivetech.com>
+X-Mailer: git-send-email 2.43.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZQ0PR01CA0001.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:5::14) To ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:7::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [can?] KMSAN: kernel-infoleak in raw_recvmsg
-To: o.rempel@pengutronix.de
-References: <0000000000007e4a2e0616fdde23@google.com>
-Content-Language: en-US
-Cc: syzbot <syzbot+5681e40d297b30f5b513@syzkaller.appspotmail.com>,
- davem@davemloft.net, edumazet@google.com, kernel@pengutronix.de,
- kuba@kernel.org, linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
- mkl@pengutronix.de, netdev@vger.kernel.org, pabeni@redhat.com,
- robin@protonic.nl, syzkaller-bugs@googlegroups.com
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-In-Reply-To: <0000000000007e4a2e0616fdde23@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1227:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55c8bca7-c205-43fc-03dc-08dc6d7f206c
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	d8wGKPSmhwgsngRSnG6R2QrdpPvxWQysqa2L/kTVcOxVCSvWNETtNrPnv2pc1GNraH8G4YCuozcUkKfxSg4s4k5gBACWlYgy2xYisETuJJWY2VWWoaqEit3YN2P65kAw5MmpPESovbwPkalpDSOwDncLvNozJHqasHwKTYHmgAK17XwIQnINCmP+j31dicbxpN9JY+ypOXkV7M5+vZ4sBsaRkS7jvo+qco57r3vhN6e47XNPr7Jnz01hVHO8ayF0WMxq/2oQfmH+AqqPmUBmUEoVjrIOKOkIxg6DhV0rvI4CZm70O1ZIg63u82hO9DdymQVaKJZp8CbqNG0XgiQSisfkh+np3Fhe9nx2BXP+xLugqOBpIgB5ImOboWMqDwSxEslyWwGMBPZbHcG9e4LSra4E5eqx/LGSx4esux813grXYwiRlr1CIrAdOxMSJv/LYj/CoIolWqTNlErupNU+2dTLpT0a6kzfSg8rH1lxK0B9GD+NAmhCgkrJkYFoz8gpDWdCtB1BGn5swa7cfHFDzOJYKC1lfg796F+9x7yqgvLoH1ykVdzzDZCVMFeDqYyyEsuXP4JsWD7Qrx3eEokwlPvVKigN3St7fLlhUHdrTl2Bw/eMx9BZEFU8Jt+v0UZZ
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(366007)(41320700004)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?lcRA+UKMxrr/lG+2qBXmtlVK77yX4bM2fr0T/Z7ckMeReeku7OgI2GTvGx+d?=
+ =?us-ascii?Q?g51lyyz/ZEXJ6UJ/MLTZqCgg4hyMFTttF2vusY6NiZAxeXuLRXjcOzmsobom?=
+ =?us-ascii?Q?Ii7TMuvNk9epGHV2OUvHea0wDzEivOR6OLtGiVofcpOJwpDcO91XiEpmaL6T?=
+ =?us-ascii?Q?PJxmJt1xFnFJbLErFNJqqDr1BXZD9OefNLbRgZPYq2pkFtqHyAa2KlRB8rK1?=
+ =?us-ascii?Q?CnJUyl8MFQj40XJO5myghdMYnvjiuJ7cAYMSMH+t2wo6q3z0LdxBEy170gko?=
+ =?us-ascii?Q?Nig0qV4/DZJvjepo8FEQCMR6MeEzLuzoLpz6Nbt33YaqydKkbNZuk+UXkd3Q?=
+ =?us-ascii?Q?wHQR6BKKZEfNDXytvZrIWuPBkXh5V8TaQVv2q6jX7KBAZ7v/0U6SbehcVFad?=
+ =?us-ascii?Q?/QpnhT2JOh08UM8WA0dJ4mWLYvCYk8g7/vIo06Q2/yqC891pCm8g9Nqx/NEt?=
+ =?us-ascii?Q?XnVXP/JlLMw8SCAqEuAHT3PxAhNISIZgdyhH1LPh9cNsFpRP/TF0aFK0/DtA?=
+ =?us-ascii?Q?5IojWgnFVw0lqi7uejuXEpv90KZuDvEsQ06+m4hZ7x3U12Bpu+k9RAInUaIK?=
+ =?us-ascii?Q?sdC9CqbkO4oL2tsPQt1wGr5SuXKfiI60Cw1RhkuJWUrrhnc2wnJ/50hiq5z9?=
+ =?us-ascii?Q?65qJEXz2bMytmmKamqa9sheUKi7WWONwpzhDaHxRl6R/XGcDHfSENrEF59Kf?=
+ =?us-ascii?Q?4al4DlGLcTIGn7tjlnnDxN3jFGgivsBSBHeWnVteI4LhKbJL5bRKx5t3jhxD?=
+ =?us-ascii?Q?g1mu5ov+C77qLGkiHNdfHwpVodjDUZj1tqyv+H4pnAlrZz+RbBjIu6EjpD9G?=
+ =?us-ascii?Q?MAF9mNNkhFZE3tqIAQB5XcTnDNGAlRBmDR70bH8yva/plA4qTnofe+BZ1+kH?=
+ =?us-ascii?Q?K1zz2dnE5DGFnnjhGaTUS4MMi7Q6dsCt8nYk8FCy+vKRD0P+7e6uiDbN0uLA?=
+ =?us-ascii?Q?9QmvUaO3MnU3iP2PvcRQxmadDpuSUhV+W3x1w2oh+WYukAsqi1Xr1VwjaUKQ?=
+ =?us-ascii?Q?BhNjv63DZzTvFlemeCkcn/gWS4cpnjAkG5Z+FBkGatBSrwM2n7Sy6Ii6azrA?=
+ =?us-ascii?Q?m9WZhSYyHTrbU05zJLWpCaUeBzpf/xYNHEiNw2D5X47onKp6yZtGFhaK/6LC?=
+ =?us-ascii?Q?dgtJSaoWVbW8Br1JscSP5LpoPNtJep+LxmaaHW4WBmAqMKTLYPWwPFBIuIti?=
+ =?us-ascii?Q?QhOzSq4mi8yRCCTtZtmTM5E0fPXLFCGNaESKkMnUulu440cha1bewJjtIpF7?=
+ =?us-ascii?Q?H4LBiWqEhCWbsRC5jO6t34gHjYfc/PzeoJkIoNUkeLaKDSc9DYuWSrYseOwT?=
+ =?us-ascii?Q?72hjR7lSDTjTQ8bBDBKJRfahuFtNA9vwTJCkntVseEMnlnV5djeqLH0NSgFF?=
+ =?us-ascii?Q?iPjBk6Hr1Pj9TWCSaxvkgsmgiTeuutCiRevuab2x/gkH8xHY5CAYffwUT3Uk?=
+ =?us-ascii?Q?yyBWQ23E/gfrlNbMmHw6nS0oyhijt1x+/eLeSp3LshlCJDCjfW52aCJOR+2Z?=
+ =?us-ascii?Q?GQSmRasjMXBVS8s6xnU/k9hSOGn2/YJy9mItxXM7TzbSfEtmUNMLmAmwedfb?=
+ =?us-ascii?Q?8YS7+fq4q7OT/hE7XdCgjaK7oHpQiompn8jaswtRnLXEzZXyVlHzzBp6GIa1?=
+ =?us-ascii?Q?6w=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55c8bca7-c205-43fc-03dc-08dc6d7f206c
+X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2024 03:46:35.3380
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ivIz7awbNyxDv+GELJ9OV1bdq66U41GR/nNrCLZ3yU3x41KAkVz7kBEj0JLIEpd/xcUKFVb2ccG04VLe4bDyGWPAEwyyQmfgEDFQDJ808Iw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1227
 
-Hello Oleksij,
+Add support for StarFive JH7110 SoC and VisionFive 2 board.
+- Cache
+- Temperature sensor
+- PMIC (AXP15060)
+- Restart GPIO
+- RNG
+- I2C
+- SPI
+- Quad SPI
+- USB & USB 2.0 PHY & PCIe 2.0/USB 3.0 PHY
+- Audio (I2S / TDM / PWM-DAC)
+- MIPI-CSI2 RX & D-PHY RX
 
-can this probably be caused by a missing initialization of unused data 
-in j1939_sk_alloc_skb()?
+Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+---
 
-Best regards,
-Oliver
+As more drivers of StarFive JH7110 VisionFive 2 board are upstream,
+add support for them in riscv defconfig.
 
-On 26.04.24 13:04, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following issue on:
-> 
-> HEAD commit:    71b1543c83d6 Merge tag '6.9-rc5-ksmbd-fixes' of git://git...
-> git tree:       upstream
-> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1784bdd7180000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=776c05250f36d55c
-> dashboard link: https://syzkaller.appspot.com/bug?extid=5681e40d297b30f5b513
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15b440d3180000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14b00907180000
-> 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/14813ccfbcb3/disk-71b1543c.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/e7b88b42cf07/vmlinux-71b1543c.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/3a64a5abfbba/bzImage-71b1543c.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+5681e40d297b30f5b513@syzkaller.appspotmail.com
-> 
-> =====================================================
-> BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-> BUG: KMSAN: kernel-infoleak in copy_to_user_iter lib/iov_iter.c:24 [inline]
-> BUG: KMSAN: kernel-infoleak in iterate_ubuf include/linux/iov_iter.h:29 [inline]
-> BUG: KMSAN: kernel-infoleak in iterate_and_advance2 include/linux/iov_iter.h:245 [inline]
-> BUG: KMSAN: kernel-infoleak in iterate_and_advance include/linux/iov_iter.h:271 [inline]
-> BUG: KMSAN: kernel-infoleak in _copy_to_iter+0x366/0x2520 lib/iov_iter.c:185
->   instrument_copy_to_user include/linux/instrumented.h:114 [inline]
->   copy_to_user_iter lib/iov_iter.c:24 [inline]
->   iterate_ubuf include/linux/iov_iter.h:29 [inline]
->   iterate_and_advance2 include/linux/iov_iter.h:245 [inline]
->   iterate_and_advance include/linux/iov_iter.h:271 [inline]
->   _copy_to_iter+0x366/0x2520 lib/iov_iter.c:185
->   copy_to_iter include/linux/uio.h:196 [inline]
->   memcpy_to_msg include/linux/skbuff.h:4113 [inline]
->   raw_recvmsg+0x2b8/0x9e0 net/can/raw.c:1008
->   sock_recvmsg_nosec net/socket.c:1046 [inline]
->   sock_recvmsg+0x2c4/0x340 net/socket.c:1068
->   ____sys_recvmsg+0x18a/0x620 net/socket.c:2803
->   ___sys_recvmsg+0x223/0x840 net/socket.c:2845
->   do_recvmmsg+0x4fc/0xfd0 net/socket.c:2939
->   __sys_recvmmsg net/socket.c:3018 [inline]
->   __do_sys_recvmmsg net/socket.c:3041 [inline]
->   __se_sys_recvmmsg net/socket.c:3034 [inline]
->   __x64_sys_recvmmsg+0x397/0x490 net/socket.c:3034
->   x64_sys_call+0xf6c/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:300
->   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->   do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
->   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> Uninit was created at:
->   slab_post_alloc_hook mm/slub.c:3804 [inline]
->   slab_alloc_node mm/slub.c:3845 [inline]
->   kmem_cache_alloc_node+0x613/0xc50 mm/slub.c:3888
->   kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:577
->   __alloc_skb+0x35b/0x7a0 net/core/skbuff.c:668
->   alloc_skb include/linux/skbuff.h:1313 [inline]
->   alloc_skb_with_frags+0xc8/0xbf0 net/core/skbuff.c:6504
->   sock_alloc_send_pskb+0xa81/0xbf0 net/core/sock.c:2795
->   sock_alloc_send_skb include/net/sock.h:1842 [inline]
->   j1939_sk_alloc_skb net/can/j1939/socket.c:878 [inline]
->   j1939_sk_send_loop net/can/j1939/socket.c:1142 [inline]
->   j1939_sk_sendmsg+0xc0a/0x2730 net/can/j1939/socket.c:1277
->   sock_sendmsg_nosec net/socket.c:730 [inline]
->   __sock_sendmsg+0x30f/0x380 net/socket.c:745
->   ____sys_sendmsg+0x877/0xb60 net/socket.c:2584
->   ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638
->   __sys_sendmsg net/socket.c:2667 [inline]
->   __do_sys_sendmsg net/socket.c:2676 [inline]
->   __se_sys_sendmsg net/socket.c:2674 [inline]
->   __x64_sys_sendmsg+0x307/0x4a0 net/socket.c:2674
->   x64_sys_call+0xc4b/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:47
->   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->   do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
->   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> Bytes 12-15 of 16 are uninitialized
-> Memory access of size 16 starts at ffff888120969690
-> Data copied to user address 00000000200017c0
-> 
-> CPU: 1 PID: 5050 Comm: syz-executor198 Not tainted 6.9.0-rc5-syzkaller-00031-g71b1543c83d6 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-> =====================================================
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want syzbot to run the reproducer, reply with:
-> #syz test: git://repo/address.git branch-or-commit-hash
-> If you attach or paste a git patch, syzbot will apply it before testing.
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
-> 
+Changes since v1:
+- Drop CONFIG_STAGING=y, CONFIG_STAGING_MEDIA=y,
+  CONFIG_V4L_PLATFORM_DRIVERS=y, CONFIG_VIDEO_STARFIVE_CAMSS=m.
+- Change CONFIG_SENSORS_SFCTEMP as a module.
+- Drop CONFIG_CLK_STARFIVE_JH7110_*=y, because they are not critical to boot.
+- Update the commit message.
+
+History:
+v1: https://lore.kernel.org/all/20240403060902.42834-1-hal.feng@starfivetech.com/
+
+---
+ arch/riscv/configs/defconfig | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
+index fc0ec2ee13bc..2c8e80b57edd 100644
+--- a/arch/riscv/configs/defconfig
++++ b/arch/riscv/configs/defconfig
+@@ -111,6 +111,7 @@ CONFIG_PCIE_XILINX=y
+ CONFIG_PCIE_FU740=y
+ CONFIG_DEVTMPFS=y
+ CONFIG_DEVTMPFS_MOUNT=y
++CONFIG_SIFIVE_CCACHE=y
+ CONFIG_MTD=y
+ CONFIG_MTD_BLOCK=y
+ CONFIG_MTD_CFI=y
+@@ -154,24 +155,35 @@ CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
+ CONFIG_VIRTIO_CONSOLE=y
+ CONFIG_HW_RANDOM=y
+ CONFIG_HW_RANDOM_VIRTIO=y
++CONFIG_HW_RANDOM_JH7110=m
++CONFIG_I2C=y
+ CONFIG_I2C_CHARDEV=m
++CONFIG_I2C_DESIGNWARE_PLATFORM=y
+ CONFIG_I2C_MV64XXX=m
+ CONFIG_I2C_RIIC=y
+ CONFIG_SPI=y
++CONFIG_SPI_CADENCE_QUADSPI=m
++CONFIG_SPI_PL022=m
+ CONFIG_SPI_RSPI=m
+ CONFIG_SPI_SIFIVE=y
+ CONFIG_SPI_SUN6I=y
+ # CONFIG_PTP_1588_CLOCK is not set
+ CONFIG_GPIO_SIFIVE=y
++CONFIG_POWER_RESET_GPIO_RESTART=y
++CONFIG_SENSORS_SFCTEMP=m
+ CONFIG_CPU_THERMAL=y
+ CONFIG_DEVFREQ_THERMAL=y
+ CONFIG_RZG2L_THERMAL=y
+ CONFIG_WATCHDOG=y
+ CONFIG_SUNXI_WATCHDOG=y
+ CONFIG_RENESAS_RZG2LWDT=y
++CONFIG_MFD_AXP20X_I2C=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
++CONFIG_REGULATOR_AXP20X=y
+ CONFIG_REGULATOR_GPIO=y
++CONFIG_MEDIA_SUPPORT=m
++CONFIG_VIDEO_CADENCE_CSI2RX=m
+ CONFIG_DRM=m
+ CONFIG_DRM_RADEON=m
+ CONFIG_DRM_NOUVEAU=m
+@@ -183,6 +195,10 @@ CONFIG_SOUND=y
+ CONFIG_SND=y
+ CONFIG_SND_SOC=y
+ CONFIG_SND_SOC_RZ=m
++CONFIG_SND_DESIGNWARE_I2S=m
++CONFIG_SND_SOC_STARFIVE=m
++CONFIG_SND_SOC_JH7110_PWMDAC=m
++CONFIG_SND_SOC_JH7110_TDM=m
+ CONFIG_SND_SOC_WM8978=m
+ CONFIG_SND_SIMPLE_CARD=m
+ CONFIG_USB=y
+@@ -196,6 +212,11 @@ CONFIG_USB_OHCI_HCD_PLATFORM=y
+ CONFIG_USB_RENESAS_USBHS=m
+ CONFIG_USB_STORAGE=y
+ CONFIG_USB_UAS=y
++CONFIG_USB_CDNS_SUPPORT=m
++CONFIG_USB_CDNS3=m
++CONFIG_USB_CDNS3_GADGET=y
++CONFIG_USB_CDNS3_HOST=y
++CONFIG_USB_CDNS3_STARFIVE=m
+ CONFIG_USB_MUSB_HDRC=m
+ CONFIG_USB_MUSB_SUNXI=m
+ CONFIG_NOP_USB_XCEIV=m
+@@ -244,6 +265,9 @@ CONFIG_RZG2L_ADC=m
+ CONFIG_RESET_RZG2L_USBPHY_CTRL=y
+ CONFIG_PHY_SUN4I_USB=m
+ CONFIG_PHY_RCAR_GEN3_USB2=y
++CONFIG_PHY_STARFIVE_JH7110_DPHY_RX=m
++CONFIG_PHY_STARFIVE_JH7110_PCIE=m
++CONFIG_PHY_STARFIVE_JH7110_USB=m
+ CONFIG_LIBNVDIMM=y
+ CONFIG_NVMEM_SUNXI_SID=y
+ CONFIG_EXT4_FS=y
+
+base-commit: dd5a440a31fae6e459c0d6271dddd62825505361
+-- 
+2.43.2
+
