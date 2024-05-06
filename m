@@ -1,82 +1,144 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB3523F9EC
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 02:23:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.220
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79A983F9EC
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 02:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714962215; cv=none; b=O2M7bKwsAtMAvrXzJwSHecDGme+U+F9ABTCGmTQq7VKf6oONAeOmipdd11uZzYMEG4Qxio67iW9Yf9N3MbHbHLSUTvv9ePDWTG+tnhMZgvJwDpC/Qj30uuPvKACjvMpX8ccc4FcZqHy185e42HAKXZvKkBfGeBamBMBFMStfue0=
+	t=1714962453; cv=none; b=qc4kyX5uRtilB2ghFnrW9WeVs1rHo8Yi/LJ/DoeSd9mZy+eIGkxAAJxt+5PThruEPX7eavmtCE5y1T7y16IpNznOSHLhBGh+pouo45TRbkTmDD+3UK+t96WPtlGjWWIWNgKPpB+um8AU0okSmP4hnEAN6j1uLi31TC7fQFJqnQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714962215; c=relaxed/simple;
-	bh=kJ1EjMpssDBDjTJkBklj+X7w3qeQ1Fz7LV7FBdijZDI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rk4vfzw7GTbovsUDmbld9+WITcjtc5hak76s/1oFFpvzJvMh/akUxXv3VE6GxVNQjr+A5wLoBj4kmfYAI7Af9r7IGAAfgIWZilEWRTuaVySPzTbD6s1LKQchj5J159GX5mIJ555R+MJ5lG+cTUzkCkpgd0z4BafcpaY4qiMHiDc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=OCzXqYV0; arc=none smtp.client-ip=45.254.50.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1714962453; c=relaxed/simple;
+	bh=9SFYx28lbOjebzpeT1IaydZg7cFtpjFbVbcTaHrbfVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Suq/xVr2kKoN+XXm/b6nlISs7jCnM14v3D0q9VQIYeNM29bZb8ngpfjkOFDLyirY3QcCc0a22Vri4JHylctvXXXtx4uMe6WopBpJWCjAVdDbFqgbtTmgowtPokx2CSuotTZ3ThGe0W3RUVRlQmcuaVWSIX9hrVr1j2fQTSbFnZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk; spf=none smtp.mailfrom=davidwei.uk; dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b=2S+pwjKW; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=davidwei.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=davidwei.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="OCzXqYV0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=LQ3sc
-	wYLoPMei8ryb8phE+FJFjgEcy7bl0P/q0SziYw=; b=OCzXqYV0c5cwhTSnRg4eQ
-	/PKEM4OKdSLpoUz8+Wl/WBNx5WhqN9Fa20CIXPVv2L7AU2cu1fRyAaTcOSc9Pn3m
-	9GjCw9xthoDG/O3L/Eion9Duw6YNyRngdgAYp/xAAcGSa4YZGcBt46bt3FLdbXQo
-	tt/FWM+kG925ZIm/f7nsj0=
-Received: from yangzhang2020.localdomain (unknown [60.27.227.220])
-	by gzga-smtp-mta-g0-0 (Coremail) with SMTP id _____wDnl6fyPjhmWCzYDQ--.44974S2;
-	Mon, 06 May 2024 10:22:42 +0800 (CST)
-From: "yang.zhang" <gaoshanliukou@163.com>
-To: alexghiti@rivosinc.com
-Cc: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	"yang.zhang" <yang.zhang@hexintek.com>
-Subject: [PATCH V2] riscv: set trap vector earlier
-Date: Mon,  6 May 2024 10:22:39 +0800
-Message-Id: <20240506022239.6817-1-gaoshanliukou@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=davidwei-uk.20230601.gappssmtp.com header.i=@davidwei-uk.20230601.gappssmtp.com header.b="2S+pwjKW"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f30f69a958so839229b3a.1
+        for <linux-kernel@vger.kernel.org>; Sun, 05 May 2024 19:27:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=davidwei-uk.20230601.gappssmtp.com; s=20230601; t=1714962451; x=1715567251; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XZcebAj1tOpuNxt9ewLjX4z+yHH+WF19I/SsunPNY+Q=;
+        b=2S+pwjKWYlLbiuBIk3HZlOWpXEc4CXmptIS03eIOnTMcGybp8XBpbKITK9/kFRg/ic
+         LbwRXnBI6CK7hAF8xFT24WlmBjb7YEHwvgMB8Ggb7SDSy0x3eu/shPeQQfnRjZw+NYA1
+         kbaoiqJb4DPFSnUmhmKxZKJvK5gdq8xJbgIMFmsLTQpXTqhNB4KX37OWnqSdir8sL8Lk
+         jNazIC9k+hM6cV7ysWMAa0W5ajuYP+n++sigN4uxDW11dLBcTaZ1TkFS5N1FBdrArOn4
+         no+itV9cHw6eUBXvQYs3wNKVAWMIPnk2zfvrYV89CDyEGP3i5y1La5iWem9GdI0RmOpj
+         9VbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714962451; x=1715567251;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XZcebAj1tOpuNxt9ewLjX4z+yHH+WF19I/SsunPNY+Q=;
+        b=EPNsz9CFP+Bc3OOfcVST+l07dop9qpRu8s+2V+NGulWeyhU+/HtthykqrvGjL1Yh7/
+         3xtNGAr8jvq9Pj/IECDppYTdr0oJBIM52KGmfFB0czSauCo+bsSD+1voCLkJw97QvVOG
+         /NBCV9EzIXWWHrFHm/b6O1yY/RyZUJbNMP+s1jUU71v2kd70G3MAK0RFE5OyE/8bAUVL
+         LPO6AZBkZT2X4b4z5uai35FV07D2DyabwWoLlBSScq031dz+vQ7RAkaLyq7k/immZwhI
+         ShD4JgFqc1cQH9IQQLTsFbX1YsZ5noj0/89PfFeI2WioD9MFDmPBg+FJzUoE8vdk2Fdd
+         Pgaw==
+X-Forwarded-Encrypted: i=1; AJvYcCX69EwgFyr21APqxlQSwoRCcKJDIWKRv1Bl57nfkMIi9gJ0YvXxaggR+gkPC++vSpYOwPIuBqlVR4VQsJSAAU4mKSkLdO7zBRvXyfAn
+X-Gm-Message-State: AOJu0Yy8BMycrKiqlSxgPr5Lou5wcQVDs34ZN1BmbTia/HiluvPM5qBy
+	mEVPVIX7Wa980YFrpn71/xdCSKdwVbx4i293Euevkeo+8zWAc0JMbV2AV/3rzF0=
+X-Google-Smtp-Source: AGHT+IG347eCvhxwYdPwO4e9Eg21UrEgM91mcHSey1ZRxbww3HF95DvYkZM1Vz2e8uSTe7UMyQMSlg==
+X-Received: by 2002:a05:6a20:d80c:b0:1af:7bbc:9f86 with SMTP id iv12-20020a056a20d80c00b001af7bbc9f86mr9359387pzb.0.1714962450620;
+        Sun, 05 May 2024 19:27:30 -0700 (PDT)
+Received: from [192.168.1.15] (174-21-160-85.tukw.qwest.net. [174.21.160.85])
+        by smtp.gmail.com with ESMTPSA id n26-20020a63591a000000b005cf450e91d2sm6955159pgb.52.2024.05.05.19.27.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 May 2024 19:27:30 -0700 (PDT)
+Message-ID: <1d0c553c-18bb-4d0d-8358-eff0b65c6c56@davidwei.uk>
+Date: Sun, 5 May 2024 19:27:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnl6fyPjhmWCzYDQ--.44974S2
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Gry8XrW8ur48JF4UGr47CFg_yoWDJrc_GF
-	Z7JrWUWry8Ca1SqF9Fq3yfWw1jvw1Y9FWF934SvrWUuw4vgFWjq3WYg345trZ5GFyIgw4k
-	J3saqFZrtr12qjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUnXAw7UUUUU==
-X-CM-SenderInfo: pjdr2x5dqox3xnrxqiywtou0bp/1tbiJxnW8mXAlp9hTwAAsY
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] net/smc: fix netdev refcnt leak in
+ smc_ib_find_route()
+Content-Language: en-GB
+To: Wen Gu <guwen@linux.alibaba.com>, wenjia@linux.ibm.com,
+ jaka@linux.ibm.com, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com
+Cc: alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+ linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240506015439.108739-1-guwen@linux.alibaba.com>
+From: David Wei <dw@davidwei.uk>
+In-Reply-To: <20240506015439.108739-1-guwen@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: "yang.zhang" <yang.zhang@hexintek.com>
+On 2024-05-05 18:54, Wen Gu wrote:
+> A netdev refcnt leak issue was found when unregistering netdev after
+> using SMC. It can be reproduced as follows.
+> 
+> - run tests based on SMC.
+> - unregister the net device.
+> 
+> The following error message can be observed.
+> 
+> 'unregister_netdevice: waiting for ethx to become free. Usage count = x'
+> 
+> With CONFIG_NET_DEV_REFCNT_TRACKER set, more detailed error message can
+> be provided by refcount tracker:
+> 
+>  unregister_netdevice: waiting for eth1 to become free. Usage count = 2
+>  ref_tracker: eth%d@ffff9cabc3bf8548 has 1/1 users at
+>       ___neigh_create+0x8e/0x420
+>       neigh_event_ns+0x52/0xc0
+>       arp_process+0x7c0/0x860
+>       __netif_receive_skb_list_core+0x258/0x2c0
+>       __netif_receive_skb_list+0xea/0x150
+>       netif_receive_skb_list_internal+0xf2/0x1b0
+>       napi_complete_done+0x73/0x1b0
+>       mlx5e_napi_poll+0x161/0x5e0 [mlx5_core]
+>       __napi_poll+0x2c/0x1c0
+>       net_rx_action+0x2a7/0x380
+>       __do_softirq+0xcd/0x2a7
+> 
+> It is because in smc_ib_find_route(), neigh_lookup() takes a netdev
+> refcnt but does not release. So fix it.
+> 
+> Fixes: e5c4744cfb59 ("net/smc: add SMC-Rv2 connection establishment")
+> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+> ---
+>  net/smc/smc_ib.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/smc/smc_ib.c b/net/smc/smc_ib.c
+> index 97704a9e84c7..b431bd8a5172 100644
+> --- a/net/smc/smc_ib.c
+> +++ b/net/smc/smc_ib.c
+> @@ -210,10 +210,11 @@ int smc_ib_find_route(struct net *net, __be32 saddr, __be32 daddr,
+>  		goto out;
+>  	if (rt->rt_uses_gateway && rt->rt_gw_family != AF_INET)
+>  		goto out;
+> -	neigh = rt->dst.ops->neigh_lookup(&rt->dst, NULL, &fl4.daddr);
+> +	neigh = dst_neigh_lookup(&rt->dst, &fl4.daddr);
 
-If trap earlier, trap vector doesn't yet set properly, current
-value maybe set by previous firmwire, typically it's the _start of kernel,
-it's confused and difficult to debuge, so set it earlier.
----
-v1 -> v2:
-As Alex commented, remove the patch for supporting hugesize kernek image
-Add the omissive logic of set trap vector earlier
+Of the two implementations of neigh_lookup() I found that do not simply
+return NULL, all of them increment or init struct neighbour::refcnt.
 
-Signed-off-by: yang.zhang <yang.zhang@hexintek.com>
----
- arch/riscv/kernel/head.S | 3 +++
- 1 file changed, 3 insertions(+)
+1. ipv4_neigh_lookup()
+2. ip6_dst_neigh_lookup()
+  a. __ipv6_neigh_lookup()
+  b. neigh_create()
 
-diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
-index 4236a69c35cb..03dc440e643e 100644
---- a/arch/riscv/kernel/head.S
-+++ b/arch/riscv/kernel/head.S
-@@ -300,6 +300,9 @@ SYM_CODE_START(_start_kernel)
- #else
- 	mv a0, a1
- #endif /* CONFIG_BUILTIN_DTB */
-+	/* Set trap vector to spin forever to help debug */
-+	la a3, .Lsecondary_park
-+	csrw CSR_TVEC, a3
- 	call setup_vm
- #ifdef CONFIG_MMU
- 	la a0, early_pg_dir
--- 
-2.25.1
+>  	if (neigh) {
+>  		memcpy(nexthop_mac, neigh->ha, ETH_ALEN);
+>  		*uses_gateway = rt->rt_uses_gateway;
+> +		neigh_release(neigh);
 
+So releasing it here looks correct.
+
+>  		return 0;
+>  	}
+>  out:
