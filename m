@@ -1,116 +1,125 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28B93154450;
-	Mon,  6 May 2024 15:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B208F1552F4
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 15:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715010648; cv=none; b=tiuU2VXbEneRGA42W/5ejfIz0MXxopXgx8ao3zW80XPGFLJBh7pOmUYNLiDE0kxAWrOPR/68dCbV6kes/o9lJB4ulI+N7+Is5hiVwo5ryI9vHG26bmfOcP60FbEHQhAeFt/jLRXiJv+PmJ7Ka5lF+fSBYg8ZzJDzMETCjWdjwEo=
+	t=1715010673; cv=none; b=KCJY6FgB16A47TI43shR73Sokib3Uj0peGzW5u2gPOIEa/nOb7NSR4MZxDZSiynxO6To0/NTljZyN2CkqVlQaTZuUwSc+nBw8iW2f0UtiTLhlubbeU1B4DTUkR4SphctVecjzqv/JBU2Xfqj5U80LynRiwJPUDm4EEvWwR1zSig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715010648; c=relaxed/simple;
-	bh=1yyAqDkLFzrqKXzOSJzS2RwxgP/SThZ2l8QRzY3mMto=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HNpMd+ss4nkngeV6fYV5UWp3sh+GBugNEvLfmjijuIjvGa6LIMiZprIbtTwmE+0iiully46DT2ZfGlC6QoW36FNEIxsifhPf+yFVelsDcnYaIBazwbRLIKXcwHp2jx+2TaxUL0p1oAUXwjew3QyLAeIu9YQ+muy+lmhi6CusgqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=P1RfsMEb; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1715010673; c=relaxed/simple;
+	bh=GMFcXlvdHlwN61woQJwvISQwU5cuAkI+j96JuCieE8w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sTFIvAvYqlNkv/fRCdLwQEJE84jvZ5AE3vYjJVhz5jCUBQt200YM/dl66S3q1NBsh6PwePqqShkTfT+XOJefprLYlCMoMr2KwGMLC2mYHE/trTn8wwe+wQahZK5CXXOlnNh9dw838epj7GfccVYJb2wI3M+TvzhQGhD6LDPPQSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DMxsEuxP; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="P1RfsMEb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1715010622; x=1715615422; i=markus.elfring@web.de;
-	bh=H9sTmaUe+r3xoDCrpXo7q1l4R6zgCLudODMODzaJySI=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=P1RfsMEbI6WI5DZVmZCjhlAGG17nCkZrsM2pxE9jgoX6OXUZmXJ1+F2FbJmP+BOt
-	 RoWfy9GMi3LIO+fMOy/mPOdh094LVq30Y71TTRGRhZUYFgPxUobApnOFbsB8KYYGx
-	 Nn3/SpewE14Us7iAJVv/lbKlSw0N4Pc1kPOsToIZAwpBspM6nAGxEf4lM74eNTgqf
-	 bEKo+8O8dS5W/WL4Gg6MXLIQtatqQeh+gcyKCvJ009TchWeW102gKzvzlBDcD8AM+
-	 gLYVxBBu4LcSHDz+VMsRarxP3r82kiucEd+txjQX2VjzEL+dOK7AqGzKWAJyg9bJ8
-	 aPLGTSpouULGIuDh0w==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M5j1c-1rxw3j4AP4-007l9k; Mon, 06
- May 2024 17:50:22 +0200
-Message-ID: <45f6991d-1595-4ba1-956b-acfcbbdfe8de@web.de>
-Date: Mon, 6 May 2024 17:50:19 +0200
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DMxsEuxP"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 67238240004;
+	Mon,  6 May 2024 15:51:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715010668;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d+wTVg9eOKsGtIWDYqk4CtYV7Tl016exC8KiZRLJoqE=;
+	b=DMxsEuxPJV+g6UtG+YRF085ccKcoCV9LqOJQaiQdVRIkEPTFaqNFe0kyDd4bPCdSSFtchG
+	vNb0dC8m1UQ1A5AzO7NZoLVL4hQFIo66foSZkBiHS4oDip3EiSgcoDpifv5bhaXO5PWjQd
+	3/fwWeOSR6/uksRPEgXMgyThettoGd8FsbcZR/2vouiGB55LwfJPmsQCROa7pxbeNTEnPq
+	L0jxv2kdIQSiZ+20vIb9pxjyI4wf2eiharJlf3lJjWD9DB4qcTGtc5uEL2zOokUwGorKKX
+	baE/tGQwBL1xKdnrRXyIbuPajYd/1y8ZdLkx56k6FoP/0qmvuIeS/+xPpT/ycg==
+Date: Mon, 6 May 2024 17:51:06 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
+ <vigneshr@ti.com>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] mtd: nand: mxc_nand: support software ECC
+Message-ID: <20240506175106.2ab7c844@xps-13>
+In-Reply-To: <20240506160508.6c60d50f@xps-13>
+References: <20240417-mtd-nand-mxc-nand-exec-op-v1-0-d12564fe54e9@pengutronix.de>
+	<20240417-mtd-nand-mxc-nand-exec-op-v1-3-d12564fe54e9@pengutronix.de>
+	<20240506160508.6c60d50f@xps-13>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3 2/2] ax25: Change kfree() in ax25_dev_free() to
- ax25_dev_put()
-To: Dan Carpenter <dan.carpenter@linaro.org>,
- Duoming Zhou <duoming@zju.edu.cn>, linux-hams@vger.kernel.org,
- netdev@vger.kernel.org, kernel-janitors@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- =?UTF-8?Q?J=C3=B6rg_Reuter?= <jreuter@yaina.de>,
- Paolo Abeni <pabeni@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
- Lars Kellogg-Stedman <lars@oddbit.com>, Simon Horman <horms@kernel.org>
-References: <cover.1715002910.git.duoming@zju.edu.cn>
- <53925353450dea9a705d67ad225b589e8508042c.1715002910.git.duoming@zju.edu.cn>
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <53925353450dea9a705d67ad225b589e8508042c.1715002910.git.duoming@zju.edu.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:YbeJ89qqt2nw8KnLHNWF0skZsoHi5qd1kuwRpt0DBunZK4csV0V
- zWBAkWyR0IcdmCCNgEuexDy+tb8yyZdhHPmgtylpJwBWORJY6SGAlQEIAoOBLDpVl1x+s+w
- yAd1KRp0oEr9Xx5y6k23CFfq+9wnZ2Wd4oP/RvZzpoZxr0IUbpXd7mlmGIzP9D8mub/PqYd
- mlo9vzqKRALUIW+QL1inw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:IMt04jr/M9U=;H1eGqO+BBW3jUOXk2stzLFN+eog
- L+RgGRdGcqtQlntEPB9fuk3V1HW0lxR+KgCX1jgBCuOylADU9aOr35dvDYotD16I4BlLIjyqh
- g4fS6fyyN/jNx3fSQxP5cmA5qgrVmuJCSATNmGuSj1478F4DaUJP/GWyxp49isqDym6G8/qK3
- vcqTWngvjCNVfWsodLJ/6GeSKSVu/K1kz4aQodPU1GARlYfm+2WUud1kljw8UQCNlR5lOVU+B
- 20yanfXneOFYaOFzuLyA6LtAYkEEThQLKhKbYP367CjgmY9Eo4HWzDXCaosBVHQmZgWENExba
- fz6fXGj2K7h9o1dpFYJPNYL7n+X1cUqyK5q3UBfhXJ95DvAuDRXKo1jubc9uKfCjEzg+QkMMD
- ttC1OUeRsDbRjp7WZjNzALqc/t3J0zLVan8UQmH8AwYF1pt1UssbL1jodbt4eXVDPohJuMRXy
- jJOb2U1Pg0wMeRyC7/ThM3czS/phRAfQmiK5AOWf1WM5AvPRD/dvFiXiH05DO2M588FZYFrn+
- 0NOlMfNHilJc9vIpzNsmwUGJ2HIMoAs8RKfrzW/v5OXzuIIqt8HOenhh8M84yvhVl6smk6CqB
- i40J3XF86mqXc3RNuEgi+LN7+aS7lEoSvncWX34djQVC5nC8H5tkbe3ivnXA4jUY08vIFE43y
- YZS4F/rDy6IrCWUnmiUv7raGxyEi79HUAJc/RZJxY1M8qcV0RJvEItbH88MldXwJagDhxMxty
- Ss6bFwACuATiotdZtspMPVuDJXXVJGzpTxzn4GP6xsvvSgbD22rTkUhGa8NDA6OeVYMmZr6zM
- 166wUZOK2Gv+8VFC88m3jx7WWwbOcAAr41GtPz28/BKlo=
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-=E2=80=A6
-> Replace it with a ax25_dev_put() call instead.
-=E2=80=A6
-> ---
-> Changes in v3:
->   - Make commit messages more clearer.
-=E2=80=A6
-> +++ b/net/ax25/ax25_dev.c
-> @@ -188,16 +188,13 @@ struct net_device *ax25_fwd_dev(struct net_device =
-*dev)
->   */
->  void __exit ax25_dev_free(void)
->  {
-=E2=80=A6
-> -	ax25_dev =3D ax25_dev_list;
-> -	while (ax25_dev !=3D NULL) {
-> -		s        =3D ax25_dev;
-> -		netdev_put(ax25_dev->dev, &ax25_dev->dev_tracker);
-> -		ax25_dev =3D ax25_dev->next;
-> -		kfree(s);
-> +	list_for_each_entry_safe(s, n, &ax25_dev_list, list) {
-> +		netdev_put(s->dev, &s->dev_tracker);
-> +		list_del(&s->list);
-> +		ax25_dev_put(s);
->  	}
-> -	ax25_dev_list =3D NULL;
-=E2=80=A6
+Hi Miquel,
 
-Can the increased application of the Linux list API be offered as
-a separate update step?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9-rc7#n81
+miquel.raynal@bootlin.com wrote on Mon, 6 May 2024 16:05:08 +0200:
 
-Regards,
-Markus
+> Hi Sascha,
+>=20
+> s.hauer@pengutronix.de wrote on Wed, 17 Apr 2024 09:13:30 +0200:
+>=20
+> > To support software ECC we still need the driver provided read_oob,
+> > read_page_raw and write_page_raw ops, so set them unconditionally
+> > no matter which engine_type we use. The OOB layout on the other hand
+> > represents the layout the i.MX ECC hardware uses, so set this only
+> > when NAND_ECC_ENGINE_TYPE_ON_HOST is in use.
+> >=20
+> > With these changes the driver can be used with software BCH ECC which
+> > is useful for NAND chips that require a stronger ECC than the i.MX
+> > hardware supports.
+> >=20
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > ---
+> >  drivers/mtd/nand/raw/mxc_nand.c | 9 +++++----
+> >  1 file changed, 5 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/drivers/mtd/nand/raw/mxc_nand.c b/drivers/mtd/nand/raw/mxc=
+_nand.c
+> > index fc70c65dea268..f44c130dca18d 100644
+> > --- a/drivers/mtd/nand/raw/mxc_nand.c
+> > +++ b/drivers/mtd/nand/raw/mxc_nand.c
+> > @@ -1394,15 +1394,16 @@ static int mxcnd_attach_chip(struct nand_chip *=
+chip)
+> >  	chip->ecc.bytes =3D host->devtype_data->eccbytes;
+> >  	host->eccsize =3D host->devtype_data->eccsize;
+> >  	chip->ecc.size =3D 512;
+> > -	mtd_set_ooblayout(mtd, host->devtype_data->ooblayout);
+> > +
+> > +	chip->ecc.read_oob =3D mxc_nand_read_oob;
+> > +	chip->ecc.read_page_raw =3D mxc_nand_read_page_raw;
+> > +	chip->ecc.write_page_raw =3D mxc_nand_write_page_raw;
+
+A second thought on this. Maybe you should consider keeping these for
+on-host operations only.
+
+The read/write_page_raw operations are supposed to detangle the data
+organization to show a proper [all data][all oob] organization to the
+user. But of course if the data is stored differently when using
+software ECC, you'll expect the implementation to be different (and the
+core provides such helpers, even though in your case they use RNDOUT
+which is not yet supported).
+
+> > =20
+> >  	switch (chip->ecc.engine_type) {
+> >  	case NAND_ECC_ENGINE_TYPE_ON_HOST:
+> > +		mtd_set_ooblayout(mtd, host->devtype_data->ooblayout);
+> >  		chip->ecc.read_page =3D mxc_nand_read_page;
+> > -		chip->ecc.read_page_raw =3D mxc_nand_read_page_raw;
+> > -		chip->ecc.read_oob =3D mxc_nand_read_oob;
+> >  		chip->ecc.write_page =3D mxc_nand_write_page_ecc;
+> > -		chip->ecc.write_page_raw =3D mxc_nand_write_page_raw;
+> >  		chip->ecc.write_oob =3D mxc_nand_write_oob;
+> >  		break; =20
+>=20
+> You also need to disable the ECC engine by default (and then you're
+> free to use the raw page helpers).
+>=20
+> I thought patch 4 was needed for this patch to work, do you confirm?
+> Otherwise with the little change requested I might also merge this one.
+>=20
+> Thanks, Miqu=C3=A8l
+
