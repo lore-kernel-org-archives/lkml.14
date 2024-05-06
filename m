@@ -1,33 +1,33 @@
-Received: from smtp-bc0e.mail.infomaniak.ch (smtp-bc0e.mail.infomaniak.ch [45.157.188.14])
+Received: from smtp-42af.mail.infomaniak.ch (smtp-42af.mail.infomaniak.ch [84.16.66.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9476156F47
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 16:55:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8232C159574
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 16:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715014537; cv=none; b=BKRtBe5+xoJMdMhzh78uusn4kBocct3zbRqkyu9u83uDx2ehHX6em3SJYRXL4jZ5anATqTl7xbhosRjqira6xPHKx87tTF8fOdacn0uejGUnDpPh1tn04ew+EsUiuI1+VtWE3mwZXPuAW6J/MIP8Z7+Ur0xZW8xlitGegqtOQlA=
+	t=1715014540; cv=none; b=utkqX9rSivndTyZydF9uZQeiXkzqRfMh+ZbMx6eLqpMB1Nq4h4gC2U/BZgWCf+S6+qxTfzAuTMNjeAvem2Ei4MTr1q03ntImD4ViMqvD9yvvn0sPh6Env2FEhvWcOCUAePA4qFdQ7+u1alm+5rjsQctpg0hTifmjTcXMtFrgEbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715014537; c=relaxed/simple;
-	bh=0tQHqd4/eEhLWaLMzB6foqA+su+xi6RrVZdOw60Sbkg=;
+	s=arc-20240116; t=1715014540; c=relaxed/simple;
+	bh=M+4DqDM3bMKzKflXmIXwGit406HlC3CP4E1NiL2yHkM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G8zkuRxvzDe8q8JcN1FHqiC6X7D03wylZ+cMgL8MU+rIH54wyjipvMP4gmBYtABJyhFmWUa5Ye2wL6UgnQzwXyLE8g0QX712Yc65VI9ACBAyraogB7vLSMkdvoVwx8yijARD8A26sM+XNu+A3S7ZSJIGmuflC1lO3+qeyMOdn18=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ugIOUxOo; arc=none smtp.client-ip=45.157.188.14
+	 MIME-Version:Content-Type; b=Idb2VIO2IJ7LszNSUPQBtrhzgq8ljPv3v0FAvrgBzlNjCtfYBAEk7AHKKn6Vg/9Hnpt6f389GPcJPZJ3e+UrpbxXXLvujXdvHFnUkklA1Z56ibFZ3rYpiiQyP9xN8P6xGFbedm7nagenFvQ4TsiMWLWHcLaZBMDz0n3iZ1uw6co=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=mH9UM3o3; arc=none smtp.client-ip=84.16.66.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ugIOUxOo"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="mH9UM3o3"
 Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VY6wc1vMPz50d;
-	Mon,  6 May 2024 18:55:28 +0200 (CEST)
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VY6wf5MS1z7K4;
+	Mon,  6 May 2024 18:55:30 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-	s=20191114; t=1715014528;
-	bh=0tQHqd4/eEhLWaLMzB6foqA+su+xi6RrVZdOw60Sbkg=;
+	s=20191114; t=1715014530;
+	bh=M+4DqDM3bMKzKflXmIXwGit406HlC3CP4E1NiL2yHkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ugIOUxOoUMFPIy2NDPZ21zUrMQARvArLvHuUUZYdIZuyikd6jOvatEk/EIBQR/XVh
-	 aMuK4GDFWXEWhjbYVT4TdpLuIFyfsRYxgtQxcvwuR8CksqvToYq4qKykL+0t9vTRbb
-	 0iqkSCV856YaOk0/VyPS9SBQmQa9sq+peLhbv/FM=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VY6wb3QpjzQTv;
-	Mon,  6 May 2024 18:55:27 +0200 (CEST)
+	b=mH9UM3o3Aer2h1akA3RvMN6jYBExqH/SwyzbOn6Ru4PVugDLIQxL7fbM83DagRANa
+	 fiOcHvgRu7RwXUp5Ugl4py+RGFy7zto96rbOFUC9DHpMJFnFjpHAyh8AYVmsBn3Ama
+	 jlm3yGIKemaW0vHOiaQ//Ux4mScpJwmLXIS1g52M=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VY6wd6tx7zQ3W;
+	Mon,  6 May 2024 18:55:29 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Christian Brauner <brauner@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -58,9 +58,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-kselftest@vger.kernel.org,
 	netdev@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH v6 04/10] selftests/harness: Fix interleaved scheduling leading to race conditions
-Date: Mon,  6 May 2024 18:55:12 +0200
-Message-ID: <20240506165518.474504-5-mic@digikod.net>
+Subject: [PATCH v6 06/10] selftests/harness: Constify fixture variants
+Date: Mon,  6 May 2024 18:55:14 +0200
+Message-ID: <20240506165518.474504-7-mic@digikod.net>
 In-Reply-To: <20240506165518.474504-1-mic@digikod.net>
 References: <20240506165518.474504-1-mic@digikod.net>
 Precedence: bulk
@@ -73,77 +73,45 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Fix a race condition when running several FIXTURE_TEARDOWN() managing
-the same resource.  This fixes a race condition in the Landlock file
-system tests when creating or unmounting the same directory.
+FIXTURE_VARIANT_ADD() types are passed as const pointers to
+FIXTURE_TEARDOWN().  Make that explicit by constifying the variants
+declarations.
 
-Using clone3() with CLONE_VFORK guarantees that the child and grandchild
-test processes are sequentially scheduled.  This is implemented with a
-new clone3_vfork() helper replacing the fork() call.
-
-This avoids triggering this error in __wait_for_test():
-  Test ended in some other way [127]
-
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Günther Noack <gnoack@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Shuah Khan <shuah@kernel.org>
+Cc: Shuah Khan <skhan@linuxfoundation.org>
 Cc: Will Drewry <wad@chromium.org>
-Fixes: 41cca0542d7c ("selftests/harness: Fix TEST_F()'s vfork handling")
 Reviewed-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240506165518.474504-5-mic@digikod.net
+Link: https://lore.kernel.org/r/20240506165518.474504-7-mic@digikod.net
 ---
 
-Changes since v2:
-* Replace __attribute__((__unused__)) with inline for clone3_vfork()
-  (suggested by Kees and Jakub)
+Changes since v1:
+* Extract change from a bigger patch (suggested by Kees).
 ---
- tools/testing/selftests/kselftest_harness.h | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
+ tools/testing/selftests/kselftest_harness.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 55699a762c45..9d7178a71c2c 100644
+index 9d7178a71c2c..201040207c85 100644
 --- a/tools/testing/selftests/kselftest_harness.h
 +++ b/tools/testing/selftests/kselftest_harness.h
-@@ -66,6 +66,8 @@
- #include <sys/wait.h>
- #include <unistd.h>
- #include <setjmp.h>
-+#include <syscall.h>
-+#include <linux/sched.h>
+@@ -338,7 +338,7 @@ static inline pid_t clone3_vfork(void)
+  * variant.
+  */
+ #define FIXTURE_VARIANT_ADD(fixture_name, variant_name) \
+-	extern FIXTURE_VARIANT(fixture_name) \
++	extern const FIXTURE_VARIANT(fixture_name) \
+ 		_##fixture_name##_##variant_name##_variant; \
+ 	static struct __fixture_variant_metadata \
+ 		_##fixture_name##_##variant_name##_object = \
+@@ -350,7 +350,7 @@ static inline pid_t clone3_vfork(void)
+ 		__register_fixture_variant(&_##fixture_name##_fixture_object, \
+ 			&_##fixture_name##_##variant_name##_object);	\
+ 	} \
+-	FIXTURE_VARIANT(fixture_name) \
++	const FIXTURE_VARIANT(fixture_name) \
+ 		_##fixture_name##_##variant_name##_variant =
  
- #include "kselftest.h"
- 
-@@ -80,6 +82,17 @@
- #  define TH_LOG_ENABLED 1
- #endif
- 
-+/* Wait for the child process to end but without sharing memory mapping. */
-+static inline pid_t clone3_vfork(void)
-+{
-+	struct clone_args args = {
-+		.flags = CLONE_VFORK,
-+		.exit_signal = SIGCHLD,
-+	};
-+
-+	return syscall(__NR_clone3, &args, sizeof(args));
-+}
-+
  /**
-  * TH_LOG()
-  *
-@@ -1183,7 +1196,7 @@ void __run_test(struct __fixture_metadata *f,
- 	fflush(stdout);
- 	fflush(stderr);
- 
--	t->pid = fork();
-+	t->pid = clone3_vfork();
- 	if (t->pid < 0) {
- 		ksft_print_msg("ERROR SPAWNING TEST CHILD\n");
- 		t->exit_code = KSFT_FAIL;
 -- 
 2.45.0
 
