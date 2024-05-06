@@ -1,90 +1,109 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail2.andi.de1.cc (vmd64148.contaboserver.net [161.97.139.27])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05895156C6E
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 20:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A271D156C6E;
+	Mon,  6 May 2024 20:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=161.97.139.27
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715027341; cv=none; b=LD7QNNkERoDTJatcamvbBS4Px1XMZXwkZ+xbUREuY0UHNIXpgN34uPjdf+TJO/F9QY2WL/D8UymJAOuZZ8Eg8925X02w4z23WWxvioZp0AKDqbo2PFhbZ9LxC4HMkdvEX42dnqfc/HEuhxC62kKJNg3i3G12iTJE31AcxV8VgwU=
+	t=1715027367; cv=none; b=lxHrBLqi4h2P5EbwQ8ai2raFT55jePDvweTGm0XngS2jCcczlnQaWhgwhlIR70fQutUmY9xjVMxlmCxtVJvow+wEOANOBHpgOZMv7fAjfRA8xyYFB8Eb/ycUTUXLGgLNIsjbSTF3RvsDdcPQTaW64Dh/fCb9Cr2UMXD7xm2bjZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715027341; c=relaxed/simple;
-	bh=mtP1zPVwwrnnzGFw61ZIo91oUo/vvEn1hAGzwekDkNQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eVyFOOo0ZH+fPmmyf8nEfo4Jkmy04T853E/fPguXLMunqVkvzQHIL34UK8I2AizFXY0UczFGSwE0RKjy65hPOQZ6NhNt92wrGuH3HrrQ9uUkOx9TRD6tvfKlsbRX3pThDRmVYa80xYn0HkevR8UzpCsCRvW8ZykrPqNWrxwp5Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=G4Zd6+tj; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1715027367; c=relaxed/simple;
+	bh=3rbdAlqqENUwmR+io8pbVt6gM09Tl1lcecSkcWkx2hw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uIbCAWrKi81tSJDEWu/moKZ7wn6FOsZF56fhw0wsmZj4WRgU0mDO5tvCY5k95obRUcA7NIgzCjWl1R3UaiK07VSBZu4qvI2sQM7Er5Ts29mh8PC+cQ+Lj7hSs5vRdIfzbLQNuS1HS/280TT0uz5O7s1vfn3UC5i66QJmSR+NP4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=WtNzAqqq; arc=none smtp.client-ip=161.97.139.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="G4Zd6+tj"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2db13ca0363so36990231fa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 13:28:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1715027338; x=1715632138; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9rEvKV3/n/eLv6nHs7D99ycPG96v9YjV73FZYOIF6xQ=;
-        b=G4Zd6+tjvbOZB2K+N2y5X28Ee/65O5L5h/CAk0wJxqzMn/3jMsnVQ6lz0gQLUCRmDz
-         sVLSmlponCaAT6OrANf+n+EuUwpoYyWDIFJjBgzg6ftmYZXR0J1ijnFwYM9JKD7UZ7jT
-         lWGakJ2YbTOZDZdjwKLkVqXuYxlHHfefCBk9Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715027338; x=1715632138;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9rEvKV3/n/eLv6nHs7D99ycPG96v9YjV73FZYOIF6xQ=;
-        b=Op5FSjvQnwWxtacsU6sGnFXZU6V+boCOqTFYN9oW5AdMKJKuFTzERNlfaQu9GKpCqi
-         DoE+4IkA+irdVn/lloEbQG6TbM5xxAEWcuK70bheKxADWH8glCz29ab0xU2Jx9NEBbwR
-         QXpnvnaLiEcBqw5xB/8uiTBXmLn+jFUQO733SyOYGQKuiajEDzKQLW5SRWiFv8/UHlnz
-         dCuI1hU1y8MPMS/V5ptj5ahaXeAAkzhCvY+oDRSXwg8W6Hx3eLSbe69PNZ8qLCEujWhY
-         o4hszGqxt23OuWJEJRw5z1xjNVOq8dXa92aeQzx3cYZmx4FeRaZi3QL+ZSD+KAtnJARK
-         bO4w==
-X-Forwarded-Encrypted: i=1; AJvYcCX7+T99LNnVqkVaAp3xDcdwH4rprOg2y9Z+bp05ize/+SvHrFzfVYs9uFpppqCB45rMe6KbOeC0zGm64CKlJ4msdK2FN0xUw7sqzizf
-X-Gm-Message-State: AOJu0YwJP9BWkJhI5mCRIwF6ToMKB7DKQhmkD4Ll8oC+VuHC8VMgLAeY
-	bNOP2wd8prGOERFk3kSsMS9bBYywgfh/f7R26iX7bqosiHw3XoCDZ+ajyn89HNBcE55eksbSNiX
-	xlmvBlw==
-X-Google-Smtp-Source: AGHT+IG6Es4jf0/5XcNE5zvJ/kHwfj6hCASvXWLTebdQmXCh0PZ87DWy0mwIojKlawbpoV/31RMIcQ==
-X-Received: by 2002:a2e:994c:0:b0:2df:6df7:c363 with SMTP id r12-20020a2e994c000000b002df6df7c363mr8790037ljj.14.1715027337860;
-        Mon, 06 May 2024 13:28:57 -0700 (PDT)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com. [209.85.221.44])
-        by smtp.gmail.com with ESMTPSA id s17-20020a170906455100b00a599ac81707sm4211801ejq.123.2024.05.06.13.28.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 May 2024 13:28:57 -0700 (PDT)
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-34db9a38755so2200656f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 13:28:56 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV/4sUVgKwVHXd0/Z/dXPBx7XQRXh8HR9GYOty89IUIDDwxp8MwrQ2vGqorqHHLk4j8Jm1H6XQH7efykjitKn3V1SiAvURUPGi7eCkm
-X-Received: by 2002:a5d:4576:0:b0:34d:b634:9033 with SMTP id
- a22-20020a5d4576000000b0034db6349033mr9191049wrc.51.1715027336528; Mon, 06
- May 2024 13:28:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="WtNzAqqq"
+Received: from mail.andi.de1.cc ([2a02:c205:3004:2154::1])
+	by mail2.andi.de1.cc with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1s44xc-005rj3-0J;
+	Mon, 06 May 2024 22:29:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=EaZQSwVaLQHyh6ZFOpYXBHwPWumE2yzYKX72jIZHUEs=; b=WtNzAqqqMqocI2uasC4mZFzXuE
+	cMkzbOei+SwbulkgG7IWfBh0XH6ByUW7gsPI50qnjRCMn5Nn3R6/ULIWlMXR01qoS2Lpr1zeb5IZ8
+	/7N/ZZcrgJtFM+86s8+pFuL5+L3Vp6cdU565qY3u/jpGOZV/aHkBjN857u6nIR4wc/P8N/96nly9d
+	hTCdQ4CffeybHfMxKPns7l7F34r3CUdlUBS8o3Q+DEJS6tVMlEGU+bXSQmPyNr+r3eRqdNWBfnv0m
+	BXiZH3LqlPi4vs9j/x3/LoayTwPHktho0aCRzg3/zRPqvhkC/v9XobXUhUvuJS9ONw+xUAWT1KqWM
+	lUnkQs7w==;
+Received: from p200300c20737c2001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:c2:737:c200:1a3d:a2ff:febf:d33a] helo=aktux)
+	by mail.andi.de1.cc with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <andreas@kemnade.info>)
+	id 1s44xZ-000ffm-0c;
+	Mon, 06 May 2024 22:29:18 +0200
+Date: Mon, 6 May 2024 22:29:16 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: dmitry.torokhov@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, u.kleine-koenig@pengutronix.de, hdegoede@redhat.com,
+ siebren.vroegindeweij@hotmail.com, linux-input@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] Input: ektf2127 - add ektf2232 support
+Message-ID: <20240506222916.055443d8@aktux>
+In-Reply-To: <CAHp75VchLWQgmdxKPSbwH-m43zFHT9ADk4aH7-jvD5-MaVOtEw@mail.gmail.com>
+References: <20240505214754.891700-1-andreas@kemnade.info>
+	<20240505214754.891700-4-andreas@kemnade.info>
+	<CAHp75Vdnwrxw96prr9hyLdZ2u6t1uNcj6pyxCp52UoVOpatTpg@mail.gmail.com>
+	<20240506182111.3c6673a0@aktux>
+	<CAHp75VchLWQgmdxKPSbwH-m43zFHT9ADk4aH7-jvD5-MaVOtEw@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502081641.457aa25f@gandalf.local.home> <20240504043957.417aa98c@rorschach.local.home>
- <20240506-cuddly-elated-agouti-be981d@houat>
-In-Reply-To: <20240506-cuddly-elated-agouti-be981d@houat>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 6 May 2024 13:28:39 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiS70D1sbhsvNfR0e5YjfG2NV0cVKWz9vp=_F_wkw3j9Q@mail.gmail.com>
-Message-ID: <CAHk-=wiS70D1sbhsvNfR0e5YjfG2NV0cVKWz9vp=_F_wkw3j9Q@mail.gmail.com>
-Subject: Re: [BUG][v6.9-rc6] Deadlock with: Revert "drm/qxl: simplify qxl_fence_wait"
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Alex Constantino <dreaming.about.electric.sheep@gmail.com>, 
-	Timo Lindfors <timo.lindfors@iki.fi>, Dave Airlie <airlied@redhat.com>, 
-	Gerd Hoffmann <kraxel@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Daniel Vetter <daniel@ffwll.ch>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 6 May 2024 at 05:46, Maxime Ripard <mripard@kernel.org> wrote:
->
-> It looks like qxl is not well maintained. Please send the revert, we'll
-> merge it.
+On Mon, 6 May 2024 21:43:14 +0300
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
 
-I'll just do the revert and we don't have to do the round-trip
-overhead (since we're already in rc7 and I hope to just do final next
-weekend).
+> On Mon, May 6, 2024 at 7:21=E2=80=AFPM Andreas Kemnade <andreas@kemnade.i=
+nfo> wrote:
+> > On Mon, 6 May 2024 15:05:52 +0300
+> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote: =20
+> > > From: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > > To: Andreas Kemnade <andreas@kemnade.info>
+> > > Date: Mon, 6 May 2024 15:05:52 +0300
+> > > On Mon, May 6, 2024 at 12:48=E2=80=AFAM Andreas Kemnade <andreas@kemn=
+ade.info> wrote: =20
+>=20
+> ...
+>=20
+> > > I'm wondering if you are using --histogram diff algo when preparing t=
+he patches. =20
+> >
+> > No, I am not using that, it seems to not make that chunk nicer.
+> > Yes, we want
+> >
+> > +       int status_shift;
+> >  };
+> > +
+> > +struct ektf2127_i2c_chip_data {
+> > +       int status_shift;
+> > +};
+> >
+> > But that is not shorter or simpler, just more readable. =20
+>=20
+> And that's exactly what histogram is about. I suggest making it
+> default for the Linux kernel project (or globally in your
+> ~/.gitconfig).
+>=20
+>=20
+again, it does not do anything helpful in this case, I tried to run
+git format-patch --histogram with
+no improvements. But it might help in other places.
 
-              Linus
+Regards,
+Andreas
+
