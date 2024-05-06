@@ -1,140 +1,185 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DE1181
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 02:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 978DC181;
+	Mon,  6 May 2024 02:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714962997; cv=none; b=I2VX6xxYKipt90+SsRGhZkaKxGJ5ZhS/2BGzPL0h3V1pOI4dAyRl23idHvcFtWGYodlL5CvpGPp947xghm9QN1GG3vaoKU1sp3HwcPelBXO9afzLBeWldhJePIOQe/0hQkCyCFsTgnkXRBcM0m8pa1JZipDi06lh1JhGqFGPruY=
+	t=1714963168; cv=none; b=Z+C5vjfLa3AsBstpJFYYmqRJ3ZacOD+nmlq6A7l0ODufhrBicMLiEAzSr+1jcIxVDuOwJtN7csd62YWJsi4QGX4nOrW5kO9UCqjFU52L8xIFVT2fF9G/HOPZhu4RVF22QmbSdfU8czcHYCf24bQj8A3NqrXaFs5E2VrtZK743E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714962997; c=relaxed/simple;
-	bh=hL5W3myfk0UZm3Gw2KTvWBL+g08d2qecIGRgiwM+xqQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YoQ4bqgZfitMdCHWcvIZ2opU0JSCnaHF+UWI8izRLa2qp8Ua60mVcnDrAsxJ1mSQwQpOIACjJ5QLxintjwOsD3Gld62fC2dRoK+iz81BcyJ+hucqfBZdF7aZzcRJL+1tYNDc47Q8Lbo3VhS2buo22UU5tI2qsKxKMORrR5g0mzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 6b988a1a0b5111ef9305a59a3cc225df-20240506
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:97bb32d5-6490-442e-9d78-1905402d49f9,IP:20,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:0
-X-CID-INFO: VERSION:1.1.37,REQID:97bb32d5-6490-442e-9d78-1905402d49f9,IP:20,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:0
-X-CID-META: VersionHash:6f543d0,CLOUDID:08ae3b8ca9d56691c3a6abca66cc108f,BulkI
-	D:240506103620X8ARMQ2P,BulkQuantity:0,Recheck:0,SF:66|24|17|19|44|102,TC:n
-	il,Content:0,EDM:-3,IP:-2,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
-	TF_CID_SPAM_ULS
-X-UUID: 6b988a1a0b5111ef9305a59a3cc225df-20240506
-Received: from node2.com.cn [(39.156.73.10)] by mailgw.kylinos.cn
-	(envelope-from <luyun@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 72075571; Mon, 06 May 2024 10:36:19 +0800
-Received: from node2.com.cn (localhost [127.0.0.1])
-	by node2.com.cn (NSMail) with SMTP id 7FEFAB80758A;
-	Mon,  6 May 2024 10:36:19 +0800 (CST)
-X-ns-mid: postfix-66384223-390027262
-Received: from localhost.localdomain (unknown [10.42.176.164])
-	by node2.com.cn (NSMail) with ESMTPA id CCB35B80758A;
-	Mon,  6 May 2024 02:36:18 +0000 (UTC)
-From: Yun Lu <luyun@kylinos.cn>
-To: syzbot+1acbadd9f48eeeacda29@syzkaller.appspotmail.com
-Cc: syzkaller-bugs@googlegroups.com,
-	linux-kernel@vger.kernel.org
-Subject: fix CPU stuck due to the taprio hrtimer
-Date: Mon,  6 May 2024 10:36:17 +0800
-Message-Id: <20240506023617.1309937-1-luyun@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <00000000000022a23c061604edb3@google.com>
-References: <00000000000022a23c061604edb3@google.com>
+	s=arc-20240116; t=1714963168; c=relaxed/simple;
+	bh=yUj4FVG11bJferK/7H08PTUjooXrvrHykqiMmLpF/3E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CX2ltAIweM8QLA9yoRWb9CRIelGsYwgjh5PrsUOUkz6RGAMoSKYI8osVjxPtovnUK2+vvnrxQC2YTYPZFgknJZe0hm1pvcEHf76vz8RVASrgXTXnQ5z2uAxA0blF7VKgsgtf0vIBHR8FnSXzth5sYNWoAnBTvwImFmHV7pJYqjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VXlWL6T2sz1HBjZ;
+	Mon,  6 May 2024 10:20:46 +0800 (CST)
+Received: from dggpemm500018.china.huawei.com (unknown [7.185.36.111])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0DDFE1402D0;
+	Mon,  6 May 2024 10:22:01 +0800 (CST)
+Received: from [10.174.178.96] (10.174.178.96) by
+ dggpemm500018.china.huawei.com (7.185.36.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Mon, 6 May 2024 10:22:00 +0800
+Message-ID: <5c7426ab-71ef-4279-8235-69f5646af8f9@huawei.com>
+Date: Mon, 6 May 2024 10:21:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpufreq/cppc: changing highest_perf to nominal_perf in
+ cppc_cpufreq_cpu_init()
+To: Pierre Gondois <pierre.gondois@arm.com>, Viresh Kumar
+	<viresh.kumar@linaro.org>, Ionela Voinescu <ionela.voinescu@arm.com>, Beata
+ Michalska <beata.michalska@arm.com>, Vanshidhar Konda
+	<vanshikonda@os.amperecomputing.com>
+CC: <rafael@kernel.org>, <al.stone@linaro.org>, <ashwin.chaugule@linaro.org>,
+	<linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<liwei391@huawei.com>, <liaoyu15@huawei.com>
+References: <20240428092852.1588188-1-liwei728@huawei.com>
+ <20240429104945.esdukn6ayudgyumc@vireshk-i7>
+ <06e3fd1a-a4c0-4be5-840c-e5ba276fe253@arm.com>
+From: "liwei (JK)" <liwei728@huawei.com>
+In-Reply-To: <06e3fd1a-a4c0-4be5-840c-e5ba276fe253@arm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500018.china.huawei.com (7.185.36.111)
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.=
-git  master
 
-Signed-off-by: Yun Lu <luyun@kylinos.cn>
----
- net/sched/sch_taprio.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
 
-diff --git a/net/sched/sch_taprio.c b/net/sched/sch_taprio.c
-index a0d54b422186..2ff8d34bdbac 100644
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -104,6 +104,7 @@ struct taprio_sched {
- 	u32 max_sdu[TC_MAX_QUEUE]; /* save info from the user */
- 	u32 fp[TC_QOPT_MAX_QUEUE]; /* only for dump and offloading */
- 	u32 txtime_delay;
-+	ktime_t offset;
- };
-=20
- struct __tc_taprio_qopt_offload {
-@@ -170,6 +171,19 @@ static ktime_t sched_base_time(const struct sched_ga=
-te_list *sched)
- 	return ns_to_ktime(sched->base_time);
- }
-=20
-+static ktime_t taprio_get_offset(const struct taprio_sched *q)
-+{
-+	enum tk_offsets tk_offset =3D READ_ONCE(q->tk_offset);
-+	ktime_t time =3D ktime_get();
-+
-+	switch (tk_offset) {
-+	case TK_OFFS_MAX:
-+		return 0;
-+	default:
-+		return ktime_sub_ns(ktime_mono_to_any(time, tk_offset), time);
-+	}
-+}
-+
- static ktime_t taprio_mono_to_any(const struct taprio_sched *q, ktime_t =
-mono)
- {
- 	/* This pairs with WRITE_ONCE() in taprio_parse_clockid() */
-@@ -918,6 +932,7 @@ static enum hrtimer_restart advance_sched(struct hrti=
-mer *timer)
- 	int num_tc =3D netdev_get_num_tc(dev);
- 	struct sched_entry *entry, *next;
- 	struct Qdisc *sch =3D q->root;
-+	ktime_t now_offset =3D taprio_get_offset(q);
- 	ktime_t end_time;
- 	int tc;
-=20
-@@ -957,6 +972,14 @@ static enum hrtimer_restart advance_sched(struct hrt=
-imer *timer)
- 	end_time =3D ktime_add_ns(entry->end_time, next->interval);
- 	end_time =3D min_t(ktime_t, end_time, oper->cycle_end_time);
-=20
-+	if (q->offset !=3D now_offset) {
-+		ktime_t diff =3D ktime_sub_ns(now_offset, q->offset);
-+
-+		end_time =3D ktime_add_ns(end_time, diff);
-+		oper->cycle_end_time =3D ktime_add_ns(oper->cycle_end_time, diff);
-+		q->offset =3D now_offset;
-+	}
-+
- 	for (tc =3D 0; tc < num_tc; tc++) {
- 		if (next->gate_duration[tc] =3D=3D oper->cycle_time)
- 			next->gate_close_time[tc] =3D KTIME_MAX;
-@@ -1210,6 +1233,7 @@ static int taprio_get_start_time(struct Qdisc *sch,
-=20
- 	base =3D sched_base_time(sched);
- 	now =3D taprio_get_time(q);
-+	q->offset =3D taprio_get_offset(q);
-=20
- 	if (ktime_after(base, now)) {
- 		*start =3D base;
---=20
-2.34.1
+在 2024/5/3 22:19, Pierre Gondois 写道:
+> Hello Liwei,
+> The change itself seems ok, but I'm not sure I understand what the
+> issue is exactly.
+> 
+> On 4/29/24 12:49, Viresh Kumar wrote:
+>> CC'ing few folks who are working with the driver.
+>>
+>> On 28-04-24, 17:28, liwei wrote:
+>>> When turning on turbo, if frequency configuration takes effect slowly,
+>>> the updated policy->cur may be equal to the frequency configured in
+>>> governor->limits(), performance governor will not adjust the frequency,
+>>> configured frequency will remain at turbo-freq.
+>>>
+>>> Simplified call stack looks as follows:
+>>> cpufreq_register_driver(&cppc_cpufreq_driver)
+>>>     ...
+>>>     cppc_cpufreq_cpu_init()
+>>>         cppc_get_perf_caps()
+>>>         policy->max = cppc_perf_to_khz(caps, caps->nominal_perf)
+>>>             cppc_set_perf(highest_perf) // set highest_perf
+>>>             policy->cur = cpufreq_driver->get() // if cur == policy->max
+> 
+> During the driver initialization, we have:
+> cppc_cpufreq_cpu_init()
+> \-policy->max = cppc_perf_to_khz(caps, caps->nominal_perf)
+> \-policy->cur = cppc_perf_to_khz(caps, caps->highest_perf);
+> \-cpu_data->perf_ctrls.desired_perf = caps->highest_perf;
+> \-cppc_set_perf(cpu, &cpu_data->perf_ctrls); // set freq to highest_perf
+> so here:
+> policy->max = nominal_freq
+> policy->cur = highest_freq
+> 
+> 
+> And then for the cpufreq framework:
+> cpufreq_online()
+> // IIUC there is some delay here, so policy->cur = nominal_freq ?
+> // i.e. the freq. was requested to change to the highest_freq,
+> // but the change is not effective yet ?
+> \-policy->cur = cpufreq_driver->get(policy->cpu);
+> \-cpufreq_init_policy()
+>    \-cpufreq_set_policy()
+>      \-cpufreq_start_governor()
+>        \-cpufreq_verify_current_freq()
+>          \-new_freq = cpufreq_driver->get(policy->cpu); // new_freq = 
+> nominal_freq ?
+>          \-if (policy->cur != new_freq)
+>          \-  cpufreq_out_of_sync()
+>            \- policy->cur = new_freq;
+>      \-cpufreq_start_governor()
+>        \-cpufreq_gov_performance_limits()
+>          \-__cpufreq_driver_target(target_freq=policy->max) // with 
+> policy->max = nominal_freq ?
+>            \-if (target_freq == policy->cur)
+>            \-  // do nothing
+> 
+> I am not sure I understand when you are turning the turbo on with:
+> # echo 1 > /sys/devices/system/cpu/cpufreq/boost
+> 
+> Or do you mean that turbo is available but not turned on ?
+> 
 
+Sorry, my description is not clear enough. The scenario described above 
+is during the kernel initialization process, turbo is available but 
+boost is not turned on.
+
+I found this problem is to read 
+/sys/devices/system/cpu/cpufreq/policyX/cpuinfo_cur_freq directly after 
+OS startup, and found that some frequencies are in turbo state and 
+/sys/devices/system/cpu/cpufreq/boost has not been modified, its value 
+is still 0.
+
+LiWei
+> 
+> Regards,
+> Pierre
+> 
+>>>     cpufreq_init_policy()
+>>>         ...
+>>>         cpufreq_start_governor() // governor: performance
+>>>             new_freq = cpufreq_driver->get() // if new_freq == 
+>>> policy->max
+>>>             if (policy->cur != new_freq)
+>>>             cpufreq_out_of_sync(policy, new_freq)
+>>>                 ...
+>>>                 policy->cur = new_freq
+>>>             ...
+>>>             policy->governor->limits()
+>>>                 __cpufreq_driver_target(policy->max)
+>>>                     if (policy->cur==target)
+>>>                     // generate error, keep set highest_perf
+>>>                         ret
+>>>                     cppc_set_perf(target)
+>>>
+>>> Fix this by changing highest_perf to nominal_perf in 
+>>> cppc_cpufreq_cpu_init().
+>>>
+>>> Fixes: 5477fb3bd1e8 ("ACPI / CPPC: Add a CPUFreq driver for use with 
+>>> CPPC")
+>>> Signed-off-by: liwei <liwei728@huawei.com>
+>>> ---
+>>>   drivers/cpufreq/cppc_cpufreq.c | 8 ++++----
+>>>   1 file changed, 4 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/drivers/cpufreq/cppc_cpufreq.c 
+>>> b/drivers/cpufreq/cppc_cpufreq.c
+>>> index 64420d9cfd1e..db04a82b8a97 100644
+>>> --- a/drivers/cpufreq/cppc_cpufreq.c
+>>> +++ b/drivers/cpufreq/cppc_cpufreq.c
+>>> @@ -669,14 +669,14 @@ static int cppc_cpufreq_cpu_init(struct 
+>>> cpufreq_policy *policy)
+>>>       if (caps->highest_perf > caps->nominal_perf)
+>>>           boost_supported = true;
+>>> -    /* Set policy->cur to max now. The governors will adjust later. */
+>>> -    policy->cur = cppc_perf_to_khz(caps, caps->highest_perf);
+>>> -    cpu_data->perf_ctrls.desired_perf =  caps->highest_perf;
+>>> +    /* Set policy->cur to norm now. */
+>>> +    policy->cur = cppc_perf_to_khz(caps, caps->nominal_perf);
+>>> +    cpu_data->perf_ctrls.desired_perf =  caps->nominal_perf;
+>>>       ret = cppc_set_perf(cpu, &cpu_data->perf_ctrls);
+>>>       if (ret) {
+>>>           pr_debug("Err setting perf value:%d on CPU:%d. ret:%d\n",
+>>> -             caps->highest_perf, cpu, ret);
+>>> +             caps->nominal_perf, cpu, ret);
+>>>           goto out;
+>>>       }
+>>> -- 
+>>> 2.25.1
+>>
