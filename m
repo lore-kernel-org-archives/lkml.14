@@ -1,65 +1,37 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913231448FB
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 07:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B141140E23;
+	Mon,  6 May 2024 07:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714982367; cv=none; b=A+bkwhfOKx4FaX2tfQlwhfau9u9Hu1io8FCkbrBO/0nCdBaWm3S8k71BaM/EuTGZdV13h+nP/25viN8PTM9ikKrwwP2COcPLgxtD0UniA3jTTR5Bi00qIOi8rohYlQbqpxGSf815f40qpHe61P7LbkWuceHClgZeP2pynaF0CNI=
+	t=1714982384; cv=none; b=airYsZZMiYy60v02OyaA7FZAYtTbqqeznnBwS1VxgFekyaFFIl90/+LxAMU7k2OE+C+wDBCbsyZP2e9McG+Op7zUG6b0p/rFbJYXQ3dDv+Y83X+u4PYO6gKl3JV5VyIqdLjauGPpBBl9R5EfBg38b0v9TdVFiAvBa+ZKTsOq48Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714982367; c=relaxed/simple;
-	bh=0QKD/VRLqE4UJhTMThwx4W0GPaxzgatlvvK+3EE9Gd0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PzVoeSy/W6fsfQOKHGkDapZmGnAkJ9cOTVv+7MeyCW6gRjUFEllqszc+WjboaLHLmMoHuLSmit1r+ezYRfXbJQMPl3A1qTBVj4FZta5VIJgjFXndF/7CR0GMWJm4NkrFDfU91rFAAAIGsh6pvZcOsBa2J3RX3G9378B4Yk2zw30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HNK33Wdi; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HNK33Wdi"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1edf506b216so3883995ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 00:59:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1714982366; x=1715587166; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ow2rUHFnrcYhlTotFbBj4Gwxyq4hSnuB9nn9e+mMxIY=;
-        b=HNK33WdiJNKGrbAzcZCJfzRSc2z/Ri2zshCOD6DA24APChdR3JA0J5CAzCO7q1SU87
-         PUfREEHBg1dSMqwo1vbGueiEI+jU798eebatD2M/LbL2cTIp/61JNGN0+ycnumaFZHfX
-         mQ1cPkJlCyCjPahkp/6LsvqX+18eBNHB3+oxk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714982366; x=1715587166;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ow2rUHFnrcYhlTotFbBj4Gwxyq4hSnuB9nn9e+mMxIY=;
-        b=iRgOcTBTzbMLLzUOSNlb2csuY7MhhQvuTl5LYgqtU5fpf8XJlOemiyFyf7h403PtI+
-         u/P+IE01H1h95/o/tQ+vWYlxM5qLzGOTt1OT0eg67kvcpsNURVL05315cVPwnLdEEs4g
-         02ds3HG6sxbRd/PDzWdPFwVNrHxmQNZPr0qTsm7qxS8XVftoWHDs+7WC+kltUlvFbK8Z
-         4sUbXetskqBzvPioPDVfefHKWH+XUANZYXTgpi8SL8cy9s8mon/wxW4m1zWMtZ26Ewb/
-         SkfCnflX+A4/bU7fTTcL0rdYAwt0PUiHDPw3eI2IH2AEehrQompnbeFfJGJLxAaOdX6I
-         ODKA==
-X-Gm-Message-State: AOJu0Yzf1nt3+POH0ariQ5z1blSwoWPN4LpMOPcEXye63QlBC80fb2cn
-	CiB94S73XlRhSw7Q1WU2xqQkbK5jrm7JDimL5yG9mj/Gjoph0/0tInAQlXjiUg==
-X-Google-Smtp-Source: AGHT+IGtD6df0LGz8qgNCcFIQycCbTSE1kkQVyBBaYoc1cmb4rEblCnjBd4Fq0l6WUO2JRvfpM/M5A==
-X-Received: by 2002:a17:902:e749:b0:1e3:cf2b:7151 with SMTP id p9-20020a170902e74900b001e3cf2b7151mr12883681plf.59.1714982365968;
-        Mon, 06 May 2024 00:59:25 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:4e24:10c3:4b65:e126])
-        by smtp.gmail.com with ESMTPSA id h6-20020a170902f54600b001ec64b128dasm7633772plf.129.2024.05.06.00.59.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 00:59:25 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv2 17/17] Documentation/zram: add documentation for algorithm parameters
-Date: Mon,  6 May 2024 16:58:30 +0900
-Message-ID: <20240506075834.302472-18-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-In-Reply-To: <20240506075834.302472-1-senozhatsky@chromium.org>
-References: <20240506075834.302472-1-senozhatsky@chromium.org>
+	s=arc-20240116; t=1714982384; c=relaxed/simple;
+	bh=mrMc4UwV2GXg/vdxlNdq7LIgtP98hWJIuB7PNLcVgqo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l6DI4Wtpb8a1U6L279TqQx2R7ojBdko233953HtxboC7qenhgrxUGrEfs0Cx/NdSMgCrZhsjVbd0tplErDKg700bh/KCCrSoB41kVQFYXgd13Xx+nHFBgh3e5P4ySY2Z9cvG1ncEka0hLdbwVc2wjkGOQfQJ6IlMAIudqaBK7R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VXtzB4FXSzNw35;
+	Mon,  6 May 2024 15:56:54 +0800 (CST)
+Received: from dggpemm500018.china.huawei.com (unknown [7.185.36.111])
+	by mail.maildlp.com (Postfix) with ESMTPS id 06A7118007C;
+	Mon,  6 May 2024 15:59:39 +0800 (CST)
+Received: from huawei.com (10.175.103.91) by dggpemm500018.china.huawei.com
+ (7.185.36.111) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 6 May
+ 2024 15:59:38 +0800
+From: liwei <liwei728@huawei.com>
+To: <rafael@kernel.org>, <lenb@kernel.org>, <Pierre.Gondois@arm.com>,
+	<viresh.kumar@linaro.org>
+CC: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<liwei391@huawei.com>, <liwei728@huawei.com>
+Subject: [PATCH v2] cpufreq/cppc: fix perf_to_khz/khz_to_perf conversion exception
+Date: Mon, 6 May 2024 15:58:16 +0800
+Message-ID: <20240506075816.1325303-1-liwei728@huawei.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,71 +39,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500018.china.huawei.com (7.185.36.111)
 
-Document brief description of compression algorithms' parameters:
-compression level and pre-trained dictionary.
+When the nominal_freq recorded by the kernel is equal to the lowest_freq,
+and the frequency adjustment operation is triggered externally, there is
+a logic error in cppc_perf_to_khz()/cppc_khz_to_perf(), resulting in perf
+and khz conversion errors.
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+Fix this by adding the branch processing logic when nominal_freq is equal
+to lowest_freq.
+
+Fixes: ec1c7ad47664 ("cpufreq: CPPC: Fix performance/frequency conversion")
+Signed-off-by: liwei <liwei728@huawei.com>
 ---
- Documentation/admin-guide/blockdev/zram.rst | 38 ++++++++++++++++-----
- 1 file changed, 29 insertions(+), 9 deletions(-)
+v2:
+    - Fix similar issue in cppc_khz_to_perf()
 
-diff --git a/Documentation/admin-guide/blockdev/zram.rst b/Documentation/admin-guide/blockdev/zram.rst
-index 091e8bb38887..58d79f9099e3 100644
---- a/Documentation/admin-guide/blockdev/zram.rst
-+++ b/Documentation/admin-guide/blockdev/zram.rst
-@@ -102,15 +102,26 @@ Examples::
- 	#select lzo compression algorithm
- 	echo lzo > /sys/block/zram0/comp_algorithm
+ drivers/acpi/cppc_acpi.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/acpi/cppc_acpi.c b/drivers/acpi/cppc_acpi.c
+index a40b6f3946ef..e3a0d6b46b24 100644
+--- a/drivers/acpi/cppc_acpi.c
++++ b/drivers/acpi/cppc_acpi.c
+@@ -1869,9 +1869,15 @@ unsigned int cppc_perf_to_khz(struct cppc_perf_caps *caps, unsigned int perf)
+ 	u64 mul, div;
  
--For the time being, the `comp_algorithm` content does not necessarily
--show every compression algorithm supported by the kernel. We keep this
--list primarily to simplify device configuration and one can configure
--a new device with a compression algorithm that is not listed in
--`comp_algorithm`. The thing is that, internally, ZRAM uses Crypto API
--and, if some of the algorithms were built as modules, it's impossible
--to list all of them using, for instance, /proc/crypto or any other
--method. This, however, has an advantage of permitting the usage of
--custom crypto compression modules (implementing S/W or H/W compression).
-+For the time being, the `comp_algorithm` content shows only compression
-+algorithms that are supported by zram.
-+
-+It is also possible to pass algorithm specific configuration parameters::
-+
-+	#set compression level to 8
-+	echo "zstd level=8" > /sys/block/zram0/comp_algorithm
-+
-+Note that `comp_algorithm` also supports `algo=name` format::
-+
-+	#set compression level to 8
-+	echo "algo=zstd level=8" > /sys/block/zram0/comp_algorithm
-+
-+Certain compression algorithms support pre-trained dictionaries, which
-+significantly change algorithms' characteristics. In order to configure
-+compression algorithm to use external pre-trained dictionary, pass full
-+path to the dictionary along with other parameters::
-+
-+	#pass path to pre-trained dictionary
-+	echo "algo=zstd dict=/etc/dictioary" > /sys/block/zram0/comp_algorithm
+ 	if (caps->lowest_freq && caps->nominal_freq) {
+-		mul = caps->nominal_freq - caps->lowest_freq;
++		/* Avoid special case when nominal_freq is equal to lowest_freq */
++		if (caps->lowest_freq == caps->nominal_freq) {
++			mul = caps->nominal_freq;
++			div = caps->nominal_perf;
++		} else {
++			mul = caps->nominal_freq - caps->lowest_freq;
++			div = caps->nominal_perf - caps->lowest_perf;
++		}
+ 		mul *= KHZ_PER_MHZ;
+-		div = caps->nominal_perf - caps->lowest_perf;
+ 		offset = caps->nominal_freq * KHZ_PER_MHZ -
+ 			 div64_u64(caps->nominal_perf * mul, div);
+ 	} else {
+@@ -1892,11 +1898,17 @@ unsigned int cppc_khz_to_perf(struct cppc_perf_caps *caps, unsigned int freq)
+ {
+ 	s64 retval, offset = 0;
+ 	static u64 max_khz;
+-	u64  mul, div;
++	u64 mul, div;
  
- 4) Set Disksize
- ===============
-@@ -442,6 +453,15 @@ configuration:::
- 	#select deflate recompression algorithm, priority 2
- 	echo "algo=deflate priority=2" > /sys/block/zramX/recomp_algorithm
- 
-+The `recomp_algorithm` also supports algorithm configuration parameters, e.g.
-+compression level and pre-trained dircionary::
-+
-+	#pass compression level
-+	echo "algo=zstd level=8" > /sys/block/zramX/recomp_algorithm
-+
-+	#pass path to pre-trained dictionary
-+	echo "algo=zstd dict=/etc/dictioary" > /sys/block/zramX/recomp_algorithm
-+
- Another device attribute that CONFIG_ZRAM_MULTI_COMP enables is recompress,
- which controls recompression.
- 
+ 	if (caps->lowest_freq && caps->nominal_freq) {
+-		mul = caps->nominal_perf - caps->lowest_perf;
+-		div = caps->nominal_freq - caps->lowest_freq;
++		/* Avoid special case when nominal_freq is equal to lowest_freq */
++		if (caps->lowest_freq == caps->nominal_freq) {
++			mul = caps->nominal_perf;
++			div = caps->nominal_freq;
++		} else {
++			mul = caps->nominal_perf - caps->lowest_perf;
++			div = caps->nominal_freq - caps->lowest_freq;
++		}
+ 		/*
+ 		 * We don't need to convert to kHz for computing offset and can
+ 		 * directly use nominal_freq and lowest_freq as the div64_u64
 -- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+2.25.1
 
