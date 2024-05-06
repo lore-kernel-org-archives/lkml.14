@@ -1,55 +1,55 @@
-Received: from mail-lf1-f73.google.com (mail-lf1-f73.google.com [209.85.167.73])
+Received: from mail-lj1-f202.google.com (mail-lj1-f202.google.com [209.85.208.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017411428ED
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 09:53:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B47B1143C72
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 09:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714989237; cv=none; b=Wa5uzgubDOKUf0LY6NPVpMWa2NA7kO6GlGgF08p1FH+Mqn8fzW/XDX5Abqxu8OG40OCVybeaX0CQY6gBhlBzOUnF2+DJDKxeD8SQLWIiTbQgRZ+mQ2whSakoEzfGM29hr7/rhQw4UDbP2x78D1QILmlicaQpZEsqT+ZK+oLYo44=
+	t=1714989241; cv=none; b=bEg9TZx7lqTOHnZHMPH8kXpQ2VtvcI90u/rvVxvlaOqcsb3XFLEWVg1cMT3zzHhJFYeJqdFV7mpnmZYXIdzDGR6ndytt5Jw8xQRzm0b0N/KfMf5c+/jsflRY+yqQwY6E5sG0m1QeLv/q9XXsAkYXa2S9UEHzvSWuC7BxVU2vJBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714989237; c=relaxed/simple;
-	bh=wEG/4LvM1FI/4ihCHGAieLrKEgeQtI2G5Vod3tjzD4o=;
+	s=arc-20240116; t=1714989241; c=relaxed/simple;
+	bh=AQhfweFhnbUEdO8w4wLgrf3c6x33991wxbRZ8aSauR0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Nf1gllDF8mJLtArRncQTu65Fd9aoI0IkqzNgqjtx4nEs+zRxfJBD6qnZYPjrWCYswe5mS+PtPc+28QD0VF7QMKmLl+AO3qEj2cShBRamBHFAOnuVOigIMz634F4Mj3JCOAULiiAVUT1+rQ0zdRQ23Edk4dKvMDUJR1d74K7+S7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UAASI9gp; arc=none smtp.client-ip=209.85.167.73
+	 To:Cc:Content-Type; b=l2aWBu+LNV8YOi1M7Xo77jwUkZt2tct2fZcH6var8R6KIMHRTSryAB3wI05NN4wpD+hPS9P6r1fdsWGOW3Jw3Ce4EgRcyKMTy0OJmCX5TjM751VKpmR6PWL6rgJTWhNhGpConaQEbnu5eCnRVRus/u6dlRsze1lmfB07LNSQ+mk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PyL+KxPI; arc=none smtp.client-ip=209.85.208.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UAASI9gp"
-Received: by mail-lf1-f73.google.com with SMTP id 2adb3069b0e04-51faceb0569so1315750e87.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 02:53:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PyL+KxPI"
+Received: by mail-lj1-f202.google.com with SMTP id 38308e7fff4ca-2e0b27cc8adso14906171fa.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 02:53:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714989232; x=1715594032; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1714989238; x=1715594038; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sBucNw+Aee/R2s0jMV10I00Gxph4SAVWU7MXoG8D4tk=;
-        b=UAASI9gpzr7nHvYXROaviRRih+MjD9MY6xVggCJyIXFMVNv5/5fFO+6Z3YgqgfytlJ
-         lT8VoR/sFX8UvLftAsSSYgtYv7zjuZxgyKoKYNNgWMtAYG29tRAK9ltfWTdwjFPl2gea
-         GtYhJOh4GDHB+u+BG8GVDtv+5u2/BDy2HiSpHD2hlFwQKYTr7lc/4N6hABAI69vbbvTE
-         4tEPkfnmJQIxIEPeUKKgC/7FiPXhrQjkPk/7vLcga0nzz5bq88+9Vk/FBCtppXUeOTOe
-         66xRlEl/GVP/tYnyqJMaUCb01Ro1bYm7IL5KzMWGDVMIvie10GRrL4u6iZqk2FV48XI6
-         nIgQ==
+        bh=0HDgKyqrf1g6QA5xH2PIc9zQKl9yIACvI9lzt3McvSs=;
+        b=PyL+KxPIMQuvxhVyf4+G7MAxJwbI6mDXKNBzTRjquudc5+Db3mUIrNPqRB6NTuPdT1
+         JJwsiyeRMW81rZHs2A4tafeyQEpBz9lj4AQ9zy9m7Q+LQG/UkBl5M6Cfd9qID4iv1DX6
+         LY8iU5GfxCXMTiAXfoM9Vk1LlkgVO6cAF4MiqPJS6VVHXa51CduY+SW5LohS7KUUDKtt
+         K11QigP2CrOYemHHryCulGspLAnJ3mvEnYMDWXVS001TpMEXkMNkfRb/IIXSntwXX3VC
+         Ry2t8KXpxG6ZLbITx8IlU6UTgEIB6EMMEy5XWOFecq6THoDNXZ9+lqsAuspvIWDCYBlm
+         HMwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714989232; x=1715594032;
+        d=1e100.net; s=20230601; t=1714989238; x=1715594038;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sBucNw+Aee/R2s0jMV10I00Gxph4SAVWU7MXoG8D4tk=;
-        b=pHcwB8JUDEb7G0keJjVfNJIw/MONy2XEwdl94YYCIl7DHDRYjsEZmegdBQ+eFWUaET
-         Sj8kPySCUlMyCGMx9GyEDpQsMv42iLjnjLXT8VgQ9rpGlZtaDv4MqpJsUnmxqzf4IWte
-         MQdKZP0brx5CKULR+bjsV9vI6GyZweUj4Br8lLKsMZsaSReLFQxNQ5bBfAHy8mskjB/P
-         ZNLPvj5mHyZVR2iyDQ4cMCGCI1gyzGGs0m4BkABGMIJhZlBow2qR+ejpvKPR34adp0i7
-         WpkvhDI9918+ShUe7tiO5uOU/1B94lkXaw4wMOwx1wRKy5S4EX5I72V/+rEHtiiwkaaj
-         O8xw==
-X-Forwarded-Encrypted: i=1; AJvYcCVSmpQQ4YO7uSmg36Zt5XnD1EYYy6LQ8Tllq0IDAo+mF0bOGvlKXXIPSYkVrDnCKg5Ix7sZnzIHokKwoMlMZbAIsSnvjGabLWSE4uDm
-X-Gm-Message-State: AOJu0YzM434j7pu9AnfE9GFN/xZ0kB8Yxu1WVAPdWwFjg07JNIxWcvIg
-	uzCWRj2h1jXpbAd+YkVHw2DW9fQr1qhF9efpU6cb850Rr4zSbphYAR4pBFM9bbynZOtHY/1C6gg
-	U7ORt7ZDw8GpNGQ==
-X-Google-Smtp-Source: AGHT+IGki79q6OvvlZmNS3ZbPOCMYVp/BCeI8OikYiJ7CZF8m6HgC3jU4faWa1+VYJknEc8hSDElMRrazQGQGsY=
+        bh=0HDgKyqrf1g6QA5xH2PIc9zQKl9yIACvI9lzt3McvSs=;
+        b=GkOUdJIhY0pYuBhA4TDf2LBq0eJrg03CNpJZ8HpWNgVrk/Z5bCJonsQ4g//M0Q2Ffn
+         t2/9r6agjZH2++8au7x2fG99LNcly38AN7tEAB196okZtxj+zX2lEMcY0ob9DPWijt5I
+         E78hrH5rrlMucL2Ouqr95N1TDQMiiB6K3Tf6QC8JSEsxxETHteMrPV299W7Lp9TLpeHY
+         VXIsr5/Im939APSgTOe6CQI4vG9hfcY1R7x79AAWNVEl2mNmYqMBdGb6NxR8H4z/d2YH
+         TSE6RUULoXDuKEgwkFH1erZl0Icv9xb7tC54AKQOjeVi8erRengbw5L+XZqmt2rrE39H
+         X3yQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgxQpDyYbRBW/wTapLLEgwGVq+wOaYxQ/EWL146zgwbNf/SNsngvqPCB3/Tggi2Ud0wGRIFUx3JxyHhib9yecwArjhI6OOHojpAgci
+X-Gm-Message-State: AOJu0YzUg5hDFJDfuRGgyFl/yNBS69PDGDyorRw4Jjf4bJ+X3kHHrSnu
+	PSgkM7NH17uccXFwWaJSpsA5DTw2KawqBDRn2icyetOhpIhUBz+5Dp5X1+Erbimyx81rymztgDY
+	7TwejIrKRUeqA6A==
+X-Google-Smtp-Source: AGHT+IGNkPUvZDfv8Muh0vJIt7Qzvxw4vZDYmCbaL7a0TKZS5EwrL7++O9rgzIs5//mviQFixGJmJKJl7nRtNGE=
 X-Received: from aliceryhl2.c.googlers.com ([fda3:e722:ac3:cc00:68:949d:c0a8:572])
- (user=aliceryhl job=sendgmr) by 2002:ac2:47e4:0:b0:51c:58b0:88c7 with SMTP id
- b4-20020ac247e4000000b0051c58b088c7mr8790lfp.7.1714989232282; Mon, 06 May
- 2024 02:53:52 -0700 (PDT)
-Date: Mon, 06 May 2024 09:53:23 +0000
+ (user=aliceryhl job=sendgmr) by 2002:a2e:874f:0:b0:2e2:a85f:f232 with SMTP id
+ q15-20020a2e874f000000b002e2a85ff232mr5284ljj.1.1714989237613; Mon, 06 May
+ 2024 02:53:57 -0700 (PDT)
+Date: Mon, 06 May 2024 09:53:25 +0000
 In-Reply-To: <20240506-linked-list-v2-0-7b910840c91f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,22 +59,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240506-linked-list-v2-0-7b910840c91f@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10280; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=wEG/4LvM1FI/4ihCHGAieLrKEgeQtI2G5Vod3tjzD4o=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmOKij3g4OFT2vjHtirVw93Wukb7vYghJioTnxF
- oCSYdMeoOaJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZjioowAKCRAEWL7uWMY5
- RvYyD/9PL8DfWduNHmw+Y+m9V/9YiNHtFIkqzLxmcybWkzVE5ST4lhnrE3Hn8FU6TnlXNTLm+dx
- HBBGfvhYzPOQfrMfuIiEsPa62+ZW2o946w79uZBuSlawfG+0DTg72sErwBxaPI8PtyoUqwmfmzU
- ch1y9fyPdhh77DzzK9ZwFQDF564vQMVS+Q6cg8SA1hQ1+RlBLb5FX4mJBtM8z+XW9hnZG+eB4rl
- aNIRGeiNgAqH9Z1qMEIwjn6Vrdqd78AY1UkR2Bs5XFHEK71ZR8IWAhRNP9OhMMxfdKlcFehbasf
- OQPhuhbd///bOOzcAfNVr5QNyMOD5nyfo2gLmKIX4+AKN1kirul9lmQIyeL30H/sTeSAjvEyGtw
- GzALJMqyouP5CiWtRCCAwGd0bW1o8nskjnfj9ezoFIgcXQVFY7QqdcBvzObGCwCq3nbSZJujZXC
- aaZZvb0yHE5qCdWlAz7mwzH1eWXKkcxZsBSh0eC0K3/Oed+pfT47a1t4Vz/yZ3DGcjqa/KIDiup
- bZUuzkqPv9BSPfEbDWNBH+BER83aJQKqmn9r7Tzhc0Rs7TdGL3CYEJlzWGJbXtXrLG815JhnWVk
- fWKxjoAac8i5rjVqi5DhWrxGNCzhmz99JBDdYfN7W/ca6Vy3SpnnZmjWK5FgO5OVZuQFlrxfofC opaBMp7AOQrvJ/w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5039; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=AQhfweFhnbUEdO8w4wLgrf3c6x33991wxbRZ8aSauR0=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBmOKikDG5fFa1vHK0LfQrvwgWciUW8TFr1x2Kk7
+ v7KeahV8muJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCZjiopAAKCRAEWL7uWMY5
+ Rs9xD/0R8N8eEZPros8IjHgRQIWEHkiNNlUd7igWD9IBbfnkALm7gfUMrH2IW+u3XET8IATQoE7
+ 3LV38vurNu3Kvce25pDQY9P72MYAOtDWuYt+OgxzTwSg0NCpWJBHljdjrezy9eOxXa5eSnslfsz
+ LntlV7zuncAJNPVcPLGoH0QSx/UeybxjsUXA/CV6R0XS/PBXRd7ymfc1MqTv6dEmDR0H0XS9Gsx
+ VV3T2hY7gsxdHPtvwYc0opJewYGqnBwzaGaBgJCMdHbLI2DkSBufqviq1j+fc6CNOnsjxR1uFQn
+ UTnwXi/26INj4vZD/g8N349nL1A4EXrTdop2Pp8/Rd+RjLjZw9w11YCKLa84fj2JtKe6mFLO98H
+ zOqoe+pUwQCSxsBXHEMR9mc6bnIIFQ0UxUHn7c+lYk0UiND4qqtKx5gONDjA1XNanpSiJfoYDRn
+ C24kIfNtVjxxEtX+kgK/avwtf34neLv7sSmCcEYQ4BdQVwuDb3yMcWe7qxze8qMm8lb13L7uBp4
+ yvvEGCSeTx6jlpSw0wCuOuLW29kKQSTV5WpmKHeTebQNSC0AqeCH9ThfdcYM1o+VwlasLzJSWdb
+ dwZT3CGiCU9g5JUxGA0TAE8REB9Wa0YKXFYXtI65+TXNjt2sSwLuJXOxTIZtcrAahMiy0ac/DN4 yVaTGpI12GkDxfQ==
 X-Mailer: b4 0.13-dev-26615
-Message-ID: <20240506-linked-list-v2-2-7b910840c91f@google.com>
-Subject: [PATCH v2 2/9] rust: list: add tracking for ListArc
+Message-ID: <20240506-linked-list-v2-4-7b910840c91f@google.com>
+Subject: [PATCH v2 4/9] rust: list: add macro for implementing ListItem
 From: Alice Ryhl <aliceryhl@google.com>
 To: Miguel Ojeda <ojeda@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
 Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, 
@@ -88,252 +88,138 @@ Cc: Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.co
 	rust-for-linux@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-Add the ability to track whether a ListArc exists for a given value,
-allowing for the creation of ListArcs without going through UniqueArc.
+Adds a macro for safely implementing the ListItem trait. As part of the
+implementation of the macro, we also provide a HasListLinks trait
+similar to the workqueue's HasWorkItem trait.
 
-The `impl_list_arc_safe!` macro is extended with a `tracked_by` strategy
-that defers the tracking of ListArcs to a field of the struct.
-Additionally, the AtomicListArcTracker type is introduced, which can
-track whether a ListArc exists using an atomic. By deferring the
-tracking to a field of type AtomicListArcTracker, structs gain the
-ability to create ListArcs without going through a UniqueArc.
-
-Rust Binder uses this for some objects where we want to be able to
-insert them into a linked list at any time. Using the
-AtomicListArcTracker, we are able to check whether an item is already in
-the list, and if not, we can create a `ListArc` and push it.
-
-The macro has the ability to defer the tracking of ListArcs to a field,
-using whatever strategy that field has. Since we don't add any
-strategies other than AtomicListArcTracker, another similar option would
-be to hard-code that the field should be an AtomicListArcTracker.
-However, Rust Binder has a case where the AtomicListArcTracker is not
-stored directly in the struct, but in a sub-struct. Furthermore, the
-outer struct is generic:
-
-struct Wrapper<T: ?Sized> {
-    links: ListLinks,
-    inner: T,
-}
-
-Here, the Wrapper struct implements ListArcSafe with `tracked_by inner`,
-and then the various types used with `inner` also uses the macro to
-implement ListArcSafe. Some of them use the untracked strategy, and some
-of them use tracked_by with an AtomicListArcTracker. This way, Wrapper
-just inherits whichever choice `inner` has made.
+The HasListLinks trait is only necessary if you are implementing
+ListItem using the impl_list_item macro.
 
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/kernel/list.rs     |   4 +-
- rust/kernel/list/arc.rs | 154 +++++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 155 insertions(+), 3 deletions(-)
+ rust/kernel/list.rs                    |  3 ++
+ rust/kernel/list/impl_list_item_mod.rs | 99 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 102 insertions(+)
 
 diff --git a/rust/kernel/list.rs b/rust/kernel/list.rs
-index fb16ea43b2ba..c5caa0f6105c 100644
+index b5cfbb96a392..f2eca542e090 100644
 --- a/rust/kernel/list.rs
 +++ b/rust/kernel/list.rs
-@@ -5,4 +5,6 @@
- //! A linked list implementation.
+@@ -8,6 +8,9 @@
+ use crate::types::Opaque;
+ use core::ptr;
  
++mod impl_list_item_mod;
++pub use self::impl_list_item_mod::{impl_has_list_links, impl_list_item, HasListLinks};
++
  mod arc;
--pub use self::arc::{impl_list_arc_safe, ListArc, ListArcSafe};
-+pub use self::arc::{
-+    impl_list_arc_safe, AtomicListArcTracker, ListArc, ListArcSafe, TryNewListArc,
-+};
-diff --git a/rust/kernel/list/arc.rs b/rust/kernel/list/arc.rs
-index 560ff07fe9b7..4c2e33f40597 100644
---- a/rust/kernel/list/arc.rs
-+++ b/rust/kernel/list/arc.rs
-@@ -7,9 +7,10 @@
- use crate::alloc::{AllocError, Flags};
- use crate::prelude::*;
- use crate::sync::{Arc, ArcBorrow, UniqueArc};
--use core::marker::Unsize;
-+use core::marker::{PhantomPinned, Unsize};
- use core::ops::Deref;
- use core::pin::Pin;
-+use core::sync::atomic::{AtomicBool, Ordering};
- 
- /// Declares that this type has some way to ensure that there is exactly one `ListArc` instance for
- /// this id.
-@@ -32,9 +33,24 @@ pub trait ListArcSafe<const ID: u64 = 0> {
-     unsafe fn on_drop_list_arc(&self);
- }
- 
-+/// Declares that this type is able to safely attempt to create `ListArc`s at any time.
+ pub use self::arc::{
+     impl_list_arc_safe, AtomicListArcTracker, ListArc, ListArcSafe, TryNewListArc,
+diff --git a/rust/kernel/list/impl_list_item_mod.rs b/rust/kernel/list/impl_list_item_mod.rs
+new file mode 100644
+index 000000000000..3ff483be89d1
+--- /dev/null
++++ b/rust/kernel/list/impl_list_item_mod.rs
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: GPL-2.0
++
++// Copyright (C) 2024 Google LLC.
++
++//! Helpers for implementing list traits safely.
++
++use crate::list::ListLinks;
++
++/// Declares that this type has a `ListLinks<ID>` field at a fixed offset.
++///
++/// This trait is only used to help implement `ListItem` safely. If `ListItem` is implemented
++/// manually, then this trait is not needed.
 +///
 +/// # Safety
 +///
-+/// Implementers must ensure that `try_new_list_arc` does not return `true` if a `ListArc` already
-+/// exists.
-+pub unsafe trait TryNewListArc<const ID: u64 = 0>: ListArcSafe<ID> {
-+    /// Attempts to convert an `Arc<Self>` into an `ListArc<Self>`. Returns `true` if the
-+    /// conversion was successful.
-+    fn try_new_list_arc(&self) -> bool;
++/// All values of this type must have a `ListLinks<ID>` field at the given offset.
++pub unsafe trait HasListLinks<const ID: u64 = 0> {
++    /// The offset of the `ListLinks` field.
++    const OFFSET: usize;
++
++    /// Returns a pointer to the [`ListLinks<T, ID>`] field.
++    ///
++    /// # Safety
++    ///
++    /// The provided pointer must point at a valid struct of type `Self`.
++    ///
++    /// [`ListLinks<T, ID>`]: ListLinks
++    // We don't really need this method, but it's necessary for the implementation of
++    // `impl_has_work!` to be correct.
++    #[inline]
++    unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut ListLinks<ID> {
++        // SAFETY: The caller promises that the pointer is valid. The implementer promises that the
++        // `OFFSET` constant is correct.
++        unsafe { (ptr as *mut u8).add(Self::OFFSET) as *mut ListLinks<ID> }
++    }
 +}
 +
- /// Declares that this type supports [`ListArc`].
- ///
--/// When using this macro, it will only be possible to create a [`ListArc`] from a [`UniqueArc`].
-+/// When using this macro, you may choose between the `untracked` strategy where it is not tracked
-+/// whether a [`ListArc`] exists, and the `tracked_by` strategy where the tracking is deferred to a
-+/// field of the struct. The `tracked_by` strategy can be combined with a field of type
-+/// [`AtomicListArcTracker`] to track whether a [`ListArc`] exists.
- #[macro_export]
- macro_rules! impl_list_arc_safe {
-     (impl$({$($generics:tt)*})? ListArcSafe<$num:tt> for $t:ty { untracked; } $($rest:tt)*) => {
-@@ -45,6 +61,37 @@ unsafe fn on_drop_list_arc(&self) {}
-         $crate::list::impl_list_arc_safe! { $($rest)* }
-     };
- 
-+    (impl$({$($generics:tt)*})? ListArcSafe<$num:tt> for $t:ty {
-+        tracked_by $field:ident : $fty:ty;
-+    } $($rest:tt)*) => {
-+        impl$(<$($generics)*>)? $crate::list::ListArcSafe<$num> for $t {
-+            unsafe fn on_create_list_arc_from_unique(self: ::core::pin::Pin<&mut Self>) {
-+                // SAFETY: This field is structurally pinned.
-+                let field = unsafe {
-+                    ::core::pin::Pin::map_unchecked_mut(self, |me| &mut me.$field)
-+                };
-+                // SAFETY: The caller promises that there is no `ListArc`.
-+                unsafe {
-+                    <$fty as $crate::list::ListArcSafe<$num>>::on_create_list_arc_from_unique(field)
-+                };
-+            }
-+            unsafe fn on_drop_list_arc(&self) {
-+                // SAFETY: The caller promises that there is no `ListArc` reference, and also
-+                // promises that the tracking thinks there is a `ListArc` reference.
-+                unsafe { <$fty as $crate::list::ListArcSafe<$num>>::on_drop_list_arc(&self.$field) };
-+            }
-+        }
-+        unsafe impl$(<$($generics)*>)? $crate::list::TryNewListArc<$num> for $t
-+        where
-+            $fty: TryNewListArc<$num>,
++/// Implements the [`HasListLinks`] trait for the given type.
++#[macro_export]
++macro_rules! impl_has_list_links {
++    ($(impl$(<$($implarg:ident),*>)?
++       HasListLinks$(<$id:tt>)?
++       for $self:ident $(<$($selfarg:ty),*>)?
++       { self$(.$field:ident)* }
++    )*) => {$(
++        // SAFETY: The implementation of `raw_get_list_links` only compiles if the field has the
++        // right type.
++        unsafe impl$(<$($implarg),*>)? $crate::list::HasListLinks$(<$id>)? for
++            $self $(<$($selfarg),*>)?
 +        {
-+            fn try_new_list_arc(&self) -> bool {
-+                <$fty as $crate::list::TryNewListArc<$num>>::try_new_list_arc(&self.field)
++            const OFFSET: usize = ::core::mem::offset_of!(Self, $($field).*) as usize;
++
++            #[inline]
++            unsafe fn raw_get_list_links(ptr: *mut Self) -> *mut $crate::list::ListLinks$(<$id>)? {
++                // SAFETY: The caller promises that the pointer is not dangling.
++                unsafe {
++                    ::core::ptr::addr_of_mut!((*ptr)$(.$field)*)
++                }
 +            }
 +        }
-+        $crate::list::impl_list_arc_safe! { $($rest)* }
++    )*};
++}
++pub use impl_has_list_links;
++
++/// Implements the [`ListItem`] trait for the given type.
++///
++/// Assumes that the type implements [`HasListLinks`].
++///
++/// [`ListItem`]: crate::list::ListItem
++#[macro_export]
++macro_rules! impl_list_item {
++    (
++        impl$({$($generics:tt)*})? $crate::list::ListItem<$num:tt> for $t:ty {
++            using ListLinks;
++        } $($rest:tt)*
++    ) => {
++        unsafe impl$(<$($generics)*>)? $crate::list::ListItem<$num> for $t {
++            unsafe fn view_links(me: *const Self) -> *mut $crate::list::ListLinks<$num> {
++                unsafe {
++                    <Self as $crate::list::HasListLinks<$num>>::raw_get_list_links(me.cast_mut())
++                }
++            }
++
++            unsafe fn view_value(me: *mut $crate::list::ListLinks<$num>) -> *const Self {
++                let offset = <Self as $crate::list::HasListLinks<$num>>::OFFSET;
++                unsafe { (me as *const u8).sub(offset) as *const Self }
++            }
++
++            unsafe fn prepare_to_insert(me: *const Self) -> *mut $crate::list::ListLinks<$num> {
++                unsafe { <Self as $crate::list::ListItem<$num>>::view_links(me) }
++            }
++
++            unsafe fn post_remove(me: *mut $crate::list::ListLinks<$num>) -> *const Self {
++                unsafe { <Self as $crate::list::ListItem<$num>>::view_value(me) }
++            }
++        }
 +    };
-+
-     () => {};
- }
- pub use impl_list_arc_safe;
-@@ -180,6 +227,52 @@ pub fn pair_from_pin_unique<const ID2: u64>(
-         }
-     }
- 
-+    /// Try to create a new `ListArc`.
-+    ///
-+    /// This fails if this value already has a `ListArc`.
-+    pub fn try_from_arc(arc: Arc<T>) -> Result<Self, Arc<T>>
-+    where
-+        T: TryNewListArc<ID>,
-+    {
-+        if arc.try_new_list_arc() {
-+            // SAFETY: The `try_new_list_arc` method returned true, so the tracking now thinks that
-+            // a `ListArc` exists, so we can create one.
-+            Ok(unsafe { Self::transmute_from_arc(arc) })
-+        } else {
-+            Err(arc)
-+        }
-+    }
-+
-+    /// Try to create a new `ListArc`.
-+    ///
-+    /// This fails if this value already has a `ListArc`.
-+    pub fn try_from_arc_borrow(arc: ArcBorrow<'_, T>) -> Option<Self>
-+    where
-+        T: TryNewListArc<ID>,
-+    {
-+        if arc.try_new_list_arc() {
-+            // SAFETY: The `try_new_list_arc` method returned true, so the tracking now thinks that
-+            // a `ListArc` exists, so we can create one.
-+            Some(unsafe { Self::transmute_from_arc(Arc::from(arc)) })
-+        } else {
-+            None
-+        }
-+    }
-+
-+    /// Try to create a new `ListArc`.
-+    ///
-+    /// If it's not possible to create a new `ListArc`, then the `Arc` is dropped. This will never
-+    /// run the destructor of the value.
-+    pub fn try_from_arc_or_drop(arc: Arc<T>) -> Option<Self>
-+    where
-+        T: TryNewListArc<ID>,
-+    {
-+        match Self::try_from_arc(arc) {
-+            Ok(list_arc) => Some(list_arc),
-+            Err(arc) => Arc::into_unique_or_drop(arc).map(Self::from_pin_unique),
-+        }
-+    }
-+
-     /// Transmutes an [`Arc`] into a `ListArc` without updating the tracking inside `T`.
-     ///
-     /// # Safety
-@@ -313,3 +406,60 @@ impl<T, U, const ID: u64> core::ops::DispatchFromDyn<ListArc<U, ID>> for ListArc
-     U: ListArcSafe<ID> + ?Sized,
- {
- }
-+
-+/// A utility for tracking whether a [`ListArc`] exists using an atomic.
-+///
-+/// # Invariant
-+///
-+/// If the boolean is `false`, then there is no [`ListArc`] for this value.
-+#[repr(transparent)]
-+pub struct AtomicListArcTracker<const ID: u64 = 0> {
-+    inner: AtomicBool,
-+    _pin: PhantomPinned,
 +}
-+
-+impl<const ID: u64> AtomicListArcTracker<ID> {
-+    /// Creates a new initializer for this type.
-+    pub fn new() -> impl PinInit<Self> {
-+        // INVARIANT: Pin-init initializers can't be used on an existing `Arc`, so this value will
-+        // not be constructed in an `Arc` that already has a `ListArc`.
-+        Self {
-+            inner: AtomicBool::new(false),
-+            _pin: PhantomPinned,
-+        }
-+    }
-+
-+    fn project_inner(self: Pin<&mut Self>) -> &mut AtomicBool {
-+        // SAFETY: The `inner` field is not structurally pinned, so we may obtain a mutable
-+        // reference to it even if we only have a pinned reference to `self`.
-+        unsafe { &mut Pin::into_inner_unchecked(self).inner }
-+    }
-+}
-+
-+impl<const ID: u64> ListArcSafe<ID> for AtomicListArcTracker<ID> {
-+    unsafe fn on_create_list_arc_from_unique(self: Pin<&mut Self>) {
-+        // INVARIANT: We just created a ListArc, so the boolean should be true.
-+        *self.project_inner().get_mut() = true;
-+    }
-+
-+    unsafe fn on_drop_list_arc(&self) {
-+        // INVARIANT: We just dropped a ListArc, so the boolean should be false.
-+        self.inner.store(false, Ordering::Release);
-+    }
-+}
-+
-+// SAFETY: If this method returns `true`, then by the type invariant there is no `ListArc` before
-+// this call, so it is okay to create a new `ListArc`.
-+//
-+// The acquire ordering will synchronize with the release store from the destruction of any
-+// previous `ListArc`, so if there was a previous `ListArc`, then the destruction of the previous
-+// `ListArc` happens-before the creation of the new `ListArc`.
-+unsafe impl<const ID: u64> TryNewListArc<ID> for AtomicListArcTracker<ID> {
-+    fn try_new_list_arc(&self) -> bool {
-+        // INVARIANT: If this method returns true, then the boolean used to be false, and is no
-+        // longer false, so it is okay for the caller to create a new [`ListArc`].
-+        self.inner
-+            .compare_exchange(false, true, Ordering::Acquire, Ordering::Relaxed)
-+            .is_ok()
-+    }
-+}
++pub use impl_list_item;
 
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
