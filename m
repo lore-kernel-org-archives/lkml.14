@@ -1,134 +1,263 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2102.outbound.protection.outlook.com [40.107.13.102])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38199143C42
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 12:23:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714998234; cv=none; b=UY/K0fKgn90HKkSiTp71YqLvAo4VhcZdAcotZjE5x/GaLkEjuK/fTnyd1/c31PAPkNxiD1Zo2UpaPgSD3NlSj3LeryGEu5vHpBlG+BGXcD0JEo+t1ebyPgksLym/np9+go2H0s2cj92rOd87t+IqMAwr9W5rtVARqIURxHyYDPE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714998234; c=relaxed/simple;
-	bh=lCeN5/qj6q6vJSmEiKVBWOtCMx5sNu2IArRIsx3u2Ng=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZX8nyCuvVOfJvzExV0jdJ7g6L77fUAez5YG2GhTiD/IuWtpEVKe++8cHnITxEDrBNZc+OsudgI5inTuyGs1nH9K1VSmsrwS/aanz4luU8D894PgJdTQ9jFyQpNlfosB4pgH5nwkelKQ3rRxnbS6s52VM6YpP3G6JJFarAiSr3vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=J4Sdfzf+; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10182143897;
+	Mon,  6 May 2024 12:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.13.102
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1714998265; cv=fail; b=Wb15w6a+BUksm46oEqMky4nqizO99HqSORJrQ6GCb/UxpKq4QTQvtJaCccIUSakVSdpUb8c2dCIvH1O6Z8eiyYsv/5rhtqphWyCAHu2PdM45ID/je0QL1HAk869NZMlK22H4wHQqmmbQ4by+lJGKp71Wzck9jczsabYF6Z+sUSg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1714998265; c=relaxed/simple;
+	bh=WO8NgWw1ZQ1CcmVR3OWPZTBaEpyYT6ZvIlT2acaWCL4=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=Myk9Q7QOlh5JS2OWgGT8l37ptE+rECVu0cOzeUtCPYOponDRwbtWUwsACnWGHrKeL+NDrveaGXTroHvD5Mw/yngKw2U2BjJy2ybNFS0fCttu835YsJ9pkmPaW4A8qjtKwLfrdQ7pEpVwxkSXLhRhPikhJf6dC3tia7JHD/+fAv0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=cVrJqxsc; arc=fail smtp.client-ip=40.107.13.102
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="J4Sdfzf+"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-34ca50999cdso99004f8f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 05:23:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1714998231; x=1715603031; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hJvxbNUxeULloPkLJE9SsjERpdsUIXxRxn2yKsRsSwc=;
-        b=J4Sdfzf+sNHeQZbjLlHQkxe+vBV/CqtEKZIE21zHs5BZaP4fVUooE839QXHepk/ae4
-         POXW3MdM2YM0mL7+kPF0sFDjddZ6ZqJgjPLk5O1FAQ9LQ6NuGoI/6ghK9qafc9p5r5/q
-         eIF9aflCGGZxuDwFxBa6ppO8Igf343ne8trek=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714998231; x=1715603031;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hJvxbNUxeULloPkLJE9SsjERpdsUIXxRxn2yKsRsSwc=;
-        b=LIAYnhtVXZvqGc3UlkXvPXd4C8uGNqDYTmpfn+wfML6ovkRxrR5GtQHk+jkABwv9bo
-         rbHsSpF4mg8LcqmrctNoUDvZTSSNm/rdMGcrQeDy8/QnC6NdKKtFMjsn42PrE3j3GyDE
-         EJm+fzy/y2EJ8id9vTVcKVh1uNhwMHfJ97Jnk97QWp6QEWZTiR3wUHwZyyy1sW8JdOBL
-         7qSHOkCUdsfveHPkZgOhqrDR19ER/2/k7cFNA5Ej8eARTlBS7/WDgu5qSDwEfgafNcuB
-         zmgH/ZBURXPM6h+dKLh9XzwqVnDqL8oULrIGE70ciVwT8145ReZoGxouLZU8Tnb16ACu
-         aEMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNJkzyBuiKAwVZ7sdX4cTJsI9wJn2LtVAh7Ig5F3Ydz03CTjG28TDmAS5YhWiuPRsXltwByxeZIhqnNcV77hnfqu7sTdhvMhmSDqf4
-X-Gm-Message-State: AOJu0Ywx4/djNvy/3Z4LuEkuPDH0KrSdR4z4GUuSF/a0Wl1PfBrv9632
-	AzyDSQSDtPFIBjQatJsC2bKQIe9XXTyBHPcCfjYqTBDo922UFE1q7OYrE0uh9eA=
-X-Google-Smtp-Source: AGHT+IGuUvBtI5rIVLpD2XOZICwCS9IQtrXwLWSsF2oFAMcsXQKy2Upppe1zQ4rIa9wWPmT5P5GIew==
-X-Received: by 2002:a05:600c:3b02:b0:41a:c4fe:b0a5 with SMTP id m2-20020a05600c3b0200b0041ac4feb0a5mr6970105wms.4.1714998231468;
-        Mon, 06 May 2024 05:23:51 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id n17-20020a05600c4f9100b0041668162b45sm19554882wmq.26.2024.05.06.05.23.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 05:23:50 -0700 (PDT)
-Date: Mon, 6 May 2024 14:23:48 +0200
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>,
-	Bui Quang Minh <minhquangbui99@gmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	syzbot <syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com>,
-	io-uring@vger.kernel.org, jack@suse.cz,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, Laura Abbott <laura@labbott.name>
-Subject: Re: get_file() unsafe under epoll (was Re: [syzbot] [fs?]
- [io-uring?] general protection fault in __ep_remove)
-Message-ID: <ZjjL1GjSMMMcxdsc@phenom.ffwll.local>
-Mail-Followup-To: Al Viro <viro@zeniv.linux.org.uk>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>,
-	Bui Quang Minh <minhquangbui99@gmail.com>,
-	Christian Brauner <brauner@kernel.org>,
-	syzbot <syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com>,
-	io-uring@vger.kernel.org, jack@suse.cz,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, Laura Abbott <laura@labbott.name>
-References: <202405031110.6F47982593@keescook>
- <64b51cc5-9f5b-4160-83f2-6d62175418a2@kernel.dk>
- <202405031207.9D62DA4973@keescook>
- <d6285f19-01aa-49c8-8fef-4b5842136215@kernel.dk>
- <202405031237.B6B8379@keescook>
- <202405031325.B8979870B@keescook>
- <20240503211109.GX2118490@ZenIV>
- <20240503213625.GA2118490@ZenIV>
- <CAHk-=wgRphONC5NBagypZpgriCUtztU7LCC9BzGZDEjWQbSVWQ@mail.gmail.com>
- <20240503215303.GC2118490@ZenIV>
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="cVrJqxsc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DojoPtFl78ku7u99G1WAMoE8Es7hsWWn7g8ek9e/lBjPptdwfqjOzj/WMpUI6oUWI/a/650ZZoLEq8V3NfLCeENtVV7EXIGNd4r5WFFVSgbJWdd2I823OKoreAVZr8QAythmlVgvzWT6ywK9vuvaxlt7rBsqtYXGxIHIMDXkm3jujWHMM5UZ+10MM2YMZ7OKqVP+diMkH1Bi2dX20dbRYyugQE1UUSFki/GA8Mgf2EphPBfOp7DcxJI0CzoxmomG6BmRqPESuOm/oBa1DNRUfBzdmxi7KIRJ4U5iIalZI8Cg2Avtdty+RFfMF9Xj+GwfLTZjzyxJmo4QBTFWrub7eA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4eUlbnPoN8w40E8M/dxF7d7o4jPw4X51BB6bfigs7Y0=;
+ b=hmOCV+xGcWA8Tuq2Ur3Fww1XvcPj7DOnNPCQZUGP+K/+szRxka1OViXlhcFyaJCtJwIfiQ5ASLUWy+RlsF5FM5a16ZIRdXddik40nkAj8ulslKA318hOl+0yFCGHGeso1oCuAR3kLR9vWifvnHeXmrWT+KtaG27UxhwDpnz61DvwtCvDIyRYlGNWF8AE3DGQF2nprJu1TT1Z+6j8H44k9QF9uoGdnAxf0t9UTYR0APg9hTCNL0JyrcriZYhIe+cbU9bgM2mKmlSlxtGj6FhAgTObACxASzDQEveneU/4jWwzk9GFJADtzeKYiwI+TTQJpEjl7dJ0GgrwcMQ7mWYOtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4eUlbnPoN8w40E8M/dxF7d7o4jPw4X51BB6bfigs7Y0=;
+ b=cVrJqxscNhPfptoFomSKoOfainQj3jwvCP4Ya1GgpkNBFHg51ofTjt2gVXBuq4qUGjOHxShgHQzoOnRXvooBAU0dXYJGhwlaSoLbCip5Y5aB5NH0bR4bB89yEdGHkpAAjos9mbhbUDJxNaUnQlJsqmi0B1uSY2S/i+axJ7YtpKA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com (2603:10a6:803:122::31)
+ by AS8PR04MB9512.eurprd04.prod.outlook.com (2603:10a6:20b:40f::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41; Mon, 6 May
+ 2024 12:24:17 +0000
+Received: from VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::59d9:878d:65f0:3936]) by VE1PR04MB6382.eurprd04.prod.outlook.com
+ ([fe80::59d9:878d:65f0:3936%4]) with mapi id 15.20.7544.029; Mon, 6 May 2024
+ 12:24:15 +0000
+From: Farouk Bouabid <farouk.bouabid@cherry.de>
+Subject: [PATCH v2 0/7] Add Mule I2C multiplexer support
+Date: Mon, 06 May 2024 13:37:51 +0200
+Message-Id: <20240506-dev-mule-i2c-mux-v2-0-a91c954f65d7@cherry.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAA/BOGYC/2WNyw6CMBBFf4XM2jHtiPhY+R+GBZSpNLHUdLCBE
+ P7dStyZ2dxzk3tmAeHoWOBaLBA5OXFhyEC7AkzfDA9G12UGUlSqfNhxQv9+5p5MDhNetDqYjtV
+ JkYY8e0W2btqU9zpz72QMcd4+JP1tfzKq/mVJo0JVHpvyTLaytr2NPYc2Bt+gzDKyl70JHup1X
+ T9r0Qv9vAAAAA==
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+ Peter Rosin <peda@axentia.se>, Andi Shyti <andi.shyti@kernel.org>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Farouk Bouabid <farouk.bouabid@cherry.de>, 
+ Quentin Schulz <quentin.schulz@cherry.de>, Heiko Stuebner <heiko@sntech.de>, 
+ Quentin Schulz <quentin.schulz@theobroma-systems.com>
+Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: VI1PR0102CA0103.eurprd01.prod.exchangelabs.com
+ (2603:10a6:803:15::44) To VE1PR04MB6382.eurprd04.prod.outlook.com
+ (2603:10a6:803:122::31)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503215303.GC2118490@ZenIV>
-X-Operating-System: Linux phenom 6.6.15-amd64 
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6382:EE_|AS8PR04MB9512:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a500abb-9885-41ab-7c3a-08dc6dc77155
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|366007|7416005|1800799015|52116005|376005|921011|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aC9lQVJuM3c4bkJFVnIwZTI3NExtQmw2ODZJajNOVFRzVGRka05KRDNERkpN?=
+ =?utf-8?B?eXQ0YVJLMm03a0xwQVM4dVBBdzhDSStxNUVxQW1UUlVXQzkwMXpRbWZTOGw2?=
+ =?utf-8?B?b0lwcndhYXFLc3Y4VlJmTWV5eVlHdWRycVVrdFdibVpSdi8wNUc5QkJXZ2xX?=
+ =?utf-8?B?WHZpbGkySndsblFidmVzMzJ3RHBxdzhUOGVBVTFKVkg2N01GWit0ZUw0b3di?=
+ =?utf-8?B?Qm0xSDZTRkd6UVVaMmwzSjJsSzBhdUU1eE10T2dnbG80SWtDNXh6TE91MTZ6?=
+ =?utf-8?B?elE0bWZCMXlKanppeCtJRFpkdHVvdHhvL1lzWFA4aGlJUjhPMzRwa3N1cEJU?=
+ =?utf-8?B?eWRxaUN5c1l1aFJ5ZXlUclZFM0lxb0tQWDc0RFN2clVvQjBxdHpzVHlyNzlL?=
+ =?utf-8?B?Y0thRzkyYW5oMU5ITTJud1BMVUdaVkp0WFl2TkdUamR3L0NBN21MTlBoMjJx?=
+ =?utf-8?B?M2EwSXBoODZmS0VVa3F1RkJsdWF4TndwWnB0TUVyUlVobW8yd2tpcWpYZ3FW?=
+ =?utf-8?B?UExkRHY2M3VzaE8rdDJRSXlKUEZ2Mm0vZXZCcC9zeENqRFkyQjhRTjhMQ3dy?=
+ =?utf-8?B?UlVrMjUzNmxCd29JN3BtVWJVd2FTeGtEeE1ub1lqZ2FucjJHNlMvcEw2VFNS?=
+ =?utf-8?B?Q0RCYlJkVmxqRzFtZGY5TUJrTUkwZXZSZzZVeVdNVDlTcFRtdkIxclZqQnoz?=
+ =?utf-8?B?NnRFU2oySkQwUGR0TzN6b1hUNTluMkRvMU4zc2V2STN5WlRvVTVQKzlxK2VS?=
+ =?utf-8?B?ck1laER2aXpwdVVEVnRIbG5GdHJNSzEzNlQvWE5DcEc5TUl6cjQ0aklPKzVl?=
+ =?utf-8?B?QTYwK3RVUnBHWEd1NzFVNTV4bEZ1NTVPUUVrSG1jR3FOeFVid1ltbmRrU0lS?=
+ =?utf-8?B?ZmVWbUZGSVo5SzhZcDhDV09ONUh0WGxoT3lrenpuNlBwbVVGQjd3WG5iK2ZG?=
+ =?utf-8?B?L1crRGdwRGJOdzlQVHdEQVJJbDl2Ry96NnR4ZHlOREFJNEhvQVFaWDluTjA2?=
+ =?utf-8?B?VFlOMFN3a3VlWGhqTlgwOG5Rd1VuQmhGNDR0dnZYK0NRdy9hdFpEb05Xd2Zo?=
+ =?utf-8?B?clNrTVBZcWxMcVZDM3M2cUZZcGtWTGR2Q3Nza1NhbjlxZUpIRDM3akZtNWlM?=
+ =?utf-8?B?MnBlbUZVTGxhNlNwdzgrODJVZlA5Z1Rub0JTZnFnalJUejA3SDF0U0FKaFFF?=
+ =?utf-8?B?Ti9KUElFeUQwdjhKYS9HM2pkQytkODMyMDdXWWR5blZYdWV1SFB6Tnh0eE5N?=
+ =?utf-8?B?ZDRWLzMyazE0dUZWTm1qc1pCanp4SVRyemdOUnFtUjRwNnloZEdBaFZxSXB5?=
+ =?utf-8?B?eXB4bktpaXczTElzWTk4UW82OFEvTTBJVStzNjJPenFlUjFTVkYrTEpMc0ZQ?=
+ =?utf-8?B?bjNXeEpQb05TdVZrOVNKR0xxSXltT2RxODRidTFOQnVmZDVBanVuS2VUMStz?=
+ =?utf-8?B?K0V1ZzdnaVBjeVBVUkh1SFoycGYzckVNMnUybUZUUVQ4UVRUTGFWNGpCZHlp?=
+ =?utf-8?B?NDJPRVNiRGJvbWdRd1FLUHMzL1VuZlBZbmY4MEZHMDByWHd4QlhhS1RqenpN?=
+ =?utf-8?B?RzBGZ0JhWW5jRGFwUUV5enovV0ZYcDVXQndtTnhUN2E1eEhERFV5aHJxMDJ1?=
+ =?utf-8?B?eTNWSDVhSmdXRk1keFo4cUJ4N0Y5akRnTmx4dTVadzkrT3lwNDlOSDJ6MEFB?=
+ =?utf-8?B?azhaNytCTDR5NFUyaUtDWS82aDBsNzRnaEhOOWtId1d5SGN3S1FMSkkxMWEx?=
+ =?utf-8?B?K1o0bnY0VDRON0VjdGwrT0VZMDlzcDNkSEhZTU9McmNjditDdXJvTzRxYUlW?=
+ =?utf-8?Q?JnFiLoHU941uEXE/UK5eKIlpUbQG0HhzVUhpY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6382.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(1800799015)(52116005)(376005)(921011)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?N2syWEFVck9oOW84amhTL091QXgwNzcwbUI4dXZmc2J3S1pPemE4NktXN0tN?=
+ =?utf-8?B?TG1uZ3poeCsxOEhwZE84VTNVODh2REZmbkdMcklCMnd5UW54dGdoS0hrN1hG?=
+ =?utf-8?B?VGUvSWNMdmpyZ0pSSjRmOFN4RmNJTGZlOFV5MmhWaisrYXIydnR4c0tHdXdh?=
+ =?utf-8?B?NFVMVXVCZGprNVBVRTdCNE9GRUNFaWd4aERrMWVRcU8zSHB1Q3g2a2pjZFRO?=
+ =?utf-8?B?RjYxUk5RTFpLYmtNd1JYNUlwYlpHWGhEelBwY0YwYjFpSWEzNTVQUGplKzN1?=
+ =?utf-8?B?Y1NSYmRRdHVoSlFiaU5aSjBSZE5wc3NWb3lvVzBENjRLQ0pxRjZ4Um0waWdt?=
+ =?utf-8?B?eWlOMU9MZzFDcnpFc0J2aWlaS1ArQnN5TjBJMVRINXN1bXRpZkdLZjN6YXBz?=
+ =?utf-8?B?YUthdXlkelNSazRtUXRDNlhUQ25QU3VjbzNndlllcDFKVmFIcXEzV0lUbkVJ?=
+ =?utf-8?B?dVNrSC85c0hCYUJleDNXOThGNVR3ODZEWERoUXJpRjdSdmNKb29NQWc5eFFS?=
+ =?utf-8?B?emtoWEpqamgrUzlWWkNoVlZ2MGpKZnE3TVNpQXFrRDFxT1lZaE9JbXN5bkkr?=
+ =?utf-8?B?WGFDZCszcFIyZDFKK2x2R0EzODljS2E1aHNueXNPdVdDNkdqL3ZSUlkzZDJh?=
+ =?utf-8?B?RHNQUWNWWmxEeUcrb0hIeDExcHlQTnI3UkQ1Y0RacFFaanZJL1pTaVhLdTFN?=
+ =?utf-8?B?dmQzMXFJRVBJdDNteFJxeUszem9hY2F4U1FCNXc0WmZlYk44aFBIc0hvTHhx?=
+ =?utf-8?B?MTV0RzBEd2s0a0VETjYxcGh6ZUNtaGtOb3hBY256K0F6TDErZ1YrR2htZFds?=
+ =?utf-8?B?UmNESUJuVnBrVXlvRmhOZy9BTW1GV0hLc2N5cURKL3JmNlUrZGZ5WU10cnlE?=
+ =?utf-8?B?SndxalphdjN2MXgrZkQzbFlDNUZ0MWZ0TmVQTFBkMmkvV01mV1lvNHFhVDdn?=
+ =?utf-8?B?N0RQQjExTXZESE5MaWtweE1QUllkRFAxanhqU0tMWFFBVU9HaWV1Z0h5Rm1M?=
+ =?utf-8?B?bWo1Y2FhWnlPZTVERGM0eTdWUzRrVVFyMGlQdUtmaUtDZTJjMmFJcTBwa1VV?=
+ =?utf-8?B?TzZJYWpyaVVOZnhJNTgvZUNMenNJUTczc3FOQTBmT2kzT0dsUmt0cXZYTUpv?=
+ =?utf-8?B?eG1Fem96V0tTSWdkR2RBc1Bxczc2ZlZDWkx3NzRLQ21OMU5RZTJMVDBvbTV2?=
+ =?utf-8?B?Z3J6WFFOcjJGZ0VQakpmVHUrY1FhSWpLWXZNQ0dTdHpyaE1kdWt5UVI5Unpu?=
+ =?utf-8?B?TW1OTllyUG1ZRWVhZHNFOWpUTXVhenhTMi9yaE1sK2FtQVg2cWVHSUxxN0Zu?=
+ =?utf-8?B?cldxRjk1K0tJNXRSd3JTSWp2cU05cVVFNktVQ0twTFRuRjVGZGRqcXV1WkUx?=
+ =?utf-8?B?TnVPdHdGa1VRRjlnL0VlNmZJZmZEZTV3WHNoWnF4TU15WDB6Z1NRNFZtVGMx?=
+ =?utf-8?B?akROeXJta2JYUExkQjJXUWo5NG1YRWVUMG1MOThWYzdTcm91K3M3WWlwb20w?=
+ =?utf-8?B?bGtlME5TQXZ6ZDdBVEdmNHpuTE1LZHV3MDhQTlZNSFVXVjZwOHVsMEFYWWNB?=
+ =?utf-8?B?TXlab0g0eUF0MldXQ1VOVkZNdjhQdy9DSm9EdnhWWG44cWxMVWZnMUlzNmZq?=
+ =?utf-8?B?Y1pkbDZVcU5WRzVINm1LSXJaWWpkcXVEeTR0cFBOUkIrK3kyZmQ1bng4RTN4?=
+ =?utf-8?B?QndLMTl3U0FTLzdzaFpEd3ZNbk1wa3ZWWWkveTlyVS8vSDlmVHRDaUxlZlNn?=
+ =?utf-8?B?RGdzbFJHRkQ1d0F3Q0Fjb2g1NmliSzFNYnVJRjc3Y3hKNC94dTMyYTlOaUNE?=
+ =?utf-8?B?WjRwMGcwRyt1V1BNQUc2M3oyS2F4aDhpTFNGWlI5NWEra1NqM1Z3YTNseXBl?=
+ =?utf-8?B?aFFqV3FkQVVrNlZUWG91NFNMeURTYlplMW9JcFRwd1RBTzNKMCs0M01mRWNP?=
+ =?utf-8?B?VkkyUHJKemFEc0JUb05LcUk3bHFmZTN3eW1KVHRaTDRWUldMcUFHdTNzcjFx?=
+ =?utf-8?B?MzNNL3RvOFJ5dTc5TmRuUWhzUFFFb0R1dnNRNmNiM0llQ29QaDdkK3lMUlBN?=
+ =?utf-8?B?Wk5WS0hyVVJ3R1A1K3VLN25IRUVuU1QzS2tWbVNkU3J1RzR6SVdqR04wU2RQ?=
+ =?utf-8?B?M3JPTVY3V0pHTDZRVGRBcXk5U2hCZmJYK1hyRGJ1cWc2dkhZVTZDVkpoZnNL?=
+ =?utf-8?B?UGc9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a500abb-9885-41ab-7c3a-08dc6dc77155
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6382.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2024 12:24:15.2180
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VeMBjK/v9rhofRl92gg/yJhGCKWJnYKCLBjBip9LtGOQWHQJj/5SIsD+94YqSEgMrnU4HVrEoIcHlTNOeUe7NFnEPCupJGpAgRyjhiZEt2c=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB9512
 
-On Fri, May 03, 2024 at 10:53:03PM +0100, Al Viro wrote:
-> On Fri, May 03, 2024 at 02:42:22PM -0700, Linus Torvalds wrote:
-> > On Fri, 3 May 2024 at 14:36, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > >
-> > > ... the last part is no-go - poll_wait() must be able to grab a reference
-> > > (well, the callback in it must)
-> > 
-> > Yeah. I really think that *poll* itself is doing everything right. It
-> > knows that it's called with a file pointer with a reference, and it
-> > adds its own references as needed.
-> 
-> Not really.  Note that select's __pollwait() does *NOT* leave a reference
-> at the mercy of driver - it's stuck into poll_table_entry->filp and
-> the poll_freewait() knows how to take those out.
-> 
-> 
-> dmabuf does something very different - it grabs the damn thing into
-> its private data structures and for all we know it could keep it for
-> a few hours, until some even materializes.
+Mule is an mcu that emulates a set of i2c devices which are reachable
+through an i2c-mux.
 
-dma_fence must complete in reasonable amount of time, where "reasonable"
-is roughly in line with other i/o (including the option that there's
-timeouts if the hw's gone busted).
+The emulated devices share a single i2c address with the mux core itself
+where the requested register is what determines which logic is executed
+(muxing logic or device logic):
 
-So definitely not hours (aside from driver bugs when things go really
-wrong ofc), but more like a few seconds in a worst case scenario.
--Sima
+1- The devices on the mux core can be selected (muxing functionality) by
+writing the appropriate device number to an i2c config register (0xff)
+that is not used by any device logic.
+
+2- Any access to a register other than the config register will be
+handled by the previously selected device.
+
+      +-------------------------------------------------------+
+      |  Mule                                                 |
+      |        +---------------+                              |
+    ----+-(1)->|Config register|-----+                        |
+      | |      +---------------+     |                        |
+      | |                            V_                       |
+      | |                            |  \          +--------+ |
+      | |                            |   \-------->| dev #0 | |
+      | |                            |   |         +--------+ |
+      | |                            | M |-------->| dev #1 | |
+      | +-----------(2)------------->| U |         +--------+ |
+      |                              | X |-------->| dev #2 | |
+      |                              |   |         +--------+ |
+      |                              |   /-------->| dev #3 | |
+      |                              |__/          +--------+ |
+      +-------------------------------------------------------+
+
+The current i2c-mux implementation does not allow the mux core to use the
+i2c address of a child device. As a workaround, A new i2c-adapter quirk is
+introduced to skip the check for conflict between a child device and the
+mux core i2c address when adding the child device.
+
+This patch-series adds support for this multiplexer. Mule is integrated
+as part of rk3399-puma, px30-ringneck, rk3588-tiger and rk3588-jaguar
+boards.
+
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Peter Rosin <peda@axentia.se>
+To: Andi Shyti <andi.shyti@kernel.org>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Quentin Schulz <quentin.schulz@theobroma-systems.com>
+To: Heiko Stuebner <heiko@sntech.de>
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: linux-i2c@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org
+Signed-off-by: Farouk Bouabid <farouk.bouabid@cherry.de>
+
+Changes in v2:
+- Add i2c-adapter quirks to skip checking for conflict between the mux core
+  and a child device address.
+- Rename dt-binding to "tsd,mule-i2c-mux.yaml"
+- Add Mule description to kconfig
+- Fix indentation
+- Move device table after probe
+
+- Link to v1: https://lore.kernel.org/r/20240426-dev-mule-i2c-mux-v1-0-045a482f6ffb@theobroma-systems.com
+
+---
+Farouk Bouabid (7):
+      i2c: mux: add the ability to share mux core address with child nodes
+      dt-bindings: i2c: mux: mule: add dt-bindings for mule i2c multiplexer
+      i2c: muxes: add support for mule i2c multiplexer
+      arm64: dts: rockchip: add mule i2c mux (0x18) on rk3399-puma
+      arm64: dts: rockchip: add mule i2c mux (0x18) on rk3588-tiger
+      arm64: dts: rockchip: add mule i2c mux (0x18) on px30-ringneck
+      arm64: dts: rockchip: add mule i2c mux (0x18) on rk3588-jaguar
+
+ .../devicetree/bindings/i2c/tsd,mule-i2c-mux.yaml  |  80 +++++++++++
+ arch/arm64/boot/dts/rockchip/px30-ringneck.dtsi    |  20 ++-
+ arch/arm64/boot/dts/rockchip/rk3399-puma.dtsi      |  20 ++-
+ arch/arm64/boot/dts/rockchip/rk3588-jaguar.dts     |  19 ++-
+ arch/arm64/boot/dts/rockchip/rk3588-tiger.dtsi     |  19 ++-
+ drivers/i2c/i2c-core-base.c                        |   6 +-
+ drivers/i2c/i2c-mux.c                              |  25 +++-
+ drivers/i2c/muxes/Kconfig                          |  18 +++
+ drivers/i2c/muxes/Makefile                         |   1 +
+ drivers/i2c/muxes/i2c-mux-mule.c                   | 157 +++++++++++++++++++++
+ include/linux/i2c-mux.h                            |   1 +
+ include/linux/i2c.h                                |   7 +
+ 12 files changed, 361 insertions(+), 12 deletions(-)
+---
+base-commit: 23918f4e52d072b96a4d909e91298b8dd6ad4325
+change-id: 20240404-dev-mule-i2c-mux-9103cde07021
+
+Best regards,
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Farouk Bouabid <farouk.bouabid@cherry.de>
+
