@@ -1,125 +1,88 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B208F1552F4
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 15:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276E715573E;
+	Mon,  6 May 2024 15:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715010673; cv=none; b=KCJY6FgB16A47TI43shR73Sokib3Uj0peGzW5u2gPOIEa/nOb7NSR4MZxDZSiynxO6To0/NTljZyN2CkqVlQaTZuUwSc+nBw8iW2f0UtiTLhlubbeU1B4DTUkR4SphctVecjzqv/JBU2Xfqj5U80LynRiwJPUDm4EEvWwR1zSig=
+	t=1715010676; cv=none; b=fyarYlH3p2o/At4EWgZ30Aq1BN4CDoUgZnfR6XE2rsoLzdlJTxh7o9+PWwz8cEkbHM4eASwaA9wdnr9kyu5csUJG1Qm2QhldsdOB5QdY/4Rn6rlUXxiWwZ3xU+13IzzxZulCy6GxCKLwuhGORIGKZsvy2F+q7b5T+85Wr6ClOB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715010673; c=relaxed/simple;
-	bh=GMFcXlvdHlwN61woQJwvISQwU5cuAkI+j96JuCieE8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sTFIvAvYqlNkv/fRCdLwQEJE84jvZ5AE3vYjJVhz5jCUBQt200YM/dl66S3q1NBsh6PwePqqShkTfT+XOJefprLYlCMoMr2KwGMLC2mYHE/trTn8wwe+wQahZK5CXXOlnNh9dw838epj7GfccVYJb2wI3M+TvzhQGhD6LDPPQSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DMxsEuxP; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1715010676; c=relaxed/simple;
+	bh=pkw/VG+9hXfYiYxsbX8EtPzi4fCCqjOQh1Apk1PvvAI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WlV47cFfksUjiHOMjM0Fgi573mesqOWfS394+PtqWemmJvwEUlOjgGAzzVaWDsTEgK6MjNotfJAWe3epViUQcRLM/zFZSvMoAXERmVZEL2bYfW2BNGqYPqxcxDtvbEL1Z2OLYx3fBsYIfvTWSU7GlXBuLHcvRPnXDxLf/yhz7Rk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fwn/3u53; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DMxsEuxP"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 67238240004;
-	Mon,  6 May 2024 15:51:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715010668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=d+wTVg9eOKsGtIWDYqk4CtYV7Tl016exC8KiZRLJoqE=;
-	b=DMxsEuxPJV+g6UtG+YRF085ccKcoCV9LqOJQaiQdVRIkEPTFaqNFe0kyDd4bPCdSSFtchG
-	vNb0dC8m1UQ1A5AzO7NZoLVL4hQFIo66foSZkBiHS4oDip3EiSgcoDpifv5bhaXO5PWjQd
-	3/fwWeOSR6/uksRPEgXMgyThettoGd8FsbcZR/2vouiGB55LwfJPmsQCROa7pxbeNTEnPq
-	L0jxv2kdIQSiZ+20vIb9pxjyI4wf2eiharJlf3lJjWD9DB4qcTGtc5uEL2zOokUwGorKKX
-	baE/tGQwBL1xKdnrRXyIbuPajYd/1y8ZdLkx56k6FoP/0qmvuIeS/+xPpT/ycg==
-Date: Mon, 6 May 2024 17:51:06 +0200
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
- <vigneshr@ti.com>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] mtd: nand: mxc_nand: support software ECC
-Message-ID: <20240506175106.2ab7c844@xps-13>
-In-Reply-To: <20240506160508.6c60d50f@xps-13>
-References: <20240417-mtd-nand-mxc-nand-exec-op-v1-0-d12564fe54e9@pengutronix.de>
-	<20240417-mtd-nand-mxc-nand-exec-op-v1-3-d12564fe54e9@pengutronix.de>
-	<20240506160508.6c60d50f@xps-13>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fwn/3u53"
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5210684cee6so221899e87.0;
+        Mon, 06 May 2024 08:51:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715010673; x=1715615473; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=F43+VbbAv63CP/l1KaJY4c5FRRfWXW7a7BiZxJ4p6TM=;
+        b=Fwn/3u53/qra9/E0510fmyLjJQ22HVD70kx2KqGPb3tHCLCMpzrwJNn9z3t8Wls1vP
+         JXWFPC5sImYgYRkX/KQ7LzEQWa0nrsdJPfE2EdeQON6VmXXr8qpLox1vNR1mW46KgA/d
+         ltQt+JXtqbf62BWnDN1oZuG0c2YdzdA/ZrtGNahBUPsm5AW8evDzR+6OWQ/k7UzVfQHX
+         eurT1QDj4JZ7/u/i3flPof8H6KjwVpVxHxsmE1MmZbMhAFbl9MZ+7yAHh2lYk9Ljg2+S
+         Fhusr08E/2DtqQlJrZpdnk8vbTTIj81IEjnGOJ9tlwdqL6ed4MuwWyum8B7b7S5W2lOk
+         1dMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715010673; x=1715615473;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F43+VbbAv63CP/l1KaJY4c5FRRfWXW7a7BiZxJ4p6TM=;
+        b=MfVpDWKDTzSnneH7dGSMnSZMvB4ue4U8cdUwfx4U5L0dWtMvAgzBRz9YS3RoCOJaaA
+         xNPJGjTizbmF7d3PUWi3xVdbPAFQAJDC7rIR3zjyoq5AeGmd9HGfzIhKjaU2aCIb/1Hf
+         8UFb0mm7qWOsqcc/FjmT/6TtSKffFqHj/evG/risG3lgBUSr2ftLiqhI/OfMaZfraejY
+         UU7cDk9iW2gY59QvA1MpSRfcW50UXU5r0R9bB7/jQs5ylxccRgEFV8bp/g05FE1MR9a4
+         PUrUE/SAOKjKB0YyvJeb7AUl+7/CACNt7vpMjG0QDWRRxuRvxoNuQ7vLwflp4DKRGFU4
+         hvlw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPEm2mzqpb20FcdnRxQHA6V9VtrGopgAobU3tDMegNeOb4Mmu90I9Gu+6vQq3gbvGEjhIDIVpKEZsGvjzh7nM4D2lX9e3q9i1JRhsx
+X-Gm-Message-State: AOJu0Yy9kdGbpflRTKvEzGUih6XxFcGhfgctI+K5ytqrCrnW4K3xyZMv
+	AZBnt7jt9FhxuPXd0drJVL4KDov2wdSQDZ98puV8qtxVQ0qWMes=
+X-Google-Smtp-Source: AGHT+IHylqTjWnk3bFeb8qCldzxVbY8wXHbt8BdYQi/hoIsi2Vat6SeNEbpUVpTgcIdugVwGm9wVSw==
+X-Received: by 2002:a05:6512:32ac:b0:51e:543c:a45d with SMTP id q12-20020a05651232ac00b0051e543ca45dmr7353602lfe.20.1715010673176;
+        Mon, 06 May 2024 08:51:13 -0700 (PDT)
+Received: from U4.lan ([2a02:810b:f40:4600:1c62:e77:6753:5729])
+        by smtp.gmail.com with ESMTPSA id y24-20020a170906071800b00a59cec38bf3sm1356230ejb.52.2024.05.06.08.51.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 May 2024 08:51:12 -0700 (PDT)
+From: Alex Bee <knaerzche@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Alex Bee <knaerzche@gmail.com>
+Subject: [PATCH 0/2] Add RK3128's sound nodes
+Date: Mon,  6 May 2024 17:51:01 +0200
+Message-ID: <20240506155103.206592-1-knaerzche@gmail.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-Hi Miquel,
+RK3128 has two I2S, and one S/PDIF controller. They are already supported
+by the drivers and covered by the bindings. All it needs to make use of
+them is exposing them in the SoC device tree.
 
-miquel.raynal@bootlin.com wrote on Mon, 6 May 2024 16:05:08 +0200:
+Alex Bee (2):
+  ARM: dts: rockchip: Add i2s nodes for RK3128
+  ARM: dts: rockchip: Add spdif node for RK3128
 
-> Hi Sascha,
->=20
-> s.hauer@pengutronix.de wrote on Wed, 17 Apr 2024 09:13:30 +0200:
->=20
-> > To support software ECC we still need the driver provided read_oob,
-> > read_page_raw and write_page_raw ops, so set them unconditionally
-> > no matter which engine_type we use. The OOB layout on the other hand
-> > represents the layout the i.MX ECC hardware uses, so set this only
-> > when NAND_ECC_ENGINE_TYPE_ON_HOST is in use.
-> >=20
-> > With these changes the driver can be used with software BCH ECC which
-> > is useful for NAND chips that require a stronger ECC than the i.MX
-> > hardware supports.
-> >=20
-> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > ---
-> >  drivers/mtd/nand/raw/mxc_nand.c | 9 +++++----
-> >  1 file changed, 5 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/drivers/mtd/nand/raw/mxc_nand.c b/drivers/mtd/nand/raw/mxc=
-_nand.c
-> > index fc70c65dea268..f44c130dca18d 100644
-> > --- a/drivers/mtd/nand/raw/mxc_nand.c
-> > +++ b/drivers/mtd/nand/raw/mxc_nand.c
-> > @@ -1394,15 +1394,16 @@ static int mxcnd_attach_chip(struct nand_chip *=
-chip)
-> >  	chip->ecc.bytes =3D host->devtype_data->eccbytes;
-> >  	host->eccsize =3D host->devtype_data->eccsize;
-> >  	chip->ecc.size =3D 512;
-> > -	mtd_set_ooblayout(mtd, host->devtype_data->ooblayout);
-> > +
-> > +	chip->ecc.read_oob =3D mxc_nand_read_oob;
-> > +	chip->ecc.read_page_raw =3D mxc_nand_read_page_raw;
-> > +	chip->ecc.write_page_raw =3D mxc_nand_write_page_raw;
+ arch/arm/boot/dts/rockchip/rk3128.dtsi | 41 ++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
 
-A second thought on this. Maybe you should consider keeping these for
-on-host operations only.
-
-The read/write_page_raw operations are supposed to detangle the data
-organization to show a proper [all data][all oob] organization to the
-user. But of course if the data is stored differently when using
-software ECC, you'll expect the implementation to be different (and the
-core provides such helpers, even though in your case they use RNDOUT
-which is not yet supported).
-
-> > =20
-> >  	switch (chip->ecc.engine_type) {
-> >  	case NAND_ECC_ENGINE_TYPE_ON_HOST:
-> > +		mtd_set_ooblayout(mtd, host->devtype_data->ooblayout);
-> >  		chip->ecc.read_page =3D mxc_nand_read_page;
-> > -		chip->ecc.read_page_raw =3D mxc_nand_read_page_raw;
-> > -		chip->ecc.read_oob =3D mxc_nand_read_oob;
-> >  		chip->ecc.write_page =3D mxc_nand_write_page_ecc;
-> > -		chip->ecc.write_page_raw =3D mxc_nand_write_page_raw;
-> >  		chip->ecc.write_oob =3D mxc_nand_write_oob;
-> >  		break; =20
->=20
-> You also need to disable the ECC engine by default (and then you're
-> free to use the raw page helpers).
->=20
-> I thought patch 4 was needed for this patch to work, do you confirm?
-> Otherwise with the little change requested I might also merge this one.
->=20
-> Thanks, Miqu=C3=A8l
+-- 
+2.43.2
 
