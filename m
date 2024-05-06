@@ -1,132 +1,72 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22E93155385
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 16:13:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8CA155A5C
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 16:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715012012; cv=none; b=El9ki5N5M2Dh9B8PL/DgzoWJ33NEkQq56M2GAw3u+enjK/knTQG22Sg0j3+JW4U/P1n0GXXjSw7LIvKzs3qluoHyl+6OMijqdKw38WXetocFd0evrJseBf6mtH7XbFs1rbqjbBvnHq7TUB6Gs2uAYdZxnJLYAt4ZPOc8EVhLWXo=
+	t=1715012045; cv=none; b=j5Cy3F5mYbgt38Mw+A4UKvNb/cp0OnMuECvVZi9Mj3+zmkI+l6q97fxvVm36QCY8fxzgHRUIPgwWwtk8SzU4NV/xCkRr4TZnZTRVt403yCSsOro20bxp7Y3H5vVnOTMSzjNFD5HxDcKTlGqmNViYAe1hFR7sr6rLsSjujST2ZM4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715012012; c=relaxed/simple;
-	bh=7+2Zwg31lOd07Oa1eR/hleD9eYRFnRcCwEZgaNvKYb8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OWm2M2DL2K7KSfY3dPsSjspxMDY1QplNaPjKIyO10miEgc6gd2BKav08PeAir7VS9Gh/opmxcBzjzpQgEl9/XgzTUr3DJ/cOB386uePYVlqG/NUbttfsvpESoze7pAUqTfmp2C4oSfKyUgkyfVJGbntVKNKBVefd1fxX3TkkxF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0q8uZ/zt; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0q8uZ/zt"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a59ce1e8609so174047566b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 09:13:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715012009; x=1715616809; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WCYAJR1IdgPjREP1tbDJpbumcoJvWIKDqFqpn65YT0o=;
-        b=0q8uZ/ztYZ+VXBBxCkCC74csBUt3IR6/hFFtBQeQptmiwZGrzv7ieaCtZ//Yv2n/uT
-         hxk6+oYs0E6aPMbZ0KTgOQLqCp8TVaXU04/Ayg+Rd9IkYzlYfjRERGrT4OrJu4ZtkUde
-         C6Uhf+2KH1BA4pbxLyiZMSYJ88RRicqdErRTg8uQw53shw1ExL5MI6BhOPu7gLqzQ919
-         z3QbuikdV5FDHhFNqp9vrTXM+hnUVK8fMAEjcZXDXNd5bQBrZq3c87ubss3dVORpK26D
-         70+xjpNT6XsyMeeM/51YqFZb/CrhgFpP+CulPraDuB55SXJnteecAzBJgGFiOhGt26Qj
-         9Ftw==
+	s=arc-20240116; t=1715012045; c=relaxed/simple;
+	bh=BY9JsAoht7mmHoYih+jIMwCwYIwSSvVTzIKTAuQvSj4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=S7vAtiZ+ti5OL5k4NIqgfgeVEjmU7r2peER2bT/SJ2xnscKkkIZg5KglYx94PCgOxtGGMY8mW6wG6oX/g+BPXeM72YS+W+TXPt2iW8PtL8viDXFmF4v+fyLU21ZylrnEt6ldBW8Q8ILyLk9nI0Xxcw0uIjGaPG8+1T5Sr41y2lQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-36c602d713eso25823445ab.1
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 09:14:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715012009; x=1715616809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WCYAJR1IdgPjREP1tbDJpbumcoJvWIKDqFqpn65YT0o=;
-        b=c9WAJlTdJi2+IuJiQmnxHsrrdZUEUubAaWjYdqu8U5+LjtV2fLqnQT1QlHxezjHRma
-         V67G8fWmqn5ouLHDPjsOo1z7I4Bqy4bxq+2bL8O55Jpxtfa071iwsr+Xye9wJG3WmVL1
-         6PTXdN/0cd80egkqrHtIBXTS1IAICaTCOBNhhAUhWNcbf5pPl5Smc0QlG4MHn11CBqxl
-         PeGqEVT/eL4+dIotMhNpTavREBBOwLLb6takQKcD2Mkj4p5lXU4ebMUUGufmWuvebv6n
-         TcJJafHVcWHmMz/UexBNUuYnbOfPHMo7DS7VjepxKFE0F6dmWk4cGmYnewwxb3NFRBQ9
-         Xv/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUdKPVT5+tZ0PgX7IuJJB+7L77BXSMehOjaX8zSwGzinTIbareaEfzkQxjAOyyJcwOI5BZ+Bsf16W5NINiZvO6cG6+tmTIQ6mQ/kfyW
-X-Gm-Message-State: AOJu0YwL/mUi5Y42dSWTZrCHTg2bl2zamNTcSZ1LzoqbKCTRdggtX1WU
-	UXVqdNMqedPAgYK6Drg5LaxjRDwtl8zxQTNgxDBA7ysIVZp1PZ0TiJYU4Dl41xv0TH4ERrI3poG
-	vzfZAbjU9dOMz/q+BDipQx8VUUDmqmd2p3hc4
-X-Google-Smtp-Source: AGHT+IEl6O4ILNj9fQHQiZgV5xjHRsOzMtUZx6feBdBMRClUOE2LxlyQoEi9EaI8l5Y5k/bVp0avGFzlHE80pzDES6s=
-X-Received: by 2002:a17:906:2a98:b0:a59:c807:72d3 with SMTP id
- l24-20020a1709062a9800b00a59c80772d3mr89978eje.17.1715012009336; Mon, 06 May
- 2024 09:13:29 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715012044; x=1715616844;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JDyv5ylTMOTj8BjgVNbgI2llj6hv7/ifg+PovlFAma0=;
+        b=jUrIFZ+RkhzG1nqOfrzXqYvVxd5aaFIH+OgyJ9YqA8LEHUCgENDo5nRL3vBCROJ0O9
+         xXqWmX6CDGQrc8wB5CBYqMhKSIIKWhgHQFIMoS2wZkYdcD1NhCQ217cjcNsCeOjE/yMr
+         s8cKZh7lgA54dHzQidM0u2kSyjU71dS2M5tjYKoIFZu/lmNG/6MGE7NtjMeOhpRr3da0
+         QdnHCBxDmTahHmFmKoKVWTJ1gXhhxP3seefyv7KT89D8QRvbgyl5Sww81dGmTb3gLVJL
+         vCJj6+KWeGUm7fglUn8NNAtry1kMuT/3NpsLEN5sbk3o8z813PSBl8wEKM96qNnv9OWO
+         QOuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWFU4ZUz4g+IFPwo43/hztaahee9N9nRc0WOJECjbWKe5S7f6Nf9TYzmgLlX2EuqxR0z0tSzlkqrtNr1PitUcDOs3QLtkiM1s5rieCN
+X-Gm-Message-State: AOJu0Yx3NECYjl5cR348lGjKAvCZWuw/k/flNtEiOKf88pl0b/KvpKW1
+	Zf1MsOMSMmHfK4E9axRQU30+arIH9js6OyjpE1lIqf6+DZO2O4zXwwty+vCEPKwcB0eaz6zqJrI
+	5va2prItT//9QCJk1tBQPnJ+hYZgucECzwZ7SZEZMjjaMko4pEgXrE9U=
+X-Google-Smtp-Source: AGHT+IEPpwXwqyDVJ42zLoK/cjm20dXbCCvicn3NPIp4P+XCJKhXUwfB1wnVweKc8Fu3PY/N7phv1M51YXhqAlE3pG47624DFBtp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <0000000000007545d00615188a03@google.com> <0000000000001b9d500617c8b23c@google.com>
- <ZjjlLcjHuQoV-7gh@google.com> <gbsy4rpt3fbcspuepstk6tzzwd3mrosuba7ufm7phopwor4pyb@ucxrvdw6nly3>
-In-Reply-To: <gbsy4rpt3fbcspuepstk6tzzwd3mrosuba7ufm7phopwor4pyb@ucxrvdw6nly3>
-From: Yosry Ahmed <yosryahmed@google.com>
-Date: Mon, 6 May 2024 09:12:53 -0700
-Message-ID: <CAJD7tkYVa5WQ=rSWYbm6EwAVJFjQE4iGsue8aOA80j6OHO6iQQ@mail.gmail.com>
-Subject: Re: [syzbot] [mm?] [cgroups?] WARNING in __mod_memcg_lruvec_state
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: syzbot <syzbot+9319a4268a640e26b72b@syzkaller.appspotmail.com>, 
-	akpm@linux-foundation.org, cgroups@vger.kernel.org, hannes@cmpxchg.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, mhocko@kernel.org, 
-	muchun.song@linux.dev, roman.gushchin@linux.dev, 
-	syzkaller-bugs@googlegroups.com, yuzhao@google.com
+X-Received: by 2002:a05:6e02:20c3:b0:36c:1004:9aa1 with SMTP id
+ 3-20020a056e0220c300b0036c10049aa1mr509536ilq.3.1715012043817; Mon, 06 May
+ 2024 09:14:03 -0700 (PDT)
+Date: Mon, 06 May 2024 09:14:03 -0700
+In-Reply-To: <af1a4b81-22f3-4955-8c44-95bede13a7bb@redhat.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a85db50617cb5b3e@google.com>
+Subject: Re: [syzbot] [mm?] [io-uring?] WARNING in hpage_collapse_scan_pmd (2)
+From: syzbot <syzbot+5ea2845f44caa77f5543@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, axboe@kernel.dk, david@redhat.com, 
+	io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	peterx@redhat.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 6, 2024 at 8:59=E2=80=AFAM Shakeel Butt <shakeel.butt@linux.dev=
-> wrote:
->
-> On Mon, May 06, 2024 at 02:11:57PM +0000, Yosry Ahmed wrote:
-> > On Mon, May 06, 2024 at 06:03:29AM -0700, syzbot wrote:
-> > > syzbot has found a reproducer for the following issue on:
-> > >
-> > > HEAD commit:    2b84edefcad1 Add linux-next specific files for 202405=
-06
-> > > git tree:       linux-next
-> > > console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D1164931f1=
-80000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=3Db499929e4=
-aaba1af
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=3D9319a4268a6=
-40e26b72b
-> > > compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for=
- Debian) 2.40
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D123d5d1=
-f180000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D165274509=
-80000
-> > >
-> > > Downloadable assets:
-> > > disk image: https://storage.googleapis.com/syzbot-assets/6a22cf95ee14=
-/disk-2b84edef.raw.xz
-> > > vmlinux: https://storage.googleapis.com/syzbot-assets/f5c45b515282/vm=
-linux-2b84edef.xz
-> > > kernel image: https://storage.googleapis.com/syzbot-assets/9bf98258a6=
-62/bzImage-2b84edef.xz
-> > >
-> > > IMPORTANT: if you fix the issue, please add the following tag to the =
-commit:
-> > > Reported-by: syzbot+9319a4268a640e26b72b@syzkaller.appspotmail.com
-> > >
-> > > ------------[ cut here ]------------
-> > > __mod_memcg_lruvec_state: missing stat item 25
-> > > WARNING: CPU: 0 PID: 5091 at mm/memcontrol.c:999 __mod_memcg_lruvec_s=
-tate+0x18c/0x430 mm/memcontrol.c:999
-> >
-> > This doesn't seem to be the same issue as the original one syzbot
-> > reported. It's the same function but a different warning. I am not sure
-> > how to tell syzbot that.
-> >
-> > Anyway, this warning is the one newly introduced by Shakeel. It is
-> > firing because NR_SHMEM_PMDMAPPED and/or NR_FILE_PMDMAPPED are being
-> > updated using __lruvec_stat_mod_folio(), which also updates the memcg
-> > stats. However, these stats are not exported per-memcg.
-> >
-> > I think the following should fix it.
-> >
->
-> Hey Yosry, can you please post your patch with the signoff? The patch
-> looks good and you can put my ack on it.
+Hello,
 
-Will do. I noticed we also update these stats from
-__folio_remove_rmap(). I will send a patch fixing these as well, so
-I'll not include your Ack for that as it will be different.
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+
+Reported-and-tested-by: syzbot+5ea2845f44caa77f5543@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         5f8be0ef mailmap: add entry for John Garry
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-hotfixes-unstable
+console output: https://syzkaller.appspot.com/x/log.txt?x=1511f1c0980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=85dbe39cf8e4f599
+dashboard link: https://syzkaller.appspot.com/bug?extid=5ea2845f44caa77f5543
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
