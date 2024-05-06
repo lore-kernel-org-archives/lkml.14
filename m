@@ -1,231 +1,106 @@
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54F8E83A0A;
-	Mon,  6 May 2024 14:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.237.72.81
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D617FBCF
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 14:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715004561; cv=none; b=slM9ujUC2yyOsqxOu8dqkNb56egch/RzyfIRvy6dHNw9fU+ScVaW6MeDz4UX7DeWtpeHAwWDHRzT8LqGtoPafLYEOjCte8iT0GvOZTIeqmhEdz8fqhbKRpSZBabbhjRtBcKk18zaX0t9/No8OfJebptU/N6gHhUjbIQrIvUGSp0=
+	t=1715004701; cv=none; b=DwU5fp8O62MlCnHblC5ol2d5+GupNVESpQhw1kE5CiV0vzmwV5ZJ9O+4lkiiSxEucg6eX/3s/mEgPqyfzabZ64hUMg+BKONzw0qzvZMGUqjwfqXJSdGhBlFcaAriUPgal5pwWDishrDHRl9Jwakvk99YOKm8Bro1DbQNi45CdJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715004561; c=relaxed/simple;
-	bh=Ybv9SpHx2OiiP79Oeh18r5QaGZGa6GjkoLYnEg8H4tU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 In-Reply-To:References; b=Suk8wtwDnJyBFXyMHuFXAf3ImrvWnljzF16GQm0N9e10bsa73X5ttYUerITRjYLbRd1hIG9S8HRQo775RAyT0SvqE4CpJafpmC9BVPS6/UfBCZu4Ao1UynUh768QLHGAx4oRMZT5VS0CNrL7wR/Xx+c4mSpOFAGFNIkiq4m6jag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=52.237.72.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from ubuntu.localdomain (unknown [221.192.180.207])
-	by mail-app2 (Coremail) with SMTP id by_KCgCXtaRj5DhmI_s4AA--.15255S3;
-	Mon, 06 May 2024 22:08:42 +0800 (CST)
-From: Duoming Zhou <duoming@zju.edu.cn>
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-hams@vger.kernel.org,
-	pabeni@redhat.com,
-	kuba@kernel.org,
+	s=arc-20240116; t=1715004701; c=relaxed/simple;
+	bh=297vEo8nyC1s/ltFlb73Hmw1Xp0B0/3D3O9My7miovA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HtHlL+qIJUDIKvc4TjwGkMgtNz8E0bazBdllfmmt3ogTdLic2fBHT/mNnf2twCkkD+urYW+OS/TptN9Uvupq0yLVDLHawqS2utBBDtiS3y71IwjiZsnjy2UmzpxsJN38D7mwERaTNH67nHj7VNmb4EyNNcM6pi5wHyDM9YsXjJk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fk7zn5N3; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fk7zn5N3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715004699;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=qK13xhGx+xh+kDbLKKe1iKuSXlAdZD7q6eOoabHwsw4=;
+	b=fk7zn5N3SU59PlCvpXom1WypG+mTxYJxZKjrl4fdQu/F3bpUv3t9k2dnJNWVXnk3hRfFdL
+	ZzTRhAv+SwyX68yuGR1wjWo3ktRhLBOE3JVzjs0BMbMws4cdewOMEO+oRiXUTfUr8080nK
+	2t6Pebi4vd6p80dt1siYoB9DZESCJZc=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-78-EjTpGxs1PNiQpHQhvu4Kfg-1; Mon, 06 May 2024 10:11:37 -0400
+X-MC-Unique: EjTpGxs1PNiQpHQhvu4Kfg-1
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1ec3e871624so22994645ad.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 07:11:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715004696; x=1715609496;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qK13xhGx+xh+kDbLKKe1iKuSXlAdZD7q6eOoabHwsw4=;
+        b=BuCWCNMYKECxZmDfaIE68ADueVu1iUsPkzEABWiz53d6fkWV9D5ID4Hs1nQndK8TzI
+         gC4CsvfNaIAgKWp8dWy+1HkTMvsf9awL2Kb7TRFirdO6y5rIiTunEgeutvuZQAKANp70
+         1GB+Fr9Kdh/TzwkVHObbw0BihBdahtwl7IcnfCsoyERpn9x29lss0JiRxNSvJhvlkLL6
+         lKh0w86V8j3+4urBrclYVoFPsyhAU4JEiZ0772xMfIjNIpLqzeDzDOjNfJ9q+nkIb9JA
+         nnie1RUSmZtAAakJumYnHFuPJAFkjjaFaSctLKBlxHIA0EhZBlFtKhV2n2oAT1lVIGaY
+         1DlA==
+X-Forwarded-Encrypted: i=1; AJvYcCWX7FTPP8hApgvnZXJ05RiC6cXyjVDOGseTBOpBTNo3wklLm/VUhshXpP83+Ev4sChaa1TcjvmNqJGX9ObfddepbJ0STz5SFFEMhPWR
+X-Gm-Message-State: AOJu0YyeMLhJavLg21BUMNPPnsF/VMzDuuLdWZEWrgqpBztDJJZeHUj6
+	MCVlIHxeAbF1Zp/p7Q8dvjtWOqOReyIZQ7OPCiLWT+hhsGbj8ad5OyAOZfynCDmx+23+mAhWCam
+	OrAIwz46OMBXhdw3+HAsg3tSxF9kHH1FfZblTrsHXeBD0fxHPG35gKLm6Xewxwg==
+X-Received: by 2002:a17:903:40c2:b0:1eb:3df4:c31d with SMTP id t2-20020a17090340c200b001eb3df4c31dmr11946811pld.42.1715004696166;
+        Mon, 06 May 2024 07:11:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH57Xka6hZHeOhrbJPj5cOqPBmd/uf5rYBBniQCsXw95IuMnWV2Gj4zSFUlXjb8VQo5dpsWjw==
+X-Received: by 2002:a17:903:40c2:b0:1eb:3df4:c31d with SMTP id t2-20020a17090340c200b001eb3df4c31dmr11946755pld.42.1715004695399;
+        Mon, 06 May 2024 07:11:35 -0700 (PDT)
+Received: from kernel-devel.local ([240d:1a:c0d:9f00:6883:65ff:fe1c:cf69])
+        by smtp.gmail.com with ESMTPSA id p2-20020a1709027ec200b001ed9fed6f61sm4398721plb.268.2024.05.06.07.11.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 May 2024 07:11:35 -0700 (PDT)
+From: Shigeru Yoshida <syoshida@redhat.com>
+To: davem@davemloft.net,
+	dsahern@kernel.org,
 	edumazet@google.com,
-	davem@davemloft.net,
-	jreuter@yaina.de,
-	horms@kernel.org,
-	Markus.Elfring@web.de,
-	dan.carpenter@linaro.org,
-	lars@oddbit.com,
-	Duoming Zhou <duoming@zju.edu.cn>
-Subject: [PATCH net v3 1/2] ax25: Fix reference count leak issues of ax25_dev and net_device
-Date: Mon,  6 May 2024 22:08:34 +0800
-Message-Id: <8338a74098bc1aafbca14d4612a10d6930fcef1b.1715002910.git.duoming@zju.edu.cn>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1715002910.git.duoming@zju.edu.cn>
-References: <cover.1715002910.git.duoming@zju.edu.cn>
-In-Reply-To: <cover.1715002910.git.duoming@zju.edu.cn>
-References: <cover.1715002910.git.duoming@zju.edu.cn>
-X-CM-TRANSID:by_KCgCXtaRj5DhmI_s4AA--.15255S3
-X-Coremail-Antispam: 1UD129KBjvJXoW3JrWDXr45trW5Cr48KF48WFg_yoW7Cr1UpF
-	Wa9FyrArZ7Jr1UAr4DWF1xGr1jyryjkws5Ary5uF1Ikw15X3sxJr18tr1DJryUGrW3ZF18
-	J347Wrs8Ar48uw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUmK14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_Xryl42xK82IYc2Ij64vIr41l4I8I
-	3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-	WUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-	wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcI
-	k0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j
-	6r4UJbIYCTnIWIevJa73UjIFyTuYvjfU1MKZDUUUU
-X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwINAWY3qokcfgAbsG
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Shigeru Yoshida <syoshida@redhat.com>
+Subject: [PATCH net] ipv6: Fix potential uninit-value access in __ip6_make_skb()
+Date: Mon,  6 May 2024 23:11:29 +0900
+Message-ID: <20240506141129.2434319-1-syoshida@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-The ax25_addr_ax25dev() exists a reference count leak issue of the
-object "ax25_dev" and the ax25_dev_device_down() exists reference
-count leak issues of the objects "ax25_dev" and "net_device".
+As it was done in commit fc1092f51567 ("ipv4: Fix uninit-value access in
+__ip_make_skb()") for IPv4, check FLOWI_FLAG_KNOWN_NH on fl6->flowi6_flags
+instead of testing HDRINCL on the socket to avoid a race condition which
+causes uninit-value access.
 
-Memory leak issue in ax25_addr_ax25dev():
-
-The reference count of the object "ax25_dev" can be increased multiple
-times in ax25_addr_ax25dev(). This will cause a memory leak so far.
-
-Memory leak issues in ax25_dev_device_down():
-
-The reference count of ax25_dev is set to 1 in ax25_dev_device_up() and
-then increase the reference count when ax25_dev is added to ax25_dev_list.
-As a result, the reference count of ax25_dev is 2. But when the device is
-shutting down. The ax25_dev_device_down() drops the reference count once
-or twice depending on if we goto unlock_put or not, which will cause
-memory leak.
-
-There is also a reference count leak issue of the object "net_device",
-when the ax25 device is shutting down. The ax25_dev_device_down() drops
-the reference count of net_device one or zero times depending on if we
-goto unlock_put or not, which will cause memory leak.
-
-In order to solve the above issues, use kernel circular doubly linked
-list to implementate ax25_dev_list. As for ax25_addr_ax25dev() issue,
-it is impossible for one pointer to be on a list twice. So add a break
-in ax25_addr_ax25dev(). As for ax25_dev_device_down() issues, increase
-the reference count of ax25_dev once in ax25_dev_device_up() and decrease
-the reference count of ax25_dev and net_device after ax25_dev is removed
-from the ax25_dev_list.
-
-Fixes: d01ffb9eee4a ("ax25: add refcount in ax25_dev to avoid UAF bugs")
-Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
+Fixes: ea30388baebc ("ipv6: Fix an uninit variable access bug in __ip6_make_skb()")
+Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
 ---
-Changes in v3:
-  - Use kernel list to implementate ax25_dev_list.
-  - Solve reference count leak issues in ax25_dev_device_down().
+ net/ipv6/ip6_output.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- include/net/ax25.h  |  4 ++--
- net/ax25/ax25_dev.c | 36 ++++++++++++------------------------
- 2 files changed, 14 insertions(+), 26 deletions(-)
-
-diff --git a/include/net/ax25.h b/include/net/ax25.h
-index 0d939e5aee4..92c6aa4f9a6 100644
---- a/include/net/ax25.h
-+++ b/include/net/ax25.h
-@@ -216,7 +216,7 @@ typedef struct {
- struct ctl_table;
+diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+index b9dd3a66e423..fa2937732665 100644
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -1933,7 +1933,7 @@ struct sk_buff *__ip6_make_skb(struct sock *sk,
+ 		u8 icmp6_type;
  
- typedef struct ax25_dev {
--	struct ax25_dev		*next;
-+	struct list_head	list;
- 
- 	struct net_device	*dev;
- 	netdevice_tracker	dev_tracker;
-@@ -330,7 +330,7 @@ int ax25_addr_size(const ax25_digi *);
- void ax25_digi_invert(const ax25_digi *, ax25_digi *);
- 
- /* ax25_dev.c */
--extern ax25_dev *ax25_dev_list;
-+static struct list_head ax25_dev_list;
- extern spinlock_t ax25_dev_lock;
- 
- #if IS_ENABLED(CONFIG_AX25)
-diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
-index 282ec581c07..fbaaba0351e 100644
---- a/net/ax25/ax25_dev.c
-+++ b/net/ax25/ax25_dev.c
-@@ -22,11 +22,11 @@
- #include <net/sock.h>
- #include <linux/uaccess.h>
- #include <linux/fcntl.h>
-+#include <linux/list.h>
- #include <linux/mm.h>
- #include <linux/interrupt.h>
- #include <linux/init.h>
- 
--ax25_dev *ax25_dev_list;
- DEFINE_SPINLOCK(ax25_dev_lock);
- 
- ax25_dev *ax25_addr_ax25dev(ax25_address *addr)
-@@ -34,11 +34,13 @@ ax25_dev *ax25_addr_ax25dev(ax25_address *addr)
- 	ax25_dev *ax25_dev, *res = NULL;
- 
- 	spin_lock_bh(&ax25_dev_lock);
--	for (ax25_dev = ax25_dev_list; ax25_dev != NULL; ax25_dev = ax25_dev->next)
-+	list_for_each_entry(ax25_dev, &ax25_dev_list, list) {
- 		if (ax25cmp(addr, (const ax25_address *)ax25_dev->dev->dev_addr) == 0) {
- 			res = ax25_dev;
- 			ax25_dev_hold(ax25_dev);
-+			break;
- 		}
-+	}
- 	spin_unlock_bh(&ax25_dev_lock);
- 
- 	return res;
-@@ -52,6 +54,7 @@ void ax25_dev_device_up(struct net_device *dev)
- {
- 	ax25_dev *ax25_dev;
- 
-+	INIT_LIST_HEAD(&ax25_dev_list);
- 	ax25_dev = kzalloc(sizeof(*ax25_dev), GFP_KERNEL);
- 	if (!ax25_dev) {
- 		printk(KERN_ERR "AX.25: ax25_dev_device_up - out of memory\n");
-@@ -59,7 +62,6 @@ void ax25_dev_device_up(struct net_device *dev)
- 	}
- 
- 	refcount_set(&ax25_dev->refcount, 1);
--	dev->ax25_ptr     = ax25_dev;
- 	ax25_dev->dev     = dev;
- 	netdev_hold(dev, &ax25_dev->dev_tracker, GFP_KERNEL);
- 	ax25_dev->forward = NULL;
-@@ -85,10 +87,9 @@ void ax25_dev_device_up(struct net_device *dev)
- #endif
- 
- 	spin_lock_bh(&ax25_dev_lock);
--	ax25_dev->next = ax25_dev_list;
--	ax25_dev_list  = ax25_dev;
-+	list_add(&ax25_dev->list, &ax25_dev_list);
- 	spin_unlock_bh(&ax25_dev_lock);
--	ax25_dev_hold(ax25_dev);
-+	dev->ax25_ptr     = ax25_dev;
- 
- 	ax25_register_dev_sysctl(ax25_dev);
- }
-@@ -111,32 +112,19 @@ void ax25_dev_device_down(struct net_device *dev)
- 	/*
- 	 *	Remove any packet forwarding that points to this device.
- 	 */
--	for (s = ax25_dev_list; s != NULL; s = s->next)
-+	list_for_each_entry(s, &ax25_dev_list, list) {
- 		if (s->forward == dev)
- 			s->forward = NULL;
--
--	if ((s = ax25_dev_list) == ax25_dev) {
--		ax25_dev_list = s->next;
--		goto unlock_put;
- 	}
- 
--	while (s != NULL && s->next != NULL) {
--		if (s->next == ax25_dev) {
--			s->next = ax25_dev->next;
--			goto unlock_put;
-+	list_for_each_entry(s, &ax25_dev_list, list) {
-+		if (s == ax25_dev) {
-+			list_del(&s->list);
-+			break;
- 		}
--
--		s = s->next;
- 	}
--	spin_unlock_bh(&ax25_dev_lock);
- 	dev->ax25_ptr = NULL;
--	ax25_dev_put(ax25_dev);
--	return;
--
--unlock_put:
- 	spin_unlock_bh(&ax25_dev_lock);
--	ax25_dev_put(ax25_dev);
--	dev->ax25_ptr = NULL;
- 	netdev_put(dev, &ax25_dev->dev_tracker);
- 	ax25_dev_put(ax25_dev);
- }
+ 		if (sk->sk_socket->type == SOCK_RAW &&
+-		   !inet_test_bit(HDRINCL, sk))
++		   !(fl6->flowi6_flags & FLOWI_FLAG_KNOWN_NH))
+ 			icmp6_type = fl6->fl6_icmp_type;
+ 		else
+ 			icmp6_type = icmp6_hdr(skb)->icmp6_type;
 -- 
-2.17.1
+2.44.0
 
