@@ -1,35 +1,35 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41BC6BB29
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 13:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D5E6D1BB
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 13:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715000596; cv=none; b=Rm7RzKQSe15fmlOCtsQs3zzoQWA3f/satflnGMNFKhSNJNpW0+dvvWn67j63qQDUf3AOYC+7U/F4bURZXgI4e/+22yGDL9m+yiCpXXsN3i+44Zd3kHSuk2FsWYcbinxgU8nwB2iyr314AOLORho88S5vWzCYP7A7fFkvDLXURYY=
+	t=1715000597; cv=none; b=Ev3Fsfd42ht7QkECYBFwjfXst/h6KXag0cS8gEXErD64gDMR5Mtjz3galSpCBG+R22743NanLo4IMfE+yS3P80nvNYgGt/2TezT/D8DpTorSzBXfviXQUa5tTrKkxMN7k/ZXQVfRWSDC5Ll/vLb2O+FiECO9zhrzbXqCQ2Vu3a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715000596; c=relaxed/simple;
-	bh=y9pKMTSpROuW5uGr7WjodDH4J07+axt2U3SLIM1IjUQ=;
+	s=arc-20240116; t=1715000597; c=relaxed/simple;
+	bh=SWCL/GgvDvSAFp81ExaUX0cbPTexrcab9TT6aTWubmw=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EcntnTlequTjAtCKMqaqNker7B8++5DOSNKCEGpMQxDZx66Dr9QoVRtEjjVpXoakifaC1X+kJEttpI23Ej210uNpEcoGA1JQUy79/NTS8+pgSYDsOT1/uGyy8C+2owOeD0C3KdOD9oIV32innS+DL6iKkOpvGUVmXrpXO6HKMCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 MIME-Version:Content-Type; b=X4Oc0TugVfx9rYBTeuCX+q/XVfE39e7UnzzGvar1sYY8aokHI4fyNLz3ONPFiFVgACne7DHfNfqT6ZOBWmNiYxrRfUc4l1v6kXsm0OZBc+NqXgT9M5eL8lBE26ir3gqvs1A+ieNm5gX5MUgI/V+aycTgNmU7dHOD7NzXIbCv1Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VY1lC0J7PzcdVt
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:01:59 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4VY1lH5v0mz1xmgr
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:02:03 +0800 (CST)
 Received: from kwepemi500008.china.huawei.com (unknown [7.221.188.139])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3E41D140134
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:03:09 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id C10761A016C
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 21:03:10 +0800 (CST)
 Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
  (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 6 May
- 2024 21:03:08 +0800
+ 2024 21:03:10 +0800
 From: Jinjie Ruan <ruanjinjie@huawei.com>
 To: <tglx@linutronix.de>, <linux-kernel@vger.kernel.org>
 CC: <ruanjinjie@huawei.com>
-Subject: [PATCH 1/5] genirq/irqdomain: Clean up for irq_create_fwspec_mapping()
-Date: Mon, 6 May 2024 21:02:19 +0800
-Message-ID: <20240506130223.317265-2-ruanjinjie@huawei.com>
+Subject: [PATCH 3/5] genirq/irqdomain: Clean code for irq_create_direct_mapping()
+Date: Mon, 6 May 2024 21:02:21 +0800
+Message-ID: <20240506130223.317265-4-ruanjinjie@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240506130223.317265-1-ruanjinjie@huawei.com>
 References: <20240506130223.317265-1-ruanjinjie@huawei.com>
@@ -44,95 +44,65 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  kwepemi500008.china.huawei.com (7.221.188.139)
 
-In irq_create_fwspec_mapping(), if the hwirq in domain extracted from
-fwspec has virq mapping, check the trigger type if they are consistent,
-which is a relatively independent function that can be extracted into a
-helper function irq_check_trigger_type(), which will make
-irq_create_fwspec_mapping() function more readable.
+Add "out" goto label for irq_domain_update_bus_token(), and
+"out_free_desc" goto label for irq_create_direct_mapping(), which can
+simplify the code.
 
 Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- kernel/irq/irqdomain.c | 60 ++++++++++++++++++++++++------------------
- 1 file changed, 34 insertions(+), 26 deletions(-)
+ kernel/irq/irqdomain.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index aadc8891cc16..baa53a9e0cd1 100644
+index 42bdbd04bc3c..6d8a368c677b 100644
 --- a/kernel/irq/irqdomain.c
 +++ b/kernel/irq/irqdomain.c
-@@ -789,6 +789,38 @@ void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args,
+@@ -317,10 +317,8 @@ void irq_domain_update_bus_token(struct irq_domain *domain,
+ 	domain->bus_token = bus_token;
+ 
+ 	name = kasprintf(GFP_KERNEL, "%s-%d", domain->name, bus_token);
+-	if (!name) {
+-		mutex_unlock(&irq_domain_mutex);
+-		return;
+-	}
++	if (!name)
++		goto out;
+ 
+ 	debugfs_remove_domain_dir(domain);
+ 
+@@ -332,6 +330,7 @@ void irq_domain_update_bus_token(struct irq_domain *domain,
+ 	domain->name = name;
+ 	debugfs_add_domain_dir(domain);
+ 
++out:
+ 	mutex_unlock(&irq_domain_mutex);
  }
- EXPORT_SYMBOL_GPL(of_phandle_args_to_fwspec);
- 
-+static inline int irq_check_trigger_type(struct irq_fwspec *fwspec,
-+					 int virq, irq_hw_number_t hwirq,
-+					 unsigned int type)
-+{
-+	struct irq_data *irq_data;
-+
-+	/*
-+	 * If the trigger type is not specified or matches the
-+	 * current trigger type then we are done so return the
-+	 * interrupt number.
-+	 */
-+	if (type == IRQ_TYPE_NONE || type == irq_get_trigger_type(virq))
-+		return 0;
-+
-+	/*
-+	 * If the trigger type has not been set yet, then set
-+	 * it now and return the interrupt number.
-+	 */
-+	if (irq_get_trigger_type(virq) == IRQ_TYPE_NONE) {
-+		irq_data = irq_get_irq_data(virq);
-+		if (!irq_data)
-+			return -EINVAL;
-+
-+		irqd_set_trigger_type(irq_data, type);
-+		return 0;
-+	}
-+
-+	pr_warn("type mismatch, failed to map hwirq-%lu for %s!\n",
-+		hwirq, of_node_full_name(to_of_node(fwspec->fwnode)));
-+	return -EINVAL;
-+}
-+
- unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
- {
- 	struct irq_domain *domain;
-@@ -829,32 +861,8 @@ unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec)
- 	 */
- 	virq = irq_find_mapping(domain, hwirq);
- 	if (virq) {
--		/*
--		 * If the trigger type is not specified or matches the
--		 * current trigger type then we are done so return the
--		 * interrupt number.
--		 */
--		if (type == IRQ_TYPE_NONE || type == irq_get_trigger_type(virq))
--			goto out;
--
--		/*
--		 * If the trigger type has not been set yet, then set
--		 * it now and return the interrupt number.
--		 */
--		if (irq_get_trigger_type(virq) == IRQ_TYPE_NONE) {
--			irq_data = irq_get_irq_data(virq);
--			if (!irq_data) {
--				virq = 0;
--				goto out;
--			}
--
--			irqd_set_trigger_type(irq_data, type);
--			goto out;
--		}
--
--		pr_warn("type mismatch, failed to map hwirq-%lu for %s!\n",
--			hwirq, of_node_full_name(to_of_node(fwspec->fwnode)));
--		virq = 0;
-+		if (irq_check_trigger_type(fwspec, virq, hwirq, type))
-+			virq = 0;
- 		goto out;
+ EXPORT_SYMBOL_GPL(irq_domain_update_bus_token);
+@@ -672,17 +671,18 @@ unsigned int irq_create_direct_mapping(struct irq_domain *domain)
+ 	if (virq >= domain->hwirq_max) {
+ 		pr_err("ERROR: no free irqs available below %lu maximum\n",
+ 			domain->hwirq_max);
+-		irq_free_desc(virq);
+-		return 0;
++		goto out_free_desc;
  	}
+ 	pr_debug("create_direct obtained virq %d\n", virq);
  
+-	if (irq_domain_associate(domain, virq, virq)) {
+-		irq_free_desc(virq);
+-		return 0;
+-	}
++	if (irq_domain_associate(domain, virq, virq))
++		goto out_free_desc;
+ 
+ 	return virq;
++
++out_free_desc:
++	irq_free_desc(virq);
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(irq_create_direct_mapping);
+ #endif
 -- 
 2.34.1
 
