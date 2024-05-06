@@ -1,146 +1,125 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB25811F7;
-	Mon,  6 May 2024 14:02:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 951EF811E6
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 14:03:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715004147; cv=none; b=JeOSdDIM6flGsGZNLiL8s3ADaeAH+3gbSFeqlLqzdo0JTpsrTGVCKOIcEaPgZFt1crlJgy6TtLAgEMLX5D72iUAY+3umTP+nqIM1xtfk6XnPIlC4IUEqhx6p07HI3iqk1U54zkbP7qFrZ+nj3dIu5q+wh9xU/KZMhlKgG+ewuew=
+	t=1715004185; cv=none; b=bYP124azd2H+o049UA2Tp/K33xD9ladHQLrqja6wMZrPDuiKE+uWVeRnFvCtZh8DXi1S7tOmS6lEkvEm2oTEFrzFYZpcrW2/g3ewucpGKNtLcn6QmcHSu5xF5ZSTzgP9eU+cju+L9qgwZpzkeufaeXM+ms8xXkuh0aPEx2mKku8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715004147; c=relaxed/simple;
-	bh=a/rC19e2I9iHG3TMQmCrv2WuR6H592ekcahsLjx1u+I=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=PPY8rWEN+ZwCu3LKT4Ajbsf3yAgJmBDMXqd0mqtit3fZMTSj5p8e2hDGt/iC9VX00vUcZ8EPHbPJE8LEJdulwLSPoXAc9tw2YLfBSfhipVfupz9iKYw0TQot5dbvvNCZbiCd3Iq9ZHH/KRkQQbEvMy1yF86PXK4/DUObVKtZSCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VY34g13G2z4f3lfy;
-	Mon,  6 May 2024 22:02:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id E08041A0179;
-	Mon,  6 May 2024 22:02:20 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP2 (Coremail) with SMTP id Syh0CgDnCg7q4jhmTvnUMA--.48428S3;
-	Mon, 06 May 2024 22:02:20 +0800 (CST)
-Subject: Re: [RFC PATCH v4 33/34] ext4: don't mark IOMAP_F_DIRTY for buffer
- write
-To: Dave Chinner <david@fromorbit.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
- adilger.kernel@dilger.ca, jack@suse.cz, ritesh.list@gmail.com,
- hch@infradead.org, djwong@kernel.org, willy@infradead.org,
- zokeefe@google.com, yi.zhang@huawei.com, chengzhihao1@huawei.com,
- yukuai3@huawei.com, wangkefeng.wang@huawei.com
-References: <20240410142948.2817554-1-yi.zhang@huaweicloud.com>
- <20240410150313.2820364-5-yi.zhang@huaweicloud.com>
- <ZjILCPNZRHeazSqV@dread.disaster.area>
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-Message-ID: <349d0d44-2ffc-6177-cf00-db7a3f48b60d@huaweicloud.com>
-Date: Mon, 6 May 2024 22:02:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+	s=arc-20240116; t=1715004185; c=relaxed/simple;
+	bh=yTGxccudV9Wg1P03fm8HrS/J338PxC/EctnXLaE/gj8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=grzmHGazphPZp2nQ6hx25vUxoG1yg8gATgeQWIjKMOVS0jbSKqIqcVqLarwnc6952z0pMWtDL9+C9pDwyYoXOUjw4NzZFC31t8tBYvIJWftqUwMOZZOu67JP+8/mYkrCrNCUu1nAeFRgKCHGuXfs6PK6EeL+LVNbJpiZ6HYDcik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=hySbyhml; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="hySbyhml"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0B66BE0009;
+	Mon,  6 May 2024 14:02:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715004175;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zFrEFhO9TjFGR+Ywqd04S0jsdBATnoKGEa06T3fRaqA=;
+	b=hySbyhml1EE7UT+stCg4Gbc8H/SHXW4yY9NO/FgdqCHsj3MbMkDTaeonzD2SVkNTBzXieV
+	4qoFaa3C9sdI69aUuDhAZ/3+Tkyjb0DuK5JhCsejaLQRM0JJHx6ZymwflmsGACbvymhF92
+	5npwMf8NKX/T3j2EJbGNfz8mUIaM2DRc6OZtQGtmWckkx4R3zLetjHFDCplTL4/Xl8h8oO
+	XG5kUxvtfwsL4C/tEg21VFUetQsPuwG0oOI/2aMsJYhCJM4t4Q6d9Cx2tAiL38rxMjmnvx
+	wAVJqn+EhnPJbTccJwuL+Ri/o2vEWNbdvPlHb/Haxiuyhe6NTwkv987/M7+ozQ==
+Date: Mon, 6 May 2024 16:02:54 +0200
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
+ <vigneshr@ti.com>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] mtd: nand: mxc_nand: implement exec_op
+Message-ID: <20240506160254.19089e94@xps-13>
+In-Reply-To: <20240417-mtd-nand-mxc-nand-exec-op-v1-2-d12564fe54e9@pengutronix.de>
+References: <20240417-mtd-nand-mxc-nand-exec-op-v1-0-d12564fe54e9@pengutronix.de>
+	<20240417-mtd-nand-mxc-nand-exec-op-v1-2-d12564fe54e9@pengutronix.de>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <ZjILCPNZRHeazSqV@dread.disaster.area>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgDnCg7q4jhmTvnUMA--.48428S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxur1DAF1DKw4rZr1kAF47Jwb_yoW5ArWDpr
-	Z7Ka1rX3WkXry7ur4IqF47ZrZ7tayUKr4DGrW8tw12y398Gw1xtF1FgFyrAF98Gr1fWw42
-	q3Wjqr97Ww17AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvab4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7I2V7IY0VAS
-	07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_
-	WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE
-	14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyT
-	uYvjxUFDGOUUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-On 2024/5/1 17:27, Dave Chinner wrote:
-> On Wed, Apr 10, 2024 at 11:03:12PM +0800, Zhang Yi wrote:
->> From: Zhang Yi <yi.zhang@huawei.com>
->>
->> The data sync dirty check in ext4_inode_datasync_dirty() is expansive
->> since jbd2_transaction_committed() holds journal->j_state lock when
->> journal is enabled, it costs a lot in high-concurrency iomap buffered
->> read/write paths, but we never check IOMAP_F_DIRTY in these cases, so
->> let's check it only in swap file, dax and direct IO cases. Tested by
->> Unixbench on 100GB ramdisk:
->>
->> ./Run -c 128 -i 10 fstime fsbuffer fsdisk
->>
->>   == without this patch ==
->>   128 CPUs in system; running 128 parallel copies of tests
->>
->>   File Copy 1024 bufsize 2000 maxblocks       6332521.0 KBps
->>   File Copy 256 bufsize 500 maxblocks         1639726.0 KBps
->>   File Copy 4096 bufsize 8000 maxblocks      24018572.0 KBps
->>
->>   == with this patch ==
->>   128 CPUs in system; running 128 parallel copies of tests
->>
->>   File Copy 1024 bufsize 2000 maxblocks      49229257.0 KBps
->>   File Copy 256 bufsize 500 maxblocks        24057510.0 KBps
->>   File Copy 4096 bufsize 8000 maxblocks      75704437.0 KBps
->>
->> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
->> ---
->>  fs/ext4/inode.c | 10 +++++++---
->>  1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
->> index 1cb219d347af..269503749ef5 100644
->> --- a/fs/ext4/inode.c
->> +++ b/fs/ext4/inode.c
->> @@ -3281,9 +3281,13 @@ static void ext4_set_iomap(struct inode *inode, struct iomap *iomap,
->>  	 * there is no other metadata changes being made or are pending.
->>  	 */
->>  	iomap->flags = 0;
->> -	if (ext4_inode_datasync_dirty(inode) ||
->> -	    offset + length > i_size_read(inode))
->> -		iomap->flags |= IOMAP_F_DIRTY;
->> +	if ((flags & (IOMAP_DAX | IOMAP_REPORT)) ||
->> +	    ((flags & (IOMAP_WRITE | IOMAP_DIRECT)) ==
->> +	     (IOMAP_WRITE | IOMAP_DIRECT))) {
->> +		if (offset + length > i_size_read(inode) ||
->> +		    ext4_inode_datasync_dirty(inode))
->> +			iomap->flags |= IOMAP_F_DIRTY;
->> +	}
-> 
-> NACK. This just adds a nasty landmine that anyone working on the
-> iomap infrastructure can step on. i.e. any time we add a new check
-> for IOMAP_F_DIRTY in the generic infrastructure, ext4 is going to
-> break because it won't set the IOMAP_F_DIRTY flag correctly.
-> 
-> If checking an inode is dirty is expensive on ext4, then make it
-> less expensive and everyone will benefit.
-> 
-> /me goes and looks at jbd2_transaction_committed()
-> 
-> Oh, it it's just a sequence number comparison, and it needs a lock
-> because it has to dereference the running/committed transactions
-> structures to get the current sequence numbers. Why not just store
-> the commiting/running transaction tids in the journal_t, and then
-> you can sample them without needing any locking and the whole
-> ext4_inode_datasync_dirty() scalability problem goes away...
-> 
+Hi Sascha,
 
-Indeed, it could be useful, and it seems could also simplify many
-other jbd2 processes.
+s.hauer@pengutronix.de wrote on Wed, 17 Apr 2024 09:13:29 +0200:
+
+> This converts the driver to the more modern exec_op which gets us rid
+> of a bunch of legacy code. Tested on i.MX27 and i.MX25.
+
+Thanks a lot for this contribution!
+
+>=20
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+
+...
+
+>  static int mxc_nand_read_page_raw(struct nand_chip *chip, uint8_t *buf,
+>  				  int oob_required, int page)
+>  {
+> +	struct mtd_info *mtd =3D nand_to_mtd(chip);
+>  	struct mxc_nand_host *host =3D nand_get_controller_data(chip);
+> -	void *oob_buf;
+> +	int ret;
+> +
+> +	host->devtype_data->enable_hwecc(chip, false);
+
+In general the expected logic would be to keep the ECC engine disabled
+and just enable/use it/disable in the page helpers.
+
+> +
+> +	ret =3D nand_read_page_op(chip, page, 0, buf, mtd->writesize);
+> +	if (ret)
+> +		return ret;
+> =20
+>  	if (oob_required)
+> -		oob_buf =3D chip->oob_poi;
+> -	else
+> -		oob_buf =3D NULL;
+> +		copy_spare(mtd, true, chip->oob_poi);
+> =20
+> -	return host->devtype_data->read_page(chip, buf, oob_buf, 0, page);
+> +	return 0;
+>  }
+> =20
+
+...
+
+>  static int mxcnd_probe(struct platform_device *pdev)
+> @@ -1752,13 +1594,6 @@ static int mxcnd_probe(struct platform_device *pde=
+v)
+> =20
+>  	nand_set_controller_data(this, host);
+>  	nand_set_flash_node(this, pdev->dev.of_node);
+> -	this->legacy.dev_ready =3D mxc_nand_dev_ready;
+> -	this->legacy.cmdfunc =3D mxc_nand_command;
+> -	this->legacy.read_byte =3D mxc_nand_read_byte;
+> -	this->legacy.write_buf =3D mxc_nand_write_buf;
+> -	this->legacy.read_buf =3D mxc_nand_read_buf;
+> -	this->legacy.set_features =3D mxc_nand_set_features;
+> -	this->legacy.get_features =3D mxc_nand_get_features;
+
+Very nice diff overall. I'm fine with the first two patches, do you
+mind if I merge 1 and 2 for now? We need to discuss further the subpage
+issue.
+
+As mentioned above, I would welcome a patch setting the HW ECC engine to
+false by default and only enabling it in the page helpers (when using
+the on-host ECC engine of course). This would be a good minor step,
+with or without software ECC support.
 
 Thanks,
-Yi.
-
+Miqu=C3=A8l
