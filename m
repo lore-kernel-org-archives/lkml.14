@@ -1,96 +1,141 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C6F5158862;
-	Mon,  6 May 2024 18:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0112D1586F6;
+	Mon,  6 May 2024 18:00:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715018430; cv=none; b=jR1CkLqriPxsH08SDkXlXr6MQR0hj9kdNm5/1ZCDzkSDFLg5j6Xd6knuH5RIrTlkDWtNZIDRj0dZe7NQoDK3slJGYT4t/pQfpFnVizpmGtVnZh9utNezDR5FCaJuFAf6+f4lbV2bKQzf7wZdvZACx6O5WQlkNfxrfuhTjXYuV8w=
+	t=1715018444; cv=none; b=RAfsnX/BqoaRLThAyeaCtYCl74cohYihrNhquC5LEe8ZnfmrYWzc3wA0knHpFUdHzPsbtafHAq6uAbmLbHTv0DZUfikdGlU0ZxwICW2Uc6e1TlhS4fbGjcfWj8nx26tRqpOL7Kef5rWm8cHZlHLf5iwzmCvVtzsFRfmkjfzteeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715018430; c=relaxed/simple;
-	bh=XZbRa2/CC1i0OKL/XxQNlvYNIDcAl0wDNwFniFr7p6A=;
+	s=arc-20240116; t=1715018444; c=relaxed/simple;
+	bh=E4hbksdLHR9sHb2ZSc5jxVRHZXCWdBpad5C427cdk04=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UPMTvvzEtSFTUT9FF9MfWtUjbmivzcAFHmEddOq2N2O3hwnPfu8BindqSIyMPRRBEZmaFgcQ6/1oAIaCLJASXblq75qA4CyMk2SJGI7g6h8u533nb54EDqAAiH9qmCq3zjL6ahUvgZtjFm2dSfxiBchDEb+z9ha0LiAdVPuUShI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=DMGWyMjn; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=TTAlm9nMe9GE+0sfJXTZ8MjJ/feOuogjE2f3KpvVmqCyd0ybYAjFHgVRA9d1mtbb+a3MExpD4A4K9vPS0bLAiZqIwqeQGoEpaTSdePBYKoOMJ7PPMRniWhorEiPUxzktAEo8GWbVYVqE/mCG9jtOon2D6cQ1pZa7OgmxQ8eEeZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H7MAKZ6s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="DMGWyMjn"
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 2C3EFA98;
-	Mon,  6 May 2024 20:00:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1715018426;
-	bh=XZbRa2/CC1i0OKL/XxQNlvYNIDcAl0wDNwFniFr7p6A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DMGWyMjnHOPYAoGyNs7FCC+QI5qcN8NyDeAOnlwB6r5VDo2Ulc0F1EkabeKNeEFeA
-	 7Pk4KzfSABahfKGfVGOx6hr4Os2GIgtntgNHuOJxzXr5R1TBG8BCYcKUxXVhuCjtFX
-	 3H+U+79SGCp/JVK84t1Q+0FwwuZqSIAwjcQIcyX0=
-Date: Mon, 6 May 2024 21:00:19 +0300
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 1/3] media: bcm2835-unicam: Fix error handling for
- platform_get_irq
-Message-ID: <20240506180019.GE29108@pendragon.ideasonboard.com>
-References: <20240430-fix-broad-v1-0-cf3b81bf97ff@chromium.org>
- <20240430-fix-broad-v1-1-cf3b81bf97ff@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H7MAKZ6s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42AD2C4AF65;
+	Mon,  6 May 2024 18:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715018443;
+	bh=E4hbksdLHR9sHb2ZSc5jxVRHZXCWdBpad5C427cdk04=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=H7MAKZ6sSZCaWpWOiPH6SFvlmEfZPnKvzhqE9Lo89A9/yP3lbXAB5x5ohwrCAjTtf
+	 q3AholZWwc5yrCvc9qvQlk9KuaDzY/Yux6LeMsd7jHHgGtq5HOlN3luNSk/UwS0sdv
+	 EPmsQUTY2u5wwmgq/SusblpzIVFO4zcAq0raksZAqUgkCsE1C+Un8/WoYpsBHB2Lr2
+	 cL8cxNhv6CInqxZf3RBnkGd0C0wh1tnZoic8cIgPvHmQsY5rOJB3MjISc+3vmjb3fM
+	 04Q4xf3PPKDL+ZRGS+M+kp0WvIuoBAYvRNmGpZ8vEEm21yep98uJ54LOwVFIcLjKBr
+	 EcOYtlPqWUfMw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id D5335CE0C56; Mon,  6 May 2024 11:00:42 -0700 (PDT)
+Date: Mon, 6 May 2024 11:00:42 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	kernel-team@meta.com, mingo@kernel.org, stern@rowland.harvard.edu,
+	parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
+	boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+	j.alglave@ucl.ac.uk, luc.maranget@inria.fr, akiyks@gmail.com,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Daniel Lustig <dlustig@nvidia.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Subject: Re: [PATCH memory-model 2/4] Documentation/litmus-tests: Demonstrate
+ unordered failing cmpxchg
+Message-ID: <2a695f63-6c9a-4837-ac03-f0a5c63daaaf@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <42a43181-a431-44bd-8aff-6b305f8111ba@paulmck-laptop>
+ <20240501232132.1785861-2-paulmck@kernel.org>
+ <c97f0529-5a8f-4a82-8e14-0078d4372bdc@huaweicloud.com>
+ <16381d02-cb70-4ae5-b24e-aa73afad9aed@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240430-fix-broad-v1-1-cf3b81bf97ff@chromium.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <16381d02-cb70-4ae5-b24e-aa73afad9aed@huaweicloud.com>
 
-Hi Ricardo,
+On Mon, May 06, 2024 at 06:30:45PM +0200, Jonas Oberhauser wrote:
+> Am 5/6/2024 um 12:05 PM schrieb Jonas Oberhauser:
+> > Am 5/2/2024 um 1:21 AM schrieb Paul E. McKenney:
+> > > This commit adds four litmus tests showing that a failing cmpxchg()
+> > > operation is unordered unless followed by an smp_mb__after_atomic()
+> > > operation.
+> > 
+> > So far, my understanding was that all RMW operations without suffix
+> > (xchg(), cmpxchg(), ...) will be interpreted as F[Mb];...;F[Mb].
+> > 
+> > I guess this shows again how important it is to model these full
+> > barriers explicitly inside the cat model, instead of relying on implicit
+> > conversions internal to herd.
+> > 
+> > I'd like to propose a patch to this effect.
+> > 
+> > What is the intended behavior of a failed cmpxchg()? Is it the same as a
+> > relaxed one?
 
-Thank you for the patch.
+Yes, and unless I am too confused, LKMM currently does implement this.
+Please let me know if I am missing something.
 
-On Tue, Apr 30, 2024 at 07:51:26AM +0000, Ricardo Ribalda wrote:
-> platform_get_irq() cannot return the value 0.
+> > My suggestion would be in the direction of marking read and write events
+> > of these operations as Mb, and then defining
+> > 
+> > (* full barrier events that appear in non-failing RMW *)
+> > let RMW_MB = Mb & (dom(rmw) | range(rmw))
+> > 
+> > 
+> > let mb =
+> >      [M] ; fencerel(Mb) ; [M]
+> >    | [M] ; (po \ rmw) ; [RMW_MB] ; po^? ; [M]
+> >    | [M] ; po^? ; [RMW_MB] ; (po \ rmw) ; [M]
+> >    | ...
+> > 
+> > The po \ rmw is because ordering is not provided internally of the rmw
 > 
-> If it returns -EPROBE_DEFER, we need to populate the error code upwards
-> to retry probing once the irq handler is ready.
+> (removed the unnecessary si since LKMM is still non-mixed-accesses)
+
+Addition of mixed-access support would be quite welcome!
+
+> This could also be written with a single rule:
 > 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
-> ---
->  drivers/media/platform/broadcom/bcm2835-unicam.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>      | [M] ; (po \ rmw) & (po^?; [RMW_MB] ; po^?) ; [M]
 > 
-> diff --git a/drivers/media/platform/broadcom/bcm2835-unicam.c b/drivers/media/platform/broadcom/bcm2835-unicam.c
-> index bd2bbb53070e..2a3a27ac70ba 100644
-> --- a/drivers/media/platform/broadcom/bcm2835-unicam.c
-> +++ b/drivers/media/platform/broadcom/bcm2835-unicam.c
-> @@ -2660,9 +2660,10 @@ static int unicam_probe(struct platform_device *pdev)
->  	}
->  
->  	ret = platform_get_irq(pdev, 0);
-> -	if (ret <= 0) {
-> +	if (ret < 0) {
->  		dev_err(&pdev->dev, "No IRQ resource\n");
-> -		ret = -EINVAL;
-> +		if (ret != -EPROBE_DEFER)
-> +			ret = -EINVAL;
-
-What's wrong with leaving ret untouched ? I assume it was set to -EINVAL
-to avoid returning success in case ret was 0. Now that the test has
-changed, I think we can leave the value as-is.
-
->  		goto err_unicam_put;
->  	}
->  
+> > I suspect that after we added [rmw] sequences it could perhaps be
+> > simplified [...]
 > 
+> No, my suspicion is wrong - this would incorrectly let full-barrier RMWs
+> act like strong fences when they appear in an rmw sequence.
+> 
+>  if (z==1)  ||  x = 2;     ||  xchg(&y,2)  || if (y==2)
+>    x = 1;   ||  y =_rel 1; ||              ||    z=1;
+> 
+> 
+> right now, we allow x=2 overwriting x=1 (in case the last thread does not
+> propagate x=2 along with z=1) because on power, the xchg might be
+> implemented with a sync that doesn't get executed until the very end
+> of the program run.
+> 
+> 
+> Instead of its negative form (everything other than inside the rmw),
+> it could also be rewritten positively. Here's a somewhat short form:
+> 
+> let mb =
+>      [M] ; fencerel(Mb) ; [M]
+>    (* everything across a full barrier RMW is ordered. This includes up to
+> one event inside the RMW. *)
+>    | [M] ; po ; [RMW_MB] ; po ; [M]
+>    (* full barrier RMW writes are ordered with everything behind the RMW *)
+>    | [W & RMW_MB] ; po ; [M]
+>    (* full barrier RMW reads are ordered with everything before the RMW *)
+>    | [M] ; po ; [R & RMW_MB]
+>    | ...
 
--- 
-Regards,
+Does this produce the results expected by the litmus tests in the Linux
+kernel source tree and also those at https://github.com/paulmckrcu/litmus?
 
-Laurent Pinchart
+							Thanx, Paul
