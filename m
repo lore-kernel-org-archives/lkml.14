@@ -1,165 +1,155 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1F51E492;
-	Mon,  6 May 2024 23:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 898D0140E38
+	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 23:10:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715037003; cv=none; b=p3PvvQdHYLfBGQ4RK8RDYMRSGf9KY8v8p+dercix1asilymhWj/C0g795D85t8dNFJtmlTQygwCeMM40oxzCo8JQKBuZX0FJWt6No1KnueafZKIDK+0XCFLyuCEzm758AFR7PUVK3Y19Om4uifmD1lGZ5K+L1ZHe3KrECvjNPZ0=
+	t=1715037036; cv=none; b=mgbPUWQ5GHANrftJBascQDFjLxHFQ3BcR9AJKDfBL3CHIP8qI2THY26ymlm5w26n0HjE6FAH2wEU9vJGwm947bc4UNie6Uz4PzYjwEvKfBT1lozEE73AD8nN7ymWrRG1UeqQpPLl3uMGIKVrMP6OLq5TYcLME+zJj/xCslJmxdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715037003; c=relaxed/simple;
-	bh=jb6AoaZ4+1JJOP5y0uiexhZgPhIBpaMIIaYEadS16Q4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dq7d/ztGS7bwT+R6gunl+rpBaUKKlGmSa6F4pTPuShoYV5XwtRNedSihydA/WtCkmPNKQUxWdsw/Cdxj/MhRNrMMwUhpWJwvnlRQNa6LKl+NfBOhYrXmFbEfXaV9sPvCdGSyx1EELzeYyysKInyuw5C79161SC/c8tGZNsBhOLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nFF/q6E/; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715037036; c=relaxed/simple;
+	bh=kIqH8s12Peez1Ha63AcrGBGXb3oMgek8ZOqH+OM6aL4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=du9I7+yQdVvY+pQrwB90aUU8agR/3IIU4NzR1cOf0d8tgAbwFJJ0hNzWjHHg5DTiTNO6GSZv/pqMqgnQuH544Mb7MZgnNVOUm3jQKml08OJZ6IAznmdiOdQOt6eod1iQRB+3bBcQ5NmHhnDdxgTPKsVhKzmWvAn4D12uMeRjsto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yg9IoGuR; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nFF/q6E/"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-34db6a29a1eso1571042f8f.1;
-        Mon, 06 May 2024 16:10:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yg9IoGuR"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be25000a4so53264127b3.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 16:10:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715037000; x=1715641800; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2djqDQE+yQ6VgjclssSW7VHfPd80JOhsReXmW/fEqXY=;
-        b=nFF/q6E/ncV3MYvnMC7xKGOyT/arhdI5FKJ2nO17qmvlhvec75Ip4UFkbelMBZm7u+
-         PBybAqvSwcZ9oDJ8hZ65h3OUtU6K6Tuy4OkIGMJU59xY9PCjEXwEAGoDPocnQ+odxFom
-         N4Er+uN2wFHGu3eg6asD6OXFTuW6yF4gNJU933BhbVd4uV4tZ6+URa8Jwqd66UlaKEXz
-         FEA2YE5NWTnaVcLhc7lKdA+UZIO5JJc7OE0mGh0wB5dw8+AOkZN8ljykJ0/x5DDTqv8I
-         +nfXwAZgQyqRLuTHKeUPhB9EQwjDvTRuBnfJV5zlxfON94q4okZL4aKm22KMg0a5rCoU
-         77jw==
+        d=google.com; s=20230601; t=1715037033; x=1715641833; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=aVTeK+PPpIcCC4K8Et9DWqwzsgriwrNP2n+cF7VfKKg=;
+        b=yg9IoGuR7ulGDpnnCk8waLUOHeu2OuxtZ9p2JWVDDRtDSCn0L/xASTdUNSrUlqsogx
+         IaBh0a0YzqNc72wB+UzYmXGIPawjqRsXV5wDAS9wXzioql1EpZTP6nKK7rmha+xUxvuN
+         Yp4GPU/ElF3Igg8j5muXOuSf5ERYE/IJTXA4aYK3f88TOBhBQc9e9Ge8s1CQJbZak19p
+         OpBKmU+gjdFVlWUBTRgpktffQe4VokKxC728E48/d0wm2uQoaWb1vyIoBn7JNbg4Eq1x
+         H8/AxLYmR+HKej1ArY4TJi3tk7MMj5aHarfYuBof+epsb5owJ8xSfqJFxUgawg0W3Zr6
+         keag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715037000; x=1715641800;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2djqDQE+yQ6VgjclssSW7VHfPd80JOhsReXmW/fEqXY=;
-        b=GaQdPszgEpeawo3JT8tP1hTAO04LdGbkLuwmnMF5k9+FiNe9ikF2g8dgHY/iTVaqn2
-         QExx9KJgqi2XrNYK6XUhBmP06jo4TO/obfKkG5vH2uOOp2yVDE2RseuD7jJ3P38Kfo12
-         i0dQiiYiCDYH3GOwV1MxmcUr5OTn9d/3fSRb6HrLwZOGIPj1NIBG4iys3BKAKJRNQPkc
-         Y39/1DsJlK+uTbiDY8KvJ6UBRY0qCl7H2VFQ78lnM1gP/R7I0Zybzh7ZdWbUIw/Z1JkM
-         /vRIsPAzucIrNmB+6lWg8cHZxeu5uZN7vE/mYLjODOoLbA++Vl7U2FmCkbw2/QTmOAJr
-         ZZ8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUaK882yAs7A/4I5W3SbVLAoLMrcy0nHYyak7mj5O7c+Hbrqn7BR12EfPEQSsWKRxjwIMCvyCHopGjpmcLmkC9+xbXZAYCJ3bMDumqOZVVj10hfF8NzN6R3fnBS4w1/r1ghl/lQ0j3Hhzfzd0zYYg0lMoT0GILyGM4p
-X-Gm-Message-State: AOJu0YwXiLNQZKp11BEH1vJXozsm/o7CPlhnvv2FoznjxEQjEfl/rvpx
-	mvMI2t9aD2zKDuZ1LTi82ZFnvMkPgmXNk4+reoPZJUOCLjlrRmLpeynVvEPL3K2WgGrClApeLjU
-	9nEhgpMBIt8Ib/U5eE2pKEC6VAY4=
-X-Google-Smtp-Source: AGHT+IGxLV8o+I20/ACsrxFvjlgXJfW+QBAHlbBignGmLULqLzAKyI21XMdrf96e9JbOwJvccCh16JA6cXe8ZtJOOVs=
-X-Received: by 2002:adf:e60c:0:b0:34d:b993:fe6e with SMTP id
- p12-20020adfe60c000000b0034db993fe6emr8100162wrm.0.1715036999414; Mon, 06 May
- 2024 16:09:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715037033; x=1715641833;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=aVTeK+PPpIcCC4K8Et9DWqwzsgriwrNP2n+cF7VfKKg=;
+        b=ojpg1PCX0dJneSvVuG+qSWKFc/CY9vPM4MjuqiQ+kFAL4kcyKELSkWIdZg59vJuQPc
+         CYE/7ibN5ib/1alGVtVDroThHfZ8bXW2W/wlEsvRTI4lYXmhgZOeT2EST3znow6KECdm
+         jtmcF8WIkC9+tJ3y+sqA2KP/SY/yAmKgl2H/I1+IEQuk/BEVwIGIy2CfupHvTkPi7YM8
+         MxOKdqSLOCmzDFQPGGTJlIpPEeY5UsvIj2qrXrxJ+UbOA677Gxff09ig8G/ZNHpO4qyO
+         6fFgzOVf6F1pm6Rws9c5COHrnXYjlXp4G2oCBLrg0FqHn458vuI6LUIuRHCd3N1qh+BF
+         w2BA==
+X-Forwarded-Encrypted: i=1; AJvYcCWp6u0WuBNG6hw5U0Oki0Dkm5enuf6HUUYwsUDakcS8f9QN1T4R83ZUyMq/l+IiUCSnsgjFxCiAc3S+kIzXIaIK9VOwheaWfah4eNVp
+X-Gm-Message-State: AOJu0Yzj5wPantCmedaoQec/HdAY1xn/Fw81RnuHOwA5+9Gr3U0qzlcL
+	sz0f1AX8hTMC5Qvn2X2VaAUQ2B4ROS3JNlFLuQxb3tCJQ4vwqC8qKACxOUUJN7Cs0c1XbHO1ySV
+	h3SPdkUzVNIWM8yfE6EHWeQ==
+X-Google-Smtp-Source: AGHT+IF2zNFukyT8p7wq1ymqZP1R4dIIyH63RYvZYt/QfzEa+yiPKhJv9Eyui+kITd06lvb+8b/KRTq5N7Or7Lpv/Q==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a05:6902:100d:b0:ddd:7581:1380 with
+ SMTP id w13-20020a056902100d00b00ddd75811380mr3803979ybt.11.1715037033677;
+ Mon, 06 May 2024 16:10:33 -0700 (PDT)
+Date: Mon, 06 May 2024 23:10:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240503182957.1042122-1-bigeasy@linutronix.de>
- <20240503182957.1042122-15-bigeasy@linutronix.de> <87y18mohhp.fsf@toke.dk>
-In-Reply-To: <87y18mohhp.fsf@toke.dk>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Mon, 6 May 2024 16:09:47 -0700
-Message-ID: <CAADnVQJkiwaYXUo+LyKoV96VFFCFL0VY5Jgpuv_0oypksrnciA@mail.gmail.com>
-Subject: Re: [PATCH net-next 14/15] net: Reference bpf_redirect_info via
- task_struct on PREEMPT_RT.
-To: =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, LKML <linux-kernel@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Boqun Feng <boqun.feng@gmail.com>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Eric Dumazet <edumazet@google.com>, Frederic Weisbecker <frederic@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Hao Luo <haoluo@google.com>, Jesper Dangaard Brouer <hawk@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Yonghong Song <yonghong.song@linux.dev>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAGZjOWYC/x2MQQqAIBAAvxJ7bsHEMvpKdEjbraXI0Igg+nvSc
+ WBmHkgUhRJ0xQORLkkS9gxVWYBfxn0mlCkzaKWNqlWDzmB20G3BryjBnxvalniyRjOzgRwekVj uf9oP7/sBTbwINmQAAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715037032; l=3971;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=kIqH8s12Peez1Ha63AcrGBGXb3oMgek8ZOqH+OM6aL4=; b=yOCnlsYhbcBawdXupFaQ+B7J0DpIGRdob00ZKEgq5/yFaPGqXUV8fr82P6p55Yn32rPhvTGBD
+ dSzQZPLXZtpB8xJ4v7A79F1yhUSY5lDRaAKQ8GG+6chUR4dcwiL8UMA
+X-Mailer: b4 0.12.3
+Message-ID: <20240506-b4-sio-block-ioctl-v1-1-da535cc020dc@google.com>
+Subject: [PATCH] block/ioctl: use overflow helper for blkpg_partition fields
+From: Justin Stitt <justinstitt@google.com>
+To: Jens Axboe <axboe@kernel.dk>, Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>
+Cc: linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Mon, May 6, 2024 at 12:41=E2=80=AFPM Toke H=C3=B8iland-J=C3=B8rgensen <t=
-oke@redhat.com> wrote:
->
-> Sebastian Andrzej Siewior <bigeasy@linutronix.de> writes:
->
-> > The XDP redirect process is two staged:
-> > - bpf_prog_run_xdp() is invoked to run a eBPF program which inspects th=
-e
-> >   packet and makes decisions. While doing that, the per-CPU variable
-> >   bpf_redirect_info is used.
-> >
-> > - Afterwards xdp_do_redirect() is invoked and accesses bpf_redirect_inf=
-o
-> >   and it may also access other per-CPU variables like xskmap_flush_list=
-.
-> >
-> > At the very end of the NAPI callback, xdp_do_flush() is invoked which
-> > does not access bpf_redirect_info but will touch the individual per-CPU
-> > lists.
-> >
-> > The per-CPU variables are only used in the NAPI callback hence disablin=
-g
-> > bottom halves is the only protection mechanism. Users from preemptible
-> > context (like cpu_map_kthread_run()) explicitly disable bottom halves
-> > for protections reasons.
-> > Without locking in local_bh_disable() on PREEMPT_RT this data structure
-> > requires explicit locking.
-> >
-> > PREEMPT_RT has forced-threaded interrupts enabled and every
-> > NAPI-callback runs in a thread. If each thread has its own data
-> > structure then locking can be avoided.
-> >
-> > Create a struct bpf_net_context which contains struct bpf_redirect_info=
-.
-> > Define the variable on stack, use bpf_net_ctx_set() to save a pointer t=
-o
-> > it. Use the __free() annotation to automatically reset the pointer once
-> > function returns.
-> > The bpf_net_ctx_set() may nest. For instance a function can be used fro=
-m
-> > within NET_RX_SOFTIRQ/ net_rx_action which uses bpf_net_ctx_set() and
-> > NET_TX_SOFTIRQ which does not. Therefore only the first invocations
-> > updates the pointer.
-> > Use bpf_net_ctx_get_ri() as a wrapper to retrieve the current struct
-> > bpf_redirect_info.
-> >
-> > On PREEMPT_RT the pointer to bpf_net_context is saved task's
-> > task_struct. On non-PREEMPT_RT builds the pointer saved in a per-CPU
-> > variable (which is always NODE-local memory). Using always the
-> > bpf_net_context approach has the advantage that there is almost zero
-> > differences between PREEMPT_RT and non-PREEMPT_RT builds.
->
-> Did you ever manage to get any performance data to see if this has an
-> impact?
->
-> [...]
->
-> > +static inline struct bpf_net_context *bpf_net_ctx_get(void)
-> > +{
-> > +     struct bpf_net_context *bpf_net_ctx =3D this_cpu_read(bpf_net_con=
-text);
-> > +
-> > +     WARN_ON_ONCE(!bpf_net_ctx);
->
-> If we have this WARN...
->
-> > +static inline struct bpf_redirect_info *bpf_net_ctx_get_ri(void)
-> > +{
-> > +     struct bpf_net_context *bpf_net_ctx =3D bpf_net_ctx_get();
-> > +
-> > +     if (!bpf_net_ctx)
-> > +             return NULL;
->
-> ... do we really need all the NULL checks?
+Running syzkaller with the newly reintroduced signed integer overflow
+sanitizer shows this report:
 
-Indeed.
-Let's drop all NULL checks, since they definitely add overhead.
-I'd also remove ifdef CONFIG_PREEMPT_RT and converge on single implementati=
-on:
-static inline struct bpf_net_context * bpf_net_ctx_get(void)
-{
- return current->bpf_net_context;
-}
+[   62.982337] ------------[ cut here ]------------
+[   62.985692] cgroup: Invalid name
+[   62.986211] UBSAN: signed-integer-overflow in ../block/ioctl.c:36:46
+[   62.989370] 9pnet_fd: p9_fd_create_tcp (7343): problem connecting socket to 127.0.0.1
+[   62.992992] 9223372036854775807 + 4095 cannot be represented in type 'long long'
+[   62.997827] 9pnet_fd: p9_fd_create_tcp (7345): problem connecting socket to 127.0.0.1
+[   62.999369] random: crng reseeded on system resumption
+[   63.000634] GUP no longer grows the stack in syz-executor.2 (7353): 20002000-20003000 (20001000)
+[   63.000668] CPU: 0 PID: 7353 Comm: syz-executor.2 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
+[   63.000677] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[   63.000682] Call Trace:
+[   63.000686]  <TASK>
+[   63.000731]  dump_stack_lvl+0x93/0xd0
+[   63.000919]  __get_user_pages+0x903/0xd30
+[   63.001030]  __gup_longterm_locked+0x153e/0x1ba0
+[   63.001041]  ? _raw_read_unlock_irqrestore+0x17/0x50
+[   63.001072]  ? try_get_folio+0x29c/0x2d0
+[   63.001083]  internal_get_user_pages_fast+0x1119/0x1530
+[   63.001109]  iov_iter_extract_pages+0x23b/0x580
+[   63.001206]  bio_iov_iter_get_pages+0x4de/0x1220
+[   63.001235]  iomap_dio_bio_iter+0x9b6/0x1410
+[   63.001297]  __iomap_dio_rw+0xab4/0x1810
+[   63.001316]  iomap_dio_rw+0x45/0xa0
+[   63.001328]  ext4_file_write_iter+0xdde/0x1390
+[   63.001372]  vfs_write+0x599/0xbd0
+[   63.001394]  ksys_write+0xc8/0x190
+[   63.001403]  do_syscall_64+0xd4/0x1b0
+[   63.001421]  ? arch_exit_to_user_mode_prepare+0x3a/0x60
+[   63.001479]  entry_SYSCALL_64_after_hwframe+0x6f/0x77
+[   63.001535] RIP: 0033:0x7f7fd3ebf539
+[   63.001551] Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 14 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+[   63.001562] RSP: 002b:00007f7fd32570c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[   63.001584] RAX: ffffffffffffffda RBX: 00007f7fd3ff3f80 RCX: 00007f7fd3ebf539
+[   63.001590] RDX: 4db6d1e4f7e43360 RSI: 0000000020000000 RDI: 0000000000000004
+[   63.001595] RBP: 00007f7fd3f1e496 R08: 0000000000000000 R09: 0000000000000000
+[   63.001599] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+[   63.001604] R13: 0000000000000006 R14: 00007f7fd3ff3f80 R15: 00007ffd415ad2b8
+...
+[   63.018142] ---[ end trace ]---
+
+Historically, the signed integer overflow sanitizer did not work in the
+kernel due to its interaction with `-fwrapv` but this has since been
+changed [1] in the newest version of Clang; It being re-enabled in the
+kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
+sanitizer").
+
+Let's use check_add_overflow to check for overflow between p.start and
+p.length, as this method won't trigger a UBSAN splat.
+
+[1]: https://github.com/llvm/llvm-project/pull/82432
+
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+ block/ioctl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/block/ioctl.c b/block/ioctl.c
+index f505f9c341eb..a66213c88ebb 100644
+--- a/block/ioctl.c
++++ b/block/ioctl.c
+@@ -33,7 +33,8 @@ static int blkpg_do_ioctl(struct block_device *bdev,
+ 	if (op == BLKPG_DEL_PARTITION)
+ 		return bdev_del_partition(disk, p.pno);
+ 
+-	if (p.start < 0 || p.length <= 0 || p.start + p.length < 0)
++	if (p.start < 0 || p.length <= 0 ||
++	    check_add_overflow(p.start, p.length, &p.start))
+ 		return -EINVAL;
+ 	/* Check that the partition is aligned to the block size */
+ 	if (!IS_ALIGNED(p.start | p.length, bdev_logical_block_size(bdev)))
+
+---
+base-commit: 0106679839f7c69632b3b9833c3268c316c0a9fc
+change-id: 20240506-b4-sio-block-ioctl-78efd742fff4
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
