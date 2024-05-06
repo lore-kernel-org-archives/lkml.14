@@ -1,89 +1,163 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C7F28488
-	for <linux-kernel@vger.kernel.org>; Mon,  6 May 2024 23:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FBC657C9A;
+	Mon,  6 May 2024 23:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715037057; cv=none; b=fQiTWfuw9GfX7LpfI12u4ySJdJPTksiHR5KHiCV3cyNxsRoWikwLTZc2+RzDx9hIg9rEt2ZZ6YIuSt2K7RZJPd9qHDTWx919lIF35mbQ7MPhGS2Y6WVHtF3kHoc7OfwVR1PkQEHDrJ0NnzNwMQPAzokY7KKAtuyj4aCTewK/YEc=
+	t=1715037253; cv=none; b=YOcQjFj5XVLuo06gI10u88MKO01p6roN+xz0gE7pH8UnxcxXd8A6Z1pxR1umUVPGea7C+/RbQuTQMI0V211byWxqOkTKBBf00399B1XdRBOAXzjEtg2IVrbpVjcblnu/0hcJQtdjlZDg/8BC/DLJGKdOj2d8pyO89RIlqtiM0ag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715037057; c=relaxed/simple;
-	bh=FCWmkGKtCYFY82UHw0ipUvRiJnRCs/R5WWby7amO1H0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KonaM6OpMuumXCIamyRLGcIovwwFmMUH/XjXh8ouyjf/8nGCrvRSVb3PjskDjXX0tRdjRiIcl6+U1Tn+KkAqCjaSSThZYzF3CUGE8XZURaa+fDy3DAi0UgPE3QiOzqStSQy9Pq7dHDzksWg9AbXkW5gOBp8/Yp3uZq/XQF4gqOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dmMcYWU8; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715037253; c=relaxed/simple;
+	bh=f+j7Sjoa7UvfSMX3qJFnPrlMFyhS/ZlGcojl7lrvd3c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P86/SboLpSko6bcKm0HRgy+vFU7Wt0nUX4AWJKIBN1+krCuuvtkZtuzkfvd4fJtu6VP01lSNY++lsEMmPxLwwoH6vQvugvyULGO598rJslrg/JVRP4mmE1fx9kCQz+yXXaJ1EbgFfNsdHaqX5cULE5aXrJHjELFg1N/EI3Rtdn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VpWpx22D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dmMcYWU8"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-572f6c56cdaso8304a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 16:10:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715037054; x=1715641854; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=To7fxBOaNRZwDFrn2W07ozUB1mmlkd6/wYo0eU+RqtA=;
-        b=dmMcYWU8qp3CHI3X4SLQNBnbXQg83gvQwgl+1AwyLqyanHLav25FCMG6UPCgH1an8Z
-         Ye46XUbnT7DShnv3bcfaAxyRIau58uA68YgSfYF2IxLfrdZRss8gwuYqBX2xfvH+C7r6
-         6nbmycAdxLhUf8d7BALfPi+bt8m5WQsGV4Ap/5d3dKuQMqe76UBjDp8NIe9eOqTfzP5X
-         6wlgU93yWp65pt5+8nlrm478+TyY7TPH0NuDaNQ/mpifQHkBDfxEley7INR2pkkU2rhF
-         Uf7sa0GEADpLfJD2QvvPl9FxeJ5H2h8NLtTInO2CmGjumTavrHn8mKRP+gTdJIxDLwpb
-         lyFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715037054; x=1715641854;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=To7fxBOaNRZwDFrn2W07ozUB1mmlkd6/wYo0eU+RqtA=;
-        b=Epv4/PvTz2P/m8RkYGiNvcau/3EciWC0Z1JTcdNiUZ8fZHGsEBOJZ8HL8K6KVb7RQF
-         jCWfZIrnm8D9n+VjXsFysU/OYvkhdHjdePkS5eFmHraRy1TWVg6/tTqxP79cPTqtIpzy
-         ORvL+z1kE7Id2yyRqtQaBfUgDb/O09vd7xM87SMDewq1eVhaK5buWHXco0q3f8ToX0QA
-         YeL6j9BKkbMUK44HnixXX7BCwrwXTRVd30yizt99gbiA0jwnhxMdiQW6aVsNOBHf7ma+
-         Ucc3wRqvvNp3TG3xevAX6NXNDxVU3jaSEr4HbbjIZ+N5wWngpuPMnZyAMZr3+UudrdJC
-         VIVg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhVmDmSQ2KMHpxBYxdriJHvr9fH2iAn9sONTzonyp1oibTuEjEq++sueQZksn2Qa50+VWNWH2rO8Xec3ZBJX8dSnp4xA56bB9IKHHk
-X-Gm-Message-State: AOJu0Yy/29xYyxRcPnVKPvge/UF/Eq8C1B1WU2M2L3FCU81tDzQX1IDS
-	RD6XmzPFByeH2CqySuxGKMu2c8JYo5TU9a+AESsSkM1eH5hD5e2zpGEvLoQm6ZXglEl8lHbcY6q
-	zOTowP3ul4Qc/Jx7o+QVyu3+04pp2gDtDcVHM
-X-Google-Smtp-Source: AGHT+IHGZfGOFMLPDtfPud/GsrF7tdooNnrZe5MoO9klCGmWbiy/B/k6yjkc3wPHejQWyh/ZbyKrPPcGutS3l9Xw+Rg=
-X-Received: by 2002:a05:6402:4304:b0:572:7c06:9c0 with SMTP id
- 4fb4d7f45d1cf-57311c1506amr107766a12.0.1715037053475; Mon, 06 May 2024
- 16:10:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VpWpx22D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 029BBC116B1;
+	Mon,  6 May 2024 23:14:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715037252;
+	bh=f+j7Sjoa7UvfSMX3qJFnPrlMFyhS/ZlGcojl7lrvd3c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VpWpx22DGV9SMd+D2G13Ifee1XYZ9/zU2nb0lQrFv96f9NyvyjWs1ebXq37x+f64f
+	 FCYmBb9EVuCnBsVJiAo/c6/lLLECz0xqGtY+GrRD862Zfjm9At1m8ydgfs65aMxhpm
+	 GTWn0hnT9VeOoAgoId9PuVZg7nLH3IegnuwJgSnnVgUGJyezd1H+ORuvBZNQKvbNws
+	 YQZJJAQlJ7zucfGUlfRyxsW9IeNeeexlSANe5bKzJw44fHppgTn1AB4yied/P+Bnse
+	 dCf3FRC4xhdU4zHEwXVG2l1wOlXdV1qEYU7e6Bv+OrtFEiCvcoh20yad3LF69A9S8R
+	 MsM/tvQyjFP2w==
+Date: Mon, 6 May 2024 18:14:10 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: Prahlad Valluru <quic_vvalluru@quicinc.com>
+Cc: robh@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org, 
+	konrad.dybcio@linaro.org, krzysztof.kozlowski+dt@linaro.org, linux-arm-msm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, quic_abhinavk@quicinc.com, quic_nankam@quicinc.com
+Subject: Re: [PATCH v2] arm64: dts: qcom: qcs6490-rb3gen2: enable hdmi bridge
+Message-ID: <jr3ble6sxr5mr6cvm6ldvpyk5j4rucj3xy6vbha6ttoecte3d7@llu6qf6oasuc>
+References: <171405653305.2527744.3813895380659072690.robh@kernel.org>
+ <20240426142442.7769-1-quic_vvalluru@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240501180622.1676340-1-edliaw@google.com> <osgrbhnqlyh5yw4y4x6wjggx56dogsgje5yy3mkpu75ubs3zwg@5tliydzky37k>
- <b55272cb757743548c789aa8c0efa448@AcuMS.aculab.com> <CAFhGd8rAW4Mkctq5VkcfVjw_yr=jVdXaWbYXP-vmeVpw7q4ruQ@mail.gmail.com>
- <CAG4es9WYrN_tOV1Uxi_ytO2qDRRZW5_uN=2p3iCg=P0r3mM3Og@mail.gmail.com> <7332ff979f3440bd8362d37d4d1f34b8@AcuMS.aculab.com>
-In-Reply-To: <7332ff979f3440bd8362d37d4d1f34b8@AcuMS.aculab.com>
-From: Edward Liaw <edliaw@google.com>
-Date: Mon, 6 May 2024 16:10:27 -0700
-Message-ID: <CAG4es9Vn2F34UEmyG3upO-frtCZ00DVN8vgK4mRfX2548FKxVw@mail.gmail.com>
-Subject: Re: [PATCH v3] selftests/vDSO: Explicit unsigned char conversion for elf_hash
-To: David Laight <David.Laight@aculab.com>
-Cc: Justin Stitt <justinstitt@google.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shuah Khan <shuah@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, "H. Peter Anvin" <hpa@linux.intel.com>, Andy Lutomirski <luto@mit.edu>, 
-	"linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>, 
-	"kernel-team@android.com" <kernel-team@android.com>, "llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240426142442.7769-1-quic_vvalluru@quicinc.com>
 
-On Mon, May 6, 2024 at 12:32=E2=80=AFPM David Laight <David.Laight@aculab.c=
-om> wrote:
->
->
-> That makes a lot more sense.
+On Fri, Apr 26, 2024 at 07:54:42PM GMT, Prahlad Valluru wrote:
+> From: Venkata Prahlad Valluru <quic_vvalluru@quicinc.com>
+> 
 
-I sent v4 https://lore.kernel.org/all/20240506181951.1804451-1-edliaw@googl=
-e.com/.
-I updated the commit log to reflect the change but I'm not sure if I
-did it right for the mailing list.  Should I have added --in-reply-to
-this thread?
+Please don't thread new versions off existing version. b4 helps you with
+getting these things right, please check go/upstream for more details.
 
-Edward
+> Enable lt9611uxc bridge for qcs6490 rb3 gen2 platform.
+> 
+
+Even if it's clear what this is, I would prefer if you described the
+hardware a little bit in your commit message.
+"Rb3Gen2 has a HDMI connector, connected to DSI via a LT on i2cX.... reset and
+irq pins comes from x and y. Describe this."
+
+> Signed-off-by: Prahlad Valluru <quic_vvalluru@quicinc.com>
+> ---
+> v2: Addressed dtschema errors
+> 	- Fixed lt9611-irq
+> 	- vdd-supply error to be ignored, as it is connected to
+> 	  input supply directly, on rb3gen2
+> ---
+>  arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 86 ++++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> index a085ff5b5fb2..c14d4a4bb3ce 100644
+> --- a/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> +++ b/arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts
+> @@ -51,6 +51,18 @@
+>  			};
+>  		};
+>  	};
+> +	
+
+There's a stray tab here, please run checkpatch --strict on your
+patches.
+
+> +	hdmi-connector {
+> +		compatible = "hdmi-connector";
+> +		label = "HDMI";
+> +		type = "a";
+> +
+> +		port {
+> +			hdmi_con: endpoint {
+> +				remote-endpoint = <&lt9611_out>;
+> +			};
+> +		};
+> +	};
+>  
+>  	reserved-memory {
+>  		xbl_mem: xbl@80700000 {
+> @@ -530,6 +542,45 @@
+[..]
+> @@ -602,6 +653,21 @@
+>  	status = "okay";
+>  };
+>  
+> +&mdss_dsi {
+
+We want to keep nodes sorted (by address if applicable, otherwise
+alphabetically on node names and on labels). "mdss_dsi" < "mdss_edp".
+
+So please move this up where it belongs.
+
+> +        vdda-supply = <&vreg_l6b_1p2>;
+> +        status = "okay";
+> +};
+> +
+> +&mdss_dsi0_out {
+> +        remote-endpoint = <&lt9611_a>;
+> +        data-lanes = <0 1 2 3>;
+> +};
+> +
+> +&mdss_dsi_phy {
+> +        vdds-supply = <&vreg_l10c_0p88>;
+> +        status = "okay";
+> +};
+> +
+>  &qupv3_id_0 {
+>  	status = "okay";
+>  };
+> @@ -711,3 +777,23 @@
+>  	function = "gpio";
+>  	bias-disable;
+>  };
+> +
+> +&pm7250b_gpios {
+> +        lt9611_rst_pin: lt9611-rst-state {
+> +                pins = "gpio2";
+> +                function = "normal";
+> +
+> +                output-high;
+> +                input-disable;
+> +                power-source = <0>;
+> +        };
+> +};
+> +
+> +&tlmm {
+> +        lt9611_irq_pin: lt9611-irq-state {
+> +                pins = "gpio24";
+> +                function = "gpio";
+> +                drive-strength = <8>;
+
+I'd expect a 2 here, so please document why this is 8.
+
+Regards,
+Bjorn
+
+> +                bias-disable;
+> +        };
+> +};
+> -- 
+> 2.17.1
+> 
