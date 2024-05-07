@@ -1,132 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACB614EC4D;
-	Tue,  7 May 2024 10:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3881214F9DE;
+	Tue,  7 May 2024 10:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715079311; cv=none; b=LEWrJFxryrFgoBk5uuz9u9kYZ2UP2Hrtarq41rBBB2w8Sr8uQ5FZVqwj5/YEuxnZKtDADH3sKgQFEvXiVpELU/ESKwrsfYXSYnC/3UbgVTVVNmUBE+tl6j35ToiVUyFXwuOTw4zlbYhCS+volqSv3MMjgsHrrGo48iF3P/3SJV8=
+	t=1715079454; cv=none; b=nvNdvP/SHCd/0DDSBTKrDDHTEC2h03c4TrQjVKG4TY6F6a5sBqbxpHwakQ6B1NaPMfxLkf0HfFCPm94XihrSVmKZTkNStADydzrgqXO76RQ8HFolAJeVPwCV95XAnP0WE5NWZ0+StIREHzsoCPhQb6WNj/RNhJb3GUdFMQS5HY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715079311; c=relaxed/simple;
-	bh=YOJAMtCe8DK1ux8SakApe84VXlSr5Oi60Hn13JG7aeE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T9Y/3K7NCPy39adYdVnaXRj+YNfLv2iGfwqLXxRHCfDkRTcuyC9xwYoffLiAZ3cPjmiKvkmTQ/JI81wkcAQXTy/H7kkagcV9di6W+oO8QAN+zhm6dl9SQeacjfKmFN8HESzBc7dIh5LVP7/FE+MnhEiem1UdGbYNK/4oatGSTc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hXgJTo8F; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hXgJTo8F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 591AFC2BBFC;
-	Tue,  7 May 2024 10:55:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715079310;
-	bh=YOJAMtCe8DK1ux8SakApe84VXlSr5Oi60Hn13JG7aeE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hXgJTo8FdTyeyQiASmgfgUOm4EvxnCORiGM3pHBT6jFPxPh4c+niH0HnaiEWp/GX0
-	 COlf5kA99GDqMrGwcLIAaKkvH1uV83qJXgnGCgbt71t4+0yuW8s6tVVONfHoyFsegP
-	 7b2Zgx2YdZ44jAR3CEdeXmv4NYClE7EwBRENHZ38gGNWfx9HZvxqz9FsIxEXS1blmr
-	 lq8/c59Zr7V7wTNhBVux/kUpX0oWOP9rR3NeikvGVyWkaULiYzyC4nj8r0CgW5b+Mq
-	 hbh2XuVnqwxR5UwwD8jlAdq2ExY8fZT//hBNjUYt4zGNAAScXcVemskf4Ic+WMdVv2
-	 By8lQWXPsEWEA==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-api@vger.kernel.org,
-	linux-man@vger.kernel.org,
-	x86@kernel.org,
-	bpf@vger.kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	"Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-	Deepak Gupta <debug@rivosinc.com>
-Subject: [PATCHv5 8/8] man2: Add uretprobe syscall page
-Date: Tue,  7 May 2024 12:53:21 +0200
-Message-ID: <20240507105321.71524-9-jolsa@kernel.org>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240507105321.71524-1-jolsa@kernel.org>
-References: <20240507105321.71524-1-jolsa@kernel.org>
+	s=arc-20240116; t=1715079454; c=relaxed/simple;
+	bh=njXfh2vlNt8e02BLkhSMu8rI1c4JuveTMOFghreNkOc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YO4eN2ubfCeMyJgIaqMNXkssV2m7gyuJ0Lj1QlYcymYAHG5t6o1IW1/iXN1Ut5s81HhX9YqtJqiNW3NDSnbgFOyvMC4FPVe5UuTgTPmZ6AwB8xlu2WeHGwk1cWLtuWcZkmH0xwvUHsSGoLo+MRA6ulyxwwVqSzqLx0BQ6zN3a4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B5191063;
+	Tue,  7 May 2024 03:57:58 -0700 (PDT)
+Received: from [10.163.37.41] (unknown [10.163.37.41])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 31DEF3F587;
+	Tue,  7 May 2024 03:57:23 -0700 (PDT)
+Message-ID: <ecb16ad9-7c91-4cf6-ab7e-4b4b5be7165c@arm.com>
+Date: Tue, 7 May 2024 16:27:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/17] perf cs-etm: Print error for new
+ PERF_RECORD_AUX_OUTPUT_HW_ID versions
+Content-Language: en-US
+To: James Clark <james.clark@arm.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, John Garry
+ <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-perf-users@vger.kernel.org, gankulkarni@os.amperecomputing.com,
+ scclevenger@os.amperecomputing.com, coresight@lists.linaro.org,
+ mike.leach@linaro.org
+References: <20240429152207.479221-1-james.clark@arm.com>
+ <20240429152207.479221-2-james.clark@arm.com>
+ <08bcd616-5006-45df-b8cc-45cf3a1dd762@arm.com>
+ <de635db0-6510-452f-91be-4fc5f7fdf671@arm.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <de635db0-6510-452f-91be-4fc5f7fdf671@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Adding man page for new uretprobe syscall.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- man2/uretprobe.2 | 50 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 man2/uretprobe.2
 
-diff --git a/man2/uretprobe.2 b/man2/uretprobe.2
-new file mode 100644
-index 000000000000..690fe3b1a44f
---- /dev/null
-+++ b/man2/uretprobe.2
-@@ -0,0 +1,50 @@
-+.\" Copyright (C) 2024, Jiri Olsa <jolsa@kernel.org>
-+.\"
-+.\" SPDX-License-Identifier: Linux-man-pages-copyleft
-+.\"
-+.TH uretprobe 2 (date) "Linux man-pages (unreleased)"
-+.SH NAME
-+uretprobe \- execute pending return uprobes
-+.SH SYNOPSIS
-+.nf
-+.B int uretprobe(void)
-+.fi
-+.SH DESCRIPTION
-+The
-+.BR uretprobe ()
-+syscall is an alternative to breakpoint instructions for
-+triggering return uprobe consumers.
-+.P
-+Calls to
-+.BR uretprobe ()
-+suscall are only made from the user-space trampoline provided by the kernel.
-+Calls from any other place result in a
-+.BR SIGILL .
-+
-+.SH RETURN VALUE
-+The
-+.BR uretprobe ()
-+syscall return value is architecture-specific.
-+
-+.SH VERSIONS
-+This syscall is not specified in POSIX,
-+and details of its behavior vary across systems.
-+.SH STANDARDS
-+None.
-+.SH HISTORY
-+TBD
-+.SH NOTES
-+The
-+.BR uretprobe ()
-+syscall was initially introduced for the x86_64 architecture where it was shown
-+to be faster than breakpoint traps. It might be extended to other architectures.
-+.P
-+The
-+.BR uretprobe ()
-+syscall exists only to allow the invocation of return uprobe consumers.
-+It should
-+.B never
-+be called directly.
-+Details of the arguments (if any) passed to
-+.BR uretprobe ()
-+and the return value are architecture-specific.
--- 
-2.44.0
+On 5/7/24 15:36, James Clark wrote:
+> 
+> 
+> On 07/05/2024 04:47, Anshuman Khandual wrote:
+>>
+>>
+>> On 4/29/24 20:51, James Clark wrote:
+>>> The likely fix for this is to update Perf so print a helpful message.
+>>>
+>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>> ---
+>>>  tools/perf/util/cs-etm.c | 5 ++++-
+>>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+>>> index d65d7485886c..32818bd7cd17 100644
+>>> --- a/tools/perf/util/cs-etm.c
+>>> +++ b/tools/perf/util/cs-etm.c
+>>> @@ -335,8 +335,11 @@ static int cs_etm__process_aux_output_hw_id(struct perf_session *session,
+>>>  	trace_chan_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
+>>>  
+>>>  	/* check that we can handle this version */
+>>> -	if (version > CS_AUX_HW_ID_CURR_VERSION)
+>>> +	if (version > CS_AUX_HW_ID_CURR_VERSION) {
+>>> +		pr_err("CS ETM Trace: PERF_RECORD_AUX_OUTPUT_HW_ID version %d not supported. Please update Perf.\n",
+>>
+>> Is not this bit misleading ? PERF_RECORD_AUX_OUTPUT_HW_ID is just the perf record
+>> format identifier. The record version here, is derived from the platform specific
+>> hardware ID information embedded in this perf record.
+> 
+> Not sure I follow what you mean here. 'version' is something that's
+> output by the kernel. It's saved into a perf.data file, and if Perf
+> can't handle version 2 for example, you need to update Perf.
 
+Got it.
+
+> 
+>>
+>> Should not this be just s/PERF_RECORD_AUX_OUTPUT_HW_ID/hardware ID/ instead ?
+>>
+> 
+> It's just a way to go from the error message to the part of the code or
+> docs that you need to look at. "hardware ID" wouldn't lead you anywhere
+> so I don't think it would be useful.
+
+Sure, fair enough.
+
+> 
+>>> +		       version);
+>>>  		return -EINVAL;
+>>> +	}
+>>>  
+>>>  	/* get access to the etm metadata */
+>>>  	etm = container_of(session->auxtrace, struct cs_etm_auxtrace, auxtrace);
+>>
+> _______________________________________________
+> CoreSight mailing list -- coresight@lists.linaro.org
+> To unsubscribe send an email to coresight-leave@lists.linaro.org
