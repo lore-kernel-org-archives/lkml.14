@@ -1,158 +1,125 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FAE115ECDB
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC792156F29
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715089174; cv=none; b=WFhS1GWQFL3sjKO4eC26M2i92sPP+/D5rjYeIkTYLRf4Kr+gD3d0Q2bVW+U1C5r0ndMOInIrS7GDM6RZP07GIMfbZyyRp+PNSZb2N+HVnF1UuYvP/+W4ZDgC6fy6Pd1Bh4lYFSIyX5jurgoT/2cfAe41sN4eGLEEMzR1O/ZL6Q0=
+	t=1715089305; cv=none; b=AcaB8wZxh/ov4mnAl2Jungme55bBVpPCCwsOgNhOD0zELGRBu9Z3MBPZIqpzFZKbUH3R4QnyDaapWP838EZZ2tVxfyEpdMbLftL/zbTFwut7t5bjoL0pcCWsc+53M8bCK3vM7/CJPnu/17W0vSHW77mclyKWU25P9Nf1gvqBk24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715089174; c=relaxed/simple;
-	bh=wtfbGydj7hoFOdn1oKPiMmXA1U1DIaBi6ccHNQcK9Hc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HuhWXh1XkIZKArFU39SMyLWpFFTtUyaqHhgxsNDnaUi+Bryr+ekEVAJkiYPcujgOgnb3r6WSzRz99Gwq8GPPG2cYoavApBAvbhz0pT0R65D9SqUjto/1bHVeW5Dl3iODHrUt1iNWd4MuDsRPYBjd3g4Z9ZVLHA+iRqokM7U7grc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=jdduwpQ+; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
+	s=arc-20240116; t=1715089305; c=relaxed/simple;
+	bh=U3rGI4TXjzTskPSdX5hfRfaXW8W6u8mc2k9lgqQ4Kyc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tBhkFZ8RGoa8+RcPnJG9S+a5wRjN9eoaEdkpG/fp5Qe5KPC3tl+XdKLTUx8Vkin/OEyGVtdf03D98ZTqWaw2b45BOsDdgJxYIQ43sN0E6mA5OQi8NN6zJWcISTjlJcmotIKLqrTV3GFeN1OvM5zOSEI7rqY0nWoTsbzACH1CvX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hTn6Rbfx; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jdduwpQ+"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-346407b8c9aso943354f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 06:39:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hTn6Rbfx"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2e3efa18e6aso6845161fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 06:41:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1715089170; x=1715693970; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M/ueNO6VgphQOXA5uS4/0Wfhc/WsOURk1MmZZT9vU18=;
-        b=jdduwpQ+GlEAIKH6qKFRFaWkStoC37BzPkJjkOo8yrOKJgBlw+/vmuS+llpPPI+r5K
-         IWh/Bi0AZqGvXC2dGcxJqCdME1VG2ffqaDHrZmBj2uzx7eGQkQHImo+l4IaNsVx/O5q+
-         3+uwuZFuJXVbJK7nmLl8CsaAQeT/SZ97VP5j0=
+        d=linaro.org; s=google; t=1715089302; x=1715694102; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eBYWPKKxIxo8aRFjjK9T2hA9r6Tr0Rm6zJjBWqA8aQQ=;
+        b=hTn6RbfxugjDJ83Lc9VWNGsRvHgrKFgborM0GZE0mE1fdiNtMjJJnZhNUcYF3Lbyu5
+         /Dg0qhjwaJ7RseO7gRyPZTGkE3L+qeCJToZd2jQj9wiooptBo+a8Z4wbV6Zl5dMuX3eQ
+         pp5Ai+vbHm325mzuKIpXxctM7vOlJ2fVIKxlFgGbo7GWkkTnNNPJ/BrK+V+MOiu1eM9u
+         S7wvbOeQGLjYV0SVRjIIELTTu8b0Iyqcdrvfj25PaFhXliZ/tVh9megjfu6ujWhcISGU
+         O2pFB2fyxN6O7JwuF1PXR5bLqH/bn5Kaz9lh0wihpAUnNAD2K1OjgV0ROzavx2BeznJu
+         3JIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715089170; x=1715693970;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:mail-followup-to:message-id:subject:cc:to
-         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=M/ueNO6VgphQOXA5uS4/0Wfhc/WsOURk1MmZZT9vU18=;
-        b=IpZsKpmcyNk+ONUT3R98AKVgimPp/cSz4pdN+M0dW5Kyh5ojxf8FdmAslyZdXk6/j2
-         7fIPWuIzV/Ko1TZrSuQG9Caf0SNNx6M6FpAl0mLyFsN7jRKA0KZANvS5V2xjKxzex66W
-         biUeCIuG4/l/rTwCu/pnHH6wiM9xElg1khs99tuxeOBxtEXeUvzqI2cKOSHkkZ/bQY7O
-         yOOgu2ythVPfYZwGICYvHRecK56Acf9/C5puePZ7ZsA9el4FdZKcgbYFZb7zqje7YjHE
-         PHVhXuUz826e8m/hwqIe7+kXYZ5Zv9POPSDV+zvxkWEhf3PPxPGRSobeZLGTmPADtgh7
-         MlFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXeUa8dzaRscXJqMXwAB56NXCz7qUIXARDl7QBCkUYkcYBQzWVT1scThpzPPxayUX6W83bUemUBXhXsfejyXUkX2T356BnBM3cNRYrH
-X-Gm-Message-State: AOJu0Ywo25rvCnumdjL44H22GzlOal9C/xIH7YL5AWLAvvI/URGqRKPO
-	H45Zkez5Py8Zr9FYEn2csTVWvVmPQRiuOuAt62zgGPJBoZ90P3p0d6uuAMCWRO8=
-X-Google-Smtp-Source: AGHT+IFFkAJxLxOoCG8nFFCsSuXqv/YiZ7tcMHz5O7ctQR4tHzkmXOo+SmkFGR5DkNaIUKepBhk//Q==
-X-Received: by 2002:a05:600c:5118:b0:418:9941:ca28 with SMTP id o24-20020a05600c511800b004189941ca28mr9213068wms.2.1715089170283;
-        Tue, 07 May 2024 06:39:30 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id h18-20020a056000001200b0034c78001f6asm12974839wrx.109.2024.05.07.06.39.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 06:39:29 -0700 (PDT)
-Date: Tue, 7 May 2024 15:39:27 +0200
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc: "T.J. Mercier" <tjmercier@google.com>,
-	Charan Teja Kalla <quic_charante@quicinc.com>,
-	zhiguojiang <justinjiang@vivo.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-Subject: Re: [PATCH] dmabuf: fix dmabuf file poll uaf issue
-Message-ID: <ZjovD5WaWjknd-qv@phenom.ffwll.local>
-Mail-Followup-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	"T.J. Mercier" <tjmercier@google.com>,
-	Charan Teja Kalla <quic_charante@quicinc.com>,
-	zhiguojiang <justinjiang@vivo.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>, linux-media@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-	linux-kernel@vger.kernel.org, opensource.kernel@vivo.com
-References: <4fedd80c-d5b6-4478-bfd3-02d1ee1a26e5@vivo.com>
- <aab5ec51-fcff-44f2-a4f5-2979bd776a03@amd.com>
- <2ebca2fd-9465-4e64-b3cc-ffb88ef87800@vivo.com>
- <d4209754-5f26-422d-aca0-45cccbc44ad0@amd.com>
- <289b9ad6-58a3-aa39-48ae-a244fe108354@quicinc.com>
- <CABdmKX3Zu8LihAFjMuUHx4xzZoqgmY7OKdyVz-D26gM-LECn6A@mail.gmail.com>
- <8ca45837-cbed-28da-4a6f-0dcec8294f51@quicinc.com>
- <83605228-92ee-b666-d894-1c145af2e5ab@quicinc.com>
- <CABdmKX2MWU9-9YN46PXx-Jy-O9CHMv8hCkvArd7BbWUBs=GPnw@mail.gmail.com>
- <8915fcc1-d8f1-48c2-9e51-65159aaa5a3b@amd.com>
+        d=1e100.net; s=20230601; t=1715089302; x=1715694102;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eBYWPKKxIxo8aRFjjK9T2hA9r6Tr0Rm6zJjBWqA8aQQ=;
+        b=Q1YwKDAAjJ+FJY09v1kYbJt+BSmxDz6eeNuPVCRbtXMqePBtpG1+dd4vJ11Qwo3HWe
+         XZ7BcxFA5xfnLAHyD9ppaZ7KS/cWW2+d6Dkm7kPQ5uZaKC24oBvLXmVJ6u9whkjB4OVv
+         PAYhCiCTpU8NmihHIbUFIa/zLjAU0+hDehbnf3qPjR6XzzJqltP7wnNymep0UiQ5IHdZ
+         4S8n5ckeq2hlRcgLdd+jzL6ntQguOAdp67nJ3x2CAw5tb6+p8RPnr0dF/tdkHkUYLl8W
+         eGUnvJ5kplUPjkBcY4W8hkzjATjg4BlbuFu8kpLpHyMM04usanvJi4uI9ty8Sf8XsXVw
+         yVMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtQ5P7k7KK+ITQwPuecMOc+Ba3OqtBeVQ7Us7fss/mHPO7Cr8e1p7zncrnMMhUibojHYI3siseEIxrGqNLKUphMeHJPmZfbij+5oqq
+X-Gm-Message-State: AOJu0YzykLO7V8c5K2xHsAyJSPznsKAFg9VIEIrXoT6rsqfP3Xt/RIkI
+	ECUzT80iOCd0oZ7FOy9/Gk7KzaIh66T8qpnn34d4SlY3pzOdF2hlQw1mmgrYrD1Jm22AShMzu1i
+	/
+X-Google-Smtp-Source: AGHT+IFhusLgGPzXhOPfN0j+8HODL1lRzxw67tVfNgxWdHZALf7v7+cLKSB0NTJACUQLd+5spu3LXw==
+X-Received: by 2002:a2e:7d0e:0:b0:2e1:eb38:d4b4 with SMTP id 38308e7fff4ca-2e3d9cb3781mr7358371fa.21.1715089301860;
+        Tue, 07 May 2024 06:41:41 -0700 (PDT)
+Received: from ?IPV6:2a00:f41:c0d:408:fa88:abdb:17c2:cf24? ([2a00:f41:c0d:408:fa88:abdb:17c2:cf24])
+        by smtp.gmail.com with ESMTPSA id i16-20020a2e8650000000b002e15aec44fesm2054159ljj.96.2024.05.07.06.41.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 May 2024 06:41:41 -0700 (PDT)
+Message-ID: <163a0c01-8f9f-48e6-89dc-2b702e755622@linaro.org>
+Date: Tue, 7 May 2024 15:41:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8915fcc1-d8f1-48c2-9e51-65159aaa5a3b@amd.com>
-X-Operating-System: Linux phenom 6.6.15-amd64 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] phy: qcom-snps-femto-v2: Add load and voltage setting for
+ LDO's used
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Udipto Goswami <quic_ugoswami@quicinc.com>,
+ Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240502123312.31083-1-quic_ugoswami@quicinc.com>
+ <CAA8EJppeQTadmny=hcs4xCQDXHwXEBHXjeecvZCUVcSXmwBTgg@mail.gmail.com>
+ <90a5b641-af5b-4640-b2ad-85dbbab523bf@linaro.org>
+ <CAA8EJpoWWXvJabcVqp+YSa8arQbLPC=v+XkvPZe6nwH7aaKnfQ@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <CAA8EJpoWWXvJabcVqp+YSa8arQbLPC=v+XkvPZe6nwH7aaKnfQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 07, 2024 at 12:10:07PM +0200, Christian König wrote:
-> Am 06.05.24 um 21:04 schrieb T.J. Mercier:
-> > On Mon, May 6, 2024 at 2:30 AM Charan Teja Kalla
-> > <quic_charante@quicinc.com> wrote:
-> > > Hi TJ,
-> > > 
-> > > Seems I have got answers from [1], where it is agreed upon epoll() is
-> > > the source of issue.
-> > > 
-> > > Thanks a lot for the discussion.
-> > > 
-> > > [1] https://lore.kernel.org/lkml/0000000000002d631f0615918f1e@google.com/
-> > > 
-> > > Thanks
-> > > Charan
-> > Oh man, quite a set of threads on this over the weekend. Thanks for the link.
+
+
+On 5/7/24 13:55, Dmitry Baryshkov wrote:
+> On Tue, 7 May 2024 at 14:43, Konrad Dybcio <konrad.dybcio@linaro.org> wrote:
+>>
+>>
+>>
+>> On 5/2/24 15:12, Dmitry Baryshkov wrote:
+>>> On Thu, 2 May 2024 at 15:33, Udipto Goswami <quic_ugoswami@quicinc.com> wrote:
+>>>>
+>>>> The Femto phy depends on 0.88/ 1.8/ 3.3V regulators for its operation.
+>>>> If one of the regulators is not voted to the required minimum voltage
+>>>> for phy to operate, then High speed mode of operation will fail.
+>>>>
+>>>> On certain targets like (qcm6490_rb3gen2) where the minimum voltage
+>>>> of the regulator is lower than the operating voltage of the phy.
+>>>> If not voted properly, the phy supply would be limited to the min value
+>>>> of the LDO thereby rendering the phy non-operational.
+>>>>
+>>>> The current implementation of the regulators in the Femto PHY is not
+>>>> setting the load and voltage for each LDO. The appropriate voltages and
+>>>> loads required for the PHY to operate should be set.
+>>>
+>>> Please move min/max voltages to the DTS. There is no need to set them
+>>> from the driver.
+>>>
+>>> Also, is there any reason why you can't use `regulator-initial-mode =
+>>> <RPMH_REGULATOR_MODE_HPM>;` like other boards do?
+>>
+>> The point is to aggregate the values and switch to HPM if a threshold is
+>> crossed (or stay in LPM otherwise)
 > 
-> Yeah and it also has some interesting side conclusion: We should probably
-> tell people to stop using DMA-buf with epoll.
-> 
-> The background is that the mutex approach epoll uses to make files disappear
-> from the interest list on close results in the fact that each file can only
-> be part of a single epoll at a time.
-> 
-> Now since DMA-buf is build around the idea that we share the buffer
-> representation as file between processes it means that only one process at a
-> time can use epoll with each DMA-buf.
-> 
-> So for example if a window manager uses epoll everything is fine. If a
-> client is using epoll everything is fine as well. But if *both* use epoll at
-> the same time it won't work.
-> 
-> This can lead to rather funny and hard to debug combinations of failures and
-> I think we need to document this limitation and explicitly point it out.
+> I see that other boards use regulator-initial-mode for the USB PHY
+> regulators. Are we going to change all of them too?
 
-Ok, I tested this with a small C program, and you're mixing things up.
-Here's what I got
+Not sure about initial mode yet.
 
-- You cannot add a file twice to the same epoll file/fd. So that part is
-  correct, and also my understanding from reading the kernel code.
+> Also note, that while the combo QMP driver sets the loads, the pure
+> USB QMP PHY driver doesn't set the loads. This way we can end up with
+> the undervolted PHY.
 
-- You can add the same file to two different epoll file instaces. Which
-  means it's totally fine to use epoll on a dma_buf in different processes
-  like both in the compositor and in clients.
+Sounds like something to fix, then
 
-- Substantially more entertaining, you can nest epoll instances, and e.g.
-  add a 2nd epoll file as an event to the first one. That way you can add
-  the same file to both epoll fds, and so end up with the same file
-  essentially being added twice to the top-level epoll file. So even
-  within one application there's no real issue when e.g. different
-  userspace drivers all want to use epoll on the same fd, because you can
-  just throw in another level of epoll and it's fine again and you won't
-  get an EEXISTS on EPOLL_CTL_ADD.
-
-  But I also don't think we have this issue right now anywhere, since it's
-  kinda a general epoll issue that happens with any duplicated file.
-
-So I don't think there's any reasons to recommend against using epoll on
-dma-buf fd (or sync_file or drm_syncobj or any of the sharing primitives
-we have really).
-
-Cheers, Sima
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Konrad
