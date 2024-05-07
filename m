@@ -1,59 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D473314B962
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 20:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E17114B964
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 20:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715112163; cv=none; b=lLy811pG3LWEkf7y+YMH9/0axY3DlL1WHO6jtxqmFF1CkGjGBkxz9//xaIziJdZPPNP6bKZB5r8+doCfn6oBTH4km1bopo5cIc7UIF+KpR/HZJlxPz65FaQY7ek+XAa+9J0y/G+o4WmV+7T/8+P9DaHTm10WJqUOoWKSwJIAb9c=
+	t=1715112164; cv=none; b=C8qvpKmwUREX+e2Qx6x4lrBzcJDeyovtPeIQnXYhXmgrDt0/8GJ3A/o5NC/K6JF8IFOhXh72xFu0EeLKj6R5Uo6Y1+lu9hhOKmypjFlFum4HugdIaEvK36tmYcX6qN/9BY7fem2aafHOqRTK61ZGGylLPrblHljjvttqKzN7gfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715112163; c=relaxed/simple;
-	bh=iqU2yt+YftKdbR2lVoCPnIPr3BqQEJhtDc0zH9IzPSo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t+++YRgvWz6Ju9woQXiSPlifERrN9RbBV3VHrPGin3Y4MxhcbtlEpxGIyglcAdUJWheM/D5ZPgv6Pkx8y+G1PxVMUXAAW8teoW/R9ZWpqvtPe1uoLJwfdtL8AEo3jaSw6WSC5RdIrHXuzm3i+PmpIxJTik39igtM4Qf/01dNOx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WwGZnkpf; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1715112164; c=relaxed/simple;
+	bh=d3kIVb3N3T3QMxmT6SHLpGgbVBfU5Yf262Tqt572UNA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=b+KfMTDuxLwepvPH5dYkFkRigTWatNIaOzBKL4u5wh8CS/hXAzsju5YsiA0dDXWVsxnc6exIpnTTdeCQWMv/7bZzH0Kk4uiDd/5/7LV8fNvbUSP27F/or6Ta3YFPWcznElouspyl+pApUfANNY1skJcE5y1a/XoXsNj5A5+R46E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cgEXDvCV; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WwGZnkpf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cgEXDvCV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715112162; x=1746648162;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iqU2yt+YftKdbR2lVoCPnIPr3BqQEJhtDc0zH9IzPSo=;
-  b=WwGZnkpfj0QLHANHfF0ge1HSfVyLY+MrPJXqBm0LGltF8AFVOyxpdKdG
-   VZ+XADO/1+x8ayBXkhMCqblo83xVLRn7YuNefW0MKQ9LDrRt/HEtiet4j
-   zGelej8iAL4YcGDseMPALC2ZBIcquZY0OfeHsyesL5rKiiJglF6yL6CZm
-   /UY1t/AWsFkyYfLUE2NufvaqJTA09txE0uxD4TlgKb85ZDKLIrkEYREI5
-   WbIF5INe9WjlcDoZVh19WjM80JikOIt9V58yH+yK8UV4bsDj6fHFbSPlt
-   BdNQ28mCKLR/452ZobeuMufXGnoAiXL6KfTzbBeatLeGfkRDEYH6gPdkL
-   Q==;
-X-CSE-ConnectionGUID: NEojcdeNSZOfD+J/j5NYqA==
-X-CSE-MsgGUID: sUQo6EFkQYe66QY0zby1sA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="10804797"
+  t=1715112163; x=1746648163;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=d3kIVb3N3T3QMxmT6SHLpGgbVBfU5Yf262Tqt572UNA=;
+  b=cgEXDvCV6RlUQYs/PZQ2BVMligSoGz5xVLDYWyVaTVBXGfd0dpB+4aL7
+   sOUPOyEKbLJYgQu0FGM/129RgCeixqjgMcteG0t0y1S8mscizbYLzfKup
+   OqdfV2rs4M+ARfOAV+CBzUpfSgKu58gGFvkZCJ/pT+9NOhvXMarjK+krV
+   eQYlJy81xcjR1eb1v2z0TBy5I1B41G+YuLE3+Q9FxYxzhYuNdV+81BfFt
+   tBPVsYkS9082/VUYQijwkUR1wzpqKR7QyNiiXRCqPb/48mwAzvwk3TxtJ
+   l8aYNEQ8tdbXTqINaEXFO8tn6wZdTJ2q0PwMXBFqynoBDsQX8i0bXnSz2
+   A==;
+X-CSE-ConnectionGUID: 1XXxJIdNSFerHlCoOdYXPQ==
+X-CSE-MsgGUID: YWB+NPXWSoS796KUffOCYw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="11063696"
 X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
-   d="scan'208";a="10804797"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 13:02:41 -0700
-X-CSE-ConnectionGUID: lV9xq1aaQiOW3ZZusx/odg==
-X-CSE-MsgGUID: mSqkrw40QjqXBFpjnHd5YA==
+   d="scan'208";a="11063696"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 13:02:41 -0700
+X-CSE-ConnectionGUID: pbvQYyhCR3e1AFbn7AX55w==
+X-CSE-MsgGUID: 9aGDmB9PQICAPz3YLVrkxQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
-   d="scan'208";a="29194238"
+   d="scan'208";a="29168276"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 07 May 2024 13:02:40 -0700
+  by orviesa007.jf.intel.com with ESMTP; 07 May 2024 13:02:40 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 69F2A12A; Tue, 07 May 2024 23:02:38 +0300 (EEST)
+	id 8A2985E8; Tue, 07 May 2024 23:02:38 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Yury Norov <yury.norov@gmail.com>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
 	Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v2 0/2] bitops: Reshuffle bitops.h and wordpart,h
-Date: Tue,  7 May 2024 23:01:30 +0300
-Message-ID: <20240507200236.527688-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 2/2] usercopy: Don't use "proxy" headers
+Date: Tue,  7 May 2024 23:01:32 +0300
+Message-ID: <20240507200236.527688-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240507200236.527688-1-andriy.shevchenko@linux.intel.com>
+References: <20240507200236.527688-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,18 +65,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move word part related macros to the respective header.
-While at it, fix the inclusion mess in lib/usercopy.h.
+Update header inclusions to follow IWYU (Include What You Use)
+principle.
 
-Andy Shevchenko (2):
-  bitops: Move aligned_byte_mask() to wordpart.h
-  usercopy: Don't use "proxy" headers
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ lib/usercopy.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
- include/linux/bitops.h   | 7 -------
- include/linux/wordpart.h | 7 +++++++
- lib/usercopy.c           | 9 +++++++--
- 3 files changed, 14 insertions(+), 9 deletions(-)
-
+diff --git a/lib/usercopy.c b/lib/usercopy.c
+index 4b62e6299cc8..499a7a7d54db 100644
+--- a/lib/usercopy.c
++++ b/lib/usercopy.c
+@@ -1,10 +1,14 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#include <linux/bitops.h>
++#include <linux/compiler.h>
++#include <linux/errno.h>
++#include <linux/export.h>
+ #include <linux/fault-inject-usercopy.h>
+ #include <linux/instrumented.h>
++#include <linux/kernel.h>
++#include <linux/nospec.h>
++#include <linux/string.h>
+ #include <linux/uaccess.h>
+ #include <linux/wordpart.h>
+-#include <linux/nospec.h>
+ 
+ /* out-of-line parts */
+ 
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
