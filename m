@@ -1,57 +1,57 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDA516D325
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3375B16D4F1
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:55:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097326; cv=none; b=s7g9trtSHKPR33HgJG3bYxKF14e8eUuE86lrbmho9e93VXQXF4DOb82YFrYVcat8gmRMfF0SaaPSoQV3bZ1YZnANmenNLTxxTr5zsNz9MTApFwBXdBw68RdYZj/SW7wM9HZ9sf112Mv5cEGezQh966NhvCkuHjKWQhYRGRhEveQ=
+	t=1715097329; cv=none; b=oiua2cOgWHLCDoeTC4tJ9BkVzUTQ695rKeBJAQPOl/OQJJmVfkZf5qRIEP4FUYd5tPJV0ygGDuhmyx+W8WIxuilRkSZWpOc1/f4ILU7xVePAj94BLiN/he2OBV8KBai8RnbSwbPyd5IZLtPuGvV+NVDc74Wh1FqrTzsu4ss9p24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715097326; c=relaxed/simple;
-	bh=XHUDN2VI7MLg/CxYWpMrE4fMasb8Fe9kDfLMNRGc7jU=;
+	s=arc-20240116; t=1715097329; c=relaxed/simple;
+	bh=lj3Uuvfbi3ogaJj1SEB5/Jfxuor2q0oFT4UvFLlqcuQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hXgymTUIyR/ZSoW83p2tLWjKFeJUatb3TRH5dtvi1Rz29gAzfWMqkri2NGj1+FmBVIjCvQiwDrue1F1XfTIFe7+UKX5SMLruXbUVtL9Pczt8vvWK7dUiSsJ1gc4IAy1Ta+pfva9oe3+vh2kqErH+hv0a5qVdSA2tWNDkl/1qoOU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rSUoQwBr; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=pVsnUYAaurz1SLsMLB5QiH5D59Fe+1P+kG0qdmZ1RHcx58Hz8DlacsZsP9XLoe0FGLL+oKyEl+uEMxEHURCG3fdq+OHzwXGjtduXZLNtZqIVHoxbimqYr4xMy39LiF9iH5FdkxxprMs7AYhHKdt5brNNjIEvB76OI11OVecH0bQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HpAA+kgj; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rSUoQwBr"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-41dc9c831acso28260585e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:55:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HpAA+kgj"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61e0c296333so69115587b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:55:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715097323; x=1715702123; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715097327; x=1715702127; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KogNzHA8DNUq5qVErfyTruPa2HrDq2ZydyrNVBz6ZGM=;
-        b=rSUoQwBreLtUFrMSh6I0JJI6c5XcJgsQGbbXgSgWqn7Ce2V4l4dRqaufMjfBhGKjh6
-         J13oaxtKFT9HSpdushKPIdYuSp0EL+cvqLYM8WAzFFxPqZkK3Yrm8DJbpTvJ6NUJi/4n
-         /7fsZiu+nOnc9o6a81nkAr+/3QPg1NwxTKkkJt3b7Bncrg64iLhXnVjRsRyXC/G+2Rkn
-         Aa4zFF2FhK0tSeek9kdnROw1kwWT22eo9LI2dCrjKaN9EcJ8EpaihwhMH4SQbAPgdr5N
-         asQJrc5IwBm+XuPwNAQaqMY8X3yLF3J+WCELULAq01h3BaOVoYBaThvwvkqti40PEPuH
-         vinQ==
+        bh=YyhwXzsTi3iuS9VxYlKBJB4yY1r1RWRn/sVpGYW4xm0=;
+        b=HpAA+kgjZ28e5uUu9/K1CjDZVmc2jF5NaQ7Y/BiRUjr6OWPoXCSxwpNQdJB0afPWrc
+         73htNL+ZsVu/w/IhRbO1eepjbLPqpDohGCTibcx8leKmq3aQ6qyzA9C2T9nx0GK2exEv
+         K+3kEM5F91hIXE72uck2+opIpsawARNrfiv1X0rzPSGE7fd1QyDnbQgwBXbIw52BjlFk
+         oV0enIFyjztTfWollok5QQjbpBXqRGbpoAsUBQhalC0JPpPSoCI7aNhu8mXWZ+u+h0Ec
+         xxkrKo5vWpJ/O71OBiYRbqGA/R7V74r/CqcouytB0CCNlr78btHqg1Zi3hgkEImO4ots
+         kOfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715097323; x=1715702123;
+        d=1e100.net; s=20230601; t=1715097327; x=1715702127;
         h=content-transfer-encoding:cc:to:from:subject:message-id:references
          :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=KogNzHA8DNUq5qVErfyTruPa2HrDq2ZydyrNVBz6ZGM=;
-        b=vy391AZi//Lww9zF0YvD4EFgv9GRQGS/N8yh8KOnfAdBep44sVPU0nAR+UTCxi7YLa
-         8D9UH251kVMcFB2lAowXalIc+Ph0Lyfp36AfXIYdvFCRYT+YVNah0C9dZ+L3PDSVPcw+
-         KLqBQMugS/UpvbEw5IH/eZ+aEb0pz7XBUc8uCqCN6oBFD0L6FA/DCYISr+YmSgHIheSg
-         KkI/NWn6LR9XWH83fXEBOaD/S/hxJG8gbCa99WL3hRcOcnjIZSSILYaOkcrNK19aiAUE
-         Pa39vdE0YHAoK8aCl7vpzdkTXl0bVw/QfgrsiB2ejcXJxBk7qresZxrG1W5HihG3kJkK
-         6aRg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLx5chvgDDPPx/yfz+N3DC5QwlN3fGm32H0SO4fTm7NPOxSI9Sj14yvwtz0zP2I1pQDG/jdIYUBBJ+Ou7AeIbJmviZEbdVITSSe8QP
-X-Gm-Message-State: AOJu0YzDUd43T+N4C+ntxzX2fjbxz5S/gzT+RgxdTJjPULPr4ng0eswv
-	7OwLyrS1tPj6W962kmmEtiSca4DWzbSPNo3FWyYDhiU63xa+t5pnl0Oq/ru9wyVOUGLl43wTtOB
-	nMGpjRJJplQ==
-X-Google-Smtp-Source: AGHT+IGDg7S/ue235EfhlQUzDC/L5iFA57uekVNXwTOfcB0fO9I1mzuwv8vAyKMuJbKe/pE9JwRfCzdMS/2g1g==
+        bh=YyhwXzsTi3iuS9VxYlKBJB4yY1r1RWRn/sVpGYW4xm0=;
+        b=EnCeuZh5yPXKaHhBjyNCkTrayHUQ9yd/WJMe6lx3BpuMTn+Is04UwAVl3VQtKnFE0y
+         MnNhH3HodHlhFoEw8O7Oz5StA2BErYq08XXtKixy3H3Oq1qYYsG0JvY+aY15MiPYEP2B
+         dEZxH5IFWlp0uq083RKkS0d3QEwmFmJa1f3Bd6n+IteY1w1LD2gJ4u0pzBrSa93u1Yl8
+         Tf9pY9FI8/7OB2PsfBBk0GS+QmI4VYTEKCX+gP/PmbDekIJxgXyw6gRPJABVoftmY9sj
+         Wa1WmQc01rs6bkza84HaDA8b+FB1+mN8FQEgVH7l5h20sE7apACzCiCo7OIUu7giAYyC
+         L2jQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVHZ8w6ZexTrRNBl5ah5fjtAaJEWjvaW3asVK0XfWrISKAK0NoZcgEOcD/9RH946bjNRmbyYsFIyW1GgOtarxgK7NWsXg3vG0AteU0y
+X-Gm-Message-State: AOJu0Yxo16T9JHC8z1km7PUpni603ZNWXdZQI4aOG9fFLlC1wFh82TQC
+	i8KPb80CstEolyfZRr2x24MgDU+cLZy62eKtEz5PHe24P71ZAfpKaRcYamyRLMUViD5iUf7P/KU
+	ptZnWHdteSA==
+X-Google-Smtp-Source: AGHT+IFXr71F6VzIV2IWcHBSYr3WsXCqqHZWMEiC5DuDYmkkVHWrNMTCKBa7KJNHIvxEbrt1NsffE8mdi7jzMQ==
 X-Received: from szatan.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2d83])
- (user=panikiel job=sendgmr) by 2002:a05:600c:4305:b0:41b:d9c8:5c19 with SMTP
- id 5b1f17b1804b1-41f2db247b5mr326195e9.2.1715097322908; Tue, 07 May 2024
- 08:55:22 -0700 (PDT)
-Date: Tue,  7 May 2024 15:54:09 +0000
+ (user=panikiel job=sendgmr) by 2002:a25:ed0d:0:b0:de5:a77e:f9bd with SMTP id
+ 3f1490d57ef6-deba36c73bamr692217276.6.1715097327282; Tue, 07 May 2024
+ 08:55:27 -0700 (PDT)
+Date: Tue,  7 May 2024 15:54:11 +0000
 In-Reply-To: <20240507155413.266057-1-panikiel@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240507155413.266057-1-panikiel@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240507155413.266057-7-panikiel@google.com>
-Subject: [PATCH v3 06/10] media: v4l2-mediabus: Add support for DisplayPort
- media bus
+Message-ID: <20240507155413.266057-9-panikiel@google.com>
+Subject: [PATCH v3 08/10] media: dt-bindings: Add Chameleon v3 video interface
 From: "=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
 To: airlied@gmail.com, akpm@linux-foundation.org, conor+dt@kernel.org, 
 	daniel@ffwll.ch, dinguyen@kernel.org, hverkuil-cisco@xs4all.nl, 
@@ -77,177 +76,89 @@ Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Add new definitions, a config struct, and a parser for the DisplayPort
-media bus.
+Add dt binding for the video interface present on the Google
+Chameleon v3. The Chameleon v3 uses the video interface to capture
+a single video source from a given HDMI or DP connector and write
+the resulting frames to memory.
 
 Signed-off-by: Pawe=C5=82 Anikiel <panikiel@google.com>
 ---
- drivers/media/v4l2-core/v4l2-fwnode.c | 38 +++++++++++++++++++++++++++
- include/media/v4l2-fwnode.h           |  5 ++++
- include/media/v4l2-mediabus.h         | 17 ++++++++++++
- 3 files changed, 60 insertions(+)
+ .../bindings/media/google,chv3-video.yaml     | 64 +++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/google,chv3-vid=
+eo.yaml
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-cor=
-e/v4l2-fwnode.c
-index 89c7192148df..49ea4d264eb2 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -67,6 +67,10 @@ static const struct v4l2_fwnode_bus_conv {
- 		V4L2_FWNODE_BUS_TYPE_DPI,
- 		V4L2_MBUS_DPI,
- 		"DPI",
-+	}, {
-+		V4L2_FWNODE_BUS_TYPE_DISPLAYPORT,
-+		V4L2_MBUS_DISPLAYPORT,
-+		"DisplayPort",
- 	}
- };
-=20
-@@ -417,6 +421,33 @@ v4l2_fwnode_endpoint_parse_csi1_bus(struct fwnode_hand=
-le *fwnode,
- 		vep->bus_type =3D V4L2_MBUS_CSI1;
- }
-=20
-+static int
-+v4l2_fwnode_endpoint_parse_dp_bus(struct fwnode_handle *fwnode,
-+				  struct v4l2_fwnode_endpoint *vep,
-+				  enum v4l2_mbus_type bus_type)
-+{
-+	struct v4l2_mbus_config_displayport *bus =3D &vep->bus.displayport;
-+	u32 array[4];
-+	int count;
-+	int i;
+diff --git a/Documentation/devicetree/bindings/media/google,chv3-video.yaml=
+ b/Documentation/devicetree/bindings/media/google,chv3-video.yaml
+new file mode 100644
+index 000000000000..b8380021cd23
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/google,chv3-video.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/google,chv3-video.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	count =3D fwnode_property_count_u32(fwnode, "data-lanes");
-+	if (count < 0)
-+		return count;
-+	if (!(count =3D=3D 1 || count =3D=3D 2 || count =3D=3D 4))
-+		return -EINVAL;
-+	fwnode_property_read_u32_array(fwnode, "data-lanes", array, count);
++title: Google Chameleon v3 video interface
 +
-+	for (i =3D 0; i < count; i++)
-+		bus->data_lanes[i] =3D array[i];
-+	bus->num_data_lanes =3D count;
-+	bus->multi_stream_support =3D fwnode_property_present(fwnode, "multi-stre=
-am-support");
++maintainers:
++  - Pawe=C5=82 Anikiel <panikiel@google.com>
 +
-+	vep->bus_type =3D V4L2_MBUS_DISPLAYPORT;
++properties:
++  compatible:
++    enum:
++      - google,chv3-video-it-1.0
++      - google,chv3-video-dp-1.0
 +
-+	return 0;
-+}
++  reg:
++    items:
++      - description: core registers
++      - description: irq registers
 +
- static int __v4l2_fwnode_endpoint_parse(struct fwnode_handle *fwnode,
- 					struct v4l2_fwnode_endpoint *vep)
- {
-@@ -482,6 +513,13 @@ static int __v4l2_fwnode_endpoint_parse(struct fwnode_=
-handle *fwnode,
- 		v4l2_fwnode_endpoint_parse_parallel_bus(fwnode, vep,
- 							vep->bus_type);
-=20
-+		break;
-+	case V4L2_MBUS_DISPLAYPORT:
-+		rval =3D v4l2_fwnode_endpoint_parse_dp_bus(fwnode, vep,
-+							 vep->bus_type);
-+		if (rval)
-+			return rval;
++  interrupts:
++    maxItems: 1
 +
- 		break;
- 	default:
- 		pr_warn("unsupported bus type %u\n", mbus_type);
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index f7c57c776589..777a61015ca0 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -36,6 +36,8 @@
-  * @bus.mipi_csi2: embedded &struct v4l2_mbus_config_mipi_csi2.
-  *		   Used if the bus is MIPI Alliance's Camera Serial
-  *		   Interface version 2 (MIPI CSI2).
-+ * @bus.displayport: embedded &struct v4l2_mbus_config_displayport.
-+ *		     Used if the bus is VESA DisplayPort.
-  * @link_frequencies: array of supported link frequencies
-  * @nr_of_link_frequencies: number of elements in link_frequenccies array
-  */
-@@ -46,6 +48,7 @@ struct v4l2_fwnode_endpoint {
- 		struct v4l2_mbus_config_parallel parallel;
- 		struct v4l2_mbus_config_mipi_csi1 mipi_csi1;
- 		struct v4l2_mbus_config_mipi_csi2 mipi_csi2;
-+		struct v4l2_mbus_config_displayport displayport;
- 	} bus;
- 	u64 *link_frequencies;
- 	unsigned int nr_of_link_frequencies;
-@@ -166,6 +169,7 @@ struct v4l2_fwnode_connector {
-  * @V4L2_FWNODE_BUS_TYPE_PARALLEL: Camera Parallel Interface bus
-  * @V4L2_FWNODE_BUS_TYPE_BT656: BT.656 video format bus-type
-  * @V4L2_FWNODE_BUS_TYPE_DPI: Video Parallel Interface bus
-+ * @V4L2_FWNODE_BUS_TYPE_DISPLAYPORT: DisplayPort bus
-  * @NR_OF_V4L2_FWNODE_BUS_TYPE: Number of bus-types
-  */
- enum v4l2_fwnode_bus_type {
-@@ -177,6 +181,7 @@ enum v4l2_fwnode_bus_type {
- 	V4L2_FWNODE_BUS_TYPE_PARALLEL,
- 	V4L2_FWNODE_BUS_TYPE_BT656,
- 	V4L2_FWNODE_BUS_TYPE_DPI,
-+	V4L2_FWNODE_BUS_TYPE_DISPLAYPORT,
- 	NR_OF_V4L2_FWNODE_BUS_TYPE
- };
-=20
-diff --git a/include/media/v4l2-mediabus.h b/include/media/v4l2-mediabus.h
-index 5bce6e423e94..74b5d96f5050 100644
---- a/include/media/v4l2-mediabus.h
-+++ b/include/media/v4l2-mediabus.h
-@@ -120,6 +120,18 @@ struct v4l2_mbus_config_mipi_csi1 {
- 	unsigned char clock_lane;
- };
-=20
-+/**
-+ * struct v4l2_mbus_config_displayport - DisplayPort data bus configuratio=
-n
-+ * @data_lanes: an array of physical data lane indexes
-+ * @num_data_lanes: number of data lanes
-+ * @multi_stream_support: multi stream transport support
-+ */
-+struct v4l2_mbus_config_displayport {
-+	unsigned char data_lanes[4];
-+	unsigned char num_data_lanes;
-+	bool multi_stream_support;
-+};
++  port:
++    $ref: /schemas/graph.yaml#/properties/port
++    description:
++      Connection to the video receiver - optional. If this isn't present,
++      the video interface still works on its own, but EDID control is
++      unavailable and DV timing information only reports the active
++      video width/height.
 +
- /**
-  * enum v4l2_mbus_type - media bus type
-  * @V4L2_MBUS_UNKNOWN:	unknown bus type, no V4L2 mediabus configuration
-@@ -131,6 +143,7 @@ struct v4l2_mbus_config_mipi_csi1 {
-  * @V4L2_MBUS_CSI2_DPHY: MIPI CSI-2 serial interface, with D-PHY
-  * @V4L2_MBUS_CSI2_CPHY: MIPI CSI-2 serial interface, with C-PHY
-  * @V4L2_MBUS_DPI:      MIPI VIDEO DPI interface
-+ * @V4L2_MBUS_DISPLAYPORT: DisplayPort interface
-  * @V4L2_MBUS_INVALID:	invalid bus type (keep as last)
-  */
- enum v4l2_mbus_type {
-@@ -142,6 +155,7 @@ enum v4l2_mbus_type {
- 	V4L2_MBUS_CSI2_DPHY,
- 	V4L2_MBUS_CSI2_CPHY,
- 	V4L2_MBUS_DPI,
-+	V4L2_MBUS_DISPLAYPORT,
- 	V4L2_MBUS_INVALID,
- };
-=20
-@@ -159,6 +173,8 @@ enum v4l2_mbus_type {
-  * @bus.mipi_csi2: embedded &struct v4l2_mbus_config_mipi_csi2.
-  *		   Used if the bus is MIPI Alliance's Camera Serial
-  *		   Interface version 2 (MIPI CSI2).
-+ * @bus.displayport: embedded &struct v4l2_mbus_config_displayport.
-+ *	    Used if the bus is VESA DisplayPort interface.
-  */
- struct v4l2_mbus_config {
- 	enum v4l2_mbus_type type;
-@@ -166,6 +182,7 @@ struct v4l2_mbus_config {
- 		struct v4l2_mbus_config_parallel parallel;
- 		struct v4l2_mbus_config_mipi_csi1 mipi_csi1;
- 		struct v4l2_mbus_config_mipi_csi2 mipi_csi2;
-+		struct v4l2_mbus_config_displayport displayport;
- 	} bus;
- };
-=20
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    video@c0060500 {
++        compatible =3D "google,chv3-video-it-1.0";
++        reg =3D <0xc0060500 0x100>,
++              <0xc0060f20 0x10>;
++        interrupts =3D <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++    };
++
++  - |
++    video@c0060600 {
++        compatible =3D "google,chv3-video-dp-1.0";
++        reg =3D <0xc0060600 0x100>,
++              <0xc0060f30 0x10>;
++        interrupts =3D <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
++
++        port {
++            video_mst0_0: endpoint {
++                remote-endpoint =3D <&dprx_mst_0>;
++            };
++        };
++    };
 --=20
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
