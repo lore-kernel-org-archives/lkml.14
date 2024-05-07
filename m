@@ -1,124 +1,77 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CD22F50
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 14:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72B72152DF5;
+	Tue,  7 May 2024 14:48:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093299; cv=none; b=D8KDTuEZvaLgOCceN1jUYETLLSYXjOKbWbLWBHWw29GMzUrptx6zfjKhRwaF6QYW+wCA9GIfooUKr4t8CaRW1Axp97Q41Kv9+EzOmpHhTcgaOlu2ZnRHbJS0GZXXg+Z0B5HA8wL1m+515J3qptQJ+XS7jPUHSSmV+ahe7wCfs7s=
+	t=1715093318; cv=none; b=g+uPPQrZrrfs6noo8KQFor8amrR+NszeKTZFkczLY44QnBXWon0oG9yU43OLJqlTkocf0iv5rCSVzda9w36NNycjMutbgVaAh38d7H/jUHV6nZWzNaBzGSxIq+sjz8lUR5HJcJJJuRobTxREwmfnyqAI6zYoTPns3/uKq7wfde0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715093299; c=relaxed/simple;
-	bh=O9U7eifATy8AucP2fwKsqv2Qi7a/NxF2S8DlLhQxBOk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EomIPQ9YDNVdMdwmYVjE1cavpHoFlqydeKrFrAqAlsEYkuYYsXCzXRu13Ai2foJRjhptSXMnC/dwsJ3Tmb/s2OIre5o2FtlEJaLoD8YWDRE5zqwuBm2HRmTTzXHUUhs5qBKwy9SppcD7IlNhgagINJfUKRegjHTBa66IV9jV6DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PCHoPc57; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1715093318; c=relaxed/simple;
+	bh=urdxsMlEzLQBGVqSKnxrypj4fBHWfpgOgfIX92EUsvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NO1lnbqpSdjYthjM44+RPPNcD2ewJKtSsjsGVi03b8qEadEEKANlsdE+7FRMcrxn/23WOZU9oMKZywRGaeYGSCJlyN2H0Q0iTn3b8zxDsGJV4M1/OleFTGrRLJwf/BghFiZIDaaZuDB/q/AQq3pyHwJJU1N+sLo+YTnDLoqVaic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TiVBOLbx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PCHoPc57"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2e43c481b53so1945381fa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 07:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1715093296; x=1715698096; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6E2tOH2LZeelmKHGCVRYEwTjym6Omr1xato4eYpOm4E=;
-        b=PCHoPc57NicYWeCbCLKQYtSzZ48TuQrqMCrl8LMUNj1+cWv5FFlocjDP5Ngpw3Xj6A
-         /8O3ynUZRCUQnO7z8PJfGkD+AeDrPLCEzEk+AVONMHcEneXGaArld6X6WA3Ruc4aj1WE
-         QfrZoxDS293sasejpLyGJFGL2JMNrQX12NRBu7NYcqFpg1z3v+qkf5VzNZksenEbbrbl
-         mPBFHb0dDbkWG6ec0QgMx4EmflB1wo8dJhXIfllZD7DgxIXEY787uqhvgD0BCJ80uBTh
-         5svbzqg8tseNOdKKzNBkyFi//p++C6BnsSiQOKXVWfpljM8AO/a7vaBdlSwR0wW1MIyX
-         ttVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715093296; x=1715698096;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6E2tOH2LZeelmKHGCVRYEwTjym6Omr1xato4eYpOm4E=;
-        b=CJFhQ9Bww3DrmrcbKGApuXYVqsccMsADybCMMsJxyNRfBdaSLnrQPZfwdsE06SQno9
-         Brog8yCXLt96LQ43VlIdZRuaLXKc1EgJVm+1bifqchKBYMlv15Y71z0QtumdV8TRDxgH
-         daWHhQ7OlFyxzxGMILt39S6Hne0RyhxbJHfYBC7hLDE9aMX1d4ZCjKhvm8eV9UPkBQFj
-         WL+EUV5udr5D0K082FWUiN57FK/FlPPrRBVIanaD56DP34etY3FiKmbAU8FwGW3Ocz0q
-         nUj3askcKIrK2g8FsmEpk3K9nFOc2S1Aqyk2VBU99we/0DDz1UMo9+fxyuwlzjd/yL5S
-         iYhw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0o0Fm9zZK+U1np3FvryEfQHwcqmZqVfMWsubGZp+5Yqk+gUb9Tte41xlcTrPYSFnDeBFzvJM1A3Y0L3Zeaw8h2nWcZflQj68sVZoV
-X-Gm-Message-State: AOJu0YzovEiwaLhVV6gK/l1vkW56WdM/MdOF9Zm0im774USy22hzPdF8
-	LbbA69ZmW3S4aXJ+IRhL+qylxFdvZwUU+R/rV1bjjyL5MUqfSXVLdkUclfbCf15zKXg2LikBFcb
-	NZdEIiOx1vh9UI4c1lRNaf5I/rdTv8631fRL5sf/K2FKHGuqC
-X-Google-Smtp-Source: AGHT+IEWf5bz0gIK/ChOYdDJ2AEL/N1lGY6OKBycVzHc97pVufGbuietFwGdydp8PqHnPhjEha+mXPz4acp5wASwKDE=
-X-Received: by 2002:a2e:b0d5:0:b0:2e1:d94a:773f with SMTP id
- g21-20020a2eb0d5000000b002e1d94a773fmr8924737ljl.11.1715093295962; Tue, 07
- May 2024 07:48:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TiVBOLbx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A89C4AF63;
+	Tue,  7 May 2024 14:48:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715093318;
+	bh=urdxsMlEzLQBGVqSKnxrypj4fBHWfpgOgfIX92EUsvc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TiVBOLbxPUAIFbu38Cyv0TU+25GTrEESVMN3vjRSuUjR9aYs/eaWgKNGihOnzF8Fh
+	 rHzd7knaeJG34ACNTajX4zEYFNCQsgt6pJKijjtMqRMp+Q5QJNVYY5qhvLj+AgSzYb
+	 fzSl5VkfwfhAFYWAOAhy09KcJhQBK6l23XvPSnNtXF80w7cwq94EACPyIFdMvHTh5v
+	 YFJA9VKOtfDHlRzQaFtmVd9l3EUTmXpaGKmOOhEwNxp/1j4WaeKBijog6QtAK730Xe
+	 xbxNwmoDHTzlye3dnNu6Qx+kOZt237/19gXuDexIk3po7XZLE69DphaqSgR2oY4uzl
+	 FDWLxxIVQigbQ==
+Date: Tue, 7 May 2024 09:48:35 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Tomasz Jeznach <tjeznach@rivosinc.com>
+Cc: Robin Murphy <robin.murphy@arm.com>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Anup Patel <apatel@ventanamicro.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Sebastien Boeuf <seb@rivosinc.com>,
+	Nick Kossifidis <mick@ics.forth.gr>,
+	linux-riscv@lists.infradead.org, iommu@lists.linux.dev,
+	Conor Dooley <conor+dt@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>, linux@rivosinc.com,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Albert Ou <aou@eecs.berkeley.edu>, Will Deacon <will@kernel.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Sunil V L <sunilvl@ventanamicro.com>
+Subject: Re: [PATCH v4 1/7] dt-bindings: iommu: riscv: Add bindings for
+ RISC-V IOMMU
+Message-ID: <171508897177.213758.18021668060802877165.robh@kernel.org>
+References: <cover.1714752293.git.tjeznach@rivosinc.com>
+ <845127470ad85f9b4f690077968fe8c5d615c538.1714752293.git.tjeznach@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507121346.16969-1-brgl@bgdev.pl> <597f5da2-71be-4144-a570-fdc4f06c4cc6@paulmck-laptop>
-In-Reply-To: <597f5da2-71be-4144-a570-fdc4f06c4cc6@paulmck-laptop>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 7 May 2024 16:48:04 +0200
-Message-ID: <CAMRc=MexihBpLBcY-8aX06buUYmtE07ZpkMq0Ho3jrHb6VE7Sw@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: fix the speed of descriptor label setting with SRCU
-To: paulmck@kernel.org
-Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <845127470ad85f9b4f690077968fe8c5d615c538.1714752293.git.tjeznach@rivosinc.com>
 
-On Tue, May 7, 2024 at 4:24=E2=80=AFPM Paul E. McKenney <paulmck@kernel.org=
-> wrote:
->
-> On Tue, May 07, 2024 at 02:13:46PM +0200, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Commit 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
-> > caused a massive drop in performance of requesting GPIO lines due to th=
-e
-> > call to synchronize_srcu() on each label change. Rework the code to not
-> > wait until all read-only users are done with reading the label but
-> > instead atomically replace the label pointer and schedule its release
-> > after all read-only critical sections are done.
-> >
-> > To that end wrap the descriptor label in a struct that also contains th=
-e
-> > rcu_head struct required for deferring tasks using call_srcu() and stop
-> > using kstrdup_const() as we're required to allocate memory anyway. Just
-> > allocate enough for the label string and rcu_head in one go.
-> >
-> > Reported-by: Neil Armstrong <neil.armstrong@linaro.org>
-> > Closes: https://lore.kernel.org/linux-gpio/CAMRc=3DMfig2oooDQYTqo23W3PX=
-SdzhVO4p=3DG4+P8y1ppBOrkrJQ@mail.gmail.com/
-> > Fixes: 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
-> > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Looks good to me!
->
-> Acked-by: Paul E. McKenney <paulmck@kernel.org>
->
-> One semi-related question...  Why the per-descriptor srcu_struct?
->
-> If the srcu_struct was shared among all of these, you could just do one
-> synchronize_srcu() and one cleanup_srcu_struct() instead of needing to
-> do one per gdev->desc[] entry.
->
-> You might be able to go further and have one srcu_struct for all the
-> gpio devices.
->
-> Or did you guys run tests and find some performance problem with sharing
-> srcu_struct structures?   (I wouldn't expect one, but sometimes the
-> hardware has a better imagination than I do.)
->
 
-I guess my goal was not to make synchronize_srcu() for descriptor X
-wait for read-only operations on descriptor Y. But with that gone, I
-suppose you're right, we can improve this patch further by switching
-to a single SRCU descriptor.
+On Fri, 03 May 2024 09:12:34 -0700, Tomasz Jeznach wrote:
+> Add bindings for the RISC-V IOMMU device drivers.
+> 
+> Co-developed-by: Anup Patel <apatel@ventanamicro.com>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> Signed-off-by: Tomasz Jeznach <tjeznach@rivosinc.com>
+> ---
+>  .../bindings/iommu/riscv,iommu.yaml           | 147 ++++++++++++++++++
+>  MAINTAINERS                                   |   7 +
+>  2 files changed, 154 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iommu/riscv,iommu.yaml
+> 
 
-I'll send a v2.
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-Bart
