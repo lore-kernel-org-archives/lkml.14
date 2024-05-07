@@ -1,73 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BA615FCF0;
-	Tue,  7 May 2024 14:53:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1CA15FD1D
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 14:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093580; cv=none; b=aYyywyqMCe4O/VjAzflFYHOt5cZ0rdU4PRmJuP4HwWjW1ilxcy6/J9tdlZ3PK2lgETpr+nF2b763OSH26D08PJfOSMoXTe1fREoMdtt8mKkqrkIWzZJinq33RF9xdvw3H5JNvZ+e9rxMUPz11C2/WxjChi+KZjVOAuqYP1MB2b4=
+	t=1715093586; cv=none; b=VwdVbv2v2DMX4oXRXvbqY8I3Y4AR6iKnQfGYGft2dcOkvr5DAX+GvdRBFqgA5/FEpRcqNSQApgfvC59F3PFHoqPXffyLqnLGPfKILMMf5322ijPEFF55It33+pxNom+CIyCXo5Aar49k4BLJxIWixVg0HJzaSTNrFaMaJB0IiAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715093580; c=relaxed/simple;
-	bh=G2fd/G6gHoEl3QR40FzwdMkgc9pQE2sWSv49OHbI4d4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jw6988NMg/jlYH/iJ3Z5OiM/L0q1Jvur3tBXNUQD0YfUtj6uuHMoGLAx3Gm1MnobHgYTcnPwY8Sj38rGqHN+VCeBsUTI5hlf+HNzIt7cyCNXuiPFwT/CgnBL9DZ11s2oog8NtggiYpFRZxnRjav4+5WxG4+H9ti3/Iuae/KMX70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JvNPgBvv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715093586; c=relaxed/simple;
+	bh=SM4uZsG+ZWU6pdCh+KmiT6fjGXAk/BqY7E2j+X8XI4c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D+Z8GRS1/OvZ2FG19N5T4gAtAh1m2eIk3FORBd0AWAumKyqAt4bf/Qwt3foyQW8dyaFQoeonwrwgXCF4EL7bclRWayjrdW/XZg5Sehkk85lLmyqeB4RpAe8BQxo+QBucoGpgWx4QAAzMSV6cb+v+FjRQRTGqZwwZ4rfhvGPzbu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQzhVbB/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JvNPgBvv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B756BC4AF63;
-	Tue,  7 May 2024 14:52:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQzhVbB/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74DBAC4AF18
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 14:53:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715093580;
-	bh=G2fd/G6gHoEl3QR40FzwdMkgc9pQE2sWSv49OHbI4d4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JvNPgBvvlZTMle2tmEciAGw4tri1AC80m9Gm4LuqqYzLzoD5yn/+U4w1lq0hVsEPN
-	 NuNmtC1elTWZev4XncK6IHzUFAxmbg4LwnEV2c9vAfCl5HJiireagp/Ej8oPJKGuul
-	 /6wHXPs9HT5lEn/+xwvxUOqeUwCCUpDzN95f5CsNZGT/7Chke0GafGBJQAcZez/uUq
-	 7poyjgcEqoT6wr6EBEJHitW+ROmlFfZzQBtREzVs2C9YM3212ZkdWRARw8oLHMVc5H
-	 OynWw14pkd5xCPEp01lHucmRHRS0CLawCT4nnn2ZQ71hfKMrdUUgBFHkFabTYqEwrO
-	 EdReYeVrSrymw==
-Date: Tue, 7 May 2024 11:52:57 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, jolsa@kernel.org,
-	adrian.hunter@intel.com, irogers@google.com,
-	segher@kernel.crashing.org, christophe.leroy@csgroup.eu,
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	maddy@linux.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com, linux-kernel@vger.kernel.org,
-	akanksha@linux.ibm.com
-Subject: Re: [PATCH V2 3/9] tools/perf: Fix a comment about multi_regs in
- extract_reg_offset function
-Message-ID: <ZjpASVk1GezAzDAG@x1>
-References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
- <20240506121906.76639-4-atrajeev@linux.vnet.ibm.com>
- <CAM9d7ciKUQErzu1Y7FnWCryW15xUkyJLSt-Jez9h8TYgp-tLjw@mail.gmail.com>
+	s=k20201202; t=1715093586;
+	bh=SM4uZsG+ZWU6pdCh+KmiT6fjGXAk/BqY7E2j+X8XI4c=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=WQzhVbB/fda7TB78952CC1FEynnAydSEv8hqNeH4gltwW5b4TL0e3A0nCSQ3xOqy6
+	 Y8F2H780LQc6R5wOIMk2gU7xTgHzC6y7F99/bqvdUMvVVZYh4SIRwr1v+9K7ZuL0Je
+	 Vi73J5KiYQ4zXQxxSH3OQplyxA5vgkxxKIDxOx/8PcCtjriqLBTLPkI1UdJS334dAW
+	 iweDOTMO30pkPMFhylJk44bSxlYmsiNcu0yAWBCSuaUlSj3+VjdcT1XZFpNaXUX3FP
+	 zWTA8uZsaLiPxskSEy4kc+0HarFmYtu6Gu9t5V4vcv/GenV1mKnOJxdrqofn+VacbZ
+	 jUk/BSvjVHuRw==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2e3fa13f018so8986611fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 07:53:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVutT3PO7kRVgek5P+IKZJVrInqnrUmKygLn1eCxQSKkwsV9CEqfaAk8vj4xq1u9QgDBVWi6cdUJBkXeWjoETLK9jL1WKK5r1LdHync
+X-Gm-Message-State: AOJu0Yz2Yzoz0897vvOCKKbMQ5mvPIDXxtGEkcu7YcRXcAPuV6HyW5gD
+	yIxuHB+rxwipvzwCS7pSrT34kmoKNFHjaoILxgwFyNkkcT4wl38GgXls7XIqK03z/Pjk4IlatC+
+	3QHT9uPbEcN5EoJmwvdlVp73BY3Y=
+X-Google-Smtp-Source: AGHT+IG8+gtXhNlZpJi3zCkLvurmd/IHF8T50fiTAvbZuF34/Xyr06janW6+OswVbMpvYUgdeNn0GONt0kX59Ir1Gk8=
+X-Received: by 2002:a2e:a41a:0:b0:2e2:b716:e67c with SMTP id
+ p26-20020a2ea41a000000b002e2b716e67cmr6828012ljn.7.1715093564082; Tue, 07 May
+ 2024 07:52:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ciKUQErzu1Y7FnWCryW15xUkyJLSt-Jez9h8TYgp-tLjw@mail.gmail.com>
+References: <20240411-tso-v1-0-754f11abfbff@marcan.st> <20240411132853.GA26481@willie-the-truck>
+ <87seythqct.fsf@draig.linaro.org>
+In-Reply-To: <87seythqct.fsf@draig.linaro.org>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Tue, 7 May 2024 16:52:30 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFqG7D2Q_T_NXZ-y3NYOjK6d8bP8ihJTeFz8TUJ77W7tw@mail.gmail.com>
+Message-ID: <CAMj1kXFqG7D2Q_T_NXZ-y3NYOjK6d8bP8ihJTeFz8TUJ77W7tw@mail.gmail.com>
+Subject: Re: [PATCH 0/4] arm64: Support the TSO memory model
+To: =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
+Cc: Will Deacon <will@kernel.org>, Hector Martin <marcan@marcan.st>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Zayd Qumsieh <zayd_qumsieh@apple.com>, 
+	Justin Lu <ih_justin@apple.com>, Ryan Houdek <Houdek.Ryan@fex-emu.org>, 
+	Mark Brown <broonie@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Miguel Luis <miguel.luis@oracle.com>, Joey Gouly <joey.gouly@arm.com>, 
+	Christoph Paasch <cpaasch@apple.com>, Kees Cook <keescook@chromium.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, Baoquan He <bhe@redhat.com>, 
+	Joel Granados <j.granados@samsung.com>, Dawei Li <dawei.li@shingroup.cn>, 
+	Andrew Morton <akpm@linux-foundation.org>, Florent Revest <revest@chromium.org>, 
+	David Hildenbrand <david@redhat.com>, Stefan Roesch <shr@devkernel.io>, Andy Chiu <andy.chiu@sifive.com>, 
+	Josh Triplett <josh@joshtriplett.org>, Oleg Nesterov <oleg@redhat.com>, Helge Deller <deller@gmx.de>, 
+	Zev Weiss <zev@bewilderbeest.net>, Ondrej Mosnacek <omosnace@redhat.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Asahi Linux <asahi@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 06, 2024 at 09:40:15PM -0700, Namhyung Kim wrote:
-> On Mon, May 6, 2024 at 5:19 AM Athira Rajeev
-> <atrajeev@linux.vnet.ibm.com> wrote:
+On Tue, 7 May 2024 at 12:24, Alex Benn=C3=A9e <alex.bennee@linaro.org> wrot=
+e:
+>
+> Will Deacon <will@kernel.org> writes:
+>
+> > Hi Hector,
 > >
-> > Fix a comment in function which explains how multi_regs field gets set
-> > for an instruction. In the example, "mov  %rsi, 8(%rbx,%rcx,4)", the
-> > comment mistakenly referred to "dst_multi_regs = 0". Correct it to use
-> > "src_multi_regs = 0"
+> > On Thu, Apr 11, 2024 at 09:51:19AM +0900, Hector Martin wrote:
+> >> x86 CPUs implement a stricter memory modern than ARM64 (TSO). For this
+> >> reason, x86 emulation on baseline ARM64 systems requires very expensiv=
+e
+> >> memory model emulation. Having hardware that supports this natively is
+> >> therefore very attractive. Such hardware, in fact, exists. This series
+> >> adds support for userspace to identify when TSO is available and
+> >> toggle it on, if supported.
 > >
-> > Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> > I'm probably going to make myself hugely unpopular here, but I have a
+> > strong objection to this patch series as it stands. I firmly believe
+> > that providing a prctl() to query and toggle the memory model to/from
+> > TSO is going to lead to subtle fragmentation of arm64 Linux userspace.
+> >
+> > It's not difficult to envisage this TSO switch being abused for native
+> > arm64 applications:
+> >
+> >   * A program no longer crashes when TSO is enabled, so the developer
+> >     just toggles TSO to meet a deadline.
+> >
+> >   * Some legacy x86 sources are being ported to arm64 but concurrency
+> >     is hard so the developer just enables TSO to (mostly) avoid thinkin=
+g
+> >     about it.
+> >
+> >   * Some binaries in a distribution exhibit instability which goes away
+> >     in TSO mode, so a taskset-like program is used to run them with TSO
+> >     enabled.
+>
+> These all just seem like cases of engineers hiding from their very real
+> problems. I don't know if its really the kernels place to avoid giving
+> them the foot gun. Would it assuage your concerns at all if we set a
+> taint flag so bug reports/core dumps indicated we were in a
+> non-architectural memory mode?
+>
+> > In all these cases, we end up with native arm64 applications that will
+> > either fail to load or will crash in subtle ways on CPUs without the TS=
+O
+> > feature. Assuming that the application cannot be fixed, a better
+> > approach would be to recompile using stronger instructions (e.g.
+> > LDAR/STLR) so that at least the resulting binary is portable. Now, it's
+> > true that some existing CPUs are TSO by design (this is a perfectly
+> > valid implementation of the arm64 memory model), but I think there's a
+> > big difference between quietly providing more ordering guarantees than
+> > software may be relying on and providing a mechanism to discover,
+> > request and ultimately rely upon the stronger behaviour.
+>
+> I think the main use case here is for emulation. When we run x86-on-arm
+> in QEMU we do currently insert lots of extra barrier instructions on
+> every load and store. If we can probe and set a TSO mode I can assure
+> you we'll do the right thing ;-)
+>
 
-Cherry picked this one into perf-tools-next.
+Without a public specification of what TSO mode actually entails,
+deciding which of those barriers can be dropped is not going to be as
+straight-forward as you make it out to be.
 
-Thanks,
+Apple's TSO mode is vertically integrated with Rosetta, which means
+that TSO mode provides whatever Rosetta needs to run x86 code
+correctly, and that it could mean different things on different
+generations of the micro-architecture. And whether Apple's TSO is the
+same as Fujitsu's is anyone's guess afaik.
 
-- Arnaldo
+Running a game and seeing it perform better is great, but it is not
+the kind of rigor we usually attempt to apply when adding support for
+architectural features. Hopefully, there will be some architectural
+support for this in the future, but without any spec that defines the
+memory model it implements, I am not convinced we should merge this.
