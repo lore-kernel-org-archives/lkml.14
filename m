@@ -1,100 +1,71 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131E416C867
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 14:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0243816C44F;
+	Tue,  7 May 2024 14:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715091190; cv=none; b=pexzk5UzxBcVaoHS2oN0VlZwRcO79bcuc6+WRh1KlMgkMghXoBLBtG5QMlAIRI+xpKz+DNeeTo9uDqJ+79PGimWHSu1AGrFA+FG4X7dySYyMQdVEyjIGg85mrIoCO9VmXlchGQqgYIefXmhuK+pdHJ1XQm8mofwwrldE73HwMto=
+	t=1715091192; cv=none; b=PRfJm8ARf2xNtI7CJRYqoyUyNAOJKMvYM2GogANFVN1fuaVQ1C3yke3d7V/U6xtRnqWXJ3NKHOiFimuAi7wm0d/YkAHQDTi0a2k/zvQusyEYL6F6FrRH7DTraZU+YaZkiwxPpAhaF7vyf0YY0PaWoKvooI8or1+Te9HX6vrSv4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715091190; c=relaxed/simple;
-	bh=zchA9qCZkbTbiKP4dWASuNmwzS8UpJKwMcrmBhDATqo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pdCPyXIJyGYRQjDMK3srp4qyONzaZw7+dELtp8kJwxS9UbK494/whdFkrSBfF5sYtpTdXsWbvuTVYkzaTxy8vCc4mIxLXOvG3ABHZOlNcoKeYoPTsHXi26+1BD3COkrfOvskemhJLDjJGAxjJxAPgZ5HcPKEPz6s6JpOquDpavk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qqcv7LlC; arc=none smtp.client-ip=209.85.219.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qqcv7LlC"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de54be7066bso6035738276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 07:12:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715091173; x=1715695973; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WETraqwVUAnZYIOXp5ZtLEEE1VYRO8MGNkm01fdovIk=;
-        b=Qqcv7LlCIOJvBe8ClD5U2l4Vj91uUJ1zIUjEjaKr6vohBi/GFK/kCBkhW9qZZdGHpC
-         nxwyf2tAeD9my0a/qM1hJuFLQ5WLbt9BIL0qxKTsdW5atZMtIoDfpEumiMKhONL+q6GC
-         72o1+zEuLefO3WFSRbvMdj98ysyUkJMpfe7bhvl6A005A3nsrGayxqodnVvhsMT20pAt
-         yNYTWrA21yYGzTAFWGKYYldNzy6HfLhHLr9P8AMYSNlf/aDrueIH/wUsf3uXieIgzDX+
-         O5JA/bxh+xBYg6hbKTMR+zx9CtluRtqSpv7bEPdFtCNAqD41I+kZK/yYDSFaH5tcnybA
-         cKyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715091173; x=1715695973;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WETraqwVUAnZYIOXp5ZtLEEE1VYRO8MGNkm01fdovIk=;
-        b=j+1GrwSHAdOBGPX0//jNO8r6M4da8D9GM1ejkulN7OI8mpSw/JJdyq2bAy+zRTdvRu
-         wprlrAqwkQFpAzKFz/+/Oj80WYK34zvypZ0jk+dHPij0TiBsXkSQXIXRGTnK7VclV0Sk
-         xQW6sCNifmR9KE70icblPHzaaVck7/BpW4EUuvxWyW8DIbCwX63SwMz1jyorHnDewAwU
-         gSPq1rzS2GyZMfDmJdqTaKwQVyszWUwmAQGXopvPxev/0L+ADJpPyxFhbPjB7IlUrSS9
-         feVjTbI4njjwvj0VpKgPQxEfelLUiHimmvrqfMKFv2eVxsB4mUWtV6eiozz9aHwk8ljr
-         ZuuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUBUUBe6RLy634ghe2QV/v3zpg0LALQwuBxC3cNEmADqrXwQwjYN6phYqradlA7f5CfT1FfCxbx+qpKr3upSNkvX91LEHbXao0U3c86
-X-Gm-Message-State: AOJu0YxQSuk4ER+P33ZHMhKbyfk3S+e0wxIjDaQLO6kkFZTYYV3HtMaO
-	KFYHFOxXn+gyGMI0tZZdS8aDh89LQcT63mh1tMVZ3DRF+zcmORMLrR7/p9rQavvvdnJV8JqxFTh
-	SFg==
-X-Google-Smtp-Source: AGHT+IGplKwNSTSkBTAvhdXpqfJnr+yrgmgSEfcIAM5opFxBtA3BpCgSqdbY3obOQsQH1wjTlAweJ+rLPgI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a25:69cc:0:b0:de5:5225:c3a4 with SMTP id
- e195-20020a2569cc000000b00de55225c3a4mr3998230ybc.7.1715091172929; Tue, 07
- May 2024 07:12:52 -0700 (PDT)
-Date: Tue, 7 May 2024 07:12:51 -0700
-In-Reply-To: <202405061002.01D399877A@keescook>
+	s=arc-20240116; t=1715091192; c=relaxed/simple;
+	bh=S06NhcV6PkCL1/+nSbIG2xok/XosV/+ZGsC6A5MxA5M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TSmHUILM1cLh5bx2UGGrM0veuz1+KD3vXwW6FGRAlhsHgLA+Z+A8NEeBGLBBs+prLtMqQ4wfbtZvfpyFmuYNfx0f84mv3LAkycaeMSeTN7/FHxXd31EjeUIRhy92Pwg5nQajeuzlhKstiVRJRzTw/4uawHNxFMa/9V7vBsWRMbc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A76AE1063;
+	Tue,  7 May 2024 07:13:21 -0700 (PDT)
+Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BBB3B3F6A8;
+	Tue,  7 May 2024 07:12:53 -0700 (PDT)
+From: James Clark <james.clark@arm.com>
+To: linux-perf-users@vger.kernel.org,
+	atrajeev@linux.vnet.ibm.com,
+	irogers@google.com
+Cc: James Clark <james.clark@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] perf maps/symbols: Various assert fixes
+Date: Tue,  7 May 2024 15:12:04 +0100
+Message-Id: <20240507141210.195939-1-james.clark@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240506165518.474504-1-mic@digikod.net> <202405061002.01D399877A@keescook>
-Message-ID: <Zjo1xyhjmehsRhZ2@google.com>
-Subject: Re: [PATCH v6 00/10] Fix Kselftest's vfork() side effects
-From: Sean Christopherson <seanjc@google.com>
-To: Kees Cook <keescook@chromium.org>
-Cc: "=?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?=" <mic@digikod.net>, Christian Brauner <brauner@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, Mark Brown <broonie@kernel.org>, 
-	Sasha Levin <sashal@kernel.org>, Shengyu Li <shengyu.li.evgeny@gmail.com>, 
-	Shuah Khan <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, Brendan Higgins <brendanhiggins@google.com>, 
-	David Gow <davidgow@google.com>, "David S . Miller" <davem@davemloft.net>, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, 
-	"=?utf-8?Q?G=C3=BCnther?= Noack" <gnoack@google.com>, Jon Hunter <jonathanh@nvidia.com>, Ron Economos <re@w6rz.net>, 
-	Ronald Warsow <rwarsow@gmx.de>, Stephen Rothwell <sfr@canb.auug.org.au>, Will Drewry <wad@chromium.org>, 
-	kernel test robot <oliver.sang@intel.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, netdev@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 06, 2024, Kees Cook wrote:
-> On Mon, May 06, 2024 at 06:55:08PM +0200, Micka=C3=ABl Sala=C3=BCn wrote:
-> > Shuah, I think this should be in -next really soon to make sure
-> > everything works fine for the v6.9 release, which is not currently the
-> > case.  I cannot test against all kselftests though.  I would prefer to
-> > let you handle this, but I guess you're not able to do so and I'll push
-> > it on my branch without reply from you.  Even if I push it on my branch=
-,
-> > please push it on yours too as soon as you see this and I'll remove it
-> > from mine.
->=20
-> Yes, please. Getting this into v6.9 is preferred,
+A few different asserts are hit when running perf report on minimal
+Arm systems when kcore is used, or the .debug/ info can't be loaded or
+/boot isn't mounted etc.
 
-Very strongly prefered for KVM selftests.  The negative impact on KVM isn't=
- that
-the bugs cause failures, it's that they cause false passes, which is far wo=
-rse
-(and why the bugs went unnoticed for most of the cycle).
+These result in some less common paths being hit for resolving symbols
+and things are done in an order that breaks some assumptions. I'm not
+sure if we could do something to make the tests pick this up, but maybe
+not easily if it would involve mocking the filesystem or even a specific
+kernel. I tried a few different variations of --kcore and --vmlinux
+arguments but ultimately I could only reproduce these issues by running
+on specific kernels and root filesystems.
+
+James Clark (4):
+  perf symbols: Remove map from list before updating addresses
+  perf maps: Re-use __maps__free_maps_by_name()
+  perf symbols: Update kcore map before merging in remaining symbols
+  perf symbols: Fix ownership of string in dso__load_vmlinux()
+
+ tools/perf/util/maps.c   | 14 ++++++------
+ tools/perf/util/symbol.c | 49 ++++++++++++++++++++++++----------------
+ 2 files changed, 36 insertions(+), 27 deletions(-)
+
+-- 
+2.34.1
+
