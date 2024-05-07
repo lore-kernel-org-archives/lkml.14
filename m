@@ -1,61 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A36916DEAC;
-	Tue,  7 May 2024 19:18:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0AB6CDC2;
+	Tue,  7 May 2024 19:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715109515; cv=none; b=FQPY83EQLd6D44z/rIi4LPNQrlIJg5JPxSyiycWaLH6kfLVKhmWOMifHrVCgk5HExBaI16TLah8y+st8iMQEXdeD4HN1feNbmawztgy65VuaaLpkrJvky3Fnay67guc/Z3k97ujyYFMy/QMJAVwdF6f9p0OAAOzU/quyB5ZmFMI=
+	t=1715109644; cv=none; b=kJsruWWRsNYGPlWsIOAPXNOcZOiIyhdjNXrU4TJYdeYcbgTyGnzZLE0sjYA093c2RcZLi8EcEbl4gCVMZo29PbLsTG5ZvYWfSoFfS3LgsN6y9TRFVAqildairW3rF7bPjlHduPr9UYzXBtFe41jlRCfyiVJZSYBsD3RIlTbUyGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715109515; c=relaxed/simple;
-	bh=uUZ0wRwqvt5AN23IbqpgPVlEjLnvM1VT4sztb1JpTlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ETYQJx/Xl0NO6tNLPCSe39j/R8D9fcQldozjiZPnh8SNBoWPcCbb4UoJEaa88F5M2W7RcCcsuJ7MgwUE9H3dMCspUhY327dAOHSeSzNCSEd5al6znF0Bv4daSbvhJV+5rVfxwTZwgTSwR2ajtK17CftllQ7HvTeHNxiJi4NxT9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EdEN10G4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715109644; c=relaxed/simple;
+	bh=UmOAYChyytc3d3vdcOolrFvQRAouAlbOgpsqjqTT7oA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mfjtRgvMQmYLJL+59BrHealkpLaa/7YCvXVrZXsbhY8irnhzHHhkdnbc7LkwT+ZOqU3yyGzJ8oWoC5y0Sg6xREo+W5G4V/PSv//oSN6E3LBr/5DXHCMo18jjVB77P6S0dHQDpQ5qCci2IlaZez+6khUOse9nVrjeZJNmatLHc0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bxSCVAql; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EdEN10G4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4848C2BBFC;
-	Tue,  7 May 2024 19:18:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715109514;
-	bh=uUZ0wRwqvt5AN23IbqpgPVlEjLnvM1VT4sztb1JpTlI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EdEN10G4X60VAwSbDobYx6poRz4kq/eSzLRO2um3y7rzL/h+t24eZgSqM3uit0SK/
-	 SiG+czgg6+nb/RQs8KEfD/qoNMyNnBPmIlshItMhm3GZpiCRDB+z0MUNcIk9nNe7bV
-	 /P2YVhWh4+g+xCCEX/mzEd2YpWpzy+oDsNLNsQZYyEZi9V+TK3XB4YptFn/Ci79JQQ
-	 gTQfmh4dBrqutvk0HsVQ+4EKxhY1Ss/EL7/Lbumpl2Wb5dJ4/4Hhn8kfryxNu0zKq0
-	 BLC/nueAXuuyvcafDLcs7SU4q0Cpgl20cDz8wxmbhx6UnZXHx3NtoHtVjZTkQrrTXd
-	 4SSsGI8P5fFdQ==
-Date: Tue, 7 May 2024 20:17:00 +0100
-From: Simon Horman <horms@kernel.org>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	dccp@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: dccp: Fix ccid2_rtt_estimator() kernel-doc
-Message-ID: <20240507191700.GJ15955@kernel.org>
-References: <20240505-ccid2_rtt_estimator-kdoc-v1-1-09231fcb9145@quicinc.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bxSCVAql"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447IYJIF010716;
+	Tue, 7 May 2024 19:20:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=IVCv6BtGrBA4/HwfnDs7C7sIdNBdWXCmiV58VQXdVdU=; b=bx
+	SCVAqldnyxsZFsJXM5XYipVzvcbLDIwO+1cTwAXOG3sEVHLPJQuvBRgWmRtlLJBh
+	IHD39mVJHqbav9FY4oXGHfo+wTKtyrSdSf2auTHNnZGIfAk+jmWiuROedIzU1qGv
+	ILQ1WIFpxTR2b6RU5OVxR+p6unYGXL7xGzzP4WX/OvsUb9SAHfjAKcczbf09N5dy
+	eYe5h4SDWhv1GVdEBg6MeERDkr4Ynl2xXbk7c9MXZZF63gVL6RerT3bBt+vTD7U6
+	WPMxaHeqKo1VF1jLmT6wzps/wWjC6qv+0xvRBE70TlOSshOf64xwPQVqSNbkvKXw
+	UZ7refpWFUGuYfLJgG8A==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xysprr2tf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 May 2024 19:20:39 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 447JKVYK002619
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 7 May 2024 19:20:31 GMT
+Received: from [10.110.125.244] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 7 May 2024
+ 12:20:30 -0700
+Message-ID: <9a48b0a8-d1d7-8e2d-dafa-47e136a46c99@quicinc.com>
+Date: Tue, 7 May 2024 12:20:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240505-ccid2_rtt_estimator-kdoc-v1-1-09231fcb9145@quicinc.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v3] arm64: dts: qcom: qcs6490-rb3gen2: enable hdmi bridge
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        "Venkata Prahlad
+ Valluru" <quic_vvalluru@quicinc.com>,
+        <andersson@kernel.org>
+CC: <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_nankam@quicinc.com>, <robh@kernel.org>
+References: <jr3ble6sxr5mr6cvm6ldvpyk5j4rucj3xy6vbha6ttoecte3d7@llu6qf6oasuc>
+ <20240507163045.28450-1-quic_vvalluru@quicinc.com>
+ <a32fa81d-bd70-4dfa-b512-e2adce4f8c35@linaro.org>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <a32fa81d-bd70-4dfa-b512-e2adce4f8c35@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: vBUzsSskaw0WJRFND1PRC0GW27DIojLh
+X-Proofpoint-ORIG-GUID: vBUzsSskaw0WJRFND1PRC0GW27DIojLh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-07_12,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ suspectscore=0 spamscore=0 phishscore=0 mlxscore=0 mlxlogscore=816
+ bulkscore=0 malwarescore=0 priorityscore=1501 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405070135
 
-On Sun, May 05, 2024 at 01:09:31PM -0700, Jeff Johnson wrote:
-> make C=1 reports:
-> 
-> warning: Function parameter or struct member 'mrtt' not described in 'ccid2_rtt_estimator'
-> 
-> So document the 'mrtt' parameter.
-> 
-> Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
 
-Reviewed-by: Simon Horman <horms@kernel.org>
 
-The comment just inside tcp_rtt_estimator is a good read :)
+On 5/7/2024 9:35 AM, Krzysztof Kozlowski wrote:
+> On 07/05/2024 18:30, Venkata Prahlad Valluru wrote:
+>> Rb3Gen2 has a lt9611uxc DSI-to-HDMI bridge on i2c0, with
+>> reset gpio from pm7250b gpio2 and irq gpio from tlmm gpio24.
+>> Bridge supplies are Vdd connected to input supply directly
+>> and vcc to L11c. Enable HDMI output, bridge and corresponding
+>> DSI output.
+>>
+>> Signed-off-by: Venkata Prahlad Valluru <quic_vvalluru@quicinc.com>
+>> ---
+>> v3: - Updated commit text
+>>      - Arranged nodes in alphabetical order
+>>      - Fixed signoff
+>>      - Fixed drive strength for lt9611_irq_pin
+>>      - Removed 'label' from hdmi-connector, which is optional
+> 
+> Please respond to each Bjorn comment and explain how did you implement it...
+> 
+
+Yes, agreed. Even though it seems like you mostly just agreed to mine 
+and Bjorn's suggestions and decided to implement all those in v3 , it 
+would have been better to explicitly ack them or tell why you agreed or 
+what went wrong that you had not done it in v2 itself to close the loop.
+
+> Best regards,
+> Krzysztof
+> 
