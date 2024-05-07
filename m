@@ -1,91 +1,71 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CD8A15E5DD
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6002C15E810
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715087618; cv=none; b=sy/oAcSc9JdXGBizk2ZnuHnlXEWwO9uMCTuVs0rBtG2twml7NGq3QnilZelq7vneC5Wlxh27L3EV3QpTPOfHtzTNk9F0KtGyZmzFljXBMRCAKbYtJlqi2W+A/a0i9FuW+Oa6TplZU7WGtouEpuX755xG4SLEsONT3LvMiPvPBBs=
+	t=1715087646; cv=none; b=VTPq+3j0qHHLsMXZxSkmx27MyERJkVO9HvKDQ8Wf4xmKpEk9ZPosBTlt2/+pKEIuMXQK71xo1aCGXCpQUdU24+QH8Axr1KH1aVI4ilmC+nmL9KHGadif8KHaakMlN/mNfkrPU2o+pAorh6rT2UCQTnS7l6zfSsxzSm1mrKGX3+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715087618; c=relaxed/simple;
-	bh=huwwMObImLXDwxdd4IcsxdgbEdaC9GS1MwLk6DCr8ws=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R7EK5SCzmuwa0V02njvCv6zUBuq8ZSJ69O/B31A6j3bgtZDpfojACh6j8L4bXCIy6w5FCrxe2tdoCHyPTyRQiiKJBO4L8zwDAh5pf+VUPK3sjmWVE5R3GxEpQGPEsZbEhvkrErMRpV9outGmUyAb8qfA4KujxbUwCUYwRGuIOHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lPlAe63m; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lPlAe63m"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-5b20318a866so1557471eaf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 06:13:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715087616; x=1715692416; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tc5VKVV3Tbfknc2vkHblG1DVZBApSAaUebZ/kDgTpwA=;
-        b=lPlAe63m8X93+m9K4ES9bqPbiyyJ92jOPrSZgPsR/rCkIifW4OAGyv6BIYQRhM+UkI
-         ojQ2DcRP1km8tLJwKWqxxtHAZkGbLcOhgRLveagfNu7stHzvfvHsOdFT/xwoWqoJQAMX
-         CZfaoiv5lyJ8vHem6gGp7kyhwAIJvbM2rmwWW3bk4JuqC42J8hLXDSxpTLKpAK1Ngyus
-         3hhGM14RcqRrdRpkcAJEz29ac4MM3VyC3qI6Pgxay6XJE/Br64iy3ooAI9MHAei8Nwvu
-         ZIKXoRmvO5Ov9+SMDiMUh3q6Q3MyQQizObTxbRiyVUiOz+tnPkZcA7d9QkBBTa1ag8Sr
-         UBWA==
+	s=arc-20240116; t=1715087646; c=relaxed/simple;
+	bh=MBVFigmtXp+fa1asaeuDh6UbDMKNYhBh484SRpNvfBQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=kP/r9hKBoy3FTLJ6uDyCW7BK1bGmKBl0W8bGo+EuxDkYBesVsx7Qt4r5gZp3auCYrv6ljTpyzV9HuPYqFlSikuddFmEOhOzencl6GFZt2NwR3hHK5Al1eCoasOLr37btnXqDsr1LjuW9sBuSX5fZ/L1TgrLRTaMXIqTBYqErAdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7e18055c2dfso117632339f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 06:14:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715087616; x=1715692416;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Tc5VKVV3Tbfknc2vkHblG1DVZBApSAaUebZ/kDgTpwA=;
-        b=wYcK+VptMqtUuI/VY7XT+C9SHyj0D8KRgrpdteJK5cRoL/PdUnVR0GWuhznxSfo59J
-         i0in1wn41Ypfb5DF5nvBJ9aD7Gjkf2i0dXIpH4oV4IHCW5hIHeyyKn/fN3UL2LrpwOAt
-         yiyxdAy06lCeHLMOu5kfMAnwHOgwT19zHIF5qHZy7C670UJst+AqABOxf90czdalI+F2
-         LgG80nxoXOqGlqDkzL5/zG1ViPCqtfUrpdHxlF2KsUGY/icDccSoBGHbXrcS0qd/5XfF
-         ZkphsuA0N9IsDnb33fJqT2WLX6h4qs8vzllQDa7SakIdRGwS51sxYzYPCWYj9tVNXIFj
-         0/ew==
-X-Forwarded-Encrypted: i=1; AJvYcCV4kl5aDuMN7h/jLnJjLDYQ/46OguU/MY/9sxug9ZQI6zSnkP28B51KjTshQzfkbN5At1HWuNGflz28j9Rz6zowp8zpRBDjUEUp6OgF
-X-Gm-Message-State: AOJu0Yy2uJWkCik9wYsGEIyDgtUtUpFyjovyxshfNfDzV+xNyyI0tyqL
-	e0DNxh26BX684rB0v+6Qk0PchmG0m/vTl+fmv1xKz+s5RHnsnf2q1t725Zh6mkFvyyeCw/ACF/D
-	4sCAVh/WCMhVVYH6nhqK5F+Y31wgBQWWpFYQKo3zDolRTFriy8iY=
-X-Google-Smtp-Source: AGHT+IHTKy6B/89JXbfSR1BZ94upeOlonaImhSTIT71Dm6wb5ue8e6UMi4QnV8cZJ9qWIAVQ5HT4NXCNagT+Zs8HTqc=
-X-Received: by 2002:a05:6808:182a:b0:3c6:5da:1635 with SMTP id
- bh42-20020a056808182a00b003c605da1635mr16926292oib.3.1715087616309; Tue, 07
- May 2024 06:13:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715087643; x=1715692443;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KLJ+z7LiDDY0HOHJwBMnTZsmDE8ItBIhU+B6/yu3WkY=;
+        b=GN8EHC4+WSD42AFzp0/+8/VjaH3MV+v9J1bXi8mC1x4CLOZU4SFVacDl3gKoraJKh1
+         eUnyMz4pX2AxHEExNPKb/Ic6JH70QfReffKj33ukYttCIiXEnEqvwY2ORpWUcxtY0C6m
+         GA2Np71LcYdQJb2Ldf2VcfvIbwqPpIUrj2ARQb4F/8YKn2f4OHp1hLGlWjqor/j8jXts
+         WnXrq0Jl7/ZeybVJA4+qVsd1tZcXJ90khY8zvU0aTi/1Elv0Q3UjgEqv/nreJHibsyc0
+         6TpLSBbB3ypw6tjL7nO54BzcakOgF+FxSEkfDleoAN2B2tPKs2hBRp/pbSS6tzQgBHZ1
+         f0Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCVU930i1GSYTfJQ65YswjaP0L4DN+En18xuJSQjRB4iFQ8XG/x95xYOQ6hZL2YLo9x8XrO0VrkDEtgfNhYECtNJ+ZivVLkQtInhtYBT
+X-Gm-Message-State: AOJu0Yxui2NGXjNsR87CQYjiwgTLOk/Mxt8C+3hMiSA9Qv26tBAbWm/M
+	FSp+oZfj6oy7jBPhn+uEv/25kJBSEsPItV3xqKuqHJscqnfpSdr6vIqEQKtyx7wSWzjTHm25NYP
+	/YFMYDKCWqT8d9XA/LFVAzBJ5qz7CybaOLmEFcCGKFOwmi95WTrgQ0eE=
+X-Google-Smtp-Source: AGHT+IGa21QCk3sWiFYZGFqpbaNRCFKMKPO28VWuuTQBFB+DP7EdYgN29hplV7/2tnE6LjIpupawkAU815VnCoXIErk4yk20HYat
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYs1ZN2K=UHOjrwRR2JNE-M0nf9iW_Q-YPzVgmW+9daU4Q@mail.gmail.com>
-In-Reply-To: <CA+G9fYs1ZN2K=UHOjrwRR2JNE-M0nf9iW_Q-YPzVgmW+9daU4Q@mail.gmail.com>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Tue, 7 May 2024 18:43:24 +0530
-Message-ID: <CA+G9fYs1F=kO11-+DtAOsNwZGEd8mmojXEfXfg431JG=Spubcg@mail.gmail.com>
-Subject: Re: arm64: defconfig: gcc-8: failed: AttributeError: module
- 'argparse' has no attribute 'BooleanOptionalAction'
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
+X-Received: by 2002:a05:6638:a58a:b0:488:59cc:eb41 with SMTP id
+ kd10-20020a056638a58a00b0048859cceb41mr184770jab.3.1715087643594; Tue, 07 May
+ 2024 06:14:03 -0700 (PDT)
+Date: Tue, 07 May 2024 06:14:03 -0700
+In-Reply-To: <20240507123456.2204-1-hdanton@sina.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c162cd0617dcf580@google.com>
+Subject: Re: [syzbot] [net?] INFO: rcu detected stall in sock_write_iter (3)
+From: syzbot <syzbot+2b5fbaaa4280010beda7@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 7 May 2024 at 17:13, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> The arm and arm64 with gcc-8 builds failed on Linux next-20240507 tag
-> with gcc-8 due to following warnings / errors.
->
-> arm64 and arm:
->   defconfig - gcc-8 - failed
+Hello,
 
-Anders bisected this build problem and found the first bad commit:
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-07a2f8716c41 drm/msm/gen_header: allow skipping the validation
+Reported-and-tested-by: syzbot+2b5fbaaa4280010beda7@syzkaller.appspotmail.com
 
-Steps to reproduce:
------
-# tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
---kconfig defconfig
+Tested on:
 
---
-Linaro LKFT
-https://lkft.linaro.org
+commit:         7367539a Merge tag 'cxl-fixes-6.9-rc7' of git://git.ke..
+git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=10c8bfdf180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3714fc09f933e505
+dashboard link: https://syzkaller.appspot.com/bug?extid=2b5fbaaa4280010beda7
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=11a5c104980000
+
+Note: testing is done by a robot and is best-effort only.
