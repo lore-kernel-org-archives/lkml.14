@@ -1,140 +1,125 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D0D614D44E
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 09:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE22714D447;
+	Tue,  7 May 2024 09:03:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715072562; cv=none; b=hZY8JdSRGW3mG1CfiKbUAPn3FeoT1ggUdIKK+HSQPhp0ZWTRLomyA1T3FYQ6z3AixxZf31DzKlffPgMcjeq6TU9BO/0aA1E0PQz7y7xi06DZ6m1GenrQJg8BdOi+vuWDQhopQaPcdNPJZEaO0LJM0ZIIRU3IGducUVJiIUHWL9w=
+	t=1715072636; cv=none; b=kRnO+236K0MjvXPimNqhJ16a1eIaqGsR5gW513235PxZu1TWny8JJUxAduXJ7ZrFEnTdbvMJjWH9ofYABKd/V2ZH4SYEkXOWeYAKaTwk934jPqKzupKoeiCIuM4StoKH/rTHgbvO4bJbYumNBdolCLD3KJZuMnSZxKoA/4v51H4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715072562; c=relaxed/simple;
-	bh=60jS181WO5k71seEepe3WjZoVHuIO2PGj2XzHCB4kn8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=THdezfaDRkqdc/fPzW99oaJGKnqLUUNbQ3fOPlqU+eg95pKtFtMQQYh+pgDqhVP6Rl5ODI27tBC1Fsi29dsuSlHezecU/TjVbYGd71sMCToqoPnWeMxwb702w+tGbcmudxbwflf0I+cxYuDp9FvNnapeFHQzBW0JRhDZaEfV20Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jXT81tP+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LfRkAYkX; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jXT81tP+; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=LfRkAYkX; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jXT81tP+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LfRkAYkX";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jXT81tP+";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="LfRkAYkX"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D18DD206B1;
-	Tue,  7 May 2024 09:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1715072552; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ixaChRQaGvKUHEvNH8Bz6whyZ7S1illey/rZiGocvi8=;
-	b=jXT81tP+Re2hes4VND70fiagI72rujWt0OqRG9tVRAwmfQC3zILCE6avtnrzRQZ41VinIz
-	2KBi5Brli5rTF11eq++jiWUYuz7XE3x9p0oRgGSjKEp62voTVY3ld+2BoEOBAX0iZiFlCk
-	GgA6LfygyR6rao2k7JjHjmaFh8wjYig=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1715072552;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ixaChRQaGvKUHEvNH8Bz6whyZ7S1illey/rZiGocvi8=;
-	b=LfRkAYkX5N7Oao+7Jux7Gwo6vYjLRALURbKFhHMeME0iBTC6jyCpshpWJI0+Si3xJfUzQV
-	TEO2jM4i60bS72DQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1715072552; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ixaChRQaGvKUHEvNH8Bz6whyZ7S1illey/rZiGocvi8=;
-	b=jXT81tP+Re2hes4VND70fiagI72rujWt0OqRG9tVRAwmfQC3zILCE6avtnrzRQZ41VinIz
-	2KBi5Brli5rTF11eq++jiWUYuz7XE3x9p0oRgGSjKEp62voTVY3ld+2BoEOBAX0iZiFlCk
-	GgA6LfygyR6rao2k7JjHjmaFh8wjYig=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1715072552;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ixaChRQaGvKUHEvNH8Bz6whyZ7S1illey/rZiGocvi8=;
-	b=LfRkAYkX5N7Oao+7Jux7Gwo6vYjLRALURbKFhHMeME0iBTC6jyCpshpWJI0+Si3xJfUzQV
-	TEO2jM4i60bS72DQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 6FA5B139CB;
-	Tue,  7 May 2024 09:02:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id OIEOGCjuOWalRgAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Tue, 07 May 2024 09:02:32 +0000
-Date: Tue, 7 May 2024 11:02:30 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: Jane Chu <jane.chu@oracle.com>
-Cc: linmiaohe@huawei.com, nao.horiguchi@gmail.com,
-	akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] mm/memory-failure: try to send SIGBUS even if unmap
- failed
-Message-ID: <ZjnuJgUVVnwYrr5p@localhost.localdomain>
-References: <20240501232458.3919593-1-jane.chu@oracle.com>
- <20240501232458.3919593-2-jane.chu@oracle.com>
+	s=arc-20240116; t=1715072636; c=relaxed/simple;
+	bh=2xnallKHSfS3jGvqNeNimXCB0bIdex0YoRsg8+jbQVg=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=cymAvXR65S8Xmbi3rh0S/7vjvV4e/QxSc7/TNUlZEiQIbgOBVtH5BK02lICbKo5tQ99v3xvXA+TO4n0i1vkxCjkJhbNVxExN/zm8xiwvp2aNSOzphvHGTIYofuUV8/Mko1m1NKtvYOrRTjQKSZZrZ3Je98Z29R01EEFkgepj+UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4VYWx16Pqrz9xFmK;
+	Tue,  7 May 2024 16:42:13 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id A417E14010C;
+	Tue,  7 May 2024 17:03:44 +0800 (CST)
+Received: from [10.45.158.162] (unknown [10.45.158.162])
+	by APP2 (Coremail) with SMTP id GxC2BwB3sSVh7jlm51OtBw--.22983S2;
+	Tue, 07 May 2024 10:03:43 +0100 (CET)
+Message-ID: <fd2369ed-1e84-4e44-ac80-cd316f8e7051@huaweicloud.com>
+Date: Tue, 7 May 2024 11:03:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240501232458.3919593-2-jane.chu@oracle.com>
-X-Spam-Flag: NO
-X-Spam-Score: -2.78
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.78 / 50.00];
-	BAYES_HAM(-2.98)[99.91%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_TLS_ALL(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[huawei.com,gmail.com,linux-foundation.org,kvack.org,vger.kernel.org];
-	RCPT_COUNT_FIVE(0.00)[6];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+User-Agent: Mozilla Thunderbird
+From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
+Subject: Re: [PATCH memory-model 2/4] Documentation/litmus-tests: Demonstrate
+ unordered failing cmpxchg
+To: Alan Stern <stern@rowland.harvard.edu>,
+ "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+ kernel-team@meta.com, mingo@kernel.org, parri.andrea@gmail.com,
+ will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
+ npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+ luc.maranget@inria.fr, akiyks@gmail.com,
+ Frederic Weisbecker <frederic@kernel.org>, Daniel Lustig
+ <dlustig@nvidia.com>, Joel Fernandes <joel@joelfernandes.org>,
+ Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>,
+ linux-doc@vger.kernel.org
+References: <42a43181-a431-44bd-8aff-6b305f8111ba@paulmck-laptop>
+ <20240501232132.1785861-2-paulmck@kernel.org>
+ <c97f0529-5a8f-4a82-8e14-0078d4372bdc@huaweicloud.com>
+ <16381d02-cb70-4ae5-b24e-aa73afad9aed@huaweicloud.com>
+ <2a695f63-6c9a-4837-ac03-f0a5c63daaaf@paulmck-laptop>
+ <c168f56f-dfae-4cac-bc61-fc5a93ee3aed@rowland.harvard.edu>
+In-Reply-To: <c168f56f-dfae-4cac-bc61-fc5a93ee3aed@rowland.harvard.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:GxC2BwB3sSVh7jlm51OtBw--.22983S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7KryrCrW7tFy5Ww4DKw1rZwb_yoW8CrWfpa
+	9rKa10kr1UXr4Sk34qqw43JrWFvwsrJay5WFyrXFWqyayqkF4SyF4Yvry5Kr93Jws7Jw42
+	yrWYga92vayDZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkmb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYY7kG6xAYrwCIc40Y0x0E
+	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
+	WxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI
+	42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUgEksDUUUU
+X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
 
-On Wed, May 01, 2024 at 05:24:56PM -0600, Jane Chu wrote:
-> For years when it comes down to kill a process due to hwpoison,
-> a SIGBUS is delivered only if unmap has been successful.
-> Otherwise, a SIGKILL is delivered. And the reason for that is
-> to prevent the involved process from accessing the hwpoisoned
-> page again.
+
+
+Am 5/6/2024 um 9:21 PM schrieb Alan Stern:
+> On Mon, May 06, 2024 at 11:00:42AM -0700, Paul E. McKenney wrote:
+>> On Mon, May 06, 2024 at 06:30:45PM +0200, Jonas Oberhauser wrote:
+>>> Am 5/6/2024 um 12:05 PM schrieb Jonas Oberhauser:
+>>>> Am 5/2/2024 um 1:21 AM schrieb Paul E. McKenney:
+>>>>> This commit adds four litmus tests showing that a failing cmpxchg()
+>>>>> operation is unordered unless followed by an smp_mb__after_atomic()
+>>>>> operation.
+>>>>
+>>>> So far, my understanding was that all RMW operations without suffix
+>>>> (xchg(), cmpxchg(), ...) will be interpreted as F[Mb];...;F[Mb].
 > 
-> Since then a lot has changed, a hwpoisoned page is marked and
-> upon being re-accessed, the process will be killed immediately.
-> So let's take out the '!unmap_success' factor and try to deliver
-> SIGBUS if possible.
+> It's more accurate to say that RMW operations without a suffix that
+> return a value will be interpreted that way.  So for example,
+> atomic_inc() doesn't imply any ordering, because it doesn't return a
+> value.
+> 
 
-I am missing some details here.
-An unmapped hwpoison page will trigger a fault and will return
-VM_FAULT_HWPOISON all the way down and then deliver SIGBUS,
-but if the page was not unmapped, how will this be catch upon
-re-accessing? Will the system deliver a MCE event? 
+I see, thanks.
+
+>>>> barriers explicitlyinside the cat model, instead of relying on implicit
+>>>> conversions internal to herd.
+> 
+> Don't the annotations in linux-kernel.def and linux-kernel.bell (like
+> "noreturn") already make this explicit?
+
+Not that I'm aware. All I can see there is that according to .bell RMW 
+don't have an mb mode, but according to .def they do.
+
+How this mb disappears between parsing the code (.def) and interpreting 
+it (.bell) is totally implicit. Including how noreturn affects this 
+disappeareance.
+
+In fact most tool developers that support LKMM (Viktor, Hernan, and Luc) 
+were at least once confused about it. And I think they read those files 
+more carefully than I.
+
+https://github.com/herd/herdtools7/issues/384#issuecomment-1132859904
+
+Note that while there's no explicit annotation of noreturn in the .def 
+file, at least I can guess based on context that it should be annotated 
+on all the functions that don't have _return and for which also a 
+version with _return exists.
 
 
--- 
-Oscar Salvador
-SUSE Labs
+have fun,
+   jonas
+
