@@ -1,109 +1,134 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5344716132A;
-	Tue,  7 May 2024 15:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D7E15FA9F
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715094465; cv=none; b=S1BgAPq6jqVmeyWQvcLZ108eLAzTRv60W/syZNkAnprE5g4ZMZLHWENoSSoBDzJYtY9iV0suTHMr/XGYzHZKAHs/Cd17OPhFcEKJKJw3TbRiQkzVFzUNHJXu0DOFzHShpR+S5qZBwDtd7nW6zEVRR5EBm/RBaSZM2t0Prara3YE=
+	t=1715094510; cv=none; b=uelSAAg8QzRhXEqKlkN/gQoeDX0LEIy5Eb+0kEm72QLeezzhdKuvZG9xN3hZwqZ90maGXt6O5LqBBH1WoMcf+UDnIe3GN1RaFUrgv2+vweahoDMtL0Ye3EYizF+CO5GRwMl01CfGKL0yFgKdrojkFEgtwrpaZSqP5U6kawh6bE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715094465; c=relaxed/simple;
-	bh=UaQVvlK7uFSTTAgQAcJhZCMHMi2rIAYqLbFWW1dKZpE=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=j3hTHx/htf9+hgSgsHQ+Hn1ZTULO4qwIic/tOLnbw8bMSeM/7zEduAs1QRHMJvWsu/iNccS4xKeu7gcGZljyliNK+OYMJdkT3J2SILIul8u5wy8E8MecGOoCF2xLq1GmUpP78j2JcgpOTTkLiWWzhypDxFKt+641t/8S4cJuYRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IgSXrtIE; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1715094510; c=relaxed/simple;
+	bh=etFllyEupyaknEFf+lcPrCQd6nzzutaeEMKfMlLm/30=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=egbLLcCV8Hyg2WZrL4wRPaLpt/wPfqv77lHqniAym81+7c4tIVc61UOEqKnKjLAweSDo5lCItQmBJlXs7JSvW6hgkmIVEWSiFSBm+wrrgGlDnzwlg/mT8WNotYAJYO2iK+k8QVUo7v17l9/xfSOUsVa2FwGKF3bBbvv4EVy6vjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rvvu9Tvd; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IgSXrtIE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 82A1C24000B;
-	Tue,  7 May 2024 15:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715094460;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UaQVvlK7uFSTTAgQAcJhZCMHMi2rIAYqLbFWW1dKZpE=;
-	b=IgSXrtIEG4/C+lOXqlsXePSOdnwI1SABeDG763VaWxy+S+JXj4runTgPnKwdcHfuXTtzba
-	yjZzI3rAwxFFAtc1tHjH3hSj8b0NJCCr8/fb5bQmLzH2do82wj6QKoj0IOc4+4AbdGMvBa
-	DGyTqXuROwkGduBJU4SSUeh5irlEVVXmMXyWt+KzZ03vETHcTZdXx2tnyRFDWYA4QtAais
-	n7y4ENDEWFfwGejQpba4RWN5ctoHl9jmDY6yPKNIIIxPNsNPbU4D26dINW+HsOKYznFdtU
-	TGP30EEV0j/YPSTEHa9+kQnCO0pYGHWOG2XfLoTqwxYA4CfLoibIYZhqMMKi2A==
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rvvu9Tvd"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-de615257412so6463814276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:08:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715094508; x=1715699308; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XIQy57nw8js2S4anIYd24L9R1IqwqfbqyoiYCyYOBxY=;
+        b=rvvu9Tvd3egW8lGyezAGdrLE+g/wU/xLOQeoQKoncJiHbIx0X+UN2+TnnXPyY+kZub
+         WDVLX4JHmVDndQT/+aXGwNQDdsHU9EUmFwxSeINpGCmQVQNROYzyzuiCcJSKaKHEfSSP
+         KP/u6iTwYSapylbkufHpm8BhO+CnKYq6nEMX/Cio+cQt4dvR+stmMj94Y0VViywuX+tl
+         N2jiQWyetwtLL8zZulJAt9lnV7ksFAN33kt5WfyS6wPfryLpKBnT56Ed2tEFaKU3PRPp
+         bH7uPuZ9Tz3g8xOqLRbGFe1GTTMOWKXQb2ybDZLOAfKiVj3ZmPK+i31JhIZiutj4rfxX
+         YsIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715094508; x=1715699308;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=XIQy57nw8js2S4anIYd24L9R1IqwqfbqyoiYCyYOBxY=;
+        b=UBcIdm/Jsp72UWx18DxXPuXCQp4EJDbsRMHpMDDojwCabKmwXlLhMBTrVz5nXpyV8I
+         K58z1EHfvfQVGFMz1tZOQjTiRs5MUKaAKsPI+dsBW7E3lJS1eAQrMCpd+/AEq9npLxVE
+         QUSI/jFBhLg7VI0/V+5FZPyikcYZ1GHE9nA/akUma61hl5Aj5PU/AX/7FE09ebw3Zvny
+         BylxwNvZWY0DdNjumzlLqFKI4SK4jH13EAomJ5ulAwg+K5T4V4s/wZcWj+fCGK85Rx5B
+         vxnLjY3mFErZ8LOM3VJnSpfj2kQBdkxUMeaePzQCsDZIXlxbh0yy9VcIje9tmIsalaBp
+         YgRg==
+X-Forwarded-Encrypted: i=1; AJvYcCV6i7+AF5d58TUFZxrenPIsCl1frVAQgl/6VTPexPiiKxfWyfeyHQ7LVgatn8w1tbvD0K27lYLH/S7HuOfiBeTqW3CculjHyeuhJJU8
+X-Gm-Message-State: AOJu0Yw4HIZNgWmDgIokH/3DQ11DYObo11JMGaz3tyvrmkaV+/FkMGfG
+	ArYvqeNPBGTcvJ3t/WVFthCsrr40D69o37C2uJ7UMkkF5BLZqQ4QQjAjX1XeL6vzidmu4GF4dP9
+	NwQ==
+X-Google-Smtp-Source: AGHT+IGAAglNqpXyaYJUaI2uBs8e7jY1OuLq1VqZRy2zy+xyQcXN8cDWnwsKdrBjSbkcmiU1ZDRoZGIH/Ac=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1245:b0:deb:8bc5:eb5b with SMTP id
+ t5-20020a056902124500b00deb8bc5eb5bmr1772807ybu.5.1715094507868; Tue, 07 May
+ 2024 08:08:27 -0700 (PDT)
+Date: Tue, 7 May 2024 08:08:26 -0700
+In-Reply-To: <994d42e4c4fb74899474a87766d7583507f13a73.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240219074733.122080-1-weijiang.yang@intel.com>
+ <20240219074733.122080-25-weijiang.yang@intel.com> <ZjLNEPwXwPFJ5HJ3@google.com>
+ <e39f609f-314b-43c7-b297-5c01e90c023a@intel.com> <038379acaf26dd942a744290bde0fc772084dbe9.camel@intel.com>
+ <ZjlovaBlLicFb6Z_@google.com> <8a6c88c7457f9677449b0be3835c7844b34b4e8a.camel@intel.com>
+ <Zjo46HkBg2eKYMc7@google.com> <994d42e4c4fb74899474a87766d7583507f13a73.camel@intel.com>
+Message-ID: <ZjpD2BaO5SXPUEj0@google.com>
+Subject: Re: [PATCH v10 24/27] KVM: x86: Enable CET virtualization for VMX and
+ advertise to userspace
+From: Sean Christopherson <seanjc@google.com>
+To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Chao Gao <chao.gao@intel.com>, Dave Hansen <dave.hansen@intel.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "peterz@infradead.org" <peterz@infradead.org>, 
+	"john.allen@amd.com" <john.allen@amd.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"mlevitsk@redhat.com" <mlevitsk@redhat.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	Weijiang Yang <weijiang.yang@intel.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 07 May 2024 17:07:39 +0200
-Message-Id: <D13I8TFIF77X.2EFWZ14LM2H6N@bootlin.com>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Rob Herring"
- <robh@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Michael Turquette" <mturquette@baylibre.com>, "Stephen Boyd"
- <sboyd@kernel.org>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, "Lee
- Jones" <lee@kernel.org>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH v2 01/11] dt-bindings: clock: mobileye,eyeq5-clk: drop
- bindings
-Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-X-Mailer: aerc 0.17.0
-References: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
- <20240503-mbly-olb-v2-1-95ce5a1e18fe@bootlin.com>
- <ee278102-f4b8-4ca0-879e-f83cd54efbd0@linaro.org>
- <13ed1865-d702-47b6-b186-d5f060103280@linaro.org>
-In-Reply-To: <13ed1865-d702-47b6-b186-d5f060103280@linaro.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
 
-Hello,
-
-On Fri May 3, 2024 at 6:05 PM CEST, Krzysztof Kozlowski wrote:
-> On 03/05/2024 17:57, Krzysztof Kozlowski wrote:
-> > On 03/05/2024 16:20, Th=C3=A9o Lebrun wrote:
-> >> Switch from sub-nodes in system-controller for each functionality to a
-> >> single node representing the entire OLB instance. dt-bindings is
-> >> unnecessary and soc/mobileye/mobileye,eyeq5-olb.yaml will inherit all
-> >> properties.
+On Tue, May 07, 2024, Rick P Edgecombe wrote:
+> On Tue, 2024-05-07 at 07:21 -0700, Sean Christopherson wrote:
 > >=20
-> > Why changing this? You just added these bindings not so long time ago..=
-.
-> > This is very confusing to push bindings and then immediately ask to
-> > remove them.
+> > Keeping X86_FEATURE_IBT set will result in "ibt" being reported in
+> > /proc/cpuinfo,
+> > i.e. will mislead userspace into thinking IBT is supported and fully en=
+abled
+> > by
+> > the kernel.=C2=A0 For a security feature, that's a pretty big issue.
+>=20
+> Since the beginning, if you don't configure kernel IBT in Kconfig but the=
+ HW
+> supports it, "ibt" will appear in /proc/cpuinfo. It never was a reliable
+> indicator of kernel IBT enforcement.
 
-See this revision as a proposal of something that has been asked
-multiple times in previous reviews. See message from Stephen Boyd on
-last revision [0], or discussion with Rob Herring on much earlier
-revision [1].
+Ah, good to know.
 
-Proposal from Stephen Boyd of using auxiliary devices makes sense, that
-could be the future direction of this series. It won't change the
-dt-bindings aspect of it, only the driver implementations.
+> It is just an indicator of if the IBT feature is usable.
 
-[0]: https://lore.kernel.org/lkml/daa732cb31d947c308513b535930c729.sboyd@ke=
-rnel.org/
-[1]: https://lore.kernel.org/lkml/20240124151405.GA930997-robh@kernel.org/
+Does ibt=3Doff make IBT unusable for userspace?  Huh.  Looking at the #CP h=
+andler,
+I take it userspace support for IBT hasn't landed yet?
 
-> One more point - anyway this should be revert with clear explanation WHY
-> you are reverting bindings.
+> I think tying kernel IBT enforcement to the CPU feature is wrong. But if =
+you
+> disable the HW feature, it makes sense that the enforcement would be
+> disabled.
+>=20
+> CET is something that requires a fair amount of SW enablement. SW needs t=
+o do
+> things in special ways or things will go wrong. So whether IBT is in use =
+and
+> whether it is supported by the HW are useful to maintain as separate conc=
+epts.
+>=20
+> >=20
+> > To fudge around that, we could add a synthetic feature flag to let the
+> > kernel tell KVM whether or not it's safe to virtualize IBT, but I don't=
+ see
+> > what value that adds over KVM checking raw host CPUID.
+>=20
+> A synthetic feature flag for kernel IBT seems reasonable to me. It's what=
+ I
+> suggested on that thread I linked earlier. But Peterz was advocating for =
+a bool.
+> How enforcement would be exposed, would just be dmesg I guess. Having a n=
+ew
+> feature flag still makes sense to me. Maybe he could be convinced.
 
-I'll make sure to use standard revert formatting and explain why it is
-being done.
-
-Thanks,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+If there's a need for IBT and KERNEL_IBT, I agree a synthetic flag makes se=
+nse.
+But as above, it's not clear to me why both are needed, at least for KVM's =
+sake.
+Is the need more apparent when userspace IBT support comes along?
