@@ -1,192 +1,314 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE3F316C447;
-	Tue,  7 May 2024 16:28:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099283; cv=none; b=fLUIhsFmVC/gSKOO2nDxIBY043tJw93y/ZZrcuFaKkq06OBvfnV+ZAhLw7B9U30+PrJ3rmJ3YFO0h03Xpem4RMvzbnezRQDx0bwHz6Dv2eJqBvXnXf4mDRxkWxTL06ggqBFOkNn8An8qyA+5TNHZy/g9O3YTJVfhYotjQ0IniGY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099283; c=relaxed/simple;
-	bh=hD+M8iZyRZ2U9jnt01xrNmHVdD1Kc6oVV4hfl9YcSjg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=r2IdKelf98fJTD4rxOepQwLJtlhRh2Ii59hAO1mAZqmC077Gb9L++NtqLYBHQ0m9SkKqFMU8NWbT45RSl3oodkPuIS3LZFY3K7EfaKGKVocZ/E+dJ3qdfK4o/orC2ACDK3lCp+yMIzUSELi8XDANA0TZl8uqMB0Poxe9rI/XVNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bBMwDUYA; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E89816C453;
+	Tue,  7 May 2024 16:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.40
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715099310; cv=fail; b=WEz8sFidsSjacZ5MmcTlVGKQExuuvC87EXLZQelQshbA6v+63IHFzaSUPN42HjA7QNpkQfBBMKC+NvvFs8i2QvNd19Jvr4q8dWvG3EX2Z/R2pX3WPil60mhnmFE0DrjzShmKS3QwoJ5SbZVLdftinIWzQVMlWUlb4SfoNqL+LoE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715099310; c=relaxed/simple;
+	bh=xB0AS24RAJmnKV2LhSkEVd+F5bhjvoo8S9ifWpwQNeI=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=CVS6jgH9MYzwtSyAf2XaCJJVAR7LDiYoHNplHRiPc8kZrrgjvOVNFBgHdVkPvpUdmD4d5zqB6mCetYfal3x2A08+wcYyYoN7pHV49fMxomIPim728gEdvXu5P9DsVeOMXvnHeOizSAWRhY6y356T5u9XiJUcFBA9lHIr6A2KMdk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=PX3/bUqx; arc=fail smtp.client-ip=40.107.244.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bBMwDUYA"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a59ab4f60a6so726402966b.0;
-        Tue, 07 May 2024 09:28:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715099280; x=1715704080; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rICwxurU6A+ycOmFzrxmjMEY+vAR/gQDdccoIGBtMqA=;
-        b=bBMwDUYAyCNo3SnY7dqiYWGUDAvA5KOLaMSiryJybhsYi6F3uv8Dk1M503llh38mDi
-         HIgw8yvrsBjKH1NCuwmy4VO6VuR1keoV7U0KfmGiM4fcjPwaNyvSi++I7Utb/B8Knpz1
-         n5d1HVwXE4Moa3MzBmlh3nunz1R3I9EDHHlxEQtZejf4zCbGFOMQR0qhVydp9YbSw1qh
-         ++QsvpHuvU2mNYohr+R71VP4K0qusnci6AHhqG4yMKnJX3DzsaJE3gEKuDgGA9ADDTTF
-         NF6cZWDsEOYSz4ul7WzUnSeHxRVwuvHQYaEsFgQobQwmtmNDYhz2+cXxjC4lKvqnSHx+
-         qESQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715099280; x=1715704080;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rICwxurU6A+ycOmFzrxmjMEY+vAR/gQDdccoIGBtMqA=;
-        b=uvjLqg/D1zzLa7UnQK+qUpfKKyW1p6XrvMNCi/egzMMEqF8iVvJjaXFgGrrKyeSDbN
-         jx947CcEYNwBb2zW3+k/oJlW/5j1kk2Wq+jMN4JCZFC4AWfefszUsXlwWe1iOJnMmxkS
-         sq6VEqW2aLE9WEBaaoMdnqwpSyM6s1hAReYig72oV9coPTsddNeN2ILymeW7yxsNe1LB
-         djGaJZl/WuqzhbcYDWYSX0GBQHidEg2J/1//OJW8beQuMXQlNNu7wyrH5ra/x8CvSlSE
-         c41YVN6MHDCSj/3GOQ+0ztRl9uaC6Nt4zyCMszCwSbDpfR77WMI+Hl+jn8Qk7gRK0Lvy
-         uZtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/S9cMRb/1qZlxyNA7JLDHukaAvAecZPcIVUKxj5wAEHfyDeJfhecT7M8OmenhDopbxf072CFSHxnzcE+dRUmnroLe+GNoh7S6clgjR039gxAS76ij57C/qzAJoX9iowlpOfgTNPiO74wcHN5DFxK5mf6igbBBoiPnE+qnfj08GA==
-X-Gm-Message-State: AOJu0YyfMgjkZ6H3IjrIxEAt1oa9K+fij8zYzj0lnjEHTpeBTaj8VJT9
-	Ve+t2L7cZiYlO7KMG9508x0vegDlkrDpaoiZznt4s3oOFQcypwUcRUpvSx61Lx9uzQKixQsSLaL
-	wOECtEdA66lfHU+BJpmyEsIkE7R0=
-X-Google-Smtp-Source: AGHT+IFn3p6+IU8MNAx4QtWppQukiCZTYwwesAVqUICe2KaycZuCykzGNsekqL7kux4xcd7LRFMUFDcyPHBLQ7Tec6w=
-X-Received: by 2002:a17:907:3f9a:b0:a59:c5c2:a31c with SMTP id
- hr26-20020a1709073f9a00b00a59c5c2a31cmr8176135ejc.33.1715099279965; Tue, 07
- May 2024 09:27:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="PX3/bUqx"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ODnCX3sFRPO5ImqdM5Mm4I3ESFdaAp72rRaf5PXOvzzaGiaxdFN1LZ7mAGAdMO8ti8rQ+kmGZOHYgWhesmePK0Xh/fegKwpU0erS0rPCtb/WW7Y5+ogr3JkNnCWr6A2Rv7LIuRnX2hp/pswN2dJHdBCyAlPTsoU+yBih+81OkG+scf7A1y2XHjsiy56vHw4yThLDR04aGfn/uBSAgdYgItRtmzgNj3A0BlvJPD1bBjUskdNCGhyqlmXsLvhtRqWYGfO52SA5YSUl/lTu9OQHZjt4N6ustUh0NaLy1ablx1nc97rVAhmScl1dSqcEa55nSnVQz+WbHQlU7k6NL5nhLQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dbo3X8GyWl7M1x/kj1phUGkDFRlbo3wfVanUB6S8No4=;
+ b=Ni5ruVO1ybO6TonjCJnWZTopv/FSWB2XCZc+elFN9MfWAJ4U63/nXSh4wZo6v/WbXGbk5mgUDTTlDJC58JXE++RqTIOdpJ2KB+hh67AqnoOtYJBF467oC0nXgOiTRxNkmzXRSqTnkvkLQuSrzJ2kyWra4fg3MO66txN4tOlPM3K/cXeeKQqRcYAFh/y3wUuA2Hgc8soaSRIofjosEoiaz+TXMjHc3WkPR+dyv9k7LGEL9fwsWVFH4JOZoLe0XXdgCJHFwFXN6o/GITqA0Eecztj7huJeos7wlNTC5pW/RzYVYWefoG6IFRQiTmW8pASjoeeoSC2QgiKaGjl4vTFOGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dbo3X8GyWl7M1x/kj1phUGkDFRlbo3wfVanUB6S8No4=;
+ b=PX3/bUqxcjwrfH2oOpV10XZKoWFOQ+M1B4ZAj2i3hCiRae6Lhn8lnqyadJCLl1EaRcC4jKIvwSeb1p38yKCMj/JFfWcr+IepleUewO7VMh6HSziT0DdV7X0uzSjmCoWivQmeHV+McRz3UoZoUX7F4Fh1vKoYKg+IAxzHpvc/f5E=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
+ by DS0PR12MB7702.namprd12.prod.outlook.com (2603:10b6:8:130::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41; Tue, 7 May
+ 2024 16:28:25 +0000
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87%4]) with mapi id 15.20.7544.041; Tue, 7 May 2024
+ 16:28:24 +0000
+Message-ID: <086a6c59-f617-4714-b91a-2b1deae8e33e@amd.com>
+Date: Tue, 7 May 2024 11:28:20 -0500
+User-Agent: Mozilla Thunderbird
+From: "Moger, Babu" <babu.moger@amd.com>
+Subject: Re: [RFC PATCH v3 05/17] x86/resctrl: Introduce the interface to
+ display the assignment state
+Reply-To: babu.moger@amd.com
+To: Reinette Chatre <reinette.chatre@intel.com>, corbet@lwn.net,
+ fenghua.yu@intel.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com
+Cc: x86@kernel.org, hpa@zytor.com, paulmck@kernel.org, rdunlap@infradead.org,
+ tj@kernel.org, peterz@infradead.org, yanjiewtw@gmail.com,
+ kim.phillips@amd.com, lukas.bulwahn@gmail.com, seanjc@google.com,
+ jmattson@google.com, leitao@debian.org, jpoimboe@kernel.org,
+ rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
+ jithu.joseph@intel.com, kai.huang@intel.com, kan.liang@linux.intel.com,
+ daniel.sneddon@linux.intel.com, pbonzini@redhat.com, sandipan.das@amd.com,
+ ilpo.jarvinen@linux.intel.com, peternewman@google.com,
+ maciej.wieczor-retman@intel.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, eranian@google.com, james.morse@arm.com
+References: <cover.1711674410.git.babu.moger@amd.com>
+ <e50e1e55c2ef4f5e1609960e573b30a125a59e5c.1711674410.git.babu.moger@amd.com>
+ <9fd1c700-fa24-4290-aa77-a6eda9758ace@intel.com>
+Content-Language: en-US
+In-Reply-To: <9fd1c700-fa24-4290-aa77-a6eda9758ace@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR01CA0015.prod.exchangelabs.com (2603:10b6:805:b6::28)
+ To MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240504003006.3303334-1-andrii@kernel.org> <20240504003006.3303334-6-andrii@kernel.org>
- <2024050425-setting-enhance-3bcd@gregkh> <CAEf4BzbiTQk6pLPQj=p9d18YW4fgn9k2V=zk6nUYAOK975J=xg@mail.gmail.com>
- <cgpi2vaxveiytrtywsd4qynxnm3qqur3xlmbzcqqgoap6oxcjv@wjxukapfjowc>
-In-Reply-To: <cgpi2vaxveiytrtywsd4qynxnm3qqur3xlmbzcqqgoap6oxcjv@wjxukapfjowc>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 7 May 2024 09:27:44 -0700
-Message-ID: <CAEf4BzZQexjTvROUMkNb2MMB2scmjJHNRunA-NqeNzfo-yYh9g@mail.gmail.com>
-Subject: Re: [PATCH 5/5] selftests/bpf: a simple benchmark tool for
- /proc/<pid>/maps APIs
-To: "Liam R. Howlett" <Liam.Howlett@oracle.com>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	linux-fsdevel@vger.kernel.org, brauner@kernel.org, viro@zeniv.linux.org.uk, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-mm@kvack.org, Suren Baghdasaryan <surenb@google.com>, 
-	Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|DS0PR12MB7702:EE_
+X-MS-Office365-Filtering-Correlation-Id: ec8b2fdb-12b0-48d5-20bc-08dc6eb2b7b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|376005|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QXpBbXFmdVZJOHRxK0IyTThCczV6c0RxKy96MDAwSmFQQnBObHYwUkp3bGYy?=
+ =?utf-8?B?Q3hxUWxFL2QyNVpZNENWMk11aU03ZUw5TDN3RXRDUWhkSHN5RWx0eHFzck0r?=
+ =?utf-8?B?eGh0ZWZ3RzZnckdrYnZ3UWwxYm9GWWJHWUd5Ti90VHd0VVlQRkxodno4UVp0?=
+ =?utf-8?B?YmQ1N3VzNVc5NFQ3d3QvVXdXRGVtQzU3dFUwM2hXN0Q4M3I2RVVHVEpacTlC?=
+ =?utf-8?B?bVo2aXlhSHl2ZFhkMUlUanR3MUZSVEpSaitzbGZ1VWQrNTFKWHBRTnJ2b0lD?=
+ =?utf-8?B?dTFEdElnMU53Y3JaR2ZrMkNqVHppK0UrSGVjRG9JNTJaNnVtYUgzZjZqRmJ2?=
+ =?utf-8?B?ZThsN1lHcEpIZytvNXRrUklDZjRobU1PTWx2Ykt3Vk5UeTdMTCszTjY5Zzk1?=
+ =?utf-8?B?S1FxWW5lTmFGajh2b0pPUzJrZFl5VGFXc1dkWk4vaURLVmJPeGg4L2Y1cGFK?=
+ =?utf-8?B?NDZLL0UyMDBlRVJWekRyMk4vbEx3OStPa2s0eTN2OUFJclBwL2VVTkk4ekZF?=
+ =?utf-8?B?ampUUjRoenpscXZwWVBPTWJ4SHZrdURtS1VvTEIwdkFrK2FsbUp1YzZpUjFF?=
+ =?utf-8?B?RmRldmxJUTZMSmZVVnZRSUlldUoyOW9lQklrV29rV2kyZVh0QmlKYXVqOW5j?=
+ =?utf-8?B?QlJUaE1JMTJPcnEyMFNKR2VoWm11U2FoejdDOTArVzdublJ2SURCaXVhM1Yw?=
+ =?utf-8?B?TFErdlhuMitxRzRybk45blFENElEaHNYRzhYNHNkK0sweEQrZ0prT0NTWkly?=
+ =?utf-8?B?UDhzckpJTnFsanFzb1NURnY1LzlTaGhOMHdveG9JMTBYUXBZamlQTlFhcW5W?=
+ =?utf-8?B?WWpYV1NiK1FwNG8vZzB5K1dFWnJpdUpFNU4vcnVGQ0VxbXMrMkltWkFabTJZ?=
+ =?utf-8?B?THhCYkZxVW9nYmx6ZFFzMUYrSEtpYUhVRUU5ZlNHZ2MvTVY0SXdNSWhRNTAv?=
+ =?utf-8?B?SWNUcnNkdlVEU0s0UnNWeWhIK1VwUUlNVHdscEZSR3NuTlJDbE4vWkE4RUoy?=
+ =?utf-8?B?STUyTUoveEVucVRSVWRMUjJZY2pCNm9kNjJPWnVFQ0JYS1M5MjBBVXc2RlU5?=
+ =?utf-8?B?R0F2M2JObFZJaUI3cnAzaG1QdVdLWGwvS2YzdXB6VXpZTGVESy8vWGNZc0V6?=
+ =?utf-8?B?bkNJUXBiQkR0Mlp2MmI3TEJtRkxwam05ZHdTYVBHTXJCeitlWXhHS056SnRv?=
+ =?utf-8?B?aEhLRCt5YnZqY3ozSTRPTFV6VjM1eHJsMmwrc2JCUVEyRXpUWnJsNGlzQW5N?=
+ =?utf-8?B?OEJKRU42VTRDZ3FBdlcrKzZFV3NVM1lJZGdkc29VQnJJSGhyaVRLV0diY1hB?=
+ =?utf-8?B?Wlo5UFpnRjJLb1VTMTJSWjZzUEFYVE9WODZpMkF4VFZkaERFUkVBZlptUlZs?=
+ =?utf-8?B?QXg3VE5sV1I2ejJSbUtERzFGRXJBblptZjZrM0RlcU1pSjlNcDJhcTRxT0Vw?=
+ =?utf-8?B?QzBaYXJCSkNjdUprVjVObGUxV0ZIOUNHZXEwaTJDU3RkckRjaEdtVVVuYldD?=
+ =?utf-8?B?UGlwamdCdnlMUmwyemFNbUtKSFlhNUxPZ0JaT29ORlplVXkzOE8yR3F2YUxO?=
+ =?utf-8?B?YTFHa1JTbEZVdzVuRjdYdUJZR1RjaVB0R25jT1U3UjdXVjg5a3FRL2Q1Z1JJ?=
+ =?utf-8?Q?hAq36FKVfanBlAwJNwlD8S4hkFd+Yr8E6Lgp6kEGbpPE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WDJLUmdFWGw3OEt1MUpXUzNvSEFHcWo5dlp1b0VYSmhvNkVGK1EyRks2aVFD?=
+ =?utf-8?B?ZTdwSlk2TW1TWEpTckw3dm9TNDRuVmR3U1kweHRxckJHUFR0TzgvNzlReFB1?=
+ =?utf-8?B?dGdpY0dLMjFxeGMxeXQ1Z0NDVWM5UHEzMG9RQnF5VFVKb0RYWkVDa2xSYmt6?=
+ =?utf-8?B?bVhQZnJKSElzQVcwWFVQeVh0eHBPL0M1V2NoREZGM0hFdHJlQTR3V1hpbUJI?=
+ =?utf-8?B?Mmg2SXpOL0FXSm9LOVJwTGdQc2h5TGx2UzNBcXRjUDYxSjA1bGo5VjFOdExr?=
+ =?utf-8?B?bmlGTjE1d0pnY0ZBUHpLdG4ySy8wV0Myc0dSYlBnMXFLMHVZK1hpQm04Vm1R?=
+ =?utf-8?B?M3A3MVJKZ0FaUGQwOE5rR05pVWRZOXc5d2owL2dhc1VyeC9DUXNaZFlXbEw2?=
+ =?utf-8?B?WFBISmFJWFBzQkowYnN2M3p0S1VFYys2MVdLMDVxN2RPbWxydkhLNE1OWC8r?=
+ =?utf-8?B?VkZrZ1ZscWZSUWg3NjRKb1V4M0ZuTTRaZVR3a00xOVpnVUwyd2VtaTdJcEhh?=
+ =?utf-8?B?UjgwVFNEQUxOOGlGaWM5RHBNYzE5WWhEM0JodkNGVlNqeGU5WWt0U3BUYTNR?=
+ =?utf-8?B?cmF4YkVjRndiUGNrWEYwdGRrbEZCZjVUVEQrUXdnMkc1b1hIb1UzKzlvWWts?=
+ =?utf-8?B?d3N0N3ZLWERLSUw5VmtPcmZvTzgvRTFJTVlBNWtDcmtWNjdlVndZT2doSkhn?=
+ =?utf-8?B?T2NyZ1pVK05BU1BXdUxoREwzQmJzQ0JsSWEycExtaDZoN1ppNms4K0FSYzA2?=
+ =?utf-8?B?eEhuMjJ1cTJDYUlSYkdZZTVrdGt2L05NZGdqNSsybGJidE1lMmhjbGRtaTJh?=
+ =?utf-8?B?Z09BL2E3SXArMCtpS3B1RGYxQXFwQmppU2V1SjZ2dE9kdVo2OGQ2d0FkMjFB?=
+ =?utf-8?B?TjE1ZkNTaE52cXRkRVIyNmkzb1ZmMTFhRzRsbTFJdzU3elZjZjJxVjdnQTg1?=
+ =?utf-8?B?Y3lHSXNreHlRbGc1U0huTkJudUNqeWRXVHA0aCtzODlxOStUd283NzBWYUJJ?=
+ =?utf-8?B?U0JXVThKcStlK3J6T2o3dVlQdlNtN3gycnJOYzhzYTZlZXhFYXE1RzU4MmNP?=
+ =?utf-8?B?V3BxeVVoOHgvQVBLczhiWWQ1NGpnVUw5WFJBZ2tnM2JiT1o4NFluSUJMTzh0?=
+ =?utf-8?B?ZlFkaCtVVGwrOWtaTklsYkRvWEs0aThRNlVTM25mem9rOU9RNFNlWWNqa25F?=
+ =?utf-8?B?aWtnVmp3QUU3cGkxZG1tamZoVTFRdHUrK2hvNDJha2pKRTdFdzBTWEFMUitP?=
+ =?utf-8?B?WW5KYXo1Q3N5OFNzZExDUGtPbVBvZ1I5eXFLdUNuUGl0VzBEYitTdXh1RnJD?=
+ =?utf-8?B?OS82bW9uVUQ5dU9sUmY0VDNTUEtjVlJSOWxTcmlqSUxSd2tIY3U5b0UrU2lR?=
+ =?utf-8?B?b3IzdU9pa1Q5czcxZFhFSHBTM0JPUzgyb0t3bjd2bTBHdEJ4R0dVamhtYzUw?=
+ =?utf-8?B?QVdJRm1hcFNGeHpjRUNIbzdiVHVlbUEreXdLVEo3Ly91UjVZYU85YlZ4bEFp?=
+ =?utf-8?B?RlRvU1hkY3p5eTRyU3N3S0laRjJhSEdnTHdSQ1dTY0hybGtNSnFydC80clds?=
+ =?utf-8?B?dWVBUEg1SE5GUllRcHRsTU1vcmRQa2JtNEE4aWYzVHFDbVpPOVprcUhySndP?=
+ =?utf-8?B?NlowSUtkSHhJM3hJK3RKWHB1QVBEc0hSaFhNdHI1aGR6c1V4aVdJQVNMcjU2?=
+ =?utf-8?B?eTFpNmxLSU9CNXFwS25zNUxIR0dZNWluZ3o5VEYxWVVpNlBtVzVaL2xoRERK?=
+ =?utf-8?B?NnhkcGlFa3ZaeEV0dzVYOGI1bFdDK0tqbThCYlpZOEZ2WEJ1bUF3QmRNMkRK?=
+ =?utf-8?B?U2hKWmJJbGtPR1VTb3BJUGxyUmUycEVDalpLaUZsT0ZVWFAzell6bUVSQURO?=
+ =?utf-8?B?L2FhSkx4dGNMWmQxRUFXQlp6SmdUZFo5dGhUa09Tek9vMDErRE1OYTRISWl0?=
+ =?utf-8?B?aUhyTlJ1eDh1QWdZaUZXMlMrK0d1WGF2K2lZMVB3TlVnQ0pYTGxHSWdNUTRD?=
+ =?utf-8?B?cmtHcjBoVmlUaytlM2g0ZXh5S01XTVJVWHArR0RubWNKZTEwR1pzODBJU2xW?=
+ =?utf-8?B?YmFmbG1rN1BhRThMTVF3UTBpRGRRQWZWNGZzRDN1ZG9NVlcxaTFid2RoeTRx?=
+ =?utf-8?Q?uKSM=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ec8b2fdb-12b0-48d5-20bc-08dc6eb2b7b6
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 16:28:24.6956
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m+wUdHyKesTyDiBoJ48q8HngkJ8al9pbwNVcTF0Dc0XMOhDypo6Ps56hgeLnuuLW
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7702
 
-On Tue, May 7, 2024 at 8:49=E2=80=AFAM Liam R. Howlett <Liam.Howlett@oracle=
-.com> wrote:
->
-> .. Adding Suren & Willy to the Cc
->
-> * Andrii Nakryiko <andrii.nakryiko@gmail.com> [240504 18:14]:
-> > On Sat, May 4, 2024 at 8:32=E2=80=AFAM Greg KH <gregkh@linuxfoundation.=
-org> wrote:
-> > >
-> > > On Fri, May 03, 2024 at 05:30:06PM -0700, Andrii Nakryiko wrote:
-> > > > I also did an strace run of both cases. In text-based one the tool =
-did
-> > > > 68 read() syscalls, fetching up to 4KB of data in one go.
-> > >
-> > > Why not fetch more at once?
-> > >
-> >
-> > I didn't expect to be interrogated so much on the performance of the
-> > text parsing front, sorry. :) You can probably tune this, but where is
-> > the reasonable limit? 64KB? 256KB? 1MB? See below for some more
-> > production numbers.
->
-> The reason the file reads are limited to 4KB is because this file is
-> used for monitoring processes.  We have a significant number of
-> organisations polling this file so frequently that the mmap lock
-> contention becomes an issue. (reading a file is free, right?)  People
-> also tend to try to figure out why a process is slow by reading this
-> file - which amplifies the lock contention.
->
-> What happens today is that the lock is yielded after 4KB to allow time
-> for mmap writes to happen.  This also means your data may be
-> inconsistent from one 4KB block to the next (the write may be around
-> this boundary).
->
-> This new interface also takes the lock in do_procmap_query() and does
-> the 4kb blocks as well.  Extending this size means more time spent
-> blocking mmap writes, but a more consistent view of the world (less
-> "tearing" of the addresses).
+Hi Reinette,
 
-Hold on. There is no 4KB in the new ioctl-based API I'm adding. It
-does a single VMA look up (presumably O(logN) operation) using a
-single vma_iter_init(addr) + vma_next() call on vma_iterator.
+On 5/3/24 18:28, Reinette Chatre wrote:
+> Hi Babu,
+> 
+> On 3/28/2024 6:06 PM, Babu Moger wrote:
+>> The ABMC feature provides an option to the user to assign an RMID
+>> to the hardware counter and monitor the bandwidth for a longer duration.
+>> System can be in only one mode at a time (Legacy Monitor mode or ABMC
+>> mode). By default, ABMC mode is disabled.
+> 
+> "By default, ABMC mode is disabled." seems to contradict later work.
 
-As for the mmap_read_lock_killable() (is that what we are talking
-about?), I'm happy to use anything else available, please give me a
-pointer. But I suspect given how fast and small this new API is,
-mmap_read_lock_killable() in it is not comparable to holding it for
-producing /proc/<pid>/maps contents.
+Yes. Will correct it.
 
->
-> We are working to reduce these issues by switching the /proc/<pid>/maps
-> file to use rcu lookup.  I would recommend we do not proceed with this
-> interface using the old method and instead, implement it using rcu from
-> the start - if it fits your use case (or we can make it fit your use
-> case).
->
-> At least, for most page faults, we can work around the lock contention
-> (since v6.6), but not all and not on all archs.
->
-> ...
->
-> >
-> > > > In comparison,
-> > > > ioctl-based implementation had to do only 6 ioctl() calls to fetch =
-all
-> > > > relevant VMAs.
-> > > >
-> > > > It is projected that savings from processing big production applica=
-tions
-> > > > would only widen the gap in favor of binary-based querying ioctl AP=
-I, as
-> > > > bigger applications will tend to have even more non-executable VMA
-> > > > mappings relative to executable ones.
-> > >
-> > > Define "bigger applications" please.  Is this some "large database
-> > > company workload" type of thing, or something else?
-> >
-> > I don't have a definition. But I had in mind, as one example, an
-> > ads-serving service we use internally (it's a pretty large application
-> > by pretty much any metric you can come up with). I just randomly
-> > picked one of the production hosts, found one instance of that
-> > service, and looked at its /proc/<pid>/maps file. Hopefully it will
-> > satisfy your need for specifics.
-> >
-> > # cat /proc/1126243/maps | wc -c
-> > 1570178
-> > # cat /proc/1126243/maps | wc -l
-> > 28875
-> > # cat /proc/1126243/maps | grep ' ..x. ' | wc -l
-> > 7347
->
-> We have distributions increasing the map_count to an insane number to
-> allow games to work [1].  It is, unfortunately, only a matter of time unt=
-il
-> this is regularly an issue as it is being normalised and allowed by an
-> increased number of distributions (fedora, arch, ubuntu).  So, despite
-> my email address, I am not talking about large database companies here.
->
-> Also, note that applications that use guard VMAs double the number for
-> the guards.  Fun stuff.
->
-> We are really doing a lot in the VMA area to reduce the mmap locking
-> contention and it seems you have a use case for a new interface that can
-> leverage these changes.
->
-> We have at least two talks around this area at LSF if you are attending.
+> 
+>>
+>> Provide an interface to display the monitor mode on the system.
+>>     $cat /sys/fs/resctrl/info/L3_MON/mbm_assign
+>>     abmc
+> 
+> This example seems to contradict earlier statements in two ways:
+> (a) it only shows one mode vs. there are two modes (legacy or ABMC)
+> (b) there is no active mode vs. one mode is always active.
 
-I am attending LSFMM, yes, I'll try to not miss them.
+I need to correct the commit messages. At this point this interface is
+read-only. I will move some of this commit message to patch 15/17.
 
->
-> Thanks,
-> Liam
->
-> [1] https://lore.kernel.org/linux-mm/8f6e2d69-b4df-45f3-aed4-5190966e2dea=
-@valvesoftware.com/
->
+> 
+>>
+>> When the feature is enabled
+>>     $cat /sys/fs/resctrl/info/L3_MON/mbm_assign
+>>     [abmc]
+>>
+>> Signed-off-by: Babu Moger <babu.moger@amd.com>
+>> ---
+>> v3: New patch to display ABMC capability.
+>> ---
+>>  Documentation/arch/x86/resctrl.rst     |  5 +++++
+>>  arch/x86/kernel/cpu/resctrl/monitor.c  |  4 +++-
+>>  arch/x86/kernel/cpu/resctrl/rdtgroup.c | 17 +++++++++++++++++
+>>  3 files changed, 25 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/arch/x86/resctrl.rst
+>> index 68df7751d1f5..cd973a013525 100644
+>> --- a/Documentation/arch/x86/resctrl.rst
+>> +++ b/Documentation/arch/x86/resctrl.rst
+>> @@ -257,6 +257,11 @@ with the following files:
+>>  	    # cat /sys/fs/resctrl/info/L3_MON/mbm_local_bytes_config
+>>  	    0=0x30;1=0x30;3=0x15;4=0x15
+>>  
+>> +"mbm_assign":
+>> +	Available when assignable monitoring features are supported.
+>> +	Reports the list of assignable features supported and the enclosed brackets
+>> +	indicate the feature is enabled.
+> 
+> "indicate the feature is enabled" -> "indicate which feature is enabled" or
+> "indicates the currently enabled feature" or ...?
+
+This looks good.
+
+> 
+>> +
+>>  "max_threshold_occupancy":
+>>  		Read/write file provides the largest value (in
+>>  		bytes) at which a previously used LLC_occupancy
+>> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+>> index 735b449039c1..48d1957ea5a3 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+>> @@ -1058,8 +1058,10 @@ int __init rdt_get_mon_l3_config(struct rdt_resource *r)
+>>  						 RFTYPE_MON_INFO | RFTYPE_RES_CACHE);
+>>  		}
+>>  
+>> -		if (resctrl_arch_has_abmc(r))
+>> +		if (resctrl_arch_has_abmc(r)) {
+>>  			r->mbm_assign_capable = ABMC_ASSIGN;
+>> +			resctrl_file_fflags_init("mbm_assign", RFTYPE_MON_INFO);
+> 
+> I think this will need some more thought when considering the fs/arch split.
+> The architecture can be expected to set r->mbm_assign_capable as above but
+> having the architecture meddle with the fs flags does not seem like the right
+> thing to do. I think that RFTYPE_MON_INFO may not be accessible to arch code
+> anyway.
+
+It is accessible to both arch and fs code per latest code.
+https://lore.kernel.org/lkml/20240426150904.8854-33-Dave.Martin@arm.com/
+
+> 
+>> +		}
+>>  	}
+>>  
+>>  	l3_mon_evt_init(r);
+>> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> index dda71fb6c10e..5ec807e8dd38 100644
+>> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+>> @@ -846,6 +846,17 @@ static int rdtgroup_rmid_show(struct kernfs_open_file *of,
+>>  	return ret;
+>>  }
+>>  
+>> +static int rdtgroup_mbm_assign_show(struct kernfs_open_file *of,
+>> +				    struct seq_file *s, void *v)
+>> +{
+>> +	struct rdt_resource *r = of->kn->parent->priv;
+>> +
+>> +	if (r->mbm_assign_capable)
+>> +		seq_puts(s, "abmc\n");
+>> +
+>> +	return 0;
+>> +}
+> 
+> Should it print "legacy" if not mbm_assign_capable? Or actually, I think
+> the expectation is that this file will only be accessible if 
+> r->mbm_assign_capable is true ... so having that if (r->mbm_assign_capable)
+
+Correct. I need to move code from patch 7/17 here to correct this.
+
+
+> check is not clear to me ... if that is false then it would be a kernel
+> bug, no?
+
+Yes. This is not correct. I need to fix this.
+
+> 
+>> +
+>>  #ifdef CONFIG_PROC_CPU_RESCTRL
+>>  
+>>  /*
+>> @@ -1903,6 +1914,12 @@ static struct rftype res_common_files[] = {
+>>  		.seq_show	= mbm_local_bytes_config_show,
+>>  		.write		= mbm_local_bytes_config_write,
+>>  	},
+>> +	{
+>> +		.name		= "mbm_assign",
+>> +		.mode		= 0444,
+>> +		.kf_ops		= &rdtgroup_kf_single_ops,
+>> +		.seq_show	= rdtgroup_mbm_assign_show,
+>> +	},
+>>  	{
+>>  		.name		= "cpus",
+>>  		.mode		= 0644,
+> 
+> Reinette
+> 
+
+-- 
+Thanks
+Babu Moger
