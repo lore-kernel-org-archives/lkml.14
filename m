@@ -1,98 +1,132 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2B7B73505
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 19:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9D81E534;
+	Tue,  7 May 2024 19:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715109459; cv=none; b=XzyllWgOw+YwXNrXOL7cdGEB/3bEQVdQwvY7etMdQAPli7iKzceUi56rQrn50oXobLuN9xpqdIoWCNCSEJ1gRyN6lj1Z2sa6oS3JhJZlNGCUqvK45oicL8r/u+Uv+p4tSFEDUX5dpsPHUNoaamtTf/PExK8AmZ4UtvRD6gsULcw=
+	t=1715109505; cv=none; b=HnA+vyea6UVEn5i3ObIZ7H9DOTgMTXmKHE9fYzLHB3G+ktNMqPxbCLTNiJL81coRtrhKUEks4W3yca6ii9aAfMBpEm24awb2Vf1NjoU72HZIKwbgAeTXS0/pTEGtYF/YUf0oKorVrIwYqsttRt1ow8xCyQlx/Jh8GMxuZXVba0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715109459; c=relaxed/simple;
-	bh=lFe6PLJLyMEdG0qUciQpwpKkHPkogNZMbmqjjed+jG0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mOSlFFzAxixh6+b97MageAVxevJDYE3NhgdfWIIn+8IrJDz8XqZxbVPpOXSC7iDPMA8678Ot5TEIiDoigEaLxUHzbKCGxZGUeHzNjDiFFec7t2ULP382gOGxigxRm4Tmc2oZgxTlVfl/NJExIYVUKu/ydl7KLgF1OnJfg0312as=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=ITl7Ivsl; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1715109505; c=relaxed/simple;
+	bh=L10iW1XnYAr019F5MAAWEsx7pIjc8LRWcQ1HoQdQV0g=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=uyksxJ6wAEcleK6aRAKsyjTm8Qbv/tsTqILVFctzaGDYgtIiDX+cy9np+hyVEgJVfqIQfTNaP18jkMQyTbxhJVMIFfJl2epcz2CxsSlTdYEUy8xQZwoZaSm79SFttJaCXDd0pHodMGYaWkUkVbR2ePLkzZSZEk4cCQIFYwRhA00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kMkVTNNv; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="ITl7Ivsl"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-61c13ed9938so161931a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 12:17:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kMkVTNNv"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-434c3d21450so12950791cf.0;
+        Tue, 07 May 2024 12:18:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1715109456; x=1715714256; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1715109503; x=1715714303; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KJ05ivw5+rga7TzuAAcMhvPRoPZ5bNll4/XJScG7k8Q=;
-        b=ITl7Ivsl7q+QAotXe5SCjBIwgmdGhb/2EbdkzwOROHjp+w9McG/c9Zd0BRfd8MUFGg
-         tY0wpfAU3BtHZE4qCL+C+ZjgFCxDSN9DASuK/VprTGtc8ixqKuXvcEPr3y6n/rxC6fxB
-         l5YDr3v4bIGgyoqdyWFp1xRa2PLxwHiK7tUp4i85jgJhjMtWOX+r3qn/2MDRxt5RrSGe
-         dlqGjs+aDX/SKcOqm6ee2EXLDH9IQAURut2DRKf4TyyLNy2mlcNeApcWLIlPAOsoHdsd
-         2nWZGDnxhuP6p0LdINd4yUxvDjULjnrlIaSbnrUlcy3+3tciQKj9/Aeenb884xES06Fy
-         iFRQ==
+        bh=YnFaPLp90E21WYAiuGhKeevnSOSTstIAB4WFXm8KCZo=;
+        b=kMkVTNNvhX+rL3ttTKaWtaADU29HSWVG6r6usyE2INyEWZbaYTa0Zgwf7kzgm7D2EH
+         IpeqFJ5GevugKUn6nDbsucdpiwT7piCIK/Ytn8yF0DQbSHzwAU6QmS9a/+3K8dUo5Z3v
+         bjEOupREQ5iEab+BXfgdZa3/b6UjSebK7JAsYMjpFZuTAYAh++dp3NQNeAjGL/x2CuCa
+         GrqXnGj9M9HpzyUj0AgMsWyMeiYMS0n1Uqa5ipZf6HhXb6YUxH+5dDWsR/+iNjk/DCx2
+         /UiMWoltmnS7Jx00/C6bOPURB7Y5DxUBWnrxEuRAQ8HwE0+OIX73j/dMiCX5kQsgAFgF
+         1Q9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715109456; x=1715714256;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KJ05ivw5+rga7TzuAAcMhvPRoPZ5bNll4/XJScG7k8Q=;
-        b=PN5nYqe9hoM08ZlNkokkl0LPgteWtRyUVbMhY12x7EyaSqTlRz6vmXIrQY//GrUkOx
-         q56t0k8VpCgYzqLcSkVCn3rpjUQdDt8/Jd61HD4UTfbMUlJYaBMbOe3c/txqOOOjL/Hs
-         v6IF02I3uJMiUILm7YepQrmk03T1Lm09zf+WyPYVjbU3glgq2tNDRFdIcJBxDUp+Ni+p
-         aqJtdXncQOrRNoBZ7Ke1HSGDSEYkcXHBNMw3wMKUm9fHSpaxeoRjf0BqdTZ5BfMC/dLg
-         hTestlCHN++XqRts+gxK1+EOMDI+/pV6FSMYnIP/LIBgE2ylGXb6IU0cuWUJ94PLGZRH
-         T+8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWPKhscytG2Trnk+qxZK4s9DF9d7dqesv47RQ/aeUrIP05/2gjfo8AVeQVk3ZnCORur9YlJAYIhccQRDxiwZDCSspKhMAfeDX7kIXyO
-X-Gm-Message-State: AOJu0Yy50KRx5QdTEO6dpxPAUtb+jw91ajbaAzrS3uv+YIT1KnmISPD3
-	8Oh6nQJ9ELNE5MGkyGMEskaT+tu6ef0xHbRFxVpfsqkxspgRHUigXrslHq7TQLc=
-X-Google-Smtp-Source: AGHT+IHEFI6jOT0orjmfXNCVZ+/GA9aPYVnzkkhuI46G8zz1yX6OrIm0AVkoHDAyOF5AvXkFW+xmXg==
-X-Received: by 2002:a05:6a21:3392:b0:1af:acda:979d with SMTP id adf61e73a8af0-1afc8d516femr758154637.1.1715109456056;
-        Tue, 07 May 2024 12:17:36 -0700 (PDT)
-Received: from [127.0.0.1] ([198.8.77.194])
-        by smtp.gmail.com with ESMTPSA id z68-20020a636547000000b005fd74e632f0sm10126797pgb.38.2024.05.07.12.17.35
+        d=1e100.net; s=20230601; t=1715109503; x=1715714303;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YnFaPLp90E21WYAiuGhKeevnSOSTstIAB4WFXm8KCZo=;
+        b=aPWD0SwMGHIEFUHa/vWK+Mc+MXOBYADEZN8zTiIbsEFAH0L8Xw1DaT+oozo8aY+Dkx
+         oT9c8kS+Msoy5Xlufbj5FUd6K+dZunGymojULK4/uKkRPMv6moCJX7dz13RHRlaXUsk6
+         /08FzExpRbKJ2BEeBaBhpvxgeYgAdqxnWcD+8KwpqkLMLGMB02fRJCTCP9mIhEwHhLg7
+         vnZhYl9VuUSsWNu6y+t7rAF/ogGYwwhKhMo0E54CBn1ObuVwXwwEGvm1dGmNXOnxSHst
+         ah8EpCMLDEHjqcr/+fDl3TDsoVXVtny5+jE729+4z6O9kfLgzng6kZvGnDN6+pGLuuMQ
+         LUJg==
+X-Forwarded-Encrypted: i=1; AJvYcCXjd5x2E5Rd0wjD7JzZTFagyoFWM6KDOW1xi0jqkvnkQR2MfTmbVpIKMc89dnUafFRf45AfjfIjakmmgIlTZB9gAJY72tHnSdPvI1wtOUtX/eUFA+h1tDAfzdVFokrJ3vA3vREGC88eLNhGa9oBtGxR2JjuEF8cwOIE
+X-Gm-Message-State: AOJu0Yx990DFa0EEs7W0qI45sxBz0axcuYi/A8l1v2XGKghTH/mvbMWi
+	vX/TWpv6GjCvi8yjxN332IiCDouHpc6hSY1v4dx37sdf9RBn/FAX
+X-Google-Smtp-Source: AGHT+IGBAmYjbwhToFiq6jwky+6txEoPz0UEsWtAY2wtqPyg7rJlQlTyID7vMECvdG4ZSAxrXQREfA==
+X-Received: by 2002:ac8:5805:0:b0:437:9875:9905 with SMTP id d75a77b69052e-43dbf5101a4mr6806571cf.27.1715109502847;
+        Tue, 07 May 2024 12:18:22 -0700 (PDT)
+Received: from localhost (164.146.150.34.bc.googleusercontent.com. [34.150.146.164])
+        by smtp.gmail.com with ESMTPSA id hh10-20020a05622a618a00b00436510ddc5esm6695624qtb.34.2024.05.07.12.18.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 12:17:35 -0700 (PDT)
-From: Jens Axboe <axboe@kernel.dk>
-To: Pavel Begunkov <asml.silence@gmail.com>, 
- Breno Leitao <leitao@debian.org>
-Cc: christophe.jaillet@wanadoo.fr, paulmck@kernel.org, 
- io-uring@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240507170002.2269003-1-leitao@debian.org>
-References: <20240507170002.2269003-1-leitao@debian.org>
-Subject: Re: [PATCH v3] io_uring/io-wq: Use set_bit() and test_bit() at
- worker->flags
-Message-Id: <171510945496.45805.5070549169318056486.b4-ty@kernel.dk>
-Date: Tue, 07 May 2024 13:17:34 -0600
+        Tue, 07 May 2024 12:18:22 -0700 (PDT)
+Date: Tue, 07 May 2024 15:18:22 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: "Abhishek Chauhan (ABC)" <quic_abchauha@quicinc.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Martin KaFai Lau <martin.lau@linux.dev>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Andrew Halaney <ahalaney@redhat.com>, 
+ Martin KaFai Lau <martin.lau@kernel.org>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ bpf <bpf@vger.kernel.org>, 
+ kernel@quicinc.com
+Message-ID: <663a7e7e1f5b5_cc75c294c0@willemb.c.googlers.com.notmuch>
+In-Reply-To: <fc8334a6-6961-41f4-affc-28bdfc3dd697@quicinc.com>
+References: <20240504031331.2737365-1-quic_abchauha@quicinc.com>
+ <20240504031331.2737365-3-quic_abchauha@quicinc.com>
+ <cab0c7ba-90bf-49e2-908d-ecd879160667@linux.dev>
+ <663a12f089b81_726ea29426@willemb.c.googlers.com.notmuch>
+ <fc8334a6-6961-41f4-affc-28bdfc3dd697@quicinc.com>
+Subject: Re: [RFC PATCH bpf-next v6 2/3] net: Add additional bit to support
+ clockid_t timestamp type
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.5-dev-2aabd
 
-
-On Tue, 07 May 2024 10:00:01 -0700, Breno Leitao wrote:
-> Utilize set_bit() and test_bit() on worker->flags within io_uring/io-wq
-> to address potential data races.
+Abhishek Chauhan (ABC) wrote:
 > 
-> The structure io_worker->flags may be accessed through various data
-> paths, leading to concurrency issues. When KCSAN is enabled, it reveals
-> data races occurring in io_worker_handle_work and
-> io_wq_activate_free_worker functions.
 > 
-> [...]
+> On 5/7/2024 4:39 AM, Willem de Bruijn wrote:
+> > Martin KaFai Lau wrote:
+> >> On 5/3/24 8:13 PM, Abhishek Chauhan wrote:
+> >>> diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
+> >>> index fe86cadfa85b..c3d852eecb01 100644
+> >>> --- a/net/ipv4/ip_output.c
+> >>> +++ b/net/ipv4/ip_output.c
+> >>> @@ -1457,7 +1457,10 @@ struct sk_buff *__ip_make_skb(struct sock *sk,
+> >>>   
+> >>>   	skb->priority = (cork->tos != -1) ? cork->priority: READ_ONCE(sk->sk_priority);
+> >>>   	skb->mark = cork->mark;
+> >>> -	skb->tstamp = cork->transmit_time;
+> >>> +	if (sk_is_tcp(sk))
+> >>
+> >> This seems not catching all IPPROTO_TCP case. In particular, the percpu 
+> >> "ipv4_tcp_sk" is SOCK_RAW. sk_is_tcp() is checking SOCK_STREAM:
+> >>
+> >> void __init tcp_v4_init(void)
+> >> {
+> >>
+> >> 	/* ... */
+> >> 	res = inet_ctl_sock_create(&sk, PF_INET, SOCK_RAW,
+> >> 				   IPPROTO_TCP, &init_net);
+> >>
+> >> 	/* ... */
+> >> }
+> >>
+> >> "while :; do ./test_progs -t tc_redirect/tc_redirect_dtime || break; done" 
+> >> failed pretty often exactly in this case.
+> >>
+> > 
+> > Interesting. The TCP stack opens non TCP sockets.
+> > 
+> > Initializing sk->sk_clockid for this socket should address that.
+> > 
+> Willem, Are you suggesting your point from the previous patch ? 
+> 
 
-Applied, thanks!
-
-[1/1] io_uring/io-wq: Use set_bit() and test_bit() at worker->flags
-      commit: 8a565304927fbd28c9f028c492b5c1714002cbab
-
-Best regards,
--- 
-Jens Axboe
-
-
-
+No, just for this custom socket to initialize the sk_clockid. It is
+not a TCP socket, but only used by TCP.
