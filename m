@@ -1,16 +1,15 @@
 Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCC4158A2D
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 12:23:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32EB315B96B
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 12:23:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715084589; cv=none; b=ViHAU7kLsPP22jPtEH2Jy0qD8yyc9JbtjqIfBfkJvZnGZxIpKDJQ62Y7nbCSPaOzbH/nobBKhokK5w2clTaV4zYY7fiE5xbolObjNClHT8NU6HwWakCWaI9hCW8VvYsfEuSf0jfhvjTcTJeC9k75WfQ11SdA1u1MflM0VRkb464=
+	t=1715084590; cv=none; b=Qgfo5toVJ/jVCxmybFWYQkPB+444IUNqospbDc01E8gin5zezb7EbLawMQQrdhQ+rTk2yUjKeIL5NolkPjH0O6SWmc0mLRJnlasLCpgHyOJ22xpo30nHv+pMEUvCJfFYkcrRx2xu/iwfPffN3Q5ySyCX6SOlGiYnQN7+z/oZlaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715084589; c=relaxed/simple;
-	bh=/tewlST2Ag3AZqZaR15gI8C1/pmeGOyOph5go6pPIeo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Totbo+qP2brEGkpQbZC3P2p6NEy1dT4OI0vCAqpSlQU9SxpxOr1MkFESvHmWG482NITPAN2BWatcH1ZR9i/l85cLa2odCf33/plQbi3ilqnOhh8zuaAPNGN8a8EHd0SxyM8DE2GieGHt+IuYdyVu8k4JTvlwQU9LaF8Kd8J+PLU=
+	s=arc-20240116; t=1715084590; c=relaxed/simple;
+	bh=CHPTXwsd0OA2FqAgbqwMFREtiS40MgtcKotbwznkjuc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=B7gmttcIOEjgMPxd5eJOhvRGu7NdHXtmN+fwpAhE3GeqSKH43KnWaZLfEjpnJURcxZIFsazB55ZvO1PyKT7/BX88vcD6GRftBqB2mrnhw528ScilWKoR/P5XZnXdmmSaL2MUUszztjmxl0GuaS/VmE/d2zgpQreEgYYQfiHlsqk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
@@ -18,21 +17,18 @@ Received: from i53875b5d.versanet.de ([83.135.91.93] helo=phil.lan)
 	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <heiko@sntech.de>)
-	id 1s4Jqa-0006h6-8J; Tue, 07 May 2024 14:23:04 +0200
+	id 1s4JqY-0006h6-VH; Tue, 07 May 2024 14:23:03 +0200
 From: Heiko Stuebner <heiko@sntech.de>
 To: srinivas.kandagatla@linaro.org
 Cc: heiko@sntech.de,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rockchip@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	quentin.schulz@cherry.de,
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Subject: [PATCH 3/3] nvmem: rockchip-efuse: set type to OTP
-Date: Tue,  7 May 2024 14:22:56 +0200
-Message-Id: <20240507122256.3765362-4-heiko@sntech.de>
+	quentin.schulz@cherry.de
+Subject: [PATCH 0/3] Small changes for Rockchip NVMEM drivers
+Date: Tue,  7 May 2024 14:22:53 +0200
+Message-Id: <20240507122256.3765362-1-heiko@sntech.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240507122256.3765362-1-heiko@sntech.de>
-References: <20240507122256.3765362-1-heiko@sntech.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,28 +37,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Heiko Stuebner <heiko.stuebner@cherry.de>
+When the option for legacy cell dt layouts was added, the
+Rockchip OTP driver seems to have been overlooked, so set
+the necessary option to allow seeing the cells again.
 
-This device currently reports an "Unknown" type in sysfs.
-Since it is an eFuse hardware device, set its type to OTP.
+And two patches set the nvmem-type option in the device config.
 
-Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
----
+Heiko Stuebner (3):
+  nvmem: rockchip-otp: set add_legacy_fixed_of_cells config option
+  nvmem: rockchip-otp: Set type to OTP
+  nvmem: rockchip-efuse: set type to OTP
+
  drivers/nvmem/rockchip-efuse.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/nvmem/rockchip-otp.c   | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/nvmem/rockchip-efuse.c b/drivers/nvmem/rockchip-efuse.c
-index 2b40978ddb18c..013e67136f3b9 100644
---- a/drivers/nvmem/rockchip-efuse.c
-+++ b/drivers/nvmem/rockchip-efuse.c
-@@ -206,6 +206,7 @@ static int rockchip_rk3399_efuse_read(void *context, unsigned int offset,
- static struct nvmem_config econfig = {
- 	.name = "rockchip-efuse",
- 	.add_legacy_fixed_of_cells = true,
-+	.type = NVMEM_TYPE_OTP,
- 	.stride = 1,
- 	.word_size = 1,
- 	.read_only = true,
 -- 
 2.39.2
 
