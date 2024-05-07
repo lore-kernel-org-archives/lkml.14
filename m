@@ -1,53 +1,52 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FFAF16C69B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39AC16C6A1
 	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:58:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097508; cv=none; b=l5K7DZ90H0YZithKaJpkewLEPLqDnKvY3Xu7dAQsl/QCvCczixuFEzoxM0rPLhBfBH59XCwP4eQlhBFB8N+fUbNUwfuOWGsfAO9fB94YVpPoHmy8Ax9z9tF8n+yVRJlKE7c6alUIlzsFnGawdcGsiAMZBO1qFAuTQbZKxZ+SLYY=
+	t=1715097509; cv=none; b=tFqYS55jT2SBEThcJOZdFZ9JoDwVnhMceLBItApOfJbgvMSjeXA9PlHPVGjLs0SPckl0681dkGefkI9wudag25zqHN8ztwLhczHLZZ6G2JhFBCkvkimQbUniD0yxhZS1/pcWQlqbOF0vlsggNXnLJ7f6XbWjHhs/UQK1xmVQxqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715097508; c=relaxed/simple;
-	bh=i9B+Gt5Pm+6zf8v66N4gLn2bBCTw0xN4qNBNeTPWtkc=;
+	s=arc-20240116; t=1715097509; c=relaxed/simple;
+	bh=AEDj0QP9X/29ZeWxz7Y3Z4nz0H8Ield92JGUU5fqxk0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=elw+uaApPn7Bo6meUPdLl4U0UnaW71LbvWJYfMHcnzEcSNT+F2cnvECOyjl00frVmS6tPUadiEmBU1DShp8xyYfDBkT5ZbC9UhWTCMgIVc5qNS4CH8DMyFhk2DtI0sG5cYTv99DdfYuvqjDFRGXoEvUxc01tfWHMYrB2ZgwnlP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OJWhEJiF; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=hCcnxyelKM240fx1uYcqB9PRhEG1DaAsYm+EW0Q/7wiw73uPpt9BD74e5PK1e50863ABawlBvydrDhirCM2equaotwaKpJ7Mkt+19p3DYYuuoXJXY/fDxpKsa0LFv/L7LmdDySCj4C3CARzvDGoePiEKXGM4l9KLvfZuRNDt5iQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HS0TdCwm; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OJWhEJiF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HS0TdCwm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
 	s=mimecast20190719; t=1715097503;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=xq2Tt26O33vj04BePyh0aDanH1v4ZfKL8A+WOD0+H98=;
-	b=OJWhEJiF9QQGEGv/he6GVaKG6yDopd7WqDxhHW4Zk4GgrT5dmPJaOMwhU5ybb7TEX0/a0G
-	Yx30iP+9C5i8NrC6FiOUoCr5v8GF/AfPZwJiBXFriCgF4KZhK+/OkVmy043OaeDSW2OC4D
-	ES2giI8qSZ94MpkyRzM25+Jg7rCXG2Y=
+	bh=KfYqWHCMNvvr7g3hZxttx2F/NwK+cEPEKDtwCJOPG4M=;
+	b=HS0TdCwmFYKwouePrQU/idx8LP6Q4mK3zNJ431omaB6a8VJL4wegglOfaoXNBQrBMO/ykq
+	u8ev0QXZeIwIfFGlUSK3HUODweKRyhb6u/tzLfgfHvprVZ59sMOANAWAIdpCsn9zdeUhGT
+	6HDa+Z3VH+EVcIgOVW5CZB+xEBUMn74=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-237-J7DHvXnxM4SVyF2CRWTz4g-1; Tue, 07 May 2024 11:58:20 -0400
-X-MC-Unique: J7DHvXnxM4SVyF2CRWTz4g-1
+ us-mta-543-3Cwx2YUwN7qLulppB-IAtg-1; Tue, 07 May 2024 11:58:20 -0400
+X-MC-Unique: 3Cwx2YUwN7qLulppB-IAtg-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0DE188029EB;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 33348802BF7;
 	Tue,  7 May 2024 15:58:20 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id DF608492CAA;
-	Tue,  7 May 2024 15:58:19 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 16C4A401441;
+	Tue,  7 May 2024 15:58:20 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Cc: Sean Christopherson <seanjc@google.com>,
-	Kai Huang <kai.huang@intel.com>
-Subject: [PATCH 11/17] KVM: x86/mmu: Don't force emulation of L2 accesses to non-APIC internal slots
-Date: Tue,  7 May 2024 11:58:11 -0400
-Message-ID: <20240507155817.3951344-12-pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Subject: [PATCH 12/17] KVM: x86/mmu: Explicitly disallow private accesses to emulated MMIO
+Date: Tue,  7 May 2024 11:58:12 -0400
+Message-ID: <20240507155817.3951344-13-pbonzini@redhat.com>
 In-Reply-To: <20240507155817.3951344-1-pbonzini@redhat.com>
 References: <20240507155817.3951344-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -62,90 +61,33 @@ X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
 From: Sean Christopherson <seanjc@google.com>
 
-Allow mapping KVM's internal memslots used for EPT without unrestricted
-guest into L2, i.e. allow mapping the hidden TSS and the identity mapped
-page tables into L2.  Unlike the APIC access page, there is no correctness
-issue with letting L2 access the "hidden" memory.  Allowing these memslots
-to be mapped into L2 fixes a largely theoretical bug where KVM could
-incorrectly emulate subsequent _L1_ accesses as MMIO, and also ensures
-consistent KVM behavior for L2.
+Explicitly detect and disallow private accesses to emulated MMIO in
+kvm_handle_noslot_fault() instead of relying on kvm_faultin_pfn_private()
+to perform the check.  This will allow the page fault path to go straight
+to kvm_handle_noslot_fault() without bouncing through __kvm_faultin_pfn().
 
-If KVM is using TDP, but L1 is using shadow paging for L2, then routing
-through kvm_handle_noslot_fault() will incorrectly cache the gfn as MMIO,
-and create an MMIO SPTE.  Creating an MMIO SPTE is ok, but only because
-kvm_mmu_page_role.guest_mode ensure KVM uses different roots for L1 vs.
-L2.  But vcpu->arch.mmio_gfn will remain valid, and could cause KVM to
-incorrectly treat an L1 access to the hidden TSS or identity mapped page
-tables as MMIO.
-
-Furthermore, forcing L2 accesses to be treated as "no slot" faults doesn't
-actually prevent exposing KVM's internal memslots to L2, it simply forces
-KVM to emulate the access.  In most cases, that will trigger MMIO,
-amusingly due to filling vcpu->arch.mmio_gfn, but also because
-vcpu_is_mmio_gpa() unconditionally treats APIC accesses as MMIO, i.e. APIC
-accesses are ok.  But the hidden TSS and identity mapped page tables could
-go either way (MMIO or access the private memslot's backing memory).
-
-Alternatively, the inconsistent emulator behavior could be addressed by
-forcing MMIO emulation for L2 access to all internal memslots, not just to
-the APIC.  But that's arguably less correct than letting L2 access the
-hidden TSS and identity mapped page tables, not to mention that it's
-*extremely* unlikely anyone cares what KVM does in this case.  From L1's
-perspective there is R/W memory at those memslots, the memory just happens
-to be initialized with non-zero data.  Making the memory disappear when it
-is accessed by L2 is far more magical and arbitrary than the memory
-existing in the first place.
-
-The APIC access page is special because KVM _must_ emulate the access to
-do the right thing (emulate an APIC access instead of reading/writing the
-APIC access page).  And despite what commit 3a2936dedd20 ("kvm: mmu: Don't
-expose private memslots to L2") said, it's not just necessary when L1 is
-accelerating L2's virtual APIC, it's just as important (likely *more*
-imporant for correctness when L1 is passing through its own APIC to L2.
-
-Fixes: 3a2936dedd20 ("kvm: mmu: Don't expose private memslots to L2")
 Signed-off-by: Sean Christopherson <seanjc@google.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
-Message-ID: <20240228024147.41573-11-seanjc@google.com>
+Message-ID: <20240228024147.41573-12-seanjc@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index ba50b93e93ed..a8e14c2b68a7 100644
+index a8e14c2b68a7..fdae6d19e72b 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4298,8 +4298,18 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 	if (slot && (slot->flags & KVM_MEMSLOT_INVALID))
- 		return RET_PF_RETRY;
+@@ -3262,6 +3262,11 @@ static int kvm_handle_noslot_fault(struct kvm_vcpu *vcpu,
+ {
+ 	gva_t gva = fault->is_tdp ? 0 : fault->addr;
  
--	if (!kvm_is_visible_memslot(slot)) {
--		/* Don't expose private memslots to L2. */
-+	if (slot && slot->id == APIC_ACCESS_PAGE_PRIVATE_MEMSLOT) {
-+		/*
-+		 * Don't map L1's APIC access page into L2, KVM doesn't support
-+		 * using APICv/AVIC to accelerate L2 accesses to L1's APIC,
-+		 * i.e. the access needs to be emulated.  Emulating access to
-+		 * L1's APIC is also correct if L1 is accelerating L2's own
-+		 * virtual APIC, but for some reason L1 also maps _L1's_ APIC
-+		 * into L2.  Note, vcpu_is_mmio_gpa() always treats access to
-+		 * the APIC as MMIO.  Allow an MMIO SPTE to be created, as KVM
-+		 * uses different roots for L1 vs. L2, i.e. there is no danger
-+		 * of breaking APICv/AVIC for L1.
-+		 */
- 		if (is_guest_mode(vcpu)) {
- 			fault->slot = NULL;
- 			fault->pfn = KVM_PFN_NOSLOT;
-@@ -4312,8 +4322,7 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 		 * MMIO SPTE.  That way the cache doesn't need to be purged
- 		 * when the AVIC is re-enabled.
- 		 */
--		if (slot && slot->id == APIC_ACCESS_PAGE_PRIVATE_MEMSLOT &&
--		    !kvm_apicv_activated(vcpu->kvm))
-+		if (!kvm_apicv_activated(vcpu->kvm))
- 			return RET_PF_EMULATE;
- 	}
++	if (fault->is_private) {
++		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
++		return -EFAULT;
++	}
++
+ 	vcpu_cache_mmio_info(vcpu, gva, fault->gfn,
+ 			     access & shadow_mmio_access_mask);
  
 -- 
 2.43.0
