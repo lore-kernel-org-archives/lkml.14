@@ -1,112 +1,98 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 238977E8;
-	Tue,  7 May 2024 20:42:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05EB0187330;
+	Tue,  7 May 2024 20:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715114534; cv=none; b=dVp4NfqwptJrCMvuQ0CIw2NhDwTpndkTHNZ/XLqh9TkYcrG4qtCzvGkigm4xfkFaBIieqXJj0SI7vgGfuYXtIJ6Bbts392EjXeR+IUz4Psm/xIvlUC5ztzm2MBJpK9Ua2EKy5l0aYi+i945QLPLobKKdkOCu0+19HCTw51NymGc=
+	t=1715114604; cv=none; b=n6FLm3LG3gf5yvtbUTTZavNuoow19EBOTKSdFnlFO/HKTR6jrQeFIemG/j6Hetef75oD7qRjtu8Zqq6Y8BJvN3IZuFxJp7ZcOb8smSCcOU4L1PRjZV526FgpneTn9j3vKUBHzA8m45zj6g5JudhGpkv1D53VFCbcM4diz5asiV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715114534; c=relaxed/simple;
-	bh=kCPZuUN4t/5qb5/ns65qHqchFck1pP0QXE79yPvXklg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=azyDvpCelzTt4gsn7szp+g3Z4ykWeKQUddEg4gClfEqx+DdlR0+2Zv7T7DKmEhVzBbmcJb+YJIY/cwE/NZBV/ZY+YsnUZsd6zgcOi1Wa9Rumw8Ei2n11vfB+Oddvh+9Ey/NT42bzvmz08b4nniknD70vPV/7U3hPaMw/lZ/FEjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cEQzyG5M; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715114604; c=relaxed/simple;
+	bh=HXRsZkxS+ayWCNvb2KUtd+RjbkcIYEhK6dtv1mcsY7U=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=A9eT9H9VFxdSF+bEULdzORxnEi0WmhoLBEhWACQRdSGYcbK+xF2JFDq6dIfCawkbxSCDWq6iLaQUmw7dVTUvG12At9s7MJkVNhr0rv1E0LBmuaecdH/ierwbpf8cYgiLMyccJNujG/DolrVctTUn4ALWEWaAunoFGW3G5ALqtfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MT8jwcyT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cEQzyG5M"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2e0a34b2899so50830071fa.3;
-        Tue, 07 May 2024 13:42:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715114531; x=1715719331; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kCPZuUN4t/5qb5/ns65qHqchFck1pP0QXE79yPvXklg=;
-        b=cEQzyG5MaefWFmhe44Egt57motKriaW5vYpD3mGF2qdJDKEa20JU08c7dNEx4spAvj
-         d7+n8nQU7CrTi7E+ZYzat0vrNbXJokDpOqDhzU8Cfs64Ylyc7ks/lYKfvQXufAOcZi87
-         0UrsdsvV36ffUJm05LO7C3a+QLZN1FzG22cWajMqsSgAYmsus+iUqzOtKckO1wtcJfKk
-         pIsJS0sPS0G6ODmj0Pf+Ojsqe6E2sd7ICi/9ku7NjLrGZ2PHEuxh7cxJSasYjrUTABvb
-         b9JGnOFAGo0iyHimm1fA9vOxaEfTMBR/SKxBqBPm5z4W9joUnAYwE14GhjXCwVf60+G0
-         RY1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715114531; x=1715719331;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kCPZuUN4t/5qb5/ns65qHqchFck1pP0QXE79yPvXklg=;
-        b=r1DK2n6ZdkbezpSo0/6SKuFGRHwlx51pZd64uUzsfvMG5WqNeDhazq7JNQrPnjPbqG
-         6lx21zt0uLHMHPwgypPisI5II4Fes6ykTHlvGWM/K5ijVZ6MvBeyVaQ/2lYN9/tm76kb
-         W/N002qjP95FeuMCbx7KKHB2YrrL+PVyNkm6vlYHNozvoiAiincYtcd5tVCo48iW8cD2
-         vVQ2dLoYJC4E09vhT5egShLVp/WAiY3HZPzTiBYaCrzThY3L0taO5ZfSPEuFVK9PtzTc
-         Ta752DyetUfbKaKuz9od0Rr3ttDH0+EJuT6K2qonm8FB7a+AWfRtAeg+uqE2v79OfjXu
-         BZzw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfaqzJ5ZWpWx89BEqXAOXZkjbRKBwXRbUEc4Y+0QhW6RLiiXsM8Lahm38E9S3u1afQ7H9BQjj9kLLB7cEGZOVE/6KsCAQCp6a+Qwn9+slNSlRu0dz2hXgseyUcGUbYd4yS
-X-Gm-Message-State: AOJu0YwxpgmTz37WPRMzImQ+EhR5P5162fmmrBONtBeCqUe33nGPm3rS
-	B/OmMnaZ68If4KyKQUv+Wlr8cXIENyMvmV6UnAj12RD2zbNHRkksS+iOnSKiq4AGVHDS8Ac/3Yr
-	mEFqrrmY8mMslefDppEPTHfaaaTM=
-X-Google-Smtp-Source: AGHT+IHA5tSY5YImS5LpbKiSZZvrmasAH5RUDvfoUhFtaX2IXPP9G3AVss5gyxGDhAh6Lq3HMLfkxmaqovC4uW0nDSo=
-X-Received: by 2002:a2e:97c9:0:b0:2e3:ba0e:de12 with SMTP id
- 38308e7fff4ca-2e446e82769mr4903291fa.22.1715114531024; Tue, 07 May 2024
- 13:42:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MT8jwcyT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 880F6C2BBFC;
+	Tue,  7 May 2024 20:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715114603;
+	bh=HXRsZkxS+ayWCNvb2KUtd+RjbkcIYEhK6dtv1mcsY7U=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=MT8jwcyTzSKWbb+y2Camk4Jqm6WK5lJDfWK//yqNx0NxtIdvOgU6UyiiIeBzo0uSN
+	 SA8EJv3VAlxiAhS0zMrOLqpA5OwWD7RC/Ym4Vc+90vbU1reOgzeCXZXvelJfS4/8RW
+	 e2VQzttr+cSVsqX0nw3Wc9t246ng+u19syJjOrKaKaJtYIYi0+K/rWChJgv/7QhQhR
+	 8b+Djf9IkECGAkwW6nHyWmvpsQJuop2Z5BWX+bHZ2rxtagjBLZ3hjNy96B7T76wy1o
+	 zHRFpkVViVP7+5Y1DBH7ieN2LM200vyEc+1UCfMCWJR9yvpbpe062LgCG1Fyu36HzW
+	 3DONOBu8HdW2A==
+Message-ID: <b3e320ecb16320f88d7db566be51b1e9.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507024952.1590681-1-haiyue.wang@intel.com>
- <CAADnVQK7zD312WRJboMib8HJnNzN=i2FKH2QxkVVy736b7sNTQ@mail.gmail.com> <CAEf4Bzbze5D0M2V9d9q90E_XHCMEUa7oXum=wOCVQ_BAugox7A@mail.gmail.com>
-In-Reply-To: <CAEf4Bzbze5D0M2V9d9q90E_XHCMEUa7oXum=wOCVQ_BAugox7A@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 7 May 2024 13:41:59 -0700
-Message-ID: <CAADnVQJuL18Zkyyztkmzm54yvq3CuB4bSjoL331cmcnX_kppeA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1] bpf,arena: Rename the kfunc set variable
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Haiyue Wang <haiyue.wang@intel.com>, bpf <bpf@vger.kernel.org>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <b1fd9806-3e33-488a-a5a9-a156a2c735d2@kernel.org>
+References: <20240504120624.6574-1-krzysztof.kozlowski@linaro.org> <8bf65df598680f0785c3d6db70acfb9a.sboyd@kernel.org> <b1fd9806-3e33-488a-a5a9-a156a2c735d2@kernel.org>
+Subject: Re: [GIT PULL] clk: samsung: drivers for v6.10
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>, linux-clk@vger.kernel.org, Sylwester Nawrocki <snawrocki@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Michael Turquette <mturquette@baylibre.com>
+Date: Tue, 07 May 2024 13:43:21 -0700
+User-Agent: alot/0.10
 
-On Tue, May 7, 2024 at 9:43=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Tue, May 7, 2024 at 7:36=E2=80=AFAM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Mon, May 6, 2024 at 7:46=E2=80=AFPM Haiyue Wang <haiyue.wang@intel.c=
-om> wrote:
-> > >
-> > > Rename the kfunc set variable to specify the 'arena' function scope,
-> > > although the 'UNSPEC' type BPF program is mapped to 'COMMON' hook.
-> > >
-> > > And there is 'common_kfunc_set' defined for real 'common' function in
-> > > file 'kernel/bpf/helpers.c'.
-> >
-> > I think common_kfunc_set is a better name to describe that these
-> > two kfuncs are in a common category.
-> > BPF_PROG_TYPE_UNSPEC is a lot less obvious.
-> >
-> > There are two static common_kfunc_set in helpers.c and arena.c
-> > and that's fine.
->
-> it is actually confusing when reading/grepping code, though, so why
+Quoting Krzysztof Kozlowski (2024-05-06 22:54:10)
+> On 07/05/2024 01:44, Stephen Boyd wrote:
+> > Quoting Krzysztof Kozlowski (2024-05-04 05:06:22)
+> >> The following changes since commit 4cece764965020c22cff7665b18a0120063=
+59095:
+> >>
+> >>   Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
+> >>
+> >> are available in the Git repository at:
+> >>
+> >>   https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/=
+samsung-clk-6.10
+> >=20
+> > I'm getting compile warnings. Is there a pending fix? Also, why is GS101
+>=20
+> I don't see any of these warnings. Neither local (W=3D1), nor on my CI,
+> nor reported by LKP (which reported build successes for this branch).
+> How can I reproduce it?
 
-What's the confusion? Same name static var in different files?
-There are tons of such cases in the kernel src tree.
+I ran this command
 
-> not have arena_common_kfunc_set and whatever the meaningful
-> "qualifier" name for the other one?
+ make W=3D1 ARCH=3Darm CROSS_COMPILE=3Darm-linux-gnueabi- drivers/clk/samsu=
+ng/clk-gs101.o
 
-arena_common_kfunc_set is certainly better than arena_kfunc_set,
-but I don't like to make the precedent to start renaming static vars
-because they have the same name.
+and I see the warnings. They're actually upgraded to errors.
 
-> >
-> > pw-bot: cr
+>=20
+>=20
+> > describing clk parents with strings instead of using clk_parent_data?
+>=20
+> GS101 uses existing Samsuung clock framework, so that's how it is done
+> there. There is nothing odd here, comparing to other Samsung clocks.
+
+Ok. Is anyone working on migrating Samsung clk drivers to the non-string
+way?
+
+>=20
+> >=20
+> > In file included from drivers/clk/samsung/clk-gs101.c:16:
+> > drivers/clk/samsung/clk-gs101.c:2616:7: error: =E2=80=98mout_hsi2_mmc_c=
+ard_p=E2=80=99
+> > defined but not used [-Werror=3Dunused-const-variable=3D]
+> >  2616 | PNAME(mout_hsi2_mmc_card_p)     =3D { "fout_shared2_pll", "fout=
+_shared3_pll",
+>=20
+> I see indeed some unused variables and I will drop them but your
+> warnings are not reproducible.
+
+Weird! I use gcc-12.2 if that helps. I've been meaning to upgrade but I
+also don't see much urgency.
+
+I'll wait for the next PR.
