@@ -1,79 +1,35 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8BB3D0AF;
-	Tue,  7 May 2024 02:48:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB8B46A4;
+	Tue,  7 May 2024 02:50:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715050086; cv=none; b=goNB127yTDQbCHPpjgzccFTb1GPSF19dXhYTEDGA1gyj4LS3oDZJTuwnNRVQLzyKaS/zgDRdA8YsoM5ZQ6xGQM7/j2FkWC52RiFCVVvDmITTzK85fxL3OC1I2H9dwSXvO1WRCM/PhuAVenW8s9GCioQ85QMDfsdT+r3H49Uf77E=
+	t=1715050228; cv=none; b=P6co3RPoGmZnJiOTVqBLn8a29T6GuxYkmm/6wXAh1OOL37mwS1cdeKRfX9gTkwU0jc+H2yPYfFsks+2vxmA82syVrTq8ZYzVnWLXY1S4cjq5fNFJ5rbCBRorEDVvZ+tkQqs31vMfszCDnkO5BIg31UCmrwMExQY2eHONZDO2/70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715050086; c=relaxed/simple;
-	bh=fPoxLXJ3y4JvA0eBPT3hLbERZiBjchIAQdBby/myRK4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Fuf8AHdwUZriMw+rMyFn0mXwy6764OHPz0I2XHTHtZz1y7byV7wepNgSDzspoqknG5WIn2AP8OoM2Oalx7+6uPP1pKxYq2dKzJrUGzcxQWcX4EKffBp7JFL9YEXFCa3pOODeYx8YiwGyXcyYz47LaZUspLZAa49kbbk56tx01PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CMibQX2X; arc=none smtp.client-ip=209.85.160.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715050228; c=relaxed/simple;
+	bh=KBBezeqB0U+xBPgpqduI3HFO+ZA2L3INddeFJ/hemnc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=QsObg5DY+wcSwe35iIx1SkIW8DlYFgrX8WZY6P81pZTii/HFUSUQwWr+h8xdc4eL+HlRcPZE/s3i5w2ZClYpllZGjtiE8T8v2BxXu97/Un2UyL64GQtZYrOxuOVKusVvn8/+3g8i5cDj7KzxdqIE9zOVvW0XFf/Mext9urG3mGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjJP6V7M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CMibQX2X"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-23d477a1a4fso1981399fac.3;
-        Mon, 06 May 2024 19:48:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715050084; x=1715654884; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B+2Yi0bAJKr/RmDXQertnEjM4vkBzvytl6JH2ermaTQ=;
-        b=CMibQX2XPZiifiivkDaPuvRldqwng7gnGLxitt1IN9O8hm7lNjJDBJNkXBK5x11bma
-         2ye76lE04AT+rG0plJQ0EecSRjqYxUtAxshEH4MCulU4wPL7eYCpxCG6QRiSohoffyqt
-         0LUtDpBoVyONTpWrrQnYqZFw01t4wP27fGKmPkREOQj7PV6Mrzovr72hkkUu4MuA6Kia
-         fqQT19ZR3U7LMt9KDiwoI4gIhUNu5N8Y267p2blCK6PZpgKB8ByjhvKVPRR90jb5dpx7
-         iytnxEtbc6pSHsqm+uCUWcY0bVOq7ielZQzWIBLHhTAtEsBP6ihf0Yf5qpYYyqjvfP9G
-         IfkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715050084; x=1715654884;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B+2Yi0bAJKr/RmDXQertnEjM4vkBzvytl6JH2ermaTQ=;
-        b=DFrO7TppBD1BYo6JAFr/1omUydGT2pGDbh5aza6D8xuma/JJWs6p16nIckkuXRjgcu
-         QGTGiGflharBTudkPPYo4aufodAHUxSF4mmg1qH89JIkKg6tIEnTwxt5J6YFwrD4m/kx
-         V8RHtmExZwRHI9D2IUdS3Xl5rAAK4N/OIr8GlEiJi9QfSmxnGJ/lFTEhsAurijUIXyy3
-         4C3S1ox533h3iE8u4Z9EAKLubAUUoyEKTsK90dAza08K0g6PHWJwynAmHwhfq/TgdhPQ
-         9/B0rorfbZIKqX+gZ4W9/n216Gc93mZ41ZKUIpyTUAdO/u1q3bxZydQQB4uSf2OLRwW+
-         62DA==
-X-Forwarded-Encrypted: i=1; AJvYcCXTb/hn8K15qgH9EVNOJLPZfp1TOtlG0xZFcNb9/Y82BVv6myXts1v5Wpv9xWIfVp12qsPmt8+QBK3XeKjUnhKT40NTqQOyRiBMEnbc2eH4PJl3jaiPUCB5tga0DjlnDnWjbOrqkvDvrfVQuLJGvZf/O5fUEBB+vSBWQ7C4bWG3pnYsHgshEihZcMWG6QNyKTFMc+iV/cBu9MKAJmZO0zM=
-X-Gm-Message-State: AOJu0Yz9tV9SxG6/73aLABXj8MXzjctpBfD6qdFFooRxsaFnGTV3yMI/
-	5MdLsErh4158U1I9h3Bn5JTNNpDGdCxcgnAk9hjiuztze3uZbRXw
-X-Google-Smtp-Source: AGHT+IEJtWYKDRvNU/yVKOg4A3pz537ZV2ldoO1wACQTYe6gsoPCrXTTJ5sVgICq2SqIVXCsWUaWZg==
-X-Received: by 2002:a05:6871:7410:b0:23c:737f:5bcf with SMTP id nw16-20020a056871741000b0023c737f5bcfmr16880218oac.8.1715050084160;
-        Mon, 06 May 2024 19:48:04 -0700 (PDT)
-Received: from nukework.lan (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
-        by smtp.gmail.com with ESMTPSA id hg13-20020a056870790d00b002396fd308basm2333895oab.35.2024.05.06.19.48.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 19:48:03 -0700 (PDT)
-From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Robert Marko <robert.marko@sartura.hr>,
-	linux-arm-msm@vger.kernel.org,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Subject: [PATCH v2 2/2] arm64: dts: qcom: ipq9574: add MDIO bus
-Date: Mon,  6 May 2024 21:47:58 -0500
-Message-Id: <20240507024758.2810514-2-mr.nuke.me@gmail.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20240507024758.2810514-1-mr.nuke.me@gmail.com>
-References: <20240507024758.2810514-1-mr.nuke.me@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjJP6V7M"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CD7AAC4AF65;
+	Tue,  7 May 2024 02:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715050227;
+	bh=KBBezeqB0U+xBPgpqduI3HFO+ZA2L3INddeFJ/hemnc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LjJP6V7MOrjbednIfdHRRS35bsRIgfvl8gvwYkdVNKHzXe9Em0SN1H6KxKK2VRQw7
+	 kU2Uqf3tybVnv/3FGuAzmncfh8LXhNHstmR5hcyccYBg22Yjlvw+w6JbAGG59NB74Q
+	 kU9ha3lc039xdbdR9tcqlUibXhb6RW2+ASQwUrTExkDYYAPdyPbSq0smP3fAaeUpYW
+	 4w0KKU14iRsMK7Ds2pA9rw9d/M6BWXZbat4yOtJLx3wRp23lz5JyvHtBL5wS42UahU
+	 DFqoeftK2RWFjGQ0tM8r1iSGTcYZBC2Tck3hwJq7VzhAOx7faO/fRZ0ha6qcR1yycm
+	 3NVBw97Z8hp+g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C5D4DC43334;
+	Tue,  7 May 2024 02:50:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,39 +37,41 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] [PATCH v2 net-next] mptcp: fix typos in comments
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171505022780.7000.12296419388151521927.git-patchwork-notify@kernel.org>
+Date: Tue, 07 May 2024 02:50:27 +0000
+References: <20240502154740.249839-1-fourcolor4c@gmail.com>
+In-Reply-To: <20240502154740.249839-1-fourcolor4c@gmail.com>
+To: Shi-Sheng Yang <fourcolor4c@gmail.com>
+Cc: matttbe@kernel.org, martineau@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, geliang@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
 
-The IPQ95xx uses an IPQ4019 compatible MDIO controller that is already
-supported. Add a DT node to expose it.
+Hello:
 
-Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
----
-changes since v1:
- - pad "reg" address to eight digits with leading zeroes
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
- arch/arm64/boot/dts/qcom/ipq9574.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On Thu,  2 May 2024 23:47:40 +0800 you wrote:
+> This patch fixes the spelling mistakes in comments.
+> The changes were generated using codespell and reviewed manually.
+> 
+> eariler -> earlier
+> greceful -> graceful
+> 
+> Signed-off-by: Shi-Sheng Yang <fourcolor4c@gmail.com>
+> 
+> [...]
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-index 7f2e5cbf3bbb..ded02bc39275 100644
---- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
-@@ -232,6 +232,16 @@ rng: rng@e3000 {
- 			clock-names = "core";
- 		};
+Here is the summary with links:
+  - [v2,net-next] mptcp: fix typos in comments
+    https://git.kernel.org/netdev/net-next/c/46a5d3abedbe
 
-+		mdio: mdio@90000 {
-+			compatible =  "qcom,ipq9574-mdio", "qcom,ipq4019-mdio";
-+			reg = <0x00090000 0x64>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			clocks = <&gcc GCC_MDIO_AHB_CLK>;
-+			clock-names = "gcc_mdio_ahb_clk";
-+			status = "disabled";
-+		};
-+
- 		qfprom: efuse@a4000 {
- 			compatible = "qcom,ipq9574-qfprom", "qcom,qfprom";
- 			reg = <0x000a4000 0x5a1>;
---
-2.40.1
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
