@@ -1,199 +1,76 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE2171754;
-	Tue,  7 May 2024 07:03:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD2D78C9E;
+	Tue,  7 May 2024 07:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.237.72.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715065444; cv=none; b=tNfpFxuVPV99LxqbJ7JiU/EEDJXOM9fAU9ZBhTj6LfBsYnOHrgWpJHp3qDCapq/DxUN4e1vr2H+Sla6ObvJ5PeyXwJudrlL9SVR+YhLJ1qn9a6hHJo1SEHDgKUPJVQ7s+tju8NsT0cZMZSSSkyxO9/7FtGzEQvUSGe6RyUHmXUc=
+	t=1715065450; cv=none; b=A6bJu7n6/1MfxJRqOvRj8Wz3+DLJkUf3q/CEjfCwlOL6CygcUSC1ZcLKppL5y55EayzDfLmdVDokT4rw+3FeBv7bVqr2AbmcSCYDNaiFFBR8OqdBMTdhczfRaVgqxyYAXghS9KH96RoEbSOPme0A+yhqw43r4gqJnro7l7/nXKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715065444; c=relaxed/simple;
-	bh=f5Y+RPch/7mrTdblk+FuyORnXeTj5LvlcQlkeUJhWus=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=NYcNWyLnYXokrmg9RKIzIoMZQugj73U1ts0p3CmXKLpjQ6qzNR5mnpY6RHbAqY64rcJckstu165hNEFFiJFfj5jxgJY4tFM5W+U/pz4HCmETDFpv3rTA9VVCKdkhPQfIs3G1uMcTRCPs6F7FFL4yFAIKn2xkekJkupLr2zBOA3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=illmbUWL; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="illmbUWL"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id D6E6D120003;
-	Tue,  7 May 2024 10:03:50 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru D6E6D120003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1715065430;
-	bh=H/kIGo3J8gDU/CLl+ICpmHfUJ577I1NNpGXMj98OV+4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=illmbUWLUP6z8cEOzU19cEiOVtGCj2hwDhcZGlI5Yc5uaDBZNel5WH65as/Sb8LBg
-	 VRUTi/IrnSR7J71oIRujD2zE2S34MUJAYcEOgCKtvPddm2+fQMYRy5FMzZXIhCBDDa
-	 0oUKtm8Rr2b5lcfITxxpEyD74goehnon3BreSRjJ3z2ZZTHRDaJq1CsS9QU54T96ej
-	 sqHd53GI8LkbXLxZj129aPUcrHiPBoBobxuHCXaF7/gCfd2dzhjW1Is/1PcieG/xHl
-	 +0wBNCL0dtDy3trbWSiaOSlxlKfFPmD4QcU97jsxgyj1KH3vjyVTlpBnZcaUoNoaV3
-	 8lvQHeDAoV1dQ==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue,  7 May 2024 10:03:50 +0300 (MSK)
-Received: from [172.28.226.125] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 7 May 2024 10:03:50 +0300
-Message-ID: <d90f9d3d-7823-503f-4cc6-73783a083d0e@salutedevices.com>
-Date: Tue, 7 May 2024 09:53:06 +0300
+	s=arc-20240116; t=1715065450; c=relaxed/simple;
+	bh=WaQkYik9wlnYGYVpBkPnO+M6frV18a2jVnfWRl5E150=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=I3v9xBUZXYX8PMV+Au0J4w9Up6vj6IJcJrjOZLm00qpJ79ewIpay6QtBYSwh48mscvqWfbm1JHg3t2Ix8xMOqJDE73kNe3N4PrjPVEud5CZmzBoqFd6RWJKdjSUYjibMawXC8VLggQw7li6lAMwF5/MAr6J/zPJym2YGxCH6DFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=52.237.72.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from ubuntu.localdomain (unknown [221.192.179.90])
+	by mail-app4 (Coremail) with SMTP id cS_KCgCXJrRP0jlmbxo0AA--.51257S2;
+	Tue, 07 May 2024 15:03:52 +0800 (CST)
+From: Duoming Zhou <duoming@zju.edu.cn>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-hams@vger.kernel.org,
+	pabeni@redhat.com,
+	kuba@kernel.org,
+	edumazet@google.com,
+	jreuter@yaina.de,
+	dan.carpenter@linaro.org,
+	Duoming Zhou <duoming@zju.edu.cn>
+Subject: [PATCH net v5 0/4] ax25: Fix issues of ax25_dev and net_device
+Date: Tue,  7 May 2024 15:03:38 +0800
+Message-Id: <cover.1715065005.git.duoming@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID:cS_KCgCXJrRP0jlmbxo0AA--.51257S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jr17CF4xCrWxAFyUArW8WFg_yoWfXFg_uF
+	ykAFWUZw18JFWDCF40kF4rXrZruF4jga1xXFyftFZ5Gry3Za4UJr4qgr4rXF18XFW7tr4k
+	t3Z5Gr1fAr17JjkaLaAFLSUrUUUU8b8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbh8YjsxI4VWxJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
+	6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+	8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0
+	cI8IcVCY1x0267AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4
+	A2jsIEc7CjxVAFwI0_GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxI
+	r21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87
+	Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0E
+	jII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v26rWY6Fy7MxkIecxEwVAFwVW8CwCF04k20x
+	vY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I
+	3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIx
+	AIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAI
+	cVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2js
+	IEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjTiLL0nUUUUU
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwIOAWY4-AkN6wAOsN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v5 1/2] dt-bindings: mtd: amlogic,meson-nand: support
- fields for boot ROM code
-Content-Language: en-US
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-CC: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
-	<vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>, <linux-mtd@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<oxffffaa@gmail.com>, <kernel@sberdevices.ru>
-References: <20240416085101.740458-1-avkrasnov@salutedevices.com>
- <20240416085101.740458-2-avkrasnov@salutedevices.com>
- <20240506154858.003bab54@xps-13>
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-In-Reply-To: <20240506154858.003bab54@xps-13>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185102 [May 07 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 19 0.3.19 07c7fa124d1a1dc9662cdc5aace418c06ae99d2b, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/07 04:23:00 #25112995
-X-KSMG-AntiVirus-Status: Clean, skipped
 
+The first patch uses kernel universal linked list to implement
+ax25_dev_list, which makes the operation of the list easier.
+The second and third patch fix reference count leak issues of
+the object "ax25_dev" and "net_device". The last patch uses
+ax25_dev_put() to replace kfree() in ax25_dev_free().
 
+You can see the former discussion in the following link:
+https://lore.kernel.org/netdev/20240501060218.32898-1-duoming@zju.edu.cn/
 
-On 06.05.2024 16:48, Miquel Raynal wrote:
-> Hi Arseniy,
-> 
-> avkrasnov@salutedevices.com wrote on Tue, 16 Apr 2024 11:51:00 +0300:
-> 
->> Boot ROM code on Meson requires that some pages on NAND must be written
->> in special mode: "short" ECC mode where each block is 384 bytes and
->> scrambling mode is on.
-> 
-> Ok
-> 
->> Such pages located with the specified interval within specified offset.
-> 
-> I'm sorry I don't get that sentence.
+Duoming Zhou (4):
+  ax25: Use kernel universal linked list to implement ax25_dev_list
+  ax25: Fix reference count leak issues of ax25_dev
+  ax25: Fix reference count leak issues of net_device
+  ax25: Change kfree() in ax25_dev_free() to ax25_dev_put()
 
-Sorry, I mean this (let me draw :) ) :
+ include/net/ax25.h  |  3 +--
+ net/ax25/ax25_dev.c | 52 +++++++++++++++++----------------------------
+ 2 files changed, 20 insertions(+), 35 deletions(-)
 
-[ page 0 ][ page 1 ][ page 2 ][ page 3 ][ page 4 ][ page 5 ][ page 6 ][ page 7 ][ page 8 ][ page 9 ]
+-- 
+2.17.1
 
-For example, we have 10 pages starting from the beginning of the chip - this is "within specified offset",
-e.g. offset is 10. BootROM on axg needs that (for example) every third page must be written in "special"
-mode: scrambling is on and ECC is 384 bytes. Such pages are 0, 2, 4, 6, 8. E.g. "specified interval" will
-be 3.
-
-So:
-
-amlogic,boot-pages: 10
-amlogic,boot-page-step: 3
-
-
-> 
->> Both interval and offset are located in the
->> device tree and used by driver if 'nand-is-boot-medium' is set for
->> NAND chip.
-> 
-> This sentence is probably not needed.
-
-Ok
-
-> 
->>
->> Signed-off-by: Arseniy Krasnov <avkrasnov@salutedevices.com>
->> ---
->>  .../bindings/mtd/amlogic,meson-nand.yaml           | 14 ++++++++++++++
->>  1 file changed, 14 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
->> index 57b6957c8415..67b2f7c1259c 100644
->> --- a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
->> +++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.yaml
->> @@ -64,11 +64,25 @@ patternProperties:
->>          items:
->>            maximum: 0
->>  
->> +      amlogic,boot-pages:
->> +        $ref: /schemas/types.yaml#/definitions/uint32
->> +        description:
->> +          Number of pages starting from 0, where special ECC
-> 
-> from *offset* 0 I guess?
-
-Yes, or may be better "from beginning of the chip" ?
-
-May be i can place here ascii picture from above, with reduced number of pages?
-And also place this picture in the commit message ?
-
-> 
->> +          algorithm will be used by the driver.
-> 
-> "where a special ECC configuration must be used because it is accessed
-> by the ROM code"? Maybe you can even detail what are these values if
-> they are fixed.
-> 
-> You should probably inform that scrambling shall be on as well.
->  
->> +
->> +      amlogic,boot-page-step:
->> +        $ref: /schemas/types.yaml#/definitions/uint32
->> +        description:
->> +          Interval between pages, read/written by the driver with
->> +          special ECC algorithm.
-> 
-> I'm not sure I fully get the description. What is the unit here? can
-> you draw a small ascii-art diagram?
-
-May be i can place here "please see diagram above" ? And in 'amlogic,boot-pages' there
-will be diagram.
-
-
-> 
->> +
->>      unevaluatedProperties: false
->>  
->>      dependencies:
->>        nand-ecc-strength: [nand-ecc-step-size]
->>        nand-ecc-step-size: [nand-ecc-strength]
->> +      amlogic,boot-pages: [nand-is-boot-medium, "amlogic,boot-page-step"]
->> +      amlogic,boot-page-step: [nand-is-boot-medium, "amlogic,boot-pages"]
->>  
->>  
->>  required:
-> 
-> 
-> Thanks,
-> Miquèl
-
-Thanks, Arseniy
