@@ -1,53 +1,54 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B227C16C855
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:58:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B4216C6AA
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:58:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097508; cv=none; b=FStUrcKjFuekbXbvEMSvXjU1KuKJFyRqo3R8pjEn0Id8VbtWSfSxcapg51bDWaSLpznO3d2Kyv522GVPZyB4wasyUOo7nnYgmgII3N6F/VAIEcMSbwCyn/tWNYriZSQQhObdWisHKkr7mnP4hE/dZef6GTzBIwiKk7Lg/HwqBiQ=
+	t=1715097508; cv=none; b=WmkekErJueof+C7Tk2wbzfQAgcDa1RCw1G+KY4g2aDMa+VEB42F5tB/zlPtnVeeClRgIE4l4mA98H4Js8i5waItpjS2Dq7AXxm3DaouoNc4Ptvkz/MDikPbpRycRghXF5IX17UgmKk4YKkPJQmwJy2eT5E9XpqH5JxU9EyaxuRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715097508; c=relaxed/simple;
-	bh=dgcmhB8XSWOn7jFspuRon54N7yuoHys5FERLE38HDtU=;
+	bh=aWR8vi3ctb5xuNS5aLdoGpoQVQX3R/AX8tzJO890OYU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bg1WH/a3QAgSyNiF94Ls46dOIEdJI6I6LTFoVYiiuOXr4ZigNW48gECxyU3ND7rK79ad7r93Q7o1u3hg5TWcboJ+ZtsxFXr4CU9g6rTTlVeiQftnO9NBuMPKFTU7AhvozE6zKU7BqxMGFj7On/dgb+L2fd6xuFwwgWUhUgi4xDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J45f7j3h; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=Ur1cjyfReOrIKeVT9+nfFFU800Ni9Ew5im/sSmTpq32MWoABpuRCVztm5BlkDd+WnNf0aF3eE2caEPIDrJlPJFufN57mbzas4/QA0P0Wh3kds3w70xCcROLOQPApPu6o9zwaVvQx8QotpC0UlATgK3OrZh2VsCKaSGI4ukClgIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V5OPKhW1; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J45f7j3h"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V5OPKhW1"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715097504;
+	s=mimecast20190719; t=1715097503;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=D0Ko3PMhRXri8rWk2ZRhKHNRYJxXRoquuhAcNllLpfk=;
-	b=J45f7j3hMpNalE4Oj+3vBdsqUdAB4Dfno9UOkH7eDyf485xIQ4r4lg9v9WifLyG69B2cin
-	4pMQRtRLPaeYpOPYVIoSYeeLh/d1qKA48tbUzPNgTTqi8tjdcNklZH/7vDxRd98Yi4I5Km
-	9T9VXk8rbmzfO9voIgaiS4jzeOruqI8=
+	bh=QeJwneIQoupo8QkN2Q+WsjpfxqenpfhUm2BwJMPTxBw=;
+	b=V5OPKhW1+BWcqS23/1fFUjMKvZbeGipkIER0abPetR8nVDGU8UBa5b+oa4j47y7hXipvqr
+	+8OCxdnhet5u+OXsS9mZWfEIYHn4ecOOy89O91FxPtA8zmBndIexvXijEX+oWwRePHjfO4
+	nlkWuyC2Nnjtktzq8F7FRP7yKIPdTfM=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-363-KpX76YA5N2OpU2nU7_psLA-1; Tue,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-32-EwPh8TxkNUSzca5Oyj3J0w-1; Tue,
  07 May 2024 11:58:21 -0400
-X-MC-Unique: KpX76YA5N2OpU2nU7_psLA-1
+X-MC-Unique: EwPh8TxkNUSzca5Oyj3J0w-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B64E63802AC6;
-	Tue,  7 May 2024 15:58:20 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1B6073802AC9;
+	Tue,  7 May 2024 15:58:21 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 95646492CAA;
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E866A401441;
 	Tue,  7 May 2024 15:58:20 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: Sean Christopherson <seanjc@google.com>,
+	David Matlack <dmatlack@google.com>,
 	Kai Huang <kai.huang@intel.com>
-Subject: [PATCH 15/17] KVM: x86/mmu: Set kvm_page_fault.hva to KVM_HVA_ERR_BAD for "no slot" faults
-Date: Tue,  7 May 2024 11:58:15 -0400
-Message-ID: <20240507155817.3951344-16-pbonzini@redhat.com>
+Subject: [PATCH 17/17] KVM: x86/mmu: Sanity check that __kvm_faultin_pfn() doesn't create noslot pfns
+Date: Tue,  7 May 2024 11:58:17 -0400
+Message-ID: <20240507155817.3951344-18-pbonzini@redhat.com>
 In-Reply-To: <20240507155817.3951344-1-pbonzini@redhat.com>
 References: <20240507155817.3951344-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -62,33 +63,41 @@ X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
 From: Sean Christopherson <seanjc@google.com>
 
-Explicitly set fault->hva to KVM_HVA_ERR_BAD when handling a "no slot"
-fault to ensure that KVM doesn't use a bogus virtual address, e.g. if
-there *was* a slot but it's unusable (APIC access page), or if there
-really was no slot, in which case fault->hva will be '0' (which is a
-legal address for x86).
+WARN if __kvm_faultin_pfn() generates a "no slot" pfn, and gracefully
+handle the unexpected behavior instead of continuing on with dangerous
+state, e.g. tdp_mmu_map_handle_target_level() _only_ checks fault->slot,
+and so could install a bogus PFN into the guest.
 
+The existing code is functionally ok, because kvm_faultin_pfn() pre-checks
+all of the cases that result in KVM_PFN_NOSLOT, but it is unnecessarily
+unsafe as it relies on __gfn_to_pfn_memslot() getting the _exact_ same
+memslot, i.e. not a re-retrieved pointer with KVM_MEMSLOT_INVALID set.
+And checking only fault->slot would fall apart if KVM ever added a flag or
+condition that forced emulation, similar to how KVM handles writes to
+read-only memslots.
+
+Cc: David Matlack <dmatlack@google.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 Reviewed-by: Kai Huang <kai.huang@intel.com>
-Message-ID: <20240228024147.41573-15-seanjc@google.com>
+Message-ID: <20240228024147.41573-17-seanjc@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/x86/kvm/mmu/mmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 7630ad8cb022..d717d60c6f19 100644
+index d717d60c6f19..510eb1117012 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -3273,6 +3273,7 @@ static int kvm_handle_noslot_fault(struct kvm_vcpu *vcpu,
- 	fault->slot = NULL;
- 	fault->pfn = KVM_PFN_NOSLOT;
- 	fault->map_writable = false;
-+	fault->hva = KVM_HVA_ERR_BAD;
+@@ -4425,7 +4425,7 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
+ 	if (unlikely(is_error_pfn(fault->pfn)))
+ 		return kvm_handle_error_pfn(vcpu, fault);
+ 
+-	if (WARN_ON_ONCE(!fault->slot))
++	if (WARN_ON_ONCE(!fault->slot || is_noslot_pfn(fault->pfn)))
+ 		return kvm_handle_noslot_fault(vcpu, fault, access);
  
  	/*
- 	 * If MMIO caching is disabled, emulate immediately without
 -- 
 2.43.0
-
 
