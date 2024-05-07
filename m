@@ -1,240 +1,120 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94A76BB4E
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 06:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D2AA6BB4E;
+	Tue,  7 May 2024 06:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715063387; cv=none; b=elOUsQuyi9tN6QabirV2MbLvblE3HJzLAVhoSy2WyMw4o5LiEjjnnQdpD7weGGw5gRLPvkJN1ZF2OFqCUXrRQfRJa9CMjWXL0WGXZzbEItABQBBiPTSyUCEC/oliop+aJpeCEJihbLJHnSmNvruGsiX6nTJbN+ifLP5iToKzh54=
+	t=1715063400; cv=none; b=DRx2KmrNdq5ZePBdLHslkyXUY7+WJ68kxEVTXecfSVZTK4Ntsv3+36qh+Sj2K+m+SgnL14VFIq8Q9Uu5Ojg048RpdqN10pjWgCtptdgHPQrXqIi0+1kC+rjn2EwYDqPUaQliljejyWBmn5g5uaUnvi8ZGjX0WIKtM3nWlfgrRO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715063387; c=relaxed/simple;
-	bh=atp/aVS6XRyaycB+GiGU7MqL3fI66SBjQjST9/hUzWc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ac90I4JOEdwCMM5tUfMdCr/9co44ndS1XGmKrEoVrszgABF975g1pdlAvpE5nXe9M67VvoSBbmirC0nHkY4Z7g0cl8HdB2QRUKFUi8iJghKX2KfHsX1+8jc8cw2huc8PIirmo2u90R35y38mQY7wuGOA+yGmaSd7uKdz6Rfx2Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VbUkpL0k; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715063400; c=relaxed/simple;
+	bh=56e8bED4V6W28096yUKf8RNEXz6YOYzyF3VADr9TI8I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ChSFIfwU1dwaR7373ajUWNJLdnH8zlzDN494BhDykZODwQfN/pG1/uABph05Zq7RW3xiLpkw/YdZM27uLaNpuDlephKjmLXg9G4Z3bwip6f0vh16dc6IJt3w6FrA/O6joyY1czA3iwYvjpj7gQvM6CfgkSrKTvEbCAtbWAt7MrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MugYcY8m; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VbUkpL0k"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a59ce1e8609so274241866b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 23:29:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715063384; x=1715668184; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HpZEoAqJyFLLuJwwHaEU4Ss44j0+PYHwovy5rYv4HZs=;
-        b=VbUkpL0kOuAdsa9CyxSjT0KOGjd7dEQEvLLDpY2toYTuqa544W1qAv+o67G8GNTUU0
-         w5jmENPs3USO4KTdFSEZX0erGklrKOHGm6G23jNGVXG/UTBvDqrUN7nmN3rx6OhNA9kE
-         kGiWH5HHkV+LJFDJ1R1fUB1Y1tpez441KuV6mO3XpWyCMX5BfUOh7ySUE1yGOdt9CosZ
-         dHpHZ4Dt7yPRyadUSJhfXoYcqMuFl/U2H8QJmwTWGSnFuNUfpjp3t5hD5/ESoX6VRd1w
-         yeY0/kKV4naj8ooS+9p45XUF+7TX6Des+kL+mibs6CAen8t9OVwlqR9SaFG+G/O1vjRF
-         aS2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715063384; x=1715668184;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=HpZEoAqJyFLLuJwwHaEU4Ss44j0+PYHwovy5rYv4HZs=;
-        b=IcYruLjlCAY4Bp/2swMI3je6vh6IyXEO2SyNs7MrLA9tyntWAYV1GORIpJYv9KuS1z
-         aCe+OG+BDn5ZqGrBSd1JQk3wUzIjNuVPURIF61Dlj5M9DzrQWg0alsgyCDqKlkyW/pu9
-         IrKABCK6NnSDLDSptuRwBgT53YM1+hk8MuKf9vddlSNf6IjCUEA1Yoy0doaXAOQ9T7EL
-         u9LkD8DTssY9W5wfBP6If6ilHc8RRpJDNj6K+m95tXdFCYwNpD0K+0WCBjkrtimyAkIO
-         b2nkYsUCCTsGVFV3VGXzUlXGVumbYzSsTiqIUAydzKc23dHNWhdwNpdAERuddVuaX7+C
-         OF7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXXuWffhkQWTUfAL7NLOx0Vgyl6T1k5XIARUFQGUJG3GI7gKs9W0UyJW2yASMMxHlUyqD61xosqAWGgFx+PnWuDuRwXUfjDSsw40beW
-X-Gm-Message-State: AOJu0YxcjVf55O3Gl8MRj2mVIycxMLJC4ogNbl1z5eKK4Vl09o3g7su+
-	8mSklGGcYv9zSrL0p5V4VQO9j1LfpeyPDFWkf7HSKr1fOaDf2TvoDM6L8G/GrUY=
-X-Google-Smtp-Source: AGHT+IEJgcKo+G/xpGo9QxOwLCrnEdMnA0yLoli/R5ICGZreB03Spa5VseZrIK/Edle5/SOhbPjlaw==
-X-Received: by 2002:a17:907:174d:b0:a59:a5c0:9a40 with SMTP id lf13-20020a170907174d00b00a59a5c09a40mr1170661ejc.25.1715063384141;
-        Mon, 06 May 2024 23:29:44 -0700 (PDT)
-Received: from [10.24.4.35] ([89.207.171.118])
-        by smtp.gmail.com with ESMTPSA id p25-20020a170906141900b00a55a5384986sm6037008ejc.24.2024.05.06.23.29.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 May 2024 23:29:43 -0700 (PDT)
-Message-ID: <2b0c832c-0e82-4be7-aeb7-eb5ec3711c37@linaro.org>
-Date: Tue, 7 May 2024 08:29:39 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MugYcY8m"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715063399; x=1746599399;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=56e8bED4V6W28096yUKf8RNEXz6YOYzyF3VADr9TI8I=;
+  b=MugYcY8moHc+6DetqGQuaudOjoD6JL70gK/mRj2Q79CAZn5b/g6OGEAW
+   goNJeSs45qt4+2RiTGtd8Q0pqMJ2woWuq7P6Vc8J6iUTZFlZPxdAnWtRM
+   Ip6xEjKSRGlpvPEfaN2yrqw/8vjvvN8c1sRwbAHf6zNA9iNBNEXbZYQ+S
+   3CRgU5b0Fp493njPGjWzInecfM5PZqA7jy9FPN9VQllGG6FQ6tYgzjFqa
+   9MTmtGOE0h7nj8SxsJPUeuhPbZmEtqQFv7jrdpgXyEseQ47XqDS3TW2xa
+   phdwQIolbLztN3YdSvjAiLIF+IaYACg7zKbb+SQxyeRpQ3zhiQMdqwbu5
+   w==;
+X-CSE-ConnectionGUID: i1HkxT/OScufA5Ky3LnD3A==
+X-CSE-MsgGUID: ANjC379ASXKR5Ghx/VFMMg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="28310310"
+X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
+   d="scan'208";a="28310310"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 23:29:58 -0700
+X-CSE-ConnectionGUID: ZbdwN7B/QKOYWMvoqZTbhg==
+X-CSE-MsgGUID: rhqLLXceR/WPYY+cor1KiA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
+   d="scan'208";a="32872739"
+Received: from unknown (HELO dcai-bmc-sherry-1.sh.intel.com) ([10.239.138.57])
+  by fmviesa005.fm.intel.com with ESMTP; 06 May 2024 23:29:54 -0700
+From: Haiyue Wang <haiyue.wang@intel.com>
+To: bpf@vger.kernel.org
+Cc: Haiyue Wang <haiyue.wang@intel.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH bpf-next v1] bpf,arena: Remove redundant page mask of vmf->address
+Date: Tue,  7 May 2024 14:33:39 +0800
+Message-ID: <20240507063358.8048-1-haiyue.wang@intel.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH] Input: goodix-berlin - Add sysfs interface for reading
- and writing touch IC registers
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Hans de Goede <hdegoede@redhat.com>
-Cc: Charles Wang <charles.goodix@gmail.com>, hadess@hadess.net,
- Richard Hughes <hughsient@gmail.com>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-References: <20240506114752.47204-1-charles.goodix@gmail.com>
- <6362e889-7df2-4c61-8ad5-bfe199e451ec@redhat.com>
- <ZjmOUp725QTHrfcT@google.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <ZjmOUp725QTHrfcT@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 07/05/2024 04:13, Dmitry Torokhov wrote:
-> On Mon, May 06, 2024 at 02:03:13PM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 5/6/24 1:47 PM, Charles Wang wrote:
->>> Export a sysfs interface that would allow reading and writing touchscreen
->>> IC registers. With this interface many things can be done in usersapce
->>> such as firmware updates. An example tool that utilizes this interface
->>> for performing firmware updates can be found at [1].
->>
->> I'm not sure if I'm a fan of adding an interface to export raw register
->> access for fwupdate.
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/input/touchscreen/goodix_fwupload.c
->>
->> Contains update support for older goodix touchscreens and it is not
->> that big. I think it might be better to just have an in kernel fwupdate
->> driver for this and have a sysfs file to which to write the new firmware.
->>
->> Adding Richard Hughes, fwupd maintainer to the Cc. Richard, do you have
->> any input on the suggested method for firmware updating ?
->>
->> If raw register access is seen as a good solution, then I think this
->> should use regmap + some generic helpers (to be written) to export
->> regmap r/w access to userspace.
-> 
-> I think the less code we have in kernel the better, especially if in
-> cases where firmware flashing is not essential for device to work (i.e.
-> it the controller has a flash memory). That said IIRC Mark felt very
-> strongly about allowing regmap writes from userspace... but maybe he
-> softened the stance or we could have this functionality opt-in?
+As the comment described in "struct vm_fault":
+	".address"      : 'Faulting virtual address - masked'
+	".real_address" : 'Faulting virtual address - unmasked'
 
-The update code is quite ugly, but we could probably limit the functionnality
-and filtering the registers read/write to only the update registers.
+The link [1] said: "Whatever the routes, all architectures end up to the
+invocation of handle_mm_fault() which, in turn, (likely) ends up calling
+__handle_mm_fault() to carry out the actual work of allocating the page
+tables."
 
-Neil
+  __handle_mm_fault() does address assignment:
+	.address = address & PAGE_MASK,
+	.real_address = address,
 
-> 
->>
->>> [1] https://github.com/goodix/fwupdate_for_berlin_linux
->>
->> Hmm, that tool seems to have some licensing issues there is an Apache License v2.0
->> LICENSE file, but the header of fwupdate.c claims it is confidential ...
->>
->> Regards,
->>
->> Hans
->>
->>
->>> Signed-off-by: Charles Wang <charles.goodix@gmail.com>
->>> ---
->>>   drivers/input/touchscreen/goodix_berlin.h     |  2 +
->>>   .../input/touchscreen/goodix_berlin_core.c    | 52 +++++++++++++++++++
->>>   drivers/input/touchscreen/goodix_berlin_i2c.c |  6 +++
->>>   drivers/input/touchscreen/goodix_berlin_spi.c |  6 +++
->>>   4 files changed, 66 insertions(+)
->>>
->>> diff --git a/drivers/input/touchscreen/goodix_berlin.h b/drivers/input/touchscreen/goodix_berlin.h
->>> index 1fd77eb69..1741f2d15 100644
->>> --- a/drivers/input/touchscreen/goodix_berlin.h
->>> +++ b/drivers/input/touchscreen/goodix_berlin.h
->>> @@ -19,6 +19,8 @@ struct regmap;
->>>   int goodix_berlin_probe(struct device *dev, int irq, const struct input_id *id,
->>>   			struct regmap *regmap);
->>>   
->>> +void goodix_berlin_remove(struct device *dev);
->>> +
->>>   extern const struct dev_pm_ops goodix_berlin_pm_ops;
->>>   
->>>   #endif
->>> diff --git a/drivers/input/touchscreen/goodix_berlin_core.c b/drivers/input/touchscreen/goodix_berlin_core.c
->>> index e7b41a926..e02160841 100644
->>> --- a/drivers/input/touchscreen/goodix_berlin_core.c
->>> +++ b/drivers/input/touchscreen/goodix_berlin_core.c
->>> @@ -672,6 +672,44 @@ static void goodix_berlin_power_off_act(void *data)
->>>   	goodix_berlin_power_off(cd);
->>>   }
->>>   
->>> +static ssize_t goodix_berlin_registers_read(struct file *filp, struct kobject *kobj,
->>> +	struct bin_attribute *bin_attr, char *buf, loff_t off, size_t count)
->>> +{
->>> +	struct goodix_berlin_core *cd;
->>> +	struct device *dev;
->>> +	int error;
->>> +
->>> +	dev = kobj_to_dev(kobj);
->>> +	cd = dev_get_drvdata(dev);
->>> +
->>> +	error = regmap_raw_read(cd->regmap, (unsigned int)off,
->>> +				buf, count);
->>> +
->>> +	return error ? error : count;
->>> +}
->>> +
->>> +static ssize_t goodix_berlin_registers_write(struct file *filp, struct kobject *kobj,
->>> +	struct bin_attribute *bin_attr, char *buf, loff_t off, size_t count)
->>> +{
->>> +	struct goodix_berlin_core *cd;
->>> +	struct device *dev;
->>> +	int error;
->>> +
->>> +	dev = kobj_to_dev(kobj);
->>> +	cd = dev_get_drvdata(dev);
->>> +
->>> +	error = regmap_raw_write(cd->regmap, (unsigned int)off,
->>> +				 buf, count);
->>> +
->>> +	return error ? error : count;
->>> +}
->>> +
->>> +static struct bin_attribute goodix_berlin_registers_attr = {
->>> +	.attr = {.name = "registers", .mode = 0600},
->>> +	.read = goodix_berlin_registers_read,
->>> +	.write = goodix_berlin_registers_write,
->>> +};
->>> +
->>>   int goodix_berlin_probe(struct device *dev, int irq, const struct input_id *id,
->>>   			struct regmap *regmap)
->>>   {
->>> @@ -743,6 +781,14 @@ int goodix_berlin_probe(struct device *dev, int irq, const struct input_id *id,
->>>   
->>>   	dev_set_drvdata(dev, cd);
->>>   
->>> +	error = sysfs_create_bin_file(&cd->dev->kobj,
->>> +				      &goodix_berlin_registers_attr);
-> 
-> If we want to instantiate attributes from the driver please utilize
-> dev_groups in respective driver structures to create and remove the
-> attributes automatically.
-> 
-> Thanks.
-> 
+This is debug dump by running `./test_progs -a "*arena*"`:
+
+[   69.767494] arena fault: vmf->address = 10000001d000, vmf->real_address = 10000001d008
+[   69.767496] arena fault: vmf->address = 10000001c000, vmf->real_address = 10000001c008
+[   69.767499] arena fault: vmf->address = 10000001b000, vmf->real_address = 10000001b008
+[   69.767501] arena fault: vmf->address = 10000001a000, vmf->real_address = 10000001a008
+[   69.767504] arena fault: vmf->address = 100000019000, vmf->real_address = 100000019008
+[   69.769388] arena fault: vmf->address = 10000001e000, vmf->real_address = 10000001e1e8
+
+So we can use the value of 'vmf->address' to do BPF arena kernel address
+space cast directly.
+
+[1] https://docs.kernel.org/mm/page_tables.html
+
+Signed-off-by: Haiyue Wang <haiyue.wang@intel.com>
+---
+ kernel/bpf/arena.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/bpf/arena.c b/kernel/bpf/arena.c
+index 343c3456c8dd..1876dc7ebb57 100644
+--- a/kernel/bpf/arena.c
++++ b/kernel/bpf/arena.c
+@@ -251,7 +251,7 @@ static vm_fault_t arena_vm_fault(struct vm_fault *vmf)
+ 	int ret;
+ 
+ 	kbase = bpf_arena_get_kern_vm_start(arena);
+-	kaddr = kbase + (u32)(vmf->address & PAGE_MASK);
++	kaddr = kbase + (u32)(vmf->address);
+ 
+ 	guard(mutex)(&arena->lock);
+ 	page = vmalloc_to_page((void *)kaddr);
+-- 
+2.43.2
 
