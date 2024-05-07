@@ -1,368 +1,210 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2070.outbound.protection.outlook.com [40.107.243.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FCA16DEA0
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 19:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715108543; cv=none; b=N5c2J305D6lSm5QaxXio4Z+ke00MhVNWeYaMuH4FcRpIf/2M/74d5HeIDQ1nBKr2E0Xmj1c9iTFG3aLWUqm33YqtvO5fRul23BYTPDz/zY1LVLxDkg2MpW+qdDsV8dUHUcSIbHUhfsGktW2R9x1Ln9a1q6P1UstAKr1exZMzQr0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715108543; c=relaxed/simple;
-	bh=EvBNYEvN8j9ghLH+OpWG+7kKxj7ybV0QTyNby5uwafc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mMWr6AkdeqzduQo2e875xwvyAP5xSqb7th+YYKP45RDtT5L8ThKwQN45D3GH4IvNANx/F8cK+VMmor9pSTdPvNuu/U9i9DD3gOeGaPhBfNAQvVJ+HEPYkCclJUZ3KAC0r2C2vLj/bmehUjyT8BE2hgI0iySZF70YU83sjgpt9eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JFkb2rPm; arc=none smtp.client-ip=209.85.167.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2A016D9A7;
+	Tue,  7 May 2024 19:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.70
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715108636; cv=fail; b=PphK3HBGgEK7k55xRs2xnAzHb7RK1LisVe8AAv4wUhUBupWXzwYZI/WsCjb1untpZK7SpYHg9s05PKowhy04M58gkIP0n2HJjPbeYUQ5D31QZgT43e/J9LO1LFQw3pxLwqwVx5NVCE0kGMdHdn+d+Gfbe/7idgeZ55c12HmjFZI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715108636; c=relaxed/simple;
+	bh=PusG0mtMgdxlbzbsAnVv0ZBqjp7audVkORpoK4o/3qI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PbrCrRk7p0dq6JoMi3lRhefjbZWQA7zVqMtlO3s5ijzQMw0xlwOIsfaY12BUAK7aDqOkHVcE1lCYbnK28O6kNldRWUI+Kc/t/71tfmJfpBa1q2OAELfDm/F+/sRe9GRQCM5Qiq1vkm4Ry8KFtmZF9DZyv9/keOpms5YfjXhRV4M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=SHlKDB+/; arc=fail smtp.client-ip=40.107.243.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JFkb2rPm"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c9691e1e78so1611907b6e.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 12:02:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715108541; x=1715713341; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a6XxGU1FlTtbSR4iab/xAALxEuyhck2Pa/6k2+UASj0=;
-        b=JFkb2rPmYyiRTnd6592xo1xzJcwlAj0VUOWlPIwSvVPLzIdOOOvqvXPEgGk32P1Lcp
-         XQy8XsIrKkZf7xVrWJf2YgtO/13FU8vbjTNjj2GUbSf6gDRWrJwy0JrXnFIhhch6L+84
-         wtlDnSNWcVxSyMklCVrO86pGX1iao4I5RSESWC095KskCIE0+6DtIedVPrtdt2evwQWP
-         eT/8hC9YVhtExUUL7QhoeUgXbNZLWs9mEaPl2MbXGrVa7FxTM8fSb0upZeMNwPNcHwev
-         ELlc2RDo0XJIK+rNTThRH2Eyo+1d4VIvo+Gd5L4KLzUVDYAnmjWYQjClaK6btop3hz1F
-         mNRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715108541; x=1715713341;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a6XxGU1FlTtbSR4iab/xAALxEuyhck2Pa/6k2+UASj0=;
-        b=MQ/ex4WbZNt4LEJDtPR29X/qjXWBPfRwKbIR6TqkkY4aw3f0NF1KBWpwd74Vmt3NLr
-         gfPtbk6svP3zxgUar/FVwPnb1qnQycVcitA6I4MlLsx0ilOfV/RPhZwuxaQrg/YY2IPJ
-         4yj4ixXdop259/5zEmgYqjS2qUMY6d117cHC6i32p/MvV6RsJjkzSwg2xfVwR63kAnRE
-         NFQTdd9hUdLPm7iJh/BCc2u2ac2NJt+FD0sdobIYD6I5Uos+5lbPDStY2fjWxQyDCkFn
-         OtT7yu5UezA6K0lAnyFEym/UfEhSoJq5q2G8wjqMMH+6iHYhO6q6ov3uDSvdHY1Q8/Uu
-         7PYA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+RM4y27MDa087hgTBWsdr3/anIIW7EPzJsKXGCdSoKSDVyn0k5e9mH66IXr2i7rSrYvQOVFmcL81RH7wknk5rGCf+DlpH04Rp1aX2
-X-Gm-Message-State: AOJu0YxlhXfa/Ziwk47XWcuGSxwWmWJA9UeeCQnEX5qA80bkyKv8EijM
-	NNKBYPpDSjKt/TGroHffb64zv9P48jfUafk68LbPnqeKhFAA5S8LH28OLT/neu0=
-X-Google-Smtp-Source: AGHT+IHv02i3bUWe97W+AMQ6Wm/DpdvU7UL0PD2+AVRJMmCdz/EkTQYkuN2YVA4GHU0hKqTEA6xPtQ==
-X-Received: by 2002:a05:6808:6292:b0:3c9:6bf7:bb7f with SMTP id 5614622812f47-3c985309de7mr415150b6e.48.1715108540566;
-        Tue, 07 May 2024 12:02:20 -0700 (PDT)
-Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id j14-20020a54480e000000b003c96bbe0e79sm909652oij.13.2024.05.07.12.02.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 12:02:20 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: David Lechner <dlechner@baylibre.com>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	=?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
-	Julien Stephan <jstephan@baylibre.com>,
-	Esteban Blanc <eblanc@baylibre.com>,
-	linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 4/4] iio: adc: ad7380: add support for multiple scan type
-Date: Tue,  7 May 2024 14:02:08 -0500
-Message-ID: <20240507-iio-add-support-for-multiple-scan-types-v1-4-95ac33ee51e9@baylibre.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240507-iio-add-support-for-multiple-scan-types-v1-0-95ac33ee51e9@baylibre.com>
-References: <20240507-iio-add-support-for-multiple-scan-types-v1-0-95ac33ee51e9@baylibre.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SHlKDB+/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=grYIE/8aMctNPYvKvgYLPBvJlWzeASwh/dwzZ4Jacf//LvnAl/TltyKMwKLp/CvXU86ijfpZdp8XTETNY2CT0MzZ9ClLCxu2eUn9CfFW2WfRxUresW1aqdSCvyxrBcOFqcbXMsfE6lN7Wy8WrCJgDn2xIidIzCkut8ugmImOaatFDUiKxqWvrRqExIEph1lNEgQhFH7AfzcDSoH5huxflpg0oBpLwmw/BqGaqF+dx5on2seG+a3W2IdPalyRHnML16CvIOmDZENzjBP0AYS6CMCBYi8w7UDKulTvNBT9Q7G9/tE4V9L0HjCrxJ3VTTCFchdDLQASVz7nFAG/Dk5PdA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=k/BVC/4aknTx7gPKhcYgQtiCdWoKwWEynWL+QAihIQI=;
+ b=O9Po1Z2nIa6+1vMMRibi0ZqTRG0pPj708s1w1fGaUBOnBMwBNT4c2HgHoKJIhl/qDzmvxFfz724q0ggVBvtb0JicbjR/rntQD5MZRSY7MyLv4dWJw5fI9zc/SH/q2ZHgHCMqUMbFFhk1K0bHYhTtRJvjmnhCyCrLoJsooq8jHrrDSDa5UQPeCstZf7BuHUXO9Lm9I+CvrKqX9ADcGL2xGg4k0HzN5NPdftlgTL3Ke8QT1+lNOA/JSNMSE6KZTzkc0l5u1dxo7YysNhuD4d1ogm5pYxQtxwgOHFnppeoMLz/vZRHr3nP2h5IrddzOhOgyIcMvg/oy6wzewWVU6GFcsg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=k/BVC/4aknTx7gPKhcYgQtiCdWoKwWEynWL+QAihIQI=;
+ b=SHlKDB+/uFIWonSBLC/hIhyM6ZqghDAylootKOiWsGg5V5Rvi895D6qdpAzqNPBs5A1nQsXePNJzNf0V+vSf4t4w7EFDzb4PKSpf80A+ovXdKN7itogaaTz4Orxty17nT7JiMK9J3rsPW3Rk8H/Ek4GlPgZxGIYJSIpiK2Ip0es=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
+ by MW4PR12MB7484.namprd12.prod.outlook.com (2603:10b6:303:212::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42; Tue, 7 May
+ 2024 19:03:49 +0000
+Received: from MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca]) by MN0PR12MB6101.namprd12.prod.outlook.com
+ ([fe80::37ee:a763:6d04:81ca%6]) with mapi id 15.20.7544.041; Tue, 7 May 2024
+ 19:03:49 +0000
+Message-ID: <65d58c4a-46e4-4012-8342-ee93b12dd68f@amd.com>
+Date: Tue, 7 May 2024 14:03:47 -0500
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/2] ChromeOS Embedded controller hwmon driver
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Benson Leung <bleung@chromium.org>, Lee Jones <lee@kernel.org>
+Cc: Guenter Roeck <groeck@chromium.org>, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, chrome-platform@lists.linux.dev,
+ Dustin Howett <dustin@howett.net>, Moritz Fischer <mdf@kernel.org>
+References: <20240507-cros_ec-hwmon-v2-0-1222c5fca0f7@weissschuh.net>
+Content-Language: en-US
+From: Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <20240507-cros_ec-hwmon-v2-0-1222c5fca0f7@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA0PR11CA0083.namprd11.prod.outlook.com
+ (2603:10b6:806:d2::28) To MN0PR12MB6101.namprd12.prod.outlook.com
+ (2603:10b6:208:3cb::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Mailer: b4 0.12.4
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|MW4PR12MB7484:EE_
+X-MS-Office365-Filtering-Correlation-Id: 168b6129-418a-4556-5165-08dc6ec86dc5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|1800799015|7416005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?aDJhcmxYWlZiRHRtSjA0WWJOUnlJNmdJeURaTDFOWHArNzFvY3hnckhtR0dF?=
+ =?utf-8?B?SS9RdE93N1Mrdk5vWTFSOFAzdHMrOWZGNzNkczFxQ09tWlFWY0Rsay9rTE1m?=
+ =?utf-8?B?NGh4d1FFL2g4MVRPamJmWkRtd1pncm15RnZaazJ6Y3ExdFcxeUw2a3Q5MlZ5?=
+ =?utf-8?B?cm5qZHpXQnM5V1RJQ1ZRSm5nMXNwZHVBYm5sdVExY0lKT3FXTVhDaFVoUXhn?=
+ =?utf-8?B?ci9oZ2ltWCthNmpOMDZEUG1xOS9EV2UzRjZUQk9YYVN2RUVwNExpZ3l5bS9y?=
+ =?utf-8?B?RmxiSXB0RUtBSUZXaVBSVE52NkI0VCtIODJyYVFDMC9DVmtqOFVYaFhoQ0Ns?=
+ =?utf-8?B?TGE4V0ZQMTl6YmZCQXdCWDBjZ3c1NjBlL1NJRFo4YVAvdGU4bU5UYWxoQzBm?=
+ =?utf-8?B?TDh6ZEY5aWZzS1pqTFpVN3ZQaW5iTTBwdzRoNUxtb2F5dlU0T1NXUW10MC9N?=
+ =?utf-8?B?K2NGeEFuREpaRTVOcjh3VE9rdGYwK2pKbzdKaUl6M3RwMUxnbWd5d3FFcmFz?=
+ =?utf-8?B?SGJpbHpSL1VhRnpSd3RLSlRiRGJWQW9aR2F0UktBV01sYzlweEkvTnVGakJq?=
+ =?utf-8?B?WEpZM3NIVW5jTDBmdGppWDhxbm9Sa1hiRGdDTUFxZnp1QmZvQmtscWZVWDNx?=
+ =?utf-8?B?VHBicUhhSWdiTjJWV2dZYVVSYkhsbzcrWDd6TlE5YS8wejFyK3lOU2hETHRJ?=
+ =?utf-8?B?UjQ2Y1FtVmhlWHJsNGVrNzUxNW92VW53dlk1enlJZ2pvVmtxdzY0YVh2MUt1?=
+ =?utf-8?B?dUhkVUhKWko3ejlMWFFTSGI5VDNXLzNBdGdIRFA3ZytxVlRST3lkT2ZhVjlZ?=
+ =?utf-8?B?RVN3N3d4Qnk3UW1CRWR1eTYrZ2MzOVNSTjU1MGpJQzRYN1JSeVozOWRmWmRa?=
+ =?utf-8?B?UkhQbWtoeHZ2TThZOHZZZGZNQitZT3MxZGhJbW9xVyszcmhPd3NCVEVJQ1lQ?=
+ =?utf-8?B?T3Q2RVVVN0hjUUhpdElSNGJmVlJWMlYrdEFSbVJJaTQzbloxOVZWUUtjRnIz?=
+ =?utf-8?B?TloyMC9LVTh2WEN6d3NHR0ZhdXY1MzVpbUhDK2daaUJEdUZPSitQZGJKTk1X?=
+ =?utf-8?B?VExvM0lrOG0zeW1PdVg1WXlzVkJOVncxU1J6d3kvWTBCR2M5YmhoVEk3SmEw?=
+ =?utf-8?B?V2VBdXJudW12UG5hdGhtS0VvQlk0cGtRWVRpMXhNemVIVUVybHlDRXliVi9u?=
+ =?utf-8?B?Q0tQaG01S2RON255NDZ0bSt0NXhBcGlMSVgrQnVXa3RzMEZ0RHdnZ0VHMEl3?=
+ =?utf-8?B?T0d6ZStlb2NPcHg5Z0hYUGxFanZDQnFsUE85R3hOdVdBcDN4ZXU5VzZTRGhy?=
+ =?utf-8?B?NkVSSjJsMzFLSWwyVjZlM3pUV1NFRlVSOTJCZXBCMHdLay8xOFV6Qml2dXlv?=
+ =?utf-8?B?N29lN2hUeUV1RzhocC9wSmdIdUlCUlh4cEZWQU1VS05WRmJ0R0ZTWVd4dlcv?=
+ =?utf-8?B?U2d1OWxlU1VDVk9PZHRlYzRrOVBKMmlZU0xnZmFQMFZFZ0N3S3ZKUWFyWlVW?=
+ =?utf-8?B?dXB3R3lkblR2OTBoMWJqVWt5ZkJCZmxYV296WjBDdm5HTXdGd1QzcWNaRERv?=
+ =?utf-8?B?YlFBQjlXSm9keVM3TGdUTTdEaThkNFhYbS9YRWdSR0F3YlRFVVpCWkV5aGhW?=
+ =?utf-8?Q?DrFzPTOLGdzmBP8IoUJrej3Ccfq/UODiBm41Pawb3Xs0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(7416005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dFJUQ0xzWG5kWENwYU5XRGVRSXVVN05sZHhCUmhIRCtOZkNGa04xYnRyM3NI?=
+ =?utf-8?B?TFVGcWZuREF1ZnNIYzNzcTAvTjc1MEN6eHBDdUloTFE2bUdtd2tuQmhrZVoz?=
+ =?utf-8?B?YjFkd2gzSHNCMTlENDlDRnRtTXBjbXdHRkpmQ0hTeHVoS3hvZk10NGhXV0k5?=
+ =?utf-8?B?WklNMWZ3S2lkcUc1Y2t2MERjeWNXemp1RWdRR2I0WmRkbnRkaEFrWWg2dDhh?=
+ =?utf-8?B?NDE1ekxrR1RtZlNMKzBsREpMcXZlRWQ0dUh1NC94UlFNenlTdi9ndFBGY21u?=
+ =?utf-8?B?QkpRbGlVSEpJWjN5bWc0VE9ueFVhbVRXYTU0T0FtYXNTdEh4S3Vwb1hIQWJr?=
+ =?utf-8?B?eGZhNjEvV3VNVWZHMEVZOHFmekY4YzdQaU8yaUowc1kzOE9RNjRIREMrTGNq?=
+ =?utf-8?B?ZlVnd3hsVmo5SkNNNk5OclJNYURQalpITUZoRUh0dVFZZnJvRitqYUJlamJv?=
+ =?utf-8?B?VDhHQXNlQWtMNEZlNmdpSXJ0TmZ6RzRJaTl5dDRad0NNamV6cTBmeGtiZjdO?=
+ =?utf-8?B?eFJzRlZXK3Z3eHFZMzNyelQ5TzA3RTRoU3lUZ0JjdlExMUlXWldIdXhMdDF0?=
+ =?utf-8?B?WlFid0VmdTZIaDFLMTgyRmtOR0ZNcmcwM1RxR0VTTGUrczVmbDY2YTdoOG1P?=
+ =?utf-8?B?b0N5TGQ3czMrb05Qb3BiK1RJUkY5UHl1U3JTQ0MrZEpNTHVyajRIRTltcGth?=
+ =?utf-8?B?QVRMWnBTSFY3WGdJNEJ5aUg1M3lsa3NhUE0zZ3NCNEY2V2hPODY1VTVpYjZY?=
+ =?utf-8?B?MTF5czB3TzAwdXY5Vlc4clBmTTJYR3hWbUtkR2FaWmROOU9kRVFkL1BORUZ2?=
+ =?utf-8?B?MnZTRWtHRDZCbW1GR2V0K21Ia21LeDdSbzBhckZaRXFLbERwV1ZZMHMralhK?=
+ =?utf-8?B?SXBPeEtuWHJtcFpJOUR0Zm9kc1VJTW1tRnhGWkwxSlFTcHcxQm84bVFBWFUw?=
+ =?utf-8?B?QWcrY2RBUXNwQjlsSldIRC9LUDgyLzJ4K202QVlQK1U2aG9FUW9vbVBSa1g1?=
+ =?utf-8?B?Yjg4N2Q5dlA5SUx5T2RjVUdtYUhyNTZhbGo1ZW82d0Z4clRqZEhGT1VQOU1z?=
+ =?utf-8?B?Szl0aUNJejh0SjU0R3JMSEJra2ZodUh5Yi94TlpORE16Ui9UWE5WK3B2MFIw?=
+ =?utf-8?B?bXdHRCtBa1huZ0Niendmc25RMFJMbXFiRVdkbUduckQxdkY4YXBhZEh5Ukp0?=
+ =?utf-8?B?OFhOMGgrczR0UXZVY2FpaFVrTFV2a0dtdTFYU1NMSzRvaHo5YUtMSHhIU1pS?=
+ =?utf-8?B?bEYvQ1RLTTM4SFNoS2JWVHh1c2YrV1cxRzN6VjlGSjkwUk05d0RpVHRFMXpR?=
+ =?utf-8?B?Unp1MEJNU1BCemJhWTBHYUZvTSt1dzNvcU1Rd1RzbW1HNXVDMWlPTlFvY011?=
+ =?utf-8?B?LzdoMFhibTZHT2drWnBTWW1GZXFtS0tFRnFKZzNRRTVOajA3ODIzd0JuYWdQ?=
+ =?utf-8?B?N1VQNlJYbDIyZjNtSXhVNzhMRkY0c3hOU3o1MzFhOWxLUWJjTUloZGRxRWEr?=
+ =?utf-8?B?R0Z6aVQ0NHNBVlNuVEN5YUc3WFRrNFVQOWtkTW5oT1VEVDFzS29HbjhtYkFi?=
+ =?utf-8?B?KzZNZEVEenEyNWIxWUtOQ3ErR0RhRzA0eGtXT05GSnh3c05KdWc1SmR0dUFP?=
+ =?utf-8?B?VW5TU3JQMThhMWpJa0tEekR4Q0NuK2ZXWnpua29OK2ZxOVBnVkd6Q2U4SGV2?=
+ =?utf-8?B?OTN1eUVmdG9MSnd4b0d5S3RoSmw0YzE1OW0zK01RZGMrUmVmblFZNitpWGR3?=
+ =?utf-8?B?RUF6b1N0UytGQmw4WTJXc0VMTUFxKzROT1FaU2pMOUdPRDRVL01sa2pTVlZp?=
+ =?utf-8?B?R3ZjU21IRXYyenljbE9BSEh6U25jaVgzYld2TTB0MllZUmFubUxYL1VrZjJi?=
+ =?utf-8?B?RlhBNTdHTS80b01ON3J5bGJQL2xhbUFRMlFpQmUrK2FUb2dpc0Foa3NDbUZh?=
+ =?utf-8?B?RWw0bHpoK0p6MDdpYmFGL2x1c25mVk9GKzlBc1Rsb0xST3B5aGpvQ2ZNV3gy?=
+ =?utf-8?B?NklScmpqOGJrRnIzY21SZzMrZ0dBbFgyYjl1MDdQOTR5QXNJY3ZCWlMyVytp?=
+ =?utf-8?B?VFVGSFJ3V1B6RTgxanZSS2VOQTV4aSs4WEJhY3FWNDl5dXVUdmg5RzI4c2RP?=
+ =?utf-8?Q?L+nk1cN6mGtrnM48QeobdINqi?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 168b6129-418a-4556-5165-08dc6ec86dc5
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 19:03:49.7773
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: JK0NPi8j7xj7Lf6XDLW+tSKFt7EEi496BwB0XNxsWFPigR8Wd+hrHGgeaMGrlwt/usuIrZzN+FG+cf4a8tCsrg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7484
 
-The AD783x chips have a resolution boost feature that allows for 2
-extra bits of resolution. Previously, we had to choose a scan type to
-fit the largest resolution and manipulate the raw data to fit when the
-resolution was lower. This patch adds support for multiple scan types
-for the voltage input channels so that we can support both resolutions
-without having to manipulate the raw data.
+On 5/7/2024 11:29, Thomas Weißschuh wrote:
+> Add a hwmon driver that reports fan and temperature readings from the
+> ChromeOS Embedded controller.
+> 
+> There was an earlier effort in 2017 to add such a driver [0], but there
+> was no followup after v1.
+> The new driver is complete reimplementation based on newer APIs and with
+> more features (temp sensor names).
+> 
+> It only works on LPC-connected ECs, as only those implement direct
+> memory-map access.
+> For other busses the data would need to be read with a command.
+> Adding some helpers was discussed in the previous patchset [1].
+> 
+> The EC protocols also support reading and writing fan curves but that is
+> not implemented.
+> 
+> Tested on a Framework 13 AMD, Firmware 3.05.
+> 
+> [0] https://lore.kernel.org/all/1491602410-31518-1-git-send-email-moritz.fischer@ettus.com/
+> [1] https://lore.kernel.org/all/ac61bfca-bfa0-143b-c9ca-365b8026ce8d@roeck-us.net/
+> 
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> ---
+> Changes in v2:
+> - drop unnecessary range checks (Guenter)
+> - only validate thermal_version during probing
+> - reorder some variable declarations
+> - validate thermal_version directly in cros_ec_hwmon_probe (Mario)
+> - drop return value from probe_temp_sensors as it can't fail anymore
+> - fail with -ENODEV if cmd_readmem is missing to avoid spurious warnings
+> - Link to v1: https://lore.kernel.org/r/20240507-cros_ec-hwmon-v1-0-2c47c5ce8e85@weissschuh.net
+> 
+> ---
+> Thomas Weißschuh (2):
+>        hwmon: add ChromeOS EC driver
+>        mfd: cros_ec: Register hardware monitoring subdevice
+> 
+>   Documentation/hwmon/cros_ec_hwmon.rst |  26 ++++
+>   Documentation/hwmon/index.rst         |   1 +
+>   MAINTAINERS                           |   8 +
+>   drivers/hwmon/Kconfig                 |  11 ++
+>   drivers/hwmon/Makefile                |   1 +
+>   drivers/hwmon/cros_ec_hwmon.c         | 269 ++++++++++++++++++++++++++++++++++
+>   drivers/mfd/cros_ec_dev.c             |   1 +
+>   7 files changed, 317 insertions(+)
+> ---
+> base-commit: 2fbe479c0024e1c6b992184a799055e19932aa48
+> change-id: 20240506-cros_ec-hwmon-24634b07cf6f
+> 
+> Best regards,
 
-Signed-off-by: David Lechner <dlechner@baylibre.com>
----
- drivers/iio/adc/ad7380.c | 185 ++++++++++++++++++++++-------------------------
- 1 file changed, 86 insertions(+), 99 deletions(-)
+That was fast!  The series looks good to me, thanks.
 
-diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-index e240098708e9..ca317e3a72d9 100644
---- a/drivers/iio/adc/ad7380.c
-+++ b/drivers/iio/adc/ad7380.c
-@@ -89,14 +89,22 @@ struct ad7380_chip_info {
- 	const struct ad7380_timing_specs *timing_specs;
- };
- 
--/*
-- * realbits/storagebits cannot be dynamically changed, so in order to
-- * support the resolution boost (additional 2  bits of resolution)
-- * we need to set realbits/storagebits to the maximum value i.e :
-- *   - realbits = 16 + 2 = 18, and storagebits = 32 for 16-bits chips
-- *   - realbits = 14 + 2 = 16, and storagebits = 16 for 14-bits chips
-- * We need to adjust the scale depending on resolution boost status
-- */
-+/** scan type for 14-bit chips with resolution boost enabled. */
-+static const struct iio_scan_type ad7380_scan_type_14_boost = {
-+	.sign = 's',
-+	.realbits = 16,
-+	.storagebits = 16,
-+	.endianness = IIO_CPU,
-+};
-+
-+/** scan type for 16-bit chips with resolution boost enabled. */
-+static const struct iio_scan_type ad7380_scan_type_16_boost = {
-+	.sign = 's',
-+	.realbits = 18,
-+	.storagebits = 32,
-+	.endianness = IIO_CPU,
-+};
-+
- #define AD7380_CHANNEL(index, bits, diff) {			\
- 	.type = IIO_VOLTAGE,					\
- 	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |		\
-@@ -113,10 +121,12 @@ struct ad7380_chip_info {
- 	.scan_index = (index),					\
- 	.scan_type = {						\
- 		.sign = 's',					\
--		.realbits = (bits) + 2,				\
--		.storagebits = ((bits) + 2 > 16) ? 32 : 16,	\
-+		.realbits = (bits),				\
-+		.storagebits = ((bits) > 16) ? 32 : 16,		\
- 		.endianness = IIO_CPU,				\
- 	},							\
-+	.ext_scan_type = &ad7380_scan_type_##bits##_boost,	\
-+	.num_ext_scan_type = 1,					\
- }
- 
- #define DEFINE_AD7380_2_CHANNEL(name, bits, diff)	\
-@@ -376,67 +386,62 @@ static int ad7380_debugfs_reg_access(struct iio_dev *indio_dev, u32 reg,
- 	unreachable();
- }
- 
--static int ad7380_prepare_spi_xfer(struct ad7380_state *st, struct spi_transfer *xfer)
-+/**
-+ * Reads one set of samples from the device. This is a simultaneous sampling
-+ * chip, so all channels are always read at the same time.
-+ *
-+ * On successful return, the raw data is stored in st->scan_data.raw.
-+ */
-+static int ad7380_read_one_sample(struct ad7380_state *st,
-+				  const struct iio_scan_type *scan_type)
- {
--	int bits_per_word;
--
--	memset(xfer, 0, sizeof(*xfer));
--
--	xfer->rx_buf = &st->scan_data.raw;
--
--	if (st->resolution_boost_enable == RESOLUTION_BOOST_ENABLE)
--		bits_per_word = st->chip_info->channels[0].scan_type.realbits;
--	else
--		bits_per_word = st->chip_info->channels[0].scan_type.realbits - 2;
--
--	xfer->bits_per_word = bits_per_word;
-+	struct spi_transfer xfers[2] = {
-+		/* toggle CS (no data xfer) to trigger a conversion */
-+		{
-+			.speed_hz = AD7380_REG_WR_SPEED_HZ,
-+			.bits_per_word = scan_type->realbits,
-+			.delay = {
-+				.value = T_CONVERT_NS,
-+				.unit = SPI_DELAY_UNIT_NSECS,
-+			},
-+			.cs_change = 1,
-+			.cs_change_delay = {
-+				.value = st->chip_info->timing_specs->t_csh_ns,
-+				.unit = SPI_DELAY_UNIT_NSECS,
-+			},
-+		},
-+		{
-+			.rx_buf = &st->scan_data.raw,
-+			.len = BITS_TO_BYTES(scan_type->storagebits) *
-+						(st->chip_info->num_channels - 1),
-+			.bits_per_word = scan_type->realbits,
-+		},
-+	};
- 
--	xfer->len = (st->chip_info->num_channels - 1) * BITS_TO_BYTES(bits_per_word);
-+	/*
-+	 * In normal average oversampling we need to wait for multiple conversions to be done
-+	 */
-+	if (st->oversampling_mode == OS_MODE_NORMAL_AVERAGE && st->oversampling_ratio > 1)
-+		xfers[0].delay.value = T_CONVERT_NS + 500 * st->oversampling_ratio;
- 
--	return bits_per_word;
-+	return spi_sync_transfer(st->spi, xfers, ARRAY_SIZE(xfers));
- }
- 
- static irqreturn_t ad7380_trigger_handler(int irq, void *p)
- {
- 	struct iio_poll_func *pf = p;
- 	struct iio_dev *indio_dev = pf->indio_dev;
-+	const struct iio_chan_spec *chan = &indio_dev->channels[0];
-+	const struct iio_scan_type *scan_type = iio_get_current_scan_type(
-+								indio_dev, chan);
- 	struct ad7380_state *st = iio_priv(indio_dev);
--	struct spi_transfer xfer;
--	int bits_per_word, realbits, i, ret;
-+	int ret;
- 
--	realbits = st->chip_info->channels[0].scan_type.realbits;
--	bits_per_word = ad7380_prepare_spi_xfer(st, &xfer);
- 
--	ret = spi_sync_transfer(st->spi, &xfer, 1);
-+	ret = ad7380_read_one_sample(st, scan_type);
- 	if (ret)
- 		goto out;
- 
--	/*
--	 * If bits_per_word == realbits (resolution boost enabled), we don't
--	 * need to manipulate the raw data, otherwise we may need to fix things
--	 * up a bit to fit the scan_type specs
--	 */
--	if (bits_per_word < realbits) {
--		if (realbits > 16 && bits_per_word <= 16) {
--			/*
--			 * Here realbits > 16 so storagebits is 32 and bits_per_word is <= 16
--			 * so we need to sign extend u16 to u32 using reverse order to
--			 * avoid writing over union data
--			 */
--			for (i = st->chip_info->num_channels - 2; i >= 0; i--)
--				st->scan_data.raw.u32[i] = sign_extend32(st->scan_data.raw.u16[i],
--									 bits_per_word - 1);
--		} else if (bits_per_word < 16) {
--			/*
--			 * Here realbits <= 16 so storagebits is 16.
--			 * We only need to sign extend only if bits_per_word is < 16
--			 */
--			for (i = 0; i < st->chip_info->num_channels - 1; i++)
--				st->scan_data.raw.u16[i] = sign_extend32(st->scan_data.raw.u16[i],
--									 bits_per_word - 1);
--		}
--	}
--
- 	iio_push_to_buffers_with_timestamp(indio_dev, &st->scan_data,
- 					   pf->timestamp);
- 
-@@ -447,47 +452,21 @@ static irqreturn_t ad7380_trigger_handler(int irq, void *p)
- }
- 
- static int ad7380_read_direct(struct ad7380_state *st,
--			      struct iio_chan_spec const *chan, int *val)
-+			      struct iio_chan_spec const *chan,
-+			      const struct iio_scan_type *scan_type,
-+			      int *val)
- {
--	struct spi_transfer xfers[2] = {
--		/* toggle CS (no data xfer) to trigger a conversion */
--		{
--			.speed_hz = AD7380_REG_WR_SPEED_HZ,
--			.bits_per_word = chan->scan_type.realbits,
--			.delay = {
--				.value = T_CONVERT_NS,
--				.unit = SPI_DELAY_UNIT_NSECS,
--			},
--			.cs_change = 1,
--			.cs_change_delay = {
--				.value = st->chip_info->timing_specs->t_csh_ns,
--				.unit = SPI_DELAY_UNIT_NSECS,
--			},
--		},
--		/* then read all channels, it will be filled by ad7380_prepare_spi_xfer */
--		{
--		},
--	};
--	int bits_per_word, ret;
--
--	/*
--	 * In normal average oversampling we need to wait for multiple conversions to be done
--	 */
--	if (st->oversampling_mode == OS_MODE_NORMAL_AVERAGE && st->oversampling_ratio > 1)
--		xfers[0].delay.value = T_CONVERT_NS + 500 * st->oversampling_ratio;
--
--	bits_per_word = ad7380_prepare_spi_xfer(st, &xfers[1]);
-+	int ret;
- 
--	ret = spi_sync_transfer(st->spi, xfers, ARRAY_SIZE(xfers));
--	if (ret < 0)
-+	ret = ad7380_read_one_sample(st, scan_type);
-+	if (ret)
- 		return ret;
--
--	if (bits_per_word > 16)
-+	if (scan_type->storagebits > 16)
- 		*val = sign_extend32(st->scan_data.raw.u32[chan->scan_index],
--				     bits_per_word - 1);
-+				     scan_type->realbits - 1);
- 	else
- 		*val = sign_extend32(st->scan_data.raw.u16[chan->scan_index],
--				     bits_per_word - 1);
-+				     scan_type->realbits - 1);
- 
- 	return IIO_VAL_INT;
- }
-@@ -496,18 +475,14 @@ static int ad7380_read_raw(struct iio_dev *indio_dev,
- 			   struct iio_chan_spec const *chan,
- 			   int *val, int *val2, long info)
- {
-+	const struct iio_scan_type *scan_type = iio_get_current_scan_type(
-+								indio_dev, chan);
- 	struct ad7380_state *st = iio_priv(indio_dev);
--	int realbits;
--
--	if (st->resolution_boost_enable == RESOLUTION_BOOST_ENABLE)
--		realbits = chan->scan_type.realbits;
--	else
--		realbits = chan->scan_type.realbits - 2;
- 
- 	switch (info) {
- 	case IIO_CHAN_INFO_RAW:
- 		iio_device_claim_direct_scoped(return -EBUSY, indio_dev) {
--			return ad7380_read_direct(st, chan, val);
-+			return ad7380_read_direct(st, chan, scan_type, val);
- 		}
- 		unreachable();
- 	case IIO_CHAN_INFO_SCALE:
-@@ -520,7 +495,7 @@ static int ad7380_read_raw(struct iio_dev *indio_dev,
- 		 * According to IIO ABI, offset is applied before scale,
- 		 * so offset is: vcm_mv / scale
- 		 */
--		*val = st->vcm_mv[chan->channel] * (1 << realbits)
-+		*val = st->vcm_mv[chan->channel] * (1 << scan_type->realbits)
- 			/ st->vref_mv;
- 
- 		return IIO_VAL_INT;
-@@ -700,6 +675,17 @@ static int ad7380_write_raw(struct iio_dev *indio_dev,
- 	}
- }
- 
-+static const struct iio_scan_type *ad7380_get_current_scan_type(
-+		const struct iio_dev *indio_dev, struct iio_chan_spec const *chan)
-+{
-+	struct ad7380_state *st = iio_priv(indio_dev);
-+
-+	if (st->resolution_boost_enable && chan->num_ext_scan_type)
-+		return chan->ext_scan_type;
-+
-+	return &chan->scan_type;
-+}
-+
- static ssize_t oversampling_mode_show(struct device *dev,
- 				      struct device_attribute *attr, char *buf)
- {
-@@ -796,6 +782,7 @@ static const struct iio_info ad7380_info = {
- 	.read_raw = &ad7380_read_raw,
- 	.read_avail = &ad7380_read_avail,
- 	.write_raw = &ad7380_write_raw,
-+	.get_current_scan_type = &ad7380_get_current_scan_type,
- 	.debugfs_reg_access = &ad7380_debugfs_reg_access,
- };
- 
-
--- 
-2.43.2
-
+Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
