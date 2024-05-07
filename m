@@ -1,46 +1,46 @@
 Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2057.outbound.protection.outlook.com [40.107.247.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02C33C097;
-	Tue,  7 May 2024 20:43:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F8B58105;
+	Tue,  7 May 2024 20:43:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715114626; cv=fail; b=Ua4GGKfLmWyW36E+PB6b9+JGj0GbPfa1evBQCjslV4ZR8b2UDqJ9ed0O+OBz7qo+T1C8m1IjRcJmqHDnTGuYEmWVPs0gvFaeak1p0Rz4vMyWpBgTBZxHnAwvKTOb4bWzN5FiRQzGpSZVjiXnpNKdQrGXSFUKe5litlk6o7RzZ0g=
+	t=1715114631; cv=fail; b=VQUVE/hcW2H//gea7+/35ztnGZuADDY3g8GbQllLMIt0m2Yo8FDDKVknQhn8FeuNagI4zEcuOA8tMK8iPr1yTo+2Ko/FdxCcI4XX9sKLWvqX2wWGes6n1gBBH4lamZo5VJWtm3r/YRBL6z6fJx00OkYbFVSp6V0MP7uGe88fDLQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715114626; c=relaxed/simple;
-	bh=Pu2py3MzeHWKZMrHR2Zye8AlThfwK4m0Da4QqUYO0w4=;
+	s=arc-20240116; t=1715114631; c=relaxed/simple;
+	bh=9o+8BJFYB+lkE5T3D66G2dBqmc0RWmEpJSNjjla+8GE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=T83A5wI/lhi9Qkg+hZkSIxp+MZCFDm6kIbzrq+KP78+uaT3LuaBfdyszRw64AvQ55okMuNSyvP2nbefn7bXyyYcKcqUVJF77b6n4e73NNmoYlBfLLn0lPu7rjjKQ1Z6qqm1/5FIBnZXQ+P3/HKRl7xFd8aNst3dH4I37tkr/6j4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=H1Br0AU7; arc=fail smtp.client-ip=40.107.247.57
+	 Content-Type:MIME-Version; b=VgNl82f3p5n0jt37lgG6oPqojWzhycyf9K9Lrzp7vBeC091TPSKzYgEhK/GZZkT2YMKWb7MgMzdQmhQytyC9N4pIUOth5i5AugDgQXl+wmD8DBqSQjT4giyStEuJ1ybcIAH8OTCfgTlXmPPYUGra+giChcUTOTwY0c/mTv40z/0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=cRVK+3rt; arc=fail smtp.client-ip=40.107.247.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="H1Br0AU7"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="cRVK+3rt"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aloHTKyuYhSZkJU95OZiBY5v/0Rq4Dz5pvsOsJtKxsXK4My/xMXtSAdsvkrQ/4HsSPAdt/CxIpKwZdcGDSjTQncho3ufpAFm2+PiTxsUg9yyqVZ4XMtsegoZUPxq1UGpzdJlgRyRbDBRSTXmYJgu5PT0hY8J/btR/2QReCcPmBYciH158P6CL/CCps2ne/VfZ7smPyeL5oL9HvKKNvxNnCrA9U6WiUxTq9dHmti0vRcHc0Sz34YOGsqwysfXBWHApTE4vcUBsJoSodxwdw7Ynmkl4ms3H6kEbm8hYgFb95Ujv17N0VOERwTNGrgtkuNWtE9X7905IClENeiMcRqLZw==
+ b=MooQaQM1MUsC01R5qKgkAFvfKNJrocbvWXyxz0BTfPdx3aBgkC4eg3edrISgoS5Eg6Ox51XAf1n4tZHo2EkpJRNoWhfs3j9YYI2LjcVZ9N0hYkGrfT+ZZAiIdtD23wtc78PtubpiGCtGgyX8yqgAi813IMC1OQ7sIBFZ/kKNNTY4e/3lP+9iqvx5kB330PHSM5BL6oiOUK1UA+Qx2ycl3iINcodbyOw7ruNGfdfxkjZC6s/5/XISq/H5T9/b5I5KgdE+Zx1+Taw8PV0IkgKwnqzN2wS14zw0UDztFImOWoStE6pAkoqSFGfL8wms42QUz3HMfSfHCJ5nJaywzDMslQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XcoW8o6oEq2d9mnm2NMy6isoGC0GF0nEtBDeGxk3UXs=;
- b=B7ysaw0tT21oiJ5KL/xvbk9Yyni+aWD6KkZ3LIkdvUBiAsq73qVJOn5yMhYLQDNcGj2JqCTEkg1liLA6jsR3boK+6I97u5s4mEyR6Fq1VXamFV3VsfMK7QkX+0p4W+9iMzlvhqLC3qVqyo3Ks6FKmYplR81qjIFSgO/z2vr3FqiaYAnglu7KUV880qRvtDoMLRP+uZeWa45epp5Q/aqEMbYGxmrr1jST9pOp/ATAz7mX0YAmWcVPcump73lebJwZmNae/pUXR2WEsOb+wmPwNKuJ8hsrRjl87myJ77dNSK/eWbA5oFm+dqWOyHmNVCdm4lz6CjcK/RncYQPVQqaaPQ==
+ bh=7elnKms9bN2UvdqPduv8ieP3RqEecL0JMfDSwMzlNWE=;
+ b=QdDX32gDpNI3O1BoSJbKleTONb/MVUKGhDvWyfRAqPu738UDixsTpLfO5OxaTocqVv/eerJ2By06gnQz0VOzScOE/YfnDopexR6LL+wiY/5KuOX9PjrGUOB4LdIKo4oplHHbawbngDNJeRoXS4808KQF5p/vL0aUyZqoyJ3uuWEN48Kb7kaYCW3dGv+MUTVRm6ka0GHyDGrOcmPQ0h8oJyweJfEfGzZr/FxDVUrAHy0r2svseTYQAG019Snb8DmhQWwv/UrE1woKHpLeDYivcfkCtqqNr58uGukh31iMTc7kbK81YiD6hGvuV/lczStemVz7ZZu/yp84QrlOYe4ozg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XcoW8o6oEq2d9mnm2NMy6isoGC0GF0nEtBDeGxk3UXs=;
- b=H1Br0AU7QLW428YP9avgwnCcoRmcOM/XXtjbVO8E7f5IxMsqyCi+7sPDkEIHteYRBk/gYLDiAzsqV2CARrjk21ukSHZnxSCnwAc56TtnG6hpdVJR6V7bQCSMCEzTl57Pyt1eheNZVxzlqW8rTMpDxQJ6TN/KTmPsBQhvEMrz8zw=
+ bh=7elnKms9bN2UvdqPduv8ieP3RqEecL0JMfDSwMzlNWE=;
+ b=cRVK+3rtHR60I0pwoM1JonJcOy/h9dN7ax2yU1EbJ5ZKPNqxUejWadPPh08GtRGAQhBt0NDb1quq32fq0fOgokGUebaYaRtEs63Qkk8qJ4kL3ah7wxusWBzRym59mQUn/In09g3mmJYRmtSG2nyCDmqfagJ4jf3C5K6u2q7eWSY=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
  by PAXPR04MB8576.eurprd04.prod.outlook.com (2603:10a6:102:217::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Tue, 7 May
- 2024 20:43:40 +0000
+ 2024 20:43:45 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7544.041; Tue, 7 May 2024
- 20:43:40 +0000
+ 20:43:45 +0000
 From: Frank Li <Frank.Li@nxp.com>
 To: alexandre.belloni@bootlin.com
 Cc: conor.culhane@silvaco.com,
@@ -58,9 +58,9 @@ Cc: conor.culhane@silvaco.com,
 	miquel.raynal@bootlin.com,
 	robh@kernel.org,
 	zbigniew.lukwinski@linux.intel.com
-Subject: [PATCH resend v9 2/8] dt-bindings: i3c: svc: add proptery mode
-Date: Tue,  7 May 2024 16:43:05 -0400
-Message-Id: <20240507204311.2898714-3-Frank.Li@nxp.com>
+Subject: [PATCH resend v9 4/8] i3c: svc: Add svc-i3c-main.c and svc-i3c.h
+Date: Tue,  7 May 2024 16:43:07 -0400
+Message-Id: <20240507204311.2898714-5-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240507204311.2898714-1-Frank.Li@nxp.com>
 References: <20240507204311.2898714-1-Frank.Li@nxp.com>
@@ -77,127 +77,273 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8576:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5b3b8a72-1b9a-4988-dd1e-08dc6ed660b2
+X-MS-Office365-Filtering-Correlation-Id: 0433acde-fc1b-48c7-fc6f-08dc6ed663e5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230031|7416005|1800799015|376005|52116005|366007|38350700005;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?WdfVDGFxXA14NiK7huLPIlouVyhLWUbfWBdFaPImG7mnZSsOLglVUgSnBCeD?=
- =?us-ascii?Q?JeE4h8XaRgA7ec0plgKG2PJ0UbxytsKKvxkUIyLLjAVyS9NMnjW7NISrTQXo?=
- =?us-ascii?Q?JWecygjf1mkUue1rITxt2dUkPHdr+A5BGlPgIPYTYz+DLTpLggwHyBKlbwfc?=
- =?us-ascii?Q?5hEa0dKOCgpDNxfmDU/V8ebuPCzbhiaOXEWUyItqyZXphl+px6UF9AaHBwJX?=
- =?us-ascii?Q?BcIH1Bj0SA7+euK6NA26CNTuykgaNykXsPJXiByLYly1hv2EhOQfy8ZBriwR?=
- =?us-ascii?Q?TvZiFDWxzr7PiMRDlBHbsceEFTJXt2gqqDoMe25dzi4mTf8TWwo2j7LfuX5y?=
- =?us-ascii?Q?FOMKO7kuYan06MBDSIfAqr8VvBh9QY4vOa9WFYNcZ+GEQL9p2Q077orza1+K?=
- =?us-ascii?Q?jhsRKJ/bOlA7zG0C3HjOcUxhJ6PTf95LsQ8rPpNFQPvxBGnfiJTsdNYKVPhs?=
- =?us-ascii?Q?S4cUAWy5EF3ylxydhCEtzsCHm7LzmnYz7Sd5sHf/hRX4qbH6cCneIqsfDVJf?=
- =?us-ascii?Q?8Vm4YE/jmMCsaYoZ9S0KOzXqe4+yJqKF42f7b+rrmDIuuzdnb2BCRLtVomDS?=
- =?us-ascii?Q?CPdLUfgQtNDhjAVjcU9gkPZp9W0wRl5+67Bm8Q41xPT95g/o036OXDIGgnn1?=
- =?us-ascii?Q?FtmXOPvSMYro6+RYxoL6ZOcWKgnDPhMk8Ba9qxx285AoBeW2p/SinKMYkOis?=
- =?us-ascii?Q?IleUIU5M6i7eR9aKkCCw+C576n9dqmwguw/o/XG5mzaIcQKsep17uLTntG3l?=
- =?us-ascii?Q?M30xTLVYggyk2uOaDNb7H2wkkXxQkpuGpXaMQbP2xFSlSZbRxhQDvQFFA95g?=
- =?us-ascii?Q?HRmAxtrxIB9C493EZzG9tRLUI3wA+nv+FB9s1ePBBJdFFWVO1o0F5vJRKQZh?=
- =?us-ascii?Q?XZOws4OdpJCvXSyorJMsAoE3sNIm6Nd+d6kyHp0RfQeIR7W6k/E58niMt11x?=
- =?us-ascii?Q?+MRtDWyRggNjJ3vociU98ScE2KI88xhPIjV+d3LRBf1+KCuDwk0LENE15A2s?=
- =?us-ascii?Q?TO52udKqu6DPuXyaUAexXvaF+C9O0G8YTfi+SbeJKkcdxhIL0pIGwqcKidcC?=
- =?us-ascii?Q?MQs/O9pdZC5LvuLQnOPDKPv2aGP3VKj9pyoJLxl2bnMUaypY0ACSnV4KvUOw?=
- =?us-ascii?Q?OoE13PvkB2l2ot6O2vR42BS0O1rn5Iz3ZRUAz8oqcZWuMtkjo7yobotieM6s?=
- =?us-ascii?Q?OGxLdY5u9u7nWAlz6gX55e+jU8U9V1cDyuJ9L/CuIcxhFcfjFqW1w93zTvs+?=
- =?us-ascii?Q?UVy2HboUWARvDIJdRtnnUTDBeI1sJazMwG5k2ds2qA=3D=3D?=
+	=?us-ascii?Q?PTDpCTIFsHvbu322Ct06l5epx4pTAv93Q5F/l2CnvJO00FtW7mMd2j5xLlI1?=
+ =?us-ascii?Q?vRvBmrzwACNhiKrUQigfdfXq4a2k6e53Qqu8gxTmAYpRKkkqk1ExGpSQrhzv?=
+ =?us-ascii?Q?DX17L55Izwc8cq8S1Ze65E/h20SlK844DNRxTpFCrBPxFQp6lRp47pFcdKqK?=
+ =?us-ascii?Q?msTJmj0yjK8Twb2iHFOI3RWOkFyVxoEOc3lQDntWRplYi1PSGlZCmIONTzmI?=
+ =?us-ascii?Q?YhsRDZI+x9pL63lFj1De6xYkdmC+O3MGr+iR/YzdLb7KUtlvJtdWDxJlaQ5/?=
+ =?us-ascii?Q?ZHO2yUXU7k/NW2XJcPktDYCBqPrTy/cRbxK17dg8KEoPBGdsBq0uCrJpZ7wC?=
+ =?us-ascii?Q?Kkm4OpY2uWahZTRAXp6MLYWy7mep4us58bMvBOMJUUWSirXKn/2iMYtPwRyU?=
+ =?us-ascii?Q?iwLfiIGXqyYDl3FWefXW5Fpb9Lx1g0WB43XoIXx+5xnUV6/1ABULYRyMdvoX?=
+ =?us-ascii?Q?BbmIgHTGDGOdKqIpzYdTmXOjKTbYI5k1PzwO0HxEVBlWYOugoR3rBMB09fOv?=
+ =?us-ascii?Q?DSUJawgypT5ZfiO0I9cqdpBjW02vorXHa5N7lum+t+4F1oJncLUHg2oM8T51?=
+ =?us-ascii?Q?IdYey7hwKMw4+D1HIX5LQXIanOXxb1ADS6XbVPFedICU7rV+MVmwYUYhty5P?=
+ =?us-ascii?Q?54nQlIqlgou2dEoAKl8QxZ4EN5RTH1dfZ88BOdtnT29bf+IKL0yV1T8yRMyq?=
+ =?us-ascii?Q?fCTez5ehtDQXiDA9bhvtUerJO7OVMLAoWVErUn3sK0hxTA/BvbfaB978kKuS?=
+ =?us-ascii?Q?8dHnT2brnllDV37rdpJuQYC2x1z46JCpyioDwCl1WCJUTE9LGBfjp2ZYj3sB?=
+ =?us-ascii?Q?fjjhwvjkOchmyGpYrP7O4m8QnxpDP83x+pt0hCGVAam7iYf9Cv/52PDtK/Rw?=
+ =?us-ascii?Q?A8optbEKmEWW094mZFzntmhsKvzRC0lcyFuEA6cYlY3ZKQxs6ZwVzkPVZAzF?=
+ =?us-ascii?Q?vKzLPnMxq+bRHC3jixrwRAy+1vIbfVga9xetmlsld6/S3aMaa4A66cW+696y?=
+ =?us-ascii?Q?jChXxRWd8h4OdBTrAncMEXVT7DQ4s6y02xyv+RlgKX8tPob8mUjTxfeu/kw7?=
+ =?us-ascii?Q?B5AmJGhea7LF284tS53AAmkthOwVF8diaQWqtZ8YQFnHUPYB9stfL7fHLyG5?=
+ =?us-ascii?Q?RMCU0AIkdOJAaYMKapIXiaAkiq298H9U9aY3ZnAc3eXHKWVgm3dGpEyX7ODV?=
+ =?us-ascii?Q?BKc3TfMAdorj3jYkLqOe/orodE3HmfcWzxZ8hsuKysM+6UbtjSo9wA9JQ49u?=
+ =?us-ascii?Q?XB3TNgQWxPEWgQY0HSSkbOpF51HDNhED2wrX0R70TJa95mZFKBF1lGcUFw5R?=
+ =?us-ascii?Q?kwTxb5PvinCtPi6FnLHqzvot?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(52116005)(366007)(38350700005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?ZCzd+eeL4FK0N/8SiyGGTLRDPT2dqkQI8e0QUE6lGFxrzK3/7GJ+tLwqqKe4?=
- =?us-ascii?Q?gpHMVrJPQ2RVd7H0exg8Eg8X8dRXvHGUhFpg3+YATw9h2GtF+FluzAGvJ/Io?=
- =?us-ascii?Q?Pofqh9sdw8CCnFUjm37lqF7crwFB3wRWq8HpEYXXlzMLjpYqVAJd5Hep80ko?=
- =?us-ascii?Q?nzLj977nGCL4IN4v7KOYGmOrWY+vI3TaXZ1ENRlBkITu6dl2Pu9G++1NZGBO?=
- =?us-ascii?Q?HatktU+364v/W21rp5P+rI+Nx5ZfboBDe1Jda32cYKxbcAL8xITuKSzqNb8r?=
- =?us-ascii?Q?tzGyUa2kwTXkDUKs4EJwEWll8ybBL7Vnt2Mc5uaKQhOoNq9bOPG9MIa7avPv?=
- =?us-ascii?Q?S/OPWjM9opb4z8D3Yn0CuxKNQA74T4n7h/p+I7zMHh55HrST7LXOrC52TvAg?=
- =?us-ascii?Q?NkopxNFG66pREXau6y39li9OInL/vq2aRGGfc/zKNiW82UhLjduefR19lzqA?=
- =?us-ascii?Q?4ZraNsMMPM8gmt8sFo7+oH46p2dCqxoaWJ78O+kOsrAxKAVfA7gKS6zkM6eH?=
- =?us-ascii?Q?6aCq2nb7Tna2WaDe9nc/FGv3suBD+jO9/ie/dM4c+fKymLZkkHYBIh8VCvN8?=
- =?us-ascii?Q?KvalEtCjGRqCItkErgaymJLyWyS30tbV+Jmo0oZ30ToTCRwnl0t8bqsoYmhU?=
- =?us-ascii?Q?C/PRlJ5lPtzFVSzFk9eDASPjBVJS8d+yN+f2PGO6GHdd+pKx5s8rVtzw/e4+?=
- =?us-ascii?Q?7t2qAxvnlJ1iG8KHr8iZhZog0byPirQl0nAiofjWmpMoReoMT76Qka+PPgNQ?=
- =?us-ascii?Q?dEFkM7upXrEhL9QPS2wnlbv4u/qxNgy1FiIEdvxoqPuamlcKIl0ZsgeIYQ1/?=
- =?us-ascii?Q?Vcznfdb8HvxK0YhzBo2q1zI9Tc5rPDpCKKPrR21vDRcnso0BUyWf2Q2T80So?=
- =?us-ascii?Q?lladVMYYm2VnGK839SyIOKsV8UVQQumxLNpIyiAS519W3GYheo5oA26hoqX1?=
- =?us-ascii?Q?N5+fcK0RVFVzYbQA1TQpHN3O7ZxZPHZIemrRtyDVRXimxf4GRxaN8o2wx9mN?=
- =?us-ascii?Q?weYZFHQZ4MXoIWaCuaXWBcV0Q2YjONWdgd5rn1uOHyR62hAvdySqNIfMDFXZ?=
- =?us-ascii?Q?vja8SZL/7wBqhkiVnJIQTFPxn35g1AUGqh3f3kAheDdopiHtq6I2HA9dCosI?=
- =?us-ascii?Q?8Uq17IPAwoy/l9a8vGSDBx+ODAzCB6MmXf9tsXODRupyEylBq1EXYrSwZKrP?=
- =?us-ascii?Q?e6+iaYjUddUQrGV8cWP4upzg8TAvTuYZaXGhyRE/COK/vJg2rqgb4+cn3kc6?=
- =?us-ascii?Q?9fRUltq4aziFvspUyiI8e3nbLoWDDEv/cwxOdb3YS2p0wkvC9oQil0wxZ0yC?=
- =?us-ascii?Q?cPSVR8YmznO/0WQON969t3BuecmPF/7J0rzZyRAafMca0dUhP6Nt7xu97JnZ?=
- =?us-ascii?Q?zi8fksXqOcFaivuoDLf5CBW4ZGK9buyzbRxHTVXSwU9lvC/O99KF+Xj8rpOo?=
- =?us-ascii?Q?8buzXNsOKO18eF+A6nPcJm5m2Dge6n3SBWrTwlQ/7gn/4FottFkqCpfjAm8s?=
- =?us-ascii?Q?U1tHjG55mZtygoi/VfjwhiXGmyLdz5vgj8HyvRtRqdJQr4QNHM6sh1x9l5am?=
- =?us-ascii?Q?xP04OLhtmmeF/i6QzSStNSXXNLOB0LbO9LkcnHV2?=
+	=?us-ascii?Q?JoKM/Fq8N9+AWEVKmvfmFfCdAz3d0shYreN461iV5wlS3vaA+tv4fWusCHCx?=
+ =?us-ascii?Q?fnN8V7Bxn14QM+7mGZGJeKXTxVgNNX4eAncBNWu2o0gsl+hOBK6bX/Q4H+0e?=
+ =?us-ascii?Q?IelIyWJ+nUMUla44KKi3vvCnou/5WwQCjXzyD9J4URm54h8fu6PTeHAthdWx?=
+ =?us-ascii?Q?kyZxpOKNEUQnq5z5NI1gmPu0Oap57YAkdgoML09dihMafV3Pws5Cplbh7YHT?=
+ =?us-ascii?Q?cUNDDRtVIFJd2EbK1YMJGhcoCAdcYoQDpgqE8xjZ35PNTJiv/eipPzZjKv7c?=
+ =?us-ascii?Q?fO0ceg8GXloyRG4QN3S1Gj948CR4S4ioeR0PB2BsrcoD/t9nmUomZsphp6Xe?=
+ =?us-ascii?Q?wdnLWEq5ELR4hhwlx6MePZkCGMm5lGKl4P7SNaU7Gw3WyHvkkFwk5BkF2arW?=
+ =?us-ascii?Q?fMLl5KR88oqmP6NzUHAtKFwYrMxcdatmHwJkmYsi69Qk/IBB62gHcqeJjZ4S?=
+ =?us-ascii?Q?8gojLt1ffmso26McRQS91SUVZhieSJ/HCCvvdLunsFIs3qbiIMLkaCfyxg1D?=
+ =?us-ascii?Q?SRwpQL5Ixa30r3ui7PbP9Ek2JG16IoU4/72Oh9y8DBRanL54K9oaNzipVzHe?=
+ =?us-ascii?Q?Do902IVa/2Bdh92GQ1vQeaV3N/saa3087ekLEyJSJEEmKp7H7ZUkNtmT+RBc?=
+ =?us-ascii?Q?WkXwuVImkExpBI1c0vBWyMQJKlpUOoQFcjm8WjuzTx2bsq2lHZY2i/2kj5ZS?=
+ =?us-ascii?Q?MJgmA+xZV8lHRTHBxd6IeQXmXONYJu0nO3NY8PfEN4u1zPkRMbIApy5LpGW0?=
+ =?us-ascii?Q?ndID5jhIxdHwqjWJ63BBN8n7t2nXXUk0kr/hJrNP8nE/XkqzKxcF+cTPGGZf?=
+ =?us-ascii?Q?tTtb2zbnUlNydybuop9Mo1GSRbKTz4WV+/P+n6eS8hS0CR0FNkv3jI88xFlw?=
+ =?us-ascii?Q?dz2yA7MYPXufOj4XBAHbHBm1Y0D82R6RhvK7G0etiNBN1PksQQseyTJEj0dT?=
+ =?us-ascii?Q?uw2oUnWw9I29/B/jJJcOSE4pGJn2e/jS0wDPHpTDwDRuGu/+PyK607NeGJdR?=
+ =?us-ascii?Q?Th33Yr4Z/Pguu7IVDu56QNpPr/v0ZmtWVLgMn+rehUGZJeo0gJCd1vokA6DN?=
+ =?us-ascii?Q?fJ0ly3FgmFnBoo59ggQQ9opp8pkxKmkseetNVxQAzv3jiu6GSARuXg+zjxaN?=
+ =?us-ascii?Q?45tKpZLQ61LhI4yLXMYol/TszXUPCqDumB/CnoMezm1IciZ7TIDhEkWpXIes?=
+ =?us-ascii?Q?3qTDDRMsN6nQtkLiAxPmpSfL/cDC38EXapb3gFPolZiA3QoLwHcS2lsS6jMq?=
+ =?us-ascii?Q?5/8EoBaad4AwCLsTaKvh9SVk9QT+beZs18GId3ASjroucGo/MnjhTJx/TJ5N?=
+ =?us-ascii?Q?y1tvcFkH8jgozIg42Oi7VJBLNWI5RYCkQkjXrJeCrD5Mp6v7fzDxmsVcJzXn?=
+ =?us-ascii?Q?lZPLEi5SBHKPXVpiiuW/R3dPrRxFq7WZXphD9t/JetlQDABIyf9xciNc50MX?=
+ =?us-ascii?Q?YAQs0ThAaF/jGCwXAdrqYw1r5c7E5Zpsy7ahcDymp4ICxncx+xPOY0YMeOF9?=
+ =?us-ascii?Q?51Odvy9O7gGO7kjoo8PH+FA8TPFQCKvKgLoN9WNmtnJzrssW611oUdkeMOwi?=
+ =?us-ascii?Q?wGYAAc8qtdtpN+I9nYMIG8BPj4ZV+ocf9iv9NhLO?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5b3b8a72-1b9a-4988-dd1e-08dc6ed660b2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0433acde-fc1b-48c7-fc6f-08dc6ed663e5
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 20:43:40.5216
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 20:43:45.8932
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DWH+GNITPZ99dakvjDbTvd7OiH9hS2oJQwRmbr/IlB7RrZv1gMI0+aKpGnqLicsWJH8TjzI5SfucvK2PlKszOg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: pQZQTngWetB3z2cWXJAwk+QOVJvUAaLtpTteHV7Jte3nsp/4PTYURdsIwyUK82RZrNium7AYb+k8/UlovNKIvQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8576
 
-Add 'mode' property to distinguish between 'controller' and 'target' modes.
+SVC i3c is a dual role controller. Move probe() into svc-i3c-main.c. This
+prepares to support target probe depending on dts "mode" settings.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
 
 Notes:
-    Change from v6 to v9
+    Change from v7 to v9
+    -none
+    Change from v6 to v7
+    - using /* SPDX-License-Identifier */ for svc-i3c.h
+    Change from v5 to v6
     - none
     Change from v4 to v5
-    - add Krzysztof Kozlowski's review tag
+    - add new line at end of file
     
-    Change from v3 to v4
-    -fix dtb check error
-    
-    Change from v2 to v3
-        - using 'mode' distringuish master and target mode
+    New file from v4
 
- .../devicetree/bindings/i3c/silvaco,i3c-master.yaml   | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/i3c/master/Makefile         |  3 +-
+ drivers/i3c/master/svc-i3c-main.c   | 53 +++++++++++++++++++++++++++++
+ drivers/i3c/master/svc-i3c-master.c | 34 ++++--------------
+ drivers/i3c/master/svc-i3c.h        | 12 +++++++
+ 4 files changed, 73 insertions(+), 29 deletions(-)
+ create mode 100644 drivers/i3c/master/svc-i3c-main.c
+ create mode 100644 drivers/i3c/master/svc-i3c.h
 
-diff --git a/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
-index 133855f11b4f5..3af77d143f018 100644
---- a/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
-+++ b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
-@@ -4,7 +4,7 @@
- $id: http://devicetree.org/schemas/i3c/silvaco,i3c-master.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
--title: Silvaco I3C master
-+title: Silvaco I3C master/target
- 
- maintainers:
-   - Conor Culhane <conor.culhane@silvaco.com>
-@@ -22,6 +22,15 @@ properties:
-   interrupts:
-     maxItems: 1
- 
-+  mode:
-+    description:
-+      Tells Dual-Role I3C controllers that we want to work on a particular
-+      mode. In case this attribute isn't passed via DT, I3C controllers
-+      should default to 'controller'.
-+    $ref: /schemas/types.yaml#/definitions/string
-+    enum: [controller, target]
-+    default: controller
+diff --git a/drivers/i3c/master/Makefile b/drivers/i3c/master/Makefile
+index 3e97960160bc8..484cb81f45821 100644
+--- a/drivers/i3c/master/Makefile
++++ b/drivers/i3c/master/Makefile
+@@ -2,5 +2,6 @@
+ obj-$(CONFIG_CDNS_I3C_MASTER)		+= i3c-master-cdns.o
+ obj-$(CONFIG_DW_I3C_MASTER)		+= dw-i3c-master.o
+ obj-$(CONFIG_AST2600_I3C_MASTER)	+= ast2600-i3c-master.o
+-obj-$(CONFIG_SVC_I3C_MASTER)		+= svc-i3c-master.o
++svc-i3c-objs				+= svc-i3c-main.o svc-i3c-master.o
++obj-$(CONFIG_SVC_I3C_MASTER)		+= svc-i3c.o
+ obj-$(CONFIG_MIPI_I3C_HCI)		+= mipi-i3c-hci/
+diff --git a/drivers/i3c/master/svc-i3c-main.c b/drivers/i3c/master/svc-i3c-main.c
+new file mode 100644
+index 0000000000000..6be6a576cdf7a
+--- /dev/null
++++ b/drivers/i3c/master/svc-i3c-main.c
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-   clocks:
-     items:
-       - description: system clock
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pm_runtime.h>
++
++#include "svc-i3c.h"
++
++static int svc_i3c_probe(struct platform_device *pdev)
++{
++	return svc_i3c_master_probe(pdev);
++}
++
++static void svc_i3c_remove(struct platform_device *pdev)
++{
++	svc_i3c_master_remove(pdev);
++}
++
++static int __maybe_unused svc_i3c_runtime_suspend(struct device *dev)
++{
++	return svc_i3c_master_runtime_suspend(dev);
++}
++
++static int __maybe_unused svc_i3c_runtime_resume(struct device *dev)
++{
++	return svc_i3c_master_runtime_resume(dev);
++}
++
++static const struct dev_pm_ops svc_i3c_pm_ops = {
++	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
++				      pm_runtime_force_resume)
++	SET_RUNTIME_PM_OPS(svc_i3c_runtime_suspend,
++			   svc_i3c_runtime_resume, NULL)
++};
++
++static const struct of_device_id svc_i3c_master_of_match_tbl[] = {
++	{ .compatible = "silvaco,i3c-master-v1"},
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, svc_i3c_master_of_match_tbl);
++
++static struct platform_driver svc_i3c_master = {
++	.probe = svc_i3c_probe,
++	.remove_new = svc_i3c_remove,
++	.driver = {
++		.name = "silvaco-i3c-master",
++		.of_match_table = svc_i3c_master_of_match_tbl,
++		.pm = &svc_i3c_pm_ops,
++	},
++};
++module_platform_driver(svc_i3c_master);
++
+diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc-i3c-master.c
+index 5ee4db68988e2..4dfe85ab17fd2 100644
+--- a/drivers/i3c/master/svc-i3c-master.c
++++ b/drivers/i3c/master/svc-i3c-master.c
+@@ -21,6 +21,8 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ 
++#include "svc-i3c.h"
++
+ /* Master Mode Registers */
+ #define SVC_I3C_MCONFIG      0x000
+ #define   SVC_I3C_MCONFIG_MASTER_EN BIT(0)
+@@ -1613,7 +1615,7 @@ static void svc_i3c_master_unprepare_clks(struct svc_i3c_master *master)
+ 	clk_disable_unprepare(master->sclk);
+ }
+ 
+-static int svc_i3c_master_probe(struct platform_device *pdev)
++int svc_i3c_master_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct svc_i3c_master *master;
+@@ -1706,7 +1708,7 @@ static int svc_i3c_master_probe(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
+-static void svc_i3c_master_remove(struct platform_device *pdev)
++void svc_i3c_master_remove(struct platform_device *pdev)
+ {
+ 	struct svc_i3c_master *master = platform_get_drvdata(pdev);
+ 
+@@ -1733,7 +1735,7 @@ static void svc_i3c_restore_regs(struct svc_i3c_master *master)
+ 	}
+ }
+ 
+-static int __maybe_unused svc_i3c_runtime_suspend(struct device *dev)
++int svc_i3c_master_runtime_suspend(struct device *dev)
+ {
+ 	struct svc_i3c_master *master = dev_get_drvdata(dev);
+ 
+@@ -1744,7 +1746,7 @@ static int __maybe_unused svc_i3c_runtime_suspend(struct device *dev)
+ 	return 0;
+ }
+ 
+-static int __maybe_unused svc_i3c_runtime_resume(struct device *dev)
++int svc_i3c_master_runtime_resume(struct device *dev)
+ {
+ 	struct svc_i3c_master *master = dev_get_drvdata(dev);
+ 
+@@ -1756,30 +1758,6 @@ static int __maybe_unused svc_i3c_runtime_resume(struct device *dev)
+ 	return 0;
+ }
+ 
+-static const struct dev_pm_ops svc_i3c_pm_ops = {
+-	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+-				      pm_runtime_force_resume)
+-	SET_RUNTIME_PM_OPS(svc_i3c_runtime_suspend,
+-			   svc_i3c_runtime_resume, NULL)
+-};
+-
+-static const struct of_device_id svc_i3c_master_of_match_tbl[] = {
+-	{ .compatible = "silvaco,i3c-master-v1"},
+-	{ /* sentinel */ },
+-};
+-MODULE_DEVICE_TABLE(of, svc_i3c_master_of_match_tbl);
+-
+-static struct platform_driver svc_i3c_master = {
+-	.probe = svc_i3c_master_probe,
+-	.remove_new = svc_i3c_master_remove,
+-	.driver = {
+-		.name = "silvaco-i3c-master",
+-		.of_match_table = svc_i3c_master_of_match_tbl,
+-		.pm = &svc_i3c_pm_ops,
+-	},
+-};
+-module_platform_driver(svc_i3c_master);
+-
+ MODULE_AUTHOR("Conor Culhane <conor.culhane@silvaco.com>");
+ MODULE_AUTHOR("Miquel Raynal <miquel.raynal@bootlin.com>");
+ MODULE_DESCRIPTION("Silvaco dual-role I3C master driver");
+diff --git a/drivers/i3c/master/svc-i3c.h b/drivers/i3c/master/svc-i3c.h
+new file mode 100644
+index 0000000000000..b9e1dce4b2109
+--- /dev/null
++++ b/drivers/i3c/master/svc-i3c.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef SVC_I3C_H
++#define SVC_I3C_H
++
++int svc_i3c_master_probe(struct platform_device *pdev);
++void svc_i3c_master_remove(struct platform_device *pdev);
++int svc_i3c_master_runtime_suspend(struct device *dev);
++int svc_i3c_master_runtime_resume(struct device *dev);
++
++#endif
++
 -- 
 2.34.1
 
