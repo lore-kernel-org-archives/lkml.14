@@ -1,173 +1,107 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward500a.mail.yandex.net (forward500a.mail.yandex.net [178.154.239.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6414C156885
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 12:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F28015B153;
+	Tue,  7 May 2024 12:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715086441; cv=none; b=DKS131XMWam6WSoCPTI8A5xjuAQV7Xt3qCYVW6BAc1UBxJ1/wWawAuIxOdHLzBlV9JeRIBE8o5QE9gWFUbK2LH8L+f9uOEhGPkDyec589gAiZU9jjpJjxu2zJNKzwleKvOg22Wn4d4eXXlzVvQTLheIbMO/i76+smyRldNusK0Q=
+	t=1715086554; cv=none; b=lkyRw0wCtQjqgCMedezZ215X9JHBuZFdxwS9DdRtiN/iynYrJvxR/2zeO+EKyZtL+6ZQgKn8/Al4412tgHK0YNuEPBWhdBuDfgWiDTwx4BeeWCQ0B6V/in6YMe+PYwuxwumhd6FCKESr2eek33n/DIZLJRXu+fvMgcgV7r0M/ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715086441; c=relaxed/simple;
-	bh=qXGfUlEuyq9acMc9wdmCRc4sbAYNXOqxy6N3x85FJp4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sRGS/8PwPaDH2XU22FJHh8RokCNQwrsDGTAbxfL870Dg6RHdRDIqhMst3vDGD2za/a5C1gxrlt6QxH5Bn0m12BBZIccFXDVKcUYIP2AKlzpAdtA5hdKZlDYhXUnlmWAKW6qdXYMhuwuzM3kPi7eGGomowrML8pTfYTirFf3rCLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QmKz/7si; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715086554; c=relaxed/simple;
+	bh=7mLQ4noYOwaZz0uIOPLa+mJodEytp0OT+zTex7p1R9I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mR5WtHVhTbpXfW3Ql19fJiZYapBA4PEPF7fc6tO87EgnSocJx/b8bbkRI4Cru+zO/WfwfTxjfwK97rXml1iXGFjTunQPqmWhAsxthXr3jI+8AVzrqMzSz9zvRBShbUqMOsYomf+f+fPuSz1jXtC0ELRxduh8JBCl98Z1Mn7aPRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=szMkz5XQ; arc=none smtp.client-ip=178.154.239.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QmKz/7si"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5e4f79007ffso2071692a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 05:54:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715086440; x=1715691240; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qXGfUlEuyq9acMc9wdmCRc4sbAYNXOqxy6N3x85FJp4=;
-        b=QmKz/7si5sk2ZXhDFfHm4Abf4ivIBe+F8/ofEZwcQM6a1sH52euRDjf1S4sFC4JZXe
-         QJHq0XNWEv14zgxHPhrg1AdTzEKyHT6UR5NIcBeiq64oANkoFufMvh/PpM15KyRH+vtG
-         Z32UxiV+6US1OyOlTs/NNpmtDtMQC6+7BLPQ8HN2ITL3shQZGHt/gyF2zQE2lmn9uTF4
-         TMaMlNfH8V1YLsuVf8JENZ6gzgdOhgDieRM/HTW24gD2DV/23T4oh+XhADHLxga2cG2y
-         zLJv2oF3L5h7H3p6QoIVexAKiq8FFgEP9sM+wkSYvd5LC7UBeIUnoGm7W4iGFUJOR0Hl
-         XkBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715086440; x=1715691240;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qXGfUlEuyq9acMc9wdmCRc4sbAYNXOqxy6N3x85FJp4=;
-        b=kUQGt84AWRetPbmELSphksn3kEtMP4qIJha6jBQSdH0KFhuhZ2fpQDG1Br0TDX//NZ
-         lVHd7tN/0/PpO1vFlziOGnkPusWFbN8GLD/Zy6itnm5b6ox6cvpVnM4rGVVkSkkUmoq7
-         jN3SeyD3c+i1i32L4Juw5JIS4VZW2CuX42mcTDqsuEmSZLX5BRQOqSdUpCVsmVpvDHQp
-         Cf244o21nsASbhL9fP2RC40iRTtxUZpRM+UdpBiBuIOLIM91GE+d4nQIv32Q4+QPO9NQ
-         cXkEYmufxmtan0iqPQZ3gfldV84rgt0dWEs5y5XMa+EaVNXpW/TxAhFcXqqVpiOpEsOZ
-         GRrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXe+SH4xheY98rhYcQ96rqwCGXh0rgTmc5bunv1jNqdXKpQsqbq23/6Q0/PknNgy71XHX3mY2DQOk/ARMPIQaZ0YDw5yL9y8D+Y300w
-X-Gm-Message-State: AOJu0Yz5S4mqXBWBjBZ5JLyUaUaFtej21NrI+XDFJ1uqky5qyLorrE4y
-	A1NIe7lenw1rhD41CBVRuhwjdXBuUu1vgYh4z2tDvyNjxKZSilNdmR+7QsqRwPC4xnF6V7em29o
-	TF0sUEW1M4gdpYRYlJ3nop+MDGu6DdKUQXgoKoA==
-X-Google-Smtp-Source: AGHT+IF3096jy/BSNmowrhBG7/4P6Cfwvb5f60E87UNKn0QswOMKfkSoKQ0PEOrgiFEyqfvYve9FVZFHeqzt4AK+nAo=
-X-Received: by 2002:a17:90a:930c:b0:2a1:f586:d203 with SMTP id
- p12-20020a17090a930c00b002a1f586d203mr10241315pjo.41.1715086438068; Tue, 07
- May 2024 05:53:58 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="szMkz5XQ"
+Received: from mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net [IPv6:2a02:6b8:c0d:230c:0:640:f8e:0])
+	by forward500a.mail.yandex.net (Yandex) with ESMTPS id 3390E61277;
+	Tue,  7 May 2024 15:48:25 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id MmXuqmAmDqM0-G4BR5X7Q;
+	Tue, 07 May 2024 15:48:24 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1715086104; bh=zAPclAFMPPKUlH6qpuAnNZJMeX8QiDYjKI0Oitzf9Wg=;
+	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
+	b=szMkz5XQXmyp2MPWrKjBmUyCNvF4aEiWBUHmeQuOvbJ+FrIwFO5zMOe5s9r3DFbuY
+	 y3OvHyeI6zCWBYm8xV4pmdhi/ldtf9ACwxzz9kUvbTK84BTzHgCL8jB+0xLQIhuhwa
+	 SIuvfx3CMflI8RM6yWMNn/teOn3X4MbK3GIdz2fk=
+Authentication-Results: mail-nwsmtp-smtp-production-main-55.vla.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <7fcb3f51-468f-444d-9dd4-fa4028f018fc@yandex.ru>
+Date: Tue, 7 May 2024 15:48:22 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240505233103.168766-1-qyousef@layalina.io> <CAKfTPtDvBAFauUfyWZhYRUz6f42iMAJcwcdDDQh+V8+QfDwc2Q@mail.gmail.com>
- <20240507110809.a45amdmhy5vr5cuw@airbuntu>
-In-Reply-To: <20240507110809.a45amdmhy5vr5cuw@airbuntu>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Tue, 7 May 2024 14:53:46 +0200
-Message-ID: <CAKfTPtDHWBKfksW4jQJ3KZVb7_GDXLZB1F7auYVZE1ddyDpgYQ@mail.gmail.com>
-Subject: Re: [PATCH v2] sched: Consolidate cpufreq updates
-To: Qais Yousef <qyousef@layalina.io>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Juri Lelli <juri.lelli@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall <bsegall@google.com>, 
-	Mel Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, 
-	Valentin Schneider <vschneid@redhat.com>, Christian Loehle <christian.loehle@arm.com>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 0/3] implement OA2_CRED_INHERIT flag for openat2()
+Content-Language: en-US
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: linux-kernel@vger.kernel.org, Stefan Metzmacher <metze@samba.org>,
+ Eric Biederman <ebiederm@xmission.com>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Andy Lutomirski <luto@kernel.org>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ Alexander Aring <alex.aring@gmail.com>,
+ David Laight <David.Laight@aculab.com>, linux-fsdevel@vger.kernel.org,
+ linux-api@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+ =?UTF-8?Q?Christian_G=C3=B6ttsche?= <cgzones@googlemail.com>
+References: <20240427112451.1609471-1-stsp2@yandex.ru>
+ <20240506.071502-teak.lily.alpine.girls-aiKJgErDohK@cyphar.com>
+ <5b5cc31f-a5be-4f64-a97b-7708466ace82@yandex.ru>
+ <20240507.110127-muggy.duff.trained.hobby-u9ZNUZ9CW5k@cyphar.com>
+From: stsp <stsp2@yandex.ru>
+In-Reply-To: <20240507.110127-muggy.duff.trained.hobby-u9ZNUZ9CW5k@cyphar.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 7 May 2024 at 13:08, Qais Yousef <qyousef@layalina.io> wrote:
->
-> On 05/07/24 10:58, Vincent Guittot wrote:
-> > On Mon, 6 May 2024 at 01:31, Qais Yousef <qyousef@layalina.io> wrote:
-> > >
-> > > Improve the interaction with cpufreq governors by making the
-> > > cpufreq_update_util() calls more intentional.
-> > >
-> > > At the moment we send them when load is updated for CFS, bandwidth for
-> > > DL and at enqueue/dequeue for RT. But this can lead to too many updates
-> > > sent in a short period of time and potentially be ignored at a critical
-> > > moment due to the rate_limit_us in schedutil.
-> > >
-> > > For example, simultaneous task enqueue on the CPU where 2nd task is
-> > > bigger and requires higher freq. The trigger to cpufreq_update_util() by
-> > > the first task will lead to dropping the 2nd request until tick. Or
-> > > another CPU in the same policy triggers a freq update shortly after.
-> > >
-> > > Updates at enqueue for RT are not strictly required. Though they do help
-> > > to reduce the delay for switching the frequency and the potential
-> > > observation of lower frequency during this delay. But current logic
-> > > doesn't intentionally (at least to my understanding) try to speed up the
-> > > request.
-> > >
-> > > To help reduce the amount of cpufreq updates and make them more
-> > > purposeful, consolidate them into these locations:
-> > >
-> > > 1. context_switch()
-> >
-> > I don't see any cpufreq update when switching from idle to CFS. We
->
-> You mean SCHED_IDLE to SCHED_NORMAL, right? Yes, if we switch policies even
-> from fair to RT an update could be missed.
+07.05.2024 14:58, Aleksa Sarai пишет:
+> On 2024-05-07, stsp <stsp2@yandex.ru> wrote:
+>> 07.05.2024 10:50, Aleksa Sarai пишет:
+>>> If you are a privileged process which plans to change users,
+>> Not privileged at all. But I think what you say is still possible with
+>> userns?
+> It is possible to configure MOUNT_ATTR_IDMAP in a user namespace but
+> there are some restrictions that I suspect will make this complicated.
+> If you try to do something with a regular filesystem you'll probably run
+> into issues because you won't have CAP_SYS_ADMIN in the super block's
+> userns. But you could probably do it with tmpfs.
 
-No I mean going out of idle. On an idle cpu, nothing happens at CFS
-task wakeup and we have to wait for the next tick to apply the new
-freq. This happens for both short task with uclamp min or long
-running/sleeping task (i.e. with high util_est)
+Then its likely not a replacement for
+my proposal, as I really don't need that
+on tmpfs.
+Perhaps right now I can use the helper
+process and an rpc as a replacement.
+This is much more work and is slower,
+but more or less can approximate my
+original design decision quite precisely.
+Another disadvantage of an rpc approach
+is that the fds I get from the helper
+process, can not be trusted, as in this
+case kernel doesn't guarantee the fd
+actually refers to the resource I requested.
+I've seen a few OSes where rpc is checked
+by a trusted entity to avoid such problem.
 
->
-> I'll need to think more about it, but I think adding an update when we switch
-> policies in the syscall looks sufficient to me, if the task is on rq already.
-> Agreed?
->
-> > have to wait for the next tick to get a freq update whatever the value
-> > of util_est and uclamp
-> >
-> > > 2. task_tick_fair()
-> >
-> > Updating only during tick is ok with a tick at 1000hz/1000us when we
-> > compare it with the1048us slice of pelt but what about 4ms or even
-> > 10ms tick ? we can have an increase of almost 200 in 10ms
->
-> IMHO the current code can still fail with these setups to update frequencies in
-> time. If there's a single task on the rq, then the only freq update will happen
-> at tick. So this is an existing problem.
+>>> A new attack I just thought of while writing this mail is that because
+>>> there is no RESOLVE_NO_XDEV requirement, it should be possible for the
+>>> process to get an arbitrary write primitive by creating a new
+>>> userns+mountns and then bind-mounting / underneath the directory.
+>> Doesn't this need a write perm to a
+>> directory? In his case this is not a threat,
+>> because you are not supposed to have a
+>> write perm to that dir. OA2_CRED_INHERIT
+>> is the only way to write.
+> No, bind-mounts don't require write permission.
 
-But any newly enqueued task can trigger a freq update without waiting
-1/4/10ms whereas we need to wait for next tick with this patch
+Oh, isn't this a problem by itself?
+Yes, in this case my patch needs to
+avoid RESOLVE_NO_XDEV, but I find this a harsh restriction. Maybe the 
+bind mount was done before a priv drop? Then it is fully legitimate. 
+Anyway, I don't know if I should work on it or not, as there seem to be 
+no indication of a possible acceptance.
 
->
-> The way I see it is that setting such high TICK values implies low
-> responsiveness by definition. So the person who selects this setup needs to
-> cater that their worst case scenario is that and be happy with it. And this
-> worst case scenario does not change.
->
-> That said, the right way to cater for this is via my other series to remove the
-> magic margins. DVFS headroom should rely on TICK value to ensure we run at
-> adequate frequency until the next worst case scenario update, which relies on
-> TICK. Which is sufficient to handle util_est changes. See below for uclamp.
->
-> Wake up preemption should cause context switches to happen sooner than a tick
-> too as we add more tasks on the rq. So I think the worst case scenario is not
-> really changing that much. In my view, it's better to be consistent about the
-> behavior.
->
-> >
-> > > 3. {attach, detach}_entity_load_avg()
-> >
-> > At enqueue/dequeue, the util_est will be updated and can make cpu
-> > utilization quite different especially with long sleeping tasks. The
-> > same applies for uclamp_min/max hints of a newly enqueued task. We
-> > might end up waiting 4/10ms depending of the tick period.
->
-> uclamp_min is a property of the task. And waiting for the task that needs the
-> boost to run is fine IMHO. And I am actually hoping to remove uclamp max()
-
-But you will delay all CPU work and the running time fo the task
-
-And what about util_est ?
-
-> aggregation in favour of applying boosts/caps when tasks are RUNNING. But more
-> things need to be improved first.
->
-> We are missing a freq update when uclamp values change by the way. This is
-> a known bug and I keep forgetting to post a patch to fix it. Let me do this
-> along update freq when policy changes.
->
-> Thanks!
