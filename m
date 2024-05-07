@@ -1,304 +1,112 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85EFE14F9C3;
-	Tue,  7 May 2024 10:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86AA322064
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715077714; cv=none; b=bGuxsIP6ZH5dt8sNeCw5XQTR7RdLoycs0DS7OYkFqthGK6gYCDdaAO710eLRendZamS5NT4/x0oJcMvUnHxI7Z/avF47TDQJL/0EiZguTaYsD3g4Dbj8gUEheScJpyzxir3OKHYlR8Pwi8uWJJVLGN1KVvX7B8mrleBxTrQCwCo=
+	t=1715077941; cv=none; b=dBwOKLucCUL8rAuuLwplTDqVIVXzj+2XCpjnVpqTZGIhVe9WUNpm7FQnJz620lrIP+EAYqLCPau8CGdSx4VPfwRt8sRcILuigE0VsRuhCmWSFD4Mok6l+m4GQjBC6XifVn3hdx15iN2h9S5ML4jpfcL3nB5hzakiq+NbZ+xzJOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715077714; c=relaxed/simple;
-	bh=EirpOcfHbhxzX5mT3leqr6K3yZqEuE5UCC8AzPDkzgU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N2eB7VvOCuizChOH2rk107+YScpip37asmF4aYkW99ut66Ic9n+0y+qCDpZNxIFYSGP00ucvB/zvjdHuOplhT1sOoodCjqWDohRoB3M6BYLcxiAiXMuwaDoFarW7NiTIWglyhLODu2MOfH6IO77mivRvDwYLqF2AEgMfsBnOGuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mAfcNcwr; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mAfcNcwr"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8B99FE0004;
-	Tue,  7 May 2024 10:28:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715077708;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CUadJuWaqhi+XpEWHDh3AN7U2iQoAUeidf5WQOmYOpA=;
-	b=mAfcNcwrAZRpbUmnaGm2ZWNEFMXcdCee0YfFjU6W8xu/Exp+ggJzi20dNqMt7Evgd06mj3
-	baEHbfAoNkQK8mxvgTmq0K7eFYGGDz4JWW2n9KYKGrWVhF90is/Iaib04gUAZfFfJIJCwf
-	I1KIF7xUou9i3pMTJuSOKtrc6YYXYbh4E3yap5RU8lk0hII/+prnIiebvoG6gTifDrYSzL
-	8IntoFByLa0syCQkmkAZZyZ0XIiVtg4xayRWDOkU5YrIDn6gVSVzlyfveD4g70OaPevL31
-	+YlxiI9RSDe18/eiLxHkkJM/rGhpBw7Ah1gSapSQHndvUqOhfFiGUl3BuBE+Cw==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?UTF-8?q?Nicol=C3=B2=20Veronese?= <nicveronese@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	mwojtas@chromium.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Antoine Tenart <atenart@kernel.org>
-Subject: [PATCH net-next 2/2] net: phy: phy_link_topology: Lazy-initialize the link topology
-Date: Tue,  7 May 2024 12:28:21 +0200
-Message-ID: <20240507102822.2023826-3-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.44.0
-In-Reply-To: <20240507102822.2023826-1-maxime.chevallier@bootlin.com>
-References: <20240507102822.2023826-1-maxime.chevallier@bootlin.com>
+	s=arc-20240116; t=1715077941; c=relaxed/simple;
+	bh=u/BiEH3uaN9Y0kT7PVoWcpdxWQWEfIsnIh/Z0uYsUa0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r7L+hJ7vF42uGbR0Kprj/PNAp/pdiSGaVfRl8EBrPNSRMhpyJJ5P83bczRyyFOaP13HLLx5I0UBWB9QpDsmBdalmi+cW41kQ5Gtw644tFJlGwC8tp1llvYry+XqWhpOcZL1xQN5NwMMlINeDvcYDUF4qi9gG6p7pXv9Oo4Hkgr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3FD51063;
+	Tue,  7 May 2024 03:32:44 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5ECB3F587;
+	Tue,  7 May 2024 03:32:17 -0700 (PDT)
+Date: Tue, 7 May 2024 11:32:15 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
+Cc: Greg KH <gregkh@linuxfoundation.org>, javier.carrasco.cruz@gmail.com,
+	Sudeep Holla <sudeep.holla@arm.com>, julia.lawall@inria.fr,
+	linux-kernel@vger.kernel.org, rafael@kernel.org,
+	skhan@linuxfoundation.org, conor@kernel.org
+Subject: Re: [PATCH 2/2 v3] drivers: use __free attribute instead of
+ of_node_put()
+Message-ID: <ZjoDL6EkDcRf6hML@bogus>
+References: <20240424125401.oxvt5n64d7a57ge3@bogus>
+ <20240501094313.407820-1-vincenzo.mezzela@gmail.com>
+ <20240501094313.407820-3-vincenzo.mezzela@gmail.com>
+ <2024050102-reshuffle-licking-f84e@gregkh>
+ <673df61a-e0f5-450b-8fb4-746bc950e3d1@gmail.com>
+ <2024050148-dutiful-unsubtle-dbb1@gregkh>
+ <2398ca58-eafc-46df-92c1-c03cd920fd06@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2398ca58-eafc-46df-92c1-c03cd920fd06@gmail.com>
 
-Having the net_device's init path for the link_topology depend on
-IS_REACHABLE(PHYLIB)-protected helpers triggers errors when modules are being
-built with phylib as a module as-well, as they expect netdev->link_topo
-to be initialized.
+On Mon, May 06, 2024 at 05:30:49PM +0200, Vincenzo Mezzela wrote:
+> 
+> On 01/05/24 15:06, Greg KH wrote:
+> > On Wed, May 01, 2024 at 02:33:39PM +0200, Vincenzo Mezzela wrote:
+> > > On 01/05/24 12:48, Greg KH wrote:
+> > > > On Wed, May 01, 2024 at 11:43:13AM +0200, Vincenzo Mezzela wrote:
+> > > > > Introduce the __free attribute for scope-based resource management.
+> > > > > Resources allocated with __free are automatically released at the end of
+> > > > > the scope. This enhancement aims to mitigate memory management issues
+> > > > > associated with forgetting to release resources by utilizing __free
+> > > > > instead of of_node_put().
+> > > > > 
+> > > > > The declaration of the device_node used within the do-while loops is
+> > > > > moved directly within the loop so that the resource is automatically
+> > > > > freed at the end of each iteration.
+> > > > > 
+> > > > > Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+> > > > > Signed-off-by: Vincenzo Mezzela <vincenzo.mezzela@gmail.com>
+> > > > > ---
+> > > > >    drivers/base/arch_topology.c | 51 +++++++++++++++---------------------
+> > > > >    1 file changed, 21 insertions(+), 30 deletions(-)
+> > > > How was all of this tested?
+> > > > 
+> > > > thanks,
+> > > > 
+> > > > greg k-h
+> > > Hi,
+> > > 
+> > > I just cross-compiled it for RISC-V to enable the config
+> > > GENERIC_ARCH_TOPOLOGY
+> > > and include arch_topology.c as well.
+> > Cross-compile is nice, how about running it?
+> > 
+> > > Do you have any suggestion to trigger the affected code and perform some
+> > > testing?
+> > That is up to you to determine if you wish to modify it :)
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> Hi,
+> 
+> I've successfully run it on QEMU. There are no differences in the dmesg
+> after applying the patches.
+>
 
-Move the link_topo initialization at the first PHY insertion, which will
-both improve the memory usage, and make the behaviour more predicatble
-and robust.
+For this patch, dmesg delta may not be of any use.
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Fixes: 6916e461e793 ("net: phy: Introduce ethernet link topology representation")
-Closes: https://lore.kernel.org/netdev/2e11b89d-100f-49e7-9c9a-834cc0b82f97@gmail.com/
-Closes: https://lore.kernel.org/netdev/20240409201553.GA4124869@dev-arch.thelio-3990X/
----
- drivers/net/phy/phy_link_topology.c    | 31 ++++++---------------
- include/linux/netdevice.h              |  2 ++
- include/linux/phy_link_topology.h      | 23 ++++++++--------
- include/linux/phy_link_topology_core.h | 23 +++-------------
- net/core/dev.c                         | 38 ++++++++++++++++++++++----
- 5 files changed, 58 insertions(+), 59 deletions(-)
+> Furthermore, I've tracked the execution of the parse_dt_topology() which is
+> calling all the functions that I've modified with the patches and I checked
+> that of_node_put was correctly called at the end of each scope.
+>
 
-diff --git a/drivers/net/phy/phy_link_topology.c b/drivers/net/phy/phy_link_topology.c
-index 0e36bd7c15dc..b1aba9313e73 100644
---- a/drivers/net/phy/phy_link_topology.c
-+++ b/drivers/net/phy/phy_link_topology.c
-@@ -12,29 +12,6 @@
- #include <linux/rtnetlink.h>
- #include <linux/xarray.h>
- 
--struct phy_link_topology *phy_link_topo_create(struct net_device *dev)
--{
--	struct phy_link_topology *topo;
--
--	topo = kzalloc(sizeof(*topo), GFP_KERNEL);
--	if (!topo)
--		return ERR_PTR(-ENOMEM);
--
--	xa_init_flags(&topo->phys, XA_FLAGS_ALLOC1);
--	topo->next_phy_index = 1;
--
--	return topo;
--}
--
--void phy_link_topo_destroy(struct phy_link_topology *topo)
--{
--	if (!topo)
--		return;
--
--	xa_destroy(&topo->phys);
--	kfree(topo);
--}
--
- int phy_link_topo_add_phy(struct net_device *dev,
- 			  struct phy_device *phy,
- 			  enum phy_upstream upt, void *upstream)
-@@ -43,6 +20,14 @@ int phy_link_topo_add_phy(struct net_device *dev,
- 	struct phy_device_node *pdn;
- 	int ret;
- 
-+	if (!topo) {
-+		ret = netdev_alloc_phy_link_topology(dev);
-+		if (ret)
-+			return ret;
-+
-+		topo = dev->link_topo;
-+	}
-+
- 	pdn = kzalloc(sizeof(*pdn), GFP_KERNEL);
- 	if (!pdn)
- 		return -ENOMEM;
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index cf261fb89d73..25a0a77cfadc 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -4569,6 +4569,8 @@ void __hw_addr_unsync_dev(struct netdev_hw_addr_list *list,
- 					const unsigned char *));
- void __hw_addr_init(struct netdev_hw_addr_list *list);
- 
-+int netdev_alloc_phy_link_topology(struct net_device *dev);
-+
- /* Functions used for device addresses handling */
- void dev_addr_mod(struct net_device *dev, unsigned int offset,
- 		  const void *addr, size_t len);
-diff --git a/include/linux/phy_link_topology.h b/include/linux/phy_link_topology.h
-index 166a01710aa2..3501f9a9e932 100644
---- a/include/linux/phy_link_topology.h
-+++ b/include/linux/phy_link_topology.h
-@@ -32,10 +32,12 @@ struct phy_device_node {
- 	struct phy_device *phy;
- };
- 
--struct phy_link_topology {
--	struct xarray phys;
--	u32 next_phy_index;
--};
-+#if IS_ENABLED(CONFIG_PHYLIB)
-+int phy_link_topo_add_phy(struct net_device *dev,
-+			  struct phy_device *phy,
-+			  enum phy_upstream upt, void *upstream);
-+
-+void phy_link_topo_del_phy(struct net_device *dev, struct phy_device *phy);
- 
- static inline struct phy_device
- *phy_link_topo_get_phy(struct net_device *dev, u32 phyindex)
-@@ -53,13 +55,6 @@ static inline struct phy_device
- 	return NULL;
- }
- 
--#if IS_REACHABLE(CONFIG_PHYLIB)
--int phy_link_topo_add_phy(struct net_device *dev,
--			  struct phy_device *phy,
--			  enum phy_upstream upt, void *upstream);
--
--void phy_link_topo_del_phy(struct net_device *dev, struct phy_device *phy);
--
- #else
- static inline int phy_link_topo_add_phy(struct net_device *dev,
- 					struct phy_device *phy,
-@@ -72,6 +67,12 @@ static inline void phy_link_topo_del_phy(struct net_device *dev,
- 					 struct phy_device *phy)
- {
- }
-+
-+static inline struct phy_device *
-+phy_link_topo_get_phy(struct net_device *dev, u32 phyindex)
-+{
-+	return NULL;
-+}
- #endif
- 
- #endif /* __PHY_LINK_TOPOLOGY_H */
-diff --git a/include/linux/phy_link_topology_core.h b/include/linux/phy_link_topology_core.h
-index 0a6479055745..f9c0520806fb 100644
---- a/include/linux/phy_link_topology_core.h
-+++ b/include/linux/phy_link_topology_core.h
-@@ -2,24 +2,9 @@
- #ifndef __PHY_LINK_TOPOLOGY_CORE_H
- #define __PHY_LINK_TOPOLOGY_CORE_H
- 
--struct phy_link_topology;
--
--#if IS_REACHABLE(CONFIG_PHYLIB)
--
--struct phy_link_topology *phy_link_topo_create(struct net_device *dev);
--void phy_link_topo_destroy(struct phy_link_topology *topo);
--
--#else
--
--static inline struct phy_link_topology *phy_link_topo_create(struct net_device *dev)
--{
--	return NULL;
--}
--
--static inline void phy_link_topo_destroy(struct phy_link_topology *topo)
--{
--}
--
--#endif
-+struct phy_link_topology {
-+	struct xarray phys;
-+	u32 next_phy_index;
-+};
- 
- #endif /* __PHY_LINK_TOPOLOGY_CORE_H */
-diff --git a/net/core/dev.c b/net/core/dev.c
-index d2ce91a334c1..1b4ffc273a04 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -10256,6 +10256,35 @@ static void netdev_do_free_pcpu_stats(struct net_device *dev)
- 	}
- }
- 
-+int netdev_alloc_phy_link_topology(struct net_device *dev)
-+{
-+	struct phy_link_topology *topo;
-+
-+	topo = kzalloc(sizeof(*topo), GFP_KERNEL);
-+	if (!topo)
-+		return -ENOMEM;
-+
-+	xa_init_flags(&topo->phys, XA_FLAGS_ALLOC1);
-+	topo->next_phy_index = 1;
-+
-+	dev->link_topo = topo;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(netdev_alloc_phy_link_topology);
-+
-+static void netdev_free_phy_link_topology(struct net_device *dev)
-+{
-+	struct phy_link_topology *topo = dev->link_topo;
-+
-+	if (!topo)
-+		return;
-+
-+	xa_destroy(&topo->phys);
-+	kfree(topo);
-+	dev->link_topo = NULL;
-+}
-+
- /**
-  * register_netdevice() - register a network device
-  * @dev: device to register
-@@ -10998,11 +11027,6 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
- #ifdef CONFIG_NET_SCHED
- 	hash_init(dev->qdisc_hash);
- #endif
--	dev->link_topo = phy_link_topo_create(dev);
--	if (IS_ERR(dev->link_topo)) {
--		dev->link_topo = NULL;
--		goto free_all;
--	}
- 
- 	dev->priv_flags = IFF_XMIT_DST_RELEASE | IFF_XMIT_DST_RELEASE_PERM;
- 	setup(dev);
-@@ -11092,7 +11116,9 @@ void free_netdev(struct net_device *dev)
- 	free_percpu(dev->xdp_bulkq);
- 	dev->xdp_bulkq = NULL;
- 
--	phy_link_topo_destroy(dev->link_topo);
-+#if IS_ENABLED(CONFIG_PHYLIB)
-+	netdev_free_phy_link_topology(dev);
-+#endif
- 
- 	/*  Compatibility with error handling in drivers */
- 	if (dev->reg_state == NETREG_UNINITIALIZED ||
--- 
-2.44.0
+That should be good enough.
 
+> Is there anything else that can be done to further testing this changes?
+>
+
+I don't think there is much we can test other than what you have done already.
+If you fix the subject and any other comments me and others had suggested, I
+am happy to Ack.
+
+--
+Regards,
+Sudeep
