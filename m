@@ -1,36 +1,36 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E7C154C05;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E69C152E15;
 	Tue,  7 May 2024 10:44:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715078690; cv=none; b=FTXnM2JnXOxd0yEzVq+aqXIABPWnN3C25NZJ3s2lGXubZe4/Klkb5R1+vPNzyvIiiESfnoJLlZAWTygtSub5HUw66/xdJ9HU5rHjNJGzMEc9KVMUCtI9uXSHGsXRr4dA6tafjjmwgwgzCpRbI0fpflkYQA4VLS/CYx5HuaQ6lQ8=
+	t=1715078690; cv=none; b=Z47oYswcZysh+ivKX10udSVX3x/GSyt9/1T//nb2zk5W6lJ5AwxM/fS3BUxVIKnMLxjG3ycTR5ejwr00eFkOhdaRjiPSfhXOn+r6zhAPAFDspJVEiao0sPVCyW87NPirG95MiC2fnHwDvoMwxGFeE+K9nzniqKMoTn/qL5NEhS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715078690; c=relaxed/simple;
-	bh=gpoxr0PXu/D1DRjyuxtdjhFXMSd2xA6w+2F/GrIHvy4=;
+	bh=yKV+ra/o9RT6b8lN0TOrWt0cfArneZMIZQPZ6W8+EeQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jtf/E285ioUjFV7aDJCgvYs7X9A+mF96BUqoSMzBMYxYs/Mbchzb7Fo9aQgS1CD/xlNeX+JImNW37hP+VI+U+WfF8ZQVqpucN+V2EA3pNwnDuVArmUGFgSxGUagAguzjC1vwyrzTUiGFFfVFMj90L2Gf3kvTnnOzotkSR0q2xwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=ejKQLNTQ; arc=none smtp.client-ip=193.104.135.124
+	 MIME-Version:Content-Type; b=ueclHdodDBH3mu+kdWpUgOZPI/KiVa0GmKdMuea0tXK3u0TOxWVtzoYayzDXfLyxlE/g3STEnDLXe2b+1ZCyr/akgbDGA0d36TNdDx/xrnF4cRECYC6XrmrVgVBdGLif4RzZXPFIBYP67jlF+EQagvosfPJb1jfVDsNvqjNQ8R4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=l3IOAuoR; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="ejKQLNTQ"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="l3IOAuoR"
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id 5B0AE60153;
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 324CA600B6;
 	Tue,  7 May 2024 10:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
 	s=202008; t=1715078675;
-	bh=gpoxr0PXu/D1DRjyuxtdjhFXMSd2xA6w+2F/GrIHvy4=;
+	bh=yKV+ra/o9RT6b8lN0TOrWt0cfArneZMIZQPZ6W8+EeQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ejKQLNTQKgVk9u5NQzjetT6a7Z7HAZoa+Uiefu0VIwwyxXJlfSHGQeZZOShjB+fYd
-	 Hyw/hdYX4Nr6Vht0599UbhLBpcnDfvXMYCFiPJyZhlLw2wwar7D12RpUym+Zkyboi3
-	 mImUt8yEfINbp60+iUEg6JFJa+orJZBGrLFNSdlm71+9VO2p6wP0DApiG+N8Z7gvdX
-	 8uSBGlMy2H/5RK0zKXrLcZPkN1inW/3Xn0HdpRN1cGzUPOXN4VvMccZGMWMwNXcAn+
-	 /cF//soS5HYCbk/pnWHBhA4LUfT4Gdv+OvzqJb+A3QvzPebXvaa+oxKkas/4JULPQV
-	 5NN11DhYSAAgw==
+	b=l3IOAuoRpnw//T8YG3NOsMC5/VQ/ZleUrkU+FcyroZ9mBiaG73qyU7T5HZ5Ft0VHn
+	 J+3X5CZ2kkBtyUo+7ata5hB7RrehlmSL9Iu4Z670P3gYOS8/FO4YSNQ0J1nFvB+r+8
+	 axE0ezBSAc3GmF3y/YvGlzTrAan6Y6r0OHZ/5dhjknWCORmqtPXNx+G4bCMOEUu9AB
+	 rUFIIGO7dl7Uozd7ty3pwTy59HPCbcejQeqnHgLwoX78bS84ZatUgDx6ZIVVs+RClK
+	 F1nNRd8aMjnNm9H9Shps9hN0vL6wd/oKh9ZKpvMlW89VnB4W+lg1i2YSmn4sliosVS
+	 Jqnkh3I2JLj+g==
 Received: by x201s (Postfix, from userid 1000)
-	id 31FF6203B08; Tue, 07 May 2024 10:44:24 +0000 (UTC)
+	id B679A2034AF; Tue, 07 May 2024 10:44:22 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: netdev@vger.kernel.org
 Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
@@ -40,9 +40,9 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	Jakub Kicinski <kuba@kernel.org>,
 	Paolo Abeni <pabeni@redhat.com>,
 	Manish Chopra <manishc@marvell.com>
-Subject: [PATCH net-next 09/14] net: qede: use extack in qede_flow_parse_udp_v4()
-Date: Tue,  7 May 2024 10:44:10 +0000
-Message-ID: <20240507104421.1628139-10-ast@fiberby.net>
+Subject: [PATCH net-next 02/14] net: qede: use extack in qede_set_v6_tuple_to_profile()
+Date: Tue,  7 May 2024 10:44:03 +0000
+Message-ID: <20240507104421.1628139-3-ast@fiberby.net>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240507104421.1628139-1-ast@fiberby.net>
 References: <20240507104421.1628139-1-ast@fiberby.net>
@@ -55,51 +55,52 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Convert qede_flow_parse_udp_v4() to take extack,
+Convert qede_set_v6_tuple_to_profile() to take extack,
 and drop the edev argument.
 
-Pass extack in call to qede_flow_parse_v4_common().
+Convert DP_INFO call to use NL_SET_ERR_MSG_MOD instead.
 
-In call to qede_flow_parse_udp_v4(), use NULL as extack
+In calls to qede_set_v6_tuple_to_profile(), use NULL as extack
 for now, until a subsequent patch makes extack available.
 
 Only compile tested.
 
 Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 ---
- drivers/net/ethernet/qlogic/qede/qede_filter.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/qlogic/qede/qede_filter.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-index e7b9aeef5a6f..de6b9a60d4cf 100644
+index 3995baa2daa6..19ffb0823d55 100644
 --- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
 +++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-@@ -1816,13 +1816,13 @@ qede_flow_parse_udp_v6(struct netlink_ext_ack *extack, struct flow_rule *rule,
+@@ -1549,7 +1549,7 @@ static int qede_set_v4_tuple_to_profile(struct qede_dev *edev,
+ 	return 0;
  }
  
- static int
--qede_flow_parse_udp_v4(struct qede_dev *edev, struct flow_rule *rule,
--		     struct qede_arfs_tuple *tuple)
-+qede_flow_parse_udp_v4(struct netlink_ext_ack *extack, struct flow_rule *rule,
-+		       struct qede_arfs_tuple *tuple)
+-static int qede_set_v6_tuple_to_profile(struct qede_dev *edev,
++static int qede_set_v6_tuple_to_profile(struct netlink_ext_ack *extack,
+ 					struct qede_arfs_tuple *t,
+ 					struct in6_addr *zaddr)
  {
- 	tuple->ip_proto = IPPROTO_UDP;
- 	tuple->eth_proto = htons(ETH_P_IP);
+@@ -1573,7 +1573,7 @@ static int qede_set_v6_tuple_to_profile(struct qede_dev *edev,
+ 		   !memcmp(&t->src_ipv6, zaddr, sizeof(struct in6_addr))) {
+ 		t->mode = QED_FILTER_CONFIG_MODE_IP_DEST;
+ 	} else {
+-		DP_INFO(edev, "Invalid N-tuple\n");
++		NL_SET_ERR_MSG_MOD(extack, "Invalid N-tuple");
+ 		return -EOPNOTSUPP;
+ 	}
  
--	return qede_flow_parse_v4_common(NULL, rule, tuple);
-+	return qede_flow_parse_v4_common(extack, rule, tuple);
+@@ -1752,7 +1752,7 @@ qede_flow_parse_v6_common(struct qede_dev *edev, struct flow_rule *rule,
+ 	if (err)
+ 		return err;
+ 
+-	return qede_set_v6_tuple_to_profile(edev, t, &zero_addr);
++	return qede_set_v6_tuple_to_profile(NULL, t, &zero_addr);
  }
  
  static int
-@@ -1864,7 +1864,7 @@ qede_parse_flow_attr(struct qede_dev *edev, __be16 proto,
- 	else if (ip_proto == IPPROTO_TCP && proto == htons(ETH_P_IPV6))
- 		rc = qede_flow_parse_tcp_v6(NULL, rule, tuple);
- 	else if (ip_proto == IPPROTO_UDP && proto == htons(ETH_P_IP))
--		rc = qede_flow_parse_udp_v4(edev, rule, tuple);
-+		rc = qede_flow_parse_udp_v4(NULL, rule, tuple);
- 	else if (ip_proto == IPPROTO_UDP && proto == htons(ETH_P_IPV6))
- 		rc = qede_flow_parse_udp_v6(NULL, rule, tuple);
- 	else
 -- 
 2.43.0
 
