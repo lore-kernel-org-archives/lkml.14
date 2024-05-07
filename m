@@ -1,75 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F4464A15;
-	Tue,  7 May 2024 02:00:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F9C34436;
+	Tue,  7 May 2024 02:01:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715047233; cv=none; b=Suli6mBq5x0C6cZHjzghx3lnpUWMnfUIxzG/4u4t1QjxWwxrImr2KbODF/pYqQuHfb+gMSFBZyh+ZWAHKIENQr46cYkGfnbgGnUwirV2XuqO+18hMvFy9jOt/zrAwMJUv+gS7JCzB2ltH+9Os/X/7qs/ugoA5eXJkXowiN/mkhs=
+	t=1715047279; cv=none; b=O+pio0ZDRW6jAqMSbLGJ2UFIlTDGxb37dFVzObOa3p1ti43/vPzEParzPtJfmBL7ZyN8vtYveG20s7hOclELz7xUAkiVQENK2gts0u1NeGPmn0FDylxqIWT+O9djQc/uwpfDKSGdFuQFx2PV1gZAmePUxsVDQ16lmNeLv0wZKLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715047233; c=relaxed/simple;
-	bh=qoy8thTFvIVPPAoydXePLz4hIIbKSzIzvg40BO3RgQY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=oAM/CNYUkO842+2/EM4aZcxaJJlu9FXkORgdF3Hlu7HO0qucrXNMG3gMZ/HhnwOYqAKNBcIsJWMsESfhWzt0cggn0ypHFTgyXi0199buZpTCAMxlaVQgyIiKf9JR3294HIMS86rvE+azrCpkJ0d9lDdx6eNu0Vk6PygMLgJKf/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mIUUf1vl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715047279; c=relaxed/simple;
+	bh=tnOpAGDJtyArCO6SMoyx0VgTyknxh1CeIy4yF66KaV0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pBhYMtE0ZxiNVrT5tZfw0Zz9HncqKGmAWmUWqqpIMpEIiSWnMJaHZHY8NasyCvFgOoVcmUjzaspDU2UYSIbZP1Yp0ZTv4r5nErwvvRC+CDvRBiwRIeiLstsCjORiaCmO4xACKsrZi8dmgHWK0MacLzLdRrrVXjY6grvSTs9008w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=hDqMXfQX; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mIUUf1vl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D0EE8C4DDE0;
-	Tue,  7 May 2024 02:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715047231;
-	bh=qoy8thTFvIVPPAoydXePLz4hIIbKSzIzvg40BO3RgQY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=mIUUf1vlrSG48rpfF4A1C13b2fgnSgGKBSnrelHjobPCU8SqlIBXv/16csX6BDVaU
-	 N5eBM/cWbKhAPQQKjIwHHpbG1x8P5YpD8UEPSI2jPK4h/ABVAMkwS/JkxzwJJsp6N1
-	 jWDpH/sR0DZ2+aB8F258nJbe6xr+bExqb3EYU1M9skl6q/hv/QmEh2gM3NBe9N1iIF
-	 o270MEHi5Zb8/NvF/6kHNL74jRy8FBw7y+J33P3KYjcacJxKmW8iUkxCA0Mc7k0hvF
-	 5cV0gH2px+X6ST1oi1H+Z8xc7gKd+u69WTBrh/vlI9FyhrhGU5M+SYkO4aVxORJ4FL
-	 /6fVpBRtEQeeQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C4F3CC43334;
-	Tue,  7 May 2024 02:00:31 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hDqMXfQX"
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 446MqQTs031533;
+	Tue, 7 May 2024 02:01:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2023-11-20;
+ bh=1C7X7yH3jIjyIskdlcoVFrQymIyuIt+SsTF+ZTvp9lQ=;
+ b=hDqMXfQXdB5FzOG7HxyWBGtyIQHTqwnzH7Q0dwqluwOdrSTvd8P1UoFTq05pt+ydbhZC
+ JrbxE56pPkdiJOeJEHUtBBnnI4wZ1rZu3JkKdPE/cemLsLDRAmxaW3NQKWi58L0cxQes
+ aIQOQ0mvC2YzY8IjNK/vohi0lcX+pLFwUapb7+xRKifGzTuBcn4CCSsAYUSXSm6UL/1L
+ qyK2P2h/l7XAUiwJcGyRLBpM67P+oMrpkddBTIaNLDbaXPSJMs9VltCD+WpXpO+lrgut
+ NMFFQtSa7Byjtd6n/6IVrY/tz5pTYc86GyFRO3yXFkfpJpD+4PKI4NIXapMqF54KtTTM cA== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3xwdjuuuw0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 07 May 2024 02:01:15 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 4470Ge5K006999;
+	Tue, 7 May 2024 02:01:15 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3xwbf7dbvx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 07 May 2024 02:01:15 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44721Elx034149;
+	Tue, 7 May 2024 02:01:14 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3xwbf7dbvc-1;
+	Tue, 07 May 2024 02:01:14 +0000
+From: "Martin K. Petersen" <martin.petersen@oracle.com>
+To: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Subject: Re: [PATCH v1 1/1] scsi: Don't use "proxy" headers
+Date: Mon,  6 May 2024 21:59:48 -0400
+Message-ID: <171504445059.1494912.2618353960474358487.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240423211843.3996046-1-andriy.shevchenko@linux.intel.com>
+References: <20240423211843.3996046-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] atm/fore200e: Delete unused 'fore200e_boards'
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171504723180.13822.15041073764970344223.git-patchwork-notify@kernel.org>
-Date: Tue, 07 May 2024 02:00:31 +0000
-References: <20240503001822.183061-1-linux@treblig.org>
-In-Reply-To: <20240503001822.183061-1-linux@treblig.org>
-To: Dr. David Alan Gilbert <linux@treblig.org>
-Cc: 3chas3@gmail.com, linux-atm-general@lists.sourceforge.net,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-06_19,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=895
+ phishscore=0 spamscore=0 suspectscore=0 mlxscore=0 malwarescore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2405070014
+X-Proofpoint-ORIG-GUID: lEPzj5qJiiPqfIkrtvt5Op4oliPwKc2G
+X-Proofpoint-GUID: lEPzj5qJiiPqfIkrtvt5Op4oliPwKc2G
 
-Hello:
+On Wed, 24 Apr 2024 00:18:43 +0300, Andy Shevchenko wrote:
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Fri,  3 May 2024 01:18:22 +0100 you wrote:
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> Update header inclusions to follow IWYU (Include What You Use)
+> principle.
 > 
-> This list looks like it's been unused since the OF conversion in
-> 2008 in
 > 
-> commit 826b6cfcd5d4 ("fore200e: Convert over to pure OF driver.")
-> 
-> [...]
 
-Here is the summary with links:
-  - atm/fore200e: Delete unused 'fore200e_boards'
-    https://git.kernel.org/netdev/net-next/c/ad3c9f0e6292
+Applied to 6.10/scsi-queue, thanks!
 
-You are awesome, thank you!
+[1/1] scsi: Don't use "proxy" headers
+      https://git.kernel.org/mkp/scsi/c/2a7177a80457
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Martin K. Petersen	Oracle Linux Engineering
