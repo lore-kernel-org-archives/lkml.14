@@ -1,117 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8679E2F50;
-	Tue,  7 May 2024 14:52:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B7EF15FCF0;
+	Tue,  7 May 2024 14:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093552; cv=none; b=WHvbF69zwonjNQDfVuDG3X2Bcgn3CZf9NPJOpinYAC3ufphmnSja/2AfKPA/XfNrBGJCOS8Movr5NkxWvMt09oEC7Rqu929r5vXJfaaxhBuZSr/yjsE8/lFUAEcp/4rr8CwLMA+ObB3Vl/7OCYxrLRldf0J9+00dsaenstWlTEM=
+	t=1715093575; cv=none; b=skNfStd2FyDIoD85YFKGJIb30qVfmzrEGAM8zCUynS6dFqFL2eFvDBrfuo23/fyXiNXon3RY0GEu3psiSD9Mm2gcczC39ABstTlVzpZxDp16VLxUYw7Wqa1hW4HBrJdB735sEiTaLIPq0mA+1jN8NmXUu/P1FOH8rQFz2dYLNGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715093552; c=relaxed/simple;
-	bh=vSiOef6zREmkg4TqEAN44W/J4gfMWJYXzNIB8ov/k3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bJleFDMik0TbaQv6S/1AvCAYZFpYOrIog89eYvE9xCVgGYguJQ7dhW5w7lM2+nDxKTSkdxyoRI3IB9ZdARCDkDmBw3nQSGodE5zV1inT+/weRX5CZdleH18p04LjspaCAegGwHaRsC6QNbZ4UcFKf7SSSXztVdsCHFv79M8Q704=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zqg08yEy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715093575; c=relaxed/simple;
+	bh=MlQMJtQlUuf6lLca3bql80rz2yBaAuTOSQM7x4CO/+E=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=YEie/5xLR5KGKMqFhvia7yN02pILKObNf3TAanbAQ/cpROO3pqtMdmW798mTZHZrb8cxQB1Ezp4KjeoG4BDG+5FlTivbBy1YrmeRURaOSSl8rmkik2SdM42GIK9l7EXIyOV6GNzYf0e9wFITSPSRLTXmnSN7mse6dKve7FFDGFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BWWaekmb; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zqg08yEy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90EA1C2BBFC;
-	Tue,  7 May 2024 14:52:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715093551;
-	bh=vSiOef6zREmkg4TqEAN44W/J4gfMWJYXzNIB8ov/k3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zqg08yEy7OEo5mBUxP4QVS+dnbvHJX3CbDzRG0ecZ67agq7Yj2WuqgbHMWHspUvAl
-	 uTZLeX5bhQXLYYHDHN20+1i43+uOwgxsodurDXtrKLunDhSG9kWNFeP7+GbD+Ab3bj
-	 wGuEfwC8RtngRPl9O29Gmo52+IBqmYy5Aei98qwTVMsDGoxFi5McMaQ+kxffdJ7Svu
-	 S7oWthQtpk7uTHwzxbcP3tmZS1w1jMHpAPORjZ50APqUABxC76/kKQLoh/2AVsTXeX
-	 vDWaE3iWq3RWuRXvFO6YcEvgiaFghEiyr22o6m7SVMegjoMg96rNYpGFkAb/76W/qt
-	 Ipg0gcL2+rKIg==
-Date: Tue, 7 May 2024 23:52:28 +0900
-From: Mark Brown <broonie@kernel.org>
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, catalin.marinas@arm.com,
-	will@kernel.org, maz@kernel.org, oliver.upton@linux.dev,
-	james.morse@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
-	tglx@linutronix.de, ardb@kernel.org, anshuman.khandual@arm.com,
-	miguel.luis@oracle.com, joey.gouly@arm.com, ryan.roberts@arm.com,
-	jeremy.linton@arm.com, ericchancf@google.com,
-	kristina.martsenko@arm.com, robh@kernel.org,
-	scott@os.amperecomputing.com, songshuaishuai@tinylab.org,
-	shijie@os.amperecomputing.com, akpm@linux-foundation.org,
-	bhe@redhat.com, horms@kernel.org, mhiramat@kernel.org,
-	rmk+kernel@armlinux.org.uk, shahuang@redhat.com,
-	takakura@valinux.co.jp, dianders@chromium.org, swboyd@chromium.org,
-	sumit.garg@linaro.org, frederic@kernel.org, reijiw@google.com,
-	akihiko.odaki@daynix.com, ruanjinjie@huawei.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH v3 1/8] arm64/sysreg: Add definitions for immediate
- versions of MSR ALLINT
-Message-ID: <ZjpALOdSgu-qhshR@finisterre.sirena.org.uk>
-References: <20240415064758.3250209-1-liaochang1@huawei.com>
- <20240415064758.3250209-2-liaochang1@huawei.com>
- <ZjUKMWPknEhLYoK8@FVFF77S0Q05N>
- <Zjjz-tzLRC2nH51A@finisterre.sirena.org.uk>
- <cde4d448-dc9d-eaad-4a2d-a6d34bda4449@huawei.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BWWaekmb"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5D8DBC0002;
+	Tue,  7 May 2024 14:52:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715093570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UGenY7YAzUwlgiT73G7TaHalCSUU2X6AFVguS+ovgFw=;
+	b=BWWaekmbWtG3JQ8gcKhy7e0+HcN08YNNci5RJE5FZSeN+mPVBdOtCyww7UraBvBuBvNe4j
+	roYAhUgVdwh+j5vWIebRHxzomUrJwZcQ/rWk189pVSdKnmtnMoUiZQnH9uyhOUzhuFQfNP
+	LMPFRd2atO3kzm+eFRMubYigSEaCuE+BqOnl9Jc3yZtRx9YorACLWdx9KZJcOpAN0cXTK9
+	BpzVO+y3YCNj2AWGaxSiF8EnDdT9NWnes/ppIWSp+tMJw4iBuCmvMs2+q8ESc8VIzGX/61
+	KexeA06fv4ck3ADqNmciQ4qi8pZnbmmPuJ0WYduRP8DP0xw1NhkhKm3qPyDtBQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l+aZ4APLeGcXdXqx"
-Content-Disposition: inline
-In-Reply-To: <cde4d448-dc9d-eaad-4a2d-a6d34bda4449@huawei.com>
-X-Cookie: Accuracy, n.:
-
-
---l+aZ4APLeGcXdXqx
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 07 May 2024 16:52:49 +0200
+Message-Id: <D13HXGJGMS76.XIIIZLZBCZ09@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v2 00/11] Add Mobileye EyeQ system controller support
+ (clk, reset, pinctrl)
+Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: "Stephen Boyd" <sboyd@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Lee Jones" <lee@kernel.org>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Philipp Zabel" <p.zabel@pengutronix.de>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+X-Mailer: aerc 0.17.0
+References: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
+ <8dcdb1422cd144128c1dc6fff1c273d3.sboyd@kernel.org>
+In-Reply-To: <8dcdb1422cd144128c1dc6fff1c273d3.sboyd@kernel.org>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Tue, May 07, 2024 at 03:41:08PM +0800, Liao, Chang wrote:
-> =E5=9C=A8 2024/5/6 23:15, Mark Brown =E5=86=99=E9=81=93:
-> > On Fri, May 03, 2024 at 05:00:49PM +0100, Mark Rutland wrote:
+Hello,
 
-> >> +#define set_pstate_allint(x)           asm volatile(SET_PSTATE_ALLINT=
-(x))
+On Sat May 4, 2024 at 4:34 AM CEST, Stephen Boyd wrote:
+> Quoting Th=C3=A9o Lebrun (2024-05-03 07:20:45)
+> > This builds on previous EyeQ5 system-controller revisions[0], supportin=
+g
+> > EyeQ5, EyeQ6L and EyeQ6H. We expose a few OLB system-controller
+> > features here:
+> >  - Clocks: some read-only PLLs derived from main crystal and some
+> >    divider clocks based on PLLs.
+> >  - Resets.
+> >  - Pin controller, only on EyeQ5 (rest will use generic pinctrl-single)=
+.
+> >=20
+> > EyeQ6H is special in that it has seven instances of this
+> > system-controller. Those are spread around and cannot be seen as a
+> > single device, hence are exposed as seven DT nodes and seven
+> > compatibles.
+> >=20
+> > This revision differs from previous in that it exposes all devices as a
+> > single DT node. Driver-wise, a MFD registers multiple cells for each
+> > device. Each driver is still in isolation from one another, each in
+> > their respective subsystem.
+>
+> Why can't you use auxiliary device and driver APIs?
 
-> > Hrm, those helpers are not ideally discoverable, partly due to the
-> > system register description for ALLINT not providing any references to
-> > this being a general scheme (which is fixable there) and partly due to
+Good question. Reasons I see:
 
-> Based on the Arm ISA reference manual, the instruction accessing the ALLI=
-NT
-> field of PSTATE uses the following encoding:
+ - I didn't know about auxdev beforehand. I discussed the rework with a
+   few colleagues and none mentioned it either.
 
-I'm not saying the suggestion is wrong, I'm saying that between the ARM
-and the way the code is written the helpers aren't as discoverable as
-they should be, like I say from a code point of view that's mainly
-because...
+ - It feels simpler to let each device access iomem resources. From my
+   understanding, an auxdev is supposed to make function calls to its
+   parent without inheriting iomem access. That sounds like it will put
+   the register logic/knowledge inside a single driver, which could or
+   could not be a better option.
 
->                     op0  op1   CRn    CRm    op2
-> MSR ALLINT, #<imm>  0b00 0b001 0b0100 0b000x 0b000
+   Implementing a function like this feels like cheating:
+      int olb_read(struct device *dev, u32 offset, u32 *val);
 
-=2E..we only have the encoding for the MSR and don't mention the letters
-'msr' anywhere.  We should improve that to say what we're encoding in
-the code (in general I'd say that's true for any __emit_inst(), not just
-these ones).
+   With an MFD, we hand over a part of the iomem resource to each child
+   and they deal with it however they like.
 
---l+aZ4APLeGcXdXqx
-Content-Type: application/pgp-signature; name="signature.asc"
+ - Syscon is what I picked to share parts of OLB to other devices that
+   need it. Currently that is only for I2C speed mode but other devices
+   have wrapping-related registers. MFD and syscon are deeply connected
+   so an MFD felt natural.
 
------BEGIN PGP SIGNATURE-----
+ - That would require picking one device that is platform driver, the
+   rest being all aux devices. Clock driver appears to be the one, same
+   as two existing mpfs and starfive-jh7110 that use auxdev for clk and
+   reset.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmY6QCcACgkQJNaLcl1U
-h9BivQf/QjNOMgHqmu7UcLWTGZ4Cdsxv0NPRW008VrPJCXISVIc/pWczJCP9gm1S
-DZVr2Mp961MBiWixhmEKzLXogx29ALEBhBL5ImpgAfipQA64gzcbD2+S8F3JGTUb
-V/PJF53nqhJd9w9YDs9TukxVmstjG6TYGMi28fdCOOsjd4QfMxq1MIHXmobPqm5u
-eyt1WHI1eqX5+/y3AIytni/LoyzglsvZ9V15GnBVTAFlMykf+aeWX0wWxTmydEXS
-OxulKo1wpSxKQDd9f9oNCiPLY0m0ZRqXRunt0/4ICmy2nvV0VVZ4Vsi41W4KA9AN
-4ORObDb31r07sFNa8JRKkjBgtYKA9g==
-=OEcE
------END PGP SIGNATURE-----
+Main reason I see for picking auxdev is that it forces devices to
+interact with a defined internal API. That can lead to nicer
+abstractions rather than inheriting resources as is being done in MFD.
 
---l+aZ4APLeGcXdXqx--
+Are there other reasons?
+
+Thanks,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
