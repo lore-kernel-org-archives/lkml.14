@@ -1,154 +1,97 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F267416C697;
-	Tue,  7 May 2024 16:24:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E39116ABE8;
+	Tue,  7 May 2024 16:24:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099066; cv=none; b=YQODyQsDGmUs234P0RlbuiSE/dV+vjIjmAn43fWeD8i2AvMfn2Di685IrKXUFmwZyrzctEi6mt2kQiuGAeZu0nqEtuvCSL2JgXTFx/Oxzdq1XwXqhe+zzjD0kKOWOpBDTO1jNnY6XuHDllfutGH/LiMrRkfIG8ILbOqpkBmy4yY=
+	t=1715099092; cv=none; b=CAljEbOoVbNCdao2GzIzsV7r6Gl/uvjrSr0ARQ/HQ/hGmSBfKAmRuPo8M/JxpX8ulllz88iANLhfvN6tcyzWOnM0acLKjNWu00eq4POPoHMlHOBod4yOY+REwYKWjFYl00nYxGYxQEc0TOv7nYv3bsxC2FyxPC/VKCpBl0WqsJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099066; c=relaxed/simple;
-	bh=lV/KHit7dzBx/dqTpedX6zF05hJ6yuvIAm+QIf8+4c4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FWAJkjWQn72jIumDUX4Y0b2V9+YCShMJiCjeEDoWdDHKc7ftzlHgZV049iU/5N7FPpVTyps0TBXyYtXAepm+m8SiyQm69QAFfs7rhJ6ZUuyu2G8EEDSYSh9WcJMQ9FPyG7/4PLBqrKG8sm8KuG8ffCJGqySAOYhy27YV5XraPcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ObR8VvlO; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715099092; c=relaxed/simple;
+	bh=xjqnat7biDHsSjLjF1RDSmbAHh5gsv1jZ8a8jPor4zE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=b2vbq/dqLGuQ5V+EbS+vlG0Ne/tod/pbNGDScXZFDVazqlOI6TJJwpqJ7HoFs2c8bCyvuqvZkY+/kiuaz6XZ22HWQI+3kPnx0H4tVPKNukUQViyOj9mMHLD3Z6qq89XX0eIubUiKEVjUJhuXzZGOYVMC45xBTPADKqIlBRh0gb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QDa28c5e; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ObR8VvlO"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-34d9c9f2cf0so2504429f8f.3;
-        Tue, 07 May 2024 09:24:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715099063; x=1715703863; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=H7xp/fk6cv9hTgtMu9MpbQCHEqA9h660fDuMw67BHqo=;
-        b=ObR8VvlOocvmFT9jAowALsT4WbZKr0QyzmDYT44G4yjd9ZroBi7Tla1O0AKR/00+7K
-         TXuFYQCE00egtT94Nn33iktT/UyLmKjFWjA7cIM3EW/tGXi//EUKB24T/jhQQFJ41Ezr
-         wTWzuUXXtL/dnm35B5ZQSQfFQ8ipYko84vhalhmMokplLi9ThbOkJ9HYUy9t4pfDT16t
-         Wmjfhjq/vduiHdUQ3Bac0Ufb9ex/K6CCj0B1poRsl0Szg32LFVIjOZMNJDIoNXKIAJ9j
-         IQpzq0BTYzKf6jdm9DCpNEDRxz23YJ8kMRzWrNeNM8ZAM3lq0Qr7zkfROFRjEAXtgtp8
-         ko1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715099063; x=1715703863;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=H7xp/fk6cv9hTgtMu9MpbQCHEqA9h660fDuMw67BHqo=;
-        b=WzoFnBOu8PBN69oo+eg8NJHdEVL2IKRBdJCfw47d+Kj+gVPVDSIQneTjwUgk1kc91f
-         UuIbmHLBYMrPmfpSrYbQQdM/JbwAWQgDu3TiHjr1NhWUbaSs37z/8/0obT6RWpdxYwVq
-         0kyDNFle4KVv+u4yMFS0Pmu1GpaUUXWcM5qJ5zUFBaj0WLov2KGtCYHqU9bQER80SVdw
-         NTl1/o9t1O4pXJcid1DGvglGVomAYda5l4EaWPP7ZqxALFXSLOEhaNi2qgCb5uPTslCq
-         juK8x18rUIAFflwoRHn02At4TgUnogWXEDmWKTWRRxqSWfY4Ul+enmz96jYrU5XDOBeL
-         H9uQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWw7ivuVW+JAx1H8E6ssS29dwH31X/ntdIVWaCO/NVJ8GWLxKMEB+ihDGKlGCLNQ7S48QH2zpFNOMTcCsAuc/b34Cv66YTQVhXkEEn0UP2Iah2pJWges5vA2cmb1L+LNToamFvwHEkZ4xuY+7K54VyFtxAoF3i4lfi3wi4VyrwNKGXT2O3u
-X-Gm-Message-State: AOJu0Yy+u1qkj9PVwKxRbfE5T+O9MCOamCRglamqi9d2NC/PHNYZ1Mp6
-	5CGStYhTsRZiXymxzSWCuOrdgmUDrlKRbk47pEfmRcYAHY2PfZhk
-X-Google-Smtp-Source: AGHT+IF3oE3dSC8Orfh6qoCYqeL7TEDpHOGeGitXh2UVUUCtJMpHfidBnO0S4+wERZriREuoBrg/zg==
-X-Received: by 2002:a05:6000:1104:b0:34f:96ba:ca3f with SMTP id ffacd0b85a97d-34fca621dbcmr357621f8f.53.1715099063264;
-        Tue, 07 May 2024 09:24:23 -0700 (PDT)
-Received: from localhost ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id g7-20020a05600c4ec700b0041902ebc87esm20102264wmq.35.2024.05.07.09.24.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 09:24:22 -0700 (PDT)
-From: Richard Gobert <richardbgobert@gmail.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	willemdebruijn.kernel@gmail.com,
-	dsahern@kernel.org,
-	alexander.duyck@gmail.com,
-	shuah@kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Cc: Richard Gobert <richardbgobert@gmail.com>
-Subject: [PATCH net-next v9 0/3] net: gro: remove network_header use, move p->{flush/flush_id} calculations to L4
-Date: Tue,  7 May 2024 18:23:45 +0200
-Message-Id: <20240507162349.130277-1-richardbgobert@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QDa28c5e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715099090; x=1746635090;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xjqnat7biDHsSjLjF1RDSmbAHh5gsv1jZ8a8jPor4zE=;
+  b=QDa28c5eIjDb0mlWxE12HHQ08Xk99KGl8fqTjRbeKx+E7BNGNhfx7RfQ
+   7c9Yn94wX50E3/D8fdjooEas5e6TxUhiS7jEX8VxtKwEmUvM1zJ2enA2R
+   mc0G+hXVSTFJRJdZvRGTZArB+UMJem7tBpu8V1gJvRptRPhLlO61Vaspn
+   /MExJ0Tt6wcD2DEpav3iR5MHQLI7qjcY+asNNRavVifmg1N60nALiQx0A
+   av/5A6g9YImucqNC0VQI3sDW3h6iXOfMkATXK1Jri62tOkBrbGQdNjpLo
+   ROs09AkieI/rgh+JFWCGTGAiqL3zuOaaGiQFuXQL5+z4G66NFsVuxwCjs
+   g==;
+X-CSE-ConnectionGUID: Z3x2xIBhS+qybM/Yt52p0g==
+X-CSE-MsgGUID: R0MNQZIFRcSmHvTyBWzxkQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="21577457"
+X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
+   d="scan'208";a="21577457"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 09:24:50 -0700
+X-CSE-ConnectionGUID: enH0uxdLSHmnEPpAFEeujw==
+X-CSE-MsgGUID: GjkPmm1BTeW4Dlv3J8Crfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
+   d="scan'208";a="28553500"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 09:24:48 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1s4NcU-000000056c9-0xMI;
+	Tue, 07 May 2024 19:24:46 +0300
+Date: Tue, 7 May 2024 19:24:45 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-spi@vger.kernel.org
+Subject: Re: [PATCH v3 REBASED] spi: Add capability to perform some transfer
+ with chipselect off
+Message-ID: <ZjpVzexVvyih2vGG@smile.fi.intel.com>
+References: <20220907141344.oDJgraej0r_TWCpXPzNZwflzEvN3hBXTvsBehJGtLSY@z>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220907141344.oDJgraej0r_TWCpXPzNZwflzEvN3hBXTvsBehJGtLSY@z>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The cb fields network_offset and inner_network_offset are used instead of
-skb->network_header throughout GRO.
+On Wed, Sep 07, 2022 at 04:13:44PM +0200, Christophe Leroy wrote:
+> Some components require a few clock cycles with chipselect off before
+> or/and after the data transfer done with CS on.
+> 
+> Typically IDT 801034 QUAD PCM CODEC datasheet states "Note *: CCLK
+> should have one cycle before CS goes low, and two cycles after
+> CS goes high".
+> 
+> The cycles "before" are implicitely provided by all previous activity
+> on the SPI bus. But the cycles "after" must be provided in order to
+> terminate the SPI transfer.
+> 
+> In order to use that kind of component, add a cs_off flag to
+> spi_transfer struct. When this flag is set, the transfer is performed
+> with chipselect off. This allows consummer to add a dummy transfer
+> at the end of the transfer list which is performed with chipselect
+> OFF, providing the required additional clock cycles.
 
-These fields are then leveraged in the next commit to remove flush_id state
-from napi_gro_cb, and stateful code in {ipv6,inet}_gro_receive which may be
-unnecessarily complicated due to encapsulation support in GRO. These fields
-are checked in L4 instead.
+Interesting. Wondering if this helps to improve mmc-spi.c case, which
+abuses SPI protocol on the initialisation phase.
 
-3rd patch adds tests for different flush_id flows in GRO.
-
-v8 -> v9:
- - rename skb_gro_network_offset to skb_gro_receive_network_offset for
-   clarification
- - improved code readability in tests and gro_network_flush functions
- - v8:
-   https://lore.kernel.org/all/20240506093550.128210-1-richardbgobert@gmail.com/
-
-v7 -> v8:
- - Remove network_header use in gro
- - Re-send commits after the dependent patch to net was applied
- - v7:
-   https://lore.kernel.org/all/20240412155533.115507-1-richardbgobert@gmail.com/
-
-v6 -> v7:
- - Moved bug fixes to a separate submission in net
- - Added UDP fwd benchmark
- - v6:
-   https://lore.kernel.org/all/20240410153423.107381-1-richardbgobert@gmail.com/
-
-v5 -> v6:
- - Write inner_network_offset in vxlan and geneve
- - Ignore is_atomic when DF=0
- - v5:
-   https://lore.kernel.org/all/20240408141720.98832-1-richardbgobert@gmail.com/
-
-v4 -> v5:
- - Add 1st commit - flush id checks in udp_gro_receive segment which can be
-   backported by itself
- - Add TCP measurements for the 5th commit
- - Add flush id tests to ensure flush id logic is preserved in GRO
- - Simplify gro_inet_flush by removing a branch
- - v4:
-   https://lore.kernel.org/all/202420325182543.87683-1-richardbgobert@gmail.com/
-
-v3 -> v4:
- - Fix code comment and commit message typos
- - v3:
-   https://lore.kernel.org/all/f939c84a-2322-4393-a5b0-9b1e0be8ed8e@gmail.com/
-
-v2 -> v3:
- - Use napi_gro_cb instead of skb->{offset}
- - v2:
-   https://lore.kernel.org/all/2ce1600b-e733-448b-91ac-9d0ae2b866a4@gmail.com/
-
-v1 -> v2:
- - Pass p_off in *_gro_complete to fix UDP bug
- - Remove more conditionals and memory fetches from inet_gro_flush
- - v1:
-   https://lore.kernel.org/netdev/e1d22505-c5f8-4c02-a997-64248480338b@gmail.com/
-
-Richard Gobert (3):
-  net: gro: use cb instead of skb->network_header
-  net: gro: move L3 flush checks to tcp_gro_receive and udp_gro_receive_segment
-  selftests/net: add flush id selftests
-
- include/net/gro.h                 |  87 ++++++++++++++++---
- net/core/gro.c                    |   3 -
- net/ipv4/af_inet.c                |  45 +---------
- net/ipv4/tcp_offload.c            |  20 ++---
- net/ipv4/udp_offload.c            |  10 +--
- net/ipv6/ip6_offload.c            |  16 +---
- net/ipv6/tcpv6_offload.c          |   3 +-
- tools/testing/selftests/net/gro.c | 138 ++++++++++++++++++++++++++++++
- 8 files changed, 227 insertions(+), 95 deletions(-)
+P.S> just noticed this change in the Git history of spi.c changes :-)
 
 -- 
-2.36.1
+With Best Regards,
+Andy Shevchenko
+
 
