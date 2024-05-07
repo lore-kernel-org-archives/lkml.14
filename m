@@ -1,140 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10CB6F09C;
-	Tue,  7 May 2024 06:20:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A93056EB5C
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 06:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715062818; cv=none; b=r05XGI+aLwsZ4KtOVHgSqBqjH7ckd2u2a3x6kELqVLC2MH7gfSH+Lz3IRX3WkVEX5Q+MRl2JKYrZ94oFRmgkNUn8wugw7kXnM5bPN45en/RfMnh1woUlvgeBnk/GJhzCcHcA8uQGpdsd6PAS9d3QZrmwgg90kK/0CSbCHGVkaWo=
+	t=1715062826; cv=none; b=EtX1gGqHJNIV/xwej+BYEp//MytNV8/ZGVO1lf2ROnqvDT+TpXIuGObZbMNsu+sNAiFHjpxbbiLc+fVD73rn4A7cQ8QcNzg4gharVUv+RrtcsbtjbFEZRE9d4ZOjs/5EUUBdxIszq+vK4chKQSEvpkuFbZ+c3V2UBq4R1WsEg8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715062818; c=relaxed/simple;
-	bh=mSaRASfGQY8AR8D1WEG7ksj0ddXO2afJXERqBKb8+K0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=tIwV9px0nP5RWYQ/O7mBmAJ85xZBOASCgpOJzvv35fITi+OEX7Z+bpjlSjVtT5+9lOEQklUsXbClwdUWtRAzL930P87SlpkOeKow0/fYUCnX4MqiqxPtRJrBLw/EAE+zLan+MVxnfws6hSnn1jdyHj2r/MEfnNZLjMmwZQZdq7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z1SjWqrr; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715062826; c=relaxed/simple;
+	bh=xpV/nMuQfBh/yww28aaTVU+mxRQ+Qd7MQI6xXDS/QtE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NgZ3BeLBp71e4Svw7UIohmcAyr3r+TWk7Ew3msZI4usLkNqNUKslSP3Xc4gfKud4ITrmCrBzppUSXwuYvi86nyheBC5hU/UE6hhGkvUNFfCWoUI+khx3btPKmlYb1B2kpCg6CvaTPJR5ZtsB2gEFz04IcMCpiv+1gdT45Pq8F2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ny7IEwlY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z1SjWqrr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715062817; x=1746598817;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=mSaRASfGQY8AR8D1WEG7ksj0ddXO2afJXERqBKb8+K0=;
-  b=Z1SjWqrr1/J7A/7jDUahemLkC4I9IRYgakWRj3bLTmumGcgOPXxyqUEm
-   ey8swK5yIDJhExjxFY69xIJgBl4cijsvn1qz99g++9CJ/R4MXDuDQP9rX
-   wjWAN6Qfla4D0j3l/C48ZwuPBX3mf91D2VPekONMDZ2MY24GVK5OCJnp7
-   vlgKRjUScRtCZ5FYYwyxOgR0zT/btVG0oIunu2PSUZkCULgGOEmGadcid
-   ARBcJPhfiZ6575q/yBEUqJaiWHgyz2SkttoRg7AoSz1PEyybnbsrPFG3L
-   7vneJrELgAyB0BTwtkWMjZBzQJ/GJQ+Gp8G6swqcTVv5oL9SRZsgukV4H
-   A==;
-X-CSE-ConnectionGUID: Gaxhuf2xRfiUsFeVVZXZsQ==
-X-CSE-MsgGUID: ascVcqElTJqtOkhkLuI+mw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10672818"
-X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
-   d="scan'208";a="10672818"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 23:20:17 -0700
-X-CSE-ConnectionGUID: mo9MOEQOR7OgE5r5/VzEQg==
-X-CSE-MsgGUID: 03sqDDM8Sde46PMnyPlv4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
-   d="scan'208";a="33081907"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 23:20:11 -0700
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: kvm@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ny7IEwlY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFB70C2BBFC;
+	Tue,  7 May 2024 06:20:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715062826;
+	bh=xpV/nMuQfBh/yww28aaTVU+mxRQ+Qd7MQI6xXDS/QtE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Ny7IEwlYDjKPkuW7sQuFVUIV+twKDFaKkaFI2EnsKMZSNDGHsiOACxYZ3ZsLjPkPQ
+	 xsn2thhcDhBtKKqB5c3woONt7bKMxoQpZgrJ6uCO8m3rLKewTLNraO+ecg+Y2PVgat
+	 14HASIEVf1zQ9AgNsDUYBsSUq4YQFKjqZKUCYqlKNQkRptsE/8gvN94g9l7OTglt8Q
+	 iYJ4ZkSE4MfK8FuvV5eFRZf0vn5zNYv/lnqUC0fT7jNuOHhSyee5cikPkpbmda6Ixg
+	 QAFO7Q0WPiOccyX0l9h8MxQQE1S0UsC57UcFJ0bmShmAEeyqW5QPgUDHaakJLywy9W
+	 kX4zhkpynMiKg==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
 	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	alex.williamson@redhat.com,
-	jgg@nvidia.com,
-	kevin.tian@intel.com
-Cc: iommu@lists.linux.dev,
-	pbonzini@redhat.com,
-	seanjc@google.com,
-	dave.hansen@linux.intel.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	hpa@zytor.com,
-	corbet@lwn.net,
-	joro@8bytes.org,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	baolu.lu@linux.intel.com,
-	yi.l.liu@intel.com,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH 1/5] x86/pat: Let pat_pfn_immune_to_uc_mtrr() check MTRR for untracked PAT range
-Date: Tue,  7 May 2024 14:19:24 +0800
-Message-Id: <20240507061924.20251-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240507061802.20184-1-yan.y.zhao@intel.com>
-References: <20240507061802.20184-1-yan.y.zhao@intel.com>
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH v2 5/5] f2fs: compress: don't allow unaligned truncation on released compress inode
+Date: Tue,  7 May 2024 14:20:19 +0800
+Message-Id: <20240507062019.1097683-1-chao@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Let pat_pfn_immune_to_uc_mtrr() check MTRR type for PFNs in untracked PAT
-range.
+f2fs image may be corrupted after below testcase:
+- mkfs.f2fs -O extra_attr,compression -f /dev/vdb
+- mount /dev/vdb /mnt/f2fs
+- touch /mnt/f2fs/file
+- f2fs_io setflags compression /mnt/f2fs/file
+- dd if=/dev/zero of=/mnt/f2fs/file bs=4k count=4
+- f2fs_io release_cblocks /mnt/f2fs/file
+- truncate -s 8192 /mnt/f2fs/file
+- umount /mnt/f2fs
+- fsck.f2fs /dev/vdb
 
-pat_pfn_immune_to_uc_mtrr() is used by KVM to distinguish MMIO PFNs and
-give them UC memory type in the EPT page tables.
-When pat_pfn_immune_to_uc_mtrr() identifies a PFN as having a PAT type of
-UC/WC/UC-, it indicates that the PFN should be accessed using an
-uncacheable memory type. Consequently, KVM maps it with UC in the EPT to
-ensure that the guest's memory access is uncacheable.
+[ASSERT] (fsck_chk_inode_blk:1256)  --> ino: 0x5 has i_blocks: 0x00000002, but has 0x3 blocks
+[FSCK] valid_block_count matching with CP             [Fail] [0x4, 0x5]
+[FSCK] other corrupted bugs                           [Fail]
 
-Internally, pat_pfn_immune_to_uc_mtrr() utilizes lookup_memtype() to
-determine PAT type for a PFN. For a PFN outside untracked PAT range, the
-returned PAT type is either
-- The type set by memtype_reserve()
-  (which, in turn, calls pat_x_mtrr_type() to adjust the requested type to
-   UC- if the requested type is WB but the MTRR type does not match WB),
-- Or UC-, if memtype_reserve() has not yet been invoked for this PFN.
+The reason is: partial truncation assume compressed inode has reserved
+blocks, after partial truncation, valid block count may change w/
+.i_blocks and .total_valid_block_count update, result in corruption.
 
-However, lookup_memtype() defaults to returning WB for PFNs within the
-untracked PAT range, regardless of their actual MTRR type. This behavior
-could lead KVM to misclassify the PFN as non-MMIO, permitting cacheable
-guest access. Such access might result in MCE on certain platforms, (e.g.
-clflush on VGA range (0xA0000-0xBFFFF) triggers MCE on some platforms).
+This patch only allow cluster size aligned truncation on released
+compress inode for fixing.
 
-Hence, invoke pat_x_mtrr_type() for PFNs within the untracked PAT range so
-as to take MTRR type into account to mitigate potential MCEs.
-
-Fixes: b8d7044bcff7 ("x86/mm: add a function to check if a pfn is UC/UC-/WC")
-Cc: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+Fixes: c61404153eb6 ("f2fs: introduce FI_COMPRESS_RELEASED instead of using IMMUTABLE bit")
+Signed-off-by: Chao Yu <chao@kernel.org>
 ---
- arch/x86/mm/pat/memtype.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+v2:
+- fix compile warning reported by lkp.
+ fs/f2fs/file.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
-index 36b603d0cdde..e85e8c5737ad 100644
---- a/arch/x86/mm/pat/memtype.c
-+++ b/arch/x86/mm/pat/memtype.c
-@@ -705,7 +705,17 @@ static enum page_cache_mode lookup_memtype(u64 paddr)
-  */
- bool pat_pfn_immune_to_uc_mtrr(unsigned long pfn)
- {
--	enum page_cache_mode cm = lookup_memtype(PFN_PHYS(pfn));
-+	u64 paddr = PFN_PHYS(pfn);
-+	enum page_cache_mode cm;
-+
-+	/*
-+	 * Check MTRR type for untracked pat range since lookup_memtype() always
-+	 * returns WB for this range.
-+	 */
-+	if (x86_platform.is_untracked_pat_range(paddr, paddr + PAGE_SIZE))
-+		cm = pat_x_mtrr_type(paddr, paddr + PAGE_SIZE, _PAGE_CACHE_MODE_WB);
-+	else
-+		cm = lookup_memtype(paddr);
+diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+index 3f0db351e976..0c8194dc6807 100644
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -952,9 +952,14 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 				  ATTR_GID | ATTR_TIMES_SET))))
+ 		return -EPERM;
  
- 	return cm == _PAGE_CACHE_MODE_UC ||
- 	       cm == _PAGE_CACHE_MODE_UC_MINUS ||
+-	if ((attr->ia_valid & ATTR_SIZE) &&
+-		!f2fs_is_compress_backend_ready(inode))
+-		return -EOPNOTSUPP;
++	if ((attr->ia_valid & ATTR_SIZE)) {
++		if (!f2fs_is_compress_backend_ready(inode))
++			return -EOPNOTSUPP;
++		if (is_inode_flag_set(inode, FI_COMPRESS_RELEASED) &&
++			!IS_ALIGNED(attr->ia_size,
++			F2FS_BLK_TO_BYTES(F2FS_I(inode)->i_cluster_size)))
++			return -EINVAL;
++	}
+ 
+ 	err = setattr_prepare(idmap, dentry, attr);
+ 	if (err)
 -- 
-2.17.1
+2.40.1
 
