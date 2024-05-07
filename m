@@ -1,50 +1,35 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F9214D451;
-	Tue,  7 May 2024 09:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CEB814D451;
+	Tue,  7 May 2024 09:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715073616; cv=none; b=bYUaH3Sc6Jwk9kN+aOJ0RMoUChUu9ty24k4PDNr/bpWIv+PcfJOZODx+eG0O4Wj+/DfrDE51tV9a/0xgBYGh6iP8dI2kXbGBFHjX+tMxE9vWRLgnSv2UvAytapsulEBEIQ1YU2N/eC+hycXlpEPNWNF1xDeDKUVU9AHbgHmteYo=
+	t=1715073629; cv=none; b=SWN0FPw30rXS9Q3EFPqWu2OwSU9Yfx4KYxZWPVw7kFQZpND4h3LDlJxbtvEWrTrApGYLFnzc6rt3ZOSlcEn2tsZzjOXVWtYNvikg6PcM2prLXD5bKoVfHgXzn59z5KmuC30H1NiiLqXDlf9ObCCsseKFUR7nrCK+NKZ6/JUkFoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715073616; c=relaxed/simple;
-	bh=sGf8/xmI8qDULHoJO68RRuCV/ofbkTSGYEIclQqzzuI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cags6hqHaeghlQcYlldB4CqFEBD2HmBvvkhg/kxwTBnjhpnNmNIxdMegEokgSXqRkGdxJW+RlLMhDw10w1YvtmXUjWISRQgItBXnGySOnHv4MFj7cDMljc1hirAT/7WfYp2SNJ1jo8RbH3nSxSP330rhuSEei0ik+eE9iu7LgoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=ArLEAsdz; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1715073629; c=relaxed/simple;
+	bh=uOZNtUaSA1NitsAwAQwP0IwamEmkrJ7p/dRtfpW0oxU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=VxU7fKrOgwcYOFKh5WjU8k7ZyDqcQTLjxV2eQVNUvCVeJb2RrDjPMlTQXEaQBc6AZrE3hJKpbt0TXe/HrVuXQgaj1eUjxNlzxWHRRHdBzetktxdmhPEnLHg56ssYK6qReOAPCXsxIDNEJVlltIV4cPTwDw9pQZ9j/lydQAEgyVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bGT+Nvke; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="ArLEAsdz"
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id A545488662;
-	Tue,  7 May 2024 11:12:19 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1715073140;
-	bh=gIiuGYeGovNn1vn+AbPqA/C3xilWFjjooh3cCUPXJPg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ArLEAsdz4l92leGhoyWDkV8sQUhnYA6o1EJlEc+Br8rlw2eUYYZMZgW4mqRKDmgjL
-	 tnyz4BaMDumIT1Ail6J+uruYZrQu8Q0zPp/cAbJH7DRcauhTJq3h0HNxUotlRh16YK
-	 UjNjF86KrS3u8F6oaviOfdUNyo43Ose8mw+U65qIvSTUtFtFZ4MWy6SHMLWIe1aTgN
-	 JS/dCdyB9QRlS23UJxlg4Obb3z1R1fjut4IjJXAuozq6lnheq7lM8kyWPmlQ+Aq+vk
-	 FCxNql/j7uLcY1IaUkgdF5gmpeRh7Xvt/5EfC/x/hkrT2z1dZwg9HWw40lyflk+fh0
-	 qAb65qHsZdeYg==
-From: Lukasz Majewski <lukma@denx.de>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukasz Majewski <lukma@denx.de>
-Subject: [net-next PATCH] test: hsr: Call cleanup_all_ns when hsr_redbox.sh script exits
-Date: Tue,  7 May 2024 11:11:55 +0200
-Message-Id: <20240507091155.3504198-1-lukma@denx.de>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bGT+Nvke"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C72DFC4AF66;
+	Tue,  7 May 2024 09:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715073628;
+	bh=uOZNtUaSA1NitsAwAQwP0IwamEmkrJ7p/dRtfpW0oxU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=bGT+NvkeqUqQom3lqasvsjqjWnqfi3h43vie3FeumHw1qxVGJbbja1ioFoeyPkt9a
+	 wTBcyKP6yY/+1h5MD6EGX3EyeHrwpfYUCrpfnNyfTkZK7LDD7jK5AGtNQm1DNZfZtT
+	 Tt7kyLToerrWg0x2GdQUqvV51XVvhOcokWIgQ7Oh47f1bn0zyFO1Api6DAFjue06XU
+	 +h57xiIXfRvxUxa+YGMdG2mXXDnDFmmg3HdRskhypMlMFn0MjrA82G+2HTnI79jEBu
+	 yQ7Xm5E5c3bVettgZjin5gN8dA7HzlJ9zA4KJ1ztBBhpbMl70XCOM17w/o9k3UV4fW
+	 yPDx36kwSwwBQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B9E1AC43332;
+	Tue,  7 May 2024 09:20:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,31 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
+Subject: Re: [PATCH net-next 0/3] net: qede: don't restrict error codes
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171507362875.12123.6973193327747912095.git-patchwork-notify@kernel.org>
+Date: Tue, 07 May 2024 09:20:28 +0000
+References: <20240503105505.839342-1-ast@fiberby.net>
+In-Reply-To: <20240503105505.839342-1-ast@fiberby.net>
+To: =?utf-8?b?QXNiasO4cm4gU2xvdGggVMO4bm5lc2VuIDxhc3RAZmliZXJieS5uZXQ+?=@ci.codeaurora.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, manishc@marvell.com
 
-Without this change the created netns instances are not cleared after
-this script execution. To fix this problem the cleanup_all_ns function
-from ../lib.sh is called.
+Hello:
 
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
----
- tools/testing/selftests/net/hsr/hsr_redbox.sh | 2 ++
- 1 file changed, 2 insertions(+)
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-diff --git a/tools/testing/selftests/net/hsr/hsr_redbox.sh b/tools/testing/selftests/net/hsr/hsr_redbox.sh
-index 52e0412c32e6..db69be95ecb3 100755
---- a/tools/testing/selftests/net/hsr/hsr_redbox.sh
-+++ b/tools/testing/selftests/net/hsr/hsr_redbox.sh
-@@ -86,6 +86,8 @@ setup_hsr_interfaces()
- check_prerequisites
- setup_ns ns1 ns2 ns3
- 
-+trap cleanup_all_ns EXIT
-+
- setup_hsr_interfaces 1
- do_complete_ping_test
- 
+On Fri,  3 May 2024 10:55:00 +0000 you wrote:
+> This series fixes the qede driver, so that when a helper function fails,
+> then the callee should return the returned error code, instead just
+> assuming that the error is eg. -EINVAL.
+> 
+> The patches in this series, reduces the change of future bugs, so new
+> error codes can be returned from the helpers, without having to update
+> the call sites.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,1/3] net: qede: use return from qede_parse_actions() for flow_spec
+    https://git.kernel.org/netdev/net-next/c/146817ec3209
+  - [net-next,2/3] net: qede: use return from qede_flow_spec_validate_unused()
+    https://git.kernel.org/netdev/net-next/c/e5ed2f0349bf
+  - [net-next,3/3] net: qede: use return from qede_flow_parse_ports()
+    https://git.kernel.org/netdev/net-next/c/c0c66eba6322
+
+You are awesome, thank you!
 -- 
-2.20.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
