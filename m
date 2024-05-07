@@ -1,57 +1,57 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56F9168B08
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3125168B06
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:18:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715087913; cv=none; b=JGPO6XG9Mqx0yP7OCpMGmgf5rlG5IFWNo3BVziBCHOWtbwlvbVZtTGa4cCHTXEOVAgyCZKFPrN7RWmq3ySPtf03bw4cVS+inta3yVPzdijh7R0hYc4rPLUYwnm/KR7IMZU8bV9AewLr1Jj4q3dMuBjMgPDw6ujI8WzdvVvtMTL4=
+	t=1715087914; cv=none; b=qKBcU1oEbevYY09ydBYX3XUOYGKrt1mif7hvmBwxF1vJpy7geZn9L/rP0NQhfzOugr1KaUFuPSnTVtq4hMWrcVpWueERYxCnRds3YdK2UXtD0d0/1vwKpLQYJpqsMa4epgxMsP0rzk5nlbb6w/2CaT5MHptqIJhs5WlFY+LjxE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715087913; c=relaxed/simple;
-	bh=bAi2ZdpBL5YU/Wxi/XteXVj/icGKTIMcJ8j0y8QoFIQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bcF22GllQbbgyPFqaxiA+gO3Lp4wD7jt9A5Lv1OL/im6u9DK0nMkTn/49QcSbIg8Q/aleVl7vux+iXINelewaCWrV/LUhRqXs4cSrAIni0vDA08rPNITkBzDRwUL7Bapal+PxiSIW92k49pUpjMDrOSwJQHGgJuF6/hDxl3v6es=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZRX3fQkb; arc=none smtp.client-ip=209.85.219.48
+	s=arc-20240116; t=1715087914; c=relaxed/simple;
+	bh=gcgfOXZpVAPIhRvVAmX6aT02WeOzRZpm8OajsHdcMqo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CkmZHrOH5qC6izoobd2NYV0zH6Wyx4AvqYZ5dxSjuU7qyfUkaEgF/6nTGRcbBEj3cX+Ft3Z4b0hDoxPAn/aacGZQPKnduobZJchDKk/ay/ocOqe7zfTo5qcuS1n6SSQKsMpwOw3V4hAKn/NROXZW/RHH9FPr2c867zoiKdD2iWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=MWJbM/cX; arc=none smtp.client-ip=209.85.160.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZRX3fQkb"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6a0d1032362so10593666d6.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 06:18:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MWJbM/cX"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-43d18a7c1deso23975621cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 06:18:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715087909; x=1715692709; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8f9hc3zYS1+xO9Qa+U18bGlg+mDWX5tgKVnZHr3X7Vw=;
-        b=ZRX3fQkbILhVfArWs1t8tD5o2EDIYKsjfkp6aXyd4PRWnf+MYlIP4LvZgzIpNz9ppB
-         BgkXuGqoyfeyH8V/pCj63430wJ6DfP/XSGvROpioq+osGTTRXtMcHEYTVmww5MHeG+p/
-         PMDCMlI6AB4vDRweg5NzuG/llx6IuK9Pagz1s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715087909; x=1715692709;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=chromium.org; s=google; t=1715087912; x=1715692712; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8f9hc3zYS1+xO9Qa+U18bGlg+mDWX5tgKVnZHr3X7Vw=;
-        b=GuyM96TjiC3ekKI2hXvazF4US6NVvmefqQVFn23BQBeGVP2ZPM5dd/X2wT7NbLBpkt
-         FqYZRUQoPEkJ4r0MuDBaKnmwWFfhCcjyIGvGTUUADpeatV1n/v06W08RROS79YBH/F1Z
-         rFCH4POzKYSJ4ebLmDGfM70pWRtqraQJ80Fm+h9Q9ZqLi9yZdUhZop4n/M1ow16OcMOm
-         T5Bx4mxKfODFBM6UfU9j46C20I+WATiIPViwl9sF/P/AwbqP3DQ4fdb1H0O29DkO+y/x
-         S1UqSzQdipeKPtH8wAL2winaqZ4oUK3N6P/QjHiDm+0AsWYfEN46Agh0cCKfUNFo1Xoi
-         AwdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyLROpXem3YABGvnG+/ziVK9I1sKik+0pJ/BE2m5LxSG5wXJJtA+4k3ZFochMExHViphWPzGttMm7BiTjVhrBiDAewIFj5GAjBNqlc
-X-Gm-Message-State: AOJu0Yzu1MKAHxq74H+zuSb403dtyegNVQzNPIQz0ShQ7VMZz3xb/Ij1
-	bTIfkZkK+yKKnZtemTdlNSs6obsBwD5UdH9VWHqodR2mQos5QYhFR6bcEh366X4deJBNjr89npW
-	dOw==
-X-Google-Smtp-Source: AGHT+IEWyU2AaY4LDvGiS+okmI+kA1r/WIVU3XwN1sQPnZg87ruugUrDP1DKKW0TPSio4xfKwE/sTA==
-X-Received: by 2002:ad4:5b8d:0:b0:6a0:c8ac:de5 with SMTP id 13-20020ad45b8d000000b006a0c8ac0de5mr16242277qvp.32.1715087909722;
-        Tue, 07 May 2024 06:18:29 -0700 (PDT)
+        bh=dp/a3NMmYGz+hm8qsmJibF9yTx35ajv4b4FGHxOOJ3Q=;
+        b=MWJbM/cX7EbscSOPeHi/T/KKwADPqBpUfpm1yZrj4iUqPCtvd+t42nlAPO9NPrmOYX
+         KnIiVWe1kx+fUQxOGxOUmEQcVseVkRygoeWapSt/jJ1loCYt5eZDYHXyRIGpkDlVoR5m
+         sFdHDl3h+mvVWCRLFCbQDC5H899GR2PYS3WJs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715087912; x=1715692712;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dp/a3NMmYGz+hm8qsmJibF9yTx35ajv4b4FGHxOOJ3Q=;
+        b=sCcRGZ1AfxJp9/Hc3i1fHvpFqrDXzGvvDmWXLQcUVQz3ycVqQcz3hNiD5Tc33tuIIj
+         CeQOSlh+4+ua72hrUtSIaSrvIWl76f6YT6mfzjG9k30pZXl4gvWRNJuP9qts37xYaTPR
+         w3wFe60Xlz73aM0eO2dkrakkkoe+JE40n7tos3JTvLMtC7x6OVhaApZ4oGPaB/iLpcG8
+         6BpX655pCWlUQjYXIz0ue47stLfmT3UFXhAFs1A29WpeBJv7qIMQxgSYOxLbaiuQn9W3
+         kg5LpF4aYKnGjwRGoNpgTK3uHDXJkDaNIpKIF/kNQhiiQtVDElFWuYn6c8mSh8LRisA0
+         leCg==
+X-Forwarded-Encrypted: i=1; AJvYcCV7b6NelswJNes8s6r0/fKf0vx2taOOrFup/5TqHfw9nTTHCm27nbM6SP8bmCeLZyfAbnzeT99hPGZ6TjvPyrh83CQd79ZO0HV6c+70
+X-Gm-Message-State: AOJu0YzOxh0bP69OK7Qh36R4cmpMgkgB7bQYlm7B8jjU/SooJCGWWJpC
+	4zbC9giPjG69PBs0AShMuZf7m6oO6CFeY2DauvLwez2JxZ4NV3OAMgfMhn4n1w==
+X-Google-Smtp-Source: AGHT+IEDglfo4F9kZks6VdwXO2dFsis27euicA9VsC2TmfkNWeTSlqrnmzGMgOLPrUCqKhp03xspNw==
+X-Received: by 2002:ad4:5ca8:0:b0:6a0:c242:16d0 with SMTP id q8-20020ad45ca8000000b006a0c24216d0mr4441213qvh.31.1715087911865;
+        Tue, 07 May 2024 06:18:31 -0700 (PDT)
 Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
-        by smtp.gmail.com with ESMTPSA id t15-20020a05621405cf00b006a0d19c3139sm4655105qvz.118.2024.05.07.06.18.28
+        by smtp.gmail.com with ESMTPSA id t15-20020a05621405cf00b006a0d19c3139sm4655105qvz.118.2024.05.07.06.18.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 06:18:29 -0700 (PDT)
+        Tue, 07 May 2024 06:18:31 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Subject: [PATCH 00/18] media: Fix the last set of coccinelle warnings
-Date: Tue, 07 May 2024 13:18:26 +0000
-Message-Id: <20240507-cocci-flexarray-v1-0-4a421c21fd06@chromium.org>
+Date: Tue, 07 May 2024 13:18:28 +0000
+Subject: [PATCH 02/18] media: xilinx: Refactor struct xvip_dma
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,9 +60,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIACIqOmYC/x3MMQqAMAxA0atIZgupKFavIg6hphoQlRSkUry7x
- fEN/2eIrMIRxiqD8i1RzqPA1hX4jY6VjSzF0GDTYoe98af3YsLOiVTpMQM57MmxRcdQqks5SPq
- P0/y+H5EtvOVhAAAA
+Message-Id: <20240507-cocci-flexarray-v1-2-4a421c21fd06@chromium.org>
+References: <20240507-cocci-flexarray-v1-0-4a421c21fd06@chromium.org>
+In-Reply-To: <20240507-cocci-flexarray-v1-0-4a421c21fd06@chromium.org>
 To: Michael Tretter <m.tretter@pengutronix.de>, 
  Pengutronix Kernel Team <kernel@pengutronix.de>, 
  Mauro Carvalho Chehab <mchehab@kernel.org>, 
@@ -79,52 +79,46 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.12.4
 
-With this set we are done with all the cocci warning/errors.
+Replace a single element array with a single field.
+
+The following cocci warning is fixed:
+drivers/media/platform/xilinx/xilinx-dma.h:100:19-22: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
-Ricardo Ribalda (18):
-      media: allegro: nal-hevc: Refactor nal_hevc_sub_layer_hrd_parameters
-      media: xilinx: Refactor struct xvip_dma
-      media: dvb-frontend/mxl5xx: Refactor struct MBIN_FILE_T
-      media: dvb-frontend/mxl5xx: Use flex array for MBIN_SEGMENT_T
-      media: pci: cx18: Use flex arrays for struct cx18_scb
-      media: siano: Refactor struct sms_msg_data
-      media: siano: Remove unused structures
-      media: siano: Use flex arrays for sms_firmware
-      media: venus: Remove unused structs
-      media: venus: Use flex array for hfi_session_release_buffer_pkt
-      media: venus: Refactor struct hfi_uncompressed_plane_info
-      media: venus: Refactor struct hfi_session_get_property_pkt
-      media: venus: Refactor struct hfi_uncompressed_format_supported
-      media: venus: Refactor hfi_session_empty_buffer_uncompressed_plane0_pkt
-      media: venus: Refactor hfi_session_empty_buffer_compressed_pkt
-      media: venus: Refactor hfi_sys_get_property_pkt
-      media: venus: Refactor hfi_session_fill_buffer_pkt
-      media: venus: Refactor hfi_buffer_alloc_mode_supported
+ drivers/media/platform/xilinx/xilinx-dma.c | 4 ++--
+ drivers/media/platform/xilinx/xilinx-dma.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
- drivers/media/common/siano/smscoreapi.c           | 10 ++---
- drivers/media/common/siano/smscoreapi.h           | 18 +--------
- drivers/media/common/siano/smsdvb-main.c          |  4 +-
- drivers/media/dvb-frontends/mxl5xx.c              |  2 +-
- drivers/media/dvb-frontends/mxl5xx_defs.h         |  4 +-
- drivers/media/pci/cx18/cx18-scb.h                 |  2 +-
- drivers/media/platform/allegro-dvt/allegro-core.c |  6 +--
- drivers/media/platform/allegro-dvt/nal-hevc.c     | 11 ++----
- drivers/media/platform/allegro-dvt/nal-hevc.h     |  6 +--
- drivers/media/platform/qcom/venus/hfi_cmds.c      | 16 ++++----
- drivers/media/platform/qcom/venus/hfi_cmds.h      | 46 +++++------------------
- drivers/media/platform/qcom/venus/hfi_helper.h    | 45 ++--------------------
- drivers/media/platform/qcom/venus/hfi_parser.c    |  2 +-
- drivers/media/platform/qcom/venus/hfi_venus.c     |  2 +-
- drivers/media/platform/xilinx/xilinx-dma.c        |  4 +-
- drivers/media/platform/xilinx/xilinx-dma.h        |  2 +-
- 16 files changed, 48 insertions(+), 132 deletions(-)
----
-base-commit: e695668af8523b059127dfa8b261c76e7c9cde10
-change-id: 20240507-cocci-flexarray-9a807a8e108e
+diff --git a/drivers/media/platform/xilinx/xilinx-dma.c b/drivers/media/platform/xilinx/xilinx-dma.c
+index a96de5d388a1..a1687b868a44 100644
+--- a/drivers/media/platform/xilinx/xilinx-dma.c
++++ b/drivers/media/platform/xilinx/xilinx-dma.c
+@@ -348,8 +348,8 @@ static void xvip_dma_buffer_queue(struct vb2_buffer *vb)
+ 	}
+ 
+ 	dma->xt.frame_size = 1;
+-	dma->sgl[0].size = dma->format.width * dma->fmtinfo->bpp;
+-	dma->sgl[0].icg = dma->format.bytesperline - dma->sgl[0].size;
++	dma->sgl.size = dma->format.width * dma->fmtinfo->bpp;
++	dma->sgl.icg = dma->format.bytesperline - dma->sgl.size;
+ 	dma->xt.numf = dma->format.height;
+ 
+ 	desc = dmaengine_prep_interleaved_dma(dma->dma, &dma->xt, flags);
+diff --git a/drivers/media/platform/xilinx/xilinx-dma.h b/drivers/media/platform/xilinx/xilinx-dma.h
+index 9c6d4c18d1a9..18f77e1a7b39 100644
+--- a/drivers/media/platform/xilinx/xilinx-dma.h
++++ b/drivers/media/platform/xilinx/xilinx-dma.h
+@@ -97,7 +97,7 @@ struct xvip_dma {
+ 	struct dma_chan *dma;
+ 	unsigned int align;
+ 	struct dma_interleaved_template xt;
+-	struct data_chunk sgl[1];
++	struct data_chunk sgl;
+ };
+ 
+ #define to_xvip_dma(vdev)	container_of(vdev, struct xvip_dma, video)
 
-Best regards,
 -- 
-Ricardo Ribalda <ribalda@chromium.org>
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
