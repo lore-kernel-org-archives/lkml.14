@@ -1,57 +1,57 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADEC15ECD2;
-	Tue,  7 May 2024 09:36:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA3415EFA1;
+	Tue,  7 May 2024 09:36:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715074564; cv=none; b=dypMjQxxREDpugB6X9lK8PTB3eI/lFXFZZZCLobOFlKsxyHVkBI87dj9c0X4/fW/qMwv4gXrK3TEvLORjthUtXyNo9BZDQ8EdZQmLU7+lSjcD9MGec5p0vMORsSp9JtPRJUy0BHPcvi/8jdpieGA5tbwi66L32iFtvMhSyz+Tv8=
+	t=1715074564; cv=none; b=nyXYf5yaydlkd9Ep4xR9UK4NNkKcwHpY9++tl9G5rJYgp51IdZlptdLEOhdWB/uIHN9S5NUPnmsVxEHfREK08ML7lp8cdES0mKeaTY7Y8NDJXLiFZbRUVYxvuchA+oR473UgwKGMeuRfht5rcWo3Mjq0MzU3ed4NNquajn5oRQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715074564; c=relaxed/simple;
-	bh=L9yyqsasGcBRwTVVl5BvyZK7asmI7UPEWvqiN+AHkfY=;
+	bh=xLIkzUhYqkpoaAiaQxcqMO2Ytt7HUJ27tzDsmg6WfCM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NbapZE0U4yjDjGyGt0h/NXLjLeEyxkceDitsec7fAjNmpYoSpaGFPtUbY3us6rPsWiC7LdKIoqtk+T2OtXlLY97kKZNMsmiAdtivX6i3kMPVNpDTDU1Z5zSUMshSaXdQg0xrFD95awZGSJ8pKOcaj0aR2B5BAsa6/c3V+S7FR+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OFBIqBY/; arc=none smtp.client-ip=209.85.208.177
+	 MIME-Version; b=KGvrZwkCnvz21DEXX0kMIy953m2/j3ehMq0QlHuJYIiF9J1ABgoagpo5KkK4kY6W/Ah7PssGWp8SMP/9myLWUJ2kikzjgs8dS/iQuMdWW1v2bY9bNkduZP4vozJg/ZBt2TUyNZVJwHQ51dA/u52xVcTFS+hMyz43CuDosqUzkf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=URAp9JHq; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OFBIqBY/"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2df9af57b5eso38862831fa.2;
-        Tue, 07 May 2024 02:36:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URAp9JHq"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e3e1ad0b19so8252951fa.0;
+        Tue, 07 May 2024 02:36:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715074560; x=1715679360; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1715074559; x=1715679359; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w1tkz/C4aSczVsYDDvrLDAru1oEnBIKM9qUQq3rJqNA=;
-        b=OFBIqBY/penvTFEvzDMkB83jyhUCTSiIYdGhLomlYiwBDYeNDQv3O9kDTT3p7ISOjC
-         kxe1nE6LP9fg3IuC06wPb6aRT13ohfemTHR7/mPBZSHZgMh2NC8VYVOsMY04P2pcdMbV
-         5Qv+ekTH0G+ojyY7NdmbcSecAa2Rnk0NT7+PBBSOzrdco6Wir+PcR5StByq1SaFf1/+F
-         V/nWL0leuSf89pQmsDP5WjfoEylyzIUG6QtNqyEJMB4Th/yYOYNg1FhDUZNljfsOKDaM
-         QpC0F++ofZgLNTTYMXM9aYL/x/rC/rXOERxn/E00jCR04owKTCgevuzAcpD2EeCJhMup
-         7o0Q==
+        bh=WdJY0TZw/fjltnhvg0EPkwklXe5dzlu0wabU2jZ/52w=;
+        b=URAp9JHq9K2vrhXWLr9yPZnKObzQo/IvLOJCvDYgJLqZP1m6Yq2dIQEGSvV+2snydK
+         H0rHvmue5VnuKh1SWZn88El1ANktAsHPMRj8qfQ7k7tgID7ZDmpSFDiVWmnBvS1Co2FT
+         4K55opFA4KFxQW7Hz9mj+/7l8Sn0iwEbWPhmQJMHYsx8d+tlxmr4MIfaTHmo7fVJZeNE
+         ZO64dQhiVMsrkN3eSFLda2iwm60hyH2WS4Eg5pS2rLI8qZG63hPdokF8Lr3Bue1u10Ub
+         95apv8G7Lea70EK/FXmbCPpPmh+EoEsms+pNnwdtOa2jf37H7+WILmiQD/sQm8NzoNyQ
+         AvwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715074560; x=1715679360;
+        d=1e100.net; s=20230601; t=1715074559; x=1715679359;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w1tkz/C4aSczVsYDDvrLDAru1oEnBIKM9qUQq3rJqNA=;
-        b=X/ZmyBFVeXIPmeBIdZwo9TCkQp1uOdvlaQdVIC2e6arNtfBE9f0YNKlwZciKwzU+lW
-         VnAOru9QyaNGX9xSf87uzo18xBReqiLwsD2sYUNeR0QB9CIcAjqLeLx3LC/y/RGsxp08
-         ygaD4u46qbwS6US1Ck6i7W+TqHSs4ZCxH9Iu+bCoO5iMVEzwlA0EiimIQJrKzSquSgNz
-         42eNXrCcSgctO5ZYUaiQl6i7Or4IJnvygK0HzvmTcrD+yeuiWGWJXE1mJL6MicPXb6tN
-         HXc3cvDhdqCbm6C2NK9Sx7p4x+ELtAaylrKGt7qr9lphEN301TrKNe88czQ9FqsCHrl1
-         79Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCVlWeOrC+tUXHbotycASOOz/WE/LYlvLvYg2tghGWBCHvRgHC6pv41UuHHjJuRyziOGjs2EwibAZXyDoTK2runv/6Ncsen8s+JWqCCE
-X-Gm-Message-State: AOJu0YyVNABP9XfEoOu0Zg1SCXWjalCoxVUet3hlyTUNCHTlPHzQKoaU
-	swJoeBJwASyEBH1o6bWfF/ETTvbcCg/XsemtVoNnDxDq+1rnD58t
-X-Google-Smtp-Source: AGHT+IEe29Z4B5o9+JvHcbUN9sMcQQWlKTFt0TCj3L378xX+JENFQMwDnGLqTaJiYVlrjSE+Qd/rhg==
-X-Received: by 2002:a2e:8904:0:b0:2df:4bad:cb7a with SMTP id d4-20020a2e8904000000b002df4badcb7amr10088812lji.0.1715074560360;
-        Tue, 07 May 2024 02:36:00 -0700 (PDT)
+        bh=WdJY0TZw/fjltnhvg0EPkwklXe5dzlu0wabU2jZ/52w=;
+        b=t4ONy/ykzgRW0YvxTb3Cu5nBUj/3nrxNWcmFSU9sOEvGCrtNrAu5vxTshQesEcb/NK
+         57EaMdjrSMQs9b2dBUND4MmKvk/U/DRrem++MyMafaX9P1vz5oLmYZc8legrMRjNjA3r
+         gUx6kR6Yu2EW6hoDBQBYMP0xJGyYjrmp4QTpbnd8gs0tYuJsD/z6E+CfOXwj/0/djHLi
+         /At2MhaOeDTbFWhPFGfbCWCWhzRty80EPvbgNsQ+40KRVXtCEKsHhH753LyW6Y45Qm4b
+         zqf8e4J2Llzo92rqoWD2/zpwQo3DZR5XqaQpu2wubQQe+j3f9IZBkc29PmnXH8QXzPAz
+         WaGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXuLWELE/29xUT1pzgTuZoHKtp3VKjfHnLbQHJf3Cc45qodu7zad6iEkRJDyyBrkJimo87xCQgZlNJI9FGA2EqRKq/Zkau5WMGyWH16
+X-Gm-Message-State: AOJu0YwMnMcRNeenSx99x4B2HE5Dpi/KC3OdVi8Bj+jd2bGWIoPT+UIr
+	MzXt7sqFhU33gjsYmspUc6HeuuyAkotvuAl9XyCJFeuTsee8yHF6
+X-Google-Smtp-Source: AGHT+IEA+c+gDL6J8ZrBuC+CGl6J+uw0YGSUA+D3NFyQuktUotuVGX88q5QGcMdQcwvZvDQ8PfEoXg==
+X-Received: by 2002:a2e:2406:0:b0:2e2:5fd:7030 with SMTP id k6-20020a2e2406000000b002e205fd7030mr7916249ljk.13.1715074558517;
+        Tue, 07 May 2024 02:35:58 -0700 (PDT)
 Received: from pc638.lan (host-185-121-47-193.sydskane.nu. [185.121.47.193])
-        by smtp.gmail.com with ESMTPSA id t18-20020a2e9d12000000b002e29c50c4dcsm1335473lji.27.2024.05.07.02.35.59
+        by smtp.gmail.com with ESMTPSA id t18-20020a2e9d12000000b002e29c50c4dcsm1335473lji.27.2024.05.07.02.35.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 02:35:59 -0700 (PDT)
+        Tue, 07 May 2024 02:35:58 -0700 (PDT)
 From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 To: "Paul E . McKenney" <paulmck@kernel.org>
 Cc: RCU <rcu@vger.kernel.org>,
@@ -63,9 +63,9 @@ Cc: RCU <rcu@vger.kernel.org>,
 	Uladzislau Rezki <urezki@gmail.com>,
 	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
 	Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH 29/48] rcu: Remove redundant CONFIG_PROVE_RCU #if condition
-Date: Tue,  7 May 2024 11:35:11 +0200
-Message-Id: <20240507093530.3043-30-urezki@gmail.com>
+Subject: [PATCH 27/48] rcu: Make hotplug operations track GP state, not flags
+Date: Tue,  7 May 2024 11:35:09 +0200
+Message-Id: <20240507093530.3043-28-urezki@gmail.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240507093530.3043-1-urezki@gmail.com>
 References: <20240507093530.3043-1-urezki@gmail.com>
@@ -79,40 +79,104 @@ Content-Transfer-Encoding: 8bit
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-The #if condition controlling the rcu_preempt_sleep_check() definition
-has a redundant check for CONFIG_PREEMPT_RCU, which is already checked
-for by an enclosing #ifndef.  This commit therefore removes this redundant
-condition from the inner #if.
+Currently, there are rcu_data structure fields named ->rcu_onl_gp_seq
+and ->rcu_ofl_gp_seq that track the rcu_state.gp_flags field at the
+time of the corresponding CPU's last online or offline operation,
+respectively.  However, this information is not particularly useful.
+It would be better to instead track the grace period state kept
+in rcu_state.gp_state.  This would also be consistent with the
+initialization in rcu_boot_init_percpu_data(), which is to RCU_GP_CLEANED
+(an rcu_state.gp_state value), and also with the diagnostics in
+rcu_implicit_dynticks_qs(), whose format is consistent with an integer,
+not a bitmask.
+
+This commit therefore makes this change and changes the names to
+->rcu_onl_gp_flags and ->rcu_ofl_gp_flags, respectively.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 ---
- include/linux/rcupdate.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/rcu/tree.c        | 12 ++++++------
+ kernel/rcu/tree.h        |  4 ++--
+ kernel/rcu/tree_plugin.h |  4 ++--
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
-index 2c54750e36a0..382780bb60f4 100644
---- a/include/linux/rcupdate.h
-+++ b/include/linux/rcupdate.h
-@@ -401,15 +401,15 @@ static inline int debug_lockdep_rcu_enabled(void)
- 		}							\
- 	} while (0)
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 7149b2d5cdd6..306f55b81d10 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -841,8 +841,8 @@ static int rcu_implicit_dynticks_qs(struct rcu_data *rdp)
+ 				__func__, rnp1->grplo, rnp1->grphi, rnp1->qsmask, rnp1->qsmaskinit, rnp1->qsmaskinitnext, rnp1->rcu_gp_init_mask);
+ 		pr_info("%s %d: %c online: %ld(%d) offline: %ld(%d)\n",
+ 			__func__, rdp->cpu, ".o"[rcu_rdp_cpu_online(rdp)],
+-			(long)rdp->rcu_onl_gp_seq, rdp->rcu_onl_gp_flags,
+-			(long)rdp->rcu_ofl_gp_seq, rdp->rcu_ofl_gp_flags);
++			(long)rdp->rcu_onl_gp_seq, rdp->rcu_onl_gp_state,
++			(long)rdp->rcu_ofl_gp_seq, rdp->rcu_ofl_gp_state);
+ 		return 1; /* Break things loose after complaining. */
+ 	}
  
--#if defined(CONFIG_PROVE_RCU) && !defined(CONFIG_PREEMPT_RCU)
-+#ifndef CONFIG_PREEMPT_RCU
- static inline void rcu_preempt_sleep_check(void)
- {
- 	RCU_LOCKDEP_WARN(lock_is_held(&rcu_lock_map),
- 			 "Illegal context switch in RCU read-side critical section");
+@@ -4420,9 +4420,9 @@ rcu_boot_init_percpu_data(int cpu)
+ 	WARN_ON_ONCE(rcu_dynticks_in_eqs(rcu_dynticks_snap(cpu)));
+ 	rdp->barrier_seq_snap = rcu_state.barrier_sequence;
+ 	rdp->rcu_ofl_gp_seq = rcu_state.gp_seq;
+-	rdp->rcu_ofl_gp_flags = RCU_GP_CLEANED;
++	rdp->rcu_ofl_gp_state = RCU_GP_CLEANED;
+ 	rdp->rcu_onl_gp_seq = rcu_state.gp_seq;
+-	rdp->rcu_onl_gp_flags = RCU_GP_CLEANED;
++	rdp->rcu_onl_gp_state = RCU_GP_CLEANED;
+ 	rdp->last_sched_clock = jiffies;
+ 	rdp->cpu = cpu;
+ 	rcu_boot_init_nocb_percpu_data(rdp);
+@@ -4682,7 +4682,7 @@ void rcutree_report_cpu_starting(unsigned int cpu)
+ 	ASSERT_EXCLUSIVE_WRITER(rcu_state.ncpus);
+ 	rcu_gpnum_ovf(rnp, rdp); /* Offline-induced counter wrap? */
+ 	rdp->rcu_onl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+-	rdp->rcu_onl_gp_flags = READ_ONCE(rcu_state.gp_flags);
++	rdp->rcu_onl_gp_state = READ_ONCE(rcu_state.gp_state);
+ 
+ 	/* An incoming CPU should never be blocking a grace period. */
+ 	if (WARN_ON_ONCE(rnp->qsmask & mask)) { /* RCU waiting on incoming CPU? */
+@@ -4733,7 +4733,7 @@ void rcutree_report_cpu_dead(void)
+ 	arch_spin_lock(&rcu_state.ofl_lock);
+ 	raw_spin_lock_irqsave_rcu_node(rnp, flags); /* Enforce GP memory-order guarantee. */
+ 	rdp->rcu_ofl_gp_seq = READ_ONCE(rcu_state.gp_seq);
+-	rdp->rcu_ofl_gp_flags = READ_ONCE(rcu_state.gp_flags);
++	rdp->rcu_ofl_gp_state = READ_ONCE(rcu_state.gp_state);
+ 	if (rnp->qsmask & mask) { /* RCU waiting on outgoing CPU? */
+ 		/* Report quiescent state -before- changing ->qsmaskinitnext! */
+ 		rcu_disable_urgency_upon_qs(rdp);
+diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+index df48160b3136..ff4d8b60554b 100644
+--- a/kernel/rcu/tree.h
++++ b/kernel/rcu/tree.h
+@@ -273,9 +273,9 @@ struct rcu_data {
+ 	bool rcu_iw_pending;		/* Is ->rcu_iw pending? */
+ 	unsigned long rcu_iw_gp_seq;	/* ->gp_seq associated with ->rcu_iw. */
+ 	unsigned long rcu_ofl_gp_seq;	/* ->gp_seq at last offline. */
+-	short rcu_ofl_gp_flags;		/* ->gp_flags at last offline. */
++	short rcu_ofl_gp_state;		/* ->gp_state at last offline. */
+ 	unsigned long rcu_onl_gp_seq;	/* ->gp_seq at last online. */
+-	short rcu_onl_gp_flags;		/* ->gp_flags at last online. */
++	short rcu_onl_gp_state;		/* ->gp_state at last online. */
+ 	unsigned long last_fqs_resched;	/* Time of last rcu_resched(). */
+ 	unsigned long last_sched_clock;	/* Jiffies of last rcu_sched_clock_irq(). */
+ 	struct rcu_snap_record snap_record; /* Snapshot of core stats at half of */
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 36a8b5dbf5b5..340bbefe5f65 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -805,8 +805,8 @@ dump_blkd_tasks(struct rcu_node *rnp, int ncheck)
+ 		rdp = per_cpu_ptr(&rcu_data, cpu);
+ 		pr_info("\t%d: %c online: %ld(%d) offline: %ld(%d)\n",
+ 			cpu, ".o"[rcu_rdp_cpu_online(rdp)],
+-			(long)rdp->rcu_onl_gp_seq, rdp->rcu_onl_gp_flags,
+-			(long)rdp->rcu_ofl_gp_seq, rdp->rcu_ofl_gp_flags);
++			(long)rdp->rcu_onl_gp_seq, rdp->rcu_onl_gp_state,
++			(long)rdp->rcu_ofl_gp_seq, rdp->rcu_ofl_gp_state);
+ 	}
  }
--#else /* #ifdef CONFIG_PROVE_RCU */
-+#else // #ifndef CONFIG_PREEMPT_RCU
- static inline void rcu_preempt_sleep_check(void) { }
--#endif /* #else #ifdef CONFIG_PROVE_RCU */
-+#endif // #else // #ifndef CONFIG_PREEMPT_RCU
  
- #define rcu_sleep_check()						\
- 	do {								\
 -- 
 2.39.2
 
