@@ -1,84 +1,88 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E52D016D4DC;
-	Tue,  7 May 2024 16:03:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE54168AF1;
+	Tue,  7 May 2024 16:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097786; cv=none; b=A2Tmwx+RYzP2frqtJFhBxiPDY8Ab8S0WH9QO9jyQ9Y4eJEIN7dsMqOj5IoB1Llq0vYlh88OXtCo2cpqmHgB2UDEvXDnddgKtxLsQdHw2E+2H15mtjdlXv4jKj2FrjGH4mmzVV0gzT/oD1l7020UK+Lw0zXn2D0N7+fbBWInMnJE=
+	t=1715097815; cv=none; b=ti7SSfYLQfloMgc+D/mUu1gxf53IbUYhxzDDdbuePOV6e00bCctPYQikVbs86UuwiShM3SXn+fb/QUOvzDCoTXK0ncoj4o1cUwRM6gkOX7lQgont3eRgriaD4vV8IJfUJROPMEVjPf8DCoxHEDPloZ7xALO3nPcBlFCKPNknFLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715097786; c=relaxed/simple;
-	bh=lNe2OKBPTAJiByLVNklZt3fwsF2kSncvssGXrmbVVqU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r0FJfCpK2z9O9EuT2mlYqTFn2/6xhBzS29UmUc1/IehnXQNpnkgXUYfbmfzEiC00p2aDujw26foDF60e7OvABAFLNGFfME8sq6zf4dJWuO4/udVUIhLZaV0T05/9MfWa2uehI9F3igJB21tfi71EvxYngpnzFba5R04lYlEbs0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a59cdf7cd78so622954866b.0;
-        Tue, 07 May 2024 09:03:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715097783; x=1715702583;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AXEoid+P4y9d9rlcyx/evf5V3Cmxvkdb7Jf8hRQs27Y=;
-        b=njnDiqf9+Tvwuoayrgwz8CATRyA7vnF2FUAFa0r/wxtgkGYxx7L40el/onM7MsaZkX
-         VuzW9CL8+2K6LbVZNLhg4H2FL15hIe3ANRVt/BTnpYIyor1HLxeNL/DG8obSWTg1zZTL
-         0TBNAQuSbut0ipV5TNl5FHLj6UsuNKaB24vkTSzviBmDAey3oHf7rMplYI4SYr2QZMlv
-         4TVUVONsC+iC/d5z3vU8o0MkObT6WECL+zct4zjr4/y/gslHrSDweYbMOaYLj5w7HQeD
-         6AwJAs+lr5PN974klc31gCVl0kjsZsOKOiGp+jwbK49wZB/B4rjiof+9nFCqjMnWDlvu
-         o56w==
-X-Forwarded-Encrypted: i=1; AJvYcCUV56NHKywqVCNgcjd49PVg3VVPni71uYzEMTlTiPxnT69A+IuhmaotzhHODcBSVUb01sJtp/VQCl7uT9jN3h1JYIk6mViSp509bIBOOHa3OTbVZ8X5B4v9xU1MKEzT6iZmVGy3tQ==
-X-Gm-Message-State: AOJu0Yx9J7aJOOWL0D0n2JomRL68jdMEh3azKGHK0QGupaf4//kiODRj
-	jj/OELbMW9Bcwa1fDSrhnVqGwBBTZgT+Tll2nfbcVs+9U8553aWL+ZA2/g==
-X-Google-Smtp-Source: AGHT+IFtMMmBt2l5Z1o6dwv8yMonvYSVpTqzn3bwquAqseHLd2VYeqJJU7FnCoTxbJrq9Fw5nmTMKQ==
-X-Received: by 2002:a17:907:da2:b0:a59:ca9c:4de9 with SMTP id go34-20020a1709070da200b00a59ca9c4de9mr6079850ejc.76.1715097783279;
-        Tue, 07 May 2024 09:03:03 -0700 (PDT)
-Received: from gmail.com (fwdproxy-lla-116.fbsv.net. [2a03:2880:30ff:74::face:b00c])
-        by smtp.gmail.com with ESMTPSA id xa8-20020a170907b9c800b00a59eb443e01sm922487ejc.74.2024.05.07.09.03.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 09:03:02 -0700 (PDT)
-Date: Tue, 7 May 2024 09:03:00 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>, leit@meta.com,
-	"open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <cgroups@vger.kernel.org>,
-	"open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" <linux-mm@kvack.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] memcg: Fix data-race KCSAN bug in rstats
-Message-ID: <ZjpQtDE9aixy0hZf@gmail.com>
-References: <20240424125940.2410718-1-leitao@debian.org>
- <ZjTKLVjxuUJwwFPg@tiehlicka>
+	s=arc-20240116; t=1715097815; c=relaxed/simple;
+	bh=Xx7Ej+9S8evVgDf2z9EGwZnJvMuS9cGkKNaqI+0ELtk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YLG4nFG7wzGEbBo7mhLEGZUomu555d2f/ND+gJp38HP9mj9H7LS+ye+3/cnGrCG/7/tJB4nZMKZyj6qIn6Vul70lzGFZWtZ1UTKwmkqAY8/98u6wNLOgXVzlENoHJp61qbugtK3kuxSZ2Q6srG3zBzRMKN8XTQAqiv7XyfQv404=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=nFVPttSH; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="nFVPttSH"
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447EWXPR028438;
+	Tue, 7 May 2024 11:01:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=j
+	tTiHU6Lrbbii6hLYj4QMHgZinWZVyyt0Dx+k7hmrAw=; b=nFVPttSHSfcNq1Jsu
+	jLJs/RRTgPTLtdRDLJEJgAxc6g5VBkef9AWQFy1LF0Z7Egj36Lwh00aLaF6LJUW2
+	ev58XGFHZkH/oPLRFSgp51B7R2DOs7PGfA23xsNWRvu00xKBx/ZDKQBzB6GLZvGD
+	VvnedakDIfZuJKwgjPtRBYGtC74l5VZHNawBxsK0Cu8lQtlzZbLP6oW5DbygQYAp
+	MqOCsMC8flRzw6C08eOBVd6dc7+dkv/U/n31rsE4+UMfbX8duQclTW1/Lvu497fb
+	cf5NfYlYp7SSWVxQFu+psdtURePhGIJorpW2PG8ynBQQpbGgX2QcpYVj+v0T/MwB
+	Vc37g==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xy2cmhaug-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 May 2024 11:01:38 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 7 May 2024
+ 17:01:35 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Tue, 7 May 2024 17:01:35 +0100
+Received: from sbinding-cirrus-dsktp2.ad.cirrus.com (unknown [198.61.65.12])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 81891820249;
+	Tue,  7 May 2024 16:01:35 +0000 (UTC)
+From: Stefan Binding <sbinding@opensource.cirrus.com>
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+CC: <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
+        "Stefan
+ Binding" <sbinding@opensource.cirrus.com>
+Subject: [PATCH v1] ALSA: hda/realtek: Add support for ASUS Zenbook 2024 HN7306W
+Date: Tue, 7 May 2024 17:01:31 +0100
+Message-ID: <20240507160131.356114-1-sbinding@opensource.cirrus.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjTKLVjxuUJwwFPg@tiehlicka>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: eH9MVN0oIpQj7gMEwNvdblta-VVel0L3
+X-Proofpoint-GUID: eH9MVN0oIpQj7gMEwNvdblta-VVel0L3
+X-Proofpoint-Spam-Reason: safe
 
-Hello Michal,
+This laptop uses CS35L41 HDA with 2 amps using I2C and Internal Boost.
 
-On Fri, May 03, 2024 at 01:27:41PM +0200, Michal Hocko wrote:
-> On Wed 24-04-24 05:59:39, Breno Leitao wrote:
-> > The race occurs because two code paths access the same "stats_updates"
-> > location. Although "stats_updates" is a per-CPU variable, it is remotely
-> > accessed by another CPU at
-> > cgroup_rstat_flush_locked()->mem_cgroup_css_rstat_flush(), leading to
-> > the data race mentioned.
-> 
-> It is worth mentioning that the race is harmless.
+Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
+---
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Are you suggesting that the race consistently avoids producing corrupt
-data, or even if corruption occurs, it's inconsequential because it only
-affects statistics?
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 8502b30d5d5d..8c157158f1cb 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -10276,6 +10276,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1043, 0x1e63, "ASUS H7606W", ALC285_FIXUP_CS35L56_I2C_2),
+ 	SND_PCI_QUIRK(0x1043, 0x1e83, "ASUS GA605W", ALC285_FIXUP_CS35L56_I2C_2),
+ 	SND_PCI_QUIRK(0x1043, 0x1e8e, "ASUS Zephyrus G15", ALC289_FIXUP_ASUS_GA401),
++	SND_PCI_QUIRK(0x1043, 0x1ed3, "ASUS HN7306W", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x1043, 0x1ee2, "ASUS UM6702RA/RC", ALC287_FIXUP_CS35L41_I2C_2),
+ 	SND_PCI_QUIRK(0x1043, 0x1c52, "ASUS Zephyrus G15 2022", ALC289_FIXUP_ASUS_GA401),
+ 	SND_PCI_QUIRK(0x1043, 0x1f11, "ASUS Zephyrus G14", ALC289_FIXUP_ASUS_GA401),
+-- 
+2.34.1
 
-If there's no data corruption, does it incur any performance drawbacks?
-
-Thanks!
