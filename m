@@ -1,45 +1,46 @@
 Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2057.outbound.protection.outlook.com [40.107.247.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0811254BED;
-	Tue,  7 May 2024 20:43:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02C33C097;
+	Tue,  7 May 2024 20:43:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.57
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715114621; cv=fail; b=g9atP4d/HbenHX9k8MfTbL3Zt196aAOHVKSgYoNl61QBgnUUnQpAyNbYq6iD1Ob9WKAss/MEV6juooxvs6yMGdONuQpV5s0ySfS1yn69j2sALu4lwIhep6OJAArL9NcZm0sOzlrMpU8pRRclAWQCOJxiR8Z9GNK/LSf/+JZX1uU=
+	t=1715114626; cv=fail; b=Ua4GGKfLmWyW36E+PB6b9+JGj0GbPfa1evBQCjslV4ZR8b2UDqJ9ed0O+OBz7qo+T1C8m1IjRcJmqHDnTGuYEmWVPs0gvFaeak1p0Rz4vMyWpBgTBZxHnAwvKTOb4bWzN5FiRQzGpSZVjiXnpNKdQrGXSFUKe5litlk6o7RzZ0g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715114621; c=relaxed/simple;
-	bh=hc0vWKzWBYmTQPNA0uhujkmwegxnId+yCijUqEvVwaI=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=ixjPZg9oD9ULewCPe4yNvEjFHOe4GSCrRBWLZc8LDjyyMvhKjFYBnGS0lVrWy7Yzq4Yjc8lzEVzG8jK9vRDrNP1xEi+maaFJkUjb4lM2e/QuVHADsJZLc7AzwubPf6S395g4yGhjS8pB71/2fBvGNHGoGJ1NK8jyG3YR5a9AKak=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=nkYxF85O; arc=fail smtp.client-ip=40.107.247.57
+	s=arc-20240116; t=1715114626; c=relaxed/simple;
+	bh=Pu2py3MzeHWKZMrHR2Zye8AlThfwK4m0Da4QqUYO0w4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=T83A5wI/lhi9Qkg+hZkSIxp+MZCFDm6kIbzrq+KP78+uaT3LuaBfdyszRw64AvQ55okMuNSyvP2nbefn7bXyyYcKcqUVJF77b6n4e73NNmoYlBfLLn0lPu7rjjKQ1Z6qqm1/5FIBnZXQ+P3/HKRl7xFd8aNst3dH4I37tkr/6j4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=H1Br0AU7; arc=fail smtp.client-ip=40.107.247.57
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nkYxF85O"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="H1Br0AU7"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RniAJHX9QAXk12uEk70UXS3AquGgMbjS2OjpfAuUCeLfGknyb3psHUx3hu6ZAQf8Zeh/iIgiwS4EMjzjQkHeOdSRQxHNfCQkaig+/vsSbgdr2n2wJ/dUcSojLpHLzJHVp5Q7dwQf0UMZ4WI5F18hUHEVv7DK6Qbk+T0EWovneenpS2ZDwD97d4/WG7z3qgZjZClKqgDq/fzqin16kyagyk+kUb4UHFGBDZIYMbyttCgpFkfWdclLrjUh5q6WiKOP873tWXlMXPTR+pzqjRIcT63ekgFCBOAaqf4XU4oWxcZh2RG4/h8qsOoNI/vQn8nmwvplzfRfZzcQ4sfXfwx47A==
+ b=aloHTKyuYhSZkJU95OZiBY5v/0Rq4Dz5pvsOsJtKxsXK4My/xMXtSAdsvkrQ/4HsSPAdt/CxIpKwZdcGDSjTQncho3ufpAFm2+PiTxsUg9yyqVZ4XMtsegoZUPxq1UGpzdJlgRyRbDBRSTXmYJgu5PT0hY8J/btR/2QReCcPmBYciH158P6CL/CCps2ne/VfZ7smPyeL5oL9HvKKNvxNnCrA9U6WiUxTq9dHmti0vRcHc0Sz34YOGsqwysfXBWHApTE4vcUBsJoSodxwdw7Ynmkl4ms3H6kEbm8hYgFb95Ujv17N0VOERwTNGrgtkuNWtE9X7905IClENeiMcRqLZw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qV44oIZVXxGjMUN038mXUA0fEvu2yZSoG67eTDt2HkM=;
- b=H5oyecKKb04h6ohmk/vTXpGgiYSfdu7laDUQ6nXNdSCkdv3vWx8cxAR8J48jE07it2K8zEnSGfgnzotGQ5fG2ylwJKMnLBCceRBSoqu36nsfSRhTaGCj/Vk8ll+N0NKApULZCtBxbNqrcZPtUqpmpt1MeCCCEvuWHc548oJ8P86lrxbpmLfwV9qSG47S/zFX0v/JXi5wwzUA8r03Sx2IM/NRcX0ZRDDSeMQwbKDcABbd0iRceErQZGQTJyXOcOBkUF0FwyhVxsMtCQgH+sIhf4cGXf1VnSNFRiZG68xKIo3KmKgwnIwmHkbcJZFY5V7G5LVmNnRP3tTab1wDOvvYQQ==
+ bh=XcoW8o6oEq2d9mnm2NMy6isoGC0GF0nEtBDeGxk3UXs=;
+ b=B7ysaw0tT21oiJ5KL/xvbk9Yyni+aWD6KkZ3LIkdvUBiAsq73qVJOn5yMhYLQDNcGj2JqCTEkg1liLA6jsR3boK+6I97u5s4mEyR6Fq1VXamFV3VsfMK7QkX+0p4W+9iMzlvhqLC3qVqyo3Ks6FKmYplR81qjIFSgO/z2vr3FqiaYAnglu7KUV880qRvtDoMLRP+uZeWa45epp5Q/aqEMbYGxmrr1jST9pOp/ATAz7mX0YAmWcVPcump73lebJwZmNae/pUXR2WEsOb+wmPwNKuJ8hsrRjl87myJ77dNSK/eWbA5oFm+dqWOyHmNVCdm4lz6CjcK/RncYQPVQqaaPQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qV44oIZVXxGjMUN038mXUA0fEvu2yZSoG67eTDt2HkM=;
- b=nkYxF85O2rB0OraZTKk1jzDTZJtMNkxG2MJ6kTsNbBOf+kjZcSKPYX4iyeQWM3J/zpOygsiVyZrg28yDYkF/Xr9bW7eJk2SxCvbxhbZKn/+Leizf2W+3ka/RBuPU0FiMgob0R+qFrOTQ3WUfg1TzrE6/JwO6Q44JXC43LqsiOt8=
+ bh=XcoW8o6oEq2d9mnm2NMy6isoGC0GF0nEtBDeGxk3UXs=;
+ b=H1Br0AU7QLW428YP9avgwnCcoRmcOM/XXtjbVO8E7f5IxMsqyCi+7sPDkEIHteYRBk/gYLDiAzsqV2CARrjk21ukSHZnxSCnwAc56TtnG6hpdVJR6V7bQCSMCEzTl57Pyt1eheNZVxzlqW8rTMpDxQJ6TN/KTmPsBQhvEMrz8zw=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
  by PAXPR04MB8576.eurprd04.prod.outlook.com (2603:10a6:102:217::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.34; Tue, 7 May
- 2024 20:43:35 +0000
+ 2024 20:43:40 +0000
 Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::1e67:dfc9:d0c1:fe58]) by PAXPR04MB9642.eurprd04.prod.outlook.com
  ([fe80::1e67:dfc9:d0c1:fe58%7]) with mapi id 15.20.7544.041; Tue, 7 May 2024
- 20:43:35 +0000
+ 20:43:40 +0000
 From: Frank Li <Frank.Li@nxp.com>
 To: alexandre.belloni@bootlin.com
 Cc: conor.culhane@silvaco.com,
@@ -57,12 +58,14 @@ Cc: conor.culhane@silvaco.com,
 	miquel.raynal@bootlin.com,
 	robh@kernel.org,
 	zbigniew.lukwinski@linux.intel.com
-Subject: [PATCH resend v9 0/8] I3C target mode support
-Date: Tue,  7 May 2024 16:43:03 -0400
-Message-Id: <20240507204311.2898714-1-Frank.Li@nxp.com>
+Subject: [PATCH resend v9 2/8] dt-bindings: i3c: svc: add proptery mode
+Date: Tue,  7 May 2024 16:43:05 -0400
+Message-Id: <20240507204311.2898714-3-Frank.Li@nxp.com>
 X-Mailer: git-send-email 2.34.1
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20240507204311.2898714-1-Frank.Li@nxp.com>
+References: <20240507204311.2898714-1-Frank.Li@nxp.com>
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: SA1PR02CA0018.namprd02.prod.outlook.com
  (2603:10b6:806:2cf::26) To PAXPR04MB9642.eurprd04.prod.outlook.com
  (2603:10a6:102:240::14)
@@ -74,199 +77,127 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|PAXPR04MB8576:EE_
-X-MS-Office365-Filtering-Correlation-Id: 44a393d1-542d-4311-1d9a-08dc6ed65d71
+X-MS-Office365-Filtering-Correlation-Id: 5b3b8a72-1b9a-4988-dd1e-08dc6ed660b2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230031|7416005|1800799015|376005|52116005|366007|38350700005;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?b3g5dWluUm9hN1pCYTZWT3VCd0RxZmZueXc5UXdNNHZYOUVyOVZPbWt3ZkJP?=
- =?utf-8?B?VWJwcGR5RWlOR2dYaUFYVWtJVTRpMEFYNkxyYnhtRjlqNWRSWkxOTElQNzRB?=
- =?utf-8?B?MHk2THJoVGdjd3VVV0NTdFd2TW5ESDJ0RTVIcmF2NzJtem5ua0s4Z0hEaHcv?=
- =?utf-8?B?RjVxRkZ6d1ZROW5VRFJuUVlGZ3lVSmF1WFQxMXMvcG1tM1FEUkpEYmRwaWFa?=
- =?utf-8?B?YkNvQ0xFUHdJQnEwUi9zUHJjMDlxdW5TQXZFd3lvZWlMZXNZalJlZU9FVEpY?=
- =?utf-8?B?MjRWVFB6a2F1T1h4UjVMWVNvdTl4MFdnZm5SaWZLZFJzcXg5WGlQWEJCYWdU?=
- =?utf-8?B?cEg1Uld0RzE3NldtYmV6c1F4RW11b1lqTjExTENGYmVlUVJwWHlRUjdjZmI5?=
- =?utf-8?B?Qm5LN2g5TGZQaUdHQlJ2S210T01tcTR3KzRxanF1TGFsSk56dlR4dEpZWDIw?=
- =?utf-8?B?ZXVVcHFwZ0FzTXBuVisrMjg3bWNCWWlZbTVaRnhvUUJxMmpWd2JmeS90UHhB?=
- =?utf-8?B?VXk4UGoxM2hONnQrcTRRWkxqMTZ0MmlaVkNuR3NNaDlHbXpOb1RtVlBvUzdX?=
- =?utf-8?B?eTRwejhwQnZFNDJ6WlM3eGtIRGMxcnhUMWk0VkZUY3FIVTJFeHNhMU1UR0ZO?=
- =?utf-8?B?ajRXVHd5SWVxWGRJRDdOWmcySlJLTzlNL0kxWXR6N1RadWNYalU2SmM1dU1M?=
- =?utf-8?B?Q3dEdG9pWk0rREF6T1lSZ2ZyN1Mzb2w1Zjg4OWx1NGQrTUI2anVZKzk5RFkx?=
- =?utf-8?B?aUkwQ3RRYVZoT2VMZVppVnNPN0VoblByNWtiSlVkME5KTjI1dm1OdDZOS1U0?=
- =?utf-8?B?cDNPL3l4dXpSS1AyT2wrd2JtbGhSa1hWOXNKVE9wenh5N2NWbVdXZC9ncldU?=
- =?utf-8?B?NlVTdGFBU3NFY21WZUFlb09vR2FVWEJEbm1BUTFGcjIrV3NVcEU5WXRvMFBD?=
- =?utf-8?B?UDMrS2c5UzRQU1B0UzVvcjFuQ3JXUHpSRmNpL3h2UDJNMDdIc0VrRGZkRnY1?=
- =?utf-8?B?TjVuQWZ2d2pWbERlN3B3bTZmbjR6WndVN01LRVJGWXB4VVVwNkcxTVhiTDd6?=
- =?utf-8?B?bDhpbWk4V3g3cm12eGw0QSsxQVUra0ZEVWVMR29uZDZDS0F2ZjhOVlFoSW0w?=
- =?utf-8?B?dFQ2SVhBaDJJTldrMnZINFBsKzJTck1lWDVObThsQ0tSRjFiL3VuZnZLK0l1?=
- =?utf-8?B?M3J1UW83Ny90MHBTbDJqZkJYQzdmUXdSNnpoWTYrS0pMM1BERlN3akgvbzVr?=
- =?utf-8?B?ZXdTNUQyWGFBNGp5WlJ1b2RGeGM1anFQZGFMT3ZJcG85Z01FWERHd1EyN0t6?=
- =?utf-8?B?UWxDMFdRR3hQVHg4RVVGdFFMMVZDcUg1TGNFdC9OSm1Ld2pZUGRVNExzb3BQ?=
- =?utf-8?B?bmNBVTRrdEo3Q2NuT2N1NURZeVJudzBjYTVqSjFNWVYvWUpsc2Vpd2o3Z3I1?=
- =?utf-8?B?TlExT00vYTlLaWNlQ1Q3OEptTC84SlZCbUJzSER1VVNidUcycEZJT3NCZGFB?=
- =?utf-8?B?M2dmcjJvR0x2dlg3Rjl3dEFQMjFrRHpmTUFqZGdIdUg1YnB0Z09SVDFvcFZh?=
- =?utf-8?B?c0pWS0psMHdzN0NqZnF2eUxsV3d4N0k2bGd3dXJNWXhqSS9CM2lMNUhHYkdH?=
- =?utf-8?B?cWxFSHJpVktEczBlanY4WDFrQzUrTDV5eHl3NWZMMEFtakhyWHovZGRxUXV5?=
- =?utf-8?B?ZzltTDZ4S1RjbFZFTkhabzR6U1V6cVhLRXN0NHMvRDRIK1NGVVAyVnJGaFd5?=
- =?utf-8?Q?t0g1FZg2atvxJr6qm2QPtcB1lxnbP7J4HuPXxnq?=
+	=?us-ascii?Q?WdfVDGFxXA14NiK7huLPIlouVyhLWUbfWBdFaPImG7mnZSsOLglVUgSnBCeD?=
+ =?us-ascii?Q?JeE4h8XaRgA7ec0plgKG2PJ0UbxytsKKvxkUIyLLjAVyS9NMnjW7NISrTQXo?=
+ =?us-ascii?Q?JWecygjf1mkUue1rITxt2dUkPHdr+A5BGlPgIPYTYz+DLTpLggwHyBKlbwfc?=
+ =?us-ascii?Q?5hEa0dKOCgpDNxfmDU/V8ebuPCzbhiaOXEWUyItqyZXphl+px6UF9AaHBwJX?=
+ =?us-ascii?Q?BcIH1Bj0SA7+euK6NA26CNTuykgaNykXsPJXiByLYly1hv2EhOQfy8ZBriwR?=
+ =?us-ascii?Q?TvZiFDWxzr7PiMRDlBHbsceEFTJXt2gqqDoMe25dzi4mTf8TWwo2j7LfuX5y?=
+ =?us-ascii?Q?FOMKO7kuYan06MBDSIfAqr8VvBh9QY4vOa9WFYNcZ+GEQL9p2Q077orza1+K?=
+ =?us-ascii?Q?jhsRKJ/bOlA7zG0C3HjOcUxhJ6PTf95LsQ8rPpNFQPvxBGnfiJTsdNYKVPhs?=
+ =?us-ascii?Q?S4cUAWy5EF3ylxydhCEtzsCHm7LzmnYz7Sd5sHf/hRX4qbH6cCneIqsfDVJf?=
+ =?us-ascii?Q?8Vm4YE/jmMCsaYoZ9S0KOzXqe4+yJqKF42f7b+rrmDIuuzdnb2BCRLtVomDS?=
+ =?us-ascii?Q?CPdLUfgQtNDhjAVjcU9gkPZp9W0wRl5+67Bm8Q41xPT95g/o036OXDIGgnn1?=
+ =?us-ascii?Q?FtmXOPvSMYro6+RYxoL6ZOcWKgnDPhMk8Ba9qxx285AoBeW2p/SinKMYkOis?=
+ =?us-ascii?Q?IleUIU5M6i7eR9aKkCCw+C576n9dqmwguw/o/XG5mzaIcQKsep17uLTntG3l?=
+ =?us-ascii?Q?M30xTLVYggyk2uOaDNb7H2wkkXxQkpuGpXaMQbP2xFSlSZbRxhQDvQFFA95g?=
+ =?us-ascii?Q?HRmAxtrxIB9C493EZzG9tRLUI3wA+nv+FB9s1ePBBJdFFWVO1o0F5vJRKQZh?=
+ =?us-ascii?Q?XZOws4OdpJCvXSyorJMsAoE3sNIm6Nd+d6kyHp0RfQeIR7W6k/E58niMt11x?=
+ =?us-ascii?Q?+MRtDWyRggNjJ3vociU98ScE2KI88xhPIjV+d3LRBf1+KCuDwk0LENE15A2s?=
+ =?us-ascii?Q?TO52udKqu6DPuXyaUAexXvaF+C9O0G8YTfi+SbeJKkcdxhIL0pIGwqcKidcC?=
+ =?us-ascii?Q?MQs/O9pdZC5LvuLQnOPDKPv2aGP3VKj9pyoJLxl2bnMUaypY0ACSnV4KvUOw?=
+ =?us-ascii?Q?OoE13PvkB2l2ot6O2vR42BS0O1rn5Iz3ZRUAz8oqcZWuMtkjo7yobotieM6s?=
+ =?us-ascii?Q?OGxLdY5u9u7nWAlz6gX55e+jU8U9V1cDyuJ9L/CuIcxhFcfjFqW1w93zTvs+?=
+ =?us-ascii?Q?UVy2HboUWARvDIJdRtnnUTDBeI1sJazMwG5k2ds2qA=3D=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(52116005)(366007)(38350700005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a0NJaFpWTFlkL282aXZ0MXpHa2RuWjNsVlpZUzRQRkJPbXhtWFd2UHlxclVZ?=
- =?utf-8?B?M2V3TE9pMFA0NnphK2ZSUTBobTJwTmJaZkxVRWk1YUx3eXZZYTNQSUhTZ1RQ?=
- =?utf-8?B?Tm9zNVZzc1didG5MVmJaOFRobHRReURNN2tKKzlmekQxRE5NeGV2eWhIVEN2?=
- =?utf-8?B?NXJkQmJXaEVyOE16TTV2UGVKdlVXNG42ZVpFaFdzbGpINjZEOXprUFpWRkRZ?=
- =?utf-8?B?UzcvZG4zVzZZRENObHRjMVMwakRmazZGbk16Mkp3WmJrWnVnRDZyYXJNQ1pv?=
- =?utf-8?B?MU9xZ2p1MUNIWDdheWFsVjllTGJTTHUrRWpNRjhTem01RjBLUStHYjVsNlE4?=
- =?utf-8?B?NjdLbHVqWlJnOUNIb0grbi85dkV5cjNsamRBTzZia1p0cVBLcnFhU3Z0V25p?=
- =?utf-8?B?KzVsTEhRSTlFMFV0bFpTcTBVNjlHYWQrVXlIc0FkZlk5YnUrWmk0TCt6N0tr?=
- =?utf-8?B?QU11bWlYMlI1ZzVQaTFsU3F4UFMwdXA0aUlYNFF5S2NnUmVSangrMzhYWDhI?=
- =?utf-8?B?K2d2UXNiaG82b016UmFOaFlqWkZlOEwxbkRKdGdyQkVkZzN6VVh1NFBuR09Z?=
- =?utf-8?B?ZnZvTXJVSkJCYjdSWWsxR0FXYUZkWDBIWXoxSnJ4RTlPL3ZOWFhLT08rOWx5?=
- =?utf-8?B?Q2RBN2M5TzMwMExRbS9uRGlJWExtL2R3OHVQL08xNlhSU1NJWmZyOHBaMzRP?=
- =?utf-8?B?ZVNiSXF0M0JZUnFqNzdKU05kdXI4UFUrbFVyMW05QS9kdlNNUk9RdG5kcmV0?=
- =?utf-8?B?d0MvSENVOEFNRVhsam5QOFlzbEhJUVQ4Z1BLUE9YL1FHbjBhSUZRL2tXMWZh?=
- =?utf-8?B?MlNxRmRFMTI0bFFNM1VLc0RGVGdqR2o4S2ZwQUFJU0IwYm1mQ1JDV1NIcDJa?=
- =?utf-8?B?NXdsWG5xaGlyVmNuM1hybE0xbHNKR2VhTXE2eXlsMzNZcEJka1RMcE1yS1lD?=
- =?utf-8?B?QmcrTk9wK0V6eUxKWUZDbzJVMjgvbmV1YzlvbmtKMEg4ZUNFWmdpb2hSclpY?=
- =?utf-8?B?Y2FOdXJIMkQ5UEc1T2pLUXVOdEY4dE9iSTRjeTRCc1ZZbzVxWXVoTDZzcHEr?=
- =?utf-8?B?ai9aVDZ1QWgzd0lLYTN1QncvOS9yTmlpSEUzQTZobkNzdWxBMVpOWnEvZzBm?=
- =?utf-8?B?WDRSY2pRU0FqNlJtYzlvMVkycDJTY0pLN0wzRmVTdHBOYktMMGMvQWg1YlRj?=
- =?utf-8?B?RHR3UnQ5anU0WUtDVkp1MldadFdSQUtnM0JXNkhTaEpNNCtEdVVQSHpaNnRN?=
- =?utf-8?B?WnB1ZnlXTmpzQXN4V3FiYkVDYlhzMThiR3hrUElGTEtyakJ1N1M5S1NTOG5u?=
- =?utf-8?B?dDRlb2k5aURCYWlxbmlYUi9QbURqWGF6V3ZObGYzTE1YemVueHVUNzFacVRR?=
- =?utf-8?B?M09MYVhrVWtzT1VOeVp3K3RCWEZ3S2gyMnVTaHcwUVFaUkRNQXlTTXlqTmZX?=
- =?utf-8?B?a1EyZXVtS0VjOWtXRDZvNEJCbFVmSWUwd3UwWERGUzNWTUFDMEtZRG4rT0t4?=
- =?utf-8?B?VVFDRG5nQ1BGMWxoSXh5TVFkTFY0UGNGMzdkckVWanU4NEJ3MVpCS0Z4eExT?=
- =?utf-8?B?T3d5NWRZZzNkWXJIVTA5aVd0YTZPdkhhSTFscDJGdzg2SnZ5dFNzSk5HOTZj?=
- =?utf-8?B?MnNhZWRCWTI1UWc5cnFKK25EV0V3THVuU0k0MjlQVE9kNUdrbWo0czNzbHFI?=
- =?utf-8?B?M2dBWkJmUit2TDJMOXU2Q2ZyWHhlUlhKcGY4M083RmRXZUN0NnlUZjhuZnJm?=
- =?utf-8?B?SUZhNXdTRm5LbUs3Z3NVTENvZFZNbDlYTkd3UXpYS0xCNFNWYndCS2pOaWxy?=
- =?utf-8?B?WTliZlN4ODhnQjUwQWJnRmx0aitSd0JCZjhTNHZncUY2bGlBNkFIcDFFd1FB?=
- =?utf-8?B?RUsreVNTUy9EOXZ1TnNDSjg2Y1NzSlpRVjlyNnhMcXRZbXZ0NTNxUjVjWHlt?=
- =?utf-8?B?TG1WUDUrMWRmbUorUzN6aGFyMXk0RnlKcE1iMEU0VXhSMVZ4ODVEbDA2Q3h1?=
- =?utf-8?B?amJmMFFUVkx5T3V5aTZBKzQwR0QwV3BxVGtYSUx5dTljWVBXYk1pekU3YktV?=
- =?utf-8?B?ekVoaFdwZnNPekVmdzZicExqdlBSRjg3dUFnSHZDMU5lWXp5cW9ETlVhVktQ?=
- =?utf-8?Q?l/6y2I1VaOh09wzPPqXg7bDn5?=
+	=?us-ascii?Q?ZCzd+eeL4FK0N/8SiyGGTLRDPT2dqkQI8e0QUE6lGFxrzK3/7GJ+tLwqqKe4?=
+ =?us-ascii?Q?gpHMVrJPQ2RVd7H0exg8Eg8X8dRXvHGUhFpg3+YATw9h2GtF+FluzAGvJ/Io?=
+ =?us-ascii?Q?Pofqh9sdw8CCnFUjm37lqF7crwFB3wRWq8HpEYXXlzMLjpYqVAJd5Hep80ko?=
+ =?us-ascii?Q?nzLj977nGCL4IN4v7KOYGmOrWY+vI3TaXZ1ENRlBkITu6dl2Pu9G++1NZGBO?=
+ =?us-ascii?Q?HatktU+364v/W21rp5P+rI+Nx5ZfboBDe1Jda32cYKxbcAL8xITuKSzqNb8r?=
+ =?us-ascii?Q?tzGyUa2kwTXkDUKs4EJwEWll8ybBL7Vnt2Mc5uaKQhOoNq9bOPG9MIa7avPv?=
+ =?us-ascii?Q?S/OPWjM9opb4z8D3Yn0CuxKNQA74T4n7h/p+I7zMHh55HrST7LXOrC52TvAg?=
+ =?us-ascii?Q?NkopxNFG66pREXau6y39li9OInL/vq2aRGGfc/zKNiW82UhLjduefR19lzqA?=
+ =?us-ascii?Q?4ZraNsMMPM8gmt8sFo7+oH46p2dCqxoaWJ78O+kOsrAxKAVfA7gKS6zkM6eH?=
+ =?us-ascii?Q?6aCq2nb7Tna2WaDe9nc/FGv3suBD+jO9/ie/dM4c+fKymLZkkHYBIh8VCvN8?=
+ =?us-ascii?Q?KvalEtCjGRqCItkErgaymJLyWyS30tbV+Jmo0oZ30ToTCRwnl0t8bqsoYmhU?=
+ =?us-ascii?Q?C/PRlJ5lPtzFVSzFk9eDASPjBVJS8d+yN+f2PGO6GHdd+pKx5s8rVtzw/e4+?=
+ =?us-ascii?Q?7t2qAxvnlJ1iG8KHr8iZhZog0byPirQl0nAiofjWmpMoReoMT76Qka+PPgNQ?=
+ =?us-ascii?Q?dEFkM7upXrEhL9QPS2wnlbv4u/qxNgy1FiIEdvxoqPuamlcKIl0ZsgeIYQ1/?=
+ =?us-ascii?Q?Vcznfdb8HvxK0YhzBo2q1zI9Tc5rPDpCKKPrR21vDRcnso0BUyWf2Q2T80So?=
+ =?us-ascii?Q?lladVMYYm2VnGK839SyIOKsV8UVQQumxLNpIyiAS519W3GYheo5oA26hoqX1?=
+ =?us-ascii?Q?N5+fcK0RVFVzYbQA1TQpHN3O7ZxZPHZIemrRtyDVRXimxf4GRxaN8o2wx9mN?=
+ =?us-ascii?Q?weYZFHQZ4MXoIWaCuaXWBcV0Q2YjONWdgd5rn1uOHyR62hAvdySqNIfMDFXZ?=
+ =?us-ascii?Q?vja8SZL/7wBqhkiVnJIQTFPxn35g1AUGqh3f3kAheDdopiHtq6I2HA9dCosI?=
+ =?us-ascii?Q?8Uq17IPAwoy/l9a8vGSDBx+ODAzCB6MmXf9tsXODRupyEylBq1EXYrSwZKrP?=
+ =?us-ascii?Q?e6+iaYjUddUQrGV8cWP4upzg8TAvTuYZaXGhyRE/COK/vJg2rqgb4+cn3kc6?=
+ =?us-ascii?Q?9fRUltq4aziFvspUyiI8e3nbLoWDDEv/cwxOdb3YS2p0wkvC9oQil0wxZ0yC?=
+ =?us-ascii?Q?cPSVR8YmznO/0WQON969t3BuecmPF/7J0rzZyRAafMca0dUhP6Nt7xu97JnZ?=
+ =?us-ascii?Q?zi8fksXqOcFaivuoDLf5CBW4ZGK9buyzbRxHTVXSwU9lvC/O99KF+Xj8rpOo?=
+ =?us-ascii?Q?8buzXNsOKO18eF+A6nPcJm5m2Dge6n3SBWrTwlQ/7gn/4FottFkqCpfjAm8s?=
+ =?us-ascii?Q?U1tHjG55mZtygoi/VfjwhiXGmyLdz5vgj8HyvRtRqdJQr4QNHM6sh1x9l5am?=
+ =?us-ascii?Q?xP04OLhtmmeF/i6QzSStNSXXNLOB0LbO9LkcnHV2?=
 X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44a393d1-542d-4311-1d9a-08dc6ed65d71
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b3b8a72-1b9a-4988-dd1e-08dc6ed660b2
 X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 20:43:35.0769
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 20:43:40.5216
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: iuHXPWexR8UqZravOKmLLAo/sY0KL0qCrWer6rA6n6hbPhc4lFGXqZ/mob08QlbV55HYUNu8YHi4P+XzoiZrpw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: DWH+GNITPZ99dakvjDbTvd7OiH9hS2oJQwRmbr/IlB7RrZv1gMI0+aKpGnqLicsWJH8TjzI5SfucvK2PlKszOg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8576
 
-This  patch introduces support for I3C target mode, which is referenced
-with a PCIe Endpoint system. It also establishes a configuration framework
-(configfs) for the I3C target controller driver and the I3C target function
-driver
+Add 'mode' property to distinguish between 'controller' and 'target' modes.
 
-Typic usage as
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
 
-The user can configure the i3c-target-tty device using configfs entry. In
-order to change the vendorid, the following commands can be used
+Notes:
+    Change from v6 to v9
+    - none
+    Change from v4 to v5
+    - add Krzysztof Kozlowski's review tag
+    
+    Change from v3 to v4
+    -fix dtb check error
+    
+    Change from v2 to v3
+        - using 'mode' distringuish master and target mode
 
-        # echo 0x011b > functions/tty/func1/vendor_id
-        # echo 0x1000 > functions/tty/func1/part_id
-        # echo 0x6 > functions/tty/t/bcr
+ .../devicetree/bindings/i3c/silvaco,i3c-master.yaml   | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-Binding i3c-target-tty Device to target Controller
-------------------------------------------------
-
-In order for the target function device to be useful, it has to be bound to
-a I3C target controller driver. Use the configfs to bind the function
-device to one of the controller driver present in the system::
-
-        # ln -s functions/pci_epf_test/func1 controllers/44330000.i3c-target/
-
-Host side:
-        cat /dev/ttyI3C0
-Taret side:
-        echo abc >/dev/ttyI3C0
-
-Notes about header files.
-
-About Ilpo Järvinen's header file comments, it can pass build, some header
-should be included by other header files.
-
-I added some, but I am not sure that is all needs. There may have tools,
-which can help check, but I don't know.
-
-Chagne from v2 to v3
-- using 'mode' distingiush master and target.
-- move svc-i3c-target.c to under master,
-- built together with svc-i3c-master.c
-
-Change from v1 to v2
-- change "slave" to "target"
-- include master side tty patch
-- fixed dtbcheck problem
-- fixed kerne-doc check warning
-
-Some review comment may be lost since it is quite long time since v1. Now
-master side dependent patches already in linux-next. So sent target side
-patches with tty support again.
-
-No sure why an additional "\r\n" appended.
-
-Frank Li (8):
-  i3c: add target mode support
-  dt-bindings: i3c: svc: add proptery mode
-  Documentation: i3c: Add I3C target mode controller and function
-  i3c: svc: Add svc-i3c-main.c and svc-i3c.h
-  i3c: target: add svc target controller support
-  i3c: target: func: add tty driver
-  i3c: add API i3c_dev_gettstatus_format1() to get target device status
-  tty: i3c: add TTY over I3C master support
-
- .../bindings/i3c/silvaco,i3c-master.yaml      |  11 +-
- Documentation/driver-api/i3c/index.rst        |   1 +
- .../driver-api/i3c/target/i3c-target-cfs.rst  | 109 +++
- .../driver-api/i3c/target/i3c-target.rst      | 189 +++++
- .../driver-api/i3c/target/i3c-tty-howto.rst   | 109 +++
- Documentation/driver-api/i3c/target/index.rst |  13 +
- drivers/i3c/Kconfig                           |  31 +-
- drivers/i3c/Makefile                          |   3 +
- drivers/i3c/device.c                          |  24 +
- drivers/i3c/func/Kconfig                      |   9 +
- drivers/i3c/func/Makefile                     |   3 +
- drivers/i3c/func/tty.c                        | 481 +++++++++++
- drivers/i3c/i3c-cfs.c                         | 389 +++++++++
- drivers/i3c/internals.h                       |   1 +
- drivers/i3c/master.c                          |  26 +
- drivers/i3c/master/Makefile                   |   3 +-
- drivers/i3c/master/svc-i3c-main.c             |  80 ++
- drivers/i3c/master/svc-i3c-master.c           |  34 +-
- drivers/i3c/master/svc-i3c-target.c           | 776 ++++++++++++++++++
- drivers/i3c/master/svc-i3c.h                  |  15 +
- drivers/i3c/target.c                          | 453 ++++++++++
- drivers/tty/Kconfig                           |  13 +
- drivers/tty/Makefile                          |   1 +
- drivers/tty/i3c_tty.c                         | 432 ++++++++++
- include/linux/i3c/device.h                    |   1 +
- include/linux/i3c/target.h                    | 548 +++++++++++++
- 26 files changed, 3724 insertions(+), 31 deletions(-)
- create mode 100644 Documentation/driver-api/i3c/target/i3c-target-cfs.rst
- create mode 100644 Documentation/driver-api/i3c/target/i3c-target.rst
- create mode 100644 Documentation/driver-api/i3c/target/i3c-tty-howto.rst
- create mode 100644 Documentation/driver-api/i3c/target/index.rst
- create mode 100644 drivers/i3c/func/Kconfig
- create mode 100644 drivers/i3c/func/Makefile
- create mode 100644 drivers/i3c/func/tty.c
- create mode 100644 drivers/i3c/i3c-cfs.c
- create mode 100644 drivers/i3c/master/svc-i3c-main.c
- create mode 100644 drivers/i3c/master/svc-i3c-target.c
- create mode 100644 drivers/i3c/master/svc-i3c.h
- create mode 100644 drivers/i3c/target.c
- create mode 100644 drivers/tty/i3c_tty.c
- create mode 100644 include/linux/i3c/target.h
-
+diff --git a/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
+index 133855f11b4f5..3af77d143f018 100644
+--- a/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
++++ b/Documentation/devicetree/bindings/i3c/silvaco,i3c-master.yaml
+@@ -4,7 +4,7 @@
+ $id: http://devicetree.org/schemas/i3c/silvaco,i3c-master.yaml#
+ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ 
+-title: Silvaco I3C master
++title: Silvaco I3C master/target
+ 
+ maintainers:
+   - Conor Culhane <conor.culhane@silvaco.com>
+@@ -22,6 +22,15 @@ properties:
+   interrupts:
+     maxItems: 1
+ 
++  mode:
++    description:
++      Tells Dual-Role I3C controllers that we want to work on a particular
++      mode. In case this attribute isn't passed via DT, I3C controllers
++      should default to 'controller'.
++    $ref: /schemas/types.yaml#/definitions/string
++    enum: [controller, target]
++    default: controller
++
+   clocks:
+     items:
+       - description: system clock
 -- 
 2.34.1
 
