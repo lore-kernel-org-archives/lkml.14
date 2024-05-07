@@ -1,128 +1,106 @@
-Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158046F525;
-	Tue,  7 May 2024 11:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B4F15252F
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 11:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715082184; cv=none; b=NjoTVaABLKUkpnJ7sTkjtcb7nYv9Jmgae3egx+2PjHU8UYzkSICwCDQmOQ9WkDsaRsp/bJdcsni0miu/S3m1vFFY9bK/LTt6zMKIrBQtnephKxAJiVHyInzv7yVXKLcQ66hB24PT95vHPC60hlHFLvsy9saTnH/ChL3aAiXBYsM=
+	t=1715082199; cv=none; b=trGqbAQ6+0KMiKj3bUn1P5G7YoZ0gnf+rYMxQq+S++r9G+SrkF/I7DzGdsYAM91zGX9J342FkZsQtOIY73Y07qCyoL8CvgvUaqGogS4qrgSPE/pwfkOfHltveJVKKTDHh3PID4XQ9q1EFIzT0WaZfvoWu9MLp0VxI6JmDCYAw1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715082184; c=relaxed/simple;
-	bh=48MNBx4lKU8jug/3dAjRcd+PwBhYp8+m1AtXcjxvV+4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u0EPHIIqqr0R6YiX+xWNz9/qNtck2kXXV24FA3iy76r1v3eltRqWKH0mgyVKbYRUkxRas7iAqesiIungxjZLAIH1jLKF2WPkMx6X0w2bcs8kGdz7/tWEHYHVerWGfgtpyIW6O6F5t+JeuyC776BANipRUoBOs1qA/6WYZJ7k7CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: by air.basealt.ru (Postfix, from userid 490)
-	id 668D72F20249; Tue,  7 May 2024 11:42:52 +0000 (UTC)
-X-Spam-Level: 
-Received: from shell.ipa.basealt.ru (unknown [176.12.98.74])
-	by air.basealt.ru (Postfix) with ESMTPSA id 0DF652F20245;
-	Tue,  7 May 2024 11:42:52 +0000 (UTC)
-From: Alexander Ofitserov <oficerovas@altlinux.org>
-To: oficerovas@altlinux.org,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Johan Hedberg <johan.hedberg@gmail.com>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Eric Dumazet <edumazet@google.com>,
-	linux-bluetooth@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: lvc-project@linuxtesting.org,
-	dutyrok@altlinux.org,
-	kovalev@altlinux.org
-Subject: [PATCH] Bluetooth: RFCOMM: possible deadlock in rfcomm_dlc_exists
-Date: Tue,  7 May 2024 14:42:44 +0300
-Message-ID: <20240507114244.120751-1-oficerovas@altlinux.org>
-X-Mailer: git-send-email 2.42.1
+	s=arc-20240116; t=1715082199; c=relaxed/simple;
+	bh=nJmQfa/G63amUHNoyNPPruCS1yE59OplOKYnfKXgiM8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=c6xI97VO8xlrGcb8gWl+03V9n0yUL9E6jMFa9FT4sF2dwZoPL4tLCNDT5sKrWzdQRnKjJsimpSlagOMN1sGT55ngWgaQWDcc1wCvUa0o+rFug4CojQRiilmk5zj4vGqwTH7HF9LON/FrS3k7Ck+F4yGdMG2D6ktel9t2YjvHtRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YX7+LXtT; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YX7+LXtT"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51f29e80800so3310523e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 04:43:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715082195; x=1715686995; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vCCDWmEOxdrYyg03QGM9HCNXy8fqBDtdzIoCPdDROW0=;
+        b=YX7+LXtTF5V7RKwwlL+PLYY/0BXJ5KWbXgprejd3wFVd1HU7X4eIEzoQ0ZC+j0aydy
+         RtGtkscZ2CThkKXGSugkEnZJ+3cqlo85qD8ZpFT0EIa6Jc+WwJ63iGdbHWy3+rQufRFd
+         ncOIZu2HTRd12OjUTCY9pYSH+aRQ5Qa8gdSBD1DCBx3JJq+k/IiVPKkxYvfxknbuokch
+         aSxsYdB3Q/JxxYK97vRv8+KQ4Q1B+/z63JNdAzs2xii0BAO5WocndJcXo6WjB5/4ipad
+         /7nWI75U61ZCqSPOyXofn3ZsQ4GKxu7mGnvN1i4l7xs0fq4/H4dv0IoSaHUUoWHAWdf6
+         9v4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715082195; x=1715686995;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vCCDWmEOxdrYyg03QGM9HCNXy8fqBDtdzIoCPdDROW0=;
+        b=my/meqF3nSUo9GL5WSKdQptuH87iYTBbVIOMQ7eiGoN/M0WfnckbrgFRWhjyuHcMzT
+         w7Bt2+zQlrpGRHrEBJKYaaL0913kTNXPK8uLjU9bcUpJspuqbEdbmtghHIkVHjrFj+JO
+         ghOFo881WmUdyzHMdJ57+cpN4r5SD5ZIFb+CeMcpIntAoXe5FI+hjYvgmfzwYEvR6p2m
+         7Sf7zMw+9BEE6mZDIcGF7KYhlWaY2Wrc5UTBuMkX/nSs8jjCRQo3slSbEoq7qof49dp8
+         n+oDUnAwUMEiIVDDp5PoAKDRJ3O7hFri7sqthMEo39HQV0ufA/BeABbFVvMv6lARJzqn
+         nTjg==
+X-Forwarded-Encrypted: i=1; AJvYcCXg8AGri+QeVk78IWBzeI4ejt201qfc9NWZx+aifLddp4ZQEkcUqQxA8D9UFKElOe+AOw/fCRV7q03qmLdue2A8sM2dazSTC4JHS4Rk
+X-Gm-Message-State: AOJu0YwEv7YHh7PZv3veBU26Apw1C3XDsCvmZms9jE//dMNow0hII3/D
+	fxc6AESz96YIp/afzs+WXEEuYvq2DSpdwvFYhmRtTOyZHada4WWjEIFPRDwLwSw=
+X-Google-Smtp-Source: AGHT+IEatV3ixiUCg3FxqsVCLWRFRBRCA8gGTMCNaxxmiDHfSI+2iThDhqWAlx33/+UViLds+bPqkg==
+X-Received: by 2002:ac2:58cc:0:b0:515:cfaf:737 with SMTP id u12-20020ac258cc000000b00515cfaf0737mr6627843lfo.9.1715082195460;
+        Tue, 07 May 2024 04:43:15 -0700 (PDT)
+Received: from [172.30.205.144] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id h2-20020a19ca42000000b005196e3e8a84sm2121235lfj.177.2024.05.07.04.43.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 May 2024 04:43:15 -0700 (PDT)
+Message-ID: <90a5b641-af5b-4640-b2ad-85dbbab523bf@linaro.org>
+Date: Tue, 7 May 2024 13:43:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] phy: qcom-snps-femto-v2: Add load and voltage setting for
+ LDO's used
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Udipto Goswami <quic_ugoswami@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240502123312.31083-1-quic_ugoswami@quicinc.com>
+ <CAA8EJppeQTadmny=hcs4xCQDXHwXEBHXjeecvZCUVcSXmwBTgg@mail.gmail.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <CAA8EJppeQTadmny=hcs4xCQDXHwXEBHXjeecvZCUVcSXmwBTgg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This bug was found by syzkaller.
-This bug is also very similar to another RFCOMM possible deadlock
-in rfcomm_dlc_exists. Both of these bugs are present in syzbot.
-Patch fixes two of these possible dedlock errors.
-Also this particular patch was already written in march of 2023
-by Hillf Danton, but seems like it just got lost or forgotten.
-Links to these bugs and original patch on syzbot:
-Link: https://syzkaller.appspot.com/bug?extid=b69a625d06e8ece26415
-Link: https://syzkaller.appspot.com/bug?extid=d7ce59b06b3eb14fd218
-Link: https://syzkaller.appspot.com/text?tag=Patch&x=133a6835c80000
 
-Signed-off-by: Alexander Ofitserov <oficerovas@altlinux.org>
----
- net/bluetooth/rfcomm/core.c |  2 +-
- net/bluetooth/rfcomm/sock.c |  2 --
- net/bluetooth/rfcomm/tty.c  | 11 +++++++----
- 3 files changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/net/bluetooth/rfcomm/core.c b/net/bluetooth/rfcomm/core.c
-index 1d34d849703329..d8502914e3602c 100644
---- a/net/bluetooth/rfcomm/core.c
-+++ b/net/bluetooth/rfcomm/core.c
-@@ -490,8 +490,8 @@ static int __rfcomm_dlc_close(struct rfcomm_dlc *d, int err)
- 
- 		rfcomm_dlc_lock(d);
- 		d->state = BT_CLOSED;
--		d->state_change(d, err);
- 		rfcomm_dlc_unlock(d);
-+		d->state_change(d, err);
- 
- 		skb_queue_purge(&d->tx_queue);
- 		rfcomm_dlc_unlink(d);
-diff --git a/net/bluetooth/rfcomm/sock.c b/net/bluetooth/rfcomm/sock.c
-index 29aa07e9db9d71..cbff37b3273407 100644
---- a/net/bluetooth/rfcomm/sock.c
-+++ b/net/bluetooth/rfcomm/sock.c
-@@ -865,9 +865,7 @@ static int rfcomm_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned lon
- 
- 	if (err == -ENOIOCTLCMD) {
- #ifdef CONFIG_BT_RFCOMM_TTY
--		lock_sock(sk);
- 		err = rfcomm_dev_ioctl(sk, cmd, (void __user *) arg);
--		release_sock(sk);
- #else
- 		err = -EOPNOTSUPP;
- #endif
-diff --git a/net/bluetooth/rfcomm/tty.c b/net/bluetooth/rfcomm/tty.c
-index 69c75c041fe10a..5be21b987141fc 100644
---- a/net/bluetooth/rfcomm/tty.c
-+++ b/net/bluetooth/rfcomm/tty.c
-@@ -403,9 +403,12 @@ static int __rfcomm_create_dev(struct sock *sk, void __user *arg)
- 		return -EPERM;
- 
- 	if (req.flags & (1 << RFCOMM_REUSE_DLC)) {
-+		lock_sock(sk);
- 		/* Socket must be connected */
--		if (sk->sk_state != BT_CONNECTED)
-+		if (sk->sk_state != BT_CONNECTED) {
-+			release_sock(sk);
- 			return -EBADFD;
-+		}
- 
- 		dlc = rfcomm_pi(sk)->dlc;
- 		rfcomm_dlc_hold(dlc);
-@@ -422,13 +425,13 @@ static int __rfcomm_create_dev(struct sock *sk, void __user *arg)
- 	}
- 
- 	id = rfcomm_dev_add(&req, dlc);
--	if (id < 0)
--		return id;
- 
- 	if (req.flags & (1 << RFCOMM_REUSE_DLC)) {
- 		/* DLC is now used by device.
- 		 * Socket must be disconnected */
--		sk->sk_state = BT_CLOSED;
-+		if (!(id < 0))
-+			sk->sk_state = BT_CLOSED;
-+		release_sock(sk);
- 	}
- 
- 	return id;
--- 
-2.42.1
+On 5/2/24 15:12, Dmitry Baryshkov wrote:
+> On Thu, 2 May 2024 at 15:33, Udipto Goswami <quic_ugoswami@quicinc.com> wrote:
+>>
+>> The Femto phy depends on 0.88/ 1.8/ 3.3V regulators for its operation.
+>> If one of the regulators is not voted to the required minimum voltage
+>> for phy to operate, then High speed mode of operation will fail.
+>>
+>> On certain targets like (qcm6490_rb3gen2) where the minimum voltage
+>> of the regulator is lower than the operating voltage of the phy.
+>> If not voted properly, the phy supply would be limited to the min value
+>> of the LDO thereby rendering the phy non-operational.
+>>
+>> The current implementation of the regulators in the Femto PHY is not
+>> setting the load and voltage for each LDO. The appropriate voltages and
+>> loads required for the PHY to operate should be set.
+> 
+> Please move min/max voltages to the DTS. There is no need to set them
+> from the driver.
+> 
+> Also, is there any reason why you can't use `regulator-initial-mode =
+> <RPMH_REGULATOR_MODE_HPM>;` like other boards do?
 
+The point is to aggregate the values and switch to HPM if a threshold is
+crossed (or stay in LPM otherwise)
+
+Konrad
