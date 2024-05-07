@@ -1,40 +1,50 @@
-Received: from Atcsqr.andestech.com (60-248-80-70.hinet-ip.hinet.net [60.248.80.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024D414D2BF
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 09:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.248.80.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F9214D451;
+	Tue,  7 May 2024 09:20:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715073617; cv=none; b=iweMJsYUQKdMQ0IPAEGT7Fz7CjIRrRCgCnCxrla795Ujuqwj+en0RkrdNAv0VXlGQ27eVpgAga8CmTMFoRpLBI++ZdED5xoiEtpCophmNZ8oYbLhFNj8KS06A8j+K13wEjjg744GQJm7c+GuAB1BwyyR72QOkyQxQ6cIp3jZJhs=
+	t=1715073616; cv=none; b=bYUaH3Sc6Jwk9kN+aOJ0RMoUChUu9ty24k4PDNr/bpWIv+PcfJOZODx+eG0O4Wj+/DfrDE51tV9a/0xgBYGh6iP8dI2kXbGBFHjX+tMxE9vWRLgnSv2UvAytapsulEBEIQ1YU2N/eC+hycXlpEPNWNF1xDeDKUVU9AHbgHmteYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715073617; c=relaxed/simple;
-	bh=wmfxCx98oiGEm0S2u+uUju/dQan/1Xv1qYRtUIqEhig=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OpLwmLsh8NP55aJWhqlSEki77AeBX0OwN/f8EyE04adOPcdBAdr8i+BNrs19xqkdP90Cu+MwdUUS4rqIkdTWh0rJP085yQRVlzGw/ceHpdZYxTcO2496gcxAn24nljrzhbRnIaY7PdOSlS43fzS6OiQ/FHJ2CbW0dGdneEWTVhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com; spf=pass smtp.mailfrom=andestech.com; arc=none smtp.client-ip=60.248.80.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=andestech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=andestech.com
-Received: from Atcsqr.andestech.com (localhost [127.0.0.2] (may be forged))
-	by Atcsqr.andestech.com with ESMTP id 44793Dkq098770
-	for <linux-kernel@vger.kernel.org>; Tue, 7 May 2024 17:03:13 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from mail.andestech.com (ATCPCS16.andestech.com [10.0.1.222])
-	by Atcsqr.andestech.com with ESMTP id 447931Cg098720;
-	Tue, 7 May 2024 17:03:01 +0800 (+08)
-	(envelope-from ben717@andestech.com)
-Received: from atctrx.andestech.com (10.0.15.190) by ATCPCS16.andestech.com
- (10.0.1.222) with Microsoft SMTP Server id 14.3.498.0; Tue, 7 May 2024
- 17:03:01 +0800
-From: Ben Zong-You Xie <ben717@andestech.com>
-To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-        <irogers@google.com>, <adrian.hunter@intel.com>,
-        Ben Zong-You Xie
-	<ben717@andestech.com>
-Subject: [PATCH v2] perf daemon: Fix the warning about time_t
-Date: Tue, 7 May 2024 17:02:41 +0800
-Message-ID: <20240507090241.3853998-1-ben717@andestech.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1715073616; c=relaxed/simple;
+	bh=sGf8/xmI8qDULHoJO68RRuCV/ofbkTSGYEIclQqzzuI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cags6hqHaeghlQcYlldB4CqFEBD2HmBvvkhg/kxwTBnjhpnNmNIxdMegEokgSXqRkGdxJW+RlLMhDw10w1YvtmXUjWISRQgItBXnGySOnHv4MFj7cDMljc1hirAT/7WfYp2SNJ1jo8RbH3nSxSP330rhuSEei0ik+eE9iu7LgoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=ArLEAsdz; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="ArLEAsdz"
+Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+	(No client certificate requested)
+	(Authenticated sender: lukma@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id A545488662;
+	Tue,  7 May 2024 11:12:19 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1715073140;
+	bh=gIiuGYeGovNn1vn+AbPqA/C3xilWFjjooh3cCUPXJPg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ArLEAsdz4l92leGhoyWDkV8sQUhnYA6o1EJlEc+Br8rlw2eUYYZMZgW4mqRKDmgjL
+	 tnyz4BaMDumIT1Ail6J+uruYZrQu8Q0zPp/cAbJH7DRcauhTJq3h0HNxUotlRh16YK
+	 UjNjF86KrS3u8F6oaviOfdUNyo43Ose8mw+U65qIvSTUtFtFZ4MWy6SHMLWIe1aTgN
+	 JS/dCdyB9QRlS23UJxlg4Obb3z1R1fjut4IjJXAuozq6lnheq7lM8kyWPmlQ+Aq+vk
+	 FCxNql/j7uLcY1IaUkgdF5gmpeRh7Xvt/5EfC/x/hkrT2z1dZwg9HWw40lyflk+fh0
+	 qAb65qHsZdeYg==
+From: Lukasz Majewski <lukma@denx.de>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Eric Dumazet <edumazet@google.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Lukasz Majewski <lukma@denx.de>
+Subject: [net-next PATCH] test: hsr: Call cleanup_all_ns when hsr_redbox.sh script exits
+Date: Tue,  7 May 2024 11:11:55 +0200
+Message-Id: <20240507091155.3504198-1-lukma@denx.de>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,77 +52,31 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-DNSRBL: 
-X-SPAM-SOURCE-CHECK: pass
-X-MAIL:Atcsqr.andestech.com 44793Dkq098770
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On the 32-bit platform, the size of time_t is 32 bits or 64 bits according
-to the architecture. Therefore, use typecasting to resolve the warnings
-for some architectures, e.g. RISC-V.
+Without this change the created netns instances are not cleared after
+this script execution. To fix this problem the cleanup_all_ns function
+from ../lib.sh is called.
 
-Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
 ---
+ tools/testing/selftests/net/hsr/hsr_redbox.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
-v2: By Palmer's remind, patch v1 may introduce a warning for some
-    other targets. Thus, use typecasting instead.
+diff --git a/tools/testing/selftests/net/hsr/hsr_redbox.sh b/tools/testing/selftests/net/hsr/hsr_redbox.sh
+index 52e0412c32e6..db69be95ecb3 100755
+--- a/tools/testing/selftests/net/hsr/hsr_redbox.sh
++++ b/tools/testing/selftests/net/hsr/hsr_redbox.sh
+@@ -86,6 +86,8 @@ setup_hsr_interfaces()
+ check_prerequisites
+ setup_ns ns1 ns2 ns3
  
----
- tools/perf/builtin-daemon.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/tools/perf/builtin-daemon.c b/tools/perf/builtin-daemon.c
-index 83954af36753..cb04caa902e8 100644
---- a/tools/perf/builtin-daemon.c
-+++ b/tools/perf/builtin-daemon.c
-@@ -688,9 +688,10 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
- 			/* lock */
- 			csv_sep, daemon->base, "lock");
- 
--		fprintf(out, "%c%lu",
-+		fprintf(out, "%c%llu",
- 			/* session up time */
--			csv_sep, (curr - daemon->start) / 60);
-+			csv_sep,
-+			(unsigned long long)((curr - daemon->start) / 60));
- 
- 		fprintf(out, "\n");
- 	} else {
-@@ -700,8 +701,8 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
- 				daemon->base, SESSION_OUTPUT);
- 			fprintf(out, "  lock:    %s/lock\n",
- 				daemon->base);
--			fprintf(out, "  up:      %lu minutes\n",
--				(curr - daemon->start) / 60);
-+			fprintf(out, "  up:      %llu minutes\n",
-+				(unsigned long long)((curr - daemon->start) / 60));
- 		}
- 	}
- 
-@@ -727,9 +728,10 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
- 				/* session ack */
- 				csv_sep, session->base, SESSION_ACK);
- 
--			fprintf(out, "%c%lu",
-+			fprintf(out, "%c%llu",
- 				/* session up time */
--				csv_sep, (curr - session->start) / 60);
-+				csv_sep,
-+				(unsigned long long)((curr - session->start) / 60));
- 
- 			fprintf(out, "\n");
- 		} else {
-@@ -745,8 +747,8 @@ static int cmd_session_list(struct daemon *daemon, union cmd *cmd, FILE *out)
- 				session->base, SESSION_CONTROL);
- 			fprintf(out, "  ack:     %s/%s\n",
- 				session->base, SESSION_ACK);
--			fprintf(out, "  up:      %lu minutes\n",
--				(curr - session->start) / 60);
-+			fprintf(out, "  up:      %llu minutes\n",
-+				(unsigned long long)((curr - session->start) / 60));
- 		}
- 	}
++trap cleanup_all_ns EXIT
++
+ setup_hsr_interfaces 1
+ do_complete_ping_test
  
 -- 
-2.34.1
+2.20.1
 
