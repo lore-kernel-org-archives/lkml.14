@@ -1,40 +1,66 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C0656BB20;
-	Tue,  7 May 2024 05:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62FDD6BB5E;
+	Tue,  7 May 2024 05:48:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715060807; cv=none; b=PdgPJxZkuKTN29O8PlB2ybhDO35V79ZBuWOI9FHlLzTsoDmaqyzmCu9tdMNPwiFw46Owk2PhitQVTffviQNtXdpi8b0b+jf0hW9SKPd/72jBJzEKQVSOwNOtNatcU5TqIkUmIIDrQ+wb03NiuIGGtEBcj8YN85a/xXW6PVnqXZU=
+	t=1715060912; cv=none; b=AxbJM25L5+Aue2rDMfPwPvPMVsYFl++V5TlfE4UO1JkNlonRju7n06Nn0+Ji9PBD/yrezub9qiFYZtv1SRZQNDy0SvouUlqFicrA293J+D8b+ETMoutMUKzH3Gy9YG0zVKesV/aRTlMVorerYNqEVTlBtZBafJQyqpy50CBkuMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715060807; c=relaxed/simple;
-	bh=/NxMfXX51LM6wRVaE17ulyFtkVct5TM0jpzpKe/PK9U=;
+	s=arc-20240116; t=1715060912; c=relaxed/simple;
+	bh=DE/+FQset3xrsj7V7n41nLCDbii0M8EJufuRl4Wvclk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MrkHHrYmtT682O6mdbMY5bFf2hLQbB+JatsMPK47kO8kQUuC/kKWlZ9S+quHcexENezVS9w5mLS8XpzgUIXFvB3mmMdN7OYnepwc52I1Ay1X6JXc26GdDHzg269cLreTB5rjLNNPI5bfqvNirUoRYc49jeFd4ULtDF6XOcOHto0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=FuNCQ0Fc; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=g48fMBshY1HD6Wzl3GbNKr2oaCZmkiMO+is21Vo3ngKPA4ifZ/gqgHLakkbsReZhDtPqzBrpp6zzyMxd9JmWzCDY2o7Re43RBfdVFwkoqGI7zPSZREeSFSAfCVhHMifdKBifMmlVyGI2tOLXzRs5F49M96ii5tWSNdtbpn1ojBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=WxXv84J1; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="FuNCQ0Fc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715060797;
-	bh=/NxMfXX51LM6wRVaE17ulyFtkVct5TM0jpzpKe/PK9U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FuNCQ0FcD+ZiIfF/od4b4YLkcRCXp0rGoT+N7WjM9oDvvlxsjT6MHIJpOjY9CAeLi
-	 lbBqMMTrBcbEomZO8hEKDPeNiifXlvgQ5BefORRhZ1Nl4clkVZeQIRufHGARJ6C4Gw
-	 ng2QdkYlG4zyiHeI4HnDVEmdka24eWcpTLlh2c12W7tw2yxbzZ0CTP2kdUhrl8mvuH
-	 4gC+cNIrBnJ4z2e0d93ltIPinESo7lf5c/8fM3QHzetcQ2B0ERSZl6sqToa+s+mZpE
-	 su/MOeBms3n85AwVi5jrTulqPOCdt3gcitgUIVAxz94JxzVbcaoK99ml7BLHEgj7Yy
-	 jy7JMOcnJtY9w==
-Received: from [100.66.96.193] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: vignesh)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 93DFB3781FE9;
-	Tue,  7 May 2024 05:46:34 +0000 (UTC)
-Message-ID: <0e56241a-859b-45d6-bc7e-da2ed894d01a@collabora.com>
-Date: Tue, 7 May 2024 11:16:32 +0530
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="WxXv84J1"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4475HhBh028795;
+	Tue, 7 May 2024 05:48:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=MxiUcbVZ+IpagCy8+kPbitRWZvYcftjrL+jTJKK50qA=;
+ b=WxXv84J1wypulOR8Y4tLtOm1+pQA3TiAif3zN0HjS8k4i7F8VEzBfM/ob793fbZFlNAM
+ z9kgsBoFh57JqsRKpdzynAqPp/512Rp8jUgS9m7ApVYoW2Q1Qpv8Ia8n/x56pxwwFAgs
+ Gkiyc9H/TehSCIhqKCz+WE72VVCX7mjajW7BWUZ16h85xaVoeX1y0pDfRwFuo55Gne7x
+ ZtRvf53nFcatIvWD+aASaGzfzh0S8t9inPDqY43io75BVDT0i1H61lXi9NcwuVvGEjvo
+ uJ6cN2QO4hl0HEQRYfDeq+PNKparWs4qRuKomsLE4m8va+/QQ/IleIxEm7Vw8XLa4FqE aw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xye1382xa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 May 2024 05:48:26 +0000
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 4475mQ9h014414;
+	Tue, 7 May 2024 05:48:26 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xye1382x3-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 May 2024 05:48:26 +0000
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4474DkGR013859;
+	Tue, 7 May 2024 05:26:40 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xx222utwj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 May 2024 05:26:40 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4475QbpC43975384
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 7 May 2024 05:26:39 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 664FD58063;
+	Tue,  7 May 2024 05:26:37 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4D8A25804B;
+	Tue,  7 May 2024 05:26:35 +0000 (GMT)
+Received: from [9.179.27.31] (unknown [9.179.27.31])
+	by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue,  7 May 2024 05:26:35 +0000 (GMT)
+Message-ID: <80aba643-60a0-4a1c-b90a-de6e0d8d7bc1@linux.ibm.com>
+Date: Tue, 7 May 2024 07:26:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,122 +68,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/5] drm/ci: generate testlist from build
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: dri-devel@lists.freedesktop.org, daniels@collabora.com,
- helen.koike@collabora.com, airlied@gmail.com, daniel@ffwll.ch,
- robdclark@gmail.com, david.heidelberg@collabora.com,
- guilherme.gallo@collabora.com, sergi.blanch.torne@collabora.com,
- mcanal@igalia.com, linux-mediatek@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-rockchip@lists.infradead.org,
- amd-gfx@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
- intel-gfx@lists.freedesktop.org, virtualization@lists.linux-foundation.org,
- linux-kernel@vger.kernel.org
-References: <20240430091121.508099-1-vignesh.raman@collabora.com>
- <20240430091121.508099-3-vignesh.raman@collabora.com>
- <k7sepoksttro3dgxxtwxfmlxwv5w5zn3aeso7p24mm3n74bo45@kx2dpe2qkqgo>
-From: Vignesh Raman <vignesh.raman@collabora.com>
-In-Reply-To: <k7sepoksttro3dgxxtwxfmlxwv5w5zn3aeso7p24mm3n74bo45@kx2dpe2qkqgo>
+Subject: Re: [PATCH net] net/smc: fix netdev refcnt leak in
+ smc_ib_find_route()
+Content-Language: en-GB
+To: Wen Gu <guwen@linux.alibaba.com>, jaka@linux.ibm.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
+Cc: alibuda@linux.alibaba.com, tonylu@linux.alibaba.com,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20240506015439.108739-1-guwen@linux.alibaba.com>
+From: Wenjia Zhang <wenjia@linux.ibm.com>
+In-Reply-To: <20240506015439.108739-1-guwen@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: PLRDL5ed79G-Pr6Cevz-_ETAaD0VLTMr
+X-Proofpoint-ORIG-GUID: 7a5cesJQLPVMTgJrsm4VrV-LJOcEzP0r
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-07_02,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 suspectscore=0
+ adultscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ phishscore=0 spamscore=0 mlxscore=0 bulkscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2405070038
 
-Hi Dmitry,
 
-On 30/04/24 15:47, Dmitry Baryshkov wrote:
-> On Tue, Apr 30, 2024 at 02:41:18PM +0530, Vignesh Raman wrote:
->> Stop vendoring the testlist into the kernel. Instead, use the
->> testlist from the IGT build to ensure we do not miss renamed
->> or newly added tests.
->>
->> Signed-off-by: Vignesh Raman <vignesh.raman@collabora.com>
->> ---
->>   drivers/gpu/drm/ci/build-igt.sh  |   23 +
->>   drivers/gpu/drm/ci/igt_runner.sh |    9 +-
->>   drivers/gpu/drm/ci/testlist.txt  | 2761 ------------------------------
->>   3 files changed, 28 insertions(+), 2765 deletions(-)
->>   delete mode 100644 drivers/gpu/drm/ci/testlist.txt
->>
->> diff --git a/drivers/gpu/drm/ci/build-igt.sh b/drivers/gpu/drm/ci/build-igt.sh
->> index 500fa4f5c30a..cedc62baba1e 100644
->> --- a/drivers/gpu/drm/ci/build-igt.sh
->> +++ b/drivers/gpu/drm/ci/build-igt.sh
->> @@ -26,6 +26,29 @@ meson build $MESON_OPTIONS $EXTRA_MESON_ARGS
->>   ninja -C build -j${FDO_CI_CONCURRENT:-4} || ninja -C build -j 1
->>   ninja -C build install
->>   
->> +set +ex
->> +export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/igt/lib64
->> +while read -r line; do
->> +    if [ "$line" = "TESTLIST" ] || [ "$line" = "END TESTLIST" ]; then
->> +        continue
->> +    fi
->> +
->> +    tests=$(echo "$line" | tr ' ' '\n')
->> +
->> +    for test in $tests; do
->> +        output=$(/igt/libexec/igt-gpu-tools/"$test" --list-subtests)
->> +
->> +        if [ -z "$output" ]; then
->> +            echo "$test"
->> +        else
->> +            echo "$output" | while read -r subtest; do
->> +                echo "$test@$subtest"
->> +            done
->> +        fi
->> +    done
->> +done < /igt/libexec/igt-gpu-tools/test-list.txt > /igt/libexec/igt-gpu-tools/testlist.txt
->> +set -ex
+
+On 06.05.24 03:54, Wen Gu wrote:
+> A netdev refcnt leak issue was found when unregistering netdev after
+> using SMC. It can be reproduced as follows.
 > 
-> Is the list in sync between x86 and arm/arm64 IGT builds? Is there a
-> chance of having a safety net here?
-
-We need to handle arm/arm64 cases also. IGT is not generating test-list 
-for arm and it is fixed now with 
-https://gitlab.freedesktop.org/drm/igt-gpu-tools/-/commit/1cf83083f855894dd287d9cf84bbcc2952b52d02
-
-Will uprev IGT to latest commit to include this fix. Thanks.
-
-Regards,
-Vignesh
-
->> +
->>   mkdir -p artifacts/
->>   tar -cf artifacts/igt.tar /igt
->>   
->> diff --git a/drivers/gpu/drm/ci/igt_runner.sh b/drivers/gpu/drm/ci/igt_runner.sh
->> index f1a08b9b146f..20026612a9bd 100755
->> --- a/drivers/gpu/drm/ci/igt_runner.sh
->> +++ b/drivers/gpu/drm/ci/igt_runner.sh
->> @@ -59,25 +59,26 @@ fi
->>   
->>   curl -L --retry 4 -f --retry-all-errors --retry-delay 60 -s ${FDO_HTTP_CACHE_URI:-}$PIPELINE_ARTIFACTS_BASE/$ARCH/igt.tar.gz | tar --zstd -v -x -C /
->>   
->> +TESTLIST="/igt/libexec/igt-gpu-tools/testlist.txt"
->>   
->>   # If the job is parallel at the gitab job level, take the corresponding fraction
->>   # of the caselist.
->>   if [ -n "$CI_NODE_INDEX" ]; then
->> -    sed -ni $CI_NODE_INDEX~$CI_NODE_TOTAL"p" /install/testlist.txt
->> +    sed -ni $CI_NODE_INDEX~$CI_NODE_TOTAL"p" $TESTLIST
->>   fi
->>   
->>   # core_getversion checks if the driver is loaded and probed correctly
->>   # so run it in all shards
->> -if ! grep -q "core_getversion" /install/testlist.txt; then
->> +if ! grep -q "core_getversion" $TESTLIST; then
->>       # Add the line to the file
->> -    echo "core_getversion" >> /install/testlist.txt
->> +    echo "core_getversion" >> $TESTLIST
->>   fi
->>   
->>   set +e
->>   igt-runner \
->>       run \
->>       --igt-folder /igt/libexec/igt-gpu-tools \
->> -    --caselist /install/testlist.txt \
->> +    --caselist $TESTLIST \
->>       --output /results \
->>       $IGT_SKIPS \
->>       $IGT_FLAKES \
+> - run tests based on SMC.
+> - unregister the net device.
 > 
+> The following error message can be observed.
+> 
+> 'unregister_netdevice: waiting for ethx to become free. Usage count = x'
+> 
+> With CONFIG_NET_DEV_REFCNT_TRACKER set, more detailed error message can
+> be provided by refcount tracker:
+> 
+>   unregister_netdevice: waiting for eth1 to become free. Usage count = 2
+>   ref_tracker: eth%d@ffff9cabc3bf8548 has 1/1 users at
+>        ___neigh_create+0x8e/0x420
+>        neigh_event_ns+0x52/0xc0
+>        arp_process+0x7c0/0x860
+>        __netif_receive_skb_list_core+0x258/0x2c0
+>        __netif_receive_skb_list+0xea/0x150
+>        netif_receive_skb_list_internal+0xf2/0x1b0
+>        napi_complete_done+0x73/0x1b0
+>        mlx5e_napi_poll+0x161/0x5e0 [mlx5_core]
+>        __napi_poll+0x2c/0x1c0
+>        net_rx_action+0x2a7/0x380
+>        __do_softirq+0xcd/0x2a7
+> 
+> It is because in smc_ib_find_route(), neigh_lookup() takes a netdev
+> refcnt but does not release. So fix it.
+> 
+> Fixes: e5c4744cfb59 ("net/smc: add SMC-Rv2 connection establishment")
+> Signed-off-by: Wen Gu <guwen@linux.alibaba.com>
+> ---
+>   net/smc/smc_ib.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/smc/smc_ib.c b/net/smc/smc_ib.c
+> index 97704a9e84c7..b431bd8a5172 100644
+> --- a/net/smc/smc_ib.c
+> +++ b/net/smc/smc_ib.c
+> @@ -210,10 +210,11 @@ int smc_ib_find_route(struct net *net, __be32 saddr, __be32 daddr,
+>   		goto out;
+>   	if (rt->rt_uses_gateway && rt->rt_gw_family != AF_INET)
+>   		goto out;
+> -	neigh = rt->dst.ops->neigh_lookup(&rt->dst, NULL, &fl4.daddr);
+> +	neigh = dst_neigh_lookup(&rt->dst, &fl4.daddr);
+>   	if (neigh) {
+>   		memcpy(nexthop_mac, neigh->ha, ETH_ALEN);
+>   		*uses_gateway = rt->rt_uses_gateway;
+> +		neigh_release(neigh);
+>   		return 0;
+>   	}
+>   out:
+
+Hi Wen,
+
+Thanks for fixing that! It looks good to me and works well.
+Please release rt for that condition in the next version. (Thx, @Ratheesh!)
+
+Thanks,
+Wenjia
