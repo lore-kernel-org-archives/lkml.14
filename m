@@ -1,79 +1,87 @@
-Received: from out203-205-251-72.mail.qq.com (out203-205-251-72.mail.qq.com [203.205.251.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3994C6B
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 02:18:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA0310F2;
+	Tue,  7 May 2024 02:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715048294; cv=none; b=STg/Cx4mW2yPajBUvEOXqGqv5UUAqXL5h+W7QYuuyrD5mgvk/1g+IzDwc6acWrvggqM/QJHb9b71MIrwpiS0TbpMTb2kP1JtBMHMpkE1rIzu7cBRNx8YYfXf1r9TbXPOiOikxL56tDQYJFzd1vZonce02fAMqp1BPpBbB5HGbGY=
+	t=1715048517; cv=none; b=kcuSuQsaWM1L5O4zlBy/oPQZr/kb/vtkSc8Kb7pIbslAb0nfnxaIu1rxiBwMire2sJs34VwESKNqwzfKVLn9Z69utiY3sLS4eTRrzqDcGYj+TlwcyiUfuauWctfSVG/y2OErCNCGBH7MflYlnvTWaS+K82byZVXRpb1OWyVYt54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715048294; c=relaxed/simple;
-	bh=6N3eSGRIs2Lgdif3lial3CflgiIAiBBtEuGf86Bw6a0=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=BSmXUVDQ4OfI5+UNRnWJUrgnKrNHjaacl9+QqjQBQeJUPCBruT97y6grud6vZLlgai6s9v/qLL6KM4Axs8CFXiookBwXKKAiyboe2cTv5Fc6Y1iMoNJtwNrhLssgMyKuGDx/rEFhEjLCucckExnDzATzlP5PnebByQ51bKaAHbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=U3cbMHAZ; arc=none smtp.client-ip=203.205.251.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1715048517; c=relaxed/simple;
+	bh=9nQW54+C4h+PA/o2ubGIoYRcvWs5DAna49ifrACI4Og=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=NW7bHbNuxxhZ06utRfEmJFoU5kVowSTqbbf5jDbmmXxmsY/fsqIa/trJEWC0ZSBs1mr/K7aw1UlNuKjWDFluH7xlBOo+YXEakF+Z46BAHg7IRzAHgYDnjVXjfL1qNwgYceD0mjlZ5k9XgRlxP/lOMZaRrWx98IjCf+gA69j4XXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AgcNmS13; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="U3cbMHAZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1715047983; bh=L68AxZj7zxXZVvaTdJ2toeMLjEVIi/d7IVdXQbKaP4s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=U3cbMHAZfG4e/V+mIS/dbmjHwoJbNESF6hCezBr/Gb1Ey6GKwV27XkhA00mWGlWhP
-	 pyF9Z2h8XDakVh0EujSvVuGFzSUhD+yKkeomZEqDZsVC2T+FTJpkJEeXXCXySjPf50
-	 AgRPCJg7v5tpeB9JRDOWp1cHMe8xZWWLz6l7gBYM=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 342072A6; Tue, 07 May 2024 10:13:02 +0800
-X-QQ-mid: xmsmtpt1715047982t7oj7skn9
-Message-ID: <tencent_456D1097D0EAEAEEAACDD47B526E602F910A@qq.com>
-X-QQ-XMAILINFO: N26DAMVpW7UEELg1dy+GMZD+00lIRCqP/w497FA+m7In7SmTs+b53VTThxdjI4
-	 RYqD4F4eFb/r9PUFAyWv3As47O7DN7unXY1sD4AJlpmPmX6Afm5/JF9B14XCRxO5LSJjGw62opqN
-	 b4t7TfwwpSGivC0CVvNlnbNpPs5DWTR7Sr8CDVe61qj3Gv07tAAq4yaFZk55zvaiGt1zLKSJM7xX
-	 cZcssu2UuTxPTUgu9IjJKzpUh8cnZbz6N3v/MLk2qdThxkkJOAVOAkFrcDlBVzU91QgNYfosUpzR
-	 BSKGOyj/fwdhW2jsz/49M/I6TPVDa8IVaBOQi6QyESxPf/pBoX6ZqE462G4Aj53rxhk1gkEjklbi
-	 6SXwTcOBH7RVu8F25JHvYPZJJV5gqcz5XFHdwP7LWU++0qvca9+VTW1JaUYxBfPpkt1jm0+wJ4Jx
-	 6KK3aZgnVFousOAJC3pm9A9dGvy0Ue+FtjHGWM/Wbf/99+Jc6iYzFZV5AoQph1Kpf+ElMjOPNkDM
-	 9ur6moGs3uPmSI7zCO55DU+MjrKRFdDzjTddbB9Eiz5PuAGK3G6clEzeQdCIEGSEkuogHEcCe3/x
-	 OchmIzRhPZSTh8jgwN/9+uCpzmkodeB25W+uT/j9VaV9FcfVjKCNwCeztyMkPvGSExFGLxbcbqTg
-	 VSUruY3cQkhtk7Ki89NMD/sOkgHg5LDgTBZicnaUh1Ohfew1BNGU6VorM9nlBm+p0sb/02iANA0T
-	 oBU4AhBBK8b/r7Kt+Yexu0bnXehFGQwjl+WYDDZURioh5zwLYC3AmtvqCy3l1b4kUM/M2p46wLhQ
-	 oatPC7SVyfZyR8B2t0zszzGDq5ihQ54nvwHCNyEU8ZbKFHfVtdj8Lr5toVfBnOXyyx5TfrZ+9tHJ
-	 c6QNuSAURs0XBA/nMXZhB/fQPHYWXUKGV4+TWTpU5IKtYaVSbBTZwUlpLU3zZUuw==
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+c48865e11e7e893ec4ab@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [bcachefs?] KASAN: slab-out-of-bounds Read in bch2_sb_clean_to_text
-Date: Tue,  7 May 2024 10:13:02 +0800
-X-OQ-MSGID: <20240507021301.2217091-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <000000000000918c290617b914ba@google.com>
-References: <000000000000918c290617b914ba@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgcNmS13"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so23175635ad.1;
+        Mon, 06 May 2024 19:21:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715048515; x=1715653315; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9nQW54+C4h+PA/o2ubGIoYRcvWs5DAna49ifrACI4Og=;
+        b=AgcNmS13y++A6qQ59dproyBR2v6T/2lL3FF59Bi/AE1gwXpPAOnfX6zzTB9XtC28eb
+         AadOdIVg2zsKqG4P29FoVqGSlPi4+h7WezuJV6ByWy3sXQ1q0GC0TZphWqomRzhRvqbs
+         0rYjhug2LWjPxffu0e2ZesSep+h6BS40tXTLJlt/bYidR7gF92/r7sV0UpfRkrMvceAM
+         HKYFFpLYusXL2lFP8Hh0ayUmeRq1kuEmYrYEjnW8SWTmC4jISQltLgJi6PCHWwWjFQxG
+         k54XiDYRmzVGumk0yNS9Gjdy5NA8l3JSvN1SbL278+FmncFyih2UA9OCSCo5U6C6eN2V
+         1iyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715048515; x=1715653315;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9nQW54+C4h+PA/o2ubGIoYRcvWs5DAna49ifrACI4Og=;
+        b=A2H7207eOGy0L0YIaThjBWMICFKzAkeMdpYaYhz3lP84b03Q8Z/XluhnfPSDuWL87Z
+         DIt71RJDRDK0hKuaXSEETNgsTwu68I706CkDQxaZzFCYozHdEm3EYpd+bZMjqHyTN+T4
+         l6n+FDslHTeVCf34FV4ZHWNfZZmx6lsJ1G+WlnSsvf8eQaBaNRkBid4N0whAECpPZ05N
+         vIRkZMQ6aA/pLcCXOzXmze4putkfRIpJTHMwRJoG1kMWhtTPRiJaTJhglNk4pqIa1tFB
+         A2tyy7O1vDUMQ56IRUKa6yg3lVtDLOcidZJfAXi+VY4irZH00/kWgZaBnw/k/jBgpcSN
+         NcdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVu53S+4/MFjDWbCBYcL7mzer5bUHxg0dhyi30uF6tTmCAyrvv01WbSJXrGWy5n7XxepIhiftzQ3Bp87n4Zb0usfs/ciEh1IYTqZ+9B
+X-Gm-Message-State: AOJu0YzbwtGugTwDFEzZhP4bRQ+IhzkhFD3qBSWoGjA9lZplBEDZ6CZb
+	LHj3/FUdCz0rc652Zb8quj++xSVgFO/VKpxZSH+icQhMZMYzZwQg8sUDqQ==
+X-Google-Smtp-Source: AGHT+IHFo3ZLLchIeUjwzHz6K75/zOue1+PuizBlbVs7J/fqNmMuoABQbBf6Q1XZ+7EiakMy72LQQQ==
+X-Received: by 2002:a17:902:eb91:b0:1ee:2a58:cb7c with SMTP id q17-20020a170902eb9100b001ee2a58cb7cmr4089540plg.35.1715048515075;
+        Mon, 06 May 2024 19:21:55 -0700 (PDT)
+Received: from smtpclient.apple ([205.204.117.126])
+        by smtp.gmail.com with ESMTPSA id x6-20020a170902a38600b001ed3702f786sm7451882pla.169.2024.05.06.19.21.52
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 06 May 2024 19:21:54 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.500.231\))
+Subject: Re: [PATCH 0/1] *** Replace KLP_* to KLP_TRANSITION_* ***
+From: zhang warden <zhangwarden@gmail.com>
+In-Reply-To: <20240507021714.29689-1-zhangwarden@gmail.com>
+Date: Tue, 7 May 2024 10:21:40 +0800
+Cc: live-patching@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0E399FCD-396E-448B-A974-6034F4CF2B53@gmail.com>
+References: <20240507021714.29689-1-zhangwarden@gmail.com>
+To: jpoimboe@kernel.org,
+ mbenes@suse.cz,
+ jikos@kernel.org,
+ Petr Mladek <pmladek@suse.com>,
+ Joe Lawrence <joe.lawrence@redhat.com>
+X-Mailer: Apple Mail (2.3731.500.231)
 
-please test oob in bch2_sb_clean_to_text
 
-#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 5eb4573ea63d
 
-diff --git a/fs/bcachefs/sb-clean.c b/fs/bcachefs/sb-clean.c
-index 5980ba2563fe..02101687853e 100644
---- a/fs/bcachefs/sb-clean.c
-+++ b/fs/bcachefs/sb-clean.c
-@@ -285,7 +285,7 @@ static void bch2_sb_clean_to_text(struct printbuf *out, struct bch_sb *sb,
- 	prt_newline(out);
- 
- 	for (entry = clean->start;
--	     entry != vstruct_end(&clean->field);
-+	     entry < vstruct_end(&clean->field);
- 	     entry = vstruct_next(entry)) {
- 		if (entry->type == BCH_JSET_ENTRY_btree_keys &&
- 		    !entry->u64s)
+>=20
+> transition state. With this marcos renamed, comments are not=20
+> necessary at this point.
+>=20
+Sorry for my careless, the comment still remains in the code. However, =
+comment in the code do no harms here. Maybe it can be kept.
 
