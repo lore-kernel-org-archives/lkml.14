@@ -1,101 +1,73 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A0E14D443
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E28B414D443;
+	Tue,  7 May 2024 10:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715076243; cv=none; b=Az9Zj/DYDqMQyVQXnuSurrYVkxzBsMjsCboRMJ248eaG/r73aKQJ6hD2v67GlwA69UIwdwqSDdmHEKapaIb8tKaPyrvSYwGhQsIsyZzb/w1RkWlaPNQDA8AGtjHKTNwl3bbvF0qSsUQ8d/IxUGFCj0wLBP1WC9JBdjKIMJjSb0U=
+	t=1715076338; cv=none; b=LeDvZTVl4DbydG4EvRdCYw4KCct5RoQgczIzUZWFCFQYF+88nb1pwicOe9FGEdRWZn2tT6llfbQKEIh/5f1e6mW4F1cwPpko6lRWxpKQN3xsyXwCBhnNSJHTTt+I50gQb1k3s82sN3PL/3z5vEihMv6jyu4c+fBxnzSuyZslrmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715076243; c=relaxed/simple;
-	bh=jnbmoIfEkquEEjiJBAjqdCDBxOD1+Yzt7A7OKiFlJfw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qCxuI2g47OS37rHBSUJnGSBTHNBY7/K3wtGmT8M1K5IBaU2Zn8u3eGJY50Mswbsofd575z5hzpeSRDfGlPkNuriTCxR3M6cB89apbN8sn1L9Ufqbjd0fyTdkTA1ewwCCDeLxInyIc5ZlQpAnWb2/e/TFhsqz2nJ3kMRwEreNMmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ClqbICPf; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715076338; c=relaxed/simple;
+	bh=zVcUl3GHK4Klc1HbBXDvbpqqBLsYLjnWF6jdPaLOoDM=;
+	h=Content-Type:MIME-Version:Subject:From:In-Reply-To:References:To:
+	 Cc:Message-ID:Date; b=rc9BlWA0M4/XqLDbLxe2jnCGTm2di6NYN3DVQj50cbdeZcJMketZevmmAEvGslczSWwM+F5tpX2W0BO0vzl4mrMiOrDvPBacUI88jOxBKe/LtlUUS9QKBUraxPlVLXdAPcDOxw08i9VGaD6n6AZ/ChkPbdRcRv7xnEQoBXwZlrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hZKMXmQ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ClqbICPf"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-de45dba15feso3080585276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 03:04:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715076241; x=1715681041; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ENlfgQ3ADPUMWuBuiOLhnFoQNEtfud/j+QDtLaNAUG0=;
-        b=ClqbICPfGWs4b3Kil8wr9qUk9sNcSadQx7MKrglRxSUZNtKHMoGjJUbwrtS+2iOZJY
-         eadxodiGOSOVLNQMyvANf317P6IFUtwTyUHhLOt7M7tvuVa/fwz9wN/+erbwFLXG2g2y
-         1oH8B115XICgrEKBcpZvfl1GSSwX37sXhcPF1RBF2im4pDZLcSScd1kn3Gou6n+G+CNJ
-         MDSKhUcbfeueiOci2vFZoYnyvQC5mgekuBzf5piN9ZJrWOwhVArEPla0MNH3XSuSPEQN
-         u87VP4F0SjIDS3IEoI6MmIpP0Ep7GIo0z+K7dW7iDrf4EWBDrubFEtAe81yZDOMJhAG1
-         LZWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715076241; x=1715681041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ENlfgQ3ADPUMWuBuiOLhnFoQNEtfud/j+QDtLaNAUG0=;
-        b=NWZNcufY+XNuczcniQ1d9hSK/yuy+Jo6isE5/vDsbK7vWQr8RMoCYu7UjWBEvwUDTg
-         BsjDLh0vgsDOljiuJ0TJF8pjhOKzxSFe9Los9v9jjeGMFPa7yJwgtVeUQf4x9/hkqfG+
-         wifMyzFAzgHb95jav7IFyeuEDGDUphGCpO7s5Qp9Mp2enmpur84JBW4ggqs1Xdzg66KO
-         8yDep+6EiWM7r7AhjCF0DOrlU9nZjsWIWyrtVFdFmLUvumr4v3sWhra+//0sSX2ZINTE
-         D0veUndV10N8bPLuyxswtqm8rZH9zhFNZDgIMkKtgUcmg8cDjyJVOddWdf8BYz21ie7y
-         re2g==
-X-Forwarded-Encrypted: i=1; AJvYcCX2LKCc3Ue+fl7ommJgjRpYg3hG/ybT/hwKKghZv0exnvDv9fx696F1OltBdUv9nZuu5jM6PjOLCLkmvjf7SruXOz8x8lsXRxzXzkaU
-X-Gm-Message-State: AOJu0YxevLjh5oRgtS1AMGwt0pW8Pn3OmjqMUJ0slqgAeumk44L4Ewhz
-	kS4S5s1WE/w/XHWKM990L3f5RHwFNNW59WjYBNjvbtJShS3mP1aRLc95ro/RJAfflAFhwpf65Bk
-	f4R2SXriX2OMS7ZeOHafJkHAgzcUtIV0ox8dW/w==
-X-Google-Smtp-Source: AGHT+IE6RbboWA6zivUgxElWhiInYBOoZKZxCooBjJtVLVKzpcY065ewr27Om73FjNB7+c1CsbFfoFINBaR1I1fIna4=
-X-Received: by 2002:a5b:912:0:b0:de6:3c4:c3a with SMTP id a18-20020a5b0912000000b00de603c40c3amr12223334ybq.10.1715076241415;
- Tue, 07 May 2024 03:04:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hZKMXmQ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22E90C2BBFC;
+	Tue,  7 May 2024 10:05:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715076337;
+	bh=zVcUl3GHK4Klc1HbBXDvbpqqBLsYLjnWF6jdPaLOoDM=;
+	h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+	b=hZKMXmQ0xyHUdME97VnF04JAmb8/ELTZq8yEFt8JIrNg1+PfRZDHJ14DgvA8E73Fp
+	 0vZt2CWocJgyqTVZm1UqzpwTn5QGVSrcFDVPb+o5uwaKNUOPa9RtF9Xv/cINgOW2hV
+	 eKqpmdlxCBE24dlcCSLI4ra/VbQkU1qqu7jqSnb4HvXL2MnMZx0W6KMIWyARwvYRVl
+	 ymyg+zfVddH8Yh4JVHB+nzxTr+eLKeaqxsRl5YDxwo+q8XBXaZdEPSPnUEhKxw08Iv
+	 Pqyh0vwVFsjJQcGxiFg4NrM5G1KoLewJ4geY7yoob6+DHgJPy5yp7+Ixxa9Xdr6MPh
+	 jcUE2m5e7fkYA==
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506142142.4042810-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240506142142.4042810-1-andriy.shevchenko@linux.intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 7 May 2024 12:03:50 +0200
-Message-ID: <CACRpkda=a3X=jyZKQoOFrfgzpE2C+rZ9UC1VDnCvGL7QP4x4BA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] PCI: controller: Move to agnostic GPIO API
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Li <Frank.Li@nxp.com>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	imx@lists.linux.dev, linux-amlogic@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli <s-vadapalli@ti.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	Yue Wang <yue.wang@amlogic.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
-	Xiaowei Song <songxiaowei@hisilicon.com>, Binghui Wang <wangbinghui@hisilicon.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH wireless-next] wil6210: Do not use embedded netdev in
+ wil6210_priv
+From: Kalle Valo <kvalo@kernel.org>
+In-Reply-To: <20240503103304.339489-1-leitao@debian.org>
+References: <20240503103304.339489-1-leitao@debian.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: netdev@vger.kernel.org, merez@codeaurora.org, quic_ailizaro@quicinc.com,
+ linux-wireless@vger.kernel.org (open list:WILOCITY WIL6210 WIRELESS DRIVER),
+ linux-kernel@vger.kernel.org (open list)
+User-Agent: pwcli/0.1.1-git (https://github.com/kvalo/pwcli/) Python/3.11.2
+Message-ID: <171507633406.3818005.5416249178784551917.kvalo@kernel.org>
+Date: Tue,  7 May 2024 10:05:35 +0000 (UTC)
 
-On Mon, May 6, 2024 at 4:22=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+Breno Leitao <leitao@debian.org> wrote:
 
-> In v4:
-> - added tag (Mani)
-> - fixed a polarity bug in iMX.6 driver (Linus)
+> Embedding net_device into structures prohibits the usage of flexible
+> arrays in the net_device structure. For more details, see the discussion
+> at [1].
+> 
+> Un-embed the net_device from struct wil6210_priv by converting it
+> into a pointer. Then use the leverage alloc_netdev_dummy() to allocate
+> the net_device object at wil_if_add(). The free of the device
+> occurs at wil_if_remove().
+> 
+> Link: https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/ [1]
+> Signed-off-by: Breno Leitao <leitao@debian.org>
+> Signed-off-by: Kalle Valo <quic_kvalo@quicinc.com>
 
-Looks good now. The series:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Patch applied to ath-next branch of ath.git, thanks.
 
-Perhaps the use of  _raw accessors could be avoided in 5/5 by some
-elaborart polarity quirk but I'm no perfectionist and it can be fixed later=
-.
+10d2b4f4aa0b wifi: wil6210: Do not use embedded netdev in wil6210_priv
 
-Yours,
-Linus Walleij
+-- 
+https://patchwork.kernel.org/project/linux-wireless/patch/20240503103304.339489-1-leitao@debian.org/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
