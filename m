@@ -1,152 +1,149 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17D7161313;
-	Tue,  7 May 2024 15:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB3215EFDE;
+	Tue,  7 May 2024 15:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715094766; cv=none; b=u2ouEjI0vpIHItQhSpav5qICHHZ2bDI8ifW5vbMgOmXaqibVQ4mEGjBI/riQpX3sJ5IWfrjbHBK6Kh3nKjm/RKs49DAS5w0txIX4eAIkbVOXAbEyteFs6a509XLIxArlD5KC0M4SWU9lqoXpS4IiEo9qypU3ZIWILRoBRgU00nY=
+	t=1715094872; cv=none; b=jei0tJAQv+AKVXcsphCaX7cXRbYLQkbU7e8YUcDZ+KFSI/v3YGlgfFyvmqQQUfFLFAXJQGnZI5HqitBOpmX/THc823iDLOV6VVdLJJy8Uyqzf7kKMFCbVyETRN2Y6WpZeFA9Q59xSrgzPRWePB2G3cJfRSN+Yl8RSK/FRpnNtok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715094766; c=relaxed/simple;
-	bh=AeQpyOACUEH32G+Z9i3H6jfYrCothtxTZY2nD1bb05g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kkwvL1Xm/b29Hlq4s0QFih/CkPLnzquJvTPHA7eqlRnYjCmTbMF4XhBUYhZP12dBwsKVrdHCsKCyON8lbrgMfVXPzo231xCkbuStrdJewDw0Puv5HatP8OmkWxRFec4T0iv22h3m8+iiLOfT4qF4Np7cuvR7Q2p1uETgHcwiuJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RsqPFWQ/; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715094872; c=relaxed/simple;
+	bh=nB/cJv7IcDvCVPO18M+qfbJN1yWBxowX9QN+QZhjrR4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=H4khYe0h5U/qJ6NHesExnrc4F1L4uHtETnecZXQyP3l8FpBReFUQuvOzXk6g/HzzYJILtwP081Rulj0+v7k1VIXJQvyeu9BdrpodEHdKvfOZEAxygEUb0mry+A2J50huTSNIaCCJzqe8CCq6jxjv8tNfbk4kj61hPrbo42xxT90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ISpe8zWi; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RsqPFWQ/"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e43c481b53so2424271fa.2;
-        Tue, 07 May 2024 08:12:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715094763; x=1715699563; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=l0XnUy7N7GmzfhRBhUIrbtF1Olv4xCz/CaIdT4eaN4M=;
-        b=RsqPFWQ/h2p0fgtOkqeDpDJLl8keWM3tn/KyqMXZsV2w5Jduue/LZPyJHLJsZc9bW+
-         iejdWK7A3ChMGS8HAVrXlcch4jpLhxi7qETTiqTNTbspG7OoMdVnmb+fPJXp0SSPv6Rc
-         rzsM4XP3JEr/qaBdsTC4TOD1dJOI8AaQX46KyGMyBWKTO+MOzG/93F8+Vz3ZSO54yo4l
-         5TJ9n2b6Pw6drqqk9HqMFT3Z9mdCSWwzrJ53+19lsPIdH8pMnfZV3yNiTn3TWJJe1YNp
-         eGzdmo+FUfaxQpNk5CRpy/IEMoXNpM8e0yKtdR5abovJ7hi6PjJN32/iqwrJn7ii0yut
-         qcvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715094763; x=1715699563;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=l0XnUy7N7GmzfhRBhUIrbtF1Olv4xCz/CaIdT4eaN4M=;
-        b=WFIKfnuZEzNWo/1B1maSOtWx5KDOv0Yu8d1mYiEUV4yELNQr0wy6KDw+X1h7yXE4dF
-         Xf3dOAgwITm3Ik3Axt2A4dTSAHsrDrUVnahZ8fpzQoxKcCv4xpdbNlPjlqDn3XNEYvmh
-         E8m/+GtEyEAtqv4oPF5vw33zD2sq4S9Qg43vuNoTCIO5wAiE374HjzxyZmFmg0XmA7GE
-         mfLO+KSm0qKZpKjm+FNfJrfCsv1mRIM4ssKALj4DQFOTdgS/yyKIjOPh9BRjBDJsGinB
-         yfdvuOLCT/6YHuK7hnT+cGtBQnVx7hno4qqbrrF7KzidX1wNXnpzJykJzZps1REl+wBb
-         Kg9g==
-X-Forwarded-Encrypted: i=1; AJvYcCXAPwtNahVX+vZnbhc4mWScJHEHFZfwy6yNtDKf7dF615AJjHw+iuP7jTzCTJjGpEQdGtFQIQ2ltiKDro2TByTDpPcd+LQK+rbsYt6EZmppBZezK5yw3yofRpipJIMa6eOc29Xa0BxMDsflKiM4Cv7RstGI1Tou/rF/30UBfZkuJEmG7fgQ
-X-Gm-Message-State: AOJu0YyHK4YbH44GtoI4UYfndBt84wlJJTq+7LaVsEYm2Owf3vUKt5yu
-	oj98boFfjg/n/YZ5W6vBTcKNvhyiXHSd6+H+M4UTBPKH9q31T7UAXLqJ4o9PyuBUJZTGUZTkmmh
-	jM3raXYiiFNUzbGgw6cXPmBQ3xcOte2P94mE=
-X-Google-Smtp-Source: AGHT+IGG3otomvjTjqDrNJOeIRme01d0y8iKublirhdl/ykvSpRNO81I30xRl+f0DqUm4Z6jhxb9ZetVuFmB/uInhc4=
-X-Received: by 2002:a2e:a9a4:0:b0:2dc:f188:a073 with SMTP id
- x36-20020a2ea9a4000000b002dcf188a073mr11287501ljq.35.1715094762470; Tue, 07
- May 2024 08:12:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ISpe8zWi"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E1D86E0005;
+	Tue,  7 May 2024 15:14:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715094867;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=206gGNUNB5hA5ZcFAZ6jyveJ5RgZY1MARbRfGQUc+HM=;
+	b=ISpe8zWiQep2P8Frm93frtzWECPQK7E31QuFfs4MQwQGxwF1LFceQXULO98URfaceGT6Pa
+	jd4Zwu76vmRl0LoukyAE9I4K5l8c8SUb5DBZzHHcw3hrTHvqkYr2ajIoRqQ5xcZmBMsaoO
+	mNRJInwwjq8LXBtvcpKIP/bFFbFDdLjsLaWqrqqeLU8C4FBgvnvEkmqsG+PNicz8fn1Hon
+	Fndh/FnABacFn11AoTLhgl5WSfUw1ks8SZSeCAQWVu0BWwIpo2bknBUYO/DPHUQqjVScoI
+	ZBu3nmgXHXdEvbSPJoT7Z5PLlX5yPraMtGNFME/46CrnxcK7PhdX0+lnB1KFOg==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240417134237.23888-1-bavishimithil@gmail.com>
- <2e179356-425d-48cc-84db-0ea3e6203fba@kernel.org> <CAGzNGR=pvv67UJtNnkDUMhrpnPjNCCYEGeCaM7e_9=4G+Lcfgw@mail.gmail.com>
- <676ce61c-e850-4046-ad0f-e3382be3fe0c@kernel.org> <CAGzNGR=rDrd6LyAC2yB4XUcxn=H1VdY8LQO99NEOBR1sLGGT0Q@mail.gmail.com>
- <3425732a-390b-4c0f-ba1b-2a7e2219d581@kernel.org> <CAGzNGRmF8K7UDDERE_7UQw1EdC=J_jvvXqefU=M0v6FQcsnbhA@mail.gmail.com>
-In-Reply-To: <CAGzNGRmF8K7UDDERE_7UQw1EdC=J_jvvXqefU=M0v6FQcsnbhA@mail.gmail.com>
-From: Mithil <bavishimithil@gmail.com>
-Date: Tue, 7 May 2024 20:42:30 +0530
-Message-ID: <CAGzNGRmB5yYyVVDQZ0PaL7k0rie8TQAySwpzDx=QokUAV1NGug@mail.gmail.com>
-Subject: Re: [PATCH v4] ASoC: dt-bindings: omap-mcpdm: Convert to DT schema
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 07 May 2024 17:14:25 +0200
+Message-Id: <D13IE06GUEJ9.UUNOU4QH2QN9@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v2 00/11] Add Mobileye EyeQ system controller support
+ (clk, reset, pinctrl)
+Cc: <linux-mips@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Gregory CLEMENT"
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, "Stephen Boyd"
+ <sboyd@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Lee Jones" <lee@kernel.org>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Philipp Zabel" <p.zabel@pengutronix.de>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
+X-Mailer: aerc 0.17.0
+References: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
+ <8dcdb1422cd144128c1dc6fff1c273d3.sboyd@kernel.org>
+ <D13HXGJGMS76.XIIIZLZBCZ09@bootlin.com>
+In-Reply-To: <D13HXGJGMS76.XIIIZLZBCZ09@bootlin.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-Hey, before making a new patch I'll just list the changes that need to
-be done according to this discussion.
-Change maintainer
-Change clocks to only include maxItems: 1
-Change clock-names to include
-items:
- - const: pdmclk
-Use correct address in example
-Use flags for interrupt in example
+Hello,
 
-Best regards,
-Mithil
+On Tue May 7, 2024 at 4:52 PM CEST, Th=C3=A9o Lebrun wrote:
+> On Sat May 4, 2024 at 4:34 AM CEST, Stephen Boyd wrote:
+> > Quoting Th=C3=A9o Lebrun (2024-05-03 07:20:45)
+> > > This builds on previous EyeQ5 system-controller revisions[0], support=
+ing
+> > > EyeQ5, EyeQ6L and EyeQ6H. We expose a few OLB system-controller
+> > > features here:
+> > >  - Clocks: some read-only PLLs derived from main crystal and some
+> > >    divider clocks based on PLLs.
+> > >  - Resets.
+> > >  - Pin controller, only on EyeQ5 (rest will use generic pinctrl-singl=
+e).
+> > >=20
+> > > EyeQ6H is special in that it has seven instances of this
+> > > system-controller. Those are spread around and cannot be seen as a
+> > > single device, hence are exposed as seven DT nodes and seven
+> > > compatibles.
+> > >=20
+> > > This revision differs from previous in that it exposes all devices as=
+ a
+> > > single DT node. Driver-wise, a MFD registers multiple cells for each
+> > > device. Each driver is still in isolation from one another, each in
+> > > their respective subsystem.
+> >
+> > Why can't you use auxiliary device and driver APIs?
+>
+> Good question. Reasons I see:
+>
+>  - I didn't know about auxdev beforehand. I discussed the rework with a
+>    few colleagues and none mentioned it either.
+>
+>  - It feels simpler to let each device access iomem resources. From my
+>    understanding, an auxdev is supposed to make function calls to its
+>    parent without inheriting iomem access. That sounds like it will put
+>    the register logic/knowledge inside a single driver, which could or
+>    could not be a better option.
+>
+>    Implementing a function like this feels like cheating:
+>       int olb_read(struct device *dev, u32 offset, u32 *val);
+>
+>    With an MFD, we hand over a part of the iomem resource to each child
+>    and they deal with it however they like.
+>
+>  - Syscon is what I picked to share parts of OLB to other devices that
+>    need it. Currently that is only for I2C speed mode but other devices
+>    have wrapping-related registers. MFD and syscon are deeply connected
+>    so an MFD felt natural.
+>
+>  - That would require picking one device that is platform driver, the
+>    rest being all aux devices. Clock driver appears to be the one, same
+>    as two existing mpfs and starfive-jh7110 that use auxdev for clk and
+>    reset.
+>
+> Main reason I see for picking auxdev is that it forces devices to
+> interact with a defined internal API. That can lead to nicer
+> abstractions rather than inheriting resources as is being done in MFD.
+>
+> Are there other reasons?
 
+Self replying myself. I gave myself some time to think about that but I
+still have more thought now that I've written the previous email, and
+re-read almost all old revisions of this series.
 
-On Sun, May 5, 2024 at 5:19=E2=80=AFPM Mithil <bavishimithil@gmail.com> wro=
-te:
->
-> On Sun, May 5, 2024 at 5:02=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
-rg> wrote:
-> >
-> > On 05/05/2024 11:59, Mithil wrote:
-> > >>>> Missing constraints, so replace it with maxItems: 1
-> > >>> Similar to how clock-names are handled?
-> > >>>
-> > >>>> List the items. I asked to open existing bindings and take a look =
-how it
-> > >>>> is there. Existing bindings would show you how we code this part.
-> > >>>   clock-names:
-> > >>>     items:
-> > >>>       - const: pdmclk
-> > >>>     minItems: 1
-> > >>>     maxItems: 1
-> > >>> Something like this?
-> > >>
-> > >> No. Do you see code like this anywhere? Please only list the items,
-> > >> although without context impossible to judge.
-> > >>
-> > > Quick search on sources gave me
-> > > Documentation/devicetree/bindings/usb/dwc2.yaml
-> >
-> > Above code is different - it does not have maxItems, which you want to =
-add.
-> >
-> > > which I used as reference for this prop
-> > > clock-names:
-> > >   description: Must be "pdmclk"
-> >
-> > Again, no, please list the items.
-> > items:
-> >  - const: foo
-> Yep that was the old code for reference. Just items (no
-> maxItems/minItems as well)
->
-> > > compatible =3D "ti,omap4-mcpdm";
-> > > reg =3D <0x40132000 0x7f>, /* MPU private access */
-> > >         <0x49032000 0x7f>; /* L3 Interconnect */
-> > > interrupts =3D <0 112 0x4>;
-> > > Not really constants as they do change with platforms (omap4 vs 5 for
-> > > example) but
-> >
-> > That is not really relevant... This is not pi or other math constant.
-> >
-> > > So do i just make up the constants for it then? Those just seem like
-> > > magic numbers.
-> >
-> > Hm? Did you look around for other SoC nodes? 0 looks like SPI, 4 like
-> > LEVEL_HIGH, but it depends on number of meaning of the interrupt cells,
-> > so who is parent interrupt controller.
-> >
-> Ah the irq values, correct, I thought you meant the reg values.
-> It should be <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>; not sure about 112 though=
-.
->
-> I suppose these changes are enough right?
->
-> Best regards,
-> Mithil
+I do like this auxdev proposal. More so than current MFD revision. One
+really nice feature is that it centralises access to iomem. I've
+noticed recently a register that has most its fields for reset but one
+lost bit dealing with a clock mux. Logic to handle that would be in one
+location.
+
+Also, I just noticed you hinted at auxiliary devices in previous emails,
+which I thought was a generic term. I did not see it as a specific
+kernel infrastructure to be used. Sorry about that.
+
+Regards,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
