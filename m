@@ -1,68 +1,128 @@
-Received: from smtp94.iad3b.emailsrvr.com (smtp94.iad3b.emailsrvr.com [146.20.161.94])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E878314B947
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 20:02:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACF3314B951
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 20:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715112124; cv=none; b=PQySA4SAEMxcvmaud1JI1kR2D3Qv3/wsyhI/9vJMjbJ/WPJguTIJwqoxPotFr7yROUn/GlEyTULa1VWwfwh3c/Qf7F8kSMFdTBXBGsj/UfDnt64lJfTrW6njBh32BdUfvuzs6c95hEIuhbG9wc6Pjl3lpj0Hi6O/b4GeQqLtixA=
+	t=1715112163; cv=none; b=mVsfYkp3nGA5HCh+1pI9W4WjxI1FcbCbY8uuFCwhZ3T3YTKU/nQT6PyYjCAkfY7MCAJ4/6pip7Wer/Z4BIBZsTt2A7c6McbUbYpm55IvVxgbuZjz8KQ7ee1p3//iKG+E5jUUmkwNt2/QVQmclXMdpaijOwC7+hYmQF86LJC9vFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715112124; c=relaxed/simple;
-	bh=Qkybr0ICtPOdOIgP4Bi2fvNRD8VjwHKkQtnvW+vmQBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O1RER2uRb+AH0vYfvRaGkdUta9UcY/K+LA6G3YmvU4BIXnoMzXRUbWmgxMwaQoHU9q3Gy1I6P8iq4wqa3hvg0gfBFP1FPRXDd9T1yB5j1Aao2JPgv+NcydEo6wyvpWGMLNW/JcwiSQsM4eTXbn2j6B8d63lAiwl6rrBSGMOfQrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oddbit.com; spf=pass smtp.mailfrom=oddbit.com; dkim=pass (1024-bit key) header.d=oddbit.com header.i=@oddbit.com header.b=oyHizF33; arc=none smtp.client-ip=146.20.161.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oddbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oddbit.com
+	s=arc-20240116; t=1715112163; c=relaxed/simple;
+	bh=rstZsC4tr4kAVi9rKuNsg0sqQb+KdmStQAo2N0cQNL0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Dv/IT7TNXhWRsn12x3e07tKKe3TfQy2LA6o2YCZdHC3woxB5o1FdniX1h4AX+RVTU4hBiLBib3KQmjKXmxE4T5Jh6QJDkycjrcttkZFz3qEW+4NmuuwlIZTTA58TwGkXzUrzvBmQb2IoK2OjZcxGKjYE4zWVQ0MzGtKtwWjp4Hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jkJ6L5z1; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=oddbit.com header.i=@oddbit.com header.b="oyHizF33"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=oddbit.com;
-	s=20180920-g2b7aziw; t=1715110992;
-	bh=Qkybr0ICtPOdOIgP4Bi2fvNRD8VjwHKkQtnvW+vmQBs=;
-	h=Date:From:To:Subject:From;
-	b=oyHizF33EJ9iPYpjHhjzhbUyxd4IKJc047Qjp1SV2xtzZaVViI5QEGEQXBIwOUhcK
-	 6jS1781D76NO4uaIx/i5/Cyw0q+6i2hyCTju4SK/sLJaQZaSQ4o/ASrGlWvQNyM3sZ
-	 g6ZBjMao8iV6oR9+pxsJaoxVAZyZQjPl/RZImsLk=
-X-Auth-ID: lars@oddbit.com
-Received: by smtp12.relay.iad3b.emailsrvr.com (Authenticated sender: lars-AT-oddbit.com) with ESMTPSA id B0AD9C00FC;
-	Tue,  7 May 2024 15:43:11 -0400 (EDT)
-Date: Tue, 7 May 2024 15:43:11 -0400
-From: Lars Kellogg-Stedman <lars@oddbit.com>
-To: Duoming Zhou <duoming@zju.edu.cn>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hams@vger.kernel.org, pabeni@redhat.com, kuba@kernel.org, edumazet@google.com, 
-	jreuter@yaina.de, dan.carpenter@linaro.org
-Subject: Re: [PATCH net v5 1/4] ax25: Use kernel universal linked list to
- implement ax25_dev_list
-Message-ID: <sijkuyypbnelg3w2shbxm3y6zu3qhfurvpvkoij5eluolnqr5w@y5dq74ycxzkm>
-References: <cover.1715065005.git.duoming@zju.edu.cn>
- <bd49e83817604e61a12c9bf688a0825f116e67c0.1715065005.git.duoming@zju.edu.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jkJ6L5z1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715112161; x=1746648161;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=rstZsC4tr4kAVi9rKuNsg0sqQb+KdmStQAo2N0cQNL0=;
+  b=jkJ6L5z1HNAfukuXDK92ktleL/xYvZy5egiGEJouy+xHwAjHBSrt6W7I
+   I8NBFONGiiWmhm4H5+uNcKqSE/wY4ntya2cgRXqC5pAd/jE33vJzxbvbP
+   hRvmBPqtz7ES7F24KvzlFs9EJSwo5kw/aeuQDq35HbD9/h0zdY2+8y8s6
+   DNlQFkz1E1saIt+qjdMVVj4OY6wzxBc7OYIFX3Gf5ll83y9+mK6UwYH2a
+   Ghaz6r2cSMRfjnH0b2+tsCVBzdd4r+Mawvh9RyOlw+peVXukz+h8YpHCu
+   4wrdfBXJ0fE+Rn21TkgqRYyMs03ath4w3p39zX6fzBOrv5ed8Bktzkik5
+   Q==;
+X-CSE-ConnectionGUID: TZfzy3CRSW6cXyRoGrz9Bw==
+X-CSE-MsgGUID: gcVX+gn1TmmnwMc5vXDVag==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="11063692"
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="11063692"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 13:02:41 -0700
+X-CSE-ConnectionGUID: vheEd5gkSOi78xYXy0kbfw==
+X-CSE-MsgGUID: +/dvpArbT3CveaVezFu47w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="29168275"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa007.jf.intel.com with ESMTP; 07 May 2024 13:02:40 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 7AA94E7; Tue, 07 May 2024 23:02:38 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Yury Norov <yury.norov@gmail.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v2 1/2] bitops: Move aligned_byte_mask() to wordpart.h
+Date: Tue,  7 May 2024 23:01:31 +0300
+Message-ID: <20240507200236.527688-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240507200236.527688-1-andriy.shevchenko@linux.intel.com>
+References: <20240507200236.527688-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bd49e83817604e61a12c9bf688a0825f116e67c0.1715065005.git.duoming@zju.edu.cn>
-X-Classification-ID: 3459c125-4b56-4fd5-9dc7-757dbe40275f-1-1
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 07, 2024 at 03:03:39PM GMT, Duoming Zhou wrote:
->  typedef struct ax25_dev {
-> -	struct ax25_dev		*next;
-> +	struct list_head	list;
+The bitops.h is for bit related operations. The aligned_byte_mask()
+is about byte (or part of the machine word) operations, for which
+we have a separate header, move the mentioned macro to wordpart.h
+to consolidate similar operations.
 
-Would it make sense to replace this with:
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/bitops.h   | 7 -------
+ include/linux/wordpart.h | 7 +++++++
+ lib/usercopy.c           | 1 +
+ 3 files changed, 8 insertions(+), 7 deletions(-)
 
-LIST_HEAD(ax25_dev_list);
-
-And then get rid of:
-
-> +	/* Initialized the list for the first entry */
-> +	if (!ax25_dev_list.next)
-> +		INIT_LIST_HEAD(&ax25_dev_list);
-
+diff --git a/include/linux/bitops.h b/include/linux/bitops.h
+index 0b561ee6b4a4..ec45284c03f5 100644
+--- a/include/linux/bitops.h
++++ b/include/linux/bitops.h
+@@ -8,13 +8,6 @@
+ 
+ #include <uapi/linux/kernel.h>
+ 
+-/* Set bits in the first 'n' bytes when loaded from memory */
+-#ifdef __LITTLE_ENDIAN
+-#  define aligned_byte_mask(n) ((1UL << 8*(n))-1)
+-#else
+-#  define aligned_byte_mask(n) (~0xffUL << (BITS_PER_LONG - 8 - 8*(n)))
+-#endif
+-
+ #define BITS_PER_TYPE(type)	(sizeof(type) * BITS_PER_BYTE)
+ #define BITS_TO_LONGS(nr)	__KERNEL_DIV_ROUND_UP(nr, BITS_PER_TYPE(long))
+ #define BITS_TO_U64(nr)		__KERNEL_DIV_ROUND_UP(nr, BITS_PER_TYPE(u64))
+diff --git a/include/linux/wordpart.h b/include/linux/wordpart.h
+index f6f8f83b15b0..4ca1ba66d2f0 100644
+--- a/include/linux/wordpart.h
++++ b/include/linux/wordpart.h
+@@ -39,4 +39,11 @@
+  */
+ #define REPEAT_BYTE(x)	((~0ul / 0xff) * (x))
+ 
++/* Set bits in the first 'n' bytes when loaded from memory */
++#ifdef __LITTLE_ENDIAN
++#  define aligned_byte_mask(n) ((1UL << 8*(n))-1)
++#else
++#  define aligned_byte_mask(n) (~0xffUL << (BITS_PER_LONG - 8 - 8*(n)))
++#endif
++
+ #endif // _LINUX_WORDPART_H
+diff --git a/lib/usercopy.c b/lib/usercopy.c
+index d29fe29c6849..4b62e6299cc8 100644
+--- a/lib/usercopy.c
++++ b/lib/usercopy.c
+@@ -3,6 +3,7 @@
+ #include <linux/fault-inject-usercopy.h>
+ #include <linux/instrumented.h>
+ #include <linux/uaccess.h>
++#include <linux/wordpart.h>
+ #include <linux/nospec.h>
+ 
+ /* out-of-line parts */
 -- 
-Lars Kellogg-Stedman <lars@oddbit.com> | larsks @ {irc,twitter,github}
-http://blog.oddbit.com/                | N1LKS
+2.43.0.rc1.1336.g36b5255a03ac
+
