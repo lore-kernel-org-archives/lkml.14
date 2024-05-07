@@ -1,123 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D62A14E2DE;
-	Tue,  7 May 2024 10:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A483214E2DE;
+	Tue,  7 May 2024 10:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715077544; cv=none; b=t50AE3xpqcNNOZMuh3vcwZ4K53K6KUP60hklX9vR+YK/T/aQklUlmWaM/kqpmt1Jm/mu4UqAbtto3dK+92+J1QMRBtbcbePrPjfLGfgRHD7prAEo0N+atGbAb++J2Gw0RGVvEuvueLV2V80juxyrZEBJC0qqvn0KiTbmw9unG1w=
+	t=1715077552; cv=none; b=b2oNOT80CNykLTFD5PbWH/0jn6RIpItsc5kk1QQBx2EfwR4ZOcppAP1gPZynN+k2IIfuzmOyVFzmrD3QYT3Yy1822lTLqp40xSDnxeCU+b3LGdYlpZmR5LHr9uuL473DPjMKJdSKkbA9+GTvlafinpma0Y2Bj/6VyC/kyyugxKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715077544; c=relaxed/simple;
-	bh=9jNmAZjFZRt65eAWVuX8vm3qJWtOwJjUSORyzEAfU3A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=W/6etdepZ6mNatksoi048RzXbUISixkdQTex8IsmkzU8i+W3xgmCyLJjkD+SL5sUsvao7xoQI7QU+gVK0cN3R+M4ctBptHVlgy70vxXAs2zPP3+CbzkUQUOCq0EtSRxXo/ThWe/hR/wtnP7zYV4tKMTVXf9WlmQc40ZzxiazRjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X6LfagNW; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X6LfagNW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715077542; x=1746613542;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=9jNmAZjFZRt65eAWVuX8vm3qJWtOwJjUSORyzEAfU3A=;
-  b=X6LfagNWMhR1ZT6aF0dgMX5J5MFWCK4C6FC2TenSmbBFTj3tfOegDCLN
-   KQFe3pwl9pJmg9GGMQtqP4w3csO/ublzQQVwHvlFKm8s/FByX5BnetLcW
-   8BRvMp0WruOxi0rWYcZWhaMN1jXbINx6MW7AP+BMUmyBA2sXTrR7bRV6c
-   QcOoHlq26vqj14aSDyEAWOt4+agCp/CJXXa09ftA6AuNrCj0ZeGIDDJ6G
-   rZm2YD4hUR4fKC89aSQ+ilpxG6F0ADrR/8Q5GNWxaUVKYUCCnYy0B07St
-   dZOdrNnOdTJ/edCw2zZCt18ZlyX2oNCbwh3+cqa5gdsdM4LpkL0LGLWhZ
-   Q==;
-X-CSE-ConnectionGUID: fCjH+G/hSWKlQY+Ltk6kPw==
-X-CSE-MsgGUID: JMUB/0A2QXi6ezb7NptJVw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10729725"
-X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
-   d="scan'208";a="10729725"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 03:25:40 -0700
-X-CSE-ConnectionGUID: bFLlPMywS9utbFP+qGdlWw==
-X-CSE-MsgGUID: IbUb9jAVR2KgSVmCToj6Ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
-   d="scan'208";a="33280196"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.74])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 03:25:36 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Igor Mammedov <imammedo@redhat.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH v3 0/8] PCI: Solve two bridge window sizing issues
-Date: Tue,  7 May 2024 13:25:15 +0300
-Message-Id: <20240507102523.57320-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1715077552; c=relaxed/simple;
+	bh=XOj366TPRt2uSSw//lAyqbR2em7cRTX0TeQlf1mrSGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V0geyW70/Nq/BKKdGxAOAxNrE28Y7Ysrp+1YorAAuZEXBDnpRdM5/C97QymVEcXZP54INrIbdr4AukffUduTgN3zwxn4F9GWhV6hc7MHEDudzOhaZL/o8BUjPN/laYKCccKQY1mM2pXR2vCLiwabYzpf5O9l7VYnjebLBoqxakw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D4881063;
+	Tue,  7 May 2024 03:26:16 -0700 (PDT)
+Received: from localhost (ionvoi01-desktop.cambridge.arm.com [10.2.80.58])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A67933F587;
+	Tue,  7 May 2024 03:25:49 -0700 (PDT)
+Date: Tue, 7 May 2024 11:25:48 +0100
+From: Ionela Voinescu <ionela.voinescu@arm.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: liwei <liwei728@huawei.com>, Beata Michalska <beata.michalska@arm.com>,
+	Vanshidhar Konda <vanshikonda@os.amperecomputing.com>,
+	rafael@kernel.org, al.stone@linaro.org, ashwin.chaugule@linaro.org,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	liwei391@huawei.com, liaoyu15@huawei.com
+Subject: Re: [PATCH] cpufreq/cppc: changing highest_perf to nominal_perf in
+ cppc_cpufreq_cpu_init()
+Message-ID: <ZjoBrF4bAK5ukm7H@arm.com>
+References: <20240428092852.1588188-1-liwei728@huawei.com>
+ <20240429104945.esdukn6ayudgyumc@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240429104945.esdukn6ayudgyumc@vireshk-i7>
 
-Hi all,
+Hi,
 
-Here's a series that contains two fixes to PCI bridge window sizing
-algorithm. Together, they should enable remove & rescan cycle to work
-for a PCI bus that has PCI devices with optional resources and/or
-disparity in BAR sizes.
+Thanks for adding me to this.
 
-For the second fix, I chose to expose find_resource_space() from
-kernel/resource.c because it should increase accuracy of the cannot-fit
-decision (currently that function is called find_resource()). In order
-to do that sensibly, a few improvements seemed in order to make its
-interface and name of the function sane before exposing it. Thus, the
-few extra patches on resource side.
+On Monday 29 Apr 2024 at 16:19:45 (+0530), Viresh Kumar wrote:
+> CC'ing few folks who are working with the driver.
+> 
+> On 28-04-24, 17:28, liwei wrote:
+> > When turning on turbo, if frequency configuration takes effect slowly,
+> > the updated policy->cur may be equal to the frequency configured in
+> > governor->limits(), performance governor will not adjust the frequency,
+> > configured frequency will remain at turbo-freq.
+> > 
+> > Simplified call stack looks as follows:
+> > cpufreq_register_driver(&cppc_cpufreq_driver)
+> > 	...
+> > 	cppc_cpufreq_cpu_init()
+> > 		cppc_get_perf_caps()
+> > 		policy->max = cppc_perf_to_khz(caps, caps->nominal_perf)
+> > 			cppc_set_perf(highest_perf) // set highest_perf
+> > 			policy->cur = cpufreq_driver->get() // if cur == policy->max
+> > 	cpufreq_init_policy()
+> > 		...
+> > 		cpufreq_start_governor() // governor: performance
+> > 			new_freq = cpufreq_driver->get() // if new_freq == policy->max
+> > 			if (policy->cur != new_freq)
+> > 			cpufreq_out_of_sync(policy, new_freq)
+> > 				...
+> > 				policy->cur = new_freq
+I believe the problem is here   ^^^^^^^^^^^^^^^^^^^^^^.
 
-v3:
-- Removed "slot" wording
-        - Renamed find_empty_resource_slot() -> find_resource_space()
-- find_resource_space() returns bool instead of int
-- Added patch to convert literal 20 related to bridge win minimum
-  alignment to __ffs(SZ_1M)
-- Fixed kerneldoc missing "struct"
-- Tweaked prints (one dbg -> info, added new dbg one for success case)
-- Changelog tweaks
-        - Take account largest >> 1 (in alignment calc)
-        - Adjust to minor changes made into calculate_memsize()
-        - Take logs from more recent kernel to get rid of reg 0xXX
+cpufreq_verify_current_freq() should not update policy->cur unless a
+request to change frequency has actually reached the driver. I believe
+policy->cur should always reflect the request, not the actual current
+frequency of the CPU.
 
-v2:
-- Add "typedef" to kerneldoc to get correct formatting
-- Use RESOURCE_SIZE_MAX instead of literal
-- Remove unnecessary checks for io{port/mem}_resource
-- Apply a few style tweaks from Andy
+Given that new_freq is the current (hardware) frequency of the CPU,
+obtained via .get(), it can be the nominal frequency, as it is in your
+case, or any frequency, if there is any firmware/hardware capping in
+place.
 
-Ilpo Järvinen (8):
-  PCI: Fix resource double counting on remove & rescan
-  resource: Rename find_resource() to find_resource_space()
-  resource: Document find_resource_space() and resource_constraint
-  resource: Use typedef for alignf callback
-  resource: Handle simple alignment inside __find_resource_space()
-  resource: Export find_resource_space()
-  PCI: Make minimum bridge window alignment reference more obvious
-  PCI: Relax bridge window tail sizing rules
+This causes the issue in your scenario, in which __cpufreq_driver_target()
+filters the request from the governor as it finds it equal to policy->cur,
+and it believes it's already set by hardware.
 
- drivers/pci/bus.c       | 10 +----
- drivers/pci/setup-bus.c | 91 +++++++++++++++++++++++++++++++++++++----
- include/linux/ioport.h  | 44 ++++++++++++++++++--
- include/linux/pci.h     |  5 +--
- kernel/resource.c       | 68 ++++++++++++++----------------
- 5 files changed, 157 insertions(+), 61 deletions(-)
+This causes another issue in which scaling_cur_freq, which for some
+systems returns policy->cur, ends up returning the hardware frequency of
+the CPUs, and not the last frequency request, as it should:
 
--- 
-2.39.2
+"scaling_cur_freq
+Current frequency of all of the CPUs belonging to this policy (in kHz).
 
+In the majority of cases, this is the frequency of the last P-state
+requested by the scaling driver from the hardware using the scaling
+interface provided by it, which may or may not reflect the frequency
+the CPU is actually running at (due to hardware design and other
+limitations)." [1]
+
+Therefore policy->cur gets polluted with the hardware frequency of the
+CPU sampled at that one time, and this affects governor decisions, as
+in your case, and scaling_cur_freq feedback as well. This bad value will
+not change until there's another .target() or cpufreq_out_of_sync()
+call, which will never happen for fixed frequency governors like the
+performance governor.
+
+Thanks,
+Ionela.
+
+
+[1] https://docs.kernel.org/admin-guide/pm/cpufreq.html
+
+> > 			...
+> > 			policy->governor->limits()
+> > 				__cpufreq_driver_target(policy->max)
+> > 					if (policy->cur==target)
+> > 					// generate error, keep set highest_perf
+> > 						ret
+> > 					cppc_set_perf(target)
+> > 
+> > Fix this by changing highest_perf to nominal_perf in cppc_cpufreq_cpu_init().
+> > 
+> > Fixes: 5477fb3bd1e8 ("ACPI / CPPC: Add a CPUFreq driver for use with CPPC")
+> > Signed-off-by: liwei <liwei728@huawei.com>
+> > ---
+> >  drivers/cpufreq/cppc_cpufreq.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
+> > index 64420d9cfd1e..db04a82b8a97 100644
+> > --- a/drivers/cpufreq/cppc_cpufreq.c
+> > +++ b/drivers/cpufreq/cppc_cpufreq.c
+> > @@ -669,14 +669,14 @@ static int cppc_cpufreq_cpu_init(struct cpufreq_policy *policy)
+> >  	if (caps->highest_perf > caps->nominal_perf)
+> >  		boost_supported = true;
+> >  
+> > -	/* Set policy->cur to max now. The governors will adjust later. */
+> > -	policy->cur = cppc_perf_to_khz(caps, caps->highest_perf);
+> > -	cpu_data->perf_ctrls.desired_perf =  caps->highest_perf;
+> > +	/* Set policy->cur to norm now. */
+> > +	policy->cur = cppc_perf_to_khz(caps, caps->nominal_perf);
+> > +	cpu_data->perf_ctrls.desired_perf =  caps->nominal_perf;
+> >  
+> >  	ret = cppc_set_perf(cpu, &cpu_data->perf_ctrls);
+> >  	if (ret) {
+> >  		pr_debug("Err setting perf value:%d on CPU:%d. ret:%d\n",
+> > -			 caps->highest_perf, cpu, ret);
+> > +			 caps->nominal_perf, cpu, ret);
+> >  		goto out;
+> >  	}
+> >  
+> > -- 
+> > 2.25.1
+> 
+> -- 
+> viresh
