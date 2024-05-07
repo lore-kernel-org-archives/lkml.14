@@ -1,100 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4B3A59;
-	Tue,  7 May 2024 07:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEFDA59
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 07:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715067575; cv=none; b=b02KVfIbHs80DEWx0iGuZoVFV9LPsvtd3S1soAOaI53e6X7VYYb4Rd8wLVmgKr9J2ozR0dC/i4EbCj4gvXBqRZemjHQpumFpbDk0As8i/VdB9jGn8xHc3QQGpAvbcOW/K6is1wU7l5UdB5Nxz8SQX/Ts/nKa/rP7aNI/y2R8Zns=
+	t=1715067684; cv=none; b=kdzjJsc6hEVK9xHe8cjYWkKHaUL7rG9ZJ6/gXR/r6X539LsSvL8L9J6K/W7J4hMbZcYYfdw+840XTY63rVjoCWquRV6e2pLVM17gDnEj8N5I6cdkUsNf4naTWN8bgzHTJosiDjIBL55bHtTPzR7WBXbeg2H9PvjsFDlF+8tdLW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715067575; c=relaxed/simple;
-	bh=rJpFn1AO9QkoOchyzDCE9TfU4pQm9RHy9KJ9ICU1PyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D1EsRuKe4uhCEikRUaPWhztRojkrB7Z+GmIYLVPy/9hKsbuIgZVWN7EINiKkkjn375uOOklZW6OXiQQU8YKLY3nNGZJM6UtwxOY6cOw4KN6ZHNc1ANqAhcJtjPFACc0SZ5TWPbXofUylUbvxPonjL0grn4BKIC1ZPU19UvJ7HVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L9gF+7FZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L9gF+7FZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 609DCC2BBFC;
-	Tue,  7 May 2024 07:39:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715067575;
-	bh=rJpFn1AO9QkoOchyzDCE9TfU4pQm9RHy9KJ9ICU1PyM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=L9gF+7FZ6nHYPWp4shMqyCWwss9CfOmgX3yR+TzEemeEu6/MM9FfL5tmUoHUnJxC/
-	 Ee0P8hN8UE31H1Lezd8mAQ/SOUYZfehRwVYz0o9KQthH2+fnknhPPlNdflrL1mruLJ
-	 nPQTRja9UDNtTkqRDZH4yhbiJu9444DCGyxQFI/99Cuje6MKfp9Q3+9VuTAn+qIucx
-	 6EPNF8uPXyEHP2vkM6Z6gfq7RcFbeES9fuwpjlpR/zdX0uS0HMV9vmRc0lPYOb63vU
-	 P3oyxFFRNCb1sJvxbK/7Q9GJgE/cPxrWjBqzhBL2qSDgfGTUchkmFvdcE/O/uKkJVw
-	 9G9UXN9PNqeLQ==
-Message-ID: <41e54b6e-7848-415f-b913-d481509d5e8a@kernel.org>
-Date: Tue, 7 May 2024 16:39:32 +0900
+	s=arc-20240116; t=1715067684; c=relaxed/simple;
+	bh=s0uYKH7sT3FXzkClZdG3yO71HRP6nYGiBJTJ1UnI0KY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=W/nuxKVogSpQANeu4Gc6mA2LYznMsmzxuUKYKz2vBRddIHk48EaHVs+v3VFimsgWIOnhJdwxc7ejsi/JX3hBzRwqP0kWu4ewMtuHgxqbOS54i/7CMLEmSDgXvNrj4KN6WitXlXIkdn96OcaLywc3D+1rXcHIc5tlZ7nXQlRtwEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VYVWR58SCzNw23;
+	Tue,  7 May 2024 15:38:27 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 343651403D2;
+	Tue,  7 May 2024 15:41:13 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Tue, 7 May 2024 15:41:09 +0800
+Message-ID: <cde4d448-dc9d-eaad-4a2d-a6d34bda4449@huawei.com>
+Date: Tue, 7 May 2024 15:41:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] PCI: rockchip-ep: Remove wrong mask on subsys_vendor_id
-To: Rick Wertenbroek <rick.wertenbroek@gmail.com>, rick.wertenbroek@heig-vd.ch
-Cc: stable@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
- linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240403144508.489835-1-rick.wertenbroek@gmail.com>
-Content-Language: en-US
-From: Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20240403144508.489835-1-rick.wertenbroek@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH v3 1/8] arm64/sysreg: Add definitions for immediate
+ versions of MSR ALLINT
+To: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+CC: <catalin.marinas@arm.com>, <will@kernel.org>, <maz@kernel.org>,
+	<oliver.upton@linux.dev>, <james.morse@arm.com>, <suzuki.poulose@arm.com>,
+	<yuzenghui@huawei.com>, <tglx@linutronix.de>, <ardb@kernel.org>,
+	<anshuman.khandual@arm.com>, <miguel.luis@oracle.com>, <joey.gouly@arm.com>,
+	<ryan.roberts@arm.com>, <jeremy.linton@arm.com>, <ericchancf@google.com>,
+	<kristina.martsenko@arm.com>, <robh@kernel.org>,
+	<scott@os.amperecomputing.com>, <songshuaishuai@tinylab.org>,
+	<shijie@os.amperecomputing.com>, <akpm@linux-foundation.org>,
+	<bhe@redhat.com>, <horms@kernel.org>, <mhiramat@kernel.org>,
+	<rmk+kernel@armlinux.org.uk>, <shahuang@redhat.com>,
+	<takakura@valinux.co.jp>, <dianders@chromium.org>, <swboyd@chromium.org>,
+	<sumit.garg@linaro.org>, <frederic@kernel.org>, <reijiw@google.com>,
+	<akihiko.odaki@daynix.com>, <ruanjinjie@huawei.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<kvmarm@lists.linux.dev>
+References: <20240415064758.3250209-1-liaochang1@huawei.com>
+ <20240415064758.3250209-2-liaochang1@huawei.com>
+ <ZjUKMWPknEhLYoK8@FVFF77S0Q05N> <Zjjz-tzLRC2nH51A@finisterre.sirena.org.uk>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <Zjjz-tzLRC2nH51A@finisterre.sirena.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On 4/3/24 23:45, Rick Wertenbroek wrote:
-> Remove wrong mask on subsys_vendor_id. Both the Vendor ID and Subsystem
-> Vendor ID are u16 variables and are written to a u32 register of the
-> controller. The Subsystem Vendor ID was always 0 because the u16 value
-> was masked incorrectly with GENMASK(31,16) resulting in all lower 16
-> bits being set to 0 prior to the shift.
-> 
-> Remove both masks as they are unnecessary and set the register correctly
-> i.e., the lower 16-bits are the Vendor ID and the upper 16-bits are the
-> Subsystem Vendor ID.
-> 
-> This is documented in the RK3399 TRM section 17.6.7.1.17
-> 
-> Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
-> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-> Cc: stable@vger.kernel.org
+Hi, Mark.
 
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-
-> ---
->  drivers/pci/controller/pcie-rockchip-ep.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
+在 2024/5/6 23:15, Mark Brown 写道:
+> On Fri, May 03, 2024 at 05:00:49PM +0100, Mark Rutland wrote:
+>> On Mon, Apr 15, 2024 at 06:47:51AM +0000, Liao Chang wrote:
 > 
-> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-> index c9046e97a1d2..37d4bcb8bd5b 100644
-> --- a/drivers/pci/controller/pcie-rockchip-ep.c
-> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-> @@ -98,10 +98,9 @@ static int rockchip_pcie_ep_write_header(struct pci_epc *epc, u8 fn, u8 vfn,
->  
->  	/* All functions share the same vendor ID with function 0 */
->  	if (fn == 0) {
-> -		u32 vid_regs = (hdr->vendorid & GENMASK(15, 0)) |
-> -			       (hdr->subsys_vendor_id & GENMASK(31, 16)) << 16;
-> -
-> -		rockchip_pcie_write(rockchip, vid_regs,
-> +		rockchip_pcie_write(rockchip,
-> +				    hdr->vendorid |
-> +				    hdr->subsys_vendor_id << 16,
->  				    PCIE_CORE_CONFIG_VENDOR);
->  	}
->  
+>> +#define PSTATE_ALLINT                  pstate_field(1, 0)
+> 
+>> +#define set_pstate_allint(x)           asm volatile(SET_PSTATE_ALLINT(x))
+> 
+> Hrm, those helpers are not ideally discoverable, partly due to the
+> system register description for ALLINT not providing any references to
+> this being a general scheme (which is fixable there) and partly due to
+
+Based on the Arm ISA reference manual, the instruction accessing the ALLINT
+field of PSTATE uses the following encoding:
+                    op0  op1   CRn    CRm    op2
+MSR ALLINT, #<imm>  0b00 0b001 0b0100 0b000x 0b000
+
+In this encoding, the 'x' represents the LSB of #<imm>, op1 is fixed as 0b001
+and op2 is fixed as 0b000. With this understanding, those helpers seem like a
+good approach for accessing the PSTATE.ALLINT field. I've aslo confirmed that
+the binary encoding generated by those helpers is same with the encoding of v3.
+
+> the use of __emit_inst() with a numeric literal - we should probably add
+> a comment next to the __emit_inst() saying what instruction we are
+> emitting
+Arm Architecture Reference Manual for A-profile outlines two variants for
+MSR instructions used to modify PSTATE fields direclty using immediate. The
+major difference between these variants lies in the CRm field encoding:
+
+- 4 bit immediate, examples include "MSR DAIFSET,#Imm4" and "MSR DAIFCLR,#Imm4".
+  The CRm field in this variant uses the least 4 bits of immediate.
+- 1 bit immediate, currently, only "MSR ALLINT,#Imm1" uses this variant.
+  The CRm field uses only the least 1 bit of immediate.
+
+The current implementation of the macro SET_PSTATE() defaults to the 1 bit
+immediate variant (!!x << PSTATE_Imm_shift). Currently, this macro is used
+to generate instructions accessing PAN, UAO, SSBS, TCO and DIT which require
+1 bit immediate variant, hence I would say it also work for ALLINT as well.
+
+Thanks.
 
 -- 
-Damien Le Moal
-Western Digital Research
-
+BR
+Liao, Chang
