@@ -1,121 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2585915DBDD;
-	Tue,  7 May 2024 13:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD37A15E21B
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:12:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715087572; cv=none; b=YBdvhw7uimx6WbttXgr2I4/pwkE/07OpdQK6jjv44VTPIy1DX55xGF5HPXHxpYKzIx13ubuOkTgqFND5hWQAN8jlTMK2vpXZ6MfMPcmrltqJnjRPlY6v5sc43L+hBYtFUQBVfZY79tlhU2T9Tc4C4rUKfFWjdRO19X3YvkrY9r8=
+	t=1715087574; cv=none; b=F3vuUlBS3lPgg3rixMhXcbOOKcZ+85Ny+Pd77dnahrWQQVODi9KFfFvsrhSGTUxATn56G7R9vGiRYtPBBrFG866Do8E0OjmMZhWMqTLbpp1U3eTPWf/cASIWjq5ikVMVghwQqY8Y+ZZBvqjYbr/RvBpMyF+zV5POC0ZLPGvxMXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715087572; c=relaxed/simple;
-	bh=a6gSLSNzkB7vq5lvXJKxfEYqY5Zj8C4OuyJc6Y6NlXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KrpkVfnJky6YgXfsTJwoURDCiQCAOKKQ5+HR5O1/GC8BXFef2iW8YnUe0MZYmLKaB6HaRBVLfgiyINHe43g14VWAGJkQs4HInOXUB+v22r18Vak5VNv/jsoVUmYHkJvImL4cty2Ij6nmMK/CgHX19n0nXNdc3Tl32LwZiSwCfTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZbChpJAr; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715087574; c=relaxed/simple;
+	bh=6iZyu6h2471MLh5Wb1cORQD9zmmQ2O6P79Od0ztmw3c=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ht11eAZywUOA99DobAElJuNmFdbCRcrnEfiZ90FZDhcSlu20RThBuAAnNq0gVHlKwh3+OTnda4Vq+Z6s7SWe5wf56xkzODqZPKLjjfcC41u9xYOLsektifVwNwzHkCZTLSoH605+tzf36uHjTiZ0BMthrDx0F5u/zsQKPsWq0Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=McdDfK3J; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZbChpJAr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715087571; x=1746623571;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=a6gSLSNzkB7vq5lvXJKxfEYqY5Zj8C4OuyJc6Y6NlXY=;
-  b=ZbChpJArKKyAZtijh9SZK5lQT+/9D+Z3PF2ie8fJU9RldW+A5gjAGaQe
-   /Y+C2Y+6ve62ddd4yC0eZJOQjvOjXwF5i4qwK3vCx7x8foz8Rnhp5egCK
-   /5FkFpJ6rxTvYntGyU7WETqNyNY7rO4wVQ7TPwZ3JTl7fGFp8b22R9/3g
-   kFpUZGJbH7F8BvnxZpOENEwjtc2zkemH7ibSS/wywW+aNHZqIE/iOapMq
-   0lucxkxRsRzh4SzG8ej5lt6syH+EmYdNTGnSE9X7uC2WeyiYyi0j30li3
-   P2RYwZQPka8IIMNSKXKjmDxVfxxBWT4NF72DsSSsA1X14Hw2NSU6zDSfy
-   w==;
-X-CSE-ConnectionGUID: N9U1l4zQQm2ybNIbe0Jzvw==
-X-CSE-MsgGUID: kerm2+NSRcmgoLVbalMd8Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="21483943"
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="21483943"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 06:12:50 -0700
-X-CSE-ConnectionGUID: Fu6nYwQcTgeZWSY044wYqQ==
-X-CSE-MsgGUID: MsXTeSYhRgedCqb9bG/apQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="28920705"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 06:12:42 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s4KcY-000000052fm-0iB8;
-	Tue, 07 May 2024 16:12:38 +0300
-Date: Tue, 7 May 2024 16:12:37 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	linux-omap@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev, linux-amlogic@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Siddharth Vadapalli <s-vadapalli@ti.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	Richard Zhu <hongxing.zhu@nxp.com>,
-	Lucas Stach <l.stach@pengutronix.de>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, Yue Wang <yue.wang@amlogic.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Xiaowei Song <songxiaowei@hisilicon.com>,
-	Binghui Wang <wangbinghui@hisilicon.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Subject: Re: [PATCH v4 0/5] PCI: controller: Move to agnostic GPIO API
-Message-ID: <ZjooxTO3wb2ItvGv@smile.fi.intel.com>
-References: <20240506142142.4042810-1-andriy.shevchenko@linux.intel.com>
- <CACRpkda=a3X=jyZKQoOFrfgzpE2C+rZ9UC1VDnCvGL7QP4x4BA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="McdDfK3J"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447C7A5A014051;
+	Tue, 7 May 2024 15:12:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=POWZoUc0X8Boorq4SPNqj49r2vjDIbLIFmBbp8SfjUo=; b=Mc
+	dDfK3JbCJ1pIDp3cuwA0BtzbFdWSvzYDt4OECLxaoHNb9IMBpXwgrq1SPxSSetgW
+	jXXAPgyY5GH9ptmNKmOqSR95TygxnsZfMseMo1gIb1ex8W+wTLNHqFGfx5crzYbi
+	lhTR0T2zegAigv7baU9bQzgN75BvlKxpF13S2qy4+e0DLf6tvHjLmERo8TcziKkb
+	ksv3uI9v8uBXhtBEa42HVX3BIVErG9eL1soh3wzg35+ki94p5KQOngwlyMO4CXm+
+	E6Dz5KnbnjvVEnLKMr1vGySlX+btU43WT74LM9YuCjePKwz3QeTAC5qxM3R8Po29
+	dSYUNmEUM4fzbPLVE1mg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xwa553xh7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 May 2024 15:12:39 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 9FF3E40045;
+	Tue,  7 May 2024 15:12:35 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C67EC21B53D;
+	Tue,  7 May 2024 15:12:01 +0200 (CEST)
+Received: from localhost (10.48.87.171) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 7 May
+ 2024 15:12:01 +0200
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+CC: Antonio Borneo <antonio.borneo@foss.st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 7/8] ARM: stm32: allow build irq-stm32mp-exti driver as module
+Date: Tue, 7 May 2024 15:10:50 +0200
+Message-ID: <20240507131051.980313-8-antonio.borneo@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240507131051.980313-1-antonio.borneo@foss.st.com>
+References: <20240507131051.980313-1-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkda=a3X=jyZKQoOFrfgzpE2C+rZ9UC1VDnCvGL7QP4x4BA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE1.st.com (10.75.90.11) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-07_06,2024-05-06_02,2023-05-22_02
 
-On Tue, May 07, 2024 at 12:03:50PM +0200, Linus Walleij wrote:
-> On Mon, May 6, 2024 at 4:22 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > In v4:
-> > - added tag (Mani)
-> > - fixed a polarity bug in iMX.6 driver (Linus)
-> 
-> Looks good now. The series:
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Drop auto-selecting the driver, so it can be built either as a
+module or built-in.
 
-Thank you!
+Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+---
+ arch/arm/mach-stm32/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-> Perhaps the use of  _raw accessors could be avoided in 5/5 by some
-> elaborart polarity quirk but I'm no perfectionist and it can be fixed later.
-
-After your comment I was thinking the same, and came to the similar conclusion,
-we might fix this later as in comparison to iMX.6 case this requires an
-additional code to be added to gpiolib-of.c.
-
+diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
+index 41bfcf31f8a76..8c8d5fc1217f6 100644
+--- a/arch/arm/mach-stm32/Kconfig
++++ b/arch/arm/mach-stm32/Kconfig
+@@ -11,7 +11,6 @@ menuconfig ARCH_STM32
+ 	select CLKSRC_STM32
+ 	select PINCTRL
+ 	select RESET_CONTROLLER
+-	select STM32MP_EXTI if ARCH_MULTI_V7
+ 	select STM32_EXTI if ARM_SINGLE_ARMV7M
+ 	help
+ 	  Support for STMicroelectronics STM32 processors.
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
