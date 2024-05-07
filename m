@@ -1,254 +1,121 @@
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE79A59;
-	Tue,  7 May 2024 07:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=58.251.27.85
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C4AE13BAE9;
+	Tue,  7 May 2024 07:42:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715067699; cv=none; b=M3SbO2qIu1GMGC6NeLo+ZTXJEOLejz6lGtvU3tISn0kdQm6IOBky2zlep/BMHiX4nzPMtu+4sII61mTYxTtS1nNPAhOkyA94dvGK1oimcxWvIKCt2VFuodut09eM03erNz8cwkj01Fz5gPc7NnM3J5T4+iqWnDhOhjGReLOr3F4=
+	t=1715067769; cv=none; b=VQM3/uMnEcN1k8bymCBresYpX7slGKLr2JZmrM5xouRLDt8TgpiGBn601UIm2u1ZmMubUwEh5AEyFdC7j2uj1eLT1yhviv9JCIdL/MpAAqZR5jknhcqsGVJ8zRw+jZimd4CxIS3kQew1SpR35mMwBm++Fnb3LL0R4Sa9u10psM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715067699; c=relaxed/simple;
-	bh=ceduBYXRbbfogzwmGKdp8Jhm4BA04QpGl8pajoF75DQ=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=C2XOVnEBWL1tZZMOAFzTSLiTOeaflM47Pmwo/LVs3V2XF5d+6DS0EFJGdFYg4UG9hxP3TzuOCqsIadhBbc26guSkSQcPry47AOxgJIjuey8jmfLW2rNG+5nNVmT19kvgqPH+UM/4ay9WkRs5QQ3mtUiUXL8wLjKVVnD5OC3LCqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=58.251.27.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mxde.zte.com.cn (unknown [10.35.20.121])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxct.zte.com.cn (FangMail) with ESMTPS id 4VYVZz4x4kzCgyJ;
-	Tue,  7 May 2024 15:41:31 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mxde.zte.com.cn (FangMail) with ESMTPS id 4VYVZs6h7rzBRHKd;
-	Tue,  7 May 2024 15:41:25 +0800 (CST)
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4VYVZh0VzBz4xPBc;
-	Tue,  7 May 2024 15:41:16 +0800 (CST)
-Received: from xaxapp03.zte.com.cn ([10.88.97.17])
-	by mse-fl1.zte.com.cn with SMTP id 4477f1Mo043774;
-	Tue, 7 May 2024 15:41:01 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp03[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 7 May 2024 15:41:03 +0800 (CST)
-Date: Tue, 7 May 2024 15:41:03 +0800 (CST)
-X-Zmail-TransId: 2afb6639db0ffffffffff2f-66cf8
-X-Mailer: Zmail v1.0
-Message-ID: <202405071541038433DpxXxFl-a_4XcQGTy_BU@zte.com.cn>
+	s=arc-20240116; t=1715067769; c=relaxed/simple;
+	bh=mi3mXWnBFgpXPxlG257vqa4x77kAtsjGzS+btNQZe28=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kaaRfdyJBfddeHBhyeLXAsLWI7N+bI/JJHXzdftJ1kA3LfiRiES1CJQIOdX+UCCNDClsL/bGFYyJWMYYgPHKidWQViUKTXS6rnIdnT43ezOeG0inc1VJo4WdmYjyR58ktrbHoda5LjrpV7aA8IQPhhTIN0FYunIow5FwttEcQuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kwcYuXFS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kwcYuXFS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEF88C2BBFC;
+	Tue,  7 May 2024 07:42:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715067769;
+	bh=mi3mXWnBFgpXPxlG257vqa4x77kAtsjGzS+btNQZe28=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kwcYuXFS1rY4n6mNBVtmRT1XBNZmpqVk6pq/YRV3g3QbnOM+waK0fNUpKwhFMp+Z2
+	 PYG9wZGheNahTisSY1g61QlJCRDIleNcVsmFhZzM11mmByNjORLiboHISsjU6ZIivQ
+	 8bLkMNw/q9BwtsjCZS7Ye46qhfjzlevAaGhSpDcrJAQhhb4NkT/fngVYcK0esR3D9o
+	 2e/x9FDCPhfzSDwOZusWXq9OBjyvQY3ssjrRF7J5LNMUxC/ypcgPva6uqn203wMT3j
+	 09kyzgrYaM9smHVBcWqiraGg6H9L147uFKvtwqicegDRWd5W0svdf3JajjdVUncd5R
+	 1P8x8QqJ934PA==
+Date: Tue, 7 May 2024 09:42:42 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: Aleksa Sarai <cyphar@cyphar.com>, Stas Sergeev <stsp2@yandex.ru>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org, 
+	Stefan Metzmacher <metze@samba.org>, Eric Biederman <ebiederm@xmission.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Andy Lutomirski <luto@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+	Alexander Aring <alex.aring@gmail.com>, David Laight <David.Laight@aculab.com>, 
+	linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, 
+	Christian =?utf-8?B?R8O2dHRzY2hl?= <cgzones@googlemail.com>
+Subject: Re: [PATCH v5 0/3] implement OA2_CRED_INHERIT flag for openat2()
+Message-ID: <20240507-verpennen-defekt-b6f2c9a46916@brauner>
+References: <20240426133310.1159976-1-stsp2@yandex.ru>
+ <CALCETrUL3zXAX94CpcQYwj1omwO+=-1Li+J7Bw2kpAw4d7nsyw@mail.gmail.com>
+ <20240428.171236-tangy.giblet.idle.helpline-y9LqufL7EAAV@cyphar.com>
+ <CALCETrU2VwCF-o7E5sc8FN_LBs3Q-vNMBf7N4rm0PAWFRo5QWw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <kuba@kernel.org>
-Cc: <horms@kernel.org>, <davem@davemloft.net>, <rostedt@goodmis.org>,
-        <mhiramat@kernel.org>, <dsahern@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <he.peilin@zte.com.cn>, <liu.chun2@zte.com.cn>,
-        <jiang.xuexin@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <kerneljasonxing@gmail.com>, <fan.yu9@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <ran.xiaokai@zte.com.cn>,
-        <zhang.run@zte.com.cn>, <wang.haoyi@zte.com.cn>, <si.hao@zte.com.cn>,
-        <lu.zhongjun@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIG5ldC1uZXh0IHY5XSBuZXQvaXB2NDogYWRkIHRyYWNlcG9pbnQgZm9yIGljbXBfc2VuZA==?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 4477f1Mo043774
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 6639DB2A.001/4VYVZz4x4kzCgyJ
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CALCETrU2VwCF-o7E5sc8FN_LBs3Q-vNMBf7N4rm0PAWFRo5QWw@mail.gmail.com>
 
-From: Peilin He <he.peilin@zte.com.cn>
+> With my kernel hat on, maybe I agree.  But with my *user* hat on, I
+> think I pretty strongly disagree.  Look, idmapis lousy for
+> unprivileged use:
+> 
+> $ install -m 0700 -d test_directory
+> $ echo 'hi there' >test_directory/file
+> $ podman run -it --rm
+> --mount=type=bind,src=test_directory,dst=/tmp,idmap [debian-slim]
 
-Introduce a tracepoint for icmp_send, which can help users to get more
-detail information conveniently when icmp abnormal events happen.
+$ podman run -it --rm --mount=type=bind,src=test_directory,dst=/tmp,idmap [debian-slim]
 
-1. Giving an usecase example:
-=============================
-When an application experiences packet loss due to an unreachable UDP
-destination port, the kernel will send an exception message through the
-icmp_send function. By adding a trace point for icmp_send, developers or
-system administrators can obtain detailed information about the UDP
-packet loss, including the type, code, source address, destination address,
-source port, and destination port. This facilitates the trouble-shooting
-of UDP packet loss issues especially for those network-service
-applications.
+as an unprivileged user doesn't use idmapped mounts at all. So I'm not
+sure what this is showing. I suppose you're talking about idmaps in
+general.
 
-2. Operation Instructions:
-==========================
-Switch to the tracing directory.
-        cd /sys/kernel/tracing
-Filter for destination port unreachable.
-        echo "type==3 && code==3" > events/icmp/icmp_send/filter
-Enable trace event.
-        echo 1 > events/icmp/icmp_send/enable
+> # cat /tmp/file
+> hi there
+> 
+> <-- Hey, look, this kind of works!
+> 
+> # setpriv --reuid=1 ls /tmp
+> ls: cannot open directory '/tmp': Permission denied
+> 
+> <-- Gee, thanks, Linux!
+> 
+> 
+> Obviously this is a made up example.  But it's quite analogous to a
+> real example.  Suppose I want to make a directory that will contain
+> some MySQL data.  I don't want to share this directory with anyone
+> else, so I set its mode to 0700.  Then I want to fire up an
+> unprivileged MySQL container, so I build or download it, and then I
+> run it and bind my directory to /var/lib/mysql and I run it.  I don't
+> need to think about UIDs or anything because it's 2024 and containers
+> just work.  Okay, I need to setenforce 0 because I'm on Fedora and
+> SELinux makes absolutely no sense in a container world, but I can live
+> with that.
+> 
+> Except that it doesn't work!  Because unless I want to manually futz
+> with the idmaps to get mysql to have access to the directory inside
+> the container, only *root* gets to get in.  But I bet that even
+> futzing with the idmap doesn't work, because software like mysql often
+> expects that root *and* a user can access data.  And some software
+> even does privilege separation and uses more than one UID.
 
-3. Result View:
-================
- udp_client_erro-11370   [002] ...s.12   124.728002:
- icmp_send: icmp_send: type=3, code=3.
- From 127.0.0.1:41895 to 127.0.0.1:6666 ulen=23
- skbaddr=00000000589b167a
+If the directory is 700 and it's owned by say root:root on the host and
+you want to share that with arbitrary container users then this isn't
+something you can do today (ignoring group permissions and ACLs for the
+sake of your argument) even on the host so that's not a limitation of
+userns or idmapped mounts. That means many to one mappings of uids/gids.
 
-Signed-off-by: Peilin He <he.peilin@zte.com.cn>
-Signed-off-by: xu xin <xu.xin16@zte.com.cn>
-Reviewed-by: Yunkai Zhang <zhang.yunkai@zte.com.cn>
-Cc: Yang Yang <yang.yang29@zte.com.cn>
-Cc: Liu Chun <liu.chun2@zte.com.cn>
-Cc: Xuexin Jiang <jiang.xuexin@zte.com.cn>
----
-v8->v9:
-Rebase the patch on the latest net-next.
+> So I want a way to give *an entire container* access to a directory.
+> Classic UNIX DAC is just *wrong* for this use case.  Maybe idmaps
+> could learn a way to squash multiple ids down to one.  Or maybe
 
-v7->v8:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iKNtKmN5im8K4dSZGqAV8=e3bZb
-Z5AhxbcNbjFxk5V1Jw@mail.gmail.com/
-1.Combine all variable definitions together without mixing
-code and variables.
+Many idmappings to one is in principle possible and I've noted that idea
+down as a possible extension at
+https://github.com/uapi-group/kernel-features quite a while (2 years?) ago.
 
-v6->v7:
-Some fixes according to
-https://lore.kernel.org/all/20240425081210.720a4cd9@kernel.org/
-1. Fix patch format issues.
+> I haven't looked at the idmap implementation nearly enough to have any
+> opinion as to whether squashing UID is practical or whether there's
 
-v5->v6:
-Some fixes according to
-https://lore.kernel.org/all/20240413161319.GA853376@kernel.org/
-1.Resubmit patches based on the latest net-next code.
-
-v4->v5:
-Some fixes according to
-https://lore.kernel.org/all/CAL+tcoDeXXh+zcRk4PHnUk8ELnx=CE2pc
-Cqs7sFm0y9aK-Eehg@mail.gmail.com/
-1.Adjust the position of trace_icmp_send() to before icmp_push_reply().
-
-v3->v4:
-Some fixes according to
-https://lore.kernel.org/all/CANn89i+EFEr7VHXNdOi59Ba_R1nFKSBJz
-BzkJFVgCTdXBx=YBg@mail.gmail.com/
-1.Add legality check for UDP header in SKB.
-2.Target this patch for net-next.
-
-v2->v3:
-Some fixes according to
-https://lore.kernel.org/all/20240319102549.7f7f6f53@gandalf.local.home/
-1. Change the tracking directory to/sys/kernel/tracking.
-2. Adjust the layout of the TP-STRUCT_entry parameter structure.
-
-v1->v2:
-Some fixes according to
-https://lore.kernel.org/all/CANn89iL-y9e_VFpdw=sZtRnKRu_tnUwqHu
-FQTJvJsv-nz1xPDw@mail.gmail.com/
-1. adjust the trace_icmp_send() to more protocols than UDP.
-2. move the calling of trace_icmp_send after sanity checks
-in __icmp_send().
----
- include/trace/events/icmp.h | 67 +++++++++++++++++++++++++++++++++++++
- net/ipv4/icmp.c             |  4 +++
- 2 files changed, 71 insertions(+)
- create mode 100644 include/trace/events/icmp.h
-
-diff --git a/include/trace/events/icmp.h b/include/trace/events/icmp.h
-new file mode 100644
-index 000000000000..31559796949a
---- /dev/null
-+++ b/include/trace/events/icmp.h
-@@ -0,0 +1,67 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM icmp
-+
-+#if !defined(_TRACE_ICMP_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_ICMP_H
-+
-+#include <linux/icmp.h>
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(icmp_send,
-+
-+		TP_PROTO(const struct sk_buff *skb, int type, int code),
-+
-+		TP_ARGS(skb, type, code),
-+
-+		TP_STRUCT__entry(
-+			__field(const void *, skbaddr)
-+			__field(int, type)
-+			__field(int, code)
-+			__array(__u8, saddr, 4)
-+			__array(__u8, daddr, 4)
-+			__field(__u16, sport)
-+			__field(__u16, dport)
-+			__field(unsigned short, ulen)
-+		),
-+
-+		TP_fast_assign(
-+			struct iphdr *iph = ip_hdr(skb);
-+			struct udphdr *uh = udp_hdr(skb);
-+			int proto_4 = iph->protocol;
-+			__be32 *p32;
-+
-+			__entry->skbaddr = skb;
-+			__entry->type = type;
-+			__entry->code = code;
-+
-+			if (proto_4 != IPPROTO_UDP || (u8 *)uh < skb->head ||
-+				(u8 *)uh + sizeof(struct udphdr)
-+				> skb_tail_pointer(skb)) {
-+				__entry->sport = 0;
-+				__entry->dport = 0;
-+				__entry->ulen = 0;
-+			} else {
-+				__entry->sport = ntohs(uh->source);
-+				__entry->dport = ntohs(uh->dest);
-+				__entry->ulen = ntohs(uh->len);
-+			}
-+
-+			p32 = (__be32 *) __entry->saddr;
-+			*p32 = iph->saddr;
-+
-+			p32 = (__be32 *) __entry->daddr;
-+			*p32 = iph->daddr;
-+		),
-+
-+		TP_printk("icmp_send: type=%d, code=%d. From %pI4:%u to %pI4:%u ulen=%d skbaddr=%p",
-+			__entry->type, __entry->code,
-+			__entry->saddr, __entry->sport, __entry->daddr,
-+			__entry->dport, __entry->ulen, __entry->skbaddr)
-+);
-+
-+#endif /* _TRACE_ICMP_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
-+
-diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
-index 207482d30dc7..ab6d0d98dbc3 100644
---- a/net/ipv4/icmp.c
-+++ b/net/ipv4/icmp.c
-@@ -93,6 +93,8 @@
- #include <net/ip_fib.h>
- #include <net/l3mdev.h>
- #include <net/addrconf.h>
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/icmp.h>
-
- /*
-  *	Build xmit assembly blocks
-@@ -770,6 +772,8 @@ void __icmp_send(struct sk_buff *skb_in, int type, int code, __be32 info,
- 	if (!fl4.saddr)
- 		fl4.saddr = htonl(INADDR_DUMMY);
-
-+	trace_icmp_send(skb_in, type, code);
-+
- 	icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
- ende:
- 	ip_rt_put(rt);
--- 
-2.17.1
+It's doable. The interesting bit to me was that if we want to allow
+writes we'd need a way to determine what the uid/gid would be to write
+down. Imho, that's not super difficult to solve though. The most obvious
+one is that userspace can just determine it when creating the idmapped
+mount.
