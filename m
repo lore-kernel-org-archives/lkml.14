@@ -1,85 +1,113 @@
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3F7187326
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 21:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1E4574433
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 21:40:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715117887; cv=none; b=CL5e1jt0PVFOKfBHopFozt0RL9VUqZY5AIPlY336XgSafhSmYf9TP/b/ImJ2yNE2z5ahko2rLRJjVrJINavwxPxKpxJPwHsr4ulvGt5QZvZ+8tu6uRU6jM0utZEtcFY80HjGhdVcXGKZRgnPLk7I9nfImq5csVhlQ90VIfn0R+k=
+	t=1715118054; cv=none; b=R3Qp0l3nxHoamPlacNag2xtAtF1+vWz/NzLGc7qSsFnO/3/w2ghLEdjU5nbIDLYXnMtU2FDnnC2GxwdxEb2pXq7MzFujdDaUqaZYRJw84R944vBSjzHuG8Mm5uNHXKjvs6EQFk0SjXmniGQkWf/MHIWU6Fxmm3jEcCHJQqEH168=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715117887; c=relaxed/simple;
-	bh=AZFqcBuqYSo71H41eUUtSnMMr07VxouumttOzkTRRkM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qZMyZFnIPevrJJNFfE+IypzeIcDzOH09R4Stjph8dZe22uIFLiTUBuxO/GvOWTYdVJEiF/Up2N7ZTH9PRBQ9qBnz2a/aQcfoQ0AWT8wMsk0A9DHNyTiqXNitX/sCnNQerSGTLOuuGWvDDm9H0BF7qJ9jeIUAFYnnTm+kWG082Gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lhUx3oFc; arc=none smtp.client-ip=209.85.219.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715118054; c=relaxed/simple;
+	bh=VpkOLQg0axggRVnkVVkWkPpv6IUOtc5+bTkTQo+ApEk=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=uINxC/3xwOCxsjQspqr1IukilD93/Ff5fnKV97p0MRiqzDuRtJ8qKSAUE4IXAZ8z4qveexeFg1kgj/RM/G0WhpHMC7KuY4cviAddM5beg4kAzsAlJ9h6u+GJl1ETuH7sz3g+OL+INIfBLV7AQ61RJ6lq/0HFiDizKD4B9Le4/08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XcNOwbWR; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lhUx3oFc"
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-de8b66d1726so187131276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 14:38:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715117885; x=1715722685; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=6UHygWSZRhuWrzQrskSZNrlKbfdaZk57WEJ9KAhSxvQ=;
-        b=lhUx3oFclofdYetCN69qMHHc65y11JtAfcHQmaVMmP3D9+0qfhYAfTE9ZZ/rKGMKnC
-         FESxbtV8Yu0MBdpHLZ1ipGpq9DBdg7xGPxT8iaHoRXbelmtr192mEdbuL65duLnJoSGe
-         g7nKNoDTb/mWQ8GH1rujVvQ2VDgNOfR3lvngI8D3vCj8QWxYtAsOjSTgpodGHFyn6xa7
-         1sgeWZvaUenNQSFRes+jiiBJIgiJagBfHkmOREJb3Cd9v/jsNUeA8lJu31ffdRJ3U8zl
-         jCSqp/h8EAmgbdx96KetKMY9YJaIMrT7iJn84dzHkq9dobcIwESa5KceqqA9oktiz7Ui
-         aq/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715117885; x=1715722685;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6UHygWSZRhuWrzQrskSZNrlKbfdaZk57WEJ9KAhSxvQ=;
-        b=nJC5yO9yxaRZ6acD2K6MFxazkzQOePyVE1yLFKtIAbG9sCPHsCmwktmwXhDNjzvA1e
-         rLUwxwsiymLadcknOxw/kl8aKTUhuHLipBoX+kiiagHUouMpKqAgeALks6prcGFilUwb
-         KTiSZaJKJCab7XKeVJEEzZoTjfBnGMBYdAoHCpJS0Ac6izzYWUyrsrgBzre2d+OCQ9Dr
-         SxAzl/UYIhn4Jmgz3d4ei2s9Jra8v9Xnyl9ofEimEVcKYWMAr0bizMsQ8bKLhJEdLrM8
-         Yh4upKuGqZnDqbyjOv8EIsZ5nf3qt3nWiPhGf295PHm7i9bHvJSYJpet1TaRlpxc6jKS
-         +D2g==
-X-Gm-Message-State: AOJu0Yx0BqXWR21oF/HDIKibOWwxtv9W414JgmW8MAOVbJi1przEzBJl
-	ebvJFOdCNMs1u0++0/NxIAlOUD9hVsjU+9nJxdaEx8SPqke/IJKtghfqBA==
-X-Google-Smtp-Source: AGHT+IGUHmpYNFbdnZFYOXUKYb/tVQWbc7jXHdiS94Jm9UDvU1z9Y5VYeJgiiaJ2407HatDTQyyw1w==
-X-Received: by 2002:a25:d094:0:b0:de6:d50:ea0f with SMTP id 3f1490d57ef6-debb95b0850mr948602276.2.1715117885195;
-        Tue, 07 May 2024 14:38:05 -0700 (PDT)
-Received: from localhost ([2601:344:8301:57f0:5343:96f7:3e43:fa89])
-        by smtp.gmail.com with ESMTPSA id h8-20020a5b02c8000000b00de7e97cd06esm2782956ybp.37.2024.05.07.14.38.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 14:38:04 -0700 (PDT)
-Date: Tue, 7 May 2024 14:38:03 -0700
-From: Yury Norov <yury.norov@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v2 0/2] bitops: Reshuffle bitops.h and wordpart,h
-Message-ID: <ZjqfOzO/L0031fgA@yury-ThinkPad>
-References: <20240507200236.527688-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XcNOwbWR"
+Received: from [100.75.32.112] (unknown [40.78.12.133])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 06CB020B2C82;
+	Tue,  7 May 2024 14:40:51 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 06CB020B2C82
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1715118052;
+	bh=ZkkdJbSLg8o/7IJdUA+jt2AhvtIP37M87RHkqOlUm4E=;
+	h=Date:To:From:Subject:Cc:From;
+	b=XcNOwbWRc+LESVunJgMi/yWwUf9JEgaCADY8Enrw7nvJRK6cSHXIYTszBPSEMWz7d
+	 1fDrrUEif3inKliWi8qOqj2jkKjT92NFczSaKzpw2sMin6OQ2ROhTCZewcKs7C8ZXw
+	 zJhAx3qk5aH6OUp1AlJfwLwXHhHpPhnXHS+3m2AA=
+Message-ID: <f1d66585-64ee-4052-928a-bd5182ea4ca8@linux.microsoft.com>
+Date: Tue, 7 May 2024 14:40:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507200236.527688-1-andriy.shevchenko@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-CA
+To: Linux kernel mailing list <linux-kernel@vger.kernel.org>,
+ linux-arm-kernel@lists.infradead.org
+From: Vijay Balakrishna <vijayb@linux.microsoft.com>
+Subject: Watchdog Reset on Idle CPU with a task on its runq
+Cc: Tyler Hicks <tyhicks@linux.microsoft.com>,
+ Allen Pais <apais@linux.microsoft.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, May 07, 2024 at 11:01:30PM +0300, Andy Shevchenko wrote:
-> Move word part related macros to the respective header.
-> While at it, fix the inclusion mess in lib/usercopy.h.
-> 
-> Andy Shevchenko (2):
->   bitops: Move aligned_byte_mask() to wordpart.h
->   usercopy: Don't use "proxy" headers
-> 
->  include/linux/bitops.h   | 7 -------
->  include/linux/wordpart.h | 7 +++++++
->  lib/usercopy.c           | 9 +++++++--
->  3 files changed, 14 insertions(+), 9 deletions(-)
+Hello,
 
-Thanks, adding it in bitmap-for-next for testing.
+We are seeing watchdog reset on ARM64 SoC running v5.10.178 kernel 
+(stable) where CPU 0 running an idle task even though there is a 
+runnable task on CFS runq (rcu_sched in output below).  We are wondering 
+why do we see a task waiting to get scheduled to run a CPU otherwise 
+running an idle task.  What does this indicate with respect to state of 
+CPU 0?  What else could we check in the kernel crash dump. Any pointers 
+appreciated.
+
+Thanks,
+Vijay
+
+(crash tool output)
+
+[530671.963762] Kernel panic - not syncing: SBSA Generic Watchdog timeout
+[530671.970288] CPU: 0 PID: 0 Comm: swapper/0 Kdump: loaded Tainted: G 
+         O      5.10.178.13-microsoft-standard #1
+[530671.980969] Hardware name: Overlake (DT)
+[530671.984967] Call trace:
+[530671.987499]  dump_backtrace+0x0/0x1f0
+[530671.991238]  show_stack+0x1c/0x24
+[530671.994630]  dump_stack+0xe0/0x13c
+[530671.998107]  panic+0x198/0x3a4
+[530672.001239]  sbsa_gwdt_set_timeout+0x0/0x7c
+[530672.005498]  __handle_irq_event_percpu+0xf0/0x2ac
+[530672.010277]  handle_irq_event+0x60/0x144
+[530672.014275]  handle_fasteoi_irq+0x144/0x234
+[530672.018533]  __handle_domain_irq+0x8c/0xcc
+[530672.022704]  gic_handle_irq+0xc0/0x120
+[530672.026527]  el1_irq+0xcc/0x180
+[530672.029744]  cpuidle_enter_state+0x1fc/0x31c
+[530672.034088]  cpuidle_enter+0x3c/0x50
+[530672.037740]  do_idle+0x1e4/0x28c
+[530672.041042]  cpu_startup_entry+0x28/0x2c
+[530672.045042]  rest_init+0xc4/0xd0
+[530672.048346]  arch_call_rest_init+0x14/0x1c
+[530672.052517]  start_kernel+0x328/0x3a4
+[530672.056267] SMP: stopping secondary CPUs
+[530672.060450] Starting crashdump kernel...
+[530672.064447] Bye!
+crash> runq -c 0
+CPU 0 RUNQUEUE: ffff07cf49233200
+   CURRENT: PID: 0      TASK: ffffde8e444e8900  COMMAND: "swapper/0"
+   RT PRIO_ARRAY: ffff07cf49233440
+      [no tasks queued]
+   CFS RB_ROOT: ffff07cf492332b0
+      [120] PID: 11     TASK: ffff07ad40c10000  COMMAND: "rcu_sched"
+crash> bt ffffde8e444e8900
+PID: 0        TASK: ffffde8e444e8900  CPU: 0    COMMAND: "swapper/0"
+  #0 [ffff800010003db0] __crash_kexec at ffffde8e4370b424
+  #1 [ffff800010003e60] panic at ffffde8e4363b64c
+  #2 [ffff800010003eb0] sbsa_gwdt_interrupt at ffffde8e43d92aa8
+  #3 [ffff800010003ed0] __handle_irq_event_percpu at ffffde8e436b9720
+  #4 [ffff800010003f40] handle_irq_event at ffffde8e436b99c4
+  #5 [ffff800010003f70] handle_fasteoi_irq at ffffde8e436bff0c
+  #6 [ffff800010003fa0] __handle_domain_irq at ffffde8e436b831c
+  #7 [ffff800010003fe0] gic_handle_irq at ffffde8e43600974
+--- <IRQ stack> ---
+  #8 [ffffde8e444d3e50] el1_irq at ffffde8e43602288
+  #9 [ffffde8e444d3e70] cpuidle_enter_state at ffffde8e43dd6190
+#10 [ffffde8e444d3ed0] cpuidle_enter at ffffde8e43dd6314
+#11 [ffffde8e444d3f10] do_idle at ffffde8e4368307c
+#12 [ffffde8e444d3f70] cpu_startup_entry at ffffde8e4368314c
+#13 [ffffde8e444d3f90] rest_init at ffffde8e4408d79c
+#14 [ffffde8e444d3fb0] arch_call_rest_init at ffffde8e443b0730
+#15 [ffffde8e444d3fe0] start_kernel at ffffde8e443b0a60
+crash>
