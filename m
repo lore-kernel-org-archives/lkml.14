@@ -1,138 +1,216 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C670F158A38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAB7315E21B
 	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715089172; cv=none; b=M0TgOYMhDeoPAfH3bZKqeLxWL6LleQlQppbpOFQ7KTDLJI92H1S+asPQj5xQLOWl8eTKcLMm5HPd/PJALGJa4mk8CWMeKzY1++5Ohdq3QEAxU01PhotMvsyoxsbfgdfNFkItlIm7akunjYhevWYAL8b8C6zEuEEGKyEvjAmRXo4=
+	t=1715089172; cv=none; b=U507UYh8PPuyATSZZijzDJEbCCQssmW3ovjfzgF0Ftz1LJT6o4dEnBudJ18rucybftIa5utuQgd25uef24iXQys0oV6/qnffS9Nf79XyDYwTo428TbXAiGu5Mv7j48BhX+D+6863/+33MYIySdgEC3ZrJVYwwx1GAPvBSGkbImw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715089172; c=relaxed/simple;
-	bh=baf6s4YBJQXtGF6yVbVmcaRCAeJ7yXP22l+WvKXqF8U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sYoEWOUYgOhzgGPT9EX1kpA4WraTxBj4SptgghwJ5qxirVvh3wa3ZQtGIxzNZdU86zi0YZdda3tZmVzrilLgSd0Q5sJdioB3X87C7iP6CWFqHZ/rSE2V9vnEf9tSKumKl270y850hBzzEgKosnYGjiY/7/QwO5ukuYt4jfP9CHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dduAIDOz; arc=none smtp.client-ip=209.85.218.54
+	bh=23g3MFnkovGPXs2xnNJPD1QwfJ6200xpIAAFCZB8vAU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IUxnze/t0AtYtCWdE/hTfdxgU0Ht30uPdRHcixlq95ueF2AahmNcF1Xy6wAFnve9OWKNZZpYBo2ZskpVJhrk+cdA6+8FatjhxBeW19VqHNdHt2cP08zKncQsclfKkgDtE1ULN4F/CD3ZdCzRx972uVXoQ3pJme1hPVKLV8YPYkY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bhPT6k17; arc=none smtp.client-ip=209.85.167.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dduAIDOz"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a59b81d087aso671552966b.3
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bhPT6k17"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51f45104ef0so3419724e87.3
         for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 06:39:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google; t=1715089169; x=1715693969; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Gfjodg5xhhVfFwSuFvBk8ppZYk42EBGXqtKBhUMnRPA=;
-        b=dduAIDOzWjLhIcBh1rjQwYSOoawfBS4MLxGEAJQ/ovKT2d7XzBeuy2eSnk54UOI9Uu
-         gmbiB6kX1VeDmGGyBInXy46PCgSB01f/xMJQV7vJ5ONWaeEPncFNz8uI26GbZ2jdx0Lr
-         zFRqhVJx2RvhWel698f0u+bKzxJX6qfBHuvX6Ht+I0P4iTaBdqbMycKT6O2Stf/z289/
-         vLnUPYbcTZZaz84PM6CbP3ripYuvJbGol3tKIks5C9a5YrLLPu0Ki47wi0cys+pnJcM5
-         4hM0x9iM6hT0FfnFKeBnvz6gXwoF+3Y1zlZgSplM6YHmlTYbsKapn3AUWUqoXvuCtrAU
-         iWlA==
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5p3RC2fOBcO/yszjFBGlQ+kLMIrLhRgtWIMaY5UGI4Q=;
+        b=bhPT6k17QFbeS9+4Zk+rsuyLAqlweagUCww8acNCfONOcAB40emdJbq/yC9nMn6e4u
+         NmnlobSt7n8sofp6ltWF2GAu7sA9nWZ3dbiqxBPLGgr1bti+DRHfZawBraqbTxFkT+Ma
+         FsNFLc1RsZ+t+L5OrWM2QIHIpE/rI20m/udrPsWhdgXXV3UKy7Ty1frXSI0spXT8FufU
+         7qYMHSrRcT+1RiPtO2RYY45nMDfV2c1B+JzIpW4+RAFCKKutJXwxx5sM+sHfsXgMwMkM
+         PX2zlV22luWkSZrTypgqlDji3XLCVPDzRACrCweDB3fA1w5dg5SubO2yn/87o3DnAuBO
+         weeg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1715089169; x=1715693969;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Gfjodg5xhhVfFwSuFvBk8ppZYk42EBGXqtKBhUMnRPA=;
-        b=xQM+BLj++alPoOpoZ/H4aHbzcobG/+kfS6TjthB8lkNGF715gqIVFFZ6zqDH7XdYW/
-         60KyhzJ61/73FudjmURHL1V/uP0JmvAxLXGhIlNKr901zefvInTfRAeoUkFXIalU9yYG
-         IFMP6ulP3t1QxzDO7IYHWZyXpHSUB/6Q9jsW3E6QMUMeq9gl84WmGE6fvldMFle+lZZ3
-         zOmPITzQ1/ri3Im4njQrmOd/ttY9VAfUhY4bgnpSwVBcnrVUWfVVtZAqN1K5Nddw7vrL
-         cJK1qXmZuF8ZUmJxjTpG5eBkNuHnp+cFv8hpgXQpjbutZegV7le+wFs8M+SY0FwxMH2n
-         IOTg==
-X-Forwarded-Encrypted: i=1; AJvYcCVN0IIUsqMLf1P9kfrasiEMbUFLS1m/6sQrkPKbRyUppIlAxDLBRuJbCBd4DXWeaG58to0SrW0jOJ3Oz58j/DtZo1+GaR2MDfv/bf1o
-X-Gm-Message-State: AOJu0Yz3l7V1G1zLIi+pzeTMpkT4tcVQL42HqMnb8Ck/c5dho9dXdAAc
-	SIIq48EVSJvVmUWN6448+vKeGhGN5fV5FwZZ1xZeCQjbpTaWHTx3tpQpWNYQaa8=
-X-Google-Smtp-Source: AGHT+IF3KIQBzWdEnZYP4BGYN86rEOXtmA+76dUovczh8JI+wGtSxkrE9J9eINymv4bPRWgRAnCpIg==
-X-Received: by 2002:a17:906:b746:b0:a59:a05c:b553 with SMTP id fx6-20020a170906b74600b00a59a05cb553mr9573163ejb.17.1715089169099;
-        Tue, 07 May 2024 06:39:29 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id b13-20020a1709062b4d00b00a59e377f197sm1195893ejg.197.2024.05.07.06.39.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5p3RC2fOBcO/yszjFBGlQ+kLMIrLhRgtWIMaY5UGI4Q=;
+        b=ummBUotENkvLDZrkyXWNCidmI1aCJgJ5eRcV+2di90lCcDTjjw7ERrJOGmjrMX148L
+         Y1qLZRJe/+8OIBEQ0X2k0Cr2ILPoqrGp0TCdyENY05bhEvNyJCkeW4aEyQNrx+CRuVQW
+         Jx1fWzD+MnimdfXsKhS/TSZhZv1kojciC9tw1Mt5Z6AYfI2Ypiwt4aSdg9g8QJK8JLlX
+         CnBaqz6nki3nQjZRlrg9tWfsuulTHVITb7fXnmFpC4u/FHOx8z13Ip4yuKEvaVgVjXPP
+         9wMtyPsKT7AI0JlsjveZ36LukS/clkCwDJxmL3kiwSoHD/XRgK45b+NcDDZRLYAgHjtm
+         YchQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnADti6VadG7wtA/PgVVn4LDgXsqED2Ez89XxmjGE+Uv/6EoORYKuoSt5f1EPcAanP5a40CcHTE8ojYQpwzphodfen2Rje+8AJVzrM
+X-Gm-Message-State: AOJu0YzwTbEq4zBSldWNyfSUxyi+YpGE+HkkH49phZ4cniJcXM69ERH1
+	8k5lj80Cx3SJ9aIFctuii5QCHs0KqiRy4hYuKNKuPiGpb9whJrsllflxqArjnGc=
+X-Google-Smtp-Source: AGHT+IESLrpsKBO3/nRqeo+k6p8A6E2bV8DthVHdN8GSSDT4aFa4P1rb+4V8Tlme+ePuRrgdQdEv7A==
+X-Received: by 2002:a19:8c16:0:b0:51e:150e:2c45 with SMTP id o22-20020a198c16000000b0051e150e2c45mr8493801lfd.63.1715089168968;
         Tue, 07 May 2024 06:39:28 -0700 (PDT)
-Message-ID: <a065216a-b533-4804-93c8-c871c6d549d9@linaro.org>
-Date: Tue, 7 May 2024 15:39:26 +0200
+Received: from eriador.lumag.spb.ru (dzdbxzyyyyyyyyyyyykxt-3.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::227])
+        by smtp.gmail.com with ESMTPSA id x36-20020a056512132400b0051d4321ef58sm2127976lfu.61.2024.05.07.06.39.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 06:39:28 -0700 (PDT)
+Date: Tue, 7 May 2024 16:39:27 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To: Alexander Stein <alexander.stein@ew.tq-group.com>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Sam Ravnborg <sam@ravnborg.org>, 
+	Vinay Simha BN <simhavcs@gmail.com>, Tony Lindgren <tony@atomide.com>, 
+	dri-devel@lists.freedesktop.org, Michael Walle <mwalle@kernel.org>, 
+	Daniel Semkowicz <dse@thaumatec.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 01/20] drm/bridge: add dsi_lp11_notify mechanism
+Message-ID: <577v55mspa672t2bqbwwvdtfdgtbj6mpejo3n56qk7bt2j6bt3@q54dfnupcvs4>
+References: <20240506-tc358775-fix-powerup-v1-0-545dcf00b8dd@kernel.org>
+ <20240506-tc358775-fix-powerup-v1-1-545dcf00b8dd@kernel.org>
+ <2189493.irdbgypaU6@steina-w>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ASoC: qcom: audioreach: Correct mapping of back speakers
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
-References: <20240507100209.610436-1-krzysztof.kozlowski@linaro.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240507100209.610436-1-krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2189493.irdbgypaU6@steina-w>
 
-On 07/05/2024 12:02, Krzysztof Kozlowski wrote:
-> Qualcomm DSP, according to downstream sources, expects back speakers to
-> be mapped as "back", not "surround".  The surround is used only for 8+
-> speakers configuration.
+On Tue, May 07, 2024 at 10:37:54AM +0200, Alexander Stein wrote:
+> Hi Michael,
 > 
-> Reported-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Fixes: 3c5fcb20e07e ("ASoC: qcom: audioreach: Add 4 channel support")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Am Montag, 6. Mai 2024, 15:34:30 CEST schrieb Michael Walle:
+> > Some bridges have very strict power-up reqirements. In this case, the
+> > Toshiba TC358775. The reset has to be deasserted while *both* the DSI
+> > clock and DSI data lanes are in LP-11 mode. After the reset is relased,
+> > the bridge needs the DSI clock to actually be able to process I2C
+> > access. This access will configure the DSI side of the bridge during
+> > which the DSI data lanes have to be in LP-11 mode.
+> 
+> Apparently this is an issue for a lot of DSI bridges. But enabling LP-11 for
+> a bridge is impossible with current documentation [1], which states "A DSI
+> host should keep the PHY powered down until the pre_enable operation is
+> called."
+> Additionally tc358767/tc9595 (DSI-DP bridge) needs LP-11 for AUX channel
+> access to even get EDID. This is a requirement before pre_enable would
+> even be possible.
+> 
+> So some changes to the current flow are needed. But I am not so sure
+> about LP-11 notification. IMHO a device request to the DSI host to
+> enable LP-11 seems more sensible.
 
-I just figured out that I duplicated Srini's patch, so I should instead
-sent his one to preserve author of original report.
+Granted that there can be several DSI devices sharing the DSI bus (aka
+split-link), I was toying with the idea of making the DSI host call
+attached DSI devices when the transition happens.
 
-Best regards,
-Krzysztof
+I don't have a fully working PoC and I probably won't have it ready til
+the end of May because of the lack of time and different local
+priorities.
 
+> 
+> Best regards,
+> Alexander
+> 
+> [1] https://www.kernel.org/doc/html/latest/gpu/drm-kms-helpers.html#mipi-dsi-bridge-operation
+> 
+> > After everything is
+> > configured the video stream can finally be enabled.
+> > 
+> > This means:
+> >  (1) The bridge has to be configured completely in .pre_enable() op
+> >      (with the clock turned on and data lanes in LP-11 mode, thus
+> >      .pre_enable_prev_first has to be set).
+> >  (2) The bridge will enable its output in the .enable() op
+> >  (3) There must be some mechanism before (1) where the bridge can
+> >      release its reset while the clock lane is still in LP-11 mode.
+> > 
+> > Unfortunately, (3) is crucial for a correct operation of the bridge.
+> > To satisfy this requriment, introduce a new callback .dsi_lp11_notify()
+> > which will be called by the DSI host driver.
+> > 
+> > Signed-off-by: Michael Walle <mwalle@kernel.org>
+> > ---
+> >  drivers/gpu/drm/drm_bridge.c | 16 ++++++++++++++++
+> >  include/drm/drm_bridge.h     | 12 ++++++++++++
+> >  2 files changed, 28 insertions(+)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
+> > index 28abe9aa99ca..98cd6558aecb 100644
+> > --- a/drivers/gpu/drm/drm_bridge.c
+> > +++ b/drivers/gpu/drm/drm_bridge.c
+> > @@ -1339,6 +1339,22 @@ void drm_bridge_hpd_notify(struct drm_bridge *bridge,
+> >  }
+> >  EXPORT_SYMBOL_GPL(drm_bridge_hpd_notify);
+> >  
+> > +/**
+> > + * drm_bridge_dsi_lp11_notify - notify clock/data lanes LP-11 mode
+> > + * @bridge: bridge control structure
+> > + *
+> > + * DSI host drivers shall call this function while the clock and data lanes
+> > + * are still in LP-11 mode.
+> > + *
+> > + * This function shall be called in a context that can sleep.
+> > + */
+> > +void drm_bridge_dsi_lp11_notify(struct drm_bridge *bridge)
+> > +{
+> > +	if (bridge->funcs->dsi_lp11_notify)
+> > +		bridge->funcs->dsi_lp11_notify(bridge);
+> > +}
+> > +EXPORT_SYMBOL_GPL(drm_bridge_dsi_lp11_notify);
+> > +
+> >  #ifdef CONFIG_OF
+> >  /**
+> >   * of_drm_find_bridge - find the bridge corresponding to the device node in
+> > diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> > index 4baca0d9107b..4ef61274e0a8 100644
+> > --- a/include/drm/drm_bridge.h
+> > +++ b/include/drm/drm_bridge.h
+> > @@ -630,6 +630,17 @@ struct drm_bridge_funcs {
+> >  	 */
+> >  	void (*hpd_disable)(struct drm_bridge *bridge);
+> >  
+> > +	/**
+> > +	 * dsi_lp11_notify:
+> > +	 *
+> > +	 * Will be called by the DSI host driver while both the DSI clock
+> > +	 * lane as well as the DSI data lanes are in LP-11 mode. Some bridges
+> > +	 * need this state while releasing the reset, for example.
+> > +	 * Not all DSI host drivers will support this. Therefore, the DSI
+> > +	 * bridge driver must not rely on this op to be called.
+> > +	 */
+> > +	void (*dsi_lp11_notify)(struct drm_bridge *bridge);
+> > +
+> >  	/**
+> >  	 * @debugfs_init:
+> >  	 *
+> > @@ -898,6 +909,7 @@ void drm_bridge_hpd_enable(struct drm_bridge *bridge,
+> >  void drm_bridge_hpd_disable(struct drm_bridge *bridge);
+> >  void drm_bridge_hpd_notify(struct drm_bridge *bridge,
+> >  			   enum drm_connector_status status);
+> > +void drm_bridge_dsi_lp11_notify(struct drm_bridge *bridge);
+> >  
+> >  #ifdef CONFIG_DRM_PANEL_BRIDGE
+> >  bool drm_bridge_is_panel(const struct drm_bridge *bridge);
+> > 
+> > 
+> 
+> 
+> -- 
+> TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
+> Amtsgericht München, HRB 105018
+> Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
+> http://www.tq-group.com/
+> 
+> 
+
+-- 
+With best wishes
+Dmitry
