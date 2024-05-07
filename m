@@ -1,106 +1,193 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7E9156F31;
-	Tue,  7 May 2024 12:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F964156F42
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 12:14:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715084018; cv=none; b=YeYOejm+C4McbdMK3jq9i5AQVW6NvI/cBFMQkpFxeIIMOXBqR0HvxfrLQLiuixo5UIuurpuQOoA09kf5GWvUZEN8RTMyEI1wZ3tB2hbwn3fUX08FDO9NLUJfOMn8K43a1RtrQL9VkG+aPLD1iy3qVCo6h3YQ3fa+zi9bO+4U73E=
+	t=1715084043; cv=none; b=K0D7bu53B1dXWoYfewPcPuQjrJPqknK6YTAor7uoAerGg/0VR9Zx8MG0ku505aQ5m5q5+3E65W51dY9n4YtowZ4RcLB+ETSsSS16D0LJX+1CfuC6hMYM1ljLzmGQ2xefy9bsk8MIP15zYm14PCxrkm7nHRyZ9svamggdhkmCCoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715084018; c=relaxed/simple;
-	bh=nqDTDgzKgA9YqyhlTfPzGqvHKL1Og1Kte7O7JbMHNCc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=T2Gs6zhTlOvwvnvxwueEcJb44WZJdsQ+V0VP/jFLmDAzjHhTyQqhCw2nzXItamwRBVGLClfjzVQPpIfzUKgaU+qVBb18X1t88HGQcLlvsGwlJUwEMqlgrJTJg2V85N4R1PWLwnQs4DYQnrD+luqNtZK8r+bZL6WppF4ZAYgFGb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a8uzT7WZ; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715084043; c=relaxed/simple;
+	bh=YmEEmeOOuxBpCRFm3B7ZNV+yLdnCW/FwbQ/WUKdOoGs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LCPzC6rIC8oPDgciRrIFVchkhhrPONDcPQpUYADmGMLuMarf9CcGOVCNd8+bu3kGWh4ClFWBGiY3l/AddOU7BVsAOFNKW61XYJ8ZjMpBuVqNDloV057qUhx/szXTPrkfEGzI07NFWHTKbYH8WGNCwp792GGjuzUCMPnqQcFLfow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vi0bfqdY; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a8uzT7WZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715084018; x=1746620018;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=nqDTDgzKgA9YqyhlTfPzGqvHKL1Og1Kte7O7JbMHNCc=;
-  b=a8uzT7WZ8vd8qM59v2G1i6MkPBEN4L1MAoK/i9k2b0ZJ1uAYDtvoDbkk
-   KWQmTVIreaCVb3sp8reqbes1vgs8zA2nkQVtAZkc1p7RPxDUWxDvtJwiI
-   ao/UxwPFETYF5JeioIXFgT6mv/1+vZVS2YPBCQ/x5zuzOqDDHoxl5LnPQ
-   ihoQkorwiMjrHtRxBiqqHtI0hkibFQHu7WJ4/yMcUF8Co/tWSvg6f/Au0
-   nNJrzO5F9wd1oUfX3WlaOpfP69gBrP3bbavqweB2yXZLAGHaJRx4nAL+8
-   r43BRdWA7YCelHYf//V79navrsDgtroi8w1Q81GzqcP4Vsua9TDOYfVAo
-   w==;
-X-CSE-ConnectionGUID: dNggHSK9TbiBYRwMgHWyJg==
-X-CSE-MsgGUID: /6/lxL5RRROj3k+/OnuFyw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="11030617"
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="11030617"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 05:13:37 -0700
-X-CSE-ConnectionGUID: bawRtxXyRCm4hOPqu9/ehg==
-X-CSE-MsgGUID: aM4VgwM0THCU0CBfg14nhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
-   d="scan'208";a="28582421"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 07 May 2024 05:13:34 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s4JhK-0001tQ-2i;
-	Tue, 07 May 2024 12:13:30 +0000
-Date: Tue, 7 May 2024 20:12:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>, patrick@stwcx.xyz,
-	joel@jms.id.au, openbmc@lists.ozlabs.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] ARM: dts: aspeed: yosemite4: add I3C config in DTS
-Message-ID: <202405072003.qTcMKOm3-lkp@intel.com>
-References: <20240506113306.1283179-1-Delphine_CC_Chiu@wiwynn.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vi0bfqdY"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51f12ccff5eso3979986e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 05:14:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1715084039; x=1715688839; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=t0xYGvyCqThiXi92JPmsLGgx6g9ZynPSql0gnOVBw6A=;
+        b=vi0bfqdYdCQkAWqd+sPGUSvGpUCeiEgbsObSGsvBhZkMV/rqlZxdyATojFeycXRzQM
+         GHLKbYOUOJcN2sLH28IZX2GTJteKKGyHZAhja8VwJmmGjkmCcCpbTJBagWpn7Qj2hKbq
+         rZEPfOSH4BDvzfSlQ/fP2+LEPHkW2xsK5+UOuk6hJx0PQoLu2yd++Xd28XoDg/O9B4Ns
+         8/MaXj+1Q/miPqF6tyUiptpSL8iA4Kwtp3zx72TZZ/qyWNCmhYmH+oGY4Xu8l3LyL9zU
+         wg0YH8s68d7pMIjMG2j97O7jzenebd8UYJwRA1wuMqHS3lXGS7a2EC7xqzXkMq/SDpMj
+         lz8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715084039; x=1715688839;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=t0xYGvyCqThiXi92JPmsLGgx6g9ZynPSql0gnOVBw6A=;
+        b=QX7BPorqPw48XLXrpFn5V2Kaol2E81aWa40lFQbt2ZwSbuOOnvw7By0p6bB1PIEJ82
+         JMG7xD090SdcGaMTZxd5NUURKsf0efxb6JNREuSFLDNDzMgm7t0c4fNaAHT7en5Xawe/
+         kBhtjUmAhsqGcySVHdAVO+dQv+dfQHCxExaiIDQe684eq8BkVInk07U2ntDHTcJ0lH8Q
+         3zF7YlVJrmhDOZrGSEZ3PynZnCvIVXN+B9mXZEoMOhfRb1kANDM9ZJdfSP26ZZTt62ZM
+         vpVo23iVuI1N8/wlMK/l3SCl42ZkQi/yp0BEbepOkhveyT8+q3JbedGZOMnOc1BTGckZ
+         mXDg==
+X-Forwarded-Encrypted: i=1; AJvYcCWIx+Uu4GFd18z7KtNGzlZJrwMra/61Gtx+EJIRIXOxv07geRoXNAuW7tNNDh/nlpRWlmvgIeJZnP9clqQ9IKCFJNe/VSWgoi6OjMJo
+X-Gm-Message-State: AOJu0Yx+TjIJp08y9kf2datlmvOd5EL/kK6DeMc99UHVqRL0S/9A9k26
+	1avfAAhzKVGWTjZrGdWlbRsAlIUbbMVw5F9DiDuNiq9L8Wnb2bKlde8CV9gf6U74EibUTKghq1b
+	l
+X-Google-Smtp-Source: AGHT+IHqZmm/9CXxuZRWSrHF2jIwUqNosYeCMXFgKJuOogWtmjLuPQQfv8CHvd9GnoCq1Y37CfxRcA==
+X-Received: by 2002:ac2:53b3:0:b0:51c:1cdb:566f with SMTP id j19-20020ac253b3000000b0051c1cdb566fmr7964786lfh.11.1715084039082;
+        Tue, 07 May 2024 05:13:59 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:75a:e000:581a:1d:3b79:3b03])
+        by smtp.gmail.com with ESMTPSA id bg5-20020a05600c3c8500b0041bbec72670sm19585693wmb.39.2024.05.07.05.13.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 05:13:58 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	"Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH] gpiolib: fix the speed of descriptor label setting with SRCU
+Date: Tue,  7 May 2024 14:13:46 +0200
+Message-Id: <20240507121346.16969-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240506113306.1283179-1-Delphine_CC_Chiu@wiwynn.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Delphine,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-kernel test robot noticed the following build errors:
+Commit 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
+caused a massive drop in performance of requesting GPIO lines due to the
+call to synchronize_srcu() on each label change. Rework the code to not
+wait until all read-only users are done with reading the label but
+instead atomically replace the label pointer and schedule its release
+after all read-only critical sections are done.
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.9-rc7 next-20240507]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+To that end wrap the descriptor label in a struct that also contains the
+rcu_head struct required for deferring tasks using call_srcu() and stop
+using kstrdup_const() as we're required to allocate memory anyway. Just
+allocate enough for the label string and rcu_head in one go.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Delphine-CC-Chiu/ARM-dts-aspeed-yosemite4-add-I3C-config-in-DTS/20240506-193458
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20240506113306.1283179-1-Delphine_CC_Chiu%40wiwynn.com
-patch subject: [PATCH v1] ARM: dts: aspeed: yosemite4: add I3C config in DTS
-config: arm-multi_v5_defconfig (https://download.01.org/0day-ci/archive/20240507/202405072003.qTcMKOm3-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240507/202405072003.qTcMKOm3-lkp@intel.com/reproduce)
+Reported-by: Neil Armstrong <neil.armstrong@linaro.org>
+Closes: https://lore.kernel.org/linux-gpio/CAMRc=Mfig2oooDQYTqo23W3PXSdzhVO4p=G4+P8y1ppBOrkrJQ@mail.gmail.com/
+Fixes: 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib.c | 31 ++++++++++++++++++++++++-------
+ drivers/gpio/gpiolib.h |  7 ++++++-
+ 2 files changed, 30 insertions(+), 8 deletions(-)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405072003.qTcMKOm3-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> Error: arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:598.1-6 Label or path i3c0 not found
->> Error: arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-yosemite4.dts:641.1-6 Label or path i3c1 not found
-   FATAL ERROR: Syntax error parsing input tree
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 94903fc1c145..2fa3756c9073 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -101,6 +101,7 @@ static bool gpiolib_initialized;
+ 
+ const char *gpiod_get_label(struct gpio_desc *desc)
+ {
++	struct gpio_desc_label *label;
+ 	unsigned long flags;
+ 
+ 	flags = READ_ONCE(desc->flags);
+@@ -108,23 +109,36 @@ const char *gpiod_get_label(struct gpio_desc *desc)
+ 	    !test_bit(FLAG_REQUESTED, &flags))
+ 		return "interrupt";
+ 
+-	return test_bit(FLAG_REQUESTED, &flags) ?
+-			srcu_dereference(desc->label, &desc->srcu) : NULL;
++	if (!test_bit(FLAG_REQUESTED, &flags))
++		return NULL;
++
++	label = srcu_dereference_check(desc->label, &desc->srcu,
++				       srcu_read_lock_held(&desc->srcu));
++
++	return label->str;
++}
++
++static void desc_free_label(struct rcu_head *rh)
++{
++	kfree(container_of(rh, struct gpio_desc_label, rh));
+ }
+ 
+ static int desc_set_label(struct gpio_desc *desc, const char *label)
+ {
+-	const char *new = NULL, *old;
++	struct gpio_desc_label *new = NULL, *old;
+ 
+ 	if (label) {
+-		new = kstrdup_const(label, GFP_KERNEL);
++		new = kzalloc(struct_size(new, str, strlen(label) + 1),
++			      GFP_KERNEL);
+ 		if (!new)
+ 			return -ENOMEM;
++
++		strcpy(new->str, label);
+ 	}
+ 
+ 	old = rcu_replace_pointer(desc->label, new, 1);
+-	synchronize_srcu(&desc->srcu);
+-	kfree_const(old);
++	if (old)
++		call_srcu(&desc->srcu, &old->rh, desc_free_label);
+ 
+ 	return 0;
+ }
+@@ -697,8 +711,11 @@ static void gpiodev_release(struct device *dev)
+ 	struct gpio_device *gdev = to_gpio_device(dev);
+ 	unsigned int i;
+ 
+-	for (i = 0; i < gdev->ngpio; i++)
++	for (i = 0; i < gdev->ngpio; i++) {
++		/* Free pending label. */
++		synchronize_srcu(&gdev->descs[i].srcu);
+ 		cleanup_srcu_struct(&gdev->descs[i].srcu);
++	}
+ 
+ 	ida_free(&gpio_ida, gdev->id);
+ 	kfree_const(gdev->label);
+diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
+index f67d5991ab1c..69a353c789f0 100644
+--- a/drivers/gpio/gpiolib.h
++++ b/drivers/gpio/gpiolib.h
+@@ -137,6 +137,11 @@ int gpiod_set_transitory(struct gpio_desc *desc, bool transitory);
+ 
+ void gpiod_line_state_notify(struct gpio_desc *desc, unsigned long action);
+ 
++struct gpio_desc_label {
++	struct rcu_head rh;
++	char str[];
++};
++
+ /**
+  * struct gpio_desc - Opaque descriptor for a GPIO
+  *
+@@ -177,7 +182,7 @@ struct gpio_desc {
+ #define FLAG_EVENT_CLOCK_HTE		19 /* GPIO CDEV reports hardware timestamps in events */
+ 
+ 	/* Connection label */
+-	const char __rcu	*label;
++	struct gpio_desc_label __rcu *label;
+ 	/* Name of the GPIO */
+ 	const char		*name;
+ #ifdef CONFIG_OF_DYNAMIC
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.40.1
+
