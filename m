@@ -1,113 +1,111 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342A91C27
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 00:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3B33DDDC;
+	Wed,  8 May 2024 00:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715126967; cv=none; b=f8hpi0Veoc5f7Wlmkgh+4Hk2CYNdE/AGBp4Vp48kS5L8eVa1qROv/Gz6cZInUCkn9Ar7bOHH54dv5LWc5oz9TpuWC1Pjb/xa2ZZqHev04Q8nVkQKmbCP73szVGhplO3tdq4xSeUAiYqsNYkicc8h/g3YRwlMQn9u6DtXY+1DZ04=
+	t=1715127000; cv=none; b=mYIY0zo5MYNPtK7C9ccHwY1iFvwmXcBEUfPGC3JiRFGVeH8IuN7TtiFxgZMpQEiKHLDVxNVXfeDe2e0PM67Jg1s4bVnouvZUjL8WlsWrHpxb5kOYJvt4hoCoxRrUlezV5T+IdTtzmEPFlVFRJUiiUNZ4cYVSJqxPe230nbQBMzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715126967; c=relaxed/simple;
-	bh=2RBkzmRwSheKgkAQe2JV3Fs7F/JeQq/TzY2YuKFXwgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YOchG5t5o4rpffFVSwE+K137K4k9lV5DdHdLnGyoPdDrj7dMhpiWAT4ONYV91t8R1irKxWNwW9JgpsmP6VFD6DHYfx34Suc6qbfk6HfNohLt37WNuJVrzq6iiml0Ja78onbLIiqlBIPeGlGyVBdAxPoFGzRAMXj9rPqDK0KgHEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=P3BpdlBR; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715127000; c=relaxed/simple;
+	bh=a1a7kGmJhVbWVk9Qjv4HmPA2feFqp8D3U+r5u1agPsY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ht3GLMw66aJlJsccV38sXrC187mpkuhe4DQ1lSLP2YPFIopD4fqgnZOvZUqpM8f6+3Vw5U5nF5n/IK6ABw8UAgdE3XNrlmbheiwMsrOadU8mvKyQmY8WxZQlL3D8N45egU911Kxlz/j5v3tI69vOYZYaSJEVjXvMS0f7YptyOhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RXxGjRjS; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P3BpdlBR"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2ad8fb779d2so2858720a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 17:09:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715126965; x=1715731765; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=y1syOJovW5eId25dp/lIC5NMYcXKMWcKV21Z0vOpfbA=;
-        b=P3BpdlBRRYrhG9RwRG98tPisRxHqA9/nXL5OVnH/XDndDAqVIgGLLYrb23uF0xFmGC
-         JYjuiUVsD6tEHDieYVr0BeFymRJW7cDFK5ge8ay0p55Cc/DLjk7yQPQS+CTCSFI3DEzm
-         rhHntFPWo8s8mBoxlYvBTio3TYfad3n792GKY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715126965; x=1715731765;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=y1syOJovW5eId25dp/lIC5NMYcXKMWcKV21Z0vOpfbA=;
-        b=twBcE7OYv4PnUW9YIAxisp7tcpFTCDLHD/CVhFYsz586OdNOGWq0COY83403r4mveP
-         KFuNXuHOH1nJrVCauo4chRDwiQYHHCStSGBPdEyyvqQ8OEMJ2zYJuHcI3tyGpctxOqAT
-         wJ0cPklRiYNK4v2cDD7ImR5n5AI1YvTAs3F9c0+b/MdGoLO6n8eVx8/0ZSEVInoZ0nju
-         jMryWciuGmZkqaUT3WoXmnWTwYc/j/MuD4Q4hs/78/dgmiPLHp5HzldWSMdc+lKHg7Fs
-         EnEygMPi5sWjQL8DgdH+aRvd+GjhP5krHpbFAqQyM2oEolAOHEIT0B22L6Tp992dzIR3
-         oAUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1w3zte1dN3PC8xnJLNCTD9gzs3o708dUmRTdaUBIBkJqXsYPZZWzH+6LAGpRBdqEXL/6vdlB2xiwtUp/8EeFM29PvY6AEjV5TJsrt
-X-Gm-Message-State: AOJu0Yz0onBhH21yNhd3PPO5nV/+7pGU6VpbFbyJdOdvu2c+o2ESXDiG
-	Cu85pZbN2UDInHIUbpsx2HLKum6ap0qAtXOmfuZekxW9kdUVQS6MCvV+kcTjXw==
-X-Google-Smtp-Source: AGHT+IG6ljKWC4/Nljh3hqVMgeNltqhDXr5URpX3VUK0fuEPsH/8i/GoTdfNLVoHrp3y4e/JzyIgVw==
-X-Received: by 2002:a17:90b:4ac8:b0:2a8:1fdf:b1b0 with SMTP id 98e67ed59e1d1-2b6166bfe0bmr1137740a91.29.1715126965497;
-        Tue, 07 May 2024 17:09:25 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id d12-20020a170902654c00b001ed9b384b6fsm6802901pln.23.2024.05.07.17.09.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 17:09:25 -0700 (PDT)
-Date: Tue, 7 May 2024 17:09:24 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Justin Stitt <justinstitt@google.com>
-Cc: Phillip Potter <phil@philpotter.co.uk>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] cdrom: rearrange last_media_change check to avoid
- unintentional overflow
-Message-ID: <202405071709.817AB45C0D@keescook>
-References: <20240507-b4-sio-ata1-v1-1-810ffac6080a@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RXxGjRjS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715126998; x=1746662998;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=a1a7kGmJhVbWVk9Qjv4HmPA2feFqp8D3U+r5u1agPsY=;
+  b=RXxGjRjSzhdH8cX3E9B7lIKNXp9cEbA9chmD77W0TuH4lhLI1AgRKN9/
+   XoNqdUV8rMou+AB7FBEtdfPuOmoelX8eC9500qpODaYx9uAnluMuVIZm/
+   PWrDA90uBcADroC4gO23Sn7vQnkL58vToJDDC5qv1OkZwBIuvIi+OQW2Q
+   ovs8+9xb0jFcv7AO5kwgSzRMhv/FGpIpRgigHpSgWChmDPfZik+LB9r6F
+   YyPjra825rNCrmhUgd+XoA1lJi9mN8z2GGqD0yd5POfGTj17IYVjNDlXV
+   ODQexQHnauH7GvbMyA2oUOAe8FM8SouDr2DIe2v7ieLA+KkijCC3kQLb4
+   w==;
+X-CSE-ConnectionGUID: AuLAhxr5Tg+K6i2dqaRldw==
+X-CSE-MsgGUID: XkL2QbgEQF2bIpFbW9Xgng==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="10898733"
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="10898733"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 17:09:58 -0700
+X-CSE-ConnectionGUID: S6NuRJE9R4O3aPD9LAFBDw==
+X-CSE-MsgGUID: eNmRilucQreQgMM/ssbf4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="29108939"
+Received: from chang-linux-3.sc.intel.com ([172.25.66.175])
+  by orviesa006.jf.intel.com with ESMTP; 07 May 2024 17:09:58 -0700
+From: "Chang S. Bae" <chang.seok.bae@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: x86@kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com,
+	tony.luck@intel.com,
+	ashok.raj@intel.com,
+	jithu.joseph@intel.com,
+	chang.seok.bae@intel.com
+Subject: [PATCH v2 0/2] x86/fpu: Extend kernel_fpu_begin_mask() for the In-Field Scan driver
+Date: Tue,  7 May 2024 16:53:42 -0700
+Message-Id: <20240507235344.249103-1-chang.seok.bae@intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240430212508.105117-1-chang.seok.bae@intel.com>
+References: <20240430212508.105117-1-chang.seok.bae@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507-b4-sio-ata1-v1-1-810ffac6080a@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 07, 2024 at 04:54:04AM +0000, Justin Stitt wrote:
-> When running syzkaller with the newly reintroduced signed integer wrap
-> sanitizer we encounter this splat:
-> 
-> [  366.015950] UBSAN: signed-integer-overflow in ../drivers/cdrom/cdrom.c:2361:33
-> [  366.021089] -9223372036854775808 - 346321 cannot be represented in type '__s64' (aka 'long long')
-> [  366.025894] program syz-executor.4 is using a deprecated SCSI ioctl, please convert it to SG_IO
-> [  366.027502] CPU: 5 PID: 28472 Comm: syz-executor.7 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
-> [  366.027512] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [  366.027518] Call Trace:
-> [  366.027523]  <TASK>
-> [  366.027533]  dump_stack_lvl+0x93/0xd0
-> [  366.027899]  handle_overflow+0x171/0x1b0
-> [  366.038787] ata1.00: invalid multi_count 32 ignored
-> [  366.043924]  cdrom_ioctl+0x2c3f/0x2d10
-> [  366.063932]  ? __pm_runtime_resume+0xe6/0x130
-> [  366.071923]  sr_block_ioctl+0x15d/0x1d0
-> [  366.074624]  ? __pfx_sr_block_ioctl+0x10/0x10
-> [  366.077642]  blkdev_ioctl+0x419/0x500
-> [  366.080231]  ? __pfx_blkdev_ioctl+0x10/0x10
-> ...
-> 
-> Historically, the signed integer overflow sanitizer did not work in the
-> kernel due to its interaction with `-fwrapv` but this has since been
-> changed [1] in the newest version of Clang. It was re-enabled in the
-> kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
-> sanitizer").
-> 
-> Let's rearrange the check to not perform any arithmetic, thus not
-> tripping the sanitizer.
-> 
-> Link: https://github.com/llvm/llvm-project/pull/82432 [1]
-> Closes: https://github.com/KSPP/linux/issues/354
-> Cc: linux-hardening@vger.kernel.org
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
+Following feedback from the previous posting [1], this revision comes
+with the changelog updates for more clarity:
 
-Much more idiomatic. :)
+* The recent change in the SDM alone does not fully explain the
+  underlying reasons. Provide a clearer explanation rather than simply
+  echoing the SDM text.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+* While it is feasible for administrators to isolate CPUs running the
+  In-Field Scan tests from those running AMX workloads, this approach is
+  considerably disruptive and conflicts with the goal of its live
+  testing. Add this point to the changelog as well.
 
+Thanks to Dave for highlighting these aspects [2]. Additionally, it is
+worth noting that the IFS Technical Paper [3] was recently published,
+which may offer further context on the IFS testing.
+
+Thanks,
+Chang
+
+[1] V1: https://lore.kernel.org/lkml/20240430212508.105117-1-chang.seok.bae@intel.com/
+[2] Feedback: https://lore.kernel.org/lkml/a41d7012-2eea-436e-9f7e-6a7702f7e2c2@intel.com/
+[3] IFS Paper: https://www.intel.com/content/www/us/en/content-details/822279/finding-faulty-components-in-a-live-fleet-environment.html
+
+Chang S. Bae (2):
+  x86/fpu: Extend kernel_fpu_begin_mask() to initialize AMX state
+  platform/x86/intel/ifs: Initialize AMX state for the scan test
+
+ arch/x86/include/asm/fpu/api.h           |  1 +
+ arch/x86/kernel/fpu/core.c               |  3 +++
+ drivers/platform/x86/intel/ifs/ifs.h     | 15 +++++++++++++++
+ drivers/platform/x86/intel/ifs/runtest.c |  6 ++++++
+ 4 files changed, 25 insertions(+)
+
+
+base-commit: 7598293ab37c92025086de4b0ecd9474013a725f
 -- 
-Kees Cook
+2.34.1
+
