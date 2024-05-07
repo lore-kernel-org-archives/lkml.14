@@ -1,43 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00823401.pphosted.com (mx0a-00823401.pphosted.com [148.163.148.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFF7131BAD;
-	Tue,  7 May 2024 23:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7391380BE5;
+	Tue,  7 May 2024 23:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.148.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715125006; cv=none; b=olDVxFx4munOwkSZt41Vsjz+oYaHsyXlZVgmmINGbNkFCcQ+SPHBo75h3tTovsy87Imrp6ZpVSiuqrKxRBj31eGjEovOoM2KhybHo+ZUnYrM13tNACjSZKCKiowpuRi93m6YlX9QAP3TCpBdDr8sMRu5OhF5Prp6eV1nhFWV9ZY=
+	t=1715125270; cv=none; b=Vq9Iu5lF7++eXzgq5JtVVQxLJrq1kmSb84xVoHp5qGdiw7oW+ae4pqzHhbaRQ9ZcHREftzSN0Fcmg8Sd7WCu9JpMMcGD9QevauXbNXj6XFmjJ1xCgggeebwA1z4gcjbVrkezJgRhF2zOTbSZxCGKMSuED0a2aiPQIvo17hUqcNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715125006; c=relaxed/simple;
-	bh=wnAuMuelVqBaOBHPNrOn1dHFRLCS5aMFuxMXl2adm8I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fIdrPA0hD7XXe6K6HrOxopi1aeSUoFtwYRyXaqEvwI+/lGuYjCoAHTiYuZEtVstKuci6Tu9+IpyoaDHnu74lcsq2ReNf3EKr+YPMfzNtBHlaTviVViWOfsaEeNdO3sQHVcVsYnhTMcjFcTQlQzxrsHLReKc4phrWaTIHlvWpSYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z9iwS89O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715125270; c=relaxed/simple;
+	bh=DzIBNyM5bHb69k+2aGT791vy83w8DRLKb5e6PQS5kxM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LQp2rDA3g1OCIQybaRoFILAD4AiFCi0DPs+M5xp6KYzEgo7Ok/Cjz2y4QjShCH+DRiYYF4pXMzR/skc8FKml18hQHS2fSq78p7ck7m9bGnD4kH/UQQmi7MJ6krQeEIKYKYVTBf3UkKu17WhfQeslyRykfoMfTlPEQK6hIVx7NhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=2UtulqaN; arc=none smtp.client-ip=148.163.148.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z9iwS89O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12984C2BBFC;
-	Tue,  7 May 2024 23:36:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715125006;
-	bh=wnAuMuelVqBaOBHPNrOn1dHFRLCS5aMFuxMXl2adm8I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z9iwS89OFb3ScbwH3X1Sd6EDA1EOXQ5QRFMuzuV/rhDDd9OF7rqDr4Le82rfdIMvK
-	 svqVrTxhPbAQsV75hM2+qI+e6RktobL99LpJrZ8bwkUBWUTrouOxYj+GBjWHWYCYS6
-	 834xXhzMZ1sBRbvtsVHS2Y64O7KHzOfdeZx7Zu5ArjF8Et7zhvnF5YRLhHgqwdKu13
-	 jhpL5ncMBGQmQaJZ3TMNCv0XaUoJaD9Hthbe2cYQFHsid3q55VVqze1mS+BmKtKzBg
-	 vEBIwu6T6QUFThpiaMbNaDeVnplTKkfqqaSR3jtNxdUcBcvJ0aZDLbtzjnpHWizuX8
-	 KPuQ9bNFKzT2A==
-Date: Tue, 7 May 2024 16:36:45 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Dan Carpenter <dan.carpenter@linaro.org>,
-	Chandan Babu R <chandan.babu@oracle.com>, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] xfs: check for negatives in xfs_exchange_range_checks()
-Message-ID: <20240507233645.GZ360919@frogsfrogsfrogs>
-References: <0e7def98-1479-4f3a-a69a-5f4d09e12fa8@moroto.mountain>
- <ZjnE2SjU7lGD0x5A@infradead.org>
- <d953392c-44d1-4c9f-a671-b25803181b97@moroto.mountain>
- <ZjnM2QBtL68KJtio@infradead.org>
+	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="2UtulqaN"
+Received: from pps.filterd (m0355087.ppops.net [127.0.0.1])
+	by mx0a-00823401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447IKCU0011567;
+	Tue, 7 May 2024 23:40:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
+	date:from:to:cc:subject:message-id:mime-version:content-type; s=
+	DKIM202306; bh=VGziX56dHq14Bu+7ioE0T28erjDlFCIx9NNqQFIUAWE=; b=2
+	UtulqaNFrOC5ntuxHe963dh2rlvjRFwvJuCuH/nNag5aPI5qzRVFhzB8mLXeox/c
+	nWoVGHcMqheKzyi5Q2lDxbtuoY1ZEOWW9iE5LLb7T8eX9b+KGHb7h2d9x4U4JYP2
+	8/Fp9pn5zWqWBkh2wtv2VNVivxvYQgZYGhYSwn36lbWwbH2kxq7h6MrSMdoK+Rfk
+	aSlLpAYto3KGBMUaIOy9OLkmc+Nxvdqhmh1G7cFpFVQcmLBypZG7gg3d6i67cnsp
+	a2+388UJncykhLYvx/fn9duUaljlEH9QzHmJK064zdtRWNvamyngYyB+7xHnCKji
+	MPrK0O50W0+9ZUikSW2oA==
+Received: from va32lpfpp01.lenovo.com ([104.232.228.21])
+	by mx0a-00823401.pphosted.com (PPS) with ESMTPS id 3xysg68ehu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 May 2024 23:40:17 +0000 (GMT)
+Received: from va32lmmrp02.lenovo.com (va32lmmrp02.mot.com [10.62.176.191])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by va32lpfpp01.lenovo.com (Postfix) with ESMTPS id 4VYvsD1ZjlzgQ3M;
+	Tue,  7 May 2024 23:40:16 +0000 (UTC)
+Received: from ilclasset02 (ilclasset02.mot.com [100.64.49.13])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: mbland)
+	by va32lmmrp02.lenovo.com (Postfix) with ESMTPSA id 4VYvsC5rZXz2VZ3B;
+	Tue,  7 May 2024 23:40:15 +0000 (UTC)
+Date: Tue, 7 May 2024 18:40:14 -0500
+From: Maxwell Bland <mbland@motorola.com>
+To: "open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)" <bpf@vger.kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+        Yonghong Song <yonghong.song@linux.dev>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Zi Shen Lim <zlim.lnx@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org,
+        open list <linux-kernel@vger.kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Puranjay Mohan <puranjay12@gmail.com>
+Subject: [PATCH bpf-next v3 0/3]  Support kCFI + BPF on arm64
+Message-ID: <fhdcjdzqdqnoehenxbipfaorseeamt3q7fbm7ghe6z5s2chif5@lrhtasolawud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,31 +73,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZjnM2QBtL68KJtio@infradead.org>
+X-Proofpoint-ORIG-GUID: 0FthpWwfiD2jFL969mXhLQWi8o5CI2vc
+X-Proofpoint-GUID: 0FthpWwfiD2jFL969mXhLQWi8o5CI2vc
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-07_15,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ adultscore=0 clxscore=1011 bulkscore=0 priorityscore=1501 phishscore=0
+ impostorscore=0 spamscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ mlxlogscore=699 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405070167
 
-On Mon, May 06, 2024 at 11:40:25PM -0700, Christoph Hellwig wrote:
-> On Tue, May 07, 2024 at 09:33:40AM +0300, Dan Carpenter wrote:
-> > On Mon, May 06, 2024 at 11:06:17PM -0700, Christoph Hellwig wrote:
-> > > On Sat, May 04, 2024 at 02:27:36PM +0300, Dan Carpenter wrote:
-> > > > The fxr->file1_offset and fxr->file2_offset variables come from the user
-> > > > in xfs_ioc_exchange_range().  They are size loff_t which is an s64.
-> > > > Check the they aren't negative.
-> > > > 
-> > > > Fixes: 9a64d9b3109d ("xfs: introduce new file range exchange ioctl")
-> > > 
-> > > In this commit file1_offset and file2_offset are u64.  They used to
-> > > be u64 in the initial submission, but we changed that as part of the
-> > > review process.
-> > 
-> > I've just checked again, and I think it was loff_t in that commit.
-> > There are two related structs, the one that's userspace API and the
-> > one that's internal.  The userspace API is u64 but internally it's
-> > loff_t.
-> 
-> Ah, yes.  The in-kernel ones probably just needs to move to use u64
-> as well.
+In preparation for the BPF summit, I took a look back on BPF-CFI patches
+to check the status and found that there had been no updates for around
+a month, so I went ahead and made the fixes suggested in v2.
 
-I don't think we want userspace to be able to exchangerange data at file
-positions that they can't read or write with a standard fs syscall.
+This patchset handles emitting proper CFI hashes during JIT, which
+can cause some of the selftests to fail, and handles removing the
+__nocfi tag from bpf_dispatch_*_func on ARM, meaning Clang CFI 
+checks will be generated:
 
---D
+0000000000fea1e8 <bpf_dispatcher_xdp_func>:
+paciasp
+stp     x29, x30, [sp, #-0x10]!
+mov     x29, sp
++ ldur    w16, [x2, #-0x4]                           
++ movk    w17, #0x1881                               
++ movk    w17, #0xd942, lsl #16                      
++ cmp     w16, w17                                
++ b.eq    0xffff8000810016a0 <bpf_dispatcher_xdp_func+0x24>
++ brk     #0x8222   
+blr     x2
+ldp     x29, x30, [sp], #0x10
+autiasp
+ret
+
+Where ^+ indicates the additional assembly.
+
+Credit goes to Puranjay Mohan entirely for this, I just did some fixes,
+hopefully that is OK.
+
+Cc: stable@vger.kernel.org
+
+Changes in v2->v3:
+https://lore.kernel.org/all/20240324211518.93892-1-puranjay12@gmail.com/
+- Simplify cfi_get_func_hash to avoid needless failure case
+- Use DEFINE_CFI_TYPE as suggested by Mark Rutland
+
+Changes in v1->v2:
+https://lore.kernel.org/bpf/20240227151115.4623-1-puranjay12@gmail.com/
+- Rebased on latest bpf-next/master
+
+Mark Rutland (1):
+  cfi: add C CFI type macro
+
+Maxwell Bland (1):
+  arm64/cfi,bpf: Use DEFINE_CFI_TYPE in arm64
+
+Puranjay Mohan (1):
+  arm64/cfi,bpf: Support kCFI + BPF on arm64
+
+ arch/arm64/include/asm/cfi.h    | 23 ++++++++++++++++++++++
+ arch/arm64/kernel/alternative.c | 18 +++++++++++++++++
+ arch/arm64/net/bpf_jit_comp.c   | 18 +++++++++++++++--
+ arch/riscv/kernel/cfi.c         | 34 ++------------------------------
+ arch/x86/kernel/alternative.c   | 35 +++------------------------------
+ include/linux/cfi_types.h       | 23 ++++++++++++++++++++++
+ 6 files changed, 85 insertions(+), 66 deletions(-)
+ create mode 100644 arch/arm64/include/asm/cfi.h
+
+
+base-commit: 329a6720a3ebbc041983b267981ab2cac102de93
+-- 
+2.34.1
+
