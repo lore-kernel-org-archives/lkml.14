@@ -1,171 +1,191 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2109.outbound.protection.outlook.com [40.107.7.109])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9276CDB1
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 12:42:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.109
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715085781; cv=fail; b=uHKRIsSOU2cGw7roWjA1trUowSwDrldWi/BOW9Wq6Qt2glmeqm+gkP5lQFbEX7SEGdsCXWAkZH63FsDf6EQQ4uisDnNFelzYeoGrRCsxbXsrrBlD6QDNw3zJB6SCXdCyRUIfWcBmzEEeXhPLwP6Nf+++ievpc8Qys++EKon48RY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715085781; c=relaxed/simple;
-	bh=o8wLQUMDLFVWhh9gAOAlULCcIvw18DJyacXDHQKINMU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=rIDNPhsptcAG1uMsi+gGoveEgPwSz0gUGmQ4cSfNC3p29EpZ9PPjwLYo0sWdznneUnvs/0nrt0Nfl17VvEjSIIH40DXxn6Tl8CdttnGAZYLiB8nM9DJ8nK9Wxflxel/dyZWhOC6EOqANp/qYiokCw4IpQgZk6oyK4rEQVaccCs4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=RVkIazQB; arc=fail smtp.client-ip=40.107.7.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05337158A2D;
+	Tue,  7 May 2024 12:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715085782; cv=none; b=jjeOjkcDLumMY/tNO06GWDrujnvv6Cze4fwxF8QaRbdGTJ+oc0pBG+XicK0qsEbIViMGakPdxcpydo7/paljlcVoMEKiRgDwggAEuPbozK3Ys0oeifUFTzgT+qekWT2dKKWPYuwBv7B/ANkxIdFBXqcs+54Dh9tXKt3302knMwk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715085782; c=relaxed/simple;
+	bh=pQ0VyLEWPbTzv8ueT/SYA25grM78ReWuMdOeMbNrUDg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qrKCUkKjAQWylYT75GwZyZEkw5J9d6b8NMP51bGz1+gPfaQKkKZIdnITI+b1EljUIzn0n0ONClJlL0AxdhL1QIntnU042YzNAsMG6wXu0UlC2rlfP9eYkVYngDUfle5Bh1UHa9zxjfBa+DLk+Ok7MHYE5Rr6i6uZrs7P3fV1rVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AgT2vZTb; arc=none smtp.client-ip=209.85.221.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="RVkIazQB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UsS6XV8qUqiWvTqtY4KHdnR1Q8MdM3S6irSL4XNjvfnEXdYmr7nBHGJtreDUWqinNDcjquhnK5Gt1lrDhoXyXmxFuoyKvXeskbxQboOOOQ6gdg8IZoHTJS03fVchjrg4fFsM0jvgmGCDT2wyGdvXTRbd69K7x25nnsr2SgsjfoTHdx0DZfEcP9JhAaVuGemN8gF4T3nAlkyS85wiXRSc1aEMJfVMGfQv8x/sQcjpBOkD76WbS3hQ6jUhaw9SwExBllMGxLq8jbW5Tbn55tpQYzI+KdyOotIe59nzUCN3d6hw0mr1aCL0pdoaS2cFqAFmNa1XYhrcZzywuNEYxt6qRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oaEn7DUUwfjlGBqkk3iRNtEsWcQx24bEmbFETzhVVAU=;
- b=ZfI/MM4XMd7oY+uyOlzJnxuK+qXd6qaEj/qKO5lgipnn0LwxmWFlvvxArfJhxExy8QiD8POJQqXFBTGF8yEmp8kv1lxNvjAQdq6Nxitx6Z09BxKPzpSb/d3OtQ08MSBa++x/CRxy12mcW41PL4XfjRLHY77v5JE3I98FDoxX/euo9F+RZef4w53r0m9X5DMZv/iebwW24GybziiRHPrUvSnKHaQSCt4UqplKSU3mmGdI+yxReVYxD5LzNizNVcPL/iJTfQDziJmw62I3N1ThG21Iy1nkpJjFLPXU6+sT8X7U6nYKxNYY7p/DEt1jQikZvOdwWIBNlNDfbIyt6bHZOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
- dkim=pass header.d=cherry.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oaEn7DUUwfjlGBqkk3iRNtEsWcQx24bEmbFETzhVVAU=;
- b=RVkIazQBzPKAiw/N5n7gM8F714cbqLLRa+BlUln438RnBbA4w9MQ2OKTObjlESmUxzxiNder4Pqghh7tZAAY8CR1fZ5IZeRqsdSjp5bLSVBVOuZyBNHbISGN/Nz9cdIkJ/46TQmxdVlfsoWyEQlwibOI/2UglDdl9j+3B5wFCFQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=cherry.de;
-Received: from DB7PR04MB4842.eurprd04.prod.outlook.com (2603:10a6:10:1b::13)
- by PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42; Tue, 7 May
- 2024 12:42:53 +0000
-Received: from DB7PR04MB4842.eurprd04.prod.outlook.com
- ([fe80::ac08:df46:97bd:4ae6]) by DB7PR04MB4842.eurprd04.prod.outlook.com
- ([fe80::ac08:df46:97bd:4ae6%6]) with mapi id 15.20.7544.041; Tue, 7 May 2024
- 12:42:53 +0000
-Message-ID: <7896e6a0-4c9e-4df6-a7ea-5b952696affd@cherry.de>
-Date: Tue, 7 May 2024 14:42:51 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Small changes for Rockchip NVMEM drivers
-To: Heiko Stuebner <heiko@sntech.de>, srinivas.kandagatla@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240507122256.3765362-1-heiko@sntech.de>
-Content-Language: en-US
-From: Quentin Schulz <quentin.schulz@cherry.de>
-In-Reply-To: <20240507122256.3765362-1-heiko@sntech.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: WA0P291CA0022.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:1::22) To DB7PR04MB4842.eurprd04.prod.outlook.com
- (2603:10a6:10:1b::13)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AgT2vZTb"
+Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-34d8f6cfe5bso2136927f8f.3;
+        Tue, 07 May 2024 05:43:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715085779; x=1715690579; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UeeAUA+M1CrSeGLqCio6FXkyYBfV90EEN3G250oeFOA=;
+        b=AgT2vZTb2uIjxuY7UvG1xtj1dcxwuDtSqq0xonzoR11Z7jelq6oe5iWv2yTyYqenrv
+         /kK2edpOwdLgT0ohHRLyQy2E4W0XJ5VJF1sluCFv4X60owkl5fgXOmc620TRLG/nhmw7
+         uHTajN7Hy7lqjxfMHDSQtEQoXLJnG3PHU+Na72rBgILztYd/VuO/x2YUtklk953E4ekX
+         yXbKq+sE0AvgnZWFdmN9oGZp/XkZwb3AK0R6ZqJy9fSEBG/5ug7itGqvSvN1su9JiyVm
+         +SWeopoir7y2xpIzCizi9dFCAq8jC3PXIJsSyvlLGeD2qm00TJxr9fKWghKuJX+vBQLn
+         oUBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715085779; x=1715690579;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UeeAUA+M1CrSeGLqCio6FXkyYBfV90EEN3G250oeFOA=;
+        b=wrzmaMKzS+jVbgNjnLkNq3/GqWHaXutd+eXeBGZ9Ti0vHmNcTjp90KwLQLsdnN+F69
+         7QrVGf+8TY5+ekcfT4gjdrqTnhaJb8dhv27OExPfLLwgdWLf6gT3K4RFQbe4hEjYBABc
+         gLIoWRIN3p/9ks95WjO2Dv+JAwHFQSjxh+mdeMAJn1ka2SxsiSUqTMbA2BCdvxGSB6yG
+         KMmQyXjknO5YYX+KGr5m/u9XnMDtM1K6ZAQoOHrtJuX4dhTmFPOkdjrVzPqQMH0XsY/h
+         dWD05NJlDVoHeiwhMw+j17O81rBBMcmPt8ZBkQRaU+L9Bs1jCcCLeuRIbDL/hdZikIlV
+         U1EA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+uE6uyYCUpk/8Ij6F5qHDWIbwbDF3FxFYstHGglacgRW8XEnURLjfOPPq0cpDf5QKLrxO8WLuNu3Hc7hp+QZCwH3Y3eCMqkTg6FMi+7w0Vpeo31sSDyoJuow2PS0V58XZIHP3
+X-Gm-Message-State: AOJu0Yy3SWnl5OmaxticlcFEW+9tEtAUe/Fj26FiHHg+3STrgV+huzYA
+	Q1seyyvJXU0OfW+VcKpaaNNwL8nc5Rh18TT8ZUfDFlS/47guSQW7
+X-Google-Smtp-Source: AGHT+IGCppBeEMOhD2xrR4PCOwGHoUpQx6Wz2LFnJVIyZ0e9u1sGi4E1te2Y5/irFZXNAMndMk5ROA==
+X-Received: by 2002:a5d:5242:0:b0:347:d352:d5c2 with SMTP id k2-20020a5d5242000000b00347d352d5c2mr9870799wrc.13.1715085779100;
+        Tue, 07 May 2024 05:42:59 -0700 (PDT)
+Received: from localhost ([45.130.85.2])
+        by smtp.gmail.com with ESMTPSA id b12-20020a5d4d8c000000b0034e65b8b43fsm10915955wru.8.2024.05.07.05.42.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 05:42:58 -0700 (PDT)
+From: Leone Fernando <leone4fernando@gmail.com>
+To: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	dsahern@kernel.org,
+	willemb@google.com,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Leone Fernando <leone4fernando@gmail.com>
+Subject: [PATCH net-next v2 0/4] net: route: improve route hinting
+Date: Tue,  7 May 2024 14:42:25 +0200
+Message-Id: <20240507124229.446802-1-leone4fernando@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB7PR04MB4842:EE_|PAXPR04MB8254:EE_
-X-MS-Office365-Filtering-Correlation-Id: d8f3bca8-6843-4c82-711c-08dc6e933638
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cFJjS2ZEVDdQWXM1ZmVYMkJmM3NHWnFkSVFBaVhlRnNESW9MenFDMGIxRkxE?=
- =?utf-8?B?ZGc3YTdtNXF4QW13eFN4VitDaTl5QjQyaENCUHlBaDdWanpNTjRTb1VZd096?=
- =?utf-8?B?NW53bUs3Mm42dk1MOFVBeVU3ZnY1MzRvOWdtWXpEeG9TMUdLa2ZOb2Zzdm5n?=
- =?utf-8?B?dHNPN3Y3SjB5dEZtTFBuOHRCRUplWXFLMVpLbGc1M0tkcGwvQlM3WVY4YzhN?=
- =?utf-8?B?V29JcEQ2VlhDMUNhSHlHL21TNk9XRXNVRE1LbkFFNGV6VWl6R3EwTjZUYmYx?=
- =?utf-8?B?RkpuaWVzMjA4KzNRVUJxaUhzRXNYaG1KcTJyRVVFODU5Y01hV1dBV2xzYU5O?=
- =?utf-8?B?UTZzT2xKaFRqYWd3ak9CalM4aFRtUVkxQ3kxZjFsWVhpMnpNZ3QrUUVISXFW?=
- =?utf-8?B?QUpTTjNud0FyUkE0aWRBZVJrcmxvN0pOMWhCTTlFRDhxZVpjUm5weURtUGk5?=
- =?utf-8?B?ejJwOXN3WVB4a1FjVzg1SGpNYVNUSFFLcTJwdERUYzRneDRRZkhWY2p1Rmlt?=
- =?utf-8?B?cnd3TmIwditLK3JCSTkzYWM0WjE0d255dWdvK2c5aUovcUZKQmN6VEJVN1Bs?=
- =?utf-8?B?UE1SaXJCVVdIejBvU0Z2NThaUEpSZDdyRisvam5mZXVyQTBkUkM2UlNxMWRz?=
- =?utf-8?B?TVVxZFVzOUhid0NuQmxHdm4xTUx0Mmp6dHdoUlRlR2VQMyt6Y1lkaGs5aDZC?=
- =?utf-8?B?MmtVZndYOXJWTTVlaFBtd1dDTjNxVi9SN1pLNExHak0reGU1cWYyM0NnYk94?=
- =?utf-8?B?WHlrLzNabE5iUVlLVVlNcG1yOVhCbmNvcGZaQmtIbC9NU2hYMlRhRFVZdU9w?=
- =?utf-8?B?ZnMwSjNYaEc5NlVDdjEzSzBDZTYzcjBNNHJDdHAzN3pPZGxnZWxWNUhzT1Rv?=
- =?utf-8?B?bjJPR3dPTlBCZHFaR0x1MEV2THV3Zk0wNkpCM2Nmc3YrcndxNnZkRk5WMWJr?=
- =?utf-8?B?VDNmWVBuQ1NkZVJwZ05NaEowclYvOWVEYS9ONGgxYVdqc29tYmFLWkR4TmpE?=
- =?utf-8?B?ZjFWcmZCS3NjdXpPSnNCcXpKMExpdkc5MG1JZDk3T1pBTFl4ZEhXRjEybDl5?=
- =?utf-8?B?ZUxhTzMzaDFsdmxWSjJ6Q1RqVHkyQy9KVkM4TGx2KzJNWGNlNUw1Y0RDWlNj?=
- =?utf-8?B?VHVBaG1KbC9wa2NySldCNm9GOEJNQkFkV3RyeXZhcFpiNEc2WTFYNHBESGhi?=
- =?utf-8?B?TlhhUHRoRUdjZXVUaTNpc1BDSllySVcxS0JYbFRYMEFEQmhUY2h1dklKaXhj?=
- =?utf-8?B?UmtjRU9CRndLc1hlWWsvb293OXY5UldLbnorQjhNNzk1dUIza01zU1BHOFpr?=
- =?utf-8?B?NmJEUUZYWHRsTzdZajBZdC9ySUFCazhEODdoaGRHb0VtcE1hc1p0OUIvUjdv?=
- =?utf-8?B?algrMTBOYVRpRnR5cENmcGU0N2FZYTZLeXV3dktGZmlyQ1pUYnh2SzVGVDJG?=
- =?utf-8?B?enBGVnN0VE9qNUhrOTliaW9LL251UmwrODVYZnVWSHZQRjRlSm5IN1A5T1Ux?=
- =?utf-8?B?ZXVWM3lXbVNFa3hWTWl6SUZpUjZQYWVzMFlQVEJ4T1o0bzlKVm1mNmk2U0pW?=
- =?utf-8?B?d3p1RkMrR2RqVWZlYktKM1ZHMXVSTWdRSzdRN2NXWmN3aDRWU2pqMDk2Um96?=
- =?utf-8?B?UGRoelVJd3FjRUpRbFowZzd5ZlpEdW8xaThTS2xLNStaeXBFQlE4T0gxamtW?=
- =?utf-8?B?cFc2WDBUS3AvTG1wQVd3dkI5endUSENoanlUcFFOMFE0MzZ3bkNrWk53PT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4842.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dXRlT29QUzFvUVZ5QVA2dnNuWGFCNWRNdzhjN3pidXhoWGVTN0JKMHdKYi9n?=
- =?utf-8?B?K0cxYmFIbmVDN3RrSlVQcld0cDFQRWRQSEE1em1hSFUyTWRjbHhxaTduOFU1?=
- =?utf-8?B?cm5CVjMydlNSd1hEcTltRlBhcWFtR2ZjWUR2VGVmMjQ1d3lhWloxSk84N1Fn?=
- =?utf-8?B?MXgvc09jck1ZMjR6QWQ1UTVxQW1WWlc3MTFPVGxlQ1h5MU9MSk9sZjNuWmg3?=
- =?utf-8?B?SGp0OERUZncwSWtQak1nblVLdVgyQUNIRWc0K3NNM2o1bnlNZW95VmFUNS9y?=
- =?utf-8?B?RlNHT2hsSDB4UXNEcFhYMmRJU1Q3bjZiSjRKbjdJOXZZNG1FcHdiNkx5bTFX?=
- =?utf-8?B?SlhMWmREckpOelB3azVrK2pySUdxK2lnbm9ZZ1RHM3NHWThPL2pocitjYk92?=
- =?utf-8?B?YXE0OU5iTldOemRoTm45Wld4OGN4K21LSStTYU9Hbm9CeUxwTUtNY2Npc2dU?=
- =?utf-8?B?OGswVjVTaTJ2RFNNZzhJaHQrRGJxS3VxSDRraDBwQnhUVnRZUkM1M3R4bnlv?=
- =?utf-8?B?UGY5NFBjaG5teEI1T05JVUlDaUJUMkxpV3NIN1VlbW9BMGs4OGJJWExxdVNX?=
- =?utf-8?B?Q1MyT2tQN2JubE1KOUpnL2szQWFKVVA3cUVrOVpOMGdYajZuNGVRY2lYTmhl?=
- =?utf-8?B?VDY2bWF4anpMbWpNOWJQSngwTDdmclVxOGNwY2ZNSlNoTUZJdFJzUDh0ZGcv?=
- =?utf-8?B?ZmpTK0hSa3p5S0xlYnhKVHVaaXJWdG0vQmw2RVMvK1ZsenpFQVZ2MmY3OC9Q?=
- =?utf-8?B?RVRoODl6UUdRR2pEQkxkMUd0QlFsWE8xbzQ2azdjK2s2QkJ4d0k5YThjQUc3?=
- =?utf-8?B?OHBheVZidGNuMVBSQnRoK0I4Sk1zcWFqaVRFNTdYWVo4QUxtT3hJR0tvdXlo?=
- =?utf-8?B?eFFKWEFkUWgxeUZaKzh3RC90UDBid2ZLNzkvZXN3eTF5anMxTXpyZUlvVFhB?=
- =?utf-8?B?SHh0MEU1QjRIV2NGblhTdVltM1FCTjBPNzM3Y3V0THk0WFlWMWFnZTVveVdC?=
- =?utf-8?B?V0lGWTl6MDNvTWxlaUFpRzZFT2c5WENtRjlSUE9aTFVEV0hMYjJjK0lzV0VW?=
- =?utf-8?B?VUFDMExYMWJBcTZjUFEzL1JscDJjWHJUVmYvV2h2S01mdnYwQ0lLT1pIWnIz?=
- =?utf-8?B?QmdMT2I2elRMb1Uva3hRUXNqRVM3ZWJjQ1JWb3ZlSUY1aWJvd2NDWSsvNVZv?=
- =?utf-8?B?VjBheXBCQ1JUYThHVEthN09vNWFBQ3M2NG1iTittdjZ2dllHbHVjWmVnZGIr?=
- =?utf-8?B?YXdNbjgxczErQVJFb25KdTNWWmRuK1g4ZWlDUnE4ZXd6eUROYmJZVCs2NXEz?=
- =?utf-8?B?eE91NGdiLzJ5TzBmTzNNeWpsZDEvK3NwZ25nMENZdXdqY1VCaEV0MUtPN3Rl?=
- =?utf-8?B?Vmc1Q0NTamxqR0U2bWFWZkFYUGpHa1djc0xVS2IwT3k0MGdsdmVUT0tWRHkx?=
- =?utf-8?B?anZBc0liQmFrOVN3bXFhR0tBUGNxMkdCMjcvcVhMbGFyNGpTelZkQWk3aGs0?=
- =?utf-8?B?MG9ocEFUekRUaWRnU2NObjUrei9adWk0WnRlZjNWQkR4dTFTRVpUdzg5dSta?=
- =?utf-8?B?WVZCSW5mTTkrdS93QitseWNmaURTNmdpcSs3Tm1wSDIxenBjZW81U1pwYVhQ?=
- =?utf-8?B?OEJ6bjlKK1Y0NHc0TnNxak85azI4SFF6VFJYZlpjRTRNSlhnby9rcTBWMWo5?=
- =?utf-8?B?a0dvSDBDbVI3Zm9MSmNnVGw0by9NOGlMcVVBL1ZqQmZlQzh0L0kvazJBZlQ0?=
- =?utf-8?B?aFMvcFR6MXl3M2pzWk1rSzRGemFUMzdkQUdIbjh1ZjZueXlCQ2FKMnQ2dDMw?=
- =?utf-8?B?cFI3N3VxQWZWeTgyU1RwcTJXazVpVFF1TnBRNVlTcEN2K1QyY2tyWWpKL01T?=
- =?utf-8?B?em5SZ0tOd0dTUmNvRGk0dTFHWm84SUtIRE9xN2NWVFl0RUowalI0U0lVQU5a?=
- =?utf-8?B?R2RZWEJaLys0WkFmYmZyUW9wK2o4R2ZHWTJ4VlBJWVNFWEg0V1BMTXZNWXFv?=
- =?utf-8?B?TkV1L1RSdDlwVWxTN3c2RTlDcDVDbUdjVCtNYmJjSWp2aWZpd3oxWkhHaUc1?=
- =?utf-8?B?TUhtRUdLMzdmUnJ2bHNCcGd5dmpqS0J1aEZzM1ZWVVBXOTJMaVd2Q2dXaXRS?=
- =?utf-8?B?SmFxRkFCQW9GL3IzNzFydndKcWxDWUtrUi9xaWJwR0NNNUlGU3VlT1ZlWXlk?=
- =?utf-8?B?Q1E9PQ==?=
-X-OriginatorOrg: cherry.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8f3bca8-6843-4c82-711c-08dc6e933638
-X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4842.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 12:42:53.0932
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /bAPZA2Gwg155IljkQUnK0XrM7t8sqDSynkVUS8fr4XDh5qQdVHbh/mysHxyN9MIbEdxj//dBLGrhd8sUL/XYdlnklQVrhV5jm/Ihhx1g0o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8254
+Content-Transfer-Encoding: 8bit
 
-Hi Heiko,
+In 2017, Paolo Abeni introduced the hinting mechanism [1] to the routing
+sub-system. The hinting optimization improves performance by reusing
+previously found dsts instead of looking them up for each skb.
 
-On 5/7/24 2:22 PM, Heiko Stuebner wrote:
-> When the option for legacy cell dt layouts was added, the
-> Rockchip OTP driver seems to have been overlooked, so set
-> the necessary option to allow seeing the cells again.
-> 
-> And two patches set the nvmem-type option in the device config.
-> 
+This patch series introduces a generalized version of the hinting mechanism that
+can "remember" a larger number of dsts. This reduces the number of dst
+lookups for frequently encountered daddrs.
 
-For the whole series:
+Before diving into the code and the benchmarking results, it's important
+to address the deletion of the old route cache [2] and why
+this solution is different. The original cache was complicated,
+vulnerable to DOS attacks and had unstable performance.
 
-Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
+The new input dst_cache is much simpler thanks to its lazy approach,
+improving performance without the overhead of the removed cache
+implementation. Instead of using timers and GC, the deletion of invalid
+entries is performed lazily during their lookups.
+The dsts are stored in a simple, lightweight, static hash table. This
+keeps the lookup times fast yet stable, preventing DOS upon cache misses.
+The new input dst_cache implementation is built over the existing
+dst_cache code which supplies a fast lockless percpu behavior.
 
-Thanks!
-Quentin
+The measurement setup is comprised of 2 machines with mlx5 100Gbit NIC.
+I sent small UDP packets with 5000 daddrs (10x of cache size) from one
+machine to the other while also varying the saddr and the tos. I set
+an iptables rule to drop the packets after routing. the receiving
+machine's CPU (i9) was saturated. 
+
+Thanks a lot to David Ahern for all the help and guidance!
+
+I measured the rx PPS using ifpps and the per-queue PPS using ethtool -S.
+These are the results:
+
+Total PPS:
+mainline              patched                   delta
+  Kpps                  Kpps                      %
+  6903                  8105                    17.41
+
+Per-Queue PPS:
+Queue          mainline         patched
+  0             345775          411780
+  1             345252          414387
+  2             347724          407501
+  3             346232          413456
+  4             347271          412088
+  5             346808          400910
+  6             346243          406699
+  7             346484          409104
+  8             342731          404612
+  9             344068          407558
+  10            345832          409558
+  11            346296          409935
+  12            346900          399084
+  13            345980          404513
+  14            347244          405136
+  15            346801          408752
+  16            345984          410865
+  17            346632          405752
+  18            346064          407539
+  19            344861          408364
+ total          6921182         8157593
+
+I also verified that the number of packets caught by the iptables rule
+matches the measured PPS.
+
+TCP throughput was not affected by the patch, below is iperf3 output:
+       mainline                                     patched 
+15.4 GBytes 13.2 Gbits/sec                  15.5 GBytes 13.2 Gbits/sec
+
+[1] https://lore.kernel.org/netdev/cover.1574252982.git.pabeni@redhat.com/
+[2] https://lore.kernel.org/netdev/20120720.142502.1144557295933737451.davem@davemloft.net/
+
+v1->v2:
+- fix bitwise cast warning
+- improved measurements setup
+
+v1:
+- fix typo while allocating per-cpu cache
+- while using dst from the dst_cache set IPSKB_DOREDIRECT correctly
+- always compile dst_cache
+
+RFC-v2:
+- remove unnecessary macro
+- move inline to .h file
+
+RFC-v1: https://lore.kernel.org/netdev/d951b371-4138-4bda-a1c5-7606a28c81f0@gmail.com/
+RFC-v2: https://lore.kernel.org/netdev/3a17c86d-08a5-46d2-8622-abc13d4a411e@gmail.com/
+
+Leone Fernando (4):
+  net: route: expire rt if the dst it holds is expired
+  net: dst_cache: add input_dst_cache API
+  net: route: always compile dst_cache
+  net: route: replace route hints with input_dst_cache
+
+ drivers/net/Kconfig        |   1 -
+ include/net/dst_cache.h    |  68 +++++++++++++++++++
+ include/net/dst_metadata.h |   2 -
+ include/net/ip_tunnels.h   |   2 -
+ include/net/route.h        |   6 +-
+ net/Kconfig                |   4 --
+ net/core/Makefile          |   3 +-
+ net/core/dst.c             |   4 --
+ net/core/dst_cache.c       | 132 +++++++++++++++++++++++++++++++++++++
+ net/ipv4/Kconfig           |   1 -
+ net/ipv4/ip_input.c        |  58 ++++++++--------
+ net/ipv4/ip_tunnel_core.c  |   4 --
+ net/ipv4/route.c           |  75 +++++++++++++++------
+ net/ipv4/udp_tunnel_core.c |   4 --
+ net/ipv6/Kconfig           |   4 --
+ net/ipv6/ip6_udp_tunnel.c  |   4 --
+ net/netfilter/nft_tunnel.c |   2 -
+ net/openvswitch/Kconfig    |   1 -
+ net/sched/act_tunnel_key.c |   2 -
+ 19 files changed, 291 insertions(+), 86 deletions(-)
+
+-- 
+2.34.1
+
