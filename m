@@ -1,93 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06D21607B3;
-	Tue,  7 May 2024 17:21:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0077D15FD03
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 17:22:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715102490; cv=none; b=GvkdfiMAw4r7OMvYmtFWCCSd+suQmHQpIFsNT9a4PYgo3ArjzapL7oEBWQq2zAevijPQZdMbtN+KzruSGG2PYFXeFNfgxfdw15S7ohnp8Xv5QNCfhFhz8XAtAhdmLqtvhz3qBGv3UfOKnTqxSAdT0kZDY5NlevcU/1to8EREcYQ=
+	t=1715102563; cv=none; b=uqE4AijLI48OVc+PCPPwTPVUc+Ict7KJoWrSEsogYM32uugvtKzoV+8DVIwOUpbjKFPZH5RT3X5WzP71H+OoLtDC0misu+mTcr3v/Oupe+IcChiM3XHoJrUswoRXQzfK5c7KKku6ZckZOxnAivtdo78yunzEYoMOk0YZKi3EHU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715102490; c=relaxed/simple;
-	bh=IDMR67aL+FJpg70JOZa/YqXPWKIXWABsZiy55mqfzgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DcYt4MjxOk/FMEWAlX+pPPsDZ2gba1aL5LiIIsExwoRJLR82nHHZgg0Lis0gao+Se6TyOfuUKtq08BX7vgc0y3hL11fz69JgDgPH1frnQGiXUxnRlRerDI5YDYt+cj1oonQpcEkLoxjdLUMCUiLQPN//q1WwJpBefq+V3GmiTag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHpaEv2j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715102563; c=relaxed/simple;
+	bh=jsKpgfNXCcSTLHP8MOPapGa4X0VcGRUo2Nh6pYraQAY=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=SF3CLeyalrlSaAub1a9m3BUikeUdh7Hbr0CVcns4Y05Z2TfaWtaezFJsBFuxRgH5BVzCT3VtUPEsW15VjWzWSTyYXhPhKZnlWjRTHvYrWIlWHHmOjWr50yvEP56y4ZrMEuZPPwsGEG/CVooW7N/nu+LLXmQRWIe8xIxVIA72fR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=rSDqox2E; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHpaEv2j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75529C4AF66;
-	Tue,  7 May 2024 17:21:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715102490;
-	bh=IDMR67aL+FJpg70JOZa/YqXPWKIXWABsZiy55mqfzgA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NHpaEv2jt8RdYDITiy9cW34apA5GulWZo2VGWPOY6kGTB/MLm0oZRf9vNRf+yh1t0
-	 nnLFMUAroOpck8gryD83BDIOqV5B1JNQSOHDEgBHku2e0v6SzhePDRTyap9EHC0c0t
-	 GLri1U62zVHUBw5Pk+C1zOD3GHkzQWJ63cFDa6XaovjXV/JtqfJCFND6TXfwjy//iX
-	 NnB/0+FdFpHCosbJlZsey2qMVPWvlegX/tZ/k9kWNqjSZAbrOQzZ2UMJyxvM4iGfV5
-	 LgZ7lVefiDXtvO/aRum2TckSTKmJkPwiSjVXVKOaNrjhjkbeEo/bfNLouO1uapMu4q
-	 iSiielqQjuNmw==
-Date: Tue, 7 May 2024 18:21:23 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Evan Green <evan@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	Heiko Stuebner <heiko@sntech.de>, Andy Chiu <andy.chiu@sifive.com>
-Subject: Re: [PATCH v6 00/17] riscv: Support vendor extensions and
- xtheadvector
-Message-ID: <20240507-rising-ricotta-1be648c095ed@spud>
-References: <20240503-dev-charlie-support_thead_vector_6_9-v6-0-cb7624e65d82@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="rSDqox2E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E03D9C2BBFC;
+	Tue,  7 May 2024 17:22:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1715102562;
+	bh=jsKpgfNXCcSTLHP8MOPapGa4X0VcGRUo2Nh6pYraQAY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rSDqox2EySg1GaW8XcSqE8TrDabLDqoXt8Uo3hd6f1x96PX4EapBLLbFYlze+TusE
+	 Cwz84nldp/4jolFfPC9/+u0+7fr2XoQvL7sQiE9UgSfBXxgSopk0YU0eohHDDdIXSp
+	 YzyWtNXnUSagh2Blmy+ZRUURWwIm452Dk/24yc2w=
+Date: Tue, 7 May 2024 10:22:41 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Lance Yang <ioworker0@gmail.com>
+Cc: David Hildenbrand <david@redhat.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, willy@infradead.org, sj@kernel.org,
+ maskray@google.com, ziy@nvidia.com, ryan.roberts@arm.com,
+ 21cnbao@gmail.com, mhocko@suse.com, fengwei.yin@intel.com,
+ zokeefe@google.com, shy828301@gmail.com, xiehuan09@gmail.com,
+ libang.li@antgroup.com, wangkefeng.wang@huawei.com,
+ songmuchun@bytedance.com, peterx@redhat.com, minchan@kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/3] mm/rmap: integrate PMD-mapped folio splitting
+ into pagewalk loop
+Message-Id: <20240507102241.0a09db69afd62efb5ce84f17@linux-foundation.org>
+In-Reply-To: <CAK1f24=rWdgscbDa6pMqOmTEDOHVLo5NQ=7jOo9TdyJRXahHZg@mail.gmail.com>
+References: <20240501042700.83974-1-ioworker0@gmail.com>
+	<20240501042700.83974-3-ioworker0@gmail.com>
+	<cc9fd23f-7d87-48a7-a737-acbea8e95fb7@linux.alibaba.com>
+	<CAK1f24kyCj2Svguuu07wDuVEWYYbcmRc_18ihgVAzSjoJ9ox2A@mail.gmail.com>
+	<a8f7a8da-c2e1-443c-9220-a224d97b1c81@redhat.com>
+	<CAK1f24=rWdgscbDa6pMqOmTEDOHVLo5NQ=7jOo9TdyJRXahHZg@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vh6wbBhSwXsR2Sa9"
-Content-Disposition: inline
-In-Reply-To: <20240503-dev-charlie-support_thead_vector_6_9-v6-0-cb7624e65d82@rivosinc.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Tue, 7 May 2024 16:38:07 +0800 Lance Yang <ioworker0@gmail.com> wrote:
 
---vh6wbBhSwXsR2Sa9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > > Yep, I'll also set pvmw.ptl to NULL here if any corner cases arise.
+> > >
+> >
+> > This series already resides in mm-stable. I asked Andrew to remove it
+> > for now. If that doesn't work, we'll need fixup patches to address any
+> > review feedback.
+> 
+> I'll patiently wait Andrew's response, and then submit the next version or
+> fixup patches accordingly.
 
-On Fri, May 03, 2024 at 11:18:15AM -0700, Charlie Jenkins wrote:
-> This patch series ended up much larger than expected, please bear with
-> me! The goal here is to support vendor extensions, starting at probing
-> the device tree and ending with reporting to userspace.
+Well, which series are we talking about?  "mm/madvise: enhance
+lazyfreeing with mTHP in madvise_free v10" or ""Reclaim lazyfree THP
+without splitting v4" or both?
 
-I think I've reviewed all the bits I care about, so thanks for all of
-your updates. It'd be nice if Andy could look at the actual vector parts
-of it, so I'm adding him to CC.
+And how significant are the needed fixup patches?
 
-Cheers,
-Conor.
-
-
---vh6wbBhSwXsR2Sa9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjpjEwAKCRB4tDGHoIJi
-0szIAQDf5iSG/bM8HfBvrIsA44lVF79BoLK1Zcf3ndnVkXn1hQEA42EjkAPJta9g
-WY59vTOFOsAcXRSCDp9JbTmwIoNyvwM=
-=UC2O
------END PGP SIGNATURE-----
-
---vh6wbBhSwXsR2Sa9--
+And what is our confidence level after those fixups are in place?
