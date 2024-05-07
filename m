@@ -1,275 +1,238 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3ECA14D6FB
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 09:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715073441; cv=none; b=pP5+YEkPYTokAEpOSsv09YphgIBVClvKK42HwYRldztG+SuXM7i1Wu7qaYH2eMbLZUEPX88ksYOL3bciw/gSrBdcFLnP8Jd6if5QIkHIYnfcf+IfjuhAcP5ehqrEqo0MkNFCrdfspL4t+un4XUiC48xPzLI0UAvwV0rGhoVNWVY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715073441; c=relaxed/simple;
-	bh=xDAfi1FwVcw1hJGnK8mlsKUg2qK3IrhmusDaLnjmsOg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z0uuTLVo2AETuFAsz8z6ApDxOcx41pXALpglSpSEUKRQW4vNEq/1zkhUwUS0lOzYkaSq851C2uAcLDgwLSnTXSpqDGkFlgESUTxY0Gvvcgn9+tFN3HfX8nEUbQZb9SesU5xMEbEP+gM1JT0H1Bx++L1Ilv950m/+BLAxCa7uHNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=blHcYE8E; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 695DF14D2BF;
+	Tue,  7 May 2024 09:18:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715073531; cv=fail; b=KaBjKo2tSRFpxGPFD/q/vaYk7YxXoVBuai4ZgWZasRCHGIIFOQX9YGnAU+MfDH930LytseSCRHW3FqZzm6/g0OHc0K0yvWeS5MyySMFNkJJ0XwNzwd+QtW+fbVN0dyDeuoKC45CK3znZ9yKuvuVBfAPePN7rDaPFgzyKBD2HHKI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715073531; c=relaxed/simple;
+	bh=76aTYV0SywrLZ9QyTLe5/Ehaf+3FBmUnrzZKMrzhIhc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gsWVLHharPOhU7yroWhOYYDNLC0gLNXipP2TUjAruF928Xq00SbFzoWqbdaK9nnPba3KH1HnmiSBNTGK26XI2YTCe5vdQhfknEBcc5R63nU4qbAa2ITkWriJNhM34vbgj9h5trETL1PZ5noZgyl3MZvomxucMVElysWP2onfS5E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=REGXPaej; arc=fail smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="blHcYE8E"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41a428374b9so39605e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 02:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715073438; x=1715678238; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANuDqw0S/PQRyRd8MNS09imR727D3AyKqo3jQsOx02k=;
-        b=blHcYE8EgpM8MypOyJ2OaGRZeYMeJ67xkqyv/zsTGuIvX2Ul5d13MLhdYU4xHUMPD9
-         FaucTaDm/bxZP/11OkDfDBS5xUdzLUDx6QGv/KY4Bmz6SdFQ2IN3CXIjfrwTlFnIhzD5
-         fFen5TYwMqFMA9dNh+nTgRSi61ObGenSwtU/+ynyctnEjq+5M5MTv6d661G1Wet59P8b
-         0PCTE/DDIxNXFSpolakCuuJEXw8dfZP74cEZo8/CwRpKGyrWOiMoHZk91vUTyOet/01B
-         HiuipWt0oImeRLsnsSYoiUq+nqkUfMeoe+yOS16BOJZ1MWcwkN+JiOfQSGvg674iwoyf
-         BcSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715073438; x=1715678238;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ANuDqw0S/PQRyRd8MNS09imR727D3AyKqo3jQsOx02k=;
-        b=FXh6/+JZ0O9XHAEgSG/0DfUMUQA5X9AGdlVpzlZewGu0PKQuq/n/kDw1bL7JuTNwr7
-         gxCUYkSZ+I/Suxe/9i5QgWypdjdVkp0HjMI8OXkV48AOoU/+tW1seXCKIw2KFrqJQA8i
-         72NAuWiCtNSrX9jryoQu9JgN8k+vQHE3gKQr+QIkvC2vQNNRZHL6PK8bOJeCRls+NV1g
-         n+UARAZcIz0NdwTsk/RVR667fJeMXrq/36UiAsXMI7Jzbu9g7z5XPjud4X2410cygh6J
-         EI+rmb9lE8PkF/QPdaH14F3FXSTviBrUzAhg0wtvr+lSjkU+5tXBa3OcSXLtbY/ut2DM
-         0RFw==
-X-Forwarded-Encrypted: i=1; AJvYcCWqzvDBix+I9niT4HfDdtd/RCcJP8NLPozo0QDiwf9ANGYzE1aJvy3NJEHXogoedgO/jCHYnyhQChQATEOsSNa/53XMYirdjfgQd9uv
-X-Gm-Message-State: AOJu0YzK9meAeIG5cnfRmpcTxNZq7J9vDQIp04vvhES6uYDyLin1xO92
-	12M2sXcRvV5/7Ctco94fJ7YcQZGJzYcz9Vz3kVL7PM1+r6jIvbHvPE3nd9vXyA==
-X-Google-Smtp-Source: AGHT+IFWa2DxPUzXtMTAIuzZ6k+JU9PX5c/LNCxxDXptEavvPHor3Swu8oygcQw0lxjLZwMh7NnFug==
-X-Received: by 2002:a05:600c:1c92:b0:41c:ab7:f9af with SMTP id 5b1f17b1804b1-41f3bdccb7dmr1044045e9.3.1715073438012;
-        Tue, 07 May 2024 02:17:18 -0700 (PDT)
-Received: from google.com (216.131.76.34.bc.googleusercontent.com. [34.76.131.216])
-        by smtp.gmail.com with ESMTPSA id k5-20020a05600c1c8500b0041bab13cd74sm18931185wms.17.2024.05.07.02.17.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 02:17:17 -0700 (PDT)
-Date: Tue, 7 May 2024 09:17:15 +0000
-From: Sebastian Ene <sebastianene@google.com>
-To: Will Deacon <will@kernel.org>
-Cc: catalin.marinas@arm.com, james.morse@arm.com, jean-philippe@linaro.org,
-	maz@kernel.org, oliver.upton@linux.dev, qperret@google.com,
-	qwandor@google.com, sudeep.holla@arm.com, suzuki.poulose@arm.com,
-	tabba@google.com, yuzenghui@huawei.com, lpieralisi@kernel.org,
-	kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH 1/4] KVM: arm64: Trap FFA_VERSION host call in pKVM
-Message-ID: <Zjnxmym0GLdzl0uR@google.com>
-References: <20240418163025.1193763-2-sebastianene@google.com>
- <20240418163025.1193763-3-sebastianene@google.com>
- <20240503143937.GA18656@willie-the-truck>
- <ZjUCyGoptCcIoGpU@google.com>
- <20240503162114.GA18789@willie-the-truck>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="REGXPaej"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715073531; x=1746609531;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=76aTYV0SywrLZ9QyTLe5/Ehaf+3FBmUnrzZKMrzhIhc=;
+  b=REGXPaejA9+qCXdY82MT+Wbfc0dO9GRFXTGUWBxoMRDlb+PJhAvsgHbM
+   N5sWklcpYYKU8uFUlvyinlKt+o3vQcizeUucuKvtRamXgXnarxlEWQnPR
+   isoFCCGByRrjbyjPvy4cfb5pwNihvKEuuIbDc4UZjRjiY/xUTPWnylvoj
+   Od8dG0zQe9aAzbkP2nmhmmZ2xgXwQ15jg1oUg+AXsvDu37AN+htrl1zmY
+   oUTFMUOKAAP8iZCbdJA/v7wwivfeXcaWiIFNSLjC/e8CH4If+A/jdbE8f
+   C4BdcIjy9iWLLJtltieKwzNU8tbE7zl5LOYT83Z76244dSCM1kq1IA3V3
+   Q==;
+X-CSE-ConnectionGUID: qyh4mc5pTOSnSKR3RYcZDw==
+X-CSE-MsgGUID: jfLH1Bx2Qd67P5qMpWyxmg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10691744"
+X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
+   d="scan'208";a="10691744"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 02:18:49 -0700
+X-CSE-ConnectionGUID: h4vLiBdKR8+MItK/MlpnAw==
+X-CSE-MsgGUID: nWKUMD3QRESLPa0xgiPhqQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
+   d="scan'208";a="28847725"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa006.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 May 2024 01:51:35 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 7 May 2024 01:51:34 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 7 May 2024 01:51:34 -0700
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Tue, 7 May 2024 01:51:34 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.101)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 7 May 2024 01:51:33 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HLq9eTh+iVomAPdq6Y3fBQ2SAP5AyjpkY48b14O4RE1bHBQJtKY335I45gJsXz/9nST3YDK8n0exEBhcNL6iUzLpZnE4vQ4LVqvz3fbgqtTSnK4sC2w3hm622Yj1+qeVNngS2eUw1iL2G2DkZNJxnQWILZ/e8FGQb+ES520aMXOagHDfhmyUKUqJaGSPpHEHHF2dXn5QFT9tZGQtqxXkGGD6n0fSjeTKlSR1CJzfUBwfgyG71Fq+2EF97ArFspYnA8CLmOvPXJvoJb0H+nTXcEWdkQb5Lsm2HLyEjiv6tQ2k5KPPFzbsfovr8DdsXxo8Hqv6URQAyztGhXklmmT1fg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=reNSG4Dtjpt8DBWHX7knmcr7JljSnMEaDSeAoaTtb74=;
+ b=MVHw/D/v91366sJKbuK5/gvpTJYq9DeaHbA1lzOThKweOC96w6OUhaxVoOQ2gYE36GsC1lDvCiFGvVQFKAeigZVU6ueBVOmsMormdOd1/cOREAkoqmM//o0L8rcQMqlJrrSiLGJoFQSZ5r95AalSoH8HD1FgNIRXpdu3pkd3bu9LJk7HEcgnOy5dSXxZIZEfNLC2PI4268jQ7WtBgC8DhpPhNbCdsEoH1Fy0OZG6pKgfW693HcIlasCaPXmis7VTT5bCQB/i4cCL3p5zbTk7gwpNZGA/7ZcXGfSAULdoxwxaD4cE2gZYjzKwxTbBsbjhX7IU1xh3xrppW2zOK0mVrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com (2603:10b6:408:135::18)
+ by DS0PR11MB7960.namprd11.prod.outlook.com (2603:10b6:8:fe::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.30; Tue, 7 May
+ 2024 08:51:31 +0000
+Received: from BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1]) by BN9PR11MB5276.namprd11.prod.outlook.com
+ ([fe80::b576:d3bd:c8e0:4bc1%4]) with mapi id 15.20.7544.041; Tue, 7 May 2024
+ 08:51:31 +0000
+From: "Tian, Kevin" <kevin.tian@intel.com>
+To: "Zhao, Yan Y" <yan.y.zhao@intel.com>, "kvm@vger.kernel.org"
+	<kvm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "jgg@nvidia.com"
+	<jgg@nvidia.com>
+CC: "iommu@lists.linux.dev" <iommu@lists.linux.dev>, "pbonzini@redhat.com"
+	<pbonzini@redhat.com>, "seanjc@google.com" <seanjc@google.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"luto@kernel.org" <luto@kernel.org>, "peterz@infradead.org"
+	<peterz@infradead.org>, "tglx@linutronix.de" <tglx@linutronix.de>,
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
+	"hpa@zytor.com" <hpa@zytor.com>, "corbet@lwn.net" <corbet@lwn.net>,
+	"joro@8bytes.org" <joro@8bytes.org>, "will@kernel.org" <will@kernel.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>, "baolu.lu@linux.intel.com"
+	<baolu.lu@linux.intel.com>, "Liu, Yi L" <yi.l.liu@intel.com>
+Subject: RE: [PATCH 3/5] x86/mm: Introduce and export interface
+ arch_clean_nonsnoop_dma()
+Thread-Topic: [PATCH 3/5] x86/mm: Introduce and export interface
+ arch_clean_nonsnoop_dma()
+Thread-Index: AQHaoEbP2GjyTtCjMk25/ApsokAYHLGLc5rg
+Date: Tue, 7 May 2024 08:51:31 +0000
+Message-ID: <BN9PR11MB527617EAB9BE91A730AC25A28CE42@BN9PR11MB5276.namprd11.prod.outlook.com>
+References: <20240507061802.20184-1-yan.y.zhao@intel.com>
+ <20240507062044.20399-1-yan.y.zhao@intel.com>
+In-Reply-To: <20240507062044.20399-1-yan.y.zhao@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN9PR11MB5276:EE_|DS0PR11MB7960:EE_
+x-ms-office365-filtering-correlation-id: 546c340d-68ca-437e-1baa-08dc6e72e44d
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|366007|7416005|376005|1800799015|38070700009;
+x-microsoft-antispam-message-info: =?us-ascii?Q?axJ2LRlgW4VmN5llYbhJbnSG0ja3LcbdYLADg4F3yZwUE3JOtUytKClGh2eA?=
+ =?us-ascii?Q?pQc+e+j0evuiNOCM9TuVzdnp4W6vovOfpULUfOww4FjeASdi4prqmF9iTHkL?=
+ =?us-ascii?Q?kMFy4f0tTakTfS//vuxZs9AaL8EvUKn3ceKAvIY1iUD08kWObKRj7/dsJD2b?=
+ =?us-ascii?Q?B6PrE1K+9YbjR6ihycjwTo88iEQICjUi9aPlcg2KGTjChERVE4xlYyeWsggC?=
+ =?us-ascii?Q?+ZRGxclEm9ZmPgK8Ok0qXHC5zFPU0BxKOfEVFgo3g00FCS/JlZhcFOcMkE/F?=
+ =?us-ascii?Q?vntskziX1Hv3y7nptomcdMHCa7FuPmPFVWBL4DQdDt01mBLbAF520dmrXTJd?=
+ =?us-ascii?Q?wlKmJtFPgWcLxPuunm6CvxnoYZttYABBztF5b11sGN7rRT8RYqpKpFU4B04b?=
+ =?us-ascii?Q?qk+9PmQuL+FBxQxBr3t/lQ5FmJSqjkA3xU9YfbWYddc8TJOvXv4tUlLWhXG/?=
+ =?us-ascii?Q?q+4MAs/Rok2TxTdG5u7Inhdv/+ZyF/cliVbDiNoYbEG4bq/ZXyqGsZ1amg3E?=
+ =?us-ascii?Q?ifVWJ3gBqu7Wwe20i35uX/aaWnRPhhweGNQFnc2a2FmlTyfXseZtxNyiHTUH?=
+ =?us-ascii?Q?Cc2agdRq2uAUd2rPCQNyY+l3lsZvfhTb91Ro4oOpf/Fjc1cTI9cleOgnkERT?=
+ =?us-ascii?Q?ZhJCUyZKOSFIdeXpP3XPdmLCv+1vcasxJN1KBhyAC9eQr8hlLHis1ckPjdUf?=
+ =?us-ascii?Q?Omib4XxLGY3bmte6HTBPA7gxH5qy4NAXi5N9P5j2Epe0OulT+8yd8XHkLjH7?=
+ =?us-ascii?Q?iS3RCeDy9urrYzw9KZR2NuDpE7D7rJwNTG6A5OglpM/shNNrSn4EiJfHaawO?=
+ =?us-ascii?Q?RpU+OZ4pXQNEu34Cakw9jBtGyrTSkMn3bHKqnCSNnQH5H+SqvWfnFyrDflqY?=
+ =?us-ascii?Q?A6LndgmYAPtlhsJDdQTrknj7sYYpXrY5+M8Lpd1HkCHdxVC2tS98BHVuWTAO?=
+ =?us-ascii?Q?a+UkONkjRL3U/A1FJBu9H8pUvSrXm1QnOJaAQsl+6Merbkwjb+XXtZTIlmU5?=
+ =?us-ascii?Q?qFZnTU4CYr3qCzfgidGfuJJVExOFsOiS8NleQc50LVakvbpfQn3KuzEYzJQH?=
+ =?us-ascii?Q?5FlO34w36OBqFraAQPxHyS1Xgvbcs3xqxp2W+Pv3A8EQSvOPizNoqadU5HPG?=
+ =?us-ascii?Q?HtskZhGZKEFxF8/z55LQviqwx9JZbTLQ+Cv5vEDu+TYCAmrc0Llg8yIXzmSg?=
+ =?us-ascii?Q?A6KkoGT7UnaoYSGs95KxVoEbH1j0rnRHd7Uch0ecHYtV6WgtsQw9sW8N2MbB?=
+ =?us-ascii?Q?udYmnstGchRMhWyjCqnIAAx+DRmCwT5J2E5D4SW1kMrmH+bXUMRE/jmR7Chx?=
+ =?us-ascii?Q?P5LGHI6ti/Jq77eexrXI3axTp7V8O37//1SW0vWpnWXHfw=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR11MB5276.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?1cipisVsgaOBs/exN1S+jatl/Mb1r21Oidx9xjaKm+i1m+uv7LYP4jYMzoT3?=
+ =?us-ascii?Q?Y3U3r2h0RwIUcgxDvQn5vYjjpPbUX4X3e9Rtk9kSd6URNZV8o6CNCbDw86CK?=
+ =?us-ascii?Q?U4B0ITt6kCNHNQuWSAR2yVgliWXCwa5Q6F/E9vFx7PSABQqgEUzVBzJq65mB?=
+ =?us-ascii?Q?IH0DPoVSReeInwQS04sd4YH3WgOJ/TJXPEZsJXfEb93bu89pN18aTwU89kow?=
+ =?us-ascii?Q?vFH+YyYN4HqVBOwI42RNhXn0OC05zTS94XVSZvFvJ5nDHhH2hLb2tmOJjj+E?=
+ =?us-ascii?Q?v4+m1+R0qoq6bOV7S05b8j8KfvujBBwlDMQ9Tlx22Z8cXyaTNolBUypm2/Xq?=
+ =?us-ascii?Q?IgOErMwYjmt/BZIOPGSpX6KyJQwp44HAJvffNvhJ/u6iBAzGBYR1uU4x591A?=
+ =?us-ascii?Q?l6fQo94lT+qRaKvPz2uAOahHNLo9eshdGMJbITsbybTbUPRrpD7Lqpc9LDWd?=
+ =?us-ascii?Q?eWfjU20hH0ayWTpXKvjH/l3nkWiALQz3ARRY1wGWGY/HC2GsQch8mIw8kDQc?=
+ =?us-ascii?Q?2GvWQGVUcp6PLYz48rmjnI+0UPp3i/F2cp7Xe1zScGX1Ee07DGrbpR93FLkX?=
+ =?us-ascii?Q?dd49wL0UV0xv3wKXFTxq2mtUIi8LKnLL9ebOqEvUClGKcQreysx9TG1MRGOw?=
+ =?us-ascii?Q?Vvp0qQaYrrRCRc6j4yQIAlXGd0OvHh8jGxZTYut9AqrLLfJV3S9V7JGTcQKt?=
+ =?us-ascii?Q?QmDg/u7L4EoEV98comos5n2dS8cogXqx2rgqWqBb8bGFJMs5ZrzPeRxGjS8S?=
+ =?us-ascii?Q?QgFxwrk3khoH9YYtGJyw/E0qt08xKGuPPQKIsURih4BW0mph/X8HnGctl3/H?=
+ =?us-ascii?Q?43KuBiLx8Jys3oNI2uYMxY0qwb6ZZRzkURLsyED+3nc9+6pYLpCLOJ3lOvel?=
+ =?us-ascii?Q?S5EJ9LmHg321aqo303MxS5ohejfu74GoRp5paUsYBN80CnRcs3bZ0NMGSLYE?=
+ =?us-ascii?Q?OSGVqF8TuXOBlahUY92JllG5Y1mSx2VHKPF35NsR7Dgj09zPO74GH/G3A9s6?=
+ =?us-ascii?Q?SRYUM3G0dJqT/xx01bSuUrteq2l4k9PsBq/1s1l0RThHToL7t3zIHPKfqqTC?=
+ =?us-ascii?Q?5l8ZnihMQyLe/fqjz/dsngURzdQi6WqNcD5eLV3GZRCZD/Gb1ZAPb6kO+y7j?=
+ =?us-ascii?Q?fnL0YGvlPmp3lEKS/LR4R0R5Bg73vWh3iq2DYrC7GXnazk1bOUvm7KZXiUXl?=
+ =?us-ascii?Q?N5sy2b3Ck14zgikThacIq1msumPVnPGtJGGh5TMUAQVJDRn4I8IHZyLDED61?=
+ =?us-ascii?Q?NLhRHs8b8WWvD4D43RTPH9GzAI8HXoSYdgBmNzIv3sYYuzAF393yWXUWcmgG?=
+ =?us-ascii?Q?NxAJF68XXQvZlxaVlw0a1BiD+KRIzhjtnJRyUxD9gFQpXwiMwoAfSWmTOidz?=
+ =?us-ascii?Q?IGUmFo3811dqf2xodRE6DVwzpviNv88SR9NYDWhku0WQmeNN9GQc/ramWDON?=
+ =?us-ascii?Q?YBPYnP/QfHWL29OeisuFx5UXK+DltWKY19VagZbiB/lXeaPFl1foVIwBKS7B?=
+ =?us-ascii?Q?8n+IxSWjJsjzGqF0UpMnaqLrvs+C+PmGMsQFRzmVJAZVgz8Kk+9mendFG+Zj?=
+ =?us-ascii?Q?OtFoDPCtpzwyb39oFQ80vvgO72NkTcQJwnG2WHwb?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503162114.GA18789@willie-the-truck>
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR11MB5276.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 546c340d-68ca-437e-1baa-08dc6e72e44d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2024 08:51:31.4742
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hvvaUkuqrgcJjKDUThqzrZGuliG42JTR8o9mHyu6MY9h8sfnVYD+YgJ33kidnCR89DwiPKGyXmM8vh/YYgI2Iw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7960
+X-OriginatorOrg: intel.com
 
-On Fri, May 03, 2024 at 05:21:14PM +0100, Will Deacon wrote:
-> On Fri, May 03, 2024 at 03:29:12PM +0000, Sebastian Ene wrote:
-> > On Fri, May 03, 2024 at 03:39:38PM +0100, Will Deacon wrote:
-> > > On Thu, Apr 18, 2024 at 04:30:23PM +0000, Sebastian Ene wrote:
-> > > > The pKVM hypervisor initializes with FF-A version 1.0. Keep the
-> > > > supported version inside the host structure and prevent the host
-> > > > drivers from overwriting the FF-A version with an increased version.
-> > > > Without trapping the call, the host drivers can negotiate a higher
-> > > > version number with TEE which can result in a different memory layout
-> > > > described during the memory sharing calls.
-> > > > 
-> > > > Signed-off-by: Sebastian Ene <sebastianene@google.com>
-> > > > ---
-> > > >  arch/arm64/kvm/hyp/nvhe/ffa.c | 43 ++++++++++++++++++++++++++++++++---
-> > > >  1 file changed, 40 insertions(+), 3 deletions(-)
-> > > > 
-> > > > diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> > > > index 320f2eaa14a9..023712e8beeb 100644
-> > > > --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-> > > > +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> > > > @@ -58,6 +58,7 @@ struct kvm_ffa_buffers {
-> > > >  	hyp_spinlock_t lock;
-> > > >  	void *tx;
-> > > >  	void *rx;
-> > > > +	u32 ffa_version;
-> > > >  };
-> > > 
-> > > Why should this be part of 'struct kvm_ffa_buffers'? The host, proxy and
-> > > Secure side will end up using the same version, so a simple global
-> > > variable would suffice, no?
-> > > 
-> > I prefer keeping it here as we will have more clients in the future /
-> > different VMs and each one of them will have its own version and its own
-> > pair of buffers.
-> 
-> We can add that when we need to. Let's keep it simple for now, as the
-> idea of the proxy having to support multiple versions of the spec at
-> once sounds terrifying to me. I don't think we're going to want to
-> re-marshall the data structures between the 1.0 and 1.1 formats, are we?
-> 
+> From: Zhao, Yan Y <yan.y.zhao@intel.com>
+> Sent: Tuesday, May 7, 2024 2:21 PM
+>=20
+> +
+> +/*
+> + * Flush a reserved page or !pfn_valid() PFN.
+> + * Flush is not performed if the PFN is accessed in uncacheable type. i.=
+e.
+> + * - PAT type is UC/UC-/WC when PAT is enabled
+> + * - MTRR type is UC/WC/WT/WP when PAT is not enabled.
+> + *   (no need to do CLFLUSH though WT/WP is cacheable).
+> + */
 
-I don't think we increase the complexity of the code by keeping this
-argument in the structure. The code in nvhe/ffa.c supports marshalling
-the structure as of [this
-change](https://lore.kernel.org/r/20231005-ffa_v1-1_notif-v4-14-cddd3237809c@arm.com
-) and that is why I was in favor of keeping the version where it belongs
-to.
+As long as a page is cacheable (being WB/WT/WP) the malicious
+guest can always use non-coherent DMA to make cache/memory
+inconsistent, hence clflush is still required after unmapping such
+page from the IOMMU page table to avoid leaking the inconsistency
+state back to the host.
 
-> > > > @@ -640,6 +641,39 @@ static bool do_ffa_features(struct arm_smccc_res *res,
-> > > >  	return true;
-> > > >  }
-> > > >  
-> > > > +static void do_ffa_version(struct arm_smccc_res *res,
-> > > > +			   struct kvm_cpu_context *ctxt)
-> > > > +{
-> > > > +	DECLARE_REG(u32, ffa_req_version, ctxt, 1);
-> > > > +	u32 current_version;
-> > > > +
-> > > > +	hyp_spin_lock(&host_buffers.lock);
-> > > 
-> > > Why do you need to take the lock for this?
-> > > 
-> > 
-> > Because we interpret the host buffer content based on the version that we
-> > end up setting here and each time we are accessing these buffers we are
-> > protected by this lock.
-> 
-> I think that's indicative of a broader issue, though, which is that you
-> allow for the version to be re-negotiated at runtime. The spec doesn't
-> allow that and I don't think we should either.
-> 
+> +
+> +/**
+> + * arch_clean_nonsnoop_dma - flush a cache range for non-coherent DMAs
+> + *                           (DMAs that lack CPU cache snooping).
+> + * @phys_addr:	physical address start
+> + * @length:	number of bytes to flush
+> + */
+> +void arch_clean_nonsnoop_dma(phys_addr_t phys_addr, size_t length)
+> +{
+> +	unsigned long nrpages, pfn;
+> +	unsigned long i;
+> +
+> +	pfn =3D PHYS_PFN(phys_addr);
+> +	nrpages =3D PAGE_ALIGN((phys_addr & ~PAGE_MASK) + length) >>
+> PAGE_SHIFT;
+> +
+> +	for (i =3D 0; i < nrpages; i++, pfn++)
+> +		clflush_pfn(pfn);
+> +}
+> +EXPORT_SYMBOL_GPL(arch_clean_nonsnoop_dma);
 
-The spec talks about interopeartion in case two versions (x,y) and (a,b)
-want to talk: 
+this is not a good name. The code has nothing to do with nonsnoop
+dma aspect. It's just a general helper accepting a physical pfn to flush
+CPU cache, with nonsnoop dma as one potential caller usage.
 
-- given the pairs (x,y) and (a,b) x=major, y=minor if x == a and y > b
-  the versions are incompatible until y downgrades its version such that
-  y <= b.
+It's clearer to be arch_flush_cache_phys().
 
-From this I drew the conclusion that the spec allows the re-negotiation
-at runtime, please let me know if you see things differently.
-
-> > > > +	/*
-> > > > +	 * If the client driver tries to downgrade the version, we need to ask
-> > > > +	 * first if TEE supports it.
-> > > > +	 */
-> > > > +	if (FFA_MINOR_VERSION(ffa_req_version) < FFA_MINOR_VERSION(current_version)) {
-> > > 
-> > > Similarly here, I don't think 'current_version' is what we should expose.
-> > > Rather, we should be returning the highest version that the proxy
-> > > supports in the host, which is 1.0 at this point in the patch series.
-> > 
-> > We already report the highest version that the proxy supports on line:
-> > `res->a0 = current_version;`
-> > 
-> > 'current_version' is assigned during proxy initialization.
-> > This check allows us to downgrade the supported ffa_version if the Host
-> > requested it and only if TF-A supports it.
-> 
-> I don't think we want the host negotiating directly with the Secure side,
-> though, do we? 'current_version' is initialised to whatever the Secure
-> side gives us, so if we had something like:
-> 
->   1. Proxy initialises, issues FFA_VERSION(1.0)
-
-This will save 1.0 in host_buffers.ffa_version
-
->   2. Secure implements 1.2 and so returns 1.2 but remains in 1.0
->      compatability mode for the data structure formats.
-
-Ack.
-
->   3. The host issues FFA_VERSION(1.1)
-
-The call is trapped and we verify if the requested version
-(FFA_VERSION(1.1) is smaller than our current_version saved in step 1.
-
-Given that is not smaller we only reply with our current supported
-version which is FFA_VERSION(1.0) and we return to the host.
-
->   4. The code above then issues FFA_VERSION(1.1) to Secure and it
->      switches over to the 1.1 data structures
-
-This was happening prior to my patch, so in a way this patch is a bugfix.
-We get this behavior without trapping and interpretting
-of the FFA_VERSION API.
-
-> 
-> Did I get that right?
-> 
-> I really think we need to settle on a single version for the host,
-> hypervisor and Secure and then stick with it following a single
-> negotiation stage.
-> 
-> > > > +		arm_smccc_1_1_smc(FFA_VERSION, ffa_req_version, 0,
-> > > > +				  0, 0, 0, 0, 0,
-> > > > +				  res);
-> > > 
-> > > Hmm, I'm struggling to see how this is supposed to work per the spec.
-> > > The FF-A spec says:
-> > > 
-> > >   | ... negotiation of the version must happen before an invocation of
-> > >   | any other FF-A ABI.
-> > 
-> > I think that is a bit vague in my opinion but what I get is that the first call
-> > executed should always be the get version ff-a call.
-> > 
-> > > 
-> > > and:
-> > > 
-> > >   | Once the caller invokes any FF-A ABI other than FFA_VERSION, the
-> > >   | version negotiation phase is complete.
-> > >   |
-> > >   | Once an FF-A version has been negotiated between a caller and a
-> > >   | callee, the version may not be changed for the lifetime of the
-> > >   | calling component. The callee must treat the negotiated version as
-> > >   | the only supported version for any subsequent interactions with the
-> > >   | caller.> 
-> > > So by the time we get here, we've already settled on our version with
-> > > the Secure side and the host cannot downgrade.
-> > 
-> > At this stage I think the spec didn't take into account that there can be a hypervisor
-> > in between.
-> 
-> Well, that's what the spec says and I think we need to follow it. I can
-> well imagine that the Secure side won't allow the version to be
-> re-negotiated on the fly and I don't think we'd want that in the proxy,
-> either.
-> 
-> > > That's a bit rubbish if you ask me, but I think it means we'll have to
-> > > defer some of the proxy initialisation until the host calls FFA_VERSION,
-> > > at which point we'll need to negotiate a common version between the host,
-> > > the proxy and Secure. Once we've done that, our FFA_VERSION handler will
-> > > just return that negotiated version.
-> > 
-> > We are already doing this when the ARM driver is built as an external
-> > module. If it is not as an external module and is builtin we have a
-> > bigger issue because it loads before pKVM at subsys_initcall. This means
-> > that we won't trap FFA_MAP* and other setup calls.
-> 
-> Sorry, I don't follow. hyp_ffa_init() issues FFA_FEATURES immediately
-> after FFA_VERSION, so we terminate the negotiation right away.
-
-Sorry I confused you, I am afraid I was trying to desribe a different issue
-here which is related to how early the ARM FF-A driver initializes when
-is builtin - it is before the hypervisor proxy is installed.
-
-> 
-> Will
-> 
-> To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
-> 
-
-Thank you,
-Seb
-
+and probably drm_clflush_pages() can be converted to use this
+helper too.
