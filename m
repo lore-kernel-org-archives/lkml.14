@@ -1,48 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E8C146000;
-	Tue,  7 May 2024 23:09:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030DC146597;
+	Tue,  7 May 2024 23:09:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715123386; cv=none; b=lF792/nEpMAoOkXTvtk2bDTM1z6nzmpxq+Ejym3dJXEzhNbY+K2KCa/36oGc2i6QvV4ZGOwkn9vKaI9+/Wpd5aL7NMaH3ufTmnrmsipU10q9pSvSAm1ZSy5seoAJUS3h0BAhSRBPjWzqK5ebsXgjWheRiTA+w0lat+c39SzB4YQ=
+	t=1715123393; cv=none; b=VxFgJiTSNe2i49Sp5H/og4ETPle5JkqkWDTJKxl/lHW/1xT1bPY/yRUtu5u292aiTTWfpiHtUF4ast53EfjHasF0EpEU7q51M3I38Pt6m5UwSaGGcJ7aA38gWL9esbpPQyRZPHYLShwIYvNmMFH1X+QFCSokXNef81yoA40l8+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715123386; c=relaxed/simple;
-	bh=cIft+zC2p2nwFimfdBQ8IvSQowxuOf9+IqyHq1DgoPo=;
+	s=arc-20240116; t=1715123393; c=relaxed/simple;
+	bh=eReVYF2BCrlIPA5oKYsRheyDizBUKVOYu2q3Y2uoyew=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XmaXAALH4Rf/h1Swaa++GpX31p8lvAFTGasvVaS+idjNaugibzpB0GUlL/uWcSN1tV9m2ppsdbC/KLXIV/9w4yXumCXlxfNK1KXTWG5cXPiq2ffye4n6Swf288VKfyz0vDvjx75oIqZ0ptiC77/G5YFROvkprZgA61loUEgrIdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TtTM9Hu6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=WHJL/li8JTT1aCkC0oznGstAHEB3OfjJixNb8xd+UZj/KhBaEFHtwkXQwgGwMreQEE1BYFdr0gKPmSXdjjJr3aMqKtJbzxk6VXzwucYF1xwH/dfXN+j7mkgc4Vw7kQZJwPAYgC8LGB1UXb61GShwawlPhaStEhKF3W/ycaG16d8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cqo8ySPw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TtTM9Hu6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DD79C2BBFC;
-	Tue,  7 May 2024 23:09:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cqo8ySPw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D779CC2BBFC;
+	Tue,  7 May 2024 23:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715123386;
-	bh=cIft+zC2p2nwFimfdBQ8IvSQowxuOf9+IqyHq1DgoPo=;
+	s=k20201202; t=1715123392;
+	bh=eReVYF2BCrlIPA5oKYsRheyDizBUKVOYu2q3Y2uoyew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TtTM9Hu6HPQuywbSC7L2AfuqAJ55pQ2jDAn8Hn6E2tmaEzKDckocyfEmQPGjv5k3E
-	 ePRjfVvJU58o9ghLxEiWdRMf2tQ4cfwhVFwaC4pctSVcFTlKWjBbZv+B9Vne517Emw
-	 Bn+LJB5b7PM0ISTH+NprmCEF9hQIl1aYSJmrD5B9ZEe16hbAitkF/zlpzeraD6z01r
-	 Mob+gY/uL8KouY3/+SxlOnHATVldM3beXOjA6B95++c8VK7eTcDQ37Y+cVfwQg+Ex+
-	 ctPk7Rdb0eorvH17EEpa9OHRDnq7F3VO8JrctC7fI1GlZnlRziHADc/BjXbbHD0Ju5
-	 MmIPK9lGyllCA==
+	b=Cqo8ySPwk3C0pG13Dmd+CcADEH/cn+FxaMYKxGqDRKs6SuZmm7Il0g70uW5wsfTFE
+	 WSyYIc0bDCdYx8h5seI7L3MP20FaKBwHsTaHwLBrGKWMqRu26GA8QkvAZ+Sj7pTSs2
+	 UClHaOCl+pRDCuWEmOgl/SHCwQJPyqYFLRqEV13WizCtk/ZyDv57V62tsmOIyN8GMY
+	 rQSDiQ/I2+UmcJwPh3jX9QWQu8ZWdm0atYIcePiv85/QqbmyoYmatjFhgxdLyiS/qs
+	 gqY56CnRzrtu1g9yo5kfZCn/Fv8xvkwy+z2JoWufQr/glGuMzJvlMhN9ftIwiwGJoZ
+	 lW/8O6cGd67Jw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Lancelot SIX <lancelot.six@amd.com>,
-	Felix Kuehling <felix.kuehling@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
+Cc: Nilay Shroff <nilay@linux.ibm.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Chaitanya Kulkarni <kch@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
-	Felix.Kuehling@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.8 43/52] drm/amdkfd: Flush the process wq before creating a kfd_process
-Date: Tue,  7 May 2024 19:07:09 -0400
-Message-ID: <20240507230800.392128-43-sashal@kernel.org>
+	linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 6.8 45/52] nvme: find numa distance only if controller has valid numa id
+Date: Tue,  7 May 2024 19:07:11 -0400
+Message-ID: <20240507230800.392128-45-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240507230800.392128-1-sashal@kernel.org>
 References: <20240507230800.392128-1-sashal@kernel.org>
@@ -57,59 +53,45 @@ X-Patchwork-Hint: Ignore
 X-stable-base: Linux 6.8.9
 Content-Transfer-Encoding: 8bit
 
-From: Lancelot SIX <lancelot.six@amd.com>
+From: Nilay Shroff <nilay@linux.ibm.com>
 
-[ Upstream commit f5b9053398e70a0c10aa9cb4dd5910ab6bc457c5 ]
+[ Upstream commit 863fe60ed27f2c85172654a63c5b827e72c8b2e6 ]
 
-There is a race condition when re-creating a kfd_process for a process.
-This has been observed when a process under the debugger executes
-exec(3).  In this scenario:
-- The process executes exec.
- - This will eventually release the process's mm, which will cause the
-   kfd_process object associated with the process to be freed
-   (kfd_process_free_notifier decrements the reference count to the
-   kfd_process to 0).  This causes kfd_process_ref_release to enqueue
-   kfd_process_wq_release to the kfd_process_wq.
-- The debugger receives the PTRACE_EVENT_EXEC notification, and tries to
-  re-enable AMDGPU traps (KFD_IOC_DBG_TRAP_ENABLE).
- - When handling this request, KFD tries to re-create a kfd_process.
-   This eventually calls kfd_create_process and kobject_init_and_add.
+On system where native nvme multipath is configured and iopolicy
+is set to numa but the nvme controller numa node id is undefined
+or -1 (NUMA_NO_NODE) then avoid calculating node distance for
+finding optimal io path. In such case we may access numa distance
+table with invalid index and that may potentially refer to incorrect
+memory. So this patch ensures that if the nvme controller numa node
+id is -1 then instead of calculating node distance for finding optimal
+io path, we set the numa node distance of such controller to default 10
+(LOCAL_DISTANCE).
 
-At this point the call to kobject_init_and_add can fail because the
-old kfd_process.kobj has not been freed yet by kfd_process_wq_release.
-
-This patch proposes to avoid this race by making sure to drain
-kfd_process_wq before creating a new kfd_process object.  This way, we
-know that any cleanup task is done executing when we reach
-kobject_init_and_add.
-
-Signed-off-by: Lancelot SIX <lancelot.six@amd.com>
-Reviewed-by: Felix Kuehling <felix.kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Link: https://lore.kernel.org/all/20240413090614.678353-1-nilay@linux.ibm.com/
+Signed-off-by: Nilay Shroff <nilay@linux.ibm.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Chaitanya Kulkarni <kch@nvidia.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_process.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/nvme/host/multipath.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-index 58c1fe5421934..451bb058cc620 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-@@ -829,6 +829,14 @@ struct kfd_process *kfd_create_process(struct task_struct *thread)
- 	if (process) {
- 		pr_debug("Process already found\n");
- 	} else {
-+		/* If the process just called exec(3), it is possible that the
-+		 * cleanup of the kfd_process (following the release of the mm
-+		 * of the old process image) is still in the cleanup work queue.
-+		 * Make sure to drain any job before trying to recreate any
-+		 * resource for this process.
-+		 */
-+		flush_workqueue(kfd_process_wq);
-+
- 		process = create_process(thread);
- 		if (IS_ERR(process))
- 			goto out;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 74de1e64aeead..75386d3e0f981 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -247,7 +247,8 @@ static struct nvme_ns *__nvme_find_path(struct nvme_ns_head *head, int node)
+ 		if (nvme_path_is_disabled(ns))
+ 			continue;
+ 
+-		if (READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_NUMA)
++		if (ns->ctrl->numa_node != NUMA_NO_NODE &&
++		    READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_NUMA)
+ 			distance = node_distance(node, ns->ctrl->numa_node);
+ 		else
+ 			distance = LOCAL_DISTANCE;
 -- 
 2.43.0
 
