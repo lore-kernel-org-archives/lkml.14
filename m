@@ -1,87 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3A1161914;
-	Tue,  7 May 2024 15:15:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5611816132B;
+	Tue,  7 May 2024 15:16:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715094935; cv=none; b=SAeASRx6DGtHNLU7eKuU7xj8OZA4QObBEJR+sNgE8wEVGZ6MQ+ZmhuW+l3Y4U/OuY6yC634HlwMs/oNHctCFeVZIDyRN4NJ5yxhAUds1kKklVqEFYdAToxtN/Q9Si2ZKpCTdYeicrtSTKTN/CQuf7lTC1jfKb5aUNA4nXbr4RVk=
+	t=1715094972; cv=none; b=X8ZtHH21Lv5Z1NnbSlAoUDeCC8TpvJRbDaWzhEFkLzxrl4phgK5F5O6SMdRmMmltkTRz3+D+RkhKowIGJB0WRU/wuxf8CRLVhIUGeRT1Ry/4lSaTL2twKLSkIVFShxd6xwU0NHLW0b+E4IqLJWft1JoZKQ0wQ3Cd7CBxBBJU+fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715094935; c=relaxed/simple;
-	bh=AF0IG7U9yLaf0TKDjmv2oW0NAZ5Yv6qM/EdNBZdaA+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mlVw9IiUfBF1wfQKbuFtX3twj1dIX2BJhw316lCgSaRzfO7SNA42mHAgr9qfx9KkkvOv5n9Mn9o2WxdaiAR4Sa2Ft9yo/XDKNC6zcMfpyLYXWmzBftwJdAi2hwo3NDs02m1LAo6g3bGAom5bHxhlsxquJqkpJcgHCoxtnEviAqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5bYQe1y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715094972; c=relaxed/simple;
+	bh=QUogm6XbstFvYkcjv7KK2GaltaFkqCsX5pzRZC70Pt8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nCojN/fA+vGVAFe0e2UYiVkUP8nSmB+4SGxXPfb2NixNcd2/te8mEKp3+uE+lD2uukyU9o8xxmYy81u056FdQ7eQtl5jKCiJkl2cj4VpuWhdoUNw4fuYi8AfNhalUyIR2gS4jCKnHPGOdRo5LzZjSZIlvLcRVh6YjQpwas7kmvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fTyxmjez; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5bYQe1y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F331C2BBFC;
-	Tue,  7 May 2024 15:15:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fTyxmjez"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C0E7C4AF63;
+	Tue,  7 May 2024 15:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715094934;
-	bh=AF0IG7U9yLaf0TKDjmv2oW0NAZ5Yv6qM/EdNBZdaA+M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N5bYQe1yIl5osdfHFh58czWgmEpherJOCYDFqdQqTSJ7s9wfmt+AOOJ1/l4Q3g7qJ
-	 vTYfylx128AP7P4/AAQsV3/EN5mNgSQCUu+TZqLAKJuSPeeId8hMMt3GIHGzoH4QDi
-	 kOL+KBP9mQb98GY7LtAVJgqC3Tvg8blVd/wK7KReF/KwDNCbcWbXk3Fs3sO/D6F6ly
-	 txyM8vZoxtvQ100G2Y65/qu5S2X/GfOj6BGaLAuQQdJu5r4AR8KnDAmPDE2lTl1s36
-	 hSLVUzZkp0CyUMG88QDwF59bHtFI9sMLAu250o1l8Od8kJLkOQOXJjQUDUTgoPx5OD
-	 5frM4STFkxL8Q==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1s4MXY-000000004ZW-2wmP;
-	Tue, 07 May 2024 17:15:36 +0200
-Date: Tue, 7 May 2024 17:15:36 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Satya Priya <quic_c_skakit@quicinc.com>,
-	Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 03/13] mfd: pm8008: deassert reset on probe
-Message-ID: <ZjpFmGNWCu6zXLrC@hovoldconsulting.com>
-References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-4-johan+linaro@kernel.org>
- <ZjkoAzHnYTKk_6Yr@surfacebook.localdomain>
+	s=k20201202; t=1715094971;
+	bh=QUogm6XbstFvYkcjv7KK2GaltaFkqCsX5pzRZC70Pt8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fTyxmjezSM4F9xUXLUWV898774LiGYOMQmXu6h5Jct6lyqa+b2nB2VzwkPQsqkRjm
+	 QFeoQ8RYNYFUDexZpVKDVrjNGiPaF5ev0/tPNNGSPya9nHnYZ/263vcN3Obj8Gfuqt
+	 1WuLxGXiZhnPLDZDcK2Z5/Ysfvludx0WBia800MGtsu4sqvrQKzJ0pBhZF3BZiwYWS
+	 u0jRlIy8BXtxLwZ86KiynLKkuFI7UmaUpqrM2xVh7tmS+7Ayo87rIBpiEIHHxH+W0l
+	 k8eyWDuDRcAzYJieZ5QCEEzv+scb8OhVeLVeCiFHz5Ir3vNR+Bn6DNMAtkLMgox1fQ
+	 gWTnS562J/n/w==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH] kconfig: gconf: show checkbox for choice correctly
+Date: Wed,  8 May 2024 00:14:50 +0900
+Message-Id: <20240507151450.1417814-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjkoAzHnYTKk_6Yr@surfacebook.localdomain>
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 06, 2024 at 09:57:07PM +0300, Andy Shevchenko wrote:
-> Mon, May 06, 2024 at 05:08:20PM +0200, Johan Hovold kirjoitti:
-> > Request and deassert any (optional) reset gpio during probe in case it
-> > has been left asserted by the boot firmware.
-> > 
-> > Note the reset line is not asserted to avoid reverting to the default
-> > I2C address in case the firmware has configured an alternate address.
-> 
-> ...
-> 
-> > +	reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
-> > +	if (IS_ERR(reset))
-> > +		return PTR_ERR(reset);
-> 
-> Shouldn't you wait a bit to make chip settle down?
+Currently, bool choices have a checkbox, but tristate choices do not.
+It is opposite.
 
-Yeah, probably. I actually asserted reset here for a while (e.g. to
-reset the address), but didn't have to use a post-reset delay then.
+Bool choices should not have a checkbox, as they are fixed to 'y' since
+commit 6a1215888e23 ("kconfig: remove 'optional' property support").
+Tristate choices, however, should have a checkbox to allow users to
+toggle the value.
 
-I'll see if I can find someone with access to a datasheet or maybe add
-some small delay here anyway.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-Johan
+ scripts/kconfig/gconf.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
+
+diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
+index 10d602faa51e..cc400ffe6615 100644
+--- a/scripts/kconfig/gconf.c
++++ b/scripts/kconfig/gconf.c
+@@ -1054,8 +1054,6 @@ static gchar **fill_row(struct menu *menu)
+ 		struct symbol *def_sym = sym_get_choice_value(sym);
+ 		struct menu *def_menu = NULL;
+ 
+-		row[COL_BTNVIS] = GINT_TO_POINTER(FALSE);
+-
+ 		for (child = menu->list; child; child = child->next) {
+ 			if (menu_is_visible(child)
+ 			    && child->sym == def_sym)
+@@ -1065,6 +1063,11 @@ static gchar **fill_row(struct menu *menu)
+ 		if (def_menu)
+ 			row[COL_VALUE] =
+ 			    g_strdup(menu_get_prompt(def_menu));
++
++		if (sym_get_type(sym) == S_BOOLEAN) {
++			row[COL_BTNVIS] = GINT_TO_POINTER(FALSE);
++			return row;
++		}
+ 	}
+ 	if (sym->flags & SYMBOL_CHOICEVAL)
+ 		row[COL_BTNRAD] = GINT_TO_POINTER(TRUE);
+@@ -1072,11 +1075,6 @@ static gchar **fill_row(struct menu *menu)
+ 	stype = sym_get_type(sym);
+ 	switch (stype) {
+ 	case S_BOOLEAN:
+-		if (GPOINTER_TO_INT(row[COL_PIXVIS]) == FALSE)
+-			row[COL_BTNVIS] = GINT_TO_POINTER(TRUE);
+-		if (sym_is_choice(sym))
+-			break;
+-		/* fall through */
+ 	case S_TRISTATE:
+ 		val = sym_get_tristate_value(sym);
+ 		switch (val) {
+-- 
+2.40.1
+
