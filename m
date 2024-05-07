@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981F9160785;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9814115FCFC;
 	Tue,  7 May 2024 14:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093330; cv=none; b=NJC0Qo1TFB8mhH73pCwj/UJv0XPx9OfdkrbCoLUnt82KPSe6nyAYBehu74X7Pad8O/8pYzFWV36cwr77YkL4kSRrhejkXi6nLfBz8rIGGpcyRoiiFYWwkrRsnt8czK7khxT55livPHb8Qg6qcJQldEJEMEh1it+zwMHJCLSGXzY=
+	t=1715093330; cv=none; b=HO6JztUo4vzB6Rycqr5pwKOWLdZ9d3qu3G4lBMK6ys7vnGKTfLaVfd/kYXVwHBFM1D4fUDDvKq+aEUA4rKPhBLoO9n4SeUj0puRfvcsOzrV2xcGgezsBIZ6PhbehsHoIui1fNB7+qrUSX/oDP6K7pCaTw4WGHmklKtu5zzZjA+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715093330; c=relaxed/simple;
-	bh=d+flEQr9cxZbb3a6RHKFy4dAh2/qde9+Fg9iSBSS0ig=;
+	bh=YIIm3nA6A0qem8v1BHDbNeu0AaDyLJhWVD2pEz5yb2s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BIEEVwoJBDj1e3E+/zg6yRTRU9y4XTH60Aq70lr/2potRMkoq1ncDVAOpBH1S7bVTpTyYE7hylN0ESseW3Q52kGqT5GiCmqS/j4zXwldS6AHDbR1PFNOjLbhriUUks+bisfHY8fb+yXwXFcyYti4aeQlrsZuhbNalqwW7OvvXrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qd/8ltE8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CWXIYFtgrMheNJFVq/5D+kExxjR9xv9ZofEVue5hVXm5KklZIUQw9r+yN+t8j7KHauBDlK1pbWFeu5zFCgVoWX/Nb+VLvWh80NCBQZjYi842Cyx3xcVxShWpDDv6oXiMLMrEA58xKk5o4VerRKsYLa5h06yeDq2naUGAq9F/yuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGt5jbgH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qd/8ltE8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B6F5C4AF66;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGt5jbgH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34BA3C2BBFC;
 	Tue,  7 May 2024 14:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715093330;
-	bh=d+flEQr9cxZbb3a6RHKFy4dAh2/qde9+Fg9iSBSS0ig=;
+	bh=YIIm3nA6A0qem8v1BHDbNeu0AaDyLJhWVD2pEz5yb2s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Qd/8ltE86w+ref6wRBvnIlr3iGN4tqq/VrVV/RntiAX2mq8zAteNvcbQz21CPMM3r
-	 bLmo0bj0DRiBetCX2YcnzBJ9JK9gV/xwjt+WpCKH83ZFLe1cIRYRsTYC+QeCLmGyGk
-	 M/bG8HtvM+LxjtOkXDLgTPutJkXs7yrC2KupFAkfNhz/E4KxXwsKm8kL1YyNQI0vHA
-	 2tuiqb2rhyBQpmctcr8orAr9kiUdYQEP7ek7zlQmVN6MN2pNJra6zQNO2sYwMti2Oy
-	 uB9ZP/uG2S/P/Np7PwE+3WYYeZAXXBn6XNpc0CY0bMJyymVrkXbMqAjWi9ESH9QWp6
-	 XmXn8VS7f8Xpg==
+	b=VGt5jbgHoMdcYgrhzFq7XaxAEKYapGeiW9qct1GQosuDopf/eAhKNtg/kTkPTxrIO
+	 Rzf5wIcfVGkp1S+8svUh0POVnMXoSkUs+HDhALkWa5/hVrzQ/JAK7RKYo7R2oVZL9G
+	 imZxGAaCorrIeDisyyy7gfdp09h4iylmwSQXoifovWI21nyopshKIFDZ76cb6EycJt
+	 fy99zRR3dy7X+xSE1aM0d7FA8xK4GTziKiuGqVkVwp/wD8Abd17EdnZOhcXSxdfdHe
+	 ZiMhERN3MaE0XIMHRvpUpValtUDJiRDlMfbtPEM/700MhLttnGbSaMU7sLQpyc4qbb
+	 76t1CgBuBoSoA==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1s4M7g-000000003Cw-2jvi;
+	id 1s4M7g-000000003Cq-1cAt;
 	Tue, 07 May 2024 16:48:52 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Jiri Kosina <jikos@kernel.org>,
@@ -46,11 +46,10 @@ Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>,
-	stable@vger.kernel.org,
-	Steev Klimaszewski <steev@kali.org>
-Subject: [PATCH v2 5/7] arm64: dts: qcom: sc8280xp-x13s: fix touchscreen power on
-Date: Tue,  7 May 2024 16:48:19 +0200
-Message-ID: <20240507144821.12275-6-johan+linaro@kernel.org>
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 2/7] dt-bindings: HID: i2c-hid: elan: add Elan eKTH5015M
+Date: Tue,  7 May 2024 16:48:16 +0200
+Message-ID: <20240507144821.12275-3-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240507144821.12275-1-johan+linaro@kernel.org>
 References: <20240507144821.12275-1-johan+linaro@kernel.org>
@@ -62,61 +61,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Elan eKTH5015M touch controller on the X13s requires a 300 ms delay
-before sending commands after having deasserted reset during power on.
+Add a compatible string for the Elan eKTH5015M touch controller.
 
-Switch to the Elan specific binding so that the OS can determine the
-required power-on sequence and make sure that the controller is always
-detected during boot.
+Judging from the current binding and commit bd3cba00dcc6 ("HID: i2c-hid:
+elan: Add support for Elan eKTH6915 i2c-hid touchscreens"), eKTH5015M
+appears to be compatible with eKTH6915. Notably the power-on sequence is
+the same.
 
-Note that the always-on 1.8 V supply (s10b) is not used by the
-controller directly and should not be described.
+While at it, drop a redundant label from the example.
 
-Fixes: 32c231385ed4 ("arm64: dts: qcom: sc8280xp: add Lenovo Thinkpad X13s devicetree")
-Cc: stable@vger.kernel.org	# 6.0
-Tested-by: Steev Klimaszewski <steev@kali.org>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts    | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/input/elan,ekth6915.yaml     | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-index 569add4ebfab..98c1b75513be 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts
-@@ -653,15 +653,16 @@ &i2c4 {
+diff --git a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
+index c1fcf8c90c24..be84f7ed0abc 100644
+--- a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
++++ b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
+@@ -18,8 +18,12 @@ allOf:
  
- 	status = "okay";
+ properties:
+   compatible:
+-    enum:
+-      - elan,ekth6915
++    oneOf:
++      - items:
++          - enum:
++              - elan,ekth5015m
++          - const: elan,ekth6915
++      - const: elan,ekth6915
  
--	/* FIXME: verify */
- 	touchscreen@10 {
--		compatible = "hid-over-i2c";
-+		compatible = "elan,ekth5015m", "elan,ekth6915";
- 		reg = <0x10>;
+   reg:
+     const: 0x10
+@@ -57,8 +61,8 @@ examples:
+       #address-cells = <1>;
+       #size-cells = <0>;
  
--		hid-descr-addr = <0x1>;
- 		interrupts-extended = <&tlmm 175 IRQ_TYPE_LEVEL_LOW>;
--		vdd-supply = <&vreg_misc_3p3>;
--		vddl-supply = <&vreg_s10b>;
-+		reset-gpios = <&tlmm 99 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-+		no-reset-on-power-off;
-+
-+		vcc33-supply = <&vreg_misc_3p3>;
-+		vccio-supply = <&vreg_misc_3p3>;
+-      ap_ts: touchscreen@10 {
+-        compatible = "elan,ekth6915";
++      touchscreen@10 {
++        compatible = "elan,ekth5015m", "elan,ekth6915";
+         reg = <0x10>;
  
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&ts0_default>;
-@@ -1507,8 +1508,8 @@ int-n-pins {
- 		reset-n-pins {
- 			pins = "gpio99";
- 			function = "gpio";
--			output-high;
--			drive-strength = <16>;
-+			drive-strength = <2>;
-+			bias-disable;
- 		};
- 	};
- 
+         interrupt-parent = <&tlmm>;
 -- 
 2.43.2
 
