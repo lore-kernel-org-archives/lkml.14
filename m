@@ -1,90 +1,86 @@
-Received: from mail.nearlyone.de (mail.nearlyone.de [49.12.199.46])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B679716130B;
-	Tue,  7 May 2024 15:16:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.199.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF36C168B02;
+	Tue,  7 May 2024 15:17:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715095021; cv=none; b=HpCTUPAm6F6oY1vGgw0fK/pp2zHNGnRVWvAiITPFNGElm7SpIzPz41l0QBoj86u/BA3irGKKFnmIJ/9xvmgSv3CPMJmLKKt7ZqkYY4fZoV8x8/2RtvHXYvtW4P4dVzHNPFxG4hoB2WjYIpR+Dns9EQQHE+eEUIPD1tRgweCylJw=
+	t=1715095023; cv=none; b=iNyw4mNwrkPAhXTovpM0/QpNLDOImshI7raHh90/qS/hnfsqXi1kd7tiubAt48f1bY7v6uz+dKXt8OyYNMNnaHURYthtCJtAXHHvI/O+Xm62u9qRqESx42DoxlVW1rXCH8Cge5G1rg5mbWU6Ys3gs+rCELBbhWdkHhzeRfudUxI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715095021; c=relaxed/simple;
-	bh=axc7D83xZY+M9GOKDBmlE8Uiep7sZqUy57pi6Y9OdkE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Hs/4b8DgW6P6JVDfr2L7XyGmNpqElacjifdvzAXiGBwQDWZhVc84PoM6V76H0WZHIIodOQx6hspW37nbjfspj7vKHDc6TXLjhOLpLR+S4Ua4OdbdpsTMTnYFieTgRg80j6BwhpKssJoK6bVr1BRprwMGmBESsrhkxMD66N2i15A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org; spf=pass smtp.mailfrom=monom.org; dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b=aaxPIIRQ; arc=none smtp.client-ip=49.12.199.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=monom.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=monom.org
+	s=arc-20240116; t=1715095023; c=relaxed/simple;
+	bh=zyJu9yBHUsDZEwiqz7xPlI0025aurXNawhHfPRrtkwg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PoWdokkIZThdfSeuRjKiBveF7709T8jbhnlHrJTPYMXrdAdlbO3/41dYxJwUpgq2yXLEa2GS8CKNFzFXCjADcrOAB/Fz77rBJK74M8nXQ+HOf5YcmFNQ2Gog6mEPLp0Zq9iOILOzu6pRVLr6NUpGXBDLSptlET3Ib41PlDbAp5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pZdYdMfZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=monom.org header.i=@monom.org header.b="aaxPIIRQ"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8ABFFDB3DF;
-	Tue,  7 May 2024 17:16:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=monom.org; s=dkim;
-	t=1715095015; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding; bh=/K1BszgO4HhkgM/dGOUg1JDl9BqIsMT795T5xI0/ZkM=;
-	b=aaxPIIRQrHAOC0VvTO7yBcFF8tYODtzuCFEsReE0Gt/YgHnr4jXgaJRElN3KBzgFdQoCya
-	8uXE34Tc/7bSH5Jqt6UaNrgxJVxvr9e3Y5w8BZfCS1UQZkNKoioNP5Wy4Rxd9KbxwyNtTT
-	G6u0uEFpV/in+GOW9FKYrWwHqJaZYucojbCxO5XYzZ2CJL1XuPpOHeNrd1OpAp/EBLrAqm
-	y0IJ32US18HGrDvB8VojTvhC1LjEGpLe4z49WPDQfGH9Zgf0VrBs5ZJBqJ/WsFDB3OFx7x
-	PkjICB7JY9aI+tu/ipUEUPZ1gS4Y4f2hzCsa27xU8zry2vNrSQ52QM8NtiqnPA==
-From: Daniel Wagner <wagi@monom.org>
-To: LKML <linux-kernel@vger.kernel.org>,
-	 <linux-rt-users@vger.kernel.org>,
-	 <stable-rt@vger.kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Tom Zanussi <tom.zanussi@linux.intel.com>,
-	Clark Williams <williams@redhat.com>
-Cc: Daniel Wagner <wagi@monom.org>
-Subject: [PATCH RT 0/1] Linux v4.19.312-rt134-rc3
-Date: Tue,  7 May 2024 17:16:47 +0200
-Message-ID: <20240507151648.17883-1-wagi@monom.org>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pZdYdMfZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E0BDC2BBFC;
+	Tue,  7 May 2024 15:17:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715095023;
+	bh=zyJu9yBHUsDZEwiqz7xPlI0025aurXNawhHfPRrtkwg=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=pZdYdMfZiA8TSK6gKH55RQbGK5Oagt5SyYfZL0flIEayMhhFIvLbQBzYQv5c//RWK
+	 BxviT6ItG19vjkwcTRYxnGhRPWTZ9vkFbbOkbPOSHU9XY1RJWh1O/Vfp4pe3Xc5QDQ
+	 U4Eyx5Z+skvIEjg49wYGNGHFz3nZkjc+mOfuUYNKmXdPS+I6Pqu3qUjdCtwhGqFOGH
+	 wBZETCUBut8DPWi+9Du6+Ogo/WbeH6CAoEuC5LVwP98BJ+8uCcNN3UUlREzW64bKcb
+	 PHDTSu1L4IdME+R4kg39WJ+Hlj9yJo3drMSAlZjAoWhqSPptIViDbnbswwOoJJsr8s
+	 0xtD9EZbvuiXg==
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2df848f9325so38624901fa.1;
+        Tue, 07 May 2024 08:17:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUYP3G9M/EAQ+XqaPIbvVh6sS5UXbWxnJbac2SN9vYOVU+PpPhLAmJMXBGdpG7rML+BcOSPES5JZRtHIxEj7AMrXEQ9HvTPC1+K0k0zo3p72wTpxbQk4+S76hlWoPF+Kr7u+/+Z5J1XyQ==
+X-Gm-Message-State: AOJu0YydTjEin2vANqSQSaC9qSmcB3h/LzL7JZBtb3zdmhguckZCGKX2
+	rIvJPalLs7gVKWD5uhCt9yUPfnMm2+AMesxaC1Fv49ZBLKEDCQ9HECwNMjZBHxF5OkFSEPHuuuT
+	I+zfNPQFIjxrJ+iSXJ05jgxCLLKs=
+X-Google-Smtp-Source: AGHT+IEHukVmyg4VBnBczawNkg5xVFPgcAhPJDAvsYtrkmQdlKZstUvc83S09YCQ/qrduDkmFw5t2m++iSbLEQQBNMY=
+X-Received: by 2002:a2e:a212:0:b0:2df:e2d1:f4b5 with SMTP id
+ h18-20020a2ea212000000b002dfe2d1f4b5mr9127593ljm.21.1715095021888; Tue, 07
+ May 2024 08:17:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20240507041343.272569-1-wens@kernel.org> <Zjo-sri2pdGvKhSf@finisterre.sirena.org.uk>
+In-Reply-To: <Zjo-sri2pdGvKhSf@finisterre.sirena.org.uk>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Tue, 7 May 2024 23:16:50 +0800
+X-Gmail-Original-Message-ID: <CAGb2v67Avo0X-NRt5AxfsiZOuAAp2MgBxJBn5hu2yN6PjdtDFA@mail.gmail.com>
+Message-ID: <CAGb2v67Avo0X-NRt5AxfsiZOuAAp2MgBxJBn5hu2yN6PjdtDFA@mail.gmail.com>
+Subject: Re: [PATCH RESEND v5 0/2] regulator: sun20i: Add Allwinner D1 LDOs driver
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear RT Folks,
+On Tue, May 7, 2024 at 10:46=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
+te:
+>
+> On Tue, May 07, 2024 at 12:13:41PM +0800, Chen-Yu Tsai wrote:
+>
+> > This is a resend of the Allwinner D1 LDO driver series, separated by
+> > subsystem. This part contains just the regulator driver bits. The sunxi
+> > SRAM binding part will be sent out after the merge window due to a
+> > conflict in next.
+>
+> ...
+>
+> > A binding and driver change is required for the SRAM controller, to
+> > accept the regulators device as its child node.
+>
+> This says that the driver depends on the SRAM change which isn't getting
+> merged this time round?
 
-This is the RT stable review cycle of patch 4.19.312-rt134-rc3.
+The SRAM driver change was already merged. The regulator DT binding doesn't
+depend on the SRAM binding change; it's the other way around: the SRAM
+binding change adds a reference to the new regulator binding.
 
-Please scream at me if I messed something up. Please test the patches
-too.
+Hope that explains things.
 
-The -rc release is also available on kernel.org
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-stable-rt.git
-
-on the v4.19-rt-next branch.
-
-If all goes well, this patch will be converted to the next main
-release on 2024-05-14.
-
-Signing key fingerprint:
-
-  5BF6 7BC5 0826 72CA BB45  ACAE 587C 5ECA 5D0A 306C
-
-All keys used for the above files and repositories can be found on the
-following git repository:
-
-   git://git.kernel.org/pub/scm/docs/kernel/pgpkeys.git
-
-Enjoy!
-Daniel
-
-Changes from v4.19.307-rt133:
-
-
-Daniel Wagner (1):
-  Linux 4.19.312-rt134
-
- localversion-rt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
--- 
-2.44.0
-
+ChenYu
