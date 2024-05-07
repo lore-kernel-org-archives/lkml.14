@@ -1,52 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840DF16C847
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805E216D4F8
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:45:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715096710; cv=none; b=bPaLMSDfj4VuBg0oqUP8DClu3/vUH9fJniznr0Xr4B+yn9icXzYhvLZbJChGpJs7qzXBdfwmH7jIe0CbBlAmpxshk/hV8iuPES94IIkdn9ld6LE9OXFPMlF5eZX4ovOiODxcQ1XIVMokGEiqhUtD+SEhtZsvFDES2WwOTYj9nM0=
+	t=1715096713; cv=none; b=iEwp56B9jNK1rs0AcvsVH999J/MBnkmILvcJqapTDHbsjKen3KBe9no1ChzVedavAhY3Zy3qU2DY6n7Wg0IlB7UBkFRHrl6bl78vNO4UmItKLWBJQCsE/E4L8JxAWUYFG9Fm6UYGu8ShuvNbBvez00ZPmNBEa8Uv22NR1LvfQRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715096710; c=relaxed/simple;
-	bh=L3kGN8uyw/Ew7Q01CNgiHp9NV1lLvt9g54vof/4wKgY=;
+	s=arc-20240116; t=1715096713; c=relaxed/simple;
+	bh=zrMK1CJms/6SL5AG7A6aHU0z1D+fasw9+uRPwXvEGDk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PJMLAYouGVM5eY8pN40I6piw0uEEHVQcZQeVbdreZvc4gGkOp6GAnH7JERFNsCIcvw/q1e6FeGLWl2hKzeKMtUQsSqf3HvQGQT3gdWHd1JWEJK8RHMDmI42DecFkM3kU0CBIigJLgACoFkAhHuI0BxGiApXukgqhfJS5f0VR2ts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bBuUQ+Ey; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=pKjH/yoW394VRc47TnR2EkrrNvepjGy2fefbfE/oInsQzficZmu/CAtD0C6rw5/HSYnM5Z3Ax50nzJr+q7L5DsskbGtT02atGgGFROawRWK1gA93Cn3c2IwM4eOfSP+6Zo1kZsuZLcgKcNXWq9d6aaPLXNzqVwSxF9Vw4yIXHA4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=C73ueMWl; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bBuUQ+Ey"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="C73ueMWl"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715096707;
+	s=mimecast20190719; t=1715096710;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DEGWSMU46Vtho/KF+via1nc+bZYocNO5WGIxzuJ1CSE=;
-	b=bBuUQ+Ey+LkdTKFVLK8bVVY+LfHeDSPjfoeAcr60hzuNwLXHSPaANO1vHW18QB+OfDXac6
-	pfCDLDDhuyd9D7aSkmWMBz/zQ4PerqMrrDqTbipWNYmqxjPAmnMxM+vJfAU2Yk0voYWGJB
-	DPRe30z8rFakdNrPiAn2d0+dAVleoY4=
+	bh=2/otD1VSzsXz9/d/LXuHnyGMpoSGECP95q0JyJeR82U=;
+	b=C73ueMWltVZZt3lQYxozFzJjgbO6MPCf1TMEEoWaGcsAt83uH00RR7TPn00rlj9fr95c+F
+	5VA3hupAfx68LeG1vBhs/p8PVJ331g4LYSJNiMfp5MjTPT6Uw0X2P1GAbT2mbsKZbPLIGj
+	9SYjB12fYOJUrsl8EPsXO40UVZk0MUQ=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-642-F8TAFoFqM4KhUeU4rQv1Yw-1; Tue, 07 May 2024 11:45:02 -0400
-X-MC-Unique: F8TAFoFqM4KhUeU4rQv1Yw-1
+ us-mta-241-yqGW9NdaOnS4WyKb3N0v4g-1; Tue, 07 May 2024 11:45:01 -0400
+X-MC-Unique: yqGW9NdaOnS4WyKb3N0v4g-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E4453101A55E;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0D2A68011A9;
 	Tue,  7 May 2024 15:45:01 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C8A67C154E5;
-	Tue,  7 May 2024 15:45:01 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id D59DFC0004E;
+	Tue,  7 May 2024 15:45:00 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Cc: Isaku Yamahata <isaku.yamahata@intel.com>
-Subject: [PATCH 7/7] KVM: VMX: Introduce test mode related to EPT violation VE
-Date: Tue,  7 May 2024 11:44:59 -0400
-Message-ID: <20240507154459.3950778-8-pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Isaku Yamahata <isaku.yamahata@intel.com>,
+	Xiaoyao Li <xiaoyao.li@intel.com>,
+	Binbin Wu <binbin.wu@linux.intel.com>
+Subject: [PATCH 2/7] KVM: x86/mmu: Replace hardcoded value 0 for the initial value for SPTE
+Date: Tue,  7 May 2024 11:44:54 -0400
+Message-ID: <20240507154459.3950778-3-pbonzini@redhat.com>
 In-Reply-To: <20240507154459.3950778-1-pbonzini@redhat.com>
 References: <20240507154459.3950778-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -59,210 +62,163 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-From: Isaku Yamahata <isaku.yamahata@intel.com>
+From: Sean Christopherson <seanjc@google.com>
 
-To support TDX, KVM is enhanced to operate with #VE.  For TDX, KVM uses the
-suppress #VE bit in EPT entries selectively, in order to be able to trap
-non-present conditions.  However, #VE isn't used for VMX and it's a bug
-if it happens.  To be defensive and test that VMX case isn't broken
-introduce an option ept_violation_ve_test and when it's set, BUG the vm.
+The TDX support will need the "suppress #VE" bit (bit 63) set as the
+initial value for SPTE.  To reduce code change size, introduce a new macro
+SHADOW_NONPRESENT_VALUE for the initial value for the shadow page table
+entry (SPTE) and replace hard-coded value 0 for it.  Initialize shadow page
+tables with their value.
 
-Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+The plan is to unconditionally set the "suppress #VE" bit for both AMD and
+Intel as: 1) AMD hardware uses the bit 63 as NX for present SPTE and
+ignored for non-present SPTE; 2) for conventional VMX guests, KVM never
+enables the "EPT-violation #VE" in VMCS control and "suppress #VE" bit is
+ignored by hardware.
+
+No functional change intended.
+
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Message-Id: <d6db6ba836605c0412e166359ba5c46a63c22f86.1705965635.git.isaku.yamahata@intel.com>
+Message-Id: <acdf09bf60cad12c495005bf3495c54f6b3069c9.1705965635.git.isaku.yamahata@intel.com>
+[Remove unnecessary CONFIG_X86_64 check. - Paolo]
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Reviewed-by: Binbin Wu <binbin.wu@linux.intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/Kconfig    | 13 ++++++++++
- arch/x86/kvm/vmx/vmcs.h |  5 ++++
- arch/x86/kvm/vmx/vmx.c  | 53 ++++++++++++++++++++++++++++++++++++++---
- arch/x86/kvm/vmx/vmx.h  |  6 ++++-
- 4 files changed, 73 insertions(+), 4 deletions(-)
+ arch/x86/kvm/mmu/mmu.c         | 14 +++++++++-----
+ arch/x86/kvm/mmu/paging_tmpl.h |  2 +-
+ arch/x86/kvm/mmu/spte.h        |  4 +++-
+ arch/x86/kvm/mmu/tdp_mmu.c     | 12 ++++++------
+ 4 files changed, 19 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 0ebdd088f28b..d64fb2b3eb69 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -95,6 +95,19 @@ config KVM_INTEL
- 	  To compile this as a module, choose M here: the module
- 	  will be called kvm-intel.
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 08900a0563f9..fbfdc606f1f1 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -567,9 +567,9 @@ static u64 mmu_spte_clear_track_bits(struct kvm *kvm, u64 *sptep)
  
-+config KVM_INTEL_PROVE_VE
-+        bool "Check that guests do not receive #VE exceptions"
-+        default KVM_PROVE_MMU || DEBUG_KERNEL
-+        depends on KVM_INTEL
-+        help
-+
-+          Checks that KVM's page table management code will not incorrectly
-+          let guests receive a virtualization exception.  Virtualization
-+          exceptions will be trapped by the hypervisor rather than injected
-+          in the guest.
-+
-+          If unsure, say N.
-+
- config X86_SGX_KVM
- 	bool "Software Guard eXtensions (SGX) Virtualization"
- 	depends on X86_SGX && KVM_INTEL
-diff --git a/arch/x86/kvm/vmx/vmcs.h b/arch/x86/kvm/vmx/vmcs.h
-index 7c1996b433e2..b25625314658 100644
---- a/arch/x86/kvm/vmx/vmcs.h
-+++ b/arch/x86/kvm/vmx/vmcs.h
-@@ -140,6 +140,11 @@ static inline bool is_nm_fault(u32 intr_info)
- 	return is_exception_n(intr_info, NM_VECTOR);
- }
+ 	if (!is_shadow_present_pte(old_spte) ||
+ 	    !spte_has_volatile_bits(old_spte))
+-		__update_clear_spte_fast(sptep, 0ull);
++		__update_clear_spte_fast(sptep, SHADOW_NONPRESENT_VALUE);
+ 	else
+-		old_spte = __update_clear_spte_slow(sptep, 0ull);
++		old_spte = __update_clear_spte_slow(sptep, SHADOW_NONPRESENT_VALUE);
  
-+static inline bool is_ve_fault(u32 intr_info)
-+{
-+	return is_exception_n(intr_info, VE_VECTOR);
-+}
-+
- /* Undocumented: icebp/int1 */
- static inline bool is_icebp(u32 intr_info)
+ 	if (!is_shadow_present_pte(old_spte))
+ 		return old_spte;
+@@ -603,7 +603,7 @@ static u64 mmu_spte_clear_track_bits(struct kvm *kvm, u64 *sptep)
+  */
+ static void mmu_spte_clear_no_track(u64 *sptep)
  {
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index d780eee9b697..f4644f61d770 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -869,6 +869,12 @@ void vmx_update_exception_bitmap(struct kvm_vcpu *vcpu)
- 
- 	eb = (1u << PF_VECTOR) | (1u << UD_VECTOR) | (1u << MC_VECTOR) |
- 	     (1u << DB_VECTOR) | (1u << AC_VECTOR);
-+	/*
-+	 * #VE isn't used for VMX.  To test against unexpected changes
-+	 * related to #VE for VMX, intercept unexpected #VE and warn on it.
-+	 */
-+	if (IS_ENABLED(CONFIG_KVM_INTEL_PROVE_VE))
-+		eb |= 1u << VE_VECTOR;
- 	/*
- 	 * Guest access to VMware backdoor ports could legitimately
- 	 * trigger #GP because of TSS I/O permission bitmap.
-@@ -2602,6 +2608,9 @@ static int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 					&_cpu_based_2nd_exec_control))
- 			return -EIO;
- 	}
-+	if (!IS_ENABLED(CONFIG_KVM_INTEL_PROVE_VE))
-+		_cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_EPT_VIOLATION_VE;
-+
- #ifndef CONFIG_X86_64
- 	if (!(_cpu_based_2nd_exec_control &
- 				SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES))
-@@ -2626,6 +2635,7 @@ static int setup_vmcs_config(struct vmcs_config *vmcs_conf,
- 			return -EIO;
- 
- 		vmx_cap->ept = 0;
-+		_cpu_based_2nd_exec_control &= ~SECONDARY_EXEC_EPT_VIOLATION_VE;
- 	}
- 	if (!(_cpu_based_2nd_exec_control & SECONDARY_EXEC_ENABLE_VPID) &&
- 	    vmx_cap->vpid) {
-@@ -4588,6 +4598,7 @@ static u32 vmx_secondary_exec_control(struct vcpu_vmx *vmx)
- 		exec_control &= ~SECONDARY_EXEC_ENABLE_VPID;
- 	if (!enable_ept) {
- 		exec_control &= ~SECONDARY_EXEC_ENABLE_EPT;
-+		exec_control &= ~SECONDARY_EXEC_EPT_VIOLATION_VE;
- 		enable_unrestricted_guest = 0;
- 	}
- 	if (!enable_unrestricted_guest)
-@@ -4711,8 +4722,12 @@ static void init_vmcs(struct vcpu_vmx *vmx)
- 
- 	exec_controls_set(vmx, vmx_exec_control(vmx));
- 
--	if (cpu_has_secondary_exec_ctrls())
-+	if (cpu_has_secondary_exec_ctrls()) {
- 		secondary_exec_controls_set(vmx, vmx_secondary_exec_control(vmx));
-+		if (vmx->ve_info)
-+			vmcs_write64(VE_INFORMATION_ADDRESS,
-+				     __pa(vmx->ve_info));
-+	}
- 
- 	if (cpu_has_tertiary_exec_ctrls())
- 		tertiary_exec_controls_set(vmx, vmx_tertiary_exec_control(vmx));
-@@ -5200,6 +5215,9 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
- 	if (is_invalid_opcode(intr_info))
- 		return handle_ud(vcpu);
- 
-+	if (KVM_BUG_ON(is_ve_fault(intr_info), vcpu->kvm))
-+		return -EIO;
-+
- 	error_code = 0;
- 	if (intr_info & INTR_INFO_DELIVER_CODE_MASK)
- 		error_code = vmcs_read32(VM_EXIT_INTR_ERROR_CODE);
-@@ -6409,8 +6427,22 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
- 		pr_err("Virtual processor ID = 0x%04x\n",
- 		       vmcs_read16(VIRTUAL_PROCESSOR_ID));
- 	if (secondary_exec_control & SECONDARY_EXEC_EPT_VIOLATION_VE) {
--		pr_err("VE info address = 0x%016llx\n",
--		       vmcs_read64(VE_INFORMATION_ADDRESS));
-+		struct vmx_ve_information *ve_info = vmx->ve_info;
-+		u64 ve_info_pa = vmcs_read64(VE_INFORMATION_ADDRESS);
-+
-+		/*
-+		 * If KVM is dumping the VMCS, then something has gone wrong
-+		 * already.  Derefencing an address from the VMCS, which could
-+		 * very well be corrupted, is a terrible idea.  The virtual
-+		 * address is known so use it.
-+		 */
-+		pr_err("VE info address = 0x%016llx%s\n", ve_info_pa,
-+		       ve_info_pa == __pa(ve_info) ? "" : "(corrupted!)");
-+		pr_err("ve_info: 0x%08x 0x%08x 0x%016llx 0x%016llx 0x%016llx 0x%04x\n",
-+		       ve_info->exit_reason, ve_info->delivery,
-+		       ve_info->exit_qualification,
-+		       ve_info->guest_linear_address,
-+		       ve_info->guest_physical_address, ve_info->eptp_index);
- 	}
+-	__update_clear_spte_fast(sptep, 0ull);
++	__update_clear_spte_fast(sptep, SHADOW_NONPRESENT_VALUE);
  }
  
-@@ -7466,6 +7498,7 @@ void vmx_vcpu_free(struct kvm_vcpu *vcpu)
- 	free_vpid(vmx->vpid);
- 	nested_vmx_free_vcpu(vcpu);
- 	free_loaded_vmcs(vmx->loaded_vmcs);
-+	free_page((unsigned long)vmx->ve_info);
+ static u64 mmu_spte_get_lockless(u64 *sptep)
+@@ -1897,7 +1897,8 @@ static bool kvm_sync_page_check(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp)
+ 
+ static int kvm_sync_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp, int i)
+ {
+-	if (!sp->spt[i])
++	/* sp->spt[i] has initial value of shadow page table allocation */
++	if (sp->spt[i] == SHADOW_NONPRESENT_VALUE)
+ 		return 0;
+ 
+ 	return vcpu->arch.mmu->sync_spte(vcpu, sp, i);
+@@ -6120,7 +6121,10 @@ int kvm_mmu_create(struct kvm_vcpu *vcpu)
+ 	vcpu->arch.mmu_page_header_cache.kmem_cache = mmu_page_header_cache;
+ 	vcpu->arch.mmu_page_header_cache.gfp_zero = __GFP_ZERO;
+ 
+-	vcpu->arch.mmu_shadow_page_cache.gfp_zero = __GFP_ZERO;
++	vcpu->arch.mmu_shadow_page_cache.init_value =
++		SHADOW_NONPRESENT_VALUE;
++	if (!vcpu->arch.mmu_shadow_page_cache.init_value)
++		vcpu->arch.mmu_shadow_page_cache.gfp_zero = __GFP_ZERO;
+ 
+ 	vcpu->arch.mmu = &vcpu->arch.root_mmu;
+ 	vcpu->arch.walk_mmu = &vcpu->arch.root_mmu;
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 4d4e98fe4f35..bebd73cd61bb 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -911,7 +911,7 @@ static int FNAME(sync_spte)(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp, int
+ 	gpa_t pte_gpa;
+ 	gfn_t gfn;
+ 
+-	if (WARN_ON_ONCE(!sp->spt[i]))
++	if (WARN_ON_ONCE(sp->spt[i] == SHADOW_NONPRESENT_VALUE))
+ 		return 0;
+ 
+ 	first_pte_gpa = FNAME(get_level1_sp_gpa)(sp);
+diff --git a/arch/x86/kvm/mmu/spte.h b/arch/x86/kvm/mmu/spte.h
+index f5c600c52f83..0f4ec2859474 100644
+--- a/arch/x86/kvm/mmu/spte.h
++++ b/arch/x86/kvm/mmu/spte.h
+@@ -149,6 +149,8 @@ static_assert(MMIO_SPTE_GEN_LOW_BITS == 8 && MMIO_SPTE_GEN_HIGH_BITS == 11);
+ 
+ #define MMIO_SPTE_GEN_MASK		GENMASK_ULL(MMIO_SPTE_GEN_LOW_BITS + MMIO_SPTE_GEN_HIGH_BITS - 1, 0)
+ 
++#define SHADOW_NONPRESENT_VALUE	0ULL
++
+ extern u64 __read_mostly shadow_host_writable_mask;
+ extern u64 __read_mostly shadow_mmu_writable_mask;
+ extern u64 __read_mostly shadow_nx_mask;
+@@ -194,7 +196,7 @@ extern u64 __read_mostly shadow_nonpresent_or_rsvd_mask;
+  *
+  * Only used by the TDP MMU.
+  */
+-#define REMOVED_SPTE	0x5a0ULL
++#define REMOVED_SPTE	(SHADOW_NONPRESENT_VALUE | 0x5a0ULL)
+ 
+ /* Removed SPTEs must not be misconstrued as shadow present PTEs. */
+ static_assert(!(REMOVED_SPTE & SPTE_MMU_PRESENT_MASK));
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+index c6192a52bd31..f5401967897a 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.c
++++ b/arch/x86/kvm/mmu/tdp_mmu.c
+@@ -603,7 +603,7 @@ static inline int tdp_mmu_zap_spte_atomic(struct kvm *kvm,
+ 	 * here since the SPTE is going from non-present to non-present.  Use
+ 	 * the raw write helper to avoid an unnecessary check on volatile bits.
+ 	 */
+-	__kvm_tdp_mmu_write_spte(iter->sptep, 0);
++	__kvm_tdp_mmu_write_spte(iter->sptep, SHADOW_NONPRESENT_VALUE);
+ 
+ 	return 0;
  }
+@@ -740,8 +740,8 @@ static void __tdp_mmu_zap_root(struct kvm *kvm, struct kvm_mmu_page *root,
+ 			continue;
  
- int vmx_vcpu_create(struct kvm_vcpu *vcpu)
-@@ -7559,6 +7592,20 @@ int vmx_vcpu_create(struct kvm_vcpu *vcpu)
- 			goto free_vmcs;
+ 		if (!shared)
+-			tdp_mmu_iter_set_spte(kvm, &iter, 0);
+-		else if (tdp_mmu_set_spte_atomic(kvm, &iter, 0))
++			tdp_mmu_iter_set_spte(kvm, &iter, SHADOW_NONPRESENT_VALUE);
++		else if (tdp_mmu_set_spte_atomic(kvm, &iter, SHADOW_NONPRESENT_VALUE))
+ 			goto retry;
  	}
+ }
+@@ -808,8 +808,8 @@ bool kvm_tdp_mmu_zap_sp(struct kvm *kvm, struct kvm_mmu_page *sp)
+ 	if (WARN_ON_ONCE(!is_shadow_present_pte(old_spte)))
+ 		return false;
  
-+	err = -ENOMEM;
-+	if (vmcs_config.cpu_based_2nd_exec_ctrl & SECONDARY_EXEC_EPT_VIOLATION_VE) {
-+		struct page *page;
-+
-+		BUILD_BUG_ON(sizeof(*vmx->ve_info) > PAGE_SIZE);
-+
-+		/* ve_info must be page aligned. */
-+		page = alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-+		if (!page)
-+			goto free_vmcs;
-+
-+		vmx->ve_info = page_to_virt(page);
-+	}
-+
- 	if (vmx_can_use_ipiv(vcpu))
- 		WRITE_ONCE(to_kvm_vmx(vcpu->kvm)->pid_table[vcpu->vcpu_id],
- 			   __pa(&vmx->pi_desc) | PID_TABLE_ENTRY_VALID);
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 65786dbe7d60..0da79a386825 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -362,6 +362,9 @@ struct vcpu_vmx {
- 		DECLARE_BITMAP(read, MAX_POSSIBLE_PASSTHROUGH_MSRS);
- 		DECLARE_BITMAP(write, MAX_POSSIBLE_PASSTHROUGH_MSRS);
- 	} shadow_msr_intercept;
-+
-+	/* ve_info must be page aligned. */
-+	struct vmx_ve_information *ve_info;
- };
+-	tdp_mmu_set_spte(kvm, kvm_mmu_page_as_id(sp), sp->ptep, old_spte, 0,
+-			 sp->gfn, sp->role.level + 1);
++	tdp_mmu_set_spte(kvm, kvm_mmu_page_as_id(sp), sp->ptep, old_spte,
++			 SHADOW_NONPRESENT_VALUE, sp->gfn, sp->role.level + 1);
  
- struct kvm_vmx {
-@@ -574,7 +577,8 @@ static inline u8 vmx_get_rvi(void)
- 	 SECONDARY_EXEC_ENABLE_VMFUNC |					\
- 	 SECONDARY_EXEC_BUS_LOCK_DETECTION |				\
- 	 SECONDARY_EXEC_NOTIFY_VM_EXITING |				\
--	 SECONDARY_EXEC_ENCLS_EXITING)
-+	 SECONDARY_EXEC_ENCLS_EXITING |					\
-+	 SECONDARY_EXEC_EPT_VIOLATION_VE)
+ 	return true;
+ }
+@@ -843,7 +843,7 @@ static bool tdp_mmu_zap_leafs(struct kvm *kvm, struct kvm_mmu_page *root,
+ 		    !is_last_spte(iter.old_spte, iter.level))
+ 			continue;
  
- #define KVM_REQUIRED_VMX_TERTIARY_VM_EXEC_CONTROL 0
- #define KVM_OPTIONAL_VMX_TERTIARY_VM_EXEC_CONTROL			\
+-		tdp_mmu_iter_set_spte(kvm, &iter, 0);
++		tdp_mmu_iter_set_spte(kvm, &iter, SHADOW_NONPRESENT_VALUE);
+ 
+ 		/*
+ 		 * Zappings SPTEs in invalid roots doesn't require a TLB flush,
 -- 
 2.43.0
+
 
