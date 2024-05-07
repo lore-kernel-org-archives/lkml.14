@@ -1,161 +1,135 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3DB112BF20
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 23:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4C112DDA1
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 23:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715124536; cv=none; b=Qxveu4XrEYTAwPG0zavcJ1IbQkP165UKQLqwb5XXaPLgIrtSv3EeMlZ9FBIcnQkswkE7JXXP2vjabwzkyitIkicMSjwJsYW5xVG4ojyIYQcVICrM2MGVXEOdmWMI9fqUw/rW8cdsyvg0OaI39OS4BttiVUxrH6xTmTZt1e5/kxo=
+	t=1715124540; cv=none; b=PHDUbdazwOhTgzYMSmhhAiQnxSf60NsomN4EPCgM8CcpR2vFLdF6eGRdso597jDmDTqvH0JrFP09Lkjaz54R2jBEC52ll/IyEZy7YfTrzLAWlaMcPB+VzCKhwReGibOZKibOFrLDpYsYXOMnG7EsfzZWeS7uI9Xw8wouphCxUmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715124536; c=relaxed/simple;
-	bh=JX0XCKXr1thgDPxaTecjtKr6rIsRQAHKTIazy9OBhDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F7VZsiaWmxh5B8Rd605vpzaee1r33ZLxZ5/x3qAqyUd79CXWFC7MEr43FBEuXqJKE/gaKgfwdY5iEDB1hxWUcauUcGFgpbMQMlRx2nXrp0hScoZPC5YphALsCnAG6jqU/Au9dvxWvTjBkFRKyS9FkKF+qY688aefUf6mDqBl7Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=YSKyRV2q; arc=none smtp.client-ip=209.85.215.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715124540; c=relaxed/simple;
+	bh=6N7YQ0tqw4GK3rBRagXlWIy9Y10OPMOiuDCFV37xTOw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lGy5jx6IP2nUGRRxYxMOVIiBhh8vkHQxGLEGrP6ZCOAbXa73vaQGTfTVQpmRVZRKO3IA8RNRb+OKmiO5Xk2ITLCX9WR3tSmhYD89tgdBrDlrQoQuMUrBmnPi4isIw8GwKxBkgWY9+FHJUCV5XUIMyRmeHywJQuVqLunwAMBue+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l4WaEWPg; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YSKyRV2q"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-5d81b08d6f2so2894539a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 16:28:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l4WaEWPg"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2df848f9325so43721031fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 16:28:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715124534; x=1715729334; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tt8XgRQm+eA+VmBxGqEcvvy66oE9R2AfbLeL3WkCPuU=;
-        b=YSKyRV2qjy0ljrYgd0U6Ch3uzgizQZe+4pSJYHsZSP01gcra909Tiz1I1roMahHF4f
-         R02+dz1KaKB4os+ZuM06R3OW4OuuE5O+jtzs5QpwOMbe9ciAbxWjG0HBoTz/GjMb/HTS
-         JZzkAPMzRCPpiJPnaz9ioUHMig2uiUqQfpOOs=
+        d=linaro.org; s=google; t=1715124537; x=1715729337; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=SZnivb6l1xDPNW5GpJEM2VTzatebi8iz4jebWhunJco=;
+        b=l4WaEWPgsGXjk/8nafmVi310JcynF/KQatFvGiz6/dON5rfOjLwPgioNNbG2ftga2D
+         0YceC5cqb5Liwh5wfwxFRkkI8CIiWLTG9cODSp5uE1nP1VjG4kY7LpJP08nM5CPBDWk5
+         xZWMYqisdYMo5O2sZ3Dp+zKD3rqFTwsfDl6Gpuv/Y3LKRhQWKwFvHXoMZKeISmcJCg29
+         FZcj4lmmxDmiiSUYL4DR+HWNApwFb4Bkt4qi/x6lBVQZSsZcQuUnvv2HIhFdOllN+ZwM
+         aijbe2e/GfMhz84I2tKd9hI5jDZAFdvZ/3I8zhupt9h5YECXN3VBBzVZtmf77oSKQQa9
+         tu5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715124534; x=1715729334;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tt8XgRQm+eA+VmBxGqEcvvy66oE9R2AfbLeL3WkCPuU=;
-        b=jDFWo2svW5RDLeFY43MWOX2Cn3Y6uPERpVXShvVFbdXNi9YbG5IbuuSVjYypt+jsNc
-         YR4Tb8L4jhUDkdPzetsDAYDrX7oWaNgP4cGRmYs7qmAE3i3BA0e4YRj702NzU+15C3d2
-         ylSyr8rO+3kqxkzMM4g07fchbAer5htmH/q98gU4uZirWG9mqhoO62h4hmzDSv26Jlpj
-         GL59a3cDaHycicaKXA6xeE47ZV6IXHHWboXecnxUXGa1jPTeLymOmEBh7bMGWj/p3x/D
-         adB5XKyvrLHTbOEgKMzOR/0wClFz1WiW4EGOab9U5ukz3z0IbdBiwS0a6ecceAktYvBS
-         2FFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVF1CyF++vCvoeY48KT4rg+r6ZvRufKyFOeDEA1OeHJldV4vxeChGRC7GwhUvhF5IN+pqh9v8Y+g5gWEaZagDxGK3k34u9FGPcC3ssO
-X-Gm-Message-State: AOJu0YxoRTnNKh1lCdD5LwuhiVKdoTuVFnq4r/2FmAe+gBfpSkhxH8Yg
-	WM5288TkGqI78y8MnZIFbyy3nt9HMAD6+GQxxBIy4SZ4S9cxt8CVXLQ6cCGHsQ==
-X-Google-Smtp-Source: AGHT+IElkYKkPF9F5WlZiOfJXRbgeCSMUqbJ3Z1JrZ5HzzcuDvdHCUlR3LVeoTae63dQgTdtTlamYA==
-X-Received: by 2002:a05:6a20:9f88:b0:1ad:6c5:4ea1 with SMTP id adf61e73a8af0-1afc8db5479mr1525582637.41.1715124534335;
-        Tue, 07 May 2024 16:28:54 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 60-20020a17090a09c200b002b624b0161fsm80422pjo.19.2024.05.07.16.28.53
+        d=1e100.net; s=20230601; t=1715124537; x=1715729337;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SZnivb6l1xDPNW5GpJEM2VTzatebi8iz4jebWhunJco=;
+        b=OjEAjKd0LvA65p2GNfvk+QdnLBkyqn6ivVudg5pi2EsgMZz1fQ2+VOjUkhXvvUiPiH
+         oAX2+62S50QQwLnMHkrjfnwvAhlu1WGtJ7naaFtB/Jhdw2eq7vjp3wqBe6eNHS2lCkif
+         vLfXi3+KoJDY2lwPGjKJUG+/wKAw+nYG+88X4U51+TAaD59zrLIJsb++TpEs4ZjQoQMU
+         EnKqkB0qvPN6miQ77iEn+61Cth2IkVZN3z9Kcxugim26TeWoV1vgTrbjtSQDNj7gU2ez
+         38JSUR4o9OefKBN9JZexPgYzcRT1e3MwcwWvirNEb4k9yZskE+FYEOsxIF46AwkOdW7K
+         guNw==
+X-Forwarded-Encrypted: i=1; AJvYcCWaDf1vuNxQ6fGk4M6NU0TkrVmQqwNrFACoC0Jnllse/yLYc0zp4tZf1HdP9p6SpyEUymhoIKPZy12qP6PbJY051K4m8J/TOHcPGuyH
+X-Gm-Message-State: AOJu0Yymyk1u3MTdKW//B2ST6gAeiCpzc2xPSOEG1muisLZro3lG7ue4
+	fuoAoX547tve4m9a7qZ8ZAIQvS3VE1uwCydOTd/TmpIQz53g0upx0DPBmtlS/OA=
+X-Google-Smtp-Source: AGHT+IEPiXoxSzLzRXgrv9XDV9vtUW/h06YqEXe8uksqmJa5e8EscDHKjV8RrPV7tXMeqhjdWBg8Yg==
+X-Received: by 2002:a2e:97d7:0:b0:2e1:afa6:9291 with SMTP id 38308e7fff4ca-2e446d7a622mr6991041fa.8.1715124536837;
+        Tue, 07 May 2024 16:28:56 -0700 (PDT)
+Received: from [192.168.0.113] ([2a02:8109:aa0d:be00::8bb3])
+        by smtp.gmail.com with ESMTPSA id f20-20020a056402195400b005725c56b35bsm6851841edz.71.2024.05.07.16.28.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 16:28:53 -0700 (PDT)
-Date: Tue, 7 May 2024 16:28:53 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Edward Liaw <edliaw@google.com>
-Cc: shuah@kernel.org, Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	David Hildenbrand <david@redhat.com>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Seth Forshee <sforshee@kernel.org>,
-	Bongsu Jeon <bongsu.jeon@samsung.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kernel-team@android.com, linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	linux-input@vger.kernel.org, iommu@lists.linux.dev,
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-security-module@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-actions@lists.infradead.org, mptcp@lists.linux.dev,
-	linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] Define _GNU_SOURCE for sources using
-Message-ID: <202405071628.7F8C3EC@keescook>
-References: <20240507214254.2787305-1-edliaw@google.com>
+        Tue, 07 May 2024 16:28:56 -0700 (PDT)
+From: Caleb Connolly <caleb.connolly@linaro.org>
+Subject: [PATCH 0/2] qcom: initial support for the SHIFTphone 8
+Date: Wed, 08 May 2024 01:28:46 +0200
+Message-Id: <20240508-otter-bringup-v1-0-c807d3d931f6@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507214254.2787305-1-edliaw@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAC65OmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDUwNz3fySktQi3aSizLz00gJdYwuL5DTjxETz5ERTJaCegqLUtMwKsHn
+ RsbW1AHe6n1RfAAAA
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: Alexander Martinz <amartinz@shiftphones.com>, 
+ Luca Weiss <luca.weiss@fairphone.com>, 
+ ~postmarketos/upstreaming@lists.sr.ht, linux-arm-msm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Caleb Connolly <caleb.connolly@linaro.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1280;
+ i=caleb.connolly@linaro.org; h=from:subject:message-id;
+ bh=6N7YQ0tqw4GK3rBRagXlWIy9Y10OPMOiuDCFV37xTOw=;
+ b=owEBbQKS/ZANAwAIAQWDMSsZX2S2AcsmYgBmOrk2B/4XeVkV74lSsQlHo/KIqvv30KzVQVOou
+ 8C7/EL5ezKJAjMEAAEIAB0WIQS2UaFGPGq+0GkMVc0FgzErGV9ktgUCZjq5NgAKCRAFgzErGV9k
+ tpPHD/9xh8ILKiI6drHKQPf2GAlPWWACEWKpC70RqEBfpRSwCzDoC3nh7TupxrCt1UdFLeoN5i3
+ rGDTOxM+BwP8AcvCIyVw6FUetbNQG0tm4BIgwFx0vNFi2znWY5TTm6rsuJh20C8Rd3x0fkN/ydf
+ 5arNFbKWVJfzfMkeRKqfE82ApbS4LMcOAcLTEq90Im7zJntJR/zrAPe0viHd6WBbBVx2NDMxYer
+ niIKxCrCcZ/7O3AAO4UxHo2i0o7/SSBtauMKRHyGBLCg4IM11WTtp4yove9l72zncqMeRcPql6K
+ IaIkjikjo/5mWnknEZ+G4/XOmpXaj0GfFhAZaVRTLagtG84Vs30C1AgzWtx+yBwRs8NmNmiMYxj
+ v1cwR/3PaWllWKaG64ed7rn0Xph9OcabmLCN3S/ZiHaUjCwRY6DiWEDIPjrRpbDgCvTN54y6y6r
+ g/6yeidUpEem04gM9N21mKt4mslDxxHNnrBwNebbV7GmqzrAH1j/WjjmPKFYORE58e98SAxxFRJ
+ Ovn42MYMVniMc5q8X7fCsNxTzklVq4TpiuwQcspxW0L1b8MfXdN4IuL6zOC5VvwQoXihzE6cESV
+ zGScL/5KTnRK+Wq8HLUlPGA22Mrr97xC3kPERcGAHKLXSzFzjWM6F2JJyHi7CvyU+lVF/jXKL5n
+ 5v73LqddEtOiaxA==
+X-Developer-Key: i=caleb.connolly@linaro.org; a=openpgp;
+ fpr=83B24DA7FE145076BC38BB250CD904EB673A7C47
 
-On Tue, May 07, 2024 at 09:38:25PM +0000, Edward Liaw wrote:
-> 809216233555 ("selftests/harness: remove use of LINE_MAX") introduced
-> asprintf into kselftest_harness.h, which is a GNU extension and needs
-> _GNU_SOURCE to either be defined prior to including headers or with the
-> -D_GNU_SOURCE flag passed to the compiler.
-> 
-> v1: https://lore.kernel.org/linux-kselftest/20240430235057.1351993-1-edliaw@google.com/
-> v2: add -D_GNU_SOURCE to KHDR_INCLUDES so that it is in a single
-> location.  Remove #define _GNU_SOURCE from source code to resolve
-> redefinition warnings.
-> 
-> Edward Liaw (5):
->   selftests: Compile kselftest headers with -D_GNU_SOURCE
->   selftests/sgx: Include KHDR_INCLUDES in Makefile
->   selftests: Include KHDR_INCLUDES in Makefile
->   selftests: Drop define _GNU_SOURCE
->   selftests: Drop duplicate -D_GNU_SOURCE
+The SHIFTphone 8 is an upcoming QCM6490 smartphone, it has the following
+features:
 
-It's a lot of churn, but I don't see a way to do it differently. :)
+* 12GB of RAM, 512GB UFS storage
+* 1080p display.
+* Hardware kill switches for cameras and microphones
+* UART access via type-c SBU pins (enabled by an internal switch)
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Initial support includes:
 
--- 
-Kees Cook
+* Framebuffer display
+* UFS and sdcard storage
+* Battery monitoring and USB role switching via pmic glink
+* Bluetooth
+* Thermals
+
+Wifi is not yet functional due to a crash in the remoteproc
+firmware.
+
+The serial port on the device can be accessed via the usb-cereal
+adapter, it must first be enabled by flipping the switch under the
+display. Additional info can be found on the postmarketOS wiki page.
+
+https://wiki.postmarketos.org/wiki/SHIFT_SHIFTphone_8_(shift-otter)
+
+---
+Caleb Connolly (2):
+      dt-bindings: arm: qcom: Add QCM6490 SHIFTphone 8
+      arm64: dts: qcom: add QCM6490 SHIFTphone 8
+
+ Documentation/devicetree/bindings/arm/qcom.yaml  |   1 +
+ arch/arm64/boot/dts/qcom/Makefile                |   1 +
+ arch/arm64/boot/dts/qcom/qcm6490-shift-otter.dts | 938 +++++++++++++++++++++++
+ 3 files changed, 940 insertions(+)
+---
+change-id: 20240507-otter-bringup-388cf3aa7ca5
+base-commit: dccb07f2914cdab2ac3a5b6c98406f765acab803
+
+// Caleb (they/them)
+
