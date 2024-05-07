@@ -1,191 +1,162 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF3F78C80;
-	Tue,  7 May 2024 06:51:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715064680; cv=fail; b=DS5cZ8fRKBVJO2L8sOD5itrFNrwjJKaDbfEynqyyfl87kH9dp0smnk7N/vGYancEqt+GNjma+iZGEqUU5tn3Ym4x9oE1AdbI+h76WXXY0I1IQaPpjlz1b8/TgBeeLFZDRqVq49eIcY0xkV8pbzadeBLNpWvnlBEb3pdmT7lH35I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715064680; c=relaxed/simple;
-	bh=1Dp0rj2DrTlLgwwVQwKLTLlnGy9rldBAuqR4G563msA=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=URdJ1MPtHAqWbHGYU0UNjmmb5zwJPQ01SkgbdzjN28Z3Imv1IilQpTwNMMSk4JLeLGU3H/dFRr+BjSHLLfe4QYEpMRNiEasQtReahycXdAPfMR0VHIQCr6/D7GCMEgOqrjEzQDNEsXhHWMZ99PCyKhs7fDMl2PqvJ7lWCN4llGo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=jQ3XW17S; arc=fail smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="jQ3XW17S"
-Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 446MrNaj017227;
-	Tue, 7 May 2024 06:50:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
-	 h=from:to:cc:subject:date:message-id:content-transfer-encoding
-	:content-type:mime-version; s=PPS06212021; bh=FglXVag+D07sMukdmz
-	IeUeteF4/gtq3w2rdSmQmDIU8=; b=jQ3XW17S+rWe3k5unBFnv+GRhn8SS6aoHZ
-	vuhgnP0a3LZMwYQCEyiAgvtJ6KUa1OBPsXW3c3B+fSCpZMt3eB/A4T7XT7kjUHiJ
-	EThevmbi+rxJyRbTRZ53eH21NnC4jUMKFYGL+KE6DIjDZW5LW1hOah9dnluR0Aln
-	+tHqcuh8sLoDRTeut4ySqpBgzDU1UieS4aj4RUv5A45gusFWIKe3ndOugs3cwY8K
-	RBZrrdYjuffK3xwR1syWpJKHVAlLNqMmoitAylt416ylzRVcco+z9erDmILkhz1A
-	6OW49Qf0rOzlXxV/V4Gzqc+tQ5Buv4v0ZWsWv5r3YfTleURXHLQw==
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3xwc052h1g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 06:50:53 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TzaTMafchkoqiomNQogj7JCYBL4GPaD2Qyh3xGaOQrpjpxbMsrzTBmsU2L1GydO6SgVptrSv+14VC590bh9yDQ+5oNXxvtExs3+e42SL2KqwkzddqYlfY72xlPY807wSDpk6U4VYCBcqnQW9EukP3cq0iWfIuehF5EK5z8oB1UpSjEZ5de85otQkjNbP9rd1VdH7BTakF2xI69LdCnF5bRL7jM2SSbVXf3F18xMTIpBqkuAlP33kCfCkhCCjFqMKTdE+VkWGS6NxSwhq4BpaOSAHBAI3Us6ApIRW7cim/Qfz2h3IVNIPm6+CZU+NM59Wg9/vtoIO/0sdhbwCyDYBBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FglXVag+D07sMukdmzIeUeteF4/gtq3w2rdSmQmDIU8=;
- b=jNxCOCM97t6OC71sy8pNcogsk0twsHDzBdo050XopzlFZO6prgU63y71ntDf2VyzjkgLlKVBSnxAMkhX5HajhDlmpefW73vk0SZzU++voMuZIUAOGg3Y8SgYNxB+dRvZl3G9znfQhbVHFDn6Sp7Yk9PgCfTVYJzQEWuSKmwT/FqW2zoIAD5IeJd3bRyJUJHOy0dz77tWMLCtJF68majhwS8qpQ3hKJqQnIjf1dRXWBJPVYNeYOzVOEyrW2YNz88vtiPcADL+80n7e7QjqrTFenQgD5jRLxPsyujxXwoR+rDLGgnkBt/Le/F3D7TL0bOBeK+6xuxQs57hqbcZtAMJow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=windriver.com; dmarc=pass action=none
- header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
-Received: from SA3PR11MB7527.namprd11.prod.outlook.com (2603:10b6:806:314::20)
- by DM4PR11MB6019.namprd11.prod.outlook.com (2603:10b6:8:60::5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7544.41; Tue, 7 May 2024 06:50:50 +0000
-Received: from SA3PR11MB7527.namprd11.prod.outlook.com
- ([fe80::9135:7397:16e6:258c]) by SA3PR11MB7527.namprd11.prod.outlook.com
- ([fe80::9135:7397:16e6:258c%3]) with mapi id 15.20.7544.036; Tue, 7 May 2024
- 06:50:49 +0000
-From: He Zhe <zhe.he@windriver.com>
-To: namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com
-Cc: zhe.he@windriver.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] perf bench: Fix trap divide error of perf bench internals inject-build-id
-Date: Tue,  7 May 2024 14:50:26 +0800
-Message-Id: <20240507065026.2652929-1-zhe.he@windriver.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI1PR02CA0047.apcprd02.prod.outlook.com
- (2603:1096:4:1f5::15) To SA3PR11MB7527.namprd11.prod.outlook.com
- (2603:10b6:806:314::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3396178C7D;
+	Tue,  7 May 2024 06:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715064747; cv=none; b=hUsv8sqL8Lzb6mcSx+wRDol32/4ULJgejPx07dLDhxCGVifaMJDQux5eBYz025k48sQl4ZhM0EG9QaNPMQABUT0XZcrnZR6MwKFwBYQP86HYnh7igx7yREJssxYYvPQWtNnLBgNnHW81kXMkSDJgaobSdJ62lSXnawn7N5vJ7eE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715064747; c=relaxed/simple;
+	bh=NXFA2n7R8fudSZ/3T2nEa5Ke4g54M+TnC5DNvRyOtkA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a0FiZz/UKuLaF49GsFcncMEG+7eowegWZXF0jZ0zJtQPIx7ri07FVjOiZXoMX3WQ6M5vvMX1wJkV7vH2CYHBdZ2+p0BsF8W1yuFmV04of8w4npYx2sFDLYjqpwDZov+ye8JWCILDxNWQFuaON27gNthX3H0wbgZYMe17kkcnu60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VYTV73X47z4f3jkr;
+	Tue,  7 May 2024 14:52:15 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id BEF1B1A0179;
+	Tue,  7 May 2024 14:52:20 +0800 (CST)
+Received: from [10.174.177.174] (unknown [10.174.177.174])
+	by APP1 (Coremail) with SMTP id cCh0CgAn9g6gzzlmdMbyLw--.9131S3;
+	Tue, 07 May 2024 14:52:20 +0800 (CST)
+Message-ID: <7c5f0e28-100f-621e-61e2-65e5071f6a22@huaweicloud.com>
+Date: Tue, 7 May 2024 14:52:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR11MB7527:EE_|DM4PR11MB6019:EE_
-X-MS-Office365-Filtering-Correlation-Id: 05bac93f-ed66-4e3e-a275-08dc6e620737
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: 
-	BCL:0;ARA:13230031|1800799015|52116005|376005|366007|38350700005;
-X-Microsoft-Antispam-Message-Info: 
-	=?us-ascii?Q?nuBVVulkUsmSlbwSawQ/ao9FLVFkigFWbMeYrY9k7iSZHQIZJ/PR4h1SZ1XH?=
- =?us-ascii?Q?ZUCPgwxWXDNXuSR2G+U8DgVvjT1/2Vsyk2KtVOqDpG8IERs1BIbq/Y0+OYJs?=
- =?us-ascii?Q?T2D+fJRcBr6zfF4B1a6SXF2dPj8pydqApkct4doAIj71XPgSAXsTA2f8/d0n?=
- =?us-ascii?Q?DrwILAzw8jtEFA2TLJ4z+fE7kYAT/9uNbmfpXRsbyrAE4BSzqOyyA9vqwbNG?=
- =?us-ascii?Q?7ENcBSM1JcJQXa14tYsDM4ByqVTmmPsIfjrhBpJELbfde7flHNpE5QEV70eo?=
- =?us-ascii?Q?C4Q5+CCh/hxu0UCClSy2FwFZrzaFtMFJNWIMQyEncd7kIYBxb1+TQIxB+4vg?=
- =?us-ascii?Q?YbztiwGbcmxgHIWR9sg+Qyl7/fGrR2e0uFnXnWJ3SzciryQXunMS+qVtnA61?=
- =?us-ascii?Q?50do3U8MBvtsY0Tto3GRrp1qicVK5S1G7V5ZCAkzax0lUDYV6rdyt01RE+nj?=
- =?us-ascii?Q?jYtCFVcmWpqZBReJPfJfUkGTfChjLouFYB/1VS6MCOCxrPrmS77sjnzWN+A/?=
- =?us-ascii?Q?+oKRaBd9IUu35+cKvZzs0R9wIeKBtZ5UA67zkULH7thO5bBfdJVjO4EPwkSk?=
- =?us-ascii?Q?/fY3C3OoxLLHtXDkCpYgWmY+J6yYw0VjmgHItE/pH+pWmkVo51rF+B64S/yO?=
- =?us-ascii?Q?kDtI1PZkJiNPdAZcF0R/UnGuAOq5GWtUIjoBCkyxGSF5zjyK775SfkFW6GFM?=
- =?us-ascii?Q?xshJHxjyVUmJNrOXu8+UNLkEZiY7jv8WQiCqamQm06mdSSakEb1N/mgAWMLQ?=
- =?us-ascii?Q?fZj71O6hP4qnBrNjeU4N7yfBCICIHjd+GtKj//LRxfeK0zKw9wPDm0HwS/9/?=
- =?us-ascii?Q?wIBQFvhw0JlSaVfz2RJW/75FmQNHmvAKpbza84f2UdxL/SUpbVeo6yR37ghI?=
- =?us-ascii?Q?B+xYrE4I9C0dtTru4NV4CwrVWiJ7f+l2ZOvAs54TL9k+3DQTL9b3PRHZsiEF?=
- =?us-ascii?Q?l8Qhnciqun6aMm2BH5gUY5zYzkL4U6ipDkIRDqNr0UN84LeP7w66TX+TYc/3?=
- =?us-ascii?Q?SqBARiF805uwFFBbruqJXcFqNCVhbOBlEeqysi/yZlQNOjPUNa/495/Mr4Mg?=
- =?us-ascii?Q?63QHEdl6t9KjqKSfsmWgjA+sZBby2QEB/WqVvZr+xn6TDXXswDffbNHyyl12?=
- =?us-ascii?Q?I3VFm0AYa4PMYrRLr8c0s5XBqjIwwD49daKTp1e6QX2rqrFl31sVSf0lzSGY?=
- =?us-ascii?Q?5wzDCyPRXZWT/ibpIDBGtzHYrH680Elb1VZSiIoKSIjmaFVheZZFyG3xz0SB?=
- =?us-ascii?Q?eWlrMVa3qJS8nixEy7rsb260wDVf2a/0VD/v+LI0YbuwVLCJXBaaU0ZhISg2?=
- =?us-ascii?Q?v8EEdwBVDiVsT4lQPk6z79NeGqd2LrUO/lq7imEkcgZmAQ=3D=3D?=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB7527.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(52116005)(376005)(366007)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?SY0GFv9QyjVFykE8k8r6Da7VhCcuwV2d7wJGKYiPgEzdtKipTHoJElqhKwER?=
- =?us-ascii?Q?p1nS5q4pxKn1YPrG8wLcN0SPqBJ9LtrojQLGy/jDYAUlQxUvNGvVbKT8nQP/?=
- =?us-ascii?Q?RAro9237Y2jAjE/oct+OKy7E6PgM81s70pfNqpBGrk2gTo8dhhAX4KFvYVwX?=
- =?us-ascii?Q?FuJ4nXtrXLKurUDV/iqGlhXX1eP1qg0S9vXw6PPnC6USa2aE92/bFB0lZDOR?=
- =?us-ascii?Q?D1ck7cJiKVrRarWzWg3jCgmmq8C3AK+20wc3bWQb61g2itTsk03aB/rItcnx?=
- =?us-ascii?Q?H37coh+u7z3tq0dUVX8gQVysRtOErNQfjLXlxCOoEfJubOuoHUiRf1Bs/i83?=
- =?us-ascii?Q?Pq5qDvZfc5hGyh5NjNZQwIWHV+9ttyEFsTofSe2qXMDHVuELpBxdrJ2/tDXi?=
- =?us-ascii?Q?XSkIdFUdexeGmyJ5BOPR7ytGz5EE/d5e3tLg/S6emup8SlMj9SGYDuonLktX?=
- =?us-ascii?Q?lVmpOJM1EOD7wk0soz2fxuzjf8LWHE36/j4tjUJ4lf7JZhnIP0SqeC868bif?=
- =?us-ascii?Q?q/ERhllAW0MrtkIz7WiwUn+mgdwCZZiA0+gNlKg3C/8bJB7HmtC2mcMIrAV8?=
- =?us-ascii?Q?ZRgwNEEqgAVbxOsGXsc7YfRtV+lHsJzITp8kLNhpwUhfeNF02hWDbzmhCoo6?=
- =?us-ascii?Q?kKi1BIjS3Gou+OZnGhWZsOlmN5DhUUcFTQzUeTeGKXo7LtFCG7XhCtr+PT8g?=
- =?us-ascii?Q?L2Saq8kPQkRdsNMpsj/E0MvwLp9PPP4QiVgvEHS5cU2+WiI5zRUyUJsThN55?=
- =?us-ascii?Q?SBEPF/e0XM6Wr1A98D+4OYgE1bdIzPU21VBhyyySK7aup2ClrU2PejBpjZT4?=
- =?us-ascii?Q?Rii1FNVAdejfqRrq7MajP4XjkmLVKvGPWmwHk9ksIzYYXTiX1F9ESrXnVAcg?=
- =?us-ascii?Q?uMjujmOBmeSd5Ggrl0FBMZ+A067xU/avV4fMiIIQhSRxecGeicqr8VzOfgBB?=
- =?us-ascii?Q?+ZyzaCYa2aRDrTKIHSoldkugUmVjWUm7rKTSBUF30jwAikf9koRIUF1eEtrU?=
- =?us-ascii?Q?/AZ1Mvc+qTGbb4vSSc6YenUJ9500xr+UR30ZsZhfXInEvEGoA/MGIlhUgyUP?=
- =?us-ascii?Q?QLW1lJVD2dtbBPblzPYA50RJl4QBxlzBLwJbtL0ICJ07TLosq0qBHo8H57Jz?=
- =?us-ascii?Q?QWWWvBKZoMOcq7hd/OTQKBsrMsJEtRAvibfVZKYIr7xulZvgBKfKx4pNAmPI?=
- =?us-ascii?Q?GMz+t0AguuXS/WD9F+Cr/br+qCl+k58SOr33U+yVntaXybJ21C5amhn7ldA6?=
- =?us-ascii?Q?oGfY2aY1HxGjBuBBD5oRPfWyeZtG4uuTBlBW4KSyqLMU95+7fa00Hj9fschL?=
- =?us-ascii?Q?R5zBYHiiB9q5hru5NVix2PhXynuAkP8ZLvrEff9TK7ToTIBreFEGCiacG4oh?=
- =?us-ascii?Q?s2zs06O2t/MpXz+FVupayI09vO465dz2tklADCK7CVleda2q2wJf2B+eZVUU?=
- =?us-ascii?Q?FIGMupC7h9LzxpgpO4Z3Hk/39QvF76lBmpnEsa+15I4Y6PF+89U3rQ6wy9oc?=
- =?us-ascii?Q?tPAOfZk+Val+vNB8qGPBOVXHVhZZCfC50nQuTQZ6k9alRaiJ5kuKmlqMMqxs?=
- =?us-ascii?Q?mDOIqQC20MJfunEhU96Ua1ZcD54RPSGfsWLZGuoO?=
-X-OriginatorOrg: windriver.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 05bac93f-ed66-4e3e-a275-08dc6e620737
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB7527.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 06:50:49.0415
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1RgLr+tG+qPVwYVC+0+sAXKn/WU9fXD5cwOV4lGWm1cOaC613SYrxiG040BGWW3UqAckV02Vx8C8VbAUmjDdxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6019
-X-Proofpoint-ORIG-GUID: yXRIa_82cqGIDP4xKt32oqVefADkagrJ
-X-Proofpoint-GUID: yXRIa_82cqGIDP4xKt32oqVefADkagrJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-07_02,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- mlxlogscore=999 clxscore=1011 suspectscore=0 adultscore=0 spamscore=0
- lowpriorityscore=0 bulkscore=0 priorityscore=1501 mlxscore=0
- malwarescore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2404010003 definitions=main-2405070046
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [PATCH 01/12] cachefiles: remove request from xarry during flush
+ requests
+To: Jingbo Xu <jefflexu@linux.alibaba.com>, netfs@lists.linux.dev
+Cc: dhowells@redhat.com, jlayton@kernel.org, zhujia.zj@bytedance.com,
+ linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, yangerkun <yangerkun@huawei.com>,
+ libaokun@huaweicloud.com
+References: <20240424033916.2748488-1-libaokun@huaweicloud.com>
+ <20240424033916.2748488-2-libaokun@huaweicloud.com>
+ <6e4a20f7-263a-46be-81cc-2667353c452d@linux.alibaba.com>
+ <ba40eb22-dc28-54b6-a8cb-7a8ba4464c9a@huaweicloud.com>
+ <876cd180-6268-4f1a-a3bc-6b7b2aa3279f@linux.alibaba.com>
+Content-Language: en-US
+From: Baokun Li <libaokun@huaweicloud.com>
+In-Reply-To: <876cd180-6268-4f1a-a3bc-6b7b2aa3279f@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAn9g6gzzlmdMbyLw--.9131S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJFW7Ary3ZF4DCr13Xr47Arb_yoWrCr48pr
+	ySyFy7Jry8Gr1kJr1UJr1UJryUJr1UJ3WUXr1UJF18Ar1UAr1Yqr4UXr1vgryUJrW8Jr4U
+	Jr1UJr17Zr1UJr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWUuVWrJwAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+	0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E
+	3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCT
+	nIWIevJa73UjIFyTuYvjfUoOJ5UUUUU
+X-CM-SenderInfo: 5olet0hnxqqx5xdzvxpfor3voofrz/
 
-perf bench internals inject-build-id suffers from the following error when
-only one DSO is collected.
+Hi Jingbo,
 
-perf bench internals inject-build-id -v
-  Collected 1 DSOs
-traps: internals-injec[2305] trap divide error
-ip:557566ba6394 sp:7ffd4de97fe0 error:0 in perf[557566b2a000+23d000]
-  Build-id injection benchmark
-  Iteration #1
-Floating point exception
+Sorry for the late reply.
 
-This patch removes the unnecessary minus one from the divisor which also
-corrects the randomization range.
+On 2024/5/6 13:50, Jingbo Xu wrote:
+>
+> On 5/6/24 11:57 AM, Baokun Li wrote:
+>> On 2024/5/6 11:48, Jingbo Xu wrote:
+>>> On 4/24/24 11:39 AM, libaokun@huaweicloud.com wrote:
+>>>> From: Baokun Li <libaokun1@huawei.com>
+>>>>
+>>>> This prevents concurrency from causing access to a freed req.
+>>> Could you give more details on how the concurrent access will happen?
+>>> How could another process access the &cache->reqs xarray after it has
+>>> been flushed?
+>> Similar logic to restore leading to UAF:
+>>
+>>       mount  |   daemon_thread1    |    daemon_thread2
+>> ------------------------------------------------------------
+>>   cachefiles_ondemand_init_object
+>>    cachefiles_ondemand_send_req
+>>     REQ_A = kzalloc(sizeof(*req) + data_len)
+>>     wait_for_completion(&REQ_A->done)
+>>
+>>              cachefiles_daemon_read
+>>               cachefiles_ondemand_daemon_read
+>>                REQ_A = cachefiles_ondemand_select_req
+>>                cachefiles_ondemand_get_fd
+>>                copy_to_user(_buffer, msg, n)
+>>              process_open_req(REQ_A)
+>>                                    // close dev fd
+>>                                    cachefiles_flush_reqs
+>>                                     complete(&REQ_A->done)
+>>     kfree(REQ_A)
+>
+>>               cachefiles_ondemand_get_fd(REQ_A)
+>>                fd = get_unused_fd_flags
+>>                file = anon_inode_getfile
+>>                fd_install(fd, file)
+>>                load = (void *)REQ_A->msg.data;
+>>                load->fd = fd;
+>>                // load UAF !!!
+> How could the second cachefiles_ondemand_get_fd() get called here, given
+> the cache has been flushed and flagged as DEAD?
+>
+I was in a bit of a rush to reply earlier, and that graph above is
+wrong. Please see the one below:
 
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
- tools/perf/bench/inject-buildid.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+      mount  |   daemon_thread1    |    daemon_thread2
+------------------------------------------------------------
+  cachefiles_ondemand_init_object
+   cachefiles_ondemand_send_req
+    REQ_A = kzalloc(sizeof(*req) + data_len)
+    wait_for_completion(&REQ_A->done)
+             cachefiles_daemon_read
+              cachefiles_ondemand_daemon_read
+                                   // close dev fd
+                                   cachefiles_flush_reqs
+                                    complete(&REQ_A->done)
+    kfree(REQ_A)
+               xa_lock(&cache->reqs);
+               cachefiles_ondemand_select_req
+                 req->msg.opcode != CACHEFILES_OP_READ
+                 // req use-after-free !!!
+               xa_unlock(&cache->reqs);
+                                    xa_destroy(&cache->reqs)
 
-diff --git a/tools/perf/bench/inject-buildid.c b/tools/perf/bench/inject-buildid.c
-index 49331743c743..a759eb2328be 100644
---- a/tools/perf/bench/inject-buildid.c
-+++ b/tools/perf/bench/inject-buildid.c
-@@ -362,7 +362,7 @@ static int inject_build_id(struct bench_data *data, u64 *max_rss)
- 		return -1;
- 
- 	for (i = 0; i < nr_mmaps; i++) {
--		int idx = rand() % (nr_dsos - 1);
-+		int idx = rand() % nr_dsos;
- 		struct bench_dso *dso = &dsos[idx];
- 		u64 timestamp = rand() % 1000000;
- 
--- 
-2.25.1
+Even with CACHEFILES_DEAD set, we can still read the requests, so
+accessing it after the request has been freed will trigger use-after-free.
+
+Thanks,
+Baokun
+>>>> ---
+>>>>    fs/cachefiles/daemon.c | 1 +
+>>>>    1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+>>>> index 6465e2574230..ccb7b707ea4b 100644
+>>>> --- a/fs/cachefiles/daemon.c
+>>>> +++ b/fs/cachefiles/daemon.c
+>>>> @@ -159,6 +159,7 @@ static void cachefiles_flush_reqs(struct
+>>>> cachefiles_cache *cache)
+>>>>        xa_for_each(xa, index, req) {
+>>>>            req->error = -EIO;
+>>>>            complete(&req->done);
+>>>> +        __xa_erase(xa, index);
+>>>>        }
+>>>>        xa_unlock(xa);
+>>>>    
+
 
