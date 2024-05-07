@@ -1,133 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FECF142E79;
-	Tue,  7 May 2024 23:09:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB3E61442EA;
+	Tue,  7 May 2024 23:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715123344; cv=none; b=jRS5ZOecUdWhEecLYMgHcCMa6Xk+pPokAYTx6Vd7MBtEfBC75Aqo+oNMYlr1RJGWR6p0KPl9Vfxt49MqtK/toyKj6Yb6sJYehB59D0+X1SQLkzJDonNPee+Xxz2NapfDr4poKGwR2HovPrlMX+7p0NqzZPBEENB20QCgMAYHfLg=
+	t=1715123344; cv=none; b=T8KhOeokMEO3VoseBVgGd3qyD0ar+H+r/raGds/8lDsJDzd7QojVX4loOcMZSiK3SGkqYvMRX/8K1836r88vpiy/DXtn+PNTCijSSM/aHSZdqE0xG3me2LhEVvd7TxibjsWoQX1G9HCvjfyCnG7a3b+1O2lvh2mSsvxz6n59dME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715123344; c=relaxed/simple;
-	bh=sbBCo2A1xLZ0vOXmtjRmskZzILCS1fwj9Xtelg+/+co=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O0k5Epvj9PlxM623iB1nfjIgB4KEz9LfhkFxWwRw9jnhYjZ9kYFRwZ+EmgbeBZ+uZeeQNI5tyPTyu+DKh8SHGi217DfOqyOD+Igv/oe0dlA23Jmx2bIfrsTsuMIl3rY7D1089R6SFUwwcJQQAKP312Jv8cZKi/IHQ+vRD6QFd90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X0KEDMGR; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	bh=n62GchpgHmjR40eE42PIoLqi1koZrXaqgEhx3LCtJdE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XnRzHeHEHODhA7AulipPBXKsOVuyzJgCTp7GIrZUMZvdRdh+XahUrQfLYsBuDW0LdlocgOyAc3wqX0rsL4gLXLQfkC2iE2aIMgO5utx3qPGgd59WpWfMwFg/hU0jXw8gjjORgoAqTKsTcTY4WcZKW47a+NjuVcKn7mBaNLkvAHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDGSunz5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X0KEDMGR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715123341; x=1746659341;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sbBCo2A1xLZ0vOXmtjRmskZzILCS1fwj9Xtelg+/+co=;
-  b=X0KEDMGRgyzKg8DoCh4Rp18rOYNySsYSKplat1Ez+uU9KoSh0BM4Zfxu
-   3Oh1y2jSjyzXzE2pqzTJmub/22yXbQI+ZqlJNWlM0vVnvud/erblqancR
-   wBPbvOoIUT865fni+SWMk///aSulPo/W4+bOW6k7FIedo2Mi7r5tAZREz
-   mXBFY4vV3GB+IGnYX6OShQN79RqGWMiKjkMfRDbiChZfKyhtzVopEu3Il
-   D0LIM3S08TFr7ECbqf9R45dgtd2NdlrNzqCw7RX06+Am8vZr2hRLzvc4Z
-   e93+DNWJW94lxSXKZ3YkrEfz6svwJuWI2lzONQ/Ouj86d4FDlTSYYx1PO
-   A==;
-X-CSE-ConnectionGUID: Jq1kagcoT7+Dwi0wMNgi1Q==
-X-CSE-MsgGUID: HUMzRYzXQXORvj9PeU1D+g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="11113109"
-X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
-   d="scan'208";a="11113109"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 16:09:00 -0700
-X-CSE-ConnectionGUID: dGaliaqjQ72/tYjH1V1Nfg==
-X-CSE-MsgGUID: pJeQw4WkSaSxWq4X0sagaQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
-   d="scan'208";a="66110058"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 07 May 2024 16:08:55 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s4TvY-0002iq-0A;
-	Tue, 07 May 2024 23:08:52 +0000
-Date: Wed, 8 May 2024 07:08:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net
-Cc: oe-kbuild-all@lists.linux.dev,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
-	Jesse Brandeburg <jesse.brandeburg@intel.com>,
-	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?iso-8859-1?Q?Nicol=F2?= Veronese <nicveronese@gmail.com>,
-	Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
-	Nathan Chancellor <nathan@kernel.org>,
-	Antoine Tenart <atenart@kernel.org>
-Subject: Re: [PATCH net-next 2/2] net: phy: phy_link_topology:
- Lazy-initialize the link topology
-Message-ID: <202405080732.pSwJSarc-lkp@intel.com>
-References: <20240507102822.2023826-3-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDGSunz5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1418CC4AF68;
+	Tue,  7 May 2024 23:09:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715123344;
+	bh=n62GchpgHmjR40eE42PIoLqi1koZrXaqgEhx3LCtJdE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oDGSunz5CJ/ULz9l/TG14bd4PJ8vMdxO84/5NtOMXApKwfNfX1ocGdYMcEf4OQR1H
+	 k1JE0R2by4v8dg0T7gjSunLlSlftQrtyZmv5SQYMBDIoArNEnaYBG4F5s8tKCUSsXA
+	 f+l3KrS07w4aGzi7KzzSoPjt0MW5/xobPRSa9G5k6OuuM1KPEGzboTjcK7ye0Rmeeo
+	 eQw/DzljwcnvF0ymCXZWeAqwzGfPPOwUKOG8qITMgLD0fqXipPvCfYaxDSWsZPQa/N
+	 PNZyNpyDNxW+jfcbrWSWjaEeSwSHcBpuY7guyIMh1fIHXTsEtfEOKQd49Yom+DUp+E
+	 JiOTnMAiW0gAA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Bard Liao <yung-chuan.liao@linux.intel.com>,
+	=?UTF-8?q?P=C3=A9ter=20Ujfalusi?= <peter.ujfalusi@linux.intel.com>,
+	Takashi Iwai <tiwai@suse.de>,
+	Sasha Levin <sashal@kernel.org>,
+	perex@perex.cz,
+	tiwai@suse.com,
+	broonie@kernel.org,
+	amadeuszx.slawinski@linux.intel.com,
+	markhas@chromium.org,
+	bradynorander@gmail.com,
+	linux-sound@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 33/52] ALSA: hda: intel-dsp-config: harden I2C/I2S codec detection
+Date: Tue,  7 May 2024 19:06:59 -0400
+Message-ID: <20240507230800.392128-33-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240507230800.392128-1-sashal@kernel.org>
+References: <20240507230800.392128-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507102822.2023826-3-maxime.chevallier@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.9
+Content-Transfer-Encoding: 8bit
 
-Hi Maxime,
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-kernel test robot noticed the following build warnings:
+[ Upstream commit 79ac4c1443eaec0d09355307043a9149287f23c1 ]
 
-[auto build test WARNING on net-next/main]
+The SOF driver is selected whenever specific I2C/I2S HIDs are reported
+as 'present' in the ACPI DSDT. In some cases, an HID is reported but
+the hardware does not actually rely on I2C/I2S.  This false positive
+leads to an invalid selection of the SOF driver and as a result an
+invalid topology is loaded.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Maxime-Chevallier/net-phy-phy_link_topology-Pass-netdevice-to-phy_link_topo-helpers/20240507-183130
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20240507102822.2023826-3-maxime.chevallier%40bootlin.com
-patch subject: [PATCH net-next 2/2] net: phy: phy_link_topology: Lazy-initialize the link topology
-config: parisc-defconfig (https://download.01.org/0day-ci/archive/20240508/202405080732.pSwJSarc-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240508/202405080732.pSwJSarc-lkp@intel.com/reproduce)
+This patch hardens the detection with a check that the NHLT table is
+consistent with the report of an I2S-based codec in DSDT. This table
+should expose at least one SSP endpoint configured for an I2S-codec
+connection.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405080732.pSwJSarc-lkp@intel.com/
+Tested on Huawei Matebook D14 (NBLB-WAX9N) using an HDaudio codec with
+an invalid ES8336 ACPI HID reported:
 
-All warnings (new ones prefixed by >>):
+[    7.858249] snd_hda_intel 0000:00:1f.3: DSP detected with PCI class/subclass/prog-if info 0x040380
+[    7.858312] snd_hda_intel 0000:00:1f.3: snd_intel_dsp_find_config: no valid SSP found for HID ESSX8336, skipped
 
->> net/core/dev.c:10276:13: warning: 'netdev_free_phy_link_topology' defined but not used [-Wunused-function]
-   10276 | static void netdev_free_phy_link_topology(struct net_device *dev)
-         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reported-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Tested-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Closes: https://github.com/thesofproject/linux/issues/4934
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Message-ID: <20240426152818.38443-1-pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/hda/intel-dsp-config.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-
-vim +/netdev_free_phy_link_topology +10276 net/core/dev.c
-
- 10275	
- 10276	static void netdev_free_phy_link_topology(struct net_device *dev)
- 10277	{
- 10278		struct phy_link_topology *topo = dev->link_topo;
- 10279	
- 10280		if (!topo)
- 10281			return;
- 10282	
- 10283		xa_destroy(&topo->phys);
- 10284		kfree(topo);
- 10285		dev->link_topo = NULL;
- 10286	}
- 10287	
-
+diff --git a/sound/hda/intel-dsp-config.c b/sound/hda/intel-dsp-config.c
+index 6a384b922e4fa..d1f6cdcf1866e 100644
+--- a/sound/hda/intel-dsp-config.c
++++ b/sound/hda/intel-dsp-config.c
+@@ -557,9 +557,32 @@ static const struct config_entry *snd_intel_dsp_find_config
+ 		if (table->codec_hid) {
+ 			int i;
+ 
+-			for (i = 0; i < table->codec_hid->num_codecs; i++)
+-				if (acpi_dev_present(table->codec_hid->codecs[i], NULL, -1))
++			for (i = 0; i < table->codec_hid->num_codecs; i++) {
++				struct nhlt_acpi_table *nhlt;
++				bool ssp_found = false;
++
++				if (!acpi_dev_present(table->codec_hid->codecs[i], NULL, -1))
++					continue;
++
++				nhlt = intel_nhlt_init(&pci->dev);
++				if (!nhlt) {
++					dev_warn(&pci->dev, "%s: NHLT table not found, skipped HID %s\n",
++						 __func__, table->codec_hid->codecs[i]);
++					continue;
++				}
++
++				if (intel_nhlt_has_endpoint_type(nhlt, NHLT_LINK_SSP) &&
++				    intel_nhlt_ssp_endpoint_mask(nhlt, NHLT_DEVICE_I2S))
++					ssp_found = true;
++
++				intel_nhlt_free(nhlt);
++
++				if (ssp_found)
+ 					break;
++
++				dev_warn(&pci->dev, "%s: no valid SSP found for HID %s, skipped\n",
++					 __func__, table->codec_hid->codecs[i]);
++			}
+ 			if (i == table->codec_hid->num_codecs)
+ 				continue;
+ 		}
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
