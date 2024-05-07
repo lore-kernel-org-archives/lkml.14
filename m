@@ -1,134 +1,100 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8433212B148;
-	Tue,  7 May 2024 23:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8931212BE80;
+	Tue,  7 May 2024 23:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715124007; cv=none; b=rI5vxonSf0NCMU9VXfjbYZ3be+ns5cVLRIhaSPl4RbX9fyl4lPAU4/t+A29kAIK4SXV0YvF3YBhgBr70R5dmXR9iqIWpFxqNY8RxTZgfWb3c7jlkwWWBk+1iHscUWD1v8S2CEMNx8m04zAx0n/tROJpkheQSq7nnvVlMd1EbLFM=
+	t=1715124007; cv=none; b=Pn843AQun5nJK25kzNeZWMsFZymNvPNbut/z21WMujR6VAcp227n1NnGQsd0I+a4wKDgOcAo4pXBlhsuUC1gbgIS8WXtF4OwAv0I5/7JyNxJR0elKBSDuIjeCQBBQxivk9Z6Um2/gIYuY/nbrS85DQv+/N/sCUVoUhq8wLbjexw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715124007; c=relaxed/simple;
-	bh=b/0FkzHkilB95lUbP7MEunDu86ZpEsqHeKZVNfq+xIQ=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MXKKs87FIjwrV8lqELe+BqW0DDvAlK/FPyKjJSM/vDVHuuD3Pw49k6aPw3JLfte9mkAzzQipLH5tJrUxWpKM9U/fHbvGBvSSJTJiEOOkbY29n+EVBCuOcMfY1KiezzsZmaueSVUYVtUOGdH+16o/3E8wLCj14V5RQJ/VeHfFspY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=MOaqecEa; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	bh=kHS9g9RwmKOf15zpnBSFQy0orV9EnY5jccmGnQvCJl0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=etBEq1fwnLcVkOTgDudGLpVyKCxIjj1BnYfJYveoBWvrjG7B0gxlQnY16WTGNseQ4aOcOH2zFyd8gnlBLnrjrK5eLNWPdYMLHwvOAsNUmUHmcr3X4cdJVvHUiM+DKYai8kuyU5ZMoSEf1VgCV2PLxj+mYe8Ep6UuZGoyEh2l+BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=FB66OVWl; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="MOaqecEa"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 99472120005;
-	Wed,  8 May 2024 02:19:59 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 99472120005
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1715123999;
-	bh=FTEc3DcCrnODzUlI904uenRxffR/nTndkV7UF8lCKs0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=MOaqecEa7KzpL1uHnPOVQMAfm++G+nohFnyBcWYFaRlh/G0AO9QWjk82Et1kkHApv
-	 YDOkYJZt5Aar9dxZo5Cy2Hms33xkHc+AGcUS07i8C2OSlSQGZTiB8KaZtJUSzTqAnG
-	 OP7pLGOXuyUQ8V9w/tThPVtkNlrt7QEDoOyC8izhFQzAodLGoiZjafSqOEXq98jBqd
-	 R0zSh/eyDeuDttGiM+DeL9OoAXyWWIyJ/OxNWSfbvEaCbYwvkHHey23l5Sv1ktgK8P
-	 2vy/Cz2tPB5M2HcbRB7gN+zCXH6TuwS+v+TtKXddyXVo+uzjmJJ4g14mGMg2FjlDwx
-	 FvZ2+VVkv5mMA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed,  8 May 2024 02:19:59 +0300 (MSK)
-Received: from localhost.localdomain (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 8 May 2024 02:19:58 +0300
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger
-	<richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>
-CC: <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <oxffffaa@gmail.com>,
-	<kernel@sberdevices.ru>, Arseniy Krasnov <avkrasnov@salutedevices.com>
-Subject: [PATCH v6 0/3] Meson: R/W support for pages used by boot ROM
-Date: Wed, 8 May 2024 02:09:00 +0300
-Message-ID: <20240507230903.3399594-1-avkrasnov@salutedevices.com>
-X-Mailer: git-send-email 2.35.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="FB66OVWl"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1715123996; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=e0zrxwPcAb6kwy18tLfS3CmdjXGu2j+7ybZ31BCE1es=;
+	b=FB66OVWllglJrtsVgitdr4BBAFSOJsBaZztYNNhtXW8dxHbHjVUuAsWqekWUXTz3pCER7z9lCNl0lxrDvK160MtUtI1/+OsEI+yk/0tf7V3hCHytjVEztSDPszc58oMe9uiK5sG4CN9CveCAkN1Qzcoth2IuaKHjdBcSVfjVNu4=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0W61IPVB_1715123993;
+Received: from 30.25.231.12(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W61IPVB_1715123993)
+          by smtp.aliyun-inc.com;
+          Wed, 08 May 2024 07:19:55 +0800
+Message-ID: <aca15d22-e2f9-4d09-b022-f290d9c902c9@linux.alibaba.com>
+Date: Wed, 8 May 2024 07:19:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185123 [May 07 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 19 0.3.19 07c7fa124d1a1dc9662cdc5aace418c06ae99d2b, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;100.64.160.123:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/07 17:58:00 #25118681
-X-KSMG-AntiVirus-Status: Clean, skipped
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH AUTOSEL 6.8 26/52] erofs: reliably distinguish block based
+ and fscache mode
+To: Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Christian Brauner <brauner@kernel.org>, Baokun Li <libaokun1@huawei.com>,
+ Jingbo Xu <jefflexu@linux.alibaba.com>, Chao Yu <chao@kernel.org>,
+ xiang@kernel.org, linux-erofs@lists.ozlabs.org
+References: <20240507230800.392128-1-sashal@kernel.org>
+ <20240507230800.392128-26-sashal@kernel.org>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240507230800.392128-26-sashal@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Amlogic's boot ROM code needs that some pages on NAND must be written
-in special "short" ECC mode with scrambling enabled. Such pages:
-1) Contain some metadata about hardware.
-2) Located with some interval starting from 0 offset, until some
-   specified offset. Interval and second offset are set in the
-   device tree.
+Hi,
 
-This patchset adds R/W support for such pages. To enable it we can setup
-it in dts:
+On 2024/5/8 07:06, Sasha Levin wrote:
+> From: Christian Brauner <brauner@kernel.org>
+> 
+> [ Upstream commit 7af2ae1b1531feab5d38ec9c8f472dc6cceb4606 ]
+> 
+> When erofs_kill_sb() is called in block dev based mode, s_bdev may not
+> have been initialised yet, and if CONFIG_EROFS_FS_ONDEMAND is enabled,
+> it will be mistaken for fscache mode, and then attempt to free an anon_dev
+> that has never been allocated, triggering the following warning:
+> 
+> ============================================
+> ida_free called for id=0 which is not allocated.
+> WARNING: CPU: 14 PID: 926 at lib/idr.c:525 ida_free+0x134/0x140
+> Modules linked in:
+> CPU: 14 PID: 926 Comm: mount Not tainted 6.9.0-rc3-dirty #630
+> RIP: 0010:ida_free+0x134/0x140
+> Call Trace:
+>   <TASK>
+>   erofs_kill_sb+0x81/0x90
+>   deactivate_locked_super+0x35/0x80
+>   get_tree_bdev+0x136/0x1e0
+>   vfs_get_tree+0x2c/0xf0
+>   do_new_mount+0x190/0x2f0
+>   [...]
+> ============================================
+> 
+> Now when erofs_kill_sb() is called, erofs_sb_info must have been
+> initialised, so use sbi->fsid to distinguish between the two modes.
+> 
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> Signed-off-by: Baokun Li <libaokun1@huawei.com>
+> Reviewed-by: Jingbo Xu <jefflexu@linux.alibaba.com>
+> Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Reviewed-by: Chao Yu <chao@kernel.org>
+> Link: https://lore.kernel.org/r/20240419123611.947084-3-libaokun1@huawei.com
+> Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-    nand-is-boot-medium;
-    amlogic,boot-pages = <1024>;
-    amlogic,boot-page-step = <128>;
 
-It means that each 128th page in range 0 to 1024 pages will be accessed
-in special mode ("short" ECC + scrambling). In practice this feature is
-needed when we want to update first block of NAND - driver will enable
-required mode by itself using value from device tree.
+Please help drop this patch for now too, you should backport
+the dependency commit
+07abe43a28b2 ("erofs: get rid of erofs_fs_context") in advance.
 
-Changelog:
- v1 -> v2:
-  * Rename 'meson,boot-page-XXX' -> 'amlogic,boot-page-XXX'.
-  * Add words that 'amlogic,boot-page-step' is measured in pages.
-  * Remove words that 'amlogic,boot-page-XXX' depends on 'nand-is-boot-medium'.
-  * Make both 'amlogic,boot-page-XXX' depend on each other also, in
-    addition to 'nand-is-boot-medium' dependency.
- v2 -> v3:
-  * Add quotes to 0001 in dependencies. This fixes 'make dt_binding_check'
-    warning.
- v3 -> v4:
-  * Rename 'amlogic,boot-page-last' to 'amlogic,boot-pages'.
- v4 -> v5:
-  * Update 'description' fields in bindings.
- v5 -> v6:
-  * Split patch for meson_nand.c to 2 patches: first is refactoring of
-    scrambling mode handling, another is support for special pages for
-    boot ROM.
-  * Update description and commit message in the bindings patch.
+Otherwise it doesn't work and break the functionality.
 
-Arseniy Krasnov (3):
-  dt-bindings: mtd: amlogic,meson-nand: support fields for boot ROM code
-  mtd: rawnand: meson: refactor use of 'meson_nfc_cmd_access()'
-  mtd: rawnand: meson: read/write access for boot ROM pages
-
- .../bindings/mtd/amlogic,meson-nand.yaml      | 18 ++++
- drivers/mtd/nand/raw/meson_nand.c             | 86 +++++++++++++------
- 2 files changed, 77 insertions(+), 27 deletions(-)
-
--- 
-2.35.0
+Thanks,
+Gao Xiang
 
