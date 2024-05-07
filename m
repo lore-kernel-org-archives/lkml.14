@@ -1,262 +1,170 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6BC16C692;
-	Tue,  7 May 2024 16:32:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209CE16F299
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 16:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099535; cv=none; b=gDDmXPGuZmdsxISvDvVpY48g/fuB5/alzoFAlmvMynISyNVMLFEK7sj+QcYwSjngeUqltCu65PnVH2Kx+dLvr5zSuUqihCP/v/jTlGktOkVJoIcrCnjA0TSRVdureEHfuv5rzSKnKaXNN58GHHy5TgqIytgu9+Wdv9vzKogGs3A=
+	t=1715099540; cv=none; b=LoBQB8juFVccsEBvX2V/7isgaphXpw6hePRSZkJt0inE8VnPov5BQEJT4Qb83/UOiCIEZarA+HJK81mmfbcwRXOPLz4twWMzZP++CjvvcOv7vVDBMAigKlQ7a/kwBzCrtfeCUDVTk3XdLq89ktzmYRX95zdLC0yJdxMOTZX8+kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099535; c=relaxed/simple;
-	bh=qEiKUExEMZHpgJDE1n2n1k+AtLntSGaapHb3Uy4fz7o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nR1imCAGAYBYhLEv3jtoCjPKH+4XQ8f3sr6LJzRLVYqeGRW0iV2HjhXRZC5LOSY94CCMlDQ2mGT0B0QXIg08lwHwVagat+ROCFcqdEyQEbD//3B6ta/eTNwHrxsAfEqb0Iv1VgLWGAyFKPqNS19TM+VtAhhQlZCTz8nFgoTgNfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O2Nqs2Ke; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715099540; c=relaxed/simple;
+	bh=Ejd2J/LkdHnUAGoIdR+9zZ4NBny/4pYwcFVlGGF3+Y4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jp6zSbHL837TUeqklGdU2v7majn1rtVcte+vJjDYWwTencb+HXWachcm+1n+U+t4fjmZVrZ656W76PCeMW7aNACTwpU7SP8++HEUzmtz2rjn5saBQkBij+8nK1n9DXtrY1zJvoG0nC/KN7DS3on6b6XiZ2bPJB6KS+k7d968e1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=T/1Xiq1a; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2Nqs2Ke"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-41b782405d5so35310135e9.2;
-        Tue, 07 May 2024 09:32:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T/1Xiq1a"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-79290021fc6so267559385a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:32:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715099532; x=1715704332; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1715099536; x=1715704336; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/eYssGOudGrpw/4EPUaTbhOQHlVbIPat/QtucojUP08=;
-        b=O2Nqs2Ken37bQvU9ArX2yBIipGWZYuMVgSpFWXy0rn56hhYVJUb6UUlqn/jshp23VM
-         BEslucmsMg8iy85oh8fkpPb3cUVidoeEDoYRzGRfmik2mi3PCRJ9/CpQgeIwqTugQvmO
-         aPdGldeAGgoKAwM/30pCPUXpA6okyefmXcHJyKAdfAXRWFJWATBaLAxXJjqSU8bGxnkp
-         DsTWrb5S+7PXNrcLe5VXTP+HEI6WWphzg2/ZVn1LVcdCEeuni/pAroPi+F1y/qxlkIYT
-         V5ocdQcG4JyCSDLqDdpvjCRqAil6ixDDV94qNY7TB9/er1p66o6Eh/QBx8nYqMn9HGfc
-         8NSw==
+        bh=DFavUp82x9+EKSXtviTqGgqyKSS9fBB+WIBnwLG/9Gg=;
+        b=T/1Xiq1a9fSEHfWh+dW3tl1/7Pbe2sFSPxhAFfnpmdl2u/Jfv8i72Ywcfi+YawtC8p
+         KKRdthYgE/vBDnP0ZEQc+Nu9iYVcnSrqHACSQK8+UGDFzW5N+pqpqwxfHY2EbJG1EeQ4
+         C9TjPwHABf9w2cWL76F/Fg0r42GdvT7nLmhRY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715099532; x=1715704332;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1715099536; x=1715704336;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/eYssGOudGrpw/4EPUaTbhOQHlVbIPat/QtucojUP08=;
-        b=Yiq8ukV/laizfQoW6T2v9/szRxiXHuLfIBG1sZ53F/QEcqMQBIf1/LOZLIPqATNKfR
-         pduy8fFzJx2BM+na/cgor2GBP3snBVoQ6BbS1pYJBkZOHkUYoMEwp0zd+co0hssQSvb+
-         fLeySSWz/qRRr/nZ/bPu5L+oAWFCzz6g9xSmtsDgIBez8z2wU0HKfuwNhoiZR3+WNLK6
-         S/GSL1bRJNlKcU6yat4ZAHG7Iy2oczdxzYuOjQRWAEtVcg1FGHvW9zG3v1Ptg8eOfSSa
-         MhemuAJANN9OqGI6q4ahZKRyc6JzeQGfF2FEIi45udk1Hh/QOgDmBTo6bHzdgsfzUFzH
-         xBAA==
-X-Forwarded-Encrypted: i=1; AJvYcCXjCLG1bbMYOjZrRy6EQQApl8cDEsQddTAfWpvjestqn4UnQ51/t7UTHGGjVxy444bSwyF0+m5oSoJ8lhSkta82Ch0Ojw1YNegVdwahW4zBr/2ERL6ODXbsYVeNzoUmUE88L8853Brji7Yls9N5DJ3ljrC7URIpT49c7VB3r3oDBN1UnqB8
-X-Gm-Message-State: AOJu0YzX/TYNMYsNCsCtH9yR7A2RmjH/2ld9radqZ0yzDCjBmEWq9+Ij
-	lFrZdEJ0TWc30+He0AOyIjSuGYgxKkdAGAGPUHYmpFrK1ZIiDpdF
-X-Google-Smtp-Source: AGHT+IHFckoTAzD480JxZr2S3FkQjA/7iQ9pLJCVZIGiio6AMeHLJNEWOcA538F/c3ZULuJiBxaOiQ==
-X-Received: by 2002:a5d:4712:0:b0:34d:3b:6ea8 with SMTP id ffacd0b85a97d-34fca241349mr304578f8f.21.1715099531955;
-        Tue, 07 May 2024 09:32:11 -0700 (PDT)
-Received: from localhost ([146.70.204.204])
-        by smtp.gmail.com with ESMTPSA id cx8-20020a056000092800b0034e01a80176sm13305901wrb.114.2024.05.07.09.32.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 09:32:11 -0700 (PDT)
-From: Richard Gobert <richardbgobert@gmail.com>
-To: richardbgobert@gmail.com
-Cc: alexander.duyck@gmail.com,
-	davem@davemloft.net,
-	dsahern@kernel.org,
-	edumazet@google.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	shuah@kernel.org,
-	willemdebruijn.kernel@gmail.com
-Subject: [PATCH net-next v9 3/3] selftests/net: add flush id selftests
-Date: Tue,  7 May 2024 18:31:41 +0200
-Message-Id: <20240507163141.130523-1-richardbgobert@gmail.com>
-In-Reply-To: <20240507162349.130277-1-richardbgobert@gmail.com>
-References: <20240507162349.130277-1-richardbgobert@gmail.com>
+        bh=DFavUp82x9+EKSXtviTqGgqyKSS9fBB+WIBnwLG/9Gg=;
+        b=W+k1YM0GLlkgfZ5H7mYmyfgSS1tJHwxG2OREHDXsJMO3ug+YXd9OII4sL30yagCtij
+         bD8ZPd9LiFJTuoyS2EegJi0u40hxhL/E9hOrYY28S7YNqye58d/xoOSij0XUpRwaDxdE
+         Ra1O3IR2VzYc1YMwegT+AmqYLrGuU/Em0NO4Hrl1InOJYblWSaRmwCL+jqX9GHI7hJ9I
+         By10ACj1Od12L9nPwdOUxlzc2Qk1awAF7wUP+/0EijCgti5rNXPAOFjfszEy5w0kndR/
+         nKoB74FKP+dw/rIv/4VKicVfCw2LCzxegOpQXRUwRX/xnX6INUIcKjs9NS6RFC+6LIZo
+         qMJA==
+X-Forwarded-Encrypted: i=1; AJvYcCUIwLrZA9nSt8431N5xr5UUm1RislzF7CUzKLnqs8F5vMSnF3Skl2vLDC92slIcVoTHWa5lPbMvr6PAREw5iRBnewloXGhco//Ehhp9
+X-Gm-Message-State: AOJu0Yy2ETNueMWJcEVzSYqnm44ls4cPqj5rUOSr0nPzwUhbgCCh8jMa
+	2/woTNjV3IUP/l99AwygWVDr+6bGWJnVFHFvnzD+FxU7E7nf1ZnGChPNooh7U+Br7XxjzeFcga0
+	=
+X-Google-Smtp-Source: AGHT+IFz9NZbYWpXPai2yuHurL5Awo5zlN4m8gcP/2YS1F0eBou45PQdsq7RtA37lsjP4984zuPPiQ==
+X-Received: by 2002:a05:620a:410a:b0:792:9403:2d84 with SMTP id af79cd13be357-792b2868e07mr20354685a.49.1715099535737;
+        Tue, 07 May 2024 09:32:15 -0700 (PDT)
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com. [209.85.160.169])
+        by smtp.gmail.com with ESMTPSA id dy29-20020a05620a60dd00b0078ede19b680sm5033456qkb.75.2024.05.07.09.32.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 May 2024 09:32:14 -0700 (PDT)
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-439b1c72676so610041cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:32:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUNthe0BWQpqxTDWtPohvylHIFkumF5I1IQQjQjMWSIESxvE0M8kFktTYU3fvRiNpACBfFaOl9ewG5TypjveZZ+l+gEDKcGkf99bnwo
+X-Received: by 2002:a05:622a:598a:b0:43a:c1cd:2f4c with SMTP id
+ d75a77b69052e-43d9835c8a0mr2999981cf.5.1715099534265; Tue, 07 May 2024
+ 09:32:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240507135234.1356855-1-yangcong5@huaqin.corp-partner.google.com>
+ <20240507135234.1356855-2-yangcong5@huaqin.corp-partner.google.com> <171509488827.493449.2668049686067198439.robh@kernel.org>
+In-Reply-To: <171509488827.493449.2668049686067198439.robh@kernel.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Tue, 7 May 2024 09:32:02 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=VNNB=jtyM1BMTUTzyTjOUqDxobWTYz9RAnCmYha-DG0w@mail.gmail.com>
+Message-ID: <CAD=FV=VNNB=jtyM1BMTUTzyTjOUqDxobWTYz9RAnCmYha-DG0w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] dt-bindings: display: panel: Add himax hx83102
+ panel bindings
+To: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
+Cc: sam@ravnborg.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linus.walleij@linaro.org, 
+	xuxinxiong@huaqin.corp-partner.google.com, airlied@gmail.com, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	devicetree@vger.kernel.org, conor+dt@kernel.org, daniel@ffwll.ch, 
+	neil.armstrong@linaro.org, "Rob Herring (Arm)" <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Added flush id selftests to test different cases where DF flag is set or
-unset and id value changes in the following packets. All cases where the
-packets should coalesce or should not coalesce are tested.
+Hi,
 
-Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
----
- tools/testing/selftests/net/gro.c | 138 ++++++++++++++++++++++++++++++
- 1 file changed, 138 insertions(+)
+On Tue, May 7, 2024 at 8:14=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org> =
+wrote:
+>
+>
+> On Tue, 07 May 2024 21:52:28 +0800, Cong Yang wrote:
+> > In V1, discussed with Doug and Linus [1], we need break out as separate
+> > driver for the himax83102-j02 controller. Beacuse "starry,himax83102-j0=
+2"
+> > and in this series "BOE nv110wum-l60" "IVO t109nw41" panels use same
+> > controller, they have some common CMDS. So add new documentation for
+> > this panels.
+> >
+> > For himax83102-j02 controller, no need 3v3 supply, so remove it.
+> >
+> > [1]: https://lore.kernel.org/all/CACRpkdbzYZAS0=3DzBQJUC4CB2wj4s1h6n6aS=
+AZQvdMV95r3zRUw@mail.gmail.com
+> >
+> > Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
+> > ---
+> > Chage since V4:
+> >
+> > - Update commit message and add fallback compatible.
+> >
+> > V3: https://lore.kernel.org/all/20240424023010.2099949-2-yangcong5@huaq=
+in.corp-partner.google.com
+> >
+> > Chage since V3:
+> >
+> > - Update commit message.
+> >
+> > V2: https://lore.kernel.org/all/20240422090310.3311429-2-yangcong5@huaq=
+in.corp-partner.google.com
+> >
+> > ---
+> >  .../display/panel/boe,tv101wum-nl6.yaml       |  2 -
+> >  .../bindings/display/panel/himax,hx83102.yaml | 73 +++++++++++++++++++
+> >  2 files changed, 73 insertions(+), 2 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/display/panel/him=
+ax,hx83102.yaml
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> yamllint warnings/errors:
+>
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/d=
+isplay/panel/himax,hx83102.example.dtb: panel@0: compatible:0: 'starry,hima=
+x83102-j02, himax,hx83102' does not match '^[a-zA-Z0-9][a-zA-Z0-9,+\\-._/]+=
+$'
+>         from schema $id: http://devicetree.org/schemas/dt-core.yaml#
+> Documentation/devicetree/bindings/display/panel/himax,hx83102.example.dtb=
+: /example-0/dsi/panel@0: failed to match any schema with compatible: ['sta=
+rry,himax83102-j02, himax,hx83102']
+>
+> doc reference errors (make refcheckdocs):
+>
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/202405=
+07135234.1356855-2-yangcong5@huaqin.corp-partner.google.com
+>
+> The base for the series is generally the latest rc1. A different dependen=
+cy
+> should be noted in *this* patch.
+>
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+>
+> pip3 install dtschema --upgrade
+>
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your sch=
+ema.
 
-diff --git a/tools/testing/selftests/net/gro.c b/tools/testing/selftests/net/gro.c
-index 353e1e867fbb..e8fc94c2b9e5 100644
---- a/tools/testing/selftests/net/gro.c
-+++ b/tools/testing/selftests/net/gro.c
-@@ -93,6 +93,7 @@ static bool tx_socket = true;
- static int tcp_offset = -1;
- static int total_hdr_len = -1;
- static int ethhdr_proto = -1;
-+static const int num_flush_id_cases = 6;
- 
- static void vlog(const char *fmt, ...)
- {
-@@ -617,6 +618,113 @@ static void add_ipv6_exthdr(void *buf, void *optpkt, __u8 exthdr_type, char *ext
- 	iph->payload_len = htons(ntohs(iph->payload_len) + MIN_EXTHDR_SIZE);
- }
- 
-+static void fix_ip4_checksum(struct iphdr *iph)
-+{
-+	iph->check = 0;
-+	iph->check = checksum_fold(iph, sizeof(struct iphdr), 0);
-+}
-+
-+static void send_flush_id_case(int fd, struct sockaddr_ll *daddr, int tcase)
-+{
-+	static char buf1[MAX_HDR_LEN + PAYLOAD_LEN];
-+	static char buf2[MAX_HDR_LEN + PAYLOAD_LEN];
-+	static char buf3[MAX_HDR_LEN + PAYLOAD_LEN];
-+	bool send_three = false;
-+	struct iphdr *iph1;
-+	struct iphdr *iph2;
-+	struct iphdr *iph3;
-+
-+	iph1 = (struct iphdr *)(buf1 + ETH_HLEN);
-+	iph2 = (struct iphdr *)(buf2 + ETH_HLEN);
-+	iph3 = (struct iphdr *)(buf3 + ETH_HLEN);
-+
-+	create_packet(buf1, 0, 0, PAYLOAD_LEN, 0);
-+	create_packet(buf2, PAYLOAD_LEN, 0, PAYLOAD_LEN, 0);
-+	create_packet(buf3, PAYLOAD_LEN * 2, 0, PAYLOAD_LEN, 0);
-+
-+	switch (tcase) {
-+	case 0: /* DF=1, Incrementing - should coalesce */
-+		iph1->frag_off |= htons(IP_DF);
-+		iph1->id = htons(8);
-+
-+		iph2->frag_off |= htons(IP_DF);
-+		iph2->id = htons(9);
-+		break;
-+
-+	case 1: /* DF=1, Fixed - should coalesce */
-+		iph1->frag_off |= htons(IP_DF);
-+		iph1->id = htons(8);
-+
-+		iph2->frag_off |= htons(IP_DF);
-+		iph2->id = htons(8);
-+		break;
-+
-+	case 2: /* DF=0, Incrementing - should coalesce */
-+		iph1->frag_off &= ~htons(IP_DF);
-+		iph1->id = htons(8);
-+
-+		iph2->frag_off &= ~htons(IP_DF);
-+		iph2->id = htons(9);
-+		break;
-+
-+	case 3: /* DF=0, Fixed - should not coalesce */
-+		iph1->frag_off &= ~htons(IP_DF);
-+		iph1->id = htons(8);
-+
-+		iph2->frag_off &= ~htons(IP_DF);
-+		iph2->id = htons(8);
-+		break;
-+
-+	case 4: /* DF=1, two packets incrementing, and one fixed - should
-+		 * coalesce only the first two packets
-+		 */
-+		iph1->frag_off |= htons(IP_DF);
-+		iph1->id = htons(8);
-+
-+		iph2->frag_off |= htons(IP_DF);
-+		iph2->id = htons(9);
-+
-+		iph3->frag_off |= htons(IP_DF);
-+		iph3->id = htons(9);
-+		send_three = true;
-+		break;
-+
-+	case 5: /* DF=1, two packets fixed, and one incrementing - should
-+		 * coalesce only the first two packets
-+		 */
-+		iph1->frag_off |= htons(IP_DF);
-+		iph1->id = htons(8);
-+
-+		iph2->frag_off |= htons(IP_DF);
-+		iph2->id = htons(8);
-+
-+		iph3->frag_off |= htons(IP_DF);
-+		iph3->id = htons(9);
-+		send_three = true;
-+		break;
-+	}
-+
-+	fix_ip4_checksum(iph1);
-+	fix_ip4_checksum(iph2);
-+	write_packet(fd, buf1, total_hdr_len + PAYLOAD_LEN, daddr);
-+	write_packet(fd, buf2, total_hdr_len + PAYLOAD_LEN, daddr);
-+
-+	if (send_three) {
-+		fix_ip4_checksum(iph3);
-+		write_packet(fd, buf3, total_hdr_len + PAYLOAD_LEN, daddr);
-+	}
-+}
-+
-+static void test_flush_id(int fd, struct sockaddr_ll *daddr, char *fin_pkt)
-+{
-+	for (int i = 0; i < num_flush_id_cases; i++) {
-+		sleep(1);
-+		send_flush_id_case(fd, daddr, i);
-+		sleep(1);
-+		write_packet(fd, fin_pkt, total_hdr_len, daddr);
-+	}
-+}
-+
- static void send_ipv6_exthdr(int fd, struct sockaddr_ll *daddr, char *ext_data1, char *ext_data2)
- {
- 	static char buf[MAX_HDR_LEN + PAYLOAD_LEN];
-@@ -935,6 +1043,8 @@ static void gro_sender(void)
- 			send_fragment4(txfd, &daddr);
- 			sleep(1);
- 			write_packet(txfd, fin_pkt, total_hdr_len, &daddr);
-+
-+			test_flush_id(txfd, &daddr, fin_pkt);
- 		} else if (proto == PF_INET6) {
- 			sleep(1);
- 			send_fragment6(txfd, &daddr);
-@@ -1061,6 +1171,34 @@ static void gro_receiver(void)
- 
- 			printf("fragmented ip4 doesn't coalesce: ");
- 			check_recv_pkts(rxfd, correct_payload, 2);
-+
-+			/* is_atomic checks */
-+			printf("DF=1, Incrementing - should coalesce: ");
-+			correct_payload[0] = PAYLOAD_LEN * 2;
-+			check_recv_pkts(rxfd, correct_payload, 1);
-+
-+			printf("DF=1, Fixed - should coalesce: ");
-+			correct_payload[0] = PAYLOAD_LEN * 2;
-+			check_recv_pkts(rxfd, correct_payload, 1);
-+
-+			printf("DF=0, Incrementing - should coalesce: ");
-+			correct_payload[0] = PAYLOAD_LEN * 2;
-+			check_recv_pkts(rxfd, correct_payload, 1);
-+
-+			printf("DF=0, Fixed - should not coalesce: ");
-+			correct_payload[0] = PAYLOAD_LEN;
-+			correct_payload[1] = PAYLOAD_LEN;
-+			check_recv_pkts(rxfd, correct_payload, 2);
-+
-+			printf("DF=1, 2 Incrementing and one fixed - should coalesce only first 2 packets: ");
-+			correct_payload[0] = PAYLOAD_LEN * 2;
-+			correct_payload[1] = PAYLOAD_LEN;
-+			check_recv_pkts(rxfd, correct_payload, 2);
-+
-+			printf("DF=1, 2 Fixed and one incrementing - should coalesce only first 2 packets: ");
-+			correct_payload[0] = PAYLOAD_LEN * 2;
-+			correct_payload[1] = PAYLOAD_LEN;
-+			check_recv_pkts(rxfd, correct_payload, 2);
- 		} else if (proto == PF_INET6) {
- 			/* GRO doesn't check for ipv6 hop limit when flushing.
- 			 * Hence no corresponding test to the ipv4 case.
--- 
-2.36.1
+I think several of your bindings patches have triggered Rob's bot.
+Please make sure you're set up to test this yourself and make sure you
+run it locally before sending out the next version of your patches. In
+general you should get in the habit of running 'make dt_binding_check'
+locally before you post any bindings changes.
 
+Thanks!
+
+-Doug
