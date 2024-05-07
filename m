@@ -1,662 +1,441 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2087.outbound.protection.outlook.com [40.107.237.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 160ED8821
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 09:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715075681; cv=none; b=FhREOX08mMrgkvGfJWBfJYGeHIjgRH4EzFdPv9E1uQr0ixB04fHP9osNPYQJRZ+ZCe2/+UVYwYfrZNuwb7RDjoNHGrFSORGbFyAq23jcTYmc/W/M6RAo/+z+oSccyYomgI1lw/BTv12n1RVBVjow71Htpc+Nc8yUwkG4Jk2bCIA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715075681; c=relaxed/simple;
-	bh=CHE1tigzNNkyysRAD+2FS2ODjhBUTibYEbL0fTaTe08=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sLGoSgUl0J/Xu0kAiJnrtCc83lntoDzpp+c/XMPEjnvXbUv0o5m7Gf1a7l6jUDyBinyaNCqL1eyYzaipZpuByh2d/5fZksFy0x71vFtCbo4tOUTTJgV1FsLv15JCypv3p+NQJOzJShVk3sT01P+gD3PLJKEnCsRpGF8p3B/sJ4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=c5AWff30; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF00014E2F9;
+	Tue,  7 May 2024 09:55:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.87
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715075708; cv=fail; b=gKt4iojrSwCpbN7YA481K1nWo4BC2VEeZzbZJ8/XswopCI9o1+DwctnFyyJHGgVQmAqbQyMhqwa8lErG7DCczG2pRgiDgQSaV81z1GXQ/4RXUIl+dgLVCUzVJ82SDw3kDYyBqEsQnVvX/5Jiv0igEHFtyHasFcy/JL6C/5kOArc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715075708; c=relaxed/simple;
+	bh=z1hiytLQYX/wq6ug7dN4l+YWaCAOVLEcmVilJgL/xyo=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=txHI923MKvbvD0L01GlkcRl/iGfkJJybN8F0gzLRyl/RLHpsGo2TYSr1vGTc3UrKEaa0M5pn4FSS1mW6sIwr+V0VAPL9XNFfe6gQQ5DU/PvlT+iAMN43KCiSlPqDqUSd1QSjzwrFqEWYUmxKK7hkdhoW4rQEwAyQUYseH+aHwDo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=iT4AWdNy; arc=fail smtp.client-ip=40.107.237.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="c5AWff30"
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com [209.85.128.200])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 5EF183FB60
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 09:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1715075675;
-	bh=XxMfRWpdblXuwoQnBu1WEKFAk7dyHrSQLZjVkp66ZA8=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=c5AWff30EIrg9uYJj6eGs7aGBGUZJ+dVbjlpNPRm0GENFsxsp06lHl329ASeG9yVH
-	 wjQ3U3gVX9JT+nFnbECaYY3Srv8I4Z5aVIPBGm/bXN8TIFVSFHawq7DRA/5o2JVP7H
-	 hfMAQzt3wt4mIG8RWVgEnu/2NeANEOXn7HSG2mw2LOPK8G1TtqwqmnG2Kvuvjsr0ZB
-	 9Oz79LpKL85Yv7m9CrpsRHxKqBPwX2ppl5vY8/0scXSP1CTrUGJp1ad31GefQI24VL
-	 OvO06YpHzMbnkQPJStYycTkWyc5/oISBLrRdSRiahNf5UhVo7n2GoH9SGgj5vVz8Up
-	 1PZcoVJJ4vbkg==
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-6202c9d143cso62034087b3.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 02:54:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715075674; x=1715680474;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=XxMfRWpdblXuwoQnBu1WEKFAk7dyHrSQLZjVkp66ZA8=;
-        b=rcC5/1scCpuKJm+UCB0Wu8ZBp7kAiV/l2HuZZmZYf073ZNVNKaid7abuVyuckj2XTb
-         +fTqW9Ild1R+hS8nYbVF3XS2Ozffl8KYS8hr9w7mCQp2QjCDF03I/jIZNLzxcix8TSs0
-         92s/hNhOawm6G7UfZtBtqnMLTIohshag3aUC2l7zh8GltnYntM3FCivJUgVcNHSExADD
-         PNfLqyMa3bvkj2FQ5acA1sxCCI93eWvSeblZp7tJTGUyD7yyQAjpNhfcsG+QCGCYVj7M
-         Z0KlC7saox8RStzmRu5eXUWD//YZthg9rgncaTZQydi5sywVcy0BGu3iItosHCSyiNbz
-         KEmw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyqsF2kGnCq7Hx/BxfA3Qra0eMtwnKlF5U+geECxQuuxuCVtYul7VubiroEa1Pq59hH/NKupMA6cJIOzMpM1+GGaKbKNlDeUJ0WFki
-X-Gm-Message-State: AOJu0Yzp/52EZaVCrvwG5zTwFHUT1Dqcs2g3rnvJpBw0zrpIs+Yl6Mov
-	MbxUf1UmV0yuC0ScwuhdVafdnB875n8nPnQALDL5plR2B830pBHrurgCVXSuyYYM47dkB/dCL4f
-	JVaLGeyOw/MmxNWm5YKY2QfnCmnhCHBORXSFIx/E5HSaUpFTAlQvtpkOluCzVhoXr7XZxFdtAIx
-	ZdtuYPQ/ZtYFnCRfBYgLf1YciczpdrH986TuVNXlohlmjlFI2ql5cF
-X-Received: by 2002:a05:690c:6f84:b0:61a:b54d:5925 with SMTP id je4-20020a05690c6f8400b0061ab54d5925mr13088703ywb.38.1715075674292;
-        Tue, 07 May 2024 02:54:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEw6YUEAS9vk1bIxTyFsZLiot4XTIjgw5Dx5kaVtTIlLPYpm3g7P4Jh2xlEwW/ZGqyJQe5vTOEawAe9GnKxE5w=
-X-Received: by 2002:a05:690c:6f84:b0:61a:b54d:5925 with SMTP id
- je4-20020a05690c6f8400b0061ab54d5925mr13088685ywb.38.1715075673819; Tue, 07
- May 2024 02:54:33 -0700 (PDT)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Tue, 7 May 2024 02:54:33 -0700
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <NTZPR01MB0986380E0F7930DF653D7807E1E4A@NTZPR01MB0986.CHNPR01.prod.partner.outlook.cn>
-References: <20240412084543.7243-1-ziv.xu@starfivetech.com>
- <20240412084543.7243-3-ziv.xu@starfivetech.com> <NTZPR01MB09860632D4BDB31B98E1BD18E11AA@NTZPR01MB0986.CHNPR01.prod.partner.outlook.cn>
- <CAJM55Z8U5ddBg_T34rHYUXQcTLdzhMhbhv3mZxehQL8VLBFtUA@mail.gmail.com> <NTZPR01MB0986380E0F7930DF653D7807E1E4A@NTZPR01MB0986.CHNPR01.prod.partner.outlook.cn>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="iT4AWdNy"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=crUm/L3kkFN69lZQuo4zYpFMRbrHwKhb87f9cwA3De2dLuNLgM5rkwaTvoKO2WfuFISDojMIB/A+gm4SO6t0dBMcg29L3sXpYFgZ2BaajQqSTPqKBBQ3X1Ho2I/FgXmyRNbWcUffJNMCGbWSBmeLH60MaN6VgadzGLLUlBsSll+73tMA+0hDuwN79jyCALCwoSLeUxjaiUow8/nJGTt3pFH92X+gOVKGsKgJc4NTmULpoEjzGNO+5tJsw9G1+YWnddW/vleGyBKJX7sseU7didLq6NtQNTucP89m69f5Fnmb6Id2SExiwYX52v5C8t7ZACQm9QJhG6pyNu9dUZtsGQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YvWvcNyrfOh/mJWkZUAq7R+6sOUKk//y5OhCTj4Hi6g=;
+ b=JNvGP5O3AKoEQxgXTkblVxwGCrCr6qyOnWpQYlO8ga19/Xlql05JCSCDFnaw9PvVmNph+/9musJ2pNA51PMJdqitZWHeydSLJZZb9zVLlpQySqw6EPaqaD4RixfBQ4UfiN6j4c0Xs6lDoIKHFuujVT2R4qkCCGt9xuH6w1EQMBVlRom3AZ64gEIszEcugn8E+4PMaB2E3id21H8D/Uy1VlNdh9Ow1gNJtcjSrMCXAzdKJGm4K2u0gEkPHlSJwREm9BDDq5SBg8DzAYjywxGNokqVEMBbyZjlqzsbKNe+jPakmI6TKVg/lvr51MDcoJQqC9MbXcNnyObtfAkuF8deZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YvWvcNyrfOh/mJWkZUAq7R+6sOUKk//y5OhCTj4Hi6g=;
+ b=iT4AWdNyrZRXKpbYE9gLSmLz93EUPtO84jbyTsaw3bUwHMiNCx/vku6EyKwpqzvwFQjE8DyLtK/LF6S1/srW8NmtQJ0uNYkmOTf1FJ5mll6Fa4jA7NmT4rMiJTeiRobbQrZbn3ZikfOoCzEmdio4f5ow+mGI6mEVsyBP2CqkK5s=
+Received: from PH0PR07CA0018.namprd07.prod.outlook.com (2603:10b6:510:5::23)
+ by PH7PR12MB5878.namprd12.prod.outlook.com (2603:10b6:510:1d6::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42; Tue, 7 May
+ 2024 09:55:02 +0000
+Received: from MWH0EPF000A6735.namprd04.prod.outlook.com
+ (2603:10b6:510:5:cafe::b7) by PH0PR07CA0018.outlook.office365.com
+ (2603:10b6:510:5::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.41 via Frontend
+ Transport; Tue, 7 May 2024 09:55:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MWH0EPF000A6735.mail.protection.outlook.com (10.167.249.27) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7544.18 via Frontend Transport; Tue, 7 May 2024 09:55:00 +0000
+Received: from amd-System-Product-Name.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Tue, 7 May 2024 04:54:54 -0500
+From: Vignesh Balasubramanian <vigbalas@amd.com>
+To: <linux-kernel@vger.kernel.org>, <linux-toolchains@vger.kernel.org>
+CC: <mpe@ellerman.id.au>, <npiggin@gmail.com>, <christophe.leroy@csgroup.eu>,
+	<aneesh.kumar@kernel.org>, <naveen.n.rao@linux.ibm.com>,
+	<ebiederm@xmission.com>, <keescook@chromium.org>, <x86@kernel.org>,
+	<linuxppc-dev@lists.ozlabs.org>, <linux-mm@kvack.org>, <bpetkov@amd.com>,
+	<jinisusan.george@amd.com>, <matz@suse.de>, <binutils@sourceware.org>,
+	<jhb@FreeBSD.org>, <felix.willgerodt@intel.com>, Vignesh Balasubramanian
+	<vigbalas@amd.com>
+Subject: [PATCH v2 1/1] x86/elf: Add a new .note section containing Xfeatures information to x86 core files
+Date: Tue, 7 May 2024 15:23:31 +0530
+Message-ID: <20240507095330.2674-2-vigbalas@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240507095330.2674-1-vigbalas@amd.com>
+References: <20240507095330.2674-1-vigbalas@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Tue, 7 May 2024 02:54:33 -0700
-Message-ID: <CAJM55Z9mTeRKxt3gc_c-APn0oUm=oZEkF1wsNxwSkDPCXUTLGA@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IOWbnuWkjTog5Zue5aSNOiBbUEFUQ0ggdjEwIDIvM10gY2xvY2tzb3VyY2U6IEFkZA==?=
-	=?UTF-8?B?IEpINzExMCB0aW1lciBkcml2ZXI=?=
-To: Ziv Xu <ziv.xu@starfivetech.com>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Walker Chen <walker.chen@starfivetech.com>, Xingyu Wu <xingyu.wu@starfivetech.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Conor Dooley <conor@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MWH0EPF000A6735:EE_|PH7PR12MB5878:EE_
+X-MS-Office365-Filtering-Correlation-Id: b805896c-55c2-4cbc-b2a2-08dc6e7bc287
+X-LD-Processed: 3dd8961f-e488-4e60-8e11-a82d994e183d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|36860700004|82310400017|1800799015|376005|7416005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jDrNtz4tlWcfY/dAu2iP2U2KV4YEj/VRCGDaSBIHteBYi0Yw/reYgPELo40+?=
+ =?us-ascii?Q?nOAoY/kYJUGSbulU1U2NtCSOUCKj0HpIpBbV1d5LQc9F9aBXL+7Igq9K5m+l?=
+ =?us-ascii?Q?epY9rfEr/Gge3d5jFd7I4EL9qtWp2Di5deSCOv06zEvrC/+qxd0kRoTiezfJ?=
+ =?us-ascii?Q?53czmSHLRXORiF4JIJPzfey8VxwA/NZQcwU4lDovN3bHMPw8LID2qkGGlZ2Y?=
+ =?us-ascii?Q?YXCflsT8wkk2HOX4/Zi00O7nbuVQzfsgMB6hiMk5FD/UMH5epcksehVtzQ6+?=
+ =?us-ascii?Q?YbT2/3lEowko0neNNHbKlj6GwRDjujqUbaDO4WBmCY4ofK7djLPimPl1EcnN?=
+ =?us-ascii?Q?nhBDgZ+Hmx0XAW9b2+TMPxqcMdckWuko9o7gkt8rr4wFsMraE2CIebZewmTs?=
+ =?us-ascii?Q?bnsZqlxcVCP/sdwIziYJYkixSAI+d64mF1BlNovl0FRw0Fq+HLy8uVSI7XrZ?=
+ =?us-ascii?Q?Tn3QdrbaaK1QwxnwjwstEceGbjeSKDk0jReTP70J9EZMGYQbxtdz18WY4iew?=
+ =?us-ascii?Q?ottDAhcxoMrMu8XbYRlGqY2kHdCjCIucPmbZsPSUcYx2ydDCKBYh5dQHHHAr?=
+ =?us-ascii?Q?Jg6mtj9mO7Hv/vPNSefokKCkY7H5kJngzrrxiVMKWX+XIrpbFHA2C4H1jPGs?=
+ =?us-ascii?Q?EvMUEHzMlj0fIwK3p18fS0S0JB3nTJGXssyQ7oGJI/UO7C6D/cdFOjIybJNg?=
+ =?us-ascii?Q?+eAAeGsZ359YVKP+K/DvFa4eqGRrPii7AKiILjGkJaI0TS24G7Z6Mxs7lkeB?=
+ =?us-ascii?Q?gA+AB6nMWqAF/ew3VyK+h5IN250goKiq6YP3QeDfYeC/1vmy/hY+o3RoWolK?=
+ =?us-ascii?Q?15jWiV2vzS+65RsFcZ1uUBZ80KA+AG1BwqqPh68maaw6JzLlwiuBndw0tx0h?=
+ =?us-ascii?Q?El8DVOL1tWnsGiYMAYMkKQ8TqGEeweAL0IHAf71WJoi1NBG2BM6TaNOsioQb?=
+ =?us-ascii?Q?sPVJVFnf+ikx6jHVaz5rwKf0bsLy3fD4Aa4OQQ2OvRt7Mp7YVl6+47bS+DKA?=
+ =?us-ascii?Q?Xoq2I3Vd9sN6ItKzl1b51Opao4ogDwY6KzRFhbVzindV8Fthv4jqLP1859+r?=
+ =?us-ascii?Q?49Mgxc+XIU0lKGjOR9bnpoeVDgBTOZg2OhUqT4wnsWOvOK5nygKixUyLqnKq?=
+ =?us-ascii?Q?GtjtFozXSQ1PhmRDtvkOTJBRDo1bRjUg96o53qbtSgUHwJGJPB58vPvrW/6Z?=
+ =?us-ascii?Q?UUUAmiXVOqqEZ2l/kb8xePOjiwQiIIzbGhZ6z19f/tkto01DH1YGnOnhpWBl?=
+ =?us-ascii?Q?itK3kJ0hVaZh3gVxttLMLKM1wPeuYIDxTqoVDZegEIftlfuo6AWpKcl8QeEi?=
+ =?us-ascii?Q?zTJ7YS46tqbyL+ueqmV0tt2+?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(82310400017)(1800799015)(376005)(7416005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 09:55:00.1754
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b805896c-55c2-4cbc-b2a2-08dc6e7bc287
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MWH0EPF000A6735.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5878
 
-Ziv Xu wrote:
->
->
-> > -----=E9=82=AE=E4=BB=B6=E5=8E=9F=E4=BB=B6-----
-> > =E5=8F=91=E4=BB=B6=E4=BA=BA: Emil Renner Berthing <emil.renner.berthing=
-@canonical.com>
-> > =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: 2024=E5=B9=B44=E6=9C=8830=E6=97=
-=A5 18:19
-> > =E6=94=B6=E4=BB=B6=E4=BA=BA: Ziv Xu <ziv.xu@starfivetech.com>; Daniel L=
-ezcano
-> > <daniel.lezcano@linaro.org>; Thomas Gleixner <tglx@linutronix.de>
-> > =E6=8A=84=E9=80=81: linux-riscv@lists.infradead.org; devicetree@vger.ke=
-rnel.org; Rob Herring
-> > <robh+dt@kernel.org>; Krzysztof Kozlowski
-> > <krzysztof.kozlowski+dt@linaro.org>; Paul Walmsley
-> > <paul.walmsley@sifive.com>; Palmer Dabbelt <palmer@dabbelt.com>; Albert
-> > Ou <aou@eecs.berkeley.edu>; Philipp Zabel <p.zabel@pengutronix.de>; Wal=
-ker
-> > Chen <walker.chen@starfivetech.com>; Xingyu Wu
-> > <xingyu.wu@starfivetech.com>; linux-kernel@vger.kernel.org; Conor Doole=
-y
-> > <conor@kernel.org>
-> > =E4=B8=BB=E9=A2=98: Re: =E5=9B=9E=E5=A4=8D: [PATCH v10 2/3] clocksource=
-: Add JH7110 timer driver
-> >
-> > Ziv Xu wrote:
-> > >
-> > >
-> > > > -----=E9=82=AE=E4=BB=B6=E5=8E=9F=E4=BB=B6-----
-> > > > =E5=8F=91=E4=BB=B6=E4=BA=BA: Ziv Xu
-> > > > =E5=8F=91=E9=80=81=E6=97=B6=E9=97=B4: 2024=E5=B9=B44=E6=9C=8812=E6=
-=97=A5 16:46
-> > > > =E6=94=B6=E4=BB=B6=E4=BA=BA: Daniel Lezcano <daniel.lezcano@linaro.=
-org>; Thomas Gleixner
-> > > > <tglx@linutronix.de>; Emil Renner Berthing
-> > > > <emil.renner.berthing@canonical.com>; Christophe JAILLET
-> > > > <christophe.jaillet@wanadoo.fr>
-> > > > =E6=8A=84=E9=80=81: linux-riscv@lists.infradead.org; devicetree@vge=
-r.kernel.org; Rob
-> > > > Herring <robh+dt@kernel.org>; Krzysztof Kozlowski
-> > > > <krzysztof.kozlowski+dt@linaro.org>; Paul Walmsley
-> > > > <paul.walmsley@sifive.com>; Palmer Dabbelt <palmer@dabbelt.com>;
-> > > > Albert Ou <aou@eecs.berkeley.edu>; Philipp Zabel
-> > > > <p.zabel@pengutronix.de>; Walker Chen
-> > > > <walker.chen@starfivetech.com>; Xingyu Wu
-> > > > <xingyu.wu@starfivetech.com>; linux-kernel@vger.kernel.org; Conor
-> > > > Dooley <conor@kernel.org>
-> > > > =E4=B8=BB=E9=A2=98: [PATCH v10 2/3] clocksource: Add JH7110 timer d=
-river
-> > > >
-> > > > From: Xingyu Wu <xingyu.wu@starfivetech.com>
-> > > >
-> > > > Add timer driver for the StarFive JH7110 SoC.
-> > > >
-> > > > This timer has four free-running and independent 32-bit counters.
-> > > > Each channel(counter) can trigger an interrupt when timeout even CP=
-U
-> > > > is sleeping. So this timer is used as global timer and register
-> > > > clockevent for each CPU core after riscv-timer registration on the =
-StarFive
-> > JH7110 SoC.
-> > > >
-> > > > Signed-off-by: Ziv Xu <ziv.xu@starfivetech.com>
-> > > > Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
-> > > > ---
-> > > >  MAINTAINERS                        |   7 +
-> > > >  drivers/clocksource/Kconfig        |  11 +
-> > > >  drivers/clocksource/Makefile       |   1 +
-> > > >  drivers/clocksource/timer-jh7110.c | 345
-> > +++++++++++++++++++++++++++++
-> > > >  include/linux/cpuhotplug.h         |   1 +
-> > > >  5 files changed, 365 insertions(+)
-> > > >  create mode 100644 drivers/clocksource/timer-jh7110.c
-> > > >
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS index
-> > > > 7c121493f43d..ef9b5f5bad9e 100644
-> > > > --- a/MAINTAINERS
-> > > > +++ b/MAINTAINERS
-> > > > @@ -21043,6 +21043,13 @@ S:	Maintained
-> > > >  F:	Documentation/devicetree/bindings/sound/starfive,jh7110-tdm.yam=
-l
-> > > >  F:	sound/soc/starfive/jh7110_tdm.c
-> > > >
-> > > > +STARFIVE JH7110 TIMER DRIVER
-> > > > +M:	Samin Guo <samin.guo@starfivetech.com>
-> > > > +M:	Xingyu Wu <xingyu.wu@starfivetech.com>
-> > > > +S:	Supported
-> > > > +F:	Documentation/devicetree/bindings/timer/starfive,jh7110-timer.y=
-aml
-> > > > +F:	drivers/clocksource/timer-jh7110.c
-> > > > +
-> > > >  STARFIVE JH71X0 CLOCK DRIVERS
-> > > >  M:	Emil Renner Berthing <kernel@esmil.dk>
-> > > >  M:	Hal Feng <hal.feng@starfivetech.com>
-> > > > diff --git a/drivers/clocksource/Kconfig
-> > > > b/drivers/clocksource/Kconfig index
-> > > > 34faa0320ece..2dc97201dee1 100644
-> > > > --- a/drivers/clocksource/Kconfig
-> > > > +++ b/drivers/clocksource/Kconfig
-> > > > @@ -641,6 +641,17 @@ config RISCV_TIMER
-> > > >  	  is accessed via both the SBI and the rdcycle instruction.  This=
- is
-> > > >  	  required for all RISC-V systems.
-> > > >
-> > > > +config STARFIVE_JH7110_TIMER
-> > > > +	bool "Timer for the STARFIVE JH7110 SoC"
-> > > > +	depends on ARCH_STARFIVE || COMPILE_TEST
-> > > > +	select TIMER_OF
-> > > > +	select CLKSRC_MMIO
-> > > > +	default ARCH_STARFIVE
-> > > > +	help
-> > > > +	  This enables the timer for StarFive JH7110 SoC. On RISC-V platf=
-orm,
-> > > > +	  the system has started RISCV_TIMER, but you can also use this
-> > timer
-> > > > +	  which can provide four channels to do a lot more things on JH71=
-10
-> > SoC.
-> > > > +
-> > > >  config CLINT_TIMER
-> > > >  	bool "CLINT Timer for the RISC-V platform" if COMPILE_TEST
-> > > >  	depends on GENERIC_SCHED_CLOCK && RISCV diff --git
-> > > > a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile index
-> > > > 4bb856e4df55..8dc2f0ea2d0f 100644
-> > > > --- a/drivers/clocksource/Makefile
-> > > > +++ b/drivers/clocksource/Makefile
-> > > > @@ -80,6 +80,7 @@ obj-$(CONFIG_INGENIC_TIMER)		+=3D
-> > ingenic-timer.o
-> > > >  obj-$(CONFIG_CLKSRC_ST_LPC)		+=3D clksrc_st_lpc.o
-> > > >  obj-$(CONFIG_X86_NUMACHIP)		+=3D numachip.o
-> > > >  obj-$(CONFIG_RISCV_TIMER)		+=3D timer-riscv.o
-> > > > +obj-$(CONFIG_STARFIVE_JH7110_TIMER)	+=3D timer-jh7110.o
-> > > >  obj-$(CONFIG_CLINT_TIMER)		+=3D timer-clint.o
-> > > >  obj-$(CONFIG_CSKY_MP_TIMER)		+=3D timer-mp-csky.o
-> > > >  obj-$(CONFIG_GX6605S_TIMER)		+=3D timer-gx6605s.o
-> > > > diff --git a/drivers/clocksource/timer-jh7110.c
-> > > > b/drivers/clocksource/timer-jh7110.c
-> > > > new file mode 100644
-> > > > index 000000000000..dc770507f209
-> > > > --- /dev/null
-> > > > +++ b/drivers/clocksource/timer-jh7110.c
-> > > > @@ -0,0 +1,345 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Starfive JH7110 Timer driver
-> > > > + *
-> > > > + * Copyright (C) 2023 StarFive Technology Co., Ltd.
-> > > > + *
-> > > > + * This timer has four free-running and independent 32-bit counter=
-s
-> > > > +and runs in 24MHz
-> > > > + * clock on the StarFive JH7110 SoC. Each channel(counter) can
-> > > > +trigger an interrupt
-> > > > + * when timeout even CPU is sleeping. They support one-shot mode
-> > > > +and
-> > > > continuous-run mode.
-> > > > + *
-> > > > + * Each channel is used as a global timer that serves each cpu cor=
-e:
-> > > > + * JH7110 Timer Channel 0 -- CPU 0
-> > > > + * JH7110 Timer Channel 1 -- CPU 1
-> > > > + * JH7110 Timer Channel 2 -- CPU 2
-> > > > + * JH7110 Timer Channel 3 -- CPU 3
-> > > > + */
-> > > > +
-> > > > +#include <linux/clk.h>
-> > > > +#include <linux/clockchips.h>
-> > > > +#include <linux/cpu.h>
-> > > > +#include <linux/iopoll.h>
-> > > > +#include <linux/irq.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +#include <linux/reset.h>
-> > > > +
-> > > > +/* Bias: Ch0-0x0, Ch1-0x40, Ch2-0x80, and so on. */
-> > > > +#define JH7110_TIMER_CH_LEN		0x40
-> > > > +#define JH7110_TIMER_CH_BASE(x)		((x) *
-> > JH7110_TIMER_CH_LEN)
-> > > > +#define JH7110_TIMER_CH_MAX		4
-> > > > +
-> > > > +#define JH7110_DELAY_US			0
-> > > > +#define JH7110_TIMEOUT_US		10000
-> > > > +#define JH7110_CLOCKEVENT_RATING	300
-> > > > +#define JH7110_TIMER_MAX_TICKS		0xffffffff
-> > > > +#define JH7110_TIMER_MIN_TICKS		0xf
-> > > > +
-> > > > +#define JH7110_TIMER_INT_STATUS		0x00 /* RO[0:4]: Interrupt
-> > Status
-> > > > for channel0~4 */
-> > > > +#define JH7110_TIMER_CTL		0x04 /* RW[0]: 0-continuous run,
-> > 1-single run
-> > > > */
-> > > > +#define JH7110_TIMER_LOAD		0x08 /* RW: load value to counter
-> > */
-> > > > +#define JH7110_TIMER_ENABLE		0x10 /* RW[0]: timer enable
-> > register */
-> > > > +#define JH7110_TIMER_RELOAD		0x14 /* RW: write 1 or 0 both
-> > reload
-> > > > counter */
-> > > > +#define JH7110_TIMER_VALUE		0x18 /* RO: timer value register */
-> > > > +#define JH7110_TIMER_INT_CLR		0x20 /* RW: timer interrupt clear
-> > > > register */
-> > > > +#define JH7110_TIMER_INT_MASK		0x24 /* RW[0]: timer
-> > interrupt
-> > > > mask register */
-> > > > +
-> > > > +#define JH7110_TIMER_INT_CLR_ENA	BIT(0)
-> > > > +#define JH7110_TIMER_INT_CLR_AVA_MASK	BIT(1)
-> > > > +
-> > > > +#define JH7110_PERCPU_GET_CLKEVT
-> > > > 	(&jh7110_timer_info.clkevt[smp_processor_id()])
-> > > > +
-> > > > +/**
-> > > > + * struct jh7110_clkevt - Description of each timer channel
-> > > > + * @clk:		Clock of each timer channel
-> > > > + * @rst:		Reset of each timer channel
-> > > > + * @base:		Virtual address of each timer channel
-> > > > + * @irq:                Interrupt number of each timer channel
-> > > > + * @timer_enabled:      Enabled flag for each timer channel
-> > > > + * @name:		Name of each timer channel
-> > > > + */
-> > > > +struct jh7110_clkevt {
-> > > > +	struct clk		*clk;
-> > > > +	struct reset_control	*rst;
-> > > > +	void __iomem		*base;
-> > > > +	int			irq;
-> > > > +	bool			timer_enabled;
-> > > > +	char			name[sizeof("jh7110-timer.chX")];
-> > > > +};
-> > > > +
-> > > > +struct jh7110_timer_priv {
-> > > > +	struct clk		*pclk;
-> > > > +	struct reset_control	*prst;
-> > > > +	struct device		*dev;
-> > > > +	struct jh7110_clkevt	clkevt[JH7110_TIMER_CH_MAX];
-> > > > +};
-> > > > +
-> > > > +static struct jh7110_timer_priv jh7110_timer_info;
-> > > > +
-> > > > +/* 0:continuous-run mode, 1:single-run mode */ enum jh7110_timer_m=
-ode
-> > {
-> > > > +	JH7110_TIMER_MODE_CONTIN,
-> > > > +	JH7110_TIMER_MODE_SINGLE,
-> > > > +};
-> > > > +
-> > > > +/* Interrupt Mask, 0:Unmask, 1:Mask */ enum jh7110_timer_int_mask =
-{
-> > > > +	JH7110_TIMER_INT_ENA,
-> > > > +	JH7110_TIMER_INT_DIS,
-> > > > +};
-> > > > +
-> > > > +enum jh7110_timer_enable {
-> > > > +	JH7110_TIMER_DIS,
-> > > > +	JH7110_TIMER_ENA,
-> > > > +};
-> > > > +
-> > > > +/*
-> > > > + * BIT(0): Read value represent channel int status.
-> > > > + * Write 1 to this bit to clear interrupt. Write 0 has no effects.
-> > > > + * BIT(1): "1" means that it is clearing interrupt. BIT(0) can not=
- be written.
-> > > > + */
-> > > > +static inline int jh7110_timer_int_clear(struct jh7110_clkevt
-> > > > +*clkevt) {
-> > > > +	u32 value;
-> > > > +	int ret;
-> > > > +
-> > > > +	/* Waiting interrupt can be cleared */
-> > > > +	ret =3D readl_poll_timeout_atomic(clkevt->base +
-> > > > +JH7110_TIMER_INT_CLR,
-> > > > value,
-> > > > +					!(value & JH7110_TIMER_INT_CLR_AVA_MASK),
-> > > > +					JH7110_DELAY_US, JH7110_TIMEOUT_US);
-> > > > +	if (!ret)
-> > > > +		writel(JH7110_TIMER_INT_CLR_ENA, clkevt->base +
-> > > > +JH7110_TIMER_INT_CLR);
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +static int jh7110_timer_start(struct jh7110_clkevt *clkevt) {
-> > > > +	int ret;
-> > > > +
-> > > > +	/* Disable and clear interrupt first */
-> > > > +	writel(JH7110_TIMER_INT_DIS, clkevt->base +
-> > > > JH7110_TIMER_INT_MASK);
-> > > > +	ret =3D jh7110_timer_int_clear(clkevt);
-> > > > +
-> > > > +	writel(JH7110_TIMER_INT_ENA, clkevt->base +
-> > > > JH7110_TIMER_INT_MASK);
-> > > > +	writel(JH7110_TIMER_ENA, clkevt->base + JH7110_TIMER_ENABLE);
-> > > > +
-> > > > +	return ret;
-> > > > +}
-> > > > +
-> > > > +static int jh7110_timer_shutdown(struct clock_event_device *evt) {
-> > > > +	struct jh7110_clkevt *clkevt =3D JH7110_PERCPU_GET_CLKEVT;
-> > > > +
-> > > > +	writel(JH7110_TIMER_DIS, clkevt->base + JH7110_TIMER_ENABLE);
-> > > > +	return jh7110_timer_int_clear(clkevt); }
-> > > > +
-> > > > +/* IRQ handler for the timer */
-> > > > +static irqreturn_t jh7110_timer_interrupt(int irq, void *data) {
-> > > > +	struct clock_event_device *evt =3D (struct clock_event_device *)d=
-ata;
-> > > > +	struct jh7110_clkevt *clkevt =3D &jh7110_timer_info.clkevt[0];
-> > > > +	u32 reg =3D readl(clkevt->base + JH7110_TIMER_INT_STATUS);
-> > > > +	u8 cpu_id =3D smp_processor_id();
-> > > > +
-> > > > +	/* Check interrupt status and channel(cpu) ID */
-> > > > +	if (!(reg & BIT(cpu_id)))
-> > > > +		return IRQ_NONE;
-> > > > +
-> > > > +	clkevt =3D &jh7110_timer_info.clkevt[cpu_id];
-> > > > +	writel(JH7110_TIMER_INT_CLR_ENA, (clkevt->base +
-> > > > +JH7110_TIMER_INT_CLR));
-> > > > +
-> > > > +	if (evt->event_handler)
-> > > > +		evt->event_handler(evt);
-> > > > +
-> > > > +	return IRQ_HANDLED;
-> > > > +}
-> > > > +
-> > > > +static int jh7110_timer_set_periodic(struct clock_event_device *ev=
-t) {
-> > > > +	struct jh7110_clkevt *clkevt =3D JH7110_PERCPU_GET_CLKEVT;
-> > > > +
-> > > > +	writel(JH7110_TIMER_MODE_CONTIN, clkevt->base +
-> > > > JH7110_TIMER_CTL);
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int jh7110_timer_set_oneshot(struct clock_event_device *evt=
-) {
-> > > > +	struct jh7110_clkevt *clkevt =3D JH7110_PERCPU_GET_CLKEVT;
-> > > > +
-> > > > +	writel(JH7110_TIMER_MODE_SINGLE, clkevt->base +
-> > > > JH7110_TIMER_CTL);
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int jh7110_timer_set_next_event(unsigned long next,
-> > > > +				       struct clock_event_device *evt) {
-> > > > +	struct jh7110_clkevt *clkevt =3D JH7110_PERCPU_GET_CLKEVT;
-> > > > +
-> > > > +	writel(JH7110_TIMER_MODE_SINGLE, clkevt->base +
-> > > > JH7110_TIMER_CTL);
-> > > > +	writel(next, clkevt->base + JH7110_TIMER_LOAD);
-> > > > +
-> > > > +	return jh7110_timer_start(clkevt); }
-> > > > +
-> > > > +static DEFINE_PER_CPU(struct clock_event_device, jh7110_clock_even=
-t) =3D
-> > {
-> > > > +	.features			=3D CLOCK_EVT_FEAT_PERIODIC |
-> > > > +					  CLOCK_EVT_FEAT_ONESHOT,
-> > > > +	.rating				=3D JH7110_CLOCKEVENT_RATING,
-> > > > +	.set_state_shutdown		=3D jh7110_timer_shutdown,
-> > > > +	.set_state_periodic		=3D jh7110_timer_set_periodic,
-> > > > +	.set_state_oneshot		=3D jh7110_timer_set_oneshot,
-> > > > +	.set_state_oneshot_stopped	=3D jh7110_timer_shutdown,
-> > > > +	.set_next_event			=3D jh7110_timer_set_next_event,
-> > > > +};
-> > > > +
-> > > > +static int jh7110_timer_dying_cpu(unsigned int cpu) {
-> > > > +	struct jh7110_timer_priv *priv =3D &jh7110_timer_info;
-> > > > +
-> > > > +	if (!priv->clkevt[cpu].timer_enabled)
-> > > > +		return 0;
-> > > > +
-> > > > +	writel(JH7110_TIMER_DIS, priv->clkevt[cpu].base +
-> > > > JH7110_TIMER_ENABLE);
-> > > > +	jh7110_timer_int_clear(&priv->clkevt[cpu]);
-> > > > +	reset_control_assert(priv->clkevt[cpu].rst);
-> > > > +	clk_disable_unprepare(priv->clkevt[cpu].clk);
-> > > > +
-> > > > +	return 0;
-> > > > +}
-> > > > +
-> > > > +static int jh7110_timer_starting_cpu(unsigned int cpu) {
-> > > > +	struct clock_event_device *evt =3D per_cpu_ptr(&jh7110_clock_even=
-t,
-> > cpu);
-> > > > +	struct jh7110_timer_priv *priv =3D &jh7110_timer_info;
-> > > > +	int err;
-> > > > +	u32 rate;
-> > > > +
-> > > > +	if (cpu >=3D JH7110_TIMER_CH_MAX)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	err =3D clk_prepare_enable(priv->clkevt[cpu].clk);
-> > > > +	if (err)
-> > > > +		goto err_starting_cpu;
-> > > > +
-> > > > +	err =3D reset_control_deassert(priv->clkevt[cpu].rst);
-> > > > +	if (err)
-> > > > +		goto err_soft_reset;
-> > > > +
-> > > > +	rate =3D clk_get_rate(priv->clkevt[cpu].clk);
-> > > > +	evt->cpumask =3D cpumask_of(cpu);
-> > > > +	evt->irq =3D priv->clkevt[cpu].irq;
-> > > > +
-> > > > +	err =3D irq_force_affinity(evt->irq, cpumask_of(cpu));
-> > > > +	if (err)
-> > > > +		goto err_affinity;
-> > > > +
-> > > > +	clockevents_config_and_register(evt, rate,
-> > JH7110_TIMER_MIN_TICKS,
-> > > > +					JH7110_TIMER_MAX_TICKS);
-> > > > +
-> > > > +	/* Use one-shot mode */
-> > > > +	writel(JH7110_TIMER_MODE_SINGLE, (priv->clkevt[cpu].base +
-> > > > +JH7110_TIMER_CTL));
-> > > > +
-> > > > +	priv->clkevt[cpu].timer_enabled =3D true;
-> > > > +
-> > > > +	err =3D jh7110_timer_start(&priv->clkevt[cpu]);
-> > > > +	if (err)
-> > > > +		goto err_affinity;
-> > > > +	return 0;
-> > > > +
-> > > > +err_affinity:
-> > > > +	reset_control_assert(priv->clkevt[cpu].rst);
-> > > > +err_soft_reset:
-> > > > +	clk_disable_unprepare(priv->clkevt[cpu].clk);
-> > > > +err_starting_cpu:
-> > > > +	free_irq(evt->irq, evt);
-> > > > +	return err;
-> > > > +}
-> > > > +
-> > > > +static int jh7110_timer_probe(struct platform_device *pdev) {
-> > > > +	struct jh7110_timer_priv *priv =3D &jh7110_timer_info;
-> > > > +	struct clock_event_device *evt;
-> > > > +	struct jh7110_clkevt *clkevt;
-> > > > +	char name[sizeof("chX")];
-> > > > +	int ch;
-> > > > +	int ret;
-> > > > +	void __iomem *base;
-> > > > +
-> > > > +	base =3D devm_platform_ioremap_resource(pdev, 0);
-> > > > +	if (IS_ERR(base))
-> > > > +		return dev_err_probe(&pdev->dev, PTR_ERR(base),
-> > > > +				     "failed to map registers\n");
-> > > > +
-> > > > +	priv->prst =3D devm_reset_control_get_exclusive(&pdev->dev, "apb"=
-);
-> > > > +	if (IS_ERR(priv->prst))
-> > > > +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->prst),
-> > > > +				     "failed to get apb reset\n");
-> > > > +
-> > > > +	priv->pclk =3D devm_clk_get_enabled(&pdev->dev, "apb");
-> > > > +	if (IS_ERR(priv->pclk))
-> > > > +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->pclk),
-> > > > +				     "failed to get & enable apb clock\n");
-> > > > +
-> > > > +	ret =3D reset_control_deassert(priv->prst);
-> > > > +	if (ret)
-> > > > +		return dev_err_probe(&pdev->dev, ret, "failed to deassert apb
-> > > > +reset\n");
-> > > > +
-> > > > +	for (ch =3D 0; ch < JH7110_TIMER_CH_MAX; ch++) {
-> > > > +		evt =3D per_cpu_ptr(&jh7110_clock_event, ch);
-> > > > +		clkevt =3D &priv->clkevt[ch];
-> > > > +		snprintf(name, sizeof(name), "ch%d", ch);
-> > > > +
-> > > > +		clkevt->base =3D base + JH7110_TIMER_CH_BASE(ch);
-> > > > +		/* Ensure timer is disabled */
-> > > > +		writel(JH7110_TIMER_DIS, clkevt->base +
-> > JH7110_TIMER_ENABLE);
-> > > > +		ret =3D jh7110_timer_int_clear(clkevt);
-> > > > +		if (ret)
-> > > > +			return ret;
-> > > > +
-> > > > +		clkevt->rst =3D devm_reset_control_get_exclusive(&pdev->dev,
-> > name);
-> > > > +		if (IS_ERR(clkevt->rst))
-> > > > +			return PTR_ERR(clkevt->rst);
-> > > > +
-> > > > +		clkevt->clk =3D devm_clk_get(&pdev->dev, name);
-> > > > +		if (IS_ERR(clkevt->clk))
-> > > > +			return PTR_ERR(clkevt->clk);
-> > > > +
-> > > > +		clkevt->irq =3D platform_get_irq(pdev, ch);
-> > > > +		if (clkevt->irq < 0)
-> > > > +			return clkevt->irq;
-> > > > +
-> > > > +		snprintf(clkevt->name, sizeof(clkevt->name),
-> > "jh7110-timer.ch%d",
-> > > > ch);
-> > > > +		ret =3D devm_request_irq(&pdev->dev, clkevt->irq,
-> > > > jh7110_timer_interrupt,
-> > > > +				       IRQF_TIMER | IRQF_IRQPOLL,
-> > > > +				       clkevt->name, evt);
-> > > > +
-> > > > +		if (ret)
-> > > > +			return ret;
-> > > > +
-> > > > +		clkevt->timer_enabled =3D false;
-> > > > +	}
-> > > > +
-> > > > +	return cpuhp_setup_state(CPUHP_AP_JH7110_TIMER_STARTING,
-> > > > +				"clockevents/jh7110/timer:starting",
-> > > > +				jh7110_timer_starting_cpu,
-> > jh7110_timer_dying_cpu); }
-> > > > +
-> > > > +static const struct of_device_id jh7110_timer_match[] =3D {
-> > > > +	{ .compatible =3D "starfive,jh7110-timer", },
-> > > > +	{ /* sentinel */ }
-> > > > +};
-> > > > +MODULE_DEVICE_TABLE(of, jh7110_timer_match);
-> > > > +
-> > > > +static struct platform_driver jh7110_timer_driver =3D {
-> > > > +	.probe =3D jh7110_timer_probe,
-> > > > +	.driver =3D {
-> > > > +		.name =3D "jh7110-timer",
-> > > > +		.of_match_table =3D jh7110_timer_match,
-> > > > +	},
-> > > > +};
-> > > > +module_platform_driver(jh7110_timer_driver);
-> > > > +
-> > > > +MODULE_AUTHOR("Xingyu Wu <xingyu.wu@starfivetech.com>");
-> > > > +MODULE_DESCRIPTION("StarFive JH7110 timer driver");
-> > > > +MODULE_LICENSE("GPL");
-> > > > diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.=
-h
-> > > > index 35e78ddb2b37..4a8b487c327e 100644
-> > > > --- a/include/linux/cpuhotplug.h
-> > > > +++ b/include/linux/cpuhotplug.h
-> > > > @@ -175,6 +175,7 @@ enum cpuhp_state {
-> > > >  	CPUHP_AP_CSKY_TIMER_STARTING,
-> > > >  	CPUHP_AP_TI_GP_TIMER_STARTING,
-> > > >  	CPUHP_AP_HYPERV_TIMER_STARTING,
-> > > > +	CPUHP_AP_JH7110_TIMER_STARTING,
-> > > >  	/* Must be the last timer callback */
-> > > >  	CPUHP_AP_DUMMY_TIMER_STARTING,
-> > > >  	CPUHP_AP_ARM_XEN_STARTING,
-> > > > --
-> > > > 2.17.1
-> > >
-> > > Hi Daniel / Thomas
-> > >
-> > > I have submitted new version of patch for jh7110 timer driver. Could =
-you please
-> > help to review and give your comments?
-> > > Thanks a lot!
-> >
-> > Hi Ziv
-> >
-> > I tried this on 6.9-rc6 on my VF2. It boots, but very slowly and "chopp=
-y". That is
-> > it repeatedly runs for <1s and then hangs for about 4s.
-> >
-> > Does this patch work for you?
-> >
-> > /Emil
->
-> Hi, Emil
->
-> I tried this on 6.9-rc7 and 6.9-rc7, but it doesn't reproduce the phenome=
-non you said.
-> The attachment is the log for 6.9-rc6. Could you please share your config=
- file (starfive_visionfive2_defconfig or .config) with me?
+Add a new .note section containing type, size, offset and flags of
+every xfeature that is present.
 
-Yeah, I just tried again on 6.9-rc7 (+ Conor's riscv-dt-for-next, Minda's P=
-CIe
-patches and the PWM driver) with this config:
+This information will be used by the debuggers to understand the XSAVE
+layout of the machine where the core file is dumped, and to read XSAVE
+registers, especially during cross-platform debugging.
 
-https://sprunge.us/kiXXba
+Some background:
 
-I don't know if it makes a difference but my also board boots via EFI.
+The XSAVE layouts of modern AMD and Intel CPUs differ, especially since
+Memory Protection Keys and the AVX-512 features have been inculcated into
+the AMD CPUs.
+This is since AMD never adopted (and hence never left room in the XSAVE
+layout for) the Intel MPX feature. Tools like GDB had assumed a fixed XSAVE
+layout matching that of Intel (based on the XCR0 mask).
+Hence, the core dumps from AMD CPUs didn't match the known size for the
+XCR0 mask. This resulted in GDB and other tools not being able to access
+the values of the AVX-512 and PKRU registers on AMD CPUs.
+To solve this, an interim solution has been accepted into GDB, and is
+already a part of GDB 14, thanks to these series of patches
+[ https://sourceware.org/pipermail/gdb-patches/2023-March/198081.html ].
+But this patch series depends on heuristics based on the total XSAVE
+register set size and the XCR0 mask to infer the layouts of the various
+register blocks for core dumps, and hence, is not a foolproof mechanism to
+determine the layout of the XSAVE area.
 
-/Emil
+Hence this new core dump note has been proposed as a more sturdy mechanism
+to allow GDB/LLDB and other relevant tools to determine the layout of the
+XSAVE area of the machine where the corefile was dumped.
+The new core dump note (which is being proposed as a per-process .note
+section), NT_X86_XSAVE_LAYOUT (0x205) contains an array of structures.
+Each structure describes an individual extended feature containing offset,
+size and flags (that is obtained through CPUID instruction) in a format
+roughly matching the follow C structure:
+
+struct xfeat_component {
+       u32 xfeat_type;
+       u32 xfeat_sz;
+       u32 xfeat_off;
+       u32 xfeat_flags;
+};
+
+Co-developed-by: Jini Susan George <jinisusan.george@amd.com>
+Signed-off-by: Jini Susan George <jinisusan.george@amd.com>
+Signed-off-by: Vignesh Balasubramanian <vigbalas@amd.com>
+---
+v1->v2: Removed kernel internal defn dependency, code improvements
+
+ arch/x86/Kconfig             |   1 +
+ arch/x86/include/asm/elf.h   |  34 +++++++++
+ arch/x86/kernel/fpu/xstate.c | 141 +++++++++++++++++++++++++++++++++++
+ fs/binfmt_elf.c              |   4 +-
+ include/uapi/linux/elf.h     |   1 +
+ 5 files changed, 179 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 928820e61cb5..cc67daab3396 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -105,6 +105,7 @@ config X86
+ 	select ARCH_HAS_DEBUG_WX
+ 	select ARCH_HAS_ZONE_DMA_SET if EXPERT
+ 	select ARCH_HAVE_NMI_SAFE_CMPXCHG
++	select ARCH_HAVE_EXTRA_ELF_NOTES
+ 	select ARCH_MHP_MEMMAP_ON_MEMORY_ENABLE
+ 	select ARCH_MIGHT_HAVE_ACPI_PDC		if ACPI
+ 	select ARCH_MIGHT_HAVE_PC_PARPORT
+diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
+index 1fb83d47711f..5952574db64b 100644
+--- a/arch/x86/include/asm/elf.h
++++ b/arch/x86/include/asm/elf.h
+@@ -13,6 +13,40 @@
+ #include <asm/auxvec.h>
+ #include <asm/fsgsbase.h>
+ 
++struct xfeat_component {
++	u32 xfeat_type;
++	u32 xfeat_sz;
++	u32 xfeat_off;
++	u32 xfeat_flags;
++} __packed;
++
++_Static_assert(sizeof(struct xfeat_component)%4 == 0, "xfeat_component is not aligned");
++
++enum custom_feature {
++	FEATURE_XSAVE_FP = 0,
++	FEATURE_XSAVE_SSE = 1,
++	FEATURE_XSAVE_YMM = 2,
++	FEATURE_XSAVE_BNDREGS = 3,
++	FEATURE_XSAVE_BNDCSR = 4,
++	FEATURE_XSAVE_OPMASK = 5,
++	FEATURE_XSAVE_ZMM_Hi256 = 6,
++	FEATURE_XSAVE_Hi16_ZMM = 7,
++	FEATURE_XSAVE_PT = 8,
++	FEATURE_XSAVE_PKRU = 9,
++	FEATURE_XSAVE_PASID = 10,
++	FEATURE_XSAVE_CET_USER = 11,
++	FEATURE_XSAVE_CET_SHADOW_STACK = 12,
++	FEATURE_XSAVE_HDC = 13,
++	FEATURE_XSAVE_UINTR = 14,
++	FEATURE_XSAVE_LBR = 15,
++	FEATURE_XSAVE_HWP = 16,
++	FEATURE_XSAVE_XTILE_CFG = 17,
++	FEATURE_XSAVE_XTILE_DATA = 18,
++	FEATURE_MAX,
++	FEATURE_XSAVE_EXTENDED_START = FEATURE_XSAVE_YMM,
++	FEATURE_XSAVE_EXTENDED_END = FEATURE_XSAVE_XTILE_DATA,
++};
++
+ typedef unsigned long elf_greg_t;
+ 
+ #define ELF_NGREG (sizeof(struct user_regs_struct) / sizeof(elf_greg_t))
+diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
+index 33a214b1a4ce..3d1c3c96e34d 100644
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@ -13,6 +13,7 @@
+ #include <linux/seq_file.h>
+ #include <linux/proc_fs.h>
+ #include <linux/vmalloc.h>
++#include <linux/coredump.h>
+ 
+ #include <asm/fpu/api.h>
+ #include <asm/fpu/regset.h>
+@@ -87,6 +88,8 @@ static unsigned int xstate_flags[XFEATURE_MAX] __ro_after_init;
+ #define XSTATE_FLAG_SUPERVISOR	BIT(0)
+ #define XSTATE_FLAG_ALIGNED64	BIT(1)
+ 
++static const char owner_name[] = "LINUX";
++
+ /*
+  * Return whether the system supports a given xfeature.
+  *
+@@ -1837,3 +1840,141 @@ int proc_pid_arch_status(struct seq_file *m, struct pid_namespace *ns,
+ 	return 0;
+ }
+ #endif /* CONFIG_PROC_PID_ARCH_STATUS */
++
++#ifdef CONFIG_COREDUMP
++static int get_sub_leaf(int custom_xfeat)
++{
++	switch (custom_xfeat) {
++	case FEATURE_XSAVE_YMM:			return XFEATURE_YMM;
++	case FEATURE_XSAVE_BNDREGS:		return XFEATURE_BNDREGS;
++	case FEATURE_XSAVE_BNDCSR:		return XFEATURE_BNDCSR;
++	case FEATURE_XSAVE_OPMASK:		return XFEATURE_OPMASK;
++	case FEATURE_XSAVE_ZMM_Hi256:		return XFEATURE_ZMM_Hi256;
++	case FEATURE_XSAVE_Hi16_ZMM:		return XFEATURE_Hi16_ZMM;
++	case FEATURE_XSAVE_PT:			return XFEATURE_PT_UNIMPLEMENTED_SO_FAR;
++	case FEATURE_XSAVE_PKRU:		return XFEATURE_PKRU;
++	case FEATURE_XSAVE_PASID:		return XFEATURE_PASID;
++	case FEATURE_XSAVE_CET_USER:		return XFEATURE_CET_USER;
++	case FEATURE_XSAVE_CET_SHADOW_STACK:	return XFEATURE_CET_KERNEL_UNUSED;
++	case FEATURE_XSAVE_HDC:			return XFEATURE_RSRVD_COMP_13;
++	case FEATURE_XSAVE_UINTR:		return XFEATURE_RSRVD_COMP_14;
++	case FEATURE_XSAVE_LBR:			return XFEATURE_LBR;
++	case FEATURE_XSAVE_HWP:			return XFEATURE_RSRVD_COMP_16;
++	case FEATURE_XSAVE_XTILE_CFG:		return XFEATURE_XTILE_CFG;
++	case FEATURE_XSAVE_XTILE_DATA:		return XFEATURE_XTILE_DATA;
++	default:
++		pr_warn_ratelimited("Not a valid XSAVE Feature.");
++		return 0;
++	}
++}
++
++/*
++ * Dump type, size, offset and flag values for every xfeature that is present.
++ */
++static int dump_xsave_layout_desc(struct coredump_params *cprm)
++{
++	u32 supported_features = 0;
++	struct xfeat_component xc;
++	u32 eax, ebx, ecx, edx;
++	int num_records = 0;
++	int sub_leaf = 0;
++	int i;
++
++	/* Find supported extended features */
++	cpuid_count(XSTATE_CPUID, 0, &eax, &ebx, &ecx, &edx);
++	supported_features = eax;
++
++	for (i = FEATURE_XSAVE_EXTENDED_START;
++			i <= FEATURE_XSAVE_EXTENDED_END; i++) {
++		sub_leaf = get_sub_leaf(i);
++		if (!sub_leaf)
++			continue;
++		if (supported_features & (1U << sub_leaf)) {
++			cpuid_count(XSTATE_CPUID, sub_leaf, &eax, &ebx, &ecx, &edx);
++			xc.xfeat_type = i;
++			xc.xfeat_sz = eax;
++			xc.xfeat_off = ebx;
++			/* Reserved for future use */
++			xc.xfeat_flags = 0;
++
++			if (!dump_emit(cprm, &xc,
++				       sizeof(struct xfeat_component)))
++				return 0;
++			num_records++;
++		}
++	}
++
++	return num_records;
++}
++
++static int get_xsave_desc_size(void)
++{
++	int supported_features = 0;
++	int xfeatures_count = 0;
++	u32 eax, ebx, ecx, edx;
++	int sub_leaf = 0;
++	int i;
++
++	/* Find supported extended features */
++	cpuid_count(XSTATE_CPUID, 0, &eax, &ebx, &ecx, &edx);
++	supported_features = eax;
++
++	for (i = FEATURE_XSAVE_EXTENDED_START;
++			i <= FEATURE_XSAVE_EXTENDED_END; i++) {
++		sub_leaf = get_sub_leaf(i);
++		if (!sub_leaf)
++			continue;
++		if (supported_features & (1U << sub_leaf))
++			xfeatures_count++;
++	}
++
++	return xfeatures_count * (sizeof(struct xfeat_component));
++}
++
++int elf_coredump_extra_notes_write(struct coredump_params *cprm)
++{
++	int num_records = 0;
++	struct elf_note en;
++
++	en.n_namesz = sizeof(owner_name);
++	en.n_descsz = get_xsave_desc_size();
++	en.n_type = NT_X86_XSAVE_LAYOUT;
++
++	if (!dump_emit(cprm, &en, sizeof(en)))
++		return 1;
++	if (!dump_emit(cprm, owner_name, en.n_namesz))
++		return 1;
++	if (!dump_align(cprm, 4))
++		return 1;
++
++	num_records = dump_xsave_layout_desc(cprm);
++	if (!num_records) {
++		pr_warn_ratelimited("Error adding XSTATE layout ELF note. XSTATE buffer in the core file will be unparseable.");
++		return 1;
++	}
++
++	/* Total size should be equal to the number of records */
++	if ((sizeof(struct xfeat_component) * num_records) != en.n_descsz) {
++		pr_warn_ratelimited("Error adding XSTATE layout ELF note. The size of the .note section does not match with the total size of the records.");
++		return 1;
++	}
++
++	return 0;
++}
++
++/*
++ * Return the size of new note.
++ */
++int elf_coredump_extra_notes_size(void)
++{
++	int size = 0;
++
++	/* NOTE Header */
++	size += sizeof(struct elf_note);
++	/* name + align */
++	size += roundup(sizeof(owner_name), 4);
++	size += get_xsave_desc_size();
++
++	return size;
++}
++#endif
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 5397b552fbeb..833bcb7e957b 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -2000,7 +2000,7 @@ static int elf_core_dump(struct coredump_params *cprm)
+ 	{
+ 		size_t sz = info.size;
+ 
+-		/* For cell spufs */
++		/* For cell spufs and x86 xstate */
+ 		sz += elf_coredump_extra_notes_size();
+ 
+ 		phdr4note = kmalloc(sizeof(*phdr4note), GFP_KERNEL);
+@@ -2064,7 +2064,7 @@ static int elf_core_dump(struct coredump_params *cprm)
+ 	if (!write_note_info(&info, cprm))
+ 		goto end_coredump;
+ 
+-	/* For cell spufs */
++	/* For cell spufs and x86 xstate */
+ 	if (elf_coredump_extra_notes_write(cprm))
+ 		goto end_coredump;
+ 
+diff --git a/include/uapi/linux/elf.h b/include/uapi/linux/elf.h
+index b54b313bcf07..e30a9b47dc87 100644
+--- a/include/uapi/linux/elf.h
++++ b/include/uapi/linux/elf.h
+@@ -411,6 +411,7 @@ typedef struct elf64_shdr {
+ #define NT_X86_XSTATE	0x202		/* x86 extended state using xsave */
+ /* Old binutils treats 0x203 as a CET state */
+ #define NT_X86_SHSTK	0x204		/* x86 SHSTK state */
++#define NT_X86_XSAVE_LAYOUT	0x205	/* XSAVE layout description */
+ #define NT_S390_HIGH_GPRS	0x300	/* s390 upper register halves */
+ #define NT_S390_TIMER	0x301		/* s390 timer register */
+ #define NT_S390_TODCMP	0x302		/* s390 TOD clock comparator register */
+-- 
+2.34.1
+
