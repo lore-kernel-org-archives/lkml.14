@@ -1,173 +1,119 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297494087C;
-	Tue,  7 May 2024 08:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5438913C8FE;
+	Tue,  7 May 2024 08:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715070151; cv=none; b=KL6skfpUXltbLSMEoIVxmf/y4PB2SqfgFbd+BVEdlBasLJr+fhIpwV8718vkexqSE9WP6Ri69mN1yFPAMPVBJ8q/iawZG4UdceW3qxHNis1XEVileaPbWw1U1r1gxCPweF3yPG5fI/P000OehHquGqUrNuDdDhGo7uPvzuGnVxs=
+	t=1715070200; cv=none; b=DMgm0krMtD93CDCJpghr/i/gVDDBzgRlLmDNn6G6KtMY05jpHyBLg6BY4pCm79dotdhf3Dn0PS/qqu5cvkf7n/hrPElea6YLEEIJUMBPQeV/4vkzrgP3XMWaR0Xq/vtox50d7kKyGEgh7FruT6kopQj469X6yCUcdsnHQYvLUpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715070151; c=relaxed/simple;
-	bh=kh7kLfzE5Rw+UIhuqbt/RM6ItgxttAdtXPM4W7tiw6A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=FgetcnOj4NFV9yy36ERNQH0kEMyTm1np3vdmUA/Y2NiidgULeJ9euZR1sxZwPcH9fTqN3T00IHm+GGjIixdLLt5xq90RN8EZsbIYoKmatqY27bfxz/UxZm3xUID5GoBw3zKF/BSEYZQ1Rmzs5reJvb70RSY8e4XgM4S+Cqv4H3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=m218MWw9; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1715070200; c=relaxed/simple;
+	bh=QxX4b7q5XOeUTB4IiEc4dG0x64/1OCYe/75fyaZndHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hXcXsrZmWYgrLRTJE8ftImt9Tbc76/qHlcKrYv3lCxzFX+tey6RfHmDn0B3v5CG9Rjx7MdGQXI84vpbL7BC8KU8bTvLEWPTTOmiONUdEpi5q41JqT+6RAKa3DnfjB2W/Be3j8S0lczv1kqUwVP3lQiEEQhFO5t+H2zPcHhqXb0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=euYnEslD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="m218MWw9"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 394EC120005;
-	Tue,  7 May 2024 11:22:24 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 394EC120005
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1715070144;
-	bh=jIjPFNyzW7kNBJrUm409Uj7Pess/SCSFbd0CJs0Wv7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=m218MWw9r9laGjM9qXxEiNvkRidn7UgJrOg5Xu/R53VqsSkkAjlqB72B+mqRzdA0Q
-	 NVrFk69LCvTkzDgE0LbBuSssB/Gb5/feiw4l4bKTGBZDHMEVqIcU8mHLzobM7NaQCp
-	 BEfb8CYnn3y2QpLaM/SYHsu+oKgiDGO+9C6KfLhSXQg52k/e8IuBtYMk/n287owrOa
-	 lHnn7uieKP8moEtvi//MPbVgtQl3HvE0rwDlswWileQq53n1NwMxfFc+C2U6unno1n
-	 m1/rHO14QNofAwIWClT75WaRU1e7U9gZMxPwt67dlnhQkGIGGlzgxccLCgxKtfSWwr
-	 ZzF5If/jer8lA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue,  7 May 2024 11:22:24 +0300 (MSK)
-Received: from [172.28.226.125] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 7 May 2024 11:22:23 +0300
-Message-ID: <771a35e4-db15-8c4d-29e9-7a984cb34abc@salutedevices.com>
-Date: Tue, 7 May 2024 11:11:40 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="euYnEslD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AD19C2BBFC;
+	Tue,  7 May 2024 08:23:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715070199;
+	bh=QxX4b7q5XOeUTB4IiEc4dG0x64/1OCYe/75fyaZndHU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=euYnEslDreQIgjsExv5pQhTSYbvEKH0VOQM+I60M3KW8WozW+xl0WPGbFOaTLAoAb
+	 /V/l5Sd0Kip9+SG1+lwlsqE6EzQ2QDTtH1JcQRl9SR+sYfrbTIhujenn2HjtkUmgoB
+	 8JkhC7UDf2kHcQZFtTKw7GLOxtgRwgiFgPl7o+WtMTCHDNQRrbMZerM6Wxlh8+daVy
+	 K5fCxgZyqWPf4Ul8hJ+9+zGkJ2bkKQCaQQTRUbyEKLMBmwK5lc8ioBoqaIRNzVLddE
+	 cJHawYtzqZOSCfMVfGcM9Tfj/khOJBJ+h/1BxdtGbwX7bhlv4bkCTMMgoXWE6ze8R/
+	 PvnCf1OOYTHzw==
+Date: Tue, 7 May 2024 09:23:15 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ben Greear <greearb@candelatech.com>
+Cc: "Linux regression tracking (Thorsten Leemhuis)" <regressions@leemhuis.info>,
+	LKML <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org,
+	Miri Korenblit <miriam.rachel.korenblit@intel.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: 6.9.0-rc2+ kernel hangs on boot (bisected, maybe LED related)
+Message-ID: <20240507082315.GS1227636@google.com>
+References: <30819e01-43ce-638f-0cc6-067d6a8d03c7@candelatech.com>
+ <89a9eec3-337f-3c9f-6bbe-00a26a15287c@candelatech.com>
+ <20240411070718.GD6194@google.com>
+ <de43c7e1-7e8c-bdbe-f59e-7632c21da24a@candelatech.com>
+ <8736ebc8881e1e0cabfbbf033725a3123a5e8e90.camel@sipsolutions.net>
+ <bc420f3a-5809-4c4a-80ad-ccd8a46853b6@leemhuis.info>
+ <8ab88be5de30bcbd0d1cac3cfde6b2085dcfc8fb.camel@sipsolutions.net>
+ <0197efe8-828b-43ae-85c9-5d521913a289@leemhuis.info>
+ <20240502071908.GB5338@google.com>
+ <8054cc9c-fbfe-a08d-5968-57b90a25af65@candelatech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v5 1/2] dt-bindings: mtd: amlogic,meson-nand: support
- fields for boot ROM code
-Content-Language: en-US
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-CC: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
-	<vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>, <linux-mtd@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<oxffffaa@gmail.com>, <kernel@sberdevices.ru>
-References: <20240416085101.740458-1-avkrasnov@salutedevices.com>
- <20240416085101.740458-2-avkrasnov@salutedevices.com>
- <20240506154858.003bab54@xps-13>
- <d90f9d3d-7823-503f-4cc6-73783a083d0e@salutedevices.com>
- <20240507092726.4ab1afdb@xps-13>
- <e3ea7238-c80d-dfe9-28bf-df95708872d6@salutedevices.com>
- <20240507100553.31578d0d@xps-13>
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-In-Reply-To: <20240507100553.31578d0d@xps-13>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185103 [May 07 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 19 0.3.19 07c7fa124d1a1dc9662cdc5aace418c06ae99d2b, {Tracking_from_domain_doesnt_match_to}, salutedevices.com:7.1.1;100.64.160.123:7.1.2;smtp.sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/07 06:33:00 #25113436
-X-KSMG-AntiVirus-Status: Clean, skipped
+In-Reply-To: <8054cc9c-fbfe-a08d-5968-57b90a25af65@candelatech.com>
 
+On Sat, 04 May 2024, Ben Greear wrote:
 
-
-On 07.05.2024 11:05, Miquel Raynal wrote:
-> Hi Arseniy,
+> On 5/2/24 00:19, Lee Jones wrote:
+> > On Tue, 23 Apr 2024, Linux regression tracking (Thorsten Leemhuis)
+> > wrote:
+> > 
+> > > On 23.04.24 11:06, Johannes Berg wrote:
+> > > > On Tue, 2024-04-23 at 11:00 +0200, Linux regression tracking
+> > > > (Thorsten Leemhuis) wrote:
+> > > > > On 16.04.24 08:17, Johannes Berg wrote:
+> > > > > > On Mon, 2024-04-15 at 13:37 -0700, Ben Greear wrote:
+> > > > > > > 
+> > > > > > > Johannes, you had another suggestion: changing iwlwifi's
+> > > > > > > request_module() to request_module_nowait() in
+> > > > > > > iwl_req_fw_callback()
+> > > > > > > 
+> > > > > > > Is that still best thing to try in your opinion?
+> > > > > > 
+> > > > > > I guess so, I don't have any better ideas so far anyway ...
+> > > > > 
+> > > > > [adding the iwlwifi maintainer; thread starts here:
+> > > > > https://lore.kernel.org/lkml/30f757e3-73c5-5473-c1f8-328bab98fd7d@candelatech.com/
+> > > > > 
+> > > > > ]
+> > > > > 
+> > > > > Johannes, Miri, what's the status wrt to this regression? From
+> > > > > here things look somewhat stalled -- but maybe there was
+> > > > > progress and I just missed it.
+> > > > 
+> > > > What do you want? It got bisected to an LED merge, but you ping
+> > > > _us_? Way to go ...
+> > > 
+> > > Sorry, to me it sounded a bit like you had an idea for a fix and
+> > > were going to give it a try -- similar to how the maintainers for
+> > > a r8169 driver and the igc driver provided fixes for bugs recent
+> > > LED changes exposed.
+> > > 
+> > > But sure, you are right, in the end some LED change seems to have
+> > > cause this, so the duty to fix it lies in that field. Therefore:
+> > > 
+> > > Lee, what's the status here to get this fixed before the final?
+> > 
+> > No idea.  Did you send a fix?
 > 
-> avkrasnov@salutedevices.com wrote on Tue, 7 May 2024 10:35:51 +0300:
-> 
->> On 07.05.2024 10:27, Miquel Raynal wrote:
->>> Hi Arseniy,
->>>
->>> avkrasnov@salutedevices.com wrote on Tue, 7 May 2024 09:53:06 +0300:
->>>   
->>>> On 06.05.2024 16:48, Miquel Raynal wrote:  
->>>>> Hi Arseniy,
->>>>>
->>>>> avkrasnov@salutedevices.com wrote on Tue, 16 Apr 2024 11:51:00 +0300:
->>>>>     
->>>>>> Boot ROM code on Meson requires that some pages on NAND must be written
->>>>>> in special mode: "short" ECC mode where each block is 384 bytes and
->>>>>> scrambling mode is on.    
->>>>>
->>>>> Ok
->>>>>     
->>>>>> Such pages located with the specified interval within specified offset.    
->>>>>
->>>>> I'm sorry I don't get that sentence.    
->>>>
->>>> Sorry, I mean this (let me draw :) ) :
->>>>
->>>> [ page 0 ][ page 1 ][ page 2 ][ page 3 ][ page 4 ][ page 5 ][ page 6 ][ page 7 ][ page 8 ][ page 9 ]
->>>>
->>>> For example, we have 10 pages starting from the beginning of the chip - this is "within specified offset",
->>>> e.g. offset is 10. BootROM on axg needs that (for example) every third page must be written in "special"
->>>> mode: scrambling is on and ECC is 384 bytes. Such pages are 0, 2, 4, 6, 8. E.g. "specified interval" will
->>>> be 3.  
->>>
->>> Shall be 2, no?  
->>
->> yes, starting from 0 - then 2. e.g.
->> if (!(page_num % 2))
->>     boot ROM need this page
->>
->>>   
->>>>
->>>> So:
->>>>
->>>> amlogic,boot-pages: 10
->>>> amlogic,boot-page-step: 3  
->>>
->>> Ok I get it. Thanks for the explanation. I don't really understand the
->>> logic behind it though. Do you know why the bootROM would access only
->>> one page over 2 or 3? Is there a default value? Is this configurable?  
->>
->> No, boot rom source is closed, I don't have access to it. I get this logic
->> from old version of vendor's uboot - in practice they use non 2 or 3, they
->> use hardcoded 128 step value. And amlogic,boot-pages is 1024
-> 
-> Feels like they are trying to use only the first page of each block, no?
-> 
-> That's very weird but I understand better.
+> I sent what is probably just a work-around.  I also spent time
+> bisecting and testing. The problem appears to have come in with the
+> LED related merge.  I think it is fair to ask the LED folks to at
+> least take a look at the lockdep debugging I posted.
 
-A little bit no, they use every 128 page in range [0, 1024] pages. E.g. there will
-be 8 such pages:
-0
-128
-256
-512
-640
-768
-896
-1024
+I can't speak for Pavel, but I personally have no way of debugging or
+reproducing this.  The only usefulness I can provide is to review and
+apply fixes as and when they appear.
 
-They write some metadata about SoC to such pages.
+> It is not fair to expect anyone that manages to find or track a bug to
+> also fix it.
 
-Thanks, Arseniy
+No such expectation has been felt or communicated.
 
-> 
-> Thanks,
-> Miquèl
+-- 
+Lee Jones [李琼斯]
