@@ -1,362 +1,116 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender-of-o51.zoho.eu (sender-of-o51.zoho.eu [136.143.169.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD32A158A38
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 12:30:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715085003; cv=none; b=f/wCkVgkOut8lmkluDrlweySqJcP9hOQJGutmytAiJhiVUDGfdTC1HBMr+UIy2q179+lJM1zZ8ny0Qwo0bg8gqz6RXV7q85VtoTdibJVlGMR/iPteZwJe7rDpUXVLHnuL9uagwlm2Mm5CTW7We9eh8rQB313aYchHumP4z0UHGg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715085003; c=relaxed/simple;
-	bh=l28PYPIUP5pamSqFdXVR1E14tHTfrnPtfiv6kx0dHQA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HyrbkgwVmk8DeSHBFI7qrrMWtb9LpGUGdyqZCTo3w1yQI4nUb4vHSsTSESCGToW63I7qUivwkVMribvLuhnGjKaVB3ONrXDgIckXdEF5O5DmBsH4sQPj6qY4WTnOfqChphcNIn9/5LOJuf7uUsUyGSE8pHSJRZMbAHX3fsXTyBM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=n9bogbrm; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BDEC15AAD7
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 12:31:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.169.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715085067; cv=pass; b=vEj2On4ucnwmOLmYTjLI+1yw5NeRu2NxMfQQpTP4Jsm0ShISAkQcOonynuLC9xGDR0oGBwi7bivhuWvi8w5tDy0+d5CS9HqURn2e/641clNdl7vSF8RrfJHsjBzYTfToowLEuRBg0jyN5dDKChqlo9En5hXRQa132k37+b8lQYY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715085067; c=relaxed/simple;
+	bh=6q30XqqIAVi2szTLHa69yYutLTZ79zT2WYETcCvxjFw=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XyI+75yps+73fzL/MqvzTfDZqy9ymFCWQFFYoLC2HlrBMemkKqNBypNggqRBnXSn4+SXYSPbwnV+P5HZR67rNDBC5xT49RcDXkuONNFTQ2VGovLmRLyh7SnTzous9/xMk3S/DgUGuVE7z5SCJoNMsMUB373jwzPerEU0rwTQSog=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bursov.com; spf=pass smtp.mailfrom=bursov.com; dkim=pass (1024-bit key) header.d=bursov.com header.i=vitaly@bursov.com header.b=ByO5uEb1; arc=pass smtp.client-ip=136.143.169.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bursov.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bursov.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="n9bogbrm"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51f0f6b613dso3780653e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 05:30:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715084999; x=1715689799; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=arB+W3iA2EBH3AUYw3mwo4IpWG1zYxIJ8kXXDziIrK0=;
-        b=n9bogbrm7cIvpV6+SC8uZuTMc+xr4esRND3IVw5SRdJRKzDZ2IOaasj20joYF2TrkP
-         DuntfH8g+5YPR9vpix6seOyC0H1UzkREMpBYCaCEXWGrN1CmPxTzkVfgBfaL22BGJDV+
-         G10aT6JcxcnemfXhIazutqK5IcUDMgaszrQRm/MsO7MS9otd9FjOI7uyw7DC4L98S6Uv
-         yZcC/IPf5pDdb2UyxMmtFxeuvIdfSiepTyaUe6yt393TT5aghfsHB7EhueBgiKbILLoP
-         jnmuhVdYvrTUva4UTzOV0n+RcgI+YewFH0XWqTqfFkpFNcjX28IBWtDDfJm73tjfhS+3
-         8uMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715084999; x=1715689799;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=arB+W3iA2EBH3AUYw3mwo4IpWG1zYxIJ8kXXDziIrK0=;
-        b=YfWnkVlWsYvxSRYWbkN5kjSbySj42JCNbBQqGC/IcmiKMLEBOymjl2PGYQPv/1s77d
-         CcvBu8YHD22j7e2GoC/1GWkm0YjDynjfXuj8dKthN7DCndL5d67dPw72UziIYXbxChBS
-         wkz9sji9XS+yGvBgg6tAICsuVqGeSlrtwDDHwM2XeHQpKrVjj5Y0m8ZQJtgpkre+hAKA
-         h8uPZKdEwAeW9rQbwONae8rR8UE54OHh7ze9SBqJyqq71GnFMEanvSGcaoSLXICDhADd
-         Z1syj9qApm/JXCrggdENHyptF4nuGviDEi8yjkbZtrOyzhJQrz6tj2TQ70hOz3+WONmP
-         IRng==
-X-Forwarded-Encrypted: i=1; AJvYcCVTxvCK0c/kmjbNmpsajNNj0UlfLSo1ZkJD6w3lx4FJaymnA0YqudaNj2TbRmcrLfYHLAaTlRyT8vEt7QUgeXD6RNXjYfYjDgBsbdO7
-X-Gm-Message-State: AOJu0Yyc5GS7VJMjYNe4RfLssjl8XtlUxk3SmJQ/EDh4nQ8ahe7CORqi
-	M5WRKnFvzREsDm2RdD4cwc1zZmP2ZajxvCbX7nqBaHIPvvVr/LXwJ79lLGADYZ0=
-X-Google-Smtp-Source: AGHT+IFhtCBP1BwfAdRHXnYNcMKb7JXk3TUTt9H2kGw8YwgafY7mzKcV4ivafwlPJGz9C8qrUeZ+kA==
-X-Received: by 2002:a05:6512:3f16:b0:51d:2c37:6c15 with SMTP id y22-20020a0565123f1600b0051d2c376c15mr10785702lfa.8.1715084998415;
-        Tue, 07 May 2024 05:29:58 -0700 (PDT)
-Received: from blmsp ([2001:4091:a246:821e:6f3b:6b50:4762:8343])
-        by smtp.gmail.com with ESMTPSA id k5-20020a05600c1c8500b0041bab13cd74sm19518280wms.17.2024.05.07.05.29.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 05:29:57 -0700 (PDT)
-Date: Tue, 7 May 2024 14:29:57 +0200
-From: Markus Schneider-Pargmann <msp@baylibre.com>
-To: Martin =?utf-8?Q?Hundeb=C3=B8ll?= <martin@geanix.com>, 
-	Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Chandrasekar Ramakrishnan <rcsekar@samsung.com>, 
-	Marc Kleine-Budde <mkl@pengutronix.de>, Vincent Mailhol <mailhol.vincent@wanadoo.fr>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, linux-can@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] can: m_can: don't enable transceiver when probing
-Message-ID: <rgjyty2tbqngttoicyxhntmiplihcd2xxjsqsi6r7pqrxrnumc@upt2nelsumv3>
-References: <20240501124204.3545056-1-martin@geanix.com>
+	dkim=pass (1024-bit key) header.d=bursov.com header.i=vitaly@bursov.com header.b="ByO5uEb1"
+ARC-Seal: i=1; a=rsa-sha256; t=1715084143; cv=none; 
+	d=zohomail.eu; s=zohoarc; 
+	b=aNOOw+VmB7ew9ck5+vlGFbOhYVSxOjPxpgvJ97AeMQM2tIwcVCzUGxEaX1+CzaMh/2CQUWQ96W7RHDXrXT69O+p2vFu7+24w55F2FQV5xOkuCSWpARUEVFCfWoRiEc75B/pkYO2QJEziq9aL4kGWifL2IeC7a3+v+cwHDcY/5ec=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.eu; s=zohoarc; 
+	t=1715084143; h=Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
+	bh=Qf/DRn4qZUpiOJrkJT7ccKfXdyqNZ+DNd7d/2NT8FLA=; 
+	b=U6Ac0+ebrQqfm8Fj7JYlxCNueu5GnB3iREIb8qmslq5u/OAefcZHXNhH7OHK5MPiT0bvrqo2Yr3Y1ysLZEZ5PxbnEgwQzuDgobkbR5FAMB5/odWkeV47phMgVspLI5cnOIivv0QWpFFgwLGuPDtlpBB4Atw2ynatDJO+UOq/Bp0=
+ARC-Authentication-Results: i=1; mx.zohomail.eu;
+	dkim=pass  header.i=bursov.com;
+	spf=pass  smtp.mailfrom=vitaly@bursov.com;
+	dmarc=pass header.from=<vitaly@bursov.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1715084143;
+	s=zoho; d=bursov.com; i=vitaly@bursov.com;
+	h=From:From:To:To:Subject:Subject:Date:Date:Message-Id:Message-Id:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Reply-To:Cc;
+	bh=Qf/DRn4qZUpiOJrkJT7ccKfXdyqNZ+DNd7d/2NT8FLA=;
+	b=ByO5uEb1Dhm5+QUTavnDcozXV4PjbQerVarNJ2uc6lpFYpIhBr1zY+MEhUbfYNIy
+	dlSAFKIM8J6ivbUbSp4CRkvzr6TRMcJlX56BCzI39K2D1csGIQhjhc2HBLcETw6JAev
+	ngIoz1boPT4B1PKMqw4FDek9fIpUu4pGqoXvP8z8=
+Received: by mx.zoho.eu with SMTPS id 1715084141240732.6014896306322;
+	Tue, 7 May 2024 14:15:41 +0200 (CEST)
+From: Vitalii Bursov <vitaly@bursov.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	Vitalii Bursov <vitaly@bursov.com>
+Subject: [PATCH v5 1/3] sched/fair: allow disabling sched_balance_newidle with sched_relax_domain_level
+Date: Tue,  7 May 2024 15:15:31 +0300
+Message-Id: <eef8e350b35f81db444f0bda66fee72f6f7b5c54.1715083479.git.vitaly@bursov.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <cover.1715083479.git.vitaly@bursov.com>
+References: <cover.1715083479.git.vitaly@bursov.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240501124204.3545056-1-martin@geanix.com>
+X-ZohoMailClient: External
 
-Hi Martin,
+Change relax_domain_level checks so that it would be possible
+to include or exclude all domains from newidle balancing.
 
-On Wed, May 01, 2024 at 02:42:03PM +0200, Martin Hundebøll wrote:
-> The m_can driver sets and clears the CCCR.INIT bit during probe (both
-> when testing the NON-ISO bit, and when configuring the chip). After
-> clearing the CCCR.INIT bit, the transceiver enters normal mode, where it
-> affects the CAN bus (i.e. it ACKs frames). This can cause troubles when
-> the m_can node is only used for monitoring the bus, as one cannot setup
-> listen-only mode before the device is probed.
-> 
-> Rework the probe flow, so that the CCCR.INIT bit is only cleared when
-> upping the device. First, the tcan4x5x driver is changed to stay in
-> standby mode during/after probe. This in turn requires changes when
-> setting bits in the CCCR register, as its CSR and CSA bits are always
-> high in standby mode.
-> 
-> Signed-off-by: Martin Hundebøll <martin@geanix.com>
-> ---
-> 
-> Changes since v1:
->  * Implement Markus review comments:
->    - Rename m_can_cccr_wait_bits() to m_can_cccr_update_bits()
->    - Explicitly set CCCR_INIT bit in m_can_dev_setup()
->    - Revert to 5 timeouts/tries to 10
->    - Use m_can_config_{en|dis}able() in m_can_niso_supported()
->    - Revert move of call to m_can_enable_all_interrupts()
->    - Return -EBUSY on failure to enter normal mode
->    - Use tcan4x5x_clear_interrupts() in tcan4x5x_can_probe()
+This matches the behavior described in the documentation:
+  -1   no request. use system default or follow request of others.
+   0   no search.
+   1   search siblings (hyperthreads in a core).
 
-Thanks for addressing these.
+"2" enables levels 0 and 1, level_max excludes the last (level_max)
+level, and level_max+1 includes all levels.
 
-In general this looks good:
-Reviewed-by: Markus Schneider-Pargmann <msp@baylibre.com>
+Fixes: 1d3504fcf560 ("sched, cpuset: customize sched domains, core")
+Signed-off-by: Vitalii Bursov <vitaly@bursov.com>
+Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Reviewed-by: Valentin Schneider <vschneid@redhat.com>
+Tested-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+---
+ kernel/cgroup/cpuset.c  | 2 +-
+ kernel/sched/topology.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-A few small things commented below, mostly nit-picks.
-@Marc: Up to you if you want to merge it or not. I hope the review was
-early enough for your PR :)
-I don't have time to test it this week, but I can do that next week.
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index a10e4bd0c0c1..c12b9fdb22a4 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -2941,7 +2941,7 @@ bool current_cpuset_is_being_rebound(void)
+ static int update_relax_domain_level(struct cpuset *cs, s64 val)
+ {
+ #ifdef CONFIG_SMP
+-	if (val < -1 || val >= sched_domain_level_max)
++	if (val < -1 || val > sched_domain_level_max + 1)
+ 		return -EINVAL;
+ #endif
+ 
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index 1d6eefa4032e..a6994a1fcc90 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1474,7 +1474,7 @@ static void set_domain_attribute(struct sched_domain *sd,
+ 	} else
+ 		request = attr->relax_domain_level;
+ 
+-	if (sd->level > request) {
++	if (sd->level >= request) {
+ 		/* Turn off idle balance on this domain: */
+ 		sd->flags &= ~(SD_BALANCE_WAKE|SD_BALANCE_NEWIDLE);
+ 	}
+-- 
+2.20.1
 
-> 
->  drivers/net/can/m_can/m_can.c         | 131 +++++++++++++++-----------
->  drivers/net/can/m_can/tcan4x5x-core.c |  13 ++-
->  2 files changed, 85 insertions(+), 59 deletions(-)
-> 
-> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
-> index 14b231c4d7ec..7974aaa5d8cc 100644
-> --- a/drivers/net/can/m_can/m_can.c
-> +++ b/drivers/net/can/m_can/m_can.c
-> @@ -379,38 +379,60 @@ m_can_txe_fifo_read(struct m_can_classdev *cdev, u32 fgi, u32 offset, u32 *val)
->  	return cdev->ops->read_fifo(cdev, addr_offset, val, 1);
->  }
->  
-> -static void m_can_config_endisable(struct m_can_classdev *cdev, bool enable)
-> +static bool m_can_cccr_update_bits(struct m_can_classdev *cdev, u32 mask, u32 val)
-
-I personally prefer functions that return error values, in this case
--ETIMEDOUT, as it more clearly indicates what error occured.
-
->  {
-> -	u32 cccr = m_can_read(cdev, M_CAN_CCCR);
-> -	u32 timeout = 10;
-> -	u32 val = 0;
-> -
-> -	/* Clear the Clock stop request if it was set */
-> -	if (cccr & CCCR_CSR)
-> -		cccr &= ~CCCR_CSR;
-> -
-> -	if (enable) {
-> -		/* enable m_can configuration */
-> -		m_can_write(cdev, M_CAN_CCCR, cccr | CCCR_INIT);
-> -		udelay(5);
-> -		/* CCCR.CCE can only be set/reset while CCCR.INIT = '1' */
-> -		m_can_write(cdev, M_CAN_CCCR, cccr | CCCR_INIT | CCCR_CCE);
-> -	} else {
-> -		m_can_write(cdev, M_CAN_CCCR, cccr & ~(CCCR_INIT | CCCR_CCE));
-> -	}
-> +	u32 val_before = m_can_read(cdev, M_CAN_CCCR);
-> +	u32 val_after = (val_before & ~mask) | val;
-> +	size_t tries = 10;
-> +
-> +	if (!(mask & CCCR_INIT) && !(val_before & CCCR_INIT))
-> +		dev_warn(cdev->dev,
-> +			 "trying to configure device when in normal mode. Expect failures\n");
-> +
-> +	/* The chip should be in standby mode when changing the CCCR register,
-> +	 * and some chips set the CSR and CSA bits when in standby. Furthermore,
-> +	 * the CSR and CSA bits should be written as zeros, even when they read
-> +	 * ones.
-> +	 */
-> +	val_after &= ~(CCCR_CSR | CCCR_CSA);
-
-By the way is this a fix that should be fixed for earlier driver/kernel
-versions as well? Or is it just required as part of this series?
-
-> +
-> +	while (tries--) {
-> +		u32 val_read;
-> +
-> +		/* Write the desired value in each try, as setting some bits in
-> +		 * the CCCR register require other bits to be set first. E.g.
-> +		 * setting the NISO bit requires setting the CCE bit first.
-> +		 */
-> +		m_can_write(cdev, M_CAN_CCCR, val_after);
-> +
-> +		val_read = m_can_read(cdev, M_CAN_CCCR) & ~(CCCR_CSR | CCCR_CSA);
->  
-> -	/* there's a delay for module initialization */
-> -	if (enable)
-> -		val = CCCR_INIT | CCCR_CCE;
-> -
-> -	while ((m_can_read(cdev, M_CAN_CCCR) & (CCCR_INIT | CCCR_CCE)) != val) {
-> -		if (timeout == 0) {
-> -			netdev_warn(cdev->net, "Failed to init module\n");
-> -			return;
-> -		}
-> -		timeout--;
-> -		udelay(1);
-> +		if (val_read == val_after)
-> +			return true;
-> +
-> +		usleep_range(1, 5);
->  	}
-> +
-> +	return false;
-> +}
-> +
-> +static void m_can_config_enable(struct m_can_classdev *cdev)
-> +{
-> +	/* CCCR_INIT must be set in order to set CCCR_CCE, but access to
-> +	 * configuration registers should only be enabled when in standby mode,
-> +	 * where CCCR_INIT is always set.
-> +	 */
-> +	if (!m_can_cccr_update_bits(cdev, CCCR_CCE, CCCR_CCE))
-
-Another personal preference is the use of this style of error checking
-for functions that actually do things:
-  err = m_can_cccr_update_bits();
-  if (err)
-
-> +		netdev_err(cdev->net, "failed to enable configuration mode\n");
-
-If we detect an error here, should it be propagated and fail probing? I
-know it wasn't checked before, so not really necessary to do it now.
-
-Best
-Markus
-
-> +}
-> +
-> +static void m_can_config_disable(struct m_can_classdev *cdev)
-> +{
-> +	/* Only clear CCCR_CCE, since CCCR_INIT cannot be cleared while in
-> +	 * standby mode
-> +	 */
-> +	if (!m_can_cccr_update_bits(cdev, CCCR_CCE, 0))
-> +		netdev_err(cdev->net, "failed to disable configuration registers\n");
->  }
->  
->  static void m_can_interrupt_enable(struct m_can_classdev *cdev, u32 interrupts)
-> @@ -1403,7 +1425,7 @@ static int m_can_chip_config(struct net_device *dev)
->  	interrupts &= ~(IR_ARA | IR_ELO | IR_DRX | IR_TEFF | IR_TFE | IR_TCF |
->  			IR_HPM | IR_RF1F | IR_RF1W | IR_RF1N | IR_RF0F);
->  
-> -	m_can_config_endisable(cdev, true);
-> +	m_can_config_enable(cdev);
->  
->  	/* RX Buffer/FIFO Element Size 64 bytes data field */
->  	m_can_write(cdev, M_CAN_RXESC,
-> @@ -1521,7 +1543,7 @@ static int m_can_chip_config(struct net_device *dev)
->  		    FIELD_PREP(TSCC_TCP_MASK, 0xf) |
->  		    FIELD_PREP(TSCC_TSS_MASK, TSCC_TSS_INTERNAL));
->  
-> -	m_can_config_endisable(cdev, false);
-> +	m_can_config_disable(cdev);
->  
->  	if (cdev->ops->init)
->  		cdev->ops->init(cdev);
-> @@ -1550,6 +1572,11 @@ static int m_can_start(struct net_device *dev)
->  		cdev->tx_fifo_putidx = FIELD_GET(TXFQS_TFQPI_MASK,
->  						 m_can_read(cdev, M_CAN_TXFQS));
->  
-> +	if (!m_can_cccr_update_bits(cdev, CCCR_INIT, 0)) {
-> +		netdev_err(dev, "failed to enter normal mode\n");
-> +		return -EBUSY;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -1603,33 +1630,20 @@ static int m_can_check_core_release(struct m_can_classdev *cdev)
->   */
->  static bool m_can_niso_supported(struct m_can_classdev *cdev)
->  {
-> -	u32 cccr_reg, cccr_poll = 0;
-> -	int niso_timeout = -ETIMEDOUT;
-> -	int i;
-> +	bool niso_supported;
->  
-> -	m_can_config_endisable(cdev, true);
-> -	cccr_reg = m_can_read(cdev, M_CAN_CCCR);
-> -	cccr_reg |= CCCR_NISO;
-> -	m_can_write(cdev, M_CAN_CCCR, cccr_reg);
-> +	m_can_config_enable(cdev);
->  
-> -	for (i = 0; i <= 10; i++) {
-> -		cccr_poll = m_can_read(cdev, M_CAN_CCCR);
-> -		if (cccr_poll == cccr_reg) {
-> -			niso_timeout = 0;
-> -			break;
-> -		}
-> +	/* First try to set the NISO bit. */
-> +	niso_supported = m_can_cccr_update_bits(cdev, CCCR_NISO, CCCR_NISO);
->  
-> -		usleep_range(1, 5);
-> -	}
-> +	/* Then clear the it again. */
-> +	if (!m_can_cccr_update_bits(cdev, CCCR_NISO, 0))
-> +		dev_err(cdev->dev, "failed to revert the NON-ISO bit in CCCR\n");
->  
-> -	/* Clear NISO */
-> -	cccr_reg &= ~(CCCR_NISO);
-> -	m_can_write(cdev, M_CAN_CCCR, cccr_reg);
-> +	m_can_config_disable(cdev);
->  
-> -	m_can_config_endisable(cdev, false);
-> -
-> -	/* return false if time out (-ETIMEDOUT), else return true */
-> -	return !niso_timeout;
-> +	return niso_supported;
->  }
->  
->  static int m_can_dev_setup(struct m_can_classdev *cdev)
-> @@ -1694,8 +1708,12 @@ static int m_can_dev_setup(struct m_can_classdev *cdev)
->  		return -EINVAL;
->  	}
->  
-> -	if (cdev->ops->init)
-> -		cdev->ops->init(cdev);
-> +	/* Forcing standby mode should be redunant, as the chip should be in
-> +	 * standby after a reset. Write the INIT bit anyways, should the chip
-> +	 * be configured by previous stage.
-> +	 */
-> +	if (!m_can_cccr_update_bits(cdev, CCCR_INIT, CCCR_INIT))
-> +		return -EBUSY;
->  
->  	return 0;
->  }
-> @@ -1708,7 +1726,8 @@ static void m_can_stop(struct net_device *dev)
->  	m_can_disable_all_interrupts(cdev);
->  
->  	/* Set init mode to disengage from the network */
-> -	m_can_config_endisable(cdev, true);
-> +	if (!m_can_cccr_update_bits(cdev, CCCR_INIT, CCCR_INIT))
-> +		netdev_err(dev, "failed to enter standby mode\n");
->  
->  	/* set the state as STOPPED */
->  	cdev->can.state = CAN_STATE_STOPPED;
-> diff --git a/drivers/net/can/m_can/tcan4x5x-core.c b/drivers/net/can/m_can/tcan4x5x-core.c
-> index a42600dac70d..d723206ac7c9 100644
-> --- a/drivers/net/can/m_can/tcan4x5x-core.c
-> +++ b/drivers/net/can/m_can/tcan4x5x-core.c
-> @@ -453,10 +453,17 @@ static int tcan4x5x_can_probe(struct spi_device *spi)
->  		goto out_power;
->  	}
->  
-> -	ret = tcan4x5x_init(mcan_class);
-> +	tcan4x5x_check_wake(priv);
-> +
-> +	ret = tcan4x5x_write_tcan_reg(mcan_class, TCAN4X5X_INT_EN, 0);
->  	if (ret) {
-> -		dev_err(&spi->dev, "tcan initialization failed %pe\n",
-> -			ERR_PTR(ret));
-> +		dev_err(&spi->dev, "Disabling interrupts failed %pe\n", ERR_PTR(ret));
-> +		goto out_power;
-> +	}
-> +
-> +	ret = tcan4x5x_clear_interrupts(mcan_class);
-> +	if (ret) {
-> +		dev_err(&spi->dev, "Clearing interrupts failed %pe\n", ERR_PTR(ret));
->  		goto out_power;
->  	}
->  
-> -- 
-> 2.44.0
-> 
