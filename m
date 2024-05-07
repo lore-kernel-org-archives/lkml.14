@@ -1,84 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D0213C3FA;
-	Tue,  7 May 2024 13:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB58515B10A;
+	Tue,  7 May 2024 13:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715089701; cv=none; b=PHK54a8vTKe4rGCV6IwDAmeXb6OyXtgg+1vjQGVQN0dUIn1tyV/YQSJ5pEtP+IFNHtXyJF+ATmgFW+A1Kmwx9TGElvywGFW6UsWC7HETVFnlxvlPhW3je0rJ5htSpB6suxhXfNOoPvmD37ty4awlCIHXApCvrJVtUnRdhvGWfAw=
+	t=1715089795; cv=none; b=U8KcWQRw5dbdawxEZu90C7PaHsRJlyOIRXiga118dducpXzqykKGKYPTxEdTpPawz5y5SGbc0gjhc/8q6Tiafld6Fzz1eE81cRsodB64KCb3Q3kq2IQTbI/X8pX59KSH4283yC0fY8LH+qb5cTEWL8kGSuJcdpwHuQR8NwLedLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715089701; c=relaxed/simple;
-	bh=+JnVkJ/DcmtF++oBXep2XfQOhJAgJTlRFNVTNBDM/Es=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IUadxnJ638Mm+kIcM49Z8G1FYkCXb9YtBRp7Q7lRSfaFZyjhkHpGhHMno7dd2DgUvn+PB4APva/A+/j+1HDy19A1pdu7psY4buzHSRRKynzb0VDGCpvtAl3DV026gDa9q3FG/n84TACOG/TpOvSA0y9aR+h/sO29r1fvMHnZ1bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uAjqF1d9; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uAjqF1d9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75EC5C2BBFC;
-	Tue,  7 May 2024 13:48:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715089700;
-	bh=+JnVkJ/DcmtF++oBXep2XfQOhJAgJTlRFNVTNBDM/Es=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uAjqF1d9EG9EYBgOPPCxw2xFDVNjHOr1ObHDHvILc1AkJJVvpNT7pwmazxkUmtlzR
-	 CpXw2Bekil7em9ppS4Od7qTonPrs0GQtxAzzM/rcvi5XpX6lb+r5jyA1UikMHbJBOU
-	 LaKbBArTAOtVAofLOVh0q2nFGOmsdk7eRPPSRSkVU2exICz5La/12Ye4328Ew2zIbB
-	 DzW5hlfPeapryWv2dkWxF/KHQhpoLsuym8OOgCaeNRABA7O1sVOm0eTuCzGIORLMda
-	 RbLiqAq62gtb6tU8GNk+7qWFieSm98tGBtK8gbMYT/wX5q/s5c2Yux7Zut7cI5iyag
-	 uDUdeVahFkNrg==
-Date: Tue, 7 May 2024 15:48:18 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang1211@gmail.com>
-Subject: Re: [PATCH v2 18/27] rcu: Rename rcu_dynticks_in_eqs_since() into
- rcu_watching_changed_since()
-Message-ID: <ZjoxIhtCw4Pov0VH@localhost.localdomain>
-References: <20240430091740.1826862-1-vschneid@redhat.com>
- <20240430091740.1826862-19-vschneid@redhat.com>
+	s=arc-20240116; t=1715089795; c=relaxed/simple;
+	bh=H2Kun73WD3Rw/C3T4LCtK/zgZb1EulH35e8HhvhQrBE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CKChYlhHV8DBBSPHk1Pry4B4AqnBkFEY1OcnxKF9DVl3rc+O3RLBusaS9X1dNKsEyo5DKCXuqEUviCbOQeYh4DyOI7UWSdUBDye2yrLzGbEvBfgu/3Im/1ElvOJqe08GhA3NdPnJSxUHhFPYgLL26QrmAxie8rSZj5NNL3TA0kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VYfhl6NktzNw8c;
+	Tue,  7 May 2024 21:47:03 +0800 (CST)
+Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
+	by mail.maildlp.com (Postfix) with ESMTPS id A34B5180080;
+	Tue,  7 May 2024 21:49:49 +0800 (CST)
+Received: from localhost.localdomain (10.90.30.45) by
+ kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 7 May 2024 21:49:48 +0800
+From: Jijie Shao <shaojijie@huawei.com>
+To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
+	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <jiri@resnulli.us>, <horms@kernel.org>
+CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
+	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <chenhao418@huawei.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH V3 net 0/7] There are some bugfix for the HNS3 ethernet driver
+Date: Tue, 7 May 2024 21:42:17 +0800
+Message-ID: <20240507134224.2646246-1-shaojijie@huawei.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240430091740.1826862-19-vschneid@redhat.com>
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600007.china.huawei.com (7.193.23.208)
 
-Le Tue, Apr 30, 2024 at 11:17:22AM +0200, Valentin Schneider a écrit :
-> The context_tracking.state RCU_DYNTICKS subvariable has been renamed to
-> RCU_WATCHING, the dynticks prefix can go.
-> 
-> Furthermore, the "in_eqs_since" part confuses me, as IIUC this only checks
-> for a change in watching/eqs state, not that RCU transitionned *into* a
-> EQS after the snapshot was taken.
-> 
-> e.g. if
->   snap = 0b1000 (EQS)
-> and the following rcu_watching_snap(CPU) is:
-> 	 0b1100 (watching)
-> then
->   rcu_watching_in_eqs_since(rdp, snap) -> true
-> 
-> but because RCU was already in EQS at the time of the
-> snap - it hasn't entered EQS "since" the snap was taken.
-> 
-> Update the name to reflect that we're only looking at watching/EQS
-> transitions, not specifically transitions into EQS.
+There are some bugfix for the HNS3 ethernet driver
 
-Indeed in practice the function only checks a change. But semantically it really
-checks a trip to eqs because this function is only ever called after a failing
-call to rcu_dynticks_in_eqs().
+---
+changeLog:
+v2 -> v3:
+  - Fix coding errors in "net: hns3: using user configure after hardware reset", suggested by Simon Horman
+  https://lore.kernel.org/all/20240426100045.1631295-1-shaojijie@huawei.com/
+v1 -> v2:
+  - Adjust the code sequence to completely eliminate the race window, suggested by Jiri Pirko
+  v1: https://lore.kernel.org/all/20240422134327.3160587-1-shaojijie@huawei.com/
+---
 
-So not sure about that one rename. Paul?
+Jian Shen (1):
+  net: hns3: direct return when receive a unknown mailbox message
+
+Peiyang Wang (4):
+  net: hns3: using user configure after hardware reset
+  net: hns3: change type of numa_node_mask as nodemask_t
+  net: hns3: release PTP resources if pf initialization failed
+  net: hns3: use appropriate barrier function after setting a bit value
+
+Yonglong Liu (2):
+  net: hns3: fix port vlan filter not disabled issue
+  net: hns3: fix kernel crash when devlink reload during initialization
+
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h   |  2 +-
+ .../hisilicon/hns3/hns3pf/hclge_main.c        | 52 ++++++++++---------
+ .../hisilicon/hns3/hns3pf/hclge_main.h        |  5 +-
+ .../hisilicon/hns3/hns3pf/hclge_mbx.c         |  7 +--
+ .../hisilicon/hns3/hns3vf/hclgevf_main.c      | 20 ++++---
+ .../hisilicon/hns3/hns3vf/hclgevf_main.h      |  2 +-
+ 6 files changed, 47 insertions(+), 41 deletions(-)
+
+-- 
+2.30.0
+
