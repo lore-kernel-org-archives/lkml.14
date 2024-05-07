@@ -1,128 +1,171 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34D614E2FB
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:11:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABBA14E2FE
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715076667; cv=none; b=I0TBBZv9fRsU9X50s1csUAutYcOSps6di6u6876EbvRLTcd28bsGCqPqfhisNCmchA898OxxRZKkr6Yh1whipiRDW41HBO3rF7qkffMTvhpr6O63nkAbHO3nNOJzGoJlNMZ3LCpnwrGqweVrrz+D0GAU5RkI9jnHwLrX2Prw6fA=
+	t=1715076684; cv=none; b=ENEAe6fXdF/3dKwRJrhalOWd2/irQRu45cZq9f0f/i+lfCOp5EzAOgyp9l7JrKdfUXizCYaoCEf+6XwSOfH7IiejAflR5bzS1Zfs1/y3fW9BpUduJhhywqN2Q3Wt7dQw9iEV0YBEkIo0O6KTYQ6Z1KYKuSF1dn3s74Bbjmr42SE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715076667; c=relaxed/simple;
-	bh=pzN0QEsi5vW51SAWCGgbkaOsqw5VvfmrBvJ7uOk7Djk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IoSpNGvVpO/yzhlLJApDtEGqZr/EXQbeD1KOgmTAYl8kqybXESr6ZalgwAGZCUkBnp8/urAgBTNzK8jcSVkjah4jumGROwnzFH2jFLiocsJoIkoXbbF9Rn5I/1EX1cbVep03BX0sBYVaJeGcfh9l1a4vBg1UIXFJz0Xz4oRf+14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L/QV+/dJ; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715076684; c=relaxed/simple;
+	bh=s86jj/APKflYyOaCwacoP71XuO9wXKQ22Yv4nmuWEsg=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PgfoE+uMZKpzjCg8m7cuAGq+MV9dMDk4MkA1k44zX5qsdETBKrZPdW/sLL9JEPkt/AOAl8NESeSzz4D1LP7v78UMg0HBJIj50Y0Daavcu4n0OwNwYxW41g4PKaAFFbrHNcZiioxsDWpk2OJ2RSWdo9Uqrvm+1hYr8SsdqIfKe1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=qevq0o3H; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L/QV+/dJ"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41bab13ca81so31478625e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 03:11:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715076664; x=1715681464; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xRkoNOEv8gPHcq2P5UAKWS8B3jCr0cVjdP20g/cY62k=;
-        b=L/QV+/dJ7j42rpb8HLhc0HWVdxhS7FBN4FcTW8z4HzQMBAtZd12/MRDlMr+jaXVhzL
-         0gq/MQ7+jLEYc9cXq5ZI8qVm5dmGHd4lXhCx5oSmAD0wyZZQTsSuXF4gd404OL8BZBbU
-         NMNIDoHbQWmAD2yy3JzA91DkbwbwNVAbUX0r+L4MbGiVBI7s6a3ZUCMKxkp0+OxABgo8
-         zEx47alEjrFV90mEneAac+26I4rlI/tvAjw2gjNCdKnrV612+JYPFHP54nvbeNXLU/ko
-         if/JwpXjx7qxNClmWzw1EiUuY8ZdYzT6tnHBXmxbvyLUXLL9M9qQrmvW9b9uwssiE4zL
-         4CYw==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="qevq0o3H"
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 607C1424B5
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:11:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1715076673;
+	bh=tN0TsnKRXwG6A84l3wPnbSYJqqWrPLAk8v9HABeeBQo=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=qevq0o3HGBsPp/Wl1QPGdwa7jsv+QczZ8R32d6D0tcRUKKZvhCHdYgc+AcX3LU3CG
+	 j3S5lTdLMHvTGPvdw82byzsZ6RDhAFeAf2RNgq7FsJbLYXDjQeH+UlPCtvWLTzsSpW
+	 /VkTWmoi6bH0kjSO1pVk6ZiJ/kt5m0js2ntGcL2kuBErmhPItG9rWs/sT+GqzXJj88
+	 OYE+tvCr2DaJPN9JoGcTSLlX2K9P1IfT2/zg1TdZ2Iy5bHZt1VTjpzsjYg5mNW7jbA
+	 vYri0++1FUVZuE1vqKQx80nGF7EeX+TLQDyYIqv2gfkXemZlUfSQLvbfrNsh5JN/jJ
+	 BlAZt/UOUjfbw==
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-43d175821fdso38530151cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 03:11:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715076664; x=1715681464;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xRkoNOEv8gPHcq2P5UAKWS8B3jCr0cVjdP20g/cY62k=;
-        b=te4+Yp0pXbDELrK4CIv58vPn6w7sQy2aeaMm7/UGojtYdOZxUsN/GmuXxntLT+nzRp
-         AVaF9Cobvof1A0rwZ9Zl1JPy7nTN1wVp8kcGU3e2n2qhsSydRXN+Ffr97/UZayEcWWUQ
-         2isJD2hvsjZAYSKqdYkjVbo3GVDdIIQngSectbYDS4ODql1gij3G1dTA21t1usOmj/4c
-         9mi0ntZ6cByJVKWKjo8LdW/EohJol/v63o+GCe/ZgQ11kOY8AFMAOhe2nw4xRbWarWxO
-         KhJAaZnWxQ4LePIItCsy5xIoDbS8eFeS24vtSklWJxOxp1UY7Zo6ltnyycjy/7WwsY+K
-         y4ZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKJ3V+LBFK0Jd+mJIiheBc6lQUclacAPjp6MIJedZ/BVrSG4WpocC3sFZF4Cw3phJ1gtQwJ5ZbypdOdKuy9eIWhASmavOBik3T94nD
-X-Gm-Message-State: AOJu0YyJFKhBsD1XYP1E+gakYAY+q/Emabt/RhayIhfTxXnJFGGb0Ppg
-	QS/ICuPvemGULp2lSYX4GCecD27XSpeWF8liWl9uZP+1yKJmV0nB5wB+fTipAZo=
-X-Google-Smtp-Source: AGHT+IHQFXd45hAfqA6n0d5ImUefQlbvL7vaRViI8Nu6Qp2CarjGeOlr7thOVlNJO6zr1Os/EEcwqg==
-X-Received: by 2002:a05:600c:1553:b0:41b:e94f:1e88 with SMTP id f19-20020a05600c155300b0041be94f1e88mr13064142wmg.24.1715076663825;
-        Tue, 07 May 2024 03:11:03 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id n19-20020a05600c4f9300b0041c14061c71sm18935780wmq.15.2024.05.07.03.11.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 03:11:03 -0700 (PDT)
-Date: Tue, 7 May 2024 12:52:03 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ratheesh Kannoth <rkannoth@marvell.com>
-Cc: Duoming Zhou <duoming@zju.edu.cn>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hams@vger.kernel.org,
-	pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
-	jreuter@yaina.de
-Subject: Re: [PATCH net v5 1/4] ax25: Use kernel universal linked list to
- implement ax25_dev_list
-Message-ID: <5863f2fc-ab8e-4f6e-873e-2667bc0a2e4b@moroto.mountain>
-References: <cover.1715065005.git.duoming@zju.edu.cn>
- <bd49e83817604e61a12c9bf688a0825f116e67c0.1715065005.git.duoming@zju.edu.cn>
- <20240507092917.GA1049473@maili.marvell.com>
+        d=1e100.net; s=20230601; t=1715076671; x=1715681471;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tN0TsnKRXwG6A84l3wPnbSYJqqWrPLAk8v9HABeeBQo=;
+        b=l1hPfSxZGFFBnAPW9x4Ckn7cArBB1CXXGR23M1hRrgXxzNUMDfpT4Bx/JHyDjJIoXr
+         G/VhhJwcZO8r8HIOj1KL+mHD2D6VRF7JBaQqTvyKzMspyiCneLC+Gu7BRleeKveJH65X
+         C8ZpM838sEa8KmY6heZFYM3ZHMeDre2Kz4yfGCBv0qVXWkrBKmibz/mz6DU0gwg9F+9e
+         3ifnFETDMs0vvv9km7hqaniCPTFCI6gyMRtm0cj8vxP3+DfyegAUH1BTmgEUExu/NF5g
+         41jID8WktCZuAYiXNS9CyerTwlLuPKmioZSgnrKKcHACGvWygwWkW0IOxDVRrTYH2ud0
+         l3lg==
+X-Forwarded-Encrypted: i=1; AJvYcCX05LxbG19R3WnhTMCkUArkkVzxL5IZ4TWU+SMX89FX/Bs+x25nOmcnGxmD7rdoc+zCxphI+P2Mzq/8y/w1qa6+5AGBrEe4r/VfHiKc
+X-Gm-Message-State: AOJu0YxT00iYrl1BYjQqsp8XK7OgJqW/svWw8K5kC/Xkp4VbotzwXKY7
+	vSu7u/kF5CTLEJ+Pb720EFLOz5aWPPfDfPF/lJAMCmD1lSR+Le4Nqfu/ZwQRp8UujiyOnQVEt07
+	unAHGh0SKTz/Ob5rM0WOTv/bZz5i9S/Ic3di2sWmXzd6cYcA+NHtpPINl0nyFGwLJR5qGHmmlIa
+	Fdx2YHcGGPNWJHvFTIErdqvV1MxzCuGZPwkK1cRVGz0rBUKjdupNee
+X-Received: by 2002:ac8:5796:0:b0:43a:ee30:c554 with SMTP id v22-20020ac85796000000b0043aee30c554mr14429959qta.19.1715076671602;
+        Tue, 07 May 2024 03:11:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEC7lED7C0+ygdXPmMOe7xhSHbvQ874n3CyLpSpLWzJYqBxzPH9DjYI8NhKtEuhH+DJaKvyqnKZq7GeBNuznjs=
+X-Received: by 2002:ac8:5796:0:b0:43a:ee30:c554 with SMTP id
+ v22-20020ac85796000000b0043aee30c554mr14429943qta.19.1715076671316; Tue, 07
+ May 2024 03:11:11 -0700 (PDT)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 7 May 2024 03:11:10 -0700
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20240507065319.274976-2-xingyu.wu@starfivetech.com>
+References: <20240507065319.274976-1-xingyu.wu@starfivetech.com> <20240507065319.274976-2-xingyu.wu@starfivetech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507092917.GA1049473@maili.marvell.com>
+Mime-Version: 1.0
+Date: Tue, 7 May 2024 03:11:10 -0700
+Message-ID: <CAJM55Z9nJKOEawvxHwUt5w0FKYGw9pBN9_YtOCHjzFGTQ_HvAA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/2] clk: starfive: jh7110-sys: Add notifier for PLL0 clock
+To: Xingyu Wu <xingyu.wu@starfivetech.com>, Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Conor Dooley <conor@kernel.org>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Hal Feng <hal.feng@starfivetech.com>, 
+	linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, May 07, 2024 at 02:59:17PM +0530, Ratheesh Kannoth wrote:
-> On 2024-05-07 at 12:33:39, Duoming Zhou (duoming@zju.edu.cn) wrote:
-> > The origin ax25_dev_list implements its own single linked list,
-> > which is complicated and error-prone. For example, when deleting
-> > the node of ax25_dev_list in ax25_dev_device_down(), we have to
-> > operate on the head node and other nodes separately.
-> >
-> > This patch uses kernel universal linked list to replace original
-> > ax25_dev_list, which make the operation of ax25_dev_list easier.
-> > There are two points that need to notice:
-> >
-> > [1] We should add a check to judge whether the list is empty before
-> > INIT_LIST_HEAD in ax25_dev_device_up(), otherwise it will empty the
-> > list for each new ax25_dev added.
-> >
-> > [2] We should do "dev->ax25_ptr = ax25_dev;" and "dev->ax25_ptr = NULL;"
-> > while holding the spinlock, otherwise the ax25_dev_device_up() and
-> > ax25_dev_device_down() could race, we're not guaranteed to find a match
-> > ax25_dev in ax25_dev_device_down().
-> >
-> > Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
-> > -ax25_dev *ax25_dev_list;
-> > +static struct list_head ax25_dev_list;
-> >  DEFINE_SPINLOCK(ax25_dev_lock);
-> >
-> >  ax25_dev *ax25_addr_ax25dev(ax25_address *addr)
-> > @@ -34,7 +35,7 @@ ax25_dev *ax25_addr_ax25dev(ax25_address *addr)
-> >  	ax25_dev *ax25_dev, *res = NULL;
-> >
-> >  	spin_lock_bh(&ax25_dev_lock);
-> > -	for (ax25_dev = ax25_dev_list; ax25_dev != NULL; ax25_dev = ax25_dev->next)
-> > +	list_for_each_entry(ax25_dev, &ax25_dev_list, list)
-> >  		if (ax25cmp(addr, (const ax25_address *)ax25_dev->dev->dev_addr) == 0) {
-> >  			res = ax25_dev;
-> >  			ax25_dev_hold(ax25_dev);
-> > @@ -52,6 +53,9 @@ void ax25_dev_device_up(struct net_device *dev)
-> >  {
-> >  	ax25_dev *ax25_dev;
-> >
-> > +	/* Initialized the list for the first entry */
-> > +	if (!ax25_dev_list.next)
-> > +		INIT_LIST_HEAD(&ax25_dev_list);
-> if you define ax25_dev_list using 'static LIST_HEAD(ax25_dev_list)', you need this conditional check and
-> initialization ?
-> 
+Xingyu Wu wrote:
+> Add notifier function for PLL0 clock. In the function, the cpu_root clock
+> should be operated by saving its current parent and setting a new safe
+> parent (osc clock) before setting the PLL0 clock rate. After setting PLL0
+> rate, it should be switched back to the original parent clock.
+>
+> Fixes: e2c510d6d630 ("riscv: dts: starfive: Add cpu scaling for JH7110 SoC")
+> Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
 
-Ah, yes.  That's the proper way to do it.
+This looks much better, thanks!
 
-regards,
-dan carpenter
+Reviewed-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 
+> ---
+>  .../clk/starfive/clk-starfive-jh7110-sys.c    | 31 ++++++++++++++++++-
+>  drivers/clk/starfive/clk-starfive-jh71x0.h    |  2 ++
+>  2 files changed, 32 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/starfive/clk-starfive-jh7110-sys.c b/drivers/clk/starfive/clk-starfive-jh7110-sys.c
+> index 8f5e5abfa178..dafa3ae71751 100644
+> --- a/drivers/clk/starfive/clk-starfive-jh7110-sys.c
+> +++ b/drivers/clk/starfive/clk-starfive-jh7110-sys.c
+> @@ -385,6 +385,32 @@ int jh7110_reset_controller_register(struct jh71x0_clk_priv *priv,
+>  }
+>  EXPORT_SYMBOL_GPL(jh7110_reset_controller_register);
+>
+> +/*
+> + * This clock notifier is called when the rate of PLL0 clock is to be changed.
+> + * The cpu_root clock should save the curent parent clock and swicth its parent
+> + * clock to osc before PLL0 rate will be changed. Then swicth its parent clock
+> + * back after the PLL0 rate is completed.
+> + */
+> +static int jh7110_pll0_clk_notifier_cb(struct notifier_block *nb,
+> +				       unsigned long action, void *data)
+> +{
+> +	struct jh71x0_clk_priv *priv = container_of(nb, struct jh71x0_clk_priv, pll_clk_nb);
+> +	struct clk *cpu_root = priv->reg[JH7110_SYSCLK_CPU_ROOT].hw.clk;
+> +	int ret = 0;
+> +
+> +	if (action == PRE_RATE_CHANGE) {
+> +		struct clk *osc = clk_get(priv->dev, "osc");
+> +
+> +		priv->original_clk = clk_get_parent(cpu_root);
+> +		ret = clk_set_parent(cpu_root, osc);
+> +		clk_put(osc);
+> +	} else if (action == POST_RATE_CHANGE) {
+> +		ret = clk_set_parent(cpu_root, priv->original_clk);
+> +	}
+> +
+> +	return notifier_from_errno(ret);
+> +}
+> +
+>  static int __init jh7110_syscrg_probe(struct platform_device *pdev)
+>  {
+>  	struct jh71x0_clk_priv *priv;
+> @@ -413,7 +439,10 @@ static int __init jh7110_syscrg_probe(struct platform_device *pdev)
+>  		if (IS_ERR(priv->pll[0]))
+>  			return PTR_ERR(priv->pll[0]);
+>  	} else {
+> -		clk_put(pllclk);
+> +		priv->pll_clk_nb.notifier_call = jh7110_pll0_clk_notifier_cb;
+> +		ret = clk_notifier_register(pllclk, &priv->pll_clk_nb);
+> +		if (ret)
+> +			return ret;
+>  		priv->pll[0] = NULL;
+>  	}
+>
+> diff --git a/drivers/clk/starfive/clk-starfive-jh71x0.h b/drivers/clk/starfive/clk-starfive-jh71x0.h
+> index 23e052fc1549..e3f441393e48 100644
+> --- a/drivers/clk/starfive/clk-starfive-jh71x0.h
+> +++ b/drivers/clk/starfive/clk-starfive-jh71x0.h
+> @@ -114,6 +114,8 @@ struct jh71x0_clk_priv {
+>  	spinlock_t rmw_lock;
+>  	struct device *dev;
+>  	void __iomem *base;
+> +	struct clk *original_clk;
+> +	struct notifier_block pll_clk_nb;
+>  	struct clk_hw *pll[3];
+>  	struct jh71x0_clk reg[];
+>  };
+> --
+> 2.25.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
