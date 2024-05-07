@@ -1,161 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AC21CB304;
-	Tue,  7 May 2024 13:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CEB15E7E8
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715088014; cv=none; b=jpD2WEGmhd8Ucr1QP5HTb+jJswEcrLLju/xPp+6O8YY74Dt/CClRdxtY2+8jiCFKjFRPIE5hgVKVN+R7NLOU4k4JWF7LKpNIFEnmzyTH0D1MfUNB3ZWT+J+Hie3wYMvvk7V2B4LS77kwIqE4E0MdJGGlULZtIdUGRQoi4QQHs+g=
+	t=1715088047; cv=none; b=Gr95auxNMhCLSeolmXyK24aK5EWhxhCbRJwmfc/SD+BgI4qb8A2kqyXLC59tRaGtYory7U+vCobqbGccb0i/k41gdr/8819LgYoEOa00QJgVZ+h4KZ1agdmgZa2dRY1HVxt7cE7dWJmJwOM3pe+Bkd1DKKSPPk+g157z2/4XPzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715088014; c=relaxed/simple;
-	bh=xqxP5tviAL2S96IuIPgdlhvR3scECTl5ZJSxLsbtWpE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qWNtSjdgCG/a3FYdCrGzSHNON0mM3Nb/y1BH3SxMybcOtaHybphatCgnNvpypzEKEgkNhGVxJeIQD7rJ8AbtZ6qw7EOzT9sEEMnsJ6Azr0mgad7ETaIIAge8fZ+8rsPnRs25IhI06aHgxfA0l9EANGkw0oq+TWtAleLjnvfsPjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gd4Oiq2g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715088047; c=relaxed/simple;
+	bh=mamtRdpVuLvc5n7H5rO8CzIxnBOX+3m2jzq6NAnyw8I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ksSezIVIrps4I9BBnuog3760FVsyY3A9IgCiJYb4+U4SpQKzVXxrSbYlHmXXGqLm1VyZHYutqeYis2+q5iSgDZAm8z2GEAW3Fi9RT/+X+rvu/XC2fJdoUtoIySqy5g1N0HcPXnk2TCrXa2bjAAlLhUHs9TfeNbo1k7ZgPayXTxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=I9lm/B7J; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gd4Oiq2g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A9D3C4DDE7;
-	Tue,  7 May 2024 13:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715088013;
-	bh=xqxP5tviAL2S96IuIPgdlhvR3scECTl5ZJSxLsbtWpE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gd4Oiq2gEdgU1xGUmMmSAo2Ok46t/iK3YslvSMCr1C8RAhH7YNv7NP5q/cKDFNCli
-	 vtBGyNL1bMnsbMz2JVDcctY3aDWQq/FmHWsw1K88IV8ITMv6MtE1MJ3pFWU4yvItaf
-	 BwwhfsZzg1sA76I4bnzpQGw3HjWmkpZ8pUwQ9P3SA9QfbhoXfOm24631lAwLGzDRdR
-	 UPscs38LStKDElMYm0Ze3gz7IUva3/sMFooxIwcSIKxo+qsGbxffEv4jyTWSsTOgae
-	 ENsvws/vunKkdMSsTnGyMpja8gceb9WxHOTmq5vKXTP5FHJn/Cf8MhtruG8VHWn50W
-	 mB+BeOuEeokQQ==
-From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Tue, 07 May 2024 15:19:36 +0200
-Subject: [PATCH RFC bpf-next 8/8] bpf: rely on __aux suffix for
- bpf_wq_set_callback_impl
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I9lm/B7J"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51f29e80800so3441117e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 06:20:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715088044; x=1715692844; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=K752O0Pcm3pbK7QoMDyqSQ3O3yzgRSedQhsNAlMKLtQ=;
+        b=I9lm/B7JeM6zCxEnqG9ogfOlR4YvRk2h64PjUiVbUsMyzt+ZHPB5WypBd2ikN44reo
+         YsBaCqBwXU7ixmFaBFPO3AL7Id2DHszD0m9OVnOTNgJquy7zyrlatO7bxBhw1OGcFIa2
+         Rv5u4k0HZOmVPT4JgmEUfe9kgAjkkKVu0+jUzzMPtlTNQIDFOQvGdxl1gynmg0x0H8sj
+         pEgenzVepqG/Ra3EsNvj9qO3XQ0dopJsojfroyat7rOttrl/2QsWEyzk2UJHzOK6r/D9
+         cAcuTadS2+T31PF/c4CvMU2RfTD4QYKnQnIQ9mB1QguqoVVjXWXQJKG3JrpoiI8eCcrh
+         ynfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715088044; x=1715692844;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=K752O0Pcm3pbK7QoMDyqSQ3O3yzgRSedQhsNAlMKLtQ=;
+        b=K2PWRJRZSxToTTeaNxVtqrLLIebQjPxl0JPp2wuRSfjyBXCWdkcFGBaEm7N5jkOnwB
+         lysEkiGc8FU7iufnBYZUVaI/asAjcgQgyJnMsL7gT+xk/jhDX6ih1BTp/US8TGDcS7Uq
+         qerJNUeHxrJBs5JERdE442rcw5xiMmbXJ1ICzgTR7yul8OlPWf5RajYC6Y4uqMhsvN5u
+         jk1uyHE1vwPmnS+N66MNqKfx/LSrjtJdX0p78u8iL+d9uV804+sc15+LEq7wQ1CGZdvU
+         uauvqKNgBL7fmHWnBScm3kKg2x9V3O0HJZ8Wne8DZvYUWr47cB5GL1oWWK4g79EC7eIQ
+         adJA==
+X-Forwarded-Encrypted: i=1; AJvYcCXvCPu/OfDJ04FWDfMybS0R4Wr5PkSc5U128LBK7lEBqBFRJgM6RvnOAVkS2qaFrLIiz+kCI6cSiWT+ZnkWUV0hqWFe4PDsCZYCpNUB
+X-Gm-Message-State: AOJu0Yw2fzhm+xz26eykRPsLWXpLha31lQwZ8obHUWajzHH8TUxSebML
+	bSj6CdzhW+f2002eUqynXTsx1t7ZdEVNu/Qui4XjAANKGsmbwPqZkNNO5cxnWpA=
+X-Google-Smtp-Source: AGHT+IEGgqheSj5TrFbScUYvwODCUxXLu8LisrOI8dAlAhc9ZxNegHyZOZbMATbWnAgxeOagu8p+xA==
+X-Received: by 2002:ac2:490b:0:b0:51e:fd97:af89 with SMTP id n11-20020ac2490b000000b0051efd97af89mr8145136lfi.16.1715088043422;
+        Tue, 07 May 2024 06:20:43 -0700 (PDT)
+Received: from [192.168.1.195] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id a6-20020a05600c348600b0041c14e42e2bsm19558165wmq.44.2024.05.07.06.20.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 May 2024 06:20:42 -0700 (PDT)
+Message-ID: <738045d2-a445-4f93-abfd-203348a538d1@linaro.org>
+Date: Tue, 7 May 2024 14:20:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] ASoC: qcom: x1e80100: Correct channel mapping
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ James Schulman <james.schulman@cirrus.com>,
+ David Rhodes <david.rhodes@cirrus.com>,
+ Richard Fitzgerald <rf@opensource.cirrus.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Banajit Goswami <bgoswami@quicinc.com>
+Cc: alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240507-asoc-x1e80100-4-channel-mapping-v1-0-b12c13e0a55d@linaro.org>
+ <20240507-asoc-x1e80100-4-channel-mapping-v1-4-b12c13e0a55d@linaro.org>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <20240507-asoc-x1e80100-4-channel-mapping-v1-4-b12c13e0a55d@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240507-bpf_async-v1-8-b4df966096d8@kernel.org>
-References: <20240507-bpf_async-v1-0-b4df966096d8@kernel.org>
-In-Reply-To: <20240507-bpf_async-v1-0-b4df966096d8@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715087980; l=3513;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=xqxP5tviAL2S96IuIPgdlhvR3scECTl5ZJSxLsbtWpE=;
- b=gLKwDN8r6bRspBt809EY3fwZaVCUxwSCKzAOrVkEzq+C8Ab8+unf1PTiflvMQqRSlCcJAZyt9
- XIcu3gAUTtSBKFD4QWf7tuSKVgxC+E6WpF36p1+A7nM8EvjE/Pq1B+E
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
 
-And then cleanup the verifier about the special cases about this kfunc.
+Thanks Krzystof for the patch.
 
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
+On 07/05/2024 11:27, Krzysztof Kozlowski wrote:
+> X1E80100 CRD board comes with four speakers arranged as left front+back
+> and then right front+back.  Using default channel mapping causes front
+> right speaker to play left back stream.
+> 
+> Adjust the channel maps for frontend DAIs to fix stereo and four-channel
+> playback.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
+>   sound/soc/qcom/x1e80100.c | 37 +++++++++++++++++++++++++++++++++++--
+>   1 file changed, 35 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/qcom/x1e80100.c b/sound/soc/qcom/x1e80100.c
+> index c3c8bf7ffb5b..e90c68815b5c 100644
+> --- a/sound/soc/qcom/x1e80100.c
+> +++ b/sound/soc/qcom/x1e80100.c
+> @@ -12,6 +12,7 @@
+>   
+>   #include "common.h"
+>   #include "qdsp6/q6afe.h"
+> +#include "qdsp6/q6dsp-common.h"
+>   #include "sdw.h"
+>   
+>   struct x1e80100_snd_data {
+> @@ -74,7 +75,7 @@ static int x1e80100_snd_hw_params(struct snd_pcm_substream *substream,
+>   	return qcom_snd_sdw_hw_params(substream, params, &data->sruntime[cpu_dai->id]);
+>   }
+>   
+> -static int x1e80100_snd_prepare(struct snd_pcm_substream *substream)
+> +static int x1e80100_snd_be_prepare(struct snd_pcm_substream *substream)
+>   {
+>   	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+>   	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+> @@ -96,12 +97,34 @@ static int x1e80100_snd_hw_free(struct snd_pcm_substream *substream)
+>   				    &data->stream_prepared[cpu_dai->id]);
+>   }
+>   
+> +static int x1e80100_snd_fe_prepare(struct snd_pcm_substream *substream)
+> +{
+> +	struct snd_soc_pcm_runtime *rtd = snd_soc_substream_to_rtd(substream);
+> +	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+> +
+> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
+> +		const unsigned int rx_slot[4] = { PCM_CHANNEL_FL,
+> +						  PCM_CHANNEL_LB,
+> +						  PCM_CHANNEL_FR,
+> +						  PCM_CHANNEL_RB };
+> +
+> +		snd_soc_dai_set_channel_map(cpu_dai, 0, NULL, ARRAY_SIZE(rx_slot),
+> +					    rx_slot);
 
----
+Channel mapping are specific to backend dais rather than front end pcm dais.
 
-This is an RFC, and is not meant to be fully reviewed/applied as it is.
-I'm posting this to show what I wanted to explain in
-https://lore.kernel.org/bpf/mhkzkf4e23uvljtmwizwcxyuyat2tmfxn33xb4t7waafgmsa66@mcrzpj3b6ssx/
----
- kernel/bpf/helpers.c  |  4 ++--
- kernel/bpf/verifier.c | 17 -----------------
- 2 files changed, 2 insertions(+), 19 deletions(-)
+This will set all the playback pcms with this channel maps, which is a 
+problem.
 
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index 97628bcbd507..03524fa5feef 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -2725,9 +2725,9 @@ typedef int (*wq_callback_fn_t)(struct bpf_map *map, int *key, struct bpf_wq *wq
- __bpf_kfunc int bpf_wq_set_callback_impl(struct bpf_wq *wq,
- 					 wq_callback_fn_t callback_fn__s_async,
- 					 unsigned int flags,
--					 void *aux__ign)
-+					 void *prog__aux)
- {
--	struct bpf_prog_aux *aux = (struct bpf_prog_aux *)aux__ign;
-+	struct bpf_prog_aux *aux = (struct bpf_prog_aux *)prog__aux;
- 	struct bpf_async_kern *async = (struct bpf_async_kern *)wq;
- 
- 	if (flags)
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 33b108db0025..829a234832d9 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -514,8 +514,6 @@ static bool is_sync_callback_calling_kfunc(u32 btf_id);
- static bool is_callback_calling_kfunc(u32 btf_id);
- static bool is_bpf_throw_kfunc(struct bpf_insn *insn);
- 
--static bool is_bpf_wq_set_callback_impl_kfunc(u32 btf_id);
--
- static bool is_sync_callback_calling_function(enum bpf_func_id func_id)
- {
- 	return func_id == BPF_FUNC_for_each_map_elem ||
-@@ -11134,7 +11132,6 @@ enum special_kfunc_type {
- 	KF_bpf_percpu_obj_new_impl,
- 	KF_bpf_percpu_obj_drop_impl,
- 	KF_bpf_throw,
--	KF_bpf_wq_set_callback_impl,
- 	KF_bpf_preempt_disable,
- 	KF_bpf_preempt_enable,
- 	KF_bpf_iter_css_task_new,
-@@ -11161,7 +11158,6 @@ BTF_ID(func, bpf_dynptr_clone)
- BTF_ID(func, bpf_percpu_obj_new_impl)
- BTF_ID(func, bpf_percpu_obj_drop_impl)
- BTF_ID(func, bpf_throw)
--BTF_ID(func, bpf_wq_set_callback_impl)
- #ifdef CONFIG_CGROUPS
- BTF_ID(func, bpf_iter_css_task_new)
- #endif
-@@ -11190,7 +11186,6 @@ BTF_ID(func, bpf_dynptr_clone)
- BTF_ID(func, bpf_percpu_obj_new_impl)
- BTF_ID(func, bpf_percpu_obj_drop_impl)
- BTF_ID(func, bpf_throw)
--BTF_ID(func, bpf_wq_set_callback_impl)
- BTF_ID(func, bpf_preempt_disable)
- BTF_ID(func, bpf_preempt_enable)
- #ifdef CONFIG_CGROUPS
-@@ -11542,11 +11537,6 @@ static bool is_bpf_throw_kfunc(struct bpf_insn *insn)
- 	       insn->imm == special_kfunc_list[KF_bpf_throw];
- }
- 
--static bool is_bpf_wq_set_callback_impl_kfunc(u32 btf_id)
--{
--	return btf_id == special_kfunc_list[KF_bpf_wq_set_callback_impl];
--}
--
- static bool is_callback_calling_kfunc(u32 btf_id)
- {
- 	return is_sync_callback_calling_kfunc(btf_id);
-@@ -19949,13 +19939,6 @@ static int fixup_kfunc_call(struct bpf_verifier_env *env, struct bpf_insn *insn,
- 		   desc->func_id == special_kfunc_list[KF_bpf_rdonly_cast]) {
- 		insn_buf[0] = BPF_MOV64_REG(BPF_REG_0, BPF_REG_1);
- 		*cnt = 1;
--	} else if (is_bpf_wq_set_callback_impl_kfunc(desc->func_id)) {
--		struct bpf_insn ld_addrs[2] = { BPF_LD_IMM64(BPF_REG_4, (long)env->prog->aux) };
--
--		insn_buf[0] = ld_addrs[0];
--		insn_buf[1] = ld_addrs[1];
--		insn_buf[2] = *insn;
--		*cnt = 3;
- 	} else {
- 		struct bpf_kfunc_call_arg_meta meta;
- 		struct bpf_insn kfunc_insn = *insn;
+example the 2 channel headset we will endup with data of front channel 
+and zeros on the right channel, however a speaker might work as you have 
+4 speakers in your system.
 
--- 
-2.44.0
 
+So No for this approach.
+
+
+--srini
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>   static const struct snd_soc_ops x1e80100_be_ops = {
+>   	.startup = qcom_snd_sdw_startup,
+>   	.shutdown = x1e80100_snd_shutdown,
+>   	.hw_params = x1e80100_snd_hw_params,
+>   	.hw_free = x1e80100_snd_hw_free,
+> -	.prepare = x1e80100_snd_prepare,
+> +	.prepare = x1e80100_snd_be_prepare,
+> +};
+> +
+> +static const struct snd_soc_ops x1e80100_fe_ops = {
+> +	.prepare = x1e80100_snd_fe_prepare,
+>   };
+>   
+>   static void x1e80100_add_be_ops(struct snd_soc_card *card)
+> @@ -118,6 +141,15 @@ static void x1e80100_add_be_ops(struct snd_soc_card *card)
+>   	}
+>   }
+>   
+> +static int x1e80100_add_dai_link(struct snd_soc_card *card, struct snd_soc_dai_link *link)
+> +{
+> +	/* Add ops for Frontend DAIs coming from Topology */
+> +	if (link->dynamic && !link->no_pcm && !link->ops)
+> +		link->ops = &x1e80100_fe_ops;
+> +
+> +	return 0;
+> +}
+> +
+>   static int x1e80100_platform_probe(struct platform_device *pdev)
+>   {
+>   	struct snd_soc_card *card;
+> @@ -135,6 +167,7 @@ static int x1e80100_platform_probe(struct platform_device *pdev)
+>   
+>   	card->owner = THIS_MODULE;
+>   	card->dev = dev;
+> +	card->add_dai_link = x1e80100_add_dai_link;
+>   	dev_set_drvdata(dev, card);
+>   	snd_soc_card_set_drvdata(card, data);
+>   
+> 
