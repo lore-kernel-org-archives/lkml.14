@@ -1,180 +1,202 @@
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2063.outbound.protection.outlook.com [40.107.236.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6BF6BFC0;
-	Tue,  7 May 2024 09:11:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715073117; cv=none; b=oqzXnMjjHJXUi43kpNBrdfh1Z5aaolu2w08440qnU5h/KiYWNRMS1884RCL+Ll11vWmi4QxmXuB8ALdk/7XiR52UTy8jbRzNWOs/mm2STu0p1R5fMhePQ69wyVvM1FtCoNLpTM3SMQXi0+F4GDK5uwJqH2YVvT41XC2psShkeLQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715073117; c=relaxed/simple;
-	bh=YHXlC7kJ8K1unV8F/MZ9J57OGBK3Citlye2x7wU1iwo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ibGOO5FFEL1zWsv57/rwCUAAN5XE/A5qnX5TMry9KHnMOV4xRVAlxBfAntKdvwoWgJZtEAiG2uYQbmEWQI46YS3tz0bojT+GLmPaQ/opmUfI25qx79Q2ByweEUcksSPGZKSuEdlTFbeQWNcK/ufw58U3QGNGWutbhrZZH/GNb4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4VYXCb0gGNz9v7fr;
-	Tue,  7 May 2024 16:54:51 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.27])
-	by mail.maildlp.com (Postfix) with ESMTP id A26CE14074A;
-	Tue,  7 May 2024 17:11:40 +0800 (CST)
-Received: from [10.45.158.162] (unknown [10.45.158.162])
-	by APP2 (Coremail) with SMTP id GxC2BwB3Yyc+8DlmamutBw--.32210S2;
-	Tue, 07 May 2024 10:11:40 +0100 (CET)
-Message-ID: <a49c85e2-f5d1-4beb-86d9-43cbc2d59336@huaweicloud.com>
-Date: Tue, 7 May 2024 11:11:19 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F1F14D451
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 09:12:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715073150; cv=fail; b=iSNkFZnO0qI3OkF7fVMIiPVxP9XEAAFqhtlmNfOQBVlPRK0V0iHhH+vvHP2kf5d+h5B/PVud6v4L9vvj5rkuN5dbBLpCJBnyrNbmcaFr3FbxXOSmqi7VBvDTSKpSwJ02q3hCzgVOh2h1Ug1zCCwROrYGq1afly9jeq5oWxEVQKQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715073150; c=relaxed/simple;
+	bh=2S62IvL0ljz2tEDMbgVhF+vCrAMFHwC18M+Hpsly2Nk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=e9mjLFw/+JDPYNseVPFRr1FdIJvqtI+oH483RJpjUJKNi+XS006IPKLV9mQ9LXFV437nhoDAZEk26ePGuhNdyyZul51UIhk1duJCG34zC3XJ/izsLEf2J0UKpNJTWaihohyIOKqzno/Si62aWO0SQwCWntLUhOs0FMPcCXkR/hk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=IUkaj/R7; arc=fail smtp.client-ip=40.107.236.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="IUkaj/R7"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KGzY4dTMvCFISF+QcZV9j3siT/sTMIJFhovGY/1hmCy+oRQZSY1VdsjzIPIO8EYqD2lyQuhPG/csWjjpWtcKhwKj1qSIZqSIoFr7gdCEBhYOu+Udp+YwJiiqI1FXGhsP5iqWMiXFl8w008lHf9pCKiyieyp0asiTNpXa7AZj2pwF5cR3H8kO0WunXuJgEza7Qffv46HedhgOq9tadi74Dw1DMY90NFz2FlGTDULzyltk5HHbzucJnXUT4sqV2Divh95LBfgokTMfr+Fg4wWDUYRZs8BI5C3jmKxKIYL20zfZkAFJR0jCVrTiRsnzTfgXabJMV9TMQYE2mEi0/qcong==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Yj7LrqOjygi3z1Z2JrElLWZXMTu+A48l2vFz1k27VsQ=;
+ b=nAWrpa3hmmHTnnqhrvr1LEsLQI4asJeBxzA2TRIQ2SARuJZSzFkeW7s+gJoSFrkvk+ZpcRQlOcWC7C3vKm5I0kzNhdTO8aVRFIEvFxhuXIjKRZClerZcDkx+KiQYBQ5zNKkx764YIYxPEAY1qRFnucyRbcEIUj5+Rp/mlnd28unbU6eP1WTklZ1MV3LPAuvLZZjchowPYmvS6KELQcRFsXpN328HU7E597dkQA18u0MafpbxIszuFxZTX286LfPtugCvg+DWwyoAUH3Zj9+Hsk+sayzzQ7D+SmpvmSDRa/XTwYKyecpnQElRSl9MGokCE0e2irHDcuuYqdbb1SC9CQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Yj7LrqOjygi3z1Z2JrElLWZXMTu+A48l2vFz1k27VsQ=;
+ b=IUkaj/R7XC4JiXbNMmuOhphpu1sN/zND90hZ/1MG+ah+VAWYdcHSxE9+Q3t1WfquLM9CxVKJ/FNFsHOu36nnIWl25bm+xixIhLBlnmfj/8CF0n6MCbYFRX5LwJXpJrbZsrpX8fBCUsTYi0npaSJyqH6Vl54duF9eOJgNqD82mLc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM8PR12MB5445.namprd12.prod.outlook.com (2603:10b6:8:24::7) by
+ PH7PR12MB9125.namprd12.prod.outlook.com (2603:10b6:510:2f4::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42; Tue, 7 May
+ 2024 09:12:23 +0000
+Received: from DM8PR12MB5445.namprd12.prod.outlook.com
+ ([fe80::a544:caf8:b505:5db6]) by DM8PR12MB5445.namprd12.prod.outlook.com
+ ([fe80::a544:caf8:b505:5db6%7]) with mapi id 15.20.7519.035; Tue, 7 May 2024
+ 09:12:23 +0000
+Message-ID: <8cb9ad12-1426-43b6-830f-277d3b3b6a02@amd.com>
+Date: Tue, 7 May 2024 16:12:14 +0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] iommu/amd: Fix sysfs leak in iommu init
+Content-Language: en-US
+To: "Kun(llfl)" <llfl@linux.alibaba.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Jerry Snitselaar <jsnitsel@redhat.com>
+Cc: Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Vasant Hegde <vasant.hegde@amd.com>
+References: <4d516a6500ea0760e13cc19e2b14e663aa333518.1715048443.git.llfl@linux.alibaba.com>
+From: "Suthikulpanit, Suravee" <suravee.suthikulpanit@amd.com>
+In-Reply-To: <4d516a6500ea0760e13cc19e2b14e663aa333518.1715048443.git.llfl@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG3P274CA0013.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::25)
+ To DM8PR12MB5445.namprd12.prod.outlook.com (2603:10b6:8:24::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH memory-model 2/4] Documentation/litmus-tests: Demonstrate
- unordered failing cmpxchg
-To: paulmck@kernel.org, luc.maranget@inria.fr
-Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- kernel-team@meta.com, mingo@kernel.org, stern@rowland.harvard.edu,
- parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
- boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
- j.alglave@ucl.ac.uk, akiyks@gmail.com,
- Frederic Weisbecker <frederic@kernel.org>, Daniel Lustig
- <dlustig@nvidia.com>, Joel Fernandes <joel@joelfernandes.org>,
- Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>,
- linux-doc@vger.kernel.org
-References: <42a43181-a431-44bd-8aff-6b305f8111ba@paulmck-laptop>
- <20240501232132.1785861-2-paulmck@kernel.org>
- <c97f0529-5a8f-4a82-8e14-0078d4372bdc@huaweicloud.com>
- <16381d02-cb70-4ae5-b24e-aa73afad9aed@huaweicloud.com>
- <2a695f63-6c9a-4837-ac03-f0a5c63daaaf@paulmck-laptop>
-From: Jonas Oberhauser <jonas.oberhauser@huaweicloud.com>
-In-Reply-To: <2a695f63-6c9a-4837-ac03-f0a5c63daaaf@paulmck-laptop>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:GxC2BwB3Yyc+8DlmamutBw--.32210S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAryDXF4kKFy3WFWfZr45trb_yoWrGr1xpF
-	WrKFWUKr1DJ3yUu340va1qqFy0v393JF4Yqw15tryjyan8GF1FvFyYqrWY9r9rtrs3Cw40
-	vr1Y93srZr98AFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUklb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYY7kG6xAYrwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
-	WxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
-	IxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU5vQ6JUUUU
-	U==
-X-CM-SenderInfo: 5mrqt2oorev25kdx2v3u6k3tpzhluzxrxghudrp/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM8PR12MB5445:EE_|PH7PR12MB9125:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e635798-fab4-4dff-8156-08dc6e75ce2c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?a1VPNFFmRjVkNkk3MksreTJaYWVuMnNqUGlZRUkxTksvNzBXUFR2aEoyU2RO?=
+ =?utf-8?B?dG1nem11OExPZHl2L29QenlpNTlCbTVEdjVnZVRHSzVmVzNBRk9TYlcwdlFj?=
+ =?utf-8?B?QmF2bGZhUVdOQkhSZXA2eU1YMzU0dHJyZmFPZmh5N293UkJrVkVjaU8yNnZX?=
+ =?utf-8?B?MmlLRUltUzU3UUZCWFcwL3IyS3dDY2xMOE1iNmVzS2d2Nm42TW1Gek1ZaFpU?=
+ =?utf-8?B?MFphNks3TXpNaDNqcytRVCtjdzNQdTM4QkZWZmZ2SjRJbUJXM2RqYU1seUJZ?=
+ =?utf-8?B?ZUVOS3VzRkxleDhzN2hxVTYxWUQrOU1QTHlKTjVZaURzN3MrMWN5YUI2b1g3?=
+ =?utf-8?B?b2liY2dyaXAyb3Fjb0MvWkdLWVE4clFCNVBxM3lMdU5QR1crQ0tIZ2lrNFBT?=
+ =?utf-8?B?M0FSYmNFVmRKeUk5RlpVMGg3Um55QS8rNEZXRG41NXRYT0d6TU8yV01mNExo?=
+ =?utf-8?B?REd5bzJDSDdqS24wcjJITngrOWJrQ3I5TXcyMUZteG5BeldSbEJVeXh1aDM2?=
+ =?utf-8?B?eFJIcG5OMTFQK0h4T3BjU2ZKSm40dy9Vdlo5cWN4UXRoUDlXT3Era3ZLMnhX?=
+ =?utf-8?B?R1g2WkFFUG5FYzFyekRWRU4yRDh1S3l3a0J6UWFGdXVsK012TklublhJaFRX?=
+ =?utf-8?B?disxb2V6U2RvWFArM2tTM3BXNmpFKzRGOVpLMFl3R2lmYmkrTHFLM1IzcmFE?=
+ =?utf-8?B?K0NqT2NtK044R0hBSVUrNGRMSDZldlBYUkVyMGhsL2xTYTRrVk04OVE4SlpF?=
+ =?utf-8?B?Z3Z5N29ncHhNeDFoaVEwVGVXWjVSOU9TT09BaWo5Nm5pSzFiS3o3UjRaWnRT?=
+ =?utf-8?B?TkdoWVFEeEV1aDRJM2szT1JBNnFYSkliT0MvZm5Udk1STStLclBjbWZtTDh0?=
+ =?utf-8?B?cWhSUzdDL1QyMFhlVEFEOVlpMUlKZjFrcHhUUVFSOEpPeEFNQUxvNXN4ZWxD?=
+ =?utf-8?B?ejRwb2Y0THl6WG1QbHFzcEhPOHFzTmFsZU5qZ1hNcGtuWkVBWjlJcnpjcDd4?=
+ =?utf-8?B?WkE5eW0zdStscmJRc29EMzVJT2QxOVlzM01qQ1haTWlZakJWTkp2MmJvLzlQ?=
+ =?utf-8?B?WlpqeDc5VThrYWtBaEgvaHZxZk9DR0FFeStIdG1FTFgwQUNDTWVXMmo1d3pX?=
+ =?utf-8?B?QWgydUU4Q3NrVHEzLzZTaDlTbDBtU3U5aytSaHdacWlpR0Y2b25wdGZLckt6?=
+ =?utf-8?B?amxzVmhRM25TdVBaZlUrbmZ2R21HdGY0MWU5SWNtOXRjbHN1bDZ5bVQ4bVJJ?=
+ =?utf-8?B?ZVFzaDJvMWg2WW1LZnFSRE4zMDByYnNDbllaZmZJdFBUR2k5bTFLcmNuOFBX?=
+ =?utf-8?B?NXNDdGhBeDh4d1NVWGFtZkhHR2VnY2ttZGtmRmF4ZTl6Y1lrak5PM2VOaE1Y?=
+ =?utf-8?B?RjI2MFF4TzZHL2ZycUphbEZQMUYxVjdoKzNaKzdrNVZrcHJYOFBkbGxnL1hS?=
+ =?utf-8?B?MnF5alN6RGl5dDBBNXJIVWdTU2FYbkV3UVJ3UVdJakxja2dsM0pkdXdqWWpC?=
+ =?utf-8?B?WkM4b0N0NWhZeUg2NlBTcDNvMktVN05oSmVNZFZ3MjZHNWhrdWZYRWNsc243?=
+ =?utf-8?B?NC92ajVxd1dqVHNFN3FZT2dOaEhpUWxjRE1qQWx1T0NyRnBjdGdOUlhKTmU2?=
+ =?utf-8?B?WjFjcGp2K0RBeC9MeTgxR0E5cFM4QjRRYWs0aUd2aGh6ejZZdE91MmQ0cU9B?=
+ =?utf-8?B?NkZXV2pTakFOQzZ6dTZEbzI0LzVoQ01UMFREaE85M1JYMHVQcVJSUG1nPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR12MB5445.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NkZHb0xYN29vOUxiMFNrTGhOdXN6VVVoL0V2ZDlhQXFJcHZxVUw3TUZOSmlj?=
+ =?utf-8?B?YWoyTnA3N3JRNzNCSllzM29IRUNRdlNseURCUmRZdmJ2cWdGR0FQbElzcWFC?=
+ =?utf-8?B?Vitqd1ZIYWZ3L2x4K3g1SDhUZmFnRmVneFFIYjd3RkhoTUlPcTJhR3FNN085?=
+ =?utf-8?B?emx4L3YwRWpvdWlwbEUyNStUNDdkaTBYR250dm5LQVdlSFR4cDNZZzZKZWVa?=
+ =?utf-8?B?U0ZKekxLZ3U2MjBxNU0zRm5QU3IzcHhFMHBsWFZ1Mm1FQktlamF1RjR5N2Rx?=
+ =?utf-8?B?N1pyd1kwQWEvTGFQYWk0NjdNTWJObkFNWitYUUN2cWZHRmFLU3ZaZUswaVov?=
+ =?utf-8?B?OEdlMC83a1hMNmxtRFRUckRuTmNmK1RnNTFaU3JSYzA4eEZZVytYSC9PcWcr?=
+ =?utf-8?B?cUd1K29GVFhXZTRDWXRmb2ttK0RsVyt4TStodjdMRWJldWdFcHFVdU1FNHgy?=
+ =?utf-8?B?NldoZUM2a2c1bHR6cFZlbjJxQUk4eEVuQVhYUTRGK2ViSE04ZVBBWFpYdTdk?=
+ =?utf-8?B?dXZIcHE3UTQvZEhKZVcyZWl3WW4wY1BwM3hDM2lKV1hvZDFCV0VsalNPNjJh?=
+ =?utf-8?B?QlUyVzNwZVNSMHBqTGEvTWhmV3NHZyt2RGIrNG1OL0k1WEZkRHlzRHJxa3Vu?=
+ =?utf-8?B?YVdYSysxZ3FZeERFV2V1b0xMMC8yUFF4K3d0Nk5sbzJwT0h1Sms0SmE3SWJQ?=
+ =?utf-8?B?b0FMNFZUUjRPOTAwenZhQ2xEdjMwRkgybmgvdS9TWjBDM3dKUEVEZERFYTZo?=
+ =?utf-8?B?SEgxYzBCeFIyNjRCWitlQ0dMYjF4UGZ2MEtpeTV1YTQwK1ZmVDBmQmhuTzI3?=
+ =?utf-8?B?cVIydXJ2L3FlZyt2MVlaVi9hWGoyeGlpb3ZxbUZXK01WVDArN0hkVlRpYTln?=
+ =?utf-8?B?eFBZZURSTjBtcTRPQzBiUGFPQ3ZoS1Z4My8xcFhXR1hXYW5BSEhBaXliVGtE?=
+ =?utf-8?B?OVNVaXQ1YjgrakVVaWNuOVN4blltcGYrSmFtenFRM2xqQVhUeXFseVM1UXhw?=
+ =?utf-8?B?cDZCcjhrUzk2aGNZZTJmUkhOU1pPTEVUN3htU0I4SVlnYUJpR2x3d0hFeFpl?=
+ =?utf-8?B?dW9xN2krNi9aeGM4OVVXVE5peFRLVWtNOXRvSzNNMEI4U2JHS0dvUjBsS2NK?=
+ =?utf-8?B?RU1VeTgzS29qdWlIcFFpZElrQ0RMcUxXb3pzUXIwYnpmQ2ZsTFgydml0cEFT?=
+ =?utf-8?B?a0pnRUpkUGR5NzV5Y2dhdTZ5R2l3U05OSGxZSytCTk1UaTJlU2txKzZybUUx?=
+ =?utf-8?B?T3AzYmoyZ08rdFl4bW9pY1BrYnFMZlRyUlhIWEg5bHBFY1FIcU9Bajg1U3JN?=
+ =?utf-8?B?TkdTYkNvY3d3cTkvYWlpRnNuWHd2Q3BITlZIbi9XN0VmUXFGMmFla1B2dlBV?=
+ =?utf-8?B?UUt4MjRBQ1ErQkZSUytUVk4vcTJZN1pqUEtkaHQycmQxOGp4R0huQU5oWHNV?=
+ =?utf-8?B?ZHcyb2hsRlp4TktWVUFlL3JqWmg3OXhDNWRoSG9TSnovQWNBczhnMWtjU1Zt?=
+ =?utf-8?B?T2FrMnVydFRHeEJoTWNwZzE0cHpZcUdoRGJrQWNtdDBJcHNoVm91ZUlwY2Nz?=
+ =?utf-8?B?TE5wSFBVWVdVaXdyQkUxbUhhV2dncW8yTU8rVXRBRTB5VXMzRmt6WU13Z2Ni?=
+ =?utf-8?B?cVFKY016VG9QOFp0MlFWbnRLQjhtTUNhL0hLRTNVa3MyK1pZaWdoRUMzeXYy?=
+ =?utf-8?B?UEtVWmxRekFralppS2svUE1uRE9DN05KOElBWkxwYVhIbTVBc0twODBqYStW?=
+ =?utf-8?B?eUVQMnpPbWx0c3ZINllMS0taVGdadFZ4Q25MWGVOeC90THFsVzRNenJvWmx0?=
+ =?utf-8?B?aGNBYWloMG1yVmNGeFNGZDV0R2NIQ0NzaUM4K1dveEdsZmd4WVpTOFFDSDJy?=
+ =?utf-8?B?dEFPd1J1RlZVS3g2VjVWS2p5WmZGVzdyeTZERmZvSGdzRGxMaVRpbmxZNDhY?=
+ =?utf-8?B?TVdrQlF5WDRFbWNDaTBkT1lWSE9zM1BVbTdUczVMR1AwMnJ3TVJ0MEZIRjls?=
+ =?utf-8?B?ZUYyZHJaWit5UkNUWk9UMmFQZ0h1ekpSMnJIS3RHZjRnYTJtdDZrdiszaHc4?=
+ =?utf-8?B?eUs1cVpqK3JpYUZwUzBFQU9qVmZ4ZlB4VEd4bnd2VFNYR2tJRTV4UzRKNk1j?=
+ =?utf-8?Q?GoLU6A5GiybItVYGnmX7ImhIt?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e635798-fab4-4dff-8156-08dc6e75ce2c
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR12MB5445.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 09:12:23.2677
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: v6lgspUkNNEaxE9GuUfi6+v0DXGN5XgHOaokWZN87u3RUkmEU9YDEQ0spzXTux02HfKiWxEzFeQGiTwWy+we8g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB9125
 
+Thanks for finding this sysfs leak.
 
-
-Am 5/6/2024 um 8:00 PM schrieb Paul E. McKenney:
-> On Mon, May 06, 2024 at 06:30:45PM +0200, Jonas Oberhauser wrote:
->> Am 5/6/2024 um 12:05 PM schrieb Jonas Oberhauser:
->>> Am 5/2/2024 um 1:21 AM schrieb Paul E. McKenney:
->>>> This commit adds four litmus tests showing that a failing cmpxchg()
->>>> operation is unordered unless followed by an smp_mb__after_atomic()
->>>> operation.
->>>
->>> So far, my understanding was that all RMW operations without suffix
->>> (xchg(), cmpxchg(), ...) will be interpreted as F[Mb];...;F[Mb].
->>>
->>> I guess this shows again how important it is to model these full
->>> barriers explicitly inside the cat model, instead of relying on implicit
->>> conversions internal to herd.
->>>
->>> I'd like to propose a patch to this effect.
->>>
->>> What is the intended behavior of a failed cmpxchg()? Is it the same as a
->>> relaxed one?
+On 5/7/2024 9:32 AM, Kun(llfl) wrote:
+> During the iommu initialization, iommu_init_pci() adds sysfs nodes.
+> However, these nodes aren't remove in free_iommu_resources() subsequently.
 > 
-> Yes, and unless I am too confused, LKMM currently does implement this.
-> Please let me know if I am missing something.
+> Fixes: ad8694bac410 ("iommu/amd: Move AMD IOMMU driver into subdirectory")
 
-At least the herd and Dat3M implementations seem to be doing that, at 
-least according to this thread sent to me by Hernan.
+Actually, this commit only move the code into new directory structure. 
+The original commit was:
 
-https://github.com/herd/herdtools7/issues/384#issue-1243049709
+commit 39ab9555c24110671f8dc671311a26e5c985b592
+Author: Joerg Roedel <jroedel@suse.de>
+Date:   Wed Feb 1 16:56:46 2017 +0100
 
+     iommu: Add sysfs bindings for struct iommu_device
 
+> Signed-off-by: Kun(llfl) <llfl@linux.alibaba.com>
+> ---
+>   drivers/iommu/amd/init.c | 7 +++++++
+>   1 file changed, 7 insertions(+)
 > 
->>> My suggestion would be in the direction of marking read and write events
->>> of these operations as Mb, and then defining
->>>
->>> (* full barrier events that appear in non-failing RMW *)
->>> let RMW_MB = Mb & (dom(rmw) | range(rmw))
->>>
->>>
->>> let mb =
->>>       [M] ; fencerel(Mb) ; [M]
->>>     | [M] ; (po \ rmw) ; [RMW_MB] ; po^? ; [M]
->>>     | [M] ; po^? ; [RMW_MB] ; (po \ rmw) ; [M]
->>>     | ...
->>>
->>> The po \ rmw is because ordering is not provided internally of the rmw
->>
->> (removed the unnecessary si since LKMM is still non-mixed-accesses)
-> 
-> Addition of mixed-access support would be quite welcome!
+> diff --git a/drivers/iommu/amd/init.c b/drivers/iommu/amd/init.c
+> index ac6754a85f35..624ea2549f64 100644
+> --- a/drivers/iommu/amd/init.c
+> +++ b/drivers/iommu/amd/init.c
+> @@ -1678,8 +1678,15 @@ static void __init free_pci_segments(void)
+>   	}
+>   }
+>   
+> +static void __init free_sysfs(struct amd_iommu *iommu)
+> +{
+> +	if (iommu->iommu.dev)
+> +		iommu_device_sysfs_remove(&iommu->iommu);
+> +}
+> +
+>   static void __init free_iommu_one(struct amd_iommu *iommu)
+>   {
+> +	free_sysfs(iommu);
 
-:P
+As part of the clean up, we also need to also call 
+iommu_device_unregister() before iommu_device_sysfs_remove().
 
+Thanks,
+Suravee
 
->> This could also be written with a single rule:
->>
->>       | [M] ; (po \ rmw) & (po^?; [RMW_MB] ; po^?) ; [M]
->>
->>> I suspect that after we added [rmw] sequences it could perhaps be
->>> simplified [...]
->>
->> No, my suspicion is wrong - this would incorrectly let full-barrier RMWs
->> act like strong fences when they appear in an rmw sequence.
->>
->>   if (z==1)  ||  x = 2;     ||  xchg(&y,2)  || if (y==2)
->>     x = 1;   ||  y =_rel 1; ||              ||    z=1;
->>
->>
->> right now, we allow x=2 overwriting x=1 (in case the last thread does not
->> propagate x=2 along with z=1) because on power, the xchg might be
->> implemented with a sync that doesn't get executed until the very end
->> of the program run.
->>
->>
->> Instead of its negative form (everything other than inside the rmw),
->> it could also be rewritten positively. Here's a somewhat short form:
->>
->> let mb =
->>       [M] ; fencerel(Mb) ; [M]
->>     (* everything across a full barrier RMW is ordered. This includes up to
->> one event inside the RMW. *)
->>     | [M] ; po ; [RMW_MB] ; po ; [M]
->>     (* full barrier RMW writes are ordered with everything behind the RMW *)
->>     | [W & RMW_MB] ; po ; [M]
->>     (* full barrier RMW reads are ordered with everything before the RMW *)
->>     | [M] ; po ; [R & RMW_MB]
->>     | ...
-> 
-> Does this produce the results expected by the litmus tests in the Linux
-> kernel source tree and also those at https://github.com/paulmckrcu/litmus?
-
-I suspect that it doesn't work out of the box because of some of the 
-implicit magic herd is doing that could get in the way, so I'd need some 
-help from Luc to actually turn this into a patch that can be tested.
-(or at least confirmation that just by changing a few things in the .def 
-& .bell files we can sidestep the implicit behaviors).
-
-But at least in my proofs it seems to be equivalent.
-(there may still be differences in opinion on what some herd things 
-mean, so what I/Viktor have formalized as the semantics of the herd 
-model may not be exactly the behavior of LKMM in herd. hence testing is 
-necessary too as a sanity check)
-
-best wishes,
-   jonas
-
+>   	free_cwwb_sem(iommu);
+>   	free_command_buffer(iommu);
+>   	free_event_buffer(iommu);
