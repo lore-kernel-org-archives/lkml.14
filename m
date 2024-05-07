@@ -1,127 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28E42EB08;
-	Tue,  7 May 2024 06:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A3F72EB08
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 06:37:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715063749; cv=none; b=u6SN29XCloBaQ2jqYTi2sEJlVcKKFFMasIA2wANt/72ZrbznZnxOgl7OJYN10Qq+uvrnSUhcLq9UK2mxSk+8KZKuNjI0jmaroWsIGomM8dGqbszAAjJGRDFvpWAYvqAL8RtHSPQJBBkbHJ63VjqF3U/1c2qERaqC/R5RBZmpa4A=
+	t=1715063853; cv=none; b=UMhNSFysT9OVaUVyWsq4sWxIpXG1AR3ha7Z78ktdb5iMMehv3gjrssS9Rz0lBbmKLcRpXrkXD3EoWkWvFumgMyqhHm2ONUw995dHFuMIQP/1C6hJ++8sgNPEloY2JcjKsbAGZ/hTT9noTINYfjZrkeMDZJ46MPOvI87CFixhnsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715063749; c=relaxed/simple;
-	bh=/Mlhnh+UCfgw9ZOZJQ3oMWCD2KpVf5vQppclCcvAgLQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EUPUJJMNOi5u5TC8PTFKc49dV2b1LW6spbGXmIaE1oVB3bkOc0IEDXm0sVana8TGA+mMPORNsNGkEQjWcVZUGNMXAD6/4Z1mBOqtIR8xgKI4cVWacs0RMgoZm6sbUtGpISXIOJ5iD4ICLD4DspbkIFNyt3v0tdULs7HJXqR3Crg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rD6QrtV9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715063853; c=relaxed/simple;
+	bh=aNqvmh4BAzwck/OFAIQFc1HiCyrj8eEwPMX9mubrqK4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iq67KiCZyQl4shWAd6E8HGbwJZGGGyiHmp8aGNRQBjRHOwXo8oWpow5r5xx35pPKwP3bGE2rNP0c55F4zLtC42WzYQ8lis3ZnY/JtJaszzz75snjSj9AH2wTaasz3BHMIyz2UZcjDrFVQS10qTMZGKGarwzMZYhaPx/c2+8ViDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf; spf=pass smtp.mailfrom=kl.wtf; dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b=k+DjRtDY; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kl.wtf
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kl.wtf
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rD6QrtV9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C92F6C2BBFC;
-	Tue,  7 May 2024 06:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715063749;
-	bh=/Mlhnh+UCfgw9ZOZJQ3oMWCD2KpVf5vQppclCcvAgLQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rD6QrtV9qW6k0cGQYJWhixxTt7MFNwMKrQleRioW9eppgaO5tlBFTJqgudXH68Lxl
-	 hEIXYoEcKQjWZm1Dx53KyJGV+ICvVQLWm1ytCKQ7vVEdAKiGXocecKWyE7qOW/LvmP
-	 RkXuj3piPlKQLWvUbeI3vvztNvziA1w3Z/3givY3MYwXUqd4HCwh/4OEuwoya79if4
-	 1DV84Ms0zk94F/TcpDsnjOMgiw5V35bwlWCIEhTwbc4yPtA2pUXvD1KDI92ug28E3v
-	 /Nu2Mjyj7uuokyu1kw5giCAlRyKQM9qz4cszR6BhJrGCQCGW9eFxDrZ+YlshtyfrDe
-	 woDv0ZbVHn0qg==
-Message-ID: <8f3cc030-e3cb-4758-8114-7364ce47481a@kernel.org>
-Date: Tue, 7 May 2024 08:35:40 +0200
+	dkim=pass (2048-bit key) header.d=kl.wtf header.i=@kl.wtf header.b="k+DjRtDY"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kl.wtf; s=key1;
+	t=1715063849;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=pocBmO/840pe2OoT/2yDl6Dta7ieL6aZ6dhZo77iND0=;
+	b=k+DjRtDYA/jxT5T84+YLgGNomCyAJER0aS+QtFD2OwSHw7f2yk5KPqLoUyrSyCCMjBaz8v
+	/HM3KGnZzDa4oDnKi3S5sLivlhfCi1SKWA8JcH6mWUa+rejjye0S9tKYop1GxIXWZFCIoF
+	loLggRgQ+0/q0elF+DCFIacp9dwMcTp/C+fOfezhTOPUMQ3XorYzFD7USR7KRq5fI6SL+m
+	57WyvStiz+BZX1mxy8MS8KLroR1UvedxgXyXtyuhGMfwnj9Ck4ZvL5uFrKcMjXCCS1iAs3
+	L5JNsw+PbRlNX+qNBrnrxbNkjRTJ2q4aY0W+NWZv7lqMVZd5787b5qPqltI91w==
+From: Kenny Levinsen <kl@kl.wtf>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kenny Levinsen <kl@kl.wtf>
+Subject: [PATCH] HID: i2c-hid: Remove unused label in i2c_hid_set_power
+Date: Tue,  7 May 2024 08:36:56 +0200
+Message-ID: <20240507063656.2892-1-kl@kl.wtf>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 05/11] i2c: core: Avoid config node enumeration
-To: Krishna Yarlagadda <kyarlagadda@nvidia.com>, linux-tegra@vger.kernel.org,
- devicetree@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-mmc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, corbet@lwn.net,
- andi.shyti@kernel.org, wsa+renesas@sang-engineering.com,
- ulf.hansson@linaro.org, adrian.hunter@intel.com, digetx@gmail.com,
- ldewangan@nvidia.com, mkumard@nvidia.com
-References: <20240506225139.57647-1-kyarlagadda@nvidia.com>
- <20240506225139.57647-6-kyarlagadda@nvidia.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240506225139.57647-6-kyarlagadda@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 07/05/2024 00:51, Krishna Yarlagadda wrote:
-> Add "config" as a common node to add device configuration settings and
-> other data. This child node should not be treated as a device.
-> Skip "config" child node during i2c device registration.
-> 
-> Signed-off-by: Krishna Yarlagadda <kyarlagadda@nvidia.com>
-> ---
->  drivers/i2c/i2c-core-of.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/i2c/i2c-core-of.c b/drivers/i2c/i2c-core-of.c
-> index a6c407d36800..f50206c6c4d6 100644
-> --- a/drivers/i2c/i2c-core-of.c
-> +++ b/drivers/i2c/i2c-core-of.c
-> @@ -98,6 +98,9 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->  		bus = of_node_get(adap->dev.of_node);
->  
->  	for_each_available_child_of_node(bus, node) {
-> +		if (!strcmp(node->name, "config"))
-> +			continue;
+This label was left behind when the wake-up logic was moved from
+i2c_hid_set_power to i2c_hid_probe_address. Clean it up as it causes
+warnings-as-errors builds to fail.
 
-NAK
+Fixes: bb1033c8a3ea ("HID: i2c-hid: Use address probe to wake on resume")
+Signed-off-by: Kenny Levinsen <kl@kl.wtf>
+---
+ drivers/hid/i2c-hid/i2c-hid-core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-All children are devices (they have unit addresses). Do not introduce
-some another, parallel addressing.
-
-Best regards,
-Krzysztof
+diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
+index 3e3885ae6ce2..632eaf9e11a6 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-core.c
++++ b/drivers/hid/i2c-hid/i2c-hid-core.c
+@@ -407,8 +407,6 @@ static int i2c_hid_set_power(struct i2c_hid *ihid, int power_state)
+ 		dev_err(&ihid->client->dev,
+ 			"failed to change power setting.\n");
+ 
+-set_pwr_exit:
+-
+ 	/*
+ 	 * The HID over I2C specification states that if a DEVICE needs time
+ 	 * after the PWR_ON request, it should utilise CLOCK stretching.
+-- 
+2.45.0
 
