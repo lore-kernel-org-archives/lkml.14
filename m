@@ -1,177 +1,175 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F081C161313
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:34:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FA8161331
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:35:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715096070; cv=none; b=WFvbfwfSxoQ+za2AKVxkDI+/bhIEUB5UYhACzewpVoRD3CEFNCcccXdL6JBPTUJr0Yso0+RCe4KNHLPwGn74FPHV1K3gmbSSscyJX1vKzaBGFsOImhf+v4HtaqFg51qqFKrbhKO9APAxDxcEephNy95SCswo4bYgwdFm0X3Rn/E=
+	t=1715096130; cv=none; b=B2hwRx25D9X/6pFD7Ygsguokp+UkcsProsfGGI+9O8OAUYQLSIleylLCyXIEmE4cRlJnJxofey8FsQ4eUilUKuztjieGDBe5HxvXnz9U3vGJwzPOiMRW1q5dbx0lCHIZ6ARCQYeeWu2C7egJ5lpFASyu1x3Iy6CLZsB94rjziR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715096070; c=relaxed/simple;
-	bh=tu+2KsqH6Kw2kSlfjdVYv3BxFYp5x00TFFNEkPzGHcg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ITYvM14l/4ufMUh0L+8FSnXENVvh+b7raXz80ozFMMjQQ625mEfAvcoSof+rCa0eCYeEZc91a6x9z9z/DnT6pG6Kz/S9MprbM7BxUpCAqUG8A0C7W629Bj5zKwd1Lc7SDFljIsS7tRZNV48XSIN2Tad1DmKFtvg4TPCCDPNxgWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gW00Oyc8; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715096130; c=relaxed/simple;
+	bh=AHmd40tFLpuB76nYEEXIiv7NLdIIAMsC68vMChwHn6I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uPgJzNZN4ziZDD/4FNfQPjHU48G56CjwMjtU7O73FmcmLeJJmSJheFBBN26kA/vUzJknwvXjLGJuLa+6yXe1j5XaYUXfjVCL2kntrReUPjWQZMOJdmaN4j3QjNYkwpcHdPWwakOHwhG+gjPtoIsbTffeAEJZ5M3SuEG+cJCxa10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=i+sZlqOc; arc=none smtp.client-ip=209.85.166.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gW00Oyc8"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51fb14816f6so4112297e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:34:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="i+sZlqOc"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-7ded01aa1d2so158264239f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:35:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715096067; x=1715700867; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=BHoEecY35FMnmlhyVpSrsI+xWHMu8Vy09k8sd+/BChg=;
-        b=gW00Oyc8fLfPJID4YqM9e720ru5kWxlyfA1OnHKru9Y74tCJNW0bi7hzQy0U2ENcbZ
-         u8XaWeOgdfrnO72cKVQxcdPtEyAHNldFYd3Ibb3v73tQhEqqdGx9RuYhzUVLqQdw8SR+
-         aLrDYqrsLx2znhsjK+xdx5ibbH2sKV7FrGXixPd2RX6S3ela5RKS5hinnj16Z5yefmo0
-         LpYKUNhh9F/u8kUhtRbFhQ+6h4h1x8TOHG6Qb4ApUYfmk/LGdA95UcWNoHLdw3yuqMYk
-         Ln9c5fQL08E9tGJmONl076FUUVmfyF2pE9dhrSCIeGEEwKXqhPRCSBW62mD2cgMtcmMi
-         7XZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715096067; x=1715700867;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+        d=sifive.com; s=google; t=1715096128; x=1715700928; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BHoEecY35FMnmlhyVpSrsI+xWHMu8Vy09k8sd+/BChg=;
-        b=U/TBuRYrVrMMf5ojkG/Pp2wdwi0peeoyGeZQe+0kehmgxZ7VOBXvic0pZ95rNE8/ju
-         YJ8gHs3nuQuBR6mMYcWfNVg/P1I/XgF6xHOgBEL/+G0Cd6Zdo7+QK1TRS5rtmy53GHex
-         eCKv9vqnvlBABt3U9iYJNheNpDkOzuPDb16xwNNP4fiVurG/X34T1Q9xU9pcuzu7bWxR
-         Wy2Eb5uvkEOZmFFzTZukXK2bx+n5+bhX2NCBSGBiMkYCONZ7nTDp9UAAwZAdxERcUFu+
-         n6VTtLbvxr6mQUsEBHS57Aun/35qdeGkD2pyBJhdep1OwUqcNaI22tWq1CBUytIMnadG
-         GsXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZjsZqc635ag2J2/9Nhm+ahNeTlr46aGQ2NQoF0EGfsGDpueG/YHg/FSu9gEfg9IDY8G3SgilR8H691Bw7FgEgyP1ZBDntRldR0pms
-X-Gm-Message-State: AOJu0YyUG2/W/DVr+uPCtoStRULJkalpF0in5HSP1ffjW2M3MecD9XUq
-	ctqYDQhgllwpfYahQGt6XY4osjxnMeu2EyS9HZegxzOzTVjira3JAuI9MSBLNpk=
-X-Google-Smtp-Source: AGHT+IEhWswRvXH88vuHJvUkIcH5ToHsgKLLHbQdBcNKmFn28UP+tHurJV3VIwnR15xNbDtbkI+YCg==
-X-Received: by 2002:a19:ac49:0:b0:51d:97e8:b780 with SMTP id r9-20020a19ac49000000b0051d97e8b780mr8499462lfc.44.1715096067213;
-        Tue, 07 May 2024 08:34:27 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id n4-20020aa7d044000000b005720e083878sm6440132edo.49.2024.05.07.08.34.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 May 2024 08:34:26 -0700 (PDT)
-Message-ID: <fd0228f2-2f41-4194-b804-7a90ea3a6091@linaro.org>
-Date: Tue, 7 May 2024 17:34:24 +0200
+        bh=7fZeIxGU7jDZbp8MIAMXuP3cI2fycrTuvDnx0IrbFAQ=;
+        b=i+sZlqOc3MkQmSognxggc5n17dDM4kHVWLwrl1hJW7/VpWZUXis/QTIMbVa7zVQvSc
+         Ka1xONl22MN2IIhvXLtnxAvobi2+uxT/REqLkBV0Wr93utOiXNQcqfKd+/IDqBtgI3yL
+         2eDEGin73/3hYX/nLXGGUwsY85plpOGNAm01Nx8rcqTy2pXYAPCyQ4H6/ZV9KZ1N0poK
+         2/V1WZkkAf0rezJL0xSXtIu197XmMqBVrOWn1Z3k4nbbhOGMzLtPehPIEC9O8I24rE6D
+         LS1BDMw9+AzS3leaI8HS1GNO+9zUNq49wBbFkhUTu2yr/MqP7wOFg7ImLSNTC8bp6mhl
+         ajiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715096128; x=1715700928;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7fZeIxGU7jDZbp8MIAMXuP3cI2fycrTuvDnx0IrbFAQ=;
+        b=uicJ8aCATtHfaHnxPy4G2s3FqTXeZj0fJnUyCR2+mXNCXEqlEpNp6CHHVoy3Q32YRK
+         fCcjZkgyy0WKnghAEwcUYjj4oOJVTcBRhyx2w/eKhhOs3QeCRfe6fi6MlIKjOiZNXEtp
+         tkufS2ulD0ODf1h5/rTFHtKwS2LFSYRWg4vN+dSHOhiAipYn1frZ9j60mO4dDTscD5+f
+         ido+cVeFQO1AI3vcdL+RXp5lVcFn1gXv1WvG9zLpXM7stFjWhR6j42730CkEBMi0rzY9
+         O14jehBcnmSDOGSfap+tW1+zy294lXgi0w/LJ2QD6E9Aq7mY/lks5cergwqPdGhmuYeQ
+         iqng==
+X-Forwarded-Encrypted: i=1; AJvYcCUlnCMaah8nGq5LVrcPI0CalyNaQlnm3rggh1ubZi3q99/M4w6OBRJ+R+XkW0bfF564YOUx1un8nHKh43dIu3ojqapqCBINnOeIjkpn
+X-Gm-Message-State: AOJu0YxERYXBMlvPGfanrVMCjAacQHGMISKT1p0A7t8CneBkzV6usiLT
+	01TcdVswn1QOI4/lu7fpYZPmWwPZSDrsreXfF+ozAQPTDV2WbcYchr9fTcZBR74DvwJ1boqcJcn
+	Bv/dBjTjaIpVK06ABsgSLI6dmzhxAWNO1/5L04A==
+X-Google-Smtp-Source: AGHT+IHqhr+YVZAu1ZOtkTbNqavDX8MQUCsFnE/WXIvw3MsduOLxL3dNlYhKHRcJc+TT/v2hNtcpr3nZKzMPIQcSz3I=
+X-Received: by 2002:a05:6602:6d12:b0:7e1:7a0b:3091 with SMTP id
+ im18-20020a0566026d1200b007e17a0b3091mr5247906iob.15.1715096127791; Tue, 07
+ May 2024 08:35:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 01/11] dt-bindings: clock: mobileye,eyeq5-clk: drop
- bindings
-To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Linus Walleij <linus.walleij@linaro.org>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Lee Jones <lee@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org,
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
- Gregory CLEMENT <gregory.clement@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-References: <20240503-mbly-olb-v2-0-95ce5a1e18fe@bootlin.com>
- <20240503-mbly-olb-v2-1-95ce5a1e18fe@bootlin.com>
- <ee278102-f4b8-4ca0-879e-f83cd54efbd0@linaro.org>
- <13ed1865-d702-47b6-b186-d5f060103280@linaro.org>
- <D13I8TFIF77X.2EFWZ14LM2H6N@bootlin.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <D13I8TFIF77X.2EFWZ14LM2H6N@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240507142600.23844-1-zong.li@sifive.com> <20240507142600.23844-7-zong.li@sifive.com>
+ <20240507150829.GJ901876@ziepe.ca>
+In-Reply-To: <20240507150829.GJ901876@ziepe.ca>
+From: Zong Li <zong.li@sifive.com>
+Date: Tue, 7 May 2024 23:35:16 +0800
+Message-ID: <CANXhq0rnWUT4ia-cUoTbSyEQUeCcmC9bC7HHru6Se-1K-PZRDQ@mail.gmail.com>
+Subject: Re: [PATCH RFC RESEND 6/6] iommu/riscv: support nested iommu for
+ flushing cache
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
+	tjeznach@rivosinc.com, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, kevin.tian@intel.com, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 07/05/2024 17:07, Théo Lebrun wrote:
-> Hello,
-> 
-> On Fri May 3, 2024 at 6:05 PM CEST, Krzysztof Kozlowski wrote:
->> On 03/05/2024 17:57, Krzysztof Kozlowski wrote:
->>> On 03/05/2024 16:20, Théo Lebrun wrote:
->>>> Switch from sub-nodes in system-controller for each functionality to a
->>>> single node representing the entire OLB instance. dt-bindings is
->>>> unnecessary and soc/mobileye/mobileye,eyeq5-olb.yaml will inherit all
->>>> properties.
->>>
->>> Why changing this? You just added these bindings not so long time ago...
->>> This is very confusing to push bindings and then immediately ask to
->>> remove them.
-> 
-> See this revision as a proposal of something that has been asked
-> multiple times in previous reviews. See message from Stephen Boyd on
+On Tue, May 7, 2024 at 11:08=E2=80=AFPM Jason Gunthorpe <jgg@ziepe.ca> wrot=
+e:
+>
+> On Tue, May 07, 2024 at 10:26:00PM +0800, Zong Li wrote:
+> > This patch implements cache_invalidate_user operation for the userspace
+> > to flush the hardware caches for a nested domain through iommufd.
+> >
+> > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > ---
+> >  drivers/iommu/riscv/iommu.c  | 91 ++++++++++++++++++++++++++++++++++++
+> >  include/uapi/linux/iommufd.h |  9 ++++
+> >  2 files changed, 100 insertions(+)
+> >
+> > diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
+> > index 7eda850df475..4dd58fe2242d 100644
+> > --- a/drivers/iommu/riscv/iommu.c
+> > +++ b/drivers/iommu/riscv/iommu.c
+> > @@ -1522,9 +1522,100 @@ static void riscv_iommu_domain_free_nested(stru=
+ct iommu_domain *domain)
+> >       kfree(riscv_domain);
+> >  }
+> >
+> > +static int riscv_iommu_fix_user_cmd(struct riscv_iommu_command *cmd,
+> > +                                 unsigned int pscid, unsigned int gsci=
+d)
+> > +{
+> > +     u32 opcode =3D FIELD_GET(RISCV_IOMMU_CMD_OPCODE, cmd->dword0);
+> > +
+> > +     switch (opcode) {
+> > +     case RISCV_IOMMU_CMD_IOTINVAL_OPCODE:
+> > +             u32 func =3D FIELD_GET(RISCV_IOMMU_CMD_FUNC, cmd->dword0)=
+;
+> > +
+> > +             if (func !=3D RISCV_IOMMU_CMD_IOTINVAL_FUNC_GVMA &&
+> > +                 func !=3D RISCV_IOMMU_CMD_IOTINVAL_FUNC_VMA) {
+> > +                     pr_warn("The IOTINVAL function: 0x%x is not suppo=
+rted\n",
+> > +                             func);
+> > +                     return -EOPNOTSUPP;
+> > +             }
+> > +
+> > +             if (func =3D=3D RISCV_IOMMU_CMD_IOTINVAL_FUNC_GVMA) {
+> > +                     cmd->dword0 &=3D ~RISCV_IOMMU_CMD_FUNC;
+> > +                     cmd->dword0 |=3D FIELD_PREP(RISCV_IOMMU_CMD_FUNC,
+> > +                                               RISCV_IOMMU_CMD_IOTINVA=
+L_FUNC_VMA);
+> > +             }
+> > +
+> > +             cmd->dword0 &=3D ~(RISCV_IOMMU_CMD_IOTINVAL_PSCID |
+> > +                              RISCV_IOMMU_CMD_IOTINVAL_GSCID);
+> > +             riscv_iommu_cmd_inval_set_pscid(cmd, pscid);
+> > +             riscv_iommu_cmd_inval_set_gscid(cmd, gscid);
+> > +             break;
+> > +     case RISCV_IOMMU_CMD_IODIR_OPCODE:
+> > +             /*
+> > +              * Ensure the device ID is right. We expect that VMM has
+> > +              * transferred the device ID to host's from guest's.
+> > +              */
+> > +             break;
+> > +     default:
+> > +             pr_warn("The user command: 0x%x is not supported\n", opco=
+de);
+> > +             return -EOPNOTSUPP;
+>
+> No userspace triggerable warnings.
 
-That's driver, we talk about bindings.
+I don't complete understand about this. Could I know whether we should
+suppress the message and return the error directly, or if we should
+convert the warning to an error (i.e. pr_err)?
 
-> last revision [0], or discussion with Rob Herring on much earlier
-> revision [1].
-> 
-> Proposal from Stephen Boyd of using auxiliary devices makes sense, that
-> could be the future direction of this series. It won't change the
-> dt-bindings aspect of it, only the driver implementations.
-> 
-> [0]: https://lore.kernel.org/lkml/daa732cb31d947c308513b535930c729.sboyd@kernel.org/
-> [1]: https://lore.kernel.org/lkml/20240124151405.GA930997-robh@kernel.org/
+>
+> > +static int riscv_iommu_cache_invalidate_user(struct iommu_domain *doma=
+in,
+> > +                                          struct iommu_user_data_array=
+ *array)
+> > +{
+> > +     struct riscv_iommu_domain *riscv_domain =3D iommu_domain_to_riscv=
+(domain);
+> > +     struct riscv_iommu_device *iommu;
+> > +     struct riscv_iommu_bond *bond;
+> > +     struct riscv_iommu_command cmd;
+> > +     struct iommu_hwpt_riscv_iommu_invalidate inv_info;
+> > +     int ret, index;
+> > +
+> > +     if (!riscv_domain)
+> > +             return -EINVAL;
+> > +
+> > +     /* Assume attached devices in the domain go through the same IOMM=
+U device */
+>
+> No, you can't assume that.
 
-So after Robs comment above, you still pushed the wrong approach and now
-you revert it?
+Do you think that it makes sense to add a riscv_iommu_device structure
+in riscv_iommu_domain? Or we might need to add some data structure to
+build the mapping of the riscv_iommu_device and riscv_iommu_domain,
+then we can get the corresponding riscv_iommu_device by
+riscv_iommu_domain?
+Thanks
 
-Why v7 was sent ignoring Rob's comments:
-https://lore.kernel.org/all/20240221-mbly-clk-v7-3-31d4ce3630c3@bootlin.com/
-
-Best regards,
-Krzysztof
-
+>
+> Jason
