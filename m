@@ -1,60 +1,60 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F411FA5
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 01:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7C54C90
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 01:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715046164; cv=none; b=eXCU7Ysgrkae6m1+4hBEPV8GmNLz8TPFt+Ta3IMap9y65wK7tbp5IsbzHUhESt+RsHRfreCr+2p9IAvejIJyTGzHpjcNM4u1JIKBBAt8HRqA6WGuiLtMUhtAcd4/kZssFjbpad6ZlHtHxvmzmGrmYKpmNS8kFLNegXzMYWWu/+0=
+	t=1715046166; cv=none; b=uL2R7ifpx2cp6zTE40VpMtPFGCUpU/0TRnh9Jn7aMc4kXScBYXfS6WYqSinx4+XBNTHrf6BH1NGwatL0a6FPi5SQlPjB+f6cpA3cZN9uOrH0yyqnDm1EpUcZXe2a/BWOveZGIoaFdXY6bLdnrmVn2wOnNGOvc1ZlpVT6yDwGCpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715046164; c=relaxed/simple;
-	bh=9E+2LlRyJf3rtGlOBhbopLxrTNkU6Xw7Fp6ra7sa6aw=;
+	s=arc-20240116; t=1715046166; c=relaxed/simple;
+	bh=qAYZSJKQfo6KGBAG143+WCG6TYn1nYEXzCXt3LEyG3U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ADMGa2LyzSlZffBSDH6JDqDm8Be/leDqQEnJ6HvFhQOYo8LoPqYU4nf3glLKodadX53psERPkYLZZxuzqtpUeYB3txyV45FFLFnSWaz4M0yMFU9DDBInvFNCEW8Dl6dTlgJOFAsHCA1efTVLhDTOWwaUTgDwdHQ7SmyXy35dVFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=AqsfXfDD; arc=none smtp.client-ip=209.85.214.177
+	 In-Reply-To:To:Cc; b=XbNS2+xk8goL+KTUnAA/HBgepE4KnKoUr/h+ob9X8GEGiPBzwZ+X9mS0mrEJfdN9SqPB2/lcBOaXB1n0UwmDmSMCDni766Pedf2L8ObHileNcPL+82NXCHZCHpyV9jjrS0rQZ+EHhbVVLJAAjaH3n+9DkNKYN+w/XhzPkOTWEAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=OYvD8wYI; arc=none smtp.client-ip=209.85.216.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="AqsfXfDD"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1eb0e08bfd2so13745545ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 18:42:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="OYvD8wYI"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2b38f2e95aeso3374565a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 18:42:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715046161; x=1715650961; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715046164; x=1715650964; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=gF8qGaJ1aJzNvgYvOCba3skq1TjRznxQuNnEFWLH5Zw=;
-        b=AqsfXfDDK9WPrMiVC6+4wMpa3i1anGD+aQNxnOnIbwYQObZfCtkyFGc90p3swn7OFa
-         zZKNI2vFMlQ5kONb6tMOGponqyh5fdKcXeJ6d3F9mf/P//Ulvj11gOerKFrUWrLpmz1v
-         wuoJqyw8mkatzE1mqhX1h5yDkDgikxm+Twu+mLs6dpL6a2wpEH4tkpUavAxPb7KB2xCc
-         +KXXma02yedNtYzgg5b/XyMaieLQWI0cPHni/2bEWKIEDdaDxZ4IN7HFZ1hzomUAhlMW
-         UBAO7f/XxwitNJXVB79vfwWKePDQW6wIHtDwdMnHwC5aRaVEJvOCPGdcRQMR0yxLkVb2
-         HaHw==
+        bh=WABN/DyVMubZMdulfTheMLTH5TZr96UUGzB/KSHHr2M=;
+        b=OYvD8wYILN6CuiCiuR1ahcg+mBVJQtqwSJm8yE6pHiTQklxvrrght6xhF4bpaEq4Nd
+         1aUDrw9iY+7TI5SYBCoX0UQYfs+AE8ecpBom0Fe3f/dqYR51kF+Ih53o3F0VNtE0LXIV
+         JzTiqioqwSiiKrFfs4QtQwh4x4+pAiJiLyNv1i4nNcxjCORGyVNhU9JtD3NOJs88S4gH
+         1nFWQYuyeGl6R1Q/PqGzmVBlSIs6rLzk6l4HKC6a1NmDf9Qa5MhDQiWoqhilwNZO20aU
+         CIOOQ2rS9/1l+KDZfXojQ9UDgVoBBYfZKPcw712KVASbeL/72p1HR7CrVSl7AEVsJzM7
+         lCGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715046161; x=1715650961;
+        d=1e100.net; s=20230601; t=1715046164; x=1715650964;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gF8qGaJ1aJzNvgYvOCba3skq1TjRznxQuNnEFWLH5Zw=;
-        b=DObyN+ndLL4ba58c8VnnDXM1GGq08a9UIdKpHvUVivCDLHwfP+l80MF+TUMKzMgU0g
-         9m0O/Q5W9H31zvVMIv2Zgk5mnwTEe6SVHbEkkuWT4KYtCeHiSyspdLRFlO0rozcJTKiE
-         ff+E3bzPDQ65KyFdqoxeE9P1c7kTMwhYfPsTYAXTq3lDYPaAKda6xOHLA/ainpkfUBY8
-         JHXszUA3MObPAuWLGis9+zluUmpiObcAeKGW1RRV7+Pb55Fv2xogn5yn8ucIr3/AGOEI
-         CkHAa4vs4wT/BUFEKk5E21+JmMf70Ue6M6GoGlFqAj0Dv03xuAPIJQ99uQtZiOGR0ZvU
-         iHaA==
-X-Forwarded-Encrypted: i=1; AJvYcCX1wi17ARbxlTJwiCf63GeDimBTfxsatG7VeCc7d3Bb2jsqNngD/CcE9G35kVpG9UEXxtCt8rTnKnJxT1GdI9+MM5BkmY4DAH0joMZB
-X-Gm-Message-State: AOJu0YwaHb6//5j1XSrP8ipfmN3VWLRe20sMxxdkmBVVECxrl0FEL1H8
-	+atgEOoV7Fe0Q2R2UKa8Ep+/QLSXTaRkcDhkpkoxfNW//0UnmUEWOs3txN2L9wU=
-X-Google-Smtp-Source: AGHT+IGpzHifmpGiAxjTcocbBFK+V7WiJThQ/SJeU/Miqz5kdTjCFTH4LwBRLMK2doOE8zu4aQNSJA==
-X-Received: by 2002:a17:90b:350e:b0:2b2:7855:da05 with SMTP id ls14-20020a17090b350e00b002b27855da05mr10460825pjb.26.1715046161112;
-        Mon, 06 May 2024 18:42:41 -0700 (PDT)
+        bh=WABN/DyVMubZMdulfTheMLTH5TZr96UUGzB/KSHHr2M=;
+        b=tP8gttZBKXo4hlzylv/8nhVdyQALNBFWpd1U1N0sBR4f8S82JJUHKXJ9fuTCglK45n
+         wfF6HkZ1VMP2V+VSW7J3k0YqYLWB49Di+INm/1AneaEzgGjl9F45K59pY7KwrCJr6opw
+         NSqRF6M1u7ap4LkHoDwcRoUFxeRqLoRMSgpKJFfg/QzdEPNIUFTwO0nJ947H8KrkFJ0D
+         BF4KbucpEY8b11RffGp6h/4HqqBUcvNtyZ6GhYSbQsIlKoyDbWN13x05PaI2kEEz7SlS
+         7dFSpPW9CwuktHwXyfS6nfLC3QfeUstLBwBFhO2WvGSgEnfVKbYfh02A+f/Wy12E/agh
+         L3xg==
+X-Forwarded-Encrypted: i=1; AJvYcCVtHAouzdIp1XprSehJnMFDpcz4j97BeoEA7HYI9aA/dYmxqaLYuxUmGxmW6sXlTLoQfvk/pNpnvx5s7ykCSGyUmklNiBHuzOqMkEPe
+X-Gm-Message-State: AOJu0YxbLuIiqWuA2pcO+TZI22E3lSpGHsHsYpqZFaPGOYnO7gwyddY5
+	UgK9ytqyuUsmqWUELGYGKwdht/0GhFH96wQae7sc7zrlRhbxUpWIxuSvo7CkGQs=
+X-Google-Smtp-Source: AGHT+IFZ1scUzbuEqN66Ol90xyUVgNHeMyyZi+HIv5KQYsgIR1rnTKs0egQjffSyS6hOuZPi2utSfQ==
+X-Received: by 2002:a17:90b:94f:b0:2b0:9544:59e7 with SMTP id 98e67ed59e1d1-2b5bc2c9156mr1704507a91.23.1715046164132;
+        Mon, 06 May 2024 18:42:44 -0700 (PDT)
 Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id q8-20020a170902dac800b001eb3f705ddasm8915311plx.255.2024.05.06.18.42.39
+        by smtp.gmail.com with ESMTPSA id q8-20020a170902dac800b001eb3f705ddasm8915311plx.255.2024.05.06.18.42.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 18:42:40 -0700 (PDT)
+        Mon, 06 May 2024 18:42:43 -0700 (PDT)
 From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Mon, 06 May 2024 18:40:42 -0700
-Subject: [PATCH 1/8] riscv: Add PLATFORM_MAY_SUPPORT_RISCV_ISA_C Kconfig
+Date: Mon, 06 May 2024 18:40:44 -0700
+Subject: [PATCH 3/8] riscv: Add PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT Kconfig
  option
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240506-compile_kernel_with_extensions-v1-1-5c25c134c097@rivosinc.com>
+Message-Id: <20240506-compile_kernel_with_extensions-v1-3-5c25c134c097@rivosinc.com>
 References: <20240506-compile_kernel_with_extensions-v1-0-5c25c134c097@rivosinc.com>
 In-Reply-To: <20240506-compile_kernel_with_extensions-v1-0-5c25c134c097@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -76,176 +76,133 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
  Charlie Jenkins <charlie@rivosinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715046158; l=5775;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715046158; l=4952;
  i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=9E+2LlRyJf3rtGlOBhbopLxrTNkU6Xw7Fp6ra7sa6aw=;
- b=k/qKiLIMvmJ90rd1YTXngnEJRwKO8kGBQZf+APAC5CZ1sloS8A25+YytARmKTTvmNP+IkLjri
- cazABYZHlYsDSt+hvd03k1xMjto5tOexlRaM5aKXwgjWVr3MEZAkbVA
+ bh=qAYZSJKQfo6KGBAG143+WCG6TYn1nYEXzCXt3LEyG3U=;
+ b=AvAZPB6bKKxnhol7r99rPIU1Pp2DEmoyg2c6T9E0ATto3yAcQP2LL90sm7dlTt4exCfuHixAo
+ ntqpY+6BJPTD2LRKfeuz9WcTRYfwxclkgO17m1GznmGptTENuDnO/53
 X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
  pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-Introduce a "Kernel ISA" menu and migrate the compressed instruction
-support options into a new file Kconfig.isa. Add a new option
-"PLATFORM_MAY_SUPPORT_RISCV_ISA_C" that can be used to conditionally
-emit C extensions if the hardware supports it.
+The previously supported config RISCV_ISA_SVNAPOT has been renamed to
+PLATFORM_MAY_SUPPORT_RISCV_ISA_SVNAPOT and the config
+PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT has been introduced to compile a
+kernel that will use svnapot by default. Both of these configs select a
+hidden CONFIG_RISCV_ISA_SVNAPOT that can be used to determin if SVNAPOT
+is allowed to be used.
 
 Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- arch/riscv/Kconfig                 | 19 +++++++-----------
- arch/riscv/Kconfig.isa             | 41 ++++++++++++++++++++++++++++++++++++++
- arch/riscv/Makefile                |  4 ++--
- arch/riscv/kernel/probes/uprobes.c |  2 +-
- arch/riscv/net/bpf_jit.h           |  4 +++-
- 5 files changed, 54 insertions(+), 16 deletions(-)
+ arch/riscv/Kconfig               | 21 +------------------
+ arch/riscv/Kconfig.isa           | 44 ++++++++++++++++++++++++++++++++++++++++
+ arch/riscv/include/asm/pgtable.h |  3 ++-
+ 3 files changed, 47 insertions(+), 21 deletions(-)
 
 diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index c8bdfd33abf4..c2a4f5364707 100644
+index c2e9eded0a7d..9c3a4347953b 100644
 --- a/arch/riscv/Kconfig
 +++ b/arch/riscv/Kconfig
-@@ -369,6 +369,12 @@ config ARCH_RV64I
- 
- endchoice
- 
-+menu "Kernel ISA"
-+
-+source "arch/riscv/Kconfig.isa"
-+
-+endmenu
-+
- # We must be able to map all physical memory into the kernel, but the compiler
- # is still a bit more efficient when generating code if it's setup in a manner
- # such that it can only map 2GiB of memory.
-@@ -478,17 +484,6 @@ config RISCV_ALTERNATIVE_EARLY
+@@ -63,7 +63,7 @@ config RISCV
+ 	select ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH if SMP && MMU
+ 	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT if MMU
+ 	select ARCH_WANT_FRAME_POINTERS
+-	select ARCH_WANT_GENERAL_HUGETLB if !RISCV_ISA_SVNAPOT
++	select ARCH_WANT_GENERAL_HUGETLB if !PLATFORM_MAY_SUPPORT_RISCV_ISA_SVNAPOT
+ 	select ARCH_WANT_HUGE_PMD_SHARE if 64BIT
+ 	select ARCH_WANT_LD_ORPHAN_WARN if !XIP_KERNEL
+ 	select ARCH_WANT_OPTIMIZE_HUGETLB_VMEMMAP
+@@ -484,25 +484,6 @@ config RISCV_ALTERNATIVE_EARLY
  	help
  	  Allows early patching of the kernel for special errata
  
--config RISCV_ISA_C
--	bool "Emit compressed instructions when building Linux"
+-config RISCV_ISA_SVNAPOT
+-	bool "Svnapot extension support for supervisor mode NAPOT pages"
+-	depends on 64BIT && MMU
+-	depends on RISCV_ALTERNATIVE
 -	default y
 -	help
--	  Adds "C" to the ISA subsets that the toolchain is allowed to emit
--	  when building Linux, which results in compressed instructions in the
--	  Linux binary. This option produces a kernel that will not run on
--	  systems that do not support compressed instructions.
+-	  Add support for the Svnapot ISA-extension in the kernel when it
+-	  is detected at boot.
+-
+-	  The Svnapot extension is used to mark contiguous PTEs as a range
+-	  of contiguous virtual-to-physical translations for a naturally
+-	  aligned power-of-2 (NAPOT) granularity larger than the base 4KB page
+-	  size. When HUGETLBFS is also selected this option unconditionally
+-	  allocates some memory for each NAPOT page size supported by the kernel.
+-	  When optimizing for low memory consumption and for platforms without
+-	  the Svnapot extension, it may be better to say N here.
 -
 -	  If you don't know what to do here, say Y.
 -
- config RISCV_ISA_SVNAPOT
- 	bool "Svnapot extension support for supervisor mode NAPOT pages"
+ config RISCV_ISA_SVPBMT
+ 	bool "Svpbmt extension support for supervisor mode page-based memory types"
  	depends on 64BIT && MMU
-@@ -937,6 +932,7 @@ config EFI
- 	bool "UEFI runtime support"
- 	depends on OF && !XIP_KERNEL
- 	depends on MMU
-+	depends on PLATFORM_SUPPORTS_RISCV_ISA_C
- 	default y
- 	select ARCH_SUPPORTS_ACPI if 64BIT
- 	select EFI_GENERIC_STUB
-@@ -944,7 +940,6 @@ config EFI
- 	select EFI_RUNTIME_WRAPPERS
- 	select EFI_STUB
- 	select LIBFDT
--	select RISCV_ISA_C
- 	select UCS2_STRING
- 	help
- 	  This option provides support for runtime services provided
 diff --git a/arch/riscv/Kconfig.isa b/arch/riscv/Kconfig.isa
-new file mode 100644
-index 000000000000..08b7af5aabb0
---- /dev/null
+index 0663c98b5b17..37585bcd763e 100644
+--- a/arch/riscv/Kconfig.isa
 +++ b/arch/riscv/Kconfig.isa
-@@ -0,0 +1,41 @@
-+config RISCV_ISA_C
+@@ -124,3 +124,47 @@ config RISCV_ISA_V_PREEMPTIVE
+ 	  This config allows kernel to run SIMD without explicitly disable
+ 	  preemption. Enabling this config will result in higher memory
+ 	  consumption due to the allocation of per-task's kernel Vector context.
++
++config RISCV_ISA_SVNAPOT
 +	bool
 +
 +choice
-+	prompt "Compressed instruction support"
-+	default PLATFORM_SUPPORTS_RISCV_ISA_C
++	prompt "Svnapot extension support for supervisor mode NAPOT pages"
++	default PLATFORM_MAY_SUPPORT_RISCV_ISA_SVNAPOT
 +	help
-+	  This selects the level of support for compressed instructions to be
-+	  built into the Linux Kernel. This does not impact whether compressed
-+	  instructions are allowed to be emitted by user-space code.
++	  This selects the level of support for Svnapot in the Linux Kernel.
 +
-+config PROHIBIT_RISCV_ISA_C
-+	bool "Prohibit compressed instructions"
++	  The Svnapot extension is used to mark contiguous PTEs as a range
++	  of contiguous virtual-to-physical translations for a naturally
++	  aligned power-of-2 (NAPOT) granularity larger than the base 4KB page
++	  size. When HUGETLBFS is also selected this option unconditionally
++	  allocates some memory for each NAPOT page size supported by the kernel.
++	  When optimizing for low memory consumption and for platforms without
++	  the Svnapot extension, it may be better to prohibit Svnapot.
++
++config PROHIBIT_RISCV_ISA_SVNAPOT
++	bool "Prohibit Svnapot extension"
++	help
++	  Regardless of if the platform supports Svnapot, prohibit the kernel
++	  from using Svnapot.
++
++config PLATFORM_MAY_SUPPORT_RISCV_ISA_SVNAPOT
++	bool "Allow Svnapot extension if supported"
++	depends on 64BIT && MMU
++	depends on RISCV_ALTERNATIVE
++	select RISCV_ISA_SVNAPOT
++	help
++	  Add support for the Svnapot ISA-extension in the kernel when it
++	  is detected at boot.
++
++config PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT
++	bool "Emit Svnapot mappings when building Linux"
++	depends on 64BIT && MMU
 +	depends on NONPORTABLE
++	select RISCV_ISA_SVNAPOT
 +	help
-+	  Regardless of if the platform supports compressed instructions,
-+	  prohibit the kernel from emitting compressed instructions.
-+
-+config PLATFORM_MAY_SUPPORT_RISCV_ISA_C
-+	bool "Allow compressed instructions sequences if supported"
-+	depends on FPU
-+	depends on NONPORTABLE
-+	select RISCV_ISA_C
-+	help
-+          Only allow compressed instructions to be emitted if "C" is present in
-+          the device tree or ACPI table. No compressed instructions will be
-+          emitted if the platform does not support them.
-+
-+config PLATFORM_SUPPORTS_RISCV_ISA_C
-+	bool "Emit compressed instructions when building Linux"
-+	depends on FPU
-+	select RISCV_ISA_C
-+	help
-+	  Adds "C" to the ISA subsets that the toolchain is allowed to emit
-+	  when building Linux, which results in compressed instructions in the
-+	  Linux binary. This option produces a kernel that will not run on
-+	  systems that do not support compressed instructions.
-+
-+	  If you don't know what to do here, say Y.
++	  Compile a kernel that assumes that the platform supports Svnapot.
++	  This option produces a kernel that will not run on systems that do
++	  not support Svnapot.
 +
 +endchoice
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index 5b3115a19852..e1be36004097 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -14,7 +14,7 @@ endif
- ifeq ($(CONFIG_DYNAMIC_FTRACE),y)
- 	LDFLAGS_vmlinux += --no-relax
- 	KBUILD_CPPFLAGS += -DCC_USING_PATCHABLE_FUNCTION_ENTRY
--ifeq ($(CONFIG_RISCV_ISA_C),y)
-+ifeq ($(CONFIG_PLATFORM_SUPPORTS_RISCV_ISA_C),y)
- 	CC_FLAGS_FTRACE := -fpatchable-function-entry=4
- else
- 	CC_FLAGS_FTRACE := -fpatchable-function-entry=2
-@@ -65,7 +65,7 @@ endif
- riscv-march-$(CONFIG_ARCH_RV32I)	:= rv32ima
- riscv-march-$(CONFIG_ARCH_RV64I)	:= rv64ima
- riscv-march-$(CONFIG_FPU)		:= $(riscv-march-y)fd
--riscv-march-$(CONFIG_RISCV_ISA_C)	:= $(riscv-march-y)c
-+riscv-march-$(CONFIG_PLATFORM_SUPPORTS_RISCV_ISA_C)	:= $(riscv-march-y)c
- riscv-march-$(CONFIG_RISCV_ISA_V)	:= $(riscv-march-y)v
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 6afd6bb4882e..432be9691b78 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -289,7 +289,8 @@ static inline pte_t pud_pte(pud_t pud)
  
- ifdef CONFIG_TOOLCHAIN_NEEDS_OLD_ISA_SPEC
-diff --git a/arch/riscv/kernel/probes/uprobes.c b/arch/riscv/kernel/probes/uprobes.c
-index 4b3dc8beaf77..a468689a6f6d 100644
---- a/arch/riscv/kernel/probes/uprobes.c
-+++ b/arch/riscv/kernel/probes/uprobes.c
-@@ -11,7 +11,7 @@
- 
- bool is_swbp_insn(uprobe_opcode_t *insn)
+ static __always_inline bool has_svnapot(void)
  {
--#ifdef CONFIG_RISCV_ISA_C
-+#ifdef CONFIG_PLATFORM_SUPPORTS_RISCV_ISA_C
- 	return (*insn & 0xffff) == UPROBE_SWBP_INSN;
- #else
- 	return *insn == UPROBE_SWBP_INSN;
-diff --git a/arch/riscv/net/bpf_jit.h b/arch/riscv/net/bpf_jit.h
-index f4b6b3b9edda..259294bdbc3a 100644
---- a/arch/riscv/net/bpf_jit.h
-+++ b/arch/riscv/net/bpf_jit.h
-@@ -15,7 +15,9 @@
- 
- static inline bool rvc_enabled(void)
- {
--	return IS_ENABLED(CONFIG_RISCV_ISA_C);
-+	return IS_ENABLED(CONFIG_PLATFORM_SUPPORTS_RISCV_ISA_C) ||
-+		(IS_ENABLED(CONFIG_PLATFORM_MAY_SUPPORT_RISCV_ISA_C) &&
-+			riscv_has_extension_likely(RISCV_ISA_EXT_c));
+-	return riscv_has_extension_likely(RISCV_ISA_EXT_SVNAPOT);
++	return IS_ENABLED(CONFIG_PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT) ||
++	       riscv_has_extension_likely(RISCV_ISA_EXT_SVNAPOT);
  }
  
- static inline bool rvzbb_enabled(void)
+ static inline unsigned long pte_napot(pte_t pte)
 
 -- 
 2.44.0
