@@ -1,144 +1,112 @@
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2E8187353;
-	Tue,  7 May 2024 21:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230E46EB65;
+	Tue,  7 May 2024 21:07:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715115959; cv=none; b=XJCCbEzyphFQMWWh7Pny5VOAMEAS+xl7Xs6vA7fvN/tuJt5eACKANLjfHOGYtNwKvZpf1v96F46wY32LPtRgtuEJe3pN9JwhnL/A299nuBH8xQnZ4TYAyKuvtnqDB0zTaELnazZpgYqrRTe1Z9jXgn2cfmeGgq3y9fvqmkBhu3s=
+	t=1715116052; cv=none; b=iv6u9bdlNTN/SZCknEHf0Ivb3r6ROlxMAr62LybmJxbIztUGhJmbx8hPWiLq3yEZCmnDecH89L3qToe7ISzhPrnN8M9gSdJd2hpkGmcBz/iWxYI1vHjzRP5A6qc3TKc0WEcRjB7EsufaRL7+t7yRrL/fl5OIb5lv9iqOuUc36yk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715115959; c=relaxed/simple;
-	bh=eETH8qyLZaEqH0jAscPRS9ATGH9bfwR8HhG7OFw2pEw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iULKKoCpSjARI6az3xDQCyoNUnQRPmUUQdUmzXvh99Q731yHE6KCWRBsyDCXprliBhPdL+8Ts2UnozBsdPrtKuiealLYxpF7rKOvqDCSCIsGCkb9hZ5wbAgfbgz2JCiTTZrKMhCuvCS7xI3q3JhaRuX2fhtkZwZoMAYLHq6JXQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fkmyOVhS; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715116052; c=relaxed/simple;
+	bh=IruPKvmHK22rd3Atyzt9f//OhnIvVhMuPrqqtt9DPSA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bGzEPq/PiZgj3Sv60NPYL1o2a4VRHCeIs8woOlWCsZZJShqUOZ6WQ9jB864XAdG01ZIb3DbkReu0szKebOq5sqV4XKkB/6bAl3sfQtoWJEbEsCtn1YPLIqhSrkVEGRFzh0faEfwOpvFCEMdZeAhuA9XkEnj2lXuTOP85Pb58g0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRar/O50; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fkmyOVhS"
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2e22a1bed91so47999291fa.0;
-        Tue, 07 May 2024 14:05:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715115956; x=1715720756; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2ef/OTw1FTNHv7I5hPzJjnHJ7ssdwk8G3HA7pFWiHOs=;
-        b=fkmyOVhSpq30fxaVZF35CHYrIdhVf63/OzaOys7u8nGP/uva+8JtHlJqTMsK9xCg/A
-         VJgFeltcOczLES/TQdJoZlhdDIn+eb05NV2XqmEpnAeDucPzoqE1FVMPRDyZvPWeW6W/
-         dt20Qfz8/nORVQSivqR9nEsYVyGzHkuUPTkgJwqXSTi5trS8TzaUyKn+xDQ2eOqf61SN
-         1Z1asqXbUpC5obCvrLVVxkP16JQdvALaIEPRK0OIdJZTcQi9ocb2oxZ913F5TVDF2DT5
-         7TDvM2evGc0QCKUKvK5nJhJr71srsg5N8GUIITxXI9UpSRMc/UvV8etwXfQE48LB797A
-         5XWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715115956; x=1715720756;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2ef/OTw1FTNHv7I5hPzJjnHJ7ssdwk8G3HA7pFWiHOs=;
-        b=r2OWQIm7bCy3LOF+KxyXNZPCdXNcYOhUheQogYyClUvQYK6T0QifwrgrAm6mdjFQpb
-         +ZPHSr+FC+bysW8BK1ltwp3UzWwEJJc2+r8iu9QPmFT43EmlFqWjpjPMyunsU4GvlsOp
-         TF9bBETXCgxDrSMfNtYt2M7E+1V6H9jsBAWlStybwT6eukgyJVUyxKrzUDe5IpppzYLz
-         bFqVadozXk5mCoP6H9MWJ0Qdo48mjF9GPFWBJDZVvuOQuLw6eeeODeypL323zR7gz88a
-         z44KJ0eYfFMKF4ECdxYsM4bqgO2q53bAS7E9ytQqKPVccsgXTCpeFrYD+15kVX+1bgVP
-         xdEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZ4gAN6kSnJFA8uJ0UTnhNiDCmymG3XPKFEDnCWbxytMwP5Fq2bCD/rhMriSNgP6XKyW5RIdp+XaKezif/Vv9qg2A4NjkUR6u0q9eedb+E8s4sTCM0E1HvSW90zbIeHskkwKph/XaaE+E=
-X-Gm-Message-State: AOJu0YwF18jv86VGjSbcQQGjJsp4ZGNO7CmGeGL88TmfjMewxcYa70PL
-	FEi+dyHQfplDc/UdTzuVOS6k5OJzey/RcBcElSmYwftznBEHOIab773Cde4sOCCwWyXkYn0KO67
-	HDarWHBhZApSbySWVi7eKN6eL1wY=
-X-Google-Smtp-Source: AGHT+IEIPqLuIXqUPlxdyHE8emQsQqvKcbB68EsssulBsPpJLcFAWFAY6+qF2e0EvPA5ZpCevCys7JBbmezZOATtWNk=
-X-Received: by 2002:ac2:520b:0:b0:51d:4472:c3f8 with SMTP id
- 2adb3069b0e04-5217c667418mr362253e87.35.1715115955829; Tue, 07 May 2024
- 14:05:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRar/O50"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A36C2BBFC;
+	Tue,  7 May 2024 21:07:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715116050;
+	bh=IruPKvmHK22rd3Atyzt9f//OhnIvVhMuPrqqtt9DPSA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JRar/O50ZvQKN+7xk/G/FDvHxyqaReRGL5ZpbC7aLsA36ByRqjQtnamcnNiR7/03U
+	 do6YQFagyR+x3Y+Sw0spCnqH2O/z/Ys0q+9J8Dr86991ivYuoZNgESUtNstMJYI/Hj
+	 z+ea713knJ+yIw0fkiXkFLHQcY+rzHC8o04ew8Xqsk+gUP0Qr2emt1XZdiggJoq85v
+	 h95cP/YanIE9j4eQwPntPjoan/WzBDfyx6XX1a9QAmsk7nZu1mR1P7SX8aR/rAOwca
+	 Wx9javJMlil7LRIJwFAgSuWkwVzsUXT0yfsSzXPJh+UpuaV8cE8vonzh8aQs6CNU/3
+	 e7LdQuEoqDgTQ==
+Date: Tue, 7 May 2024 18:07:27 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Clark <james.clark@arm.com>,
+	Tim Chen <tim.c.chen@linux.intel.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Sun Haiyong <sunhaiyong@loongson.cn>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>, Li Dong <lidong@vivo.com>,
+	Paran Lee <p4ranlee@gmail.com>, Ben Gainey <ben.gainey@arm.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 1/8] perf ui browser: Don't save pointer to stack
+ memory
+Message-ID: <ZjqYD-q7EqQW6hVE@x1>
+References: <20240507183545.1236093-1-irogers@google.com>
+ <20240507183545.1236093-2-irogers@google.com>
+ <ZjqNKPgWR7mBFaV4@x1>
+ <ZjqNjrJ2ElrT11iB@x1>
+ <CAP-5=fUsQwKsCi3us+dp-Tj+PayNPrYTqTQeo-YLbvSuOt1=9w@mail.gmail.com>
+ <ZjqXa25BnFncJmw-@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507142454.3344-1-konishi.ryusuke@gmail.com> <CAHk-=wgogPoSdCYw9jhc2Zm=BaE19nXYwFn_F9SwD2C-DyrmCw@mail.gmail.com>
-In-Reply-To: <CAHk-=wgogPoSdCYw9jhc2Zm=BaE19nXYwFn_F9SwD2C-DyrmCw@mail.gmail.com>
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Date: Wed, 8 May 2024 06:05:39 +0900
-Message-ID: <CAKFNMonSDOWt20nq6UngSO1_7L-DLRMiAbcKXmquF04qbfC55Q@mail.gmail.com>
-Subject: Re: [PATCH -mm] nilfs2: Use __field_struct() for a bitwise field
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Bart Van Assche <bvanassche@acm.org>, 
-	linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZjqXa25BnFncJmw-@x1>
 
-On Wed, May 8, 2024 at 1:25=E2=80=AFAM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> On Tue, 7 May 2024 at 07:25, Ryusuke Konishi <konishi.ryusuke@gmail.com> =
-wrote:
-> >
-> >    Despite that change, sparse complains when
-> > passing a bitwise type to is_signed_type(). It is not clear to me why.
->
-> Bah. The reason is this:
->
->    #define is_signed_type(type) (((type)(-1)) < (__force type)1)
->
-> Basically, the way "is_signed_type()" works is that it casts a
-> negative integer to the type, and checks to see if the value has now
-> become a large value.
->
-> Now, it looks odd, because only one of those casts has a "__force" on
-> it, but the reason for that is that casting all-ones and all-zeroes is
-> ok for bitwise types (think of bitwise types as being a "collection of
-> bits" - so all bits set or all bits clear are sane concepts regardless
-> of any other semantics).
->
-> So it's not the casts themselves that are problematic: that part works fi=
-ne.
->
-> But you cannot compare a random collection of bits for greater than or
-> lesser than.
->
-> Think of things like byte orders: you can compare two values for
-> _equality_ even if they are in the wrong byte order, but you can't
-> compare them for "larger than" unless you turn them into the right CPU
-> byte order.
->
-> Basically, a "collection of bits" doesn't have an ordering in itself,
-> even if equality comparisons are ok.
->
-> So yeah, is_signed_type() doesn't work for bitwise types.
->
-> And I don't see a sane way to make "is_signed_type()" to work for
-> bitwise types - the whole concept of signedness of "bunch of bits" is
-> kind of nonsensical - so I suspect your workaround is the best we can
-> do (alternatively, tracing would have to figure out a different way to
-> test for signedness).
->
->                  Linus
+On Tue, May 07, 2024 at 06:04:43PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, May 07, 2024 at 01:48:28PM -0700, Ian Rogers wrote:
+> > On Tue, May 7, 2024 at 1:22 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > >
+> > > On Tue, May 07, 2024 at 05:20:59PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > On Tue, May 07, 2024 at 11:35:38AM -0700, Ian Rogers wrote:
+> > > > > ui_browser__show is capturing the input title that is stack allocated
+> > > > > memory in hist_browser__run. Avoid a use after return by strdup-ing
+> > > > > the string.
+> > > >
+> > > > But everything happens in that context, i.e. hist_brower__run() will
+> > > > call ui_browser__ methods and then exit.
+> > > >
+> > > > We end up having browser->title pointing to returned stack memory
+> > > > (invalid) but there will be no references to it, no?
+> > > >
+> > > > If we return to hist_browser__run() we then call ui_browser__show
+> > > > passing a new title, for "live" stack memory, rinse repeat. Or have you
+> > > > noticed an actual use-after-"free"?
+> > >
+> > > And I'll take the patch, I'm just trying to figure it out if it fixed a
+> > > real bug or if it just makes the code more future proof, i.e. to avoid
+> > > us adding code that actually uses invalid stack memory.
+> > 
+> > My command line using tui is:
+> > $ sudo bash -c 'rm /tmp/asan.log*; export
+> > ASAN_OPTIONS="log_path=/tmp/asan.log"; /tmp/perf/perf mem record -a
+> > sleep 1; /tmp/perf/perf mem report'
+> > I then go to the perf annotate view and quit. This triggers the asan
+> > error (from the log file):
+> > ```
+> 
+> Thanks, it is indeed a bug, I'll keep that Fixes tag, people interested
+> in the full details can hopefully find this message going from the Link:
+> tag.
 
-Linus, thank you very much for your detailed explanation.
-
-I would like to edit the quoted part of his commit message
-
-> >    Despite that change, sparse complains when
-> > passing a bitwise type to is_signed_type(). It is not clear to me why.
-
-as follows:
-
- Despite that change, sparse complains when passing a bitwise type
- to is_signed_type().  The reason is that in its definition below, a
- comparison will be made against bitwise types, which are
- random collections of bits (the casts to bitwise types themselves
- are semantically valid and are not problematic):
-
-  #define is_signed_type(type) (((type)(-1)) < (__force type)1)
-
- So, as a workaround, fix the warnings by using __field_struct() macro
- that doesn't use is_signed_type() instead of __field().
- ...
-
-I will try to resend the patch later unless there's a misunderstanding or
-I'm missing too many points.
+Nah, I added your explanation to the cset log message.
 
 Thanks,
-Ryusuke Konishi
+
+- Arnaldo
