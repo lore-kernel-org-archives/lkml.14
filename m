@@ -1,93 +1,122 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69DD1635B6
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:09:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16F2160785
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715094576; cv=none; b=OsW7rloqYU4lDxtijqgrcvRFn1F+jbOSsTHorEIvpUkuOkHnASHhdsPg0jJnqyOh6jvx4U4vFWpCG6D8ZCaJbiM6sSyhkLetQDcRORe7gtLD9MOqsx4ceh+rQUv59nArZhXmIDnS/eanltfNTkKw4fVZKOY11XzPFpEa2ZLGayA=
+	t=1715094652; cv=none; b=gTun9VZ+cne1hoa4sRIS2Habl4JGkjE/gOHOEiZc4j+TkAokzaw0GpGBgMy9jNvJGf6Y0Ccu+OGdaOi5AuomMkFCL2ht0q/J1wt1OvOJlCjqpkmB58rfGNpUp8Jlk4sC4iZe2L674DboWum8SXdKo8H88Vs451Dhacmk4i+OVSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715094576; c=relaxed/simple;
-	bh=eQZdBa//GiiwWU5saLscyQ/eNFxlEase1Y9Rz4G07L0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i1kHPp5EQ/nFDzBgrE1i0l5FYxlf0Qwq0mhIRHvVIHzsS9QP5yGBiTqD145rulU2Cl40PGa8b04LuTEOJlgF11TLNXoSNFIWs4Bn6DSELsUccWwmmm0rrTdnmk+aDbkqPMJK8jj9AyIRke9LrqhbqLoS/IKBaqLohuxYQP48PPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=sv8TdImZ; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1715094652; c=relaxed/simple;
+	bh=V+S2qM1dz5fAisMdCHHRofI9ko5Z8Y95GSiwB94PLxw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PQWOnP3h9yOL/+hCTSLkPENPZhTTU/GaFO2GLYPJEkRhz96HznWHowxXRE0KAkgNAt5fC0GzVG2Lt6MfNVATMoxTnrRrL9tSxmNAFdV6xQ0lNEHbc8pgaHe9uPM2y+Rdr1zwc2dNJhoeJU2zk7cagS+bp7w8aLkO4d2LS0d1XnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LDn3C9Gm; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="sv8TdImZ"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-7decabf4a36so22483039f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:09:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1715094572; x=1715699372; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=E3D/yzAnQonQm6YpOqNskMzHHJ7JMLgQ77zwyP/bNEI=;
-        b=sv8TdImZqS6aZsCrKHrNTlU7Fe+I6yid9cgMoyhGjULwNIrBIa3xpBG3I872GA88Qt
-         WthjiA9yRZ5G7cIQ0PI7Z3EEsIjYR+HHRe1MCYTB7eFOhxrEy+L720ggO27rJ5PdU6Uo
-         LFsHRA2Cn9D3U9XLCZUFoKAxSw4Cg9arTbVyy5+EaBrO/WUd8RjfqaLzcJogT5X+GBcq
-         X2kGH9/8FKXl/2tAwQEr7EhvgdBJY+iV3nPiEbnNQYGNzF0opdz9NMaYwd0ELtsV+6Fw
-         bljQ/wRGHsS9bGllkPlgKhDwjgR5UmaKCe/cwM6TLNE+ip8u0TxK50Q89KOKBDX+heDE
-         l1Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715094572; x=1715699372;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E3D/yzAnQonQm6YpOqNskMzHHJ7JMLgQ77zwyP/bNEI=;
-        b=CUPRSELVrTzNReo0OgRXJoCzq0YUDa5h0I44NBX9FNQ3b/XbuhwrIJDwvIJoY19qr9
-         nsiDl5QbXG0Ts6N2TsyKG2OJqOGpNS0t5kNC9YMBRjEO6NKNH61cdKWxbjsvTX7Vtkt+
-         ZVZVczCLQwyfAhcnsYIrBJs9pl5ofNzAzpv5yc9RCklyHirgkZX6EZvNGR576SpcbnZB
-         z7s4JcJljA+Nei143ipSgDCOkg/Y6G5D6q3ThXVxkDfK8KbJOBEfN9ker1+Q/CDx9ZjV
-         kYxUtXKfstePMGGU99F5cuER6cePwP6QkGqSWVj0baN4jCchJrXaK5BGhgfPXiBk7nCq
-         BfzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwz3gqLvPmv/Pw0ahhdn/ILvOUUC+HVYcz6qszMNRiiglsLXE+7RGgQfSaMEbWDqTv0Bw6ptHfloOH5I6U4TV3Lo4AXDuRnph2Le+0
-X-Gm-Message-State: AOJu0YwRZcsc6z7WvinTJgK86QgzEl4rhRIDmovBCP2yIl7K0AMEWBLC
-	axQOK9epSs0H61mWg5ofeuig4M5VP7rFn2RKmwcMVeqwc3iwKF13/pwXKXvAKJQ=
-X-Google-Smtp-Source: AGHT+IH/xpJNOj9b9GueLYwJ09ytVaIiUnOPLZsziqVJEzXxE/krpfrw37GQ1qd29ae0cQaKRTT7Tw==
-X-Received: by 2002:a05:6602:3f48:b0:7e1:8bc8:8228 with SMTP id en8-20020a0566023f4800b007e18bc88228mr963919iob.0.1715094571886;
-        Tue, 07 May 2024 08:09:31 -0700 (PDT)
-Received: from [192.168.1.116] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id r20-20020a056638131400b00488609cd945sm1915683jad.20.2024.05.07.08.09.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 May 2024 08:09:31 -0700 (PDT)
-Message-ID: <d7d87db7-af34-4d48-8e26-ac13b5abced9@kernel.dk>
-Date: Tue, 7 May 2024 09:09:30 -0600
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LDn3C9Gm"
+Date: Tue, 7 May 2024 11:10:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715094647;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WvrXXR4AzK2MTWLrKNYWr8Cf39vw5dHBPWvT1LSDqnw=;
+	b=LDn3C9Gm5K06A74oA5w+Cql7aY5vRPu5Jbh8NZqeH3V2MhW+YNcm0qfze7cEOEqAnOelkf
+	HhPs5XaaoerLfq+scwxoaDWPDaUA4LfuxYO+wBrfRSgBsNubTR0hBMCM0sKCvqmdxQCWe+
+	sv/mnuzmEjWe01MtzpMIR03Zgr6gGKw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.9
+Message-ID: <4u2imuisg3sxaomerwbss6p22vxyc2lk6esyn5asybytwgrhe3@tccxjeu5hqmq>
+References: <3x4p5h5f4itasrdylf5cldow6anxie6ixop3o4iaqcucqi7ob4@7ewzp7azzj7i>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] io_uring/io-wq: Use set_bit() and test_bit() at
- worker->flags
-To: Breno Leitao <leitao@debian.org>, Pavel Begunkov <asml.silence@gmail.com>
-Cc: christophe.jaillet@wanadoo.fr,
- "open list:IO_URING" <io-uring@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240507150506.1748059-1-leitao@debian.org>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <20240507150506.1748059-1-leitao@debian.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3x4p5h5f4itasrdylf5cldow6anxie6ixop3o4iaqcucqi7ob4@7ewzp7azzj7i>
+X-Migadu-Flow: FLOW_OUT
 
-On 5/7/24 9:05 AM, Breno Leitao wrote:
-> @@ -631,7 +631,7 @@ static int io_wq_worker(void *data)
->  	bool exit_mask = false, last_timeout = false;
->  	char buf[TASK_COMM_LEN];
->  
-> -	worker->flags |= (IO_WORKER_F_UP | IO_WORKER_F_RUNNING);
-> +	set_mask_bits(&worker->flags, 0, IO_WORKER_F_UP | IO_WORKER_F_RUNNING);
+On Tue, May 07, 2024 at 10:43:11AM -0400, Kent Overstreet wrote:
+> Hi Linus, another stack of fixes for you.
 
-This takes a mask, no? I think this should be:
+I have a report from a user that the sb-downgrade validation has an
+issue, so that's been yanked.
 
-set_mask_bits(&worker->flags, 0, BIT(IO_WORKER_F_UP) | BIT(IO_WORKER_F_RUNNING);
+The following changes since commit c258c08add1cc8fa7719f112c5db36c08c507f1e:
 
-Hmm?
+  bcachefs: fix integer conversion bug (2024-04-28 21:34:29 -0400)
 
--- 
-Jens Axboe
+are available in the Git repository at:
 
+  https://evilpiepirate.org/git/bcachefs.git tags/bcachefs-2024-05-07.2
+
+for you to fetch changes up to 6e297a73bccf852e7716207caa8eb868737c7155:
+
+  bcachefs: Add missing sched_annotate_sleep() in bch2_journal_flush_seq_async() (2024-05-07 11:02:37 -0400)
+
+----------------------------------------------------------------
+bcachefs fixes for 6.9
+
+- Various syzbot fixes; mainly small gaps in validation
+- Fix an integer overflow in fiemap() which was preventing filefrag from
+  returning the full list of extents
+- Fix a refcounting bug on the device refcount, turned up by new
+  assertions in the development branch
+- Fix a device removal/readd bug; write_super() was repeatedly dropping
+  and retaking bch_dev->io_ref references
+
+----------------------------------------------------------------
+Kent Overstreet (19):
+      bcachefs: Fix a scheduler splat in __bch2_next_write_buffer_flush_journal_buf()
+      bcachefs: don't free error pointers
+      bcachefs: bucket_pos_to_bp_noerror()
+      bcachefs: Fix early error path in bch2_fs_btree_key_cache_exit()
+      bcachefs: Inodes need extra padding for varint_decode_fast()
+      bcachefs: Fix refcount put in sb_field_resize error path
+      bcachefs: Initialize bch_write_op->failed in inline data path
+      bcachefs: Fix bch2_dev_lookup() refcounting
+      bcachefs: Fix lifetime issue in device iterator helpers
+      bcachefs: Add a better limit for maximum number of buckets
+      bcachefs: Fix assert in bch2_alloc_v4_invalid()
+      bcachefs: Add missing validation for superblock section clean
+      bcachefs: Guard against unknown k.k->type in __bkey_invalid()
+      bcachefs: Fix shift-by-64 in bformat_needs_redo()
+      bcachefs: Fix snapshot_t() usage in bch2_fs_quota_read_inode()
+      bcachefs: Add missing skcipher_request_set_callback() call
+      bcachefs: BCH_SB_LAYOUT_SIZE_BITS_MAX
+      bcachefs: Fix race in bch2_write_super()
+      bcachefs: Add missing sched_annotate_sleep() in bch2_journal_flush_seq_async()
+
+Reed Riley (1):
+      bcachefs: fix overflow in fiemap
+
+ fs/bcachefs/alloc_background.c |  4 ++--
+ fs/bcachefs/alloc_background.h |  8 +++++--
+ fs/bcachefs/backpointers.c     |  2 +-
+ fs/bcachefs/backpointers.h     | 14 ++++++++----
+ fs/bcachefs/bcachefs_format.h  |  8 +++++++
+ fs/bcachefs/bkey_methods.c     |  4 ++--
+ fs/bcachefs/btree_key_cache.c  | 16 +++++++------
+ fs/bcachefs/checksum.c         |  1 +
+ fs/bcachefs/errcode.h          |  1 +
+ fs/bcachefs/fs.c               |  2 +-
+ fs/bcachefs/io_write.c         | 30 ++++++++++++++++---------
+ fs/bcachefs/journal.c          |  8 +++++++
+ fs/bcachefs/move.c             | 22 +++++++++++-------
+ fs/bcachefs/quota.c            |  8 +++----
+ fs/bcachefs/recovery.c         |  3 ++-
+ fs/bcachefs/sb-clean.c         | 14 ++++++++++++
+ fs/bcachefs/sb-members.c       |  6 ++---
+ fs/bcachefs/sb-members.h       |  4 ++--
+ fs/bcachefs/super-io.c         | 51 ++++++++++++++++++++++++++++--------------
+ fs/bcachefs/super.c            | 15 ++++++++-----
+ 20 files changed, 150 insertions(+), 71 deletions(-)
