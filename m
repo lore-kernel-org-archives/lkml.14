@@ -1,162 +1,230 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0591914E2F0;
-	Tue,  7 May 2024 09:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D65515E5BB;
+	Tue,  7 May 2024 09:45:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715075094; cv=none; b=PI7IMauWMt7zvrxro4esg5Y/yHQuV8gc8Wx0gY54DQEea1C35lD3awKaE8Pja+GBNAYFF2a3Mugo9XlSf2nrFLO7lvLa05sc/6afk5Ek92pHwC8zPakUXlIVxa68STIvzbSFA+BC1olB7GtItag9UubREw4lwYpLKncGEd6qCBM=
+	t=1715075104; cv=none; b=ShrsOomxaGY3GFpVMdL1aI2iMS7oJ9TSyPiQfDmFwF5ZaFlHYeSi956UE7r/bD+VqD0+L1YLgWPonInxb3X4LCoqUZmcTrZMC8FSOf4aIMaLmKVA5e0LPRhWx+zu1OODitSOfdUGQLr6myfoGf+WiaumYA/x+ou/R5sbLQ5TyrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715075094; c=relaxed/simple;
-	bh=AoKhmBK2njIJPi3MtLTSqxpffM2xgg+SxnVRyH0ufeQ=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VLKThxazI52+ylhzus0KhW1bajuPERPBChvpkJNYUnzgi5B09vdNL9YXLNmyNffHyGF1l0JbIx9SHwtFTvuakbOBqXbBq57g55Fm6NmzMq755LdJdWTO+zN7aZLmpvsv/bsnI+ZNCXshwXcqF8AwjgHC74OAeW5KQO9gKa4xUL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 4479iFOj93392615, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 4479iFOj93392615
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 May 2024 17:44:15 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 7 May 2024 17:44:15 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 7 May 2024 17:44:15 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Tue, 7 May 2024 17:44:15 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Simon Horman <horms@kernel.org>
-CC: "kuba@kernel.org" <kuba@kernel.org>,
-        "davem@davemloft.net"
-	<davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        Ping-Ke Shih <pkshih@realtek.com>, Larry Chiu <larry.chiu@realtek.com>
-Subject: RE: [PATCH net-next v17 12/13] realtek: Update the Makefile and Kconfig in the realtek folder
-Thread-Topic: [PATCH net-next v17 12/13] realtek: Update the Makefile and
- Kconfig in the realtek folder
-Thread-Index: AQHanHJwtQlHSOPjc0iBIoHkieL8ZLGEqrkAgAbh+ZA=
-Date: Tue, 7 May 2024 09:44:14 +0000
-Message-ID: <1470b2c0983442fcb5078ca510aade35@realtek.com>
-References: <20240502091847.65181-1-justinlai0215@realtek.com>
- <20240502091847.65181-13-justinlai0215@realtek.com>
- <20240503083534.GL2821784@kernel.org>
-In-Reply-To: <20240503083534.GL2821784@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1715075104; c=relaxed/simple;
+	bh=BONsjm43a6vU/CXa6qDMbtJT3z1qMQHysxnl1rgkKVs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=qbjPgI+WpeRkKohssR+lnLrf5eZppOLhuQTaLCYgga59g9pLMK9+7M9VVYjPnaBS7KfbZAQTB+KM3NEue9ZnSzQ4Z83zEdgWICcOG0YRLU/Dc1RFz4gsHQyqUDrARhx0GVV++YkVcE3iNK9sTWqxcAL50UhSgGpoG0WKY7L0YDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=t+e7mPD6; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="t+e7mPD6"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4479ilVD054872;
+	Tue, 7 May 2024 04:44:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1715075087;
+	bh=pkOS5m+eyJ1WxYIqnI2Svp6a7Kob3Ol/IrREcrUuNTA=;
+	h=From:Date:Subject:References:In-Reply-To:To:CC;
+	b=t+e7mPD6DMruqemriMUa9dtIBeL+G9ccu14eZ1G4WdcB9aQFhv0Qmw4CVerQVqJJi
+	 0U08bW8XshzEgc8HGo0d9lyp0wIZrx/M9jOU0L3NJ40rFoKIKd1uzmd+UaXqTDY2cL
+	 YF9ScsecjZvdai4Qck0ERwD8XFeKsHUDS60jf/qg=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4479ilQc026160
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 7 May 2024 04:44:47 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 7
+ May 2024 04:44:46 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 7 May 2024 04:44:47 -0500
+Received: from [127.0.1.1] (uda0497581.dhcp.ti.com [10.24.68.185])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4479iXjW117029;
+	Tue, 7 May 2024 04:44:43 -0500
+From: Manorit Chawdhry <m-chawdhry@ti.com>
+Date: Tue, 7 May 2024 15:14:29 +0530
+Subject: [PATCH 2/5] arm64: dts: ti: k3-j784s4*: Remove bootph properties
+ from parent nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240507-b4-upstream-bootph-all-v1-2-c6d52651856f@ti.com>
+References: <20240507-b4-upstream-bootph-all-v1-0-c6d52651856f@ti.com>
+In-Reply-To: <20240507-b4-upstream-bootph-all-v1-0-c6d52651856f@ti.com>
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Neha Malcom Francis <n-francis@ti.com>,
+        Aniket Limaye <a-limaye@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+        Beleswar Padhi
+	<b-padhi@ti.com>, Manorit Chawdhry <m-chawdhry@ti.com>
+X-Mailer: b4 0.13-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715075073; l=4211;
+ i=m-chawdhry@ti.com; s=20231127; h=from:subject:message-id;
+ bh=BONsjm43a6vU/CXa6qDMbtJT3z1qMQHysxnl1rgkKVs=;
+ b=qWfF1quFikUZV/kw4uTC5muhqJroARVt53l42DYut7GYzpVQ1c+nHLe+p+RYeEK++X6K0785x
+ FQUfzRaD/XHBfg0WX30L1mXWT3AXarPOnoofC1mnU7jbIoCqgWkk83n
+X-Developer-Key: i=m-chawdhry@ti.com; a=ed25519;
+ pk=fsr6Tm39TvsTgfyfFQLk+nnqIz2sBA1PthfqqfiiYSs=
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-> On Thu, May 02, 2024 at 05:18:46PM +0800, Justin Lai wrote:
-> > 1. Add the RTASE entry in the Kconfig.
-> > 2. Add the CONFIG_RTASE entry in the Makefile.
-> >
-> > Signed-off-by: Justin Lai <justinlai0215@realtek.com>
-> > ---
-> >  drivers/net/ethernet/realtek/Kconfig  | 17 +++++++++++++++++
-> > drivers/net/ethernet/realtek/Makefile |  1 +
-> >  2 files changed, 18 insertions(+)
-> >
-> > diff --git a/drivers/net/ethernet/realtek/Kconfig
-> > b/drivers/net/ethernet/realtek/Kconfig
-> > index 93d9df55b361..57ef924deebd 100644
-> > --- a/drivers/net/ethernet/realtek/Kconfig
-> > +++ b/drivers/net/ethernet/realtek/Kconfig
-> > @@ -113,4 +113,21 @@ config R8169
-> >         To compile this driver as a module, choose M here: the module
-> >         will be called r8169.  This is recommended.
-> >
-> > +config RTASE
-> > +     tristate "Realtek Automotive Switch
-> 9054/9068/9072/9075/9068/9071 PCIe Interface support"
-> > +     depends on PCI
-> > +     select CRC32
->=20
-> Hi Justin,
->=20
-> I believe that you also need:
->=20
->         select PAGE_POOL
->=20
-> As the driver uses page_pool_alloc_pages()
->=20
-> FWIIW, I observed this when using a config based on make tinyconfig with =
-PCI
-> and NET enabled, all WiFi drivers disabled, and only and only this Ethern=
-et
-> driver enabled.
->=20
-> > +     help
-> > +       Say Y here if you have a Realtek Ethernet adapter belonging to
-> > +       the following families:
-> > +       RTL9054 5GBit Ethernet
-> > +       RTL9068 5GBit Ethernet
-> > +       RTL9072 5GBit Ethernet
-> > +       RTL9075 5GBit Ethernet
-> > +       RTL9068 5GBit Ethernet
-> > +       RTL9071 5GBit Ethernet
-> > +
-> > +       To compile this driver as a module, choose M here: the module
-> > +       will be called rtase. This is recommended.
->=20
-> The advice above to chose Y and M seem to conflict.
-> Perhaps this can be edited somehow.
->=20
+Removes bootph-* properties from parent nodes and aligns the bootph-* to
+other u-boot.dtsi
 
-Hi Simon,
-I would like to ask if it would be clearer if I changed it to the following=
-?
+Signed-off-by: Manorit Chawdhry <m-chawdhry@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j784s4-evm.dts         | 10 +---------
+ arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi       |  1 +
+ arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi |  6 +++---
+ 3 files changed, 5 insertions(+), 12 deletions(-)
 
-config RTASE
-	tristate "Realtek Automotive Switch 9054/9068/9072/9075/9068/9071 PCIe Int=
-erface support"
-	depends on PCI
-	select CRC32
-	select PAGE_POOL
-	help
-	  Say Y here and it will be compiled and linked with the kernel
-	  if you have a Realtek Ethernet adapter belonging to the
-	  following families:
-	  RTL9054 5GBit Ethernet
-	  RTL9068 5GBit Ethernet
-	  RTL9072 5GBit Ethernet
-	  RTL9075 5GBit Ethernet
-	  RTL9068 5GBit Ethernet
-	  RTL9071 5GBit Ethernet
-=20
-	  To compile this driver as a module, choose M here: the module
-	  will be called rtase. This is recommended.
-> > +
-> >  endif # NET_VENDOR_REALTEK
-> > diff --git a/drivers/net/ethernet/realtek/Makefile
-> > b/drivers/net/ethernet/realtek/Makefile
-> > index 2e1d78b106b0..0c1c16f63e9a 100644
-> > --- a/drivers/net/ethernet/realtek/Makefile
-> > +++ b/drivers/net/ethernet/realtek/Makefile
-> > @@ -8,3 +8,4 @@ obj-$(CONFIG_8139TOO) +=3D 8139too.o
-> >  obj-$(CONFIG_ATP) +=3D atp.o
-> >  r8169-objs +=3D r8169_main.o r8169_firmware.o r8169_phy_config.o
-> >  obj-$(CONFIG_R8169) +=3D r8169.o
-> > +obj-$(CONFIG_RTASE) +=3D rtase/
-> > --
-> > 2.34.1
-> >
-> >
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+index 81fd7afac8c5..f262eb1a6c65 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-evm.dts
+@@ -279,7 +279,6 @@ &wkup_gpio0 {
+ };
+ 
+ &main_pmx0 {
+-	bootph-all;
+ 	main_uart8_pins_default: main-uart8-default-pins {
+ 		bootph-all;
+ 		pinctrl-single,pins = <
+@@ -339,7 +338,6 @@ J784S4_IOPAD(0x010, PIN_INPUT_PULLUP, 8) /* (AH33) MCAN13_RX.I2C4_SDA */
+ };
+ 
+ &wkup_pmx2 {
+-	bootph-all;
+ 	wkup_uart0_pins_default: wkup-uart0-default-pins {
+ 		bootph-all;
+ 		pinctrl-single,pins = <
+@@ -429,7 +427,6 @@ J784S4_WKUP_IOPAD(0x028, PIN_INPUT, 7)
+ };
+ 
+ &wkup_pmx0 {
+-	bootph-all;
+ 	mcu_fss0_ospi0_pins_default: mcu-fss0-ospi0-default-pins {
+ 		bootph-all;
+ 		pinctrl-single,pins = <
+@@ -449,7 +446,6 @@ J784S4_WKUP_IOPAD(0x008, PIN_INPUT, 0) /* (C34) MCU_OSPI0_DQS */
+ };
+ 
+ &wkup_pmx1 {
+-	bootph-all;
+ 	mcu_fss0_ospi0_1_pins_default: mcu-fss0-ospi0-1-default-pins {
+ 		bootph-all;
+ 		pinctrl-single,pins = <
+@@ -520,6 +516,7 @@ bucka12: buck12 {
+ 				regulator-max-microvolt = <1100000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
++				bootph-pre-ram;
+ 			};
+ 
+ 			bucka3: buck3 {
+@@ -600,18 +597,15 @@ &ufs_wrapper {
+ };
+ 
+ &fss {
+-	bootph-all;
+ 	status = "okay";
+ };
+ 
+ &ospi0 {
+-	bootph-all;
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mcu_fss0_ospi0_pins_default>, <&mcu_fss0_ospi0_1_pins_default>;
+ 
+ 	flash@0 {
+-		bootph-all;
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0x0>;
+ 		spi-tx-bus-width = <8>;
+@@ -668,13 +662,11 @@ partition@3fc0000 {
+ };
+ 
+ &ospi1 {
+-	bootph-all;
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mcu_fss0_ospi1_pins_default>;
+ 
+ 	flash@0 {
+-		bootph-all;
+ 		compatible = "jedec,spi-nor";
+ 		reg = <0x0>;
+ 		spi-tx-bus-width = <1>;
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+index b67c37460a73..46bd3cd1b006 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-main.dtsi
+@@ -1120,6 +1120,7 @@ secure_proxy_main: mailbox@32c00000 {
+ 			      <0x00 0x32800000 0x00 0x100000>;
+ 			interrupt-names = "rx_011";
+ 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++			bootph-all;
+ 		};
+ 
+ 		hwspinlock: hwlock@30e00000 {
+diff --git a/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
+index 77a8d99139ec..951ff3ec3ea0 100644
+--- a/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j784s4-mcu-wakeup.dtsi
+@@ -39,7 +39,6 @@ k3_reset: reset-controller {
+ 	};
+ 
+ 	wkup_conf: bus@43000000 {
+-		bootph-all;
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -171,10 +170,10 @@ mcu_timer0: timer@40400000 {
+ 		ti,timer-pwm;
+ 		/* Non-MPU Firmware usage */
+ 		status = "reserved";
++		bootph-all;
+ 	};
+ 
+ 	mcu_timer1: timer@40410000 {
+-		bootph-all;
+ 		compatible = "ti,am654-timer";
+ 		reg = <0x00 0x40410000 0x00 0x400>;
+ 		interrupts = <GIC_SPI 817 IRQ_TYPE_LEVEL_HIGH>;
+@@ -456,7 +455,6 @@ mcu_spi2: spi@40320000 {
+ 	};
+ 
+ 	mcu_navss: bus@28380000 {
+-		bootph-all;
+ 		compatible = "simple-bus";
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+@@ -519,6 +517,7 @@ secure_proxy_mcu: mailbox@2a480000 {
+ 		 * firmware on non-MPU processors
+ 		 */
+ 		status = "disabled";
++		bootph-pre-ram;
+ 	};
+ 
+ 	mcu_cpsw: ethernet@46000000 {
+@@ -630,6 +629,7 @@ wkup_vtm0: temperature-sensor@42040000 {
+ 		      <0x00 0x42050000 0x00 0x350>;
+ 		power-domains = <&k3_pds 243 TI_SCI_PD_SHARED>;
+ 		#thermal-sensor-cells = <1>;
++		bootph-pre-ram;
+ 	};
+ 
+ 	tscadc0: tscadc@40200000 {
+
+-- 
+2.43.2
+
