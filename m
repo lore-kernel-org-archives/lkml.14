@@ -1,60 +1,76 @@
-Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8E11514DE;
-	Tue,  7 May 2024 11:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B591514E0;
+	Tue,  7 May 2024 11:12:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715080355; cv=none; b=uaWpyOj7N7Y73w1FVucYUEMmF3liyAesnc5j1qvPmnUf5obhR8td+seWfLM2eYJ5tEYEiOiobkzq1g2MF1xeiqqwZ8lSH0IRWeuDM4mSyiCvCjOiDUjH1Wirp4mWLz+3ICwFeh6OmqQE5YVwzuOtNNghlgOLXMLBNOOd6uLHDEc=
+	t=1715080380; cv=none; b=Wtkd7ZAPK3bdRu8R3WNEMuROe4PCKKQuSx62HfsQT+sFUh1aAJaHu1ekpExNfbjBKvfy3VKNGkj2j54O91ylCkowEqH2GL0Kw3wJtOFxhMqpRWn+ofsTbXZgJZjIHPkx43zYs90nQXxTuINUCuEMgqFZVrS82JEL/yxOoRPe2/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715080355; c=relaxed/simple;
-	bh=zSxCKA0DoPcq5N5f7sSYXUx1jwib2HFJ6z5toCJG9ic=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RE4nz6P4HF2ZlxY6r7FNjuaHNzruHIXP11NROK8Czh+RyCyoJfGsxrpT1cRTAPYLUoFp8lhzH3SYzUEEdJlIh+at34OyUylHYyNZ8E7AJZ8hgFJR/un1H0B2pysXz3VosooYWSIeb0LnS3OZtd5gnJvCdGsxH+bFIFOvINRkzBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=EZOphe+l; arc=none smtp.client-ip=85.214.62.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1715080380; c=relaxed/simple;
+	bh=vZwwfPun+jcrJFXKdn0WPiO85JreSPpf8VyM/d3hF3Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TnlCVIwWbGZjUHt/idI4jTbu/JVXZtHJW3EiKMn2gtTTYZCOwl6qRUBBDQCSDJGtzDd30oCE9RvBLgrEokP0TXJNBqgRVMbFR0S9AoPT1fXA9WQSCAxY5jUlNzvugEWtvkZDGiHB6DNVK46eKf6705Hq4koySsee3DN/BE1JLxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aUQOJyOc; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="EZOphe+l"
-Received: from localhost.localdomain (85-222-111-42.dynamic.chello.pl [85.222.111.42])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-	(No client certificate requested)
-	(Authenticated sender: lukma@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 7A0F88872F;
-	Tue,  7 May 2024 13:12:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1715080352;
-	bh=jN+EFedDRgb8BUKslcDfIzWNN0Nyjd/TLRJiDObOb4A=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EZOphe+lgfXkwuYNX/4PmH1PHKP+QI9UBTFYz3eq2wd7wZiKfVnBH+3F+z2/NZWNU
-	 YidvliZOBZWxITzzJ/Y7SQTv1/nE2TCdmdvaxn9WdcyPV+73gq5jjh/yZoyReEcg82
-	 FrZGUEwy457kIu6e5KedOwMRREPVTlZCXro++H+tosO6PgbEMPLYEGOiQgM6YLiic7
-	 NAspXfMR2TZ0GdkmdlzUpCpLWVORm1Y14isoZuvvYFbuX0IBBRUcfUTuVirwcDHnkX
-	 ovDMIJHco8RWvKJcjyecAiQhSpvenl1fDT+EZjJiPptNGl/A6C/G8MPAtAhbg0QIkM
-	 AUhfterVL1Ipg==
-From: Lukasz Majewski <lukma@denx.de>
-To: Jakub Kicinski <kuba@kernel.org>,
-	netdev@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Eric Dumazet <edumazet@google.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Tristram.Ha@microchip.com,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Ravi Gunasekaran <r-gunasekaran@ti.com>,
-	Simon Horman <horms@kernel.org>,
-	Nikita Zhandarovich <n.zhandarovich@fintech.ru>,
-	Murali Karicheri <m-karicheri2@ti.com>,
-	Arvid Brodin <Arvid.Brodin@xdin.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	"Ricardo B. Marliere" <ricardo@marliere.net>,
-	Casper Andersson <casper.casan@gmail.com>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aUQOJyOc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715080379; x=1746616379;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vZwwfPun+jcrJFXKdn0WPiO85JreSPpf8VyM/d3hF3Q=;
+  b=aUQOJyOcXuk0xQj101q6BoaPUfOByJZh+GytipbSZR+Zj/W5nO9XlSTe
+   p+T8Kke7C3/0S3f5sUFvyEJ1YWt6gT9e90O5qOsTJ9GErylYQYluTkOol
+   F+MZqaFLzSqOiZjmiw3HNbMG5Sg1VU7VGuhaOQ1cZdLHZs2B/6t27IgbF
+   QlDEom3460hxFO7N/2OJAw5aMRzLDIlSkLGLYVYNwOJ8dx65hm403SJAt
+   bHQzvu1eKeBjntIKAFsy0lGHgbGBxUfgz1QG+oldnqji1xYvBtCp79sfh
+   13FsLzAr2YmOvFfFpN6yQ0OI9l4TKjx/1Nx7EUhL0nFUc9LGc9WcRDViO
+   Q==;
+X-CSE-ConnectionGUID: OxbJEHk3SEmeJnD0JtWWug==
+X-CSE-MsgGUID: 9m2p3pxSRraXkSvZVj495g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10721233"
+X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
+   d="scan'208";a="10721233"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 04:12:58 -0700
+X-CSE-ConnectionGUID: shxD1AQuTimRHOLMV3dpFw==
+X-CSE-MsgGUID: X6ObiS9hTta/WxyGh3BG7Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
+   d="scan'208";a="28462880"
+Received: from xiao-desktop.sh.intel.com ([10.239.46.158])
+  by fmviesa009.fm.intel.com with ESMTP; 07 May 2024 04:12:53 -0700
+From: Xiao Wang <xiao.w.wang@intel.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	luke.r.nels@gmail.com,
+	xi.wang@gmail.com,
+	bjorn@kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@google.com,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Lukasz Majewski <lukma@denx.de>
-Subject: [net PATCH v2] hsr: Simplify code for announcing HSR nodes timer setup
-Date: Tue,  7 May 2024 13:12:14 +0200
-Message-Id: <20240507111214.3519800-1-lukma@denx.de>
-X-Mailer: git-send-email 2.39.2
+	bpf@vger.kernel.org,
+	pulehui@huawei.com,
+	haicheng.li@intel.com,
+	Xiao Wang <xiao.w.wang@intel.com>
+Subject: [PATCH] riscv, bpf: Fix typo in comment
+Date: Tue,  7 May 2024 19:16:18 +0800
+Message-Id: <20240507111618.437121-1-xiao.w.wang@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,104 +78,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
-X-Virus-Status: Clean
 
-Up till now the code to start HSR announce timer, which triggers sending
-supervisory frames, was assuming that hsr_netdev_notify() would be called
-at least twice for hsrX interface. This was required to have different
-values for old and current values of network device's operstate.
+We can use either "instruction" or "insn" in the comment.
 
-This is problematic for a case where hsrX interface is already in the
-operational state when hsr_netdev_notify() is called, so timer is not
-configured to trigger and as a result the hsrX is not sending supervisory
-frames to HSR ring.
-
-This error has been discovered when hsr_ping.sh script was run. To be
-more specific - for the hsr1 and hsr2 the hsr_netdev_notify() was
-called at least twice with different IF_OPER_{LOWERDOWN|DOWN|UP} states
-assigned in hsr_check_carrier_and_operstate(hsr). As a result there was
-no issue with sending supervisory frames.
-However, with hsr3, the notify function was called only once with
-operstate set to IF_OPER_UP and timer responsible for triggering
-supervisory frames was not fired.
-
-The solution is to use netif_oper_up() and netif_running() helper
-functions to assess if network hsrX device is up.
-Only then, when the timer is not already pending, it is started.
-Otherwise it is deactivated.
-
-Signed-off-by: Lukasz Majewski <lukma@denx.de>
-
-Fixes: f421436a591d ("net/hsr: Add support for the High-availability Seamless Redundancy protocol (HSRv0)")
+Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
 ---
-Changes for v2:
+ arch/riscv/net/bpf_jit.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-- Add extra condition to check if the hsr network device is running
-  (not only up).
-
-- Only start announce timer when it is not pending (to avoid period
-  shortening/violation)
----
- net/hsr/hsr_device.c | 27 ++++++++++++---------------
- 1 file changed, 12 insertions(+), 15 deletions(-)
-
-diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
-index e9d45133d641..5afc450d0855 100644
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -61,39 +61,36 @@ static bool hsr_check_carrier(struct hsr_port *master)
- 	return false;
+diff --git a/arch/riscv/net/bpf_jit.h b/arch/riscv/net/bpf_jit.h
+index 18a7885ba95e..c1b6b44a2f49 100644
+--- a/arch/riscv/net/bpf_jit.h
++++ b/arch/riscv/net/bpf_jit.h
+@@ -611,7 +611,7 @@ static inline u32 rv_nop(void)
+ 	return rv_i_insn(0, 0, 0, 0, 0x13);
  }
  
--static void hsr_check_announce(struct net_device *hsr_dev,
--			       unsigned char old_operstate)
-+static void hsr_check_announce(struct net_device *hsr_dev)
+-/* RVC instrutions. */
++/* RVC instructions. */
+ 
+ static inline u16 rvc_addi4spn(u8 rd, u32 imm10)
  {
- 	struct hsr_priv *hsr;
- 
- 	hsr = netdev_priv(hsr_dev);
--
--	if (READ_ONCE(hsr_dev->operstate) == IF_OPER_UP && old_operstate != IF_OPER_UP) {
--		/* Went up */
--		hsr->announce_count = 0;
--		mod_timer(&hsr->announce_timer,
--			  jiffies + msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL));
-+	if (netif_running(hsr_dev) && netif_oper_up(hsr_dev)) {
-+		/* Enable announce timer and start sending supervisory frames */
-+		if (!timer_pending(&hsr->announce_timer)) {
-+			hsr->announce_count = 0;
-+			mod_timer(&hsr->announce_timer, jiffies +
-+				  msecs_to_jiffies(HSR_ANNOUNCE_INTERVAL));
-+		}
-+	} else {
-+		/* Deactivate the announce timer  */
-+		timer_delete(&hsr->announce_timer);
- 	}
--
--	if (READ_ONCE(hsr_dev->operstate) != IF_OPER_UP && old_operstate == IF_OPER_UP)
--		/* Went down */
--		del_timer(&hsr->announce_timer);
+@@ -740,7 +740,7 @@ static inline u16 rvc_swsp(u32 imm8, u8 rs2)
+ 	return rv_css_insn(0x6, imm, rs2, 0x2);
  }
  
- void hsr_check_carrier_and_operstate(struct hsr_priv *hsr)
+-/* RVZBB instrutions. */
++/* RVZBB instructions. */
+ static inline u32 rvzbb_sextb(u8 rd, u8 rs1)
  {
- 	struct hsr_port *master;
--	unsigned char old_operstate;
- 	bool has_carrier;
- 
- 	master = hsr_port_get_hsr(hsr, HSR_PT_MASTER);
- 	/* netif_stacked_transfer_operstate() cannot be used here since
- 	 * it doesn't set IF_OPER_LOWERLAYERDOWN (?)
- 	 */
--	old_operstate = READ_ONCE(master->dev->operstate);
- 	has_carrier = hsr_check_carrier(master);
- 	hsr_set_operstate(master, has_carrier);
--	hsr_check_announce(master->dev, old_operstate);
-+	hsr_check_announce(master->dev);
- }
- 
- int hsr_get_max_mtu(struct hsr_priv *hsr)
+ 	return rv_i_insn(0x604, rs1, 1, rd, 0x13);
 -- 
-2.20.1
+2.25.1
 
