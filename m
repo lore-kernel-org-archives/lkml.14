@@ -1,147 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1CA15FD1D
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 14:53:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1866156C6A;
+	Tue,  7 May 2024 14:53:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093586; cv=none; b=VwdVbv2v2DMX4oXRXvbqY8I3Y4AR6iKnQfGYGft2dcOkvr5DAX+GvdRBFqgA5/FEpRcqNSQApgfvC59F3PFHoqPXffyLqnLGPfKILMMf5322ijPEFF55It33+pxNom+CIyCXo5Aar49k4BLJxIWixVg0HJzaSTNrFaMaJB0IiAA=
+	t=1715093620; cv=none; b=M9i8DZM7ryTUknu1el/6YVezrDm5Rwb937usP82XQV1/+V5OVQ75egHlG+7+8WW40a+0NZPeKIyfR+U5+PARRrh984P4nei8KOiwPsgdX/KZ94WbW/iv0SPQJwTTSx4nXwlQtjioqXpY76UypygkHfZ+M175r9xTlwhVKxkDxSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715093586; c=relaxed/simple;
-	bh=SM4uZsG+ZWU6pdCh+KmiT6fjGXAk/BqY7E2j+X8XI4c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D+Z8GRS1/OvZ2FG19N5T4gAtAh1m2eIk3FORBd0AWAumKyqAt4bf/Qwt3foyQW8dyaFQoeonwrwgXCF4EL7bclRWayjrdW/XZg5Sehkk85lLmyqeB4RpAe8BQxo+QBucoGpgWx4QAAzMSV6cb+v+FjRQRTGqZwwZ4rfhvGPzbu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQzhVbB/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715093620; c=relaxed/simple;
+	bh=mifg95j6vMi6i0U3kvqVfsZok1b6cRwUjaejQFe3tmc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lqfQ4SqIlDWX+lvrTqL/a5u8dxQ7jTCNHxmA3RZNgdqHo9KD58PGhTFBmG7Nb8sIasTorYDFJPWYfHcf8GkcVFBu8wAFR4Wkw9Ks25Xrrw/OjgzFv8upOGwE8cQVhk/dCWMD5oB/8+RxKYDLe3JmhWjRUzWgkbCQNKOWPcL+YD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KVJZqZbO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQzhVbB/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74DBAC4AF18
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 14:53:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KVJZqZbO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B52B2C4AF18;
+	Tue,  7 May 2024 14:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715093586;
-	bh=SM4uZsG+ZWU6pdCh+KmiT6fjGXAk/BqY7E2j+X8XI4c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=WQzhVbB/fda7TB78952CC1FEynnAydSEv8hqNeH4gltwW5b4TL0e3A0nCSQ3xOqy6
-	 Y8F2H780LQc6R5wOIMk2gU7xTgHzC6y7F99/bqvdUMvVVZYh4SIRwr1v+9K7ZuL0Je
-	 Vi73J5KiYQ4zXQxxSH3OQplyxA5vgkxxKIDxOx/8PcCtjriqLBTLPkI1UdJS334dAW
-	 iweDOTMO30pkPMFhylJk44bSxlYmsiNcu0yAWBCSuaUlSj3+VjdcT1XZFpNaXUX3FP
-	 zWTA8uZsaLiPxskSEy4kc+0HarFmYtu6Gu9t5V4vcv/GenV1mKnOJxdrqofn+VacbZ
-	 jUk/BSvjVHuRw==
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2e3fa13f018so8986611fa.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 07:53:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVutT3PO7kRVgek5P+IKZJVrInqnrUmKygLn1eCxQSKkwsV9CEqfaAk8vj4xq1u9QgDBVWi6cdUJBkXeWjoETLK9jL1WKK5r1LdHync
-X-Gm-Message-State: AOJu0Yz2Yzoz0897vvOCKKbMQ5mvPIDXxtGEkcu7YcRXcAPuV6HyW5gD
-	yIxuHB+rxwipvzwCS7pSrT34kmoKNFHjaoILxgwFyNkkcT4wl38GgXls7XIqK03z/Pjk4IlatC+
-	3QHT9uPbEcN5EoJmwvdlVp73BY3Y=
-X-Google-Smtp-Source: AGHT+IG8+gtXhNlZpJi3zCkLvurmd/IHF8T50fiTAvbZuF34/Xyr06janW6+OswVbMpvYUgdeNn0GONt0kX59Ir1Gk8=
-X-Received: by 2002:a2e:a41a:0:b0:2e2:b716:e67c with SMTP id
- p26-20020a2ea41a000000b002e2b716e67cmr6828012ljn.7.1715093564082; Tue, 07 May
- 2024 07:52:44 -0700 (PDT)
+	s=k20201202; t=1715093620;
+	bh=mifg95j6vMi6i0U3kvqVfsZok1b6cRwUjaejQFe3tmc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KVJZqZbOp1Mm5+5nreIunI8P4khD7SC2zW2LmEFSs7abqKasjKjDMWQp4PK9qjEZY
+	 LEZmb0PfJ+QsD1UNpax58S/o+7+qdrp5gHqDyhYZH75t8Ik2iJ/LCeR9O7mhHZBU7m
+	 hxoWxXY9nCpsFGDUq9+tzBLdhGCkGvDWpeK3k3yHUm7GPSjkWkYmyScd3ibZXQyn86
+	 5MkaP25YeSZmsI3UrVKBvp0c0AqBJm6xj/YBeywPkRe5rMJb+hNGiG4iI6wXr5JgpQ
+	 lAhzS/IL7aN7koM+GuHH1zdJ8S25NlY2gb7JvKQjKou+7uVNS0XUos9tCI/xhV0Lap
+	 /0OAqWwkpsSsQ==
+Message-ID: <7143551f-b149-40d6-933d-be4c28994607@kernel.org>
+Date: Tue, 7 May 2024 16:53:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411-tso-v1-0-754f11abfbff@marcan.st> <20240411132853.GA26481@willie-the-truck>
- <87seythqct.fsf@draig.linaro.org>
-In-Reply-To: <87seythqct.fsf@draig.linaro.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Tue, 7 May 2024 16:52:30 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXFqG7D2Q_T_NXZ-y3NYOjK6d8bP8ihJTeFz8TUJ77W7tw@mail.gmail.com>
-Message-ID: <CAMj1kXFqG7D2Q_T_NXZ-y3NYOjK6d8bP8ihJTeFz8TUJ77W7tw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] arm64: Support the TSO memory model
-To: =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>
-Cc: Will Deacon <will@kernel.org>, Hector Martin <marcan@marcan.st>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Zayd Qumsieh <zayd_qumsieh@apple.com>, 
-	Justin Lu <ih_justin@apple.com>, Ryan Houdek <Houdek.Ryan@fex-emu.org>, 
-	Mark Brown <broonie@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Miguel Luis <miguel.luis@oracle.com>, Joey Gouly <joey.gouly@arm.com>, 
-	Christoph Paasch <cpaasch@apple.com>, Kees Cook <keescook@chromium.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Baoquan He <bhe@redhat.com>, 
-	Joel Granados <j.granados@samsung.com>, Dawei Li <dawei.li@shingroup.cn>, 
-	Andrew Morton <akpm@linux-foundation.org>, Florent Revest <revest@chromium.org>, 
-	David Hildenbrand <david@redhat.com>, Stefan Roesch <shr@devkernel.io>, Andy Chiu <andy.chiu@sifive.com>, 
-	Josh Triplett <josh@joshtriplett.org>, Oleg Nesterov <oleg@redhat.com>, Helge Deller <deller@gmx.de>, 
-	Zev Weiss <zev@bewilderbeest.net>, Ondrej Mosnacek <omosnace@redhat.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Asahi Linux <asahi@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] ARM: dts: samsung: exynos4212-tab3: Fix headset mic,
+ add jack detection
+To: Artur Weber <aweber.kernel@gmail.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Alim Akhtar <alim.akhtar@samsung.com>, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht
+References: <20240503-midas-wm1811-gpio-jack-v1-0-e8cddbd67cbf@gmail.com>
+ <20240503-midas-wm1811-gpio-jack-v1-3-e8cddbd67cbf@gmail.com>
+ <d1007753-bdcf-4db9-bb01-b36e742cee4b@kernel.org>
+ <c76fa2cc-d41e-45c5-891a-b83d5d0634b1@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <c76fa2cc-d41e-45c5-891a-b83d5d0634b1@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 7 May 2024 at 12:24, Alex Benn=C3=A9e <alex.bennee@linaro.org> wrot=
-e:
->
-> Will Deacon <will@kernel.org> writes:
->
-> > Hi Hector,
-> >
-> > On Thu, Apr 11, 2024 at 09:51:19AM +0900, Hector Martin wrote:
-> >> x86 CPUs implement a stricter memory modern than ARM64 (TSO). For this
-> >> reason, x86 emulation on baseline ARM64 systems requires very expensiv=
-e
-> >> memory model emulation. Having hardware that supports this natively is
-> >> therefore very attractive. Such hardware, in fact, exists. This series
-> >> adds support for userspace to identify when TSO is available and
-> >> toggle it on, if supported.
-> >
-> > I'm probably going to make myself hugely unpopular here, but I have a
-> > strong objection to this patch series as it stands. I firmly believe
-> > that providing a prctl() to query and toggle the memory model to/from
-> > TSO is going to lead to subtle fragmentation of arm64 Linux userspace.
-> >
-> > It's not difficult to envisage this TSO switch being abused for native
-> > arm64 applications:
-> >
-> >   * A program no longer crashes when TSO is enabled, so the developer
-> >     just toggles TSO to meet a deadline.
-> >
-> >   * Some legacy x86 sources are being ported to arm64 but concurrency
-> >     is hard so the developer just enables TSO to (mostly) avoid thinkin=
-g
-> >     about it.
-> >
-> >   * Some binaries in a distribution exhibit instability which goes away
-> >     in TSO mode, so a taskset-like program is used to run them with TSO
-> >     enabled.
->
-> These all just seem like cases of engineers hiding from their very real
-> problems. I don't know if its really the kernels place to avoid giving
-> them the foot gun. Would it assuage your concerns at all if we set a
-> taint flag so bug reports/core dumps indicated we were in a
-> non-architectural memory mode?
->
-> > In all these cases, we end up with native arm64 applications that will
-> > either fail to load or will crash in subtle ways on CPUs without the TS=
-O
-> > feature. Assuming that the application cannot be fixed, a better
-> > approach would be to recompile using stronger instructions (e.g.
-> > LDAR/STLR) so that at least the resulting binary is portable. Now, it's
-> > true that some existing CPUs are TSO by design (this is a perfectly
-> > valid implementation of the arm64 memory model), but I think there's a
-> > big difference between quietly providing more ordering guarantees than
-> > software may be relying on and providing a mechanism to discover,
-> > request and ultimately rely upon the stronger behaviour.
->
-> I think the main use case here is for emulation. When we run x86-on-arm
-> in QEMU we do currently insert lots of extra barrier instructions on
-> every load and store. If we can probe and set a TSO mode I can assure
-> you we'll do the right thing ;-)
->
+On 07/05/2024 14:44, Artur Weber wrote:
+> On 6.05.2024 08:31, Krzysztof Kozlowski wrote:
+>> On 03/05/2024 20:55, Artur Weber wrote:
+>>> Add the necessary properties to the samsung,midas-audio node to allow
+>>> for headset jack detection, set up the mic bias regulator GPIO and fix
+>>> some other small issues with the sound setup.
+>>>
+>>> Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
+>>
+>> ...
+>>
+>>> +
+>>>   &bus_acp {
+>>>   	devfreq = <&bus_dmc>;
+>>>   	status = "okay";
+>>> @@ -505,12 +521,11 @@ &i2c_4 {
+>>>   	wm1811: audio-codec@1a {
+>>>   		compatible = "wlf,wm1811";
+>>>   		reg = <0x1a>;
+>>> -		clocks = <&pmu_system_controller 0>;
+>>> -		clock-names = "MCLK1";
+>>> +		clocks = <&pmu_system_controller 0>,
+>>> +			 <&s5m8767_osc S2MPS11_CLK_BT>;
+>>> +		clock-names = "MCLK1", "MCLK2";
+>>>   		interrupt-controller;
+>>>   		#interrupt-cells = <2>;
+>>> -		interrupt-parent = <&gpx3>;
+>>> -		interrupts = <6 IRQ_TYPE_LEVEL_HIGH>;
+>>
+>> Does not look related at all to the patch.
+> 
+> I rolled up two small changes to the wm1811 audio codec config here:
 
-Without a public specification of what TSO mode actually entails,
-deciding which of those barriers can be dropped is not going to be as
-straight-forward as you make it out to be.
 
-Apple's TSO mode is vertically integrated with Rosetta, which means
-that TSO mode provides whatever Rosetta needs to run x86 code
-correctly, and that it could mean different things on different
-generations of the micro-architecture. And whether Apple's TSO is the
-same as Fujitsu's is anyone's guess afaik.
+https://elixir.bootlin.com/linux/v6.8-rc5/source/Documentation/process/submitting-patches.rst#L171
 
-Running a game and seeing it perform better is great, but it is not
-the kind of rigor we usually attempt to apply when adding support for
-architectural features. Hopefully, there will be some architectural
-support for this in the future, but without any spec that defines the
-memory model it implements, I am not convinced we should merge this.
+
+
+Best regards,
+Krzysztof
+
