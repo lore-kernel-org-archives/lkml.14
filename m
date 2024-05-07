@@ -1,59 +1,38 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from nbd.name (nbd.name [46.4.11.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B4F15252F
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 11:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359C715252F;
+	Tue,  7 May 2024 11:43:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715082199; cv=none; b=trGqbAQ6+0KMiKj3bUn1P5G7YoZ0gnf+rYMxQq+S++r9G+SrkF/I7DzGdsYAM91zGX9J342FkZsQtOIY73Y07qCyoL8CvgvUaqGogS4qrgSPE/pwfkOfHltveJVKKTDHh3PID4XQ9q1EFIzT0WaZfvoWu9MLp0VxI6JmDCYAw1s=
+	t=1715082205; cv=none; b=LSG1rnuOHJWrkLzxEkBbeF6WTZXOKrIMvpWsOGygnGu5xviyWvZ/+En0sapc4HVviG5bjSEc0Pt7zB75IOCDzsFvaXMHTQEERRltvTq14iC0P/IJvrwCThQvs61RMBy4WW6OzoI5V3kdByKaAA5iyFf8MQmDufWZl/dHBgWBlDI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715082199; c=relaxed/simple;
-	bh=nJmQfa/G63amUHNoyNPPruCS1yE59OplOKYnfKXgiM8=;
+	s=arc-20240116; t=1715082205; c=relaxed/simple;
+	bh=n8U5Uc/ahU44+LRrdcNd3RNaR49dcnf3S9OFWjvtOoY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c6xI97VO8xlrGcb8gWl+03V9n0yUL9E6jMFa9FT4sF2dwZoPL4tLCNDT5sKrWzdQRnKjJsimpSlagOMN1sGT55ngWgaQWDcc1wCvUa0o+rFug4CojQRiilmk5zj4vGqwTH7HF9LON/FrS3k7Ck+F4yGdMG2D6ktel9t2YjvHtRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YX7+LXtT; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=ZvmFkey6dhQtoig3tcMZClxZkzA3NCmLuUGwqaTGZGqXPcU+azmwSltS0fEouf407SEYsjuZXzA6zcFP0LjgCuZcQkAtqPb8jilJxybkP40ryeM52iv0vlFksLN1fdvstw0Vo680kSXWqptkWjpDiIjwp1s5kNBT3TdY7J0nrpI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=YJqu5DHm; arc=none smtp.client-ip=46.4.11.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YX7+LXtT"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-51f29e80800so3310523e87.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 04:43:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715082195; x=1715686995; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vCCDWmEOxdrYyg03QGM9HCNXy8fqBDtdzIoCPdDROW0=;
-        b=YX7+LXtTF5V7RKwwlL+PLYY/0BXJ5KWbXgprejd3wFVd1HU7X4eIEzoQ0ZC+j0aydy
-         RtGtkscZ2CThkKXGSugkEnZJ+3cqlo85qD8ZpFT0EIa6Jc+WwJ63iGdbHWy3+rQufRFd
-         ncOIZu2HTRd12OjUTCY9pYSH+aRQ5Qa8gdSBD1DCBx3JJq+k/IiVPKkxYvfxknbuokch
-         aSxsYdB3Q/JxxYK97vRv8+KQ4Q1B+/z63JNdAzs2xii0BAO5WocndJcXo6WjB5/4ipad
-         /7nWI75U61ZCqSPOyXofn3ZsQ4GKxu7mGnvN1i4l7xs0fq4/H4dv0IoSaHUUoWHAWdf6
-         9v4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715082195; x=1715686995;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vCCDWmEOxdrYyg03QGM9HCNXy8fqBDtdzIoCPdDROW0=;
-        b=my/meqF3nSUo9GL5WSKdQptuH87iYTBbVIOMQ7eiGoN/M0WfnckbrgFRWhjyuHcMzT
-         w7Bt2+zQlrpGRHrEBJKYaaL0913kTNXPK8uLjU9bcUpJspuqbEdbmtghHIkVHjrFj+JO
-         ghOFo881WmUdyzHMdJ57+cpN4r5SD5ZIFb+CeMcpIntAoXe5FI+hjYvgmfzwYEvR6p2m
-         7Sf7zMw+9BEE6mZDIcGF7KYhlWaY2Wrc5UTBuMkX/nSs8jjCRQo3slSbEoq7qof49dp8
-         n+oDUnAwUMEiIVDDp5PoAKDRJ3O7hFri7sqthMEo39HQV0ufA/BeABbFVvMv6lARJzqn
-         nTjg==
-X-Forwarded-Encrypted: i=1; AJvYcCXg8AGri+QeVk78IWBzeI4ejt201qfc9NWZx+aifLddp4ZQEkcUqQxA8D9UFKElOe+AOw/fCRV7q03qmLdue2A8sM2dazSTC4JHS4Rk
-X-Gm-Message-State: AOJu0YwEv7YHh7PZv3veBU26Apw1C3XDsCvmZms9jE//dMNow0hII3/D
-	fxc6AESz96YIp/afzs+WXEEuYvq2DSpdwvFYhmRtTOyZHada4WWjEIFPRDwLwSw=
-X-Google-Smtp-Source: AGHT+IEatV3ixiUCg3FxqsVCLWRFRBRCA8gGTMCNaxxmiDHfSI+2iThDhqWAlx33/+UViLds+bPqkg==
-X-Received: by 2002:ac2:58cc:0:b0:515:cfaf:737 with SMTP id u12-20020ac258cc000000b00515cfaf0737mr6627843lfo.9.1715082195460;
-        Tue, 07 May 2024 04:43:15 -0700 (PDT)
-Received: from [172.30.205.144] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id h2-20020a19ca42000000b005196e3e8a84sm2121235lfj.177.2024.05.07.04.43.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 May 2024 04:43:15 -0700 (PDT)
-Message-ID: <90a5b641-af5b-4640-b2ad-85dbbab523bf@linaro.org>
-Date: Tue, 7 May 2024 13:43:13 +0200
+	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="YJqu5DHm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=n8U5Uc/ahU44+LRrdcNd3RNaR49dcnf3S9OFWjvtOoY=; b=YJqu5DHmoDQFv2SpdJ+AHK0JCa
+	PK6XiFL+xqIZ2xm8Om2sajRj6UVCtyD58LD0kqJfwX429IL8FIP2ysZFT9sMBXA+QNK37DiWyXDum
+	n9lfobOvUPZ5zQWt6i5Gx/fYcS9n64cIMBMCFFypzQC12ofAA3RaZACqsIRkrNshrQFI=;
+Received: from p54ae9c93.dip0.t-ipconnect.de ([84.174.156.147] helo=nf.local)
+	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <nbd@nbd.name>)
+	id 1s4JE0-00EKxy-1x;
+	Tue, 07 May 2024 13:43:12 +0200
+Message-ID: <4bcb2be8-d769-4972-be9b-c7798f50f207@nbd.name>
+Date: Tue, 7 May 2024 13:43:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,46 +40,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] phy: qcom-snps-femto-v2: Add load and voltage setting for
- LDO's used
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Udipto Goswami <quic_ugoswami@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240502123312.31083-1-quic_ugoswami@quicinc.com>
- <CAA8EJppeQTadmny=hcs4xCQDXHwXEBHXjeecvZCUVcSXmwBTgg@mail.gmail.com>
+Subject: Re: [EXTERNAL] [PATCH net-next] net: add missing check for TCP
+ fraglist GRO
+To: Suman Ghosh <sumang@marvell.com>,
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+ Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>,
+ David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20240507094114.67716-1-nbd@nbd.name>
+ <SJ0PR18MB521604310B1F7DC297C2870DDBE42@SJ0PR18MB5216.namprd18.prod.outlook.com>
+From: Felix Fietkau <nbd@nbd.name>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <CAA8EJppeQTadmny=hcs4xCQDXHwXEBHXjeecvZCUVcSXmwBTgg@mail.gmail.com>
+Autocrypt: addr=nbd@nbd.name; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCeMncXpbbWNT2AtoAYICrKyX5R3iMAoMhw
+ cL98efvrjdstUfTCP2pfetyN
+In-Reply-To: <SJ0PR18MB521604310B1F7DC297C2870DDBE42@SJ0PR18MB5216.namprd18.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 5/2/24 15:12, Dmitry Baryshkov wrote:
-> On Thu, 2 May 2024 at 15:33, Udipto Goswami <quic_ugoswami@quicinc.com> wrote:
+On 07.05.24 13:33, Suman Ghosh wrote:
+>>----------------------------------------------------------------------
+>>It turns out that the existing checks do not guarantee that the skb can be
+>>pulled up to the GRO offset. When using the usb r8152 network driver with
+>>GRO fraglist, the BUG() in __skb_pull is often triggered.
+>>Fix the crash by adding the missing check.
 >>
->> The Femto phy depends on 0.88/ 1.8/ 3.3V regulators for its operation.
->> If one of the regulators is not voted to the required minimum voltage
->> for phy to operate, then High speed mode of operation will fail.
->>
->> On certain targets like (qcm6490_rb3gen2) where the minimum voltage
->> of the regulator is lower than the operating voltage of the phy.
->> If not voted properly, the phy supply would be limited to the min value
->> of the LDO thereby rendering the phy non-operational.
->>
->> The current implementation of the regulators in the Femto PHY is not
->> setting the load and voltage for each LDO. The appropriate voltages and
->> loads required for the PHY to operate should be set.
-> 
-> Please move min/max voltages to the DTS. There is no need to set them
-> from the driver.
-> 
-> Also, is there any reason why you can't use `regulator-initial-mode =
-> <RPMH_REGULATOR_MODE_HPM>;` like other boards do?
+>>Fixes: 8d95dc474f85 ("net: add code for TCP fraglist GRO")
+> [Suman] Since this is a fix, this should be pushed to "net".
 
-The point is to aggregate the values and switch to HPM if a threshold is
-crossed (or stay in LPM otherwise)
+No, it is fixing a commit that was just pulled into -next.
 
-Konrad
+- Felix
+
