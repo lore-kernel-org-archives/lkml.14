@@ -1,103 +1,175 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA20E15B995;
-	Tue,  7 May 2024 12:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D4D156F29;
+	Tue,  7 May 2024 12:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715084704; cv=none; b=VtccfAYZQ0qjKj1ZkTc+oE1ee4u75SOv2ZSP/kW66Ym9jzlE9RMEtggKq8IXzt4NbGltrDkRYUmXbtuT48dwyzlFvThWXMAVIKC1TcWoHjP9GrWmFllUenVC8kyynv1l0usR6Fdam2tkuWw11igTNMNrCE9NHEhY0Ko/gMsyWfs=
+	t=1715084759; cv=none; b=bP6tA2DF02IXQ2ZNNtqHUyTTRTqYK4k2eoXiA6UgM30BqiS/H41CshjoAbahOYjkM3qPIUbAxQovDPQluo8L7PeNu4cE6Q/vX185Zdy+8w+RO571A3jWoaSbxxnj4CrlzP9IJyYD2T8TINdEzFbhuL1chN2rH0MPTNMvnMw5eqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715084704; c=relaxed/simple;
-	bh=7SblqolKjySmEc6V7cBH+cBlOqX473FOdbBoGQaq4bk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SMo+Ylvgm8p3tlpsLDi55vG+FA1vWY3SMkeAuOZILkzCVdgZIheg8cDSsXxr0BwNqQZkFAs/NuTQ0fYPbsrwKtS7LCO/DNqp5N2dZlZQzorCDwtqNm2a9v5H7Yv1kRrOMJnfrk+yzCVDVCUI1kxH7vEc1XFREfcCgIuQmWjcSjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=dj+djPZm; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="dj+djPZm"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4475oO0n004102;
-	Tue, 7 May 2024 06:57:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=PODMain02222019; bh=ftBlVY/8+8MJLqv
-	he1wF4ZSuv2MhawQfCqt8ygN3VQI=; b=dj+djPZm7UuJ4P1+gdmrC6npbftpIzV
-	Cn7oGOBQ94BeHYmQqp5rYZKlYgM6FZqeYDcR0h4yd2qreGTqIAQFKVvlZe51PSn5
-	fEQEUE28InOBFMIi7968yoZkf1ecC/VLfi0Wa6UFogK6XdidF5inddpDg+ZBy5Pj
-	yJs6PDiB+QDDarDxVILc53kk6pslk4FY7Sm5CZJWddfSLoTtXIrk2SVOXtLlwMew
-	D3YprLNu8d+EHHyfaDiirnemaycRdSUB4Lg+wCPFoSWYmL2+WNGXYkPnu2UcNgHy
-	Q/r7wIyubU0Csb6k0N7Oa6i30Lwmx9pmDSAl2j9uAPuPdcAIKsphE/w==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xy2cmh154-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 06:57:13 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 7 May 2024
- 12:57:11 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Tue, 7 May 2024 12:57:11 +0100
-Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id F1C16820244;
-	Tue,  7 May 2024 11:57:10 +0000 (UTC)
-Date: Tue, 7 May 2024 11:57:09 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC: James Schulman <james.schulman@cirrus.com>,
-        David Rhodes
-	<david.rhodes@cirrus.com>,
-        Richard Fitzgerald <rf@opensource.cirrus.com>,
-        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        "Liam
- Girdwood" <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Lars-Peter
- Clausen" <lars@metafoo.de>,
-        Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Banajit Goswami
-	<bgoswami@quicinc.com>, <alsa-devel@alsa-project.org>,
-        <patches@opensource.cirrus.com>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] ASoC: Constify channel mapping array arguments in
- set_channel_map()
-Message-ID: <ZjoXFedPicgq8fyP@opensource.cirrus.com>
-References: <20240507-asoc-x1e80100-4-channel-mapping-v1-0-b12c13e0a55d@linaro.org>
- <20240507-asoc-x1e80100-4-channel-mapping-v1-1-b12c13e0a55d@linaro.org>
+	s=arc-20240116; t=1715084759; c=relaxed/simple;
+	bh=hfuT7WNUoZz0JVxXMhFVmQ3qWpZaycbTaEqiWpyZtnw=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=G2CirK5ssppmlPqze9aROWAy2HKo5buwS8ZJVXhVqalJ71cty1Yi8qleMIL2Knfy3EWG5gsMyWmzxcW8lnD2noLBf5iGKJjOdj2h3wm+uXmX0CwAhEo/z0ZGHvvjETDQ3TE1Xyp3WIGm/fhWk5aiU0vckjQqF82HqViAPzR2LFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
+Received: from local
+	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
+	 (Exim 4.97.1)
+	(envelope-from <daniel@makrotopia.org>)
+	id 1s4JtI-0000000049d-2mRN;
+	Tue, 07 May 2024 12:25:52 +0000
+Date: Tue, 7 May 2024 13:25:46 +0100
+From: Daniel Golle <daniel@makrotopia.org>
+To: Felix Fietkau <nbd@nbd.name>, Sean Wang <sean.wang@mediatek.com>,
+	Mark Lee <Mark-MC.Lee@mediatek.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [PATCH net v2 2/2] net: ethernet: mediatek: use ADMAv1 instead of
+ ADMAv2.0 on MT7981 and MT7986
+Message-ID: <9a694114ffbbf5f03384b0cbf0c27b9528c94576.1715084578.git.daniel@makrotopia.org>
+References: <6747c038f4fc3b490e1b7a355cdaaf361e359def.1715084578.git.daniel@makrotopia.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240507-asoc-x1e80100-4-channel-mapping-v1-1-b12c13e0a55d@linaro.org>
-X-Proofpoint-ORIG-GUID: _LFPFoz0pvkHmcCFOZwADU6UMjJP1mf7
-X-Proofpoint-GUID: _LFPFoz0pvkHmcCFOZwADU6UMjJP1mf7
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <6747c038f4fc3b490e1b7a355cdaaf361e359def.1715084578.git.daniel@makrotopia.org>
 
-On Tue, May 07, 2024 at 12:27:30PM +0200, Krzysztof Kozlowski wrote:
-> There is no need for implementations of DAI set_channel_map() to modify
-> contents of passed arrays with actual channel mapping.  Additionally,
-> the caller keeps full ownership of the array.
-> 
-> Constify these pointer arguments so the code will be safer and easier to
-> read (documenting the caller's ownership).
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  include/sound/cs35l41.h                 |  4 ++--
->  include/sound/soc-dai.h                 |  8 ++++----
->  sound/soc/codecs/adau7118.c             |  6 ++++--
->  sound/soc/codecs/cs35l41-lib.c          |  4 ++--
->  sound/soc/codecs/cs35l41.c              |  3 ++-
+ADMAv2.0 is plagued by RX hangs which can't easily detected and happen upon
+receival of a corrupted Ethernet frame.
 
-For the cs35l41 bits:
+Use ADMAv1 instead which is also still present and usable, and doesn't
+suffer from that problem.
 
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Fixes: 197c9e9b17b1 ("net: ethernet: mtk_eth_soc: introduce support for mt7986 chipset")
+Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+---
+v2: improve commit message
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 46 ++++++++++-----------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
-Thanks,
-Charles
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 3eefb735ce19..d7d73295f0dc 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -110,16 +110,16 @@ static const struct mtk_reg_map mt7986_reg_map = {
+ 	.tx_irq_mask		= 0x461c,
+ 	.tx_irq_status		= 0x4618,
+ 	.pdma = {
+-		.rx_ptr		= 0x6100,
+-		.rx_cnt_cfg	= 0x6104,
+-		.pcrx_ptr	= 0x6108,
+-		.glo_cfg	= 0x6204,
+-		.rst_idx	= 0x6208,
+-		.delay_irq	= 0x620c,
+-		.irq_status	= 0x6220,
+-		.irq_mask	= 0x6228,
+-		.adma_rx_dbg0	= 0x6238,
+-		.int_grp	= 0x6250,
++		.rx_ptr		= 0x4100,
++		.rx_cnt_cfg	= 0x4104,
++		.pcrx_ptr	= 0x4108,
++		.glo_cfg	= 0x4204,
++		.rst_idx	= 0x4208,
++		.delay_irq	= 0x420c,
++		.irq_status	= 0x4220,
++		.irq_mask	= 0x4228,
++		.adma_rx_dbg0	= 0x4238,
++		.int_grp	= 0x4250,
+ 	},
+ 	.qdma = {
+ 		.qtx_cfg	= 0x4400,
+@@ -1107,7 +1107,7 @@ static bool mtk_rx_get_desc(struct mtk_eth *eth, struct mtk_rx_dma_v2 *rxd,
+ 	rxd->rxd1 = READ_ONCE(dma_rxd->rxd1);
+ 	rxd->rxd3 = READ_ONCE(dma_rxd->rxd3);
+ 	rxd->rxd4 = READ_ONCE(dma_rxd->rxd4);
+-	if (mtk_is_netsys_v2_or_greater(eth)) {
++	if (mtk_is_netsys_v3_or_greater(eth)) {
+ 		rxd->rxd5 = READ_ONCE(dma_rxd->rxd5);
+ 		rxd->rxd6 = READ_ONCE(dma_rxd->rxd6);
+ 	}
+@@ -2028,7 +2028,7 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
+ 			break;
+ 
+ 		/* find out which mac the packet come from. values start at 1 */
+-		if (mtk_is_netsys_v2_or_greater(eth)) {
++		if (mtk_is_netsys_v3_or_greater(eth)) {
+ 			u32 val = RX_DMA_GET_SPORT_V2(trxd.rxd5);
+ 
+ 			switch (val) {
+@@ -2140,7 +2140,7 @@ static int mtk_poll_rx(struct napi_struct *napi, int budget,
+ 		skb->dev = netdev;
+ 		bytes += skb->len;
+ 
+-		if (mtk_is_netsys_v2_or_greater(eth)) {
++		if (mtk_is_netsys_v3_or_greater(eth)) {
+ 			reason = FIELD_GET(MTK_RXD5_PPE_CPU_REASON, trxd.rxd5);
+ 			hash = trxd.rxd5 & MTK_RXD5_FOE_ENTRY;
+ 			if (hash != MTK_RXD5_FOE_ENTRY)
+@@ -2690,7 +2690,7 @@ static int mtk_rx_alloc(struct mtk_eth *eth, int ring_no, int rx_flag)
+ 
+ 		rxd->rxd3 = 0;
+ 		rxd->rxd4 = 0;
+-		if (mtk_is_netsys_v2_or_greater(eth)) {
++		if (mtk_is_netsys_v3_or_greater(eth)) {
+ 			rxd->rxd5 = 0;
+ 			rxd->rxd6 = 0;
+ 			rxd->rxd7 = 0;
+@@ -3893,7 +3893,7 @@ static int mtk_hw_init(struct mtk_eth *eth, bool reset)
+ 	else
+ 		mtk_hw_reset(eth);
+ 
+-	if (mtk_is_netsys_v2_or_greater(eth)) {
++	if (mtk_is_netsys_v3_or_greater(eth)) {
+ 		/* Set FE to PDMAv2 if necessary */
+ 		val = mtk_r32(eth, MTK_FE_GLO_MISC);
+ 		mtk_w32(eth,  val | BIT(4), MTK_FE_GLO_MISC);
+@@ -5169,11 +5169,11 @@ static const struct mtk_soc_data mt7981_data = {
+ 		.dma_len_offset = 8,
+ 	},
+ 	.rx = {
+-		.desc_size = sizeof(struct mtk_rx_dma_v2),
+-		.irq_done_mask = MTK_RX_DONE_INT_V2,
++		.desc_size = sizeof(struct mtk_rx_dma),
++		.irq_done_mask = MTK_RX_DONE_INT,
+ 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
+-		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
+-		.dma_len_offset = 8,
++		.dma_max_len = MTK_TX_DMA_BUF_LEN,
++		.dma_len_offset = 16,
+ 	},
+ };
+ 
+@@ -5195,11 +5195,11 @@ static const struct mtk_soc_data mt7986_data = {
+ 		.dma_len_offset = 8,
+ 	},
+ 	.rx = {
+-		.desc_size = sizeof(struct mtk_rx_dma_v2),
+-		.irq_done_mask = MTK_RX_DONE_INT_V2,
++		.desc_size = sizeof(struct mtk_rx_dma),
++		.irq_done_mask = MTK_RX_DONE_INT,
+ 		.dma_l4_valid = RX_DMA_L4_VALID_V2,
+-		.dma_max_len = MTK_TX_DMA_BUF_LEN_V2,
+-		.dma_len_offset = 8,
++		.dma_max_len = MTK_TX_DMA_BUF_LEN,
++		.dma_len_offset = 16,
+ 	},
+ };
+ 
+-- 
+2.45.0
+
