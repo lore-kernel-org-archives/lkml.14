@@ -1,110 +1,101 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FC915FA80
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 14:36:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57A2015ECE2;
+	Tue,  7 May 2024 14:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715092607; cv=none; b=T8a767x6B/458rZhcoMmmouisSdiZQuPk+cCPY85rY0nf9Z4EpsI5CBf0TkRhOY2fAm0HvUHdEI66mzM3JV8MWqAi8V3NnicHWiQYUwYzl3ITCwIBv63mMtdJFZsUheD7LgRCYCEMmhT8QsQrNdUM51yizK0rC0I3qTTv2MO1Zo=
+	t=1715092623; cv=none; b=sqj4My9w5+4/MVC14NrckpcNIU27twCwp2shPUjFhvKXPr9Hj6/7rpyfvK6iZ3InC4WXirvmhF/18lJdY8xAkf3jMHQ5qiA4O8KVNpixnyWhgVQJyBOxFK/oWdeaMaTY3t8x6V97IS7ok2xQwi3ABiLWLfHZR8VEOk4daTgjngs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715092607; c=relaxed/simple;
-	bh=1nLbM1ptcwD7xsCexw9/9id1x6y7D7jbqpEOYd4k+OQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ooZvYVmExKc6ouiOj/+eTdPiLhBvjpP+DW5Utik5aALY4WLuqlkt8v1pKTf+fYTrnHtOoDosqsI9jzuJyRvblxAZLFqhAzzMvmlz2JFvFrsmnUBd2Z6dVhwLidUSjSvMGs5NV5EYfGnYkfui5rgpKvyljOqo+Y0f3gkswlJ9Qrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ILhQRlYz; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715092623; c=relaxed/simple;
+	bh=8lBxj7OlkdnR3Nw99USWXlYjj/eD13fDPsd3mf0Jpz4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TvdxLnCtoP3FzGcOKxRQbK6g90aXYTO2b6lpEKAqbd8Xc85orAcvMePGHPCmnjajrCCTJKpYUtD0Ph1FwiTvUdoqgYq6OovxowgNGAPxCm50TghNcMi8/kp+nHGe2UMuvistQHtET8PTfziAoNI7bPOhP+yMiCmS4Wx3+xH4bjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=lF29aSwl; arc=none smtp.client-ip=78.40.148.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ILhQRlYz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715092605;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=q7HVnwjvSt8iPkONjlCrJffpYCEpxZC33LnAmwF0ZIs=;
-	b=ILhQRlYzqrXvAdzE8hk7MHI1+vw+f2LtDANipBY7cSzv3F4N4p48u9VlBdV79HTZ2k9Zjo
-	xuFut/3i+htCWtMkIPMmeB3a1ZiH8ftEYx7jPvxhhZJ1rID/LsWKXqRP5NtnJK0YLqYt7a
-	KS57PyVIjaP4n2O0vjU08d4jQUWkvAg=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-12-TJHaL40tN1u07flWbrRGSg-1; Tue, 07 May 2024 10:36:43 -0400
-X-MC-Unique: TJHaL40tN1u07flWbrRGSg-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-572afd6e96fso1332521a12.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 07:36:43 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715092602; x=1715697402;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q7HVnwjvSt8iPkONjlCrJffpYCEpxZC33LnAmwF0ZIs=;
-        b=u6wQ+K/bMj48CBag5NjmetlNN7POT1/Bja/v7miszbIzPUWlLfvNpqD0cr+y1q6zfP
-         gUjAD3IGum2sBt4xujI47YKHvsH3UzdlpKNrQeuTFn9hkkQOjNWEWlWDUrk6uGXzhK2t
-         eZq3R84H1z2k5Fl+yQInq5WDKi1xuex4bBHIDC0REdFlcJtm5v+sxFs7qaM6HjSyepcX
-         dIwMUkG+ZsvobdjDDyj2bTbSOfu4Zd3Se/c3HoIoFzTGiZ7wAtqkQ0/9BrupHsNzvaQR
-         0JA6qWJ6/PNh+R3kAVKaqr1zSAzoHk8/niiycC+RMRuNOqfuEFku/VnutR99rIozhXM/
-         kKlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWtGU9A0zW0J7SOxkn3nqZbeX09GDpl83rf7+yWiXHHB3dXp6fwQu1B1SrqmCyj8zz78t++QwF/oq4byjqlFU8gewgoftOnf949RasG
-X-Gm-Message-State: AOJu0YzafONmZ8gwYmYXcCwTZ2ohcNIQNilJThdyuXoRoVJ/HEx/duir
-	UKPxSOU6TFaLqHWUV/LdXnjJnhHHRidA0rR0+S9ilQchPxzN6DQg3Hdf0J+jY/zOK7qFrkEqRVd
-	rxoi5KLQAPxI4ypVwjQmED1l5eCE7qQ/Sz+sC/fOqtiXX3Hcq/QP9k4ZNJcVKpQ==
-X-Received: by 2002:a50:cd5d:0:b0:56c:1696:58a8 with SMTP id d29-20020a50cd5d000000b0056c169658a8mr12098640edj.0.1715092602084;
-        Tue, 07 May 2024 07:36:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEY7d0zX5iF23LmZa2kdYMHYLArbIB3lGdBmgCb7Vbc8ZFRfJsz9dwxj/ZSVy7TQT4rRhoceQ==
-X-Received: by 2002:a50:cd5d:0:b0:56c:1696:58a8 with SMTP id d29-20020a50cd5d000000b0056c169658a8mr12098622edj.0.1715092601795;
-        Tue, 07 May 2024 07:36:41 -0700 (PDT)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
-        by smtp.gmail.com with ESMTPSA id u1-20020aa7d541000000b00572eebbfc61sm3485364edr.35.2024.05.07.07.36.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 07:36:41 -0700 (PDT)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] MAINTAINERS: repair file entry in BROADCOM BCM2835 CAMERA DRIVERS
-Date: Tue,  7 May 2024 16:36:37 +0200
-Message-ID: <20240507143637.179101-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="lF29aSwl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=bE7QxHBl23SqmkvQImsRLD5Ew8sdZ2Sh0oNk8KX8UXI=; b=lF29aSwlz7rdbvZlOKsenoLRqj
+	WPB0gv4x5crFU+bqbBAuOVDDVwlxMWUqxkLYMqTigGdwilcGQOdG31W7ChRV00vDImXw9ktfgN2OX
+	r/02MyS0yrCoGE1Cz5ctBUr8GdVEkoHYzFUvAy6CXQhvghOyLmRR3WO0vNeCbr48AV33D/mRKEXOd
+	Nt5oSU7qQvtojXW4qyTc10bq8fvakg3LaRuuFtOfvSD4Me0QcFHERYeahgWuxk6ea89VOlQ9BH5b4
+	NylfnD0+nDTd6MryDtsvcy5lZQJcxNa3lYx8taKNzSWBXk/2zlWKhTlTC/irXHHLQcO13Z0Kl0jXg
+	PlInHUHg==;
+Received: from [217.161.79.54] (helo=[172.16.0.144])
+	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1s4LMT-008sEA-Fx; Tue, 07 May 2024 15:00:05 +0100
+Message-ID: <b7421822-4c07-40e2-b2a4-3599ba6b39da@codethink.co.uk>
+Date: Tue, 7 May 2024 15:00:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] riscv, bpf: Optimize zextw insn with Zba extension
+To: Pu Lehui <pulehui@huawei.com>, Xiao Wang <xiao.w.wang@intel.com>,
+ paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+ luke.r.nels@gmail.com, xi.wang@gmail.com, bjorn@kernel.org
+Cc: ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+ martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@google.com, haoluo@google.com, jolsa@kernel.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, haicheng.li@intel.com
+References: <20240507104528.435980-1-xiao.w.wang@intel.com>
+ <6836eb5c-f135-4e58-987b-987ab446b27c@huawei.com>
+Content-Language: en-GB
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+In-Reply-To: <6836eb5c-f135-4e58-987b-987ab446b27c@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Sender: ben.dooks@codethink.co.uk
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+On 07/05/2024 13:47, Pu Lehui wrote:
+> 
+> On 2024/5/7 18:45, Xiao Wang wrote:
+>> The Zba extension provides add.uw insn which can be used to implement
+>> zext.w with rs2 set as ZERO.
+>>
+>> Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
+>> ---
+>>   arch/riscv/Kconfig       | 19 +++++++++++++++++++
+>>   arch/riscv/net/bpf_jit.h | 18 ++++++++++++++++++
+>>   2 files changed, 37 insertions(+)
+>>
+>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>> index 6bec1bce6586..0679127cc0ea 100644
+>> --- a/arch/riscv/Kconfig
+>> +++ b/arch/riscv/Kconfig
+>> @@ -586,6 +586,14 @@ config RISCV_ISA_V_PREEMPTIVE
+>>         preemption. Enabling this config will result in higher memory
+>>         consumption due to the allocation of per-task's kernel Vector 
+>> context.
+>> +config TOOLCHAIN_HAS_ZBA
+>> +    bool
+>> +    default y
+>> +    depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64ima_zba)
+>> +    depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32ima_zba)
+>> +    depends on LLD_VERSION >= 150000 || LD_VERSION >= 23900
+>> +    depends on AS_HAS_OPTION_ARCH
+>> +
+>>   config TOOLCHAIN_HAS_ZBB
 
-Commit 392cd78d495f ("media: bcm2835-unicam: Add support for CCP2/CSI2
-camera interface") adds the new file entry drivers/media/platform/bcm2835/.
-The commit however adds the driver in drivers/media/platform/broadcom/.
+At this point would it be easier to ask the toolchain what's enabled
+and put into kconfig via some sort of script?
 
-Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
-broken reference.
-
-Repair this file entry in the BROADCOM BCM2835 CAMERA DRIVERS section.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2fe4506f9fe8..fe6d37745106 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4176,7 +4176,7 @@ M:	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>
- L:	linux-media@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/media/brcm,bcm2835-unicam.yaml
--F:	drivers/media/platform/bcm2835/
-+F:	drivers/media/platform/broadcom/
- 
- BROADCOM BCM47XX MIPS ARCHITECTURE
- M:	Hauke Mehrtens <hauke@hauke-m.de>
 -- 
-2.44.0
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+https://www.codethink.co.uk/privacy.html
 
