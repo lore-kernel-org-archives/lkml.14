@@ -1,52 +1,54 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DECA8168AFD
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:58:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877B4168B1B
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:58:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097505; cv=none; b=gJ8qcZxbEnjEtK7hHlxR/dOIXxYmoBZCCG2uMYxK+3XlE/vFG1yKzVcGKHjXVQ5j1s9TA1j+WZl6ChkcUPFk5rwg5DfBw+8Q6qmROTBcIMsec5124PUJch6z7OSlFubBWy1y6kRMZvlTSeCE8voa0prw9/bO/tCVuUZlkR8J38M=
+	t=1715097506; cv=none; b=ufryCUS+o9kkZjJtiZK/rCNMMv9JRhsyEio08CVFVpxxntR3DiezpGd7nEcFonExT6pIw4HefA8cOdB/QCJQ+WOVV/T8nJR/j7RZJhOd1vxPbDRB00qQKQjApM0PAs4NDmPTBYvCSW4llI1a2Bzqdt5dH9KI7MHRvfcxtiFgc1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715097505; c=relaxed/simple;
-	bh=hdJ9aJOg483E4Swl6JUZaT0gB+ec59WGRD45jfApTck=;
+	s=arc-20240116; t=1715097506; c=relaxed/simple;
+	bh=Nv7alPH5S+bfefJPfN/RIwSAyzbcD0z6//fULF1pSNg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=E5vbiMmuLIBGpQFjvPaY4wb8H37xXHjSxFzTS+nIrFrzGWSWahrQY6GIHwpuNMCRPUiFavkowR81Cwy4/Mi3o6oSZnP93XD1pNrtmF1rbEO2qMUgNB0w+r6dZsUFzaGyRDGKWtyIxhpGg89Sg1WvcHZo+1dLmMZ4cdEmt59Ggdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V28GPXXe; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=iJ0UPqdbh8NscDquWI2aZNXVa/JDnI3VysyiAI6zsmjHXR4IA+2DLyxeLgMwou6fRudFrrLcC685mtrOwOo44LHf2ekD3pEAnxyYBHgG4BNgKTYDUIApQM5Y1GoqWxPXOn257Nn03YCVoFTiZUKRL0hPK0uBos6YaUArNO0Nubk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DpyV4e79; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V28GPXXe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DpyV4e79"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715097501;
+	s=mimecast20190719; t=1715097502;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jEi6J0wAbZoZwLHM7rRoVyozmEAotDh+TugUPX8/Nhs=;
-	b=V28GPXXeYwirOpCtLd+uv6Ex0LBhXuTvU0RYWC/05Gk4cnEQJXgqAJrB2HJaLVNYTD/KVO
-	sTQ9EEs0EBKDdgJyzH4dWcMOxDVozgiOn1BoHnJkwya7cTouClxiXFxRPGlc1Uje+baH0Z
-	bGxTTgyQY8vsydHUiCWsUzB27FRdcmc=
+	bh=B008ipLLAUODyL5/aCau7+Mv2sC3RQCFlbYlFbvm7+c=;
+	b=DpyV4e792EcGlCuBxXW62TceqKQzg58ZoTnTyQPLatXD6VSCs7HTgzNu02LVnC66Mbd6xs
+	ork1VXHOW72wd9H4er/iF1qEXOjuAEHmpQCfq34pc49hn3Qzbj/kq4d2TC6LEwjtGiEcgl
+	dzNdw5GbCRZK+xPx8CzXecGg1/fTpx4=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-25-vozxvGVJPOKufatsk_tYOA-1; Tue, 07 May 2024 11:58:18 -0400
-X-MC-Unique: vozxvGVJPOKufatsk_tYOA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+ us-mta-279-Whl3HQ72PNaa1_RSdPwmTw-1; Tue, 07 May 2024 11:58:21 -0400
+X-MC-Unique: Whl3HQ72PNaa1_RSdPwmTw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 54415101A525;
-	Tue,  7 May 2024 15:58:18 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8D62B857A86;
+	Tue,  7 May 2024 15:58:20 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 382A9200C7E6;
-	Tue,  7 May 2024 15:58:18 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 670074750A1;
+	Tue,  7 May 2024 15:58:20 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Cc: Sean Christopherson <seanjc@google.com>
-Subject: [PATCH 02/17] KVM: x86: Remove separate "bit" defines for page fault error code masks
-Date: Tue,  7 May 2024 11:58:02 -0400
-Message-ID: <20240507155817.3951344-3-pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	David Matlack <dmatlack@google.com>,
+	Kai Huang <kai.huang@intel.com>
+Subject: [PATCH 14/17] KVM: x86/mmu: Handle no-slot faults at the beginning of kvm_faultin_pfn()
+Date: Tue,  7 May 2024 11:58:14 -0400
+Message-ID: <20240507155817.3951344-15-pbonzini@redhat.com>
 In-Reply-To: <20240507155817.3951344-1-pbonzini@redhat.com>
 References: <20240507155817.3951344-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -57,97 +59,117 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
 From: Sean Christopherson <seanjc@google.com>
 
-Open code the bit number directly in the PFERR_* masks and drop the
-intermediate PFERR_*_BIT defines, as having to bounce through two macros
-just to see which flag corresponds to which bit is quite annoying, as is
-having to define two macros just to add recognition of a new flag.
+Handle the "no memslot" case at the beginning of kvm_faultin_pfn(), just
+after the private versus shared check, so that there's no need to
+repeatedly query whether or not a slot exists.  This also makes it more
+obvious that, except for private vs. shared attributes, the process of
+faulting in a pfn simply doesn't apply to gfns without a slot.
 
-Use ternary operator to derive the bit in permission_fault(), the one
-function that actually needs the bit number as part of clever shifting
-to avoid conditional branches.  Generally the compiler is able to turn
-it into a conditional move, and if not it's not really a big deal.
+Opportunistically stuff @fault's metadata in kvm_handle_noslot_fault() so
+that it doesn't need to be duplicated in all paths that invoke
+kvm_handle_noslot_fault(), and to minimize the probability of not stuffing
+the right fields.
 
-No functional change intended.
+Leave the existing handle behind, but convert it to a WARN, to guard
+against __kvm_faultin_pfn() unexpectedly nullifying fault->slot.
 
+Cc: David Matlack <dmatlack@google.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <20240228024147.41573-3-seanjc@google.com>
+Reviewed-by: Kai Huang <kai.huang@intel.com>
+Message-ID: <20240228024147.41573-14-seanjc@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h | 32 ++++++++++----------------------
- arch/x86/kvm/mmu.h              |  5 ++---
- 2 files changed, 12 insertions(+), 25 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 29 +++++++++++++++++------------
+ 1 file changed, 17 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 9f92bdb78504..a047480da5af 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -254,28 +254,16 @@ enum x86_intercept_stage;
- 	KVM_GUESTDBG_INJECT_DB | \
- 	KVM_GUESTDBG_BLOCKIRQ)
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index b09c8034ed15..7630ad8cb022 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -3270,6 +3270,10 @@ static int kvm_handle_noslot_fault(struct kvm_vcpu *vcpu,
+ 	vcpu_cache_mmio_info(vcpu, gva, fault->gfn,
+ 			     access & shadow_mmio_access_mask);
  
--
--#define PFERR_PRESENT_BIT 0
--#define PFERR_WRITE_BIT 1
--#define PFERR_USER_BIT 2
--#define PFERR_RSVD_BIT 3
--#define PFERR_FETCH_BIT 4
--#define PFERR_PK_BIT 5
--#define PFERR_SGX_BIT 15
--#define PFERR_GUEST_FINAL_BIT 32
--#define PFERR_GUEST_PAGE_BIT 33
--#define PFERR_IMPLICIT_ACCESS_BIT 48
--
--#define PFERR_PRESENT_MASK	BIT(PFERR_PRESENT_BIT)
--#define PFERR_WRITE_MASK	BIT(PFERR_WRITE_BIT)
--#define PFERR_USER_MASK		BIT(PFERR_USER_BIT)
--#define PFERR_RSVD_MASK		BIT(PFERR_RSVD_BIT)
--#define PFERR_FETCH_MASK	BIT(PFERR_FETCH_BIT)
--#define PFERR_PK_MASK		BIT(PFERR_PK_BIT)
--#define PFERR_SGX_MASK		BIT(PFERR_SGX_BIT)
--#define PFERR_GUEST_FINAL_MASK	BIT_ULL(PFERR_GUEST_FINAL_BIT)
--#define PFERR_GUEST_PAGE_MASK	BIT_ULL(PFERR_GUEST_PAGE_BIT)
--#define PFERR_IMPLICIT_ACCESS	BIT_ULL(PFERR_IMPLICIT_ACCESS_BIT)
-+#define PFERR_PRESENT_MASK	BIT(0)
-+#define PFERR_WRITE_MASK	BIT(1)
-+#define PFERR_USER_MASK		BIT(2)
-+#define PFERR_RSVD_MASK		BIT(3)
-+#define PFERR_FETCH_MASK	BIT(4)
-+#define PFERR_PK_MASK		BIT(5)
-+#define PFERR_SGX_MASK		BIT(15)
-+#define PFERR_GUEST_FINAL_MASK	BIT_ULL(32)
-+#define PFERR_GUEST_PAGE_MASK	BIT_ULL(33)
-+#define PFERR_IMPLICIT_ACCESS	BIT_ULL(48)
++	fault->slot = NULL;
++	fault->pfn = KVM_PFN_NOSLOT;
++	fault->map_writable = false;
++
+ 	/*
+ 	 * If MMIO caching is disabled, emulate immediately without
+ 	 * touching the shadow page tables as attempting to install an
+@@ -4350,15 +4354,18 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
+ 		return -EFAULT;
+ 	}
  
- #define PFERR_NESTED_GUEST_PAGE (PFERR_GUEST_PAGE_MASK |	\
- 				 PFERR_WRITE_MASK |		\
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 60f21bb4c27b..2343c9f00e31 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -213,7 +213,7 @@ static inline u8 permission_fault(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
++	if (unlikely(!slot))
++		return kvm_handle_noslot_fault(vcpu, fault, access);
++
+ 	/*
+ 	 * Retry the page fault if the gfn hit a memslot that is being deleted
+ 	 * or moved.  This ensures any existing SPTEs for the old memslot will
+ 	 * be zapped before KVM inserts a new MMIO SPTE for the gfn.
  	 */
- 	u64 implicit_access = access & PFERR_IMPLICIT_ACCESS;
- 	bool not_smap = ((rflags & X86_EFLAGS_AC) | implicit_access) == X86_EFLAGS_AC;
--	int index = (pfec + (not_smap << PFERR_RSVD_BIT)) >> 1;
-+	int index = (pfec | (not_smap ? PFERR_RSVD_MASK : 0)) >> 1;
- 	u32 errcode = PFERR_PRESENT_MASK;
- 	bool fault;
+-	if (slot && (slot->flags & KVM_MEMSLOT_INVALID))
++	if (slot->flags & KVM_MEMSLOT_INVALID)
+ 		return RET_PF_RETRY;
  
-@@ -234,8 +234,7 @@ static inline u8 permission_fault(struct kvm_vcpu *vcpu, struct kvm_mmu *mmu,
- 		pkru_bits = (vcpu->arch.pkru >> (pte_pkey * 2)) & 3;
+-	if (slot && slot->id == APIC_ACCESS_PAGE_PRIVATE_MEMSLOT) {
++	if (slot->id == APIC_ACCESS_PAGE_PRIVATE_MEMSLOT) {
+ 		/*
+ 		 * Don't map L1's APIC access page into L2, KVM doesn't support
+ 		 * using APICv/AVIC to accelerate L2 accesses to L1's APIC,
+@@ -4370,12 +4377,9 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
+ 		 * uses different roots for L1 vs. L2, i.e. there is no danger
+ 		 * of breaking APICv/AVIC for L1.
+ 		 */
+-		if (is_guest_mode(vcpu)) {
+-			fault->slot = NULL;
+-			fault->pfn = KVM_PFN_NOSLOT;
+-			fault->map_writable = false;
+-			goto faultin_done;
+-		}
++		if (is_guest_mode(vcpu))
++			return kvm_handle_noslot_fault(vcpu, fault, access);
++
+ 		/*
+ 		 * If the APIC access page exists but is disabled, go directly
+ 		 * to emulation without caching the MMIO access or creating a
+@@ -4386,6 +4390,9 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
+ 			return RET_PF_EMULATE;
+ 	}
  
- 		/* clear present bit, replace PFEC.RSVD with ACC_USER_MASK. */
--		offset = (pfec & ~1) +
--			((pte_access & PT_USER_MASK) << (PFERR_RSVD_BIT - PT_USER_SHIFT));
-+		offset = (pfec & ~1) | ((pte_access & PT_USER_MASK) ? PFERR_RSVD_MASK : 0);
++	fault->mmu_seq = vcpu->kvm->mmu_invalidate_seq;
++	smp_rmb();
++
+ 	/*
+ 	 * Check for a relevant mmu_notifier invalidation event before getting
+ 	 * the pfn from the primary MMU, and before acquiring mmu_lock.
+@@ -4407,19 +4414,17 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
+ 	 * *guaranteed* to need to retry, i.e. waiting until mmu_lock is held
+ 	 * to detect retry guarantees the worst case latency for the vCPU.
+ 	 */
+-	if (fault->slot &&
+-	    mmu_invalidate_retry_gfn_unsafe(vcpu->kvm, fault->mmu_seq, fault->gfn))
++	if (mmu_invalidate_retry_gfn_unsafe(vcpu->kvm, fault->mmu_seq, fault->gfn))
+ 		return RET_PF_RETRY;
  
- 		pkru_bits &= mmu->pkru_mask >> offset;
- 		errcode |= -pkru_bits & PFERR_PK_MASK;
+ 	ret = __kvm_faultin_pfn(vcpu, fault);
+ 	if (ret != RET_PF_CONTINUE)
+ 		return ret;
+ 
+-faultin_done:
+ 	if (unlikely(is_error_pfn(fault->pfn)))
+ 		return kvm_handle_error_pfn(vcpu, fault);
+ 
+-	if (unlikely(!fault->slot))
++	if (WARN_ON_ONCE(!fault->slot))
+ 		return kvm_handle_noslot_fault(vcpu, fault, access);
+ 
+ 	/*
 -- 
 2.43.0
 
