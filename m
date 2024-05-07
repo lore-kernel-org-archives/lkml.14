@@ -1,61 +1,61 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A89714EC62
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:27:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFD1214F9F0
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715077668; cv=none; b=Z31qGb6zR5ZJhCXfiAztVQOKHoyRspczl6lECPc5i94JC7LXBL3qb9cGTT7/kXw/VkKw3P0B9d3pwiDBK1IThTebv7MHbTGSjNBrAVqEse+Lsb5r9jRPEssvNisQfkUfBtc/Z4fmU89UfBv2UhrrcAR1jNPGHjNWOO/fWs0hqI8=
+	t=1715077670; cv=none; b=nykAD5M0FSRDNAwFGWDWC/GAhOoV0eljOPOj/cucUzm4HYHmGyO2CLGTjS2D2YP24L37oaz5v1Na7d5ScFv2pZgdRnMAMlkynuydckQ5C9afhlDBps0BAxJvangb9oeKJQY3YLjfYMlhl9w16Rontc5ZKBuw+seHA/i1/EDQkvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715077668; c=relaxed/simple;
-	bh=Yd5y0XTCc1hyaa/GdghPWKfW395tAOrPQ+3gt73tVPA=;
+	s=arc-20240116; t=1715077670; c=relaxed/simple;
+	bh=61rdmjNwJzA0Rtp3TjaO5PN4giA8+BNLRSAlZB30sVw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bAZCJxZBYhM/+lpXU7nGIIZx/6Nmcgm0JxH62B0vc6CyqhnZHuHZkLRCI1zrqBUo/yAQatQm33GHXG5eua9Vix49rf6psIQ7YxU+r5i2CiHe4EBKDxbb3cCMtf7OUdaAEPtr8OG5/ipBfCaeopFoiA/+AiYjYiQ91r8Xz3Zhryk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=H5NZm8aA; arc=none smtp.client-ip=209.85.167.50
+	 In-Reply-To:To:Cc; b=UxcxR0QW7ZjWvbxx6cjTF/wbFN0rtgaHgxXMvSOSV3ZSdiVVePhRGc/CY9A2y0IxUQRANLgqqFhMqErU9vPxZxD+RlYL3DT0xNJmzMhX3A75lK3hwPP6wYwp600ucaNepEwdW1kAWSa1jiaO47E3/nLcrTCvokxpEh7zL4YA+yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YO7bnWpT; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H5NZm8aA"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51f45104ef0so3197855e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 03:27:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YO7bnWpT"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a59ece5e18bso134644466b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 03:27:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715077665; x=1715682465; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1715077667; x=1715682467; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Y3ijywAq87DR82i6I0xJ7qUn776Qu12Oxhv6aBLe9MI=;
-        b=H5NZm8aAgQ2/KxVNngi+/11DZBFePm7GJzUFI983/811eQRDZg9tPY59tn4f3HB9Ff
-         VSV95yUUIEmsxVmtregwQSGgg3TElJyKLhV4ixjoJTuM1eaaqv20bQWA9pk3gjbLHxuA
-         Za/EUW9krpQrvach8YIMrhzkKuNfAxqsvfvNq5ecvPNIgmMgp8a9P/DxIjuC6HpuYEs0
-         oMNckXE0K1Ij5HzT7xJKGXYr7Tuy9mAka1b/ne6FdkkDuOaGDVSWRl5y4JidJlLG+wxx
-         pN8ZyrBvUBSwoloZBaO/tnuSeL/FtvpZrAfUm2YyuDdPkuoBPb2+qYqlyuX0Zmj6JSdo
-         lKtA==
+        bh=fudiQRTJbxGJqty5CRk/uevh8tsrjGRaaIqrnS9XFA8=;
+        b=YO7bnWpTjgGMIv+4oWS3EYt2oK8L2JMip7PAVyooVDtmzkn/tkdaTLhHD+yEyxlSbA
+         dfNTPuHM7IZjVMOeJVObS3o+3dIQ75z6RM0Gl7SfJgV1mWe/WW425pozwnQFYUpWUY0S
+         piDjMDbHQp+T+HanCyqbSAuw6g/xC4jM1gdniGF1WWaj6GQw3JKHiCYWQsae20VG1/qp
+         FgJY4wRx/H10eeoOFUAZAUTe+jSp4pNZTQnGqxVWd2b0Ta3KT1AQLHTQzTEZV71zcuWb
+         N2SI/exSodMjxyp/OS70YqinGpe4LqubnAIo6bg8o/MyxafvGHKY8/zemmeWiWjGE2MZ
+         WXJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715077665; x=1715682465;
+        d=1e100.net; s=20230601; t=1715077667; x=1715682467;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y3ijywAq87DR82i6I0xJ7qUn776Qu12Oxhv6aBLe9MI=;
-        b=N0mzM0INer3Zc+gUOwVG3MkvR10ULQa1RpsNXzCZPN42T+hiv/mB6E2XwhD2IjBWKC
-         SOyezJhN8D89H2BLZcUHTJCaQPK0PdaFKy1lYvOTtniS6Otw/ZXOyIh7g4nNrFOTo4o8
-         V7q0azJddWDNB6I3ql3CiNZJml4xHVOjdfEhkszsgrPVbrqJo9b0oq4OPAN5nNNxi3CU
-         7Rd+/LStrczrzVolIhs6J2OAx160ILy/8is+Xh76BCnoyFERlrmcqqJA0M38GNmy34sD
-         gOaqhnsLWKXmJrMOJVMDPIYV/BjHoa+bytGysy6cjtlZw8NqPcWXK84Yw2NvoSR396wP
-         LbWw==
-X-Forwarded-Encrypted: i=1; AJvYcCXK5V+cCSLZigSJM3WSd4e5ibrZvuWUjOCchvz6UeS/hvP1ESGUUjnukGhjBw/ukgSSmDqkYFRKm1RwJMVAU6Ws333F+H8fBoY9e8k3
-X-Gm-Message-State: AOJu0YxhxiA71YadBWdDswWdcdzB8J4L08WaJZw6b8mSBYB+o7mCwPuU
-	OuYLpXSeXSK/0lujbpji+yW7TH/PdMFT9aWd8fJoKMCp3ZDtb9c/MW8IDPmUous=
-X-Google-Smtp-Source: AGHT+IFyRrIkyKNovHNJaD44VkmQvzSWnGl9GuIzIVGcT3FmHg9oNUq+xd4XDCn3zqRxUQ4eg1wHmA==
-X-Received: by 2002:ac2:5a07:0:b0:51f:601f:cbae with SMTP id q7-20020ac25a07000000b0051f601fcbaemr6825817lfn.56.1715077664695;
-        Tue, 07 May 2024 03:27:44 -0700 (PDT)
+        bh=fudiQRTJbxGJqty5CRk/uevh8tsrjGRaaIqrnS9XFA8=;
+        b=FGUpDITTKE9sKZA0E9AfQ/mMG+cd4OBy/5rFQmovLD/9UqSq+iwWPT5xOWFjGoT0JZ
+         lDOazAS5cZQSupdHihAWGwuEkIKuIwkJHfGe36hd0jImkYy041bvzrMDHKISRusB+2A1
+         RsN1M6DsonQ1455uPUSf20aS/ph4e6nxmDR8PuirY4XA29TEhrscUgIET/7Zyr/l6m0V
+         zZfgHjSKalvTnLpTuyD7AkKUnpxbKFuy5+Zu8EtxOZ7dDlM8c3JATZJhiamoWaP8PlOA
+         kPq+rekGfNZyrzIrvWf4N1ko8eQCoudneZ9u+dzoqOYssy52xmpdD8mZi9lnsxkOLtvY
+         JiTg==
+X-Forwarded-Encrypted: i=1; AJvYcCVVRWME3NkQV/wAWQYRqJtXcCEkn0eJZkGSmik0sQhv427xZKbXVsQdBAjYlHOt5zGiWW3fJ3SMbtBO7yjXVCNWwGFsEpVi8iRPVhrG
+X-Gm-Message-State: AOJu0YwuAmtmclMuNgDAdzgjhw4W0enGADk7fIFEaTMmuCEhB/lXNIBL
+	/bxi5ig4x8UpKKaYhdZhAkx79JXMyV0NzwQ0uqpRghRC6LDQ4R6qbPvxJm5c5gY=
+X-Google-Smtp-Source: AGHT+IHeOlkBiIXj8Ch31jd6t9X4LVA9p4Vu0ILX858d59ZVwRVIRHE6OkXJlDTMC2ytyTIzzPodsw==
+X-Received: by 2002:a17:907:968a:b0:a59:d39a:8d6b with SMTP id hd10-20020a170907968a00b00a59d39a8d6bmr5605681ejc.43.1715077667462;
+        Tue, 07 May 2024 03:27:47 -0700 (PDT)
 Received: from [127.0.1.1] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id bo15-20020a170906d04f00b00a59b87dd0bbsm3370093ejb.161.2024.05.07.03.27.43
+        by smtp.gmail.com with ESMTPSA id bo15-20020a170906d04f00b00a59b87dd0bbsm3370093ejb.161.2024.05.07.03.27.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 03:27:44 -0700 (PDT)
+        Tue, 07 May 2024 03:27:47 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Tue, 07 May 2024 12:27:30 +0200
-Subject: [PATCH 1/4] ASoC: Constify channel mapping array arguments in
- set_channel_map()
+Date: Tue, 07 May 2024 12:27:32 +0200
+Subject: [PATCH 3/4] ASoC: qcom: q6dsp: Set channel mapping instead of
+ fixed defaults
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240507-asoc-x1e80100-4-channel-mapping-v1-1-b12c13e0a55d@linaro.org>
+Message-Id: <20240507-asoc-x1e80100-4-channel-mapping-v1-3-b12c13e0a55d@linaro.org>
 References: <20240507-asoc-x1e80100-4-channel-mapping-v1-0-b12c13e0a55d@linaro.org>
 In-Reply-To: <20240507-asoc-x1e80100-4-channel-mapping-v1-0-b12c13e0a55d@linaro.org>
 To: James Schulman <james.schulman@cirrus.com>, 
@@ -80,257 +80,149 @@ Cc: alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
  linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10004;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5315;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=Yd5y0XTCc1hyaa/GdghPWKfW395tAOrPQ+3gt73tVPA=;
- b=kA0DAAoBwTdm5oaLg9cByyZiAGY6AhqjPjPYMuBMBQmWEKYRtlETMg2edTTBzYwajHo269E+m
- YkCMwQAAQoAHRYhBN3SYig9ERsjO264qME3ZuaGi4PXBQJmOgIaAAoJEME3ZuaGi4PXx7YP/ik6
- YYkvFP7txSD3qyRPfcYSysD73XwMxoha2BQR2w5rpCwjn0XOzLCmLXUVYYPk38GCJX/WnACOCNV
- jU9DCCvuUDbX1fAFkzL7ZUY2m5TwP/rl5d0hyQyqGLvqZqjU9H6arlCiqtfJewZlbtCq/q5wkYJ
- L7d2yYvM9zPsDNircjnKYhQutsNHjCNx+9dHLe80riOCsSW8K7nEM2pCAdBKFsfWlN/1fy5tpCN
- gT/C5qnY0dx70ATHEkx125PCs92MA/DeJNNO+1A6sgdWZYrgRa7qZL2lsaHKxT2u8JYhgZYmZxK
- TcL28FDky7lKGZByHWyAZcdZzPCTW3I7M9w7K2Vh/sK4LT8lkOjsPIqES6oG0N3DKzoslWaPWpN
- PWePIikrRIg17SYRvegSEgTSYRg+KhAlRkD1T5n0tTytuQa5quJ7/YX6h68+F3i5n/DmpnPKqdw
- G+uYu6qdz7rgsIpU7PNc/+fMISMN5br7AaJBO+LJyv5o+gXhi4AUoc8vYoXMdFhZ/GdKRezfEky
- +2qyT3Vwn/thTwjaQZz4oo7FWJjxR7zWDHKWGPvPkPfyBsxhnW10JyXMvF18nruH33oFJl9M4fC
- xTPnEXETfosHV2r7Zh+q27FuaCRw6dSRWeH9aJmuZPRffvTioEYkzjmV5m3oz7G9XaRzdKzghZE
- qnqJY
+ bh=61rdmjNwJzA0Rtp3TjaO5PN4giA8+BNLRSAlZB30sVw=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmOgIbJbQul/L/8gMPvUdCdFm1n2BLVDa2rGuTT
+ vd895AN+lyJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjoCGwAKCRDBN2bmhouD
+ 1xuFD/4j2Tg7l1A0ljCHS9wL5fFYDjnOz06WS1T18RBCRlyN4NQ/j474jqc2h/FBN0Zlo+v3Ovl
+ J7qzwq7HL5C4l+Zan5FRXXcAujOhPK4USRvN4uZFKEyNz8LLKEx+Rk2XACNcZYDO8NQie2+IqVf
+ IvE0prnkEjVOTrqmGWzbUV7Yrw5jzR9fmGG0iTYcLhsdmpC3GX+iKqiMZPy+lsc77EKJfe6ajpw
+ kad/dTTUbHuWNyfygNAwZ4fmq0gZ3+VihnTIhcxDvli84fEr2reiZfzjtIo0oIWLqE9AO4mFoMI
+ svJiGg5z0l64QhSnN4AWf3euEdUat7oViLkMpY06lrENrr/Vg4gIqTGRr7tnkOueOt/wGFoHXUG
+ wIa65wXzRNA1TpNPaB6Fox6Pig6ImS8qbvPsBdigarlh49d42NKlPGTFHmNbtqnUTyoKfiz1yP6
+ pMB5UD2vF7SvKSsHImW7dHuXdVYGKkbRnimEi0pcGrCoG1VQEGqrYaTbuxs+Y/0YvObF3bk1Sx+
+ 90pYsJ8rX+RxNRs2LyfuC6jxIrzxvrWkSjkmt+Lo7Nl/dIH3ChQ013kmKXfYIxk9zRF9Gmow8/O
+ rnHDyhpunMW9tGqAfJx+VOOVD4sopCh7ZCGOQnbwwJJQuypXuZlFsitiyFkTZ/h4jQZLlerg99v
+ fK+FD8dkPIwZB/Q==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-There is no need for implementations of DAI set_channel_map() to modify
-contents of passed arrays with actual channel mapping.  Additionally,
-the caller keeps full ownership of the array.
-
-Constify these pointer arguments so the code will be safer and easier to
-read (documenting the caller's ownership).
+Use previously set channel mapping instead of defaults when preparing
+frontent Q6APM component.  This allows machine sound card drivers to
+override channel mappings.
 
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- include/sound/cs35l41.h                 |  4 ++--
- include/sound/soc-dai.h                 |  8 ++++----
- sound/soc/codecs/adau7118.c             |  6 ++++--
- sound/soc/codecs/cs35l41-lib.c          |  4 ++--
- sound/soc/codecs/cs35l41.c              |  3 ++-
- sound/soc/codecs/max98504.c             |  6 ++++--
- sound/soc/codecs/wcd9335.c              |  6 ++++--
- sound/soc/codecs/wcd934x.c              |  6 ++++--
- sound/soc/qcom/qdsp6/q6afe-dai.c        | 16 ++++++++++------
- sound/soc/qcom/qdsp6/q6apm-lpass-dais.c |  6 ++++--
- sound/soc/soc-dai.c                     |  4 ++--
- 11 files changed, 42 insertions(+), 27 deletions(-)
+ sound/soc/qcom/qdsp6/audioreach.c | 14 +++++---------
+ sound/soc/qcom/qdsp6/audioreach.h |  2 +-
+ sound/soc/qcom/qdsp6/q6apm-dai.c  | 12 ++++++++++++
+ sound/soc/qcom/qdsp6/q6apm.c      |  2 +-
+ 4 files changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/include/sound/cs35l41.h b/include/sound/cs35l41.h
-index bb70782d15d0..43c6a9ef8d9f 100644
---- a/include/sound/cs35l41.h
-+++ b/include/sound/cs35l41.h
-@@ -896,8 +896,8 @@ int cs35l41_test_key_lock(struct device *dev, struct regmap *regmap);
- int cs35l41_otp_unpack(struct device *dev, struct regmap *regmap);
- int cs35l41_register_errata_patch(struct device *dev, struct regmap *reg, unsigned int reg_revid);
- int cs35l41_set_channels(struct device *dev, struct regmap *reg,
--			 unsigned int tx_num, unsigned int *tx_slot,
--			 unsigned int rx_num, unsigned int *rx_slot);
-+			 unsigned int tx_num, const unsigned int *tx_slot,
-+			 unsigned int rx_num, const unsigned int *rx_slot);
- int cs35l41_gpio_config(struct regmap *regmap, struct cs35l41_hw_cfg *hw_cfg);
- void cs35l41_configure_cs_dsp(struct device *dev, struct regmap *reg, struct cs_dsp *dsp);
- int cs35l41_set_cspl_mbox_cmd(struct device *dev, struct regmap *regmap,
-diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
-index adcd8719d343..15ef268c9845 100644
---- a/include/sound/soc-dai.h
-+++ b/include/sound/soc-dai.h
-@@ -188,8 +188,8 @@ int snd_soc_dai_set_tdm_slot(struct snd_soc_dai *dai,
- 	unsigned int tx_mask, unsigned int rx_mask, int slots, int slot_width);
- 
- int snd_soc_dai_set_channel_map(struct snd_soc_dai *dai,
--	unsigned int tx_num, unsigned int *tx_slot,
--	unsigned int rx_num, unsigned int *rx_slot);
-+	unsigned int tx_num, const unsigned int *tx_slot,
-+	unsigned int rx_num, const unsigned int *rx_slot);
- 
- int snd_soc_dai_set_tristate(struct snd_soc_dai *dai, int tristate);
- 
-@@ -305,8 +305,8 @@ struct snd_soc_dai_ops {
- 		unsigned int tx_mask, unsigned int rx_mask,
- 		int slots, int slot_width);
- 	int (*set_channel_map)(struct snd_soc_dai *dai,
--		unsigned int tx_num, unsigned int *tx_slot,
--		unsigned int rx_num, unsigned int *rx_slot);
-+		unsigned int tx_num, const unsigned int *tx_slot,
-+		unsigned int rx_num, const unsigned int *rx_slot);
- 	int (*get_channel_map)(struct snd_soc_dai *dai,
- 			unsigned int *tx_num, unsigned int *tx_slot,
- 			unsigned int *rx_num, unsigned int *rx_slot);
-diff --git a/sound/soc/codecs/adau7118.c b/sound/soc/codecs/adau7118.c
-index a663d37e5776..abc4764697a5 100644
---- a/sound/soc/codecs/adau7118.c
-+++ b/sound/soc/codecs/adau7118.c
-@@ -121,8 +121,10 @@ static const struct snd_soc_dapm_widget adau7118_widgets[] = {
- };
- 
- static int adau7118_set_channel_map(struct snd_soc_dai *dai,
--				    unsigned int tx_num, unsigned int *tx_slot,
--				    unsigned int rx_num, unsigned int *rx_slot)
-+				    unsigned int tx_num,
-+				    const unsigned int *tx_slot,
-+				    unsigned int rx_num,
-+				    const unsigned int *rx_slot)
- {
- 	struct adau7118_data *st =
- 		snd_soc_component_get_drvdata(dai->component);
-diff --git a/sound/soc/codecs/cs35l41-lib.c b/sound/soc/codecs/cs35l41-lib.c
-index e9993a39f7d0..1702f26049d3 100644
---- a/sound/soc/codecs/cs35l41-lib.c
-+++ b/sound/soc/codecs/cs35l41-lib.c
-@@ -936,8 +936,8 @@ int cs35l41_register_errata_patch(struct device *dev, struct regmap *reg, unsign
- EXPORT_SYMBOL_GPL(cs35l41_register_errata_patch);
- 
- int cs35l41_set_channels(struct device *dev, struct regmap *reg,
--			 unsigned int tx_num, unsigned int *tx_slot,
--			 unsigned int rx_num, unsigned int *rx_slot)
-+			 unsigned int tx_num, const unsigned int *tx_slot,
-+			 unsigned int rx_num, const unsigned int *rx_slot)
- {
- 	unsigned int val, mask;
- 	int i;
-diff --git a/sound/soc/codecs/cs35l41.c b/sound/soc/codecs/cs35l41.c
-index cb25c33cc9b9..1688c2c688f0 100644
---- a/sound/soc/codecs/cs35l41.c
-+++ b/sound/soc/codecs/cs35l41.c
-@@ -673,7 +673,8 @@ static const struct snd_soc_dapm_route cs35l41_audio_map[] = {
- };
- 
- static int cs35l41_set_channel_map(struct snd_soc_dai *dai, unsigned int tx_n,
--				   unsigned int *tx_slot, unsigned int rx_n, unsigned int *rx_slot)
-+				   const unsigned int *tx_slot,
-+				   unsigned int rx_n, const unsigned int *rx_slot)
- {
- 	struct cs35l41_private *cs35l41 = snd_soc_component_get_drvdata(dai->component);
- 
-diff --git a/sound/soc/codecs/max98504.c b/sound/soc/codecs/max98504.c
-index 93412b966b33..6b6a7ece4cec 100644
---- a/sound/soc/codecs/max98504.c
-+++ b/sound/soc/codecs/max98504.c
-@@ -220,8 +220,10 @@ static int max98504_set_tdm_slot(struct snd_soc_dai *dai,
- 	return 0;
+diff --git a/sound/soc/qcom/qdsp6/audioreach.c b/sound/soc/qcom/qdsp6/audioreach.c
+index 8175678d8843..83b33e4c9de2 100644
+--- a/sound/soc/qcom/qdsp6/audioreach.c
++++ b/sound/soc/qcom/qdsp6/audioreach.c
+@@ -267,7 +267,7 @@ void *audioreach_alloc_apm_cmd_pkt(int pkt_size, uint32_t opcode, uint32_t token
  }
- static int max98504_set_channel_map(struct snd_soc_dai *dai,
--		unsigned int tx_num, unsigned int *tx_slot,
--		unsigned int rx_num, unsigned int *rx_slot)
-+				    unsigned int tx_num,
-+				    const unsigned int *tx_slot,
-+				    unsigned int rx_num,
-+				    const unsigned int *rx_slot)
+ EXPORT_SYMBOL_GPL(audioreach_alloc_apm_cmd_pkt);
+ 
+-void audioreach_set_channel_mapping(u8 *ch_map, int num_channels)
++void audioreach_set_default_channel_mapping(u8 *ch_map, int num_channels)
  {
- 	struct max98504_priv *max98504 = snd_soc_dai_get_drvdata(dai);
- 	struct regmap *map = max98504->regmap;
-diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
-index deb15b95992d..42a99978fe5a 100644
---- a/sound/soc/codecs/wcd9335.c
-+++ b/sound/soc/codecs/wcd9335.c
-@@ -1983,8 +1983,10 @@ static int wcd9335_trigger(struct snd_pcm_substream *substream, int cmd,
- }
+ 	if (num_channels == 1) {
+ 		ch_map[0] =  PCM_CHANNEL_FL;
+@@ -884,8 +884,8 @@ static int audioreach_set_compr_media_format(struct media_format *media_fmt_hdr,
+ 		mp3_cfg->endianness = PCM_LITTLE_ENDIAN;
+ 		mp3_cfg->num_channels = mcfg->num_channels;
  
- static int wcd9335_set_channel_map(struct snd_soc_dai *dai,
--				   unsigned int tx_num, unsigned int *tx_slot,
--				   unsigned int rx_num, unsigned int *rx_slot)
-+				   unsigned int tx_num,
-+				   const unsigned int *tx_slot,
-+				   unsigned int rx_num,
-+				   const unsigned int *rx_slot)
+-		audioreach_set_channel_mapping(mp3_cfg->channel_mapping,
+-					       mcfg->num_channels);
++		audioreach_set_default_channel_mapping(mp3_cfg->channel_mapping,
++						       mcfg->num_channels);
+ 		break;
+ 	case SND_AUDIOCODEC_AAC:
+ 		media_fmt_hdr->data_format = DATA_FORMAT_RAW_COMPRESSED;
+@@ -1104,9 +1104,7 @@ static int audioreach_pcm_set_media_format(struct q6apm_graph *graph,
+ 	media_cfg->num_channels = mcfg->num_channels;
+ 	media_cfg->q_factor = mcfg->bit_width - 1;
+ 	media_cfg->bits_per_sample = mcfg->bit_width;
+-
+-	audioreach_set_channel_mapping(media_cfg->channel_mapping,
+-				       num_channels);
++	memcpy(media_cfg->channel_mapping, mcfg->channel_map, mcfg->num_channels);
+ 
+ 	rc = q6apm_send_cmd_sync(graph->apm, pkt, 0);
+ 
+@@ -1163,9 +1161,7 @@ static int audioreach_shmem_set_media_format(struct q6apm_graph *graph,
+ 		cfg->q_factor = mcfg->bit_width - 1;
+ 		cfg->endianness = PCM_LITTLE_ENDIAN;
+ 		cfg->num_channels = mcfg->num_channels;
+-
+-		audioreach_set_channel_mapping(cfg->channel_mapping,
+-					       num_channels);
++		memcpy(cfg->channel_mapping, mcfg->channel_map, mcfg->num_channels);
+ 	} else {
+ 		rc = audioreach_set_compr_media_format(header, p, mcfg);
+ 		if (rc) {
+diff --git a/sound/soc/qcom/qdsp6/audioreach.h b/sound/soc/qcom/qdsp6/audioreach.h
+index cef9a9015dcc..6ae95eb85118 100644
+--- a/sound/soc/qcom/qdsp6/audioreach.h
++++ b/sound/soc/qcom/qdsp6/audioreach.h
+@@ -767,7 +767,7 @@ struct audioreach_module_config {
+ /* Packet Allocation routines */
+ void *audioreach_alloc_apm_cmd_pkt(int pkt_size, uint32_t opcode, uint32_t
+ 				    token);
+-void audioreach_set_channel_mapping(u8 *ch_map, int num_channels);
++void audioreach_set_default_channel_mapping(u8 *ch_map, int num_channels);
+ void *audioreach_alloc_cmd_pkt(int payload_size, uint32_t opcode,
+ 			       uint32_t token, uint32_t src_port,
+ 			       uint32_t dest_port);
+diff --git a/sound/soc/qcom/qdsp6/q6apm-dai.c b/sound/soc/qcom/qdsp6/q6apm-dai.c
+index 00bbd291be5c..5dfbd011bb97 100644
+--- a/sound/soc/qcom/qdsp6/q6apm-dai.c
++++ b/sound/soc/qcom/qdsp6/q6apm-dai.c
+@@ -8,6 +8,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <sound/soc.h>
++#include <sound/soc-dai.h>
+ #include <sound/soc-dapm.h>
+ #include <linux/spinlock.h>
+ #include <sound/pcm.h>
+@@ -223,7 +224,10 @@ static int q6apm_dai_prepare(struct snd_soc_component *component,
+ 			     struct snd_pcm_substream *substream)
  {
- 	struct wcd9335_codec *wcd;
- 	int i;
-diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
-index de870c7819ca..fcad2c9fba55 100644
---- a/sound/soc/codecs/wcd934x.c
-+++ b/sound/soc/codecs/wcd934x.c
-@@ -1923,8 +1923,10 @@ static int wcd934x_trigger(struct snd_pcm_substream *substream, int cmd,
- }
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
++	struct snd_soc_pcm_runtime *soc_prtd = substream->private_data;
++	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(soc_prtd, 0);
+ 	struct q6apm_dai_rtd *prtd = runtime->private_data;
++	struct q6apm *apm = prtd->graph->apm;
+ 	struct audioreach_module_config cfg;
+ 	struct device *dev = component->dev;
+ 	struct q6apm_dai_data *pdata;
+@@ -238,9 +242,17 @@ static int q6apm_dai_prepare(struct snd_soc_component *component,
+ 		return -EINVAL;
+ 	}
  
- static int wcd934x_set_channel_map(struct snd_soc_dai *dai,
--				   unsigned int tx_num, unsigned int *tx_slot,
--				   unsigned int rx_num, unsigned int *rx_slot)
-+				   unsigned int tx_num,
-+				   const unsigned int *tx_slot,
-+				   unsigned int rx_num,
-+				   const unsigned int *rx_slot)
- {
- 	struct wcd934x_codec *wcd;
- 	int i;
-diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
-index a9c4f896a7df..7d9628cda875 100644
---- a/sound/soc/qcom/qdsp6/q6afe-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
-@@ -172,8 +172,8 @@ static int q6tdm_set_tdm_slot(struct snd_soc_dai *dai,
- }
++	if (cpu_dai->id >= ARRAY_SIZE(apm->dai_config)) {
++		dev_err(dev, "Unsupported DAI ID number %d (%s)\n",
++			cpu_dai->id, cpu_dai->name);
++		return -EINVAL;
++	}
++
+ 	cfg.direction = substream->stream;
+ 	cfg.sample_rate = runtime->rate;
+ 	cfg.num_channels = runtime->channels;
++	memcpy(cfg.channel_map, apm->dai_config[cpu_dai->id].channel_map,
++	       runtime->channels);
+ 	cfg.bit_width = prtd->bits_per_sample;
+ 	cfg.fmt = SND_AUDIOCODEC_PCM;
  
- static int q6tdm_set_channel_map(struct snd_soc_dai *dai,
--				unsigned int tx_num, unsigned int *tx_slot,
--				unsigned int rx_num, unsigned int *rx_slot)
-+				unsigned int tx_num, const unsigned int *tx_slot,
-+				unsigned int rx_num, const unsigned int *rx_slot)
- {
+diff --git a/sound/soc/qcom/qdsp6/q6apm.c b/sound/soc/qcom/qdsp6/q6apm.c
+index c29a2dd36992..f6fa15f42633 100644
+--- a/sound/soc/qcom/qdsp6/q6apm.c
++++ b/sound/soc/qcom/qdsp6/q6apm.c
+@@ -758,7 +758,7 @@ static int apm_probe(gpr_device_t *gdev)
+ 	apm->dev = dev;
+ 	apm->gdev = gdev;
+ 	for (i = 0; i < ARRAY_SIZE(apm->dai_config); i++)
+-		audioreach_set_channel_mapping(apm->dai_config[i].channel_map, 4);
++		audioreach_set_default_channel_mapping(apm->dai_config[i].channel_map, 4);
+ 	init_waitqueue_head(&apm->wait);
  
- 	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
-@@ -250,8 +250,10 @@ static int q6tdm_hw_params(struct snd_pcm_substream *substream,
- }
- 
- static int q6dma_set_channel_map(struct snd_soc_dai *dai,
--				 unsigned int tx_num, unsigned int *tx_ch_mask,
--				 unsigned int rx_num, unsigned int *rx_ch_mask)
-+				 unsigned int tx_num,
-+				 const unsigned int *tx_ch_mask,
-+				 unsigned int rx_num,
-+				 const unsigned int *rx_ch_mask)
- {
- 
- 	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
-@@ -407,8 +409,10 @@ static int q6afe_dai_prepare(struct snd_pcm_substream *substream,
- }
- 
- static int q6slim_set_channel_map(struct snd_soc_dai *dai,
--				unsigned int tx_num, unsigned int *tx_slot,
--				unsigned int rx_num, unsigned int *rx_slot)
-+				  unsigned int tx_num,
-+				  const unsigned int *tx_slot,
-+				  unsigned int rx_num,
-+				  const unsigned int *rx_slot)
- {
- 	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
- 	struct q6afe_port_config *pcfg = &dai_data->port_config[dai->id];
-diff --git a/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c b/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
-index 68a38f63a2db..6bfbb52345e1 100644
---- a/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
-+++ b/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
-@@ -25,8 +25,10 @@ struct q6apm_lpass_dai_data {
- };
- 
- static int q6dma_set_channel_map(struct snd_soc_dai *dai,
--				 unsigned int tx_num, unsigned int *tx_ch_mask,
--				 unsigned int rx_num, unsigned int *rx_ch_mask)
-+				 unsigned int tx_num,
-+				 const unsigned int *tx_ch_mask,
-+				 unsigned int rx_num,
-+				 const unsigned int *rx_ch_mask)
- {
- 
- 	struct q6apm_lpass_dai_data *dai_data = dev_get_drvdata(dai->dev);
-diff --git a/sound/soc/soc-dai.c b/sound/soc/soc-dai.c
-index fefe394dce72..03afd5efb24c 100644
---- a/sound/soc/soc-dai.c
-+++ b/sound/soc/soc-dai.c
-@@ -304,8 +304,8 @@ EXPORT_SYMBOL_GPL(snd_soc_dai_set_tdm_slot);
-  * configure the relationship between channel number and TDM slot number.
-  */
- int snd_soc_dai_set_channel_map(struct snd_soc_dai *dai,
--				unsigned int tx_num, unsigned int *tx_slot,
--				unsigned int rx_num, unsigned int *rx_slot)
-+				unsigned int tx_num, const unsigned int *tx_slot,
-+				unsigned int rx_num, const unsigned int *rx_slot)
- {
- 	int ret = -ENOTSUPP;
- 
+ 	INIT_LIST_HEAD(&apm->widget_list);
 
 -- 
 2.43.0
