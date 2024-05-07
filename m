@@ -1,146 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6801350FE;
-	Tue,  7 May 2024 23:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FECF142E79;
+	Tue,  7 May 2024 23:09:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715123342; cv=none; b=lS0cT2E7m9OuOfuP2l/cfQ3NsDaezCLd8tLSiNtnpGoUkqWnjDnPKXyOGCtLgYELvA82Z95fBgSHQelnSyvGq4tNOESzZZi8+uwJi28jb1zAeHhlRjyVF4s414ocNdRR6NrQNVJo1uV5b815ZwsGGzSJFNFVcfe5fyhg5YMBRNk=
+	t=1715123344; cv=none; b=jRS5ZOecUdWhEecLYMgHcCMa6Xk+pPokAYTx6Vd7MBtEfBC75Aqo+oNMYlr1RJGWR6p0KPl9Vfxt49MqtK/toyKj6Yb6sJYehB59D0+X1SQLkzJDonNPee+Xxz2NapfDr4poKGwR2HovPrlMX+7p0NqzZPBEENB20QCgMAYHfLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715123342; c=relaxed/simple;
-	bh=pPFNJgP3ExZbYzaB6+JINPbSJcoMbjgUMEOefaHD+I4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YbxHERJdQvtCwYw+5KhE6XsymeuYZMv/qhELCSRnYGXU7UMO+7P030eCWopc+Hvg14U9sQzaOm3p80WNw4G1cp0/AZZ4IuozxA9HuytbYLq3OAmbOYOEEkd8Z6t60oVDPmcdW5/7ICCttA0L8lffG8TOeOrG38aXcaoWrvHkwvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bWT34EwK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715123344; c=relaxed/simple;
+	bh=sbBCo2A1xLZ0vOXmtjRmskZzILCS1fwj9Xtelg+/+co=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O0k5Epvj9PlxM623iB1nfjIgB4KEz9LfhkFxWwRw9jnhYjZ9kYFRwZ+EmgbeBZ+uZeeQNI5tyPTyu+DKh8SHGi217DfOqyOD+Igv/oe0dlA23Jmx2bIfrsTsuMIl3rY7D1089R6SFUwwcJQQAKP312Jv8cZKi/IHQ+vRD6QFd90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X0KEDMGR; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bWT34EwK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10E47C4AF67;
-	Tue,  7 May 2024 23:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715123341;
-	bh=pPFNJgP3ExZbYzaB6+JINPbSJcoMbjgUMEOefaHD+I4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bWT34EwKl5Byc5O8ZWi4tiAeMrq/FpFMfinQpQlgBPUkZymd7NgDOU/4kNFO0jgNS
-	 aODF2YXynBnhn4Tl14FhQZX+AOS0FIIEEv87oxU95ktCm3oZ59OVvfZUj6lGxwnGBb
-	 YeHgQXLBd9aSni8ridvUtoKzsIXwaf4JKLmJmysEEjsAa4rHTpm9X7lEjxVBGDVQ6X
-	 KEqKzsmGORkzv3N3E6Z0B7tpoXj+DK7wfUktma/ggTUraqwVooVBEtRfiikBOHPh7Q
-	 BLMAHuLheYRGdGkl3AbTFnAwj+0+IYsIhnXT8K3ugrV2FY2rRGxgqods3j1uOssAKX
-	 JmLAGUa+N037Q==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-	Mark Brown <broonie@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	james.schulman@cirrus.com,
-	david.rhodes@cirrus.com,
-	rf@opensource.cirrus.com,
-	lgirdwood@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	alsa-devel@alsa-project.org,
-	patches@opensource.cirrus.com,
-	linux-sound@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.8 32/52] ASoC: cs35l56: fix usages of device_get_named_child_node()
-Date: Tue,  7 May 2024 19:06:58 -0400
-Message-ID: <20240507230800.392128-32-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240507230800.392128-1-sashal@kernel.org>
-References: <20240507230800.392128-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X0KEDMGR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715123341; x=1746659341;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sbBCo2A1xLZ0vOXmtjRmskZzILCS1fwj9Xtelg+/+co=;
+  b=X0KEDMGRgyzKg8DoCh4Rp18rOYNySsYSKplat1Ez+uU9KoSh0BM4Zfxu
+   3Oh1y2jSjyzXzE2pqzTJmub/22yXbQI+ZqlJNWlM0vVnvud/erblqancR
+   wBPbvOoIUT865fni+SWMk///aSulPo/W4+bOW6k7FIedo2Mi7r5tAZREz
+   mXBFY4vV3GB+IGnYX6OShQN79RqGWMiKjkMfRDbiChZfKyhtzVopEu3Il
+   D0LIM3S08TFr7ECbqf9R45dgtd2NdlrNzqCw7RX06+Am8vZr2hRLzvc4Z
+   e93+DNWJW94lxSXKZ3YkrEfz6svwJuWI2lzONQ/Ouj86d4FDlTSYYx1PO
+   A==;
+X-CSE-ConnectionGUID: Jq1kagcoT7+Dwi0wMNgi1Q==
+X-CSE-MsgGUID: HUMzRYzXQXORvj9PeU1D+g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="11113109"
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="11113109"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 16:09:00 -0700
+X-CSE-ConnectionGUID: dGaliaqjQ72/tYjH1V1Nfg==
+X-CSE-MsgGUID: pJeQw4WkSaSxWq4X0sagaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="66110058"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 07 May 2024 16:08:55 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s4TvY-0002iq-0A;
+	Tue, 07 May 2024 23:08:52 +0000
+Date: Wed, 8 May 2024 07:08:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>, davem@davemloft.net
+Cc: oe-kbuild-all@lists.linux.dev,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?iso-8859-1?Q?Nicol=F2?= Veronese <nicveronese@gmail.com>,
+	Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
+	Nathan Chancellor <nathan@kernel.org>,
+	Antoine Tenart <atenart@kernel.org>
+Subject: Re: [PATCH net-next 2/2] net: phy: phy_link_topology:
+ Lazy-initialize the link topology
+Message-ID: <202405080732.pSwJSarc-lkp@intel.com>
+References: <20240507102822.2023826-3-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.9
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240507102822.2023826-3-maxime.chevallier@bootlin.com>
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Hi Maxime,
 
-[ Upstream commit fbd741f0993203d07b2b6562d68d1e5e4745b59b ]
+kernel test robot noticed the following build warnings:
 
-The documentation for device_get_named_child_node() mentions this
-important point:
+[auto build test WARNING on net-next/main]
 
-"
-The caller is responsible for calling fwnode_handle_put() on the
-returned fwnode pointer.
-"
+url:    https://github.com/intel-lab-lkp/linux/commits/Maxime-Chevallier/net-phy-phy_link_topology-Pass-netdevice-to-phy_link_topo-helpers/20240507-183130
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20240507102822.2023826-3-maxime.chevallier%40bootlin.com
+patch subject: [PATCH net-next 2/2] net: phy: phy_link_topology: Lazy-initialize the link topology
+config: parisc-defconfig (https://download.01.org/0day-ci/archive/20240508/202405080732.pSwJSarc-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240508/202405080732.pSwJSarc-lkp@intel.com/reproduce)
 
-Add fwnode_handle_put() to avoid leaked references.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405080732.pSwJSarc-lkp@intel.com/
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20240426152939.38471-1-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/codecs/cs35l56.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+All warnings (new ones prefixed by >>):
 
-diff --git a/sound/soc/codecs/cs35l56.c b/sound/soc/codecs/cs35l56.c
-index 6dd0319bc843c..ea72afe3f906f 100644
---- a/sound/soc/codecs/cs35l56.c
-+++ b/sound/soc/codecs/cs35l56.c
-@@ -1297,6 +1297,7 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(struct cs35l56_private *cs35l5
- 				    "spk-id-gpios", ACPI_TYPE_PACKAGE, &obj);
- 	if (ret) {
- 		dev_dbg(cs35l56->base.dev, "Could not get spk-id-gpios package: %d\n", ret);
-+		fwnode_handle_put(af01_fwnode);
- 		return -ENOENT;
- 	}
- 
-@@ -1304,6 +1305,7 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(struct cs35l56_private *cs35l5
- 	if (obj->package.count != 4) {
- 		dev_warn(cs35l56->base.dev, "Unexpected spk-id element count %d\n",
- 			 obj->package.count);
-+		fwnode_handle_put(af01_fwnode);
- 		return -ENOENT;
- 	}
- 
-@@ -1318,6 +1320,7 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(struct cs35l56_private *cs35l5
- 		 */
- 		ret = acpi_dev_add_driver_gpios(adev, cs35l56_af01_spkid_gpios_mapping);
- 		if (ret) {
-+			fwnode_handle_put(af01_fwnode);
- 			return dev_err_probe(cs35l56->base.dev, ret,
- 					     "Failed to add gpio mapping to AF01\n");
- 		}
-@@ -1325,14 +1328,17 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(struct cs35l56_private *cs35l5
- 		ret = devm_add_action_or_reset(cs35l56->base.dev,
- 					       cs35l56_acpi_dev_release_driver_gpios,
- 					       adev);
--		if (ret)
-+		if (ret) {
-+			fwnode_handle_put(af01_fwnode);
- 			return ret;
-+		}
- 
- 		dev_dbg(cs35l56->base.dev, "Added spk-id-gpios mapping to AF01\n");
- 	}
- 
- 	desc = fwnode_gpiod_get_index(af01_fwnode, "spk-id", 0, GPIOD_IN, NULL);
- 	if (IS_ERR(desc)) {
-+		fwnode_handle_put(af01_fwnode);
- 		ret = PTR_ERR(desc);
- 		return dev_err_probe(cs35l56->base.dev, ret, "Get GPIO from AF01 failed\n");
- 	}
-@@ -1341,9 +1347,12 @@ static int cs35l56_try_get_broken_sdca_spkid_gpio(struct cs35l56_private *cs35l5
- 	gpiod_put(desc);
- 
- 	if (ret < 0) {
-+		fwnode_handle_put(af01_fwnode);
- 		dev_err_probe(cs35l56->base.dev, ret, "Error reading spk-id GPIO\n");
- 		return ret;
--		}
-+	}
-+
-+	fwnode_handle_put(af01_fwnode);
- 
- 	dev_info(cs35l56->base.dev, "Got spk-id from AF01\n");
- 
+>> net/core/dev.c:10276:13: warning: 'netdev_free_phy_link_topology' defined but not used [-Wunused-function]
+   10276 | static void netdev_free_phy_link_topology(struct net_device *dev)
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+vim +/netdev_free_phy_link_topology +10276 net/core/dev.c
+
+ 10275	
+ 10276	static void netdev_free_phy_link_topology(struct net_device *dev)
+ 10277	{
+ 10278		struct phy_link_topology *topo = dev->link_topo;
+ 10279	
+ 10280		if (!topo)
+ 10281			return;
+ 10282	
+ 10283		xa_destroy(&topo->phys);
+ 10284		kfree(topo);
+ 10285		dev->link_topo = NULL;
+ 10286	}
+ 10287	
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
