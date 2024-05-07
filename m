@@ -1,67 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AD615C9;
-	Tue,  7 May 2024 02:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3661CF90;
+	Tue,  7 May 2024 02:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715049959; cv=none; b=o9BtP0ZCEDFz+Kh1fHsdFFjm7MlcmIs6fr53mXgZ+5SGDmOmfOAJRjcPBO+tptpTUhs4Y/rF5Iqmd+rwGcQpOHzSeO2gugr58vj1UVi+SgkBLK2/ev0p0JuxE1DPIVeBHLETWH+H5rWiAjkONa7Bov10umaQWzUpEwbgxzQWrVg=
+	t=1715050084; cv=none; b=in9MKmQy3fwbmYuSFpfXZkOLHevUI/FL443KgHZtxFHe+jLGCJgKzU6VqkS1Z3h9CQpfxTcleGkEHE0oUgUhZ4eVAAenkuFzSqkGfztz7ysT8TyruUgZZKvRs5jKWASP5BgXmYKf3ue0WcCOKlMJFbYiR30HRFkZ5RrVCIr20sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715049959; c=relaxed/simple;
-	bh=4G4o0Jo/rKX6UsEbQz7dosJdScsz2KSFW0v5nc8PWqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u8RqalhO8oZPw1r8sBkk2lUtzKcilPMwFAZ4KTJ0JMp+NX1h9i9rZ+xX3/wIOzJC8LlD+Cf/8GV6zWxAbLoO3LORyyP/cnN180yI9z7GN1mEQKlTlcJd9UAqSqKbOxSkosTjra7NCY+kN+3BI5r3VDTzCTodbHM3Jb2rl1nU1bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Pr5ywb6V; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715050084; c=relaxed/simple;
+	bh=rxm2MmkuxlHeoH5nPu+hOLhIOkAqIZWGbrgFnaDcwUQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lYl7ujbH1qf2Pi8iRJIGZszsLNnfDu1Xy9xHhYByOgn29xwwDitr2mDV5QRXAFk9Pv23J+tLchvQMssoWEXI32MlUaYep9nsSnmfN7Ia7A6BTs2haREc3I5+FCpiEujfWFfmLSVyWRbiBiDCcwfDG+4rY95jfY4mh59J63rgu28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H+xdr+IS; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Pr5ywb6V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715049958; x=1746585958;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4G4o0Jo/rKX6UsEbQz7dosJdScsz2KSFW0v5nc8PWqg=;
-  b=Pr5ywb6VEfrc7Zeja5XXGxL+XcfzHQ1RmXZUaHedLEuD6sPDtxpJyFpG
-   gHDcxK40gAuV3izHcxZZi2Wnzg1ab4ebJMptbXY0OLJYuBQOdmW53oBDQ
-   hRygk+GQVdfsg6bCaZ5Tc4PgvLb1YE9LB/GgdiYUDKJ2gHqhTJDwY+N/7
-   8BF45JEN11lGfd14kdT2YvuLjoDhEmNcIO7ngtOvzpENAr1NLbd7V5lkA
-   jXmT/AE1GlTbEvG1oFFhwdc5hpFMyl0aeSGBmtM0eoEshUuZ2080ZOFrJ
-   e42PaKCKQ7HgtUPdpg43TGjviRVVUuseIKcq7EiTn8t0J7SCAhU3Sa4tO
-   w==;
-X-CSE-ConnectionGUID: FB/7CP4HRHOFWYdr0BokRA==
-X-CSE-MsgGUID: F7fIWhnvRa6vD4DGvjbviA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="11361892"
-X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
-   d="scan'208";a="11361892"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 19:45:57 -0700
-X-CSE-ConnectionGUID: NRqpgIBnQvOc3cwys/A6cA==
-X-CSE-MsgGUID: gqaHCpsDRqyB8yQbhPi6+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
-   d="scan'208";a="32872793"
-Received: from unknown (HELO dcai-bmc-sherry-1.sh.intel.com) ([10.239.138.57])
-  by fmviesa003.fm.intel.com with ESMTP; 06 May 2024 19:45:52 -0700
-From: Haiyue Wang <haiyue.wang@intel.com>
-To: bpf@vger.kernel.org
-Cc: Haiyue Wang <haiyue.wang@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH bpf-next v1] bpf,arena: Rename the kfunc set variable
-Date: Tue,  7 May 2024 10:49:15 +0800
-Message-ID: <20240507024952.1590681-1-haiyue.wang@intel.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H+xdr+IS"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6f08ce51e02so320802a34.3;
+        Mon, 06 May 2024 19:48:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715050082; x=1715654882; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ndnxOFRoXj3oUkXyDSS39Ct1jmOQ4iAHrSPKaAlJ/7g=;
+        b=H+xdr+IS1qHAJWqGAJMxa/lU3OvzQ/8sesLbBNAwS7qVITiinUPJlwehC48AphdDBf
+         w7Y1VA8eQ4seotaLmO7xWrFoYHZsAxLkT7JqZSX9D5scXNvuVKyaRIvXsfinh0DPBSvz
+         buhCGYebKirM7XZxCZuhww1UT46iIe4gQLTXsW0qSFT+9D2Fc83+atxZp4kHoeRRaVnZ
+         MW9lvE5RZlfriZdEEoqjmoFSYd2mgzqnWAd40EFudDwrPJmZYhoX7HLwXgBEcuPlBkoP
+         Wy2hvPAvjTn/4nTk8bD/UcYJh3UOwBKioWkyLb0dgm/oQ/Whbz7AT/35TKoeWL07GLij
+         ppQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715050082; x=1715654882;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ndnxOFRoXj3oUkXyDSS39Ct1jmOQ4iAHrSPKaAlJ/7g=;
+        b=n+RB9h0mEGH2HTo5C3H16rJV52z6IF/vmeDj0kl05IjKCcrpoFiODZV9URHJKd4Ipf
+         5Ve9GkXXVVPK8sHpH8avDMi7lFmRm82GFAai1dUFuWP4CCkkAsHCwuehaCTZCo2Z0IIZ
+         AXwvi3amX+P6jE1QInAYM+ay8bHlr5Jiyff07NENgFeTMI6TbJ2dqI39/Jb1R+iz0r3W
+         Bjok6TW/P+PgtWkTjC4m32yKkw3ijOwUPQ09gMIkN6EyzGSPcW5Yj4EhG+ejtvNzYeOk
+         gcZCUZtPQEt93BE1QZCfoidzn9seN1g+QZeqFs2lGniMIVplq1jjpMOE0Um7WUIXg8OI
+         hNRg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9iHAGzamA7YyTHlTSi/w/9laQk/sX6guS5kAdkmuXPzyF2zCh0b2n8PBmlRAk0MbcPsbVAxxVPrnEVtZtgrYwEtUkOXBUealmH61ZcjKMdyq76+jLTyRt+dGGLKvTe7b38T1puiPuKAnl+Ffw7zHqeau/x6vp5zDlMpKYHLf+Uj5Nntk5lU5L+/jImyXGWr3S2NXmCRWgklskAHAb+9Q=
+X-Gm-Message-State: AOJu0YxIck/wz/VVuMBTJ+yt6ImnTiaDOEWo/3rpgjvUZ2psnK8UbbZT
+	wewiU+F7pRv6VdpfUhMGnW7jHgB/EavHkj5ydF8/eYCAAYZTAIBh
+X-Google-Smtp-Source: AGHT+IEMOxXvv/6uHhAD4yBPsU4dJtYqQlcnWY4Dz6l8BIxyBYJx7zxm+qXR9vCOWB8OwClPLnSzpA==
+X-Received: by 2002:a05:6870:164c:b0:22e:a3f8:38bc with SMTP id c12-20020a056870164c00b0022ea3f838bcmr14285168oae.22.1715050082334;
+        Mon, 06 May 2024 19:48:02 -0700 (PDT)
+Received: from nukework.lan (c-98-197-58-203.hsd1.tx.comcast.net. [98.197.58.203])
+        by smtp.gmail.com with ESMTPSA id hg13-20020a056870790d00b002396fd308basm2333895oab.35.2024.05.06.19.48.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 May 2024 19:48:01 -0700 (PDT)
+From: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Robert Marko <robert.marko@sartura.hr>,
+	linux-arm-msm@vger.kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v2 1/2] dt-bindings: net: ipq4019-mdio: add IPQ9574 compatible
+Date: Mon,  6 May 2024 21:47:57 -0500
+Message-Id: <20240507024758.2810514-1-mr.nuke.me@gmail.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,37 +79,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename the kfunc set variable to specify the 'arena' function scope,
-although the 'UNSPEC' type BPF program is mapped to 'COMMON' hook.
+Add a compatible property specific to IPQ9574. This should be used
+along with the IPQ4019 compatible. This second compatible serves the
+same purpose as the ipq{5,6,8} compatibles. This is to indicate that
+the clocks properties are required.
 
-And there is 'common_kfunc_set' defined for real 'common' function in
-file 'kernel/bpf/helpers.c'.
-
-Signed-off-by: Haiyue Wang <haiyue.wang@intel.com>
+Signed-off-by: Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- kernel/bpf/arena.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/net/qcom,ipq4019-mdio.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/bpf/arena.c b/kernel/bpf/arena.c
-index 6c81630c5293..ef2177c0465f 100644
---- a/kernel/bpf/arena.c
-+++ b/kernel/bpf/arena.c
-@@ -557,13 +557,13 @@ BTF_ID_FLAGS(func, bpf_arena_alloc_pages, KF_TRUSTED_ARGS | KF_SLEEPABLE)
- BTF_ID_FLAGS(func, bpf_arena_free_pages, KF_TRUSTED_ARGS | KF_SLEEPABLE)
- BTF_KFUNCS_END(arena_kfuncs)
+diff --git a/Documentation/devicetree/bindings/net/qcom,ipq4019-mdio.yaml b/Documentation/devicetree/bindings/net/qcom,ipq4019-mdio.yaml
+index 0029e197a825..a94480e819ac 100644
+--- a/Documentation/devicetree/bindings/net/qcom,ipq4019-mdio.yaml
++++ b/Documentation/devicetree/bindings/net/qcom,ipq4019-mdio.yaml
+@@ -20,6 +20,7 @@ properties:
+           - enum:
+               - qcom,ipq6018-mdio
+               - qcom,ipq8074-mdio
++              - qcom,ipq9574-mdio
+           - const: qcom,ipq4019-mdio
  
--static const struct btf_kfunc_id_set common_kfunc_set = {
-+static const struct btf_kfunc_id_set arena_kfunc_set = {
- 	.owner = THIS_MODULE,
- 	.set   = &arena_kfuncs,
- };
- 
- static int __init kfunc_init(void)
- {
--	return register_btf_kfunc_id_set(BPF_PROG_TYPE_UNSPEC, &common_kfunc_set);
-+	return register_btf_kfunc_id_set(BPF_PROG_TYPE_UNSPEC, &arena_kfunc_set);
- }
- late_initcall(kfunc_init);
+   "#address-cells":
+@@ -76,6 +77,7 @@ allOf:
+               - qcom,ipq5018-mdio
+               - qcom,ipq6018-mdio
+               - qcom,ipq8074-mdio
++              - qcom,ipq9574-mdio
+     then:
+       required:
+         - clocks
 -- 
-2.43.2
+2.40.1
 
