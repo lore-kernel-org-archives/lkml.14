@@ -1,196 +1,369 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0820D15FA74
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 14:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C9A156C7A
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 14:38:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715092674; cv=none; b=R6eJMTvca/GA+zMzSkSjjN6mempPu6pIltGpgiVFs5ezaWC+CJC0Q2i8sPTpmxJWd85Jd6xMFmHBZd5u8oIp0YmuRifIdDT+QR9Dmjq+EVQ3rpI8RnQ7zxfYho3phxdgLjVO9VrW8HBYDY0zN65NloMDaB6TwP9DwFDje1mzyro=
+	t=1715092713; cv=none; b=tT9zXlHui5Ay6nOCHXq13YG4/OL7cxlf25Cy4/BPBayqC5WYuwGIVx7FSoTHAh2w2NGH5Pzyi+6bwcFaek29r1Tmf5EAy1F2G/4VLxpRcgWX+K5ooJ3bPfrhmEyiO4rhXpELIbaTnylYst2bra6IqB2QwaSbhNKjmsvbPFWaT+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715092674; c=relaxed/simple;
-	bh=dIUOrSAIHdN021aT4jUnSjW6nNXUU6fCmRhcBGP9zbo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BrucMsjhPh1IqtsOeVeXm6nK0pVKaFk5llAJg8LQRmrckKuwq6bHatWBeVe1ZbRUg4UzWEA3KvmNS4OToyIg9STdGHANHvMOtC+D3ottayY8OnGJupSstZzW25ofT2AIN52XRTgssOW7fbjHms+EEtKnoYYQz/RODHLWzpy0eYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jSxwE3jK; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715092713; c=relaxed/simple;
+	bh=Eog6prXhtDOhplwkrcPh9F4cYlUcdjszabuno04hlk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=azfNv4pFm2oXvl+NZPyjLlPUXEjHQxWEniS/UKPhMaMPYaoh8qXA2RzZEs4Gw1oGWHn02MJN4ZupK/knIq1JG/vI4jvxooG4vXieCRBXXw+zVjUdwGz1n2RoVy0/dMCdEalFoHUUMt2jbp5aywDOG8ZOtPruOYiFtMZDUHIsaf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sEd81p/W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jSxwE3jK"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-78f049ddd7dso263928785a.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 07:37:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715092672; x=1715697472; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xfoakoCRXp8NuHbtuDoi6TSXe/02ySjJzEnJ69B3Tag=;
-        b=jSxwE3jKaF6cTd955SGc++FeyJvo/qXViSng1zcglz8J5vYsJRIWHJecWObtkQCEEn
-         22pizCzYKQ1dtMt4NTRa9VwmgiO7LhW0A7/AviOQZarlnRSVaOUF8tBOEa42LEcVZrgk
-         sdzWTejfCaGvbjOMWDR5FN7LprPiahQavvv+M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715092672; x=1715697472;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xfoakoCRXp8NuHbtuDoi6TSXe/02ySjJzEnJ69B3Tag=;
-        b=ehBBqGo4eMpt9pd06kd//1WVT7iK4bHH1B9/hESG377awuTLKj+fEFYs2uISUs+qcc
-         imTa0WPPfN8YBYdMgOIXYNfQSGVByGQT02htmyoppLD7uH+OTfBEogiqvxdBMdkKaTLS
-         ZyYUjY5arFnOllJu2VoeEwa/+Wj4+nA/JkTDskTg9qAKWaFMrCpnDxNQjyQd7REctSxj
-         b7q0aF0CWBFN5DRd3U7y9zef7dfoRrNNsfWqdU6e/DkM/Nu5YxD5z7vMNVkDWeC2NmsA
-         qoHsDAoHzjS+GNutmjT/HskSMGTer6s97aL5+Wr1XZKYbI6Z9XnrALyLr9fnkXgWNPXB
-         inQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIKli+Y8KFlK390Lg8hOjgFWz0q+jdG7+vA+fE0aSp/P2/QvspkWLqhVSyUYhWVQcYTEpuWi87UQBrUCz4Xo3mVeLT0PNwj/USclJN
-X-Gm-Message-State: AOJu0Yy6BPtCxKl7JyRr4Iuv5ndYMFGw18K7aBm/NKLP3UcFfeUUm7wE
-	NxgrA/N1NLgLjDjDVT57utO/2uSRsu5cdXJc4OpnnBda8Or2RIfg4a/VciClMX7gkUOtXxJ1pXa
-	O2w==
-X-Google-Smtp-Source: AGHT+IEl7BbR4sJtFxdXLTfcGpuYaBzDj6fcao0R/pbNsjFzY4cyZYW5KdJMgGaXCpaOSIqbe324bg==
-X-Received: by 2002:a05:620a:5dd6:b0:792:9d4c:6431 with SMTP id xy22-20020a05620a5dd600b007929d4c6431mr5105808qkn.56.1715092671741;
-        Tue, 07 May 2024 07:37:51 -0700 (PDT)
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com. [209.85.222.169])
-        by smtp.gmail.com with ESMTPSA id t29-20020a05620a035d00b007929be68937sm1812172qkm.108.2024.05.07.07.37.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 May 2024 07:37:51 -0700 (PDT)
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-792940cc710so235682185a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 07:37:51 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXgSLyuLMzSWHhUyOQywBUOb6Vvk2ltJfRLaEOAQlUmZbCwNnOMXrX7+ZQACh2lE+ysYDXG/oVStrEL2Fp17RMRdyS0U70DVx54iOOc
-X-Received: by 2002:a05:6808:23cb:b0:3c9:6f9c:4abf with SMTP id
- bq11-20020a05680823cb00b003c96f9c4abfmr5962885oib.32.1715092319135; Tue, 07
- May 2024 07:31:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sEd81p/W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E143BC2BBFC;
+	Tue,  7 May 2024 14:38:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715092713;
+	bh=Eog6prXhtDOhplwkrcPh9F4cYlUcdjszabuno04hlk8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=sEd81p/WBroDtBKzsxXy74rbfFfB66bvnquHZo4WUoZivQ52IMCJg6fwDE8UpFI0X
+	 f9iN8khkkhHmkEH+qOAlU5ShXygIr5jzTlzr3/0rOP6rIGr6y4LaOFzvNxDkDt0OxA
+	 7KbfOHn2EnJZu4KcZEggQbI+eqDmF0Hdc9mtetbgxAV7G/EiJgE/MnmF1g3oCM9fbW
+	 u/O8LeFCbciAU2HOesGCTTjrlo/5lcPQxKiE3133JScMuGrmLcjlcY0kClw5q1x861
+	 zPLwAsq53IsbTJpoJHq6xkePjPkRK50yeLDRiM9EGLV4hY0Cq+hYMjoeyTCbnlFzNI
+	 yDj2QADJERs4A==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 78069CE12BD; Tue,  7 May 2024 07:38:32 -0700 (PDT)
+Date: Tue, 7 May 2024 07:38:32 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexandre Chartre <alexandre.chartre@oracle.com>,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	KP Singh <kpsingh@kernel.org>, Waiman Long <longman@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v5 1/3] x86/syscall: Mark exit[_group] syscall handlers
+ __noreturn
+Message-ID: <31af8226-8357-493e-a280-465f91b58d35@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <cover.1715059256.git.jpoimboe@kernel.org>
+ <9ad251f6258adde596fb1f4d6826309b9f239ed3.1715059256.git.jpoimboe@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507-cocci-flexarray-v1-0-4a421c21fd06@chromium.org> <20240507-cocci-flexarray-v1-6-4a421c21fd06@chromium.org>
-In-Reply-To: <20240507-cocci-flexarray-v1-6-4a421c21fd06@chromium.org>
-From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 7 May 2024 16:31:43 +0200
-X-Gmail-Original-Message-ID: <CANiDSCv==iq+pj18m891AqTYaq1M+QjyE0R=4NQKUK8BmSi7Qw@mail.gmail.com>
-Message-ID: <CANiDSCv==iq+pj18m891AqTYaq1M+QjyE0R=4NQKUK8BmSi7Qw@mail.gmail.com>
-Subject: Re: [PATCH 06/18] media: siano: Refactor struct sms_msg_data
-To: Michael Tretter <m.tretter@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Michal Simek <michal.simek@amd.com>, 
-	Andy Walls <awalls@md.metrocast.net>, Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
-	Vikash Garodia <quic_vgarodia@quicinc.com>, "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
-	Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ad251f6258adde596fb1f4d6826309b9f239ed3.1715059256.git.jpoimboe@kernel.org>
 
-Hi,
+On Mon, May 06, 2024 at 10:30:04PM -0700, Josh Poimboeuf wrote:
+> The direct-call syscall dispatch function doesn't know that the exit()
+> and exit_group() syscall handlers don't return, so the call sites aren't
+> optimized accordingly.
+> 
+> Fix that by marking those exit syscall declarations __noreturn.
+> 
+> Fixes the following warnings:
+> 
+>   vmlinux.o: warning: objtool: x64_sys_call+0x2804: __x64_sys_exit() is missing a __noreturn annotation
+>   vmlinux.o: warning: objtool: ia32_sys_call+0x29b6: __ia32_sys_exit_group() is missing a __noreturn annotation
+> 
+> Fixes: 7390db8aea0d ("x86/bhi: Add support for clearing branch history at syscall entry")
+> Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+> Closes: https://lkml.kernel.org/lkml/6dba9b32-db2c-4e6d-9500-7a08852f17a3@paulmck-laptop
+> Tested-by: Paul E. McKenney <paulmck@kernel.org>
 
-The CI has found a build error in ppc for this patch.
+Just reaffirming my Tested-by, and thank you!
 
-https://gitlab.freedesktop.org/linux-media/media-staging/-/pipelines/1171798/test_report?job_name=build
+							Thanx, Paul
 
-Will send a v2 shortly
-
-On Tue, 7 May 2024 at 15:18, Ricardo Ribalda <ribalda@chromium.org> wrote:
->
-> Replace a single element array with a single element field.
->
-> This fixes the following cocci warning:
-> drivers/media/common/siano/smscoreapi.h:619:5-13: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
->
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 > ---
->  drivers/media/common/siano/smscoreapi.c  | 10 +++++-----
->  drivers/media/common/siano/smscoreapi.h  |  2 +-
->  drivers/media/common/siano/smsdvb-main.c |  4 ++--
->  3 files changed, 8 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/media/common/siano/smscoreapi.c b/drivers/media/common/siano/smscoreapi.c
-> index 7ebcb10126c9..b6f1eb5dbbdf 100644
-> --- a/drivers/media/common/siano/smscoreapi.c
-> +++ b/drivers/media/common/siano/smscoreapi.c
-> @@ -839,7 +839,7 @@ static int smscore_configure_board(struct smscore_device_t *coredev)
->                 mtu_msg.x_msg_header.msg_flags = 0;
->                 mtu_msg.x_msg_header.msg_type = MSG_SMS_SET_MAX_TX_MSG_LEN_REQ;
->                 mtu_msg.x_msg_header.msg_length = sizeof(mtu_msg);
-> -               mtu_msg.msg_data[0] = board->mtu;
-> +               mtu_msg.msg_data = board->mtu;
->
->                 coredev->sendrequest_handler(coredev->context, &mtu_msg,
->                                              sizeof(mtu_msg));
-> @@ -852,7 +852,7 @@ static int smscore_configure_board(struct smscore_device_t *coredev)
->                 SMS_INIT_MSG(&crys_msg.x_msg_header,
->                                 MSG_SMS_NEW_CRYSTAL_REQ,
->                                 sizeof(crys_msg));
-> -               crys_msg.msg_data[0] = board->crystal;
-> +               crys_msg.msg_data = board->crystal;
->
->                 coredev->sendrequest_handler(coredev->context, &crys_msg,
->                                              sizeof(crys_msg));
-> @@ -1306,7 +1306,7 @@ static int smscore_init_device(struct smscore_device_t *coredev, int mode)
->         msg = (struct sms_msg_data *)SMS_ALIGN_ADDRESS(buffer);
->         SMS_INIT_MSG(&msg->x_msg_header, MSG_SMS_INIT_DEVICE_REQ,
->                         sizeof(struct sms_msg_data));
-> -       msg->msg_data[0] = mode;
-> +       msg->msg_data = mode;
->
->         rc = smscore_sendrequest_and_wait(coredev, msg,
->                         msg->x_msg_header. msg_length,
-> @@ -1394,7 +1394,7 @@ int smscore_set_device_mode(struct smscore_device_t *coredev, int mode)
->
->                         SMS_INIT_MSG(&msg->x_msg_header, MSG_SMS_INIT_DEVICE_REQ,
->                                      sizeof(struct sms_msg_data));
-> -                       msg->msg_data[0] = mode;
-> +                       msg->msg_data = mode;
->
->                         rc = smscore_sendrequest_and_wait(
->                                 coredev, msg, msg->x_msg_header.msg_length,
-> @@ -1554,7 +1554,7 @@ void smscore_onresponse(struct smscore_device_t *coredev,
->                         struct sms_msg_data *validity = (struct sms_msg_data *) phdr;
->
->                         pr_debug("MSG_SMS_DATA_VALIDITY_RES, checksum = 0x%x\n",
-> -                               validity->msg_data[0]);
-> +                               validity->msg_data);
->                         complete(&coredev->data_validity_done);
->                         break;
->                 }
-> diff --git a/drivers/media/common/siano/smscoreapi.h b/drivers/media/common/siano/smscoreapi.h
-> index f8789ee0d554..46dc74ac9318 100644
-> --- a/drivers/media/common/siano/smscoreapi.h
-> +++ b/drivers/media/common/siano/smscoreapi.h
-> @@ -616,7 +616,7 @@ struct sms_msg_hdr {
->
->  struct sms_msg_data {
->         struct sms_msg_hdr x_msg_header;
-> -       u32 msg_data[1];
-> +       u32 msg_data;
+>  arch/x86/entry/syscall_32.c            | 10 ++++++----
+>  arch/x86/entry/syscall_64.c            |  9 ++++++---
+>  arch/x86/entry/syscall_x32.c           |  7 +++++--
+>  arch/x86/entry/syscalls/syscall_32.tbl |  6 +++---
+>  arch/x86/entry/syscalls/syscall_64.tbl |  6 +++---
+>  arch/x86/um/sys_call_table_32.c        | 10 ++++++----
+>  arch/x86/um/sys_call_table_64.c        | 11 +++++++----
+>  scripts/syscalltbl.sh                  | 18 ++++++++++++++++--
+>  tools/objtool/noreturns.h              |  4 ++++
+>  9 files changed, 56 insertions(+), 25 deletions(-)
+> 
+> diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
+> index c2235bae17ef..8cc9950d7104 100644
+> --- a/arch/x86/entry/syscall_32.c
+> +++ b/arch/x86/entry/syscall_32.c
+> @@ -14,9 +14,12 @@
+>  #endif
+>  
+>  #define __SYSCALL(nr, sym) extern long __ia32_##sym(const struct pt_regs *);
+> -
+> +#define __SYSCALL_NORETURN(nr, sym) extern long __noreturn __ia32_##sym(const struct pt_regs *);
+>  #include <asm/syscalls_32.h>
+> -#undef __SYSCALL
+> +#undef  __SYSCALL
+> +
+> +#undef  __SYSCALL_NORETURN
+> +#define __SYSCALL_NORETURN __SYSCALL
+>  
+>  /*
+>   * The sys_call_table[] is no longer used for system calls, but
+> @@ -28,11 +31,10 @@
+>  const sys_call_ptr_t sys_call_table[] = {
+>  #include <asm/syscalls_32.h>
 >  };
->
->  struct sms_msg_data2 {
-> diff --git a/drivers/media/common/siano/smsdvb-main.c b/drivers/media/common/siano/smsdvb-main.c
-> index d893a0e4672b..44d8fe8b220e 100644
-> --- a/drivers/media/common/siano/smsdvb-main.c
-> +++ b/drivers/media/common/siano/smsdvb-main.c
-> @@ -689,7 +689,7 @@ static int smsdvb_start_feed(struct dvb_demux_feed *feed)
->         pid_msg.x_msg_header.msg_flags = 0;
->         pid_msg.x_msg_header.msg_type  = MSG_SMS_ADD_PID_FILTER_REQ;
->         pid_msg.x_msg_header.msg_length = sizeof(pid_msg);
-> -       pid_msg.msg_data[0] = feed->pid;
-> +       pid_msg.msg_data = feed->pid;
->
->         return smsclient_sendrequest(client->smsclient,
->                                      &pid_msg, sizeof(pid_msg));
-> @@ -711,7 +711,7 @@ static int smsdvb_stop_feed(struct dvb_demux_feed *feed)
->         pid_msg.x_msg_header.msg_flags = 0;
->         pid_msg.x_msg_header.msg_type  = MSG_SMS_REMOVE_PID_FILTER_REQ;
->         pid_msg.x_msg_header.msg_length = sizeof(pid_msg);
-> -       pid_msg.msg_data[0] = feed->pid;
-> +       pid_msg.msg_data = feed->pid;
->
->         return smsclient_sendrequest(client->smsclient,
->                                      &pid_msg, sizeof(pid_msg));
->
-> --
-> 2.45.0.rc1.225.g2a3ae87e7f-goog
->
-
-
--- 
-Ricardo Ribalda
+> -#undef __SYSCALL
+> +#undef  __SYSCALL
+>  #endif
+>  
+>  #define __SYSCALL(nr, sym) case nr: return __ia32_##sym(regs);
+> -
+>  long ia32_sys_call(const struct pt_regs *regs, unsigned int nr)
+>  {
+>  	switch (nr) {
+> diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
+> index 33b3f09e6f15..ba8354424860 100644
+> --- a/arch/x86/entry/syscall_64.c
+> +++ b/arch/x86/entry/syscall_64.c
+> @@ -8,8 +8,12 @@
+>  #include <asm/syscall.h>
+>  
+>  #define __SYSCALL(nr, sym) extern long __x64_##sym(const struct pt_regs *);
+> +#define __SYSCALL_NORETURN(nr, sym) extern long __noreturn __x64_##sym(const struct pt_regs *);
+>  #include <asm/syscalls_64.h>
+> -#undef __SYSCALL
+> +#undef  __SYSCALL
+> +
+> +#undef  __SYSCALL_NORETURN
+> +#define __SYSCALL_NORETURN __SYSCALL
+>  
+>  /*
+>   * The sys_call_table[] is no longer used for system calls, but
+> @@ -20,10 +24,9 @@
+>  const sys_call_ptr_t sys_call_table[] = {
+>  #include <asm/syscalls_64.h>
+>  };
+> -#undef __SYSCALL
+> +#undef  __SYSCALL
+>  
+>  #define __SYSCALL(nr, sym) case nr: return __x64_##sym(regs);
+> -
+>  long x64_sys_call(const struct pt_regs *regs, unsigned int nr)
+>  {
+>  	switch (nr) {
+> diff --git a/arch/x86/entry/syscall_x32.c b/arch/x86/entry/syscall_x32.c
+> index 03de4a932131..fb77908f44f3 100644
+> --- a/arch/x86/entry/syscall_x32.c
+> +++ b/arch/x86/entry/syscall_x32.c
+> @@ -8,11 +8,14 @@
+>  #include <asm/syscall.h>
+>  
+>  #define __SYSCALL(nr, sym) extern long __x64_##sym(const struct pt_regs *);
+> +#define __SYSCALL_NORETURN(nr, sym) extern long __noreturn __x64_##sym(const struct pt_regs *);
+>  #include <asm/syscalls_x32.h>
+> -#undef __SYSCALL
+> +#undef  __SYSCALL
+> +
+> +#undef  __SYSCALL_NORETURN
+> +#define __SYSCALL_NORETURN __SYSCALL
+>  
+>  #define __SYSCALL(nr, sym) case nr: return __x64_##sym(regs);
+> -
+>  long x32_sys_call(const struct pt_regs *regs, unsigned int nr)
+>  {
+>  	switch (nr) {
+> diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+> index 5f8591ce7f25..9e9a908cd50d 100644
+> --- a/arch/x86/entry/syscalls/syscall_32.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_32.tbl
+> @@ -2,7 +2,7 @@
+>  # 32-bit system call numbers and entry vectors
+>  #
+>  # The format is:
+> -# <number> <abi> <name> <entry point> <compat entry point>
+> +# <number> <abi> <name> <entry point> [<compat entry point> [noreturn]]
+>  #
+>  # The __ia32_sys and __ia32_compat_sys stubs are created on-the-fly for
+>  # sys_*() system calls and compat_sys_*() compat system calls if
+> @@ -12,7 +12,7 @@
+>  # The abi is always "i386" for this file.
+>  #
+>  0	i386	restart_syscall		sys_restart_syscall
+> -1	i386	exit			sys_exit
+> +1	i386	exit			sys_exit			-			noreturn
+>  2	i386	fork			sys_fork
+>  3	i386	read			sys_read
+>  4	i386	write			sys_write
+> @@ -263,7 +263,7 @@
+>  249	i386	io_cancel		sys_io_cancel
+>  250	i386	fadvise64		sys_ia32_fadvise64
+>  # 251 is available for reuse (was briefly sys_set_zone_reclaim)
+> -252	i386	exit_group		sys_exit_group
+> +252	i386	exit_group		sys_exit_group			-			noreturn
+>  253	i386	lookup_dcookie
+>  254	i386	epoll_create		sys_epoll_create
+>  255	i386	epoll_ctl		sys_epoll_ctl
+> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+> index 7e8d46f4147f..5ea7387c1aa1 100644
+> --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> @@ -2,7 +2,7 @@
+>  # 64-bit system call numbers and entry vectors
+>  #
+>  # The format is:
+> -# <number> <abi> <name> <entry point>
+> +# <number> <abi> <name> <entry point> [<compat entry point> [noreturn]]
+>  #
+>  # The __x64_sys_*() stubs are created on-the-fly for sys_*() system calls
+>  #
+> @@ -68,7 +68,7 @@
+>  57	common	fork			sys_fork
+>  58	common	vfork			sys_vfork
+>  59	64	execve			sys_execve
+> -60	common	exit			sys_exit
+> +60	common	exit			sys_exit			-			noreturn
+>  61	common	wait4			sys_wait4
+>  62	common	kill			sys_kill
+>  63	common	uname			sys_newuname
+> @@ -239,7 +239,7 @@
+>  228	common	clock_gettime		sys_clock_gettime
+>  229	common	clock_getres		sys_clock_getres
+>  230	common	clock_nanosleep		sys_clock_nanosleep
+> -231	common	exit_group		sys_exit_group
+> +231	common	exit_group		sys_exit_group			-			noreturn
+>  232	common	epoll_wait		sys_epoll_wait
+>  233	common	epoll_ctl		sys_epoll_ctl
+>  234	common	tgkill			sys_tgkill
+> diff --git a/arch/x86/um/sys_call_table_32.c b/arch/x86/um/sys_call_table_32.c
+> index 89df5d89d664..51655133eee3 100644
+> --- a/arch/x86/um/sys_call_table_32.c
+> +++ b/arch/x86/um/sys_call_table_32.c
+> @@ -9,6 +9,10 @@
+>  #include <linux/cache.h>
+>  #include <asm/syscall.h>
+>  
+> +extern asmlinkage long sys_ni_syscall(unsigned long, unsigned long,
+> +				      unsigned long, unsigned long,
+> +				      unsigned long, unsigned long);
+> +
+>  /*
+>   * Below you can see, in terms of #define's, the differences between the x86-64
+>   * and the UML syscall table.
+> @@ -22,15 +26,13 @@
+>  #define sys_vm86 sys_ni_syscall
+>  
+>  #define __SYSCALL_WITH_COMPAT(nr, native, compat)	__SYSCALL(nr, native)
+> +#define __SYSCALL_NORETURN __SYSCALL
+>  
+>  #define __SYSCALL(nr, sym) extern asmlinkage long sym(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long);
+>  #include <asm/syscalls_32.h>
+> +#undef  __SYSCALL
+>  
+> -#undef __SYSCALL
+>  #define __SYSCALL(nr, sym) sym,
+> -
+> -extern asmlinkage long sys_ni_syscall(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long);
+> -
+>  const sys_call_ptr_t sys_call_table[] ____cacheline_aligned = {
+>  #include <asm/syscalls_32.h>
+>  };
+> diff --git a/arch/x86/um/sys_call_table_64.c b/arch/x86/um/sys_call_table_64.c
+> index b0b4cfd2308c..943d414f2109 100644
+> --- a/arch/x86/um/sys_call_table_64.c
+> +++ b/arch/x86/um/sys_call_table_64.c
+> @@ -9,6 +9,10 @@
+>  #include <linux/cache.h>
+>  #include <asm/syscall.h>
+>  
+> +extern asmlinkage long sys_ni_syscall(unsigned long, unsigned long,
+> +				      unsigned long, unsigned long,
+> +				      unsigned long, unsigned long);
+> +
+>  /*
+>   * Below you can see, in terms of #define's, the differences between the x86-64
+>   * and the UML syscall table.
+> @@ -18,14 +22,13 @@
+>  #define sys_iopl sys_ni_syscall
+>  #define sys_ioperm sys_ni_syscall
+>  
+> +#define __SYSCALL_NORETURN __SYSCALL
+> +
+>  #define __SYSCALL(nr, sym) extern asmlinkage long sym(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long);
+>  #include <asm/syscalls_64.h>
+> +#undef  __SYSCALL
+>  
+> -#undef __SYSCALL
+>  #define __SYSCALL(nr, sym) sym,
+> -
+> -extern asmlinkage long sys_ni_syscall(unsigned long, unsigned long, unsigned long, unsigned long, unsigned long, unsigned long);
+> -
+>  const sys_call_ptr_t sys_call_table[] ____cacheline_aligned = {
+>  #include <asm/syscalls_64.h>
+>  };
+> diff --git a/scripts/syscalltbl.sh b/scripts/syscalltbl.sh
+> index 6abe143889ef..6a903b87a7c2 100755
+> --- a/scripts/syscalltbl.sh
+> +++ b/scripts/syscalltbl.sh
+> @@ -54,7 +54,7 @@ nxt=0
+>  
+>  grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | {
+>  
+> -	while read nr abi name native compat ; do
+> +	while read nr abi name native compat noreturn; do
+>  
+>  		if [ $nxt -gt $nr ]; then
+>  			echo "error: $infile: syscall table is not sorted or duplicates the same syscall number" >&2
+> @@ -66,7 +66,21 @@ grep -E "^[0-9]+[[:space:]]+$abis" "$infile" | {
+>  			nxt=$((nxt + 1))
+>  		done
+>  
+> -		if [ -n "$compat" ]; then
+> +		if [ "$compat" = "-" ]; then
+> +			unset compat
+> +		fi
+> +
+> +		if [ -n "$noreturn" ]; then
+> +			if [ "$noreturn" != "noreturn" ]; then
+> +				echo "error: $infile: invalid string \"$noreturn\" in 'noreturn' column"
+> +				exit 1
+> +			fi
+> +			if [ -n "$compat" ]; then
+> +				echo "__SYSCALL_COMPAT_NORETURN($nr, $native, $compat)"
+> +			else
+> +				echo "__SYSCALL_NORETURN($nr, $native)"
+> +			fi
+> +		elif [ -n "$compat" ]; then
+>  			echo "__SYSCALL_WITH_COMPAT($nr, $native, $compat)"
+>  		elif [ -n "$native" ]; then
+>  			echo "__SYSCALL($nr, $native)"
+> diff --git a/tools/objtool/noreturns.h b/tools/objtool/noreturns.h
+> index 7ebf29c91184..1e8141ef1b15 100644
+> --- a/tools/objtool/noreturns.h
+> +++ b/tools/objtool/noreturns.h
+> @@ -7,12 +7,16 @@
+>   * Yes, this is unfortunate.  A better solution is in the works.
+>   */
+>  NORETURN(__fortify_panic)
+> +NORETURN(__ia32_sys_exit)
+> +NORETURN(__ia32_sys_exit_group)
+>  NORETURN(__kunit_abort)
+>  NORETURN(__module_put_and_kthread_exit)
+>  NORETURN(__reiserfs_panic)
+>  NORETURN(__stack_chk_fail)
+>  NORETURN(__tdx_hypercall_failed)
+>  NORETURN(__ubsan_handle_builtin_unreachable)
+> +NORETURN(__x64_sys_exit)
+> +NORETURN(__x64_sys_exit_group)
+>  NORETURN(arch_cpu_idle_dead)
+>  NORETURN(bch2_trans_in_restart_error)
+>  NORETURN(bch2_trans_restart_error)
+> -- 
+> 2.44.0
+> 
