@@ -1,133 +1,171 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8FF15ECFE
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDC515EFA6;
+	Tue,  7 May 2024 13:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715088729; cv=none; b=Kn5j2twu9LSJvR+qbnEDe3TlIMGvhdWz2PllscVrePKeAqiP5AmdqwnORXjlWyRHnI2WhYoj6EDCqeNxThgBKwCot3ugb2zUTx0fO1tSo7EuG0dc3/BF/oDduwzEttJgGwHnACqc8l7DFMn2vNaVhb5wEFb2ejb7xBabOpWD8o0=
+	t=1715088742; cv=none; b=YVka85X51pQBmieWs3wZw12HgL6mWjNc6RsKL3dn5/wo9ejLAOSsrsEZ5M0l0EO+5MWys7zS+cgTPm+SELvmCH/0CTa+B4Yug2wEj04D+rQNF6nTGjRYK0ovOHLyK7Fd2A+w71J53eiDvVNTjh3MvEbET/kh8KX5oaxjqVh+wXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715088729; c=relaxed/simple;
-	bh=sBzFX/sadxZL2cJQXTBg/KJIkDZ/894I5/zI13q8LZo=;
+	s=arc-20240116; t=1715088742; c=relaxed/simple;
+	bh=0aE1EB7OysxWT6vmQpIYxWU5IKQ/msWNTkadmkQXk0s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nYrjXeKcInovSdptIzR35J85aYUlaFcZh92WmucCMQ8JlZmIRA9fipMIr+8jn9sTAefsrdM7Wesco4GbDtbod8Uhz9qf/b5AdV589IRCexBxYubrtFyWcjN3aJk7B+8imvC7dS7Cc3OFq0nSqX3GPuJkZojqX2ndcHCYuKjx8FE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PG0RxQ/t; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=nJFlQA4s0g0zRZuegpcOV3qvCR4MEBU/eU5o8gb9ImgIYMZn2pw22A9iPTIo2XJMzb3dEXmNadORstM0c5SJQfvAap/rWoKY/kBlNBuqs6bZg4tEX0uPtY0zk+mvPY9kpedqQUuEsVekFu02RZihQJXkFktANrYBv/o764n6Wrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJowaa4H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PG0RxQ/t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715088726;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RIYdM7z5+Xm1S+hITzfLVzD6aDULkUJFC6+y9ilbGSk=;
-	b=PG0RxQ/t9HvQ/jrzumbNaLau9EK1YuEcTkvNDQNAkTlk3g2u4fEY9BYcm3lxfwXhOGZin5
-	Tb3PGRaYoTsHXyNR1y72lKWuRgcvTcwRlzhPrlYQ0INZ7rQqc9QqfXS40+qqyZIhRo4nok
-	XODVVNqcjrBDX+EMQCNgJ0+b77OPly8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-614-bPPBVKt9NLmUkqabt3Wgiw-1; Tue, 07 May 2024 09:32:03 -0400
-X-MC-Unique: bPPBVKt9NLmUkqabt3Wgiw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 474F784B16B;
-	Tue,  7 May 2024 13:32:02 +0000 (UTC)
-Received: from bfoster (unknown [10.22.32.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C8C793C35;
-	Tue,  7 May 2024 13:32:01 +0000 (UTC)
-Date: Tue, 7 May 2024 09:34:23 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: Petr Vorel <pvorel@suse.cz>
-Cc: linux-bcachefs@vger.kernel.org,
-	Kent Overstreet <kent.overstreet@linux.dev>, Su Yue <l@damenly.org>,
-	Coly Li <colyli@suse.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] bcachefs: Move BCACHEFS_STATFS_MAGIC to UAPI magic.h
-Message-ID: <Zjot36J9negcVlfh@bfoster>
-References: <20240507111124.118520-1-pvorel@suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJowaa4H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90D0FC2BBFC;
+	Tue,  7 May 2024 13:32:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715088741;
+	bh=0aE1EB7OysxWT6vmQpIYxWU5IKQ/msWNTkadmkQXk0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TJowaa4HpPiXiwpJkzsdfPvj2TnvxtMvqqcYR+4K3UvqVK7Buvon+6gWB5RAhyfbQ
+	 TiXtM0po6j0F9D6t29FO6JjVoTN3wJBHjoQ+3iofeq+Jy1TxSwx0mS3URvlwpE01/r
+	 AiinZZoeD1nGMRCKtqlj0oKpRjfHNkvMEB5xA6Wx/Lx6L+zB7jSlIx57n8Mjhge/JS
+	 4MYWDGjSYGRfRwcXaP08p/Ne8DKD3rlo01a1VYPCsRrk6XlmPTbA4rCBOVV97uGjSb
+	 VERhzTS4Ehuoc/0JhfYpDxdCM3oy0n3T8CifhJa+ws1GWrcYdjbD4wpeg7tvg3fk/v
+	 PbRJW/HVVo0Bg==
+Date: Tue, 7 May 2024 15:32:15 +0200
+From: Benjamin Tissoires <bentiss@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Daniel Borkmann <daniel@iogearbox.net>, 
+	Alexei Starovoitov <ast@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] bpf: verifier: allow arrays of progs to be used in
+ sleepable context
+Message-ID: <xt2zckipzs24eur4ozdo64uoxfed6jm3qixxgnp3o2gogjmosc@723s2u7jbsaz>
+References: <20240422-sleepable_array_progs-v1-1-7c46ccbaa6e2@kernel.org>
+ <7344022a-6f59-7cbf-ee45-6b7d59114be6@iogearbox.net>
+ <un4jw2ef45vu3vwojpjca3wezso7fdp5gih7np73f4pmsmhmaj@csm3ix2ygd5i>
+ <35nbgxc7hqyef3iobfvhbftxtbxb3dfz574gbba4kwvbo6os4v@sya7ul5i6mmd>
+ <CAADnVQJaG8kDaJr5LV29ces+gVpgARLAWiUvE9Ee5huuiW5X=Q@mail.gmail.com>
+ <mhkzkf4e23uvljtmwizwcxyuyat2tmfxn33xb4t7waafgmsa66@mcrzpj3b6ssx>
+ <CAADnVQLJ=nxp3bZYYMJd0yrUtMNx2DcvYXXmbGKBQAiG85kSLQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240507111124.118520-1-pvorel@suse.cz>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQLJ=nxp3bZYYMJd0yrUtMNx2DcvYXXmbGKBQAiG85kSLQ@mail.gmail.com>
 
-On Tue, May 07, 2024 at 01:11:24PM +0200, Petr Vorel wrote:
-> There are other bcachefs magic definitions: BCACHE_MAGIC, BCHFS_MAGIC,
-> which use UUID_INIT() and are used only in libbcachefs. Therefore move
-> to <linux/magic.h> only BCACHEFS_STATFS_MAGIC, which can be used outside
-> of libbcachefs for f_type field in struct statfs in statfs() or fstatfs().
+On May 06 2024, Alexei Starovoitov wrote:
+> On Tue, Apr 30, 2024 at 3:03 AM Benjamin Tissoires <bentiss@kernel.org> wrote:
+> >
+> >
+> > Right now, what I am doing is (in simplified pseudo code):
+> > - in a bpf program, the user calls hid_bpf_attach_prog(hid_device, program_fd)
+> >   where program fd is a tracing program on a never executed function
+> >   but this allows to know the type of program to run
+> > - the kernel stores that program into a dedicated prog array bpf_map
+> >   pre-loaded at boot time
+> > - when a event comes in, the kernel walks through the list of attached
+> >   programs, calls __hid_bpf_tail_call() and there is a tracing program
+> >   attached to it that just do the bpf_tail_call.
+> >
+> > This works and is simple enough from the user point of view, but is
+> > rather inefficient and clunky from the kernel point of view IMO.
+> >
+> > The freplace mechnism would definitely work if I had a tracing-like
+> > function to call, where I need to run the program any time the function
+> > gets called. But given that I want per-device filtering, I'm not sure
+> > how I could make this work. But given that I need to enable or not the
+> > bpf_program, I'm not sure how I could make it work from the kernel point
+> > of view.
+> >
+> > I tried using a simple bpf_prog_run() (which is exactly what I need in
+> > the end) but I couldn't really convince the bpf verifier that the
+> > provided context is a struct hid_bpf_ctx kernel pointer, and it felt not
+> > quite right.
+> >
+> > So after seeing how the bpf_wq worked internally, and how simple it is
+> > now to call a bpf program from the kernel as a simple function call, I
+> > played around with allowing kfunc to declare async callback functions.
+> >
+> > I have a working prototype (probably not fully functional for all of the
+> > cases), but I would like to know if you think it would be interesting to
+> > have 3 new suffixes:
+> > - "__async" for declaring an static bpf program that can be stored in
+> >   the kernel and which would be non sleepable
+> > - "__s_async" same as before, but for sleepable operations
+> > - "__aux" (or "__prog_aux") for that extra parameter to
+> >   bpf_wq_set_callback_impl() which contains the struct bpf_prog*.
 > 
-> Keeping non-standard name BCACHEFS_STATFS_MAGIC instead of renaming it
-> to more generic BCACHEFS_MAGIC to not confuse with the other bcachefs
-> definitions.
+> Sorry for the delay. I've been traveling.
+
+no worries. I'll be off myself the next few days too :)
+
 > 
+> I don't quite understand how these suffixes will work.
+> You mean arguments of kfuncs to tell kfunc that an argument
+> is a pointer to async callback?
+> Sort-of generalization of is_async_callback_calling_kfunc() ?
+> I cannot connect the dots.
 
-Perhaps it would be better to use the standard naming for the global
-header and let the bcachefs subsystem catch up with better names for
-internal defs? Something like BCACHEFS_SUPER_MAGIC also seems like it
-would be generally consistent, FWIW.
+Yes, exactly that. See [0] for my current WIP. I've just sent it, not
+for reviews, but so you see what I meant here.
 
-> Suggested-by: Su Yue <l@damenly.org>
-> Signed-off-by: Petr Vorel <pvorel@suse.cz>
-> ---
->  fs/bcachefs/bcachefs_format.h | 2 --
->  fs/bcachefs/fs.c              | 1 +
->  include/uapi/linux/magic.h    | 2 ++
->  3 files changed, 3 insertions(+), 2 deletions(-)
 > 
-> diff --git a/fs/bcachefs/bcachefs_format.h b/fs/bcachefs/bcachefs_format.h
-> index f7fbfccd2b1e..52e03f13b780 100644
-> --- a/fs/bcachefs/bcachefs_format.h
-> +++ b/fs/bcachefs/bcachefs_format.h
-> @@ -1275,8 +1275,6 @@ enum bch_compression_opts {
->  	UUID_INIT(0xc68573f6, 0x66ce, 0x90a9,				\
->  		  0xd9, 0x6a, 0x60, 0xcf, 0x80, 0x3d, 0xf7, 0xef)
->  
-> -#define BCACHEFS_STATFS_MAGIC		0xca451a4e
-> -
->  #define JSET_MAGIC		__cpu_to_le64(0x245235c1a3625032ULL)
->  #define BSET_MAGIC		__cpu_to_le64(0x90135c78b99e07f5ULL)
->  
-> diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
-> index fce690007edf..1c856ae2b0e2 100644
-> --- a/fs/bcachefs/fs.c
-> +++ b/fs/bcachefs/fs.c
-> @@ -27,6 +27,7 @@
->  #include "super.h"
->  #include "xattr.h"
->  
-> +#include <uapi/linux/magic.h>
->  #include <linux/aio.h>
->  #include <linux/backing-dev.h>
->  #include <linux/exportfs.h>
-> diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-> index 1b40a968ba91..45c8f4916167 100644
-> --- a/include/uapi/linux/magic.h
-> +++ b/include/uapi/linux/magic.h
-> @@ -103,4 +103,6 @@
->  #define SECRETMEM_MAGIC		0x5345434d	/* "SECM" */
->  #define PID_FS_MAGIC		0x50494446	/* "PIDF" */
->  
-> +#define BCACHEFS_STATFS_MAGIC		0xca451a4e
-> +
+> Feels dangerous to open up bpf prog calling to arbitrary kfuncs.
+> wq/timer/others are calling progs with:
+>         callback_fn((u64)(long)map, (u64)(long)key, (u64)(long)value, 0, 0);
+> I feel we'll struggle to code review kfuncs that do such things.
+> Plus all prog life time management concerns.
+> wq/timer do careful bpf_prog_put/get dance.
 
-Is there intended to be at least some logical organization to this file?
-It kind of looks like it, but maybe not as a rule. Personally, I'd
-probably stick this somewhere in the first chunk of definitions where
-the other major local/block filesystems are, but just a nit.
+That part is indeed painful.
 
-Brian
-
->  #endif /* __LINUX_MAGIC_H__ */
-> -- 
-> 2.43.0
 > 
+> > (I still don't have the __aux yet FWIW)
+> >
+> > The way I'm doing it is looking at the btf information to fetch the
+> > signature of the parameters of the callback, this way we can declare any
+> > callback without having to teach the verifier of is arguments (5 max).
+> >
+> > Is this something you would be comfortable with or is there a simpler
+> > mechanism already in place to call the bpf programs from the kernel
+> > without the ctx limitations?
+> 
+> "ctx limitations" you mean 5 args?
 
+No, I was meaning the special context argument for bpf_prog_run. But
+anyway, this is relatively moot if struct_ops that you mention below is
+working :)
+
+> Have you looked at struct_ops ?
+> It can have any number of args.
+> Maybe declare struct_ops in hid and let user space provide struct_ops progs?
+
+Last time I checked, I thought struct_ops were only for defining one set
+of operations. And you could overwrite them exactly once.
+But after reading more carefully how it was used in tcp_cong.c, it seems
+we can have multiple programs which define the same struct_ops, and then
+it's the kernel which will choose which one needs to be run.
+
+AFAICT there is no sleepable context concerns as well, it depends on how
+the kernel starts the various ops.
+
+Last, I'm not entirely sure how I can specify which struct_ops needs to be
+attached to which device, but it's worth a shot. I've already realized
+that I would probably have to drop the current way of HID-BPF is running,
+so now it's just technical bits to assemble :)
+
+> 
+> > I can also easily switch the bpf_wq specific cases in the verifier with
+> > those suffixes. There are still one or two wq specifics I haven't
+> > implemented through __s_async, but that would still makes things more
+> > generic.
+> >
+
+Cheers,
+Benjamin
+
+[0] https://lore.kernel.org/bpf/20240507-bpf_async-v1-0-b4df966096d8@kernel.org/T/#t
