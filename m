@@ -1,59 +1,66 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53DD8747F;
-	Tue,  7 May 2024 16:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B82CA747F
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 16:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715100906; cv=none; b=PUOn3eiI6iwi1NKXygWHwM8g0LtoqUQmoV4xkeTTA/ov/KB8lVK0msPEeLKs1SRTRFF6aMMYHWfAKkJ9gcCbL8/nRMBcXL1uuEpgEZFVlJKwKEbNttQfNhkfqVN+bTHPw61PAh9uQDat8aGc/sJ4+sBL57hzAn28rvMhw772PLo=
+	t=1715100958; cv=none; b=nNsQQZieuoi/TYtrTZUouGrRdCTZ7D5urRQF7pXxInGvkwIWHGquwQBxr0dDaRqZSxK0V1gu4f+fJ2wxpf2n7YN4FLmpVwYsAZT4CWoF6kBUtdSVuDJWSbEu2rBkIvjS3GOLhAEl2SWlQYfGASr1BKA+dq/leAEaCUQwpKyji9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715100906; c=relaxed/simple;
-	bh=w2F56fiWPcf3I7Mdw2SWi3X1Jhti8Ih4jgxuRbud9h4=;
+	s=arc-20240116; t=1715100958; c=relaxed/simple;
+	bh=ayAcoGMjeZEtCoLYulFBAV3rhD/YRujQKiVQBkAH5eU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nh2zxiJ0Mt+ofzGVLLJ8gQoWOSReGo9j0eWG1qtpIQJQZC0IA45Z918j7wvesx4W10et6QCSBkw5QmRlMw13lDFzugaLfQXxqiLDfMKnrPmPNmvu7pIsxX54quL/xFiyJ28cPeMk+MbTLRcWeTn9azFAXhrzipqZ3S/UFgx9Zto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aKuM9kIF; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=O7pJUlZ7kkwaRcNuLiHOAmYrLNPq3wsFV1eiKiX9YE86j0oP846o3Y5h1gMvPL7jsZbrhfSh9+9UOsZRPlyWcTWWuWdzb+wBDyF9p2QLOPqn14i0EFYDCfVX1ALu05CHtEp0nF57kHXkCTj933BRplZuX5c1ZZ0gv+w/B5im23k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DXkqqzwg; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aKuM9kIF"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41b782405d5so35528355e9.2;
-        Tue, 07 May 2024 09:55:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715100904; x=1715705704; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dF9l/kgRlz0B5vWAs2atat+U+Sdoi0d3PjFaa8gJGnw=;
-        b=aKuM9kIFVQWqKmaTHy+os7H0DqcqgEUt1BUiomV2TUsYKMVs2xjJChnn+MSshvCFdx
-         /PnMHUkPs1otUDw4GTYd0Ehhv1phXeaSg0UBuI8AxOWFpqLAa08d1hMXw6bWF15mANZw
-         ItewV1yNygyyM5rAfOoYr8gdsiZpbq6HRK8jRFLA0nuY+9Qtsfz8ky17qxby/uV7iyiE
-         VWFDC7kWP0tzzS+b0d65fFp4dNKX6fjG1sOPsK7FmA4rKJMMB/CbNPrBz6VyRwd8BhoN
-         C1ShwLLzOcC/KjA25Ky691Y/1fBdyeVQZS42eylyeB3eGenV21MhmDIT6oSYfpwTXRWo
-         3qWQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DXkqqzwg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715100955;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=DlCDm3cAnsY2L8H68AJPaPtU3T+hmcvfCLV+r6947v0=;
+	b=DXkqqzwg76eSlIGtkJ732xSlbmwB9OX2tKHWWwrSHUty0mZv552AcuhkywjsKtJiXUmfd4
+	M7cwVFo2HY3b6hw4QjmA+uqC45IGDx1fcCMyX4RrSPUW8YPb5ymtoAfE2VowsxX+1sW5b6
+	t+Av8QQv55+mRm2q0lSTQYlDJAz0zVs=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-677-x-07W1UKOCuT8hQrlbXNPQ-1; Tue, 07 May 2024 12:55:54 -0400
+X-MC-Unique: x-07W1UKOCuT8hQrlbXNPQ-1
+Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-51fd3568b04so2754335e87.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:55:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715100904; x=1715705704;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dF9l/kgRlz0B5vWAs2atat+U+Sdoi0d3PjFaa8gJGnw=;
-        b=g57z0eQJ3HGh4y+RNT9NfAgUByYXUJtOkvpPiGBVXWirQidAyIejEDF7VqTj6AhKEW
-         h8dmepsg22Zom/W/KRpGXqBjA7zTkEZzq+T9olA0VnSC1zBoXBULwnCxzMSE7bsxH/Vt
-         WRI3HtwD7CnYTruKua/Klx08kUpIHZ58IgByXitUpadiP3WeD7KaROoJxTqP/r3gQvBJ
-         kkOoARxRGEjZyxX3389uI5EU9gmpUWqTneUZWc3QtMUxaSTPGaOMT8s9NHtjBbkjReWV
-         J0GwzdjEeqChjkcB5xtYkrYMOEVMgMz6nT+cjs5oCOTf0hYitB7yayioQ+QiGYYHx7BF
-         sn5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVpBDGgY1n2F76L31sps4cYmoUhT9HY0585kXqSG4VgGBRYXamm0lfZ1O3ky6Ky0UGW580F64EGSAMQsGUiqpbn2YVO4sLLotb7KpoUZCArCBK9oaOmuvx9oakO0ZakzMqr8L2WX+tPEKVYwt64Ev28Cea6QZTnHj78xJIAdS9pR4rAiE75ysr3FVuhtPNv5A8U2uyoe9Nlw1H+P5ac72ZuAKr8bwvuTPSWGcfPmPPOBm7QsVVn8fKlOG1P70o0eoavIM2hiL+hJ4xDuoCpbmQqCmfjeenwSq/yNc5QNN2W037t+hz7Uo2HIj+Jy9jDBsH0/TScKSwKCATBg8P0eYWdfVm/IxLhkNALZf0/dUddA1verD5TYTh8klwX1HxlxQS7ORCLuFbri0SGU0MtJ4L7QBHF0mRoi2JW2bt2vgpiMC4720ssp2jrBzOVbKvfnbZRyA3rQGeo7du2XQiPxbeLlKdyrDNzWdX7gEFsGngX9+z7G4Q1n0CGzBKL8cAKDlYnrevoow==
-X-Gm-Message-State: AOJu0Yz8k54iFeURo2jo29iLzMWOo5yiAK19SLmyxk9Of7JuImPyanP8
-	4Nm2iiyHlg85Pb3QkAnzybiImE1JKuYDysnopsVw1VvjW6r03fMG
-X-Google-Smtp-Source: AGHT+IH7DHe6/ECg4cq2RKtLIjPPmczYwSJQD4jpcfKG6nOXnELQiScPGDQJbCXwTIzCZULoDPCQXg==
-X-Received: by 2002:a05:600c:4747:b0:41c:2313:da8d with SMTP id 5b1f17b1804b1-41f7093c658mr4744345e9.0.1715100903326;
-        Tue, 07 May 2024 09:55:03 -0700 (PDT)
-Received: from [192.168.42.69] ([85.255.235.91])
-        by smtp.gmail.com with ESMTPSA id p17-20020a05600c359100b0041adf358058sm20132504wmq.27.2024.05.07.09.54.59
+        d=1e100.net; s=20230601; t=1715100953; x=1715705753;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=DlCDm3cAnsY2L8H68AJPaPtU3T+hmcvfCLV+r6947v0=;
+        b=L3GmeFHbCiVjBaYfaFT3dTwWTsRaf9dnROH0YI/EtXulGit5pLVugHjH2H5KgbnZtv
+         9uUkc0BAL/KZD6aaPqJtfCj75O4QWDg7XyD1HynAb1A+XbCzYi3bUe/0NnNSiPce+lYd
+         In8iNSSiei9F2G8qlYQb8HBiDg3lVK3jHTmX3cHKIK7plAB5NSCrE0qWHc7GLcPwbvl/
+         vKZrdIn5sKhR2wPC9p8mj5w3cDCBBjvrZd3+XydVBce+Z7otIal5enVuWCi/1tBEyy8D
+         jSVnMlOoSNKFcMR6591CwA2kiYZ29z47GkGqIuE5LNXPso69E5EEFMi1wLt5TyQiQgzx
+         jbhw==
+X-Forwarded-Encrypted: i=1; AJvYcCURehkHa/1WvrDekiighvhxmDnMgypX0wjEkMdy5t6maCGQsFIiIEYdeZROfvoUZxgl9pu15CamVnH2QXDYE2DcDo+qBzi0NWOD8wCM
+X-Gm-Message-State: AOJu0YxO++8HwzAMfxiVT6+BCM9pnyrgJSgVlTSmK3FcdBK/hRUl3VqT
+	/yN34v0M/Ogp0yuES0Wtb+P3Q2iXgwtyDEMEJiSYx3TRnyYW/6RqcaWP414elmtfFUH4Rzh5ZGX
+	90Tu0GeMO6dt7Xo/AX8OcliRc7umCna1mhFZKQ2+KzwaykaApSKWNed+JIEVIKw==
+X-Received: by 2002:ac2:4dad:0:b0:51c:6c59:627e with SMTP id 2adb3069b0e04-5217cd49606mr61653e87.42.1715100952588;
+        Tue, 07 May 2024 09:55:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH/hrGdfZV+az9YscFnEoIqi8kKKgBXQyIsyla/Tt3dDMJ19H6muZFZnAeXsSR1oVFBSyo/uQ==
+X-Received: by 2002:ac2:4dad:0:b0:51c:6c59:627e with SMTP id 2adb3069b0e04-5217cd49606mr61627e87.42.1715100952012;
+        Tue, 07 May 2024 09:55:52 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c744:b500:3f9d:130d:ea00:afc7? (p200300cbc744b5003f9d130dea00afc7.dip0.t-ipconnect.de. [2003:cb:c744:b500:3f9d:130d:ea00:afc7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f4307ded2sm11264245e9.0.2024.05.07.09.55.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 May 2024 09:55:03 -0700 (PDT)
-Message-ID: <54b1bf11-0f9a-4e9e-9e5c-7d81e066fc7c@gmail.com>
-Date: Tue, 7 May 2024 17:55:09 +0100
+        Tue, 07 May 2024 09:55:51 -0700 (PDT)
+Message-ID: <99358cd9-3f3f-4ba1-bd8b-898cdf819e2d@redhat.com>
+Date: Tue, 7 May 2024 18:55:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,114 +68,110 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v8 02/14] net: page_pool: create hooks for
- custom page providers
-To: Christoph Hellwig <hch@infradead.org>, Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Amritha Nambiar <amritha.nambiar@intel.com>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Alexander Mikhalitsyn <alexander@mihalicyn.com>,
- Kaiyuan Zhang <kaiyuanz@google.com>, Christian Brauner <brauner@kernel.org>,
- Simon Horman <horms@kernel.org>, David Howells <dhowells@redhat.com>,
- Florian Westphal <fw@strlen.de>, Yunsheng Lin <linyunsheng@huawei.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>,
- Arseniy Krasnov <avkrasnov@salutedevices.com>,
- Aleksander Lobakin <aleksander.lobakin@intel.com>,
- Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Richard Gobert <richardbgobert@gmail.com>,
- Sridhar Samudrala <sridhar.samudrala@intel.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Johannes Berg <johannes.berg@intel.com>, Abel Wu <wuyun.abel@bytedance.com>,
- Breno Leitao <leitao@debian.org>, David Wei <dw@davidwei.uk>,
- Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
-References: <20240403002053.2376017-1-almasrymina@google.com>
- <20240403002053.2376017-3-almasrymina@google.com>
- <ZjH1QaSSQ98mw158@infradead.org>
- <CAHS8izM0=xc2UhUxhnF_BixuFs5VaDV9W1jbso1K+Rg=35NzeA@mail.gmail.com>
- <ZjjHUh1eINPg1wkn@infradead.org>
- <20b1c2d9-0b37-414c-b348-89684c0c0998@gmail.com>
- <20240507161857.GA4718@ziepe.ca> <ZjpVfPqGNfE5N4bl@infradead.org>
+Subject: Re: [PATCH] x86/fault: speed up uffd-unit-test by 10x: rate-limit
+ "MCE: Killing" logs
+To: John Hubbard <jhubbard@nvidia.com>, Andy Lutomirski <luto@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+ LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+ Peter Xu <peterx@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>
+References: <20240507022939.236896-1-jhubbard@nvidia.com>
+ <016d8cff-efc3-4ef1-9aff-7c21c48f2d69@redhat.com>
+ <302d50ac-45ff-470e-90a0-b349821706a6@nvidia.com>
+ <21d88422-7378-4a63-8fbf-f70889f309c1@redhat.com>
+ <16ab2040-9d99-41b8-8b9d-39b0753533c6@nvidia.com>
+From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <ZjpVfPqGNfE5N4bl@infradead.org>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <16ab2040-9d99-41b8-8b9d-39b0753533c6@nvidia.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/7/24 17:23, Christoph Hellwig wrote:
-> On Tue, May 07, 2024 at 01:18:57PM -0300, Jason Gunthorpe wrote:
->> On Tue, May 07, 2024 at 05:05:12PM +0100, Pavel Begunkov wrote:
->>>> even in tree if you give them enough rope, and they should not have
->>>> that rope when the only sensible options are page/folio based kernel
->>>> memory (incuding large/huge folios) and dmabuf.
+On 07.05.24 18:53, John Hubbard wrote:
+> On 5/7/24 9:43 AM, David Hildenbrand wrote:
+>> On 07.05.24 18:28, John Hubbard wrote:
+>>> On 5/7/24 1:13 AM, David Hildenbrand wrote:
+> ...
+>>> I'd like to just do this patch almost as-is, just with a fixed up
+>>> subject,
+>>> perhaps:
 >>>
->>> I believe there is at least one deep confusion here, considering you
->>> previously mentioned Keith's pre-mapping patches. The "hooks" are not
->>> that about in what format you pass memory, it's arguably the least
->>> interesting part for page pool, more or less it'd circulate whatever
->>> is given. It's more of how to have a better control over buffer lifetime
->>> and implement a buffer pool passing data to users and empty buffers
->>> back.
+>>>        x86/fault: rate-limit to avoid flooding dmesg with "MCE: Killing"
+>>> reports
+>>>
+>>> Yes?
 >>
->> Isn't that more or less exactly what dmabuf is? Why do you need
->> another almost dma-buf thing for another project?
+>>
+>> Makes sense to me (and thanks for confirming that we don't need
+>> complexity elsewhere).
+>>
+>> I think we at least need "Fixes:" (not sure if stable is warranted as
+>> well, 1b0a151c10a6d823f033023b9fdd9af72a89591b didn't CC stable).
+>>
+>> Consider adding a link to the report in that thread.
+>>
+>> Acked-by: David Hildenbrand <david@redhat.com>
+>>
 > 
-> That's the exact point I've been making since the last round of
-> the series.  We don't need to reinvent dmabuf poorly in every
-> subsystem, but instead fix the odd parts in it and make it suitable
-> for everyone.
+> OK, there's enough changes to the commit description that I'll go ahead
+> and send a v2, with a new subject line, a Fixes:, your Ack, a link to
+> the other conversation, and maybe reword a bit based on your feedback
+> too.
 
-Someone would need to elaborate how dma-buf is like that addition
-to page pool infra. The granularity here is usually 4K and less
-(hw dictated), what user receives cannot be guaranteed to be
-contiguous in memory. Having thousands of dma-buf instances is
-not an option, so a completion would need to include a range
-where data sits. Then who controls lifetime of buffers? If it's
-dma-buf, then at least it needs to track what sub-buffers are
-handed to user and what are currently in the kernel. How it would be
-accounted? ioctl_return_subrange(dmabuf, [range]), sounds like
-a bad idea for performance. To cover user memory it'd also need
-to be read from userspace, ioctl here wouldn't be an option, but
-let's say it's somehow done in the kernel.
+Sounds good. We might want to CC stable: I just read 
+1b0a151c10a6d823f033023b9fdd9af72a89591b and I think the problem there 
+cannot really be triggered by unprivileged users.
 
-That's not all the list, but in short, even though I haven't been
-following dma-buf developments too closely, I have hard time seeing
-how it can be a replacement here.
+Hm... thanks!
 
 -- 
-Pavel Begunkov
+Cheers,
+
+David / dhildenb
+
