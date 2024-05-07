@@ -1,97 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E39116ABE8;
-	Tue,  7 May 2024 16:24:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311CC16ABD8
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 16:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099092; cv=none; b=CAljEbOoVbNCdao2GzIzsV7r6Gl/uvjrSr0ARQ/HQ/hGmSBfKAmRuPo8M/JxpX8ulllz88iANLhfvN6tcyzWOnM0acLKjNWu00eq4POPoHMlHOBod4yOY+REwYKWjFYl00nYxGYxQEc0TOv7nYv3bsxC2FyxPC/VKCpBl0WqsJE=
+	t=1715099131; cv=none; b=tYsUK4BLvJuViINMo1Ykf9hs/XyOvxJnyfQ2CAtQPACv1scbi72X9j4Q8moKZBpmFE7Mbnwi1nLwa76S7Nc9+iDoES7fSCwQ0BOcbxFwhsovZ78SJK/ZeY+kRyFbubS9MFsA8b0KyjvTLtYN3HuabLL5Myxx7JhJU97huxRCuPM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099092; c=relaxed/simple;
-	bh=xjqnat7biDHsSjLjF1RDSmbAHh5gsv1jZ8a8jPor4zE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b2vbq/dqLGuQ5V+EbS+vlG0Ne/tod/pbNGDScXZFDVazqlOI6TJJwpqJ7HoFs2c8bCyvuqvZkY+/kiuaz6XZ22HWQI+3kPnx0H4tVPKNukUQViyOj9mMHLD3Z6qq89XX0eIubUiKEVjUJhuXzZGOYVMC45xBTPADKqIlBRh0gb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QDa28c5e; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715099131; c=relaxed/simple;
+	bh=5/4nUFGzVCKyh1B64hVam6vzkGBnCWQpN7HzGYdQUhw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gTqBXAjEOq+sRLOKGKaK+zOIXn741cq3Ow4ZwWE6pBx/oi6v224ual9Gc1dcwJtSc7svaMctXF09YrbmS8PH11mWzwBvaef0t9fkTwZR4KvqegTY8xrLeLx5TiXQoYvDYSF/gikdWp5p4BP8EHo/j+IAkca0QCxMgtn7Xk4E/L0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=L3FruZzs; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QDa28c5e"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715099090; x=1746635090;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xjqnat7biDHsSjLjF1RDSmbAHh5gsv1jZ8a8jPor4zE=;
-  b=QDa28c5eIjDb0mlWxE12HHQ08Xk99KGl8fqTjRbeKx+E7BNGNhfx7RfQ
-   7c9Yn94wX50E3/D8fdjooEas5e6TxUhiS7jEX8VxtKwEmUvM1zJ2enA2R
-   mc0G+hXVSTFJRJdZvRGTZArB+UMJem7tBpu8V1gJvRptRPhLlO61Vaspn
-   /MExJ0Tt6wcD2DEpav3iR5MHQLI7qjcY+asNNRavVifmg1N60nALiQx0A
-   av/5A6g9YImucqNC0VQI3sDW3h6iXOfMkATXK1Jri62tOkBrbGQdNjpLo
-   ROs09AkieI/rgh+JFWCGTGAiqL3zuOaaGiQFuXQL5+z4G66NFsVuxwCjs
-   g==;
-X-CSE-ConnectionGUID: Z3x2xIBhS+qybM/Yt52p0g==
-X-CSE-MsgGUID: R0MNQZIFRcSmHvTyBWzxkQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="21577457"
-X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
-   d="scan'208";a="21577457"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 09:24:50 -0700
-X-CSE-ConnectionGUID: enH0uxdLSHmnEPpAFEeujw==
-X-CSE-MsgGUID: GjkPmm1BTeW4Dlv3J8Crfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
-   d="scan'208";a="28553500"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 09:24:48 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1s4NcU-000000056c9-0xMI;
-	Tue, 07 May 2024 19:24:46 +0300
-Date: Tue, 7 May 2024 19:24:45 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org
-Subject: Re: [PATCH v3 REBASED] spi: Add capability to perform some transfer
- with chipselect off
-Message-ID: <ZjpVzexVvyih2vGG@smile.fi.intel.com>
-References: <20220907141344.oDJgraej0r_TWCpXPzNZwflzEvN3hBXTvsBehJGtLSY@z>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="L3FruZzs"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a59cc765c29so579998366b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:25:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1715099127; x=1715703927; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qsg2qiI3lz3EhCF2HZdFnC7wmOTqjTes666QVJJQB9w=;
+        b=L3FruZzs0HaKvGnuQxR0jF7PdeALJRIlGBpcLZKx5sBfxRv+ySo1LK/iknCVL889sG
+         LRlC0oy/r4BhvJzSwY1b1UKkI0/rr3RuEjYewtz1p3m4FY6wvFzlu3pbwaG3TyRHVKD9
+         j3pm3lg06DYdNbM5B796G77pqKRQQ8eEApFBA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715099127; x=1715703927;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qsg2qiI3lz3EhCF2HZdFnC7wmOTqjTes666QVJJQB9w=;
+        b=IZJ/iovAm8eE7c9M/2C/OEo7Xn0598P4SKzYQEymqhWUUaNw2sa2zw3EuxS31fH/Tr
+         y4oJcGwk3PM9YirSRMPEKAIdhG9g3/bJuPPPDH5Cl+MyPp6StnKmlQJBoyKqNjvCWW1q
+         RKlbKDLmDy7PtcEESMZdFcn/erGol7Zxq3+OcY5q0/+rwyVYbf3sGPi57wQhPN2vDVqL
+         tycLIJGC6Z5bKUE38vlWHi4qzYwOGENJ22/2v29EMXSMzldRMflo+jsZ7kpVrlfcc1vS
+         SPUoLbCt0etmCuhQXMAleFpN2otH0diVYyTh8coiwEVnkbOoUEF2jwJ5Nya5MJLYXrps
+         7WrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX3cwU9kJnNaKUXZ8tL9U+uYKqpzBpRosuLJOcTjDMN6NwmXqd+bG55hrZ6YD4YmkkjGJy4kRDDr+A7Q9xspkUA8EIIeCLfnHD3M1//
+X-Gm-Message-State: AOJu0YyjqRvk5eUgtj6izWHAQUCOkiu2+WlZI83/UY9sLYvtxcEs36WH
+	yNqsFg/70A3fZW689+oMSIKTrWjE2a1ERV1UE9dRY9PuzeU8HTpZgIXiYkxXq2sAUXBFgrzlEv3
+	D7sb1vw==
+X-Google-Smtp-Source: AGHT+IHMKQSiQS8NmoukPblHClZUc7lupBU1TnHwMwcYdXz2R6Z9rOH0uw0j8kNI1tiLabYMoMAwgQ==
+X-Received: by 2002:a50:8711:0:b0:56e:5735:db2b with SMTP id 4fb4d7f45d1cf-5731da81938mr154899a12.29.1715099127371;
+        Tue, 07 May 2024 09:25:27 -0700 (PDT)
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
+        by smtp.gmail.com with ESMTPSA id l11-20020a056402028b00b00572bba6745esm6467712edv.81.2024.05.07.09.25.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 May 2024 09:25:26 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a59a0e4b773so804812466b.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:25:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWkqzDGVDE9047kziGr3k9GRDkX/8tZuKtOlJfkCzTatVZlp+Zoj8rDN9OXKuQRrjmnm+bBT4X/6saaPdj35HgwoSUHQyqRH5NXtM1Q
+X-Received: by 2002:a17:906:7804:b0:a59:f380:1821 with SMTP id
+ u4-20020a170906780400b00a59f3801821mr1149640ejm.69.1715099125946; Tue, 07 May
+ 2024 09:25:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220907141344.oDJgraej0r_TWCpXPzNZwflzEvN3hBXTvsBehJGtLSY@z>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240507142454.3344-1-konishi.ryusuke@gmail.com>
+In-Reply-To: <20240507142454.3344-1-konishi.ryusuke@gmail.com>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 7 May 2024 09:25:08 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgogPoSdCYw9jhc2Zm=BaE19nXYwFn_F9SwD2C-DyrmCw@mail.gmail.com>
+Message-ID: <CAHk-=wgogPoSdCYw9jhc2Zm=BaE19nXYwFn_F9SwD2C-DyrmCw@mail.gmail.com>
+Subject: Re: [PATCH -mm] nilfs2: Use __field_struct() for a bitwise field
+To: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-nilfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Sep 07, 2022 at 04:13:44PM +0200, Christophe Leroy wrote:
-> Some components require a few clock cycles with chipselect off before
-> or/and after the data transfer done with CS on.
-> 
-> Typically IDT 801034 QUAD PCM CODEC datasheet states "Note *: CCLK
-> should have one cycle before CS goes low, and two cycles after
-> CS goes high".
-> 
-> The cycles "before" are implicitely provided by all previous activity
-> on the SPI bus. But the cycles "after" must be provided in order to
-> terminate the SPI transfer.
-> 
-> In order to use that kind of component, add a cs_off flag to
-> spi_transfer struct. When this flag is set, the transfer is performed
-> with chipselect off. This allows consummer to add a dummy transfer
-> at the end of the transfer list which is performed with chipselect
-> OFF, providing the required additional clock cycles.
+On Tue, 7 May 2024 at 07:25, Ryusuke Konishi <konishi.ryusuke@gmail.com> wrote:
+>
+>    Despite that change, sparse complains when
+> passing a bitwise type to is_signed_type(). It is not clear to me why.
 
-Interesting. Wondering if this helps to improve mmc-spi.c case, which
-abuses SPI protocol on the initialisation phase.
+Bah. The reason is this:
 
-P.S> just noticed this change in the Git history of spi.c changes :-)
+   #define is_signed_type(type) (((type)(-1)) < (__force type)1)
 
--- 
-With Best Regards,
-Andy Shevchenko
+Basically, the way "is_signed_type()" works is that it casts a
+negative integer to the type, and checks to see if the value has now
+become a large value.
 
+Now, it looks odd, because only one of those casts has a "__force" on
+it, but the reason for that is that casting all-ones and all-zeroes is
+ok for bitwise types (think of bitwise types as being a "collection of
+bits" - so all bits set or all bits clear are sane concepts regardless
+of any other semantics).
 
+So it's not the casts themselves that are problematic: that part works fine.
+
+But you cannot compare a random collection of bits for greater than or
+lesser than.
+
+Think of things like byte orders: you can compare two values for
+_equality_ even if they are in the wrong byte order, but you can't
+compare them for "larger than" unless you turn them into the right CPU
+byte order.
+
+Basically, a "collection of bits" doesn't have an ordering in itself,
+even if equality comparisons are ok.
+
+So yeah, is_signed_type() doesn't work for bitwise types.
+
+And I don't see a sane way to make "is_signed_type()" to work for
+bitwise types - the whole concept of signedness of "bunch of bits" is
+kind of nonsensical - so I suspect your workaround is the best we can
+do (alternatively, tracing would have to figure out a different way to
+test for signedness).
+
+                 Linus
