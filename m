@@ -1,312 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E803815099D;
-	Tue,  7 May 2024 10:27:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DD114E2EF
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:27:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715077622; cv=none; b=N5jcJx7Y9p2I567TLP4vRwCYHhCybC+U6nbdXJN5VS/dS1HETlGimiKE3Qb4f2OcSmdUqgQL7YNiaLUSow8lK95Vuf7aMqUMoo0oENKEx6Nwqd45luhax+yk8H0fx+6KA82lix338aGJNFn2QqkhYB5VEhWZI/nozm4GkePE1UU=
+	t=1715077666; cv=none; b=qZ6W+WbTc5Snxe0CQXHZqYg26bPMEvitQ//ukyhtqkUxyUbSRppOfrW28JrCOzq2InuvKEvQpYS3RKl0rMVhe1kxD4XV7yZeDmDH0C1c67aeDncu3ysrm2igGFr/y4U+CU4K84S7VU+sgYRbJ2G0xt0sqZur3mF8u7b1LwhTfSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715077622; c=relaxed/simple;
-	bh=nt/ZLutgromZ7gcwB6Dx88HxYCkd13s5thFkq0sTUgo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dEGG5v75gZnoQlK4nCjwhkCZ8HA4lHEmaMMiH3OexzUtS1NwSMvA55F6hTW4CSduWceL21v9QJeC4Ube0k23lXdv9rUMavYfK+e85Wpuuo26WqvYLbyZARA2k3XmGUpm7n90IUBV9K9cVkcBwubICSBXYgMHRdrr+2aaU5pupTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XGcApnKE; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715077666; c=relaxed/simple;
+	bh=UA3F40A7r6F4bjPkfKJpAKLHE1h9mHy8CdOamekYs/0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Y70maRhBs4oHQMEJbODREAXTHrr1SZOvMf6V+Kw0pYcAAGtXsFptIxQeO1zS0zF5PawKM91h2VcllMulS5N7QAuv/3NarlFnB35WhaY6R/hmHM90OvdOF6OcgNyDd3hRHwY1G6GaHULn/1yNWgSc/vPWFbjraIiss3d9m8QzqUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ApJpkcCu; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XGcApnKE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715077621; x=1746613621;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nt/ZLutgromZ7gcwB6Dx88HxYCkd13s5thFkq0sTUgo=;
-  b=XGcApnKEDn2PSU+fYCVUJDbaRMGr5NjB7NPVM/sKOtBwar2D/fbdYL3a
-   9EsRfq3g4/jRiJmUolgIZWnNWtfmvC0Om+mxQ3huU8FCe00EI/DxMqdBu
-   N59VCWcKtk0kdLjsBBHnZRRDkIsm8o92R+5lQAdIkCHpZrEsOPzCuuHfg
-   wzYRjYrnDLzoGGJ4Kv6MXriKI5YmfPVoPRIFEx6sJDQy97IbWzvd/lHKI
-   2SUcjTNc5UgB0syUluGMDx3h+dOVHilpyzNVzYLp8zfch25fCYwlv9Npr
-   ZjJinQBbEbNWllLrzm4QucOuy1YD60SSzodv35E/GaxOLN/tO0nTGtJ+I
-   w==;
-X-CSE-ConnectionGUID: ZmscuW21T8KM9hCIK0FJwg==
-X-CSE-MsgGUID: 2JSlOsT+SnS+ummjeAUlaQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10987193"
-X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
-   d="scan'208";a="10987193"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 03:27:01 -0700
-X-CSE-ConnectionGUID: T6h0186/TKC0AdLZaYMvMQ==
-X-CSE-MsgGUID: ljHjrteKTm2UmOKNsvbwIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
-   d="scan'208";a="28535704"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.74])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 03:26:56 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: linux-pci@vger.kernel.org,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-	Igor Mammedov <imammedo@redhat.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	"Rafael J . Wysocki" <rafael@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Lidong Wang <lidong.wang@intel.com>
-Subject: [PATCH v3 8/8] PCI: Relax bridge window tail sizing rules
-Date: Tue,  7 May 2024 13:25:23 +0300
-Message-Id: <20240507102523.57320-9-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240507102523.57320-1-ilpo.jarvinen@linux.intel.com>
-References: <20240507102523.57320-1-ilpo.jarvinen@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ApJpkcCu"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a4702457ccbso748468666b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 03:27:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715077663; x=1715682463; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IFiLG2QOTgMREMZMtW7unZxhYPzyuGBw42NHTzIrjEg=;
+        b=ApJpkcCuvAzwMcmep+s4Ks0+8uF0N5fODwHEPL0HJ5tbLufuq+nYlT9+KHKy8RLERp
+         i8dy4UVBSO9wyuqlREwPliPt2m4/TY9usUJw1wJNnMVlGBXNEyV7RBVq/Jv62QfGT7rp
+         TiLWcdO3tjNicOlHDm7Ivt/hxfcUKfoFbk9oZbPBhMCPiCvj32vgQ7caFcCVouTiCwUa
+         JOOSLe99IPmGIPdVXfm8BrXMREvQdSnFly8iCJd+ijE3IbsElVMhvzU2W8buLcS5EgEM
+         w3XWnf775EAJs1ALOz+iWkaxW3StA5n0ksIOXsLA3wUpLUqQVcEvv9T7f0gy9m2JeZF+
+         /5lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715077663; x=1715682463;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IFiLG2QOTgMREMZMtW7unZxhYPzyuGBw42NHTzIrjEg=;
+        b=ZhBY+4oTYjZS5KBuRZbJxtKb6GyazlNTHmwrrJycYNgFSZTa9zaJtpG+BZYthYPdvk
+         FFi8qwXBUMEiln+HIJliDG3gVtZyR75Qmppa7VRX5N5XYGmKEQ9KW7DltaqJ567g9Qhj
+         fXFkw6gBTVxChIl31EobppjCDqKoz46O87wfhwfy0IsotlTW6fJlMxZYA1Sm3ckBsQWu
+         9mlrSTjq0IG/c9qMPov/Rvg2FZ/3ui/7jqVUOEtmj5UNs0bg/B26Y8KA850bqYxUV7iV
+         BMxsmAuHBenudkjxhh4FWkdnj7ygkPpVWF309EKoMDvYLu0Iuaw1EpFAwgKQrBcCoAj1
+         /4ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJqCb0b8F6x6wi60b+cm/kzvws8OLgnT0qdAizcS09fFEqTq3iSQh6aC7O/DRf0ix9RdcFIAfa+mOYcCWXUclFTH/kp5Esefy/PywD
+X-Gm-Message-State: AOJu0YzXhC6LD6DHVnRB8mw858sSlMWp6AltDMIuoy5yj87BEE7dSG3R
+	xV8iFT83XD1XHZN4D21MF/cV2on+kuGuQK4L6k1sAgVDSHhIZrvKSukqZotaf10=
+X-Google-Smtp-Source: AGHT+IGiGDBt5yxrFViI2K6OwEdG5BxYWaB5AQ6x9sPDuZmTlizY4kXoke2k+cqZtkEZS82lyV2hMg==
+X-Received: by 2002:a17:906:f595:b0:a59:affe:b9f with SMTP id cm21-20020a170906f59500b00a59affe0b9fmr6075822ejd.6.1715077663076;
+        Tue, 07 May 2024 03:27:43 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.206.169])
+        by smtp.gmail.com with ESMTPSA id bo15-20020a170906d04f00b00a59b87dd0bbsm3370093ejb.161.2024.05.07.03.27.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 03:27:42 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 0/4] ASoC: qcom: x1e80100: Correct channel mapping
+Date: Tue, 07 May 2024 12:27:29 +0200
+Message-Id: <20240507-asoc-x1e80100-4-channel-mapping-v1-0-b12c13e0a55d@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABECOmYC/x2NwQqDMBAFf0X23IVNiNX2V0oPUZ92QWNIQATx3
+ xs9DgwzB2UkRaZ3dVDCplnXUMA8Kup/PkxgHQqTFeukloZ9XnveDVoxIuz4sgJmXnyMGiaGr0e
+ x3QvPpqVSiQmj7vfh8z3PP1coU5NxAAAA
+To: James Schulman <james.schulman@cirrus.com>, 
+ David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Banajit Goswami <bgoswami@quicinc.com>
+Cc: alsa-devel@alsa-project.org, patches@opensource.cirrus.com, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2066;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=UA3F40A7r6F4bjPkfKJpAKLHE1h9mHy8CdOamekYs/0=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmOgIZDiepsVWvVzHlozJIF74v2e8BDRMWdJ9yg
+ tul3Qy5IlSJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjoCGQAKCRDBN2bmhouD
+ 106XD/492uoI9DGw7QfAgKxvhjg/WFIaXDR7JoFHNQBWWpD6g8oM/uOyKXhus/RrfCk7ZXcD+H9
+ 1bhDN+FFWC9W43rhUMYNBsJlql7J5BH5PXmEuB2YdsEmIgEHw9fuzNtXCeN/hj4DVtmcpuVlZ62
+ 8lpWMKS3FSpH9BYVlMKzN7C1V1RvxktZl2h/bXs4eHVMCGnUBNkyzOTzkFwdIPdRy33RBidEjBP
+ AVPtgRJMSg2SENodHxrjpvdM9gzNZD7Ag4h1S1AIUm14eD1fdnNeaZoDwrinJ0U+G4NOIScL2NS
+ VxDR8P437XoyX5dsE/1kviIFmp7ZvB3jhXf/gqJm0HYq6sbnx3GXWcuGrxSiVnHuIpMhCu9VQhn
+ DVFU2IcSCJlXZpd/PteAxMbE12AOQUrKCac3CnJHl38KiceuRIyF4iasoquQmtsEL2WEA94z+ie
+ BA8IP+TPVkABmK5jhnLs8gULj5/mshiB+jPdqGCMuXRSt/iwBkuV83XFk5y42RYy6dr286bz3r5
+ JK2Xpj6KCLkpD6/mpHknjMk2Eb2NJzoAMjsU4qaGgjNI/07WAT/GLCnV3eswbEl2Jet58KdMA3+
+ TEzMjoO7nZ8GsatHKT/TLgKrV90MCRwXw4aloqAZdjAz60ocAoZi9meM0T77FLj0KstAFiq1iQX
+ hGestPGsZPrgzaw==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-During remove & rescan cycle, PCI subsystem will recalculate and adjust
-the bridge window sizing that was initially done by "BIOS". The size
-calculation is based on the required alignment of the largest resource
-among the downstream resources as per pbus_size_mem() (unimportant or
-zero parameters marked with "..."):
+Hi,
 
-	min_align = calculate_mem_align(aligns, max_order);
-	size0 = calculate_memsize(size, ..., min_align);
+First patch is a build dependency.
 
-inside calculate_memsize(), for the largest alignment:
-	min_align = align1 >> 1;
-	...
-	return min_align;
+Description
+===========
+X1E80100 CRD is the first board, which comes with four speakers, so we
+still keep fixing and adding missing pieces.
 
-and then in calculate_memsize():
-	return ALIGN(max(size, ...), align);
+The board has speaker arranged as left front+back and then right
+front+back.  Using default channel mapping causes front right speaker to
+play left back stream.
 
-If the original bridge window sizing tried to conserve space, this will
-lead to massive increase of the required bridge window size when the
-downstream has a large disparity in BAR sizes. E.g., with 16MiB and
-16GiB BARs this results in 24GiB bridge window size even if 16MiB BAR
-does not require gigabytes of space to fit.
+Adjust the channel maps for frontend DAIs to fix stereo and four-channel
+playback.
 
-When doing remove & rescan for a bus that contains such a PCI device, a
-larger bridge window is suddenly required on rescan but when there is a
-bridge window upstream that is already assigned based on the original
-size, it cannot be enlarged to the new requirement. This causes the
-allocation of the bridge window to fail (0x600000000 > 0x400ffffff):
+Best regards,
+Krzysztof
 
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
-pci 0000:02:01.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
-pci 0000:01:00.0: PCI bridge to [bus 02-04]
-pci 0000:01:00.0:   bridge window [mem 0x40400000-0x406fffff]
-pci 0000:01:00.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
-
-pci 0000:03:00.0: device released
-pci 0000:02:01.0: device released
-pcieport 0000:01:00.0: scanning [bus 02-04] behind bridge, pass 0
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
-pci 0000:02:01.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
-pci 0000:02:01.0: scanning [bus 03-03] behind bridge, pass 0
-pci 0000:03:00.0: BAR 0 [mem 0x6400000000-0x6400ffffff 64bit pref]
-pci 0000:03:00.0: BAR 2 [mem 0x6000000000-0x63ffffffff 64bit pref]
-pci 0000:03:00.0: ROM [mem 0x40400000-0x405fffff pref]
-
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0: scanning [bus 03-03] behind bridge, pass 1
-pcieport 0000:01:00.0: scanning [bus 02-04] behind bridge, pass 1
-pci 0000:02:01.0: bridge window [mem size 0x600000000 64bit pref]: can't assign; no space
-pci 0000:02:01.0: bridge window [mem size 0x600000000 64bit pref]: failed to assign
-pci 0000:02:01.0: bridge window [mem 0x40400000-0x405fffff]: assigned
-pci 0000:03:00.0: BAR 2 [mem size 0x400000000 64bit pref]: can't assign; no space
-pci 0000:03:00.0: BAR 2 [mem size 0x400000000 64bit pref]: failed to assign
-pci 0000:03:00.0: BAR 0 [mem size 0x01000000 64bit pref]: can't assign; no space
-pci 0000:03:00.0: BAR 0 [mem size 0x01000000 64bit pref]: failed to assign
-pci 0000:03:00.0: ROM [mem 0x40400000-0x405fffff pref]: assigned
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
-
-This is a major surprise for users who are suddenly left with a PCIe
-device that was working fine with the original bridge window sizing.
-
-Even if the already assigned bridge window could be enlarged by
-reallocation in some cases (something the current code does not attempt
-to do), it is not possible in general case and the large amount of
-wasted space at the tail of the bridge window may lead to other
-resource exhaustion problems on Root Complex level (think of multiple
-PCIe cards with VFs and BAR size disparity in a single system).
-
-PCI specifications only expect natural alignment for BARs (PCI Express
-Base Specification, rev. 6.1 sect. 7.5.1.2.1) and minimum of 1MiB
-alignment for the bridge window (PCI Express Base Specification,
-rev 6.1 sect. 7.5.1.3). The current bridge window tail alignment rule
-was introduced in the commit 5d0a8965aea9 ("[PATCH] 2.5.14: New PCI
-allocation code (alpha, arm, parisc) [2/2]") that only states:
-"pbus_size_mem: core stuff; tested with randomly generated sets of
-resources". It does not explain the motivation for the extra tail space
-allocated that is not truly needed by the downstream resources. As
-such, it is far from clear if it ever has been required by any HW.
-
-To prevent PCIe cards with BAR size disparity from becoming unusable
-after remove & rescan cycle, attempt to do a truly minimal allocation
-for memory resources if needed. First check if the normally calculated
-bridge window will not fit into an already assigned upstream resource.
-In such case, try with relaxed bridge window tail sizing rules instead
-where no extra tail space is requested beyond what the downstream
-resources require. Only enforce the alignment requirement of the bridge
-window itself (normally 1MiB).
-
-With this patch, the resources are successfully allocated:
-
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0: scanning [bus 03-03] behind bridge, pass 1
-pcieport 0000:01:00.0: scanning [bus 02-04] behind bridge, pass 1
-pcieport 0000:01:00.0: Assigned bridge window [mem 0x6000000000-0x6400ffffff 64bit pref] to [bus 02-04] cannot fit 0x600000000 required for 0000:02:01.0 bridging to [bus 03]
-pci 0000:02:01.0: bridge window [mem 0x6000000000-0x6400ffffff 64bit pref] to [bus 03] requires relaxed alignment rules
-pcieport 0000:01:00.0: Assigned bridge window [mem 0x40400000-0x406fffff] to [bus 02-04] free space at [mem 0x40400000-0x405fffff]
-pci 0000:02:01.0: bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]: assigned
-pci 0000:02:01.0: bridge window [mem 0x40400000-0x405fffff]: assigned
-pci 0000:03:00.0: BAR 2 [mem 0x6000000000-0x63ffffffff 64bit pref]: assigned
-pci 0000:03:00.0: BAR 0 [mem 0x6400000000-0x6400ffffff 64bit pref]: assigned
-pci 0000:03:00.0: ROM [mem 0x40400000-0x405fffff pref]: assigned
-pci 0000:02:01.0: PCI bridge to [bus 03]
-pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
-pci 0000:02:01.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
-
-This patch draws inspiration from the initial investigations and work
-by Mika Westerberg.
-
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=216795
-Link: https://lore.kernel.org/linux-pci/20190812144144.2646-1-mika.westerberg@linux.intel.com/
-Fixes: 5d0a8965aea9 ("[PATCH] 2.5.14: New PCI allocation code (alpha, arm, parisc) [2/2]")
-Tested-by: Lidong Wang <lidong.wang@intel.com>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 ---
- drivers/pci/setup-bus.c | 79 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 77 insertions(+), 2 deletions(-)
+Krzysztof Kozlowski (4):
+      ASoC: Constify channel mapping array arguments in set_channel_map()
+      ASoC: qcom: q6dsp: Implement proper channel mapping in Audioreach
+      ASoC: qcom: q6dsp: Set channel mapping instead of fixed defaults
+      ASoC: qcom: x1e80100: Correct channel mapping
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index bca1df46f19c..11ee60b9ca71 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -22,6 +22,7 @@
- #include <linux/errno.h>
- #include <linux/ioport.h>
- #include <linux/cache.h>
-+#include <linux/limits.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
-@@ -971,6 +972,67 @@ static inline resource_size_t calculate_mem_align(resource_size_t *aligns,
- 	return min_align;
- }
- 
-+/**
-+ * pbus_upstream_space_available - Check no upstream resource limits allocation
-+ * @bus:	The bus
-+ * @mask:	Mask the resource flag, then compare it with type
-+ * @type:	The type of resource from bridge
-+ * @size:	The size required from the bridge window
-+ * @align:	Required alignment for the resource
-+ *
-+ * Checks that @size can fit inside the upstream bridge resources that are
-+ * already assigned.
-+ *
-+ * Return: %true if enough space is available on all assigned upstream
-+ * resources.
-+ */
-+static bool pbus_upstream_space_available(struct pci_bus *bus, unsigned long mask,
-+					  unsigned long type, resource_size_t size,
-+					  resource_size_t align)
-+{
-+	struct resource_constraint constraint = {
-+		.max = RESOURCE_SIZE_MAX,
-+		.align = align,
-+	};
-+	struct pci_bus *downstream = bus;
-+	struct resource *r;
-+
-+	while ((bus = bus->parent)) {
-+		if (pci_is_root_bus(bus))
-+			break;
-+
-+		pci_bus_for_each_resource(bus, r) {
-+			if (!r || !r->parent || (r->flags & mask) != type)
-+				continue;
-+
-+			if (resource_size(r) >= size) {
-+				struct resource gap = {};
-+
-+				if (find_resource_space(r, &gap, size, &constraint) == 0) {
-+					gap.flags = type;
-+					pci_dbg(bus->self,
-+						"Assigned bridge window %pR to %pR free space at %pR\n",
-+						r, &bus->busn_res, &gap);
-+					return true;
-+				}
-+			}
-+
-+			if (bus->self) {
-+				pci_info(bus->self,
-+					 "Assigned bridge window %pR to %pR cannot fit 0x%llx required for %s bridging to %pR\n",
-+					 r, &bus->busn_res,
-+					 (unsigned long long)size,
-+					 pci_name(downstream->self),
-+					 &downstream->busn_res);
-+			}
-+
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
-+
- /**
-  * pbus_size_mem() - Size the memory window of a given bus
-  *
-@@ -997,7 +1059,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 			 struct list_head *realloc_head)
- {
- 	struct pci_dev *dev;
--	resource_size_t min_align, align, size, size0, size1;
-+	resource_size_t min_align, win_align, align, size, size0, size1;
- 	resource_size_t aligns[24]; /* Alignments from 1MB to 8TB */
- 	int order, max_order;
- 	struct resource *b_res = find_bus_resource_of_type(bus,
-@@ -1076,10 +1138,23 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 		}
- 	}
- 
-+	win_align = window_alignment(bus, b_res->flags);
- 	min_align = calculate_mem_align(aligns, max_order);
--	min_align = max(min_align, window_alignment(bus, b_res->flags));
-+	min_align = max(min_align, win_align);
- 	size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), min_align);
- 	add_align = max(min_align, add_align);
-+
-+	if (bus->self && size0 &&
-+	    !pbus_upstream_space_available(bus, mask | IORESOURCE_PREFETCH, type,
-+					   size0, add_align)) {
-+		min_align = 1ULL << (max_order + __ffs(SZ_1M));
-+		min_align = max(min_align, win_align);
-+		size0 = calculate_memsize(size, min_size, 0, 0, resource_size(b_res), win_align);
-+		add_align = win_align;
-+		pci_info(bus->self, "bridge window %pR to %pR requires relaxed alignment rules\n",
-+			 b_res, &bus->busn_res);
-+	}
-+
- 	size1 = (!realloc_head || (realloc_head && !add_size && !children_add_size)) ? size0 :
- 		calculate_memsize(size, min_size, add_size, children_add_size,
- 				resource_size(b_res), add_align);
+ include/sound/cs35l41.h                 |  4 ++--
+ include/sound/soc-dai.h                 |  8 +++----
+ sound/soc/codecs/adau7118.c             |  6 ++++--
+ sound/soc/codecs/cs35l41-lib.c          |  4 ++--
+ sound/soc/codecs/cs35l41.c              |  3 ++-
+ sound/soc/codecs/max98504.c             |  6 ++++--
+ sound/soc/codecs/wcd9335.c              |  6 ++++--
+ sound/soc/codecs/wcd934x.c              |  6 ++++--
+ sound/soc/qcom/qdsp6/audioreach.c       | 14 +++++--------
+ sound/soc/qcom/qdsp6/audioreach.h       |  1 +
+ sound/soc/qcom/qdsp6/q6afe-dai.c        | 16 ++++++++------
+ sound/soc/qcom/qdsp6/q6apm-dai.c        | 12 +++++++++++
+ sound/soc/qcom/qdsp6/q6apm-lpass-dais.c |  6 ++++--
+ sound/soc/qcom/qdsp6/q6apm.c            | 28 ++++++++++++++++++++++++-
+ sound/soc/qcom/qdsp6/q6apm.h            |  8 +++++++
+ sound/soc/qcom/qdsp6/topology.c         | 12 +++++++++++
+ sound/soc/qcom/x1e80100.c               | 37 +++++++++++++++++++++++++++++++--
+ sound/soc/soc-dai.c                     |  4 ++--
+ 18 files changed, 142 insertions(+), 39 deletions(-)
+---
+base-commit: c5e512ffe106f751c61e5a036560f522e58eadcd
+change-id: 20240507-asoc-x1e80100-4-channel-mapping-ea5f02b9e678
+
+Best regards,
 -- 
-2.39.2
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
