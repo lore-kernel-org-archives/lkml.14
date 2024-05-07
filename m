@@ -1,112 +1,257 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C8116F293
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 14:14:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0149D1607AB;
+	Tue,  7 May 2024 14:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715091299; cv=none; b=eLhmpy1dguDUPabRzL86dlEWZcXHrd76ybq5gCmNcV0uWkU2Fu9jORiGulBCYDV4RPKhQSsPAaHzqBqJC9zeg15qAUDyIC0MuEFF3iwA5obwHmqpmGOWhZmFgA+68ciLf97YJyUWyH+swz/1PkfskjUCvOMfsYLLi0/7wWOS/pE=
+	t=1715091310; cv=none; b=RM73hkEzDdejuQfn3JTRzRIeo6+HvQjasBC6W6+JykZ+z3UwKR7Ws/Rpmh/Rfdfc1hgb/uxUBTVShaCCFLlLy9GqTXID/OuHiFU7+1bTpJXkM10xVdPKN9Da6i0tVbqjMFnahImL8mkdGsvbh4SBbwy+WHJQlPzn901Ferc/KS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715091299; c=relaxed/simple;
-	bh=tYFhuNKK572ei44KClvdIFHmT5dQxptc6wlidmEeIbA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QfbjfyoKKpHMthsl7EtBB4zhm2nERLhDiGih52v87NbwSfL5hqiJpv//5xYxa97TIc8ztXu4LWz3bAHmC03DHDU9w0EP4vcaXx3Tbeg4e1Wx6lHPJ2TV/vUXS9mrri6UOFPvSHtZRURlgiaXDrpg0IxgEQjTEJ28/lRTJN1uf/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GAaDRJn8; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715091310; c=relaxed/simple;
+	bh=qz9bUI0E+avzydjRe5h6w3UDaf44DOCWwgWc2tfDYyI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=qrdUaF2yDjCVbb7nz3OfFK+voxljiDDf5IMTj1CDebn2pEzCg5EN6tjYT6WysT8YawFisoPhGVDF1XCmAd4aRco0/9e5R0eH/gbnRYmBwy7w3w4XFp2IFAnZ7QPMSa0tevigBsYjv/OxYtQYepRgxsNppDV97Ae8/sH8ayNNnHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=scBCwpI+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GAaDRJn8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715091297;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=X1TemjxCew8gfx5TJGpneLG70M3weE+hrm8/BhqnHVY=;
-	b=GAaDRJn8ulP9j+LywlpsZogPDbcgpO9XwGgwBIgYwBF6eQSoO+b343MtmebtF18aOIoB67
-	1aopzb7sXGRe+PiP0b+yvyqDR4wBcMQGTyA8xfY02UXioFiApBAA1rXtb8PZUaanmkHVEP
-	htlYxBUVtu3I1c2y9YI3cdk/pYhE29s=
-Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
- [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-546-NkmbHfwTNbqn1l0yvSbSeQ-1; Tue, 07 May 2024 10:14:55 -0400
-X-MC-Unique: NkmbHfwTNbqn1l0yvSbSeQ-1
-Received: by mail-lf1-f71.google.com with SMTP id 2adb3069b0e04-5202218b4d3so3122810e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 07:14:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715091294; x=1715696094;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X1TemjxCew8gfx5TJGpneLG70M3weE+hrm8/BhqnHVY=;
-        b=IaiWuKj0HFMLHOhq0JeH/CRGD/hZflb2zR6Yk7N1lu+7DHOkR0nAzT1QO93Agzdabp
-         3IyXd/86CZxLxGWMwEkntPvvyqORVJ9VyzGipV3MziIV5ORAPDvZWIDmIqIYL3qNG/7o
-         qVmACVB5cCmG62MujsRzGa8POkuCbJhn5u1f7QC13NnVCLFWcuaRHx7UOE6/UwcIzB3L
-         nRWE45rTkAMNOfgCoF/mbcbgvDhIGqq4S6cJzRAAGOLZvVUSBQ6JcaS8W1FdBkZiNu8z
-         icc6o0P7xGY0r59tgPGjzDVj9j/ynjTh+1WwlROIWVa7oPs3LYZUHNV6Fqu0iZqRPi/P
-         mI1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVMbQOg6xVVdOgmbx2J2re3nRUGJv1q93TubvcC3oEBkDnFYLbf7jjYvAJpcLtghTBA50ZGa6AxRqyJ2E9213ULE8WJLzsBpHN+4dVH
-X-Gm-Message-State: AOJu0YxsuokupsIcv/gTCxGPHB5FBX5qwrBNfJj/NET5xKp7mimec1tM
-	oQ7BcwCCTKJDjPnndLhA6PgHoIcMbXhwmHf7669Muhc/o5vs0EhfYISYt3o62qpF6+FDt40T02A
-	WQwr4NwYslWT3OirgveuC/R2qTGIpLChdFaPliPwP6iy7Ex+AHmZgmF586q8rIQ==
-X-Received: by 2002:a05:6512:78d:b0:51d:1c56:b0f1 with SMTP id x13-20020a056512078d00b0051d1c56b0f1mr9151812lfr.17.1715091293924;
-        Tue, 07 May 2024 07:14:53 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHL6gtJQR2L/AKZnQJ9Vjdq0OBoXAmgXMJxKgRmEQ2ocaAFqN0lJ69a1Qg3oAiWGUjW/dsk3Q==
-X-Received: by 2002:a05:6512:78d:b0:51d:1c56:b0f1 with SMTP id x13-20020a056512078d00b0051d1c56b0f1mr9151789lfr.17.1715091293449;
-        Tue, 07 May 2024 07:14:53 -0700 (PDT)
-Received: from lbulwahn-thinkpadx1carbongen9.rmtde.csb ([2a02:810d:7e40:14b0:4ce1:e394:7ac0:6905])
-        by smtp.gmail.com with ESMTPSA id s26-20020a170906169a00b00a59a09e34adsm4681491ejd.195.2024.05.07.07.14.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 07:14:52 -0700 (PDT)
-From: Lukas Bulwahn <lbulwahn@redhat.com>
-X-Google-Original-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
-To: Lorenzo Bianconi <lorenzo@kernel.org>,
-	Ray Liu <ray.liu@airoha.com>,
-	Mark Brown <broonie@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-spi@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@redhat.com>
-Subject: [PATCH] MAINTAINERS: repair file entry in AIROHA SPI SNFI DRIVER
-Date: Tue,  7 May 2024 16:14:49 +0200
-Message-ID: <20240507141449.177538-1-lukas.bulwahn@redhat.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="scBCwpI+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EF06C2BBFC;
+	Tue,  7 May 2024 14:15:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715091309;
+	bh=qz9bUI0E+avzydjRe5h6w3UDaf44DOCWwgWc2tfDYyI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=scBCwpI++kfSsaSK9E+iTNPa3Gn4Kpn7ej+TCsJq9/tvveZnHzDfK4ZdjVpc7TCbs
+	 npyUH8SXX+ysW7F18FoSNddiDpTlv86V9nOo+tD4UHZduDuX7vEut+K31++p/Ygi1U
+	 /ctNctmqffokczLd7vFi00arorqWT8QYVk/XWTHYe3wY0lAPtALVw6B6XQJvHFdkrJ
+	 ZUV4BMK25UOQ/EHs1wvjZ3oYdP52Cx5uxUYNN0z46rnVCVYsgYwGuSLPvlZ9cge6Cw
+	 YIsEs2ZSLiPqF0hIoJmgK07+3aaQH1eUK4jmGfJvgfjjYgOGN0bsNweRxA6vpzSI6t
+	 ByLq9Ng5RgvUw==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v10 36/36] fgraph: Skip recording calltime/rettime if it is not nneeded
+Date: Tue,  7 May 2024 23:15:02 +0900
+Message-Id: <171509130284.162236.12400830886224359503.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <171509088006.162236.7227326999861366050.stgit@devnote2>
+References: <171509088006.162236.7227326999861366050.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Commit a403997c1201 ("spi: airoha: add SPI-NAND Flash controller driver")
-adds a new section AIROHA SPI SNFI DRIVER referring to the file
-spi-airoha.c. The commit however adds the file spi-airoha-snfi.c.
+Skip recording calltime and rettime if the fgraph_ops does not need it.
+This is a kind of performance optimization for fprobe. Since the fprobe
+user does not use these entries, recording timestamp in fgraph is just
+a overhead (e.g. eBPF, ftrace). So introduce the skip_timestamp flag,
+and all fgraph_ops sets this flag, skip recording calltime and rettime.
 
-Hence, ./scripts/get_maintainer.pl --self-test=patterns complains about a
-broken reference.
-
-Repair this file entry in the AIROHA SPI SNFI DRIVER section.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@redhat.com>
+Suggested-by: Jiri Olsa <olsajiri@gmail.com>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Changes in v10:
+  - Add likely() to skipping timestamp.
+ Changes in v9:
+  - Newly added.
+---
+ include/linux/ftrace.h |    2 ++
+ kernel/trace/fgraph.c  |   51 +++++++++++++++++++++++++++++++++++++++++-------
+ kernel/trace/fprobe.c  |    1 +
+ 3 files changed, 47 insertions(+), 7 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index ca79616a4836..2fe4506f9fe8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -689,7 +689,7 @@ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- L:	linux-spi@vger.kernel.org
- S:	Maintained
- F:	Documentation/devicetree/bindings/spi/airoha,en7581-snand.yaml
--F:	drivers/spi/spi-airoha.c
-+F:	drivers/spi/spi-airoha-snfi.c
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 64ca91d1527f..eb9de9d70829 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -1156,6 +1156,8 @@ struct fgraph_ops {
+ 	struct ftrace_ops		ops; /* for the hash lists */
+ 	void				*private;
+ 	int				idx;
++	/* If skip_timestamp is true, this does not record timestamps. */
++	bool				skip_timestamp;
+ };
  
- AIRSPY MEDIA DRIVER
- L:	linux-media@vger.kernel.org
--- 
-2.44.0
+ void *fgraph_reserve_data(int idx, int size_bytes);
+diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
+index 40f47fcbc6c3..13b41485ce49 100644
+--- a/kernel/trace/fgraph.c
++++ b/kernel/trace/fgraph.c
+@@ -138,6 +138,7 @@ DEFINE_STATIC_KEY_FALSE(kill_ftrace_graph);
+ int ftrace_graph_active;
+ 
+ static struct fgraph_ops *fgraph_array[FGRAPH_ARRAY_SIZE];
++static bool fgraph_skip_timestamp;
+ 
+ /* LRU index table for fgraph_array */
+ static int fgraph_lru_table[FGRAPH_ARRAY_SIZE];
+@@ -483,7 +484,7 @@ void ftrace_graph_stop(void)
+ static int
+ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+ 			 unsigned long frame_pointer, unsigned long *retp,
+-			 int fgraph_idx)
++			 int fgraph_idx, bool skip_ts)
+ {
+ 	struct ftrace_ret_stack *ret_stack;
+ 	unsigned long long calltime;
+@@ -506,8 +507,12 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+ 	ret_stack = get_ret_stack(current, current->curr_ret_stack, &offset);
+ 	if (ret_stack && ret_stack->func == func &&
+ 	    get_fgraph_type(current, offset + FGRAPH_FRAME_OFFSET) == FGRAPH_TYPE_BITMAP &&
+-	    !is_fgraph_index_set(current, offset + FGRAPH_FRAME_OFFSET, fgraph_idx))
++	    !is_fgraph_index_set(current, offset + FGRAPH_FRAME_OFFSET, fgraph_idx)) {
++		/* If previous one skips calltime, update it. */
++		if (!skip_ts && !ret_stack->calltime)
++			ret_stack->calltime = trace_clock_local();
+ 		return offset + FGRAPH_FRAME_OFFSET;
++	}
+ 
+ 	val = (FGRAPH_TYPE_RESERVED << FGRAPH_TYPE_SHIFT) | FGRAPH_FRAME_OFFSET;
+ 
+@@ -525,7 +530,11 @@ ftrace_push_return_trace(unsigned long ret, unsigned long func,
+ 		return -EBUSY;
+ 	}
+ 
+-	calltime = trace_clock_local();
++	/* This is not really 'likely' but for keeping the least path to be faster. */
++	if (likely(skip_ts))
++		calltime = 0LL;
++	else
++		calltime = trace_clock_local();
+ 
+ 	offset = READ_ONCE(current->curr_ret_stack);
+ 	ret_stack = RET_STACK(current, offset);
+@@ -609,7 +618,8 @@ int function_graph_enter_regs(unsigned long ret, unsigned long func,
+ 	trace.func = func;
+ 	trace.depth = ++current->curr_ret_depth;
+ 
+-	offset = ftrace_push_return_trace(ret, func, frame_pointer, retp, 0);
++	offset = ftrace_push_return_trace(ret, func, frame_pointer, retp, 0,
++					  fgraph_skip_timestamp);
+ 	if (offset < 0)
+ 		goto out;
+ 
+@@ -662,7 +672,8 @@ int function_graph_enter_ops(unsigned long ret, unsigned long func,
+ 		return -ENODEV;
+ 
+ 	/* Use start for the distance to ret_stack (skipping over reserve) */
+-	offset = ftrace_push_return_trace(ret, func, frame_pointer, retp, gops->idx);
++	offset = ftrace_push_return_trace(ret, func, frame_pointer, retp, gops->idx,
++					  gops->skip_timestamp);
+ 	if (offset < 0)
+ 		return offset;
+ 	type = get_fgraph_type(current, offset);
+@@ -740,6 +751,7 @@ ftrace_pop_return_trace(struct ftrace_graph_ret *trace, unsigned long *ret,
+ 	*ret = ret_stack->ret;
+ 	trace->func = ret_stack->func;
+ 	trace->calltime = ret_stack->calltime;
++	trace->rettime = 0;
+ 	trace->overrun = atomic_read(&current->trace_overrun);
+ 	trace->depth = current->curr_ret_depth;
+ 	/*
+@@ -800,7 +812,6 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
+ 		return (unsigned long)panic;
+ 	}
+ 
+-	trace.rettime = trace_clock_local();
+ 	if (fregs)
+ 		ftrace_regs_set_instruction_pointer(fregs, ret);
+ 
+@@ -816,6 +827,12 @@ __ftrace_return_to_handler(struct ftrace_regs *fregs, unsigned long frame_pointe
+ 			continue;
+ 		if (gops == &fgraph_stub)
+ 			continue;
++		/*
++		 * This is not really 'unlikely' but for keeping the least path
++		 * to be faster.
++		 */
++		if (unlikely(!trace.rettime && !gops->skip_timestamp))
++			trace.rettime = trace_clock_local();
+ 
+ 		gops->retfunc(&trace, gops, fregs);
+ 	}
+@@ -1193,6 +1210,24 @@ static void init_task_vars(int idx)
+ 	read_unlock(&tasklist_lock);
+ }
+ 
++static void update_fgraph_skip_timestamp(void)
++{
++	int i;
++
++	for (i = 0; i < FGRAPH_ARRAY_SIZE; i++) {
++		struct fgraph_ops *gops = fgraph_array[i];
++
++		if (gops == &fgraph_stub)
++			continue;
++
++		if (!gops->skip_timestamp) {
++			fgraph_skip_timestamp = false;
++			return;
++		}
++	}
++	fgraph_skip_timestamp = true;
++}
++
+ int register_ftrace_graph(struct fgraph_ops *gops)
+ {
+ 	int command = 0;
+@@ -1227,6 +1262,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 	gops->idx = i;
+ 
+ 	ftrace_graph_active++;
++	update_fgraph_skip_timestamp();
+ 
+ 	if (ftrace_graph_active == 1) {
+ 		register_pm_notifier(&ftrace_suspend_notifier);
+@@ -1250,6 +1286,7 @@ int register_ftrace_graph(struct fgraph_ops *gops)
+ 		fgraph_array[i] = &fgraph_stub;
+ 		ftrace_graph_active--;
+ 		fgraph_lru_release_index(i);
++		update_fgraph_skip_timestamp();
+ 	}
+ out:
+ 	mutex_unlock(&ftrace_lock);
+@@ -1273,8 +1310,8 @@ void unregister_ftrace_graph(struct fgraph_ops *gops)
+ 		goto out;
+ 
+ 	fgraph_array[gops->idx] = &fgraph_stub;
+-
+ 	ftrace_graph_active--;
++	update_fgraph_skip_timestamp();
+ 
+ 	if (!ftrace_graph_active)
+ 		command = FTRACE_STOP_FUNC_RET;
+diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+index afa52d9816cf..24bb8edec8a3 100644
+--- a/kernel/trace/fprobe.c
++++ b/kernel/trace/fprobe.c
+@@ -345,6 +345,7 @@ NOKPROBE_SYMBOL(fprobe_return);
+ static struct fgraph_ops fprobe_graph_ops = {
+ 	.entryfunc	= fprobe_entry,
+ 	.retfunc	= fprobe_return,
++	.skip_timestamp = true,
+ };
+ static int fprobe_graph_active;
+ 
 
