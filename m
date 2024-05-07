@@ -1,150 +1,264 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DAC113D63B
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 17:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D7C1635A6
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 17:19:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715102267; cv=none; b=CJn5LXXRVXWhlZk6ZbSIrgDFy+FOts+J40PZzWpEmqSm9Dd+bdawO8iPCl/1MU+BZWso5X3Ltd9tPU+hRCfcg6V/GJeBgbBO7q1RljxiOq4E+bW+RtD+JL6edF1QTp0wHwR7vh9fk9EjgjQV3a+WPv5LS4v+7Eaown+EGcT4NV4=
+	t=1715102394; cv=none; b=gFovRFDqFi2IDKH5i+N+PJ5Q1Zj4WuLnJkUK3GYH1+7phnWSWkH1TwcQxOuU76uEDPReZ72LPbOkQWfSSUCuzr4HtGrqjdhhlJdVc3nzwp80VBBmjrJ5ufyfFSKk1GvosYW32wMb9OqyLk+0V7X+5n1cSnKDcoFY48qyNU+714I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715102267; c=relaxed/simple;
-	bh=Wxsc7dN4OIswSJE2MtNAs04aLoVPOnnvcVBuaHnxab0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rKVeuZAJCENgrZSgCp7MAd6f1bzH40llqH31+TNrJsVh8ZZN+bgL5hoj8ZBl/BDgeQgo0rVgb/j2sVMHIukdwF/UyZ0CNrU+PPr53RMTM7YtJhMjqJd8lNFDmr1mnHEKb2ud1+P1HFDwjdm902ussp4cKDtFa25xFGy7oFUUlNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MlvXGbvw; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715102394; c=relaxed/simple;
+	bh=hki5D+Qvj+YNsq8Oqb0RxIzlOFGOD1jr6olQST48t2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EpRmK3CGo9eeg2HnNRZM22+djng06IzJotM18yCTclZHMn8uiT7EFzblSG7xM7UOff0+mElYe8f5Zt7oWaRF+BA8nxjylWUrHPzOMQoZtysz4injqGe2XjUSz3IR3FqhbwgpFTmx2GXU7PCSHrTEvuIaVhTe4vmjEkP4e9npUGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=DbOoRlzU; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MlvXGbvw"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-5206a5854adso2813907e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 10:17:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="DbOoRlzU"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41bf7889de1so110735e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 10:19:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715102264; x=1715707064; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wxsc7dN4OIswSJE2MtNAs04aLoVPOnnvcVBuaHnxab0=;
-        b=MlvXGbvw+fdH08WBBnJ58qn6Vv88Ue51FEWVptnWwRDlgbqhOfmcJDNZB9ArVsEqJ5
-         CCDwOJ6RuOZDaB6xir2zzGs9ASe+/u6dZReYeSqSzq65M/cp/+gw6ydyphUEqV+dU4u+
-         rLX4tJMcDryic4Di4pkTtYSf66eQq2QrxhXzfa0a3WCJ72UnccfMxBe1z7ffpRHJCeH+
-         b94tFGQ97TxbqxPa1614huJPzL5orhUjmqKZ/AVZbR6eeUvg6pgy0G9tfDWcWjKrECBB
-         c98gbfYBKeLGp0+m/H2sQk2/o+bekfZAmjS/HURO2iMmS78Sqv59Fyfrfi1sISlixbWm
-         X6fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715102264; x=1715707064;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=ffwll.ch; s=google; t=1715102391; x=1715707191; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Wxsc7dN4OIswSJE2MtNAs04aLoVPOnnvcVBuaHnxab0=;
-        b=sL1AjPaNxG9yLMvAUIyWGpn0NyQiMHk9xcEsi3o8WQPbstXAu214xV6MfQDMI0vUG9
-         xGfQOp5BshtO+LC6t9ZRaJ+AfjiRAiaWPjYSI0hSVePitVOUVzoSzCjE5+q3Qv+ZKWoc
-         PMe0F76uCD0IvLYwdVUyIjllROGfTl7Yf+pWXJbzd2HDji3kCotESx4+OedYzQIyz79m
-         V0RdvOtA3seQShOIWu+f+ZKsCYxnvbsy6ZNqaDmg5418QE/Br2+OVZb6Fv16NMYnurOZ
-         Xjn8klsUdMT80A4NTvhZxzTVGhG0tsmE5jDAY7D6MGy7qzTVostK9bffx+tTm4OFfkhd
-         8lUw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWmBKmICOf+1IhXazK8XPc63qBADzqc2Unyz6cGaAEaZ09YkWPNfF4iZ/jiaCWzaDBbbqSBfvt4K5zEpCjsxvoiXzYWMNjTNpqABxw
-X-Gm-Message-State: AOJu0YyrX3+0A+qRk3Fy+F51Dg8VWH4IBkqY5Z4qtMyLP4WIM36qiIwl
-	j2Q1z+/hNGM2TBdGHe6PL1EwM5k2+fqY/5EvXLrulOAqT6KNpHWG+NeJXl5PiHgS33LkqskzJ2g
-	hR4viFFqGZ1uR7UX8abBfX1rLIhE=
-X-Google-Smtp-Source: AGHT+IHVwKMCSFFBxlt95XXjiIUjjLsx3T4M43BlxdbErkVnuwQChSJWblnS5btztEvxe9Ned7nhidvJJtYHyi/LhbQ=
-X-Received: by 2002:ac2:5df1:0:b0:51d:b7fc:29a6 with SMTP id
- 2adb3069b0e04-5217c3714e9mr124940e87.7.1715102264281; Tue, 07 May 2024
- 10:17:44 -0700 (PDT)
+        bh=bM/Dw+slNgawZzGt48alAXy5N8w9IYCinYKDze4Obec=;
+        b=DbOoRlzUXnytxDtn5IiQed5xXYB0O51ofSNRbsp+JOs7CXqXMLIyzOwIJWjhzXYDrN
+         jab9rWWBG2ZgohVzF80qh858zCy5Uaok54YjNATrQYoaVqrfh3kwV4r0mcPk2fNR4Zuo
+         Ypa2f4r6YSgVN8RtieAjGX59c1LrTCnlGhQsI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715102391; x=1715707191;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bM/Dw+slNgawZzGt48alAXy5N8w9IYCinYKDze4Obec=;
+        b=t9kknHTjwn7MBOp0LaWgrSG37D2TeXtO7MIDVal9SnEPfoYpvFqB0BVrgPqaaPdmCs
+         XYWKz5RYbsk4m5nAJ94e3m4p/QiVjEjoHlbqP1vfLn6cgbJTEdfIhPVeNWBf8Z5NYa63
+         anAXQb81l3FDlxWt4VXloYVlLjRuV+Rskc4WUOm47C3gupU9mZ8n10UNv+XFcmuTkMzu
+         VNpqb/Rt89oZ7D8C5OdntUMa2PMaMO4zW3n2Sl/mhDmoO8MHWtW5c8lM6PkEqvdgzG2J
+         +Rj9KOy93ccSbX7NdfgU6IlNQBGnwTy+Sh+kSbD1admcG+0kGe62JUsC985+Jdyp2F15
+         TRxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtp2oc4Kwtt5wS8L4olzH1nj8QSg9Wzmx5GiG3yx7wKSh0yhNMxBpARvU1MRAL67MnRmYaNkirUN8vk/FhP1Fg9m1Kpx8Bl+0hKukx
+X-Gm-Message-State: AOJu0YxXW/o2LN7ME6PeG4RZ4DvP0QEzYbVbxkPKcddVDzQxCN9WVAgw
+	PvPQSBOZhkNbt9mG9bD9CsQssF5jSu+Sfqtdef8C05mmI5jLwTabzI0+Fb4lztI=
+X-Google-Smtp-Source: AGHT+IGjYrAFJPkOT/+jV38wR5mJiJ3AoSBk6cawRCaea6OsXoRTzzuMP8kcLArTQhqp2IAKTK96/Q==
+X-Received: by 2002:a05:600c:1ca0:b0:41a:bc88:b84 with SMTP id 5b1f17b1804b1-41f71cc26f6mr3013945e9.1.1715102390920;
+        Tue, 07 May 2024 10:19:50 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id c10-20020adfef4a000000b0034a3a0a753asm13300068wrp.100.2024.05.07.10.19.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 10:19:50 -0700 (PDT)
+Date: Tue, 7 May 2024 19:19:46 +0200
+From: Daniel Vetter <daniel@ffwll.ch>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Mina Almasry <almasrymina@google.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Pavel Begunkov <asml.silence@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Amritha Nambiar <amritha.nambiar@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	Kaiyuan Zhang <kaiyuanz@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Florian Westphal <fw@strlen.de>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>,
+	Arseniy Krasnov <avkrasnov@salutedevices.com>,
+	Aleksander Lobakin <aleksander.lobakin@intel.com>,
+	Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Richard Gobert <richardbgobert@gmail.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Abel Wu <wuyun.abel@bytedance.com>,
+	Breno Leitao <leitao@debian.org>, David Wei <dw@davidwei.uk>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Subject: Re: [RFC PATCH net-next v8 02/14] net: page_pool: create hooks for
+ custom page providers
+Message-ID: <ZjpisrsAZdqTXuLT@phenom.ffwll.local>
+Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
+	Mina Almasry <almasrymina@google.com>,
+	Christoph Hellwig <hch@infradead.org>,
+	Pavel Begunkov <asml.silence@gmail.com>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
+	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Richard Henderson <richard.henderson@linaro.org>,
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+	Matt Turner <mattst88@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Steffen Klassert <steffen.klassert@secunet.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	David Ahern <dsahern@kernel.org>,
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	Amritha Nambiar <amritha.nambiar@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+	Kaiyuan Zhang <kaiyuanz@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	David Howells <dhowells@redhat.com>,
+	Florian Westphal <fw@strlen.de>,
+	Yunsheng Lin <linyunsheng@huawei.com>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>,
+	Arseniy Krasnov <avkrasnov@salutedevices.com>,
+	Aleksander Lobakin <aleksander.lobakin@intel.com>,
+	Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Richard Gobert <richardbgobert@gmail.com>,
+	Sridhar Samudrala <sridhar.samudrala@intel.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Johannes Berg <johannes.berg@intel.com>,
+	Abel Wu <wuyun.abel@bytedance.com>,
+	Breno Leitao <leitao@debian.org>, David Wei <dw@davidwei.uk>,
+	Shailend Chand <shailend@google.com>,
+	Harshitha Ramamurthy <hramamurthy@google.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Jeroen de Borst <jeroendb@google.com>,
+	Praveen Kaligineedi <pkaligineedi@google.com>
+References: <20240403002053.2376017-1-almasrymina@google.com>
+ <20240403002053.2376017-3-almasrymina@google.com>
+ <ZjH1QaSSQ98mw158@infradead.org>
+ <CAHS8izM0=xc2UhUxhnF_BixuFs5VaDV9W1jbso1K+Rg=35NzeA@mail.gmail.com>
+ <ZjjHUh1eINPg1wkn@infradead.org>
+ <20b1c2d9-0b37-414c-b348-89684c0c0998@gmail.com>
+ <20240507161857.GA4718@ziepe.ca>
+ <ZjpVfPqGNfE5N4bl@infradead.org>
+ <CAHS8izPH+sRLSiZ7vbrNtRdHrFEf8XQ61XAyHuxRSL9Jjy8YbQ@mail.gmail.com>
+ <20240507164838.GG4718@ziepe.ca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231214223423.1133074-1-yang@os.amperecomputing.com>
- <1e8f5ac7-54ce-433a-ae53-81522b2320e1@arm.com> <Zav3UK7ESNxCMjyP@casper.infradead.org>
- <b75cb59a-734f-43d5-b565-fc9bb8c5ed05@arm.com> <CAHbLzkpT6padaDo8GimCcQReSGybQn_ntzj+wsZbTXe3urtK-g@mail.gmail.com>
- <bad7ec4a-1507-4ec4-996a-ea29d07d47a0@arm.com> <CAHbLzkrtcsU=pW13AyAMvF72A03fUV5iFcM0HwQoEemeajtqxg@mail.gmail.com>
- <b84e2799-2b6c-4670-b017-3a04ec18c0f2@arm.com> <dea802da-2e5e-4c91-b817-43afdde68958@huawei.com>
- <1dc9a561-55f7-4d65-8b86-8a40fa0e84f9@arm.com> <6016c0e9-b567-4205-8368-1f1c76184a28@huawei.com>
- <2c14d9ad-c5a3-4f29-a6eb-633cdf3a5e9e@redhat.com> <da24d8bb-3723-48fa-86f4-8b24457d3556@huawei.com>
- <2b403705-a03c-4cfe-8d95-b38dd83fca52@arm.com>
-In-Reply-To: <2b403705-a03c-4cfe-8d95-b38dd83fca52@arm.com>
-From: Yang Shi <shy828301@gmail.com>
-Date: Tue, 7 May 2024 10:17:32 -0700
-Message-ID: <CAHbLzkq9BQFfpjxG_ozrgzWOO3XJmtre-mgY03McY6guVn7U9g@mail.gmail.com>
-Subject: Re: [RESEND PATCH] mm: align larger anonymous mappings on THP boundaries
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>, David Hildenbrand <david@redhat.com>, 
-	Matthew Wilcox <willy@infradead.org>, Yang Shi <yang@os.amperecomputing.com>, riel@surriel.com, 
-	cl@linux.com, akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, Ze Zuo <zuoze1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240507164838.GG4718@ziepe.ca>
+X-Operating-System: Linux phenom 6.6.15-amd64 
 
-On Tue, May 7, 2024 at 8:53=E2=80=AFAM Ryan Roberts <ryan.roberts@arm.com> =
-wrote:
->
-> On 07/05/2024 14:53, Kefeng Wang wrote:
-> >
-> >
-> > On 2024/5/7 19:13, David Hildenbrand wrote:
-> >>
-> >>> https://github.com/intel/lmbench/blob/master/src/lat_mem_rd.c#L95
-> >>>
-> >>>> suggest. If you want to try something semi-randomly; it might be use=
-ful to rule
-> >>>> out the arm64 contpte feature. I don't see how that would be interac=
-ting
-> >>>> here if
-> >>>> mTHP is disabled (is it?). But its new for 6.9 and arm64 only. Disab=
-le with
-> >>>> ARM64_CONTPTE (needs EXPERT) at compile time.
-> >>> I don't enabled mTHP, so it should be not related about ARM64_CONTPTE=
-,
-> >>> but will have a try.
-> >
-> > After ARM64_CONTPTE disabled, memory read latency is similar with ARM64=
-_CONTPTE
-> > enabled(default 6.9-rc7), still larger than align anon reverted.
->
-> OK thanks for trying.
->
-> Looking at the source for lmbench, its malloc'ing (512M + 8K) up front an=
-d using
-> that for all sizes. That will presumably be considered "large" by malloc =
-and
-> will be allocated using mmap. So with the patch, it will be 2M aligned. W=
-ithout
-> it, it probably won't. I'm still struggling to understand why not alignin=
-g it in
-> virtual space would make it more performant though...
+On Tue, May 07, 2024 at 01:48:38PM -0300, Jason Gunthorpe wrote:
+> On Tue, May 07, 2024 at 09:42:05AM -0700, Mina Almasry wrote:
+> 
+> > 1. Align with devmem TCP to use udmabuf for your io_uring memory. I
+> > think in the past you said it's a uapi you don't link but in the face
+> > of this pushback you may want to reconsider.
+> 
+> dmabuf does not force a uapi, you can acquire your pages however you
+> want and wrap them up in a dmabuf. No uapi at all.
+> 
+> The point is that dmabuf already provides ops that do basically what
+> is needed here. We don't need ops calling ops just because dmabuf's
+> ops are not understsood or not perfect. Fixup dmabuf.
+> 
+> If io_uring wants to take its existing memory pre-registration it can
+> wrap that in a dmbauf, and somehow pass it to the netstack. Userspace
+> doesn't need to know a dmabuf is being used in the background.
 
-Yeah, I'm confused too.
+So roughly the current dma-buf design considerations for the users of the
+dma-api interfaces:
 
-I just ran the same command on 6.6.13 (w/o the thp alignment patch and
-mTHP stuff) and 6.9-rc4 (w/ the thp alignment patch and all mTHP
-stuff) on my arm64 machine, but I didn't see such a pattern.
+- It's a memory buffer of fixed length.
 
-The result has a little bit fluctuation, for example, 6.6.13 has
-better result with 4M/6M/8M, but 6.9-rc4 has better result for
-12M/16M/32M/48M/64M, and the difference may be quite noticeable. But
-anyway I didn't see such a regression pattern.
+- Either that memory is permanently nailed into place with dma_buf_pin
+  (and if we add more users than just drm display then we should probably
+  figure out the mlock account question for these). For locking hierarchy
+  dma_buf_pin uses dma_resv_lock which nests within mmap_sem/vma locks but
+  outside of any reclaim/alloc contexts.
 
-The benchmark is supposed to measure cache and memory latency, its
-result strongly relies on the cache and memory subsystem, for example,
-hw prefetcher, etc.
+- Or the memory is more dynamic, in which case case you need to be able to
+  dma_resv_lock when you need the memory and make a promise (as a
+  dma_fence) that you'll release the memory within finite time and without
+  any further allocations once you've unlocked the dma_buf (because
+  dma_fence is in GFP_NORECLAIM). That promise can be waiting for memory
+  access to finish, but it can also be a pte invalidate+tlb flush, or some
+  kind of preemption, or whatever your hw can do really.
 
->
-> Is it possible to provide the smaps output for at least that 512M+8K bloc=
-k for
-> both cases? It might give a bit of a clue.
->
-> Do you have traditional (PMD-sized) THP enabled? If its enabled and unali=
-gned
-> then the front of the buffer wouldn't be mapped with THP, but if it is al=
-igned,
-> it will. That could affect it.
->
-> >
-> >>
-> >> cont-pte can get active if we're just lucky when allocating pages in t=
-he right
-> >> order, correct Ryan?
-> >>
->
+  Also, if you do this dynamic model and need to atomically reserve more
+  than one dma_buf, you get to do the wait/wound mutex dance, but that's
+  really just a bunch of funny looking error handling code and not really
+  impacting the overall design or locking hierarchy.
+
+Everything else we can adjust, but I think the above three are not really
+changeable or dma-buf becomes unuseable for gpu drivers.
+
+Note that exporters of dma-buf can pretty much do whatever they feel like,
+including rejecting all the generic interfaces/ops, because we also use
+dma-buf as userspace handles for some really special memory.
+-Sima
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
