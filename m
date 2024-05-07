@@ -1,147 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1F31C9EA4;
-	Tue,  7 May 2024 13:20:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF81E15F3F6;
+	Tue,  7 May 2024 13:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715088010; cv=none; b=aZW7AEDSYXH6b5yod1LKODtwyOTircouDRb1IrlxFq2DMfGLWr6ffCr/hGnPvdUI+uKnm5nyOxSsy5XBv6d6CtZAeaMaGN9V3Yzyljz5iOkQVWP2D8HMPkw/m8Eqi7VsvmpWGprr/cVEUIKTMCiKkVFT2iF58KPhRNCzHcon49w=
+	t=1715088011; cv=none; b=jxN3netLzXN4Ct+abGw1bX8elQvg/B+Rk0j8fMZwK5r9tjJXEK4D3mWhIN0AT1+fxBjGXTbChrwaf4JjQsgqDQQiZ9IuyK9toDBU4JvVCxR0tH9uZNxhMjpglqJEGKedcv8/u4zp1E+objfb8JP8+TpnPP43gLXqgD3UUHqH9mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715088010; c=relaxed/simple;
-	bh=egkWOz43eHGtMFIY140aoiyLqrnrPqlvPykxlJaPgaY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HcnZ+D7f296qmkbIU5CFTt/j48rNB8VUILummu1r9VhraVf7kTvH8h+IN45v5aDxGPgWd6wghxgdrWroMT8DHKeRL4fNgHzkjWjX9r6OYFR2cPqFuWiVj3qn9/04+d4Sx2We7+sJawAo0OjzhWMEexkHiZzgdPgKbwcyA8lIGBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KNcm/+Xy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715088011; c=relaxed/simple;
+	bh=ctEUTWkOz0M61/Oed2P4vk68TSJ0CbLXA3dtwZlhqsM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bA5bY3r48BS0wKVAPx/fmCxtV36wE028UK2G0brjZ2Xd6j6tH7VSJ5rIypybcJtdshspGW3UpxqfR3e/eMAzwZ/qg9qvNg0kbKhdsrF1VTIiRQMPIYXnN6jPlE6LsIaaZiWz+Cz5nHGRGXu3DpFmeJXa/Z2QQNyfywflfVF2pJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YwNkzfoV; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KNcm/+Xy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C210FC4DDE8;
-	Tue,  7 May 2024 13:20:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715088010;
-	bh=egkWOz43eHGtMFIY140aoiyLqrnrPqlvPykxlJaPgaY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=KNcm/+XyBrTLdm7oRT16OCMb3/Ap+qDbmQqv+Rp6gUHxh5DyiIXAwUGp2BmaDz7v0
-	 durzb7hgX0XX+Nagbwdc9gc+66y4/uLfnF0/0fFcEAMppdNqi6oySRmeC29LEjggyb
-	 M+a84qUFh/pFTcKg14xZ65dTwyNT7YqY75ParDTdk0D6536ARVspSebS5ZBBsMWCWo
-	 M9x8b6yREDX4te0TwoMkIEoyRSBSLAioBYFubWsR5n0k4pZiSnWw+69JC6Uta3fFg2
-	 mbhPoXK6Gm7sGdV7Jm15JdEC2pPof9EmHUeZPd3sQjj2xruBqjOHal8cNcHyLSJOcP
-	 8vzR0dIEyJJkQ==
-From: Benjamin Tissoires <bentiss@kernel.org>
-Date: Tue, 07 May 2024 15:19:35 +0200
-Subject: [PATCH RFC bpf-next 7/8] bpf: implement __aux kfunc argument
- suffix to fetch prog_aux
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YwNkzfoV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715088010; x=1746624010;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ctEUTWkOz0M61/Oed2P4vk68TSJ0CbLXA3dtwZlhqsM=;
+  b=YwNkzfoVr9VVFwz+YRLhxl1emRiDzrijYQFRen0nr+l7a5oehjyodY2d
+   ldEGumuoHpz6QH1AEcr6x63LWf7j1PrRiPDMAkjW/whQPTnE6XMfuGIx1
+   +eroYiBSM9vwl8v/VpaWOhVNr9m5ZX3GNp1gKFsPXWC8aEIyNgzMS0TJH
+   jt+qrdMUU6PMZFMqZY6vY4dOZgMpmRJcsblWbg8QljSu263awsnwLzCFq
+   4fuUxEKkUFD+ntZ3nRv8g8SJ1mSWnI9C01FXIGgkDgfFlpayXsqFtIGiA
+   sTmcmy8UGlj3dNOrEN4iyQ1KmOnc3Im+Q5Ks1CBCk/RC/yCJ+UgyJPJI9
+   Q==;
+X-CSE-ConnectionGUID: e9oyy2C0Q+q9rbn2/6xGyg==
+X-CSE-MsgGUID: ml7AxcetS9ek4k6+5SFjPQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10731907"
+X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
+   d="scan'208";a="10731907"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 06:20:09 -0700
+X-CSE-ConnectionGUID: vMnVIVLMTvyiHsGoD8eD/w==
+X-CSE-MsgGUID: dCrFu1KbTR6fIYsba6ab2Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
+   d="scan'208";a="28580029"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 07 May 2024 06:20:08 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id C98F5178; Tue, 07 May 2024 16:20:06 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>,
+	Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: [PATCH v1 1/1] spi: pxa2xx: Drop the stale entry in documentation TOC
+Date: Tue,  7 May 2024 16:20:02 +0300
+Message-ID: <20240507132002.71938-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240507-bpf_async-v1-7-b4df966096d8@kernel.org>
-References: <20240507-bpf_async-v1-0-b4df966096d8@kernel.org>
-In-Reply-To: <20240507-bpf_async-v1-0-b4df966096d8@kernel.org>
-To: Alexei Starovoitov <ast@kernel.org>, 
- Daniel Borkmann <daniel@iogearbox.net>, 
- John Fastabend <john.fastabend@gmail.com>, 
- Andrii Nakryiko <andrii@kernel.org>, 
- Martin KaFai Lau <martin.lau@linux.dev>, 
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, Benjamin Tissoires <bentiss@kernel.org>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715087980; l=2673;
- i=bentiss@kernel.org; s=20230215; h=from:subject:message-id;
- bh=egkWOz43eHGtMFIY140aoiyLqrnrPqlvPykxlJaPgaY=;
- b=oJAmtA0r9hCIs8UUHfZHyxXeyHI1ooXguBzR9uFMgWiwn0xOIIL26fN4pkiWwxNCGDAFC1RfH
- wIqjJqkgIp0DKjQK28Gx8oOq7x3Y3Ne4Ttm9fOagKbeixtvtfxJxGGc
-X-Developer-Key: i=bentiss@kernel.org; a=ed25519;
- pk=7D1DyAVh6ajCkuUTudt/chMuXWIJHlv2qCsRkIizvFw=
+Content-Transfer-Encoding: 8bit
 
-This allows kfunc to request the prog_aux environment in their
-implementation, to have access to the originated bpf_prog for example.
+The documentation had been removed, so should TOC entry.
 
-Signed-off-by: Benjamin Tissoires <bentiss@kernel.org>
-
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Fixes: 2d069c11e822 ("spi: pxa2xx: Remove outdated documentation")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
+ Documentation/spi/index.rst | 1 -
+ 1 file changed, 1 deletion(-)
 
-This is an RFC, and is not meant to be fully reviewed/applied as it is.
-I'm posting this to show what I wanted to explain in
-https://lore.kernel.org/bpf/mhkzkf4e23uvljtmwizwcxyuyat2tmfxn33xb4t7waafgmsa66@mcrzpj3b6ssx/
----
- kernel/bpf/verifier.c | 40 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 6fba9e2caa83..33b108db0025 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -10909,6 +10909,11 @@ static bool is_kfunc_arg_sleepable_async_cb(const struct btf *btf, const struct
- 	return btf_param_match_suffix(btf, arg, "__s_async");
- }
+diff --git a/Documentation/spi/index.rst b/Documentation/spi/index.rst
+index 06c34ea11bcf..824ce42ed4f0 100644
+--- a/Documentation/spi/index.rst
++++ b/Documentation/spi/index.rst
+@@ -10,7 +10,6 @@ Serial Peripheral Interface (SPI)
+    spi-summary
+    spidev
+    butterfly
+-   pxa2xx
+    spi-lm70llp
+    spi-sc18is602
  
-+static bool is_kfunc_arg_prog_aux(const struct btf *btf, const struct btf_param *arg)
-+{
-+	return btf_param_match_suffix(btf, arg, "__aux");
-+}
-+
- static bool is_kfunc_arg_scalar_with_name(const struct btf *btf,
- 					  const struct btf_param *arg,
- 					  const char *name)
-@@ -11807,7 +11812,8 @@ static int check_kfunc_args(struct bpf_verifier_env *env, struct bpf_kfunc_call_
- 
- 		t = btf_type_skip_modifiers(btf, args[i].type, NULL);
- 
--		if (is_kfunc_arg_ignore(btf, &args[i]))
-+		if (is_kfunc_arg_ignore(btf, &args[i]) ||
-+		    is_kfunc_arg_prog_aux(btf, &args[i]))
- 			continue;
- 
- 		if (btf_type_is_scalar(t)) {
-@@ -19950,6 +19956,38 @@ static int fixup_kfunc_call(struct bpf_verifier_env *env, struct bpf_insn *insn,
- 		insn_buf[1] = ld_addrs[1];
- 		insn_buf[2] = *insn;
- 		*cnt = 3;
-+	} else {
-+		struct bpf_kfunc_call_arg_meta meta;
-+		struct bpf_insn kfunc_insn = *insn;
-+		const struct btf_param *args;
-+		u32 i, nargs, prog_aux_arg;
-+		const char *func_name;
-+		int ret;
-+
-+		/* imm might not have func_id, so create a fake insn with the expected args */
-+		kfunc_insn.imm = desc->func_id;
-+
-+		ret = fetch_kfunc_meta(env, &kfunc_insn, &meta, &func_name);
-+		if (ret == 0) {
-+			args = (const struct btf_param *)(meta.func_proto + 1);
-+			nargs = btf_type_vlen(meta.func_proto);
-+			prog_aux_arg = nargs;
-+
-+			for (i = 0; i < nargs; i++) {
-+				if (is_kfunc_arg_prog_aux(meta.btf, &args[i]))
-+					prog_aux_arg = i;
-+			}
-+
-+			if (prog_aux_arg < nargs) {
-+				struct bpf_insn ld_addrs[2] = { BPF_LD_IMM64(BPF_REG_1 + prog_aux_arg,
-+								(long)env->prog->aux) };
-+
-+				insn_buf[0] = ld_addrs[0];
-+				insn_buf[1] = ld_addrs[1];
-+				insn_buf[2] = *insn;
-+				*cnt = 3;
-+			}
-+		}
- 	}
- 	return 0;
- }
-
 -- 
-2.44.0
+2.43.0.rc1.1336.g36b5255a03ac
 
