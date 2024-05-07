@@ -1,184 +1,149 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC49613C3C0
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 07:45:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138AE13BC39;
+	Tue,  7 May 2024 07:46:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715067952; cv=none; b=bEqcF/TKH1Ud6UC+rOiruE7rCdNkyrsg4mdlJWDGzlHwes+8iqmpGfwWuEs817jYAhUdb5DKwxvvSWn6ruuzyKtSfnCedg1H2XlWL2zQmDQvvfJyMkfIe/9Vh3O3e/3Wdddq7XSZaZFIZSd8+1nBoX+ETtkEN2mKsNQPzlSU+pA=
+	t=1715068001; cv=none; b=uTZgwJ48HPVMx7FVJirR1aM5WUZbzm90QcARoJRWKFkKX6VOaweN5+++JOrQObAebH99ZN9RwlU0LYv3QyF2rJYvO2Kzb/PtWoiu/9LBdHUE03zf3PzSZ/+d97q8pme30mnrzmsZRIEOuYvD8/JfIB8BIU33GPDbuOpx8p4Q+qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715067952; c=relaxed/simple;
-	bh=AxHL9xg+mFC6sPc7w09Awd3HmVldm43BtK2rfpIjzAQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PSPEQ2SOWnhXz9V1jsG/jr4QLl6QBQn4DvrPqL28xuLMSzOWWnfRMd+XcY0vzmAH1uYh0+ZV5lV0bowTFcwrViOmoNX1W7jFwNqsNNNM79FrZXQ8K7C6KzMHwGjxuDKc5Az/o3XYks1qW4g0fM43Q5VVK3xcMdQ4hPXo+pxUv68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M00XljaE; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1715068001; c=relaxed/simple;
+	bh=94Af4ymmCiF00Qx1iKDK+IJXafc4Rr4rO1jecboT9BE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=sIJwhm02ZgQ7DEZChJLKcMRz7fW7+zJrLYioZlazVHtKtrnUvEqwkm2tJsXJ5MHNJDI3UaEpsTMnzC84UEoj94S0BhoYRSgbp0A/uG3eSS+hlyZOUM+Y1ssZqQVmSIj1q62S1GM9GpvjgE+akzW9evMcIcwsM1xVLOPSuFCjKoc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=g1xsU6pQ; arc=none smtp.client-ip=45.89.224.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M00XljaE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id ADE29C0003;
-	Tue,  7 May 2024 07:45:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715067942;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g1uefqDLk/fsECxmCZwtq2WLO2NPd1F1ghvyIHDig/M=;
-	b=M00XljaEOXxbAQmAVgHUGBQNUTKDAQnYHvs5ieaX/Bbrm9QQv/xpZ+WYNaPQkcz/q4LW5t
-	BmPZlrlsV67keHukDm2p6WDeQoA7qfMpjNA1bKU/w9jalEVdaRUzdocIIxvyg73zT1e+Nn
-	RBljTJvWyy4CV0hJrOjI92L4b5qyEJetfUCLDgpYUiATqFHJcJXzVcwQXjwWCd7zY3y4LR
-	95KepSm2c5BxRCJ9suMOZ6O42LyauPD4/f0QCJW+Ad/RRZoF7i7ldtzJktwRbYaFf6FYCW
-	Qs6qEc+LVphaXnP4ibBfcokO3CPQvycRyIZgplF4+NUDZPUqa3fWEqiNijrfpA==
-Date: Tue, 7 May 2024 09:45:38 +0200
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
- <vigneshr@ti.com>, linux-mtd@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] mtd: nand: mxc_nand: support software ECC
-Message-ID: <20240507094538.745fb5a9@xps-13>
-In-Reply-To: <ZjnUXtWGR3cmtYB0@pengutronix.de>
-References: <20240417-mtd-nand-mxc-nand-exec-op-v1-0-d12564fe54e9@pengutronix.de>
-	<20240417-mtd-nand-mxc-nand-exec-op-v1-3-d12564fe54e9@pengutronix.de>
-	<20240506160508.6c60d50f@xps-13>
-	<20240506175106.2ab7c844@xps-13>
-	<ZjnUXtWGR3cmtYB0@pengutronix.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="g1xsU6pQ"
+Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 0D05B120005;
+	Tue,  7 May 2024 10:46:35 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 0D05B120005
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1715067995;
+	bh=Gu71DSSw7UmD80j9iS8L6fOPFWts2Eqb3HZYUJnLUQo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+	b=g1xsU6pQtn8HsuRHl2PbpoH6ktNn/NNTJgnu0d8Pf8dUGmmrRIrDCX2d5yDCkOWdO
+	 UqjUFPp6maQ0CRIbDhCLdQRZQUj6mIFSiIUSAwrG9Z6kuxGOlAz3fmkD11k4FG4loc
+	 ROgfBNtqvbXp40oDGrHlk/IYx8hgcfApUZHO+q1j57maDX0vnPOL14tpZqiI8FWKVR
+	 YthHiYDaJxdWI9L4+owRh4Y0RvL/j0u8rpt+2GOO+HOrJ7zPrQpwSKnvp/Sy+jMvoG
+	 Pml6qneHQmbss0rwzQo9SjB2UWqILgORZESCta4fj11wcAoMUCB3gkfw1q0yS2Qru9
+	 FBXOb92L87g4w==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Tue,  7 May 2024 10:46:34 +0300 (MSK)
+Received: from [172.28.226.125] (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 7 May 2024 10:46:34 +0300
+Message-ID: <e3ea7238-c80d-dfe9-28bf-df95708872d6@salutedevices.com>
+Date: Tue, 7 May 2024 10:35:51 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: miquel.raynal@bootlin.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v5 1/2] dt-bindings: mtd: amlogic,meson-nand: support
+ fields for boot ROM code
+Content-Language: en-US
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+CC: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
+	<vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Neil
+ Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
+	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>, <linux-mtd@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<oxffffaa@gmail.com>, <kernel@sberdevices.ru>
+References: <20240416085101.740458-1-avkrasnov@salutedevices.com>
+ <20240416085101.740458-2-avkrasnov@salutedevices.com>
+ <20240506154858.003bab54@xps-13>
+ <d90f9d3d-7823-503f-4cc6-73783a083d0e@salutedevices.com>
+ <20240507092726.4ab1afdb@xps-13>
+From: Arseniy Krasnov <avkrasnov@salutedevices.com>
+In-Reply-To: <20240507092726.4ab1afdb@xps-13>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 185103 [May 07 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 19 0.3.19 07c7fa124d1a1dc9662cdc5aace418c06ae99d2b, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/07 06:33:00 #25113436
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-Hi Sascha,
 
-s.hauer@pengutronix.de wrote on Tue, 7 May 2024 09:12:30 +0200:
 
-> On Mon, May 06, 2024 at 05:51:06PM +0200, Miquel Raynal wrote:
-> > Hi Miquel,
-> >=20
-> > miquel.raynal@bootlin.com wrote on Mon, 6 May 2024 16:05:08 +0200:
-> >  =20
-> > > Hi Sascha,
-> > >=20
-> > > s.hauer@pengutronix.de wrote on Wed, 17 Apr 2024 09:13:30 +0200:
-> > >  =20
-> > > > To support software ECC we still need the driver provided read_oob,
-> > > > read_page_raw and write_page_raw ops, so set them unconditionally
-> > > > no matter which engine_type we use. The OOB layout on the other hand
-> > > > represents the layout the i.MX ECC hardware uses, so set this only
-> > > > when NAND_ECC_ENGINE_TYPE_ON_HOST is in use.
-> > > >=20
-> > > > With these changes the driver can be used with software BCH ECC whi=
-ch
-> > > > is useful for NAND chips that require a stronger ECC than the i.MX
-> > > > hardware supports.
-> > > >=20
-> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > > ---
-> > > >  drivers/mtd/nand/raw/mxc_nand.c | 9 +++++----
-> > > >  1 file changed, 5 insertions(+), 4 deletions(-)
-> > > >=20
-> > > > diff --git a/drivers/mtd/nand/raw/mxc_nand.c b/drivers/mtd/nand/raw=
-/mxc_nand.c
-> > > > index fc70c65dea268..f44c130dca18d 100644
-> > > > --- a/drivers/mtd/nand/raw/mxc_nand.c
-> > > > +++ b/drivers/mtd/nand/raw/mxc_nand.c
-> > > > @@ -1394,15 +1394,16 @@ static int mxcnd_attach_chip(struct nand_ch=
-ip *chip)
-> > > >  	chip->ecc.bytes =3D host->devtype_data->eccbytes;
-> > > >  	host->eccsize =3D host->devtype_data->eccsize;
-> > > >  	chip->ecc.size =3D 512;
-> > > > -	mtd_set_ooblayout(mtd, host->devtype_data->ooblayout);
-> > > > +
-> > > > +	chip->ecc.read_oob =3D mxc_nand_read_oob;
-> > > > +	chip->ecc.read_page_raw =3D mxc_nand_read_page_raw;
-> > > > +	chip->ecc.write_page_raw =3D mxc_nand_write_page_raw; =20
-> >=20
-> > A second thought on this. Maybe you should consider keeping these for
-> > on-host operations only.
-> >=20
-> > The read/write_page_raw operations are supposed to detangle the data
-> > organization to show a proper [all data][all oob] organization to the
-> > user. =20
->=20
-> Let me take one step back. The organisation in the raw NAND is like this
-> when using hardware ECC:
->=20
-> [512b data0][16b oob0][512b data1][16b oob1][512b data2][16b oob2][512b d=
-ata3][16b oob3]
->=20
-> For a standard 2k+64b NAND. The read/write_page_raw operations detangle
-> this and present the data to the user like this:
->=20
-> [2048b data][64b OOB]
->=20
-> Is this the correct behaviour or should that be changed?
+On 07.05.2024 10:27, Miquel Raynal wrote:
+> Hi Arseniy,
+> 
+> avkrasnov@salutedevices.com wrote on Tue, 7 May 2024 09:53:06 +0300:
+> 
+>> On 06.05.2024 16:48, Miquel Raynal wrote:
+>>> Hi Arseniy,
+>>>
+>>> avkrasnov@salutedevices.com wrote on Tue, 16 Apr 2024 11:51:00 +0300:
+>>>   
+>>>> Boot ROM code on Meson requires that some pages on NAND must be written
+>>>> in special mode: "short" ECC mode where each block is 384 bytes and
+>>>> scrambling mode is on.  
+>>>
+>>> Ok
+>>>   
+>>>> Such pages located with the specified interval within specified offset.  
+>>>
+>>> I'm sorry I don't get that sentence.  
+>>
+>> Sorry, I mean this (let me draw :) ) :
+>>
+>> [ page 0 ][ page 1 ][ page 2 ][ page 3 ][ page 4 ][ page 5 ][ page 6 ][ page 7 ][ page 8 ][ page 9 ]
+>>
+>> For example, we have 10 pages starting from the beginning of the chip - this is "within specified offset",
+>> e.g. offset is 10. BootROM on axg needs that (for example) every third page must be written in "special"
+>> mode: scrambling is on and ECC is 384 bytes. Such pages are 0, 2, 4, 6, 8. E.g. "specified interval" will
+>> be 3.
+> 
+> Shall be 2, no?
 
-I believe so, yes.
+yes, starting from 0 - then 2. e.g.
+if (!(page_num % 2))
+    boot ROM need this page
 
-> (Side note: The GPMI NAND driver behaves differently here. It has the
-> same interleaved organisation on the chip and also presents the same
-> interleaved organisation to the user when using read_page_raw)
+> 
+>>
+>> So:
+>>
+>> amlogic,boot-pages: 10
+>> amlogic,boot-page-step: 3
+> 
+> Ok I get it. Thanks for the explanation. I don't really understand the
+> logic behind it though. Do you know why the bootROM would access only
+> one page over 2 or 3? Is there a default value? Is this configurable?
 
-I'd say the GPMI driver is wrong?
+No, boot rom source is closed, I don't have access to it. I get this logic
+from old version of vendor's uboot - in practice they use non 2 or 3, they
+use hardcoded 128 step value. And amlogic,boot-pages is 1024
 
-> With my current approach for software ECC the same layout is used on the
-> NAND chip. It would interleave the data with the OOB on the NAND chip
-> and, since using the same read/write_page_raw operations, also presents
-> [2048b data][64b OOB] to the user.
+Thanks, Arseniy
 
-No need, I believe the only reason for interleaving is that your
-hardware ECC engine works like that (writes the ECC bytes slightly
-after each chunk of data). So if you don't use on-host hardware ECC,
-you don't need to deal with this data layout.
-
-> This works fine currently, but means that NAND_CMD_RNDOUT can't be used.
-> Using NAND_CMD_RNDOUT to position the cursor at offset 512b for example
-> doesn't give you the second subpage, but instead oob0. Positioning the
-> cursor at offset 2048 doesn't give you the start of OOB, but some
-> position in the middle of data3.
->=20
-> Ok, NAND_CMD_RNDOUT can't be used for hardware ECC and there's no way
-> around it. For software ECC we could change the organisation in the chip
-> to be [2048b data][64b oob]. With that NAND_CMD_RNDOUT then could be
-> used with software ECC.
->=20
-> You say that NAND_CMD_RNDOUT is a basic command that is supported by all
-> controllers, and yes, it is also supported with the mxc_nand controller.
-> You just can't control how many bytes are transferred between the NAND
-> chip and the controller. When using NAND_CMD_RNDOUT to read a few bytes
-> at a certain page offset we'll end up reading 512 bytes discarding most
-> of it. For the next ECC block we would move the cursor forward using
-> another NAND_CMD_RNDOUT command, again read 512 bytes and discard most
-> it (altough the desired data would have been in the first read already).
-
-I'm not sure the controller limitations are so bad in this case. The
-core helpers (using the same example) will ask for:
-- 512b at offset 0
-- 512b at offset 512...
-- and finally 64b at offset 2048.
-In practice it does not look like a huge drawback? I don't understand
-in which case so much data would be read and then discarded?
-
-> So I think NAND_CMD_RNDOUT should really be avoided for this controller,
-> eventhough we might be able to support it.
-
-I also mentioned the monolithic accessors which try to avoid these
-random column changes. You probably want to check them out, they might
-just avoid the need for NAND_CMD_RNDOUT by forcing full page accesses
-directly. The reason why they were introduced is not exactly our
-current use case, but it feels like they might be handy.
-
-658beb663960 ("mtd: rawnand: Expose monolithic read/write_page_raw() helper=
-s")
-0e7f4b64ea46 ("mtd: rawnand: Allow controllers to overload soft ECC hooks")
-
-Thanks,
-Miqu=C3=A8l
+> 
+> Thanks,
+> Miquèl
