@@ -1,179 +1,105 @@
-Received: from ms.asus.com (ms.asus.com [103.10.4.13])
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BAC14D6F7;
-	Tue,  7 May 2024 09:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.10.4.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4533314D703
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 09:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715073754; cv=none; b=ttp2zRCHqz7SxYV951TPOYN/njTI+Elg/QIFxynLVXj5GCcQV/cs1JZv20lJpCqUsL/CSEJIR9JGd2bPS4PpxArTSr7F+vcEEasiFrlH/hSMOJpzIm45B+V03I3IyxICnQVfw0WFmDc2+s/XXxACG1/uSg3rioY2QL2LW0G0tf0=
+	t=1715073862; cv=none; b=UEmNxuf/dMjy0Q09jNYeh0XdivwvIrcwe6SxVE5qafiKhvvCgs2RruBUDMFntvpFb60wXPOa7HJnQxcoPL3aNTJmFRp4i8fN7/HwcuDF3P0YDj/sDQmMWqnVb7pAW9yDy56Pa2Wo3kbjH1a5hTAbvBm5SSn2D8Xwn6soyRkz64s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715073754; c=relaxed/simple;
-	bh=soaSKLNiK8yLuSfHu376E6xKacUX7+Q6AvxodFOhgpU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CljoUPEBIVqZR8Dv2qTKfKc93YA9/6ZrjYJCxU71T/Jkq5McBOtoK8i8N+RN1bSCky9AhhhpzY/ZRc/HKgx0OyJ/x9LNcBMe1YLiFRE14IMKah41+L8rUGohOtKGd01wa64/CjQhlXe/wgVcR/SThW1rEUsWizvjnNQHmjxnVg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asus.com; spf=pass smtp.mailfrom=asus.com; dkim=pass (1024-bit key) header.d=asus.com header.i=@asus.com header.b=WqDQWi3u; arc=none smtp.client-ip=103.10.4.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=asus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=asus.com
+	s=arc-20240116; t=1715073862; c=relaxed/simple;
+	bh=DbtwU8InckKBXtmRVsasd2jzJ8OYWGwrmpwdaL5r02Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qcUY1M2O2UpvkHP7XBO6Mgs2HopegwZ5hltidGrmCkPth4/gCVklkTh/OkX6ItkFcJMzoMSOrWdpooCG5SNPqKV0KKmSINqdL7oR5Fcl8V2xhiChpKbNImmaeOzHkcbmUS3TlGT6iiPbz6CxvaoFWGWab8yIi//qfjZ2SOWycvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=QLgOEwMW; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=asus.com header.i=@asus.com header.b="WqDQWi3u"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=asus.com; i=@asus.com; q=dns/txt; s=asuscom;
-  t=1715073752; x=1746609752;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=soaSKLNiK8yLuSfHu376E6xKacUX7+Q6AvxodFOhgpU=;
-  b=WqDQWi3umHzDGpnbfBfKg5EzpaSfutVzWJUG8XSTyYQA5aMiVbJJP37D
-   S7XM2sXT8gm0E5XYR+NZMx8DxrUPtAgG5e5TfLEsPCrsWyoHtmGY1okOs
-   jmejrcr7Wrpw0ppESdyftU3OIgzEk0mp0mfSn35uG5/Cj1+4uKLy2AGpL
-   o=;
-X-IPAS-Result: =?us-ascii?q?A2E3AwBZ8Tlm/xEvFqxagliFIR2WIp4NFIFqDwEBAQEBA?=
- =?us-ascii?q?QEBAQgBRAQBAYUGAogxJzYHDgECBAEBAQEDAgMBAQEBAQEIAQEBBQEBAQEBA?=
- =?us-ascii?q?QYEAQEBAoEZhS9SgmcBg3gGJ1IQOBlWBg4FgwCCZbUGM4EB3jGBawkBgT6IL?=
- =?us-ascii?q?gGEWIRpe4ILRCZvg2iDfBIBEgEJVw6FdwSGDogjO2SBeCdBgVGBDoEdg2mCT?=
- =?us-ascii?q?H+BBVkPiEpKgQccA1kyAVUTDQoLPgkWAhYDGxQEMA8JCyYDKgY2AhIMBgYGW?=
- =?us-ascii?q?SAWCQQjAwgEA0QDIHERAwQaBAsHdYMxBBNEA4E4iXqDPSmBd4QgS4R2gXgOY?=
- =?us-ascii?q?ocjAwcFLB1AAwsYDUgRLDUUGwYiH24HoywTaUAQEAMrFF4SK2URBBePaIM0g?=
- =?us-ascii?q?z+OVKBuhB2BYQyII5ccGjOEBYx+hkGScJhiglSgaYUgAgQCBAUCF4FsA4Ecc?=
- =?us-ascii?q?DMaI4EKDlaBSVIXAg+wRms7AgcLAQEDCYhuBS8sATtgAQE?=
-IronPort-PHdr: A9a23:npBHeBbfHzNKTEXPdumGcz3/LTH+14qcDmcuAnoPtbtCf+yZ8oj4O
- wSHvLMx1g6PB9+LoKsew8Pt8IneGkU4oqy9+EgYd5JNUxJXwe43pCcHRPC/NEvgMfTxZDY7F
- skRHHVs/nW8LFQHUJ2mPw6arXK99yMdFQviPgRpOOv1BpTSj8Oq3Oyu5pHfeQpFiCS5bL9oM
- hm6swbcusYLjYd8N6081gbHrnxUdutZwm9lOUidkxHg6Mmu4ZVt6T5Qu/Uv985BVaX1YaE1R
- qFGATolLm44+tTluQHMQgWT6HQcVH4WkgdTDAje8B76RJbxvTDkued7xSKXINf5TbEwWTSl8
- qdrVBrlgzoJOjIl7G3ajNF7gblFqxy9uRNw34/UYJmUNPVgeKPdYcgaTndFUspISiBNHp+wY
- 44JAuEcP+hXspP9qkMOoxWgGwSiGe3hxDxPiHD006013OsvHh3H3AE7A9IOqW7ZoMnvOasOT
- ey4yrTDwzXZb/NR3Dfw8I3GfQ4lofGIXbN7bMjfyVQpFwPKk16dronrMC2R1uQJs2mV7fdgV
- eSgi2M8sQ5xuSWvxtw2hobVgYIVz0nJ+CNky4k6OdO2UlR0YcK4EJROrSGaMZN7T8M+T2xou
- Cg0xKMLtYCncCUExpor2RDRZviJfYWW7R/tVOScLDl6iX97eb+yhhe//Eu9x+HgSsW4zEtHo
- zZHn9TKq3sD1ATT59CaRvZ/4EutwyiD2x7J5uxLI004j7fXJpw5zrMxi5Yfq1rPEjL3lUnsj
- aKbdl8o9vWr5unlZLjtu4GRN4tpigHlLqQhhNa/D/k5MgkPQWeW4fiw2bv+9kPjWrpKlOc5k
- qzBvZDfIsQUu7C2DhdO0oYm9xa/FzCm0MkEnXUfLFJKZhaHj4/xNl/QOv70FPCxjVq1nDhk2
- /zKI6ftDYnKLnjZiLfhe6hy61JGxAUp1tBf+olUBqkAIPL1REDxqMTVAgI7PgCq2errFstx2
- pkRVG+NGKOVLaHfvUeN5u01IumMYIEVuCz6K/gg//PgiGE2mVsZfaip35UXdXa4Hvt9LkqDe
- nrsn8wBHX0WsQo5SezmkFuCXiVLaHaoQ608/i07CJ6hDYrbW4yhnaSN3D2nEZ1OemBGFleMH
- G/yd4WDQPgMaCWeLdJ9kjEfVriuVZUh1Rewuw/+0bZnKfDU+iIAuZL5yNd1//HTlQ019TFsD
- MSdyWCMTmFvnmIJWz82265/rVZ+yleE0Kl4h/tYFNJI5/NKUwc2MoPTz/BhBtD2WwLBeM2GS
- EyhQtm8BjExVN0xz8cUY0lhA9WikgzD3y2yDrAJkLyLAps08rjb03fsO8Zw0HXG27c7j1kgX
- MRPMXeqhqll9wjcH4LJiVmWl762daQA2y7A7GWDzW2Qs0FcSwNwU6DFXWsFakvXsNv1/FnNT
- 6K2BbQ9LgRB0dKCKrdNatDxl1pGQursOM7AbGO/gGq/GRGIya6SY4X2fGUd2j7dCFQekwAO4
- XmGKRIyCTumo2LbFjBhD0/vMAvQ9rwqsnSxTgw40ymJYldn2r7z/QQa06+yUfQWi5EJvCMw4
- xVpGln1i/HbD96Rhxdnc41Ves4mplxA0DSK5ERGIpW8IvU61RYleANtsharjk0vYrg=
-IronPort-Data: A9a23:05G+AqgEbCo3AJ/Xz2agzZ9ZX1613REKZh0ujC45NGQN5FlHY01je
- htvCD2FOP+KZzD1ctAiaN7j9h8B68WHy9Y1GgNl+S1jRngW8JqUDtmwEBz9bniYRiHhZBs8t
- p1BMLEsDyyWolv0/ErF3m3J8CEUOZmgH+a6UqifUsxIbVcMYD87jh5+kPIOjIdtgNyoayuAo
- tqaT/f3YTdJ5hYtWo4qw/PbwP9QlKmq0N8olgRWTexGulbYi04UAPo3TU1mByCgKmX8NrfSq
- 9frlNlVzEuAl/seIorNfoLAT6E/auW60T5iKpZhc/PKbhBq/kTe20ugXRYWQR8/Zz6hx7idx
- DjR3HAZpMhA0qDkwYwgvxdk/y5WOK1tqa3WOSGFmu+t1BDkLSq9z9BMExRjVWEY0r4f7WBmy
- cRdDRxIUEjawemx2qq9R/Uqj98+N6EHPqtG5Ssml2ufUalgGM+rr6bivLe02B8Ti8RKDNbDY
- cUxYCFyd1LLZBgn1lI/UsluwLrw3yikG9FegF6KnLVp+WPU9lBWj7LLFuiNX/+AGPwAyy50o
- UqDpQwVGCoyLtuVyXmJ7lqvi/XJkCe9X5gdfJW77Ox7m0+PwWJVCxoEUVykuvq4yUKic9ZeL
- UUO/Wwpt6da3EesSN7nHBGkiH2JpBgRX5xXCeJSwAOKx6784QOCQGkICDdcAPQvssMsSCMC3
- ViFktjuAydzqqCeVTSW8bLSpC7aESQYM24JaDMeQAYt/dbuuscwgwjJQ9IlF7S65vXxGDft0
- 3WDti17hLgJi8MP/6G65kzcxTOqqILAQgM86kPQRG3Nxgd4YpO1IoWz8VXW4d5ELZ2FVR+Gr
- nwNkdPY6/oBZbmJlSqQUKAOEauv6vKtLjLRmxhsEoMn+jDr/GSsFahX+Dx4LkJiGsIFYiPyJ
- kjBvQpb/9lUJnTCRaRwZYWrTcgtyqztBPzgV/vOadFOY4A3fwiClByCfmaMxyXonA0yyfh5M
- pCBacChETATErl8pNare9ogPXYQ7nhW7QvuqVrTk3xLDZL2iKapdIo4
-IronPort-HdrOrdr: A9a23:r+KDCaBDLH/7eJLlHemE55DYdb4zR+YMi2TC1yhKJSC9Ffbo8/
- xG/c5rsiMc5wx+ZJhNo7q90ey7MBDhHP1OkOws1NWZPTUO0VHAROpfBMnZsl/d8kXFh4hgPM
- xbHJSWZuecMbAs5vyKmDVQa+xB/DDRytHQuQ+bpE0dNj1XVw==
-X-Talos-CUID: 9a23:5+VjGG9Ggw1BDcmnr2mVv0sUMZE3Y2WE9lzzHVTlKzg4GbGwa0DFrQ==
-X-Talos-MUID: 9a23:2kKaogmXs1epWMYGH8tEdnpuK/53vb6lD3pRtsoMne+2bQlTMWqk2WE=
-X-IronPort-Anti-Spam-Filtered: true
-Received: from tp-md-v01.corpnet.asus ([172.22.47.17])
-  by ms.asus.com with ESMTP; 07 May 2024 17:21:21 +0800
-Received: from localhost.localdomain (61.216.65.187) by TP-MD-V01.corpnet.asus
- (172.22.47.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.37; Tue, 7 May
- 2024 17:21:19 +0800
-From: Kelly Hung <KellyHung@asus.com>
-To: <robh+dt@kernel.org>
-CC: <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<joel@jms.id.au>, <andrew@codeconstruct.com.au>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-aspeed@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-	<openbmc@lists.ozlabs.org>, <kelly_hung@asus.com>, <Allenyy_Hsu@asus.com>,
-	Kelly Hung <KellyHung@asus.com>, Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v8 1/2] dt-bindings: arm: aspeed: add ASUS X4TF board
-Date: Tue, 7 May 2024 17:21:08 +0800
-Message-ID: <20240507092109.6018-2-KellyHung@asus.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240507092109.6018-1-KellyHung@asus.com>
-References: <20240507092109.6018-1-KellyHung@asus.com>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="QLgOEwMW"
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 72EBA424B4
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 09:24:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1715073857;
+	bh=L+nK70gt6qYfXCC8GaVCochZ/g6jNnBIwcw8pbcit5Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=QLgOEwMW8B+O+PGNDksSKzMS2xYmiwFHdG8TQT65kP6vFf51FtRMKbeuVsyGL87vu
+	 m4EudJfjAiPXS7IRGEJ3TRXFfokWcT19bQlvWf+7BEnIW0ed7Wh0mQ6J0YGlO8K4vr
+	 oQ9SUi6h4iDKcILhrE7FLoT1N8pJ7J/kfpiDRdu+kRCZkF1xEaiKtkl+pR/JJ1uXE3
+	 mZbPiOlywNcYln2n7msO0Nnlp+8lHaePBskKXY/1N1oL+WaM1s5UMU0fEqqt8ObIi5
+	 THT3PPep7zmLcKcwFNLZnEoyV+31FWUfVyOdTFIM14XMesIXH/j5ReO6FpWHwO1Zh9
+	 gqDFv+w7Ne8HQ==
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-34da03e19beso2257799f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 02:24:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715073856; x=1715678656;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L+nK70gt6qYfXCC8GaVCochZ/g6jNnBIwcw8pbcit5Q=;
+        b=ss26t1cQNfwQGZyhP7kBQ4/CN1Fho9wMYvXUvhDkGVjAvBMItWSf4ZK8jOshIfvs4W
+         roOh9xbVP2Qvbr1G2ey8nT+sNxzcJoOXrZp6dw16r+/xcHgem2OmogkORfp0TZrkf6BD
+         c4Qj9wv3LOijBdDTbioDTt3pojZuosNKRYCRzx21zrMUWWEbrN4j10ahrGEZLJJhMGrK
+         Onm9P60+EPg1jcuzuYusRJQhjRbuBJD/tEQCcTLsd4Aj21XL9iYCIOWRpZ/gge1I1WlK
+         B+KyzYhFpssUl7KbCt/c1LsQaKNp1kPDGo5PrdKcDxV3FRC+Ls2pI3YYapvivKE3/mLg
+         ljxw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhMtOWRuqPUaYpYeKX32jBaxuGhXQP3HSsFdjzDhn+9EwcnP2rOAd3Jc7JrReO+0/2rux7MTY1U6Su9yRifKPRUnPbtLu+xeRzI4of
+X-Gm-Message-State: AOJu0YzGqpdabDXiV7Lqqd9Ft6bNBMn2kL4ItXW1eOU7kSATUpojwGHm
+	ANEXYdyaBRZwyatoYycjXr5SksUHynie//kzABk5OGjIX8Pxch3wk3tkRXwVTiBg0NgeReg/PMB
+	mQMeW60t2xdQwa4P8h59CvCm4ECwTWb+edn4MsBrLPNuTN6CY8OrFKfu7f0iRXx7pVrt70feQaj
+	KhQdoCGJ1vM7w/stF70BH7+5IhYfjD1vbGba7q4hPf6MOyPcVB2Tbo
+X-Received: by 2002:a5d:55c3:0:b0:34c:6b36:33e5 with SMTP id i3-20020a5d55c3000000b0034c6b3633e5mr7548858wrw.71.1715073856797;
+        Tue, 07 May 2024 02:24:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGJawWFBRi2pUGfZ2AxzikXotCoi+SGcm4po3SlZ4MEuw3m5XCHXhPk5jDnRdkoqcxw9Tms4qQp5r+6576BHgA=
+X-Received: by 2002:a5d:55c3:0:b0:34c:6b36:33e5 with SMTP id
+ i3-20020a5d55c3000000b0034c6b3633e5mr7548841wrw.71.1715073856520; Tue, 07 May
+ 2024 02:24:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: APZA002EXB.corpnet.asus (172.22.6.14) To
- TP-MD-V01.corpnet.asus (172.22.47.17)
-X-TM-SNTS-SMTP:
-	7B5E8808B64D3409BE36DE63A1FC0495CD91438CB54365635DC9BAA38B2E39902000:8
+References: <20240502091215.13068-1-en-wei.wu@canonical.com> <f47e0bb6-fb3f-4d0e-923a-cdb5469b6cbe@lunn.ch>
+In-Reply-To: <f47e0bb6-fb3f-4d0e-923a-cdb5469b6cbe@lunn.ch>
+From: En-Wei WU <en-wei.wu@canonical.com>
+Date: Tue, 7 May 2024 11:24:05 +0200
+Message-ID: <CAMqyJG0kMFShx8Kir17mNZ1rD7SaBt2f_Wpv4ir+5-92v3bNaA@mail.gmail.com>
+Subject: Re: [PATCH] e1000e: fix link fluctuations problem
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: jesse.brandeburg@intel.co, anthony.l.nguyen@intel.com, 
+	intel-wired-lan@lists.osuosl.org, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rickywu0421@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Document the new compatibles used on ASUS X4TF.
+> Why PHY is this?
+It's the Intel I219-LM, and I haven't found any other device having
+the same issue.
 
-Signed-off-by: Kelly Hung <KellyHung@asus.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
----
-v7 -> v8:
-- Modify Signed-off-by field with new ASUS smtp account.
-- Add back Acked-by tag.
-v6 -> v7:
-- Remove incorrect tags.
-- Modify Signed-off-by field.
-v5 -> v6:
-- Add Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-- Add Reviewed-by: Rob Herring <robh@kernel.org>
-- Add Reviewed-by: Zev Weiss <zweiss@equinix.com>
-- Add Acked-by: Conor Dooley <conor.dooley@microchip.com>
-V4 -> V5: Update all changelog from v1 to v5.
-V3 -> V4: The new compatible is a BMC for a ASUS X4TF server which use
-a ast2600-a3 chip, so correct string to asus,x4tf-bmc.
-V2 -> V3: Add a label to indicate it is new compatible for bmc.
-V1 -> V2: Remove blank in front of the string x4tf.
----
- Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
- 1 file changed, 1 insertion(+)
+> It might be the PHY manufacture has an errata, since
+> this is probably not the MAC causing the problem, but the PHY itself.
+Yes. The problem seems to be a PHY problem. I'm wondering if doing a
+workaround on MAC like this patch is suitable.
 
-diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/Doc=
-umentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-index 749ee54a3..0047eb4ab 100644
---- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-+++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-@@ -74,6 +74,7 @@ properties:
-               - ampere,mtmitchell-bmc
-               - aspeed,ast2600-evb
-               - aspeed,ast2600-evb-a1
-+              - asus,x4tf-bmc
-               - facebook,bletchley-bmc
-               - facebook,cloudripper-bmc
-               - facebook,elbert-bmc
---
-2.25.1
+For further information, please check here:
+https://patchwork.ozlabs.org/project/intel-wired-lan/patch/20240503101836.32755-1-en-wei.wu@canonical.com/
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-This email and any attachments to it contain confidential information and a=
-re intended solely for the use of the individual to whom it is addressed. I=
-f you are not the intended recipient or receive it accidentally, please imm=
-ediately notify the sender by e-mail and delete the message and any attachm=
-ents from your computer system, and destroy all hard copies. Please be advi=
-sed that any unauthorized disclosure, copying, distribution or any action t=
-aken or omitted in reliance on this, is illegal and prohibited. Any views o=
-r opinions expressed are solely those of the author and do not represent th=
-ose of ASUSTeK.
-
-For pricing information, ASUS is only entitled to set a recommendation resa=
-le price. All customers are free to set their own price as they wish.
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
+On Tue, 7 May 2024 at 03:39, Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Thu, May 02, 2024 at 05:12:15PM +0800, Ricky Wu wrote:
+> > As described in https://bugzilla.kernel.org/show_bug.cgi?id=218642,
+> > some e1000e NIC reports link up -> link down -> link up when hog-plugging
+> > the Ethernet cable.
+> >
+> > The problem is because the unstable behavior of Link Status bit in
+> > PHY Status Register of some e1000e NIC.
+>
+> Why PHY is this? It might be the PHY manufacture has an errata, since
+> this is probably not the MAC causing the problem, but the PHY itself.
+>
+>         Andrew
