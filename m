@@ -1,114 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C2743687;
-	Tue,  7 May 2024 16:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A82E54BEA;
+	Tue,  7 May 2024 16:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715101001; cv=none; b=gMgBqcZyNqqYzdbVFU2OxAP8/6hSO5qN6o5xTN2jnQtiBWscKT0LRsvB0hjZHLyc4TaEA3vT7e8FSKw+Y2/sfcpGmvwwtfEnAeKqbduT06vsl6sOxExfTUecXojf5joKc95LZOdZjU7+ruOTwQ4Km8hZOEB6TSI6ucwi3WAk7yo=
+	t=1715101004; cv=none; b=YSefSJ9DuWzp/6hi3e35gFU0mgbbyhtcWqyRgTtC/FK+LVoQmAPks5SdMIvUoqhVk9Yh5bQh0NvOW47Osrd7b/j6gE/n5UZaoTi0yyTRqlpds1mYnfPx3uhTuW+kBqjYg0aihoAGCj8qo+q1r9JjCKxlkT2b4RilboJH81NicEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715101001; c=relaxed/simple;
-	bh=WNR6B5n6ha6J0gkFZyAWNDYB51k7sc/lxX0wqZoPPL4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c6ls/HL+ZlfkjPGDagWPitDgT2MeBeN7gOcc5uAhRg5ZUbZ6RWNxgiYnSiGjP9CgaMoGmrpL0D5RmGYoFtn9st5d1bfEs8wWxgQ/sc8vCI7VXZp1iGqnNpRZOjC47B5Cca+oepXkSzsfFfav2NEgJFqQO2BqtuCNY2iwomU165w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=STQJDLXE; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="STQJDLXE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715100999; x=1746636999;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WNR6B5n6ha6J0gkFZyAWNDYB51k7sc/lxX0wqZoPPL4=;
-  b=STQJDLXEOFz/VnZ9cAOt9ljnjjJGWYbVjEtMTFMaX8EP2woZ7GkC49gt
-   x6zvSJiHkChzA1c9NaWn1GDCTq1rxTaLA1AcQuBzwHHUh6s5hD7P+li4z
-   IUaVe0v0LtrUJ6Dgia8r59ugv+I0mx4RlzYM+w8Xaf7OiWcNGIhQkfkd1
-   BLR8cbsupafmvBq7t/AVetNnsZG3E2ZiBbKSNnaN6xuqio6UhEsjmk4eX
-   VizVAIH6q/Fr36Ai6MsgcQ4H/NUzJi4BHir/W8NxB02Lc0IdaqgvO1rV+
-   e1tykO87WqPgBsdeH04jJiXLiZi3zGUVPoCVwaUyLJufXZylxMQCk4pZ1
-   A==;
-X-CSE-ConnectionGUID: s2vvgnfESUyNlav/anpysA==
-X-CSE-MsgGUID: PoTxNq/XTMW7oFkP9L7bVQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="28389940"
-X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
-   d="scan'208";a="28389940"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 09:56:39 -0700
-X-CSE-ConnectionGUID: U+rezoHNRJOjxI0HG2dJLA==
-X-CSE-MsgGUID: TLvsEUQuRkSN2hUeGtSpgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
-   d="scan'208";a="33147705"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 07 May 2024 09:56:35 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s4O7F-0002Mg-1N;
-	Tue, 07 May 2024 16:56:33 +0000
-Date: Wed, 8 May 2024 00:55:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Allen Pais <apais@linux.microsoft.com>, linux-fsdevel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, viro@zeniv.linux.org.uk, brauner@kernel.org,
-	jack@suse.cz, ebiederm@xmission.com, keescook@chromium.org,
-	mcgrof@kernel.org, j.granados@samsung.com, allen.lkml@gmail.com
-Subject: Re: [PATCH v4] fs/coredump: Enable dynamic configuration of max file
- note size
-Message-ID: <202405080045.cTS3F5Or-lkp@intel.com>
-References: <20240506193700.7884-1-apais@linux.microsoft.com>
+	s=arc-20240116; t=1715101004; c=relaxed/simple;
+	bh=P+ipyRNAkG1tIcELNjSx9jh4wymOHO4binW0dDyHggs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=b4MEnqQi+CHNBYR0PrDeNxjZMfnon7estK+5ceMf7k08k0scduVjf0rsaRrh6XsYWwr3/1ct5XigF1EO8urygCgWXM9ZHPsFXLnIR0Ymq0phjdYEVUJJ/hETL9knO3SgRM7fl7aCD0R+p3DUSrmmsVgZjOzIMcYR9t4RrZM/QoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D03B71063;
+	Tue,  7 May 2024 09:57:07 -0700 (PDT)
+Received: from [10.1.34.181] (XHFQ2J9959.cambridge.arm.com [10.1.34.181])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 749443F587;
+	Tue,  7 May 2024 09:56:40 -0700 (PDT)
+Message-ID: <1f8711d2-8505-4685-9e0f-180bdc709381@arm.com>
+Date: Tue, 7 May 2024 17:56:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240506193700.7884-1-apais@linux.microsoft.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] selftests/openat2: fix clang build failures:
+ -static-libasan, LOCAL_HDRS
+Content-Language: en-GB
+To: John Hubbard <jhubbard@nvidia.com>, Shuah Khan <shuah@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+ Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>,
+ Christian Brauner <brauner@kernel.org>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Alexey Gladkov <legion@kernel.org>, Valentin Obst <kernel@valentinobst.de>,
+ linux-kselftest@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ llvm@lists.linux.dev
+References: <20240504044336.14411-1-jhubbard@nvidia.com>
+ <8fdefaa9-675e-4b37-9456-896b9989d18f@arm.com>
+ <9e346b64-0a7c-4eb9-88c4-8fb6cf65b33f@nvidia.com>
+ <518dd1e3-e31a-41c3-b488-9b75a64b6c8a@arm.com>
+ <c1ff82e6-4d6a-4680-925f-5f0226ba32c4@nvidia.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <c1ff82e6-4d6a-4680-925f-5f0226ba32c4@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Allen,
+On 07/05/2024 17:47, John Hubbard wrote:
+> On 5/7/24 9:34 AM, Ryan Roberts wrote:
+>> On 07/05/2024 17:19, John Hubbard wrote:
+>>> On 5/7/24 12:45 AM, Ryan Roberts wrote:
+>>>> On 04/05/2024 05:43, John Hubbard wrote:
+>>> ...
+>>>> Hi John,
+>>>>
+>>>> I sent out a similar fix a couple of weeks ago, see [1]. I don't think it got
+>>>> picked up though. It takes a slightly different approach, explicitly adding
+>>>> -static-libsan (note no 'a') for clang, instead of relying on its default.
+>>>>
+>>>> And it just drops helpers.h from the makefile altogether, on the assumption
+>>>> that
+>>>> it was a mistake; its just a header and shouldn't be compiled directly. I'm not
+>>>> exactly sure what the benefit of adding it to LOCAL_HDRS is?
+>>>
+>>> Ah no, you must not drop headers.h. That's a mistake itself, because
+>>> LOCAL_HDRS adds a Make dependency; that's its purpose. If you touch
+>>> helpers.h it should cause a rebuild, which won't happen if you remove it
+>>> from LOCAL_HDRS.
+>>
+>> Ahh. I was under the impression that the compiler was configured to output the
+>> list of dependencies for make to track (something like -M, from memory ?). Since
+>> helpers.h is included from helpers.c I assumed it would be tracked like this - I
+>> guess its not that simple?
+> 
+> This can be done, but it is not automatic with GNU Make. You have to explicitly
+> run gcc -M, capture the output in a dependencies list, and track it. Which the
+> Kbuild system does, but kselftest does not.
 
-kernel test robot noticed the following build warnings:
+Understood - thanks for the lesson!
 
-[auto build test WARNING on kees/for-next/execve]
-[also build test WARNING on brauner-vfs/vfs.all linus/master v6.9-rc7 next-20240507]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> After just now sweeping through kselftest to fix up the clang build, I see a
+> lot of mistaken or partial use of the kselftest build's Make variables, because
+> people naturally reason based on what they know about Kbuild, and it doesn't
+> always translate. And LOCAL_HDRS might need some more documentation too.
+> I'll keep thinking about how to clarify this, I have a couple early ideas.
+> 
+>>
+>> Anyway, on the basis that LOCAL_HDRS is the right way to do this, let's go with
+>> your version and drop mine:
+>>
+>> Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
+>>
+> 
+> Thanks for the review!
+> 
+> thanks,
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Allen-Pais/fs-coredump-Enable-dynamic-configuration-of-max-file-note-size/20240507-033907
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/execve
-patch link:    https://lore.kernel.org/r/20240506193700.7884-1-apais%40linux.microsoft.com
-patch subject: [PATCH v4] fs/coredump: Enable dynamic configuration of max file note size
-config: arm64-randconfig-r054-20240507 (https://download.01.org/0day-ci/archive/20240508/202405080045.cTS3F5Or-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240508/202405080045.cTS3F5Or-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405080045.cTS3F5Or-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> fs/coredump.c:67:27: warning: 'core_file_note_size_max' defined but not used [-Wunused-const-variable=]
-      67 | static const unsigned int core_file_note_size_max = CORE_FILE_NOTE_SIZE_MAX;
-         |                           ^~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/core_file_note_size_max +67 fs/coredump.c
-
-    62	
-    63	static int core_uses_pid;
-    64	static unsigned int core_pipe_limit;
-    65	static char core_pattern[CORENAME_MAX_SIZE] = "core";
-    66	static int core_name_size = CORENAME_MAX_SIZE;
-  > 67	static const unsigned int core_file_note_size_max = CORE_FILE_NOTE_SIZE_MAX;
-    68	unsigned int core_file_note_size_min = CORE_FILE_NOTE_SIZE_DEFAULT;
-    69	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
