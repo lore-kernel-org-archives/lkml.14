@@ -1,134 +1,109 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B350E16ABF2
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 16:01:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FE516C6A0;
+	Tue,  7 May 2024 16:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097678; cv=none; b=Urz3IT6XqxE4WQQlUi4L7tMYIhrMKPU7RxzldypOa4GEI6zylGtw/5eR0QVZbU/OgQbNalEs7PCzhmt5qT3EDF7j2K+18mLdBYy9p0/Gh5qWfmwMu93L77q+zUkM21NnvR8FjP0+SvACHK+4SlPQax/MEKXOJPvNtY5xIyImn6s=
+	t=1715097718; cv=none; b=U4FFjgYGZO/iKStcb+Al6PYS25cYl9GlTL9P81GMnRSxcLtEwykrmDUcbYZAC8eZV/sWrUyUyanzbQBosHe3GQgs0Kovo3Z2KZf5abzinf9E2rzK5bvF+1oUUW6IQmh5ttsclq2Fz29X5o2jg8DLWl7lzy7iD+r7vGPWAif+B4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715097678; c=relaxed/simple;
-	bh=uDr94odQe8OoQaFPGiq0E+3/jKUcjGtIbbMd+XhGBRM=;
+	s=arc-20240116; t=1715097718; c=relaxed/simple;
+	bh=VZJ8+RLe61gK9PUlD/myRLomOS9W7a54C8toInBF7gE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KMgyhl4cbTCPFPveUZq9rOEdEvRZ4d1HVcKQ+gliLyAh2x6cUIpkGvfS0E6obIy6v5BgQ5QJEAsWMvTLGoPrQy2euOx+p+Y+HRDGXbfRrxcEI34hyBBW5o8bze7CTn6k8TTKaUBM5HcRoo72Q1lCutXNC6LI5ZaMP2t1/CN1nDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aXq8MApD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=rDPsN3bn7F/NwAq6Cs3+qWQgfpaWca7qhQ1K8ueIfj1D3B4k2iAf6DSr2LJh27wiAwysGyl95lUNgtAXHN3CHqYVUJYkWGkRHW1gTYu2dljQ3lCBRZC7U9ZHw19IWSVeUY75Eb8VZk/ZnZz6X2qzjKIk0pvYk1BpoIhcE3tJtc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpwgShI5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aXq8MApD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715097675;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bqj+NSNknAKcKDogP9g0dp95XkIoSf3FKtqZnMGIcU0=;
-	b=aXq8MApDkbMsC/RFjpfsw4OVTfytYYt8dkhx+f0Rtq6SjylDzmx9xIalaZO2SirCjJQY3o
-	DuxLmFCoRseBwM2s+HPWH0/l6aW18Fo5XI+zJPKSV2ggi+MfFxkeJ4+uP2u0NuyB3S3++w
-	3TaPhy/QOwUjuVzqzhC2Xjn3mhROCOs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-308-MowG0XtLM_SWxohaTA-HCQ-1; Tue, 07 May 2024 12:01:10 -0400
-X-MC-Unique: MowG0XtLM_SWxohaTA-HCQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1260F185A783;
-	Tue,  7 May 2024 16:01:09 +0000 (UTC)
-Received: from bfoster (unknown [10.22.32.146])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id A04A43C25;
-	Tue,  7 May 2024 16:01:08 +0000 (UTC)
-Date: Tue, 7 May 2024 12:01:27 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: Petr Vorel <pvorel@suse.cz>
-Cc: linux-bcachefs@vger.kernel.org,
-	Kent Overstreet <kent.overstreet@linux.dev>, Su Yue <l@damenly.org>,
-	Coly Li <colyli@suse.de>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] bcachefs: Move BCACHEFS_STATFS_MAGIC value to
- UAPI magic.h
-Message-ID: <ZjpQV0ddhG9sUo8P@bfoster>
-References: <20240507153757.150891-1-pvorel@suse.cz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpwgShI5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBED5C2BBFC;
+	Tue,  7 May 2024 16:01:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715097717;
+	bh=VZJ8+RLe61gK9PUlD/myRLomOS9W7a54C8toInBF7gE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=SpwgShI5wIUMTdUWl1AeFmLRRDMtdEx/ZrTwMcKYxc9Qf5PMou/bpLvF2mHuXtYsh
+	 afCaX30hHxu15qEi2zpYsZX8K4knnxrSaMaU/dJjEnHU5aM2AlfKoLJtEJTnPUyPPk
+	 Q9bWlJuTMbPzN2ljhYFoVjyCeSJqn+cYuoiOFFGHwZxBQLtUdY1NicXRZ13uUFKgCs
+	 0vLEuwJ+XnjC0wwho324ZcrX/8TuCng5HZHv6vypkOQvg9UPE+KsLQPJgHY0ES+syw
+	 D6NqFfQoNjQ0wbTZM6zvuxdVST6Du/tMSl405yFVrj67Swyj885sRcp3iilJoGGF6j
+	 zE5RSniEqZUGA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 86E8BCE14CC; Tue,  7 May 2024 09:01:57 -0700 (PDT)
+Date: Tue, 7 May 2024 09:01:57 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH] gpiolib: fix the speed of descriptor label setting with
+ SRCU
+Message-ID: <1e9042a9-f8ba-4ca9-a5e3-5eed1a02e1ca@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240507121346.16969-1-brgl@bgdev.pl>
+ <597f5da2-71be-4144-a570-fdc4f06c4cc6@paulmck-laptop>
+ <CAMRc=MexihBpLBcY-8aX06buUYmtE07ZpkMq0Ho3jrHb6VE7Sw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240507153757.150891-1-pvorel@suse.cz>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MexihBpLBcY-8aX06buUYmtE07ZpkMq0Ho3jrHb6VE7Sw@mail.gmail.com>
 
-On Tue, May 07, 2024 at 05:37:57PM +0200, Petr Vorel wrote:
-> Move BCACHEFS_STATFS_MAGIC value to UAPI <linux/magic.h> under
-> BCACHEFS_SUPER_MAGIC definition (use common approach for name) and reuse the
-> definition in bcachefs_format.h BCACHEFS_STATFS_MAGIC.
+On Tue, May 07, 2024 at 04:48:04PM +0200, Bartosz Golaszewski wrote:
+> On Tue, May 7, 2024 at 4:24 PM Paul E. McKenney <paulmck@kernel.org> wrote:
+> >
+> > On Tue, May 07, 2024 at 02:13:46PM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > Commit 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
+> > > caused a massive drop in performance of requesting GPIO lines due to the
+> > > call to synchronize_srcu() on each label change. Rework the code to not
+> > > wait until all read-only users are done with reading the label but
+> > > instead atomically replace the label pointer and schedule its release
+> > > after all read-only critical sections are done.
+> > >
+> > > To that end wrap the descriptor label in a struct that also contains the
+> > > rcu_head struct required for deferring tasks using call_srcu() and stop
+> > > using kstrdup_const() as we're required to allocate memory anyway. Just
+> > > allocate enough for the label string and rcu_head in one go.
+> > >
+> > > Reported-by: Neil Armstrong <neil.armstrong@linaro.org>
+> > > Closes: https://lore.kernel.org/linux-gpio/CAMRc=Mfig2oooDQYTqo23W3PXSdzhVO4p=G4+P8y1ppBOrkrJQ@mail.gmail.com/
+> > > Fixes: 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
+> > > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Looks good to me!
+> >
+> > Acked-by: Paul E. McKenney <paulmck@kernel.org>
+> >
+> > One semi-related question...  Why the per-descriptor srcu_struct?
+> >
+> > If the srcu_struct was shared among all of these, you could just do one
+> > synchronize_srcu() and one cleanup_srcu_struct() instead of needing to
+> > do one per gdev->desc[] entry.
+> >
+> > You might be able to go further and have one srcu_struct for all the
+> > gpio devices.
+> >
+> > Or did you guys run tests and find some performance problem with sharing
+> > srcu_struct structures?   (I wouldn't expect one, but sometimes the
+> > hardware has a better imagination than I do.)
+> >
 > 
-> There are other bcachefs magic definitions: BCACHE_MAGIC, BCHFS_MAGIC,
-> which use UUID_INIT() and are used only in libbcachefs. Therefore move
-> only BCACHEFS_STATFS_MAGIC value, which can be used outside of
-> libbcachefs for f_type field in struct statfs in statfs() or fstatfs().
+> I guess my goal was not to make synchronize_srcu() for descriptor X
+> wait for read-only operations on descriptor Y. But with that gone, I
+> suppose you're right, we can improve this patch further by switching
+> to a single SRCU descriptor.
 > 
-> Suggested-by: Su Yue <l@damenly.org>
-> Signed-off-by: Petr Vorel <pvorel@suse.cz>
-> ---
+> I'll send a v2.
 
-I was thinking you'd just rename the STATFS_MAGIC def locally as well,
-but whatever.. LGTM, thanks for the tweaks!
+My guess is that a separate patch for each of the two changes would be
+best, but I must defer to you guys on that.
 
-Acked-by: Brian Foster <bfoster@redhat.com>
-
-> Changes v2->v3:
-> * Align tab with other entries.
-> 
-> Changes v1->v2 (all suggested by Brian Foster - thanks!):
-> * rename constant to BCACHEFS_SUPER_MAGIC,
-> * keep BCACHEFS_STATFS_MAGIC in bcachefs_format.h, just include
->  <uapi/linux/magic.h> and use BCACHEFS_SUPER_MAGIC definition,
-> * move the constant to the first chunk.
-> 
-> Kind regards,
-> Petr
-> 
->  fs/bcachefs/bcachefs_format.h | 3 ++-
->  include/uapi/linux/magic.h    | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/bcachefs/bcachefs_format.h b/fs/bcachefs/bcachefs_format.h
-> index f7fbfccd2b1e..3b831415409b 100644
-> --- a/fs/bcachefs/bcachefs_format.h
-> +++ b/fs/bcachefs/bcachefs_format.h
-> @@ -76,6 +76,7 @@
->  #include <asm/byteorder.h>
->  #include <linux/kernel.h>
->  #include <linux/uuid.h>
-> +#include <uapi/linux/magic.h>
->  #include "vstructs.h"
->  
->  #ifdef __KERNEL__
-> @@ -1275,7 +1276,7 @@ enum bch_compression_opts {
->  	UUID_INIT(0xc68573f6, 0x66ce, 0x90a9,				\
->  		  0xd9, 0x6a, 0x60, 0xcf, 0x80, 0x3d, 0xf7, 0xef)
->  
-> -#define BCACHEFS_STATFS_MAGIC		0xca451a4e
-> +#define BCACHEFS_STATFS_MAGIC		BCACHEFS_SUPER_MAGIC
->  
->  #define JSET_MAGIC		__cpu_to_le64(0x245235c1a3625032ULL)
->  #define BSET_MAGIC		__cpu_to_le64(0x90135c78b99e07f5ULL)
-> diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-> index 1b40a968ba91..bb575f3ab45e 100644
-> --- a/include/uapi/linux/magic.h
-> +++ b/include/uapi/linux/magic.h
-> @@ -37,6 +37,7 @@
->  #define HOSTFS_SUPER_MAGIC	0x00c0ffee
->  #define OVERLAYFS_SUPER_MAGIC	0x794c7630
->  #define FUSE_SUPER_MAGIC	0x65735546
-> +#define BCACHEFS_SUPER_MAGIC	0xca451a4e
->  
->  #define MINIX_SUPER_MAGIC	0x137F		/* minix v1 fs, 14 char names */
->  #define MINIX_SUPER_MAGIC2	0x138F		/* minix v1 fs, 30 char names */
-> -- 
-> 2.43.0
-> 
-
+							Thanx, Paul
