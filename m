@@ -1,55 +1,58 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD269200D2;
-	Tue,  7 May 2024 16:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FB216C87C;
+	Tue,  7 May 2024 16:39:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099978; cv=none; b=TdbDFQxy/uEFoN8qn8lBJFvWzK4bpMV5xComXmdMm/KKDpb6OEjDtVXYG/wfveBVpL5n6/u/VwYSjFKrPcKwmMTZXvxy3c5zJyXTkAqrE99Vs18NqZ8JGyjhEBNH+iRURF9dnuED+c3lvAmVEYqLBMcrAdA4zSc/BIwf0TBT/fo=
+	t=1715099984; cv=none; b=L+vdm6TBdD1mf2rbGkjsUGmqBIfgkQKsbSYecTrsswPsBqZWurPoLvd0c2gN2/oB46GTVfsq1gSYS0QZttMFcjng+yJrHtpH9/C5NQx7dyYMKWUAEMV9XjFaXvl1SuHhFtPLY8WMsBr1NvXleKUt1CJ8LTddmda03qSs6HMrzdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099978; c=relaxed/simple;
-	bh=/Vsx8L9+h8WYI+47bqCnjHt9w2HlfVsCqN6Z5HaYFdU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lgkn27BkO1raJZZuyjHlHPDfNievSVbox4rZppodRUEM2Tu80HSr48oRWhdX8r4F0eIKDuNq96tYETSpiUVEiIfLdJaEjzB+fYnzOyDfkmvLtCTv+QFkXnBWWQF8v82gT905jJDV9YJ4te4bG1fZPX1m3M//LuyOByUEa/wv2BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=GfkjhV2r; arc=none smtp.client-ip=67.231.156.173
+	s=arc-20240116; t=1715099984; c=relaxed/simple;
+	bh=NLOAkYGwNJu11eHgNp9gwDi+ovtBvDlxSyv5xNJz/d0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=TW+BC8954Nn5NstXEOfshlukI2Oe1cmVdab/DjTh4tBWG3t7kXwr1oq9gQqblUDtkm5qBwWZMaQ5NhgVCcxO3cvyyU54tWjj2XlGogxHCYeLDDKKw1psH7IOjBbmILujkr0zSYnllTAb2fA1KBLeuyNgdCYY2pgELsw7/bM4ZFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=BrVmiIs+; arc=none smtp.client-ip=67.231.148.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="GfkjhV2r"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447ERhms031423;
-	Tue, 7 May 2024 09:39:26 -0700
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="BrVmiIs+"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447F4MvH005008;
+	Tue, 7 May 2024 09:39:37 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	from:to:cc:subject:date:message-id:mime-version:content-type; s=
-	pfpt0220; bh=Yw9FpnLdSLu1VkFV4EzbZnDPKKhGzYWYJOYOurYqPVo=; b=Gfk
-	jhV2rPtY4RBjZPbuEISRacBSYFohtjpuKX2Ok3DOCITnU8pLT/2l4fL+U5mRUFKN
-	HKn5LwRnHpLitAe1yk4100nYJlwuL4CWker9+OGH0w3SA+ilaj7PT6s7WDc/ZClG
-	REz2HQVGWdTWJI9qckrGqlisHtbcOf85OE3oeMUAZ2XSQDbqPxSczn7ms8R6S1b0
-	Z3GXbRReGACRIBEgRj+XXfeKcEdbyORg1o4q25VJWcx65pMvs90wyQTC6yHBu7ic
-	6Tm3lnsfkXmVlLVEanzG9/2jV3A9aWaG17H9C3gXc5PLjbjJr196R+xZld27oZNI
-	1D3KOA05bl9mA1HVq8Q==
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3xwmhgjewn-1
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-type; s=pfpt0220; bh=lhHCuWIJrnTesQi07BUW6
+	vSQmo+ntijasWApfN0SbQw=; b=BrVmiIs+TENT6HyVDFuj/5y79aFr0+DPRr9db
+	PNHfnPq9sQxlX/Fn5UPCmdPeGk4yklTkq645aozXbMtR77lj3870tQ4zf6CUzmwj
+	9l/4zX83mjmTjeUqPQ4r0xs0VxmmPoQk6zUguYubFMO+HhORVTVajlpIPuh3OGk1
+	4Fjj0jvqlziPB1ADLNxMKxp8JyKGSr6+r26qAlzg4WW17r7lk+vz1NW4cXiAsWzX
+	mbTNEvfUT/eyuaalk17sk3pNu6+HGDXHCu5QIDqbJ2pssUfR1iq5VLAp31owaDX9
+	VT6OqJwQu6gT3xe84nIYMlPXF4UsrTksDcN/nH3ZFM6LVAW9w==
+Received: from dc5-exch05.marvell.com ([199.233.59.128])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3xygt2tq1t-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 09:39:26 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+	Tue, 07 May 2024 09:39:37 -0700 (PDT)
+Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
+ DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 7 May 2024 09:39:25 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 7 May 2024 09:39:25 -0700
+ 15.2.1544.4; Tue, 7 May 2024 09:39:36 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
+ (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Tue, 7 May 2024 09:39:36 -0700
 Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id 866F53F7041;
-	Tue,  7 May 2024 09:39:22 -0700 (PDT)
+	by maili.marvell.com (Postfix) with ESMTP id 386803F7041;
+	Tue,  7 May 2024 09:39:32 -0700 (PDT)
 From: Geetha sowjanya <gakula@marvell.com>
 To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
         <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
         <sbhatta@marvell.com>, <hkelam@marvell.com>
-Subject: [net-next PATCH v4 00/10] Introduce RVU representors  
-Date: Tue, 7 May 2024 22:09:11 +0530
-Message-ID: <20240507163921.29683-1-gakula@marvell.com>
+Subject: [net-next PATCH v4 03/10] octeontx2-pf: Create representor netdev
+Date: Tue, 7 May 2024 22:09:14 +0530
+Message-ID: <20240507163921.29683-4-gakula@marvell.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240507163921.29683-1-gakula@marvell.com>
+References: <20240507163921.29683-1-gakula@marvell.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,118 +60,278 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: CfY8cJdk9lzzcUC9eXH6_szckXM3Mtzj
-X-Proofpoint-GUID: CfY8cJdk9lzzcUC9eXH6_szckXM3Mtzj
+X-Proofpoint-ORIG-GUID: Q64TKqSmIemCa5uJ6_64eZ8iIkTWpDxz
+X-Proofpoint-GUID: Q64TKqSmIemCa5uJ6_64eZ8iIkTWpDxz
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-05-07_10,2024-05-06_02,2023-05-22_02
 
-This series adds representor support for each rvu devices.
-When switchdev mode is enabled, representor netdev is registered
-for each rvu device. In implementation of representor model, 
-one NIX HW LF with multiple SQ and RQ is reserved, where each
-RQ and SQ of the LF are mapped to a representor. A loopback channel
-is reserved to support packet path between representors and VFs.
-CN10K silicon supports 2 types of MACs, RPM and SDP. This
-patch set adds representor support for both RPM and SDP MAC
-interfaces.
+Adds initial devlink support to set/get the switchdev mode.
+Representor netdevs are created for each rvu devices when
+the switch mode is set to 'switchdev'. These netdevs are
+be used to control and configure VFs.
 
-- Patch 1: Refactors and exports the shared service functions.
-- Patch 2: Implements basic representor driver.
-- Patch 3: Add devlink support to create representor netdevs that
-  can be used to manage VFs.
-- Patch 4: Implements basec netdev_ndo_ops.
-- Patch 5: Installs tcam rules to route packets between representor and
-	   VFs.
-- Patch 6: Enables fetching VF stats via representor interface
-- Patch 7: Adds support to sync link state between representors and VFs .
-- Patch 8: Enables configuring VF MTU via representor netdevs.
-- Patch 9: Add representors for sdp MAC.
-- Patch 10: Add devlink port support.
+Signed-off-by: Geetha sowjanya <gakula@marvell.com>
+---
+ .../marvell/octeontx2/nic/otx2_devlink.c      |  49 ++++++
+ .../net/ethernet/marvell/octeontx2/nic/rep.c  | 157 ++++++++++++++++++
+ .../net/ethernet/marvell/octeontx2/nic/rep.h  |   2 +
+ 3 files changed, 208 insertions(+)
 
-Command to create VF representor
-#devlink dev eswitch set pci/0002:1c:00.0 mode switchdev
-VF representors are created for each VF when switch mode is set switchdev on representor PCI device
-# devlink dev eswitch set pci/0002:1c:00.0  mode switchdev 
-# ip link show
-25: r0p1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
-    link/ether 32:0f:0f:f0:60:f1 brd ff:ff:ff:ff:ff:ff
-26: r1p1: <BROADCAST,MULTICAST> mtu 1500 qdisc noop state DOWN mode DEFAULT group default qlen 1000
-    link/ether 3e:5d:9a:4d:e7:7b brd ff:ff:ff:ff:ff:ff
-
-#devlink dev
-pci/0002:01:00.0
-pci/0002:02:00.0
-pci/0002:03:00.0
-pci/0002:04:00.0
-pci/0002:05:00.0
-pci/0002:06:00.0
-pci/0002:07:00.0
-
-~# devlink port
-pci/0002:1c:00.0/0: type eth netdev r0p1v0 flavour pcivf controller 0 pfnum 1 vfnum 0 external false splittable false
-pci/0002:1c:00.0/1: type eth netdev r1p1v1 flavour pcivf controller 0 pfnum 1 vfnum 1 external false splittable false
-pci/0002:1c:00.0/2: type eth netdev r2p1v2 flavour pcivf controller 0 pfnum 1 vfnum 2 external false splittable false
-pci/0002:1c:00.0/3: type eth netdev r3p1v3 flavour pcivf controller 0 pfnum 1 vfnum 3 external false splittable false
-
------------
-v1-v2:
- -Fixed build warnings.
- -Address review comments provided by "Kalesh Anakkur Purayil".
-
-v2-v3:
- - Used extack for error messages.
- - As suggested reworked commit messages.
- - Fixed sparse warning.
-
-v3-v4: 
- - Patch 2 & 3: Fixed coccinelle reported warnings.
- - Patch 10: Added devlink port support.
-
-Geetha sowjanya (10):
-  octeontx2-pf: Refactoring RVU driver
-  octeontx2-pf: RVU representor driver
-  octeontx2-pf: Create representor netdev
-  octeontx2-pf: Add basic net_device_ops
-  octeontx2-af: Add packet path between representor and VF
-  octeontx2-pf: Get VF stats via representor
-  octeontx2-pf: Add support to sync link state between representor and
-    VFs
-  octeontx2-pf: Configure VF mtu via representor
-  octeontx2-pf: Add representors for sdp MAC
-  octeontx2-pf: Add devlink port support
-
- .../net/ethernet/marvell/octeontx2/Kconfig    |   8 +
- .../ethernet/marvell/octeontx2/af/Makefile    |   3 +-
- .../ethernet/marvell/octeontx2/af/common.h    |   2 +
- .../net/ethernet/marvell/octeontx2/af/mbox.h  |  73 ++
- .../net/ethernet/marvell/octeontx2/af/npc.h   |   1 +
- .../net/ethernet/marvell/octeontx2/af/rvu.h   |  30 +-
- .../marvell/octeontx2/af/rvu_debugfs.c        |  27 -
- .../marvell/octeontx2/af/rvu_devlink.c        |   6 +
- .../ethernet/marvell/octeontx2/af/rvu_nix.c   |  75 +-
- .../marvell/octeontx2/af/rvu_npc_fs.c         |   4 +
- .../ethernet/marvell/octeontx2/af/rvu_rep.c   | 457 ++++++++++++
- .../marvell/octeontx2/af/rvu_struct.h         |  26 +
- .../marvell/octeontx2/af/rvu_switch.c         |  20 +-
- .../ethernet/marvell/octeontx2/nic/Makefile   |   2 +
- .../ethernet/marvell/octeontx2/nic/cn10k.c    |   4 +-
- .../ethernet/marvell/octeontx2/nic/cn10k.h    |   2 +-
- .../marvell/octeontx2/nic/otx2_common.c       |  53 +-
- .../marvell/octeontx2/nic/otx2_common.h       |  83 ++-
- .../marvell/octeontx2/nic/otx2_devlink.c      |  49 ++
- .../ethernet/marvell/octeontx2/nic/otx2_pf.c  | 305 +++++---
- .../ethernet/marvell/octeontx2/nic/otx2_reg.h |   1 +
- .../marvell/octeontx2/nic/otx2_txrx.c         |  35 +-
- .../marvell/octeontx2/nic/otx2_txrx.h         |   3 +-
- .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |  18 +-
- .../net/ethernet/marvell/octeontx2/nic/rep.c  | 669 ++++++++++++++++++
- .../net/ethernet/marvell/octeontx2/nic/rep.h  |  53 ++
- 26 files changed, 1784 insertions(+), 225 deletions(-)
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/rep.c
- create mode 100644 drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
+index 99ddf31269d9..5d577b671686 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_devlink.c
+@@ -77,7 +77,56 @@ static const struct devlink_param otx2_dl_params[] = {
+ 			     otx2_dl_mcam_count_validate),
+ };
+ 
++#ifdef CONFIG_RVU_ESWITCH
++static int otx2_devlink_eswitch_mode_get(struct devlink *devlink, u16 *mode)
++{
++	struct otx2_devlink *otx2_dl = devlink_priv(devlink);
++	struct otx2_nic *pfvf = otx2_dl->pfvf;
++
++	if (!otx2_rep_dev(pfvf->pdev))
++		return -EOPNOTSUPP;
++
++	*mode = pfvf->esw_mode;
++
++	return 0;
++}
++
++static int otx2_devlink_eswitch_mode_set(struct devlink *devlink, u16 mode,
++					 struct netlink_ext_ack *extack)
++{
++	struct otx2_devlink *otx2_dl = devlink_priv(devlink);
++	struct otx2_nic *pfvf = otx2_dl->pfvf;
++	int ret = 0;
++
++	if (!otx2_rep_dev(pfvf->pdev))
++		return -EOPNOTSUPP;
++
++	if (pfvf->esw_mode == mode)
++		return 0;
++
++	switch (mode) {
++	case DEVLINK_ESWITCH_MODE_LEGACY:
++		rvu_rep_destroy(pfvf);
++		break;
++	case DEVLINK_ESWITCH_MODE_SWITCHDEV:
++		ret = rvu_rep_create(pfvf, extack);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	if (!ret)
++		pfvf->esw_mode = mode;
++
++	return ret;
++}
++#endif
++
+ static const struct devlink_ops otx2_devlink_ops = {
++#ifdef CONFIG_RVU_ESWITCH
++	.eswitch_mode_get = otx2_devlink_eswitch_mode_get,
++	.eswitch_mode_set = otx2_devlink_eswitch_mode_set,
++#endif
+ };
+ 
+ int otx2_register_dl(struct otx2_nic *pfvf)
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+index 33ebbcb223e1..ff4318f414f8 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+@@ -28,6 +28,157 @@ MODULE_DESCRIPTION(DRV_STRING);
+ MODULE_LICENSE("GPL");
+ MODULE_DEVICE_TABLE(pci, rvu_rep_id_table);
+ 
++static int rvu_rep_napi_init(struct otx2_nic *priv, struct netlink_ext_ack *extack)
++{
++	struct otx2_cq_poll *cq_poll = NULL;
++	struct otx2_qset *qset = &priv->qset;
++	struct otx2_hw *hw = &priv->hw;
++	int err = 0, qidx, vec;
++	char *irq_name;
++
++	qset->napi = kcalloc(hw->cint_cnt, sizeof(*cq_poll), GFP_KERNEL);
++	if (!qset->napi)
++		return -ENOMEM;
++
++	/* Register NAPI handler */
++	for (qidx = 0; qidx < hw->cint_cnt; qidx++) {
++		cq_poll = &qset->napi[qidx];
++		cq_poll->cint_idx = qidx;
++		cq_poll->cq_ids[CQ_RX] =
++			(qidx <  hw->rx_queues) ? qidx : CINT_INVALID_CQ;
++		cq_poll->cq_ids[CQ_TX] = (qidx < hw->tx_queues) ?
++					  qidx + hw->rx_queues : CINT_INVALID_CQ;
++		cq_poll->cq_ids[CQ_XDP] = CINT_INVALID_CQ;
++		cq_poll->cq_ids[CQ_QOS] = CINT_INVALID_CQ;
++
++		cq_poll->dev = (void *)priv;
++		netif_napi_add(priv->reps[qidx]->netdev, &cq_poll->napi,
++			       otx2_napi_handler);
++		napi_enable(&cq_poll->napi);
++	}
++	/* Register CQ IRQ handlers */
++	vec = hw->nix_msixoff + NIX_LF_CINT_VEC_START;
++	for (qidx = 0; qidx < hw->cint_cnt; qidx++) {
++		irq_name = &hw->irq_name[vec * NAME_SIZE];
++
++		snprintf(irq_name, NAME_SIZE, "rep%d-rxtx-%d", qidx, qidx);
++
++		err = request_irq(pci_irq_vector(priv->pdev, vec),
++				  otx2_cq_intr_handler, 0, irq_name,
++				  &qset->napi[qidx]);
++		if (err) {
++			NL_SET_ERR_MSG_FMT_MOD(extack,
++					       "RVU REP IRQ registration failed for CQ%d",
++						qidx);
++			goto err_free_cints;
++		}
++		vec++;
++
++		/* Enable CQ IRQ */
++		otx2_write64(priv, NIX_LF_CINTX_INT(qidx), BIT_ULL(0));
++		otx2_write64(priv, NIX_LF_CINTX_ENA_W1S(qidx), BIT_ULL(0));
++	}
++	priv->flags &= ~OTX2_FLAG_INTF_DOWN;
++	return 0;
++
++err_free_cints:
++	otx2_free_cints(priv, qidx);
++	otx2_disable_napi(priv);
++	return err;
++}
++
++static void rvu_rep_free_cq_rsrc(struct otx2_nic *priv)
++{
++	struct otx2_cq_poll *cq_poll = NULL;
++	struct otx2_qset *qset = &priv->qset;
++	int qidx, vec;
++
++	/* Cleanup CQ NAPI and IRQ */
++	vec = priv->hw.nix_msixoff + NIX_LF_CINT_VEC_START;
++	for (qidx = 0; qidx < priv->hw.cint_cnt; qidx++) {
++		/* Disable interrupt */
++		otx2_write64(priv, NIX_LF_CINTX_ENA_W1C(qidx), BIT_ULL(0));
++
++		synchronize_irq(pci_irq_vector(priv->pdev, vec));
++
++		cq_poll = &qset->napi[qidx];
++		napi_synchronize(&cq_poll->napi);
++		vec++;
++	}
++	otx2_free_cints(priv, priv->hw.cint_cnt);
++	otx2_disable_napi(priv);
++}
++
++void rvu_rep_destroy(struct otx2_nic *priv)
++{
++	struct rep_dev *rep;
++	int rep_id;
++
++	rvu_rep_free_cq_rsrc(priv);
++	for (rep_id = 0; rep_id < priv->rep_cnt; rep_id++) {
++		rep = priv->reps[rep_id];
++		unregister_netdev(rep->netdev);
++		free_netdev(rep->netdev);
++	}
++}
++
++int rvu_rep_create(struct otx2_nic *priv, struct netlink_ext_ack *extack)
++{
++	int rep_cnt = priv->rep_cnt;
++	struct net_device *ndev;
++	struct rep_dev *rep;
++	int rep_id, err;
++	u16 pcifunc;
++
++	priv->reps = devm_kcalloc(priv->dev, rep_cnt, sizeof(struct rep_dev *),
++				  GFP_KERNEL);
++	if (!priv->reps)
++		return -ENOMEM;
++
++	for (rep_id = 0; rep_id < rep_cnt; rep_id++) {
++		ndev = alloc_etherdev(sizeof(*rep));
++		if (!ndev) {
++			NL_SET_ERR_MSG_FMT_MOD(extack, "PFVF representor:%d
++					       creation failed", rep_id);
++			err = -ENOMEM;
++			goto exit;
++		}
++
++		rep = netdev_priv(ndev);
++		priv->reps[rep_id] = rep;
++		rep->mdev = priv;
++		rep->netdev = ndev;
++		rep->rep_id = rep_id;
++
++		ndev->min_mtu = OTX2_MIN_MTU;
++		ndev->max_mtu = priv->hw.max_mtu;
++		pcifunc = priv->rep_pf_map[rep_id];
++		rep->pcifunc = pcifunc;
++
++		snprintf(ndev->name, sizeof(ndev->name), "r%dp%d", rep_id,
++			 rvu_get_pf(pcifunc));
++
++		eth_hw_addr_random(ndev);
++		err = register_netdev(ndev);
++		if (err) {
++			NL_SET_ERR_MSG_MOD(extack, "PFVF reprentator registration failed");
++			goto exit;
++		}
++	}
++	err = rvu_rep_napi_init(priv, extack);
++	if (err)
++		goto exit;
++
++	return 0;
++exit:
++	while (--rep_id >= 0) {
++		rep = priv->reps[rep_id];
++		unregister_netdev(rep->netdev);
++		free_netdev(rep->netdev);
++	}
++	return err;
++}
++
+ static int rvu_rep_rsrc_free(struct otx2_nic *priv)
+ {
+ 	struct otx2_qset *qset = &priv->qset;
+@@ -165,6 +316,10 @@ static int rvu_rep_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (err)
+ 		goto err_detach_rsrc;
+ 
++	err = otx2_register_dl(priv);
++	if (err)
++		goto err_detach_rsrc;
++
+ 	return 0;
+ 
+ err_detach_rsrc:
+@@ -186,6 +341,8 @@ static void rvu_rep_remove(struct pci_dev *pdev)
+ {
+ 	struct otx2_nic *priv = pci_get_drvdata(pdev);
+ 
++	otx2_unregister_dl(priv);
++	rvu_rep_destroy(priv);
+ 	rvu_rep_rsrc_free(priv);
+ 	otx2_detach_resources(&priv->mbox);
+ 	if (priv->hw.lmt_info)
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.h b/drivers/net/ethernet/marvell/octeontx2/nic/rep.h
+index 9b3734146dd1..c04874c4d4c6 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.h
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.h
+@@ -29,4 +29,6 @@ static inline bool otx2_rep_dev(struct pci_dev *pdev)
+ 	return pdev->device == PCI_DEVID_RVU_REP;
+ }
+ 
++int rvu_rep_create(struct otx2_nic *priv, struct netlink_ext_ack *extack);
++void rvu_rep_destroy(struct otx2_nic *priv);
+ #endif /* REP_H */
 -- 
 2.25.1
 
