@@ -1,44 +1,44 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA4A16D33C
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 18:07:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CC716D9DB
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 18:07:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715105259; cv=none; b=mJedyxeJY/YdG6IKhyYJ/fc1A/TOoK9os89mZp5pPLTQzKAYxUN+WYXV4rBSNzqWj3v1TghWoxNUiWTDthLWTf/FLTHqcvpYMM5hMN0PqBwzfQZ/sZhReedtwu2ldDCJIkvXNMJWA0jkEaSjZ+g6tBmKBVFgAFosuNAGvAE3PWs=
+	t=1715105261; cv=none; b=JFaFuCed4DfL0KJKkHcHH18VeiewSU3qVFPkRyDiYy7UuZg9DoM6eTblfUU7OnFeMOZCnQoGWGfXMk1HdXtGinmZRPLjn7CBJjEMjepKgq65WZZMdPQVSriuJtYqjtcJOjO9ZdpkxIggBjNoIffVlC8tpkkiyLiBK708VHVTdWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715105259; c=relaxed/simple;
-	bh=dYXAYcUEcTSalyaMCHp6wfpYZFB5214Afajx4bi1OuA=;
+	s=arc-20240116; t=1715105261; c=relaxed/simple;
+	bh=kwWzymVAllJk6GhLHE+hHnn6RZc//qTaWBniYDe7nwM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=na4Mjgp3oSWmUlFzwO3/u26hI0hLbOsRNqkTJylvPFZ1JwQPHDLxXNIB2GUa4tg/+dmApy8/83wD2GCzZ+PfVQsibEQwgp02HXlNhBWqRBDsK1P7WsNlRhRssFSQda968jxrKmoF/ErWasPJgmXT/RIL1peAOKsN8ezAMakrGqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fq1pKcNy; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version:Content-Type; b=d9FdpVBmV9azUv8rf4zEUvcGFDqK/ltcmaqKQqOsz2Bd1IJHDvob7ufZLvk0G7DHlGH0JDvpKP0c2rYAAn2e20LP0lEl1CfIeGqmv1dQo9TKZ16wpJTwDmKJubwdHPOViJxHrrlaiySh/ZBIdfSldNP3KnTwXV/eWuxJr3fziq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AHtJhh4o; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fq1pKcNy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AHtJhh4o"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715105256;
+	s=mimecast20190719; t=1715105257;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=haoWzAYgu3zjEQH0/MBl6b/4BmVPvoYTenFPpRWObq0=;
-	b=fq1pKcNyJJgMQtcx/Yd5MyMq0nCQSWWuG3roP4RVjxWOoJhLDSGfdr90qEYvBAWkp5xSrj
-	v920gUK670YuQUVT5tJN/ddHBdj25AQrIEYO3o7wchE9BnCJfTvEpCNReDl9RNgPBnmIoD
-	gWEvazhxJJcnLSXe3UKl3eGuj/C2czM=
+	bh=0GKDNQVy7zEnmB2eFsd4kv9eYqaNGFJrNTdoEp6X0RE=;
+	b=AHtJhh4ovPIGtpJND9fzQIVk3VNfq4ccc/JOObBznzZWQh1XwEd0HyDInvS0npjvMwBlGM
+	BRVqqv4wuvS7IBC9dg8l6zAFMFnQqULxmg7jif7gmHLFOB9+vgjUt1pluK8geNvDbBJ92J
+	u0DCgD8MyttUYhN3oN+/6RedrbL25Bc=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-194-PxmMGZHFNb6dR8DgG3h06g-1; Tue,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-538-2HrRYwIfOxqBdOtLdbApjg-1; Tue,
  07 May 2024 14:07:32 -0400
-X-MC-Unique: PxmMGZHFNb6dR8DgG3h06g-1
+X-MC-Unique: 2HrRYwIfOxqBdOtLdbApjg-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 44A2B3802ADC;
-	Tue,  7 May 2024 18:07:32 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A7C2E3802AD1;
+	Tue,  7 May 2024 18:07:31 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 03F3340C6CB6;
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 652A340C6EB7;
 	Tue,  7 May 2024 18:07:31 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
@@ -51,9 +51,9 @@ Cc: vbabka@suse.cz,
 	rick.p.edgecombe@intel.com,
 	michael.roth@amd.com,
 	yilun.xu@intel.com
-Subject: [PATCH 7/9] KVM: guest_memfd: Add interface for populating gmem pages with user data
-Date: Tue,  7 May 2024 14:07:27 -0400
-Message-ID: <20240507180729.3975856-8-pbonzini@redhat.com>
+Subject: [PATCH 5/9] KVM: guest_memfd: Add hook for initializing memory
+Date: Tue,  7 May 2024 14:07:25 -0400
+Message-ID: <20240507180729.3975856-6-pbonzini@redhat.com>
 In-Reply-To: <20240507180729.3975856-1-pbonzini@redhat.com>
 References: <20240507180729.3975856-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -66,131 +66,194 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-During guest run-time, kvm_arch_gmem_prepare() is issued as needed to
-prepare newly-allocated gmem pages prior to mapping them into the guest.
-In the case of SEV-SNP, this mainly involves setting the pages to
-private in the RMP table.
+guest_memfd pages are generally expected to be in some arch-defined
+initial state prior to using them for guest memory. For SEV-SNP this
+initial state is 'private', or 'guest-owned', and requires additional
+operations to move these pages into a 'private' state by updating the
+corresponding entries the RMP table.
 
-However, for the GPA ranges comprising the initial guest payload, which
-are encrypted/measured prior to starting the guest, the gmem pages need
-to be accessed prior to setting them to private in the RMP table so they
-can be initialized with the userspace-provided data. Additionally, an
-SNP firmware call is needed afterward to encrypt them in-place and
-measure the contents into the guest's launch digest.
+Allow for an arch-defined hook to handle updates of this sort, and go
+ahead and implement one for x86 so KVM implementations like AMD SVM can
+register a kvm_x86_ops callback to handle these updates for SEV-SNP
+guests.
 
-While it is possible to bypass the kvm_arch_gmem_prepare() hooks so that
-this handling can be done in an open-coded/vendor-specific manner, this
-may expose more gmem-internal state/dependencies to external callers
-than necessary. Try to avoid this by implementing an interface that
-tries to handle as much of the common functionality inside gmem as
-possible, while also making it generic enough to potentially be
-usable/extensible for TDX as well.
+The preparation callback is always called when allocating/grabbing
+folios via gmem, and it is up to the architecture to keep track of
+whether or not the pages are already in the expected state (e.g. the RMP
+table in the case of SEV-SNP).
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Michael Roth <michael.roth@amd.com>
+In some cases, it is necessary to defer the preparation of the pages to
+handle things like in-place encryption of initial guest memory payloads
+before marking these pages as 'private'/'guest-owned'.  Add an argument
+(always true for now) to kvm_gmem_get_folio() that allows for the
+preparation callback to be bypassed.  To detect possible issues in
+the way userspace initializes memory, it is only possible to add an
+unprepared page if it is not already included in the filemap.
+
+Link: https://lore.kernel.org/lkml/ZLqVdvsF11Ddo7Dq@google.com/
 Co-developed-by: Michael Roth <michael.roth@amd.com>
+Signed-off-by: Michael Roth <michael.roth@amd.com>
+Message-Id: <20231230172351.574091-5-michael.roth@amd.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- include/linux/kvm_host.h | 27 +++++++++++++++++++++
- virt/kvm/guest_memfd.c   | 52 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+)
+ arch/x86/include/asm/kvm-x86-ops.h |  1 +
+ arch/x86/include/asm/kvm_host.h    |  1 +
+ arch/x86/kvm/x86.c                 |  6 ++++
+ include/linux/kvm_host.h           |  5 +++
+ virt/kvm/Kconfig                   |  4 +++
+ virt/kvm/guest_memfd.c             | 51 ++++++++++++++++++++++++++++--
+ 6 files changed, 65 insertions(+), 3 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+index 5187fcf4b610..d26fcad13e36 100644
+--- a/arch/x86/include/asm/kvm-x86-ops.h
++++ b/arch/x86/include/asm/kvm-x86-ops.h
+@@ -139,6 +139,7 @@ KVM_X86_OP(vcpu_deliver_sipi_vector)
+ KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
+ KVM_X86_OP_OPTIONAL(get_untagged_addr)
+ KVM_X86_OP_OPTIONAL(alloc_apic_backing_page)
++KVM_X86_OP_OPTIONAL_RET0(gmem_prepare)
+ 
+ #undef KVM_X86_OP
+ #undef KVM_X86_OP_OPTIONAL
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 9d6368512be6..5562a2443c5c 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1814,6 +1814,7 @@ struct kvm_x86_ops {
+ 
+ 	gva_t (*get_untagged_addr)(struct kvm_vcpu *vcpu, gva_t gva, unsigned int flags);
+ 	void *(*alloc_apic_backing_page)(struct kvm_vcpu *vcpu);
++	int (*gmem_prepare)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
+ };
+ 
+ struct kvm_x86_nested_ops {
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 2d2619d3eee4..972524ddcfdb 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -13598,6 +13598,12 @@ bool kvm_arch_no_poll(struct kvm_vcpu *vcpu)
+ }
+ EXPORT_SYMBOL_GPL(kvm_arch_no_poll);
+ 
++#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
++int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_order)
++{
++	return static_call(kvm_x86_gmem_prepare)(kvm, pfn, gfn, max_order);
++}
++#endif
+ 
+ int kvm_spec_ctrl_test_value(u64 value)
+ {
 diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 1af069ab657c..1ae65774d9fa 100644
+index afbc99264ffa..1af069ab657c 100644
 --- a/include/linux/kvm_host.h
 +++ b/include/linux/kvm_host.h
-@@ -2448,4 +2448,31 @@ int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_ord
- bool kvm_arch_gmem_prepare_needed(struct kvm *kvm);
- #endif
+@@ -2443,4 +2443,9 @@ static inline int kvm_gmem_get_pfn(struct kvm *kvm,
+ }
+ #endif /* CONFIG_KVM_PRIVATE_MEM */
  
-+/**
-+ * kvm_gmem_populate() - Populate/prepare a GPA range with guest data
-+ *
-+ * @kvm: KVM instance
-+ * @gfn: starting GFN to be populated
-+ * @src: userspace-provided buffer containing data to copy into GFN range
-+ *       (passed to @post_populate, and incremented on each iteration
-+ *       if not NULL)
-+ * @npages: number of pages to copy from userspace-buffer
-+ * @post_populate: callback to issue for each gmem page that backs the GPA
-+ *                 range
-+ * @opaque: opaque data to pass to @post_populate callback
-+ *
-+ * This is primarily intended for cases where a gmem-backed GPA range needs
-+ * to be initialized with userspace-provided data prior to being mapped into
-+ * the guest as a private page. This should be called with the slots->lock
-+ * held so that caller-enforced invariants regarding the expected memory
-+ * attributes of the GPA range do not race with KVM_SET_MEMORY_ATTRIBUTES.
-+ *
-+ * Returns the number of pages that were populated.
-+ */
-+typedef int (*kvm_gmem_populate_cb)(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
-+				    void __user *src, int order, void *opaque);
-+
-+long kvm_gmem_populate(struct kvm *kvm, gfn_t gfn, void __user *src, long npages,
-+		       kvm_gmem_populate_cb post_populate, void *opaque);
++#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
++int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_order);
++bool kvm_arch_gmem_prepare_needed(struct kvm *kvm);
++#endif
 +
  #endif
+diff --git a/virt/kvm/Kconfig b/virt/kvm/Kconfig
+index 29b73eedfe74..ca870157b2ed 100644
+--- a/virt/kvm/Kconfig
++++ b/virt/kvm/Kconfig
+@@ -109,3 +109,7 @@ config KVM_GENERIC_PRIVATE_MEM
+        select KVM_GENERIC_MEMORY_ATTRIBUTES
+        select KVM_PRIVATE_MEM
+        bool
++
++config HAVE_KVM_GMEM_PREPARE
++       bool
++       depends on KVM_PRIVATE_MEM
 diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-index bfe437098b79..5d6c87bb13f6 100644
+index fd32288d0fbc..0176089be731 100644
 --- a/virt/kvm/guest_memfd.c
 +++ b/virt/kvm/guest_memfd.c
-@@ -585,3 +585,55 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
- 	return r;
- }
- EXPORT_SYMBOL_GPL(kvm_gmem_get_pfn);
-+
-+long kvm_gmem_populate(struct kvm *kvm, gfn_t start_gfn, void __user *src, long npages,
-+		       kvm_gmem_populate_cb post_populate, void *opaque)
+@@ -13,7 +13,43 @@ struct kvm_gmem {
+ 	struct list_head entry;
+ };
+ 
+-static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
++static int kvm_gmem_prepare_folio(struct inode *inode, pgoff_t index, struct folio *folio)
 +{
-+	struct file *file;
-+	struct kvm_memory_slot *slot;
-+	void __user *p;
++#ifdef CONFIG_HAVE_KVM_GMEM_PREPARE
++	struct list_head *gmem_list = &inode->i_mapping->i_private_list;
++	struct kvm_gmem *gmem;
 +
-+	int ret = 0, max_order;
-+	long i;
-+
-+	lockdep_assert_held(&kvm->slots_lock);
-+	if (npages < 0)
-+		return -EINVAL;
-+
-+	slot = gfn_to_memslot(kvm, start_gfn);
-+	if (!kvm_slot_can_be_private(slot))
-+		return -EINVAL;
-+
-+	file = kvm_gmem_get_file(slot);
-+	if (!file)
-+		return -EFAULT;
-+
-+	filemap_invalidate_lock(file->f_mapping);
-+
-+	npages = min_t(ulong, slot->npages - (start_gfn - slot->base_gfn), npages);
-+	for (i = 0; i < npages; i += (1 << max_order)) {
-+		gfn_t gfn = start_gfn + i;
++	list_for_each_entry(gmem, gmem_list, entry) {
++		struct kvm_memory_slot *slot;
++		struct kvm *kvm = gmem->kvm;
++		struct page *page;
 +		kvm_pfn_t pfn;
++		gfn_t gfn;
++		int rc;
 +
-+		ret = __kvm_gmem_get_pfn(file, slot, gfn, &pfn, &max_order, false);
-+		if (ret)
-+			break;
++		if (!kvm_arch_gmem_prepare_needed(kvm))
++			continue;
 +
-+		if (!IS_ALIGNED(gfn, (1 << max_order)) ||
-+		    (npages - i) < (1 << max_order))
-+			max_order = 0;
++		slot = xa_load(&gmem->bindings, index);
++		if (!slot)
++			continue;
 +
-+		p = src ? src + i * PAGE_SIZE : NULL;
-+		ret = post_populate(kvm, gfn, pfn, p, max_order, opaque);
-+
-+		put_page(pfn_to_page(pfn));
-+		if (ret)
-+			break;
++		page = folio_file_page(folio, index);
++		pfn = page_to_pfn(page);
++		gfn = slot->base_gfn + index - slot->gmem.pgoff;
++		rc = kvm_arch_gmem_prepare(kvm, gfn, pfn, compound_order(compound_head(page)));
++		if (rc) {
++			pr_warn_ratelimited("gmem: Failed to prepare folio for index %lx, error %d.\n",
++					    index, rc);
++			return rc;
++		}
 +	}
 +
-+	filemap_invalidate_unlock(file->f_mapping);
-+
-+	fput(file);
-+	return ret && !i ? ret : i;
++#endif
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(kvm_gmem_populate);
++
++static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index, bool prepare)
+ {
+ 	struct folio *folio;
+ 
+@@ -41,6 +77,15 @@ static struct folio *kvm_gmem_get_folio(struct inode *inode, pgoff_t index)
+ 		folio_mark_uptodate(folio);
+ 	}
+ 
++	if (prepare) {
++		int r =	kvm_gmem_prepare_folio(inode, index, folio);
++		if (r < 0) {
++			folio_unlock(folio);
++			folio_put(folio);
++			return ERR_PTR(r);
++		}
++	}
++
+ 	/*
+ 	 * Ignore accessed, referenced, and dirty flags.  The memory is
+ 	 * unevictable and there is no storage to write back to.
+@@ -145,7 +190,7 @@ static long kvm_gmem_allocate(struct inode *inode, loff_t offset, loff_t len)
+ 			break;
+ 		}
+ 
+-		folio = kvm_gmem_get_folio(inode, index);
++		folio = kvm_gmem_get_folio(inode, index, true);
+ 		if (IS_ERR(folio)) {
+ 			r = PTR_ERR(folio);
+ 			break;
+@@ -505,7 +550,7 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 		goto out_fput;
+ 	}
+ 
+-	folio = kvm_gmem_get_folio(file_inode(file), index);
++	folio = kvm_gmem_get_folio(file_inode(file), index, true);
+ 	if (IS_ERR(folio)) {
+ 		r = PTR_ERR(folio);
+ 		goto out_fput;
 -- 
 2.43.0
 
