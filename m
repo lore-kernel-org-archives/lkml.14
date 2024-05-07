@@ -1,70 +1,161 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11D57E2;
-	Tue,  7 May 2024 00:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F27464A;
+	Tue,  7 May 2024 00:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715042096; cv=none; b=R14a0tcy2twPiM11ZydREwj2L7liMTDP4g9D293ZBOMIrvq9DBXZ2Mf9kD/zRviDjEd2bSO5FV4SPBEPy3G+KVO/hn8MOLCysCzC63OXTmddQYbbb6Uq8fAHHQECxTd0SetHkQ84EMYWeO3NN025yBgb5WDq2fiJek+jVHY3ykg=
+	t=1715042593; cv=none; b=tB7GOK6ezBV7+nekdxiNLLpPZriSRmvwt0vM7BfxEdmd5aMrM9MlxFbxZIZs+9ouhnRJZn76heLVVGKLL6Kksk8VrwoZdATfCjmZ3ou5IVCyTzvYCPA7SMcj+jSPIjcAFPcEX5P/CubIDBwL9bIEbLWwby43d48UX3jYTt8+94M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715042096; c=relaxed/simple;
-	bh=lmoD7OVGd+QojINcFSvTvWpgNlKx2KIF+0G96Ys6I/s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=l+vVvso/6/sj1cdzIArMUGcnx9F/PxH4jmOIA7XG8nqYoTS8snGJOGbZnxee73Q/7Vtu/Kn/N2U7bNM/b3eJX82GGv49VfOUdqnirWNtfo7+LcmC8+e3bCi5egdmmysh71VhsJzyY8SNf8Wtro39DjBPCLbIXSUSZDCvUbrcD/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=JY9tXfZm; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1715042593; c=relaxed/simple;
+	bh=35ruzIxPZrhxCD7KPf4GPJsvwjl1SgxA9KDx2TvP7Nc=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y0IGWnqeZKUWtAS7wEvmHnJUVNRWNnZU46C0OOeyargFZiVfi7dclUqNVG8xFiK5zhAVccDHitUj1lkMS+P2P0pdnhd1ZU+Jrv91Alcax1GML9VQo78mIMvL4ktcEDxsgikfQAkGrf4kwh6YpSPUAEJS2iucP/0rDcEPicbkbyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=TsCKbXRh; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="JY9tXfZm"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1715042090; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=Ba+5FP5FJO2/Suyp4hDjWNInibf1ZnvZ5BNqQp+lmQA=;
-	b=JY9tXfZmXxK6N5sSt8tk2Xrk/FjngPwj8Sv6ErqYe949B01AF2dcHXuhmUC/s2DOzTX+hZFUIWzRxQytnsXB/n26rw1L1uLyD+6eUYWhLxW5wa70C7g8Fc4tRGUoi8PuZbIwICDVaK94X4SThhTiokBBBKxda77giCp3KhA8J80=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R161e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0W6-1Pzd_1715042088;
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0W6-1Pzd_1715042088)
-          by smtp.aliyun-inc.com;
-          Tue, 07 May 2024 08:34:49 +0800
-From: Yang Li <yang.lee@linux.alibaba.com>
-To: richard.henderson@linaro.org,
-	mattst88@gmail.com
-Cc: linux-alpha@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yang Li <yang.lee@linux.alibaba.com>,
-	Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next] alpha: Remove duplicated include in fpreg.c
-Date: Tue,  7 May 2024 08:34:47 +0800
-Message-Id: <20240507003447.35833-1-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="TsCKbXRh"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [10.196.197.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4VYKJ504dyz9t2N;
+	Tue,  7 May 2024 02:43:01 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1715042581;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Qugc3EWbGYtRKUN09xjJUP5f1pQJWr0Xe7FT/WIQwVc=;
+	b=TsCKbXRhTkqZ6jVcObkvZgn5FOIA36H6pgH+Dz2pSbpDQyi9EmrEW/V4GhbuvyKrvMEzqs
+	sc5hX2Rgfc/yNu3nZ4jnlUOK1kSF/Rsw8/u7aLtfez0YvWMrk8ubMIzlYwMXyOyesqR67V
+	ckw2qClIyUQxPk6iHVYYobTCHmQnsOzKBwmFPj8hvT3Wy5Id79rJXJnqeDvov07kb/7Esp
+	l06Lj0xtOqcKqqpdvx9ZTOUB33pMRZnXnQ6CxuKdFFPVTmTNJ+FLqkwNWTMCrJcLGttfDt
+	iX8zqECoWkaX3n52nSfcQllAziQwKabwbCktiFG0Ov7HpLIKGDWbEc9ORB0MJg==
+Date: Tue, 7 May 2024 02:42:58 +0200
+From: Erhard Furtner <erhard_f@mailbox.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: WARNING: CPU: 1 PID: 1 at net/core/netpoll.c:370
+ netpoll_send_skb+0x1fc/0x20c at boot when netconsole is enabled (kernel
+ v6.9-rc5, v6.8.7, sungem, PowerMac G4 DP)
+Message-ID: <20240507024258.07980f55@yea>
+In-Reply-To: <20240506072645.448bc49f@kernel.org>
+References: <20240428125306.2c3080ef@legion>
+	<20240429183630.399859e2@kernel.org>
+	<20240505232713.46c03b30@yea>
+	<20240506072645.448bc49f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-MBO-RS-ID: 266ab782df82e24cac3
+X-MBO-RS-META: 69mbq1omn43emzc4fsk6puq9qwqq7rqe
 
-The header files asm/fpu.h is included twice in fpreg.c,
-so one inclusion of each can be removed.
+On Mon, 6 May 2024 07:26:45 -0700
+Jakub Kicinski <kuba@kernel.org> wrote:
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=8945
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
----
- arch/alpha/lib/fpreg.c | 1 -
- 1 file changed, 1 deletion(-)
+> On Sun, 5 May 2024 23:27:13 +0200 Erhard Furtner wrote:
+> > > On Sun, 28 Apr 2024 12:53:06 +0200 Erhard Furtner wrote:    
+> > > > With netconsole enabled I get this "WARNING: CPU: 1 PID: 1 at
+> > > > net/core/netpoll.c:370 netpoll_send_skb+0x1fc/0x20c" and "WARNING:
+> > > > CPU: 1 PID: 1 at kernel/locking/irqflag-debug.c:10
+> > > > warn_bogus_irq_restore+0x30/0x44" at boot on my PowerMac G4 DP.
+> > > > Happens more often than not (6-7 out of 10 times booting):      
+> > > 
+> > > Could you try with LOCKDEP enabled?
+> > > I wonder if irqs_disabled() behaves differently than we expect.    
+> > 
+> > Ok, after a few tries I got a "BUG: spinlock wrong CPU on CPU#0, swapper/0/1" LOCKDEP hit. But this does not happen every time when I get the netpoll_send WARNING:  
+> 
+> Oh, can you try deleting the gem_poll_controller() function?
+> Unhook it from ndo_poll_controller and remove it completely.
 
-diff --git a/arch/alpha/lib/fpreg.c b/arch/alpha/lib/fpreg.c
-index 9a238e7536ae..3d32165043f8 100644
---- a/arch/alpha/lib/fpreg.c
-+++ b/arch/alpha/lib/fpreg.c
-@@ -10,7 +10,6 @@
- #include <linux/preempt.h>
- #include <asm/fpu.h>
- #include <asm/thread_info.h>
--#include <asm/fpu.h>
+Ok, this is the resulting diff:
+
+diff --git a/drivers/net/ethernet/sun/sungem.c b/drivers/net/ethernet/sun/sungem.c
+index 9bd1df8308d2..d3a2fbb14140 100644
+--- a/drivers/net/ethernet/sun/sungem.c
++++ b/drivers/net/ethernet/sun/sungem.c
+@@ -949,17 +949,6 @@ static irqreturn_t gem_interrupt(int irq, void *dev_id)
+        return IRQ_HANDLED;
+ }
  
- #if defined(CONFIG_ALPHA_EV6) || defined(CONFIG_ALPHA_EV67)
- #define STT(reg,val)  asm volatile ("ftoit $f"#reg",%0" : "=r"(val));
--- 
-2.20.1.7.g153144c
+-#ifdef CONFIG_NET_POLL_CONTROLLER
+-static void gem_poll_controller(struct net_device *dev)
+-{
+-       struct gem *gp = netdev_priv(dev);
+-
+-       disable_irq(gp->pdev->irq);
+-       gem_interrupt(gp->pdev->irq, dev);
+-       enable_irq(gp->pdev->irq);
+-}
+-#endif
+-
+ static void gem_tx_timeout(struct net_device *dev, unsigned int txqueue)
+ {
+        struct gem *gp = netdev_priv(dev);
+@@ -2839,9 +2828,6 @@ static const struct net_device_ops gem_netdev_ops = {
+        .ndo_change_mtu         = gem_change_mtu,
+        .ndo_validate_addr      = eth_validate_addr,
+        .ndo_set_mac_address    = gem_set_mac_address,
+-#ifdef CONFIG_NET_POLL_CONTROLLER
+-       .ndo_poll_controller    = gem_poll_controller,
+-#endif
+ };
+ 
+ static int gem_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 
+
+And indeed without gem_poll_controller() I don't hit the "WARNING: CPU: 1 PID: 1 at net/core/netpoll.c:370 netpoll_send_skb+0x1fc/0x20c" and "WARNING: CPU: 1 PID: 1 at kernel/locking/irqflag-debug.c:10 warn_bogus_irq_restore+0x30/0x44" or the according lockdep bug at boot!
+
+Re-booted the machine about 20 times without anything suspicious showing up in the dmesg. With the unpatched kernel I got the WARNING at the 2nd reboot.
+
+What I still get with 'modprobe -v dev_addr_lists_test', even with gem_poll_controller() removed is:
+
+[...]
+KTAP version 1
+1..1
+    KTAP version 1
+    # Subtest: dev-addr-list-test
+    # module: dev_addr_lists_test
+    1..6
+
+====================================
+WARNING: kunit_try_catch/1770 still has locks held!
+6.9.0-rc6-PMacG4-dirty #5 Tainted: G        W        N
+------------------------------------
+1 lock held by kunit_try_catch/1770:
+ #0: c0dbfce4 (rtnl_mutex){....}-{3:3}, at: dev_addr_test_init+0xbc/0xc8 [dev_addr_lists_test]
+
+stack backtrace:
+CPU: 0 PID: 1770 Comm: kunit_try_catch Tainted: G        W        N 6.9.0-rc6-PMacG4-dirty #5
+Hardware name: PowerMac3,6 7455 0x80010303 PowerMac
+Call Trace:
+[f3749ef0] [c07c2bec] dump_stack_lvl+0x80/0xac (unreliable)
+[f3749f10] [c004fe64] do_exit+0x5b4/0x834
+[f3749f60] [c006d848] kthread_complete_and_exit+0x0/0x28
+[f3749f80] [c006d870] kthread+0x0/0xe8
+[f3749fa0] [bebf0cf4] kunit_try_catch_run+0x0/0x15c [kunit]
+[f3749fc0] [c006d954] kthread+0xe4/0xe8
+[f3749ff0] [c0015304] start_kernel_thread+0x10/0x14
+    ok 1 dev_addr_test_basic
+    ok 2 dev_addr_test_sync_one
+    ok 3 dev_addr_test_add_del
+    ok 4 dev_addr_test_del_main
+    ok 5 dev_addr_test_add_set
+    ok 6 dev_addr_test_add_excl
+# dev-addr-list-test: pass:6 fail:0 skip:0 total:6
+# Totals: pass:6 fail:0 skip:0 total:6
+ok 1 dev-addr-list-test
+[...]
+
+Regards,
+Erhard
