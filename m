@@ -1,112 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230E46EB65;
-	Tue,  7 May 2024 21:07:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C522973163;
+	Tue,  7 May 2024 21:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715116052; cv=none; b=iv6u9bdlNTN/SZCknEHf0Ivb3r6ROlxMAr62LybmJxbIztUGhJmbx8hPWiLq3yEZCmnDecH89L3qToe7ISzhPrnN8M9gSdJd2hpkGmcBz/iWxYI1vHjzRP5A6qc3TKc0WEcRjB7EsufaRL7+t7yRrL/fl5OIb5lv9iqOuUc36yk=
+	t=1715116085; cv=none; b=Uniic3Ox9DgkJecixgIGmrLE7CvsJQbO5us83oG//gKVTV6SwWNn4ERexP9GR0c7xkP0NW0CYm2OtpjQyxnKfAPpNhNXhwr6gEfbc/3wijGTj6Gzw9210L1QjYgWaLUxoU2YbysWCx91i9R4HcY87fo6M0oIs/LUAyz0QMeNNLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715116052; c=relaxed/simple;
-	bh=IruPKvmHK22rd3Atyzt9f//OhnIvVhMuPrqqtt9DPSA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bGzEPq/PiZgj3Sv60NPYL1o2a4VRHCeIs8woOlWCsZZJShqUOZ6WQ9jB864XAdG01ZIb3DbkReu0szKebOq5sqV4XKkB/6bAl3sfQtoWJEbEsCtn1YPLIqhSrkVEGRFzh0faEfwOpvFCEMdZeAhuA9XkEnj2lXuTOP85Pb58g0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRar/O50; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715116085; c=relaxed/simple;
+	bh=B6UyPSjkD4lPVXtW9MIZrPpHMifBqYpqqtm47NjnchY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Uf28kGSO+6NOVGjE4+CGBKvwjjQMYDG6NB2k4Arr7Jdg7KoAc18eTPQzTLcG5Fb0E1/dCQfZrVa/VeDzhzD8YXYhj7xTFLGkUp5Q6g8qJYBzALsbRRTVpVCX3VOt7bYmvOQwym1SRoVgqcg+pfoV8yMYZe3n4JR4ZQS84sgPzAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CEXEINa9; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRar/O50"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13A36C2BBFC;
-	Tue,  7 May 2024 21:07:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715116050;
-	bh=IruPKvmHK22rd3Atyzt9f//OhnIvVhMuPrqqtt9DPSA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JRar/O50ZvQKN+7xk/G/FDvHxyqaReRGL5ZpbC7aLsA36ByRqjQtnamcnNiR7/03U
-	 do6YQFagyR+x3Y+Sw0spCnqH2O/z/Ys0q+9J8Dr86991ivYuoZNgESUtNstMJYI/Hj
-	 z+ea713knJ+yIw0fkiXkFLHQcY+rzHC8o04ew8Xqsk+gUP0Qr2emt1XZdiggJoq85v
-	 h95cP/YanIE9j4eQwPntPjoan/WzBDfyx6XX1a9QAmsk7nZu1mR1P7SX8aR/rAOwca
-	 Wx9javJMlil7LRIJwFAgSuWkwVzsUXT0yfsSzXPJh+UpuaV8cE8vonzh8aQs6CNU/3
-	 e7LdQuEoqDgTQ==
-Date: Tue, 7 May 2024 18:07:27 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Clark <james.clark@arm.com>,
-	Tim Chen <tim.c.chen@linux.intel.com>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Sun Haiyong <sunhaiyong@loongson.cn>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>, Li Dong <lidong@vivo.com>,
-	Paran Lee <p4ranlee@gmail.com>, Ben Gainey <ben.gainey@arm.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v1 1/8] perf ui browser: Don't save pointer to stack
- memory
-Message-ID: <ZjqYD-q7EqQW6hVE@x1>
-References: <20240507183545.1236093-1-irogers@google.com>
- <20240507183545.1236093-2-irogers@google.com>
- <ZjqNKPgWR7mBFaV4@x1>
- <ZjqNjrJ2ElrT11iB@x1>
- <CAP-5=fUsQwKsCi3us+dp-Tj+PayNPrYTqTQeo-YLbvSuOt1=9w@mail.gmail.com>
- <ZjqXa25BnFncJmw-@x1>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CEXEINa9"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a4702457ccbso947716566b.3;
+        Tue, 07 May 2024 14:08:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715116082; x=1715720882; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ieHKWE/362CtrkuwJG+D03/eKpQ3iQM4fqC19j9FWgg=;
+        b=CEXEINa9LB5L1K0I9mGM+0JpL9F9qpMUlCnSAZCIFmhhjKw5D79kAmJNOSoGrZ2QWD
+         48ScQ1OUWzJnhZT8W++4u5LM108rb6zoz+XrKAMYtmT62Oo53lyO6vWTY5Ey4XkQ2OEI
+         tLnnrkoRcAjPvmpF5AFLtSV95CbOp44Ia80LK8x+WCcT+m/TFFRqzdk5TUvbm5KLRWYt
+         /J6NufyZrebUaZuKGD0EFwnEY6W3BP9ZoiQw3IwDu4EsJEjbcCHa7YSRerLMx5KOqy79
+         Y2pFT1SKZDTgFSigqBiDGEjbSR3/b4yk6yKRynScGdeETi7yjWIUgb4QRNCcjEp2dFzU
+         odWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715116082; x=1715720882;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ieHKWE/362CtrkuwJG+D03/eKpQ3iQM4fqC19j9FWgg=;
+        b=vIe8z2YXOU8JGVBfFW1rp3jIIeWXZaykrpXGaAjcfYQvl6E8DZuA2sL8slo8N9onsn
+         NgO5RZrZNvwuQqn+EIbverqvmzBINl1TwLMERTho2BCRtLQHkAM7SDMrJIE9PuDc9PQt
+         AI7d0Vfg3pQRLv0mDET6MwVwnNP+vVhCh1LTfvyz2MMMDvqL6M4ZcpZ6Y2ZH/x188Wk/
+         0svu6MBODCs1J+LYNKA+naz9Vkqx1Wy7Jx0Y72oWYXzATglazNWTfMuY5uHTbC+/UbPp
+         km7MVhNFo8kHfVz9OnIu0snLUxA9Hd8hgagQC1HYeRePVrJSqHCK5wEGvVhe+17oj3eD
+         f3Kg==
+X-Forwarded-Encrypted: i=1; AJvYcCVb6c9ejdODjgvFkobFmSej2w1Ngrus+jJ0mOBgpHqazP9jztT5VbUaxPONUuzLwMCGOXLbG9ma13ntqrG+EO2MdLFCOkYlVFFy//gmBxoMYFOng85p6wvDOCF/EjVoUmzA
+X-Gm-Message-State: AOJu0YwPyjPZbth5+LpzpP8nQUcgUy2IAa5CkgKP0pGWViT5xWGkhWzS
+	Frnnj9SRgBvf+gqahEMNEfA3RuRF/XZM4ueJjKOKy5Dp/T7DT0MvhWXKoegwNJ9w+Yz02vXfJBa
+	XCllzyLEPRYaOY5UAEc8IdXo8efY=
+X-Google-Smtp-Source: AGHT+IEw3/qNsNoUP7aAcOanTDPmGmWt8ZwnfCP9de7aC18zb/HtIe1tDLKzU3KIIw24p7yI1mX2F4HjYsuumVBJOf8=
+X-Received: by 2002:a17:906:7181:b0:a59:c9ad:bd26 with SMTP id
+ a640c23a62f3a-a59fb922db9mr35896566b.12.1715116081732; Tue, 07 May 2024
+ 14:08:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZjqXa25BnFncJmw-@x1>
+References: <20240502151854.9810-1-puranjay@kernel.org> <20240502151854.9810-2-puranjay@kernel.org>
+In-Reply-To: <20240502151854.9810-2-puranjay@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 7 May 2024 14:07:46 -0700
+Message-ID: <CAEf4BzZoB2jGZu7MVXbhyWKXNu1UCpvxznFCazH-vGPRPrYFFg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v6 1/4] riscv, bpf: add internal-only MOV
+ instruction to resolve per-CPU addrs
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Zi Shen Lim <zlim.lnx@gmail.com>, Xu Kuohai <xukuohai@huawei.com>, 
+	Florent Revest <revest@chromium.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>, 
+	puranjay12@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 07, 2024 at 06:04:43PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Tue, May 07, 2024 at 01:48:28PM -0700, Ian Rogers wrote:
-> > On Tue, May 7, 2024 at 1:22 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > >
-> > > On Tue, May 07, 2024 at 05:20:59PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > On Tue, May 07, 2024 at 11:35:38AM -0700, Ian Rogers wrote:
-> > > > > ui_browser__show is capturing the input title that is stack allocated
-> > > > > memory in hist_browser__run. Avoid a use after return by strdup-ing
-> > > > > the string.
-> > > >
-> > > > But everything happens in that context, i.e. hist_brower__run() will
-> > > > call ui_browser__ methods and then exit.
-> > > >
-> > > > We end up having browser->title pointing to returned stack memory
-> > > > (invalid) but there will be no references to it, no?
-> > > >
-> > > > If we return to hist_browser__run() we then call ui_browser__show
-> > > > passing a new title, for "live" stack memory, rinse repeat. Or have you
-> > > > noticed an actual use-after-"free"?
-> > >
-> > > And I'll take the patch, I'm just trying to figure it out if it fixed a
-> > > real bug or if it just makes the code more future proof, i.e. to avoid
-> > > us adding code that actually uses invalid stack memory.
-> > 
-> > My command line using tui is:
-> > $ sudo bash -c 'rm /tmp/asan.log*; export
-> > ASAN_OPTIONS="log_path=/tmp/asan.log"; /tmp/perf/perf mem record -a
-> > sleep 1; /tmp/perf/perf mem report'
-> > I then go to the perf annotate view and quit. This triggers the asan
-> > error (from the log file):
-> > ```
-> 
-> Thanks, it is indeed a bug, I'll keep that Fixes tag, people interested
-> in the full details can hopefully find this message going from the Link:
-> tag.
+On Thu, May 2, 2024 at 8:19=E2=80=AFAM Puranjay Mohan <puranjay@kernel.org>=
+ wrote:
+>
+> Support an instruction for resolving absolute addresses of per-CPU
+> data from their per-CPU offsets. This instruction is internal-only and
+> users are not allowed to use them directly. They will only be used for
+> internal inlining optimizations for now between BPF verifier and BPF
+> JITs.
+>
+> RISC-V uses generic per-cpu implementation where the offsets for CPUs
+> are kept in an array called __per_cpu_offset[cpu_number]. RISCV stores
+> the address of the task_struct in TP register. The first element in
+> task_struct is struct thread_info, and we can get the cpu number by
+> reading from the TP register + offsetof(struct thread_info, cpu).
+>
+> Once we have the cpu number in a register we read the offset for that
+> cpu from address: &__per_cpu_offset + cpu_number << 3. Then we add this
+> offset to the destination register.
+>
+> To measure the improvement from this change, the benchmark in [1] was
+> used on Qemu:
+>
+> Before:
+> glob-arr-inc   :    1.127 =C2=B1 0.013M/s
+> arr-inc        :    1.121 =C2=B1 0.004M/s
+> hash-inc       :    0.681 =C2=B1 0.052M/s
+>
+> After:
+> glob-arr-inc   :    1.138 =C2=B1 0.011M/s
+> arr-inc        :    1.366 =C2=B1 0.006M/s
+> hash-inc       :    0.676 =C2=B1 0.001M/s
+>
+> [1] https://github.com/anakryiko/linux/commit/8dec900975ef
+>
+> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+> ---
+>  arch/riscv/net/bpf_jit_comp64.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>
 
-Nah, I added your explanation to the cset log message.
+Please carry over acks you got on previous revisions, unless you
+significantly change something about the patch, invalidating previous
+acks. You had Bjorn's ack on this one, I believe:
 
-Thanks,
+Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org>
 
-- Arnaldo
+
+> diff --git a/arch/riscv/net/bpf_jit_comp64.c b/arch/riscv/net/bpf_jit_com=
+p64.c
+> index 15e482f2c657..1f0159963b3e 100644
+> --- a/arch/riscv/net/bpf_jit_comp64.c
+> +++ b/arch/riscv/net/bpf_jit_comp64.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/stop_machine.h>
+>  #include <asm/patch.h>
+>  #include <asm/cfi.h>
+> +#include <asm/percpu.h>
+>  #include "bpf_jit.h"
+>
+>  #define RV_FENTRY_NINSNS 2
+> @@ -1089,6 +1090,24 @@ int bpf_jit_emit_insn(const struct bpf_insn *insn,=
+ struct rv_jit_context *ctx,
+>                         emit_or(RV_REG_T1, rd, RV_REG_T1, ctx);
+>                         emit_mv(rd, RV_REG_T1, ctx);
+>                         break;
+> +               } else if (insn_is_mov_percpu_addr(insn)) {
+> +                       if (rd !=3D rs)
+> +                               emit_mv(rd, rs, ctx);
+> +#ifdef CONFIG_SMP
+> +                       /* Load current CPU number in T1 */
+> +                       emit_ld(RV_REG_T1, offsetof(struct thread_info, c=
+pu),
+> +                               RV_REG_TP, ctx);
+> +                       /* << 3 because offsets are 8 bytes */
+> +                       emit_slli(RV_REG_T1, RV_REG_T1, 3, ctx);
+> +                       /* Load address of __per_cpu_offset array in T2 *=
+/
+> +                       emit_addr(RV_REG_T2, (u64)&__per_cpu_offset, extr=
+a_pass, ctx);
+> +                       /* Add offset of current CPU to  __per_cpu_offset=
+ */
+> +                       emit_add(RV_REG_T1, RV_REG_T2, RV_REG_T1, ctx);
+> +                       /* Load __per_cpu_offset[cpu] in T1 */
+> +                       emit_ld(RV_REG_T1, 0, RV_REG_T1, ctx);
+> +                       /* Add the offset to Rd */
+> +                       emit_add(rd, rd, RV_REG_T1, ctx);
+> +#endif
+>                 }
+>                 if (imm =3D=3D 1) {
+>                         /* Special mov32 for zext */
+> @@ -2038,3 +2057,8 @@ bool bpf_jit_supports_arena(void)
+>  {
+>         return true;
+>  }
+> +
+> +bool bpf_jit_supports_percpu_insn(void)
+> +{
+> +       return true;
+> +}
+> --
+> 2.40.1
+>
