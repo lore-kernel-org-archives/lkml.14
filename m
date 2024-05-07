@@ -1,196 +1,219 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA9218733E;
-	Tue,  7 May 2024 21:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC92A71B3A;
+	Tue,  7 May 2024 21:04:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715115836; cv=none; b=S2Xom2y/XN9jocpoy2DzUKnV5fENPC7AHA9oTEUKYdV6WRrTsFYgzpa3mzmvsTthh4UR0WgA/xaoJ5Ncew5KIhR1CmbwoAz8rudw4a0YwzJ5jZc8jd0uFIfrgh2owfHiS4lKM+YbaVxrBRy1t5CNj2mn7+yMHGqxUu6tU+Qel2o=
+	t=1715115862; cv=none; b=tUcgtKvUAzHHILVi66kOnHlmZ5tfUK+0XBPxwIGb+TiGTJ4W5nu4EVs4aYQm7e9J9G4BIE+TSLpisrRtxpd+8NBMuSMvcXbtBBHEVaqF01FZ3zp9amBp97XwAUMV8Z4t/94T7ct6lLRPyY9flIAVIZbHXw4b9+JGCsK8Lopi1jc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715115836; c=relaxed/simple;
-	bh=uZ71m/kwDwRcripH7bKNsl6xLu8fmn/hVKonljdgE9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mAH8hdfZ6VhwvoJzQ+YxSlqkKXwbjq9QYGBQ00JwYG/1btvxZ5XQPywmt9L8csIaHq59Dkhm7FbydyvEI8KiH7ClOoOeT0BXAYfVKoDu32xelIbOAgj446OU8+k5stgN4wvj2E35/W4wvVGDIps0B59U5pMRJxoMzrnKAyJ1bT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EXyyqppP; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715115862; c=relaxed/simple;
+	bh=9ythelcd555ehayoCK+v6PnGyHN2aIf5mfrvlET7y4A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rlq3wbsDaluVZXYxNhnz6RHUVw0TwLtFTifXhnvpd46Lxfi8kb3ejVBqa++Wv3rTEJ6jcpqoZj21r5DMXHFxv4dTYyNwUU6og1Upi6watF2YIl38zpCYqdl7Lwz6SfkpbxLs7uJqYMerXPVF3oGwukGWj+/7dXt8WFElH4w+kNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jZqNtQxR; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EXyyqppP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715115834; x=1746651834;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uZ71m/kwDwRcripH7bKNsl6xLu8fmn/hVKonljdgE9U=;
-  b=EXyyqppPHYi1Qnooq1wGzDj5YEfxHuTgAQXBOFwY4UKzP1ja84weDhGE
-   hdljMbASp6tpMLRFwKDM0LUr2jhqX+DFopORBPdfLkDXq1mW8+KbakJxZ
-   ynttMFnS082hXMHU0VUuEl30WWsVTTQIOM4cVqy5/FC7MbQd4WbMF1UAo
-   ucdZ7+ESoXu7R71dJh23oduPkPmf94lhurzV+YDufHsJ3snzykVHZtPvK
-   1d586bO2dN6NzjTkFWsYmZTaMhZFn3CS1AFtxliuoL5qShThzKTT0cObZ
-   j7iBqjV3se0iftIRkOUbL2d3vlXH9YqfT0MOeNngHRpW3dHtQCHmfiZTx
-   g==;
-X-CSE-ConnectionGUID: YeIt3wINSe+aiw7IYxgnxA==
-X-CSE-MsgGUID: 39ifkPcMQt2HtrqVaSkq3Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="21501920"
-X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
-   d="scan'208";a="21501920"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 14:03:53 -0700
-X-CSE-ConnectionGUID: 14eykIzKTU+9AHBltx9qaA==
-X-CSE-MsgGUID: eA/kVNQTRA2X46TcXvJQ3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
-   d="scan'208";a="33465546"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 07 May 2024 14:03:49 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s4RyV-0002dE-0S;
-	Tue, 07 May 2024 21:03:47 +0000
-Date: Wed, 8 May 2024 05:02:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Perry Yuan <perry.yuan@amd.com>, rafael.j.wysocki@intel.com,
-	Mario.Limonciello@amd.com, viresh.kumar@linaro.org,
-	Ray.Huang@amd.com, gautham.shenoy@amd.com, Borislav.Petkov@amd.com
-Cc: oe-kbuild-all@lists.linux.dev, Alexander.Deucher@amd.com,
-	Xinmei.Huang@amd.com, Xiaojian.Du@amd.com, Li.Meng@amd.com,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 01/11] cpufreq: amd-pstate: optimiza the initial
- frequency values verification
-Message-ID: <202405080431.BPU6Yg9s-lkp@intel.com>
-References: <0049ad44052b051cf57d1059bf71b7ce227a5f21.1715065568.git.perry.yuan@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZqNtQxR"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-61c4ebd0c99so2368262a12.0;
+        Tue, 07 May 2024 14:04:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715115860; x=1715720660; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MFzLP9jypxz8zp9JCgtxnmrKkuxXPrSxPzVAWQBs/uM=;
+        b=jZqNtQxRsCskCePX71jcFMFj/K3q40uhIKi2if8KL/YIsEg2rFRdlgj8lCGD9Mewpj
+         DzaG9+2eDfIfpKaeKPfhxISweO5mOWhfYyhI/VCIRzsPWMgmkH6+YEUr076ePaDC8HYW
+         fOxfLrvq6trAImpWC6/ivbruvdBY3P0o3i6BdJWoMt+DgX7dbj5tY9RcYNMnTbj5jGTV
+         jvfP9I7Y5kGZWyiFucKwYpQAQ6qbjMdShiwmHAIyfWGunhUbMPTIOCQ5zGSHpJ0JQnzE
+         z8vdDKlptmwoWOQNzQ25DC8UIqF9oqKY3WAihX9DUYZ2c6ENlWiZxLQ+Lr/0GeDGe45e
+         9R4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715115860; x=1715720660;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=MFzLP9jypxz8zp9JCgtxnmrKkuxXPrSxPzVAWQBs/uM=;
+        b=VVzmgXdFHZkqNek/YmWR9AV9pjMucmKL93vg2U5fiOluZClNGR2XYsTKh4sMoXSK0g
+         78jefW2UGpqJ13MQCSU3v+N2yAa09Tnq2sdRUTrzUOj2HXhtcfAfOUXYgmCMlP55HCis
+         DF/o7qgI1AjNS0HioN5b0wKsnKSGEUPB5fWWvygV23R8k44YJLfBJvr3lCHtYPmihCH4
+         bKaNI+I0qVVv5bFGRBHJJ2Lh/btcVfwtL+UIihl70ppCymOZPfki6kGIwjVm/z9tb1vq
+         yV2otIM6PuQyzuwTJxnczlH13JiZCFqv1IAXOwU7SkPQ2W394cPPxDsSKTA6OT/PID57
+         OEog==
+X-Forwarded-Encrypted: i=1; AJvYcCV46FLTIRzbzsow448QTNhWlYd6rF4R8PSZyDJ+YSJQX/18aUa9s85YVVPqaafQJ+iu6qvh7yO2+H27OS8g1xbbktrKZQ1ZyG2yVa4B9l1BotvOeHhLkthhqRPuYFpR+yzIaQlTr0g9NFlgJr09K+gT/pmvZjjrxKI+DFYzD1VFq++ZbZB9
+X-Gm-Message-State: AOJu0YyAYA3tZGPTl7hnRmAbRgl3DyuzYu9RxSMGXIIIwlL1pLcN2Yf3
+	EHUzVYWEBo952RxxaQdMgXqPkgcpPSHKRFjNZ46bENN8ESp1p/EIHGkl/NfWqYJCl0GKKriZSrb
+	RO0pPnhsrPKoY2D0XaICUuzhdUAQ=
+X-Google-Smtp-Source: AGHT+IEvi+qh6FV6T7TpdH8lIa91LZDU7awvCKHqDLHp6p/u8XRcYsLVnh1NuA9JDVQ663ZK+HDD0OJS6hdKcdp/eaQ=
+X-Received: by 2002:a17:90b:348e:b0:2ac:513b:b316 with SMTP id
+ 98e67ed59e1d1-2b6163a32ebmr826188a91.10.1715115860101; Tue, 07 May 2024
+ 14:04:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0049ad44052b051cf57d1059bf71b7ce227a5f21.1715065568.git.perry.yuan@amd.com>
+References: <171318533841.254850.15841395205784342850.stgit@devnote2>
+ <CAEf4BzYMToveELxsOJ9dXz3H-9omhxRLKgGK-ppYvmK8pgDsfA@mail.gmail.com>
+ <20240429225119.410833c12d9f6fbcce0a58db@kernel.org> <CAEf4BzZDqD4fyLpoq9r2M0HnES7aO7YW=ZNH-k8uPJWd_VbAJg@mail.gmail.com>
+ <20240430223217.fd375d57d130a4207be18e94@kernel.org> <CAEf4BzZQLPL7419W1=yNw6gzB4gquiXfeANbUKbUL8bK+5if=w@mail.gmail.com>
+ <20240502110610.412d54a0cf194293b82ee787@kernel.org>
+In-Reply-To: <20240502110610.412d54a0cf194293b82ee787@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 7 May 2024 14:04:08 -0700
+Message-ID: <CAEf4BzYb0LUKo_BUnd72qrBOtnbbHRS8SaDz0XcTx-DTgb2mVA@mail.gmail.com>
+Subject: Re: [PATCH v9 00/36] tracing: fprobe: function_graph: Multi-function
+ graph and fprobe on fgraph
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Florent Revest <revest@chromium.org>, linux-trace-kernel@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Alan Maguire <alan.maguire@oracle.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Guo Ren <guoren@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Perry,
+On Wed, May 1, 2024 at 7:06=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.or=
+g> wrote:
+>
+> On Tue, 30 Apr 2024 09:29:40 -0700
+> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+>
+> > On Tue, Apr 30, 2024 at 6:32=E2=80=AFAM Masami Hiramatsu <mhiramat@kern=
+el.org> wrote:
+> > >
+> > > On Mon, 29 Apr 2024 13:25:04 -0700
+> > > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> > >
+> > > > On Mon, Apr 29, 2024 at 6:51=E2=80=AFAM Masami Hiramatsu <mhiramat@=
+kernel.org> wrote:
+> > > > >
+> > > > > Hi Andrii,
+> > > > >
+> > > > > On Thu, 25 Apr 2024 13:31:53 -0700
+> > > > > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> > > > >
+> > > > > > Hey Masami,
+> > > > > >
+> > > > > > I can't really review most of that code as I'm completely unfam=
+iliar
+> > > > > > with all those inner workings of fprobe/ftrace/function_graph. =
+I left
+> > > > > > a few comments where there were somewhat more obvious BPF-relat=
+ed
+> > > > > > pieces.
+> > > > > >
+> > > > > > But I also did run our BPF benchmarks on probes/for-next as a b=
+aseline
+> > > > > > and then with your series applied on top. Just to see if there =
+are any
+> > > > > > regressions. I think it will be a useful data point for you.
+> > > > >
+> > > > > Thanks for testing!
+> > > > >
+> > > > > >
+> > > > > > You should be already familiar with the bench tool we have in B=
+PF
+> > > > > > selftests (I used it on some other patches for your tree).
+> > > > >
+> > > > > What patches we need?
+> > > > >
+> > > >
+> > > > You mean for this `bench` tool? They are part of BPF selftests (und=
+er
+> > > > tools/testing/selftests/bpf), you can build them by running:
+> > > >
+> > > > $ make RELEASE=3D1 -j$(nproc) bench
+> > > >
+> > > > After that you'll get a self-container `bench` binary, which has al=
+l
+> > > > the self-contained benchmarks.
+> > > >
+> > > > You might also find a small script (benchs/run_bench_trigger.sh ins=
+ide
+> > > > BPF selftests directory) helpful, it collects final summary of the
+> > > > benchmark run and optionally accepts a specific set of benchmarks. =
+So
+> > > > you can use it like this:
+> > > >
+> > > > $ benchs/run_bench_trigger.sh kprobe kprobe-multi
+> > > > kprobe         :   18.731 =C2=B1 0.639M/s
+> > > > kprobe-multi   :   23.938 =C2=B1 0.612M/s
+> > > >
+> > > > By default it will run a wider set of benchmarks (no uprobes, but a
+> > > > bunch of extra fentry/fexit tests and stuff like this).
+> > >
+> > > origin:
+> > > # benchs/run_bench_trigger.sh
+> > > kretprobe :    1.329 =C2=B1 0.007M/s
+> > > kretprobe-multi:    1.341 =C2=B1 0.004M/s
+> > > # benchs/run_bench_trigger.sh
+> > > kretprobe :    1.288 =C2=B1 0.014M/s
+> > > kretprobe-multi:    1.365 =C2=B1 0.002M/s
+> > > # benchs/run_bench_trigger.sh
+> > > kretprobe :    1.329 =C2=B1 0.002M/s
+> > > kretprobe-multi:    1.331 =C2=B1 0.011M/s
+> > > # benchs/run_bench_trigger.sh
+> > > kretprobe :    1.311 =C2=B1 0.003M/s
+> > > kretprobe-multi:    1.318 =C2=B1 0.002M/s s
+> > >
+> > > patched:
+> > >
+> > > # benchs/run_bench_trigger.sh
+> > > kretprobe :    1.274 =C2=B1 0.003M/s
+> > > kretprobe-multi:    1.397 =C2=B1 0.002M/s
+> > > # benchs/run_bench_trigger.sh
+> > > kretprobe :    1.307 =C2=B1 0.002M/s
+> > > kretprobe-multi:    1.406 =C2=B1 0.004M/s
+> > > # benchs/run_bench_trigger.sh
+> > > kretprobe :    1.279 =C2=B1 0.004M/s
+> > > kretprobe-multi:    1.330 =C2=B1 0.014M/s
+> > > # benchs/run_bench_trigger.sh
+> > > kretprobe :    1.256 =C2=B1 0.010M/s
+> > > kretprobe-multi:    1.412 =C2=B1 0.003M/s
+> > >
+> > > Hmm, in my case, it seems smaller differences (~3%?).
+> > > I attached perf report results for those, but I don't see large diffe=
+rence.
+> >
+> > I ran my benchmarks on bare metal machine (and quite powerful at that,
+> > you can see my numbers are almost 10x of yours), with mitigations
+> > disabled, no retpolines, etc. If you have any of those mitigations it
+> > might result in smaller differences, probably. If you are running
+> > inside QEMU/VM, the results might differ significantly as well.
+>
+> I ran it on my bare metal machines again, but could not find any differen=
+ce
+> between them. But I think I enabled intel mitigations on, so it might mak=
+e
+> a difference from your result.
+>
+> Can you run the benchmark with perf record? If there is such differences,
+> there should be recorded.
 
-kernel test robot noticed the following build warnings:
+I can, yes, will try to do this week, I'm just trying to keep up with
+the rest of the stuff on my plate and haven't found yet time to do
+this. I'll get back to you (and I'll use the latest version of your
+patch set, of course).
 
-[auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on rafael-pm/bleeding-edge next-20240507]
-[cannot apply to tip/x86/core linus/master v6.9-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Perry-Yuan/cpufreq-amd-pstate-optimiza-the-initial-frequency-values-verification/20240507-151930
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-patch link:    https://lore.kernel.org/r/0049ad44052b051cf57d1059bf71b7ce227a5f21.1715065568.git.perry.yuan%40amd.com
-patch subject: [PATCH 01/11] cpufreq: amd-pstate: optimiza the initial frequency values verification
-config: x86_64-randconfig-102-20240507 (https://download.01.org/0day-ci/archive/20240508/202405080431.BPU6Yg9s-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240508/202405080431.BPU6Yg9s-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405080431.BPU6Yg9s-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/cpufreq/amd-pstate.c: In function 'amd_pstate_cpu_init':
->> drivers/cpufreq/amd-pstate.c:899:33: warning: variable 'nominal_freq' set but not used [-Wunused-but-set-variable]
-     899 |         int min_freq, max_freq, nominal_freq, ret;
-         |                                 ^~~~~~~~~~~~
-   drivers/cpufreq/amd-pstate.c: In function 'amd_pstate_epp_cpu_init':
-   drivers/cpufreq/amd-pstate.c:1350:33: warning: variable 'nominal_freq' set but not used [-Wunused-but-set-variable]
-    1350 |         int min_freq, max_freq, nominal_freq, ret;
-         |                                 ^~~~~~~~~~~~
-
-
-vim +/nominal_freq +899 drivers/cpufreq/amd-pstate.c
-
-5547c0ebfc2efd Perry Yuan        2024-04-25  896  
-ec437d71db77a1 Huang Rui         2021-12-24  897  static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
-ec437d71db77a1 Huang Rui         2021-12-24  898  {
-5c3fd1edaa8b4c Perry Yuan        2024-04-30 @899  	int min_freq, max_freq, nominal_freq, ret;
-ec437d71db77a1 Huang Rui         2021-12-24  900  	struct device *dev;
-ec437d71db77a1 Huang Rui         2021-12-24  901  	struct amd_cpudata *cpudata;
-ec437d71db77a1 Huang Rui         2021-12-24  902  
-919f4557696939 Wyes Karny        2022-11-17  903  	/*
-919f4557696939 Wyes Karny        2022-11-17  904  	 * Resetting PERF_CTL_MSR will put the CPU in P0 frequency,
-919f4557696939 Wyes Karny        2022-11-17  905  	 * which is ideal for initialization process.
-919f4557696939 Wyes Karny        2022-11-17  906  	 */
-919f4557696939 Wyes Karny        2022-11-17  907  	amd_perf_ctl_reset(policy->cpu);
-ec437d71db77a1 Huang Rui         2021-12-24  908  	dev = get_cpu_device(policy->cpu);
-ec437d71db77a1 Huang Rui         2021-12-24  909  	if (!dev)
-ec437d71db77a1 Huang Rui         2021-12-24  910  		return -ENODEV;
-ec437d71db77a1 Huang Rui         2021-12-24  911  
-ec437d71db77a1 Huang Rui         2021-12-24  912  	cpudata = kzalloc(sizeof(*cpudata), GFP_KERNEL);
-ec437d71db77a1 Huang Rui         2021-12-24  913  	if (!cpudata)
-ec437d71db77a1 Huang Rui         2021-12-24  914  		return -ENOMEM;
-ec437d71db77a1 Huang Rui         2021-12-24  915  
-ec437d71db77a1 Huang Rui         2021-12-24  916  	cpudata->cpu = policy->cpu;
-ec437d71db77a1 Huang Rui         2021-12-24  917  
-f3a052391822b7 Meng Li           2024-01-19  918  	amd_pstate_init_prefcore(cpudata);
-f3a052391822b7 Meng Li           2024-01-19  919  
-ec437d71db77a1 Huang Rui         2021-12-24  920  	ret = amd_pstate_init_perf(cpudata);
-ec437d71db77a1 Huang Rui         2021-12-24  921  	if (ret)
-41271016dfa4a0 Huang Rui         2021-12-24  922  		goto free_cpudata1;
-ec437d71db77a1 Huang Rui         2021-12-24  923  
-5547c0ebfc2efd Perry Yuan        2024-04-25  924  	ret = amd_pstate_init_freq(cpudata);
-5547c0ebfc2efd Perry Yuan        2024-04-25  925  	if (ret)
-5547c0ebfc2efd Perry Yuan        2024-04-25  926  		goto free_cpudata1;
-5547c0ebfc2efd Perry Yuan        2024-04-25  927  
-3cbbe8871a2fb8 Gautham R. Shenoy 2024-04-25  928  	min_freq = READ_ONCE(cpudata->min_freq);
-3cbbe8871a2fb8 Gautham R. Shenoy 2024-04-25  929  	max_freq = READ_ONCE(cpudata->max_freq);
-3cbbe8871a2fb8 Gautham R. Shenoy 2024-04-25  930  	nominal_freq = READ_ONCE(cpudata->nominal_freq);
-ec437d71db77a1 Huang Rui         2021-12-24  931  
-069a2bb8c48c43 Perry Yuan        2024-04-25  932  	policy->cpuinfo.transition_latency = amd_pstate_get_transition_latency(policy->cpu);
-069a2bb8c48c43 Perry Yuan        2024-04-25  933  	policy->transition_delay_us = amd_pstate_get_transition_delay_us(policy->cpu);
-ec437d71db77a1 Huang Rui         2021-12-24  934  
-ec437d71db77a1 Huang Rui         2021-12-24  935  	policy->min = min_freq;
-ec437d71db77a1 Huang Rui         2021-12-24  936  	policy->max = max_freq;
-ec437d71db77a1 Huang Rui         2021-12-24  937  
-ec437d71db77a1 Huang Rui         2021-12-24  938  	policy->cpuinfo.min_freq = min_freq;
-ec437d71db77a1 Huang Rui         2021-12-24  939  	policy->cpuinfo.max_freq = max_freq;
-ec437d71db77a1 Huang Rui         2021-12-24  940  
-ec437d71db77a1 Huang Rui         2021-12-24  941  	/* It will be updated by governor */
-ec437d71db77a1 Huang Rui         2021-12-24  942  	policy->cur = policy->cpuinfo.min_freq;
-ec437d71db77a1 Huang Rui         2021-12-24  943  
-e059c184da47e9 Huang Rui         2021-12-24  944  	if (boot_cpu_has(X86_FEATURE_CPPC))
-1d215f0319c206 Huang Rui         2021-12-24  945  		policy->fast_switch_possible = true;
-1d215f0319c206 Huang Rui         2021-12-24  946  
-41271016dfa4a0 Huang Rui         2021-12-24  947  	ret = freq_qos_add_request(&policy->constraints, &cpudata->req[0],
-41271016dfa4a0 Huang Rui         2021-12-24  948  				   FREQ_QOS_MIN, policy->cpuinfo.min_freq);
-41271016dfa4a0 Huang Rui         2021-12-24  949  	if (ret < 0) {
-41271016dfa4a0 Huang Rui         2021-12-24  950  		dev_err(dev, "Failed to add min-freq constraint (%d)\n", ret);
-41271016dfa4a0 Huang Rui         2021-12-24  951  		goto free_cpudata1;
-41271016dfa4a0 Huang Rui         2021-12-24  952  	}
-41271016dfa4a0 Huang Rui         2021-12-24  953  
-41271016dfa4a0 Huang Rui         2021-12-24  954  	ret = freq_qos_add_request(&policy->constraints, &cpudata->req[1],
-41271016dfa4a0 Huang Rui         2021-12-24  955  				   FREQ_QOS_MAX, policy->cpuinfo.max_freq);
-41271016dfa4a0 Huang Rui         2021-12-24  956  	if (ret < 0) {
-41271016dfa4a0 Huang Rui         2021-12-24  957  		dev_err(dev, "Failed to add max-freq constraint (%d)\n", ret);
-41271016dfa4a0 Huang Rui         2021-12-24  958  		goto free_cpudata2;
-41271016dfa4a0 Huang Rui         2021-12-24  959  	}
-41271016dfa4a0 Huang Rui         2021-12-24  960  
-febab20caebac9 Wyes Karny        2023-11-17  961  	cpudata->max_limit_freq = max_freq;
-febab20caebac9 Wyes Karny        2023-11-17  962  	cpudata->min_limit_freq = min_freq;
-ec437d71db77a1 Huang Rui         2021-12-24  963  
-ec437d71db77a1 Huang Rui         2021-12-24  964  	policy->driver_data = cpudata;
-ec437d71db77a1 Huang Rui         2021-12-24  965  
-41271016dfa4a0 Huang Rui         2021-12-24  966  	amd_pstate_boost_init(cpudata);
-abd61c08ef349a Perry Yuan        2023-01-31  967  	if (!current_pstate_driver->adjust_perf)
-abd61c08ef349a Perry Yuan        2023-01-31  968  		current_pstate_driver->adjust_perf = amd_pstate_adjust_perf;
-41271016dfa4a0 Huang Rui         2021-12-24  969  
-ec437d71db77a1 Huang Rui         2021-12-24  970  	return 0;
-ec437d71db77a1 Huang Rui         2021-12-24  971  
-41271016dfa4a0 Huang Rui         2021-12-24  972  free_cpudata2:
-41271016dfa4a0 Huang Rui         2021-12-24  973  	freq_qos_remove_request(&cpudata->req[0]);
-41271016dfa4a0 Huang Rui         2021-12-24  974  free_cpudata1:
-ec437d71db77a1 Huang Rui         2021-12-24  975  	kfree(cpudata);
-ec437d71db77a1 Huang Rui         2021-12-24  976  	return ret;
-ec437d71db77a1 Huang Rui         2021-12-24  977  }
-ec437d71db77a1 Huang Rui         2021-12-24  978  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> e.g.
+>
+> # perf record -g -o perf.data-kretprobe-nopatch-raw-bpf -- bench -w2 -d5 =
+-a trig-kretprobe
+> # perf report -G -i perf.data-kretprobe-nopatch-raw-bpf -k $VMLINUX --std=
+io > perf-out-kretprobe-nopatch-raw-bpf
+>
+> I attached the results in my side.
+> The interesting point is, the functions int the result are not touched by
+> this series. Thus there may be another reason if you see the kretprobe
+> regression.
+>
+> Thank you,
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
