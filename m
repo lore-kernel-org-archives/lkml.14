@@ -1,154 +1,170 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16E885950
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 23:00:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E342D8615A;
+	Tue,  7 May 2024 23:00:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715122825; cv=none; b=nP3IKUtSZ+IaL9toLxrHeidI17mRFJe9Qa49nUMGXkMbZ3bbrrJ62M2tren+wSftLJ3qcW5IqDf7W5mc4/AcLz1p7TdJfBd9Z13XScDL5/AkbXkgNZVSorhrFeP4znBx+YG53zKuKdm+c2FNlBqQNoApSQEW3nNwwFKPBPK2qrY=
+	t=1715122834; cv=none; b=uUA/9L9Ee0R7kT6hv5hZM3BiGxcGpGjDzqFKCu18BQnl1pmn2+rahe31CnYBSSLzeeSSg0ny22kd2sRXMSJV78oLF4mRdrDsJ6S1SgolTI35K2ezApkmDRpTzhsYy5H52xfYxU6JFfJ41w5vZCIgllcQlzdkaaaVtJp7DJ3Kf2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715122825; c=relaxed/simple;
-	bh=s/dVkIkUpEFDuGji+Sn4Br+tvktQk5DrZvLWBha5wH0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WxgJmHtvPnKIGWpJiPrc2X6DA+qkdowmgFerZhJU2RyjaW2JXhXBGk1DUlq36Nz2iHM/mMjR2Hr/Fpo5PcNU3u4NAWQ6Y2NSxFfJJ1XfM2DUv1KWq2s39+OXD8xXedniVvsYTYn4Vf8wbWcn/960Q5Uk3Iq7umzF4/7NXhCzw7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ziweixiao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=muTyqvL6; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ziweixiao.bounces.google.com
+	s=arc-20240116; t=1715122834; c=relaxed/simple;
+	bh=98HYj9zMKjJs+cuYRpU9Bwz/MbyiZQ0aL8seVXY3MRs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rh8YqfTEP+QIW+ClCReqlcMZSOS8Ikzb4Z7C4tn+HjLd6QKWsl7dRp3zxifiPOwxdLYnBY+3D5/sQgFW7Ejge4OfOevryxAXKUW6TfP3Ftx0T4o/6OZO98ofU2Pg3/5bnQrdQZqWBvh/e0MwNdB+d35UDQwGgVAO9an0DV6n16E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKoPkmRv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="muTyqvL6"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de615257412so7389358276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 16:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715122823; x=1715727623; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0RjaB4t+jqoB/u9GU06wWmu2KYLJOP55f0UnNOqajSk=;
-        b=muTyqvL6RLEpAHD4vpHiQxrYLa3LXGTrHJl0wpumFspI36Mbuqo6awNPevPlKqXmkd
-         cjz/LvyIKMBsyNRq1TevwuNJ9rMJCVV9hdQXH2RzQEJN5aSGnX15DkKlqGbd8n237+Ns
-         xqC0wigxGJJ7Q2u5tVM51h7HeCcJsjCLeuNlPDQN1YNweYPxiwArNbNjculIO+3a4xaJ
-         2U6cY8SzsVQTBZkIiSVYr1liDRXakuM2/oJhO8L5jwJGrpNXyCyfNmPnIBO7kkX7GVe5
-         NFKxu8s1Gn/NNqYOkyvTaWOAzms1H+B9GNveqRYl+YPTOYF4cdY6gZMP5P+lGLpK+1sg
-         MOBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715122823; x=1715727623;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0RjaB4t+jqoB/u9GU06wWmu2KYLJOP55f0UnNOqajSk=;
-        b=XKVE2+6DiPOWv2gEQzPimDi4jRNQi6ntPMkFysQWUCrUCdYeVAEFP4GYYizgK7LfKT
-         a2v78H9o1q59VlXiSEMHjHKW2Ue6zEbqbD9couSNk1YLL60Y+isiCeys2P/dWx/LNteQ
-         d7GW+l7mCW9lwNRAA5ziVtPQQeu3qcOtlci+ZLTI1Vygg/bCj6OFoSsYU6wRTePqohhS
-         Lmd9X9UmT2Q1CdXRco9ewnGQkFo7Lq2KnoatAsYHSWyMttLorfqeIR6AkfTeXgVnqUqq
-         Q4oVmh4t7tZuJkpP1NA1yMHblNXz1aMuvJ5VWeqV5WWTU1ZP6inDgBvfiLbDS6/2Oq/Y
-         DkOg==
-X-Forwarded-Encrypted: i=1; AJvYcCVY2A3q9on+p8qZOtk1E0E904V4Ni0eSXdN8QeqH3IvRgWYqVDxcBBJey7muF8Qv8uA4uNKTn2bGgoZIJbHzMHxyVW0/DMcS7tEB0CS
-X-Gm-Message-State: AOJu0YzA4ObFmUCG8L12RkHNixSloegTDa8xM1CDhvKfaCDqovrxNbC+
-	KRmCdYiIZ0DTYzMm24UZKeukWFQ0lBasRtd+L6cN77I0bt/qg1fJ65FXXBOHf4dapVFNkdrLAZ+
-	Mq0DuEe7zk7acaA==
-X-Google-Smtp-Source: AGHT+IHeHwpUsMz3naPYvRlDkGuNZZCEn9CqAnc0Smm5DESeStqFj91Zn/11qRtNpmoue13EExJCmpgR2BPwxrE=
-X-Received: from ziwei-gti.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:9b0])
- (user=ziweixiao job=sendgmr) by 2002:a05:6902:1881:b0:de5:250a:f1e7 with SMTP
- id 3f1490d57ef6-debb9e397e4mr313067276.8.1715122822767; Tue, 07 May 2024
- 16:00:22 -0700 (PDT)
-Date: Tue,  7 May 2024 22:59:41 +0000
-In-Reply-To: <20240507225945.1408516-1-ziweixiao@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKoPkmRv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664E1C2BBFC;
+	Tue,  7 May 2024 23:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715122833;
+	bh=98HYj9zMKjJs+cuYRpU9Bwz/MbyiZQ0aL8seVXY3MRs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qKoPkmRvpxYijXUMbfwJpZVYoT6hS99sYmkVL+ClaYd4nuC0nwhIhOyfoA5cx62Ji
+	 +Pwz2FUqFSJINpyUppBOiMOB4AueZpZh4ciprQyyXOZJQa4rG3AT0Fypif5RFEvhz0
+	 3V0UVGGjOZi8UU1m50Qs4OvLS/Q9yp7/9vqx/nFRLFf689Kmt6ZMSzR3hngoezzCWG
+	 2dunvAJ6U0UHT70a4zJ96tnhqdJXzaLhWt8WeSO6F1jHcDpTpp7e1JxTsIN0tfUqZ7
+	 NzrPF3T8dr8ft+PAjbcHbVahmNWlYXVv0yUfNk4V8j6BqPrGiBLuOIGnOQnjWFmUOV
+	 Xk8RpG+9God6w==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Johannes Berg <johannes.berg@intel.com>,
+	syzbot+fdc5123366fb9c3fdc6d@syzkaller.appspotmail.com,
+	Dmitry Antipov <dmantipov@yandex.ru>,
+	Sasha Levin <sashal@kernel.org>,
+	johannes@sipsolutions.net,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	linux-wireless@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 01/12] wifi: mac80211: don't use rate mask for scanning
+Date: Tue,  7 May 2024 19:00:03 -0400
+Message-ID: <20240507230031.391436-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240507225945.1408516-1-ziweixiao@google.com>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240507225945.1408516-2-ziweixiao@google.com>
-Subject: [PATCH net-next 1/5] gve: Add adminq mutex lock
-From: Ziwei Xiao <ziweixiao@google.com>
-To: netdev@vger.kernel.org
-Cc: jeroendb@google.com, pkaligineedi@google.com, shailend@google.com, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	willemb@google.com, hramamurthy@google.com, rushilg@google.com, 
-	ziweixiao@google.com, jfraker@google.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.90
+Content-Transfer-Encoding: 8bit
 
-We were depending on the rtnl_lock to make sure there is only one adminq
-command running at a time. But some commands may take too long to hold
-the rtnl_lock, such as the upcoming flow steering operations. For such
-situations, it can temporarily drop the rtnl_lock, and replace it for
-these operations with a new adminq lock, which can ensure the adminq
-command execution to be thread-safe.
+From: Johannes Berg <johannes.berg@intel.com>
 
-Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
-Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
-Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
+[ Upstream commit ab9177d83c040eba58387914077ebca56f14fae6 ]
+
+The rate mask is intended for use during operation, and
+can be set to only have masks for the currently active
+band. As such, it cannot be used for scanning which can
+be on other bands as well.
+
+Simply ignore the rate masks during scanning to avoid
+warnings from incorrect settings.
+
+Reported-by: syzbot+fdc5123366fb9c3fdc6d@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=fdc5123366fb9c3fdc6d
+Co-developed-by: Dmitry Antipov <dmantipov@yandex.ru>
+Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+Tested-by: Dmitry Antipov <dmantipov@yandex.ru>
+Link: https://msgid.link/20240326220854.9594cbb418ca.I7f86c0ba1f98cf7e27c2bacf6c2d417200ecea5c@changeid
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/google/gve/gve.h        |  1 +
- drivers/net/ethernet/google/gve/gve_adminq.c | 22 +++++++++++---------
- 2 files changed, 13 insertions(+), 10 deletions(-)
+ include/net/mac80211.h |  3 +++
+ net/mac80211/rate.c    |  6 +++++-
+ net/mac80211/scan.c    |  1 +
+ net/mac80211/tx.c      | 13 +++++++++----
+ 4 files changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
-index ae1e21c9b0a5..ca7fce17f2c0 100644
---- a/drivers/net/ethernet/google/gve/gve.h
-+++ b/drivers/net/ethernet/google/gve/gve.h
-@@ -724,6 +724,7 @@ struct gve_priv {
- 	union gve_adminq_command *adminq;
- 	dma_addr_t adminq_bus_addr;
- 	struct dma_pool *adminq_pool;
-+	struct mutex adminq_lock; /* Protects adminq command execution */
- 	u32 adminq_mask; /* masks prod_cnt to adminq size */
- 	u32 adminq_prod_cnt; /* free-running count of AQ cmds executed */
- 	u32 adminq_cmd_fail; /* free-running count of AQ cmds failed */
-diff --git a/drivers/net/ethernet/google/gve/gve_adminq.c b/drivers/net/ethernet/google/gve/gve_adminq.c
-index 3df8243680d9..2c3ec5c3b114 100644
---- a/drivers/net/ethernet/google/gve/gve_adminq.c
-+++ b/drivers/net/ethernet/google/gve/gve_adminq.c
-@@ -284,6 +284,7 @@ int gve_adminq_alloc(struct device *dev, struct gve_priv *priv)
- 			    &priv->reg_bar0->adminq_base_address_lo);
- 		iowrite32be(GVE_DRIVER_STATUS_RUN_MASK, &priv->reg_bar0->driver_status);
+diff --git a/include/net/mac80211.h b/include/net/mac80211.h
+index 43173204d6d5e..87a4f334c22a8 100644
+--- a/include/net/mac80211.h
++++ b/include/net/mac80211.h
+@@ -885,6 +885,8 @@ enum mac80211_tx_info_flags {
+  *	of their QoS TID or other priority field values.
+  * @IEEE80211_TX_CTRL_MCAST_MLO_FIRST_TX: first MLO TX, used mostly internally
+  *	for sequence number assignment
++ * @IEEE80211_TX_CTRL_SCAN_TX: Indicates that this frame is transmitted
++ *	due to scanning, not in normal operation on the interface.
+  * @IEEE80211_TX_CTRL_MLO_LINK: If not @IEEE80211_LINK_UNSPECIFIED, this
+  *	frame should be transmitted on the specific link. This really is
+  *	only relevant for frames that do not have data present, and is
+@@ -905,6 +907,7 @@ enum mac80211_tx_control_flags {
+ 	IEEE80211_TX_CTRL_NO_SEQNO		= BIT(7),
+ 	IEEE80211_TX_CTRL_DONT_REORDER		= BIT(8),
+ 	IEEE80211_TX_CTRL_MCAST_MLO_FIRST_TX	= BIT(9),
++	IEEE80211_TX_CTRL_SCAN_TX		= BIT(10),
+ 	IEEE80211_TX_CTRL_MLO_LINK		= 0xf0000000,
+ };
+ 
+diff --git a/net/mac80211/rate.c b/net/mac80211/rate.c
+index 9d33fd2377c88..a2bc9c5d92b8b 100644
+--- a/net/mac80211/rate.c
++++ b/net/mac80211/rate.c
+@@ -877,6 +877,7 @@ void ieee80211_get_tx_rates(struct ieee80211_vif *vif,
+ 	struct ieee80211_sub_if_data *sdata;
+ 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
+ 	struct ieee80211_supported_band *sband;
++	u32 mask = ~0;
+ 
+ 	rate_control_fill_sta_table(sta, info, dest, max_rates);
+ 
+@@ -889,9 +890,12 @@ void ieee80211_get_tx_rates(struct ieee80211_vif *vif,
+ 	if (ieee80211_is_tx_data(skb))
+ 		rate_control_apply_mask(sdata, sta, sband, dest, max_rates);
+ 
++	if (!(info->control.flags & IEEE80211_TX_CTRL_SCAN_TX))
++		mask = sdata->rc_rateidx_mask[info->band];
++
+ 	if (dest[0].idx < 0)
+ 		__rate_control_send_low(&sdata->local->hw, sband, sta, info,
+-					sdata->rc_rateidx_mask[info->band]);
++					mask);
+ 
+ 	if (sta)
+ 		rate_fixup_ratelist(vif, sband, info, dest, max_rates);
+diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
+index c37e2576f1c13..933d02d7c1284 100644
+--- a/net/mac80211/scan.c
++++ b/net/mac80211/scan.c
+@@ -647,6 +647,7 @@ static void ieee80211_send_scan_probe_req(struct ieee80211_sub_if_data *sdata,
+ 				cpu_to_le16(IEEE80211_SN_TO_SEQ(sn));
+ 		}
+ 		IEEE80211_SKB_CB(skb)->flags |= tx_flags;
++		IEEE80211_SKB_CB(skb)->control.flags |= IEEE80211_TX_CTRL_SCAN_TX;
+ 		ieee80211_tx_skb_tid_band(sdata, skb, 7, channel->band);
  	}
-+	mutex_init(&priv->adminq_lock);
- 	gve_set_admin_queue_ok(priv);
- 	return 0;
  }
-@@ -511,28 +512,29 @@ static int gve_adminq_issue_cmd(struct gve_priv *priv,
- 	return 0;
- }
+diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+index 3d62e8b718740..419baf8efddea 100644
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -720,11 +720,16 @@ ieee80211_tx_h_rate_ctrl(struct ieee80211_tx_data *tx)
+ 	txrc.bss_conf = &tx->sdata->vif.bss_conf;
+ 	txrc.skb = tx->skb;
+ 	txrc.reported_rate.idx = -1;
+-	txrc.rate_idx_mask = tx->sdata->rc_rateidx_mask[info->band];
  
--/* This function is not threadsafe - the caller is responsible for any
-- * necessary locks.
-- * The caller is also responsible for making sure there are no commands
-- * waiting to be executed.
-- */
- static int gve_adminq_execute_cmd(struct gve_priv *priv,
- 				  union gve_adminq_command *cmd_orig)
- {
- 	u32 tail, head;
- 	int err;
- 
-+	mutex_lock(&priv->adminq_lock);
- 	tail = ioread32be(&priv->reg_bar0->adminq_event_counter);
- 	head = priv->adminq_prod_cnt;
--	if (tail != head)
--		// This is not a valid path
--		return -EINVAL;
-+	if (tail != head) {
-+		err = -EINVAL;
-+		goto out;
+-	if (tx->sdata->rc_has_mcs_mask[info->band])
+-		txrc.rate_idx_mcs_mask =
+-			tx->sdata->rc_rateidx_mcs_mask[info->band];
++	if (unlikely(info->control.flags & IEEE80211_TX_CTRL_SCAN_TX)) {
++		txrc.rate_idx_mask = ~0;
++	} else {
++		txrc.rate_idx_mask = tx->sdata->rc_rateidx_mask[info->band];
++
++		if (tx->sdata->rc_has_mcs_mask[info->band])
++			txrc.rate_idx_mcs_mask =
++				tx->sdata->rc_rateidx_mcs_mask[info->band];
 +	}
  
- 	err = gve_adminq_issue_cmd(priv, cmd_orig);
- 	if (err)
--		return err;
-+		goto out;
- 
--	return gve_adminq_kick_and_wait(priv);
-+	err = gve_adminq_kick_and_wait(priv);
-+
-+out:
-+	mutex_unlock(&priv->adminq_lock);
-+	return err;
- }
- 
- /* The device specifies that the management vector can either be the first irq
+ 	txrc.bss = (tx->sdata->vif.type == NL80211_IFTYPE_AP ||
+ 		    tx->sdata->vif.type == NL80211_IFTYPE_MESH_POINT ||
 -- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+2.43.0
 
