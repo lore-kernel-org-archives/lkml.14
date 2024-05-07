@@ -1,108 +1,147 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B1C14EC79
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C67161327
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715095172; cv=none; b=QnyxvPve9pn6z/h9qs27IY+NykB2fyHmGfrYfczqXqggCX4M3Gj63Ywe2yxB6Sb17pzKnweNdzXnJd0bLY2mGR4gnrWXc+E3s+ExShAR8JpOT8yIIOVIk9HYY0rD4wgkuFSe1s+Eed+/uCR4N254Ba1jvM1+MDxnlRDGLxOAuaQ=
+	t=1715095213; cv=none; b=JtFu5eFzn65bmyR+KJ0sKSJk/bIOu+jCfo11N8izWxpuwKElsoXKzB+rEeyK8RcOxB0NCG1VlyIgCDtveWLoJG04//OWW5xlHojjfdi9pqt6bG/NelNrwU+SIiGu3ZkaxcsZlSSJU6xoOqsCn1z/wtG5+VUWCJx01lLzV0Y3u+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715095172; c=relaxed/simple;
-	bh=/wEyjI5m2O8HKuKdgtP+XsFBKrfzCPrB269/6Nd2+YM=;
+	s=arc-20240116; t=1715095213; c=relaxed/simple;
+	bh=7wzzu5+Dyb2zQQ/BBHzdLsyJSaQZyO4yWyaBmCt+pjk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fpkcHPAnaoiNTqBwW6+L/5+pWNsuOJDgLAOt1U5h5P/k2ew+ABCMLMcXLvBu9EIjhJefGRBsZdM6I2UcDC8HZgDbvM/FxZvA5CqhKpqKv81YUpjRwqm3nIuz59zDvxGxQSw4fRtvgzCWhDRPKN38e2n2aExC/ELlcj51bB6cwLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NBs9kHyG; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=Qa1bnqMKTezV/nVSW+kmIiWIj14oEy5tlRgvj3IbWMh/6LqhfAvsaCBCjZ8qc5M+18a/ApsIn6BeJfgLZMxYjNDCyjI65hglhX0RbQi33SG+j/l7pifKTW5dYv+Iwbjwc4UcoYZxOtaKMCiQEoQhkw7MQw68mdSCcPk0JMt9aqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=AZpy448d; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NBs9kHyG"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-de46b113a5dso3318784276.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:19:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="AZpy448d"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7d9c2096c29so175748039f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715095170; x=1715699970; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ysPCrT6aDiInuFk99HtusnAXRwhdESoITC61IbLRas=;
-        b=NBs9kHyGPLxxXrDFj1qW08YcW8p+bdkBM/KlzVlb5f3MAHLqlIECJj/LN+xOPeHO5Y
-         5e7gIKrTKfyuttAIw47A8EESpV/EWuTANdN0/Kzgu2teN+CB/uk8FXunzGKSgy6tj6if
-         JAhoKcle40muA964rUqWwy89x2WY6sVEUcZiNb2u3Nr0eVzSlJGMMe+SAC8KFK1JXLXC
-         nTPMah/fGWR92pj80GIykY2caaW+Vv57YrFYWb0LeZ+DfChS4jNnsGtuHPygmY7LGctH
-         avKAZ1GbXrr87ENVIEnylKzeiujtodMysob+sXG/z1LV05VI/3jAa2M7vFHLlDpzCwVe
-         dXow==
+        d=sifive.com; s=google; t=1715095211; x=1715700011; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3612MOIikzCEeo+mwv3X2VMyaMFpK5mgqqdWHRbusjg=;
+        b=AZpy448doK/iK5AlReaECWW6bd//Oaw7EGEdbohJSOqAKh27gKenJwqvtXN9XdI0le
+         HgIlnPjfT/Lo3TwaTZs790v7YwUThuNJMbgkFqqHWc9ByBUmQNwOmpa7HrB99UuQdKOO
+         Cgj/mW+hrl7x4OwtpeD32neluhU/oep+HYl4ZqwZoHmNOiuNAGvI1QEbfkZRVSIzn/Jd
+         oTPEL77Eg6Y4S8pB7Dv4Rw4GAUb1dvTAKjDckx5wu2vwClgIB9yGpZ4sYZFvX79FbVXQ
+         eqd2PzeT6z15mK+eHoUPtFsj4U4g7f2aerz9fCdYOMwdc2i09zIovaWP1K7uavdTnGVQ
+         bjdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715095170; x=1715699970;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3ysPCrT6aDiInuFk99HtusnAXRwhdESoITC61IbLRas=;
-        b=qckOiIOvUv5R5tw3cJ8C9/Bz/2COglWxq51Qnqq75AZdhpck/0eb+5ICU5nIMneiEB
-         QDCZADU3RR/WiDRsjb7Vb7zrlPj38zyVTNb+PLp8hYBJ6Q6HMviZQl0UG59FnEDkAZmO
-         6K60JE77SoiI3XZJpadGoUpz8xjcQ0469mGf2clyYCgU1cMhdR2klwKqASwKvjEZrzNH
-         QWG80b4QvBguKBVI+EUm4RCli9qpgiPyHcKFN9stXJtoK2hcMlLvTDpvBAy7kKksu6VO
-         +85di50yefh5VkeDj636lYXtcfGrzSTLS3MP3wOkcIXD2dGrd+cYb2Q2I9cwu1Kv/wG/
-         KQXA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHZxkJS3659LLzj/iNPok9U5OUFVdmxq06gpENXTQyw+M4SdhA7b/gx7j7rbXG16S+HDIds8m/99N0xRz/j0ddfOge4oCaIa1zPVrX
-X-Gm-Message-State: AOJu0YxEY1z3wnHsnNUrI6Q+KipfLWyFaZ84BccWxzhICgyKm52b9v3r
-	tPb3JKNd/f1gEO+IxgYnUtSCzZxOr7hdYS53Bc8cAB5hxvz0OnUeoHpOhDviEJ/X1gUw0lAxT/5
-	Y5ZUhdLPJfVufn25qxPmQY0cvOu/aJ+n+mnXjXA==
-X-Google-Smtp-Source: AGHT+IEML+Kw1JVUOv0nN6ekdfHok6Y4DPu4GGX6sExCN5x0nEZTwSwW2OQ/aCjdgj8HeWcGREcPXHHI22erdbPufQA=
-X-Received: by 2002:a05:6902:2187:b0:de6:327:fa2 with SMTP id
- dl7-20020a056902218700b00de603270fa2mr15626519ybb.8.1715095170220; Tue, 07
- May 2024 08:19:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715095211; x=1715700011;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3612MOIikzCEeo+mwv3X2VMyaMFpK5mgqqdWHRbusjg=;
+        b=R6UjG3X95F16LvYOSPb4N9pLGnBjLuFF3bomnqmo/SPkhVpf4lqtG/mKoyMB8+mWej
+         wIro/V4y2MWZsvPR9lPfC/8jdK74VlptyEBEKWw0e7JUHaJegtis3Txn+xfHQJ933uHY
+         TV5G6HmvLf1k4NKBJZmK/2REWC2Ftfwl/blWKKocKWPG2zq+eBACrq9NPnElIU4BAjfg
+         +XuzRRuDgHnetnpaVHtsfs9L4qkR/7AVVresmlQb1ivJ1UX9RLb0vol9DM22XwwwrsBz
+         JzjhNkRIaKP+RtHWFxYGJxyw++X8dehq9k5CnGmhrpV+BYPyMcswLjq3Sgo9lyxg2gPv
+         6VFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVozNFk4z9LcyotIo9dKzI9t5vuKj6Nd/AbUNkroZBGnq6B4AW8kwYYst0M7IRSXFJkGYiyptxXTOJsFzvzrsMcuWnlyC7gqzQ0N6zn
+X-Gm-Message-State: AOJu0YxOL4OXiymvVbGP1RRMmL7H6WCp1Fsf7ZErD/QDhrC1105Vs++Q
+	acX7dXpNpNXY1nR7WufK8AI6ej03bsGa9RdbMa1ZB50BKydEmQRqWIQPjkVY/IwOFLRwuXdSid4
+	CHAvVXPm7jIt3aSpuCtSnEkO6Ib24v6bYXQR2bQ==
+X-Google-Smtp-Source: AGHT+IFHKLBV5UyA+nE/FKsONZhELrkveEhHfV9QMKA63cqAy8XVSr7F4OwiQdsFr0lrM8BGsK3l5VTeIv2rndOqxu4=
+X-Received: by 2002:a05:6602:f08:b0:7de:ac01:4224 with SMTP id
+ hl8-20020a0566020f0800b007deac014224mr15044010iob.1.1715095210897; Tue, 07
+ May 2024 08:20:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <bb372250-e8b8-4458-bc99-dd8365b06991@redhat.com>
- <ojduxo54lpcbfg2wfuhqhy7k3phncamtklh65z7gvttcwztmhk@zkifewcy4ovi>
- <3c0c7e7e-1530-411b-b7a4-9f13e0ff1f9e@redhat.com> <e7ilwp3vc32xze3iu2ejgqlgz44codsktnvyiufjhuf2zxcnnf@tnwzgzoxvbg2>
- <d2a512b2-e6b1-4675-b406-478074bbbe95@linaro.org>
-In-Reply-To: <d2a512b2-e6b1-4675-b406-478074bbbe95@linaro.org>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 7 May 2024 18:19:18 +0300
-Message-ID: <CAA8EJpr4bJUQt2T63_FZ=KHGEm4vixfpk3pMV9naABEONJfMmQ@mail.gmail.com>
-Subject: Re: Safety of opening up /dev/dma_heap/* to physically present users
- (udev uaccess tag) ?
-To: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Lennart Poettering <mzxreary@0pointer.de>, Robert Mader <robert.mader@collabora.com>, 
-	Sebastien Bacher <sebastien.bacher@canonical.com>, 
-	Linux Media Mailing List <linux-media@vger.kernel.org>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Milan Zamazal <mzamazal@redhat.com>, 
-	Maxime Ripard <mripard@redhat.com>, Andrey Konovalov <andrey.konovalov.ynk@gmail.com>
+References: <20240507142600.23844-1-zong.li@sifive.com> <20240507142600.23844-5-zong.li@sifive.com>
+ <20240507145456.GH901876@ziepe.ca>
+In-Reply-To: <20240507145456.GH901876@ziepe.ca>
+From: Zong Li <zong.li@sifive.com>
+Date: Tue, 7 May 2024 23:19:58 +0800
+Message-ID: <CANXhq0ptCxyUc==oCG8MgLOCdF7Z=KRW4pct62BCSgsB_9hQkQ@mail.gmail.com>
+Subject: Re: [PATCH RFC RESEND 4/6] iommu/riscv: support nested iommu for
+ getting iommu hardware information
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com, 
+	tjeznach@rivosinc.com, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, kevin.tian@intel.com, linux-kernel@vger.kernel.org, 
+	iommu@lists.linux.dev, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 7 May 2024 at 18:15, Bryan O'Donoghue
-<bryan.odonoghue@linaro.org> wrote:
+On Tue, May 7, 2024 at 10:54=E2=80=AFPM Jason Gunthorpe <jgg@ziepe.ca> wrot=
+e:
 >
-> On 07/05/2024 16:09, Dmitry Baryshkov wrote:
-> > Ah, I see. Then why do you require the DMA-ble buffer at all? If you are
-> > providing data to VPU or DRM, then you should be able to get the buffer
-> > from the data-consuming device.
+> On Tue, May 07, 2024 at 10:25:58PM +0800, Zong Li wrote:
+> > +{
+> > +     struct riscv_iommu_device *iommu =3D dev_to_iommu(dev);
+> > +     struct iommu_hw_info_riscv_iommu *info;
+> > +
+> > +     if (!iommu)
+> > +             return ERR_PTR(-ENODEV);
 >
-> Because we don't necessarily know what the consuming device is, if any.
->
-> Could be VPU, could be Zoom/Hangouts via pipewire, could for argument
-> sake be GPU or DSP.
->
-> Also if we introduce a dependency on another device to allocate the
-> output buffers - say always taking the output buffer from the GPU, then
-> we've added another dependency which is more difficult to guarantee
-> across different arches.
+> This is not possible, don't include impossible checks like this.
 
-Yes. And it should be expected. It's a consumer who knows the
-restrictions on the buffer. As I wrote, Zoom/Hangouts should not
-require a DMA buffer at all. Applications should be able to allocate
-the buffer out of the generic memory. GPUs might also have different
-requirements. Consider GPUs with VRAM. It might be beneficial to
-allocate a buffer out of VRAM rather than generic DMA mem.
+Thanks for pointing this out, I will remove it in the next version.
 
--- 
-With best wishes
-Dmitry
+>
+> > +     info =3D kzalloc(sizeof(*info), GFP_KERNEL);
+> > +     if (!info)
+> > +             return ERR_PTR(-ENOMEM);
+> > +
+> > +     info->capability =3D iommu->caps;
+> > +     info->fctl =3D riscv_iommu_readl(iommu, RISCV_IOMMU_REG_FCTL);
+> > +
+> > +     *length =3D sizeof(*info);
+> > +     *type =3D IOMMU_HW_INFO_TYPE_RISCV_IOMMU;
+> > +
+> > +     return info;
+> > +}
+> > +
+> >  static int riscv_iommu_device_domain_type(struct device *dev)
+> >  {
+> >       return 0;
+> > @@ -1560,6 +1582,7 @@ static void riscv_iommu_release_device(struct dev=
+ice *dev)
+> >  static const struct iommu_ops riscv_iommu_ops =3D {
+> >       .pgsize_bitmap =3D SZ_4K,
+> >       .of_xlate =3D riscv_iommu_of_xlate,
+> > +     .hw_info =3D riscv_iommu_hw_info,
+> >       .identity_domain =3D &riscv_iommu_identity_domain,
+> >       .blocked_domain =3D &riscv_iommu_blocking_domain,
+> >       .release_domain =3D &riscv_iommu_blocking_domain,
+> > diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.=
+h
+> > index 1dfeaa2e649e..ec9aafd7d373 100644
+> > --- a/include/uapi/linux/iommufd.h
+> > +++ b/include/uapi/linux/iommufd.h
+> > @@ -475,15 +475,28 @@ struct iommu_hw_info_vtd {
+> >       __aligned_u64 ecap_reg;
+> >  };
+> >
+> > +/**
+> > + * struct iommu_hw_info_riscv_iommu - RISCV IOMMU hardware information
+> > + *
+> > + * @capability: Value of RISC-V IOMMU capability register
+> > + * @fctl: Value of RISC-V IOMMU feature control register
+> > + */
+>
+> Please call out explictly what spec these values come from.
+
+Let me add the description for the section that defines them.
+
+>
+> > +struct iommu_hw_info_riscv_iommu {
+> > +     __aligned_u64 capability;
+> > +     __u32 fctl;
+> > +};
+>
+> Add explicit padding here
+
+Add a u32 reserve here in the next version. Thanks
+
+>
+> Jason
