@@ -1,35 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B230F1635BE;
-	Tue,  7 May 2024 13:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C574D168B12
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715087906; cv=none; b=lTFeYKUGWxFbnEpe67E6HC2JHC2ZjNNPvS3LQ5SROAwh1cm2RAkLbDdwvcfPC3Z2UBOWD4uvFiYxXGgp9laZDqgGGMYjavCcboqem282TQOZssS3U2DFseaKOWh70cL41rgA6LgUuXoqITIrDNG1p9NSJE03O6xS312Ww22aVz8=
+	t=1715087913; cv=none; b=U0gVX5rDyN4YOafbdcXr0x16HrbCTohEoBz9xgJ0Bjq5Vv0nN8qZPUtGfDvsnTcS7lmoVCWQkyjHHiKe1cVIyaRWa4zBmVsXvp/KcbF8V1qf6MBfWKq1B0h3ypu7Tj0QQbVQSxx7feRKYQCPoPr0xEcsu/0kRVQ8+glQjpXAd88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715087906; c=relaxed/simple;
-	bh=MFh6XBBBJRBlEIIJs6KhuU7h4XMccC70JG5oFoZobdI=;
+	s=arc-20240116; t=1715087913; c=relaxed/simple;
+	bh=znTu4kcBZIJ40DAZAzE4ZarYw+mhmMYgFA8GYOICILk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sVPL6a9zyUl//2wLXq5Ytg5OReQhiI7DKZhiOFPWtusWV6msCnAy0Jyp10QMA/OCXZwix7DeF2qYItm6HiJ6z9HK6zt4x3fd9FZbOJLSva4XtuR9kI25lHEL6+PCGKN3XXvqvz9qlJ1pI4ICPaB/ayuIZomtgo5YSAOnLRYzr+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pGz9cMy3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=CsyZDN9BpuJnxaDWuj49Gn4G4oCPG24eyxHz5P3XhxfyDHw2ABVWpDsYMMapSdYj6CLEcnHB4QxChQ84B6TI83HDdnq9pWuJruL6XzgMTOd4H8lM/aENveCoky6MBsMrIbEKsOluAuwh+F6LD23Q1Z3I+LbWloCiKiZI1o+lof4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=W/ysPZ06; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pGz9cMy3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFB3FC4DDE2;
-	Tue,  7 May 2024 13:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715087906;
-	bh=MFh6XBBBJRBlEIIJs6KhuU7h4XMccC70JG5oFoZobdI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=pGz9cMy3ioZiL93lQs3IlVU1kzaUhZ2cVza7ZUNCGV7Etsr9GVPA8imo1kpH7kVI3
-	 oCBULll/TKZDodc7wSl+aWehtBzxISDca7YAk/sRyRwKxl+ws1vLi7F0ebI+GvnBqG
-	 TUnULg8jJcXZ8dH+ehEuavoFuSh7SqAyX+W0RYffMT9Vw4VSrxORi6GyEcg+DvEdW4
-	 uqFqvysO5MIUzQfoZJSyg6W8DMPZyuuYJWI75NT1z20rMQoB1/UH4yddcQjlCMaMd3
-	 WAxpu3x+mCTelhZHn4DiiWMSXfijlNrIIoB/mbypzey38N3dzmWgkAiNtIqbnwMIxv
-	 PNdaCU4ZcjppQ==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 07 May 2024 15:17:33 +0200
-Subject: [PATCH v13 15/28] drm/connector: hdmi: Compute bpc and format
- automatically
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W/ysPZ06"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-69b5ece41dfso13978866d6.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 06:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715087911; x=1715692711; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XvJOy5lJ/u6e9yHF9m7H/WFxuEXKyxfgmG432+rwWPs=;
+        b=W/ysPZ06IYFhtX/6M3QRbwwJGPzhk/CIsHei/AljHXL4JN8aGL6yhVBUYEbi36qpad
+         IA0pgS3Ljw0RtcNaz4Hi1KvWOyOSn4YmxL1sh7QEVCl4lj+o8exRPeBIC6MNNs5LrQWV
+         q4a8DJGW98T/nOESWGyHZFg1FXPO39PWk2Sj4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715087911; x=1715692711;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XvJOy5lJ/u6e9yHF9m7H/WFxuEXKyxfgmG432+rwWPs=;
+        b=Fr3ODICSHAkY2jbHL+wrEWDk4br+zNbvmXjHEkGVSytDCZfTfoDxMInxUF90o2vrzT
+         NZNkZMitXBVG8wMFV2ePa5/mPvC9YtDEfkS7Du+IiIAG1K4yr+krAODM1HCPV5qy85Q6
+         rDAR8MZZhE22GRyt2CvhFcBo7GtdxhFhUa6AltVGOVnFnUPvAlyyWHgOciYaWvf044p1
+         Eq4Ktqy1SCMAxQ22xjIr5ua1YWWqaYmn88E+BxPzZPYAW5iovREEygNn4nWHTfiMhvko
+         gOU267hWJzBmhfYy0fa393w5cv8Ditpfl/YQSS4ykxZwSPIt3lIb8FNh91SuJxnj2oSh
+         ctuw==
+X-Forwarded-Encrypted: i=1; AJvYcCVijm/zAgQC4uV+mau4ylB8ZJCPz0EEQU7U2SxzCjYOpWgBkd4Wrw0CGZx0vVdgMPG7V1KMuidpA2JqEYolvzc49l634m+jbiVye6hT
+X-Gm-Message-State: AOJu0Yz1HRNcc/8odBpyUZEZ32+clWWr2cyLmapTgZGDa5bHs9XPhYtP
+	k3I/FnsENoUEzl7OOvJi9AfrJyu038Kif1TVMO3L6aQQgRlL2qLCFtsbAe8DgA==
+X-Google-Smtp-Source: AGHT+IGm6pXwHMdL9pFaV0FwWg8eqwPdftA0BUaILiny2B4bPC36O7QRhpTkxvdwYUJMzUmDBO5Kmg==
+X-Received: by 2002:a05:6214:1253:b0:6a0:b3ec:902f with SMTP id r19-20020a056214125300b006a0b3ec902fmr19399470qvv.15.1715087910820;
+        Tue, 07 May 2024 06:18:30 -0700 (PDT)
+Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
+        by smtp.gmail.com with ESMTPSA id t15-20020a05621405cf00b006a0d19c3139sm4655105qvz.118.2024.05.07.06.18.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 06:18:30 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 07 May 2024 13:18:27 +0000
+Subject: [PATCH 01/18] media: allegro: nal-hevc: Refactor
+ nal_hevc_sub_layer_hrd_parameters
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,386 +60,103 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240507-kms-hdmi-connector-state-v13-15-8fafc5efe8be@kernel.org>
-References: <20240507-kms-hdmi-connector-state-v13-0-8fafc5efe8be@kernel.org>
-In-Reply-To: <20240507-kms-hdmi-connector-state-v13-0-8fafc5efe8be@kernel.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
- Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Andy Yan <andy.yan@rock-chips.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
- Sebastian Wick <sebastian.wick@redhat.com>, 
- =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11837; i=mripard@kernel.org;
- h=from:subject:message-id; bh=MFh6XBBBJRBlEIIJs6KhuU7h4XMccC70JG5oFoZobdI=;
- b=owGbwMvMwCmsHn9OcpHtvjLG02pJDGlWmm+v/C3+pfvxdIN14nG/L2EV27onJC+PeVo9S+3M0
- z61JX+iOqayMAhzMsiKKbI8kQk7vbx9cZWD/cofMHNYmUCGMHBxCsBEbLgZ69RniC3P3CPcIO/7
- eylvTWbPTfYrK2d6zFZd/Xq+m+di3vmHX22t0Z07L27BN+G+1ZN9bRjrrJ+vUlpyYEJBhLNDt5L
- g16u/7+39zudR1XQle93z/58+NCnM/M/FplQw9TBD0pWYpcXGAA==
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240507-cocci-flexarray-v1-1-4a421c21fd06@chromium.org>
+References: <20240507-cocci-flexarray-v1-0-4a421c21fd06@chromium.org>
+In-Reply-To: <20240507-cocci-flexarray-v1-0-4a421c21fd06@chromium.org>
+To: Michael Tretter <m.tretter@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Michal Simek <michal.simek@amd.com>, Andy Walls <awalls@md.metrocast.net>, 
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
+ Vikash Garodia <quic_vgarodia@quicinc.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+ Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.12.4
 
-Now that we have all the infrastructure needed, we can add some code
-that will, for a given connector state and mode, compute the best output
-format and bpc.
+Replace all the single elements arrays with the element itself.
 
-The algorithm is equivalent to the one already found in i915 and vc4.
+Pahole shows the same padding and alignment for x86 and arm in both
+situations.
 
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+This fixes this cocci warning:
+drivers/media/platform/allegro-dvt/nal-hevc.h:102:14-22: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
+
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/gpu/drm/display/drm_hdmi_state_helper.c    | 199 ++++++++++++++++++++-
- drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c |  25 ++-
- 2 files changed, 212 insertions(+), 12 deletions(-)
+ drivers/media/platform/allegro-dvt/allegro-core.c |  6 +++---
+ drivers/media/platform/allegro-dvt/nal-hevc.c     | 11 +++--------
+ drivers/media/platform/allegro-dvt/nal-hevc.h     |  6 +++---
+ 3 files changed, 9 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/gpu/drm/display/drm_hdmi_state_helper.c b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-index 063421835dba..f20dcfecb6b8 100644
---- a/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-+++ b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-@@ -1,9 +1,11 @@
- // SPDX-License-Identifier: MIT
+diff --git a/drivers/media/platform/allegro-dvt/allegro-core.c b/drivers/media/platform/allegro-dvt/allegro-core.c
+index da61f9beb6b4..369bd88cc0ae 100644
+--- a/drivers/media/platform/allegro-dvt/allegro-core.c
++++ b/drivers/media/platform/allegro-dvt/allegro-core.c
+@@ -1852,14 +1852,14 @@ static ssize_t allegro_hevc_write_sps(struct allegro_channel *channel,
+ 	hrd->dpb_output_delay_length_minus1 = 30;
  
- #include <drm/drm_atomic.h>
- #include <drm/drm_connector.h>
-+#include <drm/drm_edid.h>
-+#include <drm/drm_print.h>
+ 	hrd->bit_rate_scale = ffs(channel->bitrate_peak) - 6;
+-	hrd->vcl_hrd[0].bit_rate_value_minus1[0] =
++	hrd->vcl_hrd[0].bit_rate_value_minus1 =
+ 		(channel->bitrate_peak >> (6 + hrd->bit_rate_scale)) - 1;
  
- #include <drm/display/drm_hdmi_helper.h>
- #include <drm/display/drm_hdmi_state_helper.h>
+ 	cpb_size = v4l2_ctrl_g_ctrl(channel->mpeg_video_cpb_size) * 1000;
+ 	hrd->cpb_size_scale = ffs(cpb_size) - 4;
+-	hrd->vcl_hrd[0].cpb_size_value_minus1[0] = (cpb_size >> (4 + hrd->cpb_size_scale)) - 1;
++	hrd->vcl_hrd[0].cpb_size_value_minus1 = (cpb_size >> (4 + hrd->cpb_size_scale)) - 1;
  
- /**
-@@ -46,10 +48,112 @@ connector_state_get_mode(const struct drm_connector_state *conn_state)
- 		return NULL;
+-	hrd->vcl_hrd[0].cbr_flag[0] = !v4l2_ctrl_g_ctrl(channel->mpeg_video_frame_rc_enable);
++	hrd->vcl_hrd[0].cbr_flag = !v4l2_ctrl_g_ctrl(channel->mpeg_video_frame_rc_enable);
  
- 	return &crtc_state->mode;
- }
+ 	size = nal_hevc_write_sps(&dev->plat_dev->dev, dest, n, sps);
  
-+static bool
-+sink_supports_format_bpc(const struct drm_connector *connector,
-+			 const struct drm_display_info *info,
-+			 const struct drm_display_mode *mode,
-+			 unsigned int format, unsigned int bpc)
-+{
-+	struct drm_device *dev = connector->dev;
-+	u8 vic = drm_match_cea_mode(mode);
-+
-+	/*
-+	 * CTA-861-F, section 5.4 - Color Coding & Quantization states
-+	 * that the bpc must be 8, 10, 12 or 16 except for the default
-+	 * 640x480 VIC1 where the value must be 8.
-+	 *
-+	 * The definition of default here is ambiguous but the spec
-+	 * refers to VIC1 being the default timing in several occasions
-+	 * so our understanding is that for the default timing (ie,
-+	 * VIC1), the bpc must be 8.
-+	 */
-+	if (vic == 1 && bpc != 8) {
-+		drm_dbg_kms(dev, "VIC1 requires a bpc of 8, got %u\n", bpc);
-+		return false;
-+	}
-+
-+	if (!info->is_hdmi &&
-+	    (format != HDMI_COLORSPACE_RGB || bpc != 8)) {
-+		drm_dbg_kms(dev, "DVI Monitors require an RGB output at 8 bpc\n");
-+		return false;
-+	}
-+
-+	if (!(connector->hdmi.supported_formats & BIT(format))) {
-+		drm_dbg_kms(dev, "%s format unsupported by the connector.\n",
-+			    drm_hdmi_connector_get_output_format_name(format));
-+		return false;
-+	}
-+
-+	switch (format) {
-+	case HDMI_COLORSPACE_RGB:
-+		drm_dbg_kms(dev, "RGB Format, checking the constraints.\n");
-+
-+		if (!(info->color_formats & DRM_COLOR_FORMAT_RGB444)) {
-+			drm_dbg_kms(dev, "Sink doesn't support RGB.\n");
-+			return false;
-+		}
-+
-+		if (bpc == 10 && !(info->edid_hdmi_rgb444_dc_modes & DRM_EDID_HDMI_DC_30)) {
-+			drm_dbg_kms(dev, "10 BPC but sink doesn't support Deep Color 30.\n");
-+			return false;
-+		}
-+
-+		if (bpc == 12 && !(info->edid_hdmi_rgb444_dc_modes & DRM_EDID_HDMI_DC_36)) {
-+			drm_dbg_kms(dev, "12 BPC but sink doesn't support Deep Color 36.\n");
-+			return false;
-+		}
-+
-+		drm_dbg_kms(dev, "RGB format supported in that configuration.\n");
-+
-+		return true;
-+
-+	case HDMI_COLORSPACE_YUV422:
-+		drm_dbg_kms(dev, "YUV422 format, checking the constraints.\n");
-+
-+		if (!(info->color_formats & DRM_COLOR_FORMAT_YCBCR422)) {
-+			drm_dbg_kms(dev, "Sink doesn't support YUV422.\n");
-+			return false;
-+		}
-+
-+		if (bpc != 12) {
-+			drm_dbg_kms(dev, "YUV422 only supports 12 bpc.\n");
-+			return false;
-+		}
-+
-+		drm_dbg_kms(dev, "YUV422 format supported in that configuration.\n");
-+
-+		return true;
-+
-+	case HDMI_COLORSPACE_YUV444:
-+		drm_dbg_kms(dev, "YUV444 format, checking the constraints.\n");
-+
-+		if (!(info->color_formats & DRM_COLOR_FORMAT_YCBCR444)) {
-+			drm_dbg_kms(dev, "Sink doesn't support YUV444.\n");
-+			return false;
-+		}
-+
-+		if (bpc == 10 && !(info->edid_hdmi_ycbcr444_dc_modes & DRM_EDID_HDMI_DC_30)) {
-+			drm_dbg_kms(dev, "10 BPC but sink doesn't support Deep Color 30.\n");
-+			return false;
-+		}
-+
-+		if (bpc == 12 && !(info->edid_hdmi_ycbcr444_dc_modes & DRM_EDID_HDMI_DC_36)) {
-+			drm_dbg_kms(dev, "12 BPC but sink doesn't support Deep Color 36.\n");
-+			return false;
-+		}
-+
-+		drm_dbg_kms(dev, "YUV444 format supported in that configuration.\n");
-+
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
- static enum drm_mode_status
- hdmi_clock_valid(const struct drm_connector *connector,
- 		 const struct drm_display_mode *mode,
- 		 unsigned long long clock)
+diff --git a/drivers/media/platform/allegro-dvt/nal-hevc.c b/drivers/media/platform/allegro-dvt/nal-hevc.c
+index 9cdf2756e0a3..575089522df5 100644
+--- a/drivers/media/platform/allegro-dvt/nal-hevc.c
++++ b/drivers/media/platform/allegro-dvt/nal-hevc.c
+@@ -210,14 +210,9 @@ static void nal_hevc_rbsp_vps(struct rbsp *rbsp, struct nal_hevc_vps *vps)
+ static void nal_hevc_rbsp_sub_layer_hrd_parameters(struct rbsp *rbsp,
+ 						   struct nal_hevc_sub_layer_hrd_parameters *hrd)
  {
-@@ -90,10 +194,101 @@ hdmi_compute_clock(const struct drm_connector *connector,
- 	conn_state->hdmi.tmds_char_rate = clock;
- 
- 	return 0;
- }
- 
-+static bool
-+hdmi_try_format_bpc(const struct drm_connector *connector,
-+		    struct drm_connector_state *conn_state,
-+		    const struct drm_display_mode *mode,
-+		    unsigned int bpc, enum hdmi_colorspace fmt)
-+{
-+	const struct drm_display_info *info = &connector->display_info;
-+	struct drm_device *dev = connector->dev;
-+	int ret;
-+
-+	drm_dbg_kms(dev, "Trying %s output format\n",
-+		    drm_hdmi_connector_get_output_format_name(fmt));
-+
-+	if (!sink_supports_format_bpc(connector, info, mode, fmt, bpc)) {
-+		drm_dbg_kms(dev, "%s output format not supported with %u bpc\n",
-+			    drm_hdmi_connector_get_output_format_name(fmt),
-+			    bpc);
-+		return false;
-+	}
-+
-+	ret = hdmi_compute_clock(connector, conn_state, mode, bpc, fmt);
-+	if (ret) {
-+		drm_dbg_kms(dev, "Couldn't compute clock for %s output format and %u bpc\n",
-+			    drm_hdmi_connector_get_output_format_name(fmt),
-+			    bpc);
-+		return false;
-+	}
-+
-+	drm_dbg_kms(dev, "%s output format supported with %u (TMDS char rate: %llu Hz)\n",
-+		    drm_hdmi_connector_get_output_format_name(fmt),
-+		    bpc, conn_state->hdmi.tmds_char_rate);
-+
-+	return true;
-+}
-+
-+static int
-+hdmi_compute_format(const struct drm_connector *connector,
-+		    struct drm_connector_state *conn_state,
-+		    const struct drm_display_mode *mode,
-+		    unsigned int bpc)
-+{
-+	struct drm_device *dev = connector->dev;
-+
-+	/*
-+	 * TODO: Add support for YCbCr420 output for HDMI 2.0 capable
-+	 * devices, for modes that only support YCbCr420.
-+	 */
-+	if (hdmi_try_format_bpc(connector, conn_state, mode, bpc, HDMI_COLORSPACE_RGB)) {
-+		conn_state->hdmi.output_format = HDMI_COLORSPACE_RGB;
-+		return 0;
-+	}
-+
-+	drm_dbg_kms(dev, "Failed. No Format Supported for that bpc count.\n");
-+
-+	return -EINVAL;
-+}
-+
-+static int
-+hdmi_compute_config(const struct drm_connector *connector,
-+		    struct drm_connector_state *conn_state,
-+		    const struct drm_display_mode *mode)
-+{
-+	struct drm_device *dev = connector->dev;
-+	unsigned int max_bpc = clamp_t(unsigned int,
-+				       conn_state->max_bpc,
-+				       8, connector->max_bpc);
-+	unsigned int bpc;
-+	int ret;
-+
-+	for (bpc = max_bpc; bpc >= 8; bpc -= 2) {
-+		drm_dbg_kms(dev, "Trying with a %d bpc output\n", bpc);
-+
-+		ret = hdmi_compute_format(connector, conn_state, mode, bpc);
-+		if (ret)
-+			continue;
-+
-+		conn_state->hdmi.output_bpc = bpc;
-+
-+		drm_dbg_kms(dev,
-+			    "Mode %ux%u @ %uHz: Found configuration: bpc: %u, fmt: %s, clock: %llu\n",
-+			    mode->hdisplay, mode->vdisplay, drm_mode_vrefresh(mode),
-+			    conn_state->hdmi.output_bpc,
-+			    drm_hdmi_connector_get_output_format_name(conn_state->hdmi.output_format),
-+			    conn_state->hdmi.tmds_char_rate);
-+
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- /**
-  * drm_atomic_helper_connector_hdmi_check() - Helper to check HDMI connector atomic state
-  * @connector: DRM Connector
-  * @state: the DRM State object
-  *
-@@ -113,13 +308,11 @@ int drm_atomic_helper_connector_hdmi_check(struct drm_connector *connector,
- 		drm_atomic_get_new_connector_state(state, connector);
- 	const struct drm_display_mode *mode =
- 		connector_state_get_mode(new_conn_state);
- 	int ret;
- 
--	ret = hdmi_compute_clock(connector, new_conn_state, mode,
--				 new_conn_state->hdmi.output_bpc,
--				 new_conn_state->hdmi.output_format);
-+	ret = hdmi_compute_config(connector, new_conn_state, mode);
- 	if (ret)
- 		return ret;
- 
- 	if (old_conn_state->hdmi.output_bpc != new_conn_state->hdmi.output_bpc ||
- 	    old_conn_state->hdmi.output_format != new_conn_state->hdmi.output_format) {
-diff --git a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-index ead998a691e7..a49a544d7b49 100644
---- a/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-+++ b/drivers/gpu/drm/tests/drm_hdmi_state_helper_test.c
-@@ -70,13 +70,10 @@ static int light_up_connector(struct kunit *test,
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	conn_state = drm_atomic_get_connector_state(state, connector);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, conn_state);
- 
--	conn_state->hdmi.output_bpc = connector->max_bpc;
--	conn_state->hdmi.output_format = HDMI_COLORSPACE_RGB;
+-	unsigned int i;
+-	unsigned int cpb_cnt = 1;
 -
- 	ret = drm_atomic_set_crtc_for_connector(conn_state, crtc);
- 	KUNIT_EXPECT_EQ(test, ret, 0);
- 
- 	crtc_state = drm_atomic_get_crtc_state(state, crtc);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, crtc_state);
-@@ -251,14 +248,19 @@ static void drm_test_check_output_bpc_crtc_mode_changed(struct kunit *test)
- 	priv = drm_atomic_helper_connector_hdmi_init(test,
- 						     BIT(HDMI_COLORSPACE_RGB),
- 						     10);
- 	KUNIT_ASSERT_NOT_NULL(test, priv);
- 
-+	conn = &priv->connector;
-+	ret = set_connector_edid(test, conn,
-+				 test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz,
-+				 ARRAY_SIZE(test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz));
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
- 	ctx = drm_kunit_helper_acquire_ctx_alloc(test);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
- 
--	conn = &priv->connector;
- 	preferred = find_preferred_mode(conn);
- 	KUNIT_ASSERT_NOT_NULL(test, preferred);
- 
- 	drm = &priv->drm;
- 	crtc = priv->crtc;
-@@ -272,15 +274,15 @@ static void drm_test_check_output_bpc_crtc_mode_changed(struct kunit *test)
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_conn_state);
- 
- 	old_conn_state = drm_atomic_get_old_connector_state(state, conn);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, old_conn_state);
- 
--	new_conn_state->hdmi.output_bpc = 8;
-+	new_conn_state->max_requested_bpc = 8;
- 
- 	KUNIT_ASSERT_NE(test,
--			old_conn_state->hdmi.output_bpc,
--			new_conn_state->hdmi.output_bpc);
-+			old_conn_state->max_requested_bpc,
-+			new_conn_state->max_requested_bpc);
- 
- 	ret = drm_atomic_check_only(state);
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	old_conn_state = drm_atomic_get_old_connector_state(state, conn);
-@@ -320,14 +322,19 @@ static void drm_test_check_output_bpc_crtc_mode_not_changed(struct kunit *test)
- 	priv = drm_atomic_helper_connector_hdmi_init(test,
- 						     BIT(HDMI_COLORSPACE_RGB),
- 						     10);
- 	KUNIT_ASSERT_NOT_NULL(test, priv);
- 
-+	conn = &priv->connector;
-+	ret = set_connector_edid(test, conn,
-+				 test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz,
-+				 ARRAY_SIZE(test_edid_hdmi_1080p_rgb_yuv_dc_max_200mhz));
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
- 	ctx = drm_kunit_helper_acquire_ctx_alloc(test);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ctx);
- 
--	conn = &priv->connector;
- 	preferred = find_preferred_mode(conn);
- 	KUNIT_ASSERT_NOT_NULL(test, preferred);
- 
- 	drm = &priv->drm;
- 	crtc = priv->crtc;
-@@ -670,11 +677,11 @@ static void drm_test_check_format_value(struct kunit *test)
- 						     8);
- 	KUNIT_ASSERT_NOT_NULL(test, priv);
- 
- 	conn = &priv->connector;
- 	conn_state = conn->state;
--	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_format, HDMI_COLORSPACE_RGB);
-+	KUNIT_EXPECT_EQ(test, conn_state->hdmi.output_format, 0);
+-	for (i = 0; i < cpb_cnt; i++) {
+-		rbsp_uev(rbsp, &hrd->bit_rate_value_minus1[i]);
+-		rbsp_uev(rbsp, &hrd->cpb_size_value_minus1[i]);
+-		rbsp_bit(rbsp, &hrd->cbr_flag[i]);
+-	}
++	rbsp_uev(rbsp, &hrd->bit_rate_value_minus1);
++	rbsp_uev(rbsp, &hrd->cpb_size_value_minus1);
++	rbsp_bit(rbsp, &hrd->cbr_flag);
  }
  
- /*
-  * Test that the value of the output format property out of reset is set
-  * to 0, and will be computed at atomic_check time.
+ static void nal_hevc_rbsp_hrd_parameters(struct rbsp *rbsp,
+diff --git a/drivers/media/platform/allegro-dvt/nal-hevc.h b/drivers/media/platform/allegro-dvt/nal-hevc.h
+index eb46f12aae80..afa7a9d7d654 100644
+--- a/drivers/media/platform/allegro-dvt/nal-hevc.h
++++ b/drivers/media/platform/allegro-dvt/nal-hevc.h
+@@ -97,9 +97,9 @@ struct nal_hevc_vps {
+ };
+ 
+ struct nal_hevc_sub_layer_hrd_parameters {
+-	unsigned int bit_rate_value_minus1[1];
+-	unsigned int cpb_size_value_minus1[1];
+-	unsigned int cbr_flag[1];
++	unsigned int bit_rate_value_minus1;
++	unsigned int cpb_size_value_minus1;
++	unsigned int cbr_flag;
+ };
+ 
+ struct nal_hevc_hrd_parameters {
 
 -- 
-2.45.0
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
