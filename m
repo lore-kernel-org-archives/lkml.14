@@ -1,64 +1,69 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168C21649D3
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:55:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7B616C42C
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097313; cv=none; b=rDm9jbD62Qxo/gv535UqUoNAm2u06k9g0j+VElg+9rYCrDb8kQJ2g6HgViTeZ+VNe027vnaGx+H6hhQqi1PCLH8rI5sBg403dkjUzj8sWGllOLFiZi/PUykV5ULIcrNd8WO/Pl7vDcjsVpksOmqyAKmS8IXz/89f8aCpd1Mfh94=
+	t=1715097317; cv=none; b=aSEv/PMXDHR0gkQ7nsWHULtM6hliirGLSHXU+KV6Jq9wVmcqapgZyzlKGL9vWkQipMKeTtVz7hGnpAVdhHK7Msp0uOlN0xhvDEmOnzjcupM00GGoB1aDwMtgMcEP6/MiQS12cNuYWP4X30qgUvPKedcE5I9xFFMO6ZzM2d956oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715097313; c=relaxed/simple;
-	bh=pQm6/UbnhlQ71QOAiSXRcdkBS2j1QGiiSL9FOmgC6gM=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=YEoqDqim0r11bfxKhj6b0lxgJWHGIUot+L/4hIiNIp7CEVyAXErQb8HurAZE/Q6JV8J2ju8wzgZr8tMdB0aaMCzaVBAVQ5dcbA2zUol8L4FpCGkSIjZQY5N7q84F7ZYMHIdxtCnm/KWtizCsrvsBq5JbwTu/onoIYz8AFnmfLYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4S0i42gK; arc=none smtp.client-ip=209.85.128.73
+	s=arc-20240116; t=1715097317; c=relaxed/simple;
+	bh=6n53uv6UrXHDy7G0XjEFHtkiXL3tOHgrKRXUPJhRD1A=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=I7u5IaXbw94kYV7wKQbjekokhCdLDuGS9Zk7LJ2NSRzjBo/rSHuiuQ0SrnV8Nnl3Z+Wt8iDw1yPEl5iS7MuPE99CinDpI/ktVh0kC4ydhY+TLy+C0ToX8GV6WXIjDq3zWy6W8LhfoMRZi6CPNP2UZFjfkMeDHqfQofV+BrgSqUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ioYgprnD; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4S0i42gK"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-417bf71efb4so18094885e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:55:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ioYgprnD"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61bea0ca5e2so60521347b3.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:55:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715097309; x=1715702109; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RJ47pWXAtCFdZcUV/HEfsVY67B3nHtrNt0g1FksRjBo=;
-        b=4S0i42gKd3EeegV5AhTOhEC6lgJPEbZn/elkAHZw61uVnRBOblNRY88bzYz3bN78Kn
-         jzwr5OXnwLXC5RzP0BHTAhTSR9TOWe1AU4PyEdZu5Mh9cicRm8GaEZ2MDQSVy+WinQl5
-         qzxXGdu6UaNCoECk4NGLX3+/sTGO8k0c37v7ZTvleG3HHVjaDIka7kiO48kB7kLfJBue
-         feOwqcXbRLC6StobF0EyIy3fgWpx+cdbX22x51dX4M7XDW4fxl65IOYbGS/fQdXrC3OI
-         Xn4uknrkmQUBBwqqk4MyYNNfnRgUumJNOszSy3BP73QwH2uvtoPtYl5qfmhkSz9QqS9b
-         6UTQ==
+        d=google.com; s=20230601; t=1715097314; x=1715702114; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SwTfwVH/zct96Wv6kNS8l4dEdwttWxXv8+u+rDPH8Hk=;
+        b=ioYgprnDX9ZWIuCUoWr2y2fpjE2SlQcAIPL+qxsgW7FKuoSUYzSE/vPi5PlcXyhXHT
+         nOhlSH6ASo55SzFx86LXnbcr91RO/QC4e/D6eKWrexLGe/5i/EmRVtGT1d4uvc1woyhb
+         Rwtqo12tVv2cQ7ESBfO9a01gfvVSIERobQTcVwIvrs+Lly+QiilkswsRZiuc+3bDP9/q
+         1CYNO2eZL4x9eqVP8mehyTMLPImgYCRwFJvtWW78sbgXkLyF5np004yT5qglG2SsJHlz
+         K5EvqhK424ZiV1MY7rI7Ii5k7ogBcWjQ+e78ShEsJMp+jLxNQ2+Kgvv/06yR90meeq3v
+         AkjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715097309; x=1715702109;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RJ47pWXAtCFdZcUV/HEfsVY67B3nHtrNt0g1FksRjBo=;
-        b=oOLvXZCebpoUG8g/SI8kDTJhgQuvuEvj0J3ysSD8wzdAhTln4bGwbabpUhIO3n6rRr
-         j1nwv5JlSh/CnGKsynfbw22KsUHeofij1zp0bYacLY2T6wUHH0J1hwhTgPlcJC/DIj4a
-         wqQ4Yuka5p0orukQP6WmLYC+cQEa2fMArseWNRU37McAfFnweeyxcfkhO0FhpHsAgfB5
-         bKITQuUpIDsBKTi1pgOj3WjtRZfN576UiC6Pvw1vBTgvYdPRaAXDZ2dueMHO+SrrpV5q
-         Nbr2MozTEA6EQeS6ybnzAGiigVlafHqrzxKGKRkttF+qMgwUOmvSs/lJgutMwq9QliJW
-         ig2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWzZtz12VTCCq3kbUP+myUlBAXeAM6c/zrtu1oYMjwZqNpVGF94utLf3SDrg3Ifpz57rneab5TkQjs8PQVojbVquc5ZGzMW54jgnBrF
-X-Gm-Message-State: AOJu0YxnxTNgOdzZ7vJIiHbiTvwsWcVTQCKQ+Z5LjFNnZKDJrNzi1TGy
-	MMG6k+WC6e7q6QPqzVt7183n4cEfuKPpgWLqLPlISV1xoVk58DJ1FnPQNu+nqssg2cRV7crEjH1
-	XfcIUjC1lIg==
-X-Google-Smtp-Source: AGHT+IH8xn8VWc+XkVkTbMSGWBKDl+TyyuL6M2xFwlfEJnC34wjOlZXzDZDE9agYnoRWzeKbkzLvsId01BSlcg==
+        d=1e100.net; s=20230601; t=1715097314; x=1715702114;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=SwTfwVH/zct96Wv6kNS8l4dEdwttWxXv8+u+rDPH8Hk=;
+        b=VXyh9Ozh9fsY+wsQ4v2McO8nXXLFeer2VRsQgq9kAmS0hWSp31eRlrFRG8RW8iiKKR
+         LGqc52eogY6SMreAGCkg+AcsA8IJS+HQ3NX+lKlRy3Ax3kHJL+GkkwtA00LJrzesbcbu
+         oiaiPfkZPzle2QMhrOtKgLymSpW/Sm7BuZ2JH/bNKW15K9fmS0CIfrY9O5IQ7MspqU/d
+         J8N52ETwJnUsabBlBHJQZ7JBJt78+G25zBkHg1ZGTZg5qqUuBkNt9AOG/m/qCGe7e7Jr
+         8/PmD+IhWgttbxSA8gPA2dTtCrOZUYfKZ2w7X4CZChliiq1ziveVYvTZOxsdiIgYU1DJ
+         yyUg==
+X-Forwarded-Encrypted: i=1; AJvYcCW1q4hnObIr+NC90/bulkGoaim1YtLP92AOfqW0Nn9v+/wyPn7HBfqkmAPL3R7l9dMmqasWMqj5BSX/o+oxGjkANsLACMqoJRoB0x2f
+X-Gm-Message-State: AOJu0YxKxexerT79fumZuJTG4YTBN/EzKObPJHb9/aMlqfitVn4hX2Ft
+	DJwHzM1F3CSKj6tFQUCMVf2pf/QSLVxhZYv+EoD3FrG2yTm6rs+Dyhn4EWlJcRE/f0bN2e57jWG
+	c4T7BSnHrnQ==
+X-Google-Smtp-Source: AGHT+IH6tWBZa1c2PtvmD5NZcxX1JtV+6ij12GBaRi1iezknzJKJj1Laxy27Ax3P2eeZaxUFbMCw0Z+lYn3ACw==
 X-Received: from szatan.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2d83])
- (user=panikiel job=sendgmr) by 2002:a05:600c:5103:b0:41e:8543:c5ea with SMTP
- id 5b1f17b1804b1-41f2d44054cmr326105e9.1.1715097309052; Tue, 07 May 2024
- 08:55:09 -0700 (PDT)
-Date: Tue,  7 May 2024 15:54:03 +0000
+ (user=panikiel job=sendgmr) by 2002:a05:690c:4a03:b0:61b:ed85:5d3f with SMTP
+ id 00721157ae682-62085df1573mr348327b3.10.1715097314145; Tue, 07 May 2024
+ 08:55:14 -0700 (PDT)
+Date: Tue,  7 May 2024 15:54:05 +0000
+In-Reply-To: <20240507155413.266057-1-panikiel@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240507155413.266057-1-panikiel@google.com>
 X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240507155413.266057-1-panikiel@google.com>
-Subject: [PATCH v3 00/10] Add Chameleon v3 video support
+Message-ID: <20240507155413.266057-3-panikiel@google.com>
+Subject: [PATCH v3 02/10] drm/dp_mst: Move DRM-independent structures to
+ separate header
 From: "=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
 To: airlied@gmail.com, akpm@linux-foundation.org, conor+dt@kernel.org, 
 	daniel@ffwll.ch, dinguyen@kernel.org, hverkuil-cisco@xs4all.nl, 
@@ -72,327 +77,512 @@ Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Google Chameleon v3 is a testing device capable of emulating multiple
-DisplayPort monitors, used for testing purposes.  It is based on an Arria
-10 SoCFPGA.  This patchset adds V4L2 drivers for two IP blocks used in the
-device's FPGA: the Chameleon v3 video interface, and the Intel DisplayPort
-RX IP.  The former is a video capture device that takes video signal and
-writes frames into memory, which can be later processed by userspace.
-The latter is a DisplayPort receiver IP from Intel, its datasheet can
-be found at:
-https://www.intel.com/programmable/technical-pdfs/683273.pdf
+Move structures describing MST sideband messages into a separate header
+so that non-DRM code can use them.
 
-The video interface driver is a regular v4l2 capture device driver, while
-the DP RX driver is a v4l2 subdevice driver. In order to avoid code
-duplication, some parts of the DisplayPort code from the DRM subsystem
-were put into headers usable by the DP RX driver.
-
-This patchset depends on changes merged into the linux-media tree at:
-git://linuxtv.org/hverkuil/media_tree.git tags/br-v6.10d
-
-Here is the output of `v4l2-compliance -s` run on a Chameleon v3 for
-/dev/video0 (no attached subdevice):
-
-```
-v4l2-compliance 1.27.0-5204, 32 bits, 32-bit time_t
-v4l2-compliance SHA: dd049328e528 2024-04-29 13:40:09
-
-Compliance test for chv3-video device /dev/video0:
-
-Driver Info:
-	Driver name      : chv3-video
-	Card type        : Chameleon v3 video
-	Bus info         : platform:c0060500.video
-	Driver version   : 6.9.0
-	Capabilities     : 0x84200001
-		Video Capture
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04200001
-		Video Capture
-		Streaming
-		Extended Pix Format
-
-Required ioctls:
-	test VIDIOC_QUERYCAP: OK
-	test invalid ioctls: OK
-
-Allow for multiple opens:
-	test second /dev/video0 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 1 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK
-	test VIDIOC_DV_TIMINGS_CAP: OK
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Control ioctls (Input 0):
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 2 Private Controls: 0
-
-Format ioctls (Input 0):
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls (Input 0):
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls (Input 0):
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test CREATE_BUFS maximum buffers: OK
-	test VIDIOC_REMOVE_BUFS: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK (Not Supported)
-	test TIME32/64: OK
-
-Test input 0:
-
-Streaming ioctls:
-	test read/write: OK (Not Supported)
-	test blocking wait: OK
-	test MMAP (no poll): OK
-	test MMAP (select): OK
-	test MMAP (epoll): OK
-	test USERPTR (no poll): OK (Not Supported)
-	test USERPTR (select): OK (Not Supported)
-	test DMABUF: Cannot test, specify --expbuf-device
-
-Total for chv3-video device /dev/video0: 55, Succeeded: 55, Failed: 0, Warn=
-ings: 0
-```
-
-Here is the output of `v4l2-compliance -s` run on a Chameleon v3 for
-/dev/video4 (attached subdevice):
-
-```
-v4l2-compliance 1.27.0-5204, 32 bits, 32-bit time_t
-v4l2-compliance SHA: dd049328e528 2024-04-29 13:40:09
-
-Compliance test for chv3-video device /dev/video4:
-
-Driver Info:
-	Driver name      : chv3-video
-	Card type        : Chameleon v3 video
-	Bus info         : platform:c0060600.video
-	Driver version   : 6.9.0
-	Capabilities     : 0x84200001
-		Video Capture
-		Streaming
-		Extended Pix Format
-		Device Capabilities
-	Device Caps      : 0x04200001
-		Video Capture
-		Streaming
-		Extended Pix Format
-
-Required ioctls:
-	test VIDIOC_QUERYCAP: OK
-	test invalid ioctls: OK
-
-Allow for multiple opens:
-	test second /dev/video4 open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 1 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK
-	test VIDIOC_DV_TIMINGS_CAP: OK
-	test VIDIOC_G/S_EDID: OK
-
-Control ioctls (Input 0):
-	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-	test VIDIOC_QUERYCTRL: OK
-	test VIDIOC_G/S_CTRL: OK
-	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-	Standard Controls: 2 Private Controls: 0
-
-Format ioctls (Input 0):
-	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-	test VIDIOC_G/S_PARM: OK (Not Supported)
-	test VIDIOC_G_FBUF: OK (Not Supported)
-	test VIDIOC_G_FMT: OK
-	test VIDIOC_TRY_FMT: OK
-	test VIDIOC_S_FMT: OK
-	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-	test Cropping: OK (Not Supported)
-	test Composing: OK (Not Supported)
-	test Scaling: OK (Not Supported)
-
-Codec ioctls (Input 0):
-	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-Buffer ioctls (Input 0):
-	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-	test CREATE_BUFS maximum buffers: OK
-	test VIDIOC_REMOVE_BUFS: OK
-	test VIDIOC_EXPBUF: OK
-	test Requests: OK (Not Supported)
-	test TIME32/64: OK
-
-Test input 0:
-
-Streaming ioctls:
-	test read/write: OK (Not Supported)
-	test blocking wait: OK
-	test MMAP (no poll): OK
-	test MMAP (select): OK
-	test MMAP (epoll): OK
-	test USERPTR (no poll): OK (Not Supported)
-	test USERPTR (select): OK (Not Supported)
-	test DMABUF: Cannot test, specify --expbuf-device
-
-Total for chv3-video device /dev/video4: 55, Succeeded: 55, Failed: 0, Warn=
-ings: 0
-```
-
-v3 changes:
-  - Send v4l2-subdev API changes as a separate patchset
-  - Drop chameleonv3/ directory
-  - Change capture device name from "framebuffer" to "video interface"
-  - Set sensible min and max dv timing caps
-  - Set pixelclock to htotal * vtotal * 24Hz (we can't detect the actual va=
-lue)
-  - Remove enum_framesizes
-  - Use v4l2_match_dv_timings()
-  - Add V4L2_CID_DV_RX_POWER_PRESENT control
-  - Use V4L2_DV_BT_CEA_1920X1080P60 as default timing
-  - Use vb2_video_unregister_device()
-  - Move subdev pad initialization to probe
-  - Change subdev entity function to MEDIA_ENT_F_DV_DECODER
-  - Drop dprx 'port' property and always use 'ports' instead
-  - Remove legacy-format property and use multiple compats
-  - Cleanup notifier only in non-fallback mode
-  - Cleanup subdev entity using media_entity_cleanup()
-  - Increase HPD pulse length to 500ms (see comment in dprx_set_edid())
-  - Pull HPD low before updating EDID
-  - Add a DisplayPort media bus type
-  - Move receiver properties to port endpoint (data-lanes, link-frequencies=
-)
-
-v2 changes:
-  - Add missing includes in dt binding examples
-  - Add version number to intel,dprx compatible
-  - Use generic node names in dts
-  - Add and document IP configuration parameters
-  - Remove IRQ registers from intel-dprx (they're not a part of the IP)
-  - Remove no-endpoint property and check for "port" node instead
-
-Pawe=C5=82 Anikiel (10):
-  media: Add Chameleon v3 video interface driver
-  drm/dp_mst: Move DRM-independent structures to separate header
-  lib: Move DisplayPort CRC functions to common lib
-  drm/display: Add mask definitions for DP_PAYLOAD_ALLOCATE_* registers
-  media: dt-bindings: video-interfaces: Support DisplayPort MST
-  media: v4l2-mediabus: Add support for DisplayPort media bus
-  media: intel: Add Displayport RX IP driver
-  media: dt-bindings: Add Chameleon v3 video interface
-  media: dt-bindings: Add Intel Displayport RX IP
-  ARM: dts: chameleonv3: Add video device nodes
-
- .../bindings/media/google,chv3-video.yaml     |   64 +
- .../devicetree/bindings/media/intel,dprx.yaml |  172 ++
- .../bindings/media/video-interfaces.yaml      |    7 +
- .../socfpga/socfpga_arria10_chameleonv3.dts   |  194 ++
- drivers/gpu/drm/display/Kconfig               |    1 +
- drivers/gpu/drm/display/drm_dp_mst_topology.c |   76 +-
- drivers/media/platform/Kconfig                |    1 +
- drivers/media/platform/Makefile               |    1 +
- drivers/media/platform/google/Kconfig         |   13 +
- drivers/media/platform/google/Makefile        |    3 +
- drivers/media/platform/google/chv3-video.c    |  891 +++++++
- drivers/media/platform/intel/Kconfig          |   12 +
- drivers/media/platform/intel/Makefile         |    1 +
- drivers/media/platform/intel/intel-dprx.c     | 2283 +++++++++++++++++
- drivers/media/v4l2-core/v4l2-fwnode.c         |   38 +
- include/drm/display/drm_dp.h                  |    9 +-
- include/drm/display/drm_dp_mst.h              |  238 ++
- include/drm/display/drm_dp_mst_helper.h       |  232 +-
- include/dt-bindings/media/video-interfaces.h  |    2 +
- include/linux/crc-dp.h                        |   10 +
- include/media/v4l2-fwnode.h                   |    5 +
- include/media/v4l2-mediabus.h                 |   17 +
- lib/Kconfig                                   |    8 +
- lib/Makefile                                  |    1 +
- lib/crc-dp.c                                  |   78 +
- 25 files changed, 4053 insertions(+), 304 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/google,chv3-vid=
-eo.yaml
- create mode 100644 Documentation/devicetree/bindings/media/intel,dprx.yaml
- create mode 100644 drivers/media/platform/google/Kconfig
- create mode 100644 drivers/media/platform/google/Makefile
- create mode 100644 drivers/media/platform/google/chv3-video.c
- create mode 100644 drivers/media/platform/intel/intel-dprx.c
+Signed-off-by: Pawe=C5=82 Anikiel <panikiel@google.com>
+---
+ include/drm/display/drm_dp_mst.h        | 238 ++++++++++++++++++++++++
+ include/drm/display/drm_dp_mst_helper.h | 232 +----------------------
+ 2 files changed, 239 insertions(+), 231 deletions(-)
  create mode 100644 include/drm/display/drm_dp_mst.h
- create mode 100644 include/linux/crc-dp.h
- create mode 100644 lib/crc-dp.c
 
+diff --git a/include/drm/display/drm_dp_mst.h b/include/drm/display/drm_dp_=
+mst.h
+new file mode 100644
+index 000000000000..4e398bfd3ee3
+--- /dev/null
++++ b/include/drm/display/drm_dp_mst.h
+@@ -0,0 +1,238 @@
++/* SPDX-License-Identifier: MIT */
++
++#ifndef _DRM_DP_MST_H_
++#define _DRM_DP_MST_H_
++
++#include <linux/types.h>
++
++struct drm_dp_nak_reply {
++	u8 guid[16];
++	u8 reason;
++	u8 nak_data;
++};
++
++struct drm_dp_link_address_ack_reply {
++	u8 guid[16];
++	u8 nports;
++	struct drm_dp_link_addr_reply_port {
++		bool input_port;
++		u8 peer_device_type;
++		u8 port_number;
++		bool mcs;
++		bool ddps;
++		bool legacy_device_plug_status;
++		u8 dpcd_revision;
++		u8 peer_guid[16];
++		u8 num_sdp_streams;
++		u8 num_sdp_stream_sinks;
++	} ports[16];
++};
++
++struct drm_dp_remote_dpcd_read_ack_reply {
++	u8 port_number;
++	u8 num_bytes;
++	u8 bytes[255];
++};
++
++struct drm_dp_remote_dpcd_write_ack_reply {
++	u8 port_number;
++};
++
++struct drm_dp_remote_dpcd_write_nak_reply {
++	u8 port_number;
++	u8 reason;
++	u8 bytes_written_before_failure;
++};
++
++struct drm_dp_remote_i2c_read_ack_reply {
++	u8 port_number;
++	u8 num_bytes;
++	u8 bytes[255];
++};
++
++struct drm_dp_remote_i2c_read_nak_reply {
++	u8 port_number;
++	u8 nak_reason;
++	u8 i2c_nak_transaction;
++};
++
++struct drm_dp_remote_i2c_write_ack_reply {
++	u8 port_number;
++};
++
++struct drm_dp_query_stream_enc_status_ack_reply {
++	/* Bit[23:16]- Stream Id */
++	u8 stream_id;
++
++	/* Bit[15]- Signed */
++	bool reply_signed;
++
++	/* Bit[10:8]- Stream Output Sink Type */
++	bool unauthorizable_device_present;
++	bool legacy_device_present;
++	bool query_capable_device_present;
++
++	/* Bit[12:11]- Stream Output CP Type */
++	bool hdcp_1x_device_present;
++	bool hdcp_2x_device_present;
++
++	/* Bit[4]- Stream Authentication */
++	bool auth_completed;
++
++	/* Bit[3]- Stream Encryption */
++	bool encryption_enabled;
++
++	/* Bit[2]- Stream Repeater Function Present */
++	bool repeater_present;
++
++	/* Bit[1:0]- Stream State */
++	u8 state;
++};
++
++#define DRM_DP_MAX_SDP_STREAMS 16
++struct drm_dp_allocate_payload {
++	u8 port_number;
++	u8 number_sdp_streams;
++	u8 vcpi;
++	u16 pbn;
++	u8 sdp_stream_sink[DRM_DP_MAX_SDP_STREAMS];
++};
++
++struct drm_dp_allocate_payload_ack_reply {
++	u8 port_number;
++	u8 vcpi;
++	u16 allocated_pbn;
++};
++
++struct drm_dp_connection_status_notify {
++	u8 guid[16];
++	u8 port_number;
++	bool legacy_device_plug_status;
++	bool displayport_device_plug_status;
++	bool message_capability_status;
++	bool input_port;
++	u8 peer_device_type;
++};
++
++struct drm_dp_remote_dpcd_read {
++	u8 port_number;
++	u32 dpcd_address;
++	u8 num_bytes;
++};
++
++struct drm_dp_remote_dpcd_write {
++	u8 port_number;
++	u32 dpcd_address;
++	u8 num_bytes;
++	u8 *bytes;
++};
++
++#define DP_REMOTE_I2C_READ_MAX_TRANSACTIONS 4
++struct drm_dp_remote_i2c_read {
++	u8 num_transactions;
++	u8 port_number;
++	struct drm_dp_remote_i2c_read_tx {
++		u8 i2c_dev_id;
++		u8 num_bytes;
++		u8 *bytes;
++		u8 no_stop_bit;
++		u8 i2c_transaction_delay;
++	} transactions[DP_REMOTE_I2C_READ_MAX_TRANSACTIONS];
++	u8 read_i2c_device_id;
++	u8 num_bytes_read;
++};
++
++struct drm_dp_remote_i2c_write {
++	u8 port_number;
++	u8 write_i2c_device_id;
++	u8 num_bytes;
++	u8 *bytes;
++};
++
++struct drm_dp_query_stream_enc_status {
++	u8 stream_id;
++	u8 client_id[7];	/* 56-bit nonce */
++	u8 stream_event;
++	bool valid_stream_event;
++	u8 stream_behavior;
++	u8 valid_stream_behavior;
++};
++
++/* this covers ENUM_RESOURCES, POWER_DOWN_PHY, POWER_UP_PHY */
++struct drm_dp_port_number_req {
++	u8 port_number;
++};
++
++struct drm_dp_enum_path_resources_ack_reply {
++	u8 port_number;
++	bool fec_capable;
++	u16 full_payload_bw_number;
++	u16 avail_payload_bw_number;
++};
++
++/* covers POWER_DOWN_PHY, POWER_UP_PHY */
++struct drm_dp_port_number_rep {
++	u8 port_number;
++};
++
++struct drm_dp_query_payload {
++	u8 port_number;
++	u8 vcpi;
++};
++
++struct drm_dp_resource_status_notify {
++	u8 port_number;
++	u8 guid[16];
++	u16 available_pbn;
++};
++
++struct drm_dp_query_payload_ack_reply {
++	u8 port_number;
++	u16 allocated_pbn;
++};
++
++struct drm_dp_sideband_msg_req_body {
++	u8 req_type;
++	union ack_req {
++		struct drm_dp_connection_status_notify conn_stat;
++		struct drm_dp_port_number_req port_num;
++		struct drm_dp_resource_status_notify resource_stat;
++
++		struct drm_dp_query_payload query_payload;
++		struct drm_dp_allocate_payload allocate_payload;
++
++		struct drm_dp_remote_dpcd_read dpcd_read;
++		struct drm_dp_remote_dpcd_write dpcd_write;
++
++		struct drm_dp_remote_i2c_read i2c_read;
++		struct drm_dp_remote_i2c_write i2c_write;
++
++		struct drm_dp_query_stream_enc_status enc_status;
++	} u;
++};
++
++struct drm_dp_sideband_msg_reply_body {
++	u8 reply_type;
++	u8 req_type;
++	union ack_replies {
++		struct drm_dp_nak_reply nak;
++		struct drm_dp_link_address_ack_reply link_addr;
++		struct drm_dp_port_number_rep port_number;
++
++		struct drm_dp_enum_path_resources_ack_reply path_resources;
++		struct drm_dp_allocate_payload_ack_reply allocate_payload;
++		struct drm_dp_query_payload_ack_reply query_payload;
++
++		struct drm_dp_remote_dpcd_read_ack_reply remote_dpcd_read_ack;
++		struct drm_dp_remote_dpcd_write_ack_reply remote_dpcd_write_ack;
++		struct drm_dp_remote_dpcd_write_nak_reply remote_dpcd_write_nack;
++
++		struct drm_dp_remote_i2c_read_ack_reply remote_i2c_read_ack;
++		struct drm_dp_remote_i2c_read_nak_reply remote_i2c_read_nack;
++		struct drm_dp_remote_i2c_write_ack_reply remote_i2c_write_ack;
++
++		struct drm_dp_query_stream_enc_status_ack_reply enc_status;
++	} u;
++};
++
++#endif
+diff --git a/include/drm/display/drm_dp_mst_helper.h b/include/drm/display/=
+drm_dp_mst_helper.h
+index 9b19d8bd520a..61add6f6accd 100644
+--- a/include/drm/display/drm_dp_mst_helper.h
++++ b/include/drm/display/drm_dp_mst_helper.h
+@@ -23,6 +23,7 @@
+ #define _DRM_DP_MST_HELPER_H_
+=20
+ #include <linux/types.h>
++#include <drm/display/drm_dp_mst.h>
+ #include <drm/display/drm_dp_helper.h>
+ #include <drm/drm_atomic.h>
+ #include <drm/drm_fixed.h>
+@@ -248,237 +249,6 @@ struct drm_dp_mst_branch {
+ 	u8 guid[16];
+ };
+=20
+-
+-struct drm_dp_nak_reply {
+-	u8 guid[16];
+-	u8 reason;
+-	u8 nak_data;
+-};
+-
+-struct drm_dp_link_address_ack_reply {
+-	u8 guid[16];
+-	u8 nports;
+-	struct drm_dp_link_addr_reply_port {
+-		bool input_port;
+-		u8 peer_device_type;
+-		u8 port_number;
+-		bool mcs;
+-		bool ddps;
+-		bool legacy_device_plug_status;
+-		u8 dpcd_revision;
+-		u8 peer_guid[16];
+-		u8 num_sdp_streams;
+-		u8 num_sdp_stream_sinks;
+-	} ports[16];
+-};
+-
+-struct drm_dp_remote_dpcd_read_ack_reply {
+-	u8 port_number;
+-	u8 num_bytes;
+-	u8 bytes[255];
+-};
+-
+-struct drm_dp_remote_dpcd_write_ack_reply {
+-	u8 port_number;
+-};
+-
+-struct drm_dp_remote_dpcd_write_nak_reply {
+-	u8 port_number;
+-	u8 reason;
+-	u8 bytes_written_before_failure;
+-};
+-
+-struct drm_dp_remote_i2c_read_ack_reply {
+-	u8 port_number;
+-	u8 num_bytes;
+-	u8 bytes[255];
+-};
+-
+-struct drm_dp_remote_i2c_read_nak_reply {
+-	u8 port_number;
+-	u8 nak_reason;
+-	u8 i2c_nak_transaction;
+-};
+-
+-struct drm_dp_remote_i2c_write_ack_reply {
+-	u8 port_number;
+-};
+-
+-struct drm_dp_query_stream_enc_status_ack_reply {
+-	/* Bit[23:16]- Stream Id */
+-	u8 stream_id;
+-
+-	/* Bit[15]- Signed */
+-	bool reply_signed;
+-
+-	/* Bit[10:8]- Stream Output Sink Type */
+-	bool unauthorizable_device_present;
+-	bool legacy_device_present;
+-	bool query_capable_device_present;
+-
+-	/* Bit[12:11]- Stream Output CP Type */
+-	bool hdcp_1x_device_present;
+-	bool hdcp_2x_device_present;
+-
+-	/* Bit[4]- Stream Authentication */
+-	bool auth_completed;
+-
+-	/* Bit[3]- Stream Encryption */
+-	bool encryption_enabled;
+-
+-	/* Bit[2]- Stream Repeater Function Present */
+-	bool repeater_present;
+-
+-	/* Bit[1:0]- Stream State */
+-	u8 state;
+-};
+-
+-#define DRM_DP_MAX_SDP_STREAMS 16
+-struct drm_dp_allocate_payload {
+-	u8 port_number;
+-	u8 number_sdp_streams;
+-	u8 vcpi;
+-	u16 pbn;
+-	u8 sdp_stream_sink[DRM_DP_MAX_SDP_STREAMS];
+-};
+-
+-struct drm_dp_allocate_payload_ack_reply {
+-	u8 port_number;
+-	u8 vcpi;
+-	u16 allocated_pbn;
+-};
+-
+-struct drm_dp_connection_status_notify {
+-	u8 guid[16];
+-	u8 port_number;
+-	bool legacy_device_plug_status;
+-	bool displayport_device_plug_status;
+-	bool message_capability_status;
+-	bool input_port;
+-	u8 peer_device_type;
+-};
+-
+-struct drm_dp_remote_dpcd_read {
+-	u8 port_number;
+-	u32 dpcd_address;
+-	u8 num_bytes;
+-};
+-
+-struct drm_dp_remote_dpcd_write {
+-	u8 port_number;
+-	u32 dpcd_address;
+-	u8 num_bytes;
+-	u8 *bytes;
+-};
+-
+-#define DP_REMOTE_I2C_READ_MAX_TRANSACTIONS 4
+-struct drm_dp_remote_i2c_read {
+-	u8 num_transactions;
+-	u8 port_number;
+-	struct drm_dp_remote_i2c_read_tx {
+-		u8 i2c_dev_id;
+-		u8 num_bytes;
+-		u8 *bytes;
+-		u8 no_stop_bit;
+-		u8 i2c_transaction_delay;
+-	} transactions[DP_REMOTE_I2C_READ_MAX_TRANSACTIONS];
+-	u8 read_i2c_device_id;
+-	u8 num_bytes_read;
+-};
+-
+-struct drm_dp_remote_i2c_write {
+-	u8 port_number;
+-	u8 write_i2c_device_id;
+-	u8 num_bytes;
+-	u8 *bytes;
+-};
+-
+-struct drm_dp_query_stream_enc_status {
+-	u8 stream_id;
+-	u8 client_id[7];	/* 56-bit nonce */
+-	u8 stream_event;
+-	bool valid_stream_event;
+-	u8 stream_behavior;
+-	u8 valid_stream_behavior;
+-};
+-
+-/* this covers ENUM_RESOURCES, POWER_DOWN_PHY, POWER_UP_PHY */
+-struct drm_dp_port_number_req {
+-	u8 port_number;
+-};
+-
+-struct drm_dp_enum_path_resources_ack_reply {
+-	u8 port_number;
+-	bool fec_capable;
+-	u16 full_payload_bw_number;
+-	u16 avail_payload_bw_number;
+-};
+-
+-/* covers POWER_DOWN_PHY, POWER_UP_PHY */
+-struct drm_dp_port_number_rep {
+-	u8 port_number;
+-};
+-
+-struct drm_dp_query_payload {
+-	u8 port_number;
+-	u8 vcpi;
+-};
+-
+-struct drm_dp_resource_status_notify {
+-	u8 port_number;
+-	u8 guid[16];
+-	u16 available_pbn;
+-};
+-
+-struct drm_dp_query_payload_ack_reply {
+-	u8 port_number;
+-	u16 allocated_pbn;
+-};
+-
+-struct drm_dp_sideband_msg_req_body {
+-	u8 req_type;
+-	union ack_req {
+-		struct drm_dp_connection_status_notify conn_stat;
+-		struct drm_dp_port_number_req port_num;
+-		struct drm_dp_resource_status_notify resource_stat;
+-
+-		struct drm_dp_query_payload query_payload;
+-		struct drm_dp_allocate_payload allocate_payload;
+-
+-		struct drm_dp_remote_dpcd_read dpcd_read;
+-		struct drm_dp_remote_dpcd_write dpcd_write;
+-
+-		struct drm_dp_remote_i2c_read i2c_read;
+-		struct drm_dp_remote_i2c_write i2c_write;
+-
+-		struct drm_dp_query_stream_enc_status enc_status;
+-	} u;
+-};
+-
+-struct drm_dp_sideband_msg_reply_body {
+-	u8 reply_type;
+-	u8 req_type;
+-	union ack_replies {
+-		struct drm_dp_nak_reply nak;
+-		struct drm_dp_link_address_ack_reply link_addr;
+-		struct drm_dp_port_number_rep port_number;
+-
+-		struct drm_dp_enum_path_resources_ack_reply path_resources;
+-		struct drm_dp_allocate_payload_ack_reply allocate_payload;
+-		struct drm_dp_query_payload_ack_reply query_payload;
+-
+-		struct drm_dp_remote_dpcd_read_ack_reply remote_dpcd_read_ack;
+-		struct drm_dp_remote_dpcd_write_ack_reply remote_dpcd_write_ack;
+-		struct drm_dp_remote_dpcd_write_nak_reply remote_dpcd_write_nack;
+-
+-		struct drm_dp_remote_i2c_read_ack_reply remote_i2c_read_ack;
+-		struct drm_dp_remote_i2c_read_nak_reply remote_i2c_read_nack;
+-		struct drm_dp_remote_i2c_write_ack_reply remote_i2c_write_ack;
+-
+-		struct drm_dp_query_stream_enc_status_ack_reply enc_status;
+-	} u;
+-};
+-
+ /* msg is queued to be put into a slot */
+ #define DRM_DP_SIDEBAND_TX_QUEUED 0
+ /* msg has started transmitting on a slot - still on msgq */
 --=20
 2.45.0.rc1.225.g2a3ae87e7f-goog
 
