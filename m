@@ -1,130 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD48686274;
-	Tue,  7 May 2024 22:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E736786AF4
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 22:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715122676; cv=none; b=cYPAmJ4V8DqlyqG8iXvEocknHzf7XvfNyatkUXtEAMgda1c+qEMGCEhWB83RF+jMN5ukgpHWefQfsMremxJPJmnUfyC/+mSNHBNERe5HWmf45ZNaEIsXaqBRvyOq0NP4ZMgcd7cWok2aVdXpwpXJZADs6v/Hv0B6+SkbKl79Kt4=
+	t=1715122679; cv=none; b=fwOdnO7zw3m02DdYiHvuFzX6ZO2sDJ7tsBhAoGzDS3RALnahsWZlZnoLMn0aR63O+oEQvgFEDPsey00rbCZMmgq35V5Qfd83l+LJwExJKSVGWkBpaTFuaL0GU1lgfphRyd6YD2bmcHB6rQ5OtaeTYGUYYxGxqQVCRtiXWqtsMJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715122676; c=relaxed/simple;
-	bh=45Ctv6QKcT69IleXOGmx/lkPXJ7GAVZJKpVT221zneY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RJe1jNv1exv/eF1kFNgmc7RtcAim29c5ptitXe4+sJI7pJoLAsE7rBposU6Pj4nRYzzWpTHCGaIYCSJI/1rnDAJ0ZFJ8w4x05AwTlrraUF8W0SR3Ube0xBTU/Ugzy5X2GcKBruNXQFwGJtrHEd/a1SZAkAcwG3/BSK1aXZAe050=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJi+IDoP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715122679; c=relaxed/simple;
+	bh=XyBcZnJlWUppCuQIMinKz47R/Vd3bwL8FhNo2NLewFs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Pxc0ZNiXCOuUGMgBbTCt91U1JWyEc62xPtf9LGXKaH8QPRbt5ny3QpLUbzGoF4vYnqExMWBbfpKSWL0spLZoTwAlfyrSLV0A1PJ2iEh5m4sh0tMkcjTql/NO4R2sw2rjYoW3IW23ToEGig2kkkCeJedAi+wJ8uHEDLRxXC7K6LQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uwhzibAd; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJi+IDoP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10017C2BBFC;
-	Tue,  7 May 2024 22:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715122676;
-	bh=45Ctv6QKcT69IleXOGmx/lkPXJ7GAVZJKpVT221zneY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DJi+IDoPvzymqz6B8nXnSWPtU5Bskg8mxETGeQSBVlxWihdZx2eG5ZPl0oG0N6uHw
-	 LshG6mQjZ+txRUefyrFdJ5Q3Hrv4fWYcy1YcPZPv9IU7Y2meqRmT7lz479/vKiBzzr
-	 IrWE70Q27tmp4xeZJwz1Hz0X7gNy6mGM+ZlRst5b2/1n2sLHh2YJnlvTgx/KqW8CuJ
-	 2pEiHoEOvpmuQN8ZQLF6KQRnZXKY0JvZGYR1emCd38z5+4I5W+IDShze9iB7aGaF32
-	 L2Bb649/jLSL42ejAID2mWvQ0fXwDhkw0byPOS6t+Deb9AidsPJo2w+mBpqzrY6wHk
-	 9XXzZpiq0CcZQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Mukul Joshi <mukul.joshi@amd.com>,
-	Felix Kuehling <felix.kuehling@amd.com>,
-	Alex Deucher <alexander.deucher@amd.com>,
-	Sasha Levin <sashal@kernel.org>,
-	Felix.Kuehling@amd.com,
-	christian.koenig@amd.com,
-	Xinhui.Pan@amd.com,
-	airlied@gmail.com,
-	daniel@ffwll.ch,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 6.8 12/23] drm/amdkfd: Add VRAM accounting for SVM migration
-Date: Tue,  7 May 2024 18:56:38 -0400
-Message-ID: <20240507225725.390306-12-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240507225725.390306-1-sashal@kernel.org>
-References: <20240507225725.390306-1-sashal@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uwhzibAd"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de57643041bso6237839276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 15:57:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715122677; x=1715727477; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=If9Q7YXcI0jaMPx5yFMsDYt2AC8Km9g14o178fmmDSQ=;
+        b=uwhzibAdk7SJF5PiZr80OlUUfdpQ2nyF8AQn4b1e5BjyH468Th+vQZKHdagrj83BWz
+         weXeFRd5HFBXawGUiblHto7z1KcwSRQE0G3aWX6OJcFPrQMAgtifLfWtH9W4bIBA+9AP
+         RMNd0OLclTwa10ulL+uXASm/jHT/i3vhfGSWT/uada+mqE15RpEIklE0HkYI/RWm+urK
+         zroDzds6xwEueMtNwR+lbBO+8r4FtFOeq9W15V5MQronb3xg4P7eAFJWR1ckCGNV8x1Y
+         mQvVX5DOtCsEtiwtWDT9POcGD8ULvTuypv5fNspbXoWJPLpqwoyzxhmmuywu2wKiz4UU
+         CXKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715122677; x=1715727477;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=If9Q7YXcI0jaMPx5yFMsDYt2AC8Km9g14o178fmmDSQ=;
+        b=LllCALq0GmnYb3NGot+3RmGwMkflIclNyU9Lq3RdxllZWe+gPzJlUdFLGErpdVcmCt
+         CqXd+8VnKJ4/TWRqPO/hIWRCzjWgTN9WVDcUlvkoVMtZu9roCqMOvLjmQoBF998LinMC
+         JYUwIaMFvoocQ8+Y2402X9kFlh6w42qH8zchen2Xp/WQuFC0fumwhm7eONJSDgMFn7W9
+         AN5PDHh7iPqulup2x0OKpMNBU7ukTcsGqZfxBxNQBfOBCJLCUhMCJuWBXcxdvEkF2hpg
+         P6/HeiWkSoU7z3d7NIOiwl51A3Q8bgrfd8nn7I6n3U2kXpoifqgg6Sl0iT6+ZJdB1fZY
+         WDpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWRdjpMVGzIXC+IMQ4jO8w1K5EGlxLo1xcdY2undYXSW4f6PFFpN4Fz5weCNGQHV13DLiCL13gXixb1dOticKbUH/CV9xPixa6W4yzc
+X-Gm-Message-State: AOJu0YzOx8j/SAp1MfE60gobmqBtYyJkzsIC08MLUYhVOhVc/9fYLnws
+	30e4QdNv/mLGOCrgZhVC6O8sSKAmGlqekN6vwfceY4BPBJRpKFduUkyikuIZcLjlNleKo1OZiX5
+	Luw==
+X-Google-Smtp-Source: AGHT+IE4ZzQs5DeCns7tV3JfldxH2PjYiaee+lvyRphhL7PiqwnLOnIrfJmA1n2xRqrLX2r28xpQ5tHNpeg=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:110e:b0:dc7:7ce9:fb4d with SMTP id
+ 3f1490d57ef6-debb9e6d93bmr281205276.12.1715122677033; Tue, 07 May 2024
+ 15:57:57 -0700 (PDT)
+Date: Tue, 7 May 2024 15:57:55 -0700
+In-Reply-To: <893ac578-baaf-4f4f-96ee-e012dfc073a8@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.8.9
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240219074733.122080-1-weijiang.yang@intel.com>
+ <20240219074733.122080-5-weijiang.yang@intel.com> <ZjKNxt1Sq71DI0K8@google.com>
+ <893ac578-baaf-4f4f-96ee-e012dfc073a8@intel.com>
+Message-ID: <Zjqx8-ZPyB--6Eys@google.com>
+Subject: Re: [PATCH v10 04/27] x86/fpu/xstate: Introduce XFEATURE_MASK_KERNEL_DYNAMIC
+ xfeature set
+From: Sean Christopherson <seanjc@google.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Yang Weijiang <weijiang.yang@intel.com>, pbonzini@redhat.com, x86@kernel.org, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org, 
+	chao.gao@intel.com, rick.p.edgecombe@intel.com, mlevitsk@redhat.com, 
+	john.allen@amd.com
+Content-Type: text/plain; charset="us-ascii"
 
-From: Mukul Joshi <mukul.joshi@amd.com>
+On Thu, May 02, 2024, Dave Hansen wrote:
+> On 5/1/24 11:45, Sean Christopherson wrote:
+> > On Sun, Feb 18, 2024, Yang Weijiang wrote:
+> >> Define a new XFEATURE_MASK_KERNEL_DYNAMIC mask to specify the features
+> > I still don't understand why this is being called DYNAMIC.  CET_SS isn't dynamic,
+> > as KVM is _always_ allowed to save/restore CET_SS, i.e. whether or not KVM can
+> > expose CET_SS to a guest is a static, boot-time decision.  Whether or not a guest
+> > XSS actually enables CET_SS is "dynamic", but that's true of literally every
+> > xfeature in XCR0 and XSS.
+> > 
+> > XFEATURE_MASK_XTILE_DATA is labeled as dynamic because userspace has to explicitly
+> > request that XTILE_DATA be enabled, and thus whether or not KVM is allowed to
+> > expose XTILE_DATA to the guest is a dynamic, runtime decision.
+> > 
+> > So IMO, the umbrella macro should be XFEATURE_MASK_KERNEL_GUEST_ONLY.
+> 
+> Here's how I got that naming.  First, "static" features are always
+> there.  "Dynamic" features might or might not be there.  I was also much
+> more focused on what's in the XSAVE buffer than on the enabling itself,
+> which are _slightly_ different.
 
-[ Upstream commit 1e214f7faaf5d842754cd5cfcd76308bfedab3b5 ]
+Ah, and CET_KERNEL will be '0' in XSTATE_BV for non-guest buffers, but '1' for
+guest buffers.
 
-Do VRAM accounting when doing migrations to vram to make sure
-there is enough available VRAM and migrating to VRAM doesn't evict
-other possible non-unified memory BOs. If migrating to VRAM fails,
-driver can fall back to using system memory seamlessly.
+> Then, it's a matter of whether the feature is user or supervisor.  The
+> kernel might need new state for multiple reasons.  Think of LBR state as
+> an example.  The kernel might want LBR state around for perf _or_ so it
+> can be exposed to a guest.
+> 
+> I just didn't want to tie it to "GUEST" too much in case we have more of
+> these things come along that get used for things unrelated to KVM.
+> Obviously, at this point, we've only got one and KVM is the only user so
+> the delta that I was worried about doesn't actually exist.
+> 
+> So I still prefer calling it "KERNEL" over "GUEST".  But I also don't
+> feel strongly about it and I've said my peace.  I won't NAK it one way
+> or the other.
 
-Signed-off-by: Mukul Joshi <mukul.joshi@amd.com>
-Reviewed-by: Felix Kuehling <felix.kuehling@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdkfd/kfd_migrate.c | 16 +++++++++++++++-
- drivers/gpu/drm/amd/amdkfd/kfd_svm.c     |  2 +-
- 2 files changed, 16 insertions(+), 2 deletions(-)
+I assume you mean "DYNAMIC" over "GUEST"?  I'm ok with DYNAMIC, reflecting the
+impact on each buffer makes sense.
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c b/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-index bdc01ca9609a7..5c8d81bfce7ab 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_migrate.c
-@@ -509,10 +509,19 @@ svm_migrate_ram_to_vram(struct svm_range *prange, uint32_t best_loc,
- 	start = start_mgr << PAGE_SHIFT;
- 	end = (last_mgr + 1) << PAGE_SHIFT;
- 
-+	r = amdgpu_amdkfd_reserve_mem_limit(node->adev,
-+					prange->npages * PAGE_SIZE,
-+					KFD_IOC_ALLOC_MEM_FLAGS_VRAM,
-+					node->xcp ? node->xcp->id : 0);
-+	if (r) {
-+		dev_dbg(node->adev->dev, "failed to reserve VRAM, r: %ld\n", r);
-+		return -ENOSPC;
-+	}
-+
- 	r = svm_range_vram_node_new(node, prange, true);
- 	if (r) {
- 		dev_dbg(node->adev->dev, "fail %ld to alloc vram\n", r);
--		return r;
-+		goto out;
- 	}
- 	ttm_res_offset = (start_mgr - prange->start + prange->offset) << PAGE_SHIFT;
- 
-@@ -545,6 +554,11 @@ svm_migrate_ram_to_vram(struct svm_range *prange, uint32_t best_loc,
- 		svm_range_vram_node_free(prange);
- 	}
- 
-+out:
-+	amdgpu_amdkfd_unreserve_mem_limit(node->adev,
-+					prange->npages * PAGE_SIZE,
-+					KFD_IOC_ALLOC_MEM_FLAGS_VRAM,
-+					node->xcp ? node->xcp->id : 0);
- 	return r < 0 ? r : 0;
- }
- 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c b/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
-index c50a0dc9c9c07..33205078202b5 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_svm.c
-@@ -3424,7 +3424,7 @@ svm_range_trigger_migration(struct mm_struct *mm, struct svm_range *prange,
- 				mm, KFD_MIGRATE_TRIGGER_PREFETCH);
- 	*migrated = !r;
- 
--	return r;
-+	return 0;
- }
- 
- int svm_range_schedule_evict_svm_bo(struct amdgpu_amdkfd_fence *fence)
--- 
-2.43.0
+My one request would be to change the WARN in os_xsave() to fire on CET_KERNEL,
+not KERNEL_DYNAMIC, because it's specifically CET_KERNEL that is guest-only.
+Future dynamic xfeatures could be guest-only, but they could also be dynamic for
+some completely different reason.  That was my other hang-up with "DYNAMIC";
+as-is, os_xsave() implies that it really truly is GUEST_ONLY.
 
+diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
+index 83ebf1e1cbb4..2a1ff49ccfd5 100644
+--- a/arch/x86/kernel/fpu/xstate.h
++++ b/arch/x86/kernel/fpu/xstate.h
+@@ -185,8 +185,7 @@ static inline void os_xsave(struct fpstate *fpstate)
+        WARN_ON_FPU(!alternatives_patched);
+        xfd_validate_state(fpstate, mask, false);
+ 
+-       WARN_ON_FPU(!fpstate->is_guest &&
+-                   (mask & XFEATURE_MASK_KERNEL_DYNAMIC));
++       WARN_ON_FPU(!fpstate->is_guest && (mask & XFEATURE_MASK_CET_KERNEL));
+ 
+        XSTATE_XSAVE(&fpstate->regs.xsave, lmask, hmask, err);
