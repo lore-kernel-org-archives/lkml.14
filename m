@@ -1,92 +1,86 @@
-Received: from phoenix.uberspace.de (phoenix.uberspace.de [95.143.172.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC0A14E2D0
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:39:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.172.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27B414EC4A
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715078398; cv=none; b=mjSo97Mn4z6JYDQTLqlg7693GdiV/huxgo8SVDU0oLpgWLGr1S5powbLvThDF0KRwcerN1K3pKhBAPoc+0k3RFtkq/xbGTG8ZpKfHd9iXQQUWOhiDT1cB9LvCLIhbTQX0q51htbxWqOgftcWLl/GOkkbauM8W2j00kLrBMwUZTE=
+	t=1715078409; cv=none; b=BuDIXmSB1qAQFnP1dyvQA4f5ZOvVBUAHx3xVCtcNkBTjEdHsXM1yqRPMN/3Fdzwvxzh0BjqC19KmuLu+GKHw9Mkp0D3knZQGhPm1J/8EcK5v1cLnLlGXmfrdB2U163s8XOE0PDR7+WyNg9jdoUU8QSyMEJiP9jJdgo1iTtTzhpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715078398; c=relaxed/simple;
-	bh=QNnIOUmGw+/4sKtvKLRny0R9Qjd8tUiqHl1cHAokzNs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pPKK8t4p1sH5XyjMNZXjo7JpDPYumKJ0yyKFDyiWRr5E0OPBrLF2TUOYrlynCMTAWbsYV7jwNwntUcEfipFJAg2YBQU4Mp0+Uqg6qdmWjN06ZaD15WipUYfQvsdPwesgppOdnHVj7mIhN8vbB2vP6LXgKu1ePL6QQEN05oBOl9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com; spf=pass smtp.mailfrom=yshyn.com; dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b=tkRxsuVy; arc=none smtp.client-ip=95.143.172.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=yshyn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yshyn.com
+	s=arc-20240116; t=1715078409; c=relaxed/simple;
+	bh=RVraaqpU90T9jNynBtCQENH1uJ2RcPjIHtQUyCKdwiE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cVtwFUPYHbkxv1st4LUV/+eHYvnPZbEP3Pddw69v9jPTgjLKNxGqQsmFsJHHg11+e54x77H10UixsGBtV7WuAWfqQZoP7A1m5pnGEDhArFpRreRiuC8//p+WMVAD29BVMdYlTbrmHWoJqHU5tc/fx8UGy2Nj/Ol0dbSSfZsA1vA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fCgx7jU1; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yshyn.com header.i=@yshyn.com header.b="tkRxsuVy"
-Received: (qmail 8221 invoked by uid 988); 7 May 2024 10:39:53 -0000
-Authentication-Results: phoenix.uberspace.de;
-	auth=pass (plain)
-Received: from unknown (HELO unkown) (::1)
-	by phoenix.uberspace.de (Haraka/3.0.1) with ESMTPSA; Tue, 07 May 2024 12:39:53 +0200
-From: Illia Ostapyshyn <illia@yshyn.com>
-To: Tejun Heo <tj@kernel.org>,
-	Zefan Li <lizefan.x@bytedance.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: cgroups@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Illia Ostapyshyn <illia@yshyn.com>
-Subject: [PATCH v2] docs: cgroup-v1: Update page cache removal functions
-Date: Tue,  7 May 2024 12:34:27 +0200
-Message-Id: <20240507103426.544488-1-illia@yshyn.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fCgx7jU1"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-572aad902baso13640a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 03:40:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715078406; x=1715683206; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RVraaqpU90T9jNynBtCQENH1uJ2RcPjIHtQUyCKdwiE=;
+        b=fCgx7jU1Vi89ZQGCFu2/QnRfHtiWPfbRHcU+kdtVk9XO6SV4Red2KNBljrXdtwhgKh
+         qpQ/MRspQYGbeJ8Q5Ih1xuDE4zLG6JmQ3bxyZ4c6TWVVbkcYXIPLG8ICPTlt64SA1E4S
+         JpEpvjDRhQUJcSTo95i+Zz8azUjPJaslE+3+JJ7Svfeu3BTOw0Ntx1//FxLtcaoCW+t2
+         9x2qfAwDp15Vbf/V/UEeiC3rzVEc6zFavWSJOCwRMq6IuEBWkKITZO96EyTKpF6QY+Di
+         So82IvE7sWU5tZHahsmJKd0lQZinXSihE3HDAktbIRM18CXVPpgsVXTk8R+Ez5Row8s/
+         BUlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715078406; x=1715683206;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RVraaqpU90T9jNynBtCQENH1uJ2RcPjIHtQUyCKdwiE=;
+        b=Wd7TQiZNLNgMzkYNXQZPAnaHFpudVo+SlPnLp0GCUyiWjqFMQWXzswwYxt4uy0Ti7A
+         k8lyVZ9w91tjop6UzvoMP034/mseF34vgxq6Rxw1jwRWs2YjNCwE6f4lFp9ZbwDUBsdu
+         1paq3Pg19YJgrPsMgTbj4sha06F/PnL3U7c0cJZNci483xEL4weShOB6INTDkiYGTeHZ
+         a+vOV7dxuL2qovyQOebO+yP4usmx7h0ZFscMhkTB61QEIvPtjia6dTmU9aR8QeQbhLnr
+         6wUJ+oXKfpmZA3k2yp8pZtbPB90wlXKi4Jf+2SA1hf08s6qnh7YfaKcQFC+7wPMHlsbe
+         NVEA==
+X-Forwarded-Encrypted: i=1; AJvYcCWsxVAtKFsFVEn6muIFhea9yKtwe9yK4WGVwOW9aIj2XIXewzc+obFvWWIj85DGzPheniGcdf2eqgyCUe0CsmUZkMyT0TuzVMC2u26H
+X-Gm-Message-State: AOJu0Yz7jcj8s07FzZ0PBr4f85LzBoLVSUQk9mDj9elBwFActsGI39rU
+	RHqm+Ppcpy1u3YDIzVHkdfk2d05+xRWCakxLqZbRAMD5200RbRlnyo1ZjZpe0kEJ0z7NyCvE3/B
+	wGH51tbkH7h2QZBo9jpPxPdmFKrPOHL3vyw+o
+X-Google-Smtp-Source: AGHT+IGURH+TAKjYVx7HNPEQu9fLSg4tmEpjWWFcBoWqrK3Jf56PPoCH0wcN5v4H9exUF8MPoXuFORZW4WZOvliX6zM=
+X-Received: by 2002:a05:6402:35d1:b0:572:554b:ec66 with SMTP id
+ 4fb4d7f45d1cf-5731310fe6fmr162918a12.3.1715078405878; Tue, 07 May 2024
+ 03:40:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Bar: ++
-X-Rspamd-Report: SUSPICIOUS_RECIPS(1.5) BAYES_HAM(-0.000492) MID_CONTAINS_FROM(1) MIME_GOOD(-0.1) R_MISSING_CHARSET(0.5)
-X-Rspamd-Score: 2.899507
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=yshyn.com; s=uberspace;
-	h=from:to:cc:subject:date;
-	bh=QNnIOUmGw+/4sKtvKLRny0R9Qjd8tUiqHl1cHAokzNs=;
-	b=tkRxsuVy35OnSL57/lXDwilDdQpvmsMNSOyBf4sDPYWRdUOP6xXPBo/5SA8Ny1M5jmFBhhBAg5
-	wLEBo8hUTQJGaWTcNRf++3hvEoOJ/RIqCmv9zZMgoXp9Bg0HaoAoLf/J7L7ESXaFcomgnyelqTcS
-	BAU/mmwBImm9lWTJpoXJi6Mrj1Cqnxv5kAj2F8uKa0+uG/+7EszpFwD5329lPvH5F3B/HBVP+r3u
-	HjHT4SN8q/K+vK3icC6YecyYXCwSvU9NsBid1UkJyuo97FdtoScD2TR6aTh9LO6LqUsWbh0dERm4
-	x4fcKnCGuyvj9V5efTvNuJZXJzkgBwY/5k6vM7tg==
+References: <20240507090520.284821-1-wei.fang@nxp.com>
+In-Reply-To: <20240507090520.284821-1-wei.fang@nxp.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Tue, 7 May 2024 12:39:54 +0200
+Message-ID: <CANn89iJuEubWMu4Jg3rAac=HM95U3yS9PSq1eSx+-JC6rhOdbA@mail.gmail.com>
+Subject: Re: [PATCH net-next] net: fec: Convert fec driver to use lock guards
+To: Wei Fang <wei.fang@nxp.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+	shenwei.wang@nxp.com, xiaoning.wang@nxp.com, richardcochran@gmail.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, imx@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 452e9e6992fe ("filemap: Add filemap_remove_folio and
-__filemap_remove_folio") reimplemented __delete_from_page_cache() as
-__filemap_remove_folio() and delete_from_page_cache() as
-filemap_remove_folio().  The compatibility wrappers were finally removed
-in ece62684dcfb ("hugetlbfs: convert hugetlb_delete_from_page_cache() to
-use folios") and 6ffcd825e7d0 ("mm: Remove __delete_from_page_cache()").
+On Tue, May 7, 2024 at 11:16=E2=80=AFAM Wei Fang <wei.fang@nxp.com> wrote:
+>
+> Use guard() and scoped_guard() defined in linux/cleanup.h to automate
+> lock lifetime control in fec driver.
+>
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
+>
 
-Update the remaining references to dead functions in the memcg
-implementation memo.
+To me, this looks like a nice recipe for future disasters when doing backpo=
+rts,
+because I am pretty sure the "goto ..." that assumes the lock is
+magically released
+will fail horribly.
 
-Signed-off-by: Illia Ostapyshyn <illia@yshyn.com>
----
-
-Changes in v2:
- * filemap_free_folio() was meant to be filemap_remove_folio(). Sorry.
-
- Documentation/admin-guide/cgroup-v1/memcg_test.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/admin-guide/cgroup-v1/memcg_test.rst b/Documentation/admin-guide/cgroup-v1/memcg_test.rst
-index 1f128458ddea..9f8e27355cba 100644
---- a/Documentation/admin-guide/cgroup-v1/memcg_test.rst
-+++ b/Documentation/admin-guide/cgroup-v1/memcg_test.rst
-@@ -102,7 +102,7 @@ Under below explanation, we assume CONFIG_SWAP=y.
- 	The logic is very clear. (About migration, see below)
- 
- 	Note:
--	  __remove_from_page_cache() is called by remove_from_page_cache()
-+	  __filemap_remove_folio() is called by filemap_remove_folio()
- 	  and __remove_mapping().
- 
- 6. Shmem(tmpfs) Page Cache
--- 
-2.39.2
-
+I would use scoped_guard() only for new code.
