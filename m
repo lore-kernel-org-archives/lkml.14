@@ -1,266 +1,227 @@
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B85134404;
-	Tue,  7 May 2024 23:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0C9135A57
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 23:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715125629; cv=none; b=Al6N8MfKlVGk9hoKps2AB0HMcvLTltVeQDhiWUjdaScwPinYWQH8LpHz67dO5sqfRk/8KoV3oICCl7t1Zw+4grOoPksuomv2l/wqAUCLTj/OdTEZ3LefCNIjnq0eDZG63iD+YoN1HLX/Mjj45N9LEobQ1q2rF3gkxNQNw5P11lY=
+	t=1715125670; cv=none; b=mh2LQIp+CzmJqMT4+iHEDctHuoOmqhKI+Jb6GA5lrL3SOi6Gb7FTO9jtF+GggIEpJJA6oj9gK92Z2LfmNpW2OinwWgHBE41LIhaWL26p748BerGoOTccK9ddmhlwcfJJ3cs126Zk4mr81bQcDOP9CzTwrWwzQ6nWP/lyQ/D03rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715125629; c=relaxed/simple;
-	bh=YtVjxvQw4RZh1yGTzLwWjkNH1LDaZ3/lWUvZJFf+BYM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MJ2GP8wctbisQyWhwnII0HSVmByyFn6xJ+Skpooa70RmAwVqsZdjNHvjqCleTQ3TXCawmR03Yv1cxR44Xi5AWVXhoMIyfMatJJMlyyDDtzd4E9iZkaZbljJwzGdKGqOTmisdXMp8aVorS5tvJkY0PojQ+FYOKfuEfMhvFlSrqO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=CeSkU88b; arc=none smtp.client-ip=148.163.152.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
+	s=arc-20240116; t=1715125670; c=relaxed/simple;
+	bh=eJJcc9/vEoAgKc0vBQHiq0LQSeWtMHmX7IdNRX5mLMw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Ow9iY315/tAznmUI5vN8z407qWoSNZX6y1Zln1cMhkOW55hZBbwcyrD/tn/Z54tVvw0ntrzyZ9lZkQt7eBPNoNAgebodFzaKO08haSvxtOq88D9sp4AyvogK9CurGVe7XCq8ZkeUVWdz/IWpXYPjFcVLV5ZwabL2eWHvaYeLBVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tDj1/7T2; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="CeSkU88b"
-Received: from pps.filterd (m0355089.ppops.net [127.0.0.1])
-	by mx0b-00823401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447IXwm9025129;
-	Tue, 7 May 2024 23:46:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=DKIM202306; bh=qJ9uL4sH4d2ZxBF43AXo
-	nEw5zb5DxFZc2u0Y2w0tXnA=; b=CeSkU88bFUlON8DzbJFPUwn824jDhGPGKYAv
-	Bu5fyZGkzvsFhG89IeoXpk7tUkF4dy0Hx8UEq4ZwvtkO0KpmmlM+PDDfvNMs+Dn6
-	rPvMUMPP6zfBgn8NRStzhWIkACJTfr9H+zDOCgEGrO7sI40rG5xhuNL2g4qhNL8T
-	5GZgMPsA6En0CKKT56nVGKc8yg1r5y9Twa0AW+tmSAA6Kt+oorLK8T+SKWzc66fq
-	/RASjiR9gb7f/mx+dMO3uTtGXvRNlrtZnSRscP79ggDCz6MJt8z7ru4keuvzW9x+
-	8ALWtqh5paapx5DUDx3324JlGIq1oH401f/scTAwK++NjqIO1g==
-Received: from ilclpfpp02.lenovo.com ([144.188.128.68])
-	by mx0b-00823401.pphosted.com (PPS) with ESMTPS id 3xyspm0e1e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 23:46:46 +0000 (GMT)
-Received: from va32lmmrp02.lenovo.com (va32lmmrp02.mot.com [10.62.176.191])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ilclpfpp02.lenovo.com (Postfix) with ESMTPS id 4VYw0j4yp9zc3Hg;
-	Tue,  7 May 2024 23:46:45 +0000 (UTC)
-Received: from ilclasset02 (ilclasset02.mot.com [100.64.49.13])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by va32lmmrp02.lenovo.com (Postfix) with ESMTPSA id 4VYw0j19kNz2VZ3B;
-	Tue,  7 May 2024 23:46:45 +0000 (UTC)
-Date: Tue, 7 May 2024 18:46:43 -0500
-From: Maxwell Bland <mbland@motorola.com>
-To: "open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)" <bpf@vger.kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Zi Shen Lim <zlim.lnx@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: [PATCH bpf-next v3 2/3] arm64/cfi,bpf: Support kCFI + BPF on arm64
-Message-ID: <ryxpwubmx2nu2t5mcfnqsa6rdz3xxrwy2nbxsph2aw4bjl7kyd@5ivy7fumphag>
-References: <fhdcjdzqdqnoehenxbipfaorseeamt3q7fbm7ghe6z5s2chif5@lrhtasolawud>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tDj1/7T2"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de5a8638579so7228147276.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 16:47:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715125668; x=1715730468; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8IXBITghFu68KvfLK/vk4MdUQB79Xb1JqM3/6jUAIT0=;
+        b=tDj1/7T2sVLLz0OZaPa6Yev/UamStagunEeBAIAfHUDyzj1qTD0U+Iaz6RUWXGja5f
+         osOtfp92mCtCDF7gXb3RwO++ZYw9QiWz5m/OxwDJK7koKvh38BNv4z2I8vIORJ5OC3s5
+         gXONvr4DV868bvZnCHOpfSr66n2F7uIAK9Blr030yuMgGy1UFlKj0sjxOjTlEh6H5grz
+         1Juyo+x74t6BdqvH1g7DdGN+7MR2ru3OlYK+mukrL3qj84/H+UgjfA8CqNdqFgr1yhVR
+         1H8wcUFytulJpmgYqEnleaPRS9AwamfRLgRVrudbiGY4wkDyI7drt3cTEyxOMCzppr4N
+         txUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715125668; x=1715730468;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8IXBITghFu68KvfLK/vk4MdUQB79Xb1JqM3/6jUAIT0=;
+        b=Mu7/9oWjgKfqlEtOxh1P/9loewllKBv8UU6tXtdu7oraGhnpp7XeH4HDtycvBZNGPM
+         UDTHScSgqyisvt9BeCd7MCsuA3b4lJ4w7X3HTT10241iOkSkkhE99ElzWCjJ6Cv3AAA3
+         go5N9Nz6QpsQ9XnRDsW2N6RAm9ezQYeZZMELxE7xOqqiyJHxVLbpMSl88xkGp1lEUVaU
+         PN05OPCH4RhmnoQzq0LoDZNffT2gdqH92KfX28KLgAiWJ7OxL8phvpJaXZbHFL7mS0jb
+         8WpjMAETlNXwnPlIofz0d7bxrrbXBvKfE4mQL9xSTm+koF3LgZV00V2KFcyRhj0AQNaw
+         kDeg==
+X-Forwarded-Encrypted: i=1; AJvYcCWM6tMdLg0y9J8vbcK8Wn7Xl7ZeJTHyQnzX9TYgcq2wUfLam9jPhvP9KGkWHohgxDm9aR9XiwitAVMUNDX3pAKFu0LUV9w+Jm07H4/M
+X-Gm-Message-State: AOJu0YxafiTfkF57NF2JIeKxlnEQhr30PBAIzzLr5GcAKFJ3Zx80nAyS
+	ZGh4e9JTIN9Y5XGqu8+Mcy8hzu1kjVNzkkKhh+jWkjNfXFt0dqxqQn4eUnG1K3JfRbJPjymmqxg
+	ASw==
+X-Google-Smtp-Source: AGHT+IG/zbW3ZTXeLZe8peXCzOYAoo/IILDrQq8ef+DM8SDCbnL9oZ9XTD5+3e/nY3886sM0N39DaloXhVM=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a05:6902:1007:b0:dd1:38ec:905d with SMTP id
+ 3f1490d57ef6-debb9e0bdeemr128969276.11.1715125668120; Tue, 07 May 2024
+ 16:47:48 -0700 (PDT)
+Date: Tue, 7 May 2024 16:47:46 -0700
+In-Reply-To: <0e239143-65ed-445a-9782-e905527ea572@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fhdcjdzqdqnoehenxbipfaorseeamt3q7fbm7ghe6z5s2chif5@lrhtasolawud>
-X-Proofpoint-GUID: lMxuw40P7kJoi-p8EMok5hEjGPlCM3HT
-X-Proofpoint-ORIG-GUID: lMxuw40P7kJoi-p8EMok5hEjGPlCM3HT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-07_15,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- impostorscore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405010000
- definitions=main-2405070167
+Mime-Version: 1.0
+References: <20240328171949.743211-1-leobras@redhat.com> <ZgsXRUTj40LmXVS4@google.com>
+ <ZjUwHvyvkM3lj80Q@LeoBras> <ZjVXVc2e_V8NiMy3@google.com> <3b2c222b-9ef7-43e2-8ab3-653a5ee824d4@paulmck-laptop>
+ <ZjprKm5jG3JYsgGB@google.com> <663a659d-3a6f-4bec-a84b-4dd5fd16c3c1@paulmck-laptop>
+ <ZjqWXPFuoYWWcxP3@google.com> <0e239143-65ed-445a-9782-e905527ea572@paulmck-laptop>
+Message-ID: <Zjq9okodmvkywz82@google.com>
+Subject: Re: [RFC PATCH v1 0/2] Avoid rcu_core() if CPU just left guest vcpu
+From: Sean Christopherson <seanjc@google.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Leonardo Bras <leobras@redhat.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Neeraj Upadhyay <quic_neeraju@quicinc.com>, 
+	Joel Fernandes <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Zqiang <qiang.zhang1211@gmail.com>, Marcelo Tosatti <mtosatti@redhat.com>, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
 
-Currently, bpf_dispatcher_*_func() is marked with `__nocfi` therefore
-calling BPF programs from this interface doesn't cause CFI warnings.
+On Tue, May 07, 2024, Paul E. McKenney wrote:
+> On Tue, May 07, 2024 at 02:00:12PM -0700, Sean Christopherson wrote:
+> > On Tue, May 07, 2024, Paul E. McKenney wrote:
+> > > On Tue, May 07, 2024 at 10:55:54AM -0700, Sean Christopherson wrote:
+> > > > On Fri, May 03, 2024, Paul E. McKenney wrote:
+> > > > > On Fri, May 03, 2024 at 02:29:57PM -0700, Sean Christopherson wrote:
+> > > > > > So if we're comfortable relying on the 1 second timeout to guard against a
+> > > > > > misbehaving userspace, IMO we might as well fully rely on that guardrail.  I.e.
+> > > > > > add a generic PF_xxx flag (or whatever flag location is most appropriate) to let
+> > > > > > userspace communicate to the kernel that it's a real-time task that spends the
+> > > > > > overwhelming majority of its time in userspace or guest context, i.e. should be
+> > > > > > given extra leniency with respect to rcuc if the task happens to be interrupted
+> > > > > > while it's in kernel context.
+> > > > > 
+> > > > > But if the task is executing in host kernel context for quite some time,
+> > > > > then the host kernel's RCU really does need to take evasive action.
+> > > > 
+> > > > Agreed, but what I'm saying is that RCU already has the mechanism to do so in the
+> > > > form of the 1 second timeout.
+> > > 
+> > > Plus RCU will force-enable that CPU's scheduler-clock tick after about
+> > > ten milliseconds of that CPU not being in a quiescent state, with
+> > > the time varying depending on the value of HZ and the number of CPUs.
+> > > After about ten seconds (halfway to the RCU CPU stall warning), it will
+> > > resched_cpu() that CPU every few milliseconds.
+> > > 
+> > > > And while KVM does not guarantee that it will immediately resume the guest after
+> > > > servicing the IRQ, neither does the existing userspace logic.  E.g. I don't see
+> > > > anything that would prevent the kernel from preempting the interrupt task.
+> > > 
+> > > Similarly, the hypervisor could preempt a guest OS's RCU read-side
+> > > critical section or its preempt_disable() code.
+> > > 
+> > > Or am I missing your point?
+> > 
+> > I think you're missing my point?  I'm talking specifically about host RCU, what
+> > is or isn't happening in the guest is completely out of scope.
+> 
+> Ah, I was thinking of nested virtualization.
+> 
+> > My overarching point is that the existing @user check in rcu_pending() is optimistic,
+> > in the sense that the CPU is _likely_ to quickly enter a quiescent state if @user
+> > is true, but it's not 100% guaranteed.  And because it's not guaranteed, RCU has
+> > the aforementioned guardrails.
+> 
+> You lost me on this one.
+> 
+> The "user" argument to rcu_pending() comes from the context saved at
+> the time of the scheduling-clock interrupt.  In other words, the CPU
+> really was executing in user mode (which is an RCU quiescent state)
+> when the interrupt arrived.
+> 
+> And that suffices, 100% guaranteed.
 
-When BPF programs are called directly from C: from BPF helpers or
-struct_ops, CFI warnings are generated.
+Ooh, that's where I'm off in the weeds.  I was viewing @user as "this CPU will be
+quiescent", but it really means "this CPU _was_ quiescent".
 
-Implement proper CFI prologues for the BPF programs and callbacks and
-drop __nocfi for arm64. Fix the trampoline generation code to emit kCFI
-prologue when a struct_ops trampoline is being prepared.
+> The reason that it suffices is that other RCU code such as rcu_qs() and
+> rcu_note_context_switch() ensure that this CPU does not pay attention to
+> the user-argument-induced quiescent state unless this CPU had previously
+> acknowledged the current grace period.
+> 
+> And if the CPU has previously acknowledged the current grace period, that
+> acknowledgement must have preceded the interrupt from user-mode execution.
+> Thus the prior quiescent state represented by that user-mode execution
+> applies to that previously acknowledged grace period.
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- arch/arm64/include/asm/cfi.h    | 23 ++++++++++++++
- arch/arm64/kernel/alternative.c | 54 +++++++++++++++++++++++++++++++++
- arch/arm64/net/bpf_jit_comp.c   | 18 +++++++++--
- 3 files changed, 93 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/include/asm/cfi.h
+To confirm my own understanding: 
 
-diff --git a/arch/arm64/include/asm/cfi.h b/arch/arm64/include/asm/cfi.h
-new file mode 100644
-index 000000000000..670e191f8628
---- /dev/null
-+++ b/arch/arm64/include/asm/cfi.h
-@@ -0,0 +1,23 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_ARM64_CFI_H
-+#define _ASM_ARM64_CFI_H
-+
-+#ifdef CONFIG_CFI_CLANG
-+#define __bpfcall
-+static inline int cfi_get_offset(void)
-+{
-+	return 4;
-+}
-+#define cfi_get_offset cfi_get_offset
-+extern u32 cfi_bpf_hash;
-+extern u32 cfi_bpf_subprog_hash;
-+extern u32 cfi_get_func_hash(void *func);
-+#else
-+#define cfi_bpf_hash 0U
-+#define cfi_bpf_subprog_hash 0U
-+static inline u32 cfi_get_func_hash(void *func)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_CFI_CLANG */
-+#endif /* _ASM_ARM64_CFI_H */
-diff --git a/arch/arm64/kernel/alternative.c b/arch/arm64/kernel/alternative.c
-index 8ff6610af496..1715da7df137 100644
---- a/arch/arm64/kernel/alternative.c
-+++ b/arch/arm64/kernel/alternative.c
-@@ -13,6 +13,7 @@
- #include <linux/elf.h>
- #include <asm/cacheflush.h>
- #include <asm/alternative.h>
-+#include <asm/cfi.h>
- #include <asm/cpufeature.h>
- #include <asm/insn.h>
- #include <asm/module.h>
-@@ -298,3 +299,56 @@ noinstr void alt_cb_patch_nops(struct alt_instr *alt, __le32 *origptr,
- 		updptr[i] = cpu_to_le32(aarch64_insn_gen_nop());
- }
- EXPORT_SYMBOL(alt_cb_patch_nops);
-+
-+#ifdef CONFIG_CFI_CLANG
-+struct bpf_insn;
-+
-+/* Must match bpf_func_t / DEFINE_BPF_PROG_RUN() */
-+extern unsigned int __bpf_prog_runX(const void *ctx,
-+				    const struct bpf_insn *insn);
-+
-+/*
-+ * Force a reference to the external symbol so the compiler generates
-+ * __kcfi_typid.
-+ */
-+__ADDRESSABLE(__bpf_prog_runX);
-+
-+/* u32 __ro_after_init cfi_bpf_hash = __kcfi_typeid___bpf_prog_runX; */
-+asm (
-+"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
-+"	.type	cfi_bpf_hash,@object				\n"
-+"	.globl	cfi_bpf_hash					\n"
-+"	.p2align	2, 0x0					\n"
-+"cfi_bpf_hash:							\n"
-+"	.word	__kcfi_typeid___bpf_prog_runX			\n"
-+"	.size	cfi_bpf_hash, 4					\n"
-+"	.popsection						\n"
-+);
-+
-+/* Must match bpf_callback_t */
-+extern u64 __bpf_callback_fn(u64, u64, u64, u64, u64);
-+
-+__ADDRESSABLE(__bpf_callback_fn);
-+
-+/* u32 __ro_after_init cfi_bpf_subprog_hash = __kcfi_typeid___bpf_callback_fn; */
-+asm (
-+"	.pushsection	.data..ro_after_init,\"aw\",@progbits	\n"
-+"	.type	cfi_bpf_subprog_hash,@object			\n"
-+"	.globl	cfi_bpf_subprog_hash				\n"
-+"	.p2align	2, 0x0					\n"
-+"cfi_bpf_subprog_hash:						\n"
-+"	.word	__kcfi_typeid___bpf_callback_fn			\n"
-+"	.size	cfi_bpf_subprog_hash, 4				\n"
-+"	.popsection						\n"
-+);
-+
-+u32 cfi_get_func_hash(void *func)
-+{
-+	u32 hash;
-+
-+	if (get_kernel_nofault(hash, func - cfi_get_offset()))
-+		return 0;
-+
-+	return hash;
-+}
-+#endif
-diff --git a/arch/arm64/net/bpf_jit_comp.c b/arch/arm64/net/bpf_jit_comp.c
-index 76b91f36c729..703247457409 100644
---- a/arch/arm64/net/bpf_jit_comp.c
-+++ b/arch/arm64/net/bpf_jit_comp.c
-@@ -17,6 +17,7 @@
- #include <asm/asm-extable.h>
- #include <asm/byteorder.h>
- #include <asm/cacheflush.h>
-+#include <asm/cfi.h>
- #include <asm/debug-monitors.h>
- #include <asm/insn.h>
- #include <asm/patching.h>
-@@ -162,6 +163,12 @@ static inline void emit_bti(u32 insn, struct jit_ctx *ctx)
- 		emit(insn, ctx);
- }
+  1. Acknowledging the current grace period means any future rcu_read_lock() on
+     the CPU will be accounted to the next grace period.
+
+  2. A CPU can acknowledge a grace period without being quiescent.
+
+  3. Userspace can't acknowledge a grace period, because it doesn't run kernel
+     code (stating the obvious).
+
+  4. All RCU read-side critical sections must complete before exiting to usersepace.
+
+And so if an IRQ interrupts userspace, and the CPU previously acknowledged grace
+period N, RCU can infer that grace period N elapsed on the CPU, because all
+"locks" held on grace period N are guaranteed to have been dropped.
+
+> This is admittedly a bit indirect, but then again this is Linux-kernel
+> RCU that we are talking about.
+> 
+> > And I'm arguing that, since the @user check isn't bombproof, there's no reason to
+> > try to harden against every possible edge case in an equivalent @guest check,
+> > because it's unnecessary for kernel safety, thanks to the guardrails.
+> 
+> And the same argument above would also apply to an equivalent check for
+> execution in guest mode at the time of the interrupt.
+
+This is partly why I was off in the weeds.  KVM cannot guarantee that the
+interrupt that leads to rcu_pending() actually interrupted the guest.  And the
+original patch didn't help at all, because a time-based check doesn't come
+remotely close to the guarantees that the @user check provides.
+
+> Please understand that I am not saying that we absolutely need an
+> additional check (you tell me!).
+
+Heh, I don't think I'm qualified to answer that question, at least not yet.
+
+> But if we do need RCU to be more aggressive about treating guest execution as
+> an RCU quiescent state within the host, that additional check would be an
+> excellent way of making that happen.
+
+It's not clear to me that being more agressive is warranted.  If my understanding
+of the existing @user check is correct, we _could_ achieve similar functionality
+for vCPU tasks by defining a rule that KVM must never enter an RCU critical section
+with PF_VCPU set and IRQs enabled, and then rcu_pending() could check PF_VCPU.
+On x86, this would be relatively straightforward (hack-a-patch below), but I've
+no idea what it would look like on other architectures.
+
+But the value added isn't entirely clear to me, probably because I'm still missing
+something.  KVM will have *very* recently called __ct_user_exit(CONTEXT_GUEST) to
+note the transition from guest to host kernel.  Why isn't that a sufficient hook
+for RCU to infer grace period completion?
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 1a9e1e0c9f49..259b60adaad7 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -11301,6 +11301,11 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+        if (vcpu->arch.guest_fpu.xfd_err)
+                wrmsrl(MSR_IA32_XFD_ERR, 0);
  
-+static inline void emit_kcfi(u32 hash, struct jit_ctx *ctx)
-+{
-+	if (IS_ENABLED(CONFIG_CFI_CLANG))
-+		emit(hash, ctx);
-+}
++       RCU_LOCKDEP_WARN(lock_is_held(&rcu_bh_lock_map) ||
++                        lock_is_held(&rcu_lock_map) ||
++                        lock_is_held(&rcu_sched_lock_map),
++                        "KVM in RCU read-side critical section with PF_VCPU set and IRQs enabled");
 +
- /*
-  * Kernel addresses in the vmalloc space use at most 48 bits, and the
-  * remaining bits are guaranteed to be 0x1. So we can compose the address
-@@ -337,6 +344,7 @@ static int build_prologue(struct jit_ctx *ctx, bool ebpf_from_cbpf,
- 	 *
- 	 */
+        /*
+         * Consume any pending interrupts, including the possible source of
+         * VM-Exit on SVM and any ticks that occur between VM-Exit and now.
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index b2bccfd37c38..cdb815105de4 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3929,7 +3929,8 @@ static int rcu_pending(int user)
+                return 1;
  
-+	emit_kcfi(is_main_prog ? cfi_bpf_hash : cfi_bpf_subprog_hash, ctx);
- 	/* bpf function may be invoked by 3 instruction types:
- 	 * 1. bl, attached via freplace to bpf prog via short jump
- 	 * 2. br, attached via freplace to bpf prog via long jump
-@@ -1806,9 +1814,9 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *prog)
- 		jit_data->ro_header = ro_header;
- 	}
+        /* Is this a nohz_full CPU in userspace or idle?  (Ignore RCU if so.) */
+-       if ((user || rcu_is_cpu_rrupt_from_idle()) && rcu_nohz_full_cpu())
++       if ((user || rcu_is_cpu_rrupt_from_idle() || (current->flags & PF_VCPU)) &&
++           rcu_nohz_full_cpu())
+                return 0;
  
--	prog->bpf_func = (void *)ctx.ro_image;
-+	prog->bpf_func = (void *)ctx.ro_image + cfi_get_offset();
- 	prog->jited = 1;
--	prog->jited_len = prog_size;
-+	prog->jited_len = prog_size - cfi_get_offset();
- 
- 	if (!prog->is_func || extra_pass) {
- 		int i;
-@@ -2072,6 +2080,12 @@ static int prepare_trampoline(struct jit_ctx *ctx, struct bpf_tramp_image *im,
- 	/* return address locates above FP */
- 	retaddr_off = stack_size + 8;
- 
-+	if (flags & BPF_TRAMP_F_INDIRECT) {
-+		/*
-+		 * Indirect call for bpf_struct_ops
-+		 */
-+		emit_kcfi(cfi_get_func_hash(func_addr), ctx);
-+	}
- 	/* bpf trampoline may be invoked by 3 instruction types:
- 	 * 1. bl, attached to bpf prog or kernel function via short jump
- 	 * 2. br, attached to bpf prog or kernel function via long jump
--- 
-2.34.1
+        /* Is the RCU core waiting for a quiescent state from this CPU? */
 
 
