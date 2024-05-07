@@ -1,73 +1,132 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476345B1E0;
-	Tue,  7 May 2024 09:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0D25B1E0;
+	Tue,  7 May 2024 09:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715074490; cv=none; b=F75cbIW8OD/CRvYw+6dM84BCdOQMakwZcUUf/BxhCqUL2Z4dd6qLKfgpMYrff3bUnImd8ha+wX+TXX2xbXBCpTokGqhknj48OySLQ7SdXrBbWfIBngQPYYaawt8AAuZxAxdq8cN35dIjDKw6Uj9ElgmXu3Q7pDR/AELq4oxE79s=
+	t=1715074518; cv=none; b=VpWUrXio+5UWH6K2tDebpmneDdxkZ9O++iGDn2vWlguMJ1B5tXpA+ZLousz2gXCjccH3M9r7adHIu/H59K7FM75sDL+b0v+JPYp9IpCSWdcS4TW/8oykwwBwyiRAsrwRLGNiP3Pf0ed/PsrIkodnfvSPw9084csjMsubFcxp4vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715074490; c=relaxed/simple;
-	bh=ohWuVrllZ49t4dkKQwrO5nd7MUNrk39VX+83CHV8kf4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kvskUdRX+RmvHNDeTrKyi8UtdaF7Gkkng3DV+krEUlJ7b05uswW605uGDz9hybnr0eppkadHvaLUlL62aoTPv4ffAJ0D5JukwZiDgtm6AGCjo1Kohug+2O/c5K12fHEdHA1V7Lz/wx8xEiZ2l/T1Wl7dz+zL7kwiXMleEdmEFR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=PziktTF1; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1715074518; c=relaxed/simple;
+	bh=Mi58uVSDi+5iePNr8b+aVN0PSLs4Zw96zhsxEeRqYmE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dhvkUqyBAFVgq+pIfEa27ts4YkZ54eaoTW4iM8VhBFnD9fr0XnHgpgqBAyHWXTHDsqm1kPCs1iRYpqB17N7Mnbf3rCqDbtInyiFyev/A04DmiRon+EJImHb+o4jS+c9XTMnKiPsaJft62fRgHMy2a8yFgHA8D0xMRnCRQSzU/GM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f0Kb1CCE; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="PziktTF1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=uarDHQ+a07tcRKI28LofQYYCslRlvc1XjILv15IA6C8=; b=PziktTF17Jc8u09/HMPR5DU/yy
-	zsrmYUqA5oWzK7ZXjFEDfMSDi9mTS9r/VZuTc/Nmg6YvkyLNcaPCsO7RToY6boQVSm0Zr5665Op5d
-	xQIGFlpmsEmgs4Vjo70G32RTwxNTDY7rQAznZ76/NlJOd7Jo09ese7Py2HSAEP3SYJxfnE5sQqSyw
-	1ENVU4Tv8sD0poPrbuBmD3yZmb/8UrWg0UMmHhuuAcOwX1dS8wa57sY4Jn5qZWMZDS8NrDiL5OP7T
-	UfIRvmHYa8ILi911uHTFxX/uK3gcoqHaVb6eM+R1FcOZy42XV+llzS856N2PY6T/DBgNvlQ0dQmjw
-	CCFuvLaA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:46068)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1s4HDe-0003VG-1C;
-	Tue, 07 May 2024 10:34:42 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1s4HDe-0000Da-Sh; Tue, 07 May 2024 10:34:42 +0100
-Date: Tue, 7 May 2024 10:34:42 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clkdev: fix potential NULL pointer dereference
-Message-ID: <Zjn1spDSBOkUD+qh@shell.armlinux.org.uk>
-References: <CGME20240507064445eucas1p1bfc17da4f824ef46567774634482f12f@eucas1p1.samsung.com>
- <20240507064434.3213933-1-m.szyprowski@samsung.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f0Kb1CCE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715074516; x=1746610516;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Mi58uVSDi+5iePNr8b+aVN0PSLs4Zw96zhsxEeRqYmE=;
+  b=f0Kb1CCElH2s0NtHZN9vrxssW0dato7Y3zPkKX0LBLcw69wtcmAf+TBq
+   l/uO12yE8pkl5wBCmQOS4ULoVcC2KnHgFn6lasRfd1VxwRTxilSfvaJgW
+   T0MZqapWfXT9A11ugQTsFKZVeS1ij4Bg661w8s0NBDiUh+TX4qqa65Iqv
+   ATE/16Td/R8lzn2NCiS4SvAz1gfQ1Iw7LKRxSue36oe3gR4PeeuWKBZUK
+   IiJDdgLHbnOaLcacUML+J50PIP8/S0+KCB6KPPNjXO/PiMD+iFu+4nIGW
+   TADhbyohG+YL4joV5gk3SD1S+rIVbQdz5UR/k0DFV5UH4yN3ophC6SDDl
+   A==;
+X-CSE-ConnectionGUID: k6iR+1LGRnuafXBASfEWDw==
+X-CSE-MsgGUID: gIzHRv1nTFW+9P/+t8QS+g==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="28329410"
+X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
+   d="scan'208";a="28329410"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 02:35:15 -0700
+X-CSE-ConnectionGUID: mbnN2bOrQTSC4WJUNs+SKg==
+X-CSE-MsgGUID: xehOBnBQQpmFgGKtOm2zIw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
+   d="scan'208";a="33029128"
+Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.localnet) ([10.245.246.31])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 02:35:12 -0700
+From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+To: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc: linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+ Alison Schofield <alison.schofield@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>,
+ Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH v2 0/4] acpi/ghes, cper,
+ cxl: Trace FW-First CXL Protocol Errors
+Date: Tue, 07 May 2024 11:35:09 +0200
+Message-ID: <2649256.vYhyI6sBWr@fdefranc-mobl3>
+In-Reply-To: <20240109034755.100555-1-Smita.KoralahalliChannabasappa@amd.com>
+References: <20240109034755.100555-1-Smita.KoralahalliChannabasappa@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507064434.3213933-1-m.szyprowski@samsung.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, May 07, 2024 at 08:44:34AM +0200, Marek Szyprowski wrote:
-> dev_fmt argument is optional, so avoid dereferencing it unconditionally.
-> 
-> Fixes: 4d11c62ca8d7 ("clkdev: report over-sized strings when creating clkdev entries")
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+On Tuesday, January 9, 2024 4:47:51=E2=80=AFAM GMT+2 Smita Koralahalli wrot=
+e:
+> This patchset adds trace event support for FW-First Protocol Errors.
+>=20
+> This series depends on:
+> https://lore.kernel.org/linux-cxl/20231220-cxl-cper-v5-0-1bb8a4ca2c7a@int=
+el.
+> com
+>=20
+Hello Smita,
 
-Please put this in the patch system so it can be merged along with the
-change that created the problem. Thanks.
+I'm working on a small series of enhancement and additions to kernel logs a=
+nd=20
+trace events in extlog_print() (ELOG). I'm interested to reuse from ELOG th=
+e=20
+infrastructure which you made to trace the CXL Protocol Errors.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+I'm aware that this series depends on an old one from Ira which has been=20
+superseded by a different implementation and, furthermore, that this needs =
+to=20
+be reworked   because the execution of this code may sleep while in atomic=
+=20
+context.=20
+
+I'd like to ask if you plan to fix and rebase this series to a current cxl=
+=20
+branch. If so, I'll wait for the next version to integrate in ELOG.
+
+Otherwise, if you are not anymore actively working on this series, please=20
+notice that I'd be glad to help by making the necessary changes and by port=
+ing=20
+your code to a current cxl branch (of course, retaining your authorship).
+
+Thanks,
+
+=46abio M. De Francesco
+>
+> Link to v1:
+> https://lore.kernel.org/all/20240102150933.161009-1-Smita.KoralahalliChan=
+nab
+> asappa@amd.com
+>=20
+> Smita Koralahalli (4):
+>   acpi/ghes, cxl: Create a common CXL struct to handle different CXL
+>     CPER records
+>   efi/cper, cxl: Make definitions and structures global
+>   acpi/ghes, efi/cper: Recognize and process CXL Protocol Errors.
+>   acpi/ghes, cxl/pci: Trace FW-First CXL Protocol Errors
+>=20
+>  drivers/acpi/apei/ghes.c        | 22 ++++++++-
+>  drivers/cxl/core/pci.c          | 29 ++++++++++++
+>  drivers/cxl/cxlpci.h            |  3 ++
+>  drivers/cxl/pci.c               | 13 ++++--
+>  drivers/firmware/efi/cper_cxl.c | 79 ++++++++++++++++++++++++++++-----
+>  drivers/firmware/efi/cper_cxl.h |  7 +--
+>  include/linux/cper.h            |  4 ++
+>  include/linux/cxl-event.h       | 31 ++++++++++++-
+>  8 files changed, 166 insertions(+), 22 deletions(-)
+
+
+
+
