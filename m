@@ -1,92 +1,75 @@
-Received: from irl.hu (irl.hu [95.85.9.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9603F187324
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 20:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.85.9.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC943187320;
+	Tue,  7 May 2024 20:16:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715112969; cv=none; b=KL+9fsACv99rzdjDR+oq0ppevQ7e3JLljc7wO80NEylbfzXc5bwKYR5uqGlXDuKvDV0JM3abq18BVUROpwhlEAuTlBTePffhq89jPHrvYr7D/DeImhk9LcSYHudAQhCV8CyFfrcOb6lPG9uG1RAhMx/0hWdVC19yzCwVwRfLRHo=
+	t=1715113011; cv=none; b=B+MEvJGG7kQIZghqXkkaWPWaJqiqnCuPVmIX27AeHnVpx0/AEY/FX7SL7IbRkPL5VydraUkXB2HS4vn6Qp47K7v1Gso8ZMUIX0ieFp0+N6UUAOWg7nJ8W2N+3nlWZ5nrAlVhzaMq80PiyuOHurAJuRKFtor8hsp0i12nMAfbQnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715112969; c=relaxed/simple;
-	bh=vi09pAj5NzTXzGhJb/2e314Pdt//tBkobMEfvhiwVwE=;
-	h=From:To:Cc:Subject:Date:Message-ID:Mime-Version:Content-Type; b=vEW6jztmvNkzZQIu+L50ifHegSnZh6yARsq3QixrNXsOcrIPrSdlzULiIFH/ceqQPJyIEI4VEntt4KUeZoflvVx9tKwPRhsWGESsbt5k6Xvn2NH6ocZKra4n6+No9Dbzo2QgHi45iSw906pS+blW0zl+J+ExieoURHtfbmcDqiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu; spf=pass smtp.mailfrom=irl.hu; arc=none smtp.client-ip=95.85.9.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=irl.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=irl.hu
-Received: from fedori.lan (51b68e76.unconfigured.pool.telekom.hu [::ffff:81.182.142.118])
-  (AUTH: CRAM-MD5 soyer@irl.hu, )
-  by irl.hu with ESMTPSA
-  id 0000000000074965.00000000663A8ACE.001E3309; Tue, 07 May 2024 22:10:53 +0200
-From: Gergo Koteles <soyer@irl.hu>
-To: Harry Wentland <harry.wentland@amd.com>,
-  Leo Li <sunpeng.li@amd.com>,
-  Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
-  Alex Deucher <alexander.deucher@amd.com>,
-  =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-  "Pan, Xinhui" <Xinhui.Pan@amd.com>, David Airlie <airlied@gmail.com>,
-  Daniel Vetter <daniel@ffwll.ch>,
-  Mario Limonciello <mario.limonciello@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-  linux-kernel@vger.kernel.org, Gergo Koteles <soyer@irl.hu>
-Subject: [RFC PATCH] drm/amd/display: Disable panel_power_savings sysfs entry for OLED displays
-Date: Tue,  7 May 2024 22:09:19 +0200
-Message-ID: <04db7855665f9cc92a730dd7ad0b7c47c8fd0091.1715112078.git.soyer@irl.hu>
-X-Mailer: git-send-email 2.45.0
+	s=arc-20240116; t=1715113011; c=relaxed/simple;
+	bh=cGaAkkEOXpEMKaanh5pAkmdxFKN5fg25gZkTzU10KXQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UHSlECtaKtj1cAkmpxHw0aMe5saAmJ1lj2ssWdmYQUpv5pt7TqEezsc2NBCOwXnM4z5d+D6jICOWpp7x9HxtefH2JlavWrDw1rtfdevU1wbg/OZo/L2shVrzOQiIgcbSLvSrXn/yretLgqmy3qyfaSG310fWnJNw08x22yU2lW4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DzCd5kht; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DzCd5kht"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CBFAC2BBFC;
+	Tue,  7 May 2024 20:16:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715113010;
+	bh=cGaAkkEOXpEMKaanh5pAkmdxFKN5fg25gZkTzU10KXQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DzCd5kht5CJIc7xsbUMaE6HsmKbfChDDD1LJUcuBiK3Dl+rVaoYyxpGs8hZzE07Yj
+	 dLBXaoXx5Gq1PZ1KzqqDoCBnjNZqGc1D0LxU2t1Ee4zW9Jjo/Nz0eDs1o6kUO97Jmb
+	 tOKXF8acwihZSthw04n2tVCjY0niFo7R9e4iGQPMZ7E3t8eO7cvxtWEun7stK1KL+g
+	 vTcwg8eo5P1+Q1n9ZqDiAGZBToF3iZcbcnSfteaF8owH+28/SHfw9XMxBeyxP4Axkj
+	 Pjfzu9DUdhXHttJ2YMfT2jtHBGhR3FPHvkjWKeZqiKhVtUk5m2CxRQYV0AO/SPVbsU
+	 SYq7FfQx6p1wg==
+Date: Tue, 7 May 2024 15:16:48 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Drew Fustini <dfustini@tenstorrent.com>
+Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
+	Jisheng Zhang <jszhang@kernel.org>, linux-kernel@vger.kernel.org,
+	Michael Turquette <mturquette@baylibre.com>,
+	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+	Yangtao Li <frank.li@vivo.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	devicetree@vger.kernel.org, Guo Ren <guoren@kernel.org>,
+	Albert Ou <aou@eecs.berkeley.edu>, Fu Wei <wefu@redhat.com>,
+	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>
+Subject: Re: [PATCH RFC v3 2/7] dt-bindings: clock: Document T-Head TH1520
+ AP_SUBSYS controller
+Message-ID: <171511300571.994683.10040593951113632886.robh@kernel.org>
+References: <20240506-th1520-clk-v3-0-085a18a23a7f@tenstorrent.com>
+ <20240506-th1520-clk-v3-2-085a18a23a7f@tenstorrent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mime-Autoconverted: from 8bit to 7bit by courier 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240506-th1520-clk-v3-2-085a18a23a7f@tenstorrent.com>
 
-The panel_power_savings sysfs entry sets the Adaptive Backlight
-Management level (abm_level). OLED displays work without backlight, so
-it is unnecessary for them.
 
-Before creating the sysfs entry, make sure the display is not an OLED
-display.
+On Mon, 06 May 2024 21:55:15 -0700, Drew Fustini wrote:
+> Document bindings for the T-Head TH1520 AP sub-system clock controller.
+> 
+> Link: https://openbeagle.org/beaglev-ahead/beaglev-ahead/-/blob/main/docs/TH1520%20System%20User%20Manual.pdf
+> Co-developed-by: Yangtao Li <frank.li@vivo.com>
+> Signed-off-by: Yangtao Li <frank.li@vivo.com>
+> Signed-off-by: Drew Fustini <dfustini@tenstorrent.com>
+> ---
+>  .../bindings/clock/thead,th1520-clk-ap.yaml        | 64 +++++++++++++++
+>  MAINTAINERS                                        |  2 +
+>  include/dt-bindings/clock/thead,th1520-clk-ap.h    | 96 ++++++++++++++++++++++
+>  3 files changed, 162 insertions(+)
+> 
 
-Signed-off-by: Gergo Koteles <soyer@irl.hu>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index d6e71aa808d8..d54065a76f63 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -6535,9 +6535,11 @@ static const struct attribute_group amdgpu_group = {
- static void amdgpu_dm_connector_unregister(struct drm_connector *connector)
- {
- 	struct amdgpu_dm_connector *amdgpu_dm_connector = to_amdgpu_dm_connector(connector);
-+	union dpcd_sink_ext_caps *ext_caps =
-+		&amdgpu_dm_connector->dc_link->dpcd_sink_ext_caps;
- 
- 	if (connector->connector_type == DRM_MODE_CONNECTOR_eDP &&
--	    amdgpu_dm_abm_level < 0)
-+	    amdgpu_dm_abm_level < 0 && !ext_caps->bits.oled)
- 		sysfs_remove_group(&connector->kdev->kobj, &amdgpu_group);
- 
- 	drm_dp_aux_unregister(&amdgpu_dm_connector->dm_dp_aux.aux);
-@@ -6642,10 +6644,12 @@ amdgpu_dm_connector_late_register(struct drm_connector *connector)
- {
- 	struct amdgpu_dm_connector *amdgpu_dm_connector =
- 		to_amdgpu_dm_connector(connector);
-+	union dpcd_sink_ext_caps *ext_caps =
-+		&amdgpu_dm_connector->dc_link->dpcd_sink_ext_caps;
- 	int r;
- 
- 	if (connector->connector_type == DRM_MODE_CONNECTOR_eDP &&
--	    amdgpu_dm_abm_level < 0) {
-+	    amdgpu_dm_abm_level < 0 && !ext_caps->bits.oled) {
- 		r = sysfs_create_group(&connector->kdev->kobj,
- 				       &amdgpu_group);
- 		if (r)
-
-base-commit: dccb07f2914cdab2ac3a5b6c98406f765acab803
--- 
-2.45.0
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
