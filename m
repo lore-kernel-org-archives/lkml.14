@@ -1,57 +1,59 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC14516D9DA
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 16:27:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CD0D16E86E
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 16:27:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099239; cv=none; b=lQgvOgk0Mi2Gq3fpXK5n6LaaRciOj0j2QtKAEQ8WFeHyqILEvPL2KRaldVxZ+FwXgznoax2xH4QY2i3M3/AjqcVA7Rm55EC4gwKL6I1aqIQ/JjJWUma+Oa8voIvVkwrunZVp4CTscHdZXJVlkxoiUxiZu217biuXgjC7j5OHaaw=
+	t=1715099240; cv=none; b=FNz6DG0nqnGvRtxsm16q0l73d5WS9EaXAu16lOpIWFVPCD/6RU4niPdN3kMXQS7evxRbcmkeS/X3Q4zpfumWNJw/1cM5x8D3WvwT9pAJ+TDctciY5nOvJnjbtOiy3xXcHiNi9J3D8WLU4XyjtiQZUQDYClA2T34oOtZpy9Vuov4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099239; c=relaxed/simple;
-	bh=3FQmdzC7rLah5bHXqxL1pjRWMb/l2vnOq/dIwPsVxiM=;
+	s=arc-20240116; t=1715099240; c=relaxed/simple;
+	bh=9NQhYiz/IbLF6F7xrUyCvcZeCyvNKJflJvFw3WrA/2Q=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=A02zBcZV6QwJ8Fk3nVCRvKhdf+d72YEypMmsAym7xinq1nUFLlgRCcbvpzlrS07TpwANPRwgyZLVut00772QY1ZBJNyoU0I0klQgIOSx3SQTZ8Ew5yxRSh293mrsP2ckSvNOkiQp4bosOz8lncnHnYz/oABxgui3emyGVfIPkXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=d2fw3tcx; arc=none smtp.client-ip=209.85.167.172
+	 In-Reply-To:To:Cc; b=htqnNuMngUNHpJ4D2+zrG9SFRJ9503o+K8ncnyVl7B+ein5CHAsdW/ZUXnLGIXV6VHacU0SanbJT1ANowKBgHJvbWaJAz4oZW1z34EOlzA6J85DLULGS6VwbmTTPMEZOZBGx33qkkaAlwMm7VVI/pVuPg88b9vqNCJKjAfo7Sq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=X0fcPP6X; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d2fw3tcx"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c96a298d5aso1550486b6e.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:27:17 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="X0fcPP6X"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4365c1451d4so22802941cf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:27:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715099237; x=1715704037; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1715099238; x=1715704038; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JKfhOSoHE1VqyRhgB0xYInvnK6a8zz5LZUqmCULZe+M=;
-        b=d2fw3tcx8B7ebQuzRheafY/HF13lspqh3qU2RkyjcthAncGKEa7QeIed+ec4X3NLv+
-         7MRi9U7Vt1ATwL/dQIezPReprvccyBX5OKfVejS+EvZkeUxmu2MNo64kczGvQNqe8DUg
-         G3RX+SjTHmVUCLghqdzIK6J3gbIowcPupJR3s=
+        bh=WR87o59ttHnNvNigBqZHzwph/s3gT6BLw9Ga86sRtPA=;
+        b=X0fcPP6XV9gErF/+4W1Z2PmcakgwH2aR6w5ezvGuPZgIgzfX67v7HlVU9wXeFvw0QH
+         kjerepixGiDuoMQQBv35iqKyJ2r/dXb0IP3Y39y91FJjN9db8u6c2BQuka7Spfg7FjoU
+         eowjiNN+hFx3oyTZf85+N3+nqDs+thzQI/e0c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715099237; x=1715704037;
+        d=1e100.net; s=20230601; t=1715099238; x=1715704038;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JKfhOSoHE1VqyRhgB0xYInvnK6a8zz5LZUqmCULZe+M=;
-        b=mCpeJh8IeiQaTJTwCFxow2jdHzn3cn+So0/N44A5oLkmpt5NFx/BtQAm0sEE07rJKe
-         B3+MzCpZ5Y9e+0gO1hfEAE97p5o4oV7PxepqAPIfUH2nwcu5a82gysHShM1lVjCu5cf2
-         Ku3+MLWyMlkoFu2q7SYCdqGzSpU20cqL8fQHS6MqiiXOyr4Zi3SGEOy2QHr9NH78+28b
-         Jvm+GawZnNEI/mZt8AaAFqaOkAHLGas0emgpSNBbSAfPQvs/u9sN/Mhi3OyiHuNG4l1i
-         UjJovPkluYfr3uFAd+Tk7CLccPOudyNHRcvsqMV93nhDMQH7MtM0FhV8frHSOqzMSv9p
-         /3Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCVcN7FRBeWl4EwykLFLZXyZi2R50VZJEPpjsTs3idIw2iDrkkTwn3DxUVv0yIvfe4RCnzd6NnNMi9u/rBwKQLfo4uN6hTPc2M2DvwS4
-X-Gm-Message-State: AOJu0YzikxG+sUBN1rEzzx7XndnE8L/zWoT+iX9PBA9bdwfn8F5hFY5p
-	YaLlRk1ZJZ8F81gNwJBvim1U9Cy1Hj21t8f6WvWNbOaw61nwydPjUz++26qYaw==
-X-Google-Smtp-Source: AGHT+IH1n5rgepkFv+DmmmLViOZnDel/iUrOgLICLSZETgB3GeR4REJxlmdXw7sr6mA1VqvgfFFkzw==
-X-Received: by 2002:a05:6808:1990:b0:3c8:665e:1e57 with SMTP id 5614622812f47-3c9852c99fdmr89999b6e.25.1715099236642;
-        Tue, 07 May 2024 09:27:16 -0700 (PDT)
+        bh=WR87o59ttHnNvNigBqZHzwph/s3gT6BLw9Ga86sRtPA=;
+        b=Oqlcmww7VcoT4barDLBeGGyy60xSCky7Y6xPabgW2Uh2hQLdmZMEBPPItnIFubHhXU
+         DnJwSwH43n1JNEvk7cjMO7lhUDImvdZhsEoCZ6AvKQ8pXuxMKtrX8YnKLRBL15i+n/VU
+         nhT9MedyWbB5c0WYxL3GlE05y5CUMYMpCofA8yD9zfR36/Avex+wTnDMHtt6Da0oOA5Q
+         Q2yVwP6SfGXvfoeWbMKA1kAQiIfyhouZJSs4ujspB1WoiW30/HjJi7nVM6cw4nYGKI5G
+         wA14uTuXtkqBaOVZ9cCz42TrGMmnUU5DaH+sDDIGlM+441H/mUYo37pHL2I3LM/wBn8u
+         cd6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUQNgmcX8AWO2lP7/YopRbdx1vAPfKCUSEcmk+Pa1QTPah22FUTTqrZQQ7yP77RKAJvkZmeHNBh9pXUvT2pZDWZehY686l/e0/Aa2Yz
+X-Gm-Message-State: AOJu0YxsKG53W9A7PWda9tfbcFyxs2XU+UmiyCyFMWp8LA5b8KbxGb99
+	fLBB2VspZ93WdPuSq0T/LYGXimyTF4DY0RV82l67DAMuGTYzKIZR2Tyb1DvUgQSdKTSXsXMpVeE
+	M2w==
+X-Google-Smtp-Source: AGHT+IGBjH3AdmiLQTQFeu7s9S83R8vO1MeeESLv5H1A9n7OSdIiA2Y0rCHZA8aZ7JmFdPuh3j3q+g==
+X-Received: by 2002:a05:622a:1aa9:b0:43a:dade:7ad2 with SMTP id d75a77b69052e-43dbf51448dmr2415871cf.18.1715099238350;
+        Tue, 07 May 2024 09:27:18 -0700 (PDT)
 Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
-        by smtp.gmail.com with ESMTPSA id hf23-20020a05622a609700b0043d1fc9b7d9sm4160597qtb.48.2024.05.07.09.27.16
+        by smtp.gmail.com with ESMTPSA id hf23-20020a05622a609700b0043d1fc9b7d9sm4160597qtb.48.2024.05.07.09.27.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 09:27:16 -0700 (PDT)
+        Tue, 07 May 2024 09:27:17 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 07 May 2024 16:27:13 +0000
-Subject: [PATCH v2 08/18] media: siano: Use flex arrays for sms_firmware
+Date: Tue, 07 May 2024 16:27:15 +0000
+Subject: [PATCH v2 10/18] media: venus: Use flex array for
+ hfi_session_release_buffer_pkt
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +62,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240507-cocci-flexarray-v2-8-7aea262cf065@chromium.org>
+Message-Id: <20240507-cocci-flexarray-v2-10-7aea262cf065@chromium.org>
 References: <20240507-cocci-flexarray-v2-0-7aea262cf065@chromium.org>
 In-Reply-To: <20240507-cocci-flexarray-v2-0-7aea262cf065@chromium.org>
 To: Michael Tretter <m.tretter@pengutronix.de>, 
@@ -79,35 +81,30 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.12.4
 
-Replace old style single array member, with flex array.
+Replace the old style single element array with a flex array. We do not
+allocate this structure, so the size change should not be an issue.
 
-The struct is allocated, but it seems like there was an over allocation
-error:
-
-fw_buf = kmalloc(ALIGN(fw->size + sizeof(struct sms_firmware),
-		SMS_ALLOC_ALIGNMENT), GFP_KERNEL | coredev->gfp_buf_flags);
-
-This change fixes this cocci warning:
-drivers/media/common/siano/smscoreapi.h:669:6-13: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
+This fixes the following cocci warning:
+drivers/media/platform/qcom/venus/hfi_cmds.h:204:5-16: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/common/siano/smscoreapi.h | 2 +-
+ drivers/media/platform/qcom/venus/hfi_cmds.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/common/siano/smscoreapi.h b/drivers/media/common/siano/smscoreapi.h
-index bc61bc8b9ea9..82d9f8a64d99 100644
---- a/drivers/media/common/siano/smscoreapi.h
-+++ b/drivers/media/common/siano/smscoreapi.h
-@@ -666,7 +666,7 @@ struct sms_firmware {
- 	u32			check_sum;
- 	u32			length;
- 	u32			start_address;
--	u8			payload[1];
-+	u8			payload[];
+diff --git a/drivers/media/platform/qcom/venus/hfi_cmds.h b/drivers/media/platform/qcom/venus/hfi_cmds.h
+index 41f765eac4d9..6dff949c4402 100644
+--- a/drivers/media/platform/qcom/venus/hfi_cmds.h
++++ b/drivers/media/platform/qcom/venus/hfi_cmds.h
+@@ -201,7 +201,7 @@ struct hfi_session_release_buffer_pkt {
+ 	u32 extradata_size;
+ 	u32 response_req;
+ 	u32 num_buffers;
+-	u32 buffer_info[1];
++	u32 buffer_info[];
  };
  
- /* statistics information returned as response for
+ struct hfi_session_release_resources_pkt {
 
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
