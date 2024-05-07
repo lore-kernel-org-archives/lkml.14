@@ -1,100 +1,83 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFFB152170;
-	Tue,  7 May 2024 11:15:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 64EE61514F8
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 11:17:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715080536; cv=none; b=uZixdnkdqxlW/MP6ZCVH0cl/Hu8gT9N/2EuMebWxC7rKa87J3v+KHWflvuujGzO4nNGAIgpHzbp+iFlGBGfgzH6Ttga+o+z0Jg0M4xzvCv3qFlBqxnfXXupKJZ/oHrYtTTqqq9ZKJV0NN9ivTwt5Ky4GI1eimHvcbSaQVmCWsFw=
+	t=1715080644; cv=none; b=Aan1hOEy3ETh+JT2bdYUz+voEnKHvWK00s18B5dmLBVN2d8RnbSLGbzd45X3V6InSOi/Ah+OtVzMP4T7DnRd2YAc01sC5DA+UdTwZLnw3kWCODrPRHWx5rwiBDE5zj4JzKoFO4bvPxM1ptmImuzWlnvRp3QpZ9djBdJe/DqhsA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715080536; c=relaxed/simple;
-	bh=qTksG14/AXe3UADF3lCbJ7w9tRhXaIrGr0xnZCBfOIY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uTu2shJZAZLJEvvtmEPl8kHdlWN1q0YsMbCaVOYoHPRgo/CNRn744oz+EfXi7PzJeuGaGUhCzKLHq45dqhB2npOGgzSqczzKHTRYMY8DvoE7+Zg6vhG4I8pQGeuqTYTchxPqbegN/SmHLDZQCeKwjfJG4yviBZciC25YPEpbDEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VYbFN0mvtzYnhR;
-	Tue,  7 May 2024 19:11:36 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 59357180065;
-	Tue,  7 May 2024 19:15:25 +0800 (CST)
-Received: from hulk-vt.huawei.com (10.67.174.26) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 7 May 2024 19:15:25 +0800
-From: Xiu Jianfeng <xiujianfeng@huawei.com>
-To: <hannes@cmpxchg.org>, <mhocko@kernel.org>, <roman.gushchin@linux.dev>,
-	<shakeel.butt@linux.dev>, <muchun.song@linux.dev>,
-	<akpm@linux-foundation.org>
-CC: <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 -next] mm: memcg: make alloc_mem_cgroup_per_node_info() return bool
-Date: Tue, 7 May 2024 11:08:32 +0000
-Message-ID: <20240507110832.1128370-1-xiujianfeng@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1715080644; c=relaxed/simple;
+	bh=4RWDb3dhbxFzvMPLfYEXGp9RHbWBGzBigcrnGPG2AOk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rnoWq9bCMiyqvbk6iT9PY7c4VFgoB2ZiQjl2v1bGP5BTApz34PMKLLPhT4QcIdsHH/rtWBi2qrgiTGW16NQFjwR4tmF+K46/4ZaAnqiHnNYYHT8u8e8km/DFmiV/8PWduY1OYSxFEXFhEKzNjGClNRCtyS6tymodFkHbClj3FOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 743D41063;
+	Tue,  7 May 2024 04:17:47 -0700 (PDT)
+Received: from [10.1.34.181] (XHFQ2J9959.cambridge.arm.com [10.1.34.181])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 009423F587;
+	Tue,  7 May 2024 04:17:19 -0700 (PDT)
+Message-ID: <3764382b-9fa6-4e94-ad5b-2e22e3e7c71a@arm.com>
+Date: Tue, 7 May 2024 12:17:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/4] arm64/mm: Enable userfaultfd write-protect
+Content-Language: en-GB
+To: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Joey Gouly
+ <joey.gouly@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>,
+ David Hildenbrand <david@redhat.com>, Peter Xu <peterx@redhat.com>,
+ Mike Rapoport <rppt@linux.ibm.com>, Shivansh Vij <shivanshvij@outlook.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240503144604.151095-1-ryan.roberts@arm.com>
+ <20240507110750.GA22289@willie-the-truck>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <20240507110750.GA22289@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Currently alloc_mem_cgroup_per_node_info() returns 1 if failed,
-make it return bool, false for failure and true for success.
+On 07/05/2024 12:07, Will Deacon wrote:
+> Hi Ryan,
+> 
+> On Fri, May 03, 2024 at 03:45:58PM +0100, Ryan Roberts wrote:
+>> This series adds uffd write-protect support for arm64.
+>>
+>> Previous attempts to add uffd-wp (and soft-dirty) have failed because of a
+>> perceived lack of available PTE SW bits. However it actually turns out that
+>> there are 2 available but they are hidden. PTE_PROT_NONE was previously
+>> occupying a SW bit, but can be moved, freeing up the SW bit. Bit 63 is marked as
+>> "IGNORED" in the Arm ARM, but it does not currently indicate "reserved for SW
+>> use" like it does for the other SW bits. I've confirmed with the spec owner that
+>> this is an oversight; the bit is intended to be reserved for SW use and the spec
+>> will clarify this in a future update.
+>>
+>> So now we have two spare bits; patch 4 enables uffd-wp on arm64, using the SW
+>> bit freed up by moving PTE_PROT_NONE. This leaves bit 63 spare for future use
+>> (e.g. soft-dirty - see RFC at [4] - or some other usage).
+>>
+>> ---
+>>
+>> This applies on top of v6.9-rc5.
+> 
+> I chucked this into the CI on Friday and it looks to have survived the
+> long weekend, so I've gone ahead and merged it into for-next/core. Short
+> of any last minute failures (touch wood), this should land in 6.10.
 
-Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
----
- mm/memcontrol.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Oh great - thanks!
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index d11536ef59ef..69d70feb8e68 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5653,13 +5653,13 @@ struct mem_cgroup *mem_cgroup_get_from_ino(unsigned long ino)
- }
- #endif
- 
--static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
-+static bool alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
- {
- 	struct mem_cgroup_per_node *pn;
- 
- 	pn = kzalloc_node(sizeof(*pn), GFP_KERNEL, node);
- 	if (!pn)
--		return 1;
-+		return false;
- 
- 	pn->lruvec_stats = kzalloc_node(sizeof(struct lruvec_stats), GFP_KERNEL,
- 					node);
-@@ -5675,11 +5675,11 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
- 	pn->memcg = memcg;
- 
- 	memcg->nodeinfo[node] = pn;
--	return 0;
-+	return true;
- fail:
- 	kfree(pn->lruvec_stats);
- 	kfree(pn);
--	return 1;
-+	return false;
- }
- 
- static void free_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
-@@ -5751,7 +5751,7 @@ static struct mem_cgroup *mem_cgroup_alloc(struct mem_cgroup *parent)
- 	}
- 
- 	for_each_node(node)
--		if (alloc_mem_cgroup_per_node_info(memcg, node))
-+		if (!alloc_mem_cgroup_per_node_info(memcg, node))
- 			goto fail;
- 
- 	if (memcg_wb_domain_init(memcg, GFP_KERNEL))
--- 
-2.34.1
+Catalin was previously proposing to hold this until 6.11 - I'll leave you two to
+fight it out in case that's still his preference ;-)
+
+> 
+> Thanks!
+> 
+> Will
 
