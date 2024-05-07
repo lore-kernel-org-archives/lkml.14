@@ -1,350 +1,154 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0134713C808
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 08:11:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F87E13C83C
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 08:13:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715069506; cv=none; b=VCx+lz5prAbS4MCNOhG1zvE2RR1ws1s/5Xl34ZgFr2+j6+SDbqjRr2GvWrJscJV3SWus2Gx3PsuhOR2XJkEUOVMf8UhQ0eYhhjUH8mf9hKXFadOwjvr2/fmN9tp68M/a1An/PgbJFyjYXQNF4HIkK5ji5htNeVBGSqRRIfz2vvI=
+	t=1715069620; cv=none; b=u2GleN1R9/iHR2st+pEwnBQHHAjtXl5FeHgIoXJ+11YlSKdKTf0U2/G5NTSUiysN7IbppVyJ4SLi8kjZrJ3QzLO8hgnEZ7fRI9TD+dK+PXWJVwAJa8Nza32Ty+VGbDtVeEWgnvoRGrmEIerS7KJyEKpKpiOdSg2x5ZhApkVVAQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715069506; c=relaxed/simple;
-	bh=Q1WtGpJ/PqnOdfl24h9oU0yMCxyLbKUfiHt5Vr8Pucw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iAf/l71Q9lRqxogON5QQ+ezqjgMR1o3wZb6+0j/aSnwgK+8Tod0HHnxhXzvClbZLbRs5x4wY+grNWDh6zse3vGutbdsAi/Akh6uYLlgC5qNQQSb3Dhk8KkLdA4FXHklTfC95qwO4D9VbbN+o1j4OtjtXeSkV2YPZJ2UALSighjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VHZ8bVTh; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1715069620; c=relaxed/simple;
+	bh=pQZ460S954Xbp1GD9EA04b/dSVz3MlCUGoUOo0OYf+k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k0eW++wNdA3EX85bTziSJ/YOx6fRr4Ys+tz1hlbbOExqt87eb5kAcDWNIgbHdlTyks6UlyZPgJ/mUb1VWzGCG24VcuDLWwxzYbhJx1ikUTXL/7MyRe7qwqsYqQtTUmwDTPdmvbb/2WXODbKTzC+wMKk9xEeXUOSghiY1s3Eeb8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BHLeldDj; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VHZ8bVTh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHLeldDj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715069502;
+	s=mimecast20190719; t=1715069617;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=97EnrSmoY+vqswtinWEF90pPBNS1du8dFQW0Vh3EGhg=;
-	b=VHZ8bVThy9JQgguf+9pdZZu8fQBLud7p4DEcn1jq4oH2ask2jW6WT4BCm+cEuu1tHTGlRg
-	fA8efEbJ6S14z29UDCNAyekYNLkEd/FM/9OYxoAVC2w2MWvtTgUMEYSXivMEmHQ+eKIHOk
-	T/YpT3sXdlwx6jh5cNX07+d9ba5Q4Sc=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0D7kJ1qnE1ifbGitHrjWMHHalzkwljHgHWRhLR/9vEU=;
+	b=BHLeldDjoEzlvmylTlHdElLwaD9rXBnoeGinMPjcyzBnuRg8A58xFTS2HPTU/aJCieBuwE
+	gabqw2CZm1UIlYS2TWbv0VUH/UcIYPg47jue5kj7h8TmnxsKcFIwoWVDaBFM2MzE1X2ClC
+	aY9jDUaDGLBVkL5glYuLBHPcmcB6SfI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-259-oKtvfD67PBiyqrve2oT7Ug-1; Tue, 07 May 2024 04:11:41 -0400
-X-MC-Unique: oKtvfD67PBiyqrve2oT7Ug-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6a123aaa5b6so3013216d6.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 01:11:41 -0700 (PDT)
+ us-mta-157-XN3DkVbyPZKAVHAMyBcojQ-1; Tue, 07 May 2024 04:13:36 -0400
+X-MC-Unique: XN3DkVbyPZKAVHAMyBcojQ-1
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-418df23b51cso15126525e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 01:13:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715069501; x=1715674301;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=97EnrSmoY+vqswtinWEF90pPBNS1du8dFQW0Vh3EGhg=;
-        b=JAinzqbHZQnK1Nhl0tygGhL3MfOb0vQJJAIxti5FGIljeTFy49SKMBtX8JYStKNzwu
-         25u+hZBYUZl1DKQIz/B6WykAZW3LxxQnnDiOCAlfT5lpz1CLdg3NUNe0Nbcsq3bBudOZ
-         2cXNy8st3VBe3QCAWgyJNbc1QYTE4KxCurQhz6bkNxCx+my8ji1FYUDLvWBf2X/TX+ja
-         oSlihsHey8ST0wThNdHlFYlakI+k3PfRti5mue8sXlXvwZVvxEwQaXWcSnwI9TCfyLM9
-         eG+m8HzWfeK+/gC12o9xBZi+nNlLN2LmTMalyKpL65anBa6KHIEjwVP+oWaUisOeK5gx
-         Yxjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVAwFBS+aHDWyXtcYeAkXSeAXnkB141h9SZJchH6MxPemZWphHgKL8ktz2W3gA5zHVodjKgfKaTDm55CDgzOr1Jf9i5DU4mMHD58BU+
-X-Gm-Message-State: AOJu0Yyz4CTbuj0yaXxPGjnB56O1Asf2VntpZMwPUZucFh05bz4tfZLZ
-	haDuNvVeGHMUFvhyUj7VEzE7bt5H1PjaGc14//z6R93kquS6f+GQJYxI3nmX/r1OWLLFhjAomvR
-	vwcEBVE1km07Z4egM2hyw976hN7TDmyuqui5vl8kPlb8hIu4Wmvx4ZcWHaqEBAw==
-X-Received: by 2002:a05:6214:501d:b0:696:b235:f39 with SMTP id jo29-20020a056214501d00b00696b2350f39mr13688422qvb.6.1715069501188;
-        Tue, 07 May 2024 01:11:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEFeqOJc8IqNgGmZu33Ok/1DP7gT5PQ9QKjlQHeC8Or8EBxR8EsuVNKcoVeuI0e3CuBmBE3YQ==
-X-Received: by 2002:a05:6214:501d:b0:696:b235:f39 with SMTP id jo29-20020a056214501d00b00696b2350f39mr13688400qvb.6.1715069500595;
-        Tue, 07 May 2024 01:11:40 -0700 (PDT)
-Received: from pstanner-thinkpadt14sgen1.remote.csb (nat-pool-muc-t.redhat.com. [149.14.88.26])
-        by smtp.gmail.com with ESMTPSA id ml11-20020a056214584b00b006a0e5cb0254sm4503993qvb.55.2024.05.07.01.11.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 01:11:40 -0700 (PDT)
-Message-ID: <829fbd8671ca770adaf894ce8a3e8fa625739504.camel@redhat.com>
-Subject: Re: [PATCH v6 00/10] Make PCI's devres API more consistent
-From: Philipp Stanner <pstanner@redhat.com>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Daniel Vetter <daniel@ffwll.ch>, Bjorn Helgaas <bhelgaas@google.com>, Sam
- Ravnborg <sam@ravnborg.org>, dakr@redhat.com, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org
-Date: Tue, 07 May 2024 10:11:36 +0200
-In-Reply-To: <20240426220150.GA608828@bhelgaas>
-References: <20240426220150.GA608828@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        d=1e100.net; s=20230601; t=1715069615; x=1715674415;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0D7kJ1qnE1ifbGitHrjWMHHalzkwljHgHWRhLR/9vEU=;
+        b=RQanVNZFHFQoXKdl8QGgInuUNKIT34s/BG9DXCbGhTkjWMmwV1/wUablCU/IDqfUKv
+         F5P+nFiwicTGWMe9slXZPvpLeabxsDERA2fVLNhexfCF7LgHSRAl7OU878kXy/w8iZ64
+         dQirNxFrWbKBTxqirOL0VgFlOcRzZLFbxXOJXiKYVY6uFz66I4NMCWdh6vZ5jQ1NDaRZ
+         zi0oYs4IkgkUdFQWnuTj0LsyRuVsWmYXe5sBKaF+D6yf4XQT2JHySIvHmxs5sWzDlkDq
+         S5bsshgydumrwykcn8oZO1sPmVtKva4SZoV8YVsvB83PbDpS9W7sD7vP6GU4ntbBhPb+
+         NEQA==
+X-Forwarded-Encrypted: i=1; AJvYcCWUEp9lLxvU41apwUlsv7Jt7a3AaahUK6SQdoeHRXNTf98B0trKcoToPjjQpT9QbSwsNiKnDVGnWxLawYfFRYb421UN4zFdFDgZ4ZQ9
+X-Gm-Message-State: AOJu0YzSnhVmfDzhKuQs9g6upJ1OHsqY7t9mqOVNFX9gFXeL7xqD+Q/d
+	5ZNJcB3n9yDpYB7rLwawNY1nY/k8MdHY9pyiNviRfx9y4elWWQtiXoHVlXddQBejmYkkRRR1vgi
+	masExybynY52mQCh2zH0mVyG4CMcwzw5OPflkelHOy1gIa8GidWfcy+3JSzg/hg==
+X-Received: by 2002:a05:600c:3512:b0:41a:c92:d323 with SMTP id h18-20020a05600c351200b0041a0c92d323mr9227587wmq.10.1715069615377;
+        Tue, 07 May 2024 01:13:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFbUJypzMJ8qTpkAD3kEukaZowb7+J0NqZa2mJ6+j1UoIsdTZp9UvATWBmT9DDZhIzHtHejkg==
+X-Received: by 2002:a05:600c:3512:b0:41a:c92:d323 with SMTP id h18-20020a05600c351200b0041a0c92d323mr9227559wmq.10.1715069614957;
+        Tue, 07 May 2024 01:13:34 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id j15-20020a05600c190f00b0041bf512f85bsm22268129wmq.14.2024.05.07.01.13.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 May 2024 01:13:33 -0700 (PDT)
+Message-ID: <016d8cff-efc3-4ef1-9aff-7c21c48f2d69@redhat.com>
+Date: Tue, 7 May 2024 10:13:32 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/fault: speed up uffd-unit-test by 10x: rate-limit
+ "MCE: Killing" logs
+To: John Hubbard <jhubbard@nvidia.com>, Andy Lutomirski <luto@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+ LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+ Peter Xu <peterx@redhat.com>, Axel Rasmussen <axelrasmussen@google.com>
+References: <20240507022939.236896-1-jhubbard@nvidia.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20240507022939.236896-1-jhubbard@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hey Bjorn,
+The patch subject is misleading. This should be "don't flood the system 
+log". Nobody cares about the speed of a unittest ;)
 
-so I have spent a few hours seeing how we could simplify this series.
-Here are my thoughts.
+On 07.05.24 04:29, John Hubbard wrote:
+> If a system experiences a lot of memory failures, then any associated
+> printk() output really needs to be rate-limited. I noticed this while
+> running selftests/mm/uffd-unit-tests, which logs 12,305 lines of output,
+> adding (on my system) an extra 97 seconds of runtime due to printk time.
 
+Recently discussed:
 
-On Fri, 2024-04-26 at 17:01 -0500, Bjorn Helgaas wrote:
-> On Fri, Apr 26, 2024 at 10:07:02AM +0200, Philipp Stanner wrote:
-> > On Wed, 2024-04-24 at 15:12 -0500, Bjorn Helgaas wrote:
-> > > On Mon, Apr 08, 2024 at 10:44:12AM +0200, Philipp Stanner wrote:
-> > > > ...
-> > > > PCI's devres API suffers several weaknesses:
-> > > >=20
-> > > > 1. There are functions prefixed with pcim_. Those are always
-> > > > managed
-> > > > =C2=A0=C2=A0 counterparts to never-managed functions prefixed with =
-pci_ =E2=80=93
-> > > > or
-> > > > so one
-> > > > =C2=A0=C2=A0 would like to think. There are some apparently unmanag=
-ed
-> > > > functions
-> > > > =C2=A0=C2=A0 (all region-request / release functions, and pci_intx(=
-))
-> > > > which
-> > > > =C2=A0=C2=A0 suddenly become managed once the user has initialized =
-the
-> > > > device
-> > > > with
-> > > > =C2=A0=C2=A0 pcim_enable_device() instead of pci_enable_device(). T=
-his
-> > > > "sometimes
-> > > > =C2=A0=C2=A0 yes, sometimes no" nature of those functions is confus=
-ing
-> > > > and
-> > > > =C2=A0=C2=A0 therefore bug-provoking. In fact, it has already cause=
-d a
-> > > > bug in
-> > > > DRM.
-> > > > =C2=A0=C2=A0 The last patch in this series fixes that bug.
-> > > > 2. iomappings: Instead of giving each mapping its own callback,
-> > > > the
-> > > > =C2=A0=C2=A0 existing API uses a statically allocated struct tracki=
-ng one
-> > > > mapping
-> > > > =C2=A0=C2=A0 per bar. This is not extensible. Especially, you can't
-> > > > create
-> > > > =C2=A0=C2=A0 _ranged_ managed mappings that way, which many drivers=
- want.
-> > > > 3. Managed request functions only exist as "plural versions"
-> > > > with a
-> > > > =C2=A0=C2=A0 bit-mask as a parameter. That's quite over-engineered
-> > > > considering
-> > > > =C2=A0=C2=A0 that each user only ever mapps one, maybe two bars.
-> > > >=20
-> > > > This series:
-> > > > - add a set of new "singular" devres functions that use devres
-> > > > the
-> > > > way
-> > > > =C2=A0 its intended, with one callback per resource.
-> > > > - deprecates the existing iomap-table mechanism.
-> > > > - deprecates the hybrid nature of pci_ functions.
-> > > > - preserves backwards compatibility so that drivers using the
-> > > > existing
-> > > > =C2=A0 API won't notice any changes.
-> > > > - adds documentation, especially some warning users about the
-> > > > =C2=A0 complicated nature of PCI's devres.
-> > >=20
-> > > There's a lot of good work here; thanks for working on it.
-> >=20
-> > Thanks!
-> > Good to get some more feedback from you
-> >=20
-> > >=20
-> > > > Philipp Stanner (10):
-> > > > =C2=A0 PCI: Add new set of devres functions
-> > >=20
-> > > This first patch adds some infrastructure and several new
-> > > exported
-> > > interfaces:
-> > >=20
-> > > =C2=A0 void __iomem *pcim_iomap_region(struct pci_dev *pdev, int bar,
-> > > const char *name)
-> > > =C2=A0 void pcim_iounmap_region(struct pci_dev *pdev, int bar)
-> > > =C2=A0 int pcim_request_region(struct pci_dev *pdev, int bar, const
-> > > char
-> > > *name)
-> > > =C2=A0 void pcim_release_region(struct pci_dev *pdev, int bar)
-> > > =C2=A0 void __iomem *pcim_iomap_range(struct pci_dev *pdev, int bar,
-> > > =C2=A0 void __iomem *pcim_iomap_region_range(struct pci_dev *pdev, in=
-t
-> > > bar,
-> > > =C2=A0 void pcim_iounmap_region_range(struct pci_dev *pdev, int bar,
-> > >=20
-> > > > =C2=A0 PCI: Deprecate iomap-table functions
-> > >=20
-> > > This adds a little bit of infrastructure (add/remove to
-> > > legacy_table),
-> > > reimplements these existing interfaces:
-> > >=20
-> > > =C2=A0 void __iomem *pcim_iomap(struct pci_dev *pdev, int bar,
-> > > unsigned
-> > > long maxlen)
-> > > =C2=A0 void pcim_iounmap(struct pci_dev *pdev, void __iomem *addr)
-> > > =C2=A0 int pcim_iomap_regions(struct pci_dev *pdev, int mask, const
-> > > char
-> > > *name)
-> > > =C2=A0 int pcim_iomap_regions_request_all(struct pci_dev *pdev, int
-> > > mask,
-> > > =C2=A0 void pcim_iounmap_regions(struct pci_dev *pdev, int mask)
-> > >=20
-> > > and adds a couple new exported interfaces:
-> > >=20
-> > > =C2=A0 void pcim_release_all_regions(struct pci_dev *pdev)
-> > > =C2=A0 int pcim_request_all_regions(struct pci_dev *pdev, const char
-> > > *name)
-> > >=20
-> > > There's a lot going on in these two patches, so they're hard to
-> > > review.=C2=A0 I think it would be easier if you could do the fixes to
-> > > existing interfaces first,
-> >=20
-> > I agree that the patches can be further split into smaller chunks
-> > to
-> > make them more atomic and easier to review. I can do that.
-> >=20
-> > BUT I'd need some more details about what you mean by "do the fixes
-> > first" =E2=80=93 which fixes?
-> > The later patches at least in part rely on the new better functions
-> > being available.
-> >=20
-> > > followed by adding new things, maybe
-> > > something like separate patches that:
-> > >=20
-> > > =C2=A0 - Add pcim_addr_devres_alloc(), pcim_addr_devres_free(),
-> > > =C2=A0=C2=A0=C2=A0 pcim_addr_devres_clear().
-> > >=20
-> > > =C2=A0 - Add pcim_add_mapping_to_legacy_table(),
-> > > =C2=A0=C2=A0=C2=A0 pcim_remove_mapping_from_legacy_table(),
-> > > =C2=A0=C2=A0=C2=A0 pcim_remove_bar_from_legacy_table().
-> > >=20
-> > > =C2=A0 - Reimplement pcim_iomap(), pcim_iomap_regions(),
-> > > pcim_iounmap().
->=20
-> This is the part I meant by "fixes", but maybe it's not so much a fix
-> as it is reimplementing based on different infrastructure.=C2=A0 The diff=
-s
-> in "PCI: Deprecate iomap-table functions" for pcim_iomap() and
-> pcim_iounmap() are fairly straightforward and only depend on the
-> above.
->=20
-> pcim_iomap_regions() is a bit more complicated and probably needs
-> pcim_iomap_region() but not necessarily __pcim_request_region() and
-> __pcim_request_region_range().
+https://lkml.kernel.org/r/a9e3120d-8b79-4435-b113-ceb20aa45ee2@alu.unizg.hr
 
+See the pros/cons of using ratelimiting, and what an alternative for 
+uffd is that Axel is working on.
 
-Well, pcim_iomap_region() relies on __pcim_request_region() and
-__pcim_request_region_range().
-The entire architecture circles around those: At the bottom you have
-generic functions that can reserve you any range, and at the top you
-have functions that use those to get a whole BAR if needed.
+(CCing Peter and Axel)
 
-That was done very specifically to have an extensible API that doesn't
-suffer the limitations of the current devres API. It's super easy this
-way to add all sorts of request() functions should the need ever arise,
-all you need to do is add a PCIM_ADDR_* counterpart, basically.
+-- 
+Cheers,
 
-Right now, I wouldn't even know how I could implement
-pcim_iomap_region() without my __pcim_* helpers, since the later are
-(see the comment above them) written as counter parts to the ones in
-pci.c =E2=80=93 which are hybrid again.
-So I couldn't write it that way, because then we'd have circle where
-the pcim_ function calls the pci_ function which might call the pcim_
-function again...
-
-So the one thing I really want is to keep __pcim_request_region_range()
-and its wrappers.
-
-The algorithms for the region ranges in __pcim_request_region_range()
-can IMO be trusted to work because they are just copies of the existing
-ones in pci_iomap_region(). Only difference is that they request
-instead of ioremap(). And the request part in turn is copied from
-__pci_request_region(), only difference being that I tried to make it
-more readable by storing the pci_resource_*() return values at the top
-:)
-
-
-There's really a reason why I did it this way:
-   1. Add new, better interfaces
-   2. Reimplement pcim_iomap() & partners
-   3. Separate that hybrid API as much as possible
-
-I really tried to put some thought into the existing approach.
-Changing that now in v7 would be very work intensive, because I'd have
-to think everything through again, refactor it, drop APIs again, split
-commits, readjust commit messages and all the clean up comments inline
-(which wouldn't fit anymore), test the build commit-by-commit carefully
-once again with KASAN & Co...
-
-Yesterday I also found that abandoning that "inner nature" of the
-series would actually decrease readability in many cases, because
-pcim_addr_resources_match() would be added later, whereas the logic
-added in pcim_addr_resource_release() would be now empty at the
-beginning and scattered over several patches etc.
-
->=20
-> This would be a pretty small patch and defer making them deprecated
-> until replacements are added.
-
-
-I understand your desire to make those two patches smaller. We can work
-on making things more readable and reduce the exported APIs
-
-Let me suggest this:
- * I drop luxury functions no one needs (neither internally nor
-   externally) yet (e.g., pcim_request_region_range()). That will
-   already make patch #1 quite a bit smaller.
- * We don't export anything else which is not needed by users yet
-   (pcim_request_all_regions(), pcim_request_region_exclusive() etc.)
- * I split patches #1 and #2 into smaller chunks where possible
-   according to your suggestions above.
- * We keep __pcim_request_region(), and use it as the working horse
-   cleanly separated from the hybrid counterparts in pci.c.
-
-Would that work for you?
-
-
-P.
-
-
->=20
-> > > =C2=A0 - Add new interfaces like pcim_iomap_region(),
-> > > =C2=A0=C2=A0=C2=A0 pcim_request_region(), etc.
-> > >=20
-> > > =C2=A0=C2=A0=C2=A0 AFAICS, except for pcim_iomap_range() (used by vbo=
-x), these
-> > > new
-> > > =C2=A0=C2=A0=C2=A0 interfaces have no users outside drivers/pci, so .=
-.. we might
-> > > =C2=A0=C2=A0=C2=A0 defer adding them, or at least defer exposing them=
- via
-> > > =C2=A0=C2=A0=C2=A0 include/linux/pci.h, until we have users for them.
-> >=20
-> > Dropping (the export of) functions like pcim_request_region_range()
-> > or
-> > pcim_request_all_regions() is not a problem.
-> >=20
-> > What I quite fundamentally have to disagree with, however, is not
-> > to
-> > export the functions=C2=A0
-> >=20
-> > =C2=A0* pcim_request_region()
-> > =C2=A0* pcim_iomap_region()
-> >=20
-> > the main point of this series is to deprecate that hybrid nature of
-> > those existing pci_* functions. You can only deprecate something
-> > when
-> > you provide users with new, better alternatives.
->=20
-> Right.=C2=A0 But the new alternatives are only better when there are
-> actual
-> examples in the tree for people to look at.=C2=A0 If there are no users,
-> more interfaces are at best confusing and at worst dead code.
->=20
-> Bjorn
->=20
+David / dhildenb
 
