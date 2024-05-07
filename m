@@ -1,133 +1,162 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E736786AF4
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 22:57:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E2086AF4;
+	Tue,  7 May 2024 22:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715122679; cv=none; b=fwOdnO7zw3m02DdYiHvuFzX6ZO2sDJ7tsBhAoGzDS3RALnahsWZlZnoLMn0aR63O+oEQvgFEDPsey00rbCZMmgq35V5Qfd83l+LJwExJKSVGWkBpaTFuaL0GU1lgfphRyd6YD2bmcHB6rQ5OtaeTYGUYYxGxqQVCRtiXWqtsMJE=
+	t=1715122685; cv=none; b=AIBEA1J79XRDW5ZPG0QcBIfGYD+l8HfdxhkVZwAiKvlSsGDdD3IiRX04wt0lzQauIOOrE2MDnULLq0bFtcvvVZ/cjKf6j8tLH4bhJeG0A9EySMnyXRvecMnygitoe7xujxVpAG+oA7ew7NCnJWHKIdqjAqf6uJ2bT4GgLQ5WmNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715122679; c=relaxed/simple;
-	bh=XyBcZnJlWUppCuQIMinKz47R/Vd3bwL8FhNo2NLewFs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Pxc0ZNiXCOuUGMgBbTCt91U1JWyEc62xPtf9LGXKaH8QPRbt5ny3QpLUbzGoF4vYnqExMWBbfpKSWL0spLZoTwAlfyrSLV0A1PJ2iEh5m4sh0tMkcjTql/NO4R2sw2rjYoW3IW23ToEGig2kkkCeJedAi+wJ8uHEDLRxXC7K6LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uwhzibAd; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1715122685; c=relaxed/simple;
+	bh=YJMLBlX1bu6lVkrWHVTwaDJYZNchL3z069Sz1R+pnKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kkZtqO62zvBBsfZDZjnSXxbYJd8Rdc81mcVHW+pc0gP6rVM8BSgY9ePyDerak4bTLDQJWnf5CTrl80hTsLk1eeQX2g9bARS7Az8yzidMzj0KCGqgpcypnKg415Zgi+ggRUL7Bncbw9A1Olo9BfqYUR9nEHE8TfJO6uET6lExzFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lps4k72C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uwhzibAd"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de57643041bso6237839276.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 15:57:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715122677; x=1715727477; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=If9Q7YXcI0jaMPx5yFMsDYt2AC8Km9g14o178fmmDSQ=;
-        b=uwhzibAdk7SJF5PiZr80OlUUfdpQ2nyF8AQn4b1e5BjyH468Th+vQZKHdagrj83BWz
-         weXeFRd5HFBXawGUiblHto7z1KcwSRQE0G3aWX6OJcFPrQMAgtifLfWtH9W4bIBA+9AP
-         RMNd0OLclTwa10ulL+uXASm/jHT/i3vhfGSWT/uada+mqE15RpEIklE0HkYI/RWm+urK
-         zroDzds6xwEueMtNwR+lbBO+8r4FtFOeq9W15V5MQronb3xg4P7eAFJWR1ckCGNV8x1Y
-         mQvVX5DOtCsEtiwtWDT9POcGD8ULvTuypv5fNspbXoWJPLpqwoyzxhmmuywu2wKiz4UU
-         CXKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715122677; x=1715727477;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=If9Q7YXcI0jaMPx5yFMsDYt2AC8Km9g14o178fmmDSQ=;
-        b=LllCALq0GmnYb3NGot+3RmGwMkflIclNyU9Lq3RdxllZWe+gPzJlUdFLGErpdVcmCt
-         CqXd+8VnKJ4/TWRqPO/hIWRCzjWgTN9WVDcUlvkoVMtZu9roCqMOvLjmQoBF998LinMC
-         JYUwIaMFvoocQ8+Y2402X9kFlh6w42qH8zchen2Xp/WQuFC0fumwhm7eONJSDgMFn7W9
-         AN5PDHh7iPqulup2x0OKpMNBU7ukTcsGqZfxBxNQBfOBCJLCUhMCJuWBXcxdvEkF2hpg
-         P6/HeiWkSoU7z3d7NIOiwl51A3Q8bgrfd8nn7I6n3U2kXpoifqgg6Sl0iT6+ZJdB1fZY
-         WDpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRdjpMVGzIXC+IMQ4jO8w1K5EGlxLo1xcdY2undYXSW4f6PFFpN4Fz5weCNGQHV13DLiCL13gXixb1dOticKbUH/CV9xPixa6W4yzc
-X-Gm-Message-State: AOJu0YzOx8j/SAp1MfE60gobmqBtYyJkzsIC08MLUYhVOhVc/9fYLnws
-	30e4QdNv/mLGOCrgZhVC6O8sSKAmGlqekN6vwfceY4BPBJRpKFduUkyikuIZcLjlNleKo1OZiX5
-	Luw==
-X-Google-Smtp-Source: AGHT+IE4ZzQs5DeCns7tV3JfldxH2PjYiaee+lvyRphhL7PiqwnLOnIrfJmA1n2xRqrLX2r28xpQ5tHNpeg=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a05:6902:110e:b0:dc7:7ce9:fb4d with SMTP id
- 3f1490d57ef6-debb9e6d93bmr281205276.12.1715122677033; Tue, 07 May 2024
- 15:57:57 -0700 (PDT)
-Date: Tue, 7 May 2024 15:57:55 -0700
-In-Reply-To: <893ac578-baaf-4f4f-96ee-e012dfc073a8@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lps4k72C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 341E3C3277B;
+	Tue,  7 May 2024 22:58:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715122685;
+	bh=YJMLBlX1bu6lVkrWHVTwaDJYZNchL3z069Sz1R+pnKk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lps4k72CCFIYikh66jb9n+uAXxUfADYvhK8bpVwb56SkX9vOUotZmo0G35t0l9hzF
+	 uwFY3C2D5dbQAXcYaS9pS0JqVK9GljrnpgfTH7wfxg5nfT3hYD347YNu8+3DKIh81N
+	 WtVj5lSLwgXgLAAhLP7cuHPvTw67qwxp33UHvLHZXfdPQqMLbVyQcDuz8bpJx2RnRs
+	 qmZEnHiBUxwXmy3qobpMZXtVCkTB/pakRe8WAKZr1MVY+wAHbZJEaNYYwnHvPkWKRV
+	 63AxP8FtYyv0puqyLy5yyeZqXvS2/XwToCc80iyzNCIAbGP7oz9Pie2L7j4jFLppGq
+	 ggj5UJxW4Ra5w==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Prike Liang <Prike.Liang@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	Hawking.Zhang@amd.com,
+	Felix.Kuehling@amd.com,
+	Jun.Ma2@amd.com,
+	zhenguo.yin@amd.com,
+	sukrut.bellary@linux.com,
+	mukul.joshi@amd.com,
+	srinivasan.shanmugam@amd.com,
+	lijo.lazar@amd.com,
+	jonathan.kim@amd.com,
+	Lang.Yu@amd.com,
+	guchun.chen@amd.com,
+	yifan1.zhang@amd.com,
+	Tim.Huang@amd.com,
+	Jack.Xiao@amd.com,
+	aaron.liu@amd.com,
+	Hongkun.Zhang@amd.com,
+	Jiadong.Zhu@amd.com,
+	jesse.zhang@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.8 13/23] drm/amdgpu: Fix the ring buffer size for queue VM flush
+Date: Tue,  7 May 2024 18:56:39 -0400
+Message-ID: <20240507225725.390306-13-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240507225725.390306-1-sashal@kernel.org>
+References: <20240507225725.390306-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240219074733.122080-1-weijiang.yang@intel.com>
- <20240219074733.122080-5-weijiang.yang@intel.com> <ZjKNxt1Sq71DI0K8@google.com>
- <893ac578-baaf-4f4f-96ee-e012dfc073a8@intel.com>
-Message-ID: <Zjqx8-ZPyB--6Eys@google.com>
-Subject: Re: [PATCH v10 04/27] x86/fpu/xstate: Introduce XFEATURE_MASK_KERNEL_DYNAMIC
- xfeature set
-From: Sean Christopherson <seanjc@google.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Yang Weijiang <weijiang.yang@intel.com>, pbonzini@redhat.com, x86@kernel.org, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, peterz@infradead.org, 
-	chao.gao@intel.com, rick.p.edgecombe@intel.com, mlevitsk@redhat.com, 
-	john.allen@amd.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.9
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 02, 2024, Dave Hansen wrote:
-> On 5/1/24 11:45, Sean Christopherson wrote:
-> > On Sun, Feb 18, 2024, Yang Weijiang wrote:
-> >> Define a new XFEATURE_MASK_KERNEL_DYNAMIC mask to specify the features
-> > I still don't understand why this is being called DYNAMIC.  CET_SS isn't dynamic,
-> > as KVM is _always_ allowed to save/restore CET_SS, i.e. whether or not KVM can
-> > expose CET_SS to a guest is a static, boot-time decision.  Whether or not a guest
-> > XSS actually enables CET_SS is "dynamic", but that's true of literally every
-> > xfeature in XCR0 and XSS.
-> > 
-> > XFEATURE_MASK_XTILE_DATA is labeled as dynamic because userspace has to explicitly
-> > request that XTILE_DATA be enabled, and thus whether or not KVM is allowed to
-> > expose XTILE_DATA to the guest is a dynamic, runtime decision.
-> > 
-> > So IMO, the umbrella macro should be XFEATURE_MASK_KERNEL_GUEST_ONLY.
-> 
-> Here's how I got that naming.  First, "static" features are always
-> there.  "Dynamic" features might or might not be there.  I was also much
-> more focused on what's in the XSAVE buffer than on the enabling itself,
-> which are _slightly_ different.
+From: Prike Liang <Prike.Liang@amd.com>
 
-Ah, and CET_KERNEL will be '0' in XSTATE_BV for non-guest buffers, but '1' for
-guest buffers.
+[ Upstream commit fe93b0927bc58cb1d64230f45744e527d9d8482c ]
 
-> Then, it's a matter of whether the feature is user or supervisor.  The
-> kernel might need new state for multiple reasons.  Think of LBR state as
-> an example.  The kernel might want LBR state around for perf _or_ so it
-> can be exposed to a guest.
-> 
-> I just didn't want to tie it to "GUEST" too much in case we have more of
-> these things come along that get used for things unrelated to KVM.
-> Obviously, at this point, we've only got one and KVM is the only user so
-> the delta that I was worried about doesn't actually exist.
-> 
-> So I still prefer calling it "KERNEL" over "GUEST".  But I also don't
-> feel strongly about it and I've said my peace.  I won't NAK it one way
-> or the other.
+Here are the corrections needed for the queue ring buffer size
+calculation for the following cases:
+- Remove the KIQ VM flush ring usage.
+- Add the invalidate TLBs packet for gfx10 and gfx11 queue.
+- There's no VM flush and PFP sync, so remove the gfx9 real
+  ring and compute ring buffer usage.
 
-I assume you mean "DYNAMIC" over "GUEST"?  I'm ok with DYNAMIC, reflecting the
-impact on each buffer makes sense.
+Signed-off-by: Prike Liang <Prike.Liang@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c | 3 +--
+ drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c | 3 +--
+ drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c  | 2 --
+ 3 files changed, 2 insertions(+), 6 deletions(-)
 
-My one request would be to change the WARN in os_xsave() to fire on CET_KERNEL,
-not KERNEL_DYNAMIC, because it's specifically CET_KERNEL that is guest-only.
-Future dynamic xfeatures could be guest-only, but they could also be dynamic for
-some completely different reason.  That was my other hang-up with "DYNAMIC";
-as-is, os_xsave() implies that it really truly is GUEST_ONLY.
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+index dcdecb18b2306..42392a97daff2 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v10_0.c
+@@ -9194,7 +9194,7 @@ static const struct amdgpu_ring_funcs gfx_v10_0_ring_funcs_gfx = {
+ 		7 + /* PIPELINE_SYNC */
+ 		SOC15_FLUSH_GPU_TLB_NUM_WREG * 5 +
+ 		SOC15_FLUSH_GPU_TLB_NUM_REG_WAIT * 7 +
+-		2 + /* VM_FLUSH */
++		4 + /* VM_FLUSH */
+ 		8 + /* FENCE for VM_FLUSH */
+ 		20 + /* GDS switch */
+ 		4 + /* double SWITCH_BUFFER,
+@@ -9285,7 +9285,6 @@ static const struct amdgpu_ring_funcs gfx_v10_0_ring_funcs_kiq = {
+ 		7 + /* gfx_v10_0_ring_emit_pipeline_sync */
+ 		SOC15_FLUSH_GPU_TLB_NUM_WREG * 5 +
+ 		SOC15_FLUSH_GPU_TLB_NUM_REG_WAIT * 7 +
+-		2 + /* gfx_v10_0_ring_emit_vm_flush */
+ 		8 + 8 + 8, /* gfx_v10_0_ring_emit_fence_kiq x3 for user fence, vm fence */
+ 	.emit_ib_size =	7, /* gfx_v10_0_ring_emit_ib_compute */
+ 	.emit_ib = gfx_v10_0_ring_emit_ib_compute,
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
+index 0afe86bcc932b..6a6fc422e44da 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v11_0.c
+@@ -6110,7 +6110,7 @@ static const struct amdgpu_ring_funcs gfx_v11_0_ring_funcs_gfx = {
+ 		7 + /* PIPELINE_SYNC */
+ 		SOC15_FLUSH_GPU_TLB_NUM_WREG * 5 +
+ 		SOC15_FLUSH_GPU_TLB_NUM_REG_WAIT * 7 +
+-		2 + /* VM_FLUSH */
++		4 + /* VM_FLUSH */
+ 		8 + /* FENCE for VM_FLUSH */
+ 		20 + /* GDS switch */
+ 		5 + /* COND_EXEC */
+@@ -6195,7 +6195,6 @@ static const struct amdgpu_ring_funcs gfx_v11_0_ring_funcs_kiq = {
+ 		7 + /* gfx_v11_0_ring_emit_pipeline_sync */
+ 		SOC15_FLUSH_GPU_TLB_NUM_WREG * 5 +
+ 		SOC15_FLUSH_GPU_TLB_NUM_REG_WAIT * 7 +
+-		2 + /* gfx_v11_0_ring_emit_vm_flush */
+ 		8 + 8 + 8, /* gfx_v11_0_ring_emit_fence_kiq x3 for user fence, vm fence */
+ 	.emit_ib_size =	7, /* gfx_v11_0_ring_emit_ib_compute */
+ 	.emit_ib = gfx_v11_0_ring_emit_ib_compute,
+diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+index 3bc6943365a4f..153932c1f64f3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfx_v9_0.c
+@@ -6991,7 +6991,6 @@ static const struct amdgpu_ring_funcs gfx_v9_0_ring_funcs_compute = {
+ 		7 + /* gfx_v9_0_ring_emit_pipeline_sync */
+ 		SOC15_FLUSH_GPU_TLB_NUM_WREG * 5 +
+ 		SOC15_FLUSH_GPU_TLB_NUM_REG_WAIT * 7 +
+-		2 + /* gfx_v9_0_ring_emit_vm_flush */
+ 		8 + 8 + 8 + /* gfx_v9_0_ring_emit_fence x3 for user fence, vm fence */
+ 		7 + /* gfx_v9_0_emit_mem_sync */
+ 		5 + /* gfx_v9_0_emit_wave_limit for updating mmSPI_WCL_PIPE_PERCENT_GFX register */
+@@ -7029,7 +7028,6 @@ static const struct amdgpu_ring_funcs gfx_v9_0_ring_funcs_kiq = {
+ 		7 + /* gfx_v9_0_ring_emit_pipeline_sync */
+ 		SOC15_FLUSH_GPU_TLB_NUM_WREG * 5 +
+ 		SOC15_FLUSH_GPU_TLB_NUM_REG_WAIT * 7 +
+-		2 + /* gfx_v9_0_ring_emit_vm_flush */
+ 		8 + 8 + 8, /* gfx_v9_0_ring_emit_fence_kiq x3 for user fence, vm fence */
+ 	.emit_ib_size =	7, /* gfx_v9_0_ring_emit_ib_compute */
+ 	.emit_fence = gfx_v9_0_ring_emit_fence_kiq,
+-- 
+2.43.0
 
-diff --git a/arch/x86/kernel/fpu/xstate.h b/arch/x86/kernel/fpu/xstate.h
-index 83ebf1e1cbb4..2a1ff49ccfd5 100644
---- a/arch/x86/kernel/fpu/xstate.h
-+++ b/arch/x86/kernel/fpu/xstate.h
-@@ -185,8 +185,7 @@ static inline void os_xsave(struct fpstate *fpstate)
-        WARN_ON_FPU(!alternatives_patched);
-        xfd_validate_state(fpstate, mask, false);
- 
--       WARN_ON_FPU(!fpstate->is_guest &&
--                   (mask & XFEATURE_MASK_KERNEL_DYNAMIC));
-+       WARN_ON_FPU(!fpstate->is_guest && (mask & XFEATURE_MASK_CET_KERNEL));
- 
-        XSTATE_XSAVE(&fpstate->regs.xsave, lmask, hmask, err);
