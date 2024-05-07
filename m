@@ -1,249 +1,232 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A0E152E0E
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BF6155357
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715078847; cv=none; b=VhDR+DxSrKsfQjpVM34ud67UD1r5VUceF3Pm0mMTUjV9ghjSjo6+kzOiHMgKQpwKICYHJTbWLuJ4JUQs6yZr+x36mV0LNN3HJELL+Ul7tEj/YzPGkzDmDQTgaGI25CYZ27N/O/fJSN1E106XF6wVvkJ+zd8tpGSwiVDPhtZCWMI=
+	t=1715078897; cv=none; b=rrVfstKml+8KQVF3GyUmLQv57S5mFhCoHBKWRqii/1pYpYiusQgkC7aPnCgq2LdGOpv0MOqTqktrcTLMhlNSw0xL8cKwtL6cSYzwHbo07gLsxt2QBAxFruwM8uRd3iOKrUhjUnuyZ6r5QaK/pFBchcUF0fHIY7ZaHBWjfXgnAac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715078847; c=relaxed/simple;
-	bh=kiHIBvKNNEpif89Ucvo2CcuI4eCVXIyEwMixKRCDn54=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mIq3VHW74zAm0teJWen7bUS6iVbS5EchHC+Bw/3awr/tJiKw8m7dnpTcqiJ2aCluumE4N0TwVwoit7FZhfdzqZ2eGO4V6KNhKqmTV9X4CR7WJTJ56ww8+egiId58YQa65DufIJdW19vgDLDBhoiTWkj/wLJUr6TXkJsxo7Cu5b8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dG+Fu1WM; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715078897; c=relaxed/simple;
+	bh=gr6MCpczg12et+FBMDjyCUfNDicp71lojIb2Pw4ZPGk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SK40ziRwATuX9/XKs1gKyOHPb3Wr4EhkLqj5PFXO08NFJt7kkGnU5nqEsQvRToDaz7SuZvi9+khS+xBSLv+FcZFEN9R0mDcOtduhpQcrbexyknOksyB7FYbZce+HSF38PsKjruXM8E4Z0Dc1OsCHXjhavaSj45mnrqnm0Gbb3MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hI775dL/; arc=none smtp.client-ip=209.85.217.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dG+Fu1WM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715078845; x=1746614845;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kiHIBvKNNEpif89Ucvo2CcuI4eCVXIyEwMixKRCDn54=;
-  b=dG+Fu1WMIJa/Ym2aB1jeVkcGauEJl7QYIPw+Uatm4rT/F6SAxLrDzB4y
-   LFTdX2j5GJ/UgIdlfPCyCDtuM9Xw/G2ZkVa6oH5ibLzToytvebIwcblZk
-   vrzOTqFTQeb9LoC+01/+vhdqdW1e6+c8LsDJKHVybHlCfoVYKAD5Qg5Fb
-   7NPWNNYZQgqc2CA4IsTGgKmK+j6mM+GrHfoTFbv1Kxwh1SsUZBQ5sdWXb
-   CqT2uv+tmTniOgDqxIbi2UhAGxHCsoSPsH18NxDV1p2zNb72GbhIFjxi5
-   OEsM244Mx24i1pmRBH36H8qKpjLii+mSY8S0db8W8zVrIv1re7fAsmAF9
-   A==;
-X-CSE-ConnectionGUID: sWK8e5j0SHOl/JN6KnJ/RA==
-X-CSE-MsgGUID: 8s8WYsGPQdSUsNZHGHHfog==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10796746"
-X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
-   d="scan'208";a="10796746"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 03:47:25 -0700
-X-CSE-ConnectionGUID: 5ljaIkcTQCCN6LE/W+lL4Q==
-X-CSE-MsgGUID: Oma28utSTCKv3TBln5qvCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
-   d="scan'208";a="28466982"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 07 May 2024 03:47:21 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s4ILu-0001oq-2J;
-	Tue, 07 May 2024 10:47:18 +0000
-Date: Tue, 7 May 2024 18:46:23 +0800
-From: kernel test robot <lkp@intel.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
-	hughd@google.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	willy@infradead.org, david@redhat.com, ioworker0@gmail.com,
-	wangkefeng.wang@huawei.com, ying.huang@intel.com, 21cnbao@gmail.com,
-	ryan.roberts@arm.com, shy828301@gmail.com, ziy@nvidia.com,
-	baolin.wang@linux.alibaba.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/8] mm: shmem: add mTHP support for anonymous shmem
-Message-ID: <202405071820.2KY0UnDu-lkp@intel.com>
-References: <adc64bf0f150bdc614c6c06fc313adeef7dbbbff.1714978902.git.baolin.wang@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hI775dL/"
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-47ef107b07fso1578422137.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 03:48:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715078895; x=1715683695; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8LWXi1t+lE6KI0eavFtHLY+RQwXGx7aET3nURSVgDQU=;
+        b=hI775dL/nyzZpi8lC88ZoN00fZ5w5N1nupUOP35BMC0eEOwDxenh5SxDgb5m6b6eTs
+         gdn0LFxAwgTx/6/SbuGZrLqfdizyeb8/Z5yRvjgEI8bBfsm44M82kAzqkj6dxuCo18G8
+         KvUsNTkrC/SSqZkdR6zyyXaUdSxV+Edxc/NIl3foCc952PgMsG+R/XRiRFWyye12UKKN
+         oVKFMz4SqrLi0ldOxwXP2aosyqQZSsgyDUm8K0epooaOaz8ErBs7OVIv047sbAHHYlDQ
+         b02F77PtK5avE5gVx4eFk5OZbFnHL4jPo2gKmKBbDZk8dKNgmDAW7lddTa2YkXNne6ha
+         JKvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715078895; x=1715683695;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8LWXi1t+lE6KI0eavFtHLY+RQwXGx7aET3nURSVgDQU=;
+        b=L1Eqw8X7LX/TG3fQwj4tIC8ed/NVY4T8oiSL+iwnD4DWPXlowrhDSNgLf/uzN76RAq
+         TFkZZ1zO0k5deTcBcuwr1BYDzk4f6vo93URoVI3ykcA3jng5va3bVBPXZiZQmxzBoIdA
+         v9krvrZjs9pnYEqAuEPCq8Wo+7fCDgqYykN71bCcBCsWM8id88J6HiEPX8Jtne6E5pBW
+         5mYBMzmgXaawGNmuW4bbErWe/S6Hcwbm98GGGAzmn3vIXUcnblZ189rxjkV7Wi0Nrk4d
+         B96li0HhZEQ22OtzA6mrJcE6U/5UG8q3Ktgouj6lYPivgAWYvwXJdzRyoiJ/2GPLnmAu
+         fnLA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+8xW/2ebvIqdw9bh6U17NS+/FDAQLX/5DyPccFnHuWWabAQQSRa4QmH9TnRhJ/1IpfCHEggPLzjR2kvXJRwiD4sJwo/fAgC+BnN8t
+X-Gm-Message-State: AOJu0YxDKspcP8EzRqtPZRAt79uW4LsTfck9xxSe7K6lNu1FEWsNWfPT
+	D9j56LYI7geB/SQCP3QKT9lPWej03sYixgH+O4Ldme9uc4xqz6n1VeQ3efJZy30IplqJnylguWF
+	YTKHUaQYEt+LVhuo1fEbljYTjO+k=
+X-Google-Smtp-Source: AGHT+IGIQBgQs0/0XUDNmD2dno2WAe2gtY1HXhGqpZCxiIFvub8VoZsh8lfP2ESItgpq0YzJYUMQuR9NE9/ZfyctA4I=
+X-Received: by 2002:a67:f658:0:b0:47b:bda4:c30d with SMTP id
+ u24-20020a67f658000000b0047bbda4c30dmr1839721vso.3.1715078894913; Tue, 07 May
+ 2024 03:48:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <adc64bf0f150bdc614c6c06fc313adeef7dbbbff.1714978902.git.baolin.wang@linux.alibaba.com>
+References: <20240503005023.174597-1-21cnbao@gmail.com> <20240503005023.174597-7-21cnbao@gmail.com>
+ <0b4d4d4b-91d8-4fd5-af4e-aebe9ee08b89@arm.com> <CAGsJ_4wm6v+xgh4jQ+u2-EzOXCLsz6L6nRJi_=FfWuGDUjxRYg@mail.gmail.com>
+ <ff5b371a-16f6-4d03-b80d-b56af0f488c3@redhat.com> <CAGsJ_4z93FwPZx7w2VuCEkHP_JCwkO0whKwymonRJ9bSiKMVyQ@mail.gmail.com>
+ <CAGsJ_4xssg3CcjifePMmgk4aqLO+iAon0YdT9p=Uq-D8vFMxyQ@mail.gmail.com>
+ <5b770715-7516-42a8-9ea0-3f61572d92af@redhat.com> <CAGsJ_4xP1jPjH-SH7BgnFHiT4m+2gB0tP7ie_cUFynVpD_zpxQ@mail.gmail.com>
+ <7dc2084e-d8b1-42f7-b854-38981839f82e@redhat.com> <CAGsJ_4w4vDu4p-ALrTSKMZhGKDK6TpyDLrAyvY4vkPJEJ3N5Lw@mail.gmail.com>
+ <099a2c9e-f85e-4fe7-99dd-81b61115935c@redhat.com> <CAGsJ_4wNTgkP7An7ofXkfyhRpF=J-OLWTW7e5hOFef5-CxZe4Q@mail.gmail.com>
+ <41c1bd1f-b1d7-4faf-a422-1eff7425b35c@redhat.com>
+In-Reply-To: <41c1bd1f-b1d7-4faf-a422-1eff7425b35c@redhat.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 7 May 2024 18:48:03 +0800
+Message-ID: <CAGsJ_4whPN91m0v_=TtnnQN8y1CQgau+4F40q1vkrRUFK5t0wA@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] mm: swap: entirely map large folios found in swapcache
+To: David Hildenbrand <david@redhat.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org, linux-mm@kvack.org, 
+	baolin.wang@linux.alibaba.com, chrisl@kernel.org, hanchuanhua@oppo.com, 
+	hannes@cmpxchg.org, hughd@google.com, kasong@tencent.com, 
+	linux-kernel@vger.kernel.org, surenb@google.com, v-songbaohua@oppo.com, 
+	willy@infradead.org, xiang@kernel.org, ying.huang@intel.com, 
+	yosryahmed@google.com, yuzhao@google.com, ziy@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Baolin,
+On Tue, May 7, 2024 at 6:39=E2=80=AFPM David Hildenbrand <david@redhat.com>=
+ wrote:
+>
+> On 07.05.24 11:24, Barry Song wrote:
+> > On Tue, May 7, 2024 at 8:59=E2=80=AFPM David Hildenbrand <david@redhat.=
+com> wrote:
+> >>
+> >>>> Let's assume a single subpage of a large folio is no longer mapped.
+> >>>> Then, we'd have:
+> >>>>
+> >>>> nr_pages =3D=3D folio_nr_pages(folio) - 1.
+> >>>>
+> >>>> You could simply map+reuse most of the folio without COWing.
+> >>>
+> >>> yes. This is good but the pte which is no longer mapped could be
+> >>> anyone within the nr_pages PTEs. so it could be quite tricky for
+> >>> set_ptes.
+> >>
+> >> The swap batching logic should take care of that, otherwise it would b=
+e
+> >> buggy.
+> >
+> > When you mention "it would be buggy," are you also referring to the cur=
+rent
+> > fallback approach? or only refer to the future patch which might be abl=
+e
+> > to map/reuse "nr_pages - 1" pages?
+>
+> swap_pte_batch() should not skip any holes. So consequently, set_ptes()
+> should do the right thing. (regarding your comment "could be quite ricky
+> for set_ptes")
+>
+> So I think that should be working as expected.
 
-kernel test robot noticed the following build warnings:
+maybe not. take a look at my current code, I am goto check_folio with
+nr_pages =3D 1
+if  swap_pte_batch(folio_ptep, nr, folio_pte) !=3D folio_nr_pages(folio).
 
-[auto build test WARNING on akpm-mm/mm-everything]
-[also build test WARNING on next-20240506]
-[cannot apply to linus/master v6.9-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
++       nr_pages =3D 1;
++       ...
++       if (folio_test_large(folio) && folio_test_swapcache(folio)) {
++               int nr =3D folio_nr_pages(folio);
++               ...
++               if (!pte_same(folio_pte,
+pte_move_swp_offset(vmf->orig_pte, -idx)) ||
++                   swap_pte_batch(folio_ptep, nr, folio_pte) !=3D nr)
++                       goto check_folio; /* read here, i am falling
+back nr_pages =3D 1 */
++
++
++               ...
++               nr_pages =3D nr;
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Baolin-Wang/mm-move-highest_order-and-next_order-out-of-the-THP-config/20240506-164838
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/adc64bf0f150bdc614c6c06fc313adeef7dbbbff.1714978902.git.baolin.wang%40linux.alibaba.com
-patch subject: [PATCH 6/8] mm: shmem: add mTHP support for anonymous shmem
-config: s390-allnoconfig (https://download.01.org/0day-ci/archive/20240507/202405071820.2KY0UnDu-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project 0ab4458df0688955620b72cc2c72a32dffad3615)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240507/202405071820.2KY0UnDu-lkp@intel.com/reproduce)
+The fallback(=3D1) works. but it seems you are proposing set nr_pages =3D
+swap_pte_batch(folio_ptep, nr, folio_pte)
+if (swap_pte_batch(folio_ptep, nr, folio_pte) > 1 &&
+swap_pte_batch(folio_ptep, nr, folio_pte) <
+nr_pages) ?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405071820.2KY0UnDu-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from mm/shmem.c:28:
-   In file included from include/linux/ramfs.h:5:
-   In file included from include/linux/fs_parser.h:11:
-   In file included from include/linux/fs_context.h:14:
-   In file included from include/linux/security.h:33:
-   In file included from include/linux/mm.h:2253:
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
->> mm/shmem.c:1780:10: warning: variable 'folio' is used uninitialized whenever 'while' loop exits because its condition is false [-Wsometimes-uninitialized]
-    1780 |                 while (suitable_orders) {
-         |                        ^~~~~~~~~~~~~~~
-   mm/shmem.c:1795:7: note: uninitialized use occurs here
-    1795 |         if (!folio)
-         |              ^~~~~
-   mm/shmem.c:1780:10: note: remove the condition if it is always true
-    1780 |                 while (suitable_orders) {
-         |                        ^~~~~~~~~~~~~~~
-         |                        1
-   mm/shmem.c:1750:21: note: initialize the variable 'folio' to silence this warning
-    1750 |         struct folio *folio;
-         |                            ^
-         |                             = NULL
-   mm/shmem.c:1564:20: warning: unused function 'shmem_show_mpol' [-Wunused-function]
-    1564 | static inline void shmem_show_mpol(struct seq_file *seq, struct mempolicy *mpol)
-         |                    ^~~~~~~~~~~~~~~
-   3 warnings generated.
-
-
-vim +1780 mm/shmem.c
-
-  1741	
-  1742	static struct folio *shmem_alloc_and_add_folio(struct vm_fault *vmf,
-  1743			gfp_t gfp, struct inode *inode, pgoff_t index,
-  1744			struct mm_struct *fault_mm, bool huge, unsigned long orders)
-  1745	{
-  1746		struct address_space *mapping = inode->i_mapping;
-  1747		struct shmem_inode_info *info = SHMEM_I(inode);
-  1748		struct vm_area_struct *vma = vmf ? vmf->vma : NULL;
-  1749		unsigned long suitable_orders;
-  1750		struct folio *folio;
-  1751		long pages;
-  1752		int error, order;
-  1753	
-  1754		if (!IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE))
-  1755			huge = false;
-  1756	
-  1757		if (huge || orders > 0) {
-  1758			if (vma && vma_is_anon_shmem(vma) && orders) {
-  1759				suitable_orders = anon_shmem_suitable_orders(inode, vmf,
-  1760								mapping, index, orders);
-  1761			} else {
-  1762				pages = HPAGE_PMD_NR;
-  1763				suitable_orders = BIT(HPAGE_PMD_ORDER);
-  1764				index = round_down(index, HPAGE_PMD_NR);
-  1765	
-  1766				/*
-  1767				 * Check for conflict before waiting on a huge allocation.
-  1768				 * Conflict might be that a huge page has just been allocated
-  1769				 * and added to page cache by a racing thread, or that there
-  1770				 * is already at least one small page in the huge extent.
-  1771				 * Be careful to retry when appropriate, but not forever!
-  1772				 * Elsewhere -EEXIST would be the right code, but not here.
-  1773				 */
-  1774				if (xa_find(&mapping->i_pages, &index,
-  1775					index + HPAGE_PMD_NR - 1, XA_PRESENT))
-  1776					return ERR_PTR(-E2BIG);
-  1777			}
-  1778	
-  1779			order = highest_order(suitable_orders);
-> 1780			while (suitable_orders) {
-  1781				pages = 1 << order;
-  1782				index = round_down(index, pages);
-  1783				folio = shmem_alloc_hugefolio(gfp, info, index, order);
-  1784				if (folio)
-  1785					goto allocated;
-  1786	
-  1787				if (pages == HPAGE_PMD_NR)
-  1788					count_vm_event(THP_FILE_FALLBACK);
-  1789				order = next_order(&suitable_orders, order);
-  1790			}
-  1791		} else {
-  1792			pages = 1;
-  1793			folio = shmem_alloc_folio(gfp, info, index);
-  1794		}
-  1795		if (!folio)
-  1796			return ERR_PTR(-ENOMEM);
-  1797	
-  1798	allocated:
-  1799		__folio_set_locked(folio);
-  1800		__folio_set_swapbacked(folio);
-  1801	
-  1802		gfp &= GFP_RECLAIM_MASK;
-  1803		error = mem_cgroup_charge(folio, fault_mm, gfp);
-  1804		if (error) {
-  1805			if (xa_find(&mapping->i_pages, &index,
-  1806					index + pages - 1, XA_PRESENT)) {
-  1807				error = -EEXIST;
-  1808			} else if (pages == HPAGE_PMD_NR) {
-  1809				count_vm_event(THP_FILE_FALLBACK);
-  1810				count_vm_event(THP_FILE_FALLBACK_CHARGE);
-  1811			}
-  1812			goto unlock;
-  1813		}
-  1814	
-  1815		error = shmem_add_to_page_cache(folio, mapping, index, NULL, gfp);
-  1816		if (error)
-  1817			goto unlock;
-  1818	
-  1819		error = shmem_inode_acct_blocks(inode, pages);
-  1820		if (error) {
-  1821			struct shmem_sb_info *sbinfo = SHMEM_SB(inode->i_sb);
-  1822			long freed;
-  1823			/*
-  1824			 * Try to reclaim some space by splitting a few
-  1825			 * large folios beyond i_size on the filesystem.
-  1826			 */
-  1827			shmem_unused_huge_shrink(sbinfo, NULL, 2);
-  1828			/*
-  1829			 * And do a shmem_recalc_inode() to account for freed pages:
-  1830			 * except our folio is there in cache, so not quite balanced.
-  1831			 */
-  1832			spin_lock(&info->lock);
-  1833			freed = pages + info->alloced - info->swapped -
-  1834				READ_ONCE(mapping->nrpages);
-  1835			if (freed > 0)
-  1836				info->alloced -= freed;
-  1837			spin_unlock(&info->lock);
-  1838			if (freed > 0)
-  1839				shmem_inode_unacct_blocks(inode, freed);
-  1840			error = shmem_inode_acct_blocks(inode, pages);
-  1841			if (error) {
-  1842				filemap_remove_folio(folio);
-  1843				goto unlock;
-  1844			}
-  1845		}
-  1846	
-  1847		shmem_recalc_inode(inode, pages, 0);
-  1848		folio_add_lru(folio);
-  1849		return folio;
-  1850	
-  1851	unlock:
-  1852		folio_unlock(folio);
-  1853		folio_put(folio);
-  1854		return ERR_PTR(error);
-  1855	}
-  1856	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+>
+> >
+> > The current patch falls back to setting nr_pages =3D 1 without mapping =
+or
+> > reusing nr_pages - 1. I feel your concern doesn't refer to this fallbac=
+k?
+> >
+> >>
+> >>>
+> >>>>
+> >>>> Once we support COW reuse of PTE-mapped THP we'd do the same. Here, =
+it's
+> >>>> just easy to detect that the folio is exclusive (folio_ref_count(fol=
+io)
+> >>>> =3D=3D 1 before mapping anything).
+> >>>>
+> >>>> If you really want to mimic what do_wp_page() currently does, you sh=
+ould
+> >>>> have:
+> >>>>
+> >>>> exclusive || (folio_ref_count(folio) =3D=3D 1 && !folio_test_large(f=
+olio))
+> >>>
+> >>> I actually dislike the part that do_wp_page() handles the reuse of a =
+large
+> >>> folio which is entirely mapped. For example, A forks B, B exit, we wr=
+ite
+> >>> A's large folio, we get nr_pages CoW of small folios. Ideally, we can
+> >>> reuse the whole folios for writing.
+> >>
+> >> Yes, see the link I shared to what I am working on. There isn't really=
+ a
+> >> question if what we do right now needs to be improved and all these
+> >> scenarios are pretty obvious clear.
+> >
+> > Great! I plan to dedicate more time to reviewing your work.
+>
+> Nice! And there will be a lot of follow-up optimization work I won't
+> tackle immediately regarding COW (COW-reuse around, maybe sometimes we
+> want to COW bigger chunks).
+>
+> I still have making PageAnonExclusive a per-folio flag on my TODO list,
+> that will help the COW-reuse around case a lot.
+>
+> >
+> >>
+> >>>
+> >>>>
+> >>>> Personally, I think we should keep it simple here and use:
+> >>>>
+> >>>> exclusive || folio_ref_count(folio) =3D=3D 1
+> >>>
+> >>> I feel this is still better than
+> >>> exclusive || (folio_ref_count(folio) =3D=3D 1 && !folio_test_large(fo=
+lio))
+> >>> as we reuse the whole large folio. the do_wp_page() behaviour
+> >>> doesn't have this.
+> >>
+> >> Yes, but there is the comment "Same logic as in do_wp_page();". We
+> >> already ran into issues having different COW reuse logic all over the
+> >> place. For this case here, I don't care if we leave it as
+> >>
+> >> "exclusive || folio_ref_count(folio) =3D=3D 1"
+> >
+> > I'm perfectly fine with using the code for this patchset and maybe
+> > looking for other
+> > opportunities for potential optimization as an incremental patchset,
+> > for example,
+> > reusing the remaining PTEs as suggested by you -  "simply map+reuse mos=
+t of
+> > the folio without COWing."
+> >
+> >>
+> >> But let's not try inventing new stuff here.
+> >
+> > It seems you ignored and snipped my "16 + 14" pages and "15" pages
+> > example though. but once we support "simply map+reuse most of the
+> > folio without COWing", the "16+14" problem can be resolved, instead,
+> > we consume 16 pages.
+>
+>
+> Oh, sorry for skipping that, for me it was rather clear: the partially
+> mapped folios will be on the deferred split list and the excess memory
+> can (and will be) reclaimed when there is need. So this temporary memory
+> consumption is usually not a problem in practice. But yes, something to
+> optimize (just like COW reuse in general).
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
