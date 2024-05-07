@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A16116D9A0
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 18:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA4A16D33C
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 18:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715105259; cv=none; b=eXBvhdxRcYGk8DV2/xGSe2W3B4rWURA0pBvHChMEihFCEMzPGurcYY59WNvIrbGAf1F4YSxDpyAViGXs/zo1hC6g6014uSPaDTqtOxai8P2U7kgm+Cpn87ogSXn2IojD7dOrlskNmsVfucIEgXbKIvQDNm6LlvL5mNPsAV9tA0M=
+	t=1715105259; cv=none; b=mJedyxeJY/YdG6IKhyYJ/fc1A/TOoK9os89mZp5pPLTQzKAYxUN+WYXV4rBSNzqWj3v1TghWoxNUiWTDthLWTf/FLTHqcvpYMM5hMN0PqBwzfQZ/sZhReedtwu2ldDCJIkvXNMJWA0jkEaSjZ+g6tBmKBVFgAFosuNAGvAE3PWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715105259; c=relaxed/simple;
-	bh=FH7cYL5lvPSmvqfEep2f4O2RuFvzuxAEjokHvAHJUAM=;
+	bh=dYXAYcUEcTSalyaMCHp6wfpYZFB5214Afajx4bi1OuA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=qQJH7sF4JbXCnCVypgQQimSnKYuONo5PNJG53nAKBfy52+UGT9eEVZG+bzUSzFLuBc7TMhQKqjRzDVRS+FK2HvzOZ1CxlovZjopSfk3xK6OdGTp2tfcZS28yPnI6IShWHmY4cf6cX7Rbqw7QpyCbTDUedteFmyht8FDoQ3OSWwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZVINTtJX; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=na4Mjgp3oSWmUlFzwO3/u26hI0hLbOsRNqkTJylvPFZ1JwQPHDLxXNIB2GUa4tg/+dmApy8/83wD2GCzZ+PfVQsibEQwgp02HXlNhBWqRBDsK1P7WsNlRhRssFSQda968jxrKmoF/ErWasPJgmXT/RIL1peAOKsN8ezAMakrGqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fq1pKcNy; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZVINTtJX"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fq1pKcNy"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715105257;
+	s=mimecast20190719; t=1715105256;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=53/ANlC1o0IgKwLZ8A5FguWDI2cCDE7tcoOaBGJCClo=;
-	b=ZVINTtJXy6D4A0Oo61t+r6liwKSDWoKCCN8KEicgOQ6PGR2qjS2QR81LJzO6FKotuC8+7h
-	iDv+fjHU/APogEgnREHFpy+ylvhww99ZGedpFj7Y5H2wPX+FgDkEvGra5U1d873Nv0lUhi
-	VfGirzjviyqeqrGJaOaZC7WJBN5rK3Q=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-679-7mfOjuOeM062e_Lv9sPQ7Q-1; Tue, 07 May 2024 14:07:34 -0400
-X-MC-Unique: 7mfOjuOeM062e_Lv9sPQ7Q-1
+	bh=haoWzAYgu3zjEQH0/MBl6b/4BmVPvoYTenFPpRWObq0=;
+	b=fq1pKcNyJJgMQtcx/Yd5MyMq0nCQSWWuG3roP4RVjxWOoJhLDSGfdr90qEYvBAWkp5xSrj
+	v920gUK670YuQUVT5tJN/ddHBdj25AQrIEYO3o7wchE9BnCJfTvEpCNReDl9RNgPBnmIoD
+	gWEvazhxJJcnLSXe3UKl3eGuj/C2czM=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-194-PxmMGZHFNb6dR8DgG3h06g-1; Tue,
+ 07 May 2024 14:07:32 -0400
+X-MC-Unique: PxmMGZHFNb6dR8DgG3h06g-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DA05C800053;
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 44A2B3802ADC;
 	Tue,  7 May 2024 18:07:32 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9891D40C6CBE;
-	Tue,  7 May 2024 18:07:32 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 03F3340C6CB6;
+	Tue,  7 May 2024 18:07:31 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
@@ -51,9 +51,9 @@ Cc: vbabka@suse.cz,
 	rick.p.edgecombe@intel.com,
 	michael.roth@amd.com,
 	yilun.xu@intel.com
-Subject: [PATCH 9/9] KVM: x86: Add hook for determining max NPT mapping level
-Date: Tue,  7 May 2024 14:07:29 -0400
-Message-ID: <20240507180729.3975856-10-pbonzini@redhat.com>
+Subject: [PATCH 7/9] KVM: guest_memfd: Add interface for populating gmem pages with user data
+Date: Tue,  7 May 2024 14:07:27 -0400
+Message-ID: <20240507180729.3975856-8-pbonzini@redhat.com>
 In-Reply-To: <20240507180729.3975856-1-pbonzini@redhat.com>
 References: <20240507180729.3975856-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -66,107 +66,132 @@ Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-From: Michael Roth <michael.roth@amd.com>
+During guest run-time, kvm_arch_gmem_prepare() is issued as needed to
+prepare newly-allocated gmem pages prior to mapping them into the guest.
+In the case of SEV-SNP, this mainly involves setting the pages to
+private in the RMP table.
 
-In the case of SEV-SNP, whether or not a 2MB page can be mapped via a
-2MB mapping in the guest's nested page table depends on whether or not
-any subpages within the range have already been initialized as private
-in the RMP table. The existing mixed-attribute tracking in KVM is
-insufficient here, for instance:
+However, for the GPA ranges comprising the initial guest payload, which
+are encrypted/measured prior to starting the guest, the gmem pages need
+to be accessed prior to setting them to private in the RMP table so they
+can be initialized with the userspace-provided data. Additionally, an
+SNP firmware call is needed afterward to encrypt them in-place and
+measure the contents into the guest's launch digest.
 
-- gmem allocates 2MB page
-- guest issues PVALIDATE on 2MB page
-- guest later converts a subpage to shared
-- SNP host code issues PSMASH to split 2MB RMP mapping to 4K
-- KVM MMU splits NPT mapping to 4K
-- guest later converts that shared page back to private
-
-At this point there are no mixed attributes, and KVM would normally
-allow for 2MB NPT mappings again, but this is actually not allowed
-because the RMP table mappings are 4K and cannot be promoted on the
-hypervisor side, so the NPT mappings must still be limited to 4K to
-match this.
-
-Add a hook to determine the max NPT mapping size in situations like
-this.
+While it is possible to bypass the kvm_arch_gmem_prepare() hooks so that
+this handling can be done in an open-coded/vendor-specific manner, this
+may expose more gmem-internal state/dependencies to external callers
+than necessary. Try to avoid this by implementing an interface that
+tries to handle as much of the common functionality inside gmem as
+possible, while also making it generic enough to potentially be
+usable/extensible for TDX as well.
 
 Suggested-by: Sean Christopherson <seanjc@google.com>
 Signed-off-by: Michael Roth <michael.roth@amd.com>
-Reviewed-by: Isaku Yamahata <isaku.yamahata@intel.com>
-Message-ID: <20240501085210.2213060-3-michael.roth@amd.com>
+Co-developed-by: Michael Roth <michael.roth@amd.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/include/asm/kvm-x86-ops.h |  1 +
- arch/x86/include/asm/kvm_host.h    |  1 +
- arch/x86/kvm/mmu/mmu.c             | 23 +++++++++++++++++++++--
- 3 files changed, 23 insertions(+), 2 deletions(-)
+ include/linux/kvm_host.h | 27 +++++++++++++++++++++
+ virt/kvm/guest_memfd.c   | 52 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 79 insertions(+)
 
-diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
-index c81990937ab4..566d19b02483 100644
---- a/arch/x86/include/asm/kvm-x86-ops.h
-+++ b/arch/x86/include/asm/kvm-x86-ops.h
-@@ -140,6 +140,7 @@ KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
- KVM_X86_OP_OPTIONAL(get_untagged_addr)
- KVM_X86_OP_OPTIONAL(alloc_apic_backing_page)
- KVM_X86_OP_OPTIONAL_RET0(gmem_prepare)
-+KVM_X86_OP_OPTIONAL_RET0(private_max_mapping_level)
- KVM_X86_OP_OPTIONAL(gmem_invalidate)
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 1af069ab657c..1ae65774d9fa 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -2448,4 +2448,31 @@ int kvm_arch_gmem_prepare(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn, int max_ord
+ bool kvm_arch_gmem_prepare_needed(struct kvm *kvm);
+ #endif
  
- #undef KVM_X86_OP
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index c6c5018376be..87265b73906a 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1816,6 +1816,7 @@ struct kvm_x86_ops {
- 	void *(*alloc_apic_backing_page)(struct kvm_vcpu *vcpu);
- 	int (*gmem_prepare)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
- 	void (*gmem_invalidate)(kvm_pfn_t start, kvm_pfn_t end);
-+	int (*private_max_mapping_level)(struct kvm *kvm, kvm_pfn_t pfn);
- };
- 
- struct kvm_x86_nested_ops {
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 510eb1117012..a5259e070c06 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4271,6 +4271,25 @@ static inline u8 kvm_max_level_for_order(int order)
- 	return PG_LEVEL_4K;
++/**
++ * kvm_gmem_populate() - Populate/prepare a GPA range with guest data
++ *
++ * @kvm: KVM instance
++ * @gfn: starting GFN to be populated
++ * @src: userspace-provided buffer containing data to copy into GFN range
++ *       (passed to @post_populate, and incremented on each iteration
++ *       if not NULL)
++ * @npages: number of pages to copy from userspace-buffer
++ * @post_populate: callback to issue for each gmem page that backs the GPA
++ *                 range
++ * @opaque: opaque data to pass to @post_populate callback
++ *
++ * This is primarily intended for cases where a gmem-backed GPA range needs
++ * to be initialized with userspace-provided data prior to being mapped into
++ * the guest as a private page. This should be called with the slots->lock
++ * held so that caller-enforced invariants regarding the expected memory
++ * attributes of the GPA range do not race with KVM_SET_MEMORY_ATTRIBUTES.
++ *
++ * Returns the number of pages that were populated.
++ */
++typedef int (*kvm_gmem_populate_cb)(struct kvm *kvm, gfn_t gfn, kvm_pfn_t pfn,
++				    void __user *src, int order, void *opaque);
++
++long kvm_gmem_populate(struct kvm *kvm, gfn_t gfn, void __user *src, long npages,
++		       kvm_gmem_populate_cb post_populate, void *opaque);
++
+ #endif
+diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+index bfe437098b79..5d6c87bb13f6 100644
+--- a/virt/kvm/guest_memfd.c
++++ b/virt/kvm/guest_memfd.c
+@@ -585,3 +585,55 @@ int kvm_gmem_get_pfn(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 	return r;
  }
- 
-+static u8 kvm_max_private_mapping_level(struct kvm *kvm, kvm_pfn_t pfn,
-+					u8 max_level, int gmem_order)
+ EXPORT_SYMBOL_GPL(kvm_gmem_get_pfn);
++
++long kvm_gmem_populate(struct kvm *kvm, gfn_t start_gfn, void __user *src, long npages,
++		       kvm_gmem_populate_cb post_populate, void *opaque)
 +{
-+	u8 req_max_level;
++	struct file *file;
++	struct kvm_memory_slot *slot;
++	void __user *p;
 +
-+	if (max_level == PG_LEVEL_4K)
-+		return PG_LEVEL_4K;
++	int ret = 0, max_order;
++	long i;
 +
-+	max_level = min(kvm_max_level_for_order(gmem_order), max_level);
-+	if (max_level == PG_LEVEL_4K)
-+		return PG_LEVEL_4K;
++	lockdep_assert_held(&kvm->slots_lock);
++	if (npages < 0)
++		return -EINVAL;
 +
-+	req_max_level = static_call(kvm_x86_private_max_mapping_level)(kvm, pfn);
-+	if (req_max_level)
-+		max_level = min(max_level, req_max_level);
++	slot = gfn_to_memslot(kvm, start_gfn);
++	if (!kvm_slot_can_be_private(slot))
++		return -EINVAL;
 +
-+	return req_max_level;
++	file = kvm_gmem_get_file(slot);
++	if (!file)
++		return -EFAULT;
++
++	filemap_invalidate_lock(file->f_mapping);
++
++	npages = min_t(ulong, slot->npages - (start_gfn - slot->base_gfn), npages);
++	for (i = 0; i < npages; i += (1 << max_order)) {
++		gfn_t gfn = start_gfn + i;
++		kvm_pfn_t pfn;
++
++		ret = __kvm_gmem_get_pfn(file, slot, gfn, &pfn, &max_order, false);
++		if (ret)
++			break;
++
++		if (!IS_ALIGNED(gfn, (1 << max_order)) ||
++		    (npages - i) < (1 << max_order))
++			max_order = 0;
++
++		p = src ? src + i * PAGE_SIZE : NULL;
++		ret = post_populate(kvm, gfn, pfn, p, max_order, opaque);
++
++		put_page(pfn_to_page(pfn));
++		if (ret)
++			break;
++	}
++
++	filemap_invalidate_unlock(file->f_mapping);
++
++	fput(file);
++	return ret && !i ? ret : i;
 +}
-+
- static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
- 				   struct kvm_page_fault *fault)
- {
-@@ -4288,9 +4307,9 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
- 		return r;
- 	}
- 
--	fault->max_level = min(kvm_max_level_for_order(max_order),
--			       fault->max_level);
- 	fault->map_writable = !(fault->slot->flags & KVM_MEM_READONLY);
-+	fault->max_level = kvm_max_private_mapping_level(vcpu->kvm, fault->pfn,
-+							 fault->max_level, max_order);
- 
- 	return RET_PF_CONTINUE;
- }
++EXPORT_SYMBOL_GPL(kvm_gmem_populate);
 -- 
 2.43.0
+
 
