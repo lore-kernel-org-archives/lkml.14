@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9823C160787;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2AA5161915;
 	Tue,  7 May 2024 14:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093330; cv=none; b=Fts2iorPNWonoqZPZNwTRhnxIwf/yny1LrZH7rmodM0tHylZOuzreW2uSBQBf8KXYbcE1VMpWYmN5P8WjCrqSW41HTHtLHQ2SzzARVrf/6P41AkdzJcIuP0eGG+R87ikj1+6SPix0bVoZGck4/oIm8muS46ip2mg58TwvqJxnTk=
+	t=1715093330; cv=none; b=uOJ6whi7n87NAkvbIkp9ZmatZIV6lN/H7uwJgQPV92LFI0TXEZ/CWOCIkznNf1zSVrbFUZTzDXq248pJnVTOpX56fiMXSf3lxqQu0CX4lUUNxyJ1OexDPnrlG0C/uuFSp0jcSZGPu+mpdvxHq0h9nEkEg4O5bJPUt3hEK+JB/NI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715093330; c=relaxed/simple;
-	bh=6WJMlO8gbUhTSrAmcfkEkiZgyq69dy2zzKoL04LcRnY=;
+	bh=Him/mGIj3I301yB+D6WucDHFkIiyFtUIv20skypew9M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PaL3eLZkJAVjxhLpUAbjktKoH3c78oDArhCQwUh7cATKb5frnW0YgcKGywjVsFHRm4ea8GIsxghUOlghjqfpIEi24LjHq8+Wt4lTXGfvt9DZ1SeMKg+a5+l0ju1l4OKaJ837go38X44JH95/fMJGSN48gsDkshYzzE3fV/Hw3lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b66R8hOJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=B1+7UqJH9O9+gc0fkA4ZJmihFDuWNCMdnVyuVEDgWFArK0XlWddL5uHqZTJ+xo5cQnR1AvJXrL69jFoaWqh57KoqTvX0hHixaZemYL7pR2huhi7B+g+OVGeBvEhXn3uw9rTyj4+s6+8GIkqCsOOj+oyes64YPctyxjMXTv5lf/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcvRtjQi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b66R8hOJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42F93C4DDE0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcvRtjQi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69E36C4DDFA;
 	Tue,  7 May 2024 14:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715093330;
-	bh=6WJMlO8gbUhTSrAmcfkEkiZgyq69dy2zzKoL04LcRnY=;
+	bh=Him/mGIj3I301yB+D6WucDHFkIiyFtUIv20skypew9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b66R8hOJPqr0ImuxapZCr3pdViEH/w+wc0r8asncTRwE6WVnaDZUJTZk7oJyEld/l
-	 w+ffXPElsnVef9Gmuhc1fy+3JAs9iYlcLK7sytKJI6YzEfD+tUx76u1HPNxtn9WoG7
-	 LIdPtspYkpffD1cOvT4rkPavw7d1aDQxv2zrjfh9y6Nz/8rv7ZQjTjE1kKDpBqldwb
-	 JnV8TETpyheH3gYA2cIxRTSX2jRIJyzUO/RO35ioHcl3JXksd4xx4mNb5HKmacdDOp
-	 eZUkUSxG2azPwzxE/3FV/E8ynCpuGf2H392EI0DghsNg8Qo7VOA7Pr3J/ByseSL+h/
-	 VVkp+x/GQch+A==
+	b=hcvRtjQifaNSUhMmdYSt45yob5sV2a/OgqGwU1EgQsClbBbqU8tyqNBOLWfHLvTk6
+	 6Rlc7J2H/mUOLZv8anlI/tFv6CHKcL6Bk8gaCpNNRG/VynA+o2R9CVB29udJbhugMr
+	 pJ2/06axKVn+qP2MfM9QSCVMfYSKABjGqNNrl145WrDwPSD3NuM+Cti96ROj5Iqvot
+	 QZ2G0hjY11AqHRbkFm4nyuWQipXXTjoCkc9Ku0flWNS+oZSenB40mX7f08WS286LAj
+	 cTVVhoGB9pseFko2pY695Uyn6oLbjGL5eTpCGusYxaTHTeMC7gYuKeAxEi2jO2OjWL
+	 Wk5AYz8lcI5Ng==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1s4M7g-000000003Co-1C7q;
+	id 1s4M7g-000000003D0-3Ozv;
 	Tue, 07 May 2024 16:48:52 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Jiri Kosina <jikos@kernel.org>,
@@ -45,12 +45,10 @@ Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	devicetree@vger.kernel.org,
 	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 1/7] dt-bindings: HID: i2c-hid: add dedicated Ilitek ILI2901 schema
-Date: Tue,  7 May 2024 16:48:15 +0200
-Message-ID: <20240507144821.12275-2-johan+linaro@kernel.org>
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH v2 7/7] arm64: defconfig: enable Elan i2c-hid driver
+Date: Tue,  7 May 2024 16:48:21 +0200
+Message-ID: <20240507144821.12275-8-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240507144821.12275-1-johan+linaro@kernel.org>
 References: <20240507144821.12275-1-johan+linaro@kernel.org>
@@ -62,114 +60,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The Ilitek ILI2901 touch screen controller was apparently incorrectly
-added to the Elan eKTH6915 schema simply because it also has a reset
-gpio and is currently managed by the Elan driver in Linux.
+Enable the Elan i2c-hid driver which is needed for the touchscreen on
+machines like the Lenovo ThinkPad X13s.
 
-The two controllers are not related even if an unfortunate wording in
-the commit message adding the Ilitek compatible made it sound like they
-were.
-
-Add a dedicated schema for the ILI2901 which does not specify the I2C
-address (which is likely 0x41 rather than 0x10 as for other Ilitek touch
-controllers) to avoid cluttering the Elan schema with unrelated devices
-and to make it easier to find the correct schema when adding further
-Ilitek controllers.
-
-Fixes: d74ac6f60a7e ("dt-bindings: HID: i2c-hid: elan: Introduce Ilitek ili2901")
-Cc: Zhengqiao Xia <xiazhengqiao@huaqin.corp-partner.google.com>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- .../bindings/input/elan,ekth6915.yaml         |  1 -
- .../bindings/input/ilitek,ili2901.yaml        | 66 +++++++++++++++++++
- 2 files changed, 66 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/input/ilitek,ili2901.yaml
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
-index dc4ac41f2441..c1fcf8c90c24 100644
---- a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
-+++ b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
-@@ -20,7 +20,6 @@ properties:
-   compatible:
-     enum:
-       - elan,ekth6915
--      - ilitek,ili2901
- 
-   reg:
-     const: 0x10
-diff --git a/Documentation/devicetree/bindings/input/ilitek,ili2901.yaml b/Documentation/devicetree/bindings/input/ilitek,ili2901.yaml
-new file mode 100644
-index 000000000000..1abeec768d79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/ilitek,ili2901.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/ilitek,ili2901.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Ilitek ILI2901 touchscreen controller
-+
-+maintainers:
-+  - Jiri Kosina <jkosina@suse.com>
-+
-+description:
-+  Supports the Ilitek ILI2901 touchscreen controller.
-+  This touchscreen controller uses the i2c-hid protocol with a reset GPIO.
-+
-+allOf:
-+  - $ref: /schemas/input/touchscreen/touchscreen.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - ilitek,ili2901
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  panel: true
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  vcc33-supply: true
-+
-+  vccio-supply: true
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - vcc33-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      touchscreen@41 {
-+        compatible = "ilitek,ili2901";
-+        reg = <0x41>;
-+
-+        interrupt-parent = <&tlmm>;
-+        interrupts = <9 IRQ_TYPE_LEVEL_LOW>;
-+
-+        reset-gpios = <&tlmm 8 GPIO_ACTIVE_LOW>;
-+        vcc33-supply = <&pp3300_ts>;
-+      };
-+    };
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index ac6fb3de1e3a..56fb9725d7c0 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -1023,6 +1023,7 @@ CONFIG_SND_AUDIO_GRAPH_CARD2=m
+ CONFIG_HID_MULTITOUCH=m
+ CONFIG_I2C_HID_ACPI=m
+ CONFIG_I2C_HID_OF=m
++CONFIG_I2C_HID_OF_ELAN=m
+ CONFIG_USB=y
+ CONFIG_USB_OTG=y
+ CONFIG_USB_XHCI_HCD=y
 -- 
 2.43.2
 
