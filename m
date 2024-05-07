@@ -1,124 +1,117 @@
-Received: from mail.codeweavers.com (mail.codeweavers.com [4.36.192.163])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CDA389;
-	Tue,  7 May 2024 00:52:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=4.36.192.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEDB138C
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 00:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715043138; cv=none; b=j3vCIsI41Kv33oWkJ2i/4hjfCogZWkeabJlTo9KTRKULAwzhlaHHZJIRiXVflYESicXfa/TUn/oRHVS3+GQtu7OkZqVW8KgXDEoMAL5/EqiMUnqIx1KzgF+Z3wrlrS9+0sJ6wT2uhAWUT74gcxYqI1AM7/tzbgMWbd3mhXb7A1M=
+	t=1715043226; cv=none; b=oRYn6G6hfchzEgLVdEq/s+u7rdyd8Q0Xyw2pfxE3Q7xvuxN74d09Ncx5mS/kQh+ZnkPI4foomKwuzYksBSWNxpeneBc3eYk8jyRoVK2IPx4FwQpkRa1Ocqlpy8sbTFIBSpQ2vzCbB/ZzfF6rJoaEj6vgDolI2D/lVxzMw8miSXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715043138; c=relaxed/simple;
-	bh=0stx+ewjnR9CGCQ3QyccP+nXxnu5nDvOdTMiMFTSrsc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ogbhKsd/X+tT/HLaCbAC4w8aLFVt5W5UkwHu3XFnog8rs56R+bRkzni5CVe/1g7VmAUT37CMgg0qJe+8Aa2i1Tm6EOlrq/RroLEAf4k0RomuTJ3PfnwPfSAyTAlKV40Ao5lofEp2AfL5Wn/Oy6YVY7V7owPCXLMCUE0KwI8pmJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com; spf=pass smtp.mailfrom=codeweavers.com; dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b=XyjeBPDv; arc=none smtp.client-ip=4.36.192.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeweavers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeweavers.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="XyjeBPDv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=codeweavers.com; s=s1; h=Message-ID:Date:Subject:Cc:To:From:Sender;
-	bh=yuieM5pWoXr+YclrzFb7svS//LQa/jXP2pIhgfolNkw=; b=XyjeBPDvYUzSDjEOjn8SxvJuAm
-	VaZis4PYb9Vc/IvM+6wCjBEFkSQHHzK34beHoqVH0/LOeZQoQJOKmBQYz5mURVPWMJIYg3esfxaKp
-	ozWkn4YyGvHD54t0o7eG+utZZtHmxFThN8loknbRv153iVBfGyjEujRyhBysMDJ66dbsRm5FGXxkW
-	SSmhgI91Y0u3brgngfMLw8rWXIsjuW3D2nsz+8E0g711sjR3xwDbMFZsvQuWA9dt4TsGyq1FqIYMI
-	3zx5KoV3uVO0JwEOlMvc5LgRKzsMU0uAgtYPN2CU2fURZDajYenR3hDmYhoe0h01mSZY+cbCCUF1B
-	3spsCJLg==;
-Received: from [10.69.139.6] (helo=watership.localnet)
-	by mail.codeweavers.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <zfigura@codeweavers.com>)
-	id 1s48tC-00FgPg-0C;
-	Mon, 06 May 2024 19:41:02 -0500
-From: Elizabeth Figura <zfigura@codeweavers.com>
-To: Peter Zijlstra <peterz@infradead.org>, wine-devel@winehq.org
-Cc: wine-devel@winehq.org, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
- =?ISO-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
- Wolfram Sang <wsa@kernel.org>, Andy Lutomirski <luto@kernel.org>,
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Randy Dunlap <rdunlap@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
- Boqun Feng <boqun.feng@gmail.com>, Elizabeth Figura <zfigura@codeweavers.com>
-Subject: Re: [PATCH v4 00/30] NT synchronization primitive driver
-Date: Mon, 06 May 2024 19:40:45 -0500
-Message-ID: <5199277.LvFx2qVVIh@watership>
-In-Reply-To: <4560699.LvFx2qVVIh@camazotz>
-References:
- <20240416010837.333694-1-zfigura@codeweavers.com>
- <20240419161611.GA23130@noisy.programming.kicks-ass.net>
- <4560699.LvFx2qVVIh@camazotz>
+	s=arc-20240116; t=1715043226; c=relaxed/simple;
+	bh=BvwOwdEwkzBwuontV5/k1TjqYo+Ur/6QmZosZoxyff0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sZfQMYp5bH5mDpS/gQFmf9yQT1/zRC+eA5GxXeE+FMmJ8T8H4HbNEB87sBFWj5BPBBDzD/Ovu4OTxnw0GPKUrNuKcZS8J2HdcUyI+5I3r+s35JLggzVUVpAxDbZSmv7jNr0gob0cs/QtYfKggdK0n9ZuOKiCCw2KgJxsA5NaC3c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 3573487e0c0c11ef9305a59a3cc225df-20240507
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:eb5294fa-9e18-4e84-af1b-a7aae4b81b95,IP:15,
+	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:1
+X-CID-INFO: VERSION:1.1.37,REQID:eb5294fa-9e18-4e84-af1b-a7aae4b81b95,IP:15,UR
+	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:1
+X-CID-META: VersionHash:6f543d0,CLOUDID:94606faf300839f6c8dc2633b89a9b4c,BulkI
+	D:240506172954AHTO5EQK,BulkQuantity:3,Recheck:0,SF:19|43|74|64|66|38|24|17
+	|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,BE
+	C:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-UUID: 3573487e0c0c11ef9305a59a3cc225df-20240507
+X-User: lijun01@kylinos.cn
+Received: from [172.30.60.202] [(39.156.73.13)] by mailgw.kylinos.cn
+	(envelope-from <lijun01@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1478085707; Tue, 07 May 2024 08:53:24 +0800
+Message-ID: <8809f5a7-de6e-0794-feab-726c26f87344@kylinos.cn>
+Date: Tue, 7 May 2024 08:53:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH] LoongArch: Update the flush cache policy
+Content-Language: en-US
+To: Xi Ruoyao <xry111@xry111.site>, chenhuacai@kernel.org, kernel@xen0n.name,
+ lvjianmin@loongson.cn, dongbiao@loongson.cn, zhangbaoqi@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240506092419.4109941-1-lijun01@kylinos.cn>
+ <8a8135eb0f1dc724cfbb4402dc6daf08db5b0bc7.camel@xry111.site>
+ <cbb24599-8b40-cd27-6ce7-215476c0ddf4@kylinos.cn>
+ <cbd6ed9d5be1d7112d69117a72e0cb0081f9b64b.camel@xry111.site>
+From: lijun <lijun01@kylinos.cn>
+In-Reply-To: <cbd6ed9d5be1d7112d69117a72e0cb0081f9b64b.camel@xry111.site>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Friday, April 19, 2024 3:46:07=E2=80=AFPM CDT Elizabeth Figura wrote:
-> On Friday, 19 April 2024 11:16:11 CDT Peter Zijlstra wrote:
->=20
-> > On Tue, Apr 16, 2024 at 05:18:56PM -0500, Elizabeth Figura wrote:
-> >=20
-> > > On Tuesday, 16 April 2024 16:18:24 CDT Elizabeth Figura wrote:
-> > >=20
-> > > > On Tuesday, 16 April 2024 03:14:21 CDT Peter Zijlstra wrote:
-> > > >=20
-> > > > > I don't support GE has it in his builds? Last time I tried,
-> > > > > building
-> > > > > Wine was a bit of a pain.
-> > > >=20
-> > > >=20
-> > > > It doesn't seem so. I tried to build a GE-compatible ntsync build,
-> > > > uploaded
- here (thanks Arek for hosting):
-> > > >=20
-> > > >=20
-> > > >     https://f002.backblazeb2.com/file/wine-ntsync/ntsync-wine.tar.xz
-> > >=20
-> > >=20
-> > > Oops, the initial version I uploaded had broken paths. Should be fixed
-> > > now.
-=20
-> > > (It's also broken on an unpatched kernel unless explicitly disabled w=
-ith
-> > >=20
-> > > WINE_DISABLE_FAST_SYNC=3D1. Not sure what I messed up there=E2=80=94i=
-t should fall
-> > > back=20
- cleanly=E2=80=94but hopefully shouldn't be too important for testing.)
-> >=20
-> >=20
-> > So I've tried using that wine build with lutris, and I can't get it to
-> > start EGS or anything else.
-> >=20
-> > I even added a printk to the ntsync driver for every open, to see if it
-> > gets that far, but I'm not even getting that :/
->=20
->=20
-> That's odd, it works for me, both as a standalone build and with
-> lutris...
->=20
-> Does /dev/ntsync exist (module is loaded) and have nonzero permissions?
-> I forgot to mention that's necessary, sorry.
->=20
-> Otherwise I can try to look at an strace, or a Wine debug log. I don't
-> think there's an easy way to get the latter with Lutris, but something
-> like `WINEDEBUG=3D+all ./wine winecfg 2>log` should work.
+The value of addr changes very very quickly, and 'volatile' ensures that 
+every change can be read
 
-It's also possible I made that build against a too-new distribution. I've=20
-created a new build against Debian 12, which is hopefully better, and it ha=
-s=20
-some extra debug logging:
-
-https://f002.backblazeb2.com/file/wine-ntsync/ntsync-wine2.tar.xz
-
-Hopefully that's functional enough to test with, or at least give more a hi=
-nt=20
-as to why it doesn't work?
-
-
+在 2024/5/6 18:17, Xi Ruoyao 写道:
+> On Mon, 2024-05-06 at 18:08 +0800, lijun wrote:
+>> volatile prevents compiler optimization by allowing the compiler
+>>
+>>    to reread the address value of addr every time
+> But why is this ever needed?  What's wrong if the compiler optimizes it?
+>
+> If the problem is the compiler may optimize it to cdesc->ways * 3 *
+> cdesc->sets * cdesc->linesz, unknowing cdesc->ways etc may magically
+> change, you should use READ_ONCE(cdesc->ways) etc.
+>
+> I.e. use READ_ONCE on the expression which may magically change, instead
+> of hacking addr.  addr won't magically change.
+>
+>> 在 2024/5/6 17:28, Xi Ruoyao 写道:
+>>> On Mon, 2024-05-06 at 17:24 +0800, Li Jun wrote:
+>>>> fix when LoongArch s3 resume, Can't find image information
+>>>>
+>>>> Signed-off-by: Li Jun <lijun01@kylinos.cn>
+>>>> Signed-off-by: Baoqi Zhang <zhangbaoqi@loongson.cn>
+>>>> Signed-off-by: Jianmin Lv <lvjianmin@loongson.cn>
+>>>> Signed-off-by: Biao Dong <dongbiao@loongson.cn>
+>>>> ---
+>>>>    arch/loongarch/mm/cache.c | 24 +++++++++++++++++++++++-
+>>>>    1 file changed, 23 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/loongarch/mm/cache.c b/arch/loongarch/mm/cache.c
+>>>> index 6be04d36ca07..52872fa0e5d8 100644
+>>>> --- a/arch/loongarch/mm/cache.c
+>>>> +++ b/arch/loongarch/mm/cache.c
+>>>> @@ -63,6 +63,28 @@ static void flush_cache_leaf(unsigned int leaf)
+>>>>    	} while (--nr_nodes > 0);
+>>>>    }
+>>>>    
+>>>> +static void flush_cache_last_level(unsigned int leaf)
+>>>> +{
+>>>> +	u64 addr;
+>>>> +	int i, j, nr_nodes, way_size;
+>>>> +	struct cache_desc *cdesc = current_cpu_data.cache_leaves
+>>>> +
+>>>> leaf;
+>>>> +
+>>>> +	nr_nodes = loongson_sysconf.nr_nodes;
+>>>> +
+>>>> +	addr = CSR_DMW1_BASE;
+>>>> +	iocsr_write32(0x1, 0x280);
+>>>> +	way_size = cdesc->sets * cdesc->linesz;
+>>>> +	do {
+>>>> +		for (i = 0; i < (cdesc->ways * 3); i++) {
+>>>> +			for (j = 0; j < (cdesc->sets); j++) {
+>>>> +				*(volatile u32 *)addr;
+>>> ??? what does this line do?
+>>>
