@@ -1,73 +1,74 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94A6116C686;
-	Tue,  7 May 2024 16:35:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E3116D304;
+	Tue,  7 May 2024 16:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099706; cv=none; b=ItP9/NEgUgqiHg9XJQzvf9vnWI3ETfajTSoTYmWMABMUrwsoG5/a2C4VHSl4aQx0NdIGwQbSdM8FrFAxmgieiHepHz0GqS26kKymb1hIA21/dWWkfcjmKjRLFppVHkGXK2MfoZQ6Gjy/nNsc/NsbQu462TCwlV8JCio6oO6zHKU=
+	t=1715099707; cv=none; b=Lq4iR2kpuIWnfI/QWYLohZ/BWK8SFmxPvz77BqCa9p0ptwt/tRSlqiW4wMwZRzMYTvlKzjjJu77/fs/VhvBWM1RQs6bZQ0IsWfC0o6VKMrhWbf3R5PQUIjmUl/a5mlTFifZ4mIo/ZJ4fSyMuLPDbs4/ZrvMqVo9oItVGgnx8gOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099706; c=relaxed/simple;
-	bh=Yw+W6EOpS5324//V7p9SZfoADD4/uyq/iHCqqoA3zes=;
+	s=arc-20240116; t=1715099707; c=relaxed/simple;
+	bh=3zMNh/O1NvS66HKRoTqlD9Jh9hBzUu4UaBBr6ynZF3M=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UuA/TCr6c7aRnX1+vfVWgEBtH/j2wMH2rWuWAbpPUvn82BW5ARH62yrDJeSAHjkK4TGGfOZSRVI2uQFXz+64rZ96saYZnKqJtXP6zB4unSBGXN/nqPYuCEc6fa2AkVmFw/ewukSxM/GYNlZ5wyOxdHjGapzmTcjInPY4QWi6d5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hudbxpW9; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version:Content-Type; b=gmd3MLgeAqu1YaHiqGY6sr8NUq4oG5HdS11yAKd7VUPc36hmqp9QPyy9/c2tS29NaSYSJprCOoJqF++g6qgY78+NhA3QZb8O+KAT3xK+MpiEC8K3lq/8YFjoyULj/Rg18IOC3av8AxsbKk9cMB0WnqID/ogvC1EG0QFvX9QN4IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=nr7sLE9O; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hudbxpW9"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 447GPWDL003420;
-	Tue, 7 May 2024 16:35:00 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="nr7sLE9O"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 447GSxEn011653;
+	Tue, 7 May 2024 16:35:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
  subject : message-id : in-reply-to : references : mime-version :
  content-type : content-transfer-encoding; s=pp1;
- bh=ZpdvGe/PCF9K79lOhhzmJsF+6EynaPR8HQUF5y3sTcY=;
- b=hudbxpW9xTG57XuDMUQ+VtA5I8gngOXUFigovOpmjFXqwlwf9Q8FlP4UxODNJq8tXnEs
- FTsuBjXPEPq1DeSyev7yeCKr949ry/PpstWs4hg2sMV9tZ95s/m1+5Hqpud0c/lN0BUX
- xg+SSQFjvrQYTeaX1ZPeYNaD4Nc2vcjYG4PviUiLmKF7M+3kAud4lo+3aMfat6sPG9h7
- qBrPzE/bFEl5W1ki4jDP6WrCIdKkRypCztirv1AFJ5+8F76oFpEfW3WjtQqIorZP1WDx
- xw+ZIuqAyhZwMLp6aBEb2rOMWZjH6f/u6nnQd6YSLTzUEZeimlGqexcAeCkWulZjci/s 9w== 
+ bh=2JWGsGzPG9xj8K85LWOxfi5vbVOu4GgVaaG+8IQyXuA=;
+ b=nr7sLE9Oa+QdhhpHcRhc/cKv7BvVOH+kW6o9LJfP1S8ZnjifgpuggLi47POyg1nAIRbz
+ J1E84RROEuo92drfSoQxPHQJWvB84g9i4VXV7sIjGZat9fpOBPyZ208e5wq0BOfNfhAe
+ 1CSq6LFFjzTN65gWjk0dLYgLd72i4H286/6NHGTppjyHZeI6l6pX5IvgVLzxgSsGJvbj
+ YT+sUMAl+Jnm+GVt3rhph/0FZqJIWIvw63lbaeDo9Eg4C/Ux8MGUrGOxlLGsdkaKCSo2
+ uGziJll+eCQ3qZJHWkRimx+oReG/rkolnHxcljNbdGpBEHnvMJfgRZC695DhkViI9tuq Fg== 
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xyqpv0123-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xyqup80fw-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 16:34:59 +0000
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 447GYxAB019237;
+	Tue, 07 May 2024 16:35:00 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 447GZ0mk021759;
+	Tue, 7 May 2024 16:35:00 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xyqup80fs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 May 2024 16:35:00 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 447Fh7YY010635;
 	Tue, 7 May 2024 16:34:59 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xyqpv011y-1
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xx0bp7ad0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
 	Tue, 07 May 2024 16:34:59 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 447FKNjQ028545;
-	Tue, 7 May 2024 16:34:58 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3xwyr07efy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 16:34:57 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 447GYq5331064632
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 447GYr4U52560292
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 May 2024 16:34:54 GMT
+	Tue, 7 May 2024 16:34:55 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 468C72004E;
-	Tue,  7 May 2024 16:34:52 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id C58822004B;
+	Tue,  7 May 2024 16:34:53 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 12A612004B;
-	Tue,  7 May 2024 16:34:52 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 8F9D420043;
+	Tue,  7 May 2024 16:34:53 +0000 (GMT)
 Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.66])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 May 2024 16:34:52 +0000 (GMT)
-Date: Tue, 7 May 2024 17:49:00 +0200
+	Tue,  7 May 2024 16:34:53 +0000 (GMT)
+Date: Tue, 7 May 2024 18:34:30 +0200
 From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily
- Gorbik <gor@linux.ibm.com>,
+To: Heiko Carstens <hca@linux.ibm.com>
+Cc: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Vasily Gorbik
+ <gor@linux.ibm.com>,
         Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Christian
+ Borntraeger <borntraeger@linux.ibm.com>,
         Sven Schnelle
  <svens@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>,
@@ -75,12 +76,12 @@ Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
  Schaefer <gerald.schaefer@linux.ibm.com>,
         Matthew Wilcox
  <willy@infradead.org>, Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v2 04/10] s390/uv: convert PG_arch_1 users to only work
- on small folios
-Message-ID: <20240507174900.0b05791a@p-imbrenda.boeblingen.de.ibm.com>
-In-Reply-To: <20240412142120.220087-5-david@redhat.com>
+Subject: Re: [PATCH v2 00/10] s390: PG_arch_1+folio cleanups for uv+hugetlb
+Message-ID: <20240507183430.4e956c45@p-imbrenda.boeblingen.de.ibm.com>
+In-Reply-To: <20240506083830.28332-B-hca@linux.ibm.com>
 References: <20240412142120.220087-1-david@redhat.com>
-	<20240412142120.220087-5-david@redhat.com>
+	<f53a87ed-c3fe-4a60-8723-3eea25189553@redhat.com>
+	<20240506083830.28332-B-hca@linux.ibm.com>
 Organization: IBM
 X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
 Precedence: bulk
@@ -92,144 +93,38 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: OQgibnyqv9J8IT-0kxPNUMzQBczh4WlT
-X-Proofpoint-ORIG-GUID: WO723TopDS_-VtXiq7lKIJbcRXsNGkx4
+X-Proofpoint-ORIG-GUID: vc6hztu4I8AzPgN9plqRzhWW84EkSdue
+X-Proofpoint-GUID: sjrGchoLm2-zoo3bStpdk6fL4JIWnN0c
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-07_10,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 mlxscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- lowpriorityscore=0 clxscore=1015 priorityscore=1501 adultscore=0
- phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405070113
+ definitions=2024-05-07_09,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ mlxlogscore=989 priorityscore=1501 adultscore=0 clxscore=1015
+ impostorscore=0 phishscore=0 spamscore=0 suspectscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2404010000 definitions=main-2405070112
 
-On Fri, 12 Apr 2024 16:21:14 +0200
-David Hildenbrand <david@redhat.com> wrote:
+On Mon, 6 May 2024 10:38:30 +0200
+Heiko Carstens <hca@linux.ibm.com> wrote:
 
-> Now that make_folio_secure() may only set PG_arch_1 for small folios,
-> let's convert relevant remaining UV code to only work on (small) folios
-> and simply reject large folios early. This way, we'll never end up
-> touching PG_arch_1 on tail pages of a large folio in UV code.
+> On Tue, Apr 30, 2024 at 08:49:31PM +0200, David Hildenbrand wrote:
+> > On 12.04.24 16:21, David Hildenbrand wrote:  
+> > > This is v2 of [1] with changed subject:
+> > >   "[PATCH v1 0/5] s390: page_mapcount(), page_has_private() and PG_arch_1"
+> > > 
+> > > Rebased on s390x/features which contains the page_mapcount() and
+> > > page_has_private() cleanups, and some PG_arch_1 cleanups from Willy. To
+> > > compensate, I added some more cleanups ;)
+> > > 
+> > > One "easy" fix upfront. Another issue I spotted is documented in [1].
+> > > 
+> > > Once this hits upstream, we can remove HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
+> > > from core-mm and s390x, so only the folio variant will remain.  
+> > 
+> > Ping.  
 > 
-> The folio_get()/folio_put() for functions that are documented to already
-> hold a folio reference look weird; likely they are required to make
-> concurrent gmap_make_secure() back off because the caller might only hold
-> an implicit reference due to the page mapping. So leave that alone for now.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> Claudio, Janosch, this series requires your review.
 
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-
-> ---
->  arch/s390/include/asm/page.h |  2 ++
->  arch/s390/kernel/uv.c        | 41 ++++++++++++++++++++++--------------
->  2 files changed, 27 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
-> index 9381879f7ecf..b64384872c0f 100644
-> --- a/arch/s390/include/asm/page.h
-> +++ b/arch/s390/include/asm/page.h
-> @@ -214,7 +214,9 @@ static inline unsigned long __phys_addr(unsigned long x, bool is_31bit)
->  #define pfn_to_phys(pfn)	((pfn) << PAGE_SHIFT)
->  
->  #define phys_to_page(phys)	pfn_to_page(phys_to_pfn(phys))
-> +#define phys_to_folio(phys)	page_folio(phys_to_page(phys))
->  #define page_to_phys(page)	pfn_to_phys(page_to_pfn(page))
-> +#define folio_to_phys(page)	pfn_to_phys(folio_pfn(folio))
->  
->  static inline void *pfn_to_virt(unsigned long pfn)
->  {
-> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-> index 3c6d86e3e828..914dcec27329 100644
-> --- a/arch/s390/kernel/uv.c
-> +++ b/arch/s390/kernel/uv.c
-> @@ -135,14 +135,18 @@ static int uv_destroy_page(unsigned long paddr)
->   */
->  int uv_destroy_owned_page(unsigned long paddr)
->  {
-> -	struct page *page = phys_to_page(paddr);
-> +	struct folio *folio = phys_to_folio(paddr);
->  	int rc;
->  
-> -	get_page(page);
-> +	/* See gmap_make_secure(): large folios cannot be secure */
-> +	if (unlikely(folio_test_large(folio)))
-> +		return 0;
-> +
-> +	folio_get(folio);
->  	rc = uv_destroy_page(paddr);
->  	if (!rc)
-> -		clear_bit(PG_arch_1, &page->flags);
-> -	put_page(page);
-> +		clear_bit(PG_arch_1, &folio->flags);
-> +	folio_put(folio);
->  	return rc;
->  }
->  
-> @@ -170,14 +174,18 @@ int uv_convert_from_secure(unsigned long paddr)
->   */
->  int uv_convert_owned_from_secure(unsigned long paddr)
->  {
-> -	struct page *page = phys_to_page(paddr);
-> +	struct folio *folio = phys_to_folio(paddr);
->  	int rc;
->  
-> -	get_page(page);
-> +	/* See gmap_make_secure(): large folios cannot be secure */
-> +	if (unlikely(folio_test_large(folio)))
-> +		return 0;
-> +
-> +	folio_get(folio);
->  	rc = uv_convert_from_secure(paddr);
->  	if (!rc)
-> -		clear_bit(PG_arch_1, &page->flags);
-> -	put_page(page);
-> +		clear_bit(PG_arch_1, &folio->flags);
-> +	folio_put(folio);
->  	return rc;
->  }
->  
-> @@ -479,33 +487,34 @@ EXPORT_SYMBOL_GPL(gmap_destroy_page);
->   */
->  int arch_make_page_accessible(struct page *page)
->  {
-> +	struct folio *folio = page_folio(page);
->  	int rc = 0;
->  
-> -	/* Hugepage cannot be protected, so nothing to do */
-> -	if (PageHuge(page))
-> +	/* See gmap_make_secure(): large folios cannot be secure */
-> +	if (unlikely(folio_test_large(folio)))
->  		return 0;
->  
->  	/*
->  	 * PG_arch_1 is used in 3 places:
->  	 * 1. for kernel page tables during early boot
->  	 * 2. for storage keys of huge pages and KVM
-> -	 * 3. As an indication that this page might be secure. This can
-> +	 * 3. As an indication that this small folio might be secure. This can
->  	 *    overindicate, e.g. we set the bit before calling
->  	 *    convert_to_secure.
->  	 * As secure pages are never huge, all 3 variants can co-exists.
->  	 */
-> -	if (!test_bit(PG_arch_1, &page->flags))
-> +	if (!test_bit(PG_arch_1, &folio->flags))
->  		return 0;
->  
-> -	rc = uv_pin_shared(page_to_phys(page));
-> +	rc = uv_pin_shared(folio_to_phys(folio));
->  	if (!rc) {
-> -		clear_bit(PG_arch_1, &page->flags);
-> +		clear_bit(PG_arch_1, &folio->flags);
->  		return 0;
->  	}
->  
-> -	rc = uv_convert_from_secure(page_to_phys(page));
-> +	rc = uv_convert_from_secure(folio_to_phys(folio));
->  	if (!rc) {
-> -		clear_bit(PG_arch_1, &page->flags);
-> +		clear_bit(PG_arch_1, &folio->flags);
->  		return 0;
->  	}
->  
+oops! I had started reviewing it, but then other things got in the
+way...
 
