@@ -1,102 +1,159 @@
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E2416132A;
-	Tue,  7 May 2024 14:13:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0363C16190B;
+	Tue,  7 May 2024 14:13:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715091232; cv=none; b=BrVCwyEeQvkaaREyRQkxrGaMdJsKNTX+BQ//7oKVvniqFIJICTS2L4mAhjNfH2d8EF6PF0kPiWt1guo4PY++uuYeViYGeuYGY1bDHaQn/i/aVj9s6mtD0qCbrD+aZQFf2z031Fw8Id7vyusItF5+nmm8X5sAKAWvKkqgrL+3Gsw=
+	t=1715091240; cv=none; b=OAyAIIDcJjKNwkmsXTDWVOr5ShYwqaz57+wcSXCd+l6uF7XV3x8pqh9Wd5Vpy1BteB1r28H/HLOEMmCMBUCGly8lPGats5iNhOBVwC+ytLEZGtm6on7PiMRNOg3Q8Ipyk9lw/sFYXBVy94h3tAai/qKoFaqBd88P2XhAbRRqg0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715091232; c=relaxed/simple;
-	bh=LbuUNo2s482mQRrIcVdTCP+fnZZxVYLbxTrPXeS+Ksg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P0oM6R/jnHW5ySB6FmUMk3QjZPuY3VLgXj+yqx8owtsIJsJMO7HwCh07//wmcNAG6NketmONe/IG1ofXkUUNTbrKAiwOIX/n6zz3pO1w/tgf78RqBTtuHX4K53G6VKqBBBvxKKinl4QOKHT0CEB3vYPnl7WAo2dLH0DlZ47ThJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=YiqL1bcj; arc=none smtp.client-ip=67.231.156.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+	s=arc-20240116; t=1715091240; c=relaxed/simple;
+	bh=luUp+uu0oFKIjV/gk8O+fPSqFMHg0gN7kVes9334cs0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oO7pSpNE5KEGVzt4J0RFr0F/PxV4SQBTu5xqTK0aAtIhiNDbDUkGdtHDi+YKfJpcfLW2dgyRoh5jWFdv/BLCYYbwVOnHh0I0RX8rJAoh1SN4Q5Qr1fZoLe1JC0EWOIJv8UMPHfqAZsF0hu0dc9lCoMA5kyoxxe2kNJ6b9r7QvxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwbmmOjG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="YiqL1bcj"
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4478bQdu006998;
-	Tue, 7 May 2024 07:13:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pfpt0220; bh=MXQybSTqFGSVtkBn7jZOAr
-	GJgra1Vr2nPLrSYts8mXw=; b=YiqL1bcjPaRyYag5ICulirsXfRPJ1RXprA75W/
-	QCSOuLnUghs9qmhjdqM0vzBqKB1JRvsP7sH/4jtmQqx1bQ7qgh+29cXarT0zHHXG
-	XLi0YHWxJQjs2agw9kOV/fAEa02keG23NtMybJDuAej/I5m8j7CE0cx7xDsEeU1Y
-	gogC0GeMPqKboYXuey4ZokoHRSzksmVqikxy8eKFYeLx05vRkvALkY+g4qVLJUcA
-	xbvdPD60I0sJEFcs4PDXAVX1Db7Fut9NLbcbCZltNbKU7126cjvkx4r4zB5Fek0Z
-	FZ7WDlOmRDelM0a6DRhdDcR2/FJ+FD1PmcqA4AIdRT1uoTBg==
-Received: from dc5-exch05.marvell.com ([199.233.59.128])
-	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3xwmhghj5w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 07:13:31 -0700 (PDT)
-Received: from DC5-EXCH05.marvell.com (10.69.176.209) by
- DC5-EXCH05.marvell.com (10.69.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 7 May 2024 07:13:30 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH05.marvell.com
- (10.69.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 7 May 2024 07:13:30 -0700
-Received: from maili.marvell.com (unknown [10.28.36.165])
-	by maili.marvell.com (Postfix) with SMTP id B13823F7041;
-	Tue,  7 May 2024 07:13:27 -0700 (PDT)
-Date: Tue, 7 May 2024 19:43:26 +0530
-From: Ratheesh Kannoth <rkannoth@marvell.com>
-To: Duoming Zhou <duoming@zju.edu.cn>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-hams@vger.kernel.org>, <pabeni@redhat.com>, <kuba@kernel.org>,
-        <edumazet@google.com>, <jreuter@yaina.de>, <dan.carpenter@linaro.org>
-Subject: Re: [PATCH net v5 4/4] ax25: Change kfree() in ax25_dev_free() to
- ax25_dev_put()
-Message-ID: <20240507141326.GA1050877@maili.marvell.com>
-References: <cover.1715065005.git.duoming@zju.edu.cn>
- <5c61fea1b20f3c1596e4fb46282c3dedc54513a3.1715065005.git.duoming@zju.edu.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwbmmOjG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFD07C2BBFC;
+	Tue,  7 May 2024 14:13:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715091239;
+	bh=luUp+uu0oFKIjV/gk8O+fPSqFMHg0gN7kVes9334cs0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bwbmmOjGGVh8+XfBbJFrf/IHFwHDwfBhI6yjia9i+DvvMv5UuDGAWhqqZlPKGI1EX
+	 0qvs6DQTsWpskQfg8A/G4/Rxg2VGByEk1qZsoq12++rsm4cfXs0RxMpw6mnrOYUyH/
+	 zQ8i5ykwKUioirgL+3v5wq6pf9LTRMpV/EjqJ/T/PUKjwdBU5L42V6oR0oluyA0wEn
+	 u1CsL1aBxYFjyyLLJB0ct5AFPCrdoYYG1e3rfemSk1av4j5C95Zw4OSVVmDgZTig7w
+	 4FWvDCzeXMz6B6ZbxIR3dlTe/M1rrWLPEPPluLrORy3jdH5LADBY1BzRC7RlqaXUuR
+	 vEH6jXLs0wJlA==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Florent Revest <revest@chromium.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	LKML <linux-kernel@vger.kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	bpf <bpf@vger.kernel.org>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Guo Ren <guoren@kernel.org>
+Subject: [PATCH v10 30/36] ftrace: Add CONFIG_HAVE_FTRACE_GRAPH_FUNC
+Date: Tue,  7 May 2024 23:13:53 +0900
+Message-Id: <171509123327.162236.8914387678237087834.stgit@devnote2>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <171509088006.162236.7227326999861366050.stgit@devnote2>
+References: <171509088006.162236.7227326999861366050.stgit@devnote2>
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <5c61fea1b20f3c1596e4fb46282c3dedc54513a3.1715065005.git.duoming@zju.edu.cn>
-X-Proofpoint-ORIG-GUID: ifxI65k7sibW2qbX6yaRP1jxGqMYbOvE
-X-Proofpoint-GUID: ifxI65k7sibW2qbX6yaRP1jxGqMYbOvE
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-07_07,2024-05-06_02,2023-05-22_02
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On 2024-05-07 at 12:33:42, Duoming Zhou (duoming@zju.edu.cn) wrote:
-> The object "ax25_dev" is managed by reference counting. Thus it should
-> not be directly released by a kfree() call in ax25_dev_free(). Replace
-> it with a ax25_dev_put() call instead.
->
-> Fixes: d01ffb9eee4a ("ax25: add refcount in ax25_dev to avoid UAF bugs")
-> Suggested-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Signed-off-by: Duoming Zhou <duoming@zju.edu.cn>
-> ---
->  net/ax25/ax25_dev.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
-> index c6ab9b0f0be..2a40c78f6a0 100644
-> --- a/net/ax25/ax25_dev.c
-> +++ b/net/ax25/ax25_dev.c
-> @@ -195,7 +195,7 @@ void __exit ax25_dev_free(void)
->  	list_for_each_entry_safe(s, n, &ax25_dev_list, list) {
->  		netdev_put(s->dev, &s->dev_tracker);
->  		list_del(&s->list);
-> -		kfree(s);
-> +		ax25_dev_put(s);
-The commit message "The object "ax25_dev" is managed by reference counting"
-seems be not making sense here.  in case ref > 0 after the ax25_dev_put().
-ax25_dev_put(s) is not initiating any mechanism to come back and recheck.
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
->  	}
->  	spin_unlock_bh(&ax25_dev_lock);
->  }
-> --
-> 2.17.1
->
+Add CONFIG_HAVE_FTRACE_GRAPH_FUNC kconfig in addition to ftrace_graph_func
+macro check. This is for the other feature (e.g. FPROBE) which requires to
+access ftrace_regs from fgraph_ops::entryfunc() can avoid compiling if
+the fgraph can not pass the valid ftrace_regs.
+
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ Changes in v8:
+  - Newly added.
+---
+ arch/arm64/Kconfig     |    1 +
+ arch/loongarch/Kconfig |    1 +
+ arch/powerpc/Kconfig   |    1 +
+ arch/riscv/Kconfig     |    1 +
+ arch/x86/Kconfig       |    1 +
+ kernel/trace/Kconfig   |    5 +++++
+ 6 files changed, 10 insertions(+)
+
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 8d5047bc13bc..e0a5c69eeda2 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -206,6 +206,7 @@ config ARM64
+ 	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	select HAVE_FAST_GUP
++	select HAVE_FTRACE_GRAPH_FUNC
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_FUNCTION_ERROR_INJECTION
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 21dc39ae6bc2..0276a6825e6d 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -121,6 +121,7 @@ config LOONGARCH
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS if !ARCH_STRICT_ALIGN
+ 	select HAVE_EXIT_THREAD
+ 	select HAVE_FAST_GUP
++	select HAVE_FTRACE_GRAPH_FUNC
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_ARG_ACCESS_API
+ 	select HAVE_FUNCTION_ERROR_INJECTION
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 1c4be3373686..b79d16c5846a 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -237,6 +237,7 @@ config PPC
+ 	select HAVE_EBPF_JIT
+ 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+ 	select HAVE_FAST_GUP
++	select HAVE_FTRACE_GRAPH_FUNC
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_ARG_ACCESS_API
+ 	select HAVE_FUNCTION_DESCRIPTORS	if PPC64_ELF_ABI_V1
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index b58b8e81b510..6fd2a166904b 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -127,6 +127,7 @@ config RISCV
+ 	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && (CLANG_SUPPORTS_DYNAMIC_FTRACE || GCC_SUPPORTS_DYNAMIC_FTRACE)
+ 	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+ 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
++	select HAVE_FTRACE_GRAPH_FUNC
+ 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_GRAPH_FREGS
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4da23dc0b07c..bd86e598e31d 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -225,6 +225,7 @@ config X86
+ 	select HAVE_EXIT_THREAD
+ 	select HAVE_FAST_GUP
+ 	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
++	select HAVE_FTRACE_GRAPH_FUNC		if HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_GRAPH_FREGS	if HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_GRAPH_TRACER	if X86_32 || (X86_64 && DYNAMIC_FTRACE)
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 0b6ce0a38967..0e4c33f1ab43 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -34,6 +34,11 @@ config HAVE_FUNCTION_GRAPH_TRACER
+ config HAVE_FUNCTION_GRAPH_FREGS
+ 	bool
+ 
++config HAVE_FTRACE_GRAPH_FUNC
++	bool
++	help
++	  True if ftrace_graph_func() is defined.
++
+ config HAVE_DYNAMIC_FTRACE
+ 	bool
+ 	help
+
