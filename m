@@ -1,151 +1,223 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF913158D9A;
-	Tue,  7 May 2024 12:47:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1975156F24
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 12:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715086042; cv=none; b=NTITYmpDxCpLqs/iEyWUD/fArh/BfexX22yYhxB+edJP6ql2nhElkMRF8elqUAypTXGO5xGD0uFfLM0/hTVQTS5Xs6M16PS89c1Jog5XIdo4YJ2vM0dXIcvVz169qx8tD1sYSUI03C6xNru7vFKMSUiu2zNd97U8u7yJq4NOSEM=
+	t=1715086243; cv=none; b=KZnfl+Awgu4VPLKfPl7qqlsp4Ks5OkSolK4uycaqyNZT+LLq+OamwrCKcO+n0Eoq/QjBQcY/wk6Nk22P+E+MpZjmpN1XjxWmOmwwLG2kSv+qcG2KATLtZSaFHaZ1wiMQRKPV7+fB7pcIv5max36AiXqnVPZRvauxxYy6Q1d0+is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715086042; c=relaxed/simple;
-	bh=GKhXYVZz0pG3Da+o3ocD9EU+yf7bVkGor/Rs5rLaM4M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IZcZQwLYvUDeI+2KhhZvlCNrhHMcn26GtPUCPADERkeBPjYLGyc5gr8f3AoFihbrlxPzJGzDC2meSqvgwE53j3dKiRHosDPzCMWYyvcG/+9jeAaM4BFv/7ZsCi8NW5shs8n9F/9H/WOyGBa+YSmNdbueUgJdKyfHahXG0VttwH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VYdHM1fVJzYmKg;
-	Tue,  7 May 2024 20:43:27 +0800 (CST)
-Received: from kwepemf100007.china.huawei.com (unknown [7.202.181.221])
-	by mail.maildlp.com (Postfix) with ESMTPS id 89DE2180065;
-	Tue,  7 May 2024 20:47:16 +0800 (CST)
-Received: from [10.67.109.184] (10.67.109.184) by
- kwepemf100007.china.huawei.com (7.202.181.221) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 7 May 2024 20:47:15 +0800
-Message-ID: <6836eb5c-f135-4e58-987b-987ab446b27c@huawei.com>
-Date: Tue, 7 May 2024 20:47:15 +0800
+	s=arc-20240116; t=1715086243; c=relaxed/simple;
+	bh=Sr628eoIuCdX6Hr7vf8UDLcGevS6JWfBUFW53+MuhIA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YeCAoNL2XD7C6yjZivkbO8zobbvmqSCLWPLDHPEEctu8TVAeboR/YSIiJh7ucMHxUeWmPMbA0PvKQIZS+5tY/N4UDS2xR3EYy/t8Aa3SQ+5oRvZcrwCQ2VPYwWdKK8+h1NpODZxVCRVbbL0ccZO0gTJ5v6pplCRfK6zV0kpIRnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02E841063;
+	Tue,  7 May 2024 05:51:07 -0700 (PDT)
+Received: from e130256.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CDD33F793;
+	Tue,  7 May 2024 05:50:39 -0700 (PDT)
+From: Hongyan Xia <hongyan.xia2@arm.com>
+To: Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Qais Yousef <qyousef@layalina.io>,
+	Morten Rasmussen <morten.rasmussen@arm.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Christian Loehle <christian.loehle@arm.com>,
+	pierre.gondois@arm.com,
+	linux-kernel@vger.kernel.org,
+	Hongyan Xia <hongyan.xia2@arm.com>
+Subject: [RFC PATCH v3 0/6] Uclamp sum aggregation
+Date: Tue,  7 May 2024 13:50:23 +0100
+Message-Id: <cover.1715082714.git.hongyan.xia2@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv, bpf: Optimize zextw insn with Zba extension
-Content-Language: en-US
-To: Xiao Wang <xiao.w.wang@intel.com>, <paul.walmsley@sifive.com>,
-	<palmer@dabbelt.com>, <aou@eecs.berkeley.edu>, <luke.r.nels@gmail.com>,
-	<xi.wang@gmail.com>, <bjorn@kernel.org>
-CC: <ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-	<martin.lau@linux.dev>, <eddyz87@gmail.com>, <song@kernel.org>,
-	<yonghong.song@linux.dev>, <john.fastabend@gmail.com>, <kpsingh@kernel.org>,
-	<sdf@google.com>, <haoluo@google.com>, <jolsa@kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <haicheng.li@intel.com>
-References: <20240507104528.435980-1-xiao.w.wang@intel.com>
-From: Pu Lehui <pulehui@huawei.com>
-In-Reply-To: <20240507104528.435980-1-xiao.w.wang@intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemf100007.china.huawei.com (7.202.181.221)
+Content-Transfer-Encoding: 8bit
 
+Current uclamp implementation, max aggregation, has several drawbacks.
+This series gives an alternative implementation that addresses the
+problems and shows other advantages, mostly:
 
-On 2024/5/7 18:45, Xiao Wang wrote:
-> The Zba extension provides add.uw insn which can be used to implement
-> zext.w with rs2 set as ZERO.
-> 
-> Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
-> ---
->   arch/riscv/Kconfig       | 19 +++++++++++++++++++
->   arch/riscv/net/bpf_jit.h | 18 ++++++++++++++++++
->   2 files changed, 37 insertions(+)
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 6bec1bce6586..0679127cc0ea 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -586,6 +586,14 @@ config RISCV_ISA_V_PREEMPTIVE
->   	  preemption. Enabling this config will result in higher memory
->   	  consumption due to the allocation of per-task's kernel Vector context.
->   
-> +config TOOLCHAIN_HAS_ZBA
-> +	bool
-> +	default y
-> +	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64ima_zba)
-> +	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32ima_zba)
-> +	depends on LLD_VERSION >= 150000 || LD_VERSION >= 23900
-> +	depends on AS_HAS_OPTION_ARCH
-> +
->   config TOOLCHAIN_HAS_ZBB
->   	bool
->   	default y
-> @@ -601,6 +609,17 @@ config TOOLCHAIN_HAS_VECTOR_CRYPTO
->   	def_bool $(as-instr, .option arch$(comma) +v$(comma) +zvkb)
->   	depends on AS_HAS_OPTION_ARCH
->   
-> +config RISCV_ISA_ZBA
-> +	bool "Zba extension support for bit manipulation instructions"
-> +	depends on TOOLCHAIN_HAS_ZBA
-> +	depends on RISCV_ALTERNATIVE
-> +	default y
-> +	help
-> +	   Adds support to dynamically detect the presence of the ZBA
-> +	   extension (address generation acceleration) and enable its usage.
+1. Simplicity. Sum aggregation implements uclamp with less than half of
+   code than max aggregation.
+2. Effectiveness. Sum aggregation shows better uclamp effectiveness,
+   either in benchmark scores or more importantly, in energy efficiency.
+3. Works on its own. No changes in cpufreq or other sub-systems are
+   needed.
+4. Low-overhead. No bucket operations and no need to tweak the number of
+   buckets to balance between overhead and uclamp granularity.
 
-It would be better to add Zba's function description like Zbb.
+The key idea of sum aggregation is fairly simple. Each task has a
+util_avg_bias, which is obtained by:
 
-> +
-> +	   If you don't know what to do here, say Y.
-> +
->   config RISCV_ISA_ZBB
->   	bool "Zbb extension support for bit manipulation instructions"
->   	depends on TOOLCHAIN_HAS_ZBB
-> diff --git a/arch/riscv/net/bpf_jit.h b/arch/riscv/net/bpf_jit.h
-> index f4b6b3b9edda..18a7885ba95e 100644
-> --- a/arch/riscv/net/bpf_jit.h
-> +++ b/arch/riscv/net/bpf_jit.h
-> @@ -18,6 +18,11 @@ static inline bool rvc_enabled(void)
->   	return IS_ENABLED(CONFIG_RISCV_ISA_C);
->   }
->   
-> +static inline bool rvzba_enabled(void)
-> +{
-> +	return IS_ENABLED(CONFIG_RISCV_ISA_ZBA) && riscv_has_extension_likely(RISCV_ISA_EXT_ZBA);
-> +}
-> +
->   static inline bool rvzbb_enabled(void)
->   {
->   	return IS_ENABLED(CONFIG_RISCV_ISA_ZBB) && riscv_has_extension_likely(RISCV_ISA_EXT_ZBB);
-> @@ -937,6 +942,14 @@ static inline u16 rvc_sdsp(u32 imm9, u8 rs2)
->   	return rv_css_insn(0x7, imm, rs2, 0x2);
->   }
->   
-> +/* RV64-only ZBA instructions. */
-> +
-> +static inline u32 rvzba_zextw(u8 rd, u8 rs1)
-> +{
-> +	/* add.uw rd, rs1, ZERO */
-> +	return rv_r_insn(0x04, RV_REG_ZERO, rs1, 0, rd, 0x3b);
-> +}
-> +
->   #endif /* __riscv_xlen == 64 */
->   
->   /* Helper functions that emit RVC instructions when possible. */
-> @@ -1159,6 +1172,11 @@ static inline void emit_zexth(u8 rd, u8 rs, struct rv_jit_context *ctx)
->   
->   static inline void emit_zextw(u8 rd, u8 rs, struct rv_jit_context *ctx)
->   {
-> +	if (rvzba_enabled()) {
-> +		emit(rvzba_zextw(rd, rs), ctx);
-> +		return;
-> +	}
+    util_avg_bias = clamp(util_avg, uclamp_min, uclamp_max) - util_avg;
 
-Looks good to me. It seems that Zba has fewer uses in rv64 bpf jit.
+If a CPU has N tasks, p1, p2, p3... pN, then we sum the biases up and
+obtain a rq total bias:
 
-> +
->   	emit_slli(rd, rs, 32, ctx);
->   	emit_srli(rd, rd, 32, ctx);
->   }
+    rq_bias = util_avg_bias1 + util_avg_bias2... + util_avg_biasN;
+
+Then we use the biased rq utilization rq_util + rq_bias to select OPP
+and to schedule tasks.
+
+PATCH BREAKDOWN:
+
+Patch 1/6 reverts a patch that accommodate uclamp_max tasks under max
+aggregation. This patch is not needed and creates other problems for sum
+aggregation. It is discussed elsewhere that this patch will be improved
+and there may not be the need to revert it in the future.
+
+Patch 2 and 3 implement sum aggregation.
+
+Patch 4 and 5 remove max aggregation.
+
+Patch 6 applies PELT decay on negative util_avg_bias. This improves
+energy efficiency and task placement, but is not strictly necessary.
+
+TESTING:
+
+Two notebooks are shared at
+
+https://nbviewer.org/github/honxia02/notebooks/blob/bb97afd74f49d4b8add8b28ad4378ea337c695a8/whitebox/max.ipynb
+https://nbviewer.org/github/honxia02/notebooks/blob/bb97afd74f49d4b8add8b28ad4378ea337c695a8/whitebox/sum-offset.ipynb
+
+The experiments done in notebooks are on Arm Juno r2 board. CPU0-3 are
+little cores with capacity of 383. CPU4-5 are big cores. The rt-app
+profiles used for these experiments are included in the notebooks.
+
+Scenario 1: Scheduling 4 tasks with UCLAMP_MAX at 110.
+
+The scheduling decisions are plotted in Out[11]. Both max and sum
+aggregation understand the UCLAMP_MAX hint and schedule all 4 tasks on
+the little cluster. Max aggregation sometimes schedule 2 tasks on 1 CPU,
+and this is the reason why sum aggregation reverts the 1st commit.
+However, the reverted patch may be improved and this revert may not be
+needed in the future.
+
+Scenario 2: Scheduling 2 tasks with UCLAMP_MIN and UCLAMP_MAX at a value
+slightly above the capacity of the little CPU.
+
+Results are in Out[17]. The purpose is to use UCLAMP_MIN to place tasks
+on the big core. Both max and sum aggregation handle this correctly.
+
+Scenario 3: Task A is a task with a small utilization pinned to CPU4.
+Task B is an always-running task pinned to CPU5, but UCLAMP_MAX capped
+at 300. After a while, task A is then pinned to CPU5, joining B.
+
+Results are in Out[23]. Max aggregation sees a frequency spike at
+239.75s. When zoomed in, one can see square-wave-like utilization values
+because of A periodically going to sleep. When A wakes up, its default
+UCLAMP_MAX of 1024 will uncap B and reach the highest CPU frequency.
+When A sleeps, B's UCLAMP_MAX will be in effect and will reduce rq
+utilization. This happens repeatedly, hence the square wave. In
+contrast, sum aggregation sees a normal increase in utilization when A
+joins B, without any square-wave behavior.
+
+Scenario 4: 4 always-running tasks with UCLAMP_MAX of 110 pinned to the
+little PD (CPU0-3). 4 same tasks pinned to the big PD (CPU4-5).
+After a while, remove the CPU pinning of the 4 tasks on the big PD.
+
+Results are in Out[29]. After unpinning, max aggregation moves all 8
+tasks to the little cluster, but schedules 5 tasks on CPU0 and 1 each on
+CPU1-3. In contrast, sum aggregation schedules 2 on each little CPU
+after unpinning, which is the desired balanced task placement.
+
+Same as Scenario 1, the situation may not be as bad once the improvement
+of the reverted patch comes out in the future.
+
+Scenario 5: Scheduling 8 tasks with UCLAMP_MAX of 110.
+
+Results are in Out[35] and Out[36]. There's no doubt that sum
+aggregation yields substantially better scheduling decisions. This tests
+roughly the same thing as Scenario 4.
+
+EVALUATION:
+
+We backport patches to kernel v6.1 on Pixel 6 and run Android
+benchmarks.
+
+Speedometer:
+
+We run Speedometer 2.0 to test ADPF/uclamp effectiveness. Because sum
+aggregation does not circumvent the 20% OPP margin, we reduce uclamp
+values to 80% to be fair.
+
+------------------------------------------------------
+|   score   | score |   %   | CPU power (mW) |   %   |
+|    max    | 161.4 |       |    2358.9      |       |
+|  sum_0.8  | 166.0 | +2.85 |    2485.0      | +5.35 |
+| sum_tuned | 162.6 | +0.74 |    2332.0      | -1.14 |
+------------------------------------------------------
+
+We see a consistant higher score and higher average power consumption.
+Note that a higher score also means a reduction in run-time, so total
+energy increase for sum_0.8 is only 1.88%.
+
+We then reduce uclamp values so that the Speedometer score is roughly
+the same. If we do so, then sum aggregation actually gives a reduced
+average power and total energy consumption than max aggregation.
+
+UIBench:
+
+-----------------------------------------------------------------
+|   score   | jank percentage |   %    | CPU power (mW) |   %   |
+|    max    |     0.375%      |        |     122.75     |       |
+|  sum_0.8  |     0.440%      | +17.33 |     116.35     | -5.21 |
+| sum_tuned |     0.220%      | -41.33 |     119.35     | -2.77 |
+-----------------------------------------------------------------
+
+UIBench on Pixel 6 by default already has a low enough jank percentage.
+Moving to sum aggregation gives higher jank percentage and lower power
+consumption. We then tune the hardcoded uclamp values in the Android
+image to take advantage of the power budget, and can achieve more than
+41% jank reduction while still operating with less power consumption
+than max aggregation.
+
+This result is not suggesting that sum aggregation greatly outperforms
+max aggregation, because the jank percentage is already very low, but
+instead suggests that hardcoded uclamp values in the system (like in
+init scripts) need to be changed to perform well under sum aggregation.
+If tuned well, sum aggregation generally shows better effectiveness, or
+the same effectiveness but with less power consumption.
+
+---
+Changed in v3:
+- Addresses the biggest concern from multiple people, that PELT and
+  uclamp need to be separate. The new design is significantly simpler
+  than the previous revision and separates util_avg_uclamp into the
+  original util_avg (which this series doesn't touch at all) and the
+  util_avg_bias component.
+- Keep the tri-state return value of util_fits_cpu().
+- Keep both the unclamped and clamped util_est, so that we use the right
+  one depending on the caller in frequency or energy calculations.
+
+Hongyan Xia (6):
+  Revert "sched/uclamp: Set max_spare_cap_cpu even if max_spare_cap is
+    0"
+  sched/uclamp: Track a new util_avg_bias signal
+  sched/fair: Use util biases for utilization and frequency
+  sched/uclamp: Remove all uclamp bucket logic
+  sched/uclamp: Simplify uclamp_eff_value()
+  Propagate negative bias
+
+ include/linux/sched.h            |   8 +-
+ init/Kconfig                     |  32 ---
+ kernel/sched/core.c              | 321 ++----------------------
+ kernel/sched/cpufreq_schedutil.c |  12 +-
+ kernel/sched/debug.c             |   2 +-
+ kernel/sched/fair.c              | 411 ++++++++++++++++---------------
+ kernel/sched/pelt.c              |  39 +++
+ kernel/sched/rt.c                |   4 -
+ kernel/sched/sched.h             | 129 +++-------
+ 9 files changed, 319 insertions(+), 639 deletions(-)
+
+-- 
+2.34.1
+
