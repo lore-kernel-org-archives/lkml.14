@@ -1,57 +1,57 @@
-Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12B9F16D4D8
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 16:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC14516D9DA
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 16:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099237; cv=none; b=X0wztvzIAnlFobzuFtobbhSqOdHVor2bNldA5+8UYQxokT4eh6QvGDPwWpM/BMyWQYd0Qqkf1R4pCBjW9EvmyZgAV05apDoPc7la9jksa5qPO03GTFq592kPNwzkKRENWpb8VMfWhtmzEEmrZ1L+JkdlAV84UBARsXhvolxRSq4=
+	t=1715099239; cv=none; b=lQgvOgk0Mi2Gq3fpXK5n6LaaRciOj0j2QtKAEQ8WFeHyqILEvPL2KRaldVxZ+FwXgznoax2xH4QY2i3M3/AjqcVA7Rm55EC4gwKL6I1aqIQ/JjJWUma+Oa8voIvVkwrunZVp4CTscHdZXJVlkxoiUxiZu217biuXgjC7j5OHaaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099237; c=relaxed/simple;
-	bh=TBNCx1gGrBDy9NxmrHPxnzPFvK9qlBkf27idsj7B9Cw=;
+	s=arc-20240116; t=1715099239; c=relaxed/simple;
+	bh=3FQmdzC7rLah5bHXqxL1pjRWMb/l2vnOq/dIwPsVxiM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=c9SIwXmcG3l7yYcg9B//5Ou2oxSuGyEJUMHqLNac3YndiGcdHAVf52YYkL2IiMuJOhD0JVgzCMh53bYcVBXwtDA9Yj78UF1LrMOH2J/U0ZlmL21FXfxoj7/GOVEqnBOsXi0x8RWGUmf6/G6nO0hruFONT0zgquOWperpHVuN8pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lxo11x3g; arc=none smtp.client-ip=209.85.167.182
+	 In-Reply-To:To:Cc; b=A02zBcZV6QwJ8Fk3nVCRvKhdf+d72YEypMmsAym7xinq1nUFLlgRCcbvpzlrS07TpwANPRwgyZLVut00772QY1ZBJNyoU0I0klQgIOSx3SQTZ8Ew5yxRSh293mrsP2ckSvNOkiQp4bosOz8lncnHnYz/oABxgui3emyGVfIPkXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=d2fw3tcx; arc=none smtp.client-ip=209.85.167.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lxo11x3g"
-Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-3c97a48575eso628163b6e.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:27:15 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d2fw3tcx"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3c96a298d5aso1550486b6e.3
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:27:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715099235; x=1715704035; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1715099237; x=1715704037; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ckyXB1RMjwvOvAxa8fnxheCGm68/C6yK7+APpHNPb5E=;
-        b=lxo11x3ghsc929qK2ouDhbNp1XXSubGQ+xHrF3xRV61eMhBUSy3MO6hDwDntJQOWMa
-         vdp6uuLnm2lQOAiI4C4IQouaPHpNPj9Hth+LlKxEZUeUHUCj3t7C2L3C+t7FU+GiiPH1
-         cGBeGjqXE+dC33Km/zbjEksoo3JwB7aT5AhvI=
+        bh=JKfhOSoHE1VqyRhgB0xYInvnK6a8zz5LZUqmCULZe+M=;
+        b=d2fw3tcx8B7ebQuzRheafY/HF13lspqh3qU2RkyjcthAncGKEa7QeIed+ec4X3NLv+
+         7MRi9U7Vt1ATwL/dQIezPReprvccyBX5OKfVejS+EvZkeUxmu2MNo64kczGvQNqe8DUg
+         G3RX+SjTHmVUCLghqdzIK6J3gbIowcPupJR3s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715099235; x=1715704035;
+        d=1e100.net; s=20230601; t=1715099237; x=1715704037;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ckyXB1RMjwvOvAxa8fnxheCGm68/C6yK7+APpHNPb5E=;
-        b=hF+FFANWZ1POlYxMj+AGI/42nBCjUA0eZ4GVYj+3jG7dh9aS0jzBM+te7vfuSjDxgy
-         WjBm2FDp3ApMz5hN6enVAc2ldp5ZyXFYwjTf3FEB7FwK3QCI3bF0hak6obo+QZNOL+Gl
-         UFMcstnPgmPlL5Ok1dtLT95ci0rYYika/5jUR8AWPmYg0VnEymdSQrE2XHQ8tIYBtKOu
-         KR39WgbHI+8GX7G0jIsc2f3A5RbF2Ow+Aguuj3UOqfvkSk3eYeyZgNtU4iruWsIo5Msf
-         2kCy4zolmn4DNzia2yc4yj8rVfg+K7mRoih1AjlzqWIZ9VfCN0t/dcmCoN1zzXZMhlCZ
-         AkFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXoKnR7gY9oABFO2rVCfGFKR8dTQ1ve5LEZJvX7becDbUYjZGgGFdinSw4fa9QJtYPyGkbN0NqUR3r7+0PTX7eg/pv6zMT9JHMtlh2w
-X-Gm-Message-State: AOJu0YyQ19dgPmasJgnqtSJpLak3F77PY0w/Jv55TTm3brovgEGmiM3M
-	z4lvLv95CpfjTI3YfA02eKlllPBmgxXl+WrVr5EmqJ3MpElQ9ZzFCoyw7rKpsQ==
-X-Google-Smtp-Source: AGHT+IHK8MR0ETZCa+Cso9ZcR2kzwzSwWzWxtW7LPWutI3GEHlRvYRnkrjbzVhChzSF546k9ojGUqQ==
-X-Received: by 2002:a05:6808:2ca:b0:3c7:3d8f:7ef1 with SMTP id 5614622812f47-3c9852be83bmr64772b6e.17.1715099234965;
-        Tue, 07 May 2024 09:27:14 -0700 (PDT)
+        bh=JKfhOSoHE1VqyRhgB0xYInvnK6a8zz5LZUqmCULZe+M=;
+        b=mCpeJh8IeiQaTJTwCFxow2jdHzn3cn+So0/N44A5oLkmpt5NFx/BtQAm0sEE07rJKe
+         B3+MzCpZ5Y9e+0gO1hfEAE97p5o4oV7PxepqAPIfUH2nwcu5a82gysHShM1lVjCu5cf2
+         Ku3+MLWyMlkoFu2q7SYCdqGzSpU20cqL8fQHS6MqiiXOyr4Zi3SGEOy2QHr9NH78+28b
+         Jvm+GawZnNEI/mZt8AaAFqaOkAHLGas0emgpSNBbSAfPQvs/u9sN/Mhi3OyiHuNG4l1i
+         UjJovPkluYfr3uFAd+Tk7CLccPOudyNHRcvsqMV93nhDMQH7MtM0FhV8frHSOqzMSv9p
+         /3Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCVcN7FRBeWl4EwykLFLZXyZi2R50VZJEPpjsTs3idIw2iDrkkTwn3DxUVv0yIvfe4RCnzd6NnNMi9u/rBwKQLfo4uN6hTPc2M2DvwS4
+X-Gm-Message-State: AOJu0YzikxG+sUBN1rEzzx7XndnE8L/zWoT+iX9PBA9bdwfn8F5hFY5p
+	YaLlRk1ZJZ8F81gNwJBvim1U9Cy1Hj21t8f6WvWNbOaw61nwydPjUz++26qYaw==
+X-Google-Smtp-Source: AGHT+IH1n5rgepkFv+DmmmLViOZnDel/iUrOgLICLSZETgB3GeR4REJxlmdXw7sr6mA1VqvgfFFkzw==
+X-Received: by 2002:a05:6808:1990:b0:3c8:665e:1e57 with SMTP id 5614622812f47-3c9852c99fdmr89999b6e.25.1715099236642;
+        Tue, 07 May 2024 09:27:16 -0700 (PDT)
 Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
-        by smtp.gmail.com with ESMTPSA id hf23-20020a05622a609700b0043d1fc9b7d9sm4160597qtb.48.2024.05.07.09.27.13
+        by smtp.gmail.com with ESMTPSA id hf23-20020a05622a609700b0043d1fc9b7d9sm4160597qtb.48.2024.05.07.09.27.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 09:27:14 -0700 (PDT)
+        Tue, 07 May 2024 09:27:16 -0700 (PDT)
 From: Ricardo Ribalda <ribalda@chromium.org>
-Date: Tue, 07 May 2024 16:27:11 +0000
-Subject: [PATCH v2 06/18] media: siano: Refactor struct sms_msg_data
+Date: Tue, 07 May 2024 16:27:13 +0000
+Subject: [PATCH v2 08/18] media: siano: Use flex arrays for sms_firmware
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240507-cocci-flexarray-v2-6-7aea262cf065@chromium.org>
+Message-Id: <20240507-cocci-flexarray-v2-8-7aea262cf065@chromium.org>
 References: <20240507-cocci-flexarray-v2-0-7aea262cf065@chromium.org>
 In-Reply-To: <20240507-cocci-flexarray-v2-0-7aea262cf065@chromium.org>
 To: Michael Tretter <m.tretter@pengutronix.de>, 
@@ -79,150 +79,35 @@ Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
  Ricardo Ribalda <ribalda@chromium.org>
 X-Mailer: b4 0.12.4
 
-Replace a single element array with a single element field.
+Replace old style single array member, with flex array.
 
-The endianness conversion code seems to support multiple elements. To
-avoid changing behavior a pointer to the single element has been used.
+The struct is allocated, but it seems like there was an over allocation
+error:
 
-This is safer than moving to a flex array, because in that case the
-structure size changes.
+fw_buf = kmalloc(ALIGN(fw->size + sizeof(struct sms_firmware),
+		SMS_ALLOC_ALIGNMENT), GFP_KERNEL | coredev->gfp_buf_flags);
 
-This fixes the following cocci warning:
-drivers/media/common/siano/smscoreapi.h:619:5-13: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
+This change fixes this cocci warning:
+drivers/media/common/siano/smscoreapi.h:669:6-13: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
 
 Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/media/common/siano/smscoreapi.c  | 10 +++++-----
- drivers/media/common/siano/smscoreapi.h  |  2 +-
- drivers/media/common/siano/smsdvb-main.c |  4 ++--
- drivers/media/common/siano/smsendian.c   |  8 +++++---
- 4 files changed, 13 insertions(+), 11 deletions(-)
+ drivers/media/common/siano/smscoreapi.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/common/siano/smscoreapi.c b/drivers/media/common/siano/smscoreapi.c
-index 7ebcb10126c9..b6f1eb5dbbdf 100644
---- a/drivers/media/common/siano/smscoreapi.c
-+++ b/drivers/media/common/siano/smscoreapi.c
-@@ -839,7 +839,7 @@ static int smscore_configure_board(struct smscore_device_t *coredev)
- 		mtu_msg.x_msg_header.msg_flags = 0;
- 		mtu_msg.x_msg_header.msg_type = MSG_SMS_SET_MAX_TX_MSG_LEN_REQ;
- 		mtu_msg.x_msg_header.msg_length = sizeof(mtu_msg);
--		mtu_msg.msg_data[0] = board->mtu;
-+		mtu_msg.msg_data = board->mtu;
- 
- 		coredev->sendrequest_handler(coredev->context, &mtu_msg,
- 					     sizeof(mtu_msg));
-@@ -852,7 +852,7 @@ static int smscore_configure_board(struct smscore_device_t *coredev)
- 		SMS_INIT_MSG(&crys_msg.x_msg_header,
- 				MSG_SMS_NEW_CRYSTAL_REQ,
- 				sizeof(crys_msg));
--		crys_msg.msg_data[0] = board->crystal;
-+		crys_msg.msg_data = board->crystal;
- 
- 		coredev->sendrequest_handler(coredev->context, &crys_msg,
- 					     sizeof(crys_msg));
-@@ -1306,7 +1306,7 @@ static int smscore_init_device(struct smscore_device_t *coredev, int mode)
- 	msg = (struct sms_msg_data *)SMS_ALIGN_ADDRESS(buffer);
- 	SMS_INIT_MSG(&msg->x_msg_header, MSG_SMS_INIT_DEVICE_REQ,
- 			sizeof(struct sms_msg_data));
--	msg->msg_data[0] = mode;
-+	msg->msg_data = mode;
- 
- 	rc = smscore_sendrequest_and_wait(coredev, msg,
- 			msg->x_msg_header. msg_length,
-@@ -1394,7 +1394,7 @@ int smscore_set_device_mode(struct smscore_device_t *coredev, int mode)
- 
- 			SMS_INIT_MSG(&msg->x_msg_header, MSG_SMS_INIT_DEVICE_REQ,
- 				     sizeof(struct sms_msg_data));
--			msg->msg_data[0] = mode;
-+			msg->msg_data = mode;
- 
- 			rc = smscore_sendrequest_and_wait(
- 				coredev, msg, msg->x_msg_header.msg_length,
-@@ -1554,7 +1554,7 @@ void smscore_onresponse(struct smscore_device_t *coredev,
- 			struct sms_msg_data *validity = (struct sms_msg_data *) phdr;
- 
- 			pr_debug("MSG_SMS_DATA_VALIDITY_RES, checksum = 0x%x\n",
--				validity->msg_data[0]);
-+				validity->msg_data);
- 			complete(&coredev->data_validity_done);
- 			break;
- 		}
 diff --git a/drivers/media/common/siano/smscoreapi.h b/drivers/media/common/siano/smscoreapi.h
-index f8789ee0d554..46dc74ac9318 100644
+index bc61bc8b9ea9..82d9f8a64d99 100644
 --- a/drivers/media/common/siano/smscoreapi.h
 +++ b/drivers/media/common/siano/smscoreapi.h
-@@ -616,7 +616,7 @@ struct sms_msg_hdr {
- 
- struct sms_msg_data {
- 	struct sms_msg_hdr x_msg_header;
--	u32 msg_data[1];
-+	u32 msg_data;
+@@ -666,7 +666,7 @@ struct sms_firmware {
+ 	u32			check_sum;
+ 	u32			length;
+ 	u32			start_address;
+-	u8			payload[1];
++	u8			payload[];
  };
  
- struct sms_msg_data2 {
-diff --git a/drivers/media/common/siano/smsdvb-main.c b/drivers/media/common/siano/smsdvb-main.c
-index d893a0e4672b..44d8fe8b220e 100644
---- a/drivers/media/common/siano/smsdvb-main.c
-+++ b/drivers/media/common/siano/smsdvb-main.c
-@@ -689,7 +689,7 @@ static int smsdvb_start_feed(struct dvb_demux_feed *feed)
- 	pid_msg.x_msg_header.msg_flags = 0;
- 	pid_msg.x_msg_header.msg_type  = MSG_SMS_ADD_PID_FILTER_REQ;
- 	pid_msg.x_msg_header.msg_length = sizeof(pid_msg);
--	pid_msg.msg_data[0] = feed->pid;
-+	pid_msg.msg_data = feed->pid;
- 
- 	return smsclient_sendrequest(client->smsclient,
- 				     &pid_msg, sizeof(pid_msg));
-@@ -711,7 +711,7 @@ static int smsdvb_stop_feed(struct dvb_demux_feed *feed)
- 	pid_msg.x_msg_header.msg_flags = 0;
- 	pid_msg.x_msg_header.msg_type  = MSG_SMS_REMOVE_PID_FILTER_REQ;
- 	pid_msg.x_msg_header.msg_length = sizeof(pid_msg);
--	pid_msg.msg_data[0] = feed->pid;
-+	pid_msg.msg_data = feed->pid;
- 
- 	return smsclient_sendrequest(client->smsclient,
- 				     &pid_msg, sizeof(pid_msg));
-diff --git a/drivers/media/common/siano/smsendian.c b/drivers/media/common/siano/smsendian.c
-index a3573814919b..b957970c7d97 100644
---- a/drivers/media/common/siano/smsendian.c
-+++ b/drivers/media/common/siano/smsendian.c
-@@ -20,11 +20,12 @@ void smsendian_handle_tx_message(void *buffer)
- 	struct sms_msg_data *msg = buffer;
- 	int i;
- 	int msg_words;
-+	u32 *msg_data = &msg->msg_data;
- 
- 	switch (msg->x_msg_header.msg_type) {
- 	case MSG_SMS_DATA_DOWNLOAD_REQ:
- 	{
--		msg->msg_data[0] = le32_to_cpu((__force __le32)(msg->msg_data[0]));
-+		msg->msg_data = le32_to_cpu((__force __le32)(msg->msg_data));
- 		break;
- 	}
- 
-@@ -33,7 +34,7 @@ void smsendian_handle_tx_message(void *buffer)
- 				sizeof(struct sms_msg_hdr))/4;
- 
- 		for (i = 0; i < msg_words; i++)
--			msg->msg_data[i] = le32_to_cpu((__force __le32)msg->msg_data[i]);
-+			msg_data[i] = le32_to_cpu((__force __le32)msg_data[i]);
- 
- 		break;
- 	}
-@@ -66,11 +67,12 @@ void smsendian_handle_rx_message(void *buffer)
- 
- 	default:
- 	{
-+		u32 *msg_data = &msg->msg_data;
- 		msg_words = (msg->x_msg_header.msg_length -
- 				sizeof(struct sms_msg_hdr))/4;
- 
- 		for (i = 0; i < msg_words; i++)
--			msg->msg_data[i] = le32_to_cpu((__force __le32)msg->msg_data[i]);
-+			msg_data[i] = le32_to_cpu((__force __le32)msg_data[i]);
- 
- 		break;
- 	}
+ /* statistics information returned as response for
 
 -- 
 2.45.0.rc1.225.g2a3ae87e7f-goog
