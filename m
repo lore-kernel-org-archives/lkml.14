@@ -1,111 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904E916130B;
-	Tue,  7 May 2024 15:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B63161318
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:15:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715094890; cv=none; b=d1fRiXmMurRDn2l9hXqrUCtoxnb4GtpueyyTwPxodZzEac0bVWw2oe6U5mg7AccbY6+amLVWFeC5Dm7wu0FA0zE8MK+g4OB8vEAGMco0ZglMoWVGFTFaz3EB0gh3IHTazwVGCzA8EPCzGG7QKm4XrwgLp2VdnUP6ZHIkA3D/4F4=
+	t=1715094911; cv=none; b=r1I/IBRDxs551FJtpTEHqP44UGdZQUIDELr8VUh1loB/EuPXy8OVpi6ujJ6qWSSQaP6GVIQUAbLBa2mNpw6laM3Z26F6z0/A+GqT3n86PbNd1iScBIBqBCZem4wnTOdUZorbyhyyQeczy/O9OgIw3b5Jh1tmfBS/fXcam7JPW8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715094890; c=relaxed/simple;
-	bh=PjCTV7JX3phTYmApghlae2CUkayVRisRZ1IV02RHcnQ=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=ROhMuaGKTVirYgm9J0HG2sx684RDJqSrvaG40RiVLUo+UIM/YEjc2WkWa9Sizo86FfLYjCAlNqzwB0eEk1lB/PuYwo5gpxoNv5cw2GOqZ+wPW4G3o3RIfDVWzZlOWItFwwpeX8QOtjQI0pBtp4N0ytLmN8CNSfoFm8bipf5WYi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dbAdNNIB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715094911; c=relaxed/simple;
+	bh=IcrNwEYyvx0qglVf0QIVfb8UjmxLQ52vtI1NNKvzKZE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JO4o1DuA/a+Dtpeviq1Eic+CaW7vVxj+cHafH3wM+MDLBsc3Si9ETQ1diUmMc+QWQp/Oca2JaNFcU58IW9S/vzBp9B8T6wDW/fs5zZxQQkDvZ++Fi9YejZ7fGFLpoCpUQZQo+7hqa8ongffjyW7qlvbRP24oPKJOQGxpJFEnNaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uBeyiRVv; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dbAdNNIB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0820C2BBFC;
-	Tue,  7 May 2024 15:14:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715094890;
-	bh=PjCTV7JX3phTYmApghlae2CUkayVRisRZ1IV02RHcnQ=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=dbAdNNIBE5BaB+wRjqZ49wM9g1YM0gVZe02Rm0cjwLHjVLhtBZR1aPXgpeYbRMnGg
-	 vmaeLQBO4tBY+Keab/UbBTMraGLfNaTSbR9kLbKI7uRJ1AXm23+gD4Y5bF74ijPOAd
-	 ImNiajCdFbskPhJZ4Rg2q+5CfSfARELppPqbm8FkGSXOmnlhWhV5+VRWAAUMl6fPBs
-	 ihKIEwNKLVLzldd2dBvasLF+KjL2zOpji/o/RlQ+4+5EuB1aZGHET/kkx8KmyQdHwF
-	 JsiZRsgY6h7Denmo+nfxhDxoDZZ41sscorJEQdQae+j2yjYoBTkAZ5i8u9WzdyHHFJ
-	 9+CxSh2LoJDQw==
-Date: Tue, 07 May 2024 10:14:48 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uBeyiRVv"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-41ba1ba5591so24713015e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:15:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715094908; x=1715699708; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=CnDKUzJ1K4d32Zvr481HYLHQmHX8rOjTCcbf7ypp6Tk=;
+        b=uBeyiRVvgK/DiKvZGopZ/Un5K6Z2SoV5WdABrpKslm0y1k38HqCjGjnYqOGD1Nfmpp
+         +omdhuod0nP3T2x8AABjqdXb4YwptzwxkmDermFBetKevz6x+ngv/vcVAcmII4tqyqvX
+         gDKmYgCsE7sme4a18tFk6z+iyP1RpDkDssdfRAwb7Nee1QXbFVdIe8VAhBFHuSJ9VpKT
+         d467eqHdisumtQyp/oGFrUdFsS5j7N1RI7XzdeyLAHVcGIKaB4UZb3fewGtF+w4EpP7c
+         +esvzZhqOR2OTWm+Z6IHkOf9pN5EgtMxFC/f4Md8pRt2cQEU44rmm4xgOQ+QeKZB0tR1
+         CW7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715094908; x=1715699708;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CnDKUzJ1K4d32Zvr481HYLHQmHX8rOjTCcbf7ypp6Tk=;
+        b=WQWcwq4eqRLu68cBVU2ce9HwXYaIz+TGRrETFatKobaRwsyRJuEIFtB+lizDdK0E1T
+         bZA3qL2aDvGkY+f6OE/q7Z54VeKv5HbiRlFmfP8peOE0+kv8jeWua8PiM9g0S3UlhceI
+         iPL5yn+Or+ojondjRICOLCfJrbo2v9CdVYczKfoUmgMVOj/7tLYAo0A2vac+CJJNhrzT
+         tDhgocCDBA9xtF58xb64tkqYGZX0gw5SzbziDXJWZ+Tsw/oh6Az7ZIEfm3XlKG1O9kQW
+         uSpwXF9mSGH4zz0xHXifE4gKWu/TlDznIXq7d/bD8SAT6Of942pBuejFo7qGRnQBhFMe
+         Qh0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWfijZZpeEQAdu1ZdyOZw76nSZ1o+j0wUSAkvygu11zs/+5gwKqdvXBQagQZbBm02ZrwHubd+BFIYvBex54GDrQkwcP233ErbPt91lS
+X-Gm-Message-State: AOJu0YzbdHLjjizQCvs0tkL2YjzxKybuUDoW4DdPicsd/lf8LDqNl7j2
+	E03dJaphu/6UOwgtLMNBDsvlUpqQ1oGpeVlFbjb2N8a6C6m0+OjHNQqRy3HmauY=
+X-Google-Smtp-Source: AGHT+IGlcCfFKvdN6aJzvhdwXvMxfsPlGA98qekQycZhIaKPKQlXQ9xf4cXeathWNzjqKmhDo4q4+Q==
+X-Received: by 2002:a05:600c:511a:b0:41b:b77c:679 with SMTP id 5b1f17b1804b1-41f71accb88mr961465e9.37.1715094907784;
+        Tue, 07 May 2024 08:15:07 -0700 (PDT)
+Received: from [192.168.0.3] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id g7-20020adffc87000000b0034d1fe44278sm13176378wrr.39.2024.05.07.08.15.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 May 2024 08:15:07 -0700 (PDT)
+Message-ID: <d2a512b2-e6b1-4675-b406-478074bbbe95@linaro.org>
+Date: Tue, 7 May 2024 16:15:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-Cc: sam@ravnborg.org, dianders@chromium.org, linux-kernel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linus.walleij@linaro.org, 
- xuxinxiong@huaqin.corp-partner.google.com, airlied@gmail.com, 
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
- devicetree@vger.kernel.org, conor+dt@kernel.org, daniel@ffwll.ch, 
- neil.armstrong@linaro.org
-In-Reply-To: <20240507135234.1356855-2-yangcong5@huaqin.corp-partner.google.com>
-References: <20240507135234.1356855-1-yangcong5@huaqin.corp-partner.google.com>
- <20240507135234.1356855-2-yangcong5@huaqin.corp-partner.google.com>
-Message-Id: <171509488827.493449.2668049686067198439.robh@kernel.org>
-Subject: Re: [PATCH v4 1/7] dt-bindings: display: panel: Add himax hx83102
- panel bindings
+User-Agent: Mozilla Thunderbird
+Subject: Re: Safety of opening up /dev/dma_heap/* to physically present users
+ (udev uaccess tag) ?
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Hans de Goede <hdegoede@redhat.com>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>,
+ Benjamin Gaignard <benjamin.gaignard@collabora.com>,
+ Brian Starkey <Brian.Starkey@arm.com>, John Stultz <jstultz@google.com>,
+ "T.J. Mercier" <tjmercier@google.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Lennart Poettering <mzxreary@0pointer.de>,
+ Robert Mader <robert.mader@collabora.com>,
+ Sebastien Bacher <sebastien.bacher@canonical.com>,
+ Linux Media Mailing List <linux-media@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ linaro-mm-sig@lists.linaro.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Milan Zamazal <mzamazal@redhat.com>, Maxime Ripard <mripard@redhat.com>,
+ Andrey Konovalov <andrey.konovalov.ynk@gmail.com>
+References: <bb372250-e8b8-4458-bc99-dd8365b06991@redhat.com>
+ <ojduxo54lpcbfg2wfuhqhy7k3phncamtklh65z7gvttcwztmhk@zkifewcy4ovi>
+ <3c0c7e7e-1530-411b-b7a4-9f13e0ff1f9e@redhat.com>
+ <e7ilwp3vc32xze3iu2ejgqlgz44codsktnvyiufjhuf2zxcnnf@tnwzgzoxvbg2>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <e7ilwp3vc32xze3iu2ejgqlgz44codsktnvyiufjhuf2zxcnnf@tnwzgzoxvbg2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
+On 07/05/2024 16:09, Dmitry Baryshkov wrote:
+> Ah, I see. Then why do you require the DMA-ble buffer at all? If you are
+> providing data to VPU or DRM, then you should be able to get the buffer
+> from the data-consuming device.
 
-On Tue, 07 May 2024 21:52:28 +0800, Cong Yang wrote:
-> In V1, discussed with Doug and Linus [1], we need break out as separate
-> driver for the himax83102-j02 controller. Beacuse "starry,himax83102-j02"
-> and in this series "BOE nv110wum-l60" "IVO t109nw41" panels use same
-> controller, they have some common CMDS. So add new documentation for
-> this panels.
-> 
-> For himax83102-j02 controller, no need 3v3 supply, so remove it.
-> 
-> [1]: https://lore.kernel.org/all/CACRpkdbzYZAS0=zBQJUC4CB2wj4s1h6n6aSAZQvdMV95r3zRUw@mail.gmail.com
-> 
-> Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-> ---
-> Chage since V4:
-> 
-> - Update commit message and add fallback compatible.
-> 
-> V3: https://lore.kernel.org/all/20240424023010.2099949-2-yangcong5@huaqin.corp-partner.google.com
-> 
-> Chage since V3:
-> 
-> - Update commit message.
-> 
-> V2: https://lore.kernel.org/all/20240422090310.3311429-2-yangcong5@huaqin.corp-partner.google.com
-> 
-> ---
->  .../display/panel/boe,tv101wum-nl6.yaml       |  2 -
->  .../bindings/display/panel/himax,hx83102.yaml | 73 +++++++++++++++++++
->  2 files changed, 73 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml
-> 
+Because we don't necessarily know what the consuming device is, if any.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Could be VPU, could be Zoom/Hangouts via pipewire, could for argument 
+sake be GPU or DSP.
 
-yamllint warnings/errors:
+Also if we introduce a dependency on another device to allocate the 
+output buffers - say always taking the output buffer from the GPU, then 
+we've added another dependency which is more difficult to guarantee 
+across different arches.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/display/panel/himax,hx83102.example.dtb: panel@0: compatible:0: 'starry,himax83102-j02, himax,hx83102' does not match '^[a-zA-Z0-9][a-zA-Z0-9,+\\-._/]+$'
-	from schema $id: http://devicetree.org/schemas/dt-core.yaml#
-Documentation/devicetree/bindings/display/panel/himax,hx83102.example.dtb: /example-0/dsi/panel@0: failed to match any schema with compatible: ['starry,himax83102-j02, himax,hx83102']
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240507135234.1356855-2-yangcong5@huaqin.corp-partner.google.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+---
+bod
