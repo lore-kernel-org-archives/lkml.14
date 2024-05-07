@@ -1,53 +1,58 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560E416D334
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:58:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6010616C84A
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097509; cv=none; b=Zk0vaa/9ODyZ00ZnnViTigqy5uub9g/f34/8/sViIblwCXuiSEg4eXFYFMhNWDMs3Ns5l8OsRZJ3V+4xAs0+ME5yk2L2FtPVEuTuY1kqAL6c6CeHjB7wt+TJE1p8Rq6OysdQMpfW6NI6mxd9TtHCZSqPrT5H213045cfepfSkPo=
+	t=1715097510; cv=none; b=DOoT+8VC2nNkl1f7oGwE5d0Sx1j2d0Vtw9vo8D8+4D39ln5EXs2Y3XBvWGJMIMillC6QvSkOeYrI+Vhq5Nd/sJbVv132T09ASoxidG2Rs+9C52VyxwsJN9E9cxUKqx5oS4fPqQgQQqMtIa/AZanwfcIZnOW/FjnVhs5bATe+T6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715097509; c=relaxed/simple;
-	bh=GkkN7T6+cimw4JT93KNHujzpgLF1lKsT4txhFyN6FDM=;
+	s=arc-20240116; t=1715097510; c=relaxed/simple;
+	bh=GnaXsr+zbd/U7GYWO/XXTnyktbvceHVhOXczQVr4XWs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FAGYfQxnYgF2FQ0sj3X8Lb5f6rUs79AygAQPUDLAUiM6dICngUPw1iLdyKUJTA3bj1WBnVyzVdVEaksb8wgNAOfZoqayob9d+aj2GC44dlQAipgINviSxJ6aD101ZOZJ6wdGL2sJRrPEsPSTPAUau3R5AD+olY6GpqFyJXTInic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PiQembaJ; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=Oin06P6R09yx9h6HvNxgD6Pbkn57g3jAQ4N8UZ5zqs0J2QH3BrgRDX2cfNDPYYV878kABUkLgl9IsidPbVE/PKWBMt5PFCoKdKoEYpgvMrWGHYRAcAZ6o1faRzsNeTJFCmhbkgPVcvjLaI6hlAPf86xgPPDQNGPPSTOlxfLpDZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZedpxqK9; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PiQembaJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZedpxqK9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715097506;
+	s=mimecast20190719; t=1715097504;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zKGQpKXK/VsaKh591Gi5ng8g+rbrmbkAlShhkhIq5DE=;
-	b=PiQembaJ6TE9maTZmW7r0MQmX+adRkq/q4QHyUUlrBSuBb2J3gMFtcvo/jocUFl1056Hcf
-	ivjMr3yG6M2RPSBVlEMETBAWnPC79X5n8IuigAR93q1Wu0ipxWQZpXioa3dV+PSEYDGeUd
-	PdG1CZovG6M+Zlgoc57xraUu936emwM=
+	bh=5xfI8GlIpdk/dq7ZsckyDRl9W0stP1kv+OVmnAnTfxI=;
+	b=ZedpxqK9XNFMYAsemBoTBH2RizBIffP99E4PjrKvoAYQJsGtmFMaFBKwuKQlr9kh4xipOk
+	OKp8PKj/Rxh4hnNquE1AIds4f3SEHSQdo5xCvyr549YTHCbhqde+dWbia5K/s2esYZIeJX
+	0++Z10IjhazLwk+BNcqIzH1FspDxYD4=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-551-QRQjOmf1P1Wkbar0la-dlQ-1; Tue, 07 May 2024 11:58:21 -0400
-X-MC-Unique: QRQjOmf1P1Wkbar0la-dlQ-1
+ us-mta-530--TK-8O3SNhOueOYN4IhQyA-1; Tue, 07 May 2024 11:58:20 -0400
+X-MC-Unique: -TK-8O3SNhOueOYN4IhQyA-1
 Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E0207857A81;
-	Tue,  7 May 2024 15:58:20 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D716D802BFB;
+	Tue,  7 May 2024 15:58:19 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BE97C492CAA;
-	Tue,  7 May 2024 15:58:20 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9AF89492CAA;
+	Tue,  7 May 2024 15:58:19 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
 Cc: Sean Christopherson <seanjc@google.com>,
+	Yu Zhang <yu.c.zhang@linux.intel.com>,
+	Chao Peng <chao.p.peng@linux.intel.com>,
+	Fuad Tabba <tabba@google.com>,
+	Michael Roth <michael.roth@amd.com>,
+	Isaku Yamahata <isaku.yamahata@intel.com>,
 	Kai Huang <kai.huang@intel.com>
-Subject: [PATCH 16/17] KVM: x86/mmu: Initialize kvm_page_fault's pfn and hva to error values
-Date: Tue,  7 May 2024 11:58:16 -0400
-Message-ID: <20240507155817.3951344-17-pbonzini@redhat.com>
+Subject: [PATCH 10/17] KVM: x86/mmu: Move private vs. shared check above slot validity checks
+Date: Tue,  7 May 2024 11:58:10 -0400
+Message-ID: <20240507155817.3951344-11-pbonzini@redhat.com>
 In-Reply-To: <20240507155817.3951344-1-pbonzini@redhat.com>
 References: <20240507155817.3951344-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -62,36 +67,66 @@ X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
 From: Sean Christopherson <seanjc@google.com>
 
-Explicitly set "pfn" and "hva" to error values in kvm_mmu_do_page_fault()
-to harden KVM against using "uninitialized" values.  In quotes because the
-fields are actually zero-initialized, and zero is a legal value for both
-page frame numbers and virtual addresses.  E.g. failure to set "pfn" prior
-to creating an SPTE could result in KVM pointing at physical address '0',
-which is far less desirable than KVM generating a SPTE with reserved PA
-bits set and thus effectively killing the VM.
+Prioritize private vs. shared gfn attribute checks above slot validity
+checks to ensure a consistent userspace ABI.  E.g. as is, KVM will exit to
+userspace if there is no memslot, but emulate accesses to the APIC access
+page even if the attributes mismatch.
 
+Fixes: 8dd2eee9d526 ("KVM: x86/mmu: Handle page fault for private memory")
+Cc: Yu Zhang <yu.c.zhang@linux.intel.com>
+Cc: Chao Peng <chao.p.peng@linux.intel.com>
+Cc: Fuad Tabba <tabba@google.com>
+Cc: Michael Roth <michael.roth@amd.com>
+Cc: Isaku Yamahata <isaku.yamahata@intel.com>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 Reviewed-by: Kai Huang <kai.huang@intel.com>
-Message-ID: <20240228024147.41573-16-seanjc@google.com>
+Message-ID: <20240228024147.41573-10-seanjc@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu/mmu_internal.h | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kvm/mmu/mmu.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-index dfd9ff383663..ce2fcd19ba6b 100644
---- a/arch/x86/kvm/mmu/mmu_internal.h
-+++ b/arch/x86/kvm/mmu/mmu_internal.h
-@@ -307,6 +307,9 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
- 		.req_level = PG_LEVEL_4K,
- 		.goal_level = PG_LEVEL_4K,
- 		.is_private = err & PFERR_PRIVATE_ACCESS,
-+
-+		.pfn = KVM_PFN_ERR_FAULT,
-+		.hva = KVM_HVA_ERR_BAD,
- 	};
- 	int r;
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 0d884d0b0f35..ba50b93e93ed 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4317,11 +4317,6 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
+ 			return RET_PF_EMULATE;
+ 	}
  
+-	if (fault->is_private != kvm_mem_is_private(vcpu->kvm, fault->gfn)) {
+-		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
+-		return -EFAULT;
+-	}
+-
+ 	if (fault->is_private)
+ 		return kvm_faultin_pfn_private(vcpu, fault);
+ 
+@@ -4359,9 +4354,24 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
+ {
+ 	int ret;
+ 
++	/*
++	 * Note that the mmu_invalidate_seq also serves to detect a concurrent
++	 * change in attributes.  is_page_fault_stale() will detect an
++	 * invalidation relate to fault->fn and resume the guest without
++	 * installing a mapping in the page tables.
++	 */
+ 	fault->mmu_seq = vcpu->kvm->mmu_invalidate_seq;
+ 	smp_rmb();
+ 
++	/*
++	 * Now that we have a snapshot of mmu_invalidate_seq we can check for a
++	 * private vs. shared mismatch.
++	 */
++	if (fault->is_private != kvm_mem_is_private(vcpu->kvm, fault->gfn)) {
++		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
++		return -EFAULT;
++	}
++
+ 	/*
+ 	 * Check for a relevant mmu_notifier invalidation event before getting
+ 	 * the pfn from the primary MMU, and before acquiring mmu_lock.
 -- 
 2.43.0
 
