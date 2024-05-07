@@ -1,137 +1,68 @@
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp94.iad3b.emailsrvr.com (smtp94.iad3b.emailsrvr.com [146.20.161.94])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7440C21373
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 20:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E878314B947
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 20:02:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=146.20.161.94
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715112041; cv=none; b=pyeIPfB483vQAcndCwiiTH0KuEWX8SZLY+py0rT0nTLXf3J7iy2UORZgQ0IGYcuz/9+42VyOWmnFMb75CuPZWE4JN11hhLsXwutj2NGHmXqUpNVtGdttmBRWgWGQ+fzBlfOxwAOK9e4myNWu9t1aHjmf46ssrOlIsbPjWccyiMA=
+	t=1715112124; cv=none; b=PQySA4SAEMxcvmaud1JI1kR2D3Qv3/wsyhI/9vJMjbJ/WPJguTIJwqoxPotFr7yROUn/GlEyTULa1VWwfwh3c/Qf7F8kSMFdTBXBGsj/UfDnt64lJfTrW6njBh32BdUfvuzs6c95hEIuhbG9wc6Pjl3lpj0Hi6O/b4GeQqLtixA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715112041; c=relaxed/simple;
-	bh=X+Xadyc7sdCFiVHFD+t7jMRpxudrW1hnI3AG8/xjqPw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zk7BpY7VbmZwaLrWCeVe24Ih/rcGocP3n8yOAvJoAezVo2dEUox1cpsMz+fZdx6mnBWW7JIPFw4rLIIrauMfiOQZWZ5dozG0mutB6eh65Y7Hi/EgnrBmci8+xYF/ZRJAYoiIrqiTZqxvSMpPMhh1Vs5pihONSjnq7lt9Pllavns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ux55KAKb; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715112124; c=relaxed/simple;
+	bh=Qkybr0ICtPOdOIgP4Bi2fvNRD8VjwHKkQtnvW+vmQBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=O1RER2uRb+AH0vYfvRaGkdUta9UcY/K+LA6G3YmvU4BIXnoMzXRUbWmgxMwaQoHU9q3Gy1I6P8iq4wqa3hvg0gfBFP1FPRXDd9T1yB5j1Aao2JPgv+NcydEo6wyvpWGMLNW/JcwiSQsM4eTXbn2j6B8d63lAiwl6rrBSGMOfQrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oddbit.com; spf=pass smtp.mailfrom=oddbit.com; dkim=pass (1024-bit key) header.d=oddbit.com header.i=@oddbit.com header.b=oyHizF33; arc=none smtp.client-ip=146.20.161.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oddbit.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oddbit.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ux55KAKb"
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-deb99fa47c3so2049807276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 13:00:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715112038; x=1715716838; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z6TCN9feXfNh1jAxhagWihzVe8ZvEfnj2X4SFV0NO20=;
-        b=Ux55KAKbWZ81kDEnyZ610y9+/YYIP1alVvWbk1m16otzzW/+0akVJDHScN6gdhKWp1
-         PADrPwjIlKZ1ToY42+be6QtzyB//2T7MrjJuL69bIZmPp4tGE4vvDvrBwJbPaVpHTWul
-         KdMl81iU6jVfyPm8wIlFWOvBl1Bkm/JPEwDN1Pi5dVJe3SRAT9wrKoB5Fz8+h+P+ZeoD
-         RGOTNG9cuYHPWAmADbGm56NotC1ye2JrzCchJD6zXY5luo0pPVp9/0RcwDFcPRmEHuz3
-         MYJ7pfMSfImvORBDPbvu+FYesevIVlu2fNR45+QEgZ93s2vYtylvRmlmruK8MLfJ+H3+
-         QS0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715112038; x=1715716838;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z6TCN9feXfNh1jAxhagWihzVe8ZvEfnj2X4SFV0NO20=;
-        b=eLynN9jTBprzT5yTt7JUf7b0TkPvaEABXUlyt2pc39BJtDZdb7DrMW3M2rgK8GmSWV
-         8vwFng07MJEznmf0ES5QtAvcjP4THEK+gX8XZcTd2EUGrUkTXdcJZfWMBkiTbQjX6A9t
-         8PcnJX//Gk50fD7A8C/6hMXtXjS+fjPWL0phHCopnSiNboeNOP0jVGzfntkLTYWWuiZX
-         X5qsTyUk0fjBf2WCZV11qffl5FAsAZzB1131+fFydCe9Z/wWgE7+KKYrw3A+AlCxsdtL
-         JZdnMWfMB/oA55X0Riu7jTCoLLKeAzKVvZXCQIJ1MR6bwbQmjo9VZgI8zmyw0miCtE1R
-         hsrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUyg77UJPacMx3SbYKF56jO4b89exiVbSXK5oiQp4K1O/XA1GDj333Na8HiEmpVHiq2mlqz4NBIAxUvJn3eegS4tFkdf0VGrA9d1D00
-X-Gm-Message-State: AOJu0YxwzbosPSb6VJ9vDb2Skeo6AETC03zGgpcXczX95NOXz8dzRE0t
-	cXY86AzOL0Uizu2BUG5A6PTgPpIRVt267TfdZUYXVb1pV+l9YSg1qtCuxH2Gv0XGhWYpALMizRW
-	BwaOx/hQKkjgI2tKYdYPNBt+G1YLXsd4YISDj2A==
-X-Google-Smtp-Source: AGHT+IF60hyBbjrnBKrhZePsOuZiXssFt8q1j+2GeW5Nikua4rfikn2nZlySLqvaFitVitDqb6f/6c7TSTgAxbIfE+0=
-X-Received: by 2002:a25:8f88:0:b0:dd1:48c9:53f3 with SMTP id
- 3f1490d57ef6-debb9e4f729mr646274276.60.1715112038171; Tue, 07 May 2024
- 13:00:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=oddbit.com header.i=@oddbit.com header.b="oyHizF33"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=oddbit.com;
+	s=20180920-g2b7aziw; t=1715110992;
+	bh=Qkybr0ICtPOdOIgP4Bi2fvNRD8VjwHKkQtnvW+vmQBs=;
+	h=Date:From:To:Subject:From;
+	b=oyHizF33EJ9iPYpjHhjzhbUyxd4IKJc047Qjp1SV2xtzZaVViI5QEGEQXBIwOUhcK
+	 6jS1781D76NO4uaIx/i5/Cyw0q+6i2hyCTju4SK/sLJaQZaSQ4o/ASrGlWvQNyM3sZ
+	 g6ZBjMao8iV6oR9+pxsJaoxVAZyZQjPl/RZImsLk=
+X-Auth-ID: lars@oddbit.com
+Received: by smtp12.relay.iad3b.emailsrvr.com (Authenticated sender: lars-AT-oddbit.com) with ESMTPSA id B0AD9C00FC;
+	Tue,  7 May 2024 15:43:11 -0400 (EDT)
+Date: Tue, 7 May 2024 15:43:11 -0400
+From: Lars Kellogg-Stedman <lars@oddbit.com>
+To: Duoming Zhou <duoming@zju.edu.cn>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hams@vger.kernel.org, pabeni@redhat.com, kuba@kernel.org, edumazet@google.com, 
+	jreuter@yaina.de, dan.carpenter@linaro.org
+Subject: Re: [PATCH net v5 1/4] ax25: Use kernel universal linked list to
+ implement ax25_dev_list
+Message-ID: <sijkuyypbnelg3w2shbxm3y6zu3qhfurvpvkoij5eluolnqr5w@y5dq74ycxzkm>
+References: <cover.1715065005.git.duoming@zju.edu.cn>
+ <bd49e83817604e61a12c9bf688a0825f116e67c0.1715065005.git.duoming@zju.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+G9fYs1ZN2K=UHOjrwRR2JNE-M0nf9iW_Q-YPzVgmW+9daU4Q@mail.gmail.com>
- <CA+G9fYs1F=kO11-+DtAOsNwZGEd8mmojXEfXfg431JG=Spubcg@mail.gmail.com>
- <CAA8EJpoMwy2w3a9VF3ejGkcxFK905DCczZOdD4k-cd7ouKHYcA@mail.gmail.com>
- <CA+G9fYuGLz76C9F=onq6u2hk9_YYHhyjT+bvwXmeN8U6bhejNQ@mail.gmail.com>
- <CAA8EJpp5TO9CkwWCUy_OL5T4px9gTjmB-pKPr1dNPgudVc78Tg@mail.gmail.com> <c3013f57-0d0b-4e3c-9658-7cc989b77c73@app.fastmail.com>
-In-Reply-To: <c3013f57-0d0b-4e3c-9658-7cc989b77c73@app.fastmail.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Tue, 7 May 2024 23:00:26 +0300
-Message-ID: <CAA8EJpqqYrSLoLmhBLTG=dH2dxk=8Ab4PW35nt6b_Vfe5722Fg@mail.gmail.com>
-Subject: Re: arm64: defconfig: gcc-8: failed: AttributeError: module
- 'argparse' has no attribute 'BooleanOptionalAction'
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, lkft-triage@lists.linaro.org, 
-	Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, Anders Roxell <anders.roxell@linaro.org>, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bd49e83817604e61a12c9bf688a0825f116e67c0.1715065005.git.duoming@zju.edu.cn>
+X-Classification-ID: 3459c125-4b56-4fd5-9dc7-757dbe40275f-1-1
 
-On Tue, 7 May 2024 at 22:18, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Tue, May 7, 2024, at 20:19, Dmitry Baryshkov wrote:
-> > On Tue, 7 May 2024 at 21:06, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >> On Tue, 7 May 2024 at 20:58, Dmitry Baryshkov
-> >> <dmitry.baryshkov@linaro.org> wrote:
-> >> >
-> >> > On Tue, 7 May 2024 at 16:13, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >> > >
-> >> > > On Tue, 7 May 2024 at 17:13, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >> > > >
-> >> > > > The arm and arm64 with gcc-8 builds failed on Linux next-20240507 tag
-> >> > > > with gcc-8 due to following warnings / errors.
-> >> > > >
-> >> > > > arm64 and arm:
-> >> > > >   defconfig - gcc-8 - failed
-> >> > >
-> >> > > Anders bisected this build problem and found the first bad commit:
-> >> > >
-> >> > > 07a2f8716c41 drm/msm/gen_header: allow skipping the validation
-> >> > >
-> >> > > Steps to reproduce:
-> >> > > -----
-> >> > > # tuxmake --runtime podman --target-arch arm64 --toolchain gcc-8
-> >> > > --kconfig defconfig
-> >> >
-> >> > What is the python version on that platform / system?
-> >>
-> >> # python --version
-> >>  Python 3.7.3
-> >
-> > EOL.
-> > I'll check what we can do, but please consider updating the platform.
->
-> I don't think we can rely on everyone to have 3.9, 3.8
-> is not EOL yet, and we do want to still test in distros with
-> older compilers that may also come with old python.
->
-> It should just work with a regular optional argument instead
-> of the BooleanOptionalAction (without the --no-validate flag):
->
-> https://docs.python.org/3/howto/argparse.html#introducing-optional-arguments
->
-> > @@ -538,6 +538,9 @@ class Parser(object):
-> >               self.variants.add(reg.domain)
-> >
-> >       def do_validate(self, schemafile):
-> > +             if self.validate == False:
-> > +                     return
-> > +
-> >               try:
-> >                       from lxml import etree
->
-> This bit may have to become 'if not self.validate',
-> since the flag in this case is None rather than equal
-> to False. This also improves readability.
+On Tue, May 07, 2024 at 03:03:39PM GMT, Duoming Zhou wrote:
+>  typedef struct ax25_dev {
+> -	struct ax25_dev		*next;
+> +	struct list_head	list;
 
-Could you please send a patch?
+Would it make sense to replace this with:
+
+LIST_HEAD(ax25_dev_list);
+
+And then get rid of:
+
+> +	/* Initialized the list for the first entry */
+> +	if (!ax25_dev_list.next)
+> +		INIT_LIST_HEAD(&ax25_dev_list);
 
 -- 
-With best wishes
-Dmitry
+Lars Kellogg-Stedman <lars@oddbit.com> | larsks @ {irc,twitter,github}
+http://blog.oddbit.com/                | N1LKS
