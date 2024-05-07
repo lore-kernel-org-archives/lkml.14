@@ -1,59 +1,66 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 174A5165FCF;
-	Tue,  7 May 2024 17:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73ECA168AF5
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 17:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715103908; cv=none; b=cWPs+Wo/U8UVspkKJbOuNEymw92P27p0rsUKLPaxoXSqSajxLhIF6YaJY6cu79ErAP9uyu6cmmjZxnX0d7amxsZYmpEYNeF5OdNaLsuPxUjLQoWy91qKZmTlM+ikmIOeHxV2EGdcuiZj0lNPm8C9Ar+iL+gcc6G62Z9X4zUqd8E=
+	t=1715104104; cv=none; b=RY/pBeE77T89O/rdkfpoC4uuT3TPXkQGLYggxVxqT3pFmfgQw9tzjkbtvBDoWqj+m0Pl7BThc0UTc2i4/fmBAfW8bBNCbB1VM2cpp0MbCGbOwFDS+AE+Vzu4gb4Y45MFCZqnR+k3lb68knHETzA5ymEbe1A+ttrnTyw28uo3CR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715103908; c=relaxed/simple;
-	bh=Umv70e0c6nv8fGGaeErTB90Fn15g5pIK9CSartcaWHE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pEwHLdyhiXz/ksGGnJRGN/Ma0Ufo1bfG2GCaNKZpzDj80uE3DI+66agA39nnhC8kDAqDwol6e1vAN79FQOPsSOZCLpmsXUzaMQhZ+7wfaB3aI9W6D5J1fChCFQMpEHjVxZXdZB61Pb+vOmnhlLVCSpUjcOzseIVlr5BF52pPcDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YWis6Nuk; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715104104; c=relaxed/simple;
+	bh=G4sKnEbJdMGDqqOOZcGjKlz86s6SEc8Aai9Vaa1zX6Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P2Ix3WVqriC1OnUBBX1h4CaktK3PiatjzFfNRfrrZXVCrzhxzj8d/34Q9fqNRm7BGXPq1y7S9pQ/mZ6nV5gK3G/9dIokRyFrdmhP835N98x2icKD3i/ll3TKopf9dAbCB3bmTmgsFZ6O7KwcZCon4OgOmijcKzfv2jkBlL1SKBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E16icK21; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YWis6Nuk"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-41b79451153so27918995e9.2;
-        Tue, 07 May 2024 10:45:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715103905; x=1715708705; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Z39aNp6ho/cansGz6z4As7qPLlCotOLLvlN9d9rLPQI=;
-        b=YWis6NukXYhibzoqhRIV43bGUst5Jax//GdGntfRqalyjxvff+CtK0oXTRlsQSbZKp
-         LsE43eZIIUkvCIu7Yh2UCeBTYa5ia2C+2hKWIkm60bkEBidO4GttRuwTj48WP0kuGBMi
-         LxewzZGdrEhk5Y53fAC1vI14XWPMkKMaN0rGCEp8tMix/F+uXObBi0K1gIaEMF12qTtY
-         zNvSS+nYjf66S3l0BRTCXXkmEPMizcriljHobEhf7WGC23K2CkSpCU344KzWXe4ipdlV
-         VBsyRyYA6Z4bvErsZEAQp1xCTaUgJLd0GZBZyn1Vp4QZ7DB36HAfh0k2P5ZtyXIWZQ+Q
-         RH9Q==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E16icK21"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715104101;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=U7NSWv2sngdGccyzHhW9zKoCfPe+XKegdqJlyPFodbI=;
+	b=E16icK2184rGoPWH2bEBWPXJZtGGn9IuSbomFmgWyhqqa1ruGKqhGhtqOmdBud9HvxmNF8
+	k+VmqjaN1GCvbVHjRurw9a5R6X8ORqMflupozOg9FWcquJGX2GuADfbdyV2D6n3le9qlAy
+	7cR7RWsjIaPqUqnhqUs2tSPvXoMUcDw=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-308-PoGURnTGMFCdzMgdngfTjw-1; Tue, 07 May 2024 13:48:19 -0400
+X-MC-Unique: PoGURnTGMFCdzMgdngfTjw-1
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-56c1ac93679so2820194a12.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 10:48:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715103905; x=1715708705;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z39aNp6ho/cansGz6z4As7qPLlCotOLLvlN9d9rLPQI=;
-        b=FBbuWDqTOnLaRQWSmeZuX5flKFK8innoGy3ulUrC+IbtSBrQOnkj6ZgxjAV83hdqwN
-         gM7nKgLYdkErOI9JIOjm+Y1l3vY5o5p7dTUX67n74Lhq+MusEUDcDUIVGh1m+GW1d8Lj
-         FQd8Jd58oYc/jyW4BEpDA+EhKAlrzHBJxtaCfMgvlqK9ePNkhHDTpkObYXi5mjI1MwLh
-         WxYFWHr9TsiurdU8jwimY3Xx8jiJfvxVuFN/NZrpZemPhN5YG6gKtiuPZjjihyrGXtoW
-         64WTAWVQgck8wwno17SU2AbH22IS9zOC+KYrJhAG1gr6ncnTou2PGiZrMZC9ZRtGd6h6
-         YqXg==
-X-Forwarded-Encrypted: i=1; AJvYcCXClNEhaL/8uwpvhUt5O0lyRdbJWI6tEyI9U7dctLxHNtKJOAQJY3RpCJwmVb96oE5BmYyYOHHTZpBhU/YslMh5dSae6eF4qM4gI8tGkpYPhnquIWcfYD2V5TsoaTPi82JOgLaod8Cynv8g0CHdLWFLdlA/lIsChqW5rw559Ex7FL5woFaXrHkl0CZK0TlmegCjc4Pd9F2CBgl5H/KfQ7Tky9M=
-X-Gm-Message-State: AOJu0YwVnNnINz/Kshlm/ySz1r2posjyb3vu85jdcnGLcM58Q5e779tf
-	E3iR7jGreHcLsVVcYX8Le3DU/P25QwAV4P3FHOMcSTZ9qaBiHZ25
-X-Google-Smtp-Source: AGHT+IEeIO2faXt4HPtaKPSv53LPLgfetsgWUZ2rrUB+vNo+nARJS5K74POuW8sS151Q2FCZsZtlxw==
-X-Received: by 2002:a05:600c:458d:b0:41c:503:9a01 with SMTP id 5b1f17b1804b1-41f71ecb256mr3191275e9.25.1715103905216;
-        Tue, 07 May 2024 10:45:05 -0700 (PDT)
-Received: from [10.254.108.81] (munvpn.amd.com. [165.204.72.6])
-        by smtp.gmail.com with ESMTPSA id l8-20020a05600c4f0800b0041bfa349cadsm23910612wmq.16.2024.05.07.10.45.03
+        d=1e100.net; s=20230601; t=1715104098; x=1715708898;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U7NSWv2sngdGccyzHhW9zKoCfPe+XKegdqJlyPFodbI=;
+        b=p1vSUUo0+KOW667q/kUZDH7M21NlgLF1yGBmOzpsWUugtcSIERZSLqfU4D52svmhRP
+         +NNboOI3voE0kU79a3iA7EgfPSiAMoxEzsrU+nM0k1unwCFp772Gb3oK4foHXky/lq+f
+         RuNlj1z38q+hNEHj+0szR8LnVI6N50ZWnSQESK4gzi/WFm68cZX+/XwK1Cb8Rzplb8/v
+         dx1A2OsmD9hipND+1SwzI86jejT6YYD5/ibRW0UUmk4+cV1kLzbKWTQOpepDrSGzQOcG
+         P0F1MFXfgK4YJ1v+Fj+b0nHPjKSaYIjXSbh7Rhx0eT6uMI4p5YNpE1C6qzJdJ8qDsntM
+         +FJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxiuRDGEQMUBBfzeiRBb5oBzo1XrWfTOirByG77Po5I9ot//DGl/ZzSgGtaZqCrsrRjnuABnwyciEQJaDhKjAGbHjTPma2Ns21O8Ok
+X-Gm-Message-State: AOJu0Yz5NPW1cIiKuLVXk2uMENiPBVFQ7QGVBVaBq8QrMBDEu2RCPtDY
+	NPh29qIM5NaxnBezz1CoBiwg/XJqQVERZg0yksGL/7Wag/+6VzTqD9joW+Up/erp4BuZR7ZvAd8
+	WesuikRstEplNoE1sMl4arfbAjDORlfNI37gNhcWa5JaGvhRLAHHyp/9u3jaPQw==
+X-Received: by 2002:a50:8ac8:0:b0:572:9d8a:20f4 with SMTP id 4fb4d7f45d1cf-5731da81922mr272396a12.32.1715104098655;
+        Tue, 07 May 2024 10:48:18 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHWO0ZFjdL3U8Z+4qw3ObkPaduqAGsZ1NMcH6woNnJqGwZdQRg/xxY47WaZMcri4ZL0ky7IXA==
+X-Received: by 2002:a50:8ac8:0:b0:572:9d8a:20f4 with SMTP id 4fb4d7f45d1cf-5731da81922mr272359a12.32.1715104098236;
+        Tue, 07 May 2024 10:48:18 -0700 (PDT)
+Received: from [192.168.10.81] ([151.95.155.52])
+        by smtp.googlemail.com with ESMTPSA id b14-20020a0564021f0e00b00572cebc5f32sm5776641edb.65.2024.05.07.10.48.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 May 2024 10:45:04 -0700 (PDT)
-Message-ID: <d68417df-1493-421a-8558-879abe36d6fa@gmail.com>
-Date: Tue, 7 May 2024 19:45:02 +0200
+        Tue, 07 May 2024 10:48:17 -0700 (PDT)
+Message-ID: <044e8953-56f0-405e-9b50-7dde4ca8986b@redhat.com>
+Date: Tue, 7 May 2024 19:48:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,109 +68,173 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Linaro-mm-sig] Re: [PATCH] epoll: try to be a _bit_ better about
- file lifetimes
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
- keescook@chromium.org, axboe@kernel.dk, christian.koenig@amd.com,
- dri-devel@lists.freedesktop.org, io-uring@vger.kernel.org, jack@suse.cz,
- laura@labbott.name, linaro-mm-sig@lists.linaro.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-media@vger.kernel.org, minhquangbui99@gmail.com,
- sumit.semwal@linaro.org,
- syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com,
- syzkaller-bugs@googlegroups.com
-References: <202405031110.6F47982593@keescook>
- <20240503211129.679762-2-torvalds@linux-foundation.org>
- <20240503212428.GY2118490@ZenIV>
- <CAHk-=wjpsTEkHgo1uev3xGJ2bQXYShaRf3GPEqDWNgUuKx0JFw@mail.gmail.com>
- <20240504-wohngebiet-restwert-6c3c94fddbdd@brauner>
- <CAHk-=wj_Fu1FkMFrjivQ=MGkwkKXZBuh0f4BEhcZHD5WCvHesw@mail.gmail.com>
- <CAHk-=wj6XL9MGCd_nUzRj6SaKeN0TsyTTZDFpGdW34R+zMZaSg@mail.gmail.com>
- <b1728d20-047c-4e28-8458-bf3206a1c97c@gmail.com>
- <ZjoKX4nmrRdevyxm@phenom.ffwll.local>
- <CAHk-=wgh5S-7sCCqXBxGcXHZDhe4U8cuaXpVTjtXLej2si2f3g@mail.gmail.com>
+Subject: Re: [PATCH v15 02/20] KVM: x86: Add hook for determining max NPT
+ mapping level
+To: Michael Roth <michael.roth@amd.com>, kvm@vger.kernel.org
+Cc: linux-coco@lists.linux.dev, linux-mm@kvack.org,
+ linux-crypto@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+ tglx@linutronix.de, mingo@redhat.com, jroedel@suse.de,
+ thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org, seanjc@google.com,
+ vkuznets@redhat.com, jmattson@google.com, luto@kernel.org,
+ dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com,
+ peterz@infradead.org, srinivas.pandruvada@linux.intel.com,
+ rientjes@google.com, dovmurik@linux.ibm.com, tobin@ibm.com, bp@alien8.de,
+ vbabka@suse.cz, kirill@shutemov.name, ak@linux.intel.com,
+ tony.luck@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+ alpergun@google.com, jarkko@kernel.org, ashish.kalra@amd.com,
+ nikunj.dadhania@amd.com, pankaj.gupta@amd.com, liam.merwick@oracle.com
+References: <20240501085210.2213060-1-michael.roth@amd.com>
+ <20240501085210.2213060-3-michael.roth@amd.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 Content-Language: en-US
-From: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>
-In-Reply-To: <CAHk-=wgh5S-7sCCqXBxGcXHZDhe4U8cuaXpVTjtXLej2si2f3g@mail.gmail.com>
+Autocrypt: addr=pbonzini@redhat.com; keydata=
+ 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
+In-Reply-To: <20240501085210.2213060-3-michael.roth@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Am 07.05.24 um 18:46 schrieb Linus Torvalds:
-> On Tue, 7 May 2024 at 04:03, Daniel Vetter <daniel@ffwll.ch> wrote:
->> It's really annoying that on some distros/builds we don't have that, and
->> for gpu driver stack reasons we _really_ need to know whether a fd is the
->> same as another, due to some messy uniqueness requirements on buffer
->> objects various drivers have.
-> It's sad that such a simple thing would require two other horrid
-> models (EPOLL or KCMP).
->
-> There'[s a reason that KCMP is a config option - *some* of that is
-> horrible code - but the "compare file descriptors for equality" is not
-> that reason.
->
-> Note that KCMP really is a broken mess. It's also a potential security
-> hole, even for the simple things, because of how it ends up comparing
-> kernel pointers (ie it doesn't just say "same file descriptor", it
-> gives an ordering of them, so you can use KCMP to sort things in
-> kernel space).
->
-> And yes, it orders them after obfuscating the pointer, but it's still
-> not something I would consider sane as a baseline interface. It was
-> designed for checkpoint-restore, it's the wrong thing to use for some
-> "are these file descriptors the same".
->
-> The same argument goes for using EPOLL for that. Disgusting hack.
->
-> Just what are the requirements for the GPU stack? Is one of the file
-> descriptors "trusted", IOW, you know what kind it is?
->
-> Because dammit, it's *so* easy to do. You could just add a core DRM
-> ioctl for it. Literally just
->
->          struct fd f1 = fdget(fd1);
->          struct fd f2 = fdget(fd2);
->          int same;
->
->          same = f1.file && f1.file == f2.file;
->          fdput(fd1);
->          fdput(fd2);
->          return same;
->
-> where the only question is if you also woudl want to deal with O_PATH
-> fd's, in which case the "fdget()" would be "fdget_raw()".
->
-> Honestly, adding some DRM ioctl for this sounds hacky, but it sounds
-> less hacky than relying on EPOLL or KCMP.
->
-> I'd be perfectly ok with adding a generic "FISAME" VFS level ioctl
-> too, if this is possibly a more common thing. and not just DRM wants
-> it.
->
-> Would something like that work for you?
+On 5/1/24 10:51, Michael Roth wrote:
+> In the case of SEV-SNP, whether or not a 2MB page can be mapped via a
+> 2MB mapping in the guest's nested page table depends on whether or not
+> any subpages within the range have already been initialized as private
+> in the RMP table. The existing mixed-attribute tracking in KVM is
+> insufficient here, for instance:
+> 
+> - gmem allocates 2MB page
+> - guest issues PVALIDATE on 2MB page
+> - guest later converts a subpage to shared
+> - SNP host code issues PSMASH to split 2MB RMP mapping to 4K
+> - KVM MMU splits NPT mapping to 4K
+> - guest later converts that shared page back to private
+> 
+> At this point there are no mixed attributes, and KVM would normally
+> allow for 2MB NPT mappings again, but this is actually not allowed
+> because the RMP table mappings are 4K and cannot be promoted on the
+> hypervisor side, so the NPT mappings must still be limited to 4K to
+> match this.
+> 
+> Add a hook to determine the max NPT mapping size in situations like
+> this.
+> 
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Michael Roth <michael.roth@amd.com>
+> ---
+>   arch/x86/include/asm/kvm-x86-ops.h |  1 +
+>   arch/x86/include/asm/kvm_host.h    |  1 +
+>   arch/x86/kvm/mmu/mmu.c             | 18 ++++++++++++++++--
+>   3 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kvm-x86-ops.h b/arch/x86/include/asm/kvm-x86-ops.h
+> index c81990937ab4..566d19b02483 100644
+> --- a/arch/x86/include/asm/kvm-x86-ops.h
+> +++ b/arch/x86/include/asm/kvm-x86-ops.h
+> @@ -140,6 +140,7 @@ KVM_X86_OP_OPTIONAL_RET0(vcpu_get_apicv_inhibit_reasons);
+>   KVM_X86_OP_OPTIONAL(get_untagged_addr)
+>   KVM_X86_OP_OPTIONAL(alloc_apic_backing_page)
+>   KVM_X86_OP_OPTIONAL_RET0(gmem_prepare)
+> +KVM_X86_OP_OPTIONAL_RET0(private_max_mapping_level)
+>   KVM_X86_OP_OPTIONAL(gmem_invalidate)
+>   
+>   #undef KVM_X86_OP
+> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+> index c6c5018376be..87265b73906a 100644
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1816,6 +1816,7 @@ struct kvm_x86_ops {
+>   	void *(*alloc_apic_backing_page)(struct kvm_vcpu *vcpu);
+>   	int (*gmem_prepare)(struct kvm *kvm, kvm_pfn_t pfn, gfn_t gfn, int max_order);
+>   	void (*gmem_invalidate)(kvm_pfn_t start, kvm_pfn_t end);
+> +	int (*private_max_mapping_level)(struct kvm *kvm, kvm_pfn_t pfn);
+>   };
+>   
+>   struct kvm_x86_nested_ops {
+> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> index 510eb1117012..0d556da052f6 100644
+> --- a/arch/x86/kvm/mmu/mmu.c
+> +++ b/arch/x86/kvm/mmu/mmu.c
+> @@ -4271,6 +4271,20 @@ static inline u8 kvm_max_level_for_order(int order)
+>   	return PG_LEVEL_4K;
+>   }
+>   
+> +static u8 kvm_max_private_mapping_level(struct kvm *kvm, kvm_pfn_t pfn,
+> +					u8 max_level, int gmem_order)
+> +{
+> +	if (max_level == PG_LEVEL_4K)
+> +		return PG_LEVEL_4K;
+> +
+> +	max_level = min(kvm_max_level_for_order(gmem_order), max_level);
+> +	if (max_level == PG_LEVEL_4K)
+> +		return PG_LEVEL_4K;
+> +
+> +	return min(max_level,
+> +		   static_call(kvm_x86_private_max_mapping_level)(kvm, pfn));
+> +}
 
-Well the generic approach yes, the DRM specific one maybe. IIRC we need 
-to be able to compare both DRM as well as DMA-buf file descriptors.
+Since you're returning 0 both as a default and, later in the series, for non-SNP guests, you need to treat 0 as "don't care":
 
-The basic problem userspace tries to solve is that drivers might get the 
-same fd through two different code paths.
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index de35dee25bf6..62ad38b2a8c9 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4274,6 +4274,8 @@ static inline u8 kvm_max_level_for_order(int order)
+  static u8 kvm_max_private_mapping_level(struct kvm *kvm, kvm_pfn_t pfn,
+  					u8 max_level, int gmem_order)
+  {
++	u8 req_max_level;
++
+  	if (max_level == PG_LEVEL_4K)
+  		return PG_LEVEL_4K;
+  
+@@ -4281,8 +4283,11 @@ static u8 kvm_max_private_mapping_level(struct kvm *kvm, kvm_pfn_t pfn,
+  	if (max_level == PG_LEVEL_4K)
+  		return PG_LEVEL_4K;
+  
+-	return min(max_level,
+-		   static_call(kvm_x86_private_max_mapping_level)(kvm, pfn));
++	req_max_level = static_call(kvm_x86_private_max_mapping_level)(kvm, pfn);
++	if (req_max_level)
++		max_level = min(max_level, req_max_level);
++
++	return req_max_level;
+  }
+  
+  static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
 
-For example application using OpenGL/Vulkan for rendering and VA-API for 
-video decoding/encoding at the same time.
 
-Both APIs get a fd which identifies the device to use. It can be the 
-same, but it doesn't have to.
+Not beautiful but it does the job I guess.
 
-If it's the same device driver connection (or in kernel speak underlying 
-struct file) then you can optimize away importing and exporting of 
-buffers for example.
-
-Additional to that it makes cgroup accounting much easier because you 
-don't count things twice because they are shared etc...
-
-Regards,
-Christian.
-
->
->                   Linus
+Paolo
 
