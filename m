@@ -1,268 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BA478C8C;
-	Tue,  7 May 2024 06:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB8478B50;
+	Tue,  7 May 2024 06:41:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715064029; cv=none; b=KJM5FRg39qL9ZXIlq3C4lTEvsT47GsZRqq05Xk4zL21gEus2ctqzSXP5QQ0qW79KJnnJXu5Ay80P/ALuITZKhpkijA2OK/3cGkUJQJI98V7TmcoF8B9TzURDF3YiPSMcEji42XA+dSlIzbA5miy35ZaRLf7UZHPTQ45vEpzUkmQ=
+	t=1715064070; cv=none; b=Yaz8lADQ9NWEUfagwSw80esR9+WRK4mz0TK3PyApDY5Jq/Zdh0qaFDwmhCLVRXBELvyxA5eWBRQQ2+51ymYKLmY9aODuFKamFmiD5Hf/ja1ryLip0LC4zsJJzMmzv9tu00EmKlnh8qXCCnw2gsWs5f4DYQUucbwjjcNZO9VUb8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715064029; c=relaxed/simple;
-	bh=lRji6tTDCLCRRf3ujzewsDMDsH2PzV2Eu2B51lXry4w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ift8yvt9xfoNtmGa+MZVqbYPyZA03CNadsVKG4Mfw/I2w32ZK/TgRHF5LCMRcwNbF/Fy+Ga2L6BPBKNnUjr+xsy4zki9naYcmIqBjZWvTsQ37U5+Gyspgu1l9OTzzCtidFKVzOvzKzH9X4JHToN6xKx6HsNz78MxWzImqAgxS9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHRNj7nI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715064070; c=relaxed/simple;
+	bh=5eQd0Sx0nkNvoNKC2RtYfFZZ8Y8MDo0O95i8gKHAf/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YOUApXTebXVTqHeAH9pq7Kk57O6w8uhAwD5ueK4s66sfrXH39XjNgCWqYdfBYfmIwOxpG/NBuROjX8yUdibSs+vV3aHRxsO80QRzWUNuJ6TyYgS5nh5L++n+78Tktb5yR9qBmUT3op1oZTwpnQMfdxuBnyDLy0oLPY2Sn5l06Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbWxii1a; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHRNj7nI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90084C4AF18;
-	Tue,  7 May 2024 06:40:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbWxii1a"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAB66C2BBFC;
+	Tue,  7 May 2024 06:41:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715064029;
-	bh=lRji6tTDCLCRRf3ujzewsDMDsH2PzV2Eu2B51lXry4w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=kHRNj7nIPewkXNrvTtYtB1Ut+pfqG96EG0ihcYqcQf04GXFLQ02EKvyMdYtY7caRK
-	 K+w7/DFMyguWiRaPYDYvcX0zi940X9fskGL9nV7sCYBLbrgB28RtTBouKMvwy+BS8C
-	 yt7qjuekm0En1EiIJTELzxUNQS8SW/IrfNBYiKD0nrFVO4oHz9HmptCtqPdFSMSClH
-	 Bqc+2bwsExrESWIRsFJTN3q1uM5AoV4ZZAmG5TmJCuvg05BoeMEDKr1Mx0+2UMIvuV
-	 n4cdOmrcv/FP7JnqfTg7dKWiIGX4DOq3OgAjGGAuEyTEaLqUopOTrHfz4FBQDZR7C4
-	 ZJgz8ouXbEx8A==
-Date: Tue, 7 May 2024 12:05:51 +0530
-From: Naveen N Rao <naveen@kernel.org>
-To: Gautam Menghani <gautam@linux.ibm.com>
-Cc: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu, 
-	Vaibhav Jain <vaibhav@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org
-Subject: Re: [PATCH v6] arch/powerpc/kvm: Add support for reading VPA
- counters for pseries guests
-Message-ID: <bk4zdqrzthsxzd5p5ppai4pociac2ww2lsuto5zk7w6snlotuc@2ut5owudosz6>
-References: <20240506145605.73794-1-gautam@linux.ibm.com>
+	s=k20201202; t=1715064070;
+	bh=5eQd0Sx0nkNvoNKC2RtYfFZZ8Y8MDo0O95i8gKHAf/o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RbWxii1agc1VNp9F5VnoykEMn0LJC7dPsrVtwC6wdulCP4xU4B1Cvrf6VVwfJk8Qg
+	 Ib8W8wAFoTdD+zHDnk8zykj6hFoK8cyJDQfnUXQsy2q3viEiDUsu8K4Tdss/32tECG
+	 JRkQqJUSlLdCi3+bwyqvw3UCJApfZg0iSfuUDZy/R8YZuk0DlLHxyudrXWdySoL/+K
+	 uOKjeB2ti9YRd860/eLY54fe9yeXji87biT6sM4ouTPQ2hAsiBj1FacvUW+khUmDTZ
+	 fXz1vu7WDokf/eAifZMwwPDTGXuszKKWAI65F6kHkMKIZKrcc0zHHsqg04Qv/Re20o
+	 rbNwJ8lT5FpZg==
+Message-ID: <cbf4e021-a128-4122-8e19-66f139edc4d9@kernel.org>
+Date: Tue, 7 May 2024 08:41:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240506145605.73794-1-gautam@linux.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/13] dt-bindings: pinctrl: qcom,pmic-gpio: drop pm8008
+To: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Das Srinagesh <quic_gurus@quicinc.com>,
+ Satya Priya <quic_c_skakit@quicinc.com>, Stephen Boyd <swboyd@chromium.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
+ <20240506150830.23709-9-johan+linaro@kernel.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240506150830.23709-9-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, May 06, 2024 at 08:26:03PM GMT, Gautam Menghani wrote:
-> PAPR hypervisor has introduced three new counters in the VPA area of
-> LPAR CPUs for KVM L2 guest (see [1] for terminology) observability - 2
-> for context switches from host to guest and vice versa, and 1 counter
-> for getting the total time spent inside the KVM guest. Add a tracepoint
-> that enables reading the counters for use by ftrace/perf. Note that this
-> tracepoint is only available for nestedv2 API (i.e, KVM on PowerVM).
+On 06/05/2024 17:08, Johan Hovold wrote:
+> The binding for PM8008 is being reworked so that internal details like
+> interrupts and register offsets are no longer described. This
+> specifically also involves dropping the gpio child node and its
+> compatible string which is no longer needed.
 > 
-> [1] Terminology:
-> a. L1 refers to the VM (LPAR) booted on top of PAPR hypervisor
-> b. L2 refers to the KVM guest booted on top of L1.
+> Note that there are currently no users of the upstream binding and
+> driver.
 > 
-> Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 > ---
-> v5 -> v6:
-> 1. Use TRACE_EVENT_FN to enable/disable counters only once.
-> 2. Remove the agg. counters from vcpu->arch.
-> 3. Use PACA to maintain old counter values instead of zeroing on every
-> entry.
-> 4. Simplify variable names
-> 
-> v4 -> v5:
-> 1. Define helper functions for getting/setting the accumulation counter
-> in L2's VPA
-> 
-> v3 -> v4:
-> 1. After vcpu_run, check the VPA flag instead of checking for tracepoint
-> being enabled for disabling the cs time accumulation.
-> 
-> v2 -> v3:
-> 1. Move the counter disabling and zeroing code to a different function.
-> 2. Move the get_lppaca() inside the tracepoint_enabled() branch.
-> 3. Add the aggregation logic to maintain total context switch time.
-> 
-> v1 -> v2:
-> 1. Fix the build error due to invalid struct member reference.
-> 
->  arch/powerpc/include/asm/lppaca.h | 11 +++++--
->  arch/powerpc/include/asm/paca.h   |  5 +++
->  arch/powerpc/kvm/book3s_hv.c      | 52 +++++++++++++++++++++++++++++++
->  arch/powerpc/kvm/trace_hv.h       | 27 ++++++++++++++++
->  4 files changed, 92 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/lppaca.h b/arch/powerpc/include/asm/lppaca.h
-> index 61ec2447dabf..f40a646bee3c 100644
-> --- a/arch/powerpc/include/asm/lppaca.h
-> +++ b/arch/powerpc/include/asm/lppaca.h
-> @@ -62,7 +62,8 @@ struct lppaca {
->  	u8	donate_dedicated_cpu;	/* Donate dedicated CPU cycles */
->  	u8	fpregs_in_use;
->  	u8	pmcregs_in_use;
-> -	u8	reserved8[28];
-> +	u8	l2_counters_enable;  /* Enable usage of counters for KVM guest */
-> +	u8	reserved8[27];
->  	__be64	wait_state_cycles;	/* Wait cycles for this proc */
->  	u8	reserved9[28];
->  	__be16	slb_count;		/* # of SLBs to maintain */
-> @@ -92,9 +93,13 @@ struct lppaca {
->  	/* cacheline 4-5 */
->  
->  	__be32	page_ins;		/* CMO Hint - # page ins by OS */
-> -	u8	reserved12[148];
-> +	u8	reserved12[28];
-> +	volatile __be64 l1_to_l2_cs_tb;
-> +	volatile __be64 l2_to_l1_cs_tb;
-> +	volatile __be64 l2_runtime_tb;
-> +	u8 reserved13[96];
->  	volatile __be64 dtl_idx;	/* Dispatch Trace Log head index */
-> -	u8	reserved13[96];
-> +	u8	reserved14[96];
->  } ____cacheline_aligned;
->  
->  #define lppaca_of(cpu)	(*paca_ptrs[cpu]->lppaca_ptr)
-> diff --git a/arch/powerpc/include/asm/paca.h b/arch/powerpc/include/asm/paca.h
-> index 1d58da946739..f20ac7a6efa4 100644
-> --- a/arch/powerpc/include/asm/paca.h
-> +++ b/arch/powerpc/include/asm/paca.h
-> @@ -278,6 +278,11 @@ struct paca_struct {
->  	struct mce_info *mce_info;
->  	u8 mce_pending_irq_work;
->  #endif /* CONFIG_PPC_BOOK3S_64 */
-> +#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
-> +	u64 l1_to_l2_cs;
-> +	u64 l2_to_l1_cs;
-> +	u64 l2_runtime_agg;
-> +#endif
->  } ____cacheline_aligned;
->  
->  extern void copy_mm_to_paca(struct mm_struct *mm);
-> diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-> index 8e86eb577eb8..ed69ad58bd02 100644
-> --- a/arch/powerpc/kvm/book3s_hv.c
-> +++ b/arch/powerpc/kvm/book3s_hv.c
-> @@ -4108,6 +4108,54 @@ static void vcpu_vpa_increment_dispatch(struct kvm_vcpu *vcpu)
->  	}
->  }
->  
-> +static inline int kvmhv_get_l2_counters_status(void)
-> +{
-> +	return get_lppaca()->l2_counters_enable;
-> +}
-> +
-> +static inline void kvmhv_set_l2_counters_status(int cpu, bool status)
-> +{
-> +	if (status)
-> +		lppaca_of(cpu).l2_counters_enable = 1;
-> +	else
-> +		lppaca_of(cpu).l2_counters_enable = 0;
-> +}
-> +
-> +int kmvhv_counters_tracepoint_regfunc(void)
-> +{
-> +	int cpu;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		kvmhv_set_l2_counters_status(cpu, true);
-> +	}
-> +	return 0;
-> +}
-> +
-> +void kmvhv_counters_tracepoint_unregfunc(void)
-> +{
-> +	int cpu;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		kvmhv_set_l2_counters_status(cpu, false);
-> +	}
-> +}
-> +
-> +static void do_trace_nested_cs_time(struct kvm_vcpu *vcpu)
-> +{
-> +	struct lppaca *lp = get_lppaca();
-> +	u64 l1_to_l2_ns, l2_to_l1_ns, l2_runtime_ns;
-> +
-> +	l1_to_l2_ns = tb_to_ns(be64_to_cpu(lp->l1_to_l2_cs_tb));
-> +	l2_to_l1_ns = tb_to_ns(be64_to_cpu(lp->l2_to_l1_cs_tb));
-> +	l2_runtime_ns = tb_to_ns(be64_to_cpu(lp->l2_runtime_tb));
-> +	trace_kvmppc_vcpu_stats(vcpu, l1_to_l2_ns - local_paca->l1_to_l2_cs,
-> +					l2_to_l1_ns - local_paca->l2_to_l1_cs,
-> +					l2_runtime_ns - local_paca->l2_runtime_agg);
+>  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml | 3 ---
+>  1 file changed, 3 deletions(-)
 
-Depending on how the hypervisor works, if the vcpu was in l2 when the 
-tracepoint is enabled, the counters may not be updated on exit and we 
-may emit a trace with all values zero. If that is possible, it might be 
-a good idea to only emit the trace if any of the counters are non-zero.
+Dropping compatibles from bindings must happen after they are dropped
+from kernel, so this should go after spmi-gpio patch.
 
-Otherwise, this looks good to me.
-Acked-by: Naveen N Rao <naveen@kernel.org>
+Best regards,
+Krzysztof
 
-
-- Naveen
-
-> +	local_paca->l1_to_l2_cs = l1_to_l2_ns;
-> +	local_paca->l2_to_l1_cs = l2_to_l1_ns;
-> +	local_paca->l2_runtime_agg = l2_runtime_ns;
-> +}
-> +
->  static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
->  				     unsigned long lpcr, u64 *tb)
->  {
-> @@ -4156,6 +4204,10 @@ static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
->  
->  	timer_rearm_host_dec(*tb);
->  
-> +	/* Record context switch and guest_run_time data */
-> +	if (kvmhv_get_l2_counters_status())
-> +		do_trace_nested_cs_time(vcpu);
-> +
->  	return trap;
->  }
->  
-> diff --git a/arch/powerpc/kvm/trace_hv.h b/arch/powerpc/kvm/trace_hv.h
-> index 8d57c8428531..dc118ab88f23 100644
-> --- a/arch/powerpc/kvm/trace_hv.h
-> +++ b/arch/powerpc/kvm/trace_hv.h
-> @@ -238,6 +238,9 @@
->  	{H_MULTI_THREADS_ACTIVE,	"H_MULTI_THREADS_ACTIVE"}, \
->  	{H_OUTSTANDING_COP_OPS,		"H_OUTSTANDING_COP_OPS"}
->  
-> +int kmvhv_counters_tracepoint_regfunc(void);
-> +void kmvhv_counters_tracepoint_unregfunc(void);
-> +
->  TRACE_EVENT(kvm_guest_enter,
->  	TP_PROTO(struct kvm_vcpu *vcpu),
->  	TP_ARGS(vcpu),
-> @@ -512,6 +515,30 @@ TRACE_EVENT(kvmppc_run_vcpu_exit,
->  			__entry->vcpu_id, __entry->exit, __entry->ret)
->  );
->  
-> +TRACE_EVENT_FN(kvmppc_vcpu_stats,
-> +	TP_PROTO(struct kvm_vcpu *vcpu, u64 l1_to_l2_cs, u64 l2_to_l1_cs, u64 l2_runtime),
-> +
-> +	TP_ARGS(vcpu, l1_to_l2_cs, l2_to_l1_cs, l2_runtime),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(int,		vcpu_id)
-> +		__field(u64,		l1_to_l2_cs)
-> +		__field(u64,		l2_to_l1_cs)
-> +		__field(u64,		l2_runtime)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->vcpu_id  = vcpu->vcpu_id;
-> +		__entry->l1_to_l2_cs = l1_to_l2_cs;
-> +		__entry->l2_to_l1_cs = l2_to_l1_cs;
-> +		__entry->l2_runtime = l2_runtime;
-> +	),
-> +
-> +	TP_printk("VCPU %d: l1_to_l2_cs_time=%llu ns l2_to_l1_cs_time=%llu ns l2_runtime=%llu ns",
-> +		__entry->vcpu_id,  __entry->l1_to_l2_cs,
-> +		__entry->l2_to_l1_cs, __entry->l2_runtime),
-> +	kmvhv_counters_tracepoint_regfunc, kmvhv_counters_tracepoint_unregfunc
-> +);
->  #endif /* _TRACE_KVM_HV_H */
->  
->  /* This part must be outside protection */
-> -- 
-> 2.44.0
-> 
