@@ -1,105 +1,92 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4533314D703
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 09:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9876414D451;
+	Tue,  7 May 2024 09:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715073862; cv=none; b=UEmNxuf/dMjy0Q09jNYeh0XdivwvIrcwe6SxVE5qafiKhvvCgs2RruBUDMFntvpFb60wXPOa7HJnQxcoPL3aNTJmFRp4i8fN7/HwcuDF3P0YDj/sDQmMWqnVb7pAW9yDy56Pa2Wo3kbjH1a5hTAbvBm5SSn2D8Xwn6soyRkz64s=
+	t=1715073885; cv=none; b=UW/Lv/x8m1wxv0exZoIwvOIuOmGPsxjHU6iZFQ0J8y2VngvF1PmXFADR1LRYAwFKuRUpJlJdrrJmhEG8qFMdYdZVhYgnsi3woPlGjrgFfYuXPuChMoDMGyyvc3CvXWFt1ajOjM90TbhUS0zheEYsTRJ80nv5Ijg/MmWrLvFdGwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715073862; c=relaxed/simple;
-	bh=DbtwU8InckKBXtmRVsasd2jzJ8OYWGwrmpwdaL5r02Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qcUY1M2O2UpvkHP7XBO6Mgs2HopegwZ5hltidGrmCkPth4/gCVklkTh/OkX6ItkFcJMzoMSOrWdpooCG5SNPqKV0KKmSINqdL7oR5Fcl8V2xhiChpKbNImmaeOzHkcbmUS3TlGT6iiPbz6CxvaoFWGWab8yIi//qfjZ2SOWycvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=QLgOEwMW; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1715073885; c=relaxed/simple;
+	bh=+yW59onyXg0Pbvf487LVUARxqJvPaBeg6/Sc/ikl7Nw=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=R2M6+5k+KnPvFJaQB6f34jkmFET74+X2NCarso4ka5t6DWyt+fkIkK9dPL4vn1t0UeIOD/Z8TRRtJl0C/aNcyNTX8wEx6AURLE4tcctjOxzhmsdEaMGK0KUh8k006IEHgZMKzi+bNXf64Oow9uC3DPP3eyHUpgxDZSz1ABHrqzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=gVyt63eS; arc=none smtp.client-ip=162.62.57.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="QLgOEwMW"
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 72EBA424B4
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 09:24:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1715073857;
-	bh=L+nK70gt6qYfXCC8GaVCochZ/g6jNnBIwcw8pbcit5Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=QLgOEwMW8B+O+PGNDksSKzMS2xYmiwFHdG8TQT65kP6vFf51FtRMKbeuVsyGL87vu
-	 m4EudJfjAiPXS7IRGEJ3TRXFfokWcT19bQlvWf+7BEnIW0ed7Wh0mQ6J0YGlO8K4vr
-	 oQ9SUi6h4iDKcILhrE7FLoT1N8pJ7J/kfpiDRdu+kRCZkF1xEaiKtkl+pR/JJ1uXE3
-	 mZbPiOlywNcYln2n7msO0Nnlp+8lHaePBskKXY/1N1oL+WaM1s5UMU0fEqqt8ObIi5
-	 THT3PPep7zmLcKcwFNLZnEoyV+31FWUfVyOdTFIM14XMesIXH/j5ReO6FpWHwO1Zh9
-	 gqDFv+w7Ne8HQ==
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-34da03e19beso2257799f8f.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 02:24:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715073856; x=1715678656;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=L+nK70gt6qYfXCC8GaVCochZ/g6jNnBIwcw8pbcit5Q=;
-        b=ss26t1cQNfwQGZyhP7kBQ4/CN1Fho9wMYvXUvhDkGVjAvBMItWSf4ZK8jOshIfvs4W
-         roOh9xbVP2Qvbr1G2ey8nT+sNxzcJoOXrZp6dw16r+/xcHgem2OmogkORfp0TZrkf6BD
-         c4Qj9wv3LOijBdDTbioDTt3pojZuosNKRYCRzx21zrMUWWEbrN4j10ahrGEZLJJhMGrK
-         Onm9P60+EPg1jcuzuYusRJQhjRbuBJD/tEQCcTLsd4Aj21XL9iYCIOWRpZ/gge1I1WlK
-         B+KyzYhFpssUl7KbCt/c1LsQaKNp1kPDGo5PrdKcDxV3FRC+Ls2pI3YYapvivKE3/mLg
-         ljxw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhMtOWRuqPUaYpYeKX32jBaxuGhXQP3HSsFdjzDhn+9EwcnP2rOAd3Jc7JrReO+0/2rux7MTY1U6Su9yRifKPRUnPbtLu+xeRzI4of
-X-Gm-Message-State: AOJu0YzGqpdabDXiV7Lqqd9Ft6bNBMn2kL4ItXW1eOU7kSATUpojwGHm
-	ANEXYdyaBRZwyatoYycjXr5SksUHynie//kzABk5OGjIX8Pxch3wk3tkRXwVTiBg0NgeReg/PMB
-	mQMeW60t2xdQwa4P8h59CvCm4ECwTWb+edn4MsBrLPNuTN6CY8OrFKfu7f0iRXx7pVrt70feQaj
-	KhQdoCGJ1vM7w/stF70BH7+5IhYfjD1vbGba7q4hPf6MOyPcVB2Tbo
-X-Received: by 2002:a5d:55c3:0:b0:34c:6b36:33e5 with SMTP id i3-20020a5d55c3000000b0034c6b3633e5mr7548858wrw.71.1715073856797;
-        Tue, 07 May 2024 02:24:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGJawWFBRi2pUGfZ2AxzikXotCoi+SGcm4po3SlZ4MEuw3m5XCHXhPk5jDnRdkoqcxw9Tms4qQp5r+6576BHgA=
-X-Received: by 2002:a5d:55c3:0:b0:34c:6b36:33e5 with SMTP id
- i3-20020a5d55c3000000b0034c6b3633e5mr7548841wrw.71.1715073856520; Tue, 07 May
- 2024 02:24:16 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="gVyt63eS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1715073576; bh=yO/k90JymUOXJTCvLXq3LY5H5yoKY6KSmEgQ9wMKlJc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=gVyt63eSG4URXpc+GaOAIBpWiMDj4in5Tlrb84tjARNEAt0YfDMuD0ZcnQxgb9RYQ
+	 iHMJtSdxXJN89EJ58BNxfByWFy5nk+s4yY1bK0UJKbaj5fU9weAGmbrgyeZ8C8PT4C
+	 nyokwNbAsBK4WMGYbTQ2kxH9QjcTTKRCsTBvQxlw=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrsza15-1.qq.com (NewEsmtp) with SMTP
+	id 4DCB0648; Tue, 07 May 2024 17:19:28 +0800
+X-QQ-mid: xmsmtpt1715073568t102emhnj
+Message-ID: <tencent_816D842DE96C309554E8E2ED9ACC6078120A@qq.com>
+X-QQ-XMAILINFO: MZChPk4K8ikNlT2Eddi9Ggrs0oV4G9NbiHl6MtG6ekOPsfZopI6QIM/z/aIUSO
+	 goslJ60GRySBTLq1ngjWjUItTYKOInN+rKDsQj1lXUOaKrAy2xb3k/g7opZJGfA5tS80axKCTdbM
+	 FbJCtj93Em7qowzBXjUSDBZVRSa3oTkCmArSaPyAlcrQuOQbIH7XeVR01ecsiBRpH3kEDLeCTOzf
+	 UhoOq3XXWJhFkp+KjGlG4yZz301QSR24RQmOqzRGZkunD2iPByVKS3eQRy1U7mYMGwtHGvk78lp/
+	 SVzJdl0iXuJYqknPzgI8EWaz2vCT7z+jHxhtI0ihlzbDXGwnRIoyoGOmVzRQ6tRo7Dg25HcjONW8
+	 /O9rFDYzp/48tIsf1aHg9j4oMnpIKWQ7QxT8BCh5vXkgQ4UcNEO6NYH7BoPpobmRgRywEnPJV4WG
+	 czoC30voVF2ILfkwGk4nHFmL9rBH9Qt6Iv9uR1lISK3CIsz59VHPTljSiyUo0U0cclc1ysEBUBwO
+	 dlgxxB8SeV5s1tXj+/YzB/dvNJjABSOocMzEHSydcUKhfyEZRfsl3JnI2kSmtQTfJR3PjrYYo9xS
+	 CARXLrJKczs85wwFpC4Jf2MyEcfe9iuAACRB6XFf7YjhjDhUEHpyUvwB2oOd3n2u1xg7YUoLXVG/
+	 l1AgzbIZchyLnMmR8SyQ+YUDTptGk+aOGRN6sxZZvdx48aXJOPjDNGFHp1yrj6zfVUugG3Q/oF6g
+	 gTuWBrddmh2FSdGuULKPym9/5/jMjBoDRTi8h1Zf6mNFu7MbQTmGJlUDuQTzcyHt9JMmxX+M51zM
+	 y7axxD4RjO7MCzBOSMi28IfBqfRIOVY545KEnozNg0At+S5o9d6ugvfrdLbafcMNDj8vJgYooz10
+	 tfVe4iY5WBeO+GxXhjyKTm9SuXUf8GFJgHeEcAt3hE/lhxKTHJMC/IXFPO8TQ5cLvNnNvljJrN
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+c48865e11e7e893ec4ab@syzkaller.appspotmail.com
+Cc: bfoster@redhat.com,
+	kent.overstreet@linux.dev,
+	linux-bcachefs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: [PATCH] bcachefs: fix oob in bch2_sb_clean_to_text
+Date: Tue,  7 May 2024 17:19:29 +0800
+X-OQ-MSGID: <20240507091928.2789219-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <000000000000918c290617b914ba@google.com>
+References: <000000000000918c290617b914ba@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502091215.13068-1-en-wei.wu@canonical.com> <f47e0bb6-fb3f-4d0e-923a-cdb5469b6cbe@lunn.ch>
-In-Reply-To: <f47e0bb6-fb3f-4d0e-923a-cdb5469b6cbe@lunn.ch>
-From: En-Wei WU <en-wei.wu@canonical.com>
-Date: Tue, 7 May 2024 11:24:05 +0200
-Message-ID: <CAMqyJG0kMFShx8Kir17mNZ1rD7SaBt2f_Wpv4ir+5-92v3bNaA@mail.gmail.com>
-Subject: Re: [PATCH] e1000e: fix link fluctuations problem
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: jesse.brandeburg@intel.co, anthony.l.nguyen@intel.com, 
-	intel-wired-lan@lists.osuosl.org, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rickywu0421@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-> Why PHY is this?
-It's the Intel I219-LM, and I haven't found any other device having
-the same issue.
+When got too small clean field, entry will never equal vstruct_end(&clean->field), 
+the dead loop resulted in out of bounds access.
 
-> It might be the PHY manufacture has an errata, since
-> this is probably not the MAC causing the problem, but the PHY itself.
-Yes. The problem seems to be a PHY problem. I'm wondering if doing a
-workaround on MAC like this patch is suitable.
+Fixes: 12bf93a429c9 ("bcachefs: Add .to_text() methods for all superblock sections")
+Fixes: a37ad1a3aba9 ("bcachefs: sb-clean.c")
+Reported-and-tested-by: syzbot+c48865e11e7e893ec4ab@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+---
+ fs/bcachefs/sb-clean.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-For further information, please check here:
-https://patchwork.ozlabs.org/project/intel-wired-lan/patch/20240503101836.32755-1-en-wei.wu@canonical.com/
+diff --git a/fs/bcachefs/sb-clean.c b/fs/bcachefs/sb-clean.c
+index 5980ba2563fe..02101687853e 100644
+--- a/fs/bcachefs/sb-clean.c
++++ b/fs/bcachefs/sb-clean.c
+@@ -285,7 +285,7 @@ static void bch2_sb_clean_to_text(struct printbuf *out, struct bch_sb *sb,
+ 	prt_newline(out);
+ 
+ 	for (entry = clean->start;
+-	     entry != vstruct_end(&clean->field);
++	     entry < vstruct_end(&clean->field);
+ 	     entry = vstruct_next(entry)) {
+ 		if (entry->type == BCH_JSET_ENTRY_btree_keys &&
+ 		    !entry->u64s)
+-- 
+2.43.0
 
-On Tue, 7 May 2024 at 03:39, Andrew Lunn <andrew@lunn.ch> wrote:
->
-> On Thu, May 02, 2024 at 05:12:15PM +0800, Ricky Wu wrote:
-> > As described in https://bugzilla.kernel.org/show_bug.cgi?id=218642,
-> > some e1000e NIC reports link up -> link down -> link up when hog-plugging
-> > the Ethernet cable.
-> >
-> > The problem is because the unstable behavior of Link Status bit in
-> > PHY Status Register of some e1000e NIC.
->
-> Why PHY is this? It might be the PHY manufacture has an errata, since
-> this is probably not the MAC causing the problem, but the PHY itself.
->
->         Andrew
