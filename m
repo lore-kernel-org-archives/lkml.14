@@ -1,173 +1,96 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A01AD5D;
-	Tue,  7 May 2024 10:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628EC14F118;
+	Tue,  7 May 2024 10:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715078597; cv=none; b=GIrXmbhCplvGaALoc4P8pGq1COajmPleT8PgMr6FAE0QMOSRr/muayWgYPs3TPK7xUnQp6A8s2TgBxAhLMOq/TO1nDbFIJuyyCdE2LLt1KJJJ6BLQm+CouVQglM1USpTAKQAi0LUR8yU2lRwgbKDubMgJjJWc/qyMH3hV5F51dw=
+	t=1715078686; cv=none; b=mZLhdzUdR2niUrCPnMf9zR4zv7XU7KPq7lP1mxeqq1GWt7hlzBZknqeM42TfdjC/EiEj4dcNxtRTSC1W6rwIGTFOL6M8D4L7/uvFKkpAj5rh6hKxNzaE4ZXLS+MdzcjOOB/m5MYdU19NRSqfcdLS6BEw1xyujzsYUN21g2k77cU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715078597; c=relaxed/simple;
-	bh=+TRQfeq8Nw7b6DoQt3C1fHE3AuYEeUkPp5208iLu1YA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YhBTLQwhZxHARfcPFcoFEOfkChNoYPOJWvPdZjoTAqkBg9K8HKYu2QX5mxa+w306lWWWNdiHfSMJD7fHZXkV5flhLHH4Ub0W0B9JQK4L7+uy3+P83gHSa46wJGUSXH31YIYEOFAt+LQlh6xj5BdP5+vK3tFNFvr8viylPCofejU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TPJNzY3H; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715078686; c=relaxed/simple;
+	bh=zbaNIyKrKMoQ1XFqRlHQyqFViL3R5sD8FLdycEfNc8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UUzWu5f8k6jdG2Bfn8fSUrhDYhDrJV/J1dfye0PI8n9uLY4p0LJgOg4mTZrFALjmRCeZKTBpwVzbzxDzTusQVsx0xy4tZl8lVbd7D5r2gNMVfj4ROfUob7ZKSkD8EAu69dTeHgtWIWoFawFkCD7dM1txJ5csZYjBGuD3ZR3TvDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=qVOqEXLr; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TPJNzY3H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715078596; x=1746614596;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+TRQfeq8Nw7b6DoQt3C1fHE3AuYEeUkPp5208iLu1YA=;
-  b=TPJNzY3HVrt/y16SROkopaGKy8UdProYDKJCfpZkhpC2VeT7FslxMBt5
-   KwbU86rIQY0OdYMINHltm8JYaDf/x5MI8cCGAPVdOueLa4u86yeUWWceg
-   oPx5dmqbWS1iBukos4VtmzSem7pFpJh8R+mqxUygY5hKzlBmgikVyuktd
-   crslEGfAS4Pzt19yPEPhr/G4lLMj1e1X+E2F9OfTBcZMWSDSYjZjak27k
-   ma64nmxGuoRN+DZ+DisPHEdBEd1QHMtelFfT2SPu16Tav5UwNYQt3Fvnn
-   SOoneBA8e9RcrM571GYTYa7scpcFs+HvVjeZmQa2wkQpWuSR5SSDl0Oxb
-   g==;
-X-CSE-ConnectionGUID: nsCoCiQERXaGxwvUBTLDJw==
-X-CSE-MsgGUID: AkjPtzKvT82JSjy93C4i5w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="36245724"
-X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
-   d="scan'208";a="36245724"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 03:43:15 -0700
-X-CSE-ConnectionGUID: l7+b9JCCSqubT7cmWJcHIg==
-X-CSE-MsgGUID: euSulxasRP6BMwVw+2KcCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
-   d="scan'208";a="33312129"
-Received: from xiao-desktop.sh.intel.com ([10.239.46.158])
-  by orviesa004.jf.intel.com with ESMTP; 07 May 2024 03:43:09 -0700
-From: Xiao Wang <xiao.w.wang@intel.com>
-To: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	luke.r.nels@gmail.com,
-	xi.wang@gmail.com,
-	bjorn@kernel.org
-Cc: ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	martin.lau@linux.dev,
-	eddyz87@gmail.com,
-	song@kernel.org,
-	yonghong.song@linux.dev,
-	john.fastabend@gmail.com,
-	kpsingh@kernel.org,
-	sdf@google.com,
-	haoluo@google.com,
-	jolsa@kernel.org,
-	linux-riscv@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="qVOqEXLr"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 1B9EB600A7;
+	Tue,  7 May 2024 10:44:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1715078675;
+	bh=zbaNIyKrKMoQ1XFqRlHQyqFViL3R5sD8FLdycEfNc8w=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qVOqEXLrJsKtTB07rZIRastM82Y3qxWb6lLuNpwPPNCgeNpXD4J/egmc7TnE7dAvH
+	 8g5OqxD1tfyUOHxfuwxjO6PibfGHqmnd7Et3sEDc0Vcce6XQwnKZ6eT6RKucPzMuR2
+	 61L7NmWKKGJ7IHyFVbFbmWnCsok945vPyhgVZ64ENo1tKqBS7mxPNJJn9tVtZWRoBj
+	 8VxaqBe4aI5npHpNj6N27fAGyr3t9BChany0iYsF8/vlyV7kLnokAVugtPIsXZmuyB
+	 OS/DkdvZC6bporPlkD7efDuHG/MFvyTungA8F1pLN1HCbNOL+cGHb1aLU8A3qLuJou
+	 xeNOv2K4lDmQA==
+Received: by x201s (Postfix, from userid 1000)
+	id 0A46620314C; Tue, 07 May 2024 10:44:22 +0000 (UTC)
+From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
+To: netdev@vger.kernel.org
+Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	pulehui@huawei.com,
-	haicheng.li@intel.com,
-	Xiao Wang <xiao.w.wang@intel.com>
-Subject: [PATCH] riscv, bpf: Optimize zextw insn with Zba extension
-Date: Tue,  7 May 2024 18:45:28 +0800
-Message-Id: <20240507104528.435980-1-xiao.w.wang@intel.com>
-X-Mailer: git-send-email 2.25.1
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Manish Chopra <manishc@marvell.com>
+Subject: [PATCH net-next 00/14] net: qede: convert filter code to use extack
+Date: Tue,  7 May 2024 10:44:01 +0000
+Message-ID: <20240507104421.1628139-1-ast@fiberby.net>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-The Zba extension provides add.uw insn which can be used to implement
-zext.w with rs2 set as ZERO.
+This series converts the filter code in the qede driver
+to use NL_SET_ERR_MSG_*(extack, ...) for error handling.
 
-Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
----
- arch/riscv/Kconfig       | 19 +++++++++++++++++++
- arch/riscv/net/bpf_jit.h | 18 ++++++++++++++++++
- 2 files changed, 37 insertions(+)
+Patch 1-12 converts qede_parse_flow_attr() to use extack,
+along with all it's static helper functions.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 6bec1bce6586..0679127cc0ea 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -586,6 +586,14 @@ config RISCV_ISA_V_PREEMPTIVE
- 	  preemption. Enabling this config will result in higher memory
- 	  consumption due to the allocation of per-task's kernel Vector context.
- 
-+config TOOLCHAIN_HAS_ZBA
-+	bool
-+	default y
-+	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64ima_zba)
-+	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32ima_zba)
-+	depends on LLD_VERSION >= 150000 || LD_VERSION >= 23900
-+	depends on AS_HAS_OPTION_ARCH
-+
- config TOOLCHAIN_HAS_ZBB
- 	bool
- 	default y
-@@ -601,6 +609,17 @@ config TOOLCHAIN_HAS_VECTOR_CRYPTO
- 	def_bool $(as-instr, .option arch$(comma) +v$(comma) +zvkb)
- 	depends on AS_HAS_OPTION_ARCH
- 
-+config RISCV_ISA_ZBA
-+	bool "Zba extension support for bit manipulation instructions"
-+	depends on TOOLCHAIN_HAS_ZBA
-+	depends on RISCV_ALTERNATIVE
-+	default y
-+	help
-+	   Adds support to dynamically detect the presence of the ZBA
-+	   extension (address generation acceleration) and enable its usage.
-+
-+	   If you don't know what to do here, say Y.
-+
- config RISCV_ISA_ZBB
- 	bool "Zbb extension support for bit manipulation instructions"
- 	depends on TOOLCHAIN_HAS_ZBB
-diff --git a/arch/riscv/net/bpf_jit.h b/arch/riscv/net/bpf_jit.h
-index f4b6b3b9edda..18a7885ba95e 100644
---- a/arch/riscv/net/bpf_jit.h
-+++ b/arch/riscv/net/bpf_jit.h
-@@ -18,6 +18,11 @@ static inline bool rvc_enabled(void)
- 	return IS_ENABLED(CONFIG_RISCV_ISA_C);
- }
- 
-+static inline bool rvzba_enabled(void)
-+{
-+	return IS_ENABLED(CONFIG_RISCV_ISA_ZBA) && riscv_has_extension_likely(RISCV_ISA_EXT_ZBA);
-+}
-+
- static inline bool rvzbb_enabled(void)
- {
- 	return IS_ENABLED(CONFIG_RISCV_ISA_ZBB) && riscv_has_extension_likely(RISCV_ISA_EXT_ZBB);
-@@ -937,6 +942,14 @@ static inline u16 rvc_sdsp(u32 imm9, u8 rs2)
- 	return rv_css_insn(0x7, imm, rs2, 0x2);
- }
- 
-+/* RV64-only ZBA instructions. */
-+
-+static inline u32 rvzba_zextw(u8 rd, u8 rs1)
-+{
-+	/* add.uw rd, rs1, ZERO */
-+	return rv_r_insn(0x04, RV_REG_ZERO, rs1, 0, rd, 0x3b);
-+}
-+
- #endif /* __riscv_xlen == 64 */
- 
- /* Helper functions that emit RVC instructions when possible. */
-@@ -1159,6 +1172,11 @@ static inline void emit_zexth(u8 rd, u8 rs, struct rv_jit_context *ctx)
- 
- static inline void emit_zextw(u8 rd, u8 rs, struct rv_jit_context *ctx)
- {
-+	if (rvzba_enabled()) {
-+		emit(rvzba_zextw(rd, rs), ctx);
-+		return;
-+	}
-+
- 	emit_slli(rd, rs, 32, ctx);
- 	emit_srli(rd, rd, 32, ctx);
- }
+qede_parse_flow_attr() is used in two places:
+- qede_add_tc_flower_fltr()
+- qede_flow_spec_to_rule()
+
+In the latter call site extack is faked in the same way as
+is done in mlxsw (patch 12).
+
+While the conversion is going on, some error messages are silenced
+in between patch 1-12. If wanted could squash patch 1-12 in a v2, but
+I felt that it would be easier to review as 12 more trivial patches.
+
+Patch 13 and 14, finishes up by converting qede_parse_actions(),
+and ensures that extack is propagated to it, in both call contexts.
+
+Asbjørn Sloth Tønnesen (14):
+  net: qede: use extack in qede_flow_parse_ports()
+  net: qede: use extack in qede_set_v6_tuple_to_profile()
+  net: qede: use extack in qede_set_v4_tuple_to_profile()
+  net: qede: use extack in qede_flow_parse_v6_common()
+  net: qede: use extack in qede_flow_parse_v4_common()
+  net: qede: use extack in qede_flow_parse_tcp_v6()
+  net: qede: use extack in qede_flow_parse_tcp_v4()
+  net: qede: use extack in qede_flow_parse_udp_v6()
+  net: qede: use extack in qede_flow_parse_udp_v4()
+  net: qede: add extack in qede_add_tc_flower_fltr()
+  net: qede: use extack in qede_parse_flow_attr()
+  net: qede: use faked extack in qede_flow_spec_to_rule()
+  net: qede: propagate extack through qede_flow_spec_validate()
+  net: qede: use extack in qede_parse_actions()
+
+ .../net/ethernet/qlogic/qede/qede_filter.c    | 99 ++++++++++---------
+ 1 file changed, 55 insertions(+), 44 deletions(-)
+
 -- 
-2.25.1
+2.43.0
 
