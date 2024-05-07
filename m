@@ -1,128 +1,133 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187F216C45B;
-	Tue,  7 May 2024 13:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8FF15ECFE
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715088705; cv=none; b=XEUQlKqYqefET9OgKgQGIhN/huhtMDK5LSKS/XfwVh/BOX6B8kTA3XGqLBuZF6i52sg+FC6hFwygmu4pKBdgUJlAtBEYA0x+08hbbRQq1BkomoqKvX3r205Wwauje+eIdjxAVQk9T/MDqScQIk+2g7FuUvP675vgIu3TP0tOtQs=
+	t=1715088729; cv=none; b=Kn5j2twu9LSJvR+qbnEDe3TlIMGvhdWz2PllscVrePKeAqiP5AmdqwnORXjlWyRHnI2WhYoj6EDCqeNxThgBKwCot3ugb2zUTx0fO1tSo7EuG0dc3/BF/oDduwzEttJgGwHnACqc8l7DFMn2vNaVhb5wEFb2ejb7xBabOpWD8o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715088705; c=relaxed/simple;
-	bh=Z3Oh7sCEytYAY+1dl6YfvZQmJ7dlWmL4kQ0K0NhJyGs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Vp7p4L9eF0ZRWGLWYt+V3VDMp0bG6ZmZvxCnIqcrIcabIEBWKct2NJI9TDXa0/iA9R0i+OGYjZyw4BM7c/K4kX3lDspM2i7QMbU6zvJwAr1W0a9KP8gedfellJbwrUbg5eK00cycgviqe8FU8Q0Re2FWEJiw6V1em85o3pYdCg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VYfH32hTsztT4H;
-	Tue,  7 May 2024 21:28:15 +0800 (CST)
-Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7EE801800C9;
-	Tue,  7 May 2024 21:31:40 +0800 (CST)
-Received: from [10.67.110.112] (10.67.110.112) by
- dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 7 May 2024 21:31:40 +0800
-Message-ID: <10484734-13e6-4c56-d7dc-6c4cf74bd8de@huawei.com>
-Date: Tue, 7 May 2024 21:31:39 +0800
+	s=arc-20240116; t=1715088729; c=relaxed/simple;
+	bh=sBzFX/sadxZL2cJQXTBg/KJIkDZ/894I5/zI13q8LZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nYrjXeKcInovSdptIzR35J85aYUlaFcZh92WmucCMQ8JlZmIRA9fipMIr+8jn9sTAefsrdM7Wesco4GbDtbod8Uhz9qf/b5AdV589IRCexBxYubrtFyWcjN3aJk7B+8imvC7dS7Cc3OFq0nSqX3GPuJkZojqX2ndcHCYuKjx8FE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PG0RxQ/t; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PG0RxQ/t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715088726;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=RIYdM7z5+Xm1S+hITzfLVzD6aDULkUJFC6+y9ilbGSk=;
+	b=PG0RxQ/t9HvQ/jrzumbNaLau9EK1YuEcTkvNDQNAkTlk3g2u4fEY9BYcm3lxfwXhOGZin5
+	Tb3PGRaYoTsHXyNR1y72lKWuRgcvTcwRlzhPrlYQ0INZ7rQqc9QqfXS40+qqyZIhRo4nok
+	XODVVNqcjrBDX+EMQCNgJ0+b77OPly8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-614-bPPBVKt9NLmUkqabt3Wgiw-1; Tue, 07 May 2024 09:32:03 -0400
+X-MC-Unique: bPPBVKt9NLmUkqabt3Wgiw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 474F784B16B;
+	Tue,  7 May 2024 13:32:02 +0000 (UTC)
+Received: from bfoster (unknown [10.22.32.146])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id C8C793C35;
+	Tue,  7 May 2024 13:32:01 +0000 (UTC)
+Date: Tue, 7 May 2024 09:34:23 -0400
+From: Brian Foster <bfoster@redhat.com>
+To: Petr Vorel <pvorel@suse.cz>
+Cc: linux-bcachefs@vger.kernel.org,
+	Kent Overstreet <kent.overstreet@linux.dev>, Su Yue <l@damenly.org>,
+	Coly Li <colyli@suse.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] bcachefs: Move BCACHEFS_STATFS_MAGIC to UAPI magic.h
+Message-ID: <Zjot36J9negcVlfh@bfoster>
+References: <20240507111124.118520-1-pvorel@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.1
-Subject: Re: [PATCH v2 -next] mm: memcg: make alloc_mem_cgroup_per_node_info()
- return bool
-Content-Language: en-US
-To: Michal Hocko <mhocko@suse.com>
-CC: <hannes@cmpxchg.org>, <roman.gushchin@linux.dev>,
-	<shakeel.butt@linux.dev>, <muchun.song@linux.dev>,
-	<akpm@linux-foundation.org>, <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240507110832.1128370-1-xiujianfeng@huawei.com>
- <ZjooSnQ_vS30EXCT@tiehlicka>
-From: xiujianfeng <xiujianfeng@huawei.com>
-In-Reply-To: <ZjooSnQ_vS30EXCT@tiehlicka>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500023.china.huawei.com (7.185.36.114)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240507111124.118520-1-pvorel@suse.cz>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
+On Tue, May 07, 2024 at 01:11:24PM +0200, Petr Vorel wrote:
+> There are other bcachefs magic definitions: BCACHE_MAGIC, BCHFS_MAGIC,
+> which use UUID_INIT() and are used only in libbcachefs. Therefore move
+> to <linux/magic.h> only BCACHEFS_STATFS_MAGIC, which can be used outside
+> of libbcachefs for f_type field in struct statfs in statfs() or fstatfs().
+> 
+> Keeping non-standard name BCACHEFS_STATFS_MAGIC instead of renaming it
+> to more generic BCACHEFS_MAGIC to not confuse with the other bcachefs
+> definitions.
+> 
 
+Perhaps it would be better to use the standard naming for the global
+header and let the bcachefs subsystem catch up with better names for
+internal defs? Something like BCACHEFS_SUPER_MAGIC also seems like it
+would be generally consistent, FWIW.
 
-On 2024/5/7 21:10, Michal Hocko wrote:
-> On Tue 07-05-24 11:08:32, Xiu Jianfeng wrote:
->> Currently alloc_mem_cgroup_per_node_info() returns 1 if failed,
->> make it return bool, false for failure and true for success.
+> Suggested-by: Su Yue <l@damenly.org>
+> Signed-off-by: Petr Vorel <pvorel@suse.cz>
+> ---
+>  fs/bcachefs/bcachefs_format.h | 2 --
+>  fs/bcachefs/fs.c              | 1 +
+>  include/uapi/linux/magic.h    | 2 ++
+>  3 files changed, 3 insertions(+), 2 deletions(-)
 > 
-> This describes what the patch does rather than why it is doing that.
-> The former is clear from the diff while the motivation for this change
-> is unclear. I would propose something like:
-> 
-> alloc_mem_cgroup_per_node_info() returns int that doesn't map to any
-> errno error code. The only existing caller doesn't really need an error
-> code so change the the function to return bool (true on success) because
-> this is slightly less confusing and more consistent with the other code.
+> diff --git a/fs/bcachefs/bcachefs_format.h b/fs/bcachefs/bcachefs_format.h
+> index f7fbfccd2b1e..52e03f13b780 100644
+> --- a/fs/bcachefs/bcachefs_format.h
+> +++ b/fs/bcachefs/bcachefs_format.h
+> @@ -1275,8 +1275,6 @@ enum bch_compression_opts {
+>  	UUID_INIT(0xc68573f6, 0x66ce, 0x90a9,				\
+>  		  0xd9, 0x6a, 0x60, 0xcf, 0x80, 0x3d, 0xf7, 0xef)
+>  
+> -#define BCACHEFS_STATFS_MAGIC		0xca451a4e
+> -
+>  #define JSET_MAGIC		__cpu_to_le64(0x245235c1a3625032ULL)
+>  #define BSET_MAGIC		__cpu_to_le64(0x90135c78b99e07f5ULL)
+>  
+> diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
+> index fce690007edf..1c856ae2b0e2 100644
+> --- a/fs/bcachefs/fs.c
+> +++ b/fs/bcachefs/fs.c
+> @@ -27,6 +27,7 @@
+>  #include "super.h"
+>  #include "xattr.h"
+>  
+> +#include <uapi/linux/magic.h>
+>  #include <linux/aio.h>
+>  #include <linux/backing-dev.h>
+>  #include <linux/exportfs.h>
+> diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
+> index 1b40a968ba91..45c8f4916167 100644
+> --- a/include/uapi/linux/magic.h
+> +++ b/include/uapi/linux/magic.h
+> @@ -103,4 +103,6 @@
+>  #define SECRETMEM_MAGIC		0x5345434d	/* "SECM" */
+>  #define PID_FS_MAGIC		0x50494446	/* "PIDF" */
+>  
+> +#define BCACHEFS_STATFS_MAGIC		0xca451a4e
+> +
 
-Thanks, it looks much better now.
+Is there intended to be at least some logical organization to this file?
+It kind of looks like it, but maybe not as a rule. Personally, I'd
+probably stick this somewhere in the first chunk of definitions where
+the other major local/block filesystems are, but just a nit.
 
+Brian
+
+>  #endif /* __LINUX_MAGIC_H__ */
+> -- 
+> 2.43.0
 > 
->> Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
-> 
-> With changelog clarified feel free to add
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> 
->> ---
->>  mm/memcontrol.c | 10 +++++-----
->>  1 file changed, 5 insertions(+), 5 deletions(-)
->>
->> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->> index d11536ef59ef..69d70feb8e68 100644
->> --- a/mm/memcontrol.c
->> +++ b/mm/memcontrol.c
->> @@ -5653,13 +5653,13 @@ struct mem_cgroup *mem_cgroup_get_from_ino(unsigned long ino)
->>  }
->>  #endif
->>  
->> -static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
->> +static bool alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
->>  {
->>  	struct mem_cgroup_per_node *pn;
->>  
->>  	pn = kzalloc_node(sizeof(*pn), GFP_KERNEL, node);
->>  	if (!pn)
->> -		return 1;
->> +		return false;
->>  
->>  	pn->lruvec_stats = kzalloc_node(sizeof(struct lruvec_stats), GFP_KERNEL,
->>  					node);
->> @@ -5675,11 +5675,11 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
->>  	pn->memcg = memcg;
->>  
->>  	memcg->nodeinfo[node] = pn;
->> -	return 0;
->> +	return true;
->>  fail:
->>  	kfree(pn->lruvec_stats);
->>  	kfree(pn);
->> -	return 1;
->> +	return false;
->>  }
->>  
->>  static void free_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
->> @@ -5751,7 +5751,7 @@ static struct mem_cgroup *mem_cgroup_alloc(struct mem_cgroup *parent)
->>  	}
->>  
->>  	for_each_node(node)
->> -		if (alloc_mem_cgroup_per_node_info(memcg, node))
->> +		if (!alloc_mem_cgroup_per_node_info(memcg, node))
->>  			goto fail;
->>  
->>  	if (memcg_wb_domain_init(memcg, GFP_KERNEL))
->> -- 
->> 2.34.1
->>
-> 
+
