@@ -1,202 +1,181 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155F04C63;
-	Tue,  7 May 2024 02:13:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161EB3FE4
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 02:16:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715048024; cv=none; b=EJSekTzAAeeZrz98dO/vKMTv283Lwucl3q5Vf39NIohDeUsB68HfFSkQng94j7x4wdOm1s/X3YO53I2P4quTFHNJF2tSK6YU7hncsmJFB9AGupY9J+97R/fJD6wol+Ri9xW5Kg1J1IuEmlEuKmAkGZB97NmrvKkloqqumRzrQlk=
+	t=1715048169; cv=none; b=UymuzATiNBlu+iAQxxnKxsVfCzgCPwEOC37mlAUGCMgHYx+TJF1NqRey39iZeo4G3crwW+MMZE4ePCOkdC8fq4JtiM8nbbfreyoo7hJtF+ju8zFopQscAARkqTpoLUHPkqxEWYgGR0OPIkxFNFZLi5LuKCYhYJBEoqdzhcmdEUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715048024; c=relaxed/simple;
-	bh=G7eAzDnjYsUquca5DgYURom3FGxQSVe5uDgKJypFTvc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XiVb6x4tvHaYg/5QmcT+BFpyehP6x71CEJjDkAzVltXfxm4EsUMGwYT9Gzdkza3Ky0mlHCKtqwPQfIR3jGYcv6CsTsyQeSVYhHf9kq5kgpKSJ8JYmA0/ZIlcgVc88r8R7PkFLu+XAVpAWrt5YWmOmnzeKL6JeGnUzYXHMxEbyrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cIVC3Ti/; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715048169; c=relaxed/simple;
+	bh=Tlg2msnuHEnP6RLCR6+Oxh1TTRZaMFlw6rLi2MhjLGw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fKv88eXN91VNwuoudMOUXiM3SfIantblg4yEi+x1+3eLbDF3aA4Lkh3RtU0JnVXwt+21WSzv/AVtnEkgQDO798eCRnGREDX6SDiO9wIBYUjmWpVaO9K9SvLxcbV+jtYGJH7NyQng/xeAYUVh12w8ui386DBNl00fQy/LYElmZ1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=TLpadRJk; arc=none smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cIVC3Ti/"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-6f042ff9ddcso1191007a34.1;
-        Mon, 06 May 2024 19:13:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715048022; x=1715652822; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JrZ6SuQInLnc2+mgMTN2eZSIdJ1Vd4I7NVA29Tw+mFE=;
-        b=cIVC3Ti/cBQ/aciC1PKBHwiCgigXz0pOfihFAGNNpNLLCojegzgCxH9YJYzq0+Sd6u
-         ETb6wnaSkaD1T05Z/e5mqEDg59PycRLI8sydatgXcnPhpgpApHJJ2WWZxUaCqcJcXIVm
-         +drZgeOh9I0tb+JOigUPbqjr45p3p8FEmajcbrjPDtZP3ImU0TmuA2aGMILihlJAPDcd
-         Z9aSvTv7dQEbSIlgM5KdH8+qNRDEcfx6tZI62e5qVp3deP98IE8LD8RfK5C7wEJlCMXy
-         DN0XTan2U9BZk/zOjCHbXfhnNQsVPgnTb2ihyTmc3hvQV8cYSAcoz67JNT0m7UY+eWVI
-         jD+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715048022; x=1715652822;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JrZ6SuQInLnc2+mgMTN2eZSIdJ1Vd4I7NVA29Tw+mFE=;
-        b=U0FMRMelefURSmjQoMxZ90lvL+8brcFuNsQ1i9/oGXLG3UlJyDzvewMytl+g/r27gO
-         vy0h9dZNq/SZrecIRxNn3QYVfADIL3tgXqlInwpAmdFS+XVgNQDkJPu9yXR4Br0Yn/q4
-         21vmlrtsYjWeMYazPzi8XqF1PE4PuX7PycHsyE0ZZpr96e0Yme4gmV1Hn0HjXjgkwU8V
-         SapPXP1EW70IL4QMf7tO1+ziM7CKJEomKcVtch5/jN4X4wrPJ0pNMn1aXIzj0oowF3eb
-         tkLH6xhxArsiSkjvc1dto3z3Io9Gj8jmEtmXggDMKH49luex2qHsNcf5spyLSescWbra
-         7hhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtonQ4Ufk4eS84lIawxe+4YqsRAeAD88/8udI0oF59c4X1ULw2UrmZ8EJC0h0UOXiYghqHD9eR3XuA62qIyxZnrvi+E/EAg8NhIEKKtRayrKrd68eXaZ4wn0ZnmWpxc6XnEN3Iv2oGE18=
-X-Gm-Message-State: AOJu0YwpuUtT6nMtsNQyOpy+uJuG9yy+IzXDH0nB+im/TB0Y3CUdUAB8
-	R724f5NSsblfKgZlXZHAJPXzzSs97iqW1OqxE1OmBYtPof/aHo2emLsv9g==
-X-Google-Smtp-Source: AGHT+IFx1iTTLqW+a5zy+mrOU7H7PtN2kDBjD+ThTA/QprFo5oW3hrIgZguo6vcbcnI+TrSq5hHtqg==
-X-Received: by 2002:a05:6808:10ca:b0:3c9:6e4f:eeec with SMTP id s10-20020a05680810ca00b003c96e4feeecmr5933080ois.37.1715048021894;
-        Mon, 06 May 2024 19:13:41 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:da17:38c8:4449:eb9f])
-        by smtp.gmail.com with ESMTPSA id j6-20020aa78d06000000b006ecec1f4b08sm8370854pfe.118.2024.05.06.19.13.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 19:13:41 -0700 (PDT)
-Date: Mon, 6 May 2024 19:13:38 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Charles Wang <charles.goodix@gmail.com>, hadess@hadess.net,
-	Richard Hughes <hughsient@gmail.com>, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, neil.armstrong@linaro.org,
-	Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] Input: goodix-berlin - Add sysfs interface for reading
- and writing touch IC registers
-Message-ID: <ZjmOUp725QTHrfcT@google.com>
-References: <20240506114752.47204-1-charles.goodix@gmail.com>
- <6362e889-7df2-4c61-8ad5-bfe199e451ec@redhat.com>
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="TLpadRJk"
+X-UUID: 9dbad1140c1511efb92737409a0e9459-20240507
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=OkbheN73NOmkxbTzCeJVpVCAkNTb+uG4tFp2uucwYAQ=;
+	b=TLpadRJk75RzdzbqokqlXSgJs19HzlTh/1pv4twmQlLAsF3P0XkjXrjM0lYUWU6y1wLZUV0Y9xufIPBPocSiqdm1qvfK/ggwCmNQoMYMNempU1uIlMgXrx7GsJHRiuAY+YHx3hRCHDxO8y4aJD3MX0SHbww+l2kVG4sAsdMZROk=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:8f27c4fa-1286-4ede-8ff3-c894e0523740,IP:0,U
+	RL:0,TC:0,Content:0,EDM:-32768,RT:0,SF:-32768,FILE:0,BULK:-32768,RULE:Rele
+	ase_Ham,ACTION:release,TS:0
+X-CID-META: VersionHash:82c5f88,CLOUDID:f20f6e92-e2c0-40b0-a8fe-7c7e47299109,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:nil,TC:nil,Content:0,EDM:nil,IP:nil,
+	URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1
+	,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 9dbad1140c1511efb92737409a0e9459-20240507
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
+	(envelope-from <gavin.liu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1715883791; Tue, 07 May 2024 10:00:45 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Tue, 7 May 2024 10:00:43 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Tue, 7 May 2024 10:00:43 +0800
+From: gavin.liu <gavin.liu@mediatek.com>
+To: Jens Wiklander <jens.wiklander@linaro.org>, Sumit Garg
+	<sumit.garg@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>
+CC: <op-tee@lists.trustedfirmware.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	Gavin Liu <gavin.liu@mediatek.com>
+Subject: [PATCH v3] optee: add timeout value to optee_notif_wait() to support timeout
+Date: Tue, 7 May 2024 10:00:37 +0800
+Message-ID: <20240507020037.14009-1-gavin.liu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6362e889-7df2-4c61-8ad5-bfe199e451ec@redhat.com>
+Content-Type: text/plain
+X-MTK: N
 
-On Mon, May 06, 2024 at 02:03:13PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 5/6/24 1:47 PM, Charles Wang wrote:
-> > Export a sysfs interface that would allow reading and writing touchscreen
-> > IC registers. With this interface many things can be done in usersapce
-> > such as firmware updates. An example tool that utilizes this interface
-> > for performing firmware updates can be found at [1].
-> 
-> I'm not sure if I'm a fan of adding an interface to export raw register
-> access for fwupdate.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/input/touchscreen/goodix_fwupload.c
-> 
-> Contains update support for older goodix touchscreens and it is not
-> that big. I think it might be better to just have an in kernel fwupdate
-> driver for this and have a sysfs file to which to write the new firmware.
-> 
-> Adding Richard Hughes, fwupd maintainer to the Cc. Richard, do you have
-> any input on the suggested method for firmware updating ?
-> 
-> If raw register access is seen as a good solution, then I think this
-> should use regmap + some generic helpers (to be written) to export
-> regmap r/w access to userspace.
+From: Gavin Liu <gavin.liu@mediatek.com>
 
-I think the less code we have in kernel the better, especially if in
-cases where firmware flashing is not essential for device to work (i.e.
-it the controller has a flash memory). That said IIRC Mark felt very
-strongly about allowing regmap writes from userspace... but maybe he
-softened the stance or we could have this functionality opt-in?
+Add timeout value to support self waking when timeout to avoid waiting
+indefinitely.
 
-> 
-> > [1] https://github.com/goodix/fwupdate_for_berlin_linux
-> 
-> Hmm, that tool seems to have some licensing issues there is an Apache License v2.0
-> LICENSE file, but the header of fwupdate.c claims it is confidential ...
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> > Signed-off-by: Charles Wang <charles.goodix@gmail.com>
-> > ---
-> >  drivers/input/touchscreen/goodix_berlin.h     |  2 +
-> >  .../input/touchscreen/goodix_berlin_core.c    | 52 +++++++++++++++++++
-> >  drivers/input/touchscreen/goodix_berlin_i2c.c |  6 +++
-> >  drivers/input/touchscreen/goodix_berlin_spi.c |  6 +++
-> >  4 files changed, 66 insertions(+)
-> > 
-> > diff --git a/drivers/input/touchscreen/goodix_berlin.h b/drivers/input/touchscreen/goodix_berlin.h
-> > index 1fd77eb69..1741f2d15 100644
-> > --- a/drivers/input/touchscreen/goodix_berlin.h
-> > +++ b/drivers/input/touchscreen/goodix_berlin.h
-> > @@ -19,6 +19,8 @@ struct regmap;
-> >  int goodix_berlin_probe(struct device *dev, int irq, const struct input_id *id,
-> >  			struct regmap *regmap);
-> >  
-> > +void goodix_berlin_remove(struct device *dev);
-> > +
-> >  extern const struct dev_pm_ops goodix_berlin_pm_ops;
-> >  
-> >  #endif
-> > diff --git a/drivers/input/touchscreen/goodix_berlin_core.c b/drivers/input/touchscreen/goodix_berlin_core.c
-> > index e7b41a926..e02160841 100644
-> > --- a/drivers/input/touchscreen/goodix_berlin_core.c
-> > +++ b/drivers/input/touchscreen/goodix_berlin_core.c
-> > @@ -672,6 +672,44 @@ static void goodix_berlin_power_off_act(void *data)
-> >  	goodix_berlin_power_off(cd);
-> >  }
-> >  
-> > +static ssize_t goodix_berlin_registers_read(struct file *filp, struct kobject *kobj,
-> > +	struct bin_attribute *bin_attr, char *buf, loff_t off, size_t count)
-> > +{
-> > +	struct goodix_berlin_core *cd;
-> > +	struct device *dev;
-> > +	int error;
-> > +
-> > +	dev = kobj_to_dev(kobj);
-> > +	cd = dev_get_drvdata(dev);
-> > +
-> > +	error = regmap_raw_read(cd->regmap, (unsigned int)off,
-> > +				buf, count);
-> > +
-> > +	return error ? error : count;
-> > +}
-> > +
-> > +static ssize_t goodix_berlin_registers_write(struct file *filp, struct kobject *kobj,
-> > +	struct bin_attribute *bin_attr, char *buf, loff_t off, size_t count)
-> > +{
-> > +	struct goodix_berlin_core *cd;
-> > +	struct device *dev;
-> > +	int error;
-> > +
-> > +	dev = kobj_to_dev(kobj);
-> > +	cd = dev_get_drvdata(dev);
-> > +
-> > +	error = regmap_raw_write(cd->regmap, (unsigned int)off,
-> > +				 buf, count);
-> > +
-> > +	return error ? error : count;
-> > +}
-> > +
-> > +static struct bin_attribute goodix_berlin_registers_attr = {
-> > +	.attr = {.name = "registers", .mode = 0600},
-> > +	.read = goodix_berlin_registers_read,
-> > +	.write = goodix_berlin_registers_write,
-> > +};
-> > +
-> >  int goodix_berlin_probe(struct device *dev, int irq, const struct input_id *id,
-> >  			struct regmap *regmap)
-> >  {
-> > @@ -743,6 +781,14 @@ int goodix_berlin_probe(struct device *dev, int irq, const struct input_id *id,
-> >  
-> >  	dev_set_drvdata(dev, cd);
-> >  
-> > +	error = sysfs_create_bin_file(&cd->dev->kobj,
-> > +				      &goodix_berlin_registers_attr);
+Signed-off-by: Gavin Liu <gavin.liu@mediatek.com>
+---
+change in v3:
+1. change the comment in optee_rpc_cmd.h
+2. add macro for "TEE_ERROR_TIMEOUT"
+3. change from "TEEC_ERROR_BUSY" to "TEE_ERROR_TIMEOUT"
+---
+ drivers/tee/optee/notif.c         |  9 +++++++--
+ drivers/tee/optee/optee_private.h |  5 ++++-
+ drivers/tee/optee/optee_rpc_cmd.h |  1 +
+ drivers/tee/optee/rpc.c           | 10 ++++++++--
+ 4 files changed, 20 insertions(+), 5 deletions(-)
 
-If we want to instantiate attributes from the driver please utilize
-dev_groups in respective driver structures to create and remove the
-attributes automatically.
-
-Thanks.
-
+diff --git a/drivers/tee/optee/notif.c b/drivers/tee/optee/notif.c
+index 0d7878e770cd..1970880c796f 100644
+--- a/drivers/tee/optee/notif.c
++++ b/drivers/tee/optee/notif.c
+@@ -29,7 +29,7 @@ static bool have_key(struct optee *optee, u_int key)
+ 	return false;
+ }
+ 
+-int optee_notif_wait(struct optee *optee, u_int key)
++int optee_notif_wait(struct optee *optee, u_int key, u32 timeout)
+ {
+ 	unsigned long flags;
+ 	struct notif_entry *entry;
+@@ -70,7 +70,12 @@ int optee_notif_wait(struct optee *optee, u_int key)
+ 	 * Unlock temporarily and wait for completion.
+ 	 */
+ 	spin_unlock_irqrestore(&optee->notif.lock, flags);
+-	wait_for_completion(&entry->c);
++	if (timeout != 0) {
++		if (!wait_for_completion_timeout(&entry->c, timeout))
++			rc = -ETIMEDOUT;
++	} else {
++		wait_for_completion(&entry->c);
++	}
+ 	spin_lock_irqsave(&optee->notif.lock, flags);
+ 
+ 	list_del(&entry->link);
+diff --git a/drivers/tee/optee/optee_private.h b/drivers/tee/optee/optee_private.h
+index 429cc20be5cc..424898cdc4e9 100644
+--- a/drivers/tee/optee/optee_private.h
++++ b/drivers/tee/optee/optee_private.h
+@@ -26,6 +26,9 @@
+ #define TEEC_ERROR_BUSY			0xFFFF000D
+ #define TEEC_ERROR_SHORT_BUFFER		0xFFFF0010
+ 
++/* API Return Codes are from the GP TEE Internal Core API Specification */
++#define TEE_ERROR_TIMEOUT		0xFFFF3001
++
+ #define TEEC_ORIGIN_COMMS		0x00000002
+ 
+ /*
+@@ -252,7 +255,7 @@ struct optee_call_ctx {
+ 
+ int optee_notif_init(struct optee *optee, u_int max_key);
+ void optee_notif_uninit(struct optee *optee);
+-int optee_notif_wait(struct optee *optee, u_int key);
++int optee_notif_wait(struct optee *optee, u_int key, u32 timeout);
+ int optee_notif_send(struct optee *optee, u_int key);
+ 
+ u32 optee_supp_thrd_req(struct tee_context *ctx, u32 func, size_t num_params,
+diff --git a/drivers/tee/optee/optee_rpc_cmd.h b/drivers/tee/optee/optee_rpc_cmd.h
+index f3f06e0994a7..4576751b490c 100644
+--- a/drivers/tee/optee/optee_rpc_cmd.h
++++ b/drivers/tee/optee/optee_rpc_cmd.h
+@@ -41,6 +41,7 @@
+  * Waiting on notification
+  * [in]    value[0].a	    OPTEE_RPC_NOTIFICATION_WAIT
+  * [in]    value[0].b	    notification value
++ * [in]    value[0].c	    timeout in milliseconds or 0 if no timeout
+  *
+  * Sending a synchronous notification
+  * [in]    value[0].a	    OPTEE_RPC_NOTIFICATION_SEND
+diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
+index f086812f1179..5de4504665be 100644
+--- a/drivers/tee/optee/rpc.c
++++ b/drivers/tee/optee/rpc.c
+@@ -130,6 +130,8 @@ static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
+ static void handle_rpc_func_cmd_wq(struct optee *optee,
+ 				   struct optee_msg_arg *arg)
+ {
++	int rc = 0;
++
+ 	if (arg->num_params != 1)
+ 		goto bad;
+ 
+@@ -139,7 +141,8 @@ static void handle_rpc_func_cmd_wq(struct optee *optee,
+ 
+ 	switch (arg->params[0].u.value.a) {
+ 	case OPTEE_RPC_NOTIFICATION_WAIT:
+-		if (optee_notif_wait(optee, arg->params[0].u.value.b))
++		rc = optee_notif_wait(optee, arg->params[0].u.value.b, arg->params[0].u.value.c);
++		if (rc)
+ 			goto bad;
+ 		break;
+ 	case OPTEE_RPC_NOTIFICATION_SEND:
+@@ -153,7 +156,10 @@ static void handle_rpc_func_cmd_wq(struct optee *optee,
+ 	arg->ret = TEEC_SUCCESS;
+ 	return;
+ bad:
+-	arg->ret = TEEC_ERROR_BAD_PARAMETERS;
++	if (rc == -ETIMEDOUT)
++		arg->ret = TEE_ERROR_TIMEOUT;
++	else
++		arg->ret = TEEC_ERROR_BAD_PARAMETERS;
+ }
+ 
+ static void handle_rpc_func_cmd_wait(struct optee_msg_arg *arg)
 -- 
-Dmitry
+2.18.0
+
