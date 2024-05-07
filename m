@@ -1,210 +1,100 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA18914F109
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 11:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CFFB152170;
+	Tue,  7 May 2024 11:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715080533; cv=none; b=VlyI8Q9vrG5oa3PgQhuoLhf/EKiq3p3OEH8JEFBKniBZnjyCqXOXGa7eZ2jRwWIUnkpC8U6V29Oc4oJ6qqfcmDuNNhGFu4ZEKoouwQ9NWpN7uGTta3vodhYTMcX+xp+0D6zbQNJWyyVbLBP/Xd50ViwxDtUT0bYGfNTYgZctkV8=
+	t=1715080536; cv=none; b=uZixdnkdqxlW/MP6ZCVH0cl/Hu8gT9N/2EuMebWxC7rKa87J3v+KHWflvuujGzO4nNGAIgpHzbp+iFlGBGfgzH6Ttga+o+z0Jg0M4xzvCv3qFlBqxnfXXupKJZ/oHrYtTTqqq9ZKJV0NN9ivTwt5Ky4GI1eimHvcbSaQVmCWsFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715080533; c=relaxed/simple;
-	bh=cg+Ro88ytJjd/fd08mRf8Cz6ImUq4vWBcpmoLF+uj6s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NicfVnbMKgYSCbTIlgXxe4+I93ycv6xdZvlUKN4+1vjfD/i7n5g70/kF583NCL1U9X19dIhvfxrl5zYIlwzTQ4++VWnunCAiVhaAZFkdsHW3a1meqXkWHpCQOf7XGzwPlOjS454V14H50WF6BRb96uf0uz7NjztRmeovwLcW+m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=Lw0aGt4j; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Lw0aGt4j"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-346407b8c9aso905205f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 04:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1715080530; x=1715685330; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wXHaXKdqUHwPFQAJMHKHEEcPt9R1JT6UoeAkdx1FiUQ=;
-        b=Lw0aGt4jy3dTDdTuxyoeQT/ZRaFMncE8c0QbvGvgLoK1CPB8glR2J60YilKswlABWL
-         7BJxnW7VY61EI2+jJMoxpnpDe54lryiracbplfdT+MuP/4wUkzk4XRT8elRMTSoBdA57
-         sis0nq4I/80RNmGHtYDIGpSllvfFyZ7E1hK7E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715080530; x=1715685330;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wXHaXKdqUHwPFQAJMHKHEEcPt9R1JT6UoeAkdx1FiUQ=;
-        b=lF+28lMmYjdTDl0PFhuIxx8m6BEDjGHf6LhTiEabth9aOs0cGad1js3RS0W81CDHNM
-         K4CraKNmadARy0oD2lyXLuWcJvvf00XpJz7N9bRmdc8slmonHLSJnnUAVAa2HsxYM/81
-         FPg9zJN5Uy+ifMKYZsrEKcGKm44ElDZU1pemDwE29uPsARbMpBVNGb57kuRt6lN8AMIW
-         zer8VvA0U3TkLKUy4r2bsvZSv57CN4mVi8iJMp6rv400hqailErptJjOg17rENRxQ0rX
-         nQoRanshZHuHlAzEuoGxbnQHGfd0bWTLMlYZtzkmb1OT5GWpkQ2Z5lemep+M3Pp+t89J
-         SEoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUU+JhvIOMWTV/9Cyx/cvINfxZ/d6k6PBov/GdSRzg8wRkkQ5tYHrPXp9tksyhAWQ9FNk/hg28VPBkxv3APLqhjF8HBXxdc5jUNPXE4
-X-Gm-Message-State: AOJu0YzYHs9kaG1r+9iywNe/6sY7BGRLNQEJeO/e4n4TeTTb/JehVXro
-	XvsRSXhcTBuhsfzLbLQkC7i7MePHPOF1Z6sB1cBcPK4E+A2+Jy9EjNq53m2GLmc=
-X-Google-Smtp-Source: AGHT+IGEfDP7fiY2wy+u7QVPwRVnfgZKbf0WPVJ5yp1DcSn44Sb5FY9EGhKJ+yzn6ZLbDpYvJ3fvPw==
-X-Received: by 2002:a05:600c:3b02:b0:41a:c4fe:b0a5 with SMTP id m2-20020a05600c3b0200b0041ac4feb0a5mr8937623wms.4.1715080530250;
-        Tue, 07 May 2024 04:15:30 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id d10-20020a05600c3aca00b00418e4cc9de7sm22960582wms.7.2024.05.07.04.15.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 04:15:29 -0700 (PDT)
-Date: Tue, 7 May 2024 13:15:27 +0200
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Maxime Ripard <mripard@redhat.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T.J. Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Lennart Poettering <mzxreary@0pointer.de>,
-	Robert Mader <robert.mader@collabora.com>,
-	Sebastien Bacher <sebastien.bacher@canonical.com>,
-	Linux Media Mailing List <linux-media@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	linaro-mm-sig@lists.linaro.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Milan Zamazal <mzamazal@redhat.com>,
-	Andrey Konovalov <andrey.konovalov.ynk@gmail.com>
-Subject: Re: Safety of opening up /dev/dma_heap/* to physically present users
- (udev uaccess tag) ?
-Message-ID: <ZjoNTw-TkPnnWLTG@phenom.ffwll.local>
-Mail-Followup-To: Hans de Goede <hdegoede@redhat.com>,
-	Maxime Ripard <mripard@redhat.com>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>,
-	Brian Starkey <Brian.Starkey@arm.com>,
-	John Stultz <jstultz@google.com>,
-	"T.J. Mercier" <tjmercier@google.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Lennart Poettering <mzxreary@0pointer.de>,
-	Robert Mader <robert.mader@collabora.com>,
-	Sebastien Bacher <sebastien.bacher@canonical.com>,
-	Linux Media Mailing List <linux-media@vger.kernel.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	linaro-mm-sig@lists.linaro.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Milan Zamazal <mzamazal@redhat.com>,
-	Andrey Konovalov <andrey.konovalov.ynk@gmail.com>
-References: <bb372250-e8b8-4458-bc99-dd8365b06991@redhat.com>
- <20240506-dazzling-nippy-rhino-eabccd@houat>
- <ZjjdUBYYKXJ1EPr5@phenom.ffwll.local>
- <cbe5a743-d8be-4b0e-99c4-e804fbadc099@redhat.com>
+	s=arc-20240116; t=1715080536; c=relaxed/simple;
+	bh=qTksG14/AXe3UADF3lCbJ7w9tRhXaIrGr0xnZCBfOIY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uTu2shJZAZLJEvvtmEPl8kHdlWN1q0YsMbCaVOYoHPRgo/CNRn744oz+EfXi7PzJeuGaGUhCzKLHq45dqhB2npOGgzSqczzKHTRYMY8DvoE7+Zg6vhG4I8pQGeuqTYTchxPqbegN/SmHLDZQCeKwjfJG4yviBZciC25YPEpbDEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VYbFN0mvtzYnhR;
+	Tue,  7 May 2024 19:11:36 +0800 (CST)
+Received: from dggpeml500023.china.huawei.com (unknown [7.185.36.114])
+	by mail.maildlp.com (Postfix) with ESMTPS id 59357180065;
+	Tue,  7 May 2024 19:15:25 +0800 (CST)
+Received: from hulk-vt.huawei.com (10.67.174.26) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Tue, 7 May 2024 19:15:25 +0800
+From: Xiu Jianfeng <xiujianfeng@huawei.com>
+To: <hannes@cmpxchg.org>, <mhocko@kernel.org>, <roman.gushchin@linux.dev>,
+	<shakeel.butt@linux.dev>, <muchun.song@linux.dev>,
+	<akpm@linux-foundation.org>
+CC: <cgroups@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 -next] mm: memcg: make alloc_mem_cgroup_per_node_info() return bool
+Date: Tue, 7 May 2024 11:08:32 +0000
+Message-ID: <20240507110832.1128370-1-xiujianfeng@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cbe5a743-d8be-4b0e-99c4-e804fbadc099@redhat.com>
-X-Operating-System: Linux phenom 6.6.15-amd64 
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
 
-On Mon, May 06, 2024 at 04:01:42PM +0200, Hans de Goede wrote:
-> Hi Sima,
-> 
-> On 5/6/24 3:38 PM, Daniel Vetter wrote:
-> > On Mon, May 06, 2024 at 02:05:12PM +0200, Maxime Ripard wrote:
-> >> Hi,
-> >>
-> >> On Mon, May 06, 2024 at 01:49:17PM GMT, Hans de Goede wrote:
-> >>> Hi dma-buf maintainers, et.al.,
-> >>>
-> >>> Various people have been working on making complex/MIPI cameras work OOTB
-> >>> with mainline Linux kernels and an opensource userspace stack.
-> >>>
-> >>> The generic solution adds a software ISP (for Debayering and 3A) to
-> >>> libcamera. Libcamera's API guarantees that buffers handed to applications
-> >>> using it are dma-bufs so that these can be passed to e.g. a video encoder.
-> >>>
-> >>> In order to meet this API guarantee the libcamera software ISP allocates
-> >>> dma-bufs from userspace through one of the /dev/dma_heap/* heaps. For
-> >>> the Fedora COPR repo for the PoC of this:
-> >>> https://hansdegoede.dreamwidth.org/28153.html
-> >>
-> >> For the record, we're also considering using them for ARM KMS devices,
-> >> so it would be better if the solution wasn't only considering v4l2
-> >> devices.
-> >>
-> >>> I have added a simple udev rule to give physically present users access
-> >>> to the dma_heap-s:
-> >>>
-> >>> KERNEL=="system", SUBSYSTEM=="dma_heap", TAG+="uaccess"
-> >>>
-> >>> (and on Rasperry Pi devices any users in the video group get access)
-> >>>
-> >>> This was just a quick fix for the PoC. Now that we are ready to move out
-> >>> of the PoC phase and start actually integrating this into distributions
-> >>> the question becomes if this is an acceptable solution; or if we need some
-> >>> other way to deal with this ?
-> >>>
-> >>> Specifically the question is if this will have any negative security
-> >>> implications? I can certainly see this being used to do some sort of
-> >>> denial of service attack on the system (1). This is especially true for
-> >>> the cma heap which generally speaking is a limited resource.
-> >>
-> >> There's plenty of other ways to exhaust CMA, like allocating too much
-> >> KMS or v4l2 buffers. I'm not sure we should consider dma-heaps
-> >> differently than those if it's part of our threat model.
-> > 
-> > So generally for an arm soc where your display needs cma, your render node
-> > doesn't. And user applications only have access to the later, while only
-> > the compositor gets a kms fd through logind. At least in drm aside from
-> > vc4 there's really no render driver that just gives you access to cma and
-> > allows you to exhaust that, you need to be a compositor with drm master
-> > access to the display.
-> > 
-> > Which means we're mostly protected against bad applications, and that's
-> > not a threat the "user physically sits in front of the machine accounts
-> > for", and which giving cma access to everyone would open up. And with
-> > flathub/snaps/... this is very much an issue.
-> 
-> I agree that bad applications are an issue, but not for the flathub / snaps
-> case. Flatpacks / snaps run sandboxed and don't have access to a full /dev
-> so those should not be able to open /dev/dma_heap/* independent of
-> the ACLs on /dev/dma_heap/*. The plan is for cameras using the
-> libcamera software ISP to always be accessed through pipewire and
-> the camera portal, so in this case pipewere is taking the place of
-> the compositor in your kms vs render node example.
+Currently alloc_mem_cgroup_per_node_info() returns 1 if failed,
+make it return bool, false for failure and true for success.
 
-Yeah essentially if you clarify to "set the permissions such that pipewire
-can do allocations", then I think that makes sense. And is at the same
-level as e.g. drm kms giving compsitors (but _only_ compositors) special
-access rights.
+Signed-off-by: Xiu Jianfeng <xiujianfeng@huawei.com>
+---
+ mm/memcontrol.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-> So this reduces the problem to bad apps packaged by regular distributions
-> and if any of those misbehave the distros should fix that.
-> 
-> So I think that for the denial of service side allowing physical
-> present users (but not sandboxed apps running as those users) to
-> access /dev/dma_heap/* should be ok.
-> 
-> My bigger worry is if dma_heap (u)dma-bufs can be abused in other
-> ways then causing a denial of service.
-> 
-> I guess that the answer there is that causing other security issues
-> should not be possible ?
-
-Well pinned memory exhaustion is a very useful tool to make all kinds of
-other kernel issues exploitable. Like if you have that you can weaponize
-all kinds of kmalloc error paths (and since it's untracked memory the oom
-killer will not get you of these issuees).
-
-I think for the pipewire based desktop it'd be best if you only allow
-pipewire to get at an fd for allocating from dma-heaps, kinda like logind
-furnishes the kms master fd ... Still has the issue that you can't nuke
-these buffers, but that's for another day. But at least from a "limit
-attack surface" design pov I think this would be better than just handing
-out access to the current user outright. But that's also not the worst
-option I guess, as long as snaps/flatpacks only go through the pipewire
-service.
--Sima
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index d11536ef59ef..69d70feb8e68 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5653,13 +5653,13 @@ struct mem_cgroup *mem_cgroup_get_from_ino(unsigned long ino)
+ }
+ #endif
+ 
+-static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
++static bool alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
+ {
+ 	struct mem_cgroup_per_node *pn;
+ 
+ 	pn = kzalloc_node(sizeof(*pn), GFP_KERNEL, node);
+ 	if (!pn)
+-		return 1;
++		return false;
+ 
+ 	pn->lruvec_stats = kzalloc_node(sizeof(struct lruvec_stats), GFP_KERNEL,
+ 					node);
+@@ -5675,11 +5675,11 @@ static int alloc_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
+ 	pn->memcg = memcg;
+ 
+ 	memcg->nodeinfo[node] = pn;
+-	return 0;
++	return true;
+ fail:
+ 	kfree(pn->lruvec_stats);
+ 	kfree(pn);
+-	return 1;
++	return false;
+ }
+ 
+ static void free_mem_cgroup_per_node_info(struct mem_cgroup *memcg, int node)
+@@ -5751,7 +5751,7 @@ static struct mem_cgroup *mem_cgroup_alloc(struct mem_cgroup *parent)
+ 	}
+ 
+ 	for_each_node(node)
+-		if (alloc_mem_cgroup_per_node_info(memcg, node))
++		if (!alloc_mem_cgroup_per_node_info(memcg, node))
+ 			goto fail;
+ 
+ 	if (memcg_wb_domain_init(memcg, GFP_KERNEL))
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.34.1
+
