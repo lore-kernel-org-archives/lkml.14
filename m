@@ -1,136 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D296D1C8;
-	Tue,  7 May 2024 06:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+Received: from zg8tmtu5ljy1ljeznc42.icoremail.net (zg8tmtu5ljy1ljeznc42.icoremail.net [159.65.134.6])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 044226F514;
+	Tue,  7 May 2024 06:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.65.134.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715062854; cv=none; b=XpZgqXqhg1LRIyVJii5q00v/xrFs41FTa/g7m/VDgka7SDCkFZ3UPx+JF3XPS6h7wM/dKVaRoPlyhE9UvgPtStE/vHfw6opnpwmr+rwnrWh4xY75JCpRjgOUFH6gGSniM/Vz87Q4i19Kclrc2VYqnMbz0AE850x7mDZ1te99fl8=
+	t=1715062891; cv=none; b=kDoDNtmNKYkMQw43wdjkEW3x/kKcIFROmVtCsA9Sq86DggFOrfkE2tQdMmPOqfn0tKqa5WzDUq1xzTOvZII2g+lGxPbEFwuMbzcGJcLjJVyHkGtqqXQCIZ2vkC8hL9NGJsBRLlGVVjfDbyJW6EzQMl/1AUDJSCDIycYGTevMKfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715062854; c=relaxed/simple;
-	bh=8eu/qd0HcIEbXA6xsMR5u7EcC2Nxb+4PTTFdq2/lk6A=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=oYggI4ShDAQkWHR2rTFOKeHHRRXBzMUUZSI5fMjGpApctOgAk/9twIdB/56RV+MilhyioY4SD/7HhrelpqvvZFGO5bvH3gZSIANxE9uxb6WegfBZaxEW/2T2LPMQTLxrVL4+u7ZHF6dlJ4a557Slp6rwvQA9tmfXlOOBKfI8cfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hjhQvOzA; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hjhQvOzA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715062851; x=1746598851;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=8eu/qd0HcIEbXA6xsMR5u7EcC2Nxb+4PTTFdq2/lk6A=;
-  b=hjhQvOzA3r5o+tiyaj2hNao1zpGCm8Eol3+TEfmS5XLHFAmL65MN6sWP
-   LracWAdcV93fEScw7JjSYbp/ZgizcyiG6nh0tLPR0oYl3IHAaiDWoVC6S
-   ZGmtIkR+C7AeSO/y0k8TVmYDgt2ux47EIDtV+wqDOae8u4OaouYYvJ4YA
-   QEVvz819v3xbkxXTV3k8WbvRhetVQq/Co3fsfC8i221sRZ6lSljbugv09
-   eosREatjpvHW+ZFHYrZlcL1RLqjsitqNvMYPqbRaI4dmRl18f71beGrz0
-   pUZMc08RQ9GAKu4KypZdrYMA+vVJ6QTeh+Yk+jBrcooYOuEtQylsSlv/N
-   w==;
-X-CSE-ConnectionGUID: KKa3DMqCT0qcf72sucr+cg==
-X-CSE-MsgGUID: SlIoQ+5ERaqXsxJ90rfU6g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="10991991"
-X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
-   d="scan'208";a="10991991"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 23:20:51 -0700
-X-CSE-ConnectionGUID: +8utow1dTNavv5QvzC3s3Q==
-X-CSE-MsgGUID: fDhGMvmsQ4+ufRX3B4RVDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,260,1708416000"; 
-   d="scan'208";a="28296498"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 May 2024 23:20:46 -0700
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org,
-	alex.williamson@redhat.com,
-	jgg@nvidia.com,
-	kevin.tian@intel.com
-Cc: iommu@lists.linux.dev,
-	pbonzini@redhat.com,
-	seanjc@google.com,
-	dave.hansen@linux.intel.com,
-	luto@kernel.org,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	hpa@zytor.com,
-	corbet@lwn.net,
-	joro@8bytes.org,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	baolu.lu@linux.intel.com,
-	yi.l.liu@intel.com,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH 2/5] KVM: x86/mmu: Fine-grained check of whether a invalid & RAM PFN is MMIO
-Date: Tue,  7 May 2024 14:20:09 +0800
-Message-Id: <20240507062009.20336-1-yan.y.zhao@intel.com>
+	s=arc-20240116; t=1715062891; c=relaxed/simple;
+	bh=HF+Ofv68p/rKPCMK4bG+yOgon7sXYv8NhYt95aJ9Zug=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=MZ9MVGITxUlKXnUmL/rElOlmvm6gw/N5twgvsy3IgOWaxK2Mba5tKT7mSCn6kKSoB0vuHkl8EcUqDBjS99sGQ145+RZ56w1UdUhW96+qqieOfCJhfPf9YvQNDfPn0eKnDwyBClNdZDyDsxtR7Jga2hwNbYoKWOOy8WB/d4mNyUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn; spf=pass smtp.mailfrom=zju.edu.cn; arc=none smtp.client-ip=159.65.134.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
+Received: from ubuntu.localdomain (unknown [221.192.179.90])
+	by mail-app4 (Coremail) with SMTP id cS_KCgC3Q7FVyDlmqYMzAA--.6564S2;
+	Tue, 07 May 2024 14:21:13 +0800 (CST)
+From: Duoming Zhou <duoming@zju.edu.cn>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-hams@vger.kernel.org,
+	pabeni@redhat.com,
+	kuba@kernel.org,
+	edumazet@google.com,
+	davem@davemloft.net,
+	jreuter@yaina.de,
+	horms@kernel.org,
+	Markus.Elfring@web.de,
+	dan.carpenter@linaro.org,
+	lars@oddbit.com,
+	Duoming Zhou <duoming@zju.edu.cn>
+Subject: [PATCH RESEND net v4 0/4] ax25: Fix issues of ax25_dev and net_device
+Date: Tue,  7 May 2024 14:21:08 +0800
+Message-Id: <cover.1715062582.git.duoming@zju.edu.cn>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240507061802.20184-1-yan.y.zhao@intel.com>
-References: <20240507061802.20184-1-yan.y.zhao@intel.com>
+X-CM-TRANSID:cS_KCgC3Q7FVyDlmqYMzAA--.6564S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jr17CF4xCrWxAFyUArW8WFg_yoWfXFX_uF
+	ykAFWUZw18JFWDCa10ka1rXrZruF4jga1xXFyftFZ5Jry3Za4UJr4qgr4rXF18XFW7tr4k
+	t3Z5Gr1fAr17JjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUU1n8FF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_GcCE
+	3s1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+	1lnx0E84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_GcCE3s0E84ACjcxK6xIIjxv20xvE14v2
+	6w1j6s0q6x02cVCv0xWlnx0E84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_GcCE3s0E84ACjc
+	xK6I8E87Iv67AKxVW0oVCq3VCjxxvEa2IrM2vj628EF7xvwVC0I7IYx2IY6xkF7I0E14v2
+	6rxl6s0q6x02cVCv0xWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I
+	8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCF
+	s4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFI
+	xGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wrylc2xSY4AK67AK6r47MxAI
+	w28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr
+	4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxG
+	rwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJw
+	CI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2
+	z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUUZYwUUUUUU==
+X-CM-SenderInfo: qssqjiasttq6lmxovvfxof0/1tbiAwMOAWY4-AkEPQBQsN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Fine-grained check to decide whether a PFN, which is !pfn_valid() and
-identified within the raw e820 table as RAM, should be treated as MMIO by
-KVM in order to prevent guest cachable access.
+The first patch uses kernel universal linked list to implement
+ax25_dev_list, which makes the operation of the list easier.
+The second and third patch fix reference count leak issues of
+the object "ax25_dev" and "net_device". The last patch uses
+ax25_dev_put() to replace kfree() in ax25_dev_free().
 
-Previously, a PFN that is !pfn_valid() and identified within the raw e820
-table as RAM was not considered as MMIO. This is for the scenerio when
-"mem=" was passed to the kernel, resulting in certain valid pages lacking
-an associated struct page. See commit 0c55671f84ff ("kvm, x86: Properly
-check whether a pfn is an MMIO or not").
+You can see the former discussion in the following link:
+https://lore.kernel.org/netdev/20240501060218.32898-1-duoming@zju.edu.cn/
 
-However, that approach is only based on guest performance perspective
-and may cause cacheable access to potential MMIO PFNs if
-pat_pfn_immune_to_uc_mtrr() identifies the PFN as having a PAT type of
-UC/WC/UC-. Therefore, do a fine-graned check for PAT in primary MMU so that
-KVM would map the PFN as UC in EPT to prevent cachable access from guest.
+Duoming Zhou (4):
+  ax25: Use kernel universal linked list to implement ax25_dev_list
+  ax25: Fix reference count leak issues of ax25_dev
+  ax25: Fix reference count leak issues of net_device
+  ax25: Change kfree() in ax25_dev_free() to ax25_dev_put()
 
-For the rare case when PAT is not enabled, default the PFN to MMIO to avoid
-further checking MTRR (since functions for MTRR related checking are not
-exported now).
+ include/net/ax25.h  |  4 ++--
+ net/ax25/ax25_dev.c | 51 ++++++++++++++++-----------------------------
+ 2 files changed, 20 insertions(+), 35 deletions(-)
 
-Cc: Kevin Tian <kevin.tian@intel.com>
-Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
----
- arch/x86/kvm/mmu/spte.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kvm/mmu/spte.c b/arch/x86/kvm/mmu/spte.c
-index 4a599130e9c9..5db0fb7b74f5 100644
---- a/arch/x86/kvm/mmu/spte.c
-+++ b/arch/x86/kvm/mmu/spte.c
-@@ -101,9 +101,21 @@ static bool kvm_is_mmio_pfn(kvm_pfn_t pfn)
- 			 */
- 			(!pat_enabled() || pat_pfn_immune_to_uc_mtrr(pfn));
- 
-+	/*
-+	 * If the PFN is invalid and not RAM in raw e820 table, keep treating it
-+	 * as MMIO.
-+	 *
-+	 * If the PFN is invalid and is RAM in raw e820 table,
-+	 * - if PAT is not enabled, always treat the PFN as MMIO to avoid futher
-+	 *   checking of MTRRs.
-+	 * - if PAT is enabled, treat the PFN as MMIO if its PAT is UC/WC/UC- in
-+	 *   primary MMU.
-+	 * to prevent guest cacheable access to MMIO PFNs.
-+	 */
- 	return !e820__mapped_raw_any(pfn_to_hpa(pfn),
- 				     pfn_to_hpa(pfn + 1) - 1,
--				     E820_TYPE_RAM);
-+				     E820_TYPE_RAM) ? true :
-+				     (!pat_enabled() || pat_pfn_immune_to_uc_mtrr(pfn));
- }
- 
- /*
 -- 
 2.17.1
 
