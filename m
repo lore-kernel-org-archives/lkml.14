@@ -1,35 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF9D16D32A;
-	Tue,  7 May 2024 13:18:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C03A16C44D
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715087918; cv=none; b=Xc0HY9E00bwHDHu4XC1AARNoNYZvof2cL0vliAnwP6EgaCQuZoHXYZxkTDl5I/0rWlMcZr7SPjQWFHfJ48IZcC5dItGddiEHpnv8s/0qDcc10hQ9ezVVI0aVjK/v8sSN3gbdssk92jOvXJcK8nBoNQPkc+zI+ksOt99UNFw8Qn0=
+	t=1715087918; cv=none; b=ktIJ6moBxzof5LeEUHPULO7sJU+/Ptrd4L6Cj58vKZKmvAh58TI+x+9Ihy/LKGLaeXLSJKryTG2fZo3V+SNHCmcJjE7S+9dVjlpg6P0WJozeqiqYoQpOvELltDlMn+sf0FEbNBGoVT93vcCKhlctcDchIUWr7n/JqIJ/OhcWw3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715087918; c=relaxed/simple;
-	bh=RN/G2T+h0gDIvoAMWemqAVAc9PVQmQKSA0ShqGvtKJY=;
+	bh=ijopITI+g400QtGKLS59fnNFa/e12FntTcMx7Nqpa5U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Q2DDw7rd1b62dGePcLD1fha/r65/So56IPpLQaeyPPg5Jzx2MKxYBgytKDAd0GLNZyvmVjH1ImhHRrz5zADjE6APbnp0hWqV5ywwhDc8wo4B1uDquw2SEzOCAoqEDedV31CJNMTtgyDx89bDraKLm/v39RT7oMiOpaxoEGHECE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p1MtUNP3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=JsnFaIgN/d0nWGDK0ukXgmSjNFus/aeDlOXFqtcftmj9FS5MS+uks4ucFhZC9TB80UDOpIlXGHaFk0A2ACSKzkwY3MMhVy99R5DPZGTSoF0cg6+S2+7XAo9qu2Y+B5o66gCb1j4bN6sSj/NZewKm/YK+ywHtCj1Ysqyma9KQLw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=LD5VbC3C; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p1MtUNP3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17A3BC3277B;
-	Tue,  7 May 2024 13:18:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715087917;
-	bh=RN/G2T+h0gDIvoAMWemqAVAc9PVQmQKSA0ShqGvtKJY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=p1MtUNP3alS+Mw2uXOmD69n8VQrwqY1+W7h/Q9CXVoRurF6zE+tdPsneoH97HjzNy
-	 b1BcASFzArqitVDPaDUmU1PNPPoA/EPN2MgFLbcwMzndkIzxtUewhbpi+MkqgjrD7Z
-	 e/EnQ/aot22pwAveTuUdQXB1R+EYEPuv8lNNdEyoj69j056FCQeD1+biz+ZGf4sZn/
-	 salazQz7IfQcwnhiEjgZpYjEn7ETSYcd5vkygYsbz+BV313+gos/R6uvomRZNx6koX
-	 Y9oYO4KXIFSHo/Wr9cBagRys++jDv8bcjQ3feBh059EgLVuj+h7EeyzaUVKzvG0l1A
-	 jTKg4I34ctYvg==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 07 May 2024 15:17:37 +0200
-Subject: [PATCH v13 19/28] drm/connector: hdmi: Add RGB Quantization Range
- to the connector state
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LD5VbC3C"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6a0406438b5so14781076d6.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 06:18:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715087915; x=1715692715; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o/4oby1OzvPbisoZWbigQhOZs4utcCTPvU7cAHaoXZY=;
+        b=LD5VbC3C62AUAa2nR4KgWdm3kuYSzH9cbgMdt+/EVWnIHtdeJhzm/pLWCTqlIr94s5
+         k//uu2AJywfQVcHVCDhQOnXA3nLl2zoNVOjqwAB6ruv252JzcGJDdWqz8+ucS08O9+2J
+         L8glmdsq1N3jN6F/2zDjH6He4XIB4FhwDLO6I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715087915; x=1715692715;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o/4oby1OzvPbisoZWbigQhOZs4utcCTPvU7cAHaoXZY=;
+        b=pPrgI3pwT11+efQUQFeiqiXV70knsI4Ec7HaCQb1xY+gU0kgsZ5anJ6ji2+nT/kYgf
+         zVSd/O0WGjPY4vsey2N4j+yLGzi7KsTRMi/82NfJ+sb3GZH14sGTU0hGcq2NXShfsbDs
+         0RAPfFMpwO+VS4HD8esXpauB72Xj27uuat9BSLkZ6TEeaP7f/nMK+bkbCJx/l5FHkGwy
+         unrAyFMti/qhjRJB081CyT5vSV1tZ04OR1/FXPVcP+HPNpWZlcX0kvauEbtvCHVmvhC9
+         FXhLtbrpUsLy/jJqfd/ZyWfhIOS1SIcUBiw/qL4VeRbbZhZz5TG49YyZuXSSgp9+rIfH
+         tKNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXNJc7GTqCodI+lngCHwI47d2thWh0jc8b9wugyjz7Wg/Az2E0KqdkspHaboNr7M2++iJ7PqPJlwKCnfzkoWiL2tRKETm/K6WboQBc6
+X-Gm-Message-State: AOJu0Yy3OiH7Hk7arqYJplYstZiXqjKFdhYNVYMPuy4MlNm8cAHGGQF3
+	lDF4YMIsX9NoSnPoILm8TtkZDUYQw53mIyCCITTVrMeJrQB6tIUgj0hUkoySCg==
+X-Google-Smtp-Source: AGHT+IEwGqKCP2RodY96Q7BvikThgfGTcpEIa62+nhVbtzbMCCA4jSL8KZCOlBJ4ow7E8ohEtntOvA==
+X-Received: by 2002:a05:6214:2401:b0:6a0:cd2a:8ae2 with SMTP id fv1-20020a056214240100b006a0cd2a8ae2mr15077797qvb.21.1715087915445;
+        Tue, 07 May 2024 06:18:35 -0700 (PDT)
+Received: from denia.c.googlers.com (114.152.245.35.bc.googleusercontent.com. [35.245.152.114])
+        by smtp.gmail.com with ESMTPSA id t15-20020a05621405cf00b006a0d19c3139sm4655105qvz.118.2024.05.07.06.18.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 06:18:35 -0700 (PDT)
+From: Ricardo Ribalda <ribalda@chromium.org>
+Date: Tue, 07 May 2024 13:18:32 +0000
+Subject: [PATCH 06/18] media: siano: Refactor struct sms_msg_data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,139 +60,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240507-kms-hdmi-connector-state-v13-19-8fafc5efe8be@kernel.org>
-References: <20240507-kms-hdmi-connector-state-v13-0-8fafc5efe8be@kernel.org>
-In-Reply-To: <20240507-kms-hdmi-connector-state-v13-0-8fafc5efe8be@kernel.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Daniel Vetter <daniel@ffwll.ch>, Jonathan Corbet <corbet@lwn.net>, 
- Sandy Huang <hjc@rock-chips.com>, 
- =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, 
- Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Andy Yan <andy.yan@rock-chips.com>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>, 
- Sebastian Wick <sebastian.wick@redhat.com>, 
- =?utf-8?q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>, 
- dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-sunxi@lists.linux.dev, Maxime Ripard <mripard@kernel.org>, 
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4100; i=mripard@kernel.org;
- h=from:subject:message-id; bh=RN/G2T+h0gDIvoAMWemqAVAc9PVQmQKSA0ShqGvtKJY=;
- b=owGbwMvMwCmsHn9OcpHtvjLG02pJDGlWmu//neJd9GHTqncbTuxfxbjaU6lKZeu1ZfOL7+6aI
- X9+4/ba8x1TWRiEORlkxRRZnsiEnV7evrjKwX7lD5g5rEwgQxi4OAVgIgrmjLWCOneTmhgTbnid
- +pE0ZfuxCQ+1pl4M3JyYLiwSEPwzoHvapopnMxd+nKqXUNJ7pUtI3Y+xvkRx/vW8rjtHGua2vHr
- 54XWsaN4rNamqDUXWOouiH4b2z3RYvLUyes+CLom+7aeze4quAwA=
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Message-Id: <20240507-cocci-flexarray-v1-6-4a421c21fd06@chromium.org>
+References: <20240507-cocci-flexarray-v1-0-4a421c21fd06@chromium.org>
+In-Reply-To: <20240507-cocci-flexarray-v1-0-4a421c21fd06@chromium.org>
+To: Michael Tretter <m.tretter@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Michal Simek <michal.simek@amd.com>, Andy Walls <awalls@md.metrocast.net>, 
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>, 
+ Vikash Garodia <quic_vgarodia@quicinc.com>, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
+ Hans Verkuil <hverkuil-cisco@xs4all.nl>, 
+ Ricardo Ribalda <ribalda@chromium.org>
+X-Mailer: b4 0.12.4
 
-HDMI controller drivers will need to figure out the RGB range they need
-to configure based on a mode and property values. Let's expose that in
-the HDMI connector state so drivers can just use that value.
+Replace a single element array with a single element field.
 
-Reviewed-by: Dave Stevenson <dave.stevenson@raspberrypi.com>
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
+This fixes the following cocci warning:
+drivers/media/common/siano/smscoreapi.h:619:5-13: WARNING use flexible-array member instead (https://www.kernel.org/doc/html/latest/process/deprecated.html#zero-length-and-one-element-arrays)
+
+Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 ---
- drivers/gpu/drm/display/drm_hdmi_state_helper.c | 29 +++++++++++++++++++++++++
- drivers/gpu/drm/drm_atomic.c                    |  1 +
- include/drm/drm_connector.h                     |  6 +++++
- 3 files changed, 36 insertions(+)
+ drivers/media/common/siano/smscoreapi.c  | 10 +++++-----
+ drivers/media/common/siano/smscoreapi.h  |  2 +-
+ drivers/media/common/siano/smsdvb-main.c |  4 ++--
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/display/drm_hdmi_state_helper.c b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-index f038f567ab43..c3a10f9f7ecd 100644
---- a/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-+++ b/drivers/gpu/drm/display/drm_hdmi_state_helper.c
-@@ -49,10 +49,37 @@ connector_state_get_mode(const struct drm_connector_state *conn_state)
- 		return NULL;
+diff --git a/drivers/media/common/siano/smscoreapi.c b/drivers/media/common/siano/smscoreapi.c
+index 7ebcb10126c9..b6f1eb5dbbdf 100644
+--- a/drivers/media/common/siano/smscoreapi.c
++++ b/drivers/media/common/siano/smscoreapi.c
+@@ -839,7 +839,7 @@ static int smscore_configure_board(struct smscore_device_t *coredev)
+ 		mtu_msg.x_msg_header.msg_flags = 0;
+ 		mtu_msg.x_msg_header.msg_type = MSG_SMS_SET_MAX_TX_MSG_LEN_REQ;
+ 		mtu_msg.x_msg_header.msg_length = sizeof(mtu_msg);
+-		mtu_msg.msg_data[0] = board->mtu;
++		mtu_msg.msg_data = board->mtu;
  
- 	return &crtc_state->mode;
- }
+ 		coredev->sendrequest_handler(coredev->context, &mtu_msg,
+ 					     sizeof(mtu_msg));
+@@ -852,7 +852,7 @@ static int smscore_configure_board(struct smscore_device_t *coredev)
+ 		SMS_INIT_MSG(&crys_msg.x_msg_header,
+ 				MSG_SMS_NEW_CRYSTAL_REQ,
+ 				sizeof(crys_msg));
+-		crys_msg.msg_data[0] = board->crystal;
++		crys_msg.msg_data = board->crystal;
  
-+static bool hdmi_is_limited_range(const struct drm_connector *connector,
-+				  const struct drm_connector_state *conn_state)
-+{
-+	const struct drm_display_info *info = &connector->display_info;
-+	const struct drm_display_mode *mode =
-+		connector_state_get_mode(conn_state);
-+
-+	/*
-+	 * The Broadcast RGB property only applies to RGB format, and
-+	 * i915 just assumes limited range for YCbCr output, so let's
-+	 * just do the same.
-+	 */
-+	if (conn_state->hdmi.output_format != HDMI_COLORSPACE_RGB)
-+		return true;
-+
-+	if (conn_state->hdmi.broadcast_rgb == DRM_HDMI_BROADCAST_RGB_FULL)
-+		return false;
-+
-+	if (conn_state->hdmi.broadcast_rgb == DRM_HDMI_BROADCAST_RGB_LIMITED)
-+		return true;
-+
-+	if (!info->is_hdmi)
-+		return false;
-+
-+	return drm_default_rgb_quant_range(mode) == HDMI_QUANTIZATION_RANGE_LIMITED;
-+}
-+
- static bool
- sink_supports_format_bpc(const struct drm_connector *connector,
- 			 const struct drm_display_info *info,
- 			 const struct drm_display_mode *mode,
- 			 unsigned int format, unsigned int bpc)
-@@ -309,10 +336,12 @@ int drm_atomic_helper_connector_hdmi_check(struct drm_connector *connector,
- 		drm_atomic_get_new_connector_state(state, connector);
- 	const struct drm_display_mode *mode =
- 		connector_state_get_mode(new_conn_state);
- 	int ret;
+ 		coredev->sendrequest_handler(coredev->context, &crys_msg,
+ 					     sizeof(crys_msg));
+@@ -1306,7 +1306,7 @@ static int smscore_init_device(struct smscore_device_t *coredev, int mode)
+ 	msg = (struct sms_msg_data *)SMS_ALIGN_ADDRESS(buffer);
+ 	SMS_INIT_MSG(&msg->x_msg_header, MSG_SMS_INIT_DEVICE_REQ,
+ 			sizeof(struct sms_msg_data));
+-	msg->msg_data[0] = mode;
++	msg->msg_data = mode;
  
-+	new_conn_state->hdmi.is_limited_range = hdmi_is_limited_range(connector, new_conn_state);
-+
- 	ret = hdmi_compute_config(connector, new_conn_state, mode);
- 	if (ret)
- 		return ret;
+ 	rc = smscore_sendrequest_and_wait(coredev, msg,
+ 			msg->x_msg_header. msg_length,
+@@ -1394,7 +1394,7 @@ int smscore_set_device_mode(struct smscore_device_t *coredev, int mode)
  
- 	if (old_conn_state->hdmi.broadcast_rgb != new_conn_state->hdmi.broadcast_rgb ||
-diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/drm/drm_atomic.c
-index 3e57d98d8418..07b4b394e3bf 100644
---- a/drivers/gpu/drm/drm_atomic.c
-+++ b/drivers/gpu/drm/drm_atomic.c
-@@ -1145,10 +1145,11 @@ static void drm_atomic_connector_print_state(struct drm_printer *p,
+ 			SMS_INIT_MSG(&msg->x_msg_header, MSG_SMS_INIT_DEVICE_REQ,
+ 				     sizeof(struct sms_msg_data));
+-			msg->msg_data[0] = mode;
++			msg->msg_data = mode;
  
- 	if (connector->connector_type == DRM_MODE_CONNECTOR_HDMIA ||
- 	    connector->connector_type == DRM_MODE_CONNECTOR_HDMIB) {
- 		drm_printf(p, "\tbroadcast_rgb=%s\n",
- 			   drm_hdmi_connector_get_broadcast_rgb_name(state->hdmi.broadcast_rgb));
-+		drm_printf(p, "\tis_limited_range=%c\n", state->hdmi.is_limited_range ? 'y' : 'n');
- 		drm_printf(p, "\toutput_bpc=%u\n", state->hdmi.output_bpc);
- 		drm_printf(p, "\toutput_format=%s\n",
- 			   drm_hdmi_connector_get_output_format_name(state->hdmi.output_format));
- 		drm_printf(p, "\ttmds_char_rate=%llu\n", state->hdmi.tmds_char_rate);
- 	}
-diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-index a40eaf3a8ce4..1fca26d51218 100644
---- a/include/drm/drm_connector.h
-+++ b/include/drm/drm_connector.h
-@@ -1068,10 +1068,16 @@ struct drm_connector_state {
- 		 * @broadcast_rgb: Connector property to pass the
- 		 * Broadcast RGB selection value.
- 		 */
- 		enum drm_hdmi_broadcast_rgb broadcast_rgb;
+ 			rc = smscore_sendrequest_and_wait(
+ 				coredev, msg, msg->x_msg_header.msg_length,
+@@ -1554,7 +1554,7 @@ void smscore_onresponse(struct smscore_device_t *coredev,
+ 			struct sms_msg_data *validity = (struct sms_msg_data *) phdr;
  
-+		/**
-+		 * @is_full_range: Is the output supposed to use a full
-+		 * RGB Quantization Range or not?
-+		 */
-+		bool is_limited_range;
-+
- 		/**
- 		 * @output_bpc: Bits per color channel to output.
- 		 */
- 		unsigned int output_bpc;
+ 			pr_debug("MSG_SMS_DATA_VALIDITY_RES, checksum = 0x%x\n",
+-				validity->msg_data[0]);
++				validity->msg_data);
+ 			complete(&coredev->data_validity_done);
+ 			break;
+ 		}
+diff --git a/drivers/media/common/siano/smscoreapi.h b/drivers/media/common/siano/smscoreapi.h
+index f8789ee0d554..46dc74ac9318 100644
+--- a/drivers/media/common/siano/smscoreapi.h
++++ b/drivers/media/common/siano/smscoreapi.h
+@@ -616,7 +616,7 @@ struct sms_msg_hdr {
  
+ struct sms_msg_data {
+ 	struct sms_msg_hdr x_msg_header;
+-	u32 msg_data[1];
++	u32 msg_data;
+ };
+ 
+ struct sms_msg_data2 {
+diff --git a/drivers/media/common/siano/smsdvb-main.c b/drivers/media/common/siano/smsdvb-main.c
+index d893a0e4672b..44d8fe8b220e 100644
+--- a/drivers/media/common/siano/smsdvb-main.c
++++ b/drivers/media/common/siano/smsdvb-main.c
+@@ -689,7 +689,7 @@ static int smsdvb_start_feed(struct dvb_demux_feed *feed)
+ 	pid_msg.x_msg_header.msg_flags = 0;
+ 	pid_msg.x_msg_header.msg_type  = MSG_SMS_ADD_PID_FILTER_REQ;
+ 	pid_msg.x_msg_header.msg_length = sizeof(pid_msg);
+-	pid_msg.msg_data[0] = feed->pid;
++	pid_msg.msg_data = feed->pid;
+ 
+ 	return smsclient_sendrequest(client->smsclient,
+ 				     &pid_msg, sizeof(pid_msg));
+@@ -711,7 +711,7 @@ static int smsdvb_stop_feed(struct dvb_demux_feed *feed)
+ 	pid_msg.x_msg_header.msg_flags = 0;
+ 	pid_msg.x_msg_header.msg_type  = MSG_SMS_REMOVE_PID_FILTER_REQ;
+ 	pid_msg.x_msg_header.msg_length = sizeof(pid_msg);
+-	pid_msg.msg_data[0] = feed->pid;
++	pid_msg.msg_data = feed->pid;
+ 
+ 	return smsclient_sendrequest(client->smsclient,
+ 				     &pid_msg, sizeof(pid_msg));
 
 -- 
-2.45.0
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
