@@ -1,105 +1,200 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B691815E1E2;
-	Tue,  7 May 2024 13:49:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 437E715F408;
+	Tue,  7 May 2024 13:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715089801; cv=none; b=rhkNswYv//zxfuPkb40L+DvynUVlZieOtZmZ1MosXY8/vCrY6o4EE7vPXSbg+8xE4CfhyW6lY7tZ6cJ36zrwmyvQDMBEtawrPkcHUHNnr5nhTJXHlMrF+/YwxF+a1xWyP4rtFNOSRJaLaIZxftzdAq5h325XlmRvdwDwARuyMjs=
+	t=1715089802; cv=none; b=cBvLW0CkR0XKcb3dZelgFpH8G7kv/Fyc5HeBkMxtCnC4lFjidwSfstKR6SB3FJBSANKoME2sQTjNg022J5N+ocscoYnsGGP1nSBRSuwUdZ7NH/mHhIIKSBXuQ6YNHEJ6fHnJJirQsIt+CYCg7pE6+5KPH3ceROjPsZH03MhNdYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715089801; c=relaxed/simple;
-	bh=DuwCtrSlUNDnmtWfQfx1BvJwkNFl/gBu/OaoVqRMsrQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N2/RcgqBzIHKzA/JmwsekK5uaM0SIvJM0RjmUuHbRdMq+0EkMp/ix+TJWKJQa2YaMYpuwQ0ObF1LQpACFLIPXd0WKvBsbDQj86cai+p0kyr4U3x6VAQO8JOho0+8FvTlXTxfbyxm4KiqcF2fFfvJ137vCchAuOjiL1XAFJle01g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VYfh937C4z1RCRl;
-	Tue,  7 May 2024 21:46:33 +0800 (CST)
-Received: from kwepemm600007.china.huawei.com (unknown [7.193.23.208])
-	by mail.maildlp.com (Postfix) with ESMTPS id 15CC714022D;
-	Tue,  7 May 2024 21:49:52 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- kwepemm600007.china.huawei.com (7.193.23.208) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 7 May 2024 21:49:51 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <yisen.zhuang@huawei.com>, <salil.mehta@huawei.com>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <jiri@resnulli.us>, <horms@kernel.org>
-CC: <shenjian15@huawei.com>, <wangjie125@huawei.com>,
-	<liuyonglong@huawei.com>, <shaojijie@huawei.com>, <chenhao418@huawei.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH V3 net 5/7] net: hns3: use appropriate barrier function after setting a bit value
-Date: Tue, 7 May 2024 21:42:22 +0800
-Message-ID: <20240507134224.2646246-6-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20240507134224.2646246-1-shaojijie@huawei.com>
-References: <20240507134224.2646246-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1715089802; c=relaxed/simple;
+	bh=Hc/RNhSHcD+jiFZ3nckCqRmYXWrEE8CcqIQTZk2O420=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MzNS9Dm9tnYD9RF1K6buVPkIErlqDiSiUhKQrMqCGWToOYwFdj8OYKjKmjmDo6SNEY9yekvcNAihVpHbqlhmYsyZ1NWB5vOXwpHEkGQP30iQiSPQ5ySKQ/sUEzZ+mhF+Xb2bzqsSCUsGWcXdHNJa3PYcs3YNOGh36gNWDuBMt6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lPO4q6Dq; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lPO4q6Dq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715089801; x=1746625801;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Hc/RNhSHcD+jiFZ3nckCqRmYXWrEE8CcqIQTZk2O420=;
+  b=lPO4q6DqTv+La3L0KmoNPnbHjH9mjcd1qZgz4Ua8zFrrUTaBoXba/XSf
+   Onfu/MJ3XGVqELNP0WkzCDly/iNUBaM7yrjc6P1pAlyojCKsaz/C1dJW4
+   jr3/J3jejgbYBcALP5JxuKLADjAUM+JJt6hjM9kLHnX6fkUe3OEL7R3NY
+   WE0R4UHiKJZLpGTmoJPbPUFB9+2aV1VM16znyHpclKrA/c9Nk5ZDL27Yy
+   +HZaF889JItz2cvuCIvix00qOqTEgdRwco49SQiZlohCvFvSdXskTjvXY
+   jdJEgrrdsRMjEAMQq1XcCbFAYQ2bt3WL1q71BHwlRxs11R+IZFnAStowX
+   g==;
+X-CSE-ConnectionGUID: uH1djRypTx2HAzQdA+4hog==
+X-CSE-MsgGUID: EkPzERAtTTuypTkrfiU9CA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="11009876"
+X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
+   d="scan'208";a="11009876"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 06:49:56 -0700
+X-CSE-ConnectionGUID: /XUIx9WsSy+oT5gg8tWNvw==
+X-CSE-MsgGUID: S/gy+mMrSb2BvdjaEjbhbQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,261,1712646000"; 
+   d="scan'208";a="29114486"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 06:49:53 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1s4LCX-000000053NT-2YJH;
+	Tue, 07 May 2024 16:49:49 +0300
+Date: Tue, 7 May 2024 16:49:49 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Igor Mammedov <imammedo@redhat.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	linux-kernel@vger.kernel.org, Lidong Wang <lidong.wang@intel.com>
+Subject: Re: [PATCH v3 8/8] PCI: Relax bridge window tail sizing rules
+Message-ID: <ZjoxfYEi9mMQnRBh@smile.fi.intel.com>
+References: <20240507102523.57320-1-ilpo.jarvinen@linux.intel.com>
+ <20240507102523.57320-9-ilpo.jarvinen@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600007.china.huawei.com (7.193.23.208)
+In-Reply-To: <20240507102523.57320-9-ilpo.jarvinen@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Peiyang Wang <wangpeiyang1@huawei.com>
+On Tue, May 07, 2024 at 01:25:23PM +0300, Ilpo Järvinen wrote:
+> During remove & rescan cycle, PCI subsystem will recalculate and adjust
+> the bridge window sizing that was initially done by "BIOS". The size
+> calculation is based on the required alignment of the largest resource
+> among the downstream resources as per pbus_size_mem() (unimportant or
+> zero parameters marked with "..."):
+> 
+> 	min_align = calculate_mem_align(aligns, max_order);
+> 	size0 = calculate_memsize(size, ..., min_align);
+> 
+> inside calculate_memsize(), for the largest alignment:
+> 	min_align = align1 >> 1;
+> 	...
+> 	return min_align;
+> 
+> and then in calculate_memsize():
+> 	return ALIGN(max(size, ...), align);
+> 
+> If the original bridge window sizing tried to conserve space, this will
+> lead to massive increase of the required bridge window size when the
+> downstream has a large disparity in BAR sizes. E.g., with 16MiB and
+> 16GiB BARs this results in 24GiB bridge window size even if 16MiB BAR
+> does not require gigabytes of space to fit.
+> 
+> When doing remove & rescan for a bus that contains such a PCI device, a
+> larger bridge window is suddenly required on rescan but when there is a
+> bridge window upstream that is already assigned based on the original
+> size, it cannot be enlarged to the new requirement. This causes the
+> allocation of the bridge window to fail (0x600000000 > 0x400ffffff):
+> 
+> pci 0000:02:01.0: PCI bridge to [bus 03]
+> pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
+> pci 0000:02:01.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
+> pci 0000:01:00.0: PCI bridge to [bus 02-04]
+> pci 0000:01:00.0:   bridge window [mem 0x40400000-0x406fffff]
+> pci 0000:01:00.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
+> 
+> pci 0000:03:00.0: device released
+> pci 0000:02:01.0: device released
+> pcieport 0000:01:00.0: scanning [bus 02-04] behind bridge, pass 0
+> pci 0000:02:01.0: PCI bridge to [bus 03]
+> pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
+> pci 0000:02:01.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
+> pci 0000:02:01.0: scanning [bus 03-03] behind bridge, pass 0
+> pci 0000:03:00.0: BAR 0 [mem 0x6400000000-0x6400ffffff 64bit pref]
+> pci 0000:03:00.0: BAR 2 [mem 0x6000000000-0x63ffffffff 64bit pref]
+> pci 0000:03:00.0: ROM [mem 0x40400000-0x405fffff pref]
+> 
+> pci 0000:02:01.0: PCI bridge to [bus 03]
+> pci 0000:02:01.0: scanning [bus 03-03] behind bridge, pass 1
+> pcieport 0000:01:00.0: scanning [bus 02-04] behind bridge, pass 1
+> pci 0000:02:01.0: bridge window [mem size 0x600000000 64bit pref]: can't assign; no space
+> pci 0000:02:01.0: bridge window [mem size 0x600000000 64bit pref]: failed to assign
+> pci 0000:02:01.0: bridge window [mem 0x40400000-0x405fffff]: assigned
+> pci 0000:03:00.0: BAR 2 [mem size 0x400000000 64bit pref]: can't assign; no space
+> pci 0000:03:00.0: BAR 2 [mem size 0x400000000 64bit pref]: failed to assign
+> pci 0000:03:00.0: BAR 0 [mem size 0x01000000 64bit pref]: can't assign; no space
+> pci 0000:03:00.0: BAR 0 [mem size 0x01000000 64bit pref]: failed to assign
+> pci 0000:03:00.0: ROM [mem 0x40400000-0x405fffff pref]: assigned
+> pci 0000:02:01.0: PCI bridge to [bus 03]
+> pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
+> 
+> This is a major surprise for users who are suddenly left with a PCIe
+> device that was working fine with the original bridge window sizing.
+> 
+> Even if the already assigned bridge window could be enlarged by
+> reallocation in some cases (something the current code does not attempt
+> to do), it is not possible in general case and the large amount of
+> wasted space at the tail of the bridge window may lead to other
+> resource exhaustion problems on Root Complex level (think of multiple
+> PCIe cards with VFs and BAR size disparity in a single system).
+> 
+> PCI specifications only expect natural alignment for BARs (PCI Express
+> Base Specification, rev. 6.1 sect. 7.5.1.2.1) and minimum of 1MiB
+> alignment for the bridge window (PCI Express Base Specification,
+> rev 6.1 sect. 7.5.1.3). The current bridge window tail alignment rule
+> was introduced in the commit 5d0a8965aea9 ("[PATCH] 2.5.14: New PCI
+> allocation code (alpha, arm, parisc) [2/2]") that only states:
+> "pbus_size_mem: core stuff; tested with randomly generated sets of
+> resources". It does not explain the motivation for the extra tail space
+> allocated that is not truly needed by the downstream resources. As
+> such, it is far from clear if it ever has been required by any HW.
+> 
+> To prevent PCIe cards with BAR size disparity from becoming unusable
+> after remove & rescan cycle, attempt to do a truly minimal allocation
+> for memory resources if needed. First check if the normally calculated
+> bridge window will not fit into an already assigned upstream resource.
+> In such case, try with relaxed bridge window tail sizing rules instead
+> where no extra tail space is requested beyond what the downstream
+> resources require. Only enforce the alignment requirement of the bridge
+> window itself (normally 1MiB).
+> 
+> With this patch, the resources are successfully allocated:
+> 
+> pci 0000:02:01.0: PCI bridge to [bus 03]
+> pci 0000:02:01.0: scanning [bus 03-03] behind bridge, pass 1
+> pcieport 0000:01:00.0: scanning [bus 02-04] behind bridge, pass 1
+> pcieport 0000:01:00.0: Assigned bridge window [mem 0x6000000000-0x6400ffffff 64bit pref] to [bus 02-04] cannot fit 0x600000000 required for 0000:02:01.0 bridging to [bus 03]
+> pci 0000:02:01.0: bridge window [mem 0x6000000000-0x6400ffffff 64bit pref] to [bus 03] requires relaxed alignment rules
+> pcieport 0000:01:00.0: Assigned bridge window [mem 0x40400000-0x406fffff] to [bus 02-04] free space at [mem 0x40400000-0x405fffff]
+> pci 0000:02:01.0: bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]: assigned
+> pci 0000:02:01.0: bridge window [mem 0x40400000-0x405fffff]: assigned
+> pci 0000:03:00.0: BAR 2 [mem 0x6000000000-0x63ffffffff 64bit pref]: assigned
+> pci 0000:03:00.0: BAR 0 [mem 0x6400000000-0x6400ffffff 64bit pref]: assigned
+> pci 0000:03:00.0: ROM [mem 0x40400000-0x405fffff pref]: assigned
+> pci 0000:02:01.0: PCI bridge to [bus 03]
+> pci 0000:02:01.0:   bridge window [mem 0x40400000-0x405fffff]
+> pci 0000:02:01.0:   bridge window [mem 0x6000000000-0x6400ffffff 64bit pref]
+> 
+> This patch draws inspiration from the initial investigations and work
+> by Mika Westerberg.
 
-There is a memory barrier in followed case. When set the port down,
-hclgevf_set_timmer will set DOWN in state. Meanwhile, the service task has
-different behaviour based on whether the state is DOWN. Thus, to make sure
-service task see DOWN, use smp_mb__after_atomic after calling set_bit().
+...
 
-          CPU0                        CPU1
-========================== ===================================
-hclgevf_set_timer_task()    hclgevf_periodic_service_task()
-  set_bit(DOWN,state)         test_bit(DOWN,state)
+> +		min_align = 1ULL << (max_order + __ffs(SZ_1M));
 
-pf also has this issue.
+In case of a new version of the series, this can utilise BIT_ULL().
 
-Fixes: ff200099d271 ("net: hns3: remove unnecessary work in hclgevf_main")
-Fixes: 1c6dfe6fc6f7 ("net: hns3: remove mailbox and reset work in hclge_main")
-Signed-off-by: Peiyang Wang <wangpeiyang1@huawei.com>
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
-Reviewed-by: Simon Horman <horms@kernel.org>
----
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 3 +--
- drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 1d255b3ae988..e3d6a64b4575 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -7957,8 +7957,7 @@ static void hclge_set_timer_task(struct hnae3_handle *handle, bool enable)
- 		/* Set the DOWN flag here to disable link updating */
- 		set_bit(HCLGE_STATE_DOWN, &hdev->state);
- 
--		/* flush memory to make sure DOWN is seen by service task */
--		smp_mb__before_atomic();
-+		smp_mb__after_atomic(); /* flush memory to make sure DOWN is seen by service task */
- 		hclge_flush_link_update(hdev);
- 	}
- }
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-index b57111252d07..08db8e84be4e 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c
-@@ -2181,8 +2181,7 @@ static void hclgevf_set_timer_task(struct hnae3_handle *handle, bool enable)
- 	} else {
- 		set_bit(HCLGEVF_STATE_DOWN, &hdev->state);
- 
--		/* flush memory to make sure DOWN is seen by service task */
--		smp_mb__before_atomic();
-+		smp_mb__after_atomic(); /* flush memory to make sure DOWN is seen by service task */
- 		hclgevf_flush_link_update(hdev);
- 	}
- }
 -- 
-2.30.0
+With Best Regards,
+Andy Shevchenko
+
 
