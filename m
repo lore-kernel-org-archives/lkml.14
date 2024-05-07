@@ -1,106 +1,92 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7854D14B940;
-	Tue,  7 May 2024 20:07:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DCF14B962;
+	Tue,  7 May 2024 20:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715112470; cv=none; b=e1/mz8apJ34bN5mpoKjQ90Pth+ypVk3dl3OqMNrWQi5Hut3rhuz3ItxVw74Sx82mIsiN7NsYKVXk4uZPMe+yROGLZCILuTPJ6QoGt2NL2hSZfYuIQoKlDF5OCP39CKudo18Bu877KJDwE2Su5SttW9CtmW+EY5AjSlBtXFw9xH4=
+	t=1715112505; cv=none; b=ZRB43cn0Pkl1bik85ivN/Q4nAVo1ZZaEthJt5Y+Cw5NgHWTx2EM0R1i+n7Hst/atIdyqGsojc5xfEgI6pdrjy2zR4T87jTyjLR9AcjKJ2BLL2K8xPt6/3zdvGubHgjzL37EnsG8FO8OeUgOVpvU3DltQt4BjrJDnZnGAtpX3dEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715112470; c=relaxed/simple;
-	bh=fipWuacVxzVGjU5VN53PElEjG/EVMb8BJ11r6n3Qv6w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DNY0H8zqwvwtEsOq3DQkDawbI4Mj6682maltOl+AjIoZX/TvxAZRFnTT/KR7Gye2dA36TXbF1G0AdQPxCUvMrignG1wzg9NPv+3t5IJI9rCbtWV5SEwKT3mtCjcrVlRhmp4tjDpW6uA3WX/SJepT0tE3mBqrNaqPfCiV/7vPY5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ayce0jpT; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1715112505; c=relaxed/simple;
+	bh=m2RT8PC4x1UCnE8lG23iBCFVaGRGa4zOXUVtHgndTQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=TjfnUXdCmVN9nfNcw6vyg4JChDBo+bTeHhFICa6fDfAZsWuOiImJdORdNWC1Ss7hHbu4tGhIirEXjtCjISbWKfkxQP0LZPZTUSp00NgelLrBIK6R/sfk1qVKLK0781qIFlpyr2aNhketK/ofUfn64LeHUchWmYrgPKBjI4/dPpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lidICO5K; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ayce0jpT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715112466;
-	bh=fipWuacVxzVGjU5VN53PElEjG/EVMb8BJ11r6n3Qv6w=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ayce0jpTxn/KmZ5Mg7KGIx3PNbevbAYK9fpmSuiWhC9OoTF5RynAKB31qJBgqop6m
-	 SCuon0S6OseuU+bLsJvOo768IJ/HQxvJc7YlZDykNaHUatUmZVqZIOXAu67v3ObuAT
-	 rBWLOmR2jVrcZUNfXp3PDUuFNsnrSrhAU01VCRM9eytOy0S50jtKbjIClzR72op8ip
-	 mPuhRlzPQoYd5RWXWJ2OcqZY547pj/GLfuH5K/0S3QqIVuYq4nWRbltLhOMkFjR/y7
-	 okl4Xc8YxYOIThydVzngeXdBIGaSX3i+S0LmWZ4mLpwSITDBsfz5MYqC6w4GH/JLEU
-	 +93cxjjAc5JDA==
-Received: from nicolas-tpx395.localdomain (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 9274B37809D1;
-	Tue,  7 May 2024 20:07:43 +0000 (UTC)
-Message-ID: <4f59a9d78662831123cc7e560218fa422e1c5eca.camel@collabora.com>
-Subject: Re: Safety of opening up /dev/dma_heap/* to physically present
- users (udev uaccess tag) ?
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter
-	 <daniel@ffwll.ch>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Dmitry Baryshkov
- <dmitry.baryshkov@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Sumit
- Semwal <sumit.semwal@linaro.org>, Benjamin Gaignard
- <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>,
- John Stultz <jstultz@google.com>, "T.J. Mercier" <tjmercier@google.com>,
- Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Lennart
- Poettering <mzxreary@0pointer.de>,  Robert Mader
- <robert.mader@collabora.com>, Sebastien Bacher
- <sebastien.bacher@canonical.com>, Linux Media Mailing List
- <linux-media@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
- <dri-devel@lists.freedesktop.org>,  linaro-mm-sig@lists.linaro.org, Linux
- Kernel Mailing List <linux-kernel@vger.kernel.org>, Milan Zamazal
- <mzamazal@redhat.com>, Maxime Ripard <mripard@redhat.com>, Andrey Konovalov
- <andrey.konovalov.ynk@gmail.com>
-Date: Tue, 07 May 2024 16:07:39 -0400
-In-Reply-To: <20240507183613.GB20390@pendragon.ideasonboard.com>
-References: <bb372250-e8b8-4458-bc99-dd8365b06991@redhat.com>
-	 <ojduxo54lpcbfg2wfuhqhy7k3phncamtklh65z7gvttcwztmhk@zkifewcy4ovi>
-	 <3c0c7e7e-1530-411b-b7a4-9f13e0ff1f9e@redhat.com>
-	 <e7ilwp3vc32xze3iu2ejgqlgz44codsktnvyiufjhuf2zxcnnf@tnwzgzoxvbg2>
-	 <d2a512b2-e6b1-4675-b406-478074bbbe95@linaro.org>
-	 <Zjpmu_Xj6BPdkDPa@phenom.ffwll.local>
-	 <20240507183613.GB20390@pendragon.ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.1 (3.52.1-1.fc40) 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lidICO5K"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6f4603237e0so98537b3a.0;
+        Tue, 07 May 2024 13:08:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715112503; x=1715717303; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6meDpwIFn6POwM0GTM589VI6wgTQh6ljoPgnNTkMk6k=;
+        b=lidICO5KmK6oZ13JRmAOHETckuejwuWUldFJckERavjx7zehVsxfpmGnOhq9jgfoeb
+         1JvjZBIuuYHWXjItwju+jTkCO90bnM/m0OPam5nQ/icQ5xrTjFeCKOJUnPqnDn/FIXqX
+         Rd64EOiprT6aLfYbfzTck1+Bw5PEIqKOXft2Dbbgd7hW5v7TUCg3VeE6f0d9ARYgEyiS
+         gvRNGZBPaiITDnfGTGzvKxCrNOPWNtCQVflm6aVA7VOdOLmN/ooiu5dpt277v+Vute2i
+         /LW7hh1tdaAbnDx5qF5ZZ6D9hDQWU3YHWH/BtbC88nzwOLFOmIkcUY9hUXSXZMVAqi4i
+         Zqhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715112503; x=1715717303;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6meDpwIFn6POwM0GTM589VI6wgTQh6ljoPgnNTkMk6k=;
+        b=N3tDIAILsparCEwmcB/o7aJwjRrSQTEjItfbZ/g9o1BmMFnQLsCw6TaQ1IThsookUT
+         GmD1ddF1nmhEKLTXhxex+h21jjqazTnh/DIxjJQk8F3OgwTut5fr24gULMAy896SIhTR
+         P66jQjDLhY1gI1L1OJuW6d/1626s65Q7Yoz7x8PNOLMgP6+ca4FXDyFnaCORbLaJI7Dw
+         rJV4t4fn5a0NTFrwyvmd6uQS2Gq9oh8k5VcYBLYtCgBsaxijGGxUP/EYUMF3jqk7up0s
+         3juZ6hY8h0D42Z3lRhkX55cic97DkEfW3KkPWsZn/SNmTIh+nAhY1knvtX91xmQFecvY
+         joTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUji+sxMgjEti80w77wpGnibIE/sZmAsfBvNGlSXjdqbpw5vPNu4ucOM8r3LE3P/TqH41XIkEEWait3mdpaPFTpn6JWEtkYi+DoNpBrwrp0dlQ8d+e4GfbMNthK1k94LfQ6CE653QgD
+X-Gm-Message-State: AOJu0Yz+1L3/KyeY/6TPhZXblug97HC6Y3CX/cI7TQ/HyCj+v7OGx1Bu
+	wYwkbLoGKGkuXTz4NADAhxbPDKvaEvi63+8mf7weV63RVFeP52wNw9seEI4W
+X-Google-Smtp-Source: AGHT+IFZwUjrLsg8NOeqZqvTwtxZQH+cAZNq93P6AoVgP0/DMGlcVNZAxah6QwTxMcsDtMHT4ATRkw==
+X-Received: by 2002:a05:6a00:2e1f:b0:6ed:de70:5ef9 with SMTP id d2e1a72fcca58-6f49bc48a4bmr1167605b3a.0.1715112502697;
+        Tue, 07 May 2024 13:08:22 -0700 (PDT)
+Received: from localhost ([202.88.220.221])
+        by smtp.gmail.com with ESMTPSA id y6-20020a056a00190600b006eab9ef5d4esm9823201pfi.50.2024.05.07.13.08.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 13:08:22 -0700 (PDT)
+Date: Wed, 8 May 2024 01:37:11 +0530
+From: Aryabhatta Dey <aryabhattadey35@gmail.com>
+To: linux-leds@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: pavel@ucw.cz, lee@kernel.org, corbet@lwn.net, 
+	skhan@linuxfoundation.org, javier.carrasco.cruz@gmail.com
+Subject: [PATCH] docs: leds: fix typo in Documentation/leds/leds-blinkm.rst
+Message-ID: <qpnx2m6qo5abvbs65o452gicumxa7n5vnw42e3hxnnm7sou4xn@fvu52tilzujc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi,
+Change 'dasy-chain' to 'daisy-chain'.
 
-Le mardi 07 mai 2024 =C3=A0 21:36 +0300, Laurent Pinchart a =C3=A9crit=C2=
-=A0:
-> Shorter term, we have a problem to solve, and the best option we have
-> found so far is to rely on dma-buf heaps as a backend for the frame
-> buffer allocatro helper in libcamera for the use case described above.
-> This won't work in 100% of the cases, clearly. It's a stop-gap measure
-> until we can do better.
+Signed-off-by: Aryabhatta Dey <aryabhattadey35@gmail.com>
+---
+ Documentation/leds/leds-blinkm.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Considering the security concerned raised on this thread with dmabuf heap
-allocation not be restricted by quotas, you'd get what you want quickly wit=
-h
-memfd + udmabuf instead (which is accounted already).
+diff --git a/Documentation/leds/leds-blinkm.rst b/Documentation/leds/leds-blinkm.rst
+index c74b5bc877b1..2d3c226a371a 100644
+--- a/Documentation/leds/leds-blinkm.rst
++++ b/Documentation/leds/leds-blinkm.rst
+@@ -7,7 +7,7 @@ The leds-blinkm driver supports the devices of the BlinkM family.
+ They are RGB-LED modules driven by a (AT)tiny microcontroller and
+ communicate through I2C. The default address of these modules is
+ 0x09 but this can be changed through a command. By this you could
+-dasy-chain up to 127 BlinkMs on an I2C bus.
++daisy-chain up to 127 BlinkMs on an I2C bus.
+ 
+ The device accepts RGB and HSB color values through separate commands.
+ Also you can store blinking sequences as "scripts" in
+-- 
+2.44.0
 
-It was raised that distro don't enable udmabuf, but as stated there by Hans=
-, in
-any cases distro needs to take action to make the softISP works. This
-alternative is easy and does not interfere in anyway with your future plan =
-or
-the libcamera API. You could even have both dmabuf heap (for Raspbian) and =
-the
-safer memfd+udmabuf for the distro with security concerns.
-
-And for the long term plan, we can certainly get closer by fixing that issu=
-e
-with accounting. This issue also applied to v4l2 io-ops, so it would be nic=
-e to
-find common set of helpers to fix these exporters.
-
-regards,
-Nicolas
