@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98189160781;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980FC15FCF9;
 	Tue,  7 May 2024 14:48:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093330; cv=none; b=q6b7Xu4VZMupgDhj15HT42hqTpSMrltyXkdgkI4PbKKZjrPasVY3dOSXdvDVffx6YUgwzqS0Ht7EADPpl2+k/XRrcj8Fs7wWDENjbyGq8LOeo+noff6Yz3ur9zqaNYwS4GCLQEN2iguCop7fOzyDIyUyPetky3YLJSNjbFZ4X1U=
+	t=1715093330; cv=none; b=jAcg27GMJ6RMBomQvAElMjoeWnCpysBxLCpdgOfrALmYp4wX8v13JOUhhA288fXfVSdzgM2WIKXGmpbTL+UgciIONSw5XzIia8+y5/k+HnHl2+GqMOqTczUKh5fCk685ggs2wwXUxUCZh8cclLFy+wAn/5fA8fd2mn2zvVeknbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715093330; c=relaxed/simple;
-	bh=GIO4K7Jzi7e58ru4SZwn+yKyWIyZbt9nbponGMhXWbs=;
+	bh=QQXWL5yR1HiJCZ+WQ5ZsByv2gulWkZie9+fjYZTlccQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JF4f9LURaIip+3wH3kEU4jU1SibhHFCNOxcjshRbH30jL8l8lEh/LxWeYJq++odgj5mzCb8ZQa2Tiis8Bg7FU64730zff7tnSwL8UgMxPba6zzVlOBnx9wGsLKD/z3xRUuNGfL96F0XCtet44/TDKuZrGvsyLBwis8OfqH6jJN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=huv6oeXF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LlHqJ8bYftSNHT2EClGCrAAyTEGCMstfoDcu7YLjTjmaewuYDjX968ANfa9bkECeXOM6VTRUyaR9xY2CKK6yrU2N1T+kn4wbH/7BYwpi9Qg5gQZM57GhbT/TwUeB2fyuhnnmndgVPK5ocQIIB+8HrCNyEAHbUwwcryy3AHCOYHk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2RQZtN8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="huv6oeXF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4017FC4AF68;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2RQZtN8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DC73C4AF67;
 	Tue,  7 May 2024 14:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715093330;
-	bh=GIO4K7Jzi7e58ru4SZwn+yKyWIyZbt9nbponGMhXWbs=;
+	bh=QQXWL5yR1HiJCZ+WQ5ZsByv2gulWkZie9+fjYZTlccQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=huv6oeXFI2fbbRUp2ra+wqxFNEvKmHMWZFyGScm4lKhBIHOCLWf2cy0VjMX39V0/R
-	 CEDdludXc1Uh3+jjTRKWPmkpvYr92jy273U19grzAA8J2akyOBYY2SXzC7h3+8oSrq
-	 uNUg1gl+XESUcCzpfgYXcihcL5OeNNZTqHzxAEgfD4m3JiswHtmNBG0ApSodshmXt4
-	 YTTa2o+Pkz6eygeTXNqdimvwCTwxMz7orh9Rk087rEeS8HeYh0RTxwIGe89O5/IXK1
-	 bHrxf/n4tSsbwxTT+2TVfSk/UEWj12+AOzwOhbDUnLoMKuBnQKjz6Kui7m4anB8qWO
-	 nk2oLFxArl7Aw==
+	b=X2RQZtN8yZACEp4+OiKlSwk+eVhqNdNjAlU+SeIL43oJzchRfChl70dJNU4Srjpn1
+	 lHcJOv7oZpQdfaZERMioiHR7SP7n0Ptnl6+zoQQeBJJ3/+s1PXgll1kn50aPtOzuAt
+	 whwa0fz9qLL04/pE0KLiZCa83kKWhwwBdz8BoMAM9OTh+hZXGE04aBuomgwKNmI2Qr
+	 o4aLXBLYbd18K75b6F+2jQyGMtNerWvBcQFfd3WP+1PiWJIwMMvAY0BEUsiju4B0Nt
+	 40lRrRMKHQIzvpIrHvzEVXjDdfu3BWNfthN+ZImdaD7flZy0ucSrLAv5AzRzaYs+O+
+	 44PuGGbMu1RfA==
 Received: from johan by xi.lan with local (Exim 4.97.1)
 	(envelope-from <johan+linaro@kernel.org>)
-	id 1s4M7g-000000003Cs-22KF;
+	id 1s4M7g-000000003Cy-34Ll;
 	Tue, 07 May 2024 16:48:52 +0200
 From: Johan Hovold <johan+linaro@kernel.org>
 To: Jiri Kosina <jikos@kernel.org>,
@@ -46,9 +46,9 @@ Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
 	linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH v2 3/7] dt-bindings: HID: i2c-hid: elan: add 'no-reset-on-power-off' property
-Date: Tue,  7 May 2024 16:48:17 +0200
-Message-ID: <20240507144821.12275-4-johan+linaro@kernel.org>
+Subject: [PATCH v2 6/7] arm64: dts: qcom: sc8280xp-crd: use external pull up for touch reset
+Date: Tue,  7 May 2024 16:48:20 +0200
+Message-ID: <20240507144821.12275-7-johan+linaro@kernel.org>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240507144821.12275-1-johan+linaro@kernel.org>
 References: <20240507144821.12275-1-johan+linaro@kernel.org>
@@ -60,43 +60,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When the power supply is shared with other peripherals the reset line
-can be wired in such a way that it can remain deasserted regardless of
-whether the supply is on or not.
+The touch controller reset line is currently not described by the
+devicetree except in the pin configuration which is used to deassert
+reset.
 
-This is important as it can be used to avoid holding the controller in
-reset for extended periods of time when it remains powered, something
-which can lead to increased power consumption. Leaving reset deasserted
-also avoids leaking current through the reset circuitry pull-up
-resistors.
-
-Add a new 'no-reset-on-power-off' devicetree property which can be used
-by the OS to determine when reset needs to be asserted on power down.
-
-Note that this property can also be used when the supply cannot be
-turned off by the OS at all.
+As the reset line has an external pull up to an always-on rail there is
+no need to drive the pin high so just leave it configured as an input
+and disable the internal pull down.
 
 Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- Documentation/devicetree/bindings/input/elan,ekth6915.yaml | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/qcom/sc8280xp-crd.dts | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
-index be84f7ed0abc..a62916d07a08 100644
---- a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
-+++ b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
-@@ -36,6 +36,12 @@ properties:
-   reset-gpios:
-     description: Reset GPIO; not all touchscreens using eKTH6915 hook this up.
- 
-+  no-reset-on-power-off:
-+    type: boolean
-+    description:
-+      Reset line is wired so that it can (and should) be left deasserted when
-+      the power supply is off.
-+
-   vcc33-supply:
-     description: The 3.3V supply to the touchscreen.
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts b/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
+index 41215567b3ae..372b35fb844f 100644
+--- a/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-crd.dts
+@@ -977,8 +977,7 @@ int-n-pins {
+ 		reset-n-pins {
+ 			pins = "gpio99";
+ 			function = "gpio";
+-			output-high;
+-			drive-strength = <16>;
++			bias-disable;
+ 		};
+ 	};
  
 -- 
 2.43.2
