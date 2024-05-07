@@ -1,302 +1,174 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from wfout3-smtp.messagingengine.com (wfout3-smtp.messagingengine.com [64.147.123.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68EB9152172;
-	Tue,  7 May 2024 11:44:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C421015252F;
+	Tue,  7 May 2024 11:44:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715082271; cv=none; b=ZghHNF3C6gY413CwV5889iSNqgEwgFP3ls8aEkQZjvFr3HrNfb5epc2zPi+sHxgAjJawVmwuwPYgtXhH2tE3uVXv41vVaBAw1w9TRg6yH00iqAHC/PQdq2IBLlz3xDK147t8PBjpLgb6/ysg7sXpKuxyuw53oW3tNZOIUdPoKic=
+	t=1715082295; cv=none; b=QixejoTgCCiv6H7aKiPF9PItUSCVzGTEdUmvQfnqhrdiCCEGq4zcgGn5xTfwJf4ZwvZ9frkgd3oBGTA/wZU6tYeUG479jYawZ92lDORiqYflPxBYFzuc5R2BJ9jH9H+k3ZGmbvzoQA+GHnli6O0AcTnUEchcF+PuSRSs9e3XrtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715082271; c=relaxed/simple;
-	bh=60U2Bc6asAn7NidqKXexi1U7ISdZ2UfiA0OSGyFGvok=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=t7I+qS/6iUNiczYoPtlfu0zB9cj7v4XJwDLEbIyBGb9zmpWhRaZXEcVAmjXOBoOZ9i0sUKy99y1owv9ml8w/euIu9sL/6hjsLEOWqfWZQDUVnJ1YSunhRlSJdyPrac/xzndKdo+3M4xgUaUgix3ansYTvM1E4cwn+GJOI/IisWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ARevRImt; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1715082295; c=relaxed/simple;
+	bh=5l9Z1Urm/BZzymLPMlD2GWT3dGvV7j51ig+v/GSYq6w=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=a+95Pzi8BR0MNFVjMnMxvl05Nf25CTilgnjycV8pGegwJZr7pCPjPZt14zqGf8cU/AYyS4LGMpFlm+GfMqZFtM3HnXQMOV/kNpuU+miH6RPBPS12B3NwUefsF8leh16wJxYH8ZP8aeaGbbepndU/tQ0a6n6pmhws/psfIPqk/DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=l25KanTb; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CvmzHek6; arc=none smtp.client-ip=64.147.123.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ARevRImt"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 447Bh5N7019035;
-	Tue, 7 May 2024 11:44:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=otzPcaazGn9g+pLvwtbtDObHp2piOhkZasDXAFFP0fw=;
- b=ARevRImtO92G/PTpUydNB9y+fV6avH6oKz8o2O/NxtHrM1lu7J3Xb8d1W6ygmMdORX7P
- q0J1/lcygLcjHpCSZBlCuXEzy0vjONVty513eevAg4mDDz5oUTJ2CgPER+uPUJEb4vVp
- JcuwDfZD2/8QkKEEuXtcZnNY4DwwXFgbrJa/247wsAi/GMiytLj4Z6d1QtBnnII+MbYR
- 95R7+yioCfjnjhiWO8O4pGEfi9YVadqvsw4oeDZBVdcVG2PVn4rD4NBHhZr4uXkSyK0q
- pH34V7W8/zxSoiF/eYU1qnhvKOn+mJnbNLVj4XO5edHog+mAsNia6pGvUJyqQMy0reGE Iw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xykntg02s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 11:44:12 +0000
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 447BiB9b019975;
-	Tue, 7 May 2024 11:44:11 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3xykntg02q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 11:44:11 +0000
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 447AThJl022558;
-	Tue, 7 May 2024 11:44:10 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xx1jkwj3n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 11:44:10 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 447Bi5VS45351252
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 7 May 2024 11:44:07 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6D5EC20043;
-	Tue,  7 May 2024 11:44:05 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4EEFE20040;
-	Tue,  7 May 2024 11:44:01 +0000 (GMT)
-Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com.com (unknown [9.43.79.251])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue,  7 May 2024 11:44:00 +0000 (GMT)
-From: Gautam Menghani <gautam@linux.ibm.com>
-To: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        naveen.n.rao@linux.ibm.com
-Cc: Gautam Menghani <gautam@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Naveen N Rao <naveen@kernel.org>, Vaibhav Jain <vaibhav@linux.ibm.com>
-Subject: [PATCH v7] arch/powerpc/kvm: Add support for reading VPA counters for pseries guests
-Date: Tue,  7 May 2024 17:13:48 +0530
-Message-ID: <20240507114352.51819-1-gautam@linux.ibm.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="l25KanTb";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CvmzHek6"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.west.internal (Postfix) with ESMTP id 3F9F31C00142;
+	Tue,  7 May 2024 07:44:50 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 07 May 2024 07:44:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm2; t=1715082289; x=1715168689; bh=ecSzO7Aiwn
+	igNqU/smd06vR9/fdGnYG1J6IeAomF44c=; b=l25KanTbH8tO7kcr9GFjrecLwg
+	Z38jY6q5DqfCawwG5fjpy8zcT/YNv1FhdSFBn+VSbhay0UEAYYF+9+MIHVx+3f9C
+	4h6XRq0bAZmviePUd5dJP1sVV9/dygg3z5csVujvGnhCQTNlM8n/AuKojBdeFEHY
+	BX5RMoRXi01OS4CtRsyfoAIWsevQ6wJw0IMoOLMMIExjcIgtPMOANt763ap7/O9O
+	Rs/IqGa6U92qQ4VglQJG+QMV3gPLwuzI83jO7xK8CdY1nt0dKsorDO90Pg4nFlsJ
+	lNXSLxvh8RPdN8add2Vu1dKs90ijc8FNUtyqZPOzozXvZ6uaLk/bs1V9CqMg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1715082289; x=1715168689; bh=ecSzO7AiwnigNqU/smd06vR9/fdG
+	nYG1J6IeAomF44c=; b=CvmzHek6TFypfJ1RPBnToLT7kzymcthSWcUJhd7JnfZ3
+	hi956ge5sXR7a6ozc+SdLsCthpzzBYholC7g/eOPqD6phpCm94RYhqyutTGOFvo1
+	CJZtKJCf5HRY9etbVeUyInoik5gIFJ/fz3V8wBR71p3QLzGzrPRr3c7pD/Y8txlM
+	R0VgJah6C68E6gB0NdcgF24qDOoF3/FiJL3jSZcZb2kqzZP4aEEAXIhKCYBu35yN
+	U6MAULIlG+u3s5gmQRkzmgMcYBxURcDhUvsADnbDpgsB5h6fNpwYKkG9seCJTli1
+	V2YJ0G7gLKPAjViF+AHsn90PqMK4gmSvqU4qcTJ6/Q==
+X-ME-Sender: <xms:MRQ6ZrAGja7cwKav-14qSh78VkHNmbwbMbQmkRXLP4MgUSUJGaHVAQ>
+    <xme:MRQ6ZhgVRBjVtvxLB6_-nP57D1fpRZINSUsOO7UjLsG-9fNw7otV7iGG-bZ29kRQN
+    RcYNIbwcEnQKuYSeuI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddvkedggedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepleehueefffevveejgfelveeiuedutdevtdfhtdevveelgfevuedtkeeiffei
+    geffnecuffhomhgrihhnpehgohhoghhlvghsohhurhgtvgdrtghomhenucevlhhushhtvg
+    hrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdr
+    uggv
+X-ME-Proxy: <xmx:MRQ6ZmnjcLkaFldQNiLDyzPzJnD5Gddm6M1Jc4ttt89PRmFoEganhA>
+    <xmx:MRQ6ZtyVEFmcby4FEwu1Licg7YFNX1HbfCYP1rbOsIOMVfsCKyRfhw>
+    <xmx:MRQ6ZgQ7x_0f1vfI8n93hKIWYCUk2Cwsg-9hdPAhVaKSgnea0FkFOg>
+    <xmx:MRQ6ZgZVcG0-mi-NqiXX4vKIBIh9oLhJoPnkzQUPOKk-Jex0-g0e_Q>
+    <xmx:MRQ6ZjF4s5pRzqUx7PzFMR6biDCDifQj0LniQvsif9cEsJpA1QjtO-wL>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 55BF9B6008D; Tue,  7 May 2024 07:44:49 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-443-g0dc955c2a-fm-20240507.001-g0dc955c2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: nNipPBvCewN7W1260uvHkJQ39eL6XonP
-X-Proofpoint-GUID: gDbvdjFnxUD-5yXqqZnX2AoZ3WWNWZDB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-07_05,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- lowpriorityscore=0 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 malwarescore=0 impostorscore=0 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2405070080
+Message-Id: <41191296-0aa0-4010-b70f-efa80b9200d4@app.fastmail.com>
+In-Reply-To: <ZjoMI5bJSlqhtOy1@phenom.ffwll.local>
+References: <20240503192858.103640-1-florian.fainelli@broadcom.com>
+ <8e1867fc-34da-457c-b95a-2d51ea97336a@app.fastmail.com>
+ <05a5e893-12f7-49fd-9a9a-abd387571f9b@broadcom.com>
+ <ZjjXtEwWWZX43c6l@phenom.ffwll.local>
+ <47c63c4c-c657-4210-b476-c91c4f192483@app.fastmail.com>
+ <ZjoMI5bJSlqhtOy1@phenom.ffwll.local>
+Date: Tue, 07 May 2024 13:44:29 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Daniel Vetter" <daniel@ffwll.ch>
+Cc: "Florian Fainelli" <florian.fainelli@broadcom.com>,
+ linux-kernel@vger.kernel.org, "Helge Deller" <deller@gmx.de>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Javier Martinez Canillas" <javierm@redhat.com>,
+ "Sam Ravnborg" <sam@ravnborg.org>,
+ "open list:FRAMEBUFFER LAYER" <linux-fbdev@vger.kernel.org>,
+ "open list:FRAMEBUFFER LAYER" <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH] fbdev: Have CONFIG_FB_NOTIFY be tristate
+Content-Type: text/plain
 
-PAPR hypervisor has introduced three new counters in the VPA area of
-LPAR CPUs for KVM L2 guest (see [1] for terminology) observability - 2
-for context switches from host to guest and vice versa, and 1 counter
-for getting the total time spent inside the KVM guest. Add a tracepoint
-that enables reading the counters for use by ftrace/perf. Note that this
-tracepoint is only available for nestedv2 API (i.e, KVM on PowerVM).
+On Tue, May 7, 2024, at 13:10, Daniel Vetter wrote:
+> On Mon, May 06, 2024 at 04:53:47PM +0200, Arnd Bergmann wrote:
+>> On Mon, May 6, 2024, at 15:14, Daniel Vetter wrote:
+>> > On Fri, May 03, 2024 at 01:22:10PM -0700, Florian Fainelli wrote:
+>> >> On 5/3/24 12:45, Arnd Bergmann wrote:
+>> 
+>> This is the current Android GKI config:
+>> https://android.googlesource.com/kernel/common.git/+/refs/heads/android-mainline/arch/arm64/configs/gki_defconfig
+>> where I can see that CONFIG_DRM is built-in, but DRM_FBDEV_EMULATION
+>> CONFIG_VT, CONFIG_FRAMEBUFFER_CONSOLE, CONFIG_FB_DEVICE and
+>> CONFIG_FB_CORE are all disabled.
+>> 
+>> So the console won't work at all,I think this means that there
+>> is no way to get the console working, but building a fb.ko module
+>> allows using /dev/fb with simplefb.ko (or any other one) happens
+>> to almost work, but only by dumb luck rather than by design.
+>
+> So using /dev/fb chardev without fbcon is very much a real idea. This way
+> you should be able to run old userspace that uses fbdev directly for
+> drawing, but your console needs are served by a userspace console running
+> on top of drm.
+>
+> vt switching gets a bit more entertaining, but I thought logind has all
+> the glue already to make that happen. Worst case you need a tiny launcher
+> tool to get your userspace console out of the way while you launch a fbdev
+> using application, but I think correctly implement the vt ioctls to switch
+> to graphics mode /should/ work automatically.
+>
+> I do agree that this is only really a good idea with drm drivers, since
+> those do not rely on any of the fbdev infrastructure like the notifier
+> under discussion.
 
-[1] Terminology:
-a. L1 refers to the VM (LPAR) booted on top of PAPR hypervisor
-b. L2 refers to the KVM guest booted on top of L1.
+I'm pretty sure what Florian is looking for has no dependency
+on VT, fbcon or logind, but I'm only guessing based on the
+information I see in the public Android source trees.
 
-Acked-by: Naveen N Rao <naveen@kernel.org>
-Signed-off-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
----
-v6 -> v7:
-1. Use TRACE_EVENT_FN_COND to handle zero counters case.
-2. Use for_each_present_cpu() to handle hotplugs.
+My understanding is that the Android recovery application is a
+graphical tool that accesses the framebuffer directly and
+is controlled using the volume and power buttons on a phone.
 
-v5 -> v6:
-1. Use TRACE_EVENT_FN to enable/disable counters only once.
-2. Remove the agg. counters from vcpu->arch.
-3. Use PACA to maintain old counter values instead of zeroing on every
-entry.
-4. Simplify variable names
+>> I suppose making CONFIG_FB_NOTIFIER optional for FB (on by
+>> default if any of the consumers of the notification are turned
+>> on) would not be a bad direction to go in general and also
+>> address Florian's link error, but that doesn't solve the
+>> more general concern about a third-party fb.ko module on a
+>> kernel that was explicitly built with FB disabled.
+>> 
+>> The GKI defconfig was initially done at a time where one could
+>> not have CONFIG_FBDEV_EMULATION and CONFIG_FB_DEVICE without
+>> pulling in the entire fbdev module, but now that is possible.
+>> Maybe that is something that Android could now include?
+>> 
+>> Alternatively, I wonder if that recovery image could be changed
+>> to access the screen through the /dev/dri/ interfaces? I have
+>> no experience in using those without Xorg or Wayland, is that
+>> a sensible thing to do?
+>
+> Uh ... I think I'm confused about the requirements. Does android's
+> recovery image need fbdev (meaning /dev/fb chardevs), or does it need
+> fbcon?
+>
+> Note that fbcon runs (or well, should run) totally fine on top of drm
+> drivers without the fb notifier. This wasn't the case a few years ago
+> (because fbcon also used that notifier), but nowadays fb notifiers are
+> only needed for legacy fbdev drivers. So could it be that this "need fb
+> notifier" requirement is a leftover from rather old kernel versions and
+> not actually needed anymore?
+>
+> I think we should nail the actual requirements here first before jumping
+> to solutions ...
 
-v4 -> v5:
-1. Define helper functions for getting/setting the accumulation counter
-in L2's VPA
+Right, let's wait for Florian to reply. From what he said earlier
+though, the only reason that the notifiers are getting in the
+way is the link error you get from trying to load a separately
+built fb.ko module on a kernel that was built with FB=n / FB_CORE=n,
+so I don't think he even cares about notifiers, only about
+allowing the recovery application to mmap() the framebuffer.
 
-v3 -> v4:
-1. After vcpu_run, check the VPA flag instead of checking for tracepoint
-being enabled for disabling the cs time accumulation.
-
-v2 -> v3:
-1. Move the counter disabling and zeroing code to a different function.
-2. Move the get_lppaca() inside the tracepoint_enabled() branch.
-3. Add the aggregation logic to maintain total context switch time.
-
-v1 -> v2:
-1. Fix the build error due to invalid struct member reference.
-
- arch/powerpc/include/asm/lppaca.h | 11 +++++--
- arch/powerpc/include/asm/paca.h   |  5 +++
- arch/powerpc/kvm/book3s_hv.c      | 52 +++++++++++++++++++++++++++++++
- arch/powerpc/kvm/trace_hv.h       | 29 +++++++++++++++++
- 4 files changed, 94 insertions(+), 3 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/lppaca.h b/arch/powerpc/include/asm/lppaca.h
-index 61ec2447dabf..f40a646bee3c 100644
---- a/arch/powerpc/include/asm/lppaca.h
-+++ b/arch/powerpc/include/asm/lppaca.h
-@@ -62,7 +62,8 @@ struct lppaca {
- 	u8	donate_dedicated_cpu;	/* Donate dedicated CPU cycles */
- 	u8	fpregs_in_use;
- 	u8	pmcregs_in_use;
--	u8	reserved8[28];
-+	u8	l2_counters_enable;  /* Enable usage of counters for KVM guest */
-+	u8	reserved8[27];
- 	__be64	wait_state_cycles;	/* Wait cycles for this proc */
- 	u8	reserved9[28];
- 	__be16	slb_count;		/* # of SLBs to maintain */
-@@ -92,9 +93,13 @@ struct lppaca {
- 	/* cacheline 4-5 */
- 
- 	__be32	page_ins;		/* CMO Hint - # page ins by OS */
--	u8	reserved12[148];
-+	u8	reserved12[28];
-+	volatile __be64 l1_to_l2_cs_tb;
-+	volatile __be64 l2_to_l1_cs_tb;
-+	volatile __be64 l2_runtime_tb;
-+	u8 reserved13[96];
- 	volatile __be64 dtl_idx;	/* Dispatch Trace Log head index */
--	u8	reserved13[96];
-+	u8	reserved14[96];
- } ____cacheline_aligned;
- 
- #define lppaca_of(cpu)	(*paca_ptrs[cpu]->lppaca_ptr)
-diff --git a/arch/powerpc/include/asm/paca.h b/arch/powerpc/include/asm/paca.h
-index 1d58da946739..f20ac7a6efa4 100644
---- a/arch/powerpc/include/asm/paca.h
-+++ b/arch/powerpc/include/asm/paca.h
-@@ -278,6 +278,11 @@ struct paca_struct {
- 	struct mce_info *mce_info;
- 	u8 mce_pending_irq_work;
- #endif /* CONFIG_PPC_BOOK3S_64 */
-+#ifdef CONFIG_KVM_BOOK3S_HV_POSSIBLE
-+	u64 l1_to_l2_cs;
-+	u64 l2_to_l1_cs;
-+	u64 l2_runtime_agg;
-+#endif
- } ____cacheline_aligned;
- 
- extern void copy_mm_to_paca(struct mm_struct *mm);
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 8e86eb577eb8..6acfe59c9b4f 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -4108,6 +4108,54 @@ static void vcpu_vpa_increment_dispatch(struct kvm_vcpu *vcpu)
- 	}
- }
- 
-+static inline int kvmhv_get_l2_counters_status(void)
-+{
-+	return get_lppaca()->l2_counters_enable;
-+}
-+
-+static inline void kvmhv_set_l2_counters_status(int cpu, bool status)
-+{
-+	if (status)
-+		lppaca_of(cpu).l2_counters_enable = 1;
-+	else
-+		lppaca_of(cpu).l2_counters_enable = 0;
-+}
-+
-+int kmvhv_counters_tracepoint_regfunc(void)
-+{
-+	int cpu;
-+
-+	for_each_present_cpu(cpu) {
-+		kvmhv_set_l2_counters_status(cpu, true);
-+	}
-+	return 0;
-+}
-+
-+void kmvhv_counters_tracepoint_unregfunc(void)
-+{
-+	int cpu;
-+
-+	for_each_present_cpu(cpu) {
-+		kvmhv_set_l2_counters_status(cpu, false);
-+	}
-+}
-+
-+static void do_trace_nested_cs_time(struct kvm_vcpu *vcpu)
-+{
-+	struct lppaca *lp = get_lppaca();
-+	u64 l1_to_l2_ns, l2_to_l1_ns, l2_runtime_ns;
-+
-+	l1_to_l2_ns = tb_to_ns(be64_to_cpu(lp->l1_to_l2_cs_tb));
-+	l2_to_l1_ns = tb_to_ns(be64_to_cpu(lp->l2_to_l1_cs_tb));
-+	l2_runtime_ns = tb_to_ns(be64_to_cpu(lp->l2_runtime_tb));
-+	trace_kvmppc_vcpu_stats(vcpu, l1_to_l2_ns - local_paca->l1_to_l2_cs,
-+					l2_to_l1_ns - local_paca->l2_to_l1_cs,
-+					l2_runtime_ns - local_paca->l2_runtime_agg);
-+	local_paca->l1_to_l2_cs = l1_to_l2_ns;
-+	local_paca->l2_to_l1_cs = l2_to_l1_ns;
-+	local_paca->l2_runtime_agg = l2_runtime_ns;
-+}
-+
- static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
- 				     unsigned long lpcr, u64 *tb)
- {
-@@ -4156,6 +4204,10 @@ static int kvmhv_vcpu_entry_nestedv2(struct kvm_vcpu *vcpu, u64 time_limit,
- 
- 	timer_rearm_host_dec(*tb);
- 
-+	/* Record context switch and guest_run_time data */
-+	if (kvmhv_get_l2_counters_status())
-+		do_trace_nested_cs_time(vcpu);
-+
- 	return trap;
- }
- 
-diff --git a/arch/powerpc/kvm/trace_hv.h b/arch/powerpc/kvm/trace_hv.h
-index 8d57c8428531..8c563e9438db 100644
---- a/arch/powerpc/kvm/trace_hv.h
-+++ b/arch/powerpc/kvm/trace_hv.h
-@@ -238,6 +238,9 @@
- 	{H_MULTI_THREADS_ACTIVE,	"H_MULTI_THREADS_ACTIVE"}, \
- 	{H_OUTSTANDING_COP_OPS,		"H_OUTSTANDING_COP_OPS"}
- 
-+int kmvhv_counters_tracepoint_regfunc(void);
-+void kmvhv_counters_tracepoint_unregfunc(void);
-+
- TRACE_EVENT(kvm_guest_enter,
- 	TP_PROTO(struct kvm_vcpu *vcpu),
- 	TP_ARGS(vcpu),
-@@ -512,6 +515,32 @@ TRACE_EVENT(kvmppc_run_vcpu_exit,
- 			__entry->vcpu_id, __entry->exit, __entry->ret)
- );
- 
-+TRACE_EVENT_FN_COND(kvmppc_vcpu_stats,
-+	TP_PROTO(struct kvm_vcpu *vcpu, u64 l1_to_l2_cs, u64 l2_to_l1_cs, u64 l2_runtime),
-+
-+	TP_ARGS(vcpu, l1_to_l2_cs, l2_to_l1_cs, l2_runtime),
-+
-+	TP_CONDITION(l1_to_l2_cs || l2_to_l1_cs || l2_runtime),
-+
-+	TP_STRUCT__entry(
-+		__field(int,		vcpu_id)
-+		__field(u64,		l1_to_l2_cs)
-+		__field(u64,		l2_to_l1_cs)
-+		__field(u64,		l2_runtime)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->vcpu_id  = vcpu->vcpu_id;
-+		__entry->l1_to_l2_cs = l1_to_l2_cs;
-+		__entry->l2_to_l1_cs = l2_to_l1_cs;
-+		__entry->l2_runtime = l2_runtime;
-+	),
-+
-+	TP_printk("VCPU %d: l1_to_l2_cs_time=%llu ns l2_to_l1_cs_time=%llu ns l2_runtime=%llu ns",
-+		__entry->vcpu_id,  __entry->l1_to_l2_cs,
-+		__entry->l2_to_l1_cs, __entry->l2_runtime),
-+	kmvhv_counters_tracepoint_regfunc, kmvhv_counters_tracepoint_unregfunc
-+);
- #endif /* _TRACE_KVM_HV_H */
- 
- /* This part must be outside protection */
--- 
-2.44.0
-
+     Arnd
