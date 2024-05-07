@@ -1,53 +1,52 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B03A168B06
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1511316C86F
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:58:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097505; cv=none; b=QQPRhztCGqB/CHu19EjtL5gm8pM4GW5NAZ3PI3F67yzJphJ6+DVAbUK8plf4v/iwzLM1MMbNDjpuV2n2r7WEKI/0EaSAzed7aKnfmDa2tvMH+anaSk2+Oc4v26ZXmJ078D52HuSG3IGGxOt7is5SbAJyn3b1qO67HIY6SJayecg=
+	t=1715097508; cv=none; b=af3hfrcqda0NK78M+TO4O65pf62RcY+GJFC+9oTg/0gINWijr1gz4SlvqUz/gNj0oJ+2mbnQr8ujmWCZz4+L1fl0JGp4TTlH6/8wNrdujSFAS5JO7gDw6R3Tc+xP3yYlH4/GIVZ8A4Es3Ki2XfPPnpUzdhWPfVBiVnidfjQe3Uo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715097505; c=relaxed/simple;
-	bh=wPlCXimapm+jPc+Vmg65K7D6e/gcKhVZU6wKgZ0EdL0=;
+	s=arc-20240116; t=1715097508; c=relaxed/simple;
+	bh=Jc1Tbss7i1Ju4KveDSuZj4nCUDFkNCR8orrkEHkum5I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XD5G2BXRUT8ls6L0mY/x2qe0HcQx840TKxiajdEoyfjQq25m9UvEKP/CspUGgS8zcQT4jOI2XXeFTOVpJfSFNj2Q3fy4U58RRWiCKw0vgQSqqHdJWWpawg16nSDHzRHPrwQ5HFr9NjipaMuz7fdBWLBtA+UU4Qpbn4OxD1CTAow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CS4ZKego; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:Content-Type; b=IZrFTDYY7fas8nYqICJK5TIsuq3mRc7ZCB/eTg9fzaZPAg+IfIUOKXL4Z6Cr/VgotWEL9/fyaisRx8HHEetO2ScRvsfWrp4NOCzesypjUaqklmFI08CLnBQuzu7r5/pwLlUsQP/2Lx1st4Af4G6XYMTw4+mpeYYh2VDpeoF5UH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jNAbiaL3; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CS4ZKego"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jNAbiaL3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715097502;
+	s=mimecast20190719; t=1715097504;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sj1bBQVsR0XAxvgoMpCTsAlzVv4DCommwwcKBFDz4Jg=;
-	b=CS4ZKegoMohYG0JSVk1FBCdR+MJMiaNT9SGHsRzkKWO0936j7oCa3Sc4s7zovcu+65+NDe
-	W/rkhugL7s22igzv8dafbRR+BsAQm1bZ8DNMdq17igKu4IQ5zI9gtkwQpMjm7PcdE2J1H2
-	gs39d91zy4Ah4f0fSKxLmr2SXWqj4Ic=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-549-aQp1tBL6P-6KjQldWUXi6g-1; Tue, 07 May 2024 11:58:20 -0400
-X-MC-Unique: aQp1tBL6P-6KjQldWUXi6g-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	bh=rUh2GSNIC9mFZceVpUckSJUlR16exki8Ae5fEBtcFTE=;
+	b=jNAbiaL32F0T3dRpc0bwaDyUwseKzmWbx4+IJ86M7E+Ls9vkLOFDwxcZiQ7cP9ibj60+0+
+	NMS3tlE93Lrt2lFxTq819D2P8Hc4I7eGEP3laVTehTTmqnDB/XnfcsB0U4gYjRI37Ca+sB
+	kn2NCS3jUgW/Lj1Fmnz88+lrH18PAM4=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-346-8y3twOTSMzaVkPuSJ1q2aA-1; Tue,
+ 07 May 2024 11:58:19 -0400
+X-MC-Unique: 8y3twOTSMzaVkPuSJ1q2aA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5DA5E101A525;
-	Tue,  7 May 2024 15:58:20 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 35AB33802AC9;
+	Tue,  7 May 2024 15:58:19 +0000 (UTC)
 Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 3C3ED401441;
-	Tue,  7 May 2024 15:58:20 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 19A14200B2F6;
+	Tue,  7 May 2024 15:58:19 +0000 (UTC)
 From: Paolo Bonzini <pbonzini@redhat.com>
 To: linux-kernel@vger.kernel.org,
 	kvm@vger.kernel.org
-Cc: Sean Christopherson <seanjc@google.com>,
-	Kai Huang <kai.huang@intel.com>
-Subject: [PATCH 13/17] KVM: x86/mmu: Move slot checks from __kvm_faultin_pfn() to kvm_faultin_pfn()
-Date: Tue,  7 May 2024 11:58:13 -0400
-Message-ID: <20240507155817.3951344-14-pbonzini@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>
+Subject: [PATCH 07/17] KVM: x86/mmu: Use synthetic page fault error code to indicate private faults
+Date: Tue,  7 May 2024 11:58:07 -0400
+Message-ID: <20240507155817.3951344-8-pbonzini@redhat.com>
 In-Reply-To: <20240507155817.3951344-1-pbonzini@redhat.com>
 References: <20240507155817.3951344-1-pbonzini@redhat.com>
 Precedence: bulk
@@ -58,184 +57,94 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
 From: Sean Christopherson <seanjc@google.com>
 
-Move the checks related to the validity of an access to a memslot from the
-inner __kvm_faultin_pfn() to its sole caller, kvm_faultin_pfn().  This
-allows emulating accesses to the APIC access page, which don't need to
-resolve a pfn, even if there is a relevant in-progress mmu_notifier
-invalidation.  Ditto for accesses to KVM internal memslots from L2, which
-KVM also treats as emulated MMIO.
+Add and use a synthetic, KVM-defined page fault error code to indicate
+whether a fault is to private vs. shared memory.  TDX and SNP have
+different mechanisms for reporting private vs. shared, and KVM's
+software-protected VMs have no mechanism at all.  Usurp an error code
+flag to avoid having to plumb another parameter to kvm_mmu_page_fault()
+and friends.
 
-More importantly, this will allow for future cleanup by having the
-"no memslot" case bail from kvm_faultin_pfn() very early on.
+Alternatively, KVM could borrow AMD's PFERR_GUEST_ENC_MASK, i.e. set it
+for TDX and software-protected VMs as appropriate, but that would require
+*clearing* the flag for SEV and SEV-ES VMs, which support encrypted
+memory at the hardware layer, but don't utilize private memory at the
+KVM layer.
 
-Go to rather extreme and gross lengths to make the change a glorified
-nop, e.g. call into __kvm_faultin_pfn() even when there is no slot, as the
-related code is very subtle.  E.g. fault->slot can be nullified if it
-points at the APIC access page, some flows in KVM x86 expect fault->pfn
-to be KVM_PFN_NOSLOT, while others check only fault->slot, etc.
-
-No functional change intended.
+Opportunistically add a comment to call out that the logic for software-
+protected VMs is (and was before this commit) broken for nested MMUs, i.e.
+for nested TDP, as the GPA is an L2 GPA.  Punt on trying to play nice with
+nested MMUs as there is a _lot_ of functionality that simply doesn't work
+for software-protected VMs, e.g. all of the paths where KVM accesses guest
+memory need to be updated to be aware of private vs. shared memory.
 
 Signed-off-by: Sean Christopherson <seanjc@google.com>
-Reviewed-by: Kai Huang <kai.huang@intel.com>
-Message-ID: <20240228024147.41573-13-seanjc@google.com>
+Message-Id: <20240228024147.41573-6-seanjc@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/x86/kvm/mmu/mmu.c | 115 +++++++++++++++++++++--------------------
- 1 file changed, 58 insertions(+), 57 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  7 ++++++-
+ arch/x86/kvm/mmu/mmu.c          | 14 ++++++++++++++
+ arch/x86/kvm/mmu/mmu_internal.h |  2 +-
+ 3 files changed, 21 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 12e727301262..0dc755a6dc0c 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -273,7 +273,12 @@ enum x86_intercept_stage;
+  * when emulating instructions that triggers implicit access.
+  */
+ #define PFERR_IMPLICIT_ACCESS	BIT_ULL(48)
+-#define PFERR_SYNTHETIC_MASK	(PFERR_IMPLICIT_ACCESS)
++/*
++ * PRIVATE_ACCESS is a KVM-defined flag us to indicate that a fault occurred
++ * when the guest was accessing private memory.
++ */
++#define PFERR_PRIVATE_ACCESS   BIT_ULL(49)
++#define PFERR_SYNTHETIC_MASK   (PFERR_IMPLICIT_ACCESS | PFERR_PRIVATE_ACCESS)
+ 
+ #define PFERR_NESTED_GUEST_PAGE (PFERR_GUEST_PAGE_MASK |	\
+ 				 PFERR_WRITE_MASK |		\
 diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index fdae6d19e72b..b09c8034ed15 100644
+index 3609167ba30e..eb041acec2dc 100644
 --- a/arch/x86/kvm/mmu/mmu.c
 +++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4292,9 +4292,64 @@ static int kvm_faultin_pfn_private(struct kvm_vcpu *vcpu,
+@@ -5799,6 +5799,20 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
+ 	if (WARN_ON_ONCE(!VALID_PAGE(vcpu->arch.mmu->root.hpa)))
+ 		return RET_PF_RETRY;
  
- static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault)
- {
--	struct kvm_memory_slot *slot = fault->slot;
- 	bool async;
- 
-+	if (fault->is_private)
-+		return kvm_faultin_pfn_private(vcpu, fault);
-+
-+	async = false;
-+	fault->pfn = __gfn_to_pfn_memslot(fault->slot, fault->gfn, false, false,
-+					  &async, fault->write,
-+					  &fault->map_writable, &fault->hva);
-+	if (!async)
-+		return RET_PF_CONTINUE; /* *pfn has correct page already */
-+
-+	if (!fault->prefetch && kvm_can_do_async_pf(vcpu)) {
-+		trace_kvm_try_async_get_page(fault->addr, fault->gfn);
-+		if (kvm_find_async_pf_gfn(vcpu, fault->gfn)) {
-+			trace_kvm_async_pf_repeated_fault(fault->addr, fault->gfn);
-+			kvm_make_request(KVM_REQ_APF_HALT, vcpu);
-+			return RET_PF_RETRY;
-+		} else if (kvm_arch_setup_async_pf(vcpu, fault)) {
-+			return RET_PF_RETRY;
-+		}
-+	}
-+
 +	/*
-+	 * Allow gup to bail on pending non-fatal signals when it's also allowed
-+	 * to wait for IO.  Note, gup always bails if it is unable to quickly
-+	 * get a page and a fatal signal, i.e. SIGKILL, is pending.
++	 * Except for reserved faults (emulated MMIO is shared-only), set the
++	 * PFERR_PRIVATE_ACCESS flag for software-protected VMs based on the gfn's
++	 * current attributes, which are the source of truth for such VMs.  Note,
++	 * this wrong for nested MMUs as the GPA is an L2 GPA, but KVM doesn't
++	 * currently supported nested virtualization (among many other things)
++	 * for software-protected VMs.
 +	 */
-+	fault->pfn = __gfn_to_pfn_memslot(fault->slot, fault->gfn, false, true,
-+					  NULL, fault->write,
-+					  &fault->map_writable, &fault->hva);
-+	return RET_PF_CONTINUE;
-+}
++	if (IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) &&
++	    !(error_code & PFERR_RSVD_MASK) &&
++	    vcpu->kvm->arch.vm_type == KVM_X86_SW_PROTECTED_VM &&
++	    kvm_mem_is_private(vcpu->kvm, gpa_to_gfn(cr2_or_gpa)))
++		error_code |= PFERR_PRIVATE_ACCESS;
 +
-+static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
-+			   unsigned int access)
-+{
-+	struct kvm_memory_slot *slot = fault->slot;
-+	int ret;
-+
-+	/*
-+	 * Note that the mmu_invalidate_seq also serves to detect a concurrent
-+	 * change in attributes.  is_page_fault_stale() will detect an
-+	 * invalidation relate to fault->fn and resume the guest without
-+	 * installing a mapping in the page tables.
-+	 */
-+	fault->mmu_seq = vcpu->kvm->mmu_invalidate_seq;
-+	smp_rmb();
-+
-+	/*
-+	 * Now that we have a snapshot of mmu_invalidate_seq we can check for a
-+	 * private vs. shared mismatch.
-+	 */
-+	if (fault->is_private != kvm_mem_is_private(vcpu->kvm, fault->gfn)) {
-+		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
-+		return -EFAULT;
-+	}
-+
- 	/*
- 	 * Retry the page fault if the gfn hit a memslot that is being deleted
- 	 * or moved.  This ensures any existing SPTEs for the old memslot will
-@@ -4319,7 +4374,7 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 			fault->slot = NULL;
- 			fault->pfn = KVM_PFN_NOSLOT;
- 			fault->map_writable = false;
--			return RET_PF_CONTINUE;
-+			goto faultin_done;
- 		}
- 		/*
- 		 * If the APIC access page exists but is disabled, go directly
-@@ -4331,61 +4386,6 @@ static int __kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault
- 			return RET_PF_EMULATE;
- 	}
- 
--	if (fault->is_private)
--		return kvm_faultin_pfn_private(vcpu, fault);
--
--	async = false;
--	fault->pfn = __gfn_to_pfn_memslot(slot, fault->gfn, false, false, &async,
--					  fault->write, &fault->map_writable,
--					  &fault->hva);
--	if (!async)
--		return RET_PF_CONTINUE; /* *pfn has correct page already */
--
--	if (!fault->prefetch && kvm_can_do_async_pf(vcpu)) {
--		trace_kvm_try_async_get_page(fault->addr, fault->gfn);
--		if (kvm_find_async_pf_gfn(vcpu, fault->gfn)) {
--			trace_kvm_async_pf_repeated_fault(fault->addr, fault->gfn);
--			kvm_make_request(KVM_REQ_APF_HALT, vcpu);
--			return RET_PF_RETRY;
--		} else if (kvm_arch_setup_async_pf(vcpu, fault)) {
--			return RET_PF_RETRY;
--		}
--	}
--
--	/*
--	 * Allow gup to bail on pending non-fatal signals when it's also allowed
--	 * to wait for IO.  Note, gup always bails if it is unable to quickly
--	 * get a page and a fatal signal, i.e. SIGKILL, is pending.
--	 */
--	fault->pfn = __gfn_to_pfn_memslot(slot, fault->gfn, false, true, NULL,
--					  fault->write, &fault->map_writable,
--					  &fault->hva);
--	return RET_PF_CONTINUE;
--}
--
--static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
--			   unsigned int access)
--{
--	int ret;
--
--	/*
--	 * Note that the mmu_invalidate_seq also serves to detect a concurrent
--	 * change in attributes.  is_page_fault_stale() will detect an
--	 * invalidation relate to fault->fn and resume the guest without
--	 * installing a mapping in the page tables.
--	 */
--	fault->mmu_seq = vcpu->kvm->mmu_invalidate_seq;
--	smp_rmb();
--
--	/*
--	 * Now that we have a snapshot of mmu_invalidate_seq we can check for a
--	 * private vs. shared mismatch.
--	 */
--	if (fault->is_private != kvm_mem_is_private(vcpu->kvm, fault->gfn)) {
--		kvm_mmu_prepare_memory_fault_exit(vcpu, fault);
--		return -EFAULT;
--	}
--
- 	/*
- 	 * Check for a relevant mmu_notifier invalidation event before getting
- 	 * the pfn from the primary MMU, and before acquiring mmu_lock.
-@@ -4415,6 +4415,7 @@ static int kvm_faultin_pfn(struct kvm_vcpu *vcpu, struct kvm_page_fault *fault,
- 	if (ret != RET_PF_CONTINUE)
- 		return ret;
- 
-+faultin_done:
- 	if (unlikely(is_error_pfn(fault->pfn)))
- 		return kvm_handle_error_pfn(vcpu, fault);
+ 	r = RET_PF_INVALID;
+ 	if (unlikely(error_code & PFERR_RSVD_MASK)) {
+ 		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
+diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
+index 797b80f996a7..dfd9ff383663 100644
+--- a/arch/x86/kvm/mmu/mmu_internal.h
++++ b/arch/x86/kvm/mmu/mmu_internal.h
+@@ -306,7 +306,7 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 		.max_level = KVM_MAX_HUGEPAGE_LEVEL,
+ 		.req_level = PG_LEVEL_4K,
+ 		.goal_level = PG_LEVEL_4K,
+-		.is_private = kvm_mem_is_private(vcpu->kvm, cr2_or_gpa >> PAGE_SHIFT),
++		.is_private = err & PFERR_PRIVATE_ACCESS,
+ 	};
+ 	int r;
  
 -- 
 2.43.0
