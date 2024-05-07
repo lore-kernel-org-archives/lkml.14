@@ -1,256 +1,398 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4919116132A;
-	Tue,  7 May 2024 15:54:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715097298; cv=fail; b=KJm9/GYxoYXwG78h5+nRCzDJm+bWws6uRbkQ1VhJ30ghTVJgWZxb3NUYXjJ9FqNJBquxM0dY1RjznZKCBJWJqmT4V7XyR8uN9M9q+NyZhaa9zMqcuQajDp1/grDnjcNwTgesh+D+zzReDSzNyRNUxsgI7Hg7lpBnoPKSi/kR7+A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715097298; c=relaxed/simple;
-	bh=TJtXAgodlfk2muYMs1ZHEwK/pCWhBrUeUvz41xe/PNw=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fzMTdTewKfJv95NCTbHe0LnF3Eh0rs3UTTxCDqGCsj+Bh84qtgnv60sak8PafEsmkImXQzDsbZFCWVl3p5xGnJRYyuwbRzRbRX6riHzaZi0/dGLmeXacfSWG4SzvF479jDHb1OVjl3GibW5GgdLrIKg9yMTIJyFVzWhsB0ovqCo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H8ZEkNHI; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 168C21649D3
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 15:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715097313; cv=none; b=rDm9jbD62Qxo/gv535UqUoNAm2u06k9g0j+VElg+9rYCrDb8kQJ2g6HgViTeZ+VNe027vnaGx+H6hhQqi1PCLH8rI5sBg403dkjUzj8sWGllOLFiZi/PUykV5ULIcrNd8WO/Pl7vDcjsVpksOmqyAKmS8IXz/89f8aCpd1Mfh94=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715097313; c=relaxed/simple;
+	bh=pQm6/UbnhlQ71QOAiSXRcdkBS2j1QGiiSL9FOmgC6gM=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=YEoqDqim0r11bfxKhj6b0lxgJWHGIUot+L/4hIiNIp7CEVyAXErQb8HurAZE/Q6JV8J2ju8wzgZr8tMdB0aaMCzaVBAVQ5dcbA2zUol8L4FpCGkSIjZQY5N7q84F7ZYMHIdxtCnm/KWtizCsrvsBq5JbwTu/onoIYz8AFnmfLYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4S0i42gK; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--panikiel.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H8ZEkNHI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715097298; x=1746633298;
-  h=message-id:date:subject:to:references:from:in-reply-to:
-   content-transfer-encoding:mime-version;
-  bh=TJtXAgodlfk2muYMs1ZHEwK/pCWhBrUeUvz41xe/PNw=;
-  b=H8ZEkNHIQ7HzREGqfQA4gTH+X2N4R48UnJo6HQcH3Ve8zkj102eSYE1l
-   DmxFkx42R+6zwuD8Oe5xUkmfBwIUSzUdPBWPtIWy3KTp1dXITjYuhQMh/
-   XLZs96Vp5l+fBqdkaliKRv5jj8bUOLd5bZD4EBj35w1P+YGiNigIik0Xl
-   Wgwp4Pu3e9kuX1ITp4uYn0jEcALSefg1DZTa+UOb0rVt8SkVWaFgyqaSU
-   c9jFiJYHR2Xg3FuudH0KNNi95vW9S+mhuxi+jlQZHdpF0D4UoDXhzuyb2
-   ZDYPnNi9cPeHQDPKIOWh9ZMg2AZ1jA0Z1xWlYdgE9pi3/83ccvolkR6x0
-   g==;
-X-CSE-ConnectionGUID: gnlKjX+VTO2VbPW2ZLQT1w==
-X-CSE-MsgGUID: 8VVPCw2TTwuseeuGP5Hopg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="14690625"
-X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
-   d="scan'208";a="14690625"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 08:54:57 -0700
-X-CSE-ConnectionGUID: +dAE8OswRVSiU7klsTrCRA==
-X-CSE-MsgGUID: mZBpqNoxSnmCPN9FHhiY0Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
-   d="scan'208";a="29088897"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orviesa007.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 07 May 2024 08:54:56 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 7 May 2024 08:54:55 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 7 May 2024 08:54:55 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 7 May 2024 08:54:55 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 7 May 2024 08:54:54 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=htWYmJy31eXfjergSa9a8DBfNELbRCPMLjlNv0YLUPt5y1dMXexIz4Cvh6OWElsfPA5bpbob/p9/EdUnliEn7tsaa5bJevYe8q7sB4JU3+X6mTv9o+r34L/AunznI58J9GzmN8l0NHqqG7nvjNXHRDavhSXbMuxV0bvy05T7Krq9HNd7zJlSdIC/Iofsbid7XqAEj+9tprQUDa23izeLjDiaIUryf/pc+0PM0SHavGM8c0KAPj6oprW6UdNttEGWCzI0YXrZTFkvxbZ3HIA3XEW1T+WvzgzHZb0q6nDuKO8LFuelsILoPByJ81MMeL7Vqnw43OFL+6ukqnGXLoY2hw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8Yocex2f039OEQzoZ87Ru2nEr1g5DkLXmF70q2YrfF0=;
- b=Vgmbo2Y60nEc79+HdX3tlJ0DDsqCTSkMHk8nmYqKMgyeCVqu5QLbvRl056GwQr7pfGrmy5WTpkugjd+0CPE+mEOX+b+TuP3Ab9piAmRZj/tPC7hsqSKrAlznBat0JYInFpzY3rEx4LaEMO5Fo6Xgtn0/MQeOFSpcWOvOuhDG8zVvrI+UPXcS7hNXrEtn3hgipyfkOBdcUqCBSWQdCAZTuHQdCR0wj1HGesQIS86f/w+yKAB3nXAVEX/HisNRKHIm2SfJ99oR8EOYtDOEhneV3Xt1ukjtMhafQ35QFSzblXcpV1rBspFB0SrN+XQD+5hlkCeStbc2qSXbDU95k3JkHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from MN6PR11MB8102.namprd11.prod.outlook.com (2603:10b6:208:46d::9)
- by MW4PR11MB6984.namprd11.prod.outlook.com (2603:10b6:303:22e::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42; Tue, 7 May
- 2024 15:54:52 +0000
-Received: from MN6PR11MB8102.namprd11.prod.outlook.com
- ([fe80::bfb:c63:7490:93eb]) by MN6PR11MB8102.namprd11.prod.outlook.com
- ([fe80::bfb:c63:7490:93eb%3]) with mapi id 15.20.7544.041; Tue, 7 May 2024
- 15:54:52 +0000
-Message-ID: <9b9a42af-1a73-4896-9bfe-afd55ae5b278@intel.com>
-Date: Tue, 7 May 2024 17:54:46 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v2 2/2] net: ethernet: mediatek: use ADMAv1 instead of
- ADMAv2.0 on MT7981 and MT7986
-Content-Language: en-US
-To: Daniel Golle <daniel@makrotopia.org>, Felix Fietkau <nbd@nbd.name>, "Sean
- Wang" <sean.wang@mediatek.com>, Mark Lee <Mark-MC.Lee@mediatek.com>, "Lorenzo
- Bianconi" <lorenzo@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>
-References: <6747c038f4fc3b490e1b7a355cdaaf361e359def.1715084578.git.daniel@makrotopia.org>
- <9a694114ffbbf5f03384b0cbf0c27b9528c94576.1715084578.git.daniel@makrotopia.org>
-From: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-In-Reply-To: <9a694114ffbbf5f03384b0cbf0c27b9528c94576.1715084578.git.daniel@makrotopia.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: WA1P291CA0024.POLP291.PROD.OUTLOOK.COM
- (2603:10a6:1d0:19::18) To MN6PR11MB8102.namprd11.prod.outlook.com
- (2603:10b6:208:46d::9)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4S0i42gK"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-417bf71efb4so18094885e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 08:55:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715097309; x=1715702109; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RJ47pWXAtCFdZcUV/HEfsVY67B3nHtrNt0g1FksRjBo=;
+        b=4S0i42gKd3EeegV5AhTOhEC6lgJPEbZn/elkAHZw61uVnRBOblNRY88bzYz3bN78Kn
+         jzwr5OXnwLXC5RzP0BHTAhTSR9TOWe1AU4PyEdZu5Mh9cicRm8GaEZ2MDQSVy+WinQl5
+         qzxXGdu6UaNCoECk4NGLX3+/sTGO8k0c37v7ZTvleG3HHVjaDIka7kiO48kB7kLfJBue
+         feOwqcXbRLC6StobF0EyIy3fgWpx+cdbX22x51dX4M7XDW4fxl65IOYbGS/fQdXrC3OI
+         Xn4uknrkmQUBBwqqk4MyYNNfnRgUumJNOszSy3BP73QwH2uvtoPtYl5qfmhkSz9QqS9b
+         6UTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715097309; x=1715702109;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RJ47pWXAtCFdZcUV/HEfsVY67B3nHtrNt0g1FksRjBo=;
+        b=oOLvXZCebpoUG8g/SI8kDTJhgQuvuEvj0J3ysSD8wzdAhTln4bGwbabpUhIO3n6rRr
+         j1nwv5JlSh/CnGKsynfbw22KsUHeofij1zp0bYacLY2T6wUHH0J1hwhTgPlcJC/DIj4a
+         wqQ4Yuka5p0orukQP6WmLYC+cQEa2fMArseWNRU37McAfFnweeyxcfkhO0FhpHsAgfB5
+         bKITQuUpIDsBKTi1pgOj3WjtRZfN576UiC6Pvw1vBTgvYdPRaAXDZ2dueMHO+SrrpV5q
+         Nbr2MozTEA6EQeS6ybnzAGiigVlafHqrzxKGKRkttF+qMgwUOmvSs/lJgutMwq9QliJW
+         ig2g==
+X-Forwarded-Encrypted: i=1; AJvYcCWzZtz12VTCCq3kbUP+myUlBAXeAM6c/zrtu1oYMjwZqNpVGF94utLf3SDrg3Ifpz57rneab5TkQjs8PQVojbVquc5ZGzMW54jgnBrF
+X-Gm-Message-State: AOJu0YxnxTNgOdzZ7vJIiHbiTvwsWcVTQCKQ+Z5LjFNnZKDJrNzi1TGy
+	MMG6k+WC6e7q6QPqzVt7183n4cEfuKPpgWLqLPlISV1xoVk58DJ1FnPQNu+nqssg2cRV7crEjH1
+	XfcIUjC1lIg==
+X-Google-Smtp-Source: AGHT+IH8xn8VWc+XkVkTbMSGWBKDl+TyyuL6M2xFwlfEJnC34wjOlZXzDZDE9agYnoRWzeKbkzLvsId01BSlcg==
+X-Received: from szatan.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2d83])
+ (user=panikiel job=sendgmr) by 2002:a05:600c:5103:b0:41e:8543:c5ea with SMTP
+ id 5b1f17b1804b1-41f2d44054cmr326105e9.1.1715097309052; Tue, 07 May 2024
+ 08:55:09 -0700 (PDT)
+Date: Tue,  7 May 2024 15:54:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN6PR11MB8102:EE_|MW4PR11MB6984:EE_
-X-MS-Office365-Filtering-Correlation-Id: bae6844f-7c73-4539-7404-08dc6eae0869
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|366007|7416005|1800799015|921011;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?ZHhmNVNKTnhNL3R1Tkg2eVhvanpzZ21taFZuMUpwTWNvYWU3SXZIMGpSTU8x?=
- =?utf-8?B?b3E3L3BwS0hrb3lqakNOSzFNTHhxMldpdGlZR29Tak4xbE91d0lNYXF6cjg2?=
- =?utf-8?B?TCtZTXl1Q3hYaFBsZzNmVlZmMjQ2czNFK3lUSGN4c3ZQN2d4T0pMdTdGZ1hH?=
- =?utf-8?B?RG0yUWZWUFV6eFBHWkQ1RG12U1V0TVAvTXFjdHJURnk3SExKTHhtS3BpeGta?=
- =?utf-8?B?VXBlWmZNYnBDbzNEc1hDNk5Rbmc0ekgwL0NxSTA3dDdRVUhoSVhleDFPSXoy?=
- =?utf-8?B?TTdVd2lsSmZZK29teVJkcVB4YW9zVFhyMUZjblpOK0YyL1dBVmRWYy96WkRq?=
- =?utf-8?B?QUF1a1h3R2dSTE84TXJadnFZeVFtclY3bVRmc0k0b2llTm5senBUMSs3ZEUy?=
- =?utf-8?B?NkFzR2NWdksyWlBNbHpibVdhL1ArL1R3ajJRN3dCWmhzYUlUcll0R01LaWRH?=
- =?utf-8?B?OWdSODBBMFpFZUI3NGE5RFl0YXh0ZmhuZG1qTnF3SGYyOVFJWm9admdSdU8r?=
- =?utf-8?B?UHdkeVpPaSsycDJieGZ5VnRybzBjajJPdXhjV1VoZUFZZ3QwM0dNUUhsTFRm?=
- =?utf-8?B?UDJ4eVFDNXpjWUNlMFpGZ2xFWUxjL2N4bDZ2QW5EMktPUGhxK0hvM1VJWTI5?=
- =?utf-8?B?NnVCbTI1REhEQldXNHh1OEZra2JLKy9WeU5nUXdTZ0EzeDJidVVuSHNkb21P?=
- =?utf-8?B?Y29qbWxqZFZxZXpsZjJsdHhxaEIxTEdzVmNyTXZ4clRTWGpsaHJPYWo2TkJ3?=
- =?utf-8?B?RWFCMXNWQWhnNXdvTW9kdWplL09kUlBUVG9JNEU3NXM2SW1MUXFNUE14a0Jw?=
- =?utf-8?B?aURKckhPWWZtL0kyM2FSNTNqU2U3UjNjbzZFVkFJd0lwVUlhMkE4bHJmNHlt?=
- =?utf-8?B?ZVpab0U3b2kySTk0ck1IdWRhbEphS1hENW9qQ1JhV3JiS0F4ODhhZDdtVHRt?=
- =?utf-8?B?SkFiUEN4clhreWpQRUhyVzN6UW5YQ1pBcUhVYU50TTVxNDZzRFo1WUhPV1dF?=
- =?utf-8?B?c2NmZGtqVm1zRUMvbi9RUTNsb00vRklTNHoreGFVVnpmTHVwdmpsVmhhWWpM?=
- =?utf-8?B?YWU0SHE4WmJKSG9kdXJCN25JQTVMeTAxQmkxdFpPVFhKSHB1dnV6dmtQaS9Q?=
- =?utf-8?B?Umw2SFB5U3l2cFJMWXJ1Zm84MXRwVG5CSnorRzhNSW4ya0NmRDJJa3FiNFZX?=
- =?utf-8?B?dTdKZ0FKS1VGZTVWNTRSdUtPTm9adlNJS0pFenI5TEg0RHk5SG1NcEsybXM4?=
- =?utf-8?B?NGErd1FPdGlTOVlHYkorT01ZVVJyWkN3clVVcGFjeU5jVFFZOU91Zk50djEw?=
- =?utf-8?B?cHZUV0FMWmh1YnIwZG10RWRvclNOdzE0SG95Mm9VZHVkZzA2UWtaeWd4bVJj?=
- =?utf-8?B?N0t4aFlYUzE2dFNSM1poNHY3ZVZHM3VLNUpnM3RoSmQ5Q3o5cllUM1pUcERa?=
- =?utf-8?B?dUZiajQwazBSV3hObnNnTXhMSW9RNi9nRHp1YnBzOE5YZCtzcUlLSys4YTlJ?=
- =?utf-8?B?blczbmdsbGRIQWdJdXVFeUtETlgrQXVMRDc4RS9CS2FJUHpUWWwvVnd5bWFt?=
- =?utf-8?B?TFd4d3JuODFCWFFlT09YN2dZbnJUOS85WjF1T25BWUdrTm9iUitwVHN6alFZ?=
- =?utf-8?B?K0F1NTIxV1M3cGxQalgweVpxZ2hRc0lLZmo2dnB5SEVVVTFBY1BEQ0NsUUcv?=
- =?utf-8?B?UXBTWWNOSjdzYjgxUVFPRVE5VEIxVFFLdzdqYlVtZTRwVVNlSVkvQmVpUGRB?=
- =?utf-8?Q?/OZEI/IMhoVF/JjSeL0y8x3PZSxiYDEwG7aNveS?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN6PR11MB8102.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(7416005)(1800799015)(921011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SnpJZzFTSmF5djN0cVZEWE5jL2lGVXVQQitEQTJWK2JEV3VaRWgvMkZoZ0Zy?=
- =?utf-8?B?VWVmUTduSUtUck1CY0UyR29TY0RyQSticVNTUnpnbVJOUy9IeHdZOCtWTXRH?=
- =?utf-8?B?QUV2azNWN2lPVVVNc2RlbnZaUlhzZ2hFTENWSS9kVUV2QWZiS0dLNGpCRExC?=
- =?utf-8?B?ZXFweFRUSlI3ek1BTlRBQVFoZDMzWDFsa2JsTHBmTU0yWTlBbjNKUndkOUZw?=
- =?utf-8?B?S0hzSHkvaElBd1pYMkk1Ri85SW1aSG9sKzQyMS81UUxHSkZmaTFqaUxVWmhD?=
- =?utf-8?B?dE1yZnlleVd3alhUSEdvZ2U0eU5JNGFaUjREMlRNNDFhNU5sdkJsdU1JenRD?=
- =?utf-8?B?VXhHNjF0YjVQZ2J4WFhEeWtWbjlCOGdQbTMzQ3ZCb3NHTWhiODJYRVRHeFNi?=
- =?utf-8?B?NHRrakhyWDNiSjZaOExFTlRpY0s1L0l5a3dBY21JNUI0SVVNckZ4MkU2MWs4?=
- =?utf-8?B?YlJ5VnZ6alhkVGkvVWJEdG5YRHlyUlhqY3RuMVVxeWlmSDl6aVZubFFqS21u?=
- =?utf-8?B?b0MwTldHRkVwWWZPOFd2aDhFSG83aWF4d2EzR2kwQUNDTEtESUR6bW81VzY0?=
- =?utf-8?B?cWI1Mm1sVnVOU1d4dXV4VkhKR1FiOTVROUJCVXVuUUhRT1hEN25tbVRNUTRt?=
- =?utf-8?B?eGgyMHZUckh6VDZEL0NGMGVHS3B4bzRpTDhLbFlZZDZvY0k1Tkk2QUF5VkdT?=
- =?utf-8?B?dHZYZDVWWUU0S3hGcUQvZ3ZKd0xPRnJUUTlRVkd5dnE3Sm0xUFJ2SVN0QndE?=
- =?utf-8?B?UitVT2V6UlgybGdMb2d3NFZld1dRY2IvUXlIak9jdmtmcDNDNnMvczJaY2lL?=
- =?utf-8?B?S0pmNnAyaVQ5ZHhla3BneTU0QnovMFJhWVgrY0ZuMXFnenV1V09BMzVrUlhi?=
- =?utf-8?B?RjlvZWFrMVd1L1pXRG11Rmk5ay91TGZpMnJOc2pwMjNua2xDT1NsS0hPT0dX?=
- =?utf-8?B?T0tSUG9Ma2VkNnkyKzlrNmZwZmhEZ3VGT3lLSW9BUTU5NDBHdnU4WXJBYXpZ?=
- =?utf-8?B?dGkzRy9NTnh2b013bEg3Mzk4WjhMRFpPcTNyL0V6M0NCUmRFN3ZwRmw0RTFm?=
- =?utf-8?B?dDU1aGZYZXJGaDZzV29BNjdiOW0wTkdBa0JoNVpab0ZCS2JmSCt5a1RWbCtS?=
- =?utf-8?B?aGIveUNtYndiOHpFSld4Q2ZxdHBpcGN3TkowbXdickIxUGNpcC9KY3pOdmds?=
- =?utf-8?B?RkY0SjJ6dm93VXZCaDJkVHFhc3RQQkl1SDI2bmIyamYxeC9hZ1RnZjdZaXFt?=
- =?utf-8?B?cnJwSi9BK0h1cVZMV09NRjBEeDdrTWdQV2hvdHgrVkJqZmEvY1kxbkF3VWpv?=
- =?utf-8?B?dUNNUm43YitMSXpvL1kyZmFpQ0wza282MExReGZ0NXNlYUMyemhxd3pHc0Uy?=
- =?utf-8?B?ck1TVXh2MngxdWxOdkgxNDE2bGZDblBwMXhaRWpVeld5OTVIRXptMElNRG4v?=
- =?utf-8?B?Vy9GNkczS0lYUllyU1NDc29rV2FSS25LeVBxWUQ5Y1FPSk5RU1lpNFVTT2tF?=
- =?utf-8?B?aXM2ZVhSUE9WeDAyanF6dWJjaHFVWUYya2ZGNUFSbnVyQ2RBdzJCWGl3NEdS?=
- =?utf-8?B?aUNscURJbmhHd1pNTGNpT2xoa0ZSZVNQdUh6TDJ6ZVpVSHV2VGNYNG1JZ0FL?=
- =?utf-8?B?SmFyZ3dOK0ZFMzE0UkpqT1pYa1FwZEUzMHI4dnRDUVZjNXZKR2xZZGdreHFl?=
- =?utf-8?B?ZktDRXBNU3JHN1pPUVNtWGY3amM2T2kxVDI2RlkrVmtiZjVjd0ZDeFhqZ05K?=
- =?utf-8?B?TjRvQ2JLSDlCUU5wWEFlZTFVNHV1OUxZUm1lVVJpSzZyYnNaeFpUYlN2RTVl?=
- =?utf-8?B?UFBMelNmS3hTdDhjRyt1alozQVhjbE5JSkp5VDZZbE02NjBFdTNpMk4yMWdn?=
- =?utf-8?B?bURvZDJtRjl6eThBNzVJenM4Yjd0T24xTCtaSWdkbk15V3VUc0JmUWI4d2ZT?=
- =?utf-8?B?WTAwbkxiK2FYTEJZUjA4NENvSkw1TTAwSHdZVWRBckY1QitsUSt2Wm1tWHAy?=
- =?utf-8?B?UUV6Q0ZXcXFHYUdTMjd5MHZKd1ZPRGdVNEJGcmlQV3U4ZDdqMlk4U2JybHd1?=
- =?utf-8?B?bUdYWVA3bUxoZGlveHdMZXRWMEI0ZzVkUXFoV1NCTFFnNDFRUzN5THFhWXZB?=
- =?utf-8?B?VkRxRGRDdCt0aU1ET2ZTNkVTY0NtSjZDUW1JQ0FNSFBTN3NyRnhBVk1XQ05y?=
- =?utf-8?B?c3c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: bae6844f-7c73-4539-7404-08dc6eae0869
-X-MS-Exchange-CrossTenant-AuthSource: MN6PR11MB8102.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 15:54:52.4923
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: adrXBkzz8BaodIuvaURg4gmtpp91/wCeI2Ca3dSHJJAWgRgu6z32kfH+X4gSIcRKiNsz7HL5T1eJFIxvPHTT3bOqMy+uDmJRq9PS90mlA9w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6984
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <20240507155413.266057-1-panikiel@google.com>
+Subject: [PATCH v3 00/10] Add Chameleon v3 video support
+From: "=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
+To: airlied@gmail.com, akpm@linux-foundation.org, conor+dt@kernel.org, 
+	daniel@ffwll.ch, dinguyen@kernel.org, hverkuil-cisco@xs4all.nl, 
+	krzysztof.kozlowski+dt@linaro.org, maarten.lankhorst@linux.intel.com, 
+	mchehab@kernel.org, mripard@kernel.org, robh+dt@kernel.org, 
+	tzimmermann@suse.de
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	chromeos-krk-upstreaming@google.com, 
+	"=?UTF-8?q?Pawe=C5=82=20Anikiel?=" <panikiel@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/7/24 14:25, Daniel Golle wrote:
-> ADMAv2.0 is plagued by RX hangs which can't easily detected and happen upon
+Google Chameleon v3 is a testing device capable of emulating multiple
+DisplayPort monitors, used for testing purposes.  It is based on an Arria
+10 SoCFPGA.  This patchset adds V4L2 drivers for two IP blocks used in the
+device's FPGA: the Chameleon v3 video interface, and the Intel DisplayPort
+RX IP.  The former is a video capture device that takes video signal and
+writes frames into memory, which can be later processed by userspace.
+The latter is a DisplayPort receiver IP from Intel, its datasheet can
+be found at:
+https://www.intel.com/programmable/technical-pdfs/683273.pdf
 
-nit: missing "be" after "can't",
-but no need to respin just for that
+The video interface driver is a regular v4l2 capture device driver, while
+the DP RX driver is a v4l2 subdevice driver. In order to avoid code
+duplication, some parts of the DisplayPort code from the DRM subsystem
+were put into headers usable by the DP RX driver.
 
-> receival of a corrupted Ethernet frame.
-> 
-> Use ADMAv1 instead which is also still present and usable, and doesn't
-> suffer from that problem.
-> 
-> Fixes: 197c9e9b17b1 ("net: ethernet: mtk_eth_soc: introduce support for mt7986 chipset")
-> Co-developed-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> ---
-> v2: improve commit message
->   drivers/net/ethernet/mediatek/mtk_eth_soc.c | 46 ++++++++++-----------
->   1 file changed, 23 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> index 3eefb735ce19..d7d73295f0dc 100644
-> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-> @@ -110,16 +110,16 @@ static const struct mtk_reg_map mt7986_reg_map = {
+This patchset depends on changes merged into the linux-media tree at:
+git://linuxtv.org/hverkuil/media_tree.git tags/br-v6.10d
 
-MT7981 uses the same regmap, so is covered too, fine
+Here is the output of `v4l2-compliance -s` run on a Chameleon v3 for
+/dev/video0 (no attached subdevice):
 
->   	.tx_irq_mask		= 0x461c,
->   	.tx_irq_status		= 0x4618,
->   	.pdma = {
-> -		.rx_ptr		= 0x6100,
-> -		.rx_cnt_cfg	= 0x6104,
-> -		.pcrx_ptr	= 0x6108,
-> -		.glo_cfg	= 0x6204,
-> -		.rst_idx	= 0x6208,
-> -		.delay_irq	= 0x620c,
-> -		.irq_status	= 0x6220,
-> -		.irq_mask	= 0x6228,
-> -		.adma_rx_dbg0	= 0x6238,
-> -		.int_grp	= 0x6250,
-> +		.rx_ptr		= 0x4100,
-> +		.rx_cnt_cfg	= 0x4104,
-> +		.pcrx_ptr	= 0x4108,
-> +		.glo_cfg	= 0x4204,
-> +		.rst_idx	= 0x4208,
-> +		.delay_irq	= 0x420c,
-> +		.irq_status	= 0x4220,
-> +		.irq_mask	= 0x4228,
-> +		.adma_rx_dbg0	= 0x4238,
-> +		.int_grp	= 0x4250,
->   	},
->   	.qdma = {
->   		.qtx_cfg	= 0x4400,
+```
+v4l2-compliance 1.27.0-5204, 32 bits, 32-bit time_t
+v4l2-compliance SHA: dd049328e528 2024-04-29 13:40:09
 
-// ...
+Compliance test for chv3-video device /dev/video0:
 
-Reviewed-by: Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Driver Info:
+	Driver name      : chv3-video
+	Card type        : Chameleon v3 video
+	Bus info         : platform:c0060500.video
+	Driver version   : 6.9.0
+	Capabilities     : 0x84200001
+		Video Capture
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04200001
+		Video Capture
+		Streaming
+		Extended Pix Format
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+	test invalid ioctls: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK
+	test VIDIOC_DV_TIMINGS_CAP: OK
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls (Input 0):
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 2 Private Controls: 0
+
+Format ioctls (Input 0):
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls (Input 0):
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test CREATE_BUFS maximum buffers: OK
+	test VIDIOC_REMOVE_BUFS: OK
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK (Not Supported)
+	test TIME32/64: OK
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK (Not Supported)
+	test blocking wait: OK
+	test MMAP (no poll): OK
+	test MMAP (select): OK
+	test MMAP (epoll): OK
+	test USERPTR (no poll): OK (Not Supported)
+	test USERPTR (select): OK (Not Supported)
+	test DMABUF: Cannot test, specify --expbuf-device
+
+Total for chv3-video device /dev/video0: 55, Succeeded: 55, Failed: 0, Warn=
+ings: 0
+```
+
+Here is the output of `v4l2-compliance -s` run on a Chameleon v3 for
+/dev/video4 (attached subdevice):
+
+```
+v4l2-compliance 1.27.0-5204, 32 bits, 32-bit time_t
+v4l2-compliance SHA: dd049328e528 2024-04-29 13:40:09
+
+Compliance test for chv3-video device /dev/video4:
+
+Driver Info:
+	Driver name      : chv3-video
+	Card type        : Chameleon v3 video
+	Bus info         : platform:c0060600.video
+	Driver version   : 6.9.0
+	Capabilities     : 0x84200001
+		Video Capture
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04200001
+		Video Capture
+		Streaming
+		Extended Pix Format
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+	test invalid ioctls: OK
+
+Allow for multiple opens:
+	test second /dev/video4 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK
+	test VIDIOC_DV_TIMINGS_CAP: OK
+	test VIDIOC_G/S_EDID: OK
+
+Control ioctls (Input 0):
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+	test VIDIOC_QUERYCTRL: OK
+	test VIDIOC_G/S_CTRL: OK
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 2 Private Controls: 0
+
+Format ioctls (Input 0):
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK (Not Supported)
+
+Codec ioctls (Input 0):
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+Buffer ioctls (Input 0):
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test CREATE_BUFS maximum buffers: OK
+	test VIDIOC_REMOVE_BUFS: OK
+	test VIDIOC_EXPBUF: OK
+	test Requests: OK (Not Supported)
+	test TIME32/64: OK
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK (Not Supported)
+	test blocking wait: OK
+	test MMAP (no poll): OK
+	test MMAP (select): OK
+	test MMAP (epoll): OK
+	test USERPTR (no poll): OK (Not Supported)
+	test USERPTR (select): OK (Not Supported)
+	test DMABUF: Cannot test, specify --expbuf-device
+
+Total for chv3-video device /dev/video4: 55, Succeeded: 55, Failed: 0, Warn=
+ings: 0
+```
+
+v3 changes:
+  - Send v4l2-subdev API changes as a separate patchset
+  - Drop chameleonv3/ directory
+  - Change capture device name from "framebuffer" to "video interface"
+  - Set sensible min and max dv timing caps
+  - Set pixelclock to htotal * vtotal * 24Hz (we can't detect the actual va=
+lue)
+  - Remove enum_framesizes
+  - Use v4l2_match_dv_timings()
+  - Add V4L2_CID_DV_RX_POWER_PRESENT control
+  - Use V4L2_DV_BT_CEA_1920X1080P60 as default timing
+  - Use vb2_video_unregister_device()
+  - Move subdev pad initialization to probe
+  - Change subdev entity function to MEDIA_ENT_F_DV_DECODER
+  - Drop dprx 'port' property and always use 'ports' instead
+  - Remove legacy-format property and use multiple compats
+  - Cleanup notifier only in non-fallback mode
+  - Cleanup subdev entity using media_entity_cleanup()
+  - Increase HPD pulse length to 500ms (see comment in dprx_set_edid())
+  - Pull HPD low before updating EDID
+  - Add a DisplayPort media bus type
+  - Move receiver properties to port endpoint (data-lanes, link-frequencies=
+)
+
+v2 changes:
+  - Add missing includes in dt binding examples
+  - Add version number to intel,dprx compatible
+  - Use generic node names in dts
+  - Add and document IP configuration parameters
+  - Remove IRQ registers from intel-dprx (they're not a part of the IP)
+  - Remove no-endpoint property and check for "port" node instead
+
+Pawe=C5=82 Anikiel (10):
+  media: Add Chameleon v3 video interface driver
+  drm/dp_mst: Move DRM-independent structures to separate header
+  lib: Move DisplayPort CRC functions to common lib
+  drm/display: Add mask definitions for DP_PAYLOAD_ALLOCATE_* registers
+  media: dt-bindings: video-interfaces: Support DisplayPort MST
+  media: v4l2-mediabus: Add support for DisplayPort media bus
+  media: intel: Add Displayport RX IP driver
+  media: dt-bindings: Add Chameleon v3 video interface
+  media: dt-bindings: Add Intel Displayport RX IP
+  ARM: dts: chameleonv3: Add video device nodes
+
+ .../bindings/media/google,chv3-video.yaml     |   64 +
+ .../devicetree/bindings/media/intel,dprx.yaml |  172 ++
+ .../bindings/media/video-interfaces.yaml      |    7 +
+ .../socfpga/socfpga_arria10_chameleonv3.dts   |  194 ++
+ drivers/gpu/drm/display/Kconfig               |    1 +
+ drivers/gpu/drm/display/drm_dp_mst_topology.c |   76 +-
+ drivers/media/platform/Kconfig                |    1 +
+ drivers/media/platform/Makefile               |    1 +
+ drivers/media/platform/google/Kconfig         |   13 +
+ drivers/media/platform/google/Makefile        |    3 +
+ drivers/media/platform/google/chv3-video.c    |  891 +++++++
+ drivers/media/platform/intel/Kconfig          |   12 +
+ drivers/media/platform/intel/Makefile         |    1 +
+ drivers/media/platform/intel/intel-dprx.c     | 2283 +++++++++++++++++
+ drivers/media/v4l2-core/v4l2-fwnode.c         |   38 +
+ include/drm/display/drm_dp.h                  |    9 +-
+ include/drm/display/drm_dp_mst.h              |  238 ++
+ include/drm/display/drm_dp_mst_helper.h       |  232 +-
+ include/dt-bindings/media/video-interfaces.h  |    2 +
+ include/linux/crc-dp.h                        |   10 +
+ include/media/v4l2-fwnode.h                   |    5 +
+ include/media/v4l2-mediabus.h                 |   17 +
+ lib/Kconfig                                   |    8 +
+ lib/Makefile                                  |    1 +
+ lib/crc-dp.c                                  |   78 +
+ 25 files changed, 4053 insertions(+), 304 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/google,chv3-vid=
+eo.yaml
+ create mode 100644 Documentation/devicetree/bindings/media/intel,dprx.yaml
+ create mode 100644 drivers/media/platform/google/Kconfig
+ create mode 100644 drivers/media/platform/google/Makefile
+ create mode 100644 drivers/media/platform/google/chv3-video.c
+ create mode 100644 drivers/media/platform/intel/intel-dprx.c
+ create mode 100644 include/drm/display/drm_dp_mst.h
+ create mode 100644 include/linux/crc-dp.h
+ create mode 100644 lib/crc-dp.c
+
+--=20
+2.45.0.rc1.225.g2a3ae87e7f-goog
+
