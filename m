@@ -1,99 +1,100 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1755415DBB9;
-	Tue,  7 May 2024 13:11:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B4A15E1FD
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 13:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715087501; cv=none; b=LO03IWjwaWNyUTJbiVpGEauAnBEseOuJA1I2gJ4AJR+cN2H3DEG7+SqLwW2CoNvjYPOyIfho6sGxDLR249u+/knRD6fUZh9pkvjjXwx2SmATU7wkE3eYfWPMyPG255OG2SdGvRqSiaBP9cZ1Ad8gxk3kLryVSeiTIEprkmqNoRs=
+	t=1715087520; cv=none; b=D6dxYLyIObhGIK3WzHIJGcx9uIZ3zjBbexx8snZasqUrl9wo+dj001+W8PBjobKNkVsxaZcSrRydMCSnsEqeYO5lGO5wLXzBDZ8FW9hNz8ruoSTxk2TtPcWHsEIYGjIUJdN72J74ZvKl0tkIe5qWRQcoajRKlFCOo5dbiLz1UfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715087501; c=relaxed/simple;
-	bh=l03cTZG83CQkVjnsc8Q28HnnucLh+YYVgCjPTYHUUQU=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=VY9nOgSo7pudut+Wzl/IUwvo3jLm7AXcV9+ctYk9Gela+ZVb8alhSao3u/qQMcgEiIK4gDNPUyAmKuk+DMtnMDNDQkFn5No8sSdk4zUHvc51Ul1w/ZVtGM4FaKdpyCi4vszwqKWPMc43gZxjI4y+ZEaaqqamcTOEtzHJoeg2JnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VYdvg0lLTz4f3kFP;
-	Tue,  7 May 2024 21:11:27 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 5918F1A01D2;
-	Tue,  7 May 2024 21:11:35 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP2 (Coremail) with SMTP id Syh0CgAnmAuFKDpmixUxMQ--.27812S3;
-	Tue, 07 May 2024 21:11:35 +0800 (CST)
-Subject: Re: [PATCH 5/9] jbd2: remove unneeded kmap to do escape in
- jbd2_journal_write_metadata_buffer
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
- jack@suse.com
-References: <20240506141801.1165315-1-shikemeng@huaweicloud.com>
- <20240506141801.1165315-6-shikemeng@huaweicloud.com>
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-Message-ID: <1fbac8b4-167f-6f03-35f2-cabe6fc0b5e3@huaweicloud.com>
-Date: Tue, 7 May 2024 21:11:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+	s=arc-20240116; t=1715087520; c=relaxed/simple;
+	bh=zEBS6JMl3E73sfcFbF9mHYYHU8BUvelv4sHVebvCgno=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=teihkF96YF3IgYLGJyUsz+QNYvQywqkuO4WENWbpG1pXLHe632c685t7GfBG597Ku5BVip2Up5d9/i8Ea8o1gPACywNfy6nrcwBPQSjGHyJOMJJVCta/QxbIBkWipuyOnbvELvyEIRtP4s9hXE+6dWgKEXPXdAnHxHIDh0M0DqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=QIrVVIpF; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="QIrVVIpF"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447BRcs2025853;
+	Tue, 7 May 2024 15:11:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	from:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding:content-type; s=
+	selector1; bh=yAN5IQlno3nIPY6Uvv6ZYKb/KRQn6JTGU5DkXSWQ1EU=; b=QI
+	rVVIpF/Fsp1qrE0nBYyzHvp72LmJfPZ0SW8/2ocR9Xnq8YAitmEJiPRKvMZmr17Y
+	epYwv1UBwORZSIFLOKxLYvNyi+YSciQo16ovWTvp7GiIh2kZ3tQo5okAR7U19030
+	LwQSKD6NomQK/vZ9JZz9kNGirU+UAXSY6r3ayU4xaC/RBbbVC/F2YAM2IhNUIwal
+	omomhfVCnRSrggbR3U4IMnSz7xKEZGzB2M85JyZRZH1qL3s4SwD7t2Y1jq9SVZUn
+	b5o09Ka3YlLTfR2ujBSqQkb2TRY40kIhnLu9KsWyEUEmgfu7Dp8edC/X00Nk1X1B
+	encA7+88Qp2hyP76T/DQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3xwa553xd5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 May 2024 15:11:33 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DCB524002D;
+	Tue,  7 May 2024 15:11:28 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7DDC321B53E;
+	Tue,  7 May 2024 15:10:56 +0200 (CEST)
+Received: from localhost (10.48.87.171) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 7 May
+ 2024 15:10:56 +0200
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Russell King <linux@armlinux.org.uk>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>
+CC: Antonio Borneo <antonio.borneo@foss.st.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 2/8] ARM: stm32: use different EXTI driver on ARMv7m and ARMv7a
+Date: Tue, 7 May 2024 15:10:45 +0200
+Message-ID: <20240507131051.980313-3-antonio.borneo@foss.st.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240507131051.980313-1-antonio.borneo@foss.st.com>
+References: <20240507131051.980313-1-antonio.borneo@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240506141801.1165315-6-shikemeng@huaweicloud.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgAnmAuFKDpmixUxMQ--.27812S3
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xr15AF43KFykuw1Duw17ZFb_yoWDAFX_Xa
-	1vy34kursxXrn7ZF4Fk3W5WrZ5Ww15Gr1kCF10q34Uuw10q3W8GrnIkrWktrnrWa1xKr45
-	Xa4q9F4rtF9IvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
-	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
-	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
-	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
-	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
-	k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UE-erUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SAFCAS1NODE1.st.com (10.75.90.11) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-07_06,2024-05-06_02,2023-05-22_02
 
-On 2024/5/6 22:17, Kemeng Shi wrote:
-> The data to do escape could be accessed directly from b_frozen_data,
-> just remove unneeded kmap.
-> 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Build the proper driver by selecting the appropriate config flag.
 
-Looks good to me.
+Signed-off-by: Antonio Borneo <antonio.borneo@foss.st.com>
+---
+ arch/arm/mach-stm32/Kconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Reviewed-by: Zhang Yi <yi.zhang@huawei.com>
-
-> ---
->  fs/jbd2/journal.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> index 77fcdc76fdfd..87f558bd2e8a 100644
-> --- a/fs/jbd2/journal.c
-> +++ b/fs/jbd2/journal.c
-> @@ -423,11 +423,8 @@ int jbd2_journal_write_metadata_buffer(transaction_t *transaction,
->  	 * Did we need to do an escaping?  Now we've done all the
->  	 * copying, we can finally do so.
->  	 */
-> -	if (do_escape) {
-> -		mapped_data = kmap_local_folio(new_folio, new_offset);
-> -		*((unsigned int *)mapped_data) = 0;
-> -		kunmap_local(mapped_data);
-> -	}
-> +	if (do_escape)
-> +		*((unsigned int *)jh_in->b_frozen_data) = 0;
->  
->  	folio_set_bh(new_bh, new_folio, new_offset);
->  	new_bh->b_size = bh_in->b_size;
-> 
+diff --git a/arch/arm/mach-stm32/Kconfig b/arch/arm/mach-stm32/Kconfig
+index 98145031586f1..41bfcf31f8a76 100644
+--- a/arch/arm/mach-stm32/Kconfig
++++ b/arch/arm/mach-stm32/Kconfig
+@@ -11,7 +11,8 @@ menuconfig ARCH_STM32
+ 	select CLKSRC_STM32
+ 	select PINCTRL
+ 	select RESET_CONTROLLER
+-	select STM32_EXTI
++	select STM32MP_EXTI if ARCH_MULTI_V7
++	select STM32_EXTI if ARM_SINGLE_ARMV7M
+ 	help
+ 	  Support for STMicroelectronics STM32 processors.
+ 
+-- 
+2.34.1
 
