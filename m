@@ -1,199 +1,150 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA6814E2DE;
-	Tue,  7 May 2024 10:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F384614E2DE
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715077401; cv=none; b=lel0Xj1or3miA9T9jvpDq5D4V/s3WJCkzrjm03XALp+Tsl343KDB2Rez1romslBXoU0qQ+cQ57p5Xx1kNlYpfvTxkN3eBXBPa4jNCzvNkLHjTgZ6xTCnTLjDQGDXPrmQ//IkU4rvBW0te1JOTjC5Q2NJ7mXsbc2/BlO3lX2HInk=
+	t=1715077464; cv=none; b=Nm+7nkO8xj7lM8Izb41NOVMxMsvIBdmhoRgmKaNWtkqj+xAWQ1KmGIBgqbuWMv7f9O9hP1W6ThqupwCcOSTzuLW67zSN55TEf8+PX8rjje7HDAk+C7pNqpgR+lr5h+L/EvXnPu/hNn/4Ev/9csOUEpWqJNF9xnED/lAsuyuedmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715077401; c=relaxed/simple;
-	bh=Gm4GceuR5OxITl9PR6JnqdjWWBcG7QBtr441NLfsuNM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nk1+22No+A5rKTOUQFZ/QUG3EKuf4pCAYjBQGbZyvf/i1lR5nQybTrStAU4A2Sb++4lxE9WYa8arFi4ZmDJcKhzz1k8TTuDzciqwu0uNPe1+QaYxx2ev2vVat3QWlTiGGk+qe/nNqtSIEDX1cjhjkjfG9VrQofYfUd9WVsxbLQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=pbGgIpxH; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1715077464; c=relaxed/simple;
+	bh=RrYjROTDfJeyKc0YGUAw8FfKa4f5MwRcggN89Y+XeJ4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MOLYUbCQ+THGSHQnXJ2aVwV1GxiVjZyJRAT/CVvXcfxx2D3OTo1vINZ77D04snd9FEy9knCfyPKykGGOPyyQtXBLANnj3cYQXKK55BM0UrA5AWAMj2dYObOFCQoRePiS5qotWfJ8W1VfePdkcX5WOQFw5bVWN9Szk5WoQQSiark=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rdNtBAnE; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="pbGgIpxH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1715077399; x=1746613399;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Gm4GceuR5OxITl9PR6JnqdjWWBcG7QBtr441NLfsuNM=;
-  b=pbGgIpxH03gmNP8gc/c5PY7HXRsj6cv+skanUy7tk7Z7BC4QrVLuctar
-   4D6IOKbzoool62aJZippxfz7hRdF+Mvo8dZvqv7Ane4oZ9CRrv/7gBlbm
-   9cFUt8/Htc5jivIWffw30IuXI5JpZh0BiBKXslLhK1SusbgIArBs7k4tU
-   UFo7nZHiBv8dzp9y8X7x7gRps8C/vsHxesxD4CKzJFakpBbASX+DUQ0tF
-   BwLmmsCPRF93hPAOGTGXnn7hfk8VPBN3sI6z3YhPKYXHjVXLEF4jvRXFg
-   M5YNTvlgFC3KIz1qS3jXbDCNBYmuelAa0H2/bdxQQeQgMSO+ZFLu4NsQJ
-   Q==;
-X-CSE-ConnectionGUID: AI7nB1djQrayuS0RCqpZ+Q==
-X-CSE-MsgGUID: m//drMMAT1yv2KkxmHgjVA==
-X-IronPort-AV: E=Sophos;i="6.07,261,1708412400"; 
-   d="scan'208";a="26124008"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 May 2024 03:23:17 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 7 May 2024 03:23:07 -0700
-Received: from localhost (10.10.85.11) by chn-vm-ex04.mchp-main.com
- (10.10.85.152) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
- Transport; Tue, 7 May 2024 03:23:07 -0700
-Date: Tue, 7 May 2024 15:50:39 +0530
-From: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-CC: Andrew Lunn <andrew@lunn.ch>, Raju Lakkaraju
-	<Raju.Lakkaraju@microchip.com>, <netdev@vger.kernel.org>,
-	<lxu@maxlinear.com>, <hkallweit1@gmail.com>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<linux-kernel@vger.kernel.org>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH net-next] net: phy: add wol config options in phy device
-Message-ID: <ZjoAd2vsiqGhCVCv@HYD-DK-UNGSW21.microchip.com>
-References: <20240430050635.46319-1-Raju.Lakkaraju@microchip.com>
- <7fe419b2-fc73-4584-ae12-e9e313d229c3@lunn.ch>
- <ZjO4VrYR+FCGMMSp@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rdNtBAnE"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41b794510cdso24032185e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 03:24:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715077461; x=1715682261; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4YZbBZ6dudLkSPwyvQd1bbhClktoit8Kjm89gQzGu+Q=;
+        b=rdNtBAnEucN3YdI40w4sUuqJTUm5C+AYaucpckcTImNb51RBNrDmsL7s3Fn6tUhhJS
+         7T/rpu/xl89zwXU2nUjKSWq3hBUDQWWkMgEh2P+OmNwK0WAHQOupgfpLU9IXOT8JZygR
+         6H0fZl33TV1aRQ3fZVVkBPBmOIR00df/ozjXa5r5vI4YcQU/ZneSEk5xPUYtEwRAqxmk
+         QG3gyb2EabypiqrPrMwP6pVisyKtXR5sOC/jKNu2BNfhXQFQ7c8QCD3DDZ0JWLTlJ9yL
+         er8zYZf2XTxFtmwvISzmaLsNoIB5DKXsVxgRi6jougxfp++ss2lK1oErjn66CcLVE2El
+         q1GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715077461; x=1715682261;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4YZbBZ6dudLkSPwyvQd1bbhClktoit8Kjm89gQzGu+Q=;
+        b=MjvZffjkQug8TfKpJq2abu3nfd42RUGnbjuBC+IRhFdovO7YpU7HWo4DEeSqG7V/5O
+         XGOkcNgRl9YWfJcYtJQFjrs78Z7gXN8IO+ZgodeaIjt0hSgg3sCK5wZ/BFUiN/gpG1UC
+         YQPMRGMtckm/EbyuVLBfI66mMIfohFs0RPO5v4AODXskXSky3fUCqulFUr/4ZFlqCnli
+         XlOb44qpLKMmzLWKZlm0+Qnx+bsRvGvocA+MAV7oDzsOEeCQucXdRzRXc3GtnJhHqCj9
+         q+p0unrG0X5Lswl6zv9ZmfLVHg2Jm5YCMjTo3nF73I1/pVIfnHnfkIEEIzbDhfVdE621
+         vNBg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNZFnALXJUtH/P79mn7Xvutj9A2hnV8cvEWf27kgsLylh15wjAllmK9lqKSCR6th9cayr/rQGFOF64Uj/k61uBRC/og1F597t7jZnY
+X-Gm-Message-State: AOJu0Yz69jZINkIwZ0/1cqBn1BpFoKRVqHmEkSFTLHcHZSqOYRQJbo3h
+	YkKO2JJoq406evWlXiLNylEejZDH1F8ZO+zUJQNDcUIZwUbB1K0TuuG2LJg7wMk=
+X-Google-Smtp-Source: AGHT+IGBnROswMr6fiz4/nCludnMfVTnbGRYLGjJVGEbGLobnst3vIfHHqoUXu/8DrmIadb42FmShQ==
+X-Received: by 2002:a05:600c:3b29:b0:41b:8206:2c3e with SMTP id m41-20020a05600c3b2900b0041b82062c3emr8788581wms.40.1715077461332;
+        Tue, 07 May 2024 03:24:21 -0700 (PDT)
+Received: from draig.lan ([85.9.250.243])
+        by smtp.gmail.com with ESMTPSA id fm9-20020a05600c0c0900b0041c23148330sm22850929wmb.10.2024.05.07.03.24.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 03:24:19 -0700 (PDT)
+Received: from draig (localhost [IPv6:::1])
+	by draig.lan (Postfix) with ESMTP id 6C67E5F87D;
+	Tue,  7 May 2024 11:24:18 +0100 (BST)
+From: =?utf-8?Q?Alex_Benn=C3=A9e?= <alex.bennee@linaro.org>
+To: Will Deacon <will@kernel.org>
+Cc: Hector Martin <marcan@marcan.st>,  Catalin Marinas
+ <catalin.marinas@arm.com>,  Marc Zyngier <maz@kernel.org>,  Mark Rutland
+ <mark.rutland@arm.com>,  Zayd Qumsieh <zayd_qumsieh@apple.com>,  Justin Lu
+ <ih_justin@apple.com>,  Ryan Houdek <Houdek.Ryan@fex-emu.org>,  Mark Brown
+ <broonie@kernel.org>,  Ard Biesheuvel <ardb@kernel.org>,  Mateusz Guzik
+ <mjguzik@gmail.com>,  Anshuman Khandual <anshuman.khandual@arm.com>,
+  Oliver Upton <oliver.upton@linux.dev>,  Miguel Luis
+ <miguel.luis@oracle.com>,  Joey Gouly <joey.gouly@arm.com>,  Christoph
+ Paasch <cpaasch@apple.com>,  Kees Cook <keescook@chromium.org>,  Sami
+ Tolvanen <samitolvanen@google.com>,  Baoquan He <bhe@redhat.com>,  Joel
+ Granados <j.granados@samsung.com>,  Dawei Li <dawei.li@shingroup.cn>,
+  Andrew Morton <akpm@linux-foundation.org>,  Florent Revest
+ <revest@chromium.org>,  David Hildenbrand <david@redhat.com>,  Stefan
+ Roesch <shr@devkernel.io>,  Andy Chiu <andy.chiu@sifive.com>,  Josh
+ Triplett <josh@joshtriplett.org>,  Oleg Nesterov <oleg@redhat.com>,  Helge
+ Deller <deller@gmx.de>,  Zev Weiss <zev@bewilderbeest.net>,  Ondrej
+ Mosnacek <omosnace@redhat.com>,  Miguel Ojeda <ojeda@kernel.org>,
+  linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
+  Asahi Linux <asahi@lists.linux.dev>
+Subject: Re: [PATCH 0/4] arm64: Support the TSO memory model
+In-Reply-To: <20240411132853.GA26481@willie-the-truck> (Will Deacon's message
+	of "Thu, 11 Apr 2024 14:28:54 +0100")
+References: <20240411-tso-v1-0-754f11abfbff@marcan.st>
+	<20240411132853.GA26481@willie-the-truck>
+Date: Tue, 07 May 2024 11:24:18 +0100
+Message-ID: <87seythqct.fsf@draig.linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <ZjO4VrYR+FCGMMSp@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Russell King,
+Will Deacon <will@kernel.org> writes:
 
-Sorry for late response
+> Hi Hector,
+>
+> On Thu, Apr 11, 2024 at 09:51:19AM +0900, Hector Martin wrote:
+>> x86 CPUs implement a stricter memory modern than ARM64 (TSO). For this
+>> reason, x86 emulation on baseline ARM64 systems requires very expensive
+>> memory model emulation. Having hardware that supports this natively is
+>> therefore very attractive. Such hardware, in fact, exists. This series
+>> adds support for userspace to identify when TSO is available and
+>> toggle it on, if supported.
+>
+> I'm probably going to make myself hugely unpopular here, but I have a
+> strong objection to this patch series as it stands. I firmly believe
+> that providing a prctl() to query and toggle the memory model to/from
+> TSO is going to lead to subtle fragmentation of arm64 Linux userspace.
+>
+> It's not difficult to envisage this TSO switch being abused for native
+> arm64 applications:
+>
+>   * A program no longer crashes when TSO is enabled, so the developer
+>     just toggles TSO to meet a deadline.
+>
+>   * Some legacy x86 sources are being ported to arm64 but concurrency
+>     is hard so the developer just enables TSO to (mostly) avoid thinking
+>     about it.
+>
+>   * Some binaries in a distribution exhibit instability which goes away
+>     in TSO mode, so a taskset-like program is used to run them with TSO
+>     enabled.
 
-The 05/02/2024 16:59, Russell King (Oracle) wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On Thu, May 02, 2024 at 04:51:42PM +0200, Andrew Lunn wrote:
-> > On Tue, Apr 30, 2024 at 10:36:35AM +0530, Raju Lakkaraju wrote:
-> > > Introduce a new member named 'wolopts' to the 'phy_device' structure to
-> > > store the user-specified Wake-on-LAN (WOL) settings. Update this member
-> > > within the phy driver's 'set_wol()' function whenever the WOL configuration
-> > > is modified by the user.
-> > >
-> > > Currently, when the system resumes from sleep, the 'phy_init_hw()' function
-> > > resets the PHY's configuration and interrupts, which leads to problems upon
-> > > subsequent WOL attempts. By retaining the desired WOL settings in 'wolopts',
-> > > we can ensure that the PHY's WOL configuration is correctly reapplied
-> > > through 'phy_ethtool_set_wol()' before a system suspend, thereby resolving
-> > > the issue
-> >
-> > Sorry it took a white to review this.
-> >
-> > >
-> > > Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microchip.com>
-> > > ---
-> > >  drivers/net/phy/mxl-gpy.c    | 5 +++++
-> > >  drivers/net/phy/phy_device.c | 5 +++++
-> > >  include/linux/phy.h          | 2 ++
-> > >  3 files changed, 12 insertions(+)
-> > >
-> > > diff --git a/drivers/net/phy/mxl-gpy.c b/drivers/net/phy/mxl-gpy.c
-> > > index b2d36a3a96f1..6edb29a1d77e 100644
-> > > --- a/drivers/net/phy/mxl-gpy.c
-> > > +++ b/drivers/net/phy/mxl-gpy.c
-> > > @@ -680,6 +680,7 @@ static int gpy_set_wol(struct phy_device *phydev,
-> > >     struct net_device *attach_dev = phydev->attached_dev;
-> > >     int ret;
-> > >
-> > > +   phydev->wolopts = 0;
-> >
-> > Is this specific to mlx-gpy?
-> >
-> > You should be trying to solve the problem for all PHYs which support
-> > WoL. So i expect the core to be doing most of the work. In fact, i
-> > don't think there is any need for driver specific code.
-> 
-> It would be good to hear exactly why its necessary for phylib to track
-> this state,
+These all just seem like cases of engineers hiding from their very real
+problems. I don't know if its really the kernels place to avoid giving
+them the foot gun. Would it assuage your concerns at all if we set a
+taint flag so bug reports/core dumps indicated we were in a
+non-architectural memory mode?
 
-Andrew suggested that if PHY device support WOL, Ethernet MAC device should be in
-sleep expect interrrupt handling functionality.
+> In all these cases, we end up with native arm64 applications that will
+> either fail to load or will crash in subtle ways on CPUs without the TSO
+> feature. Assuming that the application cannot be fixed, a better
+> approach would be to recompile using stronger instructions (e.g.
+> LDAR/STLR) so that at least the resulting binary is portable. Now, it's
+> true that some existing CPUs are TSO by design (this is a perfectly
+> valid implementation of the arm64 memory model), but I think there's a
+> big difference between quietly providing more ordering guarantees than
+> software may be relying on and providing a mechanism to discover,
+> request and ultimately rely upon the stronger behaviour.
 
-To achive this, if we have phy device's wolopts, based on user configuration,
-we can configure phy WOL or Ethernet MAC WOL.
+I think the main use case here is for emulation. When we run x86-on-arm
+in QEMU we do currently insert lots of extra barrier instructions on
+every load and store. If we can probe and set a TSO mode I can assure
+you we'll do the right thing ;-)
 
-PCI11x1x chip MAC can support WOL (i.e. WAKE_MAGIC, WAKE_SECURE, WAKE_UCAST,
-WAKE_MCAST, WAKE_BCAST, WAKE_PHY)
-
-GPY211C PHY connect as External PHY to PCI11x1x ethernet device to achive
-2.5G/1G/100M/10Mpbs with either SGMII or 2500Base-X mode. GPY211C PHY can
-support WOL (i.e. WAKE_PHY or WAKE_MAGIC).
-
-Similarly, KSZ91931 PHY connect as External PHY to PCI11x1x ethernet device to
-achive 1G/100M/10Mbps with RGMII or GMII mode. But, KSZ9131 PHY driver does
-not support WOL.
-
-If we have phy's wolopts which holds the user configuration, Ethernet MAC
-device can configure Power Manager's WOL registers whether handle only 
-PHY interrupts or MAC's WOL functionality.
-
-In existing code, we don't have any information about PHY's user configure to
-configure the PM mode
-
-> and why the PHY isn't retaining it.
-> 
-
-mxl-gpy driver does not have soft_reset( ) function.
-In resume sequence, mxl-gpy driver is clearing the WOL configuration and interrupt
-i.e.
-gpy_config_init( ) and gpy_config_intr( )
-
-> I suspect this may have something to do with resets - the PHY being
-> hardware reset when coming out of resume (resulting in all state
-> being lost.) What's resetting it would also be good to track down
-> (as in hardware, firmware, or the kernel.)
-> 
-In case of resume, the following sequence executes:
-
-pci_pm_resume( )
---> lan743x_pm_resume()
-   --> lan743x_netdev_open( )
-      --> phy_connect_direct( )
-         --> phy_attach_direct( )
-	     --> phy_init_hw( )
-	        --> gpy_config_init( )
-		--> gpy_config_intr( )
-
-In existing gpy_config_init( ) and gpy_config_intr( ) function don't have any
-indication about whether execute in initial operation or WOL's resume
-operation.
-
-If we avoid clearing Interrupts in WOL's resume case, we need not re-configure
-the WOL on PHY. 
-
-I add the following code and test.  It's working as expected.
-
-In File: drivers/net/phy/mxl-gpy.c
-In gpy_config_init( ) function:
-
-+       if (!phydev->wolopts) {
-               /* Mask all interrupts */
-               ret = phy_write(phydev, PHY_IMASK, 0);
-               if (ret)
-                       return ret;
-+       }
-
-In gpy_config_intr( ) function:
-
-+       if (phydev->wolopts)
-+               mask |= (phy_read(phydev, PHY_IMASK) &
-+                        (PHY_IMASK_WOL | PHY_IMASK_LSTC));
-+
-
-> --
-> RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-> FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
-
--- 
-Thanks,                                                                         
-Raju
+--=20
+Alex Benn=C3=A9e
+Virtualisation Tech Lead @ Linaro
