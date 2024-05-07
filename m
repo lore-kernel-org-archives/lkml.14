@@ -1,101 +1,171 @@
-Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2109.outbound.protection.outlook.com [40.107.7.109])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CFE26CDB1;
-	Tue,  7 May 2024 12:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715085712; cv=none; b=fNcDGDBDexuZnavXrBdnY56kvZ3O8B2vc68k2ZJZFV8rvvp7HCYPInBC8N8aNFuKvOCSZGNiNJJqgaaRzInUnoqGUfCAKTtKtXRiaa0Sn/UZQZJqOYaULRq8C+jdO13gFuSiPeEV3m9DIMIdDGaEFNEo5nphpZkbA14+a+B2Xhg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715085712; c=relaxed/simple;
-	bh=7KEcsbmaA7aD57rmrMuDbLkNyccMo7sXPpbR11JklnE=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=ura5Ldm43iNBNP6vztFQk3JeEeYuUd2WnHjEROCF7FopELbjpul6v+7axVnWCvBlBjwmIm1gBvAY8St/kKkiH5L6Ri6zb+RXqPULpxzTuUtNCJWR1h+MgOujp++x5k9aJYkU9YH7X9oC6uwCQnrmQgyMufxyTA32EK7xQwuis/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VYdFF1c3Yz4f3jXg;
-	Tue,  7 May 2024 20:41:37 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 767DC1A0572;
-	Tue,  7 May 2024 20:41:45 +0800 (CST)
-Received: from [10.174.179.80] (unknown [10.174.179.80])
-	by APP2 (Coremail) with SMTP id Syh0CgAXPA+HITpmNyEvMQ--.45588S3;
-	Tue, 07 May 2024 20:41:45 +0800 (CST)
-Subject: Re: [PATCH 4/9] jbd2: move repeat tag around to remove a repeat check
- of b_frozen_data
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
- jack@suse.com
-References: <20240506141801.1165315-1-shikemeng@huaweicloud.com>
- <20240506141801.1165315-5-shikemeng@huaweicloud.com>
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-Message-ID: <b2fa97c7-3f1c-321d-038e-7fb46420d24b@huaweicloud.com>
-Date: Tue, 7 May 2024 20:41:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.12.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9276CDB1
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 12:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.109
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715085781; cv=fail; b=uHKRIsSOU2cGw7roWjA1trUowSwDrldWi/BOW9Wq6Qt2glmeqm+gkP5lQFbEX7SEGdsCXWAkZH63FsDf6EQQ4uisDnNFelzYeoGrRCsxbXsrrBlD6QDNw3zJB6SCXdCyRUIfWcBmzEEeXhPLwP6Nf+++ievpc8Qys++EKon48RY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715085781; c=relaxed/simple;
+	bh=o8wLQUMDLFVWhh9gAOAlULCcIvw18DJyacXDHQKINMU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rIDNPhsptcAG1uMsi+gGoveEgPwSz0gUGmQ4cSfNC3p29EpZ9PPjwLYo0sWdznneUnvs/0nrt0Nfl17VvEjSIIH40DXxn6Tl8CdttnGAZYLiB8nM9DJ8nK9Wxflxel/dyZWhOC6EOqANp/qYiokCw4IpQgZk6oyK4rEQVaccCs4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=RVkIazQB; arc=fail smtp.client-ip=40.107.7.109
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="RVkIazQB"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UsS6XV8qUqiWvTqtY4KHdnR1Q8MdM3S6irSL4XNjvfnEXdYmr7nBHGJtreDUWqinNDcjquhnK5Gt1lrDhoXyXmxFuoyKvXeskbxQboOOOQ6gdg8IZoHTJS03fVchjrg4fFsM0jvgmGCDT2wyGdvXTRbd69K7x25nnsr2SgsjfoTHdx0DZfEcP9JhAaVuGemN8gF4T3nAlkyS85wiXRSc1aEMJfVMGfQv8x/sQcjpBOkD76WbS3hQ6jUhaw9SwExBllMGxLq8jbW5Tbn55tpQYzI+KdyOotIe59nzUCN3d6hw0mr1aCL0pdoaS2cFqAFmNa1XYhrcZzywuNEYxt6qRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oaEn7DUUwfjlGBqkk3iRNtEsWcQx24bEmbFETzhVVAU=;
+ b=ZfI/MM4XMd7oY+uyOlzJnxuK+qXd6qaEj/qKO5lgipnn0LwxmWFlvvxArfJhxExy8QiD8POJQqXFBTGF8yEmp8kv1lxNvjAQdq6Nxitx6Z09BxKPzpSb/d3OtQ08MSBa++x/CRxy12mcW41PL4XfjRLHY77v5JE3I98FDoxX/euo9F+RZef4w53r0m9X5DMZv/iebwW24GybziiRHPrUvSnKHaQSCt4UqplKSU3mmGdI+yxReVYxD5LzNizNVcPL/iJTfQDziJmw62I3N1ThG21Iy1nkpJjFLPXU6+sT8X7U6nYKxNYY7p/DEt1jQikZvOdwWIBNlNDfbIyt6bHZOQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oaEn7DUUwfjlGBqkk3iRNtEsWcQx24bEmbFETzhVVAU=;
+ b=RVkIazQBzPKAiw/N5n7gM8F714cbqLLRa+BlUln438RnBbA4w9MQ2OKTObjlESmUxzxiNder4Pqghh7tZAAY8CR1fZ5IZeRqsdSjp5bLSVBVOuZyBNHbISGN/Nz9cdIkJ/46TQmxdVlfsoWyEQlwibOI/2UglDdl9j+3B5wFCFQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from DB7PR04MB4842.eurprd04.prod.outlook.com (2603:10a6:10:1b::13)
+ by PAXPR04MB8254.eurprd04.prod.outlook.com (2603:10a6:102:1cd::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42; Tue, 7 May
+ 2024 12:42:53 +0000
+Received: from DB7PR04MB4842.eurprd04.prod.outlook.com
+ ([fe80::ac08:df46:97bd:4ae6]) by DB7PR04MB4842.eurprd04.prod.outlook.com
+ ([fe80::ac08:df46:97bd:4ae6%6]) with mapi id 15.20.7544.041; Tue, 7 May 2024
+ 12:42:53 +0000
+Message-ID: <7896e6a0-4c9e-4df6-a7ea-5b952696affd@cherry.de>
+Date: Tue, 7 May 2024 14:42:51 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Small changes for Rockchip NVMEM drivers
+To: Heiko Stuebner <heiko@sntech.de>, srinivas.kandagatla@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240507122256.3765362-1-heiko@sntech.de>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20240507122256.3765362-1-heiko@sntech.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: WA0P291CA0022.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:1::22) To DB7PR04MB4842.eurprd04.prod.outlook.com
+ (2603:10a6:10:1b::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240506141801.1165315-5-shikemeng@huaweicloud.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgAXPA+HITpmNyEvMQ--.45588S3
-X-Coremail-Antispam: 1UD129KBjvJXoW7Wr4fCrW3Kr4UXrW3CFW7urg_yoW8Jr1xpr
-	93KF1jkFyvg3s2yFs7ua1DuFy09ws5WFy8KFnxCr1ayay3Xw1xWryjvw15Kw12yrZ7G3y8
-	Zryq93yxW3ZIvFDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUzsqWUUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB7PR04MB4842:EE_|PAXPR04MB8254:EE_
+X-MS-Office365-Filtering-Correlation-Id: d8f3bca8-6843-4c82-711c-08dc6e933638
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cFJjS2ZEVDdQWXM1ZmVYMkJmM3NHWnFkSVFBaVhlRnNESW9MenFDMGIxRkxE?=
+ =?utf-8?B?ZGc3YTdtNXF4QW13eFN4VitDaTl5QjQyaENCUHlBaDdWanpNTjRTb1VZd096?=
+ =?utf-8?B?NW53bUs3Mm42dk1MOFVBeVU3ZnY1MzRvOWdtWXpEeG9TMUdLa2ZOb2Zzdm5n?=
+ =?utf-8?B?dHNPN3Y3SjB5dEZtTFBuOHRCRUplWXFLMVpLbGc1M0tkcGwvQlM3WVY4YzhN?=
+ =?utf-8?B?V29JcEQ2VlhDMUNhSHlHL21TNk9XRXNVRE1LbkFFNGV6VWl6R3EwTjZUYmYx?=
+ =?utf-8?B?RkpuaWVzMjA4KzNRVUJxaUhzRXNYaG1KcTJyRVVFODU5Y01hV1dBV2xzYU5O?=
+ =?utf-8?B?UTZzT2xKaFRqYWd3ak9CalM4aFRtUVkxQ3kxZjFsWVhpMnpNZ3QrUUVISXFW?=
+ =?utf-8?B?QUpTTjNud0FyUkE0aWRBZVJrcmxvN0pOMWhCTTlFRDhxZVpjUm5weURtUGk5?=
+ =?utf-8?B?ejJwOXN3WVB4a1FjVzg1SGpNYVNUSFFLcTJwdERUYzRneDRRZkhWY2p1Rmlt?=
+ =?utf-8?B?cnd3TmIwditLK3JCSTkzYWM0WjE0d255dWdvK2c5aUovcUZKQmN6VEJVN1Bs?=
+ =?utf-8?B?UE1SaXJCVVdIejBvU0Z2NThaUEpSZDdyRisvam5mZXVyQTBkUkM2UlNxMWRz?=
+ =?utf-8?B?TVVxZFVzOUhid0NuQmxHdm4xTUx0Mmp6dHdoUlRlR2VQMyt6Y1lkaGs5aDZC?=
+ =?utf-8?B?MmtVZndYOXJWTTVlaFBtd1dDTjNxVi9SN1pLNExHak0reGU1cWYyM0NnYk94?=
+ =?utf-8?B?WHlrLzNabE5iUVlLVVlNcG1yOVhCbmNvcGZaQmtIbC9NU2hYMlRhRFVZdU9w?=
+ =?utf-8?B?ZnMwSjNYaEc5NlVDdjEzSzBDZTYzcjBNNHJDdHAzN3pPZGxnZWxWNUhzT1Rv?=
+ =?utf-8?B?bjJPR3dPTlBCZHFaR0x1MEV2THV3Zk0wNkpCM2Nmc3YrcndxNnZkRk5WMWJr?=
+ =?utf-8?B?VDNmWVBuQ1NkZVJwZ05NaEowclYvOWVEYS9ONGgxYVdqc29tYmFLWkR4TmpE?=
+ =?utf-8?B?ZjFWcmZCS3NjdXpPSnNCcXpKMExpdkc5MG1JZDk3T1pBTFl4ZEhXRjEybDl5?=
+ =?utf-8?B?ZUxhTzMzaDFsdmxWSjJ6Q1RqVHkyQy9KVkM4TGx2KzJNWGNlNUw1Y0RDWlNj?=
+ =?utf-8?B?VHVBaG1KbC9wa2NySldCNm9GOEJNQkFkV3RyeXZhcFpiNEc2WTFYNHBESGhi?=
+ =?utf-8?B?TlhhUHRoRUdjZXVUaTNpc1BDSllySVcxS0JYbFRYMEFEQmhUY2h1dklKaXhj?=
+ =?utf-8?B?UmtjRU9CRndLc1hlWWsvb293OXY5UldLbnorQjhNNzk1dUIza01zU1BHOFpr?=
+ =?utf-8?B?NmJEUUZYWHRsTzdZajBZdC9ySUFCazhEODdoaGRHb0VtcE1hc1p0OUIvUjdv?=
+ =?utf-8?B?algrMTBOYVRpRnR5cENmcGU0N2FZYTZLeXV3dktGZmlyQ1pUYnh2SzVGVDJG?=
+ =?utf-8?B?enBGVnN0VE9qNUhrOTliaW9LL251UmwrODVYZnVWSHZQRjRlSm5IN1A5T1Ux?=
+ =?utf-8?B?ZXVWM3lXbVNFa3hWTWl6SUZpUjZQYWVzMFlQVEJ4T1o0bzlKVm1mNmk2U0pW?=
+ =?utf-8?B?d3p1RkMrR2RqVWZlYktKM1ZHMXVSTWdRSzdRN2NXWmN3aDRWU2pqMDk2Um96?=
+ =?utf-8?B?UGRoelVJd3FjRUpRbFowZzd5ZlpEdW8xaThTS2xLNStaeXBFQlE4T0gxamtW?=
+ =?utf-8?B?cFc2WDBUS3AvTG1wQVd3dkI5endUSENoanlUcFFOMFE0MzZ3bkNrWk53PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4842.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dXRlT29QUzFvUVZ5QVA2dnNuWGFCNWRNdzhjN3pidXhoWGVTN0JKMHdKYi9n?=
+ =?utf-8?B?K0cxYmFIbmVDN3RrSlVQcld0cDFQRWRQSEE1em1hSFUyTWRjbHhxaTduOFU1?=
+ =?utf-8?B?cm5CVjMydlNSd1hEcTltRlBhcWFtR2ZjWUR2VGVmMjQ1d3lhWloxSk84N1Fn?=
+ =?utf-8?B?MXgvc09jck1ZMjR6QWQ1UTVxQW1WWlc3MTFPVGxlQ1h5MU9MSk9sZjNuWmg3?=
+ =?utf-8?B?SGp0OERUZncwSWtQak1nblVLdVgyQUNIRWc0K3NNM2o1bnlNZW95VmFUNS9y?=
+ =?utf-8?B?RlNHT2hsSDB4UXNEcFhYMmRJU1Q3bjZiSjRKbjdJOXZZNG1FcHdiNkx5bTFX?=
+ =?utf-8?B?SlhMWmREckpOelB3azVrK2pySUdxK2lnbm9ZZ1RHM3NHWThPL2pocitjYk92?=
+ =?utf-8?B?YXE0OU5iTldOemRoTm45Wld4OGN4K21LSStTYU9Hbm9CeUxwTUtNY2Npc2dU?=
+ =?utf-8?B?OGswVjVTaTJ2RFNNZzhJaHQrRGJxS3VxSDRraDBwQnhUVnRZUkM1M3R4bnlv?=
+ =?utf-8?B?UGY5NFBjaG5teEI1T05JVUlDaUJUMkxpV3NIN1VlbW9BMGs4OGJJWExxdVNX?=
+ =?utf-8?B?Q1MyT2tQN2JubE1KOUpnL2szQWFKVVA3cUVrOVpOMGdYajZuNGVRY2lYTmhl?=
+ =?utf-8?B?VDY2bWF4anpMbWpNOWJQSngwTDdmclVxOGNwY2ZNSlNoTUZJdFJzUDh0ZGcv?=
+ =?utf-8?B?ZmpTK0hSa3p5S0xlYnhKVHVaaXJWdG0vQmw2RVMvK1ZsenpFQVZ2MmY3OC9Q?=
+ =?utf-8?B?RVRoODl6UUdRR2pEQkxkMUd0QlFsWE8xbzQ2azdjK2s2QkJ4d0k5YThjQUc3?=
+ =?utf-8?B?OHBheVZidGNuMVBSQnRoK0I4Sk1zcWFqaVRFNTdYWVo4QUxtT3hJR0tvdXlo?=
+ =?utf-8?B?eFFKWEFkUWgxeUZaKzh3RC90UDBid2ZLNzkvZXN3eTF5anMxTXpyZUlvVFhB?=
+ =?utf-8?B?SHh0MEU1QjRIV2NGblhTdVltM1FCTjBPNzM3Y3V0THk0WFlWMWFnZTVveVdC?=
+ =?utf-8?B?V0lGWTl6MDNvTWxlaUFpRzZFT2c5WENtRjlSUE9aTFVEV0hMYjJjK0lzV0VW?=
+ =?utf-8?B?VUFDMExYMWJBcTZjUFEzL1JscDJjWHJUVmYvV2h2S01mdnYwQ0lLT1pIWnIz?=
+ =?utf-8?B?QmdMT2I2elRMb1Uva3hRUXNqRVM3ZWJjQ1JWb3ZlSUY1aWJvd2NDWSsvNVZv?=
+ =?utf-8?B?VjBheXBCQ1JUYThHVEthN09vNWFBQ3M2NG1iTittdjZ2dllHbHVjWmVnZGIr?=
+ =?utf-8?B?YXdNbjgxczErQVJFb25KdTNWWmRuK1g4ZWlDUnE4ZXd6eUROYmJZVCs2NXEz?=
+ =?utf-8?B?eE91NGdiLzJ5TzBmTzNNeWpsZDEvK3NwZ25nMENZdXdqY1VCaEV0MUtPN3Rl?=
+ =?utf-8?B?Vmc1Q0NTamxqR0U2bWFWZkFYUGpHa1djc0xVS2IwT3k0MGdsdmVUT0tWRHkx?=
+ =?utf-8?B?anZBc0liQmFrOVN3bXFhR0tBUGNxMkdCMjcvcVhMbGFyNGpTelZkQWk3aGs0?=
+ =?utf-8?B?MG9ocEFUekRUaWRnU2NObjUrei9adWk0WnRlZjNWQkR4dTFTRVpUdzg5dSta?=
+ =?utf-8?B?WVZCSW5mTTkrdS93QitseWNmaURTNmdpcSs3Tm1wSDIxenBjZW81U1pwYVhQ?=
+ =?utf-8?B?OEJ6bjlKK1Y0NHc0TnNxak85azI4SFF6VFJYZlpjRTRNSlhnby9rcTBWMWo5?=
+ =?utf-8?B?a0dvSDBDbVI3Zm9MSmNnVGw0by9NOGlMcVVBL1ZqQmZlQzh0L0kvazJBZlQ0?=
+ =?utf-8?B?aFMvcFR6MXl3M2pzWk1rSzRGemFUMzdkQUdIbjh1ZjZueXlCQ2FKMnQ2dDMw?=
+ =?utf-8?B?cFI3N3VxQWZWeTgyU1RwcTJXazVpVFF1TnBRNVlTcEN2K1QyY2tyWWpKL01T?=
+ =?utf-8?B?em5SZ0tOd0dTUmNvRGk0dTFHWm84SUtIRE9xN2NWVFl0RUowalI0U0lVQU5a?=
+ =?utf-8?B?R2RZWEJaLys0WkFmYmZyUW9wK2o4R2ZHWTJ4VlBJWVNFWEg0V1BMTXZNWXFv?=
+ =?utf-8?B?TkV1L1RSdDlwVWxTN3c2RTlDcDVDbUdjVCtNYmJjSWp2aWZpd3oxWkhHaUc1?=
+ =?utf-8?B?TUhtRUdLMzdmUnJ2bHNCcGd5dmpqS0J1aEZzM1ZWVVBXOTJMaVd2Q2dXaXRS?=
+ =?utf-8?B?SmFxRkFCQW9GL3IzNzFydndKcWxDWUtrUi9xaWJwR0NNNUlGU3VlT1ZlWXlk?=
+ =?utf-8?B?Q1E9PQ==?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8f3bca8-6843-4c82-711c-08dc6e933638
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4842.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 12:42:53.0932
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: /bAPZA2Gwg155IljkQUnK0XrM7t8sqDSynkVUS8fr4XDh5qQdVHbh/mysHxyN9MIbEdxj//dBLGrhd8sUL/XYdlnklQVrhV5jm/Ihhx1g0o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8254
 
-On 2024/5/6 22:17, Kemeng Shi wrote:
-> We make sure b_frozen_data is not NULL before jump to "repeat" tag, move
-> "repeat" tag around to remove repeat check of b_frozen_data.
+Hi Heiko,
+
+On 5/7/24 2:22 PM, Heiko Stuebner wrote:
+> When the option for legacy cell dt layouts was added, the
+> Rockchip OTP driver seems to have been overlooked, so set
+> the necessary option to allow seeing the cells again.
 > 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-> ---
->  fs/jbd2/journal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> index 9a35d0c5b38c..77fcdc76fdfd 100644
-> --- a/fs/jbd2/journal.c
-> +++ b/fs/jbd2/journal.c
-> @@ -353,12 +353,12 @@ int jbd2_journal_write_metadata_buffer(transaction_t *transaction,
->  	atomic_set(&new_bh->b_count, 1);
->  
->  	spin_lock(&jh_in->b_state_lock);
-> -repeat:
->  	/*
->  	 * If a new transaction has already done a buffer copy-out, then
->  	 * we use that version of the data for the commit.
->  	 */
->  	if (jh_in->b_frozen_data) {
-> +repeat:
->  		done_copy_out = 1;
->  		new_folio = virt_to_folio(jh_in->b_frozen_data);
->  		new_offset = offset_in_folio(new_folio, jh_in->b_frozen_data);
+> And two patches set the nvmem-type option in the device config.
 > 
 
-I suppose we could drop the repeat tag entirely, just set the new_folio and
-new_offset, and then goto handle do_escape. We don't need to call
-jbd2_buffer_frozen_trigger() and check for escaping again, is that right?
+For the whole series:
 
-Thanks,
-Yi.
+Reviewed-by: Quentin Schulz <quentin.schulz@cherry.de>
 
+Thanks!
+Quentin
