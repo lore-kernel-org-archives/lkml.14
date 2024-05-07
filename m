@@ -1,47 +1,58 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2948313C81C
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 08:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88896FE07;
+	Tue,  7 May 2024 08:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715069070; cv=none; b=QX1WfQIiQCck0cKAf23TfxDe6LhGXpIZjaXHlv+Ih8aFxrxHh4f2ggB2QbjBUkNC+eovEji3Qyh9VI+HLn98J/PBzAgLHWBkIFzWMmQ0uknm9or0Bm737o8bDCp1SBjhfZQdHetlplYDqeh0h0Z5eVS+/PYXKv3mH9TM+8T+V2w=
+	t=1715069166; cv=none; b=BwHtDgbJEvYwEYmA73BB9rf6CyHG47Zs5EsN2KiFqfLVvFacDmEXqCNeHkfxTDrYtDQ6b5zuLYI05REDiSjXlrG7C7K/iivzvlsMfZaHFf8a2t5oiUcP+64uxCF5sR8n9gqq9xTa7lI6KpWGbJ96Dw/npYmLt0Kxg8DCPCFXfQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715069070; c=relaxed/simple;
-	bh=0ykBxAOHnnyFYoBMTLFf57HmlIaOOKJXi3ApXDLq7OI=;
+	s=arc-20240116; t=1715069166; c=relaxed/simple;
+	bh=7BzDO5vHL5DN5HBAl+odWGDXNjBgB+USvYPToRZISgA=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bX9AZvELaE5DpXa48gcI2mJ6Z0/ED6Eg0VapT5Cpzy7hBd23jWwiJjuiDPVNx6A19Yf8EBJIYlw8RHwYEG0biwNnEN8aUNBKmrf0EgWLpZlDEZYm1WV3ZA+qRoVD3zt0qd0WXJTqGNAAwEutPyqyiiRCtxiexSzx+e1BE4uTn6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DBdTuImE; arc=none smtp.client-ip=217.70.183.195
+	 MIME-Version:Content-Type; b=HpBNnApkcRO1FqwXb3I+2dsrxpPmwDh8hcceccdKtZjPhiiw+sIgZiPs093XWsBWoZltd2w9bMBGh/HkWAUm11XcnNGd3PdbDboMuUjK4eaiZ9cEtKGiEAqFGuqfEaXDok+iw3wIkt5ay0oadflZdNbva3TVgqKspp+Tw6DI6BM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SpFGaQjH; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DBdTuImE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DDC2060002;
-	Tue,  7 May 2024 08:04:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SpFGaQjH"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E695BE0009;
+	Tue,  7 May 2024 08:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715069065;
+	t=1715069155;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zsjTpPdQhp8xGYXA1tswPY/6gILWdgf1jxKsPkJpD10=;
-	b=DBdTuImErvsqqyGScDzRjFP6Ovas2ZBQNaI3ew3vfdC+96+QHodwGpMNmeBcjkuS8qn+cb
-	M2ELFwQoWEKVoK/tD2bfRNBtlzQiOMDxjAXfxkqAmtgdy0isoav5SA+rA8pAgv6dvTg6pS
-	ijCrywnACX7Nyj2c0DG9hZQPLp965b8+JbK9BzdMyYvTOqeHFdKcWSDY4HjXrS0qAvIP69
-	maeaj3TuseAdMJtr9YGK0D0+aEUBisgJ++0osrV46VsRW776IqCjrRUXu+untSJgFGL/Y0
-	j6K0ui2o+/kLLdBQ/EabG0R/CeoLbcWzY64vuZCETVXIbRZL48IhC3StsbUXog==
-Date: Tue, 7 May 2024 10:04:24 +0200
+	bh=y9TepcGEoiKxLCbwlao4rlGSeQ9tpcI5kPyU38Gz2cI=;
+	b=SpFGaQjHqBa1/EmaMM0V0Yv5VoQyM6W/gWWjS2btE9ZQTQxVehDqriIXAkPgnynxrxhRD+
+	pV6OL/wqyJEdkYBN1GZVcgceosY9HP7sxbRWHej1+twLn+HQEuDNnEBBQVz5QPaFlUlyjT
+	y1mude0egUS4aG38ywFou0RQgSq2Vh716RUZhuHieuAz5TwR0nTlU6VRCYjTqIOyPGZeoR
+	aQxchupuRF8QxCgpd/JuICPP/BueU5pQ/QBMXstmsq7zugfzwcxKl+8RB1TtsI5J+DG/LP
+	9l/Ar29/NkMYolWtO7s9fa7Aa8QrCxBz+vJb8LUMW+ORYVt7HkTTSza3ZJHJeQ==
+Date: Tue, 7 May 2024 10:05:53 +0200
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: alexandre.belloni@bootlin.com, conor.culhane@silvaco.com,
- imx@lists.linux.dev, linux-i3c@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] i3c: master: svc: fix invalidate IBI type and
- miss call client IBI handler
-Message-ID: <20240507100424.611181f1@xps-13>
-In-Reply-To: <20240506164009.21375-3-Frank.Li@nxp.com>
-References: <20240506164009.21375-1-Frank.Li@nxp.com>
-	<20240506164009.21375-3-Frank.Li@nxp.com>
+To: Arseniy Krasnov <avkrasnov@salutedevices.com>
+Cc: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
+ <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman
+ <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>,
+ <linux-mtd@lists.infradead.org>, <devicetree@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>,
+ <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <oxffffaa@gmail.com>, <kernel@sberdevices.ru>
+Subject: Re: [PATCH v5 1/2] dt-bindings: mtd: amlogic,meson-nand: support
+ fields for boot ROM code
+Message-ID: <20240507100553.31578d0d@xps-13>
+In-Reply-To: <e3ea7238-c80d-dfe9-28bf-df95708872d6@salutedevices.com>
+References: <20240416085101.740458-1-avkrasnov@salutedevices.com>
+	<20240416085101.740458-2-avkrasnov@salutedevices.com>
+	<20240506154858.003bab54@xps-13>
+	<d90f9d3d-7823-503f-4cc6-73783a083d0e@salutedevices.com>
+	<20240507092726.4ab1afdb@xps-13>
+	<e3ea7238-c80d-dfe9-28bf-df95708872d6@salutedevices.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
@@ -54,71 +65,70 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 X-GND-Sasl: miquel.raynal@bootlin.com
 
-Hi Frank,
+Hi Arseniy,
 
-Frank.Li@nxp.com wrote on Mon,  6 May 2024 12:40:09 -0400:
+avkrasnov@salutedevices.com wrote on Tue, 7 May 2024 10:35:51 +0300:
 
-> In an In-Band Interrupt (IBI) handle, the code logic is as follows:
+> On 07.05.2024 10:27, Miquel Raynal wrote:
+> > Hi Arseniy,
+> >=20
+> > avkrasnov@salutedevices.com wrote on Tue, 7 May 2024 09:53:06 +0300:
+> >  =20
+> >> On 06.05.2024 16:48, Miquel Raynal wrote: =20
+> >>> Hi Arseniy,
+> >>>
+> >>> avkrasnov@salutedevices.com wrote on Tue, 16 Apr 2024 11:51:00 +0300:
+> >>>    =20
+> >>>> Boot ROM code on Meson requires that some pages on NAND must be writ=
+ten
+> >>>> in special mode: "short" ECC mode where each block is 384 bytes and
+> >>>> scrambling mode is on.   =20
+> >>>
+> >>> Ok
+> >>>    =20
+> >>>> Such pages located with the specified interval within specified offs=
+et.   =20
+> >>>
+> >>> I'm sorry I don't get that sentence.   =20
+> >>
+> >> Sorry, I mean this (let me draw :) ) :
+> >>
+> >> [ page 0 ][ page 1 ][ page 2 ][ page 3 ][ page 4 ][ page 5 ][ page 6 ]=
+[ page 7 ][ page 8 ][ page 9 ]
+> >>
+> >> For example, we have 10 pages starting from the beginning of the chip =
+- this is "within specified offset",
+> >> e.g. offset is 10. BootROM on axg needs that (for example) every third=
+ page must be written in "special"
+> >> mode: scrambling is on and ECC is 384 bytes. Such pages are 0, 2, 4, 6=
+, 8. E.g. "specified interval" will
+> >> be 3. =20
+> >=20
+> > Shall be 2, no? =20
 >=20
-> 1: writel(SVC_I3C_MCTRL_REQUEST_AUTO_IBI | SVC_I3C_MCTRL_IBIRESP_AUTO,
-> 	  master->regs + SVC_I3C_MCTRL);
+> yes, starting from 0 - then 2. e.g.
+> if (!(page_num % 2))
+>     boot ROM need this page
 >=20
-> 2: ret =3D readl_relaxed_poll_timeout(master->regs + SVC_I3C_MSTATUS, val,
->                                     SVC_I3C_MSTATUS_IBIWON(val), 0, 1000);
-> 	...
-> 3: ibitype =3D SVC_I3C_MSTATUS_IBITYPE(status);
->    ibiaddr =3D SVC_I3C_MSTATUS_IBIADDR(status);
+> >  =20
+> >>
+> >> So:
+> >>
+> >> amlogic,boot-pages: 10
+> >> amlogic,boot-page-step: 3 =20
+> >=20
+> > Ok I get it. Thanks for the explanation. I don't really understand the
+> > logic behind it though. Do you know why the bootROM would access only
+> > one page over 2 or 3? Is there a default value? Is this configurable? =
+=20
 >=20
-> SVC_I3C_MSTATUS_IBIWON may be set before step 1. Thus, step 2 will return
-> immediately, and the I3C controller has not sent out the 9th SCL yet.
-> Consequently, ibitype and ibiaddr are 0, resulting in an unknown IBI type
-> occurrence and missing call I3C client driver's IBI handler.
->=20
-> A typical case is that SVC_I3C_MSTATUS_IBIWON is set when an IBI occurs
-> during the controller send start frame in svc_i3c_master_xfer().
->=20
-> Clear SVC_I3C_MSTATUS_IBIWON before issue SVC_I3C_MCTRL_REQUEST_AUTO_IBI
-> to fix this issue.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: 5e5e3c92e748 ("i3c: master: svc: fix wrong data return when IBI ha=
-ppen during start frame")
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->=20
-> Notes:
->     Change from v1 to v2
->     - improve comments.
->=20
->  drivers/i3c/master/svc-i3c-master.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/i3c/master/svc-i3c-master.c b/drivers/i3c/master/svc=
--i3c-master.c
-> index 94e4954509558..032fe032ec433 100644
-> --- a/drivers/i3c/master/svc-i3c-master.c
-> +++ b/drivers/i3c/master/svc-i3c-master.c
-> @@ -415,6 +415,19 @@ static void svc_i3c_master_ibi_work(struct work_stru=
-ct *work)
->  	int ret;
-> =20
->  	mutex_lock(&master->lock);
-> +	/*
-> +	 * IBIWON may be set before SVC_I3C_MCTRL_REQUEST_AUTO_IBI, causing
-> +	 * readl_relaxed_poll_timeout() to return immediately. Consequently,
-> +	 * ibitype will be 0 since it was last updated only after the 8th SCL
-> +	 * cycle, leading to missed client IBI handlers.
-> +	 *
-> +	 * A typical scenario is when IBIWON occurs and bus arbitration is lost
-> +	 * at svc_i3c_master_priv_xfers().
-> +	 *
-> +	 * Clear SVC_I3C_MINT_IBIWON before sending SVC_I3C_MCTRL_REQUEST_AUTO_=
-IBI.
-> +	 */
+> No, boot rom source is closed, I don't have access to it. I get this logic
+> from old version of vendor's uboot - in practice they use non 2 or 3, they
+> use hardcoded 128 step value. And amlogic,boot-pages is 1024
 
-Thanks a lot.
+Feels like they are trying to use only the first page of each block, no?
 
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+That's very weird but I understand better.
 
 Thanks,
 Miqu=C3=A8l
