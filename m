@@ -1,387 +1,1255 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FF971B4C;
-	Tue,  7 May 2024 04:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210E86BFA9
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 04:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715057861; cv=none; b=E6+PQJZaEMS7PLHyawE58uPftmLjf8uxR4geppjrYvA5ZT0famHcx2yKkumPJtYy1R3A5Rmcj7bLMQBAZSBlfIm03kSRfv7ifv6SwoEDzbUcemE53xjE2s/62nBAuOXgw2AVviC8GOX1PTB6crg9WgWmzxn+1SesNH7DpAFGxsg=
+	t=1715057856; cv=none; b=CHY9eBggq785enQu6+ThqgQa2IcmywVXiOwZYjyUp2dAwMXUdLCj8oMXL9iSQJ416b+3Xuuzy2bY+OOAMAS6D5QE302WSAcmHyOp+dImFhOnWwc884uvtorAtJY5DtcIJpnJhFehFr1avb1YjuWbGGEY/VVQZV2He/CKBASjIXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715057861; c=relaxed/simple;
-	bh=1ndGqnt0Yucv/TtBDYG6nGnM4UoIraHXey9EMNGl6ac=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Z8w67swiNySsKcOlAHyHGlGnf/NmU3wxzBj5DqwaFkfmT+UGsn7+165sPr6JXofQLbHycyzTcsTfXGNfGLF4vJc7TyTcoAuQ0RzeL5eSVmHFiZ8o0qK9gL8FD2WFWob2XDnYjYvw8lAPz9glh8HdCWjrsgBTFCcAdCvO3XQODCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-60585faa69fso1714115a12.1;
-        Mon, 06 May 2024 21:57:38 -0700 (PDT)
+	s=arc-20240116; t=1715057856; c=relaxed/simple;
+	bh=oF6AgN7BW3AB3YyktiB6Cgiq6DiEL5jdZKTUcQsUcw0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=szUKvHn3YUf2UxCr/j8Ll2PtkqCvm111dmKuS5JDiDr/yDj4070fb1xHCRhXXy41yOlNHfUydy7nJpykT0ol9zSUr8Yq3pimyG0MUfdLCG8NjGfPz2VKCel6wBXjGlyJXXvRfJ03pytQviDQk7yN2j0BTFKfXqOGzAzVzVCmWF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=XKVSciig; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tenstorrent.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="XKVSciig"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e46dcd8feaso984359b3a.2
+        for <linux-kernel@vger.kernel.org>; Mon, 06 May 2024 21:57:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tenstorrent.com; s=google; t=1715057853; x=1715662653; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=WsC4fPBQOsEh4PqK4gFhjtjc9qg2CHjXErn+6xjc2cI=;
+        b=XKVSciig5HtbLFzQ3hGWgwHv95ShJHEYBAKnNIpOC2ekWfRA2lZrRt0if5CmAXnMMe
+         XcqlyqTerDJXsLuM51QI6HalR9YRhRnhe50n/vxbAMUxjjqCwikslzocXnXvvF1eCfvy
+         IbNcHEMsZpZX9/dQLLXqP75ODWSRuUgwzOpVmD/+PbiRhpufDXurEcnWU8zRMA3oRcpp
+         02IPI0URdg99E41NsmV0pJ+Pr++VNS7zb6MA303FeOXW2lEcGiPM6ssosqJWV09//+cC
+         u6aGkg9M81Xdw41KM+tAuBeDtGkpf0D9EA6WSbII3OKD7vokdhOzRfhjOHd4MdU3oXQs
+         zdWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715057858; x=1715662658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1715057853; x=1715662653;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=stzd46xkuc3HDoFga9LqxNKWgbIkvsfh9h+FPDMTTcg=;
-        b=tdN58cevMhsuZsXKpoASf/BQ+jBNKQaWRHNPwVx6nzgIXVCAJlAEyotSTn11KSWlra
-         iZtRz1c5dnwfRwCl7stkn8g7ELFREtpNCDga0L0kMDXMTjyouBNG3hRexZQgNZEeKEDl
-         CHYX0+NEa+hp07aBt0diMnvnRsimC7Br1z1hCQpVmTLJY2yjarlVN9B6kKUybzh5c4Xp
-         +hW/qqvXBTp7lAytBnR8inKTej8neJKFD/75ylTsgGTdjFPQPHERQcCApkdsPxNXj25K
-         88wLmIH62SIm7UunAp1A98D18KZAMo5oGLvMW+FbF5WtzmXvQ8tRMgrq9gBUcyOFD+Jy
-         nLOA==
-X-Forwarded-Encrypted: i=1; AJvYcCWTTXTHGWxENw+qPZqacNFVlPIcP1w/IWxphkA5lNnSjYHQ2CuYUNAk4G776gtQ9+8RuNovbvZ5OHJxdZ4Kj+TQmNAVuNtfHO0jvHEFGnvPWtsW3TRH32kQAdf1AOjBWx3RPHB91fntSaWs0RbtcQ==
-X-Gm-Message-State: AOJu0YxrecfoFz77VohT0/zkzj+gJHzex3PvRvvXW1CiulAIuGocQ6/d
-	EcQtnnWKJ4HszCJDWrz07C6Irzt2/ygywHA5A2ry6TU56jNV0LLxwHptVDrC8pr6xHifVeGBAej
-	KG9bnTyGGFTX73RXk6fiWNKwkp8E=
-X-Google-Smtp-Source: AGHT+IH2NF8/ctvHIcMuqKsanTtAceI5j8zU119ATbhXrxOC2Se2De+unE5jfahH1dbciqnk41/8L3uePUQtYbGiMic=
-X-Received: by 2002:a17:90a:b018:b0:2b2:da7:2c83 with SMTP id
- x24-20020a17090ab01800b002b20da72c83mr2473617pjq.4.1715057858240; Mon, 06 May
- 2024 21:57:38 -0700 (PDT)
+        bh=WsC4fPBQOsEh4PqK4gFhjtjc9qg2CHjXErn+6xjc2cI=;
+        b=gUjxhxX9n8X2XucuVtBzKlA5aFLHJG+QbMcSxob5Ax9AA2cct66/phSKjoPcDEQo/X
+         2JKE6LrQ0wESzD4+vhHYr9h5a14a1n0VWKJzQTKJjpFCGqRXKpVyWdYMy8+jB4yKS50v
+         +VJGGugKBvTI7Od1gr9bzWMgHteEpxkExrTXahR40OKhA9vN15BGREz5TX19CHPAHrHv
+         GcTn9r1ZbM2jHSyIZv/6xKWgN7ZYP9F7hlKR1YhmlRjHn1tupzIj7vVRngkBs3rK2+4P
+         l9S0mViF7ANTaHq59inyiTWt9OGKjKysEVqU3mIaoNb00eda8Xft5Ax6JOspW9cHro2K
+         ACWg==
+X-Forwarded-Encrypted: i=1; AJvYcCV5aeSkW57YDwaLqlK1AGkaCPRDcsCLx9Idf4DeZrOwvJXRHf5PStSahC3k8wCF/QCzCgCjQ1IHOJqeYuguXionFxzCAHGFyDFWIflf
+X-Gm-Message-State: AOJu0YxuRdNKKb5umyGUNSUtykq5j6drfhbXijHNRUFROdsDzupLjgtn
+	8/88MIQkV0k19f1Q7DD1SKJoc7K8/DuQZH7+vYILXqeC1Ba1Wbr7nKsCN7+N2MI=
+X-Google-Smtp-Source: AGHT+IE8cX4QifMUKFnglZARa3ObZqV5uQGciWrKW+5hGrCf10dyeY6J7DwPCIonOv7jhtf0xcbrLw==
+X-Received: by 2002:a05:6a00:1907:b0:6f4:436d:fd1c with SMTP id y7-20020a056a00190700b006f4436dfd1cmr14055245pfi.16.1715057853323;
+        Mon, 06 May 2024 21:57:33 -0700 (PDT)
+Received: from [127.0.1.1] ([2601:1c2:1802:170:6870:7119:e255:c3a0])
+        by smtp.gmail.com with ESMTPSA id o14-20020a637e4e000000b005f80aced5f3sm8987249pgn.0.2024.05.06.21.57.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 May 2024 21:57:33 -0700 (PDT)
+From: Drew Fustini <dfustini@tenstorrent.com>
+Date: Mon, 06 May 2024 21:55:16 -0700
+Subject: [PATCH RFC v3 3/7] clk: thead: Add support for T-Head TH1520
+ AP_SUBSYS clocks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com> <20240506121906.76639-5-atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <20240506121906.76639-5-atrajeev@linux.vnet.ibm.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 6 May 2024 21:57:27 -0700
-Message-ID: <CAM9d7ci1LDa7moT2qDr2qK+DTNLU6ZBkmROnbdozAjuQLQfNog@mail.gmail.com>
-Subject: Re: [PATCH V2 4/9] tools/perf: Add support to capture and parse raw
- instruction in objdump
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
-	irogers@google.com, segher@kernel.crashing.org, christophe.leroy@csgroup.eu, 
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, 
-	linux-kernel@vger.kernel.org, akanksha@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240506-th1520-clk-v3-3-085a18a23a7f@tenstorrent.com>
+References: <20240506-th1520-clk-v3-0-085a18a23a7f@tenstorrent.com>
+In-Reply-To: <20240506-th1520-clk-v3-0-085a18a23a7f@tenstorrent.com>
+To: Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, 
+ Fu Wei <wefu@redhat.com>, Yangtao Li <frank.li@vivo.com>, 
+ Thomas Bonnefille <thomas.bonnefille@bootlin.com>, 
+ Emil Renner Berthing <emil.renner.berthing@canonical.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Drew Fustini <dfustini@tenstorrent.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715057849; l=34261;
+ i=dfustini@tenstorrent.com; s=20230430; h=from:subject:message-id;
+ bh=oF6AgN7BW3AB3YyktiB6Cgiq6DiEL5jdZKTUcQsUcw0=;
+ b=RRtWirsjmM4LLYeOc8W6jg8g2btDt883fCxFDWcnyDU4nKJ6elrR+cOne/wf41nTTB9a7GaMA
+ BvXFVq8JskTDQN8YowFAKj5IZAzc046VFHabjnqaxpAQqOBkvHVCc21
+X-Developer-Key: i=dfustini@tenstorrent.com; a=ed25519;
+ pk=p3GKE9XFmjhwAayAHG4U108yag7V8xQVd4zJLdW0g7g=
 
-On Mon, May 6, 2024 at 5:21=E2=80=AFAM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
->
-> Add support to capture and parse raw instruction in objdump.
-> Currently, the perf tool infrastructure uses "--no-show-raw-insn" option
-> with "objdump" while disassemble. Example from powerpc with this option
-> for an instruction address is:
->
-> Snippet from:
-> objdump  --start-address=3D<address> --stop-address=3D<address>  -d --no-=
-show-raw-insn -C <vmlinux>
->
-> c0000000010224b4:       lwz     r10,0(r9)
->
-> This line "lwz r10,0(r9)" is parsed to extract instruction name,
-> registers names and offset. Also to find whether there is a memory
-> reference in the operands, "memory_ref_char" field of objdump is used.
-> For x86, "(" is used as memory_ref_char to tackle instructions of the
-> form "mov  (%rax), %rcx".
->
-> In case of powerpc, not all instructions using "(" are the only memory
-> instructions. Example, above instruction can also be of extended form (X
-> form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
-> and extract the source/target registers, patch adds support to use raw
-> instruction. With raw instruction, macros are added to extract opcode
-> and register fields.
->
-> "struct ins_operands" and "struct ins" is updated to carry opcode and
-> raw instruction binary code (raw_insn). Function "disasm_line__parse"
-> is updated to fill the raw instruction hex value and opcode in newly
-> added fields. There is no changes in existing code paths, which parses
-> the disassembled code. The architecture using the instruction name and
-> present approach is not altered. Since this approach targets powerpc,
-> the macro implementation is added for powerpc as of now.
->
-> Example:
-> representation using --show-raw-insn in objdump gives result:
->
-> 38 01 81 e8     ld      r4,312(r1)
->
-> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
-> this translates to instruction form: "ld RT,DS(RA)" and binary code
-> as:
-> _____________________________________
-> | 58 |  RT  |  RA |      DS       | |
-> -------------------------------------
-> 0    6     11    16              30 31
->
-> Function "disasm_line__parse" is updated to capture:
->
-> line:    38 01 81 e8     ld      r4,312(r1)
-> opcode and raw instruction "38 01 81 e8"
-> Raw instruction is used later to extract the reg/offset fields.
->
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/include/linux/string.h              |  2 +
->  tools/lib/string.c                        | 13 +++++++
->  tools/perf/arch/powerpc/util/dwarf-regs.c | 19 ++++++++++
->  tools/perf/util/disasm.c                  | 46 +++++++++++++++++++----
->  tools/perf/util/disasm.h                  |  6 +++
->  tools/perf/util/include/dwarf-regs.h      |  9 +++++
->  6 files changed, 88 insertions(+), 7 deletions(-)
->
-> diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
-> index db5c99318c79..0acb1fc14e19 100644
-> --- a/tools/include/linux/string.h
-> +++ b/tools/include/linux/string.h
-> @@ -46,5 +46,7 @@ extern char * __must_check skip_spaces(const char *);
->
->  extern char *strim(char *);
->
-> +extern void remove_spaces(char *s);
-> +
->  extern void *memchr_inv(const void *start, int c, size_t bytes);
->  #endif /* _TOOLS_LINUX_STRING_H_ */
-> diff --git a/tools/lib/string.c b/tools/lib/string.c
-> index 8b6892f959ab..21d273e69951 100644
-> --- a/tools/lib/string.c
-> +++ b/tools/lib/string.c
-> @@ -153,6 +153,19 @@ char *strim(char *s)
->         return skip_spaces(s);
->  }
->
-> +/*
-> + * remove_spaces - Removes whitespaces from @s
-> + */
-> +void remove_spaces(char *s)
-> +{
-> +       char *d =3D s;
-> +       do {
-> +               while (*d =3D=3D ' ') {
-> +                       ++d;
-> +               }
-> +       } while ((*s++ =3D *d++));
-> +}
-> +
->  /**
->   * strreplace - Replace all occurrences of character in string.
->   * @s: The string to operate on.
-> diff --git a/tools/perf/arch/powerpc/util/dwarf-regs.c b/tools/perf/arch/=
-powerpc/util/dwarf-regs.c
-> index 0c4f4caf53ac..e60a71fd846e 100644
-> --- a/tools/perf/arch/powerpc/util/dwarf-regs.c
-> +++ b/tools/perf/arch/powerpc/util/dwarf-regs.c
-> @@ -98,3 +98,22 @@ int regs_query_register_offset(const char *name)
->                         return roff->ptregs_offset;
->         return -EINVAL;
->  }
-> +
-> +#define        PPC_OP(op)      (((op) >> 26) & 0x3F)
-> +#define PPC_RA(a)      (((a) >> 16) & 0x1f)
-> +#define PPC_RT(t)      (((t) >> 21) & 0x1f)
-> +
-> +int get_opcode_insn(unsigned int raw_insn)
-> +{
-> +       return PPC_OP(raw_insn);
-> +}
-> +
-> +int get_source_reg(unsigned int raw_insn)
-> +{
-> +       return PPC_RA(raw_insn);
-> +}
-> +
-> +int get_target_reg(unsigned int raw_insn)
-> +{
-> +       return PPC_RT(raw_insn);
-> +}
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index 2de66a092cab..85692f73e78f 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -43,7 +43,7 @@ static int call__scnprintf(struct ins *ins, char *bf, s=
-ize_t size,
->                            struct ins_operands *ops, int max_ins_name);
->
->  static void ins__sort(struct arch *arch);
-> -static int disasm_line__parse(char *line, const char **namep, char **raw=
-p);
-> +static int disasm_line__parse(char *line, const char **namep, char **raw=
-p, int *opcode, int *rawp_insn);
->
->  static __attribute__((constructor)) void symbol__init_regexpr(void)
->  {
-> @@ -512,7 +512,7 @@ static int lock__parse(struct arch *arch, struct ins_=
-operands *ops, struct map_s
->         if (ops->locked.ops =3D=3D NULL)
->                 return 0;
->
-> -       if (disasm_line__parse(ops->raw, &ops->locked.ins.name, &ops->loc=
-ked.ops->raw) < 0)
-> +       if (disasm_line__parse(ops->raw, &ops->locked.ins.name, &ops->loc=
-ked.ops->raw, &ops->locked.ins.opcode, &ops->locked.ops->raw_insn) < 0)
+Add support for the AP sub-system clock controller in the T-Head TH1520.
+This include CPU, DPU, GMAC and TEE PLLs.
 
-This line is too long.
+Link: https://openbeagle.org/beaglev-ahead/beaglev-ahead/-/blob/main/docs/TH1520%20System%20User%20Manual.pdf
+Co-developed-by: Yangtao Li <frank.li@vivo.com>
+Signed-off-by: Yangtao Li <frank.li@vivo.com>
+Co-developed-by: Jisheng Zhang <jszhang@kernel.org>
+Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
+Signed-off-by: Drew Fustini <dfustini@tenstorrent.com>
+---
+ MAINTAINERS                       |    1 +
+ drivers/clk/Kconfig               |    1 +
+ drivers/clk/Makefile              |    1 +
+ drivers/clk/thead/Kconfig         |   12 +
+ drivers/clk/thead/Makefile        |    2 +
+ drivers/clk/thead/clk-th1520-ap.c | 1074 +++++++++++++++++++++++++++++++++++++
+ 6 files changed, 1091 insertions(+)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2b4fa9a81a01..d17e64eee42a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19016,6 +19016,7 @@ L:	linux-riscv@lists.infradead.org
+ S:	Maintained
+ F:	Documentation/devicetree/bindings/clock/thead,th1520-clk-ap.yaml
+ F:	arch/riscv/boot/dts/thead/
++F:	drivers/clk/thead/clk-th1520-ap.c
+ F:	include/dt-bindings/clock/thead,th1520-clk-ap.h
+ 
+ RNBD BLOCK DRIVERS
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 50af5fc7f570..c9057e41df34 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -494,6 +494,7 @@ source "drivers/clk/starfive/Kconfig"
+ source "drivers/clk/sunxi/Kconfig"
+ source "drivers/clk/sunxi-ng/Kconfig"
+ source "drivers/clk/tegra/Kconfig"
++source "drivers/clk/thead/Kconfig"
+ source "drivers/clk/stm32/Kconfig"
+ source "drivers/clk/ti/Kconfig"
+ source "drivers/clk/uniphier/Kconfig"
+diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
+index 14fa8d4ecc1f..2eafc268f498 100644
+--- a/drivers/clk/Makefile
++++ b/drivers/clk/Makefile
+@@ -126,6 +126,7 @@ obj-y					+= starfive/
+ obj-$(CONFIG_ARCH_SUNXI)		+= sunxi/
+ obj-y					+= sunxi-ng/
+ obj-$(CONFIG_ARCH_TEGRA)		+= tegra/
++obj-$(CONFIG_ARCH_THEAD)		+= thead/
+ obj-y					+= ti/
+ obj-$(CONFIG_CLK_UNIPHIER)		+= uniphier/
+ obj-$(CONFIG_ARCH_U8500)		+= ux500/
+diff --git a/drivers/clk/thead/Kconfig b/drivers/clk/thead/Kconfig
+new file mode 100644
+index 000000000000..1710d50bf9d4
+--- /dev/null
++++ b/drivers/clk/thead/Kconfig
+@@ -0,0 +1,12 @@
++#SPDX-License-Identifier: GPL-2.0
++
++config CLK_THEAD_TH1520_AP
++	bool "T-HEAD TH1520 AP clock support"
++	depends on ARCH_THEAD || COMPILE_TEST
++	default ARCH_THEAD
++	select REGMAP_MMIO
++	help
++	  Say yes here to support the AP sub system clock controller
++	  on the T-HEAD TH1520 SoC. This includes configuration of
++	  both CPU PLLs, both DPU PLLs as well as the GMAC, VIDEO,
++	  and TEE PLLs.
+diff --git a/drivers/clk/thead/Makefile b/drivers/clk/thead/Makefile
+new file mode 100644
+index 000000000000..7ee0bec1f251
+--- /dev/null
++++ b/drivers/clk/thead/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0
++obj-$(CONFIG_CLK_THEAD_TH1520_AP) += clk-th1520-ap.o
+diff --git a/drivers/clk/thead/clk-th1520-ap.c b/drivers/clk/thead/clk-th1520-ap.c
+new file mode 100644
+index 000000000000..2a4949013354
+--- /dev/null
++++ b/drivers/clk/thead/clk-th1520-ap.c
+@@ -0,0 +1,1074 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2023 Jisheng Zhang <jszhang@kernel.org>
++ * Copyright (C) 2023 Vivo Communication Technology Co. Ltd.
++ *  Authors: Yangtao Li <frank.li@vivo.com>
++ */
++
++#include <dt-bindings/clock/thead,th1520-clk-ap.h>
++#include <linux/clk-provider.h>
++#include <linux/device.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++
++struct ccu_internal {
++	u8	shift;
++	u8	width;
++};
++
++struct ccu_div_internal {
++	u8	shift;
++	u8	width;
++	u32	flags;
++};
++
++struct ccu_common {
++	struct regmap	*map;
++	u16		reg;
++	struct clk_hw	hw;
++};
++
++struct ccu_mux {
++	struct ccu_internal	mux;
++	struct ccu_common	common;
++};
++
++struct ccu_gate {
++	u32			enable;
++	struct ccu_common	common;
++};
++
++struct ccu_div {
++	u32			enable;
++	struct ccu_div_internal	div;
++	struct ccu_internal	mux;
++	struct ccu_common	common;
++};
++
++/*
++ * struct ccu_mdiv - Definition of an M-D-I-V clock
++ *
++ * Clocks based on the formula (parent * M) / (D * I * V)
++ */
++struct ccu_mdiv {
++	struct ccu_internal	m;
++	struct ccu_internal	d;
++	struct ccu_internal	i;
++	struct ccu_internal	v;
++	struct ccu_common	common;
++};
++
++#define TH_CCU_ARG(_shift, _width)					\
++	{								\
++		.shift	= _shift,					\
++		.width	= _width,					\
++	}
++
++#define TH_CCU_DIV_FLAGS(_shift, _width, _flags)			\
++	{								\
++		.shift	= _shift,					\
++		.width	= _width,					\
++		.flags	= _flags,					\
++	}
++
++#define CCU_GATE(_struct, _name, _parent, _reg, _gate, _flags)	\
++	struct ccu_gate _struct = {					\
++		.enable	= _gate,					\
++		.common	= {						\
++			.reg		= _reg,				\
++			.hw.init	= CLK_HW_INIT_PARENTS_DATA(_name,\
++						      _parent,		\
++						      &ccu_gate_ops,	\
++						      _flags),		\
++		}							\
++	}
++
++static inline struct ccu_common *hw_to_ccu_common(struct clk_hw *hw)
++{
++	return container_of(hw, struct ccu_common, hw);
++}
++
++static inline struct ccu_mux *hw_to_ccu_mux(struct clk_hw *hw)
++{
++	struct ccu_common *common = hw_to_ccu_common(hw);
++
++	return container_of(common, struct ccu_mux, common);
++}
++
++static inline struct ccu_mdiv *hw_to_ccu_mdiv(struct clk_hw *hw)
++{
++	struct ccu_common *common = hw_to_ccu_common(hw);
++
++	return container_of(common, struct ccu_mdiv, common);
++}
++
++static inline struct ccu_div *hw_to_ccu_div(struct clk_hw *hw)
++{
++	struct ccu_common *common = hw_to_ccu_common(hw);
++
++	return container_of(common, struct ccu_div, common);
++}
++
++static inline struct ccu_gate *hw_to_ccu_gate(struct clk_hw *hw)
++{
++	struct ccu_common *common = hw_to_ccu_common(hw);
++
++	return container_of(common, struct ccu_gate, common);
++}
++
++static u8 ccu_get_parent_helper(struct ccu_common *common,
++				struct ccu_internal *mux)
++{
++	unsigned int val;
++	u8 parent;
++
++	regmap_read(common->map, common->reg, &val);
++	parent = val >> mux->shift;
++	parent &= GENMASK(mux->width - 1, 0);
++
++	return parent;
++}
++
++static int ccu_set_parent_helper(struct ccu_common *common,
++				 struct ccu_internal *mux,
++				 u8 index)
++{
++	return regmap_update_bits(common->map, common->reg,
++			GENMASK(mux->width - 1, 0) << mux->shift,
++			index << mux->shift);
++}
++
++static u8 ccu_mux_get_parent(struct clk_hw *hw)
++{
++	struct ccu_mux *cm = hw_to_ccu_mux(hw);
++
++	return ccu_get_parent_helper(&cm->common, &cm->mux);
++}
++
++static int ccu_mux_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct ccu_mux *cm = hw_to_ccu_mux(hw);
++
++	return ccu_set_parent_helper(&cm->common, &cm->mux, index);
++}
++
++static const struct clk_ops ccu_mux_ops = {
++	.get_parent	= ccu_mux_get_parent,
++	.set_parent	= ccu_mux_set_parent,
++	.determine_rate	= __clk_mux_determine_rate,
++};
++
++static void ccu_disable_helper(struct ccu_common *common, u32 gate)
++{
++	if (!gate)
++		return;
++
++	regmap_update_bits(common->map, common->reg,
++			   gate, ~gate);
++}
++
++static int ccu_enable_helper(struct ccu_common *common, u32 gate)
++{
++	if (!gate)
++		return 0;
++
++	return regmap_update_bits(common->map, common->reg,
++				  gate, gate);
++}
++
++static int ccu_is_enabled_helper(struct ccu_common *common, u32 gate)
++{
++	unsigned int val;
++
++	if (!gate)
++		return true;
++
++	regmap_read(common->map, common->reg, &val);
++	return val & gate;
++}
++
++static int ccu_gate_is_enabled(struct clk_hw *hw)
++{
++	struct ccu_gate *cg = hw_to_ccu_gate(hw);
++
++	return ccu_is_enabled_helper(&cg->common, cg->enable);
++}
++
++static void ccu_gate_disable(struct clk_hw *hw)
++{
++	struct ccu_gate *cg = hw_to_ccu_gate(hw);
++
++	ccu_disable_helper(&cg->common, cg->enable);
++}
++
++static int ccu_gate_enable(struct clk_hw *hw)
++{
++	struct ccu_gate *cg = hw_to_ccu_gate(hw);
++
++	return ccu_enable_helper(&cg->common, cg->enable);
++}
++
++static const struct clk_ops ccu_gate_ops = {
++	.disable	= ccu_gate_disable,
++	.enable		= ccu_gate_enable,
++	.is_enabled	= ccu_gate_is_enabled,
++};
++
++static unsigned long ccu_div_recalc_rate(struct clk_hw *hw,
++					 unsigned long parent_rate)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++	unsigned int val;
++
++	regmap_read(cd->common.map, cd->common.reg, &val);
++	val = val >> cd->div.shift;
++	val &= GENMASK(cd->div.width - 1, 0);
++
++	val = divider_recalc_rate(hw, parent_rate, val, NULL,
++				  cd->div.flags, cd->div.width);
++
++	return val;
++}
++
++static u8 ccu_div_get_parent(struct clk_hw *hw)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++
++	return ccu_get_parent_helper(&cd->common, &cd->mux);
++}
++
++static int ccu_div_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++
++	return ccu_set_parent_helper(&cd->common, &cd->mux, index);
++}
++
++static void ccu_div_disable(struct clk_hw *hw)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++
++	ccu_disable_helper(&cd->common, cd->enable);
++}
++
++static int ccu_div_enable(struct clk_hw *hw)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++
++	return ccu_enable_helper(&cd->common, cd->enable);
++}
++
++static int ccu_div_is_enabled(struct clk_hw *hw)
++{
++	struct ccu_div *cd = hw_to_ccu_div(hw);
++
++	return ccu_is_enabled_helper(&cd->common, cd->enable);
++}
++
++static const struct clk_ops ccu_div_ops = {
++	.disable	= ccu_div_disable,
++	.enable		= ccu_div_enable,
++	.is_enabled	= ccu_div_is_enabled,
++	.get_parent	= ccu_div_get_parent,
++	.set_parent	= ccu_div_set_parent,
++	.recalc_rate	= ccu_div_recalc_rate,
++	.determine_rate	= clk_hw_determine_rate_no_reparent,
++};
++
++static unsigned long ccu_mdiv_recalc_rate(struct clk_hw *hw,
++					  unsigned long parent_rate)
++{
++	struct ccu_mdiv *mdiv = hw_to_ccu_mdiv(hw);
++	unsigned long div, rate = parent_rate;
++	unsigned int m, d, i, v, val;
++
++	regmap_read(mdiv->common.map, mdiv->common.reg, &val);
++
++	m = val >> mdiv->m.shift;
++	m &= GENMASK(mdiv->m.width - 1, 0);
++
++	d = val >> mdiv->d.shift;
++	d &= GENMASK(mdiv->d.width - 1, 0);
++
++	i = val >> mdiv->i.shift;
++	i &= GENMASK(mdiv->i.width - 1, 0);
++
++	v = val >> mdiv->v.shift;
++	v &= GENMASK(mdiv->v.width - 1, 0);
++
++	rate = parent_rate * m;
++	div = d * i * v;
++	do_div(rate, div);
++
++	return rate;
++}
++
++static const struct clk_ops clk_mdiv_ops = {
++	.recalc_rate	= ccu_mdiv_recalc_rate,
++};
++
++static struct ccu_mdiv cpu_pll0_clk = {
++	.m		= TH_CCU_ARG(8, 12),
++	.d		= TH_CCU_ARG(24, 3),
++	.i		= TH_CCU_ARG(20, 3),
++	.v		= TH_CCU_ARG(0, 6),
++	.common		= {
++		.reg		= 0x000,
++		.hw.init	= CLK_HW_INIT("cpu-pll0", "osc_24m",
++					      &clk_mdiv_ops,
++					      0),
++	},
++};
++
++static struct ccu_mdiv cpu_pll1_clk = {
++	.m		= TH_CCU_ARG(8, 12),
++	.d		= TH_CCU_ARG(24, 3),
++	.i		= TH_CCU_ARG(20, 3),
++	.v		= TH_CCU_ARG(0, 6),
++	.common		= {
++		.reg		= 0x010,
++		.hw.init	= CLK_HW_INIT("cpu-pll1", "osc_24m",
++					      &clk_mdiv_ops,
++					      0),
++	},
++};
++
++static struct ccu_mdiv gmac_pll_clk = {
++	.m		= TH_CCU_ARG(8, 12),
++	.d		= TH_CCU_ARG(24, 3),
++	.i		= TH_CCU_ARG(20, 3),
++	.v		= TH_CCU_ARG(0, 6),
++	.common		= {
++		.reg		= 0x020,
++		.hw.init	= CLK_HW_INIT("gmac-pll", "osc_24m",
++					      &clk_mdiv_ops,
++					      0),
++	},
++};
++
++static const struct clk_parent_data gmac_pll_clk_parent_data[] = {
++	{ .hw = &gmac_pll_clk.common.hw }
++};
++
++static struct ccu_mdiv video_pll_clk = {
++	.m		= TH_CCU_ARG(8, 12),
++	.d		= TH_CCU_ARG(24, 3),
++	.i		= TH_CCU_ARG(20, 3),
++	.v		= TH_CCU_ARG(0, 6),
++	.common		= {
++		.reg		= 0x030,
++		.hw.init	= CLK_HW_INIT("video-pll", "osc_24m",
++					      &clk_mdiv_ops,
++					      0),
++	},
++};
++
++static const struct clk_parent_data video_pll_clk_parent_data[] = {
++	{ .hw = &video_pll_clk.common.hw }
++};
++
++static struct ccu_mdiv dpu0_pll_clk = {
++	.m		= TH_CCU_ARG(8, 12),
++	.d		= TH_CCU_ARG(24, 3),
++	.i		= TH_CCU_ARG(20, 3),
++	.v		= TH_CCU_ARG(0, 6),
++	.common		= {
++		.reg		= 0x040,
++		.hw.init	= CLK_HW_INIT("dpu0-pll", "osc_24m",
++					      &clk_mdiv_ops,
++					      0),
++	},
++};
++
++static const struct clk_parent_data dpu0_pll_clk_parent_data[] = {
++	{ .hw = &dpu0_pll_clk.common.hw }
++};
++
++static struct ccu_mdiv dpu1_pll_clk = {
++	.m		= TH_CCU_ARG(8, 12),
++	.d		= TH_CCU_ARG(24, 3),
++	.i		= TH_CCU_ARG(20, 3),
++	.v		= TH_CCU_ARG(0, 6),
++	.common		= {
++		.reg		= 0x050,
++		.hw.init	= CLK_HW_INIT("dpu1-pll", "osc_24m",
++					      &clk_mdiv_ops,
++					      0),
++	},
++};
++
++static const struct clk_parent_data dpu1_pll_clk_parent_data[] = {
++	{ .hw = &dpu1_pll_clk.common.hw }
++};
++
++static struct ccu_mdiv tee_pll_clk = {
++	.m		= TH_CCU_ARG(8, 12),
++	.d		= TH_CCU_ARG(24, 3),
++	.i		= TH_CCU_ARG(20, 3),
++	.v		= TH_CCU_ARG(0, 6),
++	.common		= {
++		.reg		= 0x060,
++		.hw.init	= CLK_HW_INIT("tee-pll", "osc_24m",
++					      &clk_mdiv_ops,
++					      0),
++	},
++};
++
++static const char * const c910_i0_parents[] = { "cpu-pll0", "osc_24m" };
++
++struct ccu_mux c910_i0_clk = {
++	.mux	= TH_CCU_ARG(1, 1),
++	.common	= {
++		.reg		= 0x100,
++		.hw.init	= CLK_HW_INIT_PARENTS("c910-i0",
++					      c910_i0_parents,
++					      &ccu_mux_ops,
++					      0),
++	}
++};
++
++static const struct clk_parent_data c910_parents[] = {
++	{ .hw = &c910_i0_clk.common.hw },
++	{ .hw = &cpu_pll1_clk.common.hw }
++};
++
++struct ccu_mux c910_clk = {
++	.mux	= TH_CCU_ARG(0, 1),
++	.common	= {
++		.reg		= 0x100,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("c910",
++					      c910_parents,
++					      &ccu_mux_ops,
++					      0),
++	}
++};
++
++static const char * const ahb2_cpusys_parents[] = { "gmac-pll", "osc_24m" };
++static struct ccu_div ahb2_cpusys_hclk = {
++	.div		= TH_CCU_DIV_FLAGS(0, 3, CLK_DIVIDER_ONE_BASED),
++	.mux		= TH_CCU_ARG(5, 1),
++	.common		= {
++		.reg		= 0x120,
++		.hw.init	= CLK_HW_INIT_PARENTS("ahb2-cpusys-hclk",
++						      ahb2_cpusys_parents,
++						      &ccu_div_ops,
++						      0),
++	},
++};
++
++static const struct clk_parent_data ahb2_cpusys_hclk_parent_data[] = {
++	{ .hw = &ahb2_cpusys_hclk.common.hw }
++};
++
++static struct ccu_div apb3_cpusys_pclk = {
++	.div		= TH_CCU_ARG(0, 3),
++	.common		= {
++		.reg		= 0x130,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("apb3-cpusys-pclk",
++							   ahb2_cpusys_hclk_parent_data,
++							   &ccu_div_ops,
++							   0),
++	},
++};
++
++static const struct clk_parent_data apb3_cpusys_pclk_parent_data[] = {
++	{ .hw = &apb3_cpusys_pclk.common.hw }
++};
++
++static struct ccu_div axi4_cpusys2_aclk = {
++	.div		= TH_CCU_DIV_FLAGS(0, 3, CLK_DIVIDER_ONE_BASED),
++	.common		= {
++		.reg		= 0x134,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("axi4-cpusys2-aclk",
++					      gmac_pll_clk_parent_data,
++					      &ccu_div_ops,
++					      0),
++	},
++};
++
++static const struct clk_parent_data axi4_cpusys2_aclk_parent_data[] = {
++	{ .hw = &axi4_cpusys2_aclk.common.hw }
++};
++
++static CCU_GATE(aon2cpu_a2x_clk, "aon2cpu-a2x", axi4_cpusys2_aclk_parent_data,
++		0x134, BIT(8), 0);
++
++static CCU_GATE(x2x_cpusys_clk, "x2x-cpusys", axi4_cpusys2_aclk_parent_data,
++		0x134, BIT(7), 0);
++
++static CCU_GATE(brom_clk, "brom", ahb2_cpusys_hclk_parent_data,
++		0x100, BIT(4), 0);
++
++static CCU_GATE(bmu_clk, "bmu", axi4_cpusys2_aclk_parent_data,
++		0x100, BIT(5), 0);
++
++static const char * const axi_parents[] = { "video-pll", "osc_24m" };
++static struct ccu_div axi_aclk = {
++	.div		= TH_CCU_DIV_FLAGS(0, 4, CLK_DIVIDER_ONE_BASED),
++	.mux		= TH_CCU_ARG(5, 1),
++	.common		= {
++		.reg		= 0x138,
++		.hw.init	= CLK_HW_INIT_PARENTS("axi-aclk",
++						      axi_parents,
++						      &ccu_div_ops,
++						      0),
++	},
++};
++
++static const struct clk_parent_data axi_aclk_parent_data[] = {
++	{ .hw = &axi_aclk.common.hw }
++};
++
++static CCU_GATE(cpu2aon_x2h_clk, "cpu2aon-x2h", axi_aclk_parent_data,
++		0x138, BIT(8), 0);
++
++static const char * const perisys_ahb_hclk_parents[] = { "gmac-pll", "osc_24m" };
++static struct ccu_div perisys_ahb_hclk = {
++	.enable		= BIT(6),
++	.div		= TH_CCU_DIV_FLAGS(0, 4, CLK_DIVIDER_ONE_BASED),
++	.mux		= TH_CCU_ARG(5, 1),
++	.common		= {
++		.reg		= 0x140,
++		.hw.init	= CLK_HW_INIT_PARENTS("perisys-ahb-hclk",
++						      perisys_ahb_hclk_parents,
++						      &ccu_div_ops,
++						      0),
++	},
++};
++
++static const struct clk_parent_data perisys_ahb_hclk_parent_data[] = {
++	{ .hw = &perisys_ahb_hclk.common.hw }
++};
++
++static CCU_GATE(cpu2peri_x2h_clk, "cpu2peri-x2h", axi4_cpusys2_aclk_parent_data,
++		0x140, BIT(9), 0);
++
++static struct ccu_div perisys_apb_pclk = {
++	.div		= TH_CCU_ARG(0, 3),
++	.common		= {
++		.reg		= 0x150,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("perisys-apb-pclk",
++					      perisys_ahb_hclk_parent_data,
++					      &ccu_div_ops,
++					      0),
++	},
++};
++
++static const struct clk_parent_data perisys_apb_pclk_parent_data[] = {
++	{ .hw = &perisys_apb_pclk.common.hw }
++};
++
++static struct ccu_div peri2sys_apb_pclk = {
++	.div		= TH_CCU_DIV_FLAGS(4, 3, CLK_DIVIDER_ONE_BASED),
++	.common		= {
++		.reg		= 0x150,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("peri2sys-apb-pclk",
++					      gmac_pll_clk_parent_data,
++					      &ccu_div_ops,
++					      0),
++	},
++};
++
++static const struct clk_parent_data peri2sys_apb_pclk_parent_data[] = {
++	{ .hw = &peri2sys_apb_pclk.common.hw }
++};
++
++static CCU_GATE(perisys_apb1_hclk, "perisys-apb1-hclk", perisys_ahb_hclk_parent_data,
++		0x150, BIT(9), 0);
++
++static CCU_GATE(perisys_apb2_hclk, "perisys-apb2-hclk", perisys_ahb_hclk_parent_data,
++		0x150, BIT(10), 0);
++
++static CCU_GATE(perisys_apb3_hclk, "perisys-apb3-hclk", perisys_ahb_hclk_parent_data,
++		0x150, BIT(11), 0);
++
++static CCU_GATE(perisys_apb4_hclk, "perisys-apb4-hclk", perisys_ahb_hclk_parent_data,
++		0x150, BIT(12), 0);
++
++static CLK_FIXED_FACTOR_FW_NAME(osc12m_clk, "osc_12m", "osc_24m", 2, 1, 0);
++
++static const char * const out_parents[] = { "osc_24m", "osc_12m" };
++
++static struct ccu_div out1_clk = {
++	.enable		= BIT(5),
++	.div		= TH_CCU_DIV_FLAGS(0, 3, CLK_DIVIDER_ONE_BASED),
++	.mux		= TH_CCU_ARG(4, 1),
++	.common		= {
++		.reg		= 0x1b4,
++		.hw.init	= CLK_HW_INIT_PARENTS("out1",
++						      out_parents,
++						      &ccu_div_ops,
++						      0),
++	},
++};
++
++static struct ccu_div out2_clk = {
++	.enable		= BIT(5),
++	.div		= TH_CCU_DIV_FLAGS(0, 3, CLK_DIVIDER_ONE_BASED),
++	.mux		= TH_CCU_ARG(4, 1),
++	.common		= {
++		.reg		= 0x1b8,
++		.hw.init	= CLK_HW_INIT_PARENTS("out2",
++						      out_parents,
++						      &ccu_div_ops,
++						      0),
++	},
++};
++
++static struct ccu_div out3_clk = {
++	.enable		= BIT(5),
++	.div		= TH_CCU_DIV_FLAGS(0, 3, CLK_DIVIDER_ONE_BASED),
++	.mux		= TH_CCU_ARG(4, 1),
++	.common		= {
++		.reg		= 0x1bc,
++		.hw.init	= CLK_HW_INIT_PARENTS("out3",
++						      out_parents,
++						      &ccu_div_ops,
++						      0),
++	},
++};
++
++static struct ccu_div out4_clk = {
++	.enable		= BIT(5),
++	.div		= TH_CCU_DIV_FLAGS(0, 3, CLK_DIVIDER_ONE_BASED),
++	.mux		= TH_CCU_ARG(4, 1),
++	.common		= {
++		.reg		= 0x1c0,
++		.hw.init	= CLK_HW_INIT_PARENTS("out4",
++						      out_parents,
++						      &ccu_div_ops,
++						      0),
++	},
++};
++
++static const char * const apb_parents[] = { "gmac-pll", "osc_24m" };
++static struct ccu_div apb_pclk = {
++	.enable		= BIT(5),
++	.div		= TH_CCU_DIV_FLAGS(0, 4, CLK_DIVIDER_ONE_BASED),
++	.mux		= TH_CCU_ARG(7, 1),
++	.common		= {
++		.reg		= 0x1c4,
++		.hw.init	= CLK_HW_INIT_PARENTS("apb-pclk",
++						      apb_parents,
++						      &ccu_div_ops,
++						      0),
++	},
++};
++
++static const struct clk_parent_data npu_parents[] = {
++	{ .hw = &gmac_pll_clk.common.hw },
++	{ .hw = &video_pll_clk.common.hw }
++};
++
++static struct ccu_div npu_clk = {
++	.enable		= BIT(4),
++	.div		= TH_CCU_DIV_FLAGS(0, 3, CLK_DIVIDER_ONE_BASED),
++	.mux		= TH_CCU_ARG(6, 1),
++	.common		= {
++		.reg		= 0x1c8,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("npu",
++						      npu_parents,
++						      &ccu_div_ops,
++						      0),
++	},
++};
++
++static CCU_GATE(npu_axi_clk, "npu-axi", axi_aclk_parent_data,
++		0x1c8, BIT(5), 0);
++
++static struct ccu_div vi_clk = {
++	.div		= TH_CCU_DIV_FLAGS(16, 4, CLK_DIVIDER_ONE_BASED),
++	.common		= {
++		.reg		= 0x1d0,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("vi",
++					      video_pll_clk_parent_data,
++					      &ccu_div_ops,
++					      0),
++	},
++};
++
++static struct ccu_div vi_ahb_clk = {
++	.div		= TH_CCU_DIV_FLAGS(0, 4, CLK_DIVIDER_ONE_BASED),
++	.common		= {
++		.reg		= 0x1d0,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("vi-ahb",
++					      video_pll_clk_parent_data,
++					      &ccu_div_ops,
++					      0),
++	},
++};
++
++static struct ccu_div vo_axi_clk = {
++	.enable		= BIT(5),
++	.div		= TH_CCU_DIV_FLAGS(0, 4, CLK_DIVIDER_ONE_BASED),
++	.common		= {
++		.reg		= 0x1dc,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("vo-axi",
++					      video_pll_clk_parent_data,
++					      &ccu_div_ops,
++					      0),
++	},
++};
++
++static struct ccu_div vp_apb_clk = {
++	.div		= TH_CCU_DIV_FLAGS(0, 3, CLK_DIVIDER_ONE_BASED),
++	.common		= {
++		.reg		= 0x1e0,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("vp-apb",
++					      gmac_pll_clk_parent_data,
++					      &ccu_div_ops,
++					      0),
++	},
++};
++
++static struct ccu_div vp_axi_clk = {
++	.enable		= BIT(15),
++	.div		= TH_CCU_DIV_FLAGS(8, 4, CLK_DIVIDER_ONE_BASED),
++	.common		= {
++		.reg		= 0x1e0,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("vp-axi",
++					      video_pll_clk_parent_data,
++					      &ccu_div_ops,
++					      0),
++	},
++};
++
++static CCU_GATE(cpu2vp_clk, "cpu2vp", axi_aclk_parent_data,
++		0x1e0, BIT(13), 0);
++
++static struct ccu_div venc_clk = {
++	.enable		= BIT(5),
++	.div		= TH_CCU_DIV_FLAGS(0, 3, CLK_DIVIDER_ONE_BASED),
++	.common		= {
++		.reg		= 0x1e4,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("venc",
++					      gmac_pll_clk_parent_data,
++					      &ccu_div_ops,
++					      0),
++	},
++};
++
++static struct ccu_div dpu0_clk = {
++	.div		= TH_CCU_DIV_FLAGS(0, 8, CLK_DIVIDER_ONE_BASED),
++	.common		= {
++		.reg		= 0x1e8,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("dpu0",
++					      dpu0_pll_clk_parent_data,
++					      &ccu_div_ops,
++					      0),
++	},
++};
++
++static struct ccu_div dpu1_clk = {
++	.div		= TH_CCU_DIV_FLAGS(0, 8, CLK_DIVIDER_ONE_BASED),
++	.common		= {
++		.reg		= 0x1ec,
++		.hw.init	= CLK_HW_INIT_PARENTS_DATA("dpu1",
++					      dpu1_pll_clk_parent_data,
++					      &ccu_div_ops,
++					      0),
++	},
++};
++
++static CCU_GATE(emmc_sdio_clk, "emmc-sdio", video_pll_clk_parent_data, 0x204, BIT(30), 0);
++static CCU_GATE(gmac1_clk, "gmac1", gmac_pll_clk_parent_data, 0x204, BIT(26), 0);
++static CCU_GATE(padctrl1_clk, "padctrl1", perisys_apb_pclk_parent_data, 0x204, BIT(24), 0);
++static CCU_GATE(dsmart_clk, "dsmart", perisys_apb_pclk_parent_data, 0x204, BIT(23), 0);
++static CCU_GATE(padctrl0_clk, "padctrl0", perisys_apb_pclk_parent_data, 0x204, BIT(22), 0);
++static CCU_GATE(gmac_axi_clk, "gmac-axi", axi4_cpusys2_aclk_parent_data, 0x204, BIT(21), 0);
++static CCU_GATE(gpio3_clk, "gpio3-clk", peri2sys_apb_pclk_parent_data, 0x204, BIT(20), 0);
++static CCU_GATE(gmac0_clk, "gmac0", gmac_pll_clk_parent_data, 0x204, BIT(19), 0);
++static CCU_GATE(pwm_clk, "pwm", perisys_apb_pclk_parent_data, 0x204, BIT(18), 0);
++static CCU_GATE(qspi0_clk, "qspi0", video_pll_clk_parent_data, 0x204, BIT(17), 0);
++static CCU_GATE(qspi1_clk, "qspi1", video_pll_clk_parent_data, 0x204, BIT(16), 0);
++static CCU_GATE(spi_clk, "spi", video_pll_clk_parent_data, 0x204, BIT(15), 0);
++static CCU_GATE(uart0_pclk, "uart0-pclk", perisys_apb_pclk_parent_data, 0x204, BIT(14), 0);
++static CCU_GATE(uart1_pclk, "uart1-pclk", perisys_apb_pclk_parent_data, 0x204, BIT(13), 0);
++static CCU_GATE(uart2_pclk, "uart2-pclk", perisys_apb_pclk_parent_data, 0x204, BIT(12), 0);
++static CCU_GATE(uart3_pclk, "uart3-pclk", perisys_apb_pclk_parent_data, 0x204, BIT(11), 0);
++static CCU_GATE(uart4_pclk, "uart4-pclk", perisys_apb_pclk_parent_data, 0x204, BIT(10), 0);
++static CCU_GATE(uart5_pclk, "uart5-pclk", perisys_apb_pclk_parent_data, 0x204, BIT(9), 0);
++static CCU_GATE(gpio0_clk, "gpio0-clk", perisys_apb_pclk_parent_data, 0x204, BIT(8), 0);
++static CCU_GATE(gpio1_clk, "gpio1-clk", perisys_apb_pclk_parent_data, 0x204, BIT(7), 0);
++static CCU_GATE(gpio2_clk, "gpio2-clk", peri2sys_apb_pclk_parent_data, 0x204, BIT(6), 0);
++static CCU_GATE(i2c0_clk, "i2c0", perisys_apb_pclk_parent_data, 0x204, BIT(5), 0);
++static CCU_GATE(i2c1_clk, "i2c1", perisys_apb_pclk_parent_data, 0x204, BIT(4), 0);
++static CCU_GATE(i2c2_clk, "i2c2", perisys_apb_pclk_parent_data, 0x204, BIT(3), 0);
++static CCU_GATE(i2c3_clk, "i2c3", perisys_apb_pclk_parent_data, 0x204, BIT(2), 0);
++static CCU_GATE(i2c4_clk, "i2c4", perisys_apb_pclk_parent_data, 0x204, BIT(1), 0);
++static CCU_GATE(i2c5_clk, "i2c5", perisys_apb_pclk_parent_data, 0x204, BIT(0), 0);
++
++static CCU_GATE(spinlock_clk, "spinlock", ahb2_cpusys_hclk_parent_data, 0x208, BIT(10), 0);
++static CCU_GATE(dma_clk, "dma", axi4_cpusys2_aclk_parent_data, 0x208, BIT(8), 0);
++static CCU_GATE(mbox0_clk, "mbox0", apb3_cpusys_pclk_parent_data, 0x208, BIT(7), 0);
++static CCU_GATE(mbox1_clk, "mbox1", apb3_cpusys_pclk_parent_data, 0x208, BIT(6), 0);
++static CCU_GATE(mbox2_clk, "mbox2", apb3_cpusys_pclk_parent_data, 0x208, BIT(5), 0);
++static CCU_GATE(mbox3_clk, "mbox3", apb3_cpusys_pclk_parent_data, 0x208, BIT(4), 0);
++static CCU_GATE(wdt0_clk, "wdt0", apb3_cpusys_pclk_parent_data, 0x208, BIT(3), 0);
++static CCU_GATE(wdt1_clk, "wdt1", apb3_cpusys_pclk_parent_data, 0x208, BIT(2), 0);
++static CCU_GATE(timer0_clk, "timer0", apb3_cpusys_pclk_parent_data, 0x208, BIT(1), 0);
++static CCU_GATE(timer1_clk, "timer1", apb3_cpusys_pclk_parent_data, 0x208, BIT(0), 0);
++
++static CCU_GATE(sram0_clk, "sram0", axi_aclk_parent_data, 0x20c, BIT(4), 0);
++static CCU_GATE(sram1_clk, "sram1", axi_aclk_parent_data, 0x20c, BIT(3), 0);
++static CCU_GATE(sram2_clk, "sram2", axi_aclk_parent_data, 0x20c, BIT(2), 0);
++static CCU_GATE(sram3_clk, "sram3", axi_aclk_parent_data, 0x20c, BIT(1), 0);
++
++static CLK_FIXED_FACTOR_HW(gmac_pll_clk_100m, "gmac-pll-clk-100m",
++			   &gmac_pll_clk.common.hw,
++			   10, 1, 0);
++
++static const char * const uart_sclk_parents[] = { "gmac-pll-clk-100m", "osc_24m" };
++struct ccu_mux uart_sclk = {
++	.mux	= TH_CCU_ARG(0, 1),
++	.common	= {
++		.reg		= 0x210,
++		.hw.init	= CLK_HW_INIT_PARENTS("uart-sclk",
++					      uart_sclk_parents,
++					      &ccu_mux_ops,
++					      0),
++	}
++};
++
++static struct ccu_common *th1520_clks[] = {
++	&cpu_pll0_clk.common,
++	&cpu_pll1_clk.common,
++	&gmac_pll_clk.common,
++	&video_pll_clk.common,
++	&dpu0_pll_clk.common,
++	&dpu1_pll_clk.common,
++	&tee_pll_clk.common,
++	&c910_i0_clk.common,
++	&c910_clk.common,
++	&brom_clk.common,
++	&bmu_clk.common,
++	&ahb2_cpusys_hclk.common,
++	&apb3_cpusys_pclk.common,
++	&axi4_cpusys2_aclk.common,
++	&aon2cpu_a2x_clk.common,
++	&x2x_cpusys_clk.common,
++	&axi_aclk.common,
++	&cpu2aon_x2h_clk.common,
++	&perisys_ahb_hclk.common,
++	&cpu2peri_x2h_clk.common,
++	&perisys_apb_pclk.common,
++	&peri2sys_apb_pclk.common,
++	&perisys_apb1_hclk.common,
++	&perisys_apb2_hclk.common,
++	&perisys_apb3_hclk.common,
++	&perisys_apb4_hclk.common,
++	&out1_clk.common,
++	&out2_clk.common,
++	&out3_clk.common,
++	&out4_clk.common,
++	&apb_pclk.common,
++	&npu_clk.common,
++	&npu_axi_clk.common,
++	&vi_clk.common,
++	&vi_ahb_clk.common,
++	&vo_axi_clk.common,
++	&vp_apb_clk.common,
++	&vp_axi_clk.common,
++	&cpu2vp_clk.common,
++	&venc_clk.common,
++	&dpu0_clk.common,
++	&dpu1_clk.common,
++	&emmc_sdio_clk.common,
++	&gmac1_clk.common,
++	&padctrl1_clk.common,
++	&dsmart_clk.common,
++	&padctrl0_clk.common,
++	&gmac_axi_clk.common,
++	&gpio3_clk.common,
++	&gmac0_clk.common,
++	&pwm_clk.common,
++	&qspi0_clk.common,
++	&qspi1_clk.common,
++	&spi_clk.common,
++	&uart0_pclk.common,
++	&uart1_pclk.common,
++	&uart2_pclk.common,
++	&uart3_pclk.common,
++	&uart4_pclk.common,
++	&uart5_pclk.common,
++	&gpio0_clk.common,
++	&gpio1_clk.common,
++	&gpio2_clk.common,
++	&i2c0_clk.common,
++	&i2c1_clk.common,
++	&i2c2_clk.common,
++	&i2c3_clk.common,
++	&i2c4_clk.common,
++	&i2c5_clk.common,
++	&spinlock_clk.common,
++	&dma_clk.common,
++	&mbox0_clk.common,
++	&mbox1_clk.common,
++	&mbox2_clk.common,
++	&mbox3_clk.common,
++	&wdt0_clk.common,
++	&wdt1_clk.common,
++	&timer0_clk.common,
++	&timer1_clk.common,
++	&sram0_clk.common,
++	&sram1_clk.common,
++	&sram2_clk.common,
++	&sram3_clk.common,
++	&uart_sclk.common,
++};
++
++#define NR_CLKS	(CLK_UART_SCLK + 1)
++
++static struct clk_hw_onecell_data th1520_hw_clks = {
++	.hws	= {
++		[CLK_OSC12M]		= &osc12m_clk.hw,
++		[CLK_CPU_PLL0]		= &cpu_pll0_clk.common.hw,
++		[CLK_CPU_PLL1]		= &cpu_pll1_clk.common.hw,
++		[CLK_GMAC_PLL]		= &gmac_pll_clk.common.hw,
++		[CLK_VIDEO_PLL]		= &video_pll_clk.common.hw,
++		[CLK_DPU0_PLL]		= &dpu0_pll_clk.common.hw,
++		[CLK_DPU1_PLL]		= &dpu1_pll_clk.common.hw,
++		[CLK_TEE_PLL]		= &tee_pll_clk.common.hw,
++		[CLK_C910_I0]		= &c910_i0_clk.common.hw,
++		[CLK_C910]		= &c910_clk.common.hw,
++		[CLK_BROM]		= &brom_clk.common.hw,
++		[CLK_BMU]		= &bmu_clk.common.hw,
++		[CLK_AHB2_CPUSYS_HCLK]	= &ahb2_cpusys_hclk.common.hw,
++		[CLK_APB3_CPUSYS_PCLK]	= &apb3_cpusys_pclk.common.hw,
++		[CLK_AXI4_CPUSYS2_ACLK]	= &axi4_cpusys2_aclk.common.hw,
++		[CLK_AON2CPU_A2X]	= &aon2cpu_a2x_clk.common.hw,
++		[CLK_X2X_CPUSYS]	= &x2x_cpusys_clk.common.hw,
++		[CLK_AXI_ACLK]		= &axi_aclk.common.hw,
++		[CLK_CPU2AON_X2H]	= &cpu2aon_x2h_clk.common.hw,
++		[CLK_PERI_AHB_HCLK]	= &perisys_ahb_hclk.common.hw,
++		[CLK_CPU2PERI_X2H]	= &cpu2peri_x2h_clk.common.hw,
++		[CLK_PERI_APB_PCLK]	= &perisys_apb_pclk.common.hw,
++		[CLK_PERI2APB_PCLK]	= &peri2sys_apb_pclk.common.hw,
++		[CLK_PERI_APB1_HCLK]	= &perisys_apb1_hclk.common.hw,
++		[CLK_PERI_APB2_HCLK]	= &perisys_apb2_hclk.common.hw,
++		[CLK_PERI_APB3_HCLK]	= &perisys_apb3_hclk.common.hw,
++		[CLK_PERI_APB4_HCLK]	= &perisys_apb4_hclk.common.hw,
++		[CLK_OUT1]		= &out1_clk.common.hw,
++		[CLK_OUT2]		= &out2_clk.common.hw,
++		[CLK_OUT3]		= &out3_clk.common.hw,
++		[CLK_OUT4]		= &out4_clk.common.hw,
++		[CLK_APB_PCLK]		= &apb_pclk.common.hw,
++		[CLK_NPU]		= &npu_clk.common.hw,
++		[CLK_NPU_AXI]		= &npu_axi_clk.common.hw,
++		[CLK_VI]		= &vi_clk.common.hw,
++		[CLK_VI_AHB]		= &vi_ahb_clk.common.hw,
++		[CLK_VO_AXI]		= &vo_axi_clk.common.hw,
++		[CLK_VP_APB]		= &vp_apb_clk.common.hw,
++		[CLK_VP_AXI]		= &vp_axi_clk.common.hw,
++		[CLK_CPU2VP]		= &cpu2vp_clk.common.hw,
++		[CLK_VENC]		= &venc_clk.common.hw,
++		[CLK_DPU0]		= &dpu0_clk.common.hw,
++		[CLK_DPU1]		= &dpu1_clk.common.hw,
++		[CLK_EMMC_SDIO]		= &emmc_sdio_clk.common.hw,
++		[CLK_GMAC1]		= &gmac1_clk.common.hw,
++		[CLK_PADCTRL1]		= &padctrl1_clk.common.hw,
++		[CLK_DSMART]		= &dsmart_clk.common.hw,
++		[CLK_PADCTRL0]		= &padctrl0_clk.common.hw,
++		[CLK_GMAC_AXI]		= &gmac_axi_clk.common.hw,
++		[CLK_GPIO3]		= &gpio3_clk.common.hw,
++		[CLK_GMAC0]		= &gmac0_clk.common.hw,
++		[CLK_PWM]		= &pwm_clk.common.hw,
++		[CLK_QSPI0]		= &qspi0_clk.common.hw,
++		[CLK_QSPI1]		= &qspi1_clk.common.hw,
++		[CLK_SPI]		= &spi_clk.common.hw,
++		[CLK_UART0_PCLK]	= &uart0_pclk.common.hw,
++		[CLK_UART1_PCLK]	= &uart1_pclk.common.hw,
++		[CLK_UART2_PCLK]	= &uart2_pclk.common.hw,
++		[CLK_UART3_PCLK]	= &uart3_pclk.common.hw,
++		[CLK_UART4_PCLK]	= &uart4_pclk.common.hw,
++		[CLK_UART5_PCLK]	= &uart5_pclk.common.hw,
++		[CLK_GPIO0]		= &gpio0_clk.common.hw,
++		[CLK_GPIO1]		= &gpio1_clk.common.hw,
++		[CLK_GPIO2]		= &gpio2_clk.common.hw,
++		[CLK_I2C0]		= &i2c0_clk.common.hw,
++		[CLK_I2C1]		= &i2c1_clk.common.hw,
++		[CLK_I2C2]		= &i2c2_clk.common.hw,
++		[CLK_I2C3]		= &i2c3_clk.common.hw,
++		[CLK_I2C4]		= &i2c4_clk.common.hw,
++		[CLK_I2C5]		= &i2c5_clk.common.hw,
++		[CLK_SPINLOCK]		= &spinlock_clk.common.hw,
++		[CLK_DMA]		= &dma_clk.common.hw,
++		[CLK_MBOX0]		= &mbox0_clk.common.hw,
++		[CLK_MBOX1]		= &mbox1_clk.common.hw,
++		[CLK_MBOX2]		= &mbox2_clk.common.hw,
++		[CLK_MBOX3]		= &mbox3_clk.common.hw,
++		[CLK_WDT0]		= &wdt0_clk.common.hw,
++		[CLK_WDT1]		= &wdt1_clk.common.hw,
++		[CLK_TIMER0]		= &timer0_clk.common.hw,
++		[CLK_TIMER1]		= &timer1_clk.common.hw,
++		[CLK_SRAM0]		= &sram0_clk.common.hw,
++		[CLK_SRAM1]		= &sram1_clk.common.hw,
++		[CLK_SRAM2]		= &sram2_clk.common.hw,
++		[CLK_SRAM3]		= &sram3_clk.common.hw,
++		[CLK_PLL_GMAC_100M]	= &gmac_pll_clk_100m.hw,
++		[CLK_UART_SCLK]		= &uart_sclk.common.hw,
++	},
++	.num = NR_CLKS,
++};
++
++static const struct regmap_config th1520_clk_regmap_config = {
++	.reg_bits = 32,
++	.val_bits = 32,
++	.reg_stride = 4,
++	.fast_io = true,
++};
++
++static int th1520_clk_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct regmap *map;
++	void __iomem *regs;
++	int ret, i;
++
++	regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(regs))
++		return PTR_ERR(regs);
++
++	map = devm_regmap_init_mmio(dev, regs, &th1520_clk_regmap_config);
++	if (IS_ERR(map))
++		return PTR_ERR(map);
++
++	for (i = 0; i < ARRAY_SIZE(th1520_clks); i++)
++		th1520_clks[i]->map = map;
++
++	for (i = 0; i < th1520_hw_clks.num; i++) {
++		ret = devm_clk_hw_register(dev, th1520_hw_clks.hws[i]);
++		if (ret)
++			return ret;
++	}
++
++	ret = devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
++					  &th1520_hw_clks);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static const struct of_device_id th1520_clk_match[] = {
++	{
++		.compatible = "thead,th1520-clk-ap",
++	},
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, th1520_clk_match);
++
++static struct platform_driver th1520_clk_driver = {
++	.probe		= th1520_clk_probe,
++	.driver		= {
++		.name	= "th1520-clk",
++		.of_match_table = th1520_clk_match,
++	},
++};
++module_platform_driver(th1520_clk_driver);
++
++MODULE_DESCRIPTION("T-HEAD TH1520 AP Clock driver");
++MODULE_AUTHOR("Yangtao Li <frank.li@vivo.com>");
++MODULE_AUTHOR("Jisheng Zhang <jszhang@kernel.org>");
++MODULE_LICENSE("GPL");
 
->                 goto out_free_ops;
->
->         ops->locked.ins.ops =3D ins__find(arch, ops->locked.ins.name);
-> @@ -815,11 +815,38 @@ static void disasm_line__init_ins(struct disasm_lin=
-e *dl, struct arch *arch, str
->                 dl->ins.ops =3D NULL;
->  }
->
-> -static int disasm_line__parse(char *line, const char **namep, char **raw=
-p)
-> +int __weak get_opcode_insn(unsigned int raw_insn __maybe_unused)
->  {
-> -       char tmp, *name =3D skip_spaces(line);
-> +       return -1;
-> +}
-> +
-> +int __weak get_source_reg(unsigned int raw_insn __maybe_unused)
-> +{
-> +       return -1;
-> +}
-> +
-> +int __weak get_target_reg(unsigned int raw_insn __maybe_unused)
-> +{
-> +       return -1;
-> +}
+-- 
+2.34.1
 
-I prefer having conditional code with #ifdef rather than weak
-functions especially if it isn't needed for every arch.
-
-> +
-> +/*
-> + * Parses the objdump result captured with --show-raw-insn.
-> + * Example, objdump line from powerpc:
-> + * line:    38 01 81 e8     ld      r4,312(r1)
-> + * namep : ld
-> + * rawp  : "ld r4,312(r1)"
-> + * opcode: fetched from arch specific get_opcode_insn
-> + * rawp_insn: e8810138
-> + *
-> + * rawp_insn is used later to extract the reg/offset fields
-> + */
-> +static int disasm_line__parse(char *line, const char **namep, char **raw=
-p, int *opcode, int *rawp_insn)
-> +{
-> +       char tmp, *tmp_opcode, *name_opcode =3D skip_spaces(line);
-> +       char *name =3D skip_spaces(name_opcode + 11);
->
-> -       if (name[0] =3D=3D '\0')
-> +       if (name_opcode[0] =3D=3D '\0')
->                 return -1;
->
->         *rawp =3D name + 1;
-> @@ -829,13 +856,18 @@ static int disasm_line__parse(char *line, const cha=
-r **namep, char **rawp)
->
->         tmp =3D (*rawp)[0];
->         (*rawp)[0] =3D '\0';
-> +       tmp_opcode =3D strdup(name_opcode);
-> +       tmp_opcode[11] =3D '\0';
-
-Looks like powerpc specific.  Can we move it under arch check?
-
-
-> +       remove_spaces(tmp_opcode);
->         *namep =3D strdup(name);
-> +       *opcode =3D get_opcode_insn(be32_to_cpu(strtol(tmp_opcode, NULL, =
-16)));
-
-This as well.  Maybe we could have per-arch disasm_line__parse().
-
->
->         if (*namep =3D=3D NULL)
->                 goto out;
->
->         (*rawp)[0] =3D tmp;
->         *rawp =3D strim(*rawp);
-> +       *rawp_insn =3D be32_to_cpu(strtol(tmp_opcode, NULL, 16));
->
->         return 0;
->
-> @@ -896,7 +928,7 @@ struct disasm_line *disasm_line__new(struct annotate_=
-args *args)
->                 goto out_delete;
->
->         if (args->offset !=3D -1) {
-> -               if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->o=
-ps.raw) < 0)
-> +               if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->o=
-ps.raw, &dl->ins.opcode, &dl->ops.raw_insn) < 0)
->                         goto out_free_line;
->
->                 disasm_line__init_ins(dl, args->arch, &args->ms);
-> @@ -1726,7 +1758,7 @@ int symbol__disassemble(struct symbol *sym, struct =
-annotate_args *args)
->                  map__rip_2objdump(map, sym->start),
->                  map__rip_2objdump(map, sym->end),
->                  opts->show_linenr ? "-l" : "",
-> -                opts->show_asm_raw ? "" : "--no-show-raw-insn",
-> +                opts->show_asm_raw ? "" : "--show-raw-insn",
-
-This is not what we want.  According to the man page of objdump
-the --show-raw-insn should be enabled by default.  So I think the
-default value prints nothing.  But if it's not the case on powerpc
-(maybe on x86 too?) we could add it in the positive case too and
-make powerpc init code reset the option.
-
-Thanks,
-Namhyung
-
-
->                  opts->annotate_src ? "-S" : "",
->                  opts->prefix ? "--prefix " : "",
->                  opts->prefix ? '"' : ' ',
-> diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-> index 718177fa4775..5c1520010ca7 100644
-> --- a/tools/perf/util/disasm.h
-> +++ b/tools/perf/util/disasm.h
-> @@ -43,14 +43,18 @@ struct arch {
->
->  struct ins {
->         const char     *name;
-> +       int     opcode;
->         struct ins_ops *ops;
->  };
->
->  struct ins_operands {
->         char    *raw;
-> +       int     raw_insn;
->         struct {
->                 char    *raw;
->                 char    *name;
-> +               int     opcode;
-> +               int     raw_insn;
->                 struct symbol *sym;
->                 u64     addr;
->                 s64     offset;
-> @@ -62,6 +66,8 @@ struct ins_operands {
->                 struct {
->                         char    *raw;
->                         char    *name;
-> +                       int     opcode;
-> +                       int     raw_insn;
->                         u64     addr;
->                         bool    multi_regs;
->                 } source;
-> diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/inclu=
-de/dwarf-regs.h
-> index 01fb25a1150a..2a4e1e16e52c 100644
-> --- a/tools/perf/util/include/dwarf-regs.h
-> +++ b/tools/perf/util/include/dwarf-regs.h
-> @@ -31,6 +31,15 @@ static inline int get_dwarf_regnum(const char *name __=
-maybe_unused,
->  }
->  #endif
->
-> +/*
-> + * get_opcode_insn - Return opcode from raw instruction
-> + * get_source_reg - Return source reg from raw instruction
-> + * get_target_reg - Return target reg from raw instruction
-> + */
-> +int get_opcode_insn(unsigned int raw_insn);
-> +int get_source_reg(unsigned int raw_insn);
-> +int get_target_reg(unsigned int raw_insn);
-> +
->  #ifdef HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET
->  /*
->   * Arch should support fetching the offset of a register in pt_regs
-> --
-> 2.43.0
->
