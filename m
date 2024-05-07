@@ -1,118 +1,160 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 311CC16ABD8
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 16:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB0D51649C8
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 16:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099131; cv=none; b=tYsUK4BLvJuViINMo1Ykf9hs/XyOvxJnyfQ2CAtQPACv1scbi72X9j4Q8moKZBpmFE7Mbnwi1nLwa76S7Nc9+iDoES7fSCwQ0BOcbxFwhsovZ78SJK/ZeY+kRyFbubS9MFsA8b0KyjvTLtYN3HuabLL5Myxx7JhJU97huxRCuPM=
+	t=1715099147; cv=none; b=fON6rX9i1DQqT2xmXEmlHb/w3MaYX4N/rhIeuTbhMctI6SXu5DcNAK6oY2aWYK7MRpEoLUUiHzi4HMc+VCGbqLvUWLBxcvOK4JfQgDabZnAso1485lEE8LiimxPOQ7tq/37rC4QY425y45UUxxYkF6R2l0o/fXxcUoWP45SJzxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099131; c=relaxed/simple;
-	bh=5/4nUFGzVCKyh1B64hVam6vzkGBnCWQpN7HzGYdQUhw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gTqBXAjEOq+sRLOKGKaK+zOIXn741cq3Ow4ZwWE6pBx/oi6v224ual9Gc1dcwJtSc7svaMctXF09YrbmS8PH11mWzwBvaef0t9fkTwZR4KvqegTY8xrLeLx5TiXQoYvDYSF/gikdWp5p4BP8EHo/j+IAkca0QCxMgtn7Xk4E/L0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=L3FruZzs; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1715099147; c=relaxed/simple;
+	bh=O4KOfR7xsWkA69yvh0fmrqzX+jfoibH/wxjze2sjgyY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qN4WVZKAmDARpGTUNU/CsynpJwZCIzgnwTaTp2Q5knXZAXCa2cLAmweDNzBvjq4fbnfiLf0Dgl2auCVzt81HLj5/sxQSuSZLYn5FJ1bBKfP08pcj/TTJTJY8frCTeVGLOKol8HcS0jTZ/CBE0mn61mekw6WcPi7VcR76IMakV18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=gb6zl6WF; arc=none smtp.client-ip=209.85.222.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="L3FruZzs"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a59cc765c29so579998366b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:25:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="gb6zl6WF"
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7928c5cb63fso240931785a.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:25:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1715099127; x=1715703927; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qsg2qiI3lz3EhCF2HZdFnC7wmOTqjTes666QVJJQB9w=;
-        b=L3FruZzs0HaKvGnuQxR0jF7PdeALJRIlGBpcLZKx5sBfxRv+ySo1LK/iknCVL889sG
-         LRlC0oy/r4BhvJzSwY1b1UKkI0/rr3RuEjYewtz1p3m4FY6wvFzlu3pbwaG3TyRHVKD9
-         j3pm3lg06DYdNbM5B796G77pqKRQQ8eEApFBA=
+        d=ziepe.ca; s=google; t=1715099144; x=1715703944; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=4A1sFCToC52p1ydCgtQ7NIaPSTbzbS+T5dDjpm7wNJk=;
+        b=gb6zl6WFbKNAFcmkvfzgpgxl0XKO9pE+VR9a36+DZIObMUXNKHsMJ8ZOgODpNEg3Ns
+         fVchQss9SV4d84JleEtoY75aVZuYtcwa+Un1iUD99R75aykvZtu9MMeRmpf/P7WtyUqR
+         /pLq8e0HzWAYP9bpp2LKYKv5KkQGpO3oExb3GtkM/h0QRVjVaTqydGDWvchO7zmC17hM
+         Y741JNAwW5ka/s2laXd4e4DOKa7dNLeQdo3DmVHec+79Hq0iJlDGntHw6vu1GNqZ9Okm
+         PXgoMVNR9ipmJxXX38urwYGYTa7/lzgUhzEfM7z6sFEHBAnS6bVjz5AnrnjZtMne/7ec
+         rC8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715099127; x=1715703927;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qsg2qiI3lz3EhCF2HZdFnC7wmOTqjTes666QVJJQB9w=;
-        b=IZJ/iovAm8eE7c9M/2C/OEo7Xn0598P4SKzYQEymqhWUUaNw2sa2zw3EuxS31fH/Tr
-         y4oJcGwk3PM9YirSRMPEKAIdhG9g3/bJuPPPDH5Cl+MyPp6StnKmlQJBoyKqNjvCWW1q
-         RKlbKDLmDy7PtcEESMZdFcn/erGol7Zxq3+OcY5q0/+rwyVYbf3sGPi57wQhPN2vDVqL
-         tycLIJGC6Z5bKUE38vlWHi4qzYwOGENJ22/2v29EMXSMzldRMflo+jsZ7kpVrlfcc1vS
-         SPUoLbCt0etmCuhQXMAleFpN2otH0diVYyTh8coiwEVnkbOoUEF2jwJ5Nya5MJLYXrps
-         7WrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX3cwU9kJnNaKUXZ8tL9U+uYKqpzBpRosuLJOcTjDMN6NwmXqd+bG55hrZ6YD4YmkkjGJy4kRDDr+A7Q9xspkUA8EIIeCLfnHD3M1//
-X-Gm-Message-State: AOJu0YyjqRvk5eUgtj6izWHAQUCOkiu2+WlZI83/UY9sLYvtxcEs36WH
-	yNqsFg/70A3fZW689+oMSIKTrWjE2a1ERV1UE9dRY9PuzeU8HTpZgIXiYkxXq2sAUXBFgrzlEv3
-	D7sb1vw==
-X-Google-Smtp-Source: AGHT+IHMKQSiQS8NmoukPblHClZUc7lupBU1TnHwMwcYdXz2R6Z9rOH0uw0j8kNI1tiLabYMoMAwgQ==
-X-Received: by 2002:a50:8711:0:b0:56e:5735:db2b with SMTP id 4fb4d7f45d1cf-5731da81938mr154899a12.29.1715099127371;
-        Tue, 07 May 2024 09:25:27 -0700 (PDT)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
-        by smtp.gmail.com with ESMTPSA id l11-20020a056402028b00b00572bba6745esm6467712edv.81.2024.05.07.09.25.26
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 May 2024 09:25:26 -0700 (PDT)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a59a0e4b773so804812466b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 09:25:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWkqzDGVDE9047kziGr3k9GRDkX/8tZuKtOlJfkCzTatVZlp+Zoj8rDN9OXKuQRrjmnm+bBT4X/6saaPdj35HgwoSUHQyqRH5NXtM1Q
-X-Received: by 2002:a17:906:7804:b0:a59:f380:1821 with SMTP id
- u4-20020a170906780400b00a59f3801821mr1149640ejm.69.1715099125946; Tue, 07 May
- 2024 09:25:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715099144; x=1715703944;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4A1sFCToC52p1ydCgtQ7NIaPSTbzbS+T5dDjpm7wNJk=;
+        b=b3YS+MQHMTywjXoGR7mFIlqKHp5sxgjBzpSe3EtJWSZe5PoSkwJ8tQ0+8hfd9OZze6
+         XSm8EtynTn+vPOhmtq5VkCewaIA28WBaSpLQjvngTsAQu/gy0arehOtAOUHELwE+IzX1
+         6DkT/2uRbMqMOCUTlFFoZZv90WdSWsP5pVBqFXhLTMc+UtH54yWIt4FOyv8V71mfnNAT
+         02loTk7JnossrgZyoqQ607jAtTMdxiDV2F1Zyr2H4tTm6mpBZyijuXAvYBbG8Nt15GjI
+         12ecyrpt+5cYLft5xyq/ib82N80EQtwYPFb0aQu26/4VfUHF1dX1/q/+H9boQKK5gvCk
+         7hpA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6j1zVgC4fs0xFj3qHwSClVb/lhYAtrqLfAAsrY+MkQNFVHR6YeDbwY8K98LYPsrhC8NfjazLjQZUGAUn5q8eXDVgZtECx72CfRe1w
+X-Gm-Message-State: AOJu0YzdgP7NQ37fMDK4pBdWQb/2HtlOmvYer4IChKx/Myz/A2bCaQYG
+	szQpDr/7Z/RB/+aGWF8la5EzOr1HhE0bVEeDhvFxVI2rSx7JH/K2TAYx3xvGtdc=
+X-Google-Smtp-Source: AGHT+IHR3MbTAXPGdjRNf/QL+MFD2IJBEm9Y6V3orFfaoZDzq3rR0+g0I0blT1MsQ9Ixtyj6g+KxiA==
+X-Received: by 2002:a05:620a:e85:b0:790:9e84:9b75 with SMTP id af79cd13be357-792b247fbdcmr40342785a.12.1715099143771;
+        Tue, 07 May 2024 09:25:43 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-68-80-239.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.80.239])
+        by smtp.gmail.com with ESMTPSA id vr25-20020a05620a55b900b0079291bf9505sm2963899qkn.41.2024.05.07.09.25.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 09:25:42 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.95)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1s4NdO-0001Rh-8Y;
+	Tue, 07 May 2024 13:25:42 -0300
+Date: Tue, 7 May 2024 13:25:42 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Zong Li <zong.li@sifive.com>
+Cc: joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
+	tjeznach@rivosinc.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, kevin.tian@intel.com,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
+	linux-riscv@lists.infradead.org
+Subject: Re: [PATCH RFC RESEND 3/6] iommu/riscv: support GSCID
+Message-ID: <20240507162542.GB4718@ziepe.ca>
+References: <20240507142600.23844-1-zong.li@sifive.com>
+ <20240507142600.23844-4-zong.li@sifive.com>
+ <20240507151516.GK901876@ziepe.ca>
+ <CANXhq0qLbC2RgW04C5DcuzR-kSmT3hA9rWW=w3e3PKHr+QsyzQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240507142454.3344-1-konishi.ryusuke@gmail.com>
-In-Reply-To: <20240507142454.3344-1-konishi.ryusuke@gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 7 May 2024 09:25:08 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgogPoSdCYw9jhc2Zm=BaE19nXYwFn_F9SwD2C-DyrmCw@mail.gmail.com>
-Message-ID: <CAHk-=wgogPoSdCYw9jhc2Zm=BaE19nXYwFn_F9SwD2C-DyrmCw@mail.gmail.com>
-Subject: Re: [PATCH -mm] nilfs2: Use __field_struct() for a bitwise field
-To: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-nilfs@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANXhq0qLbC2RgW04C5DcuzR-kSmT3hA9rWW=w3e3PKHr+QsyzQ@mail.gmail.com>
 
-On Tue, 7 May 2024 at 07:25, Ryusuke Konishi <konishi.ryusuke@gmail.com> wrote:
->
->    Despite that change, sparse complains when
-> passing a bitwise type to is_signed_type(). It is not clear to me why.
+On Tue, May 07, 2024 at 11:52:15PM +0800, Zong Li wrote:
+> On Tue, May 7, 2024 at 11:15 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> >
+> > On Tue, May 07, 2024 at 10:25:57PM +0800, Zong Li wrote:
+> > > @@ -919,29 +924,43 @@ static void riscv_iommu_iotlb_inval(struct riscv_iommu_domain *domain,
+> > >       rcu_read_lock();
+> > >
+> > >       prev = NULL;
+> > > -     list_for_each_entry_rcu(bond, &domain->bonds, list) {
+> > > -             iommu = dev_to_iommu(bond->dev);
+> > >
+> > > -             /*
+> > > -              * IOTLB invalidation request can be safely omitted if already sent
+> > > -              * to the IOMMU for the same PSCID, and with domain->bonds list
+> > > -              * arranged based on the device's IOMMU, it's sufficient to check
+> > > -              * last device the invalidation was sent to.
+> > > -              */
+> > > -             if (iommu == prev)
+> > > -                     continue;
+> > > -
+> > > -             riscv_iommu_cmd_inval_vma(&cmd);
+> > > -             riscv_iommu_cmd_inval_set_pscid(&cmd, domain->pscid);
+> > > -             if (len && len >= RISCV_IOMMU_IOTLB_INVAL_LIMIT) {
+> > > -                     for (iova = start; iova < end; iova += PAGE_SIZE) {
+> > > -                             riscv_iommu_cmd_inval_set_addr(&cmd, iova);
+> > > +     /*
+> > > +      * Host domain needs to flush entries in stage-2 for MSI mapping.
+> > > +      * However, device is bound to s1 domain instead of s2 domain.
+> > > +      * We need to flush mapping without looping devices of s2 domain
+> > > +      */
+> > > +     if (domain->gscid) {
+> > > +             riscv_iommu_cmd_inval_gvma(&cmd);
+> > > +             riscv_iommu_cmd_inval_set_gscid(&cmd, domain->gscid);
+> > > +             riscv_iommu_cmd_send(iommu, &cmd, 0);
+> > > +             riscv_iommu_cmd_iofence(&cmd);
+> > > +             riscv_iommu_cmd_send(iommu, &cmd, RISCV_IOMMU_QUEUE_TIMEOUT);
+> >
+> > Is iommu null here? Where did it come from?
+> >
+> > This looks wrong too. The "bonds" list is sort of misnamed, it is
+> > really a list of invalidation instructions. If you need a special
+> > invalidation instruction for this case then you should allocate a
+> > memory and add it to the bond list when the attach is done.
+> >
+> > Invalidation should simply iterate over the bond list and do the
+> > instructions it contains, always.
+> 
+> I messed up this piece of code while cleaning it. I will fix it in the
+> next version. However, after your tips, it seems to me that we should
+> allocate a new bond entry in the s2 domain's list. 
 
-Bah. The reason is this:
+Yes, when the nest is attached the S2's bond should get a GSCID
+invalidation instruction and the S1's bond should get no invalidation
+instruction. Bond is better understood as "paging domain invalidation
+instructions".
 
-   #define is_signed_type(type) (((type)(-1)) < (__force type)1)
+(also if you follow this advice, then again, I don't see why the idr
+allocators are global)
 
-Basically, the way "is_signed_type()" works is that it casts a
-negative integer to the type, and checks to see if the value has now
-become a large value.
+You have to make a decision on the user invalidation flow, and some of
+that depends on what you plan to do for ATS invalidation.
 
-Now, it looks odd, because only one of those casts has a "__force" on
-it, but the reason for that is that casting all-ones and all-zeroes is
-ok for bitwise types (think of bitwise types as being a "collection of
-bits" - so all bits set or all bits clear are sane concepts regardless
-of any other semantics).
+It is OK to make the nested domain locked to a single iommu, enforced
+at attach time, but don't use the bond list to do it.
 
-So it's not the casts themselves that are problematic: that part works fine.
+For single iommu you'd just de-virtualize the PSCID and the ATS vRID
+and stuff the commands into the single iommu. But this shouldn't
+interact with the bond. The bond list is about invalidation
+instructions for the paging domain. Just loosely store the owning
+instace in the nesting domain struct.
 
-But you cannot compare a random collection of bits for greater than or
-lesser than.
+Also please be careful that you don't advertise ATS support to the
+guest before the kernel driver understands how to support it. You
+should probably put a note to that effect in the uapi struct for the
+get info patch.
 
-Think of things like byte orders: you can compare two values for
-_equality_ even if they are in the wrong byte order, but you can't
-compare them for "larger than" unless you turn them into the right CPU
-byte order.
-
-Basically, a "collection of bits" doesn't have an ordering in itself,
-even if equality comparisons are ok.
-
-So yeah, is_signed_type() doesn't work for bitwise types.
-
-And I don't see a sane way to make "is_signed_type()" to work for
-bitwise types - the whole concept of signedness of "bunch of bits" is
-kind of nonsensical - so I suspect your workaround is the best we can
-do (alternatively, tracing would have to figure out a different way to
-test for signedness).
-
-                 Linus
+Jason
