@@ -1,149 +1,156 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138AE13BC39;
-	Tue,  7 May 2024 07:46:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72BC813C3E2;
+	Tue,  7 May 2024 07:47:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715068001; cv=none; b=uTZgwJ48HPVMx7FVJirR1aM5WUZbzm90QcARoJRWKFkKX6VOaweN5+++JOrQObAebH99ZN9RwlU0LYv3QyF2rJYvO2Kzb/PtWoiu/9LBdHUE03zf3PzSZ/+d97q8pme30mnrzmsZRIEOuYvD8/JfIB8BIU33GPDbuOpx8p4Q+qM=
+	t=1715068027; cv=none; b=eClr/XTeKsN+2a1cItAq3oLDO2kLP/hxUgjmR6tZzBQ5NXWcnfRQ8Yq5N5hw9Nit1m6lUJ46y54uwCCFkJXBoXxlsQvR2NgL5dRY0cvyKuFPKUPc+LXve+EzyA28NTz0FP/HqXEyNWxUH6+ieQivky6DOMX3zJdT38LD/0nTHso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715068001; c=relaxed/simple;
-	bh=94Af4ymmCiF00Qx1iKDK+IJXafc4Rr4rO1jecboT9BE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sIJwhm02ZgQ7DEZChJLKcMRz7fW7+zJrLYioZlazVHtKtrnUvEqwkm2tJsXJ5MHNJDI3UaEpsTMnzC84UEoj94S0BhoYRSgbp0A/uG3eSS+hlyZOUM+Y1ssZqQVmSIj1q62S1GM9GpvjgE+akzW9evMcIcwsM1xVLOPSuFCjKoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=g1xsU6pQ; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1715068027; c=relaxed/simple;
+	bh=yf4Yg/+Zl+Y89cEZ893/e5GdcQqcjBTYy7kKVYel4w4=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=shqJJTF5Bo6YWQfd5pZAX10weFsjh38AHaBznaAqetpcljhzhXeRK9KN+Jxl2uJxPhGzVcqCgnPu9SFc0SJBmq8iJJFhCkXrm3V779gSniW3wztWiQgPv8ve5mllVaI4JHdAwoW1qtHsOmDgigHvdJ7yWie/lQ1yc+BeCHcm5fY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y6yLdX/O; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="g1xsU6pQ"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 0D05B120005;
-	Tue,  7 May 2024 10:46:35 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 0D05B120005
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1715067995;
-	bh=Gu71DSSw7UmD80j9iS8L6fOPFWts2Eqb3HZYUJnLUQo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=g1xsU6pQtn8HsuRHl2PbpoH6ktNn/NNTJgnu0d8Pf8dUGmmrRIrDCX2d5yDCkOWdO
-	 UqjUFPp6maQ0CRIbDhCLdQRZQUj6mIFSiIUSAwrG9Z6kuxGOlAz3fmkD11k4FG4loc
-	 ROgfBNtqvbXp40oDGrHlk/IYx8hgcfApUZHO+q1j57maDX0vnPOL14tpZqiI8FWKVR
-	 YthHiYDaJxdWI9L4+owRh4Y0RvL/j0u8rpt+2GOO+HOrJ7zPrQpwSKnvp/Sy+jMvoG
-	 Pml6qneHQmbss0rwzQo9SjB2UWqILgORZESCta4fj11wcAoMUCB3gkfw1q0yS2Qru9
-	 FBXOb92L87g4w==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue,  7 May 2024 10:46:34 +0300 (MSK)
-Received: from [172.28.226.125] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 7 May 2024 10:46:34 +0300
-Message-ID: <e3ea7238-c80d-dfe9-28bf-df95708872d6@salutedevices.com>
-Date: Tue, 7 May 2024 10:35:51 +0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6yLdX/O"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41b79451128so18982705e9.0;
+        Tue, 07 May 2024 00:47:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715068024; x=1715672824; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7W8Lgnc2QmcYuA3PD75NwVh4l9qkIidlX6ZKt/45er0=;
+        b=Y6yLdX/Ozo/hVRqaKh/PCZRZcGCetgUSnoJzo8zsSBACd0DgjeOv1g0jqkXFHzR1ZN
+         RGoRaluxoVDznDc2kJls718pQ/G7wE/3qtKlFsSwNm+MWIf113MSyWrZ1TuzPYmrMk6V
+         RQyZdMJVWp7zAInSB9bmWBFN1zSOICKhaGQ6Vxa4JdbR0OXqqw2LNxrvfBBoAxT1ds+1
+         IE16cZdJGdJBzzWaD0r0m19UhuI4ivpKlyX7441QhgsMAYl3l3ldfhIdibh/YWkPmnWZ
+         JUbr8e3ZNRfpnRACL/NYwyoZPMtcpsXzbZtByG8wgP6nkelZaL3IlGph7m0plXMQegS2
+         Xg3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715068024; x=1715672824;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7W8Lgnc2QmcYuA3PD75NwVh4l9qkIidlX6ZKt/45er0=;
+        b=kbgEnkYdRoCKT2M0C6XUFH+jflhtz3+H/ExeFAI67yw/hjFkVtjMC+GBeqXAjAh/xx
+         I73zdh9Jq8yg8gKE8qHVlDT3GVywNyvd7WtdKIdPln15WAveqYXBl2KH9GvplKIEh9kW
+         jhGAcyDmrKCLs/2MH3cdMyLYCrbYsPKGJ+ViLX9g+esgNzwaRChQSPOmZ/MLn8LRbzZ6
+         e1nH/ne1spAKZTYOMjhVDIcIRLYmrmLc2motmH3eFuY2dztgm9tyKuRQBmctsq/+WSh6
+         Vko/x+XvexDiJV1lLveoNHW5qju33l7bV3JTWImzPguwzoUi0qUWQe3lpEXGIgz7tl6h
+         K++Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWkDZu4wHlzSQq5ihGA9HqMgqCX8KvQWkqs20+q6GF36YcRvIG8TCJn6/CJ6HX7K7zxdB9Oj6XhuQa+v7j7N3ARW7icN33BKRGy/bz1TlnXxfX2e5hoFGGWc0OdED9gVQ/xC48qgRFCZVcNrzShfT+mFLeBL5cztaYMKJFkDhXVTA7P4UiA3PMfTV5PVQWzja/YajnupEBqKryWqgKE5eFXUFYUiB+sJlim8AalE1krg1M8tDBFSoql7ZLt
+X-Gm-Message-State: AOJu0YyOOApIaISHBr3cvka2BuRa+4jqdBUIElO8UgIsw549Rh9Q+XSQ
+	oFWaqBpHN6JYGiUdj2ybKQ1bKceNQuHS+z/UMM5XFz8z/F4Yeqqu
+X-Google-Smtp-Source: AGHT+IGsz8f0uMjryXajrRZUilHY9JjH8CEEtXxBaBPMnzG03cteHqU06c9qmaP7T8e5hgNlLiPcnw==
+X-Received: by 2002:a05:600c:3c93:b0:419:f2a0:138e with SMTP id bg19-20020a05600c3c9300b00419f2a0138emr9382664wmb.34.1715068023534;
+        Tue, 07 May 2024 00:47:03 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id g7-20020a05600c4ec700b0041902ebc87esm18626956wmq.35.2024.05.07.00.47.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 00:47:03 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 7 May 2024 09:47:00 +0200
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+	linux-man@vger.kernel.org, x86@kernel.org, bpf@vger.kernel.org,
+	Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	"Borislav Petkov (AMD)" <bp@alien8.de>,
+	Ingo Molnar <mingo@redhat.com>, Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCHv4 bpf-next 0/7] uprobe: uretprobe speed up
+Message-ID: <ZjncdFBtsZnABvva@krava>
+References: <20240502122313.1579719-1-jolsa@kernel.org>
+ <CAEf4BzYxsRMx9M_AiLavTHFpndSmZqOM8QcYhDTbBviSpv1r+A@mail.gmail.com>
+ <ZjPx0fncg-8brFBk@krava>
+ <CAEf4Bzb-dM+464JvW96KuxwOTfRQA1pxZRWM+pA7AfSWtWwqZw@mail.gmail.com>
+ <ZjVLedyQFBoHh-T_@krava>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v5 1/2] dt-bindings: mtd: amlogic,meson-nand: support
- fields for boot ROM code
-Content-Language: en-US
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-CC: Richard Weinberger <richard@nod.at>, Vignesh Raghavendra
-	<vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Neil
- Armstrong <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
-	Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>, <linux-mtd@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<oxffffaa@gmail.com>, <kernel@sberdevices.ru>
-References: <20240416085101.740458-1-avkrasnov@salutedevices.com>
- <20240416085101.740458-2-avkrasnov@salutedevices.com>
- <20240506154858.003bab54@xps-13>
- <d90f9d3d-7823-503f-4cc6-73783a083d0e@salutedevices.com>
- <20240507092726.4ab1afdb@xps-13>
-From: Arseniy Krasnov <avkrasnov@salutedevices.com>
-In-Reply-To: <20240507092726.4ab1afdb@xps-13>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185103 [May 07 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: avkrasnov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 19 0.3.19 07c7fa124d1a1dc9662cdc5aace418c06ae99d2b, {Tracking_from_domain_doesnt_match_to}, smtp.sberdevices.ru:7.1.1,5.0.1;salutedevices.com:7.1.1;100.64.160.123:7.1.2;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/07 06:33:00 #25113436
-X-KSMG-AntiVirus-Status: Clean, skipped
+In-Reply-To: <ZjVLedyQFBoHh-T_@krava>
 
-
-
-On 07.05.2024 10:27, Miquel Raynal wrote:
-> Hi Arseniy,
+On Fri, May 03, 2024 at 10:39:21PM +0200, Jiri Olsa wrote:
+> On Fri, May 03, 2024 at 11:03:24AM -0700, Andrii Nakryiko wrote:
+> > On Thu, May 2, 2024 at 1:04 PM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > >
+> > > On Thu, May 02, 2024 at 09:43:02AM -0700, Andrii Nakryiko wrote:
+> > > > On Thu, May 2, 2024 at 5:23 AM Jiri Olsa <jolsa@kernel.org> wrote:
+> > > > >
+> > > > > hi,
+> > > > > as part of the effort on speeding up the uprobes [0] coming with
+> > > > > return uprobe optimization by using syscall instead of the trap
+> > > > > on the uretprobe trampoline.
+> > > > >
+> > > > > The speed up depends on instruction type that uprobe is installed
+> > > > > and depends on specific HW type, please check patch 1 for details.
+> > > > >
+> > > > > Patches 1-6 are based on bpf-next/master, but path 1 and 2 are
+> > > > > apply-able on linux-trace.git tree probes/for-next branch.
+> > > > > Patch 7 is based on man-pages master.
+> > > > >
+> > > > > v4 changes:
+> > > > >   - added acks [Oleg,Andrii,Masami]
+> > > > >   - reworded the man page and adding more info to NOTE section [Masami]
+> > > > >   - rewrote bpf tests not to use trace_pipe [Andrii]
+> > > > >   - cc-ed linux-man list
+> > > > >
+> > > > > Also available at:
+> > > > >   https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+> > > > >   uretprobe_syscall
+> > > > >
+> > > >
+> > > > It looks great to me, thanks! Unfortunately BPF CI build is broken,
+> > > > probably due to some of the Makefile additions, please investigate and
+> > > > fix (or we'll need to fix something on BPF CI side), but it looks like
+> > > > you'll need another revision, unfortunately.
+> > > >
+> > > > pw-bot: cr
+> > > >
+> > > >   [0] https://github.com/kernel-patches/bpf/actions/runs/8923849088/job/24509002194
+> > >
+> > > yes, I think it's missing the 32-bit libc for uprobe_compat binary,
+> > > probably it needs to be added to github.com:libbpf/ci.git setup-build-env/action.yml ?
+> > > hm but I'm not sure how to test it, need to check
+> > 
+> > You can create a custom PR directly against Github repo
+> > (kernel-patches/bpf) and BPF CI will run all the tests on your custom
+> > code. This way you can iterate without spamming the mailing list.
 > 
-> avkrasnov@salutedevices.com wrote on Tue, 7 May 2024 09:53:06 +0300:
+> I'm running CI tests like that, but I think I need to change the action
+> which is in other repo (github.com:libbpf/ci.git)
 > 
->> On 06.05.2024 16:48, Miquel Raynal wrote:
->>> Hi Arseniy,
->>>
->>> avkrasnov@salutedevices.com wrote on Tue, 16 Apr 2024 11:51:00 +0300:
->>>   
->>>> Boot ROM code on Meson requires that some pages on NAND must be written
->>>> in special mode: "short" ECC mode where each block is 384 bytes and
->>>> scrambling mode is on.  
->>>
->>> Ok
->>>   
->>>> Such pages located with the specified interval within specified offset.  
->>>
->>> I'm sorry I don't get that sentence.  
->>
->> Sorry, I mean this (let me draw :) ) :
->>
->> [ page 0 ][ page 1 ][ page 2 ][ page 3 ][ page 4 ][ page 5 ][ page 6 ][ page 7 ][ page 8 ][ page 9 ]
->>
->> For example, we have 10 pages starting from the beginning of the chip - this is "within specified offset",
->> e.g. offset is 10. BootROM on axg needs that (for example) every third page must be written in "special"
->> mode: scrambling is on and ECC is 384 bytes. Such pages are 0, 2, 4, 6, 8. E.g. "specified interval" will
->> be 3.
+> > 
+> > But I'm just wondering if it's worth complicating setup just for
+> > testing this x32 compat mode. So maybe just dropping one of those
+> > patches would be better?
 > 
-> Shall be 2, no?
+> well, we had compat process crashing on uretprobe because of this change,
+> so I rather keep the test.. or it can go in later on when the CI stuff is
+> figured out.. I got busy with the shadow stack issue today, will check on
+> the CI PR next week
 
-yes, starting from 0 - then 2. e.g.
-if (!(page_num % 2))
-    boot ROM need this page
+ok, it's not as easy as just adding the package.. I don't want to delay
+this on my missing github skills, I'll skip the test in next version and
+submit it separately when the github ci is ready for that
 
-> 
->>
->> So:
->>
->> amlogic,boot-pages: 10
->> amlogic,boot-page-step: 3
-> 
-> Ok I get it. Thanks for the explanation. I don't really understand the
-> logic behind it though. Do you know why the bootROM would access only
-> one page over 2 or 3? Is there a default value? Is this configurable?
-
-No, boot rom source is closed, I don't have access to it. I get this logic
-from old version of vendor's uboot - in practice they use non 2 or 3, they
-use hardcoded 128 step value. And amlogic,boot-pages is 1024
-
-Thanks, Arseniy
-
-> 
-> Thanks,
-> Miquèl
+jirka
