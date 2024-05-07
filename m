@@ -1,122 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD1016079C
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 14:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98189160781;
+	Tue,  7 May 2024 14:48:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093321; cv=none; b=HT18JiVjh5/qjjPDJElzlJ4IHB5vCzJ07MHtSYNJzgxlsJauYawgD2iAKb4K+jcF36AQzZvxs90HGIhCOh+p3t0MAjLnGbucklxEtBFcnZHl3W5hrZ+fGriaUw50uz5aKMaV4rv6X5f5H2z2XwOhiVMZBWef6fGMkAOaoKNoP6Q=
+	t=1715093330; cv=none; b=q6b7Xu4VZMupgDhj15HT42hqTpSMrltyXkdgkI4PbKKZjrPasVY3dOSXdvDVffx6YUgwzqS0Ht7EADPpl2+k/XRrcj8Fs7wWDENjbyGq8LOeo+noff6Yz3ur9zqaNYwS4GCLQEN2iguCop7fOzyDIyUyPetky3YLJSNjbFZ4X1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715093321; c=relaxed/simple;
-	bh=I06cK2vAYPdgqkwrUehfSpbUrypwMSIUfL2EgGKqmKU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ksWqethFb2YDznrOrRlNN5trzuMmNfxnhstjRtg6STIdeW/OrYQJfJd1R8/0Nup+6n8Rs4gx7FOFrcXv+oYWpM9S6tBy+qRcE2hx3fQoiZmQKdso+yq4Jm7ef32sucEwkUyrDVfJ5gG+3BY341M7mi/+HnfPqI4gryB7JZcJa+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fhy8m5Bx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715093330; c=relaxed/simple;
+	bh=GIO4K7Jzi7e58ru4SZwn+yKyWIyZbt9nbponGMhXWbs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JF4f9LURaIip+3wH3kEU4jU1SibhHFCNOxcjshRbH30jL8l8lEh/LxWeYJq++odgj5mzCb8ZQa2Tiis8Bg7FU64730zff7tnSwL8UgMxPba6zzVlOBnx9wGsLKD/z3xRUuNGfL96F0XCtet44/TDKuZrGvsyLBwis8OfqH6jJN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=huv6oeXF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fhy8m5Bx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715093319;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mTLDRJ+Y2C9qtVA6GvAyqMW7FNLo8bVgJpqdecb1Xoc=;
-	b=fhy8m5BxQSzXx8PhyeVixJNHNA/vRNrZQ9jEmK1Ex5Qz6f1a9fzr3dwj5UKTQAv9yYhWRH
-	gygMLGBe2NBbPeIcU8Rc/ojFbJLdIkYBg87sip2FnyshKmAl4iwc6w9qvdyMfY3G38RE/S
-	NdgpDkeHUnqz/k+kXmlZ0I5Uguj3Ezo=
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
- [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-271-bKW3UGM1MMa6kRV08Xovhw-1; Tue, 07 May 2024 10:48:37 -0400
-X-MC-Unique: bKW3UGM1MMa6kRV08Xovhw-1
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-61b7d7c293cso2876274a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 07:48:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715093316; x=1715698116;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mTLDRJ+Y2C9qtVA6GvAyqMW7FNLo8bVgJpqdecb1Xoc=;
-        b=AMe5QISecVfsKTLzddLPpdSeByfS/Fia7qWjx493aUUUPQqN9tjthtvykW6SNtGj3M
-         Iwfjmq2LuVCIP/mME6Lk0b+pXqzo2otrCS4Dh7nlCaqafhXYIeY9SSIsUBCUE6wUhagi
-         ziX2pReO0jEvGi718qtLRAa+klpl9Uek+RYEjtgiLjbJhGzBjvKFo2nRlk/oQ3M4KEqO
-         2abrOUZ/SAPZfEh67ttmh1TXWQRbQPVri67bbYV/b8THRXHXVNhuOib/0IPzTCdNK1Zh
-         XyXXthxNRDykbw+6Djj9nt5wPxwsVCD6c0Pxr+Te/EUJDYm9k0AyEKRC0hhJ0rt/x4XF
-         y+iw==
-X-Forwarded-Encrypted: i=1; AJvYcCWp+R+bl7hMibfl4Cy+vQ1iGPbBtCeg0U+lG6t1Mhan/X/t5HDmMT3snmGmZQL8RnMrdI+KcaZmVAjxYNvZ7y3CuQNegCuSbq4KQ4+E
-X-Gm-Message-State: AOJu0YwutZwJEs4bGEoDHBan5AcKRvWOC36zKxRMVW8d1QTWYB0BLyXy
-	/0w7WMjrO003ES7URf7lSi6QCcBxHJTiEsOWA9j2iauYGQ6lJ3XxuxIxjjRDFPOh6VDudphAYGz
-	fP+pNTFIbZv5oIHlxWKJ0AnuM7c4QDop01v6t1wvu5xI134uWaGLugY1JSQ8WmQ==
-X-Received: by 2002:a05:6a20:2d0a:b0:1ad:31e2:56c with SMTP id g10-20020a056a202d0a00b001ad31e2056cmr16115653pzl.8.1715093315929;
-        Tue, 07 May 2024 07:48:35 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHrgeM1ZE9m7PX87R+n+J5zEki5ltNJcbMD3VGwx4A43X3ZXKh0YMm+VM4cmVfuWg9cJpbq9A==
-X-Received: by 2002:a05:6a20:2d0a:b0:1ad:31e2:56c with SMTP id g10-20020a056a202d0a00b001ad31e2056cmr16115613pzl.8.1715093315306;
-        Tue, 07 May 2024 07:48:35 -0700 (PDT)
-Received: from x1gen2nano ([2600:1700:1ff0:d0e0::33])
-        by smtp.gmail.com with ESMTPSA id w22-20020a056a0014d600b006f43c013f66sm4429038pfu.173.2024.05.07.07.48.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 07:48:34 -0700 (PDT)
-Date: Tue, 7 May 2024 09:48:30 -0500
-From: Andrew Halaney <ahalaney@redhat.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Serge Semin <fancer.lancer@gmail.com>, 
-	"Russell King (Oracle)" <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, netdev@vger.kernel.org, 
-	alexandre.torgue@foss.st.com, joabreu@synopsys.com, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, mcoquelin.stm32@gmail.com, 
-	hkallweit1@gmail.com
-Subject: Re: racing ndo_open()/phylink*connect() with phy_probe()
-Message-ID: <i3w534hh4o2klrehag7cwjshwiqxergidzo4h7zz7oa3prra2k@v6xor5k4dv5x>
-References: <uz66kbjbxieof6vkliuwgpzhlrbcmeb2f5aeuourw2vqcoc4hv@2adpvba3zszx>
- <ZjFl4rql0UgsHp97@shell.armlinux.org.uk>
- <ykdqxnky7shebbhtucoiokbews2be5bml6raqafsfn4x6bp6h3@nqsn6akpajvp>
- <7723d4l2kqgrez3yfauvp2ueu6awbizkrq4otqpsqpytzp45q2@rju2nxmqu4ew>
- <25d1164e-0ac2-4311-ad27-aa536dca3882@lunn.ch>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="huv6oeXF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4017FC4AF68;
+	Tue,  7 May 2024 14:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715093330;
+	bh=GIO4K7Jzi7e58ru4SZwn+yKyWIyZbt9nbponGMhXWbs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=huv6oeXFI2fbbRUp2ra+wqxFNEvKmHMWZFyGScm4lKhBIHOCLWf2cy0VjMX39V0/R
+	 CEDdludXc1Uh3+jjTRKWPmkpvYr92jy273U19grzAA8J2akyOBYY2SXzC7h3+8oSrq
+	 uNUg1gl+XESUcCzpfgYXcihcL5OeNNZTqHzxAEgfD4m3JiswHtmNBG0ApSodshmXt4
+	 YTTa2o+Pkz6eygeTXNqdimvwCTwxMz7orh9Rk087rEeS8HeYh0RTxwIGe89O5/IXK1
+	 bHrxf/n4tSsbwxTT+2TVfSk/UEWj12+AOzwOhbDUnLoMKuBnQKjz6Kui7m4anB8qWO
+	 nk2oLFxArl7Aw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1s4M7g-000000003Cs-22KF;
+	Tue, 07 May 2024 16:48:52 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+	Bjorn Andersson <andersson@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Douglas Anderson <dianders@chromium.org>,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: [PATCH v2 3/7] dt-bindings: HID: i2c-hid: elan: add 'no-reset-on-power-off' property
+Date: Tue,  7 May 2024 16:48:17 +0200
+Message-ID: <20240507144821.12275-4-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240507144821.12275-1-johan+linaro@kernel.org>
+References: <20240507144821.12275-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <25d1164e-0ac2-4311-ad27-aa536dca3882@lunn.ch>
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 03, 2024 at 03:25:19AM GMT, Andrew Lunn wrote:
-> > AFAICS the problem is in the race between the end0 and end1 device
-> > probes. Right?
-> > If so then can't the order be fixed by adding the links between the
-> > OF-devices?  As it's already done for various phandle-based references
-> > like "clocks", "gpios", "phys", etc?
+When the power supply is shared with other peripherals the reset line
+can be wired in such a way that it can remain deasserted regardless of
+whether the supply is on or not.
 
-Thanks for the pointer here Serge, I had no idea (still don't have much of an
-idea) on how this works. I think this makes sense to explore some more.
-Hopefully sometime this week I'll poke at this more.
+This is important as it can be used to avoid holding the controller in
+reset for extended periods of time when it remains powered, something
+which can lead to increased power consumption. Leaving reset deasserted
+also avoids leaking current through the reset circuitry pull-up
+resistors.
 
-> 
-> It gets tricky because an MDIO bus master device is often a sub device
-> of an Ethernet MAC driver. Typically how it works is that a MAC driver
-> probes. Part way through the probe it creates an MDIO bus driver,
-> which enumerates the MDIO bus and creates the PHYs. Later in the MAC
-> driver probe, or maybe when the MAC driver is opened, it follows the
-> phy-handle to a PHY on its own MDIO bus.
-> 
-> If you were to say it cannot probe the MAC driver until the MDIO bus
-> driver is created and the PHYs created, you never get anywhere,
-> because it is the act of probing the MAC driver which creates the PHYs
-> which fulfils the phandle.
-> 
-> You would need to differentiate between a phandle pointing deeper into
-> the same branch of a DT tree, or pointing to a different branch of a
-> DT tree. If it is deeper within the same branch, you need to probe in
-> order to make progress. If it points to a different branch you need to
-> defer until that sub-branch has successfully probed. And if you get
-> two branches which are mutually dependent on each other, probe and
-> hope EPROBE_DEFER solves it.
+Add a new 'no-reset-on-power-off' devicetree property which can be used
+by the OS to determine when reset needs to be asserted on power down.
 
-I'll keep this relationship in mind. IIUC the fw_devlink stuff sort of handles
-cycles, but I need to look into how all that works further. At least in
-my example device, end0 is in this situation, whereas end1 is in the
-other situation, so I have a decent test setup for that.
+Note that this property can also be used when the supply cannot be
+turned off by the OS at all.
+
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ Documentation/devicetree/bindings/input/elan,ekth6915.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
+index be84f7ed0abc..a62916d07a08 100644
+--- a/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
++++ b/Documentation/devicetree/bindings/input/elan,ekth6915.yaml
+@@ -36,6 +36,12 @@ properties:
+   reset-gpios:
+     description: Reset GPIO; not all touchscreens using eKTH6915 hook this up.
+ 
++  no-reset-on-power-off:
++    type: boolean
++    description:
++      Reset line is wired so that it can (and should) be left deasserted when
++      the power supply is off.
++
+   vcc33-supply:
+     description: The 3.3V supply to the touchscreen.
+ 
+-- 
+2.43.2
 
