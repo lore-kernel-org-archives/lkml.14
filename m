@@ -1,197 +1,173 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C664B14D430
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 10:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A01AD5D;
+	Tue,  7 May 2024 10:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715078530; cv=none; b=cqDtW70UHXzxnKH3iM3hIQxvVaW92W3qw+sf0UvsHDfyLtHSiST/2qPLkrj7euU0TV35aA6RsrZn0sGOQkt6/Bw3qAplcEWokYKk/4lSpB2NDdWiCHUQEHt0gjem8CpVyrBFNTt2YrphkT+OKoctbTgtTAfTtK52J8eaIzhCbOA=
+	t=1715078597; cv=none; b=GIrXmbhCplvGaALoc4P8pGq1COajmPleT8PgMr6FAE0QMOSRr/muayWgYPs3TPK7xUnQp6A8s2TgBxAhLMOq/TO1nDbFIJuyyCdE2LLt1KJJJ6BLQm+CouVQglM1USpTAKQAi0LUR8yU2lRwgbKDubMgJjJWc/qyMH3hV5F51dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715078530; c=relaxed/simple;
-	bh=U5VgfOOP6YcgNQcpBS/3Hv+gg9zIwZpEKcCDlvS0cGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PsqbvZukP3cZI9FQCStxamH45ZpfHkPwaNBFsWp9BMaGsX3/inCFgwopO/Ac/bv1IyoDJbLGwZogbllTKgwclYPvsQIkZIwrUpkUegNQdY5R1V6mKGalfyBt2mnO4hC8JRp9/apW5E6RZ7JjEschfewnUjLKWhdP8fXgQwoFjv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=E/o9YTuf; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
+	s=arc-20240116; t=1715078597; c=relaxed/simple;
+	bh=+TRQfeq8Nw7b6DoQt3C1fHE3AuYEeUkPp5208iLu1YA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YhBTLQwhZxHARfcPFcoFEOfkChNoYPOJWvPdZjoTAqkBg9K8HKYu2QX5mxa+w306lWWWNdiHfSMJD7fHZXkV5flhLHH4Ub0W0B9JQK4L7+uy3+P83gHSa46wJGUSXH31YIYEOFAt+LQlh6xj5BdP5+vK3tFNFvr8viylPCofejU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TPJNzY3H; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="E/o9YTuf"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-41b794510cdso24155795e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 03:42:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1715078527; x=1715683327; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tXzvyFG6l9gTH5dCnOcuMruwGnZepx9teig8QB5iF2w=;
-        b=E/o9YTufLkZ0xMxexdfkMsCaAjTTCHkOi1CIMx0E8a0u1tjv7jzICEttAxmDqyZ5z7
-         JbJQgIak1bgefKBe+MEniElFkQ/NVw7XEZZdAaqUOJI7niQd2gele80ghwHs9dLktpAX
-         4KG6hqahm3jOhP1uEewVwsYIaI+V3nKxfKjtqXNf3ibEhSj9cRPDFhKDcMvmtZYFExh6
-         mx9S5yWJxzuFXRZaoZZamZwBEQM5MJkxp6fvlg9z6JNqzUCUwGZjfF+bZ7OejeVw1GI7
-         obgVdt5tiZkRf1cjI6Lr0HFqWv/lytQ1iYltoLlxG1NaXTD4nm4Tzr0AozDDZyDiqVFN
-         tgRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715078527; x=1715683327;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tXzvyFG6l9gTH5dCnOcuMruwGnZepx9teig8QB5iF2w=;
-        b=Di1s1c5JlCT/dA3kxJnIV7n5I2Y0Fgoh1Uy41fqKiwNmBABpSZG6ssGcyIjgWz8Ult
-         fjpd92fW+jq7tFCeU4BGAPCCmAdkLpWYbXuvKrrSZUJcBXKMRwXiGq5MxIeZG6lXRbrp
-         Sc901lpIjDY16UwpBCnIOlIcNifc/iEbGIEgVA0TOWJuumOqI3KLcqy6pTDs9vXQGwKZ
-         oHHWRgpZXfiqtL/JIaYhyZqlBqAdud/YjXXJEaayFKU2vapiUVoz4LKZthPYnUahEdEC
-         UiouA3ryzvOfr5ohX/YiDHdRaTnV9ANMzjIGre2f1WQbXJe6+VDhW4QdmJmMMDF4w8IT
-         9xng==
-X-Forwarded-Encrypted: i=1; AJvYcCWMtDKnNQ5fXshu9gXbRj2BuQ5nbXi3HFisEXo1LO+pHgMEblDBfWJ7ReEn2AhSIyd7fGQ0v1jifAVgOXT7rMS4a58Py76Cn9xKGymM
-X-Gm-Message-State: AOJu0Yx36V5xwLj1xJGwuaz7SFK9OpBmn5wdE09+zjIKFJQRPXrbotvb
-	pOnfSksybzkKWYhHBkvMAftOCeq5gcyqKAtS2Z4tjioxxP4l3aRrq27CzVzu25s=
-X-Google-Smtp-Source: AGHT+IEwQzUr+WPNmHd8pSO2aHlUlJakrkwXToj6yKou3S87UBLoS3VKq0/TORQePW3TDQ05vb4nxw==
-X-Received: by 2002:a05:600c:46ca:b0:41c:11fe:4de3 with SMTP id q10-20020a05600c46ca00b0041c11fe4de3mr10030220wmo.24.1715078527041;
-        Tue, 07 May 2024 03:42:07 -0700 (PDT)
-Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
-        by smtp.gmail.com with ESMTPSA id p17-20020a05600c469100b0041b083e16e2sm23107663wmo.2.2024.05.07.03.42.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 03:42:06 -0700 (PDT)
-Date: Tue, 7 May 2024 11:42:04 +0100
-From: Qais Yousef <qyousef@layalina.io>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Christian Loehle <christian.loehle@arm.com>,
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sched: Consolidate cpufreq updates
-Message-ID: <20240507104204.ugnyrpwhrbtjkv7d@airbuntu>
-References: <20240505233103.168766-1-qyousef@layalina.io>
- <20240506100509.GL40213@noisy.programming.kicks-ass.net>
- <20240507005659.d4rzzaoq3isanndf@airbuntu>
- <20240507080230.GP40213@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TPJNzY3H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715078596; x=1746614596;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+TRQfeq8Nw7b6DoQt3C1fHE3AuYEeUkPp5208iLu1YA=;
+  b=TPJNzY3HVrt/y16SROkopaGKy8UdProYDKJCfpZkhpC2VeT7FslxMBt5
+   KwbU86rIQY0OdYMINHltm8JYaDf/x5MI8cCGAPVdOueLa4u86yeUWWceg
+   oPx5dmqbWS1iBukos4VtmzSem7pFpJh8R+mqxUygY5hKzlBmgikVyuktd
+   crslEGfAS4Pzt19yPEPhr/G4lLMj1e1X+E2F9OfTBcZMWSDSYjZjak27k
+   ma64nmxGuoRN+DZ+DisPHEdBEd1QHMtelFfT2SPu16Tav5UwNYQt3Fvnn
+   SOoneBA8e9RcrM571GYTYa7scpcFs+HvVjeZmQa2wkQpWuSR5SSDl0Oxb
+   g==;
+X-CSE-ConnectionGUID: nsCoCiQERXaGxwvUBTLDJw==
+X-CSE-MsgGUID: AkjPtzKvT82JSjy93C4i5w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11065"; a="36245724"
+X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
+   d="scan'208";a="36245724"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 03:43:15 -0700
+X-CSE-ConnectionGUID: l7+b9JCCSqubT7cmWJcHIg==
+X-CSE-MsgGUID: euSulxasRP6BMwVw+2KcCg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,261,1708416000"; 
+   d="scan'208";a="33312129"
+Received: from xiao-desktop.sh.intel.com ([10.239.46.158])
+  by orviesa004.jf.intel.com with ESMTP; 07 May 2024 03:43:09 -0700
+From: Xiao Wang <xiao.w.wang@intel.com>
+To: paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	luke.r.nels@gmail.com,
+	xi.wang@gmail.com,
+	bjorn@kernel.org
+Cc: ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	john.fastabend@gmail.com,
+	kpsingh@kernel.org,
+	sdf@google.com,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	pulehui@huawei.com,
+	haicheng.li@intel.com,
+	Xiao Wang <xiao.w.wang@intel.com>
+Subject: [PATCH] riscv, bpf: Optimize zextw insn with Zba extension
+Date: Tue,  7 May 2024 18:45:28 +0800
+Message-Id: <20240507104528.435980-1-xiao.w.wang@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240507080230.GP40213@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On 05/07/24 10:02, Peter Zijlstra wrote:
-> On Tue, May 07, 2024 at 01:56:59AM +0100, Qais Yousef wrote:
-> 
-> > Yes. How about this? Since stopper class appears as RT, we should still check
-> > for this class specifically.
-> 
-> Much nicer!
-> 
-> > static inline void update_cpufreq_ctx_switch(struct rq *rq, struct task_struct *prev)
-> > {
-> > #ifdef CONFIG_CPU_FREQ
-> > 	if (likely(fair_policy(current->policy))) {
-> > 
-> > 		if (unlikely(current->in_iowait)) {
-> > 			cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT | SCHED_CPUFREQ_FORCE_UPDATE);
-> > 			return;
-> > 		}
-> > 
-> > #ifdef CONFIG_SMP
-> > 		/*
-> > 		 * Allow cpufreq updates once for every update_load_avg() decay.
-> > 		 */
-> > 		if (unlikely(rq->cfs.decayed)) {
-> > 			rq->cfs.decayed = false;
-> > 			cpufreq_update_util(rq, 0);
-> > 			return;
-> > 		}
-> > #endif
-> > 		return;
-> > 	}
-> > 
-> > 	/*
-> > 	 * RT and DL should always send a freq update. But we can do some
-> > 	 * simple checks to avoid it when we know it's not necessary.
-> > 	 */
-> > 	if (task_is_realtime(current)) {
-> > 		if (dl_task(current) && current->dl.flags & SCHED_FLAG_SUGOV) {
-> > 			/* Ignore sugov kthreads, they're responding to our requests */
-> > 			return;
-> > 		}
-> > 
-> > 		if (rt_task(current) && rt_task(prev)) {
-> 
-> doesn't task_is_realtime() impy rt_task() ?
-> 
-> Also, this clause still includes DL tasks, is that okay?
+The Zba extension provides add.uw insn which can be used to implement
+zext.w with rs2 set as ZERO.
 
-Ugh, yes. The earlier check for dl_task() is not good enough. I should send
-a patch to fix the definition of rt_task()!
+Signed-off-by: Xiao Wang <xiao.w.wang@intel.com>
+---
+ arch/riscv/Kconfig       | 19 +++++++++++++++++++
+ arch/riscv/net/bpf_jit.h | 18 ++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
-I think at this stage open coding the policy check with a switch statement
-is the best thing to do
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index 6bec1bce6586..0679127cc0ea 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -586,6 +586,14 @@ config RISCV_ISA_V_PREEMPTIVE
+ 	  preemption. Enabling this config will result in higher memory
+ 	  consumption due to the allocation of per-task's kernel Vector context.
+ 
++config TOOLCHAIN_HAS_ZBA
++	bool
++	default y
++	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64ima_zba)
++	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32ima_zba)
++	depends on LLD_VERSION >= 150000 || LD_VERSION >= 23900
++	depends on AS_HAS_OPTION_ARCH
++
+ config TOOLCHAIN_HAS_ZBB
+ 	bool
+ 	default y
+@@ -601,6 +609,17 @@ config TOOLCHAIN_HAS_VECTOR_CRYPTO
+ 	def_bool $(as-instr, .option arch$(comma) +v$(comma) +zvkb)
+ 	depends on AS_HAS_OPTION_ARCH
+ 
++config RISCV_ISA_ZBA
++	bool "Zba extension support for bit manipulation instructions"
++	depends on TOOLCHAIN_HAS_ZBA
++	depends on RISCV_ALTERNATIVE
++	default y
++	help
++	   Adds support to dynamically detect the presence of the ZBA
++	   extension (address generation acceleration) and enable its usage.
++
++	   If you don't know what to do here, say Y.
++
+ config RISCV_ISA_ZBB
+ 	bool "Zbb extension support for bit manipulation instructions"
+ 	depends on TOOLCHAIN_HAS_ZBB
+diff --git a/arch/riscv/net/bpf_jit.h b/arch/riscv/net/bpf_jit.h
+index f4b6b3b9edda..18a7885ba95e 100644
+--- a/arch/riscv/net/bpf_jit.h
++++ b/arch/riscv/net/bpf_jit.h
+@@ -18,6 +18,11 @@ static inline bool rvc_enabled(void)
+ 	return IS_ENABLED(CONFIG_RISCV_ISA_C);
+ }
+ 
++static inline bool rvzba_enabled(void)
++{
++	return IS_ENABLED(CONFIG_RISCV_ISA_ZBA) && riscv_has_extension_likely(RISCV_ISA_EXT_ZBA);
++}
++
+ static inline bool rvzbb_enabled(void)
+ {
+ 	return IS_ENABLED(CONFIG_RISCV_ISA_ZBB) && riscv_has_extension_likely(RISCV_ISA_EXT_ZBB);
+@@ -937,6 +942,14 @@ static inline u16 rvc_sdsp(u32 imm9, u8 rs2)
+ 	return rv_css_insn(0x7, imm, rs2, 0x2);
+ }
+ 
++/* RV64-only ZBA instructions. */
++
++static inline u32 rvzba_zextw(u8 rd, u8 rs1)
++{
++	/* add.uw rd, rs1, ZERO */
++	return rv_r_insn(0x04, RV_REG_ZERO, rs1, 0, rd, 0x3b);
++}
++
+ #endif /* __riscv_xlen == 64 */
+ 
+ /* Helper functions that emit RVC instructions when possible. */
+@@ -1159,6 +1172,11 @@ static inline void emit_zexth(u8 rd, u8 rs, struct rv_jit_context *ctx)
+ 
+ static inline void emit_zextw(u8 rd, u8 rs, struct rv_jit_context *ctx)
+ {
++	if (rvzba_enabled()) {
++		emit(rvzba_zextw(rd, rs), ctx);
++		return;
++	}
++
+ 	emit_slli(rd, rs, 32, ctx);
+ 	emit_srli(rd, rd, 32, ctx);
+ }
+-- 
+2.25.1
 
-static inline void update_cpufreq_ctx_switch(struct rq *rq, struct task_struct *prev)
-{
-#ifdef CONFIG_CPU_FREQ
-	/*
-	 * RT and DL should always send a freq update. But we can do some
-	 * simple checks to avoid it when we know it's not necessary.
-	 *
-	 * iowait_boost will always trigger a freq update too.
-	 *
-	 * Fair tasks will only trigger an update if the root cfs_rq has
-	 * decayed.
-	 *
-	 * Everything else should do nothing.
-	 */
-	switch (current->policy) {
-	case SCHED_NORMAL:
-	case SCHED_BATCH:
-		if (unlikely(current->in_iowait)) {
-			cpufreq_update_util(rq, SCHED_CPUFREQ_IOWAIT | SCHED_CPUFREQ_FORCE_UPDATE);
-			return;
-		}
-
-#ifdef CONFIG_SMP
-		if (unlikely(rq->cfs.decayed)) {
-			rq->cfs.decayed = false;
-			cpufreq_update_util(rq, 0);
-			return;
-		}
-#endif
-		return;
-	case SCHED_FIFO:
-	case SCHED_RR:
-		if (rt_policy(prev)) {
-#ifdef CONFIG_UCLAMP_TASK
-			unsigned long curr_uclamp_min = uclamp_eff_value(current, UCLAMP_MIN);
-			unsigned long prev_uclamp_min = uclamp_eff_value(prev, UCLAMP_MIN);
-
-			if (curr_uclamp_min == prev_uclamp_min)
-#endif
-				return;
-		}
-#ifdef CONFIG_SMP
-		/* Stopper task masquerades as RT */
-		if (unlikely(current->sched_class == &stop_sched_class))
-			return;
-#endif
-		cpufreq_update_util(rq, SCHED_CPUFREQ_FORCE_UPDATE);
-		return;
-	case SCHED_DEADLINE:
-		if (current->dl.flags & SCHED_FLAG_SUGOV) {
-			/* Ignore sugov kthreads, they're responding to our requests */
-			return;
-		}
-		cpufreq_update_util(rq, SCHED_CPUFREQ_FORCE_UPDATE);
-		return;
-	default:
-		return;
-	}
-#endif
-}
