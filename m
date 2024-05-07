@@ -1,261 +1,97 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F84F137C42
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 23:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BEAC86278;
+	Tue,  7 May 2024 23:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715122841; cv=none; b=qXWTjfGWeK4rNsoDoOuVuNg8GcSpPKB3pLR3q1cf2zSyxOCC5ciUhTpv6tfT9dnh/GV+jCx/8OLS+Cm5yvUETQtq0KtBm82IeV80vuwEvlCkH1nQGitQjmQ0AN2OalRcIzsmLG4Ejp15qzkls56549CB5DRLDmMzfnNI6vR6qWk=
+	t=1715122847; cv=none; b=mCWz9mIpwTrH9sBggr3VsWeCp+2hx5Us+xO9lq52ZH6+ASzjQSuGzkObsYK2HmRW/fcGZFjpv3JSnvEd4awugGCw1HHeeLXqopRJvdtde/NYxsTWokNAmaok8DBnuabGm6NfGLssSRlvk5fZ38zguFrzM2ga0OmkriNhQzoMm2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715122841; c=relaxed/simple;
-	bh=KeZsDpfjg4fkDLKYyRjiHJ3K9hAB8B5iQZNvvFpcmuY=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=urmp4fXyG/lrVfUBIBKUdJs0MhRtSXIafnMEeoB+GhUeLOWFCEVtiFA7OWYri6Bd5kumnUW+43Przz9WaoDgc/lhuqzqXm2345LQnsWi0wjXkUEHTvsvHVKVVkKeIdqMvbK31qjJkk5h1lEhGP4zlvFUF8cxLVyo8c810ND4NxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ziweixiao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=apkpJ7bh; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ziweixiao.bounces.google.com
+	s=arc-20240116; t=1715122847; c=relaxed/simple;
+	bh=GAQEzVprht6F3Nn/e1UYM7rXjiUF38JLg/I9jnfqX+M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=V4IcVtRFP+2jrV1AFtMDslIe8NB/WnGoYQNm41D5vXdq9r1ENIOxfzGl5weYeo1BBQeVnNyECqLTLv5uWl88K+gJGnShnb5sYlTqiSvZvdFeAERBI/HhKQgXhBC1xIE+Hc0/hfPZyEXhwV6W02am1/7HTDqfj5wQUK0OAT8+sHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qk/yQMjl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="apkpJ7bh"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be452c62bso62513897b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 16:00:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715122838; x=1715727638; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NXnPdU94aA87037a+0BxFlWOvSqs9PYhPyi24QbUuRY=;
-        b=apkpJ7bhPGzkY87rVcN/lpNo1rNhlVA19qkVxWiptsph7CFq/Yk5EE/wfLTEIYNMkh
-         Uf/0qekupgT0JTENSpXxdcC+QICCjQ1ciuicPO8N3Hw4Rg1rKQdbxfAtx3RmaPtgRk+S
-         Fh1gVTNPp2Lq+7G9Hr3IVRkaH5dkmfLxzzAPNupKNAVMtLq2miHwJakAWQd6tDXLfdaN
-         QIQsVqRounpnKoTxSOYARHgtd191pJdu+qK3Pqjxl4iDecNFJ+zNpgy8+TBRrGElS/4u
-         AasBLxY7bkAGb2m7h/RJj+JH3Ji0jq5gaIncdX6PpScf4Rj6TRsWgYKXorE1otY8jYnZ
-         JRiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715122838; x=1715727638;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NXnPdU94aA87037a+0BxFlWOvSqs9PYhPyi24QbUuRY=;
-        b=RIaECL7gpcJ5sjQbaJ1e/rNL1rsdPhNZ1IGTYKSPaRgkT0vLErwNNFeknzpB4xEp0+
-         0V41u8ISem3q2MHd2Ki5Roqef6CbKTv6a3kIXZbfiLThcRBUZ4C141fVRqkntIFaElRh
-         f3w0Sec1Kz64arIDRrWJKto/oujU+vWtJSw33N/q3BYh5hGqGmWD0NDryFl1HX5Mc8lH
-         TypPAgG7qbDW+7ZJ7hP7Q/FG0dR733OwZwrfuRm098FL+fVHDXaalAsBrjoYmOVu7Wuq
-         LxV+3iOD5aRDPbEwdMstzA0J7mJoJGOBMnESm4FoRtORWl7hTTyb2/fJQrfgrerezChi
-         qwhw==
-X-Forwarded-Encrypted: i=1; AJvYcCWwT0uFJH0Jbc+EpYnulWfF5zTTfq8juYE+thvqs9AYbHIQpa54S8kku5H228X47w38R4y+xe08/Nvdn/6MR7gBEu51q1w/1ofR4uMy
-X-Gm-Message-State: AOJu0YwA/5LX1ls6eewpFX1A8Ks9IrOglABJoXFZZN9ou8/A+7oegshf
-	ujeBlQ2g+zDFIr1AUptO5pi+xL1/vhyLnxs3FK0wJOewzMP9cf+pxGzlUUvq1Zz73HyauByRt9C
-	3seUlQtCqTjFmQg==
-X-Google-Smtp-Source: AGHT+IGzCKQ58FIDrrek79xK7RMi6FEGG6enmakGDSgrqxx2MG5LqtgQktPivYcc2rX+1V0P7Y4exlKxHcHmtEM=
-X-Received: from ziwei-gti.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:9b0])
- (user=ziweixiao job=sendgmr) by 2002:a81:4e83:0:b0:61b:1d66:61c4 with SMTP id
- 00721157ae682-62085c83b68mr2735537b3.10.1715122838443; Tue, 07 May 2024
- 16:00:38 -0700 (PDT)
-Date: Tue,  7 May 2024 22:59:43 +0000
-In-Reply-To: <20240507225945.1408516-1-ziweixiao@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qk/yQMjl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C76B5C4AF63;
+	Tue,  7 May 2024 23:00:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715122846;
+	bh=GAQEzVprht6F3Nn/e1UYM7rXjiUF38JLg/I9jnfqX+M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Qk/yQMjlgvuhSGVJHuohL53lcrC/R/NBRrUwbCixfR6vbnWYvj8K+DnEruhMbLAkc
+	 Tk9UJrFcz+qDLDDgUWI4v6mO7MeMbUtS4fa/UadxCKPiu+yVThx7EM8fht1dEae3OF
+	 4P2nPlxdD3q0nXXGKvOZqy53pDspgUoQOmH2Y+jPhlDXofm9jVsYkB2e1tSLSkrrVx
+	 amhFNXYMLTpr1Kxu5YaVrTX6VLqgIzZru2PJLbfQ5KGdm1uk+pnEYRuEKShzYXm8hy
+	 85Ihf6IjsPrVDQsG1onwRFgGVPKM85uKGQVAhv9UNTt9UacCtibt/pH+rYdHyTBh3X
+	 ZtXXURF/nw7ig==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Joshua Ashton <joshua@froggi.es>,
+	Harry Wentland <harry.wentland@amd.com>,
+	Alex Deucher <alexander.deucher@amd.com>,
+	Sasha Levin <sashal@kernel.org>,
+	sunpeng.li@amd.com,
+	Rodrigo.Siqueira@amd.com,
+	christian.koenig@amd.com,
+	Xinhui.Pan@amd.com,
+	airlied@gmail.com,
+	daniel@ffwll.ch,
+	alex.hung@amd.com,
+	hamza.mahfooz@amd.com,
+	wayne.lin@amd.com,
+	srinivasan.shanmugam@amd.com,
+	mario.limonciello@amd.com,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 6.1 06/12] drm/amd/display: Set color_mgmt_changed to true on unsuspend
+Date: Tue,  7 May 2024 19:00:08 -0400
+Message-ID: <20240507230031.391436-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240507230031.391436-1-sashal@kernel.org>
+References: <20240507230031.391436-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240507225945.1408516-1-ziweixiao@google.com>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-Message-ID: <20240507225945.1408516-4-ziweixiao@google.com>
-Subject: [PATCH net-next 3/5] gve: Add flow steering device option
-From: Ziwei Xiao <ziweixiao@google.com>
-To: netdev@vger.kernel.org
-Cc: jeroendb@google.com, pkaligineedi@google.com, shailend@google.com, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	willemb@google.com, hramamurthy@google.com, rushilg@google.com, 
-	ziweixiao@google.com, jfraker@google.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.1.90
+Content-Transfer-Encoding: 8bit
 
-From: Jeroen de Borst <jeroendb@google.com>
+From: Joshua Ashton <joshua@froggi.es>
 
-Add a new device option to signal to the driver that the device supports
-flow steering. This device option also carries the maximum number of
-flow steering rules that the device can store.
+[ Upstream commit 2eb9dd497a698dc384c0dd3e0311d541eb2e13dd ]
 
-Signed-off-by: Jeroen de Borst <jeroendb@google.com>
-Co-developed-by: Ziwei Xiao <ziweixiao@google.com>
-Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
-Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
-Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
-Reviewed-by: Willem de Bruijn <willemb@google.com>
+Otherwise we can end up with a frame on unsuspend where color management
+is not applied when userspace has not committed themselves.
+
+Fixes re-applying color management on Steam Deck/Gamescope on S3 resume.
+
+Signed-off-by: Joshua Ashton <joshua@froggi.es>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/google/gve/gve.h        |  2 +
- drivers/net/ethernet/google/gve/gve_adminq.c | 42 ++++++++++++++++++--
- drivers/net/ethernet/google/gve/gve_adminq.h | 11 +++++
- 3 files changed, 51 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
-index ca7fce17f2c0..58213c15e084 100644
---- a/drivers/net/ethernet/google/gve/gve.h
-+++ b/drivers/net/ethernet/google/gve/gve.h
-@@ -786,6 +786,8 @@ struct gve_priv {
- 
- 	u16 header_buf_size; /* device configured, header-split supported if non-zero */
- 	bool header_split_enabled; /* True if the header split is enabled by the user */
-+
-+	u32 max_flow_rules;
- };
- 
- enum gve_service_task_flags_bit {
-diff --git a/drivers/net/ethernet/google/gve/gve_adminq.c b/drivers/net/ethernet/google/gve/gve_adminq.c
-index 514641b3ccc7..85d0d742ad21 100644
---- a/drivers/net/ethernet/google/gve/gve_adminq.c
-+++ b/drivers/net/ethernet/google/gve/gve_adminq.c
-@@ -44,6 +44,7 @@ void gve_parse_device_option(struct gve_priv *priv,
- 			     struct gve_device_option_jumbo_frames **dev_op_jumbo_frames,
- 			     struct gve_device_option_dqo_qpl **dev_op_dqo_qpl,
- 			     struct gve_device_option_buffer_sizes **dev_op_buffer_sizes,
-+			     struct gve_device_option_flow_steering **dev_op_flow_steering,
- 			     struct gve_device_option_modify_ring **dev_op_modify_ring)
- {
- 	u32 req_feat_mask = be32_to_cpu(option->required_features_mask);
-@@ -189,6 +190,23 @@ void gve_parse_device_option(struct gve_priv *priv,
- 		if (option_length == GVE_DEVICE_OPTION_NO_MIN_RING_SIZE)
- 			priv->default_min_ring_size = true;
- 		break;
-+	case GVE_DEV_OPT_ID_FLOW_STEERING:
-+		if (option_length < sizeof(**dev_op_flow_steering) ||
-+		    req_feat_mask != GVE_DEV_OPT_REQ_FEAT_MASK_FLOW_STEERING) {
-+			dev_warn(&priv->pdev->dev, GVE_DEVICE_OPTION_ERROR_FMT,
-+				 "Flow Steering",
-+				 (int)sizeof(**dev_op_flow_steering),
-+				 GVE_DEV_OPT_REQ_FEAT_MASK_FLOW_STEERING,
-+				 option_length, req_feat_mask);
-+			break;
-+		}
-+
-+		if (option_length > sizeof(**dev_op_flow_steering))
-+			dev_warn(&priv->pdev->dev,
-+				 GVE_DEVICE_OPTION_TOO_BIG_FMT,
-+				 "Flow Steering");
-+		*dev_op_flow_steering = (void *)(option + 1);
-+		break;
- 	default:
- 		/* If we don't recognize the option just continue
- 		 * without doing anything.
-@@ -208,6 +226,7 @@ gve_process_device_options(struct gve_priv *priv,
- 			   struct gve_device_option_jumbo_frames **dev_op_jumbo_frames,
- 			   struct gve_device_option_dqo_qpl **dev_op_dqo_qpl,
- 			   struct gve_device_option_buffer_sizes **dev_op_buffer_sizes,
-+			   struct gve_device_option_flow_steering **dev_op_flow_steering,
- 			   struct gve_device_option_modify_ring **dev_op_modify_ring)
- {
- 	const int num_options = be16_to_cpu(descriptor->num_device_options);
-@@ -230,7 +249,7 @@ gve_process_device_options(struct gve_priv *priv,
- 					dev_op_gqi_rda, dev_op_gqi_qpl,
- 					dev_op_dqo_rda, dev_op_jumbo_frames,
- 					dev_op_dqo_qpl, dev_op_buffer_sizes,
--					dev_op_modify_ring);
-+					dev_op_flow_steering, dev_op_modify_ring);
- 		dev_opt = next_opt;
- 	}
- 
-@@ -838,6 +857,8 @@ static void gve_enable_supported_features(struct gve_priv *priv,
- 					  *dev_op_dqo_qpl,
- 					  const struct gve_device_option_buffer_sizes
- 					  *dev_op_buffer_sizes,
-+					  const struct gve_device_option_flow_steering
-+					  *dev_op_flow_steering,
- 					  const struct gve_device_option_modify_ring
- 					  *dev_op_modify_ring)
- {
-@@ -890,10 +911,22 @@ static void gve_enable_supported_features(struct gve_priv *priv,
- 			priv->min_tx_desc_cnt = be16_to_cpu(dev_op_modify_ring->min_tx_ring_size);
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index ff460c9802eb2..31bae620aeffc 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -2964,6 +2964,7 @@ static int dm_resume(void *handle)
+ 			dc_stream_release(dm_new_crtc_state->stream);
+ 			dm_new_crtc_state->stream = NULL;
  		}
++		dm_new_crtc_state->base.color_mgmt_changed = true;
  	}
-+
-+	if (dev_op_flow_steering &&
-+	    (supported_features_mask & GVE_SUP_FLOW_STEERING_MASK)) {
-+		if (dev_op_flow_steering->max_flow_rules) {
-+			priv->max_flow_rules =
-+				be32_to_cpu(dev_op_flow_steering->max_flow_rules);
-+			dev_info(&priv->pdev->dev,
-+				 "FLOW STEERING device option enabled with max rule limit of %u.\n",
-+				 priv->max_flow_rules);
-+		}
-+	}
- }
  
- int gve_adminq_describe_device(struct gve_priv *priv)
- {
-+	struct gve_device_option_flow_steering *dev_op_flow_steering = NULL;
- 	struct gve_device_option_buffer_sizes *dev_op_buffer_sizes = NULL;
- 	struct gve_device_option_jumbo_frames *dev_op_jumbo_frames = NULL;
- 	struct gve_device_option_modify_ring *dev_op_modify_ring = NULL;
-@@ -930,6 +963,7 @@ int gve_adminq_describe_device(struct gve_priv *priv)
- 					 &dev_op_gqi_qpl, &dev_op_dqo_rda,
- 					 &dev_op_jumbo_frames, &dev_op_dqo_qpl,
- 					 &dev_op_buffer_sizes,
-+					 &dev_op_flow_steering,
- 					 &dev_op_modify_ring);
- 	if (err)
- 		goto free_device_descriptor;
-@@ -969,9 +1003,8 @@ int gve_adminq_describe_device(struct gve_priv *priv)
- 	/* set default descriptor counts */
- 	gve_set_default_desc_cnt(priv, descriptor);
- 
--	/* DQO supports LRO. */
- 	if (!gve_is_gqi(priv))
--		priv->dev->hw_features |= NETIF_F_LRO;
-+		priv->dev->hw_features |= NETIF_F_LRO | NETIF_F_NTUPLE;
- 
- 	priv->max_registered_pages =
- 				be64_to_cpu(descriptor->max_registered_pages);
-@@ -991,7 +1024,8 @@ int gve_adminq_describe_device(struct gve_priv *priv)
- 
- 	gve_enable_supported_features(priv, supported_features_mask,
- 				      dev_op_jumbo_frames, dev_op_dqo_qpl,
--				      dev_op_buffer_sizes, dev_op_modify_ring);
-+				      dev_op_buffer_sizes, dev_op_flow_steering,
-+				      dev_op_modify_ring);
- 
- free_device_descriptor:
- 	dma_pool_free(priv->adminq_pool, descriptor, descriptor_bus);
-diff --git a/drivers/net/ethernet/google/gve/gve_adminq.h b/drivers/net/ethernet/google/gve/gve_adminq.h
-index e0370ace8397..e64a0e72e781 100644
---- a/drivers/net/ethernet/google/gve/gve_adminq.h
-+++ b/drivers/net/ethernet/google/gve/gve_adminq.h
-@@ -146,6 +146,14 @@ struct gve_device_option_modify_ring {
- 
- static_assert(sizeof(struct gve_device_option_modify_ring) == 12);
- 
-+struct gve_device_option_flow_steering {
-+	__be32 supported_features_mask;
-+	__be32 reserved;
-+	__be32 max_flow_rules;
-+};
-+
-+static_assert(sizeof(struct gve_device_option_flow_steering) == 12);
-+
- /* Terminology:
-  *
-  * RDA - Raw DMA Addressing - Buffers associated with SKBs are directly DMA
-@@ -163,6 +171,7 @@ enum gve_dev_opt_id {
- 	GVE_DEV_OPT_ID_DQO_QPL			= 0x7,
- 	GVE_DEV_OPT_ID_JUMBO_FRAMES		= 0x8,
- 	GVE_DEV_OPT_ID_BUFFER_SIZES		= 0xa,
-+	GVE_DEV_OPT_ID_FLOW_STEERING		= 0xb,
- };
- 
- enum gve_dev_opt_req_feat_mask {
-@@ -174,12 +183,14 @@ enum gve_dev_opt_req_feat_mask {
- 	GVE_DEV_OPT_REQ_FEAT_MASK_DQO_QPL		= 0x0,
- 	GVE_DEV_OPT_REQ_FEAT_MASK_BUFFER_SIZES		= 0x0,
- 	GVE_DEV_OPT_REQ_FEAT_MASK_MODIFY_RING		= 0x0,
-+	GVE_DEV_OPT_REQ_FEAT_MASK_FLOW_STEERING		= 0x0,
- };
- 
- enum gve_sup_feature_mask {
- 	GVE_SUP_MODIFY_RING_MASK	= 1 << 0,
- 	GVE_SUP_JUMBO_FRAMES_MASK	= 1 << 2,
- 	GVE_SUP_BUFFER_SIZES_MASK	= 1 << 4,
-+	GVE_SUP_FLOW_STEERING_MASK	= 1 << 5,
- };
- 
- #define GVE_DEV_OPT_LEN_GQI_RAW_ADDRESSING 0x0
+ 	for_each_new_plane_in_state(dm->cached_state, plane, new_plane_state, i) {
 -- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+2.43.0
 
