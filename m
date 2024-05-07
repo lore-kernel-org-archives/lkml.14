@@ -1,48 +1,61 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F4F10E6
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 18:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99D0516C87C;
+	Tue,  7 May 2024 18:01:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715104850; cv=none; b=OaDpS4wQKdlodklS8NSp1Bzc4oY/CnnK8thc+jJ5GpRM1r/8pWQzEMuCmi34O1EQperl7D5aCLagrGOB3a8GbRU2fjaU7wPY4sk5NiVjJHe60qQUyhcUoXYysIq9NL8VUqnFy5RruTs1OLiCxcjx+1CAGHwWEovI1dKnqdvIXqo=
+	t=1715104874; cv=none; b=aoetPFY2Q7g8Osiyb7XXzY63wLvldGLdzvaI7pfy+gLkQJqvPE4gxdlmxdCkdPseV2NtYQq37fxwrY198zkDzixJu0tEviIM6cLXw9KynJwYH0q+cM4bM2hDWoGjNG/J+vKh67hpIk55rorojj2Rhq+gY/tWmOK5EfNRIXJjnfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715104850; c=relaxed/simple;
-	bh=xN1VWl6d7UWw/9znVR7KQPIH2t/Yorb7YaTWcrZ9B2U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QKhcPCd+4WfrxAhxgH5O8Vp9ARvWDqRsMoEG2esd8HNBD1VPvOCcQkgmThl2h5wsWopGFMK8AZguqvgRWqf7kfZ41oVz3ta7op7cKiSKy+FOEs43XTEF5t7GaYoRDsId4q/uTIl/qe+xqPTqMqx2IT1Sk7PuT3EBLYjb7B9Uxek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fF1pfyVR; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1715104874; c=relaxed/simple;
+	bh=DARcSI+XMSSPhvXGuNN7vW8nfhZozRoGIw846BVcHu0=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HSBLYli4K8sTSbWW/E0sYkC3jGbN/ey749bKjKu9J02KdMeCQ/UTarf+nFEFecQd2QFFrOacIcNiLveGHkcZUzMOYuqSf08erMqcdyHK9+eUvb0fS/zW2iNxHY1BDlMPqPxTKTr0PzJCzy4gom14lTN/i3zN6WKCQKi9+GlrmYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gbbnKb3K; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fF1pfyVR"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715104845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=3dZRrtiT6u2AQq8yaWtkXaA1FaAqAm5F7GJug5lWD1c=;
-	b=fF1pfyVRJsGtYEYWjlhft20hOLvQU81HyMeiblHpjRdS/UCf5xhyKb218MQmfB+XnCgCS7
-	jNvfMjSlFRYOz7Aqg5x/U5+JObktZdfdxFEFsVvQtRc4WGw4hrhwVObI7qaWdsyJQwol8e
-	Kqz+jsP+03xpnZjnVSr8f5EX5RiauRs=
-From: Sui Jingfeng <sui.jingfeng@linux.dev>
-To: Andrzej Hajda <andrzej.hajda@intel.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	dri-devel@lists.freedesktop.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gbbnKb3K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715104873; x=1746640873;
+  h=from:to:subject:date:message-id:in-reply-to:references:
+   mime-version:content-transfer-encoding;
+  bh=DARcSI+XMSSPhvXGuNN7vW8nfhZozRoGIw846BVcHu0=;
+  b=gbbnKb3Kwbq6o+9WAN+OfP1DJoU1iB4OMmhAR8uLr81Duo0Nadu4+4CW
+   L0I/jD6duEnZobZmOj94GnOsqJ9pDzkq6oOr8uMXosYADmuUG/7GaimoU
+   D35eYmTg/yp4Zo53osW3l9mj/4yfyFOqUsIQQ1GpEOw33rWu0aptlKnC1
+   muXhHFr0c3cekCWXhY6//kXRf0ehEXJJhyiamK4GXa7on4jPtObTYFNz0
+   7OniUfVncdnqe9zFL9Zrg5TMUeZOdHjjCSYdySGO1uz6Y6hrchdIPySQs
+   xvdGMO/U53BdOqJz8Q/iWZCZuY6BFv2y3Xc6/4us3f7NnGDTRiIqPxtKC
+   A==;
+X-CSE-ConnectionGUID: 6nhillbzSFGHS79vK4s46Q==
+X-CSE-MsgGUID: dCKphWeNTi+iaT4jU2lWVQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="22333258"
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="22333258"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 11:01:10 -0700
+X-CSE-ConnectionGUID: zFZLD8maTeqLw1vPEfzRSg==
+X-CSE-MsgGUID: 59jVtVi3SqS9YN7Tigy//Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="28491201"
+Received: from sayakray-mobl2.amr.corp.intel.com (HELO debox1-desk4.lan) ([10.212.130.28])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 11:01:10 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: linux-doc@vger.kernel.org,
+	david.e.box@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	hdegoede@redhat.com,
 	linux-kernel@vger.kernel.org,
-	Sui Jingfeng <sui.jingfeng@linux.dev>
-Subject: [PATCH] drm/drm-bridge.c: Drop conditionals around of_node pointers
-Date: Wed,  8 May 2024 02:00:00 +0800
-Message-Id: <20240507180001.1358816-1-sui.jingfeng@linux.dev>
+	platform-driver-x86@vger.kernel.org
+Subject: [PATCH V2 2/3] tools/arch/x86/intel_sdsi: Rework Makefile
+Date: Tue,  7 May 2024 11:01:05 -0700
+Message-Id: <20240507180106.5218-2-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240507180106.5218-1-david.e.box@linux.intel.com>
+References: <20240507180106.5218-1-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,39 +63,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-Having conditional around the of_node pointer of the drm_bridge structure
-is not necessary, since drm_bridge structure always has the of_node as its
-member.
+In preparation for more source files, rework the Makefile to handle
+prerequisites more generically, making it easier to isolate future changes.
+Also update PHONY targets.
 
-Let's drop the conditional to get a better looks, please also note that
-this is following the already accepted commitments. see commit d8dfccde2709
-("drm/bridge: Drop conditionals around of_node pointers") for reference.
-
-Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/gpu/drm/drm_bridge.c | 5 -----
- 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_bridge.c b/drivers/gpu/drm/drm_bridge.c
-index 30d66bee0ec6..a6dbe1751e88 100644
---- a/drivers/gpu/drm/drm_bridge.c
-+++ b/drivers/gpu/drm/drm_bridge.c
-@@ -352,13 +352,8 @@ int drm_bridge_attach(struct drm_encoder *encoder, struct drm_bridge *bridge,
- 	bridge->encoder = NULL;
- 	list_del(&bridge->chain_node);
+V2 - New Patch.
+
+ tools/arch/x86/intel_sdsi/Makefile | 24 ++++++++++++++----------
+ 1 file changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/tools/arch/x86/intel_sdsi/Makefile b/tools/arch/x86/intel_sdsi/Makefile
+index 5de2288cda79..47b6fd98372c 100644
+--- a/tools/arch/x86/intel_sdsi/Makefile
++++ b/tools/arch/x86/intel_sdsi/Makefile
+@@ -1,21 +1,25 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # Makefile for Intel Software Defined Silicon provisioning tool
+-
+-intel_sdsi: intel_sdsi.c
+-
+-CFLAGS = -Wextra
+-
++include ../../../scripts/Makefile.include
+ BINDIR ?= /usr/sbin
  
--#ifdef CONFIG_OF
- 	DRM_ERROR("failed to attach bridge %pOF to encoder %s: %d\n",
- 		  bridge->of_node, encoder->name, ret);
--#else
--	DRM_ERROR("failed to attach bridge to encoder %s: %d\n",
--		  encoder->name, ret);
--#endif
+-override CFLAGS += -O2 -Wall
++SRCS = intel_sdsi.c
  
- 	return ret;
- }
+-%: %.c
+-	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS)
++OBJS = $(SRCS:.c=.o)
++
++override CFLAGS += -O2 -Wall -Wextra
++
++intel_sdsi: $(OBJS)
++	$(CC) $(CFLAGS) $(OBJS) -o $@
++
++%.o: %.c
++	$(CC) $(CFLAGS) -c $< -o $@
+ 
+-.PHONY : clean
+ clean :
+-	@rm -f intel_sdsi
++	@rm -f intel_sdsi $(OBJS)
+ 
+ install : intel_sdsi
+ 	install -d  $(DESTDIR)$(BINDIR)
+ 	install -m 755 -p intel_sdsi $(DESTDIR)$(BINDIR)/intel_sdsi
++
++.PHONY : clean install
 -- 
 2.34.1
 
