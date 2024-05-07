@@ -1,170 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E342D8615A;
-	Tue,  7 May 2024 23:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2C8885C5E
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 23:00:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715122834; cv=none; b=uUA/9L9Ee0R7kT6hv5hZM3BiGxcGpGjDzqFKCu18BQnl1pmn2+rahe31CnYBSSLzeeSSg0ny22kd2sRXMSJV78oLF4mRdrDsJ6S1SgolTI35K2ezApkmDRpTzhsYy5H52xfYxU6JFfJ41w5vZCIgllcQlzdkaaaVtJp7DJ3Kf2I=
+	t=1715122834; cv=none; b=QWyMunsqdpS3LiZ2RZ1vVbcKifoO1kTxQ6W6TSrL0BqTBZNRHRqAQ4OXIivWfMsLBwu1oivcrJ0aRlfk0SgezUH2lK7xz7r0Jv/jXgjMnX2o2DB3Fy/+6pm5QtdM2EjdF2E07VbYfE+QfJSg0wE4CYS3JsAcjwvaomDTYPDzDdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715122834; c=relaxed/simple;
-	bh=98HYj9zMKjJs+cuYRpU9Bwz/MbyiZQ0aL8seVXY3MRs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Rh8YqfTEP+QIW+ClCReqlcMZSOS8Ikzb4Z7C4tn+HjLd6QKWsl7dRp3zxifiPOwxdLYnBY+3D5/sQgFW7Ejge4OfOevryxAXKUW6TfP3Ftx0T4o/6OZO98ofU2Pg3/5bnQrdQZqWBvh/e0MwNdB+d35UDQwGgVAO9an0DV6n16E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qKoPkmRv; arc=none smtp.client-ip=10.30.226.201
+	bh=4GCwDhq0fPItr6iYwK0LdmqEMJVYlgfpwBJg6tQSq7c=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=oV/f4833pP5YXXhVaD+SEk26+ZfYNe0ndO2sNhvbKfOub/A3tnnmdARHUK5RraXTk0oCxmWUOZQsXSPqCXMumKyIwF2liLGfEIcbtliCnfsHz5IaeUGqbrbc/lH/BEWzbnGfgTYL3mHvzMRtXGQnApd9vseZ8ydGjvyAjHd/DA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ziweixiao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OxyJ8Fzq; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ziweixiao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qKoPkmRv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 664E1C2BBFC;
-	Tue,  7 May 2024 23:00:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715122833;
-	bh=98HYj9zMKjJs+cuYRpU9Bwz/MbyiZQ0aL8seVXY3MRs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qKoPkmRvpxYijXUMbfwJpZVYoT6hS99sYmkVL+ClaYd4nuC0nwhIhOyfoA5cx62Ji
-	 +Pwz2FUqFSJINpyUppBOiMOB4AueZpZh4ciprQyyXOZJQa4rG3AT0Fypif5RFEvhz0
-	 3V0UVGGjOZi8UU1m50Qs4OvLS/Q9yp7/9vqx/nFRLFf689Kmt6ZMSzR3hngoezzCWG
-	 2dunvAJ6U0UHT70a4zJ96tnhqdJXzaLhWt8WeSO6F1jHcDpTpp7e1JxTsIN0tfUqZ7
-	 NzrPF3T8dr8ft+PAjbcHbVahmNWlYXVv0yUfNk4V8j6BqPrGiBLuOIGnOQnjWFmUOV
-	 Xk8RpG+9God6w==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Johannes Berg <johannes.berg@intel.com>,
-	syzbot+fdc5123366fb9c3fdc6d@syzkaller.appspotmail.com,
-	Dmitry Antipov <dmantipov@yandex.ru>,
-	Sasha Levin <sashal@kernel.org>,
-	johannes@sipsolutions.net,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-wireless@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 01/12] wifi: mac80211: don't use rate mask for scanning
-Date: Tue,  7 May 2024 19:00:03 -0400
-Message-ID: <20240507230031.391436-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OxyJ8Fzq"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61beaa137acso66163877b3.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 16:00:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715122832; x=1715727632; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ErWdw272D2abXD7knyfrLRMhZXYPy233zUsfO32sbtE=;
+        b=OxyJ8FzqKY5riQ9pEU7EsEVZjoOcO7KEhP/cRbmegkxxGqxA32vUhMc7XDtyCprOu4
+         mZB4hRYYUjXKI74ZYJEoCVZtqrz3CH/35MSux2JJJgFHEzHxmBUzluxrRAD8Yah0PA+m
+         itoq/0s7RmxhJK4xPUHzCqIlzcF0ZJ6TIOZEJyOxKY7WsaLE9uQyPB7d5u3IPjwdG7p6
+         Pbx45qx2KlkkXUqi88iXDag3UHDy0d67ce/ckVpL9z1BLEx2bLkvLbUs4GQ97wy5snw8
+         jZ2YGhL8VfhkmBUggcRUg94KI4MUR0bgaljgkY2IieFiQuHg62lgADwVOzuuv7oupsjw
+         KlQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715122832; x=1715727632;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ErWdw272D2abXD7knyfrLRMhZXYPy233zUsfO32sbtE=;
+        b=OPa8cH5RYTVHLeKwH05q7e//F/KRCefp+YPOYbP2FwxANT56dQVlvcfncB1XqDbxZE
+         fHfmqlFzdjnD3hIY8EdAx0ofCbt+GFHantMOcAYYLEAJ4eGDjAA49esjyorzBidO72yp
+         a18FrDRhuW+e8bh9kdDE6oxYhFQIafQ2bOeZgdEuWzYZzb2LxpRP7BRyoDU3tlQ7JLaF
+         5mbhBSjWb33SERjDPL2GtsYGhZmU4gw5FJKuxwbh5DZCYufu9gyP33QY8sVhYINwp7Ca
+         Qnjka8TwgP43lXN2SNvS4i1Iy8jFuDxXsAVPqMhORg0t/yzEt5C2U6WQf2kSA6rd9dc+
+         zIdA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1H3GR/i+5mi0mUWSXhmptpWriy7GiyQAW0V9/O2RoTin4qAAp8ROd3/wVqujAMphrOeGLW2mcAvu8dL7MQjT2UTi9/jyyYBAhk+99
+X-Gm-Message-State: AOJu0Yw4HWDMidoR9i0joPlcN/N/0s9DdSYFNMk7GCJXERLZ2b+SeXqY
+	2+2Fnmx34yy+3EY734iqkjzmcR3Ia3+RItRnacCM2xk1HDU5xLrLJurPdgCfgYhWHH1F2lNY7Rg
+	POjUbT2yzh15JAw==
+X-Google-Smtp-Source: AGHT+IEggfQhoLsdVcLfNYlFhswJseZ60oKy2nS2WXx4mrxJPjXzGjrzNT06tYAu70qlMFjDc+7qBXDMHdN3Af4=
+X-Received: from ziwei-gti.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:9b0])
+ (user=ziweixiao job=sendgmr) by 2002:a0d:cb09:0:b0:61b:982:4da0 with SMTP id
+ 00721157ae682-6208582b694mr2513617b3.0.1715122831995; Tue, 07 May 2024
+ 16:00:31 -0700 (PDT)
+Date: Tue,  7 May 2024 22:59:42 +0000
+In-Reply-To: <20240507225945.1408516-1-ziweixiao@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.90
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20240507225945.1408516-1-ziweixiao@google.com>
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Message-ID: <20240507225945.1408516-3-ziweixiao@google.com>
+Subject: [PATCH net-next 2/5] gve: Add adminq extended command
+From: Ziwei Xiao <ziweixiao@google.com>
+To: netdev@vger.kernel.org
+Cc: jeroendb@google.com, pkaligineedi@google.com, shailend@google.com, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	willemb@google.com, hramamurthy@google.com, rushilg@google.com, 
+	ziweixiao@google.com, jfraker@google.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Jeroen de Borst <jeroendb@google.com>
 
-[ Upstream commit ab9177d83c040eba58387914077ebca56f14fae6 ]
+The adminq command is limited to 64 bytes per entry and it's 56 bytes
+for the command itself at maximum. To support larger commands, we need
+to dma_alloc a separate memory to put the command in that memory and
+send the dma memory address instead of the actual command.
 
-The rate mask is intended for use during operation, and
-can be set to only have masks for the currently active
-band. As such, it cannot be used for scanning which can
-be on other bands as well.
+This change introduces an extended adminq command to wrap the real
+command with the inner opcode and the allocated dma memory address
+specified. Once the device receives it, it can get the real command from
+the given dma memory address. As designed with the device, all the
+extended commands will use inner opcode larger than 0xFF.
 
-Simply ignore the rate masks during scanning to avoid
-warnings from incorrect settings.
-
-Reported-by: syzbot+fdc5123366fb9c3fdc6d@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=fdc5123366fb9c3fdc6d
-Co-developed-by: Dmitry Antipov <dmantipov@yandex.ru>
-Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
-Tested-by: Dmitry Antipov <dmantipov@yandex.ru>
-Link: https://msgid.link/20240326220854.9594cbb418ca.I7f86c0ba1f98cf7e27c2bacf6c2d417200ecea5c@changeid
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jeroen de Borst <jeroendb@google.com>
+Co-developed-by: Ziwei Xiao <ziweixiao@google.com>
+Signed-off-by: Ziwei Xiao <ziweixiao@google.com>
+Reviewed-by: Praveen Kaligineedi <pkaligineedi@google.com>
+Reviewed-by: Harshitha Ramamurthy <hramamurthy@google.com>
+Reviewed-by: Willem de Bruijn <willemb@google.com>
 ---
- include/net/mac80211.h |  3 +++
- net/mac80211/rate.c    |  6 +++++-
- net/mac80211/scan.c    |  1 +
- net/mac80211/tx.c      | 13 +++++++++----
- 4 files changed, 18 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/google/gve/gve_adminq.c | 31 ++++++++++++++++++++
+ drivers/net/ethernet/google/gve/gve_adminq.h | 12 ++++++++
+ 2 files changed, 43 insertions(+)
 
-diff --git a/include/net/mac80211.h b/include/net/mac80211.h
-index 43173204d6d5e..87a4f334c22a8 100644
---- a/include/net/mac80211.h
-+++ b/include/net/mac80211.h
-@@ -885,6 +885,8 @@ enum mac80211_tx_info_flags {
-  *	of their QoS TID or other priority field values.
-  * @IEEE80211_TX_CTRL_MCAST_MLO_FIRST_TX: first MLO TX, used mostly internally
-  *	for sequence number assignment
-+ * @IEEE80211_TX_CTRL_SCAN_TX: Indicates that this frame is transmitted
-+ *	due to scanning, not in normal operation on the interface.
-  * @IEEE80211_TX_CTRL_MLO_LINK: If not @IEEE80211_LINK_UNSPECIFIED, this
-  *	frame should be transmitted on the specific link. This really is
-  *	only relevant for frames that do not have data present, and is
-@@ -905,6 +907,7 @@ enum mac80211_tx_control_flags {
- 	IEEE80211_TX_CTRL_NO_SEQNO		= BIT(7),
- 	IEEE80211_TX_CTRL_DONT_REORDER		= BIT(8),
- 	IEEE80211_TX_CTRL_MCAST_MLO_FIRST_TX	= BIT(9),
-+	IEEE80211_TX_CTRL_SCAN_TX		= BIT(10),
- 	IEEE80211_TX_CTRL_MLO_LINK		= 0xf0000000,
+diff --git a/drivers/net/ethernet/google/gve/gve_adminq.c b/drivers/net/ethernet/google/gve/gve_adminq.c
+index 2c3ec5c3b114..514641b3ccc7 100644
+--- a/drivers/net/ethernet/google/gve/gve_adminq.c
++++ b/drivers/net/ethernet/google/gve/gve_adminq.c
+@@ -461,6 +461,8 @@ static int gve_adminq_issue_cmd(struct gve_priv *priv,
+ 
+ 	memcpy(cmd, cmd_orig, sizeof(*cmd_orig));
+ 	opcode = be32_to_cpu(READ_ONCE(cmd->opcode));
++	if (opcode == GVE_ADMINQ_EXTENDED_COMMAND)
++		opcode = be32_to_cpu(cmd->extended_command.inner_opcode);
+ 
+ 	switch (opcode) {
+ 	case GVE_ADMINQ_DESCRIBE_DEVICE:
+@@ -537,6 +539,35 @@ static int gve_adminq_execute_cmd(struct gve_priv *priv,
+ 	return err;
+ }
+ 
++static int gve_adminq_execute_extended_cmd(struct gve_priv *priv, u32 opcode,
++					   size_t cmd_size, void *cmd_orig)
++{
++	union gve_adminq_command cmd;
++	dma_addr_t inner_cmd_bus;
++	void *inner_cmd;
++	int err;
++
++	inner_cmd = dma_alloc_coherent(&priv->pdev->dev, cmd_size,
++				       &inner_cmd_bus, GFP_KERNEL);
++	if (!inner_cmd)
++		return -ENOMEM;
++
++	memcpy(inner_cmd, cmd_orig, cmd_size);
++
++	memset(&cmd, 0, sizeof(cmd));
++	cmd.opcode = cpu_to_be32(GVE_ADMINQ_EXTENDED_COMMAND);
++	cmd.extended_command = (struct gve_adminq_extended_command) {
++		.inner_opcode = cpu_to_be32(opcode),
++		.inner_length = cpu_to_be32(cmd_size),
++		.inner_command_addr = cpu_to_be64(inner_cmd_bus),
++	};
++
++	err = gve_adminq_execute_cmd(priv, &cmd);
++
++	dma_free_coherent(&priv->pdev->dev, cmd_size, inner_cmd, inner_cmd_bus);
++	return err;
++}
++
+ /* The device specifies that the management vector can either be the first irq
+  * or the last irq. ntfy_blk_msix_base_idx indicates the first irq assigned to
+  * the ntfy blks. It if is 0 then the management vector is last, if it is 1 then
+diff --git a/drivers/net/ethernet/google/gve/gve_adminq.h b/drivers/net/ethernet/google/gve/gve_adminq.h
+index e64f0dbe744d..e0370ace8397 100644
+--- a/drivers/net/ethernet/google/gve/gve_adminq.h
++++ b/drivers/net/ethernet/google/gve/gve_adminq.h
+@@ -25,6 +25,9 @@ enum gve_adminq_opcodes {
+ 	GVE_ADMINQ_REPORT_LINK_SPEED		= 0xD,
+ 	GVE_ADMINQ_GET_PTYPE_MAP		= 0xE,
+ 	GVE_ADMINQ_VERIFY_DRIVER_COMPATIBILITY	= 0xF,
++
++	/* For commands that are larger than 56 bytes */
++	GVE_ADMINQ_EXTENDED_COMMAND		= 0xFF,
  };
  
-diff --git a/net/mac80211/rate.c b/net/mac80211/rate.c
-index 9d33fd2377c88..a2bc9c5d92b8b 100644
---- a/net/mac80211/rate.c
-+++ b/net/mac80211/rate.c
-@@ -877,6 +877,7 @@ void ieee80211_get_tx_rates(struct ieee80211_vif *vif,
- 	struct ieee80211_sub_if_data *sdata;
- 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
- 	struct ieee80211_supported_band *sband;
-+	u32 mask = ~0;
+ /* Admin queue status codes */
+@@ -208,6 +211,14 @@ enum gve_driver_capbility {
+ #define GVE_DRIVER_CAPABILITY_FLAGS3 0x0
+ #define GVE_DRIVER_CAPABILITY_FLAGS4 0x0
  
- 	rate_control_fill_sta_table(sta, info, dest, max_rates);
- 
-@@ -889,9 +890,12 @@ void ieee80211_get_tx_rates(struct ieee80211_vif *vif,
- 	if (ieee80211_is_tx_data(skb))
- 		rate_control_apply_mask(sdata, sta, sband, dest, max_rates);
- 
-+	if (!(info->control.flags & IEEE80211_TX_CTRL_SCAN_TX))
-+		mask = sdata->rc_rateidx_mask[info->band];
++struct gve_adminq_extended_command {
++	__be32 inner_opcode;
++	__be32 inner_length;
++	__be64 inner_command_addr;
++};
 +
- 	if (dest[0].idx < 0)
- 		__rate_control_send_low(&sdata->local->hw, sband, sta, info,
--					sdata->rc_rateidx_mask[info->band]);
-+					mask);
- 
- 	if (sta)
- 		rate_fixup_ratelist(vif, sband, info, dest, max_rates);
-diff --git a/net/mac80211/scan.c b/net/mac80211/scan.c
-index c37e2576f1c13..933d02d7c1284 100644
---- a/net/mac80211/scan.c
-+++ b/net/mac80211/scan.c
-@@ -647,6 +647,7 @@ static void ieee80211_send_scan_probe_req(struct ieee80211_sub_if_data *sdata,
- 				cpu_to_le16(IEEE80211_SN_TO_SEQ(sn));
- 		}
- 		IEEE80211_SKB_CB(skb)->flags |= tx_flags;
-+		IEEE80211_SKB_CB(skb)->control.flags |= IEEE80211_TX_CTRL_SCAN_TX;
- 		ieee80211_tx_skb_tid_band(sdata, skb, 7, channel->band);
- 	}
- }
-diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
-index 3d62e8b718740..419baf8efddea 100644
---- a/net/mac80211/tx.c
-+++ b/net/mac80211/tx.c
-@@ -720,11 +720,16 @@ ieee80211_tx_h_rate_ctrl(struct ieee80211_tx_data *tx)
- 	txrc.bss_conf = &tx->sdata->vif.bss_conf;
- 	txrc.skb = tx->skb;
- 	txrc.reported_rate.idx = -1;
--	txrc.rate_idx_mask = tx->sdata->rc_rateidx_mask[info->band];
- 
--	if (tx->sdata->rc_has_mcs_mask[info->band])
--		txrc.rate_idx_mcs_mask =
--			tx->sdata->rc_rateidx_mcs_mask[info->band];
-+	if (unlikely(info->control.flags & IEEE80211_TX_CTRL_SCAN_TX)) {
-+		txrc.rate_idx_mask = ~0;
-+	} else {
-+		txrc.rate_idx_mask = tx->sdata->rc_rateidx_mask[info->band];
++static_assert(sizeof(struct gve_adminq_extended_command) == 16);
 +
-+		if (tx->sdata->rc_has_mcs_mask[info->band])
-+			txrc.rate_idx_mcs_mask =
-+				tx->sdata->rc_rateidx_mcs_mask[info->band];
-+	}
- 
- 	txrc.bss = (tx->sdata->vif.type == NL80211_IFTYPE_AP ||
- 		    tx->sdata->vif.type == NL80211_IFTYPE_MESH_POINT ||
+ struct gve_driver_info {
+ 	u8 os_type;	/* 0x01 = Linux */
+ 	u8 driver_major;
+@@ -432,6 +443,7 @@ union gve_adminq_command {
+ 			struct gve_adminq_get_ptype_map get_ptype_map;
+ 			struct gve_adminq_verify_driver_compatibility
+ 						verify_driver_compatibility;
++			struct gve_adminq_extended_command extended_command;
+ 		};
+ 	};
+ 	u8 reserved[64];
 -- 
-2.43.0
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
