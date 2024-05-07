@@ -1,136 +1,204 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D533315664F;
-	Tue,  7 May 2024 10:44:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E49C14F9EA;
+	Tue,  7 May 2024 10:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715078691; cv=none; b=nGIENnQ6Uy1eTUlAqLXxSE4QmklKWG9ZGWqJhB2fiQWqIpUENqTCjvIQRC+15adLBkJwnTjroupnIKO68xnPvrk7ScVYf4Rcs3bx7P1MmPVCdbRh0baFE7lIgGng9mukyE2sGMMFPBcEVYHEezrCAJjFuv1OyJUGeLIIcSsbnYY=
+	t=1715078698; cv=none; b=dcPdcoKLHkT6c5+6w9BqQv/L9yJz1I35H/pUhgF/nflZg29Q/wcve17GgE7Bt8xmCZwTV6yvDPHbw9VnHAZmrJR1KKzvWBBEUVfq3xXzf4tGW0ygMkzVVi7XgQUS0uYfS9EzYrnu1sRzG7fhI4cLTyB9NAPEAxSMMilw3GP5SLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715078691; c=relaxed/simple;
-	bh=zY/EjcYVP/zTXYlcoTUN4av1Sp3C6so43ZjWoY3jWsE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CZBH4kNltkkBePGaArgHAqWsfVMmaXFzY1IPf9YBlrz34yLr6ZB6Kio9JJOTe1U47iyYO5prpF2heebYAGSwZJaJVBWMY+278h6xRbd0Yrr4av6Cm03CBRVQW119Jeu41I4ZeKSV0Fz5HN6hxZ3VztsJMA4zle0Nw71easbpi9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=D2sAopUp; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="D2sAopUp"
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id AAD3760178;
-	Tue,  7 May 2024 10:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1715078675;
-	bh=zY/EjcYVP/zTXYlcoTUN4av1Sp3C6so43ZjWoY3jWsE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=D2sAopUpIaXtBeS63XlHyU7Ir1cOr0aBMmZ0Sivg+1KMVpIUP3x49BLUfFFUVvp8r
-	 Luzlps9rDdc4Z6t+1ExWK8dH44VMyyjHNEDRyLCGfZEHRxpOYvq151PpPC+Ie2hAkk
-	 Hpxndb5ZfvsOcErdviKKxX6vhWUesKwliFZHmrZfUaT9jQ9a7A6g/cVDw3RegNUpZb
-	 ENZELJUT6zuRnZCFCfl6zSVA5VZ2cLVNtF0CRxJnJvOCl6j0jz8PKhGCDwieh+boEi
-	 uXceSgaf/kwl9k/CGHTTAaVdMcV41cg+8KwxUfaQlYcy6/YWv6Gzdaw9bJf6HE6UFm
-	 sbfouEJJqLHRg==
-Received: by x201s (Postfix, from userid 1000)
-	id 774C020372E; Tue, 07 May 2024 10:44:23 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: netdev@vger.kernel.org
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	linux-kernel@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Manish Chopra <manishc@marvell.com>
-Subject: [PATCH net-next 05/14] net: qede: use extack in qede_flow_parse_v4_common()
-Date: Tue,  7 May 2024 10:44:06 +0000
-Message-ID: <20240507104421.1628139-6-ast@fiberby.net>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240507104421.1628139-1-ast@fiberby.net>
-References: <20240507104421.1628139-1-ast@fiberby.net>
+	s=arc-20240116; t=1715078698; c=relaxed/simple;
+	bh=zN9YI3Ms1m+wOhz90UWcvVrsHIm3ci6x0/cMI4eFQzw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NV2V6fLgCggE89WKelU9Fp4zG0x5fcJuiV+sQi/kNXtqWKx5AIRvSAkI2jQbq9Fd/rpEExY45J+FPpXPH4L3bfvOvBb7lpKufkzQbLl7SzBPzE4Ht1qTjcR5tqLzURSwS5KZSfQmQvmACJ5Dno9KAKEqYGZj1t0931nPE0QdWp0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a59a9d66a51so658494466b.2;
+        Tue, 07 May 2024 03:44:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715078695; x=1715683495;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uFLVyObYwZS1gZ7qbdqFPVtvRdltbw/jeqQRl9Dx2qY=;
+        b=OWsSGy6xdvvvgpjeOp7beUCDq5+bywTWFvtH6Bj2/nE2FV7Xz7MEU2dzYpAyorT4j8
+         /21Tt4TuSHQq3ydQ9KgUA3SA3GqG96F4sGygCI2UVnSfromgnUJw0kRjgWmLwFtMqH1e
+         l5jlcnAU7PNZFIgbOdBdedWmqQc2hroJfzPab7QhcAnMgDyEI2NLWPtv+fB8HNj8gjr/
+         7b6ViyEo4FWAvgN6Iutmv4+YMdbCbA8OU+Urvdv+x04yrDs/E1xOYuy4wmN3jZub0Xgr
+         QpssbfnGtaFW27tkKVUQVvzm7GsH6N3xgPJmvLl5wSYrlqN2dWZRBVt/oyfSbYO1zhc7
+         xJaA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/SF85fwVCHmTlPwgoxyFnjHHknZ6dZUOS7rjGIli4wPzTeJzNb83PmviOmzylsTJLwHrbAnrwxYvl4/rJM+JvtzQR2eb6g8RNFwRV/gDW6HqHIvN9ZhHSMmTvZzNRNvBjYp9+pI4=
+X-Gm-Message-State: AOJu0YzDRXkWXE9tLh1UcjovtHflKsEna/Vq7G5Hdyl7gnNIT09RhmcL
+	/k5A2PSNBWfTcDj2KffIGE4Sqw/BYRLFXlfyHSS9ftRVxOqDB6k0
+X-Google-Smtp-Source: AGHT+IEgOlItaygfRGKmFqtrO1k0j+VPxNvNH039tMrrtzq2Q7B6PNbgov4CV5STMXV1l6ARN6uh/A==
+X-Received: by 2002:a17:906:81d8:b0:a59:cd46:fe89 with SMTP id e24-20020a17090681d800b00a59cd46fe89mr3517514ejx.59.1715078694526;
+        Tue, 07 May 2024 03:44:54 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-116.fbsv.net. [2a03:2880:30ff:74::face:b00c])
+        by smtp.gmail.com with ESMTPSA id p14-20020a170906604e00b00a58a3238522sm6249014ejj.207.2024.05.07.03.44.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 03:44:54 -0700 (PDT)
+Date: Tue, 7 May 2024 03:44:52 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Pavel Begunkov <asml.silence@gmail.com>, leit@meta.com,
+	"open list:IO_URING" <io-uring@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] io_uring/io-wq: Use set_bit() and test_bit() at
+ worker->flags
+Message-ID: <ZjoGJH1CEk+f+U7n@gmail.com>
+References: <20240503173711.2211911-1-leitao@debian.org>
+ <d05aa530-f0f5-4ec2-91ae-b193ae644395@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d05aa530-f0f5-4ec2-91ae-b193ae644395@kernel.dk>
 
-Convert qede_flow_parse_v4_common() to take extack,
-and drop the edev argument.
+On Fri, May 03, 2024 at 12:32:38PM -0600, Jens Axboe wrote:
+> On 5/3/24 11:37 AM, Breno Leitao wrote:
+> > Utilize set_bit() and test_bit() on worker->flags within io_uring/io-wq
+> > to address potential data races.
+> > 
+> > The structure io_worker->flags may be accessed through parallel data
+> > paths, leading to concurrency issues. When KCSAN is enabled, it reveals
+> > data races occurring in io_worker_handle_work and
+> > io_wq_activate_free_worker functions.
+> > 
+> > 	 BUG: KCSAN: data-race in io_worker_handle_work / io_wq_activate_free_worker
+> > 	 write to 0xffff8885c4246404 of 4 bytes by task 49071 on cpu 28:
+> > 	 io_worker_handle_work (io_uring/io-wq.c:434 io_uring/io-wq.c:569)
+> > 	 io_wq_worker (io_uring/io-wq.c:?)
+> > <snip>
+> > 
+> > 	 read to 0xffff8885c4246404 of 4 bytes by task 49024 on cpu 5:
+> > 	 io_wq_activate_free_worker (io_uring/io-wq.c:? io_uring/io-wq.c:285)
+> > 	 io_wq_enqueue (io_uring/io-wq.c:947)
+> > 	 io_queue_iowq (io_uring/io_uring.c:524)
+> > 	 io_req_task_submit (io_uring/io_uring.c:1511)
+> > 	 io_handle_tw_list (io_uring/io_uring.c:1198)
+> > 
+> > Line numbers against commit 18daea77cca6 ("Merge tag 'for-linus' of
+> > git://git.kernel.org/pub/scm/virt/kvm/kvm").
+> > 
+> > These races involve writes and reads to the same memory location by
+> > different tasks running on different CPUs. To mitigate this, refactor
+> > the code to use atomic operations such as set_bit(), test_bit(), and
+> > clear_bit() instead of basic "and" and "or" operations. This ensures
+> > thread-safe manipulation of worker flags.
+> 
+> Looks good, a few comments for v2:
+> 
+> > diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
+> > index 522196dfb0ff..6712d70d1f18 100644
+> > --- a/io_uring/io-wq.c
+> > +++ b/io_uring/io-wq.c
+> > @@ -44,7 +44,7 @@ enum {
+> >   */
+> >  struct io_worker {
+> >  	refcount_t ref;
+> > -	unsigned flags;
+> > +	unsigned long flags;
+> >  	struct hlist_nulls_node nulls_node;
+> >  	struct list_head all_list;
+> >  	struct task_struct *task;
+> 
+> This now creates a hole in the struct, maybe move 'lock' up after ref so
+> that it gets filled and the current hole after 'lock' gets removed as
+> well?
 
-Convert DP_NOTICE call to use NL_SET_ERR_MSG_MOD instead.
+I am not sure I can see it. From my tests, we got the same hole, and the
+struct size is the same. This is what I got with the change:
 
-Pass extack in calls to qede_flow_parse_ports() and
-qede_set_v4_tuple_to_profile().
 
-In calls to qede_flow_parse_v4_common(), use NULL as extack
-for now, until a subsequent patch makes extack available.
+	struct io_worker {
+		refcount_t                 ref;                  /*     0     4 */
 
-Only compile tested.
+		/* XXX 4 bytes hole, try to pack */
 
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
----
- drivers/net/ethernet/qlogic/qede/qede_filter.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+		raw_spinlock_t             lock;                 /*     8    64 */
+		/* --- cacheline 1 boundary (64 bytes) was 8 bytes ago --- */
+<snip>
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-index d151b64a0436..056384362037 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-@@ -1757,8 +1757,9 @@ qede_flow_parse_v6_common(struct netlink_ext_ack *extack,
- }
- 
- static int
--qede_flow_parse_v4_common(struct qede_dev *edev, struct flow_rule *rule,
--			struct qede_arfs_tuple *t)
-+qede_flow_parse_v4_common(struct netlink_ext_ack *extack,
-+			  struct flow_rule *rule,
-+			  struct qede_arfs_tuple *t)
- {
- 	int err;
- 
-@@ -1768,7 +1769,8 @@ qede_flow_parse_v4_common(struct qede_dev *edev, struct flow_rule *rule,
- 		flow_rule_match_ipv4_addrs(rule, &match);
- 		if ((match.key->src && match.mask->src != htonl(U32_MAX)) ||
- 		    (match.key->dst && match.mask->dst != htonl(U32_MAX))) {
--			DP_NOTICE(edev, "Do not support ipv4 prefix/masks\n");
-+			NL_SET_ERR_MSG_MOD(extack,
-+					   "Do not support ipv4 prefix/masks");
- 			return -EINVAL;
- 		}
- 
-@@ -1776,11 +1778,11 @@ qede_flow_parse_v4_common(struct qede_dev *edev, struct flow_rule *rule,
- 		t->dst_ipv4 = match.key->dst;
- 	}
- 
--	err = qede_flow_parse_ports(NULL, rule, t);
-+	err = qede_flow_parse_ports(extack, rule, t);
- 	if (err)
- 		return err;
- 
--	return qede_set_v4_tuple_to_profile(NULL, t);
-+	return qede_set_v4_tuple_to_profile(extack, t);
- }
- 
- static int
-@@ -1800,7 +1802,7 @@ qede_flow_parse_tcp_v4(struct qede_dev *edev, struct flow_rule *rule,
- 	tuple->ip_proto = IPPROTO_TCP;
- 	tuple->eth_proto = htons(ETH_P_IP);
- 
--	return qede_flow_parse_v4_common(edev, rule, tuple);
-+	return qede_flow_parse_v4_common(NULL, rule, tuple);
- }
- 
- static int
-@@ -1820,7 +1822,7 @@ qede_flow_parse_udp_v4(struct qede_dev *edev, struct flow_rule *rule,
- 	tuple->ip_proto = IPPROTO_UDP;
- 	tuple->eth_proto = htons(ETH_P_IP);
- 
--	return qede_flow_parse_v4_common(edev, rule, tuple);
-+	return qede_flow_parse_v4_common(NULL, rule, tuple);
- }
- 
- static int
--- 
-2.43.0
+		/* size: 336, cachelines: 6, members: 14 */
+		/* sum members: 328, holes: 2, sum holes: 8 */
+		/* forced alignments: 2, forced holes: 1, sum forced holes: 4 */
+		/* last cacheline: 16 bytes */
+	} __attribute__((__aligned__(8)));
 
+
+This is what this current patch returns:
+
+	struct io_worker {
+		refcount_t                 ref;                  /*     0     4 */
+
+		/* XXX 4 bytes hole, try to pack */
+
+		long unsigned int          flags;                /*     8     8 */
+	<snip>
+
+		/* size: 336, cachelines: 6, members: 14 */
+		/* sum members: 328, holes: 2, sum holes: 8 */
+		/* forced alignments: 2, forced holes: 1, sum forced holes: 4 */
+		/* last cacheline: 16 bytes */
+	} __attribute__((__aligned__(8)));
+
+
+
+A possible suggestion is to move `create_index` after `ref. Then we can
+get a more packed structure:
+
+	struct io_worker {
+		refcount_t                 ref;                  /*     0     4 */
+		int                        create_index;         /*     4     4 */
+		long unsigned int          flags;                /*     8     8 */
+		struct hlist_nulls_node    nulls_node;           /*    16    16 */
+		struct list_head           all_list;             /*    32    16 */
+		struct task_struct *       task;                 /*    48     8 */
+		struct io_wq *             wq;                   /*    56     8 */
+		/* --- cacheline 1 boundary (64 bytes) --- */
+		struct io_wq_work *        cur_work;             /*    64     8 */
+		struct io_wq_work *        next_work;            /*    72     8 */
+		raw_spinlock_t             lock;                 /*    80    64 */
+		/* --- cacheline 2 boundary (128 bytes) was 16 bytes ago --- */
+		struct completion          ref_done;             /*   144    88 */
+		/* --- cacheline 3 boundary (192 bytes) was 40 bytes ago --- */
+		long unsigned int          create_state;         /*   232     8 */
+		struct callback_head       create_work __attribute__((__aligned__(8))); /*   240    16 */
+		/* --- cacheline 4 boundary (256 bytes) --- */
+		union {
+			struct callback_head rcu __attribute__((__aligned__(8))); /*   256    16 */
+			struct work_struct work;                 /*   256    72 */
+		} __attribute__((__aligned__(8)));               /*   256    72 */
+
+		/* size: 328, cachelines: 6, members: 14 */
+		/* forced alignments: 2 */
+		/* last cacheline: 8 bytes */
+	} __attribute__((__aligned__(8)));
+
+How does it sound?
+
+> And then I'd renumber the flags, they take bit offsets, not
+> masks/values. Otherwise it's a bit confusing for someone reading the
+> code, using masks with test/set bit functions.
+
+Good point. What about something like?
+
+	enum {
+		IO_WORKER_F_UP          = 0,    /* up and active */
+		IO_WORKER_F_RUNNING     = 1,    /* account as running */
+		IO_WORKER_F_FREE        = 2,    /* worker on free list */
+		IO_WORKER_F_BOUND       = 3,    /* is doing bounded work */
+	};
+
+
+Since we are now using WRITE_ONCE() in io_wq_worker, I am wondering if
+this is what we want to do?
+
+	WRITE_ONCE(worker->flags, (IO_WORKER_F_UP| IO_WORKER_F_RUNNING) << 1);
+
+Thanks
