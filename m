@@ -1,55 +1,55 @@
 Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FE216D9AB;
-	Tue,  7 May 2024 16:39:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D185416F837;
+	Tue,  7 May 2024 16:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715099995; cv=none; b=lBgHwbCqrtP7N5Rts6XHck75f+22WZoiufyL2DuOo6aZvKGX49trk6lv2K6nHYLe2n2KYsp1pe1zcbTu5Bmgxdub4lr5BaVgt+IOifdi7adchgapJjmugLeImJQ8PNtG48ee54lgpQYhJMa9QVfoJIJKarepZT2YhL7MKQ+hZm4=
+	t=1715100002; cv=none; b=PFO1GYCPLAz45eI7qHFfqQ9VfinNHpyV68nAXYGF/B1LOcsErTe819/YHpXAHObBJiAR0oU+OtMo68Z1ZW18JepndotEx3JZT2Q8EfDIXVbFPrZrJ/HtpSMLawGsh9Ksl3YLc7bU3GKaFRY53EidgZ7d1mtvetigdet/pVOqo6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715099995; c=relaxed/simple;
-	bh=kjTax2n+cpqC0HeWUQXb8LYHI9i77XZGHl0Ed2omGPQ=;
+	s=arc-20240116; t=1715100002; c=relaxed/simple;
+	bh=TXb8kag+LlTRXoTWuGQVeG7iAU3B1BMp31HROW0fkwY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NwxH1BYAIDcY2cw7sAwO/jJ6ydHyAm1OrgGeUkQN9Ql1F4KYafq8VPFA+znLoRitwsvzuBKvaviwy5GOUtnZnPp5/T/igFws0VB5Vew4vQqAMYX/d6sG5b3kkDI9sG6vbHhVwE8fjuq1q6qGmPWA9IikeZUMheJ9yE8FH19DqsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=V83fGFvV; arc=none smtp.client-ip=67.231.148.174
+	 MIME-Version:Content-Type; b=J7SZLuxzBAnYo7/9ICZ1BA4EOljdJtjL8n8oJY9auF5O9CoRArjGQTUgdqtfwh650OGmtL2ZkYNdaiu9L4BYDQwJjnJTAiYVBhPbRRSNCW7uLenXUXdBCRTXyf6018kSWtkC+7klXupYZ4gZUDILAVAdK3riW25EJY/vkBmxr08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=H6RQaD4F; arc=none smtp.client-ip=67.231.148.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="V83fGFvV"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="H6RQaD4F"
 Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447F3nJp005025;
-	Tue, 7 May 2024 09:39:48 -0700
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447EGrKm005033;
+	Tue, 7 May 2024 09:39:55 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=pfpt0220; bh=j4e8D8wM5Hn0RodU7ABO9
-	apdoqfwlhmTEGhP+iuhgnU=; b=V83fGFvV/k1N8SDOHUzUFlZ3aDkPcAlqksxEz
-	TVAbHsvFLZynG7DT2wvodz0tf4ZaImsz5Ig8EZ1ljL/4EgAgeCQ8PjTxxnhHDtTk
-	l3lOFPCfS216fvzT+a9yIm4MBTtnqii7jeH5FabjsFzG18ufQp2LIlZIPDtjzZG9
-	0YsNOXn3hkEV5btWRYWRxxyXlLbdIUanfvfQYViCoN49dH+pmCqBa8/O7Ss//lPi
-	myVXkcznn0SyMzAjkl+KKDxv8bsHXGwpuPMa8XcimQiZ9A/E2ckbAwuvRIeGwLB+
-	EJkdlfxLrmNb+wZDL1rxOyK6qGVXmZijjYho/5ToTEygvxsYQ==
+	:mime-version:content-type; s=pfpt0220; bh=NnnBEJVuAGk29+SHJBFCP
+	+SNZagUJr4BqTubvZm0nDI=; b=H6RQaD4FqWWlgeJWg0rZkII3vDGgNvtviDGGH
+	nhmfIk5K0g3t1hFwp4nIDQVA75l3lFa/x6fQ76tSefaf1kv9qfn11NJLLq1azlRM
+	zKUh3ODwpmvjAHMuSzsIYEIkDiKlp9R+vv3BLQ1mP3s+inlvpyzS0huJZA1IsG1m
+	2mJhU7BFGbg+jZmTbaVvNNQZMHpMSxQCR17iMPH9RmQ0+GQFQ08Bay2D+wGYZ+9R
+	e0YK/5fX1M2pjKqhCAq64+2n2abn3B9YLzETH4qIOdP5QqmQqxUyFmME+HepvPpV
+	82c5Z9fcM72DZibOg3kpY/tzZ1+0oKorP2z6PKp1FrBoP1ogg==
 Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3xygt2tq26-1
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3xygt2tq2k-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 07 May 2024 09:39:48 -0700 (PDT)
+	Tue, 07 May 2024 09:39:55 -0700 (PDT)
 Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
  DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Tue, 7 May 2024 09:39:47 -0700
+ 15.2.1544.4; Tue, 7 May 2024 09:39:54 -0700
 Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
  (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Tue, 7 May 2024 09:39:47 -0700
+ Transport; Tue, 7 May 2024 09:39:54 -0700
 Received: from hyd1soter3.marvell.com (unknown [10.29.37.12])
-	by maili.marvell.com (Postfix) with ESMTP id DD1E03F7041;
-	Tue,  7 May 2024 09:39:43 -0700 (PDT)
+	by maili.marvell.com (Postfix) with ESMTP id 05CF33F7041;
+	Tue,  7 May 2024 09:39:50 -0700 (PDT)
 From: Geetha sowjanya <gakula@marvell.com>
 To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: <kuba@kernel.org>, <davem@davemloft.net>, <pabeni@redhat.com>,
         <edumazet@google.com>, <sgoutham@marvell.com>, <gakula@marvell.com>,
         <sbhatta@marvell.com>, <hkelam@marvell.com>
-Subject: [net-next PATCH v4 06/10] octeontx2-pf: Get VF stats via representor
-Date: Tue, 7 May 2024 22:09:17 +0530
-Message-ID: <20240507163921.29683-7-gakula@marvell.com>
+Subject: [net-next PATCH v4 08/10] octeontx2-pf: Configure VF mtu via representor
+Date: Tue, 7 May 2024 22:09:19 +0530
+Message-ID: <20240507163921.29683-9-gakula@marvell.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240507163921.29683-1-gakula@marvell.com>
 References: <20240507163921.29683-1-gakula@marvell.com>
@@ -60,244 +60,74 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: 6ZHRwRQX94m152G0iIW6yzlO244J--rr
-X-Proofpoint-GUID: 6ZHRwRQX94m152G0iIW6yzlO244J--rr
+X-Proofpoint-ORIG-GUID: zbiNw2Pr0MiBFvVshEFEbuxFDWlBe7EA
+X-Proofpoint-GUID: zbiNw2Pr0MiBFvVshEFEbuxFDWlBe7EA
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-05-07_10,2024-05-06_02,2023-05-22_02
 
-This patch add support to export VF port statistics via representor
-netdev. Defines new mbox "NIX_LF_STATS" to fetch VF hw stats.
+Add support to manage the mtu configuration for VF through representor.
+On update of representor mtu a mbox notification is send
+to VF to update its mtu.
 
+Signed-off-by: Sai Krishna <saikrishnag@marvell.com>
 Signed-off-by: Geetha sowjanya <gakula@marvell.com>
 ---
- .../net/ethernet/marvell/octeontx2/af/mbox.h  | 32 ++++++++++
- .../ethernet/marvell/octeontx2/af/rvu_rep.c   | 43 +++++++++++++
- .../net/ethernet/marvell/octeontx2/nic/rep.c  | 64 +++++++++++++++++++
- .../net/ethernet/marvell/octeontx2/nic/rep.h  | 14 ++++
- 4 files changed, 153 insertions(+)
+ .../ethernet/marvell/octeontx2/nic/otx2_pf.c    |  5 +++++
+ .../net/ethernet/marvell/octeontx2/nic/rep.c    | 17 +++++++++++++++++
+ 2 files changed, 22 insertions(+)
 
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-index 3b36da28a8f4..b7f250d218d9 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/mbox.h
-@@ -320,6 +320,7 @@ M(NIX_MCAST_GRP_DESTROY, 0x802c, nix_mcast_grp_destroy, nix_mcast_grp_destroy_re
- M(NIX_MCAST_GRP_UPDATE, 0x802d, nix_mcast_grp_update,				\
- 				nix_mcast_grp_update_req,			\
- 				nix_mcast_grp_update_rsp)			\
-+M(NIX_LF_STATS, 0x802e, nix_lf_stats, nix_stats_req, nix_stats_rsp)	\
- /* MCS mbox IDs (range 0xA000 - 0xBFFF) */					\
- M(MCS_ALLOC_RESOURCES,	0xa000, mcs_alloc_resources, mcs_alloc_rsrc_req,	\
- 				mcs_alloc_rsrc_rsp)				\
-@@ -1365,6 +1366,37 @@ struct nix_bandprof_get_hwinfo_rsp {
- 	u32 policer_timeunit;
- };
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+index faf6e1716efe..301ecb2b6a24 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/otx2_pf.c
+@@ -854,6 +854,11 @@ static int otx2_mbox_up_handler_rep_event_up_notify(struct otx2_nic *pf,
+ {
+ 	struct net_device *netdev = pf->netdev;
  
-+struct nix_stats_req {
-+	struct mbox_msghdr hdr;
-+	u8 reset;
-+	u16 pcifunc;
-+	u64 rsvd;
-+};
-+
-+struct nix_stats_rsp {
-+	struct mbox_msghdr hdr;
-+	u16 pcifunc;
-+	struct {
-+		u64 octs;
-+		u64 ucast;
-+		u64 bcast;
-+		u64 mcast;
-+		u64 drop;
-+		u64 drop_octs;
-+		u64 drop_mcast;
-+		u64 drop_bcast;
-+		u64 err;
-+		u64 rsvd[5];
-+	} rx;
-+	struct {
-+		u64 ucast;
-+		u64 bcast;
-+		u64 mcast;
-+		u64 drop;
-+		u64 octs;
-+	} tx;
-+};
-+
- /* NPC mbox message structs */
- 
- #define NPC_MCAM_ENTRY_INVALID	0xFFFF
-diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
-index 9e32e214c0de..9e73568e7cee 100644
---- a/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu_rep.c
-@@ -13,6 +13,49 @@
- #include "rvu.h"
- #include "rvu_reg.h"
- 
-+#define RVU_LF_RX_STATS(reg) \
-+		rvu_read64(rvu, blkaddr, NIX_AF_LFX_RX_STATX(nixlf, reg))
-+
-+#define RVU_LF_TX_STATS(reg) \
-+		rvu_read64(rvu, blkaddr, NIX_AF_LFX_TX_STATX(nixlf, reg))
-+
-+int rvu_mbox_handler_nix_lf_stats(struct rvu *rvu,
-+				  struct nix_stats_req *req,
-+				  struct nix_stats_rsp *rsp)
-+{
-+	u16 pcifunc = req->pcifunc;
-+	int nixlf, blkaddr, err;
-+	struct msg_req rst_req;
-+	struct msg_rsp rst_rsp;
-+
-+	err = nix_get_nixlf(rvu, pcifunc, &nixlf, &blkaddr);
-+	if (err)
++	if (info->event == RVU_EVENT_MTU_CHANGE) {
++		netdev->mtu = info->evt_data.mtu;
 +		return 0;
-+
-+	if (req->reset) {
-+		rst_req.hdr.pcifunc = pcifunc;
-+		return rvu_mbox_handler_nix_stats_rst(rvu, &rst_req, &rst_rsp);
 +	}
-+	rsp->rx.octs = RVU_LF_RX_STATS(RX_OCTS);
-+	rsp->rx.ucast = RVU_LF_RX_STATS(RX_UCAST);
-+	rsp->rx.bcast = RVU_LF_RX_STATS(RX_BCAST);
-+	rsp->rx.mcast = RVU_LF_RX_STATS(RX_MCAST);
-+	rsp->rx.drop = RVU_LF_RX_STATS(RX_DROP);
-+	rsp->rx.err = RVU_LF_RX_STATS(RX_ERR);
-+	rsp->rx.drop_octs = RVU_LF_RX_STATS(RX_DROP_OCTS);
-+	rsp->rx.drop_mcast = RVU_LF_RX_STATS(RX_DRP_MCAST);
-+	rsp->rx.drop_bcast = RVU_LF_RX_STATS(RX_DRP_BCAST);
 +
-+	rsp->tx.octs = RVU_LF_TX_STATS(TX_OCTS);
-+	rsp->tx.ucast = RVU_LF_TX_STATS(TX_UCAST);
-+	rsp->tx.bcast = RVU_LF_TX_STATS(TX_BCAST);
-+	rsp->tx.mcast = RVU_LF_TX_STATS(TX_MCAST);
-+	rsp->tx.drop = RVU_LF_TX_STATS(TX_DROP);
+ 	if (info->event == RVU_EVENT_PORT_STATE) {
+ 		if (info->evt_data.port_state) {
+ 			pf->flags |= OTX2_FLAG_PORT_UP;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+index ad218375bd5f..f7e150099b2b 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
++++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
+@@ -79,6 +79,22 @@ int rvu_event_up_notify(struct otx2_nic *pf, struct rep_event *info)
+ 	return 0;
+ }
+ 
++static int rvu_rep_change_mtu(struct net_device *dev, int new_mtu)
++{
++	struct rep_dev *rep = netdev_priv(dev);
++	struct otx2_nic *priv = rep->mdev;
++	struct rep_event evt = {0};
 +
-+	rsp->pcifunc = req->pcifunc;
++	netdev_info(dev, "Changing MTU from %d to %d\n",
++		    dev->mtu, new_mtu);
++	dev->mtu = new_mtu;
++
++	evt.evt_data.mtu = new_mtu;
++	evt.pcifunc = rep->pcifunc;
++	rvu_rep_notify_pfvf(priv, RVU_EVENT_MTU_CHANGE, &evt);
 +	return 0;
 +}
 +
- static int rvu_rep_get_vlan_id(struct rvu *rvu, u16 pcifunc)
+ static void rvu_rep_get_stats(struct work_struct *work)
  {
- 	int id;
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-index fa13b83772ba..57510a8ea475 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.c
-@@ -28,6 +28,67 @@ MODULE_DESCRIPTION(DRV_STRING);
- MODULE_LICENSE("GPL");
- MODULE_DEVICE_TABLE(pci, rvu_rep_id_table);
- 
-+static void rvu_rep_get_stats(struct work_struct *work)
-+{
-+	struct delayed_work *del_work = to_delayed_work(work);
-+	struct nix_stats_req *req;
-+	struct nix_stats_rsp *rsp;
-+	struct rep_stats *stats;
-+	struct otx2_nic *priv;
-+	struct rep_dev *rep;
-+	int err;
-+
-+	rep = container_of(del_work, struct rep_dev, stats_wrk);
-+	priv = rep->mdev;
-+
-+	mutex_lock(&priv->mbox.lock);
-+	req = otx2_mbox_alloc_msg_nix_lf_stats(&priv->mbox);
-+	if (!req) {
-+		mutex_unlock(&priv->mbox.lock);
-+		return;
-+	}
-+	req->pcifunc = rep->pcifunc;
-+	err = otx2_sync_mbox_msg_busy_poll(&priv->mbox);
-+	if (err)
-+		goto exit;
-+
-+	rsp = (struct nix_stats_rsp *)
-+	      otx2_mbox_get_rsp(&priv->mbox.mbox, 0, &req->hdr);
-+
-+	if (IS_ERR(rsp)) {
-+		err = PTR_ERR(rsp);
-+		goto exit;
-+	}
-+
-+	stats = &rep->stats;
-+	stats->rx_bytes = rsp->rx.octs;
-+	stats->rx_frames = rsp->rx.ucast + rsp->rx.bcast +
-+			    rsp->rx.mcast;
-+	stats->rx_drops = rsp->rx.drop;
-+	stats->rx_mcast_frames = rsp->rx.mcast;
-+	stats->tx_bytes = rsp->tx.octs;
-+	stats->tx_frames = rsp->tx.ucast + rsp->tx.bcast + rsp->tx.mcast;
-+	stats->tx_drops = rsp->tx.drop;
-+exit:
-+	mutex_unlock(&priv->mbox.lock);
-+}
-+
-+static void rvu_rep_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats)
-+{
-+	struct rep_dev *rep = netdev_priv(dev);
-+
-+	stats->rx_packets = rep->stats.rx_frames;
-+	stats->rx_bytes = rep->stats.rx_bytes;
-+	stats->rx_dropped = rep->stats.rx_drops;
-+	stats->multicast = rep->stats.rx_mcast_frames;
-+
-+	stats->tx_packets = rep->stats.tx_frames;
-+	stats->tx_bytes = rep->stats.tx_bytes;
-+	stats->tx_dropped = rep->stats.tx_drops;
-+
-+	schedule_delayed_work(&rep->stats_wrk, msecs_to_jiffies(100));
-+}
-+
- static int rvu_eswitch_config(struct otx2_nic *priv, u8 ena)
- {
- 	struct esw_cfg_req *req;
-@@ -87,6 +148,7 @@ static const struct net_device_ops rvu_rep_netdev_ops = {
- 	.ndo_open		= rvu_rep_open,
+ 	struct delayed_work *del_work = to_delayed_work(work);
+@@ -225,6 +241,7 @@ static const struct net_device_ops rvu_rep_netdev_ops = {
  	.ndo_stop		= rvu_rep_stop,
  	.ndo_start_xmit		= rvu_rep_xmit,
-+	.ndo_get_stats64	= rvu_rep_get_stats64,
+ 	.ndo_get_stats64	= rvu_rep_get_stats64,
++	.ndo_change_mtu		= rvu_rep_change_mtu,
  };
  
  static int rvu_rep_napi_init(struct otx2_nic *priv, struct netlink_ext_ack *extack)
-@@ -227,6 +289,8 @@ int rvu_rep_create(struct otx2_nic *priv, struct netlink_ext_ack *extack)
- 			NL_SET_ERR_MSG_MOD(extack, "PFVF reprentator registration failed");
- 			goto exit;
- 		}
-+
-+		INIT_DELAYED_WORK(&rep->stats_wrk, rvu_rep_get_stats);
- 	}
- 	err = rvu_rep_napi_init(priv, extack);
- 	if (err)
-diff --git a/drivers/net/ethernet/marvell/octeontx2/nic/rep.h b/drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-index c04874c4d4c6..5d39bf636655 100644
---- a/drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-+++ b/drivers/net/ethernet/marvell/octeontx2/nic/rep.h
-@@ -17,9 +17,23 @@
- #define PCI_DEVID_RVU_REP	0xA0E0
- 
- #define RVU_MAX_REP	OTX2_MAX_CQ_CNT
-+
-+struct rep_stats {
-+	u64 rx_bytes;
-+	u64 rx_frames;
-+	u64 rx_drops;
-+	u64 rx_mcast_frames;
-+
-+	u64 tx_bytes;
-+	u64 tx_frames;
-+	u64 tx_drops;
-+};
-+
- struct rep_dev {
- 	struct otx2_nic *mdev;
- 	struct net_device *netdev;
-+	struct rep_stats stats;
-+	struct delayed_work stats_wrk;
- 	u16 rep_id;
- 	u16 pcifunc;
- };
 -- 
 2.25.1
 
