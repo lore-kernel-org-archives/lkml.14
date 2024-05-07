@@ -1,235 +1,198 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2124.outbound.protection.partner.outlook.cn [139.219.146.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7AED13C9BD
-	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 08:25:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715070336; cv=none; b=CtjAkrlNoPmHq0SHvbcOYBDWSDU5la0FBTWluFMtVl8LLHHp9ehIjfpjiymhy2HK+vA4/eX76WNXoz7R30dpYmciIEUQNZ7qKEBnyzZLfeVaa8e4m+ZuuK84RXVJx19g4oU94lLR2eN44NlOj9p0xD2H5wJqJr0t8ZIx9aMgvhQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715070336; c=relaxed/simple;
-	bh=Ru/3Cuwl0Ds0fAdi+u7L2g+qfrHVWs2fWeekuJRZ6DM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DAizAXoHNPdAY9DOSz/1BakMi87D94z97hmTo/HNgTZkfszxe2S21eQQVtZibR8QCz8HKGnLp2L7P5i3sdRFLGtvBVoN+W/H1+GP2srCDD7kkimjTEDYwM1yeRAnH3Q8uNMIlD3YUNXO1qRg6x98bv7eb8tfwlhYAtCLVUJ+UvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UgRYx20c; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UgRYx20c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715070333;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hIV59TTIklTZ8E7Mjg7QWgOJHw97ato/FlS68wODcd0=;
-	b=UgRYx20chkX/enaEyqFmAr9yFUywYwoInJHdYMMBGKwK1olev3biKiE0d7MAtNVOIBxHK/
-	7D8jFnWG+awZBt3YPN3QjLaBzCX2ahw7JPkF4ETxyUOlUtrcpsozQDlrqZTET+TmzF1UT9
-	TgJy0JMp//Rf3mQjM+nDC5iqr5FU3aE=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-279-q7AD0pMqNhSLy5oPvbOwGw-1; Tue, 07 May 2024 04:25:32 -0400
-X-MC-Unique: q7AD0pMqNhSLy5oPvbOwGw-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-a592c35ac06so292604566b.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 01:25:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715070331; x=1715675131;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hIV59TTIklTZ8E7Mjg7QWgOJHw97ato/FlS68wODcd0=;
-        b=jCY9Xa0czkd0AOdS+1+Venc6TYF0QyXm2J85s4HAsHlqrCcIcCWPeC1qdjtUW3ccWv
-         nZDEaJse0dkj9YRzWx43/M3tjxtZLi8IsIJtRxJQ7l2DEUVcR+QhnLbuO80fZuCMR1c+
-         qwDX2xSeN4/8LE3K3GlPxmbgpPFMvOkwtem5RDeuDrAusNkxWEOoJ26qXWRykNdzHEqa
-         yXcYRNiX8B+/63cUgF6TwjMOlBdnHWZLU/pY3Mh2+T+0Fw73Rz+1XO+K4PDyzZHMKppV
-         uYLDwTes39kDPedJrSVEGjhVgWVkmmJi8u/I19mXFAdlj1QPnEwBFYVOpwVMoxAOoeSs
-         cf4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV78AvAngLMrkNfFCfkpdBlMlM4Dl5PqqiJ9eMOA0rEh5qmP2ukENn0wFFrnHt+j0AMCms8lSBgFgsGG6InWKJ+ENm3WduTYxB22S50
-X-Gm-Message-State: AOJu0YzW+85Sf5Hd8RqaGXGUVEVIbIP6sBlAqcArTEx9b9nE013/mS2P
-	jC8JMUA9bG74d64OyCl9W1L4+OY0aPJ+6HIB/HLc6J77fZoobo54J10OL+nKCH0Ch1JwaPvOUxJ
-	RHNPp+0Y8ohdTfhU4VUCR8HUYa22UR6Kpeygcj7JfbB9a+DGdRbauXk8NFBkyYQ==
-X-Received: by 2002:a17:907:9451:b0:a59:f2d2:49b1 with SMTP id dl17-20020a170907945100b00a59f2d249b1mr513044ejc.9.1715070331099;
-        Tue, 07 May 2024 01:25:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHE0YLDxSU/VMUbuSbDaD4PxbC8U7jFZ/xx4z1XkZHULEfaIHq2T/SXOucES9GSEXN/mDLg3A==
-X-Received: by 2002:a17:907:9451:b0:a59:f2d2:49b1 with SMTP id dl17-20020a170907945100b00a59f2d249b1mr513024ejc.9.1715070330705;
-        Tue, 07 May 2024 01:25:30 -0700 (PDT)
-Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
-        by smtp.gmail.com with ESMTPSA id ao18-20020a170907359200b00a59bda080ffsm3123769ejc.194.2024.05.07.01.25.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 May 2024 01:25:30 -0700 (PDT)
-Message-ID: <155361c0-5068-44df-9fca-d775fc518b7d@redhat.com>
-Date: Tue, 7 May 2024 10:25:29 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB69113C831;
+	Tue,  7 May 2024 08:25:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.124
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715070363; cv=fail; b=EXHTuzVLknGVK3ytIP8qxnyj2ZHxOgC7mXCXaVCqDeDy5OBMeK4JJLVxzo0JVcvB9WnGruQatW0kKyDKJfol2hsemaLLwiDnJeFeVeOTndeC1xbGZ0uM8v/Fx4a2TvQ8iUdIsndK0I//v5x8vMWVmPN8x5nc9q8WA7D3Owdez/E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715070363; c=relaxed/simple;
+	bh=+d1k85xv5nynBkPyXacwxSPEm1TgMXq7YLDTzM9QmM0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eoRGd5BQ7+jo2VaUU6UcrShXRIgpJ8jbk/sWY/8wGWxaFhXqI6foTxLHM3hGH7DPQ8n2nSsRP6jGWI2dIsjaP3eSHZZQsK/992h3MWxOwtSauRH2RzUopR3UNmX6GBlw2dwAgJLmfp38mAAmP7kngBEsvp10c4SocWSJTvaNkuE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LRIhjox5LY2IEuMSvjCeZWfEHC8bQMFUc/yBDfTXs0TVd5k2wEGQqX9nyJa7lp156InFEnLs4IuIN0bCh4LSGcKNTFSICmzDZO7HUn5aFR7kMs3Wy4QwzRzCPl6R5ygno3Y4NFiyGvxkvHo50NODCqoeAoyYXiCV/bu2K28Yk6y77/R2ZEZ52KdbTZjLPOExlN6HxgQL0mChDh76rZrmnqRsmjqdRo8EqY5XFPjltfjVd+EBkgysa93YD9bmQy5jsPIe3sh0jm+lqKdN0+Iby2E7UNGgOwhnGCdMDXUCOPdQFtF+GPpwP9egbLZAoTlAG3ALFuM92/9KKmnDR0GGMw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HsKXRjNxpLy5oL+nixW6k3X0zh3KH6nERM5pf9BfTh8=;
+ b=BPnvGKBRFwxNxJlIk06uU13caWlTc7RMEfaqaBWutSS7CaFS4MePKXWylGCq8ZNW21rv0m1xhoJ1Fh50qrhDMIyw7+1703jFRY81SGEr6aY+En4PonZ5DrYMOzEAAtasuiow7PhN0b/Mmvu7/xNZs0iHtxSrU7CcNTcuR6Fa5W7twQG1/RSgfEPyOraWLkanU8TXxSZM/NHrt07d0OLV02/hB8RzDBvKWeU9AXBYy2e9f32fI32m1/5ecHelYxqExQsVTIDv4VfjDucEerehD119Qt37gIQjoiu/pWLbvBSmYtt97kO4hj+/CeqoYV1EPog8ivkOurm6wtbgTvPagQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:8::10) by NTZPR01MB1100.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:8::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 7 May
+ 2024 06:53:27 +0000
+Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
+ ([fe80::e903:99a6:10b7:304d]) by
+ NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn ([fe80::e903:99a6:10b7:304d%6])
+ with mapi id 15.20.7472.044; Tue, 7 May 2024 06:53:27 +0000
+From: Xingyu Wu <xingyu.wu@starfivetech.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Conor Dooley <conor@kernel.org>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Xingyu Wu <xingyu.wu@starfivetech.com>,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v5 1/2] clk: starfive: jh7110-sys: Add notifier for PLL0 clock
+Date: Tue,  7 May 2024 14:53:18 +0800
+Message-Id: <20240507065319.274976-2-xingyu.wu@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240507065319.274976-1-xingyu.wu@starfivetech.com>
+References: <20240507065319.274976-1-xingyu.wu@starfivetech.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SH0PR01CA0020.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:5::32) To NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c510:8::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Input: goodix-berlin - Add sysfs interface for reading
- and writing touch IC registers
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Charles Wang <charles.goodix@gmail.com>, hadess@hadess.net,
- Richard Hughes <hughsient@gmail.com>, linux-input@vger.kernel.org,
- linux-kernel@vger.kernel.org, neil.armstrong@linaro.org,
- Mark Brown <broonie@kernel.org>
-References: <20240506114752.47204-1-charles.goodix@gmail.com>
- <6362e889-7df2-4c61-8ad5-bfe199e451ec@redhat.com>
- <ZjmOUp725QTHrfcT@google.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <ZjmOUp725QTHrfcT@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: NTZPR01MB0956:EE_|NTZPR01MB1100:EE_
+X-MS-Office365-Filtering-Correlation-Id: 97fd2099-bc7f-4544-9e83-08dc6e62658c
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	IQVtz3/8V3KM23kuRdpvR2kX5hbWve944w3IcDZGCt7lohn/JmBQHwMt2F5KVdJXu2a3hOLOoQmiq3uV37daexW5f0TLhH69aOblqlP/dPjq1R8Xq2QJH2laQzQZh50Z4T03kjdGbZ8n4pEcbreUQzKpT/05ZQ+OR1blxSVNDarUG7IOGDFTW9rCQWVldemqDLJ1RDpCq5Hjvb2dZQ9obWHCvYKC6xxkYw23+JDjAMH3ojBzsPth2v9ap5ozMqSQCHnKc4TiNy1jViypZG8uPpuUiClyZYdI6BVFwItT00SAhQiayPTowC2vFyM0cTY6RbUyjARxanXttCEtgWZDjaWFHx4MCgGI0K5kX05MRo4Rvb/SzCepP43TSUKZCZjtnD80LHUE6TRJQVorUhb1RAtL5Q+jDF8xn6pf4TPZtHnp+tKiZQwfSLriDKDnNzfKuvlPzo7DqhOBRQXeKWlGrYIBgcD9WwlWXBtkMEICB+Hmsb0kUJnWlnk32ks7aoW3fQ5BgvEv2tMD7GThp+kg4ZJKPqHuLwu9KityvO6wYegJAotmqawJwBeLKbcWSS13osEuuTprdXpA7y4KkwT/rIBYhfbWnsh5oYBn77kkWqB9jHsDgnn5QPcoA2600UdK
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(41320700004)(52116005)(7416005)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+ATo7AylaMm9ZQu1vkp9C6qgbHozrZ7rN5pHYPD/0r84DoEJTE4vve0u1lCw?=
+ =?us-ascii?Q?zfcnh0nexpDsRSnjfGjUc2c/hpdQ6JMBiepqA+ChFZ2Jz5+RQE5/8/pg9Rp8?=
+ =?us-ascii?Q?dA5x3oQ80GjxohQuT6WnQL++zZjLsjVmkC28DsB8zEN4PbcjShHnWzF4zB5H?=
+ =?us-ascii?Q?hPv+Rsmf5bAR9UI5n9DbMdRvGVeAnK4rMQmERgoPkmVY8V8kTVrh/hK9kFTb?=
+ =?us-ascii?Q?Se8xPHz9L2sjm6CGGNNkJNo06I0AS/XkZScH3hpT7nIV77SYwrI2iJF1Fb+p?=
+ =?us-ascii?Q?BcPh+xkHV9OKQM0Bb0OXx2Ub5NUBcG49LQi+F9WVJqONuNP+K87R9cGESFsR?=
+ =?us-ascii?Q?NzjKKmEIJbo4OEaVB1efCMiFzVdku0aCvmASHNL10q8uN1Mri8ZZJtbBHwfT?=
+ =?us-ascii?Q?j1KulYb92Lw8/fiFsEINZ7oDWWWnpUdWLwQXf5hapLnPVQVicUJstXXf5KBv?=
+ =?us-ascii?Q?t/QU6x+i0L/agnaKDoVT93NC2cQ3womO1HFnQMgQI9ADXu25HJ+il8Q/UYy1?=
+ =?us-ascii?Q?8PanKPRAqguQfKyB0XCEPgtev3Arvdc/kuL2q22HyxNj6HPCZfM6lnZBKVY6?=
+ =?us-ascii?Q?mXP5CFsPuKbmfr9G8SVf6LVFQ047SzDwbcgr7AcieyGs7E0Wm9lJtVTFNY5B?=
+ =?us-ascii?Q?tFfmIyCnoWS1j9EhimACmI1+cRZHrbmwE7bKhQmVBJPOS+7TlEIbxs6sibB4?=
+ =?us-ascii?Q?ogLMC99mviIakBB31DEiphROmZUg3AkEsSGNOQAldFRcqZzo/80SjPVM39pE?=
+ =?us-ascii?Q?SQIoQFPD/Y4p3r4ks1EMIa8p5MR3gS4VPd0/mO0vELfgBBJsO/lx0LNS+cpw?=
+ =?us-ascii?Q?QvuJ8w1j+99xsUWxTsdPbVU0Yu9vsQncOPMF/MMlm8nckGj9AMp3vBUuclbK?=
+ =?us-ascii?Q?PHrupZK3h0vmgNTY7wyVJixXHsXj5OT+0rHZ2b6ScWnoTRL8a06+r0Nys+a/?=
+ =?us-ascii?Q?YdLgJzetlx4Yfv1faoBZaCLUeGC6UKxX8/BWpuQ6QYZL+FeiOTIfJuLCWSA2?=
+ =?us-ascii?Q?Q7uEwAWKaO/l0UFpGPOUfHZbTgpvueq3todx/FweHPsNSWiaHJXEMaq+XYlM?=
+ =?us-ascii?Q?7AgJJye1WuEyz2PnyXsdguMk86WUHSnems1TilWAQVNYn44eIXjZlsm63AE6?=
+ =?us-ascii?Q?s3dLcin9vN70fS5v5gaMzcHo6/v3Fu5PbQnyjDbpOJ87t/dFW1XoMPEuC5SA?=
+ =?us-ascii?Q?E5h6fmkOHLxpcK5HmR/O+8yLiWWnwzrkQW82vnkeYD2LWrI+KXGPb+Kj17w/?=
+ =?us-ascii?Q?A9kAEbQp1Fc68q6xwMUS+D4godei20whPY6sULNgCt73iTVGsoJX3X+gLug9?=
+ =?us-ascii?Q?Xnoeh92fqI432x81VSFs/Tc7W1bcT3jo4FXKZWJotHdouIRXnQ7ulBuHJoQM?=
+ =?us-ascii?Q?WdyEeBiozCxb65Zf02uJlnbJz3cSSHPO4OzXZM2wVDE7zqRckkSrWz5WOWXV?=
+ =?us-ascii?Q?79We9XmK69LyhpkybCSPRj9OTSGTzNextQNiCTNV83SLgDH2sask1EXK0WAL?=
+ =?us-ascii?Q?XWs/gJPL+hvDlXaYQj83OMxQ4P5EAVdjGU4Zws7dFZtblpHXfKZM4PxtHGBo?=
+ =?us-ascii?Q?A7wI6eyoZ8iDknkJy6EMql/fW2pA7gEsZWnH37KVJljUxTIuN0Y0xG1VymzC?=
+ =?us-ascii?Q?Ig=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97fd2099-bc7f-4544-9e83-08dc6e62658c
+X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 06:53:27.0655
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2b/6dNvnwep52ugACydxk34v0QdM1sIQRAKoXSuRZZji8BSl2wn6Lu9sOdnswx8WKJbj121J4ryl6pW2eSjcyIdJg28FhCktOjDzCOpyHPA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1100
 
-Hi,
+Add notifier function for PLL0 clock. In the function, the cpu_root clock
+should be operated by saving its current parent and setting a new safe
+parent (osc clock) before setting the PLL0 clock rate. After setting PLL0
+rate, it should be switched back to the original parent clock.
 
-On 5/7/24 4:13 AM, Dmitry Torokhov wrote:
-> On Mon, May 06, 2024 at 02:03:13PM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 5/6/24 1:47 PM, Charles Wang wrote:
->>> Export a sysfs interface that would allow reading and writing touchscreen
->>> IC registers. With this interface many things can be done in usersapce
->>> such as firmware updates. An example tool that utilizes this interface
->>> for performing firmware updates can be found at [1].
->>
->> I'm not sure if I'm a fan of adding an interface to export raw register
->> access for fwupdate.
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/input/touchscreen/goodix_fwupload.c
->>
->> Contains update support for older goodix touchscreens and it is not
->> that big. I think it might be better to just have an in kernel fwupdate
->> driver for this and have a sysfs file to which to write the new firmware.
->>
->> Adding Richard Hughes, fwupd maintainer to the Cc. Richard, do you have
->> any input on the suggested method for firmware updating ?
->>
->> If raw register access is seen as a good solution, then I think this
->> should use regmap + some generic helpers (to be written) to export
->> regmap r/w access to userspace.
-> 
-> I think the less code we have in kernel the better,
+Fixes: e2c510d6d630 ("riscv: dts: starfive: Add cpu scaling for JH7110 SoC")
+Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
+---
+ .../clk/starfive/clk-starfive-jh7110-sys.c    | 31 ++++++++++++++++++-
+ drivers/clk/starfive/clk-starfive-jh71x0.h    |  2 ++
+ 2 files changed, 32 insertions(+), 1 deletion(-)
 
-Ok.
-
-> especially if in
-> cases where firmware flashing is not essential for device to work (i.e.
-> it the controller has a flash memory).
-
-Right the existing older goodix fw-upload is different because some
-controllers are flash-less so they need a fw upload every boot.
-
-> That said IIRC Mark felt very
-> strongly about allowing regmap writes from userspace... but maybe he
-> softened the stance or we could have this functionality opt-in?
-
-Right when I was talking about generic helpers that was meant for
-code re-use purposes. Actually exposing the regmap r/w functionality
-to userspace is something which should be decided on a case by case
-basis by the driver (IMHO).
-
-Regards,
-
-Hans
-
-
-
-> 
->>
->>> [1] https://github.com/goodix/fwupdate_for_berlin_linux
->>
->> Hmm, that tool seems to have some licensing issues there is an Apache License v2.0
->> LICENSE file, but the header of fwupdate.c claims it is confidential ...
->>
->> Regards,
->>
->> Hans
->>
->>
->>> Signed-off-by: Charles Wang <charles.goodix@gmail.com>
->>> ---
->>>  drivers/input/touchscreen/goodix_berlin.h     |  2 +
->>>  .../input/touchscreen/goodix_berlin_core.c    | 52 +++++++++++++++++++
->>>  drivers/input/touchscreen/goodix_berlin_i2c.c |  6 +++
->>>  drivers/input/touchscreen/goodix_berlin_spi.c |  6 +++
->>>  4 files changed, 66 insertions(+)
->>>
->>> diff --git a/drivers/input/touchscreen/goodix_berlin.h b/drivers/input/touchscreen/goodix_berlin.h
->>> index 1fd77eb69..1741f2d15 100644
->>> --- a/drivers/input/touchscreen/goodix_berlin.h
->>> +++ b/drivers/input/touchscreen/goodix_berlin.h
->>> @@ -19,6 +19,8 @@ struct regmap;
->>>  int goodix_berlin_probe(struct device *dev, int irq, const struct input_id *id,
->>>  			struct regmap *regmap);
->>>  
->>> +void goodix_berlin_remove(struct device *dev);
->>> +
->>>  extern const struct dev_pm_ops goodix_berlin_pm_ops;
->>>  
->>>  #endif
->>> diff --git a/drivers/input/touchscreen/goodix_berlin_core.c b/drivers/input/touchscreen/goodix_berlin_core.c
->>> index e7b41a926..e02160841 100644
->>> --- a/drivers/input/touchscreen/goodix_berlin_core.c
->>> +++ b/drivers/input/touchscreen/goodix_berlin_core.c
->>> @@ -672,6 +672,44 @@ static void goodix_berlin_power_off_act(void *data)
->>>  	goodix_berlin_power_off(cd);
->>>  }
->>>  
->>> +static ssize_t goodix_berlin_registers_read(struct file *filp, struct kobject *kobj,
->>> +	struct bin_attribute *bin_attr, char *buf, loff_t off, size_t count)
->>> +{
->>> +	struct goodix_berlin_core *cd;
->>> +	struct device *dev;
->>> +	int error;
->>> +
->>> +	dev = kobj_to_dev(kobj);
->>> +	cd = dev_get_drvdata(dev);
->>> +
->>> +	error = regmap_raw_read(cd->regmap, (unsigned int)off,
->>> +				buf, count);
->>> +
->>> +	return error ? error : count;
->>> +}
->>> +
->>> +static ssize_t goodix_berlin_registers_write(struct file *filp, struct kobject *kobj,
->>> +	struct bin_attribute *bin_attr, char *buf, loff_t off, size_t count)
->>> +{
->>> +	struct goodix_berlin_core *cd;
->>> +	struct device *dev;
->>> +	int error;
->>> +
->>> +	dev = kobj_to_dev(kobj);
->>> +	cd = dev_get_drvdata(dev);
->>> +
->>> +	error = regmap_raw_write(cd->regmap, (unsigned int)off,
->>> +				 buf, count);
->>> +
->>> +	return error ? error : count;
->>> +}
->>> +
->>> +static struct bin_attribute goodix_berlin_registers_attr = {
->>> +	.attr = {.name = "registers", .mode = 0600},
->>> +	.read = goodix_berlin_registers_read,
->>> +	.write = goodix_berlin_registers_write,
->>> +};
->>> +
->>>  int goodix_berlin_probe(struct device *dev, int irq, const struct input_id *id,
->>>  			struct regmap *regmap)
->>>  {
->>> @@ -743,6 +781,14 @@ int goodix_berlin_probe(struct device *dev, int irq, const struct input_id *id,
->>>  
->>>  	dev_set_drvdata(dev, cd);
->>>  
->>> +	error = sysfs_create_bin_file(&cd->dev->kobj,
->>> +				      &goodix_berlin_registers_attr);
-> 
-> If we want to instantiate attributes from the driver please utilize
-> dev_groups in respective driver structures to create and remove the
-> attributes automatically.
-> 
-> Thanks.
-> 
+diff --git a/drivers/clk/starfive/clk-starfive-jh7110-sys.c b/drivers/clk/starfive/clk-starfive-jh7110-sys.c
+index 8f5e5abfa178..dafa3ae71751 100644
+--- a/drivers/clk/starfive/clk-starfive-jh7110-sys.c
++++ b/drivers/clk/starfive/clk-starfive-jh7110-sys.c
+@@ -385,6 +385,32 @@ int jh7110_reset_controller_register(struct jh71x0_clk_priv *priv,
+ }
+ EXPORT_SYMBOL_GPL(jh7110_reset_controller_register);
+ 
++/*
++ * This clock notifier is called when the rate of PLL0 clock is to be changed.
++ * The cpu_root clock should save the curent parent clock and swicth its parent
++ * clock to osc before PLL0 rate will be changed. Then swicth its parent clock
++ * back after the PLL0 rate is completed.
++ */
++static int jh7110_pll0_clk_notifier_cb(struct notifier_block *nb,
++				       unsigned long action, void *data)
++{
++	struct jh71x0_clk_priv *priv = container_of(nb, struct jh71x0_clk_priv, pll_clk_nb);
++	struct clk *cpu_root = priv->reg[JH7110_SYSCLK_CPU_ROOT].hw.clk;
++	int ret = 0;
++
++	if (action == PRE_RATE_CHANGE) {
++		struct clk *osc = clk_get(priv->dev, "osc");
++
++		priv->original_clk = clk_get_parent(cpu_root);
++		ret = clk_set_parent(cpu_root, osc);
++		clk_put(osc);
++	} else if (action == POST_RATE_CHANGE) {
++		ret = clk_set_parent(cpu_root, priv->original_clk);
++	}
++
++	return notifier_from_errno(ret);
++}
++
+ static int __init jh7110_syscrg_probe(struct platform_device *pdev)
+ {
+ 	struct jh71x0_clk_priv *priv;
+@@ -413,7 +439,10 @@ static int __init jh7110_syscrg_probe(struct platform_device *pdev)
+ 		if (IS_ERR(priv->pll[0]))
+ 			return PTR_ERR(priv->pll[0]);
+ 	} else {
+-		clk_put(pllclk);
++		priv->pll_clk_nb.notifier_call = jh7110_pll0_clk_notifier_cb;
++		ret = clk_notifier_register(pllclk, &priv->pll_clk_nb);
++		if (ret)
++			return ret;
+ 		priv->pll[0] = NULL;
+ 	}
+ 
+diff --git a/drivers/clk/starfive/clk-starfive-jh71x0.h b/drivers/clk/starfive/clk-starfive-jh71x0.h
+index 23e052fc1549..e3f441393e48 100644
+--- a/drivers/clk/starfive/clk-starfive-jh71x0.h
++++ b/drivers/clk/starfive/clk-starfive-jh71x0.h
+@@ -114,6 +114,8 @@ struct jh71x0_clk_priv {
+ 	spinlock_t rmw_lock;
+ 	struct device *dev;
+ 	void __iomem *base;
++	struct clk *original_clk;
++	struct notifier_block pll_clk_nb;
+ 	struct clk_hw *pll[3];
+ 	struct jh71x0_clk reg[];
+ };
+-- 
+2.25.1
 
