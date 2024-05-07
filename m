@@ -1,198 +1,308 @@
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2124.outbound.protection.partner.outlook.cn [139.219.146.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB69113C831;
-	Tue,  7 May 2024 08:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.124
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715070363; cv=fail; b=EXHTuzVLknGVK3ytIP8qxnyj2ZHxOgC7mXCXaVCqDeDy5OBMeK4JJLVxzo0JVcvB9WnGruQatW0kKyDKJfol2hsemaLLwiDnJeFeVeOTndeC1xbGZ0uM8v/Fx4a2TvQ8iUdIsndK0I//v5x8vMWVmPN8x5nc9q8WA7D3Owdez/E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715070363; c=relaxed/simple;
-	bh=+d1k85xv5nynBkPyXacwxSPEm1TgMXq7YLDTzM9QmM0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eoRGd5BQ7+jo2VaUU6UcrShXRIgpJ8jbk/sWY/8wGWxaFhXqI6foTxLHM3hGH7DPQ8n2nSsRP6jGWI2dIsjaP3eSHZZQsK/992h3MWxOwtSauRH2RzUopR3UNmX6GBlw2dwAgJLmfp38mAAmP7kngBEsvp10c4SocWSJTvaNkuE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LRIhjox5LY2IEuMSvjCeZWfEHC8bQMFUc/yBDfTXs0TVd5k2wEGQqX9nyJa7lp156InFEnLs4IuIN0bCh4LSGcKNTFSICmzDZO7HUn5aFR7kMs3Wy4QwzRzCPl6R5ygno3Y4NFiyGvxkvHo50NODCqoeAoyYXiCV/bu2K28Yk6y77/R2ZEZ52KdbTZjLPOExlN6HxgQL0mChDh76rZrmnqRsmjqdRo8EqY5XFPjltfjVd+EBkgysa93YD9bmQy5jsPIe3sh0jm+lqKdN0+Iby2E7UNGgOwhnGCdMDXUCOPdQFtF+GPpwP9egbLZAoTlAG3ALFuM92/9KKmnDR0GGMw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HsKXRjNxpLy5oL+nixW6k3X0zh3KH6nERM5pf9BfTh8=;
- b=BPnvGKBRFwxNxJlIk06uU13caWlTc7RMEfaqaBWutSS7CaFS4MePKXWylGCq8ZNW21rv0m1xhoJ1Fh50qrhDMIyw7+1703jFRY81SGEr6aY+En4PonZ5DrYMOzEAAtasuiow7PhN0b/Mmvu7/xNZs0iHtxSrU7CcNTcuR6Fa5W7twQG1/RSgfEPyOraWLkanU8TXxSZM/NHrt07d0OLV02/hB8RzDBvKWeU9AXBYy2e9f32fI32m1/5ecHelYxqExQsVTIDv4VfjDucEerehD119Qt37gIQjoiu/pWLbvBSmYtt97kO4hj+/CeqoYV1EPog8ivkOurm6wtbgTvPagQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::10) by NTZPR01MB1100.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Tue, 7 May
- 2024 06:53:27 +0000
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- ([fe80::e903:99a6:10b7:304d]) by
- NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn ([fe80::e903:99a6:10b7:304d%6])
- with mapi id 15.20.7472.044; Tue, 7 May 2024 06:53:27 +0000
-From: Xingyu Wu <xingyu.wu@starfivetech.com>
-To: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Conor Dooley <conor@kernel.org>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Xingyu Wu <xingyu.wu@starfivetech.com>,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v5 1/2] clk: starfive: jh7110-sys: Add notifier for PLL0 clock
-Date: Tue,  7 May 2024 14:53:18 +0800
-Message-Id: <20240507065319.274976-2-xingyu.wu@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240507065319.274976-1-xingyu.wu@starfivetech.com>
-References: <20240507065319.274976-1-xingyu.wu@starfivetech.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SH0PR01CA0020.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c311:5::32) To NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A914087C
+	for <linux-kernel@vger.kernel.org>; Tue,  7 May 2024 08:26:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715070409; cv=none; b=rgIABIA7qJYwAsDIXEFG6F/em0tnyskUanVGTKo7luupAeSm6FL9a/oNDBmg32SP9GlAZL9F6UE0pqVuXsAe3X8Mt0TeWOoF6RxX6tYgRXjwZ/RRR3nDA8anDFt+CANApdtVYGQt2Xzb19ntw91HltqJHz03dDpdRO/FoHC7G64=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715070409; c=relaxed/simple;
+	bh=5X97teEDwdlg+wj/1dAb6da3SRv06Mi+ZtNsrnpQKJE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ULDVlmbSzL/PrO43PDnQoW04YdJgTKXAjJ0rLPSa8Z65gwgvYAV6f9ugp6/lT0mrHXrx/jNjY8iiy9A4hYR5AlWeuWItAl4SUIU92Q0KkaDG3OknpZ8NxS0G9a6J6EwjfvjfpqLbuAyDvXeeoDK/rUVOy7XrH0jMueAHOuj4FR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cLETlW+z; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cLETlW+z"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a59b58fe083so416703466b.0
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 01:26:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715070406; x=1715675206; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4ABsOP8SEu68sVFLiASZm/u0Hmy8w+mAVpH8nCUwY0A=;
+        b=cLETlW+zmEL/lBs12DgakGlBsXqjQov1VvyuOhNQRTHzo/vAfkp0oo4Wm6dHNZQwIU
+         X36vnNKE7BxjaoVHIfgFOhKxUVziaO25vV94Oor8IJf6Guka59mkSVhaBUYHQsRd/6Rc
+         IyLreqdAQ84uyy079A5f1+rWU8JN/xJ9bA5NSZt+bjMiajbfiLqqK9TKoTcme8XJpPPR
+         wR+6zlBwynxboI3Lq5f/6rsGEIyPpSwUp4L63d4mYt0O063RoJFFCaz8D5OdJu4lMFXe
+         cISEefW8sldbOdpOxR20CyumaLJwqw14t/qsuQFDYghqw9QU+KkELKxmHh6HqSLXOf0T
+         PKOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715070406; x=1715675206;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4ABsOP8SEu68sVFLiASZm/u0Hmy8w+mAVpH8nCUwY0A=;
+        b=uNtOzwolg1cvV4tAZ9mBjR0DgEKHgEc2I9wpnUQW1Y6/oPAyRf/DO3SxJQ7Er4RL5/
+         eLd1+9+0+Rum5Wwb95oRJYYu/Pli9nKNXn9Ci3kiCSTK5Q4bOKv0Sygkf5NvB4Un57WM
+         oleS/qXvotBKNgsAeeDuvY1aWSk/rLhIUef+832OIWT6zNOtXJ7S+TrpDZ0QRcBfHL+b
+         hAD9Gld2UNwuWHge9VxGnJD3JM4EAu5/On/Bs8gTUAiA6an7G6SGv4jB075OS92eq3uK
+         L9OmBn496GHLBEeqFCn7VsJVevM6SpjxZhu2v+9qU0TWnBjAOO+HK0zk7/mDQW2U9pT/
+         V9VA==
+X-Forwarded-Encrypted: i=1; AJvYcCX+f4TRWewNjIUNYn+vy1Ts7DQ+32opReAAzJafFyuVLsJ4Tu0i5cWdSQ2Mar6RlWvRD+Yzd0Gk5drld0u0KGIH5Z95Jikaz8EhivMS
+X-Gm-Message-State: AOJu0YzCRH/bQN/02me4kdYNIQeUSBnwnXi1l8AhSz3Z/Ijyuv6X4CxT
+	i3myAvW1EWYNwmprPPYQmua03A6Tdp1ZMSzpkU3phbClPbPf1lGBB33MCcMuqtPP4wGxgxIjRNa
+	bjKTVHo40SSzTFSPbcCTUfwWWMbo=
+X-Google-Smtp-Source: AGHT+IF0jDUUvlcUjVjTQnZ6YPtFqBDAtPQ4FSE7s7+H1V9lbJUvo7JZ6dtpIaCxEfRyi6RpoG4WFbQ41B0qq/63bk8=
+X-Received: by 2002:a50:8755:0:b0:572:a183:49a4 with SMTP id
+ 21-20020a508755000000b00572a18349a4mr8345591edv.28.1715070405633; Tue, 07 May
+ 2024 01:26:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: NTZPR01MB0956:EE_|NTZPR01MB1100:EE_
-X-MS-Office365-Filtering-Correlation-Id: 97fd2099-bc7f-4544-9e83-08dc6e62658c
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	IQVtz3/8V3KM23kuRdpvR2kX5hbWve944w3IcDZGCt7lohn/JmBQHwMt2F5KVdJXu2a3hOLOoQmiq3uV37daexW5f0TLhH69aOblqlP/dPjq1R8Xq2QJH2laQzQZh50Z4T03kjdGbZ8n4pEcbreUQzKpT/05ZQ+OR1blxSVNDarUG7IOGDFTW9rCQWVldemqDLJ1RDpCq5Hjvb2dZQ9obWHCvYKC6xxkYw23+JDjAMH3ojBzsPth2v9ap5ozMqSQCHnKc4TiNy1jViypZG8uPpuUiClyZYdI6BVFwItT00SAhQiayPTowC2vFyM0cTY6RbUyjARxanXttCEtgWZDjaWFHx4MCgGI0K5kX05MRo4Rvb/SzCepP43TSUKZCZjtnD80LHUE6TRJQVorUhb1RAtL5Q+jDF8xn6pf4TPZtHnp+tKiZQwfSLriDKDnNzfKuvlPzo7DqhOBRQXeKWlGrYIBgcD9WwlWXBtkMEICB+Hmsb0kUJnWlnk32ks7aoW3fQ5BgvEv2tMD7GThp+kg4ZJKPqHuLwu9KityvO6wYegJAotmqawJwBeLKbcWSS13osEuuTprdXpA7y4KkwT/rIBYhfbWnsh5oYBn77kkWqB9jHsDgnn5QPcoA2600UdK
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(41320700004)(52116005)(7416005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+ATo7AylaMm9ZQu1vkp9C6qgbHozrZ7rN5pHYPD/0r84DoEJTE4vve0u1lCw?=
- =?us-ascii?Q?zfcnh0nexpDsRSnjfGjUc2c/hpdQ6JMBiepqA+ChFZ2Jz5+RQE5/8/pg9Rp8?=
- =?us-ascii?Q?dA5x3oQ80GjxohQuT6WnQL++zZjLsjVmkC28DsB8zEN4PbcjShHnWzF4zB5H?=
- =?us-ascii?Q?hPv+Rsmf5bAR9UI5n9DbMdRvGVeAnK4rMQmERgoPkmVY8V8kTVrh/hK9kFTb?=
- =?us-ascii?Q?Se8xPHz9L2sjm6CGGNNkJNo06I0AS/XkZScH3hpT7nIV77SYwrI2iJF1Fb+p?=
- =?us-ascii?Q?BcPh+xkHV9OKQM0Bb0OXx2Ub5NUBcG49LQi+F9WVJqONuNP+K87R9cGESFsR?=
- =?us-ascii?Q?NzjKKmEIJbo4OEaVB1efCMiFzVdku0aCvmASHNL10q8uN1Mri8ZZJtbBHwfT?=
- =?us-ascii?Q?j1KulYb92Lw8/fiFsEINZ7oDWWWnpUdWLwQXf5hapLnPVQVicUJstXXf5KBv?=
- =?us-ascii?Q?t/QU6x+i0L/agnaKDoVT93NC2cQ3womO1HFnQMgQI9ADXu25HJ+il8Q/UYy1?=
- =?us-ascii?Q?8PanKPRAqguQfKyB0XCEPgtev3Arvdc/kuL2q22HyxNj6HPCZfM6lnZBKVY6?=
- =?us-ascii?Q?mXP5CFsPuKbmfr9G8SVf6LVFQ047SzDwbcgr7AcieyGs7E0Wm9lJtVTFNY5B?=
- =?us-ascii?Q?tFfmIyCnoWS1j9EhimACmI1+cRZHrbmwE7bKhQmVBJPOS+7TlEIbxs6sibB4?=
- =?us-ascii?Q?ogLMC99mviIakBB31DEiphROmZUg3AkEsSGNOQAldFRcqZzo/80SjPVM39pE?=
- =?us-ascii?Q?SQIoQFPD/Y4p3r4ks1EMIa8p5MR3gS4VPd0/mO0vELfgBBJsO/lx0LNS+cpw?=
- =?us-ascii?Q?QvuJ8w1j+99xsUWxTsdPbVU0Yu9vsQncOPMF/MMlm8nckGj9AMp3vBUuclbK?=
- =?us-ascii?Q?PHrupZK3h0vmgNTY7wyVJixXHsXj5OT+0rHZ2b6ScWnoTRL8a06+r0Nys+a/?=
- =?us-ascii?Q?YdLgJzetlx4Yfv1faoBZaCLUeGC6UKxX8/BWpuQ6QYZL+FeiOTIfJuLCWSA2?=
- =?us-ascii?Q?Q7uEwAWKaO/l0UFpGPOUfHZbTgpvueq3todx/FweHPsNSWiaHJXEMaq+XYlM?=
- =?us-ascii?Q?7AgJJye1WuEyz2PnyXsdguMk86WUHSnems1TilWAQVNYn44eIXjZlsm63AE6?=
- =?us-ascii?Q?s3dLcin9vN70fS5v5gaMzcHo6/v3Fu5PbQnyjDbpOJ87t/dFW1XoMPEuC5SA?=
- =?us-ascii?Q?E5h6fmkOHLxpcK5HmR/O+8yLiWWnwzrkQW82vnkeYD2LWrI+KXGPb+Kj17w/?=
- =?us-ascii?Q?A9kAEbQp1Fc68q6xwMUS+D4godei20whPY6sULNgCt73iTVGsoJX3X+gLug9?=
- =?us-ascii?Q?Xnoeh92fqI432x81VSFs/Tc7W1bcT3jo4FXKZWJotHdouIRXnQ7ulBuHJoQM?=
- =?us-ascii?Q?WdyEeBiozCxb65Zf02uJlnbJz3cSSHPO4OzXZM2wVDE7zqRckkSrWz5WOWXV?=
- =?us-ascii?Q?79We9XmK69LyhpkybCSPRj9OTSGTzNextQNiCTNV83SLgDH2sask1EXK0WAL?=
- =?us-ascii?Q?XWs/gJPL+hvDlXaYQj83OMxQ4P5EAVdjGU4Zws7dFZtblpHXfKZM4PxtHGBo?=
- =?us-ascii?Q?A7wI6eyoZ8iDknkJy6EMql/fW2pA7gEsZWnH37KVJljUxTIuN0Y0xG1VymzC?=
- =?us-ascii?Q?Ig=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 97fd2099-bc7f-4544-9e83-08dc6e62658c
-X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2024 06:53:27.0655
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2b/6dNvnwep52ugACydxk34v0QdM1sIQRAKoXSuRZZji8BSl2wn6Lu9sOdnswx8WKJbj121J4ryl6pW2eSjcyIdJg28FhCktOjDzCOpyHPA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1100
+References: <20240501042700.83974-1-ioworker0@gmail.com> <20240501042700.83974-4-ioworker0@gmail.com>
+ <e0b8a282-973f-41f7-a878-4a287bab81ea@linux.alibaba.com> <CAK1f24=gc7VojzSDyNck-03L03UWR4AFxji8Rw+xMKBg1_M7fw@mail.gmail.com>
+In-Reply-To: <CAK1f24=gc7VojzSDyNck-03L03UWR4AFxji8Rw+xMKBg1_M7fw@mail.gmail.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Tue, 7 May 2024 16:26:34 +0800
+Message-ID: <CAK1f24=HYM8zAw88apModHZdaLu849PH=JKPrZ3nxGqQWWzoyQ@mail.gmail.com>
+Subject: Re: [PATCH v4 3/3] mm/vmscan: avoid split lazyfree THP during shrink_folio_list()
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, willy@infradead.org, sj@kernel.org, 
+	maskray@google.com, ziy@nvidia.com, ryan.roberts@arm.com, david@redhat.com, 
+	21cnbao@gmail.com, mhocko@suse.com, fengwei.yin@intel.com, zokeefe@google.com, 
+	shy828301@gmail.com, xiehuan09@gmail.com, libang.li@antgroup.com, 
+	wangkefeng.wang@huawei.com, songmuchun@bytedance.com, peterx@redhat.com, 
+	minchan@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add notifier function for PLL0 clock. In the function, the cpu_root clock
-should be operated by saving its current parent and setting a new safe
-parent (osc clock) before setting the PLL0 clock rate. After setting PLL0
-rate, it should be switched back to the original parent clock.
+On Tue, May 7, 2024 at 2:32=E2=80=AFPM Lance Yang <ioworker0@gmail.com> wro=
+te:
+>
+> Hey Baolin,
+>
+> Thanks a lot for taking time to review!
+>
+> On Tue, May 7, 2024 at 12:01=E2=80=AFPM Baolin Wang
+> <baolin.wang@linux.alibaba.com> wrote:
+> >
+> >
+> >
+> > On 2024/5/1 12:27, Lance Yang wrote:
+> > > When the user no longer requires the pages, they would use
+> > > madvise(MADV_FREE) to mark the pages as lazy free. Subsequently, they
+> > > typically would not re-write to that memory again.
+> > >
+> > > During memory reclaim, if we detect that the large folio and its PMD =
+are
+> > > both still marked as clean and there are no unexpected references
+> > > (such as GUP), so we can just discard the memory lazily, improving th=
+e
+> > > efficiency of memory reclamation in this case.  On an Intel i5 CPU, r=
+eclaiming 1GiB of lazyfree THPs using
+> > > mem_cgroup_force_empty() results in the following runtimes in seconds
+> > > (shorter is better):
+> > >
+> > > --------------------------------------------
+> > > |     Old       |      New       |  Change  |
+> > > --------------------------------------------
+> > > |   0.683426    |    0.049197    |  -92.80% |
+> > > --------------------------------------------
+> > >
+> > > Suggested-by: Zi Yan <ziy@nvidia.com>
+> > > Suggested-by: David Hildenbrand <david@redhat.com>
+> > > Signed-off-by: Lance Yang <ioworker0@gmail.com>
+> > > ---
+> > >   include/linux/huge_mm.h |  9 +++++
+> > >   mm/huge_memory.c        | 73 ++++++++++++++++++++++++++++++++++++++=
++++
+> > >   mm/rmap.c               |  3 ++
+> > >   3 files changed, 85 insertions(+)
+> > >
+> > > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> > > index 38c4b5537715..017cee864080 100644
+> > > --- a/include/linux/huge_mm.h
+> > > +++ b/include/linux/huge_mm.h
+> > > @@ -411,6 +411,8 @@ static inline bool thp_migration_supported(void)
+> > >
+> > >   void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned lon=
+g address,
+> > >                          pmd_t *pmd, bool freeze, struct folio *folio=
+);
+> > > +bool unmap_huge_pmd_locked(struct vm_area_struct *vma, unsigned long=
+ addr,
+> > > +                        pmd_t *pmdp, struct folio *folio);
+> > >
+> > >   static inline void align_huge_pmd_range(struct vm_area_struct *vma,
+> > >                                       unsigned long *start,
+> > > @@ -492,6 +494,13 @@ static inline void align_huge_pmd_range(struct v=
+m_area_struct *vma,
+> > >                                       unsigned long *start,
+> > >                                       unsigned long *end) {}
+> > >
+> > > +static inline bool unmap_huge_pmd_locked(struct vm_area_struct *vma,
+> > > +                                      unsigned long addr, pmd_t *pmd=
+p,
+> > > +                                      struct folio *folio)
+> > > +{
+> > > +     return false;
+> > > +}
+> > > +
+> > >   #define split_huge_pud(__vma, __pmd, __address)     \
+> > >       do { } while (0)
+> > >
+> > > diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> > > index 145505a1dd05..90fdef847a88 100644
+> > > --- a/mm/huge_memory.c
+> > > +++ b/mm/huge_memory.c
+> > > @@ -2690,6 +2690,79 @@ static void unmap_folio(struct folio *folio)
+> > >       try_to_unmap_flush();
+> > >   }
+> > >
+> > > +static bool __discard_trans_pmd_locked(struct vm_area_struct *vma,
+> > > +                                    unsigned long addr, pmd_t *pmdp,
+> > > +                                    struct folio *folio)
+> > > +{
+> > > +     struct mm_struct *mm =3D vma->vm_mm;
+> > > +     int ref_count, map_count;
+> > > +     pmd_t orig_pmd =3D *pmdp;
+> > > +     struct mmu_gather tlb;
+> > > +     struct page *page;
+> > > +
+> > > +     if (pmd_dirty(orig_pmd) || folio_test_dirty(folio))
+> > > +             return false;
+> > > +     if (unlikely(!pmd_present(orig_pmd) || !pmd_trans_huge(orig_pmd=
+)))
+> > > +             return false;
+> > > +
+> > > +     page =3D pmd_page(orig_pmd);
+> > > +     if (unlikely(page_folio(page) !=3D folio))
+> > > +             return false;
+> > > +
+> > > +     tlb_gather_mmu(&tlb, mm);
+> > > +     orig_pmd =3D pmdp_huge_get_and_clear(mm, addr, pmdp);
+> > > +     tlb_remove_pmd_tlb_entry(&tlb, pmdp, addr);
+> > > +
+> > > +     /*
+> > > +      * Syncing against concurrent GUP-fast:
+> > > +      * - clear PMD; barrier; read refcount
+> > > +      * - inc refcount; barrier; read PMD
+> > > +      */
+> > > +     smp_mb();
+> > > +
+> > > +     ref_count =3D folio_ref_count(folio);
+> > > +     map_count =3D folio_mapcount(folio);
+> > > +
+> > > +     /*
+> > > +      * Order reads for folio refcount and dirty flag
+> > > +      * (see comments in __remove_mapping()).
+> > > +      */
+> > > +     smp_rmb();
+> > > +
+> > > +     /*
+> > > +      * If the PMD or folio is redirtied at this point, or if there =
+are
+> > > +      * unexpected references, we will give up to discard this folio
+> > > +      * and remap it.
+> > > +      *
+> > > +      * The only folio refs must be one from isolation plus the rmap=
+(s).
+> > > +      */
+> > > +     if (ref_count !=3D map_count + 1 || folio_test_dirty(folio) ||
+> > > +         pmd_dirty(orig_pmd)) {
+> > > +             set_pmd_at(mm, addr, pmdp, orig_pmd);
+> > > +             return false;
+> > > +     }
+> > > +
+> > > +     folio_remove_rmap_pmd(folio, page, vma);
+> > > +     zap_deposited_table(mm, pmdp);
+> > > +     add_mm_counter(mm, MM_ANONPAGES, -HPAGE_PMD_NR);
+> > > +     folio_put(folio);
+> >
+> > IIUC, you missed handling mlock vma, see mlock_drain_local() in
+> > try_to_unmap_one().
+>
+> Good spot!
+>
+> I suddenly realized that I overlooked another thing: If we detect that a
+> PMD-mapped THP is within the range of the VM_LOCKED VMA, we
+> should check whether the TTU_IGNORE_MLOCK flag is set in
+> try_to_unmap_one(). If the flag is set, we will remove the PMD mapping
+> from the folio. Otherwise, the folio should be mlocked, which avoids
+> splitting the folio and then mlocking each page again.
 
-Fixes: e2c510d6d630 ("riscv: dts: starfive: Add cpu scaling for JH7110 SoC")
-Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
----
- .../clk/starfive/clk-starfive-jh7110-sys.c    | 31 ++++++++++++++++++-
- drivers/clk/starfive/clk-starfive-jh71x0.h    |  2 ++
- 2 files changed, 32 insertions(+), 1 deletion(-)
+My previous response above is flawed - sorry :(
 
-diff --git a/drivers/clk/starfive/clk-starfive-jh7110-sys.c b/drivers/clk/starfive/clk-starfive-jh7110-sys.c
-index 8f5e5abfa178..dafa3ae71751 100644
---- a/drivers/clk/starfive/clk-starfive-jh7110-sys.c
-+++ b/drivers/clk/starfive/clk-starfive-jh7110-sys.c
-@@ -385,6 +385,32 @@ int jh7110_reset_controller_register(struct jh71x0_clk_priv *priv,
- }
- EXPORT_SYMBOL_GPL(jh7110_reset_controller_register);
- 
-+/*
-+ * This clock notifier is called when the rate of PLL0 clock is to be changed.
-+ * The cpu_root clock should save the curent parent clock and swicth its parent
-+ * clock to osc before PLL0 rate will be changed. Then swicth its parent clock
-+ * back after the PLL0 rate is completed.
-+ */
-+static int jh7110_pll0_clk_notifier_cb(struct notifier_block *nb,
-+				       unsigned long action, void *data)
-+{
-+	struct jh71x0_clk_priv *priv = container_of(nb, struct jh71x0_clk_priv, pll_clk_nb);
-+	struct clk *cpu_root = priv->reg[JH7110_SYSCLK_CPU_ROOT].hw.clk;
-+	int ret = 0;
-+
-+	if (action == PRE_RATE_CHANGE) {
-+		struct clk *osc = clk_get(priv->dev, "osc");
-+
-+		priv->original_clk = clk_get_parent(cpu_root);
-+		ret = clk_set_parent(cpu_root, osc);
-+		clk_put(osc);
-+	} else if (action == POST_RATE_CHANGE) {
-+		ret = clk_set_parent(cpu_root, priv->original_clk);
-+	}
-+
-+	return notifier_from_errno(ret);
-+}
-+
- static int __init jh7110_syscrg_probe(struct platform_device *pdev)
- {
- 	struct jh71x0_clk_priv *priv;
-@@ -413,7 +439,10 @@ static int __init jh7110_syscrg_probe(struct platform_device *pdev)
- 		if (IS_ERR(priv->pll[0]))
- 			return PTR_ERR(priv->pll[0]);
- 	} else {
--		clk_put(pllclk);
-+		priv->pll_clk_nb.notifier_call = jh7110_pll0_clk_notifier_cb;
-+		ret = clk_notifier_register(pllclk, &priv->pll_clk_nb);
-+		if (ret)
-+			return ret;
- 		priv->pll[0] = NULL;
- 	}
- 
-diff --git a/drivers/clk/starfive/clk-starfive-jh71x0.h b/drivers/clk/starfive/clk-starfive-jh71x0.h
-index 23e052fc1549..e3f441393e48 100644
---- a/drivers/clk/starfive/clk-starfive-jh71x0.h
-+++ b/drivers/clk/starfive/clk-starfive-jh71x0.h
-@@ -114,6 +114,8 @@ struct jh71x0_clk_priv {
- 	spinlock_t rmw_lock;
- 	struct device *dev;
- 	void __iomem *base;
-+	struct clk *original_clk;
-+	struct notifier_block pll_clk_nb;
- 	struct clk_hw *pll[3];
- 	struct jh71x0_clk reg[];
- };
--- 
-2.25.1
+If we detect that a PMD-mapped THP is within the range of the
+VM_LOCKED VMA.
 
+1) If the TTU_IGNORE_MLOCK flag is set, we will try to remove the
+PMD mapping from the folio, as this series has done.
+
+2) If the flag is not set, the large folio should be mlocked to prevent it
+from being picked during memory reclaim? Currently, we just leave it
+as is and do not to mlock it, IIUC.
+
+What do you think?
+
+Thanks,
+Lance
+
+>
+> What do you think?
+>
+> >
+> > > +
+> > > +     return true;
+> > > +}
+> > > +
+> > > +bool unmap_huge_pmd_locked(struct vm_area_struct *vma, unsigned long=
+ addr,
+> > > +                        pmd_t *pmdp, struct folio *folio)
+> > > +{
+> > > +     VM_WARN_ON_FOLIO(!folio_test_pmd_mappable(folio), folio);
+> > > +     VM_WARN_ON_FOLIO(!folio_test_locked(folio), folio);
+> > > +     VM_WARN_ON_ONCE(!IS_ALIGNED(addr, HPAGE_PMD_SIZE));
+> > > +
+> > > +     if (folio_test_anon(folio) && !folio_test_swapbacked(folio))
+> > > +             return __discard_trans_pmd_locked(vma, addr, pmdp, foli=
+o);
+> >
+> > Why add a new function, which is only used by unmap_huge_pmd_locked()?
+> > Seems can be folded in unmap_huge_pmd_locked(), but not a strong
+> > preference:)
+>
+> Thanks for the suggestion!
+>
+> Personally, I prefer adding a new function, rather than folding
+> __discard_trans_pmd_locked() into unmap_huge_pmd_locked().
+>
+> While unmap_huge_pmd_locked() currently only deals with lazyfree THP,
+> It could be expanded to support other types of large folios that are
+> PMD-mapped in the future if needed.
+>
+> Thanks a lot again for the review!
+> Lance
+>
+> >
+> > > +
+> > > +     return false;
+> > > +}
+> > > +
+> > >   static void remap_page(struct folio *folio, unsigned long nr)
+> > >   {
+> > >       int i =3D 0;
+> > > diff --git a/mm/rmap.c b/mm/rmap.c
+> > > index 432601154583..1d3d30cb752c 100644
+> > > --- a/mm/rmap.c
+> > > +++ b/mm/rmap.c
+> > > @@ -1675,6 +1675,9 @@ static bool try_to_unmap_one(struct folio *foli=
+o, struct vm_area_struct *vma,
+> > >               }
+> > >
+> > >               if (!pvmw.pte && (flags & TTU_SPLIT_HUGE_PMD)) {
+> > > +                     if (unmap_huge_pmd_locked(vma, range.start, pvm=
+w.pmd,
+> > > +                                               folio))
+> > > +                             goto walk_done;
+> > >                       /*
+> > >                        * We temporarily have to drop the PTL and star=
+t once
+> > >                        * again from that now-PTE-mapped page table.
