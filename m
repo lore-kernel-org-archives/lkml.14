@@ -1,207 +1,261 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F6916130B;
-	Tue,  7 May 2024 15:04:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=68.232.153.233
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715094300; cv=fail; b=LuXE/vLTCtWlW0d1YJRgvlfpZM7kN/C/4PV/MntjBrR3Gb38OUtgIUWu3M1adn96VpG2+tVoqmluOoBTV/PMkRjA7VCRy4HaHAg/yq+rmvpoAuCZWQI9BPaKGKuDEeWEON/JFTprzpaKSea0qaYdrzz3UkJKZ0x6rUJH7pgF9Zk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715094300; c=relaxed/simple;
-	bh=tFgiFx1A3exh7w6qK3Xiydd8CDQ6EN7lhS+XoWiOP4Q=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OpHRPTvRCqgYi2WGummQBICt47k9H3CyWZtMmq4J5onkQp8gFM96XDraLucJaOmfcEco3jNgzEIoOG4NiebDAFLB/agq3SPoDOFiLKulutPgG8ABg0nM5SWfKHbdpnb9ToS7lOxa8F0nEtFLAxu6a6mAxF+xyxojzXjIsbOy280=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=EFuEYpe5; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=PFpb3d3N; arc=fail smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="EFuEYpe5";
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="PFpb3d3N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1715094298; x=1746630298;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=tFgiFx1A3exh7w6qK3Xiydd8CDQ6EN7lhS+XoWiOP4Q=;
-  b=EFuEYpe56w1KBH2ukLR5RVSb7hJccEwD9w5oClIb+1V1ikwV525YioEK
-   sMc5Z7HyXk06hOPRnkMn/9bVKAfhKArAKaJS3f8TWYTm+hDy+eRsu0u8E
-   nL9XER4kCx+NIN1A7mTt2TQ+Waj8iCa8EB5Jejz5CWFfW3PP4xxPighjS
-   JgHR+jMIW4MIGvAlLN4Fjc5/y5xBx/Ezc6mjOiXu/GvRS/fwMWraHv629
-   daihwVvLNO4UIlxIcZJImvyOQTi1Sm++5f3lTsCTr2nDIMpvSr01v1PYN
-   Vvz13rWPd2zyQoyGpgIy44yn3y753UWsRxVWpEkajpBYSpCCTST0NhDFx
-   A==;
-X-CSE-ConnectionGUID: KM/mqgEvQUeFmV7nKnB7YQ==
-X-CSE-MsgGUID: suqszezISXiX4jMsygg7rQ==
-X-IronPort-AV: E=Sophos;i="6.08,142,1712646000"; 
-   d="scan'208";a="26159054"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 07 May 2024 08:04:51 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Tue, 7 May 2024 08:04:21 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (10.10.215.250)
- by email.microchip.com (10.10.87.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Tue, 7 May 2024 08:04:21 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h16vFJsO9RhrWlTQK5mR1pDEv21xSLles2Yp0DxPQFzamjqN/XJgqFAwChn8zugV+NbJLrWxsKDC/vKEUPFjIEffmrGBQeuKiYZNkZr1Ks+23uzUfTCpYyJzlyRpJSWwieB8uffeOiEvJxTuyF2Hr74ro/XE9tMgzWiClDn7iynYfgGlQASKJpK0kZAEMaKIUFBAifONE0mJ2kIUcrDCdXAbx37XifYlvc1KIyYIAmOocQfFd6wS7lT3TkzD6ZgEAt9d3+NrXBJC8XBQ36QyV2Bt7qsm09gVK/i4p39awHGVhPa1o+86ZIihcNLf4GLNdfpvli8OZZLln0q6M76jtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tFgiFx1A3exh7w6qK3Xiydd8CDQ6EN7lhS+XoWiOP4Q=;
- b=Ngpr9TJ25dxkV4badiN+VXt7vzTya808vIhAWOaUxVHOaBt7svCX2cCbbzzwerBDu+9x6LKaIYbYVgV+KpprJsIa+wgEDrZgsb6QMaYbdCixm/eIqO1faB7QJNtWt5lyW3BlS/lw8VTe6dtrBJdvQD23vVTZadPJVi59aSwk3TutMmf0N8NhIMkrhxEZ9ygp31JX17M21Bcy2LlaxOBVA+8n9hthwQosmbSiCET42FiLz4ARlXRL6TYIb/EDkGbRw2CJR2tu/7PA7W+hJpfE4Xlvcq7dw+kJuKbZeWEectyfn1/v/twZvpb3fadRxOmeMvaPJ02bahg4Ou/jfH96EQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tFgiFx1A3exh7w6qK3Xiydd8CDQ6EN7lhS+XoWiOP4Q=;
- b=PFpb3d3NptMUbnYIuJV9MX37XUgQ1sEixudLqe6f0v7zQNF/GxMLAcKxRRt64VdXDNzmkLewC+XcVk4ZUhl1+AqjguQvBYIYKQ7befXiLILKiHU0r3fNCACjepgsuGXqUMQLCoTg12D0l5E2wHNyMytHiBVJuZE/5MrxHhcSPM4yjvWypQPfl5Ihb6hiXjnHOQIcxqKZAmnsiNvXsVJ54JL6JGM3XcEmU3ibotCrzOX+7OHk2tISts9VO/1/N0bIxlTH+UIomSq5W5jcjONLs3344Yg8CAdl32ZOZn6MQEBamyQ1bOXgOKdWZSJYJ8hjWFskEw8OWiDBa6vFpbv9Dg==
-Received: from BL0PR11MB2913.namprd11.prod.outlook.com (2603:10b6:208:79::29)
- by CO1PR11MB4884.namprd11.prod.outlook.com (2603:10b6:303:6c::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42; Tue, 7 May
- 2024 15:04:18 +0000
-Received: from BL0PR11MB2913.namprd11.prod.outlook.com
- ([fe80::3bc1:80d8:bfa5:e742]) by BL0PR11MB2913.namprd11.prod.outlook.com
- ([fe80::3bc1:80d8:bfa5:e742%6]) with mapi id 15.20.7544.041; Tue, 7 May 2024
- 15:04:17 +0000
-From: <Woojung.Huh@microchip.com>
-To: <o.rempel@pengutronix.de>
-CC: <davem@davemloft.net>, <andrew@lunn.ch>, <edumazet@google.com>,
-	<f.fainelli@gmail.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<olteanv@gmail.com>, <Arun.Ramadoss@microchip.com>, <kernel@pengutronix.de>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<UNGLinuxDriver@microchip.com>, <dsahern@kernel.org>, <horms@kernel.org>,
-	<willemb@google.com>, <san@skov.dk>
-Subject: RE: [PATCH net-next v7 02/12] net: dsa: microchip: add IPV
- information support
-Thread-Topic: [PATCH net-next v7 02/12] net: dsa: microchip: add IPV
- information support
-Thread-Index: AQHanVvYOrS/w3MF/UCWVV5PJclUi7GKpGpQgACRbwCAAK4qoA==
-Date: Tue, 7 May 2024 15:04:17 +0000
-Message-ID: <BL0PR11MB29130F8A2E9D28BC032995A0E7E42@BL0PR11MB2913.namprd11.prod.outlook.com>
-References: <20240503131351.1969097-1-o.rempel@pengutronix.de>
- <20240503131351.1969097-3-o.rempel@pengutronix.de>
- <BL0PR11MB29131C40E4B39B119F9891C2E71C2@BL0PR11MB2913.namprd11.prod.outlook.com>
- <ZjmwEPS0BM0QJUc5@pengutronix.de>
-In-Reply-To: <ZjmwEPS0BM0QJUc5@pengutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microchip.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BL0PR11MB2913:EE_|CO1PR11MB4884:EE_
-x-ms-office365-filtering-correlation-id: 17c9741f-1708-4e64-39cc-08dc6ea6f77d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230031|366007|1800799015|376005|7416005|38070700009;
-x-microsoft-antispam-message-info: =?utf-8?B?MktoOFI0TnNMOGxyZkNmZFo4ZXYva2xLeTBqMjViNHdIa0VBbWxKREIzNk9Q?=
- =?utf-8?B?Q0tyQ1lNSXIydGJTUEdEa1ZSK295Z2VIUHo1Z1FPa0VtcExXWXcybXpXQ094?=
- =?utf-8?B?elJObVFsdzRMbzc3UlBxQUVVeG5OZ3U5cVRZaFFBck9xRmp6VTEzOFRkaUV3?=
- =?utf-8?B?eVc2aFdKcHM2ZXRnRWk5MWlCZ2hvUExWVUdoL29QdCtkWkpuN2doQWlDSi9v?=
- =?utf-8?B?NTRINUtQNm0xdEFxdUM3MFRwc3NXWGErRVBnckYvU0JtNm5wUzdPSVROOTBh?=
- =?utf-8?B?RGJSZDd2TkkwZFZEZklpc2NxTStYQlh6bVlJSmRkbVFqTnoyaU43L2paL3l0?=
- =?utf-8?B?Tk5scCtsd3B5M0FDbmM0MG80REt0cE1xSEFQNGZxbkc1Ym1EZm11TWswNEpT?=
- =?utf-8?B?OUQrV3RDZk0rV3FLYnZxMW5jVUZ5eUpENDdJbExVcFJVL3hESXdaQk9hWWYy?=
- =?utf-8?B?Mld1OVZnOXA1cjFMR1dHRHppRUZZdzNLSGpNTHVxZFVNUUs4enZ5RklVNEhU?=
- =?utf-8?B?a2F3S3crRSsrWkpUeWt2bEZ2NGtyT0RUQitlRmU2RzRBdjlQbnJZRVBCeGNT?=
- =?utf-8?B?SWU0Z1Q5M0J6T0NyOU5XN2NLTVVGbk5WSzFPSm9lbHN1eUpsN002bDVueVgy?=
- =?utf-8?B?Zmx4aGVEM1NJdzVlS1k0SCs4Y2R5VUtSc3paMmdmeElHRGk3d1VvRzMxTzd6?=
- =?utf-8?B?SHlvUzRJbWZ4am1tUW8vajduMnhILzNISy9kNHZoQTNFdGJuQkw5ZTgzZkJB?=
- =?utf-8?B?OHZqWm43TUZuOTBpWUdoQytJVGJaaUlwY01IRUx3MVJPY3hURmhIVWdVRzA3?=
- =?utf-8?B?OWJqOWU5ZjVGNDI5K3hGUnFTVmE0dUozdjdDWjV6Vnk1aUdQUFZoOXc5cktV?=
- =?utf-8?B?MU55b3c5dTRMRTV3eElHL21vbVppbUFpcWVQNnQxakpIUG1oWEpIdHI5c2NV?=
- =?utf-8?B?bExXM1NTcjhiT2UvWTFCSzdJNEovZzc5K1FXa1krUlJTNnc0OVJrb0dBU0tC?=
- =?utf-8?B?d0Z3S3BnTTlPNUxpZGRkd3Y5TDJBVHdGUUZRNno3ZEVoQ1ltd2VLdGtvUUVM?=
- =?utf-8?B?M3Y4eFEyWFBjNHE5ZW9Iak5OZDEyekpBM2lmS0hJK3BSWUdnR1QrQW42T3JC?=
- =?utf-8?B?QUFBOEhMN0Z6eWtHa2NZVjgvZzBFMlRka0ZJb1RiNXJFQzZyOE0zOE85Q0wz?=
- =?utf-8?B?MUFDUTVkN00zVi9odmlRU01ycTkzRjZXWGlxY3BYbEFQQVJ0V3JCODNvOW05?=
- =?utf-8?B?VkZsQW54TVdoeGJjVlZVQXhCNklCcWMybno5ZUtTMGxtRWtNY0xPR0JjYjNv?=
- =?utf-8?B?WFZDeEFOcFIyR1hIcUpVdnVScXhoelVKK01Qd0RodjNaRmlYRUVjUEJlL2NJ?=
- =?utf-8?B?TFVLRzBjYjBsSnBzd0dRRWdQMFdGVlVqeDE0RnVRY0FmbGkvaEczWlRpdEZG?=
- =?utf-8?B?R0U3eXFaOVZXSmNCckU1KzFjUGR4WVFWamszVXlhNEZ2d0xyOTJDOGJpN2Ix?=
- =?utf-8?B?T1EzdUVDa1Z5bkk0MDlDaFdMc2Q4TzdvVzJweG8wcTJZd0dqSVJ4Tjk0UE95?=
- =?utf-8?B?bWlLSzdxbXFXaDJRcTlOeHY3WlR5V1J5MGRyc3JUVHlaMXhIVlA5aWNsSlQ5?=
- =?utf-8?B?eURSNkxzZlI3ekE4b1BLT0VPNStmSzh5NnFFVkR6UDdUZ3FSRTdWWEZXS2o3?=
- =?utf-8?B?eDhlK3ZBcmRuQzNHcXVzWTNYN2daVVdYSys3SnJWSmF6ZmZYT3QzVVZRPT0=?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR11MB2913.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005)(7416005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WXYxOHBrdmdLWXZFd3I4K01BUGxyNkgrNnJ1Z1dHbVltcisrcTZ2aGZ4dGVk?=
- =?utf-8?B?WkJWOWFOZURGNTRJQkRFVmk2a0tVL3RyY1pnT3laeDFqcXJ0NjVVWGxLc1pF?=
- =?utf-8?B?SXVKdktWdUwxT2EvcEYxTTRibE9VaGhKTXJhN1BmQTExTU9XVzhLQmtubWVq?=
- =?utf-8?B?MUhqc3FVcEpCb1R1SkVPSVFZNXcyMzR3dFF0cjdzakc3VWs0d1pxL2dhL2hh?=
- =?utf-8?B?Y2JLOUpHdkNMVVhlT0h5TzZYbzlWUTFvRDE0YTM5WUNvWHorYUJzTThteFc4?=
- =?utf-8?B?TXVrUVZ1KzRZOEdReFc1Zkg3Si9zYmNIT0ZGeHVwK3NwYkd3d1Y5RG84S2Jt?=
- =?utf-8?B?VWpxRXk2Z1d1WkN6ZTJDaFlBMGdUZURvWEZMME9pTTNheEF5YndUbWF3aTFq?=
- =?utf-8?B?L0VyWDhOWFNZVjBITEoxTWpxU3JGSGJtbDBIT29tMGFBdkQ2VDRwOExSWFV6?=
- =?utf-8?B?YUEvTXhGZTZueGhHUCtvSEFFcmVmdVhmQ2tReEw5MlVuR2hkWEJtU0MxZlQ2?=
- =?utf-8?B?Q3FqMlB0SmJLaWF5VS9WSmkreG1LdTZZcjcxMTNWNkVOWWF1SnIvTzR5OUY0?=
- =?utf-8?B?SUgyNHh5WFNXZ1l2NjJSSXB4NVlFRkdGQkVkTVIxVVJWeWJKQkxUTnZPLzdW?=
- =?utf-8?B?b3B1ejdtYUMxZDVwa3F0bVhCT0tWZjRDM05lMFBXRGlnc1BlOFhaVWNYclky?=
- =?utf-8?B?VklHdGZqanFCNHRGNEk1bW95VDY0WnFxNDUxc2FOdXdqVTFrOGJYNnpvMmph?=
- =?utf-8?B?U2Z3Rks5S2VKUnhJQndxUktmcHhjb2ZhTG5IWjlISzkvSGdnMFp2bzhPOXAx?=
- =?utf-8?B?TDBvTVhFZk5TL2Erd1VzOWp3Y2EzallqcHRQQ1ZYVitPZkh3cWdNcEpEL1Zi?=
- =?utf-8?B?Yk96VEVwYzZoY1Q2UEtFckNTanJZVW1mdFcvR2Vsa3NLYWQ1ekhWaE5xWFlX?=
- =?utf-8?B?eG9QS2FlZVVXdGRwTVZNSDg5N0U3QnJNaU9ac21uSTFpOFhDdmNkVWphTnhh?=
- =?utf-8?B?RXMyV2NMeFVKVnplQklHc2pNUWVmMTUrZFJwbzhWY2dqWjY5cVpJNEpUaFdJ?=
- =?utf-8?B?VUFsQVRYS0t6Wmsxa3RkM2pyRFExTUlBbW1qWUdCRWJPaXhlZUhoSldRWXZT?=
- =?utf-8?B?L2JZQ1ZMKzBvcWVkWFpzYmZBa1crUXZQZjVZN0pIaXVYc1hEeGtyWktORE9B?=
- =?utf-8?B?V0dqeHZjbE5IbzM0Skl2cmlYeUlXazVOV3d5RkNjWlo2TFh3MEF2WGJTbVJ0?=
- =?utf-8?B?cmxmZUk3TFNHbkE0MUtYNG1lSGZodmRYUXhQWUdIakFQOEFnZG52elNPYXRS?=
- =?utf-8?B?RU1wb0xMbEdvMUFTV09sbjNJZGdDQkNmWnRUa0JjMUxpeC9PbnJ3QWg1V0Ja?=
- =?utf-8?B?YWh4SlpSVEZTT0JTNnNic1JNNzV3U1FqZlpBTEwwNmo2UDROMUZDN0NrWWEx?=
- =?utf-8?B?Z28wMURlMDlSSGhWQThTT3p2cG1Hd3BZeWFncVpQMXZrMmJ2cXM4SHljQm9s?=
- =?utf-8?B?QXFNVXBxenVuSWxQUVNHUG9mVWt5a0ZFZDhTTVpwRXB4WVFOTFQ5bXNDcWh3?=
- =?utf-8?B?K290aDc1WE9rVElvRzU1T0pDT2VIR0ZJRjFvTTEvbjZ0ZkVjUWxPcU0zRnlO?=
- =?utf-8?B?SWE5WEdBdUhaTXdRY0g0SzFOU0E0Q0xVT0lyVHpjcXlMa2QxRFBndTd1ZE1y?=
- =?utf-8?B?ejRqOGtVbjJrR2RUZDRFRGIxTlZCcVpWQlo1cFdlOHRFa0R1TVVZbDFWTTRk?=
- =?utf-8?B?ZGdyWG12R3BPQ29XZCtRMEI4bTZVcjBjT3pJaXVGazlPeWhVY0Z0UThjem5B?=
- =?utf-8?B?Um5FczROd2hzc0c5Z2FHSVZqMFFZV29naW1XZ3lMT2xBTmZTdXFwUHpRajha?=
- =?utf-8?B?MEJWZDRHRkJjV1Y1a0VXejUrT25MSDNDN2FsZkltb3RtSWxwZnZIaVlxZjZs?=
- =?utf-8?B?Q1ExbVAwTUg1OXFVR3NFNHA2ZlJBTDkyNnR0Y3BtbC9OdzFSWGdnWDFyWU1U?=
- =?utf-8?B?bTBiMTV0V21YMDdzVjFaQ3B4UmNmeVlpeitlVzlYNlhxeUtuVGxsR0wwUW5E?=
- =?utf-8?B?aDBMOW8vSUt4Q3pyb21yM0Q3K3Fod3ZWY1dzVnliekhJL25GaGM0Q25SVDJI?=
- =?utf-8?Q?d0l7Q9VbiQl/OrSKA3trvjcJe?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D3615F311;
+	Tue,  7 May 2024 15:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715094317; cv=none; b=bxaWRNRDiv/KjNT794OChdfDalHHSLiO3LqRxPoBrXEU0TRYXlo9d7ufqf0Xwce2ZpZcuXU6nVAzLGQ2KGojQ2tbnuyLfRqfEPLxuGBY7K64RtT1T29kBxf1p1LqAfnXU8VVTeFSJ7VsHDMSWIdok6HXQOq5cRKUbohNWbfrNxA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715094317; c=relaxed/simple;
+	bh=F5SojC1Aso76ilUIHd7zkohFfpWYx4zKuWjVs2YIOZo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ixvo6BEF+33tz+M3cmNp/zIA9AHM0qZQEzfTpPqpwcpUJe11oyuRPsU/AV7CHIo/WDMzmS1Cyq6I/XgVwCjAbWjGA/o3quwYU1moY+0u7kO0C/B3fm6FOPREevdNRaldQiK8j0EucAbz933MvuIKRD6SvLzIzM08BCbyR0YBAYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a59a5f81af4so847447666b.3;
+        Tue, 07 May 2024 08:05:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715094313; x=1715699113;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TURLiT4bRicACTKTr+r8vhSZhdlXKzpOFbrGnSfXbuo=;
+        b=AIb770xBZ9YGBcybdLaJLi3yYQIwY9QAm28Wi7XAdeq3knGqO2B0PITmO8hARSH20u
+         s2D22YJ3IYlqbEDuO37XPfm0yu+JnwCHxX5dV+uoKusI9iSHEp1w+BEyDAOGpc9MOuH9
+         Vm2A34mNjmPSh9mQWefej0pPiKPWz0ANDUgIlv5V1pJIL3eeN0cKBThSx12CdDx9RMDs
+         IqsnAYGRYKzw3Je9IVwz19pNYmnFllwFfjQPBo+3MRYLGQ81G4acsas1In8uwLqlpfAL
+         jf9QXI8HxdDWx14t5FN+2tVs/Z9gdbbA5/OhIgC/JZJU5wNIdNRyH5M8GgYepG/MTcKV
+         KCRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPf1AKXbuJfMmFoqD9RNr25yr3ekYS//IuIigBxZKaaEd3ylVTq9tJf9D4h9iMfqF99SoEm4g7Q2nhWlaGz1RUlwQabCar5F/ECU2kYgguCglbYoOSyCq6g5YmJvduSPIs8IADsdA=
+X-Gm-Message-State: AOJu0Yz8RIeCWDn16cWouDnOryd4yHQM8kNDXsIGvs4NajEwekR7lBxL
+	4fVnIchu6HSJEEIixoQZZS+eyrCuuBMG3B2nW20NMvGOHAfH3yGJ
+X-Google-Smtp-Source: AGHT+IEGkucU37pVk0CxcOQhxNRKNsgWhIiOqqzcRjmrXhSP6dg1K4fMfGdPqURZqTdCTyFxxNthMQ==
+X-Received: by 2002:a17:907:944d:b0:a59:cc9b:d6ea with SMTP id dl13-20020a170907944d00b00a59cc9bd6eamr5525762ejc.22.1715094313164;
+        Tue, 07 May 2024 08:05:13 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-120.fbsv.net. [2a03:2880:30ff:78::face:b00c])
+        by smtp.gmail.com with ESMTPSA id bh9-20020a170906a0c900b00a59b1914415sm3795821ejb.5.2024.05.07.08.05.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 08:05:12 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: Jens Axboe <axboe@kernel.dk>,
+	Pavel Begunkov <asml.silence@gmail.com>
+Cc: christophe.jaillet@wanadoo.fr,
+	io-uring@vger.kernel.org (open list:IO_URING),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] io_uring/io-wq: Use set_bit() and test_bit() at worker->flags
+Date: Tue,  7 May 2024 08:05:05 -0700
+Message-ID: <20240507150506.1748059-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR11MB2913.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17c9741f-1708-4e64-39cc-08dc6ea6f77d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 May 2024 15:04:17.5138
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: gW+ROnZbPjwdujrfU4qMqRCCv6yYOnA0Lw0eYYrwJBn3C2jcAiRD98BvtOQAZ8LbgmQkq5BHf+03xxyfKEs1YKhf+pOXBpLQaWq4ImzAMWY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB4884
+Content-Transfer-Encoding: 8bit
 
-SGkgT2xla3NpaiwNCg0KPiBIaSBXb29qdW5nLA0KPiANCj4gT24gTW9uLCBNYXkgMDYsIDIwMjQg
-YXQgMDg6NDM6NDhQTSArMDAwMCwgV29vanVuZy5IdWhAbWljcm9jaGlwLmNvbSB3cm90ZToNCj4g
-PiBIaSBPbGVrc2lqLA0KPiA+DQo+ID4gVGhhbmtzIGZvciB0aGUgcGF0Y2ggYW5kIHNvcnJ5IGFi
-b3V0IGxhdGUgY29tbWVudCBvbiB0aGlzLg0KPiA+DQo+ID4gSSBoYXZlIGEgY29tbWVudCBvbiB0
-aGUgbmFtZSBvZiBJUFYgKEludGVybmFsIFByaW9yaXR5IFZhbHVlKQ0KPiA+IElQViBpcyBhZGRl
-ZCBhbmQgdXNlZCB0ZXJtIGluIDgwMi4xUWNpIFBTRlANCj4gPiAoaHR0cHM6Ly9pZWVleHBsb3Jl
-LmllZWUub3JnL2RvY3VtZW50LzgwNjQyMjEpIGFuZCwgbWVyZ2VkIGludG8gODAyLjFRDQo+IChm
-cm9tIDgwMi4xUS0yMDE4KQ0KPiA+IGZvciBhbm90aGVyIGZ1bmN0aW9ucy4NCj4gPg0KPiA+IEV2
-ZW4gaXQgZG9lcyBzaW1pbGFyIG9wZXJhdGlvbiBob2xkaW5nIHRlbXBvcmFsIHByaW9yaXR5IHZh
-bHVlIGludGVybmFsbHkNCj4gKGFzIGl0IGlzIG5hbWVkKSwNCj4gPiBiZWNhdXNlIEtTWiBkYXRh
-c2hlZXQgZG9lc24ndCB1c2UgdGhlIHRlcm0gb2YgSVBWIChJbnRlcm5hbCBQcmlvcml0eSBWYWx1
-ZSkNCj4gYW5kDQo+ID4gYXZvaWRpbmcgYW55IGNvbmZ1c2lvbiBsYXRlciB3aGVuIFBTRlAgaXMg
-aW4gdGhlIExpbnV4IHdvcmxkLA0KPiA+IEkgd291bGQgbGlrZSB0byByZWNvbW1lbmQgYSBkaWZm
-ZXJlbnQgbmFtZSBzdWNoIGFzIElQTSAoSW50ZXJuYWwgUHJpb3JpdHkNCj4gTWFwcGluZykgdGhh
-biBJUFYuDQo+ID4NCj4gPiBIb3cgZG8geW91IHRoaW5rPw0KPiANCj4gT2suDQo+IA0KPiBEbyBJ
-UFYgaW4gTEFOOTM3MiBkYXRhc2hlZXQgbWVhbnMsIElQViA4MDIuMVFjaSBQU0ZQIG9yIElQTT8N
-Cj4gDQoNCklQViBpbiBMQU45MzcyIGlzIDgwMi4xUWNpIFBTRlAuIEl0IGhhcyBUU04gZmVhdHVy
-ZXMgaW5jbHVkaW5nIDgwMi4xUWNpLg0KDQpUaGFua3MuDQpXb29qdW5nDQo=
+Utilize set_bit() and test_bit() on worker->flags within io_uring/io-wq
+to address potential data races.
+
+The structure io_worker->flags may be accessed through various data
+paths, leading to concurrency issues. When KCSAN is enabled, it reveals
+data races occurring in io_worker_handle_work and
+io_wq_activate_free_worker functions.
+
+	 BUG: KCSAN: data-race in io_worker_handle_work / io_wq_activate_free_worker
+	 write to 0xffff8885c4246404 of 4 bytes by task 49071 on cpu 28:
+	 io_worker_handle_work (io_uring/io-wq.c:434 io_uring/io-wq.c:569)
+	 io_wq_worker (io_uring/io-wq.c:?)
+<snip>
+
+	 read to 0xffff8885c4246404 of 4 bytes by task 49024 on cpu 5:
+	 io_wq_activate_free_worker (io_uring/io-wq.c:? io_uring/io-wq.c:285)
+	 io_wq_enqueue (io_uring/io-wq.c:947)
+	 io_queue_iowq (io_uring/io_uring.c:524)
+	 io_req_task_submit (io_uring/io_uring.c:1511)
+	 io_handle_tw_list (io_uring/io_uring.c:1198)
+<snip>
+
+Line numbers against commit 18daea77cca6 ("Merge tag 'for-linus' of
+git://git.kernel.org/pub/scm/virt/kvm/kvm").
+
+These races involve writes and reads to the same memory location by
+different tasks running on different CPUs. To mitigate this, refactor
+the code to use atomic operations such as set_bit(), test_bit(), and
+clear_bit() instead of basic "and" and "or" operations. This ensures
+thread-safe manipulation of worker flags.
+
+Also, move `create_index` to avoid holes in the structure.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Changelog:
+
+v2:
+  * Moved `create_index` to avoid holes in the struct.
+  * Use set_mask_bits() as suggested by Christophe JAILLET.
+v1:
+  * https://lore.kernel.org/all/20240503173711.2211911-1-leitao@debian.org/
+
+---
+ io_uring/io-wq.c | 46 +++++++++++++++++++++++-----------------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
+
+diff --git a/io_uring/io-wq.c b/io_uring/io-wq.c
+index 522196dfb0ff..296b8301813a 100644
+--- a/io_uring/io-wq.c
++++ b/io_uring/io-wq.c
+@@ -25,10 +25,10 @@
+ #define WORKER_IDLE_TIMEOUT	(5 * HZ)
+ 
+ enum {
+-	IO_WORKER_F_UP		= 1,	/* up and active */
+-	IO_WORKER_F_RUNNING	= 2,	/* account as running */
+-	IO_WORKER_F_FREE	= 4,	/* worker on free list */
+-	IO_WORKER_F_BOUND	= 8,	/* is doing bounded work */
++	IO_WORKER_F_UP		= 0,	/* up and active */
++	IO_WORKER_F_RUNNING	= 1,	/* account as running */
++	IO_WORKER_F_FREE	= 2,	/* worker on free list */
++	IO_WORKER_F_BOUND	= 3,	/* is doing bounded work */
+ };
+ 
+ enum {
+@@ -44,7 +44,8 @@ enum {
+  */
+ struct io_worker {
+ 	refcount_t ref;
+-	unsigned flags;
++	int create_index;
++	unsigned long flags;
+ 	struct hlist_nulls_node nulls_node;
+ 	struct list_head all_list;
+ 	struct task_struct *task;
+@@ -58,7 +59,6 @@ struct io_worker {
+ 
+ 	unsigned long create_state;
+ 	struct callback_head create_work;
+-	int create_index;
+ 
+ 	union {
+ 		struct rcu_head rcu;
+@@ -165,7 +165,7 @@ static inline struct io_wq_acct *io_work_get_acct(struct io_wq *wq,
+ 
+ static inline struct io_wq_acct *io_wq_get_acct(struct io_worker *worker)
+ {
+-	return io_get_acct(worker->wq, worker->flags & IO_WORKER_F_BOUND);
++	return io_get_acct(worker->wq, test_bit(IO_WORKER_F_BOUND, &worker->flags));
+ }
+ 
+ static void io_worker_ref_put(struct io_wq *wq)
+@@ -225,7 +225,7 @@ static void io_worker_exit(struct io_worker *worker)
+ 	wait_for_completion(&worker->ref_done);
+ 
+ 	raw_spin_lock(&wq->lock);
+-	if (worker->flags & IO_WORKER_F_FREE)
++	if (test_bit(IO_WORKER_F_FREE, &worker->flags))
+ 		hlist_nulls_del_rcu(&worker->nulls_node);
+ 	list_del_rcu(&worker->all_list);
+ 	raw_spin_unlock(&wq->lock);
+@@ -410,7 +410,7 @@ static void io_wq_dec_running(struct io_worker *worker)
+ 	struct io_wq_acct *acct = io_wq_get_acct(worker);
+ 	struct io_wq *wq = worker->wq;
+ 
+-	if (!(worker->flags & IO_WORKER_F_UP))
++	if (!test_bit(IO_WORKER_F_UP, &worker->flags))
+ 		return;
+ 
+ 	if (!atomic_dec_and_test(&acct->nr_running))
+@@ -430,8 +430,8 @@ static void io_wq_dec_running(struct io_worker *worker)
+  */
+ static void __io_worker_busy(struct io_wq *wq, struct io_worker *worker)
+ {
+-	if (worker->flags & IO_WORKER_F_FREE) {
+-		worker->flags &= ~IO_WORKER_F_FREE;
++	if (test_bit(IO_WORKER_F_FREE, &worker->flags)) {
++		clear_bit(IO_WORKER_F_FREE, &worker->flags);
+ 		raw_spin_lock(&wq->lock);
+ 		hlist_nulls_del_init_rcu(&worker->nulls_node);
+ 		raw_spin_unlock(&wq->lock);
+@@ -444,8 +444,8 @@ static void __io_worker_busy(struct io_wq *wq, struct io_worker *worker)
+ static void __io_worker_idle(struct io_wq *wq, struct io_worker *worker)
+ 	__must_hold(wq->lock)
+ {
+-	if (!(worker->flags & IO_WORKER_F_FREE)) {
+-		worker->flags |= IO_WORKER_F_FREE;
++	if (!test_bit(IO_WORKER_F_FREE, &worker->flags)) {
++		set_bit(IO_WORKER_F_FREE, &worker->flags);
+ 		hlist_nulls_add_head_rcu(&worker->nulls_node, &wq->free_list);
+ 	}
+ }
+@@ -631,7 +631,7 @@ static int io_wq_worker(void *data)
+ 	bool exit_mask = false, last_timeout = false;
+ 	char buf[TASK_COMM_LEN];
+ 
+-	worker->flags |= (IO_WORKER_F_UP | IO_WORKER_F_RUNNING);
++	set_mask_bits(&worker->flags, 0, IO_WORKER_F_UP | IO_WORKER_F_RUNNING);
+ 
+ 	snprintf(buf, sizeof(buf), "iou-wrk-%d", wq->task->pid);
+ 	set_task_comm(current, buf);
+@@ -695,11 +695,11 @@ void io_wq_worker_running(struct task_struct *tsk)
+ 
+ 	if (!worker)
+ 		return;
+-	if (!(worker->flags & IO_WORKER_F_UP))
++	if (!test_bit(IO_WORKER_F_UP, &worker->flags))
+ 		return;
+-	if (worker->flags & IO_WORKER_F_RUNNING)
++	if (test_bit(IO_WORKER_F_RUNNING, &worker->flags))
+ 		return;
+-	worker->flags |= IO_WORKER_F_RUNNING;
++	set_bit(IO_WORKER_F_RUNNING, &worker->flags);
+ 	io_wq_inc_running(worker);
+ }
+ 
+@@ -713,12 +713,12 @@ void io_wq_worker_sleeping(struct task_struct *tsk)
+ 
+ 	if (!worker)
+ 		return;
+-	if (!(worker->flags & IO_WORKER_F_UP))
++	if (!test_bit(IO_WORKER_F_UP, &worker->flags))
+ 		return;
+-	if (!(worker->flags & IO_WORKER_F_RUNNING))
++	if (!test_bit(IO_WORKER_F_RUNNING, &worker->flags))
+ 		return;
+ 
+-	worker->flags &= ~IO_WORKER_F_RUNNING;
++	clear_bit(IO_WORKER_F_RUNNING, &worker->flags);
+ 	io_wq_dec_running(worker);
+ }
+ 
+@@ -732,7 +732,7 @@ static void io_init_new_worker(struct io_wq *wq, struct io_worker *worker,
+ 	raw_spin_lock(&wq->lock);
+ 	hlist_nulls_add_head_rcu(&worker->nulls_node, &wq->free_list);
+ 	list_add_tail_rcu(&worker->all_list, &wq->all_list);
+-	worker->flags |= IO_WORKER_F_FREE;
++	set_bit(IO_WORKER_F_FREE, &worker->flags);
+ 	raw_spin_unlock(&wq->lock);
+ 	wake_up_new_task(tsk);
+ }
+@@ -838,7 +838,7 @@ static bool create_io_worker(struct io_wq *wq, int index)
+ 	init_completion(&worker->ref_done);
+ 
+ 	if (index == IO_WQ_ACCT_BOUND)
+-		worker->flags |= IO_WORKER_F_BOUND;
++		set_bit(IO_WORKER_F_BOUND, &worker->flags);
+ 
+ 	tsk = create_io_thread(io_wq_worker, worker, NUMA_NO_NODE);
+ 	if (!IS_ERR(tsk)) {
+@@ -924,8 +924,8 @@ static bool io_wq_work_match_item(struct io_wq_work *work, void *data)
+ void io_wq_enqueue(struct io_wq *wq, struct io_wq_work *work)
+ {
+ 	struct io_wq_acct *acct = io_work_get_acct(wq, work);
++	unsigned long work_flags = work->flags;
+ 	struct io_cb_cancel_data match;
+-	unsigned work_flags = work->flags;
+ 	bool do_create;
+ 
+ 	/*
+-- 
+2.43.0
+
