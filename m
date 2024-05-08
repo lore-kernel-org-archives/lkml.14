@@ -1,273 +1,176 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2D9984A28
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C959C82899
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715168620; cv=none; b=Drp+rbFcLfIeg7ZzGXy2G4znk8i1qHqbRWej4nzh2fSuFCHQKskEmaqNsySZpl++gAj6JhKGfl0L8/ELlYn9qAxZe0EtxkJJdC37Uekd4w0X3cWZb+gQPJGoC04Tcp6xggBRxM/4YcfG6OAam32hq+GoQODGvtXCIQ1KQuWLg6U=
+	t=1715168629; cv=none; b=n5UjeV+hI3ZCaPnPqfy4a3sYvTqLPH+LMIv36CqAhI6nbcFNc2iJXGkIbrk7ckr9e5Fxk/J5eRVp8CxtcggbjqKYwVKd6EChGke7ua2rhG3Y7zHXGpLZUz3ZmKQuDqjeaIon+LNxeQdCv/yCEbODVZIYJn9JVCn6aw4ut3oX07Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715168620; c=relaxed/simple;
-	bh=hNesfuK+7JIeLYO6AXmKPce2DdNjYSYJbeDcMnRQMlM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gXoCeWdhvV93UgAf313MsfBFfIQz4qNetStulomFeMraP+c1Rl/lUVEtzWrDiefGDcloGEyKvULnRvunMsX+ObVrRuaYfxBdsQd7Yab/nkdNHXF2m6tyvgFfzxTinVvvnhpKYKlhXFMEEZmbAzMBFl/OuFA43fEebA6a218ewmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=JxamP8QS; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1715168629; c=relaxed/simple;
+	bh=KMEJ67Lgf0ato9GCP4BhJGyrBemrOUmEZZ2EyOeaUVI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hrN3+qRkzVMXC2FPEXIaVJGoNUQD/uESL312dTx7n5UvERJWO1D3OI645k2rcSo8JfoFNytuHGFm/OhEL8CRead4Yky9Evj2hM/p/WzDGPLFIK4S9ffz/j6k/Umk6dDWOOIbJs++4kk8z4C8aQzy4sw3whtg3499RKnKF4ZsxG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QyAPnrLz; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="JxamP8QS"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2e1fa1f1d9bso81630371fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 04:43:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QyAPnrLz"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2b6456f7e94so160852a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 04:43:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715168617; x=1715773417; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1715168627; x=1715773427; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zkDF3kPVXJf4AqMK0ZqTYH7UgAMmNVObdoVU0G1Ynu8=;
-        b=JxamP8QSOX0cao4lrZocsBN/0YmbbhqLRJpqYeGq/P8Ck6QmTe8ultgnakKHFSFCT6
-         PYyXVdyEVSBbP++jzURncN25n0uZ1ljISKJnE6Vi4hPFPUd8fU0O4r7HVSZgYWMXB7Dh
-         zQd0nF7py0qSowBF+HFFbT7z3+IP9pVfl0+4+N7j0nm3sqeMlAfm5pCzZo8QmOdU8UTq
-         eU5EGWtnbZwVnFvT/cSz36S2rQ5HzBEcsNyIW6+YQpXa+x2bKihGa/KFsxEkElXxif3I
-         gi9iUiawUUcRDDDbBtQmgaSxuYJjfc3LFYhRiQzfayK/b/I/NFWynV6iZQ3l1/ZH6laR
-         UWAw==
+        bh=VzEeV8O7cqpPCMasGDN5yB28tX49+B8gmMSvUBqc6vQ=;
+        b=QyAPnrLztXMyrY/TFo8TGdM+2qOIVSpYTb+g2N0xq2uH/MuybjsbOXTK43UtSpijNn
+         Ay3bvkooK2AHoI3QRtMYe9v2MEp6YWZwS6Khe3iloB1kaVgSNg6SkOcm6BofYy09u9Kw
+         OzJ9iEyg+vnyMgiyRHOEhifbTkSyRg4rDY+jxWcUIB7bLxGVatSXVENlp5XC0n21VIjs
+         NFPG4334x1L5SmCMkIeG1MSVknqJEjqfV+2fw8+4dNlM+Gxd4Si5CpH2l1t5qcNh3DS1
+         ILivQu7pGrGCTOiXJuUC6YkvcuFT+TN4ZV5r5yrKlw+y2YIZXZ38vqrvNmH3blOBmRJP
+         /pkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715168617; x=1715773417;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1715168627; x=1715773427;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zkDF3kPVXJf4AqMK0ZqTYH7UgAMmNVObdoVU0G1Ynu8=;
-        b=UdEZlelLij8dqVBfsuIxrBTH90wKGOnrg3E/SdZGrk5QiXpN4a+fnseri196YBnIxo
-         5w+MdaaZDz8wCk/J2VbQ/ZbtZTsy5wrc9ycPz/at848Se7HmQArzYvdYCZJ0Ewpe9Rau
-         RFcjgsxBtUlHagbggFv7k23VajDfMwQtLQcASJlBQQrayZ6XDHAUuS5yY4Uj5yq6bkte
-         H6M1lUWU0lHQAGuDJRyANEfLQqRJGec2YrifE2pFn18FK1/HBZ1UdukNIn8J7l+qZyAL
-         N7LRU5ZO9wrwV8d6apEa8ob/eZA3iKPgFEiXD1EwX/vf07smFKENLt/vOlwpyKAAqRy5
-         8YRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXh2/g7RFyTSGoobsbl3NQgTYCm/Qx9YdpgEKoHsrHlGQNpwp6+E6kuHNXNp2FHj20YseM23/zB1Ge4quX/XG8DGGBYTenEZWOFTKW8
-X-Gm-Message-State: AOJu0YzrmbmBlhs193zQNIA+fFkdJgESwQBVMEvc73558i1Ja+D2R7Yp
-	naHIvTIQDNuXo9VlTm2vHIpWmhVBVgxu9hKj4iuP03R4vTx5Npfjkxlr0zIkuAQ=
-X-Google-Smtp-Source: AGHT+IGXkVEaOMFBHx/baYrBz9derdknpbq9as3brbpiTEdPwh/hYAl2dlBH3Ljix5Ca772CLWwlVQ==
-X-Received: by 2002:a2e:9257:0:b0:2e1:a504:f9ec with SMTP id 38308e7fff4ca-2e44708423amr19911671fa.23.1715168616936;
-        Wed, 08 May 2024 04:43:36 -0700 (PDT)
-Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f88111028sm20610245e9.33.2024.05.08.04.43.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 04:43:36 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-mm@kvack.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH RESEND v2 9/9] mm: Use common huge_ptep_clear_flush() function for riscv/arm64
-Date: Wed,  8 May 2024 13:34:19 +0200
-Message-Id: <20240508113419.18620-10-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240508113419.18620-1-alexghiti@rivosinc.com>
-References: <20240508113419.18620-1-alexghiti@rivosinc.com>
+        bh=VzEeV8O7cqpPCMasGDN5yB28tX49+B8gmMSvUBqc6vQ=;
+        b=npO8hyBE+XS9/BbvaZouQ5fTFDeVDxffVAh7mdegztU3UbOMe+Ugpj8OUBzIDEY85h
+         UqsePyLXrQM7BdCBGAS9V8s9dMFn+WQPY6IG8LmcHjXMqiamtsLmlfL7Yf+8LuK3+TlK
+         ubSs/7dqfj3oerbfjLyq/ePmnXuhaY9gsxC+mIwdNPp9BKDdpF3D7mzZbAA9Dq1KwQy7
+         1lB+UZKV1h+/FXm76/rOH/2kJcot5n7RoeXA/s5dWhHo6J+V1OQrAy9Etc/6DapBpAun
+         dWKK8hvESxTzO6o1Hvtzk6DBqR+3bVruYhSHQIgOWLhlTAGw6tWl8mTcbNdUuGOAb50c
+         G8vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXAnT6C5ee6zS+knhNTRIV9CuayTGByorgp+JyymxeDHSvt1cO+WEXjiESgV0DpQYRtvGI6UuPSLrQIfWEH43qI6Tq17cWiP3Ngmd8
+X-Gm-Message-State: AOJu0Yy04V39DzRZDTKnnuRXYQwnLajCjD05aQZJtKh13YddrnxTIbZ8
+	WCDFNfWaUVkV0rGLLmt2jFcsDijEh5jyAByYBUtGBSxCHfEGawlh+kLtKa7Wo6zIg1p2ufwiFkF
+	mZ/tkZPiL1YIp0VTxw/XXS0LixbAG/RtndSW7nwFA/nGcswAcxbc=
+X-Google-Smtp-Source: AGHT+IEO3bd85u0B2AuxdYue4avxAitA4qBL7f0hd7JLyvHCW/eV8DnhuJEJqXEQqub2JjhK5jzqGCHK0lLkb/fyC7g=
+X-Received: by 2002:a17:90a:fb96:b0:2b2:802f:e90a with SMTP id
+ 98e67ed59e1d1-2b611aed27bmr3178106a91.24.1715168627082; Wed, 08 May 2024
+ 04:43:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240507135234.1356855-1-yangcong5@huaqin.corp-partner.google.com>
+ <20240507135234.1356855-2-yangcong5@huaqin.corp-partner.google.com>
+ <171509488827.493449.2668049686067198439.robh@kernel.org> <CAD=FV=VNNB=jtyM1BMTUTzyTjOUqDxobWTYz9RAnCmYha-DG0w@mail.gmail.com>
+In-Reply-To: <CAD=FV=VNNB=jtyM1BMTUTzyTjOUqDxobWTYz9RAnCmYha-DG0w@mail.gmail.com>
+From: cong yang <yangcong5@huaqin.corp-partner.google.com>
+Date: Wed, 8 May 2024 19:43:35 +0800
+Message-ID: <CAHwB_NLhKqqy-Ot=HjiG2oZ6MraYvvMaV_=r60=1yR4164FeaA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/7] dt-bindings: display: panel: Add himax hx83102
+ panel bindings
+To: Doug Anderson <dianders@chromium.org>
+Cc: sam@ravnborg.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linus.walleij@linaro.org, 
+	xuxinxiong@huaqin.corp-partner.google.com, airlied@gmail.com, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	devicetree@vger.kernel.org, conor+dt@kernel.org, daniel@ffwll.ch, 
+	neil.armstrong@linaro.org, "Rob Herring (Arm)" <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After some adjustments, both architectures have the same implementation
-so move it to the generic code.
+Hi, Doug &Conor
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/arm64/mm/hugetlbpage.c | 61 -------------------------------------
- arch/riscv/mm/hugetlbpage.c | 51 -------------------------------
- mm/contpte.c                | 15 +++++++++
- 3 files changed, 15 insertions(+), 112 deletions(-)
+Doug Anderson <dianders@chromium.org> =E4=BA=8E2024=E5=B9=B45=E6=9C=888=E6=
+=97=A5=E5=91=A8=E4=B8=89 00:40=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Hi,
+>
+> On Tue, May 7, 2024 at 8:14=E2=80=AFAM Rob Herring (Arm) <robh@kernel.org=
+> wrote:
+> >
+> >
+> > On Tue, 07 May 2024 21:52:28 +0800, Cong Yang wrote:
+> > > In V1, discussed with Doug and Linus [1], we need break out as separa=
+te
+> > > driver for the himax83102-j02 controller. Beacuse "starry,himax83102-=
+j02"
+> > > and in this series "BOE nv110wum-l60" "IVO t109nw41" panels use same
+> > > controller, they have some common CMDS. So add new documentation for
+> > > this panels.
+> > >
+> > > For himax83102-j02 controller, no need 3v3 supply, so remove it.
+> > >
+> > > [1]: https://lore.kernel.org/all/CACRpkdbzYZAS0=3DzBQJUC4CB2wj4s1h6n6=
+aSAZQvdMV95r3zRUw@mail.gmail.com
+> > >
+> > > Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
+> > > ---
+> > > Chage since V4:
+> > >
+> > > - Update commit message and add fallback compatible.
+> > >
+> > > V3: https://lore.kernel.org/all/20240424023010.2099949-2-yangcong5@hu=
+aqin.corp-partner.google.com
+> > >
+> > > Chage since V3:
+> > >
+> > > - Update commit message.
+> > >
+> > > V2: https://lore.kernel.org/all/20240422090310.3311429-2-yangcong5@hu=
+aqin.corp-partner.google.com
+> > >
+> > > ---
+> > >  .../display/panel/boe,tv101wum-nl6.yaml       |  2 -
+> > >  .../bindings/display/panel/himax,hx83102.yaml | 73 +++++++++++++++++=
+++
+> > >  2 files changed, 73 insertions(+), 2 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/display/panel/h=
+imax,hx83102.yaml
+> > >
+> >
+> > My bot found errors running 'make dt_binding_check' on your patch:
+> >
+> > yamllint warnings/errors:
+> >
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
+/display/panel/himax,hx83102.example.dtb: panel@0: compatible:0: 'starry,hi=
+max83102-j02, himax,hx83102' does not match '^[a-zA-Z0-9][a-zA-Z0-9,+\\-._/=
+]+$'
+> >         from schema $id: http://devicetree.org/schemas/dt-core.yaml#
+> > Documentation/devicetree/bindings/display/panel/himax,hx83102.example.d=
+tb: /example-0/dsi/panel@0: failed to match any schema with compatible: ['s=
+tarry,himax83102-j02, himax,hx83102']
+> >
+> > doc reference errors (make refcheckdocs):
+> >
+> > See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/2024=
+0507135234.1356855-2-yangcong5@huaqin.corp-partner.google.com
+> >
+> > The base for the series is generally the latest rc1. A different depend=
+ency
+> > should be noted in *this* patch.
+> >
+> > If you already ran 'make dt_binding_check' and didn't see the above
+> > error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> > date:
+> >
+> > pip3 install dtschema --upgrade
+> >
+> > Please check and re-submit after running the above command yourself. No=
+te
+> > that DT_SCHEMA_FILES can be set to your schema file to speed up checkin=
+g
+> > your schema. However, it must be unset to test all examples with your s=
+chema.
+>
+> I think several of your bindings patches have triggered Rob's bot.
+> Please make sure you're set up to test this yourself and make sure you
+> run it locally before sending out the next version of your patches. In
+> general you should get in the habit of running 'make dt_binding_check'
+> locally before you post any bindings changes.
 
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index e56f2c8ec7e7..5869f20ca28e 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -112,53 +112,6 @@ int find_num_contig(struct mm_struct *mm, unsigned long addr,
- 	return CONT_PTES;
- }
- 
--/*
-- * Changing some bits of contiguous entries requires us to follow a
-- * Break-Before-Make approach, breaking the whole contiguous set
-- * before we can change any entries. See ARM DDI 0487A.k_iss10775,
-- * "Misprogramming of the Contiguous bit", page D4-1762.
-- *
-- * This helper performs the break step.
-- */
--static pte_t get_clear_contig(struct mm_struct *mm,
--			     unsigned long addr,
--			     pte_t *ptep,
--			     unsigned long pgsize,
--			     unsigned long ncontig)
--{
--	pte_t orig_pte = __ptep_get(ptep);
--	unsigned long i;
--
--	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++) {
--		pte_t pte = __ptep_get_and_clear(mm, addr, ptep);
--
--		/*
--		 * If HW_AFDBM is enabled, then the HW could turn on
--		 * the dirty or accessed bit for any page in the set,
--		 * so check them all.
--		 */
--		if (pte_dirty(pte))
--			orig_pte = pte_mkdirty(orig_pte);
--
--		if (pte_young(pte))
--			orig_pte = pte_mkyoung(orig_pte);
--	}
--	return orig_pte;
--}
--
--static pte_t get_clear_contig_flush(struct mm_struct *mm,
--				    unsigned long addr,
--				    pte_t *ptep,
--				    unsigned long pgsize,
--				    unsigned long ncontig)
--{
--	pte_t orig_pte = get_clear_contig(mm, addr, ptep, pgsize, ncontig);
--	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
--
--	flush_tlb_range(&vma, addr, addr + (pgsize * ncontig));
--	return orig_pte;
--}
--
- pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
- 		      unsigned long addr, unsigned long sz)
- {
-@@ -277,20 +230,6 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
- 	return entry;
- }
- 
--pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
--			    unsigned long addr, pte_t *ptep)
--{
--	struct mm_struct *mm = vma->vm_mm;
--	size_t pgsize;
--	int ncontig;
--
--	if (!pte_cont(__ptep_get(ptep)))
--		return ptep_clear_flush(vma, addr, ptep);
--
--	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
--	return get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
--}
--
- static int __init hugetlbpage_init(void)
- {
- 	if (pud_sect_supported())
-diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
-index 440d3bde88f2..47333efa2d83 100644
---- a/arch/riscv/mm/hugetlbpage.c
-+++ b/arch/riscv/mm/hugetlbpage.c
-@@ -121,42 +121,6 @@ unsigned long hugetlb_mask_last_page(struct hstate *h)
- 	return 0UL;
- }
- 
--static pte_t get_clear_contig(struct mm_struct *mm,
--			      unsigned long addr,
--			      pte_t *ptep,
--			      unsigned long pte_num)
--{
--	pte_t orig_pte = ptep_get(ptep);
--	unsigned long i;
--
--	for (i = 0; i < pte_num; i++, addr += PAGE_SIZE, ptep++) {
--		pte_t pte = ptep_get_and_clear(mm, addr, ptep);
--
--		if (pte_dirty(pte))
--			orig_pte = pte_mkdirty(orig_pte);
--
--		if (pte_young(pte))
--			orig_pte = pte_mkyoung(orig_pte);
--	}
--
--	return orig_pte;
--}
--
--static pte_t get_clear_contig_flush(struct mm_struct *mm,
--				    unsigned long addr,
--				    pte_t *ptep,
--				    unsigned long pte_num)
--{
--	pte_t orig_pte = get_clear_contig(mm, addr, ptep, pte_num);
--	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
--	bool valid = !pte_none(orig_pte);
--
--	if (valid)
--		flush_tlb_range(&vma, addr, addr + (PAGE_SIZE * pte_num));
--
--	return orig_pte;
--}
--
- pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
- {
- 	unsigned long order;
-@@ -173,21 +137,6 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
- 	return entry;
- }
- 
--pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
--			    unsigned long addr,
--			    pte_t *ptep)
--{
--	pte_t pte = ptep_get(ptep);
--	int pte_num;
--
--	if (!pte_napot(pte))
--		return ptep_clear_flush(vma, addr, ptep);
--
--	pte_num = arch_contpte_get_num_contig(vma->vm_mm, addr, ptep, 0, NULL);
--
--	return get_clear_contig_flush(vma->vm_mm, addr, ptep, pte_num);
--}
--
- static bool is_napot_size(unsigned long size)
- {
- 	unsigned long order;
-diff --git a/mm/contpte.c b/mm/contpte.c
-index 8ad2a3099dfd..15791f6d9c41 100644
---- a/mm/contpte.c
-+++ b/mm/contpte.c
-@@ -27,6 +27,7 @@
-  *   - huge_ptep_get_and_clear()
-  *   - huge_ptep_set_access_flags()
-  *   - huge_ptep_set_wrprotect()
-+ *   - huge_ptep_clear_flush()
-  */
- 
- pte_t huge_ptep_get(pte_t *ptep)
-@@ -255,3 +256,17 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
- 
- 	set_contptes(mm, addr, ptep, pte, ncontig, pgsize);
- }
-+
-+pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
-+			    unsigned long addr, pte_t *ptep)
-+{
-+	struct mm_struct *mm = vma->vm_mm;
-+	size_t pgsize;
-+	int ncontig;
-+
-+	if (!pte_cont(__ptep_get(ptep)))
-+		return ptep_clear_flush(vma, addr, ptep);
-+
-+	ncontig = arch_contpte_get_num_contig(mm, addr, ptep, 0, &pgsize);
-+	return get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
-+}
--- 
-2.39.2
+Sorry, I forgot to running 'make dt_binding_check'.
+Thanks for the correction.
 
+>
+> Thanks!
+>
+> -Doug
