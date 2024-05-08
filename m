@@ -1,60 +1,61 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6772D524
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 01:36:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F7CAD5B
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 01:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715132209; cv=none; b=DevhTLaq2G9PVfGudu5db/tdhwN4IFsMw9BbP+nW3MeYzZKKMPBEsgIh23z6BD8yZEROaD3Wkl/vcIY+1Zxxf4BUR05fX6js20VVllI9yng4iid3cg1HjHjnuQMnQQi6tHzXUmqNIltPMG0WwH0yV63s2s57pbl9YlQW+cIvr3A=
+	t=1715132206; cv=none; b=acgglvxCmknRAntGRHmeHaDvuv/ZCl6mQNSPxX4EBEw9ViEaJ4K588VS46Qmr5ky+i9yi2p3D4IR0rx9Rvk1q02o1nyHcVcD1bDBLxR50eJVssrDmSBH1UfaVTihjJ6tF8DPQAWnvRtA45AW2ozwfJG5P8sVsSYP9dZh/UouUjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715132209; c=relaxed/simple;
-	bh=hN6gBReRWF4tyaALzLlv0FO1iXf71FwbEQWuRR1cn6U=;
+	s=arc-20240116; t=1715132206; c=relaxed/simple;
+	bh=W4jHdZN/kCsCwkDu00hJrCLOm+euMvrei2YBsQUCfLQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uWnQ6xivFbCWe5z5dZtoPlGGqP8hRBUKDY612zkkouUkxyqI/15q1QNkRlGp02yc7ELkoGWAxlv1fzcaSo5pY23evEfvcGa723lsuBSrhkJ8Jlhp+EsfCyt+oay9HzinAdSdCIpTiCCAQkCJrtanQNA5grfMBJuIejKcGnGkWQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=hC9xZOH8; arc=none smtp.client-ip=209.85.210.174
+	 In-Reply-To:To:Cc; b=XGSjKd7KEJjualD0R+B1ZbEkVIXmKQEvA7hCXWgjc1X9s9dYWZlMwFw+kS6vmQCUo0eDII3TWda1MebUEe00huDunGQxGSfqHhBNpkpGHU8UnTCXvP3kMGf72VRKKdfEST4Mlq8diW7Na2LWD3bOuA82pxY/HJ0m9Zjl2SyumMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PGcUSzsX; arc=none smtp.client-ip=209.85.210.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="hC9xZOH8"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6f4a817f1e5so97058b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 18:36:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PGcUSzsX"
+Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6edc61d0ff6so3564379b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 18:36:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715132207; x=1715737007; darn=vger.kernel.org;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715132204; x=1715737004; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vFSJQnmxYmfjoFDImtU4VL6iWxbfob1tPsjHMgxh4E4=;
-        b=hC9xZOH8ijF3CnS3r0NotAGEhR/x1LruMi9LSeeLhdesfs7YUDJVVc1CdtqHhMXziL
-         mFaeYYi+BJrx7YewtPx6bMMtPEcXGvcvWuk8+V4LO9sLp0ERek6dZSUaX2llZiBHn9tG
-         JnAGkW0rvYE/fCvb90Qz/cOshGUEy8a7PrOhrLOYzOfl4HdMXwPh4/8bi2nAPAZHJ8J4
-         d0osYqAkU5a4gAL47LOu2VHE2lAop69ieASqAVfLx0xZ/c4lg2os6Qh+VsJPYjHbLfsf
-         P80C3IuixnXXUS0bhY9aN7Umm7m/qur3RDxOtJG87Icm+5W+qAZhkbl3d7ubWzfkvzv0
-         uReQ==
+        bh=QsWvdiflsnWwGCusk/V+w219I8PirWa/ozpvjoDvtCY=;
+        b=PGcUSzsXziERMexGov1lvADymqJBFRCOOOzZy+GR5+5Iq96fLj1JKOtnHrwfyl9Vhl
+         TpTywh3IfncfqRD461xt97JgFS61LKco0OJxwU1BxmmsC5LJnNUDwdNvOM6uSOLnej7q
+         g1PuOObO0i2wgoYM/n/IGjzdXe3IKB7y7Qa2dPz6Ksgrmw8e5KrPEq83CUUomPIBRIo6
+         PuYeIcgfLht4HN/+ZaqCLFyVjPWcoqs/HORa/PmNwDTnSrbJULLca3PL2WEI+iCJrUee
+         aeEWVV7zL+iBsjuPLJYNJg18dvWG49IgyhX2XLGYFWzidHppJO9Cm+XVXwh9OmKwgtVD
+         vU1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715132207; x=1715737007;
+        d=1e100.net; s=20230601; t=1715132204; x=1715737004;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vFSJQnmxYmfjoFDImtU4VL6iWxbfob1tPsjHMgxh4E4=;
-        b=PDMGW9mr+wC2Kjs31xA1uF/WzxRTdvifLXaAQe9A7h5kzE9FB7sdGccouc2R5vN9yd
-         Iz7sSOmHn7ZchJEiMsyGIvQjquJmgUOgdZ4jfMU/hvT7zBtbL7hEfCBjjNJ0Vub1wcwb
-         a+a4zcMLQQPf2/lPpha4YLjA0EDNzc2T6yuqpO5+JkM9KVvO1Wwk8FIaDJ+4/S0IvtNw
-         oXyF4d+ZWdQrgzuBdmBg0s+csXEA1LJ6xfmLQzbZQWFz5xQeAp2ysAN1F+G4RG9+OSvG
-         NUlNos/uF1M+dsFwFm1ru1tNzg3Pc8KQECE+sMRCq/X9rO9lvxfMILxskNkUIqW11b91
-         1bJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWKnusdEhYCERFUwVJ568HhdihV+mwzFO8ddtKYdzYtLrmAN6/9H5xkRVuT1Mqqvj35tfEkgr1cRLdxbm3rZhzVQqI+pPk61HTbKPQQ
-X-Gm-Message-State: AOJu0YwFgHWSexJn0efoHGgStxJu7aalGw7wCpPlK77Fl+/zibKPH5Up
-	UohGIL05EnK8Mq7EAe4VjhJUAhkOtxc1nz+KXuP0ETMnLwLttz93zX1MfG9yPkg=
-X-Google-Smtp-Source: AGHT+IGyPdvmy6aV3B3L4umYWWDDY8xIoU7bUJV2TUBvLWRK8ohQMMF3SW0DKxfoVvgynUcDHsYrOA==
-X-Received: by 2002:a05:6a21:2715:b0:1a9:5b1e:4f06 with SMTP id adf61e73a8af0-1afc8e045e8mr1232295637.52.1715132207095;
-        Tue, 07 May 2024 18:36:47 -0700 (PDT)
+        bh=QsWvdiflsnWwGCusk/V+w219I8PirWa/ozpvjoDvtCY=;
+        b=NVviBNP+lwIO4WoGOR43eriFVTTH5ZhHVdDjaDs+L/id5kAbHazFCkpNwX/MpMjdGH
+         aBsjqaZeKXRgR1wjczEfx6f+UDgZ2IxLATz93R/KBKyGBg7/I3g6b/wQ6yj91/xTuq70
+         tnYsqwat77E7ZgnF6vpTjevlF8hjiOgCm0/G1NzdF0P8Aseydb1StDplq8sSuWcbVnXZ
+         TBRf8tzJSjUpizN+RgrdVutC6iw6VzScpzpk+CByMq9ajrJyy+MJPiLcuDZqqkPAJFph
+         1RU3lUxV4W8jak9UaN940a2Hf6htFP9yVWqdjga6tpeyaBNTJ3ZjI9fm8llBpihpFdbX
+         74Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCVO4SWuhTrPY8zw3l9P3yjJAuAMzT/Qtnfz2kcQW0gzngzNCCETC0wu9o6sbU2IfqibW5j3k9ASV01SP5t4q7/NDbgxQrJGCbksJaX2
+X-Gm-Message-State: AOJu0YxpNfe6L6TBtwsshvf7o2ecQVVOggpsl0worCLE6eKOm+DdnJFl
+	8hpnJfowZvdFulQw31s/WTSbgxc1cT5mtG1ZCasn5FtDnrwM4DQnBoauXpQnfnQ=
+X-Google-Smtp-Source: AGHT+IHnbYWaPgyfBvsooFp5nm4cy6R66eKw9IW9Ae2xxUroArGaGCo9hfmYeJJ/Lsc9/W9mM29X7Q==
+X-Received: by 2002:a05:6a21:2782:b0:1ac:c455:c126 with SMTP id adf61e73a8af0-1afc8d266famr1254554637.19.1715132203783;
+        Tue, 07 May 2024 18:36:43 -0700 (PDT)
 Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b62863a265sm171994a91.10.2024.05.07.18.36.45
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b62863a265sm171994a91.10.2024.05.07.18.36.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 18:36:46 -0700 (PDT)
+        Tue, 07 May 2024 18:36:42 -0700 (PDT)
 From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Tue, 07 May 2024 18:36:30 -0700
-Subject: [PATCH v2 4/8] riscv: Move RISCV_ISA_SVPBMT to Kconfig.isa
+Date: Tue, 07 May 2024 18:36:28 -0700
+Subject: [PATCH v2 2/8] riscv: Add PLATFORM_MAY_SUPPORT_RISCV_ISA_V Kconfig
+ option
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240507-compile_kernel_with_extensions-v2-4-722c21c328c6@rivosinc.com>
+Message-Id: <20240507-compile_kernel_with_extensions-v2-2-722c21c328c6@rivosinc.com>
 References: <20240507-compile_kernel_with_extensions-v2-0-722c21c328c6@rivosinc.com>
 In-Reply-To: <20240507-compile_kernel_with_extensions-v2-0-722c21c328c6@rivosinc.com>
 To: Paul Walmsley <paul.walmsley@sifive.com>, 
@@ -76,76 +77,464 @@ To: Paul Walmsley <paul.walmsley@sifive.com>,
 Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
  Charlie Jenkins <charlie@rivosinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715132198; l=2196;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715132198; l=16103;
  i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=hN6gBReRWF4tyaALzLlv0FO1iXf71FwbEQWuRR1cn6U=;
- b=rwmUivRGvDcoS+kvi09gdGx7PVj/grlp+Tad0aawkK1yi6IcKtZer2CtyNjel3SZbguaXYzst
- 2GPHvUxb7LyAOvNrFFBjRTs73lBl91FO/UMmx/qaiWyoJ8A6E4MRt+T
+ bh=W4jHdZN/kCsCwkDu00hJrCLOm+euMvrei2YBsQUCfLQ=;
+ b=Po3uOpS8qy3hDavCm7BAc4KyH9f/ISmzzk0Eli8vAsMDCAJhx2yoQJ5x2SaBTpoHvNd2vCNya
+ c6Uj3tJG8RvCO5SM1Et9LXsKrr4DWMGYfT32EXVMKKrZVzPdBeblh6P
 X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
  pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-Svpbmt would not benefit from having PLATFORM_SUPPORTS_RISCV_ISA_SVPBMT
-so just move the definition of RISCV_ISA_SVPBMT to Kconfig.isa.
+Current versions of the kernel add "v" to the march and then immeidately
+filter it out such that "v" is not passed to CFLAGS.  Instead of doing
+this filtering, code blocks in the kernel that want to use vector
+assembly have been changed to locally enable vector (using ".option
+arch, +v").
+
+To support kernels that can run on hardware that may support vector, the
+config option PLATFORM_MAY_SUPPORT_RISCV_ISA_V is added, and the
+previous behavior of RISCV_ISA_V is retained with the option
+CONFIG_PLATFORM_SUPPORTS_RISCV_ISA_V. When the hardware is assumed to
+support vector, has_vector() unconditionally returns true. "v" is
+not added to the toolchain march even when the hardware is assumed to
+support vector because kernel vector code must be guarded by
+kernel_vector_begin/end.
 
 Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- arch/riscv/Kconfig     | 17 -----------------
- arch/riscv/Kconfig.isa | 17 +++++++++++++++++
- 2 files changed, 17 insertions(+), 17 deletions(-)
+ arch/riscv/Kconfig               | 54 -------------------------
+ arch/riscv/Kconfig.isa           | 85 ++++++++++++++++++++++++++++++++++++++++
+ arch/riscv/Makefile              |  6 +--
+ arch/riscv/crypto/Kconfig        | 14 +++----
+ arch/riscv/include/asm/simd.h    |  3 ++
+ arch/riscv/include/asm/vector.h  |  3 +-
+ arch/riscv/kernel/cpufeature.c   |  3 +-
+ arch/riscv/kernel/head.S         |  8 +++-
+ arch/riscv/kernel/process.c      | 12 +++---
+ arch/riscv/kernel/ptrace.c       |  6 +++
+ arch/riscv/lib/riscv_v_helpers.c |  1 -
+ arch/riscv/lib/uaccess_vector.S  |  2 +
+ arch/riscv/lib/xor.S             |  2 +
+ 13 files changed, 123 insertions(+), 76 deletions(-)
 
 diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 3c1960e8cd7c..47a1d28bbb64 100644
+index c2a4f5364707..c2e9eded0a7d 100644
 --- a/arch/riscv/Kconfig
 +++ b/arch/riscv/Kconfig
-@@ -484,23 +484,6 @@ config RISCV_ALTERNATIVE_EARLY
- 	help
- 	  Allows early patching of the kernel for special errata
+@@ -520,60 +520,6 @@ config RISCV_ISA_SVPBMT
  
--config RISCV_ISA_SVPBMT
--	bool "Svpbmt extension support for supervisor mode page-based memory types"
--	depends on 64BIT && MMU
--	depends on RISCV_ALTERNATIVE
+ 	   If you don't know what to do here, say Y.
+ 
+-config TOOLCHAIN_HAS_V
+-	bool
+-	default y
+-	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64iv)
+-	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32iv)
+-	depends on LLD_VERSION >= 140000 || LD_VERSION >= 23800
+-	depends on AS_HAS_OPTION_ARCH
+-
+-config RISCV_ISA_V
+-	bool "Vector extension support"
+-	depends on TOOLCHAIN_HAS_V
+-	depends on FPU
+-	select DYNAMIC_SIGFRAME
 -	default y
 -	help
--	   Add support for the Svpbmt ISA-extension (Supervisor-mode:
--	   page-based memory types) in the kernel when it is detected at boot.
+-	  Add support for the Vector extension when it is detected at boot.
+-	  When this option is disabled, neither the kernel nor userspace may
+-	  use vector procedures.
 -
--	   The memory type for a page contains a combination of attributes
--	   that indicate the cacheability, idempotency, and ordering
--	   properties for access to that page.
+-	  If you don't know what to do here, say Y.
 -
--	   The Svpbmt extension is only available on 64-bit cpus.
+-config RISCV_ISA_V_DEFAULT_ENABLE
+-	bool "Enable userspace Vector by default"
+-	depends on RISCV_ISA_V
+-	default y
+-	help
+-	  Say Y here if you want to enable Vector in userspace by default.
+-	  Otherwise, userspace has to make explicit prctl() call to enable
+-	  Vector, or enable it via the sysctl interface.
 -
--	   If you don't know what to do here, say Y.
+-	  If you don't know what to do here, say Y.
+-
+-config RISCV_ISA_V_UCOPY_THRESHOLD
+-	int "Threshold size for vectorized user copies"
+-	depends on RISCV_ISA_V
+-	default 768
+-	help
+-	  Prefer using vectorized copy_to_user()/copy_from_user() when the
+-	  workload size exceeds this value.
+-
+-config RISCV_ISA_V_PREEMPTIVE
+-	bool "Run kernel-mode Vector with kernel preemption"
+-	depends on PREEMPTION
+-	depends on RISCV_ISA_V
+-	default y
+-	help
+-	  Usually, in-kernel SIMD routines are run with preemption disabled.
+-	  Functions which envoke long running SIMD thus must yield core's
+-	  vector unit to prevent blocking other tasks for too long.
+-
+-	  This config allows kernel to run SIMD without explicitly disable
+-	  preemption. Enabling this config will result in higher memory
+-	  consumption due to the allocation of per-task's kernel Vector context.
 -
  config TOOLCHAIN_HAS_ZBB
  	bool
  	default y
 diff --git a/arch/riscv/Kconfig.isa b/arch/riscv/Kconfig.isa
-index 37585bcd763e..50e217dc5719 100644
+index 08b7af5aabb0..0663c98b5b17 100644
 --- a/arch/riscv/Kconfig.isa
 +++ b/arch/riscv/Kconfig.isa
-@@ -168,3 +168,20 @@ config PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT
- 	  not support Svnapot.
+@@ -39,3 +39,88 @@ config PLATFORM_SUPPORTS_RISCV_ISA_C
+ 	  If you don't know what to do here, say Y.
  
  endchoice
 +
-+config RISCV_ISA_SVPBMT
-+	bool "Svpbmt extension support for supervisor mode page-based memory types"
-+	depends on 64BIT && MMU
-+	depends on RISCV_ALTERNATIVE
++config TOOLCHAIN_HAS_V
++	bool
++	default y
++	depends on !64BIT || $(cc-option,-mabi=lp64 -march=rv64iv)
++	depends on !32BIT || $(cc-option,-mabi=ilp32 -march=rv32iv)
++	depends on LLD_VERSION >= 140000 || LD_VERSION >= 23800
++	depends on AS_HAS_OPTION_ARCH
++
++config RISCV_ISA_V
++	bool
++
++choice
++	prompt "Vector extension support"
++	default PLATFORM_MAY_SUPPORT_RISCV_ISA_V
++	help
++	  This selects the level of support for vector instructions to be
++	  built into the Linux Kernel. This does not impact whether vector
++	  instructions are allowed to be emitted by user-space code.
++
++config PROHIBIT_RISCV_ISA_V
++	bool "Prohibit vector instructions"
++	depends on NONPORTABLE
++	help
++	  Regardless of if the platform supports vector instructions,
++	  prohibit the kernel from emitting vector instructions.
++
++config PLATFORM_MAY_SUPPORT_RISCV_ISA_V
++	bool "Allow vector instruction sequences if supported"
++	depends on TOOLCHAIN_HAS_V
++	depends on FPU
++	select DYNAMIC_SIGFRAME
++	select RISCV_ISA_V
++	help
++	  Only allow vector instructions to be emitted if "V" is present in
++	  the device tree or ACPI table. No vector instructions will be
++	  emitted if the platform does not support them.
++
++config PLATFORM_SUPPORTS_RISCV_ISA_V
++	bool "Emit vector instructions when building Linux"
++	depends on TOOLCHAIN_HAS_V
++	depends on FPU
++	depends on NONPORTABLE
++	select DYNAMIC_SIGFRAME
++	select RISCV_ISA_V
++	help
++	  Adds "V" to the ISA subsets that the toolchain is allowed to emit
++	  when building Linux, which results in vector instructions in the
++	  Linux binary. This option produces a kernel that will not run on
++	  systems that do not support vector instructions.
++
++endchoice
++
++config RISCV_ISA_V_DEFAULT_ENABLE
++	bool "Enable userspace Vector by default"
++	depends on RISCV_ISA_V
 +	default y
 +	help
-+	   Add support for the Svpbmt ISA-extension (Supervisor-mode:
-+	   page-based memory types) in the kernel when it is detected at boot.
++	  Say Y here if you want to enable Vector in userspace by default.
++	  Otherwise, userspace has to make explicit prctl() call to enable
++	  Vector, or enable it via the sysctl interface.
 +
-+	   The memory type for a page contains a combination of attributes
-+	   that indicate the cacheability, idempotency, and ordering
-+	   properties for access to that page.
++	  If you don't know what to do here, say Y.
 +
-+	   The Svpbmt extension is only available on 64-bit cpus.
++config RISCV_ISA_V_UCOPY_THRESHOLD
++	int "Threshold size for vectorized user copies"
++	depends on RISCV_ISA_V
++	default 768
++	help
++	  Prefer using vectorized copy_to_user()/copy_from_user() when the
++	  workload size exceeds this value.
 +
-+	   If you don't know what to do here, say Y.
++config RISCV_ISA_V_PREEMPTIVE
++	bool "Run kernel-mode Vector with kernel preemption"
++	depends on PREEMPTION
++	depends on RISCV_ISA_V
++	default y
++	help
++	  Usually, in-kernel SIMD routines are run with preemption disabled.
++	  Functions which envoke long running SIMD thus must yield core's
++	  vector unit to prevent blocking other tasks for too long.
++
++	  This config allows kernel to run SIMD without explicitly disable
++	  preemption. Enabling this config will result in higher memory
++	  consumption due to the allocation of per-task's kernel Vector context.
+diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
+index e1be36004097..e1111e62ca20 100644
+--- a/arch/riscv/Makefile
++++ b/arch/riscv/Makefile
+@@ -66,7 +66,6 @@ riscv-march-$(CONFIG_ARCH_RV32I)	:= rv32ima
+ riscv-march-$(CONFIG_ARCH_RV64I)	:= rv64ima
+ riscv-march-$(CONFIG_FPU)		:= $(riscv-march-y)fd
+ riscv-march-$(CONFIG_PLATFORM_SUPPORTS_RISCV_ISA_C)	:= $(riscv-march-y)c
+-riscv-march-$(CONFIG_RISCV_ISA_V)	:= $(riscv-march-y)v
+ 
+ ifdef CONFIG_TOOLCHAIN_NEEDS_OLD_ISA_SPEC
+ KBUILD_CFLAGS += -Wa,-misa-spec=2.2
+@@ -78,10 +77,7 @@ endif
+ # Check if the toolchain supports Zihintpause extension
+ riscv-march-$(CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE) := $(riscv-march-y)_zihintpause
+ 
+-# Remove F,D,V from isa string for all. Keep extensions between "fd" and "v" by
+-# matching non-v and non-multi-letter extensions out with the filter ([^v_]*)
+-KBUILD_CFLAGS += -march=$(shell echo $(riscv-march-y) | sed -E 's/(rv32ima|rv64ima)fd([^v_]*)v?/\1\2/')
+-
++KBUILD_CFLAGS += -march=$(subst fd,,$(riscv-march-y))
+ KBUILD_AFLAGS += -march=$(riscv-march-y)
+ 
+ KBUILD_CFLAGS += -mno-save-restore
+diff --git a/arch/riscv/crypto/Kconfig b/arch/riscv/crypto/Kconfig
+index ad58dad9a580..5f7ea675a8cf 100644
+--- a/arch/riscv/crypto/Kconfig
++++ b/arch/riscv/crypto/Kconfig
+@@ -4,7 +4,7 @@ menu "Accelerated Cryptographic Algorithms for CPU (riscv)"
+ 
+ config CRYPTO_AES_RISCV64
+ 	tristate "Ciphers: AES, modes: ECB, CBC, CTS, CTR, XTS"
+-	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
++	depends on 64BIT && PLATFORM_SUPPORTS_RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
+ 	select CRYPTO_ALGAPI
+ 	select CRYPTO_LIB_AES
+ 	select CRYPTO_SKCIPHER
+@@ -20,7 +20,7 @@ config CRYPTO_AES_RISCV64
+ 
+ config CRYPTO_CHACHA_RISCV64
+ 	tristate "Ciphers: ChaCha"
+-	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
++	depends on 64BIT && PLATFORM_SUPPORTS_RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
+ 	select CRYPTO_SKCIPHER
+ 	select CRYPTO_LIB_CHACHA_GENERIC
+ 	help
+@@ -31,7 +31,7 @@ config CRYPTO_CHACHA_RISCV64
+ 
+ config CRYPTO_GHASH_RISCV64
+ 	tristate "Hash functions: GHASH"
+-	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
++	depends on 64BIT && PLATFORM_SUPPORTS_RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
+ 	select CRYPTO_GCM
+ 	help
+ 	  GCM GHASH function (NIST SP 800-38D)
+@@ -41,7 +41,7 @@ config CRYPTO_GHASH_RISCV64
+ 
+ config CRYPTO_SHA256_RISCV64
+ 	tristate "Hash functions: SHA-224 and SHA-256"
+-	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
++	depends on 64BIT && PLATFORM_SUPPORTS_RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
+ 	select CRYPTO_SHA256
+ 	help
+ 	  SHA-224 and SHA-256 secure hash algorithm (FIPS 180)
+@@ -52,7 +52,7 @@ config CRYPTO_SHA256_RISCV64
+ 
+ config CRYPTO_SHA512_RISCV64
+ 	tristate "Hash functions: SHA-384 and SHA-512"
+-	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
++	depends on 64BIT && PLATFORM_SUPPORTS_RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
+ 	select CRYPTO_SHA512
+ 	help
+ 	  SHA-384 and SHA-512 secure hash algorithm (FIPS 180)
+@@ -63,7 +63,7 @@ config CRYPTO_SHA512_RISCV64
+ 
+ config CRYPTO_SM3_RISCV64
+ 	tristate "Hash functions: SM3 (ShangMi 3)"
+-	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
++	depends on 64BIT && PLATFORM_SUPPORTS_RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
+ 	select CRYPTO_HASH
+ 	select CRYPTO_SM3
+ 	help
+@@ -75,7 +75,7 @@ config CRYPTO_SM3_RISCV64
+ 
+ config CRYPTO_SM4_RISCV64
+ 	tristate "Ciphers: SM4 (ShangMi 4)"
+-	depends on 64BIT && RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
++	depends on 64BIT && PLATFORM_SUPPORTS_RISCV_ISA_V && TOOLCHAIN_HAS_VECTOR_CRYPTO
+ 	select CRYPTO_ALGAPI
+ 	select CRYPTO_SM4
+ 	help
+diff --git a/arch/riscv/include/asm/simd.h b/arch/riscv/include/asm/simd.h
+index adb50f3ec205..81508325fd51 100644
+--- a/arch/riscv/include/asm/simd.h
++++ b/arch/riscv/include/asm/simd.h
+@@ -26,6 +26,9 @@
+  */
+ static __must_check inline bool may_use_simd(void)
+ {
++	if (!has_vector())
++		return false;
++
+ 	/*
+ 	 * RISCV_KERNEL_MODE_V is only set while preemption is disabled,
+ 	 * and is clear whenever preemption is enabled.
+diff --git a/arch/riscv/include/asm/vector.h b/arch/riscv/include/asm/vector.h
+index 731dcd0ed4de..a08c4bf92ecd 100644
+--- a/arch/riscv/include/asm/vector.h
++++ b/arch/riscv/include/asm/vector.h
+@@ -37,7 +37,8 @@ static inline u32 riscv_v_flags(void)
+ 
+ static __always_inline bool has_vector(void)
+ {
+-	return riscv_has_extension_unlikely(RISCV_ISA_EXT_v);
++	return IS_ENABLED(CONFIG_PLATFORM_SUPPORTS_RISCV_ISA_V) ||
++	       riscv_has_extension_likely(RISCV_ISA_EXT_v);
+ }
+ 
+ static inline void __riscv_v_vstate_clean(struct pt_regs *regs)
+diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
+index 3ed2359eae35..7cb365714855 100644
+--- a/arch/riscv/kernel/cpufeature.c
++++ b/arch/riscv/kernel/cpufeature.c
+@@ -683,7 +683,6 @@ void __init riscv_fill_hwcap(void)
+ 	}
+ 
+ 	if (elf_hwcap & COMPAT_HWCAP_ISA_V) {
+-		riscv_v_setup_vsize();
+ 		/*
+ 		 * ISA string in device tree might have 'v' flag, but
+ 		 * CONFIG_RISCV_ISA_V is disabled in kernel.
+@@ -691,6 +690,8 @@ void __init riscv_fill_hwcap(void)
+ 		 */
+ 		if (!IS_ENABLED(CONFIG_RISCV_ISA_V))
+ 			elf_hwcap &= ~COMPAT_HWCAP_ISA_V;
++		else
++			riscv_v_setup_vsize();
+ 	}
+ 
+ 	memset(print_str, 0, sizeof(print_str));
+diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+index 4236a69c35cb..b027be82bbb3 100644
+--- a/arch/riscv/kernel/head.S
++++ b/arch/riscv/kernel/head.S
+@@ -428,17 +428,20 @@ SYM_CODE_START_LOCAL(reset_regs)
+ .Lreset_regs_done_fpu:
+ #endif /* CONFIG_FPU */
+ 
+-#ifdef CONFIG_RISCV_ISA_V
++#if defined(CONFIG_PLATFORM_MAY_SUPPORT_RISCV_ISA_V)
+ 	csrr	t0, CSR_MISA
+ 	li	t1, COMPAT_HWCAP_ISA_V
+ 	and	t0, t0, t1
+ 	beqz	t0, .Lreset_regs_done_vector
+-
++#endif
++#ifdef CONFIG_RISCV_ISA_V
+ 	/*
+ 	 * Clear vector registers and reset vcsr
+ 	 * VLMAX has a defined value, VLEN is a constant,
+ 	 * and this form of vsetvli is defined to set vl to VLMAX.
+ 	 */
++	.option push
++	.option arch, +v
+ 	li	t1, SR_VS
+ 	csrs	CSR_STATUS, t1
+ 	csrs	CSR_VCSR, x0
+@@ -447,6 +450,7 @@ SYM_CODE_START_LOCAL(reset_regs)
+ 	vmv.v.i v8, 0
+ 	vmv.v.i v16, 0
+ 	vmv.v.i v24, 0
++	.option pop
+ 	/* note that the caller must clear SR_VS */
+ .Lreset_regs_done_vector:
+ #endif /* CONFIG_RISCV_ISA_V */
+diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+index e4bc61c4e58a..3ba7bf63ccb2 100644
+--- a/arch/riscv/kernel/process.c
++++ b/arch/riscv/kernel/process.c
+@@ -165,11 +165,13 @@ void flush_thread(void)
+ #endif
+ #ifdef CONFIG_RISCV_ISA_V
+ 	/* Reset vector state */
+-	riscv_v_vstate_ctrl_init(current);
+-	riscv_v_vstate_off(task_pt_regs(current));
+-	kfree(current->thread.vstate.datap);
+-	memset(&current->thread.vstate, 0, sizeof(struct __riscv_v_ext_state));
+-	clear_tsk_thread_flag(current, TIF_RISCV_V_DEFER_RESTORE);
++	if (has_vector()) {
++		riscv_v_vstate_ctrl_init(current);
++		riscv_v_vstate_off(task_pt_regs(current));
++		kfree(current->thread.vstate.datap);
++		memset(&current->thread.vstate, 0, sizeof(struct __riscv_v_ext_state));
++		clear_tsk_thread_flag(current, TIF_RISCV_V_DEFER_RESTORE);
++	}
+ #endif
+ }
+ 
+diff --git a/arch/riscv/kernel/ptrace.c b/arch/riscv/kernel/ptrace.c
+index 92731ff8c79a..bdfaed2a4023 100644
+--- a/arch/riscv/kernel/ptrace.c
++++ b/arch/riscv/kernel/ptrace.c
+@@ -92,6 +92,9 @@ static int riscv_vr_get(struct task_struct *target,
+ 	struct __riscv_v_ext_state *vstate = &target->thread.vstate;
+ 	struct __riscv_v_regset_state ptrace_vstate;
+ 
++	if (!has_vector())
++		return 0;
++
+ 	if (!riscv_v_vstate_query(task_pt_regs(target)))
+ 		return -EINVAL;
+ 
+@@ -127,6 +130,9 @@ static int riscv_vr_set(struct task_struct *target,
+ 	struct __riscv_v_ext_state *vstate = &target->thread.vstate;
+ 	struct __riscv_v_regset_state ptrace_vstate;
+ 
++	if (!has_vector())
++		return 0;
++
+ 	if (!riscv_v_vstate_query(task_pt_regs(target)))
+ 		return -EINVAL;
+ 
+diff --git a/arch/riscv/lib/riscv_v_helpers.c b/arch/riscv/lib/riscv_v_helpers.c
+index be38a93cedae..661c77fdd7f7 100644
+--- a/arch/riscv/lib/riscv_v_helpers.c
++++ b/arch/riscv/lib/riscv_v_helpers.c
+@@ -21,7 +21,6 @@ asmlinkage int enter_vector_usercopy(void *dst, void *src, size_t n)
+ {
+ 	size_t remain, copied;
+ 
+-	/* skip has_vector() check because it has been done by the asm  */
+ 	if (!may_use_simd())
+ 		goto fallback;
+ 
+diff --git a/arch/riscv/lib/uaccess_vector.S b/arch/riscv/lib/uaccess_vector.S
+index 7c45f26de4f7..4de37a3a2163 100644
+--- a/arch/riscv/lib/uaccess_vector.S
++++ b/arch/riscv/lib/uaccess_vector.S
+@@ -5,6 +5,8 @@
+ #include <asm/asm-extable.h>
+ #include <asm/csr.h>
+ 
++.option arch, +v
++
+ #define pDst a0
+ #define pSrc a1
+ #define iNum a2
+diff --git a/arch/riscv/lib/xor.S b/arch/riscv/lib/xor.S
+index b28f2430e52f..9a3e2c19efc9 100644
+--- a/arch/riscv/lib/xor.S
++++ b/arch/riscv/lib/xor.S
+@@ -6,6 +6,8 @@
+ #include <linux/export.h>
+ #include <asm/asm.h>
+ 
++.option arch, +v
++
+ SYM_FUNC_START(xor_regs_2_)
+ 	vsetvli a3, a0, e8, m8, ta, ma
+ 	vle8.v v0, (a1)
 
 -- 
 2.44.0
