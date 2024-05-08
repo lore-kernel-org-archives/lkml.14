@@ -1,88 +1,93 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 786061272BB;
-	Wed,  8 May 2024 15:08:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16DC127E21
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 15:08:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715180884; cv=none; b=nZscJYOpU709RsCX9Ybwd8L4pKcSUPUzeU0zCl8wCPJs9LoHwh52gL0yVlkiovi3+lVVC+40xMC2wtq2Hkdux9SnLF64VgZN00neh7y6mHfb/tIS6+zo3LhmxSoSeVUdoFR6t4k8VQaF9bWT9uY0iYmxL0FNoF398Xe/UW0Dm9k=
+	t=1715180887; cv=none; b=u4rNVD937Dq0kH1vttPN07tObwA5kfYIUWsfTQ0ZGBotuQo6DcjC54iQVjh0YgD7YBy6Hd/DLBs/mDMnof+2rn1UN4X0y27Qp4sjp8EaWVNjRdsnaj1q8LqKtPoaaKO6dDrlhF3jylSDDvNseB4mgGzmMCgSuCW7v1Qp/crc4Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715180884; c=relaxed/simple;
-	bh=8hHikQJgKvHrF6+f83Hf7hW04VKGZyT8FIIZHg2JC88=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=axZkfccJO8olAB2dU8ydhxfDZHecT5QRcJaANBJSKwKepbcirsDackmjrziOO3qZ7ZC2zzxI4Ph32caR3r1EVBpK1zBPK7iuxRx0DPG4jKtQCT0hsEjTUooF+EVspdCZjPddEYZfOT1dD2m7UlgK3MLFCR0KNcNA+BZSoyVnkQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=T7xueD9W; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1715180887; c=relaxed/simple;
+	bh=fk7GxC1PPEc7qrUG7K+DrVTUtdnP9TQkDTTKR3NFiQ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ozoumkEuUCBSBAJAacSm2AyUIdCh+YNZT4YGgbp4v2gS00KWFgVxBN2nDkXPAJzcZkEwvmaCtlSIksPfvIu9mCAdAG9Rbh/JGahZznk+wlftXkiZUWGBCsG9QAW6cJgOG3kB0hu8NzWwa37zf3v3RcPxQJ57TpeHzNoCKEpmVOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kqmfmjgz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="T7xueD9W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1715180541; x=1715785341; i=markus.elfring@web.de;
-	bh=8hHikQJgKvHrF6+f83Hf7hW04VKGZyT8FIIZHg2JC88=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=T7xueD9We+EV7NMRzFieIVmDcOAqa4EH2FwMGOtod5U3f+vdiEfRzeEceAtDB4k1
-	 qjdSON+Z9a8WiqlOKBl9unTGiOms/7K4M4a3/JbKukPFmDlX/FPQctUFnPD/YNPsi
-	 CEbnrmmgNudxryF7mYYMdhubz0pOKC49EFNmEDgxQYmMtT786faX9+P6V265np4/p
-	 rxTPBLypBogyJuNHUqm42cHter328/Jrs4KNi97ABDYwlLGQQx5QG0NJSqLJG8k1x
-	 fLDkXQbz0NjML8xrWwJMULHD0OPCh64Y9oajsWG8E1VLpq4Csd/uMR3yfJ+9Z3Sr1
-	 Bx/uHhj4PtczwGtMhg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M7Nmq-1rzDYf18Ga-007qvg; Wed, 08
- May 2024 17:02:21 +0200
-Message-ID: <34c08d45-a0fe-49c9-b7ba-de6a79d46ebc@web.de>
-Date: Wed, 8 May 2024 17:02:14 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kqmfmjgz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9900DC4AF09
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 15:08:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715180886;
+	bh=fk7GxC1PPEc7qrUG7K+DrVTUtdnP9TQkDTTKR3NFiQ0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=KqmfmjgzfA7SCpd2skvs5EweP4UWYpe/EgQw5Lblio/1CGIa1/NkjQS6dEbb7S39u
+	 yQncy7lQGMK+0nszk3GR6UszEIjI3jjl1CbKuGm6RbpPInIpWfB90wJOi5EzNj6I4V
+	 00Exk/vWptXodaaUrIPT1HnDfYj9wCjwQl8Cizzfdl3d6rL2fHlNAoEfFrN4lc/J6S
+	 isItL+ip8wu+UDzsAnTQLHxZAHvSTneo17zvkmSGSJeOE7Pfwsy1jAFfocjGEZs9DB
+	 dzNvwUME9rt/OxHUTKsXegGfuDiKTQRJum/VCBfdCZOumi5ZePTTNgm8KlFnSTYMS+
+	 FCljcJbpxqrwA==
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5b20318a866so2319721eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 08:08:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXnjFYO9Cw8pSqaZIvq7nka4d3z/zLiUce1xV2WB6rLPrPhVOdZ/zEGt4AOipzU754ye2dH/WE1LOl5cBt8Z6aPWkzpl6QzvEkYCA5p
+X-Gm-Message-State: AOJu0YwS8MNtpmqupbiLxbjHrKlS6d2PDSE9LoMxTd8Z/P5PNDPiKi5H
+	W1g4K4+KvGMZdygE/PsFDxsPeViV1Q394bEvxQbLWdPHnfpUkIxHaw378rizAImj1exlWB2v7GA
+	ds9uMmUT69nMOdlUfDbu3FRqAT7o=
+X-Google-Smtp-Source: AGHT+IFz6Ek/HKY5LqapHYp2J3UPciEFtCHWRtdaW10My+nmaYFrHG+n4/M/edgWSE1MPtgvRcB47UJ6HiFsKanjCPQ=
+X-Received: by 2002:a4a:aa86:0:b0:5aa:4a0c:d99e with SMTP id
+ 006d021491bc7-5b24d75c1b8mr2668167eaf.8.1715180886050; Wed, 08 May 2024
+ 08:08:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Zhang Yi <yi.zhang@huawei.com>, linux-ext4@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.cz>,
- Ritesh Harjani <ritesh.list@gmail.com>, Theodore Ts'o <tytso@mit.edu>,
- Yu Kuai <yukuai3@huawei.com>, Zhang Yi <yi.zhang@huaweicloud.com>,
- Zhihao Cheng <chengzhihao1@huawei.com>
-References: <20240508061220.967970-3-yi.zhang@huaweicloud.com>
-Subject: Re: [PATCH v3 02/10] ext4: check the extent status again before
- inserting delalloc block
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20240508061220.967970-3-yi.zhang@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20240416211941.9369-1-tony.luck@intel.com> <20240416212214.9586-1-tony.luck@intel.com>
+In-Reply-To: <20240416212214.9586-1-tony.luck@intel.com>
+From: Chanwoo Choi <chanwoo@kernel.org>
+Date: Thu, 9 May 2024 00:07:29 +0900
+X-Gmail-Original-Message-ID: <CAGTfZH3UTdOVd+RAY6jTVHWFRgsFNCoTM7g0TLaL8GQqVTM86Q@mail.gmail.com>
+Message-ID: <CAGTfZH3UTdOVd+RAY6jTVHWFRgsFNCoTM7g0TLaL8GQqVTM86Q@mail.gmail.com>
+Subject: Re: [PATCH v3 49/74] x86/cpu/vfm: Update drivers/extcon/extcon-axp288.c
+To: Tony Luck <tony.luck@intel.com>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, 
+	Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:P3bhoIr5hklyJjfO6yQONug9t3uau7D9hknXlpPWcdyJLCwtBz1
- X0JBciOtO6QFCY7nGG5nZsd7eCMgfgF1BY/EWkLZmoSNxqatE6jLKbZHvODMOiVHk9vyeSf
- px0/lWQZd/oRx+GEVIfwrxGU1LvV4TdL1a2i2L9zyxlbdwor7gT8udJs1p29ZZh4BzMyuhM
- 94Gv6AkPsMtR9+OymzzYQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:Zd6Rz4IAoAQ=;IlMHiD3mE+kv8VkXfvELousQr3H
- czyT66RkzWwCJlAFrIUXiduc37YMO7ARkFJvMkhsR3GF6GWJpdxdfbkTd40R4vRcTZzHeJGds
- 7k2ZECVfYyibjABGf6rfhPbmRDPJC21HYlEJvbnjqc1tyxeh8s9eIY+CSBtjJb2m5uGI+buoM
- z/IuFRdiaJDxVLA2zi0u7lnJHWWQuLlnHwNS68sbXfxbYlTTBWc+5Su0TQofcyEk9mZDcczlg
- 3rk8huvYYL7fhpqfTUxU3GrjRpBK3JCT/7tBJzrN5ExF8jBjvmUqZOavP8B5USLYTi0JGFbJw
- 0yJORcSNuRi/h1gPO6MO8oqYmUzZXMFUPUzXlO/1H7Z3u3ndstyMnve7oYNJdYkQGn43xKC/K
- iUhUT9UiPmfRqwhsherXWr8oYMYV7SjPE7w6YkbEG48we7fiE4R76DBH/JRYT3FHkxlyUaO2Y
- d1wRq5rFN8W52rmgUeXXRbO7b1SuB+EARlk64zHuzCXZxCPx0rwafMQiRpFgmf5rw0eVJ+2DQ
- irkC1wQPTKpXqHtuN0xkn45bPRwKo11J4YctfIhFhDV1JgKPfW3uVbSW6SR2xSAVNvBojOVtZ
- zogXYiJy7bcKORDYgEbsramlT5PkN1uxq/3WGYf+KXwo0gKrEvg8UL5K680uv3r5unmZEMuWp
- 3NtF/yfuE6i7XGGe6GH7jwPhvzOpBENG4GFPe2MDy8NNOxSTD2O4xG4s8Lpyu1WRKSJ9A9vu7
- 7Sigyxzla53lTMRARvHAxB3FKTrI0V9ivW41eDEQy831hoLmvmyckiQiB7vTve6OA2esnY7HM
- lYyhc2uSlT4qtWv/bfXZLADLgTTHolUjJyyujZRLP6Ob0=
 
-=E2=80=A6
-> This patch fixes the problem by looking =E2=80=A6
+On Wed, Apr 17, 2024 at 6:31=E2=80=AFAM Tony Luck <tony.luck@intel.com> wro=
+te:
+>
+> New CPU #defines encode vendor and family as well as model.
+>
+> Signed-off-by: Tony Luck <tony.luck@intel.com>
+> ---
+>  drivers/extcon/extcon-axp288.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/extcon/extcon-axp288.c b/drivers/extcon/extcon-axp28=
+8.c
+> index a703a8315634..d3bcbe839c09 100644
+> --- a/drivers/extcon/extcon-axp288.c
+> +++ b/drivers/extcon/extcon-axp288.c
+> @@ -108,7 +108,7 @@ struct axp288_extcon_info {
+>  };
+>
+>  static const struct x86_cpu_id cherry_trail_cpu_ids[] =3D {
+> -       X86_MATCH_INTEL_FAM6_MODEL(ATOM_AIRMONT,        NULL),
+> +       X86_MATCH_VFM(INTEL_ATOM_AIRMONT,       NULL),
+>         {}
+>  };
+>
+> --
+> 2.44.0
+>
+>
 
-Will corresponding imperative wordings be desirable for an improved change=
- description?
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9-rc7#n94
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
 
-Regards,
-Markus
+--=20
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
