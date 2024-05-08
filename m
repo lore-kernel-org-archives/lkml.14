@@ -1,379 +1,175 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700AB86AF4
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 19:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9780186AF4
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 19:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715196713; cv=none; b=V6rwrZHgK4pQWFuiPQpTTeBXFBhI8Gcms+gpwkkB8AqXdCLfbbqph9BIhwMeTdLA5wju+VrL6lvJ9hj/MeSf4o+huYDeMgjtnfCTMp0JHz5aMf/UF+bX6TX+TwW07z7KDdZA2ffdw8sMVEekMJAmmFzrTnkc7zRNqC3lYUmHQsQ=
+	t=1715196743; cv=none; b=DdSqQUeptCOEjvMxa1NGKgOG9Diu5uvstzJpYxZVZMbgqnZJkbhg9gXA836ElCOdi+SL5FliQCV/8jOJtKFF/dCjnL/Q/ncO7S/nPF2Sr16TA1ZINDGURjnt2317eWDI016LhrvAlvgiZqohFvpSgxW8H0stNYLv5n62oV0ESrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715196713; c=relaxed/simple;
-	bh=17Fc7ODuOz1kLt1gNe1cLiC3KB/RQ6g/Lgo9SPZ4gaw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dMH9cfNbW2urrKprx1e1ARK3g4c0K9wR4cd+nyXF2AM5PgD8rXI5494cogRpclSXpFakBrs66OiZYjj3Ypp9kbf2XIqug99i0zo4QpO6giqepbpNGkD/JkIPHvRY8/9IsH2b5F4QxBuXi/TckN3shjynTy0C07x6WylQpig9pRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=qpXz0fpK; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="qpXz0fpK"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-34e0d8b737eso741279f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 12:31:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715196710; x=1715801510; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3Mj4lZQ0sNzizek27x00kn2/PQ3ffbB6QFBBUZYNyzk=;
-        b=qpXz0fpK6bmYnoAg6TyQoKjCo8PTRaAKLX3LxpHCm0YM37mPKT6RKI+g+cQyhN9RwJ
-         pep0GkfvVSkvmsCkiNtQkVBjUONZJZ5sTF02IBaGPLYxJg5xpnxaMP+jYTKoTkT8RVu7
-         wiMyKY+jKs7avzysbZRNmNcBv4c9p8+UoD/9sR7ZHB5GrDnad5zgPLialTH2Ri8WGDsy
-         28UrsbOqaJjJs7tuHntTbfIxRjMEcN5K6LnHIFM6mtkGar8yFQcicRKPWY+PlN6BDZ3y
-         mc08qKZapIhvT2s2AFh1vBePl2TzpspcjY17CGHgGP7DtGgtdtNs5JhE9v1u5kb0hUUc
-         XBiA==
+	s=arc-20240116; t=1715196743; c=relaxed/simple;
+	bh=+ySXkYc5QiwkJ0CeVRZu0/kwBzu8zL6y7flU962u6hw=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=T82eGijV58u4xYY6aLQGAY3u4y9zv32hY2bodyxDtb+n2WZYQ8E+BLBVshC0HVknGeuU/8cjkzQtsHsbt8d2LIyiji4YAi4qSD6C6DQydZQtD5+vfCYLFT9DnRrBrOtg1N0vLOqUS2olCiM8UehFP1t+07cicCeQpxwRZ9eRhrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-7e1840023bbso2656539f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 12:32:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715196710; x=1715801510;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3Mj4lZQ0sNzizek27x00kn2/PQ3ffbB6QFBBUZYNyzk=;
-        b=qhlTTY21gdf+YNB+Xo+j3AQSfIsTN1Qr2vaq1zIvoJag6Y2V7MCptpU8y/uaymuRVz
-         oF3tcBBG1aivrXffpKiJoj62l8TijYZAEbzEhMaKXGTfReM+vlr6dy/27ZU2yaYQxHU9
-         Ah83zQ9JFlxfM0rwYcSpx6568Zv429JXBnbpORtIOXl9tqlifuuHhcJct9tWw4LXUZVt
-         SJrFzEAZiu3ne13dlw9OdqgRDE2mHppyMdUUQyZiVo7btOCBNocNzUksIUTHOZvt/wF5
-         Uowk+RD1Uhqvw3MNPXMtEhJDviQtlfv0VwSRcXssXGgVF6L9Mj18CQCa04IXyiTvaPl8
-         q1mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVeFa9B7HQ7WiZREAtGAhUOzyBh/aAPlOa7DGd18Wp2WN66c4DQ4sTzmzIK9/wTumJQyAoEeugcIOXK2QhKhzdf0USA8/ux/9xPZiDl
-X-Gm-Message-State: AOJu0YxmPPW3pgUT5jePY9QR2q+was8WzhmJNgpuz33K0slhFsABlnSz
-	bxwi1jGWa8eTAXHIMDX7L3FLw8slwgK+o+RATvTyAJGKJ//ii+sk6UzNE190APU=
-X-Google-Smtp-Source: AGHT+IGynnks5bQyXkefndTUc8PNt1+uZJK8w5+sVciCnroxfstzlHH5YDMjCv7Za3kPs8Z2dwdXzA==
-X-Received: by 2002:adf:fe8a:0:b0:34c:fd92:3359 with SMTP id ffacd0b85a97d-350185d57e7mr489056f8f.21.1715196709811;
-        Wed, 08 May 2024 12:31:49 -0700 (PDT)
-Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id s2-20020a5d4242000000b003472489d26fsm15924162wrr.19.2024.05.08.12.31.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 12:31:49 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Ryan Roberts <ryan.roberts@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-riscv@lists.infradead.org,
-	linux-efi@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-mm@kvack.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH 12/12] mm, riscv, arm64: Use common get_and_clear_full_ptes()/clear_full_ptes() functions
-Date: Wed,  8 May 2024 21:19:31 +0200
-Message-Id: <20240508191931.46060-13-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240508191931.46060-1-alexghiti@rivosinc.com>
-References: <20240508191931.46060-1-alexghiti@rivosinc.com>
+        d=1e100.net; s=20230601; t=1715196741; x=1715801541;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=io8+fYOvzjtMLOZbcmfcrk1vBoRPVdoezfG7Q0K1kV0=;
+        b=NXAjx04hkuDh2OfPooVY3Vf4kxR9Fxlr01W0E/oR/G24zf7XKyy6aJH2NWXh6EIVyg
+         3rhyGbXlDRHw6CfrDYsUTBVuyJYok2QumZmjwZa0H/NGwywWYp/d+rc64PLSyjmmQYpY
+         fHZhMPzDFuJMAHnv4vaoTeAAPmGLlMIN6seqdFJfjGfBqBksxq34QNjg2mX2waTmeee7
+         q/h97v97ElDsnHIWEguVpxqPEyQW6ETOrgZX7f5pzTR9Gw8OzgDfCQj5GHFMurXwOskk
+         rbs4RodXj/7A1VrlnlEzHY39ZFVYpy+yBFsK8q6Fwu/F8Pg9xVjPIS0fDZmnjroJSbYa
+         PzuA==
+X-Forwarded-Encrypted: i=1; AJvYcCVltXb2BB8nH+AW+m7azc1rkl01zOctGtikZkptsABpyubRMlxKsb+GEYruI8FNgN8do4J2edffmv4hFd9DGJr4iYHc6JjjDgELBOOH
+X-Gm-Message-State: AOJu0YyjCiENNe8R+ydKrDQ2eUTl1QlcLeCBjjqBtCPr8lcpzs3G4Q4a
+	vIB9alwHXdmJ/egQf72k+BUXiapHn+ocP91SEyONGpTOTexD7D/4cGf6eh/yMwiHwSkKogMRuob
+	NDRgHAv+cOQamatyBsmBQjD18jpnwF7j4+HYgo2Uv0T+E3TTKHb6bSyk=
+X-Google-Smtp-Source: AGHT+IFF/ZEHm61uwGpMLqTumNcisBXc9baf1FbQ4sZFLvhtQCBQvcV1Gvt9UXF/OBsFZUNYeljvYXXepgrnK2C55XMPOpPQGVut
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:1d1d:b0:36b:fbab:9f14 with SMTP id
+ e9e14a558f8ab-36caecdd2cemr1572725ab.1.1715196740936; Wed, 08 May 2024
+ 12:32:20 -0700 (PDT)
+Date: Wed, 08 May 2024 12:32:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000076ba3b0617f65cc8@google.com>
+Subject: [syzbot] [lsm?] general protection fault in hook_inode_free_security
+From: syzbot <syzbot+5446fbf332b0602ede0b@syzkaller.appspotmail.com>
+To: jmorris@namei.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, mic@digikod.net, paul@paul-moore.com, 
+	serge@hallyn.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Make riscv use the contpte aware get_and_clear_full_ptes()/clear_full_ptes()
-function from arm64.
+Hello,
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+syzbot found the following issue on:
+
+HEAD commit:    dccb07f2914c Merge tag 'for-6.9-rc7-tag' of git://git.kern..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14a46760980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6d14c12b661fb43
+dashboard link: https://syzkaller.appspot.com/bug?extid=5446fbf332b0602ede0b
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/39d66018d8ad/disk-dccb07f2.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/c160b651d1bc/vmlinux-dccb07f2.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3662a33ac713/bzImage-dccb07f2.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5446fbf332b0602ede0b@syzkaller.appspotmail.com
+
+general protection fault, probably for non-canonical address 0xdffffc018f62f515: 0000 [#1] PREEMPT SMP KASAN NOPTI
+KASAN: probably user-memory-access in range [0x0000000c7b17a8a8-0x0000000c7b17a8af]
+CPU: 1 PID: 5102 Comm: syz-executor.1 Not tainted 6.9.0-rc7-syzkaller-00012-gdccb07f2914c #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+RIP: 0010:hook_inode_free_security+0x5b/0xb0 security/landlock/fs.c:1047
+Code: 8a fd 48 8b 1b 48 c7 c0 c4 4e d5 8d 48 c1 e8 03 42 0f b6 04 30 84 c0 75 3e 48 63 05 33 59 65 09 48 01 c3 48 89 d8 48 c1 e8 03 <42> 80 3c 30 00 74 08 48 89 df e8 66 be 8a fd 48 83 3b 00 75 0d e8
+RSP: 0018:ffffc9000307f9a8 EFLAGS: 00010212
+RAX: 000000018f62f515 RBX: 0000000c7b17a8a8 RCX: ffff888027668000
+RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff88805c0bb270
+RBP: ffffffff8c01fb00 R08: ffffffff82132a15 R09: 1ffff1100b81765f
+R10: dffffc0000000000 R11: ffffffff846ff540 R12: dffffc0000000000
+R13: 1ffff1100b817683 R14: dffffc0000000000 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880b9500000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f43c42de000 CR3: 00000000635f8000 CR4: 0000000000350ef0
+Call Trace:
+ <TASK>
+ security_inode_free+0x4a/0xd0 security/security.c:1613
+ __destroy_inode+0x2d9/0x650 fs/inode.c:286
+ destroy_inode fs/inode.c:309 [inline]
+ evict+0x521/0x630 fs/inode.c:682
+ dispose_list fs/inode.c:700 [inline]
+ evict_inodes+0x5f9/0x690 fs/inode.c:750
+ generic_shutdown_super+0x9d/0x2d0 fs/super.c:626
+ kill_block_super+0x44/0x90 fs/super.c:1675
+ deactivate_locked_super+0xc6/0x130 fs/super.c:472
+ cleanup_mnt+0x426/0x4c0 fs/namespace.c:1267
+ task_work_run+0x251/0x310 kernel/task_work.c:180
+ exit_task_work include/linux/task_work.h:38 [inline]
+ do_exit+0xa1b/0x27e0 kernel/exit.c:878
+ do_group_exit+0x207/0x2c0 kernel/exit.c:1027
+ __do_sys_exit_group kernel/exit.c:1038 [inline]
+ __se_sys_exit_group kernel/exit.c:1036 [inline]
+ __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1036
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f731567dd69
+Code: Unable to access opcode bytes at 0x7f731567dd3f.
+RSP: 002b:00007fff4f0804d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+RAX: ffffffffffffffda RBX: 00007f73156c93a3 RCX: 00007f731567dd69
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000002 R08: 00007fff4f07e277 R09: 00007fff4f081790
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fff4f081790
+R13: 00007f73156c937e R14: 00000000000154d0 R15: 000000000000001e
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:hook_inode_free_security+0x5b/0xb0 security/landlock/fs.c:1047
+Code: 8a fd 48 8b 1b 48 c7 c0 c4 4e d5 8d 48 c1 e8 03 42 0f b6 04 30 84 c0 75 3e 48 63 05 33 59 65 09 48 01 c3 48 89 d8 48 c1 e8 03 <42> 80 3c 30 00 74 08 48 89 df e8 66 be 8a fd 48 83 3b 00 75 0d e8
+RSP: 0018:ffffc9000307f9a8 EFLAGS: 00010212
+RAX: 000000018f62f515 RBX: 0000000c7b17a8a8 RCX: ffff888027668000
+RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff88805c0bb270
+RBP: ffffffff8c01fb00 R08: ffffffff82132a15 R09: 1ffff1100b81765f
+R10: dffffc0000000000 R11: ffffffff846ff540 R12: dffffc0000000000
+R13: 1ffff1100b817683 R14: dffffc0000000000 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880b9400000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000555587f03978 CR3: 0000000049876000 CR4: 0000000000350ef0
+----------------
+Code disassembly (best guess):
+   0:	8a fd                	mov    %ch,%bh
+   2:	48 8b 1b             	mov    (%rbx),%rbx
+   5:	48 c7 c0 c4 4e d5 8d 	mov    $0xffffffff8dd54ec4,%rax
+   c:	48 c1 e8 03          	shr    $0x3,%rax
+  10:	42 0f b6 04 30       	movzbl (%rax,%r14,1),%eax
+  15:	84 c0                	test   %al,%al
+  17:	75 3e                	jne    0x57
+  19:	48 63 05 33 59 65 09 	movslq 0x9655933(%rip),%rax        # 0x9655953
+  20:	48 01 c3             	add    %rax,%rbx
+  23:	48 89 d8             	mov    %rbx,%rax
+  26:	48 c1 e8 03          	shr    $0x3,%rax
+* 2a:	42 80 3c 30 00       	cmpb   $0x0,(%rax,%r14,1) <-- trapping instruction
+  2f:	74 08                	je     0x39
+  31:	48 89 df             	mov    %rbx,%rdi
+  34:	e8 66 be 8a fd       	call   0xfd8abe9f
+  39:	48 83 3b 00          	cmpq   $0x0,(%rbx)
+  3d:	75 0d                	jne    0x4c
+  3f:	e8                   	.byte 0xe8
+
+
 ---
- arch/arm64/include/asm/pgtable.h | 41 ++++------------------------
- arch/arm64/mm/Makefile           |  1 -
- arch/arm64/mm/contpte.c          | 46 -------------------------------
- arch/riscv/include/asm/pgtable.h | 39 ++++++++++++++++++++++++++
- include/linux/contpte.h          |  5 ++++
- mm/contpte.c                     | 47 ++++++++++++++++++++++++++++++++
- 6 files changed, 96 insertions(+), 83 deletions(-)
- delete mode 100644 arch/arm64/mm/contpte.c
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 162efd9647dd..f8a3159f9df0 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -1373,17 +1373,6 @@ extern void ptep_modify_prot_commit(struct vm_area_struct *vma,
- 
- #ifdef CONFIG_THP_CONTPTE
- 
--/*
-- * The contpte APIs are used to transparently manage the contiguous bit in ptes
-- * where it is possible and makes sense to do so. The PTE_CONT bit is considered
-- * a private implementation detail of the public ptep API (see below).
-- */
--extern void contpte_clear_full_ptes(struct mm_struct *mm, unsigned long addr,
--				pte_t *ptep, unsigned int nr, int full);
--extern pte_t contpte_get_and_clear_full_ptes(struct mm_struct *mm,
--				unsigned long addr, pte_t *ptep,
--				unsigned int nr, int full);
--
- #define pte_batch_hint pte_batch_hint
- static inline unsigned int pte_batch_hint(pte_t *ptep, pte_t pte)
- {
-@@ -1428,34 +1417,14 @@ extern void pte_clear(struct mm_struct *mm,
- 		      unsigned long addr, pte_t *ptep);
- #define pte_clear pte_clear
- 
-+extern void clear_full_ptes(struct mm_struct *mm, unsigned long addr,
-+			    pte_t *ptep, unsigned int nr, int full);
- #define clear_full_ptes clear_full_ptes
--static inline void clear_full_ptes(struct mm_struct *mm, unsigned long addr,
--				pte_t *ptep, unsigned int nr, int full)
--{
--	if (likely(nr == 1)) {
--		contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
--		__clear_full_ptes(mm, addr, ptep, nr, full);
--	} else {
--		contpte_clear_full_ptes(mm, addr, ptep, nr, full);
--	}
--}
- 
-+extern pte_t get_and_clear_full_ptes(struct mm_struct *mm,
-+				     unsigned long addr, pte_t *ptep,
-+				     unsigned int nr, int full);
- #define get_and_clear_full_ptes get_and_clear_full_ptes
--static inline pte_t get_and_clear_full_ptes(struct mm_struct *mm,
--				unsigned long addr, pte_t *ptep,
--				unsigned int nr, int full)
--{
--	pte_t pte;
--
--	if (likely(nr == 1)) {
--		contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
--		pte = __get_and_clear_full_ptes(mm, addr, ptep, nr, full);
--	} else {
--		pte = contpte_get_and_clear_full_ptes(mm, addr, ptep, nr, full);
--	}
--
--	return pte;
--}
- 
- #define __HAVE_ARCH_PTEP_GET_AND_CLEAR
- extern pte_t ptep_get_and_clear(struct mm_struct *mm,
-diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
-index 52a1b2082627..dbd1bc95967d 100644
---- a/arch/arm64/mm/Makefile
-+++ b/arch/arm64/mm/Makefile
-@@ -3,7 +3,6 @@ obj-y				:= dma-mapping.o extable.o fault.o init.o \
- 				   cache.o copypage.o flush.o \
- 				   ioremap.o mmap.o pgd.o mmu.o \
- 				   context.o proc.o pageattr.o fixmap.o
--obj-$(CONFIG_THP_CONTPTE)	+= contpte.o
- obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
- obj-$(CONFIG_PTDUMP_CORE)	+= ptdump.o
- obj-$(CONFIG_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
-diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-deleted file mode 100644
-index 1cef93b15d6e..000000000000
---- a/arch/arm64/mm/contpte.c
-+++ /dev/null
-@@ -1,46 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0-only
--/*
-- * Copyright (C) 2023 ARM Ltd.
-- */
--
--#include <linux/mm.h>
--#include <linux/efi.h>
--#include <linux/export.h>
--#include <asm/tlbflush.h>
--
--static void contpte_try_unfold_partial(struct mm_struct *mm, unsigned long addr,
--					pte_t *ptep, unsigned int nr)
--{
--	/*
--	 * Unfold any partially covered contpte block at the beginning and end
--	 * of the range.
--	 */
--
--	if (ptep != arch_contpte_align_down(ptep) || nr < CONT_PTES)
--		contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
--
--	if (ptep + nr != arch_contpte_align_down(ptep + nr)) {
--		unsigned long last_addr = addr + PAGE_SIZE * (nr - 1);
--		pte_t *last_ptep = ptep + nr - 1;
--
--		contpte_try_unfold(mm, last_addr, last_ptep,
--				   __ptep_get(last_ptep));
--	}
--}
--
--void contpte_clear_full_ptes(struct mm_struct *mm, unsigned long addr,
--				pte_t *ptep, unsigned int nr, int full)
--{
--	contpte_try_unfold_partial(mm, addr, ptep, nr);
--	__clear_full_ptes(mm, addr, ptep, nr, full);
--}
--EXPORT_SYMBOL_GPL(contpte_clear_full_ptes);
--
--pte_t contpte_get_and_clear_full_ptes(struct mm_struct *mm,
--				unsigned long addr, pte_t *ptep,
--				unsigned int nr, int full)
--{
--	contpte_try_unfold_partial(mm, addr, ptep, nr);
--	return __get_and_clear_full_ptes(mm, addr, ptep, nr, full);
--}
--EXPORT_SYMBOL_GPL(contpte_get_and_clear_full_ptes);
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 728f31da5e6a..a4843bdfdb37 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -754,6 +754,37 @@ static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
- 	return pte;
- }
- 
-+static inline void __clear_full_ptes(struct mm_struct *mm, unsigned long addr,
-+				     pte_t *ptep, unsigned int nr, int full)
-+{
-+	for (;;) {
-+		__ptep_get_and_clear(mm, addr, ptep);
-+		if (--nr == 0)
-+			break;
-+		ptep++;
-+		addr += PAGE_SIZE;
-+	}
-+}
-+
-+static inline pte_t __get_and_clear_full_ptes(struct mm_struct *mm,
-+					      unsigned long addr, pte_t *ptep,
-+					      unsigned int nr, int full)
-+{
-+	pte_t pte, tmp_pte;
-+
-+	pte = __ptep_get_and_clear(mm, addr, ptep);
-+	while (--nr) {
-+		ptep++;
-+		addr += PAGE_SIZE;
-+		tmp_pte = __ptep_get_and_clear(mm, addr, ptep);
-+		if (pte_dirty(tmp_pte))
-+			pte = pte_mkdirty(pte);
-+		if (pte_young(tmp_pte))
-+			pte = pte_mkyoung(pte);
-+	}
-+	return pte;
-+}
-+
- static inline void __ptep_set_wrprotect(struct mm_struct *mm,
- 					unsigned long address, pte_t *ptep,
- 					pte_t pte)
-@@ -823,6 +854,13 @@ extern void ptep_set_wrprotect(struct mm_struct *mm,
- extern void wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
- 			   pte_t *ptep, unsigned int nr);
- #define wrprotect_ptes	wrprotect_ptes
-+extern void clear_full_ptes(struct mm_struct *mm, unsigned long addr,
-+			    pte_t *ptep, unsigned int nr, int full);
-+#define clear_full_ptes	clear_full_ptes
-+extern pte_t get_and_clear_full_ptes(struct mm_struct *mm,
-+				     unsigned long addr, pte_t *ptep,
-+				     unsigned int nr, int full);
-+#define get_and_clear_full_ptes	get_and_clear_full_ptes
- 
- #else /* CONFIG_THP_CONTPTE */
- 
-@@ -842,6 +880,7 @@ extern void wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
- #define ptep_set_wrprotect(mm, addr, ptep)					\
- 			__ptep_set_wrprotect(mm, addr, ptep, __ptep_get(ptep))
- #define wrprotect_ptes		__wrprotect_ptes
-+#define clear_full_ptes		__clear_full_ptes
- 
- #endif /* CONFIG_THP_CONTPTE */
- 
-diff --git a/include/linux/contpte.h b/include/linux/contpte.h
-index d1439db1706c..b24554ebca41 100644
---- a/include/linux/contpte.h
-+++ b/include/linux/contpte.h
-@@ -28,5 +28,10 @@ int contpte_ptep_set_access_flags(struct vm_area_struct *vma,
- 				  pte_t entry, int dirty);
- void contpte_wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
- 			    pte_t *ptep, unsigned int nr);
-+void contpte_clear_full_ptes(struct mm_struct *mm, unsigned long addr,
-+			     pte_t *ptep, unsigned int nr, int full);
-+pte_t contpte_get_and_clear_full_ptes(struct mm_struct *mm,
-+				      unsigned long addr, pte_t *ptep,
-+				      unsigned int nr, int full);
- 
- #endif /* _LINUX_CONTPTE_H */
-diff --git a/mm/contpte.c b/mm/contpte.c
-index fe36b6b1d20a..677344e0e3c3 100644
---- a/mm/contpte.c
-+++ b/mm/contpte.c
-@@ -51,6 +51,8 @@
-  *   - ptep_clear_flush_young()
-  *   - wrprotect_ptes()
-  *   - ptep_set_wrprotect()
-+ *   - clear_full_ptes()
-+ *   - get_and_clear_full_ptes()
-  */
- 
- pte_t huge_ptep_get(pte_t *ptep)
-@@ -905,4 +907,49 @@ __always_inline void ptep_set_wrprotect(struct mm_struct *mm,
- {
- 	wrprotect_ptes(mm, addr, ptep, 1);
- }
-+
-+void contpte_clear_full_ptes(struct mm_struct *mm, unsigned long addr,
-+			     pte_t *ptep, unsigned int nr, int full)
-+{
-+	contpte_try_unfold_partial(mm, addr, ptep, nr);
-+	__clear_full_ptes(mm, addr, ptep, nr, full);
-+}
-+EXPORT_SYMBOL_GPL(contpte_clear_full_ptes);
-+
-+pte_t contpte_get_and_clear_full_ptes(struct mm_struct *mm,
-+				      unsigned long addr, pte_t *ptep,
-+				      unsigned int nr, int full)
-+{
-+	contpte_try_unfold_partial(mm, addr, ptep, nr);
-+	return __get_and_clear_full_ptes(mm, addr, ptep, nr, full);
-+}
-+EXPORT_SYMBOL_GPL(contpte_get_and_clear_full_ptes);
-+
-+__always_inline void clear_full_ptes(struct mm_struct *mm, unsigned long addr,
-+				     pte_t *ptep, unsigned int nr, int full)
-+{
-+	if (likely(nr == 1)) {
-+		contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
-+		__clear_full_ptes(mm, addr, ptep, nr, full);
-+	} else {
-+		contpte_clear_full_ptes(mm, addr, ptep, nr, full);
-+	}
-+}
-+
-+__always_inline pte_t get_and_clear_full_ptes(struct mm_struct *mm,
-+					      unsigned long addr, pte_t *ptep,
-+					      unsigned int nr, int full)
-+{
-+	pte_t pte;
-+
-+	if (likely(nr == 1)) {
-+		contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
-+		pte = __get_and_clear_full_ptes(mm, addr, ptep, nr, full);
-+	} else {
-+		pte = contpte_get_and_clear_full_ptes(mm, addr, ptep, nr, full);
-+	}
-+
-+	return pte;
-+}
-+
- #endif /* CONFIG_THP_CONTPTE */
--- 
-2.39.2
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
