@@ -1,17 +1,17 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F1187E0F0;
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE237E798;
 	Wed,  8 May 2024 10:02:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715162584; cv=none; b=SurNJ4RNJKtlbKyD454aFJay8h95BspMn249KGbTZ4ftKrWyOTUkioJKa5sItTyPiTbc7iZ5kMHmdy8lE9bBfSIiVupg0Z5+jJ/iN2pjA1B9+pSspU92IhuydaEQIA4X9yXrrzx/5isJJ/TCduKe7TKKqNrIrB8NT3Wld5DFyZs=
+	t=1715162585; cv=none; b=dP40uGGjHnAG9+WWDoVE8FD6i/nm1CUFDFp1I+ov4j7IFuog8eq2JT+yc04tg0ulxqhsZDspMj34fUjgHBIRJpKZmNieW4Zgx7qsCMMWB3s+vh7W08DiQjwHm/RZj+tuLfY4gh6iFDuVxfqSlnjksjrLFv9bA4PfMZD9nu4Ox7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715162584; c=relaxed/simple;
-	bh=MruAYr/ze2aZU4Q6DDtEFdBspBpkL05uqzvhsrQG5Gc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ViW4YFX6Qzdcf9geUx/ABt/GuQpSgrFbBSIDsWd0efQ0OPrcrHSQBdmzztbkhdtgm2w0lqsCeRptHQB6dsM6eu4ZhJ9k+YbBnQrDOw+OWtuIWP3ynGmFJBi6oosKaPbyFKa80AQ4ZRG3nsdQx+594arO85wT4tNGC8bIKq2RUE0=
+	s=arc-20240116; t=1715162585; c=relaxed/simple;
+	bh=ILOiGypKonBszEM01cavkBhnNff7lLqOK+UDeJBRKwI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=eS2SVNf9L06G5r0Lo1KQ/t1JMY19dmgZWNe4HvCdc2+AOz6d36EvJW0H+OIIeBNL1bGDgSYNp6vmzaEjplH9U1Y3mluR4q0r4KJqPB7LGhfINkHHCC+7KksI2zh6QCxncPVTW93EqVaQHMGcCHKZfhtmWZrYdchOCJJrJJo/Wb8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-f6-663b4a3a5441
+X-AuditID: a67dfc5b-d85ff70000001748-d9-663b4a3c0e6c
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org
 Cc: kernel_team@skhynix.com,
@@ -71,43 +71,43 @@ Cc: kernel_team@skhynix.com,
 	longman@redhat.com,
 	hdanton@sina.com,
 	her0gyugyu@gmail.com
-Subject: [PATCH v14 14/28] dept: Apply sdt_might_sleep_{start,end}() to hashed-waitqueue wait
-Date: Wed,  8 May 2024 18:47:11 +0900
-Message-Id: <20240508094726.35754-15-byungchul@sk.com>
+Subject: [PATCH v14 28/28] dept: Add documentation for Dept's APIs
+Date: Wed,  8 May 2024 18:47:25 +0900
+Message-Id: <20240508094726.35754-29-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240508094726.35754-1-byungchul@sk.com>
 References: <20240508094726.35754-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAz3Sa0yTZxQHcJ73TkP1tcPwjpFMmxAVM4YG9UxxMYbpM4mJ15hIjOvgReoA
-	tVUQGQlIuchFgQWqgKaAKRWqaOEDIrgKgiApdti4QrhMNCIKNDKK1lY3Ltm+nPxyLv9PhyNl
-	jbQ/p0w4LaoSFHFyRkJJJn0qv9m8a0tMSEuXHIryQ8A5k0NBRb2RAeutOgTGxnQCxjt2wp+z
-	EwjclickaEusCCqfD5HQ2DmMoNVwnoGnL5eAzelgoLskj4GM6noG/njrIWCwtJiAOtNu6Cms
-	IsDsGqNAO85AuTaDmCuvCXDpa1nQpwXCqKGMBc/zddA9/IyG1oG1cOXaIAMtrd0UdDaNEvC0
-	uYKBYeM/NPR0dlFgLSqg4eZUFQNvZ/Uk6J0OFvrMOgJua+aCsv7+TMOjAjMBWdfvEGDrv4fg
-	fs5fBJiMzxhod04Q0GAqIeFjTQeC0YuTLGTmu1goT7+IIC+zlALN4AZwf6hgtn2H2yccJNY0
-	JOHWWR2FH1cJ+G7ZEIs19wdYrDOdwQ2GIFzdMk7gymknjU21Fxhsmi5mce6kjcBTvb0s7rrs
-	pvBLm5bY439YEhYtxikTRdW33/8kiR0bKqJP2rmznx7eZdOQnclF3pzAhwo5ngv/u/txDTlv
-	hl8l2O2uBfvyK4SGglf0vEl+QiJc790x7y/4I8KlN5ULtxQfKDR35C1Yym8UjPZacjHza6Hu
-	tnnB3nP9/rEpNG8Zv0G4l1HGLu7McMI7S8iivxQeGOxUIZLqkFctkikTEuMVyrjQ4NjkBOXZ
-	4KgT8SY090v6VE9kE5q27m9DPIfkPlKz3+YYGa1IVCfHtyGBI+W+0o7sTTEyabQi+ZyoOnFU
-	dSZOVLehrzhK7iddP5sULeOPKU6Lv4jiSVH135TgvP3T0KqIX90jL/rZlPOW0ON7jL+9dgR/
-	6nuYfWnlVU3NgZ2HUlLKLafa8/22uX4PzxxYtjT8zkzA8oA1UXorrvuxuWmr9ENq8I0e2Sbf
-	gvDtHvdItjpCu/GU3pP//oewnw2Wg9X12z/ug9V9LUntxie5tii/EMfezGmdV1ZAVuFIM3vj
-	c6ScUscq1gWRKrXiX7YHUApHAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAAzXSbUhTYRQH8J778tzrcHFbUpcsymFUWmaQdUgrP1RejKRPBkLkqGsb6Yyt
-	LKNAU3vRfFmhs2kyzaZt86XZB2taos5akVmKTVHJFak1FapJS3tRoy+HH+fP+X86LCnT06tY
-	lfqMqFErkuVYQkniIrO27IqNTAofNfiD7kY4eL9fo6C8wYqhp96CwPowk4AJRwy8m/EgmH31
-	mgR9cQ+CytFhEh52jSBorb2MoffjUujzTmNwFudhyLrbgOHNlzkChkpuEmCxHYKXRVUEtPnG
-	KNBPYCjTZxHzY5wAn8nMgCljPbhrDQzMjW4D50g/DR13nDS0DobC7YohDC2tTgq6mt0E9D4u
-	xzBi/UPDy67nFPTo8mmom6rC8GXGRILJO83A2zYjAY3Z821Xvv2m4Vl+GwFXqh8Q0DdgR/Dk
-	2nsCbNZ+DB1eDwFNtmISftY4ELgLJhnIueFjoCyzAEFeTgkF2UMRMPujHEfvEjo806SQ3XRO
-	aJ0xUsKLKl54ZBhmhOwng4xgtJ0VmmpDhLstE4RQ+dVLCzbzdSzYvt5khNzJPkKY6u5mhOel
-	s5TwsU9PHA5MkESdEJNVaaJm655EiXJsWEefdrHnf3U+YjKQC+ciP5bntvPOFzXkgjG3gXe5
-	fIsO4NbxTfmf6AWTnEfCV3cfWPBy7ihf+Lly8Zbi1vOPHXmLlnI7eKvLTP7rXMtbGtsW7Te/
-	HxibQguWcRG8PcvAFCGJES0xowCVOi1FoUqOCNOeUqarVefDjqem2ND8u5guzema0ffemHbE
-	sUjuL+3BkUkyWpGmTU9pRzxLygOkjqs7k2TSE4r0C6Im9ZjmbLKobUeBLCVfKY09IibKuJOK
-	M+IpUTwtav6nBOu3KgPdWmNsiJIlRLGdIUFGd2Vzp8VdOG738RmpG+/tV45Z64I6Vw+Nh81J
-	YoJn7YV5xvCZ+44PdRWeUX1w2Yr6Bl0MUicESrfmuEyOZZveXdzydJ9oie6ofmvGObilsDRX
-	0zWy+fUOZf/uB6b4fH9laFzB3vZ936IO2uNDDSm/42k5pVUqtoWQGq3iL4Oqv/cqAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0iTYRTHe97rXK5eltCrkdUggsLKyDqVRBTYUxEUXakPNdprG02TmbdA
+	0rxU3khDV9NELdbS1Wzbhy5qa+F0hTbLcuaFNMssLzSbaNplKn45/Pif8/99OiJSaqWDRKro
+	C4ImWq6WMWJKPORfHhK+d1vkemtXMOTnrAfvr6sUlJiMDLgeViEwWlMJGKjfDW1jgwgmm96Q
+	oC10ISjv6SLB6uhGUGu4zMC7vgXQ6h1hwFmYzUDaHRMDLT+mCOgsKiCgyrwfXl+vIMA20U+B
+	doCBYm0a4RvfCJjQV7KgT1kJvQYdC1M9oeDs/kBD7cc1cKu0k4GaWicFjse9BLx7WsJAt/Ef
+	Da8djRS48nNpeDBcwcCPMT0Jeu8IC29tZQRUp/tEmaN/aWjItRGQefcRAa3tzxDUXf1EgNn4
+	gYGX3kECLOZCEn7fq0fQmzfEQkbOBAvFqXkIsjOKKEjvDIPJ8RJmxxb8cnCExOmWBFw7Vkbh
+	VxU8fqLrYnF63UcWl5njsMWwGt+pGSBwucdLY3PlNQabPQUszhpqJfBwczOLG29OUrivVUsc
+	CDohDlcIalW8oFm3/bRYmeFsYGNKZYnVTXEpKH9JFvIT8dxG/vZvDzXHn0tHZ5jhVvFu9wQ5
+	zQHcct6S+5WeZpIbFPN3myOmeRG3k3eMvkfTTHEr+Uxny0xXwm3ibxQ40KxzGV9VbZvx+Pny
+	9v7hmVzKhfHP0nRsFhL7bsZFfNv7Unq2EMi/MLip60hShuZVIqkqOj5KrlJvXKtMilYlrj1z
+	PsqMfL+kT546+Rh5XIfsiBMhmb/EtnhrpJSWx8cmRdkRLyJlAZL6K5sjpRKFPOmioDl/ShOn
+	FmLtaImIki2WbBhLUEi5s/ILwjlBiBE0c1tC5BeUghbWdeh0l1YcW3E4yjQQY+l4eON5VlNa
+	oNq41G21NR9pbDsuDrbYU/ECuX2n64i/OnENV4PF24wJ88e/7/H2L/t1tNPzpd2rLtocv+5+
+	Y9fPlojiP3/CziWHK4cK9yqGtR2mE3k5+9zKgIN1ZGVoiJX793RX7iVTgMKQ3XD/SYhURsUq
+	5aGrSU2s/D9L025kRwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSf0yMcRzH+36fX9ets2dX41nZ4qYh82sTHw4zjEfGzGxt/UGH53TrKu4q
+	Yua4fqhkLurIlZOcVofcxUJnt9LltE6UiLRKQ6SsuubU0GX+ee+192ef119vESEtokJFqqQU
+	QZOkUMtoMSneKdcvlkfLlct6ateC4dwy8I6dJcF010pD650qBNaa0xgGGrfCm/FBBBMtLwgw
+	FrYiuN77gYAaVzcCR8UZGtr6Z0C7d5gGd2EeDfobd2l4+W0SQ1dRAYYq2w5ovlCGwen7TIJx
+	gIarRj2eii8YfJZKBiy6COirKGZgsnc5uLs7KGgocVPgeLcIrpR20VDncJPgqu3D0PbIREO3
+	9Q8Fza5nJLQa8im4PVRGw7dxCwEW7zADr5xmDNUZU7as0d8UNOU7MWSV38PQ3vkYwZOzPRhs
+	1g4aGryDGOy2QgJ+3WpE0Hf+OwOZ53wMXD19HkFeZhEJGV1RMPHTRG9YwzcMDhN8hv0o7xg3
+	k/zzMo5/WPyB4TOevGN4sy2Vt1dE8jfqBjB/fcRL8bbKHJq3jRQwfO73dswPeTwM/+zyBMn3
+	txvxrrBY8dqDglqVJmiWro8Tx2e6m5jDpbJj1S2pOmQIy0WBIo5dwX0sHSX9TLPzubdvfYSf
+	Q9g5nD3/E+Vngh0Uc+WeLX4OZjdyrtHXyM8kG8FluV9O/0rYldzFAhf65wznqqqd057Aqb7z
+	89B0L2WjuMf6YuYCEptRQCUKUSWlJSpU6qgl2oT49CTVsSUHkhNtaGotlpOThlo01ra1HrEi
+	JAuStNJypZRSpGnTE+sRJyJkIZLG7FVKqeSgIv24oEnep0lVC9p6FCYiZbMk0TFCnJQ9pEgR
+	EgThsKD5f8WiwFAduo+jT62brDPFlji/apqRY6ZhZPX28pBkpUd35URTV9jCH+qle/eXa3cH
+	xW3y3Nx81O7bWLvN2p+84dFs/dwOpTEgRnvtgfip0hTckmBeMOxInRP1/ogqeN7TyEvyrEs1
+	KfNMtj1ljLM6r8cVtG/Px/zeJnN2drhWt+tAjmyd/EyJjNTGK5ZHEhqt4i/zXmBuKQMAAA==
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -115,41 +115,137 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Makes Dept able to track dependencies by hashed-waitqueue waits.
+This document describes the APIs of Dept.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/wait_bit.h | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/dependency/dept_api.txt | 117 ++++++++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
+ create mode 100644 Documentation/dependency/dept_api.txt
 
-diff --git a/include/linux/wait_bit.h b/include/linux/wait_bit.h
-index 7725b7579b78..fe89282c3e96 100644
---- a/include/linux/wait_bit.h
-+++ b/include/linux/wait_bit.h
-@@ -6,6 +6,7 @@
-  * Linux wait-bit related types and methods:
-  */
- #include <linux/wait.h>
-+#include <linux/dept_sdt.h>
- 
- struct wait_bit_key {
- 	void			*flags;
-@@ -246,6 +247,7 @@ extern wait_queue_head_t *__var_waitqueue(void *p);
- 	struct wait_bit_queue_entry __wbq_entry;			\
- 	long __ret = ret; /* explicit shadow */				\
- 									\
-+	sdt_might_sleep_start(NULL);					\
- 	init_wait_var_entry(&__wbq_entry, var,				\
- 			    exclusive ? WQ_FLAG_EXCLUSIVE : 0);		\
- 	for (;;) {							\
-@@ -263,6 +265,7 @@ extern wait_queue_head_t *__var_waitqueue(void *p);
- 		cmd;							\
- 	}								\
- 	finish_wait(__wq_head, &__wbq_entry.wq_entry);			\
-+	sdt_might_sleep_end();						\
- __out:	__ret;								\
- })
- 
+diff --git a/Documentation/dependency/dept_api.txt b/Documentation/dependency/dept_api.txt
+new file mode 100644
+index 000000000000..8e0d5a118a46
+--- /dev/null
++++ b/Documentation/dependency/dept_api.txt
+@@ -0,0 +1,117 @@
++DEPT(DEPendency Tracker) APIs
++=============================
++
++Started by Byungchul Park <max.byungchul.park@sk.com>
++
++SDT(Single-event Dependency Tracker) APIs
++-----------------------------------------
++Use these APIs to annotate on either wait or event.  These have been
++already applied into the existing synchronization primitives e.g.
++waitqueue, swait, wait_for_completion(), dma fence and so on.  The basic
++APIs of SDT are:
++
++   /*
++    * After defining 'struct dept_map map', initialize the instance.
++    */
++   sdt_map_init(map);
++
++   /*
++    * Place just before the interesting wait.
++    */
++   sdt_wait(map);
++
++   /*
++    * Place just before the interesting event.
++    */
++   sdt_event(map);
++
++The advanced APIs of SDT are:
++
++   /*
++    * After defining 'struct dept_map map', initialize the instance
++    * using an external key.
++    */
++   sdt_map_init_key(map, key);
++
++   /*
++    * Place just before the interesting timeout wait.
++    */
++   sdt_wait_timeout(map, time);
++
++   /*
++    * Use sdt_might_sleep_start() and sdt_might_sleep_end() in pair.
++    * Place at the start of the interesting section that might enter
++    * schedule() or its family that needs to be woken up by
++    * try_to_wake_up().
++    */
++   sdt_might_sleep_start(map);
++
++   /*
++    * Use sdt_might_sleep_start_timeout() and sdt_might_sleep_end() in
++    * pair.  Place at the start of the interesting section that might
++    * enter schedule_timeout() or its family that needs to be woken up
++    * by try_to_wake_up().
++    */
++   sdt_might_sleep_start_timeout(map, time);
++
++   /*
++    * Use sdt_might_sleep_start() and sdt_might_sleep_end() in pair.
++    * Place at the end of the interesting section that might enter
++    * schedule(), schedule_timeout() or its family that needs to be
++    * woken up by try_to_wake_up().
++    */
++   sdt_might_sleep_end();
++
++   /*
++    * Use sdt_ecxt_enter() and sdt_ecxt_exit() in pair.  Place at the
++    * start of the interesting section where the interesting event might
++    * be triggered.
++    */
++   sdt_ecxt_enter(map);
++
++   /*
++    * Use sdt_ecxt_enter() and sdt_ecxt_exit() in pair.  Place at the
++    * end of the interesting section where the interesting event might
++    * be triggered.
++    */
++   sdt_ecxt_exit(map);
++
++
++LDT(Lock Dependency Tracker) APIs
++---------------------------------
++Do not use these APIs directly.  These are the wrappers for typical
++locks, that have been already applied into major locks internally e.g.
++spin lock, mutex, rwlock and so on.  The APIs of LDT are:
++
++   ldt_init(map, key, sub, name);
++   ldt_lock(map, sub_local, try, nest, ip);
++   ldt_rlock(map, sub_local, try, nest, ip, queued);
++   ldt_wlock(map, sub_local, try, nest, ip);
++   ldt_unlock(map, ip);
++   ldt_downgrade(map, ip);
++   ldt_set_class(map, name, key, sub_local, ip);
++
++
++Raw APIs
++--------
++Do not use these APIs directly.  The raw APIs of dept are:
++
++   dept_free_range(start, size);
++   dept_map_init(map, key, sub, name);
++   dept_map_reinit(map, key, sub, name);
++   dept_ext_wgen_init(ext_wgen);
++   dept_map_copy(map_to, map_from);
++   dept_wait(map, wait_flags, ip, wait_func, sub_local, time);
++   dept_stage_wait(map, key, ip, wait_func, time);
++   dept_request_event_wait_commit();
++   dept_clean_stage();
++   dept_stage_event(task, ip);
++   dept_ecxt_enter(map, evt_flags, ip, ecxt_func, evt_func, sub_local);
++   dept_ecxt_holding(map, evt_flags);
++   dept_request_event(map, ext_wgen);
++   dept_event(map, evt_flags, ip, evt_func, ext_wgen);
++   dept_ecxt_exit(map, evt_flags, ip);
++   dept_ecxt_enter_nokeep(map);
++   dept_key_init(key);
++   dept_key_destroy(key);
++   dept_map_ecxt_modify(map, cur_evt_flags, key, evt_flags, ip, ecxt_func, evt_func, sub_local);
 -- 
 2.17.1
 
