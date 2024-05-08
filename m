@@ -1,93 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4DC82492;
-	Wed,  8 May 2024 11:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38EC7823BF
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:52:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715168874; cv=none; b=OeQxuHfqMNroZFyBFTLWZra98e72ImojDfuN3bGHV6TE70/Zo2ZmHThD1uce0uVT8DbqRdJR3DwDNqKnD1mvu/bnDdsSTShBFMmHckzdPgcGK2cnjTthWbK9bbPHwxujYz00LIaP8+HrmAbufrY32BS9lZJvlaJlLl+ZKqrLd2Q=
+	t=1715169123; cv=none; b=qGtcG7EvG3E0W9WQoQXTHLBHAxp9eUYnodvd2O62g/bPjOSwoWQZipbFSHvznBD4NsKL0ly6pmydX/DXsNGuB4D2RrNCGZA9frPxMnve/Qio7/moq8IpwFaZumreS/JKYVjl5VAMc2qboo8sMcdTlSTJPEqCtz4IBr/LZzUP74Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715168874; c=relaxed/simple;
-	bh=uDG480PUhwe0ESIDmugza7mKOq0B7fW09PsYqfZWf+w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OQD9hDbdereDTM4di/juqy383T6o6AEYOO0uPzbYwWZV4P1iYhXH4XWMkHKiLcIMRUsFW0dg1ipHig8LBdX7lCAYmGT8TiJZEn2Tlx3YRjfuM0lduX7llgSU6KK2lqO7qa0a3t248pbypCVtlShdK0q8wihPCYQGm6/TiC9eYII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PzMa+iHl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715169123; c=relaxed/simple;
+	bh=21WZUZABtoQNfRX1jBAzfALHLDUGBlVG06XSqRlV0fg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=elXBhz7U/5okWX/4qsjlNNWR1zru+Si999OdTUZfwaw43hDp1WmSe2iH7LA8D3Q5AKjev8iF7LfNCHOIPhTX+qi3LUAGUpj5yZGTTQZskqM+Mmr6nTGhoEdYOC1nwq5HU3SgwnkctCT6MwMJNNGMPO+3XdF+g/iSRMthV0daPyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DfxI5AKH; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PzMa+iHl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFB8DC113CC;
-	Wed,  8 May 2024 11:47:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715168874;
-	bh=uDG480PUhwe0ESIDmugza7mKOq0B7fW09PsYqfZWf+w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PzMa+iHlmGnMVBsjCPWjPeHvQZtIFYHrHr70MzejGo9K494+r1vUTzSegQVW8tQe5
-	 4sUy59+h9vZq4b9MeGcfSzeIbX1WFy2YC0l0twTGv1vU2MrnxQRTW5TftBIgr+Ikyx
-	 bldlW9k2RqgO/E7/oVymFWM+DbeXyUNgCQBfgjmfsvG3zXvMvV6fV1itm5qze0o1fv
-	 +NIH/NEeG5uUqyX/2ThBI7VfoU9JRN+Y6mEQvXUYb3ypEsGepAqWZaka9YXE7/C1Nd
-	 8xgXxwAY0Ay/0FQQvw6wthkJUVAUxbxCbUlEm3xRjDvRl2YOIZFymdHNUzdw2wF8U2
-	 Z6jj9cQfnDiMg==
-Date: Wed, 8 May 2024 20:47:51 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Richard Hughes <hughsient@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Jeff LaBundy <jeff@labundy.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Charles Wang <charles.goodix@gmail.com>, hadess@hadess.net,
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-	neil.armstrong@linaro.org
-Subject: Re: [PATCH] Input: goodix-berlin - Add sysfs interface for reading
- and writing touch IC registers
-Message-ID: <ZjtmZ6Jrj6vn6sv3@finisterre.sirena.org.uk>
-References: <20240506114752.47204-1-charles.goodix@gmail.com>
- <6362e889-7df2-4c61-8ad5-bfe199e451ec@redhat.com>
- <ZjmOUp725QTHrfcT@google.com>
- <Zjo8eTQQS1LvzFgZ@finisterre.sirena.org.uk>
- <ZjpFVGw6PgjRcZY3@nixie71>
- <ZjqYp1oxPPWcF3jW@google.com>
- <ZjrledLjn8RsGiwC@finisterre.sirena.org.uk>
- <CAD2FfiE+VFa+7sHQg=LGkBy556msNyyFUhmWW_cAfZd0V4DPYQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DfxI5AKH"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2b387e2e355so2884610a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 04:52:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715169121; x=1715773921; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wYxgECP19KQcIH0PhiMfWn89B9REarDnlrwf/7Dgpy8=;
+        b=DfxI5AKHdSr9rHLldL1S5XNs1utg+7iRBgQbin0Xx3Wg2CpzQ94dg0dadOLKkrctJ/
+         B/KdAluEflC4hPw3/rTlOHA0IobIWG2rn4A7ibG9mu5A+HPOQox2IMuOC1Cf2fuHITOP
+         zwuoHVTbAoUAlZG5UeUYIhTZR6GOzE0pkv3KNpGVZEf0/Jm+3SWV8E7YTVIFg0hTEgcU
+         q7F4OuAMtOziMNanddSOlunKGxGk62KcbhmhIfyBKPuNnejqlYf2kZYp+G9QPHbPhV39
+         yvrhNc/sJQzD5T9BvCwPAUuhJFOepbMi9iwx+NKlEJDxSIme6X9P/HFTk8HV2FrTy/is
+         sQ7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715169121; x=1715773921;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wYxgECP19KQcIH0PhiMfWn89B9REarDnlrwf/7Dgpy8=;
+        b=I6Fgb6HEqWm2giE4lrr66Z/7vWc8BRbdtPFVJdsKbyx3xb0cJUkEPy+X6xJP0XxTYO
+         UU+mmhyHxKGmm7F+xo6ShH0H13IVy1Tj7TOm9cT4+qY7sLb7GkRTI0gnsO1hxhaGssGO
+         SWg1ao+Pg3mByJ6eFOP/a9Oglm+I5sKEed4Zq6qQ0PfCPgKEz6d/Sw56aE3fR1M3SPqm
+         sF4BzQ53Va+spDy7PdWmYMm5cGfX/s07XWHf9mvz8hhM25Wlfxv847HWiutT2uljHYEu
+         3K0GskZ8NNjv/qnEriwczgyP7I7kBQx05Io5iBe38X2Bm8YPHGRGZqj4ovqmy1Hke2mO
+         wlVw==
+X-Forwarded-Encrypted: i=1; AJvYcCXrjJhWa7q/PSWSt0mObNGn69mAP/8VQUM3ZuH89JULp8Wt3R8K3Gihs8va1ZxLf4VafLvoBqEAmwvJM/0d4XIgDqCDkPu7rFau7+CL
+X-Gm-Message-State: AOJu0YwIh7rbbo3sKdgiuhOoLUDzeadIfJlks2LmSrdjKgpfZ23w+xCA
+	jYYNzkaeDzMIM1RmVHhgFD9mNMyuxqjtf0+fb/efxtMzQYLF+rrvSkH/GeTYwJ+zC+PrQXm72Mk
+	bhTlfHffIiG6RT1zdiTRgoIhbA2lvgQUZdgv3OQ==
+X-Google-Smtp-Source: AGHT+IEhdE+GG8XxwKNRlclHRbBSycIrPohs+PTxSK9Z3F9iJMuBG2HZF6XAdrrAJXkCh/xJgPaDBMp9H0/wPUP9epQ=
+X-Received: by 2002:a17:90a:d386:b0:2b6:22f0:3b8a with SMTP id
+ 98e67ed59e1d1-2b622f03bc3mr1840592a91.36.1715169121651; Wed, 08 May 2024
+ 04:52:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nDq691KZs7iF1YOg"
-Content-Disposition: inline
-In-Reply-To: <CAD2FfiE+VFa+7sHQg=LGkBy556msNyyFUhmWW_cAfZd0V4DPYQ@mail.gmail.com>
-X-Cookie: Accuracy, n.:
+References: <20240507135234.1356855-1-yangcong5@huaqin.corp-partner.google.com>
+ <20240507135234.1356855-3-yangcong5@huaqin.corp-partner.google.com> <CAD=FV=Wj5WKcVbNGHQ_BbZa_fsVJkpYb2C8TE8bjhvJvx+N_hw@mail.gmail.com>
+In-Reply-To: <CAD=FV=Wj5WKcVbNGHQ_BbZa_fsVJkpYb2C8TE8bjhvJvx+N_hw@mail.gmail.com>
+From: cong yang <yangcong5@huaqin.corp-partner.google.com>
+Date: Wed, 8 May 2024 19:51:50 +0800
+Message-ID: <CAHwB_NKPswAvE5TjRxWMR8LLV5sNuMmymXr4nhDc3r_AdRKr8A@mail.gmail.com>
+Subject: Re: [PATCH v4 2/7] drm/panel: himax-hx83102: Break out as separate driver
+To: Doug Anderson <dianders@chromium.org>
+Cc: sam@ravnborg.org, neil.armstrong@linaro.org, daniel@ffwll.ch, 
+	linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org, 
+	robh+dt@kernel.org, conor+dt@kernel.org, airlied@gmail.com, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, xuxinxiong@huaqin.corp-partner.google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
---nDq691KZs7iF1YOg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Doug Anderson <dianders@chromium.org> =E4=BA=8E2024=E5=B9=B45=E6=9C=888=E6=
+=97=A5=E5=91=A8=E4=B8=89 07:35=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Hi,
+>
+> On Tue, May 7, 2024 at 6:53=E2=80=AFAM Cong Yang
+> <yangcong5@huaqin.corp-partner.google.com> wrote:
+> >
+> > +static int hx83102_enable_extended_cmds(struct hx83102 *ctx, bool enab=
+le)
+> > +{
+> > +       struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D ctx->dsi }=
+;
+> > +
+> > +       if (enable)
+> > +               mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETEXTC,=
+ 0x83, 0x10, 0x21, 0x55, 0x00);
+> > +       else
+> > +               mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETEXTC,=
+ 0x00, 0x00, 0x00);
+> > +
+> > +       return 0;
+>
+> You're throwing away the error codes returned by the
+> mipi_dsi_dcs_write_seq_multi(), which you shouldn't do. You have two
+> options:
+>
+> Option #1: return dsi_ctx.accum_err here and then check the return
+> value in callers.
+>
+> Option #2: instead of having this function take "struct hx83102 *ctx",
+> just have it take "struct mipi_dsi_multi_context *dsi_ctx". Then it
+> can return void and everything will be fine.
+>
+> I'd prefer option #2 but either is OK w/ me.
 
-On Wed, May 08, 2024 at 09:39:41AM +0100, Richard Hughes wrote:
+Ok,I will fix in V4, thanks.
 
-> If it helps, fwupd already uses mtd for other devices too, although at
-> the moment we're using it only for system firmware -- e.g. intel-spi
-> style. The MTD subsystem doesn't give fwupd much info about the
-> {removable} device itself, and that can pose a problem unless you
-> start using heuristics about the parent device to match firmware to
-> the mtd device.
+>
+>
+> > +static int starry_himax83102_j02_init(struct hx83102 *ctx)
+> > +{
+> > +       struct mipi_dsi_multi_context dsi_ctx =3D { .dsi =3D ctx->dsi }=
+;
+> > +
+> > +       hx83102_enable_extended_cmds(ctx, true);
+> > +       mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPOWER, 0x2c, =
+0xb5, 0xb5, 0x31, 0xf1,
+> > +                                        0x31, 0xd7, 0x2f, 0x36, 0x36, =
+0x36, 0x36, 0x1a, 0x8b, 0x11,
+> > +                                        0x65, 0x00, 0x88, 0xfa, 0xff, =
+0xff, 0x8f, 0xff, 0x08, 0x74,
+> > +                                        0x33);
+>
+> The indentation is still off here. You have 5 tabs followed by a
+> space. To make things line up with the opening brace I think it should
+> be 4 tabs followed by 5 spaces.
 
-FWIW I know SolareFlare network cards used to do this too, though I
-don't know about current products.
+Sorry, my  editor 'Visual Studio Code' It seems that the correct indentatio=
+n
+is not recognized. I have checked it through the 'vim' editor in the V4 ver=
+sion.
+Thanks.
 
---nDq691KZs7iF1YOg
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+>
+> > +static int hx83102_enable(struct drm_panel *panel)
+> > +{
+> > +       struct hx83102 *ctx =3D panel_to_hx83102(panel);
+> > +       struct mipi_dsi_device *dsi =3D ctx->dsi;
+> > +       struct device *dev =3D &dsi->dev;
+> > +       int ret;
+> > +
+> > +       ret =3D ctx->desc->init(ctx);
+> > +       if (ret)
+> > +               return ret;
+>
+> You're still changing behavior here. In the old boe-tv101wum-nl6
+> driver the init() function was invoked at the end of prepare(). Now
+> you've got it at the beginning of enable(). If this change is
+> important it should be in a separate commit and explained.
+>
+>
+> > +       ret =3D mipi_dsi_dcs_exit_sleep_mode(dsi);
+> > +       if (ret) {
+> > +               dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
+> > +               return ret;
+> > +       }
+> > +
+> > +       msleep(120);
+> > +
+> > +       ret =3D mipi_dsi_dcs_set_display_on(dsi);
+> > +       if (ret) {
+> > +               dev_err(dev, "Failed to turn on the display: %d\n", ret=
+);
+> > +       }
+>
+> The old boe-tv101wum-nl6 driver didn't call
+> mipi_dsi_dcs_exit_sleep_mode() nor mipi_dsi_dcs_set_display_on() in
+> its enable routine, did it? If this change is important please put it
+> in a separate change and justify it.
 
------BEGIN PGP SIGNATURE-----
+In the old boe-tv101wum-nl6 driver inital cmds was invoked at the end of
+prepare() function , and call 0x11 and 0x29 at end of inital. For
+himax-hx83102 driver, we move inital cmds invoked at enable() function.
+For panel timing, I think there is no much difference. They are
+all initial cmds executed after meeting the power-on sequence.
+I will update these in the v4 commit message.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmY7ZmcACgkQJNaLcl1U
-h9Bivgf8C+o2DfqpMLI8yUtww0Hmq/ALfX3f27DBHJBMrIuD/k475jxEPHnIbIJH
-lzizEAs4ZZW+LU5Yl+kmdYikVAv3pelrRnjHlEI5TL47wypIft3/Nh3iRHMflPkt
-oskqPewUw52nQVijTLjXeT+lDPt5WhtVPohVTZPOqAeF/Gq+hen059KvvizBF6id
-f6iGzbZuNTGuCOJ6xrysqjZtK+7nZxqHyhRhG2+GjV2Dxri6YQEETSCc//Nl+o2D
-PE5gJ4YPIIuscbi0BINKgiYa/mIB4/HkOK2cG/lvLM1UCMWeX7uZ1GllSp5KC49q
-DDYFT4Gih3hzgVzilxTxF+XKGS1D4g==
-=XTWh
------END PGP SIGNATURE-----
-
---nDq691KZs7iF1YOg--
+>
+>
+> -Doug
