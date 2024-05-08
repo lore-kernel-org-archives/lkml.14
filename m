@@ -1,490 +1,376 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747B812BF30
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 17:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FE612DDA7
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 17:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715190940; cv=none; b=qq3qJ+XsnE8QqT7N5voOndkr4TEP9sQc4T+INoxxWW/NGX+446LI0HfX0/cMqUbApxBU+3+TLdBQieT+Hu90uCQg3ZcNt9UQ2x1YlfXxYIs76MRIClmA/82PXEyhY5gII/L/sMzAv8aPWGqV6bSlo30SgEA1wUmvlV2Yinvww+8=
+	t=1715190949; cv=none; b=HKRDfg/AuWMVduXjeVzguPDth/tSaXklqXxdXwanhWs5RTFwHeJXStilGXEN2LAlDw79qBoGWe3ByC5KHAaivtLTOuAAzF9DCWhOwaA+PVsJQYcFW5n5t3bgkXA0FpV1VBC73Lh3Hm0rmruL565lNghwv1RfzOcybM0Fdn8/UoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715190940; c=relaxed/simple;
-	bh=Vc6rLoxAgVGJ5eJYWC/uLyuyS2NkQmLhh0gviilg7Ps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H9pi2r2gGpdF96gjIv243eqCq8ZuBSejopg+ErtLkvzONJnKWNrvkwxTEdccxvZ6DO8Rr8dpmht1zkj7WW3Y7KqXe+FafT8FcQT7qkNICMjbofZSikBLGlqFq7DQIM7qqkJ+HEFh+/s6TZEKflm6ObNWKl4WVqN/AGICIbVrAvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=IUZu5Ami; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1715190949; c=relaxed/simple;
+	bh=V7C+CKfOagC+riG3QFlA9fKMXi6NJl/wZwrn9MhG3DY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=SPjDtpEZiKK4Bk/aJF3ftcTxCYPg2Y42Cc91vtdknQPKgx8eswHEC6Sgg55sDvt1n1kDF7inJcQuBZlTzY93QyZ11wgiXvZbekB7MOr64i1XtOUw15wFXWUwN3X1Ry1AjCA0z8hKuIad85UIEFLjXB+p8sPouCEsCgVq2Gzr/ik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexus-software.ie; spf=none smtp.mailfrom=nexus-software.ie; dkim=pass (2048-bit key) header.d=nexus-software-ie.20230601.gappssmtp.com header.i=@nexus-software-ie.20230601.gappssmtp.com header.b=CXvp3FnE; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nexus-software.ie
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nexus-software.ie
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="IUZu5Ami"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51aa6a8e49aso6342445e87.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 10:55:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=nexus-software-ie.20230601.gappssmtp.com header.i=@nexus-software-ie.20230601.gappssmtp.com header.b="CXvp3FnE"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41ba1ba5592so31583705e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 10:55:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1715190937; x=1715795737; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+Tk/DSvx3CdlaEWEA56nwYg8oGe5JC/scXpJMt5kzns=;
-        b=IUZu5AmilAx24BkecSQ3c6D7A4Y4cAm8qN7MLooVM/uZw919zsySWM6WF7hnOKHpXJ
-         RO7VH1ALwXEqo0y4LQvEWAFWnoImIYD/UlAWr+LliOW+8Qz/zbW0LpLqmd/EDWFYuMR+
-         ujZ6GA2tM1lwaSoUHPq0l1+WvcdNGKbUBujAw=
+        d=nexus-software-ie.20230601.gappssmtp.com; s=20230601; t=1715190946; x=1715795746; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WA0zmIcyX5iAtUqFQfYMTNe30P56U7NW2HShbhJXXS0=;
+        b=CXvp3FnEnosrntINby3qaQAogI0q2GRlvGatxjqVU+UN63ms2LGdYaeTTitAce8d5k
+         go+2OLYa23NEFqkILk/qzCnQh4q/3zOrur+BnOMccXJUnmvxGqxK8UtJoxPsR8poUw9L
+         /gAxtehjExk/Mym8vlzUbyTVmKNm2aQrC3rdXeR6SWX89BwVL4T0jFewnBoEKzkux+q5
+         AXZwScbv0X42v+htwJif19Z6HURMoEZetmRCoa51qpgy9Q4hZHxAeD4XnOpktrETvbzz
+         5KgTmOVbtIv9QhOWDfkFnf1Qxy+7hLDraVbknOruBwS9Onsbnlk/cFhZH2uVkNs76IQW
+         cbAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715190937; x=1715795737;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+Tk/DSvx3CdlaEWEA56nwYg8oGe5JC/scXpJMt5kzns=;
-        b=pJZWgLd19VGPCHVGzzW9wQCNHpWJLRalg4QEq5/QJPkK/Axy2USzmWtaBzpRYFVaiF
-         KeONXs/ueQkLglBQNp1AbMULd94j7BCX1CGID+sw86t7Vfr86fq7MtGIKBsm02/SeEJN
-         DMjSTD3u4VNubRm3z8rYLcC5gUk9hpsoM6UNDhNVxdDTr/qSHfJteEt4YGHJiP1LbjOD
-         pEbYV+1Bqfl0UmGaGwWbZMT3BrOiJi5KlzaiGXqGQ8KFR27ZH1BylCpsLphbxKcv5+/a
-         6FIfKMhMb6+g8H0BkZ5/NTRLvqO8K/kIkAZQEUP5ZPYQYfWHTPZoYsJiGbec5C3aOpUw
-         qVuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWEskgl8mGc98BEpNyqu0MQk5OMWDHzOeYaw9t92b1BmBrYvsumZRH4PA3f4NhiJ2RlXDFLBpDoQqC2wNqrBxSFU3WKQWY0LtP1JCyr
-X-Gm-Message-State: AOJu0YznOF1zeIf29Jk2CJnNMyLmVuOM9uFkL7emdE73fbIJhzlkSkVS
-	IGAFsdTMaO6vHRSXUg6NCRf8Cnfm8BJDMec5cJ7ULULhkwX9e3qlcCaCx4ePjuSL6rcwjmF6K7V
-	5OxaLHclEt2ToFZYMNU23YTAKfsNBgvYF1MM2
-X-Google-Smtp-Source: AGHT+IGKhxSyqp746HzlQERCUl8CNd2z8ip666Qe3qRrj0441mZ3ZrOYamIDCC8C914GUOAqgi9tppoZ1i39ghwtcos=
-X-Received: by 2002:ac2:4e97:0:b0:519:2c84:2405 with SMTP id
- 2adb3069b0e04-5217cc42bbamr1948485e87.44.1715190936604; Wed, 08 May 2024
- 10:55:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715190946; x=1715795746;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WA0zmIcyX5iAtUqFQfYMTNe30P56U7NW2HShbhJXXS0=;
+        b=OvaJGNhuiNPzGsEMOrkLkVDuBD1Z/EHqXagC5T+muQBV1quGVHIjJLaw9L/E6PELY3
+         afolc8/63+8muPKEOw4YTg1bNIwj+p57XdQ7TNpPDu6HVFInEO8rBmoNmOZlXXpsvSeH
+         oTVA8mzeQS5S30Tlgw5DslvTjAZzpRJ9sToCI2eU0oS6zX9iWG0bbthwBklMaYikymII
+         GuDNsNd9yrGX2//8x5wANSNTUmcIePgv0UPYsNRhoenZhWa3gesNR/fntpcpJWQHa6Mn
+         1bsgcZogffdoKDZUQNYgEpzVIDyPuGmwJJ0MFwViAHrBGM6PR+scj7BjxDsF1iAfy7op
+         C1yA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOMeUQmQrs1d/t1g0ei6O0/WlrbU8dSdoU+MH6DWjIl/sdESTKa53o1uSZoCv3bJqwWMFubrUOUh154/mwsneN+b0M+YW9XE7l4A62
+X-Gm-Message-State: AOJu0YzuqWjRA37bAF0Bt4tSsuFf3lpg6bpHQm7uEtMT08W9p8OXVwJ/
+	oXTmYkGmDOX0Xy+tThTYEhmoyjl7Xw27PQKdOhXpIg4+Ga14oFf78rjJ0dQki+s=
+X-Google-Smtp-Source: AGHT+IFdh5BzXQu/pgVj7MrvDM2Rm5XE1mpMtep+Fb84PVAxuyfnuxqqsI7RgSy5BgC018j36uUO7g==
+X-Received: by 2002:a05:600c:24e:b0:41c:22f4:87d3 with SMTP id 5b1f17b1804b1-41f71ec19d7mr36240865e9.17.1715190946166;
+        Wed, 08 May 2024 10:55:46 -0700 (PDT)
+Received: from [192.168.0.3] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f4d075970sm32524585e9.1.2024.05.08.10.55.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 May 2024 10:55:45 -0700 (PDT)
+Message-ID: <d763c1b4-93dc-46a5-8e46-2e4ede67875a@nexus-software.ie>
+Date: Wed, 8 May 2024 18:55:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240403213902.26391-5-james.quinlan@broadcom.com> <20240506232031.GA1714174@bhelgaas>
-In-Reply-To: <20240506232031.GA1714174@bhelgaas>
-From: Jim Quinlan <james.quinlan@broadcom.com>
-Date: Wed, 8 May 2024 13:55:24 -0400
-Message-ID: <CA+-6iNxEZm=axRAeeAKwxemjEdjjmJYTUs8nThp_NDohXcV5Jg@mail.gmail.com>
-Subject: Re: [PATCH v9 4/4] PCI: brcmstb: Configure HW CLKREQ# mode
- appropriate for downstream device
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: linux-pci@vger.kernel.org, Nicolas Saenz Julienne <nsaenz@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, 
-	Cyril Brulebois <kibi@debian.org>, Phil Elwell <phil@raspberrypi.com>, 
-	bcm-kernel-feedback-list@broadcom.com, 
-	Florian Fainelli <florian.fainelli@broadcom.com>, Jim Quinlan <jim2101024@gmail.com>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-rpi-kernel@lists.infradead.org>, 
-	"moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000008644370617f502a6"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
+To: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Das Srinagesh <quic_gurus@quicinc.com>,
+ Satya Priya <quic_c_skakit@quicinc.com>, Stephen Boyd <swboyd@chromium.org>,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
+ <20240506150830.23709-13-johan+linaro@kernel.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <pure.logic@nexus-software.ie>
+In-Reply-To: <20240506150830.23709-13-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
---0000000000008644370617f502a6
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 06/05/2024 16:08, Johan Hovold wrote:
+> From: Satya Priya <quic_c_skakit@quicinc.com>
+> 
+> Qualcomm Technologies, Inc. PM8008 is an I2C-controlled PMIC containing
+> seven LDO regulators. Add a PM8008 regulator driver to support PMIC
+> regulator management via the regulator framework.
+> 
+> Note that this driver, originally submitted by Satya Priya [1], has been
+> reworked to match the new devicetree binding which no longer describes
+> each regulator as a separate device.
+> 
+> This avoids describing internal details like register offsets in the
+> devicetree and allows for extending the implementation with features
+> like over-current protection without having to update the binding.
+> 
+> Specifically note that the regulator interrupts are shared between all
+> regulators.
+> 
+> Note that the secondary regmap is looked up by name and that if the
+> driver ever needs to be generalised to support regulators provided by
+> the primary regmap (I2C address) such information could be added to a
+> driver lookup table matching on the parent compatible.
+> 
+> This also fixes the original implementation, which looked up regulators
+> by 'regulator-name' property rather than devicetree node name and which
+> prevented the regulators from being named to match board schematics.
+> 
+> [1] https://lore.kernel.org/r/1655200111-18357-8-git-send-email-quic_c_skakit@quicinc.com
+> 
+> Signed-off-by: Satya Priya <quic_c_skakit@quicinc.com>
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> [ johan: rework probe to match new binding, amend commit message and
+>           Kconfig entry]
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+>   drivers/regulator/Kconfig                 |   7 +
+>   drivers/regulator/Makefile                |   1 +
+>   drivers/regulator/qcom-pm8008-regulator.c | 215 ++++++++++++++++++++++
+>   3 files changed, 223 insertions(+)
+>   create mode 100644 drivers/regulator/qcom-pm8008-regulator.c
+> 
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index 7db0a29b5b8d..d07d034ef1a2 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -1027,6 +1027,13 @@ config REGULATOR_PWM
+>   	  This driver supports PWM controlled voltage regulators. PWM
+>   	  duty cycle can increase or decrease the voltage.
+>   
+> +config REGULATOR_QCOM_PM8008
+> +	tristate "Qualcomm Technologies, Inc. PM8008 PMIC regulators"
+> +	depends on MFD_QCOM_PM8008
+> +	help
+> +	  Select this option to enable support for the voltage regulators in
+> +	  Qualcomm Technologies, Inc. PM8008 PMICs.
+> +
+>   config REGULATOR_QCOM_REFGEN
+>   	tristate "Qualcomm REFGEN regulator driver"
+>   	depends on ARCH_QCOM || COMPILE_TEST
+> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> index 46fb569e6be8..0457b0925b3e 100644
+> --- a/drivers/regulator/Makefile
+> +++ b/drivers/regulator/Makefile
+> @@ -112,6 +112,7 @@ obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
+>   obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
+>   obj-$(CONFIG_REGULATOR_MTK_DVFSRC) += mtk-dvfsrc-regulator.o
+>   obj-$(CONFIG_REGULATOR_QCOM_LABIBB) += qcom-labibb-regulator.o
+> +obj-$(CONFIG_REGULATOR_QCOM_PM8008) += qcom-pm8008-regulator.o
+>   obj-$(CONFIG_REGULATOR_QCOM_REFGEN) += qcom-refgen-regulator.o
+>   obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
+>   obj-$(CONFIG_REGULATOR_QCOM_RPMH) += qcom-rpmh-regulator.o
+> diff --git a/drivers/regulator/qcom-pm8008-regulator.c b/drivers/regulator/qcom-pm8008-regulator.c
+> new file mode 100644
+> index 000000000000..51f1ce5e043c
+> --- /dev/null
+> +++ b/drivers/regulator/qcom-pm8008-regulator.c
+> @@ -0,0 +1,215 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/driver.h>
+> +
+> +#define VSET_STEP_MV			8
+> +#define VSET_STEP_UV			(VSET_STEP_MV * 1000)
+> +
+> +#define LDO_ENABLE_REG(base)		((base) + 0x46)
+> +#define ENABLE_BIT			BIT(7)
+> +
+> +#define LDO_VSET_LB_REG(base)		((base) + 0x40)
+> +
+> +#define LDO_STEPPER_CTL_REG(base)	((base) + 0x3b)
+> +#define DEFAULT_VOLTAGE_STEPPER_RATE	38400
+> +#define STEP_RATE_MASK			GENMASK(1, 0)
+> +
+> +#define NLDO_MIN_UV			528000
+> +#define NLDO_MAX_UV			1504000
+> +
+> +#define PLDO_MIN_UV			1504000
+> +#define PLDO_MAX_UV			3400000
+> +
+> +struct pm8008_regulator_data {
+> +	const char			*name;
+> +	const char			*supply_name;
+> +	u16				base;
+> +	int				min_dropout_uv;
+> +	const struct linear_range	*voltage_range;
+> +};
+> +
+> +struct pm8008_regulator {
+> +	struct regmap		*regmap;
+> +	struct regulator_desc	rdesc;
+> +	u16			base;
+> +	int			step_rate;
+> +};
+> +
+> +static const struct linear_range nldo_ranges[] = {
+> +	REGULATOR_LINEAR_RANGE(528000, 0, 122, 8000),
+> +};
+> +
+> +static const struct linear_range pldo_ranges[] = {
+> +	REGULATOR_LINEAR_RANGE(1504000, 0, 237, 8000),
+> +};
+> +
+> +static const struct pm8008_regulator_data reg_data[] = {
+> +	/* name	  parent       base    headroom_uv voltage_range */
+> +	{ "ldo1", "vdd_l1_l2", 0x4000, 225000, nldo_ranges, },
+> +	{ "ldo2", "vdd_l1_l2", 0x4100, 225000, nldo_ranges, },
+> +	{ "ldo3", "vdd_l3_l4", 0x4200, 300000, pldo_ranges, },
+> +	{ "ldo4", "vdd_l3_l4", 0x4300, 300000, pldo_ranges, },
+> +	{ "ldo5", "vdd_l5",    0x4400, 200000, pldo_ranges, },
+> +	{ "ldo6", "vdd_l6",    0x4500, 200000, pldo_ranges, },
+> +	{ "ldo7", "vdd_l7",    0x4600, 200000, pldo_ranges, },
+> +};
+> +
+> +static int pm8008_regulator_get_voltage(struct regulator_dev *rdev)
+> +{
+> +	struct pm8008_regulator *pm8008_reg = rdev_get_drvdata(rdev);
+> +	__le16 mV;
+> +	int uV;
+> +
+> +	regmap_bulk_read(pm8008_reg->regmap,
+> +			LDO_VSET_LB_REG(pm8008_reg->base), (void *)&mV, 2);
+> +
+> +	uV = le16_to_cpu(mV) * 1000;
+> +	return (uV - pm8008_reg->rdesc.min_uV) / pm8008_reg->rdesc.uV_step;
+> +}
+> +
+> +static inline int pm8008_write_voltage(struct pm8008_regulator *pm8008_reg,
+> +							int mV)
+> +{
+> +	__le16 vset_raw;
+> +
+> +	vset_raw = cpu_to_le16(mV);
+> +
+> +	return regmap_bulk_write(pm8008_reg->regmap,
+> +			LDO_VSET_LB_REG(pm8008_reg->base),
+> +			(const void *)&vset_raw, sizeof(vset_raw));
+> +}
+> +
+> +static int pm8008_regulator_set_voltage_time(struct regulator_dev *rdev,
+> +				int old_uV, int new_uv)
+> +{
+> +	struct pm8008_regulator *pm8008_reg = rdev_get_drvdata(rdev);
+> +
+> +	return DIV_ROUND_UP(abs(new_uv - old_uV), pm8008_reg->step_rate);
+> +}
+> +
+> +static int pm8008_regulator_set_voltage(struct regulator_dev *rdev,
+> +					unsigned int selector)
+> +{
+> +	struct pm8008_regulator *pm8008_reg = rdev_get_drvdata(rdev);
+> +	int rc, mV;
+> +
+> +	rc = regulator_list_voltage_linear_range(rdev, selector);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	/* voltage control register is set with voltage in millivolts */
+> +	mV = DIV_ROUND_UP(rc, 1000);
+> +
+> +	rc = pm8008_write_voltage(pm8008_reg, mV);
+> +	if (rc < 0)
+> +		return rc;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct regulator_ops pm8008_regulator_ops = {
+> +	.enable			= regulator_enable_regmap,
+> +	.disable		= regulator_disable_regmap,
+> +	.is_enabled		= regulator_is_enabled_regmap,
+> +	.set_voltage_sel	= pm8008_regulator_set_voltage,
+> +	.get_voltage_sel	= pm8008_regulator_get_voltage,
+> +	.list_voltage		= regulator_list_voltage_linear,
+> +	.set_voltage_time	= pm8008_regulator_set_voltage_time,
+> +};
+> +
+> +static int pm8008_regulator_probe(struct platform_device *pdev)
+> +{
+> +	struct regulator_config reg_config = {};
+> +	struct pm8008_regulator *pm8008_reg;
+> +	struct device *dev = &pdev->dev;
+> +	struct regulator_desc *rdesc;
+> +	struct regulator_dev *rdev;
+> +	struct regmap *regmap;
+> +	unsigned int val;
+> +	int rc, i;
+> +
+> +	regmap = dev_get_regmap(dev->parent, "secondary");
+> +	if (!regmap)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(reg_data); i++) {
+> +		pm8008_reg = devm_kzalloc(dev, sizeof(*pm8008_reg), GFP_KERNEL);
+> +		if (!pm8008_reg)
+> +			return -ENOMEM;
+> +
+> +		pm8008_reg->regmap = regmap;
+> +		pm8008_reg->base = reg_data[i].base;
+> +
+> +		/* get slew rate */
+> +		rc = regmap_bulk_read(pm8008_reg->regmap,
+> +				LDO_STEPPER_CTL_REG(pm8008_reg->base), &val, 1);
+> +		if (rc < 0) {
+> +			dev_err(dev, "failed to read step rate: %d\n", rc);
+> +			return rc;
+> +		}
+> +		val &= STEP_RATE_MASK;
+> +		pm8008_reg->step_rate = DEFAULT_VOLTAGE_STEPPER_RATE >> val;
+> +
+> +		rdesc = &pm8008_reg->rdesc;
+> +		rdesc->type = REGULATOR_VOLTAGE;
+> +		rdesc->ops = &pm8008_regulator_ops;
+> +		rdesc->name = reg_data[i].name;
+> +		rdesc->supply_name = reg_data[i].supply_name;
+> +		rdesc->of_match = reg_data[i].name;
+> +		rdesc->uV_step = VSET_STEP_UV;
+> +		rdesc->linear_ranges = reg_data[i].voltage_range;
+> +		rdesc->n_linear_ranges = 1;
+> +		BUILD_BUG_ON((ARRAY_SIZE(pldo_ranges) != 1) ||
+> +				(ARRAY_SIZE(nldo_ranges) != 1));
+> +
+> +		if (reg_data[i].voltage_range == nldo_ranges) {
+> +			rdesc->min_uV = NLDO_MIN_UV;
+> +			rdesc->n_voltages = ((NLDO_MAX_UV - NLDO_MIN_UV) / rdesc->uV_step) + 1;
+> +		} else {
+> +			rdesc->min_uV = PLDO_MIN_UV;
+> +			rdesc->n_voltages = ((PLDO_MAX_UV - PLDO_MIN_UV) / rdesc->uV_step) + 1;
+> +		}
+> +
+> +		rdesc->enable_reg = LDO_ENABLE_REG(pm8008_reg->base);
+> +		rdesc->enable_mask = ENABLE_BIT;
+> +		rdesc->min_dropout_uV = reg_data[i].min_dropout_uv;
+> +		rdesc->regulators_node = of_match_ptr("regulators");
+> +
+> +		reg_config.dev = dev->parent;
+> +		reg_config.driver_data = pm8008_reg;
+> +		reg_config.regmap = pm8008_reg->regmap;
+> +
+> +		rdev = devm_regulator_register(dev, rdesc, &reg_config);
+> +		if (IS_ERR(rdev)) {
+> +			rc = PTR_ERR(rdev);
+> +			dev_err(dev, "failed to register regulator %s: %d\n",
+> +					reg_data[i].name, rc);
+> +			return rc;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct platform_driver pm8008_regulator_driver = {
+> +	.driver	= {
+> +		.name = "qcom-pm8008-regulator",
+> +	},
+> +	.probe = pm8008_regulator_probe,
+> +};
+> +
+> +module_platform_driver(pm8008_regulator_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm Technologies, Inc. PM8008 PMIC Regulator Driver");
+> +MODULE_LICENSE("GPL");
+> +MODULE_ALIAS("platform:qcom-pm8008-regulator");
 
-On Mon, May 6, 2024 at 7:20=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
-rote:
->
-> On Wed, Apr 03, 2024 at 05:39:01PM -0400, Jim Quinlan wrote:
-> > The Broadcom STB/CM PCIe HW core, which is also used in RPi SOCs, must =
-be
-> > deliberately set by the PCIe RC HW into one of three mutually exclusive
-> > modes:
-> >
-> > "safe" -- No CLKREQ# expected or required, refclk is always provided.  =
-This
-> >     mode should work for all devices but is not be capable of any refcl=
-k
-> >     power savings.
->
-> s/refclk is always provided/the Root Port always supplies Refclk/
->
-> At least, I assume that's what this means?  The Root Port always
-> supplies Refclk regardless of whether a downstream device deasserts
-> CLKREQ#?
->
-> The patch doesn't do anything to prevent aspm.c from setting
-> PCI_EXP_LNKCTL_CLKREQ_EN, so it looks like Linux may still set the
-> "Enable Clock Power Management" bit in downstream devices, but the
-> Root Port just ignores the CLKREQ# signal, right?
->
-> s/is not be/is not/
->
-> > "no-l1ss" -- CLKREQ# is expected to be driven by the downstream device =
-for
-> >     CPM and ASPM L0s and L1.  Provides Clock Power Management, L0s, and=
- L1,
-> >     but cannot provide L1 substate (L1SS) power savings. If the downstr=
-eam
-> >     device connected to the RC is L1SS capable AND the OS enables L1SS,=
- all
-> >     PCIe traffic may abruptly halt, potentially hanging the system.
->
-> s/CPM/Clock Power Management (CPM)/ and then you can use "CPM" for the
-> *second* reference here.
->
-> It *looks* like we should never see this PCIe hang because with this
-> setting you don't advertise L1SS in the Root Port, so the OS should
-> never enable L1SS, at least for that link.  Right?
->
-> If we never enable L1SS in the case where it could cause a hang, why
-> mention the possibility here?
-
-Hello Bjorn,
-
-I will remove this.
-
->
-> I assume that if the downstream device is a Switch, L1SS is unsafe for
-> the Root Port to Switch link, but it could still be used for the link
-> between the Switch and whatever is below it?
-Yes.  The "brcm,clkreq-mode" only applies to the root complex and the
-device to which it is connected.
-
->
-> > "default" -- Bidirectional CLKREQ# between the RC and downstream device=
-.
-> >     Provides ASPM L0s, L1, and L1SS, but not compliant to provide Clock
-> >     Power Management; specifically, may not be able to meet the T_CLRon=
- max
-> >     timing of 400ns as specified in "Dynamic Clock Control", section
-> >     3.2.5.2.2 of the PCIe Express Mini CEM 2.1 specification.  This
-> >     situation is atypical and should happen only with older devices.
->
-> IIUC this T_CLRon timing issue is with the STB/CM *Root Port*, but the
-> last sentence refers to "older devices," which sounds like it means
-> "older devices that might be plugged into the Root Port."  That would
-> suggest the issue is with those devices, not iwth the STB/CM Root
-> Port.
-According to the PCIe HW designer, more modern chips have extra circuitry
-to overcome this issue.  I really do not know if this is the case, nor am I
-sure that he knows for sure.  But the spec says that T_CLRon should meet
-a certain value, and this RC cannot do that in some situations.
-
->
-> Or maybe this is meant to refer to older STB/CM Root Ports?
->
-> > Previously, this driver always set the mode to "no-l1ss", as almost all
-> > STB/CM boards operate in this mode.  But now there is interest in
-> > activating L1SS power savings from STB/CM customers, which requires
-> > "default" mode.  In addition, a bug was filed for RPi4 CM platform beca=
-use
-> > most devices did not work in "no-l1ss" mode (see link below).
->
-> I'm having a hard time reconciling "almost all STB/CM boards operate
-> in 'no-l1ss' mode" with "most devices did not work in 'no-l1ss' mode."
-> They sound contradictory.
-
-I concur, it is no longer clear to me why some device+board+connector
-combos work
-in "no-l1ss" mode and not in "default mode", and vice versa.  Our
-existing boards
-work in "no-l1ss" mode and the RPi CM HW works fine with "default"
-mode (l1ss possible).
-
-This is not just due to older devices, although I've noticed that a
-lot of older devices
-have no trace connected to their CLKREQ# pin, and the signal is left floati=
-ng.
-Another thing that has recently surfaced is that some of our board
-designs are using a unidirectional level-shifter for CLKREQ#, which is
-a bidirectional signal.  This may be causing mayhem.  Another issue is
-that some if not a majority of the
-adapters I use to test PCIe devices on a board with a socket interfere
-with the CLKREQ# signal;
-e.g. some adapters ground it, leading me to believe that systems are
-working when
-they would not if CLKREQ# was not grounded.
-
-I have not enumerated all of the reasons for which
-brcm,clkreq-mode setting will make a device+board+connector combo work or n=
-ot.
-But I do know that being able to configure these modes is a must-have
-requirement.  I also
-know that the "default" setting I am proposing is the same configuration
-that is used by the RaspberryPi folks with RaspianOS.  The STB consumers ha=
-ve no
-problem changing the DT property if required.  Similarly, a Linux
-enthusiast should be
-able to set  the brcm,clkreq-mode property to "safe" if they are
-having PCIe issues,
-just like they may configure  CONFIG_PCIE_BUS_SAFE=3Dy.
-
-Please keep in mind that currently the upstream Linux will not run on
-an Rpi CM board until
-this submission or something like it is accepted.
-
-TL;DR  Let me rewrite this text and resubmit.
-
->
-> > Note that the mode is specified by the DT property "brcm,clkreq-mode". =
- If
-> > this property is omitted, then "default" mode is chosen.
->
-> As a user, how do I determine which setting to use?
-Using the "safe" mode will always work.  In fact I considered making
-this the default mode.
-As I said, I cannot enumerate all of the reasons why one mode works and one=
- does
-not for a particular device+board+connector combo.  The HW folks have not r=
-eally
-been forthcoming on the reasons as well.
-
->
-> Trial and error?  If so, how do I identify the errors?
-Either PCIe link-up is not happening, or it is happening but the
-device driver is non-functional
-and boot typically  hangs.
-
->
-> Obviously "default" is the best, so I assume I would try that first.
-> If something is flaky (whatever that means), I would fall back to
-> "no-l1ss", which gets me Clock PM, L0s, and L1, right?  In what
-> situation does "no-l1ss" fail, and how do I tell that it fails?
-
-For example,"no-l1ss" fails on the Rpi CM.  Perhaps the reason for that
-is that the CLKREQ# signal is left floating  and some devices do not connec=
-t
-their CLKREQ# pin.  But I am not sure of that -- I do not have access to
-the signals and I do not have the requisite RPi CM design info.
-
-Regards,
-Jim Quinlan
-Broadcom STB/CM
-
-
->
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217276
-> >
-> > Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> > ---
-> >  drivers/pci/controller/pcie-brcmstb.c | 79 ++++++++++++++++++++++++---
-> >  1 file changed, 70 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/contro=
-ller/pcie-brcmstb.c
-> > index 3d08b92d5bb8..3dc8511e6f58 100644
-> > --- a/drivers/pci/controller/pcie-brcmstb.c
-> > +++ b/drivers/pci/controller/pcie-brcmstb.c
-> > @@ -48,6 +48,9 @@
-> >  #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY                    0x04dc
-> >  #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK 0xc00
-> >
-> > +#define PCIE_RC_CFG_PRIV1_ROOT_CAP                   0x4f8
-> > +#define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK   0xf8
-> > +
-> >  #define PCIE_RC_DL_MDIO_ADDR                         0x1100
-> >  #define PCIE_RC_DL_MDIO_WR_DATA                              0x1104
-> >  #define PCIE_RC_DL_MDIO_RD_DATA                              0x1108
-> > @@ -121,9 +124,12 @@
-> >
-> >  #define PCIE_MISC_HARD_PCIE_HARD_DEBUG                                =
-       0x4204
-> >  #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK     0=
-x2
-> > +#define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK             0=
-x200000
-> >  #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK             0=
-x08000000
-> >  #define  PCIE_BMIPS_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK        =
-       0x00800000
-> > -
-> > +#define  PCIE_CLKREQ_MASK \
-> > +       (PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK | \
-> > +        PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK)
-> >
-> >  #define PCIE_INTR2_CPU_BASE          0x4300
-> >  #define PCIE_MSI_INTR2_BASE          0x4500
-> > @@ -1100,13 +1106,73 @@ static int brcm_pcie_setup(struct brcm_pcie *pc=
-ie)
-> >       return 0;
-> >  }
-> >
-> > +static void brcm_config_clkreq(struct brcm_pcie *pcie)
-> > +{
-> > +     static const char err_msg[] =3D "invalid 'brcm,clkreq-mode' DT st=
-ring\n";
-> > +     const char *mode =3D "default";
-> > +     u32 clkreq_cntl;
-> > +     int ret, tmp;
-> > +
-> > +     ret =3D of_property_read_string(pcie->np, "brcm,clkreq-mode", &mo=
-de);
-> > +     if (ret && ret !=3D -EINVAL) {
-> > +             dev_err(pcie->dev, err_msg);
-> > +             mode =3D "safe";
-> > +     }
-> > +
-> > +     /* Start out assuming safe mode (both mode bits cleared) */
-> > +     clkreq_cntl =3D readl(pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG=
-);
-> > +     clkreq_cntl &=3D ~PCIE_CLKREQ_MASK;
-> > +
-> > +     if (strcmp(mode, "no-l1ss") =3D=3D 0) {
-> > +             /*
-> > +              * "no-l1ss" -- Provides Clock Power Management, L0s, and
-> > +              * L1, but cannot provide L1 substate (L1SS) power
-> > +              * savings. If the downstream device connected to the RC =
-is
-> > +              * L1SS capable AND the OS enables L1SS, all PCIe traffic
-> > +              * may abruptly halt, potentially hanging the system.
-> > +              */
-> > +             clkreq_cntl |=3D PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DE=
-BUG_ENABLE_MASK;
-> > +             /*
-> > +              * We want to un-advertise L1 substates because if the OS
-> > +              * tries to configure the controller into using L1 substa=
-te
-> > +              * power savings it may fail or hang when the RC HW is in
-> > +              * "no-l1ss" mode.
-> > +              */
-> > +             tmp =3D readl(pcie->base + PCIE_RC_CFG_PRIV1_ROOT_CAP);
-> > +             u32p_replace_bits(&tmp, 2, PCIE_RC_CFG_PRIV1_ROOT_CAP_L1S=
-S_MODE_MASK);
-> > +             writel(tmp, pcie->base + PCIE_RC_CFG_PRIV1_ROOT_CAP);
-> > +
-> > +     } else if (strcmp(mode, "default") =3D=3D 0) {
-> > +             /*
-> > +              * "default" -- Provides L0s, L1, and L1SS, but not
-> > +              * compliant to provide Clock Power Management;
-> > +              * specifically, may not be able to meet the Tclron max
-> > +              * timing of 400ns as specified in "Dynamic Clock Control=
-",
-> > +              * section 3.2.5.2.2 of the PCIe spec.  This situation is
-> > +              * atypical and should happen only with older devices.
-> > +              */
-> > +             clkreq_cntl |=3D PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENAB=
-LE_MASK;
-> > +
-> > +     } else {
-> > +             /*
-> > +              * "safe" -- No power savings; refclk is driven by RC
-> > +              * unconditionally.
-> > +              */
-> > +             if (strcmp(mode, "safe") !=3D 0)
-> > +                     dev_err(pcie->dev, err_msg);
-> > +             mode =3D "safe";
-> > +     }
-> > +     writel(clkreq_cntl, pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-> > +
-> > +     dev_info(pcie->dev, "clkreq-mode set to %s\n", mode);
-> > +}
-> > +
-> >  static int brcm_pcie_start_link(struct brcm_pcie *pcie)
-> >  {
-> >       struct device *dev =3D pcie->dev;
-> >       void __iomem *base =3D pcie->base;
-> >       u16 nlw, cls, lnksta;
-> >       bool ssc_good =3D false;
-> > -     u32 tmp;
-> >       int ret, i;
-> >
-> >       /* Unassert the fundamental reset */
-> > @@ -1138,6 +1204,8 @@ static int brcm_pcie_start_link(struct brcm_pcie =
-*pcie)
-> >        */
-> >       brcm_extend_internal_bus_timeout(pcie, BRCM_LTR_MAX_NS + 1000);
-> >
-> > +     brcm_config_clkreq(pcie);
-> > +
-> >       if (pcie->gen)
-> >               brcm_pcie_set_gen(pcie, pcie->gen);
-> >
-> > @@ -1156,13 +1224,6 @@ static int brcm_pcie_start_link(struct brcm_pcie=
- *pcie)
-> >                pci_speed_string(pcie_link_speed[cls]), nlw,
-> >                ssc_good ? "(SSC)" : "(!SSC)");
-> >
-> > -     /*
-> > -      * Refclk from RC should be gated with CLKREQ# input when ASPM L0=
-s,L1
-> > -      * is enabled =3D> setting the CLKREQ_DEBUG_ENABLE field to 1.
-> > -      */
-> > -     tmp =3D readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-> > -     tmp |=3D PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK;
-> > -     writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
-> >
-> >       return 0;
-> >  }
-> > --
-> > 2.17.1
-> >
->
->
-
---0000000000008644370617f502a6
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-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
-mOAplh6h3nMZUZxBguxG3g2p3iD4EgibUYneEzqOQafIQB/naf2uetKb8y9jKgWJxq2Y4y8Jqg2u
-uVIO1AyOJjWwqdgN+QhuIlat+qZd03P48Gim9ZPEMDUCAwEAAaOCAdswggHXMA4GA1UdDwEB/wQE
-AwIFoDCBowYIKwYBBQUHAQEEgZYwgZMwTgYIKwYBBQUHMAKGQmh0dHA6Ly9zZWN1cmUuZ2xvYmFs
-c2lnbi5jb20vY2FjZXJ0L2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNydDBBBggrBgEFBQcw
-AYY1aHR0cDovL29jc3AuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAw
-TQYDVR0gBEYwRDBCBgorBgEEAaAyASgKMDQwMgYIKwYBBQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2Jh
-bHNpZ24uY29tL3JlcG9zaXRvcnkvMAkGA1UdEwQCMAAwSQYDVR0fBEIwQDA+oDygOoY4aHR0cDov
-L2NybC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcmwwJQYDVR0R
-BB4wHIEaamFtZXMucXVpbmxhbkBicm9hZGNvbS5jb20wEwYDVR0lBAwwCgYIKwYBBQUHAwQwHwYD
-VR0jBBgwFoAUljPR5lgXWzR1ioFWZNW+SN6hj88wHQYDVR0OBBYEFGx/E27aeGBP2eJktrILxlhK
-z8f6MA0GCSqGSIb3DQEBCwUAA4IBAQBdQQukiELsPfse49X4QNy/UN43dPUw0I1asiQ8wye3nAuD
-b3GFmf3SZKlgxBTdWJoaNmmUFW2H3HWOoQBnTeedLtV9M2Tb9vOKMncQD1f9hvWZR6LnZpjBIlKe
-+R+v6CLF07qYmBI6olvOY/Rsv9QpW9W8qZYk+2RkWHz/fR5N5YldKlJHP0NDT4Wjc5fEzV+mZC8A
-AlT80qiuCVv+IQP08ovEVSLPhUp8i1pwsHT9atbWOfXQjbq1B/ditFIbPzwmwJPuGUc7n7vpmtxB
-75sSFMj27j4JXl5W9vORgHR2YzuPBzfzDJU1ul0DIofSWVF6E1dx4tZohRED1Yl/T/ZGMYICbTCC
-AmkCAQEwazBbMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UE
-AxMoR2xvYmFsU2lnbiBHQ0MgUjMgUGVyc29uYWxTaWduIDIgQ0EgMjAyMAIMSO43VW7D5NP1X/KD
-MA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCCvxvfqzpk9K+yKY0bafV2LbpDnTWz3
-iQ706DPCgwW4KTAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0yNDA1
-MDgxNzU1MzdaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUDBAEqMAsGCWCGSAFlAwQBFjALBglg
-hkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsGCSqGSIb3DQEBBzALBglghkgBZQME
-AgEwDQYJKoZIhvcNAQEBBQAEggEAf9P7fUCECTilY6BX5dhX1SxL6XigyWW/XTSVuHlGUM9eCxxZ
-sGpPHCTsRM03MpjGVvcnVg26V4nW/nWMk16JNOQFCHrrhG6VAHhXju9chsQXvBY42vfmJWS/Kk1z
-f7lOoU58CttxcV/8yD//1kQ9mXTKb3LrChCM2ykXpKM4OEV6bxjXC4zcHktvcQ7GJZjsLWycbto8
-Tsm1VsyfKlV2lHSKmDMpHGCyG+MzACCYzcwIKlcuWebKUNZX9+wKqQ5VzThOxUn1mkvAyZavnYyi
-oTJSwFdeabmVBSqQxqL92DWZ30QUl6x1oEpP/StF1fugm70htAdCXSHe3fpGq5XstA==
---0000000000008644370617f502a6--
+Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
