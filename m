@@ -1,347 +1,108 @@
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C583222318
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 22:37:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7950168DC
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 22:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715207875; cv=none; b=QGvrYdoEl1zxRAbxIUYO13Rcc3O0WKUQZkaaAw67uNmP4KN+wf9YzefoMoJmGiBfam06ztC+DNeGrEAohAfee361WulVAdlGOwYAyzDwknSnSyauLUEnzgb8l9TcRfjvKUBK2RGlVeWl/5idRvePPuqt993tMgjFJfnp8uGIL0o=
+	t=1715208090; cv=none; b=ebVOcfJoCa+ZcO18IyUvqdWEYWwnzjnR1IP7Jz2Y9BNQFwSjIRyjMfLjLz1pVoDYWh+3YfXbQ3jmGquCaJXzNWwEcHC5fqv2X+Lx88S0JGQcPXXBWsBML6z6vWgluY4waaVdUu8g4Z7i6/I+0/kHu6744CbyofJhaq59JfoQUcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715207875; c=relaxed/simple;
-	bh=gkiQnNwVQrsa+28STlZ5/i+j4rn304bwjnjT6RZAH8c=;
-	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sPA7XMnvmwEgGt6emKicJViD+O6NRBCrChN+d0P4aBdgEvxS4TXg9gP/Y83bGWGV9ixhhXZszKTjJNV3s9mJycx/mGOmL+nIRJZok8YgcjqVQIWZw9CFBFCxpLLs0LlPwQyZtFj6/up/GkxY70EwQFer6T7P7EH4Zb8FyfVwlQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gvOyBGsQ; arc=none smtp.client-ip=209.85.219.178
+	s=arc-20240116; t=1715208090; c=relaxed/simple;
+	bh=URL+ux74FcLHKQ/ZvQJboYQjgTPCQONFknkyVXoRCOo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=P7PuT5gXAYYhhaTnbq7Xuiz5WczevzukfkcX1R6RU6CF628ae1xxKGSan8RR/jUQvG5U1C3Cbo139XWYtpIht96czOfUa6GeGD/gJZ/oSd/nU9Jnq44M66Wayiusi4uuW9ZUdoRWJYPlO/5FJpWSpSse5ntD16dUFEjoX4A6Yjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=hgKBO+1t; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gvOyBGsQ"
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-de4665b4969so323687276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 15:37:52 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hgKBO+1t"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a5a0013d551so23623066b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 15:41:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715207872; x=1715812672; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CQnhPPJLZqhiPyY2VjG7VAxW3Am1dwZRgVu5xvgsRfk=;
-        b=gvOyBGsQA82/b71DKXWg3uNs5mjtvtzNHNn5Ta0OeOGNbmiikN/Z3qcIfA+1ip20TT
-         J25zVD0K9+4d4bfOi7I3TXUTGfvRR4DDbzpI6a9vBw2g5GIMQenYIkhJfOyw0CTDqhiD
-         z7PVwhy2hg/kG1aVfuNkeG+euOmvK/Y7GWlX0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715207872; x=1715812672;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1715208087; x=1715812887; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CQnhPPJLZqhiPyY2VjG7VAxW3Am1dwZRgVu5xvgsRfk=;
-        b=UJw5aNsvy6Sa4Kt5rBGVJJ8ChQ/ew876NVP4NaHidtvKkb42OcBsNUzUFC40rrVnaB
-         PPSdVlAYnHh32SCVqOUT75woi3pjYgRrj6/VLpVQnHXkuyBSYXL5zuFL/AthRdBIfx0E
-         aHP2FDk2DRpPr3PEe2WSGQN1oSpd8B1sy9NMY73vC8Uwh/PNmAz2cS+reQtillxbSQSz
-         VDUXLmjgE5caREccKZ8Hm2PQLnT9OSEdq2kZzqldt8sPtPyu+42FSn1JnGv5NP/s6WId
-         I4BGSNWjsAcu5oS3mm7pJ3ygXFpDcYvvmrTWSH02MHEetQ1rypDWtBn8XiPZV06reXy7
-         a6rw==
-X-Forwarded-Encrypted: i=1; AJvYcCUC0yquTWPtMfViMiQ1QZo/cGKQA3fG0eGKUCpPtjCNHK4HAQ1elYGl1nlvXDcFsjsYwH/DyabShc9m+vwDV3GFoa+drOhnwq5y/k0n
-X-Gm-Message-State: AOJu0Yy5maEsxkPEmuhPoOUiqAviUVVc4yPZ9SvwButDndQRuqzjwVEu
-	rvKh4Noi8jW8YpbMjUHV2zii8+LA8qfG5P/I+lEjhGgqJdbHB5dq+eeYhCIlSNBf3QXPsXG2TYS
-	gJOX95GstPvoxIi0TGzf/moNah7dkduRiKHZ4
-X-Google-Smtp-Source: AGHT+IEDCFI8xn8l9izDfECjs69+U4QoPp9r27+Xw69iFeSo27F7rPihO9uzigfOROJXNOoUrDXWiJl7KN8VUyIrL2c=
-X-Received: by 2002:a5b:811:0:b0:de5:4bb4:25b9 with SMTP id
- 3f1490d57ef6-debb9ce095dmr4747797276.12.1715207871771; Wed, 08 May 2024
- 15:37:51 -0700 (PDT)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 8 May 2024 22:37:51 +0000
+        bh=EwxEO1i5UPI2XEISzMMX9ftGaU8p/mPogEOhXcQuJ0Q=;
+        b=hgKBO+1tGl2fxpcNnBBbDNubCZZvb3OxUzfSUAf2iIOMinZMNB5c/UPYlNsn1DG2cU
+         oEI0wqNgDArVov6Y3bb/2rps46By51BOlhtgARgSzQDGx2Am6Z+2G2/ZHoVLMjnRibzp
+         0wBBtghE61ynB7CQNrl3BXeDwIqqsSxG3XrzM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715208087; x=1715812887;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EwxEO1i5UPI2XEISzMMX9ftGaU8p/mPogEOhXcQuJ0Q=;
+        b=HQXAH3F6ymQOwNiWjST8ZZ0XYiMfo8mRme/lJIaYkw+nSgzRnWW/oaudYGDGvEkXgF
+         ABFqMCWH/92QqYfcm5tm8xaKJDAyJ7nhj6520nN/Tol2Yc//vR8UwT0aAhoVGgqQENbM
+         qfrGlcWj4vyrTVcxyRIdng92IpT+0rzOpiRx15Oq8mVIVKzyIrXRWTbXRsK0Eq6vQWNG
+         HphyBN9qR1P7BYPKb4cqEhQqUmj56BUNlVfA9HOTelRR52vTwwGtF9sBl5tamLeAllyM
+         jpUzZOlU+GM73yhUNwYBRQpngBIbQKBaVU6NrSBYSuyyQX18zR/oFf+gJm6UFy112bil
+         we1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVuG77FuN3k0muOxX/DMIdpfIdpH0HvhUYcakSuj2GYOVRTlS4NAfginiY+qTGCG+3wEpukBHO45vGCR2Ensh3U82sOFMpaTYUXDD40
+X-Gm-Message-State: AOJu0Yya4bdb4ddCELFC7L5lTw+QNVu4yn8msKd04rkqopgGF7yPsj80
+	Lb6cWqp8+kJ9SvWJCXnNVJSmqwihibKKs3SwcYjkwyMYmAvgsZnYb38clIZl/DUNnFZrXFtINT0
+	+cQ==
+X-Google-Smtp-Source: AGHT+IGMbRoArTZPQShoms4RBLzYw6guvw5O3BrOJ/ZcCQLmKdoAi8/wlxR5+eoV7ObYc3nTcKNN+Q==
+X-Received: by 2002:a50:8d06:0:b0:570:3bb:e099 with SMTP id 4fb4d7f45d1cf-5731d99b86dmr3263753a12.1.1715208086824;
+        Wed, 08 May 2024 15:41:26 -0700 (PDT)
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com. [209.85.128.49])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c322c3csm50153a12.83.2024.05.08.15.41.26
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 May 2024 15:41:26 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-41b48daaaf4so33885e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 15:41:26 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVsLFJTfFWUIs/Wk3ZxNbZoJensJPWdKkRTyz3OkW0hiFXcbE/KwYRmA0etQ3t1G5BrzYJfSvb9o1cbKNn6YXEJgeTKRc+NG/Eo5rSK
+X-Received: by 2002:a05:600c:b5a:b0:41b:e416:1073 with SMTP id
+ 5b1f17b1804b1-41fc27b0e81mr775855e9.0.1715208085721; Wed, 08 May 2024
+ 15:41:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240506150830.23709-13-johan+linaro@kernel.org>
-References: <20240506150830.23709-1-johan+linaro@kernel.org> <20240506150830.23709-13-johan+linaro@kernel.org>
-From: Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.10
-Date: Wed, 8 May 2024 22:37:50 +0000
-Message-ID: <CAE-0n52KTZ8G2VuvrDgJ9kAE61YULXY4u6nPP3CYWpg1CBjbXA@mail.gmail.com>
-Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
-To: Bjorn Andersson <andersson@kernel.org>, Johan Hovold <johan+linaro@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Mark Brown <broonie@kernel.org>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Das Srinagesh <quic_gurus@quicinc.com>, 
-	Satya Priya <quic_c_skakit@quicinc.com>, linux-arm-msm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
+References: <20240503-fd-fix-lxml-v2-0-f80a60ce21a1@linaro.org> <20240503-fd-fix-lxml-v2-1-f80a60ce21a1@linaro.org>
+In-Reply-To: <20240503-fd-fix-lxml-v2-1-f80a60ce21a1@linaro.org>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 8 May 2024 15:41:12 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=XnpS-=CookKxzFM8og9WCSEMxfESmfTYH811438qg4ng@mail.gmail.com>
+Message-ID: <CAD=FV=XnpS-=CookKxzFM8og9WCSEMxfESmfTYH811438qg4ng@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] drm/msm/gen_header: allow skipping the validation
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Helen Koike <helen.koike@collabora.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Quoting Johan Hovold (2024-05-06 08:08:29)
-> From: Satya Priya <quic_c_skakit@quicinc.com>
+Hi,
+
+On Fri, May 3, 2024 at 11:15=E2=80=AFAM Dmitry Baryshkov
+<dmitry.baryshkov@linaro.org> wrote:
 >
-> Qualcomm Technologies, Inc. PM8008 is an I2C-controlled PMIC containing
-> seven LDO regulators. Add a PM8008 regulator driver to support PMIC
-> regulator management via the regulator framework.
->
-> Note that this driver, originally submitted by Satya Priya [1], has been
-> reworked to match the new devicetree binding which no longer describes
-> each regulator as a separate device.
->
-> This avoids describing internal details like register offsets in the
-> devicetree and allows for extending the implementation with features
-> like over-current protection without having to update the binding.
+> @@ -941,6 +948,7 @@ def main():
+>         parser =3D argparse.ArgumentParser()
+>         parser.add_argument('--rnn', type=3Dstr, required=3DTrue)
+>         parser.add_argument('--xml', type=3Dstr, required=3DTrue)
+> +       parser.add_argument('--validate', action=3Dargparse.BooleanOption=
+alAction)
 
-Thanks. I had to remember this topic.
+FWIW, the above (argparse.BooleanOptionalAction) appears to be a
+python 3.9 thing. My own build environment happens to have python3
+default to python 3.8 and thus I get a build error related to this. I
+have no idea what the kernel usually assumes for a baseline, but
+others might get build errors too. I don't even see python listed in:
 
->
-> Specifically note that the regulator interrupts are shared between all
-> regulators.
->
-> Note that the secondary regmap is looked up by name and that if the
-> driver ever needs to be generalised to support regulators provided by
-> the primary regmap (I2C address) such information could be added to a
-> driver lookup table matching on the parent compatible.
->
-> This also fixes the original implementation, which looked up regulators
-> by 'regulator-name' property rather than devicetree node name and which
-> prevented the regulators from being named to match board schematics.
->
-> [1] https://lore.kernel.org/r/1655200111-18357-8-git-send-email-quic_c_skakit@quicinc.com
->
-> Signed-off-by: Satya Priya <quic_c_skakit@quicinc.com>
-> Cc: Stephen Boyd <swboyd@chromium.org>
-> [ johan: rework probe to match new binding, amend commit message and
->          Kconfig entry]
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
-> diff --git a/drivers/regulator/qcom-pm8008-regulator.c b/drivers/regulator/qcom-pm8008-regulator.c
-> new file mode 100644
-> index 000000000000..51f1ce5e043c
-> --- /dev/null
-> +++ b/drivers/regulator/qcom-pm8008-regulator.c
-> @@ -0,0 +1,215 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2022 Qualcomm Innovation Center, Inc. All rights reserved.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/driver.h>
-> +
-> +#define VSET_STEP_MV                   8
-> +#define VSET_STEP_UV                   (VSET_STEP_MV * 1000)
-> +
-> +#define LDO_ENABLE_REG(base)           ((base) + 0x46)
-> +#define ENABLE_BIT                     BIT(7)
-> +
-> +#define LDO_VSET_LB_REG(base)          ((base) + 0x40)
-> +
-> +#define LDO_STEPPER_CTL_REG(base)      ((base) + 0x3b)
-> +#define DEFAULT_VOLTAGE_STEPPER_RATE   38400
-> +#define STEP_RATE_MASK                 GENMASK(1, 0)
+https://docs.kernel.org/process/changes.html
 
-Include bits.h?
+...in any case, if it's easy to change this to not require python3.9
+that would at least help for my build environment. :-P
 
-> +
-> +#define NLDO_MIN_UV                    528000
-> +#define NLDO_MAX_UV                    1504000
-> +
-> +#define PLDO_MIN_UV                    1504000
-> +#define PLDO_MAX_UV                    3400000
-> +
-> +struct pm8008_regulator_data {
-> +       const char                      *name;
-> +       const char                      *supply_name;
-> +       u16                             base;
-> +       int                             min_dropout_uv;
-> +       const struct linear_range       *voltage_range;
-> +};
-> +
-> +struct pm8008_regulator {
-> +       struct regmap           *regmap;
-> +       struct regulator_desc   rdesc;
-> +       u16                     base;
-> +       int                     step_rate;
-
-Is struct regulator_desc::vsel_step usable for this? If not, can it be
-unsigned?
-
-> +};
-> +
-> +static const struct linear_range nldo_ranges[] = {
-> +       REGULATOR_LINEAR_RANGE(528000, 0, 122, 8000),
-> +};
-> +
-> +static const struct linear_range pldo_ranges[] = {
-> +       REGULATOR_LINEAR_RANGE(1504000, 0, 237, 8000),
-> +};
-> +
-> +static const struct pm8008_regulator_data reg_data[] = {
-> +       /* name   parent       base    headroom_uv voltage_range */
-> +       { "ldo1", "vdd_l1_l2", 0x4000, 225000, nldo_ranges, },
-> +       { "ldo2", "vdd_l1_l2", 0x4100, 225000, nldo_ranges, },
-> +       { "ldo3", "vdd_l3_l4", 0x4200, 300000, pldo_ranges, },
-> +       { "ldo4", "vdd_l3_l4", 0x4300, 300000, pldo_ranges, },
-> +       { "ldo5", "vdd_l5",    0x4400, 200000, pldo_ranges, },
-> +       { "ldo6", "vdd_l6",    0x4500, 200000, pldo_ranges, },
-> +       { "ldo7", "vdd_l7",    0x4600, 200000, pldo_ranges, },
-> +};
-> +
-> +static int pm8008_regulator_get_voltage(struct regulator_dev *rdev)
-> +{
-> +       struct pm8008_regulator *pm8008_reg = rdev_get_drvdata(rdev);
-> +       __le16 mV;
-> +       int uV;
-
-Can this be unsigned? Doubt we have negative voltage and this would
-match rdesc.min_uV type.
-
-> +
-> +       regmap_bulk_read(pm8008_reg->regmap,
-> +                       LDO_VSET_LB_REG(pm8008_reg->base), (void *)&mV, 2);
-
-Is struct regulator_desc::vsel_reg usable for this?
-
-> +
-> +       uV = le16_to_cpu(mV) * 1000;
-> +       return (uV - pm8008_reg->rdesc.min_uV) / pm8008_reg->rdesc.uV_step;
-> +}
-> +
-> +static inline int pm8008_write_voltage(struct pm8008_regulator *pm8008_reg,
-> +                                                       int mV)
-> +{
-> +       __le16 vset_raw;
-> +
-> +       vset_raw = cpu_to_le16(mV);
-> +
-> +       return regmap_bulk_write(pm8008_reg->regmap,
-> +                       LDO_VSET_LB_REG(pm8008_reg->base),
-> +                       (const void *)&vset_raw, sizeof(vset_raw));
-
-Is the cast to please sparse?
-
-> +}
-> +
-> +static int pm8008_regulator_set_voltage_time(struct regulator_dev *rdev,
-> +                               int old_uV, int new_uv)
-> +{
-> +       struct pm8008_regulator *pm8008_reg = rdev_get_drvdata(rdev);
-> +
-> +       return DIV_ROUND_UP(abs(new_uv - old_uV), pm8008_reg->step_rate);
-> +}
-> +
-> +static int pm8008_regulator_set_voltage(struct regulator_dev *rdev,
-> +                                       unsigned int selector)
-> +{
-> +       struct pm8008_regulator *pm8008_reg = rdev_get_drvdata(rdev);
-> +       int rc, mV;
-> +
-> +       rc = regulator_list_voltage_linear_range(rdev, selector);
-> +       if (rc < 0)
-> +               return rc;
-> +
-> +       /* voltage control register is set with voltage in millivolts */
-> +       mV = DIV_ROUND_UP(rc, 1000);
-> +
-> +       rc = pm8008_write_voltage(pm8008_reg, mV);
-> +       if (rc < 0)
-> +               return rc;
-> +
-> +       return 0;
-
-Can be shorter to save lines
-
-	return pm8008_write_voltage(pm8008_reg, mV);
-
-> +}
-> +
-> +static const struct regulator_ops pm8008_regulator_ops = {
-> +       .enable                 = regulator_enable_regmap,
-> +       .disable                = regulator_disable_regmap,
-> +       .is_enabled             = regulator_is_enabled_regmap,
-> +       .set_voltage_sel        = pm8008_regulator_set_voltage,
-> +       .get_voltage_sel        = pm8008_regulator_get_voltage,
-> +       .list_voltage           = regulator_list_voltage_linear,
-> +       .set_voltage_time       = pm8008_regulator_set_voltage_time,
-> +};
-> +
-> +static int pm8008_regulator_probe(struct platform_device *pdev)
-> +{
-> +       struct regulator_config reg_config = {};
-> +       struct pm8008_regulator *pm8008_reg;
-> +       struct device *dev = &pdev->dev;
-> +       struct regulator_desc *rdesc;
-> +       struct regulator_dev *rdev;
-> +       struct regmap *regmap;
-> +       unsigned int val;
-> +       int rc, i;
-> +
-> +       regmap = dev_get_regmap(dev->parent, "secondary");
-> +       if (!regmap)
-> +               return -EINVAL;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(reg_data); i++) {
-> +               pm8008_reg = devm_kzalloc(dev, sizeof(*pm8008_reg), GFP_KERNEL);
-> +               if (!pm8008_reg)
-> +                       return -ENOMEM;
-> +
-> +               pm8008_reg->regmap = regmap;
-> +               pm8008_reg->base = reg_data[i].base;
-> +
-> +               /* get slew rate */
-> +               rc = regmap_bulk_read(pm8008_reg->regmap,
-> +                               LDO_STEPPER_CTL_REG(pm8008_reg->base), &val, 1);
-> +               if (rc < 0) {
-> +                       dev_err(dev, "failed to read step rate: %d\n", rc);
-
-Is it step rate or slew rate? The comment doesn't agree with the error
-message.
-
-> +                       return rc;
-> +               }
-> +               val &= STEP_RATE_MASK;
-> +               pm8008_reg->step_rate = DEFAULT_VOLTAGE_STEPPER_RATE >> val;
-> +
-> +               rdesc = &pm8008_reg->rdesc;
-> +               rdesc->type = REGULATOR_VOLTAGE;
-> +               rdesc->ops = &pm8008_regulator_ops;
-> +               rdesc->name = reg_data[i].name;
-> +               rdesc->supply_name = reg_data[i].supply_name;
-> +               rdesc->of_match = reg_data[i].name;
-> +               rdesc->uV_step = VSET_STEP_UV;
-> +               rdesc->linear_ranges = reg_data[i].voltage_range;
-> +               rdesc->n_linear_ranges = 1;
-> +               BUILD_BUG_ON((ARRAY_SIZE(pldo_ranges) != 1) ||
-
-This should be an && not || right?
-
-> +                               (ARRAY_SIZE(nldo_ranges) != 1));
-> +
-> +               if (reg_data[i].voltage_range == nldo_ranges) {
-> +                       rdesc->min_uV = NLDO_MIN_UV;
-> +                       rdesc->n_voltages = ((NLDO_MAX_UV - NLDO_MIN_UV) / rdesc->uV_step) + 1;
-> +               } else {
-> +                       rdesc->min_uV = PLDO_MIN_UV;
-> +                       rdesc->n_voltages = ((PLDO_MAX_UV - PLDO_MIN_UV) / rdesc->uV_step) + 1;
-> +               }
-> +
-> +               rdesc->enable_reg = LDO_ENABLE_REG(pm8008_reg->base);
-> +               rdesc->enable_mask = ENABLE_BIT;
-> +               rdesc->min_dropout_uV = reg_data[i].min_dropout_uv;
-> +               rdesc->regulators_node = of_match_ptr("regulators");
-> +
-> +               reg_config.dev = dev->parent;
-> +               reg_config.driver_data = pm8008_reg;
-> +               reg_config.regmap = pm8008_reg->regmap;
-> +
-> +               rdev = devm_regulator_register(dev, rdesc, &reg_config);
-> +               if (IS_ERR(rdev)) {
-> +                       rc = PTR_ERR(rdev);
-> +                       dev_err(dev, "failed to register regulator %s: %d\n",
-> +                                       reg_data[i].name, rc);
-> +                       return rc;
-
-Could be return dev_err_probe() to simplify.
+-Doug
