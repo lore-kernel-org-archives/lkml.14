@@ -1,57 +1,57 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5759712A142;
-	Wed,  8 May 2024 16:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC43412C47B;
+	Wed,  8 May 2024 16:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715187149; cv=none; b=epk0I/eVWpOpW+oZrThSvin3sxXtqS7AyGcAxTcsXzzWqTO3UkdmN3KSg1RTD/RWsKyNSlOrLvAxw19C9vEkNGHmiBfYCsU1L5kwsX3CCgNjOhJ8ORuDEXIAbyG7wzdXRR9tUE2W04EuNtsaaPIhizSCAA+9e7C4iW+uAus7bcc=
+	t=1715187152; cv=none; b=qG0kidVvvjmikwg0gzNoyUT/imrFdrRrHqhUjshplL15dJEl9UgeLG+7NTrPOi7D5o3ySx4jkXlb+KIzy0JxgTeNxa30x28FA2vomqCE1pJeIv0RdkE8XcEItWam3Ow4MVvyJaMCLZM7UaShnIZ0Mn1zeVrLObL/lcWV60xUWTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715187149; c=relaxed/simple;
-	bh=GZaAr5RygQFmlE6KJCuN9p5qEvzol2zFA6i0gHwOQG0=;
+	s=arc-20240116; t=1715187152; c=relaxed/simple;
+	bh=fxP9i04RNhAjZ4ctX+mdZLVUDLi1yiy4Npa2hJQXbrA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=FHE4ngnAYRLC8KRG4zxgu/TDoeBn1updA2HVCMdxwe4ZuGaleNWoXsTxdC70lkpZWt/veWZK6/UN9AfXRIFz287p2j0bF4ww+zmEEnu+UpPDIiGWBWzvcUl4NlDsEwht5VH3upmzOOFonaIJdmbzCvbGIptpmQD9Y8jG0B+czx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KSr5PUhr; arc=none smtp.client-ip=209.85.218.49
+	 MIME-Version; b=YpLpfmgpl46r+NN7n/PVakgUhg9QBQXzWXZ9KS7NzbHTTOyle663SfHVfELwTUKFbjYfHn6wwNSho/a3glkbRmyMhzo7XB9FyKGp0WzTeQ1jv8o5OAy6R7Bg8qbDxqko2YVRfGS5aXm32opVG7jpPrtJS+/86Ay3CUBfWSeboFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ek2czNds; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSr5PUhr"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a59cdf7cd78so960209966b.0;
-        Wed, 08 May 2024 09:52:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ek2czNds"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a599c55055dso1145942666b.0;
+        Wed, 08 May 2024 09:52:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715187144; x=1715791944; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1715187148; x=1715791948; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MC7P1POHROJSmnY61bQaysxhFvNv1wVgLw++QzUYJv8=;
-        b=KSr5PUhrZ/o88vNQT0GcJOPfxdhLR529DB+b0P3vzLAOmdj9FheDUcbpap/MOSxvpE
-         ynu+8WL2TNAZcSuwct0RerqSaRs1qDDY29UMMm0+y9jdDpRGTtl0cBErXx2cqDBFmd+H
-         jw194oMdTpJ7MiimxT12fQTg25Cak2wBytz0U2svf56cuXbSg8dz4ohHCybSJ8gmdWra
-         qNpv1KqMhcxEslhPilIuPcslY7I+n/LurMvsZqocRHqyi7XG534RxiB9YtqIX3nzR9kC
-         rMf4phqF9FQiOBcFLjYOKGQJKeId907SYe9fx9EikPSf97dqLnd1LeGxsNXHg+ATljrn
-         l4Lg==
+        bh=xJt7mVuRJNKLzE2eMfimVnif2l+O+RK1K2IG2NW9mM0=;
+        b=Ek2czNdsd/hJhPOV8SpWuwQPnKaTPe/2Mjs6zs0YZkZSwpv0TzzfCRIx8hlIr2rE04
+         UW2rkTXOuwo59Jx7BciGl99E31IOdNhRHlrtAgJbnaNBUNgBbUQNk1HVMd7PX4mB+He9
+         6iP2O/VF0tm3/o+0E/rJ0BXvHGDroUfSzys5JviWHSubbaEI05y1xq1Cd1NzYO6Eb5gE
+         SRGbzL+D5JRaZki6HgyfzeZteCpLx4KTx8NMMXRS+BB0UzUdyaYsRuSQuycZJECPyHXX
+         an+p4LUFC9wOAzyKTHjr5texeRb/eh0GsjdHLdvOev+XIjXhBpb/MeUtoF0t8GN4ICL8
+         qTNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715187144; x=1715791944;
+        d=1e100.net; s=20230601; t=1715187148; x=1715791948;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MC7P1POHROJSmnY61bQaysxhFvNv1wVgLw++QzUYJv8=;
-        b=GaIGinBRw+G1QmqoYyVFCzIfoH8yk/p5H+7hjW7CEpzmPGwVW8qaXkuDqmSHFdH5P0
-         FBtuk9wN/rvreRnZdlCpyuGqM91VD2bVUzpmcElE76B4iXv6BdQJkGNchFlpdE/Ba+rU
-         GQYWptAz41pQsallyEURMIMKC3zlXJa+riqh72dxORfUcFUnGyjlrtkdNn+/pDp64v3x
-         QxXi/Cly7z/RuTNy/xehC47infTPueJO+cPdFPDY+YJe7FE6vqECLSD/wvoY56jKBHgM
-         NA1OkmBiOcMPsvUxmYm36w6YF5T/NWOD0FckSt95/s5Jrnkg4tLp3aLYlFbgi5muIVZw
-         r/Dg==
-X-Forwarded-Encrypted: i=1; AJvYcCWIeqS27IO1H3Ljj8sN82WcykeeHJ5xLAbZgLvaW7oqHb5tkO18bC/QwykLwcbUcczrRWgie+vdmdMQYGHsoiDBtTwK5mXZUkezpICM56BpttO1XGsMjXGv7UQvuVjRdrBbfZI5WyR7
-X-Gm-Message-State: AOJu0YzLofyY1ZQh77p26KVcc75wCG0S2/VaUDny3H1EhIGav1HjxlqZ
-	B0hi0h+lPOHh1Ce1fwrKC+u0mqK5YDmRFJo2TrrF2uO2uGXOCusC
-X-Google-Smtp-Source: AGHT+IH5k2NBeYJvjjjPdyiQmgzcaEFUMGlVmUimxjkG88EhxHOlc/UhbKl4RfRR2Y5OGDfzY+B/Cg==
-X-Received: by 2002:a17:906:6d50:b0:a59:9b52:cfc5 with SMTP id a640c23a62f3a-a59fb969a55mr210768066b.37.1715187143258;
-        Wed, 08 May 2024 09:52:23 -0700 (PDT)
+        bh=xJt7mVuRJNKLzE2eMfimVnif2l+O+RK1K2IG2NW9mM0=;
+        b=gpQdVJZl2Wx+QREtJdcSLP7bENPqMMW9Mh4tHC+4teB+HgpjJ4EzcoVi9gXRTMGDaL
+         AzVT7xNKb5s/5sJ4SOgE0mf030iMHTcJ7ioacQsQHgmYLwmZ5DrSsBMDluFngTB+gt78
+         ZGQ/ecvdc72pEVhOiZ6ohNE/3T8eUPMmuFKCgajUzekPBQpmAolmAHVld1g/c3SbsIw8
+         eALzwh1shQnGoMpGTavwMRVPxHKMhVv3d5iCtqFfr4VDDTgGjXzXt8WsOUdyRUujD/mO
+         v2tKTEvzNZ/yZRpMaWz/pi2Do+FbF51VrIrkSpNhYQHaHW3OtGykEMuS3nkGtkEBXMby
+         c8aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXdJrRqFLws3EWvUkmn7AGf1gQVARmGPh4647HnQeiwbIVlWzklhp9O0nNxZrxA/WiupJDUgxQuzPA+6a8j7aNbXoqwGbP6UvH/rIm+b7lnI/mY3dutC9f0gm6/DeNUMVNtWVfAO85X
+X-Gm-Message-State: AOJu0Yyn0cgZNuPhwc3xn0WwsiDeM/7NYigVgetK7jdqSxmpDyceEj62
+	LAis4HQTC7Vj+qWCHT/ftnjXEKyRrtDCSgKNviDPBr1NXqWPJI+I
+X-Google-Smtp-Source: AGHT+IHSe7t2WB2Ww7MXVfhkIlFZnx2rJJOGtJFlO+8kTdpe1frB0fffb0jl4tfqjFQOlqfqVWk4oA==
+X-Received: by 2002:a17:906:351b:b0:a59:e3b8:ab7b with SMTP id a640c23a62f3a-a59fb9e9964mr187405966b.74.1715187148190;
+        Wed, 08 May 2024 09:52:28 -0700 (PDT)
 Received: from localhost.localdomain ([2a04:ee41:82:7577:a3c8:644e:cd04:560a])
-        by smtp.gmail.com with ESMTPSA id kj24-20020a170907765800b00a59a8212c8esm5648010ejc.42.2024.05.08.09.52.22
+        by smtp.gmail.com with ESMTPSA id kj24-20020a170907765800b00a59a8212c8esm5648010ejc.42.2024.05.08.09.52.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 09:52:22 -0700 (PDT)
+        Wed, 08 May 2024 09:52:27 -0700 (PDT)
 From: Vasileios Amoiridis <vassilisamir@gmail.com>
 To: jic23@kernel.org
 Cc: lars@metafoo.de,
@@ -66,11 +66,10 @@ Cc: lars@metafoo.de,
 	semen.protsenko@linaro.org,
 	linux-iio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Vasileios Amoiridis <vassilisamir@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v6 5/9] iio: pressure: bmp280: Refactorize reading functions
-Date: Wed,  8 May 2024 18:52:03 +0200
-Message-Id: <20240508165207.145554-6-vassilisamir@gmail.com>
+	Vasileios Amoiridis <vassilisamir@gmail.com>
+Subject: [PATCH v6 9/9] iio: pressure: bmp280: Add triggered buffer support
+Date: Wed,  8 May 2024 18:52:07 +0200
+Message-Id: <20240508165207.145554-10-vassilisamir@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240508165207.145554-1-vassilisamir@gmail.com>
 References: <20240508165207.145554-1-vassilisamir@gmail.com>
@@ -82,645 +81,708 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For BMP18x, BMP28x, BME280, BMP38x the reading of the pressure
-value requires an update of the t_fine variable which happens
-through reading the temperature value.
+BMP2xx, BME280, BMP3xx, and BMP5xx use continuous buffers for their
+temperature, pressure and humidity readings. This facilitates the
+use of burst/bulk reads in order to acquire data faster. The
+approach is different from the one used in oneshot captures.
 
-So all the bmpxxx_read_press() functions of the above sensors
-are internally calling the equivalent bmpxxx_read_temp() function
-in order to update the t_fine value. By just looking at the code
-this functionality is a bit hidden and is not easy to understand
-why those channels are not independent.
+BMP085 & BMP1xx devices use a completely different measurement
+process that is well defined and is used in their buffer_handler().
 
-This commit tries to clear these things a bit by splitting the
-bmpxxx_{read/compensate}_{temp/press/humid}() to the following:
-
-i. bmpxxx_read_{temp/press/humid}_adc(): read the raw value from
-the sensor.
-
-ii. bmpxx_calc_t_fine(): calculate the t_fine variable.
-
-iii. bmpxxx_get_t_fine(): get the t_fine variable.
-
-iv. bmpxxx_compensate_{temp/press/humid}(): compensate the adc
-values and return the calculated value.
-
-v. bmpxxx_read_{temp/press/humid}(): combine calls of the
-aforementioned functions to return the requested value.
-
-Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Suggested-by: Angel Iglesias <ang.iglesiasg@gmail.com>
 Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
 ---
- drivers/iio/pressure/bmp280-core.c | 361 ++++++++++++++++++-----------
- drivers/iio/pressure/bmp280.h      |   6 -
- 2 files changed, 232 insertions(+), 135 deletions(-)
+ drivers/iio/pressure/Kconfig       |   2 +
+ drivers/iio/pressure/bmp280-core.c | 339 +++++++++++++++++++++++++++--
+ drivers/iio/pressure/bmp280-spi.c  |   8 +-
+ drivers/iio/pressure/bmp280.h      |  21 +-
+ 4 files changed, 348 insertions(+), 22 deletions(-)
 
+diff --git a/drivers/iio/pressure/Kconfig b/drivers/iio/pressure/Kconfig
+index 3ad38506028e..0b5406a3f85d 100644
+--- a/drivers/iio/pressure/Kconfig
++++ b/drivers/iio/pressure/Kconfig
+@@ -31,6 +31,8 @@ config BMP280
+ 	select REGMAP
+ 	select BMP280_I2C if (I2C)
+ 	select BMP280_SPI if (SPI_MASTER)
++	select IIO_BUFFER
++	select IIO_TRIGGERED_BUFFER
+ 	help
+ 	  Say yes here to build support for Bosch Sensortec BMP180, BMP280, BMP380
+ 	  and BMP580 pressure and temperature sensors. Also supports the BME280 with
 diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
-index dd5c526dacbd..a864f8db8e24 100644
+index 3f8144a0355b..95f56836fd86 100644
 --- a/drivers/iio/pressure/bmp280-core.c
 +++ b/drivers/iio/pressure/bmp280-core.c
-@@ -288,13 +288,35 @@ static int bme280_read_calib(struct bmp280_data *data)
-  *
-  * Taken from BME280 datasheet, Section 4.2.3, "Compensation formula".
-  */
-+static int bme280_read_humid_adc(struct bmp280_data *data, u16 *adc_humidity)
-+{
-+	u16 value_humidity;
-+	int ret;
-+
-+	ret = regmap_bulk_read(data->regmap, BME280_REG_HUMIDITY_MSB,
-+			       &data->be16, sizeof(data->be16));
-+	if (ret) {
-+		dev_err(data->dev, "failed to read humidity\n");
-+		return ret;
-+	}
-+
-+	value_humidity = be16_to_cpu(data->be16);
-+	if (value_humidity == BMP280_HUMIDITY_SKIPPED) {
-+		dev_err(data->dev, "reading humidity skipped\n");
-+		return -EIO;
-+	}
-+	*adc_humidity = value_humidity;
-+
-+	return 0;
-+}
-+
- static u32 bme280_compensate_humidity(struct bmp280_data *data,
--				      u16 adc_humidity)
-+				      u16 adc_humidity, s32 t_fine)
- {
- 	struct bmp280_calib *calib = &data->calib.bmp280;
- 	s32 var;
+@@ -41,7 +41,10 @@
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
  
--	var = data->t_fine - (s32)76800;
-+	var = t_fine - (s32)76800;
- 	var = (((((s32)adc_humidity << 14) - (calib->H4 << 20) - (calib->H5 * var))
- 		+ (s32)16384) >> 15) * (((((((var * calib->H6) >> 10)
- 		* (((var * (s32)calib->H3) >> 11) + (s32)32768)) >> 10)
-@@ -313,8 +335,29 @@ static u32 bme280_compensate_humidity(struct bmp280_data *data,
-  *
-  * Taken from datasheet, Section 3.11.3, "Compensation formula".
-  */
--static s32 bmp280_compensate_temp(struct bmp280_data *data,
--				  u32 adc_temp)
-+static int bmp280_read_temp_adc(struct bmp280_data *data, u32 *adc_temp)
-+{
-+	u32 value_temp;
-+	int ret;
-+
-+	ret = regmap_bulk_read(data->regmap, BMP280_REG_TEMP_MSB,
-+			       data->buf, sizeof(data->buf));
-+	if (ret) {
-+		dev_err(data->dev, "failed to read temperature\n");
-+		return ret;
-+	}
-+
-+	value_temp = FIELD_GET(BMP280_MEAS_TRIM_MASK, get_unaligned_be24(data->buf));
-+	if (value_temp == BMP280_TEMP_SKIPPED) {
-+		dev_err(data->dev, "reading temperature skipped\n");
-+		return -EIO;
-+	}
-+	*adc_temp = value_temp;
-+
-+	return 0;
-+}
-+
-+static s32 bmp280_calc_t_fine(struct bmp280_data *data, u32 adc_temp)
- {
- 	struct bmp280_calib *calib = &data->calib.bmp280;
- 	s32 var1, var2;
-@@ -324,9 +367,26 @@ static s32 bmp280_compensate_temp(struct bmp280_data *data,
- 	var2 = (((((((s32)adc_temp) >> 4) - ((s32)calib->T1)) *
- 		  ((((s32)adc_temp >> 4) - ((s32)calib->T1))) >> 12) *
- 		((s32)calib->T3))) >> 14;
--	data->t_fine = var1 + var2;
-+	return var1 + var2; /* t_fine = var1 + var2 */
-+}
-+
-+static int bmp280_get_t_fine(struct bmp280_data *data, s32 *t_fine)
-+{
-+	u32 adc_temp;
-+	int ret;
-+
-+	ret = bmp280_read_temp_adc(data, &adc_temp);
-+	if (ret)
-+		return ret;
++#include <linux/iio/buffer.h>
+ #include <linux/iio/iio.h>
++#include <linux/iio/trigger_consumer.h>
++#include <linux/iio/triggered_buffer.h>
  
--	return (data->t_fine * 5 + 128) >> 8;
-+	*t_fine = bmp280_calc_t_fine(data, adc_temp);
-+
-+	return 0;
-+}
-+
-+static s32 bmp280_compensate_temp(struct bmp280_data *data, u32 adc_temp)
-+{
-+	return (bmp280_calc_t_fine(data, adc_temp) * 5 + 128) / 256;
- }
+ #include <asm/unaligned.h>
  
- /*
-@@ -336,13 +396,35 @@ static s32 bmp280_compensate_temp(struct bmp280_data *data,
-  *
-  * Taken from datasheet, Section 3.11.3, "Compensation formula".
-  */
-+static int bmp280_read_press_adc(struct bmp280_data *data, u32 *adc_press)
-+{
-+	u32 value_press;
-+	int ret;
-+
-+	ret = regmap_bulk_read(data->regmap, BMP280_REG_PRESS_MSB,
-+			       data->buf, sizeof(data->buf));
-+	if (ret) {
-+		dev_err(data->dev, "failed to read pressure\n");
-+		return ret;
-+	}
-+
-+	value_press = FIELD_GET(BMP280_MEAS_TRIM_MASK, get_unaligned_be24(data->buf));
-+	if (value_press == BMP280_PRESS_SKIPPED) {
-+		dev_err(data->dev, "reading pressure skipped\n");
-+		return -EIO;
-+	}
-+	*adc_press = value_press;
-+
-+	return 0;
-+}
-+
- static u32 bmp280_compensate_press(struct bmp280_data *data,
--				   u32 adc_press)
-+				   u32 adc_press, s32 t_fine)
- {
- 	struct bmp280_calib *calib = &data->calib.bmp280;
- 	s64 var1, var2, p;
+@@ -134,6 +137,12 @@ enum {
+ 	BMP380_P11 = 20,
+ };
  
--	var1 = ((s64)data->t_fine) - 128000;
-+	var1 = ((s64)t_fine) - 128000;
- 	var2 = var1 * var1 * (s64)calib->P6;
- 	var2 += (var1 * (s64)calib->P5) << 17;
- 	var2 += ((s64)calib->P4) << 35;
-@@ -369,59 +451,34 @@ static int bmp280_read_temp(struct bmp280_data *data,
- 	u32 adc_temp;
++enum bmp280_scan {
++	BMP280_PRESS,
++	BMP280_TEMP,
++	BME280_HUMID,
++};
++
+ static const struct iio_chan_spec bmp280_channels[] = {
+ 	{
+ 		.type = IIO_PRESSURE,
+@@ -142,6 +151,13 @@ static const struct iio_chan_spec bmp280_channels[] = {
+ 				      BIT(IIO_CHAN_INFO_RAW) |
+ 				      BIT(IIO_CHAN_INFO_SCALE) |
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
++		.scan_index = 0,
++		.scan_type = {
++			.sign = 'u',
++			.realbits = 32,
++			.storagebits = 32,
++			.endianness = IIO_CPU,
++		},
+ 	},
+ 	{
+ 		.type = IIO_TEMP,
+@@ -150,7 +166,15 @@ static const struct iio_chan_spec bmp280_channels[] = {
+ 				      BIT(IIO_CHAN_INFO_RAW) |
+ 				      BIT(IIO_CHAN_INFO_SCALE) |
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
++		.scan_index = 1,
++		.scan_type = {
++			.sign = 's',
++			.realbits = 32,
++			.storagebits = 32,
++			.endianness = IIO_CPU,
++		},
+ 	},
++	IIO_CHAN_SOFT_TIMESTAMP(2),
+ };
+ 
+ static const struct iio_chan_spec bme280_channels[] = {
+@@ -161,6 +185,13 @@ static const struct iio_chan_spec bme280_channels[] = {
+ 				      BIT(IIO_CHAN_INFO_RAW) |
+ 				      BIT(IIO_CHAN_INFO_SCALE) |
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
++		.scan_index = 0,
++		.scan_type = {
++			.sign = 'u',
++			.realbits = 32,
++			.storagebits = 32,
++			.endianness = IIO_CPU,
++		},
+ 	},
+ 	{
+ 		.type = IIO_TEMP,
+@@ -169,6 +200,13 @@ static const struct iio_chan_spec bme280_channels[] = {
+ 				      BIT(IIO_CHAN_INFO_RAW) |
+ 				      BIT(IIO_CHAN_INFO_SCALE) |
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
++		.scan_index = 1,
++		.scan_type = {
++			.sign = 's',
++			.realbits = 32,
++			.storagebits = 32,
++			.endianness = IIO_CPU,
++		},
+ 	},
+ 	{
+ 		.type = IIO_HUMIDITYRELATIVE,
+@@ -177,7 +215,15 @@ static const struct iio_chan_spec bme280_channels[] = {
+ 				      BIT(IIO_CHAN_INFO_RAW) |
+ 				      BIT(IIO_CHAN_INFO_SCALE) |
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
++		.scan_index = 2,
++		.scan_type = {
++			.sign = 'u',
++			.realbits = 32,
++			.storagebits = 32,
++			.endianness = IIO_CPU,
++		},
+ 	},
++	IIO_CHAN_SOFT_TIMESTAMP(3),
+ };
+ 
+ static const struct iio_chan_spec bmp380_channels[] = {
+@@ -190,6 +236,13 @@ static const struct iio_chan_spec bmp380_channels[] = {
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+ 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+ 					   BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
++		.scan_index = 0,
++		.scan_type = {
++			.sign = 'u',
++			.realbits = 32,
++			.storagebits = 32,
++			.endianness = IIO_CPU,
++		},
+ 	},
+ 	{
+ 		.type = IIO_TEMP,
+@@ -200,7 +253,15 @@ static const struct iio_chan_spec bmp380_channels[] = {
+ 				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO),
+ 		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ) |
+ 					   BIT(IIO_CHAN_INFO_LOW_PASS_FILTER_3DB_FREQUENCY),
++		.scan_index = 1,
++		.scan_type = {
++			.sign = 's',
++			.realbits = 32,
++			.storagebits = 32,
++			.endianness = IIO_CPU,
++		},
+ 	},
++	IIO_CHAN_SOFT_TIMESTAMP(2),
+ };
+ 
+ static int bmp280_read_calib(struct bmp280_data *data)
+@@ -322,7 +383,7 @@ static int bme280_read_humid_adc(struct bmp280_data *data, u16 *adc_humidity)
  	int ret;
  
--	ret = regmap_bulk_read(data->regmap, BMP280_REG_TEMP_MSB,
--			       data->buf, sizeof(data->buf));
--	if (ret) {
--		dev_err(data->dev, "failed to read temperature\n");
-+	ret = bmp280_read_temp_adc(data, &adc_temp);
-+	if (ret)
- 		return ret;
--	}
- 
--	adc_temp = FIELD_GET(BMP280_MEAS_TRIM_MASK, get_unaligned_be24(data->buf));
--	if (adc_temp == BMP280_TEMP_SKIPPED) {
--		/* reading was skipped */
--		dev_err(data->dev, "reading temperature skipped\n");
--		return -EIO;
--	}
- 	comp_temp = bmp280_compensate_temp(data, adc_temp);
- 
--	/*
--	 * val might be NULL if we're called by the read_press routine,
--	 * who only cares about the carry over t_fine value.
--	 */
--	if (val) {
--		*val = comp_temp * 10;
--		return IIO_VAL_INT;
--	}
--
--	return 0;
-+	/* IIO units are in milli Celsius */
-+	*val = comp_temp * 10;
-+	return IIO_VAL_INT;
- }
- 
- static int bmp280_read_press(struct bmp280_data *data,
- 			     int *val, int *val2)
- {
--	u32 comp_press, adc_press;
-+	u32 comp_press, adc_press, t_fine;
- 	int ret;
- 
--	/* Read and compensate temperature so we get a reading of t_fine. */
--	ret = bmp280_read_temp(data, NULL, NULL);
-+	ret = bmp280_get_t_fine(data, &t_fine);
- 	if (ret)
- 		return ret;
- 
--	ret = regmap_bulk_read(data->regmap, BMP280_REG_PRESS_MSB,
--			       data->buf, sizeof(data->buf));
--	if (ret) {
--		dev_err(data->dev, "failed to read pressure\n");
-+	ret = bmp280_read_press_adc(data, &adc_press);
-+	if (ret)
- 		return ret;
--	}
- 
--	adc_press = FIELD_GET(BMP280_MEAS_TRIM_MASK, get_unaligned_be24(data->buf));
--	if (adc_press == BMP280_PRESS_SKIPPED) {
--		/* reading was skipped */
--		dev_err(data->dev, "reading pressure skipped\n");
--		return -EIO;
--	}
--	comp_press = bmp280_compensate_press(data, adc_press);
-+	comp_press = bmp280_compensate_press(data, adc_press, t_fine);
- 
-+	/* IIO units are in kPa */
- 	*val = comp_press;
- 	*val2 = 256000;
- 
-@@ -432,28 +489,20 @@ static int bme280_read_humid(struct bmp280_data *data, int *val, int *val2)
- {
- 	u32 comp_humidity;
- 	u16 adc_humidity;
-+	s32 t_fine;
- 	int ret;
- 
--	/* Read and compensate temperature so we get a reading of t_fine. */
--	ret = bmp280_read_temp(data, NULL, NULL);
-+	ret = bmp280_get_t_fine(data, &t_fine);
- 	if (ret)
- 		return ret;
- 
--	ret = regmap_bulk_read(data->regmap, BME280_REG_HUMIDITY_MSB,
+ 	ret = regmap_bulk_read(data->regmap, BME280_REG_HUMIDITY_MSB,
 -			       &data->be16, sizeof(data->be16));
--	if (ret) {
--		dev_err(data->dev, "failed to read humidity\n");
-+	ret = bme280_read_humid_adc(data, &adc_humidity);
-+	if (ret)
++			       &data->be16, BME280_NUM_HUMIDITY_BYTES);
+ 	if (ret) {
+ 		dev_err(data->dev, "failed to read humidity\n");
  		return ret;
--	}
+@@ -369,7 +430,7 @@ static int bmp280_read_temp_adc(struct bmp280_data *data, u32 *adc_temp)
+ 	int ret;
  
--	adc_humidity = be16_to_cpu(data->be16);
--	if (adc_humidity == BMP280_HUMIDITY_SKIPPED) {
--		/* reading was skipped */
--		dev_err(data->dev, "reading humidity skipped\n");
--		return -EIO;
--	}
--	comp_humidity = bme280_compensate_humidity(data, adc_humidity);
-+	comp_humidity = bme280_compensate_humidity(data, adc_humidity, t_fine);
+ 	ret = regmap_bulk_read(data->regmap, BMP280_REG_TEMP_MSB,
+-			       data->buf, sizeof(data->buf));
++			       data->buf, BMP280_NUM_TEMP_BYTES);
+ 	if (ret) {
+ 		dev_err(data->dev, "failed to read temperature\n");
+ 		return ret;
+@@ -430,7 +491,7 @@ static int bmp280_read_press_adc(struct bmp280_data *data, u32 *adc_press)
+ 	int ret;
  
-+	/* IIO units are in 1000 * % */
- 	*val = comp_humidity * 1000 / 1024;
+ 	ret = regmap_bulk_read(data->regmap, BMP280_REG_PRESS_MSB,
+-			       data->buf, sizeof(data->buf));
++			       data->buf, BMP280_NUM_PRESS_BYTES);
+ 	if (ret) {
+ 		dev_err(data->dev, "failed to read pressure\n");
+ 		return ret;
+@@ -874,6 +935,16 @@ static const struct iio_info bmp280_info = {
+ 	.write_raw = &bmp280_write_raw,
+ };
  
- 	return IIO_VAL_INT;
-@@ -930,9 +979,31 @@ static int bmp380_cmd(struct bmp280_data *data, u8 cmd)
-  * Taken from datasheet, Section Appendix 9, "Compensation formula" and repo
-  * https://github.com/BoschSensortec/BMP3-Sensor-API.
-  */
--static s32 bmp380_compensate_temp(struct bmp280_data *data, u32 adc_temp)
-+static int bmp380_read_temp_adc(struct bmp280_data *data, u32 *adc_temp)
++static const unsigned long bmp280_avail_scan_masks[] = {
++	BIT(BMP280_TEMP) | BIT(BMP280_PRESS),
++	0
++};
++
++static const unsigned long bme280_avail_scan_masks[] = {
++	BIT(BME280_HUMID) | BIT(BMP280_TEMP) | BIT(BMP280_PRESS),
++	0
++};
++
+ static int bmp280_chip_config(struct bmp280_data *data)
+ {
+ 	u8 osrs = FIELD_PREP(BMP280_OSRS_TEMP_MASK, data->oversampling_temp + 1) |
+@@ -901,6 +972,74 @@ static int bmp280_chip_config(struct bmp280_data *data)
+ 	return ret;
+ }
+ 
++static irqreturn_t bmp280_buffer_handler(int irq, void *p)
 +{
-+	u32 value_temp;
++	struct iio_poll_func *pf = p;
++	struct iio_dev *indio_dev = pf->indio_dev;
++	struct bmp280_data *data = iio_priv(indio_dev);
++	s32 adc_temp, adc_press, adc_humidity, t_fine;
++	u8 sizeof_burst_read;
 +	int ret;
 +
-+	ret = regmap_bulk_read(data->regmap, BMP380_REG_TEMP_XLSB,
-+			       data->buf, sizeof(data->buf));
++	guard(mutex)(&data->lock);
++
++	/*
++	 * If humidity channel is enabled it means that we are called for the
++	 * BME280 humidity sensor.
++	 */
++	if (test_bit(BME280_HUMID, indio_dev->active_scan_mask))
++		sizeof_burst_read = BME280_BURST_READ_BYTES;
++	else
++		sizeof_burst_read = BMP280_BURST_READ_BYTES;
++
++	/* Burst read data registers */
++	ret = regmap_bulk_read(data->regmap, BMP280_REG_PRESS_MSB,
++			       data->buf, sizeof_burst_read);
 +	if (ret) {
-+		dev_err(data->dev, "failed to read temperature\n");
-+		return ret;
++		dev_err(data->dev, "failed to burst read sensor data\n");
++		goto out;
 +	}
 +
-+	value_temp = get_unaligned_le24(data->buf);
-+	if (value_temp == BMP380_TEMP_SKIPPED) {
++	/* Temperature calculations */
++	adc_temp = FIELD_GET(BMP280_MEAS_TRIM_MASK, get_unaligned_be24(&data->buf[3]));
++	if (adc_temp == BMP280_TEMP_SKIPPED) {
 +		dev_err(data->dev, "reading temperature skipped\n");
-+		return -EIO;
-+	}
-+	*adc_temp = value_temp;
-+
-+	return 0;
-+}
-+
-+static s32 bmp380_calc_t_fine(struct bmp280_data *data, u32 adc_temp)
- {
--	s64 var1, var2, var3, var4, var5, var6, comp_temp;
-+	s64 var1, var2, var3, var4, var5, var6;
- 	struct bmp380_calib *calib = &data->calib.bmp380;
- 
- 	var1 = ((s64) adc_temp) - (((s64) calib->T1) << 8);
-@@ -941,7 +1012,29 @@ static s32 bmp380_compensate_temp(struct bmp280_data *data, u32 adc_temp)
- 	var4 = var3 * ((s64) calib->T3);
- 	var5 = (var2 << 18) + var4;
- 	var6 = var5 >> 32;
--	data->t_fine = (s32) var6;
-+	return (s32) var6; /* t_fine = var6 */
-+}
-+
-+static int bmp380_get_t_fine(struct bmp280_data *data, s32 *t_fine)
-+{
-+	s32 adc_temp;
-+	int ret;
-+
-+	ret = bmp380_read_temp_adc(data, &adc_temp);
-+	if (ret)
-+		return ret;
-+
-+	*t_fine = bmp380_calc_t_fine(data, adc_temp);
-+
-+	return 0;
-+}
-+
-+static int bmp380_compensate_temp(struct bmp280_data *data, u32 adc_temp)
-+{
-+	s64 comp_temp;
-+	s32 var6;
-+
-+	var6 = bmp380_calc_t_fine(data, adc_temp);
- 	comp_temp = (var6 * 25) >> 14;
- 
- 	comp_temp = clamp_val(comp_temp, BMP380_MIN_TEMP, BMP380_MAX_TEMP);
-@@ -955,27 +1048,50 @@ static s32 bmp380_compensate_temp(struct bmp280_data *data, u32 adc_temp)
-  * Taken from datasheet, Section 9.3. "Pressure compensation" and repository
-  * https://github.com/BoschSensortec/BMP3-Sensor-API.
-  */
--static u32 bmp380_compensate_press(struct bmp280_data *data, u32 adc_press)
-+static int bmp380_read_press_adc(struct bmp280_data *data, u32 *adc_press)
-+{
-+	u32 value_press;
-+	int ret;
-+
-+	ret = regmap_bulk_read(data->regmap, BMP380_REG_PRESS_XLSB,
-+			       data->buf, sizeof(data->buf));
-+	if (ret) {
-+		dev_err(data->dev, "failed to read pressure\n");
-+		return ret;
++		goto out;
 +	}
 +
-+	value_press = get_unaligned_le24(data->buf);
-+	if (value_press == BMP380_PRESS_SKIPPED) {
++	data->sensor_data[1] = bmp280_compensate_temp(data, adc_temp);
++
++	/* Pressure calculations */
++	adc_press = FIELD_GET(BMP280_MEAS_TRIM_MASK, get_unaligned_be24(&data->buf[0]));
++	if (adc_press == BMP280_PRESS_SKIPPED) {
 +		dev_err(data->dev, "reading pressure skipped\n");
-+		return -EIO;
++		goto out;
 +	}
-+	*adc_press = value_press;
 +
-+	return 0;
++	t_fine = bmp280_calc_t_fine(data, adc_temp);
++
++	data->sensor_data[0] = bmp280_compensate_press(data, adc_press, t_fine);
++
++	/* Humidity calculations */
++	if (test_bit(BME280_HUMID, indio_dev->active_scan_mask)) {
++		adc_humidity = get_unaligned_be16(&data->buf[6]);
++
++		if (adc_humidity == BMP280_HUMIDITY_SKIPPED) {
++			dev_err(data->dev, "reading humidity skipped\n");
++			goto out;
++		}
++		data->sensor_data[2] = bme280_compensate_humidity(data, adc_humidity, t_fine);
++	}
++
++	iio_push_to_buffers_with_timestamp(indio_dev, &data->sensor_data,
++					   iio_get_time_ns(indio_dev));
++
++out:
++	iio_trigger_notify_done(indio_dev->trig);
++
++	return IRQ_HANDLED;
 +}
 +
-+static u32 bmp380_compensate_press(struct bmp280_data *data,
-+				   u32 adc_press, s32 t_fine)
- {
- 	s64 var1, var2, var3, var4, var5, var6, offset, sensitivity;
- 	struct bmp380_calib *calib = &data->calib.bmp380;
- 	u32 comp_press;
+ static const int bmp280_oversampling_avail[] = { 1, 2, 4, 8, 16 };
+ static const u8 bmp280_chip_ids[] = { BMP280_CHIP_ID };
+ static const int bmp280_temp_coeffs[] = { 10, 1 };
+@@ -913,7 +1052,8 @@ const struct bmp280_chip_info bmp280_chip_info = {
+ 	.regmap_config = &bmp280_regmap_config,
+ 	.start_up_time = 2000,
+ 	.channels = bmp280_channels,
+-	.num_channels = 2,
++	.num_channels = 3,
++	.avail_scan_masks = bmp280_avail_scan_masks,
  
--	var1 = (s64)data->t_fine * (s64)data->t_fine;
-+	var1 = (s64)t_fine * (s64)t_fine;
- 	var2 = var1 >> 6;
--	var3 = (var2 * ((s64) data->t_fine)) >> 8;
-+	var3 = (var2 * ((s64) t_fine)) >> 8;
- 	var4 = ((s64)calib->P8 * var3) >> 5;
- 	var5 = ((s64)calib->P7 * var1) << 4;
--	var6 = ((s64)calib->P6 * (s64)data->t_fine) << 22;
-+	var6 = ((s64)calib->P6 * (s64)t_fine) << 22;
- 	offset = ((s64)calib->P5 << 47) + var4 + var5 + var6;
- 	var2 = ((s64)calib->P4 * var3) >> 5;
- 	var4 = ((s64)calib->P3 * var1) << 2;
- 	var5 = ((s64)calib->P2 - ((s64)1 << 14)) *
--	       ((s64)data->t_fine << 21);
-+	       ((s64)t_fine << 21);
- 	sensitivity = (((s64) calib->P1 - ((s64) 1 << 14)) << 46) +
- 			var2 + var4 + var5;
- 	var1 = (sensitivity >> 24) * (s64)adc_press;
--	var2 = (s64)calib->P10 * (s64)data->t_fine;
-+	var2 = (s64)calib->P10 * (s64)t_fine;
- 	var3 = var2 + ((s64)calib->P9 << 16);
- 	var4 = (var3 * (s64)adc_press) >> 13;
+ 	.oversampling_temp_avail = bmp280_oversampling_avail,
+ 	.num_oversampling_temp_avail = ARRAY_SIZE(bmp280_oversampling_avail),
+@@ -942,6 +1082,8 @@ const struct bmp280_chip_info bmp280_chip_info = {
+ 	.read_temp = bmp280_read_temp,
+ 	.read_press = bmp280_read_press,
+ 	.read_calib = bmp280_read_calib,
++
++	.buffer_handler = bmp280_buffer_handler,
+ };
+ EXPORT_SYMBOL_NS(bmp280_chip_info, IIO_BMP280);
  
-@@ -1001,59 +1117,34 @@ static int bmp380_read_temp(struct bmp280_data *data, int *val, int *val2)
- 	u32 adc_temp;
+@@ -974,7 +1116,8 @@ const struct bmp280_chip_info bme280_chip_info = {
+ 	.regmap_config = &bmp280_regmap_config,
+ 	.start_up_time = 2000,
+ 	.channels = bme280_channels,
+-	.num_channels = 3,
++	.num_channels = 4,
++	.avail_scan_masks = bme280_avail_scan_masks,
+ 
+ 	.oversampling_temp_avail = bmp280_oversampling_avail,
+ 	.num_oversampling_temp_avail = ARRAY_SIZE(bmp280_oversampling_avail),
+@@ -1000,6 +1143,8 @@ const struct bmp280_chip_info bme280_chip_info = {
+ 	.read_press = bmp280_read_press,
+ 	.read_humid = bme280_read_humid,
+ 	.read_calib = bme280_read_calib,
++
++	.buffer_handler = bmp280_buffer_handler,
+ };
+ EXPORT_SYMBOL_NS(bme280_chip_info, IIO_BMP280);
+ 
+@@ -1061,7 +1206,7 @@ static int bmp380_read_temp_adc(struct bmp280_data *data, u32 *adc_temp)
  	int ret;
  
--	ret = regmap_bulk_read(data->regmap, BMP380_REG_TEMP_XLSB,
+ 	ret = regmap_bulk_read(data->regmap, BMP380_REG_TEMP_XLSB,
 -			       data->buf, sizeof(data->buf));
--	if (ret) {
--		dev_err(data->dev, "failed to read temperature\n");
-+	ret = bmp380_read_temp_adc(data, &adc_temp);
-+	if (ret)
++			       data->buf, BMP280_NUM_TEMP_BYTES);
+ 	if (ret) {
+ 		dev_err(data->dev, "failed to read temperature\n");
  		return ret;
--	}
- 
--	adc_temp = get_unaligned_le24(data->buf);
--	if (adc_temp == BMP380_TEMP_SKIPPED) {
--		dev_err(data->dev, "reading temperature skipped\n");
--		return -EIO;
--	}
- 	comp_temp = bmp380_compensate_temp(data, adc_temp);
- 
--	/*
--	 * Val might be NULL if we're called by the read_press routine,
--	 * who only cares about the carry over t_fine value.
--	 */
--	if (val) {
--		/* IIO reports temperatures in milli Celsius */
--		*val = comp_temp * 10;
--		return IIO_VAL_INT;
--	}
--
--	return 0;
-+	/* IIO units are in milli Celsius */
-+	*val = comp_temp * 10;
-+	return IIO_VAL_INT;
- }
- 
- static int bmp380_read_press(struct bmp280_data *data, int *val, int *val2)
- {
--	u32 adc_press, comp_press;
-+	u32 adc_press, comp_press, t_fine;
+@@ -1130,7 +1275,7 @@ static int bmp380_read_press_adc(struct bmp280_data *data, u32 *adc_press)
  	int ret;
  
--	/* Read and compensate for temperature so we get a reading of t_fine */
--	ret = bmp380_read_temp(data, NULL, NULL);
-+	ret = bmp380_get_t_fine(data, &t_fine);
- 	if (ret)
- 		return ret;
- 
--	ret = regmap_bulk_read(data->regmap, BMP380_REG_PRESS_XLSB,
+ 	ret = regmap_bulk_read(data->regmap, BMP380_REG_PRESS_XLSB,
 -			       data->buf, sizeof(data->buf));
--	if (ret) {
--		dev_err(data->dev, "failed to read pressure\n");
-+	ret = bmp380_read_press_adc(data, &adc_press);
-+	if (ret)
++			       data->buf, BMP280_NUM_PRESS_BYTES);
+ 	if (ret) {
+ 		dev_err(data->dev, "failed to read pressure\n");
  		return ret;
--	}
- 
--	adc_press = get_unaligned_le24(data->buf);
--	if (adc_press == BMP380_PRESS_SKIPPED) {
--		dev_err(data->dev, "reading pressure skipped\n");
--		return -EIO;
--	}
--	comp_press = bmp380_compensate_press(data, adc_press);
-+	comp_press = bmp380_compensate_press(data, adc_press, t_fine);
- 
-+	/* IIO units are in kPa */
- 	*val = comp_press;
--	/* Compensated pressure is in cPa (centipascals) */
- 	*val2 = 100000;
- 
- 	return IIO_VAL_FRACTIONAL;
-@@ -1825,7 +1916,7 @@ static int bmp180_wait_for_eoc(struct bmp280_data *data, u8 ctrl_meas)
+@@ -1384,6 +1529,53 @@ static int bmp380_chip_config(struct bmp280_data *data)
  	return 0;
  }
  
--static int bmp180_read_adc_temp(struct bmp280_data *data, int *val)
-+static int bmp180_read_temp_adc(struct bmp280_data *data, u32 *adc_temp)
- {
- 	int ret;
- 
-@@ -1842,7 +1933,7 @@ static int bmp180_read_adc_temp(struct bmp280_data *data, int *val)
- 		return ret;
- 	}
- 
--	*val = be16_to_cpu(data->be16);
-+	*adc_temp = be16_to_cpu(data->be16);
- 
- 	return 0;
- }
-@@ -1892,16 +1983,34 @@ static int bmp180_read_calib(struct bmp280_data *data)
-  *
-  * Taken from datasheet, Section 3.5, "Calculating pressure and temperature".
-  */
--static s32 bmp180_compensate_temp(struct bmp280_data *data, u32 adc_temp)
-+
-+static s32 bmp180_calc_t_fine(struct bmp280_data *data, u32 adc_temp)
- {
- 	struct bmp180_calib *calib = &data->calib.bmp180;
- 	s32 x1, x2;
- 
- 	x1 = ((((s32)adc_temp) - calib->AC6) * calib->AC5) >> 15;
- 	x2 = (calib->MC << 11) / (x1 + calib->MD);
--	data->t_fine = x1 + x2;
-+	return x1 + x2; /* t_fine = x1 + x2; */
-+}
-+
-+static int bmp180_get_t_fine(struct bmp280_data *data, s32 *t_fine)
++static irqreturn_t bmp380_buffer_handler(int irq, void *p)
 +{
-+	s32 adc_temp;
++	struct iio_poll_func *pf = p;
++	struct iio_dev *indio_dev = pf->indio_dev;
++	struct bmp280_data *data = iio_priv(indio_dev);
++	s32 adc_temp, adc_press, t_fine;
 +	int ret;
 +
-+	ret = bmp180_read_temp_adc(data, &adc_temp);
-+	if (ret)
-+		return ret;
++	guard(mutex)(&data->lock);
 +
-+	*t_fine = bmp180_calc_t_fine(data, adc_temp);
++	/* Burst read data registers */
++	ret = regmap_bulk_read(data->regmap, BMP380_REG_PRESS_XLSB,
++			       data->buf, BMP280_BURST_READ_BYTES);
++	if (ret) {
++		dev_err(data->dev, "failed to burst read sensor data\n");
++		goto out;
++	}
++
++	/* Temperature calculations */
++	adc_temp = get_unaligned_le24(&data->buf[3]);
++	if (adc_temp == BMP380_TEMP_SKIPPED) {
++		dev_err(data->dev, "reading temperature skipped\n");
++		goto out;
++	}
++
++	data->sensor_data[1] = bmp380_compensate_temp(data, adc_temp);
++
++	/* Pressure calculations */
++	adc_press = get_unaligned_le24(&data->buf[0]);
++	if (adc_press == BMP380_PRESS_SKIPPED) {
++		dev_err(data->dev, "reading pressure skipped\n");
++		goto out;
++	}
++
++	t_fine = bmp380_calc_t_fine(data, adc_temp);
++
++	data->sensor_data[0] = bmp380_compensate_press(data, adc_press, t_fine);
++
++	iio_push_to_buffers_with_timestamp(indio_dev, &data->sensor_data,
++					   iio_get_time_ns(indio_dev));
++
++out:
++	iio_trigger_notify_done(indio_dev->trig);
++
++	return IRQ_HANDLED;
++}
++
+ static const int bmp380_oversampling_avail[] = { 1, 2, 4, 8, 16, 32 };
+ static const int bmp380_iir_filter_coeffs_avail[] = { 1, 2, 4, 8, 16, 32, 64, 128};
+ static const u8 bmp380_chip_ids[] = { BMP380_CHIP_ID, BMP390_CHIP_ID };
+@@ -1398,7 +1590,8 @@ const struct bmp280_chip_info bmp380_chip_info = {
+ 	.spi_read_extra_byte = true,
+ 	.start_up_time = 2000,
+ 	.channels = bmp380_channels,
+-	.num_channels = 2,
++	.num_channels = 3,
++	.avail_scan_masks = bmp280_avail_scan_masks,
  
--	return (data->t_fine + 8) >> 4;
+ 	.oversampling_temp_avail = bmp380_oversampling_avail,
+ 	.num_oversampling_temp_avail = ARRAY_SIZE(bmp380_oversampling_avail),
+@@ -1426,6 +1619,8 @@ const struct bmp280_chip_info bmp380_chip_info = {
+ 	.read_press = bmp380_read_press,
+ 	.read_calib = bmp380_read_calib,
+ 	.preinit = bmp380_preinit,
++
++	.buffer_handler = bmp380_buffer_handler,
+ };
+ EXPORT_SYMBOL_NS(bmp380_chip_info, IIO_BMP280);
+ 
+@@ -1545,8 +1740,8 @@ static int bmp580_read_temp(struct bmp280_data *data, s32 *raw_temp)
+ {
+ 	int ret;
+ 
+-	ret = regmap_bulk_read(data->regmap, BMP580_REG_TEMP_XLSB, data->buf,
+-			       sizeof(data->buf));
++	ret = regmap_bulk_read(data->regmap, BMP580_REG_TEMP_XLSB,
++			       data->buf, BMP280_NUM_TEMP_BYTES);
+ 	if (ret) {
+ 		dev_err(data->dev, "failed to read temperature\n");
+ 		return ret;
+@@ -1565,8 +1760,8 @@ static int bmp580_read_press(struct bmp280_data *data, u32 *raw_press)
+ {
+ 	int ret;
+ 
+-	ret = regmap_bulk_read(data->regmap, BMP580_REG_PRESS_XLSB, data->buf,
+-			       sizeof(data->buf));
++	ret = regmap_bulk_read(data->regmap, BMP580_REG_PRESS_XLSB,
++			       data->buf, BMP280_NUM_PRESS_BYTES);
+ 	if (ret) {
+ 		dev_err(data->dev, "failed to read pressure\n");
+ 		return ret;
+@@ -1890,6 +2085,51 @@ static int bmp580_chip_config(struct bmp280_data *data)
+ 	return 0;
+ }
+ 
++static irqreturn_t bmp580_buffer_handler(int irq, void *p)
++{
++	struct iio_poll_func *pf = p;
++	struct iio_dev *indio_dev = pf->indio_dev;
++	struct bmp280_data *data = iio_priv(indio_dev);
++	s32 adc_temp, adc_press;
++	int ret;
++
++	guard(mutex)(&data->lock);
++
++	/* Burst read data registers */
++	ret = regmap_bulk_read(data->regmap, BMP580_REG_TEMP_XLSB,
++			       data->buf, BMP280_BURST_READ_BYTES);
++	if (ret) {
++		dev_err(data->dev, "failed to burst read sensor data\n");
++		goto out;
++	}
++
++	/* Temperature calculations */
++	adc_temp = get_unaligned_le24(&data->buf[0]);
++	if (adc_temp == BMP580_TEMP_SKIPPED) {
++		dev_err(data->dev, "reading temperature skipped\n");
++		goto out;
++	}
++
++	data->sensor_data[1] = adc_temp;
++
++	/* Pressure calculations */
++	adc_press = get_unaligned_le24(&data->buf[3]);
++	if (adc_press == BMP380_PRESS_SKIPPED) {
++		dev_err(data->dev, "reading pressure skipped\n");
++		goto out;
++	}
++
++	data->sensor_data[0] = adc_press;
++
++	iio_push_to_buffers_with_timestamp(indio_dev, &data->sensor_data,
++					   iio_get_time_ns(indio_dev));
++
++out:
++	iio_trigger_notify_done(indio_dev->trig);
++
++	return IRQ_HANDLED;
++}
++
+ static const int bmp580_oversampling_avail[] = { 1, 2, 4, 8, 16, 32, 64, 128 };
+ static const u8 bmp580_chip_ids[] = { BMP580_CHIP_ID, BMP580_CHIP_ID_ALT };
+ static const int bmp580_temp_coeffs[] = { 1000, 16 };
+@@ -1902,7 +2142,8 @@ const struct bmp280_chip_info bmp580_chip_info = {
+ 	.regmap_config = &bmp580_regmap_config,
+ 	.start_up_time = 2000,
+ 	.channels = bmp380_channels,
+-	.num_channels = 2,
++	.num_channels = 3,
++	.avail_scan_masks = bmp280_avail_scan_masks,
+ 
+ 	.oversampling_temp_avail = bmp580_oversampling_avail,
+ 	.num_oversampling_temp_avail = ARRAY_SIZE(bmp580_oversampling_avail),
+@@ -1929,6 +2170,8 @@ const struct bmp280_chip_info bmp580_chip_info = {
+ 	.read_temp = bmp580_read_temp,
+ 	.read_press = bmp580_read_press,
+ 	.preinit = bmp580_preinit,
++
++	.buffer_handler = bmp580_buffer_handler,
+ };
+ EXPORT_SYMBOL_NS(bmp580_chip_info, IIO_BMP280);
+ 
+@@ -2107,7 +2350,7 @@ static int bmp180_read_press_adc(struct bmp280_data *data, u32 *adc_press)
+ 		return ret;
+ 
+ 	ret = regmap_bulk_read(data->regmap, BMP180_REG_OUT_MSB,
+-			       data->buf, sizeof(data->buf));
++			       data->buf, BMP280_NUM_PRESS_BYTES);
+ 	if (ret) {
+ 		dev_err(data->dev, "failed to read pressure\n");
+ 		return ret;
+@@ -2178,6 +2421,36 @@ static int bmp180_chip_config(struct bmp280_data *data)
+ 	return 0;
+ }
+ 
++static irqreturn_t bmp180_buffer_handler(int irq, void *p)
++{
++	struct iio_poll_func *pf = p;
++	struct iio_dev *indio_dev = pf->indio_dev;
++	struct bmp280_data *data = iio_priv(indio_dev);
++	int ret, chan_value;
++
++	guard(mutex)(&data->lock);
++
++	ret = bmp180_read_temp(data, &chan_value);
++	if (ret)
++		goto out;
++
++	data->sensor_data[1] = chan_value;
++
++	ret = bmp180_read_press(data, &chan_value);
++	if (ret)
++		goto out;
++
++	data->sensor_data[0] = chan_value;
++
++	iio_push_to_buffers_with_timestamp(indio_dev, &data->sensor_data,
++					   iio_get_time_ns(indio_dev));
++
++out:
++	iio_trigger_notify_done(indio_dev->trig);
++
++	return IRQ_HANDLED;
++}
++
+ static const int bmp180_oversampling_temp_avail[] = { 1 };
+ static const int bmp180_oversampling_press_avail[] = { 1, 2, 4, 8 };
+ static const u8 bmp180_chip_ids[] = { BMP180_CHIP_ID };
+@@ -2191,7 +2464,8 @@ const struct bmp280_chip_info bmp180_chip_info = {
+ 	.regmap_config = &bmp180_regmap_config,
+ 	.start_up_time = 2000,
+ 	.channels = bmp280_channels,
+-	.num_channels = 2,
++	.num_channels = 3,
++	.avail_scan_masks = bmp280_avail_scan_masks,
+ 
+ 	.oversampling_temp_avail = bmp180_oversampling_temp_avail,
+ 	.num_oversampling_temp_avail =
+@@ -2212,6 +2486,8 @@ const struct bmp280_chip_info bmp180_chip_info = {
+ 	.read_temp = bmp180_read_temp,
+ 	.read_press = bmp180_read_press,
+ 	.read_calib = bmp180_read_calib,
++
++	.buffer_handler = bmp180_buffer_handler,
+ };
+ EXPORT_SYMBOL_NS(bmp180_chip_info, IIO_BMP280);
+ 
+@@ -2257,6 +2533,30 @@ static int bmp085_fetch_eoc_irq(struct device *dev,
+ 	return 0;
+ }
+ 
++static int bmp280_buffer_preenable(struct iio_dev *indio_dev)
++{
++	struct bmp280_data *data = iio_priv(indio_dev);
++
++	pm_runtime_get_sync(data->dev);
++
 +	return 0;
 +}
 +
-+static s32 bmp180_compensate_temp(struct bmp280_data *data, u32 adc_temp)
++static int bmp280_buffer_postdisable(struct iio_dev *indio_dev)
 +{
-+	return (bmp180_calc_t_fine(data, adc_temp) + 8) / 16;
- }
- 
- static int bmp180_read_temp(struct bmp280_data *data, int *val, int *val2)
-@@ -1910,25 +2019,18 @@ static int bmp180_read_temp(struct bmp280_data *data, int *val, int *val2)
- 	u32 adc_temp;
- 	int ret;
- 
--	ret = bmp180_read_adc_temp(data, &adc_temp);
-+	ret = bmp180_read_temp_adc(data, &adc_temp);
- 	if (ret)
- 		return ret;
- 
- 	comp_temp = bmp180_compensate_temp(data, adc_temp);
- 
--	/*
--	 * val might be NULL if we're called by the read_press routine,
--	 * who only cares about the carry over t_fine value.
--	 */
--	if (val) {
--		*val = comp_temp * 100;
--		return IIO_VAL_INT;
--	}
--
--	return 0;
-+	/* IIO units are in milli Celsius */
-+	*val = comp_temp * 100;
-+	return IIO_VAL_INT;
- }
- 
--static int bmp180_read_adc_press(struct bmp280_data *data, int *val)
-+static int bmp180_read_press_adc(struct bmp280_data *data, u32 *adc_press)
++	struct bmp280_data *data = iio_priv(indio_dev);
++
++	pm_runtime_mark_last_busy(data->dev);
++	pm_runtime_put_autosuspend(data->dev);
++
++	return 0;
++}
++
++const struct iio_buffer_setup_ops bmp280_buffer_setup_ops = {
++	.preenable = bmp280_buffer_preenable,
++	.postdisable = bmp280_buffer_postdisable,
++};
++
+ static void bmp280_pm_disable(void *data)
  {
- 	u8 oss = data->oversampling_press;
- 	int ret;
-@@ -1947,7 +2049,7 @@ static int bmp180_read_adc_press(struct bmp280_data *data, int *val)
- 		return ret;
+ 	struct device *dev = data;
+@@ -2303,6 +2603,7 @@ int bmp280_common_probe(struct device *dev,
+ 	/* Apply initial values from chip info structure */
+ 	indio_dev->channels = chip_info->channels;
+ 	indio_dev->num_channels = chip_info->num_channels;
++	indio_dev->available_scan_masks = chip_info->avail_scan_masks;
+ 	data->oversampling_press = chip_info->oversampling_press_default;
+ 	data->oversampling_humid = chip_info->oversampling_humid_default;
+ 	data->oversampling_temp = chip_info->oversampling_temp_default;
+@@ -2388,6 +2689,14 @@ int bmp280_common_probe(struct device *dev,
+ 					     "failed to read calibration coefficients\n");
  	}
  
--	*val = get_unaligned_be24(data->buf) >> (8 - oss);
-+	*adc_press = get_unaligned_be24(data->buf) >> (8 - oss);
- 
- 	return 0;
- }
-@@ -1957,7 +2059,8 @@ static int bmp180_read_adc_press(struct bmp280_data *data, int *val)
-  *
-  * Taken from datasheet, Section 3.5, "Calculating pressure and temperature".
-  */
--static u32 bmp180_compensate_press(struct bmp280_data *data, u32 adc_press)
-+static u32 bmp180_compensate_press(struct bmp280_data *data, u32 adc_press,
-+				   s32 t_fine)
++	ret = devm_iio_triggered_buffer_setup(data->dev, indio_dev,
++					      iio_pollfunc_store_time,
++					      data->chip_info->buffer_handler,
++					      NULL);
++	if (ret)
++		return dev_err_probe(data->dev, ret,
++				     "iio triggered buffer setup failed\n");
++
+ 	/*
+ 	 * Attempt to grab an optional EOC IRQ - only the BMP085 has this
+ 	 * however as it happens, the BMP085 shares the chip ID of BMP180
+diff --git a/drivers/iio/pressure/bmp280-spi.c b/drivers/iio/pressure/bmp280-spi.c
+index 62b4e58104cf..e5abee15950e 100644
+--- a/drivers/iio/pressure/bmp280-spi.c
++++ b/drivers/iio/pressure/bmp280-spi.c
+@@ -40,14 +40,10 @@ static int bmp380_regmap_spi_read(void *context, const void *reg,
+ 				  size_t reg_size, void *val, size_t val_size)
  {
- 	struct bmp180_calib *calib = &data->calib.bmp180;
- 	s32 oss = data->oversampling_press;
-@@ -1965,7 +2068,7 @@ static u32 bmp180_compensate_press(struct bmp280_data *data, u32 adc_press)
- 	s32 b3, b6;
- 	u32 b4, b7;
+ 	struct spi_device *spi = to_spi_device(context);
+-	u8 rx_buf[4];
++	u8 rx_buf[BME280_BURST_READ_BYTES + 1];
+ 	ssize_t status;
  
--	b6 = data->t_fine - 4000;
-+	b6 = t_fine - 4000;
- 	x1 = (calib->B2 * (b6 * b6 >> 12)) >> 11;
- 	x2 = calib->AC2 * b6 >> 11;
- 	x3 = x1 + x2;
-@@ -1974,7 +2077,7 @@ static u32 bmp180_compensate_press(struct bmp280_data *data, u32 adc_press)
- 	x2 = (calib->B1 * ((b6 * b6) >> 12)) >> 16;
- 	x3 = (x1 + x2 + 2) >> 2;
- 	b4 = calib->AC4 * (u32)(x3 + 32768) >> 15;
--	b7 = (adc_press - b3) * (50000 >> oss);
-+	b7 = (((u32)adc_press) - b3) * (50000 >> oss);
- 	if (b7 < 0x80000000)
- 		p = (b7 * 2) / b4;
- 	else
-@@ -1990,19 +2093,19 @@ static u32 bmp180_compensate_press(struct bmp280_data *data, u32 adc_press)
- static int bmp180_read_press(struct bmp280_data *data, int *val, int *val2)
- {
- 	u32 comp_press, adc_press;
--	int ret;
-+	s32 t_fine;
+-	/*
+-	 * Maximum number of consecutive bytes read for a temperature or
+-	 * pressure measurement is 3.
+-	 */
+-	if (val_size > 3)
++	if (val_size > BME280_BURST_READ_BYTES)
+ 		return -EINVAL;
  
--	/* Read and compensate temperature so we get a reading of t_fine. */
--	ret = bmp180_read_temp(data, NULL, NULL);
-+	ret = bmp180_get_t_fine(data, &t_fine);
- 	if (ret)
- 		return ret;
- 
--	ret = bmp180_read_adc_press(data, &adc_press);
-+	ret = bmp180_read_press_adc(data, &adc_press);
- 	if (ret)
- 		return ret;
- 
--	comp_press = bmp180_compensate_press(data, adc_press);
-+	comp_press = bmp180_compensate_press(data, adc_press, t_fine);
- 
-+	/* IIO units are in kPa */
- 	*val = comp_press;
- 	*val2 = 1000;
- 
+ 	/*
 diff --git a/drivers/iio/pressure/bmp280.h b/drivers/iio/pressure/bmp280.h
-index fe4d3f127954..7c30e4d523be 100644
+index a3d2cd722760..756c644354c2 100644
 --- a/drivers/iio/pressure/bmp280.h
 +++ b/drivers/iio/pressure/bmp280.h
-@@ -397,12 +397,6 @@ struct bmp280_data {
+@@ -304,6 +304,16 @@
+ #define BMP280_PRESS_SKIPPED		0x80000
+ #define BMP280_HUMIDITY_SKIPPED		0x8000
+ 
++/* Number of bytes for each value */
++#define BMP280_NUM_PRESS_BYTES		3
++#define BMP280_NUM_TEMP_BYTES		3
++#define BME280_NUM_HUMIDITY_BYTES	2
++#define BMP280_BURST_READ_BYTES		(BMP280_NUM_PRESS_BYTES + \
++					 BMP280_NUM_TEMP_BYTES)
++#define BME280_BURST_READ_BYTES		(BMP280_NUM_PRESS_BYTES + \
++					 BMP280_NUM_TEMP_BYTES + \
++					 BME280_NUM_HUMIDITY_BYTES)
++
+ /* Core exported structs */
+ 
+ static const char *const bmp280_supply_names[] = {
+@@ -397,13 +407,19 @@ struct bmp280_data {
  	 */
  	int sampling_freq;
  
--	/*
--	 * Carryover value from temperature conversion, used in pressure
--	 * calculation.
--	 */
--	s32 t_fine;
--
++	/*
++	 * Data to push to userspace triggered buffer. Up to 3 channels and
++	 * s64 timestamp, aligned.
++	 */
++	s32 sensor_data[6] __aligned(8);
++
  	/*
  	 * DMA (thus cache coherency maintenance) may require the
  	 * transfer buffers to live in their own cache lines.
+ 	 */
+ 	union {
+ 		/* Sensor data buffer */
+-		u8 buf[3];
++		u8 buf[BME280_BURST_READ_BYTES];
+ 		/* Calibration data buffers */
+ 		__le16 bmp280_cal_buf[BMP280_CONTIGUOUS_CALIB_REGS / 2];
+ 		__be16 bmp180_cal_buf[BMP180_REG_CALIB_COUNT / 2];
+@@ -425,6 +441,7 @@ struct bmp280_chip_info {
+ 	const struct iio_chan_spec *channels;
+ 	int num_channels;
+ 	unsigned int start_up_time;
++	const unsigned long *avail_scan_masks;
+ 
+ 	const int *oversampling_temp_avail;
+ 	int num_oversampling_temp_avail;
+@@ -459,6 +476,8 @@ struct bmp280_chip_info {
+ 	int (*read_humid)(struct bmp280_data *data, u32 *adc_humidity);
+ 	int (*read_calib)(struct bmp280_data *data);
+ 	int (*preinit)(struct bmp280_data *data);
++
++	irqreturn_t (*buffer_handler)(int irq, void *p);
+ };
+ 
+ /* Chip infos for each variant */
 -- 
 2.25.1
 
