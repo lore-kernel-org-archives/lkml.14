@@ -1,286 +1,171 @@
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2044.outbound.protection.outlook.com [40.107.117.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CDE126F05;
-	Wed,  8 May 2024 14:43:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715179416; cv=none; b=RaYkQMQqKtJRbup4F+OxM4tsREq1y1biIVFNkO9ormhS1C/qz3dJaOCQl/Wxi1Ee1IbCELDIjvR4CaX3KPhaxNlKjRjm8pOoACm3kiqJhVR8SsDHW8/mUdceqnQYOWMl7ch+bPDhGYQztRTY9yALDDB2y1T7KgnbkE70v+9+Zkk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715179416; c=relaxed/simple;
-	bh=sdVj+zO8H4B/fvjouDoi7Nhc5dIxJ2GTTWp+LPjaQAA=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CpcbX3sYbS4nuQkakOwopgDY18mreEjTq8Z7B9zGrSywovUPD5K40j1QVqDtgbrbplbG+gRgHkUhqbCyGiEm9xrXDzy74MPBy4ue6kqprRFxhl0eNHTsAUWLA8vbzotEJ0fOUKrRI6lBdHYBTDK4GURuwAQdkZul8QsIhO9mkfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=n4v9oMXI; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373FD86621
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 14:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.44
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715179418; cv=fail; b=FOqpHb4YHyK6oX6ApsnnZtDuiWnKlqiPyAIWxuDgqHdq2xYghtXMV3CftukAxCK/I7KquFfmj8HWCpMKpl09Or7o5AjckuGxpTM0jT52g7U1jtahONbiQmBVYqO8SGQm+iDiabzGSsNlN05+MogUR9pcpMTTqXD/vm9HO/GhkEY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715179418; c=relaxed/simple;
+	bh=CyPQ0BXBlPbcvFvs2dFDQbWnMNLBR1AXN8a43XpcMaw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K01BGaVyirnmwra2z++1MFMGyLFRD03o3PffrYFNLp4LLoWp/6iwSUIIhsz9t7R4lx3ihId75KAV3a56PzbMc8XIcgid+q5fybOgDbX5SEssRxo2mvb+ROTEaYkU83UqCq5GtNqGo/Pueamo4QuWlcoOFXWUv2MPPo18VzfvFHI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com; spf=pass smtp.mailfrom=oppo.com; dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b=PTA/vjXk; arc=fail smtp.client-ip=40.107.117.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oppo.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="n4v9oMXI"
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 14952100003;
-	Wed,  8 May 2024 17:43:31 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 14952100003
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1715179411;
-	bh=93FmlCSWH+YO/nmTOmSVLAybLAxTDRjCOeQkxoXUEKA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=n4v9oMXI2cws0zW/bqF3Ci9N4/SH+JI1DfZeQfKJS82ftPNthf4fjNmgswCrACF7U
-	 toRMtV5pcfqNWBSro4FwL0o0Q4eKhSnxSwdphLR9H5VftPJCmsxm0GIVjcYF0NdKeo
-	 zgD5Lvxl4nXWlEg6K0qKtrBonq+eR33uaxo2ZOxDf3C5dxuCDYZVTcZovUb82965Ab
-	 yJnSSmgFJ8EK+Vq8C5vQIAnvACJkqZGEhVPBNL7VdnXbImvS6vRG+C/QOIWTpnp7St
-	 bGIpEaUakxHLAv8gh1t+TJRjWr+sxuMTdimzfcfj1sJK80iyLdHWYIemCCV5j2UUb1
-	 ZkgyHkrVV3/rA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Wed,  8 May 2024 17:43:30 +0300 (MSK)
-Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 8 May 2024 17:43:30 +0300
-From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Conor Dooley
-	<conor+dt@kernel.org>, <devicetree@vger.kernel.org>, Jerome Brunet
-	<jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Martin
- Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette
-	<mturquette@baylibre.com>, Neil Armstrong <neil.armstrong@linaro.org>, Rob
- Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
-Subject: [APPROACH 1 1/1] dt-bindings: clock: meson: Convert axg-audio-clkc to YAML format
-Date: Wed, 8 May 2024 17:42:57 +0300
-Message-ID: <20240508144259.191843-2-jan.dakinevich@salutedevices.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240508144259.191843-1-jan.dakinevich@salutedevices.com>
-References: <20240508144259.191843-1-jan.dakinevich@salutedevices.com>
+	dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b="PTA/vjXk"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oFDe0vXREJUQf3b3Fjjwvrm7gyxgJCKWCJcPoPUJkAd7dRW4ZbNgkN80PZdGw+92lV+4BJ747CvVgmgqLfF0OGJv04tXVPcj1ktugBbYXx6qv1yCe0wy6dh7vdnO2UMb5PuKsqP1hfUDKwr/DurxjkTxcm5fBSPJdRF6gXK4TAjhonSj4mKn2OCnEHh6XnysgwLBjleKbKIY5i0OVz5+Bu1H1BlDQmqTIMHTqxb95g+jOR8SgMpRKm7bkZbf9774b1fd97I9O2rVhpBGibkNa2pHly4QKUWq0Aw3GO3tKGKpiBLKTNS4ZpeOZ1wWGF31iAS0GVpny0eZRjdmdFKGDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fiXFFb2wR6td3f/0a4yxw9j8+tQQgkNqUf68E69UwPc=;
+ b=ByKVAUEnc7FSBe4/4OTrh17QYBiUwKdVErC7P+2rlE7qzORKaw59nKZGHtqNaodibPWnURMjJrld9ky7WJzg65CBBHdz5Ou1kcBDfiM2tLmuUFUTHY57xmQYpjWXsD/zJ0T+c5nn01a+oMdUAv8h0d41rD4CRpv2q4Xcfr3q+esI9Zu/EyQOSTXJlCE1VFHOdzkFaOCK5xxMVhaWmzw6t2zcuBROg9lnGK3O4k3OFMDMUPMw3xDGzXcjC0fYWRPsWJLEUcD6vmCkDuXYFEU6dLrgV5wOkV9NcD1gw1ajS3PVXsaWPUZAZJzLM42m95GBXHKLAHJUobdPFXT5ulYAnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 58.252.5.68) smtp.rcpttodomain=linux.alibaba.com smtp.mailfrom=oppo.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=oppo.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oppo.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fiXFFb2wR6td3f/0a4yxw9j8+tQQgkNqUf68E69UwPc=;
+ b=PTA/vjXkEpQCaiAWtFfzvhWCkPvSio9mVErhkxSaXtd6UvK0Q/NLs3d3wEEUlLOP8EqFtmxRzVXjpNTp25hNjppZKxlbFy2xO0BGliVZRb2uoYQs36CcXGnUsnVKLYqflCPsGv2dRO+RU0TxkVh/YJ7MGVJPUfTL9OcNy6MOJqE=
+Received: from SGAP274CA0014.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b6::26) by
+ SEYPR02MB7173.apcprd02.prod.outlook.com (2603:1096:101:1a9::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.45; Wed, 8 May
+ 2024 14:43:29 +0000
+Received: from SG2PEPF000B66CE.apcprd03.prod.outlook.com
+ (2603:1096:4:b6:cafe::e6) by SGAP274CA0014.outlook.office365.com
+ (2603:1096:4:b6::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7519.36 via Frontend
+ Transport; Wed, 8 May 2024 14:43:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 58.252.5.68)
+ smtp.mailfrom=oppo.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=oppo.com;
+Received-SPF: Pass (protection.outlook.com: domain of oppo.com designates
+ 58.252.5.68 as permitted sender) receiver=protection.outlook.com;
+ client-ip=58.252.5.68; helo=mail.oppo.com; pr=C
+Received: from mail.oppo.com (58.252.5.68) by
+ SG2PEPF000B66CE.mail.protection.outlook.com (10.167.240.21) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7544.18 via Frontend Transport; Wed, 8 May 2024 14:43:28 +0000
+Received: from oppo.com (172.16.40.118) by mailappw31.adc.com (172.16.56.198)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Wed, 8 May
+ 2024 22:43:27 +0800
+Date: Wed, 8 May 2024 22:43:21 +0800
+From: Hailong Liu <hailong.liu@oppo.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+CC: <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>,
+	<urezki@gmail.com>, <hch@infradead.org>, <lstoakes@gmail.com>,
+	<21cnbao@gmail.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+	<xiang@kernel.org>, <chao@kernel.org>, Oven <liyangouwen1@oppo.com>
+Subject: Re: [RFC PATCH] mm/vmalloc: fix vmalloc which may return null if
+ called with __GFP_NOFAIL
+Message-ID: <20240508144321.ymnhn54daaabalhe@oppo.com>
+References: <20240508125808.28882-1-hailong.liu@oppo.com>
+ <404add29-2d3f-45db-9103-0c5b66fb254e@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185143 [May 08 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 19 0.3.19 07c7fa124d1a1dc9662cdc5aace418c06ae99d2b, {Tracking_smtp_not_equal_from}, {Tracking_uf_ne_domains}, smtp.sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;devicetree.org:7.1.1;100.64.160.123:7.1.2;salutedevices.com:7.1.1;sberdevices.ru:5.0.1,7.1.1;127.0.0.199:7.1.2, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/05/08 13:27:00
-X-KSMG-LinksScanning: Clean, bases: 2024/05/08 13:27:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/08 09:52:00 #25122865
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <404add29-2d3f-45db-9103-0c5b66fb254e@linux.alibaba.com>
+X-ClientProxiedBy: mailappw31.adc.com (172.16.56.198) To mailappw31.adc.com
+ (172.16.56.198)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CE:EE_|SEYPR02MB7173:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b47cd1e-2f75-4d1b-1a1b-08dc6f6d397a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|1800799015|7416005|36860700004|82310400017;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Mfn5B1dz6IvB0kG5dEdwJrDlQlJIgVWp9XIjQkMAdMCAk21qzuGCK/R4IkZM?=
+ =?us-ascii?Q?ydAM98I8Ovd2+tycm8zxmSAf/iWFLEQ8wsdIAEHpUw1/ZVHQBVAAOiqIgvY3?=
+ =?us-ascii?Q?mGr36SXk6Zk1UGcwjQRE6m81KHcfTUXyjSbBBRmmsv+Cue6oDjsdd1El9zYr?=
+ =?us-ascii?Q?IWlj4SBGTKPfJOgzep/ndFvuhfZRF0R5jkfnrNZgUIZhwqX/laIEPcOSw93A?=
+ =?us-ascii?Q?aWISjMn8TpjTbiPqD0SXSTKxXwXpglnOhJ/lPK2yqtRslFTvKHijT/bols6j?=
+ =?us-ascii?Q?Zp/g3PpuQK5pRVxkoocY8Cvi6cXUlhDWwFRh2VtOtuaSuy4PsOOp9RQtB02E?=
+ =?us-ascii?Q?Rud6XsKL1nTfC6I61Ia8PtRPsXn4XaUexRvCU40TnLb5wpFRyQSN3KZSHwfy?=
+ =?us-ascii?Q?U2IOZBzkSJ9bfhnKV+JMiSO1jJepZ2S3VZuZa7rXWrAyr6HMyDRQzU3/Z6YY?=
+ =?us-ascii?Q?o3dh/MtZHHkeDTqrORhyymw8f78bNHyFakI73DebGym8Yu0DpwYSjBSNiOEb?=
+ =?us-ascii?Q?uRA+2KM8CungrpzjqCOU6FEMcteKr6cXhbLSD3XQzHzJ3VcHhBhmwK0W/0jw?=
+ =?us-ascii?Q?vFp9z5gAVatomArgtcjwAkJJvgI8IjtRn0NzSC0Go5JdKASE8OsSq3Djmxia?=
+ =?us-ascii?Q?6VBxJaoa7zskxgpX4VNS9wllN9dKXW4PKKMGphJYKlCkdI6VY1GtW9Akjm1n?=
+ =?us-ascii?Q?LaUtZU1Rv8GY/JKIfOOtzrPBByYctAAL6LlRHNcpWwPhi2NCwxtw5kjZspHy?=
+ =?us-ascii?Q?nXcr/d6BrmkQVfJQugcrLll9tyP9rcCHxaIWgZQ1D5/z9sFMKPZRa35dEBGT?=
+ =?us-ascii?Q?ACf8Fq4qAgj58Aee8i8MKX88K9XJHIF2tZun14ZKJR2uahpAsAeSSWtXbeIg?=
+ =?us-ascii?Q?foUR4Qp7XHsWL4s6iAuWkqd/CNl4LDb/6owOwVc29ORym+HqZRgqZjJJUOan?=
+ =?us-ascii?Q?GWAkpYvi63Nsk5JBqHSaChIOAb9ycOW23qVKrzg/Ne09XbH3HVk/05n2aFgu?=
+ =?us-ascii?Q?6EqlA5H3bV5d9r9OUYMpD1w5uiMlk7RovSq3cbaYY1jNWn8QNRb8sFsGU3cZ?=
+ =?us-ascii?Q?SUBfjMlCPCarqQquaahD6xlbbRgtkZYOl/udfY+0Vs7S3J8xWE9j4dJ0v1am?=
+ =?us-ascii?Q?no3eOutPDNbJpZB24Sgn3//TwZ08dVmI+oD3zsMPPGRBdGVaJDjTEyifOJWt?=
+ =?us-ascii?Q?v3ez8xC4ugXA481C+ntJDIsSYTBpc+P1MaWqUPjgnjl6HPVZo5ZYsY7jh0YS?=
+ =?us-ascii?Q?TLIBxzwXBPRdOQknwcZFVrHjaiwwRlogxYQHehEMsHjNX0o3kXvcw3aDWfPM?=
+ =?us-ascii?Q?83gCMdr0dCYIhnWafJhkWjEimoC3U8MyLhH01bzYG3K9v/p0YjJDgVUuH/XC?=
+ =?us-ascii?Q?tDXaVtU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:58.252.5.68;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.oppo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(36860700004)(82310400017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2024 14:43:28.5252
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b47cd1e-2f75-4d1b-1a1b-08dc6f6d397a
+X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f1905eb1-c353-41c5-9516-62b4a54b5ee6;Ip=[58.252.5.68];Helo=[mail.oppo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SG2PEPF000B66CE.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR02MB7173
 
-From: Alexander Stein <alexander.stein@mailbox.org>
+On Wed, 08. May 21:41, Gao Xiang wrote:
+>
+> +Cc Michal,
+>
+> On 2024/5/8 20:58, hailong.liu@oppo.com wrote:
+> > From: "Hailong.Liu" <hailong.liu@oppo.com>
+> >
+> > Commit a421ef303008 ("mm: allow !GFP_KERNEL allocations for kvmalloc")
+> > includes support for __GFP_NOFAIL, but it presents a conflict with
+> > commit dd544141b9eb ("vmalloc: back off when the current task is
+> > OOM-killed"). A possible scenario is as belows:
+> >
+> > process-a
+> > kvcalloc(n, m, GFP_KERNEL | __GFP_NOFAIL)
+> >      __vmalloc_node_range()
+> > 	__vmalloc_area_node()
+> > 	    vm_area_alloc_pages()
+> >              --> oom-killer send SIGKILL to process-a
+> >              if (fatal_signal_pending(current)) break;
+> > --> return NULL;
+> >
+> > to fix this, do not check fatal_signal_pending() in vm_area_alloc_pages()
+> > if __GFP_NOFAIL set.
+> >
+> > Reported-by: Oven <liyangouwen1@oppo.com>
+> > Signed-off-by: Hailong.Liu <hailong.liu@oppo.com>
+>
+> Why taging this as RFC here?  It seems a corner-case fix of
+> commit a421ef303008
+>
+> Thanks,
+> Gao Xiang
+>
 
-Convert Amlogic AXG Audio Clock Controller binding to yaml.
+Hi Gao Xiang:
 
-Signed-off-by: Alexander Stein <alexander.stein@mailbox.org>
-Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
----
- .../bindings/clock/amlogic,axg-audio-clkc.txt |  59 ---------
- .../clock/amlogic,axg-audio-clkc.yaml         | 115 ++++++++++++++++++
- 2 files changed, 115 insertions(+), 59 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
- create mode 100644 Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
+RFC here to wait for a better way to handle this case :).
+IMO, if vmalloc support __GFP_NOFAIL it should not return
+null even system is deadlock on memory.
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
-deleted file mode 100644
-index 3a8948c04bc9..000000000000
---- a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.txt
-+++ /dev/null
-@@ -1,59 +0,0 @@
--* Amlogic AXG Audio Clock Controllers
--
--The Amlogic AXG audio clock controller generates and supplies clock to the
--other elements of the audio subsystem, such as fifos, i2s, spdif and pdm
--devices.
--
--Required Properties:
--
--- compatible	: should be "amlogic,axg-audio-clkc" for the A113X and A113D,
--		  "amlogic,g12a-audio-clkc" for G12A,
--		  "amlogic,sm1-audio-clkc" for S905X3.
--- reg		: physical base address of the clock controller and length of
--		  memory mapped region.
--- clocks	: a list of phandle + clock-specifier pairs for the clocks listed
--		  in clock-names.
--- clock-names	: must contain the following:
--		  * "pclk" - Main peripheral bus clock
--		  may contain the following:
--		  * "mst_in[0-7]" - 8 input plls to generate clock signals
--		  * "slv_sclk[0-9]" - 10 slave bit clocks provided by external
--				      components.
--		  * "slv_lrclk[0-9]" - 10 slave sample clocks provided by external
--				       components.
--- resets	: phandle of the internal reset line
--- #clock-cells	: should be 1.
--- #reset-cells  : should be 1 on the g12a (and following) soc family
--
--Each clock is assigned an identifier and client nodes can use this identifier
--to specify the clock which they consume. All available clocks are defined as
--preprocessor macros in the dt-bindings/clock/axg-audio-clkc.h header and can be
--used in device tree sources.
--
--Example:
--
--clkc_audio: clock-controller@0 {
--	compatible = "amlogic,axg-audio-clkc";
--	reg = <0x0 0x0 0x0 0xb4>;
--	#clock-cells = <1>;
--
--	clocks = <&clkc CLKID_AUDIO>,
--		 <&clkc CLKID_MPLL0>,
--		 <&clkc CLKID_MPLL1>,
--		 <&clkc CLKID_MPLL2>,
--		 <&clkc CLKID_MPLL3>,
--		 <&clkc CLKID_HIFI_PLL>,
--		 <&clkc CLKID_FCLK_DIV3>,
--		 <&clkc CLKID_FCLK_DIV4>,
--		 <&clkc CLKID_GP0_PLL>;
--	clock-names = "pclk",
--		      "mst_in0",
--		      "mst_in1",
--		      "mst_in2",
--		      "mst_in3",
--		      "mst_in4",
--		      "mst_in5",
--		      "mst_in6",
--		      "mst_in7";
--	resets = <&reset RESET_AUDIO>;
--};
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
-new file mode 100644
-index 000000000000..b683896e950a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
-@@ -0,0 +1,115 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/amlogic,axg-audio-clkc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amlogic AXG Audio Clock Controller
-+
-+maintainers:
-+  - Neil Armstrong <neil.armstrong@linaro.org>
-+  - Jerome Brunet <jbrunet@baylibre.com>
-+
-+description:
-+  The Amlogic AXG audio clock controller generates and supplies clock to the
-+  other elements of the audio subsystem, such as fifos, i2s, spdif and pdm
-+  devices.
-+
-+properties:
-+  compatible:
-+    enum:
-+      - amlogic,axg-audio-clkc
-+      - amlogic,g12a-audio-clkc
-+      - amlogic,sm1-audio-clkc
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 28
-+    items:
-+      - description: main peripheral bus clock
-+    additionalItems:
-+      oneOf:
-+        - description: mst_in[0-7] - input plls to generate clock signals
-+        - description: slv_sclk[0-9] - slave bit clocks provided by external components
-+        - description: slv_lrclk[0-9]- slave sample clocks provided by external components
-+
-+  clock-names:
-+    maxItems: 28
-+    items:
-+      - const: pclk
-+    additionalItems:
-+      oneOf:
-+        - pattern: "^mst_in[0-7]$"
-+        - pattern: "^slv_sclk[0-9]$"
-+        - pattern: "^slv_lrclk[0-9]$"
-+
-+  resets:
-+    description: internal reset line
-+
-+required:
-+  - compatible
-+  - '#clock-cells'
-+  - reg
-+  - clocks
-+  - clock-names
-+  - resets
-+
-+allOf:
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - amlogic,g12a-audio-clkc
-+              - amlogic,sm1-audio-clkc
-+    then:
-+      required:
-+        - '#reset-cells'
-+    else:
-+      properties:
-+        '#reset-cells': false
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/axg-clkc.h>
-+    #include <dt-bindings/reset/amlogic,meson-axg-reset.h>
-+    apb {
-+        #address-cells = <2>;
-+        #size-cells = <2>;
-+
-+        clkc_audio: clock-controller@0 {
-+            compatible = "amlogic,axg-audio-clkc";
-+            reg = <0x0 0x0 0x0 0xb4>;
-+            #clock-cells = <1>;
-+
-+            clocks = <&clkc CLKID_AUDIO>,
-+                     <&clkc CLKID_MPLL0>,
-+                     <&clkc CLKID_MPLL1>,
-+                     <&clkc CLKID_MPLL2>,
-+                     <&clkc CLKID_MPLL3>,
-+                     <&clkc CLKID_HIFI_PLL>,
-+                     <&clkc CLKID_FCLK_DIV3>,
-+                     <&clkc CLKID_FCLK_DIV4>,
-+                     <&clkc CLKID_GP0_PLL>;
-+            clock-names = "pclk",
-+                          "mst_in0",
-+                          "mst_in1",
-+                          "mst_in2",
-+                          "mst_in3",
-+                          "mst_in4",
-+                          "mst_in5",
-+                          "mst_in6",
-+                          "mst_in7";
-+            resets = <&reset RESET_AUDIO>;
-+        };
-+    };
--- 
-2.34.1
+--
 
+Best Regards,
+Hailong.
