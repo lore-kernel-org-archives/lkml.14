@@ -1,222 +1,112 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A5F56455;
-	Wed,  8 May 2024 12:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD226F068;
+	Wed,  8 May 2024 12:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715172235; cv=none; b=tA+FqRtr89TnO41bmVAeCxQrLq+7unbI4Sn1F82RnujnYsR78nygJlSl7QQ8uftINGjooneWxZvJCw1sSyMrr0kivIpTtSPbRsbLWQPQ9D3wsz0OsJp0KRYH6/OJlAHmNcmp9YKKvDNhNSStbrV4ZofZp8yiPyHXYkCQZiZAKXs=
+	t=1715172245; cv=none; b=VuZpWnPdkQ/wV5EiFRO2KunPaFpI2zL9rqoxIBUHV0wlh+h9GTfuBcGlpZNfveNeHyiYulWj+fzFiPqLrzaKQjILa4MjS8+K/9JSwbhanV8rAjnDhLfLX4GxhuzHMefFlK6ge+gOxyd+O1nBZDEJXI73Wd+TVjK+tEfoK7hdlTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715172235; c=relaxed/simple;
-	bh=PhV2Emi/wGXycD+0LHkChmZx0uNY1pxA/6vcGae8lIs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fNfQCIDUxwrPOlMphQmOf7SsDptKsfppPy+SKLUlbQPvg81Z2u7m2dXahv8V/58pJ2O/ZLyihr/p2KSf4Yp1fI8upsVyzu1/rsSX65Fg/kSfYFHfC3GIn8hA9uz13aN39w+ydobqqCZJtzjSQFKJ19dW7Qa6KAoDEFH+M6aVnDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 448ChZzlD467590, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 448ChZzlD467590
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 8 May 2024 20:43:35 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 8 May 2024 20:43:35 +0800
-Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 8 May
- 2024 20:43:35 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <pkshih@realtek.com>, <larry.chiu@realtek.com>,
-        Justin Lai <justinlai0215@realtek.com>
-Subject: [PATCH net-next v18 07/13] rtase: Implement a function to receive packets
-Date: Wed, 8 May 2024 20:39:39 +0800
-Message-ID: <20240508123945.201524-8-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240508123945.201524-1-justinlai0215@realtek.com>
-References: <20240508123945.201524-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1715172245; c=relaxed/simple;
+	bh=D/MdFRhwmEy4kwhpm2dB7s4ocO/FTSaGT0pU8iZ/zdg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WeRkjDm1PcSH/FRUcUMhjopwOKD31r1wKBBsMaABv2QX+L4iRDJAf5q/LB90MEtBmo6TjW9frleFg05eUGf40pO5NcvimEqCrIZdkodfeGbo73c6TMAGaITthCZWeY/KUy9R6zXTq0hyRkt74sWpw7/3/2Ulla3NsQY7Yb/gb5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sMqHaLHI; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sMqHaLHI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB38FC113CC;
+	Wed,  8 May 2024 12:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715172245;
+	bh=D/MdFRhwmEy4kwhpm2dB7s4ocO/FTSaGT0pU8iZ/zdg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sMqHaLHIOUTJC21oahLKMiVt2A2dBKLs/VMXaV9KeWKBqfivSLtUqXe3iQIvUxHky
+	 Ziku1RlKVNgkAWcT3SqlLfO0wtrFhKY2/SHDmu22Fs2rtGXxVCtNs5zQQKCohv0Y3N
+	 n9C1d8OuYDmEkYzc+AHi3ZPsyPMsfsqrnd/5CYg+FFHoS0Ouw5V/es1kebzvew+du0
+	 8sE6wqM0gKmEbBv+6jqV7WqVbB6r07bHkPlNimO5jLElCVdPgBEkfLo6I6wFY/TNuE
+	 eU2P3wrqNzyL3CExm422j1H2JJXfUtQn5bbKZnCsbJ7x5npm41jw0DxJp0MgXAgJk/
+	 MjfQcWDZ0E0oQ==
+Date: Wed, 8 May 2024 13:44:00 +0100
+From: Simon Horman <horms@kernel.org>
+To: Martin =?utf-8?Q?Hundeb=C3=B8ll?= <martin@geanix.com>
+Cc: Chandrasekar Ramakrishnan <rcsekar@samsung.com>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Markus Schneider-Pargmann <msp@baylibre.com>,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] can: m_can: don't enable transceiver when probing
+Message-ID: <20240508124400.GE1736038@kernel.org>
+References: <20240501124204.3545056-1-martin@geanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
+In-Reply-To: <20240501124204.3545056-1-martin@geanix.com>
 
-Implement rx_handler to read the information of the rx descriptor,
-thereby checking the packet accordingly and storing the packet
-in the socket buffer to complete the reception of the packet.
+On Wed, May 01, 2024 at 02:42:03PM +0200, Martin Hundebøll wrote:
+> The m_can driver sets and clears the CCCR.INIT bit during probe (both
+> when testing the NON-ISO bit, and when configuring the chip). After
+> clearing the CCCR.INIT bit, the transceiver enters normal mode, where it
+> affects the CAN bus (i.e. it ACKs frames). This can cause troubles when
+> the m_can node is only used for monitoring the bus, as one cannot setup
+> listen-only mode before the device is probed.
+> 
+> Rework the probe flow, so that the CCCR.INIT bit is only cleared when
+> upping the device. First, the tcan4x5x driver is changed to stay in
+> standby mode during/after probe. This in turn requires changes when
+> setting bits in the CCCR register, as its CSR and CSA bits are always
+> high in standby mode.
+> 
+> Signed-off-by: Martin Hundebøll <martin@geanix.com>
+> ---
+> 
+> Changes since v1:
+>  * Implement Markus review comments:
+>    - Rename m_can_cccr_wait_bits() to m_can_cccr_update_bits()
+>    - Explicitly set CCCR_INIT bit in m_can_dev_setup()
+>    - Revert to 5 timeouts/tries to 10
+>    - Use m_can_config_{en|dis}able() in m_can_niso_supported()
+>    - Revert move of call to m_can_enable_all_interrupts()
+>    - Return -EBUSY on failure to enter normal mode
+>    - Use tcan4x5x_clear_interrupts() in tcan4x5x_can_probe()
+> 
+>  drivers/net/can/m_can/m_can.c         | 131 +++++++++++++++-----------
+>  drivers/net/can/m_can/tcan4x5x-core.c |  13 ++-
+>  2 files changed, 85 insertions(+), 59 deletions(-)
+> 
+> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- .../net/ethernet/realtek/rtase/rtase_main.c   | 146 ++++++++++++++++++
- 1 file changed, 146 insertions(+)
+...
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index a30dcdbdc3cc..4aac9cc134d3 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -452,6 +452,152 @@ static void rtase_rx_ring_clear(struct rtase_ring *ring)
- 	}
- }
- 
-+static int rtase_fragmented_frame(u32 status)
-+{
-+	return (status & (RTASE_RX_FIRST_FRAG | RTASE_RX_LAST_FRAG)) !=
-+		(RTASE_RX_FIRST_FRAG | RTASE_RX_LAST_FRAG);
-+}
-+
-+static void rtase_rx_csum(const struct rtase_private *tp, struct sk_buff *skb,
-+			  const union rtase_rx_desc *desc)
-+{
-+	u32 opts2 = le32_to_cpu(desc->desc_status.opts2);
-+
-+	/* rx csum offload */
-+	if (((opts2 & RTASE_RX_V4F) && !(opts2 & RTASE_RX_IPF)) ||
-+	    (opts2 & RTASE_RX_V6F)) {
-+		if (((opts2 & RTASE_RX_TCPT) && !(opts2 & RTASE_RX_TCPF)) ||
-+		    ((opts2 & RTASE_RX_UDPT) && !(opts2 & RTASE_RX_UDPF))) {
-+			skb->ip_summed = CHECKSUM_UNNECESSARY;
-+		} else {
-+			skb->ip_summed = CHECKSUM_NONE;
-+		}
-+	} else {
-+		skb->ip_summed = CHECKSUM_NONE;
-+	}
-+}
-+
-+static void rtase_rx_vlan_skb(union rtase_rx_desc *desc, struct sk_buff *skb)
-+{
-+	u32 opts2 = le32_to_cpu(desc->desc_status.opts2);
-+
-+	if (!(opts2 & RTASE_RX_VLAN_TAG))
-+		return;
-+
-+	__vlan_hwaccel_put_tag(skb, htons(ETH_P_8021Q),
-+			       swab16(opts2 & RTASE_VLAN_TAG_MASK));
-+}
-+
-+static void rtase_rx_skb(const struct rtase_ring *ring, struct sk_buff *skb)
-+{
-+	struct rtase_int_vector *ivec = ring->ivec;
-+
-+	napi_gro_receive(&ivec->napi, skb);
-+}
-+
-+static int rx_handler(struct rtase_ring *ring, int budget)
-+{
-+	const struct rtase_private *tp = ring->ivec->tp;
-+	union rtase_rx_desc *desc_base = ring->desc;
-+	u32 pkt_size, cur_rx, delta, entry, status;
-+	struct net_device *dev = tp->dev;
-+	union rtase_rx_desc *desc;
-+	struct sk_buff *skb;
-+	int workdone = 0;
-+
-+	cur_rx = ring->cur_idx;
-+	entry = cur_rx % RTASE_NUM_DESC;
-+	desc = &desc_base[entry];
-+
-+	do {
-+		/* make sure discriptor has been updated */
-+		rmb();
-+		status = le32_to_cpu(desc->desc_status.opts1);
-+
-+		if (status & RTASE_DESC_OWN)
-+			break;
-+
-+		if (unlikely(status & RTASE_RX_RES)) {
-+			if (net_ratelimit())
-+				netdev_warn(dev, "Rx ERROR. status = %08x\n",
-+					    status);
-+
-+			dev->stats.rx_errors++;
-+
-+			if (status & (RTASE_RX_RWT | RTASE_RX_RUNT))
-+				dev->stats.rx_length_errors++;
-+
-+			if (status & RTASE_RX_CRC)
-+				dev->stats.rx_crc_errors++;
-+
-+			if (dev->features & NETIF_F_RXALL)
-+				goto process_pkt;
-+
-+			rtase_mark_to_asic(desc, tp->rx_buf_sz);
-+			goto skip_process_pkt;
-+		}
-+
-+process_pkt:
-+		pkt_size = status & RTASE_RX_PKT_SIZE_MASK;
-+		if (likely(!(dev->features & NETIF_F_RXFCS)))
-+			pkt_size -= ETH_FCS_LEN;
-+
-+		/* the driver does not support incoming fragmented
-+		 * frames. they are seen as a symptom of over-mtu
-+		 * sized frames
-+		 */
-+		if (unlikely(rtase_fragmented_frame(status))) {
-+			dev->stats.rx_dropped++;
-+			dev->stats.rx_length_errors++;
-+			rtase_mark_to_asic(desc, tp->rx_buf_sz);
-+			continue;
-+		}
-+
-+		skb = ring->skbuff[entry];
-+		dma_sync_single_for_cpu(&tp->pdev->dev,
-+					ring->mis.data_phy_addr[entry],
-+					tp->rx_buf_sz, DMA_FROM_DEVICE);
-+
-+		ring->skbuff[entry] = NULL;
-+
-+		if (dev->features & NETIF_F_RXCSUM)
-+			rtase_rx_csum(tp, skb, desc);
-+
-+		skb->dev = dev;
-+		skb_put(skb, pkt_size);
-+		skb_mark_for_recycle(skb);
-+		skb->protocol = eth_type_trans(skb, dev);
-+
-+		if (skb->pkt_type == PACKET_MULTICAST)
-+			dev->stats.multicast++;
-+
-+		rtase_rx_vlan_skb(desc, skb);
-+		rtase_rx_skb(ring, skb);
-+
-+		dev_sw_netstats_rx_add(dev, pkt_size);
-+
-+skip_process_pkt:
-+		workdone++;
-+		cur_rx++;
-+		entry = cur_rx % RTASE_NUM_DESC;
-+		desc = ring->desc + sizeof(union rtase_rx_desc) * entry;
-+		prefetch(desc);
-+	} while (workdone != budget);
-+
-+	ring->cur_idx = cur_rx;
-+	delta = rtase_rx_ring_fill(ring, ring->dirty_idx, ring->cur_idx, 1);
-+
-+	if (!delta && workdone)
-+		netdev_info(dev, "no Rx buffer allocated\n");
-+
-+	ring->dirty_idx += delta;
-+
-+	if ((ring->dirty_idx + RTASE_NUM_DESC) == ring->cur_idx)
-+		netdev_emerg(dev, "Rx buffers exhausted\n");
-+
-+	return workdone;
-+}
-+
- static void rtase_rx_desc_init(struct rtase_private *tp, u16 idx)
- {
- 	struct rtase_ring *ring = &tp->rx_ring[idx];
--- 
-2.34.1
+> @@ -1694,8 +1708,12 @@ static int m_can_dev_setup(struct m_can_classdev *cdev)
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (cdev->ops->init)
+> -		cdev->ops->init(cdev);
+> +	/* Forcing standby mode should be redunant, as the chip should be in
 
+Hi Martin,
+
+A minor nit, to consider fixing if you send a v3 for some other reason:
+redunant -> redundant.
+
+> +	 * standby after a reset. Write the INIT bit anyways, should the chip
+> +	 * be configured by previous stage.
+> +	 */
+> +	if (!m_can_cccr_update_bits(cdev, CCCR_INIT, CCCR_INIT))
+> +		return -EBUSY;
+>  
+>  	return 0;
+>  }
+
+...
