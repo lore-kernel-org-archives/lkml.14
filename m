@@ -1,36 +1,35 @@
 Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB2E8625F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC0686270;
 	Wed,  8 May 2024 14:43:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715179393; cv=none; b=Vx/gJGvgCXSxUllV9geCWfb7It1wcRO9iTal28IoDgzOmkY5KPyU9g3J3CZaXYdQqnvGTbDpuB0oKMcz/vc43WwBCx6uHaJMcwufcJ//YsXD/hyf3pVDLZbPMjEYJslGHnFTNcS/KS/jFrp7A/c0xNwdVk8tChgq8yROYD1qcUU=
+	t=1715179393; cv=none; b=cCf903GUHGnc8mJsfPEpI935KfHqmpxHC43m8voYVGIZQobkbcCAe9cF3cw18X0NWV/yEDMDavgzT0LReQHr3HBS0QmAsQTUMjImV2qCvUVWvNWG5pfzu7Fht6Dj0O/Gfrr+c7NmWFU+eaIjmmMGnIwY8ZKrrEsOwMcptcToWgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715179393; c=relaxed/simple;
-	bh=hRQM6pa4uOlYJlXbLpb90EuOE7VS+21UzKU3uMNSqcc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f/9OqIQowo0jghQYu5ji14qhWr7Xe4Ybvci3TKBufsOiArATIlLfUQwhBWUxXHiFbCpJdRP0yNgPnyQWZZbjvYz8VnebT64oIsY0mMzdkVnlgQGOhjSew5xtBNeCgGHHlUZ6u5l62R6L1bNdqKTfpBBHd19c3zD8lcYH3KuZVTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=XNGGDpS0; arc=none smtp.client-ip=193.104.135.124
+	bh=de6mABlly2eNPPMWPujcomvFv6/tsClXC1FbKAjjl5Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dsjxlwzjhwNugEzwCEs2w7cQtnpzf2ylBUVNtJ8/gfsEdhYdNge7e90RWLGS8eeUlfKBjDFIL1t5Auzd+LX4rjWR7xSYRSNZ2wwGuJ911LoDf/p4cipJt2g6ofKJiBcoFpc300iD3evYDcz6N1BxTZm2/vLOj86RNe+xo4gqKAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=BXzV0qZj; arc=none smtp.client-ip=193.104.135.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="XNGGDpS0"
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="BXzV0qZj"
 Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id EBFE6600A2;
-	Wed,  8 May 2024 14:34:25 +0000 (UTC)
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 02F34600A7;
+	Wed,  8 May 2024 14:34:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1715178866;
-	bh=hRQM6pa4uOlYJlXbLpb90EuOE7VS+21UzKU3uMNSqcc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XNGGDpS0ikIorNWcFCAqFXZFSoEZobaoZZSuxKak2Ye1Lj3zeTwprjOGPhG6NumDJ
-	 ieUduAKpyFrteW8F7aWi/Clx84pVPFoN75sP1xSEiIUFjmmuTxCmD7PWyXe6bry8aQ
-	 kh5eobe2q0x4a/RIY6pCVsjNWGW4nPoYWg49547603FleV+AldkaZ+uRdEChz7xRfw
-	 Dm7pMGKYV/tnrfzTPRxnbQifaTifRYZ9EHW1Bf3RJ3NeOlHxPsyzHMbKUM06xO+yjB
-	 wzVQ7buMdNKkkbPGG7p4wJ2a9OMaynN0xlcgVHEhMkyXSdQ1g/f6ju7xQFLZzzNhMX
-	 thvhYwE9hJuoA==
+	s=202008; t=1715178867;
+	bh=de6mABlly2eNPPMWPujcomvFv6/tsClXC1FbKAjjl5Q=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BXzV0qZj6tkNEHDeBAFX/giRSXuh45KplIjcKJC0gkTBaEpc2sXKBGxxnQZ5bOjBD
+	 nYtFa+FKtLBsz1KWD/n72PbXJVqgjbRAWzuMQZygUTCFFiTyu/ZOGnspyjyoErbV8Z
+	 5R1xUywDHps7WCCshkb+ML/+6wMhNbW2HRhdaDI2Dn3Fi56qnDFdS06yoOxWv2Lefu
+	 7AzCQRr+20ufISuKu90LJfNTn/qkERENqQg42fUjojYpJDig5i6X1zXVdHJ2JAVoz9
+	 +XQsQETf/fyFAmHS9WHrOIMKo2fEk1K9Kz89fFGc6/jUx6R3BZVzmMcYkm4NFg3LUB
+	 2aQveYZ9pHdKQ==
 Received: by x201s (Postfix, from userid 1000)
-	id 8F1AC20916D; Wed, 08 May 2024 14:34:07 +0000 (UTC)
+	id E8119203455; Wed, 08 May 2024 14:34:04 +0000 (UTC)
 From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
 To: netdev@vger.kernel.org
 Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
@@ -41,12 +40,10 @@ Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	Paolo Abeni <pabeni@redhat.com>,
 	Manish Chopra <manishc@marvell.com>,
 	Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Subject: [PATCH net-next v2 14/14] net: qede: use extack in qede_parse_actions()
-Date: Wed,  8 May 2024 14:34:02 +0000
-Message-ID: <20240508143404.95901-15-ast@fiberby.net>
+Subject: [PATCH net-next v2 00/14] net: qede: convert filter code to use extack
+Date: Wed,  8 May 2024 14:33:48 +0000
+Message-ID: <20240508143404.95901-1-ast@fiberby.net>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240508143404.95901-1-ast@fiberby.net>
-References: <20240508143404.95901-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,40 +53,53 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Convert DP_NOTICE/DP_INFO to NL_SET_ERR_MSG_MOD.
+This series converts the filter code in the qede driver
+to use NL_SET_ERR_MSG_*(extack, ...) for error handling.
 
-Keep edev around for use with QEDE_RSS_COUNT().
+Patch 1-12 converts qede_parse_flow_attr() to use extack,
+along with all it's static helper functions.
 
-Only compile tested.
+qede_parse_flow_attr() is used in two places:
+- qede_add_tc_flower_fltr()
+- qede_flow_spec_to_rule()
 
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
+In the latter call site extack is faked in the same way as
+is done in mlxsw (patch 12).
+
+While the conversion is going on, some error messages are silenced
+in between patch 1-12. If wanted could squash patch 1-12 in a v3, but
+I felt that it would be easier to review as 12 more trivial patches.
+
+Patch 13 and 14, finishes up by converting qede_parse_actions(),
+and ensures that extack is propagated to it, in both call contexts.
+
 ---
- drivers/net/ethernet/qlogic/qede/qede_filter.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Changelog:
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-index e616855d8891..9c72febc6a42 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-@@ -1671,7 +1671,7 @@ static int qede_parse_actions(struct qede_dev *edev,
- 	int i;
- 
- 	if (!flow_action_has_entries(flow_action)) {
--		DP_NOTICE(edev, "No actions received\n");
-+		NL_SET_ERR_MSG_MOD(extack, "No actions received");
- 		return -EINVAL;
- 	}
- 
-@@ -1687,7 +1687,8 @@ static int qede_parse_actions(struct qede_dev *edev,
- 				break;
- 
- 			if (act->queue.index >= QEDE_RSS_COUNT(edev)) {
--				DP_INFO(edev, "Queue out-of-bounds\n");
-+				NL_SET_ERR_MSG_MOD(extack,
-+						   "Queue out-of-bounds");
- 				return -EINVAL;
- 			}
- 			break;
+v2:
+- Reworked to always add extack as last argument. (Requested by Przemek)
+
+v1: https://lore.kernel.org/netdev/20240507104421.1628139-1-ast@fiberby.net/
+
+Asbjørn Sloth Tønnesen (14):
+  net: qede: use extack in qede_flow_parse_ports()
+  net: qede: use extack in qede_set_v6_tuple_to_profile()
+  net: qede: use extack in qede_set_v4_tuple_to_profile()
+  net: qede: use extack in qede_flow_parse_v6_common()
+  net: qede: use extack in qede_flow_parse_v4_common()
+  net: qede: use extack in qede_flow_parse_tcp_v6()
+  net: qede: use extack in qede_flow_parse_tcp_v4()
+  net: qede: use extack in qede_flow_parse_udp_v6()
+  net: qede: use extack in qede_flow_parse_udp_v4()
+  net: qede: add extack in qede_add_tc_flower_fltr()
+  net: qede: use extack in qede_parse_flow_attr()
+  net: qede: use faked extack in qede_flow_spec_to_rule()
+  net: qede: propagate extack through qede_flow_spec_validate()
+  net: qede: use extack in qede_parse_actions()
+
+ .../net/ethernet/qlogic/qede/qede_filter.c    | 114 ++++++++++--------
+ 1 file changed, 63 insertions(+), 51 deletions(-)
+
 -- 
 2.43.0
 
