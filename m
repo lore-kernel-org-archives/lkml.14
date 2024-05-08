@@ -1,267 +1,174 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA3D2745E
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 07:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BC41F937;
+	Wed,  8 May 2024 07:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715152613; cv=none; b=ngm43rKBhSTmNamUT79SYsXi/aBt9Lvyp9xokr2arX37t+rm/13YnKnU1e1XQA6VSs5LRZGVzu5U7leZtcFalxX8P5IL9x48+P9F5jNbYbrIeDVaKIRpxB3y16s3nJArvTXgB4wBgBn/PKYwhHRAl7hVxDGv0hB2bL4vyeQwaSE=
+	t=1715152742; cv=none; b=XHHGr4YGpBW5+7wHxZ6xQKAxfg2jQLsLKtm547wpuFE6vYzjoIHQ8f01Cs+ZcXwYIuxdYZA2WodeG2txvYWQ6j9NzPj5Rpmskl6MUQiv8MJIXUPHOR8v2YQfNS7bMeFj0ROmWFNThF/4FX6797StXxeWOhQnAcfK1gcT4PkMTVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715152613; c=relaxed/simple;
-	bh=f0m34QhDPAosJyYZmjdMVXrVYo1qtPAsG7RWUe2/wXY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PEsnbgqLBqLYLaifTC0+hXHi1DAVLmAvOj/p4sSHQTUExocM/Ne7vuEkuqyi7er9rsxBv5lTeMt9p6ZrykNDEp/TbBLvLv+HJQwtN7aUCYayHMo55uH0oaOz+QBVYb16BsQ+cClsxtO19ItRktDjSLAKW2anJePJNrOg6ncOiKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch; spf=none smtp.mailfrom=ffwll.ch; dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b=MroJbJ8q; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ffwll.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="MroJbJ8q"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a59cac06ec3so80474066b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 00:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google; t=1715152610; x=1715757410; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CeBqT9Zed0z1jUGrfvGp1XN4J6QgdBnyIkuy1n0h3cY=;
-        b=MroJbJ8qrt1lWtQl9CkIOA2S2/0/Rhz+N8DSshEjcDJkwLiOBB10BYEH8HBRVgEogf
-         aproeU1tIF8tqQahdssZIDdOG5v17aE1qXU1Efu55FGbbP739+/7KY5q49fLqgFTZdy9
-         E3mqH2mJI76tWpPg8ek0CnV201zdpFmeUQeyQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715152610; x=1715757410;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CeBqT9Zed0z1jUGrfvGp1XN4J6QgdBnyIkuy1n0h3cY=;
-        b=BXDosC6wNgUCf+gyr+0oV/tui1DjETqmDXpw0+839N7zGSZ6by9enjEZKMP3L0HYrU
-         YPtOYb+vQt79wEzCzI5UJbBPpwQZCim+JpuZquWUTTR8MHTSh0yFexo4X7eOg4nqm1Ld
-         HsM+wP1ATmI9uuSHywGlLfMKuw9NLCxtx7tEMFXTWk+LuTzzFuXJAt73uHXaie/weMQ6
-         EU7nJ/QAlSIuP2l/slFqOKoIXLAHWpheVPjCwZvVqQTcC0AMlrFGNbLf2GsBsx3GgB0f
-         H6dSj0jvLaq0DxXcEdGqmMZRQ++FsTTIXT0GP5ZiBmKjbVqjtCl4RygLi7KI+zZ1BSod
-         DkZw==
-X-Forwarded-Encrypted: i=1; AJvYcCW8AZhBFAvs8dqfnwzOcpFyaOu3VGt5SXVEmSVtVJjJW9bZwMHoRzFhidDcfxI+4KNE2D1bc0tyUWANaOk7q9Nekq6MytabonaaP6ci
-X-Gm-Message-State: AOJu0YyKKK3GNPjsdg5IIqv8qk9yycyb2LmmkSA+F5KAuYXDd/BodPWG
-	rtjkDnzwx5HKSlZFElGtV8E9tnCuMo8lu1E2Q0xz2yBI1ylo4nPFBlZv7HHVKCs=
-X-Google-Smtp-Source: AGHT+IHGhXCUeVIYLmH7Uo4M9BmI6iPWf/Ls31PQQRWTBdNBS6P3e6HNMCsyKMnZNizlrV6npyfCDA==
-X-Received: by 2002:a05:6402:378a:b0:572:d841:1189 with SMTP id 4fb4d7f45d1cf-5731da624efmr899529a12.3.1715152610093;
-        Wed, 08 May 2024 00:16:50 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id n18-20020a05640205d200b00572f0438b02sm4124571edx.6.2024.05.08.00.16.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 00:16:49 -0700 (PDT)
-Date: Wed, 8 May 2024 09:16:46 +0200
-From: Daniel Vetter <daniel@ffwll.ch>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Pavel Begunkov <asml.silence@gmail.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Ahern <dsahern@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Amritha Nambiar <amritha.nambiar@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	Kaiyuan Zhang <kaiyuanz@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Florian Westphal <fw@strlen.de>,
-	Yunsheng Lin <linyunsheng@huawei.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>,
-	Arseniy Krasnov <avkrasnov@salutedevices.com>,
-	Aleksander Lobakin <aleksander.lobakin@intel.com>,
-	Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Richard Gobert <richardbgobert@gmail.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Breno Leitao <leitao@debian.org>, David Wei <dw@davidwei.uk>,
-	Shailend Chand <shailend@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>
-Subject: Re: [RFC PATCH net-next v8 02/14] net: page_pool: create hooks for
- custom page providers
-Message-ID: <Zjsm3vO6rIY_sw5A@phenom.ffwll.local>
-Mail-Followup-To: Jason Gunthorpe <jgg@ziepe.ca>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Mina Almasry <almasrymina@google.com>,
-	Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Richard Henderson <richard.henderson@linaro.org>,
-	Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-	Matt Turner <mattst88@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	David Ahern <dsahern@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Sumit Semwal <sumit.semwal@linaro.org>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	Amritha Nambiar <amritha.nambiar@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	Kaiyuan Zhang <kaiyuanz@google.com>,
-	Christian Brauner <brauner@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Florian Westphal <fw@strlen.de>,
-	Yunsheng Lin <linyunsheng@huawei.com>,
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>,
-	Arseniy Krasnov <avkrasnov@salutedevices.com>,
-	Aleksander Lobakin <aleksander.lobakin@intel.com>,
-	Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Richard Gobert <richardbgobert@gmail.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Abel Wu <wuyun.abel@bytedance.com>,
-	Breno Leitao <leitao@debian.org>, David Wei <dw@davidwei.uk>,
-	Shailend Chand <shailend@google.com>,
-	Harshitha Ramamurthy <hramamurthy@google.com>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Jeroen de Borst <jeroendb@google.com>,
-	Praveen Kaligineedi <pkaligineedi@google.com>
-References: <ZjjHUh1eINPg1wkn@infradead.org>
- <20b1c2d9-0b37-414c-b348-89684c0c0998@gmail.com>
- <20240507161857.GA4718@ziepe.ca>
- <ZjpVfPqGNfE5N4bl@infradead.org>
- <CAHS8izPH+sRLSiZ7vbrNtRdHrFEf8XQ61XAyHuxRSL9Jjy8YbQ@mail.gmail.com>
- <20240507164838.GG4718@ziepe.ca>
- <0d5da361-cc7b-46e9-a635-9a7a4c208444@gmail.com>
- <20240507175644.GJ4718@ziepe.ca>
- <6a50d01a-b5b9-4699-9d58-94e5f8f81c13@gmail.com>
- <20240507233247.GK4718@ziepe.ca>
+	s=arc-20240116; t=1715152742; c=relaxed/simple;
+	bh=sxJMZNGTsOPQkxugWPcno0X/RFph40IOC7d7sbtLQvI=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=c5FqwdG34tmpBTrCYnQ+LQ94tW3pTFqB5IHltpfW2j7Y+/x5gCGCTMAjHXm0f7NahmHr6s7dXV97JldRaGrjrlPXVsRdOjyXtPq6Q9BAzEH1n73MZV8bqlE0xsDhzuvx5sXqA30brjlQkE/Xyg0Ez1aOjsbQvf3WI3oYEJ3Czzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VZ5yV3JL5ztSnC;
+	Wed,  8 May 2024 15:15:30 +0800 (CST)
+Received: from kwepemm600005.china.huawei.com (unknown [7.193.23.191])
+	by mail.maildlp.com (Postfix) with ESMTPS id 65B8B180065;
+	Wed,  8 May 2024 15:18:56 +0800 (CST)
+Received: from [10.67.121.110] (10.67.121.110) by
+ kwepemm600005.china.huawei.com (7.193.23.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 8 May 2024 15:18:55 +0800
+Subject: Re: [PATCH v6 2/5] hisi_acc_vfio_pci: modify the register location of
+ the XQC address
+To: Alex Williamson <alex.williamson@redhat.com>
+CC: <jgg@nvidia.com>, <shameerali.kolothum.thodi@huawei.com>,
+	<jonathan.cameron@huawei.com>, <kvm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linuxarm@openeuler.org>
+References: <20240425132322.12041-1-liulongfang@huawei.com>
+ <20240425132322.12041-3-liulongfang@huawei.com>
+ <20240503101138.7921401f.alex.williamson@redhat.com>
+ <bc4fd179-265a-cbd8-afcb-358748ece897@huawei.com>
+ <20240507063552.705cb1b6.alex.williamson@redhat.com>
+From: liulongfang <liulongfang@huawei.com>
+Message-ID: <3911fd96-a872-c352-b0ab-0eb2ae982037@huawei.com>
+Date: Wed, 8 May 2024 15:18:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507233247.GK4718@ziepe.ca>
-X-Operating-System: Linux phenom 6.6.15-amd64 
+In-Reply-To: <20240507063552.705cb1b6.alex.williamson@redhat.com>
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemm600005.china.huawei.com (7.193.23.191)
 
-On Tue, May 07, 2024 at 08:32:47PM -0300, Jason Gunthorpe wrote:
-> On Tue, May 07, 2024 at 08:35:37PM +0100, Pavel Begunkov wrote:
-> > On 5/7/24 18:56, Jason Gunthorpe wrote:
-> > > On Tue, May 07, 2024 at 06:25:52PM +0100, Pavel Begunkov wrote:
-> > > > On 5/7/24 17:48, Jason Gunthorpe wrote:
-> > > > > On Tue, May 07, 2024 at 09:42:05AM -0700, Mina Almasry wrote:
-> > > > > 
-> > > > > > 1. Align with devmem TCP to use udmabuf for your io_uring memory. I
-> > > > > > think in the past you said it's a uapi you don't link but in the face
-> > > > > > of this pushback you may want to reconsider.
-> > > > > 
-> > > > > dmabuf does not force a uapi, you can acquire your pages however you
-> > > > > want and wrap them up in a dmabuf. No uapi at all.
-> > > > > 
-> > > > > The point is that dmabuf already provides ops that do basically what
-> > > > > is needed here. We don't need ops calling ops just because dmabuf's
-> > > > > ops are not understsood or not perfect. Fixup dmabuf.
-> > > > 
-> > > > Those ops, for example, are used to efficiently return used buffers
-> > > > back to the kernel, which is uapi, I don't see how dmabuf can be
-> > > > fixed up to cover it.
-> > > 
-> > > Sure, but that doesn't mean you can't use dma buf for the other parts
-> > > of the flow. The per-page lifetime is a different topic than the
-> > > refcounting and access of the entire bulk of memory.
-> > 
-> > Ok, so if we're leaving uapi (and ops) and keep per page/sub-buffer as
-> > is, the rest is resolving uptr -> pages, and passing it to page pool in
-> > a convenient to page pool format (net_iov).
+On 2024/5/7 20:35, Alex Williamson wrote:
+> On Tue, 7 May 2024 16:29:05 +0800
+> liulongfang <liulongfang@huawei.com> wrote:
 > 
-> I'm not going to pretend to know about page pool details, but dmabuf
-> is the way to get the bulk of pages into a pool within the net stack's
-> allocator and keep that bulk properly refcounted while.
+>> On 2024/5/4 0:11, Alex Williamson wrote:
+>>> On Thu, 25 Apr 2024 21:23:19 +0800
+>>> Longfang Liu <liulongfang@huawei.com> wrote:
+>>>   
+>>>> According to the latest hardware register specification. The DMA
+>>>> addresses of EQE and AEQE are not at the front of their respective
+>>>> register groups, but start from the second.
+>>>> So, previously fetching the value starting from the first register
+>>>> would result in an incorrect address.
+>>>>
+>>>> Therefore, the register location from which the address is obtained
+>>>> needs to be modified.  
+>>>
+>>> How does this affect migration?  Has it ever worked?  Does this make  
+>>
+>> The general HiSilicon accelerator task will only use SQE and CQE.
+>> EQE is only used when user running kernel mode task and uses interrupt mode.
+>> AEQE is only used when user running task exceptions occur and software reset
+>> is required.
+>>
+>> The DMA addresses of these four queues are written to the device by the device
+>> driver through the mailbox command during driver initialization.
+>> The DMA addresses of EQE and AEQE are migrated through the device register.
+>>
+>> EQE and AEQE are not used in general task, after the live migration is completed,
+>> this DMA address error will not be found. until we added a new kernel-mode test case
+>> that we discovered that this address was abnormal.
+>>
+>>> the migration data incompatible?
+>>>  
+>>
+>> This address only affects the kernel mode interrupt mode task function and device
+>> exception recovery function.
+>> They do not affect live migration functionality
 > 
-> An object like dmabuf is needed for the general case because there are
-> not going to be per-page references or otherwise available.
-> 
-> What you seem to want is to alter how the actual allocation flow works
-> from that bulk of memory and delay the free. It seems like a different
-> topic to me, and honestly hacking into the allocator free function
-> seems a bit weird..
+> Then why are we migrating them?  Especially EQE, if it is only used by
+> kernel mode drivers then why does the migration protocol have any
+> business transferring the value from the source device?  It seems the
+> fix should be not to apply the value from the source and mark these as
+> reserved fields in the migration data stream.  Thanks,
+>
 
-Also I don't see how it's an argument against dma-buf as the interface for
-all these, because e.g. ttm internally does have a page pool because
-depending upon allocator, that's indeed beneficial. Other drm drivers have
-more buffer-based concepts for opportunistically memory around, usually
-by marking buffers that are just kept as cache as purgeable (which is a
-concept that goes all the way to opengl/vulkan).
+HiSilicon accelerator equipment can perform general services after completing live migration.
+This kind of business is executed through the user mode driver and only needs to use SQE and CQE.
 
-But these are all internals of the dma-buf exporter, the dma-buf api users
-don't ever need to care.
--Sima
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+At the same time, this device can also perform kernel-mode services in the VM through the crypto
+subsystem. This kind of service requires the use of EQE.
+
+Finally, if the device is abnormal, the driver needs to perform a device reset, and AEQE needs to
+be used in this case.
+
+Therefore, a complete device live migration function needs to ensure that device functions are
+normal in all these scenarios.
+Therefore, this data still needs to be migrated.
+
+Thanks,
+Longfang.
+
+> Alex
+> 
+>  
+>>> Fixes: ???
+>>>   
+>>
+>> OK!
+>>
+>> Thanks.
+>> Longfang.
+>>>> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+>>>> ---
+>>>>  drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c | 8 ++++----
+>>>>  drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h | 3 +++
+>>>>  2 files changed, 7 insertions(+), 4 deletions(-)
+>>>>
+>>>> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>>>> index 45351be8e270..0c7e31076ff4 100644
+>>>> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>>>> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>>>> @@ -516,12 +516,12 @@ static int vf_qm_state_save(struct hisi_acc_vf_core_device *hisi_acc_vdev,
+>>>>  		return -EINVAL;
+>>>>  
+>>>>  	/* Every reg is 32 bit, the dma address is 64 bit. */
+>>>> -	vf_data->eqe_dma = vf_data->qm_eqc_dw[1];
+>>>> +	vf_data->eqe_dma = vf_data->qm_eqc_dw[QM_XQC_ADDR_HIGH];
+>>>>  	vf_data->eqe_dma <<= QM_XQC_ADDR_OFFSET;
+>>>> -	vf_data->eqe_dma |= vf_data->qm_eqc_dw[0];
+>>>> -	vf_data->aeqe_dma = vf_data->qm_aeqc_dw[1];
+>>>> +	vf_data->eqe_dma |= vf_data->qm_eqc_dw[QM_XQC_ADDR_LOW];
+>>>> +	vf_data->aeqe_dma = vf_data->qm_aeqc_dw[QM_XQC_ADDR_HIGH];
+>>>>  	vf_data->aeqe_dma <<= QM_XQC_ADDR_OFFSET;
+>>>> -	vf_data->aeqe_dma |= vf_data->qm_aeqc_dw[0];
+>>>> +	vf_data->aeqe_dma |= vf_data->qm_aeqc_dw[QM_XQC_ADDR_LOW];
+>>>>  
+>>>>  	/* Through SQC_BT/CQC_BT to get sqc and cqc address */
+>>>>  	ret = qm_get_sqc(vf_qm, &vf_data->sqc_dma);
+>>>> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+>>>> index 5bab46602fad..f887ab98581c 100644
+>>>> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+>>>> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.h
+>>>> @@ -38,6 +38,9 @@
+>>>>  #define QM_REG_ADDR_OFFSET	0x0004
+>>>>  
+>>>>  #define QM_XQC_ADDR_OFFSET	32U
+>>>> +#define QM_XQC_ADDR_LOW	0x1
+>>>> +#define QM_XQC_ADDR_HIGH	0x2
+>>>> +
+>>>>  #define QM_VF_AEQ_INT_MASK	0x0004
+>>>>  #define QM_VF_EQ_INT_MASK	0x000c
+>>>>  #define QM_IFC_INT_SOURCE_V	0x0020  
+>>>
+>>> .
+>>>   
+>>
+> 
+> .
+> 
