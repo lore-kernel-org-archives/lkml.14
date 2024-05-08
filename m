@@ -1,85 +1,97 @@
-Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEADAAD51
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 01:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B670AAD5B
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 01:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715133497; cv=none; b=Vl0SgZxEktUkghMAaDwXuDgHEEMiBu6TTVAn85EXzj1tJVjteVJCUSoU7akKfEw1vptYwfawYWbPjj1ZEMUEeulO5qISe+CUiFn2ibHu+qZbn1bo1u50ii5x7qBA0ZAU41VN+SpzR3zHcqoY909MBR+t+WqWEKh6mY7VxNVZsn0=
+	t=1715133544; cv=none; b=vEmcwJCy3eggWEQzCdrbx8pJSyTJiLKS6/o+3IxKYRAaJHIbGLELCaln+TL6iXJds4zDeiW4AYXs0gYK4m71BYxj8HWBfqqJAoix4GhvKzwlfjJx9H0s4B4lKMATc/VpIreLeUmpbxzqMZvbdN7OZhjnTUuKim9s+/EE7LhoTIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715133497; c=relaxed/simple;
-	bh=xCS0trzB3FXbPMwRlsMvngLcoOqHigTONUMuxSprm1w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=kMRm3hxRafohubwEjUfnyFBTUywxIFUPxVEgpHLscxuKVQgMEiFEeyEvBIpOnTVb8Ebt0EJCP4Lv9KGU2jqaJ2Li2QeAJYiA58NyNFyR45KS1opObGG+H9moyRqln7aDu/VYMuKQdKYxUlln9teCLL7+Eb/mvpGR7wpHozQWVt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=EcooEocR reason="signature verification failed"; arc=none smtp.client-ip=45.254.50.219
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1715133544; c=relaxed/simple;
+	bh=lwZIs6CzSxO5Tr1++vZd4auE5LaEKUQlwHfL7lc3r4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Wn4HNjtTayeETFBbUQLZ68VCIOWrqTJVZYKfZjUAxUi+336l+/UAEy2Tm7nIzFVzl/nD3HZVIka+dC++A3WwJhvi/gFfrWZTyTxtRPhM1QmUBrYgizBk98SAde/6oNgFZCngqkEpou4pUZtCA9fbqyqra0wGoC5CEb0XXlScjUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XrqdimSk; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="EcooEocR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
-	Message-ID; bh=qAcwmOcJtkUz7iXSL+0YdjC+Tf34zyZyjt2ptu431Wo=; b=E
-	cooEocRPcoof0j9Jgb9r00i0MLjd6lolNFHgxezTSBR7vpl1SOhFb5Bym0rO2WAy
-	MTHn/Eu/ZWSqHToHaoHbd1R9e7kjI0cMAV6iz4ORPNlrHHzr0M5BlVoclETuQgRh
-	BTNzbh7M4OPGSN61IJMavLVsn6ESQckPmAgqeJ96YM=
-Received: from gaoshanliukou$163.com ( [60.27.227.220] ) by
- ajax-webmail-wmsvr-40-120 (Coremail) ; Wed, 8 May 2024 09:42:16 +0800 (CST)
-Date: Wed, 8 May 2024 09:42:16 +0800 (CST)
-From: "yang.zhang" <gaoshanliukou@163.com>
-To: "Alexandre Ghiti" <alex@ghiti.fr>
-Cc: alexghiti@rivosinc.com, paul.walmsley@sifive.com, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, "yang.zhang" <yang.zhang@hexintek.com>
-Subject: Re:Re: [PATCH V2] riscv: set trap vector earlier
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
- Copyright (c) 2002-2024 www.mailtech.cn 163com
-In-Reply-To: <bfb82e87-94c0-4a23-b59d-bb57911224b5@ghiti.fr>
-References: <20240506022239.6817-1-gaoshanliukou@163.com>
- <bfb82e87-94c0-4a23-b59d-bb57911224b5@ghiti.fr>
-X-NTES-SC: AL_Qu2aB/2YvU0o4CacZOkXnEYQh+k3XcK4u/0u2YFVP5E0qiT/wSEYRHJZB3L16u6SFyS3vRWtTxZsxu98Z4lpQI9nkv/NUE9cGOesQFbkm49C
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=GBK
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XrqdimSk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715133540; x=1746669540;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=lwZIs6CzSxO5Tr1++vZd4auE5LaEKUQlwHfL7lc3r4k=;
+  b=XrqdimSk1kCgPE7gUsodWiCCVHiG4oXofYhD6kiyFLTfBjT9LhyfRVUi
+   LkozLqcpCjEzGVasEeRRkUpCSsPjqQi/kB+aSesWFfUQRoDuddVhrADss
+   sOYGGirKzAt3ZtR7N872eh+jbTfxiyLeWaTB734vQx/VbUl/nTRRtlclb
+   yBZHGK6M++h7DtijuGuKgoNoaJcYguGRQreTMEmu6gdnfc0XX2P83l02/
+   82h90H1V8OOsEQ6pkouueXUEoMhiAJF2dFi7GQSySNGrUDoeUIuCEzQKi
+   B/M1ycE8JhA1VkR09X5CSR4kYaPPfzcWBU6TnyDgmPk+HRIynSznGGAEX
+   w==;
+X-CSE-ConnectionGUID: 2/I0yDkqSpSRVS8GQ4ujQA==
+X-CSE-MsgGUID: 8zVzJGSeRTiXu86taohE7Q==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="11127389"
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="11127389"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 18:58:59 -0700
+X-CSE-ConnectionGUID: WLhRMqfLTC23F4cTUpLASg==
+X-CSE-MsgGUID: EJXhSxmWSsOQhFZh1uBWfA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,143,1712646000"; 
+   d="scan'208";a="28818348"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 07 May 2024 18:58:58 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s4Wa8-0002q8-1n;
+	Wed, 08 May 2024 01:58:56 +0000
+Date: Wed, 8 May 2024 09:58:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andreas Larsson <andreas@gaisler.com>
+Subject: (.head.text+0x2040): relocation truncated to fit: R_SPARC_WDISP22
+ against `.init.text'
+Message-ID: <202405080936.tWaJdO3P-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4feaf8ec.2435.18f55dd9745.Coremail.gaoshanliukou@163.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:_____wD333R42DpmZiMnAA--.42497W
-X-CM-SenderInfo: pjdr2x5dqox3xnrxqiywtou0bp/1tbiNwbX8mXAlHQD7QACs9
-X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-CgpBdCAyMDI0LTA1LTA3IDEzOjI4OjU4LCAiQWxleGFuZHJlIEdoaXRpIiA8YWxleEBnaGl0aS5m
-cj4gd3JvdGU6Cj5IaSBZYW5nLAo+Cj5PbiAwNi8wNS8yMDI0IDA0OjIyLCB5YW5nLnpoYW5nIHdy
-b3RlOgo+PiBGcm9tOiAieWFuZy56aGFuZyIgPHlhbmcuemhhbmdAaGV4aW50ZWsuY29tPgo+Pgo+
-PiBJZiB0cmFwIGVhcmxpZXIsIHRyYXAgdmVjdG9yIGRvZXNuJ3QgeWV0IHNldCBwcm9wZXJseSwg
-Y3VycmVudAo+PiB2YWx1ZSBtYXliZSBzZXQgYnkgcHJldmlvdXMgZmlybXdpcmUsIHR5cGljYWxs
-eSBpdCdzIHRoZSBfc3RhcnQgb2Yga2VybmVsLAo+PiBpdCdzIGNvbmZ1c2VkIGFuZCBkaWZmaWN1
-bHQgdG8gZGVidWdlLCBzbyBzZXQgaXQgZWFybGllci4KPgo+Cj5XaGF0IGFib3V0Ogo+Cj4iVGhl
-IGV4Y2VwdGlvbiB2ZWN0b3Igb2YgdGhlIGJvb3RpbmcgaGFydCBpcyBub3Qgc2V0IGJlZm9yZSBl
-bmFibGluZyB0aGUgCj5tbXUgYW5kIHRoZW4gc3RpbGwgcG9pbnRzIHRvIHRoZSB2YWx1ZSBvZiB0
-aGUgcHJldmlvdXMgZmlybXdhcmUsIAo+dHlwaWNhbGx5IF9zdGFydF9rZXJuZWwuIFRoYXQgbWFr
-ZXMgaXQgaGFyZCB0byBkZWJ1ZyBzZXR1cF92bSgpIHdoZW4gYmFkIAo+dGhpbmdzIGhhcHBlbi4g
-U28gZml4IHRoYXQgYnkgc2V0dGluZyB0aGUgZXhjZXB0aW9uIHZlY3RvciBlYXJsaWVyLiIKCkhp
-IGFsZXg6Ck1heWJlICJ0eXBpY2FsbHkgX3N0YXJ0IiBub3QgInR5cGljYWxseSBfc3RhcnRfa2Vy
-bmVsIiwgcmlnaHQ/ClRoYW5rcyBmb3IgeW91ciBoZWxwoaMKPj4gLS0tCj4+IHYxIC0+IHYyOgo+
-PiBBcyBBbGV4IGNvbW1lbnRlZCwgcmVtb3ZlIHRoZSBwYXRjaCBmb3Igc3VwcG9ydGluZyBodWdl
-c2l6ZSBrZXJuZWsgaW1hZ2UKPj4gQWRkIHRoZSBvbWlzc2l2ZSBsb2dpYyBvZiBzZXQgdHJhcCB2
-ZWN0b3IgZWFybGllcgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiB5YW5nLnpoYW5nIDx5YW5nLnpoYW5n
-QGhleGludGVrLmNvbT4KPj4gLS0tCj4+ICAgYXJjaC9yaXNjdi9rZXJuZWwvaGVhZC5TIHwgMyAr
-KysKPj4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQg
-YS9hcmNoL3Jpc2N2L2tlcm5lbC9oZWFkLlMgYi9hcmNoL3Jpc2N2L2tlcm5lbC9oZWFkLlMKPj4g
-aW5kZXggNDIzNmE2OWMzNWNiLi4wM2RjNDQwZTY0M2UgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvcmlz
-Y3Yva2VybmVsL2hlYWQuUwo+PiArKysgYi9hcmNoL3Jpc2N2L2tlcm5lbC9oZWFkLlMKPj4gQEAg
-LTMwMCw2ICszMDAsOSBAQCBTWU1fQ09ERV9TVEFSVChfc3RhcnRfa2VybmVsKQo+PiAgICNlbHNl
-Cj4+ICAgCW12IGEwLCBhMQo+PiAgICNlbmRpZiAvKiBDT05GSUdfQlVJTFRJTl9EVEIgKi8KPj4g
-KwkvKiBTZXQgdHJhcCB2ZWN0b3IgdG8gc3BpbiBmb3JldmVyIHRvIGhlbHAgZGVidWcgKi8KPj4g
-KwlsYSBhMywgLkxzZWNvbmRhcnlfcGFyawo+PiArCWNzcncgQ1NSX1RWRUMsIGEzCj4+ICAgCWNh
-bGwgc2V0dXBfdm0KPj4gICAjaWZkZWYgQ09ORklHX01NVQo+PiAgIAlsYSBhMCwgZWFybHlfcGdf
-ZGlyCj4KPk5vdGUgdGhhdCB0aGlzIHBhdGNoIHdpbGwgYWxsb3cgdG8gY2F0Y2ggYW55IGV4Y2Vw
-dGlvbiBoYXBwZW5pbmcgaW4gCj5zZXR1cF92bSgpIGJ1dCBhcyB3ZSByZXNldCBzdHZlYyBpbiBy
-ZWxvY2F0ZV9lbmFibGVfbW11LiBCdXQgdGhhdCdzIG9rLCAKPml0IHdpbGwgaGVscCBjYXRjaGlu
-ZyB3ZWlyZCBidWdzIG1vcmUgZWFzaWx5IDopCj4KPldpdGggdGhlIGNvbW1pdCBtZXNzYWdlIGZp
-eGVkLCB5b3UgY2FuIGFkZDoKPgo+UmV2aWV3ZWQtYnk6IEFsZXhhbmRyZSBHaGl0aSA8YWxleGdo
-aXRpQHJpdm9zaW5jLmNvbT4KPgo+VGhhbmtzLAo+Cj5BbGV4Cg==
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   dccb07f2914cdab2ac3a5b6c98406f765acab803
+commit: 91d3ff922c346d6d8cb8de5ff8d504fe0ca9e17e sparc32: Fix parport build with sparc32
+date:   9 weeks ago
+config: sparc-randconfig-001-20240508 (https://download.01.org/0day-ci/archive/20240508/202405080936.tWaJdO3P-lkp@intel.com/config)
+compiler: sparc-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240508/202405080936.tWaJdO3P-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405080936.tWaJdO3P-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   arch/sparc/kernel/head_32.o: in function `current_pc':
+>> (.head.text+0x2040): relocation truncated to fit: R_SPARC_WDISP22 against `.init.text'
+   arch/sparc/kernel/head_32.o: in function `halt_notsup':
+   (.head.text+0x2100): relocation truncated to fit: R_SPARC_WDISP22 against `.init.text'
+>> arch/sparc/kernel/process_32.o:(.fixup+0x4): relocation truncated to fit: R_SPARC_WDISP22 against `.text'
+   arch/sparc/kernel/process_32.o:(.fixup+0xc): relocation truncated to fit: R_SPARC_WDISP22 against `.text'
+>> arch/sparc/kernel/signal_32.o:(.fixup+0x0): relocation truncated to fit: R_SPARC_WDISP22 against `.text'
+   arch/sparc/kernel/signal_32.o:(.fixup+0x8): relocation truncated to fit: R_SPARC_WDISP22 against `.text'
+   arch/sparc/kernel/signal_32.o:(.fixup+0x10): relocation truncated to fit: R_SPARC_WDISP22 against `.text'
+   arch/sparc/kernel/signal_32.o:(.fixup+0x18): relocation truncated to fit: R_SPARC_WDISP22 against `.text'
+   arch/sparc/kernel/signal_32.o:(.fixup+0x20): relocation truncated to fit: R_SPARC_WDISP22 against `.text'
+   arch/sparc/kernel/signal_32.o:(.fixup+0x28): relocation truncated to fit: R_SPARC_WDISP22 against `.text'
+   arch/sparc/kernel/signal_32.o:(.fixup+0x30): additional relocation overflows omitted from the output
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
