@@ -1,244 +1,211 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2139.outbound.protection.outlook.com [40.107.8.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB05171B49;
-	Wed,  8 May 2024 09:12:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715159576; cv=none; b=CC90jSLE3u9kYvcajjPU8qrSSdpi4oDBEBhMIHJzoKPT0K71VvEe31toFBcrb5PZqvfIuL50zklBqG8/QA80Ue7OE76BIV5xnjWWWwYwcmsP7eFnSHW9jMzPvmcWqMIPcOZkQ7H7dnfw/BFXL5ZVkBMCYrNxN2H7NrHr4gmz8+8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715159576; c=relaxed/simple;
-	bh=6XVaT/rOwjD6l7J+zEX/991xLR3yWl6JEhyuKgB9bEE=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Rn1LU82gR4fozlFHz5/VKh5uWP+W4xvUArSkaYBQWJwwNpMsiZ/mlI7DxBmkgdAiqdxbC2qNiscuiQftVxwjoz3xFYvaHngGhkWwsVigKR8nepcUwkvh3yiuxBFevh8kaLztgdzzXBanek9H8ADqsxPApMcvHbprLPzivoIJrPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VZ8VL0CLvz6K63J;
-	Wed,  8 May 2024 17:09:46 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 35040140B2A;
-	Wed,  8 May 2024 17:12:51 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 8 May
- 2024 10:12:50 +0100
-Date: Fri, 3 May 2024 10:52:45 +0100
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: John Groves <John@groves.net>
-CC: Dongsheng Yang <dongsheng.yang@easystack.cn>, Gregory Price
-	<gregory.price@memverge.com>, Dan Williams <dan.j.williams@intel.com>,
-	<axboe@kernel.dk>, <linux-block@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<nvdimm@lists.linux.dev>
-Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
-Message-ID: <20240503105245.00003676@Huawei.com>
-In-Reply-To: <wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
-References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
-	<66288ac38b770_a96f294c6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-	<ef34808b-d25d-c953-3407-aa833ad58e61@easystack.cn>
-	<ZikhwAAIGFG0UU23@memverge.com>
-	<bbf692ec-2109-baf2-aaae-7859a8315025@easystack.cn>
-	<ZiuwyIVaKJq8aC6g@memverge.com>
-	<98ae27ff-b01a-761d-c1c6-39911a000268@easystack.cn>
-	<ZivS86BrfPHopkru@memverge.com>
-	<8f373165-dd2b-906f-96da-41be9f27c208@easystack.cn>
-	<wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FBC71B44;
+	Wed,  8 May 2024 09:12:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.139
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715159574; cv=fail; b=s09otQXZgqMYnv8f1IgEvRj2n0SM8Ul8W4xuJUzucpTi7YNJG6Jgv4k641DuknhaiEvf2pKJlAu130fiOFmMEJ01jAt9x/ULIUynASUy4vKqH04mRcMeoQBRp2nrX59qmwZhJOy7QPqVa7+E3ynVO30aw1w9qyBbhjNZYmGa+NM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715159574; c=relaxed/simple;
+	bh=v2okUKJTwch9158OMnWJSrzzR33cqi8iUQsZc2/cgrI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Qk+8u1ypHP3fVnplcDFmEUrEoR8GfopP2II/hM7ojy/2YVAe+1khjnjT5/c2oq8hGJOdxKDYfnpNyinTCgL6Bta/JkbVRCG0pnMGWUpDC9NK60wyiJJb0zOn07u3bM9/e53s6uJ6/eYpRB2/t4dRSyv+WaACg6ZmUS4sBFa4oaE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de; spf=pass smtp.mailfrom=cherry.de; dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b=C5a85VOZ; arc=fail smtp.client-ip=40.107.8.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=cherry.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cherry.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=cherry.de header.i=@cherry.de header.b="C5a85VOZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VzJbg+/zfnmgdZXzJVW6HllY14I4PXZrCWnojgvnUTygvvpyn2m/ST/Gt1ibktYgweY8aVMvCI83wUgtjOfRnisHO7Mkik2scsY5G6Pq9nsi+BuWMa6gTfzEVoVn0f66H1Uq2BopspYftuGGYyuPiapUG/c0BAC9cJTazKXNcCWiFrFl1lQJw3oql2HNXmeRryZyAAJ5EnS18D3BMPakBeQWwM38XlrI2jRHOybEz3QMIXTRC3D2iItL4MUvoF71W7kEF8qD7YzQkzLqznOKV+rLDioSz4AfY5u1KfU+6Ytp1M57ULco79RkTeI3yE2NQVWBF1Ymz3zMhWt0QHIFRA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=C8QyFXGUk/07AS0lsFBStQHTKB5E5mqVCPB7xIp0HG4=;
+ b=Qxz4FKzdr6zGDo1lNGzhvv8qyHXQihl6ZU/sZgtON6WOBECUBZjy9aoWUh4bkXVgWmsU9Sxvgfw3kLCrinFDr9IOrslSAkqfqt5hxhfBWLBhB3W4Vj7IheM/I7FbT2peRfxqb/dbXO/TlR7uIX62Vg4lfTD2pIrbgN2brCh+0xlQ6f9XoCojzmm2CmwoPMueKt1D7MfFvPEYbh+LXQO+nr+50jKC2uPJ78SNViWb9fCWGAXfKzCC7Bk8AmkIYwS682Gn49e6O8vcxAbz1eLnCV2lzxMeDmkKGVRP3ae11yvrfbPpCctTkmkg1G5gLFAYU6TBUKXy4PJt2YeDghdMVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cherry.de; dmarc=pass action=none header.from=cherry.de;
+ dkim=pass header.d=cherry.de; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cherry.de;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C8QyFXGUk/07AS0lsFBStQHTKB5E5mqVCPB7xIp0HG4=;
+ b=C5a85VOZceqVmQbxnlwSOetxOfZM2y8+XJjxwAhC4X65ifSbJHJVjrOEvNAC3qVkkFClkIbDrm9u+xwxXsunNqDgQ8RxSXnDZkyIR9X5vlyUP8JZgeTjzxZ1BKuF5x1V+w/KIyj9fIlCux5XR6Co33FxBCutuiOPbAviEF0Da0w=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=cherry.de;
+Received: from DB7PR04MB4842.eurprd04.prod.outlook.com (2603:10a6:10:1b::13)
+ by VI0PR04MB10289.eurprd04.prod.outlook.com (2603:10a6:800:242::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42; Wed, 8 May
+ 2024 09:12:46 +0000
+Received: from DB7PR04MB4842.eurprd04.prod.outlook.com
+ ([fe80::ac08:df46:97bd:4ae6]) by DB7PR04MB4842.eurprd04.prod.outlook.com
+ ([fe80::ac08:df46:97bd:4ae6%6]) with mapi id 15.20.7544.041; Wed, 8 May 2024
+ 09:12:46 +0000
+Message-ID: <e220061e-0bb5-4fa4-9a91-aefd81e6636c@cherry.de>
+Date: Wed, 8 May 2024 11:12:43 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 6/6] arm64: dts: rockchip: Add OPP data for CPU cores
+ on RK3588
+To: Alexey Charkov <alchark@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>,
+ Dragan Simic <dsimic@manjaro.org>, Viresh Kumar <viresh.kumar@linaro.org>,
+ Chen-Yu Tsai <wens@kernel.org>, Diederik de Haas <didi.debian@cknow.org>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Kever Yang <kever.yang@rock-chips.com>
+References: <20240506-rk-dts-additions-v4-0-271023ddfd40@gmail.com>
+ <20240506-rk-dts-additions-v4-6-271023ddfd40@gmail.com>
+Content-Language: en-US
+From: Quentin Schulz <quentin.schulz@cherry.de>
+In-Reply-To: <20240506-rk-dts-additions-v4-6-271023ddfd40@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: WA1P291CA0004.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:19::15) To DB7PR04MB4842.eurprd04.prod.outlook.com
+ (2603:10a6:10:1b::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB7PR04MB4842:EE_|VI0PR04MB10289:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed49d9ea-57cf-4042-aabc-08dc6f3f066c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|376005|1800799015|7416005|366007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MU9uL3hmKzFMSkptY1JPMnFtRjliRlBvSUZQSUhRUzVoNjZjTmRpMmhSUUVz?=
+ =?utf-8?B?aFdVSmRnMWQ4dG9ITTJtYnNMYWd2MGd0QVNGN2crcVN4emFTSk4yWGgxNVMw?=
+ =?utf-8?B?ZE8xK2N3VlZXVXZzcWtodFNqdGRLakFHZTNXc2pKZEVnS055emhBcFlnTTdB?=
+ =?utf-8?B?R0g4NlNtOHg3L3hIU3lGeWFrNWs1YUtxMFIzc2F3L3VoL2RZYlgzb3FFZlhj?=
+ =?utf-8?B?ZWVnc2Y0Vk5RNWxMR1dxbWo5Y0xEQUt3SFRpQllESzVNSzBUc3BudEtUYWVO?=
+ =?utf-8?B?c0doMzFxbFlEUmtZOU13QUZXUXljYlVUV2N1TWNmaklDSWc1M2lERkhCVXhB?=
+ =?utf-8?B?UnRWMXhVbmxJSVVMYTNoK2dQQkF6UncwRFl1VWg2bUVpT2tUQkVRMS9odm92?=
+ =?utf-8?B?ZEh3aE5QWXRqQStFSjdldnlRNmZ6bW9GMkR1VDJSWkhVbzYxdzVzaXc4cmJB?=
+ =?utf-8?B?NlpGMFdBeXVrOHE0cml4TzZGVjY0RHF0UzNPcXpqSndHN2ZFNXlNOEEwN2t5?=
+ =?utf-8?B?WVVvc1BINndqOEJRMWVla00yM1EyRlg5MEg1L1JEL004cWV4Q0ZmckdHV2l6?=
+ =?utf-8?B?UEVvdldLTUdQUnh5TE9DT1YrWncrZnhzakM3ZERtL3htNjVPYVZqcDdhUUY1?=
+ =?utf-8?B?OHEvamtWd2JuZExjMmR5QjJwQ0ZOcUIxUzJLelpPUlpISGI5M25lMmxPODky?=
+ =?utf-8?B?MkwxWkFydy9FL2tmQktjVDZWZEhZdzFocnR4c213UmpMcWEyb2NSOEY4aXNO?=
+ =?utf-8?B?aXN0V05ZNlByV0s4aG1aK3FxWXU2QVlwZGJKMGRnZHBrb2Y1MnB4VjB6VTdP?=
+ =?utf-8?B?cFNvMzRhdDcrTDdUNXBYN1Y4NVJXTC8zRzZJK0phZGkzR1hOaDhXRU1JYU1F?=
+ =?utf-8?B?WXdJR3NUdFBNNzRLcnc0OFNDak40ZUc2MUc1Rk9ScGdXN0k2VHFENnV3Uk1C?=
+ =?utf-8?B?VTZZT042bGpFUENHSThNVFdsSUJRSzlvZmVKNy9qaFFpaUtoVGNBVVV6MUVC?=
+ =?utf-8?B?NlVqWEZCS28rd3djZUlxVmFNcGMxRis0V2RUVjQ4WDZuWStwcXUvK3FxWTJF?=
+ =?utf-8?B?N0poeUNhYnBRK1V3NjRaVVRHSnBTNXZsb0Z5aXhDMm0zRVJ2cmFVamJheVNV?=
+ =?utf-8?B?MnYvdFV4YWVJeVMyMmJuY0lKZkF1YXdzOHhNOE9sS0YyZnA1cGFyWUJKRzF4?=
+ =?utf-8?B?YndEMUQ5RHdtSFdXK05OelJHTS9SVnZUUktvK3R1TDh4WU9wWTE0ekRWOG9D?=
+ =?utf-8?B?T2pvWldSRnZMNGZKRjFLSTBGY3dOeE9WQVRpR3JSZDhTWnM5U2thVXRaS3dV?=
+ =?utf-8?B?VndCeUR4VWNtMWtOY3dmeGVQTG1tQnNxeStMcUJrQXRRamtwMlRiNzU1RzN6?=
+ =?utf-8?B?TEx4OHJuMnVHTCs5bWJGbTh0aWl6UXFUeER0UGlWbTVaTlN6dS80UVNuUHUx?=
+ =?utf-8?B?akdGTDVlR3pmVkZuTDNKT1huV1czNVlMYUhrN3dwSGVBbm9td204QjdXQk11?=
+ =?utf-8?B?M1gyQmxOdFBWMEIxOG96eWY5aE52WmhNTnkvQ3dPUFZDOFM1c2NsQWUxa0Fl?=
+ =?utf-8?B?U1VFOEZyU2NMQUErN2Y3UXI1WE5QWDVET2wvNVE5TUR3NjdkQ2RBdEFQUU5G?=
+ =?utf-8?B?SG9sMzhlbEorK2VCTFIxUWk3Vy9ubkJOMiswWGxoUlVoR3hvQWpiVUE4ays5?=
+ =?utf-8?B?Q3VYRjNyeDZtNVZNSjd1UmlERURQdGFObyszTFN4aDBHbHd1NENXdlhnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR04MB4842.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SmUydGZiblY2cmprVUFsVDFFYXFVb1krMmlqbEszL3l2TTRHa3dVeHIwcS9G?=
+ =?utf-8?B?TG5FUUtqVzJHZFFXd3BmRG8vR0tncTRTbWZSWWh4Sk5JT2FMN3N2eXgxenAr?=
+ =?utf-8?B?VnFCQTM5Y2ZqSUEwZWxOSlptZTZLWWx1N3Y0ejVOcU1UTkhFaGh2YnRtYW1X?=
+ =?utf-8?B?QWIxQjRMMzhVYWpQQVlyZXFDT3NtSlBDczBjZHg2NytnV09RTUZVcjJFM2M2?=
+ =?utf-8?B?UnRxTHN0ZndiQjNtZG1RY2pVVTRWV3BSTGVqTHpPbXlhMmVPTGNRU1cydm5l?=
+ =?utf-8?B?ZEhxL1J5cjZSMVArZTZhcGtvQk94ekpVYStBcmx0UXJnYmdLYXU1cWxLdU5h?=
+ =?utf-8?B?UjJ5VWw3N05sWjBNV2dudEtzTHdvVmpDQ0NaT1BwWHlGczVHa2R5SGg2bzZy?=
+ =?utf-8?B?T245SzUwMDBydERVSUtKUm5zZUNkc0JhY2tZSlBDM1c4QUVTUzcxYk5uMWp3?=
+ =?utf-8?B?K3FRSjdlZXNIQW5TVXM5Y3prWkF5Sjd5MWpQZjVOSW5zbUpVWnFXMmZNR1A0?=
+ =?utf-8?B?QzQrQXpvUzZMKys5eDVnRHZRek8rUnVjank0dFYvWGl3WWZER0V0czV4RFdB?=
+ =?utf-8?B?U1crK3hsRStwNllLUk1KNG1zWHJOSWhpRFNOdjJlaW5FNTB0UkxweGc0Zld2?=
+ =?utf-8?B?N3JCa1IwZG9iNEM3c3QxclhrMEtDc0p0aE8xZU9RYW5vT2xMQUMwdFFpRzhQ?=
+ =?utf-8?B?RkJBdDFhUVNwd3hMQm5pbDJnRndnZkoxOCttaklyL0w4Smg0OGMvSEtSaGZ0?=
+ =?utf-8?B?YUpBZ0xoNDN2czN6UUNwbHRQZU9TVHNDVVJ6bDhlOEg1ZEtkRi9NV29uSEMy?=
+ =?utf-8?B?SnZjek9MZTNwSGQycnFkOVg2NFV0QVVUREFhMlNQV2ZlbW5OQXJIRUxmQkFH?=
+ =?utf-8?B?THg4c09henVUQlFrbjFmY2lCeW9sRzJlWFkyUzF0SzVVTVVZeWwwTll2Ris4?=
+ =?utf-8?B?SEo4ek5LaFpDeWcwZnZxVFpBblBaOFpQakpUT1N3RXJpaG01Y1JzSEJkaVhm?=
+ =?utf-8?B?SS9rUVlKYWhRbkp2OHRONHB2QkE3V3k2dmhLZitTaENSK2FST0lZS2hMcjhs?=
+ =?utf-8?B?UmlxZGtxcStqTkt4MGQ5RnhsNnZSVzdQczNueEtUU1YzZUhidlZkOTU3YW52?=
+ =?utf-8?B?RjJYTWpQT2RwSWpUOW1lTDZ3OWVBNXRQR1FTdStFa0FQYU1aOCtVeGRMcnQx?=
+ =?utf-8?B?ZHh4ckZoNml0eHppOW1vMURQenhESHpmdmcxbGtadHQwd3RWVXIyL2M2ZFpu?=
+ =?utf-8?B?aU5KWVZHL0s2d0lUWlVaaytRaGdSZG9WbGV0UzRQcXhCK2JyVzlwUWRWTjVk?=
+ =?utf-8?B?UEZWQVNNREp5Z3Fxc1B6K2ltL0huTUg3Z0pPdC9tN0FzdFFxNG9CZXA4SDdK?=
+ =?utf-8?B?THoxSE5VQ0RScWxJc25JN2R2VmVRWjhPSEwxMkFCcCtlMW9paHdTTWE3NkNu?=
+ =?utf-8?B?bmJuckxLTFBKaEVaUHBTMmFPdGQ2Wk5ObHhucFBwNzBQRGN5anZwVUpJRldJ?=
+ =?utf-8?B?cm4vTEFRSytoZ1UrN0wzV2c3SU1KMnlwMGJWTVRLaFZRQU5iOFRNaVNpcXdi?=
+ =?utf-8?B?WElCanFsZUEybldRNzk4NzY3MTdSTEY2RTNBYXljRnJuZzV0a3NVV0xEU0JV?=
+ =?utf-8?B?elFiQWM1VC9ES2cvazJPeEU5dzdHZldDc0xrTkR3d2xaREw4SWF4RTQ3N245?=
+ =?utf-8?B?ckFlY1BWdXRFbnM0K0dXZXRKWjlkOGQ5U3FiWThBcnA5eVF0bG1SN2hXOFNZ?=
+ =?utf-8?B?TmtaK0tlZTZTRDQwcklTUUU0c2F2ZlY0Y1BtVHBzdTdqUS9mU3poYXZBczAr?=
+ =?utf-8?B?MWljK2htcXFnRXhoR0ZrY01DYW5FSkFiZmdTMDN2SHlESmxEOXozTkcvT0Vs?=
+ =?utf-8?B?ZHVaMHZpL3lIbjIrQ1JzSElpM3FlOFhoWUtDQklJRlcyZmwzcVk3empEQWZk?=
+ =?utf-8?B?eTcycnNuU0xzSWhsSmRHMStOTmRSYXYwM3Zxc2dUeUlDYUhKN29OUk1rZExD?=
+ =?utf-8?B?RWZmSFZEU2hwRW5IUXJUdkROd1piTUJLWmxIUXRYYTIwdlp3bHNoMndZMm42?=
+ =?utf-8?B?VDZxUHFQMXozcE9FWTMvNkJCOG9RZ0hDdTZDa3g4R044bzQ5SXV5Y3JLM1I5?=
+ =?utf-8?B?MWxhejdrSXBmYXhFbDdiU01ta0w0SXdpK1BsTlp6YWNjVlIvdGNoUVVlZHQy?=
+ =?utf-8?Q?CzdqTb7lRVCsTiy4DoVKhOU=3D?=
+X-OriginatorOrg: cherry.de
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed49d9ea-57cf-4042-aabc-08dc6f3f066c
+X-MS-Exchange-CrossTenant-AuthSource: DB7PR04MB4842.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2024 09:12:46.2371
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5e0e1b52-21b5-4e7b-83bb-514ec460677e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J2t8UXjIAPKdc6DSZIAuDYBOFA64MS7pRV2D+Ycjc5zmqlUpoX65v8jn+5iLlexZmLTMZ6vsSegdMWZnYgIigrCGJMJBo4xc2Aya9nMHsbo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10289
 
-On Sun, 28 Apr 2024 11:55:10 -0500
-John Groves <John@groves.net> wrote:
+Hi Alexey,
 
-> On 24/04/28 01:47PM, Dongsheng Yang wrote:
-> >=20
-> >=20
-> > =E5=9C=A8 2024/4/27 =E6=98=9F=E6=9C=9F=E5=85=AD =E4=B8=8A=E5=8D=88 12:1=
-4, Gregory Price =E5=86=99=E9=81=93: =20
-> > > On Fri, Apr 26, 2024 at 10:53:43PM +0800, Dongsheng Yang wrote: =20
-> > > >=20
-> > > >=20
-> > > > =E5=9C=A8 2024/4/26 =E6=98=9F=E6=9C=9F=E4=BA=94 =E4=B8=8B=E5=8D=88 =
-9:48, Gregory Price =E5=86=99=E9=81=93: =20
-> > > > >  =20
-> > > >=20
-> > > > In (5) of the cover letter, I mentioned that cbd addresses cache co=
-herence
-> > > > at the software level:
-> > > >=20
-> > > > (5) How do blkdev and backend interact through the channel?
-> > > > 	a) For reader side, before reading the data, if the data in this c=
-hannel
-> > > > may be modified by the other party, then I need to flush the cache =
-before
-> > > > reading to ensure that I get the latest data. For example, the blkd=
-ev needs
-> > > > to flush the cache before obtaining compr_head because compr_head w=
-ill be
-> > > > updated by the backend handler.
-> > > > 	b) For writter side, if the written information will be read by ot=
-hers,
-> > > > then after writing, I need to flush the cache to let the other part=
-y see it
-> > > > immediately. For example, after blkdev submits cbd_se, it needs to =
-update
-> > > > cmd_head to let the handler have a new cbd_se. Therefore, after upd=
-ating
-> > > > cmd_head, I need to flush the cache to let the backend see it.
-> > > >  =20
-> > >=20
-> > > Flushing the cache is insufficient.  All that cache flushing guarante=
-es
-> > > is that the memory has left the writer's CPU cache.  There are potent=
-ially
-> > > many write buffers between the CPU and the actual backing media that =
-the
-> > > CPU has no visibility of and cannot pierce through to force a full
-> > > guaranteed flush back to the media.
-> > >=20
-> > > for example:
-> > >=20
-> > > memcpy(some_cacheline, data, 64);
-> > > mfence();
-> > >=20
-> > > Will not guarantee that after mfence() completes that the remote host
-> > > will have visibility of the data.  mfence() does not guarantee a full
-> > > flush back down to the device, it only guarantees it has been pushed =
-out
-> > > of the CPU's cache.
-> > >=20
-> > > similarly:
-> > >=20
-> > > memcpy(some_cacheline, data, 64);
-> > > mfence();
-> > > memcpy(some_other_cacheline, data, 64);
-> > > mfence()
-> > >=20
-> > > Will not guarantee that some_cacheline reaches the backing media prior
-> > > to some_other_cacheline, as there is no guarantee of write-ordering in
-> > > CXL controllers (with the exception of writes to the same cacheline).
-> > >=20
-> > > So this statement:
-> > >  =20
-> > > > I need to flush the cache to let the other party see it immediately=
-. =20
-> > >=20
-> > > Is misleading.  They will not see is "immediately", they will see it
-> > > "eventually at some completely unknowable time in the future". =20
-> >=20
-> > This is indeed one of the issues I wanted to discuss at the RFC stage. =
-Thank
-> > you for pointing it out.
-> >=20
-> > In my opinion, using "nvdimm_flush" might be one way to address this is=
-sue,
-> > but it seems to flush the entire nd_region, which might be too heavy.
-> > Moreover, it only applies to non-volatile memory.
-> >=20
-> > This should be a general problem for cxl shared memory. In theory, FAMFS
-> > should also encounter this issue.
-> >=20
-> > Gregory, John, and Dan, Any suggestion about it?
-> >=20
-> > Thanx a lot =20
-> > >=20
-> > > ~Gregory
-> > >  =20
->=20
-> Hi Dongsheng,
->=20
-> Gregory is right about the uncertainty around "clflush" operations, but
-> let me drill in a bit further.
->=20
-> Say you copy a payload into a "bucket" in a queue and then update an
-> index in a metadata structure; I'm thinking of the standard producer/
-> consumer queuing model here, with one index mutated by the producer and
-> the other mutated by the consumer.=20
->=20
-> (I have not reviewed your queueing code, but you *must* be using this
-> model - things like linked-lists won't work in shared memory without=20
-> shared locks/atomics.)
->=20
-> Normal logic says that you should clflush the payload before updating
-> the index, then update and clflush the index.
->=20
-> But we still observe in non-cache-coherent shared memory that the payload=
-=20
-> may become valid *after* the clflush of the queue index.
->=20
-> The famfs user space has a program called pcq.c, which implements a
-> producer/consumer queue in a pair of famfs files. The only way to=20
-> currently guarantee a valid read of a payload is to use sequence numbers=
-=20
-> and checksums on payloads.  We do observe mismatches with actual shared=20
-> memory, and the recovery is to clflush and re-read the payload from the=20
-> client side. (Aside: These file pairs theoretically might work for CBD=20
-> queues.)
->=20
-> Anoter side note: it would be super-helpful if the CPU gave us an explici=
-t=20
-> invalidate rather than just clflush, which will write-back before=20
-> invalidating *if* the cache line is marked as dirty, even when software
-> knows this should not happen.
->=20
-> Note that CXL 3.1 provides a way to guarantee that stuff that should not
-> be written back can't be written back: read-only mappings. This one of
-> the features I got into the spec; using this requires CXL 3.1 DCD, and=20
-> would require two DCD allocations (i.e. two tagged-capacity dax devices -=
-=20
-> one writable by the server and one by the client).
->=20
-> Just to make things slightly gnarlier, the MESI cache coherency protocol
-> allows a CPU to speculatively convert a line from exclusive to modified,
-> meaning it's not clear as of now whether "occasional" clean write-backs
-> can be avoided. Meaning those read-only mappings may be more important
-> than one might think. (Clean write-backs basically make it
-> impossible for software to manage cache coherency.)
+On 5/6/24 11:36 AM, Alexey Charkov wrote:
+> By default the CPUs on RK3588 start up in a conservative performance
+> mode. Add frequency and voltage mappings to the device tree to enable
+> dynamic scaling via cpufreq.
+> 
+> OPP values are adapted from Radxa's downstream kernel for Rock 5B [1],
+> stripping them down to the minimum frequency and voltage combinations
+> as expected by the generic upstream cpufreq-dt driver, and also dropping
+> those OPPs that don't differ in voltage but only in frequency (keeping
+> the top frequency OPP in each case).
+> 
+> Note that this patch ignores voltage scaling for the CPU memory
+> interface which the downstream kernel does through a custom cpufreq
+> driver, and which is why the downstream version has two sets of voltage
+> values for each OPP (the second one being meant for the memory
+> interface supply regulator). This is done instead via regulator
+> coupling between CPU and memory interface supplies on affected boards.
+> 
 
-My understanding is that clean write backs are an implementation specific
-issue that came as a surprise to some CPU arch folk I spoke to, we will
-need some path for a host to say if they can ever do that.
+I'm not sure this is everything we need though.
 
-Given this definitely effects one CPU vendor, maybe solutions that
-rely on this not happening are not suitable for upstream.
+For the LITTLE cores cluster, all OPPs up to 1.416GHz are using the same 
+opp-supported-hw, however the ones above, aren't.
 
-Maybe this market will be important enough for that CPU vendor to stop
-doing it but if they do it will take a while...
+1.608GHz, 1.704GHz and 1.8GHz are all using different opp-supported-hw.
 
-Flushing in general is as CPU architecture problem where each of the
-architectures needs to be clear what they do / specify that their
-licensees do.
+Similarly, for the big cores clusters, all OPPs up to 1.608GHz are using 
+the same opp-supported-hw, but not the ones above.
 
-I'm with Dan on encouraging all memory vendors to do hardware coherence!
+1.8GHz and 2.016GHz, 2.208GHz, 2.256GHz, 2.304GHz, 2.352GHz and 2.4GHz 
+all have a different opp-supported-hw.
 
-J
+The values in that array are coming from cpu leakage (different for 
+LITTLE, big0 and big1 clusters) and "specification serial number" 
+(whatever that means), those are coming from the SoC OTP. In the 
+downstream kernel from Rockchip, the former value is called "SoC 
+Version" and the latter "Speed Grade".
 
->=20
-> Keep in mind that I don't think anybody has cxl 3 devices or CPUs yet, an=
-d=20
-> shared memory is not explicitly legal in cxl 2, so there are things a cpu=
-=20
-> could do (or not do) in a cxl 2 environment that are not illegal because=
-=20
-> they should not be observable in a no-shared-memory environment.
->=20
-> CBD is interesting work, though for some of the reasons above I'm somewhat
-> skeptical of shared memory as an IPC mechanism.
->=20
-> Regards,
-> John
->=20
->=20
->=20
+I think this may have something to do with "binning" and I would see the 
+ones above the "common" OPPs as "overclocking". Not all CPUs would 
+support them and some may not run stable at some lower frequency than 
+their stable max. Adding Kever from Rockchip in Cc to have some input on 
+the need to support those.
 
+Cheers,
+Quentin
