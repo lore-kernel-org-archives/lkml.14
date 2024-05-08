@@ -1,176 +1,211 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sequoia-grove.ad.secure-endpoints.com (sequoia-grove.ad.secure-endpoints.com [208.125.0.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43ABC3CF73
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 08:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4E313D54C
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 08:04:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=208.125.0.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715155432; cv=none; b=SBVLRUpEXiuDiPN420Wvarn8F8DkjrDOD9BmtDlflYbI0mdEhUINxIAnyXcL16U3SibqSjq6eunGwzKLhg4i+0EyoNVm0FfWK/RpqSSHZcsScOjyVPo/7bQh1Pjedd1lxG0GcWiEfpkhe98gsgsV0iHpnFBBIVxJ0Ip3R5Pzr30=
+	t=1715155459; cv=none; b=h0R9G/c41iJmg02ck/AczZueh9YyM8SS/74rlpIFnlKrPAJmEQz+Apqre9zaU02d8mJSSfTnS8SckNuQo/mEztQ8ntDnEDjuWltMWx/w38b9rVi7a7GoJHHJdxxf0/e6Qf1RWBgrgZhv2IG2lPauhaRD9yQithcoTkvBK2cO8CM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715155432; c=relaxed/simple;
-	bh=jwC9M5BWq2vxWcPd0WqZZUFo5bYUj4aAuO4f1WiU67U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DuWk1CAV6LZRLtj9Z/KIsUERPXb3h7qw+scKuOwNJMZEZ6THv8Koaf5SGoL3DeAsn+nZEyi8BB7V2bRwdqEVbH3LCS6sGRBKkjXnNc7rIQdRmYPC32zd2M4Q4EYcwqsEhTrDPHgIC22AO25lwfsYYdAhXDGWxPSV5Xwn4LiStpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tBG0gy7V; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715155459; c=relaxed/simple;
+	bh=fnAGjN3WXf6Gf+kzeLVB8Y1WbqKeRRlANUtvCPGb+fs=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=STZfF0GLnONZxFrSktziLUSMB6Lg7qZXz2F3ltd8ZpzQgptudz7H2sqYeXdAOmKmsduWadeyCrfFeuZmrXv9noxTD21WSmoZMXqiYRVfcNI8qDtShbanvk/WMI84kW6rnq1aK9xiiMiuQC3dIEq6WIk+eW3XXljizpiWv9cYMZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com; spf=pass smtp.mailfrom=auristor.com; dkim=pass (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b=N/RL/99i; arc=none smtp.client-ip=208.125.0.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=auristor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=auristor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tBG0gy7V"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a59c5c9c6aeso826971966b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 01:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715155429; x=1715760229; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=eu4SeCR/kEFNVAoI9TGLUZ5URLmJpaE5X6aXPMjBCyk=;
-        b=tBG0gy7VjCcIKDsMwTYURPUoybJ+40Rgv5325/38INnLm7SkbT3wQabeiGtOs4hBQW
-         OvXk+/9eTip6g2za3tUlAsilTNREJBM0ka3v0ln3jEYHxKWV2+TETO4+DE3ccCOr6PzW
-         Mh/fJDZKxZhj0453JlJtTQ01KBzdZbNwm6t0Ne2pggr+j+QpqfTbnStjTWgzZD7K6qAQ
-         7f6x9pDtjYBBzVnMwno7TF/xZxG6mYTreBq1w41mGMYfUHAYkj0iMwK1WE0CU/bctjN+
-         sIJ9X67uuCT2do/jDliVi5CFbKa8XlV7dR76ENYNCtE2B92Ez9vyCFUJDV2TIo6fLevf
-         Ebqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715155429; x=1715760229;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eu4SeCR/kEFNVAoI9TGLUZ5URLmJpaE5X6aXPMjBCyk=;
-        b=KYOYMt8efx3cLR4AdUXdRiDdG75cq6xhwDImQXnWbg3i6uULGAgXt5HZ5pUIBTSGjV
-         9uL7RtDHBwpzLISmeYy7a11spRhwjnJrQ1FlILEYRwvEvxkhI0hSkdY/dVB+HzXjRm2S
-         5Vhz4gHtveJU+PbCR/KnbZrp6ta5W28jVXzc8XTjCAIi+tXCVjooh0w82qL4jOX0ygtx
-         gGNdUZzw7pn3FoTZhJuYfCCvU7dIMRkjZwDEO9GVMbRO6xaG9gGzP36lNAH9whQ1vi8z
-         jK+Xwpq7N1sxLJ6txywm0Jy0jiwBP1j9SnCObf3HSni3RnJ/M70PSyeWmJwM3bsBIA81
-         spKA==
-X-Forwarded-Encrypted: i=1; AJvYcCXEHUjo17FRMEyXZwKqt2/bAUAsI99Uqelod3syOIhl6c9pc8Ayc8QTiuGyVW58xaEjJ/NVl1QQjHypsMYigsdlaUnqQJIaAvApV5Ul
-X-Gm-Message-State: AOJu0YwR6txxk1r8g3ALUK+3jQtfW8b+Yp9N+rZ01pVa5Zh15Q/tSyn1
-	gr9BiZj2AZ4+YG80KT0BvGGP+JdUlo9DKjfHHPv8AasliAh7QKzPX7/A/NuVcNU=
-X-Google-Smtp-Source: AGHT+IHwFPyHnACE6OWnp5/5Gpo7kWNOw0G/J9KE5f4I8SUilDWBJu0uFLQdxEQ7R+clkHHUXEibKQ==
-X-Received: by 2002:a17:906:1957:b0:a59:a977:a157 with SMTP id a640c23a62f3a-a59fb9f209dmr116411466b.73.1715155428636;
-        Wed, 08 May 2024 01:03:48 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id fw14-20020a170906c94e00b00a59bf41edbesm4378311ejb.146.2024.05.08.01.03.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 May 2024 01:03:47 -0700 (PDT)
-Message-ID: <0e7496c4-7dfc-404d-944c-a1869389722b@linaro.org>
-Date: Wed, 8 May 2024 10:03:46 +0200
+	dkim=pass (1024-bit key) header.d=auristor.com header.i=jaltman@auristor.com header.b="N/RL/99i"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/relaxed;
+	d=auristor.com; s=MDaemon; r=y; t=1715155089; x=1715759889;
+	i=jaltman@auristor.com; q=dns/txt; h=Content-Type:Mime-Version:
+	Subject:From:In-Reply-To:Date:Cc:Content-Transfer-Encoding:
+	Message-Id:References:To; bh=OOGFqnrRmLyMJdtPJTcV8eMaia1HruvhmH/
+	XgAfJZ68=; b=N/RL/99itCm4Gb2jZ5L7LGt3pcw7Io9Nkq763XsoMrgFNpKZ77Q
+	xSSa5swVv0Am1KmFo6VwFpivejc8p6oI5+mgov5NIMUU011A4XIsVeixf7GSKj/E
+	CMwqA+g4vb1DjjI0jH51WaEgICTmmFUm78SDtYidAN6evMOkktW/g/q4=
+X-MDAV-Result: clean
+X-MDAV-Processed: sequoia-grove.ad.secure-endpoints.com, Wed, 08 May 2024 03:58:09 -0400
+Received: from smtpclient.apple [(146.70.168.190)] by auristor.com (208.125.0.235) (MDaemon PRO v24.0.0c) 
+	with ESMTPSA id md5001003915906.msg; Wed, 08 May 2024 03:58:07 -0400
+X-Spam-Processed: sequoia-grove.ad.secure-endpoints.com, Wed, 08 May 2024 03:58:07 -0400
+	(not processed: message from trusted or authenticated source)
+X-MDRemoteIP: 146.70.168.190
+X-MDHelo: smtpclient.apple
+X-MDArrival-Date: Wed, 08 May 2024 03:58:07 -0400
+X-MDOrigin-Country: US, NA
+X-Authenticated-Sender: jaltman@auristor.com
+X-Return-Path: prvs=1858b13987=jaltman@auristor.com
+X-Envelope-From: jaltman@auristor.com
+X-MDaemon-Deliver-To: linux-kernel@vger.kernel.org
+Content-Type: multipart/signed;
+	boundary="Apple-Mail=_D836D061-CAAF-425C-8204-6F0770CDD582";
+	protocol="application/pkcs7-signature";
+	micalg=sha-256
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] ASoC: dt-bindings: Add bindings for Cadence I2S-MC
- controller
-To: Xingyu Wu <xingyu.wu@starfivetech.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Claudiu Beznea <Claudiu.Beznea@microchip.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor.dooley@microchip.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-References: <20240508070406.286159-1-xingyu.wu@starfivetech.com>
- <20240508070406.286159-2-xingyu.wu@starfivetech.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240508070406.286159-2-xingyu.wu@starfivetech.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 08/05/2024 09:04, Xingyu Wu wrote:
-> Add bindings for the Multi-Channel I2S controller of Cadence.
-> 
-> The Multi-Channel I2S (I2S-MC) implements a function of the
-> 8-channel I2S bus interfasce. Each channel can become receiver
-> or transmitter. Four I2S instances are used on the StarFive
-> JH8100 SoC. One instance of them is limited to 2 channels, two
-> instance are limited to 4 channels, and the other one can use
-> most 8 channels. Add a unique property about
-> 'starfive,i2s-max-channels' to distinguish each instance.
-> 
-> Signed-off-by: Xingyu Wu <xingyu.wu@starfivetech.com>
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH net 0/5] rxrpc: Miscellaneous fixes
+From: Jeffrey Altman <jaltman@auristor.com>
+In-Reply-To: <20240507194447.20bcfb60@kernel.org>
+Date: Wed, 8 May 2024 01:57:43 -0600
+Cc: David Howells <dhowells@redhat.com>,
+ netdev@vger.kernel.org,
+ Marc Dionne <marc.dionne@auristor.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>,
+ linux-afs@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <955B77FD-C0C2-479E-9D85-D2F62E3DA48C@auristor.com>
+References: <20240503150749.1001323-1-dhowells@redhat.com>
+ <20240507194447.20bcfb60@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-MDCFSigsAdded: auristor.com
 
 
-> +
-> +  starfive,i2s-max-channels:
-> +    description:
-> +      Number of I2S max stereo channels supported on the StarFive
-> +      JH8100 SoC.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    enum: [2, 4, 8]
-> +
-> +allOf:
-> +  - $ref: dai-common.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: starfive,jh8100-i2s
-> +    then:
-> +      required:
-> +        - starfive,i2s-max-channels
-> +    else:
-> +      properties:
-> +        starfive,i2s-max-channels: false
-> +
-> +required:
+--Apple-Mail=_D836D061-CAAF-425C-8204-6F0770CDD582
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
 
-I asked to put it after properties: block, not after allOf:. See
-example-schema for preferred order. Why? Because we are used to it and
-it makes reading the schema easier for us.
 
-Rest looks good, so with the re-order:
+> On May 7, 2024, at 8:44=E2=80=AFPM, Jakub Kicinski <kuba@kernel.org> =
+wrote:
+>=20
+> On Fri,  3 May 2024 16:07:38 +0100 David Howells wrote:
+>> Here some miscellaneous fixes for AF_RXRPC:
+>>=20
+>> (1) Fix the congestion control algorithm to start cwnd at 4 and to =
+not cut
+>>  ssthresh when the peer cuts its rwind size.
+>>=20
+>> (2) Only transmit a single ACK for all the DATA packets glued =
+together
+>>  into a jumbo packet to reduce the number of ACKs being generated.
+>>=20
+>> (3) Clean up the generation of flags in the protocol header when =
+creating
+>>  a packet for transmission.  This means we don't carry the old
+>>  REQUEST-ACK bit around from previous transmissions, will make it
+>>  easier to fix the MORE-PACKETS flag and make it easier to do jumbo
+>>  packet assembly in future.
+>>=20
+>> (4) Fix how the MORE-PACKETS flag is driven.  We shouldn't be setting =
+it
+>>  in sendmsg() as the packet is then queued and the bit is left in =
+that
+>>  state, no matter how long it takes us to transmit the packet - and
+>>  will still be in that state if the packet is retransmitted.
+>>=20
+>> (5) Request an ACK on an impending transmission stall due to the app =
+layer
+>>  not feeding us new data fast enough.  If we don't request an ACK, we
+>>  may have to hold on to the packet buffers for a significant amount =
+of
+>>  time until the receiver gets bored and sends us an ACK anyway.
+>=20
+> Looks like these got marked as Rejected in patchwork.
+> I think either because lore is confused and attaches an exchange with
+> DaveM from 2022 to them (?) or because I mentioned to DaveM that I'm
+> not sure these are fixes. So let me ask - on a scale of 1 to 10, how
+> convinced are you that these should go to Linus this week rather than
+> being categorized as general improvements and go during the merge
+> window (without the Fixes tags)?
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Jakub,
 
-Best regards,
-Krzysztof
+In my opinion, the first two patches in the series I believe are =
+important to back port to the stable branches.
+
+Reviewed-by: Jeffrey Altman <jaltman@auristor.com =
+<mailto:jaltman@auristor.com>>
+
+Jeffrey
+
+
+
+
+--Apple-Mail=_D836D061-CAAF-425C-8204-6F0770CDD582
+Content-Disposition: attachment;
+	filename=smime.p7s
+Content-Type: application/pkcs7-signature;
+	name=smime.p7s
+Content-Transfer-Encoding: base64
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCDHEw
+ggXSMIIEuqADAgECAhBAAYJpmi/rPn/F0fJyDlzMMA0GCSqGSIb3DQEBCwUAMDoxCzAJBgNVBAYT
+AlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEzMB4XDTIyMDgw
+NDE2MDQ0OFoXDTI1MTAzMTE2MDM0OFowcDEvMC0GCgmSJomT8ixkAQETH0EwMTQxMEQwMDAwMDE4
+MjY5OUEyRkQyMDAwMjMzQ0QxGTAXBgNVBAMTEEplZmZyZXkgRSBBbHRtYW4xFTATBgNVBAoTDEF1
+cmlTdG9yIEluYzELMAkGA1UEBhMCVVMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCk
+C7PKBBZnQqDKPtZPMLAy77zo2DPvwtGnd1hNjPvbXrpGxUb3xHZRtv179LHKAOcsY2jIctzieMxf
+82OMyhpBziMPsFAG/ukihBMFj3/xEeZVso3K27pSAyyNfO/wJ0rX7G+ges22Dd7goZul8rPaTJBI
+xbZDuaykJMGpNq4PQ8VPcnYZx+6b+nJwJJoJ46kIEEfNh3UKvB/vM0qtxS690iAdgmQIhTl+qfXq
+4IxWB6b+3NeQxgR6KLU4P7v88/tvJTpxIKkg9xj89ruzeThyRFd2DSe3vfdnq9+g4qJSHRXyTft6
+W3Lkp7UWTM4kMqOcc4VSRdufVKBQNXjGIcnhAgMBAAGjggKcMIICmDAOBgNVHQ8BAf8EBAMCBPAw
+gYQGCCsGAQUFBwEBBHgwdjAwBggrBgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVu
+dHJ1c3QuY29tMEIGCCsGAQUFBzAChjZodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL2Nl
+cnRzL3RydXN0aWRjYWExMy5wN2MwHwYDVR0jBBgwFoAULbfeG1l+KpguzeHUG+PFEBJe6RQwCQYD
+VR0TBAIwADCCASsGA1UdIASCASIwggEeMIIBGgYLYIZIAYb5LwAGAgEwggEJMEoGCCsGAQUFBwIB
+Fj5odHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmljYXRlcy9wb2xpY3kvdHMvaW5k
+ZXguaHRtbDCBugYIKwYBBQUHAgIwga0MgapUaGlzIFRydXN0SUQgQ2VydGlmaWNhdGUgaGFzIGJl
+ZW4gaXNzdWVkIGluIGFjY29yZGFuY2Ugd2l0aCBJZGVuVHJ1c3QncyBUcnVzdElEIENlcnRpZmlj
+YXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL3NlY3VyZS5pZGVudHJ1c3QuY29tL2NlcnRpZmlj
+YXRlcy9wb2xpY3kvdHMvaW5kZXguaHRtbDBFBgNVHR8EPjA8MDqgOKA2hjRodHRwOi8vdmFsaWRh
+dGlvbi5pZGVudHJ1c3QuY29tL2NybC90cnVzdGlkY2FhMTMuY3JsMB8GA1UdEQQYMBaBFGphbHRt
+YW5AYXVyaXN0b3IuY29tMB0GA1UdDgQWBBQB+nzqgljLocLTsiUn2yWqEc2sgjAdBgNVHSUEFjAU
+BggrBgEFBQcDAgYIKwYBBQUHAwQwDQYJKoZIhvcNAQELBQADggEBAJwVeycprp8Ox1npiTyfwc5Q
+aVaqtoe8Dcg2JXZc0h4DmYGW2rRLHp8YL43snEV93rPJVk6B2v4cWLeQfaMrnyNeEuvHx/2CT44c
+dLtaEk5zyqo3GYJYlLcRVz6EcSGHv1qPXgDT0xB/25etwGYqutYF4Chkxu4KzIpq90eDMw5ajkex
+w+8ARQz4N5+d6NRbmMCovd7wTGi8th/BZvz8hgKUiUJoQle4wDxrdXdnIhCP7g87InXKefWgZBF4
+VX21t2+hkc04qrhIJlHrocPG9mRSnnk2WpsY0MXta8ivbVKtfpY7uSNDZSKTDi1izEFH5oeQdYRk
+gIGb319a7FjslV8wggaXMIIEf6ADAgECAhBAAXA7OrqBjMk8rp4OuNQSMA0GCSqGSIb3DQEBCwUA
+MEoxCzAJBgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxJzAlBgNVBAMTHklkZW5UcnVzdCBD
+b21tZXJjaWFsIFJvb3QgQ0EgMTAeFw0yMDAyMTIyMTA3NDlaFw0zMDAyMTIyMTA3NDlaMDoxCzAJ
+BgNVBAYTAlVTMRIwEAYDVQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEzMIIB
+IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAu6sUO01SDD99PM+QdZkNxKxJNt0NgQE+Zt6i
+xaNP0JKSjTd+SG5LwqxBWjnOgI/3dlwgtSNeN77AgSs+rA4bK4GJ75cUZZANUXRKw/et8pf9Qn6i
+qgB63OdHxBN/15KbM3HR+PyiHXQoUVIevCKW8nnlWnnZabT1FejOhRRKVUg5HACGOTfnCOONrlxl
+g+m1Vjgno1uNqNuLM/jkD1z6phNZ/G9IfZGI0ppHX5AA/bViWceX248VmefNhSR14ADZJtlAAWOi
+2un03bqrBPHA9nDyXxI8rgWLfUP5rDy8jx2hEItg95+ORF5wfkGUq787HBjspE86CcaduLka/Bk2
+VwIDAQABo4IChzCCAoMwEgYDVR0TAQH/BAgwBgEB/wIBADAOBgNVHQ8BAf8EBAMCAYYwgYkGCCsG
+AQUFBwEBBH0wezAwBggrBgEFBQcwAYYkaHR0cDovL2NvbW1lcmNpYWwub2NzcC5pZGVudHJ1c3Qu
+Y29tMEcGCCsGAQUFBzAChjtodHRwOi8vdmFsaWRhdGlvbi5pZGVudHJ1c3QuY29tL3Jvb3RzL2Nv
+bW1lcmNpYWxyb290Y2ExLnA3YzAfBgNVHSMEGDAWgBTtRBnA0/AGi+6ke75C5yZUyI42djCCASQG
+A1UdIASCARswggEXMIIBEwYEVR0gADCCAQkwSgYIKwYBBQUHAgEWPmh0dHBzOi8vc2VjdXJlLmlk
+ZW50cnVzdC5jb20vY2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRleC5odG1sMIG6BggrBgEFBQcC
+AjCBrQyBqlRoaXMgVHJ1c3RJRCBDZXJ0aWZpY2F0ZSBoYXMgYmVlbiBpc3N1ZWQgaW4gYWNjb3Jk
+YW5jZSB3aXRoIElkZW5UcnVzdCdzIFRydXN0SUQgQ2VydGlmaWNhdGUgUG9saWN5IGZvdW5kIGF0
+IGh0dHBzOi8vc2VjdXJlLmlkZW50cnVzdC5jb20vY2VydGlmaWNhdGVzL3BvbGljeS90cy9pbmRl
+eC5odG1sMEoGA1UdHwRDMEEwP6A9oDuGOWh0dHA6Ly92YWxpZGF0aW9uLmlkZW50cnVzdC5jb20v
+Y3JsL2NvbW1lcmNpYWxyb290Y2ExLmNybDAdBgNVHQ4EFgQULbfeG1l+KpguzeHUG+PFEBJe6RQw
+HQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMA0GCSqGSIb3DQEBCwUAA4ICAQB/7BKcygLX
+6Nl4a03cDHt7TLdPxCzFvDF2bkVYCFTRX47UfeomF1gBPFDee3H/IPlLRmuTPoNt0qjdpfQzmDWN
+95jUXLdLPRToNxyaoB5s0hOhcV6H08u3FHACBif55i0DTDzVSaBv0AZ9h1XeuGx4Fih1Vm3Xxz24
+GBqqVudvPRLyMJ7u6hvBqTIKJ53uCs3dyQLZT9DXnp+kJv8y7ZSAY+QVrI/dysT8avtn8d7k7azN
+BkfnbRq+0e88QoBnel6u+fpwbd5NLRHywXeH+phbzULCa+bLPRMqJaW2lbhvSWrMHRDy3/d8Hvgn
+LCBFK2s4Spns4YCN4xVcbqlGWzgolHCKUH39vpcsDo1ymZFrJ8QR6ihIn8FmJ5oKwAnnd/G6ADXF
+C9budb9+532phSAXOZrrecIQn+vtP366PC+aClAPsIIDJDsotS5z4X2JUFsNIuEgXGqhiKE7SuZb
+rFG9sdcLprSlJN7TsRDc0W2b9nqwD+rj/5MN0C+eKwha+8ydv0+qzTyxPP90KRgaegGowC4dUsZy
+Tk2n4Z3MuAHX5nAZL/Vh/SyDj/ajorV44yqZBzQ3ChKhXbfUSwe2xMmygA2Z5DRwMRJnp/BscizY
+dNk2WXJMTnH+wVLN8sLEwEtQR4eTLoFmQvrK2AMBS9kW5sBkMzINt/ZbbcZ3F+eAMDGCAqYwggKi
+AgEBME4wOjELMAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UEAxMOVHJ1c3RJ
+RCBDQSBBMTMCEEABgmmaL+s+f8XR8nIOXMwwDQYJYIZIAWUDBAIBBQCgggEpMBgGCSqGSIb3DQEJ
+AzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0MDUwODA3NTc0M1owLwYJKoZIhvcNAQkE
+MSIEIOvI1o7o3RBhHrydMNY+LyjGKKdZbn4T1gSrSHI4x0J9MF0GCSsGAQQBgjcQBDFQME4wOjEL
+MAkGA1UEBhMCVVMxEjAQBgNVBAoTCUlkZW5UcnVzdDEXMBUGA1UEAxMOVHJ1c3RJRCBDQSBBMTMC
+EEABgmmaL+s+f8XR8nIOXMwwXwYLKoZIhvcNAQkQAgsxUKBOMDoxCzAJBgNVBAYTAlVTMRIwEAYD
+VQQKEwlJZGVuVHJ1c3QxFzAVBgNVBAMTDlRydXN0SUQgQ0EgQTEzAhBAAYJpmi/rPn/F0fJyDlzM
+MA0GCSqGSIb3DQEBCwUABIIBAJSAqsyvXHysXBxBoywxmyaC/FOja91oh/km1wpW4crvs6JGSdO8
+1ljHQAhA/QByvuq1x7fJ5JaQV5yf/A+2vMT6Mi9uYkQztOtzCZ5FX3/9rv/woLflsx9LYuoGjVod
+ccenZ9Nikrl1vxbNV3G100KvD+3efWu6sW3nWK44BQWbPjraCZ/eZD4qID5wtdMitQCpymbmDKCk
+xRLPOIDTsTpS2HuMxNzNky1dwucRLME9985gP72uEw4LOx95evwklTFzeIDV6xPnPNGoE/8DHoCw
+I69v5156EJXF9T7iQPyDSMXtm77DTIueHrXSWRDyX0P2osh7j41koYxvN5rOtMwAAAAAAAA=
+--Apple-Mail=_D836D061-CAAF-425C-8204-6F0770CDD582--
 
