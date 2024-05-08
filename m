@@ -1,173 +1,273 @@
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2102.outbound.protection.partner.outlook.cn [139.219.17.102])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2055.outbound.protection.outlook.com [40.107.92.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D9126291;
-	Wed,  8 May 2024 07:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.102
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F75626291;
+	Wed,  8 May 2024 07:21:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.55
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715152825; cv=fail; b=P3BkcdzmwkxtFs39yC39wA2hQD+4LbUVkcLmKVviFbCX+O6aQr013yCUlsQIALM9Nhs5E03Ex44T06bMnIvXAn3Md60I9KmmyfQvZRLfIHlvZH2/Y9yuNOTXV16mwpYWerGsMa9DapcBfPNPVbP56p2bcd+0/LMATUClsqE1PmE=
+	t=1715152894; cv=fail; b=gDzhF8UHsqXNpBdAVcxHf4Ndsn7pXf9Hlnc4AOwziovcEc6qsMBpDt0sTqM7thNI3agplgNIXy5fHwfhwV/vhAvmOngHqE/AlzUQs8ouaYXu05YP2wB1hOARsDTbxEj/QYelnVVFOc6LxTc6/izHr9gY9IqdRicF/0jTnnNWPMw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715152825; c=relaxed/simple;
-	bh=HJvIUgUd9BUIe/soRVflVqY4v3qfdJyFFZPAdzMhiF4=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=O7hAYM5JQDkzG50iR5fv37BFY05rydEQJsA3iWO+tUZ0VaJpeI4YdZyXNI0CPn0UcGem/pLkVajPSAOFKXNJ6RvEMRAD3BzpMmLVdrlA5R1yW3SddPHlI8Cw3s0dvxgfcJvq9ZI3sljT7uAZ0UilfqmA17D31msIOtYVSZdKMfI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.102
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+	s=arc-20240116; t=1715152894; c=relaxed/simple;
+	bh=Hup2+gXfQC8Z/VRS8TIpfCAFJuiUVXHTe3ednvc/kUQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QCGwXmreo+T4NXLr2dmC8bMMLL1r9xRd92dzpN26t4/FEEZhpY7avS1ERFgBJaJkga31Puj+OF1eGtlIwOrOX7r0WEIxh3pOi2cC3UOkdOer1+yatEsBcm5qpg0sMtFrPQlY1+KSyVJHU4+tycP6z8NlQASETDmgGG72tEVCiPM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZM5OQBiP; arc=fail smtp.client-ip=40.107.92.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZM5OQBiP"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XEiZJDBbBRmCH1bZ4JQCX0mS1vpGHeET8k2l6rCbbXWr24aCnkszN09GQdkS1b3ylX6FrMNM66To+6UqmYC6TLrdsK5WQTRQGM77iii13fwI5YnTx5G4MpDOWMKmbfvpJJywA+nQLxqVuKYhuM5/HPD2HZVeMLpODxQOyOv8VhbwR/cWh0v7k2Mn42F55DwVbLfS25pNibwMfP/g5ZUEBiI+iOZFKD3czxlHf1IEWqjaeoETOSmHb1O7iu1x1Z81SEuVI/q619MkyYBf+UhtPX8ggmUVRHnhMtiZsIGrHRQuN6oc+Mo7u3XUdymZCGuNgndFkMnUOBYd6H1h7qigZw==
+ b=GrUN3ZA9dU87NervJAecDwCtRDpxkqrm77SF0Ox/0sSOqJnjlv7R/e3zYWL/WkSxM6DslNCQzi7uK0pphmHdODLOMrh3NXNj3wC8Qencl0GOyc1QTQSvqAVM/XpiiNmil+roqgXwpQa9ibRaiBFSC21xDBJ+z0RKH0VhLJDjomsWvkpA4KBwKlLY4nzwIRyYVnQ3E4845v8T86aIaRPNMq6qCTiQtzoeyypj7OWvx5CzHQubQ4SHMtEGGWZ6MSaUMNR76mojic6kUnKvMnAZ85pwuwbMyCoFhGTbKzHSZ/dvrJTdrMCyqw/TPi7GfdUw3HIaPKU0T3dNW0CX4EdoHg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dt4ZLihArQkU8P3Z4dQamKHuAPsmwOivzAebXuv2eCg=;
- b=f3YJGsYL9QfZNn4/NKB2fbx5Q+lZoDuYi18+Vu/ICJK3d0HF+HKHraHv37nsNIim1ZbJkaoUy/7DTL1o7DyodHj5shiRH9VJSeFJJJHERaUz1UVDhOR01lw7J3qJVPJ5A37czY7WRVgfnB3sAMFxENriXscliz2HeEnT5+hugTcjCeq2DqGsZZoQAKXh3+sQ1NWnoN2dB1VmeeLASWJo2hU2Okye0w3MXTuMb04v16hIKVbW/qv0mEFSlAoHJvm/pGDrMj4tU+b62vkilNpPsjZie0s0mNOVKtQJUGZKAxCIwtvGKTbWbax6o9xyTdD7YpNVQUu+6HAg8/m/E2mmyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::10) by NTZPR01MB1050.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:1::6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.43; Wed, 8 May
- 2024 07:04:14 +0000
-Received: from NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- ([fe80::e903:99a6:10b7:304d]) by
- NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn ([fe80::e903:99a6:10b7:304d%6])
- with mapi id 15.20.7472.044; Wed, 8 May 2024 07:04:14 +0000
-From: Xingyu Wu <xingyu.wu@starfivetech.com>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Claudiu Beznea <Claudiu.Beznea@microchip.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor.dooley@microchip.com>
-Cc: Xingyu Wu <xingyu.wu@starfivetech.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	alsa-devel@alsa-project.org,
-	linux-sound@vger.kernel.org
-Subject: [PATCH v3 0/2] Add Cadence I2S-MC controller driver
-Date: Wed,  8 May 2024 15:04:04 +0800
-Message-Id: <20240508070406.286159-1-xingyu.wu@starfivetech.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BJSPR01CA0003.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c211:c::15) To NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c510:8::10)
+ bh=/xL4kFKRtC9K4jiGXoD/qTWI9S8TZbt1wr3ZL8nPqUs=;
+ b=goYOtq9/0/2/RtyRpcjFfqqKep6vOfXyz8R6rF0jh8wUnwlLLaQKSbk14F1VH1qo0vHOlizBmG57hukLCgdkhpnOjO9FvaOnC/mn2cnhwL3R06Z2abj6JXC7jgRAIO8sit2BB4gErksAgIPX5/Y+3eC46kLtYTTzbjkuaXC+yETcY6lFTZpYlwp3zJp9HpY4aqyeBtm3yLBajJiNJiKF6IXqISp0t0zcU3rLTH777Cj5+anxuWZcIsJnUpu9jY5N0qATU5hufbgnjSibW3d9WzeJvAwwv18szOrKaM1KV85hJtv5IPwRpRq+FLjQT8L1n9bhn9QNsLTBIVFNPI5MvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/xL4kFKRtC9K4jiGXoD/qTWI9S8TZbt1wr3ZL8nPqUs=;
+ b=ZM5OQBiPIA3JLzPFA0bh26xHCSA+SZtBV6Acc0jqmauFnV5ZV329Zpcte/V2pcYQH2iDmkvceTafuv31qDxcFWrSel6R/mv5SWCP4O0bvEdG/mvGtLvaQm13qCQNCzGrsy3T+SOzVIMoElh92vvHz4MkBbT00jrXve0mq9Tq2+s=
+Received: from MN2PR01CA0063.prod.exchangelabs.com (2603:10b6:208:23f::32) by
+ SN7PR12MB7883.namprd12.prod.outlook.com (2603:10b6:806:32b::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7544.40; Wed, 8 May 2024 07:21:28 +0000
+Received: from BL02EPF0001A106.namprd05.prod.outlook.com
+ (2603:10b6:208:23f:cafe::42) by MN2PR01CA0063.outlook.office365.com
+ (2603:10b6:208:23f::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.43 via Frontend
+ Transport; Wed, 8 May 2024 07:21:28 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BL02EPF0001A106.mail.protection.outlook.com (10.167.241.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7544.18 via Frontend Transport; Wed, 8 May 2024 07:21:28 +0000
+Received: from pyuan-Chachani-VN.amd.com (10.180.168.240) by
+ SATLEXMB04.amd.com (10.181.40.145) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 8 May 2024 02:21:24 -0500
+From: Perry Yuan <perry.yuan@amd.com>
+To: <rafael.j.wysocki@intel.com>, <Mario.Limonciello@amd.com>,
+	<viresh.kumar@linaro.org>, <Ray.Huang@amd.com>, <gautham.shenoy@amd.com>,
+	<Borislav.Petkov@amd.com>
+CC: <Alexander.Deucher@amd.com>, <Xinmei.Huang@amd.com>,
+	<Xiaojian.Du@amd.com>, <Li.Meng@amd.com>, <linux-pm@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v10 0/7] AMD Pstate Driver Core Performance Boost
+Date: Wed, 8 May 2024 15:21:05 +0800
+Message-ID: <cover.1715152592.git.perry.yuan@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: NTZPR01MB0956:EE_|NTZPR01MB1050:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4cd88dfc-b97b-4555-b2f9-08dc6f2d1184
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A106:EE_|SN7PR12MB7883:EE_
+X-MS-Office365-Filtering-Correlation-Id: 54bd08b1-5417-48bf-897a-08dc6f2f7a50
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|82310400017|1800799015|36860700004|376005;
 X-Microsoft-Antispam-Message-Info:
-	wHX/Ar0b39I7jKCJmreU35WEh8+Tw/6CxBMsWBWHWIrRpJEvkmwb2yIj2F1sEywT7Zw/R+v4a0QD7IzKxxqIRpLcDtGr06o6i/UR+Qw7TfxB0ZRtzh41SOuHDq/VN2XMLu/5G7vN5Fhr76UFwKdlkUdHcfLsGhC+4JbyrebeVuWMlESp1eNvHO1+2zqqmem21l1QhoejjDyuOsqDh4iCufPi9CEXGbcKUJKYE7mNRh9YmDk0eL8uO4Mui6VuykJ3w4o2JiVnKK/DzrgzcKLo+jGMEBIv1TgT/3U+P1WROpGQjivlPvK8IblJJsZxsb1oCV8J8GcEdJGKVRDpgYquHIyCJGOUdmql+b/DYUeySZQzQFmt5UlfYLr1+bYGwE+8V6ujNxcxEqExO4hvK+aqfzjgs380EciNkK7mTa3gvugxOtwCElizsgfpA007kPZiRbrxawKx1HEzNjgR4xEort8rmgg16kJ+K5fiXjY7enowPsSVUlUZNfucwqhMhmkaop4ylfzInxKffCKL6gw8DcbAPGE6io25hDpuBaXwZxneCn62Jd4+uUXQtOg5FMdvz0N9GKjHMcaWxlex/BavPFGINgK+jdg0eBjTOoo9d54fk7kRw8ohwGXrguVmxHg5
+	=?us-ascii?Q?C4tB8ecZT0ZH4dS0GrK7Rrm7fmjo88w+mPsxPlOCX2OpuqUYxLqdokSxAZZq?=
+ =?us-ascii?Q?A0GdK4VH4JPkyR7E5+oW0iJdQ9zFO44X+HaQ3AFV4Sk2OvFXqgQs5aM3RZUT?=
+ =?us-ascii?Q?SU2ZZ2Agxf074I0ztZSMWtbPnE2hD6iLB7LO6Ur2MxqRpSttvlgxRNnoEv2L?=
+ =?us-ascii?Q?LQAoSptsdn7bQ6z8YdWrryvRdWhVFLpJ/cPaYYjBVEStF/EiMPsE2kpFotLV?=
+ =?us-ascii?Q?j8oQSOlLxk13nw0uinPiP/x06gvVoJ0NFYw39iLo30iN26v4Jl3U9A2Rsa36?=
+ =?us-ascii?Q?X/ECyFBZREHS58pggottOAGmbAKPvtUNvuDHbUlZladN5l5cE1Ou3njctg7C?=
+ =?us-ascii?Q?0CCPdH+yGdfzev6Gx25nNxxuxQKjfRzZdffb+ROniAATgzlCeCbucr2ni0t8?=
+ =?us-ascii?Q?ehXV5YGEOTAz/NI4AxJi6bYdrZBWkHI1yBr+Dl/3dUMnbVBuHG/7qFKlywxN?=
+ =?us-ascii?Q?C647NNOnyo8QmKGI3yKCRpRlH+F/modegByRPar8lzdEvFpI3Twja8Gg3H/n?=
+ =?us-ascii?Q?IQcf5gZ8tjBJ8biLZQephwsrWpr/SSIdXVCEkpADhQlFuFUUtwSjwDGk10Yq?=
+ =?us-ascii?Q?G6FnkYb3TkaGF3WMIi5IC3+UhDEjr2GDe0+SyX3yT6rLcZkAc94gmtLfdq6H?=
+ =?us-ascii?Q?dGqYDLu6OJB0D0TuSl2GQh3GLtxCbCl1yp0jcqFLALqxS7v+axlWxVPJg9Zj?=
+ =?us-ascii?Q?feR9trVbFwj4fDc5wlz2DNvZ6lWK5mYTZ1HXIh2pxQmPxwOJFY9c/yH0UmRQ?=
+ =?us-ascii?Q?KvixMS7yj1577WFsfWIR0wlRtTKsl2zAtWhnW9kfUsIjcGDFGR8zSmty8tdu?=
+ =?us-ascii?Q?jKUzyn65tDtqnZr5LIRERmgLl4LsXWw+f2Bi+dg/SDUwv9cEpN0pxvSDdqOA?=
+ =?us-ascii?Q?IB+pRWVaywQLSiCdHMfqHsk7vUIF8gF1jn8DuRNBMtW4vWFNJ+TI8KobxI4E?=
+ =?us-ascii?Q?5DkxBuzBCJvasmH4WV89mahovmY17OzppF0VCL7ttRb4XKTs1CXphl1IvDDC?=
+ =?us-ascii?Q?UeQA7N6qSVV/zMUnTiRwMZSHGIN9sIVHA1gEpRPcbC6Kc0AI7zWJdWMqqPCc?=
+ =?us-ascii?Q?WvwC8rvNsBlG+8bz3ZG2u0qScvgb/+ual1LA6kmx4xVQE9NCpDlUsbnlX8Cn?=
+ =?us-ascii?Q?fK1k/ZUsbFW2AOx0AMeyzQQk1QZ16/dQnD/bEI1AV9x4SYM3VQS7ZIvDYu34?=
+ =?us-ascii?Q?qPBl3DmLBxEh2K/g+R6fMuDY1bcIwYdv3z8M2P0rtSbbupRk61gdHjOEA1S+?=
+ =?us-ascii?Q?M+cDW2EkG4wiYKJrF5ICzny8Ro+i/sJOa7ux7oxYa0iGVUsNjUy6pcdvUqwl?=
+ =?us-ascii?Q?E9vegk9cLAZ7xpYCoyxWj9tOHs+peUNuj8cnml7IE9D96A=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(52116005)(41320700004)(366007)(7416005)(1800799015)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?BYRzGTpzG3OXVftv+nE7zA46n/grrmg6cF0l0BX9tZy6prcx3ic+9rH3tByY?=
- =?us-ascii?Q?fZccBkPlvN8rwtOHRx+JIUf556oZ2PAb2tpOwULDxhACWg5hfUbyNgWzxq1F?=
- =?us-ascii?Q?Vi21IfksOBAxeMFDU3em3eIrD440pVQ9XcLBpKtjSZsD9mgvtmvmA//xQLWW?=
- =?us-ascii?Q?Bmm3bfQiRR0qBE1gEkyFKW263oKafwiwyhq1GGNMRL7F3nJ/UCYEtBxSF1Tx?=
- =?us-ascii?Q?hblqL62nrTNJ5Ku9py1PcIrRgMq024/JkDxY9ajcHiPDRMi8Dtrxnbirfw0z?=
- =?us-ascii?Q?wAG739UCu+PofJlRdBBm3+7PP47SVfjflEjaMYF5dyiCaef7rs4mAw6iAv0b?=
- =?us-ascii?Q?2pyJIcYgS1UaWyelIHRWsnQZ0J/NZ7J/zP+1KTzjGXYOQW7G75L9jF7xY8Dp?=
- =?us-ascii?Q?wkHglLriAeLtpGTMSiT6Cb3tQA0O2nU5v14/69rr6kXeHKQkJG+U8OfXLB/f?=
- =?us-ascii?Q?/r7/ZmtV232lsHzmEw9qTnU15a0MLifxcLjh0l6hBb5GOr5T7Kfd4OCG2C8/?=
- =?us-ascii?Q?PhBbwKL6ncqvy7q6f33PsEnvUoQJ7pFETC2h6KBCa4sLkzg6nFhkaWA4Ccmz?=
- =?us-ascii?Q?ycVFOLiInT/9YO6xyDHbF99BZDVLhIIyB4uqWlH0+YAZebpMQBmkyDkaKRn/?=
- =?us-ascii?Q?bgQxoPLLxBhaqHHnY5Sqv+3vkNQHuCrQC2VjRwaesiWUPKJOUCGINzdf70FF?=
- =?us-ascii?Q?nnX3Tg4q9ZQRh2Fqnn9f6yyjEKSuEZ9fji73ZMFYDTt5dCNXQQxzgWClXdGx?=
- =?us-ascii?Q?ZdHYFsZvwJNQVg1HFw2vGRgIyEj9lPBMf8i/NkghztrJZSFytkg8m0a2xddJ?=
- =?us-ascii?Q?bs23rFHKh8axOF+mCj7y2N+4CTQUwZYPU9JoRjsl3jHuvv1whqDhXni/7PT5?=
- =?us-ascii?Q?8V0z5PsTSBIHmH/KkhLB+6eykttq9QlLA1dH0emEm2K57/IyE5CxRJEOC0/V?=
- =?us-ascii?Q?hrUNKRuIs5IAOtLZT9KmFJi5r/zAiBr9NQd/NKfbQ4vr30MWZz9TIBxFAGn3?=
- =?us-ascii?Q?EuDtY+WPqHpPIkwee8RdpUsb7LkHeJFyicQgoa98QGDMZsWBNKa7nvNw6CBo?=
- =?us-ascii?Q?c/6f7ca/i78jcSm4sps0oj5/h9lTEsUzF6nZALQYQLIxawvKsQ8LfXI0916c?=
- =?us-ascii?Q?3tsKIvyju8lzPf6m+VLRFo8hsva4YTAs4GOZSwFms1yzGFVM3pdEG/lo86sK?=
- =?us-ascii?Q?4lpTAPFRai1fXdvGu/d1x7ADcME3k9U9eiHf0+25eMlq3WkveZKUwp2AI2Bt?=
- =?us-ascii?Q?ccpSYs6GH1zlD9OkgNAeBBHwFnPq6OqOPUMmIQTZExPBwEuAnytvhimeqX5G?=
- =?us-ascii?Q?ULU6ri1omNjzKPk5jcXVeZ3znI3V2FXuwGD6u8harlmxwiXFQ2aAKH4Y1gJK?=
- =?us-ascii?Q?Xy5Ywj96sSMdGU4oKDGe5izp9nrZZOyPyieOCwj8LmBrlHjg0N9obK2qAkHc?=
- =?us-ascii?Q?ESvGFEyMkVLVV/LV6Ua6GgYzikmDZbv6ATqW/trnf3tSMaPdscf9jK0L0Rq0?=
- =?us-ascii?Q?KckslgrnPRAXutB22kxvyf/r9/9sYFkQ/mkSGf4Zqj2F68fAKrU9wEPMWakh?=
- =?us-ascii?Q?2Is/sAxBLtlQ9ZvzAEyNUvQElT8N1V9OLMQcOZ+Nq22PJXHlc2voEz+XktWc?=
- =?us-ascii?Q?YA=3D=3D?=
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4cd88dfc-b97b-4555-b2f9-08dc6f2d1184
-X-MS-Exchange-CrossTenant-AuthSource: NTZPR01MB0956.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2024 07:04:13.9376
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400017)(1800799015)(36860700004)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2024 07:21:28.5543
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jrAlNbgLL+u8q2D4gxRAQBwMuKtQs1LxKk/w05Xrr1iqtJMCtUKyrjJL+lW3vlKbz+8wrO1OY7GZLJ2HVsInriCc33dV4zhSHjxgMNNlIRc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: NTZPR01MB1050
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54bd08b1-5417-48bf-897a-08dc6f2f7a50
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A106.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7883
 
-The Cadence Multi-channel I2S (I2S-MC) Controller implements a function of
-the multi-channel (up to 8-channel) bus. Each stereo channel combines
-functions of a transmitter and a receiver, and can switch freely between
-them. Each channel has independent gating, clock and interruption control.
-It also support some of these channels are used as playback and others can 
-also be used as record in the same time.
+Hi all,
+The patchset series add core performance boost feature for AMD pstate
+driver including passisve ,guide and active mode support.
 
-Four I2S controllers are used on the StarFive JH8100 SoC. Two of the I2S 
-controllers use two stereo channels, one of them use four channels, and 
-one use eight. It had tested on the fpga with WM8960 and PDM.
+User can change core frequency boost control with a new sysfs entry:
 
-Changes since v2:
-- Dropped the description of interrupts in bindings.
-- Modified the properties like 'compatible' and 'required'.
-- Defined the special property in top-level and made it false in other
-  case in the bindings.
-- Added the test of other format in the driver.
-- Changed the return values and switch the TX and RX channels for
-  convenience.
-- Modified the macros about 'SND_SOC_DAIFMT_CBM_CFM'.
-- Added pm_runtime_set_active() to fix the state of pm_runtime.
+"/sys/devices/system/cpu/amd_pstate/cpb_boost"
 
-v2: https://lore.kernel.org/all/20240320090239.168743-1-xingyu.wu@starfivetech.com/
 
-Changes since v1: 
-- Added new compatible for StarFive JH8100 SoC and a special property to
-  be got as the max channels number in the bindings.
-- Dropped the useless '|' in the bindings.
-- Moved the drivers to a new folder named 'cdns' and modified the name
-  of functions.
+1) globally disable core boost:
+$ sudo bash -c "echo 0 > /sys/devices/system/cpu/amd_pstate/cpb_boost"
+$ lscpu -ae
+CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ      MHZ
+  0    0      0    0 0:0:0:0          yes 4201.0000 400.0000 2983.578
+  1    0      0    1 1:1:1:0          yes 4201.0000 400.0000 2983.578
+  2    0      0    2 2:2:2:0          yes 4201.0000 400.0000 2583.855
+  3    0      0    3 3:3:3:0          yes 4201.0000 400.0000 2983.578
+  4    0      0    4 4:4:4:0          yes 4201.0000 400.0000 2983.578
 
-v1: https://lore.kernel.org/all/20231221033223.73201-1-xingyu.wu@starfivetech.com/
+2) globally enable core boost:
+$ sudo bash -c "echo 1 > /sys/devices/system/cpu/amd_pstate/cpb_boost"
+$ lscpu -ae
+   0    0      0    0 0:0:0:0          yes 5759.0000 400.0000 2983.578
+  1    0      0    1 1:1:1:0          yes 5759.0000 400.0000 2983.578
+  2    0      0    2 2:2:2:0          yes 5759.0000 400.0000 2983.578
+  3    0      0    3 3:3:3:0          yes 5759.0000 400.0000 2983.578
+  4    0      0    4 4:4:4:0          yes 5759.0000 400.0000 2983.578
 
-Xingyu Wu (2):
-  ASoC: dt-bindings: Add bindings for Cadence I2S-MC controller
-  ASoC: cdns: Add drivers of Cadence Multi-Channel I2S Controller
 
- .../bindings/sound/cdns,i2s-mc.yaml           | 109 +++
- MAINTAINERS                                   |   6 +
- sound/soc/Kconfig                             |   1 +
- sound/soc/Makefile                            |   1 +
- sound/soc/cdns/Kconfig                        |  18 +
- sound/soc/cdns/Makefile                       |   3 +
- sound/soc/cdns/cdns-i2s-mc-pcm.c              | 285 +++++++
- sound/soc/cdns/cdns-i2s-mc.c                  | 704 ++++++++++++++++++
- sound/soc/cdns/cdns-i2s-mc.h                  | 151 ++++
- 9 files changed, 1278 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/cdns,i2s-mc.yaml
- create mode 100644 sound/soc/cdns/Kconfig
- create mode 100644 sound/soc/cdns/Makefile
- create mode 100644 sound/soc/cdns/cdns-i2s-mc-pcm.c
- create mode 100644 sound/soc/cdns/cdns-i2s-mc.c
- create mode 100644 sound/soc/cdns/cdns-i2s-mc.h
+============================================================================
+The V9 patches add per CPU boost control, user can enable/disable CPUs boost
+as the below command tested on a laptop system.
+# before
+  CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ       MHZ
+  0    0      0    0 0:0:0:0          yes 4208.0000 400.0000 1666.7740
+  1    0      0    0 0:0:0:0          yes 4208.0000 400.0000  400.0000
+  2    0      0    1 1:1:1:0          yes 4208.0000 400.0000 3386.1260
+  3    0      0    1 1:1:1:0          yes 4208.0000 400.0000  400.0000
+$ sudo rdmsr 0xc00102b3 -p 0
+10a6
+
+$ sudo bash -c "echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/boost"
+# after
+  CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ       MHZ
+    0    0      0    0 0:0:0:0          yes 3501.0000 400.0000  400.0000
+    1    0      0    0 0:0:0:0          yes 4208.0000 400.0000 1391.0690
+    2    0      0    1 1:1:1:0          yes 4208.0000 400.0000 3654.4541
+    3    0      0    1 1:1:1:0          yes 4208.0000 400.0000  400.0000
+$ sudo rdmsr 0xc00102b3 -p 0
+108a
+
+
+The patches have been tested with the AMD 7950X processor and many users
+would like to get core boost control enabled for power saving.
+
+Perry.
+
+
+Changes from v9:
+ * change per CPU boost sysfs file name to `boost` (Mario)
+ * rebased to latest linux-pm/bleeding-edge
+
+Changes from v8:
+ * pick RB flag for patch 4 (Mario)
+ * change boot_cpu_has to cpu_feature_enabled for patch 2 (Boris)
+ * merge patch 6 into patch 3 (Mario)
+ * add two patch for per CPU boost control patch 6 & 7(Mario)
+ * rebased to latest linux-pm/bleeding-edge
+
+Changes from v7:
+ * fix the mutext locking issue in the sysfs file update(Ray, Mario)
+ * pick ack flag from Ray
+ * use X86_FEATURE_CPB to verify the CPB function in Patch #2(Ray)
+ * rerun the testing to check function works well
+ * rebased to linux-pm/bleeding-edge latest
+
+Changes from v6:
+ * reword patch 2 commit log (Gautham)
+ * update cover letter description(Gautham)
+ * rebase to kernel v6.9-rc5
+
+Changes from v4:
+ * drop the legacy boost remove patch, let us keep the legacy interface
+   in case some applications break.
+ * rebase to linux-pm/bleeding-edge branch
+ * rework the patchset base on [PATCH v8 0/8] AMD Pstate Fixes And
+   Enhancements which has some intial work done there.
+
+Changes from v4:
+ * move MSR_K7_HWCR_CPB_DIS_BIT into msr-index.h
+ * pick RB flag from Gautham R. Shenoy
+ * add Cc Oleksandr Natalenko <oleksandr@natalenko.name>
+ * rebase to latest linux-pm/bleeding-edge branch
+ * rebase the patch set on top of [PATCH v7 0/6] AMD Pstate Fixes And Enhancements
+ * update  [PATCH v7 2/6] to use MSR_K7_HWCR_CPB_DIS_BIT
+
+Changes from v3:
+ * rebased to linux-pm/bleeding-edge v6.8
+ * rename global to amd_pstate_global_params(Oleksandr Natalenko)
+ * remove comments for boot_supported in amd_pstate.h
+ * fix the compiler warning for amd-pstate-ut.ko
+ * use for_each_online_cpu in cpb_boost_store which fix the null pointer
+   error during testing
+ * fix the max frequency value to be KHz when cpb boost disabled(Gautham R. Shenoy)
+
+Changes from v2:
+ * move global struct to amd-pstate.h
+ * fix the amd-pstate-ut with new cpb control interface
+
+Changes from v1:
+ * drop suspend/resume fix patch 6/7 because of the fix should be in
+   another fix series instead of CPB feature
+ * move the set_boost remove patch to the last(Mario)
+ * Fix commit info with "Closes:" (Mario)
+ * simplified global.cpb_supported initialization(Mario)
+ * Add guide mode support for CPB control
+ * Fixed some Doc typos and add guide mode info to Doc as well.
+
+v1: https://lore.kernel.org/all/cover.1706255676.git.perry.yuan@amd.com/
+v2: https://lore.kernel.org/lkml/cover.1707047943.git.perry.yuan@amd.com/
+v3: https://lore.kernel.org/lkml/cover.1707297581.git.perry.yuan@amd.com/
+v4: https://lore.kernel.org/lkml/cover.1710322310.git.perry.yuan@amd.com/
+v5: https://lore.kernel.org/lkml/cover.1710473712.git.perry.yuan@amd.com/
+v6: https://lore.kernel.org/lkml/cover.1710754236.git.perry.yuan@amd.com/
+v7: https://lore.kernel.org/lkml/cover.1713861200.git.perry.yuan@amd.com/
+v8: https://lore.kernel.org/lkml/cover.1714112854.git.perry.yuan@amd.com/
+v9: https://lore.kernel.org/lkml/cover.1714989803.git.perry.yuan@amd.com/
+
+Perry Yuan (7):
+  cpufreq: acpi: move MSR_K7_HWCR_CPB_DIS_BIT into msr-index.h
+  cpufreq: amd-pstate: initialize new core precision boost state
+  cpufreq: amd-pstate: implement cpb_boost sysfs entry for boost control
+  cpufreq: amd-pstate: fix the MSR highest perf will be reset issue
+    while cpb boost off
+  Documentation: cpufreq: amd-pstate: introduce the new cpu boost
+    control method
+  cpufreq: amd-pstate: introduce per CPU frequency boost control
+  Documentation: cpufreq: amd-pstate: update doc for Per CPU boost
+    control method
+
+ Documentation/admin-guide/pm/amd-pstate.rst |  30 ++++
+ arch/x86/include/asm/msr-index.h            |   2 +
+ drivers/cpufreq/acpi-cpufreq.c              |   2 -
+ drivers/cpufreq/amd-pstate-ut.c             |   2 +-
+ drivers/cpufreq/amd-pstate.c                | 189 ++++++++++++++++++--
+ include/linux/amd-pstate.h                  |  14 ++
+ 6 files changed, 225 insertions(+), 14 deletions(-)
 
 -- 
-2.25.1
+2.34.1
 
