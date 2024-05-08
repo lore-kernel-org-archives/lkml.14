@@ -1,45 +1,45 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAA4B130A5D
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 18:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDABC12F393
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 18:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715193021; cv=none; b=bZu7GPHN6AIH9ji2kq2wiUZsM2O9IVNQZQj8D3Ai03hhCZxl8OlJLjzHwDRm5rMBxH5AOI/kLcyIxrV404aETGHnSkXjfpu1Wo4Ua581ESUvhvfjWCCgI4hV+pEcY0ct/vXLNbCnLfwY0K3V7qjDSFACtjAWjeo9fkhV2TIpn94=
+	t=1715193027; cv=none; b=ptzSuD92gfe3LoS/4opi8TAeVoxZXe6vH7iQDS9fS07khltwcjd7bvvzw8V9fOOvL8omADKHw2txJUKoi41Vlw0LHvH1Ryz1VX8bBC5d3de4wlm+7quEnnv1RG3gAhw2K6Bvx+BpJicLl+zf33tEU8PvHHfg+0nG2iXjpnAIpds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715193021; c=relaxed/simple;
-	bh=9cMxw+0FUPFscli9SRIp15T5tvpY7n1JYHRqVPxhLQ8=;
+	s=arc-20240116; t=1715193027; c=relaxed/simple;
+	bh=2jYn8Nc6+ozSR1Xn/B9+Ij4CHbheK6aJy1ZEPlp0hzU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=n1UG4oMC4QoQK2Ok81VkQb3lZSidxTEhMGt+RJ+JhxXPquClmEWDfj+9qEqHrqfGKgKRiaY3ybwlhrCdoTTWIpb1U3vSiMm7PALWDnmWVPPedLwWvRDXD94SwfClC3a/xpn1yW1kKStFK3rPku/5SjuJuxM6T7YZduMq5fw77eM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aqolmFLy; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=NkNq4QKTPHGpcViFCpLnd7IYgQ/R9WPaSST77sfw0hggtLtxxG+KjC0V1t4hKDshPkeitqAtOfsGLDPv/BkouXWiB4SYuHfKKGFMVTjnNR7bFPW5gDQIQdXyLKSiCWujbBelsbst4GjdA9cASV4Lm2Eql/B5H3zayorcomvOAPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=is+lmrBe; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aqolmFLy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="is+lmrBe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715193018;
+	s=mimecast20190719; t=1715193025;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=MYWABkGxV8MYRWHh8nd3DHUSmm6awTOHiljU31Nr1kM=;
-	b=aqolmFLyiCKur/L8AxnNt7vvV6YIHoBrTVtSLIpEZqiLVpTbxnz4hICnBwvcbSBJexjrtt
-	XKstOWPl0Shpieuq4lE6LuejB43JdxmOFPTp62p+fFRbPMd1C+8VNvPywqVQE4yAcuE/hK
-	AHqMUQKh/afMPXJ3NCT4DNOl0Xz+5/Q=
+	bh=4sBosY++fTH5Chz3WH+OVztpSiojrQgo/6j44g/xQVs=;
+	b=is+lmrBeDIC3L758DTe/J2Y268e7Ecx2OMSeueLI4ijmHkP0QZ66rOrPjlhneSR1i0t+25
+	JPkYltgKgi5ZnJk4SZSYkEAiNXKAwCgYsrvKKBSi7BE1rF4BKEiBK4c2tw0GM6hQR97Ko8
+	BAZ1jwmk7qQHY8d6bnBcHpZuciJB5fs=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-628-C9cFn8fZOBah3jYfTssNEg-1; Wed, 08 May 2024 14:30:13 -0400
-X-MC-Unique: C9cFn8fZOBah3jYfTssNEg-1
+ us-mta-477-EmvBefZoPPCR3lind5eOTg-1; Wed, 08 May 2024 14:30:20 -0400
+X-MC-Unique: EmvBefZoPPCR3lind5eOTg-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CD905800262;
-	Wed,  8 May 2024 18:30:12 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 04CC98016FA;
+	Wed,  8 May 2024 18:30:20 +0000 (UTC)
 Received: from t14s.fritz.box (unknown [10.39.192.63])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5545C1000DB4;
-	Wed,  8 May 2024 18:30:09 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id F3CFB10009E6;
+	Wed,  8 May 2024 18:30:16 +0000 (UTC)
 From: David Hildenbrand <david@redhat.com>
 To: linux-kernel@vger.kernel.org
 Cc: kvm@vger.kernel.org,
@@ -55,9 +55,9 @@ Cc: kvm@vger.kernel.org,
 	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
 	Matthew Wilcox <willy@infradead.org>,
 	Thomas Huth <thuth@redhat.com>
-Subject: [PATCH v3 04/10] s390/uv: convert PG_arch_1 users to only work on small folios
-Date: Wed,  8 May 2024 20:29:49 +0200
-Message-ID: <20240508182955.358628-5-david@redhat.com>
+Subject: [PATCH v3 06/10] s390/uv: make uv_convert_from_secure() a static function
+Date: Wed,  8 May 2024 20:29:51 +0200
+Message-ID: <20240508182955.358628-7-david@redhat.com>
 In-Reply-To: <20240508182955.358628-1-david@redhat.com>
 References: <20240508182955.358628-1-david@redhat.com>
 Precedence: bulk
@@ -69,130 +69,52 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Now that make_folio_secure() may only set PG_arch_1 for small folios,
-let's convert relevant remaining UV code to only work on (small) folios
-and simply reject large folios early. This way, we'll never end up
-touching PG_arch_1 on tail pages of a large folio in UV code.
-
-The folio_get()/folio_put() for functions that are documented to already
-hold a folio reference look weird; likely they are required to make
-concurrent gmap_make_secure() back off because the caller might only hold
-an implicit reference due to the page mapping. So leave that alone for now.
+It's not used outside of uv.c, so let's make it a static function.
 
 Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/s390/include/asm/page.h |  2 ++
- arch/s390/kernel/uv.c        | 41 ++++++++++++++++++++++--------------
- 2 files changed, 27 insertions(+), 16 deletions(-)
+ arch/s390/include/asm/uv.h | 6 ------
+ arch/s390/kernel/uv.c      | 2 +-
+ 2 files changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
-index 224ff9d433ea..ecbf4b626f46 100644
---- a/arch/s390/include/asm/page.h
-+++ b/arch/s390/include/asm/page.h
-@@ -247,7 +247,9 @@ static inline unsigned long __phys_addr(unsigned long x, bool is_31bit)
- #define pfn_to_phys(pfn)	((pfn) << PAGE_SHIFT)
+diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
+index 0e7bd3873907..d2205ff97007 100644
+--- a/arch/s390/include/asm/uv.h
++++ b/arch/s390/include/asm/uv.h
+@@ -484,7 +484,6 @@ int uv_pin_shared(unsigned long paddr);
+ int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb);
+ int gmap_destroy_page(struct gmap *gmap, unsigned long gaddr);
+ int uv_destroy_owned_page(unsigned long paddr);
+-int uv_convert_from_secure(unsigned long paddr);
+ int uv_convert_owned_from_secure(unsigned long paddr);
+ int gmap_convert_to_secure(struct gmap *gmap, unsigned long gaddr);
  
- #define phys_to_page(phys)	pfn_to_page(phys_to_pfn(phys))
-+#define phys_to_folio(phys)	page_folio(phys_to_page(phys))
- #define page_to_phys(page)	pfn_to_phys(page_to_pfn(page))
-+#define folio_to_phys(page)	pfn_to_phys(folio_pfn(folio))
+@@ -503,11 +502,6 @@ static inline int uv_destroy_owned_page(unsigned long paddr)
+ 	return 0;
+ }
  
- static inline void *pfn_to_virt(unsigned long pfn)
+-static inline int uv_convert_from_secure(unsigned long paddr)
+-{
+-	return 0;
+-}
+-
+ static inline int uv_convert_owned_from_secure(unsigned long paddr)
  {
+ 	return 0;
 diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-index 3c6d86e3e828..914dcec27329 100644
+index ecfc08902215..3d3250b406a6 100644
 --- a/arch/s390/kernel/uv.c
 +++ b/arch/s390/kernel/uv.c
-@@ -135,14 +135,18 @@ static int uv_destroy_page(unsigned long paddr)
+@@ -156,7 +156,7 @@ int uv_destroy_owned_page(unsigned long paddr)
+  *
+  * @paddr: Absolute host address of page to be exported
   */
- int uv_destroy_owned_page(unsigned long paddr)
+-int uv_convert_from_secure(unsigned long paddr)
++static int uv_convert_from_secure(unsigned long paddr)
  {
--	struct page *page = phys_to_page(paddr);
-+	struct folio *folio = phys_to_folio(paddr);
- 	int rc;
- 
--	get_page(page);
-+	/* See gmap_make_secure(): large folios cannot be secure */
-+	if (unlikely(folio_test_large(folio)))
-+		return 0;
-+
-+	folio_get(folio);
- 	rc = uv_destroy_page(paddr);
- 	if (!rc)
--		clear_bit(PG_arch_1, &page->flags);
--	put_page(page);
-+		clear_bit(PG_arch_1, &folio->flags);
-+	folio_put(folio);
- 	return rc;
- }
- 
-@@ -170,14 +174,18 @@ int uv_convert_from_secure(unsigned long paddr)
-  */
- int uv_convert_owned_from_secure(unsigned long paddr)
- {
--	struct page *page = phys_to_page(paddr);
-+	struct folio *folio = phys_to_folio(paddr);
- 	int rc;
- 
--	get_page(page);
-+	/* See gmap_make_secure(): large folios cannot be secure */
-+	if (unlikely(folio_test_large(folio)))
-+		return 0;
-+
-+	folio_get(folio);
- 	rc = uv_convert_from_secure(paddr);
- 	if (!rc)
--		clear_bit(PG_arch_1, &page->flags);
--	put_page(page);
-+		clear_bit(PG_arch_1, &folio->flags);
-+	folio_put(folio);
- 	return rc;
- }
- 
-@@ -479,33 +487,34 @@ EXPORT_SYMBOL_GPL(gmap_destroy_page);
-  */
- int arch_make_page_accessible(struct page *page)
- {
-+	struct folio *folio = page_folio(page);
- 	int rc = 0;
- 
--	/* Hugepage cannot be protected, so nothing to do */
--	if (PageHuge(page))
-+	/* See gmap_make_secure(): large folios cannot be secure */
-+	if (unlikely(folio_test_large(folio)))
- 		return 0;
- 
- 	/*
- 	 * PG_arch_1 is used in 3 places:
- 	 * 1. for kernel page tables during early boot
- 	 * 2. for storage keys of huge pages and KVM
--	 * 3. As an indication that this page might be secure. This can
-+	 * 3. As an indication that this small folio might be secure. This can
- 	 *    overindicate, e.g. we set the bit before calling
- 	 *    convert_to_secure.
- 	 * As secure pages are never huge, all 3 variants can co-exists.
- 	 */
--	if (!test_bit(PG_arch_1, &page->flags))
-+	if (!test_bit(PG_arch_1, &folio->flags))
- 		return 0;
- 
--	rc = uv_pin_shared(page_to_phys(page));
-+	rc = uv_pin_shared(folio_to_phys(folio));
- 	if (!rc) {
--		clear_bit(PG_arch_1, &page->flags);
-+		clear_bit(PG_arch_1, &folio->flags);
- 		return 0;
- 	}
- 
--	rc = uv_convert_from_secure(page_to_phys(page));
-+	rc = uv_convert_from_secure(folio_to_phys(folio));
- 	if (!rc) {
--		clear_bit(PG_arch_1, &page->flags);
-+		clear_bit(PG_arch_1, &folio->flags);
- 		return 0;
- 	}
- 
+ 	struct uv_cb_cfs uvcb = {
+ 		.header.cmd = UVC_CMD_CONV_FROM_SEC_STOR,
 -- 
 2.45.0
 
