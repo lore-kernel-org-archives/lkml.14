@@ -1,316 +1,137 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26AB6A347
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 19:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263E11272B2;
+	Wed,  8 May 2024 19:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715196223; cv=none; b=jVyas/BT2L0+5p6QYhFJS19+kgFSSzzA+6PJr9kjr8pIssybyDww98uyzO/RVs3TaptQJWKKXPWklKfr18RWkFJBpwboLT555JNiscqbVstje32tKMkTmxwdlMXFPOsCVDc3spKvjqddrapBYchiaPndaWfk9pJQEEDzN7vPHQ4=
+	t=1715196236; cv=none; b=XxRnX1ncQtfC0/7O2FLnte8KtYeAKVkAjDbHXZmM3oFFbZlCWCARgupLmeNjzsYYydZ5wF2X4Yb1yU1TbFbef8/lbspneboGYeqx2wWctB2QFKVZ1AabWOJUsyjgJ7ac9fJSjDU2RWJOUXDzKlh8MdsFTLGHulyNp2ZsGZ6EWBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715196223; c=relaxed/simple;
-	bh=wcKEBEj6dA1hAzvJNMwh9ijgprqdrbza0ZtmU7EQbks=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=h0sju/0kvDJxwdU8+WJ0+HyNpPkTUc7Mta0jhRa8KS8Tcj+U641OJB/JidpOCordAa6NPEMs+Kpved/ZHxTUCP5spO3YFd7jlHaUtXVK0YsDfINQB0o6xoJsFoh5S60NBXukFGKwaP+giVMhQQuklR33TAV20BBPgZMAxylD2eY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=i8tVVjgb; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1715196236; c=relaxed/simple;
+	bh=GHuER5dbfZxlowizuRnXdNSV4RfCN5Z1qKuPNP9FXLk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PycnjuUrmv9THdX89et1kd1txcYXs5Tr0gt0i8P2OC8JIFaG/WD1BVeVoZBvdC80RS0qPnqXrD7ZE/bp43Dwi3hMatUwJnyy81FICgGDKUruth7ZmTndH5Mco/p1cu7xU8I1q32piX9f/QkTu/KIajXq2Y4mvkw19ZRYZtwSbI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T5J88gsR; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="i8tVVjgb"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-41ba1ba55ffso751055e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 12:23:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715196220; x=1715801020; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=99tlcIPBJBGOnw31Oe30kKMBjt8TwvO6BCavKhZeDaw=;
-        b=i8tVVjgbb4BHCJhh2V9BNiljur2N2+rOZPCL2I+8/IRPZ2LXD8F7xCJOpYaVjxnh9J
-         uF1ouooaYmOUzy6hPz0C0r6HOZWCdIXeW1Bp8uOK3TMVb0jV0PsGHXN27GKmr0Ud9vth
-         TLlVGxuk5gGFB26oRneBKgz+QSI/jxNbfRvOvICil6LnW48F7HgQgdS3d94McXxD39cb
-         VUOjdxmi8eC5b1ArnT6ogXEKnghhX2x59ItyUPSwggN3hBcTryGXqU6TjRm6yH1TlFfY
-         bfm1zJV8Y31fpdKyGoh4pHJuCAIH/2Pbp6iKz/tnG+baVUhHfXJ7kY99u1uZSP99rZQl
-         Slmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715196220; x=1715801020;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=99tlcIPBJBGOnw31Oe30kKMBjt8TwvO6BCavKhZeDaw=;
-        b=IwppOii9H+0u/RlWpdiJRd6jkTjQ6qvb4hFSDSaLNBIyWWMSP5PQxFpXujVJiNjYUm
-         a1AtGmJG5vDbMa6i748CvOgWkwSLSdKuPOpKXLDOsT5yfBv7s4/rfYUKjfNgElagGi2X
-         8iye4XiHa8/yTkO+BRD7wZ8ljZh27zqYxLIIl9oAzR1y6Q7XVcYyO9FZng4LZBsOuD+j
-         ox3BYHpF7w/WgBTy0q2QLNAUecZsecxuOwQZwWhQCurFGnxneaMte+QgDIq6dRY7ix2D
-         cmviYVxXWJEKENMQwcnf0Ym+G4DUjqmoCafDIdDHJGIyS5xk0aHOVXFsnGrQ4tNXcB8a
-         SftQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8EblUDonKnNUDSO7Z7Li6CHicyp0TGyePdbSO3qsA0nheElk/iqMrVB+BkhOeZ+SKp5MRO13Rrf53bqtg/acEIb5OE1oyV6FUVwa4
-X-Gm-Message-State: AOJu0YzPTHKa9J8LExke3fYCy6C71LGQpmpDE2evK7YnMTWe0U18UNAj
-	zzAfWjc4ACVBTVGkejQh18IofxHvf1vWOFZu/H88WAhgPelxO2ggmlr5xiEdCqU=
-X-Google-Smtp-Source: AGHT+IFuqFkdx1GrRMX9VnSrFsQl595h33hB5u187da/mHSb1Bien42UkrHvFd9ITnGVH1r4SnsHfw==
-X-Received: by 2002:a05:600c:3ca9:b0:41b:ed36:e055 with SMTP id 5b1f17b1804b1-41fbcb4b4fbmr4761445e9.7.1715196220131;
-        Wed, 08 May 2024 12:23:40 -0700 (PDT)
-Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f42e74625sm47255965e9.0.2024.05.08.12.23.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 12:23:39 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Ryan Roberts <ryan.roberts@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-riscv@lists.infradead.org,
-	linux-efi@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-mm@kvack.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH 04/12] mm, riscv, arm64: Use common ptep_get_lockless() function
-Date: Wed,  8 May 2024 21:19:23 +0200
-Message-Id: <20240508191931.46060-5-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240508191931.46060-1-alexghiti@rivosinc.com>
-References: <20240508191931.46060-1-alexghiti@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T5J88gsR"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=owcYIBhREu30dQ7gp++xwkQ2QSY2wtlTxlrzCTL5bZI=; b=T5J88gsRvVqm7VXMGnlAXqj71K
+	wogB+O1qSZcA3PbIWP8DCHh9ewoZQ3J5vwkhHhuyEPlhUJnobg2cuYu5Y5dca8RpEJjOPfM6Pt03B
+	Pe+t/WCDCTXomOu/5YkL3h2wfP8s0sO1pER6ZmMtYxZ9VjfWUWTXEM7btge5E/kDl4YVNJeU7YRmj
+	AyRdEJGilqUgwVkH1M2s5Ju9R8geUvTTb1iM/GLRS5dfmkEsVI4ze+tK7OIAbMH5McIRcPJ34Pa+E
+	WawfRDbj+ExplViquzo2kLxJ3GvTB7Q+oGJfKxOpAnOZC6sElHOJfRqMhzErfPuFCXwWz3XgM074C
+	ZWFoHYjw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s4mtA-0000000GiK0-1rbQ;
+	Wed, 08 May 2024 19:23:40 +0000
+Date: Wed, 8 May 2024 12:23:40 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: David Hildenbrand <david@redhat.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Christoph Lameter <christoph@lameter.com>,
+	Christoph Hellwig <hch@lst.de>, Dave Chinner <david@fromorbit.com>
+Cc: Daniel Gomez <da.gomez@samsung.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"hughd@google.com" <hughd@google.com>,
+	"ioworker0@gmail.com" <ioworker0@gmail.com>,
+	"wangkefeng.wang@huawei.com" <wangkefeng.wang@huawei.com>,
+	"ying.huang@intel.com" <ying.huang@intel.com>,
+	"21cnbao@gmail.com" <21cnbao@gmail.com>,
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"shy828301@gmail.com" <shy828301@gmail.com>,
+	"ziy@nvidia.com" <ziy@nvidia.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Linux FS Devel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 0/8] add mTHP support for anonymous shmem
+Message-ID: <ZjvRPLaXQewA8K4s@bombadil.infradead.org>
+References: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
+ <CGME20240508113934eucas1p13a3972f3f9955365f40155e084a7c7d5@eucas1p1.samsung.com>
+ <fqtaxc5pgu3zmvbdad4w6xty5iozye7v5z2b5ckqcjv273nz7b@hhdrjwf6rai3>
+ <f44dc19a-e117-4418-9114-b723c5dc1178@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f44dc19a-e117-4418-9114-b723c5dc1178@redhat.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 
-Make riscv use the contpte aware ptep_get_lockless() function from arm64.
+On Wed, May 08, 2024 at 01:58:19PM +0200, David Hildenbrand wrote:
+> On 08.05.24 13:39, Daniel Gomez wrote:
+> > On Mon, May 06, 2024 at 04:46:24PM +0800, Baolin Wang wrote:
+> > > The primary strategy is similar to supporting anonymous mTHP. Introduce
+> > > a new interface '/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled',
+> > > which can have all the same values as the top-level
+> > > '/sys/kernel/mm/transparent_hugepage/shmem_enabled', with adding a new
+> > > additional "inherit" option. By default all sizes will be set to "never"
+> > > except PMD size, which is set to "inherit". This ensures backward compatibility
+> > > with the shmem enabled of the top level, meanwhile also allows independent
+> > > control of shmem enabled for each mTHP.
+> > 
+> > I'm trying to understand the adoption of mTHP and how it fits into the adoption
+> > of (large) folios that the kernel is moving towards. Can you, or anyone involved
+> > here, explain this? How much do they overlap, and can we benefit from having
+> > both? Is there any argument against the adoption of large folios here that I
+> > might have missed?
+> 
+> mTHP are implemented using large folios, just like traditional PMD-sized THP
+> are.
+> 
+> The biggest challenge with memory that cannot be evicted on memory pressure
+> to be reclaimed (in contrast to your ordinary files in the pagecache) is
+> memory waste, well, and placement of large chunks of memory in general,
+> during page faults.
+> 
+> In the worst case (no swap), you allocate a large chunk of memory once and
+> it will stick around until freed: no reclaim of that memory.
+> 
+> That's the reason why THP for anonymous memory and SHMEM have toggles to
+> manually enable and configure them, in contrast to the pagecache. The same
+> was done for mTHP for anonymous memory, and now (anon) shmem follows.
+> 
+> There are plans to have, at some point, have it all working automatically,
+> but a lot for that for anonymous memory (and shmem similarly) is still
+> missing and unclear.
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/arm64/include/asm/pgtable.h | 11 +----
- arch/arm64/mm/contpte.c          | 57 --------------------------
- arch/riscv/include/asm/pgtable.h |  2 +
- include/linux/contpte.h          |  1 +
- mm/contpte.c                     | 69 ++++++++++++++++++++++++++++++++
- 5 files changed, 73 insertions(+), 67 deletions(-)
+Whereas the use for large folios for filesystems is already automatic,
+so long as the filesystem supports it. We do this in readahead and write
+path already for iomap, we opportunistically use large folios if we can,
+otherwise we use smaller folios.
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index e85b3a052a02..8a0603257436 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -1384,7 +1384,6 @@ extern void ptep_modify_prot_commit(struct vm_area_struct *vma,
-  * where it is possible and makes sense to do so. The PTE_CONT bit is considered
-  * a private implementation detail of the public ptep API (see below).
-  */
--extern pte_t contpte_ptep_get_lockless(pte_t *orig_ptep);
- extern void contpte_clear_full_ptes(struct mm_struct *mm, unsigned long addr,
- 				pte_t *ptep, unsigned int nr, int full);
- extern pte_t contpte_get_and_clear_full_ptes(struct mm_struct *mm,
-@@ -1430,16 +1429,8 @@ static inline unsigned int pte_batch_hint(pte_t *ptep, pte_t pte)
- extern pte_t ptep_get(pte_t *ptep);
- #define ptep_get ptep_get
- 
-+extern pte_t ptep_get_lockless(pte_t *ptep);
- #define ptep_get_lockless ptep_get_lockless
--static inline pte_t ptep_get_lockless(pte_t *ptep)
--{
--	pte_t pte = __ptep_get(ptep);
--
--	if (likely(!pte_valid_cont(pte)))
--		return pte;
--
--	return contpte_ptep_get_lockless(ptep);
--}
- 
- static inline void set_pte(pte_t *ptep, pte_t pte)
- {
-diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-index e225e458856e..5e9e40145085 100644
---- a/arch/arm64/mm/contpte.c
-+++ b/arch/arm64/mm/contpte.c
-@@ -28,63 +28,6 @@ static void contpte_try_unfold_partial(struct mm_struct *mm, unsigned long addr,
- 	}
- }
- 
--pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
--{
--	/*
--	 * The ptep_get_lockless() API requires us to read and return *orig_ptep
--	 * so that it is self-consistent, without the PTL held, so we may be
--	 * racing with other threads modifying the pte. Usually a READ_ONCE()
--	 * would suffice, but for the contpte case, we also need to gather the
--	 * access and dirty bits from across all ptes in the contiguous block,
--	 * and we can't read all of those neighbouring ptes atomically, so any
--	 * contiguous range may be unfolded/modified/refolded under our feet.
--	 * Therefore we ensure we read a _consistent_ contpte range by checking
--	 * that all ptes in the range are valid and have CONT_PTE set, that all
--	 * pfns are contiguous and that all pgprots are the same (ignoring
--	 * access/dirty). If we find a pte that is not consistent, then we must
--	 * be racing with an update so start again. If the target pte does not
--	 * have CONT_PTE set then that is considered consistent on its own
--	 * because it is not part of a contpte range.
--	 */
--
--	pgprot_t orig_prot;
--	unsigned long pfn;
--	pte_t orig_pte;
--	pgprot_t prot;
--	pte_t *ptep;
--	pte_t pte;
--	int i;
--
--retry:
--	orig_pte = __ptep_get(orig_ptep);
--
--	if (!pte_valid_cont(orig_pte))
--		return orig_pte;
--
--	orig_prot = pte_pgprot(pte_mkold(pte_mkclean(orig_pte)));
--	ptep = arch_contpte_align_down(orig_ptep);
--	pfn = pte_pfn(orig_pte) - (orig_ptep - ptep);
--
--	for (i = 0; i < CONT_PTES; i++, ptep++, pfn++) {
--		pte = __ptep_get(ptep);
--		prot = pte_pgprot(pte_mkold(pte_mkclean(pte)));
--
--		if (!pte_valid_cont(pte) ||
--		   pte_pfn(pte) != pfn ||
--		   pgprot_val(prot) != pgprot_val(orig_prot))
--			goto retry;
--
--		if (pte_dirty(pte))
--			orig_pte = pte_mkdirty(orig_pte);
--
--		if (pte_young(pte))
--			orig_pte = pte_mkyoung(orig_pte);
--	}
--
--	return orig_pte;
--}
--EXPORT_SYMBOL_GPL(contpte_ptep_get_lockless);
--
- void contpte_clear_full_ptes(struct mm_struct *mm, unsigned long addr,
- 				pte_t *ptep, unsigned int nr, int full)
- {
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index ebfe6b16529e..62cad1b974f1 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -785,6 +785,8 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
- 
- extern pte_t ptep_get(pte_t *ptep);
- #define ptep_get ptep_get
-+extern pte_t ptep_get_lockless(pte_t *ptep);
-+#define ptep_get_lockless ptep_get_lockless
- extern void set_ptes(struct mm_struct *mm, unsigned long addr,
- 		     pte_t *ptep, pte_t pteval, unsigned int nr);
- #define set_ptes set_ptes
-diff --git a/include/linux/contpte.h b/include/linux/contpte.h
-index 54d10204e9af..01da4bfc3af6 100644
---- a/include/linux/contpte.h
-+++ b/include/linux/contpte.h
-@@ -8,6 +8,7 @@
-  * a private implementation detail of the public ptep API (see below).
-  */
- pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte);
-+pte_t contpte_ptep_get_lockless(pte_t *orig_ptep);
- void __contpte_try_fold(struct mm_struct *mm, unsigned long addr,
- 			pte_t *ptep, pte_t pte);
- void contpte_try_fold(struct mm_struct *mm, unsigned long addr,
-diff --git a/mm/contpte.c b/mm/contpte.c
-index 566745d7842f..060e0bc1a2a3 100644
---- a/mm/contpte.c
-+++ b/mm/contpte.c
-@@ -42,6 +42,7 @@
-  *   - huge_ptep_clear_flush()
-  *   - ptep_get()
-  *   - set_ptes()
-+ *   - ptep_get_lockless()
-  */
- 
- pte_t huge_ptep_get(pte_t *ptep)
-@@ -589,4 +590,72 @@ __always_inline void set_ptes(struct mm_struct *mm, unsigned long addr,
- 		contpte_set_ptes(mm, addr, ptep, pte, nr);
- 	}
- }
-+
-+pte_t contpte_ptep_get_lockless(pte_t *orig_ptep)
-+{
-+	/*
-+	 * The ptep_get_lockless() API requires us to read and return *orig_ptep
-+	 * so that it is self-consistent, without the PTL held, so we may be
-+	 * racing with other threads modifying the pte. Usually a READ_ONCE()
-+	 * would suffice, but for the contpte case, we also need to gather the
-+	 * access and dirty bits from across all ptes in the contiguous block,
-+	 * and we can't read all of those neighbouring ptes atomically, so any
-+	 * contiguous range may be unfolded/modified/refolded under our feet.
-+	 * Therefore we ensure we read a _consistent_ contpte range by checking
-+	 * that all ptes in the range are valid and have CONT_PTE set, that all
-+	 * pfns are contiguous and that all pgprots are the same (ignoring
-+	 * access/dirty). If we find a pte that is not consistent, then we must
-+	 * be racing with an update so start again. If the target pte does not
-+	 * have CONT_PTE set then that is considered consistent on its own
-+	 * because it is not part of a contpte range.
-+	 */
-+
-+	pgprot_t orig_prot;
-+	unsigned long pfn;
-+	pte_t orig_pte;
-+	pgprot_t prot;
-+	pte_t *ptep;
-+	pte_t pte;
-+	int i, ncontig;
-+
-+retry:
-+	orig_pte = __ptep_get(orig_ptep);
-+
-+	if (!pte_valid_cont(orig_pte))
-+		return orig_pte;
-+
-+	orig_prot = pte_pgprot(pte_mkold(pte_mkclean(orig_pte)));
-+	ptep = arch_contpte_align_down(orig_ptep);
-+	ncontig = arch_contpte_get_num_contig(NULL, 0, ptep, 0, NULL);
-+	pfn = pte_pfn(orig_pte) - (orig_ptep - ptep);
-+
-+	for (i = 0; i < ncontig; i++, ptep++, pfn++) {
-+		pte = __ptep_get(ptep);
-+		prot = pte_pgprot(pte_mkold(pte_mkclean(pte)));
-+
-+		if (!pte_valid_cont(pte) ||
-+				pte_pfn(pte) != pfn ||
-+				pgprot_val(prot) != pgprot_val(orig_prot))
-+			goto retry;
-+
-+		if (pte_dirty(pte))
-+			orig_pte = pte_mkdirty(orig_pte);
-+
-+		if (pte_young(pte))
-+			orig_pte = pte_mkyoung(orig_pte);
-+	}
-+
-+	return orig_pte;
-+}
-+EXPORT_SYMBOL_GPL(contpte_ptep_get_lockless);
-+
-+__always_inline pte_t ptep_get_lockless(pte_t *ptep)
-+{
-+	pte_t pte = __ptep_get(ptep);
-+
-+	if (likely(!pte_valid_cont(pte)))
-+		return pte;
-+
-+	return contpte_ptep_get_lockless(ptep);
-+}
- #endif /* CONFIG_THP_CONTPTE */
--- 
-2.39.2
+So a recommended approach by Matthew was to use the readahead and write
+path, just as in iomap to determine the size of the folio to use [0].
+The use of large folios would also be automatic and not require any
+knobs at all.
 
+The mTHP approach would be growing the "THP" use in filesystems by the
+only single filesystem to use THP. Meanwhile use of large folios is already
+automatic with the approach taken by iomap.
+
+We're at a crux where it does beg the question if we should continue to
+chug on with tmpfs being special and doing things differently extending
+the old THP interface with mTHP, or if it should just use large folios
+using the same approach as iomap did.
+
+From my perspective the more shared code the better, and the more shared
+paths the better. There is a chance to help test swap with large folios
+instead of splitting the folios for swap, and that would could be done
+first with tmpfs. I have not evaluated the difference in testing or how
+we could get the most of shared code if we take a mTHP approach or the
+iomap approach for tmpfs, that should be considered.
+
+Are there other things to consider? Does this require some dialog at
+LSFMM?
+
+[0] https://lore.kernel.org/all/ZHD9zmIeNXICDaRJ@casper.infradead.org/
+
+  Luis
