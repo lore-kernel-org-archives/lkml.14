@@ -1,121 +1,85 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414668F5B;
-	Wed,  8 May 2024 01:57:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Received: from m15.mail.163.com (m15.mail.163.com [45.254.50.219])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEADAAD51
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 01:58:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.254.50.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715133458; cv=none; b=Wr5ap4RJNVNNAWQkG7d7kbActjcTLb3Rr8QkcSOJDOhvyVEwUKpwb7d5J/AVDUAQvsPUvNfM+950wSBfCRYmAxcdkawOG6ivXDCGgwUPRTn/WyomgcBeqsIq2FC64Qi/6K52ax+MM948gUwNBBvslp0OYwm9RYnsuKqdWqBqUwI=
+	t=1715133497; cv=none; b=Vl0SgZxEktUkghMAaDwXuDgHEEMiBu6TTVAn85EXzj1tJVjteVJCUSoU7akKfEw1vptYwfawYWbPjj1ZEMUEeulO5qISe+CUiFn2ibHu+qZbn1bo1u50ii5x7qBA0ZAU41VN+SpzR3zHcqoY909MBR+t+WqWEKh6mY7VxNVZsn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715133458; c=relaxed/simple;
-	bh=HcDPoxwMQd5aL1/Y+9hVU+0sr3rIr4L2JMYSTKUkfu4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qwHb4bEiCntWZgaVnG2zeHjGUnH8yd9S+QITCfUIardnNwV8n6LAHl9iOi7GxgwxmqaOTfQQCPvV/K6mP0PCG+hdKUUFXuuyfS3dTb1Ki1WaFo1FNMufVy17+u59DM0XOHFh5GCzCJ3aIWPpoED3XwVbdDLL/wg8g6KcNplPVlM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=GXKOWuht; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715133497; c=relaxed/simple;
+	bh=xCS0trzB3FXbPMwRlsMvngLcoOqHigTONUMuxSprm1w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=kMRm3hxRafohubwEjUfnyFBTUywxIFUPxVEgpHLscxuKVQgMEiFEeyEvBIpOnTVb8Ebt0EJCP4Lv9KGU2jqaJ2Li2QeAJYiA58NyNFyR45KS1opObGG+H9moyRqln7aDu/VYMuKQdKYxUlln9teCLL7+Eb/mvpGR7wpHozQWVt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=EcooEocR reason="signature verification failed"; arc=none smtp.client-ip=45.254.50.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="GXKOWuht"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4481VYiR006544;
-	Wed, 8 May 2024 01:57:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=qcppdkim1; bh=SmUaCm+lO5/m6trar7GNY
-	UV5v+xucRFrgeFiKiolHnc=; b=GXKOWuhtnjKabGKiNVt17Y4Rf9JLMss1cY4Fx
-	YndQkmqedHFpBGhVJdSoMw4yGWy2fD7edFs2w3uw0iFgj1spNOfTET8iFySCwjeI
-	3SfXDzoLHIkwQe250Bxrd+lGHXOgT0euNTZtlJyRv9XQhkoJHgEzdmzZUy4M6CAA
-	Ewxxn2bXNs1dj5YFJg10sk7i97AS5LWH8MFeX2SsuPpOAb6eblCYSqY/hgcaopVI
-	oCugZ1lfMGzf4B14nf9NDZxrAkLJeiayrv7xU1vfguxXcWi76J0ZMnLuno46aKeF
-	wNhen6zWYwugdU0DE+SLX7oICaUAXWVXlmhB0vpFct8veSAEA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xyspr0pj7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 May 2024 01:57:27 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4481vQhd028314
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 8 May 2024 01:57:26 GMT
-Received: from hu-mdtipton-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 7 May 2024 18:57:26 -0700
-Date: Tue, 7 May 2024 18:57:24 -0700
-From: Mike Tipton <quic_mdtipton@quicinc.com>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>, Georgi Djakov <djakov@kernel.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Stephan Gerhold
-	<stephan@gerhold.net>,
-        <quic_okukatla@quicinc.com>
-Subject: Re: [PATCH 3/4] interconnect: qcom: icc-rpm: Make simple functions
- return void
-Message-ID: <20240508015724.GC25316@hu-mdtipton-lv.qualcomm.com>
-References: <20240326-topic-rpm_icc_qos_cleanup-v1-0-357e736792be@linaro.org>
- <20240326-topic-rpm_icc_qos_cleanup-v1-3-357e736792be@linaro.org>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="EcooEocR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=qAcwmOcJtkUz7iXSL+0YdjC+Tf34zyZyjt2ptu431Wo=; b=E
+	cooEocRPcoof0j9Jgb9r00i0MLjd6lolNFHgxezTSBR7vpl1SOhFb5Bym0rO2WAy
+	MTHn/Eu/ZWSqHToHaoHbd1R9e7kjI0cMAV6iz4ORPNlrHHzr0M5BlVoclETuQgRh
+	BTNzbh7M4OPGSN61IJMavLVsn6ESQckPmAgqeJ96YM=
+Received: from gaoshanliukou$163.com ( [60.27.227.220] ) by
+ ajax-webmail-wmsvr-40-120 (Coremail) ; Wed, 8 May 2024 09:42:16 +0800 (CST)
+Date: Wed, 8 May 2024 09:42:16 +0800 (CST)
+From: "yang.zhang" <gaoshanliukou@163.com>
+To: "Alexandre Ghiti" <alex@ghiti.fr>
+Cc: alexghiti@rivosinc.com, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, "yang.zhang" <yang.zhang@hexintek.com>
+Subject: Re:Re: [PATCH V2] riscv: set trap vector earlier
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20230109(dcb5de15)
+ Copyright (c) 2002-2024 www.mailtech.cn 163com
+In-Reply-To: <bfb82e87-94c0-4a23-b59d-bb57911224b5@ghiti.fr>
+References: <20240506022239.6817-1-gaoshanliukou@163.com>
+ <bfb82e87-94c0-4a23-b59d-bb57911224b5@ghiti.fr>
+X-NTES-SC: AL_Qu2aB/2YvU0o4CacZOkXnEYQh+k3XcK4u/0u2YFVP5E0qiT/wSEYRHJZB3L16u6SFyS3vRWtTxZsxu98Z4lpQI9nkv/NUE9cGOesQFbkm49C
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240326-topic-rpm_icc_qos_cleanup-v1-3-357e736792be@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: b2lNbMb76KSIVE28Q5SkNa_-WNSCSK2d
-X-Proofpoint-GUID: b2lNbMb76KSIVE28Q5SkNa_-WNSCSK2d
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-07_16,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 clxscore=1015 malwarescore=0 suspectscore=0 priorityscore=1501
- mlxscore=0 impostorscore=0 mlxlogscore=928 bulkscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405080012
+Message-ID: <4feaf8ec.2435.18f55dd9745.Coremail.gaoshanliukou@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:_____wD333R42DpmZiMnAA--.42497W
+X-CM-SenderInfo: pjdr2x5dqox3xnrxqiywtou0bp/1tbiNwbX8mXAlHQD7QACs9
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Tue, Mar 26, 2024 at 08:42:34PM +0100, Konrad Dybcio wrote:
-> Register accesses can't just randomly fail. Change the return type of
-> functions that only do that to void.
-> 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> ---
->  drivers/interconnect/qcom/icc-rpm.c | 110 +++++++++++++++---------------------
->  1 file changed, 47 insertions(+), 63 deletions(-)
-> 
-
-[...]
-
-> @@ -115,48 +111,42 @@ static int qcom_icc_set_bimc_qos(struct icc_node *src)
->  	 * only if we are NOT in Bypass Mode.
->  	 */
->  	if (mode != NOC_QOS_MODE_BYPASS) {
-> -		for (i = 3; i >= 0; i--) {
-> -			rc = qcom_icc_bimc_set_qos_health(qp,
-> -							  &qn->qos, i);
-> -			if (rc)
-> -				return rc;
-> -		}
-> +		qcom_icc_bimc_set_qos_health(qp, &qn->qos, 3);
-> +		qcom_icc_bimc_set_qos_health(qp, &qn->qos, 2);
-> +		qcom_icc_bimc_set_qos_health(qp, &qn->qos, 1);
-> +		qcom_icc_bimc_set_qos_health(qp, &qn->qos, 0);
-
-Not sure I see the point of unrolling this loop. With the error checking
-removed, the loop could be reduced to just two lines, which is shorter
-than the unrolled version and isn't really any more complicated:
-
-	for (i = 3; i >= 0; i--)
-		qcom_icc_bimc_set_qos_health(qp, &qn->qos, i);
-
-Unrolling the loop is also slightly out-of-scope for this patch that
-claims to just change the return types.
-
-Otherwise, patch looks good to me.
+CgpBdCAyMDI0LTA1LTA3IDEzOjI4OjU4LCAiQWxleGFuZHJlIEdoaXRpIiA8YWxleEBnaGl0aS5m
+cj4gd3JvdGU6Cj5IaSBZYW5nLAo+Cj5PbiAwNi8wNS8yMDI0IDA0OjIyLCB5YW5nLnpoYW5nIHdy
+b3RlOgo+PiBGcm9tOiAieWFuZy56aGFuZyIgPHlhbmcuemhhbmdAaGV4aW50ZWsuY29tPgo+Pgo+
+PiBJZiB0cmFwIGVhcmxpZXIsIHRyYXAgdmVjdG9yIGRvZXNuJ3QgeWV0IHNldCBwcm9wZXJseSwg
+Y3VycmVudAo+PiB2YWx1ZSBtYXliZSBzZXQgYnkgcHJldmlvdXMgZmlybXdpcmUsIHR5cGljYWxs
+eSBpdCdzIHRoZSBfc3RhcnQgb2Yga2VybmVsLAo+PiBpdCdzIGNvbmZ1c2VkIGFuZCBkaWZmaWN1
+bHQgdG8gZGVidWdlLCBzbyBzZXQgaXQgZWFybGllci4KPgo+Cj5XaGF0IGFib3V0Ogo+Cj4iVGhl
+IGV4Y2VwdGlvbiB2ZWN0b3Igb2YgdGhlIGJvb3RpbmcgaGFydCBpcyBub3Qgc2V0IGJlZm9yZSBl
+bmFibGluZyB0aGUgCj5tbXUgYW5kIHRoZW4gc3RpbGwgcG9pbnRzIHRvIHRoZSB2YWx1ZSBvZiB0
+aGUgcHJldmlvdXMgZmlybXdhcmUsIAo+dHlwaWNhbGx5IF9zdGFydF9rZXJuZWwuIFRoYXQgbWFr
+ZXMgaXQgaGFyZCB0byBkZWJ1ZyBzZXR1cF92bSgpIHdoZW4gYmFkIAo+dGhpbmdzIGhhcHBlbi4g
+U28gZml4IHRoYXQgYnkgc2V0dGluZyB0aGUgZXhjZXB0aW9uIHZlY3RvciBlYXJsaWVyLiIKCkhp
+IGFsZXg6Ck1heWJlICJ0eXBpY2FsbHkgX3N0YXJ0IiBub3QgInR5cGljYWxseSBfc3RhcnRfa2Vy
+bmVsIiwgcmlnaHQ/ClRoYW5rcyBmb3IgeW91ciBoZWxwoaMKPj4gLS0tCj4+IHYxIC0+IHYyOgo+
+PiBBcyBBbGV4IGNvbW1lbnRlZCwgcmVtb3ZlIHRoZSBwYXRjaCBmb3Igc3VwcG9ydGluZyBodWdl
+c2l6ZSBrZXJuZWsgaW1hZ2UKPj4gQWRkIHRoZSBvbWlzc2l2ZSBsb2dpYyBvZiBzZXQgdHJhcCB2
+ZWN0b3IgZWFybGllcgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiB5YW5nLnpoYW5nIDx5YW5nLnpoYW5n
+QGhleGludGVrLmNvbT4KPj4gLS0tCj4+ICAgYXJjaC9yaXNjdi9rZXJuZWwvaGVhZC5TIHwgMyAr
+KysKPj4gICAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQg
+YS9hcmNoL3Jpc2N2L2tlcm5lbC9oZWFkLlMgYi9hcmNoL3Jpc2N2L2tlcm5lbC9oZWFkLlMKPj4g
+aW5kZXggNDIzNmE2OWMzNWNiLi4wM2RjNDQwZTY0M2UgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvcmlz
+Y3Yva2VybmVsL2hlYWQuUwo+PiArKysgYi9hcmNoL3Jpc2N2L2tlcm5lbC9oZWFkLlMKPj4gQEAg
+LTMwMCw2ICszMDAsOSBAQCBTWU1fQ09ERV9TVEFSVChfc3RhcnRfa2VybmVsKQo+PiAgICNlbHNl
+Cj4+ICAgCW12IGEwLCBhMQo+PiAgICNlbmRpZiAvKiBDT05GSUdfQlVJTFRJTl9EVEIgKi8KPj4g
+KwkvKiBTZXQgdHJhcCB2ZWN0b3IgdG8gc3BpbiBmb3JldmVyIHRvIGhlbHAgZGVidWcgKi8KPj4g
+KwlsYSBhMywgLkxzZWNvbmRhcnlfcGFyawo+PiArCWNzcncgQ1NSX1RWRUMsIGEzCj4+ICAgCWNh
+bGwgc2V0dXBfdm0KPj4gICAjaWZkZWYgQ09ORklHX01NVQo+PiAgIAlsYSBhMCwgZWFybHlfcGdf
+ZGlyCj4KPk5vdGUgdGhhdCB0aGlzIHBhdGNoIHdpbGwgYWxsb3cgdG8gY2F0Y2ggYW55IGV4Y2Vw
+dGlvbiBoYXBwZW5pbmcgaW4gCj5zZXR1cF92bSgpIGJ1dCBhcyB3ZSByZXNldCBzdHZlYyBpbiBy
+ZWxvY2F0ZV9lbmFibGVfbW11LiBCdXQgdGhhdCdzIG9rLCAKPml0IHdpbGwgaGVscCBjYXRjaGlu
+ZyB3ZWlyZCBidWdzIG1vcmUgZWFzaWx5IDopCj4KPldpdGggdGhlIGNvbW1pdCBtZXNzYWdlIGZp
+eGVkLCB5b3UgY2FuIGFkZDoKPgo+UmV2aWV3ZWQtYnk6IEFsZXhhbmRyZSBHaGl0aSA8YWxleGdo
+aXRpQHJpdm9zaW5jLmNvbT4KPgo+VGhhbmtzLAo+Cj5BbGV4Cg==
