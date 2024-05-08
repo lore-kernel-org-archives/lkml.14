@@ -1,155 +1,194 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C7342062;
-	Wed,  8 May 2024 12:40:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21D6B43ACA;
+	Wed,  8 May 2024 12:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715172010; cv=none; b=q27iDZ9iTyJ7KR/RcWMM/4G0TKSOgNiC6t/WoddocrDXB6jFJFTUeIN+1MxswrxYi/Xw/FrCF4gqcIO+DIkySAwYTQjVy5H/yk56aPIuVQaHloXiiXZzj43rakJXIzPBoVb0A5tjqJJvN77cShBVFgKaM5tEcD4Br3trf8JSSmk=
+	t=1715172035; cv=none; b=ZH1syLLpRY5JVDhpz5vN5jR1oyfgMAkYSADXgzDg9EAJ+hLrpn0xRebNaUmHplrYB6lEzVFU0OO0B2lSGZBeVU5TXAWpT6jlltFoofsi8O25BOKI9kZdZKazSqm0dOQgqt0eg1qlX2swZ6cjAEJyniIfrQgxPiNYGOMVl3yNRJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715172010; c=relaxed/simple;
-	bh=1vMA+1FxGPIUX0MsOYg2MBJxGNADp4fpRMmfQxXengs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XvTTdd3yAJ1QHTNd8fTFmpzpk3clWoZc/sWVpiJtswH84M/WontwHhFVm+s19LumxPNbHyYz/gEyDO/+1pYNtxSOVcBfrH/ajXd0nb95kqJQ9GhZg8duP5RTZRR6O2aAc2Efji7o5CPVPxNNyRpYvVhcgXLyo4FqFsQkTAdWFQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P/KysQiS; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/KysQiS"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6f4a817f1e5so488690b3a.2;
-        Wed, 08 May 2024 05:40:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715172007; x=1715776807; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z67cu76Wcq7ICqFNBw/3kQYlwUX0or8mnSlZrvt4o5I=;
-        b=P/KysQiSNUemZhOuWp3ZPTAxeGugZhWhVAuSXkcI8xuPti7dZn8f0aFHtckPTdj4UB
-         rZsbq1G3AkOO+hGYnS2cfuYp03mpz0ZEBb7wRFOIfT3hijzKoCWPySP1oDjawJf1qEmo
-         4GvTcOjZQkxL6sYb5e7bbQSb6VWYO00WTTR6xvHloeQoIrdNtyJA1PSlW4WBKnH1Znqa
-         QtrgUitRRRh0rO0n+IbYWzrPrkP4ghACWKw6Ntjp73WVAgpiKfbcpbDrKMav4ltnKGkb
-         xh+f9njZlyT5+81fLkJA6jjsIfIXnGHY8Vt2HMRjmT2Igmp7/i4EBYH0y87D27aKzG85
-         wVWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715172007; x=1715776807;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z67cu76Wcq7ICqFNBw/3kQYlwUX0or8mnSlZrvt4o5I=;
-        b=L4chNqgKafj6VMQJteZi5JCTeRYCP1La3U51WSFIaHPyqfzbhOCygyL/8aRcsqtT+C
-         r9KdmHCiqC/TpzYEsbFEZcjwM302iDLnsKx1Mfr3jGz9qHwXePrkWUhWCJaN8O457X6l
-         vMSRWKaKyZWKyVpqj2KcMbZ6iLoPiJV0D0EXAsyo3umHKXWLQG4B6aDRfOzsLszIObsz
-         tMtAXp3mEnZwLbMMsJVF0u5YSGdezOlYdpgeX3Q2ERx5WeVsvlZG0Fze9+lmc9P3iCOT
-         5QTaxpNsHkmJJl3MYiaSZ35osmk95qZUowgxPkjZrCogWPg1tsbCoqEfW6iUkdGA7dHt
-         J+qw==
-X-Forwarded-Encrypted: i=1; AJvYcCVAgjRSbKRhzrXX6FniOe0iGhAKS5/DK/QRpTHeMxJIyzIU99BGLJPfORjiR1FG9pm22enBMCYMWEjzrcKbnKIcDEMtEW5YmywalgkeQlPg9ShEe8xrormUFXU22nnQ2QxmPMCftZJnlO4=
-X-Gm-Message-State: AOJu0YxbU/cwdZ02XG4924ES069z2WHgDHWYXmuhHsaqRn2+eUef5hdk
-	QWAeWPdcig6eqOjpmwuOBMysdQRqL5CBsBOp/HKlmT4AIbhLUUTE
-X-Google-Smtp-Source: AGHT+IFEGhOOBV1ZTJYRr4DLgBCZdFz1cpcM9DEyzw4fbZQHquBbRkpeUIM1eWZ812Z7PpQ5FKAM2g==
-X-Received: by 2002:a05:6a20:9146:b0:1a9:d6e2:66e9 with SMTP id adf61e73a8af0-1afc8d8e5dbmr2724605637.28.1715172007480;
-        Wed, 08 May 2024 05:40:07 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e2-20020a056a0000c200b006eb3c2bde43sm11019014pfj.205.2024.05.08.05.40.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 05:40:06 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Wed, 8 May 2024 05:40:05 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Andrei Aldea <andrei1998@gmail.com>
-Cc: jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HWMon: LM80: Add "support" for Texas Instruments AMC80
-Message-ID: <0d71a8ec-2d14-4937-95f3-04332b7fbb78@roeck-us.net>
-References: <20240508090244.18070-1-andrei1998@gmail.com>
+	s=arc-20240116; t=1715172035; c=relaxed/simple;
+	bh=4xlPiApvLSWf+1n3R2aI2Emt3M+fAvUv2Q2gwKr0vtY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IHi/93HXZHJ5TotTW8Tql4kEbbU/GCRhDjtRcz6R9UPo82r11+sXpFT8U5U7wQcyqbx3N1hXz8IUluVh1y5WhXpO7FxiXwpZY2vMM8DpsbiFbuoe8/M+y5H76b//cKAia9Fi7e+gurdyzGjcsPfFSERX48fL8Yp9jXs4cOGxx1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 448CdwGsB464588, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 448CdwGsB464588
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 8 May 2024 20:39:58 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 8 May 2024 20:39:58 +0800
+Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 8 May
+ 2024 20:39:57 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <pkshih@realtek.com>, <larry.chiu@realtek.com>,
+        Justin Lai <justinlai0215@realtek.com>
+Subject: [PATCH net-next v18 00/13] Add Realtek automotive PCIe driver
+Date: Wed, 8 May 2024 20:39:32 +0800
+Message-ID: <20240508123945.201524-1-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240508090244.18070-1-andrei1998@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-On Wed, May 08, 2024 at 04:02:44AM -0500, Andrei Aldea wrote:
-> Add support for AMC80 which is register compatible with LM96080 and a result of TI's acquisition of National Semiconductor
-> 
-Line length. Also, "and a result of TI's acquisition of National
-Semiconductor" is irrelevant.
+This series includes adding realtek automotive ethernet driver
+and adding rtase ethernet driver entry in MAINTAINERS file.
 
-> https://www.ti.com/lit/ds/symlink/amc80.pdf
+This ethernet device driver for the PCIe interface of 
+Realtek Automotive Ethernet Switch,applicable to 
+RTL9054, RTL9068, RTL9072, RTL9075, RTL9068, RTL9071.
 
-This should be added to the documentation, not to the patch
-description.
+v1 -> v2:
+- Remove redundent debug message.
+- Modify coding rule.
+- Remove other function codes not related to netdev.
 
-The subject should start with "hwmon: (lm80)", and please drop the quotes
-around "support".
+v2 -> v3:
+- Remove SR-IOV function - We will add the SR-IOV function together when
+uploading the vf driver in the future.
+- Remove other unnecessary code and macro.
 
-> 
-> Signed-off-by: Andrei Aldea <andrei1998@gmail.com>
-> ---
->  drivers/hwmon/Kconfig | 4 ++--
->  drivers/hwmon/lm80.c  | 6 ++++++
+v3 -> v4:
+- Remove function prototype - Our driver does not use recursion, so we
+have reordered the code and removed the function prototypes.
+- Define macro precisely - Improve macro code readability to make the
+source code cleaner.
 
-Chip description (Documentation/hwmon/lm80.rst) needs to be updated as
-well.
+v4 -> v5:
+- Modify ethtool function - Remove some unnecessary code.
+- Don't use inline function - Let the compiler decide.
 
->  2 files changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 83945397b6eb..f901ece2ff43 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1446,11 +1446,11 @@ config SENSORS_LM78
->  	  will be called lm78.
->  
->  config SENSORS_LM80
-> -	tristate "National Semiconductor LM80 and LM96080"
-> +	tristate "National Semiconductor LM80, LM96080 and compatibles"
+v5 -> v6:
+- Some old macro definitions have been removed and replaced with the
+lastest usage.
+- Replace s32 with int to ensure consistency.
+- Clearly point out the objects of the service and remove unnecessary
+struct.
 
-		"National Semiconductor LM80 and compatibles"
+v6 -> v7:
+- Split this driver into multiple patches.
+- Reorganize this driver code and remove redundant code to make this
+driver more concise.
 
->  	depends on I2C
->  	help
->  	  If you say yes here you get support for National Semiconductor
-> -	  LM80 and LM96080 sensor chips.
-> +	  LM80, LM96080 and Texas Instruments AMC80 sensor chips.
->  
->  	  This driver can also be built as a module. If so, the module
->  	  will be called lm80.
-> diff --git a/drivers/hwmon/lm80.c b/drivers/hwmon/lm80.c
-> index 63c7831bd3e1..0355b9d849be 100644
-> --- a/drivers/hwmon/lm80.c
-> +++ b/drivers/hwmon/lm80.c
-> @@ -573,6 +573,11 @@ static int lm80_detect(struct i2c_client *client, struct i2c_board_info *info)
->  			return -ENODEV;
->  
->  		name = "lm96080";
-> +
-> +	/* Check for  AMC80 version which is register compatible with lm96080 */
-> +	} else if (man_id == 0x80 && dev_id == 0x08) {
-> +		name = "amc80";
-> +
->  	} else {
->  		/* Check 6-bit addressing */
->  		for (i = 0x2a; i <= 0x3d; i++) {
-> @@ -624,6 +629,7 @@ static int lm80_probe(struct i2c_client *client)
->  static const struct i2c_device_id lm80_id[] = {
->  	{ "lm80", 0 },
->  	{ "lm96080", 1 },
-> +	{ "amc80", 2},
+v7 -> v8:
+- Add the function to calculate time mitigation and the function to 
+calculate packet number mitigation. Users can use these two functions 
+to calculate the reg value that needs to be set for the mitigation value
+they want to set.
+- This device is usually used in automotive embedded systems. The page
+pool api will use more memory in receiving packets and requires more 
+verification, so we currently do not plan to use it in this patch.
 
-The driver_data values are unused and therefore unnecessary.
+v8 -> v9:
+- Declare functions that are not extern as static functions and increase
+the size of the character array named name in the rtase_int_vector struct
+to correct the build warning noticed by the kernel test robot.
 
-However, I did not have time to check the chip datasheet to confirm that
-chip specific code is indeed not needed.
+v9 -> v10:
+- Currently we change to use the page pool api. However, when we allocate
+more than one page to an rx buffer, it will cause system errors
+in some cases. Therefore, we set the rx buffer to fixed size with 3776
+(PAGE_SIZE - SKB_DATA_ALIGN(sizeof(skb_shared_info) )), and the maximum 
+value of mtu is set to 3754(rx buffer size - VLAN_ETH_HLEN - ETH_FCS_LEN).
+- When ndo_tx_timeout is called, it will dump some device information,
+which can be used for debugging.
+- When the mtu is greater than 1500, the device supports checksums
+but not TSO.
+- Fix compiler warnning.
 
-Guenter
+v10 -> v11:
+- Added error handling of rtase_init_ring().
+- Modify the error related to asymmetric pause in rtase_get_settings.
+- Fix compiler error.
 
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(i2c, lm80_id);
-> -- 
-> 2.39.3 (Apple Git-146)
-> 
-> 
+v11 -> v12:
+- Use pm_sleep_ptr and related macros.
+- Remove multicast filter limit.
+- Remove VLAN support and CBS offload functions. 
+- Remove redundent code.
+- Fix compiler warnning.
+
+v12 -> v13:
+- Fixed the compiler warning of unuse rtase_suspend() and rtase_resume()
+when there is no define CONFIG_PM_SLEEP.
+
+v13 -> v14:
+- Remove unuse include.
+- call eth_hw_addr_random() to generate random MAC and set device flag 
+- use pci_enable_msix_exact() instead of pci_enable_msix_range() 
+- If dev->dma_mask is non-NULL, dma_set_mask_and_coherent with a 64-bit
+mask will never fail, so remove the part that determines the 32-bit mask.
+- set dev->pcpu_stat_type before register_netdev() and core will allocate
+stats 
+- call NAPI instance at the right location
+
+v14 -> v15:
+- In rtase_open, when the request interrupt fails, all request interrupts
+are freed.
+- When calling netif_device_detach, there is no need to call
+netif_stop_queue.
+- Call netif_tx_disable() instead of stop_queue(), it takes the tx lock so
+there is no need to worry about the packets being transmitted.
+- In rtase_tx_handler, napi budget is no longer used, but a customized
+tx budget is used.
+- Use the start / stop macros from include/net/netdev_queues.h. 
+- Remove redundent code.
+
+v15 -> v16:
+- Re-upload v15 patch set
+
+v16 -> v17:
+- Prefix the names of some rtase-specific macros, structs, and enums.
+- Fix the abnormal problem when returning page_pool resources.
+
+v17 -> v18:
+- Limit the width of each line to 80 colums.
+- Use reverse xmas tree order.
+- Modify the error handling of rtase_alloc_msix and rtase_alloc_interrupt.
+
+Justin Lai (13):
+  rtase: Add pci table supported in this module
+  rtase: Implement the .ndo_open function
+  rtase: Implement the rtase_down function
+  rtase: Implement the interrupt routine and rtase_poll
+  rtase: Implement hardware configuration function
+  rtase: Implement .ndo_start_xmit function
+  rtase: Implement a function to receive packets
+  rtase: Implement net_device_ops
+  rtase: Implement pci_driver suspend and resume function
+  rtase: Implement ethtool function
+  rtase: Add a Makefile in the rtase folder
+  realtek: Update the Makefile and Kconfig in the realtek folder
+  MAINTAINERS: Add the rtase ethernet driver entry
+
+ MAINTAINERS                                   |    7 +
+ drivers/net/ethernet/realtek/Kconfig          |   19 +
+ drivers/net/ethernet/realtek/Makefile         |    1 +
+ drivers/net/ethernet/realtek/rtase/Makefile   |   10 +
+ drivers/net/ethernet/realtek/rtase/rtase.h    |  326 +++
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 2363 +++++++++++++++++
+ 6 files changed, 2726 insertions(+)
+ create mode 100644 drivers/net/ethernet/realtek/rtase/Makefile
+ create mode 100644 drivers/net/ethernet/realtek/rtase/rtase.h
+ create mode 100644 drivers/net/ethernet/realtek/rtase/rtase_main.c
+
+-- 
+2.34.1
+
