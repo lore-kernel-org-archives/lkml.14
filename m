@@ -1,126 +1,112 @@
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23172537F2;
-	Wed,  8 May 2024 09:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA123A1BE
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 09:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715158908; cv=none; b=eXfcuGQf6BIy1k1QcZ+3ccddVu26qtNmbdtriXZApQf+2qKDytVER5yv+s45ZSA90O3RRB07eUB1zY6XbDZmqvSf6TTem7B2h0OSSDRpzBOPkmQXDC2A8QidRXO64wldxev3P9bogR2eulHnUAyJ/rcpmTx+gGsDaXG5XL+zDE4=
+	t=1715158968; cv=none; b=aCRAlADGaxXLRMk1xwHiW6X4mDHzWs6kg42FO6cAD7ON4R2baVzr2cpqFwvUDIYm+p2evw6tu4vGn9wZ6JbIptYNNwzwjjlSLaqz2foWaAaXWRESdZDhZGTPWLoB4iQN1rDxwCPv63sxdxY1RNKeYHI5j2yOHMmjq9/bACjDDSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715158908; c=relaxed/simple;
-	bh=wAUIHDwJWti/Qtu1rVeMco4tYKMnZhzWFK1YVr5s2h4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fLld4yBq+cu3dmlwC0dyHjaBIPTHff8Cg3qx/n1Bjyc7Jb5sH1TtzA/0Uc5mVgtXxWczZwzptyPkY3dcI+PWE9DG6cBRZPpLt83rwv2crFyJjY/f6J2KaO54kYZKiV8f7oHbwCjPwFNwR7ttiI6px4Y+p0BjAXeU7iqOx7gOfp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=DURQmnno; arc=none smtp.client-ip=80.241.56.161
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="DURQmnno"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4VZ89X13K6z9sRx;
-	Wed,  8 May 2024 10:55:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1715158512;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LgTa174CN4twtJVuodBezk0b2vWnBKWssMs5UWGeMhE=;
-	b=DURQmnnoX8sm4mSH2+Wiww+tChze7TvUiyZS+n2y2rVSOBoJXb5ppk/y7HqkmmEuUINXx7
-	EyqnuylnRlAwf77RwpnGTSJILDfxnX1FUVI8ZrehNhEtcaTHHZTy6M+wNwOVOUPO2RbMaM
-	UeHRH9PSgD31eUfIWwtRjUC/3qvwxu3Wd5ImjKpbczOWgcSw868cjExUJn6axBs7pLtUSf
-	nI2PknUfuA92H5l8KI5gdBfriQCCrsWW+pFz+l1KMguYCBTTE+ZgV/G68jGwXcFJCrtmdz
-	PGmwcn2syJUh1ivzuEfbD8bo8CB4EguP0f8b+x1MoMyYrt0ovmllRs6JmNQdLA==
-Date: Wed, 8 May 2024 10:55:05 +0200
-From: Erhard Furtner <erhard_f@mailbox.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-Subject: Re: WARNING: CPU: 1 PID: 1 at net/core/netpoll.c:370
- netpoll_send_skb+0x1fc/0x20c at boot when netconsole is enabled (kernel
- v6.9-rc5, v6.8.7, sungem, PowerMac G4 DP)
-Message-ID: <20240508105505.098efd6c@yea>
-In-Reply-To: <20240506181020.292b25f0@kernel.org>
-References: <20240428125306.2c3080ef@legion>
-	<20240429183630.399859e2@kernel.org>
-	<20240505232713.46c03b30@yea>
-	<20240506072645.448bc49f@kernel.org>
-	<20240507024258.07980f55@yea>
-	<20240506181020.292b25f0@kernel.org>
+	s=arc-20240116; t=1715158968; c=relaxed/simple;
+	bh=qdVURWUQTSFjr2TDtJ9VB2HmxpiC61kP72lHZ5Sh/9A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J63+AM6GYPhPd6iL7PUPdgRMTSyZ3kwhJrbJQq1vDMguW1pJ7c0MMa9hrB4MWvo+bO0zmauufYE5KnbkXXLcvPa0q+ILTjiEhsubabhCjNAhrRtZZbR9HDjTgEcGyHxX3dqeY3TXQCWGtyhYPD05qBAcvYihzMTaELYl9ucAJSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9ECFD1063;
+	Wed,  8 May 2024 02:03:10 -0700 (PDT)
+Received: from [10.57.67.194] (unknown [10.57.67.194])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 43F0C3F6A8;
+	Wed,  8 May 2024 02:02:43 -0700 (PDT)
+Message-ID: <eb3aa3dc-42ee-475a-8b95-d27951c362a1@arm.com>
+Date: Wed, 8 May 2024 10:02:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/8] mm: shmem: add multi-size THP sysfs interface for
+ anonymous shmem
+Content-Language: en-GB
+To: David Hildenbrand <david@redhat.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
+ ying.huang@intel.com, 21cnbao@gmail.com, shy828301@gmail.com,
+ ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
+ <6b4afed1ef26dbd08ae9ec58449b329564dcef3e.1714978902.git.baolin.wang@linux.alibaba.com>
+ <30329a82-45b9-4e78-8c48-bd56af113786@arm.com>
+ <0b3735bc-2ad7-44f8-808b-37fc90d57199@linux.alibaba.com>
+ <cb458b62-e27d-47d6-8efd-bacdb9da7530@redhat.com>
+ <ff1908f8-0887-403b-8d2a-d83a17895523@redhat.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <ff1908f8-0887-403b-8d2a-d83a17895523@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-MBO-RS-META: oi1ksroanrx3buqynk4yf9m64a7ii418
-X-MBO-RS-ID: 34bc1399a180a3c52e3
 
-On Mon, 6 May 2024 18:10:20 -0700
-Jakub Kicinski <kuba@kernel.org> wrote:
-
-> Excellent! Do you want to submit that as an official patch?
-> The explanation is that we can't call disable_irq() from atomic
-> context (which which netpoll runs). But the callback is no longer
-> necessary as we can depend on NAPI to do the polling these days.
-
-I could do that with the explanation you stated. But should any further questions arise in this process I would also lack the technical background to deal with them. ;)
-
-I also noticed a similar #ifdef CONFIG_NET_POLL_CONTROLLER logic shows up in
-many network drivers, e.g. net/ethernet/realtek/8139too.c:
-
-#ifdef CONFIG_NET_POLL_CONTROLLER
-static void rtl8139_poll_controller(struct net_device *dev);
-#endif
-[...]
-#ifdef CONFIG_NET_POLL_CONTROLLER
-/*
- * Polling receive - used by netconsole and other diagnostic tools
- * to allow network i/o with interrupts disabled.
- */
-static void rtl8139_poll_controller(struct net_device *dev)
-{
-        struct rtl8139_private *tp = netdev_priv(dev);
-       	const int irq = tp->pci_dev->irq;
-
-       	disable_irq_nosync(irq);
-       	rtl8139_interrupt(irq, dev);
-       	enable_irq(irq);
-}
-#endif
-[...]
-#ifdef CONFIG_NET_POLL_CONTROLLER
-       	.ndo_poll_controller    = rtl8139_poll_controller,
-#endif
-
-
-Should it be removed here too? This would be more cards I can test. So far I only see this on my G4 and I think something similar on an old Pentium4 box I no longer have. 
- 
-> > What I still get with 'modprobe -v dev_addr_lists_test', even with gem_poll_controller() removed is:
-> > 
-> > [...]
-> > KTAP version 1
-> > 1..1
-> >     KTAP version 1
-> >     # Subtest: dev-addr-list-test
-> >     # module: dev_addr_lists_test
-> >     1..6
-> > 
-> > ====================================
-> > WARNING: kunit_try_catch/1770 still has locks held!
-> > 6.9.0-rc6-PMacG4-dirty #5 Tainted: G        W        N
-> > ------------------------------------
-> > 1 lock held by kunit_try_catch/1770:
-> >  #0: c0dbfce4 (rtnl_mutex){....}-{3:3}, at: dev_addr_test_init+0xbc/0xc8 [dev_addr_lists_test]  
+On 08/05/2024 08:12, David Hildenbrand wrote:
+> On 08.05.24 09:08, David Hildenbrand wrote:
+>> On 08.05.24 06:45, Baolin Wang wrote:
+>>>
+>>>
+>>> On 2024/5/7 18:52, Ryan Roberts wrote:
+>>>> On 06/05/2024 09:46, Baolin Wang wrote:
+>>>>> To support the use of mTHP with anonymous shmem, add a new sysfs interface
+>>>>> 'shmem_enabled' in the '/sys/kernel/mm/transparent_hugepage/hugepages-kB/'
+>>>>> directory for each mTHP to control whether shmem is enabled for that mTHP,
+>>>>> with a value similar to the top level 'shmem_enabled', which can be set to:
+>>>>> "always", "inherit (to inherit the top level setting)", "within_size",
+>>>>> "advise",
+>>>>> "never", "deny", "force". These values follow the same semantics as the top
+>>>>> level, except the 'deny' is equivalent to 'never', and 'force' is equivalent
+>>>>> to 'always' to keep compatibility.
+>>>>
+>>>> We decided at [1] to not allow 'force' for non-PMD-sizes.
+>>>>
+>>>> [1]
+>>>> https://lore.kernel.org/linux-mm/533f37e9-81bf-4fa2-9b72-12cdcb1edb3f@redhat.com/
+>>>>
+>>>> However, thinking about this a bit more, I wonder if the decision we made to
+>>>> allow all hugepages-xxkB/enabled controls to take "inherit" was the wrong one.
+>>>> Perhaps we should have only allowed the PMD-sized enable=inherit (this is just
+>>>> for legacy back compat after all, I don't think there is any use case where
+>>>> changing multiple mTHP size controls atomically is actually useful). Applying
+>>>
+>>> Agree. This is also our usage of 'inherit'.
 > 
-> I think that's fixed in net-next.
+> Missed that one: there might be use cases in the future once we would start
+> defaulting to "inherit" for all knobs (a distro might default to that) and
+> default-enable THP in the global knob. Then, it would be easy to disable any THP
+> by disabling the global knob. (I think that's the future we're heading to, where
+> we'd have an "auto" mode that can be set on the global toggle).
+> 
+> But I am just making up use cases ;) I think it will be valuable and just doing
+> it consistently now might be cleaner.
 
-Ah, good to hear!
+I agree that consistency between enabled and shmem_enabled is top priority. And
+yes, I had forgotten about the glorious "auto" future. So probably continuing
+all sizes to select "inherit" is best.
 
-Regards,
-Erhard F.
+But for shmem_enabled, that means we need the following error checking:
+
+ - It is an error to set "force" for any size except PMD-size
+
+ - It is an error to set "force" for the global control if any size except PMD-
+   size is set to "inherit"
+
+ - It is an error to set "inherit" for any size except PMD-size if the global
+   control is set to "force".
+
+Certainly not too difficult to code and prove to be correct, but not the nicest
+UX from the user's point of view when they start seeing errors.
+
+I think we previously said this would likely be temporary, and if/when tmpfs
+gets mTHP support, we could simplify and allow all sizes to be set to "force".
+But I wonder if tmpfs would ever need explicit mTHP control? Maybe it would be
+more suited to the approach the page cache takes to transparently ramp up the
+folio size as it faults more in. (Just saying there is a chance that this error
+checking becomes permanent).
+
