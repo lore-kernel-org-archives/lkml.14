@@ -1,129 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24DC17BCD;
-	Wed,  8 May 2024 07:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D8D2030B
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 07:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715151671; cv=none; b=NGP7GGX4Za/rP/hSUl2sFocF4tVZymgiBu2FXgdrNKrgMVR0zz6cWPHoqOLF6RkdQ7w29wgQplygoVCIahL4FGkelPc8aFW2iKhSqC3tKysc4gMJ0izpnLW7EONWuCf1b3EY6z2xzgoPun6SJ+JgbylsHUq3ceU9JNmDPDpkytc=
+	t=1715151989; cv=none; b=T373kMrpMQAkOfOdtceJUfxuKUKNa0we8aAphwwWP/Ur0ZPD0v0+lgVZWFor0+ctfIujPVpOvCTZoDh+pJDuqE1aIF2AahpWkZ4lzL9aru2rtwjIA3GuK1XLQUEQn9lV/dqT4PiV7HW13ReYIsH3od32SkPFzfl3VJ4/b5rEUb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715151671; c=relaxed/simple;
-	bh=bDBwycGaC/PlY0kR4qyYfRKjMFSOWty57OMtRsUEpP8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oGEuxs7nqT61n8VK7QQiw+8KVJsz0v7m3+eGZAxXsdBHTOZ3R/bPHggxBKF35Y6mrI+JoCZZ6bJCUWv3D4cHKENFQyfj+Daat3QiocMFNJ0NRT5hiHqfxxZmk1rmcGdy4LE4jwixAzESwQKkES8HASofDCO23h7Dm2Ks7xULGeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7KFktG7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715151989; c=relaxed/simple;
+	bh=qeru5WQi3NikU8tXr0CLvujWJxGVYg4dmfb+Nmtp0o4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NHqzG3i2chGaGAfBkUzXmZ7hiuYPO2dhjpF9SPtFPNYX1r3urLOKrseTEwEMg3ZTSsQgcOT3WTeGwLb/ocVTnroBqrn4koyw7GhGZcC5x/IC89NhynJLSTNrAWKQDT34Tu6LwUe4Jkud5QPkkr7M+K8ZZkFW+vNv+fI+Y9SYYrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=c26aNat1; arc=none smtp.client-ip=149.28.215.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7KFktG7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38EB3C113CC;
-	Wed,  8 May 2024 07:01:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715151671;
-	bh=bDBwycGaC/PlY0kR4qyYfRKjMFSOWty57OMtRsUEpP8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=S7KFktG7znFadJ4uNm2bTFIfNIScmGeiSnyIyvZDI/8Id/p5jxBojGxgs8cgYUhCN
-	 w08m9AsqumuxKG0SMzAZr0PO150nTx+jHvuHLvXMTxS1T1RWfGfin8Tgu8CdU+zU8m
-	 wuVeQyo51t0z3LVVtDQEljxMNZNrvDVgEktP7tcj0FZ8pK5xuxoFnayJj4XZX+uiiC
-	 VfQ4ujJxnEtDPzgyn19dyJQ/iv5BxIipo9cas6xv9GdbjPnhY1cHbrAp1lWgVL829a
-	 oruudRpalSliEaSZIDgCUSSxA7Gx3D2VG84IEpKpanD1SaesXUzien4o0cMDYAV3Sr
-	 hVnYyPUkb1dAg==
-Message-ID: <a0a89cd8-9604-4a75-a358-2974a0f70e54@kernel.org>
-Date: Wed, 8 May 2024 09:01:03 +0200
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="c26aNat1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: MIME-Version: Message-ID: Date: Subject: Cc:
+ To: From; q=dns/txt; s=fe-e1b5cab7be; t=1715151981;
+ bh=4SBiHj3UaP8h4i4SKqdmJI+KpeU5a4XOxwcb5Gg0phs=;
+ b=c26aNat1iwpw6RjewIhz+qWHNs+JRdSGgO2yYl3sGKESI+o0hm2YR1xkitEARc64wnKUdUjDL
+ q8Uxgmewl0av0bnjgHeJs/oLQDTo/NAtV6d046j9R4V84uZNMem92up7tZ7wQn0eDBZI9H583cG
+ D5dyFypnRiobUXUqNLEIZJz8dngNGPKisEE9BpAfQCjKVdczGrJi2CldRyaYD1zfa5XJMXcChtk
+ hDAh/Bv/6x5HxUZUEN9FIkyp7833KL3PNA7jL6JDTWUrhkpmB2dANEpyjlPS9N/zkQ12N74IeQ/
+ RsJhFrqxo5xFjb5Qo74euzN2CThAYochQZeDopTAuXVw==
+From: Jonas Karlman <jonas@kwiboo.se>
+To: Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Jonas
+ Karlman <jonas@kwiboo.se>
+Subject: [PATCH v5 0/2] arm64: dts: rockchip: Add Radxa ZERO 3W/3E
+Date: Wed,  8 May 2024 07:06:03 +0000
+Message-ID: <20240508070611.4153602-1-jonas@kwiboo.se>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] dt-bindings: net: qcom: ethernet: Allow
- dma-coherent
-To: Sagar Cheluvegowda <quic_scheluve@quicinc.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Andrew Halaney <ahalaney@redhat.com>, Vinod Koul <vkoul@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc: kernel@quicinc.com, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20240507-mark_ethernet_devices_dma_coherent-v3-0-dbe70d0fa971@quicinc.com>
- <20240507-mark_ethernet_devices_dma_coherent-v3-2-dbe70d0fa971@quicinc.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240507-mark_ethernet_devices_dma_coherent-v3-2-dbe70d0fa971@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-ForwardEmail-Version: 0.4.40
+X-ForwardEmail-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 149.28.215.223
+X-ForwardEmail-ID: 663b2469a86e8ee0e42ddc14
 
-On 08/05/2024 03:31, Sagar Cheluvegowda wrote:
-> On SA8775P, Ethernet DMA controller is coherent with the CPU.
-> allow specifying that.
-> 
-> Signed-off-by: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/net/qcom,ethqos.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
-> index 69a337c7e345..44028987ef92 100644
-> --- a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
-> +++ b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
-> @@ -66,6 +66,8 @@ properties:
->    phy-names:
->      const: serdes
->  
-> +  dma-coherent: true
+This series adds initial support for the Radxa ZERO 3W/3E boards.
 
-Do not add properties to the end of the list. That's downstream
-practice... Keep it next to iommus, for example.
+The Radxa ZERO 3W/3E is an ultra-small, high-performance single board
+computer based on the Rockchip RK3566, with a compact form factor and
+rich interfaces.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Schematic for ZERO 3W and ZERO 3E can be found at:
+https://dl.radxa.com/zero3/docs/hw/3w/radxa_zero_3w_v1110_schematic.pdf
+https://dl.radxa.com/zero3/docs/hw/3e/radxa_zero_3e_v1200_schematic.pdf
 
-Best regards,
-Krzysztof
+Changes in v2:
+- Collect acked-by tag
+- Add to Makefile
+- Add patch to fix #sound-dai-cells warning
+
+Changes in v3:
+- Fix devicetree spelling
+- Sort hdmi-con, leds, pmic@20 and regulator@40 nodes
+- Change to regulator-off-in-suspend for vdd_logic
+- Drop patch to fix #sound-dai-cells warning, similar patch [1] already
+  exists
+
+Changes in v4:
+- Change compatible of vdd_logic
+- Add vcc5v_midu and vbus regulator and related vcc8/vcc9-supply prop
+- Adjust clock_in_out prop for gmac1
+- Add cap-mmc-highspeed prop to sdhci
+- Add sdmmc1 and uart1 nodes used for wifi/bt on 3W
+- Rename rk3566-radxa-zero3.dtsi to rk3566-radxa-zero-3.dtsi
+- Rebase on latest mmind/for-next tree
+
+Changes in v5:
+- Rename regulator-fixed nodes
+- Add keep-power-in-suspend to sdmmc1 node
+- Add uart-has-rtscts to uart1 node
+
+[1] https://lore.kernel.org/linux-rockchip/3a035c16-75b5-471d-aa9d-e91c2bb9f8d0@gmail.com/
+
+Jonas Karlman (2):
+  dt-bindings: arm: rockchip: Add Radxa ZERO 3W/3E
+  arm64: dts: rockchip: Add Radxa ZERO 3W/3E
+
+ .../devicetree/bindings/arm/rockchip.yaml     |   7 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   2 +
+ .../dts/rockchip/rk3566-radxa-zero-3.dtsi     | 464 ++++++++++++++++++
+ .../dts/rockchip/rk3566-radxa-zero-3e.dts     |  41 ++
+ .../dts/rockchip/rk3566-radxa-zero-3w.dts     |  87 ++++
+ 5 files changed, 601 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3566-radxa-zero-3.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3566-radxa-zero-3e.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3566-radxa-zero-3w.dts
+
+-- 
+2.43.2
 
