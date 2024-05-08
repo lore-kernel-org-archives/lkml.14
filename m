@@ -1,91 +1,90 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77A4282876
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.85.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B0A9823D1
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715169136; cv=none; b=frF3Z6i9iZ8XdbKk64VaDvPiR4PAP3sdMc/hyzGHROUIyX/uDJ0OUB5RExyZnu94rSSeKo4895USr+QbpPCsxt4qCFDLFHnPW/c+XeEULrRTOnHIjCTErNDgvbh5aBy6WlM11Pcam9YtvWPfFdgzrfr4HCqFaUcvKspLxfHUpJE=
+	t=1715169217; cv=none; b=tKQWg6lWTSub6xmxGEB7QTtljPoiL1ZASiIx+xxK2MDgv0698gtyfK1QDj0An1laIouI6SJFX3hN1hV4o8036Dpum1b6NOIdsRvMnTpnuZM5ru+Q6ib9hcTktXYmLBc4KxA4/Hj1wAuWFTy9IsXZu8VC8+lGoAzbMShpVE+YwVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715169136; c=relaxed/simple;
-	bh=3TcpGLamPR+er3cedcxqpNcBb7/RyBJ4tTHiLInhVpI=;
-	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=EUxRBh8V+uiOuyewowKk6TkNyOnjUKVWOzgK6p6d0xgRWoIxht04hDJ29VU8vAbkC1Kwt3EMI3/MIgV7YcTT7rFguVid5vmnAQ+LU7oKBQdO2jtC053HafSp+pnJWgX68/W4GddxkIhEItAUjgUXkuKtcZknWWFczgM5IGZs5VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.85.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-28-ejStQR8JMFGrAgvUcnec0Q-1; Wed, 08 May 2024 12:52:11 +0100
-X-MC-Unique: ejStQR8JMFGrAgvUcnec0Q-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 8 May
- 2024 12:51:40 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Wed, 8 May 2024 12:51:40 +0100
-From: David Laight <David.Laight@ACULAB.COM>
-To: =?utf-8?B?J0NocmlzdGlhbiBLw7ZuaWcn?= <christian.koenig@amd.com>, "T.J.
- Mercier" <tjmercier@google.com>, Charan Teja Kalla
-	<quic_charante@quicinc.com>, zhiguojiang <justinjiang@vivo.com>, Sumit Semwal
-	<sumit.semwal@linaro.org>, "linux-media@vger.kernel.org"
-	<linux-media@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>, "linaro-mm-sig@lists.linaro.org"
-	<linaro-mm-sig@lists.linaro.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "opensource.kernel@vivo.com"
-	<opensource.kernel@vivo.com>
-Subject: RE: [PATCH] dmabuf: fix dmabuf file poll uaf issue
-Thread-Topic: [PATCH] dmabuf: fix dmabuf file poll uaf issue
-Thread-Index: AQHaoId+JYKtMQTt+U6dUCQNubR7xbGNNzKw
-Date: Wed, 8 May 2024 11:51:40 +0000
-Message-ID: <c0fe95949d4f41449f17add8300270b9@AcuMS.aculab.com>
-References: <4fedd80c-d5b6-4478-bfd3-02d1ee1a26e5@vivo.com>
- <aab5ec51-fcff-44f2-a4f5-2979bd776a03@amd.com>
- <2ebca2fd-9465-4e64-b3cc-ffb88ef87800@vivo.com>
- <d4209754-5f26-422d-aca0-45cccbc44ad0@amd.com>
- <289b9ad6-58a3-aa39-48ae-a244fe108354@quicinc.com>
- <CABdmKX3Zu8LihAFjMuUHx4xzZoqgmY7OKdyVz-D26gM-LECn6A@mail.gmail.com>
- <8ca45837-cbed-28da-4a6f-0dcec8294f51@quicinc.com>
- <83605228-92ee-b666-d894-1c145af2e5ab@quicinc.com>
- <CABdmKX2MWU9-9YN46PXx-Jy-O9CHMv8hCkvArd7BbWUBs=GPnw@mail.gmail.com>
- <8915fcc1-d8f1-48c2-9e51-65159aaa5a3b@amd.com>
- <ZjovD5WaWjknd-qv@phenom.ffwll.local>
- <44b08793-cf44-4cbd-a3bb-583af351ab9e@amd.com>
-In-Reply-To: <44b08793-cf44-4cbd-a3bb-583af351ab9e@amd.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1715169217; c=relaxed/simple;
+	bh=hYwn+JI3hSrV50VTfmR6XV0Ay3DMP/xwKfK4TzcbBFQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=irnrXfo4soo24TPvIFE/xqtlTcE82Bds/ZwgO6hcrkkHF6I7lzrC+GmyA/E7yPVFNa2eZiKE7b++thQ3r5WucZjGIOe6o3f4n9V7np3Q/Kq4jZ8hc11vs78dKhO9GX+5S4JEvOoU//JMXxkutilTmmHjO6OWI6aklm0csl+iNDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6VCsAAm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6VCsAAm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F62CC3277B;
+	Wed,  8 May 2024 11:53:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715169216;
+	bh=hYwn+JI3hSrV50VTfmR6XV0Ay3DMP/xwKfK4TzcbBFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G6VCsAAmBEfWQLdNhiQFeJ6vEKrVRN5tmq+kb5I3MWPg3GFOLaYVWAGEgFkX5Ye64
+	 vOnpV7tyk1mdhwHk3kiH7i5ys+Q9km6CyFSOkhH8lxmFshLQfzCSYzCCNQbnoKBBFw
+	 68RDN0eUWsRIkWoXVb69ukGEG9DdfDX/ukPPawbXnPcKabHgnCc3XT9yeuAKnLWZRk
+	 ONIVHK589AIF8B/wFRsX9O/9Ni9OGLLD08b90OZ3uHHQQXPn5O5kVJvxlL008Tv7he
+	 CUvTD/OOrQ6zCumarW22kFgvu2M3rzLApki0b2LaR5W7GwALtzW3RErBIEOUO2nL3H
+	 GzmJ44I4e3cZQ==
+Date: Wed, 8 May 2024 20:53:34 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Alina Yu <alina_yu@richtek.com>
+Cc: lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+	johnny_lai@richtek.com, cy_huang@richtek.com
+Subject: Re: [PATCH v2 2/4] regulator: rtq2208: Fix LDO to be compatible with
+ both fixed and adjustable vout
+Message-ID: <ZjtnvjlJpfNn7qVT@finisterre.sirena.org.uk>
+References: <cover.1714467553.git.alina_yu@richtek.com>
+ <ffeecd61c194df1f7f049bd50cb2bbbad3cf1025.1714467553.git.alina_yu@richtek.com>
+ <ZjGmmYWHu-ZQQdIh@finisterre.sirena.org.uk>
+ <20240502073029.GA4055@linuxcarl2.richtek.com>
+ <20240502092614.GA31518@linuxcarl2.richtek.com>
+ <ZjRAsJHn57pZy5UH@finisterre.sirena.org.uk>
+ <20240503073536.GA12846@linuxcarl2.richtek.com>
+ <ZjjwFTtiopqsYdeJ@finisterre.sirena.org.uk>
+ <20240508065402.GA7462@linuxcarl2.richtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mtC14iJaOWxhpsjn"
+Content-Disposition: inline
+In-Reply-To: <20240508065402.GA7462@linuxcarl2.richtek.com>
+X-Cookie: Accuracy, n.:
 
-RnJvbTogQ2hyaXN0aWFuIEvDtm5pZw0KPiBTZW50OiAwNyBNYXkgMjAyNCAxNTowNQ0KLi4uDQo+
-IEkgYWN0dWFsbHkgaGF2ZSBiZWVuIHRlbGxpbmcgcGVvcGxlIHRvIChhYil1c2UgdGhlIGVwb2xs
-IGJlaGF2aW9yIHRvDQo+IGNoZWNrIGlmIHR3byBmaWxlIGRlc2NyaXB0b3JzIHBvaW50IHRvIHRo
-ZSBzYW1lIHVuZGVybHlpbmcgZmlsZSB3aGVuDQo+IEtDTVAgaXNuJ3QgYXZhaWxhYmxlLg0KDQpJ
-biB3aGF0IHdheT8NCllvdSBjYW4gYWRkIGJvdGggZmQgdG8gdGhlIHNhbWUgZXBvbGwgZmQuDQpS
-ZWx5aW5nIG9uIHRoZSBpbXBsaWNpdCBFUE9MTF9DVExfREVMIG5vdCBoYXBwZW5pbmcgdW50aWwg
-Ym90aCBmZCBhcmUNCmNsb3NlZCBpcyBhIHJlY2lwZSBmb3IgZGlzYXN0ZXIuDQooQW5kIEkgY2Fu
-J3Qgc2VlIGFuIG9idmlvdXMgd2F5IG9mIHRlc3RpbmcgaXQuKQ0KDQpRNi9BNiBvbiBlcG9sbCg3
-KSBzaG91bGQgYWx3YXlzIGhhdmUgaGFkIGEgY2F2ZWF0IHRoYXQgaXQgaXMgYW4NCidpbXBsZW1l
-bnRhdGlvbiBkZXRhaWwnIGFuZCBzaG91bGRuJ3QgYmUgcmVsaWVkIG9uLg0KKGl0IGlzIHdyaXR0
-ZW4gYXMgYSAnYmV3YXJlIG9mJyAuLi4pDQoNClRoZSBvdGhlciBwb2ludCBpcyB0aGF0IHRoZXJl
-IGFyZSB0d28gd2F5cyB0byBnZXQgbXVsdGlwbGUgZmQgdGhhdA0KcmVmZXJlbmNlIHRoZSBzYW1l
-IHVuZGVybHlpbmcgZmlsZS4NCmR1cCgpIGZvcmsoKSBldGMgc2hhcmUgdGhlIGZpbGUgb2Zmc2V0
-LCBidXQgb3BlbigiL2Rldi9mZC9uIikgYWRkcw0KYSByZWZlcmVuY2UgY291bnQgbGF0ZXIgYW5k
-IGhhcyBhIHNlcGFyYXRlIGZpbGUgb2Zmc2V0Lg0KDQpJIGRvbid0IGtub3cgd2hpY2ggc3RydWN0
-dXJlIGVwb2xsIGlzIHVzaW5nLCBidXQgSSBzdXNwZWN0IGl0IGlzDQp0aGUgZm9ybWVyLg0KU28g
-aXQgbWF5IG5vdCB0ZWxsIHlvdSB3aGF0IHlvdSB3YW50IHRvIGtub3cuDQoNCglEYXZpZA0KDQot
-DQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwg
-TWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2Fs
-ZXMpDQo=
 
+--mtC14iJaOWxhpsjn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, May 08, 2024 at 02:54:02PM +0800, Alina Yu wrote:
+
+> May I modify the code into this ?
+> I'll add 'richtek,fixed-microvolt' property in dtsi; remove 'regulator-min-microvolt' and 'regulator-max-microvolt'
+> to prevent fail caused by constraints->apply_uV.
+
+Adding the new property seems fine.  You still need to permit the
+min/max microvolt properties for the case where the regulator is in
+normal mode and can vary, you could write rules that ensure that the
+constraints line up in the case where a fixed voltage is specified but
+I'm not sure it's worth the effort.
+
+--mtC14iJaOWxhpsjn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmY7Z7sACgkQJNaLcl1U
+h9Aquwf9H+G8Hr6XIT+TdTjeWbKbmYnY5RaWfJdxK43T7eNU/oHJdAsLluk2/pVx
+K/fkI82xYzAFuHBcOolpKy3Vxp7tMt2W3+edHzxSQWr+wWcJLlHWEpSWHrfjxMA/
+1rCfVnpKZPZUJM+3CShDOHwWdwEtGQMEtH/+GTjxl/DJV3UCybGBQq+1O/0QPg0b
+bXSFJtrpu56D5ePvApQKSBvrE6K9KPw5cgRh8/1SWLOIvQZNOnc5WybUuTRt6Q4O
+IAJiS86ZvbvHOq4jK0dSYOzmRXjSknDrb2qzaQKCN4k7WJ3bWuwDm5i4MRUgITUI
+qnqEDr00RhOleKjbf4AD4YG+GO7z2Q==
+=iHZI
+-----END PGP SIGNATURE-----
+
+--mtC14iJaOWxhpsjn--
