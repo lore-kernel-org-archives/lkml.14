@@ -1,104 +1,161 @@
-Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07A679EA;
-	Wed,  8 May 2024 01:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A2E8BEC
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 01:36:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715132034; cv=none; b=Or8SyhV6IJIRj6jtf/3p5XNR3L87KH7W8n0jdJlMMRZRgvH5+5q5t2yYGXpPTR5raQgc+Ha8L9dQBFtgkieWR8/xl7JuoadMHw1K9k1cuhMESvMcSH2NEr74NYHzAfkU25XoG9HninLZTaZOf/4hStHu1FkxSLxPS+m5jnR9dJk=
+	t=1715132202; cv=none; b=OugU/773zk2FA3KGOuS8gQzay6XS5MHC2bVbOAcXNPLXjerShEWM4cOUYVFS/j4+FbrldgfYUPwiJk1+E8czNCL0rZb2frAr2154BvGJj6V4DfdnmOQsN0qK8+kOo84Cpcugy6EhTG80WnUaxcfCbj0yNTk+4rCOo+2AAwtJFYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715132034; c=relaxed/simple;
-	bh=YlFykGoxAiiJuRSGMaXz+r9CTvvsH71wleL5j7OOBK8=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=pLXONj0OSxsKSEknJvUZYtEiJ2/1dnLyRTvN4jMErXws4MIkOeQVIDGC3BHJ24MeMDSKi8SDdgX4h9ugrJrtrUSLr7aM9MW5uMgJ97zTrXzP7Qapqq/IFXK2QdAp+dJKK200IYAGmy/stB4ZAD5YxPXg2TZdzeLLszAYhe9YqZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Yen5rOD9; arc=none smtp.client-ip=203.205.221.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1715132202; c=relaxed/simple;
+	bh=JLgbatqmIExlBnuCq3aANbOE8Onz3/4vLKRdWZjAJIg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aypaJhUGDifOCPpILK5mXI2kHcUmPcXU72xeTC14MpBisoCtCcJmW32vNq50has/8N3TaRV8Q5dLuuI+U4jKgykk+bZJvkEErvPD0Rv1PgX4e+R04EwnV44BFBu8yretbr3xF9KoUOEJPfV+MhDS3g3vshkNEnYhn+EaYz18GPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=dIBbIyi1; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Yen5rOD9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1715131729; bh=RpAApWwz9vkgICo+/HQ8lHrSIvkMVGTy8S0GeZrlgnA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Yen5rOD9cbZyWc/jSaTf3Z/6fAAfN+bHweFJbjzH08pU4J+E1dgMvXfEMS5qv1X3H
-	 a/UmHUTFHSqaw7GGnzhpncrnes0VaIMhx5BjVlP1PV7o8o2SsI3juArSm4GKeyZpax
-	 2Gztw2XvZu2H0e3lmp2oSBIenhHtYNgNZyroIAuk=
-Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 72E20E1A; Wed, 08 May 2024 09:28:46 +0800
-X-QQ-mid: xmsmtpt1715131726tzjvae2pq
-Message-ID: <tencent_B063096003B044521770576F66D1336E2305@qq.com>
-X-QQ-XMAILINFO: NKDEJ657lpu+DDn7E0qu1B5l9FJz1NUFydfhaK0WOb/m6BIuFtUYxkqaX89AzB
-	 R90rmgs9QYyMVM31FNZjg3zY9Np0qiQ2zEny9CJidE5+8CJXK5GrV9EhpgP4Bx++KWMSDjtGmml1
-	 dXPi0A1jFMLs2IqBZWHo1/tKtz6cm3G2yLh7W6JDIp1QeNrI91vgyLUIY4z3Md8kmTlPjboKcuG+
-	 d5/HXtd3oQxi6+qwYclwIpjGfGeLaDLkXgjL+KW5K2UgAMvQM7b7I5IFcdkPgLdpyIg34y7pgGjE
-	 yjsJ+tgx/HUAMPF+Nb89E2PjxdtzvpNXhJ4R35DwNKSt0Qg0Xr+0lg1+785j2AZQO6wZcZOyIsHt
-	 CUT4V3fZD9mKwZ5tCOSowJlTRXYZFYyQKBf515wrrm8kndgR33aa7UTNH0JB0vBdOEVRmOEX6huh
-	 zfWMQg8/slPUwzrW6IZ3Ogvd8pGYrQ2a4VW4CLk1TaI6Te2XJYIFgt3Zv1OIzF8g2TnlkXOZK+K9
-	 m6CAlOjSFsWTfihoXn+Inmq5wcBFQZyyTodV9+3EXGbzDEZcqrUpVk4CoyITRGm9yxEKLwxpEP/X
-	 3+FyoIQ/90nRIub/MNkHB9F1qwu6BbPe51OuGOEGfSAhWecWtSMtwVXCMqVJM/uZNTQ4fIUszS7n
-	 j8NzV3SDcVmzPyb6JJGX530Pfs/g5yiPQoB/R6lGw32PKnUoyyKK9fc3ggWcXbKzWJ5uDYJ/x76T
-	 3UGxGWn1GqKzCZLmh0Lxf+IRH03LlEAg9Q+4xoHUIdriSPX0bsa6Z8epS5yksR0b1OunTX6VnJ4W
-	 MXyTg+wvF9TzHBpXr+Hez+9SqnoDqL7GnDYAlIMlJpNzqdAc/R7AakFkVqLfO/Im3FNTDJZfxIaP
-	 PT7lSEUcs9wByl5MKu10l/6rZ8nJl6cakz/bT4+af2lGP0kMcFgSzHPg1vdLGKSS5hNCDwbPvp0p
-	 XGGp9JMYi1xZyrA++LVqVAfdYtHWPgxdlP61OcTbSLyw2pEBQKZNrBxZIhnvJJ2e9K5pHcMPo=
-X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
-From: Edward Adam Davis <eadavis@qq.com>
-To: kent.overstreet@linux.dev
-Cc: bfoster@redhat.com,
-	eadavis@qq.com,
-	linux-bcachefs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzbot+c48865e11e7e893ec4ab@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] bcachefs: fix oob in bch2_sb_clean_to_text
-Date: Wed,  8 May 2024 09:28:47 +0800
-X-OQ-MSGID: <20240508012846.3244444-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <nq3ka3ovvksptfkl5c53c4yn54efhu6dtt356lrda2wg7xzwak@tutbtfe7eskb>
-References: <nq3ka3ovvksptfkl5c53c4yn54efhu6dtt356lrda2wg7xzwak@tutbtfe7eskb>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="dIBbIyi1"
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-60585faa69fso253844a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 18:36:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715132200; x=1715737000; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+7QlTjnxppzA5Udx+bzDo8JE3hSKFTseR43SNN1UptE=;
+        b=dIBbIyi1hZUqfa9cSBwJy3TH+ZwSIkis6WZZRp+dPwBDhtmgvn7HDGHzOAmrgKssoB
+         KuAJ5IDg5ZYgjPHOYzMD8D2F7fMMT/rhvqbdm2wf/qCwDBPHWXw9QJDUiWOMDG+pBU5r
+         eB6Z4az3eAWzoZTgkG9oZSeAUFQxd0uDBZb8SyBe/VF7l1mlhnekagIhu+Sz2qWGaw4V
+         XczIrsll84AJsUFU14NchzA1yTbbn14lXudD2g6NhxSXpnx23lftxz1UZNZJs8SV3f1B
+         9mT7uQd076OVSjE1kmm2jEKuwVi4eRnzCHt2jTZTO5tG/kOGVHbAJ5ITdzhvLEPsj0Vp
+         u+kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715132200; x=1715737000;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+7QlTjnxppzA5Udx+bzDo8JE3hSKFTseR43SNN1UptE=;
+        b=HfJ5Iw0XTZQuRiWEtnCL7AAbrZDxNd08QQvxk4MFFe2x/A+1YZugGcDwKm1niAx5Ri
+         YM7fYzVH9EptbKb+LCGhQeS4kZKAawedu3+/SSivgOElWXMwiOHWYXV7rPRsrnFXJ/73
+         xq96QJ4LPvnyOVKFiJQ6YngLxO6P+H+Dk/HGAkEt6F43ji1wNOsHjdbn0F2uNXJC2/gM
+         841BfJwUiEuOS5CJO/qyWAJMTmvehxJn2dYr2XpPR4XrE84Z3ruzpCyfSXb95ROL3Dup
+         plT0P6upAqHuZqM7q4r1PVl76VcHelDs8+xfOxyn9ZYcrIs4giOYkAujvkqB1yMOppBz
+         Q5QQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWchGFmhcsdazFZhsqwMJKNjWUwAJo/u4UbN51wAE0s8nmJYenX0ZV7GLF+ljdlihU9H+JmQw1E+FWjzfFAmYk1o0c1JXzSw0lnr2gP
+X-Gm-Message-State: AOJu0YypMP1g2AihHrJeYiZ7mDYq8QW6e4RiJ19hlS1GKA0Rb9zetKoG
+	cRgvFegtOh7G172M7Dy6GS+0iuq+4c4JWb++cNzCESpFxFDlqS4wCvqOoxr6wNY=
+X-Google-Smtp-Source: AGHT+IGBUMwgwED594JfXAPKf75mxxw8xGyD68Kq1T2yA2i8v2BD/Iit1PYfzguaf0S8GcMHvm4ZFA==
+X-Received: by 2002:a17:90a:d790:b0:2af:33a6:f820 with SMTP id 98e67ed59e1d1-2b611378d9fmr1997613a91.1.1715132200272;
+        Tue, 07 May 2024 18:36:40 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b62863a265sm171994a91.10.2024.05.07.18.36.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 18:36:39 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH v2 0/8] riscv: Support compiling the kernel with more
+ extensions
+Date: Tue, 07 May 2024 18:36:26 -0700
+Message-Id: <20240507-compile_kernel_with_extensions-v2-0-722c21c328c6@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABrXOmYC/4WNUQ6CMBBEr0L225qyUA1+cQ9DiGlX2YgtaUnFk
+ N7dggfw801m3qwQyDMFuBQreIoc2NkMeChADzf7IMEmM6DEWtbYCO1eE4/UP8lbGvs3z0NPy0x
+ 2WwbRoDG5WZkKFWTJ5OnOy35w7TIPHGbnP/tfLLf0p1by9E8dSyGF0qh0WdVaNufWc3SBrT7mJ
+ XQppS+UkX6CzwAAAA==
+To: Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Conor Dooley <conor.dooley@microchip.com>, Song Liu <song@kernel.org>, 
+ Xi Wang <xi.wang@gmail.com>, 
+ =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>, 
+ Jessica Clarke <jrtc27@jrtc27.com>, Andy Chiu <andy.chiu@sifive.com>
+Cc: linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715132198; l=3278;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=JLgbatqmIExlBnuCq3aANbOE8Onz3/4vLKRdWZjAJIg=;
+ b=KiyA7L0KVvS1JXAVEqaLEplXpWMoEL9cajQs3TtOugD7mQ62ZP7TAKqfmSj3ujpal1dMogWjs
+ utnjYrKD1D3Bkd7DacIU9Ge0j4MDOYapJ08pOkqHW8T3bLIMCqV5aoC
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-On Tue, 7 May 2024 21:21:16 -0400, Kent Overstreet wrote:
-> > > > > diff --git a/fs/bcachefs/sb-clean.c b/fs/bcachefs/sb-clean.c
-> > > > > index 35ca3f138de6..194e55b11137 100644
-> > > > > --- a/fs/bcachefs/sb-clean.c
-> > > > > +++ b/fs/bcachefs/sb-clean.c
-> > > > > @@ -278,6 +278,17 @@ static int bch2_sb_clean_validate(struct bch_sb *sb,
-> > > > >  		return -BCH_ERR_invalid_sb_clean;
-> > > > >  	}
-> > > > > 
-> > > > > +	for (struct jset_entry *entry = clean->start;
-> > > > > +	     entry != vstruct_end(&clean->field);
-> > > > > +	     entry = vstruct_next(entry)) {
-> > > > > +		if ((void *) vstruct_next(entry) > vstruct_end(&clean->field)) {
-> > > > > +			prt_str(err, "entry type ");
-> > > > > +			bch2_prt_jset_entry_type(err, le16_to_cpu(entry->type));
-> > > > > +			prt_str(err, " overruns end of section");
-> > > > > +			return -BCH_ERR_invalid_sb_clean;
-> > > > > +		}
-> > > > > +	}
-> > > > > +
-> > > > The original judgment here is sufficient, there is no need to add this section of inspection.
-> > > 
-> > > No, we need to be able to print things that failed to validate so that
-> > > we see what went wrong.
-> > The follow check work fine, why add above check ?
-> >    1         if (vstruct_bytes(&clean->field) < sizeof(*clean)) {
-> >   268                 prt_printf(err, "wrong size (got %zu should be %zu)",
-> >     1                        vstruct_bytes(&clean->field), sizeof(*clean));
-> > 
-> 
-> You sure you're not inebriated?
-Here, is my test log, according to it, I can confirm what went wrong.
-[  129.350671][ T7772] bcachefs (/dev/loop0): error validating superblock: Invalid superblock section clean: wrong size (got 8 should be 24)
-[  129.350671][ T7772] clean (size 8):
-[  129.350671][ T7772] flags:          0
-[  129.350671][ T7772] journal_seq:    0
+The kernel currently has the restriction that it can only be compiled
+with the extensions that are hardcoded in arch/risc/Makefile.
+
+Any extension that is not listed in the Makefile can still be used by
+explicitly writing the assembly and using alternative patching.
+
+This series introduces Kconfig options that allow the kernel to be
+compiled with additional extensions.
+
+The motivation for this patch is the performance improvements that come
+along with compiling the kernel with these extra instructions. Allowing
+the compiler to emit arbitrary Zb* instructions achieves a 4.9%
+reduction of dynamic instruction count for a test ran in Spike that
+boots the kernel and runs a user space program that prints to the
+console.
+
+Additionally, alternatives that check if an extension is supported can
+be eliminated when the Kconfig options to assume hardware support is
+enabled.
+
+This series is based on the wording changes from Conor in:
+
+https://lore.kernel.org/lkml/20240424-tabby-plural-5f1d9fe44f47@spud/T/
+
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+Changes in v2:
+- Eliminate references to incorrect config in Svpbmt patch (Jess)
+- Add motivation to cover letter (Conor)
+- Remove "v" from march
+- Correct the ifdef for vector
+- Correct the ifdef for Svnapot
+- Link to v1: https://lore.kernel.org/r/20240506-compile_kernel_with_extensions-v1-0-5c25c134c097@rivosinc.com
+
+---
+Charlie Jenkins (8):
+      riscv: Add PLATFORM_MAY_SUPPORT_RISCV_ISA_C Kconfig option
+      riscv: Add PLATFORM_MAY_SUPPORT_RISCV_ISA_V Kconfig option
+      riscv: Add PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT Kconfig option
+      riscv: Move RISCV_ISA_SVPBMT to Kconfig.isa
+      riscv: Add PLATFORM_SUPPORTS_RISCV_ISA_ZBB Kconfig option
+      riscv: Add PLATFORM_SUPPORTS_RISCV_ISA_ZBA Kconfig option
+      riscv: Add PLATFORM_SUPPORTS_RISCV_ISA_ZBC Kconfig option
+      riscv: Add PLATFORM_SUPPORTS_RISCV_ISA_ZBS Kconfig option
+
+ arch/riscv/Kconfig                    | 133 +-----------
+ arch/riscv/Kconfig.isa                | 393 ++++++++++++++++++++++++++++++++++
+ arch/riscv/Makefile                   |  14 +-
+ arch/riscv/crypto/Kconfig             |  14 +-
+ arch/riscv/include/asm/arch_hweight.h |  33 +--
+ arch/riscv/include/asm/checksum.h     |  18 +-
+ arch/riscv/include/asm/pgtable.h      |   3 +-
+ arch/riscv/include/asm/simd.h         |   3 +
+ arch/riscv/include/asm/vector.h       |   3 +-
+ arch/riscv/kernel/cpufeature.c        |   3 +-
+ arch/riscv/kernel/head.S              |   8 +-
+ arch/riscv/kernel/probes/uprobes.c    |   2 +-
+ arch/riscv/kernel/process.c           |  12 +-
+ arch/riscv/kernel/ptrace.c            |   6 +
+ arch/riscv/lib/csum.c                 |  48 ++---
+ arch/riscv/lib/riscv_v_helpers.c      |   1 -
+ arch/riscv/lib/strcmp.S               |   4 +-
+ arch/riscv/lib/strlen.S               |   4 +-
+ arch/riscv/lib/strncmp.S              |   4 +-
+ arch/riscv/lib/uaccess_vector.S       |   2 +
+ arch/riscv/lib/xor.S                  |   2 +
+ arch/riscv/net/bpf_jit.h              |   8 +-
+ 22 files changed, 509 insertions(+), 209 deletions(-)
+---
+base-commit: 2f47357557b7aa98d9d9002688aae480864ca3f6
+change-id: 20240429-compile_kernel_with_extensions-92dd2403d325
+-- 
+- Charlie
 
