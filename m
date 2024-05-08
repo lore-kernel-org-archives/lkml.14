@@ -1,131 +1,91 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15B51E89A
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 20:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2F412BEA4
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 20:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715201110; cv=none; b=MxEXJMlt3FU2dvZ5sAYmLgf6qMezXVQjykR7Nj/vEUjSCrMmBL06dK2X8C8pDpqlEpeAGSOWUpb+KKfIVgSXeUfjKvF5RVty16FkkQdfZ2tDOT1LppUPDOe+pU8ZU/5yPBqOocqRMjqyOHMs6uwDBsLzV7cjRXSoyPgdyRFf6Xk=
+	t=1715201544; cv=none; b=SObvjJQ2THNIsxCN0aL9XnCRBP6vh75WiAULai5yF+I4WyvmZvtjYGBrRYfhw7CA2DBcucoOmzfwbx3Xvb+PxZM6skwW4/4DBbmSRWAVC/527BBxXRik4f/N1avm/v332wEy/Rv8rUFRookxS0FV6baD69qoIEz9bTZwS4/jDcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715201110; c=relaxed/simple;
-	bh=+TrNJxROO7MAmapZhWZcQZNsYA4TI5CqvlqU+QKwtRc=;
+	s=arc-20240116; t=1715201544; c=relaxed/simple;
+	bh=p+hc+OA2iCLCTepSnlLlQPjrNwZJrh8G7ChR6vwC3vY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fPP9zrDxN4ngFaNrdwac68yujQn5BUuXAXlhtv5ES9o5mSh3t3zPA+IaUhHCDbcy1FLEFA9PwZkwGLwlWP0LusxJoAGIeBnlEX6Ee1eVP+grQYMbcqp/v1D3vEMLp2gJMd17JlCgMDEyM7Jf5v4TOPyYR6jQgZYJGaF9FHDh2KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ue3R8+yk; arc=none smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=fZW/P0QQm2XEYTJbMMaXnHR+ekdXj+XteOmEn4j7wcm85TfDxclsi4Xp7PKoP8L/fUBkAphvNVCbKulfOg8iaGmQDS54xcT4LyXtC69uoJXLcZsZT7AxezLkyJJe8qyxpxE4q7lJVZWjVsUNTx2shVPzsNH10Z+FFChtygIhBKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Dfi+CvcQ; arc=none smtp.client-ip=209.85.219.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ue3R8+yk"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-43d361a2124so103211cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 13:45:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dfi+CvcQ"
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-de45dba157cso183425276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 13:52:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715201108; x=1715805908; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1715201541; x=1715806341; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zrS4ra5r0MYUhXUqUrqqa9EFMt0orErlafYzq0uBTrk=;
-        b=ue3R8+ykxQxwIVBBXHeVPWoH87ZNdT/hr+LTTSkUo/19PVxv9yd1TzXh8//pQDM2vJ
-         /mJfLmuZw6jdZ95VbTYmD5Tz4SWyqxsXtKXQIEvRMiKm+EEu9y6OL6W3C5HBvO/eWFzj
-         77WNLXeFNduacSPmbMA9ekE8uFQIar0oZoZPx3DTR4PNABcaaQ+OtGJsefoQ+nnszFr9
-         UnIxc3mM93V5YcLXEVTfKVGNaavuRU4vDtPXS86oVUxAKydxSFnIIkgI22sVBqdMUuHZ
-         GjqPkAXslFyvRj4ClCuk2KMBG3sEgeZkE7MlFOroOmFk8R3saAQBtk1RdufPWqpOTRcS
-         np5Q==
+        bh=p+hc+OA2iCLCTepSnlLlQPjrNwZJrh8G7ChR6vwC3vY=;
+        b=Dfi+CvcQ1tnVNA/9QYJx1Oe5Mu5DQU6hWMsqkFgCa5jhHR/mJS3weI40FMH9vXCOsm
+         oibX0aNWzOfzGiDrxRHuGIrFFPIQZcfEv2qhhKm1Sfl0g0ENSLzSVuktIp1KiqGfBRX/
+         rPMy/6vaSj1kVK7LY1181+2RWVc6czChGWyOQ02s2noe+yrjVBcTfTBE6Y+Ukuto97gd
+         frQAyCMvVEkAcf6kLr7ioDoBYBtyDKP2e8sRl3QRbjtTAx0uk2dy16iQkC42Qrim2CTs
+         fvlWYNIuct9DjIzeZZhaacvmwPJyvgOZIXpr7gyKphj6SKCZ+WcCKW0A0xaCQEEFIWXF
+         CoUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715201108; x=1715805908;
+        d=1e100.net; s=20230601; t=1715201541; x=1715806341;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zrS4ra5r0MYUhXUqUrqqa9EFMt0orErlafYzq0uBTrk=;
-        b=hCluuMPSm0NFLnRkm5JNetdQ1QPgcd5MoJLnERFex1a0608ijdKvquMSYgjOI9NbQ2
-         wXuzPojFsEOQXBWkcytnufP/5bZtdxUjNdAxeSu2uV+cBXswr36wNW7N6ETPnDZp7UXW
-         2W84sGVTavfELAijpyLmgL1sTPTvD18swrMgGNl8WdtxGlRkEIGJxMAc6ow1pgL4sohZ
-         n0jPNxqDusoWKwSwleT6Zs5nYa3JbupXY9qeLl27CRVBdyyHWLSMQXh5gmilvKiaK2wD
-         1JxTuwbhXjx1LwoG3PgbJfdV0cBDuIL7QqO+U6JCdaPvuTO5+geq+Ba9xZHyjPf6PjNY
-         sNrA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhGJZlniuFI7U6afWgq60ERl/PZWnGoUXXAqxQSU1/usCN+0jb3tWswi09YtvS6/TQ+gnOkXW96HHzB6EyxrrEAWejWyNnMuWpZFng
-X-Gm-Message-State: AOJu0YwCn8TfGIeNDZEfvfl7ToDos6OZtIGrxRu7poZw0rocGN33KOv6
-	aHFJp1f6WoEC/eYgutt4gyMNh5P5Ux7V1Y0fRQhYkgNWUmZA3LJxPrVnIWEkfE0mcN8hGT+83Cs
-	g0GBTFET4iTp0n5pVIPoigwu2cyOWqLB3hPDh
-X-Google-Smtp-Source: AGHT+IH78yrpGhaO2gSlcGlq7AlTg4g7/GluKLEv+bGcOc0UlkSZjbXsCjMz34xRnP6fjTUeWEdXGxDu/sVE+za7bsk=
-X-Received: by 2002:a05:622a:5786:b0:43a:b51c:46ca with SMTP id
- d75a77b69052e-43df483fa74mr51311cf.29.1715201107528; Wed, 08 May 2024
- 13:45:07 -0700 (PDT)
+        bh=p+hc+OA2iCLCTepSnlLlQPjrNwZJrh8G7ChR6vwC3vY=;
+        b=H4BdaAV0oXM8flCfbPGWTTfS9oAOU0GKCSrywBxxZz1j6VIz7t+Clvj9CtJb7NnCEW
+         JYaOVX7C5Dd6mAv9uCDkdqcaahRAeMWSl+PUZithltcwe2egUUnFwYNloZ811Qi8Wave
+         5Tr5YRUNaEv9zzigQGn4Gag/T/+Mf4J1AMMqUnWuj8XLVdw7Axjw+EOEZV1BtDohC75E
+         nAGQYr7ffzwYSpMwpbDzLG9K9Nwej6Z7zqH2bSl3r7ai2M/IRcCuEJMXIL4Eh101r0ai
+         cKy1e5ymwzbMpvSBREBeVgf916rEz2vnbso8DHsZ+63Tkl+AyEefqQsp4NmFYbBS6mK3
+         OAFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOGVEIIhLJJLOtmZMw+d0Lps449d685aYFpeOuM+bUE9Ch46kPnXS0IYAAUuiMOYrsZfAuFYgUNCAs+S8ZJwtHBSc0uTMbBpo3yYqI
+X-Gm-Message-State: AOJu0YxRwophgEaBdXcRgGYq0DIqgIvLYy409qZbHU8TIq+vfn5eAEAA
+	QVWpS8b6PF4nuHG/ey975U4ql4vdFHyj09P2V585ghz+JRo3vjQTf5/Yca1/hZTYutRKqcIUyox
+	/vtq529qK+afDhlwoTIu/TiMElFHtDz7d6e4N7A==
+X-Google-Smtp-Source: AGHT+IF4xwRhzJxSLcmGAjfMW/Ca8OBmnmyryFGPuWCqEjcaYNQiCPcJ9EBFy8Xy7r/a++IRKIMbf67vWhWe0XdfywY=
+X-Received: by 2002:a05:6902:4f4:b0:de6:b58:fe72 with SMTP id
+ 3f1490d57ef6-debb9dc3424mr4139892276.58.1715201539541; Wed, 08 May 2024
+ 13:52:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZjssGrj+abyC6mYP@gmail.com>
-In-Reply-To: <ZjssGrj+abyC6mYP@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 8 May 2024 13:44:52 -0700
-Message-ID: <CAP-5=fUvLiCDVDFFfJ78ng4T1FZ8j2N9Yt1sGTeGsupkbFEEug@mail.gmail.com>
-Subject: Re: Makefile.perf:1149: *** Missing bpftool input for generating
- vmlinux.h. Stop.
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Namhyung Kim <namhyung@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+References: <CGME20240507064445eucas1p1bfc17da4f824ef46567774634482f12f@eucas1p1.samsung.com>
+ <20240507064434.3213933-1-m.szyprowski@samsung.com>
+In-Reply-To: <20240507064434.3213933-1-m.szyprowski@samsung.com>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Wed, 8 May 2024 15:52:08 -0500
+Message-ID: <CAPLW+4=0_ErruqVsSUkKfzw0+m3i8J=jn8A_SEnwLKWZX1Oyuw@mail.gmail.com>
+Subject: Re: [PATCH] clkdev: fix potential NULL pointer dereference
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 8, 2024 at 12:39=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wrot=
-e:
+On Tue, May 7, 2024 at 1:45=E2=80=AFAM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
 >
+> dev_fmt argument is optional, so avoid dereferencing it unconditionally.
 >
-> So I've been getting this perf build failure for some time:
+> Fixes: 4d11c62ca8d7 ("clkdev: report over-sized strings when creating clk=
+dev entries")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
 >
->   kepler:~/tip/tools/perf> make clean
->   Makefile.perf:1149: *** Missing bpftool input for generating vmlinux.h.=
-  Stop.
->   make: *** [Makefile:90: clean] Error 2
->
-> ... but if I clone a new repository, it works fine, until a point.
->
-> 'make clean' doesn't work - and 'make mrproper' in the main kernel
-> directory doesn't clean up properly.
->
-> Only if I do a brute-force:
->
->         rm -rf tools/
->         git checkout HEAD -f
->
-> does it get resolved.
->
-> The failure condition triggers if I Ctrl-C the following build a couple o=
-f
-> times, without it being finished:
->
->
->    cd tools/perf; make clean install
->    ...
->
->    LD      util/perf-in.o
->    LD      perf-in.o
->    CC      pmu-events/pmu-events.o
->  ^Cmake[3]: *** [pmu-events/Build:43: pmu-events/pmu-events.o] Interrupt
->  make[2]: *** [Makefile.perf:709: pmu-events/pmu-events-in.o] Interrupt
->  make[1]: *** [Makefile.perf:264: sub-make] Interrupt
->  make: *** [Makefile:113: install] Interrupt
->  kepler:~/tip> perfi
->  Makefile.perf:1149: *** Missing bpftool input for generating vmlinux.h. =
- Stop.
->  make: *** [Makefile:90: clean] Error 2
 
-We have a checked-in vmlinux.h:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/bpf_skel/vmlinux/vmlinux.h?h=3Dperf-tools-next
-so this shouldn't have been a problem for a while. bpftool is no
-longer on that line:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/Makefile.perf?h=3Dperf-tools-next#n1149
-so I suspect if you use a newer tree then things will work.
+Thanks for fixing this, Marek! I tested it on the E850-96 board, and
+it fixes the boot on current kernel-next for me (next-20240508). Feel
+free to add:
 
-Thanks,
-Ian
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+Tested-by: Sam Protsenko <semen.protsenko@linaro.org>
 
-> Thanks,
->
->         Ingo
+[snip]
