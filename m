@@ -1,188 +1,183 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4386639AD6
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 19:25:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A6D6A347;
+	Wed,  8 May 2024 19:26:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715196345; cv=none; b=oyhJfQZsUTqb99EQzF9oBa8EaCOj5GY5/dRgfkihWsKGyMz5DL/Jvlcnu188D8oy/IsAdqMzrHDEH2VD7vuOQI39sp9YXDTuOLmcqtMPr2K6YH8ayD5TL9D3cW1MPMowlGI8xTl6giy/vaobZp9M1HO2pZU17cQYSh3IrsawimM=
+	t=1715196403; cv=none; b=d2VRTf70A412uwg3ZzxI5SttLHIj4qwXNklLRqgAhPUhgcT+FuH5ORCEoJJc5jfStDKYUY+hOj98lxR5NcsLCwXlvzMLQDCVr5V/w9YWsfJJsELTQuk6GMeqr3mo6W25eDihtdGB5s9+r4kKgWSd7IkwwMTz/5Mbjs/ZLhiFrVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715196345; c=relaxed/simple;
-	bh=PQE6gIAzIEyjZtZOWR0stsukrYzPYSrIuauq4EQ2VFQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GdsFo1bK4luPulxwes/TRaQtqdfHolZSNZSaz/+3LQdRQbjKa0VMYmctRI3NV84mIKE6C+Y65SyLdI7JZYqhDvOBtdubHAOJNmXfu4sqanvpMNzlmK8DY89cOhi9QSkWPaNOWpcjltcewVcgbEDhQgbd/Sfw9WxMDhN6VfVN7sU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=BDz8rVKH; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="BDz8rVKH"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-41b7a26326eso432735e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 12:25:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715196343; x=1715801143; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nb289X82Pwy2psbtYSkuOYlUdcLMn+kmFJiTkQU5Z+c=;
-        b=BDz8rVKHvv2T6cuL9LzQj1msbZjcTb3MNkw5SwsN7Hcw0+JvthaSzouNtn8Ns9St3v
-         Fy6GS+r4aVoilkxByBvAKvgesKEf1NSNaiO8XgBCX/cKNHRMEMRVKAp29YZGIJ2vi3m6
-         VRg5IC6FTse8M0QkDhXZBrCYZU4RqT5L5H7knhB2qWpde7GAgHLGHdNysPMJUTMMBCNY
-         1PWmqzM4q2S7R1+VU/InT/klu88wt7eDIsIx7ekMErUjMiaj2SsKklo0w7e66CydSKAp
-         Mm09pBcog64MsXDkIn98odxXhnHGjFW0GFE7s2hf1Z1hKKi/ge/rZncRBGoVc0ypTy+k
-         Cm2g==
+	s=arc-20240116; t=1715196403; c=relaxed/simple;
+	bh=LI8Wdu73HyhVGuk88SpDGd85xS3prBe90k0sDqhmi58=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H+kLA7PCBKjx9EI2TnimI2jdI9ciVtYMUbYJJOML1xdaoFoYfAwP2lTNPyogPbMWBM7XzfXXvK+TJAelITr9F2Yw+1OkYkoeA8l/Eo+DGeLERUdV2ztdB8mlhN2y+bG9zLyb5lF4eNbQTeAr6lBES1nAHp+eIEsDxxhR9fCh3pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a59a5f81af4so21293466b.3;
+        Wed, 08 May 2024 12:26:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715196343; x=1715801143;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nb289X82Pwy2psbtYSkuOYlUdcLMn+kmFJiTkQU5Z+c=;
-        b=Zb5+wCihBy+nuifey9aYEmQdjlUSkApdVkWS/e//EFJA/vo4x/RKjXTRwBzq/QhFwW
-         RqFDLUtqmyHxGTNsD1Khv1whqOSOA2pPs/UuT6L6Us8SZpZTAIoEbeIV3FOGIlLHvnSX
-         Xtz5mVxs08AkKcE1DT4r6jtQu/az3BofnmmAfYuRFW+jC0muuFjTVRoePiRsUZP522eq
-         sH3I5IhsJvAIneZJQd0d6lMF6/+DJ5rd98eJleKtqrdX/ObFiBkh3PbOzdlXDapLiSU/
-         Rywa+lQ4Vxv315jdrEIw5u4FKJ/k2gLluGWi9nYpMkmei+yGiT84isq+u136vIgkT3kc
-         kcrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW0cdfASV3WeMx7xX4UTG90neq/ugeNIdAnpzY5DuSFYRTYXmnV0/pC3SSxpO+57bwWFqKzNlPoOV7WnB6S9A02j1DcESempMjGeLnM
-X-Gm-Message-State: AOJu0YwS7ewhRpNiYl39BN15WJtx5eT2qJRVSvRw4yG+g4PniA85D4/8
-	7u5MClM8daDTrmJZhPtgADnDTJZTuxYx0rjp/xIHHkHxUW2wylLcuYL93WIPuZg=
-X-Google-Smtp-Source: AGHT+IFUGL9dDH2gwgI9tPWACeaOFPW71lxlPF9m81I7+sLroC1dBTrL+wbzR1KIUMB3+0Tz7vFgZA==
-X-Received: by 2002:adf:a492:0:b0:343:a368:f792 with SMTP id ffacd0b85a97d-34fca621315mr2849241f8f.52.1715196342717;
-        Wed, 08 May 2024 12:25:42 -0700 (PDT)
-Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id b12-20020a5d4d8c000000b0034e65b8b43fsm14038517wru.8.2024.05.08.12.25.41
+        d=1e100.net; s=20230601; t=1715196400; x=1715801200;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jTeXUpbLMFzYH91bk5qDIYWQEdbPmjkqMnqa4yD1axU=;
+        b=ATTZJGZwhbDUd3K0tkEyNwiwJy/hUDEYhaw4786fx3MIZEUsQpGxtvJpmu12d4IA3b
+         /1lw/Cv+aan4JBIW7w1Lxd7n4GytECRblB3knVhsqacDHGaNwWuGpvjgjI4C/s7P69aJ
+         4A6e7tAz/lNFuOjLt7THZRGuMAIucS3jjWmHwjReLM1x0xHfDeZEagBg4hap05BOfzAS
+         YI62eXRtsqym5Jf5CdzQa/1BGtk2eS3rL3Gl7j+wpA2MnIxOZJcbDX/MGCTp4d5RUoX9
+         5dsWutMTl6SfhJJTVq5WmY9uQ9jJ25xKkc0Geh9SKLKyW/cVXC7MBm4D8+BRHGW4sH+I
+         KKsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUQqNjnKQPxAMm6NpIZML6sIPYXh2VqIWmcZns0NsqYArBBlYZeEKEkHeKaMqvKRBicoUQ/Wqq4s1z/xzvMVbzVvHlz9lhm3IWzgeUDjuI4e1GGqyaAgWexqsZAy5x99TTKUFBG
+X-Gm-Message-State: AOJu0YxcG+xv4WoQ8Q+MecBcvPVlw1XC+hkZKASRki1inEuby4P6gBWy
+	XOufLaPJ7gdRIsx3BI6J/PLjMHe1+3+ezsnWClRJM4Ay3I2W6KYQ
+X-Google-Smtp-Source: AGHT+IHRH2OoDlddyXF11c7orEKW9KmOdG0KQem72KOTc91vxrgmylRU28l18cjWdplcQ8Q12lF7eQ==
+X-Received: by 2002:a17:907:2084:b0:a59:be21:3575 with SMTP id a640c23a62f3a-a59fb9d95aamr228765466b.51.1715196400170;
+        Wed, 08 May 2024 12:26:40 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-006.fbsv.net. [2a03:2880:30ff:6::face:b00c])
+        by smtp.gmail.com with ESMTPSA id b18-20020a170906039200b00a59d9e71778sm3482960eja.111.2024.05.08.12.26.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 12:25:42 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Ryan Roberts <ryan.roberts@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Vincenzo Frascino <vincenzo.frascino@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	linux-riscv@lists.infradead.org,
-	linux-efi@vger.kernel.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-mm@kvack.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH 06/12] mm, riscv, arm64: Use common pte_clear() function
-Date: Wed,  8 May 2024 21:19:25 +0200
-Message-Id: <20240508191931.46060-7-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240508191931.46060-1-alexghiti@rivosinc.com>
-References: <20240508191931.46060-1-alexghiti@rivosinc.com>
+        Wed, 08 May 2024 12:26:39 -0700 (PDT)
+Date: Wed, 8 May 2024 12:26:37 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: alexander@mihalicyn.com, daan.j.demeyer@gmail.com, davem@davemloft.net,
+	dhowells@redhat.com, edumazet@google.com, horms@kernel.org,
+	john.fastabend@gmail.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	pabeni@redhat.com, paulmck@kernel.org
+Subject: Re: [PATCH net-next] af_unix: Fix data races in
+ unix_release_sock/unix_stream_sendmsg
+Message-ID: <ZjvR7YAxTmsX68Hl@gmail.com>
+References: <20240508111749.2386649-1-leitao@debian.org>
+ <20240508173324.53565-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240508173324.53565-1-kuniyu@amazon.com>
 
-Make riscv use the contpte aware pte_clear() function from arm64.
+On Wed, May 08, 2024 at 10:33:24AM -0700, Kuniyuki Iwashima wrote:
+> From: Breno Leitao <leitao@debian.org>
+> Date: Wed,  8 May 2024 04:17:45 -0700
+> > A data-race condition has been identified in af_unix. In one data path,
+> > the write function unix_release_sock() atomically writes to
+> > sk->sk_shutdown using WRITE_ONCE. However, on the reader side,
+> > unix_stream_sendmsg() does not read it atomically. Consequently, this
+> > issue is causing the following KCSAN splat to occur:
+> > 
+> > 	BUG: KCSAN: data-race in unix_release_sock / unix_stream_sendmsg
+> > 
+> > 	write (marked) to 0xffff88867256ddbb of 1 bytes by task 7270 on cpu 28:
+> > 	unix_release_sock (net/unix/af_unix.c:640)
+> > 	unix_release (net/unix/af_unix.c:1050)
+> > 	sock_close (net/socket.c:659 net/socket.c:1421)
+> > 	__fput (fs/file_table.c:422)
+> > 	__fput_sync (fs/file_table.c:508)
+> > 	__se_sys_close (fs/open.c:1559 fs/open.c:1541)
+> > 	__x64_sys_close (fs/open.c:1541)
+> > 	x64_sys_call (arch/x86/entry/syscall_64.c:33)
+> > 	do_syscall_64 (arch/x86/entry/common.c:?)
+> > 	entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+> > 
+> > 	read to 0xffff88867256ddbb of 1 bytes by task 989 on cpu 14:
+> > 	unix_stream_sendmsg (net/unix/af_unix.c:2273)
+> > 	__sock_sendmsg (net/socket.c:730 net/socket.c:745)
+> > 	____sys_sendmsg (net/socket.c:2584)
+> > 	__sys_sendmmsg (net/socket.c:2638 net/socket.c:2724)
+> > 	__x64_sys_sendmmsg (net/socket.c:2753 net/socket.c:2750 net/socket.c:2750)
+> > 	x64_sys_call (arch/x86/entry/syscall_64.c:33)
+> > 	do_syscall_64 (arch/x86/entry/common.c:?)
+> > 	entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+> > 
+> > 	value changed: 0x01 -> 0x03
+> > 
+> > The line numbers are related to commit dd5a440a31fa ("Linux 6.9-rc7").
+> > 
+> > Commit e1d09c2c2f57 ("af_unix: Fix data races around sk->sk_shutdown.")
+> > addressed a comparable issue in the past regarding sk->sk_shutdown.
+> > However, it overlooked resolving this particular data path.
+> > 
+> > To prevent potential race conditions in the future, all read accesses to
+> > sk->sk_shutdown in af_unix need be marked with READ_ONCE().
+> 
+> Let's not add READ_ONCE() if not needed.  Othwewise, someone reading
+> the code would assess wrongly that the value could be updated locklessly
+> elsewhere.
+> 
+> You can find all writers of sk->sk_shutdown do that update under
+> unix_state_lock().
+> 
+> 
+> > Although
+> > there are additional reads in other->sk_shutdown without atomic reads,
+> > I'm excluding them as I'm uncertain about their potential parallel
+> > execution.
+> > 
+> > Signed-off-by: Breno Leitao <leitao@debian.org>
+> > ---
+> >  net/unix/af_unix.c | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+> > index 9a6ad5974dff..74795e6d13c6 100644
+> > --- a/net/unix/af_unix.c
+> > +++ b/net/unix/af_unix.c
+> > @@ -2270,7 +2270,7 @@ static int unix_stream_sendmsg(struct socket *sock, struct msghdr *msg,
+> >  			goto out_err;
+> >  	}
+> >  
+> > -	if (sk->sk_shutdown & SEND_SHUTDOWN)
+> > +	if (READ_ONCE(sk->sk_shutdown) & SEND_SHUTDOWN)
+> >  		goto pipe_err;
+> >  
+> >  	while (sent < len) {
+> > @@ -2446,7 +2446,7 @@ int __unix_dgram_recvmsg(struct sock *sk, struct msghdr *msg, size_t size,
+> >  		unix_state_lock(sk);
+> >  		/* Signal EOF on disconnected non-blocking SEQPACKET socket. */
+> >  		if (sk->sk_type == SOCK_SEQPACKET && err == -EAGAIN &&
+> > -		    (sk->sk_shutdown & RCV_SHUTDOWN))
+> > +		    (READ_ONCE(sk->sk_shutdown) & RCV_SHUTDOWN))
+> 
+> Here we locked unix_state_lock() just before accessing sk_shutdown,
+> so no need for READ_ONCE().
+> 
+> 
+> >  			err = 0;
+> >  		unix_state_unlock(sk);
+> >  		goto out;
+> > @@ -2566,7 +2566,7 @@ static long unix_stream_data_wait(struct sock *sk, long timeo,
+> >  		if (tail != last ||
+> >  		    (tail && tail->len != last_len) ||
+> >  		    sk->sk_err ||
+> > -		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
+> > +		    (READ_ONCE(sk->sk_shutdown) & RCV_SHUTDOWN) ||
+> >  		    signal_pending(current) ||
+> >  		    !timeo)
+> >  			break;
+> 
+> Same here,
+> 
+> 
+> > @@ -2764,7 +2764,7 @@ static int unix_stream_read_generic(struct unix_stream_read_state *state,
+> >  			err = sock_error(sk);
+> >  			if (err)
+> >  				goto unlock;
+> > -			if (sk->sk_shutdown & RCV_SHUTDOWN)
+> > +			if (READ_ONCE(sk->sk_shutdown) & RCV_SHUTDOWN)
+> >  				goto unlock;
+> >  
+> >  			unix_state_unlock(sk);
+> 
+> and here.
+> 
+> Could you update the changelog and repost v2 for unix_stream_sendmsg()
+> targetting net tree with this Fixes tag ?
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/arm64/include/asm/pgtable.h | 9 +++------
- arch/riscv/include/asm/pgtable.h | 4 +++-
- arch/riscv/mm/init.c             | 2 +-
- mm/contpte.c                     | 6 ++++++
- 4 files changed, 13 insertions(+), 8 deletions(-)
+Sure. I will keep the READ_ONCE only in unix_stream_sendmsg() then.
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index bb6210fb72c8..74e582f2884f 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -1439,12 +1439,9 @@ extern void set_ptes(struct mm_struct *mm, unsigned long addr,
- 		     pte_t *ptep, pte_t pte, unsigned int nr);
- #define set_ptes set_ptes
- 
--static inline void pte_clear(struct mm_struct *mm,
--				unsigned long addr, pte_t *ptep)
--{
--	contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
--	__pte_clear(mm, addr, ptep);
--}
-+extern void pte_clear(struct mm_struct *mm,
-+		      unsigned long addr, pte_t *ptep);
-+#define pte_clear pte_clear
- 
- #define clear_full_ptes clear_full_ptes
- static inline void clear_full_ptes(struct mm_struct *mm, unsigned long addr,
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 4f8f673787e7..41534f4b8a6d 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -792,18 +792,20 @@ extern void set_ptes(struct mm_struct *mm, unsigned long addr,
- #define set_ptes set_ptes
- extern void set_pte(pte_t *ptep, pte_t pte);
- #define set_pte set_pte
-+extern void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep);
-+#define pte_clear pte_clear
- 
- #else /* CONFIG_THP_CONTPTE */
- 
- #define ptep_get		__ptep_get
- #define set_ptes		__set_ptes
- #define set_pte			__set_pte
-+#define pte_clear		__pte_clear
- 
- #endif /* CONFIG_THP_CONTPTE */
- 
- #define __HAVE_ARCH_PTEP_GET_AND_CLEAR
- #define ptep_get_and_clear	__ptep_get_and_clear
--#define pte_clear		__pte_clear
- #define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
- #define ptep_set_access_flags	__ptep_set_access_flags
- #define __HAVE_ARCH_PTEP_SET_WRPROTECT
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index bb5c6578204c..c82f17b3060b 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -327,7 +327,7 @@ void __set_fixmap(enum fixed_addresses idx, phys_addr_t phys, pgprot_t prot)
- 	if (pgprot_val(prot))
- 		__set_pte(ptep, pfn_pte(phys >> PAGE_SHIFT, prot));
- 	else
--		pte_clear(&init_mm, addr, ptep);
-+		__pte_clear(&init_mm, addr, ptep);
- 	local_flush_tlb_page(addr);
- }
- 
-diff --git a/mm/contpte.c b/mm/contpte.c
-index 543ae5b5a863..c9eff6426ca0 100644
---- a/mm/contpte.c
-+++ b/mm/contpte.c
-@@ -45,6 +45,7 @@
-  *   - set_ptes()
-  *   - ptep_get_lockless()
-  *   - set_pte()
-+ *   - pte_clear()
-  */
- 
- pte_t huge_ptep_get(pte_t *ptep)
-@@ -676,4 +677,9 @@ void set_pte(pte_t *ptep, pte_t pte)
- 	__set_pte(ptep, pte_mknoncont(pte));
- }
- 
-+void pte_clear(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
-+{
-+	contpte_try_unfold(mm, addr, ptep, __ptep_get(ptep));
-+	__pte_clear(mm, addr, ptep);
-+}
- #endif /* CONFIG_THP_CONTPTE */
--- 
-2.39.2
-
+Thanks for the review!
