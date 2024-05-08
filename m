@@ -1,16 +1,16 @@
 Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050E8768FC
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 13:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A5F7CF18;
+	Wed,  8 May 2024 13:41:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715175716; cv=none; b=oYeOog3AdgV7sHcn6RncMhEjeddNgC8NyipyJMd+ak18u/a4Px6o3k5hbIIVxIot7Ye6JXHiJRwCTdgv55DQgBZsPov2Oz0pidOQK8Mc3KIKY54xVnMEdpugKv/vYaqLycy1n/k6MGJq5Tl/53eTHpHRX961EO1vLjmdXkYHoOc=
+	t=1715175717; cv=none; b=G5sD5I/jkfmUA9l3m67vKoWUw4vBHQPthbySzbwpEfbSitloajMG71+ADV2Y+XUN5ITUj/PElwK7Wv7+YR0hvtzOgoYESYDG+8KcX7i1QrXvtLLrV7EeIUm+c80xS2G0nDw878Sxb3ZoYpzwoZs5wLojuXCLPLUUl2521udttxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715175716; c=relaxed/simple;
-	bh=Txx4Yud5UEU0OVCIwwHmcf9KT7+PYgR0XhbF6Lp8vG0=;
+	s=arc-20240116; t=1715175717; c=relaxed/simple;
+	bh=l58XFGkABLDTN6QAKvg2jQCCAeS3M9CarSf2paN6xx8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=pIV9ggIqacx/Bi/SHLG3KA90RKhmBNVMLrbR+OJQO3AMJrbwvFICB/PM6yRUtvhMsWKnSInODff9YXNkLMvpGEaeqSeE9Dw1j3L74gSH7CrozzZBDbQELkAzQ5J7psdwxz2ZnO+yZ5J78KhQ8ggODyVgdrGMGkswBVlp1iI0sgU=
+	 MIME-Version:Content-Type; b=I1WVndIjJVZoPyhYokxavweGVZHlV4iuwRbhXM6/SYA7DE3AyjZYeZMSoiAqz9+LZnGRF4uAXEZPTVf5y4IaIUmqcU1dmLBzVbLUF/WxdUKllgSwMFfsz/S1unt7VWlvJfUPRdG+Ho2qprOERDM6IeQiPIMJpq4O1JnQtmY+xbo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
@@ -18,15 +18,15 @@ Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VZGXK12D8z4x3q;
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VZGXK4YBmz4x3k;
 	Wed,  8 May 2024 23:41:53 +1000 (AEST)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: arnd@arndb.de, mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com, Kunwu Chan <chentao@kylinos.cn>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240125082637.532826-1-chentao@kylinos.cn>
-References: <20240125082637.532826-1-chentao@kylinos.cn>
-Subject: Re: [PATCH v2] powerpc/iommu: Code cleanup for cell/iommu.c
-Message-Id: <171517558555.165093.13672934998542887170.b4-ty@ellerman.id.au>
+To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+In-Reply-To: <91de862dda99d170697eb79ffb478678af7e0b27.1709652689.git.christophe.leroy@csgroup.eu>
+References: <91de862dda99d170697eb79ffb478678af7e0b27.1709652689.git.christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH] powerpc/bpf/32: Fix failing test_bpf tests
+Message-Id: <171517558551.165093.13897722350418535881.b4-ty@ellerman.id.au>
 Date: Wed, 08 May 2024 23:39:45 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,19 +37,21 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Thu, 25 Jan 2024 16:26:37 +0800, Kunwu Chan wrote:
-> This part was commented from commit 165785e5c0be ("[POWERPC] Cell
-> iommu support") in about 17 years before.
+On Tue, 05 Mar 2024 16:36:23 +0100, Christophe Leroy wrote:
+> Recent additions in BPF like cpu v4 instructions, test_bpf module
+> exhibits the following failures:
 > 
-> If there are no plans to enable this part code in the future,
-> we can remove this dead code.
-> 
+> 	test_bpf: #82 ALU_MOVSX | BPF_B jited:1 ret 2 != 1 (0x2 != 0x1)FAIL (1 times)
+> 	test_bpf: #83 ALU_MOVSX | BPF_H jited:1 ret 2 != 1 (0x2 != 0x1)FAIL (1 times)
+> 	test_bpf: #84 ALU64_MOVSX | BPF_B jited:1 ret 2 != 1 (0x2 != 0x1)FAIL (1 times)
+> 	test_bpf: #85 ALU64_MOVSX | BPF_H jited:1 ret 2 != 1 (0x2 != 0x1)FAIL (1 times)
+> 	test_bpf: #86 ALU64_MOVSX | BPF_W jited:1 ret 2 != 1 (0x2 != 0x1)FAIL (1 times)
 > 
 > [...]
 
 Applied to powerpc/next.
 
-[1/1] powerpc/iommu: Code cleanup for cell/iommu.c
-      https://git.kernel.org/powerpc/c/f3560a2ba5cbbb6c62c14dbdc1e33cb3565199d0
+[1/1] powerpc/bpf/32: Fix failing test_bpf tests
+      https://git.kernel.org/powerpc/c/8ecf3c1dab1c675721d3d0255556abe2306fa340
 
 cheers
