@@ -1,109 +1,115 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4317274C09
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 09:20:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2A971753;
+	Wed,  8 May 2024 09:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715160029; cv=none; b=To5fLlCYrCoQzGFB5zKSDn9IIF4+iVgUMdFqyBOX7Y26CzHHpcYSPJw2eb9Byzoz/1EGHp6Tgxe4e01RyH6iuEUweuNBEtNnHSKrLPqOCHNAlT3wN4LYOQsOrtHxkfQpKS9iMzCGuhJZ/ji32IrHK4V5KgdnR9TwdYdVkT23CXk=
+	t=1715160588; cv=none; b=s7Dw6EcCfG1wHXMt7BthOmO78ISE7yZDz6zvWli6DqJ54fVY5h2Exozx+553MHX7X9jVyrz99aKTSzwGbbXGeTgST9wKEHHEf2BPy1qFABVK3ciKptOuOR0B9YFuYbPPwQ1KD6NFHH9sRuUJ4dxdqcPho3mfkrDgVZoHgIWI5fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715160029; c=relaxed/simple;
-	bh=yKfqWildDBpRn3j/aQLboejYqWIQhfdprrcdr7mLdr8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jY4LkBk6KNYJVjSEcpNIm1XFZ0HhwtsztYwczpCL+gb/JH+LtHKMGf3LT4N9qCBt37VPRMTo6pa6THsTlSayIWI1CkcObiDyTp4EItjLNVeeH1mC8KHTu0ThOrfDeQY+HGnu6Gajtu50ODEE9UaW1s3ZrslXs5hHR4w6wJ0HkMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ei3BqE/P; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715160588; c=relaxed/simple;
+	bh=CyUA6ks1HsLglg9cdqivgokq0SYSLKF5yuxVYskxaFY=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=unJMbanPABl4VVNXLwyBwZSFRf2yiGynpdVfl37E6fKHi1l853yiGtDFsrg4OTHJNm6BY+AuG8JUiuJ+nfTvFHt6aL4OtYUndbVumoDhjB4vmnxyrk2S7r+sag6+BStJJFt700q2F6RwVd14v2ZF27Kx8LzWgF/2n4bOAiF1dJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=yI4LvrKF; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ei3BqE/P"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a59a387fbc9so1035586166b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 02:20:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715160026; x=1715764826; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3XvuGnMD1Ah+tuwTUGBWHswEEMKL2KFH48xBYXc+VM8=;
-        b=ei3BqE/PSo0Ze6nfudrXV+AGVhUpl5uCPNXWHQde5JTUkkhun9QoqF3bWU5z3tTOJA
-         LkBvJ7cp3DS/IE+ptDRw00V1wujbtMlDBoifZGlN0Kspce3DqMMgn4oODS3YpEhNPEIR
-         OdosdwD+D56YUhkWHovISFpkZoMikcDI3RcCGnt+SindLNWqqRROmZ2RBZ4QjbKwR09N
-         Axx1R5TJhMV22cMsoDi2URq62P5r+VjduU14jFL3IBQImhJ9GCJTBRZVaeAMudogCoG8
-         fTbQvqUp/E1wWJKBssDmDhb89/39CB0kr8dcl0HGD7pVPJM/vfQQjEV8Vesi0g+3yaVb
-         W90Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715160026; x=1715764826;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3XvuGnMD1Ah+tuwTUGBWHswEEMKL2KFH48xBYXc+VM8=;
-        b=aXkwIl05Jh3XtxCTMAXjrN7YWq5mYwiMIC7/yY/+C2E67c11skbRmFltyihdajU8wv
-         CPVD7Cwy3HFdHtghiha1hcfdDzm7YrJp5rnL24OiASxWEyz3fGL6wpCIF/2M1d9fgGdI
-         W4dCf8Fir9H+yV/7M5IV/PST322r0DLqibq7RiY6t7NnyZ42+wU0Drx7qCwYBKEIaitf
-         zatTiehQe2LAPZHOl+SqlRnuWvnZE1KRuc706cC5Tw+i5WnTJ9zYoces4kBmI0gAb8kt
-         zdKAzmeJ3votkYObuvkZP9V4L2/oYETVp8TnbUPT3D+ThvRJfInpS4zCBXtdAPdK4HXc
-         bd4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXxw9WOytl1LYMTvT3H1C6KXQgX2goBPRUqBzg0Yvd/YykdMXnwYItwpyVsFwBMQY58g/3B2eQ+CwZ7cH/JFnBxZGlFNn5+9IHQ8lkL
-X-Gm-Message-State: AOJu0YwLw6GO7hPF7Dz86C+5MM9P5aUTbl2uv7TXZ5A8tCtSzOvrr7rh
-	sgAMp7h/Qg4S55IulXsIpSSWlfVY391fG3+fdKRXgGm0FVLicuyXh4H48UgcmgIF+HolxFdM6Fi
-	6
-X-Google-Smtp-Source: AGHT+IHq2INOQdTZFtxvBQ4CNgUmxUKG/Y5YiCzni6VgE1Hb/kxqQiCsxPVeCX8iNNi6RQsuxFZCQw==
-X-Received: by 2002:a17:906:c444:b0:a59:c28a:7ec2 with SMTP id a640c23a62f3a-a59fb95dc67mr115208566b.41.1715160026392;
-        Wed, 08 May 2024 02:20:26 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id g3-20020a170906394300b00a599c1d46d5sm5967553eje.101.2024.05.08.02.20.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 02:20:25 -0700 (PDT)
-Date: Wed, 8 May 2024 12:20:22 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Dave Chinner <david@fromorbit.com>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	Chandan Babu R <chandan.babu@oracle.com>, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] xfs: check for negatives in xfs_exchange_range_checks()
-Message-ID: <20137ff5-76a7-4b3d-96d9-9c6c90cbb063@moroto.mountain>
-References: <0e7def98-1479-4f3a-a69a-5f4d09e12fa8@moroto.mountain>
- <ZjrVaynGeygNaDtQ@dread.disaster.area>
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="yI4LvrKF"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjrVaynGeygNaDtQ@dread.disaster.area>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1715160582;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JL7Cqc7rpixgBgbCXhIQMAAO82vWRkxls15BxMKvRjg=;
+	b=yI4LvrKFeze38qylAOEwDE+u0aDLwijFZ11pRQXLtPq+5cRr4L29GioAoB+XHJJDyJS4SF
+	dYIhMJAXL01yhOISHYCff80gnsnbRlJjsKG6TCf4LS1ODA4AJ9t67oUGzH4ISIZDALxboo
+	gdoTbP5qvSjdWBwukr/zNQnLi6bvSeISFQ6/PHSSCnZ08BywqcGtOG8PJtO84fGlMs1fSD
+	snRkHQU1XjAAncDkgSsXaoQVWdgM9rBRrTVmCn+3xTLCgHk1394fEio19jL9iJEsXEUw01
+	ts0CTGePsVsnx/F2vIjQY0+BetXaqSm0qvR9tqLxnXB4gwwNq+qMV6QRH7xSvg==
+Date: Wed, 08 May 2024 11:29:41 +0200
+From: Dragan Simic <dsimic@manjaro.org>
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: Alexey Charkov <alchark@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano
+ <daniel.lezcano@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Chen-Yu
+ Tsai <wens@kernel.org>, Diederik de Haas <didi.debian@cknow.org>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Kever Yang
+ <kever.yang@rock-chips.com>
+Subject: Re: [PATCH v4 6/6] arm64: dts: rockchip: Add OPP data for CPU cores
+ on RK3588
+In-Reply-To: <e220061e-0bb5-4fa4-9a91-aefd81e6636c@cherry.de>
+References: <20240506-rk-dts-additions-v4-0-271023ddfd40@gmail.com>
+ <20240506-rk-dts-additions-v4-6-271023ddfd40@gmail.com>
+ <e220061e-0bb5-4fa4-9a91-aefd81e6636c@cherry.de>
+Message-ID: <dd9c76519ee0eee177528488a4946056@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Wed, May 08, 2024 at 11:29:15AM +1000, Dave Chinner wrote:
-> On Sat, May 04, 2024 at 02:27:36PM +0300, Dan Carpenter wrote:
-> > The fxr->file1_offset and fxr->file2_offset variables come from the user
-> > in xfs_ioc_exchange_range().  They are size loff_t which is an s64.
-> > Check the they aren't negative.
-> > 
-> > Fixes: 9a64d9b3109d ("xfs: introduce new file range exchange ioctl")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> > From static analysis.  Untested.  Sorry!
-> > 
-> >  fs/xfs/xfs_exchrange.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/fs/xfs/xfs_exchrange.c b/fs/xfs/xfs_exchrange.c
-> > index c8a655c92c92..3465e152d928 100644
-> > --- a/fs/xfs/xfs_exchrange.c
-> > +++ b/fs/xfs/xfs_exchrange.c
-> > @@ -337,6 +337,9 @@ xfs_exchange_range_checks(
-> >  	if (IS_SWAPFILE(inode1) || IS_SWAPFILE(inode2))
-> >  		return -ETXTBSY;
-> >  
-> > +	if (fxr->file1_offset < 0 || fxr->file2_offset < 0)
-> > +		return -EINVAL;
+Hello Quentin,
+
+On 2024-05-08 11:12, Quentin Schulz wrote:
+> On 5/6/24 11:36 AM, Alexey Charkov wrote:
+>> By default the CPUs on RK3588 start up in a conservative performance
+>> mode. Add frequency and voltage mappings to the device tree to enable
+>> dynamic scaling via cpufreq.
+>> 
+>> OPP values are adapted from Radxa's downstream kernel for Rock 5B [1],
+>> stripping them down to the minimum frequency and voltage combinations
+>> as expected by the generic upstream cpufreq-dt driver, and also 
+>> dropping
+>> those OPPs that don't differ in voltage but only in frequency (keeping
+>> the top frequency OPP in each case).
+>> 
+>> Note that this patch ignores voltage scaling for the CPU memory
+>> interface which the downstream kernel does through a custom cpufreq
+>> driver, and which is why the downstream version has two sets of 
+>> voltage
+>> values for each OPP (the second one being meant for the memory
+>> interface supply regulator). This is done instead via regulator
+>> coupling between CPU and memory interface supplies on affected boards.
 > 
-> Aren't the operational offset/lengths already checked for underflow
-> and overflow via xfs_exchange_range_verify_area()?
+> I'm not sure this is everything we need though.
+> 
+> For the LITTLE cores cluster, all OPPs up to 1.416GHz are using the
+> same opp-supported-hw, however the ones above, aren't.
+> 
+> 1.608GHz, 1.704GHz and 1.8GHz are all using different opp-supported-hw.
+> 
+> Similarly, for the big cores clusters, all OPPs up to 1.608GHz are
+> using the same opp-supported-hw, but not the ones above.
+> 
+> 1.8GHz and 2.016GHz, 2.208GHz, 2.256GHz, 2.304GHz, 2.352GHz and 2.4GHz
+> all have a different opp-supported-hw.
+> 
+> The values in that array are coming from cpu leakage (different for
+> LITTLE, big0 and big1 clusters) and "specification serial number"
+> (whatever that means), those are coming from the SoC OTP. In the
+> downstream kernel from Rockchip, the former value is called "SoC
+> Version" and the latter "Speed Grade".
+> 
+> I think this may have something to do with "binning" and I would see
+> the ones above the "common" OPPs as "overclocking". Not all CPUs would
+> support them and some may not run stable at some lower frequency than
+> their stable max. Adding Kever from Rockchip in Cc to have some input
+> on the need to support those.
 
-Ah right.  Smatch complains in the middle of the two calls to
-xfs_exchange_range_verify_area().  (It get's called in different places
-depending on if the XFS_EXCHANGE_RANGE_TO_EOF flag is set).
+Good point.  We should remove the OPPs for both clusters that aren't
+supported by all RK3588(s) binnings, to be on the safe side.
 
-regards,
-dan carpenter
-
+I'll hopefully dive into supporting different Rockchip binnings rather
+soon.  There's even more about that, and not just with the RK3588(s),
+which I think I'll get all covered.
