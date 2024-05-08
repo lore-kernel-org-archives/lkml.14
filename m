@@ -1,125 +1,103 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8A67F470
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 09:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3B8BA27
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 09:56:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715162202; cv=none; b=K255udX1fGlqMXLa0csu9YpbTKgA/AqRzU9KTrLiv5mOrZaay+79ksa1dcBLop8YgiWV3mhGW1p1Fqvtb9tma9dcev1uDXEYR1Wl1LSwqCWiTZkDNBhyZrOalXHubKKpv/eaAIUUrim8ay7+TgkUVHbwBF/bB1fs+KkYEsv1DX0=
+	t=1715162217; cv=none; b=KSmYtrV011O1Gymy3v4JwTrcWXFl7fDe4ylvF6vuVLvvEvucvF03o/JzYC2K99KviKMZer5WvWfp3/HNz7JOWEY5msp2uT+d3QwKy7SSQdbj0qjoNAe0v31PQ+vu7ea3XwsWjKcYOMBsVpCrJvtAN4cgZLl6uxYLyD8y3BkSiWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715162202; c=relaxed/simple;
-	bh=ss7DfeQ3iIOHVfPafgYrAJPDTsUQSQx+kzwMyH5OwKo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M4+sQaJ3msLKEBFEm2BVb4/68Mtjn12yjWYfYEi533tfclgZz61dgo1o30tevf0OQ+jdnrn+5enrv4b7oy388dvX+jqUZL5iHS7JBQWLH+qYNUitKPLJDoD2YdCPJYL4uvTaTScI1611sQb30+b1z7j5ZqapEdvHZD5GpzmXFQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kjcNAsj1; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1715162217; c=relaxed/simple;
+	bh=gWOGj0Cw+EPeFvCPM84I9RZ1xnLNBOxo/kWhfYtd4Y4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VB4C/OLDRIWTSO4d698pbNe1xhAVjo6D5c/OD2iqYt7oSr9AFszmmPg1ily7nh9vF5fONUZovPPNQTxpw/xZq6x/I6xDnOQN2rcBE7JjRHbkoMrbJbW1xrZGxwzkpoY3v8+X+mO4yi6sQHsHI89gnCw0Gf7aJ72c5KHYaeBQ9B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SO8auOHz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kjcNAsj1"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715162198;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SO8auOHz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715162214;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=FsicJzPzSYjb9EaWqN7pAslrOCGTYHDq5WxD1KJCe/4=;
-	b=kjcNAsj1cuN9Enofn4z93wcbSAjYLywjhJjN77ua1sIREN682XM4/TUP7KT8khp+C1Lxo9
-	/sUFpeSD3NLJqtnOZwJbyj9x/lzghKhbvs6VQjYNuH7/a4A3y3fzWLWWbcQd8hcfO2GpIG
-	/os+5isiO/1zThfvmUzmeT4jB804zKw=
-From: Chengming Zhou <chengming.zhou@linux.dev>
-Date: Wed, 08 May 2024 17:55:41 +0800
-Subject: [PATCH 4/4] mm/ksm: calculate general_profit more accurately
+	bh=6HilCpQqF5nWfQLfesSgvF2CEj1QWp3oMiTsmW5AIS0=;
+	b=SO8auOHzoolTspb+kJCR78zi51MNyfksn+muzetM9zXWr5ht9e3RGcTUigMPjI34CNxykM
+	OW4Fb7H1pUbCw8k/kc0dCuz99EyJRmziff2YKervM5NIxTrfy0QldaiFet9ZhpdS+qcDhY
+	C/dhEQlRa0F0i4uyL0cQgq+jVevPqBs=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-471-Jder783tP7mfKG3-i3lIuw-1; Wed,
+ 08 May 2024 05:56:49 -0400
+X-MC-Unique: Jder783tP7mfKG3-i3lIuw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AD26E29AB410;
+	Wed,  8 May 2024 09:56:48 +0000 (UTC)
+Received: from sirius.home.kraxel.org (unknown [10.39.194.74])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 399463C25;
+	Wed,  8 May 2024 09:56:48 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+	id E8ACB1800D69; Wed,  8 May 2024 11:56:46 +0200 (CEST)
+Date: Wed, 8 May 2024 11:56:46 +0200
+From: Gerd Hoffmann <kraxel@redhat.com>
+To: Timo Lindfors <timo.lindfors@iki.fi>
+Cc: David Airlie <airlied@redhat.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, Maxime Ripard <mripard@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, LKML <linux-kernel@vger.kernel.org>, 
+	Alex Constantino <dreaming.about.electric.sheep@gmail.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [BUG][v6.9-rc6] Deadlock with: Revert "drm/qxl: simplify
+ qxl_fence_wait"
+Message-ID: <ibl7jsqhbdga64nasmrruh3t2oa7rxqmwxywe6wtdfsqrliyue@tbgmm6uvxsqi>
+References: <20240502081641.457aa25f@gandalf.local.home>
+ <20240504043957.417aa98c@rorschach.local.home>
+ <20240506-cuddly-elated-agouti-be981d@houat>
+ <CAHk-=wiS70D1sbhsvNfR0e5YjfG2NV0cVKWz9vp=_F_wkw3j9Q@mail.gmail.com>
+ <CAMwc25qMXOFOfKsa7BRi3dz125PDyvVtgTty0Q4bkAFftJDLqQ@mail.gmail.com>
+ <alpine.DEB.2.20.2405070933070.20162@mail.home>
+ <obume4wdvgxc3zljnelhpwrg2rouae322nak5jy3s4hsruoddd@stoopms6fo2a>
+ <alpine.DEB.2.20.2405071833510.21166@mail.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240508-b4-ksm-counters-v1-4-e2a9b13f70c5@linux.dev>
-References: <20240508-b4-ksm-counters-v1-0-e2a9b13f70c5@linux.dev>
-In-Reply-To: <20240508-b4-ksm-counters-v1-0-e2a9b13f70c5@linux.dev>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- David Hildenbrand <david@redhat.com>, Stefan Roesch <shr@devkernel.io>, 
- xu xin <xu.xin16@zte.com.cn>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- zhouchengming@bytedance.com, Chengming Zhou <chengming.zhou@linux.dev>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715162174; l=2381;
- i=chengming.zhou@linux.dev; s=20240508; h=from:subject:message-id;
- bh=ss7DfeQ3iIOHVfPafgYrAJPDTsUQSQx+kzwMyH5OwKo=;
- b=X6wGm8B+bjpFtCP8g73w6XczYKdiMwJ0vj812mxv/NkXQMbGzsqKeRNtJg3TU4ZL32DX+qm6z
- RzE/1RA0jgRBfO4CzfzJYEvfQ2HcOnx7ltDIHCHSXi8xkvh4KwjavFh
-X-Developer-Key: i=chengming.zhou@linux.dev; a=ed25519;
- pk=kx40VUetZeR6MuiqrM7kPCcGakk1md0Az5qHwb6gBdU=
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.20.2405071833510.21166@mail.home>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-The memory resource of KSM is mainly ksm_rmap_item, which has to allocate
-for each anon page that mm has mapped on. Another memory resource is the
-ksm_stable_node, which is much less than the ksm_rmap_item.
+On Tue, May 07, 2024 at 06:46:41PM GMT, Timo Lindfors wrote:
+> The qxl + spice + firefox combination scrolls smoothly even if I force
+> firefox to use wayland.
 
-We can account it easily to make general_profit calculation more accurate.
-This is important when max_page_sharing is limited and so we have more
-chained nodes.
+scrolling sending 2d accel bitblits works only when running the xorg
+xserver with the qxl driver.  xwayland wouldn't do that.  So that
+doesn't explain the performance difference.
 
-Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
----
- mm/ksm.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+> I suppose I could write a more synthetic test if it would be useful?
 
-diff --git a/mm/ksm.c b/mm/ksm.c
-index 87ffd228944c..a9ce17e6814d 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -267,6 +267,9 @@ static unsigned long ksm_pages_unshared;
- /* The number of rmap_items in use: to calculate pages_volatile */
- static unsigned long ksm_rmap_items;
- 
-+/* The number of stable_node */
-+static unsigned long ksm_stable_nodes;
-+
- /* The number of stable_node chains */
- static unsigned long ksm_stable_node_chains;
- 
-@@ -584,12 +587,17 @@ static inline void free_rmap_item(struct ksm_rmap_item *rmap_item)
- 
- static inline struct ksm_stable_node *alloc_stable_node(void)
- {
-+	struct ksm_stable_node *node;
-+
- 	/*
- 	 * The allocation can take too long with GFP_KERNEL when memory is under
- 	 * pressure, which may lead to hung task warnings.  Adding __GFP_HIGH
- 	 * grants access to memory reserves, helping to avoid this problem.
- 	 */
--	return kmem_cache_alloc(stable_node_cache, GFP_KERNEL | __GFP_HIGH);
-+	node = kmem_cache_alloc(stable_node_cache, GFP_KERNEL | __GFP_HIGH);
-+	if (likely(node))
-+		ksm_stable_nodes++;
-+	return node;
- }
- 
- static inline void free_stable_node(struct ksm_stable_node *stable_node)
-@@ -597,6 +605,7 @@ static inline void free_stable_node(struct ksm_stable_node *stable_node)
- 	VM_BUG_ON(stable_node->rmap_hlist_len &&
- 		  !is_stable_node_chain(stable_node));
- 	kmem_cache_free(stable_node_cache, stable_node);
-+	ksm_stable_nodes--;
- }
- 
- /*
-@@ -3671,7 +3680,8 @@ static ssize_t general_profit_show(struct kobject *kobj,
- 	long general_profit;
- 
- 	general_profit = (ksm_pages_sharing + get_ksm_zero_pages()) * PAGE_SIZE -
--				ksm_rmap_items * sizeof(struct ksm_rmap_item);
-+				ksm_rmap_items * sizeof(struct ksm_rmap_item) -
-+				ksm_stable_nodes * sizeof(struct ksm_stable_node);
- 
- 	return sysfs_emit(buf, "%ld\n", general_profit);
- }
+Well, don't work on qemu graphics any more.  So I can't sink much time
+into this, and my memories on details are starting to fade ...
 
--- 
-2.45.0
+> With systemtap I can trace what happens during a single scroll event.
+
+Had a brief look at the driver source code.  One possibly important
+difference is damage tracking.
+
+qxl seems to send updates for the list of damaged rectangle to the host
+(see qxl_draw_dirty_fb).
+
+virtio-gpu goes call drm_atomic_helper_damage_merged() to get a single
+rectangle covering all regions which need updating and works with that.
+
+Which could very well explain the performance difference.  If you want
+dig deeper I'd suggest to start there.
+
+HTH & take care,
+  Gerd
 
