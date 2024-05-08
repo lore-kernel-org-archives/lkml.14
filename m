@@ -1,211 +1,137 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413D510953
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 17:05:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973D36FD0;
+	Wed,  8 May 2024 17:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715187936; cv=none; b=YUDn6nBO21vLqu2g9UqWnngZUPCbCndS7TlGCRc/hvzqbijj8o8S2+kyMfx3EeWzdMxg/UNxfwQXcvUjzi7Cf9o92A323AZaJ8t1FV+4+c6Fn997ddmyfX0f8Zfc85i4lV9L0lkiwA4ew4sun+BrNrDa8k5YwQo/j+ZzwTdmEbU=
+	t=1715188061; cv=none; b=R+Z+b7JRA4lTq8xn2R1u0cDQlakwp8W+ENNj273akAlgyBi/j+aLcznR861Crok/QDSYWECSpLoSgpEgp+CSkLPT3jg/BvBQl9vy5w86gaGLLjE+wbQgOYersu54QifV3y2ZvFf/07BbIxr63UdYYH8VZCdjwEpz15SAzBMN6lQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715187936; c=relaxed/simple;
-	bh=JvbzMcqTDU7UqThEDKgsAHD40j4VZ8mm2M0mjTdiwJ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JoDnKGxxzqPCeqSRvYBaqq5Jou/2dCZ/gdGQ84dprWePj/rm9b6a6hd8UMu3EQRK6KkMd5nQE/dnu5q/t2XXrmMFdHa1n3c7wdi1+cwfLHPAJ7wDAIVSHsjd+oT8fZlDyWtEwa28SvDOJugqx+vShn+QvoY7M96VIDLfciI9Cr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=mgLcIuTE; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1715188061; c=relaxed/simple;
+	bh=TgcdtXtxI62R95H5BWg8ywLoEwBFqq2ooZE9ZRACGBc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kCR+Erjq2Vng/3rIS4NmQ8OD6yqKaK6VXiVjgBrfgDzIuf1aXhoj84Ce1qzPlgd51E+x8aTivJK8WhPyICGG2ixTdd/3o/c4c4Dzh9mapq8GkKIYx5Nxj5hPxmBpt2pnF3v822aUJVvKTRRIpa0ZXk0H+nvTkS0KuTeDNq3SpM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P+4hYmbz; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="mgLcIuTE"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1e4c4fb6af3so134595ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 10:05:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+4hYmbz"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-34e0d8b737eso666760f8f.1;
+        Wed, 08 May 2024 10:07:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715187933; x=1715792733; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3NSwC0XUWH2/jAZekAHNFl+y4/f7gtwIOhD7wWr4LzY=;
-        b=mgLcIuTEY+MnLLQOegAl4oWbJSWP7BWzG2Bl0COFSvhQ9Gjr83tBGb6lvCpVAT6ZWs
-         QMVGKWhEIb0FvE/mkQ4x3HbWNtrN8gChXGZieDRAydckIMhyI5ZJ2UVyA+Xx+yc6CLpO
-         XWXXdQacqfe6OkX6kt4EotYsWRSkM7NWHHZ58iT2Sn3c8bRIGFKo5v2IwiPD0YnzK00V
-         Blvcb6jdgpvz73Akt6bdnaj1RlcTStxy/4FYiXj20wAJYZcb/1YY2vRvvjyWQyY4suS8
-         6ZwBeYODDYwlYUnWQVho0XQsWMk1ltHkT9YMjjoM/CzXWcrYqad56/jI1acvWJVSs0Ph
-         Vx8A==
+        d=gmail.com; s=20230601; t=1715188058; x=1715792858; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7iywJHAkcG7tFG6+CpLm9F2F3QcvXhajnNv1XCFGvzA=;
+        b=P+4hYmbzSGSz7c+sX6fNA382SgdBZjft8Q0Lmi6lO900rVFcm2nX0rdNcgrsoNTfF2
+         txpmlOagdwEGaxJ8vBsMDlM/XqEWdQKQPQL4sLboWoDANS5HI7JvRbbTkb3RZQLttbpN
+         P311P+ta+TfjyiYwhgF0NZVtSxH4NExy52BeCGMeXBSkmmkU7mrU2clzZnotvj8Kbjjb
+         dVZAThSIfmH3sykhVSpMjvLImS7l38DrUoTwd1QWPSjN8tk+pXv1lDWpvtIhXos9dcwN
+         EuWJagmSVsIucX9CrADjzyFkqpoybOPC+ifyq0f9DNmQj80Al0GLfVtWv2KXdx5CJJSl
+         nr/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715187933; x=1715792733;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3NSwC0XUWH2/jAZekAHNFl+y4/f7gtwIOhD7wWr4LzY=;
-        b=uoQA7ENMiCdJ0fIOyMZBg70yg+tBXs4V2V5TP+QJn16zmRvsySg8HK2L/vT1HHZHzR
-         lGLrZ4nTAaEmOEqrTMsKcTFUTOa/vg67ipSrtidpU90UAO5dipZCvpUv5A9g4tlhNJcc
-         AXzPjFzWE5VS6aLuZe+9owyhtIVrgjIWyR7pZzDB87PmlTvYuA/VXL58zUZG/pP10Lk8
-         xPugojGTivQymcE/PR17zRru1/3Kus8xCAsBOmwGaj5GIHV4qFcuYbCV7cvpKPZb4egw
-         BLbwReX861WIL/cx2P8smJTSS13g9qGaXJ6RUHEDPtYiBbPiH0cVUMJVbAda3+GHm4S/
-         PJXw==
-X-Forwarded-Encrypted: i=1; AJvYcCXup2K2SvddZ/8xR56k6nlqdgTV8epQ19srRu1tQk60JV0CQTQmDPgbCGDv3vYmK3DujjBPgZQwlRokicizVtuZgWK9fuF/jFLuTAuL
-X-Gm-Message-State: AOJu0Yx134KgC8NVlD4Dc1WVfK0Ye9wgEGLQPdeaqsq8/b7jOqUYjvwl
-	KbBaW22NV8fig9vHV6xv6Alq7nf+shlLoAD/BJrnMMGjUovi5wgdS59rpIcD9gM=
-X-Google-Smtp-Source: AGHT+IGgz0QEZsH36hv/uUgJ9K6WhGuMsBxbHUfds4fIdLNeyAsKU2bNpkZPr42Zsg1brC4AQL33vQ==
-X-Received: by 2002:a17:902:da84:b0:1e2:a5db:30d1 with SMTP id d9443c01a7336-1eefa138b68mr3407615ad.13.1715187933343;
-        Wed, 08 May 2024 10:05:33 -0700 (PDT)
-Received: from ghost ([2601:647:5700:6860:1d01:8836:5e9d:e040])
-        by smtp.gmail.com with ESMTPSA id jx7-20020a170903138700b001e469386fddsm12124945plb.40.2024.05.08.10.05.32
+        d=1e100.net; s=20230601; t=1715188058; x=1715792858;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7iywJHAkcG7tFG6+CpLm9F2F3QcvXhajnNv1XCFGvzA=;
+        b=U2BNolMHAb8JVEMdNtcRf10xTHt/4V1NinioduyVYZggjdkGInwwT07sEj1hjYq4KF
+         kaTI4Y1owSerUznlPQmbk7xfI0LoktTUDsHSQOvfX89jacuTV1DVW2/RqPYjGeV3367G
+         7qLCLmGLd040iPGMUMVuslNeg0eZnl+sIjwr++7eAus2YaUMdP+Ahk5vLSc5Nib9nskJ
+         86SeQZIJz03t12LPP/jefQCZohJ8/HgyqrwmlVvzCSDR4AZvIYtgnj+qncg64rLDDkql
+         uVQstfhgpm0Z0nQQqAcG11AqiPZ2o7HLIviQ7RbQpOjQpP0dgd+dmH+bXkSVg5JXE9ir
+         RK0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWrTTTWjfiUGMfFjYDqimu64HfTjdW/vZEie9ge7aOZ25uMyv8GL5zcYW517n+gqA1q4m9bwaAPBtlhr68GKVdZtdqF1NOzxV4sXFvnJKfSDYNj2mZTr0FCD6JNksFfljZ6C4GO+0pqDSHX8IlvUv7jpQyXMqg4SbzBbFp+8jGt9RC8OFE=
+X-Gm-Message-State: AOJu0YyireNA+IH4ulwbwJ/PmJYljQrkej5Whjq44cAdwugOr4tOZk63
+	GDNJ2IAN7Bm+5FaN/g1ey7VJZrnYSRsoE31VnPqR9O2xCVqRTeWo
+X-Google-Smtp-Source: AGHT+IFouGf4+90tc1Nrm7lSg3uMFWPHIRxmbr/6ZfKwQ2Yieyl8tIMsjGqkbdJlAumP9prWdrCnFw==
+X-Received: by 2002:adf:e58e:0:b0:34d:8206:e76b with SMTP id ffacd0b85a97d-35018117631mr207032f8f.9.1715188057526;
+        Wed, 08 May 2024 10:07:37 -0700 (PDT)
+Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
+        by smtp.googlemail.com with ESMTPSA id fk12-20020a05600c0ccc00b0041c130520fbsm2921555wmb.46.2024.05.08.10.07.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 10:05:32 -0700 (PDT)
-Date: Wed, 8 May 2024 10:05:30 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	Song Liu <song@kernel.org>, Xi Wang <xi.wang@gmail.com>,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
-	Jessica Clarke <jrtc27@jrtc27.com>,
-	Andy Chiu <andy.chiu@sifive.com>, linux-riscv@lists.infradead.org,
+        Wed, 08 May 2024 10:07:36 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Hauke Mehrtens <hauke@hauke-m.de>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	linux-mips@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/8] riscv: Add PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT
- Kconfig option
-Message-ID: <Zjuw2t6vL6yIcPR9@ghost>
-References: <20240507-compile_kernel_with_extensions-v2-0-722c21c328c6@rivosinc.com>
- <20240507-compile_kernel_with_extensions-v2-3-722c21c328c6@rivosinc.com>
- <b3ff587a-61f5-4abf-b71f-7ad48ff66969@codethink.co.uk>
+Subject: [PATCH v3 0/4] mips: bmips: improve handling of RAC and CBR addr
+Date: Wed,  8 May 2024 19:07:16 +0200
+Message-ID: <20240508170721.3023-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3ff587a-61f5-4abf-b71f-7ad48ff66969@codethink.co.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 08, 2024 at 10:00:48AM +0100, Ben Dooks wrote:
-> On 08/05/2024 02:36, Charlie Jenkins wrote:
-> > The existing "RISCV_ISA_SVNAPOT" option is repurposed to be used to by
-> > kernel code to determine if either
-> > PLATFORM_MAY_SUPPORT_RISCV_ISA_SVNAPOT or
-> > PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT has been set.
-> > 
-> > PLATFORM_MAY_SUPPORT_RISCV_ISA_SVNAPOT will check if the hardware
-> > supports Svnapot before using it, while
-> > PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT will assume that the hardware
-> > supports Svnapot.
-> > 
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > ---
-> >   arch/riscv/Kconfig               | 19 -----------------
-> >   arch/riscv/Kconfig.isa           | 44 ++++++++++++++++++++++++++++++++++++++++
-> >   arch/riscv/include/asm/pgtable.h |  3 ++-
-> >   3 files changed, 46 insertions(+), 20 deletions(-)
-> > 
-> > diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> > index c2e9eded0a7d..3c1960e8cd7c 100644
-> > --- a/arch/riscv/Kconfig
-> > +++ b/arch/riscv/Kconfig
-> > @@ -484,25 +484,6 @@ config RISCV_ALTERNATIVE_EARLY
-> >   	help
-> >   	  Allows early patching of the kernel for special errata
-> > -config RISCV_ISA_SVNAPOT
-> > -	bool "Svnapot extension support for supervisor mode NAPOT pages"
-> > -	depends on 64BIT && MMU
-> > -	depends on RISCV_ALTERNATIVE
-> > -	default y
-> > -	help
-> > -	  Add support for the Svnapot ISA-extension in the kernel when it
-> > -	  is detected at boot.
-> > -
-> > -	  The Svnapot extension is used to mark contiguous PTEs as a range
-> > -	  of contiguous virtual-to-physical translations for a naturally
-> > -	  aligned power-of-2 (NAPOT) granularity larger than the base 4KB page
-> > -	  size. When HUGETLBFS is also selected this option unconditionally
-> > -	  allocates some memory for each NAPOT page size supported by the kernel.
-> > -	  When optimizing for low memory consumption and for platforms without
-> > -	  the Svnapot extension, it may be better to say N here.
-> > -
-> > -	  If you don't know what to do here, say Y.
-> > -
-> >   config RISCV_ISA_SVPBMT
-> >   	bool "Svpbmt extension support for supervisor mode page-based memory types"
-> >   	depends on 64BIT && MMU
-> > diff --git a/arch/riscv/Kconfig.isa b/arch/riscv/Kconfig.isa
-> > index 0663c98b5b17..37585bcd763e 100644
-> > --- a/arch/riscv/Kconfig.isa
-> > +++ b/arch/riscv/Kconfig.isa
-> > @@ -124,3 +124,47 @@ config RISCV_ISA_V_PREEMPTIVE
-> >   	  This config allows kernel to run SIMD without explicitly disable
-> >   	  preemption. Enabling this config will result in higher memory
-> >   	  consumption due to the allocation of per-task's kernel Vector context.
-> > +
-> > +config RISCV_ISA_SVNAPOT
-> > +	bool
-> > +
-> > +choice
-> > +	prompt "Svnapot extension support for supervisor mode NAPOT pages"
-> > +	default PLATFORM_MAY_SUPPORT_RISCV_ISA_SVNAPOT
-> > +	help
-> > +	  This selects the level of support for Svnapot in the Linux Kernel.
-> > +
-> > +	  The Svnapot extension is used to mark contiguous PTEs as a range
-> > +	  of contiguous virtual-to-physical translations for a naturally
-> > +	  aligned power-of-2 (NAPOT) granularity larger than the base 4KB page
-> > +	  size. When HUGETLBFS is also selected this option unconditionally
-> > +	  allocates some memory for each NAPOT page size supported by the kernel.
-> > +	  When optimizing for low memory consumption and for platforms without
-> > +	  the Svnapot extension, it may be better to prohibit Svnapot.
-> > +
-> > +config PROHIBIT_RISCV_ISA_SVNAPOT
-> > +	bool "Prohibit Svnapot extension"
-> > +	help
-> > +	  Regardless of if the platform supports Svnapot, prohibit the kernel
-> > +	  from using Svnapot.
-> > +
-> > +config PLATFORM_MAY_SUPPORT_RISCV_ISA_SVNAPOT
-> > +	bool "Allow Svnapot extension if supported"
-> > +	depends on 64BIT && MMU
-> > +	depends on RISCV_ALTERNATIVE
-> > +	select RISCV_ISA_SVNAPOT
-> > +	help
-> > +	  Add support for the Svnapot ISA-extension in the kernel when it
-> > +	  is detected at boot.
-> > +
-> > +config PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT
-> > +	bool "Emit Svnapot mappings when building Linux"
-> > +	depends on 64BIT && MMU
-> > +	depends on NONPORTABLE
-> > +	select RISCV_ISA_SVNAPOT
-> > +	help
-> > +	  Compile a kernel that assumes that the platform supports Svnapot.
-> > +	  This option produces a kernel that will not run on systems that do
-> > +	  not support Svnapot.
-> > +
-> > +endchoice
-> > diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> > index 6afd6bb4882e..432be9691b78 100644
-> > --- a/arch/riscv/include/asm/pgtable.h
-> > +++ b/arch/riscv/include/asm/pgtable.h
-> > @@ -289,7 +289,8 @@ static inline pte_t pud_pte(pud_t pud)
-> >   static __always_inline bool has_svnapot(void)
-> >   {
-> > -	return riscv_has_extension_likely(RISCV_ISA_EXT_SVNAPOT);
-> > +	return IS_ENABLED(CONFIG_PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT) ||
-> > +	       riscv_has_extension_likely(RISCV_ISA_EXT_SVNAPOT);
-> 
-> could you add the IS_ENABLED(*) check into riscv_has_extension_likely
-> and other such functions?
+Hi,
 
-I wasn't sure how to support that. An option I was debating about this
-was fixing up riscv_has_extension_likely() so that it's a macro and
-SVNAPOT could be expanded to both
-CONFIG_PLATFORM_SUPPORTS_RISCV_ISA_SVNAPOT and RISCV_ISA_EXT_SVNAPOT.
+this simple series improve handling of RAC and CBR address and try to
+upstream these simple patch we have in OpenWrt for a while.
 
-- Charlie
+The first patch fix a straight kernel panic where some Bootloader might
+enable RAC but misconfigure the CBR address. The current logic only
+check if RAC is enabled but doesn't verify if the CBR address is usable.
 
-> 
-> 
-> -- 
-> Ben Dooks				http://www.codethink.co.uk/
-> Senior Engineer				Codethink - Providing Genius
-> 
-> https://www.codethink.co.uk/privacy.html
-> 
+The DMA sync function cause a kernel panic for invalid write. (as CBR is
+0 or something like 0xa)
+
+The second is preparation for making the CBR address configurable in DT.
+Since this address doesn't change, we can cache it and reference it with
+a local variable instead of calling the register to access the value.
+
+The 4th patch make it configurable with 2 DT property, one to actually
+set the reg and the other to force set it.
+
+The first property is used when CBR is set to 0. The second property is
+to force it if the Bootloader sets it to something wrong.
+
+If the CBR value is not 0 and is not forced with the second property a
+WARN is printed and the DT value is ignored.
+
+The 4th patch enable RAC on BMIPS4350.
+
+These has been tested on BCM6358 (HG556a) and BCM6368 (VH4032N) and
+reported correct functionality.
+
+Changes v3:
+- Drop broken-cbr-reg property
+- Fix anyOf+const with enum
+Changes v2:
+- Prefix brcm vendor in the added property
+- Drop last patch (cpu switch from DMA sync)
+- Validate CBR addr from DT to be outside DRAM
+- Reduce indentation in DT CBR check
+- Reduce delta and use local variable for CBR where possible
+- Fix and improve typo and spelling mistake
+- Use 0xf instead of 0xa for BCM6358 RAC enable
+
+Christian Marangi (3):
+  mips: bmips: rework and cache CBR addr handling
+  dt-bindings: mips: brcm: Document brcm,bmips-cbr-reg property
+  mips: bmips: setup: make CBR address configurable
+
+Daniel González Cabanelas (1):
+  mips: bmips: enable RAC on BMIPS4350
+
+ .../devicetree/bindings/mips/brcm/soc.yaml    | 23 +++++++++++++
+ arch/mips/bmips/dma.c                         |  2 +-
+ arch/mips/bmips/setup.c                       | 34 +++++++++++++++++--
+ arch/mips/include/asm/bmips.h                 |  1 +
+ arch/mips/kernel/smp-bmips.c                  | 21 ++++++++++--
+ 5 files changed, 76 insertions(+), 5 deletions(-)
+
+-- 
+2.43.0
+
