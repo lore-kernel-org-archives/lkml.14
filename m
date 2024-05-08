@@ -1,62 +1,90 @@
-Received: from smtp.domeneshop.no (smtp.domeneshop.no [194.63.252.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8D716419
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 05:15:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.63.252.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8046617597
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 05:19:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715145322; cv=none; b=igvlcmSBdnOXZ87SgxrgkCwy8hwIJMmjA7HcMBTR2zev6LJUPyQmn8jNbSrMva6mPulCeJUmVUU630CxPE5jp9J207M9/oesGdO7Pyf0SofMk7IS7jdZg4ioHaXXywWgKl11p1Qv+d0RzkvdtEPx6l1EDhkYd+bpYg1JwhIo+4o=
+	t=1715145596; cv=none; b=KbfekmQ5NrOEV+fctjtlIIPBDsKaqfTmfONq4zOlUnHQBcRBQc5M17zZTqCdGVfLaDcVeeyS1yfrYK6Zj/tlIv0xymdWcrNxqUNddtO0AvS2+l4v+V8a4fHYLVyzNd8JvWqPwc63wKjwyAgGaM3ECNdhwyNT+RiOaGLGawAaCmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715145322; c=relaxed/simple;
-	bh=CwILteTVVFdjDNg5dCjfA2fIF8UfjEGWlYTGc9Dqf/8=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=B9YRDHiHPzTLYKVXy9/hwHyfAyR2HTGqtqXy3LCRO2dwmQn2/jKy0xZ5uJdCpz95JEQpb43WIttTNQZN1OecY6r3C9SBS3i6KGF0O1fCnvtKVGvAi6dWG+xFeKl/f/gpWKBp1oTVWds6RTjU2SaSeH5Nokxf69TnxEwZ5uyK2vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-x.org; spf=pass smtp.mailfrom=bit-x.org; dkim=pass (2048-bit key) header.d=bit-x.org header.i=@bit-x.org header.b=hxHzpwBa; arc=none smtp.client-ip=194.63.252.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bit-x.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bit-x.org
+	s=arc-20240116; t=1715145596; c=relaxed/simple;
+	bh=uTA5DvevSWIwMkF+/JsuZ+DF8dql4scWS+lC4mf41Fc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LrcN51damYUDxOU2rQV19/OBFHniPHhmSFYYpdklrGHSE7i2LWLrIxB/2JMzaJHPvX3qQE5DQvbYvz7/vNiSFn+fb/MRixS0ykPZvXMae6FWrfy81jJMMIyA7mpvOTl1KQehrDT+/LvR1uO7nXd8RrDk7Qe+SOtnz4cUJCMAU2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YiWRAWhY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bit-x.org header.i=@bit-x.org header.b="hxHzpwBa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=bit-x.org;
-	s=ds202404; h=Content-Transfer-Encoding:Content-Type:Subject:From:To:
-	MIME-Version:Date:Message-ID:Sender:Reply-To:Cc:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=T0nX+BOlNNNrGDbMsnqBa7iQmBBTghYYCUKH0RzmnK4=; b=hxHzpwBam2l/L8J7OKIq8TMdi1
-	pvmu+N9HidsatesOBPhl9W8NhBM99Ku1DlyBTf9tzhMnQYdgTlVPNj+/b8Rfj/tGRXlqEK9c4F8N6
-	5Mi4LL/j6N5elYBxyQoZJ7Af8tUoHb8uPTnKcMlm2Bne3iKBb5ZwwJYTlxpLUwk7MVmJtaH0uvCJD
-	ypFiKoG5Xwso2/qldybbu+Nw76g6OIbKz4xtEBiXn19n7maFgkVsJuZtjksgQFhCeqlD/9hx2T8DW
-	xZvb2iDtOPo/br33NkNkYFlQncGmdk6YWUkM5N+bZNab6gnsn3b1Nzrjm4crB25ArK2gd3vOjkVDz
-	7UCXjEQA==;
-Received: from [2a02:fe1:7001:f100:4137:fb70:1484:5def] (port=64842)
-	by smtp.domeneshop.no with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <ywe_caerlyn@bit-x.org>)
-	id 1s4Ze4-00DVJA-70
-	for linux-kernel@vger.kernel.org;
-	Wed, 08 May 2024 07:15:12 +0200
-Message-ID: <e3b3b8a8-061b-45e7-95d0-1ff02282247d@bit-x.org>
-Date: Wed, 8 May 2024 07:15:11 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YiWRAWhY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BBB1C4AF18;
+	Wed,  8 May 2024 05:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715145596;
+	bh=uTA5DvevSWIwMkF+/JsuZ+DF8dql4scWS+lC4mf41Fc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YiWRAWhY5I47cemKIyLaIawi4aNds6sw8ApKknON0Nb+qKW100VXDnvXNcRL6mu6A
+	 b78nRpVJPxrJDj5WZdfgkooyZBjWlY3YJR0g19DXDk9bwf64FkQ/8axd/JG6b106yt
+	 2YoeFCpN0sUmJ5ilve+aPgwbo14ujNZX8j4pbolnUmmRjXRbH8gVswD44wwHjZabmF
+	 EpVUkmtri0S8Qh1FKqekI1sDMEjWHqodCu9eArHEXQ8FaA+cmcx4J4It9LOfPfLDjT
+	 nHERt7jpId8BNMMxJyqw2yd0GHL6FSKt8/wSQVIjSggNfB+jVXFQYp0yIDk2SfrX5C
+	 8OTit/JzmRL7A==
+Date: Tue, 7 May 2024 22:19:53 -0700
+From: Josh Poimboeuf <jpoimboe@kernel.org>
+To: Daniel Sneddon <daniel.sneddon@linux.intel.com>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alexandre Chartre <alexandre.chartre@oracle.com>,
+	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Nikolay Borisov <nik.borisov@suse.com>,
+	KP Singh <kpsingh@kernel.org>, Waiman Long <longman@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+	Maksim Davydov <davydov-max@yandex-team.ru>
+Subject: Re: [PATCH v5 3/3] x86/bugs: Add 'spectre_bhi=vmexit' cmdline option
+Message-ID: <20240508051953.oz3q3hdvifo6lb7o@treble>
+References: <cover.1715059256.git.jpoimboe@kernel.org>
+ <66327dcf87284a09ed17ac24227695ea3ba1f287.1715059256.git.jpoimboe@kernel.org>
+ <ab3e92eb-d35e-4f5a-8e99-10b3ccb7c2cf@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-kernel@vger.kernel.org
-From: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywe_caerlyn@bit-x.org>
-Subject: Bit X; Bit/Bi/IT
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ab3e92eb-d35e-4f5a-8e99-10b3ccb7c2cf@linux.intel.com>
 
-Yes, Bit X, seems much a perfected concept.
+On Tue, May 07, 2024 at 07:58:07AM -0700, Daniel Sneddon wrote:
+> On 5/6/24 22:30, Josh Poimboeuf wrote:
+> > In cloud environments it can be useful to *only* enable the vmexit
+> > mitigation and leave syscalls vulnerable.  Add that as an option.
+> > 
+> > This is similar to the old spectre_bhi=auto option which was removed
+> > with the following commit:
+> > 
+> >   36d4fe147c87 ("x86/bugs: Remove CONFIG_BHI_MITIGATION_AUTO and spectre_bhi=auto")
+> > 
+> > with the main difference being that this has a more descriptive name and
+> > is disabled by default.
+> > 
+> > Requested-by: Maksim Davydov <davydov-max@yandex-team.ru>
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+> > ---
+> 
+> Does the KConfig option need to be updated to support this as well?
 
-Many people wonder about related culture such as Bi, which it is fully 
-compliant with, which many gay follow also. And ofcourse IT which is a 
-related term aswell.
+In general we don't provide a config option for every possible
+mitigation cmdline option.  If someone requests it we could add it
+later.
 
-I invite everyone to read my summary on https://bit-x.org/BIT/BIT.html 
-which includes a little graphics on my research aswell.
+> Reviewed-by: Daniel Sneddon <daniel.sneddon@linux.intel.com>
 
-The Light Be With You.
-Ywe.
+Thanks!
+
+-- 
+Josh
