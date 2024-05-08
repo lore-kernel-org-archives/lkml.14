@@ -1,83 +1,199 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4134453389;
-	Wed,  8 May 2024 14:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135EE54FA3;
+	Wed,  8 May 2024 14:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715178056; cv=none; b=Q+GjU1vsUAPdqPwpMMe3awsspjNGQuXHIDDkX0K/JAQz2gLBVvnKyba6hGyZsNRa2uGGDfhCap/cFe//at6QuS1ueoVM7ov5xzdIA6Rdl1s5yA6C5wwyGrcvYDPH/Kya+BkY0oBb6W6Gp9XeTqdSO+lfU9vv2NxcD/BWy7sHgDE=
+	t=1715178302; cv=none; b=XVwhWlelnW7NrYS/1BEDh+xXlYyRopuHMUw92iNgFL1ecKU3jDOXJQfKa92X4W7YuZxA6FxE1NfjgouSUM1aQmC1xlXVGtu25qRGpF/0vRle1j0qwhILB4klty8iIik2d2KWdx9enuLykmMpmABl/pC5a2gfEYTgduXtqgtDT8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715178056; c=relaxed/simple;
-	bh=61y6P5AaAWfLeBCLoo/c8leQzADfKeBCFXDPTdvvqQ4=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
-	 Content-Type; b=P3l0PyMtihu3N0gE9HbuuxBZ3BEmZYUhn4CD71zv+7ei59J5yTnVe7VIcwKndsbjclHtD47lTI1cOJ/Pf+TKH4/F8rse40iy6Y7iSwCJ6Zhzdj4ZeirHaROnNIaehY7GUMhSQq4BrqYfPWySPTXiHhxKO2Ws/NCz3QZGW76Y0Zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sTgDFVpE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7eVYbT82; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1715178302; c=relaxed/simple;
+	bh=H5W0qWwV5Zw5XZ0V4zxs5cf/O4YOn5Y1GFbYXB47ePU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jBhqrLCaEsZ602a97ORlBDY0JGuZOjWb8K5+15HijorRRcuggwFO374JDgw1xy54KLiyggfoANN7iaEXtuy1Er5Q58NAWqRXRHNemcjPlicFXp7BDtcEjJxqCQ3jyrJ8lYMOEcAiWDB/0ozG1znLhvdleiP9z2gXf728lPpx0Ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDy0rFmd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sTgDFVpE";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7eVYbT82"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1715178053;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=YgetIJA3y5E8vFibh/hDlQ0S8ccwG3COG6nPX1e2n5M=;
-	b=sTgDFVpE1AxvYWVFv+FivWZ1E2Bjrz0nknVF1iPAZhRh7NCgTNDLT2unU7Q1tSKIk8gl3X
-	SJJ/NvMBmfa047vcx9Aos05W5WLr82ehJ07eMTr7EbpNEYQaCCPBJZtEsaStoFdpJd4rn9
-	9iCATMmoSLZauJhbLgykuDwGc6NAk9bssmUUGGrcy3vlsWvSpX+8KN2c/Is3/aYlupJC34
-	LeNwJNIRotG7Z788tdB8/Pf7MiBpDJFcNqbJN8RsF/pp4j/LWFdHWz0RdyDmcTdFVj2ZkN
-	LJQBsXL0RYEHoc/rN5MvEcpT0LhStGRlcbq5HJO/nowlyZvKcAFc96cVJmQU+g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1715178053;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=YgetIJA3y5E8vFibh/hDlQ0S8ccwG3COG6nPX1e2n5M=;
-	b=7eVYbT82xWnol8KnX0+53N6N67hn+G3Nyh0onVr7SrmYBcKa5+u9t8xDx3pNVdMd7he1Ke
-	jLZZ8xhE7ttHsvBA==
-To: Sam Sun <samsun1006219@gmail.com>, linux-kernel@vger.kernel.org,
- akpm@linux-foundation.org
-Cc: syzkaller-bugs@googlegroups.com, xrivendell7@gmail.com,
- reiserfs-devel@vger.kernel.org
-Subject: Re: [Linux kernel bug] general protection fault in alloc_object
-In-Reply-To: <CAEkJfYN_xh-zU-8ZgaSDdTgDejBv0uGHa_KW-Vi3CijZi5UZ+A@mail.gmail.com>
-Date: Wed, 08 May 2024 16:20:53 +0200
-Message-ID: <87pltwo056.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDy0rFmd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7517EC113CC;
+	Wed,  8 May 2024 14:25:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715178301;
+	bh=H5W0qWwV5Zw5XZ0V4zxs5cf/O4YOn5Y1GFbYXB47ePU=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=NDy0rFmdLGcDZEKwnoEz7PDzd1Iw8kQMjMA87zRnt69QSQVQ18WsnLIe2eZGn2b0O
+	 oDe+rE5fKtMD9DUf3OH80HPg7tf4oumrFJpvZIa2aawoGCUMj7bYi9lWkL7B087NBs
+	 lEoXZ1QmKI+5fBoFODxUBcRcwQh06g/dIy44QmBEJBpBmGrXhZY6uaVIpwFkGY4j7k
+	 U8F72AYCup1//T6oL6nfJnd8gtJkWbMvM3f33FkQ7iJrSHvH6326jP43AjRyIcGOSj
+	 8AtvL1V83nXda+NumGlqQGUxTnxDsEAabuYDjPiTkxKkUb2YcwoDGaKhNLotRgwrqM
+	 R4rpI4JOzi3Kg==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 15DA6CE0448; Wed,  8 May 2024 07:25:01 -0700 (PDT)
+Date: Wed, 8 May 2024 07:25:01 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Puranjay Mohan <puranjay@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	Hari Bathini <hbathini@linux.ibm.com>, bpf@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+	puranjay12@gmail.com
+Subject: Re: [PATCH bpf v2] powerpc/bpf: enforce full ordering for ATOMIC
+ operations with BPF_FETCH
+Message-ID: <6b26d11f-ee4c-4d1e-b4b3-5a94444d8fea@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240508115404.74823-1-puranjay@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240508115404.74823-1-puranjay@kernel.org>
 
-On Tue, May 07 2024 at 14:32, Sam Sun wrote:
-> ```
-> general protection fault, probably for non-canonical address
-> 0xdffffc0040000001: 0000 [#1] PREEMPT SMP KASAN NOPTI
-> KASAN: probably user-memory-access in range
-> [0x0000000200000008-0x000000020000000f]
+On Wed, May 08, 2024 at 11:54:04AM +0000, Puranjay Mohan wrote:
+> The Linux Kernel Memory Model [1][2] requires RMW operations that have a
+> return value to be fully ordered.
+> 
+> BPF atomic operations with BPF_FETCH (including BPF_XCHG and
+> BPF_CMPXCHG) return a value back so they need to be JITed to fully
+> ordered operations. POWERPC currently emits relaxed operations for
+> these.
+> 
+> We can show this by running the following litmus-test:
+> 
+> PPC SB+atomic_add+fetch
+> 
+> {
+> 0:r0=x;  (* dst reg assuming offset is 0 *)
+> 0:r1=2;  (* src reg *)
+> 0:r2=1;
+> 0:r4=y;  (* P0 writes to this, P1 reads this *)
+> 0:r5=z;  (* P1 writes to this, P0 reads this *)
+> 0:r6=0;
+> 
+> 1:r2=1;
+> 1:r4=y;
+> 1:r5=z;
+> }
+> 
+> P0                      | P1            ;
+> stw         r2, 0(r4)   | stw  r2,0(r5) ;
+>                         |               ;
+> loop:lwarx  r3, r6, r0  |               ;
+> mr          r8, r3      |               ;
+> add         r3, r3, r1  | sync          ;
+> stwcx.      r3, r6, r0  |               ;
+> bne         loop        |               ;
+> mr          r1, r8      |               ;
+>                         |               ;
+> lwa         r7, 0(r5)   | lwa  r7,0(r4) ;
+> 
+> ~exists(0:r7=0 /\ 1:r7=0)
+> 
+> Witnesses
+> Positive: 9 Negative: 3
+> Condition ~exists (0:r7=0 /\ 1:r7=0)
+> Observation SB+atomic_add+fetch Sometimes 3 9
+> 
+> This test shows that the older store in P0 is reordered with a newer
+> load to a different address. Although there is a RMW operation with
+> fetch between them. Adding a sync before and after RMW fixes the issue:
+> 
+> Witnesses
+> Positive: 9 Negative: 0
+> Condition ~exists (0:r7=0 /\ 1:r7=0)
+> Observation SB+atomic_add+fetch Never 0 9
+> 
+> [1] https://www.kernel.org/doc/Documentation/memory-barriers.txt
+> [2] https://www.kernel.org/doc/Documentation/atomic_t.txt
+> 
+> Fixes: 65112709115f ("powerpc/bpf/64: add support for BPF_ATOMIC bitwise operations")
+> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
 
-This is a reiserfs issue. It crashes at random places:
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-[  348.634665][ T5992] REISERFS (device loop0): Using tea hash to sort names
-[  348.780602][ T5993] (udev-worker)[5993]: segfault at 200000001 ip 0000000200000001 sp 00007fffca0e6190 error 14 in udevadm[5613a8f19000+1a000] likely on CPU 3 (core 0, socket 3)
-[  348.796165][ T5993] Code: Unable to access opcode bytes at 0x1ffffffd7.
-[  348.831600][ T5016] systemd-journald[5016]: /var/log/journal/a042c4e41bfd4c9697a628486ba7707d/system.journal: Journal file corrupted, rotating.
-[  348.840565][ T6004] systemd-udevd[6004]: segfault at 100040048 ip 00007fde601b58a3 sp 00007fffca0e6250 error 4 in libc.so.6[7fde60108000+155000] likely on CPU 5 (core 0, socket 5)
-[  348.844214][ T6004] Code: 89 10 49 8b b4 24 a8 10 00 00 eb 34 0f 1f 00 4c 8b 2d 69 f5 0f 00 64 45 8b 75 00 e8 27 42 fc ff e8 52 fe fa ff e9 01 fe ff ff <48> 8b 0a 48 8b 42 08 48 89 41 08 48 89 08 49 8b b4 24 a8 10 00 00
-[  356.765557][ T5992] ==================================================================
-[  356.767188][ T5992] BUG: unable to handle page fault for address: 0000000100040058
-[  356.767204][ T5992] #PF: supervisor read access in kernel mode
-[  356.767219][ T5992] #PF: error_code(0x0000) - not-present page
-[  356.767233][ T5992] PGD 80000004ca01f067 P4D 80000004ca01f067 PUD 0 
-[  356.767266][ T5992] Oops: 0000 [#1] PREEMPT SMP KASAN PTI
-[  356.767294][ T5992] CPU: 4 PID: 5992 Comm: a Not tainted 6.9.0-rc7-00012-gdccb07f2914c-dirty #43
-[  356.767325][ T5992] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-[  356.767342][ T5992] RIP: 0010:stack_depot_save_flags+0x14b/0x8e0
-
-Can we just get rid of this mess?
-
-Thanks,
-
-        tglx
+> ---
+> Changes in v1 -> v2:
+> v1: https://lore.kernel.org/all/20240507175439.119467-1-puranjay@kernel.org/
+> - Don't emit `sync` for non-SMP kernels as that adds unessential overhead.
+> ---
+>  arch/powerpc/net/bpf_jit_comp32.c | 12 ++++++++++++
+>  arch/powerpc/net/bpf_jit_comp64.c | 12 ++++++++++++
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/arch/powerpc/net/bpf_jit_comp32.c b/arch/powerpc/net/bpf_jit_comp32.c
+> index 2f39c50ca729..0318b83f2e6a 100644
+> --- a/arch/powerpc/net/bpf_jit_comp32.c
+> +++ b/arch/powerpc/net/bpf_jit_comp32.c
+> @@ -853,6 +853,15 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
+>  			/* Get offset into TMP_REG */
+>  			EMIT(PPC_RAW_LI(tmp_reg, off));
+>  			tmp_idx = ctx->idx * 4;
+> +			/*
+> +			 * Enforce full ordering for operations with BPF_FETCH by emitting a 'sync'
+> +			 * before and after the operation.
+> +			 *
+> +			 * This is a requirement in the Linux Kernel Memory Model.
+> +			 * See __cmpxchg_u64() in asm/cmpxchg.h as an example.
+> +			 */
+> +			if (imm & BPF_FETCH && IS_ENABLED(CONFIG_SMP))
+> +				EMIT(PPC_RAW_SYNC());
+>  			/* load value from memory into r0 */
+>  			EMIT(PPC_RAW_LWARX(_R0, tmp_reg, dst_reg, 0));
+>  
+> @@ -905,6 +914,9 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
+>  
+>  			/* For the BPF_FETCH variant, get old data into src_reg */
+>  			if (imm & BPF_FETCH) {
+> +				/* Emit 'sync' to enforce full ordering */
+> +				if (IS_ENABLED(CONFIG_SMP))
+> +					EMIT(PPC_RAW_SYNC());
+>  				EMIT(PPC_RAW_MR(ret_reg, ax_reg));
+>  				if (!fp->aux->verifier_zext)
+>  					EMIT(PPC_RAW_LI(ret_reg - 1, 0)); /* higher 32-bit */
+> diff --git a/arch/powerpc/net/bpf_jit_comp64.c b/arch/powerpc/net/bpf_jit_comp64.c
+> index 79f23974a320..9a077f8acf7b 100644
+> --- a/arch/powerpc/net/bpf_jit_comp64.c
+> +++ b/arch/powerpc/net/bpf_jit_comp64.c
+> @@ -804,6 +804,15 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
+>  			/* Get offset into TMP_REG_1 */
+>  			EMIT(PPC_RAW_LI(tmp1_reg, off));
+>  			tmp_idx = ctx->idx * 4;
+> +			/*
+> +			 * Enforce full ordering for operations with BPF_FETCH by emitting a 'sync'
+> +			 * before and after the operation.
+> +			 *
+> +			 * This is a requirement in the Linux Kernel Memory Model.
+> +			 * See __cmpxchg_u64() in asm/cmpxchg.h as an example.
+> +			 */
+> +			if (imm & BPF_FETCH && IS_ENABLED(CONFIG_SMP))
+> +				EMIT(PPC_RAW_SYNC());
+>  			/* load value from memory into TMP_REG_2 */
+>  			if (size == BPF_DW)
+>  				EMIT(PPC_RAW_LDARX(tmp2_reg, tmp1_reg, dst_reg, 0));
+> @@ -865,6 +874,9 @@ int bpf_jit_build_body(struct bpf_prog *fp, u32 *image, u32 *fimage, struct code
+>  			PPC_BCC_SHORT(COND_NE, tmp_idx);
+>  
+>  			if (imm & BPF_FETCH) {
+> +				/* Emit 'sync' to enforce full ordering */
+> +				if (IS_ENABLED(CONFIG_SMP))
+> +					EMIT(PPC_RAW_SYNC());
+>  				EMIT(PPC_RAW_MR(ret_reg, _R0));
+>  				/*
+>  				 * Skip unnecessary zero-extension for 32-bit cmpxchg.
+> -- 
+> 2.42.0
+> 
