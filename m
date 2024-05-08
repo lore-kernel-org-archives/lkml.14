@@ -1,145 +1,104 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8270DDB3;
-	Wed,  8 May 2024 01:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E07A679EA;
+	Wed,  8 May 2024 01:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715131893; cv=none; b=nx9gZUybqmpUsHUsr1j5In6/3MkGFST8t6LJMHf83S66wesRzYsYfIFC9OLQ2XPa9b7KF/mpaJO+YTP8fEYzR7wnZOBKi7m9GrRZBuA8dnFMtePrx1RUf5zy1T3RB8S9+GDv4PXxI1rbOFKChMtiKy8EyD1OLJerccGKmnKY+Qg=
+	t=1715132034; cv=none; b=Or8SyhV6IJIRj6jtf/3p5XNR3L87KH7W8n0jdJlMMRZRgvH5+5q5t2yYGXpPTR5raQgc+Ha8L9dQBFtgkieWR8/xl7JuoadMHw1K9k1cuhMESvMcSH2NEr74NYHzAfkU25XoG9HninLZTaZOf/4hStHu1FkxSLxPS+m5jnR9dJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715131893; c=relaxed/simple;
-	bh=bgJe8CD5Cy5YFMk2bifAmaRqq6gFsp2lDEFW1Q52+gw=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=lT4fnUVxX9p1Bf9xlqb+kbufIqAS0e7cl6mnCiiM6Y6xIjAH4pXBwPfdLYl/K2YboE66kIHT2E92euh4tgDJPF2FBj/FEwIhFl89UblZyO5eNZe3GpQZhPB8ci3HJTg+lXEa+OWwqAOhbxVIbeNrXBr25H5TVlbIACn1lYcJLTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TkLlv5Ep; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715132034; c=relaxed/simple;
+	bh=YlFykGoxAiiJuRSGMaXz+r9CTvvsH71wleL5j7OOBK8=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=pLXONj0OSxsKSEknJvUZYtEiJ2/1dnLyRTvN4jMErXws4MIkOeQVIDGC3BHJ24MeMDSKi8SDdgX4h9ugrJrtrUSLr7aM9MW5uMgJ97zTrXzP7Qapqq/IFXK2QdAp+dJKK200IYAGmy/stB4ZAD5YxPXg2TZdzeLLszAYhe9YqZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Yen5rOD9; arc=none smtp.client-ip=203.205.221.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TkLlv5Ep"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 447LSBS8010568;
-	Wed, 8 May 2024 01:31:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:subject:date:message-id:mime-version:content-type
-	:content-transfer-encoding:to:cc; s=qcppdkim1; bh=vuoaFeUU6XssIK
-	wTd1WsnfAeKzA349xSXCu9bfOdhjk=; b=TkLlv5EpnI6r73AF6uc74TrSWgTPi6
-	qzGwsgmg8+5a4kl6luSrnv7H8bXD7YegMoIU+qOGPfIoXQzVT5rCeC9Ezy451i8E
-	bljzC8iMIdT72QXiJgbW5hlHcxzXzzE/YpD84ExknYSCVyXwf0FNuJp5ucdGOM+1
-	oKW6i8u6faThBjJ+tJy0oSNHNTGfdoSk92m/iXPe1B1tDYsYYV89W4c8X9wFa9JK
-	RvVuHtSXgxjiw62VaYzXKARIRqcK2oDj2AreHfpDEw+z3CBpKgahd3VMG4iE4Vbl
-	ZcYBBTbxEB/rwP0g5AF1rV0UOu+cedt9SYVaA5yCDpkFhZQJosKT6aJQ==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xyspggnkx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 May 2024 01:31:21 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4481VKlx024746
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 8 May 2024 01:31:20 GMT
-Received: from hu-scheluve-lv.qualcomm.com (10.49.16.6) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 7 May 2024 18:31:11 -0700
-From: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
-Subject: [PATCH v3 0/2] Mark Ethernet devices on sa8775p as DMA-coherent
-Date: Tue, 7 May 2024 18:30:59 -0700
-Message-ID: <20240507-mark_ethernet_devices_dma_coherent-v3-0-dbe70d0fa971@quicinc.com>
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Yen5rOD9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1715131729; bh=RpAApWwz9vkgICo+/HQ8lHrSIvkMVGTy8S0GeZrlgnA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Yen5rOD9cbZyWc/jSaTf3Z/6fAAfN+bHweFJbjzH08pU4J+E1dgMvXfEMS5qv1X3H
+	 a/UmHUTFHSqaw7GGnzhpncrnes0VaIMhx5BjVlP1PV7o8o2SsI3juArSm4GKeyZpax
+	 2Gztw2XvZu2H0e3lmp2oSBIenhHtYNgNZyroIAuk=
+Received: from pek-lxu-l1.wrs.com ([111.198.228.153])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id 72E20E1A; Wed, 08 May 2024 09:28:46 +0800
+X-QQ-mid: xmsmtpt1715131726tzjvae2pq
+Message-ID: <tencent_B063096003B044521770576F66D1336E2305@qq.com>
+X-QQ-XMAILINFO: NKDEJ657lpu+DDn7E0qu1B5l9FJz1NUFydfhaK0WOb/m6BIuFtUYxkqaX89AzB
+	 R90rmgs9QYyMVM31FNZjg3zY9Np0qiQ2zEny9CJidE5+8CJXK5GrV9EhpgP4Bx++KWMSDjtGmml1
+	 dXPi0A1jFMLs2IqBZWHo1/tKtz6cm3G2yLh7W6JDIp1QeNrI91vgyLUIY4z3Md8kmTlPjboKcuG+
+	 d5/HXtd3oQxi6+qwYclwIpjGfGeLaDLkXgjL+KW5K2UgAMvQM7b7I5IFcdkPgLdpyIg34y7pgGjE
+	 yjsJ+tgx/HUAMPF+Nb89E2PjxdtzvpNXhJ4R35DwNKSt0Qg0Xr+0lg1+785j2AZQO6wZcZOyIsHt
+	 CUT4V3fZD9mKwZ5tCOSowJlTRXYZFYyQKBf515wrrm8kndgR33aa7UTNH0JB0vBdOEVRmOEX6huh
+	 zfWMQg8/slPUwzrW6IZ3Ogvd8pGYrQ2a4VW4CLk1TaI6Te2XJYIFgt3Zv1OIzF8g2TnlkXOZK+K9
+	 m6CAlOjSFsWTfihoXn+Inmq5wcBFQZyyTodV9+3EXGbzDEZcqrUpVk4CoyITRGm9yxEKLwxpEP/X
+	 3+FyoIQ/90nRIub/MNkHB9F1qwu6BbPe51OuGOEGfSAhWecWtSMtwVXCMqVJM/uZNTQ4fIUszS7n
+	 j8NzV3SDcVmzPyb6JJGX530Pfs/g5yiPQoB/R6lGw32PKnUoyyKK9fc3ggWcXbKzWJ5uDYJ/x76T
+	 3UGxGWn1GqKzCZLmh0Lxf+IRH03LlEAg9Q+4xoHUIdriSPX0bsa6Z8epS5yksR0b1OunTX6VnJ4W
+	 MXyTg+wvF9TzHBpXr+Hez+9SqnoDqL7GnDYAlIMlJpNzqdAc/R7AakFkVqLfO/Im3FNTDJZfxIaP
+	 PT7lSEUcs9wByl5MKu10l/6rZ8nJl6cakz/bT4+af2lGP0kMcFgSzHPg1vdLGKSS5hNCDwbPvp0p
+	 XGGp9JMYi1xZyrA++LVqVAfdYtHWPgxdlP61OcTbSLyw2pEBQKZNrBxZIhnvJJ2e9K5pHcMPo=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Edward Adam Davis <eadavis@qq.com>
+To: kent.overstreet@linux.dev
+Cc: bfoster@redhat.com,
+	eadavis@qq.com,
+	linux-bcachefs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syzbot+c48865e11e7e893ec4ab@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] bcachefs: fix oob in bch2_sb_clean_to_text
+Date: Wed,  8 May 2024 09:28:47 +0800
+X-OQ-MSGID: <20240508012846.3244444-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <nq3ka3ovvksptfkl5c53c4yn54efhu6dtt356lrda2wg7xzwak@tutbtfe7eskb>
+References: <nq3ka3ovvksptfkl5c53c4yn54efhu6dtt356lrda2wg7xzwak@tutbtfe7eskb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANPVOmYC/5WNyw7CIBQFf8WwFgO3gI+V/2EMoXBriSlVqETT9
- N+lXelOl3OSMzOShNFjIofVSCJmn3wfClTrFbGtCRek3hUmwEAwAZJ2Jl41Di3GgIN25WIxadc
- ZbfsyYhiosopLUe8EV5IU0S1i459L5HQu3Po09PG1NDOf17/0mVNOjWNbKZkQCOp4f3jrg93Yv
- iNzIMOHtGI/SaFIQTR17eyecYBv6TRNb/YNf8ErAQAA
-To: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Bartosz
- Golaszewski" <bartosz.golaszewski@linaro.org>,
-        Andrew Halaney
-	<ahalaney@redhat.com>, Vinod Koul <vkoul@kernel.org>,
-        "David S. Miller"
-	<davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Bhupesh Sharma
-	<bhupesh.sharma@linaro.org>
-CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>,
-        Sagar Cheluvegowda <quic_scheluve@quicinc.com>
-X-Mailer: b4 0.13.0
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: LCz7ZCAEwpLmpQFW6rFbGceAJYCWQs5L
-X-Proofpoint-ORIG-GUID: LCz7ZCAEwpLmpQFW6rFbGceAJYCWQs5L
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-07_16,2024-05-06_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- phishscore=0 suspectscore=0 clxscore=1015 bulkscore=0 mlxlogscore=740
- adultscore=0 spamscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405010000
- definitions=main-2405080009
+Content-Transfer-Encoding: 8bit
 
-To: Bjorn Andersson <andersson@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@linaro.org>
-To: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: Conor Dooley <conor+dt@kernel.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-To: Andrew Halaney <ahalaney@redhat.com>
-To: Vinod Koul <vkoul@kernel.org>
-To: David S. Miller <davem@davemloft.net>
-To: Eric Dumazet <edumazet@google.com>
-To: Jakub Kicinski <kuba@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-To: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc: kernel@quicinc.com
-Cc: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: netdev@vger.kernel.org
-
-Patch 1 :- This patch marks Ethernet devices on Sa8775p as DMA-coherent
-as both the devices are cache coherent.
-
-Patch 2 :- Update the schema of qcom,ethqos to allow specifying Ethernet
-devices as "dma-coherent".
-
-Changes in v3:
-Update the schema to specify Ethernet devices as "dma-coherent".
-- Link: https://lore.kernel.org/r/20240425-mark_ethernet_devices_dma_coherent-v1-1-ad0755044e26@quicinc.com
-
-Changes in v2:
-Remove internal change-id from commit message
-- Link to v1: https://lore.kernel.org/r/20240425-mark_ethernet_devices_dma_coherent-v1-1-ad0755044e26@quicinc.com
-
----
----
-Sagar Cheluvegowda (2):
-      arm64: dts: qcom: sa8775p: mark ethernet devices as DMA-coherent
-      dt-bindings: net: qcom: ethernet: Allow dma-coherent
-
- Documentation/devicetree/bindings/net/qcom,ethqos.yaml | 2 ++
- arch/arm64/boot/dts/qcom/sa8775p.dtsi                  | 2 ++
- 2 files changed, 4 insertions(+)
----
-base-commit: a93289b830ce783955b22fbe5d1274a464c05acf
-change-id: 20240425-mark_ethernet_devices_dma_coherent-6c6154b84165
-
-Best regards,
--- 
-Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+On Tue, 7 May 2024 21:21:16 -0400, Kent Overstreet wrote:
+> > > > > diff --git a/fs/bcachefs/sb-clean.c b/fs/bcachefs/sb-clean.c
+> > > > > index 35ca3f138de6..194e55b11137 100644
+> > > > > --- a/fs/bcachefs/sb-clean.c
+> > > > > +++ b/fs/bcachefs/sb-clean.c
+> > > > > @@ -278,6 +278,17 @@ static int bch2_sb_clean_validate(struct bch_sb *sb,
+> > > > >  		return -BCH_ERR_invalid_sb_clean;
+> > > > >  	}
+> > > > > 
+> > > > > +	for (struct jset_entry *entry = clean->start;
+> > > > > +	     entry != vstruct_end(&clean->field);
+> > > > > +	     entry = vstruct_next(entry)) {
+> > > > > +		if ((void *) vstruct_next(entry) > vstruct_end(&clean->field)) {
+> > > > > +			prt_str(err, "entry type ");
+> > > > > +			bch2_prt_jset_entry_type(err, le16_to_cpu(entry->type));
+> > > > > +			prt_str(err, " overruns end of section");
+> > > > > +			return -BCH_ERR_invalid_sb_clean;
+> > > > > +		}
+> > > > > +	}
+> > > > > +
+> > > > The original judgment here is sufficient, there is no need to add this section of inspection.
+> > > 
+> > > No, we need to be able to print things that failed to validate so that
+> > > we see what went wrong.
+> > The follow check work fine, why add above check ?
+> >    1         if (vstruct_bytes(&clean->field) < sizeof(*clean)) {
+> >   268                 prt_printf(err, "wrong size (got %zu should be %zu)",
+> >     1                        vstruct_bytes(&clean->field), sizeof(*clean));
+> > 
+> 
+> You sure you're not inebriated?
+Here, is my test log, according to it, I can confirm what went wrong.
+[  129.350671][ T7772] bcachefs (/dev/loop0): error validating superblock: Invalid superblock section clean: wrong size (got 8 should be 24)
+[  129.350671][ T7772] clean (size 8):
+[  129.350671][ T7772] flags:          0
+[  129.350671][ T7772] journal_seq:    0
 
