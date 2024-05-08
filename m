@@ -1,171 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5631F8663E;
-	Wed,  8 May 2024 15:46:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC35126F39;
+	Wed,  8 May 2024 15:47:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715183168; cv=none; b=oNBtflsqvaP0WWW0y2VQMTLWIZfxuAPk81N2r6VhGV4GTX1cOmTFAFaRYkUpmwtMUOtXxhWknM6nRsoD0fSsbQrbiCA0BKIe6xPQSWhVsUuEeRKcL246yj+cR/5ZbrT48LTWR3gIAOS16/YTjeCoqqVWnCgWLIFLw4UnJsj9VLU=
+	t=1715183234; cv=none; b=YkWYXLa9ccoqYfuLuBa6zICuHywKXMcNj83AfogbVLplUNlLY5my6fdNLcUCkH8IELKefOtM74DfhZAr2QOzIcp2Q5rTc7c3vWTtSZT45UI6U38PYPKJdFDhpnqxn2VG4bJ08ahkWzFOLsmATogTqcXJZkL6lfsDofyxisgVhtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715183168; c=relaxed/simple;
-	bh=9faLKA5XKMW4fuawS5HE+LFSPeCjU5F3QYsafZQ/I0c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nn133RP6c2jydElxe7HUmGBgEVlIBu9obCitU+r3K3FXuLOSW+7x4+6R3ahlbyXwlml34R6sYV6XCgEY683vIvAhlH4qP4NFXZ09/yIxuGAhWL1G5tjxPIzv2I3xi5miWqZl1wCtyyNdh8se/WRJZTfXAVLJce+FyM00ga9i+Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IzchGpKm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715183234; c=relaxed/simple;
+	bh=0HR6q0zl75bMlgfU7A1SNZdUSz2U26CMH4Khc6e3wVY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nVuUnhpHDQg1Xdlwixgo3TYH3NVk6TGkO2cmqWTjUkrpEOaY9pG+c6IxIZy28a/lQDK0Yd3qr5XpwgrJ1/qLGX274/AfhC95jKo9vi134OPKydNdDVMfJzqisC0VGpyaa591ppZ5IsFVGYMwMDTNYxvR0pmnZu2rRBNeMvwnpPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTBS1PAz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IzchGpKm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D275CC2BD10;
-	Wed,  8 May 2024 15:46:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTBS1PAz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AE5AC113CC;
+	Wed,  8 May 2024 15:47:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715183167;
-	bh=9faLKA5XKMW4fuawS5HE+LFSPeCjU5F3QYsafZQ/I0c=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=IzchGpKmiMUkh9d2vo19t401Ko5RhUnYizFnSNrcRBat9dYyl48IaGQWqHFog7VBf
-	 1z1DpGeRlO4jCrcmj830wjF7kevP9hSbUwpByDne7owXpGRp3QT+PXaYuZpddZsp9D
-	 lrz7mbVBppy297y6TrVCKctpnvqIcNC4FRhBl/y/o8GObW/jO0J5saq9PPg2DJne/i
-	 YPTLsL+/64CJXdsKNt99olDUo654PphN0lCNgW76MTYR0fcePKNJS1vFIALzttqVyK
-	 yljXSHqXGonORzsIv8uZ4QyRg8CZZlV5m8/ngTXEI0Jl9p2UjhpWu8nC+tiOODna7t
-	 nBlYub/YfnpMQ==
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5b264f3ec79so184435eaf.3;
-        Wed, 08 May 2024 08:46:07 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUGUGQbYF7tXAVXuteKOvUTjSVLmLO3de/ziCRYTzf9QyCujXVR6GxR8r4QPlwt7csnoSP7fmB6+FzwTrQlfdkmtwv7KDzf9o9C7NdIl2Lunv/fr+D95xiVkmRnjyDhV7nkXqHEDzduW1bo2JA0BeFNWMNN7rqWx88kury6xPnBVqxFSisbIg0JPw==
-X-Gm-Message-State: AOJu0YzN9WyfyRhOPebZSQbHCghlq1LgFWI+44+GLz+YYv638EPJ6P/V
-	UhlexBEWR3plgiOBAQ3H76himPRrEigf472NyX+L0vFLD16PEnj4wdApPdLzpO7/IVWAmEYIACv
-	t2wlqJnuPAfRBCFCj89Kw7/1MQno=
-X-Google-Smtp-Source: AGHT+IGvIPQZWsqX1hgK6QcrGssTICYqXpiGpjNqL7cHyisXt5WVsp5YwTqaNCsJQHb8eEQju8hMx2CabLvoKT5VcNI=
-X-Received: by 2002:a4a:b00b:0:b0:5b2:bc0:f385 with SMTP id
- 006d021491bc7-5b24d81b9f1mr2671702eaf.8.1715183167259; Wed, 08 May 2024
- 08:46:07 -0700 (PDT)
+	s=k20201202; t=1715183234;
+	bh=0HR6q0zl75bMlgfU7A1SNZdUSz2U26CMH4Khc6e3wVY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=BTBS1PAzbNf5tz9Ylffd4s0oku6UWlAlm3kmSVwkXAO3ZZzbNmrXVpugY9mtYHqdn
+	 /XdXhjBsBEa+TUINBTB2B2en7R3j+TtPNvonFvbDTdZBLEEP8WFzlTz9d1Qe6c+h2C
+	 2bBe2OBE7a8lDLgcqtWnzFOwOT8imZwETAiPED54GqjZrhZ2yC8lS060tN/kWjh9RD
+	 5wlaoTeI6ccvR+9z0aXsdXIPwhk4C53T7fdORfUk19uUSPq7R+rTX0YbHiUkn4w3jD
+	 pVQDZactcwSIJegW1XYIXUNMv5Hcukemwo6AdvLzTMCVLj400ZHlWqHuIdP0pURcw4
+	 X9c6Vi/T6AhYA==
+From: Conor Dooley <conor@kernel.org>
+To: linux-spi@vger.kernel.org
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	stable@vger.kernel.org,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	Naga Sureshkumar Relli <nagasuresh.relli@microchip.com>,
+	Mark Brown <broonie@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] spi: microchip-core-qspi: fix setting spi bus clock rate
+Date: Wed,  8 May 2024 16:46:51 +0100
+Message-ID: <20240508-fox-unpiloted-b97e1535627b@spud>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240417044459.1908-1-linux.amoon@gmail.com>
-In-Reply-To: <20240417044459.1908-1-linux.amoon@gmail.com>
-From: Chanwoo Choi <chanwoo@kernel.org>
-Date: Thu, 9 May 2024 00:45:30 +0900
-X-Gmail-Original-Message-ID: <CAGTfZH3oJQsc0XVrrA-F7NxSfKx8=mOYDM1Vvxt37+skvXZVaw@mail.gmail.com>
-Message-ID: <CAGTfZH3oJQsc0XVrrA-F7NxSfKx8=mOYDM1Vvxt37+skvXZVaw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] PM / devfreq: exynos: Use Use devm_clk_get_enabled()
- helpers
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, 
-	Kyungmin Park <kyungmin.park@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>, linux-pm@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1341; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=JZge+HWuFL69hQ2rSaeYyYwg1fwwg6/w4PlilwD4sWM=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGnW87IY6wvjcvbd3lc5s9/aYuKZvvjm3zweQikcjRv66 /ctvsnQUcrCIMbBICumyJJ4u69Fav0flx3OPW9h5rAygQxh4OIUgIlcncrIsPFnWtJWd4OtphIv ylmefL970ExKTr392aGbuWIBFxlZ2hj+u9uo3583L3LLvj2WExIS+68aJopO6H/8T/nr/8/mnOx uXAA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 17, 2024 at 1:45=E2=80=AFPM Anand Moon <linux.amoon@gmail.com> =
-wrote:
->
-> The devm_clk_get_enabled() helpers:
->     - call devm_clk_get()
->     - call clk_prepare_enable() and register what is needed in order to
->      call clk_disable_unprepare() when needed, as a managed resource.
->
-> This simplifies the code and avoids the calls to clk_disable_unprepare().
->
-> While at it, use dev_err_probe consistently, and use its return value
-> to return the error code.
->
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> v3 - No change
-> v2 - No change
-> ---
->  drivers/devfreq/exynos-bus.c | 21 ++++-----------------
->  1 file changed, 4 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-> index 245898f1a88e..153340b6685f 100644
-> --- a/drivers/devfreq/exynos-bus.c
-> +++ b/drivers/devfreq/exynos-bus.c
-> @@ -160,7 +160,6 @@ static void exynos_bus_exit(struct device *dev)
->         platform_device_unregister(bus->icc_pdev);
->
->         dev_pm_opp_of_remove_table(dev);
-> -       clk_disable_unprepare(bus->clk);
->         dev_pm_opp_put_regulators(bus->opp_token);
->  }
->
-> @@ -171,7 +170,6 @@ static void exynos_bus_passive_exit(struct device *de=
-v)
->         platform_device_unregister(bus->icc_pdev);
->
->         dev_pm_opp_of_remove_table(dev);
-> -       clk_disable_unprepare(bus->clk);
->  }
->
->  static int exynos_bus_parent_parse_of(struct device_node *np,
-> @@ -247,23 +245,15 @@ static int exynos_bus_parse_of(struct device_node *=
-np,
->         int ret;
->
->         /* Get the clock to provide each bus with source clock */
-> -       bus->clk =3D devm_clk_get(dev, "bus");
-> -       if (IS_ERR(bus->clk)) {
-> -               dev_err(dev, "failed to get bus clock\n");
-> -               return PTR_ERR(bus->clk);
-> -       }
-> -
-> -       ret =3D clk_prepare_enable(bus->clk);
-> -       if (ret < 0) {
-> -               dev_err(dev, "failed to get enable clock\n");
-> -               return ret;
-> -       }
-> +       bus->clk =3D devm_clk_get_enabled(dev, "bus");
-> +       if (IS_ERR(bus->clk))
-> +               return dev_err_probe(dev, PTR_ERR(bus->clk), "failed to g=
-et bus clock\n");
+From: Conor Dooley <conor.dooley@microchip.com>
 
-nitpick. I recommend that better to keep 80 char on one line as following
-for the readability.
+Before ORing the new clock rate with the control register value read
+from the hardware, the existing clock rate needs to be masked off as
+otherwise the existing value will interfere with the new one.
 
-               return dev_err_probe(dev, PTR_ERR(bus->clk),
-                                          "failed to get bus clock\n");
+CC: stable@vger.kernel.org
+Fixes: 8596124c4c1b ("spi: microchip-core-qspi: Add support for microchip fpga qspi controllers")
+Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+---
+CC: Conor Dooley <conor.dooley@microchip.com>
+CC: Daire McNamara <daire.mcnamara@microchip.com>
+CC: Naga Sureshkumar Relli <nagasuresh.relli@microchip.com>
+CC: Mark Brown <broonie@kernel.org>
+CC: linux-spi@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+---
+ drivers/spi/spi-microchip-core-qspi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/spi/spi-microchip-core-qspi.c b/drivers/spi/spi-microchip-core-qspi.c
+index 03d125a71fd9..09f16471c537 100644
+--- a/drivers/spi/spi-microchip-core-qspi.c
++++ b/drivers/spi/spi-microchip-core-qspi.c
+@@ -283,6 +283,7 @@ static int mchp_coreqspi_setup_clock(struct mchp_coreqspi *qspi, struct spi_devi
+ 	}
+ 
+ 	control = readl_relaxed(qspi->regs + REG_CONTROL);
++	control &= ~CONTROL_CLKRATE_MASK;
+ 	control |= baud_rate_val << CONTROL_CLKRATE_SHIFT;
+ 	writel_relaxed(control, qspi->regs + REG_CONTROL);
+ 	control = readl_relaxed(qspi->regs + REG_CONTROL);
+-- 
+2.43.0
 
->
->         /* Get the freq and voltage from OPP table to scale the bus freq =
-*/
->         ret =3D dev_pm_opp_of_add_table(dev);
->         if (ret < 0) {
->                 dev_err(dev, "failed to get OPP table\n");
-> -               goto err_clk;
-> +               return ret;
->         }
->
->         rate =3D clk_get_rate(bus->clk);
-> @@ -281,8 +271,6 @@ static int exynos_bus_parse_of(struct device_node *np=
-,
->
->  err_opp:
->         dev_pm_opp_of_remove_table(dev);
-> -err_clk:
-> -       clk_disable_unprepare(bus->clk);
->
->         return ret;
->  }
-> @@ -453,7 +441,6 @@ static int exynos_bus_probe(struct platform_device *p=
-dev)
->
->  err:
->         dev_pm_opp_of_remove_table(dev);
-> -       clk_disable_unprepare(bus->clk);
->  err_reg:
->         dev_pm_opp_put_regulators(bus->opp_token);
->
-> --
-> 2.44.0
->
->
-
-
---=20
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
