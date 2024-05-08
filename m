@@ -1,117 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2115.outbound.protection.partner.outlook.cn [139.219.146.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35F961758E;
-	Wed,  8 May 2024 06:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715149215; cv=none; b=MXujeL8Tex/Q6cM0vOdk3o+9JqDFDRqpIC64W6eSdd8kwuC/jcfQcMVgp38UHvFHZrmGJSfs7BMSV5WN2VEJzJhBYaDZ41U2rPUQgN8j2YvhQoN9fRjsqlqVNjdFC0qT0zz8zFGn3P9Gz7smcG3/nA9PDKuy5S/iHfL2wWwSwjM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715149215; c=relaxed/simple;
-	bh=9aXNhsDVP0gfJxfrZP8xiEseqy1Wo1/lCHeXwFzjbps=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UvOKBu0XZwLnFQuO01ZMsgkxvZDaFvDb2+zPsxzwzBNeVDZmeZ5zUSP9TLbE28vBK9FgJ/8dkf06YpKe0khJCw5D0P2HbegRIl1v9Dy+cKUNMt8YW282JTwq/NoYBt4gUieL6oUW/0AH5JVnd4orTuZ7y1gNKNNBVw5gQLv4V/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Be5TFYRP; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Be5TFYRP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715149214; x=1746685214;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9aXNhsDVP0gfJxfrZP8xiEseqy1Wo1/lCHeXwFzjbps=;
-  b=Be5TFYRP/DHlvKJK1PP9caygWBmbmTApcnRX6qLdQkzkYEGAN3Ihdasb
-   U7yP9tZ74JXBjFuVKjcvdaDFOs6iIQh5T04r/NM15aLxmiM7BPBBDvBW0
-   zHup0su8bPbCcIvyCz3QdaMAcekSvw9qqHMIA38EPXT3ONR1ecmWwkjpX
-   vcopFY8f63q/lYJGxDTDr6sIvolA1VZq0SaReamQrP9VZksqKGqovs6xs
-   XO2or3PoJ7pSHOBrnkAiEL0wLHMG2zamYMDMnCydjvdc+L9BkuXc41j5d
-   C1s5LFSjxcqly8a9l09ZzxIMrf/icW+Wyuni1/KcTkbndvbhRyOsY4Bba
-   A==;
-X-CSE-ConnectionGUID: VHvnbLeARJel1k7HoYg1eg==
-X-CSE-MsgGUID: HdsYz9+TRaeGkxkWrxck4A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="14781180"
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="14781180"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 23:20:14 -0700
-X-CSE-ConnectionGUID: rnaNMFQnRnqLRZRs1Hz4LA==
-X-CSE-MsgGUID: S4tCt9sASXC/k2Wyco5CyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="33254696"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 07 May 2024 23:20:09 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s4aes-00034K-0z;
-	Wed, 08 May 2024 06:20:06 +0000
-Date: Wed, 8 May 2024 14:19:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
-	kernel@xen0n.name, tglx@linutronix.de, jiaxun.yang@flygoat.com,
-	gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
-	yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
-	dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
-	zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
-	zhoubinbin@loongson.cn
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Loongarch:Support loongarch avec
-Message-ID: <202405081417.CPM5mm4Q-lkp@intel.com>
-References: <20240507125953.9117-1-zhangtianyang@loongson.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A481758E;
+	Wed,  8 May 2024 06:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.146.115
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715149230; cv=fail; b=biqB05ROkAxJaemQcHrv5n67k5V4icl5zgA+gbvzkZ16GlHxXVfv6+AVlmVrlG3CDShEq/bgt5Fj5sWLSUr4QbAnO+3grTTqjE+ZESJ7FeZBa7b7qT5n9dmB8WKYOFKqVaxDhdBfLKVlqaiZQWsiu2KTnMMJUZb2ZMRMJ4jLEc0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715149230; c=relaxed/simple;
+	bh=rdPUtQ675hwgNMI/PlmKfSzLCZ/j1fNA27U4VrYGgzw=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=icpY4LTt1XIq4gFVS3SjuxxQzk11xrcqFxIsEvxWmwtjV1s5EHOccrp3mW8yJVH58pjjrrvMuyqPnFTvWYACtRO6TiAqckHFKPBggWMLLNlI9VIxvtiUiQLbkWjBNP7qhtPlM0XMDduE/PMf0LwEFf3coa5egKgmsiOTIJ941EE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.146.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=czGbGrJQ0Hcw0k6GcDeV4mq8p+jRXq5lJnPqmECJZIu16oeimVGJ9GKYeq1TfwZe9nO+UmTVnaWfMwCgX6sqKudNwoeerIXSuV55CTeoVQzU2muH42vgr0b5vlZ4w1zKQI4jbO5+RPvR/+2snV85QlJmqu/TPODNqZj7Ta0jthKbn4Ki1EFclKZV1vwK+137gSzDLkhyk/vMJgupi0c/0nFRC5LJWVVP3HXwYAgIxJpefn3y30i6N6qL2yVHYOJ/fFlK0HRKN9KrODyZ052gPDlOCFtO3uCjWb4Ne/0lAhCNDFcmLz2/kSQvwi1Ql4StSo6JyM3OKEHK1wbVrRzIJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PDYhACnrixQIhjb1jRKxRA3HQkg0g0CEvUI0w+vAtvU=;
+ b=GIm3zcLoB/7nmW+rkI6QqgnVOq87OsR8tP/r4BPgbVuWKZGq4T2ZFEPPdbHEERHub5ynG0v1IejWvYs/7TceaQxwjsNlJ7jVkaw/7/FyBkofbP85+IdcRgFNNB7gzL/Hqq3d6d5Yx3kS4F1J9t1nV6nKMWPoA4k2ZnwMdloyuPyQ86wGNTSJmy2eQli7w654+JkLYX6GcMg+yxStKSHoYARoP0qKNUtqlr2CKdfOB6KqvFd3i7vbwsHvrKUWdoi9GgMlOt4vnltkNRXb8wTGPtuH0pGmiQb9bzvXFKvRds7nw1e8DEKtWT75gVcIwAlQo1GKptFY0zNjW0nrMgWlrg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::9) by ZQ4PR01MB1283.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:15::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.44; Wed, 8 May
+ 2024 05:48:03 +0000
+Received: from ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn
+ ([fe80::301e:ec80:4356:8b14]) by
+ ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn ([fe80::301e:ec80:4356:8b14%6])
+ with mapi id 15.20.7472.044; Wed, 8 May 2024 05:48:03 +0000
+From: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>
+To: Mark Brown <broonie@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Michal Simek <michal.simek@amd.com>,
+	Lars-Peter Clausen <lars@metafoo.de>
+Cc: Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	linux-spi@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/2] Add optional reset control for Cadence SPI
+Date: Wed,  8 May 2024 13:47:26 +0800
+Message-ID: <20240508054728.1751162-1-jisheng.teoh@starfivetech.com>
+X-Mailer: git-send-email 2.43.2
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SHXPR01CA0026.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c311:1b::35) To ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507125953.9117-1-zhangtianyang@loongson.cn>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ4PR01MB1154:EE_|ZQ4PR01MB1283:EE_
+X-MS-Office365-Filtering-Correlation-Id: e55a6e1d-9442-437d-6c34-08dc6f226d6b
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	gGP6A6hgS+BxkSlaIQa6ROj704vWC6OFtJpgJFmF3PG/mUw0uRs5aqkB28guc7tnJcpSytn8D42ID1k3LKGqsgfsJBfrVrr7LXZ62Tr8RA4lpUwjEG6lkKIEVK3KZEiery5woK0WackmBKNxoXyKjuZrMJuKnkpcn1CupuhaNtv8U7cHfaImr+WsS+s16VvV+8qBXEZ33Q3cS/uS2wFnJMMl1cRyP1Mq5u2m9l/ipz/ORDR5sc4EIueb2nGrA/5fMEwmLTMdZbLHSYYhVOPMbibcJ+odvKPZ/dWBYch6dUi4oKY8LtnE2ZtJFvwkAYQdie/7Fsxef0YoBhwJdzV6xcOCuSpILzRk6mx4dv5dcImw9ujZUw9PhHHBb78tc5aZ3iQ2xdIOf51V3R13bit1DR9B6cOb3iDD0wxAISZ6EGsoPxrlf7VXaOOuMTuMv1Da3AyLO9oP/vIokbsfucz7ichhd4kyKhLq/KwV8CYUwbtAbMdhjv9uZU+SePVPBzy7fHEU3J+7T8bJrauU1+qmR87MQEoAr3Bh0CJ5zfFhWc1k+n7/smDWEjX04p333CbsegCBUzyj9rnveLw7xHl46LNJTT/y5e6XMy//Vyl8217IKstzCbCUFU8u/dfMW6fT
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(41320700004)(7416005)(52116005)(38350700005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?1dUJBzMBlYkl6qxV5mfeOgp/C07wnFTaCpawPsdWGhgTVUoUMrSOFurBoLvQ?=
+ =?us-ascii?Q?VUJxLVcPx7FHJLfXg5Q5KqNqSaHrttmoMumilGwCQV4KoJ+y1+yw/tvwi+5T?=
+ =?us-ascii?Q?GqXneX3SlcyY6sWVU5xShAayB/5GXN3QnWWsQnlJQJ4yF2lMeye6EQfr7uBv?=
+ =?us-ascii?Q?MxQCfkG7mdbv0ed3sNR5sqjzo0C216Zp73kbGnt03uFkNkA7C4jvCSWzjfJY?=
+ =?us-ascii?Q?PfgVxPagQK99PayVartypS/P2VphVugWnSw1y9LZ5odOBqkm4tvLl+HdHGHI?=
+ =?us-ascii?Q?Qh54TfAnlzxclahfuXIm65DLEyFq6HZykztpdfWc5UdkY92fDvD8LsmbxmlN?=
+ =?us-ascii?Q?kQ1kBaYE2hkW8cCIex0Fhyi/7B1sfEQvknqqSLS2D/2q9XcoiNVtzsG+5Bji?=
+ =?us-ascii?Q?a3jWEPuRc4I2hSMvkpmfQ6+NG/SrzoZtiV9udTmqvhVhfipAt7djEoODKrBx?=
+ =?us-ascii?Q?4LDWRWqBNl00nUqmS1icgZj7bMe0xD7r/QkNk1m0vfVZjR2exlbj9qfenpaB?=
+ =?us-ascii?Q?nn/JKy2BzDmq5QU/mmfLzbQ7xwgUwq9GA0wxCm5wsPysG13EgAvkNj1M0x/G?=
+ =?us-ascii?Q?UfKZTBZagKfgsh643jhR87HvjSH0EXjnhmpWjgNtnR9uh8cB44U4+KL9Tq84?=
+ =?us-ascii?Q?omALXB30ykOlzNoSOYXPPGmSLaAnDxyJwTfVFqD5i9fGD5yafhKGCfGGnAK3?=
+ =?us-ascii?Q?KS2Ud/FaWLWjCiR+nlUJVz/rmMZVD7unVFbbtR3OYPd4hwB2hY84fd37dg5R?=
+ =?us-ascii?Q?bUFR0tw04lmlQJ2VD7ghWMRcKp7AhzNcRQfSh8amH3iaxFFdLewV7SdBqfDh?=
+ =?us-ascii?Q?4hr9V9uidWDHoC2y/TPe71bH9wE0HWYsWc1gZC/4QzVfNWebW2uFUPNbJkpK?=
+ =?us-ascii?Q?tWkL2fCq79A8Cbgml5rKSYk4TxaUh9C1iZL5iwIedYDJhRzpg1kHTM5Rfdqn?=
+ =?us-ascii?Q?IaHvtXqEk6XtwJo4qPMMV3nCdj0czJ5fYGKCDDaiQHOhMn49yHH09gsrJ/Hc?=
+ =?us-ascii?Q?IVgV8OwDdD975cw/XjtXSDa+1A1OXbfylw4FAcika2FSMBiY80m/rjZNSct+?=
+ =?us-ascii?Q?clSqzKS7s1NKhYckDSWIYo46px2bBtprvOEfA6SDjgW6reKxnUlZmwLY5Z3h?=
+ =?us-ascii?Q?txnmLEGDyUYG5E004psDYObePbzouKLqXRUjwBAqhouBGeBBgHM8HwMKhtD2?=
+ =?us-ascii?Q?MFgjBInOT9RmnGmvkOnWPB3QNO1Bki2MFlUnvPFsYNHQKuXNepveENgNn2MD?=
+ =?us-ascii?Q?2YScIPlRJ6lPdaHwRTm3LDh5ivN3XKtD8kDgc2ql0V/u1GZQxhxSEs5Deej9?=
+ =?us-ascii?Q?/rOsVW8+yLUiCS6eJEAqc8se1NQDFUi9EvyN56X++M76mWau7Wniuy8kOhob?=
+ =?us-ascii?Q?V0dvxPOSHp0ESIBe9rb+4RZavGtDr/qC857HEgV5d+DhKaMC2wPSSoWLBnR7?=
+ =?us-ascii?Q?a/VxChFzlt9D91GdQ7mIl4V+2hS7L3bANoZCbN0p8augsQrbfKfzFx2Ejya/?=
+ =?us-ascii?Q?UY95SMwy074kxDuvGTQEQwwW/6iTIUhZOEuNHLeliOrfWpfNQI/N9qe65ja4?=
+ =?us-ascii?Q?xoOrWNIsbz+W07TY4oix/6H2uVIa+lKP+mP/4b8vs/UN4WN/DQgUTBDe1F8S?=
+ =?us-ascii?Q?qw=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e55a6e1d-9442-437d-6c34-08dc6f226d6b
+X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1154.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2024 05:48:03.6910
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ioo0GluzSeHcJjQp8WekyUGXwaCBcZLz5YjmO+TKrQtFY4xHcvzOVOqkfIgPWjrxKhO525JVI2oCc8JiXoE1KjPbWEcO0eCc46wxDMbH/6M=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1283
 
-Hi Tianyang,
+The first patch adds optional reset control to support assertion and
+deassertion of reset signal to properly bring the SPI device into an
+operating condition.
+The second patch documents the optional reset control into dt-bindings.
 
-kernel test robot noticed the following build warnings:
+Changes since v2:
+ - Added Krzysztof's Reviewed-by tag and fixup Co-developed-by tag in dt-bindings patch.
+ - Used dev_err_probe() in place of dev_err() in spi-cadence.c.
 
-[auto build test WARNING on tip/irq/core]
-[also build test WARNING on linus/master v6.9-rc7]
-[cannot apply to next-20240507]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Changes since v1:
+ - Dropped resets description and added reset-names property in dt-bindings.
+ - Specified "spi" as reset control name instead of using NULL in
+   devm_reset_control_get_optional_exclusive().
+ - Included reset.h in spi-cadence.c missing in v1.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tianyang-Zhang/Loongarch-Support-loongarch-avec/20240507-210314
-base:   tip/irq/core
-patch link:    https://lore.kernel.org/r/20240507125953.9117-1-zhangtianyang%40loongson.cn
-patch subject: [PATCH 2/2] Loongarch:Support loongarch avec
-config: mips-loongson3_defconfig (https://download.01.org/0day-ci/archive/20240508/202405081417.CPM5mm4Q-lkp@intel.com/config)
-compiler: mips64el-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240508/202405081417.CPM5mm4Q-lkp@intel.com/reproduce)
+Ji Sheng Teoh (2):
+  spi: spi-cadence: Add optional reset control support
+  dt-bindings: spi: spi-cadence: Add optional reset control
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405081417.CPM5mm4Q-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/irqchip/irq-loongson-pch-msi.c:107:31: warning: 'pch_msi_domain_info_v2' defined but not used [-Wunused-variable]
-     107 | static struct msi_domain_info pch_msi_domain_info_v2 = {
-         |                               ^~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/pch_msi_domain_info_v2 +107 drivers/irqchip/irq-loongson-pch-msi.c
-
-   106	
- > 107	static struct msi_domain_info pch_msi_domain_info_v2 = {
-   108		.flags		= MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS |
-   109				MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX,
-   110		.chip	= &pch_msi_irq_chip_v2,
-   111	};
-   112	
+ .../devicetree/bindings/spi/spi-cadence.yaml        |  7 +++++++
+ drivers/spi/spi-cadence.c                           | 13 +++++++++++++
+ 2 files changed, 20 insertions(+)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.2
+
