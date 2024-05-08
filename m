@@ -1,99 +1,99 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D0A422071;
-	Wed,  8 May 2024 12:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305075C8F4;
+	Wed,  8 May 2024 12:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715172678; cv=none; b=PSSsROc2rLG/kmtiFt5FMRaA1L64bNqEGTOgPHrPrALJUhjVKPqnlG5AKZvWKDPbK3SZyfZn9SWyIUzi7SUyT64uMdcsI4IXCvyeMoq3HUTuu5ad7q7ZDhi0d8SGbM1coapZfVeyHN0CcPVSmRYSxLsL9lV3OnvOmxBD5OVeTa4=
+	t=1715172698; cv=none; b=KGlxgCF+n6uYrOOkp0wKnU/Rbk2AaW9PK7J+HpNmD6ItAC7NtHSMN1F4AZbg79qDjwhAQ1Zi4ZMwYllxkHtUjVEzLvNRY24pYUKtQHT8MHZ1szjTOc5ocKpR4dF/Ny+Y2y2z2x7dAsfxkxHz/iyllVH1OUqNlhShSbsGFNBnoFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715172678; c=relaxed/simple;
-	bh=zjLlvB+WbJijsa7Xq2sGoO7LgZnL7gRVI2UA3wsYzcY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=geN/5VNbdH8GTK1diKdVxyoZZgNg5vvSEWXIsjkTzSpn9n9rtlGjkRCazZmEAgm+mJNNtaoEXKTBFH0anbIvmk6LBlIW8T0RxozZZg6pTnreZ2rBk7dXufm17g7HSGpjbAsDrvrVHlhwdMxhUDWfJKZY9YikbOf2nnz9PDXvnSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=BkR85RNs; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1715172698; c=relaxed/simple;
+	bh=IuMR0WzGssFWCdB3kp6DpjezXdcQqzHxncfUeFUz8rU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Eih4uk7905wVFNGKcaQgsjKyiu+5mJJtn27OE6Ma7CxoufLqy3NZoiCDtnLD/mEDvuwGz2Bgxj6dV5P28fSMk8Oos+BIRgIXmLBI/VIkTSX6JT5AzLVJ8FgxXNMTUpoaD9HWdYvo37Kzwg6KBvXVv2sS3l/Ym9pcD4NbI25kpVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p+wYYErv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="BkR85RNs"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
-	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
-	In-Reply-To:References; bh=zjLlvB+WbJijsa7Xq2sGoO7LgZnL7gRVI2UA3wsYzcY=;
-	t=1715172676; x=1715604676; b=BkR85RNsJiheEHp4jencaeLhwFiknHBpEcEwEG6g/9FugG1
-	DHRX6V5j0wmaijOjWzC2ylJr2jo3MNzJFKHDX4J77455GieigLGDxVDTQGDv3ayDtAQXbHJH7VjbQ
-	jLz8UmQAx8QK0Sh6UazeUdKOhdl8G7Hm66WrbI2w8K72EJtzFvPbSkkY84mYInFQypdnwo0ACDuM6
-	uiQFt6Shmx+Dtfz7bNW+dVbSNMMCPrZUpFNda8xdf/NYPNQJmgdIXzLU8rs3RReKYrCv6Lf96rMxg
-	zyy/9Ls6Ni7lJ0DmC/mXqFHBtsZV3vUD7nJO4S074nOYe3/zw+cCRCWBTMgU1y8w==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1s4glL-0003Db-Ck; Wed, 08 May 2024 14:51:11 +0200
-Message-ID: <7e3fdac4-e0bc-42f4-9bb3-a6b16f323491@leemhuis.info>
-Date: Wed, 8 May 2024 14:51:10 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p+wYYErv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B8A4C4AF63;
+	Wed,  8 May 2024 12:51:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715172697;
+	bh=IuMR0WzGssFWCdB3kp6DpjezXdcQqzHxncfUeFUz8rU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p+wYYErvSCkfV+3Fv1Z+xaki7HRzIeK9BQec+115VBUjo+vXp7MUXTja1QBu8dCg1
+	 P/SFgIWSwDM0o07QM3v4dorxNvIdkAUeTv2388YoHJE/v7po0qRsW76+bMb6K1lsUd
+	 MHk1GjQj7/nHXNIXLE9TSsFYz59UIxP9rALBIV+ZeC8S/A7ebIKZQSYt2/AeNeczuQ
+	 7fhnrwvzEoJmgRDep4M31YOtyA3rN/1VrdH0wPa7XVgAhbsWxqGtvoghPmqTxwHTmD
+	 D/8UGQh043B3nAWEm9P389YLFJ0sDXvdtxotmZIKc24vFGkEFtrusC4PJMZEXbXenf
+	 R0BtLjhrI6ZGw==
+Date: Wed, 8 May 2024 14:51:34 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: marc.ferland@gmail.com
+Cc: michal.simek@amd.com, linux-arm-kernel@lists.infradead.org, 
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Marc Ferland <marc.ferland@sonatest.com>
+Subject: Re: [PATCH] i2c: xiic: print error code when xiic_start_xfer fails
+Message-ID: <h6mggdcri53rq65jzi5ov6n7oqdvaldtpofh6eina6gos2wyyw@crjmnmfpynw4>
+References: <20240506154520.3886867-1-marc.ferland@sonatest.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Regression] 6.9.0: WARNING: workqueue: WQ_MEM_RECLAIM
- ttm:ttm_bo_delayed_delete [ttm] is flushing !WQ_MEM_RECLAIM
- events:qxl_gc_work [qxl]
-To: stable@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>
-Cc: airlied@gmail.com, airlied@redhat.com, daniel@ffwll.ch,
- dreaming.about.electric.sheep@gmail.com, dri-devel@lists.freedesktop.org,
- kraxel@redhat.com, linux-kernel@vger.kernel.org,
- maarten.lankhorst@linux.intel.com, mripard@kernel.org,
- spice-devel@lists.freedesktop.org, tzimmermann@suse.de,
- virtualization@lists.linux.dev, Anders Blomdell <anders.blomdell@gmail.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- David Wang <00107082@163.com>
-References: <20240430061337.764633-1-00107082@163.com>
- <20240506143003.4855-1-00107082@163.com>
- <ac41c761-27c9-48c3-bd80-d94d4db291e8@leemhuis.info>
- <b57f8ede-5de6-4d3d-96a0-d2fdc6c31174@gmail.com>
-From: "Linux regression tracking (Thorsten Leemhuis)"
- <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <b57f8ede-5de6-4d3d-96a0-d2fdc6c31174@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715172676;62cce3d8;
-X-HE-SMSGID: 1s4glL-0003Db-Ck
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240506154520.3886867-1-marc.ferland@sonatest.com>
 
-On 08.05.24 14:35, Anders Blomdell wrote:
-> On 2024-05-07 07:04, Linux regression tracking (Thorsten Leemhuis) wrote:
->> On 06.05.24 16:30, David Wang wrote:
->>>> On 30.04.24 08:13, David Wang wrote:
->>
->>>> And confirmed that the warning is caused by
->>>> 07ed11afb68d94eadd4ffc082b97c2331307c5ea and reverting it can fix.
->>>
->>> The kernel warning still shows up in 6.9.0-rc7.
->>> (I think 4 high load processes on a 2-Core VM could easily trigger
->>> the kernel warning.)
->>
->> Thx for the report. Linus just reverted the commit 07ed11afb68 you
->> mentioned in your initial mail (I put that quote in again, see above):
->>
->> 3628e0383dd349 ("Reapply "drm/qxl: simplify qxl_fence_wait"")
->> https://git.kernel.org/torvalds/c/3628e0383dd349f02f882e612ab6184e4bb3dc10
->>
->> So this hopefully should be history now.
->>
-> Since this affects the 6.8 series (6.8.7 and onwards), I made a CC to
-> stable@vger.kernel.org
+Hi Marc,
 
-Ohh, good idea, I thought Linus had added a stable tag, but that is not
-the case. Adding Greg as well and making things explicit:
+On Mon, May 06, 2024 at 11:45:20AM -0400, marc.ferland@gmail.com wrote:
+> From: Marc Ferland <marc.ferland@sonatest.com>
+> 
+> xiic_start_xfer can fail for different reasons:
+> 
+> - EBUSY: bus is busy or i2c messages still in tx_msg or rx_msg
+> - ETIMEDOUT: timed-out trying to clear the RX fifo
 
-@Greg: you might want to add 3628e0383dd349 ("Reapply "drm/qxl: simplify
-qxl_fence_wait"") to all branches that received 07ed11afb68d94 ("Revert
-"drm/qxl: simplify qxl_fence_wait"") (which afaics went into v6.8.7,
-v6.6.28, v6.1.87, and v5.15.156).
+Wolfram has recently removed all the error printouts caused by
+etimedout.
 
-Ciao, Thorsten
+> - EINVAL: wrong clock settings
+> 
+> Printing the error code helps identifying the root cause.
+> 
+> Signed-off-by: Marc Ferland <marc.ferland@sonatest.com>
+> ---
+>  drivers/i2c/busses/i2c-xiic.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-xiic.c b/drivers/i2c/busses/i2c-xiic.c
+> index 71391b590ada..73729f0180a1 100644
+> --- a/drivers/i2c/busses/i2c-xiic.c
+> +++ b/drivers/i2c/busses/i2c-xiic.c
+> @@ -1165,7 +1165,7 @@ static int xiic_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs, int num)
+>  
+>  	err = xiic_start_xfer(i2c, msgs, num);
+>  	if (err < 0) {
+> -		dev_err(adap->dev.parent, "Error xiic_start_xfer\n");
+> +		dev_err(adap->dev.parent, "Error xiic_start_xfer: %d\n", err);
+
+I don't see the end user being interested in having the error
+number printed in the dmesg. In fact, I doubt the end user is
+interested in this message at all.
+
+We could print the debug messages (or warnings) where the actual
+failure occurs. For example, in the setclk case, a warning is
+already being printed, and I don't see why we should also print
+an error here.
+
+Does that make sense?
+
+Andi
+
+>  		goto out;
+>  	}
+>  
+> -- 
+> 2.34.1
+> 
