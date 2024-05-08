@@ -1,192 +1,139 @@
-Received: from out-187.mta0.migadu.com (out-187.mta0.migadu.com [91.218.175.187])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDE42836D
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 10:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BB62836D
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 10:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715164698; cv=none; b=j4dGOMXY/QpyoSCBLvySn06Y774J+uhkJ8V/kpZdWZRMT8Iypn8X9erCQMzoOV42g86t5WchTt9TUdLlWdV+afd1JuPXwin5PtqOjUFvM3+kbn7ZbJ1ekiVjsP5ofMSEacmDyEekECfkMMyV4uv49AdyL5h6BbP/TOutDMSkNW0=
+	t=1715164753; cv=none; b=Bxo9u6SRDzAdbhJF8bzBAOXUESQJ5dNYO2tGCrCn4Ucvxcn8cKos1wJ3tUmPxylBeb5OaOzuXnsJjr5Dl5mdSooKg8rZPjV7K5nkS/m4ovZ2HPUTaPQoOSyPDvnM7t1sdLLkwnUbrCTw1VgBk2K9BRA/sRGhul8+ysO7KpdtzXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715164698; c=relaxed/simple;
-	bh=aaYeaMdasKaspZebsx+IVEbvrwdp4b2JzRsLI+LVbtg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qpltzl+Iy5GttO4mz6BkO5uM4EnA0NrGHWhJ08pFQdXfKCH1GNOjUvP8ilm5Zw65tjQ2/eZ9ahB6WPdrTY/BhJh7KeqcVz/6J/iCADYhCvmdg0LZbG3ePse0oqRDO+zdGPAe/o5rqVe79UGIXZHp+3oRlrOy2Yn/Kz0dSgpSVLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Edwc/9s3; arc=none smtp.client-ip=91.218.175.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Edwc/9s3"
-Message-ID: <45bdacaf-29e9-488f-a4e8-2b5ec891cfc4@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715164692;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5eHqA7UOBweZX4Vrf/qg7QA6MfSTlCuOrDrWzen+vio=;
-	b=Edwc/9s3GpdgxKvV/VSPbUnQYAZI0n2z411AMthQyYUD2RRB9vj71UInEVmevYLsEMN7Q9
-	NBvNXthWvS8THUBzFxoCSAUe+4KC59uC++8xQSDeh6K9DW2bgGbEK7UmW9ZsIlq8JL98KS
-	zffZlxZFFbEyHGvDqzSgSkyg7f711+8=
-Date: Wed, 8 May 2024 18:37:44 +0800
+	s=arc-20240116; t=1715164753; c=relaxed/simple;
+	bh=yDHGXknAKcnKVyO/nYkC7OKUIyh3qMraCazNQoiwyLw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uS1yAX/TqydJIszeF3/F0Wl1aDwS6GgHw3LXWzLR+PaKcrxW4Xk2a5H2/3g7eXcW4E7bXEo5FwNlQDWxFwLSgM4jTYp2rpHn2tOuuUyGLwFBI5cgIM4JNtAYhLNLmbIdZxgkN3iM79Xy3nGUnmP7qVEumlrfs1dna95yh++vmE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1s4ehV-0004BI-8n; Wed, 08 May 2024 12:39:05 +0200
+Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ore@pengutronix.de>)
+	id 1s4ehT-000G0G-Gi; Wed, 08 May 2024 12:39:03 +0200
+Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1s4ehT-00HLTZ-1S;
+	Wed, 08 May 2024 12:39:03 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: "David S. Miller" <davem@davemloft.net>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Eric Dumazet <edumazet@google.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Arun Ramadoss <arun.ramadoss@microchip.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org,
+	UNGLinuxDriver@microchip.com,
+	David Ahern <dsahern@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Willem de Bruijn <willemb@google.com>,
+	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
+Subject: [PATCH net-next v1 1/3] net: dsa: microchip: dcb: add comments for DSCP related functions
+Date: Wed,  8 May 2024 12:39:00 +0200
+Message-Id: <20240508103902.4134098-2-o.rempel@pengutronix.de>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240508103902.4134098-1-o.rempel@pengutronix.de>
+References: <20240508103902.4134098-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/4] mm/ksm: fix ksm_zero_pages accounting
-Content-Language: en-US
-To: Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@redhat.com>, Stefan Roesch <shr@devkernel.io>,
- xu xin <xu.xin16@zte.com.cn>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- zhouchengming@bytedance.com
-References: <20240508-b4-ksm-counters-v1-0-e2a9b13f70c5@linux.dev>
- <20240508-b4-ksm-counters-v1-2-e2a9b13f70c5@linux.dev>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Chengming Zhou <chengming.zhou@linux.dev>
-In-Reply-To: <20240508-b4-ksm-counters-v1-2-e2a9b13f70c5@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 2024/5/8 17:55, Chengming Zhou wrote:
-> We normally ksm_zero_pages++ in ksmd when page is merged with zero page,
-> but ksm_zero_pages-- is done from page tables side, which can't protected
-> by the ksmd mutex.
-> 
-> So we can read very exceptional value of ksm_zero_pages in rare cases,
-> such as -1, which is very confusing to users.
-> 
-> Fix it by changing to use atomic_long_t, and the same case with the
-> mm->ksm_zero_pages.
-> 
+All other functions are commented. Add missing comments to following
+functions:
+ksz_set_global_dscp_entry()
+ksz_port_add_dscp_prio()
+ksz_port_del_dscp_prio()
 
-Fixes: e2942062e01d ("ksm: count all zero pages placed by KSM")
-Fixes: 6080d19f0704 ("ksm: add ksm zero pages for each process")
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ drivers/net/dsa/microchip/ksz_dcb.c | 33 ++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
 
-> Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
-> ---
->  fs/proc/base.c           |  2 +-
->  include/linux/ksm.h      | 22 +++++++++++++++++++---
->  include/linux/mm_types.h |  2 +-
->  mm/ksm.c                 | 11 +++++------
->  4 files changed, 26 insertions(+), 11 deletions(-)
-> 
-> diff --git a/fs/proc/base.c b/fs/proc/base.c
-> index 18550c071d71..72a1acd03675 100644
-> --- a/fs/proc/base.c
-> +++ b/fs/proc/base.c
-> @@ -3214,7 +3214,7 @@ static int proc_pid_ksm_stat(struct seq_file *m, struct pid_namespace *ns,
->  	mm = get_task_mm(task);
->  	if (mm) {
->  		seq_printf(m, "ksm_rmap_items %lu\n", mm->ksm_rmap_items);
-> -		seq_printf(m, "ksm_zero_pages %lu\n", mm->ksm_zero_pages);
-> +		seq_printf(m, "ksm_zero_pages %ld\n", mm_ksm_zero_pages(mm));
->  		seq_printf(m, "ksm_merging_pages %lu\n", mm->ksm_merging_pages);
->  		seq_printf(m, "ksm_process_profit %ld\n", ksm_process_profit(mm));
->  		mmput(mm);
-> diff --git a/include/linux/ksm.h b/include/linux/ksm.h
-> index 52c63a9c5a9c..bfc2cf756b0d 100644
-> --- a/include/linux/ksm.h
-> +++ b/include/linux/ksm.h
-> @@ -33,16 +33,32 @@ void __ksm_exit(struct mm_struct *mm);
->   */
->  #define is_ksm_zero_pte(pte)	(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte))
->  
-> -extern unsigned long ksm_zero_pages;
-> +extern atomic_long_t ksm_zero_pages;
-> +
-> +static inline void ksm_map_zero_page(struct mm_struct *mm)
-> +{
-> +	atomic_long_inc(&ksm_zero_pages);
-> +	atomic_long_inc(&mm->ksm_zero_pages);
-> +}
->  
->  static inline void ksm_might_unmap_zero_page(struct mm_struct *mm, pte_t pte)
->  {
->  	if (is_ksm_zero_pte(pte)) {
-> -		ksm_zero_pages--;
-> -		mm->ksm_zero_pages--;
-> +		atomic_long_dec(&ksm_zero_pages);
-> +		atomic_long_dec(&mm->ksm_zero_pages);
->  	}
->  }
->  
-> +static inline long get_ksm_zero_pages(void)
-> +{
-> +	return atomic_long_read(&ksm_zero_pages);
-> +}
-> +
-> +static inline long mm_ksm_zero_pages(struct mm_struct *mm)
-> +{
-> +	return atomic_long_read(&mm->ksm_zero_pages);
-> +}
-> +
->  static inline int ksm_fork(struct mm_struct *mm, struct mm_struct *oldmm)
->  {
->  	if (test_bit(MMF_VM_MERGEABLE, &oldmm->flags))
-> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> index 24323c7d0bd4..af3a0256fa93 100644
-> --- a/include/linux/mm_types.h
-> +++ b/include/linux/mm_types.h
-> @@ -985,7 +985,7 @@ struct mm_struct {
->  		 * Represent how many empty pages are merged with kernel zero
->  		 * pages when enabling KSM use_zero_pages.
->  		 */
-> -		unsigned long ksm_zero_pages;
-> +		atomic_long_t ksm_zero_pages;
->  #endif /* CONFIG_KSM */
->  #ifdef CONFIG_LRU_GEN_WALKS_MMU
->  		struct {
-> diff --git a/mm/ksm.c b/mm/ksm.c
-> index 0f9c491552ff..6e0dca3cecf3 100644
-> --- a/mm/ksm.c
-> +++ b/mm/ksm.c
-> @@ -296,7 +296,7 @@ static bool ksm_use_zero_pages __read_mostly;
->  static bool ksm_smart_scan = true;
->  
->  /* The number of zero pages which is placed by KSM */
-> -unsigned long ksm_zero_pages;
-> +atomic_long_t ksm_zero_pages = ATOMIC_LONG_INIT(0);
->  
->  /* The number of pages that have been skipped due to "smart scanning" */
->  static unsigned long ksm_pages_skipped;
-> @@ -1429,8 +1429,7 @@ static int replace_page(struct vm_area_struct *vma, struct page *page,
->  		 * the dirty bit in zero page's PTE is set.
->  		 */
->  		newpte = pte_mkdirty(pte_mkspecial(pfn_pte(page_to_pfn(kpage), vma->vm_page_prot)));
-> -		ksm_zero_pages++;
-> -		mm->ksm_zero_pages++;
-> +		ksm_map_zero_page(mm);
->  		/*
->  		 * We're replacing an anonymous page with a zero page, which is
->  		 * not anonymous. We need to do proper accounting otherwise we
-> @@ -3373,7 +3372,7 @@ static void wait_while_offlining(void)
->  #ifdef CONFIG_PROC_FS
->  long ksm_process_profit(struct mm_struct *mm)
->  {
-> -	return (long)(mm->ksm_merging_pages + mm->ksm_zero_pages) * PAGE_SIZE -
-> +	return (long)(mm->ksm_merging_pages + mm_ksm_zero_pages(mm)) * PAGE_SIZE -
->  		mm->ksm_rmap_items * sizeof(struct ksm_rmap_item);
->  }
->  #endif /* CONFIG_PROC_FS */
-> @@ -3662,7 +3661,7 @@ KSM_ATTR_RO(pages_skipped);
->  static ssize_t ksm_zero_pages_show(struct kobject *kobj,
->  				struct kobj_attribute *attr, char *buf)
->  {
-> -	return sysfs_emit(buf, "%ld\n", ksm_zero_pages);
-> +	return sysfs_emit(buf, "%ld\n", get_ksm_zero_pages());
->  }
->  KSM_ATTR_RO(ksm_zero_pages);
->  
-> @@ -3671,7 +3670,7 @@ static ssize_t general_profit_show(struct kobject *kobj,
->  {
->  	long general_profit;
->  
-> -	general_profit = (ksm_pages_sharing + ksm_zero_pages) * PAGE_SIZE -
-> +	general_profit = (ksm_pages_sharing + get_ksm_zero_pages()) * PAGE_SIZE -
->  				ksm_rmap_items * sizeof(struct ksm_rmap_item);
->  
->  	return sysfs_emit(buf, "%ld\n", general_profit);
-> 
+diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
+index 5e520c02afd72..879471cf815e3 100644
+--- a/drivers/net/dsa/microchip/ksz_dcb.c
++++ b/drivers/net/dsa/microchip/ksz_dcb.c
+@@ -310,7 +310,18 @@ int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp)
+ 	return (data >> shift) & mask;
+ }
+ 
+-static int ksz_set_global_dscp_entry(struct ksz_device *dev, u8 dscp, u8 ipv)
++/**
++ * ksz_set_global_dscp_entry - Sets the global DSCP-to-priority mapping entry
++ * @dev: Pointer to the KSZ switch device structure
++ * @dscp: DSCP value for which to set the priority
++ * @ipm: Priority value to set
++ *
++ * This function sets the global DSCP-to-priority mapping entry for the
++ * specified DSCP value.
++ *
++ * Return: 0 on success, or a negative error code on failure.
++ */
++static int ksz_set_global_dscp_entry(struct ksz_device *dev, u8 dscp, u8 ipm)
+ {
+ 	int reg, per_reg, shift;
+ 	u8 mask;
+@@ -377,6 +388,16 @@ static int ksz_init_global_dscp_map(struct ksz_device *dev)
+ 	return 0;
+ }
+ 
++/**
++ * ksz_port_add_dscp_prio - Adds a DSCP-to-priority mapping entry for a port on
++ *			    a KSZ switch.
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number for which to add the DSCP-to-priority mapping entry
++ * @dscp: DSCP value for which to add the priority
++ * @prio: Priority value to set
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
+ int ksz_port_add_dscp_prio(struct dsa_switch *ds, int port, u8 dscp, u8 prio)
+ {
+ 	struct ksz_device *dev = ds->priv;
+@@ -387,6 +408,16 @@ int ksz_port_add_dscp_prio(struct dsa_switch *ds, int port, u8 dscp, u8 prio)
+ 	return ksz_set_global_dscp_entry(dev, dscp, prio);
+ }
+ 
++/**
++ * ksz_port_del_dscp_prio - Deletes a DSCP-to-priority mapping entry for a port
++ *			    on a KSZ switch.
++ * @ds: Pointer to the DSA switch structure
++ * @port: Port number for which to delete the DSCP-to-priority mapping entry
++ * @dscp: DSCP value for which to delete the priority
++ * @prio: Priority value to delete
++ *
++ * Return: 0 on success, or a negative error code on failure
++ */
+ int ksz_port_del_dscp_prio(struct dsa_switch *ds, int port, u8 dscp, u8 prio)
+ {
+ 	struct ksz_device *dev = ds->priv;
+-- 
+2.39.2
+
