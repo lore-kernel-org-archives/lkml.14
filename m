@@ -1,198 +1,117 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AB447F6C;
-	Wed,  8 May 2024 11:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A2A81AD0
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:36:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715168148; cv=none; b=eJjU0TsyE78ZD963yoessgBvF11SwWh0/x/rK0cRpUufsMGUsuTzHye401rZNWuGDQZ9zeEyjewMj1/RGe2rU0rd2NRkBij8yGR9576KvMPalBIrE8ulL8G7xO6hxNqNI8GB0FyuMiKne1rqb+azIjofCbJTSgdDULIU20Ztmsw=
+	t=1715168189; cv=none; b=ug14IVVyjAFFXNKub0ew8ghaSUUeCXdV8h0IfbyYrQK5esIlmNreOR5Xd8/tS0gKZI36zzBl/MU9NYeQvGbyg007emJjuHQmeM0g+ocUYd5EEX8P4M19nVU0iz/Hd7jZ4cJP7RhUqCkNuTDu1QcSOGcyrB89GZTYPGnKzMCjUpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715168148; c=relaxed/simple;
-	bh=NUGzzI2KqNP1cPbp/GxrzL3VQvSocCNEihYdoADSwBA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=P7Nkvm7GcpAYmXb1yv4TUGjc4bdQV9BxYOZZvaVvdmxkiaJJTNsu7hyhghtAcp4SS6rtwjo3tNaIkRwnsU8K05ADAMOfgoF1Sld/FTWcx2KHPw0RySsaXFTb2forzcWP44kAkw19wiLoZy0L29zUWXqX/erg7uBhc0YgvhlGiOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cVtwl2Ey; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715168189; c=relaxed/simple;
+	bh=+Fl34XZCnTBozqKQN1RM+pVRa0O2c176ao71VrsxAaw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Zoom9hV05lSmicJC7ZZSMln6rEWpnSf018J1ntAn/NDMBoFO0rzJaUhPfgrPlcRHgtuvQvCukMiMuauYT82vfPSYQqjs0otrxOVr4W7rfMEcMwYbbZlREhUXIvF/3z9vHXCTn1ss/he6Hul49hodNiscbQvABnA6DRQIr/UHslA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=yBiLQNIf; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cVtwl2Ey"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a59c5c9c6aeso889617966b.2;
-        Wed, 08 May 2024 04:35:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="yBiLQNIf"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41b79451153so33337205e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 04:36:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715168145; x=1715772945; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Vb7A8NDewpqVb/wyIJ0582aE2qv/3FWwkQEcmRDFW+Y=;
-        b=cVtwl2EyWMN1bGdSkykbJhrDFoQpdkWU7U8Iqy5jzsqGgIvn/e6ZCNK6t48QGPTZ/x
-         P70xXIi51A1Jkx7i30fX0a5dMpmqyyeTmNPyo0KzQBvmURkZDWUUCvKPBrPmzjJxqmq+
-         Au3+NimpyoMB0Z74M/IOrwR6cou46Qxg8Rt946ebkk7lRvziMVXMRkxMVJusv/6DaNWu
-         IEDZhsoO/i1y43oBsLpNQ6T96eMJU0Kx2k96MPJbB5sPytYv67jOqcmBixqa7TnMvlsK
-         kiQ5Pr43AQKfYlO9JU6XsdJy44dMQCfMEayJ4Qj5R7tGtqFJnzDQz2cpLNpF9vqlPzHQ
-         UTgg==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715168186; x=1715772986; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oM+WuwVvF178uIr+5Dc8IcJyYSbzDoUf3sQGwgQ7LEI=;
+        b=yBiLQNIf2GlIfvr9C8dAQOmARw2fEspcT2lgk7eQWPXM4ogrEX8tZRL0cyQrP77FH+
+         NG5C7Hl3HCi/YBWhaVUq29vaNj1vZigP8vLTpMORYy3UHDcF/Hj/eO0POOc23/h7qnxt
+         VUdutZCRAPmZgFPdeii4bH3IKaHzz1J/ZIGNHCJRULrNt33cZm2pUQxlqkM9F2sTT8aB
+         HF+p30k4n35aoQPix6hhT9aaHWqzCtWor/j18g1dVjagiXz231CD1Rc2Fjvv9vb865LP
+         YSMxpJsnSkYFKu+Y+hObmftofE5hXx/FYWTbEFYpjrglB43WaV2IOFwamDVoMfCa0wJa
+         KIXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715168145; x=1715772945;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vb7A8NDewpqVb/wyIJ0582aE2qv/3FWwkQEcmRDFW+Y=;
-        b=AgjGsJScNDHJqQnI6NO2doDMKlGhORuTvTqwGd7a5nhAK5hlZOowBbS6EK3x1GsZAW
-         oxpBCGu/hEnuqVBaKDdzmirrQ0KDQJpVl5QASebqXLVqe776RWbI2oeHZwkwqCmnuHF3
-         IB6Tvwxt4gjNYO/WHqrDbpY19rILXEkkvcVUyCENOOcNNRAyzbTv3CWz4NK8sn0jYhHE
-         cAS1zCfsOFQECJyLeeypg8VKpoQABZlB+w6wUCEnTD/VWvDRoePdeW1tF7wIq2wPG4f8
-         F+G4Za6ERSCi2N7c4gNkQHnc7Zt/zeY0C9JWkZBFolOsp6UUN/XnyMZw4HmbbRjaZXTk
-         WpkA==
-X-Forwarded-Encrypted: i=1; AJvYcCWU88OpDWbAOKdGKRMW2jpmD1p+H4YCFocqp3cT5i4CVf8rHabWNVVjXlErDKGMXBVu7ygruQDbYaQBCzHGvKGWhmDWRQ4yVA6e3EueaCUBuMsscIgViXVmvYZziF7rumzHQgTbhQB9DZhymBNt8fZyF70VxXaYEPTwv6fr/G6qLlLvQ6XizMsnVgGCGnetj5aPeEISags693A3rBN9ze3otY7SB5qAlnwby1thQL0ZDnfU/XDPQb1dIiXBzYjmdKg/pOLJ0NT7R39oD741CYEesFvQwmDJh8wJSP+IAVxdrZboU+QI80YhsL17T+DPQwpdQE8JjS/U7gA3STCtvWxSdJAgmCTXPO5CCbTtBm8lx+Y9AxYZ55B0L7PFd4bA5ZGNoIwgwdXwkiAb6zOIQimtEU9CUJcmAM5uk+QlhPZWXUKnGJPMufklnDErHVFvBdOVUnFi1LDEyvIor+jgsCk01DdZlVsDvVLZqOaGkt4PNaBbwKMc+LPXJznPCeyFAOEeerFwZw==
-X-Gm-Message-State: AOJu0YzI1687RXF6xyRCrTIQN9uPWV+DevSYCa5VsGXCpQOX+qFFXMnX
-	LXvIxD90PoGcaC1YBBzmXYmeCRggFEUco55LvUySgy3oWOkuDtSh
-X-Google-Smtp-Source: AGHT+IFD1CFod5VQ+iswMgBuojxIC5HF11jrNe705xchAqUdklV+Hcoyl3d8HPrZmlieFNMEy7rhLQ==
-X-Received: by 2002:a17:906:54c7:b0:a59:9edf:14b6 with SMTP id a640c23a62f3a-a59fb9699ccmr154863866b.45.1715168145194;
-        Wed, 08 May 2024 04:35:45 -0700 (PDT)
-Received: from [192.168.42.217] ([163.114.131.193])
-        by smtp.gmail.com with ESMTPSA id p25-20020a170906141900b00a55a5384986sm7568868ejc.24.2024.05.08.04.35.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 May 2024 04:35:44 -0700 (PDT)
-Message-ID: <1e2823db-504b-4829-856f-3f45a45ccada@gmail.com>
-Date: Wed, 8 May 2024 12:35:52 +0100
+        d=1e100.net; s=20230601; t=1715168186; x=1715772986;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oM+WuwVvF178uIr+5Dc8IcJyYSbzDoUf3sQGwgQ7LEI=;
+        b=N8FfPeJcRhmXM22eA9xB0wtyKbZHF0+S9aSD8Ngw2p1z7jmvGS+2L8jRUSfELdXcI7
+         Ealx4UzkoC+WdYY0OzolXLsdPX0shCzgqsZQxqd8U26yr3YPR99TC+BSpCfa7o2uqKCK
+         UWlA2R81+hoNy5FFu+guFWr8fCWtao+QC9A0RD9DGk3SwSadrXXhCeVqJoNHdVCyCylo
+         lJZKrklJFzC/RG72XZZonZS7KGUCbF8iMwmbA6tTEoL+V/BN1rplWqY0LUX9w8a8Zz2S
+         3AmCIpHGu1llnJGFJSJ8C+4sPFiEu/czjG3R1gQj4VHg3nr5AI02QKg9TpGoFyW9GJQ7
+         JvWg==
+X-Forwarded-Encrypted: i=1; AJvYcCWZNzPs8HaMhF10MSdfOI2F1PA5bmKP+jZlPzgs6Hys7QizxOs3dcUAoB7B0WLStcNX0AUbcEm8pZ7yxHGzqkvWWr2eRHZzE0gBitto
+X-Gm-Message-State: AOJu0YzmMSYX/p2e/M9aZRYDgyEe2EmjIZpiT4RHcs1lw4B8yhr7sL4O
+	rpHtk4ERMOKVg8xxCPSmV861LR47AXemfWyZJKxof10VXuE7MQxuHBotn05naP4=
+X-Google-Smtp-Source: AGHT+IHVO5vcmWKipbJIGDQ+CDJ8RhNP/JYjB5jDnNbYNNxR9pALzbWj/fP/sjh1jhNLJi0qhKSTGw==
+X-Received: by 2002:a05:6000:508:b0:34c:77bd:2545 with SMTP id ffacd0b85a97d-34fca810737mr1911157f8f.70.1715168186464;
+        Wed, 08 May 2024 04:36:26 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id dn15-20020a0560000c0f00b0034d9012e74bsm15283014wrb.72.2024.05.08.04.36.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 04:36:26 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-mm@kvack.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH RESEND v2 2/9] riscv: Safely remove huge_pte_offset() when manipulating NAPOT ptes
+Date: Wed,  8 May 2024 13:34:12 +0200
+Message-Id: <20240508113419.18620-3-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240508113419.18620-1-alexghiti@rivosinc.com>
+References: <20240508113419.18620-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v8 02/14] net: page_pool: create hooks for
- custom page providers
-To: Jason Gunthorpe <jgg@ziepe.ca>, Mina Almasry <almasrymina@google.com>,
- Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-alpha@vger.kernel.org, linux-mips@vger.kernel.org,
- linux-parisc@vger.kernel.org, sparclinux@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Amritha Nambiar <amritha.nambiar@intel.com>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Alexander Mikhalitsyn <alexander@mihalicyn.com>,
- Kaiyuan Zhang <kaiyuanz@google.com>, Christian Brauner <brauner@kernel.org>,
- Simon Horman <horms@kernel.org>, David Howells <dhowells@redhat.com>,
- Florian Westphal <fw@strlen.de>, Yunsheng Lin <linyunsheng@huawei.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>,
- Arseniy Krasnov <avkrasnov@salutedevices.com>,
- Aleksander Lobakin <aleksander.lobakin@intel.com>,
- Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Richard Gobert <richardbgobert@gmail.com>,
- Sridhar Samudrala <sridhar.samudrala@intel.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Johannes Berg <johannes.berg@intel.com>, Abel Wu <wuyun.abel@bytedance.com>,
- Breno Leitao <leitao@debian.org>, David Wei <dw@davidwei.uk>,
- Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
-References: <ZjjHUh1eINPg1wkn@infradead.org>
- <20b1c2d9-0b37-414c-b348-89684c0c0998@gmail.com>
- <20240507161857.GA4718@ziepe.ca> <ZjpVfPqGNfE5N4bl@infradead.org>
- <CAHS8izPH+sRLSiZ7vbrNtRdHrFEf8XQ61XAyHuxRSL9Jjy8YbQ@mail.gmail.com>
- <20240507164838.GG4718@ziepe.ca>
- <0d5da361-cc7b-46e9-a635-9a7a4c208444@gmail.com>
- <20240507175644.GJ4718@ziepe.ca>
- <6a50d01a-b5b9-4699-9d58-94e5f8f81c13@gmail.com>
- <20240507233247.GK4718@ziepe.ca> <Zjsm3vO6rIY_sw5A@phenom.ffwll.local>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <Zjsm3vO6rIY_sw5A@phenom.ffwll.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/8/24 08:16, Daniel Vetter wrote:
-> On Tue, May 07, 2024 at 08:32:47PM -0300, Jason Gunthorpe wrote:
->> On Tue, May 07, 2024 at 08:35:37PM +0100, Pavel Begunkov wrote:
->>> On 5/7/24 18:56, Jason Gunthorpe wrote:
->>>> On Tue, May 07, 2024 at 06:25:52PM +0100, Pavel Begunkov wrote:
->>>>> On 5/7/24 17:48, Jason Gunthorpe wrote:
->>>>>> On Tue, May 07, 2024 at 09:42:05AM -0700, Mina Almasry wrote:
->>>>>>
->>>>>>> 1. Align with devmem TCP to use udmabuf for your io_uring memory. I
->>>>>>> think in the past you said it's a uapi you don't link but in the face
->>>>>>> of this pushback you may want to reconsider.
->>>>>>
->>>>>> dmabuf does not force a uapi, you can acquire your pages however you
->>>>>> want and wrap them up in a dmabuf. No uapi at all.
->>>>>>
->>>>>> The point is that dmabuf already provides ops that do basically what
->>>>>> is needed here. We don't need ops calling ops just because dmabuf's
->>>>>> ops are not understsood or not perfect. Fixup dmabuf.
->>>>>
->>>>> Those ops, for example, are used to efficiently return used buffers
->>>>> back to the kernel, which is uapi, I don't see how dmabuf can be
->>>>> fixed up to cover it.
->>>>
->>>> Sure, but that doesn't mean you can't use dma buf for the other parts
->>>> of the flow. The per-page lifetime is a different topic than the
->>>> refcounting and access of the entire bulk of memory.
->>>
->>> Ok, so if we're leaving uapi (and ops) and keep per page/sub-buffer as
->>> is, the rest is resolving uptr -> pages, and passing it to page pool in
->>> a convenient to page pool format (net_iov).
->>
->> I'm not going to pretend to know about page pool details, but dmabuf
->> is the way to get the bulk of pages into a pool within the net stack's
->> allocator and keep that bulk properly refcounted while.
->>
->> An object like dmabuf is needed for the general case because there are
->> not going to be per-page references or otherwise available.
->>
->> What you seem to want is to alter how the actual allocation flow works
->> from that bulk of memory and delay the free. It seems like a different
->> topic to me, and honestly hacking into the allocator free function
->> seems a bit weird..
-> 
-> Also I don't see how it's an argument against dma-buf as the interface for
+The pte_t pointer is expected to point to the first entry of the NAPOT
+mapping so no need to use huge_pte_offset(), similarly to what is done
+in arm64.
 
-It's not, neither I said it is, but it is an argument against removing
-the network's page pool ops.
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/riscv/mm/hugetlbpage.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-> all these, because e.g. ttm internally does have a page pool because
-> depending upon allocator, that's indeed beneficial. Other drm drivers have
-> more buffer-based concepts for opportunistically memory around, usually
-> by marking buffers that are just kept as cache as purgeable (which is a
-> concept that goes all the way to opengl/vulkan).
-
-Because in this case it solves nothing and helps with nothing, quite
-the opposite. Just as well we can ask why NVMe doesn't wrap user pages
-into a dmabuf while doing IO.
-
-> But these are all internals of the dma-buf exporter, the dma-buf api users
-> don't ever need to care.
-> -Sima
-
+diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
+index fe8067ee71b4..f042f5c8bdb7 100644
+--- a/arch/riscv/mm/hugetlbpage.c
++++ b/arch/riscv/mm/hugetlbpage.c
+@@ -274,7 +274,6 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 		return ptep_set_access_flags(vma, addr, ptep, pte, dirty);
+ 
+ 	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
+-	ptep = huge_pte_offset(mm, addr, pte_num * pgsize);
+ 
+ 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
+ 
+@@ -319,10 +318,8 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 	}
+ 
+ 	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
+-	ptep = huge_pte_offset(mm, addr, pte_num * pgsize);
+ 
+ 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
+-
+ 	orig_pte = pte_wrprotect(orig_pte);
+ 
+ 	set_ptes(mm, addr, ptep, orig_pte, pte_num);
 -- 
-Pavel Begunkov
+2.39.2
+
