@@ -1,85 +1,89 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12C3C128396;
-	Wed,  8 May 2024 16:21:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80837128801;
+	Wed,  8 May 2024 16:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715185285; cv=none; b=tFc9I8R+Z3Bfc5YP55QApji9/ExtikdRgp+8evr+oFkfMk0eMa3XQ7YhyOsGpPY3qGj1IUMd4IM8WteVm+/GiFyF1tSCMLtr6mMd0lVSQfxL13gRVuWgWlBkYu8VRxKytFfJMZ5KT45EAZhIuatVgSOM/AvvDVI5V0Cj4azCJj8=
+	t=1715185321; cv=none; b=RrGh8bvIkbaFdRKbW0rcbKyjgJw+ZI4MML56AR3m3tdGK/lVBji2tDuUwTq5u5aOCHix0LIhdYm0tTMg07AOjyWxuErP7sA5HbX63a+sMWTLuQ+R0mN5JHvm0jaAgqlnR3tvK2KSmvUAcl0me3N/ri+lSIQE0T3qXhP3QZG/+KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715185285; c=relaxed/simple;
-	bh=5QNOGdMJ/e8elnH9GXwxtWVSpRGUAu8yyndSDA/XBGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CsIan4kkYKHDkCjSSjlko5mPIZhBdvqRcnS7OjOp4BbB/WMbmmiLdO1SVP1E4yi9FO1gUs3PnXylSNPVDM2taqT7CQLgC1CT/VC4YJrq4FVN25M7enczaHoX27YSPkZ5BHt8HillHkrPzkyHZLEDezdG7xJVrCuexCB3Z7N/8Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.97.1)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1s4k2e-000000003Ks-1aM4;
-	Wed, 08 May 2024 16:21:16 +0000
-Date: Wed, 8 May 2024 17:21:11 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: SkyLake Huang =?utf-8?B?KOm7g+WVn+a+pCk=?= <SkyLake.Huang@mediatek.com>,
-	"linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"kuba@kernel.org" <kuba@kernel.org>,
-	"pabeni@redhat.com" <pabeni@redhat.com>,
-	"edumazet@google.com" <edumazet@google.com>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"dqfext@gmail.com" <dqfext@gmail.com>,
-	Steven Liu =?utf-8?B?KOWKieS6uuixqik=?= <steven.liu@mediatek.com>,
-	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-	"davem@davemloft.net" <davem@davemloft.net>,
-	"hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-	"angelogioacchino.delregno@collabora.com" <angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH 3/3] net: phy: mediatek: add support for built-in 2.5G
- ethernet PHY on MT7988
-Message-ID: <Zjumd3bnZDu9LYGH@makrotopia.org>
-References: <20240425023325.15586-1-SkyLake.Huang@mediatek.com>
- <20240425023325.15586-4-SkyLake.Huang@mediatek.com>
- <ZiocBmBWiNnbeyGq@shell.armlinux.org.uk>
- <4ccd437ee744382a8483ffe71d06cd495dacec71.camel@mediatek.com>
- <577176af-9f6c-45f9-824f-2b4ca762b2f7@lunn.ch>
+	s=arc-20240116; t=1715185321; c=relaxed/simple;
+	bh=IPjypEyMF7w+4uwKDEkSvt83JFezjeRn0o6vAzqV3ts=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=dDjZVoY/n5s/7s4glquoqrPgIpTe9TWWsuDucCZPPYjc3SOg8ZkUCBguD9ZpeUfxZIkoUQEsLvNs68Z6bNLtrHVgEGXbkvnnfxPhmzx/A13i2AZh4kcg1H5TKmDYYuL7G3UMZF1PxVjQIDTdZQY0veq08yYHL/SPrMIg/W3wJvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kGAB3kMv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kGAB3kMv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E89BFC113CC;
+	Wed,  8 May 2024 16:22:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715185321;
+	bh=IPjypEyMF7w+4uwKDEkSvt83JFezjeRn0o6vAzqV3ts=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=kGAB3kMvDmYyuyDaT9XRqZMjch9CKO4IMFzWBNCDEzNj9Ox3clK2m9d4UjETQeUJj
+	 3A2Bw0/bCVf0VTWINo+PdezJvyN8XIxdeV735h4GeMa8M1mtMfMX3MY3QvqYtAnk1o
+	 jwDi4vRiufXXNVIz9sYbgFIhgk+IJGFANwOPCAgBbg527LumeGIuQeVUbsqXuOfdqi
+	 xeXSSDggklcIisApSoZJfvchy2bl4g7NpP0diMWSUaGDEM46TEdi596fZQczdGnh2d
+	 jJR8uqPC7dUssmARO5c0rfa8XQwjWJ6Lv8xJvIekiP3xP7WRY6E0sX7SQfelpBcYWF
+	 Ts3HUJPdfiEAQ==
+Date: Wed, 8 May 2024 11:21:59 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI: Make pcie_bandwidth_capable() static
+Message-ID: <20240508162159.GA1769860@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <577176af-9f6c-45f9-824f-2b4ca762b2f7@lunn.ch>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240507121758.13849-1-ilpo.jarvinen@linux.intel.com>
 
-On Wed, May 08, 2024 at 02:30:21PM +0200, Andrew Lunn wrote:
-> > I'm not sure I really get this. MT7988's internal 2.5Gphy is built
-> > inside SoC. We won't have a number of these PHYs.
+On Tue, May 07, 2024 at 03:17:58PM +0300, Ilpo Järvinen wrote:
+> pcie_bandwidth_capable() is only used within pci.c, make it static.
 > 
-> How long does firmware download take? If you are holding RTNL you are
-> blocking all other network configuration. How many Ethernets does this
-> device have? If it is just one, it is not too bad, but if there is a
-> built in switch, you cannot be configuring that switch at the same
-> time firmware download is happening...
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
-The MT7988 SoC has a bunch of network interfaces:
+Applied to pci/misc for v6.10, thanks!
 
- - GMAC0 is typically connected as conduit to a 4-port MT7530-like DSA
-   switch offering 4 1GE user ports. PHY driver mediatek-ge-soc.c takes
-   care of those, and yes, they do need some "care"...
-
- - GMAC1 can be used with the internal 2.5GE PHY (ie. with the driver
-   discussed here) OR for to connect an external PHY or SFP via
-   1000Base-X, 2500Base-X, SGMII, 5GBase-R, 10GBase-R or USXGMII.
-
- - GMAC2 is can only be used with an external PHY or SFP using
-   1000Base-X, 2500Base-X, SGMII, 5GBase-R, 10GBase-R or USXGMII.
-
-So while there is only exactly one of the internal 2.5GE PHY there are
-many other network interfaces on that same SoC.
-
-I hope that clarifies things a bit.
+> ---
+>  drivers/pci/pci.c | 4 ++--
+>  drivers/pci/pci.h | 2 --
+>  2 files changed, 2 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e5f243dd4288..23fb5d6c25b0 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6065,8 +6065,8 @@ EXPORT_SYMBOL(pcie_get_width_cap);
+>   * and width, multiplying them, and applying encoding overhead.  The result
+>   * is in Mb/s, i.e., megabits/second of raw bandwidth.
+>   */
+> -u32 pcie_bandwidth_capable(struct pci_dev *dev, enum pci_bus_speed *speed,
+> -			   enum pcie_link_width *width)
+> +static u32 pcie_bandwidth_capable(struct pci_dev *dev, enum pci_bus_speed *speed,
+> +				  enum pcie_link_width *width)
+>  {
+>  	*speed = pcie_get_speed_cap(dev);
+>  	*width = pcie_get_width_cap(dev);
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 17fed1846847..fd44565c4756 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -293,8 +293,6 @@ void pci_bus_put(struct pci_bus *bus);
+>  const char *pci_speed_string(enum pci_bus_speed speed);
+>  enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
+>  enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
+> -u32 pcie_bandwidth_capable(struct pci_dev *dev, enum pci_bus_speed *speed,
+> -			   enum pcie_link_width *width);
+>  void __pcie_print_link_status(struct pci_dev *dev, bool verbose);
+>  void pcie_report_downtraining(struct pci_dev *dev);
+>  void pcie_update_link_speed(struct pci_bus *bus, u16 link_status);
+> -- 
+> 2.39.2
+> 
