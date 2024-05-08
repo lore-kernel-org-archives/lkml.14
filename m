@@ -1,87 +1,123 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5178F132816;
-	Wed,  8 May 2024 22:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E953213340E;
+	Wed,  8 May 2024 22:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715207378; cv=none; b=NSPc7gN0fuS6Kjga9jVZC0b/cgLakxoSc9LU5BQdUYErqtSgYkh845gpa+FCwsBMpEp7IBf5+7W62GDxdAx4MztPuppfKeYZcoEC/oSNe8UqWMfUObignInI1TAI/DgiOt2fgY6k/JMfkmVPpzlQ4jfBGCMHMSIEfg0McaMyrf0=
+	t=1715207391; cv=none; b=aeo0D32PKS+wy9P8kr6ovH1cJOQlbN4espE71o26+qxWnFIwYLtlUeMuhpykiGRhnnUsJnugBR9VDUqGpeQO0qpEn6FOvCUOMFMuSXMDyB757T489UzsT5AU1huuuTx2+6i7RTipYFZvFe+/LR/Dvyohh4Hx7qwGZr+DJ5FTeUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715207378; c=relaxed/simple;
-	bh=8CFE89KQ1YCyvoNxJkTNQ2HS3pGySrvPKIrTF4hkP6Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MJHJ8C3UlIDOPdkfrhRTd4gdwKKCCUJXFXagB/A6MOkQKNxHQiJIsc058zFU4qPI1bOWlIviusRO7lHweh1eP9tkXpWTEhZrSD6BFuSQ7CedmoTo9f4ihL2polrt4jHIRtGlMMYz3UYfLM2rG2p9YH4GIW5SJu5pV+wiCKd6Uqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=FEtckNfX; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1715207391; c=relaxed/simple;
+	bh=FzJBgrQxIdNzOxQOHuhjRfbO74jsiRprQUNagdrkAaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MInjMlLVG9FdGLdkgxQtLQdyKoKzcDSfHV+X16+X0rtoNRf1tdAkHYvnnVmV8QOhfXvbAMt0OyZ9e87mEem7Y2MF5Qmg97927zVLzxgAuQa5KqgBc0k70QULD8ROVhSKJJ8FOayebbEkjCPJXX9EDEC7fScxLc6/X5WGBQuYOtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d8tD27Us; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FEtckNfX"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d8tD27Us"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Eb6h6lYO2Xj8IhPPKAoLKWE2vlA1ySJ+zUASlEJjoTU=; b=FEtckNfXCagMhx2pYvdo/RZKvJ
-	p+XTKA9wWiv4JnepfK8na49y4qvgRBuV6gu5VwTbHIpxtKv11fbkIu7CX4pNltuQG/kZ/9PDV9+RY
-	Pr9J9yyKsf91exZwtiK/iCuSFt8RoyQEQbBCpTT5NGnLlKv5RFuhq9b5DJxE0T2kt9037o8S9a7qs
-	zrVodNGW4wdEeB2S+N4Bx/2ZOhH44sveIZxPly0jFcPNMz7WbqGOXLf6/uOAs9pW1SVOa2fL4dXWE
-	kcXbOhFdYl7bUh0HLakR2Kdqn9TYuUehFv6e/eVHGZTvHg1MqQ331GwS2qHKP6gCpk+u5EsCsIbMD
-	yTWc6/Rw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:48902)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1s4pmv-0005h2-1q;
-	Wed, 08 May 2024 23:29:25 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1s4pmu-0001hI-UL; Wed, 08 May 2024 23:29:24 +0100
-Date: Wed, 8 May 2024 23:29:24 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Sam Protsenko <semen.protsenko@linaro.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	Naresh Kamboju <naresh.kamboju@linaro.org>,
-	linux-clk <linux-clk@vger.kernel.org>, lkft-triage@lists.linaro.org,
-	open list <linux-kernel@vger.kernel.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: clkdev: report over-sized strings when creating clkdev entries
-Message-ID: <Zjv8xBXcRnfShpvf@shell.armlinux.org.uk>
-References: <CA+G9fYuZd_ur56H8fwDSvUywopvn_b7ogprGkjEatQ7EPTLwYQ@mail.gmail.com>
- <11be44d3-0f32-49c6-b4ae-ba97a9f97763@app.fastmail.com>
- <820ddc2ec70780ae1ecd3af864dc8bd6.sboyd@kernel.org>
- <CAPLW+4=D_31Fy_W_7+_ko22y9_-8rZ9Logh6KyW8UPM3q58J0A@mail.gmail.com>
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=d6XhmtyByC67AvaiaMru39DJYEvRdT178Mi2caB30As=; b=d8tD27Usvg00XgSFQM+NPLWPb2
+	H580GLyvv8UpISBdrNnFqZw8uq7BmCDzdRVb3hTTjAa1zvLLVY3r+theec7SMIORmGqGiPDKoDrrW
+	rQ1ggvRwkXJa+jfgVl2OVVIL2I/xWRUsGfrvRFQBn1ZcfdzpdcvaABUKHNtXkikzrgvYk17hjxo72
+	cmmaWM0izaQlC6wpy01HAxzXSsMR7jBomGSDC4Mo5bbmRbEWXPBHx2rrQpbUuAPN2Fyk1JGkoNQju
+	EETZzYJReBw22RRvI4iuFFkaMBPQ0y8yWU9lbuxxmR0CASGv8oNeGqfC44XFpgejANGjt6nnGisNL
+	W1w4EwNg==;
+Received: from [50.53.4.147] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s4pnG-0000000H9uo-43cd;
+	Wed, 08 May 2024 22:29:47 +0000
+Message-ID: <c1f1b699-71ad-409a-a843-afe42640626a@infradead.org>
+Date: Wed, 8 May 2024 15:29:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPLW+4=D_31Fy_W_7+_ko22y9_-8rZ9Logh6KyW8UPM3q58J0A@mail.gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] docs: Add advanced extended IRQ model description
+To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, siyanteng@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240507122228.5288-1-zhangtianyang@loongson.cn>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240507122228.5288-1-zhangtianyang@loongson.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 08, 2024 at 04:07:57PM -0500, Sam Protsenko wrote:
-> The patch [1] ("clk: samsung: Don't register clkdev lookup for the
-> fixed rate clocks") fixes those. I think both have to be applied ASAP.
-> In case of E850-96, I guess [1] is more critical.
+Hi--
 
-The fixes to clkdev.c have been pushed out for a while now, so I think
-you may need to update your tree. There's been one more fix to it more
-recently (because of the whole va_copy() debacle).
+On 5/7/24 5:22 AM, Tianyang Zhang wrote:
+> From 3C6000, Loongarch began to support advanced extended
+> interrupt mode, in which each CPU has an independent interrupt
+> vector number.This will enhance the architecture's ability
+> to support modern devices
+> 
+> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+> ---
+>  .../arch/loongarch/irq-chip-model.rst         | 33 +++++++++++++++++
+>  .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 +++++++++++++++++--
+>  2 files changed, 67 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
+> index 7988f4192363..79228741d1b9 100644
+> --- a/Documentation/arch/loongarch/irq-chip-model.rst
+> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
+> @@ -85,6 +85,39 @@ to CPUINTC directly::
+>      | Devices |
+>      +---------+
+>  
+> +Advanced Extended IRQ model
+> +=======================
 
-Whether linux-next picks up the latest version depends when they pull
-in relation to me pushing the changes out, which can take 48 hours
-due to the timezone differences. linux-next tends not to pick stuff
-up quickly if one's in the UK and pushes stuff out in the late
-afternoon/evening. That said, the NULL fix has been pushed out for
-a few days now.
+The === underline line needs to be at least as long as the line above it.
 
+> +
+> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
+> +to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, MSI interrupts go to AVEC,
+> +and then go to CPUINTC, Other devices interrupts go to PCH-PIC/PCH-LPC and gathered
+
+                  CPUINTC.
+
+> +by EIOINTC, and then go to CPUINTC directly::
+> +
+> + +-----+     +--------------------------+     +-------+
+> + | IPI | --> |           CPUINTC        | <-- | Timer |
+> + +-----+     +--------------------------+     +-------+
+> +              ^        ^             ^
+> +              |        |             |
+> +      +--------+  +---------+ +---------+     +-------+
+> +      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
+> +      +--------+  +---------+ +---------+     +-------+
+> +           ^            ^
+> +           |            |
+> +         +---------+  +---------+
+> +         |   MSI   |  | PCH-PIC |
+> +         +---------+  +---------+
+> +            ^          ^       ^
+> +            |          |       |
+> +    +---------+ +---------+ +---------+
+> +    | Devices | | PCH-LPC | | Devices |
+> +    +---------+ +---------+ +---------+
+> +                     ^
+> +                     |
+> +                +---------+
+> +                | Devices |
+> +                +---------+
+> +
+> +
+>  ACPI-related definitions
+>  ========================
+>  
+
+thanks.
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
