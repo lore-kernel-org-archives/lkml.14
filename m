@@ -1,133 +1,110 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0D155E58
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 12:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 250281863C;
+	Wed,  8 May 2024 12:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715171651; cv=none; b=bMFA5dgs56/0akX5CWvlEvRhuhGkHMRqOAtN9xppGAYBj1uPzwcHmzT0UfRZcEaoHSJbd3VE4trVNVM2NtXwiaEkbIe2ukrZC1RTNJfHI/ngMfoi2j//g/48o7IiaF6qooNpQcqkuR3gYvqoySv7R11HQDKe0pGcACE2b1jAYtw=
+	t=1715171713; cv=none; b=o9y6h/oNwM9EM3NKnECOFPICeUlHySmTbYXii5OFlsD2qDWUkOg7rQTnAtbrBw3ayiC33xywWX0q9GVSjzFF/VWJcwa5j1SRVJNnJDTDoUnUgDARNCKclEvjkbB+NXFqyGCy6oA1mb8gmRQwMBIbnXojpSZkVd97keuDXRDTibs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715171651; c=relaxed/simple;
-	bh=DiF+oR2Mfi2GH39WI0QdXSCh3Dt7vn1cAK3BuRqWzvs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SgPOd3LSyUgUH0ZIxMwph+1hlQMCeOxjtRizs/nc1Hfy+eleZarmOXkHZSGVxK97ZXmIZC86u8uiStJV1muudMHHr+TkkdBroiDQZSYi+XBs+uuJBXNe3fLOI8e7F2y/wAdWlLC1hyO1uSpQX1WCJ4Vgup4OroYuO05Eyjoie6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Ft47RNiP; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1715171713; c=relaxed/simple;
+	bh=i2JLkQ5wqYLV4moBdZnxKtMAd2an5huS7pmMXcoLDiA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PKi4pWRKVG/rX4H7WweA0j31D/S2VP+TCflPLalLA8qXoPS8r6RtcEaiPjFJU3HKdE5lGwKH8N8wcSiR5S/i3OLVVFXPmf4GUhfighHvZmcF9vHuFQfD91bp8S28OGJPlzW8DeDN8wXYuujPG1HZ4YcwtLTKEsCmYc5jduooTPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FGZ18gdJ; arc=none smtp.client-ip=209.85.167.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Ft47RNiP"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1715171644; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=yw11G1gLE8iNd8Cfpyqtd9XhzkVzZPbalt0cTW63xQw=;
-	b=Ft47RNiPD34fR71qxFw7ts0MS5rRhSftdwBPPuCtGHJ6+JNaXgaZY2RkmCwfMh0lJdXRelC0QC1Tt5xfz+uHErfUhyrpgqCtE2OGT1sK8wk+24EBi+I247Kq/YtVhNj2Zu5cuOizcmRYfSSxVa1RqA4M7hT+ammpeVghtep8eZY=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R611e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032014031;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0W63ZZzu_1715171638;
-Received: from x31i01179.sqa.na131.tbsite.net(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W63ZZzu_1715171638)
-          by smtp.aliyun-inc.com;
-          Wed, 08 May 2024 20:34:03 +0800
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-To: linux-erofs@lists.ozlabs.org
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	Chao Yu <chao@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>
-Subject: [PATCH] erofs: clean up z_erofs_load_full_lcluster()
-Date: Wed,  8 May 2024 20:33:57 +0800
-Message-Id: <20240508123357.3266173-1-hsiangkao@linux.alibaba.com>
-X-Mailer: git-send-email 2.39.3
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGZ18gdJ"
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-51f45104ef0so4679569e87.3;
+        Wed, 08 May 2024 05:35:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715171710; x=1715776510; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=AGqJENKGu2VDw1JweApXY7Cnx0SgkltEUbGukf+76pw=;
+        b=FGZ18gdJ/SAGTTsqWoU8XSnnqP+YjWXvazdqI3jkPGbfzQ+yApaMyd6MabtEWBP3Hv
+         QIlTezCX3QPm9Z4fAAyYxei3JU9q9gfnGzCM1oCTuwxGxaTLdu4FDvyjUEXKhOy4X5io
+         RBZZ/aImoqMdHdtCgqjGL0yNrqukxsZqEl4LaxVTekBGsMBHqjh/DlttsTTDYfupQMXQ
+         V1+lfneGoxGN8vOlygxrSkm1+WYew4uMr6QnCBgwjVQfBcxKp2Ebc7t1ZoZEhyDveDTP
+         URHBe88Y8xmwWjFfe1hlFl/RnfWOUrSj1+v7zYpfNM0tA/6jD27eikrs0F+lDpHFrb4W
+         XYwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715171710; x=1715776510;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AGqJENKGu2VDw1JweApXY7Cnx0SgkltEUbGukf+76pw=;
+        b=ObUWbU6p6IXJGh5qyaQeTHLpBqfBFh7+Mi8exP09eNmLiI887wk0AkWC1B9knuAwXF
+         a50sYCg072NLzQAJuqh0mGkXbD3Ly/Kkg/CNAwpQ6YMXwjeHDrEp+L1uZ7AMZKasahkk
+         laFupF45LJkLpuAjNbKLflFIg0G5mkAH2cAn+Sm0qPAXBqxwA645HdOpRhmsNNHpmLHF
+         gissLBrmQE8k5NHsXgxuHtGCaMnR33yiA/b7y+BdaQtlnfrYcPdqRQ2a2HFuqZkuHrHV
+         10khfL41UkL/XzRkp8gEPfkxdPw9/fHEXYK9ZbLXqZ9DJE0QbfSEk6xy661WR7rAOYQg
+         QFqg==
+X-Forwarded-Encrypted: i=1; AJvYcCXsMUDPBTdSq6ScgXzB9LjzxBnDNweaqyeQaHkj6ywlP7ARxE779/dRua8pBVsdLxN2JcYbwSLS78Fny/9x803M4w6dcOmstbUOEop8bYj5iKhV9NV6V6FSV2uBWxtrJYe93cmf
+X-Gm-Message-State: AOJu0YxYYqx8xMmwFv4EsWJ5AUZRbHMEE3bToN8q0juGxw9bPVpx/m/2
+	rrveJ9jLuLLVqCLk6RxYdobvXUYajrPUk+w5uR+YrjfGb5NQD6jCsM0oTiv2
+X-Google-Smtp-Source: AGHT+IGEhgoz0oL9QWFm1uMJ3wjDKHCYFTJDY7pYc8SqD9sY6qgDMaPrAs6eZsiz9jKDcFCAfaIogw==
+X-Received: by 2002:ac2:4c2b:0:b0:51e:11d5:bcaa with SMTP id 2adb3069b0e04-5217c56e432mr1461968e87.39.1715171709955;
+        Wed, 08 May 2024 05:35:09 -0700 (PDT)
+Received: from [130.235.83.196] (nieman.control.lth.se. [130.235.83.196])
+        by smtp.gmail.com with ESMTPSA id b2-20020a056512060200b0051f0225e0a4sm2492021lfe.227.2024.05.08.05.35.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 08 May 2024 05:35:09 -0700 (PDT)
+Message-ID: <b57f8ede-5de6-4d3d-96a0-d2fdc6c31174@gmail.com>
+Date: Wed, 8 May 2024 14:35:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Regression] 6.9.0: WARNING: workqueue: WQ_MEM_RECLAIM
+ ttm:ttm_bo_delayed_delete [ttm] is flushing !WQ_MEM_RECLAIM
+ events:qxl_gc_work [qxl]
+To: Linux regressions mailing list <regressions@lists.linux.dev>,
+ David Wang <00107082@163.com>
+Cc: airlied@gmail.com, airlied@redhat.com, daniel@ffwll.ch,
+ dreaming.about.electric.sheep@gmail.com, dri-devel@lists.freedesktop.org,
+ kraxel@redhat.com, linux-kernel@vger.kernel.org,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+ spice-devel@lists.freedesktop.org, tzimmermann@suse.de,
+ virtualization@lists.linux.dev, stable@vger.kernel.org
+References: <20240430061337.764633-1-00107082@163.com>
+ <20240506143003.4855-1-00107082@163.com>
+ <ac41c761-27c9-48c3-bd80-d94d4db291e8@leemhuis.info>
+Content-Language: en-US
+From: Anders Blomdell <anders.blomdell@gmail.com>
+In-Reply-To: <ac41c761-27c9-48c3-bd80-d94d4db291e8@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Only four lcluster types here, remove redundant code.
-No real logic changes.
 
-Signed-off-by: Gao Xiang <hsiangkao@linux.alibaba.com>
----
-Some random cleanup out of the upcoming big lclusters..
 
- fs/erofs/erofs_fs.h |  5 +----
- fs/erofs/zmap.c     | 21 +++++----------------
- 2 files changed, 6 insertions(+), 20 deletions(-)
+On 2024-05-07 07:04, Linux regression tracking (Thorsten Leemhuis) wrote:
+> 
+> 
+> On 06.05.24 16:30, David Wang wrote:
+>>> On 30.04.24 08:13, David Wang wrote:
+> 
+>>> And confirmed that the warning is caused by
+>>> 07ed11afb68d94eadd4ffc082b97c2331307c5ea and reverting it can fix.
+>>
+>> The kernel warning still shows up in 6.9.0-rc7.
+>> (I think 4 high load processes on a 2-Core VM could easily trigger the kernel warning.)
+> 
+> Thx for the report. Linus just reverted the commit 07ed11afb68 you
+> mentioned in your initial mail (I put that quote in again, see above):
+> 
+> 3628e0383dd349 ("Reapply "drm/qxl: simplify qxl_fence_wait"")
+> https://git.kernel.org/torvalds/c/3628e0383dd349f02f882e612ab6184e4bb3dc10
+> 
+> So this hopefully should be history now.
+> 
+> Ciao, Thorsten
+> 
+Since this affects the 6.8 series (6.8.7 and onwards), I made a CC to stable@vger.kernel.org
 
-diff --git a/fs/erofs/erofs_fs.h b/fs/erofs/erofs_fs.h
-index 4bc11602aac8..6c0c270c42e1 100644
---- a/fs/erofs/erofs_fs.h
-+++ b/fs/erofs/erofs_fs.h
-@@ -406,8 +406,7 @@ enum {
- 	Z_EROFS_LCLUSTER_TYPE_MAX
- };
- 
--#define Z_EROFS_LI_LCLUSTER_TYPE_BITS        2
--#define Z_EROFS_LI_LCLUSTER_TYPE_BIT         0
-+#define Z_EROFS_LI_LCLUSTER_TYPE_MASK	(Z_EROFS_LCLUSTER_TYPE_MAX - 1)
- 
- /* (noncompact only, HEAD) This pcluster refers to partial decompressed data */
- #define Z_EROFS_LI_PARTIAL_REF		(1 << 15)
-@@ -461,8 +460,6 @@ static inline void erofs_check_ondisk_layout_definitions(void)
- 		     sizeof(struct z_erofs_lcluster_index));
- 	BUILD_BUG_ON(sizeof(struct erofs_deviceslot) != 128);
- 
--	BUILD_BUG_ON(BIT(Z_EROFS_LI_LCLUSTER_TYPE_BITS) <
--		     Z_EROFS_LCLUSTER_TYPE_MAX - 1);
- 	/* exclude old compiler versions like gcc 7.5.0 */
- 	BUILD_BUG_ON(__builtin_constant_p(fmh) ?
- 		     fmh != cpu_to_le64(1ULL << 63) : 0);
-diff --git a/fs/erofs/zmap.c b/fs/erofs/zmap.c
-index e313c936351d..26637a60eba5 100644
---- a/fs/erofs/zmap.c
-+++ b/fs/erofs/zmap.c
-@@ -31,7 +31,7 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
- 			vi->inode_isize + vi->xattr_isize) +
- 			lcn * sizeof(struct z_erofs_lcluster_index);
- 	struct z_erofs_lcluster_index *di;
--	unsigned int advise, type;
-+	unsigned int advise;
- 
- 	m->kaddr = erofs_read_metabuf(&m->map->buf, inode->i_sb,
- 				      erofs_blknr(inode->i_sb, pos), EROFS_KMAP);
-@@ -43,10 +43,8 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
- 	di = m->kaddr + erofs_blkoff(inode->i_sb, pos);
- 
- 	advise = le16_to_cpu(di->di_advise);
--	type = (advise >> Z_EROFS_LI_LCLUSTER_TYPE_BIT) &
--		((1 << Z_EROFS_LI_LCLUSTER_TYPE_BITS) - 1);
--	switch (type) {
--	case Z_EROFS_LCLUSTER_TYPE_NONHEAD:
-+	m->type = advise & Z_EROFS_LI_LCLUSTER_TYPE_MASK;
-+	if (m->type == Z_EROFS_LCLUSTER_TYPE_NONHEAD) {
- 		m->clusterofs = 1 << vi->z_logical_clusterbits;
- 		m->delta[0] = le16_to_cpu(di->di_u.delta[0]);
- 		if (m->delta[0] & Z_EROFS_LI_D0_CBLKCNT) {
-@@ -60,24 +58,15 @@ static int z_erofs_load_full_lcluster(struct z_erofs_maprecorder *m,
- 			m->delta[0] = 1;
- 		}
- 		m->delta[1] = le16_to_cpu(di->di_u.delta[1]);
--		break;
--	case Z_EROFS_LCLUSTER_TYPE_PLAIN:
--	case Z_EROFS_LCLUSTER_TYPE_HEAD1:
--	case Z_EROFS_LCLUSTER_TYPE_HEAD2:
--		if (advise & Z_EROFS_LI_PARTIAL_REF)
--			m->partialref = true;
-+	} else {
-+		m->partialref = !!(advise & Z_EROFS_LI_PARTIAL_REF);
- 		m->clusterofs = le16_to_cpu(di->di_clusterofs);
- 		if (m->clusterofs >= 1 << vi->z_logical_clusterbits) {
- 			DBG_BUGON(1);
- 			return -EFSCORRUPTED;
- 		}
- 		m->pblk = le32_to_cpu(di->di_u.blkaddr);
--		break;
--	default:
--		DBG_BUGON(1);
--		return -EOPNOTSUPP;
- 	}
--	m->type = type;
- 	return 0;
- }
- 
--- 
-2.39.3
-
+/Anders
