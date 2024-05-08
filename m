@@ -1,105 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F00228383;
-	Wed,  8 May 2024 07:55:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796332BB09
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 07:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715154917; cv=none; b=F4FOreH9Cr6PwYB2wha3byneUTfm+eIK9III7+C4JkknnI3iSBsKTapp0AIiIJ44OX3OktXN53YZmUkFrLs3ZaMe/8qlOVlYMLiYIFqK5SPmoZh8zGWeNNI+edhD50YT3dmol4zlXYu7YOsyaROqKS5sVl+Q6UCW5Wq8XoiD0vg=
+	t=1715155030; cv=none; b=sT2nRO/Br4WTKRd0QO4I9dbwX6Ytah2tVuFpLmQu4ji+1gXuuDgg0XbBC2ecJRnCCdwxQsBxFUzR/OSfJCcc2XFHqykixcpv8u+JU1zzxpQBAN3p0dFlEACqAars7pIloJaDZdKYAEj0Tpz+9Nuk+sK/o3sJDYtjuJ9tY2rWsGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715154917; c=relaxed/simple;
-	bh=YrROZEGTXJ5Na3vZ1OgfXZMfsvJsndhnGWoVmoGD1fE=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=YB68aZs39s0JU423lRJvSt74ziLjyKFPlmvgPMAU9i60aSYUzzABBbU0Z0NMBTdEk457UvQp45X1xKMXkz/OKRwirKjeqxn/1DYgUyBEp2iydhh2gr62Zk54cbEXjbK3jU/tQQxxckCM9GEXqgSbI9cBVn9PsLrxh1fOhrE3jQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G86IK9I3; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715155030; c=relaxed/simple;
+	bh=V/YjDIQfRp2l7miiRrx3Z5IZQokNP9VXtuvlvHRlYG4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XrtqhQYYnrsK3AXpE4gfTJS8sTFbHPtsHqa5Y5HYaponh4IGxeV1f82sVj5UGHahhoDGtz5oRhMszdkvGzWdWawR6/4ELDRH/ANKzzkKoHZycQLx7IRr84G/DM1H1zLKiIPGUNCEmbdcMdja1+YmMb8Q94YMx6PjqVjn2ReS4MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YYwh1J3n; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G86IK9I3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715154916; x=1746690916;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=YrROZEGTXJ5Na3vZ1OgfXZMfsvJsndhnGWoVmoGD1fE=;
-  b=G86IK9I30KZcdNT7/Yz5mvE8urgzlawIHbC15mRM4uNqrkVGcEFKs7Ka
-   FpvCofZdtHpf5wV2MpyU3p11Qw56QfJtYvqqQlO2hzYyC83FX/GQFzOdn
-   3l7APYocoXyMPd3qYZDptInnmJf10+xJLd4Zyo3DDFKiQ2ojJLdwVXmCP
-   J5foiqP5/acsgua6w932hhfCB0zJvCMiznv056IFAuiTXm0ZPIfJ3eqa0
-   Sl//EesSmJv61zUeU7joAx2xAAkgrCeTgNViSc1Bqxf6hw0PZ8TwoGls2
-   5T1okcPCBmnaoudVfh9TyW1NVKGjOR2fdotHFayTLwIs8Op3zYX3gnmVz
-   g==;
-X-CSE-ConnectionGUID: 5HeRvp3ATHKLvwfxgWGwlg==
-X-CSE-MsgGUID: 3tVgoquiSqKjAFHsu5V7zQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="10867375"
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="10867375"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 00:55:15 -0700
-X-CSE-ConnectionGUID: nIvYSU2mSQKcdsyUT5oGzw==
-X-CSE-MsgGUID: kqiuqbQCTcSp8uQkIlFagQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="33494143"
-Received: from ijarvine-desk1.ger.corp.intel.com (HELO localhost) ([10.245.247.80])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 00:55:12 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 8 May 2024 10:55:07 +0300 (EEST)
-To: "Dr. David Alan Gilbert" <linux@treblig.org>
-cc: bhelgaas@google.com, dave.hansen@linux.intel.com, x86@kernel.org, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] x86: ce4100: Remove unused struct 'sim_reg_op'
-In-Reply-To: <20240507232348.46677-1-linux@treblig.org>
-Message-ID: <8a3efad2-8e65-5ba4-573c-4fb041bf675b@linux.intel.com>
-References: <20240507232348.46677-1-linux@treblig.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YYwh1J3n"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715155028;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V/YjDIQfRp2l7miiRrx3Z5IZQokNP9VXtuvlvHRlYG4=;
+	b=YYwh1J3nqrx1onSt4KlfD7Hnz2cbp0K7apfC+vNwKMkMVbWmDN2Xznj99ZB+V8l9ODI35Y
+	PoSCwmb893YGracuv7zrWq/56zGxqOd/y4llDRuVIvR+Bt9+TOdkSMMA9SxpDURgF3mr9s
+	L0sww24/lCHft64i3GZ2yQ2ZQndoyB0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-402-9zIbIx_RPi2zsftI5GvHzw-1; Wed, 08 May 2024 03:57:04 -0400
+X-MC-Unique: 9zIbIx_RPi2zsftI5GvHzw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6DAAA800262;
+	Wed,  8 May 2024 07:57:03 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.39.193.44])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id E6CE57414;
+	Wed,  8 May 2024 07:56:59 +0000 (UTC)
+From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
+To: yongqin.liu@linaro.org
+Cc: amit.pundir@linaro.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	inventor500@vivaldi.net,
+	jarkko.palviainen@gmail.com,
+	jstultz@google.com,
+	jtornosm@redhat.com,
+	kuba@kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org,
+	pabeni@redhat.com,
+	stable@vger.kernel.org,
+	sumit.semwal@linaro.org,
+	vadim.fedorenko@linux.dev,
+	vmartensson@google.com
+Subject: Re: [PATCH v2] net: usb: ax88179_178a: avoid writing the mac address before first reading
+Date: Wed,  8 May 2024 09:56:54 +0200
+Message-ID: <20240508075658.7164-1-jtornosm@redhat.com>
+In-Reply-To: <CAMSo37UN11V8UeDM4cyD+iXyRR1Us53a00e34wTy+zP6vx935A@mail.gmail.com>
+References: <CAMSo37UN11V8UeDM4cyD+iXyRR1Us53a00e34wTy+zP6vx935A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1989487649-1715154864=:3164"
-Content-ID: <cab851e2-067e-3290-0970-8adbffef36a3@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hello Yongqin,
 
---8323328-1989487649-1715154864=:3164
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <4773f2f7-b4b1-5e0f-d133-313ae9fbffb4@linux.intel.com>
+Sorry for the inconveniences.
 
-On Wed, 8 May 2024, linux@treblig.org wrote:
+I don't have the db845c, could you provide information about the type of
+device and protocol used?
+Related driver logs would be very helpful for this.
 
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
->=20
-> struct 'sim_reg_op' doesn't look like it was ever used.
-> Remove it.
->=20
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> ---
->  arch/x86/pci/ce4100.c | 6 ------
->  1 file changed, 6 deletions(-)
->=20
-> diff --git a/arch/x86/pci/ce4100.c b/arch/x86/pci/ce4100.c
-> index 87313701f069e..f5dbd25651e0f 100644
-> --- a/arch/x86/pci/ce4100.c
-> +++ b/arch/x86/pci/ce4100.c
-> @@ -35,12 +35,6 @@ struct sim_dev_reg {
->  =09struct sim_reg sim_reg;
->  };
-> =20
-> -struct sim_reg_op {
-> -=09void (*init)(struct sim_dev_reg *reg);
-> -=09void (*read)(struct sim_dev_reg *reg, u32 value);
-> -=09void (*write)(struct sim_dev_reg *reg, u32 value);
-> -};
-> -
+Best regards
+José Ignacio
 
-Thanks.
-
-Reviewed-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-
---=20
- i.
---8323328-1989487649-1715154864=:3164--
