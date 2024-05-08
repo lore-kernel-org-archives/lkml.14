@@ -1,200 +1,95 @@
-Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2551DFE8;
-	Wed,  8 May 2024 09:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F898757FF;
+	Wed,  8 May 2024 09:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715161344; cv=none; b=onh4ycT5O1FzqKlEST2ACBpnllUtzV3czkBJCKfN35r3iUwxukXkaFx0SV3uua0UWD5HdDLlWYWU3fu/ynwXNBkTo1Y2MX3ykzOxwr/LRP55fCwS4I3PtCYizc/eQX3OJbr7yuSaC6c8bMgy5wKxp4E+TeM+kMcqD8vUP3NSJhQ=
+	t=1715161374; cv=none; b=D+D3NI34tCvpsnKNnbqq3qAdDdtygqaWGbnLNVad8ANXF8KEtteHp0xyJRJqSZT0uuF+2X/sS+WgIOoK5QH/xNxLVm3ykWlniaJ624KMvsPrUeVE8rz5eGjKzGZToybrZe6bJV9tVwYob3AvzZJJ3iv1o+lL/Y3+gZQrLjpxjcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715161344; c=relaxed/simple;
-	bh=tpHBLYwWAXWzFJOiiqPNurkj4onSKHEuQPtc+N0ukQ0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VfsK94TT9j5ZRhedqF6cA9oH7BBYdpCz2sa6Kk0C2kLLE807oDrwRa3dQqRPnapBSS9DmhLxJXhLl1xz9mwflCxe5uRtNPvGt2sM5LLqFK2FHlwHmfZv6UCH1xY2SB/k5ZoNnHJoewpYNijrWP04YpUpGeB+OJuB2FACaFjBWeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=C1WtybD9; arc=none smtp.client-ip=199.247.17.104
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="C1WtybD9"
-Received: from spock.localnet (unknown [94.142.239.106])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	by prime.voidband.net (Postfix) with ESMTPSA id BE1EC62DD101;
-	Wed, 08 May 2024 11:34:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
-	s=dkim-20170712; t=1715160896;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ITaU40SFRGKxHYojpCSGh4eL/ryxiwlKRxY2NrN5Zus=;
-	b=C1WtybD9FCqWeBqrKKxR6GaNxYDNixDpsr8122tNc9qjBkBxdK5+OZSBm8d/iIzRSScW8I
-	aZ2o+kiJy0d3sa3ZgBToBB5vwIe5Hk6WobBHabirTBFjky7OBc17eYz9MGPXAM4RJWnTP+
-	avQsxBdHVgLbQwRtbyM8GLhENTKHRek=
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-To: rafael.j.wysocki@intel.com, Mario.Limonciello@amd.com,
- viresh.kumar@linaro.org, Ray.Huang@amd.com, gautham.shenoy@amd.com,
- Borislav.Petkov@amd.com, Perry Yuan <perry.yuan@amd.com>
-Cc: Alexander.Deucher@amd.com, Xinmei.Huang@amd.com, Xiaojian.Du@amd.com,
- Li.Meng@amd.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject:
- Re: [PATCH v10 6/7] cpufreq: amd-pstate: introduce per CPU frequency boost
- control
-Date: Wed, 08 May 2024 11:34:21 +0200
-Message-ID: <12430678.O9o76ZdvQC@natalenko.name>
-In-Reply-To:
- <49204c6d4a334c0bfbc589dda79b5cd7c4c28b7c.1715152592.git.perry.yuan@amd.com>
-References:
- <cover.1715152592.git.perry.yuan@amd.com>
- <49204c6d4a334c0bfbc589dda79b5cd7c4c28b7c.1715152592.git.perry.yuan@amd.com>
+	s=arc-20240116; t=1715161374; c=relaxed/simple;
+	bh=YHhb3E66PGlQl+ORWKOgBzytmosAOuM1TfPsevoH4HQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=pNVhwPNozauyvTKDYNlZvPHoTN9AFHHEEkuKvysxRA8VGvpcD0MXn7wOanNTFH/L5eHHNfAZLaAYvfP9wkyKSY3yhe1L63b3nM4faqX61gRIh5zPFA4CsHcc78B+MbQAPlLnMAuOJRJj0xRrlEj9/huEgI2kxII0COUwA6LCkyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VZ9DM2lFHz4f3kKj;
+	Wed,  8 May 2024 17:42:43 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id AE2D11A016E;
+	Wed,  8 May 2024 17:42:48 +0800 (CST)
+Received: from [10.174.176.117] (unknown [10.174.176.117])
+	by APP1 (Coremail) with SMTP id cCh0CgDHmBEXSTtmpt9aMA--.1934S2;
+	Wed, 08 May 2024 17:42:48 +0800 (CST)
+Subject: Re: WARNING in fuse_request_end
+To: Miklos Szeredi <miklos@szeredi.hu>
+Cc: lee bruce <xrivendell7@gmail.com>, linux-fsdevel@vger.kernel.org,
+ yue sun <samsun1006219@gmail.com>, linux-kernel@vger.kernel.org,
+ syzkaller@googlegroups.com
+References: <CABOYnLwAe+hVUNe+bsYeKJJQ-G9svs7dR2ymZDh0PsfqFNMm2A@mail.gmail.com>
+ <2625b40f-b6c5-2359-33fe-5c81e9a925a9@huaweicloud.com>
+ <CAJfpegvGhtLSxOHUQQ95a3skqEgEPt+MzpBT8vOOdqWcRxPR5Q@mail.gmail.com>
+From: Hou Tao <houtao@huaweicloud.com>
+Message-ID: <58f13e47-4765-fce4-daf4-dffcc5ae2330@huaweicloud.com>
+Date: Wed, 8 May 2024 17:42:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5776929.DvuYhMxLoT";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
-
---nextPart5776929.DvuYhMxLoT
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Oleksandr Natalenko <oleksandr@natalenko.name>
-Date: Wed, 08 May 2024 11:34:21 +0200
-Message-ID: <12430678.O9o76ZdvQC@natalenko.name>
-MIME-Version: 1.0
-
-Hello.
-
-On st=C5=99eda 8. kv=C4=9Btna 2024 9:21:11, SEL=C4=8C Perry Yuan wrote:
-> Add a new sysfs attribute file to support per CPU frequency boost
-> control, allowing individual CPUs to enable or disable CPB separately.
->=20
-> The new sysfs attribute file is located at below path,
-> `/sys/devices/system/cpu/cpuX/cpufreq/boost`,
-> where `X` represents the CPU number.
->=20
-> To disable CPB for a specific CPU, you can use the following command:
-> $ sudo bash -c "echo 0 > /sys/devices/system/cpu/cpuX/cpufreq/boost"
->=20
-> After disabling CPB, the CPU frequency will no longer boost beyond
-> the base frequency for that particular CPU.
->=20
-> for example:
-> ----------------------------------------------------------------------
-> CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ       MHZ
->   0    0      0    0 0:0:0:0          yes 4208.0000 400.0000 1666.7740
->   1    0      0    0 0:0:0:0          yes 4208.0000 400.0000  400.0000
->=20
-> ----------------------------------------------------------------------
-> $ sudo bash -c "echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/boost"
->=20
-> CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ       MHZ
->   0    0      0    0 0:0:0:0          yes 3501.0000 400.0000 4154.3140
->   1    0      0    0 0:0:0:0          yes 4208.0000 400.0000  400.0000
->=20
-> Please be aware that modifying the global variable
-> `amd_pstate_global_params.cpb_boost` will overwrite the individual CPU se=
-ttings.
->=20
-> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
-> ---
->  drivers/cpufreq/amd-pstate.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->=20
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index 11bce2c1db32..cb0055e7c842 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -1371,6 +1371,30 @@ static int amd_pstate_cpu_boost(int cpu, bool stat=
-e)
->  	return ret < 0 ? ret : 0;
->  }
-> =20
-> +static ssize_t show_boost(struct cpufreq_policy *policy, char *buf)
-> +{
-> +	struct amd_cpudata *cpudata =3D policy->driver_data;
-> +	bool boost_val;
-> +
-> +	boost_val =3D READ_ONCE(cpudata->boost_state);
-> +
-> +	return sysfs_emit(buf, "%u\n", boost_val);
-> +}
-> +
-> +static ssize_t store_boost(
-> +		struct cpufreq_policy *policy, const char *buf, size_t count)
-> +{
-> +	bool boost_val;
-> +	int ret;
-> +
-> +	if (sscanf(buf, "%d", &boost_val) !=3D 1)
-
-This will generate warning. IIUC, sscanf() doesn't work with booleans direc=
-tly, so you'd probably want to read the value into an (unsigned) integer, a=
-nd then cast it to bool.
-
-> +		return -EINVAL;
-> +
-> +	ret =3D amd_pstate_cpu_boost(policy->cpu, boost_val);
-> +
-> +	return ret < 0 ? ret : count;
-> +}
-> +
->  static ssize_t cpb_boost_show(struct device *dev,
->  			   struct device_attribute *attr, char *buf)
->  {
-> @@ -1416,6 +1440,7 @@ cpufreq_freq_attr_ro(amd_pstate_prefcore_ranking);
->  cpufreq_freq_attr_ro(amd_pstate_hw_prefcore);
->  cpufreq_freq_attr_rw(energy_performance_preference);
->  cpufreq_freq_attr_ro(energy_performance_available_preferences);
-> +cpufreq_freq_attr_rw(boost);
->  static DEVICE_ATTR_RW(status);
->  static DEVICE_ATTR_RO(prefcore);
->  static DEVICE_ATTR_RW(cpb_boost);
-> @@ -1426,6 +1451,7 @@ static struct freq_attr *amd_pstate_attr[] =3D {
->  	&amd_pstate_highest_perf,
->  	&amd_pstate_prefcore_ranking,
->  	&amd_pstate_hw_prefcore,
-> +	&boost,
->  	NULL,
->  };
-> =20
-> @@ -1437,6 +1463,7 @@ static struct freq_attr *amd_pstate_epp_attr[] =3D {
->  	&amd_pstate_hw_prefcore,
->  	&energy_performance_preference,
->  	&energy_performance_available_preferences,
-> +	&boost,
->  	NULL,
->  };
-> =20
->=20
+In-Reply-To: <CAJfpegvGhtLSxOHUQQ95a3skqEgEPt+MzpBT8vOOdqWcRxPR5Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID:cCh0CgDHmBEXSTtmpt9aMA--.1934S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw18Cw17ZF1kCF4DArWrXwb_yoWxtFg_ur
+	47uryvkF15Jr18uFWrtF1rKr98AFWkA3Z7WwsrAFy3AayUZ3yxZryYvr1rGr43Gw45JFn5
+	u3s8ua98KFyYgjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbzAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
+	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
+	k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUzsqWUUUUU
+X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
 
-=2D-=20
-Oleksandr Natalenko (post-factum)
---nextPart5776929.DvuYhMxLoT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
 
------BEGIN PGP SIGNATURE-----
+On 5/8/2024 4:21 PM, Miklos Szeredi wrote:
+> On Tue, 7 May 2024 at 15:30, Hou Tao <houtao@huaweicloud.com> wrote:
+>
+>> diff --git a/fs/fuse/dev.c b/fs/fuse/dev.c
+>> index 3ec8bb5e68ff5..840cefdf24e26 100644
+>> --- a/fs/fuse/dev.c
+>> +++ b/fs/fuse/dev.c
+>> @@ -1814,6 +1814,7 @@ static void fuse_resend(struct fuse_conn *fc)
+>>
+>>         list_for_each_entry_safe(req, next, &to_queue, list) {
+>>                 __set_bit(FR_PENDING, &req->flags);
+>> +               clear_bit(FR_SENT, &req->flags);
+>>                 /* mark the request as resend request */
+>>                 req->in.h.unique |= FUSE_UNIQUE_RESEND;
+>>         }
+>>
+> ACK, fix looks good.
+>
+> Would you mind resending it as a proper patch?
 
-iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmY7Rx0ACgkQil/iNcg8
-M0sozhAAwBKs7R6wasSZh5RwWS9z9V5g2aOMfwlMXNbXWMxVHZsq8E/rncUtUJ5b
-jjjvAYGBFcW4Z+5WWU8OTQr82MpTiXfPs7A5lSz6vbrkuF2dGfWPdrXFmA1xv1Nw
-SrDjQSNkzB7U3/wUFjADu5yyaORBMRrCGCl6CktG4Cnoe6pRi1tLndNqPjp7xiHm
-blZJTNvs7V7KV2tTpMPYgPKAadkuMfEURI7grBqe0kfy8r1z6HHQmkJVHCfoa3RF
-oHiwFcBBZJ3bAUG2ps/V8dsNcStYWvgDQHuKMO1ZGwvx0L3JMhY8hKFIzb92i2El
-51u9zAa81QZEnEr4BjvqRIdRuH+4QkQ07gXjsmfxQwGmhJgpGTlqUoHBLUXNyD6U
-QZpfWsltaKpLf3ilhc/OTXclHe4eg3/hMhNUNTCg1ThKKgSRG/QCLE3vS80F2tdL
-Vc1RehzmUdFfxLPN+6In+w+i9eQqzrKelXME1NGOoETKyLtxu4UvUOxw+Ux8/jTD
-Dh9mRRFAaeiPuKnH+Eu7X1dCoCZ9flByhOJKABZO9Q3LQ3bvNUzJHEHVDsSmiKZ0
-2a0FkEuC/kRwUnr1rARFjHzxoFZh94gMewyqCCehgAH1iB4dYNzHZHkDXJi1z/dD
-IrwctWnfVHmwTLQmx7u/4qXoTwvoxAyf4QDvhcZIlq4D5CYz1g0=
-=SI1r
------END PGP SIGNATURE-----
-
---nextPart5776929.DvuYhMxLoT--
-
-
+Thanks for the ACK. Will post it.
+>
+> Thanks,
+> Miklos
+>
+> .
 
