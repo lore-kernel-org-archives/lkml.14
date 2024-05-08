@@ -1,129 +1,112 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0F0C22324;
-	Wed,  8 May 2024 06:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1612815E88;
+	Wed,  8 May 2024 06:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715149294; cv=none; b=ZM5nd2hrQrzy0KDCt1052sahT6QNfzfHQTCCoIE5SevLuU8ewD+RxpRSH1+g5ieYoRkl1T/Oen8wZp8gQUK3qyeYKOJ4ZouosM/OucRp5FVZP9/7VvMpBy1phDBY7+g29+w6AfMIwzFn0cBPoR4iLiJXxVuWr0TFZDe29Neh8Uw=
+	t=1715149365; cv=none; b=kZyF2i4azMujFZgK8uFF29NScQdBFFX5LdpOlL+o4hvhzaPUTjFjIN/aIcT7nEwRHFado8VKCAFC7mvQAsvPVyn3LpyRJ73NURtFjCDwSDYkdr6TBSxkIZyLftQ1fUa9sal1AP+ldO2I/DZL5DEVyhop6HL3s01MPsXIoTdjXaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715149294; c=relaxed/simple;
-	bh=koB9KjRCACYqvO5zQYyzJJVHaA/xr3oY+TisVzeadio=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KnsAXIXN1+OgRr7ks0lDHbWhhBvjrfDZrpSgOdbV2FQXiSgH1V3YqtcBLzXP2BsL5mWQ4VvS+aYTP4RLZZ0+wKRHskz4j6yhx/W8eZE1x9CWXRFMlHeGlDdKpkrezyuLTuh7E0VLfrYxFw+kjFkhiY/kKkBAmyVZByMRGIxRi6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eDDk2Gc6; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eDDk2Gc6"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4485fOw2022330;
-	Wed, 8 May 2024 06:21:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=S59UCkcML8LZV3YRENrW3zpbmlTqLI7XVn7wkHOw4Kw=; b=eD
-	Dk2Gc6K/n8eB8+HO3Z4pWDEwJRlxS9b/6dt/YNTm6aG494xosT/XdpH62Ggaxqmt
-	oDF0eDP7DS0UXb8JAbJjMrnB2Tv/6V4oakxoqdbw/wVWk/lwoqFbFdy9wSVvrVwI
-	Zf5LyvXBWYZg2iTDipMgnwYQqtIVmAMA2qgzTgBYwVnVGgZNsANth1a+T1CSbKuk
-	zUlko9r2/nso20OMaCRJIXMj0VTzTTyMMbhAnrVUjk9kPthuJhPpIVnZA3KXVHoN
-	tTqvQ+TfwCkUx/Y6/Nx0S+ch54+zLHlNFYiokUid6w2p1yGUWqVjvAr+mUCfK04X
-	hD5y1sy0GgXh1mVAJTSg==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xyste12p0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 May 2024 06:21:28 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4486LR6O009667
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 8 May 2024 06:21:27 GMT
-Received: from [10.217.216.47] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 7 May 2024
- 23:21:21 -0700
-Message-ID: <fc1e0745-a226-4be4-9b08-379c81396a7e@quicinc.com>
-Date: Wed, 8 May 2024 11:51:04 +0530
+	s=arc-20240116; t=1715149365; c=relaxed/simple;
+	bh=jdmUxbzlHSWTfdmP9jgdk7cyaKCSoH9U3c70PqabuME=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Sfc06YCvNwgTZG8CddOsYR5P7tidL54MPJTqyFO9J+cm4ONNh9dGDJTNz0pFM+OpvEjLfPdsN/x4OBJuDh3B1fMFLY+ljDk/OXsAg4Djxrvt4rg8+mQ2r0Q+AuY/3EAbH0NBZlJ0zvypJfYmxXSTGHIaJ1SCTBqXMqtntyGv8e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VZ4nK4WwJz4f3m7g;
+	Wed,  8 May 2024 14:22:29 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 7509D1A0FC1;
+	Wed,  8 May 2024 14:22:39 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAX6REbGjtm9_1NMA--.61952S7;
+	Wed, 08 May 2024 14:22:39 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-ext4@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz,
+	ritesh.list@gmail.com,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com
+Subject: [PATCH v3 03/10] ext4: warn if delalloc counters are not zero on inactive
+Date: Wed,  8 May 2024 14:12:13 +0800
+Message-Id: <20240508061220.967970-4-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240508061220.967970-1-yi.zhang@huaweicloud.com>
+References: <20240508061220.967970-1-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/8] dt-bindings: clock: qcom: Fix SM8450 videocc
- incorrect header file name
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen
- Boyd" <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        "Vladimir
- Zapolskiy" <vladimir.zapolskiy@linaro.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Taniya Das
-	<quic_tdas@quicinc.com>,
-        Satya Priya Kakitapalli <quic_skakitap@quicinc.com>,
-        Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>
-References: <20240430142757.16872-1-quic_jkona@quicinc.com>
- <20240430142757.16872-2-quic_jkona@quicinc.com>
- <3951a7ea-b469-42dc-8240-a5c593bc536f@linaro.org>
-Content-Language: en-US
-From: Jagadeesh Kona <quic_jkona@quicinc.com>
-In-Reply-To: <3951a7ea-b469-42dc-8240-a5c593bc536f@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9iI8pudK4sYzzSV4ASYdvZeui-EJ4Gzj
-X-Proofpoint-ORIG-GUID: 9iI8pudK4sYzzSV4ASYdvZeui-EJ4Gzj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-08_02,2024-05-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 mlxscore=0 bulkscore=0 clxscore=1015
- mlxlogscore=998 spamscore=0 adultscore=0 suspectscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405010000
- definitions=main-2405080045
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAX6REbGjtm9_1NMA--.61952S7
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr4UZFyDAFW7Kw4UXr4rGrg_yoW8XF47p3
+	srA3W8GF95WrykGan7Xw47Xr10ga1xKF48Gr4xWr1UZF98Ja4Sqr1UtFy5C3WjgrZ3Ar4F
+	qa4rKr17uFyUG37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBE14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v2
+	6r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2
+	Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_
+	Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMI
+	IF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUCXdbUUUUU
+	=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
+From: Zhang Yi <yi.zhang@huawei.com>
 
+The per-inode i_reserved_data_blocks count the reserved delalloc blocks
+in a regular file, it should be zero when destroying the file. The
+per-fs s_dirtyclusters_counter count all reserved delalloc blocks in a
+filesystem, it also should be zero when umounting the filesystem. Now we
+have only an error message if the i_reserved_data_blocks is not zero,
+which is unable to be simply captured, so add WARN_ON_ONCE to make it
+more visable.
 
-On 5/4/2024 6:15 PM, Krzysztof Kozlowski wrote:
-> On 30/04/2024 16:27, Jagadeesh Kona wrote:
->> Fix incorrect header file name in SM8450 videocc bindings.
->>
->> Fixes: 1e910b2ba0ed ("dt-bindings: clock: qcom: Add SM8450 video clock controller")
->> Signed-off-by: Jagadeesh Kona <quic_jkona@quicinc.com>
->> ---
->>   .../devicetree/bindings/clock/qcom,sm8450-videocc.yaml          | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8450-videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8450-videocc.yaml
->> index bad8f019a8d3..78a1bb5be878 100644
->> --- a/Documentation/devicetree/bindings/clock/qcom,sm8450-videocc.yaml
->> +++ b/Documentation/devicetree/bindings/clock/qcom,sm8450-videocc.yaml
->> @@ -13,7 +13,7 @@ description: |
->>     Qualcomm video clock control module provides the clocks, resets and power
->>     domains on SM8450.
->>   
->> -  See also:: include/dt-bindings/clock/qcom,videocc-sm8450.h
->> +  See also:: include/dt-bindings/clock/qcom,sm8450-videocc.h
-> 
-> Then also s/::/:/. It was a mistake to introduce it.
-> 
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+---
+ fs/ext4/super.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Thanks Krzysztof for your review. Will update this in next series.
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 044135796f2b..440dd54eea25 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -1343,6 +1343,9 @@ static void ext4_put_super(struct super_block *sb)
+ 
+ 	ext4_group_desc_free(sbi);
+ 	ext4_flex_groups_free(sbi);
++
++	WARN_ON_ONCE(!ext4_forced_shutdown(sb) &&
++		     percpu_counter_sum(&sbi->s_dirtyclusters_counter));
+ 	ext4_percpu_param_destroy(sbi);
+ #ifdef CONFIG_QUOTA
+ 	for (int i = 0; i < EXT4_MAXQUOTAS; i++)
+@@ -1473,7 +1476,8 @@ static void ext4_destroy_inode(struct inode *inode)
+ 		dump_stack();
+ 	}
+ 
+-	if (EXT4_I(inode)->i_reserved_data_blocks)
++	if (!ext4_forced_shutdown(inode->i_sb) &&
++	    WARN_ON_ONCE(EXT4_I(inode)->i_reserved_data_blocks))
+ 		ext4_msg(inode->i_sb, KERN_ERR,
+ 			 "Inode %lu (%p): i_reserved_data_blocks (%u) not cleared!",
+ 			 inode->i_ino, EXT4_I(inode),
+-- 
+2.39.2
 
-Thanks,
-Jagadeesh
