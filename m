@@ -1,181 +1,155 @@
-Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 598553EA71;
-	Wed,  8 May 2024 12:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C7342062;
+	Wed,  8 May 2024 12:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715171935; cv=none; b=VO2Kqxl3LZFdBOLBZxWDz0s4EJV+CwQqf/Xwqe5laD+dU+78Lhq514qsR6ov9yM4AzBZhxwfbxRPO2rWYlAA8hLfdS639Ho9BZtVV9Qb+AwpXwvcVY+lICXS/JhyJxeL1O9+dyqoyKlTHnqwEEbhd3WmMz4Oa+1I2LMGt1PS7bw=
+	t=1715172010; cv=none; b=q27iDZ9iTyJ7KR/RcWMM/4G0TKSOgNiC6t/WoddocrDXB6jFJFTUeIN+1MxswrxYi/Xw/FrCF4gqcIO+DIkySAwYTQjVy5H/yk56aPIuVQaHloXiiXZzj43rakJXIzPBoVb0A5tjqJJvN77cShBVFgKaM5tEcD4Br3trf8JSSmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715171935; c=relaxed/simple;
-	bh=YVwXBtQreDx3E3FCTm5s4b7FvBNPm7PsGh/YNI7HFBs=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=hOPoXdfi5e/NX9AJav9qrQjrri2UbTInUTvW2+8tnB6yuJs6D/6xQVslkDX+OuKQeKMXGyBolEEiW2YeFChyF+cb6oVMhjDQ3TPGkJefAxPJKI1lbdl3X58WYqC9Au0ihzMDSh1stNcry7Sw+BDv3TAJUaN8eXS5BiWd4YFB8Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=DxVlZ1Dw; arc=none smtp.client-ip=116.203.91.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
+	s=arc-20240116; t=1715172010; c=relaxed/simple;
+	bh=1vMA+1FxGPIUX0MsOYg2MBJxGNADp4fpRMmfQxXengs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XvTTdd3yAJ1QHTNd8fTFmpzpk3clWoZc/sWVpiJtswH84M/WontwHhFVm+s19LumxPNbHyYz/gEyDO/+1pYNtxSOVcBfrH/ajXd0nb95kqJQ9GhZg8duP5RTZRR6O2aAc2Efji7o5CPVPxNNyRpYvVhcgXLyo4FqFsQkTAdWFQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P/KysQiS; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="DxVlZ1Dw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/KysQiS"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-6f4a817f1e5so488690b3a.2;
+        Wed, 08 May 2024 05:40:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715172007; x=1715776807; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=z67cu76Wcq7ICqFNBw/3kQYlwUX0or8mnSlZrvt4o5I=;
+        b=P/KysQiSNUemZhOuWp3ZPTAxeGugZhWhVAuSXkcI8xuPti7dZn8f0aFHtckPTdj4UB
+         rZsbq1G3AkOO+hGYnS2cfuYp03mpz0ZEBb7wRFOIfT3hijzKoCWPySP1oDjawJf1qEmo
+         4GvTcOjZQkxL6sYb5e7bbQSb6VWYO00WTTR6xvHloeQoIrdNtyJA1PSlW4WBKnH1Znqa
+         QtrgUitRRRh0rO0n+IbYWzrPrkP4ghACWKw6Ntjp73WVAgpiKfbcpbDrKMav4ltnKGkb
+         xh+f9njZlyT5+81fLkJA6jjsIfIXnGHY8Vt2HMRjmT2Igmp7/i4EBYH0y87D27aKzG85
+         wVWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715172007; x=1715776807;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z67cu76Wcq7ICqFNBw/3kQYlwUX0or8mnSlZrvt4o5I=;
+        b=L4chNqgKafj6VMQJteZi5JCTeRYCP1La3U51WSFIaHPyqfzbhOCygyL/8aRcsqtT+C
+         r9KdmHCiqC/TpzYEsbFEZcjwM302iDLnsKx1Mfr3jGz9qHwXePrkWUhWCJaN8O457X6l
+         vMSRWKaKyZWKyVpqj2KcMbZ6iLoPiJV0D0EXAsyo3umHKXWLQG4B6aDRfOzsLszIObsz
+         tMtAXp3mEnZwLbMMsJVF0u5YSGdezOlYdpgeX3Q2ERx5WeVsvlZG0Fze9+lmc9P3iCOT
+         5QTaxpNsHkmJJl3MYiaSZ35osmk95qZUowgxPkjZrCogWPg1tsbCoqEfW6iUkdGA7dHt
+         J+qw==
+X-Forwarded-Encrypted: i=1; AJvYcCVAgjRSbKRhzrXX6FniOe0iGhAKS5/DK/QRpTHeMxJIyzIU99BGLJPfORjiR1FG9pm22enBMCYMWEjzrcKbnKIcDEMtEW5YmywalgkeQlPg9ShEe8xrormUFXU22nnQ2QxmPMCftZJnlO4=
+X-Gm-Message-State: AOJu0YxbU/cwdZ02XG4924ES069z2WHgDHWYXmuhHsaqRn2+eUef5hdk
+	QWAeWPdcig6eqOjpmwuOBMysdQRqL5CBsBOp/HKlmT4AIbhLUUTE
+X-Google-Smtp-Source: AGHT+IFEGhOOBV1ZTJYRr4DLgBCZdFz1cpcM9DEyzw4fbZQHquBbRkpeUIM1eWZ812Z7PpQ5FKAM2g==
+X-Received: by 2002:a05:6a20:9146:b0:1a9:d6e2:66e9 with SMTP id adf61e73a8af0-1afc8d8e5dbmr2724605637.28.1715172007480;
+        Wed, 08 May 2024 05:40:07 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e2-20020a056a0000c200b006eb3c2bde43sm11019014pfj.205.2024.05.08.05.40.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 05:40:06 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 8 May 2024 05:40:05 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Andrei Aldea <andrei1998@gmail.com>
+Cc: jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] HWMon: LM80: Add "support" for Texas Instruments AMC80
+Message-ID: <0d71a8ec-2d14-4937-95f3-04332b7fbb78@roeck-us.net>
+References: <20240508090244.18070-1-andrei1998@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
-	t=1715171930;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BPFkYEBLBu+tpZgMs9SII339kDjPu7h+3QrTJ//DNU0=;
-	b=DxVlZ1Dw2g3w914yY0RHiAhqFnuaZ1sMlaTmkbwpv+/NR4+GS92c09B8RQqbyUZqz2rZrh
-	UnqKAhBbjywxXiyUt8KtliLd/TtPa16AaBgn0WdB/eIjtWklIqaUgf/SkMghdi+7cK1Quj
-	JSsq5MDgny/YPuRGAvDvhjAqznpSqnM4qgCg63QdzF9g2MtEZNKJPUtq6OZnL0Q2NfmMYT
-	7JS2vYermceJj/lGk+39OwnSFix8wF8tbZTsmDRwn0sWE4GRrU7TUQPnXx6o+vrjul2maP
-	PhRBvShJrSj0QGCnMbMhzK+UeA2k90TNYf/Rk/CqtBCbgPoPizotciM5gH3ylw==
-Date: Wed, 08 May 2024 14:38:49 +0200
-From: Dragan Simic <dsimic@manjaro.org>
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Anand Moon <linux.amoon@gmail.com>, Diederik de Haas
- <didi.debian@cknow.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano
- <daniel.lezcano@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Chen-Yu
- Tsai <wens@kernel.org>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/6] arm64: dts: rockchip: enable thermal management on
- all RK3588 boards
-In-Reply-To: <CABjd4YwHGYRrpMFn1uoQMRh3Tp4-py111tZiCGgf7afWxNGXnQ@mail.gmail.com>
-References: <20240506-rk-dts-additions-v4-0-271023ddfd40@gmail.com>
- <20240506-rk-dts-additions-v4-2-271023ddfd40@gmail.com>
- <2543817.5xW6y1K4kI@bagend>
- <CABjd4Yw-JA5=SfcgtVNYZN37hFbqf14Ut1yHTSz1YZiZ3NQ-pw@mail.gmail.com>
- <CANAwSgTU7UF_RaNnVSZR7SehQqC7Eo6D=JqT11gN7jK2diN_Ug@mail.gmail.com>
- <a1fb157c88f420cd85d56edff2a4d85b@manjaro.org>
- <CABjd4YwHGYRrpMFn1uoQMRh3Tp4-py111tZiCGgf7afWxNGXnQ@mail.gmail.com>
-Message-ID: <36ecf59460430bb7267b71c1f49fe123@manjaro.org>
-X-Sender: dsimic@manjaro.org
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Authentication-Results: ORIGINATING;
-	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240508090244.18070-1-andrei1998@gmail.com>
 
-Hello Alexey,
-
-On 2024-05-08 14:30, Alexey Charkov wrote:
-> On Wed, May 8, 2024 at 3:46 PM Dragan Simic <dsimic@manjaro.org> wrote:
->> On 2024-05-08 13:40, Anand Moon wrote:
->> > On Mon, 6 May 2024 at 18:24, Alexey Charkov <alchark@gmail.com> wrote:
->> >> On Mon, May 6, 2024 at 4:29 PM Diederik de Haas
->> >> <didi.debian@cknow.org> wrote:
->> >> > On Monday, 6 May 2024 11:36:33 CEST Alexey Charkov wrote:
->> >> > > This enables the on-chip thermal monitoring sensor (TSADC) on all
->> >> > > RK3588(s) boards that don't have it enabled yet. It provides temperature
->> >> > > monitoring for the SoC and emergency thermal shutdowns, and is thus
->> >> > > important to have in place before CPU DVFS is enabled, as high CPU
->> >> > > operating performance points can overheat the chip quickly in the
->> >> > > absence of thermal management.
->> >> > >
->> >> > > Signed-off-by: Alexey Charkov <alchark@gmail.com>
->> >> > > ---
->> >> > >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts               | 4 ++++
->> >> > >  8 files changed, 32 insertions(+)
->> >> > >
->> >> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
->> >> > > b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts index
->> >> > > b8e15b76a8a6..21e96c212dd8 100644
->> >> > > --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
->> >> > > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
->> >> > > @@ -742,6 +742,10 @@ regulator-state-mem {
->> >> > >       };
->> >> > >  };
->> >> > >
->> >> > > +&tsadc {
->> >> > > +     status = "okay";
->> >> > > +};
->> >> > > +
->> >> > >  &uart2 {
->> >> > >       pinctrl-0 = <&uart2m0_xfer>;
->> >> > >       status = "okay";
->> >> >
->> >> > I built a kernel with v3 of your patch set and someone tested it on a ROCK 5B
->> >> > 'for me' and it had the following line in dmesg:
->> >> >
->> >> > rockchip-thermal fec00000.tsadc: Missing rockchip,grf property
->> >> >
->> >> > I'm guessing that turned up due to enabling tsadc, but (also) in v4 I didn't
->> >> > see a change wrt "rockchip,grf".
->> >> > Should that be done? (asking; I don't know)
->> >>
->> >> I'm getting the same. Neither the mainline TSADC driver [1], nor the
->> >> downstream one [2] seems to use the grf pointer on RK3588 at all. It
->> >> still works in spite of that warning, although I can't see how (or if)
->> >> it configures the reset mechanism without those GRF registers.
->> >>
->> >> Best regards,
->> >> Alexey
->> >>
->> >> [1]
->> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/thermal/rockchip_thermal.c#n818
->> >> [2]
->> >> https://github.com/radxa/kernel/blob/stable-5.10-rock5/drivers/thermal/rockchip_thermal.c#L961
->> >>
->> >
->> > If the following changes fix the warning.
->> >
->> > Checking the Rockchip RK3588 TRM V1.0-Part1-20220309.pdf
->> > PMU1GRF_SOC_CON3 which has tsadc_shut_reset_trigger_en bit
->> > to control the Enable TSADC shut reset trigger for DDR fail safe.
->> >
->> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
->> > b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
->> > index 85c25d5efdad..5490a44e093e 100644
->> > --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
->> > +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
->> > @@ -2662,6 +2662,7 @@ tsadc: tsadc@fec00000 {
->> >                 rockchip,hw-tshut-temp = <120000>;
->> >                 rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU
->> > 1:GPIO */
->> >                 rockchip,hw-tshut-polarity = <0>; /* tshut polarity
->> > 0:LOW 1:HIGH */
->> > +               rockchip,pmu = <&pmu1grf>;
->> >                 pinctrl-0 = <&tsadc_gpio_func>;
->> >                 pinctrl-1 = <&tsadc_shut>;
->> >                 pinctrl-names = "gpio", "otpout";
->> 
->> Basically, the rockchip_thermal driver doesn't use GRF at all on
->> the RK3588(s), so virtually any value specified as "rockchip,pmu"
->> can eliminate the warning.
+On Wed, May 08, 2024 at 04:02:44AM -0500, Andrei Aldea wrote:
+> Add support for AMC80 which is register compatible with LM96080 and a result of TI's acquisition of National Semiconductor
 > 
-> To me, specifying an arbitrary GRF in the device tree just to silence
-> a warning that the current driver emits sounds bad. If the GRF is not
-> needed for TSADC initialization on RK3588, then it should not be in
-> the device tree (and it looks like the case here) - otherwise the
-> device tree ceases to be a truthful description of the hardware.
+Line length. Also, "and a result of TI's acquisition of National
+Semiconductor" is irrelevant.
 
-After thinking a bit more about it, I think you're right.  If the
-rockchip_thermal driver ever gets changed to require use of GRF on
-the RK3588(s), only then adding that property to the DT would be
-the right thing to do.
+> https://www.ti.com/lit/ds/symlink/amc80.pdf
 
-> I'm not sure if we need that "DDR fail safe" logic mentioned in the
-> TRM that Anand quoted, given that neither Rockchip downstream nor
-> current mainline driver implement it, and furthermore none of the
-> other SoC revisions supported by the driver mention it. If we do in
-> fact need it, we should probably first test it along with respective
-> driver code before committing to an upstream DT and thus making it
-> part of the ABI.
+This should be added to the documentation, not to the patch
+description.
+
+The subject should start with "hwmon: (lm80)", and please drop the quotes
+around "support".
+
 > 
-> IMO this is more of a driver issue than a device tree issue: maybe a
-> small patch to demote this warning to an info message would be better?
-> It's harmless anyway.
+> Signed-off-by: Andrei Aldea <andrei1998@gmail.com>
+> ---
+>  drivers/hwmon/Kconfig | 4 ++--
+>  drivers/hwmon/lm80.c  | 6 ++++++
 
-After having second thoughts, I'll see to improve the rockchip_thermal
-driver to emit that warning only when having "rockchip,grf" specified
-is actually needed for the particular Rockchip SoC.  That's how it 
-should
-behave, yelling about the wrong hardware description only when that's
-actually the case.
+Chip description (Documentation/hwmon/lm80.rst) needs to be updated as
+well.
+
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 83945397b6eb..f901ece2ff43 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1446,11 +1446,11 @@ config SENSORS_LM78
+>  	  will be called lm78.
+>  
+>  config SENSORS_LM80
+> -	tristate "National Semiconductor LM80 and LM96080"
+> +	tristate "National Semiconductor LM80, LM96080 and compatibles"
+
+		"National Semiconductor LM80 and compatibles"
+
+>  	depends on I2C
+>  	help
+>  	  If you say yes here you get support for National Semiconductor
+> -	  LM80 and LM96080 sensor chips.
+> +	  LM80, LM96080 and Texas Instruments AMC80 sensor chips.
+>  
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called lm80.
+> diff --git a/drivers/hwmon/lm80.c b/drivers/hwmon/lm80.c
+> index 63c7831bd3e1..0355b9d849be 100644
+> --- a/drivers/hwmon/lm80.c
+> +++ b/drivers/hwmon/lm80.c
+> @@ -573,6 +573,11 @@ static int lm80_detect(struct i2c_client *client, struct i2c_board_info *info)
+>  			return -ENODEV;
+>  
+>  		name = "lm96080";
+> +
+> +	/* Check for  AMC80 version which is register compatible with lm96080 */
+> +	} else if (man_id == 0x80 && dev_id == 0x08) {
+> +		name = "amc80";
+> +
+>  	} else {
+>  		/* Check 6-bit addressing */
+>  		for (i = 0x2a; i <= 0x3d; i++) {
+> @@ -624,6 +629,7 @@ static int lm80_probe(struct i2c_client *client)
+>  static const struct i2c_device_id lm80_id[] = {
+>  	{ "lm80", 0 },
+>  	{ "lm96080", 1 },
+> +	{ "amc80", 2},
+
+The driver_data values are unused and therefore unnecessary.
+
+However, I did not have time to check the chip datasheet to confirm that
+chip specific code is indeed not needed.
+
+Guenter
+
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(i2c, lm80_id);
+> -- 
+> 2.39.3 (Apple Git-146)
+> 
+> 
