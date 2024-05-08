@@ -1,118 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5050186630;
-	Wed,  8 May 2024 14:34:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1E153716F;
+	Wed,  8 May 2024 14:34:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715178878; cv=none; b=j9LWj7Z3H5AlQHVwE2gaEeFyJDPxwL0nc4P8anPxHcNb7BZLkaQK7s3VY9euKZUfOmxcDwxjpjqprVZ/v6TY8Ns6ybLQsloa9iWu+AWQwAxYoBok4Ikl3jpxFzyPu0COJMtAf2Bc03h/Tphg2963DDQTbym/8inUCTL0H+HN6F4=
+	t=1715178878; cv=none; b=iE3NgeoZqXrED2PJqOW84D6l15vNgXY0T41NLdnSpirGFU9NcfktyN8a0pFjQ8mqENIc6AoPNJhDM+0+FqqUiTiUGvY2QT4aCwmKfPEBYp1GDs/1hp2NUXWVknXyVPMuWZY8BEkEdaq5/e51qB+QcBbUQ7xXNDi+NxvNCi5fALk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715178878; c=relaxed/simple;
-	bh=LkpImf7Xtegq1U9a+QMyUfSZIIkF8bJjQH28HZhVga0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pdRCfcv5oTyl47h97jD2+zBB//BWUfyGxzN/JHMRA63zqMzmsd8XXJgp2YOos9gxQPswB5P68PIAr4l16JldOGvZH1fG7pfMjB/Mh/pDzWR7Gxnu+Mg4EKwyAO7detugQjJuMnELoA52vA0vqg+EekQqZepF/prwpffV4LZQ8r8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sb49OlRC; arc=none smtp.client-ip=10.30.226.201
+	bh=L6tUtjjwEalXnyxEbR/SPQOiHRyaF0s5LZSjg+wvO3A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PpPK0MLLZfFGnF2mzvZY546dYhZMdvfnw2tVf9gwmE195alt0M7GI/4WO2DJrMDQPX4fG0TlAOWlFlBLLBSyeAmPt0hLwYaQSuH0pGiE4ZteXKwKqI0vIQ0dzTPGWwWtsUO84dxr4vddgfc5TaIX5okaXHdLrFzvxg+VGxaEJNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=scwWq6c1; arc=none smtp.client-ip=193.104.135.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sb49OlRC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84C1CC32783;
-	Wed,  8 May 2024 14:34:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715178877;
-	bh=LkpImf7Xtegq1U9a+QMyUfSZIIkF8bJjQH28HZhVga0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Sb49OlRC1SeN2Z3yjggk5qbbS+bA9/SmtwkeG/4KATklP+CJdtZ2EXsJCcgoPI19L
-	 u00EsvbrMumHLyBDeGfjvZMtz5Xlg44JC9XWF4fVhkhcfrAawWN9/dNRayNeU7A8OT
-	 IboYGxypuslUkGCdY7BipEsqI0msBln/hKwRHdcFa4Tx65YBxL69IfAmf/9aAdL4SR
-	 stdL30hqMNFSAWipoYsCjisjsHFhc0VipbCbJfw3mKqTPdYnu0R38pxOTljGKceX3t
-	 glP/6q93MgUdFh3SxLtg6Hfa2J2yVvx3E2/bW0omYLgFQk3agx1Qf4+XKmMyv4xZLp
-	 qBNgO1v+I/6oA==
-From: Puranjay Mohan <puranjay@kernel.org>
-To: Alan Stern <stern@rowland.harvard.edu>,
-	Andrea Parri <parri.andrea@gmail.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Jade Alglave <j.alglave@ucl.ac.uk>,
-	Luc Maranget <luc.maranget@inria.fr>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Akira Yokosawa <akiyks@gmail.com>,
-	Daniel Lustig <dlustig@nvidia.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
+	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="scwWq6c1"
+Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
+	by mail1.fiberby.net (Postfix) with ESMTPSA id 80DEF600B1;
+	Wed,  8 May 2024 14:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
+	s=202008; t=1715178869;
+	bh=L6tUtjjwEalXnyxEbR/SPQOiHRyaF0s5LZSjg+wvO3A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=scwWq6c1Pt2/kLdr9IQpdlcytjQsMaV0PJAHX/D8+pczUSCm/GfHJ6yLDcM+kxwJ4
+	 5buAArHU6cA87JtuUekyq4DO8CMZQL/mjhvDqh6aqz1mlt03a00jPERhTtj/WdyfON
+	 Qo5POi2mivtvgNIY2asomaEF7fK65OPb28zgQWhazsAybL2hq9sGUIxrmlYTFelEpo
+	 g5mCflG0Ca3vygMEQ46rMgv0EYTD36vci6tZDBXIKq+a6CYxAaY4LMPmyTLNOwRuhZ
+	 HBJqgUmMFsBHPXLp/NUyZ9t9ZF+ZMsJNephET094UhXvS1A+n7ZGELh235Lz/qzFlg
+	 Mvix4WMeplRxA==
+Received: by x201s (Postfix, from userid 1000)
+	id 9E2FD203E4F; Wed, 08 May 2024 14:34:05 +0000 (UTC)
+From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
+To: netdev@vger.kernel.org
+Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
 	linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org
-Cc: puranjay12@gmail.com
-Subject: [PATCH] tools/memory-model: Add atomic_and()/or()/xor() and add_negative
-Date: Wed,  8 May 2024 14:34:00 +0000
-Message-Id: <20240508143400.36256-1-puranjay@kernel.org>
-X-Mailer: git-send-email 2.40.1
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Manish Chopra <manishc@marvell.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Subject: [PATCH net-next v2 03/14] net: qede: use extack in qede_set_v4_tuple_to_profile()
+Date: Wed,  8 May 2024 14:33:51 +0000
+Message-ID: <20240508143404.95901-4-ast@fiberby.net>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240508143404.95901-1-ast@fiberby.net>
+References: <20240508143404.95901-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Pull-849[1] added the support of '&', '|', and '^' to the herd7 tool's
-atomics operations.
+Convert qede_set_v4_tuple_to_profile() to take extack,
+and drop the edev argument.
 
-Use these in linux-kernel.def to implement atomic_and()/or()/xor() with
-all their ordering variants.
+Convert DP_INFO call to use NL_SET_ERR_MSG_MOD instead.
 
-atomic_add_negative() is already available so add its acquire, release,
-and relaxed ordering variants.
+In calls to qede_set_v4_tuple_to_profile(), use NULL as extack
+for now, until a subsequent patch makes extack available.
 
-[1] https://github.com/herd/herdtools7/pull/849
+Only compile tested.
 
-Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 ---
- tools/memory-model/linux-kernel.def | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ drivers/net/ethernet/qlogic/qede/qede_filter.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/memory-model/linux-kernel.def b/tools/memory-model/linux-kernel.def
-index 88a39601f525..d1f11930ec51 100644
---- a/tools/memory-model/linux-kernel.def
-+++ b/tools/memory-model/linux-kernel.def
-@@ -65,6 +65,9 @@ atomic_set_release(X,V) { smp_store_release(X,V); }
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
+index 0f951d00b10e..6f4c4a5d6c77 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
+@@ -1520,8 +1520,8 @@ static int qede_flow_spec_validate_unused(struct qede_dev *edev,
+ 	return 0;
+ }
  
- atomic_add(V,X) { __atomic_op(X,+,V); }
- atomic_sub(V,X) { __atomic_op(X,-,V); }
-+atomic_and(V,X) { __atomic_op(X,&,V); }
-+atomic_or(V,X)  { __atomic_op(X,|,V); }
-+atomic_xor(V,X) { __atomic_op(X,^,V); }
- atomic_inc(X)   { __atomic_op(X,+,1); }
- atomic_dec(X)   { __atomic_op(X,-,1); }
+-static int qede_set_v4_tuple_to_profile(struct qede_dev *edev,
+-					struct qede_arfs_tuple *t)
++static int qede_set_v4_tuple_to_profile(struct qede_arfs_tuple *t,
++					struct netlink_ext_ack *extack)
+ {
+ 	/* We must have Only 4-tuples/l4 port/src ip/dst ip
+ 	 * as an input.
+@@ -1538,7 +1538,7 @@ static int qede_set_v4_tuple_to_profile(struct qede_dev *edev,
+ 		   t->dst_ipv4 && !t->src_ipv4) {
+ 		t->mode = QED_FILTER_CONFIG_MODE_IP_DEST;
+ 	} else {
+-		DP_INFO(edev, "Invalid N-tuple\n");
++		NL_SET_ERR_MSG_MOD(extack, "Invalid N-tuple");
+ 		return -EOPNOTSUPP;
+ 	}
  
-@@ -77,6 +80,21 @@ atomic_fetch_add_relaxed(V,X) __atomic_fetch_op{once}(X,+,V)
- atomic_fetch_add_acquire(V,X) __atomic_fetch_op{acquire}(X,+,V)
- atomic_fetch_add_release(V,X) __atomic_fetch_op{release}(X,+,V)
+@@ -1779,7 +1779,7 @@ qede_flow_parse_v4_common(struct qede_dev *edev, struct flow_rule *rule,
+ 	if (err)
+ 		return err;
  
-+atomic_fetch_and(V,X) __atomic_fetch_op{mb}(X,&,V)
-+atomic_fetch_and_relaxed(V,X) __atomic_fetch_op{once}(X,&,V)
-+atomic_fetch_and_acquire(V,X) __atomic_fetch_op{acquire}(X,&,V)
-+atomic_fetch_and_release(V,X) __atomic_fetch_op{release}(X,&,V)
-+
-+atomic_fetch_or(V,X) __atomic_fetch_op{mb}(X,|,V)
-+atomic_fetch_or_relaxed(V,X) __atomic_fetch_op{once}(X,|,V)
-+atomic_fetch_or_acquire(V,X) __atomic_fetch_op{acquire}(X,|,V)
-+atomic_fetch_or_release(V,X) __atomic_fetch_op{release}(X,|,V)
-+
-+atomic_fetch_xor(V,X) __atomic_fetch_op{mb}(X,^,V)
-+atomic_fetch_xor_relaxed(V,X) __atomic_fetch_op{once}(X,^,V)
-+atomic_fetch_xor_acquire(V,X) __atomic_fetch_op{acquire}(X,^,V)
-+atomic_fetch_xor_release(V,X) __atomic_fetch_op{release}(X,^,V)
-+
- atomic_inc_return(X) __atomic_op_return{mb}(X,+,1)
- atomic_inc_return_relaxed(X) __atomic_op_return{once}(X,+,1)
- atomic_inc_return_acquire(X) __atomic_op_return{acquire}(X,+,1)
-@@ -117,3 +135,6 @@ atomic_sub_and_test(V,X) __atomic_op_return{mb}(X,-,V) == 0
- atomic_dec_and_test(X)  __atomic_op_return{mb}(X,-,1) == 0
- atomic_inc_and_test(X)  __atomic_op_return{mb}(X,+,1) == 0
- atomic_add_negative(V,X) __atomic_op_return{mb}(X,+,V) < 0
-+atomic_add_negative_relaxed(V,X) __atomic_op_return{once}(X,+,V) < 0
-+atomic_add_negative_acquire(V,X) __atomic_op_return{acquire}(X,+,V) < 0
-+atomic_add_negative_release(V,X) __atomic_op_return{release}(X,+,V) < 0
+-	return qede_set_v4_tuple_to_profile(edev, t);
++	return qede_set_v4_tuple_to_profile(t, NULL);
+ }
+ 
+ static int
 -- 
-2.40.1
+2.43.0
 
