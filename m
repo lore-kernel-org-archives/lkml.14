@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FD327E11E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C2E57E588;
 	Wed,  8 May 2024 10:02:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715162585; cv=none; b=RQIBmmWLAcUeTQBfGqRwPUJbF2zziUMh7krqlKxAzDdmnsEURRGd5rXpJBW4UPjZ0QFX/Xq1ThvB6FdtlL0u487JTQ5PWUgKljYirWRllkChyCnW8dr7vL6JwSuTkk2sg47wtN3Ubq6wg0sgIMvqqcgS0HLdz5cr7DONM8Lv67I=
+	t=1715162585; cv=none; b=hy4XGl52FTPgeidmnmQ+PrQP9yFq6+UggeoZQcVBHwfd3B1MlItHxRXrc64mGW2fmSfDrdeeylX+uGo5IrcQGISyj7vWIY/DUgN+7jNPAX82Cn0u0QGX6fWYryRhO/VRGyax7hxxQLP67jaKDi/vRTAu4fzVedsMvmnZz5dVlpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715162585; c=relaxed/simple;
-	bh=yYyo9J9LbrfncpB2CWVjqJhM6aD/eyXV6B0l1bR9NkI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=bx7MTKAwffy3bd0r14NS5gjJn/kHrpgQEAJsv/SyFg0vvROSxLIDg5q0x3BMYJL8XN2EOqxy0pt3BCEd6yFCLrSbN/ytwk1nQxzPVNm/jea1V4zQ+AF7ID4OVZyxtvOogCdFySjsXspn6lhA3ogHnm7hK76pcD7X88uKCThTuFg=
+	bh=saWe6a3fhc64UJRxzIxNtK20F4aE3vpbQLNILPOmhGU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=IoD3HyTsBZbRbHCkA4tfzYJU4feReT7F2fqbIOiSIZdWJlv9plS30yi6Nb+MRLEBgpaXmV39JgmtrOjcRS3dHM6CvwkVHJDGI/urF8ZXlxy6ZJjWBGgwYd2t+OgAvEb+hVw9U/WQOVsC9EnAi0BUTqgxmeUkvS2ecOLXeLeOb0o=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d85ff70000001748-45-663b4a3836b1
+X-AuditID: a67dfc5b-d85ff70000001748-48-663b4a3a9bc8
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org
 Cc: kernel_team@skhynix.com,
@@ -71,43 +71,43 @@ Cc: kernel_team@skhynix.com,
 	longman@redhat.com,
 	hdanton@sina.com,
 	her0gyugyu@gmail.com
-Subject: [PATCH v14 03/28] dept: Add single event dependency tracker APIs
-Date: Wed,  8 May 2024 18:47:00 +0900
-Message-Id: <20240508094726.35754-4-byungchul@sk.com>
+Subject: [PATCH v14 19/28] dept: Apply timeout consideration to waitqueue wait
+Date: Wed,  8 May 2024 18:47:16 +0900
+Message-Id: <20240508094726.35754-20-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240508094726.35754-1-byungchul@sk.com>
 References: <20240508094726.35754-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSbUxTZxTH9zz3lTs6r5XIFT64dFETDSoG9PgSs8RE74y6RY0f9ANWe7HV
-	gloERWMCUhgW0WrEbpUpINYGqmBrjC+AtaQoELFqVTCUCKljjVC02moFpwXjl5Nfzvn/f58O
-	S8gdVBKryd4n6bKVWgXNkdxwfHXK4tVLM+dfHOXg5LH5EH5fSkJlg40Gz5V6BLZrhRgC7lXw
-	PDKEYPTBQwJMFR4E1f0+Aq619SFoth6h4Yn/J/CGR2horyijoehCAw2PXo9h6D1zCkO9fS10
-	GmswOKODJJgCNJw1FeHY+A9D1FLHgKVgBgxYzQyM9adCe98zCppfzIG/z/XS0NTcTkLbjQEM
-	T25V0tBn+0JBZ9t9Ejwnyym4HKyh4XXEQoAlPMLAY2cVhkZ9TFTy7n8K7pU7MZTUXsXg7bmN
-	oKX0JQa77RkNreEhDA57BQGfLrkRDBwfZqD4WJSBs4XHEZQVnyFB35sOox8r6V8Xi61DI4So
-	d+wXmyNVpNhRI4g3zT5G1Le8YMQqe67osM4WLzQFsFgdClOive4oLdpDpxjRMOzFYrCrixHv
-	/zVKin6vCf+RtJlbppK0mjxJN2/5Vk7tMpqpPc8TD0RM0wuQV25AcazApwldw6+I7/zWYptg
-	mp8ldHdHJziB/1lwlP9LjTPBD3FCbdfKcZ7C/yY8bXzDGBDLkvwMocc4ZXwt49OFPl8n/qac
-	LtQ3Oic0cfxCoWcwiMZZHsvcLjLHqlws85EVzJYg9a0wTbhr7SaNSFaFfqhDck12XpZSo02b
-	q87P1hyYu313lh3FXslyeGzLDRTybHAhnkWKeJkzcUmmnFLm5eRnuZDAEooEmfvPRZlymUqZ
-	f1DS7c7Q5WqlHBdKZklFomxBZL9Kzu9Q7pN2SdIeSff9itm4pAKkTVQd8oMv/s670KdJCTO5
-	8/0dq93qvRt/8Y/9s+5Ex4Ied/pggff6j7lrjCo20KRsXbc+dXmywW8XHC69j9u0xaFLNzxc
-	Mblw79Q3DbRnfeDSTtNp98vP1schfbItJa32Q0YwevpDKabLplkNRb8XZuDiRUtajpblq0v4
-	lM/bFGSOWpk6m9DlKL8Cl/UHnUYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0hTcRjG+//P1dnqMCUP+cEYdMFIk7RetDthpyipT0UENfKYS52xqWVo
-	WFNT09BAV17CSy3RVTbNrDSW4tIss1zpTFeaZNLSbhst18UVfXn58TwPv08vS8iKqYWsUpUk
-	qlWKeDktISVREdoVsD0iZmW/IwSK8leC41sOCeU3DDT0Xa9HYGg6hWGycysMOO0IZp48JUBX
-	3IeganSEgCazDUFb7Wka+sfngcUxTUN38VkatDU3aHj2wY1huOQ8hnrjTugprMZgck2QoJuk
-	oUynxbPnPQaXvo4BfcZiGKstZcA9GgLdtpcUdFR0U9A2tBwuXhqmobWtmwRzyxiG/rvlNNgM
-	vynoMXeR0FdUQMG1qWoaPjj1BOgd0ww8N1ViaMictWV//UXBwwIThuzLNzFYrPcQ3M95g8Fo
-	eElDh8OOodFYTMCPq50Ixs59ZCAr38VA2alzCM5mlZCQORwGM9/L6Y3hQod9mhAyG48Jbc5K
-	UnhUzQt3SkcYIfP+ECNUGpOFxtpAoaZ1EgtVXxyUYKzLpQXjl/OMkPfRgoWp3l5G6LowQwrj
-	Fh3e5b9PsjZajFemiOrg9Qclse2FpdTRAb/jTl1ABrLI8pAXy3Oh/Ge9gfAwzS3lBwddf9mX
-	W8Q3FryjPExwdgl/uTfSwz7cNv5FwycmD7EsyS3mrYU+nljKhfG2kR78TxnA1zeY/mq8uNW8
-	dWIKeVg2u7mnLWUKkaQSzalDvkpVSoJCGR8WpImLTVUpjwcdSkwwotln0ae7i1rQt/6t7Yhj
-	kXyutI+OiJFRihRNakI74llC7ivtPLMmRiaNVqSeENWJB9TJ8aKmHfmzpNxPun2PeFDGHVYk
-	iXGieFRU/28x67UwA+2TOVOhaUVGy25r8o7DEYMtFa+cri0ynb8k3b3Otlb6uOzW5qr5reb1
-	u3NfaJWbUqrqLHRIbqItMHf/kYAN7gfRzeFBWwzWS2yFd7B3GsoPDm2+ElewyGEPjEyf9yZ8
-	geL2yZ+R3hO39pY8cS9JOyBvjqqGZa2rxNdvs0wq81iUnNTEKkICCbVG8QdySKOkKAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSe0hTcRTH+/3u3b3X4eS2gm4aPUYRGJlG2ulBVFJdoidB0ENs6bUNn8xX
+	FoG6ZeZaWGGWWajVXG69NnuoadPwscRHbZSaSa2HSVPDmriUalr9c/jw/R4+nD8OQ0grRf6M
+	MiFFUCXI42SUmBQP+pYuXbN1TUywts4Xzp0JBvePXBKK75oo6LxjRGCqzMIw0LgFXo+6EIy3
+	dRBQWNCJoPT9WwIqm/oQ1BqyKbB/9AOHe5gCW4GWAvX1uxS8+DqBoffieQxG83ZozS/DYPX0
+	k1A4QMGVQjX2ji8YPPoKGvSZi8BpKKJh4n0I2PpeiaC2ZwlcvtZLwZNaGwlNj50Y7NXFFPSZ
+	fougtamFhM5zOhHcHiqj4OuongC9e5iGl9YSDPc0XlHO918iaNZZMeTcuI/B0V2DoC73HQaz
+	6RUFz9wuDBZzAQE/yxsROM8O0nDyjIeGK1lnEWhPXiRB0xsK42PF1PpV/DPXMMFrLOl87WgJ
+	yT8v4/iqorc0r6nrofkScypvMQTy158MYL50xC3izRWnKd48cp7m8wYdmB9qb6f5lkvjJP/R
+	UYh3+e8Xr40W4pRpgmrZukNixaduG0p6QB99d+ESmYk0VB7yYTh2BafO/UH+55f5ZVNMsYu5
+	ri4PMckz2fmcRfdZNMkE6xJzN9o35yGGmcHu4Frteydjkl3E3bd9mFJK2DBOq3tI/FXO44z3
+	rFPs4827+4fQJEvZUK5GXUTnIbF3Z4zhPPbyfzfM5uoNXWQ+kpSgaRVIqkxIi5cr41YEKTIS
+	lEeDohLjzcj7S/oTEwceo5HOPQ2IZZDMV2KdtTpGKpKnJWfENyCOIWQzJY2nVsZIJdHyjGOC
+	KjFSlRonJDegAIaUzZIsH02PlrJH5ClCrCAkCar/LWZ8/DNRepSxYUH2wgv7dgfEluvYjQaD
+	Q3az6pE6TDvWXf3z+AfFpuYw99XIb6uxyUjW35lev0tm1fo9twdSL/yDZxwOF6daWiWRro6I
+	W85p2ZmKncbDkZv95iwu2n+tIygrpAaOHK+TbhvvDwh/+vpNRODcg4+utm1w7tgbcay+uqbZ
+	GRwhI5MV8pBAQpUs/wOQQqMTRwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAAzWSa0hTYRzGe99zznuOo9VhGR2SKEajG12srH8ZUQR1CIpAKqgPufKYI52x
+	mWUXsDYrXctL6cqslsWSzS5uWSubiKK5JFtOKkUl7aLWdGDNMqVyRV8efjwP/D49HKUoYqZz
+	Gm2apNOqk5VERsu2xhoWrt4cm7gkcH0p5J9bAqFvZ2kouVdOwHfXgaD8wUkM/fWb4M1wAMHo
+	i5cUWAp9CG50d1LwoKELgafsFAH/h0nQGgoS8BaaCBhu3iPw6ssYho6iAgwO5xZoyivFUDPS
+	S4Oln8AViwGPRx+GEZudBVumCnrKilkY644Gb9drBuquehnwtC+Ay9c6CDz1eGlocPdg8D8p
+	IdBV/puBpoZGGnz5ZgbuDJYS+DJso8AWCrLQUmPFcN84bjv99RcDz8w1GE7fqsDQ2laFoPrs
+	OwzO8tcE6kIBDC5nIQU/b9cj6Dk/wELWuREWrpw8j8CUVUSDsSMGRn+UkHWrxbpAkBKNrsOi
+	Z9hKi89LBfFxcScrGqvbWdHqPCS6yuaLN5/2Y/HGUIgRnfZsIjqHClgxZ6AVi4PNzazYeGmU
+	Fj+0WvC2qF2yNQlSsiZd0i1eGy9L+tjmRQcr2SPvLlyiM5GR5KAITuCXCy15pXSYCT9HePt2
+	hApzJD9LcJk/MWGm+IBMuNW8MQdx3BR+q9Dk3xGuaV4lVHjf/9XI+RWCyfyQ+qecKTju1/zl
+	iPG+rXcQhVnBxwhVhmI2D8msaIIdRWq06SlqTXLMIv2BpAyt5siifakpTjT+FtuJsXw3+ubf
+	VIt4Diknyn0kNlHBqNP1GSm1SOAoZaS8/szKRIU8QZ1xVNKl7tEdSpb0tSiKo5XT5Jt3SvEK
+	fr86TTogSQcl3f8VcxHTM5GKy+qz9q7/mW6pjI+zvnhkPtbpru5WOUh2x8vZHndFmmP7blPu
+	ZBP7farheyhbtzNKlRulDzhbqrRNmcaqPubysDRUEhOyB32LUVzBhHlDM1ZVuk6k+YuPb/B3
+	R7cvu7BDTV9MqMyde3hv4+PUbPu2mX0De/Vfg49wXNvnX24lrU9SR8+ndHr1H7XhvnMpAwAA
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -115,108 +115,28 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Wrapped the base APIs for easier annotation on wait and event. Start
-with supporting waiters on each single event. More general support for
-multiple events is a future work. Do more when the need arises.
-
-How to annotate (the simplest way):
-
-1. Initaialize a map for the interesting wait.
-
-   /*
-    * Recommand to place along with the wait instance.
-    */
-   struct dept_map my_wait;
-
-   /*
-    * Recommand to place in the initialization code.
-    */
-   sdt_map_init(&my_wait);
-
-2. Place the following at the wait code.
-
-   sdt_wait(&my_wait);
-
-3. Place the following at the event code.
-
-   sdt_event(&my_wait);
-
-That's it!
+Now that CONFIG_DEPT_AGGRESSIVE_TIMEOUT_WAIT was introduced, apply the
+consideration to waitqueue wait, assuming an input 'ret' in
+___wait_event() macro is used as a timeout value.
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/dept_sdt.h | 62 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
- create mode 100644 include/linux/dept_sdt.h
+ include/linux/wait.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/dept_sdt.h b/include/linux/dept_sdt.h
-new file mode 100644
-index 000000000000..12a793b90c7e
---- /dev/null
-+++ b/include/linux/dept_sdt.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Single-event Dependency Tracker
-+ *
-+ * Started by Byungchul Park <max.byungchul.park@gmail.com>:
-+ *
-+ *  Copyright (c) 2020 LG Electronics, Inc., Byungchul Park
-+ */
-+
-+#ifndef __LINUX_DEPT_SDT_H
-+#define __LINUX_DEPT_SDT_H
-+
-+#include <linux/kernel.h>
-+#include <linux/dept.h>
-+
-+#ifdef CONFIG_DEPT
-+#define sdt_map_init(m)							\
-+	do {								\
-+		static struct dept_key __key;				\
-+		dept_map_init(m, &__key, 0, #m);			\
-+	} while (0)
-+
-+#define sdt_map_init_key(m, k)		dept_map_init(m, k, 0, #m)
-+
-+#define sdt_wait(m)							\
-+	do {								\
-+		dept_request_event(m);					\
-+		dept_wait(m, 1UL, _THIS_IP_, __func__, 0);		\
-+	} while (0)
-+
-+/*
-+ * sdt_might_sleep() and its family will be committed in __schedule()
-+ * when it actually gets to __schedule(). Both dept_request_event() and
-+ * dept_wait() will be performed on the commit.
-+ */
-+
-+/*
-+ * Use the code location as the class key if an explicit map is not used.
-+ */
-+#define sdt_might_sleep_start(m)					\
-+	do {								\
-+		struct dept_map *__m = m;				\
-+		static struct dept_key __key;				\
-+		dept_stage_wait(__m, __m ? NULL : &__key, _THIS_IP_, __func__);\
-+	} while (0)
-+
-+#define sdt_might_sleep_end()		dept_clean_stage()
-+
-+#define sdt_ecxt_enter(m)		dept_ecxt_enter(m, 1UL, _THIS_IP_, "start", "event", 0)
-+#define sdt_event(m)			dept_event(m, 1UL, _THIS_IP_, __func__)
-+#define sdt_ecxt_exit(m)		dept_ecxt_exit(m, 1UL, _THIS_IP_)
-+#else /* !CONFIG_DEPT */
-+#define sdt_map_init(m)			do { } while (0)
-+#define sdt_map_init_key(m, k)		do { (void)(k); } while (0)
-+#define sdt_wait(m)			do { } while (0)
-+#define sdt_might_sleep_start(m)	do { } while (0)
-+#define sdt_might_sleep_end()		do { } while (0)
-+#define sdt_ecxt_enter(m)		do { } while (0)
-+#define sdt_event(m)			do { } while (0)
-+#define sdt_ecxt_exit(m)		do { } while (0)
-+#endif
-+#endif /* __LINUX_DEPT_SDT_H */
+diff --git a/include/linux/wait.h b/include/linux/wait.h
+index 3177550a1b42..0bc7720273c8 100644
+--- a/include/linux/wait.h
++++ b/include/linux/wait.h
+@@ -303,7 +303,7 @@ extern void init_wait_entry(struct wait_queue_entry *wq_entry, int flags);
+ 	struct wait_queue_entry __wq_entry;					\
+ 	long __ret = ret;	/* explicit shadow */				\
+ 										\
+-	sdt_might_sleep_start(NULL);						\
++	sdt_might_sleep_start_timeout(NULL, __ret);				\
+ 	init_wait_entry(&__wq_entry, exclusive ? WQ_FLAG_EXCLUSIVE : 0);	\
+ 	for (;;) {								\
+ 		long __int = prepare_to_wait_event(&wq_head, &__wq_entry, state);\
 -- 
 2.17.1
 
