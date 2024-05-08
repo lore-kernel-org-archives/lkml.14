@@ -1,108 +1,121 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84CCB8F6A
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 01:29:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8392DDCB;
+	Wed,  8 May 2024 01:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715131762; cv=none; b=Uu/J+rR6DaWfKmNftGQ8F0m3a1bPSF1+nsvkrZxaGo24broIL2xST9PDpcoun7cKMzddr2aiEJQ85FeDQevcaJujk24ZIKLKks1yq5k1Cwqex0vkSFebH4M3+bSuh+djUiCfOEnOftrRuPVJoInpcAHOhWkpo2LwlyRgi/F1blk=
+	t=1715131893; cv=none; b=X5BHhPY+hWjakorY31UXIuo4qusrU0EnSLiOlHQFpq5G3KLEUNoXA5x0Hi/MUMKegV1ymU/Rgw5zXXx5iltjrBA8RLivfnO79Afocq1tyW/qlbF7QACYRDCQfhBkbKE+qmhhOBhIXEGJ13TYrFCgzDFRdmGcm4Pttiguhp3fqOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715131762; c=relaxed/simple;
-	bh=S+KmA9dSLhjXnhJF873IqV/Gd9cnIAVOxz54318nTNs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lij0P7W5O6fVY2tDzjQKrjnA90Hg/FrAT0KRs6clFV7xa0ar7qoEvfeOjW3N4PDTRKUVmyb+jrx6ugToBBETdCW72H+6J1+GwQjm7BCS0wCQQ75KxlLB6uwMjbu6f1FPgNQCJGpblWMHaY2jW0t8G3Hu4IzoJ3Q5KxZJNWLTEOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com; spf=pass smtp.mailfrom=fromorbit.com; dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b=oO3OfM6q; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fromorbit.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fromorbit.com
+	s=arc-20240116; t=1715131893; c=relaxed/simple;
+	bh=a85YE09jCnC4vp5a+eWmz0ilTRgT1T3FHBUWY9ktg3E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=eLRIKqbjW4wqgp5xjwBMZGopEYNg0ywsc2EVyKjECxZKh1P9/KrgiaRigtBNCQ/y1VcYYFjUJo+ohP1Ltj8QpjS7+H5VkZV+pNkifEzUOxBYMjyh6qNze64wHjc1uc2FA7U3p9UdtPp/tNyveZi6B/B1eNEkz2MA8BE3cqMiWbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Z7tGFu29; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="oO3OfM6q"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6f44a2d1e3dso3263827b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 18:29:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1715131760; x=1715736560; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=tzB4aecjphlPEDzQe5NK3FsOS2K2mixibavsvosnc7o=;
-        b=oO3OfM6qLLjMz9aUHLhklQ0uPj2Y5ZRMWlLy9gma4k33HACixpV2Ake6Hpax5RliMZ
-         2M4Tgj1YvJCseaP4E7iKLcqV6toXKblk9O+jIE+VuhqtbkTg2vt2ljEvPmJW+AqCqaos
-         Vjau5N7VOUKC373kRYF41noOFbH2SmJN88qpAw5Wv4IFccy8k16lkWaHp64/x5yJePsx
-         RcTE794ew9YpKBqG2LJZbvwjCC/IfBkQCT7t1JfRpxzbM1KBm2zDp08Qggoz+LmiPTXQ
-         nlqNlYSa47jpXxlTsKRayZE5TPnHNbOiYEMYP+hDIVEHnCA++qGXxoOMY8zMPyBAAzWq
-         pceA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715131760; x=1715736560;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tzB4aecjphlPEDzQe5NK3FsOS2K2mixibavsvosnc7o=;
-        b=t21RhdKEMpAz3enDFc96g0upQlPIXkmA5pDaUx+3KO7DofAXDejZ8ZX3+5KWo8btRe
-         qUajXZZ8O0cAYeQi16k5ech54paAXYWtdnJY66h05nrc/pTY0mpR8h440r8YoYJavkpU
-         IXTcAxvUE0dqNl0ILpgkU58oyGR1szRlEwSGkOqEzWu/fEss/1xTsbomXoztOD0Xf+5F
-         PVfJ0Fr2pmKY74qk9wkKKze28+dafgFZeI1JAvdBaSgvShKUmZ+1bKsEevpnfb/38cs0
-         95fXIKDT7HDVPALlA+LDe/EAoTQ3kAx2nblEUr4QiwXabplFsdDKIScmjTTEteGBy8vc
-         5g+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXPta1IVq22LpmHuPcaSAnJEeR587Kf0Wh83gz/NzHkOFAket1hyvr158ZoYhAGM008aB07ziyOO6cSuDHrDDhidHLyn8o1r84vhqpN
-X-Gm-Message-State: AOJu0YyfXqJK3YbB0Mf7X4jF+bLbclV7HzDFyoFqZlCom1NGev9DhIsq
-	7v+UeCRxpKEJaqo1GnunhGW6vpbnA6phYEe2ZaZA9XboHn13o2ZGBoOzJBTso8etHE+aY+AZBv/
-	t
-X-Google-Smtp-Source: AGHT+IFRCw8e0cW7ldgPKWllS3XVUq4LhbnIO0GsLRIB6i79BIUwHKsbT8AkP/LXEDjMS63xwL/0KA==
-X-Received: by 2002:a05:6a00:1410:b0:6ea:b9a1:63d7 with SMTP id d2e1a72fcca58-6f49c20eba9mr1696829b3a.10.1715131759520;
-        Tue, 07 May 2024 18:29:19 -0700 (PDT)
-Received: from dread.disaster.area (pa49-179-32-121.pa.nsw.optusnet.com.au. [49.179.32.121])
-        by smtp.gmail.com with ESMTPSA id fi39-20020a056a0039a700b006f3f9e4dfd4sm10040409pfb.60.2024.05.07.18.29.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 18:29:19 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-	(envelope-from <david@fromorbit.com>)
-	id 1s4W7P-007LB8-18;
-	Wed, 08 May 2024 11:29:15 +1000
-Date: Wed, 8 May 2024 11:29:15 +1000
-From: Dave Chinner <david@fromorbit.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: "Darrick J. Wong" <djwong@kernel.org>,
-	Chandan Babu R <chandan.babu@oracle.com>, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] xfs: check for negatives in xfs_exchange_range_checks()
-Message-ID: <ZjrVaynGeygNaDtQ@dread.disaster.area>
-References: <0e7def98-1479-4f3a-a69a-5f4d09e12fa8@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Z7tGFu29"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4480WG5H003762;
+	Wed, 8 May 2024 01:31:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:date:subject:mime-version:content-type
+	:content-transfer-encoding:message-id:references:in-reply-to:to
+	:cc; s=qcppdkim1; bh=Cm0GFSAT7Pj661XFsByeZeL4jp2pj7WY1d5NO7wgNBk
+	=; b=Z7tGFu29pDdzxoOxNOhsOxBlwqyCHvPXgXH0lstGueQjzt26t8XAczTRRoP
+	sYZAsUi43UTdUHNQHwl6fxYMsywezTvWLgR+0C53bBuftIs/QJl9a/28lZ0Seiv0
+	l0c05VXB6DoxAXV2q2mTtNkorHAqmSyLL0t7Tj7Hvbl12d1huIC7LlQQjexrYxFM
+	Z7ej1TPAcgqcN3917G/oj0OZTzZWJXOjxQP9jYCwzVgcVErFF8rpqlce3B86CjiE
+	/s5lxXttNMDHfd72vRqWgKU0or6qvnOP+Erp3g1Y0ljPQ4+HiJLSXPj6/DaUzj8H
+	WEJUxW/BeT2FQeVeN4Vub34FgEw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3xysph0nra-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 08 May 2024 01:31:21 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4481VKm1024746
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 8 May 2024 01:31:20 GMT
+Received: from hu-scheluve-lv.qualcomm.com (10.49.16.6) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 7 May 2024 18:31:12 -0700
+From: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+Date: Tue, 7 May 2024 18:31:01 -0700
+Subject: [PATCH v3 2/2] dt-bindings: net: qcom: ethernet: Allow
+ dma-coherent
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0e7def98-1479-4f3a-a69a-5f4d09e12fa8@moroto.mountain>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20240507-mark_ethernet_devices_dma_coherent-v3-2-dbe70d0fa971@quicinc.com>
+References: <20240507-mark_ethernet_devices_dma_coherent-v3-0-dbe70d0fa971@quicinc.com>
+In-Reply-To: <20240507-mark_ethernet_devices_dma_coherent-v3-0-dbe70d0fa971@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Bartosz
+ Golaszewski" <bartosz.golaszewski@linaro.org>,
+        Andrew Halaney
+	<ahalaney@redhat.com>, Vinod Koul <vkoul@kernel.org>,
+        "David S. Miller"
+	<davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Bhupesh Sharma
+	<bhupesh.sharma@linaro.org>
+CC: <kernel@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>,
+        Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+X-Mailer: b4 0.13.0
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: gDhp96LEdGblpd6Ze3irKuBAFf2ZBBK4
+X-Proofpoint-GUID: gDhp96LEdGblpd6Ze3irKuBAFf2ZBBK4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-07_16,2024-05-06_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=731
+ impostorscore=0 priorityscore=1501 bulkscore=0 phishscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405080009
 
-On Sat, May 04, 2024 at 02:27:36PM +0300, Dan Carpenter wrote:
-> The fxr->file1_offset and fxr->file2_offset variables come from the user
-> in xfs_ioc_exchange_range().  They are size loff_t which is an s64.
-> Check the they aren't negative.
-> 
-> Fixes: 9a64d9b3109d ("xfs: introduce new file range exchange ioctl")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
-> From static analysis.  Untested.  Sorry!
-> 
->  fs/xfs/xfs_exchrange.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/fs/xfs/xfs_exchrange.c b/fs/xfs/xfs_exchrange.c
-> index c8a655c92c92..3465e152d928 100644
-> --- a/fs/xfs/xfs_exchrange.c
-> +++ b/fs/xfs/xfs_exchrange.c
-> @@ -337,6 +337,9 @@ xfs_exchange_range_checks(
->  	if (IS_SWAPFILE(inode1) || IS_SWAPFILE(inode2))
->  		return -ETXTBSY;
->  
-> +	if (fxr->file1_offset < 0 || fxr->file2_offset < 0)
-> +		return -EINVAL;
+On SA8775P, Ethernet DMA controller is coherent with the CPU.
+allow specifying that.
 
-Aren't the operational offset/lengths already checked for underflow
-and overflow via xfs_exchange_range_verify_area()?
+Signed-off-by: Sagar Cheluvegowda <quic_scheluve@quicinc.com>
+---
+ Documentation/devicetree/bindings/net/qcom,ethqos.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
--Dave.
+diff --git a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+index 69a337c7e345..44028987ef92 100644
+--- a/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
++++ b/Documentation/devicetree/bindings/net/qcom,ethqos.yaml
+@@ -66,6 +66,8 @@ properties:
+   phy-names:
+     const: serdes
+ 
++  dma-coherent: true
++
+ required:
+   - compatible
+   - clocks
+
 -- 
-Dave Chinner
-david@fromorbit.com
+2.34.1
+
