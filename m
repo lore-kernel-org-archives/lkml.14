@@ -1,80 +1,81 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB07712AAEF
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 17:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AA112B163
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 17:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715189515; cv=none; b=FxWvfsb7HA/3+1W8S8WQYdBt9iC/INhs9tk7DDSVQ8lazEBu8eOsBcvmAngyNvzp8H/Hm489bRsACuyQ/tZ+ozN10QN4/UeCCOwGH2R+nmHD51/FVTmJe80Oha9yNvPpi58CMAV6KJfEkwPx2flXUobMpM4O682Q0/DA0oLg25k=
+	t=1715189517; cv=none; b=n/qNlBRrZgXnQziNZRNdy6Zwm9Y0scqCwDwCrkiNbrH5/pR+8WrUNOzjEOp9Zm3lgNzBj2yE1L9UWFMzJvqk7KnTFv/tdw8aHL+hkc6+nLfJeEMqoN3T6gBHN3t8pg3TpZOv0mdIRM+nA2NygHtJ+aLGk4/hgkWocDxm/MimSXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715189515; c=relaxed/simple;
-	bh=EVV19YgGbcPQsIHd5yk4GzGYcoILxXyLnNlnQWFy9pw=;
+	s=arc-20240116; t=1715189517; c=relaxed/simple;
+	bh=eUy8l4dx1nlgASZnAXri0kDxbx6zhnXlB+I6YzLFjTw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C4/wEP3Qtf+0WVQWaoxM4di5FXaryvE0LMs7O/YSeuIz2y9mhs16mkCHIV8Z31bm0AupYmAi7hmWmqfK97Ved3DA9q/OcuZvIIdTqwiikR0CEgFI+rZVAvw7qRbGrb6bNh5haZGcCq0rru2dLOQpsGJyXQ4VdX3lfJJnZwjujxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TT823LaE; arc=none smtp.client-ip=209.85.214.181
+	 MIME-Version; b=Z9B5sTdtVrq186CO72nMf8wGHFdOIxrSB4xIOytS2QFMgNpGqEngRJ6zSMztp3Mk7tEgv4lgc3D6KB+5a1g+ub0WCh26Gjhp+W+sP5nOcgS+kafngq3FSw3Ccyd6E70UkHyzbT1pe3MibqPHnEegybOCb0lTFba6y3U1tob2TTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IwMJg9F9; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TT823LaE"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ee38966529so8246305ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 10:31:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IwMJg9F9"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1ed835f3c3cso42205085ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 10:31:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715189511; x=1715794311; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1715189512; x=1715794312; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ckhcb2/0RYF0Gnhe/jQlCjJECN0VZ08/Fvs6ZKfOACc=;
-        b=TT823LaE2Z4LKXmY/o6l28b988iFT0/bsSW5L6lXPIOXs/YULCFcGE3WfOd071tshz
-         kwNyO5Ka+V6+hZiZiUCej4/w3UtP2G4qpnQwPuMSgdQ89kc3bIbDsWPj83n13VDzCet5
-         bE2oTZmpkBrcIvXz3Bj4KvQ2xdfJfbDgp8B28=
+        bh=4rcMwpi5swukR9fu2rr+tgqRl98owlkzS7lAQiTyYR0=;
+        b=IwMJg9F9lQfEe+AzV5jXn9VE/b5xqYgCuZThGRFk87TXfYrsFkqugIBbidix+EdaPm
+         Wtua8BqjGwxslnquNHT2gXwsd/PUTcLhRmZIi52Ax8Wa2KSp2tR02ZvfQDPpV6m7oeIt
+         KCkRtVeZjbZsbsiROw33eBmmRddR5m6kMa5k0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715189511; x=1715794311;
+        d=1e100.net; s=20230601; t=1715189512; x=1715794312;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ckhcb2/0RYF0Gnhe/jQlCjJECN0VZ08/Fvs6ZKfOACc=;
-        b=iW5dXJzGewF2fleFpMHKCm8lgN2OUNLxfXYs0GJVQfNjpQEtm7XHiFInPFeAkAI2bB
-         IErRmKEY5UFBTyQ5av+dhB16dTu3VvPGHRw3DhBY//ShK8O8iuqEvuOAi45oRC9UJHHc
-         JdPARAvDF75GRwNj87a+tfwuFj9Tf7+IjKyBQ4/PMmbwk3qCzYfGVhYGwfP9tY+ueGFi
-         e8o6vEdSHzHyyun+u2vwbQuAHO/kRJnWkU4wsht0BGW0Q+NkC2BB7dlZJDEvrDtlp4wt
-         PYSXw2Y1gA8zgUZ3C12KVT3aK2ithOJ7WhxHWk89xSnEsMXn8mMZzAybxp2b062dZg5d
-         BdSw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4WHqitK/aBn9lxcOLNeFeYpj5cunEJkRjqP7DYn5MvHpfGX/y8fnm1iXGYs4t70xhsCUlcdu/mOq4E6Ws0HjpoJIPRkrQjTY3auvl
-X-Gm-Message-State: AOJu0YwyVv1L3R/vj1/2rP1IyIroAOfGHdcthDwt/467wYgN4O+koZvf
-	EysqqXGcM/F+HmLzpZoURg1cb/B5+JkMxgI87tmi1vgVPWUUpWasg37Z2j8Jng==
-X-Google-Smtp-Source: AGHT+IFe9RE0PlweeOYjLwef5REO+i00c2oo7HJiryhYfaXZtd4BvtB2nxrgXXbdGr6zE8h3r5g01g==
-X-Received: by 2002:a17:902:dacc:b0:1eb:8299:db35 with SMTP id d9443c01a7336-1eefa58cfe5mr4314535ad.32.1715189510956;
-        Wed, 08 May 2024 10:31:50 -0700 (PDT)
+        bh=4rcMwpi5swukR9fu2rr+tgqRl98owlkzS7lAQiTyYR0=;
+        b=hI7mlSL2FCYPYKuq0t+QVeiYyAOLHNjEU9E91iCqM3Tqdg0ziGiBNPsnO8LsFyjKNo
+         gtMcsxoTY+SMCHSwPUXK1cd6wIOGtj5ZLwtXvv2yPUE1Pwt9jMTaBl9Z/Jhycd8PXdXG
+         QJ+MfyNeshyRBjVA+fMBVYNPMsh8G5RzjIQVj9J3sc/QUfM8YfnRhiPSHuwICYwtP2Pb
+         N3oVNca73oS1a9eG3bUgg8CXrerN3n7oY3tnuWS0XxKSI0IRfZlzuvdgR9zU2bc3j86q
+         LwDYiUtOuupDj1V/CQxanNY/ovTa3A36Sz5PO9fjoxPLOe1dw6NlQl/wvObOWLrqlpUT
+         rDQA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwxdp6Cpo5Hig6DWbQcGEfAjFEsSqlo4Dzh73bytFuw4er2t0ZmxhBt4yIvEWscIRQVB3AsQc/LuhRfjrhEhBo14TdQQX9CRgiOaIF
+X-Gm-Message-State: AOJu0YyhbvcALd+B+xiubH7JCXKPLDC+HjOOFMYAAteJwWbCbpAULTwV
+	RYT0AlyymYsLmo0O5CDpF9NpJUuSffcD41+0O5pyl1Hq8I5+JOVl8lw8pO3iBg==
+X-Google-Smtp-Source: AGHT+IFNr+b2pAfQcWXsO87OnrvROJLzoQf+GfNtUyLNTbuK3rS25oOgdGVm7lFzQQasZ1Pfzw4/2A==
+X-Received: by 2002:a17:902:6506:b0:1e6:766c:6a26 with SMTP id d9443c01a7336-1eeb017cfd1mr35094695ad.12.1715189512601;
+        Wed, 08 May 2024 10:31:52 -0700 (PDT)
 Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id b3-20020a170902d30300b001e2a479954dsm12129520plc.181.2024.05.08.10.31.50
+        by smtp.gmail.com with ESMTPSA id la13-20020a170902fa0d00b001ec412676adsm12094121plb.275.2024.05.08.10.31.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 10:31:50 -0700 (PDT)
+        Wed, 08 May 2024 10:31:52 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
 To: "H . J . Lu" <hjl.tools@gmail.com>
 Cc: Kees Cook <keescook@chromium.org>,
-	Chris Kennelly <ckennelly@google.com>,
+	Mike Rapoport <rppt@linux.ibm.com>,
+	Rui Salvaterra <rsalvaterra@gmail.com>,
+	Victor Stinner <vstinner@redhat.com>,
+	Jan Palus <jpalus@fastmail.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jan Kara <jack@suse.cz>,
 	Eric Biederman <ebiederm@xmission.com>,
+	linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Chris Kennelly <ckennelly@google.com>,
 	Shuah Khan <shuah@kernel.org>,
 	Muhammad Usama Anjum <usama.anjum@collabora.com>,
 	John Hubbard <jhubbard@nvidia.com>,
 	Fangrui Song <maskray@google.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	Yang Yingliang <yangyingliang@huawei.com>,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
 	Mike Rapoport <rppt@kernel.org>,
-	Rui Salvaterra <rsalvaterra@gmail.com>,
-	Victor Stinner <vstinner@redhat.com>,
-	Jan Palus <jpalus@fastmail.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
 	linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
 	linux-hardening@vger.kernel.org
-Subject: [PATCH 1/3] selftests/exec: Build both static and non-static load_address tests
-Date: Wed,  8 May 2024 10:31:46 -0700
-Message-Id: <20240508173149.677910-1-keescook@chromium.org>
+Subject: [PATCH 3/3] binfmt_elf: Honor PT_LOAD alignment for static PIE
+Date: Wed,  8 May 2024 10:31:48 -0700
+Message-Id: <20240508173149.677910-3-keescook@chromium.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240508172848.work.131-kees@kernel.org>
 References: <20240508172848.work.131-kees@kernel.org>
@@ -84,200 +85,150 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6882; i=keescook@chromium.org;
- h=from:subject; bh=EVV19YgGbcPQsIHd5yk4GzGYcoILxXyLnNlnQWFy9pw=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmO7cE7X4mhGALtYnO3LLjThfOhTf4zqWRzUonM
- YIEVDy8ECGJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZju3BAAKCRCJcvTf3G3A
- JqzhEACugoYdfeBq9hllOhN230YzjegmLLmyhu7D4ZUW4opBdmlFfiuiuoZexZQUxlhuR0aHobi
- Xktw+k9RzRwGjeUQm6DqEFJ5/ypq1MYaS2e7qfeSwkLfsLSeRGnn2N3Ag6eXL/e/cXhkcQTPo9b
- Vfd0+o5ctjpzD9SDvJKtjz8hG69soCmtgK6rJyovDQslCzC7aDH33Fvri9GB9lyD1Miafv0AZEA
- 9H8+/ycD1h+4dKxrn5h5DP7ZMGEhcGDSz8BTtvTibEaIEJNsIVsPkfb0FySoNeRpgIlKOcynYKm
- W5rADoIiq2Js477XNNWD8awi1czVmZBgBP7vXuSdmgQki7LmPUyd3uBH+xc4wZJX7YqTzuU2p6f
- 0kCwpXgkwxz5lVtdItPdl4q7RHdCBAungFLFpCqNvhxfnOjp4EeOQcPZWWrBJ4VRM6JnLz6AyBi
- oaadMihDqXQ3DpElP4hIeED20RpP6RnOoxv9NQPTDNLVryc+aqXTTJyaNVDhjFGTZ3lDDrt2YQJ
- BJuugxHoIMXKzmxjqagdcHEkkEQc3QT+0a7jsiUyJoFqb18rRzPbTRz3p5f5pMt+fBN/tbQxnfY
- gKd6t/Mj+QNdLzLoBnE1r39sCfnDiklNPn3+eQskJ8fUaFsewNAWbhyjVVux6wK3OnQrrcooaNB Agj16aAcMuOgCnA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5293; i=keescook@chromium.org;
+ h=from:subject; bh=eUy8l4dx1nlgASZnAXri0kDxbx6zhnXlB+I6YzLFjTw=;
+ b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmO7cEJD8sdRg2kTQVgy9QHVOS08welrL7Y9Xmg
+ lC0fTmRrBSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZju3BAAKCRCJcvTf3G3A
+ JtM8EACdAwapwoIf1FEL7K12lEwr6cSDnpSo/80JcopA9tWkFKXsiep6tWvoxZDOzJ1vc9e6b4V
+ YLAAZBeXNl/xk6VrycAfh+xwdHN2k+KNbWvuJiD34NZowKV8tHkpCLzfyBMxlsEnwkpvxp4gaSj
+ d4IhlEOcmwxk6K5OT+QsSmcjMCjEBIVRIK0goPl4GHq8aOi+sRueJ8TaFrjvw1+8mrbvG2DdFCe
+ Uv8kWkvlo/ILaWPFZ0NusPLLdDhExA73NKe/ve4YZAfk0p6FRzmyWuHOaT7dkEYmU9yuB2JtgFA
+ K2DJetC6ue7f0Q13jS3/JzqgB2vtfz+FNYDwsf5pZqI/0ziFNMCvidOe43tE7Iw0Lmdt2/BgPNL
+ r8gTuz9/tlA2bbDc3e/kRUhuX5nwaHcjR/r8IVSalFQmyqc5IPAk37VHvGDmg6DIbep/8qnwvCF
+ QLG5UBoysuC4MgK+oc4o06z7rfYgL2DuXeo2iJifxHJslw72FqLeVf4SKpDzrWKHhqNWvN5fVlO
+ iCNqiQqRpRch+qbtKbcDu6uw3gg9q5q8qzx+EEXIHGhqVyKXRZKdXgMmXXp/my+9/udZV/cFPHl
+ Axrb6nLzkWUCWdMUTIN4aZHCt5ihat6gagmdxw0UNkomFQUeEHsgPbhNUGZztz5L0i7eTM6zPj0 PxL8C6OI/h070mg==
 X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-After commit 4d1cd3b2c5c1 ("tools/testing/selftests/exec: fix link
-error"), the load address alignment tests tried to build statically.
-This was silently ignored in some cases. However, after attempting to
-further fix the build by switching to "-static-pie", the test started
-failing. This appears to be due to non-PT_INTERP ET_DYN execs ("static
-PIE") not doing alignment correctly, which remains unfixed[1]. See commit
-aeb7923733d1 ("revert "fs/binfmt_elf: use PT_LOAD p_align values for
-static PIE"") for more details.
+The p_align values in PT_LOAD were ignored for static PIE executables
+(i.e. ET_DYN without PT_INTERP). This is because there is no way to
+request a non-fixed mmap region with a specific alignment. ET_DYN with
+PT_INTERP uses a separate base address (ELF_ET_DYN_BASE) and binfmt_elf
+performs the ASLR itself, which means it can also apply alignment. For
+the mmap region, the address selection happens deep within the vm_mmap()
+implementation (when the requested address is 0).
 
-Provide rules to build both static and non-static PIE binaries, improve
-debug reporting, and perform several test steps instead of a single
-all-or-nothing test. However, do not actually enable static-pie tests;
-alignment specification is only supported for ET_DYN with PT_INTERP
-("regular PIE").
+The earlier attempt to implement this:
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=215275 [1]
+  commit 9630f0d60fec ("fs/binfmt_elf: use PT_LOAD p_align values for static PIE")
+  commit 925346c129da ("fs/binfmt_elf: fix PT_LOAD p_align values for loaders")
+
+did not take into account the different base address origins, and were
+eventually reverted:
+
+  aeb7923733d1 ("revert "fs/binfmt_elf: use PT_LOAD p_align values for static PIE"")
+
+In order to get the correct alignment from an mmap base, binfmt_elf must
+perform a 0-address load first, then tear down the mapping and perform
+alignment on the resulting address. Since this is slightly more overhead,
+only do this when it is needed (i.e. the alignment is not the default
+ELF alignment). This does, however, have the benefit of being able to
+use MAP_FIXED_NOREPLACE, to avoid potential collisions.
+
+With this fixed, enable the static PIE self tests again.
+
+Reported-by: H.J. Lu <hjl.tools@gmail.com>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=215275
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-Cc: Chris Kennelly <ckennelly@google.com>
+Cc: H.J. Lu <hjl.tools@gmail.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Rui Salvaterra <rsalvaterra@gmail.com>
+Cc: Victor Stinner <vstinner@redhat.com>
+Cc: Jan Palus <jpalus@fastmail.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>
 Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Fangrui Song <maskray@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Yang Yingliang <yangyingliang@huawei.com>
+Cc: linux-fsdevel@vger.kernel.org
 Cc: linux-mm@kvack.org
-Cc: linux-kselftest@vger.kernel.org
 ---
- tools/testing/selftests/exec/Makefile       | 19 +++---
- tools/testing/selftests/exec/load_address.c | 67 +++++++++++++++++----
- 2 files changed, 66 insertions(+), 20 deletions(-)
+ fs/binfmt_elf.c                       | 42 +++++++++++++++++++++++----
+ tools/testing/selftests/exec/Makefile |  2 +-
+ 2 files changed, 38 insertions(+), 6 deletions(-)
 
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 56432e019d4e..cbb07a9c02d4 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1088,10 +1088,13 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 				goto out_free_dentry;
+ 			}
+ 
++			/* Calculate any requested alignment. */
++			alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
++
+ 			/*
+ 			 * There are effectively two types of ET_DYN
+-			 * binaries: programs (i.e. PIE: ET_DYN with INTERP)
+-			 * and loaders (ET_DYN without INTERP, since they
++			 * binaries: programs (i.e. PIE: ET_DYN with PT_INTERP)
++			 * and loaders (ET_DYN without PT_INTERP, since they
+ 			 * _are_ the ELF interpreter). The loaders must
+ 			 * be loaded away from programs since the program
+ 			 * may otherwise collide with the loader (especially
+@@ -1111,15 +1114,44 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
+ 			 */
+ 			if (interpreter) {
++				/* On ET_DYN with PT_INTERP, we do the ASLR. */
+ 				load_bias = ELF_ET_DYN_BASE;
+ 				if (current->flags & PF_RANDOMIZE)
+ 					load_bias += arch_mmap_rnd();
+-				alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
++				/* Adjust alignment as requested. */
+ 				if (alignment)
+ 					load_bias &= ~(alignment - 1);
+ 				elf_flags |= MAP_FIXED_NOREPLACE;
+-			} else
+-				load_bias = 0;
++			} else {
++				/*
++				 * For ET_DYN without PT_INTERP, we rely on
++				 * the architectures's (potentially ASLR) mmap
++				 * base address (via a load_bias of 0).
++				 *
++				 * When a large alignment is requested, we
++				 * must do the allocation at address "0" right
++				 * now to discover where things will load so
++				 * that we can adjust the resulting alignment.
++				 * In this case (load_bias != 0), we can use
++				 * MAP_FIXED_NOREPLACE to make sure the mapping
++				 * doesn't collide with anything.
++				 */
++				if (alignment > ELF_MIN_ALIGN) {
++					load_bias = elf_load(bprm->file, 0, elf_ppnt,
++							     elf_prot, elf_flags, total_size);
++					if (BAD_ADDR(load_bias)) {
++						retval = IS_ERR_VALUE(load_bias) ?
++							 PTR_ERR((void*)load_bias) : -EINVAL;
++						goto out_free_dentry;
++					}
++					vm_munmap(load_bias, total_size);
++					/* Adjust alignment as requested. */
++					if (alignment)
++						load_bias &= ~(alignment - 1);
++					elf_flags |= MAP_FIXED_NOREPLACE;
++				} else
++					load_bias = 0;
++			}
+ 
+ 			/*
+ 			 * Since load_bias is used for all subsequent loading
 diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
-index fb4472ddffd8..619cff81d796 100644
+index 619cff81d796..ab67d58cfab7 100644
 --- a/tools/testing/selftests/exec/Makefile
 +++ b/tools/testing/selftests/exec/Makefile
-@@ -3,8 +3,13 @@ CFLAGS = -Wall
- CFLAGS += -Wno-nonnull
- CFLAGS += -D_GNU_SOURCE
+@@ -6,7 +6,7 @@ CFLAGS += -D_GNU_SOURCE
+ ALIGNS := 0x1000 0x200000 0x1000000
+ ALIGN_PIES        := $(patsubst %,load_address.%,$(ALIGNS))
+ ALIGN_STATIC_PIES := $(patsubst %,load_address.static.%,$(ALIGNS))
+-ALIGNMENT_TESTS   := $(ALIGN_PIES)
++ALIGNMENT_TESTS   := $(ALIGN_PIES) $(ALIGN_STATIC_PIES)
  
-+ALIGNS := 0x1000 0x200000 0x1000000
-+ALIGN_PIES        := $(patsubst %,load_address.%,$(ALIGNS))
-+ALIGN_STATIC_PIES := $(patsubst %,load_address.static.%,$(ALIGNS))
-+ALIGNMENT_TESTS   := $(ALIGN_PIES)
-+
  TEST_PROGS := binfmt_script.py
--TEST_GEN_PROGS := execveat load_address_4096 load_address_2097152 load_address_16777216 non-regular
-+TEST_GEN_PROGS := execveat non-regular $(ALIGNMENT_TESTS)
- TEST_GEN_FILES := execveat.symlink execveat.denatured script subdir
- # Makefile is a run-time dependency, since it's accessed by the execveat test
- TEST_FILES := Makefile
-@@ -28,9 +33,9 @@ $(OUTPUT)/execveat.symlink: $(OUTPUT)/execveat
- $(OUTPUT)/execveat.denatured: $(OUTPUT)/execveat
- 	cp $< $@
- 	chmod -x $@
--$(OUTPUT)/load_address_4096: load_address.c
--	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x1000 -pie -static $< -o $@
--$(OUTPUT)/load_address_2097152: load_address.c
--	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x200000 -pie -static $< -o $@
--$(OUTPUT)/load_address_16777216: load_address.c
--	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=0x1000000 -pie -static $< -o $@
-+$(OUTPUT)/load_address.0x%: load_address.c
-+	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=$(lastword $(subst ., ,$@)) \
-+		-fPIE -pie $< -o $@
-+$(OUTPUT)/load_address.static.0x%: load_address.c
-+	$(CC) $(CFLAGS) $(LDFLAGS) -Wl,-z,max-page-size=$(lastword $(subst ., ,$@)) \
-+		-fPIE -static-pie $< -o $@
-diff --git a/tools/testing/selftests/exec/load_address.c b/tools/testing/selftests/exec/load_address.c
-index 17e3207d34ae..8257fddba8c8 100644
---- a/tools/testing/selftests/exec/load_address.c
-+++ b/tools/testing/selftests/exec/load_address.c
-@@ -5,11 +5,13 @@
- #include <link.h>
- #include <stdio.h>
- #include <stdlib.h>
-+#include <stdbool.h>
- #include "../kselftest.h"
- 
- struct Statistics {
- 	unsigned long long load_address;
- 	unsigned long long alignment;
-+	bool interp;
- };
- 
- int ExtractStatistics(struct dl_phdr_info *info, size_t size, void *data)
-@@ -26,11 +28,20 @@ int ExtractStatistics(struct dl_phdr_info *info, size_t size, void *data)
- 	stats->alignment = 0;
- 
- 	for (i = 0; i < info->dlpi_phnum; i++) {
-+		unsigned long long align;
-+
-+		if (info->dlpi_phdr[i].p_type == PT_INTERP) {
-+			stats->interp = true;
-+			continue;
-+		}
-+
- 		if (info->dlpi_phdr[i].p_type != PT_LOAD)
- 			continue;
- 
--		if (info->dlpi_phdr[i].p_align > stats->alignment)
--			stats->alignment = info->dlpi_phdr[i].p_align;
-+		align = info->dlpi_phdr[i].p_align;
-+
-+		if (align > stats->alignment)
-+			stats->alignment = align;
- 	}
- 
- 	return 1;  // Terminate dl_iterate_phdr.
-@@ -38,27 +49,57 @@ int ExtractStatistics(struct dl_phdr_info *info, size_t size, void *data)
- 
- int main(int argc, char **argv)
- {
--	struct Statistics extracted;
--	unsigned long long misalign;
-+	struct Statistics extracted = { };
-+	unsigned long long misalign, pow2;
-+	bool interp_needed;
-+	char buf[1024];
-+	FILE *maps;
- 	int ret;
- 
- 	ksft_print_header();
--	ksft_set_plan(1);
-+	ksft_set_plan(4);
-+
-+	/* Dump maps file for debugging reference. */
-+	maps = fopen("/proc/self/maps", "r");
-+	if (!maps)
-+		ksft_exit_fail_msg("FAILED: /proc/self/maps: %s\n", strerror(errno));
-+	while (fgets(buf, sizeof(buf), maps)) {
-+		ksft_print_msg("%s", buf);
-+	}
-+	fclose(maps);
- 
-+	/* Walk the program headers. */
- 	ret = dl_iterate_phdr(ExtractStatistics, &extracted);
- 	if (ret != 1)
- 		ksft_exit_fail_msg("FAILED: dl_iterate_phdr\n");
- 
--	if (extracted.alignment == 0)
--		ksft_exit_fail_msg("FAILED: No alignment found\n");
--	else if (extracted.alignment & (extracted.alignment - 1))
--		ksft_exit_fail_msg("FAILED: Alignment is not a power of 2\n");
-+	/* Report our findings. */
-+	ksft_print_msg("load_address=%#llx alignment=%#llx\n",
-+		       extracted.load_address, extracted.alignment);
-+
-+	/* If we're named with ".static." we expect no INTERP. */
-+	interp_needed = strstr(argv[0], ".static.") == NULL;
-+
-+	/* Were we built as expected? */
-+	ksft_test_result(interp_needed == extracted.interp,
-+			 "%s INTERP program header %s\n",
-+			 interp_needed ? "Wanted" : "Unwanted",
-+			 extracted.interp ? "seen" : "missing");
-+
-+	/* Did we find an alignment? */
-+	ksft_test_result(extracted.alignment != 0,
-+			 "Alignment%s found\n", extracted.alignment ? "" : " NOT");
-+
-+	/* Is the alignment sane? */
-+	pow2 = extracted.alignment & (extracted.alignment - 1);
-+	ksft_test_result(pow2 == 0,
-+			 "Alignment is%s a power of 2: %#llx\n",
-+			 pow2 == 0 ? "" : " NOT", extracted.alignment);
- 
-+	/* Is the load address aligned? */
- 	misalign = extracted.load_address & (extracted.alignment - 1);
--	if (misalign)
--		ksft_exit_fail_msg("FAILED: alignment = %llu, load_address = %llu\n",
--				   extracted.alignment, extracted.load_address);
-+	ksft_test_result(misalign == 0, "Load Address is %saligned (%#llx)\n",
-+			 misalign ? "MIS" : "", misalign);
- 
--	ksft_test_result_pass("Completed\n");
- 	ksft_finished();
- }
+ TEST_GEN_PROGS := execveat non-regular $(ALIGNMENT_TESTS)
 -- 
 2.34.1
 
