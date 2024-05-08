@@ -1,129 +1,80 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBFD512E7C
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 10:48:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1C012E7C
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 10:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715165323; cv=none; b=HlUYXpnjBX3V66RQJN0EbZ2ip5FunqggTCFYtim321YGJDhe38Fijrxzl/9QZkJmnmvre8SMovkLvwEuwnggRGlQK70QDFuUR9YdI4MMUf32grhUQwZTTCiAqAKNEuqDaIvVoZWEEQlpuZBKSq9EybIZRMD0YzgPryUw/IGv+ZY=
+	t=1715165334; cv=none; b=H+jPajDsOtzGPRze3184WbUngwuSmpIG67up4znILzqcmgF7nM8UAcdhUeMo4bT5RDdtq1KREcZMt2iekLLq9jw95GRZ4+BDnV+6G9PA18AaYvbUkTzvHXEfgdXe6oW4VTv1uUuDpbQdedDVj6h4Y2Lk2pIxPyyRDIDIBz59vBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715165323; c=relaxed/simple;
-	bh=A5qQlIijoeLOoPvuKXsRqwEGEPoVXglckbxb80njhNE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NqoaBTdtNt4BYVrwIg9MhHCJ9NdydqAKAVNqUN4pPJUPIdCvJ1axTluotFms8wbnz2tf0kCcKQgWMgco+cihLZAXloA0sgDGZhX97Ii+WAz7Vk789nMIP3+5AQCzLINIGa474iDf8r9992DelrEGejE6SyTkxP78uYlcHHk/rWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE1A91063;
-	Wed,  8 May 2024 03:49:06 -0700 (PDT)
-Received: from [10.57.67.194] (unknown [10.57.67.194])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 576633F587;
-	Wed,  8 May 2024 03:48:39 -0700 (PDT)
-Message-ID: <f6844b9d-378f-4743-a71d-d5b7cd921946@arm.com>
-Date: Wed, 8 May 2024 11:48:37 +0100
+	s=arc-20240116; t=1715165334; c=relaxed/simple;
+	bh=0C5AgGV462+lOg51Wn/vGwtPYKFzY44U3qnezUNglsI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IJnCOi8yp1KdEjwflE3LjTb75ryYtSoY/IEYSgBM140rzl/pbWBDrlGEnJdWFm6+4C0WX6BakFepB36SZH5sQQbOMDurr1Nagef/GnBbAUmimD4mcBH6iPnCurTJuZTXT9sRBEnCgVjiGP5joaHYmpIzxPy0Jlv3+GxZlzTmKeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gbs/8Hvy; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gbs/8Hvy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715165334; x=1746701334;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=0C5AgGV462+lOg51Wn/vGwtPYKFzY44U3qnezUNglsI=;
+  b=gbs/8HvyBmzJdYSyiCsETi1+kZQTOwNMfNDf7z2lSiADhdc1Zf4wUJmb
+   +EdY7rcqIPEIFpDOF2/vtf2eFa+uWi6Q94xmucHubeVgnEEDRyqVTEUlN
+   0IrFTuqQhufHbjXKWcL1l+XjNeYrzHitCesIkJMHicx2x+6yAvEnlBYCe
+   g5NqbVH5+PemFdI02OtZwhMO+QQ9vYU1FifZKZFhTKR+UBwy+vlzpetmi
+   OCk50w3O7L0EnLdEpORo01ZL4VkF88da4DNwRVO6jG2etDDjul1ii/tsH
+   1hqpTQSV+MTWCal3t/PgDSKvg9YApy2P3zRVpT/f2jJMDH1JQnupWmObN
+   g==;
+X-CSE-ConnectionGUID: CRLtsAbZQv2ZYXBdqfCj/w==
+X-CSE-MsgGUID: iWeIZse0QkizaycgLwgQsw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="14834627"
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="14834627"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 03:48:53 -0700
+X-CSE-ConnectionGUID: 2KeLlfaMRg24192bx6+kvQ==
+X-CSE-MsgGUID: F81GQKA7RwukcTaD0egj9g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="33319270"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa005.fm.intel.com with ESMTP; 08 May 2024 03:48:52 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 16571109; Wed, 08 May 2024 13:48:49 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Cc: Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH v1 0/2] mfd: lm3533: Get rid of legacy GPIO APIs
+Date: Wed,  8 May 2024 13:46:47 +0300
+Message-ID: <20240508104848.846580-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] mm: shmem: add multi-size THP sysfs interface for
- anonymous shmem
-Content-Language: en-GB
-To: Baolin Wang <baolin.wang@linux.alibaba.com>,
- David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
- ying.huang@intel.com, 21cnbao@gmail.com, shy828301@gmail.com,
- ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
- <6b4afed1ef26dbd08ae9ec58449b329564dcef3e.1714978902.git.baolin.wang@linux.alibaba.com>
- <30329a82-45b9-4e78-8c48-bd56af113786@arm.com>
- <0b3735bc-2ad7-44f8-808b-37fc90d57199@linux.alibaba.com>
- <cb458b62-e27d-47d6-8efd-bacdb9da7530@redhat.com>
- <ff1908f8-0887-403b-8d2a-d83a17895523@redhat.com>
- <eb3aa3dc-42ee-475a-8b95-d27951c362a1@arm.com>
- <5b23a706-5fb3-41b4-ba2e-d38a29b51820@linux.alibaba.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <5b23a706-5fb3-41b4-ba2e-d38a29b51820@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 08/05/2024 10:56, Baolin Wang wrote:
-> 
-> 
-> On 2024/5/8 17:02, Ryan Roberts wrote:
->> On 08/05/2024 08:12, David Hildenbrand wrote:
->>> On 08.05.24 09:08, David Hildenbrand wrote:
->>>> On 08.05.24 06:45, Baolin Wang wrote:
->>>>>
->>>>>
->>>>> On 2024/5/7 18:52, Ryan Roberts wrote:
->>>>>> On 06/05/2024 09:46, Baolin Wang wrote:
->>>>>>> To support the use of mTHP with anonymous shmem, add a new sysfs interface
->>>>>>> 'shmem_enabled' in the '/sys/kernel/mm/transparent_hugepage/hugepages-kB/'
->>>>>>> directory for each mTHP to control whether shmem is enabled for that mTHP,
->>>>>>> with a value similar to the top level 'shmem_enabled', which can be set to:
->>>>>>> "always", "inherit (to inherit the top level setting)", "within_size",
->>>>>>> "advise",
->>>>>>> "never", "deny", "force". These values follow the same semantics as the top
->>>>>>> level, except the 'deny' is equivalent to 'never', and 'force' is equivalent
->>>>>>> to 'always' to keep compatibility.
->>>>>>
->>>>>> We decided at [1] to not allow 'force' for non-PMD-sizes.
->>>>>>
->>>>>> [1]
->>>>>> https://lore.kernel.org/linux-mm/533f37e9-81bf-4fa2-9b72-12cdcb1edb3f@redhat.com/
->>>>>>
->>>>>> However, thinking about this a bit more, I wonder if the decision we made to
->>>>>> allow all hugepages-xxkB/enabled controls to take "inherit" was the wrong
->>>>>> one.
->>>>>> Perhaps we should have only allowed the PMD-sized enable=inherit (this is
->>>>>> just
->>>>>> for legacy back compat after all, I don't think there is any use case where
->>>>>> changing multiple mTHP size controls atomically is actually useful). Applying
->>>>>
->>>>> Agree. This is also our usage of 'inherit'.
->>>
->>> Missed that one: there might be use cases in the future once we would start
->>> defaulting to "inherit" for all knobs (a distro might default to that) and
->>> default-enable THP in the global knob. Then, it would be easy to disable any THP
->>> by disabling the global knob. (I think that's the future we're heading to, where
->>> we'd have an "auto" mode that can be set on the global toggle).
->>>
->>> But I am just making up use cases ;) I think it will be valuable and just doing
->>> it consistently now might be cleaner.
->>
->> I agree that consistency between enabled and shmem_enabled is top priority. And
->> yes, I had forgotten about the glorious "auto" future. So probably continuing
->> all sizes to select "inherit" is best.
->>
->> But for shmem_enabled, that means we need the following error checking:
->>
->>   - It is an error to set "force" for any size except PMD-size
->>
->>   - It is an error to set "force" for the global control if any size except PMD-
->>     size is set to "inherit"
->>
->>   - It is an error to set "inherit" for any size except PMD-size if the global
->>     control is set to "force".
->>
->> Certainly not too difficult to code and prove to be correct, but not the nicest
->> UX from the user's point of view when they start seeing errors.
->>
->> I think we previously said this would likely be temporary, and if/when tmpfs
->> gets mTHP support, we could simplify and allow all sizes to be set to "force".
->> But I wonder if tmpfs would ever need explicit mTHP control? Maybe it would be
->> more suited to the approach the page cache takes to transparently ramp up the
->> folio size as it faults more in. (Just saying there is a chance that this error
->> checking becomes permanent).
-> 
-> The strategy for tmpfs supporting mTHP will require more discussions and
-> evaluations in the future. However, regardless of the strategy (explicit mTHP
-> control or page cache control), I think it would be possible to use 'force' to
-> override previous strategies for some testing purposes. This appears to be
-> permissible according to the explanation in the current documentation: "force
-> the huge option on for all - very useful for testing". So it seems not permanent?
+Driver is quite outdated from Linux kernel internal APIs perspective.
+Update the GPIO part in this miniseries.
 
-Yeah ok, makes sense to me.
+The first patch to make sure noone is going to use legacy platform data.
+An alternative approach is to remove completely these family of drivers.
+
+Andy Shevchenko (2):
+  mfd: lm3533: Hide legacy platform data in the driver
+  mfd: lm3533: Move to new GPIO descriptor-based APIs
+
+ drivers/mfd/lm3533-core.c  | 45 +++++++++++++++++++-------------------
+ include/linux/mfd/lm3533.h | 18 ++-------------
+ 2 files changed, 25 insertions(+), 38 deletions(-)
+
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
 
