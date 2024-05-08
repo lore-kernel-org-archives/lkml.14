@@ -1,128 +1,507 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from prime.voidband.net (prime.voidband.net [199.247.17.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC45113247D;
-	Wed,  8 May 2024 21:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B30C12BF20;
+	Wed,  8 May 2024 21:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.247.17.104
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715203763; cv=none; b=MyfTU7me3gY2129YQjIo75rn3c2OXasZjDbztdpC89C9iFcGH9FX9+8KZyME30CsYXk7V7S6HbbDODbGP6zrlJ0PPr8nztYTjK8do1DsetogEW42GMc+HDWMhFs8bStb3szePtZ7qWho12XwK3bvHpcfpRaYsFhhwfWNVS6ZRmY=
+	t=1715203883; cv=none; b=kzRfTIQaaAhirxDKgBkRqgZU3CixYuNNUarhpXMDLcs0ruF9c4VseLHhuwf9lEOg+87EcOthFl3ZQVb6vp8ru6b1xpUT0XIv9Qwoch4YJoYcUKBY4rHgBn7tPybGG0sfGQ2SIY2RiQjM1VaKZ1eNVSl3FbemSKSgtvH+5pfp9Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715203763; c=relaxed/simple;
-	bh=C8Xvi1dqxGMmUWFmC5443UIoMw0DmQtqXBALLo+P4cs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YlRExcBr3mQpRae66yUTW2ZKFNevZFUK+pbuJDHvi8vA1q+5AX5zouVuBUt1ve1tq7+hYEj7xTpb9vf+UBbp7C4f4loe/69EqZ24jAZ+Et/V1GclW82/CFG9gIw01EiDcaL+GhqoyLM3VAeXCj0a1wUWHbDb/No/4qhIRXpDywM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qt3eHpTi; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715203883; c=relaxed/simple;
+	bh=ZtLGdl52vtg3vnmN06ew7auLRElOGROMxgEJsMhzGDg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=UyD9hMfkv3OsN8nBHZbezpo3SEmND0e+ZaApnIPkr6o50QS03xSngph8UyBW2aQn9iYO8tOYGRmzbXItq7EhPQeHRQbEAbG9NKZe0YtsZc8amTu2Y5zgXCbHJ9KW6ZARsf+S+V5mfIT0Nmpo9XeeLgg5g1YHQb/Y0NtMnbLePxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name; spf=pass smtp.mailfrom=natalenko.name; dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b=BOZ5oF8B; arc=none smtp.client-ip=199.247.17.104
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=natalenko.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=natalenko.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qt3eHpTi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715203762; x=1746739762;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C8Xvi1dqxGMmUWFmC5443UIoMw0DmQtqXBALLo+P4cs=;
-  b=Qt3eHpTiQRNKHlRnoreEcEFcKYLgsW6tjSYtbYMvLmKw9AQr15ie3BKH
-   DwFj21nizk9T6a3spB91zdTg3Yt0uefEoVMmkx8ahdkRd0RcnYMKWfPsX
-   3DCl9a50Fdx4i/aVaTY0VCbjm3+McbFPNL/Od7u6GXO+Xg7ZUfANdQxIL
-   mDzMAwdOUtd7SG74Yk0cMYaf9sviTbij9OTpqPnUP/sYm5k4mc8mFxxpE
-   /9qFGsPPr5AWEKUz3dQb04Ov4S9/RtPyE18XIg8LjthGGL+kic0JpzEg4
-   iXj7bZDDRqgm7b26gEXakGeGJTka8Lkmtw4UDYMt+QwXmFHt6aO1EsdoE
-   A==;
-X-CSE-ConnectionGUID: L2cp5IOkRuS7frDl0ngSKA==
-X-CSE-MsgGUID: 9czIEUUIQMORxtK8H0kyUg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="10944295"
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="10944295"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 14:29:21 -0700
-X-CSE-ConnectionGUID: iSeayxZASOe+bvS8jTtpbg==
-X-CSE-MsgGUID: 1lF8zhgzQeu+oVzzGWXuZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="33708469"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 08 May 2024 14:29:17 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s4oqg-00047m-0I;
-	Wed, 08 May 2024 21:29:14 +0000
-Date: Thu, 9 May 2024 05:28:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tianyang Zhang <zhangtianyang@loongson.cn>, chenhuacai@kernel.org,
-	kernel@xen0n.name, tglx@linutronix.de, jiaxun.yang@flygoat.com,
-	gaoliang@loongson.cn, wangliupu@loongson.cn, lvjianmin@loongson.cn,
-	yijun@loongson.cn, mhocko@suse.com, akpm@linux-foundation.org,
-	dianders@chromium.org, maobibo@loongson.cn, xry111@xry111.site,
-	zhaotianrui@loongson.cn, nathan@kernel.org, yangtiezhu@loongson.cn,
-	zhoubinbin@loongson.cn
-Cc: oe-kbuild-all@lists.linux.dev, loongarch@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] Loongarch:Support loongarch avec
-Message-ID: <202405090419.xGNdK28X-lkp@intel.com>
-References: <20240507125953.9117-1-zhangtianyang@loongson.cn>
+	dkim=pass (1024-bit key) header.d=natalenko.name header.i=@natalenko.name header.b="BOZ5oF8B"
+Received: from spock.localnet (unknown [94.142.239.106])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by prime.voidband.net (Postfix) with ESMTPSA id 5FD2C6356CD3;
+	Wed, 08 May 2024 23:31:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=natalenko.name;
+	s=dkim-20170712; t=1715203875;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d2BqnhV+W965UycNPyHoE8fPrB0pAV5FBq8owwCeXiI=;
+	b=BOZ5oF8Bj64A1l2IqDpSHAFY/+vvZ0ByCeUJ1r8bF075+BGKK4+iZ3m2HoXynUsv4luEPN
+	/JS4id7zbB6JJY6bBPgCBFHYXZtEZb2kwKcd7jgIL3TpV0VuFnBPhMfNgXK4hC59MntRk2
+	nMjuBJUUv3oGXGy+04fqBzdAAIh7fzI=
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+To: rafael.j.wysocki@intel.com, Mario.Limonciello@amd.com,
+ viresh.kumar@linaro.org, Ray.Huang@amd.com, gautham.shenoy@amd.com,
+ Borislav.Petkov@amd.com, Perry Yuan <perry.yuan@amd.com>
+Cc: Alexander.Deucher@amd.com, Xinmei.Huang@amd.com, Xiaojian.Du@amd.com,
+ Li.Meng@amd.com, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 0/7] AMD Pstate Driver Core Performance Boost
+Date: Wed, 08 May 2024 23:31:02 +0200
+Message-ID: <12430912.O9o76ZdvQC@natalenko.name>
+In-Reply-To: <2728768.mvXUDI8C0e@natalenko.name>
+References:
+ <cover.1715152592.git.perry.yuan@amd.com> <6041368.lOV4Wx5bFT@natalenko.name>
+ <2728768.mvXUDI8C0e@natalenko.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507125953.9117-1-zhangtianyang@loongson.cn>
+Content-Type: multipart/signed; boundary="nextPart5776996.DvuYhMxLoT";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
-Hi Tianyang,
+--nextPart5776996.DvuYhMxLoT
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Oleksandr Natalenko <oleksandr@natalenko.name>
+Subject: Re: [PATCH v10 0/7] AMD Pstate Driver Core Performance Boost
+Date: Wed, 08 May 2024 23:31:02 +0200
+Message-ID: <12430912.O9o76ZdvQC@natalenko.name>
+In-Reply-To: <2728768.mvXUDI8C0e@natalenko.name>
+MIME-Version: 1.0
 
-kernel test robot noticed the following build warnings:
+On st=C5=99eda 8. kv=C4=9Btna 2024 21:21:39, SEL=C4=8C Oleksandr Natalenko =
+wrote:
+> On st=C5=99eda 8. kv=C4=9Btna 2024 21:13:40, SEL=C4=8C Oleksandr Natalenk=
+o wrote:
+> > On st=C5=99eda 8. kv=C4=9Btna 2024 17:11:42, SEL=C4=8C Oleksandr Natale=
+nko wrote:
+> > > Hello.
+> > >=20
+> > > On st=C5=99eda 8. kv=C4=9Btna 2024 9:21:05, SEL=C4=8C Perry Yuan wrot=
+e:
+> > > > Hi all,
+> > > > The patchset series add core performance boost feature for AMD psta=
+te
+> > > > driver including passisve ,guide and active mode support.
+> > > >=20
+> > > > User can change core frequency boost control with a new sysfs entry:
+> > > >=20
+> > > > "/sys/devices/system/cpu/amd_pstate/cpb_boost"
+> > > >=20
+> > > >=20
+> > > > 1) globally disable core boost:
+> > > > $ sudo bash -c "echo 0 > /sys/devices/system/cpu/amd_pstate/cpb_boo=
+st"
+> > > > $ lscpu -ae
+> > > > CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ      M=
+HZ
+> > > >   0    0      0    0 0:0:0:0          yes 4201.0000 400.0000 2983.5=
+78
+> > > >   1    0      0    1 1:1:1:0          yes 4201.0000 400.0000 2983.5=
+78
+> > > >   2    0      0    2 2:2:2:0          yes 4201.0000 400.0000 2583.8=
+55
+> > > >   3    0      0    3 3:3:3:0          yes 4201.0000 400.0000 2983.5=
+78
+> > > >   4    0      0    4 4:4:4:0          yes 4201.0000 400.0000 2983.5=
+78
+> > > >=20
+> > > > 2) globally enable core boost:
+> > > > $ sudo bash -c "echo 1 > /sys/devices/system/cpu/amd_pstate/cpb_boo=
+st"
+> > > > $ lscpu -ae
+> > > >    0    0      0    0 0:0:0:0          yes 5759.0000 400.0000 2983.=
+578
+> > > >   1    0      0    1 1:1:1:0          yes 5759.0000 400.0000 2983.5=
+78
+> > > >   2    0      0    2 2:2:2:0          yes 5759.0000 400.0000 2983.5=
+78
+> > > >   3    0      0    3 3:3:3:0          yes 5759.0000 400.0000 2983.5=
+78
+> > > >   4    0      0    4 4:4:4:0          yes 5759.0000 400.0000 2983.5=
+78
+> > > >=20
+> > > >=20
+> > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> > > > The V9 patches add per CPU boost control, user can enable/disable C=
+PUs boost
+> > > > as the below command tested on a laptop system.
+> > > > # before
+> > > >   CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ     =
+  MHZ
+> > > >   0    0      0    0 0:0:0:0          yes 4208.0000 400.0000 1666.7=
+740
+> > > >   1    0      0    0 0:0:0:0          yes 4208.0000 400.0000  400.0=
+000
+> > > >   2    0      0    1 1:1:1:0          yes 4208.0000 400.0000 3386.1=
+260
+> > > >   3    0      0    1 1:1:1:0          yes 4208.0000 400.0000  400.0=
+000
+> > > > $ sudo rdmsr 0xc00102b3 -p 0
+> > > > 10a6
+> > > >=20
+> > > > $ sudo bash -c "echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/boost"
+> > > > # after
+> > > >   CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ   MINMHZ     =
+  MHZ
+> > > >     0    0      0    0 0:0:0:0          yes 3501.0000 400.0000  400=
+=2E0000
+> > > >     1    0      0    0 0:0:0:0          yes 4208.0000 400.0000 1391=
+=2E0690
+> > > >     2    0      0    1 1:1:1:0          yes 4208.0000 400.0000 3654=
+=2E4541
+> > > >     3    0      0    1 1:1:1:0          yes 4208.0000 400.0000  400=
+=2E0000
+> > > > $ sudo rdmsr 0xc00102b3 -p 0
+> > > > 108a
+> > > >=20
+> > > >=20
+> > > > The patches have been tested with the AMD 7950X processor and many =
+users
+> > > > would like to get core boost control enabled for power saving.
+> > > >=20
+> > > > Perry.
+> > > >=20
+> > > >=20
+> > > > Changes from v9:
+> > > >  * change per CPU boost sysfs file name to `boost` (Mario)
+> > > >  * rebased to latest linux-pm/bleeding-edge
+> > > >=20
+> > > > Changes from v8:
+> > > >  * pick RB flag for patch 4 (Mario)
+> > > >  * change boot_cpu_has to cpu_feature_enabled for patch 2 (Boris)
+> > > >  * merge patch 6 into patch 3 (Mario)
+> > > >  * add two patch for per CPU boost control patch 6 & 7(Mario)
+> > > >  * rebased to latest linux-pm/bleeding-edge
+> > > >=20
+> > > > Changes from v7:
+> > > >  * fix the mutext locking issue in the sysfs file update(Ray, Mario)
+> > > >  * pick ack flag from Ray
+> > > >  * use X86_FEATURE_CPB to verify the CPB function in Patch #2(Ray)
+> > > >  * rerun the testing to check function works well
+> > > >  * rebased to linux-pm/bleeding-edge latest
+> > > >=20
+> > > > Changes from v6:
+> > > >  * reword patch 2 commit log (Gautham)
+> > > >  * update cover letter description(Gautham)
+> > > >  * rebase to kernel v6.9-rc5
+> > > >=20
+> > > > Changes from v4:
+> > > >  * drop the legacy boost remove patch, let us keep the legacy inter=
+face
+> > > >    in case some applications break.
+> > > >  * rebase to linux-pm/bleeding-edge branch
+> > > >  * rework the patchset base on [PATCH v8 0/8] AMD Pstate Fixes And
+> > > >    Enhancements which has some intial work done there.
+> > > >=20
+> > > > Changes from v4:
+> > > >  * move MSR_K7_HWCR_CPB_DIS_BIT into msr-index.h
+> > > >  * pick RB flag from Gautham R. Shenoy
+> > > >  * add Cc Oleksandr Natalenko <oleksandr@natalenko.name>
+> > > >  * rebase to latest linux-pm/bleeding-edge branch
+> > > >  * rebase the patch set on top of [PATCH v7 0/6] AMD Pstate Fixes A=
+nd Enhancements
+> > > >  * update  [PATCH v7 2/6] to use MSR_K7_HWCR_CPB_DIS_BIT
+> > > >=20
+> > > > Changes from v3:
+> > > >  * rebased to linux-pm/bleeding-edge v6.8
+> > > >  * rename global to amd_pstate_global_params(Oleksandr Natalenko)
+> > > >  * remove comments for boot_supported in amd_pstate.h
+> > > >  * fix the compiler warning for amd-pstate-ut.ko
+> > > >  * use for_each_online_cpu in cpb_boost_store which fix the null po=
+inter
+> > > >    error during testing
+> > > >  * fix the max frequency value to be KHz when cpb boost disabled(Ga=
+utham R. Shenoy)
+> > > >=20
+> > > > Changes from v2:
+> > > >  * move global struct to amd-pstate.h
+> > > >  * fix the amd-pstate-ut with new cpb control interface
+> > > >=20
+> > > > Changes from v1:
+> > > >  * drop suspend/resume fix patch 6/7 because of the fix should be in
+> > > >    another fix series instead of CPB feature
+> > > >  * move the set_boost remove patch to the last(Mario)
+> > > >  * Fix commit info with "Closes:" (Mario)
+> > > >  * simplified global.cpb_supported initialization(Mario)
+> > > >  * Add guide mode support for CPB control
+> > > >  * Fixed some Doc typos and add guide mode info to Doc as well.
+> > > >=20
+> > > > v1: https://lore.kernel.org/all/cover.1706255676.git.perry.yuan@amd=
+=2Ecom/
+> > > > v2: https://lore.kernel.org/lkml/cover.1707047943.git.perry.yuan@am=
+d.com/
+> > > > v3: https://lore.kernel.org/lkml/cover.1707297581.git.perry.yuan@am=
+d.com/
+> > > > v4: https://lore.kernel.org/lkml/cover.1710322310.git.perry.yuan@am=
+d.com/
+> > > > v5: https://lore.kernel.org/lkml/cover.1710473712.git.perry.yuan@am=
+d.com/
+> > > > v6: https://lore.kernel.org/lkml/cover.1710754236.git.perry.yuan@am=
+d.com/
+> > > > v7: https://lore.kernel.org/lkml/cover.1713861200.git.perry.yuan@am=
+d.com/
+> > > > v8: https://lore.kernel.org/lkml/cover.1714112854.git.perry.yuan@am=
+d.com/
+> > > > v9: https://lore.kernel.org/lkml/cover.1714989803.git.perry.yuan@am=
+d.com/
+> > > >=20
+> > > > Perry Yuan (7):
+> > > >   cpufreq: acpi: move MSR_K7_HWCR_CPB_DIS_BIT into msr-index.h
+> > > >   cpufreq: amd-pstate: initialize new core precision boost state
+> > > >   cpufreq: amd-pstate: implement cpb_boost sysfs entry for boost co=
+ntrol
+> > > >   cpufreq: amd-pstate: fix the MSR highest perf will be reset issue
+> > > >     while cpb boost off
+> > > >   Documentation: cpufreq: amd-pstate: introduce the new cpu boost
+> > > >     control method
+> > > >   cpufreq: amd-pstate: introduce per CPU frequency boost control
+> > > >   Documentation: cpufreq: amd-pstate: update doc for Per CPU boost
+> > > >     control method
+> > > >=20
+> > > >  Documentation/admin-guide/pm/amd-pstate.rst |  30 ++++
+> > > >  arch/x86/include/asm/msr-index.h            |   2 +
+> > > >  drivers/cpufreq/acpi-cpufreq.c              |   2 -
+> > > >  drivers/cpufreq/amd-pstate-ut.c             |   2 +-
+> > > >  drivers/cpufreq/amd-pstate.c                | 189 ++++++++++++++++=
+++--
+> > > >  include/linux/amd-pstate.h                  |  14 ++
+> > > >  6 files changed, 225 insertions(+), 14 deletions(-)
+> > >=20
+> > > I've applied this series along with fixes and improvements [1], and I=
+ cannot get guided mode to work with my CPU any more.
+> > >=20
+> > > The CPU is:
+> > >=20
+> > > ```
+> > > Vendor ID:                AuthenticAMD
+> > >   Model name:             AMD Ryzen 9 5950X 16-Core Processor
+> > >     CPU family:           25
+> > >     Model:                33
+> > >     Thread(s) per core:   2
+> > >     Core(s) per socket:   16
+> > >     Socket(s):            1
+> > >     Stepping:             2
+> > > ```
+> > >=20
+> > > I've got `amd_pstate=3Dguided` set in the kernel cmdline, but `amd-ps=
+tate-epp` gets loaded anyway.
+> >=20
+> > OK, this part is solved like below:
+> >=20
+> > ```
+> > diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+> > index aafa4466e5ced..5aee7d2b8cfd7 100644
+> > --- a/drivers/cpufreq/amd-pstate.c
+> > +++ b/drivers/cpufreq/amd-pstate.c
+> > @@ -66,7 +66,7 @@
+> >  static struct cpufreq_driver *current_pstate_driver;
+> >  static struct cpufreq_driver amd_pstate_driver;
+> >  static struct cpufreq_driver amd_pstate_epp_driver;
+> > -static int cppc_state;
+> > +static int cppc_state =3D CONFIG_X86_AMD_PSTATE_DEFAULT_MODE;
+> >  static bool cppc_enabled;
+> >  static bool amd_pstate_prefcore =3D true;
+> >  static struct quirk_entry *quirks;
+> > @@ -1958,10 +1958,6 @@ static int __init amd_pstate_init(void)
+> >  	/* check if this machine need CPPC quirks */
+> >  	dmi_check_system(amd_pstate_quirks_table);
+> > =20
+> > -	/* get default driver mode for loading*/
+> > -	cppc_state =3D CONFIG_X86_AMD_PSTATE_DEFAULT_MODE;
+> > -	pr_debug("cppc working state set to mode:%d\n", cppc_state);
+> > -
+> >  	switch (cppc_state) {
+> >  	case AMD_PSTATE_DISABLE:
+> >  		pr_info("driver load is disabled, boot with specific mode to enable =
+this\n");
+> > ```
+> >=20
+> > as we have discussed here [1].
+> >=20
+> > [1] https://lore.kernel.org/lkml/CYYPR12MB865554562BE018D46FF0108C9CE52=
+@CYYPR12MB8655.namprd12.prod.outlook.com/
+>=20
+> Ah no, scratch it, it's not solved. With `amd_pstate=3Dguided` the driver=
+ fails to register during the boottime with the same `sysfs` error:
+>=20
+> ```
+> kernel: sysfs: cannot create duplicate filename '/devices/system/cpu/cpuf=
+req/policy0/boost'
+> kernel: Hardware name: ASUS System Product Name/Pro WS X570-ACE, BIOS 480=
+5 03/18/2024
+> kernel: Call Trace:
+> kernel:  <TASK>
+> kernel:  dump_stack_lvl+0x47/0x60
+> kernel:  sysfs_warn_dup+0x5a/0x70
+> kernel:  sysfs_create_file_ns+0x196/0x1b0
+> kernel:  cpufreq_online+0x244/0xde0
+> kernel:  cpufreq_add_dev+0x7b/0x90
+> kernel:  subsys_interface_register+0x19e/0x1d0
+> kernel:  cpufreq_register_driver+0x177/0x2f0
+> kernel:  amd_pstate_init+0x1b8/0x2c0
+> kernel:  do_one_initcall+0x5b/0x320
+> kernel:  kernel_init_freeable+0x1dc/0x380
+> kernel:  kernel_init+0x1a/0x1c0
+> kernel:  ret_from_fork+0x34/0x50
+> kernel:  ret_from_fork_asm+0x1b/0x30
+> kernel:  </TASK>
+> ```
+>=20
+> and things revert to `acpi_cpufreq` instead.
+>=20
+> What's wrong?
 
-[auto build test WARNING on tip/irq/core]
-[also build test WARNING on linus/master v6.9-rc7]
-[cannot apply to next-20240508]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+This happens with both `amd_pstate=3Dguided` and `amd_pstate=3Dpassive`, wh=
+ile with `amd_pstate=3Dactive` it works. Also note I've got:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tianyang-Zhang/Loongarch-Support-loongarch-avec/20240507-210314
-base:   tip/irq/core
-patch link:    https://lore.kernel.org/r/20240507125953.9117-1-zhangtianyang%40loongson.cn
-patch subject: [PATCH 2/2] Loongarch:Support loongarch avec
-config: loongarch-randconfig-r113-20240508 (https://download.01.org/0day-ci/archive/20240509/202405090419.xGNdK28X-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20240509/202405090419.xGNdK28X-lkp@intel.com/reproduce)
+```
+CONFIG_X86_AMD_PSTATE=3Dy
+CONFIG_X86_AMD_PSTATE_DEFAULT_MODE=3D3
+```
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405090419.xGNdK28X-lkp@intel.com/
+aka "active" by default.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/irqchip/irq-loongarch-avec.c:34:1: sparse: sparse: symbol '__pcpu_scope_pending_list' was not declared. Should it be static?
-   drivers/irqchip/irq-loongarch-avec.c:41:3: sparse: sparse: symbol 'loongarch_avec' was not declared. Should it be static?
-   drivers/irqchip/irq-loongarch-avec.c:181:31: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_d'
-   drivers/irqchip/irq-loongarch-avec.c:181:31: sparse: sparse: cast from unknown type
-   drivers/irqchip/irq-loongarch-avec.c:184:31: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_d'
-   drivers/irqchip/irq-loongarch-avec.c:184:31: sparse: sparse: cast from unknown type
-   drivers/irqchip/irq-loongarch-avec.c:187:31: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_d'
-   drivers/irqchip/irq-loongarch-avec.c:187:31: sparse: sparse: cast from unknown type
-   drivers/irqchip/irq-loongarch-avec.c:190:31: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_d'
-   drivers/irqchip/irq-loongarch-avec.c:190:31: sparse: sparse: cast from unknown type
-   drivers/irqchip/irq-loongarch-avec.c:215:18: sparse: sparse: undefined identifier '__builtin_loongarch_csrrd_d'
-   drivers/irqchip/irq-loongarch-avec.c:215:18: sparse: sparse: cast from unknown type
-   drivers/irqchip/irq-loongarch-avec.c: note: in included file (through include/linux/mmzone.h, include/linux/topology.h, include/linux/irq.h, ...):
-   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
-   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
-   drivers/irqchip/irq-loongarch-avec.c:164:6: sparse: sparse: context imbalance in 'complete_irq_moving' - different lock contexts for basic block
-   drivers/irqchip/irq-loongarch-avec.c: note: in included file (through arch/loongarch/include/asm/loongarch.h, arch/loongarch/include/asm/cpu-info.h, ...):
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:294:30: sparse: sparse: undefined identifier '__builtin_loongarch_iocsrrd_d'
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:294:11: sparse: sparse: cast from unknown type
-   ../lib/gcc/loongarch64-linux/13.2.0/include/larchintrin.h:332:3: sparse: sparse: undefined identifier '__builtin_loongarch_iocsrwr_d'
+It seems I miss to understand something in the init sequence.
 
-vim +/__pcpu_scope_pending_list +34 drivers/irqchip/irq-loongarch-avec.c
+>=20
+> >=20
+> > But this part:
+> >=20
+> > > When I try to set `guided` manually via `echo guided | sudo tee /sys/=
+devices/system/cpu/amd_pstate/status`, the status gets dropped to `disable`=
+, `tee` errors out with `-ENODEV`, and there's this in the kernel log:
+> > >=20
+> > > ```
+> > > $ jctl -kb | grep sysfs: | cut -d ' ' -f 5-
+> > > kernel: sysfs: cannot create duplicate filename '/devices/system/cpu/=
+cpufreq/policy0/boost'
+> > > =E2=80=A6
+> > > kernel: sysfs: cannot create duplicate filename '/devices/system/cpu/=
+cpufreq/policy31/boost'
+> > > ```
+> >=20
+> > is not. I've successfully booted with `amd_pstate=3Dguided`, then did t=
+his:
+> >=20
+> > ```
+> > $ echo active | sudo tee /sys/devices/system/cpu/amd_pstate/status
+> > ```
+> >=20
+> > just for the sake of test, and got this:
+> >=20
+> > ```
+> > tee: /sys/devices/system/cpu/amd_pstate/status: File exists
+> > ```
+> >=20
+> > and this:
+> >=20
+> > ```
+> > kernel: WARNING: CPU: 9 PID: 8528 at drivers/cpufreq/cpufreq.c:2961 cpu=
+freq_unregister_driver+0x1a/0xc0
+> > ```
+> >=20
+> > which corresponds to:
+> >=20
+> > ```
+> > 2957 void cpufreq_unregister_driver(struct cpufreq_driver *driver)
+> > 2958 {
+> > 2959         unsigned long flags;
+> > 2960
+> > 2961         if (WARN_ON(!cpufreq_driver || (driver !=3D cpufreq_driver=
+)))
+> > 2962                 return;
+> > ```
+> >=20
+> > I haven't conducted this test before, so I don't know whether this beha=
+viour is new, or it was present in older iterations. I also don't know if t=
+his belongs to the "boost" series or the "fixes", and just letting you know=
+ so that you can test the runtime switching yourself and see if it is repro=
+ducible in your environment as well or not.
+> >=20
+> > > The following is applied on top of v6.9-rc7:
+> > >=20
+> > > ```
+> > > cpufreq: amd-pstate: automatically load pstate driver by default
+> > > cpufreq: amd-pstate: fix the highest frequency issue which limit perf=
+ormance
+> > > cpufreq: amd-pstate: implement heterogeneous core topology for highes=
+t performance initialization
+> > > x86/cpufeatures: Add feature bits for AMD heterogeneous processor
+> > > cpufreq: amd-pstate: switch boot_cpu_has() to cpu_feature_enabled()
+> > > Documentation: PM: amd-pstate: add guide mode to the Operation mode
+> > > Documentation: PM: amd-pstate: add debugging section for driver loadi=
+ng failure
+> > > Documentation: PM: amd-pstate: introducing recommended reboot require=
+ment during driver switch
+> > > cpufreq: amd-pstate: add debug message while CPPC is supported and di=
+sabled by SBIOS
+> > > cpufreq: amd-pstate: show CPPC debug message if CPPC is not supported
+> > > cpufreq: amd-pstate: optimiza the initial frequency values verificati=
+on
+> > > Documentation: cpufreq: amd-pstate: update doc for Per CPU boost cont=
+rol method
+> > > cpufreq: amd-pstate: introduce per CPU frequency boost control
+> > > Documentation: cpufreq: amd-pstate: introduce the new cpu boost contr=
+ol method
+> > > cpufreq: amd-pstate: fix the MSR highest perf will be reset issue whi=
+le cpb boost off
+> > > cpufreq: amd-pstate: implement cpb_boost sysfs entry for boost control
+> > > cpufreq: amd-pstate: initialize new core precision boost state
+> > > cpufreq: acpi: move MSR_K7_HWCR_CPB_DIS_BIT into msr-index.h
+> > > cpufreq: amd-pstate: remove unused variable lowest_nonlinear_freq
+> > > cpufreq: amd-pstate: fix code format problems
+> > > cpufreq: amd-pstate: Add quirk for the pstate CPPC capabilities missi=
+ng
+> > > cpufreq: amd-pstate: get transition delay and latency value from ACPI=
+ tables
+> > > cpufreq: amd-pstate: Bail out if min/max/nominal_freq is 0
+> > > cpufreq: amd-pstate: Remove amd_get_{min,max,nominal,lowest_nonlinear=
+}_freq()
+> > > cpufreq: amd-pstate: Unify computation of {max,min,nominal,lowest_non=
+linear}_freq
+> > > cpufreq: amd-pstate: Document the units for freq variables in amd_cpu=
+data
+> > > cpufreq: amd-pstate: Document *_limit_* fields in struct amd_cpudata
+> > > ```
+> > >=20
+> > > Previously, with your submissions, it was possible to use `guided` mo=
+de with my Zen 3.
+> > >=20
+> > > [1] https://lore.kernel.org/lkml/cover.1715065568.git.perry.yuan@amd.=
+com/
+> > >=20
+> > >=20
+> >=20
+> >=20
+> >=20
+>=20
+>=20
+>=20
 
-    33	
-  > 34	DEFINE_PER_CPU(struct pending_list, pending_list);
-    35	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+=2D-=20
+Oleksandr Natalenko (post-factum)
+--nextPart5776996.DvuYhMxLoT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEZUOOw5ESFLHZZtOKil/iNcg8M0sFAmY77xYACgkQil/iNcg8
+M0vTPRAAn5Ok15YbTWaUKJBld7bnA7lqyUbyXz/VHzJa1Qfj4ctiG/e49qLgrIYU
+S/XB4BSmh5Ofn7/I8rZn28CbMgEpFzQJU/FTyohPk2DNALeT/3b+MClHD4P1PoVq
+eqBMTCAHwIK7v393ozjr+y53DeMg7mqsSCdLlDbHPmUj9+SlF6h9NrO+x1qwAVzc
+tGhrCxqoL873mW0h6zPzQBrEdDBhUNX8SJ1BM77szlzgEt2+DwWJF0W7XXN767So
+jLiLNhXxro87EgfnvFYc4MHkce0peNzEX2f2eMihl+SMCRC53hMbaKt93iJWNRZp
+zpvLQD+AMN9nHexERJWLggXIDkV4V03CrfnJELjBMtTSoNdVf1i99Prh3y3RbZzS
+KrxAnyF1EOIksKbxFXDWojbJ+rXJUPA+lgRXDt/HoD8f4G8Ynb1W2rMzBU8gCK3D
+YyJ7KIWMvCQpi+0td9S1a3qQGZn9ENjSzwAk7WnElTkKFWX/77XvD2wTDbVdP/1g
+eoF05ve/A3Qm28JauOE1m2i/ZS5Lgjt8LC2Gtgbu4qzKjHhCy399V/cQAYdaz3LX
+CdIRerOVTlRGicLLadJo9cOPBX8IFMq4r7Wh+5W0or1pwlrffRWsTr69iJR8JXuA
+K+pe8NeSRfvhmC2cozs8Cj8enx4y+z2Auesg/C8w8QFyYEdoqaY=
+=+58A
+-----END PGP SIGNATURE-----
+
+--nextPart5776996.DvuYhMxLoT--
+
+
+
