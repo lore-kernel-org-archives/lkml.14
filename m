@@ -1,151 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05703B7A0
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 08:10:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551453FBB1
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 08:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715155858; cv=none; b=rG731aQhWAvYdQkqj2og+6OU9hHJRnV2TJx/hvYrKTYAyuraha+SkPwPPHNhgQXNlAeoVZte59lYEhcok+1bfKjnfPWWh4EyGtjfzBQVDaPL1NM+pqRdKSmZEd6eln+Ht8doeVNujBa3ud84luOIb51Fj4Ep/0MmMhr1jPLfIuM=
+	t=1715155889; cv=none; b=gs4henUAhv5gwCSnhMveUXEQTBzCiB9T1J8V9xSzjPeYPYw1ahZB+y5SfJ8Kqt6ALQpzfV48a2HDOWjN/XOhl6SjNzNuLdsZI7ruz/cRz6N4PN2LdWYchineWhBstqhKhQfl2lb+Qbp88ZLg2cInMCDFFFf8bdS15CZSNZdPSJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715155858; c=relaxed/simple;
-	bh=/on5X/cY4M8emv68YO5Q8B0COsehn7OYyz7t0+eXzto=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=uck8m7p/XxYNmT+GOH9pzkegsTTaeO6HMSJVSQYnw4ov8hDVchw3fkQsKzJbRdfMbWO+2Uz2bakMDA6SJKWleA6PP5M+BdHV6mSWij1Kr2Mtpn2CwZc+4/zb2IVWsvfgLfu3B1RMesQ0mHmCs+DQwEY/Hyw7JGCsjWfytebcGxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gA1++mlU; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gA1++mlU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715155856; x=1746691856;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=/on5X/cY4M8emv68YO5Q8B0COsehn7OYyz7t0+eXzto=;
-  b=gA1++mlUTTskrDvSlSOwlbQj7O811GMEAZTNr8lIyb1KtKEz5fCsLAGT
-   8dntkWHXPRzB6pPOSZo0Yj1Tea7p0eqI3CXX1K9kLjuyhk1HwQeLlGFAT
-   zfkIJVw9TmVoHC4pxqVmlPCujNZ9K6tOgq4ChZynSymFg7rtiLB/JaHU8
-   XzXk4LOHsa4HfhIZ4lqRgebul+pnNERm9TNyjQ5f6ZA/qCS9qg7fnbhjT
-   cn2X8mwfBk3VYom9wdsnlgcBm0K9K9/Z3Jm31iWjnSMUWzujSwv/NHw+X
-   N5KaGSh6nBeKf3MtObk8iwwBwNKFHj2rLCL6u8cY3Bc9xvWwHTHFv7vhq
-   A==;
-X-CSE-ConnectionGUID: 8RJBdDFVRLiPGwQGDXoYAw==
-X-CSE-MsgGUID: 01pBGfnSTeOX1vC0W9sMjg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="10845312"
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="10845312"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 01:10:56 -0700
-X-CSE-ConnectionGUID: kAvrKWCvRniONnhB8OO5sg==
-X-CSE-MsgGUID: CRmLOhA8ROSKgO52UJ0qTQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="29384745"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 01:10:51 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org,  linux-mm@kvack.org,
-  baolin.wang@linux.alibaba.com,  chrisl@kernel.org,  david@redhat.com,
-  hanchuanhua@oppo.com,  hannes@cmpxchg.org,  hughd@google.com,
-  kasong@tencent.com,  linux-kernel@vger.kernel.org,  ryan.roberts@arm.com,
-  surenb@google.com,  v-songbaohua@oppo.com,  willy@infradead.org,
-  xiang@kernel.org,  yosryahmed@google.com,  yuzhao@google.com,
-  ziy@nvidia.com
-Subject: Re: [PATCH v3 3/6] mm: introduce pte_move_swp_offset() helper which
- can move offset bidirectionally
-In-Reply-To: <20240503005023.174597-4-21cnbao@gmail.com> (Barry Song's message
-	of "Fri, 3 May 2024 12:50:20 +1200")
-References: <20240503005023.174597-1-21cnbao@gmail.com>
-	<20240503005023.174597-4-21cnbao@gmail.com>
-Date: Wed, 08 May 2024 16:08:59 +0800
-Message-ID: <87ttj8iv38.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1715155889; c=relaxed/simple;
+	bh=saxFz38dozy1mF1iTqtAanoNI9EUBodlVOT3bIkWB5A=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Bg2bx4BWYHDqxJVdALLHSQgm24qXGGGKkjJvuLm1BBzTVZsUja9pgP2KqXKJJIlKVYoURkeZS94aQ0lPylHT+HbDTgBI4zx9eJuDguMfn7k6seBRCqRVyHqsP5+idt15Jl9CpwiS1NpIh6zQn5TVud/NPjkHlpu2ndjfz2sWIq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-7e195fac186so41803639f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 01:11:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715155887; x=1715760687;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1TC4P/faER2lAvVgIfDbtDWGEj4zknODtVb17Ze9sQc=;
+        b=RUM5MdEf4MteV3QGr57IqCR18+AKl7KX/RzkpFApvBR+ej8ZxtyfmGY+bx6lCqUfPx
+         CSbVQBHXnYlRgw+YIgBpgrTOYv5E+M4NmpD+fWa7p0Y1MI4KHIgzCRtlhgytdMU1QJPI
+         6ofAnWMhJZkT+wquiFTBl63zlOq97N9/UpklhT2XnAcxG40Kq3VJj30nLehfk0fLBi1Y
+         yePv+YbMY/K1hnUm6mPZJX42NUO7g3ujHY/tL3XK690j31pOxcBCM0zwK+s++lhKMPOD
+         6uQuW/LoBLl0vXTFoVM/ntUg8aGDViUAab9m8uxbQmiggSFPxWR0sN3QABl0Z6QwiD6X
+         ckCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWXm/D3rqecos9s/lPY+xIQVTB48Od0jwwKWnANibsVb+GLltoMKesKuJwSUfL1NS7cYf8Tmx+YGmnVnQEEM8p7hABXNrJhtDiBrDxu
+X-Gm-Message-State: AOJu0YxUZlx0xdMQkH0hoWCnksAYZGqtwV3AI0C5FYheTSg74sDWuy51
+	gUy1QRAzdmhZ9WdgZCSNPvOdjIsnDlkJ9A5QknKoXO2Qs7ocPpQehas7fNrIVNlu04ZBJQnRcIj
+	rM9iI2TWxHt4ppixNXF1EpSdd/4DynyAw39BAvQ+MyCaVE4FGDTMAnzc=
+X-Google-Smtp-Source: AGHT+IFgdbj6+sIkAGoToRnJPBmkbWHMq5sVU4eRFthIoz0S0PkhOpDpwMsH0rgxzOLiMI3IvKdgBCzhZ+dNiex9WuLAD5SUsQqj
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+X-Received: by 2002:a05:6638:2389:b0:488:59cc:eb4c with SMTP id
+ 8926c6da1cb9f-488fdd5553amr128283173.3.1715155887604; Wed, 08 May 2024
+ 01:11:27 -0700 (PDT)
+Date: Wed, 08 May 2024 01:11:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006a59f00617ecd989@google.com>
+Subject: [syzbot] [bcachefs?] UBSAN: shift-out-of-bounds in bch2_bkey_format_invalid
+From: syzbot <syzbot+9833a1d29d4a44361e2c@syzkaller.appspotmail.com>
+To: bfoster@redhat.com, kent.overstreet@linux.dev, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Barry Song <21cnbao@gmail.com> writes:
+Hello,
 
-> From: Barry Song <v-songbaohua@oppo.com>
->
-> There could arise a necessity to obtain the first pte_t from a swap
-> pte_t located in the middle. For instance, this may occur within the
-> context of do_swap_page(), where a page fault can potentially occur in
-> any PTE of a large folio. To address this, the following patch introduces
-> pte_move_swp_offset(), a function capable of bidirectional movement by
-> a specified delta argument. Consequently, pte_increment_swp_offset()
-> will directly invoke it with delta = 1.
->
-> Suggested-by: "Huang, Ying" <ying.huang@intel.com>
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+syzbot found the following issue on:
 
-LGTM, Thanks!  Feel free to add
+HEAD commit:    9221b2819b8a Add linux-next specific files for 20240503
+git tree:       linux-next
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=153b20e4980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8ab537f51a6a0d98
+dashboard link: https://syzkaller.appspot.com/bug?extid=9833a1d29d4a44361e2c
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=114b7a50980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11b7ae87180000
 
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/3e67dbdc3c37/disk-9221b281.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/ade618fa19f8/vmlinux-9221b281.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/df12e5073c97/bzImage-9221b281.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/d64ba6155455/mount_0.gz
 
-in the future version.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+9833a1d29d4a44361e2c@syzkaller.appspotmail.com
 
-> ---
->  mm/internal.h | 25 +++++++++++++++++++++----
->  1 file changed, 21 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/internal.h b/mm/internal.h
-> index c5552d35d995..cfe4aed66a5c 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -211,18 +211,21 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
->  }
->  
->  /**
-> - * pte_next_swp_offset - Increment the swap entry offset field of a swap pte.
-> + * pte_move_swp_offset - Move the swap entry offset field of a swap pte
-> + *	 forward or backward by delta
->   * @pte: The initial pte state; is_swap_pte(pte) must be true and
->   *	 non_swap_entry() must be false.
-> + * @delta: The direction and the offset we are moving; forward if delta
-> + *	 is positive; backward if delta is negative
->   *
-> - * Increments the swap offset, while maintaining all other fields, including
-> + * Moves the swap offset, while maintaining all other fields, including
->   * swap type, and any swp pte bits. The resulting pte is returned.
->   */
-> -static inline pte_t pte_next_swp_offset(pte_t pte)
-> +static inline pte_t pte_move_swp_offset(pte_t pte, long delta)
->  {
->  	swp_entry_t entry = pte_to_swp_entry(pte);
->  	pte_t new = __swp_entry_to_pte(__swp_entry(swp_type(entry),
-> -						   (swp_offset(entry) + 1)));
-> +						   (swp_offset(entry) + delta)));
->  
->  	if (pte_swp_soft_dirty(pte))
->  		new = pte_swp_mksoft_dirty(new);
-> @@ -234,6 +237,20 @@ static inline pte_t pte_next_swp_offset(pte_t pte)
->  	return new;
->  }
->  
-> +
-> +/**
-> + * pte_next_swp_offset - Increment the swap entry offset field of a swap pte.
-> + * @pte: The initial pte state; is_swap_pte(pte) must be true and
-> + *	 non_swap_entry() must be false.
-> + *
-> + * Increments the swap offset, while maintaining all other fields, including
-> + * swap type, and any swp pte bits. The resulting pte is returned.
-> + */
-> +static inline pte_t pte_next_swp_offset(pte_t pte)
-> +{
-> +	return pte_move_swp_offset(pte, 1);
-> +}
-> +
->  /**
->   * swap_pte_batch - detect a PTE batch for a set of contiguous swap entries
->   * @start_ptep: Page table pointer for the first entry.
+loop0: detected capacity change from 0 to 32768
+bcachefs (loop0): mounting version 1.7: mi_btree_bitmap opts=compression=lz4,nojournal_transaction_names
+bcachefs (loop0): recovering from clean shutdown, journal seq 7
+------------[ cut here ]------------
+UBSAN: shift-out-of-bounds in fs/bcachefs/bkey.c:663:22
+shift exponent 254 is too large for 64-bit type 'unsigned long long'
+CPU: 1 PID: 5092 Comm: syz-executor406 Not tainted 6.9.0-rc6-next-20240503-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ ubsan_epilogue lib/ubsan.c:231 [inline]
+ __ubsan_handle_shift_out_of_bounds+0x3c8/0x420 lib/ubsan.c:468
+ bch2_bkey_format_invalid+0x46c/0x5c0 fs/bcachefs/bkey.c:663
+ validate_bset+0x168d/0x25a0 fs/bcachefs/btree_io.c:824
+ bch2_btree_node_read_done+0x20d2/0x5ed0 fs/bcachefs/btree_io.c:1142
+ btree_node_read_work+0x665/0x1300 fs/bcachefs/btree_io.c:1345
+ bch2_btree_node_read+0x2637/0x2c80 fs/bcachefs/btree_io.c:1730
+ __bch2_btree_root_read fs/bcachefs/btree_io.c:1769 [inline]
+ bch2_btree_root_read+0x61e/0x970 fs/bcachefs/btree_io.c:1793
+ read_btree_roots+0x22d/0x7b0 fs/bcachefs/recovery.c:472
+ bch2_fs_recovery+0x2334/0x36e0 fs/bcachefs/recovery.c:800
+ bch2_fs_start+0x356/0x5b0 fs/bcachefs/super.c:1030
+ bch2_fs_open+0xa8d/0xdf0 fs/bcachefs/super.c:2105
+ bch2_mount+0x71d/0x1320 fs/bcachefs/fs.c:1917
+ legacy_get_tree+0xee/0x190 fs/fs_context.c:662
+ vfs_get_tree+0x90/0x2a0 fs/super.c:1780
+ do_new_mount+0x2be/0xb40 fs/namespace.c:3352
+ do_mount fs/namespace.c:3692 [inline]
+ __do_sys_mount fs/namespace.c:3898 [inline]
+ __se_sys_mount+0x2d9/0x3c0 fs/namespace.c:3875
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fa35434c8fa
+Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 5e 04 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff2b30e848 EFLAGS: 00000282 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007fff2b30e860 RCX: 00007fa35434c8fa
+RDX: 0000000020005d80 RSI: 0000000020005dc0 RDI: 00007fff2b30e860
+RBP: 0000000000000010 R08: 00007fff2b30e8a0 R09: 0000000000005d8f
+R10: 0000000000000010 R11: 0000000000000282 R12: 0000000000000004
+R13: 00007fff2b30e8a0 R14: 0000000000000003 R15: 0000000001000000
+ </TASK>
+---[ end trace ]---
 
---
-Best Regards,
-Huang, Ying
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
