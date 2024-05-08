@@ -1,121 +1,77 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2798E75811;
-	Wed,  8 May 2024 09:39:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C66977581A;
+	Wed,  8 May 2024 09:40:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715161189; cv=none; b=k4iY8agMePlD0vL1j1CsfvlvN/vhXH5taTP35Y18VlOaQp73b0snOTkWj8e7GqFIDD2Kci93vLxDo4qa7g0Gz0TImEV3ul50dqGtV7laMyrbZo6sWb0dnVW7oZAP7gbNBSgMAPMW4vKAXihhgMDMTURMYaMHT7QIXt8g5ho5cJY=
+	t=1715161229; cv=none; b=W9I5etdV9y8E+r+jz94gUhkS9154IU1ky1tA70OQ2YLgoz0GyUAGCQk5KU3lM7LaefJSaIdCSBQdIEWek5c1i6/MOin1pSLZszrMog9jjc8wG/OqMulwzovlBPO0DGhvrheeeGxAVCPW4ByzBL5J/XYks0dWZwUaKI5f+goxOK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715161189; c=relaxed/simple;
-	bh=tooO+PnKs4QuJyhK8dQd4N8Ll7R1cRiwaAFITlTvBKs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WEBhLYwROuAQQ59/ndJUOQiRevrR8D5oNtswQXbMqIByftKWTJ0BT5tcRcGBOBp6egBCRHNkejPHfIeksxXgXDRTiFguNA7jeiKy/7oI8wtf/YEHi33eRGdz0waQjG0ubADZ5xe96MW7r1MFh8kJFBkWPJ9KvYJM0nn0o1E9Psc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=gVOfzAbj; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1715161229; c=relaxed/simple;
+	bh=XyCutnzQ3i618e+75rtDEoLQys3pHpoSb4bsdFYd1IY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Wa7rPeVJb0uGpm2ko1ng9EtO7FKfuWilQmbBT9Fh0gNT8E8fJ/CFkS1MBf/8esQFqPTPbRUhAfEGxb/gdeFfNdm6V+i8hjbMVZxCzTeLWNkHxpiES28lCoGdouGAc1gPqWzCAuI1a0G15cACEoT9WGKetHNfK6BhV/La/BOnc1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cTuwdHI0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gVOfzAbj"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4489dg0g108024;
-	Wed, 8 May 2024 04:39:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715161182;
-	bh=OUWrbCU48QMw/LpDyFtgC8ZGVV6wJUg+tB4jL7Mcw+o=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=gVOfzAbjdBayCgJe2IbJ1igCDAIr/W5yWouQKPc7aMNAW+gsHz3Gcf4ghCxrMUqzD
-	 skJzhIUw35PoEbN6BaCFsLY2w9kgPSO7QfKOCyLr7fPdNJAsxl7ekJoBQVHnlP9c4W
-	 5WmYqRnUM79VEVCYaZ83AkggB4ctqaRB9HESicL4=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4489dgi2031181
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 8 May 2024 04:39:42 -0500
-Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 8
- May 2024 04:39:42 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 8 May 2024 04:39:42 -0500
-Received: from [172.24.227.88] (uda0500640.dhcp.ti.com [172.24.227.88])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4489dcRN036983;
-	Wed, 8 May 2024 04:39:39 -0500
-Message-ID: <5167d813-d5ff-eb3e-ea6e-68e5a5acf39e@ti.com>
-Date: Wed, 8 May 2024 15:09:38 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cTuwdHI0"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4BA83C4AF18;
+	Wed,  8 May 2024 09:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715161229;
+	bh=XyCutnzQ3i618e+75rtDEoLQys3pHpoSb4bsdFYd1IY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=cTuwdHI0s1XkVG28wfDeVuGEI/VsvYg1GkFjSFs7vr+II0ATg1x17ae98mEeStJw6
+	 srzkp3GqwkDctO7X1/TCKTKjFWEAwEb9r8155CZf4Kam3gdngjNm7dYBccxMbIocTp
+	 lhTt3UXSYsXLPOTQnyPj6KXAf2KHRDurrHvM2pH4RbDOwug4GK8T2WA+0jBx0nP2TJ
+	 3rdglA/GWbPpKArgcNk748lN7QdC4dVrsZA1pjpx8zwpIxWX2F1wPYVE9SauXayadB
+	 FU1CFtT+MXDXr3qRODti5k/fd286BOHkJbYoKcXRPuQLdbMpLtD7CPQQutFeVLnmRe
+	 rrVnCM1LVzg/w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3EF13C3275D;
+	Wed,  8 May 2024 09:40:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 3/3] arm64: dts: ti: k3-j722s-evm: Update USB0 and USB1
- configuration for EVM
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <srk@ti.com>, <rogerq@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Ravi Gunasekaran <r-gunasekaran@ti.com>
-References: <20240429120932.11456-1-r-gunasekaran@ti.com>
- <20240429120932.11456-4-r-gunasekaran@ti.com>
- <20240507150123.GA471367-robh@kernel.org>
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-In-Reply-To: <20240507150123.GA471367-robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: bridge: fix corrupted ethernet header on
+ multicast-to-unicast
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171516122925.8124.11827972831667240154.git-patchwork-notify@kernel.org>
+Date: Wed, 08 May 2024 09:40:29 +0000
+References: <20240505184239.15002-1-nbd@nbd.name>
+In-Reply-To: <20240505184239.15002-1-nbd@nbd.name>
+To: Felix Fietkau <nbd@nbd.name>
+Cc: netdev@vger.kernel.org, roopa@nvidia.com, razor@blackwall.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ bridge@lists.linux.dev, linux-kernel@vger.kernel.org
 
+Hello:
 
+This patch was applied to netdev/net.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-On 5/7/24 8:31 PM, Rob Herring wrote:
-> On Mon, Apr 29, 2024 at 05:39:32PM +0530, Ravi Gunasekaran wrote:
->> The GPIO expander on the EVM allows the USB selection for Type-C
->> port to either USB0 or USB1 via USB hub. By default, let the Type-C
->> port select USB0 via the GPIO expander port P05.
->>
->> Enable super-speed on USB1 by updating SerDes0 lane configuration.
->>
->> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
->> ---
->>  arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 58 +++++++++++++++++++++++++
->>  arch/arm64/boot/dts/ti/k3-serdes.h      |  7 +++
->>  2 files changed, 65 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
->> index bf3c246d13d1..ddb4f1f0d92d 100644
->> --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
->> +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
->> @@ -9,7 +9,9 @@
->>  /dts-v1/;
->>  
->>  #include <dt-bindings/net/ti-dp83867.h>
->> +#include <dt-bindings/phy/phy.h>
->>  #include "k3-j722s.dtsi"
->> +#include "k3-serdes.h"
->>  
->>  / {
->>  	compatible = "ti,j722s-evm", "ti,j722s";
->> @@ -20,6 +22,8 @@
->>  		serial2 = &main_uart0;
->>  		mmc0 = &sdhci0;
->>  		mmc1 = &sdhci1;
->> +		usb0 = &usb0;
->> +		usb1 = &usb1;
+On Sun,  5 May 2024 20:42:38 +0200 you wrote:
+> The change from skb_copy to pskb_copy unfortunately changed the data
+> copying to omit the ethernet header, since it was pulled before reaching
+> this point. Fix this by calling __skb_push/pull around pskb_copy.
 > 
-> Why is this needed? Doesn't look related?
-
-I rechecked, it is not needed, I will remove it in v2.
-
+> Fixes: 59c878cbcdd8 ("net: bridge: fix multicast-to-unicast with fraglist GSO")
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
 > 
->>  	};
->>  
+> [...]
 
-[...]
+Here is the summary with links:
+  - [net] net: bridge: fix corrupted ethernet header on multicast-to-unicast
+    https://git.kernel.org/netdev/net/c/86b29d830ad6
 
+You are awesome, thank you!
 -- 
-Regards,
-Ravi
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
