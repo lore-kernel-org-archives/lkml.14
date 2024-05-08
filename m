@@ -1,112 +1,123 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF747D095;
-	Wed,  8 May 2024 13:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7757047F5B
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 13:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715175503; cv=none; b=ua7HuWqsEK89K5GdchMedgK9sSJ8EKhUar56JLiqsRwnjCIRQnDUlRJ2zmmZT7cu6yHySpsTTCdP7mfd9Ql3HwjybbDPK7ztGtaKK14ChV/SyFZ70bCSjfH4gpp+HUbDPPVBSMmdT3CJWOoJAxrW5xLWi+urYj8/LMD9zEEdoRE=
+	t=1715175534; cv=none; b=N1nl37q2kQr68HO8IFdE4O0koAHzDn3E5JDXwXXj0bXJ9ud5j4BXxUrkNBvY9jYccWbZo6kOUklbsundzFsEduCcITG0AFjrDquHJL5SFdW/vSh8ks45lx5FYviUWuuLXJ2nz0Cnqd9w/xQErsk29WROBQjUN8jWkCKb5fnvvys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715175503; c=relaxed/simple;
-	bh=vB0Sjt7S+gjdevIA1MOKWP5yvN4Z07ftcH3hTneiHdc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=o4upPQsawuwAKaxHj2vrcjoI/nG3w5RayaJarizD87MrFfytWqLVwaHqQMEyufkXk077jNyzdGjwKo800DGlwlLUrh3ZfFWxixyyXI6kAKfXNumHUNt+ehDJuozCEvNb6BTjwcircfd417BYyPtXEI7qD6c8ETwLPQW++Nd4yZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=H2+bo0K7; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=qtXJCzoe reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	s=arc-20240116; t=1715175534; c=relaxed/simple;
+	bh=KXuV8RoiY5xdXgYVrpJ2IDhSwHXnabJ23V1GXq8N3K4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EjBnlZ1TbqXYTQyEO76dNaKEvfTb/imqOj46kjEDlNeSsJ8zsNkzjLfoH845P8yxA84KDhq0cLtd27SNT6cSjDo73qhunaenB7wjxxYGqAuPyWlj2i3kQAot13VZjuKhRGL5GZLrK7ys4c6K4S6SsHDOFyp/q/gGXqQO0HJQYcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yhsM53EH; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="H2+bo0K7";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="qtXJCzoe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yhsM53EH"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a59a9d66a51so1010494866b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 06:38:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1715175500; x=1746711500;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1anWl7U0g1N5ReOl67RGFJDhNdBee4tIaUiND+Vgla8=;
-  b=H2+bo0K7oLCgYvX4fiB/8hxucoN3XJyPIX8zpROAL4MnIvwOE1u3Os0a
-   980VafRB/96O/j7EQQ8WqKlJUZZNx2/QJBIh02YwoAvYBQdqsszmpTjqq
-   WLaDavkxvLEUdkLlMfqoQzTt4Gkzwh+ofOc0y5qu2DNjnJZa1VY1V+Jow
-   3rglfLXKQGY6zh3UZh3uzpNqTXPbUBQqzcYmmwbrsKfCBjuk3Mwuna13e
-   FgyeTwZazyZKs4fnC2NXaxnu6sQH8bRJNNfNYERgXajMUAksLHA2ZDN4x
-   5gfTdoKvjIp/RIhu4yp5y7WuKAZ3QPKGgv7nXkLwYNK3ke2b4JTPcJVSD
-   A==;
-X-CSE-ConnectionGUID: z54Sk1EmRBC1VdH69ne3fA==
-X-CSE-MsgGUID: 3vZd3Y/sRkKMGvbzBMbsTQ==
-X-IronPort-AV: E=Sophos;i="6.08,145,1712613600"; 
-   d="scan'208";a="36814849"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 08 May 2024 15:38:11 +0200
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D977816E68D;
-	Wed,  8 May 2024 15:38:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1715175487;
-	h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding; bh=1anWl7U0g1N5ReOl67RGFJDhNdBee4tIaUiND+Vgla8=;
-	b=qtXJCzoersL5wQiIkKQBAwn4D4j1wABKeNyuQudkAIie3Q8ZmvyTdD5EEbJNiX7a42Ctpk
-	W1eBU5pUlT2EFPWCm6CPi5kFsDDgkeP0OUiJjsVJct0eVihbTEg76lQCV7yAo2N+FH5Etn
-	PcWCE0YGvTmH1q9BOR0cBxOGgSPG/o0oLR1glcAgFoOz8b3+btIhMgCk1mhPeIjg7K5tBZ
-	v9qfdIH/33ko0jAiHFk/lPBP03oCDFu2N5ZCDQ391ng8zlYRQZZPbi96RHuKup5SCpW0AO
-	Q3DcCAxCoeIkVPH7W6D6WB+F0LyjF6wjePw6SGW3HHIKKh93QW/RJwxc+AfrRg==
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux@ew.tq-group.com,
-	Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
-	Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-Subject: [PATCH] serial: imx: Raise TX trigger level to 8
-Date: Wed,  8 May 2024 15:37:44 +0200
-Message-ID: <20240508133744.35858-1-matthias.schiffer@ew.tq-group.com>
-X-Mailer: git-send-email 2.43.2
+        d=linaro.org; s=google; t=1715175531; x=1715780331; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CeiUxlPokRBNj/XrnUanirZmaFrCz9byAC7MP/B4Crw=;
+        b=yhsM53EHF3+2iMGxRrTZSKpLHZqhR5xmkeRVlsD+IeDTL9J8Ul2u+etscxeuZ32vVR
+         2duiIUcJMYm0M9dFusOl0oEoTA4PEs0USCGr9BPV0ZNqCH6ROlQh5dWuA/qGuFt7kYxB
+         UQwcenO3sz6B0bhFnWpaP5fwkU9uFEA/tddXDSeCP8q54yQXNkXwuXmdCF0YPztqXl7s
+         0/8xSfG57LXKhOwD0vdKuPm9qIv2BXajPtHLU7Zauc0Da0SNz9hxducxoy+FmU82m+Ak
+         4VAEmyBDZHxyBK2F0YX5oXrmZZ5CrfTR9sD7BUzHi8M7CuBHUUd+Z+0G5n+IUPbfsLMW
+         a1GQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715175531; x=1715780331;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CeiUxlPokRBNj/XrnUanirZmaFrCz9byAC7MP/B4Crw=;
+        b=rf7dUrsMThioUmy/n/6Wj24ywbzUy6fqqUycW0lXEn5TSp0cpi+Sk52XgRKsSAzbQo
+         19HGEpZCb4owvbbGy+DBjD3awVkL+Asqp+HrzWaALMyk8SYEuOGl5lWcykfBxYufsryi
+         A4rNjSeW/AtfexA+CHva20+klSrs87SrE+K77Jx7PytgxfNCLKhVoMgQ4DXOV8s5yBGX
+         8lul+8YJGF3ZZQ/1QMTEkZIsAYdeF3hPUQrcjeN4tlnla4lUjLSlna1ArpoCs0ab0E/m
+         yXc3XtSbBKDitCnOlHH5dwdujvdsbZy1J15yLONAJKl8zaw+arY+orylLLnmPVLTtula
+         omjQ==
+X-Gm-Message-State: AOJu0Yzq/9dRCrOj1CEzBiH0w9vkqcmAKvV+JP+Jw0CeHQeWwhrvgtOV
+	47ADl/fFhjsHdLM+zqGiPEBe6DCy3ZMilLOWn5C7bqSFReBsjNjHAzX0YiafISo=
+X-Google-Smtp-Source: AGHT+IHUEJrR0vQ5S1q+SZ9fehvy0TtVHXmW5rIqD8OHCOWuVd2BODEl8tfj3O4q9WsZzin1gDFlow==
+X-Received: by 2002:a50:d78f:0:b0:572:727f:d0db with SMTP id 4fb4d7f45d1cf-5731d9d37d3mr1991213a12.15.1715175530575;
+        Wed, 08 May 2024 06:38:50 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id e22-20020a056402105600b0057300ba262esm3523428edu.34.2024.05.08.06.38.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 06:38:50 -0700 (PDT)
+Date: Wed, 8 May 2024 16:38:45 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: open list <linux-kernel@vger.kernel.org>, kunit-dev@googlegroups.com,
+	lkft-triage@lists.linaro.org, David Gow <davidgow@google.com>,
+	Brendan Higgins <brendan.higgins@linux.dev>,
+	Guenter Roeck <linux@roeck-us.net>, Arnd Bergmann <arnd@arndb.de>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: next: kasan: Unable to handle kernel paging request at virtual
+ address
+Message-ID: <3a2e5e75-66d4-4411-aa8c-b028259fe8f6@moroto.mountain>
+References: <CA+G9fYvOjtEBtB21FwFmvbautebx_2Py-tjqduPcWyS5B9nB5w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvOjtEBtB21FwFmvbautebx_2Py-tjqduPcWyS5B9nB5w@mail.gmail.com>
 
-At the default TX trigger level of 2 in non-DMA mode (meaning that an
-interrupt is generated when less than 2 characters are left in the
-FIFO), we have observed frequent buffer underruns at 115200 Baud on an
-i.MX8M Nano. This can cause communication issues if the receiving side
-expects a continuous transfer.
+On Wed, May 08, 2024 at 04:59:10PM +0530, Naresh Kamboju wrote:
+> While running kunit tests on arm64 and x86_64 the following kernel BUG
+> noticed on running Linux next-20240508 kernel and stride tests failed.
+> 
+> observations:
+> 1) The null pointer dereference notice while running kunit_test
+> 2) The stride test case failed on today's linux next-20240508 tag.
+> 
+> The detailed log provided in the links below.
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> Crash log:
+> --------
+> 
+> <6>[   43.086497]     KTAP version 1
+> <6>[   43.087004]     # Subtest: kunit_fault
+> <6>[   43.087577]     # module: kunit_test
+> <6>[   43.087748]     1..1
+> <1>[   43.092588] Unable to handle kernel paging request at virtual
+> address dfff800000000000
+> <1>[   43.093687] KASAN: null-ptr-deref in range
+> [0x0000000000000000-0x0000000000000007]
+> <1>[   43.094770] Mem abort info:
+> <1>[   43.095425]   ESR = 0x0000000096000005
+> <1>[   43.097071]   EC = 0x25: DABT (current EL), IL = 32 bits
+> <1>[   43.098034]   SET = 0, FnV = 0
+> <1>[   43.098542]   EA = 0, S1PTW = 0
+> <1>[   43.099104]   FSC = 0x05: level 1 translation fault
+> <1>[   43.099837] Data abort info:
+> <1>[   43.100679]   ISV = 0, ISS = 0x00000005, ISS2 = 0x00000000
+> <1>[   43.101535]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+> <1>[   43.102321]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+> <1>[   43.103287] [dfff800000000000] address between user and kernel
+> address ranges
+> <0>[   43.105111] Internal error: Oops: 0000000096000005 [#1] PREEMPT SMP
+> <4>[   43.106046] Modules linked in:
+> <4>[   43.108961] CPU: 1 PID: 375 Comm: kunit_try_catch Tainted: G
+>             N 6.9.0-rc7-next-20240508 #1
+> <4>[   43.110433] Hardware name: linux,dummy-virt (DT)
+> <4>[   43.111555] pstate: 82400009 (Nzcv daif +PAN -UAO +TCO -DIT
+> -SSBS BTYPE=--)
+> <4>[   43.113232] pc : kunit_test_null_dereference+0x2c/0x114
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+This function is supposed to dereference a NULL pointer.
 
-Increasing the level to 8 makes the UART trigger an interrupt earlier,
-giving the kernel enough time to refill the FIFO, at the cost of
-triggering one interrupt per ~24 instead of ~30 bytes of transmitted
-data (as the i.MX UART has a 32 byte FIFO).
-
-Signed-off-by: Michael Krummsdorf <michael.krummsdorf@tq-group.com>
-Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
----
- drivers/tty/serial/imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 79f1503cd75b4..2eb22594960f3 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -1305,7 +1305,7 @@ static void imx_uart_clear_rx_errors(struct imx_port *sport)
- 
- }
- 
--#define TXTL_DEFAULT 2 /* reset default */
-+#define TXTL_DEFAULT 8
- #define RXTL_DEFAULT 8 /* 8 characters or aging timer */
- #define TXTL_DMA 8 /* DMA burst setting */
- #define RXTL_DMA 9 /* DMA burst setting */
--- 
-TQ-Systems GmbH | Mühlstraße 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht München, HRB 105018
-Geschäftsführer: Detlef Schneider, Rüdiger Stahl, Stefan Schneider
-https://www.tq-group.com/
+regards,
+dan carpenter
 
