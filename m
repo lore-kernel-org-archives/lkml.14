@@ -1,207 +1,242 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64801823D1
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAB0B823BF
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:39:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715168373; cv=none; b=S8po4BeN4QwlZwt5yWPW1ffbdKPzyx2I1MHVPDZr7pmJsGCAaVAYXl2IoQMNR8veKA0GD0+SWOvBF2z0qd3PoZooU5hLbDtCCmfRj+LxerYZrOBjjlF7cdDl3BKfLh/I/LVFmZGfsLB7GIuaW4xHid9us4JsFfe+FDOakMhoQ8M=
+	t=1715168385; cv=none; b=q6H3EsenRMuYwhBdTdUrGl0pC622QXonZBODHyPosmoG0GoviTqNGLvP1WSzVF1sagQHJCy5qg+5/QwnQ7XUj3LaqKKmVNXjUhbZWNDBRjQ+Lrek/GICQash6wflPDTRfNJHzMkuzOxl215136CohAaxrCUUKkp2AObGKPehcjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715168373; c=relaxed/simple;
-	bh=VcXd6zYXwEr2WPHeuoMzH4NNHOKAqqGKrEMxYOSoP+o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Wzxj4ieOyEIbk7vQqSK6ADh2wV0+Q9AOhIaopiBs74IG4g2I0Gyx3VIMrLhCOmtUjGlbLYegQyL+qxOMH65RBkLUHkq3upvmcXgrpLsIdMaFt5ebuFrUaAl2Ca9EXFPFgUy2F0NNCVuWj1IIBt6dqHd26zUI4R6Aab0Vf4kCnCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=PtJNC531; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1715168385; c=relaxed/simple;
+	bh=9Qe5pZ+rjtqEDk3v9IAjxKJmQfwIKq6U4XC6r7G4KKA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
+	 MIME-Version:References; b=HI40etRgMaATLKZ9gEAvQ+mDLVUV+v/++NuOIahkY1G34Uieq2BDoJ74X46kC563bm1oiumqCifSSqxpwYrRGfEZR4IxJo1OIi28421FMLZ6YSJJMQ78X8Mg8sq85q3e9uffTG3CxJCEe8rF+gfG9Apa1kyPMx7AxVpRB5AmIkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=V07IgPI1; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="PtJNC531"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41bab13ca81so43858135e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 04:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715168370; x=1715773170; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hkOJ479CewvDdU5HWPEgLgm2sAjKEVUPHaCHVUUKnDI=;
-        b=PtJNC531nvw14TSDwudd1ix+TWHgxDy1kUHhkvgqaF+9iKum0PsXMf3+Gz6YmN0nLM
-         zsbafbI5HRrUA5BvopsPX+YrD5WwGoMcpD9JrmcxV9FQpbEydlVYZnf57Hte0mwvBH6Z
-         /AB9qMPHhFON0KKRevnb7RxorspyC9lONdy6kPIieL+Ggrr4Ldh8YvAKhre7oZXUZ4xE
-         G6KgeMizXqi2bodLZZMI7iCQ+oBvL0eqeDELpZG3mlI8toErpFuMaskQT0MvxxyVeCiD
-         aG68I7ytfGrYbiuPprKMxmpjdj2CfEHQAfcCVfTXdHw+ISI1X6J0VgdclVABjpPDicdd
-         zEFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715168370; x=1715773170;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hkOJ479CewvDdU5HWPEgLgm2sAjKEVUPHaCHVUUKnDI=;
-        b=nwrZfWENK2hq/hla+uN0NhfQJJIEAEIOSG4+PSwoU+4+cuDrwklaUI6psFzUaxN0Ba
-         ZaraiJXXH2NCrrZfjiPS50L7uLKJ1en+5Ww58wN7vgtwt4S+xObZLmAVhWDMK8MZyIxX
-         r/Tlob0A7e5xwG12QE6nhTiW2sizr42h6LjEui66kHglrw8KhYcz6URk0Tnl1Db3n020
-         ZYejhasTNoOOsZrsTXshlUFOrQfSB6f3RtAwOVymyrWNN58APvkH2hf2+eeYMDEAblW1
-         NZ+3F15+zUtjkDUH4bbteySZyGt5pCpXkJoUBe6i6FAFflzFxEP2U2D6LTczZuCOujfW
-         UODA==
-X-Forwarded-Encrypted: i=1; AJvYcCVHHhzLdUA+A6Ikss06+tlbLI+QfsyIusWCQthaDmaMpK8+CU5GimMAwBs3HqenY10XpgZOffldZ5EIp/ScGz4JlpSmqqvNkcdmJ4Dv
-X-Gm-Message-State: AOJu0YwUJOuipgrskfXjQuYdOyuzkMWLBlMxrqRb6TKbtOP9xWxVEkDm
-	FWn8yBL6iN2KZi1i7C8Z5z5ys2lqBhEgCEJGxwcOnsNiHDxnZcIpFv4gVTtIaFQ=
-X-Google-Smtp-Source: AGHT+IEZS4ddGwIWcQuhI1g6wktPlm5wrgDKEngfcuzPllSn67aCj73nYZBEmuYd+HrBwCZhVDrutw==
-X-Received: by 2002:adf:e752:0:b0:34d:17f2:956d with SMTP id ffacd0b85a97d-34fca80dffcmr2356969f8f.66.1715168369782;
-        Wed, 08 May 2024 04:39:29 -0700 (PDT)
-Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f88110ff8sm20241365e9.38.2024.05.08.04.39.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 04:39:29 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-mm@kvack.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH RESEND v2 5/9] mm: Use common huge_pte_clear() function for riscv/arm64
-Date: Wed,  8 May 2024 13:34:15 +0200
-Message-Id: <20240508113419.18620-6-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240508113419.18620-1-alexghiti@rivosinc.com>
-References: <20240508113419.18620-1-alexghiti@rivosinc.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="V07IgPI1"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240508113935euoutp01aa688a1142f61dad10a612ea541b5dd0~NgIzB0Bg62121021210euoutp01j
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:39:35 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240508113935euoutp01aa688a1142f61dad10a612ea541b5dd0~NgIzB0Bg62121021210euoutp01j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1715168375;
+	bh=xkZiCUdvs+R8pen3miw27jBfj4tN5EP5emATPQt1vhg=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References:From;
+	b=V07IgPI1yRCapIBFrxgveLc6RXmefaDuy+nqGGycBJKrx+8+AjR6/oZWfuZp5gsID
+	 EK+AEF86iq4k1wwKZm7Ev+mqm8mzeEsE+ESouqlbRrWXLLsYBTlIr/6u9HDI6vxbgO
+	 A1c5NDAHRqA8LVVhkLDASP4AVpw0xXeoW2O+NUBg=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240508113934eucas1p29aeb818176adb3c58f9f020e5603507e~NgIyscc0X1611916119eucas1p22;
+	Wed,  8 May 2024 11:39:34 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id 4A.EA.09875.6746B366; Wed,  8
+	May 2024 12:39:34 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240508113934eucas1p13a3972f3f9955365f40155e084a7c7d5~NgIyTK7Eo0806308063eucas1p1t;
+	Wed,  8 May 2024 11:39:34 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240508113934eusmtrp179b478b5420c82c955c10898a5dc3d73~NgIySQ--01031510315eusmtrp1z;
+	Wed,  8 May 2024 11:39:34 +0000 (GMT)
+X-AuditID: cbfec7f4-11bff70000002693-47-663b64763b96
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id AE.CB.09010.6746B366; Wed,  8
+	May 2024 12:39:34 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240508113934eusmtip2a12ef41e3ebb50ec75e16f4e922f6f9a~NgIyGc4n81285312853eusmtip2E;
+	Wed,  8 May 2024 11:39:34 +0000 (GMT)
+Received: from CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) by
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348) with Microsoft SMTP
+	Server (TLS) id 15.0.1497.2; Wed, 8 May 2024 12:39:33 +0100
+Received: from CAMSVWEXC02.scsc.local ([::1]) by CAMSVWEXC02.scsc.local
+	([fe80::3c08:6c51:fa0a:6384%13]) with mapi id 15.00.1497.012; Wed, 8 May
+	2024 12:39:33 +0100
+From: Daniel Gomez <da.gomez@samsung.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+CC: "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"hughd@google.com" <hughd@google.com>, "willy@infradead.org"
+	<willy@infradead.org>, "david@redhat.com" <david@redhat.com>,
+	"ioworker0@gmail.com" <ioworker0@gmail.com>, "wangkefeng.wang@huawei.com"
+	<wangkefeng.wang@huawei.com>, "ying.huang@intel.com" <ying.huang@intel.com>,
+	"21cnbao@gmail.com" <21cnbao@gmail.com>, "ryan.roberts@arm.com"
+	<ryan.roberts@arm.com>, "shy828301@gmail.com" <shy828301@gmail.com>,
+	"ziy@nvidia.com" <ziy@nvidia.com>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/8] add mTHP support for anonymous shmem
+Thread-Topic: [PATCH 0/8] add mTHP support for anonymous shmem
+Thread-Index: AQHaoTxlCSlVdbHh/EKIyyNA4DF78w==
+Date: Wed, 8 May 2024 11:39:32 +0000
+Message-ID: <fqtaxc5pgu3zmvbdad4w6xty5iozye7v5z2b5ckqcjv273nz7b@hhdrjwf6rai3>
+In-Reply-To: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D8E4F56FA1AA5D4F90F8EFF2A1EDEC7D@scsc.local>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrPKsWRmVeSWpSXmKPExsWy7djP87plKdZpBjNfalh8vitkMWf9GjaL
+	/3uPMVp8Xf+L2eLppz4Wi0W/jS0u75rDZnFvzX9Wi57dUxktFpxYzGjR+Pk+o8XvH0CJk7Mm
+	s1jMPnqP3YHPY828NYweO2fdZfdYsKnUo+XIW1aPzSu0PBbvecnksenTJHaPEzN+s3jsfGjp
+	0dv8js3j/b6rbB6fN8kF8ERx2aSk5mSWpRbp2yVwZTz/eImtYJtKxbFbnxkbGH9LdzFyckgI
+	mEgcm3mYvYuRi0NIYAWjxPUdL5kgnC+MEr82XYDKfGaUONj+lLmLkQOs5fcCUYj4ckaJq7dv
+	sMEVHX7zAKrjNKPEnlfTmOEG376zkRVkI5uApsS+k5vYQUaJCOhL9M71BalhFvjIItGzvo8J
+	pEZYwFZi0fkfbCC2iICdROPCaSwQtp7E8S8tYHNYBFQkvj7axwhi8wr4Smy4NBOsl1PAUWLe
+	3OPMIDajgKzEo5W/2EFsZgFxiVtP5jNBfC0osWj2HmYIW0zi366HbBC2jsTZ608YIWwDia1L
+	97FA2IoSHcduskHM0ZFYsPsTlG0p0XLiCguErS2xbOFrZoh7BCVOznzCAvKYhMBOLoklbZ1Q
+	g1wk/k1rglosLPHq+Bb2CYw6s5DcNwvJjllIdsxCsmMWkh0LGFlXMYqnlhbnpqcWG+WllusV
+	J+YWl+al6yXn525iBKbJ0/+Of9nBuPzVR71DjEwcjIcYJTiYlUR4j7abpwnxpiRWVqUW5ccX
+	leakFh9ilOZgURLnVU2RTxUSSE8sSc1OTS1ILYLJMnFwSjUw1UQynDvbtDnnXWk7XwdLXYTn
+	ma8Hr629ockTIHtg5r9iXakQqdtSlUz/I9OsJs6ZJzG39ndUGrvnW5E91cJN+xr3LJ6TobRy
+	lotEsJao0O3iPnPeTfF+3lFR7yMO+8qxzG2p4t82v05tVfjyjzetzn75vqV48gyutWtF12yO
+	qX3A/1hbkWOdzu1Am43pX3rnv81xrXx00e7zz8qPumUFNeHJWUaeW/rzV1c6KuvoOzg/2Ml4
+	wHvZsUsJe/cySKuc4Sk6cPqGv5qPZGzEI0kJ3ij2mczHBDJ0ji5Z+8rtEd/zDc3p1S51+0XX
+	szZ823Xp9CSLF+Ibb16IWDHt7G1HqW+CPvqdkdxTRcU43xkrsRRnJBpqMRcVJwIAg93gqAIE
+	AAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrCKsWRmVeSWpSXmKPExsVy+t/xe7plKdZpBh2/+C0+3xWymLN+DZvF
+	/73HGC2+rv/FbPH0Ux+LxaLfxhaXd81hs7i35j+rRc/uqYwWC04sZrRo/Hyf0eL3D6DEyVmT
+	WSxmH73H7sDnsWbeGkaPnbPusnss2FTq0XLkLavH5hVaHov3vGTy2PRpErvHiRm/WTx2PrT0
+	6G1+x+bxft9VNo/Pm+QCeKL0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTt
+	bFJSczLLUov07RL0Mp5/vMRWsE2l4titz4wNjL+luxg5OCQETCR+LxDtYuTkEBJYyijx7r4p
+	iC0hICOx8ctVVghbWOLPtS62LkYuoJqPjBJ3zv1kh3BOM0rMX9HEDNG9glGiZa0diM0moCmx
+	7+QmdpAFIgL6Er1zfUHqmQXes0ismdfFDlIjLGArsej8DzYQW0TATqJx4TQWCFtP4viXFrDN
+	LAIqEl8f7WMEsXkFfCU2XJrJBLHLQWLWmQawGk4BR4l5c4+D3cAoICvxaOUvsPnMAuISt57M
+	Z4L4QEBiyZ7zzBC2qMTLx/+gPtOROHv9CSOEbSCxdek+FghbUaLj2E02iDk6Egt2f4KyLSVa
+	TlxhgbC1JZYtfM0McZugxMmZT1gmMMrMQrJ6FpL2WUjaZyFpn4WkfQEj6ypGkdTS4tz03GIj
+	veLE3OLSvHS95PzcTYzA5Lft2M8tOxhXvvqod4iRiYPxEKMEB7OSCO/RdvM0Id6UxMqq1KL8
+	+KLSnNTiQ4ymwLCbyCwlmpwPTL95JfGGZgamhiZmlgamlmbGSuK8ngUdiUIC6YklqdmpqQWp
+	RTB9TBycUg1MBvs7dnN0SUqX2iy1OqC/U+L8ZpGub4wCuRw75mkWtlwoqJrK1ackeMc1w/3D
+	rerVkv1q4Vplad9K/6maHp7e97Xrmur0JYd7buz4vGz+UbmNAu3y+innLFbfbvs6KW/P6lRt
+	nZ1zb3B+kC2bxSpxVzzjafWZquniusfN/7s6GkWyvHyxKj+cbxrvD9HV2pHa2mLZ3ZvX/vp9
+	bNWN2zFtCQuD+G72vtiXYs8VnGb66QTLXTHzI8efVelsiTDZJN72yvnR7vq4hFUSJRMrWy5V
+	7st5um6nhq2NwNmoVI8dK+5+5rz8fhbTu18dnjwcq3/OV5BlbmqTOfbUbMV8P7nir8HGDiEm
+	3jf/nKyIcKhTYinOSDTUYi4qTgQA41PtnQcEAAA=
+X-CMS-MailID: 20240508113934eucas1p13a3972f3f9955365f40155e084a7c7d5
+X-Msg-Generator: CA
+X-RootMTR: 20240508113934eucas1p13a3972f3f9955365f40155e084a7c7d5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240508113934eucas1p13a3972f3f9955365f40155e084a7c7d5
+References: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
+	<CGME20240508113934eucas1p13a3972f3f9955365f40155e084a7c7d5@eucas1p1.samsung.com>
 
-Both architectures have the same implementation so move it to generic code.
+On Mon, May 06, 2024 at 04:46:24PM +0800, Baolin Wang wrote:
+> Anonymous pages have already been supported for multi-size (mTHP) allocat=
+ion
+> through commit 19eaf44954df, that can allow THP to be configured through =
+the
+> sysfs interface located at '/sys/kernel/mm/transparent_hugepage/hugepage-=
+XXkb/enabled'.
+>=20
+> However, the anonymous shared pages will ignore the anonymous mTHP rule
+> configured through the sysfs interface, and can only use the PMD-mapped
+> THP, that is not reasonable. Many implement anonymous page sharing throug=
+h
+> mmap(MAP_SHARED | MAP_ANONYMOUS), especially in database usage scenarios,
+> therefore, users expect to apply an unified mTHP strategy for anonymous p=
+ages,
+> also including the anonymous shared pages, in order to enjoy the benefits=
+ of
+> mTHP. For example, lower latency than PMD-mapped THP, smaller memory bloa=
+t
+> than PMD-mapped THP, contiguous PTEs on ARM architecture to reduce TLB mi=
+ss etc.
+>=20
+> The primary strategy is similar to supporting anonymous mTHP. Introduce
+> a new interface '/mm/transparent_hugepage/hugepage-XXkb/shmem_enabled',
+> which can have all the same values as the top-level
+> '/sys/kernel/mm/transparent_hugepage/shmem_enabled', with adding a new
+> additional "inherit" option. By default all sizes will be set to "never"
+> except PMD size, which is set to "inherit". This ensures backward compati=
+bility
+> with the shmem enabled of the top level, meanwhile also allows independen=
+t
+> control of shmem enabled for each mTHP.
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/arm64/mm/hugetlbpage.c      | 12 ------------
- arch/riscv/include/asm/pgtable.h |  5 +++--
- arch/riscv/mm/hugetlbpage.c      | 19 -------------------
- mm/contpte.c                     | 14 ++++++++++++++
- 4 files changed, 17 insertions(+), 33 deletions(-)
+I'm trying to understand the adoption of mTHP and how it fits into the adop=
+tion
+of (large) folios that the kernel is moving towards. Can you, or anyone inv=
+olved
+here, explain this? How much do they overlap, and can we benefit from havin=
+g
+both? Is there any argument against the adoption of large folios here that =
+I
+might have missed?
 
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index b8353b0a273c..cf44837369be 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -277,18 +277,6 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
- 	return entry;
- }
- 
--void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
--		    pte_t *ptep, unsigned long sz)
--{
--	int i, ncontig;
--	size_t pgsize;
--
--	ncontig = arch_contpte_get_num_contig(ptep, sz, &pgsize);
--
--	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
--		__pte_clear(mm, addr, ptep);
--}
--
- pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
- 			      unsigned long addr, pte_t *ptep)
- {
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 5d1d3a6c7c44..0847a7fb8661 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -644,8 +644,8 @@ static inline void __set_ptes(struct mm_struct *mm, unsigned long addr,
- #define set_contptes(mm, addr, ptep, pte, nr, pgsize)			\
- 			__set_ptes(mm, addr, ptep, pte, nr)
- 
--static inline void pte_clear(struct mm_struct *mm,
--	unsigned long addr, pte_t *ptep)
-+static inline void __pte_clear(struct mm_struct *mm,
-+			       unsigned long addr, pte_t *ptep)
- {
- 	__set_pte_at(mm, ptep, __pte(0));
- }
-@@ -700,6 +700,7 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
- #define set_ptes		__set_ptes
- #define __HAVE_ARCH_PTEP_GET_AND_CLEAR
- #define ptep_get_and_clear	__ptep_get_and_clear
-+#define pte_clear		__pte_clear
- 
- #define pgprot_nx pgprot_nx
- static inline pgprot_t pgprot_nx(pgprot_t _prot)
-diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
-index d8f07aef758b..437b1df059eb 100644
---- a/arch/riscv/mm/hugetlbpage.c
-+++ b/arch/riscv/mm/hugetlbpage.c
-@@ -254,25 +254,6 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
- 	return get_clear_contig_flush(vma->vm_mm, addr, ptep, pte_num);
- }
- 
--void huge_pte_clear(struct mm_struct *mm,
--		    unsigned long addr,
--		    pte_t *ptep,
--		    unsigned long sz)
--{
--	size_t pgsize;
--	pte_t pte = ptep_get(ptep);
--	int i, pte_num;
--
--	if (!pte_napot(pte)) {
--		pte_clear(mm, addr, ptep);
--		return;
--	}
--
--	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
--	for (i = 0; i < pte_num; i++, addr += pgsize, ptep++)
--		pte_clear(mm, addr, ptep);
--}
--
- static bool is_napot_size(unsigned long size)
- {
- 	unsigned long order;
-diff --git a/mm/contpte.c b/mm/contpte.c
-index 2320ee23478a..22e0de197bd3 100644
---- a/mm/contpte.c
-+++ b/mm/contpte.c
-@@ -12,6 +12,7 @@
-  *   - __ptep_get()
-  *   - __set_ptes()
-  *   - __ptep_get_and_clear()
-+ *   - __pte_clear()
-  *   - pte_cont()
-  *   - arch_contpte_get_num_contig()
-  */
-@@ -20,6 +21,7 @@
-  * This file implements the following contpte aware API:
-  *   - huge_ptep_get()
-  *   - set_huge_pte_at()
-+ *   - huge_pte_clear()
-  */
- 
- pte_t huge_ptep_get(pte_t *ptep)
-@@ -102,3 +104,15 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
- 
- 	set_contptes(mm, addr, ptep, pte, ncontig, pgsize);
- }
-+
-+void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
-+		    pte_t *ptep, unsigned long sz)
-+{
-+	int i, ncontig;
-+	size_t pgsize;
-+
-+	ncontig = arch_contpte_get_num_contig(ptep, sz, &pgsize);
-+
-+	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
-+		__pte_clear(mm, addr, ptep);
-+}
--- 
-2.39.2
-
+>=20
+> Use the page fault latency tool to measure the performance of 1G anonymou=
+s shmem
+> with 32 threads on my machine environment with: ARM64 Architecture, 32 co=
+res,
+> 125G memory:
+> base: mm-unstable
+> user-time    sys_time    faults_per_sec_per_cpu     faults_per_sec
+> 0.04s        3.10s         83516.416                  2669684.890
+>=20
+> mm-unstable + patchset, anon shmem mTHP disabled
+> user-time    sys_time    faults_per_sec_per_cpu     faults_per_sec
+> 0.02s        3.14s         82936.359                  2630746.027
+>=20
+> mm-unstable + patchset, anon shmem 64K mTHP enabled
+> user-time    sys_time    faults_per_sec_per_cpu     faults_per_sec
+> 0.08s        0.31s         678630.231                 17082522.495
+>=20
+> From the data above, it is observed that the patchset has a minimal impac=
+t when
+> mTHP is not enabled (some fluctuations observed during testing). When ena=
+bling 64K
+> mTHP, there is a significant improvement of the page fault latency.
+>=20
+> TODO:
+>  - Support mTHP for tmpfs.
+>  - Do not split the large folio when share memory swap out.
+>  - Can swap in a large folio for share memory.
+>=20
+> Changes from RFC:
+>  - Rebase the patch set against the new mm-unstable branch, per Lance.
+>  - Add a new patch to export highest_order() and next_order().
+>  - Add a new patch to align mTHP size in shmem_get_unmapped_area().
+>  - Handle the uffd case and the VMA limits case when building mapping for
+>    large folio in the finish_fault() function, per Ryan.
+>  - Remove unnecessary 'order' variable in patch 3, per Kefeng.
+>  - Keep the anon shmem counters' name consistency.
+>  - Modify the strategy to support mTHP for anonymous shmem, discussed wit=
+h
+>    Ryan and David.
+>  - Add reviewed tag from Barry.
+>  - Update the commit message.
+>=20
+> Baolin Wang (8):
+>   mm: move highest_order() and next_order() out of the THP config
+>   mm: memory: extend finish_fault() to support large folio
+>   mm: shmem: add an 'order' parameter for shmem_alloc_hugefolio()
+>   mm: shmem: add THP validation for PMD-mapped THP related statistics
+>   mm: shmem: add multi-size THP sysfs interface for anonymous shmem
+>   mm: shmem: add mTHP support for anonymous shmem
+>   mm: shmem: add mTHP size alignment in shmem_get_unmapped_area
+>   mm: shmem: add mTHP counters for anonymous shmem
+>=20
+>  Documentation/admin-guide/mm/transhuge.rst |  29 ++
+>  include/linux/huge_mm.h                    |  35 ++-
+>  mm/huge_memory.c                           |  17 +-
+>  mm/memory.c                                |  43 ++-
+>  mm/shmem.c                                 | 335 ++++++++++++++++++---
+>  5 files changed, 387 insertions(+), 72 deletions(-)
+>=20
+> --=20
+> 2.39.3
+> =
