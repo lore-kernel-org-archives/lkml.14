@@ -1,211 +1,234 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939E213119E;
-	Wed,  8 May 2024 21:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EA6312C497;
+	Wed,  8 May 2024 21:22:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715203159; cv=none; b=peaq8qkMuJ+JlTmdYUXv8903yp2TIyOMnHlHdh3HM7UkvOR7gbhJvdB5k8iUbCDABd/bWgsg4+sh/McAvcrruekH3IZkh5rdXqy1dwXMoxeLdshvcbXlMM0yFPNbbj23h1VpzxSdQ2kw0AS4f/8sFEjrVLo5pXwypV9rHfsnq6g=
+	t=1715203346; cv=none; b=Z5VxVwBXWAw0RFF6c4by1JYTVJCYzLGjeSo52s3oTs0FI+/f9h8l6a7lYuHAxioQ8Y04++g79YsvyPdL7XYVFFmEW2Clpm+epm4wAzQSAEvh6yk0ZW6fPP+hMC7i22SQjt8CPRXDpWEUK5dW6miIcj92Mtv8Yp9cv0lxkNu5y4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715203159; c=relaxed/simple;
-	bh=YLYrpjHh3hn32bvgW3ETTt82p/27a+oZUhGKBb/WX+Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IrLxTe75P48io6SdkGDK/Kn175xo5w/NilAs9MoRkiD92UWUyyzIcpWA4bG7e73qmWD/kaWNCl74x4YNzHrJNAoiDpqsU+q4/PIayZEUcJbUvImWt4P8GrC8bmQIcm9FpYICsh6elaGnDIqFyHjVQ69xbg5erfS8x/NJDCWYlRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DM5i1Ki/; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715203346; c=relaxed/simple;
+	bh=e9USpes2DzX9zdYg/vrpyLlR/1aUhbsBA0KXXm0Gero=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=K1D1/03jQCY0slE/7oeAqGgz2sco492NMPXW04llXDWk5f7YCpl0JrM8vqJOsbOIJ8vS1pp6Xrk2yJmZLlC6bSX2bEDufyqoUSLCWGibCeAjkdC8IhQaZUf0TzR49S50AEgJz+zAk28ajH8VvfLpWgQ2mwP1uEorcnkz2aO0pvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VnCDWlGr; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DM5i1Ki/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715203158; x=1746739158;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YLYrpjHh3hn32bvgW3ETTt82p/27a+oZUhGKBb/WX+Y=;
-  b=DM5i1Ki//dBWvOlYVitMvOVBKiriJPR0V2Xz61lvK4qrG2FVbvLoIivq
-   +RIw7dPIhtrfyHHHpIB0Id5cBZV2j/VppiNxXW93O8QV9M95lXJGaGZIF
-   AdJiihy6kUAfZfP1MmiU7g8KWiGq/oGUGuucy1PKgFAmO0s6rfKXJnMXv
-   CSXhQQ6XpaepWv2vk4tmeejSjU+v0HJyEmrwZvxHd78XOzaqYnpDYWGpC
-   eEcJRc5k4DJ0HBT4jjoWdq+DbMPMqgrrMpl6T8y7+g3uAXa3S5o7ph8WN
-   8L6E0T7Dr7XVWFAO/YHKVQBdEqpQggNSGPoY4ajkvchKIqVJTj5vhXs0v
-   A==;
-X-CSE-ConnectionGUID: DnUQycqxSVW+FZpoUY4v7g==
-X-CSE-MsgGUID: tXPxfFo0SZGyB+mi08mH7g==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="21662614"
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="21662614"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 14:19:18 -0700
-X-CSE-ConnectionGUID: QT7w+RkPTiy3xD8mcnJifQ==
-X-CSE-MsgGUID: EWHKRMMtRImX7RSmLSeJ1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="29389461"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 08 May 2024 14:19:15 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s4ogy-00047W-2c;
-	Wed, 08 May 2024 21:19:12 +0000
-Date: Thu, 9 May 2024 05:18:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Ekansh Gupta <quic_ekangupt@quicinc.com>,
-	srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/5] misc: fastrpc: Add static PD restart support
-Message-ID: <202405090532.EhFuvhrs-lkp@intel.com>
-References: <20240508054250.2922-6-quic_ekangupt@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VnCDWlGr"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-78f0e3b6feeso8183685a.1;
+        Wed, 08 May 2024 14:22:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715203344; x=1715808144; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=EF6kiOxUxjMHaMOZEZWN8I3r+QaY2TVkICy8VZIjNZc=;
+        b=VnCDWlGrBWlFOoUoqn5GudK6RcqRzTy13jb82cKsQBLnQf6W3pkDjv6+Dmjygg7bbA
+         gyID3qm6sBdn54Ju3055D0O+IxAcHyu2BQ+F+9WqRFxllaGl/tp4RSto8/aOEtvZay89
+         eGtvtObVBToAiXLLCa8Su1pyotRX8DgrKJUth6Sk7uF+pQPWfUO30ZiTz8q68UKRp3hS
+         PJnjia+baufbZrd1oCb+hJHmp0Bbv7QEJpYFNDjoGkbU+dWCuvdrAU7bFcb/xR01rFK7
+         q/5mx+Sv0co+3l3kK3EKiGNB/SmJyHc8/e1WzlZejz8FYLHDAAe7JcLnxQ3Hwck8sm7q
+         3IeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715203344; x=1715808144;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EF6kiOxUxjMHaMOZEZWN8I3r+QaY2TVkICy8VZIjNZc=;
+        b=YDIn63f6zbmwj7VOQCaf03Zfe5NXVBRLnjwJSRhOGzrsmK3VHp5UzYJE2KynBoKzeQ
+         5tdoKvGKvVR87FY8rpW96ej7GuJfc2LtIv62PF2eVy9YKeQ9noG78prWpxPdcxfUlhw+
+         PdNBAHvki6HkDtO6hqtXJsAlN5zHtrnxOd25Cw58t64TMZ7nGosiRAR2oEW2X3wTa43c
+         BwVPwMWdxWn5DfbvDoxQN77ULtHh9x2iNz503obzh2o3CPSvTNdnXa5ij2lV/0LCHAKi
+         p00lHZjSFQlaIw+uIPcq4HjuGwX+tqu4joYHRwbASMl5zvtt0IOtXBTKvYgfhjrlrDyS
+         lVZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXb09koDBbSnXKoW58JAEb0gPT/RlUDSkVZpDf2+HiBSZBKlwiC/EKZdxKbA+tATbj3yO6awxSqVumrq6OB3dg3aX3RXSeCJzqWRhdDPovcqyOJvhdLgt3kq+PZTCKWKgrzvfUjnCxTJM4fk3cPiz4=
+X-Gm-Message-State: AOJu0Yw6kzp5DZHM5rhOtkj78xbLiP7McE7xgJfQ8MYBD+uyVvjj3tJV
+	leN84DVVOJkIm05KeTIbHKUX8/0FkY8Nobzp3qrMMclbpYDO/6Ym
+X-Google-Smtp-Source: AGHT+IEkYkR/8Y3Nk2iLGt8MFsDJ4syw93kCnUnOc5c78ck1kRsRAQrpnX86L0tY1UlArCiHrMfztA==
+X-Received: by 2002:a05:620a:5608:b0:790:c017:89e2 with SMTP id af79cd13be357-792b26ae15dmr475307685a.16.1715203344170;
+        Wed, 08 May 2024 14:22:24 -0700 (PDT)
+Received: from fionn.redhat.com ([74.12.5.183])
+        by smtp.gmail.com with ESMTPSA id op3-20020a05620a534300b0079071ee067fsm6265258qkn.31.2024.05.08.14.22.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 14:22:23 -0700 (PDT)
+Sender: John Kacur <jkacur@gmail.com>
+From: John Kacur <jkacur@redhat.com>
+To: Daniel Bristot de Oliveria <bristot@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	lkml <linux-kernel@vger.kernel.org>,
+	linux-trace-devel@vger.kernel.org
+Cc: John Kacur <jkacur@redhat.com>
+Subject: [PATCH] rtla: Fix -t/--trace[=file]
+Date: Wed,  8 May 2024 17:21:55 -0400
+Message-ID: <20240508212155.71946-1-jkacur@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240508054250.2922-6-quic_ekangupt@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Ekansh,
+Normally with a short option we don't provide an equals sign like this
+-tfile.txt
+-t file.txt
 
-kernel test robot noticed the following build errors:
+But we do provide an equals sign with the long option like this
+--trace=file.txt
 
-[auto build test ERROR on char-misc/char-misc-testing]
-[also build test ERROR on char-misc/char-misc-next char-misc/char-misc-linus linus/master v6.9-rc7 next-20240508]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Also, a good parser should work with a space instead of an equals sign
+--trace file.txt
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ekansh-Gupta/misc-fastrpc-Redesign-remote-heap-management/20240508-134613
-base:   char-misc/char-misc-testing
-patch link:    https://lore.kernel.org/r/20240508054250.2922-6-quic_ekangupt%40quicinc.com
-patch subject: [PATCH v1 5/5] misc: fastrpc: Add static PD restart support
-config: arm-randconfig-001-20240509 (https://download.01.org/0day-ci/archive/20240509/202405090532.EhFuvhrs-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240509/202405090532.EhFuvhrs-lkp@intel.com/reproduce)
+Most of these are broken!
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405090532.EhFuvhrs-lkp@intel.com/
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 -tfile.txt
+Saving trace to ile.txt
+File name truncated
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 -t file.txt
+Saving trace to timerlat_trace.txt
+Default file name used instead of the requested one.
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/video/fbdev/goldfishfb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt6765-img.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt6765-mipi0a.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt6797-img.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt6797-mm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-img.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt2712-mfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7622-eth.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7988-apmixed.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7988-topckgen.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt7988-infracfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167-apmixedsys.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167-aud.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167-img.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167-mfgcfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8167-vdec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-apmixedsys.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-topckgen.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-infra_ao.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-cam.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-img.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-imp_iic_wrap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-ipe.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-mdp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-mm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-vdec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8186-wpe.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8188-mfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8192.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8192-aud.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8192-cam.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8192-img.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8192-imp_iic_wrap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8192-ipe.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8192-msdc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8192-venc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8365-apmixedsys.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8365.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8365-apu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8365-mfg.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/mediatek/clk-mt8365-vdec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun20i-d1-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun50i-h6-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun50i-h6-r-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun6i-rtc-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun8i-a23-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun8i-v3s-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun9i-a80-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun9i-a80-de-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/clk/sunxi-ng/sun9i-a80-usb-ccu.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/soc/imx/soc-imx8m.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/soc/qcom/spm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/regulator/rt4831-regulator.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/tty/serial/esp32_acm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/char/hw_random/omap-rng.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iommu/iova.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/lontium-lt9611.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/lontium-lt9611uxc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/bridge/sil-sii8620.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/gpu/drm/drm_panel_orientation_quirks.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-slimbus.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-spmi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-w1.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/base/regmap/regmap-sccb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/misc/fastrpc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/arizona.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/mfd/pcf50633-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/dax/dax.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/cdrom/cdrom.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/auxdisplay/hd44780_common.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/auxdisplay/line-display.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/phy/phy-am335x-control.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/phy/phy-am335x.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/misc/ezusb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/host/ohci-exynos.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/ch341.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/mxuport.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/navman.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/qcaux.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/usb-serial-simple.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/serial/symbolserial.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/usb/chipidea/ci_hdrc_msm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/touchscreen/cyttsp_i2c_common.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/rtc/rtc-twl.o
-WARNING: modpost: drivers/media/i2c/et8ek8/et8ek8: section mismatch in reference: et8ek8_i2c_driver+0x8 (section: .data) -> et8ek8_remove (section: .exit.text)
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/i2c/uda1342.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/tuners/tda9887.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/v4l2-core/v4l2-async.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/media/v4l2-core/v4l2-fwnode.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/leds/flash/leds-rt4505.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/leds/blink/leds-bcm63138.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-hub.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-master-gpio.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fsi/fsi-scom.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spmi/hisi-spmi-controller.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/spmi/spmi-pmic-arb.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/adc/ingenic-adc.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/adc/xilinx-ams.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/iio/buffer/kfifo_buf.o
->> ERROR: modpost: "qmi_txn_init" [drivers/soc/qcom/pdr_interface.ko] undefined!
->> ERROR: modpost: "qmi_send_request" [drivers/soc/qcom/pdr_interface.ko] undefined!
->> ERROR: modpost: "qmi_txn_cancel" [drivers/soc/qcom/pdr_interface.ko] undefined!
->> ERROR: modpost: "qmi_txn_wait" [drivers/soc/qcom/pdr_interface.ko] undefined!
->> ERROR: modpost: "qmi_add_lookup" [drivers/soc/qcom/pdr_interface.ko] undefined!
->> ERROR: modpost: "qmi_handle_init" [drivers/soc/qcom/pdr_interface.ko] undefined!
->> ERROR: modpost: "qmi_handle_release" [drivers/soc/qcom/pdr_interface.ko] undefined!
->> ERROR: modpost: "qmi_response_type_v01_ei" [drivers/soc/qcom/pdr_interface.ko] undefined!
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 -t=file.txt
+Saving trace to file.txt
+This works, but people normally don't use '=' with a short option
 
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for QCOM_PDR_HELPERS
-   Depends on [n]: NET [=n]
-   Selected by [m]:
-   - QCOM_FASTRPC [=m] && (ARCH_QCOM [=n] || COMPILE_TEST [=y]) && RPMSG [=m]
+/rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 --trace=file.txt
+Saving trace to ile.txt
+File name truncated
 
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 --trace file.txt
+timerlat_trace.txt
+Default file name used instead of the requested one.
+
+After the fix
+
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 -tfile.txt
+Saving trace to file.txt
+
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 -t file.txt
+Saving trace to file.txt
+
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 -t=file.txt
+Saving trace to file.txt
+
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 --trace=file.txt
+Saving trace to file.txt
+
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 --trace file.txt
+Saving trace to file.txt
+
+I also tested -t and --trace without providing a file name both as the
+last requested option and with a following long and short option
+
+For example
+
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 -t -u
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 --trace -u
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 -t
+./rtla timerlat hist -P f:95 -u -c0-11 -E3500 -T50 --trace
+
+And all correctly do Saving trace to timerlat_trace.txt as expected
+
+This fix is applied to both timerlat top and hist
+and to osnoise top and hist
+
+Signed-off-by: John Kacur <jkacur@redhat.com>
+---
+ tools/tracing/rtla/src/osnoise_hist.c  | 11 ++++++++---
+ tools/tracing/rtla/src/osnoise_top.c   | 11 ++++++++---
+ tools/tracing/rtla/src/timerlat_hist.c | 11 ++++++++---
+ tools/tracing/rtla/src/timerlat_top.c  | 11 ++++++++---
+ 4 files changed, 32 insertions(+), 12 deletions(-)
+
+diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+index 01870d50942a..8ff1c816eb6a 100644
+--- a/tools/tracing/rtla/src/osnoise_hist.c
++++ b/tools/tracing/rtla/src/osnoise_hist.c
+@@ -640,9 +640,14 @@ static struct osnoise_hist_params
+ 			params->threshold = get_llong_from_str(optarg);
+ 			break;
+ 		case 't':
+-			if (optarg)
+-				/* skip = */
+-				params->trace_output = &optarg[1];
++			if (optarg) {
++				if (optarg[0] == '=')
++					params->trace_output = &optarg[1];
++				else
++					params->trace_output = &optarg[0];
++			}
++			else if (optind < argc && argv[optind][0] != '0')
++				params->trace_output = argv[optind];
+ 			else
+ 				params->trace_output = "osnoise_trace.txt";
+ 			break;
+diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+index 457360db0767..c685d881daf1 100644
+--- a/tools/tracing/rtla/src/osnoise_top.c
++++ b/tools/tracing/rtla/src/osnoise_top.c
+@@ -480,9 +480,14 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
+ 			params->stop_total_us = get_llong_from_str(optarg);
+ 			break;
+ 		case 't':
+-			if (optarg)
+-				/* skip = */
+-				params->trace_output = &optarg[1];
++			if (optarg){
++				if (optarg[0] == '=')
++					params->trace_output = &optarg[1];
++				else
++					params->trace_output = &optarg[0];
++			}
++			else if (optind < argc && argv[optind][0] != '-')
++				params->trace_output = argv[optind];
+ 			else
+ 				params->trace_output = "osnoise_trace.txt";
+ 			break;
+diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+index 8bd51aab6513..d2a639d3c02c 100644
+--- a/tools/tracing/rtla/src/timerlat_hist.c
++++ b/tools/tracing/rtla/src/timerlat_hist.c
+@@ -720,9 +720,14 @@ static struct timerlat_hist_params
+ 			params->stop_total_us = get_llong_from_str(optarg);
+ 			break;
+ 		case 't':
+-			if (optarg)
+-				/* skip = */
+-				params->trace_output = &optarg[1];
++			if (optarg) {
++				if (optarg[0] == '=')
++					params->trace_output = &optarg[1];
++				else
++					params->trace_output = &optarg[0];
++			}
++			else if (optind < argc && argv[optind][0] != '-')
++				params->trace_output = argv[optind];
+ 			else
+ 				params->trace_output = "timerlat_trace.txt";
+ 			break;
+diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+index 8a3fa64319c6..e6e75937832e 100644
+--- a/tools/tracing/rtla/src/timerlat_top.c
++++ b/tools/tracing/rtla/src/timerlat_top.c
+@@ -547,9 +547,14 @@ static struct timerlat_top_params
+ 			params->stop_total_us = get_llong_from_str(optarg);
+ 			break;
+ 		case 't':
+-			if (optarg)
+-				/* skip = */
+-				params->trace_output = &optarg[1];
++			if (optarg) {
++				if (optarg[0] == '=')
++					params->trace_output = &optarg[1];
++				else
++					params->trace_output = &optarg[0];
++			}
++			else if (optind < argc && argv[optind][0] != '-')
++				params->trace_output = argv[optind];
+ 			else
+ 				params->trace_output = "timerlat_trace.txt";
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.44.0
+
