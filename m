@@ -1,234 +1,96 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-out3.simply.com (smtp-out3.simply.com [94.231.106.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AA112B163
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 17:31:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2FF128806;
+	Wed,  8 May 2024 17:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.231.106.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715189517; cv=none; b=n/qNlBRrZgXnQziNZRNdy6Zwm9Y0scqCwDwCrkiNbrH5/pR+8WrUNOzjEOp9Zm3lgNzBj2yE1L9UWFMzJvqk7KnTFv/tdw8aHL+hkc6+nLfJeEMqoN3T6gBHN3t8pg3TpZOv0mdIRM+nA2NygHtJ+aLGk4/hgkWocDxm/MimSXo=
+	t=1715189571; cv=none; b=usIEm1klYeprFes6Aa521qRopCWFRiYOC66A+/I98DI/w33vv238NOGel8my76JayE5M90Y+5pRzNwgZvJJX19W9JH0E1en8cOIXWOZCo/3h7DsjBiWAt14CugsAZB/+BlDmJpm9p3HlAFgIpIdRkqi3qlMEKCdpBAkvBtUM+JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715189517; c=relaxed/simple;
-	bh=eUy8l4dx1nlgASZnAXri0kDxbx6zhnXlB+I6YzLFjTw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z9B5sTdtVrq186CO72nMf8wGHFdOIxrSB4xIOytS2QFMgNpGqEngRJ6zSMztp3Mk7tEgv4lgc3D6KB+5a1g+ub0WCh26Gjhp+W+sP5nOcgS+kafngq3FSw3Ccyd6E70UkHyzbT1pe3MibqPHnEegybOCb0lTFba6y3U1tob2TTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IwMJg9F9; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715189571; c=relaxed/simple;
+	bh=PxR5CNx0YeCBV12sK3NEaQgIkG5iTrz7NBVUDZ1Z6l8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NpNggZo8thCs3ZYKpOJ2MLBuzsXT/MYCklWVT2ZQ+2CLCIzylmYm/728ZsX9wHentuB8w/X6lsnraiArMyVaDlLEmWzCLZmUHev7y2vKfs74iCfEkzaMoCB4BhZx5Gf//r9VJhLmji+kkJvIRIwog/i9Ao4v9rdh+G6GjXBD8dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com; spf=pass smtp.mailfrom=gaisler.com; dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b=EMdtwJpD; arc=none smtp.client-ip=94.231.106.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gaisler.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gaisler.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IwMJg9F9"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1ed835f3c3cso42205085ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 10:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715189512; x=1715794312; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4rcMwpi5swukR9fu2rr+tgqRl98owlkzS7lAQiTyYR0=;
-        b=IwMJg9F9lQfEe+AzV5jXn9VE/b5xqYgCuZThGRFk87TXfYrsFkqugIBbidix+EdaPm
-         Wtua8BqjGwxslnquNHT2gXwsd/PUTcLhRmZIi52Ax8Wa2KSp2tR02ZvfQDPpV6m7oeIt
-         KCkRtVeZjbZsbsiROw33eBmmRddR5m6kMa5k0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715189512; x=1715794312;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4rcMwpi5swukR9fu2rr+tgqRl98owlkzS7lAQiTyYR0=;
-        b=hI7mlSL2FCYPYKuq0t+QVeiYyAOLHNjEU9E91iCqM3Tqdg0ziGiBNPsnO8LsFyjKNo
-         gtMcsxoTY+SMCHSwPUXK1cd6wIOGtj5ZLwtXvv2yPUE1Pwt9jMTaBl9Z/Jhycd8PXdXG
-         QJ+MfyNeshyRBjVA+fMBVYNPMsh8G5RzjIQVj9J3sc/QUfM8YfnRhiPSHuwICYwtP2Pb
-         N3oVNca73oS1a9eG3bUgg8CXrerN3n7oY3tnuWS0XxKSI0IRfZlzuvdgR9zU2bc3j86q
-         LwDYiUtOuupDj1V/CQxanNY/ovTa3A36Sz5PO9fjoxPLOe1dw6NlQl/wvObOWLrqlpUT
-         rDQA==
-X-Forwarded-Encrypted: i=1; AJvYcCVwxdp6Cpo5Hig6DWbQcGEfAjFEsSqlo4Dzh73bytFuw4er2t0ZmxhBt4yIvEWscIRQVB3AsQc/LuhRfjrhEhBo14TdQQX9CRgiOaIF
-X-Gm-Message-State: AOJu0YyhbvcALd+B+xiubH7JCXKPLDC+HjOOFMYAAteJwWbCbpAULTwV
-	RYT0AlyymYsLmo0O5CDpF9NpJUuSffcD41+0O5pyl1Hq8I5+JOVl8lw8pO3iBg==
-X-Google-Smtp-Source: AGHT+IFNr+b2pAfQcWXsO87OnrvROJLzoQf+GfNtUyLNTbuK3rS25oOgdGVm7lFzQQasZ1Pfzw4/2A==
-X-Received: by 2002:a17:902:6506:b0:1e6:766c:6a26 with SMTP id d9443c01a7336-1eeb017cfd1mr35094695ad.12.1715189512601;
-        Wed, 08 May 2024 10:31:52 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id la13-20020a170902fa0d00b001ec412676adsm12094121plb.275.2024.05.08.10.31.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 10:31:52 -0700 (PDT)
-From: Kees Cook <keescook@chromium.org>
-To: "H . J . Lu" <hjl.tools@gmail.com>
-Cc: Kees Cook <keescook@chromium.org>,
-	Mike Rapoport <rppt@linux.ibm.com>,
-	Rui Salvaterra <rsalvaterra@gmail.com>,
-	Victor Stinner <vstinner@redhat.com>,
-	Jan Palus <jpalus@fastmail.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Jan Kara <jack@suse.cz>,
-	Eric Biederman <ebiederm@xmission.com>,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	Chris Kennelly <ckennelly@google.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	John Hubbard <jhubbard@nvidia.com>,
-	Fangrui Song <maskray@google.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Yang Yingliang <yangyingliang@huawei.com>,
-	Mike Rapoport <rppt@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH 3/3] binfmt_elf: Honor PT_LOAD alignment for static PIE
-Date: Wed,  8 May 2024 10:31:48 -0700
-Message-Id: <20240508173149.677910-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240508172848.work.131-kees@kernel.org>
-References: <20240508172848.work.131-kees@kernel.org>
+	dkim=pass (1024-bit key) header.d=gaisler.com header.i=@gaisler.com header.b="EMdtwJpD"
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.simply.com (Simply.com) with ESMTP id 4VZMfg4H7Xz683x;
+	Wed,  8 May 2024 19:32:43 +0200 (CEST)
+Received: from [192.168.0.25] (h-98-128-223-123.NA.cust.bahnhof.se [98.128.223.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(Client did not present a certificate)
+	by smtp.simply.com (Simply.com) with ESMTPSA id 4VZMfg2360z683f;
+	Wed,  8 May 2024 19:32:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gaisler.com;
+	s=unoeuro; t=1715189563;
+	bh=qFLJ8C/vJOy8ztY+ErSoPE9hPN1aNMGglndtw+goyc4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=EMdtwJpDLqaCLEUY9rcA4LKsuJBXljK6a+sSvt71da1bFK7iyJPuiPzQhOHvokuJm
+	 YrBWAJColD+H5mvb3FJOFhUipfhklisGeh29JpgZQbqcEDQIGM5C1o/W/j31R1xbfL
+	 +kU3aV1ZOmG7VcLoXxTVaQrlc5Or2HExzgHfI3Nk=
+Message-ID: <b7ae0457-2663-4f8d-a6f7-b79dd60623d1@gaisler.com>
+Date: Wed, 8 May 2024 19:32:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5293; i=keescook@chromium.org;
- h=from:subject; bh=eUy8l4dx1nlgASZnAXri0kDxbx6zhnXlB+I6YzLFjTw=;
- b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBmO7cEJD8sdRg2kTQVgy9QHVOS08welrL7Y9Xmg
- lC0fTmRrBSJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCZju3BAAKCRCJcvTf3G3A
- JtM8EACdAwapwoIf1FEL7K12lEwr6cSDnpSo/80JcopA9tWkFKXsiep6tWvoxZDOzJ1vc9e6b4V
- YLAAZBeXNl/xk6VrycAfh+xwdHN2k+KNbWvuJiD34NZowKV8tHkpCLzfyBMxlsEnwkpvxp4gaSj
- d4IhlEOcmwxk6K5OT+QsSmcjMCjEBIVRIK0goPl4GHq8aOi+sRueJ8TaFrjvw1+8mrbvG2DdFCe
- Uv8kWkvlo/ILaWPFZ0NusPLLdDhExA73NKe/ve4YZAfk0p6FRzmyWuHOaT7dkEYmU9yuB2JtgFA
- K2DJetC6ue7f0Q13jS3/JzqgB2vtfz+FNYDwsf5pZqI/0ziFNMCvidOe43tE7Iw0Lmdt2/BgPNL
- r8gTuz9/tlA2bbDc3e/kRUhuX5nwaHcjR/r8IVSalFQmyqc5IPAk37VHvGDmg6DIbep/8qnwvCF
- QLG5UBoysuC4MgK+oc4o06z7rfYgL2DuXeo2iJifxHJslw72FqLeVf4SKpDzrWKHhqNWvN5fVlO
- iCNqiQqRpRch+qbtKbcDu6uw3gg9q5q8qzx+EEXIHGhqVyKXRZKdXgMmXXp/my+9/udZV/cFPHl
- Axrb6nLzkWUCWdMUTIN4aZHCt5ihat6gagmdxw0UNkomFQUeEHsgPbhNUGZztz5L0i7eTM6zPj0 PxL8C6OI/h070mg==
-X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 5/5] sparc/leon: Remove on-stack cpumask var
+To: Dawei Li <dawei.li@shingroup.cn>, davem@davemloft.net
+Cc: sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, sam@ravnborg.org
+References: <20240424025548.3765250-1-dawei.li@shingroup.cn>
+ <20240424025548.3765250-6-dawei.li@shingroup.cn>
+Content-Language: en-US
+From: Andreas Larsson <andreas@gaisler.com>
+In-Reply-To: <20240424025548.3765250-6-dawei.li@shingroup.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The p_align values in PT_LOAD were ignored for static PIE executables
-(i.e. ET_DYN without PT_INTERP). This is because there is no way to
-request a non-fixed mmap region with a specific alignment. ET_DYN with
-PT_INTERP uses a separate base address (ELF_ET_DYN_BASE) and binfmt_elf
-performs the ASLR itself, which means it can also apply alignment. For
-the mmap region, the address selection happens deep within the vm_mmap()
-implementation (when the requested address is 0).
+On 2024-04-24 04:55, Dawei Li wrote:
+> In general it's preferable to avoid placing cpumasks on the stack, as
+> for large values of NR_CPUS these can consume significant amounts of
+> stack space and make stack overflows more likely.
+> 
+> Use cpumask_subset() and cpumask_first_and() to avoid the need for a
+> temporary cpumask on the stack.
+> 
+> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Dawei Li <dawei.li@shingroup.cn>
+> ---
+>  arch/sparc/kernel/leon_kernel.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/sparc/kernel/leon_kernel.c b/arch/sparc/kernel/leon_kernel.c
+> index 4c61da491fee..a43cf794bb1e 100644
+> --- a/arch/sparc/kernel/leon_kernel.c
+> +++ b/arch/sparc/kernel/leon_kernel.c
+> @@ -106,13 +106,12 @@ unsigned long leon_get_irqmask(unsigned int irq)
+>  #ifdef CONFIG_SMP
+>  static int irq_choose_cpu(const struct cpumask *affinity)
+>  {
+> -	cpumask_t mask;
+> +	unsigned int cpu = cpumask_first_and(affinity, cpu_online_mask);
+>  
+> -	cpumask_and(&mask, cpu_online_mask, affinity);
+> -	if (cpumask_equal(&mask, cpu_online_mask) || cpumask_empty(&mask))
+> +	if (cpumask_subset(cpu_online_mask, affinity) || cpu >= nr_cpu_ids)
+>  		return boot_cpu_id;
+>  	else
+> -		return cpumask_first(&mask);
+> +		return cpu;
+>  }
+>  #else
+>  #define irq_choose_cpu(affinity) boot_cpu_id
 
-The earlier attempt to implement this:
+Reviewed-by: Andreas Larsson <andreas@gaisler.com>
+Tested-by: Andreas Larsson <andreas@gaisler.com>
 
-  commit 9630f0d60fec ("fs/binfmt_elf: use PT_LOAD p_align values for static PIE")
-  commit 925346c129da ("fs/binfmt_elf: fix PT_LOAD p_align values for loaders")
+Picking this up to my for-next.
 
-did not take into account the different base address origins, and were
-eventually reverted:
-
-  aeb7923733d1 ("revert "fs/binfmt_elf: use PT_LOAD p_align values for static PIE"")
-
-In order to get the correct alignment from an mmap base, binfmt_elf must
-perform a 0-address load first, then tear down the mapping and perform
-alignment on the resulting address. Since this is slightly more overhead,
-only do this when it is needed (i.e. the alignment is not the default
-ELF alignment). This does, however, have the benefit of being able to
-use MAP_FIXED_NOREPLACE, to avoid potential collisions.
-
-With this fixed, enable the static PIE self tests again.
-
-Reported-by: H.J. Lu <hjl.tools@gmail.com>
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=215275
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
-Cc: H.J. Lu <hjl.tools@gmail.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Rui Salvaterra <rsalvaterra@gmail.com>
-Cc: Victor Stinner <vstinner@redhat.com>
-Cc: Jan Palus <jpalus@fastmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Christian Brauner <brauner@kernel.org>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-mm@kvack.org
----
- fs/binfmt_elf.c                       | 42 +++++++++++++++++++++++----
- tools/testing/selftests/exec/Makefile |  2 +-
- 2 files changed, 38 insertions(+), 6 deletions(-)
-
-diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-index 56432e019d4e..cbb07a9c02d4 100644
---- a/fs/binfmt_elf.c
-+++ b/fs/binfmt_elf.c
-@@ -1088,10 +1088,13 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 				goto out_free_dentry;
- 			}
- 
-+			/* Calculate any requested alignment. */
-+			alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
-+
- 			/*
- 			 * There are effectively two types of ET_DYN
--			 * binaries: programs (i.e. PIE: ET_DYN with INTERP)
--			 * and loaders (ET_DYN without INTERP, since they
-+			 * binaries: programs (i.e. PIE: ET_DYN with PT_INTERP)
-+			 * and loaders (ET_DYN without PT_INTERP, since they
- 			 * _are_ the ELF interpreter). The loaders must
- 			 * be loaded away from programs since the program
- 			 * may otherwise collide with the loader (especially
-@@ -1111,15 +1114,44 @@ static int load_elf_binary(struct linux_binprm *bprm)
- 			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
- 			 */
- 			if (interpreter) {
-+				/* On ET_DYN with PT_INTERP, we do the ASLR. */
- 				load_bias = ELF_ET_DYN_BASE;
- 				if (current->flags & PF_RANDOMIZE)
- 					load_bias += arch_mmap_rnd();
--				alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
-+				/* Adjust alignment as requested. */
- 				if (alignment)
- 					load_bias &= ~(alignment - 1);
- 				elf_flags |= MAP_FIXED_NOREPLACE;
--			} else
--				load_bias = 0;
-+			} else {
-+				/*
-+				 * For ET_DYN without PT_INTERP, we rely on
-+				 * the architectures's (potentially ASLR) mmap
-+				 * base address (via a load_bias of 0).
-+				 *
-+				 * When a large alignment is requested, we
-+				 * must do the allocation at address "0" right
-+				 * now to discover where things will load so
-+				 * that we can adjust the resulting alignment.
-+				 * In this case (load_bias != 0), we can use
-+				 * MAP_FIXED_NOREPLACE to make sure the mapping
-+				 * doesn't collide with anything.
-+				 */
-+				if (alignment > ELF_MIN_ALIGN) {
-+					load_bias = elf_load(bprm->file, 0, elf_ppnt,
-+							     elf_prot, elf_flags, total_size);
-+					if (BAD_ADDR(load_bias)) {
-+						retval = IS_ERR_VALUE(load_bias) ?
-+							 PTR_ERR((void*)load_bias) : -EINVAL;
-+						goto out_free_dentry;
-+					}
-+					vm_munmap(load_bias, total_size);
-+					/* Adjust alignment as requested. */
-+					if (alignment)
-+						load_bias &= ~(alignment - 1);
-+					elf_flags |= MAP_FIXED_NOREPLACE;
-+				} else
-+					load_bias = 0;
-+			}
- 
- 			/*
- 			 * Since load_bias is used for all subsequent loading
-diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
-index 619cff81d796..ab67d58cfab7 100644
---- a/tools/testing/selftests/exec/Makefile
-+++ b/tools/testing/selftests/exec/Makefile
-@@ -6,7 +6,7 @@ CFLAGS += -D_GNU_SOURCE
- ALIGNS := 0x1000 0x200000 0x1000000
- ALIGN_PIES        := $(patsubst %,load_address.%,$(ALIGNS))
- ALIGN_STATIC_PIES := $(patsubst %,load_address.static.%,$(ALIGNS))
--ALIGNMENT_TESTS   := $(ALIGN_PIES)
-+ALIGNMENT_TESTS   := $(ALIGN_PIES) $(ALIGN_STATIC_PIES)
- 
- TEST_PROGS := binfmt_script.py
- TEST_GEN_PROGS := execveat non-regular $(ALIGNMENT_TESTS)
--- 
-2.34.1
-
+Thanks,
+Andreas
