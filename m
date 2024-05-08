@@ -1,203 +1,108 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0931671745
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 07:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6AA07442E
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 07:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715154189; cv=none; b=CLznXy26+Dw0GFmelUbbitPRnZ3vi35ENJw3++XNeeT+9lVKq1MuJDgsCdpwm7fJovUmYhtTe/8FIuMV2Mtk+doEDb00p/Bx92TT8I7wIV5F4me1q0pmjzyb8HjoUSQXwvuoyJi4rtG1OIFvy4MHHMvyCmdqmult2HkVtap0V/Q=
+	t=1715154192; cv=none; b=UPv/hcgCgYTiHiV7+vzuPF6Bu+vFZ8kvI9l9Oe+1DKh4ZOvxA8J1EY8aiRCtttw6jcB4jJYboV/71o8gbqDv9Ix4s95H7WlxcE5UoacnHeh2Gh+tRWJaAhzFbvSKNhU/bS2wYPnpgU+Lr6SZLE6wl+xIxryZTmFlh170gBASnEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715154189; c=relaxed/simple;
-	bh=hqBaAu2Ha8Gh/abMg4Cg6golRoIbO9BVZYRoWaldmIQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EboNn0FWNHW8CUmLZhTJqD5bgObm2HR+BEgDUFvyqa/YpdlsaNp6+bD8L99Vf6Nt2wDd0D+b0eYv6QXw/t4KCfYYmdWw72TJVQpbs5HGE+K2D6UZlB1jXBMI5xgPMCC66I3QX9z3CISncSyWbA+LljLUZjdGT4wgrez/lt4vDXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=PKiywfTP; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715154192; c=relaxed/simple;
+	bh=/K1XcnvsP30yWA0TcnD+ptMLyVHuWtcwczM/qqCTSuU=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=nhTouRaQZcJcrPeWKnCQxaUDBTATyc5h71EBHmMaEVEj7r2fl9EepTuENDl6KXxM7OxVSjfUSZPkJMbxlqVK8z7q+QR9Ln/18GlHY/TBT9+pH64jHwNLrwg++VVqgY4YNBfNZPt4A8RI4nhzEphDLj6ciA4cFwgJKws51UmjUes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=s0XZMc2G; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PKiywfTP"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2b27eec1eb1so2915544a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 00:43:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s0XZMc2G"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a59c0a6415fso915396866b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 00:43:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715154187; x=1715758987; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=une8u6O58vSEqdMRQHIC0PiltZGgPobzLxkJ5Uf2uCM=;
-        b=PKiywfTP7x35TLvZ5Wl70U3In2E6HROkPCFyFEd5xKwwGj7f/8sfEVVyrk/x2H9yyi
-         d4Fu3xK7VxfPl3Ffj33ueCtkPgxnF0LVPquV9/C8jDa5MW1wUnzkTSRWq4YHvBYToBX/
-         Aa6i1W3uweqQdcvs4SiSWHbcPqtwDxU3Ag6oc=
+        d=linaro.org; s=google; t=1715154189; x=1715758989; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7Xvw3cr1RyoF79KTdx9ez6z4+coEhpvNMvaOv4mOPeY=;
+        b=s0XZMc2GVH22ks4YW/y9FPtu3ksMTX0NzWUqArMM+TJbCin0u+ZbA5v2jepTYcoDZb
+         xJwoHnQv2xQpfmolZJYv7KG5bpqnk/flQhtkeK0uxWVOdSl+rMKE1X2LHxom6ZeOXeEs
+         P+ta8V69/xFisEeyC5Zf8uyRF+fLJUph9H6e0Mwogo4ReNt1jue96wLPlSbPG9Wk2CAg
+         pSiZt3aVjw6ZWmTihBw+Owr9Jhn/4bXtwIbOellRcBLA56SEf7R7U/9cgW8UH9gB3hA8
+         gOQzxdoBCAuBcVIEwNgreJAB+grycZLaDZ13i/zqQujZNNmHd53wUl+EsG+0wRoteZcs
+         Witw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715154187; x=1715758987;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=une8u6O58vSEqdMRQHIC0PiltZGgPobzLxkJ5Uf2uCM=;
-        b=vczfhzW6g7PXsS4Zhb0nRNR05YM3f/2RMvQ6yFLT9HwY7Hjw7Y5GpFDEV/fRlvxOim
-         1hSspdh/Jk6IGP+gtACFl4C3+VKyhW2GgTG1As5fmJ7nDg3WL2hnSE4/AD1cixbiyoLz
-         laqqFn4JKI2pnp+MDOVyFkm684K4fpmEccB7ZbaXbPkqf3hMdVtbWof1/DAS9HTRC3Pb
-         XunmmIUa2OqQEnzCo9kylhH9JXEYhggNTNpAkLL6wM880+h6fpTAJHDYq/ba8bIpuXbn
-         btNdneBEJU39RzDQwsOzMxuRg2kO6vCj85/3UJV0UZjQyhCCfXHZkK2wfKURUoFII06r
-         rLJA==
-X-Gm-Message-State: AOJu0YzWZD1BQ1XBLsSamG9mBz6w+KIqPXVPNm9uslFPats8CA5xulNW
-	Haa8lx6+RHTj//SAT1aOY1/HNsBkx9W6dTDoWuQgOHBINbkoUMpQtUMahB6YhQ==
-X-Google-Smtp-Source: AGHT+IHVw5rVeShNRu6xrdN8APaPx44Qmmg3cThkOLagufafTV2ioHSynqyx4HHegBvdxZGaapvtwQ==
-X-Received: by 2002:a17:90a:aa81:b0:2b6:3792:ea4d with SMTP id 98e67ed59e1d1-2b637932ademr433346a91.5.1715154187479;
-        Wed, 08 May 2024 00:43:07 -0700 (PDT)
-Received: from tigerii.tok.corp.google.com ([2401:fa00:8f:203:ad4d:5f6c:6699:2da4])
-        by smtp.gmail.com with ESMTPSA id l5-20020a17090aec0500b002b328adaa40sm780011pjy.17.2024.05.08.00.43.05
+        d=1e100.net; s=20230601; t=1715154189; x=1715758989;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7Xvw3cr1RyoF79KTdx9ez6z4+coEhpvNMvaOv4mOPeY=;
+        b=d3C4/UIgsmo0FRndYTkJCGVD3MkzzGnCi5iW2uwM4ii21U+xhY1VjxKx5dEhu400+i
+         GKzQtwkL/qyljXYrbS/FS9dFN4NEzA25DUpwo414Q72MIZzhcxdW4ETcx0l9lqtrMfFe
+         8CBeF1U/jsKTbxv/g7mDvHJRi0NK8bGyGGerpZAQCAIjbqYvZnmJSe3XuaXi/ljBsKQh
+         HcDNshmzkiOJvHReRojqB/sV+K6RcnQRxqYX1cbPfNKfMgxsnKxIb9p1HNtKFAsnwJ+D
+         C5h/y+7H3Cvu3lpepckcx2R+JzPyaZEDvMdTIWWjfl4HnWqBVP3OH1h6cf4V4/bFLh1s
+         2gWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXr6nQW3Myna9/aBCCBRDiakMsnMVC9lTBB0wNqE9FziBpbVJNrfsCu28//Qzfl8lxmBrmYrmIZuLiji4QWzGqFNQBASOM7XLOCCNXL
+X-Gm-Message-State: AOJu0YyrU2hNYoz6YKae7JKX6ozJAOYs6melcR8hr9Usk1xCzVYM/ex7
+	9HfdkuwuE7jn39Z+bIpIPq67vIyAzrHlJ3slu5PrgUzq+c9fhTFYVuaW38cbQPw=
+X-Google-Smtp-Source: AGHT+IGNGbq3AaoeyQZEUAek7mACIMKHY6D74+bWoezKoLVMrHCzDFCvjv/4+axxxyGGJUbfgQms/w==
+X-Received: by 2002:a50:8e4f:0:b0:572:78df:c606 with SMTP id 4fb4d7f45d1cf-5731da6b1e5mr1274488a12.26.1715154188725;
+        Wed, 08 May 2024 00:43:08 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id q9-20020aa7cc09000000b005725d859e4esm7328022edt.73.2024.05.08.00.43.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 00:43:07 -0700 (PDT)
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: [PATCHv3 13/19] zram: add support for dict comp config
-Date: Wed,  8 May 2024 16:42:06 +0900
-Message-ID: <20240508074223.652784-14-senozhatsky@chromium.org>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
-In-Reply-To: <20240508074223.652784-1-senozhatsky@chromium.org>
-References: <20240508074223.652784-1-senozhatsky@chromium.org>
+        Wed, 08 May 2024 00:43:08 -0700 (PDT)
+Date: Wed, 8 May 2024 10:43:04 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Sagi Grimberg <sagi@grimberg.me>
+Cc: Christoph Hellwig <hch@lst.de>, Chaitanya Kulkarni <kch@nvidia.com>,
+	Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] nvmet: prevent sprintf() overflow in
+ nvmet_subsys_nsid_exists()
+Message-ID: <25e9c58d-d192-4a91-ad40-4c2ea01fbdf5@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-Handle dict=path param so that we can read a pre-trained
-compression algorithm dictionary which we then pass to the
-backend configuration.
+The nsid value is a u32 that comes from nvmet_req_find_ns().  It's
+endian data and we're on an error path and both of those raise red
+flags.  So let's make this safer.
 
-Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+1) Make the buffer large enough for any u32.
+2) Remove the unnecessary initialization.
+3) Use snprintf() instead of sprintf() for even more safety.
+4) The sprintf() function returns the number of bytes printed, not
+   counting the NUL terminator. It is impossible for the return value to
+   be <= 0 so delete that.
+
+Fixes: 505363957fad ("nvmet: fix nvme status code when namespace is disabled")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/block/zram/zram_drv.c | 54 ++++++++++++++++++++++++++++-------
- 1 file changed, 43 insertions(+), 11 deletions(-)
+ drivers/nvme/target/configfs.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
-index 89a2eb37e26c..863e4e125eaa 100644
---- a/drivers/block/zram/zram_drv.c
-+++ b/drivers/block/zram/zram_drv.c
-@@ -33,6 +33,7 @@
- #include <linux/debugfs.h>
- #include <linux/cpuhotplug.h>
- #include <linux/part_stat.h>
-+#include <linux/kernel_read_file.h>
- 
- #include "zram_drv.h"
- 
-@@ -1013,9 +1014,35 @@ static int __comp_algorithm_store(struct zram *zram, u32 prio, const char *buf)
- 	return 0;
- }
- 
--static int comp_config_store(struct zram *zram, u32 prio, s32 level)
-+static void __reset_comp_config(struct zram *zram, u32 prio)
+diff --git a/drivers/nvme/target/configfs.c b/drivers/nvme/target/configfs.c
+index 89a001101a7f..37cd75ff150e 100644
+--- a/drivers/nvme/target/configfs.c
++++ b/drivers/nvme/target/configfs.c
+@@ -757,10 +757,9 @@ static struct configfs_attribute *nvmet_ns_attrs[] = {
+ bool nvmet_subsys_nsid_exists(struct nvmet_subsys *subsys, u32 nsid)
  {
-+	struct zcomp_config *config = &zram->configs[prio];
-+
-+	vfree(config->dict);
-+	config->level = ZCOMP_CONFIG_NO_LEVEL;
-+	config->dict_sz = 0;
-+	config->dict = NULL;
-+}
-+
-+static int comp_config_store(struct zram *zram, u32 prio, s32 level,
-+			     const char *dict_path)
-+{
-+	ssize_t sz = 0;
-+
-+	__reset_comp_config(zram, prio);
-+
-+	if (dict_path) {
-+		sz = kernel_read_file_from_path(dict_path, 0,
-+						&zram->configs[prio].dict,
-+						INT_MAX,
-+						NULL,
-+						READING_POLICY);
-+		if (sz < 0)
-+			return -EINVAL;
-+	}
-+
- 	zram->configs[prio].level = level;
-+	zram->configs[prio].dict_sz = sz;
- 	return 0;
- }
+ 	struct config_item *ns_item;
+-	char name[4] = {};
++	char name[12];
  
-@@ -1035,7 +1062,7 @@ static ssize_t comp_algorithm_store(struct device *dev,
- {
- 	struct zram *zram = dev_to_zram(dev);
- 	char *args, *param, *val;
--	char *alg = NULL;
-+	char *alg = NULL, *dict_path = NULL;
- 	s32 level = ZCOMP_CONFIG_NO_LEVEL;
- 	int ret;
- 
-@@ -1063,12 +1090,17 @@ static ssize_t comp_algorithm_store(struct device *dev,
- 				return ret;
- 			continue;
- 		}
-+
-+		if (!strcmp(param, "dict")) {
-+			dict_path = val;
-+			continue;
-+		}
- 	}
- 
- 	if (!alg)
- 		return -EINVAL;
- 
--	ret = comp_config_store(zram, ZRAM_PRIMARY_COMP, level);
-+	ret = comp_config_store(zram, ZRAM_PRIMARY_COMP, level, dict_path);
- 	if (!ret)
- 		ret = __comp_algorithm_store(zram, ZRAM_PRIMARY_COMP, alg);
- 	return ret ? ret : len;
-@@ -1102,7 +1134,7 @@ static ssize_t recomp_algorithm_store(struct device *dev,
- 	struct zram *zram = dev_to_zram(dev);
- 	int prio = ZRAM_SECONDARY_COMP;
- 	char *args, *param, *val;
--	char *alg = NULL;
-+	char *alg = NULL, *dict_path = NULL;
- 	s32 level = ZCOMP_CONFIG_NO_LEVEL;
- 	int ret;
- 
-@@ -1131,6 +1163,11 @@ static ssize_t recomp_algorithm_store(struct device *dev,
- 				return ret;
- 			continue;
- 		}
-+
-+		if (!strcmp(param, "dict")) {
-+			dict_path = val;
-+			continue;
-+		}
- 	}
- 
- 	if (!alg)
-@@ -1139,7 +1176,7 @@ static ssize_t recomp_algorithm_store(struct device *dev,
- 	if (prio < ZRAM_SECONDARY_COMP || prio >= ZRAM_MAX_COMPS)
- 		return -EINVAL;
- 
--	ret = comp_config_store(zram, prio, level);
-+	ret = comp_config_store(zram, prio, level, dict_path);
- 	if (!ret)
- 		ret = __comp_algorithm_store(zram, prio, alg);
- 	return ret ? ret : len;
-@@ -2049,12 +2086,7 @@ static void zram_reset_comp_configs(struct zram *zram)
- 	u32 prio;
- 
- 	for (prio = 0; prio < ZRAM_MAX_COMPS; prio++) {
--		struct zcomp_config *config = &zram->configs[prio];
--
--		vfree(config->dict);
--		config->level = ZCOMP_CONFIG_NO_LEVEL;
--		config->dict_sz = 0;
--		config->dict = NULL;
-+		__reset_comp_config(zram, prio);
- 	}
- }
- 
+-	if (sprintf(name, "%u", nsid) <= 0)
+-		return false;
++	snprintf(name, sizeof(name), "%u", nsid);
+ 	mutex_lock(&subsys->namespaces_group.cg_subsys->su_mutex);
+ 	ns_item = config_group_find_item(&subsys->namespaces_group, name);
+ 	mutex_unlock(&subsys->namespaces_group.cg_subsys->su_mutex);
 -- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+2.43.0
 
