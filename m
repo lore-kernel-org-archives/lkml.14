@@ -1,84 +1,71 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A8969D29;
-	Wed,  8 May 2024 15:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7328662F;
+	Wed,  8 May 2024 15:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715180816; cv=none; b=lrocmcDeLXR2dJa/kmzIZ34lzmboxD7SEZUHqs9AbcV7irrTgzak9+qE3eMq+dL8S0pNMm15eNfMA11pfr3l2A1MUD3VTB8AVhmBZGP3ANqmiHokBlAci05+Y0926IfyknySPNUeYv1biQocL+kQneqp4oATYcHtE52ADQMLM30=
+	t=1715180879; cv=none; b=CL9aiJwIyo+T2VrgcmdhkK3EYP+wpp8rlEZxgqnpNBp5EY2HxdMDBoCSG7tnhmVIa8pQTUvV42UdinayqRviLNeIXBafJhOU8Q9Llqgx4xgRtJVgFYpXLh7unxBcSyYRzzHZxmxtPZy4FrKAHyI6M2WX/d0OMuFTBe73VhkVX08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715180816; c=relaxed/simple;
-	bh=v5MiUA9DTlKONnt0SBn4aw4JvqbNC1DtJQVmFvcZPtE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dJLhd59feKMlnVpb9kHNTu5aBJbnxFrwaSFOB5veBeumMx0gZF4LPOmJhlmFCFVyWswQoi7olRb0VM3jAOcalbajTBS8zRSa3FV9QmTXelSUvNnJGPlylKlCatBbemC1SPdIUlm/pLsdP3d0QkXyckCsmWX2qA6n+pgSqvrB5Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jJyg5OjN; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715180879; c=relaxed/simple;
+	bh=GciHj+oZ2fXP+d0t8BBXmVMu4hdURU+8gmHOXySA124=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YrG4ejC1OcC6XvAfgwTMTwKjH1RBDTDai/oL8CdMkJz4KxWrYRWcKADKge/sMxMjUCKZuqqZqG1CBio7T7aBSXoQr/B1tVkVDh07sSc+KxUnFVmgwuXt7CC5bE/i1AZ09N/F1vtQb5k07A9oEDdJJgRX2hs0OT4fcOrUUN64Jlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c06nezEY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jJyg5OjN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715180815; x=1746716815;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=v5MiUA9DTlKONnt0SBn4aw4JvqbNC1DtJQVmFvcZPtE=;
-  b=jJyg5OjNQvQvlm3bIZtKVVVK5B5HEmgZSojI91ldbcQqL69FBPxMKLgI
-   vzgGhNKU4++CULtFZWNJcPwYOlz00ErGZGiNFoHv87T+2F6Ed4BZfNCNa
-   MtFiG/p6p85hF0cUBZZZNTST3uFbPyW14UYHPItqrucee6Ivz19splaCW
-   IICogaj5dryQhVAI5+CXBSInUu/fRH8kMkBWrCa09aA6WtlDJ6x/OQpVn
-   BoQxynZZoiHiQOCQ8p5Mvadk9clxxmZa1d9aGcyDblJsMb77N/jjwi/5X
-   t3V3hnqHoiMguPmqyqBbkh6S3M85nu3jzmT9eSUfggqZzTIPssR6DfDSR
-   w==;
-X-CSE-ConnectionGUID: 7opiOhjMSuOjgvVcqS/8/A==
-X-CSE-MsgGUID: uVudBaQoRR6cFxwAp9PxYA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="22441864"
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="22441864"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 08:06:54 -0700
-X-CSE-ConnectionGUID: tGQnIkQQQwuurRWpgH/mpg==
-X-CSE-MsgGUID: SCYgCp7nTxeB0UCGo3Lfxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="33474428"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 08:06:53 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s4isc-00000005TlZ-3C2a;
-	Wed, 08 May 2024 18:06:50 +0300
-Date: Wed, 8 May 2024 18:06:50 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v1 1/1] usb: fotg210: Use *-y instead of *-objs in
- Makefile
-Message-ID: <ZjuVCvQw4aL0x42W@smile.fi.intel.com>
-References: <20240508150406.1378672-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c06nezEY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E00C6C2BD10;
+	Wed,  8 May 2024 15:07:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715180879;
+	bh=GciHj+oZ2fXP+d0t8BBXmVMu4hdURU+8gmHOXySA124=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=c06nezEYl1LdgI3waamrNIV13kQ53qXqYx967MvYOeHk107qc5SkaRxjYeubzP6ie
+	 hz+werFguJaxK+lyztT54imHkGIhQ27D/vzyOHxjGr39zwc9G9k4UoimMndoRNkNgk
+	 zFDPHho/FwqxAgVDQHFk6N+l1HwmE2RalfF7gwtFIBuSQEAPWSikKTZkqjFcZBlX5I
+	 vqM8k2tGwchCeEptTRpVQjIG5nGpj6qms6RZ3kzHZ+bYynoTks4CwZSQC+D4dYwVIP
+	 yeOldfvyAMSs6Fhy3tO+XJm44g7N1fzoT2TaY7b87b/eukvuHH0IHf5xCUmUOB6KUu
+	 cJI2tBOpR7zAA==
+Date: Wed, 8 May 2024 08:07:57 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: netdev@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>, "David
+ S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo
+ Abeni <pabeni@redhat.com>, linux-afs@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net 0/5] rxrpc: Miscellaneous fixes
+Message-ID: <20240508080757.5022b867@kernel.org>
+In-Reply-To: <1478421.1715176828@warthog.procyon.org.uk>
+References: <20240507194447.20bcfb60@kernel.org>
+	<20240503150749.1001323-1-dhowells@redhat.com>
+	<1478421.1715176828@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240508150406.1378672-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 08, 2024 at 06:04:06PM +0300, Andy Shevchenko wrote:
-> *-objs suffix is reserved rather for (user-space) host programs while
-> usually *-y suffix is used for kernel drivers (although *-objs works
-> for that purpose for now).
+On Wed, 08 May 2024 15:00:28 +0100 David Howells wrote:
+> Jakub Kicinski <kuba@kernel.org> wrote:
 > 
-> Let's correct the old usages of *-objs in Makefiles.
+> > Looks like these got marked as Rejected in patchwork.
+> > I think either because lore is confused and attaches an exchange with
+> > DaveM from 2022 to them (?) or because I mentioned to DaveM that I'm
+> > not sure these are fixes. So let me ask - on a scale of 1 to 10, how
+> > convinced are you that these should go to Linus this week rather than
+> > being categorized as general improvements and go during the merge
+> > window (without the Fixes tags)?  
+> 
+> Ah, sorry.  I marked them rejected as I put myself as cc: not S-o-b on one of
+> them, but then got distracted and didn't get around to reposting them.  And
+> Jeff mentioned that the use of the MORE-PACKETS flag is not exactly
+> consistent between various implementations.
 
-Note, the original approach is weirdest from existing. Only a few
-drivers use this (-objs-y) one most likely by mistake.
+Ah, mystery solved :)
 
--- 
-With Best Regards,
-Andy Shevchenko
+> So if you could take just the first two for the moment?
 
-
+Done!
