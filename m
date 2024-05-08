@@ -1,168 +1,90 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9D2B8F55
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 02:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9499441
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 02:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715134100; cv=none; b=nS5tY3xoqMfYEfHr3r+9kPjQvCp4thXKKrlF1ILErO9Mf/zRCRH5H6YDEGVGFcBF4YY1QqJ1FmsoRbb/ov1tmQ2QnrTrVofkgdJAnDj4ig8m1jTxPpXjOFEZT5NDIMIAItlkPrjbaVG/xm49DPbSr8U2W8jCRQjMaGXYtjR73KI=
+	t=1715134412; cv=none; b=jAPnoYsD4TR9fDMfAbQymlGJ1l38CUcJXi67LuXpdw6G0PORJIVE6ZhXn3SNR/Cf4QD8B8KZkFlX5O/6Jw+Zv+IobVBEfnI5H084GTCHrmSOYSWn8Y1lDeXNTaMxup5NjSzxuLN5fmfmDi5PejA3hFDbxPwfGI71hTmEuXr8cx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715134100; c=relaxed/simple;
-	bh=agy9+JvSsjkh/8vuiZScDKeMv5BxMXimZr+iwOD9br0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=WBtxiEpyu1JuI7ZYqhjNOKlEgTv8/ZPy/EgznJl5MapHAOcVcm3PvWv07BrQf9wkNUIQfrOblpUVcFBy+WiqbnNwO/LInv/OIrVDdB/zrvn3z+BvQ5kRfLwem1K8yolpdTZN3W4GV/7mFDiAK0K2sC4tkWvNfPF7Je8mqHygMcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=EJQIVfmk; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1715134412; c=relaxed/simple;
+	bh=n5QFlSypq32hB2yeYcNZfKutq267CVYUJOO6/Fa/m+U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VtE3e6P6yuH2frVUDtF0BXqVyorBsXdFB83QCiG1JWAZDHuFfVYntQwfa2Fptt0BlP6cV+buiMLWyXrl/lV4WJruayJwlSqMJVLjccE1CTMGEo0byZl2yZLgkuUBBWU7ul/uyYjcFUxF2HPCyoI+y03kNgHOiuuZWnHtpKybHT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=j/qiLOhh; arc=none smtp.client-ip=115.124.30.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="EJQIVfmk"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2df83058d48so46044061fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 19:08:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1715134096; x=1715738896; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8RA5zO8osT581yFAhgKqZ9U4T2nN2QEoLCxUvIOmSqY=;
-        b=EJQIVfmkZsTCAm8E4kDj+88nxmhpGc9rK1sBXSVsOl6SW6BYmrRX0vn/GPjGjr2vqJ
-         l4OTyYrsKlM3svY0njbmWpBrU2wb/mAKTQreuq0/sK2tBOcruo65AVRaboQHh6ocamqN
-         pK/boy0bupvFzAw3dWHz61fKvqeGQOMBeUexPChWm93uhXZWL0K16XvEav6jl8dTm1Nh
-         z3YpC+vR/bKjm4qMRPbccfkeeZIh5RNa45Kl5e5bGDaBi5Rco2yXE9II4i4apG6/j5HH
-         BdaNEMduq/0k4jtQANF7XZ1O4YA59iNsEz1bdJuXkycbwAJPT4WiBBpEez0vJMk1LAQc
-         nVIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715134096; x=1715738896;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8RA5zO8osT581yFAhgKqZ9U4T2nN2QEoLCxUvIOmSqY=;
-        b=TJ6e/aDSdSsaKfow6NlzEvuDbKoom2BlM3eccOJxEwO5xz5EkQNT4Jumy/peD8FQhw
-         kO3ShRNsR+BE8XJgPXulmTMGzYfkefeEJETNhckjaHSpQuTLiNSjZe1UZCH+znBQ9WDQ
-         Y0u+Eo0sGllImWKvvt5wy/yyODjxhiMqBEWw2WkWflCRRYB1HZu2olIp1Dm/ACzg5fHe
-         TQIN80V4ioRGTrwErJmkH+N+WA3JRXhQU3i6/mMampzPAt2nnDM4M3MiwIdTwixxt7bn
-         M1xSoM1YRcE63swJ2Kgmu0aK1Wcqq1cnRUvuum/otMxw4J3ydwisF+NadpUvYMwsp9+f
-         ovhA==
-X-Forwarded-Encrypted: i=1; AJvYcCXeXfYgDld5qfmX40gIccOu/IEqdMek3+KU6KRH4R2YL0J4b63i96WIiDhMK93wzP+M+XrvAo47jkxqXxdccaHMC3DLRHzpil55ExxL
-X-Gm-Message-State: AOJu0YziooWTU5g2L9XAwjOHWx94vWZ7/8HK392pmfswo3BNOKYFkVm1
-	M9f3I6xoSlrnRHquGEyTlK5YkPBIJ9JWkq5bS2GFLht55Pghih1QbmquutK7DY4=
-X-Google-Smtp-Source: AGHT+IHuCKZWRSvYmBLsmIQIFIzj2KISU/Cxy4Z6gTC0a2VO73blSIRNmYX8gZSP0hZGHx3nlXGojg==
-X-Received: by 2002:a2e:9cc2:0:b0:2d6:f69d:c74c with SMTP id 38308e7fff4ca-2e4476afb1dmr7263991fa.38.1715134095969;
-        Tue, 07 May 2024 19:08:15 -0700 (PDT)
-Received: from smtpclient.apple ([23.247.139.60])
-        by smtp.gmail.com with ESMTPSA id d13-20020aa7868d000000b006f49c07f9dasm530017pfo.21.2024.05.07.19.08.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 07 May 2024 19:08:15 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="j/qiLOhh"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1715134407; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=PnVKvCgegzpzXY1p/Owa2fV8B2MMlLljlSzcXtnLj/4=;
+	b=j/qiLOhhXrhZ1kpndUmDgt3GewnErfft8O7iBC23+9/8Dg8Mgo765dhvpqKdANHbX9sZlWWe3SrvOPlmnO66iNn61lg2ovvO4kzVu6Ch2Uta73QvBTx54pqdTfcsHRcx8u+8VNXe4p7KFg636m+ebvRAiuYcwGeQVW4BrugROXk=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W61sxpy_1715134404;
+Received: from 30.97.56.69(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W61sxpy_1715134404)
+          by smtp.aliyun-inc.com;
+          Wed, 08 May 2024 10:13:25 +0800
+Message-ID: <2fcd6dfc-21b7-4e3f-9741-8f0d23d2da5f@linux.alibaba.com>
+Date: Wed, 8 May 2024 10:13:23 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
-Subject: Re: [PATCH v3 1/1] bcachefs: Move BCACHEFS_STATFS_MAGIC value to UAPI
- magic.h
-From: Glass Su <glass.su@suse.com>
-In-Reply-To: <20240507153757.150891-1-pvorel@suse.cz>
-Date: Wed, 8 May 2024 10:08:01 +0800
-Cc: linux-bcachefs@vger.kernel.org,
- Kent Overstreet <kent.overstreet@linux.dev>,
- Su Yue <l@damenly.org>,
- Brian Foster <bfoster@redhat.com>,
- Coly Li <colyli@suse.de>,
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] mm: move highest_order() and next_order() out of the
+ THP config
+To: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, david@redhat.com, ioworker0@gmail.com,
+ wangkefeng.wang@huawei.com, ying.huang@intel.com, 21cnbao@gmail.com,
+ shy828301@gmail.com, ziy@nvidia.com, linux-mm@kvack.org,
  linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <6D9FCB08-480D-4CA0-82E2-284B1F2BF8FD@suse.com>
-References: <20240507153757.150891-1-pvorel@suse.cz>
-To: Petr Vorel <pvorel@suse.cz>
-X-Mailer: Apple Mail (2.3774.500.171.1.1)
+References: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
+ <d9c0ac9df6f6e6176b09fc1ae58146ec4f8d73f5.1714978902.git.baolin.wang@linux.alibaba.com>
+ <9576c979-8a11-48e2-aec4-646acf0d8e26@arm.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <9576c979-8a11-48e2-aec4-646acf0d8e26@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-> On May 7, 2024, at 23:37, Petr Vorel <pvorel@suse.cz> wrote:
->=20
-> Move BCACHEFS_STATFS_MAGIC value to UAPI <linux/magic.h> under
-> BCACHEFS_SUPER_MAGIC definition (use common approach for name) and =
-reuse the
-> definition in bcachefs_format.h BCACHEFS_STATFS_MAGIC.
->=20
-> There are other bcachefs magic definitions: BCACHE_MAGIC, BCHFS_MAGIC,
-> which use UUID_INIT() and are used only in libbcachefs. Therefore move
-> only BCACHEFS_STATFS_MAGIC value, which can be used outside of
-> libbcachefs for f_type field in struct statfs in statfs() or =
-fstatfs().
->=20
-> Suggested-by: Su Yue <l@damenly.org>
+On 2024/5/7 18:21, Ryan Roberts wrote:
+> On 06/05/2024 09:46, Baolin Wang wrote:
+>> Move highest_order() and next_order() out of the CONFIG_TRANSPARENT_HUGEPAGE
+>> macro, which can be common functions to be used.
+> 
+> Sorry if I haven't kept up with the discussion, but why is this needed? I
+> wouldn't expect a need to iterate over orders if THP is compile-time disabled
+> because we will never try to allocate THP?
 
-Would you kindly amend it to Su Yue <glass.su@suse.com> or
-Kent can help if the patch is going to be applied.
+Cause I don't want to add some dummy functions to avoid building errors 
+if CONFIG_TRANSPARENT_HUGEPAGE is not enabled in patch 6. Another 
+thought is that the pagecache can also allocate a large folio even when 
+THP is not enabled, so these helpers may be used in the future (not sure 
+though).
 
-> Signed-off-by: Petr Vorel <pvorel@suse.cz>
-> ---
-> Changes v2->v3:
-> * Align tab with other entries.
->=20
-> Changes v1->v2 (all suggested by Brian Foster - thanks!):
-> * rename constant to BCACHEFS_SUPER_MAGIC,
-> * keep BCACHEFS_STATFS_MAGIC in bcachefs_format.h, just include
-> <uapi/linux/magic.h> and use BCACHEFS_SUPER_MAGIC definition,
-> * move the constant to the first chunk.
->=20
-> Kind regards,
-> Petr
->=20
-> fs/bcachefs/bcachefs_format.h | 3 ++-
-> include/uapi/linux/magic.h    | 1 +
-> 2 files changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/bcachefs/bcachefs_format.h =
-b/fs/bcachefs/bcachefs_format.h
-> index f7fbfccd2b1e..3b831415409b 100644
-> --- a/fs/bcachefs/bcachefs_format.h
-> +++ b/fs/bcachefs/bcachefs_format.h
-> @@ -76,6 +76,7 @@
-> #include <asm/byteorder.h>
-> #include <linux/kernel.h>
-> #include <linux/uuid.h>
-> +#include <uapi/linux/magic.h>
-> #include "vstructs.h"
->=20
-> #ifdef __KERNEL__
-> @@ -1275,7 +1276,7 @@ enum bch_compression_opts {
-> UUID_INIT(0xc68573f6, 0x66ce, 0x90a9, \
->  0xd9, 0x6a, 0x60, 0xcf, 0x80, 0x3d, 0xf7, 0xef)
->=20
-> -#define BCACHEFS_STATFS_MAGIC 0xca451a4e
-> +#define BCACHEFS_STATFS_MAGIC BCACHEFS_SUPER_MAGIC
->=20
-> #define JSET_MAGIC __cpu_to_le64(0x245235c1a3625032ULL)
-> #define BSET_MAGIC __cpu_to_le64(0x90135c78b99e07f5ULL)
-> diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-> index 1b40a968ba91..bb575f3ab45e 100644
-> --- a/include/uapi/linux/magic.h
-> +++ b/include/uapi/linux/magic.h
-> @@ -37,6 +37,7 @@
-> #define HOSTFS_SUPER_MAGIC 0x00c0ffee
-> #define OVERLAYFS_SUPER_MAGIC 0x794c7630
-> #define FUSE_SUPER_MAGIC 0x65735546
-> +#define BCACHEFS_SUPER_MAGIC 0xca451a4e
-
-IIUC, due to some historical reasons bcachefs used to switched
-ondisk sb magic from BCACHE_MAGIC to BCHFS_MAGIC.
-Other major fses uses  *_SUPER_MAGIC both for ondisk=20
-sb magic, kstatfs::f_type and super_block::s_magic.
-However, for bcacehfs there are three magic numbers.
-
-Anyway, it looks good to me so far:
-Reviewed-by: Su Yue <glass.su@suse.com>=20
-
-=E2=80=94=20
-Su
-
-> #define MINIX_SUPER_MAGIC 0x137F /* minix v1 fs, 14 char names */
-> #define MINIX_SUPER_MAGIC2 0x138F /* minix v1 fs, 30 char names */
-> --=20
-> 2.43.0
->=20
->=20
-
+Anyway, I also have no strong perference for this patch, below dummy 
+functions can also work for me:
+diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+index c15bebb2cf53..7aa802ee2ce5 100644
+--- a/include/linux/huge_mm.h
++++ b/include/linux/huge_mm.h
+@@ -586,6 +586,16 @@ static inline bool thp_migration_supported(void)
+  {
+         return false;
+  }
++
++static inline int highest_order(unsigned long orders)
++{
++        return 0;
++}
++
++static inline int next_order(unsigned long *orders, int prev)
++{
++        return 0;
++}
+  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
