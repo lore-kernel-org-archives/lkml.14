@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA62C8248D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA5E782487;
 	Wed,  8 May 2024 11:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715167829; cv=none; b=suzjQ9BJbOEv720fkTWsngB7fgXCKOZSA+mrRIzhkuiC6qr6daAcaW06Y47j+qANeKADFhihIuUU+UPxD4eNWT7Fy03O8pkIhEf47YJrmQ2ZEVj2VDN2e9k/Ia88+i1AN6TI2k0xQnTo6o2+ywxWeYuFM/7QGe2k+aE9k+VNtpk=
+	t=1715167829; cv=none; b=kn/JPyZfiTycyhdfDFaXh9vQ9PZJGYlLe72oqwBLEPdiQXzV2f0tKQ3ZFxR+K6fhhOGXDuU2Vieel+qX0KJ3SLqc4De7x4YSZbEF89OHJzjCeSLyFjNetB6CGeKmXTaQsLZsPuEYy3u5e3D9Ja9ji2B4xrt6J4ieMUfL3dQGDHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715167829; c=relaxed/simple;
-	bh=axHrUToPoL787w2hxsBZe3Z6MmWMNp4EPGZTDCBJPl4=;
+	bh=jnXx7y874v4iRFiY+y9hcn33IsqIg8gQYsHVn/2a1/M=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MDm117fZKH6hjqxzJvhG+WkMz9/BCsWSiqyUgzDF9RAhNlyppfOxobhH1MBmG26JQMsADw7rsQOakqYMxdfZD3Ko5s1YrG/ErMxDFcvhAcuW4b924S3MrZ5OKOD/9L86OwWfmr1MQv5MDk+Dtg9M//d9FTWfsqKgSFhlVyEuubQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AEKPGAi+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=dzS8b6jeo5WLikwodTP/BIYNNX7/qG0TIGDNsGgBsn5TEqQCuEqdEp49qiBMR4cqqlLUbMMkFAvmJoyugi6TCKQjzWCP6j101q6dR2JNayZ2H7EXdVCjMNCsNEI5x/g8+rmCp5uZCvRwGZlSCEU8RE9lOciOliC0MP6CxuW4Rm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=owjdlBqA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AEKPGAi+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id ADF13C4AF18;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="owjdlBqA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 985C2C4DDE0;
 	Wed,  8 May 2024 11:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715167828;
-	bh=axHrUToPoL787w2hxsBZe3Z6MmWMNp4EPGZTDCBJPl4=;
+	bh=jnXx7y874v4iRFiY+y9hcn33IsqIg8gQYsHVn/2a1/M=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=AEKPGAi+YpkuKFQljES739yUDjh3q9jmTkCisXmC+T0r4YCapun/EatCG8NSYuJTX
-	 FLvyPzR5FVlZGN9ncgnkS++gXNsoJHdhrsEG2oknpvg3btc3xK+P42RudyqZJtSMsU
-	 FKPVP7+pVesAR9K+QsqIGaCAICE1QrHa9CJcAGx+vDUjw0YmReDA1Rvvk4C/xAhruz
-	 OUvcjruGXohs/alDi9iFTdvvRAu3rEr67224uMT+qoD2kzQeXidqG/HT4VKFR0NuaC
-	 gu4dcaZEg3FGa8di+US6Jv40PeW81VTXkQfxQDsqIbcIh6HiGWI4PTGCpOahgCmjBN
-	 2vrVqhw0htlVA==
+	b=owjdlBqAm80LsK+EKCh+R5vUX1akCBp4hM0guUJBIB14kUKdu87fLj8hGMUd1H39Z
+	 5L6D9DRzvPKW2CnNQ57s0PEJ0Tb33dzJ8cn5tIBcK5yCuDseTE/sq5IAzPLNfR1w4O
+	 tEzIOLw46Vewp+3Zcx+ycdLDB8P+3pSLgOqjj0+Vv1nIUEseawNsP1b9PgwMQYMkTF
+	 UmYnD207p1QvGPSXdamjXh+hMVKwzFjNQNjjvifvsLu/+6VuvQXZ+q3avjyS5BHbXH
+	 ar9/fP+h3ROpyPbxbclx7e8wkkk3rS6bnXufC451OaF5nwY7K+CS3kiaNhOi38Ga5w
+	 q6UDJ9gz7CqGQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9E997C54BB1;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 8DEC3C3275D;
 	Wed,  8 May 2024 11:30:28 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,37 +37,38 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [net-next PATCH] test: hsr: Call cleanup_all_ns when hsr_redbox.sh
- script exits
+Subject: Re: [PATCH net-next] ax25: Remove superfuous "return" from
+ ax25_ds_set_timer
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171516782864.10113.4815978135761063766.git-patchwork-notify@kernel.org>
+ <171516782857.10113.12922238920177706856.git-patchwork-notify@kernel.org>
 Date: Wed, 08 May 2024 11:30:28 +0000
-References: <20240507091155.3504198-1-lukma@denx.de>
-In-Reply-To: <20240507091155.3504198-1-lukma@denx.de>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
- pabeni@redhat.com, shuah@kernel.org, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240507-jag-fix_void_ret_ax25-v1-1-507fb246f192@samsung.com>
+In-Reply-To: <20240507-jag-fix_void_ret_ax25-v1-1-507fb246f192@samsung.com>
+To: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Cc: jreuter@yaina.de, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, linux-hams@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, j.granados@samsung.com
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by David S. Miller <davem@davemloft.net>:
 
-On Tue,  7 May 2024 11:11:55 +0200 you wrote:
-> Without this change the created netns instances are not cleared after
-> this script execution. To fix this problem the cleanup_all_ns function
-> from ../lib.sh is called.
+On Tue, 07 May 2024 10:40:39 +0200 you wrote:
+> From: Joel Granados <j.granados@samsung.com>
 > 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> ---
->  tools/testing/selftests/net/hsr/hsr_redbox.sh | 2 ++
->  1 file changed, 2 insertions(+)
+> Remove the explicit call to "return" in the void ax25_ds_set_timer
+> function that was introduced in 78a7b5dbc060 ("ax.25: x.25: Remove the
+> now superfluous sentinel elements from ctl_table array").
+> 
+> Signed-off-by: Joel Granados <j.granados@samsung.com>
+> 
+> [...]
 
 Here is the summary with links:
-  - [net-next] test: hsr: Call cleanup_all_ns when hsr_redbox.sh script exits
-    https://git.kernel.org/netdev/net-next/c/252aa6d53931
+  - [net-next] ax25: Remove superfuous "return" from ax25_ds_set_timer
+    https://git.kernel.org/netdev/net-next/c/1d3985ed0dd3
 
 You are awesome, thank you!
 -- 
