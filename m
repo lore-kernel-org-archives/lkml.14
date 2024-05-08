@@ -1,84 +1,83 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E507823B8
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 22:05:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5743FD530
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 22:05:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715205904; cv=none; b=L1df7/7uxEfWChcPFdDrnJOugGkyU9s6/Q6NVtNhxxVTOR8tDw9h/hijGBUfYc4w5fSa/2VGeNiiH1pIUxb5jqwcTSHyRo+X2+3LI4gHdclZhrSDO5W9RHdqMzglVO/EpuhE1Wl84GHBMqm6ZqSUKqzqLgvdfp5XroA6MdVUa9s=
+	t=1715205942; cv=none; b=eJKu1EvK5s2Kju833eJ0jcZfanbCpTQ9sdcYhjJpJbwS2JXDkY0CwFSwCGn6sJ3TZHdVaEv2buCPaPoAlV3jQjdwsW7z/UWit1nJ+VSxndkYRTGyWT/+AS1n6Mm9ioHnUbfUwokNqltny0n2kd/G7zVD0UzWDnt1dtfuTjY8kZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715205904; c=relaxed/simple;
-	bh=KABPgwE0pigLe/stqXFpNZgiPsJrHsm9MvrMXNC+AZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hhHTlCJLq4JIQk7mYSB04/6LWRkbXaMuuQ0skfYvOBSXJYOlqRP/N9nWvKtG03TZh9H83pVg24PPNo0qYC0BQK7wYeCb9rSVCbEmXFzAgYCNE0lWtLV0ky9ee40p59FRH1vjOAg+Tk8uzDHaSeRiykPAWinInvCmvvPsHC1E9uI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=SGXSUbsf; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1715205942; c=relaxed/simple;
+	bh=xXJXTX+AXl31YNYKpCfQaCakia+fRsDhNq9CD9DPan0=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Lwe83ecEvuvhPi4U5Pn+LcNsbEuJSZKR7WUaVN6LkFgeg0XrJKJ6tbAWF6Zchfljs4cnd7Mx6kEtCqNjYY6XrpMZ47bgAYNXgFzNch1BH8xzKhCqiZqLgp4zOqjdYfMgGrWQ2SqzF5K1RcSzMY3c1pzLHDqMfHKzOrQKUMmphLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=lSauip+Q; arc=none smtp.client-ip=209.85.219.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="SGXSUbsf"
-Received: from cwcc.thunk.org (pool-173-48-113-2.bstnma.fios.verizon.net [173.48.113.2])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 448M4Yxu009182
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 8 May 2024 18:04:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1715205879; bh=5ypHmjNsTrYNX0vfbc84/6O6MkoCV0OFM+TJ+Bn/Er0=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=SGXSUbsfAWX9PZBN1Wmhw91h8AkspLeppUe2ntzmH7dlA4tjEx2P94eB0V3yxokdb
-	 lOLNEjIX73PsnmkM+olEPKEVl88ESylJ07cbUQJClm/x6l7dQQCrZkNnvJgtHLiXpx
-	 suKeE8ad4Z8+x9pzxdivKhGyI6ngbIPLvtNYTsX6uIOKSWQPTIyptkisjJJ/bUuwYa
-	 iAZBexG8CiWuch6KyVa225eByWszagaohwByLaPi5xdmKQCJXVcRHi2aPnUkVS4pnc
-	 8kWf5cWTx4mPdg5Z2FK8MbuKPMTrfecaXkRCpQ5IxIrj4UlZHNUtVByTm6hrT/OmsO
-	 KW0LCCI6NPU0Q==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 80CF015C026D; Wed, 08 May 2024 18:04:34 -0400 (EDT)
-Date: Wed, 8 May 2024 18:04:34 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Christoph Hellwig <hch@lst.de>, Christian Brauner <brauner@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "Ritesh Harjani (IBM)" <ritesh.list@gmail.com>
-Subject: Re: linux-next: manual merge of the vfs-brauner tree with the ext4
- tree
-Message-ID: <20240508220434.GA3620298@mit.edu>
-References: <20240508103436.589bb440@canb.auug.org.au>
- <20240508064700.GB10736@lst.de>
- <20240508165953.67afc064@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lSauip+Q"
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so278301276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 15:05:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715205939; x=1715810739; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xXJXTX+AXl31YNYKpCfQaCakia+fRsDhNq9CD9DPan0=;
+        b=lSauip+QEVMvJYgAjrNL7aHJDKYdz7h7x/0PNu0Wwi4oAMaSgvBj2TjIblgwtBO7+S
+         6K+Z4xnIod/vIjM+nS1NrwEssn2rKJEnBJqI1LL78EfKeMZBQWchxCPC6GnGfVR3uoZ9
+         2rfDVGeVaGtkqhc7zmZwo1cgw3iDTw8pTmBlg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715205939; x=1715810739;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xXJXTX+AXl31YNYKpCfQaCakia+fRsDhNq9CD9DPan0=;
+        b=YQ7xNefL7JoEHn1gF6yEnI/reH7la4qf4eH5H2GIKS1cVyqhtxezfEiqofMcKP+d2d
+         U2hYFw22ZNGBhVgnTmVw1og75jS49fJ6Uyn+DDcj10WcY36ztwlGZLG7JaACC0s+D0tF
+         MVuQ3fIzx1BL9T0y/dW2VVHie6A8Z3jsDtx+JNNrg9B0vZXy+h1K2o1HUAK0n7i6POYD
+         K+6Cv+QcgRPO0Y2JprAWuQBMKjrFUXQUVgwiNOZdwttS+sYBI32yphrirWtNfFGMG1bw
+         RgJF376uuG/jIb//ix0dF8w8qsPVKcZ8adzQ01I+gcL8+y/noZN7m3VPuCXe8McDGUdm
+         EGug==
+X-Forwarded-Encrypted: i=1; AJvYcCVsiljWP5NRLo6C5EPRuROyw/uFLrQq8PJe4dk0TGLbjGlUGJMR01AYjA8FdVr5rTGeIw4tOVcjvtkPjT8nYfnNci0Fv+PndnafZLzq
+X-Gm-Message-State: AOJu0YxZblzs4Mx0QgWQ5Mtrtngz+yXNM4fncZfOozm4+ppBkorES9OW
+	FWYJOGxEfNy2hIZT+5dKD/YFZaVuE4KPQEsajJZMSM7l91nDfG5ZcR6Y/oBaUfmYzmK6lptx2ib
+	c7lFyFTJuxGog23pHnysHwkzhaRsQJQfRO7xr
+X-Google-Smtp-Source: AGHT+IFOzlvTP54gRhOxc+z5MQ8WG/MPd7EKLY+wd4h6GfQB/rKrNwQ8ChHVKkeDh1oaX6WWyOIU2soq0jHzKU8OGwY=
+X-Received: by 2002:a25:ac9a:0:b0:de6:d0a:ee3d with SMTP id
+ 3f1490d57ef6-debb9db5a4amr4379276276.30.1715205939465; Wed, 08 May 2024
+ 15:05:39 -0700 (PDT)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Wed, 8 May 2024 15:05:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240508165953.67afc064@canb.auug.org.au>
+In-Reply-To: <20240506150830.23709-8-johan+linaro@kernel.org>
+References: <20240506150830.23709-1-johan+linaro@kernel.org> <20240506150830.23709-8-johan+linaro@kernel.org>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date: Wed, 8 May 2024 15:05:38 -0700
+Message-ID: <CAE-0n51CUjWD30BbyPDqspg3-ZX3QaguBEtR9tBztGxCxSa4eg@mail.gmail.com>
+Subject: Re: [PATCH 07/13] mfd: pm8008: drop unused driver data
+To: Bjorn Andersson <andersson@kernel.org>, Johan Hovold <johan+linaro@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Mark Brown <broonie@kernel.org>
+Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Das Srinagesh <quic_gurus@quicinc.com>, 
+	Satya Priya <quic_c_skakit@quicinc.com>, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, May 08, 2024 at 04:59:53PM +1000, Stephen Rothwell wrote:
-> On Wed, 8 May 2024 08:47:00 +0200 Christoph Hellwig <hch@lst.de> wrote:
-> > 
-> > Ted, if you still can maybe just drop the ext4 patch for now?  I can
-> > redo it for next merge window with the moved flag.
-> 
-> If the resolution I did is fine, I am sure Linus will cope (but worth
-> mentioning it to him in the pull request).  Its a simple enough conflict.
+Quoting Johan Hovold (2024-05-06 08:08:24)
+> The i2c client driver data pointer has never been used so drop the
+> unnecessary assignment.
+>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
 
-I agree... but at the same time, the patch in question is a cleanup
-and there's not a lot of downside in dropping this for a cycle.
-Cristoph, is that right?  Will not taking this cleanup block anything
-that you were hoping to land this cycle?
-
-I'm fine either way with either asking Linus to fix up the merge, or
-dropping it and picking it up later.  In fact, I'd be fine just simply
-landing this post -rc1.
-
-So what do people think?  Again, I don't have strong opinions one way
-or another.
-
-					- Ted
-
-	
-
-
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
