@@ -1,156 +1,201 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2055.outbound.protection.outlook.com [40.107.94.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E89F8225D9
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 19:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715197428; cv=fail; b=pcQjl20+E+WGiApJFempaE09hf+5RNmtr0t1eP388H5HYYRIAK+JcwSR4zd6/o0iJ2E7sHbirBF6wM19+ZZyeqqDD8pdwxF9wGJwMMLeFrLfUHZvamdzAd7poeP8aQuCkawYurJk/7eeZJr+AG99yJOeV2Admv6h+8ak07No5O4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715197428; c=relaxed/simple;
-	bh=fWYza5RXCBAHB6oNyWEKk9NEdOcca3btQCa7NNQHVDI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QohdmGl7fWeq8qpHtHQaL3AyLnbP82fCslY7Wkgy4uyOhHx10L5bWnrtH/4Bn8C1ATYfa4xtwU9x2hggqSMQJBmOW39CEaYao6yn+zaUBva+3zUhIUpJg1m0ww99guY3XIvXo6rSfZ+yKNTxkPeSTaTq4fPr1oe/ylYI7H3d8as=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=QQKKIMny; arc=fail smtp.client-ip=40.107.94.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F13712CDBC
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 19:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715197499; cv=none; b=gBN00KnFW/doNTxjehak0bPiMFHN+VitWP4QR2gqbzqjPD7YLde+Yq5DvYi5UpXJP/lxoIPEGQaqiLG881hYZ3douSHmI/c0yUiUG4ntTBGJAgrQrI8ERFmpdU/1wSh1aswEN6bcxydAlCkevwG0BCLe1xqMDui9aFXJ81hGP10=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715197499; c=relaxed/simple;
+	bh=IlFN+qjVbyWxbajojL+B3XzFHidR01L29y4ThUK6x84=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NKJl4cEocodTGjGK+bkHRXLV0XPcfe1lElmA8fO9mors+YQasafG7Li5jS74H+FIhGY99KYdGo6v/joVOQaihUFGpIDgOn6PbOGe7YRPY6LpHBvH2A+5jjEtHD7mchqxN/D78Ugu4S+m8mnOphZyxS8mrw4HjbD/UmA5zfq0G9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=EqfmzA+K; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="QQKKIMny"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ILWjnihRxZiDb+ODF7JTr9KIuDf6bRoy65fRlRQtKaP7sByNFHDrGy5iOB6jQnpBrwySQdjaXd2XlcaBLYYIjHjagAl6hZsXhFzpwyNCVVcoifp/xkcSET3AJcO9Wjf1iJ5h3Jqp9/bb+WBhO+grHgJ90btUXlbwp5xvnShMMuAHps16NCMwQR+iRziMTrazjDAo85SXEbn+/eLgicbP9psZOfogOBrQVVJcjgzeXYgI2GOIOYbNxo4uLOoG/lcbfrTLzP5n1UwE+dLUoTl9hb864nPtf98uqY3UWNB5t8f9jwad18zVJzmiOskEe4rQZaVlaDwcJFw950FVxsXDdg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VASkNtfF6UbaSAl9l4hCtkWSs6jbeToDMsakMALnVoQ=;
- b=PkIzfKb+33/dWLLrBF9jYZXjcSoRsiXjbtlg/vNVWerNqlcb/Q0nMTSbuufbWUxNvS3zWW7S/y95m58MzwqxYUy1nmbicNMKK46TJRhDurLiQznP0I2vk3Cav+I+cRynbEXo1Z5Vna1vQ82WYYtFqt75MKa0jC4mn+84ZJDNMSPRJtPWgrdByK0I7VnFCw7MAb92NSRNo+epxSgY0a+NsfcHeftvhrSIRWwDydqDYa5Gtvk949MeRX99nnx659Od0fPG3lv+JSz6pIFy/H7DH869P+icZAaS4EK1aCnIkmloCLUyggnM75ZGAtBiSoGYe3cbpJJlvUXn38rw7uozCg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VASkNtfF6UbaSAl9l4hCtkWSs6jbeToDMsakMALnVoQ=;
- b=QQKKIMnyn8hBR9dwaNMoIIUN5IIwj9DUK4vjcr69UzkD2Z2kTu3z+bNM26/aDW9eFSSITzKqqCadxXQDuCdXrp04ufe6AIQdhrDmwNscqYSs99wJQG6iYFU9gXYEcp4EOog54hIuWkXDQuFEETgzHvmwIBh+zRCOBxzpyD7P7Kc=
-Received: from BL0PR02CA0061.namprd02.prod.outlook.com (2603:10b6:207:3d::38)
- by BL3PR12MB6378.namprd12.prod.outlook.com (2603:10b6:208:3b1::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42; Wed, 8 May
- 2024 19:43:43 +0000
-Received: from BN2PEPF00004FC1.namprd04.prod.outlook.com
- (2603:10b6:207:3d:cafe::ae) by BL0PR02CA0061.outlook.office365.com
- (2603:10b6:207:3d::38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.46 via Frontend
- Transport; Wed, 8 May 2024 19:43:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF00004FC1.mail.protection.outlook.com (10.167.243.187) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Wed, 8 May 2024 19:43:43 +0000
-Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 8 May
- 2024 14:43:39 -0500
-From: Mario Limonciello <mario.limonciello@amd.com>
-To: <dri-devel@lists.freedesktop.org>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>
-CC: <linux-kernel@vger.kernel.org>, <amd-gfx@lists.freedesktop.org>,
-	"Aurabindo Pillai" <aurabindo.pillai@amd.com>, Daniel Wheeler
-	<daniel.wheeler@amd.com>, Fangzhi Zuo <jerry.zuo@amd.com>, Mario Limonciello
-	<mario.limonciello@amd.com>, Tyler Schneider <tyler.schneider@amd.com>
-Subject: [PATCH 2/2] Revert "drm/amd/display: Temporary Disable MST DP Colorspace Property"
-Date: Wed, 8 May 2024 14:43:08 -0500
-Message-ID: <20240508194308.48366-2-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240508194308.48366-1-mario.limonciello@amd.com>
-References: <20240508194308.48366-1-mario.limonciello@amd.com>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EqfmzA+K"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2b3f5fcecc1so139390a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 12:44:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715197498; x=1715802298; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bSkp1IjyO8SPzHju8VI5tBOliintVpxYB8En8fnp8Mk=;
+        b=EqfmzA+Kfc5DePx79WriG5iM23AcOvyazs4+a2tvnJWKPWBniJ9qbve1my6BHaFqNm
+         YluT9ga3vCUaUHEmOsSzfDdGgJcfdnGmrOmZoNezv0zWaLBPQbhjyD3+kf2KXnIAFW+q
+         i++PrNm0Rj9zUmk/dOYuWy71pPxqHxJFsuo4E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715197498; x=1715802298;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bSkp1IjyO8SPzHju8VI5tBOliintVpxYB8En8fnp8Mk=;
+        b=GdeazHMX1YYhYI1NF2uS9jhe6CM4SPuf7/+pUQQezerPvvNs70RabMneXZ8kaC7zsB
+         OAreDS5DsW2HO/Do3+rAR6x41gAiKw678WWOc2SWVMr1WFc3+4y7+oOk8DtmI4YCCzrS
+         eyCkYxholVz+N0jdgPfQGDZ7XHXhIzso8hsI1CGtCTvZvSdi87C5IYBP2Ti/9Wa4JVSu
+         ReFUDPzcdlTxT8BCqwZALirdcUmPNlyvs3JFCGVGOJSaLRPKSGBdIoiKH8iPwz2mdtwG
+         xrrntr+cgFSzN8uTEuYCA2STs4e26/hmMu7V4lNTygQaPjAoQZ5NcdXw4go/gbZdIZA0
+         KCvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVOTcUG/itKsDSqjfjVQd5TS/CL9L3wOGXjiQB/Us78B3a2r7dIq+0UF+RvSXDlArnMiDQ8/xOy6nKIzVoPr+LYqp9goUeTIGJdXIC8
+X-Gm-Message-State: AOJu0Yw+XLnFzIKl5iSM+ntqvFrki63by52vl9qp4JQvQcn8grR+xBUg
+	fS0tgVCXzemqBZRP8IdPH/tlLen1ErBf5A5lr3kZVme2MngrmBXo26B88jACzg==
+X-Google-Smtp-Source: AGHT+IEQJv5MoWCuSsH7z9sDM3firMHKZ9a0PaOa+JkXwojX56OtQaqrhExQGOf6H5m7P+TAapuX/w==
+X-Received: by 2002:a17:90a:1305:b0:2ab:9819:64bc with SMTP id 98e67ed59e1d1-2b6169e25cfmr3250633a91.32.1715197497713;
+        Wed, 08 May 2024 12:44:57 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id f23-20020a17090ac29700b002acf260e82bsm1827034pjt.57.2024.05.08.12.44.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 12:44:57 -0700 (PDT)
+Date: Wed, 8 May 2024 12:44:56 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Justin Stitt <justinstitt@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+Message-ID: <202405081144.D5FCC44A@keescook>
+References: <202404291502.612E0A10@keescook>
+ <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FC1:EE_|BL3PR12MB6378:EE_
-X-MS-Office365-Filtering-Correlation-Id: 62a684e4-876c-4294-b958-08dc6f972b50
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|82310400017|376005|1800799015|36860700004;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?G4I91gAxCfNzee2tieJg/E7nUQmgZ0/48gkmd4yKaD6ap+gArJlwFQaFY9q+?=
- =?us-ascii?Q?fccFBHFqaj07n03QE3KXuNWfi89Jr0x/3TIdE3SnJsrFfTst7RUl87k+ympi?=
- =?us-ascii?Q?VDUt1lHW9a5olVnIADO6iGud/FCODMSBqCXLYui5DLgpCOKf8J+7/AzwaHav?=
- =?us-ascii?Q?XrDcR0ZqqO1NnsCm+CcgtzCtkXi8IFIDFfrG0lDGrztYUpTb3DJmvWcfowSd?=
- =?us-ascii?Q?+sxCTmnZf1/wZ8euWIWdEblwcAOXLArCZ9QsQl40AA+RJp4uQn/DPc0zjSdj?=
- =?us-ascii?Q?oFWmf+juZOay5GXAWueNtBY1OuUV09kL/Ziqo9RzPBuLJeHUy535huogsxe1?=
- =?us-ascii?Q?rbPPvFNT+qisJ9fIxJ9xU3je5w/Wwbqo7z8WJ5Ndwv20K3LvvWbXVTc9vm1Q?=
- =?us-ascii?Q?KZpnKj10G2SritgfbE3hv9WHqsXjWLONPcq7QIN8Y7zX5qNAVVRQWs0Votx9?=
- =?us-ascii?Q?WFBavh9SwfZAX7pVc26t96gw+dcFaOKEAVLX5UfTZtDTpoA3PApXWLPnwm80?=
- =?us-ascii?Q?7Oa+RomjcWpj1i2qPyOXgeVipoFRC0KjNhv58TVpdInxQdRbaoQtJonGQ+ce?=
- =?us-ascii?Q?3Nd9lVZPgdVeOv7fXL5maAfhPzfjX2V73dWWceOeUWavK/fma+WG8RxANrjA?=
- =?us-ascii?Q?tLixpVUYKmt+nvDULEsAqBC+VnnXlXbYyT7ppJ18kN2xixGbYOBJ2iBzAI4I?=
- =?us-ascii?Q?e2UwwKgvUvvWtbJe9zkqzQoJyQkjKO/CGFtgOA7bX3VbmDBiVajqgLdmK18p?=
- =?us-ascii?Q?OEab3d23C+PHCO7P7TYw38wtUctlBbNvmEopmYJoMaBrx6VgZaOWfYQuDZZd?=
- =?us-ascii?Q?9rGIOdliQ9HTXHMzgQQm3050VV7aGJ2LoATnZnV53yuvlRCY2htwtxLxMos3?=
- =?us-ascii?Q?7kXrA1rayJK2lhmqa63KDBqcE2bg9/q6aPbLCC2pycdU0dGu1xqk+RA1eXbM?=
- =?us-ascii?Q?YhXbhmJYfHzI/ENhR14Od8/1r+5ipROPXcOSrVQqETHghF8/11SxfB66B99F?=
- =?us-ascii?Q?MySYdFxvwUmjPz0K77vEri3Mbaa16Un9hVC3K5NQudFrbSEyi6f++Sq3383e?=
- =?us-ascii?Q?CzGzQ7c8UmojNbjZrnMhAskNL2/yYzZWyzyXXeaPVXCau+pYZPoBDaK1GOAB?=
- =?us-ascii?Q?1RiIB4nFCxk3JCXKXNq2rN7Upq+U4JIN41lPK+lZPbn7hXuePzjd6thB5u7l?=
- =?us-ascii?Q?5vfVobjv9UNBifhD6Hn59dNlhzUuArP/yhgOZNEjG3lvf3eBHziwenG8blkR?=
- =?us-ascii?Q?vuBsM+zqqCuj4OafWmBNHxJFaXdDwYwm9VcU8JI/Dli7p52mwCYqga3WBRO7?=
- =?us-ascii?Q?RSGJaxsSg6vC11gEFUVk3I3r?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(82310400017)(376005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2024 19:43:43.6754
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62a684e4-876c-4294-b958-08dc6f972b50
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF00004FC1.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR12MB6378
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
 
-MST colorspace property support was disabled due to a series of warnings
-that came up when the device was plugged in.  As those warnings are fixed,
-revert commit 69a959610229 ("drm/amd/display: Temporary Disable MST DP
-Colorspace Property").
+On Wed, May 08, 2024 at 10:52:44AM -0700, Linus Torvalds wrote:
+> On Tue, 7 May 2024 at 16:27, Kees Cook <keescook@chromium.org> wrote:
+> [...]
+> Put another way the absolute first and fundamental thing you should
+> look at is to make sure tools don't complain about sane behavior.
 
-Reported-and-tested-by: Tyler Schneider <tyler.schneider@amd.com>
-Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3353
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Agreed, and I explicitly called this out in the proposals, including
+adding several idioms that have been found besides the case you mention:
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 3054bf79fc99..93e2030f4c17 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -7695,7 +7695,7 @@ void amdgpu_dm_connector_init_helper(struct amdgpu_display_manager *dm,
- 	if (connector_type == DRM_MODE_CONNECTOR_HDMIA) {
- 		if (!drm_mode_create_hdmi_colorspace_property(&aconnector->base, supported_colorspaces))
- 			drm_connector_attach_colorspace_property(&aconnector->base);
--	} else if ((connector_type == DRM_MODE_CONNECTOR_DisplayPort && !aconnector->mst_root) ||
-+	} else if (connector_type == DRM_MODE_CONNECTOR_DisplayPort ||
- 		   connector_type == DRM_MODE_CONNECTOR_eDP) {
- 		if (!drm_mode_create_dp_colorspace_property(&aconnector->base, supported_colorspaces))
- 			drm_connector_attach_colorspace_property(&aconnector->base);
+> > - allow for common idioms to bypass sanitizers:
+> >   - explicit wrap-around tests: if (var + offset < var)
+> >   - loop iterator wrap-around during post-decrement: while (var--)
+> >   - negative unsigned constants: -1UL
+
+What I need, though, is for _intent_ to be captured at the source level.
+Unfortunately neither compilers nor humans are omniscient. Wrapping vs
+non-wrapping intent can only rarely be unambiguously determined. I tried
+to explain that here:
+
+> > This is what is meant through-out by "ambiguous": the _intent of the
+> > author_ can be ambiguous as it relates to whether a calculation is
+> > meant to wrap-around. That it wraps around on overflow is not ambiguous:
+> > it will wrap-around. :) See "Terminology Considerations".
+> >
+> > This is the corner stone of the problem: even though the behavior of
+> > overflow is well-defined, so many authors so often don't correctly handle
+> > it that the results threaten the integrity of Linux as a whole. C makes
+> > it too easy to get it wrong, so we are left needing to fix this at a
+> > fundamental level. This is not a developer education problem; it is a
+> > problem with C language semantics. "Just do it correctly" has not
+> > worked.
+
+
+> The thing is, wrap-around is not only well-defined, it's *common*, and
+> *EXPECTED*.
+
+Yes, common, but that still means "sometimes unexpected". The fact that
+when wrap-around is wanted, an author does nothing different from when
+it is unwanted is the core of the problem: C doesn't provide a way for
+us to see intent. We need to fix this.
+
+> Example:
+> 
+>    static inline u32 __hash_32_generic(u32 val)
+>    {
+>         return val * GOLDEN_RATIO_32;
+>    }
+
+But what about:
+
+static inline u32 __item_offset(u32 val)
+{
+	return val * ITEM_SIZE_PER_UNIT;
+}
+
+All I did was change the names of things and now we have to wonder if
+the result is going to be used for indexing or sizing, and maybe it
+never considered that there might be a way for val to be greater than
+UINT_MAX / ITEM_SIZE_PER_UNIT.
+
+So instead, how about:
+
+static inline u32_wrap __hash_32_generic(u32_wrap val)
+{
+         return val * GOLDEN_RATIO_32;
+}
+
+Now intent is clear.
+
+> and dammit, I absolutely DO NOT THINK we should annotate this as some
+> kind of "special multiply".
+
+Yes, I agree, annotating the calculations individually seems like it would
+make things much less readable. And this matches the nearly universal
+feedback from developers. The solution used in other languages, with
+much success, is to tie wrapping intent to types. We can do the same.
+
+> I have no idea how many of these exist. But I am 100% convinced that
+> making humans annotate this and making the source code worse is
+> absolutely the wrong approach.
+
+I'd like to make the source better, not worse. :) But if we're going
+to solve this, and do it incrementally, I think progressively updating
+types is the way to go. We have used types in plenty of places where we
+want the compiler to help with checking (gfp_t, pid_t, etc), or with
+specific behaviors (atomic_t, refcount_t, etc). This would be more of
+that, though, yes, to a greater degree.
+
+> So I think you need to limit your wrap-around complaints, and really
+> think about how to limit them. If you go "wrap-around is wrong" as
+> some kind of general; rule, I'm going to ignore you, and I'm going to
+> tell people to ignore you, and refuse any idiotic patches that are the
+> result of such idiotic rules.
+
+This doesn't take into account the reality of deployments worldwide that
+are getting exploited by unexpected wrap-around. There's no problem with
+wrap-around per se, it's that we have no source-level way to indicate
+when it is _intended_. I would phrase the rule as "ambiguous intent of
+wrap-around is wrong".
+
+> Put another way the absolute first and fundamental thing you should
+> look at is to make sure tools don't complain about sane behavior.
+
+What do you see as the solution for the ambiguous intent problem?
+
+> Until you have done that, and taken this seriously, this discussion is
+> not going to ever result in anything productive.
+
+I think I've shown pretty clearly that I take this seriously. We have
+been working out feasibility and potential directions for some time now,
+engaging with compiler communities, building the tooling needed to do
+this with as minimal impact as possible, etc. I didn't send this RFC
+for fun. :)
+
+But let me make sure we're on the same page: do you agree that we need
+to protect Linux from classes of bugs? That there is value in protecting
+our billions of users from avoidable and exploitable flaws that have
+literally life-threatening consequences? If we don't agree that there
+is a problem here worth solving, then yes, it will be hard to have a
+productive discussion.
+
+And please remember that I'm not saying "let's fix it overnight", I'm
+looking to coordinate a best way forward. I want to make a plan. Neither
+human nor compiler omniscience has manifested, so what's the next step?
+
+-Kees
+
 -- 
-2.43.0
-
+Kees Cook
