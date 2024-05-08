@@ -1,57 +1,57 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AB479DD4;
-	Wed,  8 May 2024 13:13:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7472684A39;
+	Wed,  8 May 2024 13:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715174001; cv=none; b=L6pnOKF8NF8nt7e4CPeHUwskLv3U3K+QIZbZZoD4NkwJsWRePMbimZlPDkX3yMdSG4Ty/eJrxkqklSSqwms0euFZzmulXmor35u7kqwYtAeUkXU9lkiCdNR6bnfmuyCp/TqQAzWBPGxW+JwDPr3+G+CQjZRLvSJOFCXjwpxnUtc=
+	t=1715174005; cv=none; b=G2yKYvftoaQxdoqolCocSnC1zknrzgCI2h5fyobMWPRbIMQpeZSKXrOfD6HGIUDqNaSpifOsAnO0EN/gUs1wIXQjuC3I7a2xvOW2Q651g1/cq4u/qK/klSMrXvvsZcrfU3n+h2RkZnRZRt0ZoEaDqSEJ2FiiPfD/EXFvVIBXMRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715174001; c=relaxed/simple;
-	bh=9UkFAE7iLsQZRwMDPV0r3qgO8Qfs9KaIwDxhJCqaAbM=;
+	s=arc-20240116; t=1715174005; c=relaxed/simple;
+	bh=DxuztM5+j6nac1APTOoaKArZlnbI+0NO9/kXQn4MppU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HxOSIcv+F3s5dsr18jZg8DaIp16GxMy6JdblStmBOu55jDvA7DkYaqeMhdvlviK7xBLyDJK7Xy9kLlZ/+9maF3BZvymdC6UZB9tCeRP/3AmZH4dlu8XEIzILhAYkAwv0E086MJACI5rJtYsSnGO4wRBs91h0kAjESHowWvgIs80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VDClRqBn; arc=none smtp.client-ip=209.85.208.178
+	 MIME-Version; b=dG8OeTNVhPd2Sj520f2LgrzQE9np6zecNhranmk/ReVz05txpmj6X2wa5S1IfnOgCOPyGkA8htuRiR6/fIl/UyhIpi2aaFQbCii1BBnQa7TPpFScI8TwzO0vMJEcxQ5Fn+amRqi32mgYXE78/kcX/Ad5NHywT7yFVGf15Ep+Fd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HjRQl7ZN; arc=none smtp.client-ip=209.85.208.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VDClRqBn"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2e3e18c24c1so24861261fa.1;
-        Wed, 08 May 2024 06:13:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjRQl7ZN"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e3e18c23f9so33779551fa.3;
+        Wed, 08 May 2024 06:13:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715173998; x=1715778798; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1715174001; x=1715778801; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LrE8mXpcndBf6eUlpjGTP9brfOJGIKxXWfJr0qURJq8=;
-        b=VDClRqBnMDS+u5ey8Ut8tpN66j1nDfQHnYTcTq3nfWxJSYVTmoBiT+qXyP4kEHbX79
-         tzSIi17YiF+YnbsiPz/3lRdPl3DeWVjwWoRen2t/xFEZpy05gukYCJsZxuLAnLtkgcEA
-         In10GbgDPXaP5FyWRysAVE0u4IcUnDDGJO8Rv6Iz0onyiRWBpYMJpmEawjTd0F4LISAP
-         X87oa2YDT+IthEqz5vDMx7Y2YSV6e6cGDeYduQMJwOgunrq++ha/pb6eMdXcpdMSmE0j
-         wLp3I5JAeizGsdob7eH5he2UN3mJ5dpEsKPZRv1JTnobgaDvNjhgpwaVtLtlvldT9mdN
-         ZR/w==
+        bh=bA/WbFSY3RF63tkLESgPXqoWCWDmxvouNTqO5wkompE=;
+        b=HjRQl7ZNBi/nA40H7BbBmspjdFkbNe/vgfHU3IGVYXGYQH1SrNibcfGJfLq3gPIBkV
+         0THW2EUvu9qqbH43sOEf5FlhCPe1BzE+Zl4Dg0Vw7htjLVDGEKI6Y0zJbAHc3sA1llx2
+         EJxRbyvsVjy/XZmGkjhngZAMBXaD2gTkPNOklQB3A1uUdPy6mG5hrWarnsHJnTPJSWnS
+         Y8CwhE4Roj4uUiEXr/nSzsoW3neOXM76qkczhkh7YCrjS4btAxKUXUOyAD0YBTEATRUv
+         3DwuqClJibdNXul5y4riH1qh6EjxqeVb5uiYSpS6IQxQgtYqrY1B5wJx/ctmUZi07VkB
+         ym9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715173998; x=1715778798;
+        d=1e100.net; s=20230601; t=1715174001; x=1715778801;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LrE8mXpcndBf6eUlpjGTP9brfOJGIKxXWfJr0qURJq8=;
-        b=m+r4qOaCAtBRIR1RsrkWT95WAlhWQm4LjSPhvVBk/tbz7ZViLGbHB1WtPi5I3/DEj3
-         WtSjr7lTs2y2f7XKqMpkmzKbwCL/TnZt2xf6Dkug1LbdbD+oeF4a3aVgabLtJqEXolr6
-         9MgqlE33f0MKXT3IMH8sOFioCEg9V72LPDwLzzKoNZGB2k/ES4hY7q7dBa+WsuQCDVeK
-         VzYuBtmVH4uyyrRd+/wboxfEazYQj3+Mw3EBtO9wK/ZfgvmTEaF5pee1LopnPYCNgVK6
-         GJq+3NHF1nh0iRbaAtr/jG5YisIsprIxWzEST2IpqU+4GSlIL+viqT0fwdUpgfICSGrm
-         Rzqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXGBAIB7j18ESdYNSF1+r/TnlEJIsUlPMdvweD1ZACmDRmYTC6r8YpYXBtb8QcioRb3UhvatUbO+/IuWZ4wrnpV+wuYJUVfZf28rDUaWlpuYfuRnwtW8rhPmxMHvlG16aqB8wMnkw==
-X-Gm-Message-State: AOJu0YxJuNuoKnaACGuRhQ4buR4kXnAART/gdRD74VyRjyuAI0BvFaoJ
-	dW63/zKL4Yb85saXXYn+RpAkKK0Pemfdo6l9nsmJ/+unGB7Cr6nAb/HGt6Age5M=
-X-Google-Smtp-Source: AGHT+IF7VU7Y1QSO6KjlyfD2UAUnXFOZ55c6wE3pNSEiANo07qh/k9rEcOA9qyaBcYg4OCT6P4uePA==
-X-Received: by 2002:a2e:80c9:0:b0:2d5:9703:263f with SMTP id 38308e7fff4ca-2e4479a3179mr17159541fa.44.1715173997413;
-        Wed, 08 May 2024 06:13:17 -0700 (PDT)
+        bh=bA/WbFSY3RF63tkLESgPXqoWCWDmxvouNTqO5wkompE=;
+        b=PUKRY5xDiZet8f1v5EA2yKXmY9jEz0PORrsEpgJ84rSqrYvNTjpLPqpMIu320PbR7d
+         BP9IscgecWnEdpWxiD+99kT6CmouKzoOG8A5hnNOB2MOD802rz9R6wApig9t36PJ1Lz2
+         Oat4r0XwrsKCM3kuzfWXi22yokFoGeIkc1OG4tl+mfpLj1j8Y7yLbtEJvM3CGrA31da+
+         W+ts1wE6SHkw31Gf8jAMFI4LXQkhw7HvV5D9RoKua0QOM5f5E3sQ3MayrHevODLzpIYk
+         Pn46tcCsJGxSm2Av698AZ9vSC2Mz6UfklxTX+hHu3+9zc6nq6/Rx5nvqM87w9Hn5vsL3
+         v9Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWQrCFdDwATfg8Zqp17LZOPEN1crkK83e7OlMUAbVwvskfYa4kv/c7OtCTjYZUDYcCFrCDclNV4AdG/mAQbhcfuNzHEi8uHqP7dZtLff5dhfZCJDjJKp5YzkbJoerwRhmLvfLjkQ==
+X-Gm-Message-State: AOJu0Yy1+b9ltZvzcbKdYIr2aHcE4RXgbCFxZrEdWzAp913WqJ80Ux8g
+	rc7F9rDNxXUg4Q9YdGIHBCg4Tt3YqZfb4FbF4LPj8zIEGH40nxJV/LVRJjMeVEQ=
+X-Google-Smtp-Source: AGHT+IFetLSuS6EOFk/5ZISvmhcTIP6y7eOnIujEnOT+TaXxj00+sk5NF/0KMG6pZx8Dq1CEyZMbtw==
+X-Received: by 2002:a2e:a54c:0:b0:2e2:a0f0:4e74 with SMTP id 38308e7fff4ca-2e4477b4e16mr20835421fa.52.1715174001006;
+        Wed, 08 May 2024 06:13:21 -0700 (PDT)
 Received: from rbolboac.. ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f88110f3esm22848365e9.29.2024.05.08.06.13.16
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f88110f3esm22848365e9.29.2024.05.08.06.13.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 06:13:16 -0700 (PDT)
+        Wed, 08 May 2024 06:13:20 -0700 (PDT)
 From: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	jic23@kernel.org,
@@ -62,9 +62,9 @@ To: linux-kernel@vger.kernel.org,
 	robh@kernel.org,
 	nuno.sa@analog.com
 Cc: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
-Subject: [PATCH v2 3/8] iio: imu: adis16475: Re-define ADIS16475_DATA
-Date: Wed,  8 May 2024 16:13:05 +0300
-Message-Id: <20240508131310.880479-4-ramona.bolboaca13@gmail.com>
+Subject: [PATCH v2 6/8] drivers: iio: imu: adis16475: generic computation for sample rate
+Date: Wed,  8 May 2024 16:13:08 +0300
+Message-Id: <20240508131310.880479-7-ramona.bolboaca13@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240508131310.880479-1-ramona.bolboaca13@gmail.com>
 References: <20240508131310.880479-1-ramona.bolboaca13@gmail.com>
@@ -76,311 +76,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Re-define ADIS16475_DATA such that it takes _burst_max_len and
-_burst_max_speed_hz as parameters.
+Currently adis16475 supports a sample rate between 1900 and 2100 Hz.
+This patch changes the setting of sample rate from hardcoded values to
+a generic computation based on the internal clock frequency.
+This is a preparatory patch for adding support for adis1657x family
+devices which allow sample rates between 3900 and 4100 Hz.
 
 Signed-off-by: Ramona Gradinariu <ramona.bolboaca13@gmail.com>
 ---
 changes in v2:
- - fixed typo from adis16475_timeouts to adis1650x_timeouts for devices which
- actually have adis1650x_timeouts
- drivers/iio/imu/adis16475.c | 136 +++++++++++++++++++++++-------------
- 1 file changed, 89 insertions(+), 47 deletions(-)
+ - new patch
+ drivers/iio/imu/adis16475.c | 39 +++++++++++++++++++++----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/iio/imu/adis16475.c b/drivers/iio/imu/adis16475.c
-index 53872b716f4a..f9455ecb348c 100644
+index ab955efdad92..c589f214259b 100644
 --- a/drivers/iio/imu/adis16475.c
 +++ b/drivers/iio/imu/adis16475.c
-@@ -690,32 +690,32 @@ static const char * const adis16475_status_error_msgs[] = {
- 	[ADIS16475_DIAG_STAT_CLK] = "Clock error",
- };
+@@ -310,6 +310,9 @@ static int adis16475_set_freq(struct adis16475 *st, const u32 freq)
+ 	u16 dec;
+ 	int ret;
+ 	u32 sample_rate = st->clk_freq;
++	/* The optimal sample rate for the supported IMUs is between int_clk - 100 and int_clk + 100. */
++	u32 max_sample_rate =  st->info->int_clk * 1000 + 100000;
++	u32 min_sample_rate =  st->info->int_clk * 1000 - 100000;
 
--#define ADIS16475_DATA(_prod_id, _timeouts)				\
--{									\
--	.msc_ctrl_reg = ADIS16475_REG_MSG_CTRL,				\
--	.glob_cmd_reg = ADIS16475_REG_GLOB_CMD,				\
--	.diag_stat_reg = ADIS16475_REG_DIAG_STAT,			\
--	.prod_id_reg = ADIS16475_REG_PROD_ID,				\
--	.prod_id = (_prod_id),						\
--	.self_test_mask = BIT(2),					\
--	.self_test_reg = ADIS16475_REG_GLOB_CMD,			\
--	.cs_change_delay = 16,						\
--	.read_delay = 5,						\
--	.write_delay = 5,						\
--	.status_error_msgs = adis16475_status_error_msgs,		\
--	.status_error_mask = BIT(ADIS16475_DIAG_STAT_DATA_PATH) |	\
--		BIT(ADIS16475_DIAG_STAT_FLASH_MEM) |			\
--		BIT(ADIS16475_DIAG_STAT_SPI) |				\
--		BIT(ADIS16475_DIAG_STAT_STANDBY) |			\
--		BIT(ADIS16475_DIAG_STAT_SENSOR) |			\
--		BIT(ADIS16475_DIAG_STAT_MEMORY) |			\
--		BIT(ADIS16475_DIAG_STAT_CLK),				\
--	.unmasked_drdy = true,						\
--	.timeouts = (_timeouts),					\
--	.burst_reg_cmd = ADIS16475_REG_GLOB_CMD,			\
--	.burst_len = ADIS16475_BURST_MAX_DATA,				\
--	.burst_max_len = ADIS16475_BURST32_MAX_DATA,			\
--	.burst_max_speed_hz = ADIS16475_BURST_MAX_SPEED			\
-+#define ADIS16475_DATA(_prod_id, _timeouts, _burst_max_len, _burst_max_speed_hz)	\
-+{											\
-+	.msc_ctrl_reg = ADIS16475_REG_MSG_CTRL,						\
-+	.glob_cmd_reg = ADIS16475_REG_GLOB_CMD,						\
-+	.diag_stat_reg = ADIS16475_REG_DIAG_STAT,					\
-+	.prod_id_reg = ADIS16475_REG_PROD_ID,						\
-+	.prod_id = (_prod_id),								\
-+	.self_test_mask = BIT(2),							\
-+	.self_test_reg = ADIS16475_REG_GLOB_CMD,					\
-+	.cs_change_delay = 16,								\
-+	.read_delay = 5,								\
-+	.write_delay = 5,								\
-+	.status_error_msgs = adis16475_status_error_msgs,				\
-+	.status_error_mask = BIT(ADIS16475_DIAG_STAT_DATA_PATH) |			\
-+		BIT(ADIS16475_DIAG_STAT_FLASH_MEM) |					\
-+		BIT(ADIS16475_DIAG_STAT_SPI) |						\
-+		BIT(ADIS16475_DIAG_STAT_STANDBY) |					\
-+		BIT(ADIS16475_DIAG_STAT_SENSOR) |					\
-+		BIT(ADIS16475_DIAG_STAT_MEMORY) |					\
-+		BIT(ADIS16475_DIAG_STAT_CLK),						\
-+	.unmasked_drdy = true,								\
-+	.timeouts = (_timeouts),							\
-+	.burst_reg_cmd = ADIS16475_REG_GLOB_CMD,					\
-+	.burst_len = ADIS16475_BURST_MAX_DATA,						\
-+	.burst_max_len = _burst_max_len,						\
-+	.burst_max_speed_hz = _burst_max_speed_hz					\
- }
+ 	if (!freq)
+ 		return -EINVAL;
+@@ -317,8 +320,9 @@ static int adis16475_set_freq(struct adis16475 *st, const u32 freq)
+ 	adis_dev_lock(&st->adis);
+ 	/*
+ 	 * When using sync scaled mode, the input clock needs to be scaled so that we have
+-	 * an IMU sample rate between (optimally) 1900 and 2100. After this, we can use the
+-	 * decimation filter to lower the sampling rate in order to get what the user wants.
++	 * an IMU sample rate between (optimally) int_clk - 100 and int_clk + 100.
++	 * After this, we can use the decimation filter to lower the sampling rate in order
++	 * to get what the user wants.
+ 	 * Optimally, the user sample rate is a multiple of both the IMU sample rate and
+ 	 * the input clock. Hence, calculating the sync_scale dynamically gives us better
+ 	 * chances of achieving a perfect/integer value for DEC_RATE. The math here is:
+@@ -336,23 +340,24 @@ static int adis16475_set_freq(struct adis16475 *st, const u32 freq)
+ 		 * solution. In this case, we get the highest multiple of the input clock
+ 		 * lower than the IMU max sample rate.
+ 		 */
+-		if (scaled_rate > 2100000)
+-			scaled_rate = 2100000 / st->clk_freq * st->clk_freq;
++		if (scaled_rate > max_sample_rate)
++			scaled_rate = max_sample_rate / st->clk_freq * st->clk_freq;
+ 		else
+-			scaled_rate = 2100000 / scaled_rate * scaled_rate;
++			scaled_rate = max_sample_rate / scaled_rate * scaled_rate;
 
- static const struct adis16475_sync adis16475_sync_mode[] = {
-@@ -753,7 +753,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16470, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16470, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16475_1] = {
- 		.name = "adis16475-1",
-@@ -770,7 +772,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16475_2] = {
- 		.name = "adis16475-2",
-@@ -787,7 +791,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16475_3] = {
- 		.name = "adis16475-3",
-@@ -804,7 +810,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16475, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16477_1] = {
- 		.name = "adis16477-1",
-@@ -822,7 +830,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16477_2] = {
- 		.name = "adis16477-2",
-@@ -840,7 +850,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16477_3] = {
- 		.name = "adis16477-3",
-@@ -858,7 +870,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16477, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16465_1] = {
- 		.name = "adis16465-1",
-@@ -875,7 +889,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16465_2] = {
- 		.name = "adis16465-2",
-@@ -892,7 +908,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16465_3] = {
- 		.name = "adis16465-3",
-@@ -909,7 +927,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16465, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16467_1] = {
- 		.name = "adis16467-1",
-@@ -926,7 +946,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16467_2] = {
- 		.name = "adis16467-2",
-@@ -943,7 +965,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16467_3] = {
- 		.name = "adis16467-3",
-@@ -960,7 +984,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		.max_dec = 1999,
- 		.sync = adis16475_sync_mode,
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode),
--		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts),
-+		.adis_data = ADIS16475_DATA(16467, &adis16475_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16500] = {
- 		.name = "adis16500",
-@@ -979,7 +1005,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16500, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16500, &adis1650x_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16501] = {
- 		.name = "adis16501",
-@@ -998,7 +1026,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16501, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16501, &adis1650x_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16505_1] = {
- 		.name = "adis16505-1",
-@@ -1017,7 +1047,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16505, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16505, &adis1650x_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16505_2] = {
- 		.name = "adis16505-2",
-@@ -1036,7 +1068,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16505, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16505, &adis1650x_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16505_3] = {
- 		.name = "adis16505-3",
-@@ -1055,7 +1089,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16505, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16505, &adis1650x_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16507_1] = {
- 		.name = "adis16507-1",
-@@ -1074,7 +1110,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16507, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16507, &adis1650x_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16507_2] = {
- 		.name = "adis16507-2",
-@@ -1093,7 +1131,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16507, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16507, &adis1650x_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- 	[ADIS16507_3] = {
- 		.name = "adis16507-3",
-@@ -1112,7 +1152,9 @@ static const struct adis16475_chip_info adis16475_chip_info[] = {
- 		/* pulse sync not supported */
- 		.num_sync = ARRAY_SIZE(adis16475_sync_mode) - 1,
- 		.flags = ADIS16475_HAS_BURST32 | ADIS16475_HAS_BURST_DELTA_DATA,
--		.adis_data = ADIS16475_DATA(16507, &adis1650x_timeouts),
-+		.adis_data = ADIS16475_DATA(16507, &adis1650x_timeouts,
-+					    ADIS16475_BURST32_MAX_DATA,
-+					    ADIS16475_BURST_MAX_SPEED),
- 	},
- };
+ 		/*
+ 		 * This is not an hard requirement but it's not advised to run the IMU
+-		 * with a sample rate lower than 1900Hz due to possible undersampling
+-		 * issues. However, there are users that might really want to take the risk.
+-		 * Hence, we provide a module parameter for them. If set, we allow sample
+-		 * rates lower than 1.9KHz. By default, we won't allow this and we just roundup
+-		 * the rate to the next multiple of the input clock bigger than 1.9KHz. This
+-		 * is done like this as in some cases (when DEC_RATE is 0) might give
+-		 * us the closest value to the one desired by the user...
++		 * with a sample rate lower than internal clock frequency, due to possible
++		 * undersampling issues. However, there are users that might really want
++		 * to take the risk. Hence, we provide a module parameter for them. If set,
++		 * we allow sample rates lower than internal clock frequency.
++		 * By default, we won't allow this and we just roundup the rate to the next
++		 *  multiple of the input clock. This is done like this as in some cases
++		 * (when DEC_RATE is 0) might give us the closest value to the one desired
++		 * by the user...
+ 		 */
+-		if (scaled_rate < 1900000 && !low_rate_allow)
+-			scaled_rate = roundup(1900000, st->clk_freq);
++		if (scaled_rate < min_sample_rate && !low_rate_allow)
++			scaled_rate = roundup(min_sample_rate, st->clk_freq);
 
+ 		sync_scale = scaled_rate / st->clk_freq;
+ 		ret = __adis_write_reg_16(&st->adis, ADIS16475_REG_UP_SCALE, sync_scale);
+@@ -1359,6 +1364,7 @@ static int adis16475_config_sync_mode(struct adis16475 *st)
+ 	struct device *dev = &st->adis.spi->dev;
+ 	const struct adis16475_sync *sync;
+ 	u32 sync_mode;
++	u16 max_sample_rate = st->info->int_clk + 100;
+
+ 	/* default to internal clk */
+ 	st->clk_freq = st->info->int_clk * 1000;
+@@ -1398,10 +1404,9 @@ static int adis16475_config_sync_mode(struct adis16475 *st)
+ 			/*
+ 			 * In sync scaled mode, the IMU sample rate is the clk_freq * sync_scale.
+ 			 * Hence, default the IMU sample rate to the highest multiple of the input
+-			 * clock lower than the IMU max sample rate. The optimal range is
+-			 * 1900-2100 sps...
++			 * clock lower than the IMU max sample rate.
+ 			 */
+-			up_scale = 2100 / st->clk_freq;
++			up_scale = max_sample_rate / st->clk_freq;
+
+ 			ret = __adis_write_reg_16(&st->adis,
+ 						  ADIS16475_REG_UP_SCALE,
 --
 2.34.1
 
