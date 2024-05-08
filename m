@@ -1,243 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19D954F89
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 12:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D44C5491D;
+	Wed,  8 May 2024 12:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715172327; cv=none; b=XNxCP8QSN2k+zs9V8jKV5IQHpRrUmGkicofl+oXPDEYqLzg/TVBxYAx9UAtlqaYoDETgCkkG7tax8zp92zra0J5iI9gB9WMmqRNmtQZaE3ZJp3KM+Ks809gvTzPhA0bMe1W2+gdGE7V0qqA+b7UiuYgctcIytlv7lv+y1UJsgBM=
+	t=1715172357; cv=none; b=DKKW/PhT/rFze4r/kztgF82odXwdCagu/sTDDNwziDjRzHyWIC0rIwyQuVCKLQrg4CyPA3lzF4eLeylDPLRSk2u7Q3LoAb+2oZyJF/rQb69SQo0U/SR5e6aEDHXAUFRW4xYQescHoL98C7HfTvQVmNreIcF3VIFYJo4xzNQ3BiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715172327; c=relaxed/simple;
-	bh=+jK+yriHZDZMzigJkgSTbSzcfx7MQHjxfjtHe8cdo08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Le68oYPpDKoZKnmD5P0e2knqwILksGZJOgjQBKl+zU2lMpdJWBpAL3zVDImUY2y8IPwj4QMmBEWmg8IgkIjfMVlQ9vRIegbW+Uy1Q6FikZ4TxdmJpinQgkz7U2GRf8EAd1dbQ5IGTWXMX2a0ZhLE+UKxvxNM1hMx/+Wi4asaIjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jI3jlvd3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jI3jlvd3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715172324;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=nKOPWRtfFPemzFcBua7c8IERdqoqRoxeJZphMP7/WDk=;
-	b=jI3jlvd3g5xqUspty2Trk77D3qQzCf/YajPH3nCrGEs4q6dV80JdmF2KefBLGDkdt+RCfU
-	ohqgxFcEbGbR2dkhXEEQ8GSrrzAWid0zUrZyJ723KSdZ8pk8W+vGSrBA+yWlMAFYrSkZoW
-	Svl27RIIUmWcf0zwy0Ci3ViAxzJNgAk=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-343-B2XlcYthML2EMcxaK7zydw-1; Wed, 08 May 2024 08:45:23 -0400
-X-MC-Unique: B2XlcYthML2EMcxaK7zydw-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-34dd570f48cso2591802f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 05:45:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715172322; x=1715777122;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=nKOPWRtfFPemzFcBua7c8IERdqoqRoxeJZphMP7/WDk=;
-        b=PToUcmK2xSq00O09IkdMkpUXNvC8HzaZqDHSd13vJF2Vl+5FlJz4jjvIQGLlE3MyRR
-         OnZUDsD4mZROdShXGBFroUlIuKSL/j+nNvXB9DEqjMdcRqNhUr1z/PHHPYXAf5RcnsA0
-         1cnAWXzHb3AarVwEftS++54s0O/XhNmpOzbPSJ6ckjLXntiVtMUtqhOVl1WJ6QE1+4Ca
-         lX1KCGD0ucBkGPhki098yA19AO/iVDRvq/+QRUp8qkdO+fSQn78Y0jv9bqAtlj7Z9hMG
-         ciJmgR7+98E/CCDUgdt1eVoe4bhvCom3HzZXZp8eV26BSAgw+35++GHAkp98q220kaLX
-         ILmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8fH76g1G8fv3tKF2n4X4W0L2qkcejvjU/FKfCKb/xs8aQ7steQbLTHYmnlo3kg84bRFPsFk96NfczpONiXdKuF6VwVrYYULytjDTt
-X-Gm-Message-State: AOJu0YyaXdKn2eocw04iWVDO0TAvrHCqpA757DNBGstJ47bp0TPqZL5h
-	M/Iv9djzVlRWUiPinfhVq6dUvQ4AJHRLKMDz2D6gQE8PQmTsr3tMUKusrZMJz0PHP0EKCQpOVJT
-	V4LR2wJ0MHvbLYYSLAKD157SYs4S8fIqijgLv0slmItd8s8exsbb7ee88Vpmhxg==
-X-Received: by 2002:adf:f7cb:0:b0:34d:b03c:9a99 with SMTP id ffacd0b85a97d-34fcaddf963mr1975342f8f.2.1715172322037;
-        Wed, 08 May 2024 05:45:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFPIOWgDYDc8RPU4fQZPvnZmnDKhsbapctXF8d+7yMjU/pSkHCX/Lkj9HsDnJ5JKF5sUHuckw==
-X-Received: by 2002:adf:f7cb:0:b0:34d:b03c:9a99 with SMTP id ffacd0b85a97d-34fcaddf963mr1975312f8f.2.1715172321487;
-        Wed, 08 May 2024 05:45:21 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c707:3100:35c3:fc4b:669f:9ff9? (p200300cbc707310035c3fc4b669f9ff9.dip0.t-ipconnect.de. [2003:cb:c707:3100:35c3:fc4b:669f:9ff9])
-        by smtp.gmail.com with ESMTPSA id j3-20020a056000124300b0034de3098980sm15309823wrx.97.2024.05.08.05.45.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 May 2024 05:45:21 -0700 (PDT)
-Message-ID: <f7efdbf6-958c-4576-a375-8f7548f58dec@redhat.com>
-Date: Wed, 8 May 2024 14:45:19 +0200
+	s=arc-20240116; t=1715172357; c=relaxed/simple;
+	bh=k6jUUXRBzaiMT1m8Id3W62pKuOgfCCbm8YwCH9F2uck=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=n0HxBQb1fivYMj637BZw2tz07M//5ngzOt/zcP+Dzyky+BIB4J69eQJRpd3q7BEiIqsq0J6F1nnXWkdfCj/zNGHDgAnOQJ9dJ4bsL6+p0ENWrMUkg/HYffrsUkPxM2/cnjcBPeItmlhPK3HxrtP0BMElynSqW26R8r2XohzVlGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 448CjaEnB468934, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 448CjaEnB468934
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 8 May 2024 20:45:37 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 8 May 2024 20:45:37 +0800
+Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 8 May
+ 2024 20:45:36 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <pkshih@realtek.com>, <larry.chiu@realtek.com>,
+        Justin Lai <justinlai0215@realtek.com>
+Subject: [PATCH net-next v18 10/13] rtase: Implement ethtool function
+Date: Wed, 8 May 2024 20:39:42 +0800
+Message-ID: <20240508123945.201524-11-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240508123945.201524-1-justinlai0215@realtek.com>
+References: <20240508123945.201524-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] mm: shmem: add multi-size THP sysfs interface for
- anonymous shmem
-To: Ryan Roberts <ryan.roberts@arm.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
- ying.huang@intel.com, 21cnbao@gmail.com, shy828301@gmail.com,
- ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
- <6b4afed1ef26dbd08ae9ec58449b329564dcef3e.1714978902.git.baolin.wang@linux.alibaba.com>
- <30329a82-45b9-4e78-8c48-bd56af113786@arm.com>
- <0b3735bc-2ad7-44f8-808b-37fc90d57199@linux.alibaba.com>
- <cb458b62-e27d-47d6-8efd-bacdb9da7530@redhat.com>
- <ff1908f8-0887-403b-8d2a-d83a17895523@redhat.com>
- <eb3aa3dc-42ee-475a-8b95-d27951c362a1@arm.com>
- <928c73de-76b0-40d6-a0c3-23d72270ac5c@redhat.com>
- <28f311ec-9b46-4f28-991c-ac74177acf32@redhat.com>
- <5c2c70fd-a291-4ca4-b229-dc54e92b3471@arm.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <5c2c70fd-a291-4ca4-b229-dc54e92b3471@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-On 08.05.24 14:43, Ryan Roberts wrote:
-> On 08/05/2024 13:10, David Hildenbrand wrote:
->> On 08.05.24 14:02, David Hildenbrand wrote:
->>> On 08.05.24 11:02, Ryan Roberts wrote:
->>>> On 08/05/2024 08:12, David Hildenbrand wrote:
->>>>> On 08.05.24 09:08, David Hildenbrand wrote:
->>>>>> On 08.05.24 06:45, Baolin Wang wrote:
->>>>>>>
->>>>>>>
->>>>>>> On 2024/5/7 18:52, Ryan Roberts wrote:
->>>>>>>> On 06/05/2024 09:46, Baolin Wang wrote:
->>>>>>>>> To support the use of mTHP with anonymous shmem, add a new sysfs interface
->>>>>>>>> 'shmem_enabled' in the '/sys/kernel/mm/transparent_hugepage/hugepages-kB/'
->>>>>>>>> directory for each mTHP to control whether shmem is enabled for that mTHP,
->>>>>>>>> with a value similar to the top level 'shmem_enabled', which can be set to:
->>>>>>>>> "always", "inherit (to inherit the top level setting)", "within_size",
->>>>>>>>> "advise",
->>>>>>>>> "never", "deny", "force". These values follow the same semantics as the top
->>>>>>>>> level, except the 'deny' is equivalent to 'never', and 'force' is
->>>>>>>>> equivalent
->>>>>>>>> to 'always' to keep compatibility.
->>>>>>>>
->>>>>>>> We decided at [1] to not allow 'force' for non-PMD-sizes.
->>>>>>>>
->>>>>>>> [1]
->>>>>>>> https://lore.kernel.org/linux-mm/533f37e9-81bf-4fa2-9b72-12cdcb1edb3f@redhat.com/
->>>>>>>>
->>>>>>>> However, thinking about this a bit more, I wonder if the decision we made to
->>>>>>>> allow all hugepages-xxkB/enabled controls to take "inherit" was the wrong
->>>>>>>> one.
->>>>>>>> Perhaps we should have only allowed the PMD-sized enable=inherit (this is
->>>>>>>> just
->>>>>>>> for legacy back compat after all, I don't think there is any use case where
->>>>>>>> changing multiple mTHP size controls atomically is actually useful).
->>>>>>>> Applying
->>>>>>>
->>>>>>> Agree. This is also our usage of 'inherit'.
->>>>>
->>>>> Missed that one: there might be use cases in the future once we would start
->>>>> defaulting to "inherit" for all knobs (a distro might default to that) and
->>>>> default-enable THP in the global knob. Then, it would be easy to disable any
->>>>> THP
->>>>> by disabling the global knob. (I think that's the future we're heading to,
->>>>> where
->>>>> we'd have an "auto" mode that can be set on the global toggle).
->>>>>
->>>>> But I am just making up use cases ;) I think it will be valuable and just doing
->>>>> it consistently now might be cleaner.
->>>>
->>>> I agree that consistency between enabled and shmem_enabled is top priority. And
->>>> yes, I had forgotten about the glorious "auto" future. So probably continuing
->>>> all sizes to select "inherit" is best.
->>>>
->>>> But for shmem_enabled, that means we need the following error checking:
->>>>
->>>>     - It is an error to set "force" for any size except PMD-size
->>>>
->>>>     - It is an error to set "force" for the global control if any size except
->>>> PMD-
->>>>       size is set to "inherit"
->>>>
->>>>     - It is an error to set "inherit" for any size except PMD-size if the global
->>>>       control is set to "force".
->>>>
->>>> Certainly not too difficult to code and prove to be correct, but not the nicest
->>>> UX from the user's point of view when they start seeing errors.
->>>>
->>>> I think we previously said this would likely be temporary, and if/when tmpfs
->>>> gets mTHP support, we could simplify and allow all sizes to be set to "force".
->>>> But I wonder if tmpfs would ever need explicit mTHP control? Maybe it would be
->>>> more suited to the approach the page cache takes to transparently ramp up the
->>>> folio size as it faults more in. (Just saying there is a chance that this error
->>>> checking becomes permanent).
->>>
->>> Note that with shmem you're inherently facing the same memory waste
->>> issues etc as you would with anonymous memory. (sometimes even worse, if
->>> you're running shmem that's configured to be unswappable!).
->>
->> Also noting that memory waste is not really a problem when a write to a shmem
->> file allocates a large folio that stays within boundaries of that write; issues
->> only pop up if you end up over-allocating, especially, during page faults where
->> you have not that much clue about what to do (single address, no real range
->> provided).
->>
->> There is the other issue that wasting large chunks of contiguous memory on stuff
->> that barely benefits from it. With memory that maybe never gets evicted, there
->> is no automatic "handing back" of that memory to the system to be used by
->> something else. With ordinary files, that's a bit different. But I did not look
->> closer into that issue yet, it's one of the reasons MADV_HUGEPAGE was added IIRC.
-> 
-> OK understood. Although, with tmpfs you're not going to mmap it then randomly
-> extend the file through page faults - mmap doesn't permit that, I don't think?
-> So presumably the user must explicitly set the size of the file first? Are you
-> suggesting there are a lot of use cases where a large tmpfs file is created,
-> mmaped then only accessed sparsely?
+Implement the ethtool function to support users to obtain network card
+information, including obtaining various device settings, Report whether
+physical link is up, Report pause parameters, Set pause parameters,
+Return a set of strings that describe the requested objects, Get number
+of strings that @get_strings will write, Return extended statistics
+about the device.
 
-I don't know about "a lot of use cases", but for VMs that's certainly 
-how it's used.
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 104 ++++++++++++++++++
+ 1 file changed, 104 insertions(+)
 
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 4928397d88a5..143f0b8d357f 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -1754,9 +1754,113 @@ static void rtase_get_mac_address(struct net_device *dev)
+ 	rtase_rar_set(tp, dev->dev_addr);
+ }
+ 
++static void rtase_get_drvinfo(struct net_device *dev,
++			      struct ethtool_drvinfo *drvinfo)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++
++	strscpy(drvinfo->driver, KBUILD_MODNAME, 32);
++	strscpy(drvinfo->bus_info, pci_name(tp->pdev), 32);
++}
++
++static int rtase_get_settings(struct net_device *dev,
++			      struct ethtool_link_ksettings *cmd)
++{
++	u32 supported = SUPPORTED_MII | SUPPORTED_Pause | SUPPORTED_Asym_Pause;
++
++	ethtool_convert_legacy_u32_to_link_mode(cmd->link_modes.supported,
++						supported);
++	cmd->base.speed = SPEED_5000;
++	cmd->base.duplex = DUPLEX_FULL;
++	cmd->base.port = PORT_MII;
++	cmd->base.autoneg = AUTONEG_DISABLE;
++
++	return 0;
++}
++
++static void rtase_get_pauseparam(struct net_device *dev,
++				 struct ethtool_pauseparam *pause)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++	u16 value = rtase_r16(tp, RTASE_CPLUS_CMD);
++
++	pause->autoneg = AUTONEG_DISABLE;
++
++	if ((value & (RTASE_FORCE_TXFLOW_EN | RTASE_FORCE_RXFLOW_EN)) ==
++	    (RTASE_FORCE_TXFLOW_EN | RTASE_FORCE_RXFLOW_EN)) {
++		pause->rx_pause = 1;
++		pause->tx_pause = 1;
++	} else if ((value & RTASE_FORCE_TXFLOW_EN)) {
++		pause->tx_pause = 1;
++	} else if ((value & RTASE_FORCE_RXFLOW_EN)) {
++		pause->rx_pause = 1;
++	}
++}
++
++static int rtase_set_pauseparam(struct net_device *dev,
++				struct ethtool_pauseparam *pause)
++{
++	const struct rtase_private *tp = netdev_priv(dev);
++	u16 value = rtase_r16(tp, RTASE_CPLUS_CMD);
++
++	if (pause->autoneg)
++		return -EOPNOTSUPP;
++
++	value &= ~(RTASE_FORCE_TXFLOW_EN | RTASE_FORCE_RXFLOW_EN);
++
++	if (pause->tx_pause)
++		value |= RTASE_FORCE_TXFLOW_EN;
++
++	if (pause->rx_pause)
++		value |= RTASE_FORCE_RXFLOW_EN;
++
++	rtase_w16(tp, RTASE_CPLUS_CMD, value);
++	return 0;
++}
++
++static void rtase_get_ethtool_stats(struct net_device *dev,
++				    struct ethtool_stats *stats, u64 *data)
++{
++	struct rtase_private *tp = netdev_priv(dev);
++	const struct rtase_counters *counters;
++
++	ASSERT_RTNL();
++
++	counters = tp->tally_vaddr;
++	if (!counters)
++		return;
++
++	rtase_dump_tally_counter(tp);
++
++	data[0] = le64_to_cpu(counters->tx_packets);
++	data[1] = le64_to_cpu(counters->rx_packets);
++	data[2] = le64_to_cpu(counters->tx_errors);
++	data[3] = le32_to_cpu(counters->rx_errors);
++	data[4] = le16_to_cpu(counters->rx_missed);
++	data[5] = le16_to_cpu(counters->align_errors);
++	data[6] = le32_to_cpu(counters->tx_one_collision);
++	data[7] = le32_to_cpu(counters->tx_multi_collision);
++	data[8] = le64_to_cpu(counters->rx_unicast);
++	data[9] = le64_to_cpu(counters->rx_broadcast);
++	data[10] = le32_to_cpu(counters->rx_multicast);
++	data[11] = le16_to_cpu(counters->tx_aborted);
++	data[12] = le16_to_cpu(counters->tx_underun);
++}
++
++static const struct ethtool_ops rtase_ethtool_ops = {
++	.get_drvinfo = rtase_get_drvinfo,
++	.get_link = ethtool_op_get_link,
++	.get_link_ksettings = rtase_get_settings,
++	.get_pauseparam = rtase_get_pauseparam,
++	.set_pauseparam = rtase_set_pauseparam,
++	.get_ethtool_stats = rtase_get_ethtool_stats,
++	.get_ts_info = ethtool_op_get_ts_info,
++};
++
+ static void rtase_init_netdev_ops(struct net_device *dev)
+ {
+ 	dev->netdev_ops = &rtase_netdev_ops;
++	dev->ethtool_ops = &rtase_ethtool_ops;
+ }
+ 
+ static void rtase_reset_interrupt(struct pci_dev *pdev,
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
