@@ -1,121 +1,104 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B774347B6;
-	Wed,  8 May 2024 12:37:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED4D42055
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 12:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715171858; cv=none; b=C2e8VJqZITpGdcS9oZJ8w1VsQrqIiMdH9LIQWrbpfRhv6RjWyaa611PxDjsvBxvqDBGmYgieCfWi28MCYaqR6s3zEZIsCyyezCK2k3eDVDwCnfSmpvkyNcMmtxJdMDMYh/8bdba/t2nDhrKhfClGw7u41Pge9VJrKstNnvd5GR4=
+	t=1715171925; cv=none; b=CS8twUdBH/2UACKKHJOFLxFLF2hv2vvv/elbS7rvvUUp17WnCDNqEEue238FaD1mZnDJEPzpPUUgZccdWxDAb3x8qUay+DG57Lnn+A+atFNlaokOyvd+LnZ2OZcjCyoBwU7eHEolHRTkz39+jsdBBwwuNXE67W6KDRF0+2TtkTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715171858; c=relaxed/simple;
-	bh=cAz7HeJbFspsZFZ1DAYm8MdRx4JYFVuGaZU2/nEtWSE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A3uatjmnBs5N/o44CSyLBQEUsXepmq3lAOjLTQePvISbfnGudIPUzihe+339luIXgQR2RLQYlAHHJgkJgiSpgGjDfvXhCunlCi3sost8LDsvBvN3tGHWaRYDZ1ljQz57uTiECfTm3glm1AmGJyJDOabLE2Er9+jubj3eavlx/1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fVuDMYxI; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715171925; c=relaxed/simple;
+	bh=0U23O4IifsWoKyzKHhaaAo1uk/eFcgF3SudtcJ9vppw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=rBWi1xPST5GRVNzlFyeFiFqT5DGkQTJ39fnIyHiLGf7hdS+GOK2yZjB8y9QhgGt9LX8vSm86r066olU1ADx3RBCCezmRb5Dmi+o/+z1rzAaJEfb6xl4jzwTY4w37czQ2pfYYSlsncf0KCZbC4kulZoOd+P2wO4TLYA6J5NnbcxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=zVPGKyKf; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVuDMYxI"
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51f300b318cso5068490e87.3;
-        Wed, 08 May 2024 05:37:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715171855; x=1715776655; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=i58eGKPvYNQTQcyeap/7W0ADrn9Va3j9vHO5Ufznw58=;
-        b=fVuDMYxIfgSgSsxnBwdSAog3UeLFFOUY36lksdFcyybPUCbXi6q7A2TfG78WyElM29
-         iVwaTnJKGSdtt51DCZFAEqWFUd9VPHA+41OqaHdMoZr3VRCFlmZHTS38bC/4W2e/lKnS
-         /daTZc6XY4We4nTZElyehmPL47waAww/oQ47fw4u3YqvefPHDs+WOvhbwxJwU0oirZrr
-         mWA7eRCdo0Dyt7yLYErgXufCMQsuS55erUEW0bWKwZJM3RqR34F4VhXeAKrpAe04FL8p
-         XA1RwhcLXMHjKXzWSwEOUJZ1initQTpB1EbTKNj6AyIk/3d0wf/zS6I5anGdJ6ew2KNU
-         Qswg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715171855; x=1715776655;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i58eGKPvYNQTQcyeap/7W0ADrn9Va3j9vHO5Ufznw58=;
-        b=V1v0PamH0EZlIQ8lpZYSO4q4n6s9mDFgYOxmtI3w1Z4lwwCeWcB56oFIsfIgA6UN4i
-         AW1p5+eIrG13BveDUdLIXIDZRcf+KhRkuTsBlfBkII8E0SWKGoPe7VJHgZAoE4Omv01h
-         L/JJHKm/NQJVOlj35o0cYHT5rJX7AEYFhuCLWR83J4eQVOKcDBQJOgcwnRUJJIqIo2Yn
-         osRVzlzuRwmkOR0idnPVXDofpEqHfjNSZ4E3t5QNGC0P5v1JOnIXsH/+x8J9PdWMMIV+
-         nUZle008w4Pz4+9K2oSLhu5S2CUrhlOkkLP2fzbUdyYEmvPiorWhy/gAZnPKfM+MzVEz
-         VfNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVjQih1N0gDkgLwoVkMFJSaXwvJMtu2MGJE7sQuSfmI03ALToSH01uP55UO92PYN8HH0aCmfAVxTkLE6Fg2kFWdP6uUXoC+TP0s7mvUYoOhlIUjJdhSEVOuzFC7L1Ozn9Nnj+gygbxz+V287oKvUOA/Z7AAyCdOX4/XmPP5+THtX1Y3fP0=
-X-Gm-Message-State: AOJu0YwTPevSSDI8VHgbDlxqAYyfAC7qOEn5KV3F0zxFlxLqGi+h3ztR
-	RJxUhfqMwafqp+M8bkKTGvNXe2T1fnHx4i+mDhZ4npHSJwNZUQLHQo66pw==
-X-Google-Smtp-Source: AGHT+IESdzI9ECXTCgEWOcIfTwT0hKXRiT5PTOUn7yNGACujM0l6NidLseL3uzfgExjDFynctwp+jA==
-X-Received: by 2002:ac2:4a7a:0:b0:51d:605e:c1e0 with SMTP id 2adb3069b0e04-5217c5664d4mr1346867e87.19.1715171855101;
-        Wed, 08 May 2024 05:37:35 -0700 (PDT)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id b26-20020a056512025a00b0051f026412b5sm2514455lfo.141.2024.05.08.05.37.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 05:37:34 -0700 (PDT)
-Date: Wed, 8 May 2024 15:37:31 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: Paul Burton <paulburton@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-mips@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 0/5] MIPS: cm: Probe GCR address from devicetree
-Message-ID: <zy2p2ebyjmuaj6fv2qhglljnjz2x4jmb5d7rkwipu6rn5rrxnc@2tavfilxs7ie>
-References: <20240507-cm_probe-v1-0-11dbfd598f3c@flygoat.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="zVPGKyKf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1715171922;
+	bh=0U23O4IifsWoKyzKHhaaAo1uk/eFcgF3SudtcJ9vppw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=zVPGKyKfbF3n5CnjFI147MV+4XzTAeuTZjHxXRPNjNWTJE2dKJIasxSpUmEEwbv2/
+	 XIyGy9yI6gLpQykNgrcde8wfFtlNl28BY+f5uem5zyZDiDbTgUM6FdDSjLgk2bIf2o
+	 nHAGmN6VkolhyfulWT/FGL8oanXwqqGl65Bu2/RWQKN++ZDFoPb2dCgziwccvh/3x/
+	 whP4KRZOwslJvTCoqkuEhLzRLNh0CcAzpqwKtS9WAAJS3pBrEWJ2Y1dCHJYcrvshgE
+	 zInEtTBq3pMAUGg+qn4LemLHVemv9mfDB4f8sd9Hl91QHxTm/kpghD/AQeRdz2e6O1
+	 Ou63r3AsyqQgQ==
+Received: from localhost.localdomain (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A31F73782112;
+	Wed,  8 May 2024 12:38:41 +0000 (UTC)
+From: Laura Nao <laura.nao@collabora.com>
+To: regressions@leemhuis.info
+Cc: kernel@collabora.com,
+	laura.nao@collabora.com,
+	linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev
+Subject: [REGRESSION] next boot regression caused by RIP:0010:acpi_find_gpio+0x4b/0x103 kernel panic
+Date: Wed,  8 May 2024 14:39:15 +0200
+Message-Id: <20240508123915.534166-1-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <252f883a-6bf1-4ef7-a5f9-d261a6cf725e@leemhuis.info>
+References: <252f883a-6bf1-4ef7-a5f9-d261a6cf725e@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507-cm_probe-v1-0-11dbfd598f3c@flygoat.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Jiaxun
+Hi Thorsten,
 
-On Tue, May 07, 2024 at 10:01:48AM +0100, Jiaxun Yang wrote:
-> Hi all,
+On 5/8/24 13:36, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 26.04.24 17:42, Laura Nao wrote:
+>> Hello,
+>>
+>> KernelCI has identified a next boot regression on the following
+>> Chromebooks, between next-20240416 and next-20240418:
+>> - Lenovo ThinkPad C13 Yoga Chromebook (codename morphius) - kernel
+>>    configuration used [1]
+>> - ASUS Chromebook Flip C436FA (codename helios) - kernel configuration
+>>    used [2]
+>>
+>> [...]
+>>
+>> The issue is still present on next-20240426.
+>>> #regzbot introduced: next-20240416..next-20240418
 > 
-> This series enabled mips-cm code to probe GCR address from devicetree.
+> Hmmm, I noticed nothing has happened here.
 > 
-> This feature has been implemented in MIPS's out-of-tree kernel for
-> a while, and MIPS's u-boot fork on boston will generate required
-> "mti,mips-cm" node as well.
+> Is this issue still happening? With a link to the particular test in the
+> CI I might have been able to answer that myself. ;)
+> 
+> If it's still broken I assume we need a bisection.
+> 
 
-Thank you very much for the series. This work has been scheduled in my
-TODO list for years. I could have done it earlier but a simple at the
-first glance change turned to be tricky. The main concern was the
-stage at what CM was probed. I was afraid to break things by changing
-the order of the CM-base address getting. Let's discuss this matter in
-the respective patch. It might get to be I was wrong to worry.
+The issue was detected by the new KernelCI system - there's no web 
+dashboard for it yet, which is why I did not provide a link earlier.
 
--Serge(y)
+I verified this is still happening on next-20240508 and I already 
+started a bisection, I'll report back when I get the results.
 
+Thanks,
+
+Laura
+
+> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+> --
+> Everything you wanna know about Linux kernel regression tracking:
+> https://linux-regtracking.leemhuis.info/about/#tldr
+> If I did something stupid, please tell me, as explained on that page.
 > 
-> Please review.
-> Thanks
+> #regzbot poke
 > 
-> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
-> ---
-> Jiaxun Yang (5):
->       MIPS: generic: Do __dt_setup_arch in prom_init
->       MIPS: cm: Prefix probe functions with __init
->       MIPS: Move mips_cm_probe after prom_init
->       dt-bindings: mips: Document mti,mips-cm
->       MIPS: cm: Probe GCR address from DeviceTree
-> 
->  .../devicetree/bindings/mips/mips-cm.yaml          | 37 ++++++++++++
->  arch/mips/generic/init.c                           |  9 ++-
->  arch/mips/include/asm/mips-cm.h                    |  4 +-
->  arch/mips/kernel/mips-cm.c                         | 66 ++++++++++++++++++----
->  arch/mips/kernel/setup.c                           |  2 +-
->  5 files changed, 100 insertions(+), 18 deletions(-)
-> ---
-> base-commit: 2b84edefcad14934796fad37b16512b6a2ca467e
-> change-id: 20240506-cm_probe-0c667c8b63bf
-> 
-> Best regards,
-> -- 
-> Jiaxun Yang <jiaxun.yang@flygoat.com>
-> 
-> 
+> _______________________________________________
+> Kernel mailing list -- kernel@mailman.collabora.com
+> To unsubscribe send an email to kernel-leave@mailman.collabora.com
+> This list is managed by https://mailman.collabora.com
+
