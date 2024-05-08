@@ -1,152 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A89753389
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 12:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F238054BFD;
+	Wed,  8 May 2024 12:45:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715172303; cv=none; b=NvXaFUUx6oU52hqBZla2805r1cL6eUp327loIyMm9bsm8Uu5no6BQv28T191BZNFlY9UTlleoxt36tjAW95Mb4bIMyfDcDmjfDAyftK5W1qa4rNRjtDBqFAD67uC+iduXcGG+HxEir22lmfZFAB/QICvGlUPcyqMKGJFrXfoMuw=
+	t=1715172311; cv=none; b=LNOE9KY/6zAjvGeLc99fbw0yJljCnMqoywLR3YOlL0PLFrpUzyRGOdQrh8C7IG4ix55nGoHOU0AUaZRG63MJXsfpps1i4iWvsrFPuJouW6iE3TBIsxq1khDIIlsbUHBXglRWP0iKeskc/IY5w8u8m+YOuZGcy23VY6bkUsg/yqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715172303; c=relaxed/simple;
-	bh=G6mMO8Hw203WkjN6OLfUWlZeQIa0p1RukkdeLtcAqmg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=sTKj3RUV9rJL2nqyrwjmhp95K7QQ6itu8/HT5TzXNmDBUCbzAkCvgdHoI9zlDbjzkEwoSA4DnVlh4SPlxEwxbnjOYbs0uFQvR4xUPrlfrRTwA0osbuz2Gko9CL9rq2UXMXdqTrkp5iCOq9H8AAUthUZwDmK7eb3wgpw5vEgIGtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27F421007;
-	Wed,  8 May 2024 05:45:26 -0700 (PDT)
-Received: from [10.57.67.194] (unknown [10.57.67.194])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B61523F587;
-	Wed,  8 May 2024 05:44:58 -0700 (PDT)
-Message-ID: <c9d30301-9bca-43bb-b273-bbd0a3fc180d@arm.com>
-Date: Wed, 8 May 2024 13:44:57 +0100
+	s=arc-20240116; t=1715172311; c=relaxed/simple;
+	bh=7R8U9Pn+fSgmx2Bzggll2m9VpDK62jiFfTEWCcLiq80=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lo0hb7H1/c7HTzpLFDKkDlJM83gG4xuE1a1BUOTRJNo6DmPx5Vwy9XCD/7wHur3g4worVJc8m/yOGyQtWn+ImXxqkjlX0c4weCzma0rqHDlfVBvXjEuxO4k6jS6YzUVvuNRcTocErNUESlwSmmkTAL3qYOEWOwIxqzgxdem2ZSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 448CipkrF467652, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 448CipkrF467652
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 8 May 2024 20:44:52 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 8 May 2024 20:44:52 +0800
+Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 8 May
+ 2024 20:44:49 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <pkshih@realtek.com>, <larry.chiu@realtek.com>,
+        Justin Lai <justinlai0215@realtek.com>
+Subject: [PATCH net-next v18 09/13] rtase: Implement pci_driver suspend and resume function
+Date: Wed, 8 May 2024 20:39:41 +0800
+Message-ID: <20240508123945.201524-10-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240508123945.201524-1-justinlai0215@realtek.com>
+References: <20240508123945.201524-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/8] mm: shmem: add multi-size THP sysfs interface for
- anonymous shmem
-Content-Language: en-GB
-From: Ryan Roberts <ryan.roberts@arm.com>
-To: David Hildenbrand <david@redhat.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, ioworker0@gmail.com, wangkefeng.wang@huawei.com,
- ying.huang@intel.com, 21cnbao@gmail.com, shy828301@gmail.com,
- ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
- <6b4afed1ef26dbd08ae9ec58449b329564dcef3e.1714978902.git.baolin.wang@linux.alibaba.com>
- <30329a82-45b9-4e78-8c48-bd56af113786@arm.com>
- <0b3735bc-2ad7-44f8-808b-37fc90d57199@linux.alibaba.com>
- <cb458b62-e27d-47d6-8efd-bacdb9da7530@redhat.com>
- <ff1908f8-0887-403b-8d2a-d83a17895523@redhat.com>
- <eb3aa3dc-42ee-475a-8b95-d27951c362a1@arm.com>
- <928c73de-76b0-40d6-a0c3-23d72270ac5c@redhat.com>
- <28f311ec-9b46-4f28-991c-ac74177acf32@redhat.com>
- <5c2c70fd-a291-4ca4-b229-dc54e92b3471@arm.com>
-In-Reply-To: <5c2c70fd-a291-4ca4-b229-dc54e92b3471@arm.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
 
-On 08/05/2024 13:43, Ryan Roberts wrote:
-> On 08/05/2024 13:10, David Hildenbrand wrote:
->> On 08.05.24 14:02, David Hildenbrand wrote:
->>> On 08.05.24 11:02, Ryan Roberts wrote:
->>>> On 08/05/2024 08:12, David Hildenbrand wrote:
->>>>> On 08.05.24 09:08, David Hildenbrand wrote:
->>>>>> On 08.05.24 06:45, Baolin Wang wrote:
->>>>>>>
->>>>>>>
->>>>>>> On 2024/5/7 18:52, Ryan Roberts wrote:
->>>>>>>> On 06/05/2024 09:46, Baolin Wang wrote:
->>>>>>>>> To support the use of mTHP with anonymous shmem, add a new sysfs interface
->>>>>>>>> 'shmem_enabled' in the '/sys/kernel/mm/transparent_hugepage/hugepages-kB/'
->>>>>>>>> directory for each mTHP to control whether shmem is enabled for that mTHP,
->>>>>>>>> with a value similar to the top level 'shmem_enabled', which can be set to:
->>>>>>>>> "always", "inherit (to inherit the top level setting)", "within_size",
->>>>>>>>> "advise",
->>>>>>>>> "never", "deny", "force". These values follow the same semantics as the top
->>>>>>>>> level, except the 'deny' is equivalent to 'never', and 'force' is
->>>>>>>>> equivalent
->>>>>>>>> to 'always' to keep compatibility.
->>>>>>>>
->>>>>>>> We decided at [1] to not allow 'force' for non-PMD-sizes.
->>>>>>>>
->>>>>>>> [1]
->>>>>>>> https://lore.kernel.org/linux-mm/533f37e9-81bf-4fa2-9b72-12cdcb1edb3f@redhat.com/
->>>>>>>>
->>>>>>>> However, thinking about this a bit more, I wonder if the decision we made to
->>>>>>>> allow all hugepages-xxkB/enabled controls to take "inherit" was the wrong
->>>>>>>> one.
->>>>>>>> Perhaps we should have only allowed the PMD-sized enable=inherit (this is
->>>>>>>> just
->>>>>>>> for legacy back compat after all, I don't think there is any use case where
->>>>>>>> changing multiple mTHP size controls atomically is actually useful).
->>>>>>>> Applying
->>>>>>>
->>>>>>> Agree. This is also our usage of 'inherit'.
->>>>>
->>>>> Missed that one: there might be use cases in the future once we would start
->>>>> defaulting to "inherit" for all knobs (a distro might default to that) and
->>>>> default-enable THP in the global knob. Then, it would be easy to disable any
->>>>> THP
->>>>> by disabling the global knob. (I think that's the future we're heading to,
->>>>> where
->>>>> we'd have an "auto" mode that can be set on the global toggle).
->>>>>
->>>>> But I am just making up use cases ;) I think it will be valuable and just doing
->>>>> it consistently now might be cleaner.
->>>>
->>>> I agree that consistency between enabled and shmem_enabled is top priority. And
->>>> yes, I had forgotten about the glorious "auto" future. So probably continuing
->>>> all sizes to select "inherit" is best.
->>>>
->>>> But for shmem_enabled, that means we need the following error checking:
->>>>
->>>>    - It is an error to set "force" for any size except PMD-size
->>>>
->>>>    - It is an error to set "force" for the global control if any size except
->>>> PMD-
->>>>      size is set to "inherit"
->>>>
->>>>    - It is an error to set "inherit" for any size except PMD-size if the global
->>>>      control is set to "force".
->>>>
->>>> Certainly not too difficult to code and prove to be correct, but not the nicest
->>>> UX from the user's point of view when they start seeing errors.
->>>>
->>>> I think we previously said this would likely be temporary, and if/when tmpfs
->>>> gets mTHP support, we could simplify and allow all sizes to be set to "force".
->>>> But I wonder if tmpfs would ever need explicit mTHP control? Maybe it would be
->>>> more suited to the approach the page cache takes to transparently ramp up the
->>>> folio size as it faults more in. (Just saying there is a chance that this error
->>>> checking becomes permanent).
->>>
->>> Note that with shmem you're inherently facing the same memory waste
->>> issues etc as you would with anonymous memory. (sometimes even worse, if
->>> you're running shmem that's configured to be unswappable!).
->>
->> Also noting that memory waste is not really a problem when a write to a shmem
->> file allocates a large folio that stays within boundaries of that write; issues
->> only pop up if you end up over-allocating, especially, during page faults where
->> you have not that much clue about what to do (single address, no real range
->> provided).
->>
->> There is the other issue that wasting large chunks of contiguous memory on stuff
->> that barely benefits from it. With memory that maybe never gets evicted, there
->> is no automatic "handing back" of that memory to the system to be used by
->> something else. With ordinary files, that's a bit different. But I did not look
->> closer into that issue yet, it's one of the reasons MADV_HUGEPAGE was added IIRC.
-> 
-> OK understood. Although, with tmpfs you're not going to mmap it then randomly
-> extend the file through page faults - mmap doesn't permit that, I don't think?
-> So presumably the user must explicitly set the size of the file first? Are you
-> suggesting there are a lot of use cases where a large tmpfs file is created,
-> mmaped then only accessed sparsely?
+Implement the pci_driver suspend function to enable the device
+to sleep, and implement the resume function to enable the device
+to resume operation.
 
-I know that's often the case for anon memory, but not sure if you would expect
-the same pattern with an explicit file?
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ .../net/ethernet/realtek/rtase/rtase_main.c   | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+
+diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+index 61f12a3b79eb..4928397d88a5 100644
+--- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
++++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
+@@ -2197,12 +2197,63 @@ static void rtase_shutdown(struct pci_dev *pdev)
+ 	rtase_reset_interrupt(pdev, tp);
+ }
+ 
++static int rtase_suspend(struct device *device)
++{
++	struct net_device *dev = dev_get_drvdata(device);
++
++	if (netif_running(dev)) {
++		netif_device_detach(dev);
++		rtase_hw_reset(dev);
++	}
++
++	return 0;
++}
++
++static int rtase_resume(struct device *device)
++{
++	struct net_device *dev = dev_get_drvdata(device);
++	struct rtase_private *tp = netdev_priv(dev);
++	int ret;
++
++	/* restore last modified mac address */
++	rtase_rar_set(tp, dev->dev_addr);
++
++	if (!netif_running(dev))
++		goto out;
++
++	rtase_wait_for_quiescence(dev);
++
++	rtase_tx_clear(tp);
++	rtase_rx_clear(tp);
++
++	ret = rtase_init_ring(dev);
++	if (ret) {
++		netdev_err(dev, "unable to init ring\n");
++		rtase_free_desc(tp);
++		return -ENOMEM;
++	}
++
++	rtase_hw_config(dev);
++	/* always link, so start to transmit & receive */
++	rtase_hw_start(dev);
++
++	netif_device_attach(dev);
++out:
++
++	return 0;
++}
++
++static const struct dev_pm_ops rtase_pm_ops = {
++	SYSTEM_SLEEP_PM_OPS(rtase_suspend, rtase_resume)
++};
++
+ static struct pci_driver rtase_pci_driver = {
+ 	.name = KBUILD_MODNAME,
+ 	.id_table = rtase_pci_tbl,
+ 	.probe = rtase_init_one,
+ 	.remove = rtase_remove_one,
+ 	.shutdown = rtase_shutdown,
++	.driver.pm = pm_ptr(&rtase_pm_ops),
+ };
+ 
+ module_pci_driver(rtase_pci_driver);
+-- 
+2.34.1
 
