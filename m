@@ -1,136 +1,118 @@
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC66D1758E
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 05:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1A0A1DFC5;
+	Wed,  8 May 2024 05:42:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715146970; cv=none; b=Pn1HxZebziWuaQ+oKABJY1HWrSiflsnoKDounXiOReFPk+Xz83qMgpPzrFyb8UJjJK5FfB6cAlv2+Vha+gV4jxB29Lfa2kHnU0jbZvw5a6FnRnvEdM+JQw1rOPbV1FKbHQ1RW98Edz8aDQOJnO/hQHzVkbneBkFQUVD+PY3TbUE=
+	t=1715146978; cv=none; b=XBvdgpiVICUrcUaToM7OrRhFSySy+bzwdSmpB5cRtFFzc29OZ1D/oUkbAIbO39o9JiYlEwblHG7ORPJfT4SMpJkI8cT+WUTCM5DXRp5OFOWeCbTUnvknxWyRe4mUFp8uvz1iPB4F+UM7xJ7FS6Sx/oY/X+jx5HBr0Za1XqQPcXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715146970; c=relaxed/simple;
-	bh=Dm8oAyDId/BGzFguq4WTwi8cfuw6NO7IL3CwBWqI+YI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tFo5CDmDFlK7Ivhd5spME3sVFsN0tAsMn78KGO+CtzAZzRrtvjylXMkaLDK0f3HkJPDwNGScfBKfkLjWuHhsF2HshRUfEXXuV40SdyIcv8Bw0uEm83n928ED5HZW/8/cjrgP+ddy9vL8QETIfeUKvvWcf9Cse0E90CsdnevWuk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KcIa/Bhi; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715146978; c=relaxed/simple;
+	bh=C4633FM/2fwr3jRA6+nCGxJmj6K03Kpsy2481BbSSKk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DMtTwc7VjNcsPBp4Y9mDTtCdFLAvMmVNWcyZYUyIi8+0XuNGO50Jg67gUO8tb934tuu/XfiujaAR6dJXp2lORsS/l8SKfzYFicd79f79pG5u7Y2yMoZfCkCTpQugtzZIntyxXaEY7VnYVfckS9mOiFnbrp2MYgkWsqgNCKkvSgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hMFUuw8E; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KcIa/Bhi"
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-61bed5ce32fso43600747b3.2
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 22:42:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hMFUuw8E"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7928c351c6bso366266585a.0;
+        Tue, 07 May 2024 22:42:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715146968; x=1715751768; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=8is/8kMXXquytRmRTTojazPRXnlwoDhApNzUo9b3+OQ=;
-        b=KcIa/BhiRW5xS3AQueE75g59SNsIUK7uFzmASvX+e254/TVlCrWRvk69o5U56MBJVJ
-         +6xNpGUi81LEsfeMlpf6hPyxUdTvREE/rIno9US2AeUv9/8rmuCvX8qkUtO/S4P8x9A7
-         gNql39MBxjLtQik8dAb4RLs/g8TlxD2m+dPOYdISqkTDJKRFqa+foXMAvQz00Bh58S6/
-         LHt55T6ueY+mS8FEKFflcKay5dgT8SAdfyf0xb9P5MfFn4/7Zh96p49GdgRLyEj69xui
-         BSmXw9E1iueHRuA82pmMB9+39RgIgqlXs/LhwyNLzhxGWgRGtzBOCF67qE5Z49dGQA17
-         TOmg==
+        d=gmail.com; s=20230601; t=1715146975; x=1715751775; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hWdYBTdI6YHyaOO3KZJOsp4QvXAU01tQunIm8J+oqpI=;
+        b=hMFUuw8EsFNO+/OZjjbVUhv8GLo1IQm2d3WaApoP0Pif1EB4Eg4mOR4Uh8O1EjQ+MS
+         Grs/N4CPhzWOaRgBPtzqF9dFB6xrnNhCbKx2ypERWVkmEgCPUTbryG/AC2REaIHrIepc
+         VkHpXKVE48DBh9TPK5wBh+hfzMI0X84jVg1zofK4IrHFk9ufhH3bO5egliNX15KQ+r3F
+         dTd3G3+7o1QYUj9e+vJ93Pg/+YTNtCB6S/Jcc5VzYd3gKXeovG2zYlSGYfAebVFVGezN
+         2JuMfHw4eheolhZ0fWcJ8I00tdCMnsgqlDbVmsIh1ZL8XdR5QLgchji/oWd7vH5whmCN
+         tZYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715146968; x=1715751768;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1715146975; x=1715751775;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8is/8kMXXquytRmRTTojazPRXnlwoDhApNzUo9b3+OQ=;
-        b=RarGravilvmXjrQHNNpIRyQZAnzh0h9RQJP+uZEegEKok3WV6Cexfvq2LqTd9VkR/A
-         2xCNxc2fS8pViUZ51xWJ/jxj05ijdHs3Odv2pufS+hylE2SwcldRGSXnskdnXKPXCwuS
-         778eIfKlpJobea2zF0G12kAlPggwn2JHpHpoI/2Vaqq1o9950WIXHrmovVFsT2vPq3at
-         kjBR4qpQdZ+zsHTKbDgmLCozKzgD3IwJladJiMAP+y4MFM9l2zcrh9HkeGDNMUJYUL7Q
-         p51sYsqHiWYlKBBb9nB10HyuhfSp3S0T1XZfLJOyFiDRBRg0Rc43IIKBGSo1haceARcf
-         bIyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXK4cTqQm/w3DkUoqJgv9rwEHjhqQF9wm6Dmozry99yr42DyffXbNODZyjgh63SnSHX/waXR6eaqijm7l2dcF04qz9FoALbat4Ay6gk
-X-Gm-Message-State: AOJu0YwTlFLGtIVxBBq353JGI0jxq1ScixkJTiA0bKNrZPbgR885h7he
-	Gqg6+0CI/OMVa1TcjXgBVcOamve4wShi5HZ4OW5vIEDV0dai7BEkyfTE4O5HFEU+VJgMA7ugpOJ
-	pRmVD+Szqngv7dYajP7sKHV9RSbKOK6RqdUql2Q==
-X-Google-Smtp-Source: AGHT+IG24D1NQIZ27R3N3aZ27xeVwEEsTRm5xCfdyZ/r6uMBhrpmntSpIHxXqQrXwipOem08bGFWGZKtDUaSlW68z1M=
-X-Received: by 2002:a81:7182:0:b0:61b:3356:a679 with SMTP id
- 00721157ae682-62085a6fd15mr20951377b3.17.1715146967118; Tue, 07 May 2024
- 22:42:47 -0700 (PDT)
+        bh=hWdYBTdI6YHyaOO3KZJOsp4QvXAU01tQunIm8J+oqpI=;
+        b=DF74vnsydj4kx39tROcIF9+NB8wyJam3892Bd+VcWY4urIUDYKszDP5r3Lrd9mVLR6
+         qSptMK+/TTPnf04hQLcf7j2u1pq01VzQwzp4pYDldX5IoQOrQxNmcyAld3gALcbQniGl
+         Y9Ngt97yJ6ry/Kn+xqHdtCZnujabexjLQHhqSkgNYZPOR4xRhbQfRjutwAwABQpzY/bl
+         HJ41WmLLO1yjghIQs7+ru5ycT4sLpFtbZFXS9p4AsHColwWgrm7KQIHgW8l5vGmDeqmG
+         A5flidiOp7r88mPpDZ1WiA6RN2DS54x/KGsNggXfi3rzhMiIGpq/Y9AvZgnHNKyhauEC
+         DBPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCUeWNknQ7mk55peNjj0rwNgmnE0I+uX6G/K1OdCaANt10Nyd86OYLP1A1IvZMa75jkkHm/mezmNdynu/ACa8e0HuyqjCfkgHueai8nO0+jwq+IwaXLCtswlZNii5h93ZlO367PACF4UA=
+X-Gm-Message-State: AOJu0YyR3TxcXSJnsf/8dVaUfbFJHjphWFC532KiJ9KqG/1faPO5hW/j
+	EEUzBfNt5YDCerpf09KnoKsOvMBgzYtIEclLdXg8W7xMyweDY475
+X-Google-Smtp-Source: AGHT+IH3Gtb9zcwRjA7/rwW8zyDSMRH/7dVvKMi9jFfO9cbK2TDr0XFTDAyoMfutkp2MuFiMCB9ysQ==
+X-Received: by 2002:a05:620a:56c2:b0:790:9b2c:fdb7 with SMTP id af79cd13be357-792b27b11b8mr182761085a.23.1715146975632;
+        Tue, 07 May 2024 22:42:55 -0700 (PDT)
+Received: from debug-VirtualBox.phub.net.cable.rogers.com (pool-174-114-162-125.cpe.net.cable.rogers.com. [174.114.162.125])
+        by smtp.gmail.com with ESMTPSA id i21-20020a05620a145500b00792aad04aeasm1148218qkl.102.2024.05.07.22.42.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 May 2024 22:42:55 -0700 (PDT)
+From: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
+To: akari.ailus@linux.intel.com,
+	dave.stevenson@raspberrypi.com,
+	jacopo@jmondi.org,
+	mchehab@kernel.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	julia.lawall@inria.fr
+Cc: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>,
+	skhan@linuxfoundation.org,
+	javier.carrasco.cruz@gmail.com
+Subject: [PATCH] media: i2c: replacing of_node_put with __free(device_node)
+Date: Wed,  8 May 2024 01:42:53 -0400
+Message-Id: <20240508054253.1568781-1-abdulrasaqolawani@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240430082717.65f26140@kernel.org> <20240430160057.557295-1-jtornosm@redhat.com>
-In-Reply-To: <20240430160057.557295-1-jtornosm@redhat.com>
-From: Yongqin Liu <yongqin.liu@linaro.org>
-Date: Wed, 8 May 2024 13:42:36 +0800
-Message-ID: <CAMSo37UN11V8UeDM4cyD+iXyRR1Us53a00e34wTy+zP6vx935A@mail.gmail.com>
-Subject: Re: [PATCH v2] net: usb: ax88179_178a: avoid writing the mac address
- before first reading
-To: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-Cc: kuba@kernel.org, davem@davemloft.net, edumazet@google.com, 
-	inventor500@vivaldi.net, jarkko.palviainen@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, stable@vger.kernel.org, 
-	vadim.fedorenko@linux.dev, Sumit Semwal <sumit.semwal@linaro.org>, 
-	John Stultz <jstultz@google.com>, Viktor Martensson <vmartensson@google.com>, 
-	Amit Pundir <amit.pundir@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi, Jose
+Replaced instance of of_node_put with __free(device_node)
+and removed goto statement to protect against any memory leaks
+due to future changes in control flow.
 
-On Wed, 1 May 2024 at 00:01, Jose Ignacio Tornos Martinez
-<jtornosm@redhat.com> wrote:
->
-> > v6.8.8 has 56f78615b already. We need another patch, Jose?
->
-> Hello Jakub,
->
-> I will try to analyze it during the next week (I will be out until then).
->
+Suggested-by: Julia Lawall <julia.lawall@inria.fr>
+Signed-off-by: Abdulrasaq Lawani <abdulrasaqolawani@gmail.com>
+---
+ drivers/media/i2c/ov5647.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-Not sure if you have checked it already, this commit causes an issue for the
-db845c + ACK android15-6.6[1] + AOSP main Android configuration, the
-ethernet does not work,
-there is no ip address assigned, like:
-    db845c:/ # ifconfig eth0
-    eth0      Link encap:Ethernet  HWaddr 02:00:89:7a:fb:61  Driver ax88179_178a
-              UP BROADCAST MULTICAST  MTU:1500  Metric:1
-              RX packets:0 errors:0 dropped:0 overruns:0 frame:0
-              TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
-              collisions:0 txqueuelen:1000
-              RX bytes:0 TX bytes:0
-
-    db845c:/ #
-if I have this change reverted, then it will work again:
-    db845c:/ # ifconfig eth0
-    eth0      Link encap:Ethernet  HWaddr 02:00:89:7a:fb:61  Driver ax88179_178a
-              inet addr:192.168.1.10  Bcast:192.168.1.255  Mask:255.255.255.0
-              inet6 addr: 240e:305:2c88:4700:4b6d:926d:1592:fc5e/64
-Scope: Global
-              inet6 addr: 240e:305:2c88:4700:edc9:86ec:7c5e:b028/64
-Scope: Global
-              inet6 addr: fe80::32ce:8a2e:269d:e53f/64 Scope: Link
-              UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
-              RX packets:966 errors:0 dropped:33 overruns:0 frame:0
-              TX packets:475 errors:0 dropped:0 overruns:0 carrier:0
-              collisions:0 txqueuelen:1000
-              RX bytes:51193 TX bytes:39472
-
-    db845c:/ #
-
-One thing to be noted here is that, during the boot, the MAC address
-will be reassigned
-to make sure each board has its own unique MAC address with the
-following commands:
-    /vendor/bin/ifconfig eth0 down
-    /vendor/bin/ifconfig eth0 hw ether "${ETHADDR}"
-    /vendor/bin/ifconfig eth0 up
-
-
-Could you please help have a check and fix or give some suggestions on
-this issue?
-
-[1]: https://android.googlesource.com/kernel/common/+/refs/heads/android15-6.6
+diff --git a/drivers/media/i2c/ov5647.c b/drivers/media/i2c/ov5647.c
+index 7e1ecdf2485f..d593dba092e3 100644
+--- a/drivers/media/i2c/ov5647.c
++++ b/drivers/media/i2c/ov5647.c
+@@ -1360,23 +1360,19 @@ static int ov5647_parse_dt(struct ov5647 *sensor, struct device_node *np)
+ 	struct v4l2_fwnode_endpoint bus_cfg = {
+ 		.bus_type = V4L2_MBUS_CSI2_DPHY,
+ 	};
+-	struct device_node *ep;
++	struct device_node *ep __free(device_node) = of_graph_get_endpoint_by_regs(np, 0, -1);
+ 	int ret;
+ 
+-	ep = of_graph_get_endpoint_by_regs(np, 0, -1);
+ 	if (!ep)
+ 		return -EINVAL;
+ 
+ 	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &bus_cfg);
+ 	if (ret)
+-		goto out;
++		return ret;
+ 
+ 	sensor->clock_ncont = bus_cfg.bus.mipi_csi2.flags &
+ 			      V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK;
+ 
+-out:
+-	of_node_put(ep);
+-
+ 	return ret;
+ }
+ 
 -- 
-Best Regards,
-Yongqin Liu
----------------------------------------------------------------
-#mailing list
-linaro-android@lists.linaro.org
-http://lists.linaro.org/mailman/listinfo/linaro-android
+2.34.1
+
