@@ -1,78 +1,123 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A571272A0
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 15:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5121A2C05
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 15:16:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715181185; cv=none; b=WyCpOprQanjkmKvcQ2uKgyUfE6N+8cqZGt+FjLEL2i/7aflakcKP5alwMrIc5kSPuwWAxQDH+LJWVhr2aVdbdVLyJkiX9sxQcINjUzgKH62i4++uwESyBdHYjyafBxhJk0RgtV6DlxCMK/VTH9gDUvvqlHpzvrEQ5TtVEkGM1so=
+	t=1715181374; cv=none; b=scPzwZovXeCiNZonKEh11ao1JfnwxBPhocntXuk/EA8Ylw6qJ9Ci77korqXpPKe6EdY3gZK4ygs9gW51/Gdlb1zqDVNoGxl4aPVYmfM3FT09aHJE4iZFznPz7WlbkZgBjYlIrKV6jv6tYKN450sfDExwrPzUm274CaCxWxveAl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715181185; c=relaxed/simple;
-	bh=VTooLKM1UWVTk8gSGQDqgDwStVWBUyMdaRzHq8tOcbs=;
+	s=arc-20240116; t=1715181374; c=relaxed/simple;
+	bh=SDEkX/7FIehgXht/piuMpV8rE/Un2CrlriQeS6ym12M=;
 	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=L5oqXMtLDCz/mROLTfwZkJGUJ4KC4uULoPRkw7b5sSOo0pGH/nQqLd1OtSsMhFhy6tTTqzLNb61es/pkGXuU5cTU/ascxwoS43arIpif1vTKtBbpL5IrMOhVT8bcGwETcj8bIDcioTH798s5aK8ljAWqiMDu5zFgKA4lV08KIaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
+	 Content-Type; b=N2ab9CnFHNuFBlExc7zAzo3VitnA6dAizRVdujf4bZ9241VpbcnUqlM2C2rsBJ50nn9AoagrRSS+ZXFoGrDb5uSvFdJyx1YeTVAbdgWBzPqqn1+oT9Y3cUzG8naUGX9Do7QP2zZl7ATBdiUsBJ4FmWhizV/I96qDkIZEj1Ceat0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7dec4e29827so463929539f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 08:13:04 -0700 (PDT)
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7da41da873bso651020839f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 08:16:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715181183; x=1715785983;
+        d=1e100.net; s=20230601; t=1715181372; x=1715786172;
         h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AEBdO5/t3gWQndQoUbCFMwd1dlzvgeFuNRoAmahB4YQ=;
-        b=DHlgbOsFCZOApy+/V9Eyg5XxVkxUxSSuhIjRq+r4BfgxWw4yjp6LQFTT/+NEGWNMUC
-         ujFeghQ53t9o6SH47wZDN0iGaNaeV3mqHy2a0m7WmaozXdFGCiNBOu75gdHQUVE5wdZp
-         fXP+bhBncNqSGjPA1oyVRFCQIZSp7qx39FNAiAQNSwx7enhCMNq6vchnd3Msfwb3W8Np
-         62Zr2xC8CngsH6P6x7CTiCaVuFgnAYXf/qdGA+DoxJB7kIjXibxad4wVpIGkflOMw4vm
-         YvKZWXrnAtvttm/oXsHCLGy9El6ZxN18t6TYkrObilTzQh2ZRigPqUDs8ZmGfoNIsKXw
-         Cgkg==
-X-Forwarded-Encrypted: i=1; AJvYcCXds+lgV+kESP4quwIhHCXRqZZ3ur6uVzqYSuPGyI92jhQjPJB8fpgiPSnVnIv2sIyOnAtupIkf067OezWMLqkNw8Y7wNEYGOPU9lCf
-X-Gm-Message-State: AOJu0YyPTcC/8tAaiLcT/+K6z4ob1JB30VCbhWk+UCMR1H0o6qwX/R9a
-	fwoIucuiJ2QT+5qMK070KzmwMAS90rv4PfAC6Vhwgbi/heCHW8x96iN0AsamrIpS/2mxmshuFm/
-	Erudaz+DQEOrctMt6JBsTDVkxoNXGUupy8/9cx4mgt6SpjELG7SsYrOk=
-X-Google-Smtp-Source: AGHT+IEgJOu5ZVCCFED8YRbF5GZ6UCcgUorZLjp//7D8s5IUYcamXViyuOmXvu9So1WH93R5xeRN4nyaq37WLksFXyCFnIm9g7Cb
+        bh=mVj+gVbgXZM6nZIWEcn7mM4B49NEdWTqZh3wTgaJrF8=;
+        b=ZrPkb2H5Z7y+aATViuigeYgK0a9hxT6ArPiF58EZjMhfvQNoLrQL+/smp8J1dLIeIi
+         cHel3NKVg6wTnbiewvrKkpYpwyYMNAImvl1aH3RuJcXmUMkkvuz+a4M6Mt7f2ZiFi80j
+         EEkRhlioiF96qccz9fqOYxLgEpXL6TuQh3ouWOv+tOiAyheEGge7TXHVOIrMe0iLis/B
+         kikyBn3xVTUf8m9ygVC0lYpB15vF5V+PN1yYVpnVQWMmLGdyue5lMptzEyIts4H1m+VD
+         VNQElW/GX7j9kg5BaDV82t+mwnkq9ffruoL1usMAScvx+eaMFuE5rwerdt4X2LkdFgn4
+         0XCA==
+X-Gm-Message-State: AOJu0YwB92CxEtjTVBwZHAtbP82umy4G8J5ShjvHa53taWoDeL8/K5P7
+	Sv9IJIsDDkAZAjFDTdn+6wSxlkIAGZA72uIAhMeuETqFzKQ6XtfFIZmpFqVUwqWWE/tySc/AGvx
+	xJCnQuZRyXzht7K/VbGNbYewYPI84UNKBNFidTaVlFwd/PYNd3cfvKno=
+X-Google-Smtp-Source: AGHT+IEf0UrDkOdjl1prdkMMdW8yNlz9ic6T0GyVf4rguyg1pKqOEiG12mK8wcw4t7eviIR85mbxB75vHRv+WRcDVcD+8e1CGZMr
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8325:b0:488:ac5a:7fe9 with SMTP id
- 8926c6da1cb9f-488fdd777e4mr155178173.4.1715181183643; Wed, 08 May 2024
- 08:13:03 -0700 (PDT)
-Date: Wed, 08 May 2024 08:13:03 -0700
-In-Reply-To: <0000000000006399c80617120daa@google.com>
+X-Received: by 2002:a05:6602:641c:b0:7da:6916:b435 with SMTP id
+ ca18e2360f4ac-7e18fbcd3eamr4375739f.0.1715181371844; Wed, 08 May 2024
+ 08:16:11 -0700 (PDT)
+Date: Wed, 08 May 2024 08:16:11 -0700
+In-Reply-To: <00000000000003b4af060de27f6b@google.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002d41840617f2bd39@google.com>
-Subject: Re: [syzbot] [kernfs?] possible deadlock in kernfs_seq_start
-From: syzbot <syzbot+4c493dcd5a68168a94b2@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, gregkh@linuxfoundation.org, hch@lst.de, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-unionfs@vger.kernel.org, miklos@szeredi.hu, rafael@kernel.org, 
-	syzkaller-bugs@googlegroups.com, tj@kernel.org
+Message-ID: <00000000000064fced0617f2c805@google.com>
+Subject: Re: [syzbot] [PATCH net v4] nfc: nci: Fix uninit-value in nci_rx_work
+From: syzbot <syzbot+d7b4dc6cd50410152534@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-syzbot has bisected this issue to:
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-commit 1e8c813b083c4122dfeaa5c3b11028331026e85d
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Wed May 31 12:55:32 2023 +0000
+***
 
-    PM: hibernate: don't use early_lookup_bdev in resume_store
+Subject: [PATCH net v4] nfc: nci: Fix uninit-value in nci_rx_work
+Author: ryasuoka@redhat.com
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1380072f180000
-start commit:   dccb07f2914c Merge tag 'for-6.9-rc7-tag' of git://git.kern..
-git tree:       upstream
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=1040072f180000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1780072f180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9d7ea7de0cb32587
-dashboard link: https://syzkaller.appspot.com/bug?extid=4c493dcd5a68168a94b2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1134f3c0980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1367a504980000
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git master
 
-Reported-by: syzbot+4c493dcd5a68168a94b2@syzkaller.appspotmail.com
-Fixes: 1e8c813b083c ("PM: hibernate: don't use early_lookup_bdev in resume_store")
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index b133dc55304c..0aaff30cb68f 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -1463,6 +1463,16 @@ int nci_core_ntf_packet(struct nci_dev *ndev, __u16 opcode,
+ 				 ndev->ops->n_core_ops);
+ }
+ 
++static bool nci_valid_size(struct sk_buff *skb, unsigned int header_size)
++{
++	if (skb->len < header_size ||
++	    !nci_plen(skb->data) ||
++	    skb->len < header_size + nci_plen(skb->data)) {
++		return false;
++	}
++	return true;
++}
++
+ /* ---- NCI TX Data worker thread ---- */
+ 
+ static void nci_tx_work(struct work_struct *work)
+@@ -1516,24 +1526,32 @@ static void nci_rx_work(struct work_struct *work)
+ 		nfc_send_to_raw_sock(ndev->nfc_dev, skb,
+ 				     RAW_PAYLOAD_NCI, NFC_DIRECTION_RX);
+ 
+-		if (!nci_plen(skb->data)) {
++		if (!skb->len) {
+ 			kfree_skb(skb);
+-			kcov_remote_stop();
+-			break;
++			continue;
+ 		}
+ 
+ 		/* Process frame */
+ 		switch (nci_mt(skb->data)) {
+ 		case NCI_MT_RSP_PKT:
+-			nci_rsp_packet(ndev, skb);
++			if (nci_valid_size(skb, NCI_CTRL_HDR_SIZE))
++				nci_rsp_packet(ndev, skb);
++			else
++				kfree_skb(skb);
+ 			break;
+ 
+ 		case NCI_MT_NTF_PKT:
+-			nci_ntf_packet(ndev, skb);
++			if (nci_valid_size(skb, NCI_CTRL_HDR_SIZE))
++				nci_ntf_packet(ndev, skb);
++			else
++				kfree_skb(skb);
+ 			break;
+ 
+ 		case NCI_MT_DATA_PKT:
+-			nci_rx_data_packet(ndev, skb);
++			if (nci_valid_size(skb, NCI_DATA_HDR_SIZE))
++				nci_rx_data_packet(ndev, skb);
++			else
++				kfree_skb(skb);
+ 			break;
+ 
+ 		default:
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
