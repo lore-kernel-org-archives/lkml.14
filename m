@@ -1,59 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAAA12F582
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 18:49:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E695312E1FF
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 18:49:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715194161; cv=none; b=OFR5HIelhP0TKdv/oxPrZ4nNERtuqfqAslyHr2k7yEThqIf5fYo3ZWvPal2lTPOJXKVoRXyjprxZGOaXReb6WObfHoFVjQttLV8V1OXyqk3Fg1r4hgSG9uzOwrNRSNWdMABTV/y339pAqNu8K4oaxfeSyr4ABBHgYz231EWIYqI=
+	t=1715194160; cv=none; b=SL1W8lllUYsnFEkW2iIcURz2LZ/zN51aa1OxgQ7eJP4QvlP5PkKBEgaYdfzGMSRkSr08OERoM1yHuFTCK3aey4NSBtI90eew/9PpvANjC866qA0+wdlZxTOLqs2DtZPEmNO7TJFTlUTP6s32AHkm5OR4cmwiJ5B0+CZQU0n68rU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715194161; c=relaxed/simple;
-	bh=hd+FSPktwPD2NcYKRreZq3cQ1ikz55qeFiAASrNEG50=;
+	s=arc-20240116; t=1715194160; c=relaxed/simple;
+	bh=XHHtXSHKttwhznEXOospov8JgLdUaQ19JoW77OK0grI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=O0yEBkODtMsJZmuGgbtrziIScbcB4iBzPHoSVSbcnLLDzQGT2ibSLCMKnope3LaXEg+yvpxsh4u39omJcJHpCGgt50gMlFb6IouX5vjhilPFDfnCL9RpADZo2KfMOVJ/+K6wIuWGaSn0QfQYWZudDMkyzAAbS7/y4z4qgLzpI7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lXHcMZ0f; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=iZPR8TlHwf6i7O2XUiqVNuowMiF8/QX7wJpOUqWTZEoc1pYHPpKhArNIgtgpbgDm2YTQFEPIXnaoD2gCSKb2fRaAeRMyk33/m+1lTVxOnh+hxq2Ree1gV10WK7ARU5FUt3ogFjQEBs8axyxNXNmcIPYgF5NOqmgRH1vtMcpnf6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AjYg4F9Y; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lXHcMZ0f"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AjYg4F9Y"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715194160; x=1746730160;
+  t=1715194159; x=1746730159;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=hd+FSPktwPD2NcYKRreZq3cQ1ikz55qeFiAASrNEG50=;
-  b=lXHcMZ0fQM61GHqNmfhwxoRHDuljVJlHeRUMADKckSUP/J3w+A0jHeuL
-   QL69VOPpiursSKuL6gFQ/NdWVHM6VEhhEte6jz+wakV6YV6T+k3kvM8r3
-   CMpVvQQe4QfrVzZ/KCX4RpQlBcMVKFch1GqLTHWtStQL0RCoPk91UuQpP
-   ivXaiWWJ8fYaaVbRNgC5nP31EGXuGkHkMxhG+9CwsJ3JXY7cNxZfn5fE3
-   AQ1qPJoDPx/iMck8dOOBa4fIUlVB3dcKAwBxFtwyfuTFprf0udsgc7cnC
-   rCRJUrnZvVIqh4qNIfAGnk7/vq6ulA6Co05fNqeQS+aK7suK/IkqD8q1i
-   w==;
-X-CSE-ConnectionGUID: xS1D0IvYSSyWZaB+i7GxoA==
-X-CSE-MsgGUID: ELvcE6P7RsGkeDxf7kZ6VA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="36457776"
+  bh=XHHtXSHKttwhznEXOospov8JgLdUaQ19JoW77OK0grI=;
+  b=AjYg4F9Y20FMU4ha92agNrZ9dZmjk7SYJOEcym0aRp6lUNLJwFgUBeeA
+   cEtrEYKt/fQzToNqZeDlbvyHpNxxTMD58T3YX9PD6ZIDNk+WI2BbSiR27
+   +GtOmsOWqpjOj8Qu2Un+N0pnTTHHPcSJlmecTx85Gq0W2fmoybNmCNyXJ
+   2BYUiD73OHsOnzTLSTcXX+rrONh9LDTWa7Zhj6Nn+Ex6kGqDaqsps2rRq
+   BK1pxzce0t401zuvKko55issBumPPhl0X8Dl4qsUN4ECMHbrrSIX3lQXW
+   LUlqKXXyEgg+ZGnz2ksQhVeNxKCKlfReDw6QR8cinlWH0e6GdnRNFg2eT
+   A==;
+X-CSE-ConnectionGUID: zqjFRHJcRvuOsIhAPSeuJQ==
+X-CSE-MsgGUID: z72ECz8VSMivdqTe4I/8Fw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="36457772"
 X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="36457776"
+   d="scan'208";a="36457772"
 Received: from fmviesa009.fm.intel.com ([10.60.135.149])
   by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 11:49:18 -0700
-X-CSE-ConnectionGUID: kq6I8R3mT5CiJjCYFvDp+w==
-X-CSE-MsgGUID: iOck02fWSHSZQUgxLuhOAQ==
+X-CSE-ConnectionGUID: JFtiCinyRbelhm2ndi5ecA==
+X-CSE-MsgGUID: YuFuB+kfTZ6l4B8OQS387w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="28957220"
+   d="scan'208";a="28957218"
 Received: from black.fi.intel.com ([10.237.72.28])
   by fmviesa009.fm.intel.com with ESMTP; 08 May 2024 11:49:16 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C58CE11F; Wed, 08 May 2024 21:49:12 +0300 (EEST)
+	id AB84D83F; Wed, 08 May 2024 21:49:12 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: Arnd Bergmann <arnd@arndb.de>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 08/10] misc: eeprom_93xx46: Replace explicit castings with proper specifiers
-Date: Wed,  8 May 2024 21:47:01 +0300
-Message-ID: <20240508184905.2102633-9-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 05/10] misc: eeprom_93xx46: Remove ->prepare() and ->finish() customisation
+Date: Wed,  8 May 2024 21:46:58 +0300
+Message-ID: <20240508184905.2102633-6-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 In-Reply-To: <20240508184905.2102633-1-andriy.shevchenko@linux.intel.com>
 References: <20240508184905.2102633-1-andriy.shevchenko@linux.intel.com>
@@ -65,49 +65,150 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is no need to have an explicit casting when we can simply use
-the correct printf() specifier.
+Currently there is only one way how chip is prepared and unprepared
+for an operation. Drop unnecessary customisation.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/misc/eeprom/eeprom_93xx46.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/misc/eeprom/eeprom_93xx46.c | 48 +++++------------------------
+ 1 file changed, 8 insertions(+), 40 deletions(-)
 
 diff --git a/drivers/misc/eeprom/eeprom_93xx46.c b/drivers/misc/eeprom/eeprom_93xx46.c
-index 18a3b534ea73..ac485b2827db 100644
+index a5a043ddedbb..b6d699c1cd39 100644
 --- a/drivers/misc/eeprom/eeprom_93xx46.c
 +++ b/drivers/misc/eeprom/eeprom_93xx46.c
-@@ -162,8 +162,8 @@ static int eeprom_93xx46_read(void *priv, unsigned int off,
- 		ndelay(250);
+@@ -37,12 +37,6 @@ struct eeprom_93xx46_platform_data {
+ /* Add extra cycle after address during a read */
+ #define EEPROM_93XX46_QUIRK_EXTRA_READ_CYCLE		BIT(2)
  
- 		if (err) {
--			dev_err(&edev->spi->dev, "read %zu bytes at %d: err. %d\n",
--				nbytes, (int)off, err);
-+			dev_err(&edev->spi->dev, "read %zu bytes at %u: err. %d\n",
-+				nbytes, off, err);
- 			break;
- 		}
+-	/*
+-	 * optional hooks to control additional logic
+-	 * before and after spi transfer.
+-	 */
+-	void (*prepare)(void *);
+-	void (*finish)(void *);
+ 	struct gpio_desc *select;
+ };
  
-@@ -274,7 +274,8 @@ static int eeprom_93xx46_write(void *priv, unsigned int off,
- {
- 	struct eeprom_93xx46_dev *edev = priv;
- 	char *buf = val;
--	int i, ret, step = 1;
-+	int ret, step = 1;
-+	unsigned int i;
+@@ -123,8 +117,7 @@ static int eeprom_93xx46_read(void *priv, unsigned int off,
  
- 	if (unlikely(off >= edev->size))
- 		return -EFBIG;
-@@ -301,8 +302,7 @@ static int eeprom_93xx46_write(void *priv, unsigned int off,
+ 	mutex_lock(&edev->lock);
+ 
+-	if (edev->pdata->prepare)
+-		edev->pdata->prepare(edev);
++	gpiod_set_value_cansleep(edev->pdata->select, 1);
+ 
+ 	/* The opcode in front of the address is three bits. */
+ 	bits = edev->addrlen + 3;
+@@ -180,8 +173,7 @@ static int eeprom_93xx46_read(void *priv, unsigned int off,
+ 		count -= nbytes;
+ 	}
+ 
+-	if (edev->pdata->finish)
+-		edev->pdata->finish(edev);
++	gpiod_set_value_cansleep(edev->pdata->select, 0);
+ 
+ 	mutex_unlock(&edev->lock);
+ 
+@@ -222,8 +214,7 @@ static int eeprom_93xx46_ew(struct eeprom_93xx46_dev *edev, int is_on)
+ 
+ 	mutex_lock(&edev->lock);
+ 
+-	if (edev->pdata->prepare)
+-		edev->pdata->prepare(edev);
++	gpiod_set_value_cansleep(edev->pdata->select, 1);
+ 
+ 	ret = spi_sync(edev->spi, &m);
+ 	/* have to wait at least Tcsl ns */
+@@ -232,8 +223,7 @@ static int eeprom_93xx46_ew(struct eeprom_93xx46_dev *edev, int is_on)
+ 		dev_err(&edev->spi->dev, "erase/write %sable error %d\n",
+ 			is_on ? "en" : "dis", ret);
+ 
+-	if (edev->pdata->finish)
+-		edev->pdata->finish(edev);
++	gpiod_set_value_cansleep(edev->pdata->select, 0);
+ 
+ 	mutex_unlock(&edev->lock);
+ 	return ret;
+@@ -312,8 +302,7 @@ static int eeprom_93xx46_write(void *priv, unsigned int off,
+ 
+ 	mutex_lock(&edev->lock);
+ 
+-	if (edev->pdata->prepare)
+-		edev->pdata->prepare(edev);
++	gpiod_set_value_cansleep(edev->pdata->select, 1);
+ 
  	for (i = 0; i < count; i += step) {
  		ret = eeprom_93xx46_write_word(edev, &buf[i], off + i);
- 		if (ret) {
--			dev_err(&edev->spi->dev, "write failed at %d: %d\n",
--				(int)off + i, ret);
-+			dev_err(&edev->spi->dev, "write failed at %u: %d\n", off + i, ret);
- 			break;
+@@ -324,8 +313,7 @@ static int eeprom_93xx46_write(void *priv, unsigned int off,
  		}
  	}
+ 
+-	if (edev->pdata->finish)
+-		edev->pdata->finish(edev);
++	gpiod_set_value_cansleep(edev->pdata->select, 0);
+ 
+ 	mutex_unlock(&edev->lock);
+ 
+@@ -336,7 +324,6 @@ static int eeprom_93xx46_write(void *priv, unsigned int off,
+ 
+ static int eeprom_93xx46_eral(struct eeprom_93xx46_dev *edev)
+ {
+-	struct eeprom_93xx46_platform_data *pd = edev->pdata;
+ 	struct spi_message m;
+ 	struct spi_transfer t;
+ 	int bits, ret;
+@@ -368,8 +355,7 @@ static int eeprom_93xx46_eral(struct eeprom_93xx46_dev *edev)
+ 
+ 	mutex_lock(&edev->lock);
+ 
+-	if (edev->pdata->prepare)
+-		edev->pdata->prepare(edev);
++	gpiod_set_value_cansleep(edev->pdata->select, 1);
+ 
+ 	ret = spi_sync(edev->spi, &m);
+ 	if (ret)
+@@ -377,8 +363,7 @@ static int eeprom_93xx46_eral(struct eeprom_93xx46_dev *edev)
+ 	/* have to wait erase cycle time Tec ms */
+ 	mdelay(6);
+ 
+-	if (pd->finish)
+-		pd->finish(edev);
++	gpiod_set_value_cansleep(edev->pdata->select, 0);
+ 
+ 	mutex_unlock(&edev->lock);
+ 	return ret;
+@@ -407,20 +392,6 @@ static ssize_t eeprom_93xx46_store_erase(struct device *dev,
+ }
+ static DEVICE_ATTR(erase, S_IWUSR, NULL, eeprom_93xx46_store_erase);
+ 
+-static void select_assert(void *context)
+-{
+-	struct eeprom_93xx46_dev *edev = context;
+-
+-	gpiod_set_value_cansleep(edev->pdata->select, 1);
+-}
+-
+-static void select_deassert(void *context)
+-{
+-	struct eeprom_93xx46_dev *edev = context;
+-
+-	gpiod_set_value_cansleep(edev->pdata->select, 0);
+-}
+-
+ static const struct of_device_id eeprom_93xx46_of_table[] = {
+ 	{ .compatible = "eeprom-93xx46", .data = &at93c46_data, },
+ 	{ .compatible = "atmel,at93c46", .data = &at93c46_data, },
+@@ -483,9 +454,6 @@ static int eeprom_93xx46_probe_fw(struct device *dev)
+ 		return PTR_ERR(pd->select);
+ 	gpiod_set_consumer_name(pd->select, "93xx46 EEPROMs OE");
+ 
+-	pd->prepare = select_assert;
+-	pd->finish = select_deassert;
+-
+ 	data = spi_get_device_match_data(to_spi_device(dev));
+ 	if (data) {
+ 		pd->quirks = data->quirks;
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
