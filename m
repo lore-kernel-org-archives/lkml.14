@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6994C61F;
-	Wed,  8 May 2024 11:30:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6928248E;
+	Wed,  8 May 2024 11:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715167828; cv=none; b=NkMX3NDzp33kDAc+B1MVaxZRNi+GPS7TdMcBHJiOOTwj5hp2qLSUGMDX7RaBlZiYb8auj1Kx4CiIeMbQm5kTh4ZJ01McOBlallzlOKqZmjJt+q7JSV6dias1tCsp6KEVJy+hF4JuOJz+ncA1pbkmxkk8AElLYcZPpnFDeqmOtpE=
+	t=1715167829; cv=none; b=LGPjmHh5bENFHPvb6iQ7zYehG1T69mV/pwHRVPh2Voq/JZtP4Ulyo5RvBBfXc9YPqLBbzWnsPH7wui6vTFSD/UcWZ/O2s6bV59qiG9O9y1REJnodBIscBNpvas4Q9zR5Z1y6lj5MKlwdlswIwGp1vU7vS+8cMtNEWMqaJsoEdSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715167828; c=relaxed/simple;
-	bh=bQZKNvjZf5us9sxQt4200Dii2HdUlVFuP7rD3ndAJLw=;
+	s=arc-20240116; t=1715167829; c=relaxed/simple;
+	bh=ZWwvIlpDfXjQiHlFpfVwvKlXouqi+uWHU0X/OwSj8eA=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=aN6O7x7WgWPdwFoSVobt9jJLa1SiQgq0D7rqibf1MfF3eh2IZnIoTF7XU8OrzdGSzh6nV0huKN9XN+wK9oHsELnbJ4FgnkFc9V+PR8uiAY94xbjUwiC70VjLzH/GNLfJI4He7lyQuvPMyL8zd5oZK268seqF4DJ+jTrbTOLaDIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqRA0NGS; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=jIjcAldLNF+XiIEmbYYF+NfjoDjJS33K41/umrIBzCvxo2FpbqujvRWkoWOrPkfAL36I8Z1DpxJV6Vdmd1BfUBhitz9FS7lNWzsjyRoxPAKWhAvK0q1nZNeLtG/SgXIyMIP3DQemDGd9nSwhZ2X11Fdo4JIIe0PU1yCmB11pa8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RFbOiohp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqRA0NGS"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BD612C4AF18;
-	Wed,  8 May 2024 11:30:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RFbOiohp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A6D14C4DDE1;
+	Wed,  8 May 2024 11:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715167827;
-	bh=bQZKNvjZf5us9sxQt4200Dii2HdUlVFuP7rD3ndAJLw=;
+	s=k20201202; t=1715167828;
+	bh=ZWwvIlpDfXjQiHlFpfVwvKlXouqi+uWHU0X/OwSj8eA=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=MqRA0NGSCtx/EymXl9zc1TBo0q+RI8DHN1yWQ4bEBWHVUcrK6W+O2DkCQ0j82Ulyv
-	 S1XgXFa9MLjQqjd7Gfur+hlFqyD9iLIm8Ye3ta60lUYudgoZWaPczxnFjvMyllIyWt
-	 Ye/h7j0ZEyyG2FgkIokjteEbAkN3UqsN55mtmBiEYTb0gqZptFsqUXKxs1yM/DQkiX
-	 IBgodnmNxexYUO7rVtcMwssWJa5ViUyyQ11p7Jz7R/RMZYGfKg8qVXZmo34i/TCU7K
-	 239T/a7vaIo4wogoXa7oOQrkOw6CdBm0bPU/cppP55uVZe71O73B9CKydOq7ckUzH2
-	 4O/B1tWtm7s6Q==
+	b=RFbOiohp7ndeulJ/85d8ir4PvJ2UFBFYNR1PwRR1ORHWpSuE9NqZdLrsYfb1LatKh
+	 ssBELM9UwJo8hXN+Y34a5N8+NzFfp/S1mbDLle2EOk43LioXFNa8Kce8oWPoQmRDrg
+	 us4iF+YiAmGBLkMvQIN+CDvDWLRJijazf0Zz57OeE83zIKWpsUISIKD6rb1zrE0J2R
+	 eHr0/94245mqt3WGyhDBLTrhxBVgM7zBR5yPgb3w9+utbKHr+gmiiULg5j3aHP8/Xg
+	 F3fGZNaYZKa4Z3RLSJ7/wl042pY8+EptX2D9CbBqAFYKy2kbT4Dd+Wf9jYptv+WtI6
+	 HXHwnmCVm70Gg==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AD679C3275C;
-	Wed,  8 May 2024 11:30:27 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 964ADC3275C;
+	Wed,  8 May 2024 11:30:28 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,38 +37,40 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] ipv6: Fix potential uninit-value access in
- __ip6_make_skb()
+Subject: Re: [PATCH v4 1/2] ipvs: add READ_ONCE barrier for
+ ipvs->sysctl_amemthresh
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171516782770.10113.114314269958250190.git-patchwork-notify@kernel.org>
-Date: Wed, 08 May 2024 11:30:27 +0000
-References: <20240506141129.2434319-1-syoshida@redhat.com>
-In-Reply-To: <20240506141129.2434319-1-syoshida@redhat.com>
-To: Shigeru Yoshida <syoshida@redhat.com>
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
+ <171516782861.10113.14484359490290066834.git-patchwork-notify@kernel.org>
+Date: Wed, 08 May 2024 11:30:28 +0000
+References: <20240506141444.145946-1-aleksandr.mikhalitsyn@canonical.com>
+In-Reply-To: <20240506141444.145946-1-aleksandr.mikhalitsyn@canonical.com>
+To: Aleksandr Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+Cc: horms@verge.net.au, netdev@vger.kernel.org, lvs-devel@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, linux-kernel@vger.kernel.org, ja@ssi.bg,
+ pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This series was applied to netdev/net-next.git (main)
 by David S. Miller <davem@davemloft.net>:
 
-On Mon,  6 May 2024 23:11:29 +0900 you wrote:
-> As it was done in commit fc1092f51567 ("ipv4: Fix uninit-value access in
-> __ip_make_skb()") for IPv4, check FLOWI_FLAG_KNOWN_NH on fl6->flowi6_flags
-> instead of testing HDRINCL on the socket to avoid a race condition which
-> causes uninit-value access.
-> 
-> Fixes: ea30388baebc ("ipv6: Fix an uninit variable access bug in __ip6_make_skb()")
-> Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
+On Mon,  6 May 2024 16:14:43 +0200 you wrote:
+> Cc: Julian Anastasov <ja@ssi.bg>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Pablo Neira Ayuso <pablo@netfilter.org>
+> Cc: Jozsef Kadlecsik <kadlec@netfilter.org>
+> Cc: Florian Westphal <fw@strlen.de>
+> Suggested-by: Julian Anastasov <ja@ssi.bg>
+> Signed-off-by: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
 > 
 > [...]
 
 Here is the summary with links:
-  - [net] ipv6: Fix potential uninit-value access in __ip6_make_skb()
-    https://git.kernel.org/netdev/net/c/4e13d3a9c25b
+  - [v4,1/2] ipvs: add READ_ONCE barrier for ipvs->sysctl_amemthresh
+    https://git.kernel.org/netdev/net-next/c/643bb5dbaef7
+  - [v4,2/2] ipvs: allow some sysctls in non-init user namespaces
+    https://git.kernel.org/netdev/net-next/c/2b696a2a101d
 
 You are awesome, thank you!
 -- 
