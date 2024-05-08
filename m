@@ -1,87 +1,101 @@
-Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48F454FAA
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 18:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3EA12BE9E;
+	Wed,  8 May 2024 18:27:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715192793; cv=none; b=CYi7iWvgZvbnN6+4VkS5hk0AhAqEL51Cz/VtLLivq0Of2qXqG6wpq2Rs8FkKHJ9FWbQhAeAhkgg9T61JfRLRf9NY4GKOwdxrdBuJ4WWB1htdY4SuCk0/1NvM7q9ji1BRGe8nTC04emhPf2rIT7gbkL9pO02mPhnjT2dvullX7qE=
+	t=1715192865; cv=none; b=MYznzFf4V90bq2xauUrWjYuaZ/pG8IJBSnTrztzFbAN1XAdgCmUOrluzmCkJr4dXdDrBokmBM9gBoH3xJi5rLD6XCCQlXduXKEmvcSgRuPkdsJMTgtNlXFBmJU3rpCYIGWBQIgORefo4B9DzSuLKmvwSrloZ8kD6LrczonUVmd4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715192793; c=relaxed/simple;
-	bh=oIvO6wRDB+Tamjd+aYPlKckkBTBydH1MgXq4hju3B7o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=i3nSKv3uizK2kyZuTupbxHd0ndWH1m/tSpSNbRp1sJPYqZkglXI802PlVP/5Dm+JwGTHH30X1IyvALs4L7lr2H+I+Qn24/JcrUWfs4O4lHZjMJmv6KI7x3gYxLjtkoKtL4wdz+p5TVg4+jQiWlVzigRdLIAA4qLV7Kftt+pVhis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.178.240
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: from relay2-d.mail.gandi.net (unknown [217.70.183.194])
-	by mslow1.mail.gandi.net (Postfix) with ESMTP id B92D0C546E
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 18:22:48 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id D5E4040005;
-	Wed,  8 May 2024 18:22:43 +0000 (UTC)
-Message-ID: <43829e94-98ae-46a4-a3e6-dbabbe94d7c1@ghiti.fr>
-Date: Wed, 8 May 2024 20:22:43 +0200
+	s=arc-20240116; t=1715192865; c=relaxed/simple;
+	bh=TQyn2lCiksoMNY+L3Cmit5xvgMlOchLg/3HXre8evts=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=edsEDS3j0RPY+BwoUi8S8U7Fr9lsZ7L32QqNlYUlzOXfyI2d8VwO9e55GZBMaCUZRFXEEF4dQ+O5bEAzJuwsZzvemqb2c6voH++gKGVDAatp7rWfRwMbf/BhHH6F4e+wBjjHtwD6dXQBC07/IbyjGh6UYYRnDUg1KHGtRe+sBPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H4dHBcmI; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H4dHBcmI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715192864; x=1746728864;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TQyn2lCiksoMNY+L3Cmit5xvgMlOchLg/3HXre8evts=;
+  b=H4dHBcmI0CQIMpvcgBLfLZ0c69k+BzZv6LIpTb17DmNnAyJYtRhO6xR5
+   wLr/C0n8GZTKdQNAd36muZiLm4SNdlhE+SG+ZIvy/QGGY0jqzH/HuXLwL
+   RYfpGh0a9IABSSlmo9VSUX5wQ3nW9r7RD0r+OT1FiaGF9dw2aibjDz9sD
+   lNmcKFnGRDPx0AK+UvxNUidISEwCav2L/PfSZ2eyqLN1Fvs0BgSiTw0dj
+   gQXsjoum2MW9Y4WpZvtp6+9zJtXdKUI2qdPzRRbU28+6dET6V7Dq4/IwZ
+   VhJNiuhhAWFvEipK8lAzmZkUcv388wVbkexZUXnaOWy9ewUNaqDOpawgd
+   Q==;
+X-CSE-ConnectionGUID: HHU7tMSuRsmdxVylYmK5TQ==
+X-CSE-MsgGUID: UrZviiP8Qdi+uEx9eP8HZQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="21746829"
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="21746829"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 11:27:43 -0700
+X-CSE-ConnectionGUID: pPHW8MKiSkaurGKf+8RAmQ==
+X-CSE-MsgGUID: 6/g+hsMwS+mdRwVMUlc4Pg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="33526172"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 11:27:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1s4m0t-00000005XUW-2oGJ;
+	Wed, 08 May 2024 21:27:35 +0300
+Date: Wed, 8 May 2024 21:27:35 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Jacob Keller <jacob.e.keller@intel.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Aleksandr Loktionov <aleksandr.loktionov@intel.com>
+Subject: Re: [PATCH net-next v2 1/1] net: intel: Use *-y instead of *-objs in
+ Makefile
+Message-ID: <ZjvEF7haIsMcMh08@smile.fi.intel.com>
+References: <20240508180057.1947637-1-andriy.shevchenko@linux.intel.com>
+ <1f2eb3d5-649d-4723-af89-ca625070877d@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: Don't use hugepage mappings for vmemmap if it's
- not supported
-Content-Language: en-US
-To: Nam Cao <namcao@linutronix.de>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alexghiti@rivosinc.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240508173116.2866192-1-namcao@linutronix.de>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20240508173116.2866192-1-namcao@linutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: yes
-X-Spam-Level: **************************
-X-GND-Spam-Score: 400
-X-GND-Status: SPAM
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1f2eb3d5-649d-4723-af89-ca625070877d@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Nam,
+On Wed, May 08, 2024 at 11:23:39AM -0700, Jacob Keller wrote:
+> On 5/8/2024 11:00 AM, Andy Shevchenko wrote:
 
-On 08/05/2024 19:31, Nam Cao wrote:
-> Commit ff172d4818ad ("riscv: Use hugepage mappings for vmemmap") broke XIP
-> kernel, because huge pages are not supported on XIP kernel.
+...
+
+> FWIW I applied v1 and v2, and got only the following range-diff:
+
+> This matches the changes described w.r.t ordering, and everything built
+> properly when I tested it on my test kernel tree.
+> 
+> Reviewed-by: Jacob Keller <jacob.e.keller@intel.com>
+
+Thank you!
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-I don't understand why XIP kernels can't support huge vmalloc mappings, 
-so I think the right fix would be to enable such mappings on XIP. WDYT?
-
-Thanks,
-
-Alex
-
-
->
-> Only use hugepage mapping if it is supported.
->
-> Fixes: ff172d4818ad ("riscv: Use hugepage mappings for vmemmap")
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
-> Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-> Cc: <stable@vger.kernel.org>
-> ---
->   arch/riscv/mm/init.c | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 968761843203..c081e7d349b1 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -1414,6 +1414,8 @@ int __meminit vmemmap_check_pmd(pmd_t *pmdp, int node,
->   int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->   			       struct vmem_altmap *altmap)
->   {
-> +	if (!IS_ENABLED(CONFIG_HAVE_ARCH_HUGE_VMAP))
-> +		return vmemmap_populate_basepages(start, end, node, NULL);
->   	/*
->   	 * Note that SPARSEMEM_VMEMMAP is only selected for rv64 and that we
->   	 * can't use hugepage mappings for 2-level page table because in case of
