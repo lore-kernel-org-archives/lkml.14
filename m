@@ -1,123 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49371171A2;
-	Wed,  8 May 2024 03:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0CF1A2C12
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 03:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715139426; cv=none; b=ElKtybpoMkxXBgc2qUjlKgxaIbbJss5qFJS7E5tMUyg5zSfNVI0zwqIaBu9iymor7m0k++ik1LnDWVzWnSHll5bhSLLYAPF8I7z5c1ioLWX04ihQ6Yu3uzSAg4caAuLVVBMtftNRflu9FUH6icSrakLEhFs4hhVm/Hmct3ypKtM=
+	t=1715139850; cv=none; b=X8baHpookl9j9xODaHjjTcxKv+eBGuSuYBgDIqHuPhvAY6wuHBXpfnEHAEA9Ldu5BbOny55hag9G9xBeOOZxApRFaApNcuMiELFElpC3ERA8T9pxa3Cc/pGREm5mm7Ll5vs+aQLoJstUgCEsv1ed5F1+Cd8DtTsDo2yAGD0dhZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715139426; c=relaxed/simple;
-	bh=VX4j3o8PuAumvX98LolK5x0BnWOyxYhPrqsi65acJqo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=H7QvClJp8UNtN9vRWX0Jkl8cWXZUAoklY5vEf7YZvkbqqi8A/D9o3rrYKoGzr6rL/7jd9R3In30qweLzcgXSh0dB4I6bjY69TE+vcZdqg9rn22OyaNbOFkIe1gtghY40lwitE3NC5YphznfDKa956cV7x64ZqtvkgyK13vXvHKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PWP4irtH; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715139850; c=relaxed/simple;
+	bh=7kX1Ut7jRqhIV6TewVq5DZj7lDhWkC5q2P8XLXhsMhY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fiPPMdptXVtPckXNCe2sj9M2eX6XouScbXfhq9CqHmYkyZdJPYrDzG+8ZCCjrJsS/RLlfSX4ti5jk6SlOMNTBUOmY4vmn2vQrz8E8sw5VneyLqgKnscVWVNv6vWivAwRVkiG63rrGDBs4sTJRk8teKpeF+6swI1/4s38NCCHIZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=HbuRIYCU; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PWP4irtH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715139425; x=1746675425;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references;
-  bh=VX4j3o8PuAumvX98LolK5x0BnWOyxYhPrqsi65acJqo=;
-  b=PWP4irtHuQ108ZNBr7YuB4alK36lD8S9r+ieInP4BDA3WyOn8508usPG
-   frfX8bA9ZekPjNQE0EwdmBtgW4YaS1MvnffTNG8JHDxVF3wOVYkGI9dZ2
-   07ZJIUgu7kD9oNZF2h4+eyHAUT3XfqdAxTLzfVZIviF0lL7sMHTluEaou
-   6oOdEFXVLsAqbyznPEu0h84CW2KLC0o+NjOwaGzDzojwAzGLGFIWRjmBX
-   ESfnS5BfdfelUjiS5gRH/owDCG9PcPXN7KsBKLXn7HcfbmtJccf3gxVCP
-   JitxFgm1k+72dlyViBeVInkJZuyU5cgsSNiymIy3pGcJJoQZEMG0WJsPa
-   A==;
-X-CSE-ConnectionGUID: ZNtiUPYrS6unZkD3KADRkg==
-X-CSE-MsgGUID: Iq+ZyGcDSEegd77kbALTaQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="10820910"
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="10820910"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2024 20:36:54 -0700
-X-CSE-ConnectionGUID: YyQ012U5RCqIHJrpvyf/sQ==
-X-CSE-MsgGUID: 98kccrMhRkq07nRyGxlmfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="33551931"
-Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
-  by orviesa005.jf.intel.com with ESMTP; 07 May 2024 20:36:53 -0700
-From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc: Zhang Rui <rui.zhang@intel.com>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	Len Brown <len.brown@intel.com>,
-	Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ricardo Neri <ricardo.neri@intel.com>
-Subject: [PATCH v2 3/4] thermal: intel: hfi: Rename HFI_MAX_THERM_NOTIFY_COUNT
-Date: Tue,  7 May 2024 20:43:51 -0700
-Message-Id: <20240508034352.18414-4-ricardo.neri-calderon@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240508034352.18414-1-ricardo.neri-calderon@linux.intel.com>
-References: <20240508034352.18414-1-ricardo.neri-calderon@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="HbuRIYCU"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1715139843; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Pn3vBXANuMvF5ku6GRIIqsfOGK3UsbQF8fYDYvSVp0I=;
+	b=HbuRIYCUerJ94Vp87LyjEhAI6VyFav9WMoWthz5GVIQkV970WMyb8B2Y/Jf3IQgiYJ1DDuCYeCwHtlvFuhyEJg1Pqt2igFHIvpNyScFQ2FATk/W9zy1RwK4lKVf8HVluroD+KsfdtII0L6vj89zSD8d4RKF21DieIUgmVuW3mBE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033068173054;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W625alR_1715139840;
+Received: from 30.97.56.69(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W625alR_1715139840)
+          by smtp.aliyun-inc.com;
+          Wed, 08 May 2024 11:44:01 +0800
+Message-ID: <d2bd3277-7ef5-4909-a149-6895ad95459e@linux.alibaba.com>
+Date: Wed, 8 May 2024 11:44:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/8] mm: memory: extend finish_fault() to support large
+ folio
+To: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: willy@infradead.org, david@redhat.com, ioworker0@gmail.com,
+ wangkefeng.wang@huawei.com, ying.huang@intel.com, 21cnbao@gmail.com,
+ shy828301@gmail.com, ziy@nvidia.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
+ <e3f4ae78ef2d565a65fadaa843e53a24bf5b57e4.1714978902.git.baolin.wang@linux.alibaba.com>
+ <13939ade-a99a-4075-8a26-9be7576b7e03@arm.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <13939ade-a99a-4075-8a26-9be7576b7e03@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-When processing a hardware update, HFI generates as many thermal netlink
-events as needed to relay all the updated CPU capabilities to user space.
-The constant HFI_MAX_THERM_NOTIFY_COUNT is the number of CPU capabilities
-updated per each of those events.
 
-Give this constant a more descriptive name.
 
-Signed-off-by: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
----
-Cc: Len Brown <len.brown@intel.com>
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Cc: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
-Changes since v1:
- * None
----
- drivers/thermal/intel/intel_hfi.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+On 2024/5/7 18:37, Ryan Roberts wrote:
+> On 06/05/2024 09:46, Baolin Wang wrote:
+>> Add large folio mapping establishment support for finish_fault() as a preparation,
+>> to support multi-size THP allocation of anonymous shmem pages in the following
+>> patches.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+>> ---
+>>   mm/memory.c | 43 +++++++++++++++++++++++++++++++++----------
+>>   1 file changed, 33 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/mm/memory.c b/mm/memory.c
+>> index eea6e4984eae..936377220b77 100644
+>> --- a/mm/memory.c
+>> +++ b/mm/memory.c
+>> @@ -4747,9 +4747,12 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+>>   {
+>>   	struct vm_area_struct *vma = vmf->vma;
+>>   	struct page *page;
+>> +	struct folio *folio;
+>>   	vm_fault_t ret;
+>>   	bool is_cow = (vmf->flags & FAULT_FLAG_WRITE) &&
+>>   		      !(vma->vm_flags & VM_SHARED);
+>> +	int type, nr_pages, i;
+>> +	unsigned long addr = vmf->address;
+>>   
+>>   	/* Did we COW the page? */
+>>   	if (is_cow)
+>> @@ -4780,24 +4783,44 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+>>   			return VM_FAULT_OOM;
+>>   	}
+>>   
+>> +	folio = page_folio(page);
+>> +	nr_pages = folio_nr_pages(folio);
+>> +
+>> +	if (unlikely(userfaultfd_armed(vma))) {
+>> +		nr_pages = 1;
+>> +	} else if (nr_pages > 1) {
+>> +		unsigned long start = ALIGN_DOWN(vmf->address, nr_pages * PAGE_SIZE);
+>> +		unsigned long end = start + nr_pages * PAGE_SIZE;
+>> +
+>> +		/* In case the folio size in page cache beyond the VMA limits. */
+>> +		addr = max(start, vma->vm_start);
+>> +		nr_pages = (min(end, vma->vm_end) - addr) >> PAGE_SHIFT;
+>> +
+>> +		page = folio_page(folio, (addr - start) >> PAGE_SHIFT);
+> 
+> I still don't really follow the logic in this else if block. Isn't it possible
+> that finish_fault() gets called with a page from a folio that isn't aligned with
+> vmf->address?
+> 
+> For example, let's say we have a file who's size is 64K and which is cached in a
+> single large folio in the page cache. But the file is mapped into a process at
+> VA 16K to 80K. Let's say we fault on the first page (VA=16K). You will calculate
 
-diff --git a/drivers/thermal/intel/intel_hfi.c b/drivers/thermal/intel/intel_hfi.c
-index d82b8788b0f8..c6658f8c5cca 100644
---- a/drivers/thermal/intel/intel_hfi.c
-+++ b/drivers/thermal/intel/intel_hfi.c
-@@ -167,7 +167,7 @@ static DEFINE_MUTEX(hfi_instance_lock);
- 
- static struct workqueue_struct *hfi_updates_wq;
- #define HFI_UPDATE_DELAY_MS		100
--#define HFI_MAX_THERM_NOTIFY_COUNT	16
-+#define HFI_THERMNL_CAPS_PER_EVENT	16
- 
- static void get_hfi_caps(struct hfi_instance *hfi_instance,
- 			 struct thermal_genl_cpu_caps *cpu_caps)
-@@ -218,14 +218,14 @@ static void update_capabilities(struct hfi_instance *hfi_instance)
- 
- 	get_hfi_caps(hfi_instance, cpu_caps);
- 
--	if (cpu_count < HFI_MAX_THERM_NOTIFY_COUNT)
-+	if (cpu_count < HFI_THERMNL_CAPS_PER_EVENT)
- 		goto last_cmd;
- 
--	/* Process complete chunks of HFI_MAX_THERM_NOTIFY_COUNT capabilities. */
-+	/* Process complete chunks of HFI_THERMNL_CAPS_PER_EVENT capabilities. */
- 	for (i = 0;
--	     (i + HFI_MAX_THERM_NOTIFY_COUNT) <= cpu_count;
--	     i += HFI_MAX_THERM_NOTIFY_COUNT)
--		thermal_genl_cpu_capability_event(HFI_MAX_THERM_NOTIFY_COUNT,
-+	     (i + HFI_THERMNL_CAPS_PER_EVENT) <= cpu_count;
-+	     i += HFI_THERMNL_CAPS_PER_EVENT)
-+		thermal_genl_cpu_capability_event(HFI_THERMNL_CAPS_PER_EVENT,
- 						  &cpu_caps[i]);
- 
- 	cpu_count = cpu_count - i;
--- 
-2.34.1
+For shmem, this doesn't happen because the VA is aligned with the 
+hugepage size in the shmem_get_unmapped_area() function. See patch 7.
 
+> start=0 and end=64K I think?
+
+Yes. Unfortunately, some file systems that support large mappings do not 
+perform alignment for multi-size THP (non-PMD sized, for example: 64K). 
+I think this requires modification to 
+__get_unmapped_area--->thp_get_unmapped_area_vmflags() or 
+file->f_op->get_unmapped_area() to align VA for multi-size THP in future.
+
+So before adding that VA alignment changes, only allow building the 
+large folio mapping for anonymous shmem:
+
+diff --git a/mm/memory.c b/mm/memory.c
+index 936377220b77..9e4d51826d23 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4786,7 +4786,7 @@ vm_fault_t finish_fault(struct vm_fault *vmf)
+         folio = page_folio(page);
+         nr_pages = folio_nr_pages(folio);
+
+-       if (unlikely(userfaultfd_armed(vma))) {
++       if (unlikely(userfaultfd_armed(vma)) || !vma_is_anon_shmem(vma)) {
+                 nr_pages = 1;
+         } else if (nr_pages > 1) {
+                 unsigned long start = ALIGN_DOWN(vmf->address, nr_pages 
+* PAGE_SIZE);
+
+> Additionally, I think this path will end up mapping the entire folio (as long as
+> it fits in the VMA). But this bypasses the fault-around configuration. As I
+> think I mentioned against the RFC, this will inflate the RSS of the process and
+> can cause behavioural changes as a result. I believe the current advice is to
+> disable fault-around to prevent this kind of bloat when needed.
+
+With above change, I do not think this is a problem? since users already 
+want to use mTHP for anonymous shmem.
+
+> It might be that you need a special variant of finish_fault() for shmem?
+> 
+> 
+>> +	}
+>>   	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+>> -				      vmf->address, &vmf->ptl);
+>> +				       addr, &vmf->ptl);
+>>   	if (!vmf->pte)
+>>   		return VM_FAULT_NOPAGE;
+>>   
+>>   	/* Re-check under ptl */
+>> -	if (likely(!vmf_pte_changed(vmf))) {
+>> -		struct folio *folio = page_folio(page);
+>> -		int type = is_cow ? MM_ANONPAGES : mm_counter_file(folio);
+>> -
+>> -		set_pte_range(vmf, folio, page, 1, vmf->address);
+>> -		add_mm_counter(vma->vm_mm, type, 1);
+>> -		ret = 0;
+>> -	} else {
+>> -		update_mmu_tlb(vma, vmf->address, vmf->pte);
+>> +	if (nr_pages == 1 && unlikely(vmf_pte_changed(vmf))) {
+>> +		update_mmu_tlb(vma, addr, vmf->pte);
+>> +		ret = VM_FAULT_NOPAGE;
+>> +		goto unlock;
+>> +	} else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
+>> +		for (i = 0; i < nr_pages; i++)
+>> +			update_mmu_tlb(vma, addr + PAGE_SIZE * i, vmf->pte + i);
+>>   		ret = VM_FAULT_NOPAGE;
+>> +		goto unlock;
+>>   	}
+>>   
+>> +	set_pte_range(vmf, folio, page, nr_pages, addr);
+>> +	type = is_cow ? MM_ANONPAGES : mm_counter_file(folio);
+>> +	add_mm_counter(vma->vm_mm, type, nr_pages);
+>> +	ret = 0;
+>> +
+>> +unlock:
+>>   	pte_unmap_unlock(vmf->pte, vmf->ptl);
+>>   	return ret;
+>>   }
