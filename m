@@ -1,157 +1,104 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com [209.85.160.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EFF823AF;
-	Wed,  8 May 2024 11:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5D2824B9
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:19:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715167142; cv=none; b=KF/wGD5KGuKqfkKfaKZqOqbqc3fPOZsxniYUPoWeW9I1aiULyWlxPe1iqcNzHgXFvnimTtXkoV8pBfjhwjqfbFEfJnmIOfrdBgR7lcvKxnk6v+Eu6rzYiwgkUllN6HjmkAspWE82juMmj+/8/dunCWlH0J/gqUBANVtxUUSFzd0=
+	t=1715167159; cv=none; b=Z+5SPS42cPRHf4Od0t8ShRQL9zQYhNNF5esUOm4s6xDUk43yl5D+NhN2qEhOP6l2L0lLeRNSKZdyWp6aRtkEheA27Q9Mc28INkB772tQu99Vg3X5GZra3O3kHpvz50GrRud0lTZ/vDvJZx7+xw72QlB9eHbVmPnhjQLd3Rwyqro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715167142; c=relaxed/simple;
-	bh=Wt6hBn/E8/rcOV/yvuQND3bBYWKNlqQD6+pprEZT1U8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u59PV53h0Puvgjk8+DsjyGErW9DpoHT+nWwjdJEFW7GhsL3wM8/b4L3g2W5LLjUK1Gwp3Z3A93Junoymx5p1z2M2udrfnAWM5k8J2IzVw8DNbgKsJBOilz1GstF7x5rox62HkNyBu/5YH0O/L3qaVcES1ww9nFN6jovmcvgjhTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51fea3031c3so5480513e87.0;
-        Wed, 08 May 2024 04:18:59 -0700 (PDT)
+	s=arc-20240116; t=1715167159; c=relaxed/simple;
+	bh=lx+9Xgjt8qYgmhILpcyWB1vEDTF6K3IN0xYImBlQY5U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=H9L9TV5Snws/PH++RnMZ/q/bWY1C+U4CCGVPM3f5C2EilDfx3RH3LXrfCRm6nUTbNqrD7VahTuDCMBrfveqSA/M+36PGqWgUPR/lgY2bAD91ippzv0QqWqrJ53HLgSmclarRYfcu4hvxvANbsMx85Ra4pUAAIoc2WpP06OJVSVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=XnrQWGaa; arc=none smtp.client-ip=209.85.160.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="XnrQWGaa"
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-23d23a6123eso1725299fac.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 04:19:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1715167152; x=1715771952; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lx+9Xgjt8qYgmhILpcyWB1vEDTF6K3IN0xYImBlQY5U=;
+        b=XnrQWGaaiN/Jj5WIv2YisHfx21btj2BHsrRbWMz8NcyUfMUYFhbpZWOl67FzUCQiJe
+         HQZU8hdvQcZW6DrtIhcPUYRTrfy/GFrfmYCbX9VmkkH8oeir8uLWPb3Ax1+HMQIRRdoz
+         +BCyxTpxcpAV7rUNwFE4OfvlfvK/0AeUIlqbsTRbpSlPxwu48hfjALubelTSjgSGDjfu
+         hgve/46ujOFIBATvuBrOP65z8wzYh2KGDkLHBiQMOXMQxAsWrOpAIzjpNnsb+IPallok
+         jkrP4wFps9w4ddsj+z0IzpuAGVPiBl5IM8tHJEHzeobawMB5V1+P5RsHqsp4C/OC7Piy
+         UwwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715167137; x=1715771937;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=m4K236F83xIjOHXZVpnRuR+gp9TcM6droQplL3I6znE=;
-        b=XQvOA0BEh+INREhdtm0JQEgwThG28A8LgJLFmEexBSKHgS5sOJwPwkfEfcwV91ivid
-         vVzdRrvbp0M0hS2bOOmm+TXBBy9yUCBcFNNDe+FQfdSqfCMwdsf1/8vxBXnfD5IMdNAh
-         ITbZY8DbAZHkJswx7GkRYWZD7hQnV5xE3sXC3anvuWsQNG03Hj94gquRKw5kfhfqqzqL
-         TgHXTpxvZmeZ6Z4yAqf31cxmGg0+xjj51/p+GzYQHfKSgUqXMMegk6KsEOr6anziSBZT
-         m61EvUWC27hQK+FEHXZzLPy+bB4x9u+GKGULARqg2eDOxCG56cHXzvgLr8EO24yNca1G
-         603A==
-X-Forwarded-Encrypted: i=1; AJvYcCViqMZcnLqY1aP+uyj2XEDiPYSVPKOv2q0BaMnEfr3s2/RO9RsOcxKXyf2sP1MrBQU7HeGn8IhXKQDv8XBF0N0hceJSl4xi9TzlZ86b
-X-Gm-Message-State: AOJu0YzXJOfmlKPKrIwhgpyTUhHt0BBXz1X+r6Mx7UKqbdQDE91LuUyZ
-	zHG5r7qIV7B6AoUxP5EaaA4ZPUneHqRgdSQngBc04ShB+7fc02OiuBHETQ==
-X-Google-Smtp-Source: AGHT+IFHlpDZ23iWMflSbn+Bqk/HBR/+rVo0kskLofTqQoJYroOXR/UZ6UyBGN5V7B1WiMmNAo4u0Q==
-X-Received: by 2002:ac2:43bc:0:b0:51d:8842:f0b8 with SMTP id 2adb3069b0e04-5217c373de3mr1879465e87.13.1715167137178;
-        Wed, 08 May 2024 04:18:57 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-003.fbsv.net. [2a03:2880:30ff:3::face:b00c])
-        by smtp.gmail.com with ESMTPSA id wp1-20020a170907060100b00a59a70d748dsm5456605ejb.56.2024.05.08.04.18.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 04:18:56 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: kuniyu@amazon.com,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org,
-	horms@kernel.org,
-	paulmck@kernel.org,
-	David Howells <dhowells@redhat.com>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Daan De Meyer <daan.j.demeyer@gmail.com>,
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next] af_unix: Fix data races in unix_release_sock/unix_stream_sendmsg
-Date: Wed,  8 May 2024 04:17:45 -0700
-Message-ID: <20240508111749.2386649-1-leitao@debian.org>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1715167152; x=1715771952;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lx+9Xgjt8qYgmhILpcyWB1vEDTF6K3IN0xYImBlQY5U=;
+        b=PQHxnadbwYng0J9ZkDYWJEhaKzsrPSX1UnL2cwTThl24Mv0UIkfOZr+KZ5ccus1qXy
+         CI7JLYrDNZbrSL/Ed/VtFP97OwCdJz1uoNRy8KdTGWYXjFzraBj2Zmax8W6iDN/iqg0a
+         mPKWciNkpoBPXNlmtsMKiw1xayl0cqukiq+WxPDlF7a5cBj8E4BvQ31yc9OV1m9dvbEl
+         C5C+Zc6Agk3zHdO1YYBS+cuNxppbsVwfAVm4XI87cNVtG3vv9qvNkssvUXD8g61OEY+P
+         4lgT24a1hgrlZl0/lMW80MJ/S4HaQMJpVpeE6ARNZBQJPP4gINHZYOg+UHp2/ToG5Egi
+         6zDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUeWhIm8UyrqFxe3uMBpLmiQ6sdBlpTG7KwgpuMFJY7DfimsulfcyZWJtZTGAnEEOl6IE47832F66e74jMOcIn+nH2j7ZTHchnUtJsC
+X-Gm-Message-State: AOJu0YzPynwXM43T/asDul2svTGDM/9KYv4YTm7Cz9M5RqwO+6K0Jlby
+	/vTUgCnhvMBWii7FcenHS3v5aYViEwdEsnc+G+/goBqYObf4824HMNrJ5uCHe6mgv4Eu+tjFwsb
+	WLs5sjQ4DH61ct4auib9Q0nbJe3SpgTo2ewuOIg==
+X-Google-Smtp-Source: AGHT+IF3+5FujeR3kO7PsOpHF+5mMBxLYw8Z1NzywDpU6OEN5QBCAec77PNwgwaACUPo4GNnUyl3QXQ0Gu3mZ2LA98k=
+X-Received: by 2002:a05:6870:c155:b0:23d:45cd:ee66 with SMTP id
+ 586e51a60fabf-240992d1c8bmr2486931fac.55.1715167152059; Wed, 08 May 2024
+ 04:19:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240418034330.84721-1-cuiyunhui@bytedance.com>
+ <20240418034330.84721-2-cuiyunhui@bytedance.com> <20240502-herald-catty-a03eafc4e6b1@spud>
+In-Reply-To: <20240502-herald-catty-a03eafc4e6b1@spud>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Wed, 8 May 2024 19:19:01 +0800
+Message-ID: <CAEEQ3wnthxGbrJ_qLnZUQ9w3E_1UWgMign5P=+rNP2p5xGm4Bg@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v4 2/3] riscv: cacheinfo: initialize
+ cacheinfo's level and type from ACPI PPTT
+To: Conor Dooley <conor@kernel.org>
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org, bhelgaas@google.com, 
+	james.morse@arm.com, jhugo@codeaurora.org, jeremy.linton@arm.com, 
+	john.garry@huawei.com, Jonathan.Cameron@huawei.com, pierre.gondois@arm.com, 
+	sudeep.holla@arm.com, tiantao6@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A data-race condition has been identified in af_unix. In one data path,
-the write function unix_release_sock() atomically writes to
-sk->sk_shutdown using WRITE_ONCE. However, on the reader side,
-unix_stream_sendmsg() does not read it atomically. Consequently, this
-issue is causing the following KCSAN splat to occur:
+Hi Palmer,
 
-	BUG: KCSAN: data-race in unix_release_sock / unix_stream_sendmsg
+Gentle ping...
 
-	write (marked) to 0xffff88867256ddbb of 1 bytes by task 7270 on cpu 28:
-	unix_release_sock (net/unix/af_unix.c:640)
-	unix_release (net/unix/af_unix.c:1050)
-	sock_close (net/socket.c:659 net/socket.c:1421)
-	__fput (fs/file_table.c:422)
-	__fput_sync (fs/file_table.c:508)
-	__se_sys_close (fs/open.c:1559 fs/open.c:1541)
-	__x64_sys_close (fs/open.c:1541)
-	x64_sys_call (arch/x86/entry/syscall_64.c:33)
-	do_syscall_64 (arch/x86/entry/common.c:?)
-	entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+On Fri, May 3, 2024 at 12:37=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
+te:
+>
+> On Thu, Apr 18, 2024 at 11:43:29AM +0800, Yunhui Cui wrote:
+> > Before cacheinfo can be built correctly, we need to initialize level
+> > and type. Since RSIC-V currently does not have a register group that
+> > describes cache-related attributes like ARM64, we cannot obtain them
+> > directly, so now we obtain cache leaves from the ACPI PPTT table
+> > (acpi_get_cache_info()) and set the cache type through split_levels.
+> >
+> > Suggested-by: Jeremy Linton <jeremy.linton@arm.com>
+> > Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
+> : Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+>
+> I'm not an ACPI head, so whether or not the table is valid on RISC-V or
+> w/e I do not know, but the code here looks sane to me, so
 
-	read to 0xffff88867256ddbb of 1 bytes by task 989 on cpu 14:
-	unix_stream_sendmsg (net/unix/af_unix.c:2273)
-	__sock_sendmsg (net/socket.c:730 net/socket.c:745)
-	____sys_sendmsg (net/socket.c:2584)
-	__sys_sendmmsg (net/socket.c:2638 net/socket.c:2724)
-	__x64_sys_sendmmsg (net/socket.c:2753 net/socket.c:2750 net/socket.c:2750)
-	x64_sys_call (arch/x86/entry/syscall_64.c:33)
-	do_syscall_64 (arch/x86/entry/common.c:?)
-	entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+>
+> Cheers,
+> Conor.
 
-	value changed: 0x01 -> 0x03
-
-The line numbers are related to commit dd5a440a31fa ("Linux 6.9-rc7").
-
-Commit e1d09c2c2f57 ("af_unix: Fix data races around sk->sk_shutdown.")
-addressed a comparable issue in the past regarding sk->sk_shutdown.
-However, it overlooked resolving this particular data path.
-
-To prevent potential race conditions in the future, all read accesses to
-sk->sk_shutdown in af_unix need be marked with READ_ONCE(). Although
-there are additional reads in other->sk_shutdown without atomic reads,
-I'm excluding them as I'm uncertain about their potential parallel
-execution.
-
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
- net/unix/af_unix.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
-index 9a6ad5974dff..74795e6d13c6 100644
---- a/net/unix/af_unix.c
-+++ b/net/unix/af_unix.c
-@@ -2270,7 +2270,7 @@ static int unix_stream_sendmsg(struct socket *sock, struct msghdr *msg,
- 			goto out_err;
- 	}
- 
--	if (sk->sk_shutdown & SEND_SHUTDOWN)
-+	if (READ_ONCE(sk->sk_shutdown) & SEND_SHUTDOWN)
- 		goto pipe_err;
- 
- 	while (sent < len) {
-@@ -2446,7 +2446,7 @@ int __unix_dgram_recvmsg(struct sock *sk, struct msghdr *msg, size_t size,
- 		unix_state_lock(sk);
- 		/* Signal EOF on disconnected non-blocking SEQPACKET socket. */
- 		if (sk->sk_type == SOCK_SEQPACKET && err == -EAGAIN &&
--		    (sk->sk_shutdown & RCV_SHUTDOWN))
-+		    (READ_ONCE(sk->sk_shutdown) & RCV_SHUTDOWN))
- 			err = 0;
- 		unix_state_unlock(sk);
- 		goto out;
-@@ -2566,7 +2566,7 @@ static long unix_stream_data_wait(struct sock *sk, long timeo,
- 		if (tail != last ||
- 		    (tail && tail->len != last_len) ||
- 		    sk->sk_err ||
--		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
-+		    (READ_ONCE(sk->sk_shutdown) & RCV_SHUTDOWN) ||
- 		    signal_pending(current) ||
- 		    !timeo)
- 			break;
-@@ -2764,7 +2764,7 @@ static int unix_stream_read_generic(struct unix_stream_read_state *state,
- 			err = sock_error(sk);
- 			if (err)
- 				goto unlock;
--			if (sk->sk_shutdown & RCV_SHUTDOWN)
-+			if (READ_ONCE(sk->sk_shutdown) & RCV_SHUTDOWN)
- 				goto unlock;
- 
- 			unix_state_unlock(sk);
--- 
-2.43.0
-
+Thanks,
+Yunhui
