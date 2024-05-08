@@ -1,38 +1,40 @@
-Received: from air.basealt.ru (air.basealt.ru [194.107.17.39])
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20395338A;
-	Wed,  8 May 2024 09:30:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.107.17.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F6263D961;
+	Wed,  8 May 2024 09:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715160616; cv=none; b=BOGlZMnvMep3GH0nnKka1woQX4+z5vzxOcrEWEo1pFwfcr3Cw9/lqik0Um7Ydh8n1tIzGyO1b+TnIgJFC+G9ssGcgNCuPeOykQ11hxL/qJDOMWGr/u0bQbnnSELee350EONbe/mXSXwyesa3pSDj/3wHw3+3AadE0OONj56p/QU=
+	t=1715160662; cv=none; b=NTPJi9+CRJQjwVfDJ89K3nAwlM3/igTmykivmoAM5hhiH/tRa1NGYpo3j5Fz+GdFfb1zhrF/oSIwifYCpCt2jwcy/e/6P3WxFD9RF0wKUZpNM7TUDUd9KpdDjCBMZKFoPYYV5O4w5mQL5hQdW1J8smFV0zihnajDCV26rOtiTBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715160616; c=relaxed/simple;
-	bh=c4hP47PEyo99rjBVhRg7TCURkjQeGtkuWHONiZoyZqk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O6gTOCqoENuc0sMqkVOVPhmyUfNpYtcasdKCxWJrnbSppqx2NjKhFyXyraacUcD0DK0ENo1PyCzgDLHdjrS7pDNt3556YsxbtJLgJmsymp7Jc632sFCAg+cNc77rgkl9ACiLWjilov7zXJv01iKiPLewMov+dbYlXRovLGyP1wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org; spf=pass smtp.mailfrom=altlinux.org; arc=none smtp.client-ip=194.107.17.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=altlinux.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altlinux.org
-Received: by air.basealt.ru (Postfix, from userid 490)
-	id 4FA662F20247; Wed,  8 May 2024 09:30:08 +0000 (UTC)
-X-Spam-Level: 
-Received: from altlinux.malta.altlinux.ru (obninsk.basealt.ru [217.15.195.17])
-	by air.basealt.ru (Postfix) with ESMTPSA id DB0C82F20242;
-	Wed,  8 May 2024 09:30:07 +0000 (UTC)
-From: kovalev@altlinux.org
-To: gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
+	s=arc-20240116; t=1715160662; c=relaxed/simple;
+	bh=+eHgcr2e3JuTlx7yzSK7Ri/f46kJbzU74BjCTSxabTA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ib0+kPU4ImOtg6PUbPHj0K/EtX/TJqKWp45DbCeg5U4xQmIeUBhapEsjp+vjoFdZHeSKdaXWiT1jzViCWww4ZqMoWuIcmkVLj0jL5WHxXqR/LgUf7WhD/LVRShouu1Qnsfv2f4ujqj7keF/zH/erikyZmoHW5YiELmqVVW9EiaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VZ8yd5Ngsz4f3kJr;
+	Wed,  8 May 2024 17:30:49 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 154401A017D;
+	Wed,  8 May 2024 17:30:55 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgDHlxBNRjtm_BpaMA--.32846S4;
+	Wed, 08 May 2024 17:30:54 +0800 (CST)
+From: linan666@huaweicloud.com
+To: song@kernel.org
+Cc: linux-raid@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Cc: lvc-project@linuxtesting.org,
-	dutyrok@altlinux.org,
-	oficerovas@altlinux.org,
-	Vasiliy Kovalev <kovalev@altlinux.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] tty: Fix possible deadlock in tty_buffer_flush
-Date: Wed,  8 May 2024 12:30:05 +0300
-Message-Id: <20240508093005.1044815-1-kovalev@altlinux.org>
-X-Mailer: git-send-email 2.33.8
+	linan666@huaweicloud.com,
+	yukuai3@huawei.com,
+	yi.zhang@huawei.com,
+	houtao1@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH] md: do not delete safemode_timer in mddev_suspend
+Date: Wed,  8 May 2024 17:20:53 +0800
+Message-Id: <20240508092053.1447930-1-linan666@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,146 +42,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDHlxBNRjtm_BpaMA--.32846S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxJr1UJry8Kw1ruw47uw4DJwb_yoW8GF4fp3
+	ySqw4agw1rXFWIyF4UAa1kWFy5Jwn3GrZFyFy7W395Za1Sqr18WF42gws0qFyUuF93Janr
+	Jrs5C34rZa48GF7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1lnxkEFVAIw20F6cxK64vIFxWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I
+	648v4I1lw4CEc2x0rVAKj4xxMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r
+	4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF
+	67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2I
+	x0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvj
+	DU0xZFpf9x0JUBSoJUUUUU=
+X-CM-SenderInfo: polqt0awwwqx5xdzvxpfor3voofrz/
 
-From: Vasiliy Kovalev <kovalev@altlinux.org>
+From: Li Nan <linan122@huawei.com>
 
-A possible scenario in which a deadlock may occur is as follows:
+The deletion of safemode_timer in mddev_suspend() is redundant and
+potentially harmful now. If timer is about to be woken up but gets
+deleted, 'in_sync' will remain 0 until the next write, causing array
+to stay in the 'active' state instead of transitioning to 'clean'.
 
-flush_to_ldisc() {
+Commit 0d9f4f135eb6 ("MD: Add del_timer_sync to mddev_suspend (fix
+nasty panic))" introduced this deletion for dm, because if timer fired
+after dm is destroyed, the resource which the timer depends on might
+have been freed.
 
-  mutex_lock(&buf->lock);
+However, commit 0dd84b319352 ("md: call __md_stop_writes in md_stop")
+added __md_stop_writes() to md_stop(), which is called before freeing
+resource. Timer is deleted in __md_stop_writes(), and the origin issue
+is resolved. Therefore, delete safemode_timer can be removed safely now.
 
-  tty_port_default_receive_buf() {
-    tty_ldisc_receive_buf() {
-      n_tty_receive_buf2() {
-	n_tty_receive_buf_common() {
-	  n_tty_receive_char_special() {
-	    isig() {
-	      tty_driver_flush_buffer() {
-		pty_flush_buffer() {
-		  tty_buffer_flush() {
-
-		    mutex_lock(&buf->lock); (DEADLOCK)
-
-flush_to_ldisc() and tty_buffer_flush() functions they use the same mutex
-(&buf->lock), but not necessarily the same struct tty_bufhead object.
-However, you should probably use a separate mutex for the
-tty_buffer_flush() function to exclude such a situation.
-
-Found by Syzkaller:
-======================================================
-WARNING: possible circular locking dependency detected
-5.10.213-std-def-alt1 #1 Not tainted
-------------------------------------------------------
-kworker/u6:8/428 is trying to acquire lock:
-ffff88810c3498b8 (&buf->lock){+.+.}-{3:3},
-        at: tty_buffer_flush+0x7b/0x2b0 drivers/tty/tty_buffer.c:228
-
-but task is already holding lock:
-ffff888114dca2e8 (&o_tty->termios_rwsem/1){++++}-{3:3},
-        at: isig+0xef/0x440 drivers/tty/n_tty.c:1127
-
-which lock already depends on the new lock.
-
-Chain exists of:
-  &buf->lock --> &port->buf.lock/1 --> &o_tty->termios_rwsem/1
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&o_tty->termios_rwsem/1);
-                               lock(&port->buf.lock/1);
-                               lock(&o_tty->termios_rwsem/1);
-  lock(&buf->lock);
-
-stack backtrace:
-CPU: 0 PID: 428 Comm: kworker/u6:8 Not tainted 5.10.213-std-def-alt1 #1
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-                BIOS 1.16.0-alt1 04/01/2014
-Workqueue: events_unbound flush_to_ldisc
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x19b/0x203 lib/dump_stack.c:118
- print_circular_bug.cold+0x162/0x171 kernel/locking/lockdep.c:2002
- check_noncircular+0x263/0x2e0 kernel/locking/lockdep.c:2123
- check_prev_add kernel/locking/lockdep.c:2988 [inline]
- check_prevs_add kernel/locking/lockdep.c:3113 [inline]
- validate_chain kernel/locking/lockdep.c:3729 [inline]
- __lock_acquire+0x298f/0x5500 kernel/locking/lockdep.c:4955
- lock_acquire kernel/locking/lockdep.c:5566 [inline]
- lock_acquire+0x1fe/0x550 kernel/locking/lockdep.c:5531
- __mutex_lock_common kernel/locking/mutex.c:968 [inline]
- __mutex_lock+0x142/0x10c0 kernel/locking/mutex.c:1109
- mutex_lock_nested+0x17/0x20 kernel/locking/mutex.c:1124
- tty_buffer_flush+0x7b/0x2b0 drivers/tty/tty_buffer.c:228
- pty_flush_buffer+0x4e/0x170 drivers/tty/pty.c:222
- tty_driver_flush_buffer+0x65/0x80 drivers/tty/tty_ioctl.c:96
- isig+0x1e4/0x440 drivers/tty/n_tty.c:1138
- n_tty_receive_signal_char+0x24/0x160 drivers/tty/n_tty.c:1239
- n_tty_receive_char_special+0x1261/0x2a70 drivers/tty/n_tty.c:1285
- n_tty_receive_buf_fast drivers/tty/n_tty.c:1606 [inline]
- __receive_buf drivers/tty/n_tty.c:1640 [inline]
- n_tty_receive_buf_common+0x1e76/0x2b60 drivers/tty/n_tty.c:1738
- n_tty_receive_buf2+0x34/0x40 drivers/tty/n_tty.c:1773
- tty_ldisc_receive_buf+0xb1/0x1a0 drivers/tty/tty_buffer.c:441
- tty_port_default_receive_buf+0x73/0xa0 drivers/tty/tty_port.c:39
- receive_buf drivers/tty/tty_buffer.c:461 [inline]
- flush_to_ldisc+0x21c/0x400 drivers/tty/tty_buffer.c:513
- process_one_work+0x9ae/0x14b0 kernel/workqueue.c:2282
- worker_thread+0x622/0x1320 kernel/workqueue.c:2428
- kthread+0x396/0x470 kernel/kthread.c:313
- ret_from_fork+0x22/0x30 arch/x86/entry/entry_64.S:299
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Vasiliy Kovalev <kovalev@altlinux.org>
+Signed-off-by: Li Nan <linan122@huawei.com>
 ---
- drivers/tty/tty_buffer.c   | 5 +++--
- include/linux/tty_buffer.h | 1 +
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ drivers/md/md.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/tty/tty_buffer.c b/drivers/tty/tty_buffer.c
-index 79f0ff94ce00da..e777bd5f3a2fca 100644
---- a/drivers/tty/tty_buffer.c
-+++ b/drivers/tty/tty_buffer.c
-@@ -226,7 +226,7 @@ void tty_buffer_flush(struct tty_struct *tty, struct tty_ldisc *ld)
- 
- 	atomic_inc(&buf->priority);
- 
--	mutex_lock(&buf->lock);
-+	mutex_lock(&buf->flush_mtx);
- 	/* paired w/ release in __tty_buffer_request_room; ensures there are
- 	 * no pending memory accesses to the freed buffer
+diff --git a/drivers/md/md.c b/drivers/md/md.c
+index aff9118ff697..09c55d9a2c54 100644
+--- a/drivers/md/md.c
++++ b/drivers/md/md.c
+@@ -479,7 +479,6 @@ int mddev_suspend(struct mddev *mddev, bool interruptible)
  	 */
-@@ -241,7 +241,7 @@ void tty_buffer_flush(struct tty_struct *tty, struct tty_ldisc *ld)
- 		ld->ops->flush_buffer(tty);
+ 	WRITE_ONCE(mddev->suspended, mddev->suspended + 1);
  
- 	atomic_dec(&buf->priority);
--	mutex_unlock(&buf->lock);
-+	mutex_unlock(&buf->flush_mtx);
- }
+-	del_timer_sync(&mddev->safemode_timer);
+ 	/* restrict memory reclaim I/O during raid array is suspend */
+ 	mddev->noio_flag = memalloc_noio_save();
  
- /**
-@@ -577,6 +577,7 @@ void tty_buffer_init(struct tty_port *port)
- {
- 	struct tty_bufhead *buf = &port->buf;
- 
-+	mutex_init(&buf->flush_mtx);
- 	mutex_init(&buf->lock);
- 	tty_buffer_reset(&buf->sentinel, 0);
- 	buf->head = &buf->sentinel;
-diff --git a/include/linux/tty_buffer.h b/include/linux/tty_buffer.h
-index 31125e3be3c55e..cea4eacc3b70d3 100644
---- a/include/linux/tty_buffer.h
-+++ b/include/linux/tty_buffer.h
-@@ -35,6 +35,7 @@ static inline u8 *flag_buf_ptr(struct tty_buffer *b, unsigned int ofs)
- struct tty_bufhead {
- 	struct tty_buffer *head;	/* Queue head */
- 	struct work_struct work;
-+	struct mutex	   flush_mtx;	/* For use in tty_buffer_flush() */
- 	struct mutex	   lock;
- 	atomic_t	   priority;
- 	struct tty_buffer sentinel;
 -- 
-2.33.8
+2.39.2
 
