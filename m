@@ -1,126 +1,85 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8324050A7E;
-	Wed,  8 May 2024 12:48:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3567354FA3;
+	Wed,  8 May 2024 12:48:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715172505; cv=none; b=DeTP5uGNYd4O2wddCztTzGKpyrQmcuWoaS76q9r+yDfczkFGiDn7n6C2kpFjP9HyEWTesJj6M1mHuuGGjsbnu0++Xgei2oIdEfFwtCfBut8idwsiC/hk1K0C5BGKlmZ+3JV5IyMciXyNxdaDfeYXbOvx5hvYvcYmHmZOwHrHI6w=
+	t=1715172522; cv=none; b=E3oBQkKX3nzMcPeQBZUp+stqarwcS4kXtLmNQEhmjwMttVDZqaiEUlk+YXvXolKd6eVzFkgRXsP5l7oTI0UzkrXbeMCQRbXdMtWto+eYtu4w1FzlY+3GsCykAPJ4atihSauu3EDlmXxxUWvQB6JRwRgRCK3bC9dhoYcKAsqK53M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715172505; c=relaxed/simple;
-	bh=FIQlfh2bstN+hWpqxtSySmw1ecObAkBOa2X4+arU7n0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aNZ/KRQ1+Hy+gYF9vKHBzrjg86rQ0bJtTKBUBJqYyZWiyrTpzdAMYFRzY17r3EuN+napyzudmnEEsZiYiIelF9jtWZPLZn/fZGcw/g4Xpj/u4qBmP7OVlgt8Ok4mL8Wo10OeDwFofx+dJI3BWSChSvKfhGILwts7dJtz3C1HYdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CR+/o3zB; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CR+/o3zB"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 448CmBiK026407;
-	Wed, 8 May 2024 07:48:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715172491;
-	bh=5H+tj5RJ1yPj5wj2v7QxKDjzeUn3VidTkO5sVoqF4FY=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=CR+/o3zBoBNF0TgEpDfatA1EZUGR718IGcUDGxntviGfzm/1t8yUZFUu4rxFyxQTC
-	 fvj2sHNV3wcY2zlR5lR+r7DUY2f1TTAMjNWJ2DndI8L8+P3IpEwV0/CSQmUMKR86Fg
-	 oWmPGy1igQtwMHto68HpBxBr3rssA+hCZpAwbITs=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 448CmBAv065638
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 8 May 2024 07:48:11 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 8
- May 2024 07:48:11 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 8 May 2024 07:48:10 -0500
-Received: from [172.24.227.88] (uda0500640.dhcp.ti.com [172.24.227.88])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 448Cm784112022;
-	Wed, 8 May 2024 07:48:07 -0500
-Message-ID: <1e787f16-662e-16ec-d0c5-e2a8c59dc99b@ti.com>
-Date: Wed, 8 May 2024 18:18:06 +0530
+	s=arc-20240116; t=1715172522; c=relaxed/simple;
+	bh=MI3YoqRg4YUilgLgYBvMD4OnwPf5srVjoKTF2rxCYnc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K2YLyEZBpNUtQRNEOI7a3dHFV3bcDuTsNHEzNAuVyauloYN+A6c/L18NBREO3pSp7M5Bn/tWem9QEXObvKpyEy4d/jYDKqyP+VzNpCekWx/NIjt4KAM2ENjcWUP7iwXAGAxHnIudEZUKyHLtJrPmRN2hk7QztUX7kTLumOfWJQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 448CmKp65469884, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 448CmKp65469884
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 8 May 2024 20:48:20 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 8 May 2024 20:48:21 +0800
+Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
+ (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 8 May
+ 2024 20:48:20 +0800
+From: Justin Lai <justinlai0215@realtek.com>
+To: <kuba@kernel.org>
+CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
+        <pkshih@realtek.com>, <larry.chiu@realtek.com>,
+        Justin Lai <justinlai0215@realtek.com>
+Subject: [PATCH net-next v18 13/13] MAINTAINERS: Add the rtase ethernet driver entry
+Date: Wed, 8 May 2024 20:39:45 +0800
+Message-ID: <20240508123945.201524-14-justinlai0215@realtek.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240508123945.201524-1-justinlai0215@realtek.com>
+References: <20240508123945.201524-1-justinlai0215@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH 3/3] arm64: dts: ti: k3-j722s-evm: Update USB0 and USB1
- configuration for EVM
-Content-Language: en-US
-To: Roger Quadros <rogerq@kernel.org>, <nm@ti.com>, <vigneshr@ti.com>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <srk@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Ravi
- Gunasekaran <r-gunasekaran@ti.com>
-References: <20240429120932.11456-1-r-gunasekaran@ti.com>
- <20240429120932.11456-4-r-gunasekaran@ti.com>
- <2e19a254-58d2-4c27-9c34-2662827ea505@kernel.org>
-From: Ravi Gunasekaran <r-gunasekaran@ti.com>
-In-Reply-To: <2e19a254-58d2-4c27-9c34-2662827ea505@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: RTEXH36506.realtek.com.tw (172.21.6.27) To
+ RTEXMBS04.realtek.com.tw (172.21.6.97)
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
+Add myself and Larry Chiu as the maintainer for the rtase ethernet driver.
 
+Signed-off-by: Justin Lai <justinlai0215@realtek.com>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-On 5/8/24 5:33 PM, Roger Quadros wrote:
-> 
-> 
-> On 29/04/2024 15:09, Ravi Gunasekaran wrote:
->> The GPIO expander on the EVM allows the USB selection for Type-C
->> port to either USB0 or USB1 via USB hub. By default, let the Type-C
->> port select USB0 via the GPIO expander port P05.
->>
->> Enable super-speed on USB1 by updating SerDes0 lane configuration.
->>
->> Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
->> ---
->>  arch/arm64/boot/dts/ti/k3-j722s-evm.dts | 58 +++++++++++++++++++++++++
->>  arch/arm64/boot/dts/ti/k3-serdes.h      |  7 +++
->>  2 files changed, 65 insertions(+)
->>
-
-[...]
-
->> +
->> +		p05-hog {
->> +			/* P05 - USB2.0_MUX_SEL */
->> +			gpio-hog;
->> +			gpios = <5 GPIO_ACTIVE_LOW>;
->> +			output-high;
->> +			line-name = "USB2.0_MUX_SEL";
-> 
-> This line-name is already added in gpio-line-names property above.
-> Do we really need to add it again?
-
-Not needed. If the line-name property is not present for the hog,
-then its taken from the gpio chip via gpio-line-names.
-So I will remove the line-name property in v2
-
-static struct gpio_desc *of_parse_own_gpio(...)
-...
-        if (name && of_property_read_string(np, "line-name", name))                                     
-                *name = np->name; 
-...
-
-> 
->> +		};
->>  	};
->>  };
->>  
-
-[...]
-
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 294e472d7de8..536df02d7ac8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -19207,6 +19207,13 @@ L:	linux-remoteproc@vger.kernel.org
+ S:	Maintained
+ F:	drivers/tty/rpmsg_tty.c
+ 
++RTASE ETHERNET DRIVER
++M:	Justin Lai <justinlai0215@realtek.com>
++M:	Larry Chiu <larry.chiu@realtek.com>
++L:	netdev@vger.kernel.org
++S:	Maintained
++F:	drivers/net/ethernet/realtek/rtase/
++
+ RTL2830 MEDIA DRIVER
+ L:	linux-media@vger.kernel.org
+ S:	Orphan
 -- 
-Regards,
-Ravi
+2.34.1
+
