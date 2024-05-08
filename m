@@ -1,52 +1,64 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5985312836A
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 13:42:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B7ED75818;
+	Wed,  8 May 2024 13:43:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715175724; cv=none; b=UNWZAd2vR8InJFsg4uosl6car6X60wzkMfoKUkVgpXCTK8aJZgY+wBqt3BIgSUQvb6nECoXZJXfwhISZDwK7lxXN8CNaArIqKHUBTESTOaBoMi2EhF11G0TAkcbo5CqE6FJRasXU3Klq/GynUGXFtMmczTgmyvmZ5Ax1XLI1AS8=
+	t=1715175790; cv=none; b=orgBIu+DA/G+i2S7F5zco1T/UzSOf0xPnwL0x8DE0WLAjQArsk1sP/e8Hv/9GCm/eqYUiRldb/kU+lAKP93+cDJdm0AjJra2xdYCayf+BgB8LGFkaWckpMw5fXuuUrAL4c59KnThCGKcKjBtD1/t/Lij6WhOJySZPAuNm4PP5cg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715175724; c=relaxed/simple;
-	bh=R3pj01mpVzzwsDrMf0so1PId8hUDV2RIpJUsaOtxsgw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CYaHjReZbVWctUjWd8M7VwKu5iulClhnGikTFvvU4Z/MgJjVWG1PiIoJVtnaVReYrulVS8beyuSGr60ieND+OrmJBFNKzshvaNV7829z03Tui5xGe2k5arokaW8hMrthdBKe+cR4XCeXbHzg87Vt2L590jCD2qbrtgcpB8AOnJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VZGXW02Fnz4xNH;
-	Wed,  8 May 2024 23:42:02 +1000 (AEST)
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: rdunlap@infradead.org, arnd@arndb.de, mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu, aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com, Yang Li <yang.lee@linux.alibaba.com>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240408053109.96360-1-yang.lee@linux.alibaba.com>
-References: <20240408053109.96360-1-yang.lee@linux.alibaba.com>
-Subject: Re: [PATCH -next 2/3 v2] powerpc: Fix kernel-doc comments in fsl_gtm.c
-Message-Id: <171517558552.165093.5326367473907742082.b4-ty@ellerman.id.au>
-Date: Wed, 08 May 2024 23:39:45 +1000
+	s=arc-20240116; t=1715175790; c=relaxed/simple;
+	bh=f3ORKPUuuxPvn/SDUoAA/2zcl8K8/9tPG6vej4gbSY8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LsK9/UOG4bglU46sYyDtkzLqZztrfPWZ0gr76nRc0voqvfoe+P/Tklf6db7NVhM9OW3cWdcUO5wwy9A/c22J/NkMr+3c58m7dqFGMt5wjjKmgi7FlWL02s3evEeXqGZ8J+Ixd1J2AI12Hc75ch2MvJXf99gQQW+QE/YXwblUUBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91A7E1007;
+	Wed,  8 May 2024 06:43:33 -0700 (PDT)
+Received: from dsg-hive-n1sdp-01.cambridge.arm.com (dsg-hive-n1sdp-01.cambridge.arm.com [10.2.3.10])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9F92A3F6A8;
+	Wed,  8 May 2024 06:43:06 -0700 (PDT)
+From: Nick Forrington <nick.forrington@arm.com>
+To: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: Nick Forrington <nick.forrington@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Subject: [PATCH v3 0/1] Perf lock improvements
+Date: Wed,  8 May 2024 13:42:57 +0000
+Message-ID: <20240508134259.24413-1-nick.forrington@arm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Mon, 08 Apr 2024 13:31:08 +0800, Yang Li wrote:
-> Fix some function names in kernel-doc comments.
-> 
-> 
+Improvement to command line handling for perf lock info.
+---
+v1: https://lore.kernel.org/all/20231031120526.11502-1-nick.forrington@arm.com/
 
-Applied to powerpc/next.
+v2:
+* Drop previous "perf lock report: Restore aggregation by caller by
+  default" patch. Not required for newly collected data with LOCKDEP
+  tracepoints.
+* Display map and thread info (rather than an error) when neither or
+  both of --map and --thread are specified.
 
-[2/3] powerpc: Fix kernel-doc comments in fsl_gtm.c
-      https://git.kernel.org/powerpc/c/97bd2693b399cfd436acaa230d8f09e4c39e8e5c
-[3/3] powerpc/rtas: Add kernel-doc comments to smp_startup_cpu()
-      https://git.kernel.org/powerpc/c/554da5e0f71238384787954242d881cfeeff844d
+v3:
+* Update --help output
 
-cheers
+Nick Forrington (1):
+  perf lock info: Display both map and thread by default
+
+ tools/perf/Documentation/perf-lock.txt |  4 ++--
+ tools/perf/builtin-lock.c              | 22 +++++++++++++++++-----
+ 2 files changed, 19 insertions(+), 7 deletions(-)
+
+-- 
+2.44.0
