@@ -1,81 +1,70 @@
-Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25957E0FF
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 09:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12629BA27;
+	Wed,  8 May 2024 09:56:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715162082; cv=none; b=JpulgbslFMoPlcM5TBuVWlQ4KQPYPYmEyn4HyupGyfUhOJOkOpDu72E6f8VVP4DtYG5Jzioe6gyZQgq0/hVwedai9aA65z4+h5XemMzHcS53Pmz/nvMU/eIBi6LnTUt4ucgSHGBcc8zWc+8eoKj5IFNFhpxObOLmn7E4tR6R+9o=
+	t=1715162176; cv=none; b=Pz6i54+NKCI9IfuUjRPWphLtuUl0O8BK/yIX9UNm41i9A8APNL7lgIeVc06zMoI6giWzRolKS+cUiEyVKGz6O97cWUUEN6t1MHxS1iREQlT8BiebhmGe0RgVJMZJfJQDHffgprOd1oxQIGAuM+oRcEpq9WPMboADkKmIr2qOEF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715162082; c=relaxed/simple;
-	bh=haOq/suRGOm3L6UrcZgS8+xZ99laLeivrU9ONOPMMYA=;
+	s=arc-20240116; t=1715162176; c=relaxed/simple;
+	bh=L58OHrtgnGvD6BMHNnxub1BnLgpGqwKlRG8lHbKfkmg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sdJ+i1QLDDqzXgcKgMkaXLGNo5ZX2v5o97axW7K27dHvkpljfhZitnthWwmMmnpIDwUWi1RzK7BZD7GQjVLT5cfrYJvYkNlcel1z+0KgHDvLlRIwjONTYgO5qmcER4CdeY11r9eUMfC9rY/knE34wgdev8/cwDVbDFuBery/Q3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=KxdfiOLU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=UNbvlddN; arc=none smtp.client-ip=103.168.172.150
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
+	 Content-Type:Content-Disposition:In-Reply-To; b=GC8pjJpz1PRBh5kMy6oFDC1bNd9VX4jf4l6oDfs77hFPJjDHY9Gv6mw9RIcPFAwhx1eD6ZLqM1kvywsd2pSc1Jc4Gk/voQFxd+FCZVfNx/orSWfQbeOSe+rHFnjUzD5ctmIoxTdOWB+uPpjCURj4sWGZCFo6h2+gWkmoo/exiqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jd3/3MUB; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="KxdfiOLU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UNbvlddN"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 07EC71380FEA;
-	Wed,  8 May 2024 05:54:40 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Wed, 08 May 2024 05:54:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
-	 h=cc:cc:content-type:content-type:date:date:from:from
-	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1715162080; x=
-	1715248480; bh=Tj2F6+Vw3OTzzfc8yd2SH2593sFycDAClFvqFzQ0epo=; b=K
-	xdfiOLU1OGGCqyA0PaQ94qtdH/422k62p8xS61GjDydkhlFIG1yfSuSqF2lS9wXS
-	EfbMU/9cZl5ygxxQj7B+1t89tSWH3gKt8lCQj9QIZs6AsMsCO4OYyTPCjaa8vUSW
-	PekLMLIT3C/Qtvg2NxvkUBZJ1X92a4q4Xg1dFR/vefVyGa9MPxACt2fp2kZQeoA7
-	gP6RS3KH5u6LXXspxJGP/V589kQEfravvN4YJBxDdkW4d5N65Zy1i0kijKu2y5sS
-	EFHFN9kpYiSYWIRYWmC4nKX+adyXJRsQc+2GWj7jHNztguM0BAJRQjZ/gO7LVGl3
-	OIPFCpsSrCn1Ka/IdZctg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1715162080; x=1715248480; bh=Tj2F6+Vw3OTzzfc8yd2SH2593sFy
-	cDAClFvqFzQ0epo=; b=UNbvlddN4kstGPMQ1G66+2/3U3FsKEUwZ9zIKErgEubL
-	Aiuhp6lfUItE0E/QKhTlqB5tv1pGHHhqD/6Wd2I3yTkCOU9CL2E7zfwrecEzJiRp
-	lzPgO2eXamWIid15aH5SEzHUQpL/WcmUfeqoVgCl96rfn9oKTYUY1kejkp+aNLxb
-	RufBeziyUS01MZeKQh1jAgD3e9YQWZ8oIJuAHGmUMDpXTBhYuOE7LrGr63FyQkoF
-	yMPmHK3Q39jkTCF/iQt74mQrPRXOFA8YewKRuS5VojVUZEl+IDF/ybZhazmR2+dx
-	ZrFTMmf15x9IjUk3uyPhWF1RmW6JEMT4VstLzsSSxQ==
-X-ME-Sender: <xms:30s7Zmfa2HL00yUPM2AR6fipcfEAXk0bS5xk5Sr38y9jeSGmlr5Ivw>
-    <xme:30s7ZgOkd6v-qeUet9JtWb0kWqQnN2xPjHqj2uW4myyH3F9W7DiMa9z9kUYbXKvuH
-    bbTJodkoEPW3nUAuK4>
-X-ME-Received: <xmr:30s7Znjfb0OstU-3QgX5YrwCMkwOFlzGykqGhKwp6xo8-IxzlSZQ6cAeRRsADwUoDWcjNeIpGkGF8v-p6X1JA-odd9esbvCb6No>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeftddgvddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfhfgggtuggjsehttd
-    ertddttddvnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghk
-    rghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeehhffhte
-    etgfekvdeiueffveevueeftdelhfejieeitedvleeftdfgfeeuudekueenucevlhhushht
-    vghrufhiiigvpedunecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhise
-    hsrghkrghmohgttghhihdrjhhp
-X-ME-Proxy: <xmx:30s7Zj9i65AiGSy3k3GgOkOG_BWjOe0rAR9wNAUeAC840ngfcLXfpg>
-    <xmx:30s7Zisz1Z6HaF7IupUJol3LUbGAI04oSuaddiElpyizgHROU7QtMw>
-    <xmx:30s7ZqEHSiOX_lRaMgpc4tDdng_FH7SduT36qUhSmwzDneU7aKLCjQ>
-    <xmx:30s7ZhN3aaKGbRUrc2XeXkpIWBweP2T81_fIxa6lVJS51J2Ug45INg>
-    <xmx:4Es7Zr5aRbvKa-honvwebJgpGIy4UL6KwuCyfzwyt-C2SdPcHQc7fcyJ>
-Feedback-ID: ie8e14432:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 8 May 2024 05:54:38 -0400 (EDT)
-Date: Wed, 8 May 2024 18:54:36 +0900
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-To: linux1394-devel@lists.sourceforge.net
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] firewire: core: remove flag and width from u64 formats
- of tracepoints events
-Message-ID: <20240508095436.GB433207@workstation.local>
-Mail-Followup-To: linux1394-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org
-References: <20240506082154.396077-1-o-takashi@sakamocchi.jp>
- <20240506082154.396077-2-o-takashi@sakamocchi.jp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jd3/3MUB"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-51f71e4970bso4934972e87.2;
+        Wed, 08 May 2024 02:56:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715162173; x=1715766973; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=io8fmhR7P9iwCv/52XS5SThweh8W+4/Do9egkjm9CcM=;
+        b=Jd3/3MUBTiSrw/xZ5I3Q4pNQBXsBYWyDUVofdyQ9yeEPFWuPpNjYV1NxSwb+WMstj7
+         8chDKeCC3Zh7cxgO4CU2BW68SGm7R7nfpGfDovlhH5jmpBL02Y6J2fq1rzi/XQiOG2Mj
+         UKRu/fal++BMgtrH/TkGsblpCE7VGRKa5Be0GWI6vKQjZ1gIhvN5NN9kMei6Z8jrPT+q
+         Jmble/hOmxwlVMZnAKp3MxPb7aJ8uKnNtum0CjfP7Pjly9u9UhY7Q3yF/79AQpG2Zf3+
+         jcikFhLP2kE2Yam9zDlFFUen9cr9w2MGRYRcbBDMFTw+OcYiKzsT2RjMMCtufc2MgrI5
+         5qng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715162173; x=1715766973;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=io8fmhR7P9iwCv/52XS5SThweh8W+4/Do9egkjm9CcM=;
+        b=tW0DWys1Ie2mgXDdv8oV9o1iDhE0Cbc6DvOc8DanDyZQ5BV+jo70OJbPg6l+WIotBN
+         YVV+BaHEpCxO6q/Wp4CJYs+1B7pB8DUac20augfRNZOP/HRX913BGUDdypOS9JhO37ZD
+         q6AcC6Dd3/qplK2nkQIXrhtn7kOAlewK9Klsp1iEpQDPUySYsXLix1/RkQpS5tFVuz7e
+         NMWrR2+qpQaubTrqYyJdPMBeX42ZxxkaDlpoSmwQUqs6fWgh4uW6o35jjCOswcMCk3NC
+         MKU8cNfcGw8g3YtsbKdbJ+5ds2pln6pxt9WHDD08SudKkv+NnlqDmW05GH3zORYd31Im
+         dAVg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQqPGyyUf1wZrESi+/OWVpNTZhruI6DcoK8YFcnuztT/r9lNOYsJoaG+p+oeyekMuqXvdegUu0ovhUoaK88LKwxPwwz/b/E09xeY0mx+nWdSJjy5cNC2tHvq+D+B1woSDLzXyV
+X-Gm-Message-State: AOJu0YxZIqonjy2o2qj4L4XGcFrHTyOpHM59AFFfvKHAsQjAd124n7HF
+	QlJH5/beFPIkF41GV96fLdJUMBzGO1APq+dQmb9C/gnIDIqE5dbk
+X-Google-Smtp-Source: AGHT+IFSg3ipoB9x/q9K5s3nqoZPNbvUw9v4r5YNPaHHmzhGDbABkPL44NPpL7eQYgs74L94b0SGPg==
+X-Received: by 2002:a05:6512:3157:b0:518:eef0:45c0 with SMTP id 2adb3069b0e04-5217cc520d0mr1791398e87.48.1715162172805;
+        Wed, 08 May 2024 02:56:12 -0700 (PDT)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id o3-20020ac24943000000b0051e12a2c07bsm2475872lfi.20.2024.05.08.02.56.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 02:56:12 -0700 (PDT)
+Date: Wed, 8 May 2024 12:56:09 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Xiaolei Wang <xiaolei.wang@windriver.com>
+Cc: alexandre.torgue@foss.st.com, joabreu@synopsys.com, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	mcoquelin.stm32@gmail.com, richardcochran@gmail.com, bartosz.golaszewski@linaro.org, 
+	horms@kernel.org, ahalaney@redhat.com, rohan.g.thomas@intel.com, 
+	j.zink@pengutronix.de, rmk+kernel@armlinux.org.uk, leong.ching.swee@intel.com, 
+	netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] net: stmmac: move the lock to struct
+ plat_stmmacenet_data
+Message-ID: <dvtilkr2ho5yy56fii6voglgu3tnopmoy556vrdo4evlynet5g@lnrlv73a27hm>
+References: <20240508045257.2470698-1-xiaolei.wang@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,57 +73,93 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240506082154.396077-2-o-takashi@sakamocchi.jp>
+In-Reply-To: <20240508045257.2470698-1-xiaolei.wang@windriver.com>
 
-On Mon, May 06, 2024 at 05:21:54PM +0900, Takashi Sakamoto wrote:
-> The pointer to fw_packet structure is passed to ring buffer of tracepoints
-> framework as the value of u64 type. '0x%016llx' is used for the print
-> format of value, while the flag and width are useless in the case.
+On Wed, May 08, 2024 at 12:52:57PM +0800, Xiaolei Wang wrote:
+> Reinitialize the whole est structure would also reset the mutex lock
+> which is embedded in the est structure, and then trigger the following
+> warning. To address this, move the lock to struct plat_stmmacenet_data.
+> We also need to require the mutex lock when doing this initialization.
 > 
-> This commit removes them.
+> DEBUG_LOCKS_WARN_ON(lock->magic != lock)
+> WARNING: CPU: 3 PID: 505 at kernel/locking/mutex.c:587 __mutex_lock+0xd84/0x1068
+>  Modules linked in:
+>  CPU: 3 PID: 505 Comm: tc Not tainted 6.9.0-rc6-00053-g0106679839f7-dirty #29
+>  Hardware name: NXP i.MX8MPlus EVK board (DT)
+>  pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+>  pc : __mutex_lock+0xd84/0x1068
+>  lr : __mutex_lock+0xd84/0x1068
+>  sp : ffffffc0864e3570
+>  x29: ffffffc0864e3570 x28: ffffffc0817bdc78 x27: 0000000000000003
+>  x26: ffffff80c54f1808 x25: ffffff80c9164080 x24: ffffffc080d723ac
+>  x23: 0000000000000000 x22: 0000000000000002 x21: 0000000000000000
+>  x20: 0000000000000000 x19: ffffffc083bc3000 x18: ffffffffffffffff
+>  x17: ffffffc08117b080 x16: 0000000000000002 x15: ffffff80d2d40000
+>  x14: 00000000000002da x13: ffffff80d2d404b8 x12: ffffffc082b5a5c8
+>  x11: ffffffc082bca680 x10: ffffffc082bb2640 x9 : ffffffc082bb2698
+>  x8 : 0000000000017fe8 x7 : c0000000ffffefff x6 : 0000000000000001
+>  x5 : ffffff8178fe0d48 x4 : 0000000000000000 x3 : 0000000000000027
+>  x2 : ffffff8178fe0d50 x1 : 0000000000000000 x0 : 0000000000000000
+>  Call trace:
+>   __mutex_lock+0xd84/0x1068
+>   mutex_lock_nested+0x28/0x34
+>   tc_setup_taprio+0x118/0x68c
+>   stmmac_setup_tc+0x50/0xf0
+>   taprio_change+0x868/0xc9c
 > 
-> Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+> Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
 > ---
->  include/trace/events/firewire.h | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> v1 -> v2:
+>  - move the lock to struct plat_stmmacenet_data
+> v2 -> v3:
+>  - Add require the mutex lock for reinitialization
 > 
-> diff --git a/include/trace/events/firewire.h b/include/trace/events/firewire.h
-> index 4163959be57a..cd6931b134ee 100644
-> --- a/include/trace/events/firewire.h
-> +++ b/include/trace/events/firewire.h
-> @@ -221,7 +221,7 @@ TRACE_EVENT(async_phy_outbound_initiate,
->  		__entry->second_quadlet = second_quadlet
->  	),
->  	TP_printk(
-> -		"packet=0x%016llx generation=%u first_quadlet=0x%08x second_quadlet=0x%08x",
-> +		"packet=0x%llx generation=%u first_quadlet=0x%08x second_quadlet=0x%08x",
->  		__entry->packet,
->  		__entry->generation,
->  		__entry->first_quadlet,
-> @@ -245,7 +245,7 @@ TRACE_EVENT(async_phy_outbound_complete,
->  		__entry->timestamp = timestamp;
->  	),
->  	TP_printk(
-> -		"packet=0x%016llx generation=%u status=%u timestamp=0x%04x",
-> +		"packet=0x%llx generation=%u status=%u timestamp=0x%04x",
->  		__entry->packet,
->  		__entry->generation,
->  		__entry->status,
-> @@ -273,7 +273,7 @@ TRACE_EVENT(async_phy_inbound,
->  		__entry->second_quadlet = second_quadlet
->  	),
->  	TP_printk(
-> -		"packet=0x%016llx generation=%u status=%u timestamp=0x%04x first_quadlet=0x%08x second_quadlet=0x%08x",
-> +		"packet=0x%llx generation=%u status=%u timestamp=0x%04x first_quadlet=0x%08x second_quadlet=0x%08x",
->  		__entry->packet,
->  		__entry->generation,
->  		__entry->status,
+>  .../net/ethernet/stmicro/stmmac/stmmac_ptp.c   |  8 ++++----
+>  .../net/ethernet/stmicro/stmmac/stmmac_tc.c    | 18 ++++++++++--------
+>  include/linux/stmmac.h                         |  2 +-
+>  3 files changed, 15 insertions(+), 13 deletions(-)
+> 
+> [...]
+>
+> diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+> index dfa1828cd756..316ff7eb8b33 100644
+> --- a/include/linux/stmmac.h
+> +++ b/include/linux/stmmac.h
+> @@ -117,7 +117,6 @@ struct stmmac_axi {
+>  
+>  #define EST_GCL		1024
+>  struct stmmac_est {
+> -	struct mutex lock;
+>  	int enable;
+>  	u32 btr_reserve[2];
+>  	u32 btr_offset[2];
+> @@ -246,6 +245,7 @@ struct plat_stmmacenet_data {
+>  	struct fwnode_handle *port_node;
+>  	struct device_node *mdio_node;
+>  	struct stmmac_dma_cfg *dma_cfg;
+> +	struct mutex lock;
+>  	struct stmmac_est *est;
+>  	struct stmmac_fpe_cfg *fpe_cfg;
+>  	struct stmmac_safety_feature_cfg *safety_feat_cfg;
+
+Seeing you are going to move things around I suggest to move the
+entire stmmac_est instance out of the plat_stmmacenet_data structure
+and place it in the stmmac_priv instead. Why? Because the EST configs
+don't look as the platform config, but EST is enabled in runtime with
+the settings retrieved for the TC TAPRIO feature also in runtime. So
+it's better to have the EST-data preserved in the driver private date
+instead of the platform data storage. You could move the structure
+there and place the lock aside of it. Field name like "est_lock" might
+be most suitable to be looking unified with the "ptp_lock" or
+"aux_ts_lock".
+
+* The same, but with no lock-related thing should be done for the
+* stmmac_safety_feature_cfg structure,
+but it's unrelated to the subject...
+
+-Serge(y)
+
 > -- 
-> 2.43.0
-
-Applied to for-next branch.
-
-
-Regards
-
-Takashi Sakamoto
+> 2.25.1
+> 
+> 
