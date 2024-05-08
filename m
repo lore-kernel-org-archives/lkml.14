@@ -1,106 +1,110 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543088061B
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 10:42:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F1D2836D
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 10:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715164930; cv=none; b=FAzR1wo5j5b9/viXfI0aSbSTl4a07CSsR3omMr49PG07zZhTQ/SbBOYsv7g4Fw5Ue7jTffGn0XHfSlyNx66RmxGcqX87KRzR4dXBUJWtJyZfRTPjdoEnahR0OKPXiaxqgSDC9Ayrh+6TQPIXtngWBRJMCoRwERoSwgzlUOecsIQ=
+	t=1715165004; cv=none; b=cOer8mCcDJaGdpzCEuG7zmz6VIDgQ1Xll7pm2zHgPemTkPMRB80oLO6Xdbb2NMN+iweDPD4BxjltBUpyt9GF3zfRdBSqt3Nl+XxaXHfNSExkX6vDM28gDbYi3Vk3KZriuIW9uZ7ctD2p9vlJ9BpORjxFdXL4eghX+gnO4K8He9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715164930; c=relaxed/simple;
-	bh=msFOWMMZAv+nOcQqKV5mzuGZJ+dqXm8YAjq5UYtYae0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qns9jUInvIOhbRaonPahKN9YVT7eF2qFu8vXPD6BSfw8or6Yu9zsZlrDHPFJ3tMgvsmVwEUdJB6R/5UhynWLffBHpLb+C6t86GjT6HuQZ7XK1bJ/KXQX++ALZqvq+PO5cDtvNru2VMBC+FJwNpHD3zLAefwyVfz63o166BBKgMA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z3FgsNNT; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715165004; c=relaxed/simple;
+	bh=AdV+B9yUmsPOyuDJKdAkNFoSqAGDd/uKzuOMYP2Y0+4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dwQPM2SG0DsKCPn6uuEXOqn8Vq61zu/OBBtWB2P+QKUPvhF2A+6c1/0mnC3CC0AnPSs1/rvFqs8S6O9c0B0elcYqkr9IyiIEJJasDLBCD6TyY30Cwg5I6Izoyq+NEYpxMAUL+9idIKlegU2ZTt+fFgpl8KGZihAzwsFe0a2ye3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=aX0Pcbz3; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z3FgsNNT"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-61be674f5d1so43317157b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 03:42:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="aX0Pcbz3"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a59ece5e18bso482773066b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 03:43:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715164928; x=1715769728; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SCNZSYQEn9C0yYifJvIKeqaC0I3ddBBIVvQAOJJfdew=;
-        b=Z3FgsNNTxk1w3eCb/U+dIqo+fSnddur6Kj3Hjwm6PWw6J43QdXoqeyT9WmkuZsv2Fn
-         r0CglCSOtTjn42IStELQLTUfutMDTHCLcjU7Xv9xg0rZExtbqIQLsgy+7rKvINYWrjr3
-         mpdFacD3PlzYQKEt0u4BXc6JzQs8LEQjpOU0pyERqcnGVQJqam7XE69WSpuRL07S+eMF
-         8UOwMlMZPVNNO0MtG3MSzXrNLqYVpOcQ9By2Rf+4C9CaYhcWQ1vYd5xPF98wCF6TtCM5
-         QhLhFYECHfF6Cpj66Bvzue9MmTZucTPd1gd8CXiZSy7hhEj2vRMqYGZQ71X1My/ETTNL
-         JGRA==
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1715165001; x=1715769801; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AImnvo1Yv6QQBwBo/PQQOErjpEng1YiXNlTdoFkDN/c=;
+        b=aX0Pcbz3cZtlC+JPuc+tv5udwZNr8a+ZCWod4bNrwhjpnrQo3P/VZokOotnZ4x+mub
+         KduD1gxBJlib9CH82f3v2k6kzTaD+rcck8xFhXxGsopNg0/Wcs+/WlPQLabt4fQYCbI9
+         YyrtpkZr4Kg46dqK/B7s/sHh/ikocit+fWYJFUugPE6MgNNia0bXflrezUKZ95PsYv+k
+         nwA0phSYoY7vRPKGY3F6aHt3IfEcT7JM1Q1dXADN51nP47KwE9FpR8kDyugLYwVpElRp
+         52vt8uI4uE2FCOnwpDjgY/VOMxkwsIkYWvdo76Rsd5ns7Lp23OdnUwuHQdUcpH00P/ex
+         6bUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715164928; x=1715769728;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1715165001; x=1715769801;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=SCNZSYQEn9C0yYifJvIKeqaC0I3ddBBIVvQAOJJfdew=;
-        b=OvKa3+cm851LGRBAtP+DS2hCheUVV7qxf9eVqKKOZvM1yAot9n1DJ/bL3DLPjAn1P3
-         UT2Rfnz8Hefov2FfL/oZg1ky3tFHCLNK/peAdbySJY4wxCo8uxEbEe+jM/kNR824RLHv
-         Z2jYjVlgn2TCT3OdT2m9XHWdUlhCPAfV36zlevgbjiMZ6H5Fr3eWgE8Imrme5Gx+iJnN
-         e62+uZ7vJl+hEMxmCdv73xKbFLMwxZEN2FaWqq/yUraYsOCsTzpuGi9Gor1448cahWRd
-         f9sVHRXGFTvGXybDsDFoyuXeZvAJNqWo+hFmJH4OA0Xh2ToDzNne7z+KuTD32zSQQIUx
-         QOWg==
-X-Forwarded-Encrypted: i=1; AJvYcCXsDUC5ckFFnYRJtpwa1Ip1F3R4JqZ9jPYwYypefvXApGMlXwmOgfEZZrrnYpikXYCJYnHEZ9YN2WvrDKaz7+REU89/b4465EzHRh4b
-X-Gm-Message-State: AOJu0YxLIeuE/JYxKvQWIA0gwLy2huK5SzUj2xIDyF3zDAQNl7dPJVf1
-	lr2BNnylybinrr+BWKnZ+E0227me2ZzrNeTeY+DrQEnVPknhJ87HPskS5G1IGwpuAdsGkLUWbFi
-	JfipB89tptbgrVB5tIhC/d2Eva+GiYjRbfQFylA==
-X-Google-Smtp-Source: AGHT+IG/YkpxJFnMtp9np4dGXgtlpi8FQCo5Um1fohI6F0WuAx9qFoD5jZyRnJpee9YYAVFVuPsAG5b/WQKuWWsqGYM=
-X-Received: by 2002:a81:844c:0:b0:61a:db67:b84f with SMTP id
- 00721157ae682-62085da981emr27885857b3.27.1715164928430; Wed, 08 May 2024
- 03:42:08 -0700 (PDT)
+        bh=AImnvo1Yv6QQBwBo/PQQOErjpEng1YiXNlTdoFkDN/c=;
+        b=rJIk4W4x874+kB7ykd0Fq1nqZ7KTjGDNBvQPUqU3gGITIlSz9pTTm9nH72ChtFElcy
+         PwCPcRGNFOXZBHTenxV7CSYpv7GeG6MYjROl6aHcEhNa3yC5zgpUrQ7dUA6BnNXJCTzz
+         dn4e8MPH9YHuPj8LWQ2Jb9r3M1VWJ/ymUUg+Gmw4yXPPLLvNgWDfq2z4QeVGuyd2OrFf
+         CNZUhwuY0PlBENS7YQg1NpmpjbZvfz30XSWzuRDtYDz8y/z0Cn2FCeYaScJKZP1amvxM
+         sKLKI+dpaa5sq/kPWrYOhMmY5EY3XldCu+NeHNzXEvNpdHEud+5fPSbThmMXNyOuomWv
+         ooFg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqfNGP7A1Nzoe90cgEHWelsVEhLx/9iboWnZTNFr8PU1nO8qHiI4JXBIOjzaPXRaKQZXpllmDt49z+XjqOirh9C16bys/Pri6EXOpM
+X-Gm-Message-State: AOJu0YyJr9RTC/VbYuLCwQlomU6yfRzCBNHCuAwHYdIAPMLJDJ06/agi
+	bR2v3QKyqRh2F5wKpJpLZtTBk639WPg+a05/tyc+4kp9ZRgNmhJw3aES1dF3Bic=
+X-Google-Smtp-Source: AGHT+IFInUoAInvNUg+Pr6feANwga+FXl0TeerqG+DsnNLAldMdb7HKUnSL+Mh0YRl5gYy0rkPm9+g==
+X-Received: by 2002:a17:906:f8da:b0:a59:c0a6:25cd with SMTP id a640c23a62f3a-a59fb91fa9emr172899266b.5.1715165001153;
+        Wed, 08 May 2024 03:43:21 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
+        by smtp.gmail.com with ESMTPSA id r13-20020a170906548d00b00a59caa028b0sm3877237ejo.225.2024.05.08.03.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 03:43:20 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: platform-driver-x86@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] platform/x86/amd/pmf: Use memdup_user()
+Date: Wed,  8 May 2024 11:46:29 +0200
+Message-ID: <20240508094628.308221-2-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMSo37UN11V8UeDM4cyD+iXyRR1Us53a00e34wTy+zP6vx935A@mail.gmail.com>
- <20240508075658.7164-1-jtornosm@redhat.com>
-In-Reply-To: <20240508075658.7164-1-jtornosm@redhat.com>
-From: Yongqin Liu <yongqin.liu@linaro.org>
-Date: Wed, 8 May 2024 18:41:57 +0800
-Message-ID: <CAMSo37XddAvE199QpA_WR5uwQUjzemF8GxqoWfETUNtFw6iCrg@mail.gmail.com>
-Subject: Re: [PATCH v2] net: usb: ax88179_178a: avoid writing the mac address
- before first reading
-To: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-Cc: amit.pundir@linaro.org, davem@davemloft.net, edumazet@google.com, 
-	inventor500@vivaldi.net, jarkko.palviainen@gmail.com, jstultz@google.com, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, stable@vger.kernel.org, 
-	sumit.semwal@linaro.org, vadim.fedorenko@linux.dev, vmartensson@google.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi, Jose
+Switching to memdup_user() overwrites the allocated memory only once,
+whereas kzalloc() followed by copy_from_user() initializes the allocated
+memory to zero and then immediately overwrites it.
 
-On Wed, 8 May 2024 at 15:57, Jose Ignacio Tornos Martinez
-<jtornosm@redhat.com> wrote:
->
-> Hello Yongqin,
->
-> Sorry for the inconveniences.
->
-> I don't have the db845c, could you provide information about the type of
-> device and protocol used?
+Fixes the following Coccinelle/coccicheck warning reported by
+memdup_user.cocci:
 
-The db845c uses an RJ45 as the physical interface.
-It has the translation from PCIe0 to USB and USB to Gigabit Ethernet controller.
+	WARNING opportunity for memdup_user
 
-For details, maybe you could check the hardware details from the documents here:
-    https://www.96boards.org/documentation/consumer/dragonboard/dragonboard845c/hardware-docs/
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ drivers/platform/x86/amd/pmf/tee-if.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-> Related driver logs would be very helpful for this.
-
-Here is the log from the serial console side:
-    https://gist.github.com/liuyq/809247d8a12aa1d9e03058e8371a4d44
-
-Please let me know if I could try and provide more information for the
-investigation.
-
+diff --git a/drivers/platform/x86/amd/pmf/tee-if.c b/drivers/platform/x86/amd/pmf/tee-if.c
+index b438de4d6bfc..1b53cabc9aa2 100644
+--- a/drivers/platform/x86/amd/pmf/tee-if.c
++++ b/drivers/platform/x86/amd/pmf/tee-if.c
+@@ -301,14 +301,9 @@ static ssize_t amd_pmf_get_pb_data(struct file *filp, const char __user *buf,
+ 		return -EINVAL;
+ 
+ 	/* re-alloc to the new buffer length of the policy binary */
+-	new_policy_buf = kzalloc(length, GFP_KERNEL);
+-	if (!new_policy_buf)
+-		return -ENOMEM;
+-
+-	if (copy_from_user(new_policy_buf, buf, length)) {
+-		kfree(new_policy_buf);
+-		return -EFAULT;
+-	}
++	new_policy_buf = memdup_user(buf, length);
++	if (IS_ERR(new_policy_buf))
++		return PTR_ERR(new_policy_buf);
+ 
+ 	kfree(dev->policy_buf);
+ 	dev->policy_buf = new_policy_buf;
 -- 
-Best Regards,
-Yongqin Liu
----------------------------------------------------------------
-#mailing list
-linaro-android@lists.linaro.org
-http://lists.linaro.org/mailman/listinfo/linaro-android
+2.45.0
+
