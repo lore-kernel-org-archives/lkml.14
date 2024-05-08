@@ -1,323 +1,473 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA3AE79DD5;
-	Wed,  8 May 2024 13:02:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F04E96F514;
+	Wed,  8 May 2024 13:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715173387; cv=none; b=L1mOJ4XlvEvRv03tgGY5bl8q3KNYYuHVITbU/xB4trVbTxszbsTJbCsoICMkegCAbPrAkpvTgZyryZ4j9CaCb5kBuGipKt+pwBMCaUnPh1xQ+D9+N8AAEnZFEoWPKNiLNQFlR7kIwFhL43VLmQYDCiFHc3DSMo2CYhrON7C46EE=
+	t=1715173427; cv=none; b=EPD5C5/Grv77IkLPOTfKeczTX94qy1AKSjpMk/2v2+Y6OQvCkPhLtiKW0Mx9tGY9ewIuxhbZHTWHnV1XC87h5bl6/xB5Xg9AkHMeDtTHjN0OD2xxiN5hPj69/VikaP0XBjV+VzlXWaGrLGAgRK3kxYTHLcmJIMXG9tgaruoNQyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715173387; c=relaxed/simple;
-	bh=A5opIo9FDKeD8ue/wvAEY7f6wkl1IuKrnCZpbn1EUaE=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
-	 Content-Type; b=o5UYbs+LM8LuazimlzU9UsYfgD8aYoYQUT3unCqLlGKfphL/3agGNN91xwDNeuEHcqigrsHVCXPd8Fk+fYQoDOXI5vd0BGoMKpAqhgNdOXWr/OWSA+HemGrv5XN6hI+ogmV7hsMKyyYzu9XEIn1K57voL2frUcaY3kZbeuNx4xk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VRkJfiJf; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4GTCzv/Z; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1715173427; c=relaxed/simple;
+	bh=5FEuNuqB/xNgZpz5eMrt4wnOu5jHXdgJutLLPE66LU8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IqU1bNU1VAvv3eAxaJ7Jcp7OIdLJnVDAD4c5+ssjbhMU5OhxEGxlP4CJWZh/rPW0Odwgl/sX6AQSN/OdEKNjjdoYccDBoKcaFPqrVRuEmOsh0uR75f5VA0ykyEymNkh2LVsrFaUw+BF+SQfiYITQAMX3hqQ7xklJEKRSY1nn4Sk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=D4VLAPfu; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VRkJfiJf";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4GTCzv/Z"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1715173375;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=9VFXYNnmWVAd3Sn8DKCZ8yiqWzSwEdQ+Pabjj2q4hB0=;
-	b=VRkJfiJfWZ6AookMVOKv9e9HzbGtO1L0xsXLM+GqeVg04zUbQMgxteMJClaRvAfOdTALkg
-	O9e4scpjuaBKPVzCRsySOt2lcD/606KGBScnWIFENihZmILKnD8lPngsC4/1t7lLE3EQtQ
-	WqCSYCpDoVPzPxiwh7uI/C2lO0S/rW6cs0YHp0w/d1kqCl/FWExNg8YEtVfO5e6ojMBhcg
-	Yh/9LNILDkGQV9e8JyAZH3hTuwDmYPp5+7K8FYP17a9Sp/Qkc5sxOc1Plgtp+ZAvkpERQa
-	fj3HGUhWKvZhW6RRYmpeTusXkOdHJgvak/KrTiZacBCE3zHNRbq0UyyEQ0DxRQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1715173375;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=9VFXYNnmWVAd3Sn8DKCZ8yiqWzSwEdQ+Pabjj2q4hB0=;
-	b=4GTCzv/ZQ4stwae37N//lUQMPYDxwL6kuSxLgbdpRlqjBvrmic4aq21mLw+5OMsTsGEaq/
-	AXZPI3MF3nY9IhDw==
-To: Vignesh Balasubramanian <vigbalas@amd.com>,
- linux-kernel@vger.kernel.org, linux-toolchains@vger.kernel.org
-Cc: mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
- aneesh.kumar@kernel.org, naveen.n.rao@linux.ibm.com,
- ebiederm@xmission.com, keescook@chromium.org, x86@kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, bpetkov@amd.com,
- jinisusan.george@amd.com, matz@suse.de, binutils@sourceware.org,
- jhb@FreeBSD.org, felix.willgerodt@intel.com, Vignesh Balasubramanian
- <vigbalas@amd.com>
-Subject: Re: [PATCH v2 1/1] x86/elf: Add a new .note section containing
- Xfeatures information to x86 core files
-In-Reply-To: <20240507095330.2674-2-vigbalas@amd.com>
-Date: Wed, 08 May 2024 15:02:55 +0200
-Message-ID: <87wmo4o3r4.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="D4VLAPfu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1715173413;
+	bh=5FEuNuqB/xNgZpz5eMrt4wnOu5jHXdgJutLLPE66LU8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=D4VLAPfuxR04RrUjyNzTm7l5RZgiJoBmJV1sabUa/Kk325ubbamcDSvyqRzIrOfpw
+	 VWUkvUkvJgc0PYKVdPkRzqcdmAanVMw9vNxQIgtEWw7h7QXxyA5uS1m+qqs/+bcfDK
+	 1rCndo0hswsnhlVKE7ZU0SEXuBQFTQLGJ3Xjzhd3kejwMqKfM8xkCO7uBWvmarC1Dj
+	 lR29yk7jjk5UbWW8QLktLZaTXPLFlNfhZ4p9WWigL2Fb5YHx4mEJNBDZUtB9XIphk4
+	 Y8lywEA0ZnlXn63dHFHXriFjoruE9Kps2B/gaoMj3iIdWb5LB6kI1OoyF18Xb8eQkP
+	 G2fS605ZHlgqg==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 87E133782113;
+	Wed,  8 May 2024 13:03:32 +0000 (UTC)
+Message-ID: <cbf73111-a6cf-47da-9563-89d49fbdb17d@collabora.com>
+Date: Wed, 8 May 2024 15:03:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/3] dt-bindings: arm: mediatek: mmsys: Add OF graph
+ support for board path
+To: =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>,
+ "chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+ "wenst@chromium.org" <wenst@chromium.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "tzimmermann@suse.de" <tzimmermann@suse.de>,
+ =?UTF-8?B?U2hhd24gU3VuZyAo5a6L5a2d6KyZKQ==?= <Shawn.Sung@mediatek.com>,
+ "mripard@kernel.org" <mripard@kernel.org>,
+ =?UTF-8?B?Sml0YW8gU2hpICjnn7PorrDmtpsp?= <jitao.shi@mediatek.com>,
+ "daniel@ffwll.ch" <daniel@ffwll.ch>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+ "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>,
+ "robh@kernel.org" <robh@kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "krzysztof.kozlowski+dt@linaro.org" <krzysztof.kozlowski+dt@linaro.org>,
+ "kernel@collabora.com" <kernel@collabora.com>,
+ "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+ =?UTF-8?B?WXUtY2hhbmcgTGVlICjmnY7nprnnkosp?= <Yu-chang.Lee@mediatek.com>,
+ "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+References: <20240409120211.321153-1-angelogioacchino.delregno@collabora.com>
+ <20240409120211.321153-3-angelogioacchino.delregno@collabora.com>
+ <aa7e3bcf70383e563a65919f924ec2e5e4cd778c.camel@mediatek.com>
+ <becdc2e5-4a1d-4280-b6f8-78d4903be283@collabora.com>
+ <4dfb09b9c437ab2baa0898eca13a43fd7475047a.camel@mediatek.com>
+ <46347f5d-e09b-4e83-a5a2-e12407f442a4@collabora.com>
+ <847e1a84b532956f697d24014d684c86f0b76f03.camel@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <847e1a84b532956f697d24014d684c86f0b76f03.camel@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 07 2024 at 15:23, Vignesh Balasubramanian wrote:
-> +struct xfeat_component {
-> +	u32 xfeat_type;
-> +	u32 xfeat_sz;
-> +	u32 xfeat_off;
-> +	u32 xfeat_flags;
-> +} __packed;
+Il 08/05/24 09:19, CK Hu (胡俊光) ha scritto:
+> On Tue, 2024-05-07 at 16:07 +0200, AngeloGioacchino Del Regno wrote:
+>> Il 07/05/24 08:59, CK Hu (胡俊光) ha scritto:
+>>> On Thu, 2024-05-02 at 10:50 +0200, AngeloGioacchino Del Regno
+>>> wrote:
+>>>> Il 25/04/24 04:23, CK Hu (胡俊光) ha scritto:
+>>>>> Hi, Angelo:
+>>>>>
+>>>>> On Tue, 2024-04-09 at 14:02 +0200, AngeloGioacchino Del Regno
+>>>>> wrote:
+>>>>>> Document OF graph on MMSYS/VDOSYS: this supports up to three
+>>>>>> DDP
+>>>>>> paths
+>>>>>> per HW instance (so potentially up to six displays for multi-
+>>>>>> vdo
+>>>>>> SoCs).
+>>>>>>
+>>>>>> The MMSYS or VDOSYS is always the first component in the DDP
+>>>>>> pipeline,
+>>>>>> so it only supports an output port with multiple endpoints -
+>>>>>> where
+>>>>>> each
+>>>>>> endpoint defines the starting point for one of the (currently
+>>>>>> three)
+>>>>>> possible hardware paths.
+>>>>>>
+>>>>>> Signed-off-by: AngeloGioacchino Del Regno <
+>>>>>> angelogioacchino.delregno@collabora.com>
+>>>>>> ---
+>>>>>>     .../bindings/arm/mediatek/mediatek,mmsys.yaml | 23
+>>>>>> +++++++++++++++++++
+>>>>>>     1 file changed, 23 insertions(+)
+>>>>>>
+>>>>>> diff --git
+>>>>>> a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mms
+>>>>>> ys.y
+>>>>>> aml
+>>>>>> b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mms
+>>>>>> ys.y
+>>>>>> aml
+>>>>>> index b3c6888c1457..4e9acd966aa5 100644
+>>>>>> ---
+>>>>>> a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mms
+>>>>>> ys.y
+>>>>>> aml
+>>>>>> +++
+>>>>>> b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mms
+>>>>>> ys.y
+>>>>>> aml
+>>>>>> @@ -93,6 +93,29 @@ properties:
+>>>>>>       '#reset-cells':
+>>>>>>         const: 1
+>>>>>>     
+>>>>>> +  port:
+>>>>>> +    $ref: /schemas/graph.yaml#/properties/port
+>>>>>> +    description:
+>>>>>> +      Output port node. This port connects the MMSYS/VDOSYS
+>>>>>> output
+>>>>>> to
+>>>>>> +      the first component of one display pipeline, for
+>>>>>> example
+>>>>>> one
+>>>>>> of
+>>>>>> +      the available OVL or RDMA blocks.
+>>>>>> +      Some MediaTek SoCs support up to three display outputs
+>>>>>> per
+>>>>>> MMSYS.
+>>>>>> +    properties:
+>>>>>> +      endpoint@0:
+>>>>>> +        $ref: /schemas/graph.yaml#/properties/endpoint
+>>>>>> +        description: Output to the primary display pipeline
+>>>>>> +
+>>>>>> +      endpoint@1:
+>>>>>> +        $ref: /schemas/graph.yaml#/properties/endpoint
+>>>>>> +        description: Output to the secondary display
+>>>>>> pipeline
+>>>>>> +
+>>>>>> +      endpoint@2:
+>>>>>> +        $ref: /schemas/graph.yaml#/properties/endpoint
+>>>>>> +        description: Output to the tertiary display pipeline
+>>>>>> +
+>>>>>> +    required:
+>>>>>> +      - endpoint@0
+>>>>>> +
+>>>>>
+>>>>> mmsys/vdosys does not output data to the first component of
+>>>>> display
+>>>>> pipeline, so this connection looks 'virtual'. Shall we add
+>>>>> something
+>>>>> virtual in device tree? You add this in order to decide which
+>>>>> pipeline
+>>>>> is 1st, 2nd, 3rd, but for device it don't care which one is
+>>>>> first.
+>>>>> In
+>>>>> computer, software could change which display is the primary
+>>>>> display.
+>>>>> I'm not sure it's good to decide display order in device tree?
+>>>>>
+>>>>
+>>>> Devicetree describes hardware, so nothing virtual can be present
+>>>> -
+>>>> and in any case,
+>>>> the primary/secondary/tertiary pipeline is in relation to MM/VDO
+>>>> SYS,
+>>>> not referred
+>>>> to software.
+>>>>
+>>>> Better explaining, the primary pipeline is not necessarily the
+>>>> primary display in
+>>>> DRM terms: that's a concept that is completely detached from the
+>>>> scope of this
+>>>> series and this graph - and it's something that shall be managed
+>>>> solely by the
+>>>> driver (mediatek-drm in this case).
+>>>>
+>>>> Coming back to the connection looking, but *not* being virtual:
+>>>> the
+>>>> sense here is
+>>>> that the MM/VDOSYS blocks are used in the display pipeline to
+>>>> "stitch" together
+>>>> the various display pipeline hardware blocks, or, said
+>>>> differently,
+>>>> setting up the
+>>>> routing between all of those (P.S.: mmsys_mtxxxx_routing_table!)
+>>>> through the VDO
+>>>> Input Selection (VDOx_SEL_IN) or Output Selection (VDOx_SEL_OUT)
+>>>> and
+>>>> with the
+>>>> assistance of the VDO Multiple Output Mask (VDOx_MOUT) for the
+>>>> multiple outputs
+>>>> usecase, both of which, are described by this graph.
+>>>
+>>> I agree this part, but this is related to display device OF graph.
+>>> These display device would output video data from one device and
+>>> input
+>>> to another video device. These video device would not input or
+>>> output
+>>> video data to mmsys/vdosys.
+>>>
+>>>>
+>>>> This means that the VDOSYS is really the "master" of the display
+>>>> pipeline since
+>>>> everything gets enabled, mixed and matched from there - and
+>>>> that's in
+>>>> the sense
+>>>> of hardware operation, so we are *really* (and not virtually!)
+>>>> flipping switches.
+>>>
+>>> I agree mmsys/vdosys is master of video pipeline, so let's define
+>>> what
+>>> the port in mmsys/vdosys is. If the port means the master
+>>> relationship,
+>>> mmsys/vdosys should output port to every display device. Or use a
+>>> simply way to show the master relation ship
+>>>
+>>> mmsys-subdev = <&ovl0, &rdma0, &color0, ...>, <&ovl1, &rdma1,
+>>> &color1,
+>>> ...>;
+>>>
+>>
+>> There's no need to list all of the VDO0/VDO1/mmsys devices in one big
+>> array
+>> property, because the actual possible devices can be defined:
+>>     1. In the bindings; and
+>>     2. In the actual OF graph that we write for each SoC+board
+>> combination.
+>>
+>> A graph cannot contain a connection to a device that cannot be
+>> connected to
+>> the previous, so, your "mmsys-subdev" list can be retrieved by
+>> looking at the
+>> graph:
+>>    - Start from VDO0/1 or MMSYS
+>>    - Walk through (visually, even) OUTPUT ports
+>>      - VDO0 (read output ep) -> ovl0 (read output ep) -> rdma0 (read
+>> output ep) ->
+>>        color0 (...) -> etc
+>>    - Nothing more - it's all defined there.
+>>
+>>>
+>>> Another problem is how to group display device? If two pipeline
+>>> could
+>>> be route to the same display interface, such as
+>>>
+>>> rdma0 -> dsi
+>>> rdma1 -> dsi
+>>>
+>>> Would this be single group?
+>>
+>> There are multiple ways of doing this, but one that comes to my mind
+>> right now and
+>> that looks clean as well is the following:
+>>
+>> ovl0@ef01 {
+>>      .....
+>>     ports {
+>>       port@0 {
+>>         reg = <0>;
+>>         ovl0_in: endpoint {
+>>           remote-endpoint = <&vdosys0_out>;
+>>         };
+>>       };
+> 
+> I'm not sure how do you define this port from OVL to vdosys. If this
+> port means 'master relationship', others could add port in COLOR to
+> point to vdosys because COLOR and vdosys has the 'master relationship'
+> and I could not reject this. So we need more specific definition of
+> this port.
 
-Why repeating xfeat_ for all member names?
 
-    u32       type;
-    u32       size;
-    u32       offset;
-    u32       flags;
+> Only the 'first' device in pipeline could have this port?
 
-is sufficient and obvious, no?
+Correct. Only the first device in a pipeline - and this is actually a restriction
+that the generic binding definition of port already gives, in a way.
 
-> +enum custom_feature {
-> +	FEATURE_XSAVE_FP = 0,
-> +	FEATURE_XSAVE_SSE = 1,
-> +	FEATURE_XSAVE_YMM = 2,
-> +	FEATURE_XSAVE_BNDREGS = 3,
-> +	FEATURE_XSAVE_BNDCSR = 4,
-> +	FEATURE_XSAVE_OPMASK = 5,
-> +	FEATURE_XSAVE_ZMM_Hi256 = 6,
-> +	FEATURE_XSAVE_Hi16_ZMM = 7,
-> +	FEATURE_XSAVE_PT = 8,
-> +	FEATURE_XSAVE_PKRU = 9,
-> +	FEATURE_XSAVE_PASID = 10,
-> +	FEATURE_XSAVE_CET_USER = 11,
-> +	FEATURE_XSAVE_CET_SHADOW_STACK = 12,
-> +	FEATURE_XSAVE_HDC = 13,
-> +	FEATURE_XSAVE_UINTR = 14,
-> +	FEATURE_XSAVE_LBR = 15,
-> +	FEATURE_XSAVE_HWP = 16,
-> +	FEATURE_XSAVE_XTILE_CFG = 17,
-> +	FEATURE_XSAVE_XTILE_DATA = 18,
-> +	FEATURE_MAX,
-> +	FEATURE_XSAVE_EXTENDED_START = FEATURE_XSAVE_YMM,
-> +	FEATURE_XSAVE_EXTENDED_END = FEATURE_XSAVE_XTILE_DATA,
-> +};
 
-Why can't this use the existing 'enum xfeature' which is providing
-exactly the same information already?
+> In mt8173, one pipeline is
+> 
+> ovl -> color -> aal -> od -> rdma -> ufo -> dsi
+> 
+> But rdma has an option to read data from od or directly from DRAM. If
+> from DRAM, the pipeline would be changed to
+> 
+> rdma -> ufo -> dsi
+> 
+> 
+> So it's confused which one is 'first'.
 
-> +#ifdef CONFIG_COREDUMP
-> +static int get_sub_leaf(int custom_xfeat)
-> +{
-> +	switch (custom_xfeat) {
-> +	case FEATURE_XSAVE_YMM:			return XFEATURE_YMM;
-> +	case FEATURE_XSAVE_BNDREGS:		return XFEATURE_BNDREGS;
-> +	case FEATURE_XSAVE_BNDCSR:		return XFEATURE_BNDCSR;
-> +	case FEATURE_XSAVE_OPMASK:		return XFEATURE_OPMASK;
-> +	case FEATURE_XSAVE_ZMM_Hi256:		return XFEATURE_ZMM_Hi256;
-> +	case FEATURE_XSAVE_Hi16_ZMM:		return XFEATURE_Hi16_ZMM;
-> +	case FEATURE_XSAVE_PT:			return XFEATURE_PT_UNIMPLEMENTED_SO_FAR;
-> +	case FEATURE_XSAVE_PKRU:		return XFEATURE_PKRU;
-> +	case FEATURE_XSAVE_PASID:		return XFEATURE_PASID;
-> +	case FEATURE_XSAVE_CET_USER:		return XFEATURE_CET_USER;
-> +	case FEATURE_XSAVE_CET_SHADOW_STACK:	return XFEATURE_CET_KERNEL_UNUSED;
-> +	case FEATURE_XSAVE_HDC:			return XFEATURE_RSRVD_COMP_13;
-> +	case FEATURE_XSAVE_UINTR:		return XFEATURE_RSRVD_COMP_14;
-> +	case FEATURE_XSAVE_LBR:			return XFEATURE_LBR;
-> +	case FEATURE_XSAVE_HWP:			return XFEATURE_RSRVD_COMP_16;
-> +	case FEATURE_XSAVE_XTILE_CFG:		return XFEATURE_XTILE_CFG;
-> +	case FEATURE_XSAVE_XTILE_DATA:		return XFEATURE_XTILE_DATA;
-> +	default:
-> +		pr_warn_ratelimited("Not a valid XSAVE Feature.");
-> +		return 0;
-> +	}
-> +}
+That's why the pipeline is *board-specific* and not soc-generic!
 
-This function then maps the identical enums one to one. The only actual
-"functionality" is the default case and that's completely pointless.
+And what you described is *exactly* the reason why I'm adding support for the
+OF graphs in mediatek-drm: specifying the correct pipeline for each board as per
+what each board wants to use (said differently: for each board's *capabilities*).
 
-> +/*
-> + * Dump type, size, offset and flag values for every xfeature that is present.
-> + */
-> +static int dump_xsave_layout_desc(struct coredump_params *cprm)
-> +{
-> +	u32 supported_features = 0;
-> +	struct xfeat_component xc;
-> +	u32 eax, ebx, ecx, edx;
-> +	int num_records = 0;
-> +	int sub_leaf = 0;
-> +	int i;
-> +
-> +	/* Find supported extended features */
-> +	cpuid_count(XSTATE_CPUID, 0, &eax, &ebx, &ecx, &edx);
-> +	supported_features = eax;
+So, if on a certain board you want to skip OD, you can hook RDMA up directly to
+MMSYS/VDOSYS.
 
-Why does this need to re-evaluate CPUID instead of just using the
-existing fpu_user_cfg.max_features?
+In MT8173, one pipeline for one board uses endpoints IN/OUT like this:
 
-> +	for (i = FEATURE_XSAVE_EXTENDED_START;
-> +			i <= FEATURE_XSAVE_EXTENDED_END; i++) {
+MMSYS -> OVL -> COLOR -> AAL -> OD -> RDMA -> UFO -> DSI
 
-Please use the full 100 character line width.
+and for another board, endpoints will be like
 
-> +		sub_leaf = get_sub_leaf(i);
-> +		if (!sub_leaf)
-> +			continue;
-> +		if (supported_features & (1U << sub_leaf)) {
-> +			cpuid_count(XSTATE_CPUID, sub_leaf, &eax, &ebx, &ecx, &edx);
-> +			xc.xfeat_type = i;
-> +			xc.xfeat_sz = eax;
-> +			xc.xfeat_off = ebx;
-> +			/* Reserved for future use */
-> +			xc.xfeat_flags = 0;
-> +
-> +			if (!dump_emit(cprm, &xc,
-> +				       sizeof(struct xfeat_component)))
+MMSYS -> RDMA -> UFO -> DSI
 
-sizeof(xc), no?
+...which is the exact same as you described, and I think that your confusion comes
+from the fact that you didn't put MMSYS at the beginning of the pipeline :-)
 
-> +				return 0;
-> +			num_records++;
-> +		}
-> +	}
 
-This whole thing can be written as:
 
-	for_each_extended_xfeature(i, fpu_user_cfg.max_features) {
-		struct xfeat_component xc = {
-                	.type	= i,
-                        .size	= xstate_sizes[i],
-                        .offset	= xstate_offsets[i],
-		};
 
-		if (!dump_emit(cprm, &xc, sizeof(xc)))
-			return 0;
-                num_records++;
-	}
+In case you need any *temporary override* on any board that defines a pipeline like
 
-It omits the features which are supported by the CPU, but not enabled by
-the kernel. That's perfectly fine because:
+MMSYS -> OVL -> COLOR -> AAL -> OD -> RDMA -> UFO -> DSI
 
-  1) the corresponding xfeature bits of those component in the actual
-     XSAVE dump are guaranteed to be zero
+so that the pipeline *temporarily* becomes (for power management, or for any other
+reason) RDMA -> UFO -> DSI .... that's not a concern: the graph is present, and it
+is used to tell to the driver what is the regular pipeline to use.
+Eventual temporary overrides can be managed transparently inside of the driver with
+C code and no changes to the devicetree are required.
 
-  2) the corresponding regions in the actual XSAVE dump are zeroed
 
-So there is absolutely no point in having notes for the not enabled
-features at all.
+> I don't know how to decide which device could point to mmsys/vdosys. So
+> please give a specific definition.
+> 
 
-Hmm?
+Nothing points TO mmsys/vdosys. It is mmsys/vdosys pointing to a device.
 
-> +
-> +	return num_records;
-> +}
-> +
-> +static int get_xsave_desc_size(void)
-> +{
-> +	int supported_features = 0;
-> +	int xfeatures_count = 0;
-> +	u32 eax, ebx, ecx, edx;
-> +	int sub_leaf = 0;
-> +	int i;
-> +
-> +	/* Find supported extended features */
-> +	cpuid_count(XSTATE_CPUID, 0, &eax, &ebx, &ecx, &edx);
-> +	supported_features = eax;
-> +
-> +	for (i = FEATURE_XSAVE_EXTENDED_START;
-> +			i <= FEATURE_XSAVE_EXTENDED_END; i++) {
-> +		sub_leaf = get_sub_leaf(i);
-> +		if (!sub_leaf)
-> +			continue;
-> +		if (supported_features & (1U << sub_leaf))
-> +			xfeatures_count++;
-> +	}
-> +	return xfeatures_count * (sizeof(struct xfeat_component));
+So, mmsys/vdosys must point to the *first device in the pipeline*.
 
-Then this can be replaced by:
+Any other doubt?
 
-	int i, cnt = 0;
+Cheers,
+Angelo
 
-	for_each_extended_xfeature(i, fpu_user_cfg.max_features)
-        	cnt++;
+> Regards,
+> CK
+> 
+>>
+>>       port@1 {
+>>         reg = <1>;
+>>         ovl0_out0: endpoint@0 {
+>>           remote-endpoint = <&rdma0_in>;
+>>         };
+>>         ovl0_out1: endpoint@1 {
+>>           remote-endpoint = <&rdma1_in>;
+>>         };
+>>       };
+>>     };
+>> };
+>>
+>> rdma0@1234 {
+>>      .....
+>>     ports {
+>>       port@0 {
+>>         reg = <0>;
+>>         rdma0_in: endpoint {
+>>           remote-endpoint = <&ovl0_out0>; /* assuming ovl0 outputs to
+>> rdma0...*/
+>>         };
+>>       };
+>>       port@1 {
+>>         reg = <1>;
+>>         rdma0_out: endpoint@1 {
+>>           remote-endpoint = <&dsi_dual_intf0_in>;
+>>         };
+>>       };
+>>     };
+>> };
+>>
+>>
+>> rdma1@5678 {
+>>      .....
+>>     ports {
+>>       port@0 {
+>>         reg = <0>;
+>>         rdma1_in: endpoint {
+>>           /* assuming ovl0 outputs to rdma1 as well... can be
+>> something else. */
+>>           remote-endpoint = <&ovl0_out1>;
+>>         };
+>>       };
+>>       port@1 {
+>>         reg = <1>;
+>>         rdma1_out: endpoint {
+>>           remote-endpoint = <&dsi_dual_intf1_in>;
+>>         };
+>>       };
+>>     };
+>> };
+>>
+>>
+>> dsi@9abcd {
+>>      .....
+>>     ports {
+>>       port@0 {
+>>         reg = <0>;
+>>         /* Where endpoint@0 could be always DSI LEFT CTRL */
+>>         dsi_dual_intf0_in: endpoint@0 {
+>>           remote-endpoint = <&rdma0_out>;
+>>         };
+>>         /* ...and @1 could be always DSI RIGHT CTRL */
+>>         dsi_dual_intf1_in: endpoint@1 {
+>>           remote-endpoint = <&rdma1_out>;
+>>         };
+>>       };
+>>
+>>       port@1 {
+>>         reg = <1>;
+>>         dsi0_out: endpoint {
+>>           remote-endpoint = <&dsi_panel_in>;
+>>         };
+>>       };
+>>     };
+>> };
+>>
+>> ...for a dual-dsi panel, it'd be a similar graph.
+>>
+>> Cheers,
+>> Angelo
+>>
+>>>
+>>> mmsys-subdev = <&rdma0, &rdma1, &dsi>;
+>>>
+>>> Or two group?
+>>>
+>>> mmsys-subdev = <&rdma0, &dsi>, <&rdma1, &dsi>;
+>>>
+>>> I think we should clearly define this.
+>>>
+>>> Regards,
+>>> CK
+>>>
+>>>>
+>>>>
+>>>> Cheers,
+>>>> Angelo
+>>>>
+>>>>> Regards,
+>>>>> CK
+>>>>>
+>>>>>
+>>>>>>     required:
+>>>>>>       - compatible
+>>>>>>       - reg
+>>>>
+>>>>
+>>
+>>
+>>
 
-        return cnt * sizeof(struct xfeat_component);
 
-In fact the number of extended features can be calculated once during
-boot during xstate initialization.
-
-No?
-
-> +}
-> +
-> +int elf_coredump_extra_notes_write(struct coredump_params *cprm)
-> +{
-> +	int num_records = 0;
-> +	struct elf_note en;
-> +
-> +	en.n_namesz = sizeof(owner_name);
-> +	en.n_descsz = get_xsave_desc_size();
-> +	en.n_type = NT_X86_XSAVE_LAYOUT;
-> +
-> +	if (!dump_emit(cprm, &en, sizeof(en)))
-> +		return 1;
-> +	if (!dump_emit(cprm, owner_name, en.n_namesz))
-> +		return 1;
-> +	if (!dump_align(cprm, 4))
-> +		return 1;
-> +
-> +	num_records = dump_xsave_layout_desc(cprm);
-> +	if (!num_records) {
-> +		pr_warn_ratelimited("Error adding XSTATE layout ELF note. XSTATE buffer in the core file will be unparseable.");
-> +		return 1;
-
-This is going to trigger on all systems which do not support XSAVE. So
-why emitting this note in the first place on such systems?
-
-The function should have
-
-	if (!fpu_kernel_cfg.max_features)
-        	return 0;
-
-right at the beginning.
-
-Aside of that, these warnings are pointless noise in the case that
-dump_emit() caused the function to return early. Dumps can be truncated.
-
-> +/*
-> + * Return the size of new note.
-
-Which new note? This is extra notes, no?
-
-> + */
-> +int elf_coredump_extra_notes_size(void)
-> +{
-> +	int size = 0;
-
-	int size;
-
-> +
-> +	/* NOTE Header */
-
-  Note header ?
-
-> +	size += sizeof(struct elf_note);
-
-	size = ....
-
-> +	/* name + align */
-
-  Name plus alignment to 4 bytes ?
-
-> +	size += roundup(sizeof(owner_name), 4);
-> +	size += get_xsave_desc_size();
-> +
-> +	return size;
-> +}
-
-And like the write function this wants:
-
-	if (!fpu_kernel_cfg.max_features)
-        	return 0;
-
-at the beginning. No point in emitting useless notes and headers.
-
-Thanks,
-
-        tglx
