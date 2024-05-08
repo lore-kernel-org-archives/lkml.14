@@ -1,175 +1,318 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57605823C3;
-	Wed,  8 May 2024 11:40:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EBD8248E
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715168424; cv=none; b=aB+W0C1wJbGidrrIuMrhZl6l+bzgK8t1PXfv/fqLg8arlzB3MK+Vavnu7ijBcR2ZGFnZLDfE6lnTapShGf2sjTnSeSk2z90/EpBc+cxBiRNdajZvi9M3eVwtTj1+jWcbIivqgU+au3blL7pljvClpSBg6E8rC+pe30UorAT0r2w=
+	t=1715168434; cv=none; b=X0rCmoO0GSTcxYoYe5ZlfT2lSL38a5NoHxoiMJiL6e/0Zix0dCx0IfpRfCevBvwBToqL151+z+S6YPpq9fVJ8Ed9YkwnNy4MSRYBmGYi68OQ5I8WVmehOnKnOA/vrItREGy9rVJpV0Bj58M4FaH4iWdl6wTySbVcwgYOzaZ4D0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715168424; c=relaxed/simple;
-	bh=LzkcsxBboOgTqBhvmxB1AA5X0VPmOIkAnWcagywa/TM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rMIqoa6z+ZFb0qX3hmKwz7/bRPn8+0T1bb25n0n+pe5+lshySxjkoODy2DTo3cXIsLdTMP2xu0TrsIVl0d3l9+rd28wePqw28AFZAV9b8otp7hAu8jqZETYZs5J9v69Sk0xYTv6x3+cTZu19CVXd/nPsAF+5j08xJlMggjFcROA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GnLsjxTl; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715168434; c=relaxed/simple;
+	bh=VABY+Ba0JMwODv7U/E8RCXCu+cNtq0sU3lmtzPLVeMc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=a58di6LqMIUDjUwmfbOS9taIZIPP97dMGpSDOlEBafu20t57deoPOos83EMn79Mw4sSStk5/K+Nyqhy20Y9ui8PsRDP22g0/mR+Yxn25UJvZYsMoaV7I9SSQWzYfqlnWWQyVtp4i7fGO5+aSNH8UJ1EDyAsekN3q6Xah8cBLiyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Nijyms6r; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GnLsjxTl"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5b203c9933dso2267152eaf.3;
-        Wed, 08 May 2024 04:40:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Nijyms6r"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2e242b1df60so51971411fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 04:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715168422; x=1715773222; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715168431; x=1715773231; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IOIzh5hay1VG+baSkhj40F76B94Bx+2N06xZr/PBSXw=;
-        b=GnLsjxTlU/2dVrZE8+WMjbY0VMLNLbBbnA5YrhMHhR7q2cbI0XQyq5dgFmEfLylK65
-         G8e7syVaiLXR1q/NtIZ+5Y8w5isHEQviYloB2o1j/8f8m21X/+LS9hfiTOVTkcFSSA9r
-         9D/oP6rsLFrUcMYJuOWlQ3vFF9os4REMNWgK6PXw+hpi9xiHUOg972DGWuG9mvPI2Rl/
-         eX9k4tGsCDmUiOSWhbaGnI6PMHCwY2kHvtJMOh3Wj6ImrzYkzXp3Nl3WAyvpfis3IYqd
-         jnp6BYG8RYVQUMHPDnz0U19jOoYqO2lcZbUsOawLTD33IeBR6bKyUBsWpyHPCxZEh0UE
-         Za8Q==
+        bh=k7TbOelFCBPjD//aDEZ907vn9YCYdQxapVfhTuFqwGo=;
+        b=Nijyms6rYYB1G02T2NcUP9wbzWm0bpP6ugmPzIykXA5jkewgGgbKq1Y1wOmolkS03r
+         2qFsv6t5nEyAmRWYamCJkYEzOYFvT/mXdMjFCJHbiOkvZRQp2D2aYRW8D87oJKpkTl+6
+         6uepsgMh+x9j8iLrtcQoJohsUmM8vbPXbY0keOAubRhtxsT0vEcsZNV9Dynb/hySVYBP
+         7ZjAmavzmSzAXu5+cudEdKulhj3PuZ0Wch1nNSpO5YBtBbWom3qtKpHbStBFxz6RCAso
+         9r2l7QO2qhLIY2+EWwU6dCZP7z/jIL+NZaAwDIud7ZAki2I282eHppnleJGgLcDNSIk1
+         NIoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715168422; x=1715773222;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1715168431; x=1715773231;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IOIzh5hay1VG+baSkhj40F76B94Bx+2N06xZr/PBSXw=;
-        b=WXhFxa8mfmpTobscMItxtiwCQx7lxK/TpoBw1pJgakmm8M6ZvweD8soUbGanJXkYDr
-         AaLbeZPr5t89+FeQzuWVoaWxWnL916RvWWqMfzFUFT/VelDgsxQSrDushS4XBDFJ95+H
-         TNvelYbw1ZfLJ4aB8VvRwGJ6q9tqhrzPByPaM/NX4e9SS8bbIq/ARWXP6Df5y2V3Z7rL
-         qiXQ+vmdzA5EpqHoOsIUBbG5oLFYV2Nk+7uJ/LncbJ0KbLVoxNK2p3j/y3v2vetrD4HU
-         +ITQnMkPic9Kw7E9r9uFPIFzdW/R83XoevcYQVBBbH1fA98de3wB3/6bFN8/xyJcz9x0
-         77DA==
-X-Forwarded-Encrypted: i=1; AJvYcCWYuRWlmXOWqsB0YGiQ4C9nFWAoDbyzdrKFrfEacWtD/gZdJnN9/ewc6VIZBkjR5Yp4B0Qd4GHYLjibqeZXCPvO9qEFoc3D8aVhRK5Q/ofciV7NIVxcLnLR6VBhqNUMQS5UDRxo/AJleA==
-X-Gm-Message-State: AOJu0YyGfguW+bhLtTe0f1UTPijWDYIOJyhm5dqC1wi+CfpIkcV5nIdp
-	tdTOaX7NFwuz8C9dPrtU9DXr2CAZ9o+deThI0EVsN2PZQI8PgvinWWkaPZ913XIvJZXJgwf8K7w
-	QRDzi32ZcnrVowH3krliTU/oZTwljLorWx7Q=
-X-Google-Smtp-Source: AGHT+IHmLv/TAPoHKLua1wTR21SZpjGzAQp6CSeJ56q1NNnw1JuHDSs+rZx7mIDbkUq4KHNnaSNxsszq9ha12ZE1pgk=
-X-Received: by 2002:a4a:58c8:0:b0:5b1:ff93:de40 with SMTP id
- 006d021491bc7-5b24d60d1c7mr2278127eaf.5.1715168422279; Wed, 08 May 2024
- 04:40:22 -0700 (PDT)
+        bh=k7TbOelFCBPjD//aDEZ907vn9YCYdQxapVfhTuFqwGo=;
+        b=Tec93bLROxRFE6AajGqiFTpown4eVcKVqbyArrwpuRDAc+OYX8q9hV8CAOALEqwaF9
+         9Mu9SYFOGmrw9eiuh5nZzVMhRy3nACKuY+ZfUM8j9CzdZqS/sY9EUI9+OuUnNR7Ahpuv
+         7320349r1/9zUQdCdZpLRtvPkC6aNEw22kd46e8+AcUdbZSVxmrOYvqqONaXuavg0Xe/
+         VJlUVZ4vZ3KgJmU1ff1GiueptRo2wK6klqWd45fhrrs+ztTE/e9L5KB5b/JE7FmYAshR
+         SIpxcs2V693a4rAnCA2nH6xJYbGhQv1i+HMEfKovwjCmODtU3+AP/C8P3Qta8mVHp5yZ
+         rshg==
+X-Forwarded-Encrypted: i=1; AJvYcCWKJe3fblvfmvzhKWu4a65eHt0AC5Y+kocA8hI3IM2peCHFluqMV+/LxVckPx0U82l4FpPKae2v0zWw9pfsg7z6OAceCvgKNYL8FO8z
+X-Gm-Message-State: AOJu0YyCC6CoU5TUfManqY9OfyQahqsNh5NSFQ48Ti4mG62mRH6cvt7i
+	rceviRTqt3UWT6FqVdiPtC4cMjsrF9uHVjKlsnSr0gqmFKSdptJZKfNG72W2dSUeZjL63G9mYt5
+	8
+X-Google-Smtp-Source: AGHT+IHoKXWUN4OirZVjujYdTPRjtHlf5MTjdp4rZ05v4P+q2zGuw+P9Rq7y6u6CQwAZzw3ytsfSow==
+X-Received: by 2002:a2e:8749:0:b0:2e1:ae29:f28a with SMTP id 38308e7fff4ca-2e447697612mr22142151fa.34.1715168430817;
+        Wed, 08 May 2024 04:40:30 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id b15-20020a05600c4e0f00b0041aa79f27a0sm2003785wmq.38.2024.05.08.04.40.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 04:40:30 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-mm@kvack.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH RESEND v2 6/9] mm: Use common huge_ptep_get_and_clear() function for riscv/arm64
+Date: Wed,  8 May 2024 13:34:16 +0200
+Message-Id: <20240508113419.18620-7-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240508113419.18620-1-alexghiti@rivosinc.com>
+References: <20240508113419.18620-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506-rk-dts-additions-v4-0-271023ddfd40@gmail.com>
- <20240506-rk-dts-additions-v4-2-271023ddfd40@gmail.com> <2543817.5xW6y1K4kI@bagend>
- <CABjd4Yw-JA5=SfcgtVNYZN37hFbqf14Ut1yHTSz1YZiZ3NQ-pw@mail.gmail.com>
-In-Reply-To: <CABjd4Yw-JA5=SfcgtVNYZN37hFbqf14Ut1yHTSz1YZiZ3NQ-pw@mail.gmail.com>
-From: Anand Moon <linux.amoon@gmail.com>
-Date: Wed, 8 May 2024 17:10:05 +0530
-Message-ID: <CANAwSgTU7UF_RaNnVSZR7SehQqC7Eo6D=JqT11gN7jK2diN_Ug@mail.gmail.com>
-Subject: Re: [PATCH v4 2/6] arm64: dts: rockchip: enable thermal management on
- all RK3588 boards
-To: Alexey Charkov <alchark@gmail.com>
-Cc: Diederik de Haas <didi.debian@cknow.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiko Stuebner <heiko@sntech.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Dragan Simic <dsimic@manjaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Chen-Yu Tsai <wens@kernel.org>, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Alexey,
+After some adjustments, both architectures have the same implementation
+so move it to the generic code.
 
-On Mon, 6 May 2024 at 18:24, Alexey Charkov <alchark@gmail.com> wrote:
->
-> Hello Diederik,
->
-> On Mon, May 6, 2024 at 4:29=E2=80=AFPM Diederik de Haas <didi.debian@ckno=
-w.org> wrote:
-> >
-> > Hi,
-> >
-> > On Monday, 6 May 2024 11:36:33 CEST Alexey Charkov wrote:
-> > > This enables the on-chip thermal monitoring sensor (TSADC) on all
-> > > RK3588(s) boards that don't have it enabled yet. It provides temperat=
-ure
-> > > monitoring for the SoC and emergency thermal shutdowns, and is thus
-> > > important to have in place before CPU DVFS is enabled, as high CPU
-> > > operating performance points can overheat the chip quickly in the
-> > > absence of thermal management.
-> > >
-> > > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > > ---
-> > >  arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts               | 4 ++=
-++
-> > >  8 files changed, 32 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> > > b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts index
-> > > b8e15b76a8a6..21e96c212dd8 100644
-> > > --- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> > > +++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-> > > @@ -742,6 +742,10 @@ regulator-state-mem {
-> > >       };
-> > >  };
-> > >
-> > > +&tsadc {
-> > > +     status =3D "okay";
-> > > +};
-> > > +
-> > >  &uart2 {
-> > >       pinctrl-0 =3D <&uart2m0_xfer>;
-> > >       status =3D "okay";
-> >
-> > I built a kernel with v3 of your patch set and someone tested it on a R=
-OCK 5B
-> > 'for me' and it had the following line in dmesg:
-> >
-> > rockchip-thermal fec00000.tsadc: Missing rockchip,grf property
-> >
-> > I'm guessing that turned up due to enabling tsadc, but (also) in v4 I d=
-idn't
-> > see a change wrt "rockchip,grf".
-> > Should that be done? (asking; I don't know)
->
-> I'm getting the same. Neither the mainline TSADC driver [1], nor the
-> downstream one [2] seems to use the grf pointer on RK3588 at all. It
-> still works in spite of that warning, although I can't see how (or if)
-> it configures the reset mechanism without those GRF registers.
->
-> Best regards,
-> Alexey
->
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
-ee/drivers/thermal/rockchip_thermal.c#n818
-> [2] https://github.com/radxa/kernel/blob/stable-5.10-rock5/drivers/therma=
-l/rockchip_thermal.c#L961
->
+Note that get_clear_contig() function is duplicated in the generic and
+the arm64 code because it is still used by some arm64 functions that
+will, in the next commits, be moved to the generic code. Once all have
+been moved, the arm64 version will be removed.
 
-If the following changes fix the warning.
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/arm64/include/asm/pgtable.h | 14 +++++++++-
+ arch/arm64/mm/hugetlbpage.c      | 19 ++-----------
+ arch/riscv/include/asm/pgtable.h |  4 ++-
+ arch/riscv/mm/hugetlbpage.c      | 21 ++------------
+ mm/contpte.c                     | 48 ++++++++++++++++++++++++++++++--
+ 5 files changed, 66 insertions(+), 40 deletions(-)
 
-Checking the Rockchip RK3588 TRM V1.0-Part1-20220309.pdf
-PMU1GRF_SOC_CON3 which has tsadc_shut_reset_trigger_en bit
-to control the Enable TSADC shut reset trigger for DDR fail safe.
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 2e0415fd5083..7c2938cb70b9 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -1644,11 +1644,23 @@ static inline int ptep_set_access_flags(struct vm_area_struct *vma,
+ 
+ #endif /* CONFIG_ARM64_CONTPTE */
+ 
+-static inline int arch_contpte_get_num_contig(pte_t *ptep, unsigned long size,
++int find_num_contig(struct mm_struct *mm, unsigned long addr,
++		    pte_t *ptep, size_t *pgsize);
++
++static inline int arch_contpte_get_num_contig(struct mm_struct *mm,
++					      unsigned long addr,
++					      pte_t *ptep, unsigned long size,
+ 					      size_t *pgsize)
+ {
+ 	int contig_ptes = 0;
+ 
++	/*
++	 * If the size is not passed, we need to go through the page table to
++	 * find out the number of contiguous ptes.
++	 */
++	if (size == 0)
++		return find_num_contig(mm, addr, ptep, pgsize);
++
+ 	*pgsize = size;
+ 
+ 	switch (size) {
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index cf44837369be..5ace4bf7ce35 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -93,8 +93,8 @@ int pud_huge(pud_t pud)
+ #endif
+ }
+ 
+-static int find_num_contig(struct mm_struct *mm, unsigned long addr,
+-			   pte_t *ptep, size_t *pgsize)
++int find_num_contig(struct mm_struct *mm, unsigned long addr,
++		    pte_t *ptep, size_t *pgsize)
+ {
+ 	pgd_t *pgdp = pgd_offset(mm, addr);
+ 	p4d_t *p4dp;
+@@ -277,21 +277,6 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
+ 	return entry;
+ }
+ 
+-pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+-			      unsigned long addr, pte_t *ptep)
+-{
+-	int ncontig;
+-	size_t pgsize;
+-	pte_t orig_pte = __ptep_get(ptep);
+-
+-	if (!pte_cont(orig_pte))
+-		return __ptep_get_and_clear(mm, addr, ptep);
+-
+-	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
+-
+-	return get_clear_contig(mm, addr, ptep, pgsize, ncontig);
+-}
+-
+ /*
+  * huge_ptep_set_access_flags will update access flags (dirty, accesssed)
+  * and write permission.
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 0847a7fb8661..d976113a370d 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -532,7 +532,9 @@ static inline void __set_pte_at(struct mm_struct *mm, pte_t *ptep, pte_t pteval)
+ #define PFN_PTE_SHIFT		_PAGE_PFN_SHIFT
+ 
+ #ifdef CONFIG_RISCV_ISA_SVNAPOT
+-static inline int arch_contpte_get_num_contig(pte_t *ptep, unsigned long size,
++static inline int arch_contpte_get_num_contig(struct mm_struct *mm,
++					      unsigned long addr,
++					      pte_t *ptep, unsigned long size,
+ 					      size_t *pgsize)
+ {
+ 	unsigned long hugepage_shift;
+diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
+index 437b1df059eb..a757e0b2f090 100644
+--- a/arch/riscv/mm/hugetlbpage.c
++++ b/arch/riscv/mm/hugetlbpage.c
+@@ -187,7 +187,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 	if (!pte_napot(pte))
+ 		return ptep_set_access_flags(vma, addr, ptep, pte, dirty);
+ 
+-	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
++	pte_num = arch_contpte_get_num_contig(vma->vm_mm, addr, ptep, 0, &pgsize);
+ 
+ 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
+ 
+@@ -202,21 +202,6 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 	return true;
+ }
+ 
+-pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+-			      unsigned long addr,
+-			      pte_t *ptep)
+-{
+-	pte_t orig_pte = ptep_get(ptep);
+-	int pte_num;
+-
+-	if (!pte_napot(orig_pte))
+-		return ptep_get_and_clear(mm, addr, ptep);
+-
+-	pte_num = arch_contpte_get_num_contig(ptep, 0, NULL);
+-
+-	return get_clear_contig(mm, addr, ptep, pte_num);
+-}
+-
+ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 			     unsigned long addr,
+ 			     pte_t *ptep)
+@@ -231,7 +216,7 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 		return;
+ 	}
+ 
+-	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
++	pte_num = arch_contpte_get_num_contig(mm, addr, ptep, 0, &pgsize);
+ 
+ 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
+ 	orig_pte = pte_wrprotect(orig_pte);
+@@ -249,7 +234,7 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 	if (!pte_napot(pte))
+ 		return ptep_clear_flush(vma, addr, ptep);
+ 
+-	pte_num = arch_contpte_get_num_contig(ptep, 0, NULL);
++	pte_num = arch_contpte_get_num_contig(vma->vm_mm, addr, ptep, 0, NULL);
+ 
+ 	return get_clear_contig_flush(vma->vm_mm, addr, ptep, pte_num);
+ }
+diff --git a/mm/contpte.c b/mm/contpte.c
+index 22e0de197bd3..68eb1634b922 100644
+--- a/mm/contpte.c
++++ b/mm/contpte.c
+@@ -22,6 +22,7 @@
+  *   - huge_ptep_get()
+  *   - set_huge_pte_at()
+  *   - huge_pte_clear()
++ *   - huge_ptep_get_and_clear()
+  */
+ 
+ pte_t huge_ptep_get(pte_t *ptep)
+@@ -33,7 +34,7 @@ pte_t huge_ptep_get(pte_t *ptep)
+ 	if (!pte_present(orig_pte) || !pte_cont(orig_pte))
+ 		return orig_pte;
+ 
+-	ncontig = arch_contpte_get_num_contig(ptep,
++	ncontig = arch_contpte_get_num_contig(NULL, 0, ptep,
+ 					      page_size(pte_page(orig_pte)),
+ 					      &pgsize);
+ 
+@@ -87,7 +88,7 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 	int i;
+ 	int ncontig;
+ 
+-	ncontig = arch_contpte_get_num_contig(ptep, sz, &pgsize);
++	ncontig = arch_contpte_get_num_contig(mm, addr, ptep, sz, &pgsize);
+ 
+ 	if (!pte_present(pte)) {
+ 		for (i = 0; i < ncontig; i++, ptep++, addr += pgsize)
+@@ -111,8 +112,49 @@ void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+ 	int i, ncontig;
+ 	size_t pgsize;
+ 
+-	ncontig = arch_contpte_get_num_contig(ptep, sz, &pgsize);
++	ncontig = arch_contpte_get_num_contig(mm, addr, ptep, sz, &pgsize);
+ 
+ 	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
+ 		__pte_clear(mm, addr, ptep);
+ }
++
++static pte_t get_clear_contig(struct mm_struct *mm,
++			      unsigned long addr,
++			      pte_t *ptep,
++			      unsigned long pgsize,
++			      unsigned long ncontig)
++{
++	pte_t orig_pte = __ptep_get(ptep);
++	unsigned long i;
++
++	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++) {
++		pte_t pte = __ptep_get_and_clear(mm, addr, ptep);
++
++		/*
++		 * If HW_AFDBM (arm64) or svadu (riscv) is enabled, then the HW
++		 * could turn on the dirty or accessed bit for any page in the
++		 * set, so check them all.
++		 */
++		if (pte_dirty(pte))
++			orig_pte = pte_mkdirty(orig_pte);
++
++		if (pte_young(pte))
++			orig_pte = pte_mkyoung(orig_pte);
++	}
++	return orig_pte;
++}
++
++pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
++			      unsigned long addr, pte_t *ptep)
++{
++	int ncontig;
++	size_t pgsize;
++	pte_t orig_pte = __ptep_get(ptep);
++
++	if (!pte_cont(orig_pte))
++		return __ptep_get_and_clear(mm, addr, ptep);
++
++	ncontig = arch_contpte_get_num_contig(mm, addr, ptep, 0, &pgsize);
++
++	return get_clear_contig(mm, addr, ptep, pgsize, ncontig);
++}
+-- 
+2.39.2
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-index 85c25d5efdad..5490a44e093e 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-@@ -2662,6 +2662,7 @@ tsadc: tsadc@fec00000 {
-                rockchip,hw-tshut-temp =3D <120000>;
-                rockchip,hw-tshut-mode =3D <0>; /* tshut mode 0:CRU 1:GPIO =
-*/
-                rockchip,hw-tshut-polarity =3D <0>; /* tshut polarity
-0:LOW 1:HIGH */
-+               rockchip,pmu =3D <&pmu1grf>;
-                pinctrl-0 =3D <&tsadc_gpio_func>;
-                pinctrl-1 =3D <&tsadc_shut>;
-                pinctrl-names =3D "gpio", "otpout";
-
-Thanks
--Anand
-
-> _______________________________________________
-> Linux-rockchip mailing list
-> Linux-rockchip@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-rockchip
