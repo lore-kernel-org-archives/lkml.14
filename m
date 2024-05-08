@@ -1,294 +1,117 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2064.outbound.protection.outlook.com [40.107.22.64])
+Received: from fout7-smtp.messagingengine.com (fout7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1124A3FE3F;
-	Wed,  8 May 2024 09:52:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715161960; cv=fail; b=t6kJaNNOekAFtcHTfgZWw9uUZIKDcsiktPUc8sPz0J6rhQ23GXnEGtI0GSaeFxLFqk6k+UcbJFf96FhgY9hcUjAsPJaIoJhUMelpn1XH7J/9L90NsDD+SNkWm9eYBUZSnql/H53dW6hl/tZ0PAz0ZQpRrFTXQaxJl2kjqD9tx5s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715161960; c=relaxed/simple;
-	bh=nMGiGDB9JXkC53TjLf4CCd4D9DO8PP+U5JIZrEckc+U=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=a/SBQA2gH9owgNAzQuC8bdRIzi2wJyRGMG76rY0cM2TkdnGTrwTa6x9uy/QUXraPtcPA0OuHyTQDZL+DuOCigDtwT/9yuQ157YL/XsMB/psOClm8A15J4unwjZquz+gletxxi+eJSxzMY/rIKr1xtpHI29LyqHYglEi96K4pnys=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=klIX2UEx; arc=fail smtp.client-ip=40.107.22.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C83054679
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 09:54:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715162067; cv=none; b=MCoOneztLKytYGJkvyy2GrCjlParezPwuw0WRdeEaZQiEbIOkyxJIdinXzvIEwHYmBO6gb6AWHGVtjNlur+pqYOLN3R9PMciTRDPpiw9j0RKNMRqexVv57id6jwBTAVbZnCVL/H2pER4X9QrgvKoeEgTjI76RUKliYqigwKk1rs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715162067; c=relaxed/simple;
+	bh=UmEryDPKqCzmLaa7zf8PbJnXXv0HOPRm8AWkF9fYbgg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EQ6FBQbzGucZ3JpHh6X224uEvFn8YkXzadfu1V3YvW66y+6cpyrge6OAAEQ+BZpCb5lwOCxkLGNZXhggOq1bzszHVvbP6MRQgklVw4evtKda+JjVVaQSLipOtazNYoEcP8jPnmo3i7Dtz1NZ8vlXAO4DeRcSxJlccwQl0zcfRIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp; spf=pass smtp.mailfrom=sakamocchi.jp; dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b=EOzF3R/6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ZJwH4v8v; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sakamocchi.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sakamocchi.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="klIX2UEx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SCzL+6ZENlM0CVncr+MDW334LZ/lgWzArNCF30e6HbTWXceSHkCP0DP+96Rz7o4YtwgmKi2w7hCND89ahtU0C5rXhhsAGjZPPiqApFKsQvXaOjzEZwlvoWqSYpSvBRcjowZiKLfIzQoWxi7l2QM/VXcRKNEnoiQlOnssH/GaOmXrbjbiPPQd1pyDKPOu8I/P+jg3Q1P9s3ZNtMuEs/kizodw3DXVK1iAtbbOkVhyXxj+U93ZS5iG/3r6BOZIY6fBWZmNWuZ8/msBexWfSft/FMyv25MjucGP05chInVdpMpTjo3W3MZoWk4QA86zXqNdXP6iMSSqik+efShuCKWpgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xs98spefrIN/RuSSeBRfeMHEkXHi3HLZNCBM8h1TC74=;
- b=hTnSDmUmne/0o1Cp+zM6ap4BT1d5FH2zfmToEnmFhDMch2IhWn3mg9XZifiuqRoN/tqwARv2hXgcP7tFnQJFiq6mRKKZqg4Sz38G+cNOPsbLDWyJJC40xYlS15Cli9ffXgQqn06JJAdkwCTK2DAIIXbUznYn6VM6GSkqPzjug1Wx+mGBXCIRV3q7ZVTjQNVx9TuZ6E0YcfxsMwItvl5GPkKJW2CTkmsA7AslPTxwx+iVykwlcMfPlyZmFFu3FEyUHOzNHg5q6VgqLl4S3CebIZJxBPmcZsyixHy6WK5cGq3yGnqKzVBlGTQZ46SttIyeuRLSqeON718RgZ9KLA897Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xs98spefrIN/RuSSeBRfeMHEkXHi3HLZNCBM8h1TC74=;
- b=klIX2UExd6HTIJQCR3IZPnj79NpSxhOkC/oMazt08Lvnz3PLyybg9NhbNEZ+C3HB6lZprnzvVXSPST9AEhYQsTkXuh3B32UM4N4eQuaNiZIBSVrBvHsURwHgQ1hrvyKI/ukwNpnAIASAY/SkXNe/CcWeRR2msiOWmwdHEGZXmbE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by DB8PR04MB7196.eurprd04.prod.outlook.com (2603:10a6:10:123::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.45; Wed, 8 May
- 2024 09:52:33 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%3]) with mapi id 15.20.7544.041; Wed, 8 May 2024
- 09:52:33 +0000
-From: Liu Ying <victor.liu@nxp.com>
-To: imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=sakamocchi.jp header.i=@sakamocchi.jp header.b="EOzF3R/6";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ZJwH4v8v"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 128D91380FEC;
+	Wed,  8 May 2024 05:54:24 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 08 May 2024 05:54:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sakamocchi.jp;
+	 h=cc:cc:content-type:content-type:date:date:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to; s=fm3; t=1715162064; x=
+	1715248464; bh=h2YNeouZG7QNm2DhbCVNKqFB+E2lilrvJm0btMHZ2I0=; b=E
+	OzF3R/6jG1MR/oLES9tVrSzHl+ypqLU9jDCGweC6ywIsUKlz6u3Phda8J9ueXlF2
+	En/NFenspOZv6DCzEOESyZy4D2Anlf/6e/d4Xc/TVFNoqRto1wk7OMvSbUZ8cpJi
+	ki/+w/9ZFeXyn2CbmOkVx9aIAzsy/tAr4ykX/4v6jEub5nhlD2VDsVb5xviNV6/S
+	st+FodVGYgdowhjGe/IXSts7/XiIrKZt/Dnh2xjo08I+XlD5k/pK+O1O9Woxmw5c
+	wJ4u+v7nZ6Y9GqNB2K6kW4m2EGTiN62iIYg6k9PUIWi8EYTMRkoeA+REU0QlsmGj
+	F2YpE4wWjknHISGWIcWdw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm3; t=1715162064; x=1715248464; bh=h2YNeouZG7QNm2DhbCVNKqFB+E2l
+	ilrvJm0btMHZ2I0=; b=ZJwH4v8vAuHiIiGRN8hB/brgPp/5gmqApA3O9yqqhrF5
+	tAT3U3r6e81taaRxYSNSmZArnySyxnDmG1JYLsbJMRDtD8RG55bV2OEZ+1orWDw2
+	uANOPDJrx0MEwPZyQFLWWEturpJxnN5PyzLX1VLvMvdORnDForxs0dWrTmKk6K9g
+	P42aueKLiIq1CeUylCMWF1WdqsqzO+i6S1vd6/O8Alt5hg8yomfgKCmFnHF0PLy8
+	s5hBVSh0qeAfUzCilbFHoVARXoSozV935M4ovbZgLj+4J1JpW+jPSIroVBvUktm9
+	7JnOhXwYQ7SaqQxH+kToNjliOL1HJJDKLt/W6JZlrQ==
+X-ME-Sender: <xms:z0s7ZgLNIUHOekJkbE_U7gT8hTXineLm4kGgAoTnxFvqHqnGN6Xo4w>
+    <xme:z0s7ZgIyYht92PR0cIwcfxh5ZTkfepXW2ZA1RaSTKfTxz01cACzrziRD47zf0djf8
+    AsFbfVZibk-A0kdMCM>
+X-ME-Received: <xmr:z0s7Zgtv9a5PYuYNsUJ92lhI9WzOpgrawxTS1T0aJL0HqJSMtb1ZF1zyKp5ifkfxXWA3nKBBGKUWhSLoFoKDXYP7leWoSnisvRE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdeftddgvddtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpeffhffvvefukfhfgggtuggjsehttd
+    ertddttddvnecuhfhrohhmpefvrghkrghshhhiucfurghkrghmohhtohcuoehoqdhtrghk
+    rghshhhisehsrghkrghmohgttghhihdrjhhpqeenucggtffrrghtthgvrhhnpeehhffhte
+    etgfekvdeiueffveevueeftdelhfejieeitedvleeftdfgfeeuudekueenucevlhhushht
+    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehoqdhtrghkrghshhhise
+    hsrghkrghmohgttghhihdrjhhp
+X-ME-Proxy: <xmx:z0s7ZtaVSy3gwRvUu4yHbasR0-Ua5GhNL75gSmnN457aJ3KHqP4z6Q>
+    <xmx:z0s7ZnbUWCNvwbjV63qXyl7RE5HrrPF7md487K4cB-x4xtqieP53Qw>
+    <xmx:z0s7ZpAWY40rZL2UrRs8WUZaD4IwB_mjjo23aBAR2b-FzugXiSVCdw>
+    <xmx:z0s7ZtaM01iqAZ1NvnxSogf2gObfzjuLOaUT4HgBAkAyYyMSKNpg5w>
+    <xmx:0Es7Zmm6QXat8w3_x8aWsGyW6P-DEdPPpYX3_Cz_JJ4NBVd1abmOzeeH>
+Feedback-ID: ie8e14432:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 8 May 2024 05:54:22 -0400 (EDT)
+Date: Wed, 8 May 2024 18:54:19 +0900
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+To: linux1394-devel@lists.sourceforge.net
+Cc: linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] firewire: core: fix type of timestamp for
+ async_inbound_template tracepoints events
+Message-ID: <20240508095419.GA433207@workstation.local>
+Mail-Followup-To: linux1394-devel@lists.sourceforge.net,
 	linux-kernel@vger.kernel.org
-Cc: shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Subject: [PATCH] arm64: dts: imx8mp-evk: Add MX8-DLVDS-LCD1 display module support
-Date: Wed,  8 May 2024 18:00:13 +0800
-Message-Id: <20240508100013.2693440-1-victor.liu@nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR02CA0039.apcprd02.prod.outlook.com
- (2603:1096:4:196::9) To AM7PR04MB7046.eurprd04.prod.outlook.com
- (2603:10a6:20b:113::22)
+References: <20240506082154.396077-1-o-takashi@sakamocchi.jp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|DB8PR04MB7196:EE_
-X-MS-Office365-Filtering-Correlation-Id: 93e8f17d-0c0e-4a82-dea2-08dc6f449556
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|366007|376005|7416005|52116005|38350700005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?O+qHScgnBoW5omal+aP4IJ8RSt0fmFZf/xUWqPcWG3n1WSAAKLacCdoMPGC+?=
- =?us-ascii?Q?ZNI2neIhqd1wHcAH1lAFTWPc1YUl5sOqYodyUlTc6BYHxc7ktvjDU6gYY4I7?=
- =?us-ascii?Q?co+vN/l8WsFf6X7uqWqiVJkokVQl2mMCfIXHQXNIx0IHgCiLkvX7d5FzRGZw?=
- =?us-ascii?Q?3p50bF9CCFk1jkzrFfDJhalQdIBsytAWRymE9pUzH4kwI/xgwXRsW9yeqGj7?=
- =?us-ascii?Q?CeoUSLWrzNdaEiqw7dQlVcYepTe4zHWeTrYESoQhyAOI2hGVQJ1eMEYnYHbe?=
- =?us-ascii?Q?8Pg4SD3bBt2XrmVfAEM7jeGpIdJPMUJY2wl+Ex1RWt2IgzeCc5Uz7Bcr3TqD?=
- =?us-ascii?Q?96khY8v6UL/6bAk8TU4oi+4TyIl1jfHPusy5bgjKQaECQbH4fYo6lLQdmzxy?=
- =?us-ascii?Q?R0lszdG9ALEJCpLo5nBceUNf+l3PtTcBRQuaZVqYfBgSj8qazPSEZ9t8LyDt?=
- =?us-ascii?Q?HVulnSOF+moHBbZWu3i8DpS2ehXIDsuL734cuBxrMtEQXvTxFYGyPNYQp2QM?=
- =?us-ascii?Q?ZTE1B0sJvX1TyEc3gl6KKG84zD2sz+Uwcm9Nuumdpon+Kk9xIAiji/HG2OOj?=
- =?us-ascii?Q?IatvctLTFga5a+hI1OSSTVzGVzJdybkmd7F/O3tF8C6Ii9OdpXdN3lHfBcMP?=
- =?us-ascii?Q?2nqZ7Jf+OeoyVclMWJ5Gm6rbqnQqFT/J/3u29g0ubTS0X+B2rWmrDj+93UMY?=
- =?us-ascii?Q?oXZTIe2U1667LsWmB9ORZK2tfygy6YWHYuG/oaOsgWphzg7jQ35e9LyuHWS1?=
- =?us-ascii?Q?wmdnFA+K/244/2hknrXOX25bAX4M6JRbjWxX8hDu87rX8qa92M7q5X8iW8MU?=
- =?us-ascii?Q?GzT21WfA64O79T1DE1kIPsE7dXcGuSEgDjM6YoEv4V1VaoBUf/DE2jCYbp4P?=
- =?us-ascii?Q?woOYwhZqQHr3kcxpyxGp70LhPfWLAhTqgHHj1+M/Lp67GXjunhq+zeXwHdLP?=
- =?us-ascii?Q?oSrlpID+RLhZU9NZ4SGmV4YP3F9itmzPq4U2keT1IOVTv48ihM0QNKxTP1KW?=
- =?us-ascii?Q?R1P0paS+YkZYYegcBcvk/stm3mebcdtopWnu375K/+OcZ5LE09yyghkkLUaO?=
- =?us-ascii?Q?EtZlUFY+IyTnsBoqziXz54S6T0Afg6PyoPq1E9uMpvjvWY8puccU8srk3bCJ?=
- =?us-ascii?Q?s45+JRasYr0owOE+ZPFcx8VtEeaY7XsD+7wpfsg1bgPJMvzatkeGfWqALNsF?=
- =?us-ascii?Q?tiFxiuS3fnUK0AIpYLlaeUZizMnlUtHu70NrorcdqfFu9FDrWxe5wp2dPbTt?=
- =?us-ascii?Q?jYyPM/iA/noaWNW2vWWPJR6RB6f1LNLB+IsOr3hEfgwouauGuR658WURY3ZH?=
- =?us-ascii?Q?/RUkLyx2RBaPQD7ozJK26DRYoh6rB8TOnLxsXYO00MozeA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(366007)(376005)(7416005)(52116005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?GxdI6yqLyZHjyuze89wf1C85roUstk/X9Bm2NpkmT2P4oWhSyOGFcqV5daEh?=
- =?us-ascii?Q?dnAhKIAmc+BatwOlxL349z0JjFNpYp0Ez92D6ef6/aRj3Lj/S28OZgySGaV5?=
- =?us-ascii?Q?Pq/lX3aQQJAkOVQgNK9pMCIkWxVQ99GMBmAkGTpNj3loiZ2BU5Sq79qsuIWs?=
- =?us-ascii?Q?+OfzwGO/4yK+fSt5dLaEYqJe4Qei/JF7nTrRMdsxrJPKZoHvSpSwgwvll9nm?=
- =?us-ascii?Q?IOQJ1+MidxON3UR/jAFDV1oZOBM8K8pO6sERuJqDEZ8ScSEStmE/mt6kdV1o?=
- =?us-ascii?Q?wQqMACj+4L1WMauG/bz6ByF/kwARByy/zCqVMZ46xCluMTQII52+UXM5v/X7?=
- =?us-ascii?Q?UvxeoO9ztpgeIvl0UwbuctghP2mJq8wOzrIqMpdfTv04hI/tS9faAKCCeUN7?=
- =?us-ascii?Q?yJu8UWQlbGIc6thDWD4bTa/KT08BIPwN+iO8RNjMTyeuR5NJgBns6G3Yn+Fk?=
- =?us-ascii?Q?YxXlv49UsF+nZSJss0H9ASKvfwTBNXWymTPzJyMyLriqnBsYzCdy5xDN4y4q?=
- =?us-ascii?Q?5ef6DQLYrRZ+YrQtwtDFlZFgHgFX+NmBMnjWqVbIywkhF37QffOC5ps70ae3?=
- =?us-ascii?Q?azcm4nCgkxFid4A7QHDS+bCh5dD6ANP7qjIfjbxxheKoyh3j37Yi0+hpRr1J?=
- =?us-ascii?Q?lCujkipauiZ0H6a5JTrjhhyPofFuPOTsOuiuApCCxvQ7/mw+vFD04uDLskFf?=
- =?us-ascii?Q?qbPTbMvb7ozgzF1YMQRKGAU/5k2ifTr+GQMBbPPzGBoBiKRQkSs/qXe3TBHJ?=
- =?us-ascii?Q?q2AbW3c0GSjk+pVqMvFKjfXVRc97ekjwob3yfIq+Ei8LeJK+fMhNgzlbiIE3?=
- =?us-ascii?Q?oxoxL/XPVTj4HTNEbAeJL8k5NRnC3RhBRhFnrR4+8Eva3VhKO7vEPC9DeNPB?=
- =?us-ascii?Q?+tzPOsbpEpj4Qmqe4ZnFJkfbMzNURIyYqXWc3o/hGOAM9IVy81e4NtoGzn5b?=
- =?us-ascii?Q?D6kj2UHhAjqxBa8F6Y7aSNYjftRMkjN5sNYXkhdI4hSOZHK32lg67/qEr7AQ?=
- =?us-ascii?Q?T8dIC+VAg86GOrR8eAI25g3mbyriTsIT7dkpm7Zdvy0G4D6iujYiCEvIaVLv?=
- =?us-ascii?Q?xH75Urj5gkjf2giwNEVUBOAGRkSen8l1smvqf45cEg8KKJx8/5l2E1UBbQEL?=
- =?us-ascii?Q?NiOhnClMAWuSbJ6mhXBfB+WcwG195UTUXvmtCOhNdXLFDv4if0DWRgYGgp9O?=
- =?us-ascii?Q?UBTdpJqtFIZshx5K+yq4B7ViJKU8NGww4hnw0si/mHBKoRk2RKrSzbzMh1vD?=
- =?us-ascii?Q?xlc21JB2vH8NnojBfTHdiGGeAB/oivhTpGN+dOOYP/IKeSW2HAuduQHGUTGW?=
- =?us-ascii?Q?SvVPjsZuTYacDDCLkFwFMV3qjBVax9qhLM9lZBWC6FM7PlmuqqoEXZFguG5p?=
- =?us-ascii?Q?c1kdKLKi7eGSdEyFQzIdpdjfBnkI92h28OEwNm+pF8kVBMqKHRMcsrrxyKLn?=
- =?us-ascii?Q?sqfhYQsHA4HPC/TpC6Z0/4tDw7HCCJQUFgoPZIUckjBpYlyasYe76XM771J7?=
- =?us-ascii?Q?rV5Q/dyYwtdnuY0toCR1fSKGLUtfqCfU8U8Rn0SuUpNS+NXHeu6i1wsuJJh7?=
- =?us-ascii?Q?tR5cOpxbU+/7Bg9TVO2PbyBbofNcXkQvPM7JwdAS?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 93e8f17d-0c0e-4a82-dea2-08dc6f449556
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2024 09:52:33.5497
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jJcqxaETnbicKiefaMDjHatDI8wbdUVdw3ArBYGOIPtYKig2W0ML43pS850RFFy8ViFNhcLtf89fTaB1b+pRvQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7196
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240506082154.396077-1-o-takashi@sakamocchi.jp>
 
-MX8-DLVDS-LCD1 display module integrates a KOE TX26D202VM0BWA LCD panel
-and a touch IC.  Add an overlay to support the LCD panel on i.MX8MP EVK.
-Specify 148.5MHz clock frequency in panel-timing node to accommodate
-3.5-fold 519.75MHz media_ldb clock which is derived from 1.0395GHz
-video_pll1 clock.
+On Mon, May 06, 2024 at 05:21:53PM +0900, Takashi Sakamoto wrote:
+> The type of time stamp should be u16, instead of u8.
+> 
+> Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+> ---
+>  include/trace/events/firewire.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/firewire.h b/include/trace/events/firewire.h
+> index cd6931b134ee..d695a560673f 100644
+> --- a/include/trace/events/firewire.h
+> +++ b/include/trace/events/firewire.h
+> @@ -106,7 +106,7 @@ DECLARE_EVENT_CLASS(async_inbound_template,
+>  		__field(u8, generation)
+>  		__field(u8, scode)
+>  		__field(u8, status)
+> -		__field(u8, timestamp)
+> +		__field(u16, timestamp)
+>  		__array(u32, header, ASYNC_HEADER_QUADLET_COUNT)
+>  		__dynamic_array(u32, data, data_count)
+>  	),
+> -- 
+> 2.43.0
 
-Signed-off-by: Liu Ying <victor.liu@nxp.com>
----
- arch/arm64/boot/dts/freescale/Makefile        |  3 +
- .../freescale/imx8mp-evk-mx8-dlvds-lcd1.dtso  | 77 +++++++++++++++++++
- arch/arm64/boot/dts/freescale/imx8mp-evk.dts  | 19 +++++
- 3 files changed, 99 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/imx8mp-evk-mx8-dlvds-lcd1.dtso
+Applied to for-next branch.
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 045250d0a040..005f6c514f44 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -185,6 +185,9 @@ dtb-$(CONFIG_ARCH_MXC) += imx8mp-verdin-wifi-dev.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-verdin-wifi-mallow.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-verdin-wifi-yavia.dtb
- 
-+imx8mp-evk-mx8-dlvds-lcd1-dtbs += imx8mp-evk.dtb imx8mp-evk-mx8-dlvds-lcd1.dtbo
-+dtb-$(CONFIG_ARCH_MXC) += imx8mp-evk-mx8-dlvds-lcd1.dtb
-+
- imx8mp-tqma8mpql-mba8mpxl-lvds-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-tqma8mpql-mba8mpxl-lvds.dtbo
- imx8mp-tqma8mpql-mba8mpxl-lvds-g133han01-dtbs += imx8mp-tqma8mpql-mba8mpxl.dtb imx8mp-tqma8mpql-mba8mpxl-lvds-g133han01.dtbo
- dtb-$(CONFIG_ARCH_MXC) += imx8mp-tqma8mpql-mba8mpxl-lvds.dtb
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk-mx8-dlvds-lcd1.dtso b/arch/arm64/boot/dts/freescale/imx8mp-evk-mx8-dlvds-lcd1.dtso
-new file mode 100644
-index 000000000000..1b71890d43d5
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-evk-mx8-dlvds-lcd1.dtso
-@@ -0,0 +1,77 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright 2024 NXP
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+&{/} {
-+	panel-lvds {
-+		compatible = "koe,tx26d202vm0bwa";
-+		backlight = <&backlight_lvds>;
-+		power-supply = <&reg_vext_3v3>;
-+
-+		panel-timing {
-+			clock-frequency = <148500000>;
-+			hactive = <1920>;
-+			vactive = <1200>;
-+			hfront-porch = <130>;
-+			hback-porch = <70>;
-+			hsync-len = <30>;
-+			vfront-porch = <5>;
-+			vback-porch = <5>;
-+			vsync-len = <5>;
-+			de-active = <1>;
-+		};
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				dual-lvds-odd-pixels;
-+
-+				panel_in_odd: endpoint {
-+					remote-endpoint = <&ldb_lvds_ch0>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				dual-lvds-even-pixels;
-+
-+				panel_in_even: endpoint {
-+					remote-endpoint = <&ldb_lvds_ch1>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&backlight_lvds {
-+	status = "okay";
-+};
-+
-+&lcdif2 {
-+	status = "okay";
-+};
-+
-+&lvds_bridge {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			ldb_lvds_ch0: endpoint {
-+				remote-endpoint = <&panel_in_odd>;
-+			};
-+		};
-+
-+		port@2 {
-+			ldb_lvds_ch1: endpoint {
-+				remote-endpoint = <&panel_in_even>;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-index 9beba8d6a0df..1cb71f566b0f 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-@@ -16,6 +16,16 @@ chosen {
- 		stdout-path = &uart2;
- 	};
- 
-+	backlight_lvds: backlight-lvds {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm2 0 100000 0>;
-+		brightness-levels = <0 100>;
-+		num-interpolated-steps = <100>;
-+		default-brightness-level = <100>;
-+		power-supply = <&reg_per_12v>;
-+		status = "disabled";
-+	};
-+
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		label = "hdmi";
-@@ -96,6 +106,15 @@ reg_pcie0: regulator-pcie {
- 		enable-active-high;
- 	};
- 
-+	reg_per_12v: regulator-per-12v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "PER_12V";
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+		gpio = <&pca6416 1 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
- 	reg_usdhc2_vmmc: regulator-usdhc2 {
- 		compatible = "regulator-fixed";
- 		pinctrl-names = "default";
--- 
-2.34.1
 
+Regards
+
+Takashi Sakamoto
