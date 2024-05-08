@@ -1,144 +1,169 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B30F1A2C29
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 01:41:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69FC98F55;
+	Wed,  8 May 2024 01:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715132493; cv=none; b=boxCAfQvxSmA8NHUUeDRvOJBPSQJa3Fd/bkAwFsiUC+phSYH3hIgkHhyHLMoAo9luwjJnxkAWN/iSGLlBgGV1xCLDlPvKilj3Wt7L4b3DXFj734kDXIVL8C0Lyd1xU02+UXje1jKZ+H12XKnzSghjixY8nhy6vsMst6q1jUo0Ps=
+	t=1715132565; cv=none; b=q1DDSeNoGrT5H1eKA5BImrIeml0U1HqnecgwFKEeBDWOLb8u5kSawGWRSVkllECklKBoDGZo4UfA28Ns6Q5B98o8F30uSZhly4eB/UzNrfECeCA+t7HCVdlYn+PFtcHqXznd3Hjx0PIyJq1sU2JNm6+L+ua/jJJ0ddtVnm8+D9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715132493; c=relaxed/simple;
-	bh=U++Wt1vJMVU24lMaRM/asFxVOCqBflE/pPriRsK4LOE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=oDItViIA0XuGEv088e2VnD7YWClcXd1t/Oq2EegZIPZokKk8rdaAbuM0XOOIiroyUZJjLRp9GWjB2IXLXsi7fxRH3Ih+DegDCsDBnC06ffLum3T8RV8ABMUt5tyM5pEuy3OeekKhsrO3gkDPlWgBpE/9ysZ8+VdQop/2ybnLof0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-7e195fac186so11154639f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 07 May 2024 18:41:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715132491; x=1715737291;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FiedDuSC7553Sx1Ao9avbkr7uy7OLcZ+DBs6tFTz7e0=;
-        b=GpnJE5Gw9dP0LKuEaw6b0NO5V9XGOEjfPOIL4PDEfP3Tlawq4gxXGj9NpL/bl4l7Qw
-         JTM931P164OZkdutFlIHcqu9KDsZIXWeHNlyW3STEl7zSICh1lncjTf26is/Brr7B8V5
-         CLhzNItEDb9BoN5WzxV6kpABbFP3sDvdh63CohWYLGkkYS1H8+O+MEY3PZfCKZKmQR8e
-         alBPUCmgZ+Nm9QOvOtUxEUwfw/+asVz0CO7yIwCDLkTxb7F0rnEAyUSCTuCiBovXyEft
-         e0O9uO+GD7NL7GkQubfDbZA8+6MPgV45PY/Gwmq0Ts1r3qi6Hd/K6/EiWzVOhJ1sPxRa
-         U38g==
-X-Forwarded-Encrypted: i=1; AJvYcCWGttWkWoSpqkx7Gbt2oPqdGKDyRF+4AQ8texRo5qq7DHHSTykgNgo0Eu3LTmC+IvzoFPtseyXShQy6vtvGqRQFlaynT456S5ddRJTC
-X-Gm-Message-State: AOJu0YzgGkpg6w6xcMAv7yTRgrtbGKg3Y3DvtkxQXI5MFzcV8XnKg/GA
-	gqD9QQ2FbppBTxA4x0Hv09b8tEyx85Ut8DWnOZq7yyehWduMjCVlIeC59lzqzli141XcUKKRb9W
-	6wo8kobZ1AEp81Z1SObYZk4uLsWUGuXxm09p2HMnLsgLagdtuIJQHt2A=
-X-Google-Smtp-Source: AGHT+IGNEia7F/Es2blJowud1vQuzy7L7xI3FVzaB2IIGaPWCswb8lmUg0ktjC8lKytL8TvA6rLQfnhFfhtXbyYNmQ3pmbTkjitz
+	s=arc-20240116; t=1715132565; c=relaxed/simple;
+	bh=oGoVz8s3KiR6LB2gCC4BsXs8Nv8ylpNu5HpFwvaB3T0=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=KICY+L+sbUbMzLFtk2Y18Y6jbUyB4rAt/ydqv88/yrPf7yyhedb3A0HkPcBxTr6dE7BXrCTCaXAhwwkneOtJyVnlh21XhzaWOTdxoxAiw0K7ENtsL5rUyiqurBU18KwgYfjoKM2ZOJy41oSog5q94diqdn57nmjA6c7sB6LbQ3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VYyZ650zXz4f3m7G;
+	Wed,  8 May 2024 09:42:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 826771A08FD;
+	Wed,  8 May 2024 09:42:32 +0800 (CST)
+Received: from [10.174.178.129] (unknown [10.174.178.129])
+	by APP1 (Coremail) with SMTP id cCh0CgDH4QqH2DpmJeM7MA--.39785S2;
+	Wed, 08 May 2024 09:42:32 +0800 (CST)
+Subject: Re: [PATCH 2/9] jbd2: remove unused return info from
+ jbd2_journal_write_metadata_buffer
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org, tytso@mit.edu,
+ jack@suse.com
+References: <20240506141801.1165315-1-shikemeng@huaweicloud.com>
+ <20240506141801.1165315-3-shikemeng@huaweicloud.com>
+ <97dbc0cd-5676-9e92-931c-5873f2e207cd@huaweicloud.com>
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+Message-ID: <ba9e9257-b309-17aa-9c1d-b4730bc2a91e@huaweicloud.com>
+Date: Wed, 8 May 2024 09:42:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:219d:b0:36c:4e54:aedc with SMTP id
- e9e14a558f8ab-36caed5342cmr506445ab.3.1715132491424; Tue, 07 May 2024
- 18:41:31 -0700 (PDT)
-Date: Tue, 07 May 2024 18:41:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e4fa7f0617e76674@google.com>
-Subject: [syzbot] [serial?] KMSAN: kernel-infoleak in con_font_op
-From: syzbot <syzbot+8d57540d08e2510c9741@syzkaller.appspotmail.com>
-To: gregkh@linuxfoundation.org, jirislaby@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    3d25a941ea50 Merge tag 'block-6.9-20240503' of git://git.k..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1503a62f180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bbf567496022057b
-dashboard link: https://syzkaller.appspot.com/bug?extid=8d57540d08e2510c9741
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/31394def760d/disk-3d25a941.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/b07167755ad1/vmlinux-3d25a941.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/7cb810157366/bzImage-3d25a941.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8d57540d08e2510c9741@syzkaller.appspotmail.com
-
-=====================================================
-BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x110 lib/usercopy.c:40
- instrument_copy_to_user include/linux/instrumented.h:114 [inline]
- _copy_to_user+0xbc/0x110 lib/usercopy.c:40
- copy_to_user include/linux/uaccess.h:191 [inline]
- con_font_get drivers/tty/vt/vt.c:4750 [inline]
- con_font_op+0x14a2/0x1710 drivers/tty/vt/vt.c:4844
- vt_k_ioctl drivers/tty/vt/vt_ioctl.c:474 [inline]
- vt_ioctl+0x2b6e/0x2fe0 drivers/tty/vt/vt_ioctl.c:751
- tty_ioctl+0xd18/0x1990 drivers/tty/tty_io.c:2803
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:904 [inline]
- __se_sys_ioctl+0x261/0x450 fs/ioctl.c:890
- __x64_sys_ioctl+0x96/0xe0 fs/ioctl.c:890
- x64_sys_call+0x1883/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Uninit was created at:
- __kmalloc_large_node+0x231/0x370 mm/slub.c:3921
- __do_kmalloc_node mm/slub.c:3954 [inline]
- __kmalloc_node+0xb07/0x1060 mm/slub.c:3973
- kmalloc_node include/linux/slab.h:648 [inline]
- kvmalloc_node+0xc0/0x2d0 mm/util.c:634
- kvmalloc include/linux/slab.h:766 [inline]
- con_font_get drivers/tty/vt/vt.c:4719 [inline]
- con_font_op+0x659/0x1710 drivers/tty/vt/vt.c:4844
- vt_k_ioctl drivers/tty/vt/vt_ioctl.c:474 [inline]
- vt_ioctl+0x2b6e/0x2fe0 drivers/tty/vt/vt_ioctl.c:751
- tty_ioctl+0xd18/0x1990 drivers/tty/tty_io.c:2803
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:904 [inline]
- __se_sys_ioctl+0x261/0x450 fs/ioctl.c:890
- __x64_sys_ioctl+0x96/0xe0 fs/ioctl.c:890
- x64_sys_call+0x1883/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:17
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Bytes 65536-81919 of 81920 are uninitialized
-Memory access of size 81920 starts at ffff888073400000
-Data copied to user address 00000000200001c0
-
-CPU: 0 PID: 32400 Comm: syz-executor.1 Not tainted 6.9.0-rc6-syzkaller-00227-g3d25a941ea50 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-=====================================================
+In-Reply-To: <97dbc0cd-5676-9e92-931c-5873f2e207cd@huaweicloud.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgDH4QqH2DpmJeM7MA--.39785S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw4DZFyUJw45GF18Kr1rWFg_yoW5ZFW3pr
+	95Ga48AFyqvry8AFn7XFWDJFWj9ayjkFyjkr1qk3Z5ta15Jwn2gF1Iyr1a9r1jyF93Cw18
+	AF1UC3yDGw4av3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUkC14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7I2V7IY0VAS07AlzVAY
+	IcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_
+	Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjfU5WlkUU
+	UUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+on 5/7/2024 7:51 PM, Zhang Yi wrote:
+> On 2024/5/6 22:17, Kemeng Shi wrote:
+>> The done_copy_out info from jbd2_journal_write_metadata_buffer is not
+>> used. Simply remove it.
+>>
+>> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+>> ---
+>>  fs/jbd2/journal.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+>> index 207b24e12ce9..068031f35aea 100644
+>> --- a/fs/jbd2/journal.c
+>> +++ b/fs/jbd2/journal.c
+>> @@ -320,7 +320,6 @@ static void journal_kill_thread(journal_t *journal)
+>>   *
+>>   * On success:
+>>   * Bit 0 set == escape performed on the data
+>> - * Bit 1 set == buffer copy-out performed (kfree the data after IO)
+>>   */
+>>  
+>>  int jbd2_journal_write_metadata_buffer(transaction_t *transaction,
+>> @@ -455,7 +454,7 @@ int jbd2_journal_write_metadata_buffer(transaction_t *transaction,
+>>  	set_buffer_shadow(bh_in);
+>>  	spin_unlock(&jh_in->b_state_lock);
+>>  
+>> -	return do_escape | (done_copy_out << 1);
+>> +	return do_escape;
+>>  }
+>>  
+> 
+> I checked the history, it seems that this bit has not been used since
+> the very beginning when the jbd code was merged in, I suppose we could
+> drop it. Since there is only one flag that is still in use, why not just
+> drop the flag and pass out do_escape through an output parameter, or
+> directly pass tag_flag, after that we could also drop the weird
+> "if (flags & 1)" check in jbd2_journal_commit_transaction()?
+Thanks for looking into this. I agree that the "flags & 1" is wired, I
+wonder if we could further remove "flags & 1" with following change:
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
+index 5e122586e06e..67077308b56b 100644
+--- a/fs/jbd2/commit.c
++++ b/fs/jbd2/commit.c
+@@ -353,7 +353,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+        struct buffer_head *descriptor;
+        struct buffer_head **wbuf = journal->j_wbuf;
+        int bufs;
+-       int flags;
++       int escape;
+        int err;
+        unsigned long long blocknr;
+        ktime_t start_time;
+@@ -661,10 +661,10 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+                 */
+                set_bit(BH_JWrite, &jh2bh(jh)->b_state);
+                JBUFFER_TRACE(jh, "ph3: write metadata");
+-               flags = jbd2_journal_write_metadata_buffer(commit_transaction,
++               escape = jbd2_journal_write_metadata_buffer(commit_transaction,
+                                                jh, &wbuf[bufs], blocknr);
+-               if (flags < 0) {
+-                       jbd2_journal_abort(journal, flags);
++               if (escape < 0) {
++                       jbd2_journal_abort(journal, escape);
+                        continue;
+                }
+                jbd2_file_log_bh(&io_bufs, wbuf[bufs]);
+@@ -673,7 +673,7 @@ void jbd2_journal_commit_transaction(journal_t *journal)
+                    buffer */
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+                tag_flag = 0;
+-               if (flags & 1)
++               if (escape)
+                        tag_flag |= JBD2_FLAG_ESCAPE;
+                if (!first_tag)
+                        tag_flag |= JBD2_FLAG_SAME_UUID;
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index 08c59197c5bd..c8a1eca5caab 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -309,10 +309,8 @@ static void journal_kill_thread(journal_t *journal)
+  *
+  * Return value:
+  *  <0: Error
+- * >=0: Finished OK
+- *
+- * On success:
+- * Bit 0 set == escape performed on the data
++ *  =0: Finished OK without escape
++ *  =1: Finished OK with escape
+  */
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+Look forward to your reply.
+Thanks.
+Kemeng
 
-If you want to undo deduplication, reply with:
-#syz undup
+> 
+> Thanks,
+> Yi.
+> 
+
