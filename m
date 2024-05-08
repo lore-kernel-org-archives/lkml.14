@@ -1,16 +1,15 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BB62836D
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83BEF81721
 	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 10:39:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715164753; cv=none; b=Bxo9u6SRDzAdbhJF8bzBAOXUESQJ5dNYO2tGCrCn4Ucvxcn8cKos1wJ3tUmPxylBeb5OaOzuXnsJjr5Dl5mdSooKg8rZPjV7K5nkS/m4ovZ2HPUTaPQoOSyPDvnM7t1sdLLkwnUbrCTw1VgBk2K9BRA/sRGhul8+ysO7KpdtzXc=
+	t=1715164754; cv=none; b=H52BCK7BbFsooHIqCGLoGtL5ZJPsb6qG/J9S7KwjLbjNn4cqSao2pP6C/5mj1phVNc91rCmodOG0d5ATblWsUGVtqhkk4b4Pejv3fjOTR+R3FOkRPPqBMkcmAHE3QbZzWloSGt4abImPj6VMhzLYD73s+qRcKjIg3ej9nE3sjao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715164753; c=relaxed/simple;
-	bh=yDHGXknAKcnKVyO/nYkC7OKUIyh3qMraCazNQoiwyLw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uS1yAX/TqydJIszeF3/F0Wl1aDwS6GgHw3LXWzLR+PaKcrxW4Xk2a5H2/3g7eXcW4E7bXEo5FwNlQDWxFwLSgM4jTYp2rpHn2tOuuUyGLwFBI5cgIM4JNtAYhLNLmbIdZxgkN3iM79Xy3nGUnmP7qVEumlrfs1dna95yh++vmE4=
+	s=arc-20240116; t=1715164754; c=relaxed/simple;
+	bh=shiwGSUaYs6M/v6Nfu5vlAB62BF0UdPHl54Nvv1gzsE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Z1W4jaMsP/2idB6+jXSZundqJiO28V5YkZeDc+EKqsNKL4GDqZ+uCNfnzoIdxvC7HZqnp8925U15+50XAdNgKU5UYkZsY4IxiGrXXL+yM9x/aTyiPOJre5CUuiNY+HbEvUZOjsXQ7DceALJhgx5X7sLYzVXFjhWVbP4pOa7fbLU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +17,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s4ehV-0004BI-8n; Wed, 08 May 2024 12:39:05 +0200
+	id 1s4ehV-0004BH-8n; Wed, 08 May 2024 12:39:05 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s4ehT-000G0G-Gi; Wed, 08 May 2024 12:39:03 +0200
+	id 1s4ehT-000G0F-GF; Wed, 08 May 2024 12:39:03 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s4ehT-00HLTZ-1S;
+	id 1s4ehT-00HLTP-1M;
 	Wed, 08 May 2024 12:39:03 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,12 +46,10 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v1 1/3] net: dsa: microchip: dcb: add comments for DSCP related functions
-Date: Wed,  8 May 2024 12:39:00 +0200
-Message-Id: <20240508103902.4134098-2-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v1 0/3] net: dsa: microchip: DCB fixes 
+Date: Wed,  8 May 2024 12:38:59 +0200
+Message-Id: <20240508103902.4134098-1-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240508103902.4134098-1-o.rempel@pengutronix.de>
-References: <20240508103902.4134098-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,75 +62,21 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-All other functions are commented. Add missing comments to following
-functions:
-ksz_set_global_dscp_entry()
-ksz_port_add_dscp_prio()
-ksz_port_del_dscp_prio()
+This patch series address recommendation to rename IPV to IPM to avoid
+confusion with IPV name used in 802.1Qci PSFP. And restores default "PCP
+only" configuration as source of priorities to avoid possible
+regressions. 
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/net/dsa/microchip/ksz_dcb.c | 33 ++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+Oleksij Rempel (3):
+  net: dsa: microchip: dcb: add comments for DSCP related functions
+  net: dsa: microchip: dcb: rename IPV to IPM
+  net: dsa: microchip: dcb: set default apptrust to PCP only
 
-diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
-index 5e520c02afd72..879471cf815e3 100644
---- a/drivers/net/dsa/microchip/ksz_dcb.c
-+++ b/drivers/net/dsa/microchip/ksz_dcb.c
-@@ -310,7 +310,18 @@ int ksz_port_get_dscp_prio(struct dsa_switch *ds, int port, u8 dscp)
- 	return (data >> shift) & mask;
- }
- 
--static int ksz_set_global_dscp_entry(struct ksz_device *dev, u8 dscp, u8 ipv)
-+/**
-+ * ksz_set_global_dscp_entry - Sets the global DSCP-to-priority mapping entry
-+ * @dev: Pointer to the KSZ switch device structure
-+ * @dscp: DSCP value for which to set the priority
-+ * @ipm: Priority value to set
-+ *
-+ * This function sets the global DSCP-to-priority mapping entry for the
-+ * specified DSCP value.
-+ *
-+ * Return: 0 on success, or a negative error code on failure.
-+ */
-+static int ksz_set_global_dscp_entry(struct ksz_device *dev, u8 dscp, u8 ipm)
- {
- 	int reg, per_reg, shift;
- 	u8 mask;
-@@ -377,6 +388,16 @@ static int ksz_init_global_dscp_map(struct ksz_device *dev)
- 	return 0;
- }
- 
-+/**
-+ * ksz_port_add_dscp_prio - Adds a DSCP-to-priority mapping entry for a port on
-+ *			    a KSZ switch.
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number for which to add the DSCP-to-priority mapping entry
-+ * @dscp: DSCP value for which to add the priority
-+ * @prio: Priority value to set
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
- int ksz_port_add_dscp_prio(struct dsa_switch *ds, int port, u8 dscp, u8 prio)
- {
- 	struct ksz_device *dev = ds->priv;
-@@ -387,6 +408,16 @@ int ksz_port_add_dscp_prio(struct dsa_switch *ds, int port, u8 dscp, u8 prio)
- 	return ksz_set_global_dscp_entry(dev, dscp, prio);
- }
- 
-+/**
-+ * ksz_port_del_dscp_prio - Deletes a DSCP-to-priority mapping entry for a port
-+ *			    on a KSZ switch.
-+ * @ds: Pointer to the DSA switch structure
-+ * @port: Port number for which to delete the DSCP-to-priority mapping entry
-+ * @dscp: DSCP value for which to delete the priority
-+ * @prio: Priority value to delete
-+ *
-+ * Return: 0 on success, or a negative error code on failure
-+ */
- int ksz_port_del_dscp_prio(struct dsa_switch *ds, int port, u8 dscp, u8 prio)
- {
- 	struct ksz_device *dev = ds->priv;
+ drivers/net/dsa/microchip/ksz_common.c |  46 +++++------
+ drivers/net/dsa/microchip/ksz_common.h |   2 +-
+ drivers/net/dsa/microchip/ksz_dcb.c    | 106 ++++++++++++++-----------
+ 3 files changed, 85 insertions(+), 69 deletions(-)
+
 -- 
 2.39.2
 
