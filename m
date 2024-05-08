@@ -1,33 +1,40 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B231117C8D
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 07:49:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B537F2C6B2;
+	Wed,  8 May 2024 07:50:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715154546; cv=none; b=DuwOIFy1UX4lFGnVgfRHr+tHdBWjNOeigOZGDLGeNpvw95i1NKZCKrklW5gxMmaDHjo4PGC2Ja+3ml5ffM15QMRp/enQhp3Q0/lGsho1JuDrJpG/EHcHT7tr1y2dooS8flAhn5tbcv7bgDJlZyQ5fEfuCmLBaMRANJqCn/vN1PI=
+	t=1715154622; cv=none; b=u0XlOrOuIuxcAtDgZ6zkCncRQjdDdlQEcVUp/yNqN3WGAecFtx9vZ+uqUZjvvGKw4uORBP0DHwEdlBaO75p3xVu6plc3d2XfjSEPHW4/DKrRoxrVaGSPU0baIqR6TGnt1bskpGgO7Pc6HYP/tqEFv7+tR9JCzbVefhdBBilM3XQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715154546; c=relaxed/simple;
-	bh=VCPo2uhbepH4wm0G0oSI9vYtTvxrDD84qTpELl3kkVE=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:CC:
-	 References:From:In-Reply-To; b=Skapyq2juyv/AJt2KCjtwp21WQAKYTOmhTTq70RvFuOHF3d2j9cfaSXH4wLHKefS3g8ejdBc1oSZ/MD8cW++QSYOyCNPUgPVw566F04N2TaF99GvoRJDagIVd7LQy7COBhO6GcR1mGc1qW71TRg9d5TcbT51kFw21w4G5gcXHsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VZ6dC0Kbmz1RDmX;
-	Wed,  8 May 2024 15:45:35 +0800 (CST)
-Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id C5704140120;
-	Wed,  8 May 2024 15:48:51 +0800 (CST)
-Received: from [10.174.177.243] (10.174.177.243) by
- dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 8 May 2024 15:48:51 +0800
-Content-Type: multipart/mixed;
-	boundary="------------VyMDYtp4q69oxASCyICYwSes"
-Message-ID: <281aebf1-0bff-4858-b479-866eb05b9e94@huawei.com>
-Date: Wed, 8 May 2024 15:48:50 +0800
+	s=arc-20240116; t=1715154622; c=relaxed/simple;
+	bh=/PYr6SUMNBrkW6nqx2E1+VcSKjZX90qblFRZGrBVVpQ=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ij389LanVXZI5m7XwIjP8WZjiHSm1PW4nj4WWAShjSPD8l1PF32PSlm/Ewa98R+XFRygf+hN3rshtXsQH7VI0B4x4xJr1Fd9GYiT1EKRNHdVsdPSz9wRk9jULpjw8mMexS0RiNK4vlh6584tFNscluY4Bu2koQoEmvhHwVBdy58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Gz9oGuI1; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Gz9oGuI1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1715154615;
+	bh=/PYr6SUMNBrkW6nqx2E1+VcSKjZX90qblFRZGrBVVpQ=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=Gz9oGuI1yC8+sACIr5JJh9YjkCfiapVrZ7q7m8eBgtNre6tIH2qfj3Q4LagZnNqjL
+	 fv7itXCXsp6yunBLbdDV4EBbnFaIHFEFj4PX7rAyF/fHGZKqkflOkGDOJOg43wxUUC
+	 M+2lypCImE4e3cXJcxSO6vKfDDnq4Fj5PmAmCE2UgtsZ6HLJOsSPCr3+etJKB6D+DK
+	 mducZ18pKQMJFEVAIQ9ZM7vVMJi30FKI6rEgAO3XStxP2525SlREL9IlxOMfl2fQ4Y
+	 04TagZ4R3LnQiOPv7JavP92mjJzdGHBFfAOtyFCXcsgozlE6XGWGyo+RfahREpmUYr
+	 XdGohaEJcwyHA==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id ABADA3782170;
+	Wed,  8 May 2024 07:49:44 +0000 (UTC)
+Message-ID: <f4cdb328-fafb-4197-8028-33e472b1a42f@collabora.com>
+Date: Wed, 8 May 2024 12:50:09 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,2391 +42,2725 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH] mm: align larger anonymous mappings on THP
- boundaries
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kernel-team@android.com, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-input@vger.kernel.org, iommu@lists.linux.dev, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-actions@lists.infradead.org, mptcp@lists.linux.dev,
+ linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] selftests: Drop define _GNU_SOURCE
+To: Edward Liaw <edliaw@google.com>, shuah@kernel.org,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Christian Brauner
+ <brauner@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
+ Kees Cook <keescook@chromium.org>,
+ OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?=
+ <andrealmeid@igalia.com>, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Kevin Tian <kevin.tian@intel.com>, Andy Lutomirski <luto@amacapital.net>,
+ Will Drewry <wad@chromium.org>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atishp@atishpatra.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ David Hildenbrand <david@redhat.com>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>, Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Seth Forshee
+ <sforshee@kernel.org>, Bongsu Jeon <bongsu.jeon@samsung.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Steffen Klassert <steffen.klassert@secunet.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
+ <afaerber@suse.de>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Matthieu Baerts <matttbe@kernel.org>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Fenghua Yu <fenghua.yu@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>
+References: <20240507214254.2787305-1-edliaw@google.com>
+ <20240507214254.2787305-5-edliaw@google.com>
 Content-Language: en-US
-To: Yang Shi <shy828301@gmail.com>, Ryan Roberts <ryan.roberts@arm.com>
-CC: David Hildenbrand <david@redhat.com>, Matthew Wilcox
-	<willy@infradead.org>, Yang Shi <yang@os.amperecomputing.com>,
-	<riel@surriel.com>, <cl@linux.com>, <akpm@linux-foundation.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, Ze Zuo
-	<zuoze1@huawei.com>
-References: <20231214223423.1133074-1-yang@os.amperecomputing.com>
- <1e8f5ac7-54ce-433a-ae53-81522b2320e1@arm.com>
- <Zav3UK7ESNxCMjyP@casper.infradead.org>
- <b75cb59a-734f-43d5-b565-fc9bb8c5ed05@arm.com>
- <CAHbLzkpT6padaDo8GimCcQReSGybQn_ntzj+wsZbTXe3urtK-g@mail.gmail.com>
- <bad7ec4a-1507-4ec4-996a-ea29d07d47a0@arm.com>
- <CAHbLzkrtcsU=pW13AyAMvF72A03fUV5iFcM0HwQoEemeajtqxg@mail.gmail.com>
- <b84e2799-2b6c-4670-b017-3a04ec18c0f2@arm.com>
- <dea802da-2e5e-4c91-b817-43afdde68958@huawei.com>
- <1dc9a561-55f7-4d65-8b86-8a40fa0e84f9@arm.com>
- <6016c0e9-b567-4205-8368-1f1c76184a28@huawei.com>
- <2c14d9ad-c5a3-4f29-a6eb-633cdf3a5e9e@redhat.com>
- <da24d8bb-3723-48fa-86f4-8b24457d3556@huawei.com>
- <2b403705-a03c-4cfe-8d95-b38dd83fca52@arm.com>
- <CAHbLzkq9BQFfpjxG_ozrgzWOO3XJmtre-mgY03McY6guVn7U9g@mail.gmail.com>
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-In-Reply-To: <CAHbLzkq9BQFfpjxG_ozrgzWOO3XJmtre-mgY03McY6guVn7U9g@mail.gmail.com>
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm100001.china.huawei.com (7.185.36.93)
-
---------------VyMDYtp4q69oxASCyICYwSes
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240507214254.2787305-5-edliaw@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-
-
-On 2024/5/8 1:17, Yang Shi wrote:
-> On Tue, May 7, 2024 at 8:53 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
->>
->> On 07/05/2024 14:53, Kefeng Wang wrote:
->>>
->>>
->>> On 2024/5/7 19:13, David Hildenbrand wrote:
->>>>
->>>>> https://github.com/intel/lmbench/blob/master/src/lat_mem_rd.c#L95
->>>>>
->>>>>> suggest. If you want to try something semi-randomly; it might be useful to rule
->>>>>> out the arm64 contpte feature. I don't see how that would be interacting
->>>>>> here if
->>>>>> mTHP is disabled (is it?). But its new for 6.9 and arm64 only. Disable with
->>>>>> ARM64_CONTPTE (needs EXPERT) at compile time.
->>>>> I don't enabled mTHP, so it should be not related about ARM64_CONTPTE,
->>>>> but will have a try.
->>>
->>> After ARM64_CONTPTE disabled, memory read latency is similar with ARM64_CONTPTE
->>> enabled(default 6.9-rc7), still larger than align anon reverted.
->>
->> OK thanks for trying.
->>
->> Looking at the source for lmbench, its malloc'ing (512M + 8K) up front and using
->> that for all sizes. That will presumably be considered "large" by malloc and
->> will be allocated using mmap. So with the patch, it will be 2M aligned. Without
->> it, it probably won't. I'm still struggling to understand why not aligning it in
->> virtual space would make it more performant though...
+On 5/8/24 2:38 AM, Edward Liaw wrote:
+> _GNU_SOURCE is provided by KHDR_INCLUDES, so it should be dropped to
+> prevent _GNU_SOURCE redefined warnings.
 > 
-> Yeah, I'm confused too.
-Me too, I get a smaps[_rollup] for 0.09375M size, the biggest difference
-for anon shows below, and all attached.
+> Fixes: 809216233555 ("selftests/harness: remove use of LINE_MAX")
+> Signed-off-by: Edward Liaw <edliaw@google.com>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-1) with efa7df3e3bb5 smaps
-
-ffff68e00000-ffff88e03000 rw-p 00000000 00:00 0
-Size:             524300 kB
-KernelPageSize:        4 kB
-MMUPageSize:           4 kB
-Rss:                2048 kB
-Pss:                2048 kB
-Pss_Dirty:          2048 kB
-Shared_Clean:          0 kB
-Shared_Dirty:          0 kB
-Private_Clean:         0 kB
-Private_Dirty:      2048 kB
-Referenced:         2048 kB
-Anonymous:          2048 kB // we have 1 anon thp
-KSM:                   0 kB
-LazyFree:              0 kB
-AnonHugePages:      2048 kB
-ShmemPmdMapped:        0 kB
-FilePmdMapped:         0 kB
-Shared_Hugetlb:        0 kB
-Private_Hugetlb:       0 kB
-Swap:                  0 kB
-SwapPss:               0 kB
-Locked:                0 kB
-THPeligible:           1
-VmFlags: rd wr mr mw me ac
-ffff88eff000-ffff89000000 rw-p 00000000 00:00 0
-Size:               1028 kB
-KernelPageSize:        4 kB
-MMUPageSize:           4 kB
-Rss:                1028 kB
-Pss:                1028 kB
-Pss_Dirty:          1028 kB
-Shared_Clean:          0 kB
-Shared_Dirty:          0 kB
-Private_Clean:         0 kB
-Private_Dirty:      1028 kB
-Referenced:         1028 kB
-Anonymous:          1028 kB // another large anon
-KSM:                   0 kB
-LazyFree:              0 kB
-AnonHugePages:         0 kB
-ShmemPmdMapped:        0 kB
-FilePmdMapped:         0 kB
-Shared_Hugetlb:        0 kB
-Private_Hugetlb:       0 kB
-Swap:                  0 kB
-SwapPss:               0 kB
-Locked:                0 kB
-THPeligible:           0
-VmFlags: rd wr mr mw me ac
-
-and the smap_rollup
-
-00400000-fffff56bd000 ---p 00000000 00:00 0 
-[rollup]
-Rss:                4724 kB
-Pss:                3408 kB
-Pss_Dirty:          3338 kB
-Pss_Anon:           3338 kB
-Pss_File:             70 kB
-Pss_Shmem:             0 kB
-Shared_Clean:       1176 kB
-Shared_Dirty:        420 kB
-Private_Clean:         0 kB
-Private_Dirty:      3128 kB
-Referenced:         4344 kB
-Anonymous:          3548 kB
-KSM:                   0 kB
-LazyFree:              0 kB
-AnonHugePages:      2048 kB
-ShmemPmdMapped:        0 kB
-FilePmdMapped:         0 kB
-Shared_Hugetlb:        0 kB
-Private_Hugetlb:       0 kB
-Swap:                  0 kB
-SwapPss:               0 kB
-Locked:                0 kB
-
-2) without efa7df3e3bb5 smaps
-
-ffff9845b000-ffffb855f000 rw-p 00000000 00:00 0
-Size:             525328 kB
-KernelPageSize:        4 kB
-MMUPageSize:           4 kB
-Rss:                1128 kB
-Pss:                1128 kB
-Pss_Dirty:          1128 kB
-Shared_Clean:          0 kB
-Shared_Dirty:          0 kB
-Private_Clean:         0 kB
-Private_Dirty:      1128 kB
-Referenced:         1128 kB
-Anonymous:          1128 kB // only large anon
-KSM:                   0 kB
-LazyFree:              0 kB
-AnonHugePages:         0 kB
-ShmemPmdMapped:        0 kB
-FilePmdMapped:         0 kB
-Shared_Hugetlb:        0 kB
-Private_Hugetlb:       0 kB
-Swap:                  0 kB
-SwapPss:               0 kB
-Locked:                0 kB
-THPeligible:           1
-VmFlags: rd wr mr mw me ac
-
-and the smap_rollup,
-
-00400000-ffffca5dc000 ---p 00000000 00:00 0 
-[rollup]
-Rss:                2600 kB
-Pss:                1472 kB
-Pss_Dirty:          1388 kB
-Pss_Anon:           1388 kB
-Pss_File:             84 kB
-Pss_Shmem:             0 kB
-Shared_Clean:       1000 kB
-Shared_Dirty:        424 kB
-Private_Clean:         0 kB
-Private_Dirty:      1176 kB
-Referenced:         2220 kB
-Anonymous:          1600 kB
-KSM:                   0 kB
-LazyFree:              0 kB
-AnonHugePages:         0 kB
-ShmemPmdMapped:        0 kB
-FilePmdMapped:         0 kB
-Shared_Hugetlb:        0 kB
-Private_Hugetlb:       0 kB
-Swap:                  0 kB
-SwapPss:               0 kB
-Locked:                0 kB
-
+> ---
+>  tools/testing/selftests/cachestat/test_cachestat.c            | 2 --
+>  tools/testing/selftests/capabilities/test_execve.c            | 2 --
+>  tools/testing/selftests/clone3/clone3.c                       | 2 --
+>  .../testing/selftests/clone3/clone3_cap_checkpoint_restore.c  | 2 --
+>  tools/testing/selftests/clone3/clone3_clear_sighand.c         | 2 --
+>  tools/testing/selftests/clone3/clone3_selftests.h             | 1 -
+>  tools/testing/selftests/clone3/clone3_set_tid.c               | 2 --
+>  tools/testing/selftests/core/close_range_test.c               | 2 --
+>  tools/testing/selftests/drivers/dma-buf/udmabuf.c             | 1 -
+>  tools/testing/selftests/fchmodat2/fchmodat2_test.c            | 2 --
+>  tools/testing/selftests/filesystems/binderfs/binderfs_test.c  | 2 --
+>  tools/testing/selftests/filesystems/devpts_pts.c              | 1 -
+>  tools/testing/selftests/filesystems/dnotify_test.c            | 1 -
+>  tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c | 2 --
+>  tools/testing/selftests/filesystems/eventfd/eventfd_test.c    | 2 --
+>  tools/testing/selftests/filesystems/fat/rename_exchange.c     | 2 --
+>  tools/testing/selftests/filesystems/overlayfs/dev_in_maps.c   | 2 --
+>  .../testing/selftests/filesystems/statmount/statmount_test.c  | 3 ---
+>  tools/testing/selftests/futex/functional/futex_requeue_pi.c   | 3 ---
+>  tools/testing/selftests/ipc/msgque.c                          | 1 -
+>  tools/testing/selftests/kcmp/kcmp_test.c                      | 2 --
+>  tools/testing/selftests/kvm/aarch64/arch_timer.c              | 2 --
+>  tools/testing/selftests/kvm/aarch64/page_fault_test.c         | 1 -
+>  tools/testing/selftests/kvm/aarch64/psci_test.c               | 3 ---
+>  tools/testing/selftests/kvm/aarch64/vgic_init.c               | 1 -
+>  tools/testing/selftests/kvm/arch_timer.c                      | 3 ---
+>  tools/testing/selftests/kvm/demand_paging_test.c              | 3 ---
+>  tools/testing/selftests/kvm/dirty_log_test.c                  | 3 ---
+>  tools/testing/selftests/kvm/guest_memfd_test.c                | 2 --
+>  tools/testing/selftests/kvm/hardware_disable_test.c           | 3 ---
+>  tools/testing/selftests/kvm/include/userfaultfd_util.h        | 3 ---
+>  tools/testing/selftests/kvm/kvm_binary_stats_test.c           | 2 --
+>  tools/testing/selftests/kvm/kvm_create_max_vcpus.c            | 2 --
+>  tools/testing/selftests/kvm/kvm_page_table_test.c             | 3 ---
+>  tools/testing/selftests/kvm/lib/assert.c                      | 3 ---
+>  tools/testing/selftests/kvm/lib/kvm_util.c                    | 2 --
+>  tools/testing/selftests/kvm/lib/memstress.c                   | 2 --
+>  tools/testing/selftests/kvm/lib/test_util.c                   | 2 --
+>  tools/testing/selftests/kvm/lib/userfaultfd_util.c            | 3 ---
+>  tools/testing/selftests/kvm/lib/x86_64/sev.c                  | 1 -
+>  tools/testing/selftests/kvm/max_guest_memory_test.c           | 2 --
+>  .../testing/selftests/kvm/memslot_modification_stress_test.c  | 3 ---
+>  tools/testing/selftests/kvm/riscv/arch_timer.c                | 3 ---
+>  tools/testing/selftests/kvm/rseq_test.c                       | 1 -
+>  tools/testing/selftests/kvm/s390x/cmma_test.c                 | 2 --
+>  tools/testing/selftests/kvm/s390x/sync_regs_test.c            | 2 --
+>  tools/testing/selftests/kvm/set_memory_region_test.c          | 1 -
+>  tools/testing/selftests/kvm/steal_time.c                      | 1 -
+>  tools/testing/selftests/kvm/x86_64/amx_test.c                 | 2 --
+>  .../selftests/kvm/x86_64/exit_on_emulation_failure_test.c     | 3 ---
+>  tools/testing/selftests/kvm/x86_64/hwcr_msr_test.c            | 2 --
+>  tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c             | 2 --
+>  tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c             | 1 -
+>  tools/testing/selftests/kvm/x86_64/hyperv_ipi.c               | 2 --
+>  tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c          | 1 -
+>  tools/testing/selftests/kvm/x86_64/hyperv_tlb_flush.c         | 2 --
+>  tools/testing/selftests/kvm/x86_64/nested_exceptions_test.c   | 2 --
+>  tools/testing/selftests/kvm/x86_64/nx_huge_pages_test.c       | 3 ---
+>  tools/testing/selftests/kvm/x86_64/platform_info_test.c       | 2 --
+>  tools/testing/selftests/kvm/x86_64/pmu_counters_test.c        | 2 --
+>  tools/testing/selftests/kvm/x86_64/pmu_event_filter_test.c    | 3 ---
+>  .../selftests/kvm/x86_64/private_mem_conversions_test.c       | 1 -
+>  tools/testing/selftests/kvm/x86_64/set_boot_cpu_id.c          | 1 -
+>  tools/testing/selftests/kvm/x86_64/set_sregs_test.c           | 1 -
+>  .../selftests/kvm/x86_64/smaller_maxphyaddr_emulation_test.c  | 3 ---
+>  tools/testing/selftests/kvm/x86_64/smm_test.c                 | 1 -
+>  tools/testing/selftests/kvm/x86_64/state_test.c               | 1 -
+>  tools/testing/selftests/kvm/x86_64/sync_regs_test.c           | 2 --
+>  tools/testing/selftests/kvm/x86_64/ucna_injection_test.c      | 2 --
+>  tools/testing/selftests/kvm/x86_64/userspace_msr_exit_test.c  | 2 --
+>  tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c       | 3 ---
+>  tools/testing/selftests/kvm/x86_64/vmx_pmu_caps_test.c        | 1 -
+>  .../testing/selftests/kvm/x86_64/vmx_preemption_timer_test.c  | 1 -
+>  tools/testing/selftests/kvm/x86_64/xapic_ipi_test.c           | 2 --
+>  tools/testing/selftests/kvm/x86_64/xapic_state_test.c         | 1 -
+>  tools/testing/selftests/kvm/x86_64/xss_msr_test.c             | 2 --
+>  tools/testing/selftests/landlock/base_test.c                  | 2 --
+>  tools/testing/selftests/landlock/fs_test.c                    | 2 --
+>  tools/testing/selftests/landlock/net_test.c                   | 2 --
+>  tools/testing/selftests/landlock/ptrace_test.c                | 2 --
+>  tools/testing/selftests/lsm/common.c                          | 2 --
+>  tools/testing/selftests/lsm/lsm_get_self_attr_test.c          | 2 --
+>  tools/testing/selftests/lsm/lsm_list_modules_test.c           | 2 --
+>  tools/testing/selftests/lsm/lsm_set_self_attr_test.c          | 2 --
+>  tools/testing/selftests/membarrier/membarrier_test_impl.h     | 1 -
+>  .../selftests/membarrier/membarrier_test_multi_thread.c       | 1 -
+>  .../selftests/membarrier/membarrier_test_single_thread.c      | 1 -
+>  tools/testing/selftests/memfd/common.c                        | 1 -
+>  tools/testing/selftests/memfd/fuse_test.c                     | 2 --
+>  tools/testing/selftests/memfd/memfd_test.c                    | 1 -
+>  tools/testing/selftests/mm/cow.c                              | 1 -
+>  tools/testing/selftests/mm/gup_longterm.c                     | 1 -
+>  tools/testing/selftests/mm/hugepage-mmap.c                    | 1 -
+>  tools/testing/selftests/mm/hugepage-mremap.c                  | 2 --
+>  tools/testing/selftests/mm/hugetlb-madvise.c                  | 2 --
+>  tools/testing/selftests/mm/hugetlb-read-hwpoison.c            | 2 --
+>  tools/testing/selftests/mm/khugepaged.c                       | 1 -
+>  tools/testing/selftests/mm/ksm_functional_tests.c             | 1 -
+>  tools/testing/selftests/mm/madv_populate.c                    | 1 -
+>  tools/testing/selftests/mm/map_populate.c                     | 2 --
+>  tools/testing/selftests/mm/mdwe_test.c                        | 1 -
+>  tools/testing/selftests/mm/memfd_secret.c                     | 2 --
+>  tools/testing/selftests/mm/mlock2-tests.c                     | 1 -
+>  tools/testing/selftests/mm/mrelease_test.c                    | 1 -
+>  tools/testing/selftests/mm/mremap_dontunmap.c                 | 1 -
+>  tools/testing/selftests/mm/mremap_test.c                      | 2 --
+>  tools/testing/selftests/mm/pagemap_ioctl.c                    | 1 -
+>  tools/testing/selftests/mm/pkey-helpers.h                     | 1 -
+>  tools/testing/selftests/mm/protection_keys.c                  | 1 -
+>  tools/testing/selftests/mm/split_huge_page_test.c             | 2 --
+>  tools/testing/selftests/mm/thuge-gen.c                        | 2 --
+>  tools/testing/selftests/mm/uffd-common.h                      | 1 -
+>  tools/testing/selftests/mount_setattr/mount_setattr_test.c    | 1 -
+>  .../move_mount_set_group/move_mount_set_group_test.c          | 1 -
+>  tools/testing/selftests/net/af_unix/diag_uid.c                | 2 --
+>  tools/testing/selftests/net/af_unix/scm_pidfd.c               | 1 -
+>  tools/testing/selftests/net/af_unix/unix_connect.c            | 2 --
+>  tools/testing/selftests/net/csum.c                            | 3 ---
+>  tools/testing/selftests/net/gro.c                             | 3 ---
+>  tools/testing/selftests/net/ip_defrag.c                       | 3 ---
+>  tools/testing/selftests/net/ipsec.c                           | 3 ---
+>  tools/testing/selftests/net/ipv6_flowlabel.c                  | 3 ---
+>  tools/testing/selftests/net/ipv6_flowlabel_mgr.c              | 3 ---
+>  tools/testing/selftests/net/mptcp/mptcp_connect.c             | 3 ---
+>  tools/testing/selftests/net/mptcp/mptcp_inq.c                 | 3 ---
+>  tools/testing/selftests/net/mptcp/mptcp_sockopt.c             | 3 ---
+>  tools/testing/selftests/net/msg_zerocopy.c                    | 3 ---
+>  tools/testing/selftests/net/nettest.c                         | 2 --
+>  tools/testing/selftests/net/psock_fanout.c                    | 3 ---
+>  tools/testing/selftests/net/psock_snd.c                       | 3 ---
+>  tools/testing/selftests/net/reuseport_addr_any.c              | 3 ---
+>  tools/testing/selftests/net/reuseport_bpf_cpu.c               | 3 ---
+>  tools/testing/selftests/net/reuseport_bpf_numa.c              | 3 ---
+>  tools/testing/selftests/net/reuseport_dualstack.c             | 3 ---
+>  tools/testing/selftests/net/so_incoming_cpu.c                 | 1 -
+>  tools/testing/selftests/net/so_netns_cookie.c                 | 1 -
+>  tools/testing/selftests/net/so_txtime.c                       | 3 ---
+>  tools/testing/selftests/net/tap.c                             | 3 ---
+>  tools/testing/selftests/net/tcp_fastopen_backup_key.c         | 1 -
+>  tools/testing/selftests/net/tcp_inq.c                         | 2 --
+>  tools/testing/selftests/net/tcp_mmap.c                        | 1 -
+>  tools/testing/selftests/net/tls.c                             | 3 ---
+>  tools/testing/selftests/net/toeplitz.c                        | 3 ---
+>  tools/testing/selftests/net/tun.c                             | 3 ---
+>  tools/testing/selftests/net/txring_overwrite.c                | 3 ---
+>  tools/testing/selftests/net/txtimestamp.c                     | 3 ---
+>  tools/testing/selftests/net/udpgso.c                          | 3 ---
+>  tools/testing/selftests/net/udpgso_bench_rx.c                 | 3 ---
+>  tools/testing/selftests/net/udpgso_bench_tx.c                 | 3 ---
+>  tools/testing/selftests/perf_events/remove_on_exec.c          | 2 --
+>  tools/testing/selftests/perf_events/sigtrap_threads.c         | 2 --
+>  tools/testing/selftests/pid_namespace/regression_enomem.c     | 1 -
+>  tools/testing/selftests/pidfd/pidfd.h                         | 1 -
+>  tools/testing/selftests/pidfd/pidfd_fdinfo_test.c             | 2 --
+>  tools/testing/selftests/pidfd/pidfd_getfd_test.c              | 2 --
+>  tools/testing/selftests/pidfd/pidfd_open_test.c               | 2 --
+>  tools/testing/selftests/pidfd/pidfd_poll_test.c               | 2 --
+>  tools/testing/selftests/pidfd/pidfd_setns_test.c              | 2 --
+>  tools/testing/selftests/pidfd/pidfd_test.c                    | 2 --
+>  tools/testing/selftests/pidfd/pidfd_wait.c                    | 2 --
+>  tools/testing/selftests/ptrace/get_set_sud.c                  | 1 -
+>  tools/testing/selftests/ptrace/peeksiginfo.c                  | 1 -
+>  tools/testing/selftests/rseq/basic_percpu_ops_test.c          | 1 -
+>  tools/testing/selftests/rseq/basic_test.c                     | 2 --
+>  tools/testing/selftests/rseq/param_test.c                     | 1 -
+>  tools/testing/selftests/rseq/rseq.c                           | 2 --
+>  tools/testing/selftests/seccomp/seccomp_benchmark.c           | 1 -
+>  tools/testing/selftests/seccomp/seccomp_bpf.c                 | 2 --
+>  tools/testing/selftests/user_events/abi_test.c                | 2 --
+>  tools/testing/selftests/x86/amx.c                             | 2 --
+>  tools/testing/selftests/x86/check_initial_reg_state.c         | 3 ---
+>  tools/testing/selftests/x86/corrupt_xstate_header.c           | 3 ---
+>  tools/testing/selftests/x86/entry_from_vm86.c                 | 3 ---
+>  tools/testing/selftests/x86/fsgsbase.c                        | 2 --
+>  tools/testing/selftests/x86/fsgsbase_restore.c                | 2 --
+>  tools/testing/selftests/x86/ioperm.c                          | 2 --
+>  tools/testing/selftests/x86/iopl.c                            | 2 --
+>  tools/testing/selftests/x86/lam.c                             | 1 -
+>  tools/testing/selftests/x86/ldt_gdt.c                         | 2 --
+>  tools/testing/selftests/x86/mov_ss_trap.c                     | 2 --
+>  tools/testing/selftests/x86/nx_stack.c                        | 2 --
+>  tools/testing/selftests/x86/ptrace_syscall.c                  | 2 --
+>  tools/testing/selftests/x86/sigaltstack.c                     | 2 --
+>  tools/testing/selftests/x86/sigreturn.c                       | 3 ---
+>  tools/testing/selftests/x86/single_step_syscall.c             | 3 ---
+>  tools/testing/selftests/x86/syscall_arg_fault.c               | 3 ---
+>  tools/testing/selftests/x86/syscall_numbering.c               | 3 ---
+>  tools/testing/selftests/x86/sysret_rip.c                      | 3 ---
+>  tools/testing/selftests/x86/sysret_ss_attrs.c                 | 3 ---
+>  tools/testing/selftests/x86/test_FCMOV.c                      | 4 ----
+>  tools/testing/selftests/x86/test_FCOMI.c                      | 4 ----
+>  tools/testing/selftests/x86/test_FISTTP.c                     | 4 ----
+>  tools/testing/selftests/x86/test_mremap_vdso.c                | 1 -
+>  tools/testing/selftests/x86/test_shadow_stack.c               | 3 ---
+>  tools/testing/selftests/x86/test_syscall_vdso.c               | 4 ----
+>  tools/testing/selftests/x86/test_vsyscall.c                   | 3 ---
+>  tools/testing/selftests/x86/unwind_vdso.c                     | 3 ---
+>  tools/testing/selftests/x86/vdso_restorer.c                   | 3 ---
+>  198 files changed, 405 deletions(-)
 > 
-> I just ran the same command on 6.6.13 (w/o the thp alignment patch and
-> mTHP stuff) and 6.9-rc4 (w/ the thp alignment patch and all mTHP
-> stuff) on my arm64 machine, but I didn't see such a pattern.
-> 
-> The result has a little bit fluctuation, for example, 6.6.13 has
-> better result with 4M/6M/8M, but 6.9-rc4 has better result for
-> 12M/16M/32M/48M/64M, and the difference may be quite noticeable. But
-> anyway I didn't see such a regression pattern.
+> diff --git a/tools/testing/selftests/cachestat/test_cachestat.c b/tools/testing/selftests/cachestat/test_cachestat.c
+> index b171fd53b004..c1a6ce7b0912 100644
+> --- a/tools/testing/selftests/cachestat/test_cachestat.c
+> +++ b/tools/testing/selftests/cachestat/test_cachestat.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+> -
+>  #include <stdio.h>
+>  #include <stdbool.h>
+>  #include <linux/kernel.h>
+> diff --git a/tools/testing/selftests/capabilities/test_execve.c b/tools/testing/selftests/capabilities/test_execve.c
+> index 7cde07a5df78..e3954b88c3ee 100644
+> --- a/tools/testing/selftests/capabilities/test_execve.c
+> +++ b/tools/testing/selftests/capabilities/test_execve.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+> -
+>  #include <cap-ng.h>
+>  #include <linux/capability.h>
+>  #include <stdbool.h>
+> diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selftests/clone3/clone3.c
+> index 3c9bf0cd82a8..3c5e45dae617 100644
+> --- a/tools/testing/selftests/clone3/clone3.c
+> +++ b/tools/testing/selftests/clone3/clone3.c
+> @@ -1,8 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  
+>  /* Based on Christian Brauner's clone3() example */
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <inttypes.h>
+>  #include <linux/types.h>
+> diff --git a/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c b/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
+> index 31b56d625655..bb99ea20f7d5 100644
+> --- a/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
+> +++ b/tools/testing/selftests/clone3/clone3_cap_checkpoint_restore.c
+> @@ -7,8 +7,6 @@
+>   */
+>  
+>  /* capabilities related code based on selftests/bpf/test_verifier.c */
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <linux/types.h>
+>  #include <linux/sched.h>
+> diff --git a/tools/testing/selftests/clone3/clone3_clear_sighand.c b/tools/testing/selftests/clone3/clone3_clear_sighand.c
+> index 54a8b2445be9..50336d56db6b 100644
+> --- a/tools/testing/selftests/clone3/clone3_clear_sighand.c
+> +++ b/tools/testing/selftests/clone3/clone3_clear_sighand.c
+> @@ -1,6 +1,4 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <sched.h>
+>  #include <signal.h>
+> diff --git a/tools/testing/selftests/clone3/clone3_selftests.h b/tools/testing/selftests/clone3/clone3_selftests.h
+> index 3d2663fe50ba..172e19d5515f 100644
+> --- a/tools/testing/selftests/clone3/clone3_selftests.h
+> +++ b/tools/testing/selftests/clone3/clone3_selftests.h
+> @@ -3,7 +3,6 @@
+>  #ifndef _CLONE3_SELFTESTS_H
+>  #define _CLONE3_SELFTESTS_H
+>  
+> -#define _GNU_SOURCE
+>  #include <sched.h>
+>  #include <linux/sched.h>
+>  #include <linux/types.h>
+> diff --git a/tools/testing/selftests/clone3/clone3_set_tid.c b/tools/testing/selftests/clone3/clone3_set_tid.c
+> index ed785afb6077..8b5ed4484ee6 100644
+> --- a/tools/testing/selftests/clone3/clone3_set_tid.c
+> +++ b/tools/testing/selftests/clone3/clone3_set_tid.c
+> @@ -5,8 +5,6 @@
+>   * These tests are assuming to be running in the host's
+>   * PID namespace.
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <linux/types.h>
+>  #include <linux/sched.h>
+> diff --git a/tools/testing/selftests/core/close_range_test.c b/tools/testing/selftests/core/close_range_test.c
+> index c59e4adb905d..1c2902bcc913 100644
+> --- a/tools/testing/selftests/core/close_range_test.c
+> +++ b/tools/testing/selftests/core/close_range_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <linux/kernel.h>
+> diff --git a/tools/testing/selftests/drivers/dma-buf/udmabuf.c b/tools/testing/selftests/drivers/dma-buf/udmabuf.c
+> index c812080e304e..7c8dbab8ac44 100644
+> --- a/tools/testing/selftests/drivers/dma-buf/udmabuf.c
+> +++ b/tools/testing/selftests/drivers/dma-buf/udmabuf.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #define __EXPORTED_HEADERS__
+>  
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/fchmodat2/fchmodat2_test.c b/tools/testing/selftests/fchmodat2/fchmodat2_test.c
+> index e0319417124d..6b411859c2cd 100644
+> --- a/tools/testing/selftests/fchmodat2/fchmodat2_test.c
+> +++ b/tools/testing/selftests/fchmodat2/fchmodat2_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+> -
+> -#define _GNU_SOURCE
+>  #include <fcntl.h>
+>  #include <sys/stat.h>
+>  #include <sys/types.h>
+> diff --git a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+> index 5f362c0fd890..fca693db1b09 100644
+> --- a/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+> +++ b/tools/testing/selftests/filesystems/binderfs/binderfs_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <pthread.h>
+> diff --git a/tools/testing/selftests/filesystems/devpts_pts.c b/tools/testing/selftests/filesystems/devpts_pts.c
+> index b1fc9b916ace..73766447eeb0 100644
+> --- a/tools/testing/selftests/filesystems/devpts_pts.c
+> +++ b/tools/testing/selftests/filesystems/devpts_pts.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <sched.h>
+> diff --git a/tools/testing/selftests/filesystems/dnotify_test.c b/tools/testing/selftests/filesystems/dnotify_test.c
+> index c0a9b2d3302d..05367a70b963 100644
+> --- a/tools/testing/selftests/filesystems/dnotify_test.c
+> +++ b/tools/testing/selftests/filesystems/dnotify_test.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE	/* needed to get the defines */
+>  #include <fcntl.h>	/* in glibc 2.2 this has the needed
+>  				   values defined */
+>  #include <signal.h>
+> diff --git a/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c b/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
+> index 65ede506305c..9bc2ddad7e92 100644
+> --- a/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
+> +++ b/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <asm/unistd.h>
+>  #include <linux/time_types.h>
+>  #include <poll.h>
+> diff --git a/tools/testing/selftests/filesystems/eventfd/eventfd_test.c b/tools/testing/selftests/filesystems/eventfd/eventfd_test.c
+> index f142a137526c..17935f42fbc9 100644
+> --- a/tools/testing/selftests/filesystems/eventfd/eventfd_test.c
+> +++ b/tools/testing/selftests/filesystems/eventfd/eventfd_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <asm/unistd.h>
+> diff --git a/tools/testing/selftests/filesystems/fat/rename_exchange.c b/tools/testing/selftests/filesystems/fat/rename_exchange.c
+> index e488ad354fce..56cf3ad8640d 100644
+> --- a/tools/testing/selftests/filesystems/fat/rename_exchange.c
+> +++ b/tools/testing/selftests/filesystems/fat/rename_exchange.c
+> @@ -6,8 +6,6 @@
+>   * Copyright 2022 Red Hat Inc.
+>   * Author: Javier Martinez Canillas <javierm@redhat.com>
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/filesystems/overlayfs/dev_in_maps.c b/tools/testing/selftests/filesystems/overlayfs/dev_in_maps.c
+> index 759f86e7d263..b58a80bde95a 100644
+> --- a/tools/testing/selftests/filesystems/overlayfs/dev_in_maps.c
+> +++ b/tools/testing/selftests/filesystems/overlayfs/dev_in_maps.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+> -
+>  #include <inttypes.h>
+>  #include <unistd.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/filesystems/statmount/statmount_test.c b/tools/testing/selftests/filesystems/statmount/statmount_test.c
+> index 3eafd7da58e2..d1cefd1b7d16 100644
+> --- a/tools/testing/selftests/filesystems/statmount/statmount_test.c
+> +++ b/tools/testing/selftests/filesystems/statmount/statmount_test.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0-or-later
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <assert.h>
+>  #include <stdint.h>
+>  #include <sched.h>
+> diff --git a/tools/testing/selftests/futex/functional/futex_requeue_pi.c b/tools/testing/selftests/futex/functional/futex_requeue_pi.c
+> index 7f3ca5c78df1..8e41f9fe784c 100644
+> --- a/tools/testing/selftests/futex/functional/futex_requeue_pi.c
+> +++ b/tools/testing/selftests/futex/functional/futex_requeue_pi.c
+> @@ -16,9 +16,6 @@
+>   *      2009-Nov-6: futex test adaptation by Darren Hart <dvhart@linux.intel.com>
+>   *
+>   *****************************************************************************/
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <errno.h>
+>  #include <limits.h>
+>  #include <pthread.h>
+> diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
+> index 656c43c24044..291c81d59a9d 100644
+> --- a/tools/testing/selftests/ipc/msgque.c
+> +++ b/tools/testing/selftests/ipc/msgque.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include <stdlib.h>
+>  #include <stdio.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/kcmp/kcmp_test.c b/tools/testing/selftests/kcmp/kcmp_test.c
+> index 25110c7c0b3e..885c9e943cee 100644
+> --- a/tools/testing/selftests/kcmp/kcmp_test.c
+> +++ b/tools/testing/selftests/kcmp/kcmp_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+> -
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <signal.h>
+> diff --git a/tools/testing/selftests/kvm/aarch64/arch_timer.c b/tools/testing/selftests/kvm/aarch64/arch_timer.c
+> index 4eaba83cdcf3..5369959e9fc2 100644
+> --- a/tools/testing/selftests/kvm/aarch64/arch_timer.c
+> +++ b/tools/testing/selftests/kvm/aarch64/arch_timer.c
+> @@ -5,8 +5,6 @@
+>   *
+>   * Copyright (c) 2021, Google LLC.
+>   */
+> -#define _GNU_SOURCE
+> -
+>  #include "arch_timer.h"
+>  #include "delay.h"
+>  #include "gic.h"
+> diff --git a/tools/testing/selftests/kvm/aarch64/page_fault_test.c b/tools/testing/selftests/kvm/aarch64/page_fault_test.c
+> index 5972905275cf..79e99f47a9fe 100644
+> --- a/tools/testing/selftests/kvm/aarch64/page_fault_test.c
+> +++ b/tools/testing/selftests/kvm/aarch64/page_fault_test.c
+> @@ -7,7 +7,6 @@
+>   * hugetlbfs with a hole). It checks that the expected handling method is
+>   * called (e.g., uffd faults with the right address and write/read flag).
+>   */
+> -#define _GNU_SOURCE
+>  #include <linux/bitmap.h>
+>  #include <fcntl.h>
+>  #include <test_util.h>
+> diff --git a/tools/testing/selftests/kvm/aarch64/psci_test.c b/tools/testing/selftests/kvm/aarch64/psci_test.c
+> index 9b004905d1d3..1c8c6f0c1ca3 100644
+> --- a/tools/testing/selftests/kvm/aarch64/psci_test.c
+> +++ b/tools/testing/selftests/kvm/aarch64/psci_test.c
+> @@ -10,9 +10,6 @@
+>   *  - A test for KVM's handling of PSCI SYSTEM_SUSPEND and the associated
+>   *    KVM_SYSTEM_EVENT_SUSPEND UAPI.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <linux/psci.h>
+>  
+>  #include "kvm_util.h"
+> diff --git a/tools/testing/selftests/kvm/aarch64/vgic_init.c b/tools/testing/selftests/kvm/aarch64/vgic_init.c
+> index ca917c71ff60..b3b5fb0ff0a9 100644
+> --- a/tools/testing/selftests/kvm/aarch64/vgic_init.c
+> +++ b/tools/testing/selftests/kvm/aarch64/vgic_init.c
+> @@ -4,7 +4,6 @@
+>   *
+>   * Copyright (C) 2020, Red Hat, Inc.
+>   */
+> -#define _GNU_SOURCE
+>  #include <linux/kernel.h>
+>  #include <sys/syscall.h>
+>  #include <asm/kvm.h>
+> diff --git a/tools/testing/selftests/kvm/arch_timer.c b/tools/testing/selftests/kvm/arch_timer.c
+> index ae1f1a6d8312..fcebd8d81ce4 100644
+> --- a/tools/testing/selftests/kvm/arch_timer.c
+> +++ b/tools/testing/selftests/kvm/arch_timer.c
+> @@ -19,9 +19,6 @@
+>   *
+>   * Copyright (c) 2021, Google LLC.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <stdlib.h>
+>  #include <pthread.h>
+>  #include <linux/sizes.h>
+> diff --git a/tools/testing/selftests/kvm/demand_paging_test.c b/tools/testing/selftests/kvm/demand_paging_test.c
+> index bf3609f71854..0c4d3b6afbf8 100644
+> --- a/tools/testing/selftests/kvm/demand_paging_test.c
+> +++ b/tools/testing/selftests/kvm/demand_paging_test.c
+> @@ -6,9 +6,6 @@
+>   * Copyright (C) 2018, Red Hat, Inc.
+>   * Copyright (C) 2019, Google, Inc.
+>   */
+> -
+> -#define _GNU_SOURCE /* for pipe2 */
+> -
+>  #include <inttypes.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+> index eaad5b20854c..bf1ebc29f22a 100644
+> --- a/tools/testing/selftests/kvm/dirty_log_test.c
+> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
+> @@ -4,9 +4,6 @@
+>   *
+>   * Copyright (C) 2018, Red Hat, Inc.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_name */
+> -
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <pthread.h>
+> diff --git a/tools/testing/selftests/kvm/guest_memfd_test.c b/tools/testing/selftests/kvm/guest_memfd_test.c
+> index 92eae206baa6..309fe84b84ad 100644
+> --- a/tools/testing/selftests/kvm/guest_memfd_test.c
+> +++ b/tools/testing/selftests/kvm/guest_memfd_test.c
+> @@ -4,8 +4,6 @@
+>   *
+>   * Author: Chao Peng <chao.p.peng@linux.intel.com>
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <stdlib.h>
+>  #include <string.h>
+>  #include <unistd.h>
+> diff --git a/tools/testing/selftests/kvm/hardware_disable_test.c b/tools/testing/selftests/kvm/hardware_disable_test.c
+> index decc521fc760..bce73bcb973c 100644
+> --- a/tools/testing/selftests/kvm/hardware_disable_test.c
+> +++ b/tools/testing/selftests/kvm/hardware_disable_test.c
+> @@ -4,9 +4,6 @@
+>   * kvm_arch_hardware_disable is called and it attempts to unregister the user
+>   * return notifiers.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <fcntl.h>
+>  #include <pthread.h>
+>  #include <semaphore.h>
+> diff --git a/tools/testing/selftests/kvm/include/userfaultfd_util.h b/tools/testing/selftests/kvm/include/userfaultfd_util.h
+> index 877449c34592..a9d97c213584 100644
+> --- a/tools/testing/selftests/kvm/include/userfaultfd_util.h
+> +++ b/tools/testing/selftests/kvm/include/userfaultfd_util.h
+> @@ -5,9 +5,6 @@
+>   * Copyright (C) 2018, Red Hat, Inc.
+>   * Copyright (C) 2019-2022 Google LLC
+>   */
+> -
+> -#define _GNU_SOURCE /* for pipe2 */
+> -
+>  #include <inttypes.h>
+>  #include <time.h>
+>  #include <pthread.h>
+> diff --git a/tools/testing/selftests/kvm/kvm_binary_stats_test.c b/tools/testing/selftests/kvm/kvm_binary_stats_test.c
+> index 698c1cfa3111..f02355c3c4c2 100644
+> --- a/tools/testing/selftests/kvm/kvm_binary_stats_test.c
+> +++ b/tools/testing/selftests/kvm/kvm_binary_stats_test.c
+> @@ -6,8 +6,6 @@
+>   *
+>   * Test the fd-based interface for KVM statistics.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/kvm_create_max_vcpus.c b/tools/testing/selftests/kvm/kvm_create_max_vcpus.c
+> index b9e23265e4b3..c78f34699f73 100644
+> --- a/tools/testing/selftests/kvm/kvm_create_max_vcpus.c
+> +++ b/tools/testing/selftests/kvm/kvm_create_max_vcpus.c
+> @@ -6,8 +6,6 @@
+>   *
+>   * Test for KVM_CAP_MAX_VCPUS and KVM_CAP_MAX_VCPU_ID.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/kvm_page_table_test.c b/tools/testing/selftests/kvm/kvm_page_table_test.c
+> index e0ba97ac1c56..7759c685086b 100644
+> --- a/tools/testing/selftests/kvm/kvm_page_table_test.c
+> +++ b/tools/testing/selftests/kvm/kvm_page_table_test.c
+> @@ -8,9 +8,6 @@
+>   * page size have been pre-allocated on your system, if you are planning to
+>   * use hugepages to back the guest memory for testing.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_name */
+> -
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <time.h>
+> diff --git a/tools/testing/selftests/kvm/lib/assert.c b/tools/testing/selftests/kvm/lib/assert.c
+> index 2bd25b191d15..b49690658c60 100644
+> --- a/tools/testing/selftests/kvm/lib/assert.c
+> +++ b/tools/testing/selftests/kvm/lib/assert.c
+> @@ -4,9 +4,6 @@
+>   *
+>   * Copyright (C) 2018, Google LLC.
+>   */
+> -
+> -#define _GNU_SOURCE /* for getline(3) and strchrnul(3)*/
+> -
+>  #include "test_util.h"
+>  
+>  #include <execinfo.h>
+> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> index b2262b5fad9e..1eaf001d0ad4 100644
+> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> @@ -4,8 +4,6 @@
+>   *
+>   * Copyright (C) 2018, Google LLC.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_name */
+>  #include "test_util.h"
+>  #include "kvm_util.h"
+>  #include "processor.h"
+> diff --git a/tools/testing/selftests/kvm/lib/memstress.c b/tools/testing/selftests/kvm/lib/memstress.c
+> index cf2c73971308..555e3932e529 100644
+> --- a/tools/testing/selftests/kvm/lib/memstress.c
+> +++ b/tools/testing/selftests/kvm/lib/memstress.c
+> @@ -2,8 +2,6 @@
+>  /*
+>   * Copyright (C) 2020, Google LLC.
+>   */
+> -#define _GNU_SOURCE
+> -
+>  #include <inttypes.h>
+>  #include <linux/bitmap.h>
+>  
+> diff --git a/tools/testing/selftests/kvm/lib/test_util.c b/tools/testing/selftests/kvm/lib/test_util.c
+> index 5a8f8becb129..8ed0b74ae837 100644
+> --- a/tools/testing/selftests/kvm/lib/test_util.c
+> +++ b/tools/testing/selftests/kvm/lib/test_util.c
+> @@ -4,8 +4,6 @@
+>   *
+>   * Copyright (C) 2020, Google LLC.
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <stdarg.h>
+>  #include <assert.h>
+> diff --git a/tools/testing/selftests/kvm/lib/userfaultfd_util.c b/tools/testing/selftests/kvm/lib/userfaultfd_util.c
+> index f4eef6eb2dc2..bd07568a5240 100644
+> --- a/tools/testing/selftests/kvm/lib/userfaultfd_util.c
+> +++ b/tools/testing/selftests/kvm/lib/userfaultfd_util.c
+> @@ -6,9 +6,6 @@
+>   * Copyright (C) 2018, Red Hat, Inc.
+>   * Copyright (C) 2019-2022 Google LLC
+>   */
+> -
+> -#define _GNU_SOURCE /* for pipe2 */
+> -
+>  #include <inttypes.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/lib/x86_64/sev.c b/tools/testing/selftests/kvm/lib/x86_64/sev.c
+> index e248d3364b9c..e83809febae1 100644
+> --- a/tools/testing/selftests/kvm/lib/x86_64/sev.c
+> +++ b/tools/testing/selftests/kvm/lib/x86_64/sev.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <stdint.h>
+>  #include <stdbool.h>
+>  
+> diff --git a/tools/testing/selftests/kvm/max_guest_memory_test.c b/tools/testing/selftests/kvm/max_guest_memory_test.c
+> index 1a6da7389bf1..0b9678858b6d 100644
+> --- a/tools/testing/selftests/kvm/max_guest_memory_test.c
+> +++ b/tools/testing/selftests/kvm/max_guest_memory_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+> -
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <pthread.h>
+> diff --git a/tools/testing/selftests/kvm/memslot_modification_stress_test.c b/tools/testing/selftests/kvm/memslot_modification_stress_test.c
+> index 156361966612..05fcf902e067 100644
+> --- a/tools/testing/selftests/kvm/memslot_modification_stress_test.c
+> +++ b/tools/testing/selftests/kvm/memslot_modification_stress_test.c
+> @@ -6,9 +6,6 @@
+>   * Copyright (C) 2018, Red Hat, Inc.
+>   * Copyright (C) 2020, Google, Inc.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_name */
+> -
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <sys/syscall.h>
+> diff --git a/tools/testing/selftests/kvm/riscv/arch_timer.c b/tools/testing/selftests/kvm/riscv/arch_timer.c
+> index 0f9cabd99fd4..4b5004ef9c6b 100644
+> --- a/tools/testing/selftests/kvm/riscv/arch_timer.c
+> +++ b/tools/testing/selftests/kvm/riscv/arch_timer.c
+> @@ -7,9 +7,6 @@
+>   *
+>   * Copyright (c) 2024, Intel Corporation.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include "arch_timer.h"
+>  #include "kvm_util.h"
+>  #include "processor.h"
+> diff --git a/tools/testing/selftests/kvm/rseq_test.c b/tools/testing/selftests/kvm/rseq_test.c
+> index 28f97fb52044..b3536400f9ac 100644
+> --- a/tools/testing/selftests/kvm/rseq_test.c
+> +++ b/tools/testing/selftests/kvm/rseq_test.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <pthread.h>
+> diff --git a/tools/testing/selftests/kvm/s390x/cmma_test.c b/tools/testing/selftests/kvm/s390x/cmma_test.c
+> index 626a2b8a2037..84ba79c42ab1 100644
+> --- a/tools/testing/selftests/kvm/s390x/cmma_test.c
+> +++ b/tools/testing/selftests/kvm/s390x/cmma_test.c
+> @@ -7,8 +7,6 @@
+>   * Authors:
+>   *  Nico Boehr <nrb@linux.ibm.com>
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/s390x/sync_regs_test.c b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+> index 43fb25ddc3ec..53def355ccba 100644
+> --- a/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+> +++ b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+> @@ -10,8 +10,6 @@
+>   *
+>   * Test expected behavior of the KVM_CAP_SYNC_REGS functionality.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/set_memory_region_test.c b/tools/testing/selftests/kvm/set_memory_region_test.c
+> index bd57d991e27d..214ff84f6fdb 100644
+> --- a/tools/testing/selftests/kvm/set_memory_region_test.c
+> +++ b/tools/testing/selftests/kvm/set_memory_region_test.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <pthread.h>
+>  #include <sched.h>
+> diff --git a/tools/testing/selftests/kvm/steal_time.c b/tools/testing/selftests/kvm/steal_time.c
+> index bae0c5026f82..e9231387c589 100644
+> --- a/tools/testing/selftests/kvm/steal_time.c
+> +++ b/tools/testing/selftests/kvm/steal_time.c
+> @@ -4,7 +4,6 @@
+>   *
+>   * Copyright (C) 2020, Red Hat, Inc.
+>   */
+> -#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <time.h>
+>  #include <sched.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/amx_test.c b/tools/testing/selftests/kvm/x86_64/amx_test.c
+> index eae521f050e0..8e5713e36d4b 100644
+> --- a/tools/testing/selftests/kvm/x86_64/amx_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/amx_test.c
+> @@ -6,8 +6,6 @@
+>   *
+>   * Tests for amx #NM exception and save/restore.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/exit_on_emulation_failure_test.c b/tools/testing/selftests/kvm/x86_64/exit_on_emulation_failure_test.c
+> index 6c2e5e0ceb1f..9c21b6bccc38 100644
+> --- a/tools/testing/selftests/kvm/x86_64/exit_on_emulation_failure_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/exit_on_emulation_failure_test.c
+> @@ -4,9 +4,6 @@
+>   *
+>   * Test for KVM_CAP_EXIT_ON_EMULATION_FAILURE.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+> -
+>  #include "flds_emulation.h"
+>  
+>  #include "test_util.h"
+> diff --git a/tools/testing/selftests/kvm/x86_64/hwcr_msr_test.c b/tools/testing/selftests/kvm/x86_64/hwcr_msr_test.c
+> index df351ae17029..10b1b0ba374e 100644
+> --- a/tools/testing/selftests/kvm/x86_64/hwcr_msr_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/hwcr_msr_test.c
+> @@ -2,8 +2,6 @@
+>  /*
+>   * Copyright (C) 2023, Google LLC.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <sys/ioctl.h>
+>  
+>  #include "test_util.h"
+> diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> index 5c27efbf405e..4f5881d4ef66 100644
+> --- a/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> +++ b/tools/testing/selftests/kvm/x86_64/hyperv_cpuid.c
+> @@ -7,8 +7,6 @@
+>   * This work is licensed under the terms of the GNU GPL, version 2.
+>   *
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c b/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c
+> index 4c7257ecd2a6..4f3f3a9b038b 100644
+> --- a/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c
+> +++ b/tools/testing/selftests/kvm/x86_64/hyperv_evmcs.c
+> @@ -4,7 +4,6 @@
+>   *
+>   * Tests for Enlightened VMCS, including nested guest state.
+>   */
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_ipi.c b/tools/testing/selftests/kvm/x86_64/hyperv_ipi.c
+> index f1617762c22f..8206f5ef42dd 100644
+> --- a/tools/testing/selftests/kvm/x86_64/hyperv_ipi.c
+> +++ b/tools/testing/selftests/kvm/x86_64/hyperv_ipi.c
+> @@ -5,8 +5,6 @@
+>   * Copyright (C) 2022, Red Hat, Inc.
+>   *
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <pthread.h>
+>  #include <inttypes.h>
+>  
+> diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c b/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c
+> index c9b18707edc0..b987a3d79715 100644
+> --- a/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/hyperv_svm_test.c
+> @@ -4,7 +4,6 @@
+>   *
+>   * Tests for Hyper-V extensions to SVM.
+>   */
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/hyperv_tlb_flush.c b/tools/testing/selftests/kvm/x86_64/hyperv_tlb_flush.c
+> index 05b56095cf76..077cd0ec3040 100644
+> --- a/tools/testing/selftests/kvm/x86_64/hyperv_tlb_flush.c
+> +++ b/tools/testing/selftests/kvm/x86_64/hyperv_tlb_flush.c
+> @@ -5,8 +5,6 @@
+>   * Copyright (C) 2022, Red Hat, Inc.
+>   *
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <asm/barrier.h>
+>  #include <pthread.h>
+>  #include <inttypes.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/nested_exceptions_test.c b/tools/testing/selftests/kvm/x86_64/nested_exceptions_test.c
+> index 3670331adf21..3eb0313ffa39 100644
+> --- a/tools/testing/selftests/kvm/x86_64/nested_exceptions_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/nested_exceptions_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+> -
+>  #include "test_util.h"
+>  #include "kvm_util.h"
+>  #include "processor.h"
+> diff --git a/tools/testing/selftests/kvm/x86_64/nx_huge_pages_test.c b/tools/testing/selftests/kvm/x86_64/nx_huge_pages_test.c
+> index 17bbb96fc4df..e7efb2b35f8b 100644
+> --- a/tools/testing/selftests/kvm/x86_64/nx_huge_pages_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/nx_huge_pages_test.c
+> @@ -5,9 +5,6 @@
+>   *
+>   * Copyright (C) 2022, Google LLC.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <fcntl.h>
+>  #include <stdint.h>
+>  #include <time.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/platform_info_test.c b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
+> index 87011965dc41..2165b1ad8b38 100644
+> --- a/tools/testing/selftests/kvm/x86_64/platform_info_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/platform_info_test.c
+> @@ -9,8 +9,6 @@
+>   * Verifies expected behavior of controlling guest access to
+>   * MSR_PLATFORM_INFO.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+> index 26c85815f7e9..77f14138594e 100644
+> --- a/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/pmu_counters_test.c
+> @@ -2,8 +2,6 @@
+>  /*
+>   * Copyright (C) 2023, Tencent, Inc.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <x86intrin.h>
+>  
+>  #include "pmu.h"
+> diff --git a/tools/testing/selftests/kvm/x86_64/pmu_event_filter_test.c b/tools/testing/selftests/kvm/x86_64/pmu_event_filter_test.c
+> index 3c85d1ae9893..5ce53b8c46e0 100644
+> --- a/tools/testing/selftests/kvm/x86_64/pmu_event_filter_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/pmu_event_filter_test.c
+> @@ -9,9 +9,6 @@
+>   * Verifies the expected behavior of allow lists and deny lists for
+>   * virtual PMU events.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+> -
+>  #include "kvm_util.h"
+>  #include "pmu.h"
+>  #include "processor.h"
+> diff --git a/tools/testing/selftests/kvm/x86_64/private_mem_conversions_test.c b/tools/testing/selftests/kvm/x86_64/private_mem_conversions_test.c
+> index e0f642d2a3c4..82a8d88b5338 100644
+> --- a/tools/testing/selftests/kvm/x86_64/private_mem_conversions_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/private_mem_conversions_test.c
+> @@ -2,7 +2,6 @@
+>  /*
+>   * Copyright (C) 2022, Google LLC.
+>   */
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <limits.h>
+>  #include <pthread.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/set_boot_cpu_id.c b/tools/testing/selftests/kvm/x86_64/set_boot_cpu_id.c
+> index 366cf18600bc..d691d86e5bc3 100644
+> --- a/tools/testing/selftests/kvm/x86_64/set_boot_cpu_id.c
+> +++ b/tools/testing/selftests/kvm/x86_64/set_boot_cpu_id.c
+> @@ -4,7 +4,6 @@
+>   *
+>   * Copyright (C) 2020, Red Hat, Inc.
+>   */
+> -#define _GNU_SOURCE /* for program_invocation_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/set_sregs_test.c b/tools/testing/selftests/kvm/x86_64/set_sregs_test.c
+> index 3610981d9162..c021c0795a96 100644
+> --- a/tools/testing/selftests/kvm/x86_64/set_sregs_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/set_sregs_test.c
+> @@ -10,7 +10,6 @@
+>   * That bug allowed a user-mode program that called the KVM_SET_SREGS
+>   * ioctl to put a VCPU's local APIC into an invalid state.
+>   */
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/smaller_maxphyaddr_emulation_test.c b/tools/testing/selftests/kvm/x86_64/smaller_maxphyaddr_emulation_test.c
+> index 416207c38a17..362be40fc00d 100644
+> --- a/tools/testing/selftests/kvm/x86_64/smaller_maxphyaddr_emulation_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/smaller_maxphyaddr_emulation_test.c
+> @@ -5,9 +5,6 @@
+>   * Test that KVM emulates instructions in response to EPT violations when
+>   * allow_smaller_maxphyaddr is enabled and guest.MAXPHYADDR < host.MAXPHYADDR.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+> -
+>  #include "flds_emulation.h"
+>  
+>  #include "test_util.h"
+> diff --git a/tools/testing/selftests/kvm/x86_64/smm_test.c b/tools/testing/selftests/kvm/x86_64/smm_test.c
+> index e18b86666e1f..55c88d664a94 100644
+> --- a/tools/testing/selftests/kvm/x86_64/smm_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/smm_test.c
+> @@ -4,7 +4,6 @@
+>   *
+>   * Tests for SMM.
+>   */
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/state_test.c b/tools/testing/selftests/kvm/x86_64/state_test.c
+> index 88b58aab7207..1c756db329e5 100644
+> --- a/tools/testing/selftests/kvm/x86_64/state_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/state_test.c
+> @@ -6,7 +6,6 @@
+>   *
+>   * Tests for vCPU state save/restore, including nested guest state.
+>   */
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/sync_regs_test.c b/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
+> index adb5593daf48..8fa3948b0170 100644
+> --- a/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/sync_regs_test.c
+> @@ -8,8 +8,6 @@
+>   * including requesting an invalid register set, updates to/from values
+>   * in kvm_run.s.regs when kvm_valid_regs and kvm_dirty_regs are toggled.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c b/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c
+> index dcbb3c29fb8e..abe71946941f 100644
+> --- a/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/ucna_injection_test.c
+> @@ -17,8 +17,6 @@
+>   * delivered into the guest or not.
+>   *
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <pthread.h>
+>  #include <inttypes.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/userspace_msr_exit_test.c b/tools/testing/selftests/kvm/x86_64/userspace_msr_exit_test.c
+> index f4f61a2d2464..53afbea4df88 100644
+> --- a/tools/testing/selftests/kvm/x86_64/userspace_msr_exit_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/userspace_msr_exit_test.c
+> @@ -4,8 +4,6 @@
+>   *
+>   * Tests for exiting into userspace on registered MSRs
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <sys/ioctl.h>
+>  
+>  #include "kvm_test_harness.h"
+> diff --git a/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c b/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
+> index 977948fd52e6..fa512d033205 100644
+> --- a/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/vmx_dirty_log_test.c
+> @@ -4,9 +4,6 @@
+>   *
+>   * Copyright (C) 2018, Red Hat, Inc.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_name */
+> -
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <linux/bitmap.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/vmx_pmu_caps_test.c b/tools/testing/selftests/kvm/x86_64/vmx_pmu_caps_test.c
+> index ea0cb3cae0f7..3b93f262b797 100644
+> --- a/tools/testing/selftests/kvm/x86_64/vmx_pmu_caps_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/vmx_pmu_caps_test.c
+> @@ -10,7 +10,6 @@
+>   * and check it can be retrieved with KVM_GET_MSR, also test
+>   * the invalid LBR formats are rejected.
+>   */
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <sys/ioctl.h>
+>  
+>  #include <linux/bitmap.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/vmx_preemption_timer_test.c b/tools/testing/selftests/kvm/x86_64/vmx_preemption_timer_test.c
+> index affc32800158..00dd2ac07a61 100644
+> --- a/tools/testing/selftests/kvm/x86_64/vmx_preemption_timer_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/vmx_preemption_timer_test.c
+> @@ -9,7 +9,6 @@
+>   * value instead of partially decayed timer value
+>   *
+>   */
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/xapic_ipi_test.c b/tools/testing/selftests/kvm/x86_64/xapic_ipi_test.c
+> index 725c206ba0b9..c78e5f755116 100644
+> --- a/tools/testing/selftests/kvm/x86_64/xapic_ipi_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/xapic_ipi_test.c
+> @@ -19,8 +19,6 @@
+>   * Migration is a command line option. When used on non-numa machines will 
+>   * exit with error. Test is still usefull on non-numa for testing IPIs.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <getopt.h>
+>  #include <pthread.h>
+>  #include <inttypes.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/xapic_state_test.c b/tools/testing/selftests/kvm/x86_64/xapic_state_test.c
+> index ab75b873a4ad..69849acd95b0 100644
+> --- a/tools/testing/selftests/kvm/x86_64/xapic_state_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/xapic_state_test.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <fcntl.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/kvm/x86_64/xss_msr_test.c b/tools/testing/selftests/kvm/x86_64/xss_msr_test.c
+> index 167c97abff1b..f331a4e9bae3 100644
+> --- a/tools/testing/selftests/kvm/x86_64/xss_msr_test.c
+> +++ b/tools/testing/selftests/kvm/x86_64/xss_msr_test.c
+> @@ -4,8 +4,6 @@
+>   *
+>   * Tests for the IA32_XSS MSR.
+>   */
+> -
+> -#define _GNU_SOURCE /* for program_invocation_short_name */
+>  #include <sys/ioctl.h>
+>  
+>  #include "test_util.h"
+> diff --git a/tools/testing/selftests/landlock/base_test.c b/tools/testing/selftests/landlock/base_test.c
+> index a6f89aaea77d..bdb3955a9452 100644
+> --- a/tools/testing/selftests/landlock/base_test.c
+> +++ b/tools/testing/selftests/landlock/base_test.c
+> @@ -5,8 +5,6 @@
+>   * Copyright © 2017-2020 Mickaël Salaün <mic@digikod.net>
+>   * Copyright © 2019-2020 ANSSI
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <linux/landlock.h>
+> diff --git a/tools/testing/selftests/landlock/fs_test.c b/tools/testing/selftests/landlock/fs_test.c
+> index 9a6036fbf289..acec1c82c8b4 100644
+> --- a/tools/testing/selftests/landlock/fs_test.c
+> +++ b/tools/testing/selftests/landlock/fs_test.c
+> @@ -6,8 +6,6 @@
+>   * Copyright © 2020 ANSSI
+>   * Copyright © 2020-2022 Microsoft Corporation
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <fcntl.h>
+>  #include <linux/landlock.h>
+>  #include <linux/magic.h>
+> diff --git a/tools/testing/selftests/landlock/net_test.c b/tools/testing/selftests/landlock/net_test.c
+> index f21cfbbc3638..eed040adcbac 100644
+> --- a/tools/testing/selftests/landlock/net_test.c
+> +++ b/tools/testing/selftests/landlock/net_test.c
+> @@ -5,8 +5,6 @@
+>   * Copyright © 2022-2023 Huawei Tech. Co., Ltd.
+>   * Copyright © 2023 Microsoft Corporation
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <fcntl.h>
+> diff --git a/tools/testing/selftests/landlock/ptrace_test.c b/tools/testing/selftests/landlock/ptrace_test.c
+> index a19db4d0b3bd..c831e6d03b02 100644
+> --- a/tools/testing/selftests/landlock/ptrace_test.c
+> +++ b/tools/testing/selftests/landlock/ptrace_test.c
+> @@ -5,8 +5,6 @@
+>   * Copyright © 2017-2020 Mickaël Salaün <mic@digikod.net>
+>   * Copyright © 2019-2020 ANSSI
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <linux/landlock.h>
+> diff --git a/tools/testing/selftests/lsm/common.c b/tools/testing/selftests/lsm/common.c
+> index 9ad258912646..1b18aac570f1 100644
+> --- a/tools/testing/selftests/lsm/common.c
+> +++ b/tools/testing/selftests/lsm/common.c
+> @@ -4,8 +4,6 @@
+>   *
+>   * Copyright © 2023 Casey Schaufler <casey@schaufler-ca.com>
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <linux/lsm.h>
+>  #include <fcntl.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/lsm/lsm_get_self_attr_test.c b/tools/testing/selftests/lsm/lsm_get_self_attr_test.c
+> index df215e4aa63f..7465bde3f922 100644
+> --- a/tools/testing/selftests/lsm/lsm_get_self_attr_test.c
+> +++ b/tools/testing/selftests/lsm/lsm_get_self_attr_test.c
+> @@ -5,8 +5,6 @@
+>   *
+>   * Copyright © 2022 Casey Schaufler <casey@schaufler-ca.com>
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <linux/lsm.h>
+>  #include <fcntl.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/lsm/lsm_list_modules_test.c b/tools/testing/selftests/lsm/lsm_list_modules_test.c
+> index 06d24d4679a6..a6b44e25c21f 100644
+> --- a/tools/testing/selftests/lsm/lsm_list_modules_test.c
+> +++ b/tools/testing/selftests/lsm/lsm_list_modules_test.c
+> @@ -5,8 +5,6 @@
+>   *
+>   * Copyright © 2022 Casey Schaufler <casey@schaufler-ca.com>
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <linux/lsm.h>
+>  #include <string.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/lsm/lsm_set_self_attr_test.c b/tools/testing/selftests/lsm/lsm_set_self_attr_test.c
+> index 66dec47e3ca3..110c6a07e74c 100644
+> --- a/tools/testing/selftests/lsm/lsm_set_self_attr_test.c
+> +++ b/tools/testing/selftests/lsm/lsm_set_self_attr_test.c
+> @@ -5,8 +5,6 @@
+>   *
+>   * Copyright © 2022 Casey Schaufler <casey@schaufler-ca.com>
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <linux/lsm.h>
+>  #include <string.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/membarrier/membarrier_test_impl.h b/tools/testing/selftests/membarrier/membarrier_test_impl.h
+> index af89855adb7b..a8a60b6271a5 100644
+> --- a/tools/testing/selftests/membarrier/membarrier_test_impl.h
+> +++ b/tools/testing/selftests/membarrier/membarrier_test_impl.h
+> @@ -1,5 +1,4 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+> -#define _GNU_SOURCE
+>  #include <linux/membarrier.h>
+>  #include <syscall.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/membarrier/membarrier_test_multi_thread.c b/tools/testing/selftests/membarrier/membarrier_test_multi_thread.c
+> index a9cc17facfb3..b4651e2ade00 100644
+> --- a/tools/testing/selftests/membarrier/membarrier_test_multi_thread.c
+> +++ b/tools/testing/selftests/membarrier/membarrier_test_multi_thread.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include <linux/membarrier.h>
+>  #include <syscall.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/membarrier/membarrier_test_single_thread.c b/tools/testing/selftests/membarrier/membarrier_test_single_thread.c
+> index 4cdc8b1d124c..17ae5199b916 100644
+> --- a/tools/testing/selftests/membarrier/membarrier_test_single_thread.c
+> +++ b/tools/testing/selftests/membarrier/membarrier_test_single_thread.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include <linux/membarrier.h>
+>  #include <syscall.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/memfd/common.c b/tools/testing/selftests/memfd/common.c
+> index 8eb3d75f6e60..879d4f4c66fa 100644
+> --- a/tools/testing/selftests/memfd/common.c
+> +++ b/tools/testing/selftests/memfd/common.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #define __EXPORTED_HEADERS__
+>  
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/memfd/fuse_test.c b/tools/testing/selftests/memfd/fuse_test.c
+> index 93798c8c5d54..15bc189bf831 100644
+> --- a/tools/testing/selftests/memfd/fuse_test.c
+> +++ b/tools/testing/selftests/memfd/fuse_test.c
+> @@ -12,8 +12,6 @@
+>   * the read() syscall with our memory-mapped memfd object as receive buffer to
+>   * force the kernel to write into our memfd object.
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #define __EXPORTED_HEADERS__
+>  
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/memfd/memfd_test.c b/tools/testing/selftests/memfd/memfd_test.c
+> index 18f585684e20..5172c27a8748 100644
+> --- a/tools/testing/selftests/memfd/memfd_test.c
+> +++ b/tools/testing/selftests/memfd/memfd_test.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #define __EXPORTED_HEADERS__
+>  
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/mm/cow.c b/tools/testing/selftests/mm/cow.c
+> index 363bf5f801be..6f1a36d51f19 100644
+> --- a/tools/testing/selftests/mm/cow.c
+> +++ b/tools/testing/selftests/mm/cow.c
+> @@ -6,7 +6,6 @@
+>   *
+>   * Author(s): David Hildenbrand <david@redhat.com>
+>   */
+> -#define _GNU_SOURCE
+>  #include <stdlib.h>
+>  #include <string.h>
+>  #include <stdbool.h>
+> diff --git a/tools/testing/selftests/mm/gup_longterm.c b/tools/testing/selftests/mm/gup_longterm.c
+> index ad168d35b23b..3bfd5a630081 100644
+> --- a/tools/testing/selftests/mm/gup_longterm.c
+> +++ b/tools/testing/selftests/mm/gup_longterm.c
+> @@ -6,7 +6,6 @@
+>   *
+>   * Author(s): David Hildenbrand <david@redhat.com>
+>   */
+> -#define _GNU_SOURCE
+>  #include <stdlib.h>
+>  #include <string.h>
+>  #include <stdbool.h>
+> diff --git a/tools/testing/selftests/mm/hugepage-mmap.c b/tools/testing/selftests/mm/hugepage-mmap.c
+> index 267eea2e0e0b..edb46888222f 100644
+> --- a/tools/testing/selftests/mm/hugepage-mmap.c
+> +++ b/tools/testing/selftests/mm/hugepage-mmap.c
+> @@ -16,7 +16,6 @@
+>   * range.
+>   * Other architectures, such as ppc64, i386 or x86_64 are not so constrained.
+>   */
+> -#define _GNU_SOURCE
+>  #include <stdlib.h>
+>  #include <stdio.h>
+>  #include <unistd.h>
+> diff --git a/tools/testing/selftests/mm/hugepage-mremap.c b/tools/testing/selftests/mm/hugepage-mremap.c
+> index c463d1c09c9b..8e22822bb754 100644
+> --- a/tools/testing/selftests/mm/hugepage-mremap.c
+> +++ b/tools/testing/selftests/mm/hugepage-mremap.c
+> @@ -11,8 +11,6 @@
+>   * To make sure the test triggers pmd sharing and goes through the 'unshare'
+>   * path in the mremap code use 1GB (1024) or more.
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <stdlib.h>
+>  #include <stdio.h>
+>  #include <unistd.h>
+> diff --git a/tools/testing/selftests/mm/hugetlb-madvise.c b/tools/testing/selftests/mm/hugetlb-madvise.c
+> index e74107185324..70c40c67bc5d 100644
+> --- a/tools/testing/selftests/mm/hugetlb-madvise.c
+> +++ b/tools/testing/selftests/mm/hugetlb-madvise.c
+> @@ -11,8 +11,6 @@
+>   * filesystem.  Therefore, a hugetlbfs filesystem must be mounted on some
+>   * directory.
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <stdlib.h>
+>  #include <stdio.h>
+>  #include <unistd.h>
+> diff --git a/tools/testing/selftests/mm/hugetlb-read-hwpoison.c b/tools/testing/selftests/mm/hugetlb-read-hwpoison.c
+> index ba6cc6f9cabc..6b8b41b4f754 100644
+> --- a/tools/testing/selftests/mm/hugetlb-read-hwpoison.c
+> +++ b/tools/testing/selftests/mm/hugetlb-read-hwpoison.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <stdlib.h>
+>  #include <stdio.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/mm/khugepaged.c b/tools/testing/selftests/mm/khugepaged.c
+> index 829320a519e7..d18bf400dae6 100644
+> --- a/tools/testing/selftests/mm/khugepaged.c
+> +++ b/tools/testing/selftests/mm/khugepaged.c
+> @@ -1,4 +1,3 @@
+> -#define _GNU_SOURCE
+>  #include <ctype.h>
+>  #include <errno.h>
+>  #include <fcntl.h>
+> diff --git a/tools/testing/selftests/mm/ksm_functional_tests.c b/tools/testing/selftests/mm/ksm_functional_tests.c
+> index d615767e396b..1deae905c42e 100644
+> --- a/tools/testing/selftests/mm/ksm_functional_tests.c
+> +++ b/tools/testing/selftests/mm/ksm_functional_tests.c
+> @@ -6,7 +6,6 @@
+>   *
+>   * Author(s): David Hildenbrand <david@redhat.com>
+>   */
+> -#define _GNU_SOURCE
+>  #include <stdlib.h>
+>  #include <string.h>
+>  #include <stdbool.h>
+> diff --git a/tools/testing/selftests/mm/madv_populate.c b/tools/testing/selftests/mm/madv_populate.c
+> index 17bcb07f19f3..d19ad13ffd7e 100644
+> --- a/tools/testing/selftests/mm/madv_populate.c
+> +++ b/tools/testing/selftests/mm/madv_populate.c
+> @@ -6,7 +6,6 @@
+>   *
+>   * Author(s): David Hildenbrand <david@redhat.com>
+>   */
+> -#define _GNU_SOURCE
+>  #include <stdlib.h>
+>  #include <string.h>
+>  #include <stdbool.h>
+> diff --git a/tools/testing/selftests/mm/map_populate.c b/tools/testing/selftests/mm/map_populate.c
+> index 5c8a53869b1b..ff4d4079bd0e 100644
+> --- a/tools/testing/selftests/mm/map_populate.c
+> +++ b/tools/testing/selftests/mm/map_populate.c
+> @@ -4,8 +4,6 @@
+>   *
+>   * MAP_POPULATE | MAP_PRIVATE should COW VMA pages.
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <sys/mman.h>
+> diff --git a/tools/testing/selftests/mm/mdwe_test.c b/tools/testing/selftests/mm/mdwe_test.c
+> index 1e01d3ddc11c..200bedcdc32e 100644
+> --- a/tools/testing/selftests/mm/mdwe_test.c
+> +++ b/tools/testing/selftests/mm/mdwe_test.c
+> @@ -7,7 +7,6 @@
+>  #include <linux/mman.h>
+>  #include <linux/prctl.h>
+>  
+> -#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <sys/auxv.h>
+> diff --git a/tools/testing/selftests/mm/memfd_secret.c b/tools/testing/selftests/mm/memfd_secret.c
+> index 9b298f6a04b3..750adede2816 100644
+> --- a/tools/testing/selftests/mm/memfd_secret.c
+> +++ b/tools/testing/selftests/mm/memfd_secret.c
+> @@ -4,8 +4,6 @@
+>   *
+>   * Author: Mike Rapoport <rppt@linux.ibm.com>
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <sys/uio.h>
+>  #include <sys/mman.h>
+>  #include <sys/wait.h>
+> diff --git a/tools/testing/selftests/mm/mlock2-tests.c b/tools/testing/selftests/mm/mlock2-tests.c
+> index 26f744188ad0..42574290d728 100644
+> --- a/tools/testing/selftests/mm/mlock2-tests.c
+> +++ b/tools/testing/selftests/mm/mlock2-tests.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include <sys/mman.h>
+>  #include <stdint.h>
+>  #include <unistd.h>
+> diff --git a/tools/testing/selftests/mm/mrelease_test.c b/tools/testing/selftests/mm/mrelease_test.c
+> index 100370a7111d..d78bf686e99f 100644
+> --- a/tools/testing/selftests/mm/mrelease_test.c
+> +++ b/tools/testing/selftests/mm/mrelease_test.c
+> @@ -2,7 +2,6 @@
+>  /*
+>   * Copyright 2022 Google LLC
+>   */
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <stdbool.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/mm/mremap_dontunmap.c b/tools/testing/selftests/mm/mremap_dontunmap.c
+> index 1d75084b9ca5..934fa6b441b2 100644
+> --- a/tools/testing/selftests/mm/mremap_dontunmap.c
+> +++ b/tools/testing/selftests/mm/mremap_dontunmap.c
+> @@ -5,7 +5,6 @@
+>   *
+>   * Copyright 2020, Brian Geffon <bgeffon@google.com>
+>   */
+> -#define _GNU_SOURCE
+>  #include <sys/mman.h>
+>  #include <linux/mman.h>
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/mm/mremap_test.c b/tools/testing/selftests/mm/mremap_test.c
+> index 2f8b991f78cb..e057154630e0 100644
+> --- a/tools/testing/selftests/mm/mremap_test.c
+> +++ b/tools/testing/selftests/mm/mremap_test.c
+> @@ -2,8 +2,6 @@
+>  /*
+>   * Copyright 2020 Google LLC
+>   */
+> -#define _GNU_SOURCE
+> -
+>  #include <errno.h>
+>  #include <stdlib.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/mm/pagemap_ioctl.c b/tools/testing/selftests/mm/pagemap_ioctl.c
+> index d59517ed3d48..2a18b5d276f0 100644
+> --- a/tools/testing/selftests/mm/pagemap_ioctl.c
+> +++ b/tools/testing/selftests/mm/pagemap_ioctl.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <fcntl.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/mm/pkey-helpers.h b/tools/testing/selftests/mm/pkey-helpers.h
+> index 1af3156a9db8..37d6b01ce90a 100644
+> --- a/tools/testing/selftests/mm/pkey-helpers.h
+> +++ b/tools/testing/selftests/mm/pkey-helpers.h
+> @@ -1,7 +1,6 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+>  #ifndef _PKEYS_HELPER_H
+>  #define _PKEYS_HELPER_H
+> -#define _GNU_SOURCE
+>  #include <string.h>
+>  #include <stdarg.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/mm/protection_keys.c b/tools/testing/selftests/mm/protection_keys.c
+> index 48dc151f8fca..9f7de92caeda 100644
+> --- a/tools/testing/selftests/mm/protection_keys.c
+> +++ b/tools/testing/selftests/mm/protection_keys.c
+> @@ -21,7 +21,6 @@
+>   *	gcc -mxsave      -o protection_keys    -O2 -g -std=gnu99 -pthread -Wall protection_keys.c -lrt -ldl -lm
+>   *	gcc -mxsave -m32 -o protection_keys_32 -O2 -g -std=gnu99 -pthread -Wall protection_keys.c -lrt -ldl -lm
+>   */
+> -#define _GNU_SOURCE
+>  #define __SANE_USERSPACE_TYPES__
+>  #include <errno.h>
+>  #include <linux/elf.h>
+> diff --git a/tools/testing/selftests/mm/split_huge_page_test.c b/tools/testing/selftests/mm/split_huge_page_test.c
+> index d3c7f5fb3e7b..ae6ac950d7a1 100644
+> --- a/tools/testing/selftests/mm/split_huge_page_test.c
+> +++ b/tools/testing/selftests/mm/split_huge_page_test.c
+> @@ -3,8 +3,6 @@
+>   * A test of splitting PMD THPs and PTE-mapped THPs from a specified virtual
+>   * address range in a process via <debugfs>/split_huge_pages interface.
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <stdarg.h>
+> diff --git a/tools/testing/selftests/mm/thuge-gen.c b/tools/testing/selftests/mm/thuge-gen.c
+> index ea7fd8fe2876..28a5c31bd791 100644
+> --- a/tools/testing/selftests/mm/thuge-gen.c
+> +++ b/tools/testing/selftests/mm/thuge-gen.c
+> @@ -12,8 +12,6 @@
+>     ipcrm -m by hand, like this
+>     sudo ipcs | awk '$1 == "0x00000000" {print $2}' | xargs -n1 sudo ipcrm -m
+>     (warning this will remove all if someone else uses them) */
+> -
+> -#define _GNU_SOURCE 1
+>  #include <sys/mman.h>
+>  #include <stdlib.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/mm/uffd-common.h b/tools/testing/selftests/mm/uffd-common.h
+> index cc5629c3d2aa..abb44319264a 100644
+> --- a/tools/testing/selftests/mm/uffd-common.h
+> +++ b/tools/testing/selftests/mm/uffd-common.h
+> @@ -7,7 +7,6 @@
+>  #ifndef __UFFD_COMMON_H__
+>  #define __UFFD_COMMON_H__
+>  
+> -#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <errno.h>
+>  #include <unistd.h>
+> diff --git a/tools/testing/selftests/mount_setattr/mount_setattr_test.c b/tools/testing/selftests/mount_setattr/mount_setattr_test.c
+> index c6a8c732b802..d894417134b6 100644
+> --- a/tools/testing/selftests/mount_setattr/mount_setattr_test.c
+> +++ b/tools/testing/selftests/mount_setattr/mount_setattr_test.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include <sched.h>
+>  #include <stdio.h>
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/move_mount_set_group/move_mount_set_group_test.c b/tools/testing/selftests/move_mount_set_group/move_mount_set_group_test.c
+> index bcf51d785a37..bd975670f61d 100644
+> --- a/tools/testing/selftests/move_mount_set_group/move_mount_set_group_test.c
+> +++ b/tools/testing/selftests/move_mount_set_group/move_mount_set_group_test.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include <sched.h>
+>  #include <stdio.h>
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/net/af_unix/diag_uid.c b/tools/testing/selftests/net/af_unix/diag_uid.c
+> index 79a3dd75590e..279d0c5f70d3 100644
+> --- a/tools/testing/selftests/net/af_unix/diag_uid.c
+> +++ b/tools/testing/selftests/net/af_unix/diag_uid.c
+> @@ -1,7 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /* Copyright Amazon.com Inc. or its affiliates. */
+> -
+> -#define _GNU_SOURCE
+>  #include <sched.h>
+>  
+>  #include <unistd.h>
+> diff --git a/tools/testing/selftests/net/af_unix/scm_pidfd.c b/tools/testing/selftests/net/af_unix/scm_pidfd.c
+> index 7e534594167e..2986b8cd0418 100644
+> --- a/tools/testing/selftests/net/af_unix/scm_pidfd.c
+> +++ b/tools/testing/selftests/net/af_unix/scm_pidfd.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0 OR MIT
+> -#define _GNU_SOURCE
+>  #include <error.h>
+>  #include <limits.h>
+>  #include <stddef.h>
+> diff --git a/tools/testing/selftests/net/af_unix/unix_connect.c b/tools/testing/selftests/net/af_unix/unix_connect.c
+> index d799fd8f5c7c..34e816862cc7 100644
+> --- a/tools/testing/selftests/net/af_unix/unix_connect.c
+> +++ b/tools/testing/selftests/net/af_unix/unix_connect.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <sched.h>
+>  
+>  #include <stddef.h>
+> diff --git a/tools/testing/selftests/net/csum.c b/tools/testing/selftests/net/csum.c
+> index 90eb06fefa59..8262aa862331 100644
+> --- a/tools/testing/selftests/net/csum.c
+> +++ b/tools/testing/selftests/net/csum.c
+> @@ -58,9 +58,6 @@
+>   * different seed for each run (and logs this for reproducibility). It
+>   * is advised to enable this for extra coverage in continuous testing.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <asm/byteorder.h>
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/net/gro.c b/tools/testing/selftests/net/gro.c
+> index 353e1e867fbb..f5d7032e6466 100644
+> --- a/tools/testing/selftests/net/gro.c
+> +++ b/tools/testing/selftests/net/gro.c
+> @@ -34,9 +34,6 @@
+>   * flakiness is to be expected.
+>   *
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/ip_defrag.c b/tools/testing/selftests/net/ip_defrag.c
+> index f9ed749fd8c7..80c9e567a3d8 100644
+> --- a/tools/testing/selftests/net/ip_defrag.c
+> +++ b/tools/testing/selftests/net/ip_defrag.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/ipsec.c b/tools/testing/selftests/net/ipsec.c
+> index be4a30a0d02a..04aa06d26b09 100644
+> --- a/tools/testing/selftests/net/ipsec.c
+> +++ b/tools/testing/selftests/net/ipsec.c
+> @@ -3,9 +3,6 @@
+>   * ipsec.c - Check xfrm on veth inside a net-ns.
+>   * Copyright (c) 2018 Dmitry Safonov
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <asm/types.h>
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/net/ipv6_flowlabel.c b/tools/testing/selftests/net/ipv6_flowlabel.c
+> index 708a9822259d..b7e0c3c02e20 100644
+> --- a/tools/testing/selftests/net/ipv6_flowlabel.c
+> +++ b/tools/testing/selftests/net/ipv6_flowlabel.c
+> @@ -1,8 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /* Test IPV6_FLOWINFO cmsg on send and recv */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <asm/byteorder.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/ipv6_flowlabel_mgr.c b/tools/testing/selftests/net/ipv6_flowlabel_mgr.c
+> index af95b48acea9..ebd219ba386e 100644
+> --- a/tools/testing/selftests/net/ipv6_flowlabel_mgr.c
+> +++ b/tools/testing/selftests/net/ipv6_flowlabel_mgr.c
+> @@ -1,8 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /* Test IPV6_FLOWINFO_MGR */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <error.h>
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index d2043ec3bf6d..ea93030ed3ec 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <errno.h>
+>  #include <limits.h>
+>  #include <fcntl.h>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_inq.c b/tools/testing/selftests/net/mptcp/mptcp_inq.c
+> index 218aac467321..c5bf873d76c2 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_inq.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_inq.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <assert.h>
+>  #include <errno.h>
+>  #include <fcntl.h>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> index 926b0be87c99..7203ca9900e9 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <assert.h>
+>  #include <errno.h>
+>  #include <fcntl.h>
+> diff --git a/tools/testing/selftests/net/msg_zerocopy.c b/tools/testing/selftests/net/msg_zerocopy.c
+> index bdc03a2097e8..9278bf585c80 100644
+> --- a/tools/testing/selftests/net/msg_zerocopy.c
+> +++ b/tools/testing/selftests/net/msg_zerocopy.c
+> @@ -24,9 +24,6 @@
+>   * the kernel queues completions on the error queue for all zerocopy
+>   * transfers.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <error.h>
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/net/nettest.c b/tools/testing/selftests/net/nettest.c
+> index cd8a58097448..88e1d3b2ddf1 100644
+> --- a/tools/testing/selftests/net/nettest.c
+> +++ b/tools/testing/selftests/net/nettest.c
+> @@ -3,8 +3,6 @@
+>   *
+>   * Copyright (c) 2013-2019 David Ahern <dsahern@gmail.com>. All rights reserved.
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <features.h>
+>  #include <sys/types.h>
+>  #include <sys/ioctl.h>
+> diff --git a/tools/testing/selftests/net/psock_fanout.c b/tools/testing/selftests/net/psock_fanout.c
+> index 1a736f700be4..5b2d34440ae9 100644
+> --- a/tools/testing/selftests/net/psock_fanout.c
+> +++ b/tools/testing/selftests/net/psock_fanout.c
+> @@ -26,9 +26,6 @@
+>   * Todo:
+>   * - functionality: PACKET_FANOUT_FLAG_DEFRAG
+>   */
+> -
+> -#define _GNU_SOURCE		/* for sched_setaffinity */
+> -
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <fcntl.h>
+> diff --git a/tools/testing/selftests/net/psock_snd.c b/tools/testing/selftests/net/psock_snd.c
+> index edf1e6f80d41..2f29b513e18f 100644
+> --- a/tools/testing/selftests/net/psock_snd.c
+> +++ b/tools/testing/selftests/net/psock_snd.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/reuseport_addr_any.c b/tools/testing/selftests/net/reuseport_addr_any.c
+> index b8475cb29be7..9ee6ece52865 100644
+> --- a/tools/testing/selftests/net/reuseport_addr_any.c
+> +++ b/tools/testing/selftests/net/reuseport_addr_any.c
+> @@ -3,9 +3,6 @@
+>  /* Test that sockets listening on a specific address are preferred
+>   * over sockets listening on addr_any.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/reuseport_bpf_cpu.c b/tools/testing/selftests/net/reuseport_bpf_cpu.c
+> index 2d646174729f..e93e38cfb2a8 100644
+> --- a/tools/testing/selftests/net/reuseport_bpf_cpu.c
+> +++ b/tools/testing/selftests/net/reuseport_bpf_cpu.c
+> @@ -11,9 +11,6 @@
+>   * This entire process is done for several different core id permutations
+>   * and for each IPv4/IPv6 and TCP/UDP combination.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/reuseport_bpf_numa.c b/tools/testing/selftests/net/reuseport_bpf_numa.c
+> index c9ba36aa688e..502fdb9ce770 100644
+> --- a/tools/testing/selftests/net/reuseport_bpf_numa.c
+> +++ b/tools/testing/selftests/net/reuseport_bpf_numa.c
+> @@ -3,9 +3,6 @@
+>   * Test functionality of BPF filters with SO_REUSEPORT. Same test as
+>   * in reuseport_bpf_cpu, only as one socket per NUMA node.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/reuseport_dualstack.c b/tools/testing/selftests/net/reuseport_dualstack.c
+> index fb7a59ed759e..d3c3d3f39f8f 100644
+> --- a/tools/testing/selftests/net/reuseport_dualstack.c
+> +++ b/tools/testing/selftests/net/reuseport_dualstack.c
+> @@ -10,9 +10,6 @@
+>   * This test creates these mixed AF_INET/AF_INET6 sockets and asserts the
+>   * AF_INET preference for v4 packets.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/so_incoming_cpu.c b/tools/testing/selftests/net/so_incoming_cpu.c
+> index e9fa14e10732..95bd0cdc3253 100644
+> --- a/tools/testing/selftests/net/so_incoming_cpu.c
+> +++ b/tools/testing/selftests/net/so_incoming_cpu.c
+> @@ -1,6 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  /* Copyright Amazon.com Inc. or its affiliates. */
+> -#define _GNU_SOURCE
+>  #include <sched.h>
+>  
+>  #include <fcntl.h>
+> diff --git a/tools/testing/selftests/net/so_netns_cookie.c b/tools/testing/selftests/net/so_netns_cookie.c
+> index b39e87e967cd..18532d564f79 100644
+> --- a/tools/testing/selftests/net/so_netns_cookie.c
+> +++ b/tools/testing/selftests/net/so_netns_cookie.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include <sched.h>
+>  #include <unistd.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/net/so_txtime.c b/tools/testing/selftests/net/so_txtime.c
+> index 8457b7ccbc09..011a24af9786 100644
+> --- a/tools/testing/selftests/net/so_txtime.c
+> +++ b/tools/testing/selftests/net/so_txtime.c
+> @@ -9,9 +9,6 @@
+>   * the expected stream. Sender will read transmit timestamps from the error
+>   * queue. The streams can differ due to out-of-order delivery and drops.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <error.h>
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/net/tap.c b/tools/testing/selftests/net/tap.c
+> index 247c3b3ac1c9..fa78b92d9740 100644
+> --- a/tools/testing/selftests/net/tap.c
+> +++ b/tools/testing/selftests/net/tap.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/net/tcp_fastopen_backup_key.c b/tools/testing/selftests/net/tcp_fastopen_backup_key.c
+> index c1cb0c75156a..d30f89bb944c 100644
+> --- a/tools/testing/selftests/net/tcp_fastopen_backup_key.c
+> +++ b/tools/testing/selftests/net/tcp_fastopen_backup_key.c
+> @@ -12,7 +12,6 @@
+>   * there are no cases in which a cookie is not accepted by verifying
+>   * that TcpExtTCPFastOpenPassiveFail remains 0.
+>   */
+> -#define _GNU_SOURCE
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/tcp_inq.c b/tools/testing/selftests/net/tcp_inq.c
+> index bd6a9c7a3e8a..71ee145f151e 100644
+> --- a/tools/testing/selftests/net/tcp_inq.c
+> +++ b/tools/testing/selftests/net/tcp_inq.c
+> @@ -5,8 +5,6 @@
+>   *
+>   * Simple example on how to use TCP_INQ and TCP_CM_INQ.
+>   */
+> -#define _GNU_SOURCE
+> -
+>  #include <error.h>
+>  #include <netinet/in.h>
+>  #include <netinet/tcp.h>
+> diff --git a/tools/testing/selftests/net/tcp_mmap.c b/tools/testing/selftests/net/tcp_mmap.c
+> index 4fcce5150850..72d5f1207ee0 100644
+> --- a/tools/testing/selftests/net/tcp_mmap.c
+> +++ b/tools/testing/selftests/net/tcp_mmap.c
+> @@ -46,7 +46,6 @@
+>   * received 32768 MB (99.9939 % mmap'ed) in 7.43764 s, 36.9577 Gbit
+>   *   cpu usage user:0.035 sys:3.467, 106.873 usec per MB, 65530 c-switches
+>   */
+> -#define _GNU_SOURCE
+>  #include <pthread.h>
+>  #include <sys/types.h>
+>  #include <fcntl.h>
+> diff --git a/tools/testing/selftests/net/tls.c b/tools/testing/selftests/net/tls.c
+> index f27a12d2a2c9..6dbad97d1d0a 100644
+> --- a/tools/testing/selftests/net/tls.c
+> +++ b/tools/testing/selftests/net/tls.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/toeplitz.c b/tools/testing/selftests/net/toeplitz.c
+> index 9ba03164d73a..e2d739892ce4 100644
+> --- a/tools/testing/selftests/net/toeplitz.c
+> +++ b/tools/testing/selftests/net/toeplitz.c
+> @@ -20,9 +20,6 @@
+>   * 5. Compute the cpu that RPS should select based on rx_hash and $rps_bitmap
+>   * 6. Compare the cpus from 4 and 5
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/tun.c b/tools/testing/selftests/net/tun.c
+> index fa83918b62d1..a64dcfb242c1 100644
+> --- a/tools/testing/selftests/net/tun.c
+> +++ b/tools/testing/selftests/net/tun.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/net/txring_overwrite.c b/tools/testing/selftests/net/txring_overwrite.c
+> index 7d9ea039450a..96972e0110a0 100644
+> --- a/tools/testing/selftests/net/txring_overwrite.c
+> +++ b/tools/testing/selftests/net/txring_overwrite.c
+> @@ -4,9 +4,6 @@
+>   * Verify that consecutive sends over packet tx_ring are mirrored
+>   * with their original content intact.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <assert.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/txtimestamp.c b/tools/testing/selftests/net/txtimestamp.c
+> index ec60a16c9307..33dba9e90dea 100644
+> --- a/tools/testing/selftests/net/txtimestamp.c
+> +++ b/tools/testing/selftests/net/txtimestamp.c
+> @@ -16,9 +16,6 @@
+>   * This test requires a dummy TCP server.
+>   * A simple `nc6 [-u] -l -p $DESTPORT` will do
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <asm/types.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/udpgso.c b/tools/testing/selftests/net/udpgso.c
+> index 85b3baa3f7f3..9dc1026a033a 100644
+> --- a/tools/testing/selftests/net/udpgso.c
+> +++ b/tools/testing/selftests/net/udpgso.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <stddef.h>
+>  #include <arpa/inet.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/net/udpgso_bench_rx.c b/tools/testing/selftests/net/udpgso_bench_rx.c
+> index 1cbadd267c96..999df1236320 100644
+> --- a/tools/testing/selftests/net/udpgso_bench_rx.c
+> +++ b/tools/testing/selftests/net/udpgso_bench_rx.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <error.h>
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/net/udpgso_bench_tx.c b/tools/testing/selftests/net/udpgso_bench_tx.c
+> index 477392715a9a..d7632993b354 100644
+> --- a/tools/testing/selftests/net/udpgso_bench_tx.c
+> +++ b/tools/testing/selftests/net/udpgso_bench_tx.c
+> @@ -1,7 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <arpa/inet.h>
+>  #include <errno.h>
+>  #include <error.h>
+> diff --git a/tools/testing/selftests/perf_events/remove_on_exec.c b/tools/testing/selftests/perf_events/remove_on_exec.c
+> index 5814611a1dc7..ef4d923f4759 100644
+> --- a/tools/testing/selftests/perf_events/remove_on_exec.c
+> +++ b/tools/testing/selftests/perf_events/remove_on_exec.c
+> @@ -5,8 +5,6 @@
+>   * Copyright (C) 2021, Google LLC.
+>   */
+>  
+> -#define _GNU_SOURCE
+> -
+>  /* We need the latest siginfo from the kernel repo. */
+>  #include <sys/types.h>
+>  #include <asm/siginfo.h>
+> diff --git a/tools/testing/selftests/perf_events/sigtrap_threads.c b/tools/testing/selftests/perf_events/sigtrap_threads.c
+> index d1d8483ac628..14d1a3c8cb5c 100644
+> --- a/tools/testing/selftests/perf_events/sigtrap_threads.c
+> +++ b/tools/testing/selftests/perf_events/sigtrap_threads.c
+> @@ -5,8 +5,6 @@
+>   * Copyright (C) 2021, Google LLC.
+>   */
+>  
+> -#define _GNU_SOURCE
+> -
+>  /* We need the latest siginfo from the kernel repo. */
+>  #include <sys/types.h>
+>  #include <asm/siginfo.h>
+> diff --git a/tools/testing/selftests/pid_namespace/regression_enomem.c b/tools/testing/selftests/pid_namespace/regression_enomem.c
+> index 7d84097ad45c..54dc8f16d92a 100644
+> --- a/tools/testing/selftests/pid_namespace/regression_enomem.c
+> +++ b/tools/testing/selftests/pid_namespace/regression_enomem.c
+> @@ -1,4 +1,3 @@
+> -#define _GNU_SOURCE
+>  #include <assert.h>
+>  #include <errno.h>
+>  #include <fcntl.h>
+> diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
+> index 88d6830ee004..e33177b1aa41 100644
+> --- a/tools/testing/selftests/pidfd/pidfd.h
+> +++ b/tools/testing/selftests/pidfd/pidfd.h
+> @@ -3,7 +3,6 @@
+>  #ifndef __PIDFD_H
+>  #define __PIDFD_H
+>  
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <sched.h>
+> diff --git a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+> index 01cc37bf611c..67c9dc436c71 100644
+> --- a/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+> +++ b/tools/testing/selftests/pidfd/pidfd_fdinfo_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <assert.h>
+>  #include <errno.h>
+>  #include <fcntl.h>
+> diff --git a/tools/testing/selftests/pidfd/pidfd_getfd_test.c b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
+> index cd51d547b751..b6a0e9b3d2f5 100644
+> --- a/tools/testing/selftests/pidfd/pidfd_getfd_test.c
+> +++ b/tools/testing/selftests/pidfd/pidfd_getfd_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <limits.h>
+> diff --git a/tools/testing/selftests/pidfd/pidfd_open_test.c b/tools/testing/selftests/pidfd/pidfd_open_test.c
+> index 8a59438ccc78..781a3931fb5a 100644
+> --- a/tools/testing/selftests/pidfd/pidfd_open_test.c
+> +++ b/tools/testing/selftests/pidfd/pidfd_open_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <inttypes.h>
+> diff --git a/tools/testing/selftests/pidfd/pidfd_poll_test.c b/tools/testing/selftests/pidfd/pidfd_poll_test.c
+> index 610811275357..a40fb27a78bb 100644
+> --- a/tools/testing/selftests/pidfd/pidfd_poll_test.c
+> +++ b/tools/testing/selftests/pidfd/pidfd_poll_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <linux/types.h>
+>  #include <poll.h>
+> diff --git a/tools/testing/selftests/pidfd/pidfd_setns_test.c b/tools/testing/selftests/pidfd/pidfd_setns_test.c
+> index 6e2f2cd400ca..49d7a78cc4fe 100644
+> --- a/tools/testing/selftests/pidfd/pidfd_setns_test.c
+> +++ b/tools/testing/selftests/pidfd/pidfd_setns_test.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <limits.h>
+> diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
+> index c081ae91313a..c3d52406b8fd 100644
+> --- a/tools/testing/selftests/pidfd/pidfd_test.c
+> +++ b/tools/testing/selftests/pidfd/pidfd_test.c
+> @@ -1,6 +1,4 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <linux/types.h>
+> diff --git a/tools/testing/selftests/pidfd/pidfd_wait.c b/tools/testing/selftests/pidfd/pidfd_wait.c
+> index 0dcb8365ddc3..54beba0983f1 100644
+> --- a/tools/testing/selftests/pidfd/pidfd_wait.c
+> +++ b/tools/testing/selftests/pidfd/pidfd_wait.c
+> @@ -1,6 +1,4 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <linux/sched.h>
+>  #include <linux/types.h>
+> diff --git a/tools/testing/selftests/ptrace/get_set_sud.c b/tools/testing/selftests/ptrace/get_set_sud.c
+> index 5297b10d25c3..054a78ebe8b5 100644
+> --- a/tools/testing/selftests/ptrace/get_set_sud.c
+> +++ b/tools/testing/selftests/ptrace/get_set_sud.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include "../kselftest_harness.h"
+>  #include <stdio.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/ptrace/peeksiginfo.c b/tools/testing/selftests/ptrace/peeksiginfo.c
+> index a6884f66dc01..1b7b77190f72 100644
+> --- a/tools/testing/selftests/ptrace/peeksiginfo.c
+> +++ b/tools/testing/selftests/ptrace/peeksiginfo.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <signal.h>
+>  #include <unistd.h>
+> diff --git a/tools/testing/selftests/rseq/basic_percpu_ops_test.c b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
+> index 2348d2c20d0a..5961c24ee1ae 100644
+> --- a/tools/testing/selftests/rseq/basic_percpu_ops_test.c
+> +++ b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: LGPL-2.1
+> -#define _GNU_SOURCE
+>  #include <assert.h>
+>  #include <pthread.h>
+>  #include <sched.h>
+> diff --git a/tools/testing/selftests/rseq/basic_test.c b/tools/testing/selftests/rseq/basic_test.c
+> index 295eea16466f..1fed749b4bd7 100644
+> --- a/tools/testing/selftests/rseq/basic_test.c
+> +++ b/tools/testing/selftests/rseq/basic_test.c
+> @@ -2,8 +2,6 @@
+>  /*
+>   * Basic test coverage for critical regions and rseq_current_cpu().
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <assert.h>
+>  #include <sched.h>
+>  #include <signal.h>
+> diff --git a/tools/testing/selftests/rseq/param_test.c b/tools/testing/selftests/rseq/param_test.c
+> index 2f37961240ca..48a55d94eb72 100644
+> --- a/tools/testing/selftests/rseq/param_test.c
+> +++ b/tools/testing/selftests/rseq/param_test.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: LGPL-2.1
+> -#define _GNU_SOURCE
+>  #include <assert.h>
+>  #include <linux/membarrier.h>
+>  #include <pthread.h>
+> diff --git a/tools/testing/selftests/rseq/rseq.c b/tools/testing/selftests/rseq/rseq.c
+> index 96e812bdf8a4..88602889414c 100644
+> --- a/tools/testing/selftests/rseq/rseq.c
+> +++ b/tools/testing/selftests/rseq/rseq.c
+> @@ -14,8 +14,6 @@
+>   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+>   * Lesser General Public License for more details.
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <errno.h>
+>  #include <sched.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/seccomp/seccomp_benchmark.c b/tools/testing/selftests/seccomp/seccomp_benchmark.c
+> index b83099160fbc..3632a4890da9 100644
+> --- a/tools/testing/selftests/seccomp/seccomp_benchmark.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_benchmark.c
+> @@ -2,7 +2,6 @@
+>   * Strictly speaking, this is not a test. But it can report during test
+>   * runs so relative performace can be measured.
+>   */
+> -#define _GNU_SOURCE
+>  #include <assert.h>
+>  #include <err.h>
+>  #include <limits.h>
+> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> index 783ebce8c4de..972ccc12553e 100644
+> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> @@ -4,8 +4,6 @@
+>   *
+>   * Test code for seccomp bpf.
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <sys/types.h>
+>  
+>  /*
+> diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
+> index 7288a05136ba..a1f156dbbd56 100644
+> --- a/tools/testing/selftests/user_events/abi_test.c
+> +++ b/tools/testing/selftests/user_events/abi_test.c
+> @@ -4,8 +4,6 @@
+>   *
+>   * Copyright (c) 2022 Beau Belgrave <beaub@linux.microsoft.com>
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <sched.h>
+>  
+>  #include <errno.h>
+> diff --git a/tools/testing/selftests/x86/amx.c b/tools/testing/selftests/x86/amx.c
+> index d884fd69dd51..9441635fc452 100644
+> --- a/tools/testing/selftests/x86/amx.c
+> +++ b/tools/testing/selftests/x86/amx.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -
+> -#define _GNU_SOURCE
+>  #include <err.h>
+>  #include <errno.h>
+>  #include <pthread.h>
+> diff --git a/tools/testing/selftests/x86/check_initial_reg_state.c b/tools/testing/selftests/x86/check_initial_reg_state.c
+> index 3bc95f3ed585..0129cdae8abe 100644
+> --- a/tools/testing/selftests/x86/check_initial_reg_state.c
+> +++ b/tools/testing/selftests/x86/check_initial_reg_state.c
+> @@ -3,9 +3,6 @@
+>   * check_initial_reg_state.c - check that execve sets the correct state
+>   * Copyright (c) 2014-2016 Andrew Lutomirski
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <stdio.h>
+>  
+>  unsigned long ax, bx, cx, dx, si, di, bp, sp, flags;
+> diff --git a/tools/testing/selftests/x86/corrupt_xstate_header.c b/tools/testing/selftests/x86/corrupt_xstate_header.c
+> index cf9ce8fbb656..d2c746149678 100644
+> --- a/tools/testing/selftests/x86/corrupt_xstate_header.c
+> +++ b/tools/testing/selftests/x86/corrupt_xstate_header.c
+> @@ -4,9 +4,6 @@
+>   *
+>   * Based on analysis and a test case from Thomas Gleixner.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <stdlib.h>
+>  #include <stdio.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/x86/entry_from_vm86.c b/tools/testing/selftests/x86/entry_from_vm86.c
+> index d1e919b0c1dc..9fa9d4a847ac 100644
+> --- a/tools/testing/selftests/x86/entry_from_vm86.c
+> +++ b/tools/testing/selftests/x86/entry_from_vm86.c
+> @@ -5,9 +5,6 @@
+>   *
+>   * This exercises a few paths that need to special-case vm86 mode.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <assert.h>
+>  #include <stdlib.h>
+>  #include <sys/syscall.h>
+> diff --git a/tools/testing/selftests/x86/fsgsbase.c b/tools/testing/selftests/x86/fsgsbase.c
+> index 8c780cce941d..348134d2cefc 100644
+> --- a/tools/testing/selftests/x86/fsgsbase.c
+> +++ b/tools/testing/selftests/x86/fsgsbase.c
+> @@ -3,8 +3,6 @@
+>   * fsgsbase.c, an fsgsbase test
+>   * Copyright (c) 2014-2016 Andy Lutomirski
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <stdbool.h>
+> diff --git a/tools/testing/selftests/x86/fsgsbase_restore.c b/tools/testing/selftests/x86/fsgsbase_restore.c
+> index 6fffadc51579..88dce47ab8e6 100644
+> --- a/tools/testing/selftests/x86/fsgsbase_restore.c
+> +++ b/tools/testing/selftests/x86/fsgsbase_restore.c
+> @@ -12,8 +12,6 @@
+>   *
+>   * This is not part of fsgsbase.c, because that test is 64-bit only.
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <stdbool.h>
+> diff --git a/tools/testing/selftests/x86/ioperm.c b/tools/testing/selftests/x86/ioperm.c
+> index 57ec5e99edb9..07b7c10f8d39 100644
+> --- a/tools/testing/selftests/x86/ioperm.c
+> +++ b/tools/testing/selftests/x86/ioperm.c
+> @@ -3,8 +3,6 @@
+>   * ioperm.c - Test case for ioperm(2)
+>   * Copyright (c) 2015 Andrew Lutomirski
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <err.h>
+>  #include <stdio.h>
+>  #include <stdint.h>
+> diff --git a/tools/testing/selftests/x86/iopl.c b/tools/testing/selftests/x86/iopl.c
+> index 7e3e09c1abac..baa691154905 100644
+> --- a/tools/testing/selftests/x86/iopl.c
+> +++ b/tools/testing/selftests/x86/iopl.c
+> @@ -3,8 +3,6 @@
+>   * iopl.c - Test case for a Linux on Xen 64-bit bug
+>   * Copyright (c) 2015 Andrew Lutomirski
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <err.h>
+>  #include <stdio.h>
+>  #include <stdint.h>
+> diff --git a/tools/testing/selftests/x86/lam.c b/tools/testing/selftests/x86/lam.c
+> index 215b8150b7cc..39edfd7f6037 100644
+> --- a/tools/testing/selftests/x86/lam.c
+> +++ b/tools/testing/selftests/x86/lam.c
+> @@ -1,5 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/x86/ldt_gdt.c b/tools/testing/selftests/x86/ldt_gdt.c
+> index 3a29346e1452..3b4237a85a12 100644
+> --- a/tools/testing/selftests/x86/ldt_gdt.c
+> +++ b/tools/testing/selftests/x86/ldt_gdt.c
+> @@ -3,8 +3,6 @@
+>   * ldt_gdt.c - Test cases for LDT and GDT access
+>   * Copyright (c) 2015 Andrew Lutomirski
+>   */
+> -
+> -#define _GNU_SOURCE
+>  #include <err.h>
+>  #include <stdio.h>
+>  #include <stdint.h>
+> diff --git a/tools/testing/selftests/x86/mov_ss_trap.c b/tools/testing/selftests/x86/mov_ss_trap.c
+> index cc3de6ff9fba..47ecc63220b7 100644
+> --- a/tools/testing/selftests/x86/mov_ss_trap.c
+> +++ b/tools/testing/selftests/x86/mov_ss_trap.c
+> @@ -19,8 +19,6 @@
+>   *
+>   * This should mostly cover CVE-2018-1087 and CVE-2018-8897.
+>   */
+> -#define _GNU_SOURCE
+> -
+>  #include <stdlib.h>
+>  #include <sys/ptrace.h>
+>  #include <sys/types.h>
+> diff --git a/tools/testing/selftests/x86/nx_stack.c b/tools/testing/selftests/x86/nx_stack.c
+> index ea4a4e246879..97c5b34096cc 100644
+> --- a/tools/testing/selftests/x86/nx_stack.c
+> +++ b/tools/testing/selftests/x86/nx_stack.c
+> @@ -23,8 +23,6 @@
+>   * Regular stack is completely overwritten before testing.
+>   * Test doesn't exit SIGSEGV handler after first fault at INT3.
+>   */
+> -#undef _GNU_SOURCE
+> -#define _GNU_SOURCE
+>  #undef NDEBUG
+>  #include <assert.h>
+>  #include <signal.h>
+> diff --git a/tools/testing/selftests/x86/ptrace_syscall.c b/tools/testing/selftests/x86/ptrace_syscall.c
+> index 12aaa063196e..bdc81c8bd1a7 100644
+> --- a/tools/testing/selftests/x86/ptrace_syscall.c
+> +++ b/tools/testing/selftests/x86/ptrace_syscall.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#define _GNU_SOURCE
+> -
+>  #include <sys/ptrace.h>
+>  #include <sys/types.h>
+>  #include <sys/wait.h>
+> diff --git a/tools/testing/selftests/x86/sigaltstack.c b/tools/testing/selftests/x86/sigaltstack.c
+> index f689af75e979..7f41c3a4268b 100644
+> --- a/tools/testing/selftests/x86/sigaltstack.c
+> +++ b/tools/testing/selftests/x86/sigaltstack.c
+> @@ -1,6 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+> -
+> -#define _GNU_SOURCE
+>  #include <signal.h>
+>  #include <stdio.h>
+>  #include <stdbool.h>
+> diff --git a/tools/testing/selftests/x86/sigreturn.c b/tools/testing/selftests/x86/sigreturn.c
+> index 5d7961a5f7f6..2054f729b2c2 100644
+> --- a/tools/testing/selftests/x86/sigreturn.c
+> +++ b/tools/testing/selftests/x86/sigreturn.c
+> @@ -24,9 +24,6 @@
+>   *
+>   * Do not run on outdated, unpatched kernels at risk of nasty crashes.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <sys/time.h>
+>  #include <time.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/x86/single_step_syscall.c b/tools/testing/selftests/x86/single_step_syscall.c
+> index 9a30f443e928..375f3b50a0b5 100644
+> --- a/tools/testing/selftests/x86/single_step_syscall.c
+> +++ b/tools/testing/selftests/x86/single_step_syscall.c
+> @@ -9,9 +9,6 @@
+>   * immediately issues #DB from CPL 0.  This requires special handling in
+>   * the kernel.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <sys/time.h>
+>  #include <time.h>
+>  #include <stdlib.h>
+> diff --git a/tools/testing/selftests/x86/syscall_arg_fault.c b/tools/testing/selftests/x86/syscall_arg_fault.c
+> index 461fa41a4d02..10eee1bcd015 100644
+> --- a/tools/testing/selftests/x86/syscall_arg_fault.c
+> +++ b/tools/testing/selftests/x86/syscall_arg_fault.c
+> @@ -3,9 +3,6 @@
+>   * syscall_arg_fault.c - tests faults 32-bit fast syscall stack args
+>   * Copyright (c) 2015 Andrew Lutomirski
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <stdlib.h>
+>  #include <stdio.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/x86/syscall_numbering.c b/tools/testing/selftests/x86/syscall_numbering.c
+> index 991591718bb0..c72fc8aaa4d3 100644
+> --- a/tools/testing/selftests/x86/syscall_numbering.c
+> +++ b/tools/testing/selftests/x86/syscall_numbering.c
+> @@ -5,9 +5,6 @@
+>   *
+>   * Copyright (c) 2018 Andrew Lutomirski
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <stdlib.h>
+>  #include <stdio.h>
+>  #include <stdbool.h>
+> diff --git a/tools/testing/selftests/x86/sysret_rip.c b/tools/testing/selftests/x86/sysret_rip.c
+> index 84d74be1d902..24bc219358a5 100644
+> --- a/tools/testing/selftests/x86/sysret_rip.c
+> +++ b/tools/testing/selftests/x86/sysret_rip.c
+> @@ -3,9 +3,6 @@
+>   * sigreturn.c - tests that x86 avoids Intel SYSRET pitfalls
+>   * Copyright (c) 2014-2016 Andrew Lutomirski
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <stdlib.h>
+>  #include <unistd.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/x86/sysret_ss_attrs.c b/tools/testing/selftests/x86/sysret_ss_attrs.c
+> index 5f3d4fca440f..f8b9e0b2a0c5 100644
+> --- a/tools/testing/selftests/x86/sysret_ss_attrs.c
+> +++ b/tools/testing/selftests/x86/sysret_ss_attrs.c
+> @@ -7,9 +7,6 @@
+>   * the hidden attributes set to an unusable state.  Make sure the kernel
+>   * doesn't let this happen.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <stdlib.h>
+>  #include <unistd.h>
+>  #include <stdio.h>
+> diff --git a/tools/testing/selftests/x86/test_FCMOV.c b/tools/testing/selftests/x86/test_FCMOV.c
+> index 6b5036fbb735..0c9431ba7d31 100644
+> --- a/tools/testing/selftests/x86/test_FCMOV.c
+> +++ b/tools/testing/selftests/x86/test_FCMOV.c
+> @@ -1,8 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#undef _GNU_SOURCE
+> -#define _GNU_SOURCE 1
+> -#undef __USE_GNU
+> -#define __USE_GNU 1
+>  #include <unistd.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/x86/test_FCOMI.c b/tools/testing/selftests/x86/test_FCOMI.c
+> index aec6692c6dcf..ba186665918d 100644
+> --- a/tools/testing/selftests/x86/test_FCOMI.c
+> +++ b/tools/testing/selftests/x86/test_FCOMI.c
+> @@ -1,8 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#undef _GNU_SOURCE
+> -#define _GNU_SOURCE 1
+> -#undef __USE_GNU
+> -#define __USE_GNU 1
+>  #include <unistd.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/x86/test_FISTTP.c b/tools/testing/selftests/x86/test_FISTTP.c
+> index 09789c0ce3e9..95580cdaaa32 100644
+> --- a/tools/testing/selftests/x86/test_FISTTP.c
+> +++ b/tools/testing/selftests/x86/test_FISTTP.c
+> @@ -1,8 +1,4 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> -#undef _GNU_SOURCE
+> -#define _GNU_SOURCE 1
+> -#undef __USE_GNU
+> -#define __USE_GNU 1
+>  #include <unistd.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/x86/test_mremap_vdso.c b/tools/testing/selftests/x86/test_mremap_vdso.c
+> index f0d876d48277..a8bdba356682 100644
+> --- a/tools/testing/selftests/x86/test_mremap_vdso.c
+> +++ b/tools/testing/selftests/x86/test_mremap_vdso.c
+> @@ -9,7 +9,6 @@
+>   * Can be built statically:
+>   * gcc -Os -Wall -static -m32 test_mremap_vdso.c
+>   */
+> -#define _GNU_SOURCE
+>  #include <stdio.h>
+>  #include <errno.h>
+>  #include <unistd.h>
+> diff --git a/tools/testing/selftests/x86/test_shadow_stack.c b/tools/testing/selftests/x86/test_shadow_stack.c
+> index 757e6527f67e..0ceca9064cec 100644
+> --- a/tools/testing/selftests/x86/test_shadow_stack.c
+> +++ b/tools/testing/selftests/x86/test_shadow_stack.c
+> @@ -7,9 +7,6 @@
+>   * special glibc shadow stack support (longjmp(), swapcontext(), etc). Just
+>   * stick to the basics and hope the compiler doesn't do anything strange.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <sys/syscall.h>
+>  #include <asm/mman.h>
+>  #include <sys/mman.h>
+> diff --git a/tools/testing/selftests/x86/test_syscall_vdso.c b/tools/testing/selftests/x86/test_syscall_vdso.c
+> index 8965c311bd65..5cd13279bba5 100644
+> --- a/tools/testing/selftests/x86/test_syscall_vdso.c
+> +++ b/tools/testing/selftests/x86/test_syscall_vdso.c
+> @@ -8,10 +8,6 @@
+>   * Can be built statically:
+>   * gcc -Os -Wall -static -m32 test_syscall_vdso.c thunks_32.S
+>   */
+> -#undef _GNU_SOURCE
+> -#define _GNU_SOURCE 1
+> -#undef __USE_GNU
+> -#define __USE_GNU 1
+>  #include <unistd.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> diff --git a/tools/testing/selftests/x86/test_vsyscall.c b/tools/testing/selftests/x86/test_vsyscall.c
+> index 47cab972807c..cbf4e5012005 100644
+> --- a/tools/testing/selftests/x86/test_vsyscall.c
+> +++ b/tools/testing/selftests/x86/test_vsyscall.c
+> @@ -1,7 +1,4 @@
+>  /* SPDX-License-Identifier: GPL-2.0 */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <stdio.h>
+>  #include <sys/time.h>
+>  #include <time.h>
+> diff --git a/tools/testing/selftests/x86/unwind_vdso.c b/tools/testing/selftests/x86/unwind_vdso.c
+> index 4c311e1af4c7..754f5d4d425a 100644
+> --- a/tools/testing/selftests/x86/unwind_vdso.c
+> +++ b/tools/testing/selftests/x86/unwind_vdso.c
+> @@ -5,9 +5,6 @@
+>   *
+>   * This tests __kernel_vsyscall's unwind info.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <features.h>
+>  #include <stdio.h>
+>  
+> diff --git a/tools/testing/selftests/x86/vdso_restorer.c b/tools/testing/selftests/x86/vdso_restorer.c
+> index fe99f2434155..8193de22a390 100644
+> --- a/tools/testing/selftests/x86/vdso_restorer.c
+> +++ b/tools/testing/selftests/x86/vdso_restorer.c
+> @@ -10,9 +10,6 @@
+>   * 64-bit userspace has never supported sa_restorer == NULL, so this is
+>   * 32-bit only.
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <err.h>
+>  #include <stdio.h>
+>  #include <dlfcn.h>
 
-Although it is not fluctuation, but on our arm64, it is very noticeable.
-
-> 
-> The benchmark is supposed to measure cache and memory latency, its
-> result strongly relies on the cache and memory subsystem, for example,
-> hw prefetcher, etc.
-
-Yes, I will try another type of arm64 if possible, no available machine now.
-
-
-> 
->>
->> Is it possible to provide the smaps output for at least that 512M+8K block for
->> both cases? It might give a bit of a clue.
-
-Will collect more smaps.
-
->>
->> Do you have traditional (PMD-sized) THP enabled? If its enabled and unaligned
->> then the front of the buffer wouldn't be mapped with THP, but if it is aligned,
->> it will. That could affect it.
-
-Yes, PMD-sized THP enabled. at least for above smaps, without 
-efa7df3e3bb5, the anon don't be mappped with THP.
-
---------------VyMDYtp4q69oxASCyICYwSes
-Content-Type: text/plain; charset="UTF-8"; name="base.smaps_rollup"
-Content-Disposition: attachment; filename="base.smaps_rollup"
-Content-Transfer-Encoding: base64
-
-MDA0MDAwMDAtZmZmZmY1NmJkMDAwIC0tLXAgMDAwMDAwMDAgMDA6MDAgMCAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIFtyb2xsdXBdClJzczogICAgICAgICAgICAgICAgNDcyNCBr
-QgpQc3M6ICAgICAgICAgICAgICAgIDM0MDgga0IKUHNzX0RpcnR5OiAgICAgICAgICAzMzM4
-IGtCClBzc19Bbm9uOiAgICAgICAgICAgMzMzOCBrQgpQc3NfRmlsZTogICAgICAgICAgICAg
-NzAga0IKUHNzX1NobWVtOiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAg
-MTE3NiBrQgpTaGFyZWRfRGlydHk6ICAgICAgICA0MjAga0IKUHJpdmF0ZV9DbGVhbjogICAg
-ICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgMzEyOCBrQgpSZWZlcmVuY2VkOiAgICAg
-ICAgIDQzNDQga0IKQW5vbnltb3VzOiAgICAgICAgICAzNTQ4IGtCCktTTTogICAgICAgICAg
-ICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdl
-czogICAgICAyMDQ4IGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFw
-cGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVf
-SHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBz
-czogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgo=
---------------VyMDYtp4q69oxASCyICYwSes
-Content-Type: text/plain; charset="UTF-8"; name="base.smaps"
-Content-Disposition: attachment; filename="base.smaps"
-Content-Transfer-Encoding: base64
-
-MDA0MDAwMDAtMDA0MTgwMDAgci14cCAwMDAwMDAwMCBmZDowNSAyNTIxOTAzMCAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIC9ob21lL3p6L2xtYmVuY2gtMy4wLWE5L2Jpbi9hYXJjaDY0
-LWxpbnV4LWdudS9sYXRfbWVtX3JkClNpemU6ICAgICAgICAgICAgICAgICA5NiBrQgpLZXJu
-ZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJz
-czogICAgICAgICAgICAgICAgICA5NiBrQgpQc3M6ICAgICAgICAgICAgICAgICAgNDgga0IK
-UHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAgICA5NiBr
-QgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAw
-IGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAg
-OTYga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAg
-ICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAg
-ICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAg
-ICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRs
-YjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAg
-ICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJs
-ZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgZXggbXIgbXcgbWUgCjAwNDJmMDAwLTAwNDMw
-MDAwIHItLXAgMDAwMWYwMDAgZmQ6MDUgMjUyMTkwMzAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAvaG9tZS96ei9sbWJlbmNoLTMuMC1hOS9iaW4vYWFyY2g2NC1saW51eC1nbnUvbGF0
-X21lbV9yZApTaXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2VybmVsUGFnZVNpemU6ICAg
-ICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAg
-ICAgICAgIDQga0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtCClBzc19EaXJ0eTogICAg
-ICAgICAgICAgMiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5
-OiAgICAgICAgICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0Rp
-cnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICA0IGtCCkFub255bW91
-czogICAgICAgICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZy
-ZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1l
-bVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNo
-YXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IK
-U3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBr
-QgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAw
-ClZtRmxhZ3M6IHJkIG1yIG13IG1lIGFjIAowMDQzMDAwMC0wMDQzMTAwMCBydy1wIDAwMDIw
-MDAwIGZkOjA1IDI1MjE5MDMwICAgICAgICAgICAgICAgICAgICAgICAgICAgL2hvbWUvenov
-bG1iZW5jaC0zLjAtYTkvYmluL2FhcmNoNjQtbGludXgtZ251L2xhdF9tZW1fcmQKU2l6ZTog
-ICAgICAgICAgICAgICAgICA0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQ
-YWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICA0IGtCClBz
-czogICAgICAgICAgICAgICAgICAgNCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDQga0IK
-U2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBr
-QgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICA0
-IGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgNCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAg
-IDQga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAg
-ICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAg
-ICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjog
-ICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAg
-ICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAg
-ICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCB3
-ciBtciBtdyBtZSBhYyAKM2QwYjUwMDAtM2QwZDYwMDAgcnctcCAwMDAwMDAwMCAwMDowMCAw
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtoZWFwXQpTaXplOiAgICAgICAg
-ICAgICAgICAxMzIga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXpl
-OiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDgga0IKUHNzOiAgICAg
-ICAgICAgICAgICAgICA4IGtCClBzc19EaXJ0eTogICAgICAgICAgICAgOCBrQgpTaGFyZWRf
-Q2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZh
-dGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDgga0IKUmVm
-ZXJlbmNlZDogICAgICAgICAgICA4IGtCCkFub255bW91czogICAgICAgICAgICAgOCBrQgpL
-U006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtC
-CkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAg
-a0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAg
-MCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAg
-ICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAg
-ICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIHdyIG1yIG13
-IG1lIGFjIApmZmZmNjhlMDAwMDAtZmZmZjg4ZTAzMDAwIHJ3LXAgMDAwMDAwMDAgMDA6MDAg
-MCAKU2l6ZTogICAgICAgICAgICAgNTI0MzAwIGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAg
-NCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAy
-MDQ4IGtCClBzczogICAgICAgICAgICAgICAgMjA0OCBrQgpQc3NfRGlydHk6ICAgICAgICAg
-IDIwNDgga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAg
-ICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTog
-ICAgICAyMDQ4IGtCClJlZmVyZW5jZWQ6ICAgICAgICAgMjA0OCBrQgpBbm9ueW1vdXM6ICAg
-ICAgICAgIDIwNDgga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAg
-ICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgIDIwNDgga0IKU2htZW1QbWRN
-YXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRf
-SHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6
-ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9j
-a2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMQpWbUZs
-YWdzOiByZCB3ciBtciBtdyBtZSBhYyAKZmZmZjg4ZWZmMDAwLWZmZmY4OTAwMDAwMCBydy1w
-IDAwMDAwMDAwIDAwOjAwIDAgClNpemU6ICAgICAgICAgICAgICAgMTAyOCBrQgpLZXJuZWxQ
-YWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczog
-ICAgICAgICAgICAgICAgMTAyOCBrQgpQc3M6ICAgICAgICAgICAgICAgIDEwMjgga0IKUHNz
-X0RpcnR5OiAgICAgICAgICAxMDI4IGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpT
-aGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtC
-ClByaXZhdGVfRGlydHk6ICAgICAgMTAyOCBrQgpSZWZlcmVuY2VkOiAgICAgICAgIDEwMjgg
-a0IKQW5vbnltb3VzOiAgICAgICAgICAxMDI4IGtCCktTTTogICAgICAgICAgICAgICAgICAg
-MCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAg
-ICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAg
-ICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjog
-ICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAg
-ICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTog
-ICAgICAgICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUgYWMgCmZmZmY4OTAwMDAwMC1m
-ZmZmODkyNzUwMDAgci14cCAwMDAwMDAwMCBmZDowMCAyNzAyNTggICAgICAgICAgICAgICAg
-ICAgICAvdXNyL2xpYjY0L2xpYmNyeXB0by5zby4xLjEuMW0KU2l6ZTogICAgICAgICAgICAg
-ICAyNTE2IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAg
-ICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzczogICAgICAgICAg
-ICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0NsZWFu
-OiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0Ns
-ZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5j
-ZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NNOiAg
-ICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9u
-SHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZp
-bGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IK
-UHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBr
-QgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAw
-IGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMQpWbUZsYWdzOiByZCBleCBtciBtdyBtZSAK
-ZmZmZjg5Mjc1MDAwLWZmZmY4OTI4NzAwMCAtLS1wIDAwMjc1MDAwIGZkOjAwIDI3MDI1OCAg
-ICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGliY3J5cHRvLnNvLjEuMS4xbQpTaXpl
-OiAgICAgICAgICAgICAgICAgNzIga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1N
-VVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDAga0IK
-UHNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBr
-QgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAw
-IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAg
-IDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAg
-ICAgMCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAg
-ICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDog
-ICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxi
-OiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAg
-ICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAg
-ICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IG1y
-IG13IG1lIApmZmZmODkyODcwMDAtZmZmZjg5MmIwMDAwIHItLXAgMDAyNzcwMDAgZmQ6MDAg
-MjcwMjU4ICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJjcnlwdG8uc28uMS4x
-LjFtClNpemU6ICAgICAgICAgICAgICAgIDE2NCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAg
-IDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAg
-IDE2NCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgODIga0IKUHNzX0RpcnR5OiAgICAgICAg
-ICAgIDgyIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAg
-ICAgICAxNjQga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6
-ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAg
-ICAgICAgICAgMTY0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTog
-ICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1k
-TWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVk
-X0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2Fw
-OiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxv
-Y2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1G
-bGFnczogcmQgbXIgbXcgbWUgYWMgCmZmZmY4OTJiMDAwMC1mZmZmODkyYjQwMDAgcnctcCAw
-MDJhMDAwMCBmZDowMCAyNzAyNTggICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xp
-YmNyeXB0by5zby4xLjEuMW0KU2l6ZTogICAgICAgICAgICAgICAgIDE2IGtCCktlcm5lbFBh
-Z2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAg
-ICAgICAgICAgICAgICAgIDE2IGtCClBzczogICAgICAgICAgICAgICAgICAgOCBrQgpQc3Nf
-RGlydHk6ICAgICAgICAgICAgIDgga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNo
-YXJlZF9EaXJ0eTogICAgICAgICAxNiBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IK
-UHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBr
-QgpBbm9ueW1vdXM6ICAgICAgICAgICAgMTYga0IKS1NNOiAgICAgICAgICAgICAgICAgICAw
-IGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAg
-IDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAg
-ICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAg
-ICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAg
-ICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAg
-ICAgICAgICAgMApWbUZsYWdzOiByZCB3ciBtciBtdyBtZSBhYyAKZmZmZjg5MmI0MDAwLWZm
-ZmY4OTJiODAwMCBydy1wIDAwMDAwMDAwIDAwOjAwIDAgClNpemU6ICAgICAgICAgICAgICAg
-ICAxNiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAg
-ICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgOCBrQgpQc3M6ICAgICAgICAgICAg
-ICAgICAgIDQga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICA0IGtCClNoYXJlZF9DbGVhbjog
-ICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDgga0IKUHJpdmF0ZV9DbGVh
-bjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2Vk
-OiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICA4IGtCCktTTTogICAg
-ICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1
-Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxl
-UG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClBy
-aXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IK
-U3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBr
-QgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUgYWMg
-CmZmZmY4OTM1MDAwMC1mZmZmODkzNTIwMDAgcnctcCAwMDAwMDAwMCAwMDowMCAwIApTaXpl
-OiAgICAgICAgICAgICAgICAgIDgga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1N
-VVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDgga0IK
-UHNzOiAgICAgICAgICAgICAgICAgICA2IGtCClBzc19EaXJ0eTogICAgICAgICAgICAgNiBr
-QgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICA0
-IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAg
-IDQga0IKUmVmZXJlbmNlZDogICAgICAgICAgICA4IGtCCkFub255bW91czogICAgICAgICAg
-ICAgOCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAg
-ICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDog
-ICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxi
-OiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAg
-ICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAg
-ICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJk
-IHdyIG1yIG13IG1lIGFjIApmZmZmODkzNTIwMDAtZmZmZjg5M2QyMDAwIHIteHAgMDAwMDAw
-MDAgZmQ6MDAgMjY0ODM4ICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJwY3Jl
-Mi04LnNvLjAuMTAuNApTaXplOiAgICAgICAgICAgICAgICA1MTIga0IKS2VybmVsUGFnZVNp
-emU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAg
-ICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzc19EaXJ0
-eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVk
-X0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2
-YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFu
-b255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IK
-TGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBr
-QgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAw
-IGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAg
-IDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAg
-ICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAg
-ICAgICAwClZtRmxhZ3M6IHJkIGV4IG1yIG13IG1lIApmZmZmODkzZDIwMDAtZmZmZjg5M2Yx
-MDAwIC0tLXAgMDAwODAwMDAgZmQ6MDAgMjY0ODM4ICAgICAgICAgICAgICAgICAgICAgL3Vz
-ci9saWI2NC9saWJwY3JlMi04LnNvLjAuMTAuNApTaXplOiAgICAgICAgICAgICAgICAxMjQg
-a0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAg
-NCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAgICAg
-ICAwIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAg
-ICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAg
-ICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAg
-ICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAg
-ICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFn
-ZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1h
-cHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRl
-X0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQ
-c3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQ
-ZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IG1yIG13IG1lIApmZmZmODkzZjEwMDAt
-ZmZmZjg5M2YyMDAwIHItLXAgMDAwOGYwMDAgZmQ6MDAgMjY0ODM4ICAgICAgICAgICAgICAg
-ICAgICAgL3Vzci9saWI2NC9saWJwY3JlMi04LnNvLjAuMTAuNApTaXplOiAgICAgICAgICAg
-ICAgICAgIDQga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAg
-ICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDQga0IKUHNzOiAgICAgICAg
-ICAgICAgICAgICAyIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMiBrQgpTaGFyZWRfQ2xl
-YW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICA0IGtCClByaXZhdGVf
-Q2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJl
-bmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgNCBrQgpLU006
-ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFu
-b25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IK
-RmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBr
-QgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAw
-IGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAg
-IDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIG1yIG13IG1lIGFj
-IApmZmZmODkzZjIwMDAtZmZmZjg5M2YzMDAwIHJ3LXAgMDAwOTAwMDAgZmQ6MDAgMjY0ODM4
-ICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJwY3JlMi04LnNvLjAuMTAuNApT
-aXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtC
-Ck1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDQg
-a0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtCClBzc19EaXJ0eTogICAgICAgICAgICAg
-MiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAg
-ICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAg
-ICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAg
-ICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAg
-ICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBl
-ZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdl
-dGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAg
-ICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6
-ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6
-IHJkIHdyIG1yIG13IG1lIGFjIApmZmZmODkzZjMwMDAtZmZmZjg5NDBiMDAwIHIteHAgMDAw
-MDAwMDAgZmQ6MDAgMjY0ODQ0ICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJ6
-LnNvLjEuMi4xMQpTaXplOiAgICAgICAgICAgICAgICAgOTYga0IKS2VybmVsUGFnZVNpemU6
-ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAg
-ICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzc19EaXJ0eTog
-ICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0Rp
-cnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRl
-X0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255
-bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6
-eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpT
-aG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtC
-ClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAg
-a0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAg
-MCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAg
-ICAwClZtRmxhZ3M6IHJkIGV4IG1yIG13IG1lIApmZmZmODk0MGIwMDAtZmZmZjg5NDIyMDAw
-IC0tLXAgMDAwMTgwMDAgZmQ6MDAgMjY0ODQ0ICAgICAgICAgICAgICAgICAgICAgL3Vzci9s
-aWI2NC9saWJ6LnNvLjEuMi4xMQpTaXplOiAgICAgICAgICAgICAgICAgOTIga0IKS2VybmVs
-UGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6
-ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBz
-c19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IK
-U2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBr
-QgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAw
-IGtCCkFub255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAgICAgICAgICAg
-IDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAg
-ICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAg
-ICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6
-ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAg
-ICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6
-ICAgICAgICAgICAwClZtRmxhZ3M6IG1yIG13IG1lIApmZmZmODk0MjIwMDAtZmZmZjg5NDIz
-MDAwIHItLXAgMDAwMWYwMDAgZmQ6MDAgMjY0ODQ0ICAgICAgICAgICAgICAgICAgICAgL3Vz
-ci9saWI2NC9saWJ6LnNvLjEuMi4xMQpTaXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2Vy
-bmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpS
-c3M6ICAgICAgICAgICAgICAgICAgIDQga0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtC
-ClBzc19EaXJ0eTogICAgICAgICAgICAgMiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAg
-a0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAg
-MCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAg
-ICAwIGtCCkFub255bW91czogICAgICAgICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAg
-ICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAg
-ICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDog
-ICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0
-bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAg
-ICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2li
-bGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIG1yIG13IG1lIGFjIApmZmZmODk0MjMwMDAt
-ZmZmZjg5NDI0MDAwIHJ3LXAgMDAwMjAwMDAgZmQ6MDAgMjY0ODQ0ICAgICAgICAgICAgICAg
-ICAgICAgL3Vzci9saWI2NC9saWJ6LnNvLjEuMi4xMQpTaXplOiAgICAgICAgICAgICAgICAg
-IDQga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAg
-ICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDQga0IKUHNzOiAgICAgICAgICAgICAg
-ICAgICAyIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMiBrQgpTaGFyZWRfQ2xlYW46ICAg
-ICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICA0IGtCClByaXZhdGVfQ2xlYW46
-ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDog
-ICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgNCBrQgpLU006ICAgICAg
-ICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdl
-UGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBt
-ZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2
-YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3
-YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IK
-VEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIHdyIG1yIG13IG1lIGFjIApm
-ZmZmODk0MjQwMDAtZmZmZjg5NDRjMDAwIHIteHAgMDAwMDAwMDAgZmQ6MDAgMjY0MDg3ICAg
-ICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJzZWxpbnV4LnNvLjEKU2l6ZTogICAg
-ICAgICAgICAgICAgMTYwIGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdl
-U2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzczog
-ICAgICAgICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hh
-cmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQ
-cml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtC
-ClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAg
-a0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAg
-MCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAg
-ICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAg
-ICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAg
-ICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAg
-ICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBleCBt
-ciBtdyBtZSAKZmZmZjg5NDRjMDAwLWZmZmY4OTQ2MzAwMCAtLS1wIDAwMDI4MDAwIGZkOjAw
-IDI2NDA4NyAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlic2VsaW51eC5zby4x
-ClNpemU6ICAgICAgICAgICAgICAgICA5MiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQg
-a0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAg
-MCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzX0RpcnR5OiAgICAgICAgICAg
-ICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAg
-ICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAg
-ICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAg
-ICAgICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAg
-ICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFw
-cGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1
-Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAg
-ICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tl
-ZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFn
-czogbXIgbXcgbWUgCmZmZmY4OTQ2MzAwMC1mZmZmODk0NjQwMDAgci0tcCAwMDAyZjAwMCBm
-ZDowMCAyNjQwODcgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYnNlbGludXgu
-c28uMQpTaXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2VybmVsUGFnZVNpemU6ICAgICAg
-ICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAg
-ICAgIDQga0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtCClBzc19EaXJ0eTogICAgICAg
-ICAgICAgMiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAg
-ICAgICAgICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5
-OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czog
-ICAgICAgICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6
-ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBt
-ZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJl
-ZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dh
-cDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpM
-b2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZt
-RmxhZ3M6IHJkIG1yIG13IG1lIGFjIApmZmZmODk0NjQwMDAtZmZmZjg5NDY1MDAwIHJ3LXAg
-MDAwMzAwMDAgZmQ6MDAgMjY0MDg3ICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9s
-aWJzZWxpbnV4LnNvLjEKU2l6ZTogICAgICAgICAgICAgICAgICA0IGtCCktlcm5lbFBhZ2VT
-aXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAg
-ICAgICAgICAgICAgICA0IGtCClBzczogICAgICAgICAgICAgICAgICAgMiBrQgpQc3NfRGly
-dHk6ICAgICAgICAgICAgIDIga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJl
-ZF9EaXJ0eTogICAgICAgICAgNCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJp
-dmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpB
-bm9ueW1vdXM6ICAgICAgICAgICAgIDQga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtC
-CkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAg
-a0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAg
-MCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAg
-ICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAg
-ICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAg
-ICAgICAgMApWbUZsYWdzOiByZCB3ciBtciBtdyBtZSBhYyAKZmZmZjg5NDY1MDAwLWZmZmY4
-OTQ2OTAwMCBydy1wIDAwMDAwMDAwIDAwOjAwIDAgClNpemU6ICAgICAgICAgICAgICAgICAx
-NiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAg
-ICA0IGtCClJzczogICAgICAgICAgICAgICAgICAxMiBrQgpQc3M6ICAgICAgICAgICAgICAg
-ICAgIDYga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICA2IGtCClNoYXJlZF9DbGVhbjogICAg
-ICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgMTIga0IKUHJpdmF0ZV9DbGVhbjog
-ICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAg
-ICAgICAgICAgIDQga0IKQW5vbnltb3VzOiAgICAgICAgICAgIDEyIGtCCktTTTogICAgICAg
-ICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQ
-YWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1k
-TWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZh
-dGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dh
-cFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpU
-SFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUgYWMgCmZm
-ZmY4OTQ2OTAwMC1mZmZmODk0NzYwMDAgci14cCAwMDAwMDAwMCBmZDowMCAyNjQ0NjUgICAg
-ICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYnJlc29sdi5zby4yClNpemU6ICAgICAg
-ICAgICAgICAgICA1MiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNp
-emU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3M6ICAg
-ICAgICAgICAgICAgICAgIDAga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJl
-ZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJp
-dmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpS
-ZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtC
-CktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAg
-a0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAg
-MCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAg
-ICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAg
-ICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAg
-ICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgZXggbXIg
-bXcgbWUgCmZmZmY4OTQ3NjAwMC1mZmZmODk0ODgwMDAgLS0tcCAwMDAwZDAwMCBmZDowMCAy
-NjQ0NjUgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYnJlc29sdi5zby4yClNp
-emU6ICAgICAgICAgICAgICAgICA3MiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IK
-TU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgMCBr
-QgpQc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAw
-IGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAg
-IDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAg
-ICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAg
-ICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAg
-ICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVk
-OiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0
-bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAg
-ICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDog
-ICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczog
-bXIgbXcgbWUgCmZmZmY4OTQ4ODAwMC1mZmZmODk0ODkwMDAgci0tcCAwMDAwZjAwMCBmZDow
-MCAyNjQ0NjUgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYnJlc29sdi5zby4y
-ClNpemU6ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQg
-a0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAg
-NCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0RpcnR5OiAgICAgICAgICAg
-ICAyIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAg
-ICAgIDQga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAg
-ICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAg
-ICAgICAgICA0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAg
-ICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFw
-cGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1
-Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAg
-ICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tl
-ZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFn
-czogcmQgbXIgbXcgbWUgYWMgCmZmZmY4OTQ4OTAwMC1mZmZmODk0OGEwMDAgcnctcCAwMDAx
-MDAwMCBmZDowMCAyNjQ0NjUgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYnJl
-c29sdi5zby4yClNpemU6ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6ZTog
-ICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAg
-ICAgICAgICAgNCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0RpcnR5OiAg
-ICAgICAgICAgICAyIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGly
-dHk6ICAgICAgICAgIDQga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVf
-RGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnlt
-b3VzOiAgICAgICAgICAgICA0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5
-RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNo
-bWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IK
-U2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBr
-QgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAw
-IGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAg
-IDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUgYWMgCmZmZmY4OTQ4YTAwMC1mZmZmODk0OGMw
-MDAgcnctcCAwMDAwMDAwMCAwMDowMCAwIApTaXplOiAgICAgICAgICAgICAgICAgIDgga0IK
-S2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBr
-QgpSc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAgICAgICAw
-IGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAg
-IDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAgICAg
-ICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAg
-ICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAgICAg
-ICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6
-ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBl
-ZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1
-Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6
-ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxp
-Z2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIHdyIG1yIG13IG1lIGFjIApmZmZmODk0
-OGMwMDAtZmZmZjg5NDkwMDAwIHIteHAgMDAwMDAwMDAgZmQ6MDAgMjY1MDM5ICAgICAgICAg
-ICAgICAgICAgICAgL3Vzci9saWI2NC9saWJrZXl1dGlscy5zby4xLjEwClNpemU6ICAgICAg
-ICAgICAgICAgICAxNiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNp
-emU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3M6ICAg
-ICAgICAgICAgICAgICAgIDAga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJl
-ZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJp
-dmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpS
-ZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtC
-CktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAg
-a0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAg
-MCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAg
-ICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAg
-ICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAg
-ICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgZXggbXIg
-bXcgbWUgCmZmZmY4OTQ5MDAwMC1mZmZmODk0YWIwMDAgLS0tcCAwMDAwNDAwMCBmZDowMCAy
-NjUwMzkgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYmtleXV0aWxzLnNvLjEu
-MTAKU2l6ZTogICAgICAgICAgICAgICAgMTA4IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAg
-NCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAg
-ICAwIGtCClBzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAg
-ICAgIDAga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAg
-ICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTog
-ICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAg
-ICAgICAgICAgIDAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAg
-ICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRN
-YXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRf
-SHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6
-ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9j
-a2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZs
-YWdzOiBtciBtdyBtZSAKZmZmZjg5NGFiMDAwLWZmZmY4OTRhYzAwMCByLS1wIDAwMDBmMDAw
-IGZkOjAwIDI2NTAzOSAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlia2V5dXRp
-bHMuc28uMS4xMApTaXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2VybmVsUGFnZVNpemU6
-ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAg
-ICAgICAgICAgIDQga0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtCClBzc19EaXJ0eTog
-ICAgICAgICAgICAgMiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0Rp
-cnR5OiAgICAgICAgICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRl
-X0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255
-bW91czogICAgICAgICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6
-eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpT
-aG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtC
-ClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAg
-a0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAg
-MCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAg
-ICAwClZtRmxhZ3M6IHJkIG1yIG13IG1lIGFjIApmZmZmODk0YWMwMDAtZmZmZjg5NGFkMDAw
-IHJ3LXAgMDAwMTAwMDAgZmQ6MDAgMjY1MDM5ICAgICAgICAgICAgICAgICAgICAgL3Vzci9s
-aWI2NC9saWJrZXl1dGlscy5zby4xLjEwClNpemU6ICAgICAgICAgICAgICAgICAgNCBrQgpL
-ZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtC
-ClJzczogICAgICAgICAgICAgICAgICAgNCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDIg
-a0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAyIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAg
-MCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDQga0IKUHJpdmF0ZV9DbGVhbjogICAgICAg
-ICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAg
-ICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICA0IGtCCktTTTogICAgICAgICAgICAg
-ICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczog
-ICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVk
-OiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVn
-ZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczog
-ICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGln
-aWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUgYWMgCmZmZmY4OTRh
-ZDAwMC1mZmZmODk0YmMwMDAgci14cCAwMDAwMDAwMCBmZDowMCAyNjg1MDMgICAgICAgICAg
-ICAgICAgICAgICAvdXNyL2xpYjY0L2xpYmtyYjVzdXBwb3J0LnNvLjAuMQpTaXplOiAgICAg
-ICAgICAgICAgICAgNjAga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VT
-aXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAg
-ICAgICAgICAgICAgICAgICAwIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFy
-ZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClBy
-aXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IK
-UmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBr
-QgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAw
-IGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAg
-IDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAg
-ICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAg
-ICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAg
-ICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIGV4IG1y
-IG13IG1lIApmZmZmODk0YmMwMDAtZmZmZjg5NGNjMDAwIC0tLXAgMDAwMGYwMDAgZmQ6MDAg
-MjY4NTAzICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJrcmI1c3VwcG9ydC5z
-by4wLjEKU2l6ZTogICAgICAgICAgICAgICAgIDY0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAg
-ICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAg
-ICAgICAwIGtCClBzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAg
-ICAgICAgIDAga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTog
-ICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0
-eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6
-ICAgICAgICAgICAgIDAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVl
-OiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1Q
-bWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFy
-ZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3
-YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IK
-TG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApW
-bUZsYWdzOiBtciBtdyBtZSAKZmZmZjg5NGNjMDAwLWZmZmY4OTRjZDAwMCByLS1wIDAwMDBm
-MDAwIGZkOjAwIDI2ODUwMyAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlia3Ji
-NXN1cHBvcnQuc28uMC4xClNpemU6ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdl
-U2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAg
-ICAgICAgICAgICAgICAgNCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0Rp
-cnR5OiAgICAgICAgICAgICAyIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFy
-ZWRfRGlydHk6ICAgICAgICAgIDQga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClBy
-aXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IK
-QW5vbnltb3VzOiAgICAgICAgICAgICA0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBr
-QgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAw
-IGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAg
-IDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAg
-ICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAg
-ICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAg
-ICAgICAgIDAKVm1GbGFnczogcmQgbXIgbXcgbWUgYWMgCmZmZmY4OTRjZDAwMC1mZmZmODk0
-Y2UwMDAgcnctcCAwMDAxMDAwMCBmZDowMCAyNjg1MDMgICAgICAgICAgICAgICAgICAgICAv
-dXNyL2xpYjY0L2xpYmtyYjVzdXBwb3J0LnNvLjAuMQpTaXplOiAgICAgICAgICAgICAgICAg
-IDQga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAg
-ICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDQga0IKUHNzOiAgICAgICAgICAgICAg
-ICAgICAyIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMiBrQgpTaGFyZWRfQ2xlYW46ICAg
-ICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICA0IGtCClByaXZhdGVfQ2xlYW46
-ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDog
-ICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgNCBrQgpLU006ICAgICAg
-ICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdl
-UGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBt
-ZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2
-YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3
-YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IK
-VEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIHdyIG1yIG13IG1lIGFjIApm
-ZmZmODk0Y2UwMDAtZmZmZjg5NGQxMDAwIHIteHAgMDAwMDAwMDAgZmQ6MDAgMjY4NjM2ICAg
-ICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJjb21fZXJyLnNvLjIuMQpTaXplOiAg
-ICAgICAgICAgICAgICAgMTIga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBh
-Z2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNz
-OiAgICAgICAgICAgICAgICAgICAwIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpT
-aGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtC
-ClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAg
-a0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAg
-MCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAg
-ICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAg
-ICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAg
-ICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAg
-ICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAg
-ICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIGV4
-IG1yIG13IG1lIApmZmZmODk0ZDEwMDAtZmZmZjg5NGVkMDAwIC0tLXAgMDAwMDMwMDAgZmQ6
-MDAgMjY4NjM2ICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJjb21fZXJyLnNv
-LjIuMQpTaXplOiAgICAgICAgICAgICAgICAxMTIga0IKS2VybmVsUGFnZVNpemU6ICAgICAg
-ICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAg
-ICAgIDAga0IKUHNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzc19EaXJ0eTogICAgICAg
-ICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAg
-ICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5
-OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czog
-ICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6
-ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBt
-ZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJl
-ZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dh
-cDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpM
-b2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZt
-RmxhZ3M6IG1yIG13IG1lIApmZmZmODk0ZWQwMDAtZmZmZjg5NGVlMDAwIHItLXAgMDAwMGYw
-MDAgZmQ6MDAgMjY4NjM2ICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJjb21f
-ZXJyLnNvLjIuMQpTaXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2VybmVsUGFnZVNpemU6
-ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAg
-ICAgICAgICAgIDQga0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtCClBzc19EaXJ0eTog
-ICAgICAgICAgICAgMiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0Rp
-cnR5OiAgICAgICAgICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRl
-X0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255
-bW91czogICAgICAgICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6
-eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpT
-aG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtC
-ClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAg
-a0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAg
-MCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAg
-ICAwClZtRmxhZ3M6IHJkIG1yIG13IG1lIGFjIApmZmZmODk0ZWUwMDAtZmZmZjg5NGVmMDAw
-IHJ3LXAgMDAwMTAwMDAgZmQ6MDAgMjY4NjM2ICAgICAgICAgICAgICAgICAgICAgL3Vzci9s
-aWI2NC9saWJjb21fZXJyLnNvLjIuMQpTaXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2Vy
-bmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpS
-c3M6ICAgICAgICAgICAgICAgICAgIDQga0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtC
-ClBzc19EaXJ0eTogICAgICAgICAgICAgMiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAg
-a0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAg
-MCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAg
-ICAwIGtCCkFub255bW91czogICAgICAgICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAg
-ICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAg
-ICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDog
-ICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0
-bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAg
-ICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2li
-bGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIHdyIG1yIG13IG1lIGFjIApmZmZmODk0ZWYw
-MDAtZmZmZjg5NTA0MDAwIHIteHAgMDAwMDAwMDAgZmQ6MDAgMjY4NDk1ICAgICAgICAgICAg
-ICAgICAgICAgL3Vzci9saWI2NC9saWJrNWNyeXB0by5zby4zLjEKU2l6ZTogICAgICAgICAg
-ICAgICAgIDg0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTog
-ICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzczogICAgICAg
-ICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0Ns
-ZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRl
-X0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVy
-ZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NN
-OiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpB
-bm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtC
-CkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAg
-a0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAg
-MCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAg
-ICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBleCBtciBtdyBt
-ZSAKZmZmZjg5NTA0MDAwLWZmZmY4OTUxZDAwMCAtLS1wIDAwMDE1MDAwIGZkOjAwIDI2ODQ5
-NSAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGliazVjcnlwdG8uc28uMy4xClNp
-emU6ICAgICAgICAgICAgICAgIDEwMCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IK
-TU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgMCBr
-QgpQc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAw
-IGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAg
-IDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAg
-ICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAg
-ICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAg
-ICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVk
-OiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0
-bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAg
-ICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDog
-ICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczog
-bXIgbXcgbWUgCmZmZmY4OTUxZDAwMC1mZmZmODk1MWYwMDAgci0tcCAwMDAxZTAwMCBmZDow
-MCAyNjg0OTUgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYms1Y3J5cHRvLnNv
-LjMuMQpTaXplOiAgICAgICAgICAgICAgICAgIDgga0IKS2VybmVsUGFnZVNpemU6ICAgICAg
-ICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAg
-ICAgIDgga0IKUHNzOiAgICAgICAgICAgICAgICAgICA0IGtCClBzc19EaXJ0eTogICAgICAg
-ICAgICAgNCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAg
-ICAgICAgICA4IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5
-OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czog
-ICAgICAgICAgICAgOCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6
-ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBt
-ZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJl
-ZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dh
-cDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpM
-b2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZt
-RmxhZ3M6IHJkIG1yIG13IG1lIGFjIApmZmZmODk1MWYwMDAtZmZmZjg5NTIwMDAwIHJ3LXAg
-MDAwMjAwMDAgZmQ6MDAgMjY4NDk1ICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9s
-aWJrNWNyeXB0by5zby4zLjEKU2l6ZTogICAgICAgICAgICAgICAgICA0IGtCCktlcm5lbFBh
-Z2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAg
-ICAgICAgICAgICAgICAgICA0IGtCClBzczogICAgICAgICAgICAgICAgICAgMiBrQgpQc3Nf
-RGlydHk6ICAgICAgICAgICAgIDIga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNo
-YXJlZF9EaXJ0eTogICAgICAgICAgNCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IK
-UHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBr
-QgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDQga0IKS1NNOiAgICAgICAgICAgICAgICAgICAw
-IGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAg
-IDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAg
-ICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAg
-ICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAg
-ICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAg
-ICAgICAgICAgMApWbUZsYWdzOiByZCB3ciBtciBtdyBtZSBhYyAKZmZmZjg5NTIwMDAwLWZm
-ZmY4OTVmOTAwMCByLXhwIDAwMDAwMDAwIGZkOjAwIDI2ODUwMSAgICAgICAgICAgICAgICAg
-ICAgIC91c3IvbGliNjQvbGlia3JiNS5zby4zLjMKU2l6ZTogICAgICAgICAgICAgICAgODY4
-IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAg
-IDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzczogICAgICAgICAgICAgICAg
-ICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0NsZWFuOiAgICAg
-ICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAg
-ICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAg
-ICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NNOiAgICAgICAg
-ICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBh
-Z2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRN
-YXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0
-ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2Fw
-UHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRI
-UGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBleCBtciBtdyBtZSAKZmZmZjg5
-NWY5MDAwLWZmZmY4OTYxMzAwMCAtLS1wIDAwMGQ5MDAwIGZkOjAwIDI2ODUwMSAgICAgICAg
-ICAgICAgICAgICAgIC91c3IvbGliNjQvbGlia3JiNS5zby4zLjMKU2l6ZTogICAgICAgICAg
-ICAgICAgMTA0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTog
-ICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzczogICAgICAg
-ICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0Ns
-ZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRl
-X0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVy
-ZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NN
-OiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpB
-bm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtC
-CkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAg
-a0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAg
-MCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAg
-ICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiBtciBtdyBtZSAKZmZm
-Zjg5NjEzMDAwLWZmZmY4OTYyMDAwMCByLS1wIDAwMGUzMDAwIGZkOjAwIDI2ODUwMSAgICAg
-ICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlia3JiNS5zby4zLjMKU2l6ZTogICAgICAg
-ICAgICAgICAgIDUyIGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6
-ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgIDUyIGtCClBzczogICAg
-ICAgICAgICAgICAgICAyNiBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgMjYga0IKU2hhcmVk
-X0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICA1MiBrQgpQcml2
-YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJl
-ZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgNTIga0IK
-S1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBr
-QgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAw
-IGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAg
-IDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAg
-ICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAg
-ICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBtciBtdyBt
-ZSBhYyAKZmZmZjg5NjIwMDAwLWZmZmY4OTYyMTAwMCBydy1wIDAwMGYwMDAwIGZkOjAwIDI2
-ODUwMSAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlia3JiNS5zby4zLjMKU2l6
-ZTogICAgICAgICAgICAgICAgICA0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpN
-TVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICA0IGtC
-ClBzczogICAgICAgICAgICAgICAgICAgMiBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDIg
-a0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAg
-NCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAg
-ICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAg
-ICAgIDQga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAg
-ICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6
-ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRs
-YjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAg
-ICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAg
-ICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiBy
-ZCB3ciBtciBtdyBtZSBhYyAKZmZmZjg5NjIxMDAwLWZmZmY4OTYyMjAwMCBydy1wIDAwMDAw
-MDAwIDAwOjAwIDAgClNpemU6ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6
-ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAg
-ICAgICAgICAgICAgMCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzX0RpcnR5
-OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRf
-RGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZh
-dGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5v
-bnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpM
-YXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtC
-ClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAg
-a0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAg
-MCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAg
-ICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAg
-ICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUgYWMgCmZmZmY4OTYyMjAwMC1mZmZmODk2
-NzAwMDAgci14cCAwMDAwMDAwMCBmZDowMCAyNjg0OTEgICAgICAgICAgICAgICAgICAgICAv
-dXNyL2xpYjY0L2xpYmdzc2FwaV9rcmI1LnNvLjIuMgpTaXplOiAgICAgICAgICAgICAgICAz
-MTIga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAg
-ICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAg
-ICAgICAwIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAg
-ICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46
-ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDog
-ICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAg
-ICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdl
-UGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBt
-ZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2
-YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3
-YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IK
-VEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIGV4IG1yIG13IG1lIApmZmZm
-ODk2NzAwMDAtZmZmZjg5NjgwMDAwIC0tLXAgMDAwNGUwMDAgZmQ6MDAgMjY4NDkxICAgICAg
-ICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJnc3NhcGlfa3JiNS5zby4yLjIKU2l6ZTog
-ICAgICAgICAgICAgICAgIDY0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQ
-YWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBz
-czogICAgICAgICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IK
-U2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBr
-QgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAw
-IGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAg
-IDAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAg
-ICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAg
-ICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjog
-ICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAg
-ICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAg
-ICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiBtciBt
-dyBtZSAKZmZmZjg5NjgwMDAwLWZmZmY4OTY4MjAwMCByLS1wIDAwMDRlMDAwIGZkOjAwIDI2
-ODQ5MSAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGliZ3NzYXBpX2tyYjUuc28u
-Mi4yClNpemU6ICAgICAgICAgICAgICAgICAgOCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAg
-IDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAg
-ICAgOCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDQga0IKUHNzX0RpcnR5OiAgICAgICAg
-ICAgICA0IGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAg
-ICAgICAgIDgga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6
-ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAg
-ICAgICAgICAgICA4IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTog
-ICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1k
-TWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVk
-X0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2Fw
-OiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxv
-Y2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1G
-bGFnczogcmQgbXIgbXcgbWUgYWMgCmZmZmY4OTY4MjAwMC1mZmZmODk2ODMwMDAgcnctcCAw
-MDA1MDAwMCBmZDowMCAyNjg0OTEgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xp
-Ymdzc2FwaV9rcmI1LnNvLjIuMgpTaXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2VybmVs
-UGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6
-ICAgICAgICAgICAgICAgICAgIDQga0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtCClBz
-c19EaXJ0eTogICAgICAgICAgICAgMiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IK
-U2hhcmVkX0RpcnR5OiAgICAgICAgICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBr
-QgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAw
-IGtCCkFub255bW91czogICAgICAgICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAgICAg
-IDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAg
-ICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAg
-ICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6
-ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAg
-ICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6
-ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIHdyIG1yIG13IG1lIGFjIApmZmZmODk2ODMwMDAt
-ZmZmZjg5N2ZjMDAwIHIteHAgMDAwMDAwMDAgZmQ6MDAgMjY0NDU3ICAgICAgICAgICAgICAg
-ICAgICAgL3Vzci9saWI2NC9saWJjLnNvLjYKU2l6ZTogICAgICAgICAgICAgICAxNTA4IGtC
-Cktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQg
-a0IKUnNzOiAgICAgICAgICAgICAgICAgODIwIGtCClBzczogICAgICAgICAgICAgICAgICAx
-MiBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0NsZWFuOiAgICAgICAg
-ODIwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAg
-ICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAg
-ICAgIDgyMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NNOiAgICAgICAgICAg
-ICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2Vz
-OiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBw
-ZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9I
-dWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNz
-OiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVs
-aWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBleCBtciBtdyBtZSAKZmZmZjg5N2Zj
-MDAwLWZmZmY4OTgxMDAwMCAtLS1wIDAwMTc5MDAwIGZkOjAwIDI2NDQ1NyAgICAgICAgICAg
-ICAgICAgICAgIC91c3IvbGliNjQvbGliYy5zby42ClNpemU6ICAgICAgICAgICAgICAgICA4
-MCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAg
-ICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3M6ICAgICAgICAgICAgICAg
-ICAgIDAga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAg
-ICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjog
-ICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAg
-ICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAg
-ICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQ
-YWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1k
-TWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZh
-dGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dh
-cFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpU
-SFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogbXIgbXcgbWUgCmZmZmY4OTgxMDAw
-MC1mZmZmODk4MTMwMDAgci0tcCAwMDE3ZDAwMCBmZDowMCAyNjQ0NTcgICAgICAgICAgICAg
-ICAgICAgICAvdXNyL2xpYjY0L2xpYmMuc28uNgpTaXplOiAgICAgICAgICAgICAgICAgMTIg
-a0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAg
-NCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgMTIga0IKUHNzOiAgICAgICAgICAgICAgICAg
-ICA2IGtCClBzc19EaXJ0eTogICAgICAgICAgICAgNiBrQgpTaGFyZWRfQ2xlYW46ICAgICAg
-ICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgIDEyIGtCClByaXZhdGVfQ2xlYW46ICAg
-ICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAg
-ICAgICAgICA0IGtCCkFub255bW91czogICAgICAgICAgICAxMiBrQgpLU006ICAgICAgICAg
-ICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFn
-ZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1h
-cHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRl
-X0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQ
-c3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQ
-ZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIG1yIG13IG1lIGFjIApmZmZmODk4
-MTMwMDAtZmZmZjg5ODE2MDAwIHJ3LXAgMDAxODAwMDAgZmQ6MDAgMjY0NDU3ICAgICAgICAg
-ICAgICAgICAgICAgL3Vzci9saWI2NC9saWJjLnNvLjYKU2l6ZTogICAgICAgICAgICAgICAg
-IDEyIGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAg
-ICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgIDEyIGtCClBzczogICAgICAgICAgICAg
-ICAgICAxMiBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgMTIga0IKU2hhcmVkX0NsZWFuOiAg
-ICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFu
-OiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgIDEyIGtCClJlZmVyZW5jZWQ6
-ICAgICAgICAgICAxMiBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgMTIga0IKS1NNOiAgICAg
-ICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVn
-ZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQ
-bWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJp
-dmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpT
-d2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtC
-ClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCB3ciBtciBtdyBtZSBhYyAK
-ZmZmZjg5ODE2MDAwLWZmZmY4OTgxZDAwMCBydy1wIDAwMDAwMDAwIDAwOjAwIDAgClNpemU6
-ICAgICAgICAgICAgICAgICAyOCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1V
-UGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAxNiBrQgpQ
-c3M6ICAgICAgICAgICAgICAgICAgMTIga0IKUHNzX0RpcnR5OiAgICAgICAgICAgIDEyIGtC
-ClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDgg
-a0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAg
-OCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgMTIga0IKQW5vbnltb3VzOiAgICAgICAgICAg
-IDE2IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAg
-ICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAg
-ICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6
-ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAg
-ICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAg
-ICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQg
-d3IgbXIgbXcgbWUgYWMgCmZmZmY4OTgxZDAwMC1mZmZmODk4NGEwMDAgci14cCAwMDAwMDAw
-MCBmZDowMCAyNjg2ODEgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYnRpcnBj
-LnNvLjMuMC4wClNpemU6ICAgICAgICAgICAgICAgIDE4MCBrQgpLZXJuZWxQYWdlU2l6ZTog
-ICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAg
-ICAgICAgICA2NCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDQga0IKUHNzX0RpcnR5OiAg
-ICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAgICA2NCBrQgpTaGFyZWRfRGly
-dHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVf
-RGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgNjQga0IKQW5vbnlt
-b3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5
-RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNo
-bWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IK
-U2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBr
-QgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAw
-IGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAg
-IDAKVm1GbGFnczogcmQgZXggbXIgbXcgbWUgCmZmZmY4OTg0YTAwMC1mZmZmODk4NWIwMDAg
-LS0tcCAwMDAyZDAwMCBmZDowMCAyNjg2ODEgICAgICAgICAgICAgICAgICAgICAvdXNyL2xp
-YjY0L2xpYnRpcnBjLnNvLjMuMC4wClNpemU6ICAgICAgICAgICAgICAgICA2OCBrQgpLZXJu
-ZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJz
-czogICAgICAgICAgICAgICAgICAgMCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDAga0IK
-UHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBr
-QgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAw
-IGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAg
-IDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAg
-ICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAg
-ICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAg
-ICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRs
-YjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAg
-ICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJs
-ZTogICAgICAgICAgIDAKVm1GbGFnczogbXIgbXcgbWUgCmZmZmY4OTg1YjAwMC1mZmZmODk4
-NWQwMDAgci0tcCAwMDAyZTAwMCBmZDowMCAyNjg2ODEgICAgICAgICAgICAgICAgICAgICAv
-dXNyL2xpYjY0L2xpYnRpcnBjLnNvLjMuMC4wClNpemU6ICAgICAgICAgICAgICAgICAgOCBr
-QgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0
-IGtCClJzczogICAgICAgICAgICAgICAgICAgOCBrQgpQc3M6ICAgICAgICAgICAgICAgICAg
-IDQga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICA0IGtCClNoYXJlZF9DbGVhbjogICAgICAg
-ICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDgga0IKUHJpdmF0ZV9DbGVhbjogICAg
-ICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAg
-ICAgICAgIDQga0IKQW5vbnltb3VzOiAgICAgICAgICAgICA4IGtCCktTTTogICAgICAgICAg
-ICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdl
-czogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFw
-cGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVf
-SHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBz
-czogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBl
-bGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgbXIgbXcgbWUgYWMgCmZmZmY4OTg1
-ZDAwMC1mZmZmODk4NWUwMDAgcnctcCAwMDAzMDAwMCBmZDowMCAyNjg2ODEgICAgICAgICAg
-ICAgICAgICAgICAvdXNyL2xpYjY0L2xpYnRpcnBjLnNvLjMuMC4wClNpemU6ICAgICAgICAg
-ICAgICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6
-ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgNCBrQgpQc3M6ICAgICAg
-ICAgICAgICAgICAgIDIga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAyIGtCClNoYXJlZF9D
-bGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDQga0IKUHJpdmF0
-ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZl
-cmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICA0IGtCCktT
-TTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IK
-QW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBr
-QgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAw
-IGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAg
-IDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAg
-ICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcg
-bWUgYWMgCmZmZmY4OTg1ZTAwMC1mZmZmODk4ZTAwMDAgci14cCAwMDAwMDAwMCBmZDowMCAy
-NjQ0NjAgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYm0uc28uNgpTaXplOiAg
-ICAgICAgICAgICAgICA1MjAga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBh
-Z2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgNjQga0IKUHNz
-OiAgICAgICAgICAgICAgICAgICAyIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpT
-aGFyZWRfQ2xlYW46ICAgICAgICAgNjQga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtC
-ClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAg
-a0IKUmVmZXJlbmNlZDogICAgICAgICAgIDY0IGtCCkFub255bW91czogICAgICAgICAgICAg
-MCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAg
-ICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAg
-ICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAg
-ICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAg
-ICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAg
-ICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIGV4
-IG1yIG13IG1lIApmZmZmODk4ZTAwMDAtZmZmZjg5OGZkMDAwIC0tLXAgMDAwODIwMDAgZmQ6
-MDAgMjY0NDYwICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJtLnNvLjYKU2l6
-ZTogICAgICAgICAgICAgICAgMTE2IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpN
-TVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtC
-ClBzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAg
-a0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAg
-MCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAg
-ICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAg
-ICAgIDAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAg
-ICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6
-ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRs
-YjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAg
-ICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAg
-ICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiBt
-ciBtdyBtZSAKZmZmZjg5OGZkMDAwLWZmZmY4OThmZTAwMCByLS1wIDAwMDhmMDAwIGZkOjAw
-IDI2NDQ2MCAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlibS5zby42ClNpemU6
-ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1V
-UGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgNCBrQgpQ
-c3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAyIGtC
-ClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDQg
-a0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAg
-MCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDQga0IKQW5vbnltb3VzOiAgICAgICAgICAg
-ICA0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAg
-ICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAg
-ICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6
-ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAg
-ICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAg
-ICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQg
-bXIgbXcgbWUgYWMgCmZmZmY4OThmZTAwMC1mZmZmODk4ZmYwMDAgcnctcCAwMDA5MDAwMCBm
-ZDowMCAyNjQ0NjAgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYm0uc28uNgpT
-aXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtC
-Ck1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDQg
-a0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtCClBzc19EaXJ0eTogICAgICAgICAgICAg
-MiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAg
-ICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAg
-ICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAg
-ICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAg
-ICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBl
-ZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdl
-dGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAg
-ICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6
-ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6
-IHJkIHdyIG1yIG13IG1lIGFjIApmZmZmODk4ZmYwMDAtZmZmZjg5OTIyMDAwIHIteHAgMDAw
-MDAwMDAgZmQ6MDAgMjY0NDUzICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWIvbGQtbGlu
-dXgtYWFyY2g2NC5zby4xClNpemU6ICAgICAgICAgICAgICAgIDE0MCBrQgpLZXJuZWxQYWdl
-U2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAg
-ICAgICAgICAgICAgIDEyOCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0Rp
-cnR5OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAgIDEyOCBrQgpTaGFy
-ZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClBy
-aXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAxMjgga0IK
-QW5vbnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBr
-QgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAw
-IGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAg
-IDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAg
-ICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAg
-ICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAg
-ICAgICAgIDAKVm1GbGFnczogcmQgZXggbXIgbXcgbWUgCmZmZmY4OTkyMzAwMC1mZmZmODk5
-MjcwMDAgcnctcCAwMDAwMDAwMCAwMDowMCAwIApTaXplOiAgICAgICAgICAgICAgICAgMTYg
-a0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAg
-NCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgMTYga0IKUHNzOiAgICAgICAgICAgICAgICAg
-ICA4IGtCClBzc19EaXJ0eTogICAgICAgICAgICAgOCBrQgpTaGFyZWRfQ2xlYW46ICAgICAg
-ICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgIDE2IGtCClByaXZhdGVfQ2xlYW46ICAg
-ICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAg
-ICAgICAgICA4IGtCCkFub255bW91czogICAgICAgICAgICAxNiBrQgpLU006ICAgICAgICAg
-ICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFn
-ZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1h
-cHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRl
-X0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQ
-c3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQ
-ZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIHdyIG1yIG13IG1lIGFjIApmZmZm
-ODk5M2EwMDAtZmZmZjg5OTNjMDAwIHItLXAgMDAwMDAwMDAgMDA6MDAgMCAgICAgICAgICAg
-ICAgICAgICAgICAgICAgW3Z2YXJdClNpemU6ICAgICAgICAgICAgICAgICAgOCBrQgpLZXJu
-ZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJz
-czogICAgICAgICAgICAgICAgICAgMCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDAga0IK
-UHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBr
-QgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAw
-IGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAg
-IDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAg
-ICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAg
-ICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAg
-ICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRs
-YjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAg
-ICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJs
-ZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgbXIgcGYgZGUgCmZmZmY4OTkzYzAwMC1mZmZm
-ODk5M2QwMDAgci14cCAwMDAwMDAwMCAwMDowMCAwICAgICAgICAgICAgICAgICAgICAgICAg
-ICBbdmRzb10KU2l6ZTogICAgICAgICAgICAgICAgICA0IGtCCktlcm5lbFBhZ2VTaXplOiAg
-ICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAg
-ICAgICAgICA0IGtCClBzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAg
-ICAgICAgICAgIDAga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICA0IGtCClNoYXJlZF9EaXJ0
-eTogICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9E
-aXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgNCBrQgpBbm9ueW1v
-dXM6ICAgICAgICAgICAgIDAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlG
-cmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2ht
-ZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpT
-aGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtC
-ClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAg
-a0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAg
-MApWbUZsYWdzOiByZCBleCBtciBtdyBtZSBkZSAKZmZmZjg5OTNkMDAwLWZmZmY4OTkzZjAw
-MCByLS1wIDAwMDJlMDAwIGZkOjAwIDI2NDQ1MyAgICAgICAgICAgICAgICAgICAgIC91c3Iv
-bGliL2xkLWxpbnV4LWFhcmNoNjQuc28uMQpTaXplOiAgICAgICAgICAgICAgICAgIDgga0IK
-S2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBr
-QgpSc3M6ICAgICAgICAgICAgICAgICAgIDgga0IKUHNzOiAgICAgICAgICAgICAgICAgICA0
-IGtCClBzc19EaXJ0eTogICAgICAgICAgICAgNCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAg
-IDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICA4IGtCClByaXZhdGVfQ2xlYW46ICAgICAg
-ICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAg
-ICAgICA0IGtCCkFub255bW91czogICAgICAgICAgICAgOCBrQgpLU006ICAgICAgICAgICAg
-ICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6
-ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBl
-ZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1
-Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6
-ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxp
-Z2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIG1yIG13IG1lIGFjIApmZmZmODk5M2Yw
-MDAtZmZmZjg5OTQxMDAwIHJ3LXAgMDAwMzAwMDAgZmQ6MDAgMjY0NDUzICAgICAgICAgICAg
-ICAgICAgICAgL3Vzci9saWIvbGQtbGludXgtYWFyY2g2NC5zby4xClNpemU6ICAgICAgICAg
-ICAgICAgICAgOCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6
-ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgOCBrQgpQc3M6ICAgICAg
-ICAgICAgICAgICAgIDgga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICA4IGtCClNoYXJlZF9D
-bGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0
-ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgOCBrQgpSZWZl
-cmVuY2VkOiAgICAgICAgICAgIDgga0IKQW5vbnltb3VzOiAgICAgICAgICAgICA4IGtCCktT
-TTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IK
-QW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBr
-QgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAw
-IGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAg
-IDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAg
-ICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcg
-bWUgYWMgCmZmZmZmNTY5YzAwMC1mZmZmZjU2YmQwMDAgcnctcCAwMDAwMDAwMCAwMDowMCAw
-ICAgICAgICAgICAgICAgICAgICAgICAgICBbc3RhY2tdClNpemU6ICAgICAgICAgICAgICAg
-IDEzMiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAg
-ICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAyMCBrQgpQc3M6ICAgICAgICAgICAg
-ICAgICAgMTQga0IKUHNzX0RpcnR5OiAgICAgICAgICAgIDE0IGtCClNoYXJlZF9DbGVhbjog
-ICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgMTIga0IKUHJpdmF0ZV9DbGVh
-bjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgOCBrQgpSZWZlcmVuY2Vk
-OiAgICAgICAgICAgIDgga0IKQW5vbnltb3VzOiAgICAgICAgICAgIDIwIGtCCktTTTogICAg
-ICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1
-Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxl
-UG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClBy
-aXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IK
-U3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBr
-QgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUgZ2Qg
-YWMgCg==
---------------VyMDYtp4q69oxASCyICYwSes
-Content-Type: text/plain; charset="UTF-8"; name="revert.smaps"
-Content-Disposition: attachment; filename="revert.smaps"
-Content-Transfer-Encoding: base64
-
-MDA0MDAwMDAtMDA0MTgwMDAgci14cCAwMDAwMDAwMCBmZDowNCAyNTIxOTAzMCAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIC9ob21lL3p6L2xtYmVuY2gtMy4wLWE5L2Jpbi9hYXJjaDY0
-LWxpbnV4LWdudS9sYXRfbWVtX3JkClNpemU6ICAgICAgICAgICAgICAgICA5NiBrQgpLZXJu
-ZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJz
-czogICAgICAgICAgICAgICAgICA5NiBrQgpQc3M6ICAgICAgICAgICAgICAgICAgNDgga0IK
-UHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAgICA5NiBr
-QgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAw
-IGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAg
-OTYga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAg
-ICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAg
-ICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAg
-ICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRs
-YjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAg
-ICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJs
-ZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgZXggbXIgbXcgbWUgCjAwNDJmMDAwLTAwNDMw
-MDAwIHItLXAgMDAwMWYwMDAgZmQ6MDQgMjUyMTkwMzAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAvaG9tZS96ei9sbWJlbmNoLTMuMC1hOS9iaW4vYWFyY2g2NC1saW51eC1nbnUvbGF0
-X21lbV9yZApTaXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2VybmVsUGFnZVNpemU6ICAg
-ICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAg
-ICAgICAgIDQga0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtCClBzc19EaXJ0eTogICAg
-ICAgICAgICAgMiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5
-OiAgICAgICAgICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0Rp
-cnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICA0IGtCCkFub255bW91
-czogICAgICAgICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZy
-ZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1l
-bVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNo
-YXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IK
-U3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBr
-QgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAw
-ClZtRmxhZ3M6IHJkIG1yIG13IG1lIGFjIAowMDQzMDAwMC0wMDQzMTAwMCBydy1wIDAwMDIw
-MDAwIGZkOjA0IDI1MjE5MDMwICAgICAgICAgICAgICAgICAgICAgICAgICAgL2hvbWUvenov
-bG1iZW5jaC0zLjAtYTkvYmluL2FhcmNoNjQtbGludXgtZ251L2xhdF9tZW1fcmQKU2l6ZTog
-ICAgICAgICAgICAgICAgICA0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQ
-YWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICA0IGtCClBz
-czogICAgICAgICAgICAgICAgICAgNCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDQga0IK
-U2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBr
-QgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICA0
-IGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgNCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAg
-IDQga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAg
-ICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAg
-ICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjog
-ICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAg
-ICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAg
-ICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCB3
-ciBtciBtdyBtZSBhYyAKMGU5YWIwMDAtMGU5Y2MwMDAgcnctcCAwMDAwMDAwMCAwMDowMCAw
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtoZWFwXQpTaXplOiAgICAgICAg
-ICAgICAgICAxMzIga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXpl
-OiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDgga0IKUHNzOiAgICAg
-ICAgICAgICAgICAgICA4IGtCClBzc19EaXJ0eTogICAgICAgICAgICAgOCBrQgpTaGFyZWRf
-Q2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZh
-dGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDgga0IKUmVm
-ZXJlbmNlZDogICAgICAgICAgICA4IGtCCkFub255bW91czogICAgICAgICAgICAgOCBrQgpL
-U006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtC
-CkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAg
-a0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAg
-MCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAg
-ICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAg
-ICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIHdyIG1yIG13
-IG1lIGFjIApmZmZmOTg0NWIwMDAtZmZmZmI4NTVmMDAwIHJ3LXAgMDAwMDAwMDAgMDA6MDAg
-MCAKU2l6ZTogICAgICAgICAgICAgNTI1MzI4IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAg
-NCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAx
-MTI4IGtCClBzczogICAgICAgICAgICAgICAgMTEyOCBrQgpQc3NfRGlydHk6ICAgICAgICAg
-IDExMjgga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAg
-ICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTog
-ICAgICAxMTI4IGtCClJlZmVyZW5jZWQ6ICAgICAgICAgMTEyOCBrQgpBbm9ueW1vdXM6ICAg
-ICAgICAgIDExMjgga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAg
-ICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRN
-YXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRf
-SHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6
-ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9j
-a2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMQpWbUZs
-YWdzOiByZCB3ciBtciBtdyBtZSBhYyAKZmZmZmI4NTVmMDAwLWZmZmZiODVkZjAwMCByLXhw
-IDAwMDAwMDAwIGZkOjAwIDI2NDgzOCAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQv
-bGlicGNyZTItOC5zby4wLjEwLjQKU2l6ZTogICAgICAgICAgICAgICAgNTEyIGtCCktlcm5l
-bFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNz
-OiAgICAgICAgICAgICAgICAgICAwIGtCClBzczogICAgICAgICAgICAgICAgICAgMCBrQgpQ
-c3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtC
-ClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAg
-a0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAg
-MCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NNOiAgICAgICAgICAgICAgICAg
-ICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAg
-ICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAg
-ICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxi
-OiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAg
-ICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxl
-OiAgICAgICAgICAgMApWbUZsYWdzOiByZCBleCBtciBtdyBtZSAKZmZmZmI4NWRmMDAwLWZm
-ZmZiODVmZTAwMCAtLS1wIDAwMDgwMDAwIGZkOjAwIDI2NDgzOCAgICAgICAgICAgICAgICAg
-ICAgIC91c3IvbGliNjQvbGlicGNyZTItOC5zby4wLjEwLjQKU2l6ZTogICAgICAgICAgICAg
-ICAgMTI0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAg
-ICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzczogICAgICAgICAg
-ICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0NsZWFu
-OiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0Ns
-ZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5j
-ZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NNOiAg
-ICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9u
-SHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZp
-bGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IK
-UHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBr
-QgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAw
-IGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiBtciBtdyBtZSAKZmZmZmI4
-NWZlMDAwLWZmZmZiODVmZjAwMCByLS1wIDAwMDhmMDAwIGZkOjAwIDI2NDgzOCAgICAgICAg
-ICAgICAgICAgICAgIC91c3IvbGliNjQvbGlicGNyZTItOC5zby4wLjEwLjQKU2l6ZTogICAg
-ICAgICAgICAgICAgICA0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdl
-U2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICA0IGtCClBzczog
-ICAgICAgICAgICAgICAgICAgMiBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDIga0IKU2hh
-cmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgNCBrQgpQ
-cml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtC
-ClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDQg
-a0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAg
-MCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAg
-ICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAg
-ICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAg
-ICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAg
-ICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBtciBt
-dyBtZSBhYyAKZmZmZmI4NWZmMDAwLWZmZmZiODYwMDAwMCBydy1wIDAwMDkwMDAwIGZkOjAw
-IDI2NDgzOCAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlicGNyZTItOC5zby4w
-LjEwLjQKU2l6ZTogICAgICAgICAgICAgICAgICA0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAg
-ICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAg
-ICAgICA0IGtCClBzczogICAgICAgICAgICAgICAgICAgMiBrQgpQc3NfRGlydHk6ICAgICAg
-ICAgICAgIDIga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTog
-ICAgICAgICAgNCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0
-eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6
-ICAgICAgICAgICAgIDQga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVl
-OiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1Q
-bWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFy
-ZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3
-YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IK
-TG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApW
-bUZsYWdzOiByZCB3ciBtciBtdyBtZSBhYyAKZmZmZmI4NjAwMDAwLWZmZmZiODg3NTAwMCBy
-LXhwIDAwMDAwMDAwIGZkOjAwIDI3MDI1OCAgICAgICAgICAgICAgICAgICAgIC91c3IvbGli
-NjQvbGliY3J5cHRvLnNvLjEuMS4xbQpTaXplOiAgICAgICAgICAgICAgIDI1MTYga0IKS2Vy
-bmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpS
-c3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAgICAgICAwIGtC
-ClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAg
-a0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAg
-MCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAg
-ICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAgICAgICAg
-ICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAg
-ICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDog
-ICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0
-bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAg
-ICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2li
-bGU6ICAgICAgICAgICAxClZtRmxhZ3M6IHJkIGV4IG1yIG13IG1lIApmZmZmYjg4NzUwMDAt
-ZmZmZmI4ODg3MDAwIC0tLXAgMDAyNzUwMDAgZmQ6MDAgMjcwMjU4ICAgICAgICAgICAgICAg
-ICAgICAgL3Vzci9saWI2NC9saWJjcnlwdG8uc28uMS4xLjFtClNpemU6ICAgICAgICAgICAg
-ICAgICA3MiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAg
-ICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3M6ICAgICAgICAg
-ICAgICAgICAgIDAga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVh
-bjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9D
-bGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVu
-Y2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTog
-ICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5v
-bkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpG
-aWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtC
-ClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAg
-a0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAg
-MCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogbXIgbXcgbWUgCmZmZmZi
-ODg4NzAwMC1mZmZmYjg4YjAwMDAgci0tcCAwMDI3NzAwMCBmZDowMCAyNzAyNTggICAgICAg
-ICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYmNyeXB0by5zby4xLjEuMW0KU2l6ZTogICAg
-ICAgICAgICAgICAgMTY0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdl
-U2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgMTY0IGtCClBzczog
-ICAgICAgICAgICAgICAgICA4MiBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgODIga0IKU2hh
-cmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgIDE2NCBrQgpQ
-cml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtC
-ClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAxNjQg
-a0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAg
-MCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAg
-ICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAg
-ICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAg
-ICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAg
-ICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBtciBt
-dyBtZSBhYyAKZmZmZmI4OGIwMDAwLWZmZmZiODhiNDAwMCBydy1wIDAwMmEwMDAwIGZkOjAw
-IDI3MDI1OCAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGliY3J5cHRvLnNvLjEu
-MS4xbQpTaXplOiAgICAgICAgICAgICAgICAgMTYga0IKS2VybmVsUGFnZVNpemU6ICAgICAg
-ICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAg
-ICAgMTYga0IKUHNzOiAgICAgICAgICAgICAgICAgICA4IGtCClBzc19EaXJ0eTogICAgICAg
-ICAgICAgOCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAg
-ICAgICAgIDE2IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5
-OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czog
-ICAgICAgICAgICAxNiBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6
-ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBt
-ZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJl
-ZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dh
-cDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpM
-b2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZt
-RmxhZ3M6IHJkIHdyIG1yIG13IG1lIGFjIApmZmZmYjg4YjQwMDAtZmZmZmI4OGI4MDAwIHJ3
-LXAgMDAwMDAwMDAgMDA6MDAgMCAKU2l6ZTogICAgICAgICAgICAgICAgIDE2IGtCCktlcm5l
-bFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNz
-OiAgICAgICAgICAgICAgICAgICA4IGtCClBzczogICAgICAgICAgICAgICAgICAgNCBrQgpQ
-c3NfRGlydHk6ICAgICAgICAgICAgIDQga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtC
-ClNoYXJlZF9EaXJ0eTogICAgICAgICAgOCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAg
-a0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAg
-MCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDgga0IKS1NNOiAgICAgICAgICAgICAgICAg
-ICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAg
-ICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAg
-ICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxi
-OiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAg
-ICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxl
-OiAgICAgICAgICAgMApWbUZsYWdzOiByZCB3ciBtciBtdyBtZSBhYyAKZmZmZmI4OGM4MDAw
-LWZmZmZiODhjYTAwMCBydy1wIDAwMDAwMDAwIDAwOjAwIDAgClNpemU6ICAgICAgICAgICAg
-ICAgICAgOCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAg
-ICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgOCBrQgpQc3M6ICAgICAgICAg
-ICAgICAgICAgIDYga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICA2IGtCClNoYXJlZF9DbGVh
-bjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDQga0IKUHJpdmF0ZV9D
-bGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgNCBrQgpSZWZlcmVu
-Y2VkOiAgICAgICAgICAgIDgga0IKQW5vbnltb3VzOiAgICAgICAgICAgICA4IGtCCktTTTog
-ICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5v
-bkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpG
-aWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtC
-ClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAg
-a0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAg
-MCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUg
-YWMgCmZmZmZiODhjYTAwMC1mZmZmYjg4ZTIwMDAgci14cCAwMDAwMDAwMCBmZDowMCAyNjQ4
-NDQgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYnouc28uMS4yLjExClNpemU6
-ICAgICAgICAgICAgICAgICA5NiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1V
-UGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgMCBrQgpQ
-c3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtC
-ClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAg
-a0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAg
-MCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAg
-ICAwIGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAg
-ICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAg
-ICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6
-ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAg
-ICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAg
-ICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQg
-ZXggbXIgbXcgbWUgCmZmZmZiODhlMjAwMC1mZmZmYjg4ZjkwMDAgLS0tcCAwMDAxODAwMCBm
-ZDowMCAyNjQ4NDQgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYnouc28uMS4y
-LjExClNpemU6ICAgICAgICAgICAgICAgICA5MiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAg
-IDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAg
-ICAgMCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzX0RpcnR5OiAgICAgICAg
-ICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAg
-ICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6
-ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAg
-ICAgICAgICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTog
-ICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1k
-TWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVk
-X0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2Fw
-OiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxv
-Y2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1G
-bGFnczogbXIgbXcgbWUgCmZmZmZiODhmOTAwMC1mZmZmYjg4ZmEwMDAgci0tcCAwMDAxZjAw
-MCBmZDowMCAyNjQ4NDQgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYnouc28u
-MS4yLjExClNpemU6ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6ZTogICAg
-ICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAg
-ICAgICAgNCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0RpcnR5OiAgICAg
-ICAgICAgICAyIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6
-ICAgICAgICAgIDQga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGly
-dHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3Vz
-OiAgICAgICAgICAgICA0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJl
-ZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVt
-UG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hh
-cmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpT
-d2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtC
-CkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAK
-Vm1GbGFnczogcmQgbXIgbXcgbWUgYWMgCmZmZmZiODhmYTAwMC1mZmZmYjg4ZmIwMDAgcnct
-cCAwMDAyMDAwMCBmZDowMCAyNjQ4NDQgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0
-L2xpYnouc28uMS4yLjExClNpemU6ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdl
-U2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAg
-ICAgICAgICAgICAgICAgNCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0Rp
-cnR5OiAgICAgICAgICAgICAyIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFy
-ZWRfRGlydHk6ICAgICAgICAgIDQga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClBy
-aXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IK
-QW5vbnltb3VzOiAgICAgICAgICAgICA0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBr
-QgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAw
-IGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAg
-IDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAg
-ICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAg
-ICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAg
-ICAgICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUgYWMgCmZmZmZiODhmYjAwMC1mZmZm
-Yjg5MjMwMDAgci14cCAwMDAwMDAwMCBmZDowMCAyNjQwODcgICAgICAgICAgICAgICAgICAg
-ICAvdXNyL2xpYjY0L2xpYnNlbGludXguc28uMQpTaXplOiAgICAgICAgICAgICAgICAxNjAg
-a0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAg
-NCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAgICAg
-ICAwIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAg
-ICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAg
-ICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAg
-ICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAg
-ICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFn
-ZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1h
-cHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRl
-X0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQ
-c3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQ
-ZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIGV4IG1yIG13IG1lIApmZmZmYjg5
-MjMwMDAtZmZmZmI4OTNhMDAwIC0tLXAgMDAwMjgwMDAgZmQ6MDAgMjY0MDg3ICAgICAgICAg
-ICAgICAgICAgICAgL3Vzci9saWI2NC9saWJzZWxpbnV4LnNvLjEKU2l6ZTogICAgICAgICAg
-ICAgICAgIDkyIGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTog
-ICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzczogICAgICAg
-ICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0Ns
-ZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRl
-X0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVy
-ZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NN
-OiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpB
-bm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtC
-CkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAg
-a0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAg
-MCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAg
-ICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiBtciBtdyBtZSAKZmZm
-ZmI4OTNhMDAwLWZmZmZiODkzYjAwMCByLS1wIDAwMDJmMDAwIGZkOjAwIDI2NDA4NyAgICAg
-ICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlic2VsaW51eC5zby4xClNpemU6ICAgICAg
-ICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNp
-emU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgNCBrQgpQc3M6ICAg
-ICAgICAgICAgICAgICAgIDIga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAyIGtCClNoYXJl
-ZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDQga0IKUHJp
-dmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpS
-ZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICA0IGtC
-CktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAg
-a0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAg
-MCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAg
-ICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAg
-ICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAg
-ICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgbXIgbXcg
-bWUgYWMgCmZmZmZiODkzYjAwMC1mZmZmYjg5M2MwMDAgcnctcCAwMDAzMDAwMCBmZDowMCAy
-NjQwODcgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYnNlbGludXguc28uMQpT
-aXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtC
-Ck1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDQg
-a0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtCClBzc19EaXJ0eTogICAgICAgICAgICAg
-MiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAg
-ICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAg
-ICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAg
-ICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAg
-ICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBl
-ZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdl
-dGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAg
-ICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6
-ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6
-IHJkIHdyIG1yIG13IG1lIGFjIApmZmZmYjg5M2MwMDAtZmZmZmI4OTQwMDAwIHJ3LXAgMDAw
-MDAwMDAgMDA6MDAgMCAKU2l6ZTogICAgICAgICAgICAgICAgIDE2IGtCCktlcm5lbFBhZ2VT
-aXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAg
-ICAgICAgICAgICAgIDEyIGtCClBzczogICAgICAgICAgICAgICAgICAgNiBrQgpQc3NfRGly
-dHk6ICAgICAgICAgICAgIDYga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJl
-ZF9EaXJ0eTogICAgICAgICAxMiBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJp
-dmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgNCBrQgpB
-bm9ueW1vdXM6ICAgICAgICAgICAgMTIga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtC
-CkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAg
-a0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAg
-MCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAg
-ICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAg
-ICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAg
-ICAgICAgMApWbUZsYWdzOiByZCB3ciBtciBtdyBtZSBhYyAKZmZmZmI4OTQwMDAwLWZmZmZi
-ODk0ZDAwMCByLXhwIDAwMDAwMDAwIGZkOjAwIDI2NDQ2NSAgICAgICAgICAgICAgICAgICAg
-IC91c3IvbGliNjQvbGlicmVzb2x2LnNvLjIKU2l6ZTogICAgICAgICAgICAgICAgIDUyIGtC
-Cktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQg
-a0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzczogICAgICAgICAgICAgICAgICAg
-MCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0NsZWFuOiAgICAgICAg
-ICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAg
-ICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAg
-ICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NNOiAgICAgICAgICAg
-ICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2Vz
-OiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBw
-ZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9I
-dWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNz
-OiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVs
-aWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBleCBtciBtdyBtZSAKZmZmZmI4OTRk
-MDAwLWZmZmZiODk1ZjAwMCAtLS1wIDAwMDBkMDAwIGZkOjAwIDI2NDQ2NSAgICAgICAgICAg
-ICAgICAgICAgIC91c3IvbGliNjQvbGlicmVzb2x2LnNvLjIKU2l6ZTogICAgICAgICAgICAg
-ICAgIDcyIGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAg
-ICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzczogICAgICAgICAg
-ICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0NsZWFu
-OiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0Ns
-ZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5j
-ZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NNOiAg
-ICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9u
-SHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZp
-bGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IK
-UHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBr
-QgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAw
-IGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiBtciBtdyBtZSAKZmZmZmI4
-OTVmMDAwLWZmZmZiODk2MDAwMCByLS1wIDAwMDBmMDAwIGZkOjAwIDI2NDQ2NSAgICAgICAg
-ICAgICAgICAgICAgIC91c3IvbGliNjQvbGlicmVzb2x2LnNvLjIKU2l6ZTogICAgICAgICAg
-ICAgICAgICA0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTog
-ICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICA0IGtCClBzczogICAgICAg
-ICAgICAgICAgICAgMiBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDIga0IKU2hhcmVkX0Ns
-ZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgNCBrQgpQcml2YXRl
-X0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVy
-ZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDQga0IKS1NN
-OiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpB
-bm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtC
-CkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAg
-a0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAg
-MCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAg
-ICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBtciBtdyBtZSBh
-YyAKZmZmZmI4OTYwMDAwLWZmZmZiODk2MTAwMCBydy1wIDAwMDEwMDAwIGZkOjAwIDI2NDQ2
-NSAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlicmVzb2x2LnNvLjIKU2l6ZTog
-ICAgICAgICAgICAgICAgICA0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQ
-YWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICA0IGtCClBz
-czogICAgICAgICAgICAgICAgICAgMiBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDIga0IK
-U2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgNCBr
-QgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAw
-IGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAg
-IDQga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAg
-ICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAg
-ICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjog
-ICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAg
-ICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAg
-ICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCB3
-ciBtciBtdyBtZSBhYyAKZmZmZmI4OTYxMDAwLWZmZmZiODk2MzAwMCBydy1wIDAwMDAwMDAw
-IDAwOjAwIDAgClNpemU6ICAgICAgICAgICAgICAgICAgOCBrQgpLZXJuZWxQYWdlU2l6ZTog
-ICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAg
-ICAgICAgICAgMCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzX0RpcnR5OiAg
-ICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGly
-dHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVf
-RGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnlt
-b3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5
-RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNo
-bWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IK
-U2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBr
-QgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAw
-IGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAg
-IDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUgYWMgCmZmZmZiODk2MzAwMC1mZmZmYjg5Njcw
-MDAgci14cCAwMDAwMDAwMCBmZDowMCAyNjUwMzkgICAgICAgICAgICAgICAgICAgICAvdXNy
-L2xpYjY0L2xpYmtleXV0aWxzLnNvLjEuMTAKU2l6ZTogICAgICAgICAgICAgICAgIDE2IGtC
-Cktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQg
-a0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzczogICAgICAgICAgICAgICAgICAg
-MCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0NsZWFuOiAgICAgICAg
-ICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAg
-ICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAg
-ICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NNOiAgICAgICAgICAg
-ICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2Vz
-OiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBw
-ZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9I
-dWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNz
-OiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVs
-aWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBleCBtciBtdyBtZSAKZmZmZmI4OTY3
-MDAwLWZmZmZiODk4MjAwMCAtLS1wIDAwMDA0MDAwIGZkOjAwIDI2NTAzOSAgICAgICAgICAg
-ICAgICAgICAgIC91c3IvbGliNjQvbGlia2V5dXRpbHMuc28uMS4xMApTaXplOiAgICAgICAg
-ICAgICAgICAxMDgga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXpl
-OiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAgICAg
-ICAgICAgICAgICAgICAwIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRf
-Q2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZh
-dGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVm
-ZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBrQgpL
-U006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtC
-CkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAg
-a0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAg
-MCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAg
-ICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAg
-ICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IG1yIG13IG1lIApm
-ZmZmYjg5ODIwMDAtZmZmZmI4OTgzMDAwIHItLXAgMDAwMGYwMDAgZmQ6MDAgMjY1MDM5ICAg
-ICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJrZXl1dGlscy5zby4xLjEwClNpemU6
-ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1V
-UGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgNCBrQgpQ
-c3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAyIGtC
-ClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDQg
-a0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAg
-MCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAg
-ICA0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAg
-ICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAg
-ICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6
-ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAg
-ICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAg
-ICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQg
-bXIgbXcgbWUgYWMgCmZmZmZiODk4MzAwMC1mZmZmYjg5ODQwMDAgcnctcCAwMDAxMDAwMCBm
-ZDowMCAyNjUwMzkgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYmtleXV0aWxz
-LnNvLjEuMTAKU2l6ZTogICAgICAgICAgICAgICAgICA0IGtCCktlcm5lbFBhZ2VTaXplOiAg
-ICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAg
-ICAgICAgICA0IGtCClBzczogICAgICAgICAgICAgICAgICAgMiBrQgpQc3NfRGlydHk6ICAg
-ICAgICAgICAgIDIga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0
-eTogICAgICAgICAgNCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9E
-aXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1v
-dXM6ICAgICAgICAgICAgIDQga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlG
-cmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2ht
-ZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpT
-aGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtC
-ClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAg
-a0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAg
-MApWbUZsYWdzOiByZCB3ciBtciBtdyBtZSBhYyAKZmZmZmI4OTg0MDAwLWZmZmZiODk5MzAw
-MCByLXhwIDAwMDAwMDAwIGZkOjAwIDI2ODUwMyAgICAgICAgICAgICAgICAgICAgIC91c3Iv
-bGliNjQvbGlia3JiNXN1cHBvcnQuc28uMC4xClNpemU6ICAgICAgICAgICAgICAgICA2MCBr
-QgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0
-IGtCClJzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3M6ICAgICAgICAgICAgICAgICAg
-IDAga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAg
-ICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAg
-ICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAg
-ICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAgICAg
-ICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdl
-czogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFw
-cGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVf
-SHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBz
-czogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBl
-bGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgZXggbXIgbXcgbWUgCmZmZmZiODk5
-MzAwMC1mZmZmYjg5YTMwMDAgLS0tcCAwMDAwZjAwMCBmZDowMCAyNjg1MDMgICAgICAgICAg
-ICAgICAgICAgICAvdXNyL2xpYjY0L2xpYmtyYjVzdXBwb3J0LnNvLjAuMQpTaXplOiAgICAg
-ICAgICAgICAgICAgNjQga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VT
-aXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAg
-ICAgICAgICAgICAgICAgICAwIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFy
-ZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClBy
-aXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IK
-UmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBr
-QgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAw
-IGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAg
-IDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAg
-ICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAg
-ICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAg
-ICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IG1yIG13IG1l
-IApmZmZmYjg5YTMwMDAtZmZmZmI4OWE0MDAwIHItLXAgMDAwMGYwMDAgZmQ6MDAgMjY4NTAz
-ICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9saWJrcmI1c3VwcG9ydC5zby4wLjEK
-U2l6ZTogICAgICAgICAgICAgICAgICA0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBr
-QgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICA0
-IGtCClBzczogICAgICAgICAgICAgICAgICAgMiBrQgpQc3NfRGlydHk6ICAgICAgICAgICAg
-IDIga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAg
-ICAgNCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAg
-ICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAg
-ICAgICAgIDQga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAg
-ICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBw
-ZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVn
-ZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAg
-ICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2Vk
-OiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdz
-OiByZCBtciBtdyBtZSBhYyAKZmZmZmI4OWE0MDAwLWZmZmZiODlhNTAwMCBydy1wIDAwMDEw
-MDAwIGZkOjAwIDI2ODUwMyAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlia3Ji
-NXN1cHBvcnQuc28uMC4xClNpemU6ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdl
-U2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAg
-ICAgICAgICAgICAgICAgNCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0Rp
-cnR5OiAgICAgICAgICAgICAyIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFy
-ZWRfRGlydHk6ICAgICAgICAgIDQga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClBy
-aXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IK
-QW5vbnltb3VzOiAgICAgICAgICAgICA0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBr
-QgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAw
-IGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAg
-IDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAg
-ICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAg
-ICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAg
-ICAgICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUgYWMgCmZmZmZiODlhNTAwMC1mZmZm
-Yjg5YTgwMDAgci14cCAwMDAwMDAwMCBmZDowMCAyNjg2MzYgICAgICAgICAgICAgICAgICAg
-ICAvdXNyL2xpYjY0L2xpYmNvbV9lcnIuc28uMi4xClNpemU6ICAgICAgICAgICAgICAgICAx
-MiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAg
-ICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3M6ICAgICAgICAgICAgICAg
-ICAgIDAga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAg
-ICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjog
-ICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAg
-ICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAg
-ICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQ
-YWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1k
-TWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZh
-dGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dh
-cFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpU
-SFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgZXggbXIgbXcgbWUgCmZmZmZi
-ODlhODAwMC1mZmZmYjg5YzQwMDAgLS0tcCAwMDAwMzAwMCBmZDowMCAyNjg2MzYgICAgICAg
-ICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYmNvbV9lcnIuc28uMi4xClNpemU6ICAgICAg
-ICAgICAgICAgIDExMiBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNp
-emU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3M6ICAg
-ICAgICAgICAgICAgICAgIDAga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJl
-ZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJp
-dmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpS
-ZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtC
-CktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAg
-a0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAg
-MCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAg
-ICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAg
-ICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAg
-ICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogbXIgbXcgbWUg
-CmZmZmZiODljNDAwMC1mZmZmYjg5YzUwMDAgci0tcCAwMDAwZjAwMCBmZDowMCAyNjg2MzYg
-ICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYmNvbV9lcnIuc28uMi4xClNpemU6
-ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1V
-UGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgNCBrQgpQ
-c3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAyIGtC
-ClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDQg
-a0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAg
-MCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAg
-ICA0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAg
-ICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAg
-ICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6
-ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAg
-ICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAg
-ICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQg
-bXIgbXcgbWUgYWMgCmZmZmZiODljNTAwMC1mZmZmYjg5YzYwMDAgcnctcCAwMDAxMDAwMCBm
-ZDowMCAyNjg2MzYgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYmNvbV9lcnIu
-c28uMi4xClNpemU6ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6ZTogICAg
-ICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAg
-ICAgICAgNCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0RpcnR5OiAgICAg
-ICAgICAgICAyIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6
-ICAgICAgICAgIDQga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGly
-dHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3Vz
-OiAgICAgICAgICAgICA0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJl
-ZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVt
-UG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hh
-cmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpT
-d2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtC
-CkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAK
-Vm1GbGFnczogcmQgd3IgbXIgbXcgbWUgYWMgCmZmZmZiODljNjAwMC1mZmZmYjg5ZGIwMDAg
-ci14cCAwMDAwMDAwMCBmZDowMCAyNjg0OTUgICAgICAgICAgICAgICAgICAgICAvdXNyL2xp
-YjY0L2xpYms1Y3J5cHRvLnNvLjMuMQpTaXplOiAgICAgICAgICAgICAgICAgODQga0IKS2Vy
-bmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpS
-c3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAgICAgICAwIGtC
-ClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAg
-a0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAg
-MCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAg
-ICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAgICAgICAg
-ICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAg
-ICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDog
-ICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0
-bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAg
-ICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2li
-bGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIGV4IG1yIG13IG1lIApmZmZmYjg5ZGIwMDAt
-ZmZmZmI4OWY0MDAwIC0tLXAgMDAwMTUwMDAgZmQ6MDAgMjY4NDk1ICAgICAgICAgICAgICAg
-ICAgICAgL3Vzci9saWI2NC9saWJrNWNyeXB0by5zby4zLjEKU2l6ZTogICAgICAgICAgICAg
-ICAgMTAwIGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAg
-ICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzczogICAgICAgICAg
-ICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0NsZWFu
-OiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0Ns
-ZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5j
-ZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NNOiAg
-ICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9u
-SHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZp
-bGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IK
-UHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBr
-QgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAw
-IGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiBtciBtdyBtZSAKZmZmZmI4
-OWY0MDAwLWZmZmZiODlmNjAwMCByLS1wIDAwMDFlMDAwIGZkOjAwIDI2ODQ5NSAgICAgICAg
-ICAgICAgICAgICAgIC91c3IvbGliNjQvbGliazVjcnlwdG8uc28uMy4xClNpemU6ICAgICAg
-ICAgICAgICAgICAgOCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNp
-emU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgOCBrQgpQc3M6ICAg
-ICAgICAgICAgICAgICAgIDQga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICA0IGtCClNoYXJl
-ZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDgga0IKUHJp
-dmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpS
-ZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICA4IGtC
-CktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAg
-a0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAg
-MCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAg
-ICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAg
-ICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAg
-ICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgbXIgbXcg
-bWUgYWMgCmZmZmZiODlmNjAwMC1mZmZmYjg5ZjcwMDAgcnctcCAwMDAyMDAwMCBmZDowMCAy
-Njg0OTUgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYms1Y3J5cHRvLnNvLjMu
-MQpTaXplOiAgICAgICAgICAgICAgICAgIDQga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0
-IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAg
-IDQga0IKUHNzOiAgICAgICAgICAgICAgICAgICAyIGtCClBzc19EaXJ0eTogICAgICAgICAg
-ICAgMiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAg
-ICAgICA0IGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAg
-ICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAg
-ICAgICAgICAgNCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAg
-ICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1h
-cHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9I
-dWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDog
-ICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2Nr
-ZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxh
-Z3M6IHJkIHdyIG1yIG13IG1lIGFjIApmZmZmYjg5ZjcwMDAtZmZmZmI4YWQwMDAwIHIteHAg
-MDAwMDAwMDAgZmQ6MDAgMjY4NTAxICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWI2NC9s
-aWJrcmI1LnNvLjMuMwpTaXplOiAgICAgICAgICAgICAgICA4Njgga0IKS2VybmVsUGFnZVNp
-emU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAg
-ICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAgICAgICAwIGtCClBzc19EaXJ0
-eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hhcmVk
-X0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2
-YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgICAwIGtCCkFu
-b255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IK
-TGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBr
-QgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAw
-IGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAg
-IDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAg
-ICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAg
-ICAgICAwClZtRmxhZ3M6IHJkIGV4IG1yIG13IG1lIApmZmZmYjhhZDAwMDAtZmZmZmI4YWVh
-MDAwIC0tLXAgMDAwZDkwMDAgZmQ6MDAgMjY4NTAxICAgICAgICAgICAgICAgICAgICAgL3Vz
-ci9saWI2NC9saWJrcmI1LnNvLjMuMwpTaXplOiAgICAgICAgICAgICAgICAxMDQga0IKS2Vy
-bmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpS
-c3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAgICAgICAwIGtC
-ClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAg
-a0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAg
-MCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAg
-ICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAgICAgICAg
-ICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAg
-ICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDog
-ICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0
-bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAg
-ICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2li
-bGU6ICAgICAgICAgICAwClZtRmxhZ3M6IG1yIG13IG1lIApmZmZmYjhhZWEwMDAtZmZmZmI4
-YWY3MDAwIHItLXAgMDAwZTMwMDAgZmQ6MDAgMjY4NTAxICAgICAgICAgICAgICAgICAgICAg
-L3Vzci9saWI2NC9saWJrcmI1LnNvLjMuMwpTaXplOiAgICAgICAgICAgICAgICAgNTIga0IK
-S2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBr
-QgpSc3M6ICAgICAgICAgICAgICAgICAgNTIga0IKUHNzOiAgICAgICAgICAgICAgICAgIDI2
-IGtCClBzc19EaXJ0eTogICAgICAgICAgICAyNiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAg
-IDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgIDUyIGtCClByaXZhdGVfQ2xlYW46ICAgICAg
-ICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAg
-ICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICA1MiBrQgpLU006ICAgICAgICAgICAg
-ICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6
-ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBl
-ZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1
-Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6
-ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxp
-Z2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIG1yIG13IG1lIGFjIApmZmZmYjhhZjcw
-MDAtZmZmZmI4YWY4MDAwIHJ3LXAgMDAwZjAwMDAgZmQ6MDAgMjY4NTAxICAgICAgICAgICAg
-ICAgICAgICAgL3Vzci9saWI2NC9saWJrcmI1LnNvLjMuMwpTaXplOiAgICAgICAgICAgICAg
-ICAgIDQga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAg
-ICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDQga0IKUHNzOiAgICAgICAgICAg
-ICAgICAgICAyIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMiBrQgpTaGFyZWRfQ2xlYW46
-ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICA0IGtCClByaXZhdGVfQ2xl
-YW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNl
-ZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgNCBrQgpLU006ICAg
-ICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25I
-dWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmls
-ZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQ
-cml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtC
-ClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAg
-a0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIHdyIG1yIG13IG1lIGFj
-IApmZmZmYjhhZjgwMDAtZmZmZmI4YWY5MDAwIHJ3LXAgMDAwMDAwMDAgMDA6MDAgMCAKU2l6
-ZTogICAgICAgICAgICAgICAgICA0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpN
-TVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICAwIGtC
-ClBzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAg
-a0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAg
-MCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAg
-ICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAg
-ICAgIDAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAg
-ICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6
-ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRs
-YjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAg
-ICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAg
-ICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiBy
-ZCB3ciBtciBtdyBtZSBhYyAKZmZmZmI4YWY5MDAwLWZmZmZiOGI0NzAwMCByLXhwIDAwMDAw
-MDAwIGZkOjAwIDI2ODQ5MSAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGliZ3Nz
-YXBpX2tyYjUuc28uMi4yClNpemU6ICAgICAgICAgICAgICAgIDMxMiBrQgpLZXJuZWxQYWdl
-U2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAg
-ICAgICAgICAgICAgICAgMCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzX0Rp
-cnR5OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFy
-ZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClBy
-aXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IK
-QW5vbnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBr
-QgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAw
-IGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAg
-IDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAg
-ICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAg
-ICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAg
-ICAgICAgIDAKVm1GbGFnczogcmQgZXggbXIgbXcgbWUgCmZmZmZiOGI0NzAwMC1mZmZmYjhi
-NTcwMDAgLS0tcCAwMDA0ZTAwMCBmZDowMCAyNjg0OTEgICAgICAgICAgICAgICAgICAgICAv
-dXNyL2xpYjY0L2xpYmdzc2FwaV9rcmI1LnNvLjIuMgpTaXplOiAgICAgICAgICAgICAgICAg
-NjQga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAg
-ICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAgICAg
-ICAgICAwIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAg
-ICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46
-ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDog
-ICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAg
-ICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdl
-UGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBt
-ZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2
-YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3
-YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IK
-VEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IG1yIG13IG1lIApmZmZmYjhiNTcw
-MDAtZmZmZmI4YjU5MDAwIHItLXAgMDAwNGUwMDAgZmQ6MDAgMjY4NDkxICAgICAgICAgICAg
-ICAgICAgICAgL3Vzci9saWI2NC9saWJnc3NhcGlfa3JiNS5zby4yLjIKU2l6ZTogICAgICAg
-ICAgICAgICAgICA4IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6
-ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICA4IGtCClBzczogICAg
-ICAgICAgICAgICAgICAgNCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDQga0IKU2hhcmVk
-X0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgOCBrQgpQcml2
-YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJl
-ZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDgga0IK
-S1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBr
-QgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAw
-IGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAg
-IDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAg
-ICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAg
-ICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBtciBtdyBt
-ZSBhYyAKZmZmZmI4YjU5MDAwLWZmZmZiOGI1YTAwMCBydy1wIDAwMDUwMDAwIGZkOjAwIDI2
-ODQ5MSAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGliZ3NzYXBpX2tyYjUuc28u
-Mi4yClNpemU6ICAgICAgICAgICAgICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAg
-IDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAg
-ICAgNCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDIga0IKUHNzX0RpcnR5OiAgICAgICAg
-ICAgICAyIGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAg
-ICAgICAgIDQga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6
-ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAg
-ICAgICAgICAgICA0IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTog
-ICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1k
-TWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVk
-X0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2Fw
-OiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxv
-Y2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1G
-bGFnczogcmQgd3IgbXIgbXcgbWUgYWMgCmZmZmZiOGI1YTAwMC1mZmZmYjhjZDMwMDAgci14
-cCAwMDAwMDAwMCBmZDowMCAyNjQ0NTcgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYjY0
-L2xpYmMuc28uNgpTaXplOiAgICAgICAgICAgICAgIDE1MDgga0IKS2VybmVsUGFnZVNpemU6
-ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAg
-ICAgICAgICA2MzYga0IKUHNzOiAgICAgICAgICAgICAgICAgIDE4IGtCClBzc19EaXJ0eTog
-ICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICA2MzYga0IKU2hhcmVkX0Rp
-cnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRl
-X0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNlZDogICAgICAgICAgNjM2IGtCCkFub255
-bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6
-eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpT
-aG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtC
-ClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAg
-a0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAg
-MCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAg
-ICAwClZtRmxhZ3M6IHJkIGV4IG1yIG13IG1lIApmZmZmYjhjZDMwMDAtZmZmZmI4Y2U3MDAw
-IC0tLXAgMDAxNzkwMDAgZmQ6MDAgMjY0NDU3ICAgICAgICAgICAgICAgICAgICAgL3Vzci9s
-aWI2NC9saWJjLnNvLjYKU2l6ZTogICAgICAgICAgICAgICAgIDgwIGtCCktlcm5lbFBhZ2VT
-aXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAg
-ICAgICAgICAgICAgICAwIGtCClBzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3NfRGly
-dHk6ICAgICAgICAgICAgIDAga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJl
-ZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJp
-dmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpB
-bm9ueW1vdXM6ICAgICAgICAgICAgIDAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtC
-CkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAg
-a0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAg
-MCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAg
-ICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAg
-ICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAg
-ICAgICAgMApWbUZsYWdzOiBtciBtdyBtZSAKZmZmZmI4Y2U3MDAwLWZmZmZiOGNlYTAwMCBy
-LS1wIDAwMTdkMDAwIGZkOjAwIDI2NDQ1NyAgICAgICAgICAgICAgICAgICAgIC91c3IvbGli
-NjQvbGliYy5zby42ClNpemU6ICAgICAgICAgICAgICAgICAxMiBrQgpLZXJuZWxQYWdlU2l6
-ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAg
-ICAgICAgICAgICAxMiBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDYga0IKUHNzX0RpcnR5
-OiAgICAgICAgICAgICA2IGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRf
-RGlydHk6ICAgICAgICAgMTIga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZh
-dGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDQga0IKQW5v
-bnltb3VzOiAgICAgICAgICAgIDEyIGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpM
-YXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtC
-ClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAg
-a0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAg
-MCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAg
-ICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAg
-ICAgIDAKVm1GbGFnczogcmQgbXIgbXcgbWUgYWMgCmZmZmZiOGNlYTAwMC1mZmZmYjhjZWQw
-MDAgcnctcCAwMDE4MDAwMCBmZDowMCAyNjQ0NTcgICAgICAgICAgICAgICAgICAgICAvdXNy
-L2xpYjY0L2xpYmMuc28uNgpTaXplOiAgICAgICAgICAgICAgICAgMTIga0IKS2VybmVsUGFn
-ZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAg
-ICAgICAgICAgICAgICAgMTIga0IKUHNzOiAgICAgICAgICAgICAgICAgIDEyIGtCClBzc19E
-aXJ0eTogICAgICAgICAgICAxMiBrQgpTaGFyZWRfQ2xlYW46ICAgICAgICAgIDAga0IKU2hh
-cmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQ
-cml2YXRlX0RpcnR5OiAgICAgICAgMTIga0IKUmVmZXJlbmNlZDogICAgICAgICAgIDEyIGtC
-CkFub255bW91czogICAgICAgICAgICAxMiBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAg
-a0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAg
-MCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAg
-ICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAg
-ICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAg
-ICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAg
-ICAgICAgICAwClZtRmxhZ3M6IHJkIHdyIG1yIG13IG1lIGFjIApmZmZmYjhjZWQwMDAtZmZm
-ZmI4Y2Y0MDAwIHJ3LXAgMDAwMDAwMDAgMDA6MDAgMCAKU2l6ZTogICAgICAgICAgICAgICAg
-IDI4IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAg
-ICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgIDE2IGtCClBzczogICAgICAgICAgICAg
-ICAgICAxMiBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgMTIga0IKU2hhcmVkX0NsZWFuOiAg
-ICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgOCBrQgpQcml2YXRlX0NsZWFu
-OiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICA4IGtCClJlZmVyZW5jZWQ6
-ICAgICAgICAgICAxMiBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgMTYga0IKS1NNOiAgICAg
-ICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVn
-ZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQ
-bWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJp
-dmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpT
-d2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtC
-ClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCB3ciBtciBtdyBtZSBhYyAK
-ZmZmZmI4Y2Y0MDAwLWZmZmZiOGQyMTAwMCByLXhwIDAwMDAwMDAwIGZkOjAwIDI2ODY4MSAg
-ICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlidGlycGMuc28uMy4wLjAKU2l6ZTog
-ICAgICAgICAgICAgICAgMTgwIGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQ
-YWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgIDY0IGtCClBz
-czogICAgICAgICAgICAgICAgICAxMCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDAga0IK
-U2hhcmVkX0NsZWFuOiAgICAgICAgIDY0IGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBr
-QgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAw
-IGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICA2NCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAg
-IDAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAg
-ICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAg
-ICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjog
-ICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAg
-ICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAg
-ICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBl
-eCBtciBtdyBtZSAKZmZmZmI4ZDIxMDAwLWZmZmZiOGQzMjAwMCAtLS1wIDAwMDJkMDAwIGZk
-OjAwIDI2ODY4MSAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlidGlycGMuc28u
-My4wLjAKU2l6ZTogICAgICAgICAgICAgICAgIDY4IGtCCktlcm5lbFBhZ2VTaXplOiAgICAg
-ICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAg
-ICAgICAwIGtCClBzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAg
-ICAgICAgIDAga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTog
-ICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0
-eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6
-ICAgICAgICAgICAgIDAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVl
-OiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1Q
-bWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFy
-ZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3
-YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IK
-TG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApW
-bUZsYWdzOiBtciBtdyBtZSAKZmZmZmI4ZDMyMDAwLWZmZmZiOGQzNDAwMCByLS1wIDAwMDJl
-MDAwIGZkOjAwIDI2ODY4MSAgICAgICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlidGly
-cGMuc28uMy4wLjAKU2l6ZTogICAgICAgICAgICAgICAgICA4IGtCCktlcm5lbFBhZ2VTaXpl
-OiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAg
-ICAgICAgICAgICA4IGtCClBzczogICAgICAgICAgICAgICAgICAgNCBrQgpQc3NfRGlydHk6
-ICAgICAgICAgICAgIDQga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9E
-aXJ0eTogICAgICAgICAgOCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0
-ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgNCBrQgpBbm9u
-eW1vdXM6ICAgICAgICAgICAgIDgga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxh
-enlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IK
-U2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBr
-QgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAw
-IGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAg
-IDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAg
-ICAgMApWbUZsYWdzOiByZCBtciBtdyBtZSBhYyAKZmZmZmI4ZDM0MDAwLWZmZmZiOGQzNTAw
-MCBydy1wIDAwMDMwMDAwIGZkOjAwIDI2ODY4MSAgICAgICAgICAgICAgICAgICAgIC91c3Iv
-bGliNjQvbGlidGlycGMuc28uMy4wLjAKU2l6ZTogICAgICAgICAgICAgICAgICA0IGtCCktl
-cm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IK
-UnNzOiAgICAgICAgICAgICAgICAgICA0IGtCClBzczogICAgICAgICAgICAgICAgICAgMiBr
-QgpQc3NfRGlydHk6ICAgICAgICAgICAgIDIga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAw
-IGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgNCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAg
-IDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAg
-ICAgMCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDQga0IKS1NNOiAgICAgICAgICAgICAg
-ICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAg
-ICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6
-ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdl
-dGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAg
-ICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdp
-YmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCB3ciBtciBtdyBtZSBhYyAKZmZmZmI4ZDM1
-MDAwLWZmZmZiOGRiNzAwMCByLXhwIDAwMDAwMDAwIGZkOjAwIDI2NDQ2MCAgICAgICAgICAg
-ICAgICAgICAgIC91c3IvbGliNjQvbGlibS5zby42ClNpemU6ICAgICAgICAgICAgICAgIDUy
-MCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAg
-ICA0IGtCClJzczogICAgICAgICAgICAgICAgICA2MCBrQgpQc3M6ICAgICAgICAgICAgICAg
-ICAgIDIga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAg
-ICAgICA2MCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDAga0IKUHJpdmF0ZV9DbGVhbjog
-ICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAg
-ICAgICAgICAgNjAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICAwIGtCCktTTTogICAgICAg
-ICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQ
-YWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1k
-TWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZh
-dGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dh
-cFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpU
-SFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgZXggbXIgbXcgbWUgCmZmZmZi
-OGRiNzAwMC1mZmZmYjhkZDQwMDAgLS0tcCAwMDA4MjAwMCBmZDowMCAyNjQ0NjAgICAgICAg
-ICAgICAgICAgICAgICAvdXNyL2xpYjY0L2xpYm0uc28uNgpTaXplOiAgICAgICAgICAgICAg
-ICAxMTYga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBhZ2VTaXplOiAgICAg
-ICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDAga0IKUHNzOiAgICAgICAgICAg
-ICAgICAgICAwIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpTaGFyZWRfQ2xlYW46
-ICAgICAgICAgIDAga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtCClByaXZhdGVfQ2xl
-YW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAga0IKUmVmZXJlbmNl
-ZDogICAgICAgICAgICAwIGtCCkFub255bW91czogICAgICAgICAgICAgMCBrQgpLU006ICAg
-ICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAgICAwIGtCCkFub25I
-dWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAgICAgIDAga0IKRmls
-ZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAgICAgICAgMCBrQgpQ
-cml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAgICAgICAgICAwIGtC
-ClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAgICAgICAgICAgIDAg
-a0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IG1yIG13IG1lIApmZmZmYjhk
-ZDQwMDAtZmZmZmI4ZGQ1MDAwIHItLXAgMDAwOGYwMDAgZmQ6MDAgMjY0NDYwICAgICAgICAg
-ICAgICAgICAgICAgL3Vzci9saWI2NC9saWJtLnNvLjYKU2l6ZTogICAgICAgICAgICAgICAg
-ICA0IGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAg
-ICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgICA0IGtCClBzczogICAgICAgICAgICAg
-ICAgICAgMiBrQgpQc3NfRGlydHk6ICAgICAgICAgICAgIDIga0IKU2hhcmVkX0NsZWFuOiAg
-ICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgNCBrQgpQcml2YXRlX0NsZWFu
-OiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6
-ICAgICAgICAgICAgNCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDQga0IKS1NNOiAgICAg
-ICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVn
-ZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQ
-bWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJp
-dmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpT
-d2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtC
-ClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCBtciBtdyBtZSBhYyAKZmZm
-ZmI4ZGQ1MDAwLWZmZmZiOGRkNjAwMCBydy1wIDAwMDkwMDAwIGZkOjAwIDI2NDQ2MCAgICAg
-ICAgICAgICAgICAgICAgIC91c3IvbGliNjQvbGlibS5zby42ClNpemU6ICAgICAgICAgICAg
-ICAgICAgNCBrQgpLZXJuZWxQYWdlU2l6ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAg
-ICAgICAgICA0IGtCClJzczogICAgICAgICAgICAgICAgICAgNCBrQgpQc3M6ICAgICAgICAg
-ICAgICAgICAgIDIga0IKUHNzX0RpcnR5OiAgICAgICAgICAgICAyIGtCClNoYXJlZF9DbGVh
-bjogICAgICAgICAgMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICAgIDQga0IKUHJpdmF0ZV9D
-bGVhbjogICAgICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVu
-Y2VkOiAgICAgICAgICAgIDAga0IKQW5vbnltb3VzOiAgICAgICAgICAgICA0IGtCCktTTTog
-ICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5v
-bkh1Z2VQYWdlczogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpG
-aWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtC
-ClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAg
-a0IKU3dhcFBzczogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAg
-MCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUg
-YWMgCmZmZmZiOGRkNjAwMC1mZmZmYjhkZjkwMDAgci14cCAwMDAwMDAwMCBmZDowMCAyNjQ0
-NTMgICAgICAgICAgICAgICAgICAgICAvdXNyL2xpYi9sZC1saW51eC1hYXJjaDY0LnNvLjEK
-U2l6ZTogICAgICAgICAgICAgICAgMTQwIGtCCktlcm5lbFBhZ2VTaXplOiAgICAgICAgNCBr
-QgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAgICAgMTQw
-IGtCClBzczogICAgICAgICAgICAgICAgICAgNCBrQgpQc3NfRGlydHk6ICAgICAgICAgICAg
-IDAga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgMTQwIGtCClNoYXJlZF9EaXJ0eTogICAgICAg
-ICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0eTogICAg
-ICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgIDE0MCBrQgpBbm9ueW1vdXM6ICAgICAg
-ICAgICAgIDAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVlOiAgICAg
-ICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1QbWRNYXBw
-ZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFyZWRfSHVn
-ZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3YXA6ICAg
-ICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IKTG9ja2Vk
-OiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApWbUZsYWdz
-OiByZCBleCBtciBtdyBtZSAKZmZmZmI4ZGZhMDAwLWZmZmZiOGRmZTAwMCBydy1wIDAwMDAw
-MDAwIDAwOjAwIDAgClNpemU6ICAgICAgICAgICAgICAgICAxNiBrQgpLZXJuZWxQYWdlU2l6
-ZTogICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAg
-ICAgICAgICAgICAxNiBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDgga0IKUHNzX0RpcnR5
-OiAgICAgICAgICAgICA4IGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRf
-RGlydHk6ICAgICAgICAgMTYga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZh
-dGVfRGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDgga0IKQW5v
-bnltb3VzOiAgICAgICAgICAgIDE2IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpM
-YXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtC
-ClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAg
-a0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAg
-MCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAg
-ICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAg
-ICAgIDAKVm1GbGFnczogcmQgd3IgbXIgbXcgbWUgYWMgCmZmZmZiOGUxMTAwMC1mZmZmYjhl
-MTMwMDAgci0tcCAwMDAwMDAwMCAwMDowMCAwICAgICAgICAgICAgICAgICAgICAgICAgICBb
-dnZhcl0KU2l6ZTogICAgICAgICAgICAgICAgICA4IGtCCktlcm5lbFBhZ2VTaXplOiAgICAg
-ICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAgICAgICAgICAgICAg
-ICAgICAwIGtCClBzczogICAgICAgICAgICAgICAgICAgMCBrQgpQc3NfRGlydHk6ICAgICAg
-ICAgICAgIDAga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNoYXJlZF9EaXJ0eTog
-ICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IKUHJpdmF0ZV9EaXJ0
-eTogICAgICAgICAwIGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgMCBrQgpBbm9ueW1vdXM6
-ICAgICAgICAgICAgIDAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAwIGtCCkxhenlGcmVl
-OiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAgIDAga0IKU2htZW1Q
-bWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAgICAgMCBrQgpTaGFy
-ZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAgICAgICAwIGtCClN3
-YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAgICAgICAgIDAga0IK
-TG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAgICAgICAgICAgMApW
-bUZsYWdzOiByZCBtciBwZiBkZSAKZmZmZmI4ZTEzMDAwLWZmZmZiOGUxNDAwMCByLXhwIDAw
-MDAwMDAwIDAwOjAwIDAgICAgICAgICAgICAgICAgICAgICAgICAgIFt2ZHNvXQpTaXplOiAg
-ICAgICAgICAgICAgICAgIDQga0IKS2VybmVsUGFnZVNpemU6ICAgICAgICA0IGtCCk1NVVBh
-Z2VTaXplOiAgICAgICAgICAgNCBrQgpSc3M6ICAgICAgICAgICAgICAgICAgIDQga0IKUHNz
-OiAgICAgICAgICAgICAgICAgICAwIGtCClBzc19EaXJ0eTogICAgICAgICAgICAgMCBrQgpT
-aGFyZWRfQ2xlYW46ICAgICAgICAgIDQga0IKU2hhcmVkX0RpcnR5OiAgICAgICAgICAwIGtC
-ClByaXZhdGVfQ2xlYW46ICAgICAgICAgMCBrQgpQcml2YXRlX0RpcnR5OiAgICAgICAgIDAg
-a0IKUmVmZXJlbmNlZDogICAgICAgICAgICA0IGtCCkFub255bW91czogICAgICAgICAgICAg
-MCBrQgpLU006ICAgICAgICAgICAgICAgICAgIDAga0IKTGF6eUZyZWU6ICAgICAgICAgICAg
-ICAwIGtCCkFub25IdWdlUGFnZXM6ICAgICAgICAgMCBrQgpTaG1lbVBtZE1hcHBlZDogICAg
-ICAgIDAga0IKRmlsZVBtZE1hcHBlZDogICAgICAgICAwIGtCClNoYXJlZF9IdWdldGxiOiAg
-ICAgICAgMCBrQgpQcml2YXRlX0h1Z2V0bGI6ICAgICAgIDAga0IKU3dhcDogICAgICAgICAg
-ICAgICAgICAwIGtCClN3YXBQc3M6ICAgICAgICAgICAgICAgMCBrQgpMb2NrZWQ6ICAgICAg
-ICAgICAgICAgIDAga0IKVEhQZWxpZ2libGU6ICAgICAgICAgICAwClZtRmxhZ3M6IHJkIGV4
-IG1yIG13IG1lIGRlIApmZmZmYjhlMTQwMDAtZmZmZmI4ZTE2MDAwIHItLXAgMDAwMmUwMDAg
-ZmQ6MDAgMjY0NDUzICAgICAgICAgICAgICAgICAgICAgL3Vzci9saWIvbGQtbGludXgtYWFy
-Y2g2NC5zby4xClNpemU6ICAgICAgICAgICAgICAgICAgOCBrQgpLZXJuZWxQYWdlU2l6ZTog
-ICAgICAgIDQga0IKTU1VUGFnZVNpemU6ICAgICAgICAgICA0IGtCClJzczogICAgICAgICAg
-ICAgICAgICAgOCBrQgpQc3M6ICAgICAgICAgICAgICAgICAgIDQga0IKUHNzX0RpcnR5OiAg
-ICAgICAgICAgICA0IGtCClNoYXJlZF9DbGVhbjogICAgICAgICAgMCBrQgpTaGFyZWRfRGly
-dHk6ICAgICAgICAgIDgga0IKUHJpdmF0ZV9DbGVhbjogICAgICAgICAwIGtCClByaXZhdGVf
-RGlydHk6ICAgICAgICAgMCBrQgpSZWZlcmVuY2VkOiAgICAgICAgICAgIDQga0IKQW5vbnlt
-b3VzOiAgICAgICAgICAgICA4IGtCCktTTTogICAgICAgICAgICAgICAgICAgMCBrQgpMYXp5
-RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdlczogICAgICAgICAwIGtCClNo
-bWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFwcGVkOiAgICAgICAgIDAga0IK
-U2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVfSHVnZXRsYjogICAgICAgMCBr
-QgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBzczogICAgICAgICAgICAgICAw
-IGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgpUSFBlbGlnaWJsZTogICAgICAgICAg
-IDAKVm1GbGFnczogcmQgbXIgbXcgbWUgYWMgCmZmZmZiOGUxNjAwMC1mZmZmYjhlMTgwMDAg
-cnctcCAwMDAzMDAwMCBmZDowMCAyNjQ0NTMgICAgICAgICAgICAgICAgICAgICAvdXNyL2xp
-Yi9sZC1saW51eC1hYXJjaDY0LnNvLjEKU2l6ZTogICAgICAgICAgICAgICAgICA4IGtCCktl
-cm5lbFBhZ2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IK
-UnNzOiAgICAgICAgICAgICAgICAgICA4IGtCClBzczogICAgICAgICAgICAgICAgICAgOCBr
-QgpQc3NfRGlydHk6ICAgICAgICAgICAgIDgga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAw
-IGtCClNoYXJlZF9EaXJ0eTogICAgICAgICAgMCBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAg
-IDAga0IKUHJpdmF0ZV9EaXJ0eTogICAgICAgICA4IGtCClJlZmVyZW5jZWQ6ICAgICAgICAg
-ICAgOCBrQgpBbm9ueW1vdXM6ICAgICAgICAgICAgIDgga0IKS1NNOiAgICAgICAgICAgICAg
-ICAgICAwIGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAg
-ICAgICAgIDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6
-ICAgICAgICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdl
-dGxiOiAgICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAg
-ICAgICAgICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdp
-YmxlOiAgICAgICAgICAgMApWbUZsYWdzOiByZCB3ciBtciBtdyBtZSBhYyAKZmZmZmNhNWJi
-MDAwLWZmZmZjYTVkYzAwMCBydy1wIDAwMDAwMDAwIDAwOjAwIDAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIFtzdGFja10KU2l6ZTogICAgICAgICAgICAgICAgMTMyIGtCCktlcm5lbFBh
-Z2VTaXplOiAgICAgICAgNCBrQgpNTVVQYWdlU2l6ZTogICAgICAgICAgIDQga0IKUnNzOiAg
-ICAgICAgICAgICAgICAgIDIwIGtCClBzczogICAgICAgICAgICAgICAgICAxMiBrQgpQc3Nf
-RGlydHk6ICAgICAgICAgICAgMTIga0IKU2hhcmVkX0NsZWFuOiAgICAgICAgICAwIGtCClNo
-YXJlZF9EaXJ0eTogICAgICAgICAxNiBrQgpQcml2YXRlX0NsZWFuOiAgICAgICAgIDAga0IK
-UHJpdmF0ZV9EaXJ0eTogICAgICAgICA0IGtCClJlZmVyZW5jZWQ6ICAgICAgICAgICAgOCBr
-QgpBbm9ueW1vdXM6ICAgICAgICAgICAgMjAga0IKS1NNOiAgICAgICAgICAgICAgICAgICAw
-IGtCCkxhenlGcmVlOiAgICAgICAgICAgICAgMCBrQgpBbm9uSHVnZVBhZ2VzOiAgICAgICAg
-IDAga0IKU2htZW1QbWRNYXBwZWQ6ICAgICAgICAwIGtCCkZpbGVQbWRNYXBwZWQ6ICAgICAg
-ICAgMCBrQgpTaGFyZWRfSHVnZXRsYjogICAgICAgIDAga0IKUHJpdmF0ZV9IdWdldGxiOiAg
-ICAgICAwIGtCClN3YXA6ICAgICAgICAgICAgICAgICAgMCBrQgpTd2FwUHNzOiAgICAgICAg
-ICAgICAgIDAga0IKTG9ja2VkOiAgICAgICAgICAgICAgICAwIGtCClRIUGVsaWdpYmxlOiAg
-ICAgICAgICAgMApWbUZsYWdzOiByZCB3ciBtciBtdyBtZSBnZCBhYyAK
---------------VyMDYtp4q69oxASCyICYwSes
-Content-Type: text/plain; charset="UTF-8"; name="revert.smaps_rollup"
-Content-Disposition: attachment; filename="revert.smaps_rollup"
-Content-Transfer-Encoding: base64
-
-MDA0MDAwMDAtZmZmZmNhNWRjMDAwIC0tLXAgMDAwMDAwMDAgMDA6MDAgMCAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIFtyb2xsdXBdClJzczogICAgICAgICAgICAgICAgMjYwMCBr
-QgpQc3M6ICAgICAgICAgICAgICAgIDE0NzIga0IKUHNzX0RpcnR5OiAgICAgICAgICAxMzg4
-IGtCClBzc19Bbm9uOiAgICAgICAgICAgMTM4OCBrQgpQc3NfRmlsZTogICAgICAgICAgICAg
-ODQga0IKUHNzX1NobWVtOiAgICAgICAgICAgICAwIGtCClNoYXJlZF9DbGVhbjogICAgICAg
-MTAwMCBrQgpTaGFyZWRfRGlydHk6ICAgICAgICA0MjQga0IKUHJpdmF0ZV9DbGVhbjogICAg
-ICAgICAwIGtCClByaXZhdGVfRGlydHk6ICAgICAgMTE3NiBrQgpSZWZlcmVuY2VkOiAgICAg
-ICAgIDIyMjAga0IKQW5vbnltb3VzOiAgICAgICAgICAxNjAwIGtCCktTTTogICAgICAgICAg
-ICAgICAgICAgMCBrQgpMYXp5RnJlZTogICAgICAgICAgICAgIDAga0IKQW5vbkh1Z2VQYWdl
-czogICAgICAgICAwIGtCClNobWVtUG1kTWFwcGVkOiAgICAgICAgMCBrQgpGaWxlUG1kTWFw
-cGVkOiAgICAgICAgIDAga0IKU2hhcmVkX0h1Z2V0bGI6ICAgICAgICAwIGtCClByaXZhdGVf
-SHVnZXRsYjogICAgICAgMCBrQgpTd2FwOiAgICAgICAgICAgICAgICAgIDAga0IKU3dhcFBz
-czogICAgICAgICAgICAgICAwIGtCCkxvY2tlZDogICAgICAgICAgICAgICAgMCBrQgo=
-
---------------VyMDYtp4q69oxASCyICYwSes--
+-- 
+BR,
+Muhammad Usama Anjum
