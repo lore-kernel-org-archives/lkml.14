@@ -1,85 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC91B7BAE5;
-	Wed,  8 May 2024 09:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E392A3FE3F
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 10:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715162236; cv=none; b=Vkogu2d+sz5zkYy4hxppGfh/MOH7X++z/iEfM5+kT737pa4b2pVsnepSil/JsE8MdI2uxi9NjmHJ2mXfFsEgXVeUaJMoIq90jsvwe16M09rJ0nDTIPxDAMlVG1udfTWYYrhhhzbL8CdRy13rWmS/f5txbfUS4cKswSoZwqLTV/U=
+	t=1715162427; cv=none; b=dei9pXt5BoSKpBvRM3Ibv/0A7mAVRuI8XuWGqOgmaDxbJW9RyvfoJDpv/kCvQq4W63lhQdvTDulzi5PxigsR5e65rS+S2iKFIyaCwakgNJYi+DdrJKZMjaVpEVfo+DV88XUHLSap8dhH005LSUno/uE4GKJZzdOWRVcm2/b6uZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715162236; c=relaxed/simple;
-	bh=UecIehVVuV7QKjuoSfjMFuJteQdUV6hEq71ZHIeaoHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P5PWk0urhN0UJKH0hEZYfPQ9UD4g5yNTj5Nyujtn5JbXWwp+KtsJcm+oGOYonZKMtoQgCi1v+5pb1begwj0Kg0qReC4Q6sFmsCRMdqGofrjtd4WIJpkt2ehpOTbGqeGm6d7HOBqhmkhb47VoYMA+yNvsR0k3n9O5D16VAxF0cm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=black.fi.intel.com; spf=pass smtp.mailfrom=intel.com; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=black.fi.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-X-CSE-ConnectionGUID: MwiFWwKdQg2cswwyacOt8A==
-X-CSE-MsgGUID: usYW88xCSla2i9zIpkXKHQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="11135411"
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="11135411"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 02:57:14 -0700
-X-CSE-ConnectionGUID: xK14A5pkRseOjSi3NIRvUA==
-X-CSE-MsgGUID: mQlF92BzS8yrJ9ckC5YT8A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="29235860"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa006.jf.intel.com with ESMTP; 08 May 2024 02:57:12 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 5089518E; Wed, 08 May 2024 12:57:11 +0300 (EEST)
-Date: Wed, 8 May 2024 12:57:11 +0300
-From: Andy Shevchenko <andy@black.fi.intel.com>
-To: linux-kernel@vger.kernel.org
-Cc: linux-tip-commits@vger.kernel.org, Levi Yun <ppbuk5246@gmail.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, x86@kernel.org
-Subject: Re: [tip: timers/urgent] timers/migration: Prevent out of bounds
- access on failure
-Message-ID: <ZjtMdx8v051qcNtU@black.fi.intel.com>
-References: <20240506041059.86877-1-ppbuk5246@gmail.com>
- <171516154125.10875.14125964308560203288.tip-bot2@tip-bot2>
+	s=arc-20240116; t=1715162427; c=relaxed/simple;
+	bh=Clksgg3nQKgJU4IUYhhUlpLCznOj3chtVCYbTOvxo4I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bXrg/5n+RzINbXPB++pQZn+23sIK1uL3QgP0WJiOij/DsLvMhH5/3tVxoZ5i0o5USCxthd/rrn3TsDjoM2MRWnGs+rw9nlNGeNa3bvvQ/HNA+ACXjWX8oGTTocwFglhxARx3HhmrNmwdHzhe/QHR8y7rwiWgohnE9xIe7kZ1RdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 980B71063;
+	Wed,  8 May 2024 03:00:49 -0700 (PDT)
+Received: from [10.163.34.220] (unknown [10.163.34.220])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA6BA3F587;
+	Wed,  8 May 2024 03:00:19 -0700 (PDT)
+Message-ID: <674dac6b-4fd5-4460-81fd-6b215b21434e@arm.com>
+Date: Wed, 8 May 2024 15:30:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <171516154125.10875.14125964308560203288.tip-bot2@tip-bot2>
-
-On Wed, May 08, 2024 at 09:45:41AM -0000, tip-bot2 for Levi Yun wrote:
-> The following commit has been merged into the timers/urgent branch of tip:
-
-(Yes, I noted above)
-
-...
-
-> -	do {
-> +	while (i > 0) {
->  		group = stack[--i];
-
-Looking at this and most used patterns for cleanup loops, I would amend
-this to
-
-	while (i--) {
-		group = stack[i];
-
-which seems to me an equivalent.
-
->  		if (err < 0) {
-> @@ -1645,7 +1645,7 @@ static int tmigr_setup_groups(unsigned int cpu, unsigned int node)
->  				tmigr_connect_child_parent(child, group);
->  			}
->  		}
-> -	} while (i > 0);
-> +	}
-
--- 
-With Best Regards,
-Andy Shevchenko
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/4] arm64/mm: Enable userfaultfd write-protect
+Content-Language: en-US
+To: Will Deacon <will@kernel.org>, Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Joey Gouly
+ <joey.gouly@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, David Hildenbrand <david@redhat.com>,
+ Peter Xu <peterx@redhat.com>, Mike Rapoport <rppt@linux.ibm.com>,
+ Shivansh Vij <shivanshvij@outlook.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240503144604.151095-1-ryan.roberts@arm.com>
+ <20240507110750.GA22289@willie-the-truck>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20240507110750.GA22289@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
+
+On 5/7/24 16:37, Will Deacon wrote:
+> Hi Ryan,
+> 
+> On Fri, May 03, 2024 at 03:45:58PM +0100, Ryan Roberts wrote:
+>> This series adds uffd write-protect support for arm64.
+>>
+>> Previous attempts to add uffd-wp (and soft-dirty) have failed because of a
+>> perceived lack of available PTE SW bits. However it actually turns out that
+>> there are 2 available but they are hidden. PTE_PROT_NONE was previously
+>> occupying a SW bit, but can be moved, freeing up the SW bit. Bit 63 is marked as
+>> "IGNORED" in the Arm ARM, but it does not currently indicate "reserved for SW
+>> use" like it does for the other SW bits. I've confirmed with the spec owner that
+>> this is an oversight; the bit is intended to be reserved for SW use and the spec
+>> will clarify this in a future update.
+>>
+>> So now we have two spare bits; patch 4 enables uffd-wp on arm64, using the SW
+>> bit freed up by moving PTE_PROT_NONE. This leaves bit 63 spare for future use
+>> (e.g. soft-dirty - see RFC at [4] - or some other usage).
+>>
+>> ---
+>>
+>> This applies on top of v6.9-rc5.
+> 
+> I chucked this into the CI on Friday and it looks to have survived the
+> long weekend, so I've gone ahead and merged it into for-next/core. Short
+> of any last minute failures (touch wood), this should land in 6.10.
+
+It would be great to have some memory migration tests (including THP and HugeTLB)
+thrown at this series, which should test the mapped, migration entry transitions
+etc. But not sure if there are any such tests off the shelf and readily available
+in the CI system.
