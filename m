@@ -1,59 +1,40 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.17.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A327D3D6D;
-	Wed,  8 May 2024 17:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1A9DDDB2;
+	Wed,  8 May 2024 17:03:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715187731; cv=none; b=UxH8eXHBHkuj34qgT9p99MVGWvI9rFKZIQSpHRWj2u5yGaKNOE9ALmtlXSBVUGvFHl+slDS2KsaSxQ1Pxav6CmQAfGTeMiEvnEg6oWQz67APrU6zUEqaECrcK8A9VROX+QD/V5IMkl9sC7Z6cmAQnIPWvM0arrFxqTS7I+TqFto=
+	t=1715187821; cv=none; b=Tuxl0RkyvDBXmTsfroIICKa0E8rbh71BF2bjyKO7O/xnTA7KKp5OEzCOhhcjQS0yLw3jrEv2+la2LlSyKnzSJwMmGtECx9NGS/qWmycYtvNyFqN4jlQUTZfTELjLTRzHidMoaWBEUL4boEfHzWEMs32UAf2vw/gcj4P26O5NGLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715187731; c=relaxed/simple;
-	bh=RJTd0DFSkwcgQXADy0NPRv8wgTOjMh4ljQ8AnIpUJ68=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l2oy45pIPoxI6s7jE2GHb4Fw9dOipddjkUxShixpx5G0Yt5PhU0P3Odnpvc/w2rhN/bTnjouPGPa1ePzx27ZaEf7BbMKTsiXd0iFIxYyH7pXPjFZts52pQ2qIg6swO+0Pnan+sqU0eI0Bjz2AJ3Kc7q6AMwUMT2q7d8FP96Q7ic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OnynkGDj; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715187821; c=relaxed/simple;
+	bh=u+FDl3tH7RdzNgAMG/vr0jZH4Fdz2u+wV1+KsTqh1uM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=SsogKdBPUtnGVgPZ0hWheakLF2PzfiKI98uJm9D6+lyD6xGcG0lX60cFZ64mhGCOQ6a2/pL7Rrvt1XGG+fnrikYB02u+o2d9XMq86x8fvOMJf4SFNRn/IcmIx36fRwYGYR0kO0HyLqoQeLxa4eXbXM8HwhXq4j6qogWWSaAkWqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=sPoUqj4s; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OnynkGDj"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a599af16934so1168471766b.1;
-        Wed, 08 May 2024 10:02:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715187728; x=1715792528; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=w63SX1W8IWtKWaRdVmF8DRJBTDth/aiRDPCWeP/m/u8=;
-        b=OnynkGDjg0vGkDGdSEon5d0xDjiqrzpioqZiHuL0Nag9NOdtNmLL3NPjDyUSxO/8Zh
-         Sl+gc5S7CVBd88KtjhJXiNeDchtVDDGKv6H/SAE6+GLdMr1ysapTuwr7Pr4/78062sv7
-         U1lM4WybzDoSe5R2r24p9NH3yIBvBq9+pDtp0CzFHUBmR/pJCTQiP0KU5gSlQeVFN4rX
-         IZgnJ+Sil5bIFR5pjfTpMuErMJKV2AJwbjhVuPdWn6lEcT1GnlbKS3hG7EdRBqH91WIf
-         QZNhxXRNenOywRA9FMky14JAU1+sR83V/REHv91nu+Q82sjYZhD1WE/rxIzMUY0c6uZX
-         cirQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715187728; x=1715792528;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=w63SX1W8IWtKWaRdVmF8DRJBTDth/aiRDPCWeP/m/u8=;
-        b=bmsFr1k1KAJQ7Q3VUl8EgsqIvJ4zlhHOTlJAFPNLqOfUOXUaUNjsa4FJ1cck1yIQ/E
-         qgmHYmaTf3bnH7E8vdW1sX2XKBWzJwT6Vg9cgxlyaHkrDKKvC0WKN8ncxsvQz9cdkJDk
-         DrragEDQ550BH3PcG5acaNQoJjjC8/zRHXiko+XZXNecX8+XWK5MOYMAqrCMjk7DxLdg
-         2GCWkLgDr274wq25oI/vkS1fmr1ikW6ZzDULYq0htd5k1lSi9uQP3PDDHOAbZh1XJmzK
-         KCVC7AwCLecgS/Gz+ocUG8uGMav5V7rYwdMSi4eKqqtKIpyXLTi6KsDmUWEYwIY2ZHnP
-         BeZA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpZDVMJVxmnosHfPGBUJMOY92ouCL7Dc7PEjsoGbREL1ZbBeSsordAD3mlP+0KGUAYo+xo+Z9CsdgRakUKWjkHXcs71G8S5O568Ki8JmyxizvHh2iqX+jmRSaQzHEiORYPR1UfuO8sfXG2unlshuu/BJvLBJ8yIhZukc3/RxrWKs2sUGBjENu0x9D+3+drv9jU6aty54HCvgwcyDXEEBOqIcuvylKvAPKGT9S8upE+KcSriQ6rjbTOpn86kI3OOQEK88UemXG2lsRnLMoKd3u9+Bep3b16RXRt/hiCNxLLvG9xfuN1rAAax2y8pbjCS+inxRjmwjJUNArkS3Guza5x69y5Rm3ApBxxizEcjyOLZ1gy0ZeT8E8Xv6/4ARSX3IKjjs0Gy5vfZossSp54rsDPqP3ZMSc+rNPULtkfQ3PIg/Us2jH7h1bPsZzDGqB9brrPJ/237rk0AKogMHh80g3k+ugvK9gOGVMWetnLavzm68pQBEPoP6iaq4QQAVmu1aEpk9QdQg==
-X-Gm-Message-State: AOJu0Yyj11/IJlgWqJLmmpp73awguVVf+GMiNUelEDHixyVS4C+4Of5W
-	MZeZKY7W70ZMHk5kmHJiaRKhShh5qBSlDiuepajjS5JyNVNG+1JV
-X-Google-Smtp-Source: AGHT+IGnIbHLe2S57apepPi+KOdstUOemuaNblSGc79A9OnsYp187XWHNbGjxYPqzEX3412l6BXKTQ==
-X-Received: by 2002:a17:907:7286:b0:a59:bacc:b07f with SMTP id a640c23a62f3a-a59fb9d6452mr265356266b.52.1715187727754;
-        Wed, 08 May 2024 10:02:07 -0700 (PDT)
-Received: from [192.168.42.40] ([163.114.131.193])
-        by smtp.gmail.com with ESMTPSA id n18-20020a170906841200b00a59a8a5dd15sm5634228ejx.206.2024.05.08.10.02.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 May 2024 10:02:07 -0700 (PDT)
-Message-ID: <8ced4c49-d153-40fb-9e62-0a5784cfa864@gmail.com>
-Date: Wed, 8 May 2024 18:02:14 +0100
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="sPoUqj4s"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1715187771; x=1715792571; i=markus.elfring@web.de;
+	bh=AjnPyjnsrQDPJYZ9uhUAt6VHnSPdsHQWUWsa/Smbu2E=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=sPoUqj4soztmQ7fatgrCape28SO9n8goudCMAKjg7u+XImp8dStpAehLDR/MgXR6
+	 haguGkkEHZh+EKDSnNUBbDhYc8CspXkpfidNj0S7TyzjMksL+IQldbx5qSMMqcSLP
+	 FMPy6Homya/3UQYgd5bgdQ5tn4cvqGXs4sFs/q20PG9uMyD4hliNkazEad/5uXtyp
+	 wyLl/yb8HavPMYA7RNTms8LnDxTEcNxj4+wdWSfX2Kac0Y1Ef4J7+4+FlLb/X2Nuu
+	 ABHgZOGnNNbrwNS3JVuobH2PfX0MQmQjyrS6fvxJxQ3aZma+A5Z0gZ7zfjSAj8w5r
+	 3eTDNpGQX6B0f7MNag==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MFayq-1rprls3eiE-00H5w9; Wed, 08
+ May 2024 19:02:50 +0200
+Message-ID: <4294f69b-a317-4f09-b775-52439e2ea6fc@web.de>
+Date: Wed, 8 May 2024 19:02:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,114 +42,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH net-next v8 02/14] net: page_pool: create hooks for
- custom page providers
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>, Mina Almasry <almasrymina@google.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-arch@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org,
- dri-devel@lists.freedesktop.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
- Richard Henderson <richard.henderson@linaro.org>,
- Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner
- <mattst88@gmail.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Andreas Larsson <andreas@gaisler.com>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
- <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Steffen Klassert
- <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
- David Ahern <dsahern@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Shuah Khan <shuah@kernel.org>, Sumit Semwal <sumit.semwal@linaro.org>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Amritha Nambiar <amritha.nambiar@intel.com>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Alexander Mikhalitsyn <alexander@mihalicyn.com>,
- Kaiyuan Zhang <kaiyuanz@google.com>, Christian Brauner <brauner@kernel.org>,
- Simon Horman <horms@kernel.org>, David Howells <dhowells@redhat.com>,
- Florian Westphal <fw@strlen.de>, Yunsheng Lin <linyunsheng@huawei.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Jens Axboe <axboe@kernel.dk>,
- Arseniy Krasnov <avkrasnov@salutedevices.com>,
- Aleksander Lobakin <aleksander.lobakin@intel.com>,
- Michael Lass <bevan@bi-co.net>, Jiri Pirko <jiri@resnulli.us>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Lorenzo Bianconi <lorenzo@kernel.org>,
- Richard Gobert <richardbgobert@gmail.com>,
- Sridhar Samudrala <sridhar.samudrala@intel.com>,
- Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- Johannes Berg <johannes.berg@intel.com>, Abel Wu <wuyun.abel@bytedance.com>,
- Breno Leitao <leitao@debian.org>, David Wei <dw@davidwei.uk>,
- Shailend Chand <shailend@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst
- <jeroendb@google.com>, Praveen Kaligineedi <pkaligineedi@google.com>
-References: <20240507161857.GA4718@ziepe.ca> <ZjpVfPqGNfE5N4bl@infradead.org>
- <CAHS8izPH+sRLSiZ7vbrNtRdHrFEf8XQ61XAyHuxRSL9Jjy8YbQ@mail.gmail.com>
- <20240507164838.GG4718@ziepe.ca>
- <0d5da361-cc7b-46e9-a635-9a7a4c208444@gmail.com>
- <20240507175644.GJ4718@ziepe.ca>
- <6a50d01a-b5b9-4699-9d58-94e5f8f81c13@gmail.com>
- <20240507233247.GK4718@ziepe.ca> <Zjsm3vO6rIY_sw5A@phenom.ffwll.local>
- <1e2823db-504b-4829-856f-3f45a45ccada@gmail.com>
- <ZjufddNVJs5Csaix@infradead.org>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <ZjufddNVJs5Csaix@infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To: Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Ian Rogers
+ <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+ James Clark <james.clark@arm.com>, Jiri Olsa <jolsa@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240505202805.583253-1-leo.yan@arm.com>
+Subject: Re: [PATCH] perf maps: Process kcore maps in order
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240505202805.583253-1-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:LKnRS7MuSAFl/he+bteY1QUAX2irvK6smzp2qbkyj/kinqwqi1h
+ uyyAA7lhXKQ8dzcgnzmhStr3IDlsazri2nVcIio+qU5tvQfBICx6crITmo1j6CkDuVAvKLB
+ WA1ezTunRPLbh44c96ZL73BpM+lbxtp1WtrTpjipWi1MarX3eCK2gn3Tjgu+T9qzkadlFcC
+ x6xERPm/oQeLX2dvLSfbw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:qSMLRAMRP6o=;dv54UHQvXakuD/tl3CKU+TJdKIQ
+ MjUdd/DPFvsHI5t5Z/a9ZFZmNcSOwGpNcrYWkYwFbn6y6DUP/7CWv0v6ENrve711O6X3RmTpx
+ 3lh0/7dmMmAnZixj492qxd3y7EWs+563WYmD4EoRKyPWo53R2v3KH0kW+bdPqK0ip7KSkhC5X
+ KQzb9lB5WUc5d4LIqeyRgm3ZMUtE6Xa3KNFR4AHhev5OkMDeDey7dtOv8PLHfpTGXxwjKJ3XJ
+ lSD/2B8uMQcp8h61ywNoF3O2Z7xfwbUgKiYQqB4n+Ni44djPrCNTqTbwoJ5l8cv4m9jVqkEt+
+ vB+xIUjGC4Zw5wQRpoOaSrAQLLFk9cTeFGGInR+D/c794ucUjuRVDcJz6jdMfUWjT5xWynJgu
+ BqJ+F1H8iW/ruPCdDzJiKUwLayUNXmoOtc5w/9f7Kgjkh3Zoquv8AGwGsYRg3+wfO0Da/TfOs
+ HNYz0uM+datnl6gDzrKrurkaXV5+OWenf2TVWUQRP06fC+L6P9b+nHU5Pib0UHQRVirsba7QM
+ XKCvObBvAAtip+2NRJ4K7sBDrSn2oClvu/kpP7ste/UjqXsnItUg5f/213DyAcQO5M2rAlNvw
+ k4KBqbjy/9j3XyUtkNlQqvbZOErBcebq5XxV1ddsrbwGfcVTc9lKqjrVmFsP4pEwGgcpQfVog
+ DYtr08VEljzkQMTs/XmyplJSnHTFmqZULdyH6/5BHHIYlfMYt63zsA0drgb1wZj5KUcR16Mtj
+ aVkpH31CXuvmvzi1cWEx0cgq5+xbEZw02xKpbSEaQD5oYlR09r8TQc8VIMOuZi8EnpuT59+kT
+ 7Sj9dkTaCa2J86I8zzRor92VuqZC5BfVPU9g8wlN8p914=
 
-On 5/8/24 16:51, Christoph Hellwig wrote:
-> On Wed, May 08, 2024 at 12:35:52PM +0100, Pavel Begunkov wrote:
->>> all these, because e.g. ttm internally does have a page pool because
->>> depending upon allocator, that's indeed beneficial. Other drm drivers have
->>> more buffer-based concepts for opportunistically memory around, usually
->>> by marking buffers that are just kept as cache as purgeable (which is a
->>> concept that goes all the way to opengl/vulkan).
->>
->> Because in this case it solves nothing and helps with nothing, quite
->> the opposite. Just as well we can ask why NVMe doesn't wrap user pages
->> into a dmabuf while doing IO.
-> 
-> You seem to confused totally unrelated things.
->
-> For short-term pins, that is pin_user_pages without FOLL_LONGTERM there
-> would never be any point in using a dmabuf as the pin is transient.  For
-> long-term pin dmabufs in the block layer absolutely make sense, and I
+>                                                        =E2=80=A6 To fix =
+it, this
+> patch adds kcore maps in the tail of list, =E2=80=A6
 
-Well, the example fell flat, but you don't use dmabuf when there are
-no upsides from using it. For instance, when you already have pinned
-pages, you're going to use pages, and there are no other refcounting
-concerns. Unless there is an advantage of dmabufs over FOLL_LONGTERM
-that I don't know about when used with normal user pages.
+* How do you think about to add the tag =E2=80=9CFixes=E2=80=9D?
 
-> wish io_uring would have just implemented them from the start instead of
-> the current fixed buffers that are not quite as useful by not
-> pre-mapping DMA and not supporting P2P.
+* Would you like to use imperative wordings for an improved changelog?
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?h=3Dv6.9-rc7#n94
 
-fdget(dmabuf) would be horrible, I assume that's not the suggestion.
-But then it's really about kernel internals, and theoretically can
-be patched to wrap user pages into a dmabuf and pass it in. The tricky
-part is how that "pass it in" should looks like. Keith tried to cover
-both pre-mapping and p2p by registering dmabuf and passing the mapped
-addresses in an iter IIRC.
-
-Anyway, this discussion should better move from to block/fs lists,
-if there is any interest.
-
--- 
-Pavel Begunkov
+Regards,
+Markus
