@@ -1,65 +1,57 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from out162-62-57-210.mail.qq.com (out162-62-57-210.mail.qq.com [162.62.57.210])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 468B21A2C05;
-	Wed,  8 May 2024 15:20:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885E986AF4
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 15:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715181609; cv=none; b=dCDHNGyqmQzs1/57LlzHA0GK2DYKqEUtzGN34XL+2ClmAY8ps+pbZcAVQGfPat/FCwYel77n6D5oOCBKi67a7uWHkXmOuhAkcdnN87RPPAOfeddIo37zu+PcXHCJB7fcxfCcx1a2AweMuva1Z0Hrhym0nn7E0c5ifFLeoSu30mE=
+	t=1715181623; cv=none; b=UMMl+1yhDtiHYkyTegoqMqSQj780HIAnsar0GCgtGnfO+UA5gmdrLpfgVN1V7uOYTygHKSgn5SxyNecT5jxXcXdeUKVTsZMEB0rdWmT2ElKFeMwMGcQL6qZKYyXKH9p0f6ejjMIPUDV9K0Ql0ODBIW3FrUxEOUkGnps3jU8olNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715181609; c=relaxed/simple;
-	bh=F7/xJtqZj5pHb27cUKilA7HO8qx0Hd9ce0l1SBmQKRI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eea/wLZT+y6SwkKKkjvchh+krAF++aIBxjD2Z4VTqh6wI6i29sFm0Kz6r0K+lKGWzsG/9BduHthG7Kduw9m5FTms81TmsTpfwzM9vND1JkcxSxYVEwGnZ82BlwhVY2Dc4Ge/VcW7w8yp6txvjHkJ4kYgOeYRiMMQPqiySFeEE9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K9rZ1qBM; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715181623; c=relaxed/simple;
+	bh=pVWuYbzUs7Jev4RY7RmHJPW4092hATCc5SdzY5qRSLw=;
+	h=Message-ID:From:To:Subject:Date:MIME-Version; b=ZrM20EIWOKilFC9Eqn2KghFTK0O8nBKtQufnpnhQtb4uq7Md4WCmJjHHh4xuQLE4261aMDFwBeUnKs6MIWZ+opKAhGYRAl5CxA7XSr0pVPVyAamrpz8Fb0BVaD8vTgSYhRfoncNyBLr6J27IQ/tlxCXazQHxe+OBVLyLyuVV2uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=P4xkoawb; arc=none smtp.client-ip=162.62.57.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K9rZ1qBM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715181607; x=1746717607;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=F7/xJtqZj5pHb27cUKilA7HO8qx0Hd9ce0l1SBmQKRI=;
-  b=K9rZ1qBMIbDSnoZfkx/JsFnmqxaXIQm5gH3TdQhaqhNWm494Co+KPEZr
-   wSnaDFaamtbmY9oBJZya6fK00RgROspDBpIgCW2ehSaTJD0gLLhYDc1Fu
-   FoiLL2XapInY8Ggz82ZiaA5IV2IrL7w0Q5hDJ9ec11YA7mpK4HU0I3azZ
-   W4jWjAzbCBVezVBcR+XMmuebg06MJAAFZgZSnGuTJhFwz8gMKse1PVii/
-   Www/m5/OAMqA+mJd+vMfetlkVzJ2S/8+an0tdpkDqv+JZqjrOK2sSgF08
-   xTBFrnfDHcNxdAWco17KBYFt2RA7a47AJseeNzmANa5X/wigcaJil1I49
-   w==;
-X-CSE-ConnectionGUID: Tv+QKSp1Tt6i0T1NcAvU6w==
-X-CSE-MsgGUID: 7u3Vk7otSP6kQgbYqg5nEg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="11428977"
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="11428977"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 08:19:59 -0700
-X-CSE-ConnectionGUID: hVZnJc5nTd+QSa92kM2png==
-X-CSE-MsgGUID: 8GM+nOUMSu6VdSY8WhUTvA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="28850980"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 08 May 2024 08:19:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 7C6DD109; Wed, 08 May 2024 18:19:52 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-nfs@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="P4xkoawb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1715181609; bh=elRxz6OWhugfzFAIlmwlLj9gRAiGJCPhF4W6JN9Xyhg=;
+	h=From:To:Subject:Date;
+	b=P4xkoawbUSX2SA01TpRaQrvpxoNZ2ctBO2HwRubIMdTeVA9VhWhCs7dNTVSjgm7lQ
+	 v9T+ueQvpK1J60/BkgvlYVZHKNJ+LTBsejdan+veu1ciHMK7QiBeWrhrQE0+iDtO0Z
+	 0sIEWHd7aqw9cXOJ9/UpmwIsUHJT1Kct/VCz0fY0=
+Received: from pipishuo-OMEN-by-HP-Laptop-16-b0xxx.. ([123.115.148.131])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id 375AB210; Wed, 08 May 2024 23:13:53 +0800
+X-QQ-mid: xmsmtpt1715181233tkjqblovg
+Message-ID: <tencent_1992979C468AF087A1909000C6D0D5E61207@qq.com>
+X-QQ-XMAILINFO: MUl6Z5IrFzo7Rxpr5BMoTbyvm829X+fUJdpiyFAfklHaNPjsUL+MRRa88iq6np
+	 3dCgOCRp+f1wzZtEYcNcXa6FM6+LOwGTASB1HPAU0OnaQ/YTIAkrP9/I7LPEKwb7KeVwKg44OmYf
+	 r61J/cAI+dDoBOx7ilN+jxbQZ1tDWQ8e+Y0g/gZK3s+QcBrxjFjGamqOnddAcKpwgc6fBOwh38mz
+	 5uzMJAJmfMHoWD5ROP8p8jgZpCF1oQxjTXNXPY1rXOft+/uPxGLk6HwvEAijQhMHjHlhLxQOmyjf
+	 095s3a31xa+OqJPx0a9xJX6OfbBHXgVG66ZPHKx3JlWGCDXfrrRdQljO5TZDDjhFUJywSrg7RK4u
+	 6F6MGGcFcirD4eXvzvT2XSRJcSxdXWdRlAK80zgUa4Z/GXi6fjyZQJkiexd2vfYrr9Oj0XO91uF7
+	 WBxJEWDszBDeF5GGPWkwAdzhJCBPzhgbx5roJywTUY47CyfCHlKH3C5s0yEx1PAAI8GPCqofqTrr
+	 qXecxlbWm0kB7WocpxS4S3Ah1a5IPsr6fiR5FehXWe3vz/PC4oftteA03AikEqsznXwWJgg6CktF
+	 DdK4mBrGzobzKhNjkGgzZfLyHY3aTNA7L3+3UFprG9nPkgqfWyoZxQDj5MWjNfEnmea7g9UjZAdM
+	 68VJZWjuw4cujoSMppGqKGEBu1NXklINrk88Aqp7KdHKDfkXB3fDh59eq/J7Azha4/o2iYb3+Jx4
+	 qZ8iV+GucNO0rMx7sWtxB817jWB+52QD+R6OTiWyCa29yOqMULjUzFvZX1/vQ7jG/Es+ePpDu5En
+	 Q5VGh4KNNtDag+IVgDs74I5YKKGsnc1x1bu8g7KQxQ6Q8xuVi2DBLHdJyOjSlRTwbXg3CxSr5+9O
+	 FJyT5qtY68xbOargjIpdou8k9H37z/fX5Sp6uDhvXztEGiiDLytJQn+B6Ul7D4AJvAf3qznt01DI
+	 pNqKBzaSf3MaybwXggIUHj93jGvziYl/TuCyx7efXP4X/fuY10ZQjHSLfzw3u0PtJlKJeuDZ+fvz
+	 P06Gp/Aje/IQruYAn0U6qBRfjhgfzCsb1JibiV0gfMVoGVnp6+8B/KtwQvqcURTnk0zn+7+Bdr8F
+	 DF5lNdpfhZXpM4VJvJw7jbvAuKk9rP8bWc5hpGUTkgZnCT7c0WMvu/uyIcg92NEYmo5mYyIrRS9U
+	 ciOkc/2yAsioev2Q==
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Chen shuo <1289151713@qq.com>
+To: 1289151713@qq.com,
+	linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>
-Subject: [PATCH v1 1/1] lockd: Use *-y instead of *-objs in Makefile
-Date: Wed,  8 May 2024 18:19:38 +0300
-Message-ID: <20240508151951.1445074-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+Subject: [PATCH v2] staging: rtl8192e: remove the r8192E_dev.c's unnecessary brace
+Date: Wed,  8 May 2024 23:13:52 +0800
+X-OQ-MSGID: <20240508151352.6831-1-1289151713@qq.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,38 +60,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-*-objs suffix is reserved rather for (user-space) host programs while
-usually *-y suffix is used for kernel drivers (although *-objs works
-for that purpose for now).
+There is a unnecessary brace in r8192E_dev.c.Remove it to shorten
+code and improve readability.
 
-Let's correct the old usages of *-objs in Makefiles.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Chen shuo <1289151713@qq.com>
 ---
+v2:Make "Subject" line more unique.
+   Add space after : and driver name in the subject.
 
-Note, the original approach is weirdest from the existing.
-Only a few drivers use this (-objs-y) one most likely by mistake.
+ drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
- fs/lockd/Makefile | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/fs/lockd/Makefile b/fs/lockd/Makefile
-index ac9f9d84510e..fe3e23dd29c3 100644
---- a/fs/lockd/Makefile
-+++ b/fs/lockd/Makefile
-@@ -7,8 +7,7 @@ ccflags-y += -I$(src)			# needed for trace events
+diff --git a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c b/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
+index e3ed709a7674..1862a9899966 100644
+--- a/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
++++ b/drivers/staging/rtl8192e/rtl8192e/r8192E_dev.c
+@@ -1640,9 +1640,8 @@ bool rtl92e_get_rx_stats(struct net_device *dev, struct rtllib_rx_stats *stats,
+ 	if (stats->Length < 24)
+ 		stats->bHwError |= 1;
  
- obj-$(CONFIG_LOCKD) += lockd.o
+-	if (stats->bHwError) {
++	if (stats->bHwError)
+ 		return false;
+-	}
  
--lockd-objs-y += clntlock.o clntproc.o clntxdr.o host.o svc.o svclock.o \
--	        svcshare.o svcproc.o svcsubs.o mon.o trace.o xdr.o
--lockd-objs-$(CONFIG_LOCKD_V4) += clnt4xdr.o xdr4.o svc4proc.o
--lockd-objs-$(CONFIG_PROC_FS) += procfs.o
--lockd-objs		      := $(lockd-objs-y)
-+lockd-y := clntlock.o clntproc.o clntxdr.o host.o svc.o svclock.o \
-+	   svcshare.o svcproc.o svcsubs.o mon.o trace.o xdr.o
-+lockd-$(CONFIG_LOCKD_V4) += clnt4xdr.o xdr4.o svc4proc.o
-+lockd-$(CONFIG_PROC_FS) += procfs.o
+ 	stats->RxDrvInfoSize = pdesc->RxDrvInfoSize;
+ 	stats->RxBufShift = (pdesc->Shift) & 0x03;
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.34.1
 
