@@ -1,975 +1,949 @@
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2431A12883C;
-	Wed,  8 May 2024 15:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBC482D6D
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 15:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715182682; cv=none; b=fKKSLvnCcxCFl5tEXUpcuPbnaTt/7BjAH4dqr8WSdAqkzMCrTZJYy/V4mkpXePFmz0vcFa7eZy5VFddeb+V4uzlf0RMgdH2iKD8aZJl63pTEZAmrEtHnkb9NZ1ITxOY2oz5hZaPHKqsGD+Z2/SEy7944HRDIWeYWsX0IXdrlGts=
+	t=1715182750; cv=none; b=j/wvbuxuGSu6Su2CqDegd2PpcQK/CZTN0+oQRdgqqV9SmEdtWnrziYYXX2e/PcnJfggjptsUrsXy/0ytiWpQiTfkEOwpBCUVsZHN2rQo7239VBAW7FVdqTKpjP1Ia7R2gi7jUyY9LAHIZLKMaJq7uaZnVVW7ttvvkkyd3KuGB5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715182682; c=relaxed/simple;
-	bh=zGPnMIebe/xqlIs7/bMpkN0Oq9zBYgsjN5wIBazhO8A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qaitsfxgw4TwKu8hvQMUaDUrLleSG/rKRkgK49lkMXVhbemSKUOuF/Ob5veodifHINx0TBdU0FJnpgVS4hEo2JepLl4NSYgj5c8SxWddqW0KNX6fMIBaYLIDf5PWd/R52i60JJJSNlVF5EG8UVeFzFHBCsDb12IwusDEeKRBDgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=XdMpfjac; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1715182750; c=relaxed/simple;
+	bh=XCOfphAWWVHCXqG8wyNN2Wcii1G+lx1EInsiJpHscLI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D4mQq5ty9E/0uJrCd4ct16xAr+WJ/gFvfMisIvIPHLsTA33Ejca2ntVrfoYPWckCEhGU/jHLNqd05NvCLeeyxY07cvmpiTlnzZkVexvhU0KxuecQ6I6sChua8jaWGvy+xTLFWVLft2/8xqMFJOt8CPRbCQFUvkbG0UFkclPSSyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=kLrGdNKp; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="XdMpfjac"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 448FapIu067963;
-	Wed, 8 May 2024 10:36:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715182611;
-	bh=omDcnSQchdELoZiKULhEQGlkcXlbF6ZRXlx1XHOU1F0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=XdMpfjacQt2c1UJNwOn5y7F4ILKnKtg7W/Lculki3j7xa9OpgDIm7vgcW1di+hXYs
-	 uYGUUyHuWtKwf4B26Q67DxrBTCvlzN/UlT2uxiTWBd+r3M6xBz35+vQV1PNPztNcme
-	 yCrYgr/0UMQ17bhzjhsyE+PyOi9YKw2FDf8uXHzY=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 448FapE4016156
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 8 May 2024 10:36:51 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 8
- May 2024 10:36:50 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 8 May 2024 10:36:50 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 448FaoMJ115879;
-	Wed, 8 May 2024 10:36:50 -0500
-Message-ID: <b66e8bbe-8228-401a-9bb8-848b2d132ca0@ti.com>
-Date: Wed, 8 May 2024 10:36:50 -0500
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="kLrGdNKp"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-5b209d564e0so2147126eaf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 08:39:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1715182747; x=1715787547; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=limtBVI9MykgftDyY/f+++qPSUASl/s/QYosYT8KLzQ=;
+        b=kLrGdNKp5FVk4PFBmqzhTj0wXzJ7FdGaU1tVBW7giU7Iy3SGl0T+SvOuwobFEcRsjo
+         CFjMW0I6rw61YSkBKpeVHDol3vn2qYC+45V6QwzbF6MdyVQDF/QP+OvgpoCAHa4Wo+ZI
+         uw8PzOEZORBwxBRkX/TBvFC9I1uYSzAI/1jkMg9IUHIrQYrNIEUJqiXcJO77ynsTv7Yr
+         3mdPzim2VwGEAarKe5nLupi0Jtl02CYAqkG/3jrnJa73CQrS5uhjRtj8c0DOlEq4NNV5
+         EXZmo/Ylp2MXWHZfOT1wpXxxEqdU1633+bPmbIBILzJgQ0lE1sWOoIwDrZg7PxAh1pW5
+         A1mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715182747; x=1715787547;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=limtBVI9MykgftDyY/f+++qPSUASl/s/QYosYT8KLzQ=;
+        b=SrX9T1fcSJxQORzv6glb7pa5GeyjRtffvgI0FN12lwkZLo6vs6Gq6tERQ4vorOSCYm
+         mxDwoG13hZLe50h9vvwRTU+plw/4uI8sDF4Kny/tt1zdsjDlwG8EzcHr3S7+Kawzve0B
+         AYHKCLRztlGoriinOxYYLC/46tfEC4E28ah/SrlH3Tfe0AHHKM6Qc5OMDukdiIQwaEVo
+         E4aPXu4V2dFM7ppSDQ/LhSOIIAQsdmpQYssY5Kyz00/dyVPopBJCB2yChYEHdopVKvNi
+         RQefYcziUKy49fqKQJTDSaUN+OMR0taNiWJkHNx/zNtBr4Mkqo8or1oPQvRf4XtgbA1Q
+         9EHg==
+X-Forwarded-Encrypted: i=1; AJvYcCU/NoCt68eFLzGzKSC+1HFYdBAH/OWLt1dOOyG+TBu1c2jd1aBchG/1yB49vqAd0yQeO0IaIksC9FbAPK8PaXoGpQK7/JSf7jlWatBn
+X-Gm-Message-State: AOJu0YzTkPNdnN8Ugt19zh/Rve8TcBnJqjKePI+Gpkn5/42ERz727O0l
+	esIVlKYIWS83s9+OVB9d4wf1VsmbkMicilHWTrCjAmYmNR4VSfln5+DVtlzUQkQMd6yXyZoNpT9
+	7aYljdhSlndPXFkQsEDhJsBi4pZAaMl2wKnbjMg==
+X-Google-Smtp-Source: AGHT+IHI2DGsLq0EFgaG62DbfYkEkjx6W1M2aYxvCsIqCTNU0xdxrusynWsIt+er9+03eFj12c8TpjPDVXz0WlDMyKo=
+X-Received: by 2002:a4a:8c24:0:b0:5aa:538a:ed60 with SMTP id
+ 006d021491bc7-5b24d28fdb4mr2724899eaf.3.1715182747035; Wed, 08 May 2024
+ 08:39:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 2/5] remoteproc: k3-m4: Add a remoteproc driver for M4F
- subsystem
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero
- Kristo <kristo@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Hari
- Nagalla <hnagalla@ti.com>, <linux-remoteproc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20240426191811.32414-1-afd@ti.com>
- <20240426191811.32414-3-afd@ti.com> <ZjlBrf2mxENSZb8E@p14s>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <ZjlBrf2mxENSZb8E@p14s>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <cover.1714752293.git.tjeznach@rivosinc.com> <f63635cd72fd0d1b0026a6839dbfeaa2cd154eaa.1714752293.git.tjeznach@rivosinc.com>
+In-Reply-To: <f63635cd72fd0d1b0026a6839dbfeaa2cd154eaa.1714752293.git.tjeznach@rivosinc.com>
+From: Zong Li <zong.li@sifive.com>
+Date: Wed, 8 May 2024 23:38:56 +0800
+Message-ID: <CANXhq0qD-9d5Nbh3By2zf6BORNOsM3W4CN4J8H94c_n3_xT_Pg@mail.gmail.com>
+Subject: Re: [PATCH v4 6/7] iommu/riscv: Command and fault queue support
+To: Tomasz Jeznach <tjeznach@rivosinc.com>
+Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+	Robin Murphy <robin.murphy@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Anup Patel <apatel@ventanamicro.com>, devicetree@vger.kernel.org, 
+	Conor Dooley <conor+dt@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>, linux@rivosinc.com, 
+	linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, 
+	Sebastien Boeuf <seb@rivosinc.com>, iommu@lists.linux.dev, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Nick Kossifidis <mick@ics.forth.gr>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-riscv@lists.infradead.org, 
+	Lu Baolu <baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/6/24 3:46 PM, Mathieu Poirier wrote:
-> Good day,
-> 
-> I have started reviewing this patchset.  Comments will be scattered over
-> multiple days and as such, I will explicitly inform you when  am done with the
-> review.
-> 
-> On Fri, Apr 26, 2024 at 02:18:08PM -0500, Andrew Davis wrote:
->> From: Martyn Welch <martyn.welch@collabora.com>
->>
->> The AM62x and AM64x SoCs of the TI K3 family has a Cortex M4F core in
->> the MCU domain. This core is typically used for safety applications in a
->> stand alone mode. However, some application (non safety related) may
->> want to use the M4F core as a generic remote processor with IPC to the
->> host processor. The M4F core has internal IRAM and DRAM memories and are
->> exposed to the system bus for code and data loading.
->>
->> A remote processor driver is added to support this subsystem, including
->> being able to load and boot the M4F core. Loading includes to M4F
->> internal memories and predefined external code/data memories. The
->> carve outs for external contiguous memory is defined in the M4F device
->> node and should match with the external memory declarations in the M4F
->> image binary. The M4F subsystem has two resets. One reset is for the
->> entire subsystem i.e including the internal memories and the other, a
->> local reset is only for the M4F processing core. When loading the image,
->> the driver first releases the subsystem reset, loads the firmware image
->> and then releases the local reset to let the M4F processing core run.
->>
->> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
->> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
->> Signed-off-by: Andrew Davis <afd@ti.com>
->> ---
->>   drivers/remoteproc/Kconfig               |  13 +
->>   drivers/remoteproc/Makefile              |   1 +
->>   drivers/remoteproc/ti_k3_m4_remoteproc.c | 785 +++++++++++++++++++++++
->>   3 files changed, 799 insertions(+)
->>   create mode 100644 drivers/remoteproc/ti_k3_m4_remoteproc.c
->>
->> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
->> index 48845dc8fa852..1a7c0330c91a9 100644
->> --- a/drivers/remoteproc/Kconfig
->> +++ b/drivers/remoteproc/Kconfig
->> @@ -339,6 +339,19 @@ config TI_K3_DSP_REMOTEPROC
->>   	  It's safe to say N here if you're not interested in utilizing
->>   	  the DSP slave processors.
->>   
->> +config TI_K3_M4_REMOTEPROC
->> +	tristate "TI K3 M4 remoteproc support"
->> +	depends on ARCH_K3 || COMPILE_TEST
->> +	select MAILBOX
->> +	select OMAP2PLUS_MBOX
->> +	help
->> +	  Say m here to support TI's M4 remote processor subsystems
->> +	  on various TI K3 family of SoCs through the remote processor
->> +	  framework.
->> +
->> +	  It's safe to say N here if you're not interested in utilizing
->> +	  a remote processor.
->> +
->>   config TI_K3_R5_REMOTEPROC
->>   	tristate "TI K3 R5 remoteproc support"
->>   	depends on ARCH_K3
->> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
->> index 91314a9b43cef..5ff4e2fee4abd 100644
->> --- a/drivers/remoteproc/Makefile
->> +++ b/drivers/remoteproc/Makefile
->> @@ -37,5 +37,6 @@ obj-$(CONFIG_ST_REMOTEPROC)		+= st_remoteproc.o
->>   obj-$(CONFIG_ST_SLIM_REMOTEPROC)	+= st_slim_rproc.o
->>   obj-$(CONFIG_STM32_RPROC)		+= stm32_rproc.o
->>   obj-$(CONFIG_TI_K3_DSP_REMOTEPROC)	+= ti_k3_dsp_remoteproc.o
->> +obj-$(CONFIG_TI_K3_M4_REMOTEPROC)	+= ti_k3_m4_remoteproc.o
->>   obj-$(CONFIG_TI_K3_R5_REMOTEPROC)	+= ti_k3_r5_remoteproc.o
->>   obj-$(CONFIG_XLNX_R5_REMOTEPROC)	+= xlnx_r5_remoteproc.o
->> diff --git a/drivers/remoteproc/ti_k3_m4_remoteproc.c b/drivers/remoteproc/ti_k3_m4_remoteproc.c
->> new file mode 100644
->> index 0000000000000..0030e509f6b5d
->> --- /dev/null
->> +++ b/drivers/remoteproc/ti_k3_m4_remoteproc.c
->> @@ -0,0 +1,785 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * TI K3 Cortex-M4 Remote Processor(s) driver
->> + *
->> + * Copyright (C) 2021-2024 Texas Instruments Incorporated - https://www.ti.com/
->> + *	Hari Nagalla <hnagalla@ti.com>
->> + */
->> +
->> +#include <linux/io.h>
->> +#include <linux/mailbox_client.h>
->> +#include <linux/module.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_reserved_mem.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/remoteproc.h>
->> +#include <linux/reset.h>
->> +#include <linux/slab.h>
->> +
->> +#include "omap_remoteproc.h"
->> +#include "remoteproc_internal.h"
->> +#include "ti_sci_proc.h"
->> +
->> +/**
->> + * struct k3_m4_rproc_mem - internal memory structure
->> + * @cpu_addr: MPU virtual address of the memory region
->> + * @bus_addr: Bus address used to access the memory region
->> + * @dev_addr: Device address of the memory region from remote processor view
->> + * @size: Size of the memory region
->> + */
->> +struct k3_m4_rproc_mem {
->> +	void __iomem *cpu_addr;
->> +	phys_addr_t bus_addr;
->> +	u32 dev_addr;
->> +	size_t size;
->> +};
->> +
->> +/**
->> + * struct k3_m4_rproc_mem_data - memory definitions for a remote processor
->> + * @name: name for this memory entry
->> + * @dev_addr: device address for the memory entry
->> + */
->> +struct k3_m4_rproc_mem_data {
->> +	const char *name;
->> +	const u32 dev_addr;
->> +};
->> +
->> +/**
->> + * struct k3_m4_rproc_dev_data - device data structure for a remote processor
->> + * @mems: pointer to memory definitions for a remote processor
->> + * @num_mems: number of memory regions in @mems
->> + * @uses_lreset: flag to denote the need for local reset management
->> + */
->> +struct k3_m4_rproc_dev_data {
->> +	const struct k3_m4_rproc_mem_data *mems;
->> +	u32 num_mems;
->> +	bool uses_lreset;
->> +};
->> +
->> +/**
->> + * struct k3_m4_rproc - k3 remote processor driver structure
->> + * @dev: cached device pointer
->> + * @rproc: remoteproc device handle
->> + * @mem: internal memory regions data
->> + * @num_mems: number of internal memory regions
->> + * @rmem: reserved memory regions data
->> + * @num_rmems: number of reserved memory regions
->> + * @reset: reset control handle
->> + * @data: pointer to device data
->> + * @tsp: TI-SCI processor control handle
->> + * @ti_sci: TI-SCI handle
->> + * @ti_sci_id: TI-SCI device identifier
->> + * @mbox: mailbox channel handle
->> + * @client: mailbox client to request the mailbox channel
->> + */
->> +struct k3_m4_rproc {
->> +	struct device *dev;
->> +	struct rproc *rproc;
->> +	struct k3_m4_rproc_mem *mem;
->> +	int num_mems;
->> +	struct k3_m4_rproc_mem *rmem;
->> +	int num_rmems;
->> +	struct reset_control *reset;
->> +	const struct k3_m4_rproc_dev_data *data;
->> +	struct ti_sci_proc *tsp;
->> +	const struct ti_sci_handle *ti_sci;
->> +	u32 ti_sci_id;
->> +	struct mbox_chan *mbox;
->> +	struct mbox_client client;
->> +};
->> +
->> +/**
->> + * k3_m4_rproc_mbox_callback() - inbound mailbox message handler
->> + * @client: mailbox client pointer used for requesting the mailbox channel
->> + * @data: mailbox payload
->> + *
->> + * This handler is invoked by the K3 mailbox driver whenever a mailbox
->> + * message is received. Usually, the mailbox payload simply contains
->> + * the index of the virtqueue that is kicked by the remote processor,
->> + * and we let remoteproc core handle it.
->> + *
->> + * In addition to virtqueue indices, we also have some out-of-band values
->> + * that indicate different events. Those values are deliberately very
->> + * large so they don't coincide with virtqueue indices.
->> + */
->> +static void k3_m4_rproc_mbox_callback(struct mbox_client *client, void *data)
->> +{
->> +	struct k3_m4_rproc *kproc = container_of(client, struct k3_m4_rproc,
->> +						  client);
->> +	struct device *dev = kproc->rproc->dev.parent;
->> +	const char *name = kproc->rproc->name;
->> +	u32 msg = (u32)(uintptr_t)(data);
->> +
->> +	dev_dbg(dev, "mbox msg: 0x%x\n", msg);
->> +
->> +	switch (msg) {
->> +	case RP_MBOX_CRASH:
->> +		/*
->> +		 * remoteproc detected an exception, but error recovery is not
->> +		 * supported. So, just log this for now
->> +		 */
->> +		dev_err(dev, "K3 rproc %s crashed\n", name);
->> +		break;
->> +	case RP_MBOX_ECHO_REPLY:
->> +		dev_info(dev, "received echo reply from %s\n", name);
->> +		break;
->> +	default:
->> +		/* silently handle all other valid messages */
->> +		if (msg >= RP_MBOX_READY && msg < RP_MBOX_END_MSG)
->> +			return;
->> +		if (msg > kproc->rproc->max_notifyid) {
->> +			dev_dbg(dev, "dropping unknown message 0x%x", msg);
->> +			return;
->> +		}
->> +		/* msg contains the index of the triggered vring */
->> +		if (rproc_vq_interrupt(kproc->rproc, msg) == IRQ_NONE)
->> +			dev_dbg(dev, "no message was found in vqid %d\n", msg);
->> +	}
->> +}
->> +
->> +/*
->> + * Kick the remote processor to notify about pending unprocessed messages.
->> + * The vqid usage is not used and is inconsequential, as the kick is performed
->> + * through a simulated GPIO (a bit in an IPC interrupt-triggering register),
->> + * the remote processor is expected to process both its Tx and Rx virtqueues.
->> + */
->> +static void k3_m4_rproc_kick(struct rproc *rproc, int vqid)
->> +{
->> +	struct k3_m4_rproc *kproc = rproc->priv;
->> +	struct device *dev = rproc->dev.parent;
->> +	u32 msg = (u32)vqid;
->> +	int ret;
->> +
->> +	/* send the index of the triggered virtqueue in the mailbox payload */
->> +	ret = mbox_send_message(kproc->mbox, (void *)(uintptr_t)msg);
->> +	if (ret < 0)
->> +		dev_err(dev, "failed to send mailbox message, status = %d\n",
->> +			ret);
->> +}
->> +
->> +/* Put the remote processor into reset */
->> +static int k3_m4_rproc_reset(struct k3_m4_rproc *kproc)
->> +{
->> +	struct device *dev = kproc->dev;
->> +	int ret;
->> +
->> +	ret = reset_control_assert(kproc->reset);
->> +	if (ret) {
->> +		dev_err(dev, "local-reset assert failed, ret = %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	if (kproc->data->uses_lreset)
->> +		return ret;
->> +
->> +	ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
->> +						    kproc->ti_sci_id);
->> +	if (ret) {
->> +		dev_err(dev, "module-reset assert failed, ret = %d\n", ret);
->> +		if (reset_control_deassert(kproc->reset))
->> +			dev_warn(dev, "local-reset deassert back failed\n");
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +/* Release the remote processor from reset */
->> +static int k3_m4_rproc_release(struct k3_m4_rproc *kproc)
->> +{
->> +	struct device *dev = kproc->dev;
->> +	int ret;
->> +
->> +	if (kproc->data->uses_lreset)
->> +		goto lreset;
->> +
->> +	ret = kproc->ti_sci->ops.dev_ops.get_device(kproc->ti_sci,
->> +						    kproc->ti_sci_id);
->> +	if (ret) {
->> +		dev_err(dev, "module-reset deassert failed, ret = %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +lreset:
->> +	ret = reset_control_deassert(kproc->reset);
->> +	if (ret) {
->> +		dev_err(dev, "local-reset deassert failed, ret = %d\n", ret);
->> +		if (kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
->> +							  kproc->ti_sci_id))
->> +			dev_warn(dev, "module-reset assert back failed\n");
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static int k3_m4_rproc_request_mbox(struct rproc *rproc)
->> +{
->> +	struct k3_m4_rproc *kproc = rproc->priv;
->> +	struct mbox_client *client = &kproc->client;
->> +	struct device *dev = kproc->dev;
->> +	int ret;
->> +
->> +	client->dev = dev;
->> +	client->tx_done = NULL;
->> +	client->rx_callback = k3_m4_rproc_mbox_callback;
->> +	client->tx_block = false;
->> +	client->knows_txdone = false;
->> +
->> +	kproc->mbox = mbox_request_channel(client, 0);
->> +	if (IS_ERR(kproc->mbox)) {
->> +		ret = -EBUSY;
->> +		dev_err(dev, "mbox_request_channel failed: %ld\n",
->> +			PTR_ERR(kproc->mbox));
->> +		return ret;
->> +	}
->> +
->> +	/*
->> +	 * Ping the remote processor, this is only for sanity-sake for now;
->> +	 * there is no functional effect whatsoever.
->> +	 *
->> +	 * Note that the reply will _not_ arrive immediately: this message
->> +	 * will wait in the mailbox fifo until the remote processor is booted.
->> +	 */
->> +	ret = mbox_send_message(kproc->mbox, (void *)RP_MBOX_ECHO_REQUEST);
->> +	if (ret < 0) {
->> +		dev_err(dev, "mbox_send_message failed: %d\n", ret);
->> +		mbox_free_channel(kproc->mbox);
->> +		return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +/*
->> + * The M4 cores have a local reset that affects only the CPU, and a
->> + * generic module reset that powers on the device and allows the internal
->> + * memories to be accessed while the local reset is asserted. This function is
->> + * used to release the global reset on remote cores to allow loading into the
->> + * internal RAMs. The .prepare() ops is invoked by remoteproc core before any
->> + * firmware loading, and is followed by the .start() ops after loading to
->> + * actually let the remote cores to run. This callback is invoked only in
->> + * remoteproc mode.
->> + */
->> +static int k3_m4_rproc_prepare(struct rproc *rproc)
->> +{
->> +	struct k3_m4_rproc *kproc = rproc->priv;
->> +	struct device *dev = kproc->dev;
->> +	int ret;
->> +
->> +	ret = kproc->ti_sci->ops.dev_ops.get_device(kproc->ti_sci,
->> +						    kproc->ti_sci_id);
->> +	if (ret)
->> +		dev_err(dev, "module-reset deassert failed, cannot enable internal RAM loading, ret = %d\n",
->> +			ret);
->> +
->> +	return ret;
->> +}
->> +
->> +/*
->> + * This function implements the .unprepare() ops and performs the complimentary
->> + * operations to that of the .prepare() ops. The function is used to assert the
->> + * global reset on applicable cores. This completes the second portion of
->> + * powering down the remote core. The cores themselves are only halted in the
->> + * .stop() callback through the local reset, and the .unprepare() ops is invoked
->> + * by the remoteproc core after the remoteproc is stopped to balance the global
->> + * reset. This callback is invoked only in remoteproc mode.
->> + */
->> +static int k3_m4_rproc_unprepare(struct rproc *rproc)
->> +{
->> +	struct k3_m4_rproc *kproc = rproc->priv;
->> +	struct device *dev = kproc->dev;
->> +	int ret;
->> +
->> +	ret = kproc->ti_sci->ops.dev_ops.put_device(kproc->ti_sci,
->> +						    kproc->ti_sci_id);
->> +	if (ret)
->> +		dev_err(dev, "module-reset assert failed, ret = %d\n", ret);
->> +
->> +	return ret;
->> +}
->> +
->> +/*
->> + * This function implements the .get_loaded_rsc_table() callback and is used
->> + * to provide the resource table for a booted remote processor in IPC-only
->> + * mode. The remote processor firmwares follow a design-by-contract approach
->> + * and are expected to have the resource table at the base of the DDR region
->> + * reserved for firmware usage. This provides flexibility for the remote
->> + * processor to be booted by different bootloaders that may or may not have the
->> + * ability to publish the resource table address and size through a DT
->> + * property.
->> + */
->> +static struct resource_table *k3_m4_get_loaded_rsc_table(struct rproc *rproc,
->> +							 size_t *rsc_table_sz)
->> +{
->> +	struct k3_m4_rproc *kproc = rproc->priv;
->> +	struct device *dev = kproc->dev;
->> +
->> +	if (!kproc->rmem[0].cpu_addr) {
->> +		dev_err(dev, "memory-region #1 does not exist, loaded rsc table can't be found");
->> +		return ERR_PTR(-ENOMEM);
->> +	}
->> +
->> +	/*
->> +	 * NOTE: The resource table size is currently hard-coded to a maximum
->> +	 * of 256 bytes. The most common resource table usage for K3 firmwares
->> +	 * is to only have the vdev resource entry and an optional trace entry.
->> +	 * The exact size could be computed based on resource table address, but
->> +	 * the hard-coded value suffices to support the IPC-only mode.
->> +	 */
->> +	*rsc_table_sz = 256;
->> +	return (__force struct resource_table *)kproc->rmem[0].cpu_addr;
->> +}
->> +
->> +/*
->> + * Custom function to translate a remote processor device address (internal
->> + * RAMs only) to a kernel virtual address.  The remote processors can access
->> + * their RAMs at either an internal address visible only from a remote
->> + * processor, or at the SoC-level bus address. Both these addresses need to be
->> + * looked through for translation. The translated addresses can be used either
->> + * by the remoteproc core for loading (when using kernel remoteproc loader), or
->> + * by any rpmsg bus drivers.
->> + */
->> +static void *k3_m4_rproc_da_to_va(struct rproc *rproc, u64 da, size_t len, bool *is_iomem)
->> +{
->> +	struct k3_m4_rproc *kproc = rproc->priv;
->> +	void __iomem *va = NULL;
->> +	phys_addr_t bus_addr;
->> +	u32 dev_addr, offset;
->> +	size_t size;
->> +	int i;
->> +
->> +	if (len == 0)
->> +		return NULL;
->> +
->> +	for (i = 0; i < kproc->num_mems; i++) {
->> +		bus_addr = kproc->mem[i].bus_addr;
->> +		dev_addr = kproc->mem[i].dev_addr;
->> +		size = kproc->mem[i].size;
->> +
->> +		/* handle M4-view addresses */
->> +		if (da >= dev_addr && ((da + len) <= (dev_addr + size))) {
->> +			offset = da - dev_addr;
->> +			va = kproc->mem[i].cpu_addr + offset;
->> +			return (__force void *)va;
->> +		}
->> +
->> +		/* handle SoC-view addresses */
->> +		if (da >= bus_addr && ((da + len) <= (bus_addr + size))) {
->> +			offset = da - bus_addr;
->> +			va = kproc->mem[i].cpu_addr + offset;
->> +			return (__force void *)va;
->> +		}
->> +	}
->> +
->> +	/* handle static DDR reserved memory regions */
->> +	for (i = 0; i < kproc->num_rmems; i++) {
->> +		dev_addr = kproc->rmem[i].dev_addr;
->> +		size = kproc->rmem[i].size;
->> +
->> +		if (da >= dev_addr && ((da + len) <= (dev_addr + size))) {
->> +			offset = da - dev_addr;
->> +			va = kproc->rmem[i].cpu_addr + offset;
->> +			return (__force void *)va;
->> +		}
->> +	}
->> +
->> +	return NULL;
->> +}
->> +
->> +static int k3_m4_rproc_of_get_memories(struct platform_device *pdev,
->> +				       struct k3_m4_rproc *kproc)
->> +{
->> +	const struct k3_m4_rproc_dev_data *data = kproc->data;
->> +	struct device *dev = &pdev->dev;
->> +	struct resource *res;
->> +	int num_mems = 0;
->> +	int i;
->> +
->> +	num_mems = kproc->data->num_mems;
->> +	kproc->mem = devm_kcalloc(kproc->dev, num_mems,
->> +				  sizeof(*kproc->mem), GFP_KERNEL);
->> +	if (!kproc->mem)
->> +		return -ENOMEM;
->> +
->> +	for (i = 0; i < num_mems; i++) {
->> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> +						   data->mems[i].name);
->> +		if (!res) {
->> +			dev_err(dev, "found no memory resource for %s\n",
->> +				data->mems[i].name);
->> +			return -EINVAL;
->> +		}
->> +		if (!devm_request_mem_region(dev, res->start,
->> +					     resource_size(res),
->> +					     dev_name(dev))) {
->> +			dev_err(dev, "could not request %s region for resource\n",
->> +				data->mems[i].name);
->> +			return -EBUSY;
->> +		}
->> +
->> +		kproc->mem[i].cpu_addr = devm_ioremap_wc(dev, res->start,
->> +							 resource_size(res));
->> +		if (!kproc->mem[i].cpu_addr) {
->> +			dev_err(dev, "failed to map %s memory\n",
->> +				data->mems[i].name);
->> +			return -ENOMEM;
->> +		}
->> +		kproc->mem[i].bus_addr = res->start;
->> +		kproc->mem[i].dev_addr = data->mems[i].dev_addr;
->> +		kproc->mem[i].size = resource_size(res);
->> +
->> +		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%zx va %pK da 0x%x\n",
->> +			data->mems[i].name, &kproc->mem[i].bus_addr,
->> +			kproc->mem[i].size, kproc->mem[i].cpu_addr,
->> +			kproc->mem[i].dev_addr);
->> +	}
->> +	kproc->num_mems = num_mems;
->> +
->> +	return 0;
->> +}
->> +
->> +static void k3_m4_rproc_dev_mem_release(void *data)
->> +{
->> +	struct device *dev = data;
->> +
->> +	of_reserved_mem_device_release(dev);
->> +}
->> +
->> +static int k3_m4_reserved_mem_init(struct k3_m4_rproc *kproc)
->> +{
->> +	struct device *dev = kproc->dev;
->> +	struct device_node *np = dev->of_node;
->> +	struct device_node *rmem_np;
->> +	struct reserved_mem *rmem;
->> +	int num_rmems;
->> +	int ret, i;
->> +
->> +	num_rmems = of_property_count_elems_of_size(np, "memory-region",
->> +						    sizeof(phandle));
->> +	if (num_rmems < 0) {
->> +		dev_err(dev, "device does not reserved memory regions (%pe)\n",
->> +			ERR_PTR(num_rmems));
->> +		return -EINVAL;
->> +	}
->> +	if (num_rmems < 2) {
->> +		dev_err(dev, "device needs at least two memory regions to be defined, num = %d\n",
->> +			num_rmems);
->> +		return -EINVAL;
->> +	}
->> +
->> +	/* use reserved memory region 0 for vring DMA allocations */
->> +	ret = of_reserved_mem_device_init_by_idx(dev, np, 0);
->> +	if (ret) {
->> +		dev_err(dev, "device cannot initialize DMA pool (%pe)\n",
->> +			ERR_PTR(ret));
->> +		return ret;
->> +	}
->> +	ret = devm_add_action_or_reset(dev, k3_m4_rproc_dev_mem_release, dev);
->> +	if (ret)
->> +		return ret;
->> +
->> +	num_rmems--;
->> +	kproc->rmem = devm_kcalloc(dev, num_rmems, sizeof(*kproc->rmem), GFP_KERNEL);
->> +	if (!kproc->rmem)
->> +		return -ENOMEM;
->> +
->> +	/* use remaining reserved memory regions for static carveouts */
->> +	for (i = 0; i < num_rmems; i++) {
->> +		rmem_np = of_parse_phandle(np, "memory-region", i + 1);
->> +		if (!rmem_np)
->> +			return -EINVAL;
->> +
->> +		rmem = of_reserved_mem_lookup(rmem_np);
->> +		if (!rmem) {
->> +			of_node_put(rmem_np);
->> +			return -EINVAL;
->> +		}
->> +		of_node_put(rmem_np);
->> +
->> +		kproc->rmem[i].bus_addr = rmem->base;
->> +		/* 64-bit address regions currently not supported */
->> +		kproc->rmem[i].dev_addr = (u32)rmem->base;
->> +		kproc->rmem[i].size = rmem->size;
->> +		kproc->rmem[i].cpu_addr = devm_ioremap_wc(dev, rmem->base, rmem->size);
->> +		if (!kproc->rmem[i].cpu_addr) {
->> +			dev_err(dev, "failed to map reserved memory#%d at %pa of size %pa\n",
->> +				i + 1, &rmem->base, &rmem->size);
->> +			return -ENOMEM;
->> +		}
->> +
->> +		dev_dbg(dev, "reserved memory%d: bus addr %pa size 0x%zx va %pK da 0x%x\n",
->> +			i + 1, &kproc->rmem[i].bus_addr,
->> +			kproc->rmem[i].size, kproc->rmem[i].cpu_addr,
->> +			kproc->rmem[i].dev_addr);
->> +	}
->> +	kproc->num_rmems = num_rmems;
->> +
->> +	return 0;
->> +}
->> +
->> +static struct ti_sci_proc *k3_m4_rproc_of_get_tsp(struct device *dev,
->> +						  const struct ti_sci_handle *sci)
->> +{
->> +	struct ti_sci_proc *tsp;
->> +	u32 temp[2];
->> +	int ret;
->> +
->> +	ret = of_property_read_u32_array(dev->of_node, "ti,sci-proc-ids",
->> +					 temp, 2);
->> +	if (ret < 0)
->> +		return ERR_PTR(ret);
->> +
->> +	tsp = devm_kzalloc(dev, sizeof(*tsp), GFP_KERNEL);
->> +	if (!tsp)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	tsp->dev = dev;
->> +	tsp->sci = sci;
->> +	tsp->ops = &sci->ops.proc_ops;
->> +	tsp->proc_id = temp[0];
->> +	tsp->host_id = temp[1];
->> +
->> +	return tsp;
->> +}
->> +
->> +static void k3_m4_release_tsp(void *data)
->> +{
->> +	struct ti_sci_proc *tsp = data;
->> +
->> +	ti_sci_proc_release(tsp);
->> +}
->> +
->> +/*
->> + * Power up the M4F remote processor.
->> + *
->> + * This function will be invoked only after the firmware for this rproc
->> + * was loaded, parsed successfully, and all of its resource requirements
->> + * were met. This callback is invoked only in remoteproc mode.
->> + */
->> +static int k3_m4_rproc_start(struct rproc *rproc)
->> +{
->> +	struct k3_m4_rproc *kproc = rproc->priv;
->> +	int ret;
->> +
->> +	ret = k3_m4_rproc_request_mbox(rproc);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = k3_m4_rproc_release(kproc);
->> +	if (ret)
->> +		goto put_mbox;
->> +
->> +	return 0;
->> +
->> +put_mbox:
->> +	mbox_free_channel(kproc->mbox);
->> +	return ret;
->> +}
->> +
->> +/*
->> + * Stop the M4 remote processor.
->> + *
->> + * This function puts the M4 processor into reset, and finishes processing
->> + * of any pending messages. This callback is invoked only in remoteproc mode.
->> + */
->> +static int k3_m4_rproc_stop(struct rproc *rproc)
->> +{
->> +	struct k3_m4_rproc *kproc = rproc->priv;
->> +
->> +	mbox_free_channel(kproc->mbox);
->> +
->> +	k3_m4_rproc_reset(kproc);
->> +
->> +	return 0;
->> +}
->> +
->> +/*
->> + * Attach to a running M4 remote processor (IPC-only mode)
->> + *
->> + * This rproc attach callback only needs to request the mailbox, the remote
->> + * processor is already booted, so there is no need to issue any TI-SCI
->> + * commands to boot the M4 core. This callback is used only in IPC-only mode.
->> + */
->> +static int k3_m4_rproc_attach(struct rproc *rproc)
->> +{
->> +	struct k3_m4_rproc *kproc = rproc->priv;
->> +	struct device *dev = kproc->dev;
->> +	int ret;
->> +
->> +	ret = k3_m4_rproc_request_mbox(rproc);
->> +	if (ret)
->> +		return ret;
->> +
->> +	dev_info(dev, "M4 initialized in IPC-only mode\n");
->> +	return 0;
->> +}
->> +
->> +/*
->> + * Detach from a running M4 remote processor (IPC-only mode)
->> + *
->> + * This rproc detach callback performs the opposite operation to attach callback
->> + * and only needs to release the mailbox, the M4 core is not stopped and will
->> + * be left to continue to run its booted firmware. This callback is invoked only in
->> + * IPC-only mode.
->> + */
->> +static int k3_m4_rproc_detach(struct rproc *rproc)
->> +{
->> +	struct k3_m4_rproc *kproc = rproc->priv;
->> +	struct device *dev = kproc->dev;
->> +
->> +	mbox_free_channel(kproc->mbox);
->> +	dev_info(dev, "M4 deinitialized in IPC-only mode\n");
->> +	return 0;
->> +}
->> +
->> +static const struct rproc_ops k3_m4_rproc_ops = {
->> +	.start		= k3_m4_rproc_start,
->> +	.stop		= k3_m4_rproc_stop,
->> +	.attach		= k3_m4_rproc_attach,
->> +	.detach		= k3_m4_rproc_detach,
->> +	.kick		= k3_m4_rproc_kick,
->> +	.da_to_va	= k3_m4_rproc_da_to_va,
->> +	.get_loaded_rsc_table = k3_m4_get_loaded_rsc_table,
->> +};
->> +
->> +static int k3_m4_rproc_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct device_node *np = dev->of_node;
->> +	const struct k3_m4_rproc_dev_data *data;
->> +	struct k3_m4_rproc *kproc;
->> +	struct rproc *rproc;
->> +	const char *fw_name;
->> +	bool r_state = false;
->> +	bool p_state = false;
->> +	int ret = 0;
->> +
->> +	data = device_get_match_data(dev);
->> +	if (!data)
->> +		return -ENODEV;
->> +
->> +	ret = rproc_of_parse_firmware(dev, 0, &fw_name);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "failed to parse firmware-name property\n");
->> +
->> +	rproc = devm_rproc_alloc(dev, dev_name(dev), &k3_m4_rproc_ops, fw_name,
->> +				 sizeof(*kproc));
->> +	if (!rproc)
->> +		return -ENOMEM;
->> +
->> +	rproc->has_iommu = false;
->> +	rproc->recovery_disabled = true;
->> +	if (data->uses_lreset) {
->> +		rproc->ops->prepare = k3_m4_rproc_prepare;
->> +		rproc->ops->unprepare = k3_m4_rproc_unprepare;
->> +	}
->> +	kproc = rproc->priv;
->> +	kproc->rproc = rproc;
->> +	kproc->dev = dev;
->> +	kproc->data = data;
->> +
->> +	kproc->ti_sci = devm_ti_sci_get_by_phandle(dev, "ti,sci");
->> +	if (IS_ERR(kproc->ti_sci))
->> +		return dev_err_probe(dev, PTR_ERR(kproc->ti_sci),
->> +				     "failed to get ti-sci handle\n");
->> +
->> +	ret = of_property_read_u32(np, "ti,sci-dev-id", &kproc->ti_sci_id);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "missing 'ti,sci-dev-id' property\n");
->> +
->> +	kproc->reset = devm_reset_control_get_exclusive(dev, NULL);
->> +	if (IS_ERR(kproc->reset))
->> +		return dev_err_probe(dev, PTR_ERR(kproc->reset), "failed to get reset\n");
-> 
-> What happens when devm_reset_control_get_exclusive() returns NULL?
-> 
+On Sat, May 4, 2024 at 12:13=E2=80=AFAM Tomasz Jeznach <tjeznach@rivosinc.c=
+om> wrote:
+>
+> Introduce device command submission and fault reporting queues,
+> as described in Chapter 3.1 and 3.2 of the RISC-V IOMMU Architecture
+> Specification.
+>
+> Command and fault queues are instantiated in contiguous system memory
+> local to IOMMU device domain, or mapped from fixed I/O space provided
+> by the hardware implementation. Detection of the location and maximum
+> allowed size of the queue utilize WARL properties of queue base control
+> register. Driver implementation will try to allocate up to 128KB of
+> system memory, while respecting hardware supported maximum queue size.
+>
+> Interrupts allocation is based on interrupt vectors availability and
+> distributed to all queues in simple round-robin fashion. For hardware
+> Implementation with fixed event type to interrupt vector assignment
+> IVEC WARL property is used to discover such mappings.
+>
+> Address translation, command and queue fault handling in this change
+> is limited to simple fault reporting without taking any action.
+>
+> Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+> Signed-off-by: Tomasz Jeznach <tjeznach@rivosinc.com>
+> ---
+>  drivers/iommu/riscv/iommu-bits.h |  75 +++++
+>  drivers/iommu/riscv/iommu.c      | 496 ++++++++++++++++++++++++++++++-
+>  drivers/iommu/riscv/iommu.h      |  21 ++
+>  3 files changed, 590 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/iommu/riscv/iommu-bits.h b/drivers/iommu/riscv/iommu=
+-bits.h
+> index ba093c29de9f..40c379222821 100644
+> --- a/drivers/iommu/riscv/iommu-bits.h
+> +++ b/drivers/iommu/riscv/iommu-bits.h
+> @@ -704,4 +704,79 @@ struct riscv_iommu_msi_pte {
+>  #define RISCV_IOMMU_MSI_MRIF_NPPN      RISCV_IOMMU_PPN_FIELD
+>  #define RISCV_IOMMU_MSI_MRIF_NID_MSB   BIT_ULL(60)
+>
+> +/* Helper functions: command structure builders. */
+> +
+> +static inline void riscv_iommu_cmd_inval_vma(struct riscv_iommu_command =
+*cmd)
+> +{
+> +       cmd->dword0 =3D FIELD_PREP(RISCV_IOMMU_CMD_OPCODE, RISCV_IOMMU_CM=
+D_IOTINVAL_OPCODE) |
+> +                     FIELD_PREP(RISCV_IOMMU_CMD_FUNC, RISCV_IOMMU_CMD_IO=
+TINVAL_FUNC_VMA);
+> +       cmd->dword1 =3D 0;
+> +}
+> +
+> +static inline void riscv_iommu_cmd_inval_set_addr(struct riscv_iommu_com=
+mand *cmd,
+> +                                                 u64 addr)
+> +{
+> +       cmd->dword1 =3D FIELD_PREP(RISCV_IOMMU_CMD_IOTINVAL_ADDR, phys_to=
+_pfn(addr));
+> +       cmd->dword0 |=3D RISCV_IOMMU_CMD_IOTINVAL_AV;
+> +}
+> +
+> +static inline void riscv_iommu_cmd_inval_set_pscid(struct riscv_iommu_co=
+mmand *cmd,
+> +                                                  int pscid)
+> +{
+> +       cmd->dword0 |=3D FIELD_PREP(RISCV_IOMMU_CMD_IOTINVAL_PSCID, pscid=
+) |
+> +                      RISCV_IOMMU_CMD_IOTINVAL_PSCV;
+> +}
+> +
+> +static inline void riscv_iommu_cmd_inval_set_gscid(struct riscv_iommu_co=
+mmand *cmd,
+> +                                                  int gscid)
+> +{
+> +       cmd->dword0 |=3D FIELD_PREP(RISCV_IOMMU_CMD_IOTINVAL_GSCID, gscid=
+) |
+> +                      RISCV_IOMMU_CMD_IOTINVAL_GV;
+> +}
+> +
+> +static inline void riscv_iommu_cmd_iofence(struct riscv_iommu_command *c=
+md)
+> +{
+> +       cmd->dword0 =3D FIELD_PREP(RISCV_IOMMU_CMD_OPCODE, RISCV_IOMMU_CM=
+D_IOFENCE_OPCODE) |
+> +                     FIELD_PREP(RISCV_IOMMU_CMD_FUNC, RISCV_IOMMU_CMD_IO=
+FENCE_FUNC_C) |
+> +                     RISCV_IOMMU_CMD_IOFENCE_PR | RISCV_IOMMU_CMD_IOFENC=
+E_PW;
+> +       cmd->dword1 =3D 0;
+> +}
+> +
+> +static inline void riscv_iommu_cmd_iofence_set_av(struct riscv_iommu_com=
+mand *cmd,
+> +                                                 u64 addr, u32 data)
+> +{
+> +       cmd->dword0 =3D FIELD_PREP(RISCV_IOMMU_CMD_OPCODE, RISCV_IOMMU_CM=
+D_IOFENCE_OPCODE) |
+> +                     FIELD_PREP(RISCV_IOMMU_CMD_FUNC, RISCV_IOMMU_CMD_IO=
+FENCE_FUNC_C) |
+> +                     FIELD_PREP(RISCV_IOMMU_CMD_IOFENCE_DATA, data) |
+> +                     RISCV_IOMMU_CMD_IOFENCE_AV;
+> +       cmd->dword1 =3D addr >> 2;
+> +}
+> +
+> +static inline void riscv_iommu_cmd_iodir_inval_ddt(struct riscv_iommu_co=
+mmand *cmd)
+> +{
+> +       cmd->dword0 =3D FIELD_PREP(RISCV_IOMMU_CMD_OPCODE, RISCV_IOMMU_CM=
+D_IODIR_OPCODE) |
+> +                     FIELD_PREP(RISCV_IOMMU_CMD_FUNC, RISCV_IOMMU_CMD_IO=
+DIR_FUNC_INVAL_DDT);
+> +       cmd->dword1 =3D 0;
+> +}
+> +
+> +static inline void riscv_iommu_cmd_iodir_inval_pdt(struct riscv_iommu_co=
+mmand *cmd)
+> +{
+> +       cmd->dword0 =3D FIELD_PREP(RISCV_IOMMU_CMD_OPCODE, RISCV_IOMMU_CM=
+D_IODIR_OPCODE) |
+> +                     FIELD_PREP(RISCV_IOMMU_CMD_FUNC, RISCV_IOMMU_CMD_IO=
+DIR_FUNC_INVAL_PDT);
+> +       cmd->dword1 =3D 0;
+> +}
+> +
+> +static inline void riscv_iommu_cmd_iodir_set_did(struct riscv_iommu_comm=
+and *cmd,
+> +                                                unsigned int devid)
+> +{
+> +       cmd->dword0 |=3D FIELD_PREP(RISCV_IOMMU_CMD_IODIR_DID, devid) |
+> +                      RISCV_IOMMU_CMD_IODIR_DV;
+> +}
+> +
+> +static inline void riscv_iommu_cmd_iodir_set_pid(struct riscv_iommu_comm=
+and *cmd,
+> +                                                unsigned int pasid)
+> +{
+> +       cmd->dword0 |=3D FIELD_PREP(RISCV_IOMMU_CMD_IODIR_PID, pasid);
+> +}
+> +
+>  #endif /* _RISCV_IOMMU_BITS_H_ */
+> diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
+> index 71b7903d83d4..4349ac8a3990 100644
+> --- a/drivers/iommu/riscv/iommu.c
+> +++ b/drivers/iommu/riscv/iommu.c
+> @@ -25,7 +25,14 @@
+>  #include "iommu.h"
+>
+>  /* Timeouts in [us] */
+> -#define RISCV_IOMMU_DDTP_TIMEOUT       50000
+> +#define RISCV_IOMMU_QCSR_TIMEOUT       150000
+> +#define RISCV_IOMMU_QUEUE_TIMEOUT      150000
+> +#define RISCV_IOMMU_DDTP_TIMEOUT       10000000
+> +#define RISCV_IOMMU_IOTINVAL_TIMEOUT   90000000
+> +
+> +/* Number of entries per CMD/FLT queue, should be <=3D INT_MAX */
+> +#define RISCV_IOMMU_DEF_CQ_COUNT       8192
+> +#define RISCV_IOMMU_DEF_FQ_COUNT       4096
+>
+>  /* RISC-V IOMMU PPN <> PHYS address conversions, PHYS <=3D> PPN[53:10] *=
+/
+>  #define phys_to_ppn(va)  (((va) >> 2) & (((1ULL << 44) - 1) << 10))
+> @@ -89,6 +96,432 @@ static void riscv_iommu_free_pages(struct riscv_iommu=
+_device *iommu, void *addr)
+>                        riscv_iommu_devres_pages_match, &devres);
+>  }
+>
+> +/*
+> + * Hardware queue allocation and management.
+> + */
+> +
+> +/* Setup queue base, control registers and default queue length */
+> +#define RISCV_IOMMU_QUEUE_INIT(q, name) do {                           \
+> +       struct riscv_iommu_queue *_q =3D q;                              =
+ \
+> +       _q->qid =3D RISCV_IOMMU_INTR_ ## name;                           =
+ \
+> +       _q->qbr =3D RISCV_IOMMU_REG_ ## name ## B;                       =
+ \
+> +       _q->qcr =3D RISCV_IOMMU_REG_ ## name ## CSR;                     =
+ \
+> +       _q->mask =3D _q->mask ?: (RISCV_IOMMU_DEF_ ## name ## _COUNT) - 1=
+;\
+> +} while (0)
+> +
+> +/* Note: offsets are the same for all queues */
+> +#define Q_HEAD(q) ((q)->qbr + (RISCV_IOMMU_REG_CQH - RISCV_IOMMU_REG_CQB=
+))
+> +#define Q_TAIL(q) ((q)->qbr + (RISCV_IOMMU_REG_CQT - RISCV_IOMMU_REG_CQB=
+))
+> +#define Q_ITEM(q, index) ((q)->mask & (index))
+> +#define Q_IPSR(q) BIT((q)->qid)
+> +
+> +/*
+> + * Discover queue ring buffer hardware configuration, allocate in-memory
+> + * ring buffer or use fixed I/O memory location, configure queue base re=
+gister.
+> + * Must be called before hardware queue is enabled.
+> + *
+> + * @queue - data structure, configured with RISCV_IOMMU_QUEUE_INIT()
+> + * @entry_size - queue single element size in bytes.
+> + */
+> +static int riscv_iommu_queue_alloc(struct riscv_iommu_device *iommu,
+> +                                  struct riscv_iommu_queue *queue,
+> +                                  size_t entry_size)
+> +{
+> +       unsigned int logsz;
+> +       u64 qb, rb;
+> +
+> +       /*
+> +        * Use WARL base register property to discover maximum allowed
+> +        * number of entries and optional fixed IO address for queue loca=
+tion.
+> +        */
+> +       riscv_iommu_writeq(iommu, queue->qbr, RISCV_IOMMU_QUEUE_LOGSZ_FIE=
+LD);
+> +       qb =3D riscv_iommu_readq(iommu, queue->qbr);
+> +
+> +       /*
+> +        * Calculate and verify hardware supported queue length, as repor=
+ted
+> +        * by the field LOGSZ, where max queue length is equal to 2^(LOGS=
+Z + 1).
+> +        * Update queue size based on hardware supported value.
+> +        */
+> +       logsz =3D ilog2(queue->mask);
+> +       if (logsz > FIELD_GET(RISCV_IOMMU_QUEUE_LOGSZ_FIELD, qb))
+> +               logsz =3D FIELD_GET(RISCV_IOMMU_QUEUE_LOGSZ_FIELD, qb);
+> +
+> +       /*
+> +        * Use WARL base register property to discover an optional fixed =
+IO
+> +        * address for queue ring buffer location. Otherwise allocate con=
+tigus
+> +        * system memory.
+> +        */
+> +       if (FIELD_GET(RISCV_IOMMU_PPN_FIELD, qb)) {
+> +               const size_t queue_size =3D entry_size << (logsz + 1);
+> +
+> +               queue->phys =3D ppn_to_phys(FIELD_GET(RISCV_IOMMU_PPN_FIE=
+LD, qb));
+> +               queue->base =3D devm_ioremap(iommu->dev, queue->phys, que=
+ue_size);
+> +       } else {
+> +               do {
+> +                       const size_t queue_size =3D entry_size << (logsz =
++ 1);
+> +                       const int order =3D get_order(queue_size);
+> +
+> +                       queue->base =3D riscv_iommu_get_pages(iommu, orde=
+r);
+> +                       queue->phys =3D __pa(queue->base);
+> +               } while (!queue->base && logsz-- > 0);
+> +       }
+> +
+> +       if (!queue->base)
+> +               return -ENOMEM;
+> +
+> +       qb =3D phys_to_ppn(queue->phys) |
+> +            FIELD_PREP(RISCV_IOMMU_QUEUE_LOGSZ_FIELD, logsz);
+> +
+> +       /* Update base register and read back to verify hw accepted our w=
+rite */
+> +       riscv_iommu_writeq(iommu, queue->qbr, qb);
+> +       rb =3D riscv_iommu_readq(iommu, queue->qbr);
+> +       if (rb !=3D qb) {
+> +               dev_err(iommu->dev, "queue #%u allocation failed\n", queu=
+e->qid);
+> +               return -ENODEV;
+> +       }
+> +
+> +       /* Update actual queue mask */
+> +       queue->mask =3D (2U << logsz) - 1;
+> +
+> +       dev_dbg(iommu->dev, "queue #%u allocated 2^%u entries",
+> +               queue->qid, logsz + 1);
+> +
+> +       return 0;
+> +}
+> +
+> +/* Check interrupt queue status, IPSR */
+> +static irqreturn_t riscv_iommu_queue_ipsr(int irq, void *data)
+> +{
+> +       struct riscv_iommu_queue *queue =3D (struct riscv_iommu_queue *)d=
+ata;
+> +
+> +       if (riscv_iommu_readl(queue->iommu, RISCV_IOMMU_REG_IPSR) & Q_IPS=
+R(queue))
+> +               return IRQ_WAKE_THREAD;
+> +
+> +       return IRQ_NONE;
+> +}
+> +
+> +static int riscv_iommu_queue_vec(struct riscv_iommu_device *iommu, int n=
+)
+> +{
+> +       /* Reuse IVEC.CIV mask for all interrupt vectors mapping. */
+> +       return (iommu->ivec >> (n * 4)) & RISCV_IOMMU_IVEC_CIV;
+> +}
+> +
+> +/*
+> + * Enable queue processing in the hardware, register interrupt handler.
+> + *
+> + * @queue - data structure, already allocated with riscv_iommu_queue_all=
+oc()
+> + * @irq_handler - threaded interrupt handler.
+> + */
+> +static int riscv_iommu_queue_enable(struct riscv_iommu_device *iommu,
+> +                                   struct riscv_iommu_queue *queue,
+> +                                   irq_handler_t irq_handler)
+> +{
+> +       const unsigned int irq =3D iommu->irqs[riscv_iommu_queue_vec(iomm=
+u, queue->qid)];
+> +       u32 csr;
+> +       int rc;
+> +
+> +       if (queue->iommu)
+> +               return -EBUSY;
+> +
+> +       /* Polling not implemented */
+> +       if (!irq)
+> +               return -ENODEV;
+> +
+> +       queue->iommu =3D iommu;
+> +       rc =3D request_threaded_irq(irq, riscv_iommu_queue_ipsr, irq_hand=
+ler,
+> +                                 IRQF_ONESHOT | IRQF_SHARED,
+> +                                 dev_name(iommu->dev), queue);
+> +       if (rc) {
+> +               queue->iommu =3D NULL;
+> +               return rc;
+> +       }
+> +
+> +       /*
+> +        * Enable queue with interrupts, clear any memory fault if any.
+> +        * Wait for the hardware to acknowledge request and activate queu=
+e
+> +        * processing.
+> +        * Note: All CSR bitfields are in the same offsets for all queues=
+.
+> +        */
+> +       riscv_iommu_writel(iommu, queue->qcr,
+> +                          RISCV_IOMMU_QUEUE_ENABLE |
+> +                          RISCV_IOMMU_QUEUE_INTR_ENABLE |
+> +                          RISCV_IOMMU_QUEUE_MEM_FAULT);
+> +
+> +       riscv_iommu_readl_timeout(iommu, queue->qcr,
+> +                                 csr, !(csr & RISCV_IOMMU_QUEUE_BUSY),
+> +                                 10, RISCV_IOMMU_QCSR_TIMEOUT);
+> +
+> +       if (RISCV_IOMMU_QUEUE_ACTIVE !=3D (csr & (RISCV_IOMMU_QUEUE_ACTIV=
+E |
+> +                                               RISCV_IOMMU_QUEUE_BUSY |
+> +                                               RISCV_IOMMU_QUEUE_MEM_FAU=
+LT))) {
+> +               /* Best effort to stop and disable failing hardware queue=
+. */
+> +               riscv_iommu_writel(iommu, queue->qcr, 0);
+> +               free_irq(irq, queue);
+> +               queue->iommu =3D NULL;
+> +               dev_err(iommu->dev, "queue #%u failed to start\n", queue-=
+>qid);
+> +               return -EBUSY;
+> +       }
+> +
+> +       /* Clear any pending interrupt flag. */
+> +       riscv_iommu_writel(iommu, RISCV_IOMMU_REG_IPSR, Q_IPSR(queue));
+> +
+> +       return 0;
+> +}
+> +
+> +/*
+> + * Disable queue. Wait for the hardware to acknowledge request and
+> + * stop processing enqueued requests. Report errors but continue.
+> + */
+> +static void riscv_iommu_queue_disable(struct riscv_iommu_queue *queue)
+> +{
+> +       struct riscv_iommu_device *iommu =3D queue->iommu;
+> +       u32 csr;
+> +
+> +       if (!iommu)
+> +               return;
+> +
+> +       free_irq(iommu->irqs[riscv_iommu_queue_vec(iommu, queue->qid)], q=
+ueue);
+> +       riscv_iommu_writel(iommu, queue->qcr, 0);
+> +       riscv_iommu_readl_timeout(iommu, queue->qcr,
+> +                                 csr, !(csr & RISCV_IOMMU_QUEUE_BUSY),
+> +                                 10, RISCV_IOMMU_QCSR_TIMEOUT);
+> +
+> +       if (csr & (RISCV_IOMMU_QUEUE_ACTIVE | RISCV_IOMMU_QUEUE_BUSY))
+> +               dev_err(iommu->dev, "fail to disable hardware queue #%u, =
+csr 0x%x\n",
+> +                       queue->qid, csr);
+> +
+> +       queue->iommu =3D NULL;
+> +}
+> +
+> +/*
+> + * Returns number of available valid queue entries and the first item in=
+dex.
+> + * Update shadow producer index if necessary.
+> + */
+> +static int riscv_iommu_queue_consume(struct riscv_iommu_queue *queue,
+> +                                    unsigned int *index)
+> +{
+> +       unsigned int head =3D atomic_read(&queue->head);
+> +       unsigned int tail =3D atomic_read(&queue->tail);
+> +       unsigned int last =3D Q_ITEM(queue, tail);
+> +       int available =3D (int)(tail - head);
+> +
+> +       *index =3D head;
+> +
+> +       if (available > 0)
+> +               return available;
+> +
+> +       /* read hardware producer index, check reserved register bits are=
+ not set. */
+> +       if (riscv_iommu_readl_timeout(queue->iommu, Q_TAIL(queue),
+> +                                     tail, (tail & ~queue->mask) =3D=3D =
+0,
+> +                                     0, RISCV_IOMMU_QUEUE_TIMEOUT)) {
+> +               dev_err_once(queue->iommu->dev,
+> +                            "Hardware error: queue access timeout\n");
+> +               return 0;
+> +       }
+> +
+> +       if (tail =3D=3D last)
+> +               return 0;
+> +
+> +       /* update shadow producer index */
+> +       return (int)(atomic_add_return((tail - last) & queue->mask, &queu=
+e->tail) - head);
+> +}
+> +
+> +/*
+> + * Release processed queue entries, should match riscv_iommu_queue_consu=
+me() calls.
+> + */
+> +static void riscv_iommu_queue_release(struct riscv_iommu_queue *queue, i=
+nt count)
+> +{
+> +       const unsigned int head =3D atomic_add_return(count, &queue->head=
+);
+> +
+> +       riscv_iommu_writel(queue->iommu, Q_HEAD(queue), Q_ITEM(queue, hea=
+d));
+> +}
+> +
+> +/* Return actual consumer index based on hardware reported queue head in=
+dex. */
+> +static unsigned int riscv_iommu_queue_cons(struct riscv_iommu_queue *que=
+ue)
+> +{
+> +       const unsigned int cons =3D atomic_read(&queue->head);
+> +       const unsigned int last =3D Q_ITEM(queue, cons);
+> +       unsigned int head;
+> +
+> +       if (riscv_iommu_readl_timeout(queue->iommu, Q_HEAD(queue), head,
+> +                                     !(head & ~queue->mask),
+> +                                     0, RISCV_IOMMU_QUEUE_TIMEOUT))
+> +               return cons;
+> +
+> +       return cons + ((head - last) & queue->mask);
+> +}
+> +
+> +/* Wait for submitted item to be processed. */
+> +static int riscv_iommu_queue_wait(struct riscv_iommu_queue *queue,
+> +                                 unsigned int index,
+> +                                 unsigned int timeout_us)
+> +{
+> +       unsigned int cons =3D atomic_read(&queue->head);
+> +
+> +       /* Already processed by the consumer */
+> +       if ((int)(cons - index) > 0)
+> +               return 0;
+> +
+> +       /* Monitor consumer index */
+> +       return readx_poll_timeout(riscv_iommu_queue_cons, queue, cons,
+> +                                (int)(cons - index) > 0, 0, timeout_us);
+> +}
 
-Only the _optional_ version of this fuction can return NULL, this fuction
-will always return an error if the reset cannot be taken.
+Apart from iofence command, it seems to me that we might not be able
+to use the head pointer to determine whether the command is executed,
+because spec mentioned that the IOMMU advancing cqh is not a guarantee
+that the commands fetched by the IOMMU have been executed or
+committed. For iofence completion, perhaps using ADD and AV to write
+memory would be better as well.
 
->> +
->> +	kproc->tsp = k3_m4_rproc_of_get_tsp(dev, kproc->ti_sci);
->> +	if (IS_ERR(kproc->tsp))
->> +		return dev_err_probe(dev, PTR_ERR(kproc->tsp),
->> +				     "failed to construct ti-sci proc control\n");
->> +
->> +	ret = ti_sci_proc_request(kproc->tsp);
->> +	if (ret < 0)
->> +		return dev_err_probe(dev, ret, "ti_sci_proc_request failed\n");
->> +	ret = devm_add_action_or_reset(dev, k3_m4_release_tsp, kproc->tsp);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = k3_m4_rproc_of_get_memories(pdev, kproc);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = k3_m4_reserved_mem_init(kproc);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret, "reserved memory init failed\n");
->> +
->> +	ret = kproc->ti_sci->ops.dev_ops.is_on(kproc->ti_sci, kproc->ti_sci_id,
->> +					       &r_state, &p_state);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret,
->> +				     "failed to get initial state, mode cannot be determined\n");
->> +
->> +	/* configure devices for either remoteproc or IPC-only mode */
->> +	if (p_state) {
->> +		dev_info(dev, "configured M4 for IPC-only mode\n");
->> +		rproc->state = RPROC_DETACHED;
->> +		/* override rproc ops with only required IPC-only mode ops */
->> +		rproc->ops->prepare = NULL;
->> +		rproc->ops->unprepare = NULL;
->> +		rproc->ops->start = NULL;
->> +		rproc->ops->stop = NULL;
->> +		rproc->ops->attach = k3_m4_rproc_attach;
->> +		rproc->ops->detach = k3_m4_rproc_detach;
->> +		rproc->ops->get_loaded_rsc_table = k3_m4_get_loaded_rsc_table;
-> 
-> Why are the last 3 assignment needed when they are already set in the
-> declaration of k3_m4_rproc_ops?
-> 
+> +
+> +/* Enqueue an entry and wait to be processed if timeout_us > 0
+> + *
+> + * Error handling for IOMMU hardware not responding in reasonable time
+> + * will be added as separate patch series along with other RAS features.
+> + * For now, only report hardware failure and continue.
+> + */
+> +static void riscv_iommu_queue_send(struct riscv_iommu_queue *queue,
+> +                                  void *entry, size_t entry_size,
+> +                                  unsigned int timeout_us)
+> +{
+> +       unsigned int prod;
+> +       unsigned int head;
+> +       unsigned int tail;
+> +       unsigned long flags;
+> +
+> +       /* Do not preempt submission flow. */
+> +       local_irq_save(flags);
+> +
+> +       /* 1. Allocate some space in the queue */
+> +       prod =3D atomic_inc_return(&queue->prod) - 1;
+> +       head =3D atomic_read(&queue->head);
+> +
+> +       /* 2. Wait for space availability. */
+> +       if ((prod - head) > queue->mask) {
+> +               if (readx_poll_timeout(atomic_read, &queue->head,
+> +                                      head, (prod - head) < queue->mask,
+> +                                      0, RISCV_IOMMU_QUEUE_TIMEOUT))
+> +                       goto err_busy;
+> +       } else if ((prod - head) =3D=3D queue->mask) {
+> +               const unsigned int last =3D Q_ITEM(queue, head);
+> +
+> +               if (riscv_iommu_readl_timeout(queue->iommu, Q_HEAD(queue)=
+, head,
+> +                                             !(head & ~queue->mask) && h=
+ead !=3D last,
+> +                                             0, RISCV_IOMMU_QUEUE_TIMEOU=
+T))
+> +                       goto err_busy;
+> +               atomic_add((head - last) & queue->mask, &queue->head);
+> +       }
+> +
+> +       /* 3. Store entry in the ring buffer. */
+> +       memcpy(queue->base + Q_ITEM(queue, prod) * entry_size, entry, ent=
+ry_size);
+> +
+> +       /* 4. Wait for all previous entries to be ready */
+> +       if (readx_poll_timeout(atomic_read, &queue->tail, tail, prod =3D=
+=3D tail,
+> +                              0, RISCV_IOMMU_QUEUE_TIMEOUT))
+> +               goto err_busy;
+> +
+> +       /* 5. Complete submission and restore local interrupts */
+> +       dma_wmb();
+> +       riscv_iommu_writel(queue->iommu, Q_TAIL(queue), Q_ITEM(queue, pro=
+d + 1));
+> +       atomic_inc(&queue->tail);
+> +       local_irq_restore(flags);
+> +
+> +       if (timeout_us && riscv_iommu_queue_wait(queue, prod, timeout_us)=
+)
+> +               dev_err_once(queue->iommu->dev,
+> +                            "Hardware error: command execution timeout\n=
+");
+> +
+> +       return;
+> +
+> +err_busy:
+> +       local_irq_restore(flags);
+> +       dev_err_once(queue->iommu->dev, "Hardware error: command enqueue =
+failed\n");
+> +}
+> +
+> +/*
+> + * IOMMU Command queue chapter 3.1
+> + */
+> +
+> +/* Command queue interrupt handler thread function */
+> +static irqreturn_t riscv_iommu_cmdq_process(int irq, void *data)
+> +{
+> +       const struct riscv_iommu_queue *queue =3D (struct riscv_iommu_que=
+ue *)data;
+> +       unsigned int ctrl;
+> +
+> +       /* Clear MF/CQ errors, complete error recovery to be implemented.=
+ */
+> +       ctrl =3D riscv_iommu_readl(queue->iommu, queue->qcr);
+> +       if (ctrl & (RISCV_IOMMU_CQCSR_CQMF | RISCV_IOMMU_CQCSR_CMD_TO |
+> +                   RISCV_IOMMU_CQCSR_CMD_ILL | RISCV_IOMMU_CQCSR_FENCE_W=
+_IP)) {
+> +               riscv_iommu_writel(queue->iommu, queue->qcr, ctrl);
 
-Good point, seems none of these overrides should be needed, start()/stop()
-are not called for ATTCHED/DETACHED cores anyway, opposite is true for attach()/detach().
+For RISCV_IOMMU_CQCSR_CMD_ILL and RISCV_IOMMU_CQCSR_CMD_TO, I think we
+need to adjust the head/tail pointer, otherwise, IOMMU might keep
+trying to execute the problematic command.
 
-I'll drop these overrides.
+> +               dev_warn(queue->iommu->dev,
+> +                        "Queue #%u error; fault:%d timeout:%d illegal:%d=
+ fence_w_ip:%d\n",
 
->> +	} else {
->> +		dev_info(dev, "configured M4 for remoteproc mode\n");
->> +		/*
->> +		 * ensure the M4 local reset is asserted to ensure the core
->> +		 * doesn't execute bogus code in .prepare() when the module
->> +		 * reset is released.
->> +		 */
->> +		if (data->uses_lreset) {
->> +			ret = reset_control_status(kproc->reset);
->> +			if (ret < 0) {
->> +				return dev_err_probe(dev, ret, "failed to get reset status\n");
->> +			} else if (ret == 0) {
->> +				dev_warn(dev, "local reset is deasserted for device\n");
->> +				k3_m4_rproc_reset(kproc);
->> +			}
->> +		}
->> +	}
->> +
->> +	ret = devm_rproc_add(dev, rproc);
->> +	if (ret)
->> +		return dev_err_probe(dev, ret,
->> +				     "failed to add register device with remoteproc core\n");
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct k3_m4_rproc_mem_data am64_m4_mems[] = {
->> +	{ .name = "iram", .dev_addr = 0x0 },
->> +	{ .name = "dram", .dev_addr = 0x30000 },
->> +};
-> 
-> Is this hardcoded in the hardware and never expected to change?  If not please
-> add to the DT bindings.
-> 
+It might be a bit weird if we view fence_w_ip as queue error and print
+the message as error?
 
-This is a hardware hardcoded address and will be the same for this class
-of K3 M4 cores.
 
-Thanks,
-Andrew
-
-> More comments later or tomorrow.
-> 
-> Thanks,
-> Mathieu
-> 
->> +
->> +static const struct k3_m4_rproc_dev_data am64_m4_data = {
->> +	.mems = am64_m4_mems,
->> +	.num_mems = ARRAY_SIZE(am64_m4_mems),
->> +	.uses_lreset = true,
->> +};
->> +
->> +static const struct of_device_id k3_m4_of_match[] = {
->> +	{ .compatible = "ti,am64-m4fss", .data = &am64_m4_data, },
->> +	{ /* sentinel */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, k3_m4_of_match);
->> +
->> +static struct platform_driver k3_m4_rproc_driver = {
->> +	.probe	= k3_m4_rproc_probe,
->> +	.driver	= {
->> +		.name = "k3-m4-rproc",
->> +		.of_match_table = k3_m4_of_match,
->> +	},
->> +};
->> +module_platform_driver(k3_m4_rproc_driver);
->> +
->> +MODULE_AUTHOR("Hari Nagalla <hnagalla@ti.com>");
->> +MODULE_DESCRIPTION("TI K3 M4 Remoteproc driver");
->> +MODULE_LICENSE("GPL");
->> -- 
->> 2.39.2
->>
+> +                        queue->qid,
+> +                        !!(ctrl & RISCV_IOMMU_CQCSR_CQMF),
+> +                        !!(ctrl & RISCV_IOMMU_CQCSR_CMD_TO),
+> +                        !!(ctrl & RISCV_IOMMU_CQCSR_CMD_ILL),
+> +                        !!(ctrl & RISCV_IOMMU_CQCSR_FENCE_W_IP));
+> +       }
+> +
+> +       /* Placeholder for command queue interrupt notifiers */
+> +
+> +       /* Clear command interrupt pending. */
+> +       riscv_iommu_writel(queue->iommu, RISCV_IOMMU_REG_IPSR, Q_IPSR(que=
+ue));
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+> +/* Send command to the IOMMU command queue */
+> +static void riscv_iommu_cmd_send(struct riscv_iommu_device *iommu,
+> +                                struct riscv_iommu_command *cmd,
+> +                                unsigned int timeout_us)
+> +{
+> +       riscv_iommu_queue_send(&iommu->cmdq, cmd, sizeof(*cmd), timeout_u=
+s);
+> +}
+> +
+> +/*
+> + * IOMMU Fault/Event queue chapter 3.2
+> + */
+> +
+> +static void riscv_iommu_fault(struct riscv_iommu_device *iommu,
+> +                             struct riscv_iommu_fq_record *event)
+> +{
+> +       unsigned int err =3D FIELD_GET(RISCV_IOMMU_FQ_HDR_CAUSE, event->h=
+dr);
+> +       unsigned int devid =3D FIELD_GET(RISCV_IOMMU_FQ_HDR_DID, event->h=
+dr);
+> +
+> +       /* Placeholder for future fault handling implementation, report o=
+nly. */
+> +       if (err)
+> +               dev_warn_ratelimited(iommu->dev,
+> +                                    "Fault %d devid: 0x%x iotval: %llx i=
+otval2: %llx\n",
+> +                                    err, devid, event->iotval, event->io=
+tval2);
+> +}
+> +
+> +/* Fault queue interrupt handler thread function */
+> +static irqreturn_t riscv_iommu_fltq_process(int irq, void *data)
+> +{
+> +       struct riscv_iommu_queue *queue =3D (struct riscv_iommu_queue *)d=
+ata;
+> +       struct riscv_iommu_device *iommu =3D queue->iommu;
+> +       struct riscv_iommu_fq_record *events;
+> +       unsigned int ctrl, idx;
+> +       int cnt, len;
+> +
+> +       events =3D (struct riscv_iommu_fq_record *)queue->base;
+> +
+> +       /* Clear fault interrupt pending and process all received fault e=
+vents. */
+> +       riscv_iommu_writel(iommu, RISCV_IOMMU_REG_IPSR, Q_IPSR(queue));
+> +
+> +       do {
+> +               cnt =3D riscv_iommu_queue_consume(queue, &idx);
+> +               for (len =3D 0; len < cnt; idx++, len++)
+> +                       riscv_iommu_fault(iommu, &events[Q_ITEM(queue, id=
+x)]);
+> +               riscv_iommu_queue_release(queue, cnt);
+> +       } while (cnt > 0);
+> +
+> +       /* Clear MF/OF errors, complete error recovery to be implemented.=
+ */
+> +       ctrl =3D riscv_iommu_readl(iommu, queue->qcr);
+> +       if (ctrl & (RISCV_IOMMU_FQCSR_FQMF | RISCV_IOMMU_FQCSR_FQOF)) {
+> +               riscv_iommu_writel(iommu, queue->qcr, ctrl);
+> +               dev_warn(iommu->dev,
+> +                        "Queue #%u error; memory fault:%d overflow:%d\n"=
+,
+> +                        queue->qid,
+> +                        !!(ctrl & RISCV_IOMMU_FQCSR_FQMF),
+> +                        !!(ctrl & RISCV_IOMMU_FQCSR_FQOF));
+> +       }
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+>  /* Lookup and initialize device context info structure. */
+>  static struct riscv_iommu_dc *riscv_iommu_get_dc(struct riscv_iommu_devi=
+ce *iommu,
+>                                                  unsigned int devid)
+> @@ -250,6 +683,7 @@ static int riscv_iommu_iodir_set_mode(struct riscv_io=
+mmu_device *iommu,
+>         struct device *dev =3D iommu->dev;
+>         u64 ddtp, rq_ddtp;
+>         unsigned int mode, rq_mode =3D ddtp_mode;
+> +       struct riscv_iommu_command cmd;
+>
+>         ddtp =3D riscv_iommu_read_ddtp(iommu);
+>         if (ddtp & RISCV_IOMMU_DDTP_BUSY)
+> @@ -317,6 +751,18 @@ static int riscv_iommu_iodir_set_mode(struct riscv_i=
+ommu_device *iommu,
+>         if (mode !=3D ddtp_mode)
+>                 dev_dbg(dev, "DDTP hw mode %u, requested %u\n", mode, ddt=
+p_mode);
+>
+> +       /* Invalidate device context cache */
+> +       riscv_iommu_cmd_iodir_inval_ddt(&cmd);
+> +       riscv_iommu_cmd_send(iommu, &cmd, 0);
+> +
+> +       /* Invalidate address translation cache */
+> +       riscv_iommu_cmd_inval_vma(&cmd);
+> +       riscv_iommu_cmd_send(iommu, &cmd, 0);
+> +
+> +       /* IOFENCE.C */
+> +       riscv_iommu_cmd_iofence(&cmd);
+> +       riscv_iommu_cmd_send(iommu, &cmd, RISCV_IOMMU_IOTINVAL_TIMEOUT);
+> +
+>         return 0;
+>  }
+>
+> @@ -492,6 +938,26 @@ static int riscv_iommu_init_check(struct riscv_iommu=
+_device *iommu)
+>                         return -EINVAL;
+>         }
+>
+> +       /*
+> +        * Distribute interrupt vectors, always use first vector for CIV.
+> +        * At least one interrupt is required. Read back and verify.
+> +        */
+> +       if (!iommu->irqs_count)
+> +               return -EINVAL;
+> +
+> +       iommu->ivec =3D 0;
+> +       iommu->ivec |=3D FIELD_PREP(RISCV_IOMMU_IVEC_FIV, 1 % iommu->irqs=
+_count);
+> +       iommu->ivec |=3D FIELD_PREP(RISCV_IOMMU_IVEC_PIV, 2 % iommu->irqs=
+_count);
+> +       iommu->ivec |=3D FIELD_PREP(RISCV_IOMMU_IVEC_PMIV, 3 % iommu->irq=
+s_count);
+> +       riscv_iommu_writeq(iommu, RISCV_IOMMU_REG_IVEC, iommu->ivec);
+> +
+> +       iommu->ivec =3D riscv_iommu_readq(iommu, RISCV_IOMMU_REG_IVEC);
+> +       if (riscv_iommu_queue_vec(iommu, RISCV_IOMMU_IVEC_CIV) >=3D RISCV=
+_IOMMU_INTR_COUNT ||
+> +           riscv_iommu_queue_vec(iommu, RISCV_IOMMU_IVEC_FIV) >=3D RISCV=
+_IOMMU_INTR_COUNT ||
+> +           riscv_iommu_queue_vec(iommu, RISCV_IOMMU_IVEC_PIV) >=3D RISCV=
+_IOMMU_INTR_COUNT ||
+> +           riscv_iommu_queue_vec(iommu, RISCV_IOMMU_IVEC_PMIV) >=3D RISC=
+V_IOMMU_INTR_COUNT)
+> +               return -EINVAL;
+> +
+>         return 0;
+>  }
+>
+> @@ -500,12 +966,17 @@ void riscv_iommu_remove(struct riscv_iommu_device *=
+iommu)
+>         iommu_device_unregister(&iommu->iommu);
+>         iommu_device_sysfs_remove(&iommu->iommu);
+>         riscv_iommu_iodir_set_mode(iommu, RISCV_IOMMU_DDTP_MODE_OFF);
+> +       riscv_iommu_queue_disable(&iommu->cmdq);
+> +       riscv_iommu_queue_disable(&iommu->fltq);
+>  }
+>
+>  int riscv_iommu_init(struct riscv_iommu_device *iommu)
+>  {
+>         int rc;
+>
+> +       RISCV_IOMMU_QUEUE_INIT(&iommu->cmdq, CQ);
+> +       RISCV_IOMMU_QUEUE_INIT(&iommu->fltq, FQ);
+> +
+>         rc =3D riscv_iommu_init_check(iommu);
+>         if (rc)
+>                 return dev_err_probe(iommu->dev, rc, "unexpected device s=
+tate\n");
+> @@ -514,10 +985,28 @@ int riscv_iommu_init(struct riscv_iommu_device *iom=
+mu)
+>         if (rc)
+>                 return rc;
+>
+> -       rc =3D riscv_iommu_iodir_set_mode(iommu, RISCV_IOMMU_DDTP_MODE_MA=
+X);
+> +       rc =3D riscv_iommu_queue_alloc(iommu, &iommu->cmdq,
+> +                                    sizeof(struct riscv_iommu_command));
+> +       if (rc)
+> +               return rc;
+> +
+> +       rc =3D riscv_iommu_queue_alloc(iommu, &iommu->fltq,
+> +                                    sizeof(struct riscv_iommu_fq_record)=
+);
+> +       if (rc)
+> +               return rc;
+> +
+> +       rc =3D riscv_iommu_queue_enable(iommu, &iommu->cmdq, riscv_iommu_=
+cmdq_process);
+>         if (rc)
+>                 return rc;
+>
+> +       rc =3D riscv_iommu_queue_enable(iommu, &iommu->fltq, riscv_iommu_=
+fltq_process);
+> +       if (rc)
+> +               goto err_queue_disable;
+> +
+> +       rc =3D riscv_iommu_iodir_set_mode(iommu, RISCV_IOMMU_DDTP_MODE_MA=
+X);
+> +       if (rc)
+> +               goto err_queue_disable;
+> +
+>         rc =3D iommu_device_sysfs_add(&iommu->iommu, NULL, NULL, "riscv-i=
+ommu@%s",
+>                                     dev_name(iommu->dev));
+>         if (rc) {
+> @@ -537,5 +1026,8 @@ int riscv_iommu_init(struct riscv_iommu_device *iomm=
+u)
+>         iommu_device_sysfs_remove(&iommu->iommu);
+>  err_iodir_off:
+>         riscv_iommu_iodir_set_mode(iommu, RISCV_IOMMU_DDTP_MODE_OFF);
+> +err_queue_disable:
+> +       riscv_iommu_queue_disable(&iommu->fltq);
+> +       riscv_iommu_queue_disable(&iommu->cmdq);
+>         return rc;
+>  }
+> diff --git a/drivers/iommu/riscv/iommu.h b/drivers/iommu/riscv/iommu.h
+> index f1696926582c..03e0c45bc7e1 100644
+> --- a/drivers/iommu/riscv/iommu.h
+> +++ b/drivers/iommu/riscv/iommu.h
+> @@ -17,6 +17,22 @@
+>
+>  #include "iommu-bits.h"
+>
+> +struct riscv_iommu_device;
+> +
+> +struct riscv_iommu_queue {
+> +       atomic_t prod;                          /* unbounded producer all=
+ocation index */
+> +       atomic_t head;                          /* unbounded shadow ring =
+buffer consumer index */
+> +       atomic_t tail;                          /* unbounded shadow ring =
+buffer producer index */
+> +       unsigned int mask;                      /* index mask, queue leng=
+th - 1 */
+> +       unsigned int irq;                       /* allocated interrupt nu=
+mber */
+> +       struct riscv_iommu_device *iommu;       /* iommu device handling =
+the queue when active */
+> +       void *base;                             /* ring buffer kernel poi=
+nter */
+> +       dma_addr_t phys;                        /* ring buffer physical a=
+ddress */
+> +       u16 qbr;                                /* base register offset, =
+head and tail reference */
+> +       u16 qcr;                                /* control and status reg=
+ister offset */
+> +       u8 qid;                                 /* queue identifier, same=
+ as RISCV_IOMMU_INTR_XX */
+> +};
+> +
+>  struct riscv_iommu_device {
+>         /* iommu core interface */
+>         struct iommu_device iommu;
+> @@ -34,6 +50,11 @@ struct riscv_iommu_device {
+>         /* available interrupt numbers, MSI or WSI */
+>         unsigned int irqs[RISCV_IOMMU_INTR_COUNT];
+>         unsigned int irqs_count;
+> +       unsigned int ivec;
+> +
+> +       /* hardware queues */
+> +       struct riscv_iommu_queue cmdq;
+> +       struct riscv_iommu_queue fltq;
+>
+>         /* device directory */
+>         unsigned int ddt_mode;
+> --
+> 2.34.1
+>
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
