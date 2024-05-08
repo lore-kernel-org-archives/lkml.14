@@ -1,130 +1,164 @@
-Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF5112BF20
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 21:27:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BC312BF20
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 21:29:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715203679; cv=none; b=s9Xl15AUnFVkjTXz0/vt+ZBQf5awXU7fGzz9UkAFrBJ67Bem7tzRJU7c5bHTJHqh/pOdo0dc3CWWKYyCpsHMR4K2CrakqdzRzjSYEDoldOsG2CWGHiCmiGQsafSV0J0Hf/nhHiVQuUJ2gKMlAEQfhtgz2Wb1aTpzUouUL/Yw8xo=
+	t=1715203758; cv=none; b=SEzKaD8PORdxfYMoRZwIObWF7LkZoWAozHtoBY/Lbt+0obeBromhksJnhWpJam2akGXNhu/zIwTDRoVnijXogR07wcsCZsdybQbQ4MjhbL1ZG1rLrupJZLA+0WfcY2QgJlPICD16zTCd8zVuVmH4ibcREjGwIQMfRtmdR8Pjdio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715203679; c=relaxed/simple;
-	bh=tcyUkUGFCBs0apT7j12lUi7+Ta45tAkzDbK0EVCuh4Q=;
+	s=arc-20240116; t=1715203758; c=relaxed/simple;
+	bh=xeUr75kZnnbSfVzuy78pZvlDf3Ckf0OA3LtMUAVF6c4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dYt99Yd4QmKLxxs66XWfNLxARYFFyEyWnAq1bJeGYZvdv3isJwcPPu/nod1NEuqHL75oCjCELkiSSiD6uv5F1P2cSjD+Qk4tptRo9zFtUN02zJGVeO17fhfv09d99kh/QEO/o9q/OQeC0cD1Ur+GHQ0ZG4CD1xS96KKTHITc0QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=UkxCOW46; arc=none smtp.client-ip=95.215.58.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="UkxCOW46"
-Date: Wed, 8 May 2024 17:27:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715203674;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u2PIVc4MsF5g5dNnPzDWtY9lOI3+7BMrFx1/YjZoqfI=;
-	b=UkxCOW46H3sIjs6jdu40nEnfyl29X4TBl2yJBNFlw9i4iUwt+AlRzuqhp8lYAdectpmkJe
-	LxyvKl+SqWIMO45lRJA9dzool9ftAt2mK0XtR/wz4n31CbMwnDiJ1O4zO80zEYkhfFvzEh
-	CQ0c+WO13oF8wZ+ec/WiRsaETdrodtw=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Petr Vorel <pvorel@suse.cz>
-Cc: Glass Su <glass.su@suse.com>, linux-bcachefs@vger.kernel.org, 
-	Su Yue <l@damenly.org>, Brian Foster <bfoster@redhat.com>, Coly Li <colyli@suse.de>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] bcachefs: Move BCACHEFS_STATFS_MAGIC value to
- UAPI magic.h
-Message-ID: <fg3cvwvadldeglwrqdeeglswxwupyy2cjki7si7sz3jwsrpzpf@5pkugq7jyzb2>
-References: <20240507153757.150891-1-pvorel@suse.cz>
- <6D9FCB08-480D-4CA0-82E2-284B1F2BF8FD@suse.com>
- <20240508211759.GA209026@pevik>
+	 Content-Type:Content-Disposition:In-Reply-To; b=uG/mOb5bxuKuKXbPqbzmXoeHUj8yER/l4fGemp854Ka8ExZkmAjR1sIphMtyduhw5sMN3xY14N+tt4aZcgeDq5mtwD7dNt7wkKa8zSdQOzBAFSN6ovBWwe7RzuMczbCQZfGLNvDhhw93yMcWnfJNH4dMpcRuKQDSV7DjrgWvxjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1s4oqZ-0002oe-Tu; Wed, 08 May 2024 23:29:07 +0200
+Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1s4oqX-000LFt-Rc; Wed, 08 May 2024 23:29:05 +0200
+Received: from mgr by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mgr@pengutronix.de>)
+	id 1s4oqX-000iXc-2U;
+	Wed, 08 May 2024 23:29:05 +0200
+Date: Wed, 8 May 2024 23:29:05 +0200
+From: Michael Grzeschik <mgr@pengutronix.de>
+To: Wesley Cheng <quic_wcheng@quicinc.com>
+Cc: Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	michael.riesch@wolfvision.net, kernel@pengutronix.de,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usb: dwc3: gadget: create per ep interrupts
+Message-ID: <ZjvuoVpVTnEcHRIH@pengutronix.de>
+References: <20240507-dwc3_per_ep_irqthread-v1-1-f14dec6de19f@pengutronix.de>
+ <518a046b-1056-287b-f505-149958ad9c9c@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Bu/eOJv20AIjpObb"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240508211759.GA209026@pevik>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <518a046b-1056-287b-f505-149958ad9c9c@quicinc.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mgr@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2024 at 11:17:59PM +0200, Petr Vorel wrote:
-> HI Su, Kent,
-> 
-> > > On May 7, 2024, at 23:37, Petr Vorel <pvorel@suse.cz> wrote:
-> 
-> > > Move BCACHEFS_STATFS_MAGIC value to UAPI <linux/magic.h> under
-> > > BCACHEFS_SUPER_MAGIC definition (use common approach for name) and reuse the
-> > > definition in bcachefs_format.h BCACHEFS_STATFS_MAGIC.
-> 
-> > > There are other bcachefs magic definitions: BCACHE_MAGIC, BCHFS_MAGIC,
-> > > which use UUID_INIT() and are used only in libbcachefs. Therefore move
-> > > only BCACHEFS_STATFS_MAGIC value, which can be used outside of
-> > > libbcachefs for f_type field in struct statfs in statfs() or fstatfs().
-> 
-> > > Suggested-by: Su Yue <l@damenly.org>
-> 
-> > Would you kindly amend it to Su Yue <glass.su@suse.com> or
-> > Kent can help if the patch is going to be applied.
-> 
-> Unfortunately Kent was faster, it's already merged without your SUSE address
-> (and your RBT you added in the end):
-> 
-> https://evilpiepirate.org/git/bcachefs.git/commit/?h=for-next&id=ce8f9355f23be9756e499682d0d642a741db6c3a
-> 
-> @Kent: Maybe it can be even now amended (with Su Yue's RBT).
 
-...sure, make me invalidate my test results :)
+--Bu/eOJv20AIjpObb
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > > Signed-off-by: Petr Vorel <pvorel@suse.cz>
-> > > ---
-> > > Changes v2->v3:
-> > > * Align tab with other entries.
-> ...
-> > > #include <linux/uuid.h>
-> > > +#include <uapi/linux/magic.h>
-> > > #include "vstructs.h"
-> 
-> > > #ifdef __KERNEL__
-> > > @@ -1275,7 +1276,7 @@ enum bch_compression_opts {
-> > > UUID_INIT(0xc68573f6, 0x66ce, 0x90a9, \
-> > >  0xd9, 0x6a, 0x60, 0xcf, 0x80, 0x3d, 0xf7, 0xef)
-> 
-> > > -#define BCACHEFS_STATFS_MAGIC 0xca451a4e
-> > > +#define BCACHEFS_STATFS_MAGIC BCACHEFS_SUPER_MAGIC
-> 
-> > > #define JSET_MAGIC __cpu_to_le64(0x245235c1a3625032ULL)
-> > > #define BSET_MAGIC __cpu_to_le64(0x90135c78b99e07f5ULL)
-> > > diff --git a/include/uapi/linux/magic.h b/include/uapi/linux/magic.h
-> > > index 1b40a968ba91..bb575f3ab45e 100644
-> > > --- a/include/uapi/linux/magic.h
-> > > +++ b/include/uapi/linux/magic.h
-> > > @@ -37,6 +37,7 @@
-> > > #define HOSTFS_SUPER_MAGIC 0x00c0ffee
-> > > #define OVERLAYFS_SUPER_MAGIC 0x794c7630
-> > > #define FUSE_SUPER_MAGIC 0x65735546
-> > > +#define BCACHEFS_SUPER_MAGIC 0xca451a4e
-> 
-> > IIUC, due to some historical reasons bcachefs used to switched
-> > ondisk sb magic from BCACHE_MAGIC to BCHFS_MAGIC.
-> > Other major fses uses  *_SUPER_MAGIC both for ondisk 
-> > sb magic, kstatfs::f_type and super_block::s_magic.
-> > However, for bcacehfs there are three magic numbers.
-> 
-> Thanks for info. But for struct statfs in statfs() or fstatfs() only 0xca451a4e
-> is needed, right? I would not expose the other(s) unless it's really needed.
-> Also we'd need to backport UUID_INIT() into UAPI :(.
-> 
-> > Anyway, it looks good to me so far:
-> > Reviewed-by: Su Yue <glass.su@suse.com> 
-> 
-> And also without your RBT.
-> 
-> Kind regards,
-> Petr
-> 
-> > — 
-> > Su
+On Tue, May 07, 2024 at 11:57:36AM -0700, Wesley Cheng wrote:
+>Hi Michael,
+>
+>On 5/6/2024 4:06 PM, Michael Grzeschik wrote:
+>>This patch is splitting up the interrupt event handling from one
+>>interrupt thread to separate per endpoint interrupt threads.
+>>
+>
+>I assume that the incentive from doing this is to improve overall=20
+>throughput numbers.  Would you be able to share some data on the=20
+>benefits of moving to per EP event management?
+
+The main benefit is to make it possible to use high demanding usb
+endpoints simultaneously. In our special case we saw that streaming
+via uac and streaming via uvc was producing noise in the audio
+stream. This was due to the fact, that the isoc feedback endpoint
+that would adjust the samplerate was not being called fast enough
+when there was heavy a lot of traffic in the uvc endpoint context.
+
+By moving the endpoints into their own thread handlers the short
+feedback requests are at least able to be scheduled in between the bursts
+of the uvc packages. The next step is to have all threads running on
+different cpu cores, without interfering each other. However, as we
+still have not matrix irq allocator for arm, there still is no direct
+benefit from that yet.
+
+
+>>To achieve this we create a new dwc3 interrupt domain in which
+>>we map all claimed interrupts to individual interrupt threads.
+>>
+>>Although the gadget layer is preparing the claimed parameter
+>>of each usb_ep which could be checked if the endpoint is
+>>to used or not, the claimed value was 0 for each ep in gadget_start.
+>>This was tested when describing some composite gadget using configfs.
+>>
+>
+>yeah... the claimed flag is cleared by the USB gadget, ie USB configfs=20
+>(not sure if you're using this) whenever it adds a USB config.  This=20
+>is to handle multi config situations, so subsequent USB configs can be=20
+>assigned (resuse) endpoints, since only one config is active at a time=20
+>for a USB device.
+>
+>This was a struggle for me as well when adding the TXFIFO resizing=20
+>logic.  We won't actually know which EPs are going to be used until=20
+>the host issues the set configuration packet to select a config, and=20
+>the set_alt() callback issues usb_ep_enable().  So the implementation=20
+>(TXFIFO resizing) is currently based on the maximum potential=20
+>endpoints used by any USB configuration.
+>
+>Not sure if having 31 (potentially) different IRQ entries would be ok,=20
+>but maybe it would be simpler to just to request IRQ for dwc->num_eps=20
+>always?
+>
+>Have you tried this on a multi config device?
+
+No, I didn't. I doubt that this will work after your explanation. So
+thanks for the insides!
+
+I tried putting the request_threaded_irq into the ep_enable function
+but this does not work as I see a lot of schedule while atomic
+errors. This is possible as ep_enable is called from an set alt
+coming from ep0 interrupt thread context.
+
+So there is probably now no other option left to have exact endpoint
+interrupt threads. I will rework this back to request a kthread for each
+endpoint even as we will probably would not be using them.
+
+Regards,
+Michael
+
+
+--=20
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--Bu/eOJv20AIjpObb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEElXvEUs6VPX6mDPT8C+njFXoeLGQFAmY77p0ACgkQC+njFXoe
+LGTmAw//TWDPyBVnUlSATYNkGsDTLyZvMYRB6q2WOFT+d6anJfi621jHOV3b8YMo
+oMKhCDRBp7fsxsebpTBzOvQi/wI9J0gDP5W0cQEcvtV8h3xns+HrHFvIpEKuVIJW
+4Kn5/fsFhJbM2u9OURjVktAdIrEutctzBbHDYYdJv52BUuXRzCKBi3MLvvV+GRCr
+iwWwRTB/DV8ICOTtiQnGVHePtaWTNJ4QWIpSwfSf1p+s/BNqzaxv8ZPt5fc5sQUs
+PnVUxunVqWtIRKS/xVyTj2tTpSddaXSBn8VloqMQtnfylSey4+hk1WXdo7cZdhoN
+ocGduhXyQtfl7sU8EvFuOUV8tZZ/TYg53Yp6CK+ezrE81uJoBVBRAldRSe0aJMAP
+yGcLk+NcBZ6wPqGK7cA9l/vY3FqnGHBrSh9CiWZk+fjxl7Or5u7mFDN4+ktyb3oD
+te83upxxWy2V9VHmWNb/GJfaxhFXf5krAyEWDz63vsI4jnzjrk4Buj0RohgCI7qs
+TR6OyB+TXIT+cqk3bDF+Rc4y5YY8eBs74tjwTpLw0w0Ed+/7TNvXgnMDOeyy+iLe
+yV+vWU66bglUAXqFwUVcLD3WnM/BuD53Ia79GhysUqtlF4w/Z1xDB4EZENZCa/9h
+jjgyYsCki1e8GPO+/euvFJVUDQwUSJy1qP1zKA76ECgdSJsJrMg=
+=5+Qo
+-----END PGP SIGNATURE-----
+
+--Bu/eOJv20AIjpObb--
