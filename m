@@ -1,176 +1,88 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562FF17C8D
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 07:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3AB1DFC7;
+	Wed,  8 May 2024 07:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715153868; cv=none; b=D2Tp4zXx7z4w1GB+WjsJPPtM/ycXVel3DW/Fr/hnC1kxmYXK5aIAcPPDTCY+r2RrRKlOfgutt8FGDxcvV9ap3tmqrShhcTbiWv0FbHncWxO9W0lvXmWPVbvoieCknsNkKkFPvbQL0p8G9n8RSsr4u/Soz29snhFPlYuDVpIooCQ=
+	t=1715153870; cv=none; b=QIRI/wDB5JN7XWBGA/e4zRPhAF6LO0LPBB5FFioDTRNub5h9sRXiSv/EMXzdN+77Zy8e+RvYG271gO680D2Dz9UL19XMUetddgM0qbuni8BuNK3GXtIY54gyprXKmFLN3y8oXCJn2iFPUT/Vpliy7vKy0txq8NKkSu0z8sa0+L0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715153868; c=relaxed/simple;
-	bh=7kK1OGyMIdX7Apf6Ja0H+cg76QDS3Hw4FvN28t5kLy8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Pyoxv+7leCIWKQwFFU39ssyzsK5kcA2BH0CWA76q7KIaPIS0PdHxC/Ns+5a+x084Co769B4Fg2UFyXgGOXUkjaCpqXhe+HzMchzO/wPyCdoFgbuY4Dy4ZEh0GwLkiw0qERDWDxwpOwz+heizewQt/6mp7o+aB+ppCpAXguJ5oo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S935Zaqs; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715153870; c=relaxed/simple;
+	bh=kjymmrxtJnbENdbBxRaFYN4T1ytF+h/wvUQvibBNOmM=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=MA6Ly62jS7+5LVEGicbXRE+JwRj/25b/NCf1qPJAuzdPRfvxI4J8vgKOVPPnWCPOGYGs/9B2stMsvDn24dJOL4kXCbl9bTW1bta0EMFAyDoqXPjLtkz17qFTbqWn/+EBxUv7r2rNdP5o4aGM3C76U5xB5qJVPgRLUbMLlm5PJ0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=u8KZiHzU; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S935Zaqs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715153868; x=1746689868;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=7kK1OGyMIdX7Apf6Ja0H+cg76QDS3Hw4FvN28t5kLy8=;
-  b=S935ZaqsqNemhCHZ8d6YU352XHL4vihvFFiAauLXaugLi1svXZKRqT9g
-   i1NCs5oRSLHLBgaCkl7aTPiWhCPXmV0RkUaQq82LsR9CzhjEJmvRfTRSh
-   A+RgyPKXqsXWeP1pQVZWSn2y1wYaKktk8dh8jZnkSxYWiiK/HbBhBIPaB
-   V6VoMH40vN1h088mr1WQCJvoshBnZVmomGLH3MchaiFGl14HujlTrERvq
-   UOrAMNYKaTF2xNcR3wWa/p7CIikx0NUDdEZEzW5Szql3Lnx08G6gaQA43
-   23Pgys6MGcytpmkUwVPc3WOkdFsM1ngnPKTthYJhY+4/yKhEWyvQbacMf
-   Q==;
-X-CSE-ConnectionGUID: Y+5p9PJHREeni57i/1jLvw==
-X-CSE-MsgGUID: nq6uwVa1Rg24j7hPW5IYPA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="21596327"
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="21596327"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 00:37:47 -0700
-X-CSE-ConnectionGUID: wPLR2/CiQuaJotSJBX2cMw==
-X-CSE-MsgGUID: Zebk5gcESHmin/TaV87uCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,144,1712646000"; 
-   d="scan'208";a="59651920"
-Received: from unknown (HELO yhuang6-desk2.ccr.corp.intel.com) ([10.238.208.55])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 00:37:42 -0700
-From: "Huang, Ying" <ying.huang@intel.com>
-To: Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org,  linux-mm@kvack.org,
-  baolin.wang@linux.alibaba.com,  chrisl@kernel.org,  david@redhat.com,
-  hanchuanhua@oppo.com,  hannes@cmpxchg.org,  hughd@google.com,
-  kasong@tencent.com,  linux-kernel@vger.kernel.org,  ryan.roberts@arm.com,
-  surenb@google.com,  v-songbaohua@oppo.com,  willy@infradead.org,
-  xiang@kernel.org,  yosryahmed@google.com,  yuzhao@google.com,
-  ziy@nvidia.com
-Subject: Re: [PATCH v3 1/6] mm: swap: introduce swap_free_nr() for batched
- swap_free()
-In-Reply-To: <20240503005023.174597-2-21cnbao@gmail.com> (Barry Song's message
-	of "Fri, 3 May 2024 12:50:18 +1200")
-References: <20240503005023.174597-1-21cnbao@gmail.com>
-	<20240503005023.174597-2-21cnbao@gmail.com>
-Date: Wed, 08 May 2024 15:35:49 +0800
-Message-ID: <8734qskb6y.fsf@yhuang6-desk2.ccr.corp.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="u8KZiHzU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1715153855; x=1715758655; i=markus.elfring@web.de;
+	bh=kjymmrxtJnbENdbBxRaFYN4T1ytF+h/wvUQvibBNOmM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=u8KZiHzUrO1bkzjdExhf6DJk5ewDvyDgxLFXItWbsQbjXP7h8xN/v/PadObmkfeR
+	 OeFpmGhJPKe9TY4rzS6JQakC2oQR7bXSs/Rq4KH2ytDXfAS2ExUVnpVqs2KCy+90I
+	 +WiSWSrMUNQGs5WYw0HRS4ZnsF7MpUG7YZs9W8TOHkmqusbwyQEgIGJI7ffNZtH6Y
+	 g9wwqDEXjTzo/OKnO+A7WjLMbo0Ogxw5KSFjgUSOkEdhgrw7fi2Mj0SkGpkKzxEme
+	 DSRcPBTdrPLXyZiyE0D5lFNRR4CRUxvaf3WJ2fby28OYfltvRKyhdLIQwUGbhsdN8
+	 k+NnUH8vnk4iLX7Ong==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MMpCS-1sNNjn0SSC-00IvXH; Wed, 08
+ May 2024 09:37:35 +0200
+Message-ID: <f136ac86-5005-404f-b834-e1b0a41c5758@web.de>
+Date: Wed, 8 May 2024 09:37:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+To: Caleb Connolly <caleb.connolly@linaro.org>,
+ ~postmarketos/upstreaming@lists.sr.ht, devicetree@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Alexander Martinz <amartinz@shiftphones.com>,
+ Luca Weiss <luca.weiss@fairphone.com>
+References: <20240508-otter-bringup-v1-1-c807d3d931f6@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: qcom: Add QCM6490 SHIFTphone 8
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240508-otter-bringup-v1-1-c807d3d931f6@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:2OXHLDwn/2ONXEUS2H0kBYcGb8/agWCTFmshIKaPd5XwfPltFhG
+ 0XxlGGZkww1r/vWw/X1CNWhFKgAve9qX86eshB4qzSMWHXza/g3uv3u9DLDB+7LEEub3Ler
+ 6TFi4G0gRV29+vEHz+ddOAL86DXki36LcHfO5lZCRksiuec1GxHP5EAfj+oZKpbSX1lUPqf
+ ZEMxUXBc2W3lRdNpYIRBA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:bwAxRZ44HAg=;h1h8H6NbuOr3//A5qfN0HkAzmCf
+ 01W1Flr62numc4uvTGUgLp3RTNbNVPCOJe5tnbYaXsk+NWm1vj1RJfrA4k+p0rWcq78DmWMRl
+ iKwE1lin7kC8Kvuf9ZR/bTxl3fNdsFx5D9pDooJVwstitQ5iT2tO5QxSRd0oFao3NQ5JfPviz
+ COytUl+ZrTCL4sDBVcnivB/UwxHOchUCEnyHnEcrQA0L50CZgvgU6iB182hzl3ORyVzltwY+D
+ nYWze0uJVNaDlLHZ2lISFi3c/fMRzq7TrgG7nMj0aO/K7m7g3dOSL/Y5x3hOQpDImc5JyEYTC
+ CDhMx3VD1kU68n2jWUXtDm2hnwRNsp2AQdT1xPE+N+eGQR4xUFaUURWpv8DgEtgFxvnUzyMfa
+ A7iU7Wa9g/7W8LjV2M/5AO4QRRF4+X4q+bwGYSZs80FQCgdaUjHiw6WJYWMASovI4HMEaGAIB
+ x0/xBD90sOHN/oG9u/jLg5FrV6N4YdpaYRehl8V3BjCr1041b7HRQOBv0tqgZo+ngV+N+7Y/B
+ ZaJVeqU5Nah8TEL10fB/4i5s6RK02sme7AFrdCfMO6KAL4JaWnA1ewD116sdZfsHQgP5+OZDc
+ mOEm+OHVyl90/cjujZ8sgm9uVUyQvv1gGu/ZnCcg+UzrGYKuvrqDGTqIpB7okRsGo86KXcW9R
+ G6E7KEUx5AO2c/mrPTtT/R6OhvpHvVM1DHhFgMFSHKqVLEMC1cml8l8Vind2jB6iu6ZkkBFzk
+ /mniR+qOD9H3USlJpjC06kjcgrTv7A1fpp4FunKfxAggMW3a/t1DhAJFqyCzZK1CNYbCP+VHa
+ 7kv/yKeRecb1pL9htIYpIhGyOuF6cqC/AH3dg6ivNZsws=
 
-Barry Song <21cnbao@gmail.com> writes:
+> The SHIFTphone 8 (codename otter) is a smartphone based on the QCM6490
+> SoC.
 
-> From: Chuanhua Han <hanchuanhua@oppo.com>
->
-> While swapping in a large folio, we need to free swaps related to the whole
-> folio. To avoid frequently acquiring and releasing swap locks, it is better
-> to introduce an API for batched free.
-> Furthermore, this new function, swap_free_nr(), is designed to efficiently
-> handle various scenarios for releasing a specified number, nr, of swap
-> entries.
->
-> Signed-off-by: Chuanhua Han <hanchuanhua@oppo.com>
-> Co-developed-by: Barry Song <v-songbaohua@oppo.com>
-> Signed-off-by: Barry Song <v-songbaohua@oppo.com>
+* I suggest to move the last word into the first text line.
 
-LGTM, Thanks!
+* Please add an imperative wording for a better change description.
 
-Reviewed-by: "Huang, Ying" <ying.huang@intel.com>
-
-> ---
->  include/linux/swap.h |  5 +++++
->  mm/swapfile.c        | 47 ++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 52 insertions(+)
->
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index 11c53692f65f..d1d35e92d7e9 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -483,6 +483,7 @@ extern void swap_shmem_alloc(swp_entry_t);
->  extern int swap_duplicate(swp_entry_t);
->  extern int swapcache_prepare(swp_entry_t);
->  extern void swap_free(swp_entry_t);
-> +extern void swap_free_nr(swp_entry_t entry, int nr_pages);
->  extern void swapcache_free_entries(swp_entry_t *entries, int n);
->  extern void free_swap_and_cache_nr(swp_entry_t entry, int nr);
->  int swap_type_of(dev_t device, sector_t offset);
-> @@ -564,6 +565,10 @@ static inline void swap_free(swp_entry_t swp)
->  {
->  }
->  
-> +static inline void swap_free_nr(swp_entry_t entry, int nr_pages)
-> +{
-> +}
-> +
->  static inline void put_swap_folio(struct folio *folio, swp_entry_t swp)
->  {
->  }
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index f6ca215fb92f..ec12f2b9d229 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -1356,6 +1356,53 @@ void swap_free(swp_entry_t entry)
->  		__swap_entry_free(p, entry);
->  }
->  
-> +static void cluster_swap_free_nr(struct swap_info_struct *sis,
-> +		unsigned long offset, int nr_pages)
-> +{
-> +	struct swap_cluster_info *ci;
-> +	DECLARE_BITMAP(to_free, BITS_PER_LONG) = { 0 };
-> +	int i, nr;
-> +
-> +	ci = lock_cluster_or_swap_info(sis, offset);
-> +	while (nr_pages) {
-> +		nr = min(BITS_PER_LONG, nr_pages);
-> +		for (i = 0; i < nr; i++) {
-> +			if (!__swap_entry_free_locked(sis, offset + i, 1))
-> +				bitmap_set(to_free, i, 1);
-> +		}
-> +		if (!bitmap_empty(to_free, BITS_PER_LONG)) {
-> +			unlock_cluster_or_swap_info(sis, ci);
-> +			for_each_set_bit(i, to_free, BITS_PER_LONG)
-> +				free_swap_slot(swp_entry(sis->type, offset + i));
-> +			if (nr == nr_pages)
-> +				return;
-> +			bitmap_clear(to_free, 0, BITS_PER_LONG);
-> +			ci = lock_cluster_or_swap_info(sis, offset);
-> +		}
-> +		offset += nr;
-> +		nr_pages -= nr;
-> +	}
-> +	unlock_cluster_or_swap_info(sis, ci);
-> +}
-> +
-> +void swap_free_nr(swp_entry_t entry, int nr_pages)
-> +{
-> +	int nr;
-> +	struct swap_info_struct *sis;
-> +	unsigned long offset = swp_offset(entry);
-> +
-> +	sis = _swap_info_get(entry);
-> +	if (!sis)
-> +		return;
-> +
-> +	while (nr_pages) {
-> +		nr = min_t(int, nr_pages, SWAPFILE_CLUSTER - offset % SWAPFILE_CLUSTER);
-> +		cluster_swap_free_nr(sis, offset, nr);
-> +		offset += nr;
-> +		nr_pages -= nr;
-> +	}
-> +}
-> +
->  /*
->   * Called after dropping swapcache to decrease refcnt to swap entries.
->   */
+Regards,
+Markus
