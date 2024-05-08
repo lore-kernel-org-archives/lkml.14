@@ -1,270 +1,123 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D6E3E493;
-	Wed,  8 May 2024 07:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDCA836B00;
+	Wed,  8 May 2024 07:51:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715154663; cv=none; b=bAuVM5SdF7sMbqTKAmVfDc1H5DMIwa8347TqyZg3VX/tSlLWxnCva17JL97kQKQY2v/WpQOOTthD36m35Vtz6DRYl7IrFF0cfj0p3kCqwi+zqlAz0pRlIuqG8jQh0CKsiY7KHqTnhgwf+YYD6MJlVzfVIk+PqxlTtP7+SE9n9zU=
+	t=1715154695; cv=none; b=O+7TnW4TsVOpk4IImZW2Nh+qJjeZLu9/46iYWBLwRhdfgO+IqdqmBTGrbeqThf61WdX+vNyR5tAp7R1/bXX2eNOo4ydQQH0XrrjnGcahk2EwQHrw+KvioeLF0tyCo/vC62Hm3jM36/PvKearCRtqXiH0P8fYeDxLaK98DC0Z7E4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715154663; c=relaxed/simple;
-	bh=ER1Z4aI2riqIkflza4C4e1PlWp6zX494INQCy0XREMI=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jVYvRPy4Jm/8Qly0IrAVG8f4yvgrbYPdUOgv0xVo9VAwLGDTi8hwgjKc9nT8f3aM5feChXAQeu1Ykk7J0lNen81+V9H9Zjd7+gFAxZDpjgkp4pDqeq5he5VeLUBV5Of/xdvFm0rvXlIDDSHu43a/18Qq8gjokRT43xmnrdsBObU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=TyCeEKfi; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1715154695; c=relaxed/simple;
+	bh=o2qpCjMzog+vEoHz/oDlZEdsgwifD8WLuTbmMXmjILQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=d3h/DpMIFyVtBiU/fFyz2TZPyy9BGI2bdKUwKlPNxJXv9k0BTM84ATtZ0MRdKOP/VAPa40cXGOzBbzXXEY7lToIFZbT3Uw7v7PyI7QKawmw2MIkEtSEUoEE4vhXIUjecow+2s4DNAfsdOQYqAPxT7SZnggHjgdb1w9n26ibUX0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=KvvUOWbo; arc=none smtp.client-ip=80.241.56.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="TyCeEKfi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715154660;
-	bh=ER1Z4aI2riqIkflza4C4e1PlWp6zX494INQCy0XREMI=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=TyCeEKfi6CYhIwEaqOEpH25jFs6qvBUVq945IAEJX0ygECWU589cyU+MvgoMTwPux
-	 6/BdQxBfA97+L51tiYYuC6Z019EIYhFF3sdDZuG2WVBm/WaUFyhWfjl8go6V74ihZL
-	 zBcgP46R18osAyST9mJimRCt5HPROCQi3DU7kLTMECfOKz73i5JJsM6E5KBVualcXQ
-	 5gzkdSfbaSw8tyRODR4he2DEGEVliGska4eIsPBcU5tlE50l57QHTt63UZ0CRXcg2U
-	 D0N9WjN6eZpiBY81Z85YXE8KEKC/rooS7M1+Qvq169eoVStaDUIn3LxqthwG70lAAM
-	 pCsLg40TYView==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="KvvUOWbo"
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7EA2C378216D;
-	Wed,  8 May 2024 07:50:16 +0000 (UTC)
-Message-ID: <9b54b87f-f761-4e4f-8df3-993e426ebc27@collabora.com>
-Date: Wed, 8 May 2024 12:49:58 +0500
+	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4VZ6lv0ll0z9spf;
+	Wed,  8 May 2024 09:51:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1715154683;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=seqGXW7fWjnxdTfmzUCRIjDohlKE9YFEMwzBlrsD9vw=;
+	b=KvvUOWboNt1gLqyxi7HHWFVIEJEoREy4Lyw3eNMtTycPAtUOHCKfylR/+SGakz9tQsRsWj
+	P5tdtWoHN3mZ4L/NQTCVQa3mG5vjEz4jbPWHB/sqrRy8ELoCb1EAgTWP7hmfdHWAL9EK4V
+	dWkU3/NeXvdZO0C0UsKdYxJp7/KLHWuVnUPXWUr6nJzRlTsxW6wxGitGktjUkB7GGf1KSM
+	WX9tC592UcG5FQ9+Uj+dVzh9Z5Vb+UVwMNji89xLZm2LbzW+SxD9jYstAM50q722ksvZLv
+	r7Kd89iS+1Zta7mZzfExJBUH7c4xj99CxFMonw/Rclw83vRIBF+eYqtbkSrKcA==
+Message-ID: <36169520-56e4-4a01-a467-051a94c7f810@mailbox.org>
+Date: Wed, 8 May 2024 09:51:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kernel-team@android.com, linux-sound@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-input@vger.kernel.org, iommu@lists.linux.dev, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
- linux-actions@lists.infradead.org, mptcp@lists.linux.dev,
- linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] selftests: Include KHDR_INCLUDES in Makefile
-To: Edward Liaw <edliaw@google.com>, shuah@kernel.org,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Christian Brauner
- <brauner@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
- Kees Cook <keescook@chromium.org>,
- OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?=
- <andrealmeid@igalia.com>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
- Kevin Tian <kevin.tian@intel.com>, Andy Lutomirski <luto@amacapital.net>,
- Will Drewry <wad@chromium.org>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- David Hildenbrand <david@redhat.com>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
- <mic@digikod.net>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- Andrew Morton <akpm@linux-foundation.org>, Seth Forshee
- <sforshee@kernel.org>, Bongsu Jeon <bongsu.jeon@samsung.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
- <afaerber@suse.de>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Matthieu Baerts <matttbe@kernel.org>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Fenghua Yu <fenghua.yu@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Paul E. McKenney" <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Jarkko Sakkinen <jarkko@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>
-References: <20240507214254.2787305-1-edliaw@google.com>
- <20240507214254.2787305-4-edliaw@google.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240507214254.2787305-4-edliaw@google.com>
+Subject: Re: [Linaro-mm-sig] Re: [PATCH] epoll: try to be a _bit_ better about
+ file lifetimes
+To: =?UTF-8?Q?Christian_K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Christian Brauner <brauner@kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
+ keescook@chromium.org, axboe@kernel.dk, christian.koenig@amd.com,
+ dri-devel@lists.freedesktop.org, io-uring@vger.kernel.org, jack@suse.cz,
+ laura@labbott.name, linaro-mm-sig@lists.linaro.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org, minhquangbui99@gmail.com,
+ sumit.semwal@linaro.org,
+ syzbot+045b454ab35fd82a35fb@syzkaller.appspotmail.com,
+ syzkaller-bugs@googlegroups.com
+References: <202405031110.6F47982593@keescook>
+ <20240503211129.679762-2-torvalds@linux-foundation.org>
+ <20240503212428.GY2118490@ZenIV>
+ <CAHk-=wjpsTEkHgo1uev3xGJ2bQXYShaRf3GPEqDWNgUuKx0JFw@mail.gmail.com>
+ <20240504-wohngebiet-restwert-6c3c94fddbdd@brauner>
+ <CAHk-=wj_Fu1FkMFrjivQ=MGkwkKXZBuh0f4BEhcZHD5WCvHesw@mail.gmail.com>
+ <CAHk-=wj6XL9MGCd_nUzRj6SaKeN0TsyTTZDFpGdW34R+zMZaSg@mail.gmail.com>
+ <b1728d20-047c-4e28-8458-bf3206a1c97c@gmail.com>
+ <ZjoKX4nmrRdevyxm@phenom.ffwll.local>
+ <CAHk-=wgh5S-7sCCqXBxGcXHZDhe4U8cuaXpVTjtXLej2si2f3g@mail.gmail.com>
+ <d68417df-1493-421a-8558-879abe36d6fa@gmail.com>
+From: =?UTF-8?Q?Michel_D=C3=A4nzer?= <michel.daenzer@mailbox.org>
+Content-Language: en-CA, de-CH-frami
+In-Reply-To: <d68417df-1493-421a-8558-879abe36d6fa@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-MBO-RS-META: 9swp1jw5c6zi83pbktm1xw4d3s3f1o5r
+X-MBO-RS-ID: b22b617ddbdc3eec153
 
-On 5/8/24 2:38 AM, Edward Liaw wrote:
-> Add KHDR_INCLUDES to CFLAGS to pull in the kselftest harness
-> dependencies (-D_GNU_SOURCE).
+On 2024-05-07 19:45, Christian König wrote:
+> Am 07.05.24 um 18:46 schrieb Linus Torvalds:
+>>
+>> Just what are the requirements for the GPU stack? Is one of the file
+>> descriptors "trusted", IOW, you know what kind it is?
+>>
+>> Because dammit, it's *so* easy to do. You could just add a core DRM
+>> ioctl for it. Literally just
+>>
+>>          struct fd f1 = fdget(fd1);
+>>          struct fd f2 = fdget(fd2);
+>>          int same;
+>>
+>>          same = f1.file && f1.file == f2.file;
+>>          fdput(fd1);
+>>          fdput(fd2);
+>>          return same;
+>>
+>> where the only question is if you also woudl want to deal with O_PATH
+>> fd's, in which case the "fdget()" would be "fdget_raw()".
+>>
+>> Honestly, adding some DRM ioctl for this sounds hacky, but it sounds
+>> less hacky than relying on EPOLL or KCMP.
+>>
+>> I'd be perfectly ok with adding a generic "FISAME" VFS level ioctl
+>> too, if this is possibly a more common thing. and not just DRM wants
+>> it.
+>>
+>> Would something like that work for you?
 > 
-> Fixes: 809216233555 ("selftests/harness: remove use of LINE_MAX")
-> Signed-off-by: Edward Liaw <edliaw@google.com>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> Well the generic approach yes, the DRM specific one maybe. IIRC we need to be able to compare both DRM as well as DMA-buf file descriptors.
+> 
+> The basic problem userspace tries to solve is that drivers might get the same fd through two different code paths.
+> 
+> For example application using OpenGL/Vulkan for rendering and VA-API for video decoding/encoding at the same time.
+> 
+> Both APIs get a fd which identifies the device to use. It can be the same, but it doesn't have to.
+> 
+> If it's the same device driver connection (or in kernel speak underlying struct file) then you can optimize away importing and exporting of buffers for example.
 
-> ---
->  tools/testing/selftests/alsa/Makefile                  | 2 +-
->  tools/testing/selftests/arm64/signal/Makefile          | 2 +-
->  tools/testing/selftests/exec/Makefile                  | 2 +-
->  tools/testing/selftests/filesystems/overlayfs/Makefile | 2 +-
->  tools/testing/selftests/hid/Makefile                   | 2 +-
->  tools/testing/selftests/nci/Makefile                   | 2 +-
->  tools/testing/selftests/prctl/Makefile                 | 2 ++
->  tools/testing/selftests/proc/Makefile                  | 2 +-
->  tools/testing/selftests/riscv/mm/Makefile              | 2 +-
->  tools/testing/selftests/rtc/Makefile                   | 2 +-
->  tools/testing/selftests/tmpfs/Makefile                 | 2 +-
->  11 files changed, 12 insertions(+), 10 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/alsa/Makefile b/tools/testing/selftests/alsa/Makefile
-> index 5af9ba8a4645..9a0ef194522c 100644
-> --- a/tools/testing/selftests/alsa/Makefile
-> +++ b/tools/testing/selftests/alsa/Makefile
-> @@ -6,7 +6,7 @@ LDLIBS += $(shell pkg-config --libs alsa)
->  ifeq ($(LDLIBS),)
->  LDLIBS += -lasound
->  endif
-> -CFLAGS += -L$(OUTPUT) -Wl,-rpath=./
-> +CFLAGS += $(KHDR_INCLUDES) -L$(OUTPUT) -Wl,-rpath=./
->  
->  LDLIBS+=-lpthread
->  
-> diff --git a/tools/testing/selftests/arm64/signal/Makefile b/tools/testing/selftests/arm64/signal/Makefile
-> index 8f5febaf1a9a..ae682ade615d 100644
-> --- a/tools/testing/selftests/arm64/signal/Makefile
-> +++ b/tools/testing/selftests/arm64/signal/Makefile
-> @@ -2,7 +2,7 @@
->  # Copyright (C) 2019 ARM Limited
->  
->  # Additional include paths needed by kselftest.h and local headers
-> -CFLAGS += -D_GNU_SOURCE -std=gnu99 -I.
-> +CFLAGS += $(KHDR_INCLUDES) -std=gnu99 -I.
->  
->  SRCS := $(filter-out testcases/testcases.c,$(wildcard testcases/*.c))
->  PROGS := $(patsubst %.c,%,$(SRCS))
-> diff --git a/tools/testing/selftests/exec/Makefile b/tools/testing/selftests/exec/Makefile
-> index fb4472ddffd8..15e78ec7c55e 100644
-> --- a/tools/testing/selftests/exec/Makefile
-> +++ b/tools/testing/selftests/exec/Makefile
-> @@ -1,7 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  CFLAGS = -Wall
->  CFLAGS += -Wno-nonnull
-> -CFLAGS += -D_GNU_SOURCE
-> +CFLAGS += $(KHDR_INCLUDES)
->  
->  TEST_PROGS := binfmt_script.py
->  TEST_GEN_PROGS := execveat load_address_4096 load_address_2097152 load_address_16777216 non-regular
-> diff --git a/tools/testing/selftests/filesystems/overlayfs/Makefile b/tools/testing/selftests/filesystems/overlayfs/Makefile
-> index 56b2b48a765b..6c29c963c7a8 100644
-> --- a/tools/testing/selftests/filesystems/overlayfs/Makefile
-> +++ b/tools/testing/selftests/filesystems/overlayfs/Makefile
-> @@ -2,6 +2,6 @@
->  
->  TEST_GEN_PROGS := dev_in_maps
->  
-> -CFLAGS := -Wall -Werror
-> +CFLAGS := -Wall -Werror $(KHDR_INCLUDES)
->  
->  include ../../lib.mk
-> diff --git a/tools/testing/selftests/hid/Makefile b/tools/testing/selftests/hid/Makefile
-> index 2b5ea18bde38..0661b34488ef 100644
-> --- a/tools/testing/selftests/hid/Makefile
-> +++ b/tools/testing/selftests/hid/Makefile
-> @@ -21,7 +21,7 @@ CXX ?= $(CROSS_COMPILE)g++
->  
->  HOSTPKG_CONFIG := pkg-config
->  
-> -CFLAGS += -g -O0 -rdynamic -Wall -Werror -I$(OUTPUT)
-> +CFLAGS += -g -O0 -rdynamic -Wall -Werror $(KHDR_INCLUDES) -I$(OUTPUT)
->  CFLAGS += -I$(OUTPUT)/tools/include
->  
->  LDLIBS += -lelf -lz -lrt -lpthread
-> diff --git a/tools/testing/selftests/nci/Makefile b/tools/testing/selftests/nci/Makefile
-> index 47669a1d6a59..bbc5b8ec3b17 100644
-> --- a/tools/testing/selftests/nci/Makefile
-> +++ b/tools/testing/selftests/nci/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -CFLAGS += -Wl,-no-as-needed -Wall
-> +CFLAGS += -Wl,-no-as-needed -Wall $(KHDR_INCLUDES)
->  LDFLAGS += -lpthread
->  
->  TEST_GEN_PROGS := nci_dev
-> diff --git a/tools/testing/selftests/prctl/Makefile b/tools/testing/selftests/prctl/Makefile
-> index 01dc90fbb509..1a0aefec9d6f 100644
-> --- a/tools/testing/selftests/prctl/Makefile
-> +++ b/tools/testing/selftests/prctl/Makefile
-> @@ -6,6 +6,8 @@ ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
->  ifeq ($(ARCH),x86)
->  TEST_PROGS := disable-tsc-ctxt-sw-stress-test disable-tsc-on-off-stress-test \
->  		disable-tsc-test set-anon-vma-name-test set-process-name
-> +
-> +CFLAGS += $(KHDR_INCLUDES)
->  all: $(TEST_PROGS)
->  
->  include ../lib.mk
-> diff --git a/tools/testing/selftests/proc/Makefile b/tools/testing/selftests/proc/Makefile
-> index cd95369254c0..9596014c10a0 100644
-> --- a/tools/testing/selftests/proc/Makefile
-> +++ b/tools/testing/selftests/proc/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  CFLAGS += -Wall -O2 -Wno-unused-function
-> -CFLAGS += -D_GNU_SOURCE
-> +CFLAGS += $(KHDR_INCLUDES)
->  LDFLAGS += -pthread
->  
->  TEST_GEN_PROGS :=
-> diff --git a/tools/testing/selftests/riscv/mm/Makefile b/tools/testing/selftests/riscv/mm/Makefile
-> index c333263f2b27..715a21241113 100644
-> --- a/tools/testing/selftests/riscv/mm/Makefile
-> +++ b/tools/testing/selftests/riscv/mm/Makefile
-> @@ -3,7 +3,7 @@
->  # Originally tools/testing/arm64/abi/Makefile
->  
->  # Additional include paths needed by kselftest.h and local headers
-> -CFLAGS += -D_GNU_SOURCE -std=gnu99 -I.
-> +CFLAGS += $(KHDR_INCLUDES) -std=gnu99 -I.
->  
->  TEST_GEN_FILES := mmap_default mmap_bottomup
->  
-> diff --git a/tools/testing/selftests/rtc/Makefile b/tools/testing/selftests/rtc/Makefile
-> index 55198ecc04db..654f9d58da3c 100644
-> --- a/tools/testing/selftests/rtc/Makefile
-> +++ b/tools/testing/selftests/rtc/Makefile
-> @@ -1,5 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -CFLAGS += -O3 -Wl,-no-as-needed -Wall
-> +CFLAGS += -O3 -Wl,-no-as-needed -Wall $(KHDR_INCLUDES)
->  LDLIBS += -lrt -lpthread -lm
->  
->  TEST_GEN_PROGS = rtctest
-> diff --git a/tools/testing/selftests/tmpfs/Makefile b/tools/testing/selftests/tmpfs/Makefile
-> index aa11ccc92e5b..bcdc1bb6d2e6 100644
-> --- a/tools/testing/selftests/tmpfs/Makefile
-> +++ b/tools/testing/selftests/tmpfs/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0-only
->  CFLAGS += -Wall -O2
-> -CFLAGS += -D_GNU_SOURCE
-> +CFLAGS += $(KHDR_INCLUDES)
->  
->  TEST_GEN_PROGS :=
->  TEST_GEN_PROGS += bug-link-o-tmpfile
+It's not just about optimization. Mesa needs to know this for correct tracking of GEM handles. If it guesses incorrectly, there can be misbehaviour.
+
 
 -- 
-BR,
-Muhammad Usama Anjum
+Earthling Michel Dänzer            |                  https://redhat.com
+Libre software enthusiast          |         Mesa and Xwayland developer
+
