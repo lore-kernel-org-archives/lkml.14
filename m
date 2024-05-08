@@ -1,16 +1,16 @@
 Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DAA486244
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD4E86278
 	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 13:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715175721; cv=none; b=MWRFxdkqVI2xEP/eFjizJ8LqnrcTc1OozLEpckPBQG1zlX0lquKzA+jZ+ncNQOltfD7QB95r/jjlBT7E60Hl3sKvxX9sseVxdtZBMQQQj16eZLZ3eqxr2XUtofxtvsDIPcUZNcZHiJn42FJMyw13G1WFQWEafz4DPRUylIiFoow=
+	t=1715175722; cv=none; b=uZ4WDFVYhCzy6pvJEMa1aIpSUFuZRz7//XnkwMlIrf2U4WvrkkgkFU7VmgjbldUGNFqnY1ANmrmvoPs7XsBcrfZux474b6DJ29uggFaDRLntrjwsRoNFPM+5jZODDWyFJjWgzozKy5OLY6/hUWgWkN2OOpicUR821hwEgzt1GZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715175721; c=relaxed/simple;
-	bh=WQGjo0KOQfzPqgPzYYoZJZp2ermeNX4r8eyPXu0S4aY=;
+	s=arc-20240116; t=1715175722; c=relaxed/simple;
+	bh=0IuCiJTKMu+ZvVjLGZmjgMVBhu4d7QeprtBMafyQNCA=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=nrd0xMXvpArOtEASuaJr3zOBD8mtqSGJJtr0NAEY1tbq5Z2mDWqQ4dakS3bQhZd6/+A/clTRXBH8iI6TcMY6nR0P2uT/wf6Cu1ZPTq/kPjgUPiVoVi/tVh7R8Kbz9zRqkxmBn5Ve4EegLTa3748MOSs0sNRdURN+JfRprwJ8Ifk=
+	 MIME-Version:Content-Type; b=Ab8U46ELGJlldhbAS/s5zdZPgZXthYY+skbcFV8XJtlyy7UYCX9iEqLzrKtmVSkJEkOo3RdeBj5U8WLKFlNjngzsUPauLq8P4fXoaqGADYotyxXnv1bV0BR4JqGomBM75j7GZgCMQzMid0KRqIgd1/GK29MQL/H4jcR4LstY5CQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au; spf=pass smtp.mailfrom=ellerman.id.au; arc=none smtp.client-ip=150.107.74.76
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ellerman.id.au
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ellerman.id.au
@@ -18,15 +18,15 @@ Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VZGXQ45fLz4x4T;
-	Wed,  8 May 2024 23:41:58 +1000 (AEST)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VZGXR24Wnz4xGX;
+	Wed,  8 May 2024 23:41:59 +1000 (AEST)
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
-To: mpe@ellerman.id.au, npiggin@gmail.com, linux@treblig.org
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240503002317.183500-1-linux@treblig.org>
-References: <20240503002317.183500-1-linux@treblig.org>
-Subject: Re: [PATCH] power: Remove arch specific module bug stuff
-Message-Id: <171517558546.165093.744820732746093524.b4-ty@ellerman.id.au>
+To: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>, "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+In-Reply-To: <20240216135517.2002749-1-masahiroy@kernel.org>
+References: <20240216135517.2002749-1-masahiroy@kernel.org>
+Subject: Re: [PATCH] powerpc: remove unused *_syscall_64.o variables in Makefile
+Message-Id: <171517558552.165093.5436397769184900794.b4-ty@ellerman.id.au>
 Date: Wed, 08 May 2024 23:39:45 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,20 +37,19 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Fri, 03 May 2024 01:23:17 +0100, linux@treblig.org wrote:
-> The last function to reference module_bug_list went in 2008's
->   commit b9754568ef17 ("powerpc: Remove dead module_find_bug code")
-> but I don't think that was called since 2006's
->   commit 73c9ceab40b1 ("[POWERPC] Generic BUG for powerpc")
+On Fri, 16 Feb 2024 22:55:17 +0900, Masahiro Yamada wrote:
+> Commit ab1a517d55b0 ("powerpc/syscall: Rename syscall_64.c into
+> interrupt.c") missed to update these three lines:
 > 
-> Now that the list has gone, I think we can also clean up the bug
-> entries in mod_arch_specific.
+>   GCOV_PROFILE_syscall_64.o := n
+>   KCOV_INSTRUMENT_syscall_64.o := n
+>   UBSAN_SANITIZE_syscall_64.o := n
 > 
 > [...]
 
 Applied to powerpc/next.
 
-[1/1] power: Remove arch specific module bug stuff
-      https://git.kernel.org/powerpc/c/4071739249fd2e647e7058dbab0db4ddc0a0c427
+[1/1] powerpc: remove unused *_syscall_64.o variables in Makefile
+      https://git.kernel.org/powerpc/c/4f1dad618587fa2fa903235301111c8c382b6f3e
 
 cheers
