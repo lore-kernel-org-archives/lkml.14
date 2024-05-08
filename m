@@ -1,86 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796332BB09
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 07:57:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C453D2C6B2
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 07:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715155030; cv=none; b=sT2nRO/Br4WTKRd0QO4I9dbwX6Ytah2tVuFpLmQu4ji+1gXuuDgg0XbBC2ecJRnCCdwxQsBxFUzR/OSfJCcc2XFHqykixcpv8u+JU1zzxpQBAN3p0dFlEACqAars7pIloJaDZdKYAEj0Tpz+9Nuk+sK/o3sJDYtjuJ9tY2rWsGg=
+	t=1715155090; cv=none; b=jbCEEg9Np13cy6VTHx0RrosIinJ8GyvcuDYTkYsGMoNzWgmgnDOuvtWXARaKNrWmRQ/r8c4sXGTgSzzigldDw7FFDwgzHRlyl4hDhydrs8Kb6kwaiH+ZESa4P4SD1cORID5jM23/w9rt+gR0lJHLVBTycJqoQrnmdU4ue2JSNNo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715155030; c=relaxed/simple;
-	bh=V/YjDIQfRp2l7miiRrx3Z5IZQokNP9VXtuvlvHRlYG4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XrtqhQYYnrsK3AXpE4gfTJS8sTFbHPtsHqa5Y5HYaponh4IGxeV1f82sVj5UGHahhoDGtz5oRhMszdkvGzWdWawR6/4ELDRH/ANKzzkKoHZycQLx7IRr84G/DM1H1zLKiIPGUNCEmbdcMdja1+YmMb8Q94YMx6PjqVjn2ReS4MI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YYwh1J3n; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YYwh1J3n"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715155028;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=V/YjDIQfRp2l7miiRrx3Z5IZQokNP9VXtuvlvHRlYG4=;
-	b=YYwh1J3nqrx1onSt4KlfD7Hnz2cbp0K7apfC+vNwKMkMVbWmDN2Xznj99ZB+V8l9ODI35Y
-	PoSCwmb893YGracuv7zrWq/56zGxqOd/y4llDRuVIvR+Bt9+TOdkSMMA9SxpDURgF3mr9s
-	L0sww24/lCHft64i3GZ2yQ2ZQndoyB0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-402-9zIbIx_RPi2zsftI5GvHzw-1; Wed, 08 May 2024 03:57:04 -0400
-X-MC-Unique: 9zIbIx_RPi2zsftI5GvHzw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6DAAA800262;
-	Wed,  8 May 2024 07:57:03 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.193.44])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E6CE57414;
-	Wed,  8 May 2024 07:56:59 +0000 (UTC)
-From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-To: yongqin.liu@linaro.org
-Cc: amit.pundir@linaro.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	inventor500@vivaldi.net,
-	jarkko.palviainen@gmail.com,
-	jstultz@google.com,
-	jtornosm@redhat.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	stable@vger.kernel.org,
-	sumit.semwal@linaro.org,
-	vadim.fedorenko@linux.dev,
-	vmartensson@google.com
-Subject: Re: [PATCH v2] net: usb: ax88179_178a: avoid writing the mac address before first reading
-Date: Wed,  8 May 2024 09:56:54 +0200
-Message-ID: <20240508075658.7164-1-jtornosm@redhat.com>
-In-Reply-To: <CAMSo37UN11V8UeDM4cyD+iXyRR1Us53a00e34wTy+zP6vx935A@mail.gmail.com>
-References: <CAMSo37UN11V8UeDM4cyD+iXyRR1Us53a00e34wTy+zP6vx935A@mail.gmail.com>
+	s=arc-20240116; t=1715155090; c=relaxed/simple;
+	bh=uWM00LTb29R7wXe11vLiSA1AF/FT232XqVRFnb/7+uQ=;
+	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=kqqQF+5uYFGzppAmeA/w7TXkkmN9yldgOX2GzF3trk6Zhbhp1j8zKzox0dcpoW7e8u9gOUrtrCIVU+EtxgVelaRo5ZCicbIAFEVzDy6UFqJn1W9GpOF+zAKHft18xGTqFcCZO1WpI0oJyCfXQrzEAmYiZdP0y4x/c17RmscHX5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VZ6qf53pwztT2C;
+	Wed,  8 May 2024 15:54:38 +0800 (CST)
+Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id A72751800B8;
+	Wed,  8 May 2024 15:58:04 +0800 (CST)
+Received: from [10.173.135.154] (10.173.135.154) by
+ canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 8 May 2024 15:58:04 +0800
+Subject: Re: [PATCH 2/3] mm/madvise: Add MF_ACTION_REQUIRED to
+ madvise(MADV_HWPOISON)
+To: Jane Chu <jane.chu@oracle.com>, <nao.horiguchi@gmail.com>,
+	<akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240501232458.3919593-1-jane.chu@oracle.com>
+ <20240501232458.3919593-3-jane.chu@oracle.com>
+ <0c7dbf7d-dcb6-f9f2-4a2a-9700ea465a47@huawei.com>
+ <c37e5aac-3bc7-4013-b58a-e29c6bfbfd1f@oracle.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <0268cba2-807c-d7c8-952f-a81f52d45d15@huawei.com>
+Date: Wed, 8 May 2024 15:58:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <c37e5aac-3bc7-4013-b58a-e29c6bfbfd1f@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ canpemm500002.china.huawei.com (7.192.104.244)
 
-Hello Yongqin,
+On 2024/5/7 3:54, Jane Chu wrote:
+> On 5/5/2024 12:02 AM, Miaohe Lin wrote:
+> 
+>> On 2024/5/2 7:24, Jane Chu wrote:
+>>> The soft hwpoison injector via madvise(MADV_HWPOISON) operates in
+>>> a synchrous way in a sense, the injector is also a process under
+>>> test, and should it have the poisoned page mapped in its address
+>>> space, it should legitimately get killed as much as in a real UE
+>>> situation.
+>> Will it be better to add a method to set MF_ACTION_REQUIRED explicitly when inject soft hwpoison?
+>> Thanks.
+> 
+> So the first question is: Is there a need to preserve the existing behavior of  madvise(MADV_HWPOISON)?
+> 
+> The madvise(2) man page says -
+> 
+>        *MADV_HWPOISON *(since Linux 2.6.32)
+>               Poison the pages in the range specified by/addr/  and/length/
+>               and handle subsequent references to those pages like a
+>               hardware memory corruption.  This operation is available
+>               only for privileged (*CAP_SYS_ADMIN*) processes.  This
+>               operation may result in the calling process receiving a
+>               *SIGBUS *and the page being unmapped.
+> 
+>               This feature is intended for testing of memory error-
+>               handling code; it is available only if the kernel was
+>               configured with*CONFIG_MEMORY_FAILURE*.
+> 
+> And the impression from my reading is that: there doesn't seem to be a need.
+> 
+> A couple observations -
+> - The man page states that the calling process may receive a SIGBUS and the page being unmapped.
+> But the existing behavior is no SIGBUS unless MCE early kill is elected, so it doesn't quite match
+> the man page.
+> - There is 'hwpoison-inject' which behaves similar to the existing madvise(MADV_HWPOISON), that is,
+> soft inject without MF_ACTION_REQUIRED flag.
+> 
 
-Sorry for the inconveniences.
-
-I don't have the db845c, could you provide information about the type of
-device and protocol used?
-Related driver logs would be very helpful for this.
-
-Best regards
-José Ignacio
-
+I tend to agree with you. It might be a good idea to add MF_ACTION_REQUIRED to madvise(MADV_HWPOISON).
+Thanks.
+.
