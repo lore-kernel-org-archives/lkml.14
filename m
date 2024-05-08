@@ -1,58 +1,61 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1C012E7C
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A77E7D07F
 	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 10:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715165334; cv=none; b=H+jPajDsOtzGPRze3184WbUngwuSmpIG67up4znILzqcmgF7nM8UAcdhUeMo4bT5RDdtq1KREcZMt2iekLLq9jw95GRZ4+BDnV+6G9PA18AaYvbUkTzvHXEfgdXe6oW4VTv1uUuDpbQdedDVj6h4Y2Lk2pIxPyyRDIDIBz59vBs=
+	t=1715165335; cv=none; b=e+yeTfDFJDtkMytUYZxJnKvkYYIFesee869DyTRw7TZY7Tn/fEisfc3gnQeqsbyb7FjkiwHv3C7eLkPny7u2tLEqEvmGFR90n/SNXZhtYYNbxaPrD/KYh62lK5yIO80KP25Skv2cmnO77lW8GVaoo8wXxb1aIM/lNnXVdwR/HN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715165334; c=relaxed/simple;
-	bh=0C5AgGV462+lOg51Wn/vGwtPYKFzY44U3qnezUNglsI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IJnCOi8yp1KdEjwflE3LjTb75ryYtSoY/IEYSgBM140rzl/pbWBDrlGEnJdWFm6+4C0WX6BakFepB36SZH5sQQbOMDurr1Nagef/GnBbAUmimD4mcBH6iPnCurTJuZTXT9sRBEnCgVjiGP5joaHYmpIzxPy0Jlv3+GxZlzTmKeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gbs/8Hvy; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1715165335; c=relaxed/simple;
+	bh=ZNNfLZfasRSKVK4SelseF0rAKOZZC/2hFdQtZg5lS5w=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pEKIvhHX7GDXCExMczWQC76j26IcC+NFcVuyF3wqhGLJtiTY+Y95l5PohDt6Kf8dVyhScFTnOq5JVo3ycbzPKjTUgdLZWeRKl+vlt5HlRHj/PiQFlLmco3oKJRc/uufxpk04Nuai4N6OwzHyFsjF8FKAaez6/yhnuAdwsQAV9l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MYMtVnFB; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gbs/8Hvy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MYMtVnFB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1715165334; x=1746701334;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0C5AgGV462+lOg51Wn/vGwtPYKFzY44U3qnezUNglsI=;
-  b=gbs/8HvyBmzJdYSyiCsETi1+kZQTOwNMfNDf7z2lSiADhdc1Zf4wUJmb
-   +EdY7rcqIPEIFpDOF2/vtf2eFa+uWi6Q94xmucHubeVgnEEDRyqVTEUlN
-   0IrFTuqQhufHbjXKWcL1l+XjNeYrzHitCesIkJMHicx2x+6yAvEnlBYCe
-   g5NqbVH5+PemFdI02OtZwhMO+QQ9vYU1FifZKZFhTKR+UBwy+vlzpetmi
-   OCk50w3O7L0EnLdEpORo01ZL4VkF88da4DNwRVO6jG2etDDjul1ii/tsH
-   1hqpTQSV+MTWCal3t/PgDSKvg9YApy2P3zRVpT/f2jJMDH1JQnupWmObN
-   g==;
-X-CSE-ConnectionGUID: CRLtsAbZQv2ZYXBdqfCj/w==
-X-CSE-MsgGUID: iWeIZse0QkizaycgLwgQsw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="14834627"
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ZNNfLZfasRSKVK4SelseF0rAKOZZC/2hFdQtZg5lS5w=;
+  b=MYMtVnFBxDYmu8Dz6bJHNslJmyLQvqO4675h6oCVFChBBQXypWdPiaNw
+   YmSI8+kev4c6xRiuxcClbFamOn00+GD9EV3sRsRE8t9cbEIGOQsSL68Yj
+   vacfKWqQyoMVWlKOlywh1xJRj7fFQsSSbkIRWFm6GNw9xfvlX7iDD3lL5
+   RDjf7usmE4Qkhs0/mL7YMvIkHnPvkOHVWGDYlcIDc1Yg/pXxIXBeM72Rq
+   o885Vi1BRI5lAPZOelxtKQVwRLyplhTSZMLslOsiqUSDhylmk9NE/hDcp
+   wUMJjCm3iDboKvXpKifEFvSdP9or2QUojg5qqXznEDVLkwytLATE1vcas
+   Q==;
+X-CSE-ConnectionGUID: hieqyiXeQ6GqdnosLjvd3w==
+X-CSE-MsgGUID: THvaFgpXToi22OQgHdZprQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="21615952"
 X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="14834627"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 03:48:53 -0700
-X-CSE-ConnectionGUID: 2KeLlfaMRg24192bx6+kvQ==
-X-CSE-MsgGUID: F81GQKA7RwukcTaD0egj9g==
+   d="scan'208";a="21615952"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 03:48:53 -0700
+X-CSE-ConnectionGUID: 3eJGVDsIRTqFgZqAAkFitw==
+X-CSE-MsgGUID: 739vXvwdS9S5BGhy/VwOVw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="33319270"
+   d="scan'208";a="59705173"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 08 May 2024 03:48:52 -0700
+  by orviesa002.jf.intel.com with ESMTP; 08 May 2024 03:48:51 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 16571109; Wed, 08 May 2024 13:48:49 +0300 (EEST)
+	id 366C1656; Wed, 08 May 2024 13:48:50 +0300 (EEST)
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	linux-kernel@vger.kernel.org
 Cc: Lee Jones <lee@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH v1 0/2] mfd: lm3533: Get rid of legacy GPIO APIs
-Date: Wed,  8 May 2024 13:46:47 +0300
-Message-ID: <20240508104848.846580-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 2/2] mfd: lm3533: Move to new GPIO descriptor-based APIs
+Date: Wed,  8 May 2024 13:46:49 +0300
+Message-ID: <20240508104848.846580-3-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+In-Reply-To: <20240508104848.846580-1-andriy.shevchenko@linux.intel.com>
+References: <20240508104848.846580-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,20 +64,97 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Driver is quite outdated from Linux kernel internal APIs perspective.
-Update the GPIO part in this miniseries.
+Legacy GPIO APIs are subject to remove. Convert the driver to new APIs.
 
-The first patch to make sure noone is going to use legacy platform data.
-An alternative approach is to remove completely these family of drivers.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/mfd/lm3533-core.c  | 26 +++++++-------------------
+ include/linux/mfd/lm3533.h |  3 ++-
+ 2 files changed, 9 insertions(+), 20 deletions(-)
 
-Andy Shevchenko (2):
-  mfd: lm3533: Hide legacy platform data in the driver
-  mfd: lm3533: Move to new GPIO descriptor-based APIs
-
- drivers/mfd/lm3533-core.c  | 45 +++++++++++++++++++-------------------
- include/linux/mfd/lm3533.h | 18 ++-------------
- 2 files changed, 25 insertions(+), 38 deletions(-)
-
+diff --git a/drivers/mfd/lm3533-core.c b/drivers/mfd/lm3533-core.c
+index 515a6c3b3244..e135142a158d 100644
+--- a/drivers/mfd/lm3533-core.c
++++ b/drivers/mfd/lm3533-core.c
+@@ -11,7 +11,7 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/err.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/mfd/core.h>
+ #include <linux/regmap.h>
+@@ -22,8 +22,6 @@
+ #include <linux/mfd/lm3533.h>
+ 
+ struct lm3533_platform_data {
+-	int gpio_hwen;
+-
+ 	enum lm3533_boost_ovp boost_ovp;
+ 	enum lm3533_boost_freq boost_freq;
+ 
+@@ -239,14 +237,12 @@ static int lm3533_set_lvled_config(struct lm3533 *lm3533, u8 lvled, u8 led)
+ 
+ static void lm3533_enable(struct lm3533 *lm3533)
+ {
+-	if (gpio_is_valid(lm3533->gpio_hwen))
+-		gpio_set_value(lm3533->gpio_hwen, 1);
++	gpiod_set_value(lm3533->hwen, 1);
+ }
+ 
+ static void lm3533_disable(struct lm3533 *lm3533)
+ {
+-	if (gpio_is_valid(lm3533->gpio_hwen))
+-		gpio_set_value(lm3533->gpio_hwen, 0);
++	gpiod_set_value(lm3533->hwen, 0);
+ }
+ 
+ enum lm3533_attribute_type {
+@@ -496,18 +492,10 @@ static int lm3533_device_init(struct lm3533 *lm3533)
+ 	if (!pdata)
+ 		return -ENOMEM;
+ 
+-	lm3533->gpio_hwen = pdata->gpio_hwen;
+-
+-	if (gpio_is_valid(lm3533->gpio_hwen)) {
+-		ret = devm_gpio_request_one(lm3533->dev, lm3533->gpio_hwen,
+-					GPIOF_OUT_INIT_LOW, "lm3533-hwen");
+-		if (ret < 0) {
+-			dev_err(lm3533->dev,
+-				"failed to request HWEN GPIO %d\n",
+-				lm3533->gpio_hwen);
+-			return ret;
+-		}
+-	}
++	lm3533->hwen = devm_gpiod_get(lm3533->dev, NULL, GPIOD_OUT_LOW);
++	if (IS_ERR(lm3533->hwen))
++		return dev_err_probe(lm3533->dev, PTR_ERR(lm3533->hwen), "failed to request HWEN GPIO\n");
++	gpiod_set_consumer_name(lm3533->hwen, "lm3533-hwen");
+ 
+ 	lm3533_enable(lm3533);
+ 
+diff --git a/include/linux/mfd/lm3533.h b/include/linux/mfd/lm3533.h
+index ce42f0737768..d30c70c2a5f6 100644
+--- a/include/linux/mfd/lm3533.h
++++ b/include/linux/mfd/lm3533.h
+@@ -16,6 +16,7 @@
+ 	DEVICE_ATTR(_name, S_IRUGO | S_IWUSR , show_##_name, store_##_name)
+ 
+ struct device;
++struct gpio_desc;
+ struct regmap;
+ 
+ struct lm3533 {
+@@ -23,7 +24,7 @@ struct lm3533 {
+ 
+ 	struct regmap *regmap;
+ 
+-	int gpio_hwen;
++	struct gpio_desc *hwen;
+ 	int irq;
+ 
+ 	unsigned have_als:1;
 -- 
 2.43.0.rc1.1336.g36b5255a03ac
 
