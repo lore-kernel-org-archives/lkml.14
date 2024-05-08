@@ -1,117 +1,86 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A2A81AD0
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167AC823DD;
+	Wed,  8 May 2024 11:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715168189; cv=none; b=ug14IVVyjAFFXNKub0ew8ghaSUUeCXdV8h0IfbyYrQK5esIlmNreOR5Xd8/tS0gKZI36zzBl/MU9NYeQvGbyg007emJjuHQmeM0g+ocUYd5EEX8P4M19nVU0iz/Hd7jZ4cJP7RhUqCkNuTDu1QcSOGcyrB89GZTYPGnKzMCjUpM=
+	t=1715168222; cv=none; b=qrjvs207sTlcaWaitD3mtPja7HLzQLvv61Cdnz5RHFbOMs/Vxt11+++eAvQxSXGy3+LXwMzXl7XGIwYS1v3cutWsoHKDooyJnH3VJ74I4ArygTLAIIHObGqtxszIMedfdr0P3UUIwElKwU5y0qnzuECtZ4kmVVjVhcqbhGNI/XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715168189; c=relaxed/simple;
-	bh=+Fl34XZCnTBozqKQN1RM+pVRa0O2c176ao71VrsxAaw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Zoom9hV05lSmicJC7ZZSMln6rEWpnSf018J1ntAn/NDMBoFO0rzJaUhPfgrPlcRHgtuvQvCukMiMuauYT82vfPSYQqjs0otrxOVr4W7rfMEcMwYbbZlREhUXIvF/3z9vHXCTn1ss/he6Hul49hodNiscbQvABnA6DRQIr/UHslA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=yBiLQNIf; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1715168222; c=relaxed/simple;
+	bh=z/2a/nrs23WhS9VrtF5qiDn+DU+cNJvGsX0TMquMRxU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q8yO+xm1PrKXS+S6ahVwnvJKMh7R9TyyXfdvRp+4f/8D6VnaeYF8v1MHdcArHKj7mFPA2Bqeb57C2f+kTTRSv9i4sbfpCHUJxF1RAEPZdgfJ1MLQEClGUGjf+C7Nah33aGRvmf9TZdQsNywvm25SVLbWu4w1Fe6BPmYl6xwtulo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vp+oNFN9; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="yBiLQNIf"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41b79451153so33337205e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 04:36:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715168186; x=1715772986; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oM+WuwVvF178uIr+5Dc8IcJyYSbzDoUf3sQGwgQ7LEI=;
-        b=yBiLQNIf2GlIfvr9C8dAQOmARw2fEspcT2lgk7eQWPXM4ogrEX8tZRL0cyQrP77FH+
-         NG5C7Hl3HCi/YBWhaVUq29vaNj1vZigP8vLTpMORYy3UHDcF/Hj/eO0POOc23/h7qnxt
-         VUdutZCRAPmZgFPdeii4bH3IKaHzz1J/ZIGNHCJRULrNt33cZm2pUQxlqkM9F2sTT8aB
-         HF+p30k4n35aoQPix6hhT9aaHWqzCtWor/j18g1dVjagiXz231CD1Rc2Fjvv9vb865LP
-         YSMxpJsnSkYFKu+Y+hObmftofE5hXx/FYWTbEFYpjrglB43WaV2IOFwamDVoMfCa0wJa
-         KIXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715168186; x=1715772986;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oM+WuwVvF178uIr+5Dc8IcJyYSbzDoUf3sQGwgQ7LEI=;
-        b=N8FfPeJcRhmXM22eA9xB0wtyKbZHF0+S9aSD8Ngw2p1z7jmvGS+2L8jRUSfELdXcI7
-         Ealx4UzkoC+WdYY0OzolXLsdPX0shCzgqsZQxqd8U26yr3YPR99TC+BSpCfa7o2uqKCK
-         UWlA2R81+hoNy5FFu+guFWr8fCWtao+QC9A0RD9DGk3SwSadrXXhCeVqJoNHdVCyCylo
-         lJZKrklJFzC/RG72XZZonZS7KGUCbF8iMwmbA6tTEoL+V/BN1rplWqY0LUX9w8a8Zz2S
-         3AmCIpHGu1llnJGFJSJ8C+4sPFiEu/czjG3R1gQj4VHg3nr5AI02QKg9TpGoFyW9GJQ7
-         JvWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWZNzPs8HaMhF10MSdfOI2F1PA5bmKP+jZlPzgs6Hys7QizxOs3dcUAoB7B0WLStcNX0AUbcEm8pZ7yxHGzqkvWWr2eRHZzE0gBitto
-X-Gm-Message-State: AOJu0YzmMSYX/p2e/M9aZRYDgyEe2EmjIZpiT4RHcs1lw4B8yhr7sL4O
-	rpHtk4ERMOKVg8xxCPSmV861LR47AXemfWyZJKxof10VXuE7MQxuHBotn05naP4=
-X-Google-Smtp-Source: AGHT+IHVO5vcmWKipbJIGDQ+CDJ8RhNP/JYjB5jDnNbYNNxR9pALzbWj/fP/sjh1jhNLJi0qhKSTGw==
-X-Received: by 2002:a05:6000:508:b0:34c:77bd:2545 with SMTP id ffacd0b85a97d-34fca810737mr1911157f8f.70.1715168186464;
-        Wed, 08 May 2024 04:36:26 -0700 (PDT)
-Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id dn15-20020a0560000c0f00b0034d9012e74bsm15283014wrb.72.2024.05.08.04.36.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 04:36:26 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-mm@kvack.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH RESEND v2 2/9] riscv: Safely remove huge_pte_offset() when manipulating NAPOT ptes
-Date: Wed,  8 May 2024 13:34:12 +0200
-Message-Id: <20240508113419.18620-3-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240508113419.18620-1-alexghiti@rivosinc.com>
-References: <20240508113419.18620-1-alexghiti@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vp+oNFN9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:From:Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:
+	Content-Type:Content-Transfer-Encoding:Content-ID:Content-Description:
+	In-Reply-To:References; bh=lwuG52TUbyfVkNwqey1JXh7+1gTpfjwoDt9EJB504Lw=;
+	t=1715168221; x=1715600221; b=vp+oNFN9YcexA9sn1rkTwGe+LIyAGFqDIo88U2/k8wGCO2N
+	iFpjjIKKZYng4anMFaoT1phnQpJ0h6Oh0LEyNCazes+Fy/ZHLMKofC5SwiBxeyScIVD9qbWdH6hYS
+	4+YOfGeETq2iXYFxA0HtPxYWo+in/7MugkhC6GquCR5Gfdg6vBgn/oXuJC/yrUiHsLxn6xFeEOKDC
+	CgyQo2Xj2+ZF2KRI2ezAAZXFoOQftCdlLrrqcLSvopKaLEtmkVXtZTCL9vXdWB5Di7GeXK1fBFZ10
+	Fs9oeCkT8wqXMFlBnPVr45J5SnG/3KA/TWVo5EjQrAssR84JJlga5Lk4NAy4sRvw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1s4fbX-00055h-2w; Wed, 08 May 2024 13:36:59 +0200
+Message-ID: <252f883a-6bf1-4ef7-a5f9-d261a6cf725e@leemhuis.info>
+Date: Wed, 8 May 2024 13:36:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] next boot regression caused by
+ RIP:0010:acpi_find_gpio+0x4b/0x103 kernel panic
+To: Laura Nao <laura.nao@collabora.com>, regressions@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, kernel@collabora.com
+References: <20240426154208.81894-1-laura.nao@collabora.com>
+From: "Linux regression tracking (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Content-Language: en-US, de-DE
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20240426154208.81894-1-laura.nao@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1715168221;b694817c;
+X-HE-SMSGID: 1s4fbX-00055h-2w
 
-The pte_t pointer is expected to point to the first entry of the NAPOT
-mapping so no need to use huge_pte_offset(), similarly to what is done
-in arm64.
+On 26.04.24 17:42, Laura Nao wrote:
+> Hello,
+> 
+> KernelCI has identified a next boot regression on the following
+> Chromebooks, between next-20240416 and next-20240418:
+> - Lenovo ThinkPad C13 Yoga Chromebook (codename morphius) - kernel
+>   configuration used [1]
+> - ASUS Chromebook Flip C436FA (codename helios) - kernel configuration
+>   used [2]
+>
+> [...]
+> 
+> The issue is still present on next-20240426.
+>> #regzbot introduced: next-20240416..next-20240418
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/mm/hugetlbpage.c | 3 ---
- 1 file changed, 3 deletions(-)
+Hmmm, I noticed nothing has happened here.
 
-diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
-index fe8067ee71b4..f042f5c8bdb7 100644
---- a/arch/riscv/mm/hugetlbpage.c
-+++ b/arch/riscv/mm/hugetlbpage.c
-@@ -274,7 +274,6 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
- 		return ptep_set_access_flags(vma, addr, ptep, pte, dirty);
- 
- 	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
--	ptep = huge_pte_offset(mm, addr, pte_num * pgsize);
- 
- 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
- 
-@@ -319,10 +318,8 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
- 	}
- 
- 	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
--	ptep = huge_pte_offset(mm, addr, pte_num * pgsize);
- 
- 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
--
- 	orig_pte = pte_wrprotect(orig_pte);
- 
- 	set_ptes(mm, addr, ptep, orig_pte, pte_num);
--- 
-2.39.2
+Is this issue still happening? With a link to the particular test in the
+CI I might have been able to answer that myself. ;)
+
+If it's still broken I assume we need a bisection.
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
 
