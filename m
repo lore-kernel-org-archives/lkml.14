@@ -1,203 +1,125 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFCC7EF12;
-	Wed,  8 May 2024 09:56:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8A67F470
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 09:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715162201; cv=none; b=V4LPeyFTl2GfPqG0t9b/x4aLpNzX2G5ka80cl7Bwrlq99X3yRg1MqRhuAqmEPFNjAtW+qhBJ0n+F0CTpuEapcp2vun5+Nm7ABIkDtd3jsA/YsBlHi8sRGI9GsrdXePJlpoZvaWZcZRZmQSkR46/aJNnu9bS38bU7g//Svndwm+U=
+	t=1715162202; cv=none; b=K255udX1fGlqMXLa0csu9YpbTKgA/AqRzU9KTrLiv5mOrZaay+79ksa1dcBLop8YgiWV3mhGW1p1Fqvtb9tma9dcev1uDXEYR1Wl1LSwqCWiTZkDNBhyZrOalXHubKKpv/eaAIUUrim8ay7+TgkUVHbwBF/bB1fs+KkYEsv1DX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715162201; c=relaxed/simple;
-	bh=Mzl7cdo6GRa6aNpW/krWz0eupxXUOn59BXxd1oj37jU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Dnkf6P6rVOANdnK71ndW3BGm93BhzT93BuuHVql/pQTLOJtXavy9Cb1GdEZN2VWM3Z7wF48DbqM/Dp+9SDGSFm2eNG6n/EZxlCc+JeEJosAhvyrC9sb11ftottFV8Vdr8lFbGH4PLlFOy0U2q7cx5ngHiheY4UadBvaIkQNNNac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=Fg7jsYSw; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1715162202; c=relaxed/simple;
+	bh=ss7DfeQ3iIOHVfPafgYrAJPDTsUQSQx+kzwMyH5OwKo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=M4+sQaJ3msLKEBFEm2BVb4/68Mtjn12yjWYfYEi533tfclgZz61dgo1o30tevf0OQ+jdnrn+5enrv4b7oy388dvX+jqUZL5iHS7JBQWLH+qYNUitKPLJDoD2YdCPJYL4uvTaTScI1611sQb30+b1z7j5ZqapEdvHZD5GpzmXFQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kjcNAsj1; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="Fg7jsYSw"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4486vtiF026053;
-	Wed, 8 May 2024 04:56:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:mime-version
-	:content-transfer-encoding:content-type; s=PODMain02222019; bh=R
-	vqf78UChrZfvXZe6KiazLJ3FLV6tQAjUMLVg1LWMFg=; b=Fg7jsYSw4SHm94xl0
-	Zp8ABoUQ5zaQmHAX8qlORJ8UKfWNSLqBE1Ylc1L3yva8nvIU9xSIMrWFVlA1dMkD
-	8fHukjg4ur5Isl6JTTerGZRAdZqbE6K4dU4gDsxOMlS+Y4RXpJ+GnfEn4lnHX5uB
-	BF/m2xBTnZdsKdn6BodiNTV3UBkyJ4VQKxC5RYw0NLr83EaNNqOlRGTw8mLg640S
-	My4J6fp+qK/7maYjcr4WysCkC6aA+aMUZso4nN9TlxNfov0Z9+xdNrfNhHRIjh0e
-	lK1E9mUYW/hH3cZkiBx2O8hNr2CdeQKRttq+zZvCylOsdmm8hrkMc0Y7/+Uf1201
-	iSGFA==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xyshernev-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 08 May 2024 04:56:31 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 8 May 2024
- 10:56:27 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
- via Frontend Transport; Wed, 8 May 2024 10:56:27 +0100
-Received: from ediswws06.ad.cirrus.com (ediswws06.ad.cirrus.com [198.90.208.18])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 0D943820244;
-	Wed,  8 May 2024 09:56:27 +0000 (UTC)
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-To: <tiwai@suse.com>
-CC: <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>,
-        <alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>
-Subject: [PATCH] ALSA: hda/cs_dsp_ctl: Use private_free for control cleanup
-Date: Wed, 8 May 2024 10:56:27 +0100
-Message-ID: <20240508095627.44476-1-rf@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kjcNAsj1"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715162198;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FsicJzPzSYjb9EaWqN7pAslrOCGTYHDq5WxD1KJCe/4=;
+	b=kjcNAsj1cuN9Enofn4z93wcbSAjYLywjhJjN77ua1sIREN682XM4/TUP7KT8khp+C1Lxo9
+	/sUFpeSD3NLJqtnOZwJbyj9x/lzghKhbvs6VQjYNuH7/a4A3y3fzWLWWbcQd8hcfO2GpIG
+	/os+5isiO/1zThfvmUzmeT4jB804zKw=
+From: Chengming Zhou <chengming.zhou@linux.dev>
+Date: Wed, 08 May 2024 17:55:41 +0800
+Subject: [PATCH 4/4] mm/ksm: calculate general_profit more accurately
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: HpwR96T6fm9AdjatzGpyAfUF0IKJAH6v
-X-Proofpoint-ORIG-GUID: HpwR96T6fm9AdjatzGpyAfUF0IKJAH6v
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240508-b4-ksm-counters-v1-4-e2a9b13f70c5@linux.dev>
+References: <20240508-b4-ksm-counters-v1-0-e2a9b13f70c5@linux.dev>
+In-Reply-To: <20240508-b4-ksm-counters-v1-0-e2a9b13f70c5@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@redhat.com>, Stefan Roesch <shr@devkernel.io>, 
+ xu xin <xu.xin16@zte.com.cn>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ zhouchengming@bytedance.com, Chengming Zhou <chengming.zhou@linux.dev>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715162174; l=2381;
+ i=chengming.zhou@linux.dev; s=20240508; h=from:subject:message-id;
+ bh=ss7DfeQ3iIOHVfPafgYrAJPDTsUQSQx+kzwMyH5OwKo=;
+ b=X6wGm8B+bjpFtCP8g73w6XczYKdiMwJ0vj812mxv/NkXQMbGzsqKeRNtJg3TU4ZL32DX+qm6z
+ RzE/1RA0jgRBfO4CzfzJYEvfQ2HcOnx7ltDIHCHSXi8xkvh4KwjavFh
+X-Developer-Key: i=chengming.zhou@linux.dev; a=ed25519;
+ pk=kx40VUetZeR6MuiqrM7kPCcGakk1md0Az5qHwb6gBdU=
+X-Migadu-Flow: FLOW_OUT
 
-Use the control private_free callback to free the associated data
-block. This ensures that the memory won't leak, whatever way the
-control gets destroyed.
+The memory resource of KSM is mainly ksm_rmap_item, which has to allocate
+for each anon page that mm has mapped on. Another memory resource is the
+ksm_stable_node, which is much less than the ksm_rmap_item.
 
-The original implementation didn't actually remove the ALSA
-controls in hda_cs_dsp_control_remove(). It only freed the internal
-tracking structure. This meant it was possible to remove/unload the
-amp driver while leaving its ALSA controls still present in the
-soundcard. Obviously attempting to access them could cause segfaults
-or at least dereferencing stale pointers.
+We can account it easily to make general_profit calculation more accurate.
+This is important when max_page_sharing is limited and so we have more
+chained nodes.
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.cirrus.com>
-Fixes: 3233b978af23 ("ALSA: hda: hda_cs_dsp_ctl: Add Library to support CS_DSP ALSA controls")
+Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
 ---
-This replaces my earlier "keep it simple" attempt at cleanup.
-I decided that implementing private_free is the only sensible
-way to fix the cleanup.
----
- sound/pci/hda/hda_cs_dsp_ctl.c | 47 ++++++++++++++++++++++------------
- 1 file changed, 31 insertions(+), 16 deletions(-)
+ mm/ksm.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/sound/pci/hda/hda_cs_dsp_ctl.c b/sound/pci/hda/hda_cs_dsp_ctl.c
-index 463ca06036bf..9db45d7c17e5 100644
---- a/sound/pci/hda/hda_cs_dsp_ctl.c
-+++ b/sound/pci/hda/hda_cs_dsp_ctl.c
-@@ -8,6 +8,7 @@
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 87ffd228944c..a9ce17e6814d 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -267,6 +267,9 @@ static unsigned long ksm_pages_unshared;
+ /* The number of rmap_items in use: to calculate pages_volatile */
+ static unsigned long ksm_rmap_items;
  
- #include <linux/module.h>
- #include <sound/soc.h>
-+#include <linux/cleanup.h>
- #include <linux/firmware/cirrus/cs_dsp.h>
- #include <linux/firmware/cirrus/wmfw.h>
- #include "hda_cs_dsp_ctl.h"
-@@ -97,11 +98,23 @@ static unsigned int wmfw_convert_flags(unsigned int in)
- 	return out;
- }
++/* The number of stable_node */
++static unsigned long ksm_stable_nodes;
++
+ /* The number of stable_node chains */
+ static unsigned long ksm_stable_node_chains;
  
--static void hda_cs_dsp_add_kcontrol(struct hda_cs_dsp_coeff_ctl *ctl, const char *name)
-+static void hda_cs_dsp_free_kcontrol(struct snd_kcontrol *kctl)
+@@ -584,12 +587,17 @@ static inline void free_rmap_item(struct ksm_rmap_item *rmap_item)
+ 
+ static inline struct ksm_stable_node *alloc_stable_node(void)
  {
-+	struct hda_cs_dsp_coeff_ctl *ctl = (struct hda_cs_dsp_coeff_ctl *)snd_kcontrol_chip(kctl);
- 	struct cs_dsp_coeff_ctl *cs_ctl = ctl->cs_ctl;
++	struct ksm_stable_node *node;
 +
-+	/* NULL priv to prevent a double-free in hda_cs_dsp_control_remove() */
-+	cs_ctl->priv = NULL;
-+	kfree(ctl);
-+}
-+
-+static void hda_cs_dsp_add_kcontrol(struct cs_dsp_coeff_ctl *cs_ctl,
-+				    const struct hda_cs_dsp_ctl_info *info,
-+				    const char *name)
-+{
- 	struct snd_kcontrol_new kcontrol = {0};
- 	struct snd_kcontrol *kctl;
-+	struct hda_cs_dsp_coeff_ctl *ctl __free(kfree) = NULL;
- 	int ret = 0;
- 
- 	if (cs_ctl->len > ADSP_MAX_STD_CTRL_SIZE) {
-@@ -110,6 +123,13 @@ static void hda_cs_dsp_add_kcontrol(struct hda_cs_dsp_coeff_ctl *ctl, const char
- 		return;
- 	}
- 
-+	ctl = kzalloc(sizeof(*ctl), GFP_KERNEL);
-+	if (!ctl)
-+		return;
-+
-+	ctl->cs_ctl = cs_ctl;
-+	ctl->card = info->card;
-+
- 	kcontrol.name = name;
- 	kcontrol.info = hda_cs_dsp_coeff_info;
- 	kcontrol.iface = SNDRV_CTL_ELEM_IFACE_MIXER;
-@@ -117,20 +137,22 @@ static void hda_cs_dsp_add_kcontrol(struct hda_cs_dsp_coeff_ctl *ctl, const char
- 	kcontrol.get = hda_cs_dsp_coeff_get;
- 	kcontrol.put = hda_cs_dsp_coeff_put;
- 
--	/* Save ctl inside private_data, ctl is owned by cs_dsp,
--	 * and will be freed when cs_dsp removes the control */
- 	kctl = snd_ctl_new1(&kcontrol, (void *)ctl);
- 	if (!kctl)
- 		return;
- 
--	ret = snd_ctl_add(ctl->card, kctl);
-+	kctl->private_free = hda_cs_dsp_free_kcontrol;
-+	ctl->kctl = kctl;
-+
-+	/* snd_ctl_add() calls our private_free on error, which will kfree(ctl) */
-+	cs_ctl->priv = no_free_ptr(ctl);
-+	ret = snd_ctl_add(info->card, kctl);
- 	if (ret) {
- 		dev_err(cs_ctl->dsp->dev, "Failed to add KControl %s = %d\n", kcontrol.name, ret);
- 		return;
- 	}
- 
- 	dev_dbg(cs_ctl->dsp->dev, "Added KControl: %s\n", kcontrol.name);
--	ctl->kctl = kctl;
+ 	/*
+ 	 * The allocation can take too long with GFP_KERNEL when memory is under
+ 	 * pressure, which may lead to hung task warnings.  Adding __GFP_HIGH
+ 	 * grants access to memory reserves, helping to avoid this problem.
+ 	 */
+-	return kmem_cache_alloc(stable_node_cache, GFP_KERNEL | __GFP_HIGH);
++	node = kmem_cache_alloc(stable_node_cache, GFP_KERNEL | __GFP_HIGH);
++	if (likely(node))
++		ksm_stable_nodes++;
++	return node;
  }
  
- static void hda_cs_dsp_control_add(struct cs_dsp_coeff_ctl *cs_ctl,
-@@ -138,7 +160,6 @@ static void hda_cs_dsp_control_add(struct cs_dsp_coeff_ctl *cs_ctl,
- {
- 	struct cs_dsp *cs_dsp = cs_ctl->dsp;
- 	char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
--	struct hda_cs_dsp_coeff_ctl *ctl;
- 	const char *region_name;
- 	int ret;
- 
-@@ -163,15 +184,7 @@ static void hda_cs_dsp_control_add(struct cs_dsp_coeff_ctl *cs_ctl,
- 			 " %.*s", cs_ctl->subname_len - skip, cs_ctl->subname + skip);
- 	}
- 
--	ctl = kzalloc(sizeof(*ctl), GFP_KERNEL);
--	if (!ctl)
--		return;
--
--	ctl->cs_ctl = cs_ctl;
--	ctl->card = info->card;
--	cs_ctl->priv = ctl;
--
--	hda_cs_dsp_add_kcontrol(ctl, name);
-+	hda_cs_dsp_add_kcontrol(cs_ctl, info, name);
+ static inline void free_stable_node(struct ksm_stable_node *stable_node)
+@@ -597,6 +605,7 @@ static inline void free_stable_node(struct ksm_stable_node *stable_node)
+ 	VM_BUG_ON(stable_node->rmap_hlist_len &&
+ 		  !is_stable_node_chain(stable_node));
+ 	kmem_cache_free(stable_node_cache, stable_node);
++	ksm_stable_nodes--;
  }
  
- void hda_cs_dsp_add_controls(struct cs_dsp *dsp, const struct hda_cs_dsp_ctl_info *info)
-@@ -203,7 +216,9 @@ void hda_cs_dsp_control_remove(struct cs_dsp_coeff_ctl *cs_ctl)
- {
- 	struct hda_cs_dsp_coeff_ctl *ctl = cs_ctl->priv;
+ /*
+@@ -3671,7 +3680,8 @@ static ssize_t general_profit_show(struct kobject *kobj,
+ 	long general_profit;
  
--	kfree(ctl);
-+	/* ctl and kctl may already have been removed by ALSA private_free */
-+	if (ctl && ctl->kctl)
-+		snd_ctl_remove(ctl->card, ctl->kctl);
+ 	general_profit = (ksm_pages_sharing + get_ksm_zero_pages()) * PAGE_SIZE -
+-				ksm_rmap_items * sizeof(struct ksm_rmap_item);
++				ksm_rmap_items * sizeof(struct ksm_rmap_item) -
++				ksm_stable_nodes * sizeof(struct ksm_stable_node);
+ 
+ 	return sysfs_emit(buf, "%ld\n", general_profit);
  }
- EXPORT_SYMBOL_NS_GPL(hda_cs_dsp_control_remove, SND_HDA_CS_DSP_CONTROLS);
- 
+
 -- 
-2.39.2
+2.45.0
 
