@@ -1,118 +1,330 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE64839EA
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0779F824BF;
+	Wed,  8 May 2024 11:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715167242; cv=none; b=k4wPt7IZSOqWTmHE5iMmyGNc5QVo9rsFIoru+GZ5Kl0fZo/TGmJQrx8/qkgbVFscpoJNcIT5Bl5TOlrM+e6ABYjYmuCar3b1or+VWaUOIQmkv2uIUM622Z4TygJZ1MgQ60tLC3XqrUzpB8S195cuYWjOO1Uu/9XtbnmfVwvv6+4=
+	t=1715167247; cv=none; b=bHUJmnIQ9CGT2nw4KszTFtdU/46r5WmJyzk5PeTnikDk174HFvr/F4x8PNBgGtxXpnd+wQlJ+BH4a3mp9FiuDmxeHFHtv5+Uirr/ZWKTNRgBFMXZDnaImkFY2k9foIVLOVG7DFiOC489qLqgOoYHerjWYuWNwCIivfrmiy0uKnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715167242; c=relaxed/simple;
-	bh=+Fl34XZCnTBozqKQN1RM+pVRa0O2c176ao71VrsxAaw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SeoyS/uNS/Z92KgHNNBaYa4WykO8So2iQTyjVAJ8XOTbwTx0PD8290mRr4O2x3VkXHJS18ekIXei8qRbnE4J/oS2/TGVW6HV7HSZTjGcgHDjKmjoz+yudnabjaqBG1Vy17eJxz4lohzNPnNc1R9SBueItQ1WIYvFQJFe1AF/2PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=X6Azz6B7; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="X6Azz6B7"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41b79450f78so28471275e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 04:20:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715167239; x=1715772039; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oM+WuwVvF178uIr+5Dc8IcJyYSbzDoUf3sQGwgQ7LEI=;
-        b=X6Azz6B7EXXR8FLfABTsol2qyXf89hTxSlS8Lj/b89lP2GQN/C0Y/RtEO1OKuCzz7M
-         Za+gbtmcI5FJvNl42sX4mFNafRj5yGYSyyqiAR9lATjvypNlcsIiW/0Che6FMXq4Jt3P
-         XckR8webDgI3BoKmNjwPiNVsp1Xpz7rqIuQPjzELoG5DG0Dat9fLSXSzYUkaq9A+sOQD
-         BXfPB3hiFG0nTRC5ScOm66JmHAiL4KeJaTEJXH7Io/kzVtvM99FDfl6smCar8egYf6vO
-         9fU/PsY4SzHNcM2uq+dE0wHqC4qrJ35zDrF5rNl9gYjgsreHBBxlgOreKVFYoGgzm+9u
-         XaPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715167239; x=1715772039;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oM+WuwVvF178uIr+5Dc8IcJyYSbzDoUf3sQGwgQ7LEI=;
-        b=mIxbUi+TqK4dIYEk5ooicFlEvySAbL8b56jbvvXQpesV/Ghnf7TtsAp9Hk/xgXO20Q
-         dJGabMP95u0OZjGOY9Uy7NdC5Pms5gIQvqChlXYAMiZdcyLz4loWL+NIttzHa4TE0MnS
-         tkJg24roFHhP/6Na2sx1AMqeaplz7+3LuIjotPTffrXaNJSQubobcEbQB4eTjwx78ER3
-         n3ssnI8X6YOax5CNX1pw+4Wyj5TM3R9ldfi10fn41aH3u7v+1DkMPyxeydB08wFgfs6o
-         iDQfuOhmQs3j9VC2uqNq/IQN6pOifvGW5LbeC0ZZepZEV3S5QoA3o7OGYNNRB4I/JOKz
-         SmcA==
-X-Forwarded-Encrypted: i=1; AJvYcCVpZPl6sUwaI8Sajjv2Sv6CAKvzZICQ4M2b0TZSWyhOeqD1XX+ZP/5OsigEqcL+denPCOIMTxhIEovgedZS1bmI8us72+xt/iMhaf8S
-X-Gm-Message-State: AOJu0YwokFrUeG4AorO3TbG7rLPiDr+l2SDlBEs7E7/Foo/7vWI9rloh
-	fOjW8DQpLvDjdIcOjp2vYnH9XSxe3phvi/ZjXTiEIZBCL7n1mgkCfEGhZoFiFrlz33o83S/DhJ3
-	S
-X-Google-Smtp-Source: AGHT+IEtMJJRHnAlx2d7EmAnwEp8LMaoiRtpdi+BWrYkSsfaWBlt5vRm4skQUYamx6SwwnjaoJRU9Q==
-X-Received: by 2002:a05:600c:1395:b0:41b:e201:eedb with SMTP id 5b1f17b1804b1-41f7269010amr20541325e9.41.1715167238957;
-        Wed, 08 May 2024 04:20:38 -0700 (PDT)
-Received: from localhost.localdomain (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f87c254f1sm19678785e9.14.2024.05.08.04.20.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 04:20:38 -0700 (PDT)
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-To: Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
+	s=arc-20240116; t=1715167247; c=relaxed/simple;
+	bh=SOFK6vxi3GZWSiC2GhxKzkoWc9mqFMse7HMQCdT9VYQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S+UQ5qMNd6iPHAfCWeMMyP+9mxEsMn8E/r7+kmccBnIoem8NYAaWVn2OD3NklMzW72g9w5vnnhjRn2zU4t2tYxUe6LVjWyybac1ThN4tEXH8oHABBIDwWHz9hW0l3dustno5lCpH7q+q1sBgUJANc7dAiJU0Gc541KbASPqb8pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392AFC4DDE1;
+	Wed,  8 May 2024 11:20:44 +0000 (UTC)
+Date: Wed, 8 May 2024 12:20:41 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Maxwell Bland <mbland@motorola.com>
+Cc: linux-mm@kvack.org, Will Deacon <will@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-mm@kvack.org
-Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
-Subject: [PATCH v2 2/9] riscv: Safely remove huge_pte_offset() when manipulating NAPOT ptes
-Date: Wed,  8 May 2024 13:18:22 +0200
-Message-Id: <20240508111829.16891-3-alexghiti@rivosinc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240508111829.16891-1-alexghiti@rivosinc.com>
-References: <20240508111829.16891-1-alexghiti@rivosinc.com>
+	Ard Biesheuvel <ardb@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] ptdump: add intermediate directory support
+Message-ID: <ZjtgCfhQDJus3dqI@arm.com>
+References: <fik5ys53dbkpkl22o4s7sw7cxi6dqjcpm2f3kno5tyms73jm5y@buo4jsktsnrt>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fik5ys53dbkpkl22o4s7sw7cxi6dqjcpm2f3kno5tyms73jm5y@buo4jsktsnrt>
 
-The pte_t pointer is expected to point to the first entry of the NAPOT
-mapping so no need to use huge_pte_offset(), similarly to what is done
-in arm64.
+On Tue, Apr 30, 2024 at 11:05:01AM -0500, Maxwell Bland wrote:
+> diff --git a/Documentation/arch/arm64/ptdump.rst b/Documentation/arch/arm64/ptdump.rst
+> index 5dcfc5d7cddf..350eea06300e 100644
+> --- a/Documentation/arch/arm64/ptdump.rst
+> +++ b/Documentation/arch/arm64/ptdump.rst
+> @@ -2,25 +2,24 @@
+>  Kernel page table dump
+>  ======================
+>  
+> -ptdump is a debugfs interface that provides a detailed dump of the
+> -kernel page tables. It offers a comprehensive overview of the kernel
+> -virtual memory layout as well as the attributes associated with the
+> -various regions in a human-readable format. It is useful to dump the
+> -kernel page tables to verify permissions and memory types. Examining the
+> -page table entries and permissions helps identify potential security
+> -vulnerabilities such as mappings with overly permissive access rights or
+> -improper memory protections.
+> +ptdump is a debugfs interface that provides a detailed dump of the kernel page
+> +tables. It offers a comprehensive overview of the kernel virtual memory layout
+> +as well as the attributes associated with the various regions in a
+> +human-readable format. It is useful to dump the kernel page tables to verify
+> +permissions and memory types. Examining the page table entries and permissions
+> +helps identify potential security vulnerabilities such as mappings with overly
+> +permissive access rights or improper memory protections.
 
-Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
----
- arch/riscv/mm/hugetlbpage.c | 3 ---
- 1 file changed, 3 deletions(-)
+Please don't re-wrap existing text unless it's a separate patch with no
+content change (and with a good justification). It is hard to see
+whether anything has changed in this paragraph (or the next ones).
 
-diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
-index fe8067ee71b4..f042f5c8bdb7 100644
---- a/arch/riscv/mm/hugetlbpage.c
-+++ b/arch/riscv/mm/hugetlbpage.c
-@@ -274,7 +274,6 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
- 		return ptep_set_access_flags(vma, addr, ptep, pte, dirty);
- 
- 	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
--	ptep = huge_pte_offset(mm, addr, pte_num * pgsize);
- 
- 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
- 
-@@ -319,10 +318,8 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
- 	}
- 
- 	pte_num = arch_contpte_get_num_contig(ptep, 0, &pgsize);
--	ptep = huge_pte_offset(mm, addr, pte_num * pgsize);
- 
- 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
--
- 	orig_pte = pte_wrprotect(orig_pte);
- 
- 	set_ptes(mm, addr, ptep, orig_pte, pte_num);
+Also, many (most?) text files are wrapped around 72 characters, no need
+to re-wrap them at 80, just keep the formatting in that file when adding
+new text.
+
+> @@ -29,68 +28,101 @@ configurations and mount debugfs::
+>   mount -t debugfs nodev /sys/kernel/debug
+>   cat /sys/kernel/debug/kernel_page_tables
+>  
+> -On analysing the output of ``cat /sys/kernel/debug/kernel_page_tables``
+> -one can derive information about the virtual address range of the entry,
+> -followed by size of the memory region covered by this entry, the
+> -hierarchical structure of the page tables and finally the attributes
+> -associated with each page. The page attributes provide information about
+> -access permissions, execution capability, type of mapping such as leaf
+> -level PTE or block level PGD, PMD and PUD, and access status of a page
+> -within the kernel memory. Assessing these attributes can assist in
+> -understanding the memory layout, access patterns and security
+> -characteristics of the kernel pages.
+> +On analysing the output of ``cat /sys/kernel/debug/kernel_page_tables`` one can
+> +derive information about the virtual address range of a contiguous group of
+> +page table entries, followed by size of the memory region covered by this
+> +group, the hierarchical structure of the page tables and finally the attributes
+> +associated with each page in the group. Groups are broken up either according
+> +to a change in attributes or by parent descriptor, such as a PMD. Note that the
+> +set of attributes, and therefore formatting, is not equivalent between entry
+> +types. For example, PMD entries have a separate set of attributes from leaf
+> +level PTE entries, because they support both the UXNTable and PXNTable
+> +permission bits.
+> +
+> +The page attributes provide information about access permissions, execution
+> +capability, type of mapping such as leaf level PTE or block level PGD, PMD and
+> +PUD, and access status of a page within the kernel memory. Non-PTE block or
+> +page level entries are denoted with either "BLK" or "TBL", respectively.
+> +Assessing these attributes can assist in understanding the memory layout,
+> +access patterns and security characteristics of the kernel pages.
+
+I presume there's some new text here.
+
+> diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
+> index 6986827e0d64..bd4f1df0c444 100644
+> --- a/arch/arm64/mm/ptdump.c
+> +++ b/arch/arm64/mm/ptdump.c
+> @@ -24,6 +24,7 @@
+>  #include <asm/memory.h>
+>  #include <asm/pgtable-hwdef.h>
+>  #include <asm/ptdump.h>
+> +#include <asm/pgalloc.h>
+>  
+>  
+>  #define pt_dump_seq_printf(m, fmt, args...)	\
+> @@ -70,6 +71,11 @@ static const struct prot_bits pte_bits[] = {
+>  		.val	= PTE_VALID,
+>  		.set	= " ",
+>  		.clear	= "F",
+> +	}, {
+> +		.mask	= PTE_TABLE_BIT,
+> +		.val	= PTE_TABLE_BIT,
+> +		.set	= "   ",
+> +		.clear	= "BLK",
+>  	}, {
+>  		.mask	= PTE_USER,
+>  		.val	= PTE_USER,
+> @@ -105,11 +111,6 @@ static const struct prot_bits pte_bits[] = {
+>  		.val	= PTE_CONT,
+>  		.set	= "CON",
+>  		.clear	= "   ",
+> -	}, {
+> -		.mask	= PTE_TABLE_BIT,
+> -		.val	= PTE_TABLE_BIT,
+> -		.set	= "   ",
+> -		.clear	= "BLK",
+>  	}, {
+>  		.mask	= PTE_UXN,
+>  		.val	= PTE_UXN,
+
+Since you are adding a separate pmd_bits[] array, I think we could get
+rid of the PTE_TABLE_BIT entry. It doesn't make sense for ptes anyway.
+Why it works currently is that for ptes it won't show anything since we
+have the bit set while for p*d entries it should have shown TBL when set
+but it's not called on non-leaf entries.
+
+> @@ -143,34 +144,208 @@ static const struct prot_bits pte_bits[] = {
+>  	}
+>  };
+>  
+> +static const struct prot_bits pmd_bits[] = {
+[...]
+> +};
+> +
+> +static const struct prot_bits pud_bits[] = {
+[...]
+> +};
+
+Do we need pud_bits[] as well? Can we not just use pmd_bits[]? Call it
+pxd_bits if you want, the format is the same for all p*d entries.
+
+> +
+>  struct pg_level {
+>  	const struct prot_bits *bits;
+>  	char name[4];
+>  	int num;
+>  	u64 mask;
+> +	unsigned long size;
+>  };
+>  
+>  static struct pg_level pg_level[] __ro_after_init = {
+>  	{ /* pgd */
+>  		.name	= "PGD",
+> -		.bits	= pte_bits,
+> -		.num	= ARRAY_SIZE(pte_bits),
+> +		.bits	= pud_bits,
+> +		.num	= ARRAY_SIZE(pud_bits),
+> +		.size	= PGD_SIZE
+>  	}, { /* p4d */
+>  		.name	= "P4D",
+> -		.bits	= pte_bits,
+> -		.num	= ARRAY_SIZE(pte_bits),
+> +		.bits	= pud_bits,
+> +		.num	= ARRAY_SIZE(pud_bits),
+> +		.size	= P4D_SIZE
+>  	}, { /* pud */
+>  		.name	= "PUD",
+> -		.bits	= pte_bits,
+> -		.num	= ARRAY_SIZE(pte_bits),
+> +		.bits	= pud_bits,
+> +		.num	= ARRAY_SIZE(pud_bits),
+> +		.size	= PUD_SIZE
+>  	}, { /* pmd */
+>  		.name	= "PMD",
+> -		.bits	= pte_bits,
+> -		.num	= ARRAY_SIZE(pte_bits),
+> +		.bits	= pmd_bits,
+> +		.num	= ARRAY_SIZE(pmd_bits),
+> +		.size	= PMD_SIZE
+>  	}, { /* pte */
+>  		.name	= "PTE",
+>  		.bits	= pte_bits,
+>  		.num	= ARRAY_SIZE(pte_bits),
+> +		.size	= PAGE_SIZE
+>  	},
+>  };
+>  
+> @@ -225,8 +400,9 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
+>  		      u64 val)
+>  {
+>  	struct pg_state *st = container_of(pt_st, struct pg_state, ptdump);
+> -	static const char units[] = "KMGTPE";
+> +	static const char units[] = "BKMGTPE";
+>  	u64 prot = 0;
+> +	int i = 0;
+>  
+>  	/* check if the current level has been folded dynamically */
+>  	if ((level == 1 && mm_p4d_folded(st->mm)) ||
+> @@ -241,20 +417,33 @@ static void note_page(struct ptdump_state *pt_st, unsigned long addr, int level,
+>  		st->current_prot = prot;
+>  		st->start_address = addr;
+>  		pt_dump_seq_printf(st->seq, "---[ %s ]---\n", st->marker->name);
+> -	} else if (prot != st->current_prot || level != st->level ||
+> -		   addr >= st->marker[1].start_address) {
+> +	} else if ((prot != st->current_prot || level != st->level ||
+> +		   addr >= st->marker[1].start_address)) {
+>  		const char *unit = units;
+>  		unsigned long delta;
+>  
+> +		for (i = 0; i < st->level; i++)
+> +			pt_dump_seq_printf(st->seq, "  ");
+
+Please separate the alignment changes into a different patch, it makes
+it easier to review what's new functionality, what's cosmetic. I'm also
+not particularly keen on the new alignment. It's fine to have the
+sub-ranges indented but I'd keep the bits/permissions/size/etc. aligned.
+
+> +
+>  		if (st->current_prot) {
+>  			note_prot_uxn(st, addr);
+>  			note_prot_wx(st, addr);
+>  		}
+>  
+> -		pt_dump_seq_printf(st->seq, "0x%016lx-0x%016lx   ",
+> -				   st->start_address, addr);
+> +		/*
+> +		 * Entries are coalesced into a single line, so non-leaf
+> +		 * entries have no size relative to start_address
+> +		 */
+> +		if (st->start_address != addr) {
+> +			pt_dump_seq_printf(st->seq, "0x%016lx-0x%016lx   ",
+> +					   st->start_address, addr);
+> +			delta = (addr - st->start_address);
+
+What's this supposed to show? In your example, it's strange that the PGD
+is shown as 128 bytes:
+
++ 0xffff020000000000-0xffff020000000080         128B PGD   TBL     RW               NXTbl UXNTbl    MEM/NORMAL
++     0xffff020000000000-0xffff023080000000         194G PUD
++     0xffff023080000000-0xffff0230c0000000           1G PUD   TBL     RW               NXTbl UXNTbl    MEM/NORMAL
+
+The table pgd entries should cover full pud ranges below. I don't know
+how it ended up with 0x...80 as the end of the range for the pgd. Should
+it show a PGD_SIZE * number_of_entries instead?
+
+> +		} else {
+> +			pt_dump_seq_printf(st->seq, "0x%016lx-0x%016lx   ", addr,
+> +					   addr + pg_level[st->level].size);
+> +			delta = (pg_level[st->level].size);
+> +		}
+>  
+> -		delta = (addr - st->start_address) >> 10;
+>  		while (!(delta & 1023) && unit[1]) {
+>  			delta >>= 10;
+>  			unit++;
+> @@ -301,7 +490,8 @@ void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
+>  			.range = (struct ptdump_range[]){
+>  				{info->base_addr, end},
+>  				{0, 0}
+> -			}
+> +			},
+> +			.note_non_leaf = true
+>  		}
+>  	};
+>  
+> diff --git a/include/linux/ptdump.h b/include/linux/ptdump.h
+> index 8dbd51ea8626..b3e793a5c77f 100644
+> --- a/include/linux/ptdump.h
+> +++ b/include/linux/ptdump.h
+> @@ -16,6 +16,7 @@ struct ptdump_state {
+>  			  int level, u64 val);
+>  	void (*effective_prot)(struct ptdump_state *st, int level, u64 val);
+>  	const struct ptdump_range *range;
+> +	bool note_non_leaf;
+>  };
+>  
+>  bool ptdump_walk_pgd_level_core(struct seq_file *m,
+> diff --git a/mm/ptdump.c b/mm/ptdump.c
+> index 106e1d66e9f9..97da7a765b22 100644
+> --- a/mm/ptdump.c
+> +++ b/mm/ptdump.c
+> @@ -41,6 +41,9 @@ static int ptdump_pgd_entry(pgd_t *pgd, unsigned long addr,
+>  	if (st->effective_prot)
+>  		st->effective_prot(st, 0, pgd_val(val));
+>  
+> +	if (st->note_non_leaf && !pgd_leaf(val))
+> +		st->note_page(st, addr, 0, pgd_val(val));
+> +
+>  	if (pgd_leaf(val)) {
+>  		st->note_page(st, addr, 0, pgd_val(val));
+>  		walk->action = ACTION_CONTINUE;
+
+Is the difference between leaf and non-leaf calls only the walk->action?
+We could have a single call to st->note_page() and keep the walk->action
+setting separately. Do we also need to set ACTION_SUBTREE in case the
+entry is a table entry? Or is it done in the caller somewhere? I could
+not figure out.
+
+An alternative would be to have an ARCH_WANT_NON_LEAF_PTDUMP Kconfig
+option instead of a bool note_non_leaf in struct ptdump_state. This
+option seems to be entirely static, not sure it's worth a struct member
+for it. You'd use IS_ENABLED() above instead of st->note_non_leaf.
+
 -- 
-2.39.2
-
+Catalin
