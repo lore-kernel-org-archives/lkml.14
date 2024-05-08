@@ -1,61 +1,77 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 064178120A;
-	Wed,  8 May 2024 11:38:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A15A82D82
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 11:38:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715168297; cv=none; b=SXXZ+aemNTkzNugrLC+8PtqAD7CJMZO9zvyMsd0/J43nePWid/PYZHb8oLeTgeDfEscNnYof26yixprVtP1CRKrP0m7RHSGv9/tDOVeX/TM0edXyBL3C/RKZ2XTr0oWKGOw+ITsSCiBrfoOStQ4j5j1xm3ruY7YWaJ19w65/Oi8=
+	t=1715168312; cv=none; b=INgoJyQCz5sbcBqSmyKWQYmahlc/XAGhI4e7lZRBsF63LMOhiOoQ4yT/J/gcp2SEyLvKraemzbCd4/nVIPvlHvzsGaEete8VJ5NPOZ6LxKzwXydvsptrT4OtjbcAXmLfhB/M9AJN/DQ1ZKYVoRsmORQP1NsiHd5yqin8sV5TpS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715168297; c=relaxed/simple;
-	bh=iweWDyYezogrtHMPwakIJOi3mF2YKlhm4kZbXzx5dEM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=L0y2Sdez1th6PjCW59a24zJyWBTXNW/03j8GM5fuTESwiajibD9gnqEdUbLNcfYvT3Vr/Y8sRbpUOMriAY/Aik0iFUkGDxLRzhuAnkqS8nlvus/b1UnL3TxLPtLpIpB0vju19mt5Ocx2Exeq5CC3m0EXFgcHvwYpcGxUv4WMnJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kci4b9x0; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715168312; c=relaxed/simple;
+	bh=b2CmOyaFaiwbt6cdUwy4Ez0JGf0aumlKPqvfskmokMs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=X5OCy3Jq+CSH51R4gnWvMscfC7HCTIlFTr42c6Nst+O8/T0ske70jMIjHryfFjwGFrEEFF9PyTSxEJYCEtUjB4HlnQGMLf46uuXTd4BlfMi2ym8wT/b9L5E2ZbD3yhgFmpVzWZ7w237m2j4ZNsEH+0I2uFcjfWcyIjiFkJR93bw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=ln/UXvkP; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kci4b9x0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715168296; x=1746704296;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=iweWDyYezogrtHMPwakIJOi3mF2YKlhm4kZbXzx5dEM=;
-  b=Kci4b9x0IEIUk5fGHt4RZWBF26Kqg+mi6dSj7YOKBhsEYy+dFC3pi8Wx
-   BjmqR9K6ib+KQueNvI2Vml3iuPnZQi46WAUs3JyvNtHLesrY4tRin2tYM
-   OHTM1S4HpxBLzTS6tddgKkxvTALuP0LNddRCl+6SrjocjOLM8pjVZMHAU
-   hn5fxG/+ofgWIPV0nLOmXyaEGgqLHMWFz3ho9qGIW6ed6P1asBlCn2dvq
-   8YvdHEFVTprsr7HC+HayfNDoMOuLht2ajtf6TMauPbfxiXtQwcO8SQUXo
-   NMLWKId6xWKfMJVhNbdGOQNYTSXtZn9znBQAyT6mZNNTk+psjCGZt+8Li
-   w==;
-X-CSE-ConnectionGUID: OVRgsgomQaSJFGf6BDGb3A==
-X-CSE-MsgGUID: CNNuUfs9RjaprAyMJZHBQw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11066"; a="11233689"
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="11233689"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 04:38:15 -0700
-X-CSE-ConnectionGUID: zisdnwuuRFOLYoml0UjQIw==
-X-CSE-MsgGUID: nwWIU/lPSi2pMCs/8TgTyg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="33695727"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa004.jf.intel.com with ESMTP; 08 May 2024 04:38:13 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 2286911F; Wed, 08 May 2024 14:38:12 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-usb@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>
-Subject: [PATCH v1 1/1] usb: phy: tegra: Replace of_gpio.h by proper one
-Date: Wed,  8 May 2024 14:38:09 +0300
-Message-ID: <20240508113809.926155-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="ln/UXvkP"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4196c62bb4eso31778035e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 04:38:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715168309; x=1715773109; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9tID4t35K2Xq8XfdKgfehJoKp8xw/RZTmJgN0BGYZu8=;
+        b=ln/UXvkPw3KSLnnI5/btG1hIpsahkUOfABjcGqm+WqW8P2XgTwVpqw9+zolPUd/BMD
+         3N7mjPo3xKnfe0yn3EQ8HFg2GlBZxCuFIw240YDqAOQ0JZzC2SYBOAfTVR7SKflVmp3+
+         ldllXJ6cuXTQ874RrpZim/AhLHsJX6oSwVOiyN9HOeUFLFXpwAgiL8RXa/+gIu0C0U1M
+         7bPJv7zLXW8A+v9k5vH6BLz0aht2IMz8K+L8eJGTgRiR7a1ANUJInWwCNC6z2C/0vyVy
+         nCUT3IK4Gqjahu261iAGFyXnzugHOQiNIjTDZ2qqUTIkhSNcKBjkOSrKWsJ4Y9TTT6+u
+         lamA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715168309; x=1715773109;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9tID4t35K2Xq8XfdKgfehJoKp8xw/RZTmJgN0BGYZu8=;
+        b=BxjFCEGXMpQvKzQZDiVYG9TZbBSWSPUa2jYSJnPfo77qcp0iOALyAVJYkUTCjtWVZ7
+         p8Tc/sC1IiaGYi2qShpPE+vSmdzN7rZE4sNKYv2nX1v3lJN5TJYPrTe0uAohAbVILUvc
+         09iKfzDRbtrxz4c6rpnUobae3eQT+LhvFm9RAwSETyfZvP5koZRN9BEnipPnm8dtmWki
+         7IIkXy7QOul5dZ/N/38tQNYU/uV1jWJCXGP2MZzEuMEmpWG0zz4gGNmRDsbA1QAWdXmR
+         pngtS0jueXiTWl/pdU5giKwUh29PYnPff5eGiAyFLzVnzq1Ne6MSpIjYAwihmoF5AIIF
+         /kCw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPfr770IE9LfsHMTeK8um+LRojF8+Z36fmB1+7RfPK6tN/zDOmxYqgoy8Vhi1Gaq7mlfr7GiSLD87D0lbMCDeWm2Bw04k1mjp/XQnG
+X-Gm-Message-State: AOJu0Yx6KzqJ0n9xlda1DPvVliKCzRPDUEwMQXudGroUBz9VEw2VoTAx
+	LEPPSn8326loVdqmCDR2+CSqzEzONPzbHxNFMvZOGfRJ1G+GcXKWUCGsgIyWzhU=
+X-Google-Smtp-Source: AGHT+IFc73xLy956G8LkxzJy48Vpp254D4XfW/OPcYqIx5DwErIqgJZXPvuWYs+kahkVNUCZ42Avig==
+X-Received: by 2002:a05:600c:444e:b0:41b:935:24a9 with SMTP id 5b1f17b1804b1-41f714fbe0amr19186605e9.24.1715168308900;
+        Wed, 08 May 2024 04:38:28 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com (amontpellier-656-1-456-62.w92-145.abo.wanadoo.fr. [92.145.124.62])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41f87d20214sm20234005e9.24.2024.05.08.04.38.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 04:38:28 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-mm@kvack.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH RESEND v2 4/9] mm: Use common set_huge_pte_at() function for riscv/arm64
+Date: Wed,  8 May 2024 13:34:14 +0200
+Message-Id: <20240508113419.18620-5-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240508113419.18620-1-alexghiti@rivosinc.com>
+References: <20240508113419.18620-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,33 +80,368 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-of_gpio.h is deprecated and subject to remove.
-The driver doesn't use it directly, replace it
-with what is really being used.
+After some adjustments, both architectures have the same implementation
+so move it to generic code.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
 ---
- include/linux/usb/tegra_usb_phy.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/pgtable.h | 14 +++++---
+ arch/arm64/mm/hugetlbpage.c      | 56 -----------------------------
+ arch/riscv/include/asm/pgtable.h | 39 +++++++++++++-------
+ arch/riscv/mm/hugetlbpage.c      | 62 --------------------------------
+ mm/contpte.c                     | 59 ++++++++++++++++++++++++++++++
+ 5 files changed, 95 insertions(+), 135 deletions(-)
 
-diff --git a/include/linux/usb/tegra_usb_phy.h b/include/linux/usb/tegra_usb_phy.h
-index 46e73584b6e6..e6c14f2b1f9b 100644
---- a/include/linux/usb/tegra_usb_phy.h
-+++ b/include/linux/usb/tegra_usb_phy.h
-@@ -7,11 +7,12 @@
- #define __TEGRA_USB_PHY_H
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index e30149a128f2..2e0415fd5083 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -372,9 +372,10 @@ static inline pte_t pte_advance_pfn(pte_t pte, unsigned long nr)
+ 	return pfn_pte(pte_pfn(pte) + nr, pte_pgprot(pte));
+ }
  
- #include <linux/clk.h>
--#include <linux/gpio.h>
- #include <linux/regmap.h>
- #include <linux/reset.h>
- #include <linux/usb/otg.h>
+-static inline void __set_ptes(struct mm_struct *mm,
+-			      unsigned long __always_unused addr,
+-			      pte_t *ptep, pte_t pte, unsigned int nr)
++static inline void ___set_ptes(struct mm_struct *mm,
++			       unsigned long __always_unused addr,
++			       pte_t *ptep, pte_t pte, unsigned int nr,
++			       size_t pgsize)
+ {
+ 	page_table_check_ptes_set(mm, ptep, pte, nr);
+ 	__sync_cache_and_tags(pte, nr);
+@@ -385,10 +386,15 @@ static inline void __set_ptes(struct mm_struct *mm,
+ 		if (--nr == 0)
+ 			break;
+ 		ptep++;
+-		pte = pte_advance_pfn(pte, 1);
++		pte = pte_advance_pfn(pte, pgsize >> PAGE_SHIFT);
+ 	}
+ }
  
-+struct gpio_desc;
++#define __set_ptes(mm, addr, ptep, pte, nr)				\
++			___set_ptes(mm, addr, ptep, pte, nr, PAGE_SIZE)
++
++#define set_contptes	___set_ptes
 +
  /*
-  * utmi_pll_config_in_car_module: true if the UTMI PLL configuration registers
-  *     should be set up by clk-tegra, false if by the PHY code
+  * Huge pte definitions.
+  */
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index 9e9c80ec6e74..b8353b0a273c 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -159,62 +159,6 @@ static pte_t get_clear_contig_flush(struct mm_struct *mm,
+ 	return orig_pte;
+ }
+ 
+-/*
+- * Changing some bits of contiguous entries requires us to follow a
+- * Break-Before-Make approach, breaking the whole contiguous set
+- * before we can change any entries. See ARM DDI 0487A.k_iss10775,
+- * "Misprogramming of the Contiguous bit", page D4-1762.
+- *
+- * This helper performs the break step for use cases where the
+- * original pte is not needed.
+- */
+-static void clear_flush(struct mm_struct *mm,
+-			     unsigned long addr,
+-			     pte_t *ptep,
+-			     unsigned long pgsize,
+-			     unsigned long ncontig)
+-{
+-	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
+-	unsigned long i, saddr = addr;
+-
+-	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
+-		__ptep_get_and_clear(mm, addr, ptep);
+-
+-	flush_tlb_range(&vma, saddr, addr);
+-}
+-
+-void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+-			    pte_t *ptep, pte_t pte, unsigned long sz)
+-{
+-	size_t pgsize;
+-	int i;
+-	int ncontig;
+-	unsigned long pfn, dpfn;
+-	pgprot_t hugeprot;
+-
+-	ncontig = arch_contpte_get_num_contig(ptep, sz, &pgsize);
+-
+-	if (!pte_present(pte)) {
+-		for (i = 0; i < ncontig; i++, ptep++, addr += pgsize)
+-			__set_ptes(mm, addr, ptep, pte, 1);
+-		return;
+-	}
+-
+-	if (!pte_cont(pte)) {
+-		__set_ptes(mm, addr, ptep, pte, 1);
+-		return;
+-	}
+-
+-	pfn = pte_pfn(pte);
+-	dpfn = pgsize >> PAGE_SHIFT;
+-	hugeprot = pte_pgprot(pte);
+-
+-	clear_flush(mm, addr, ptep, pgsize, ncontig);
+-
+-	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
+-		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
+-}
+-
+ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
+ 		      unsigned long addr, unsigned long sz)
+ {
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 66061002ff36..5d1d3a6c7c44 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -535,29 +535,39 @@ static inline void __set_pte_at(struct mm_struct *mm, pte_t *ptep, pte_t pteval)
+ static inline int arch_contpte_get_num_contig(pte_t *ptep, unsigned long size,
+ 					      size_t *pgsize)
+ {
++	unsigned long hugepage_shift;
+ 	pte_t __pte;
+ 
+ 	/* We must read the raw value of the pte to get the size of the mapping */
+ 	__pte = READ_ONCE(*ptep);
+ 
+-	if (pgsize) {
+-		if (size >= PGDIR_SIZE)
++	if (size >= PGDIR_SIZE) {
++		if (pgsize)
+ 			*pgsize = PGDIR_SIZE;
+-		else if (size >= P4D_SIZE)
++		hugepage_shift = PGDIR_SHIFT;
++	} else if (size >= P4D_SIZE) {
++		if (pgsize)
+ 			*pgsize = P4D_SIZE;
+-		else if (size >= PUD_SIZE)
++		hugepage_shift = P4D_SHIFT;
++	} else if (size >= PUD_SIZE) {
++		if (pgsize)
+ 			*pgsize = PUD_SIZE;
+-		else if (size >= PMD_SIZE)
++		hugepage_shift = PUD_SHIFT;
++	} else if (size >= PMD_SIZE) {
++		if (pgsize)
+ 			*pgsize = PMD_SIZE;
+-		else
++		hugepage_shift = PMD_SHIFT;
++	} else {
++		if (pgsize)
+ 			*pgsize = PAGE_SIZE;
++		hugepage_shift = PAGE_SHIFT;
+ 	}
+ 
+ 	/* Make sure __pte is not a swap entry */
+ 	if (pte_valid_napot(__pte))
+ 		return napot_pte_num(napot_cont_order(__pte));
+ 
+-	return 1;
++	return size >> hugepage_shift;
+ }
+ #endif
+ 
+@@ -586,8 +596,8 @@ static inline pte_t __ptep_get(pte_t *ptep)
+ 	return pte;
+ }
+ 
+-static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
+-		pte_t *ptep, pte_t pteval, unsigned int nr)
++static inline void __set_ptes(struct mm_struct *mm, unsigned long addr,
++			      pte_t *ptep, pte_t pteval, unsigned int nr)
+ {
+ #ifdef CONFIG_RISCV_ISA_SVNAPOT
+ 	if (unlikely(pte_valid_napot(pteval))) {
+@@ -631,7 +641,8 @@ static inline void set_ptes(struct mm_struct *mm, unsigned long addr,
+ 		pte_val(pteval) += 1 << _PAGE_PFN_SHIFT;
+ 	}
+ }
+-#define set_ptes set_ptes
++#define set_contptes(mm, addr, ptep, pte, nr, pgsize)			\
++			__set_ptes(mm, addr, ptep, pte, nr)
+ 
+ static inline void pte_clear(struct mm_struct *mm,
+ 	unsigned long addr, pte_t *ptep)
+@@ -646,9 +657,8 @@ extern int ptep_set_access_flags(struct vm_area_struct *vma, unsigned long addre
+ extern int ptep_test_and_clear_young(struct vm_area_struct *vma, unsigned long address,
+ 				     pte_t *ptep);
+ 
+-#define __HAVE_ARCH_PTEP_GET_AND_CLEAR
+-static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
+-				       unsigned long address, pte_t *ptep)
++static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
++					 unsigned long address, pte_t *ptep)
+ {
+ 	pte_t pte = __pte(atomic_long_xchg((atomic_long_t *)ptep, 0));
+ 
+@@ -687,6 +697,9 @@ static inline int ptep_clear_flush_young(struct vm_area_struct *vma,
+ }
+ 
+ #define ptep_get		__ptep_get
++#define set_ptes		__set_ptes
++#define __HAVE_ARCH_PTEP_GET_AND_CLEAR
++#define ptep_get_and_clear	__ptep_get_and_clear
+ 
+ #define pgprot_nx pgprot_nx
+ static inline pgprot_t pgprot_nx(pgprot_t _prot)
+diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
+index be129f4f1503..d8f07aef758b 100644
+--- a/arch/riscv/mm/hugetlbpage.c
++++ b/arch/riscv/mm/hugetlbpage.c
+@@ -173,68 +173,6 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
+ 	return entry;
+ }
+ 
+-static void clear_flush(struct mm_struct *mm,
+-			unsigned long addr,
+-			pte_t *ptep,
+-			unsigned long pgsize,
+-			unsigned long ncontig)
+-{
+-	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
+-	unsigned long i, saddr = addr;
+-
+-	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
+-		ptep_get_and_clear(mm, addr, ptep);
+-
+-	flush_tlb_range(&vma, saddr, addr);
+-}
+-
+-/*
+- * When dealing with NAPOT mappings, the privileged specification indicates that
+- * "if an update needs to be made, the OS generally should first mark all of the
+- * PTEs invalid, then issue SFENCE.VMA instruction(s) covering all 4 KiB regions
+- * within the range, [...] then update the PTE(s), as described in Section
+- * 4.2.1.". That's the equivalent of the Break-Before-Make approach used by
+- * arm64.
+- */
+-void set_huge_pte_at(struct mm_struct *mm,
+-		     unsigned long addr,
+-		     pte_t *ptep,
+-		     pte_t pte,
+-		     unsigned long sz)
+-{
+-	unsigned long hugepage_shift, pgsize;
+-	int i, pte_num;
+-
+-	if (sz >= PGDIR_SIZE)
+-		hugepage_shift = PGDIR_SHIFT;
+-	else if (sz >= P4D_SIZE)
+-		hugepage_shift = P4D_SHIFT;
+-	else if (sz >= PUD_SIZE)
+-		hugepage_shift = PUD_SHIFT;
+-	else if (sz >= PMD_SIZE)
+-		hugepage_shift = PMD_SHIFT;
+-	else
+-		hugepage_shift = PAGE_SHIFT;
+-
+-	pte_num = sz >> hugepage_shift;
+-	pgsize = 1 << hugepage_shift;
+-
+-	if (!pte_present(pte)) {
+-		for (i = 0; i < pte_num; i++, ptep++, addr += pgsize)
+-			set_ptes(mm, addr, ptep, pte, 1);
+-		return;
+-	}
+-
+-	if (!pte_napot(pte)) {
+-		set_ptes(mm, addr, ptep, pte, 1);
+-		return;
+-	}
+-
+-	clear_flush(mm, addr, ptep, pgsize, pte_num);
+-
+-	set_ptes(mm, addr, ptep, pte, pte_num);
+-}
+-
+ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 			       unsigned long addr,
+ 			       pte_t *ptep,
+diff --git a/mm/contpte.c b/mm/contpte.c
+index e8574051d0b9..2320ee23478a 100644
+--- a/mm/contpte.c
++++ b/mm/contpte.c
+@@ -10,6 +10,8 @@
+ /*
+  * Any arch that wants to use that needs to define:
+  *   - __ptep_get()
++ *   - __set_ptes()
++ *   - __ptep_get_and_clear()
+  *   - pte_cont()
+  *   - arch_contpte_get_num_contig()
+  */
+@@ -17,6 +19,7 @@
+ /*
+  * This file implements the following contpte aware API:
+  *   - huge_ptep_get()
++ *   - set_huge_pte_at()
+  */
+ 
+ pte_t huge_ptep_get(pte_t *ptep)
+@@ -43,3 +46,59 @@ pte_t huge_ptep_get(pte_t *ptep)
+ 	}
+ 	return orig_pte;
+ }
++
++/*
++ * ARM64: Changing some bits of contiguous entries requires us to follow a
++ * Break-Before-Make approach, breaking the whole contiguous set
++ * before we can change any entries. See ARM DDI 0487A.k_iss10775,
++ * "Misprogramming of the Contiguous bit", page D4-1762.
++ *
++ * RISCV: When dealing with NAPOT mappings, the privileged specification
++ * indicates that "if an update needs to be made, the OS generally should first
++ * mark all of the PTEs invalid, then issue SFENCE.VMA instruction(s) covering
++ * all 4 KiB regions within the range, [...] then update the PTE(s), as
++ * described in Section 4.2.1.". That's the equivalent of the Break-Before-Make
++ * approach used by arm64.
++ *
++ * This helper performs the break step for use cases where the
++ * original pte is not needed.
++ */
++static void clear_flush(struct mm_struct *mm,
++			unsigned long addr,
++			pte_t *ptep,
++			unsigned long pgsize,
++			unsigned long ncontig)
++{
++	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
++	unsigned long i, saddr = addr;
++
++	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
++		__ptep_get_and_clear(mm, addr, ptep);
++
++	flush_tlb_range(&vma, saddr, addr);
++}
++
++void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
++		     pte_t *ptep, pte_t pte, unsigned long sz)
++{
++	size_t pgsize;
++	int i;
++	int ncontig;
++
++	ncontig = arch_contpte_get_num_contig(ptep, sz, &pgsize);
++
++	if (!pte_present(pte)) {
++		for (i = 0; i < ncontig; i++, ptep++, addr += pgsize)
++			__set_ptes(mm, addr, ptep, pte, 1);
++		return;
++	}
++
++	if (!pte_cont(pte)) {
++		__set_ptes(mm, addr, ptep, pte, 1);
++		return;
++	}
++
++	clear_flush(mm, addr, ptep, pgsize, ncontig);
++
++	set_contptes(mm, addr, ptep, pte, ncontig, pgsize);
++}
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.39.2
 
