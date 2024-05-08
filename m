@@ -1,87 +1,104 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38001DFE8
-	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 09:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8E37C0B7;
+	Wed,  8 May 2024 09:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715161228; cv=none; b=JKRFjH9GF6oQ3+H84oOxvYkV8+Wc59XmBamhWV2JRW0oGf4YJxROvHZpG1wFacGNaIIQwykROE6l+I2/BzdKoyRI1cFGk0+Pv7VJtNjKpN6Ujayweell5cYPo13+nHFeUXJ9ign7izPeE0B2nT+GBxiJ6eg9w+PQi4wzNYSIZW8=
+	t=1715161232; cv=none; b=qJyy/+UYKcEdqGQz/wDZBgsWn1XL/uzEGsB1HWmsOSMm2jiUEmkeSQUOAlmgl2j2zr/VhcK06VRr/sYat1SCl5hIV/LyCa51MwXJup/s4X6fb9djMzTvmGCCZu+DJqWZVBlANQnjIcqRs604Ehm7aPnn9wPmJoEjCqa7SWvgUc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715161228; c=relaxed/simple;
-	bh=89fF2WUvzEs/BGabOMYifyRgGUfmVocWR9VpboGPG6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hCgSzpQUGb7S9v5DEwU054JHkKU9NsPcQ7rD5hxFa+ey2i265tO1aIdgZKg5ktGB7Er/59iijZJ/igw6aEFiZqjZG7UF/ogBXZBmsY4UFw8DovxQYIll5mtchRrJFuOAiMAC2y5ST1yK+qLAwCTDm1ckdrQdz10hRooqJcupG4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=XJ1/7aSq; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1715161232; c=relaxed/simple;
+	bh=oKJsKvym8vodu81AUhtMguwCfrKtZBaq8/lv95giHhc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=PMZyJtuA/ZmVYwLfWuaZACAmiy1pmcbtBQoyMzx9fzva/aZA4I/kXb2ir5xcUAdCI/XpHAMKrIUyjthryBCBe9vzYfTRN6p3EBfshhEyzGOn2tn4LZm5fHf7FdhqMSbh4GEZv0/PbMhHbn8VMRQcjFxz27+H0Nd31RbfiPQk/+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHyybW0R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="XJ1/7aSq"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1715161222; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=7PolV6oZOy6l4rky9sVZcKOydBFtU8Dw4oGyzGtNEmk=;
-	b=XJ1/7aSqVuFwfQRJ7CXhJ0/NvSX/Hd4MNkMf5DGn63YxLjFIDpVSp9kA4RtsRZY0JSEzfYsgaYEWC4dv3jPOAuKueDzzuEa13KiruigaWIbomcZLTzjzEkulq90FA2bTcNcekBZkgHX4kf/nlv5yrx+kyott16Ae9UCJpRUg0D4=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R191e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033022160150;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W63EItG_1715161219;
-Received: from 30.97.56.69(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W63EItG_1715161219)
-          by smtp.aliyun-inc.com;
-          Wed, 08 May 2024 17:40:21 +0800
-Message-ID: <aedb9063-bdbb-46a6-96ca-0381e7931a0e@linux.alibaba.com>
-Date: Wed, 8 May 2024 17:40:19 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHyybW0R"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 14D0DC4AF18;
+	Wed,  8 May 2024 09:40:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715161232;
+	bh=oKJsKvym8vodu81AUhtMguwCfrKtZBaq8/lv95giHhc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=sHyybW0R9zju/NhJBVwPfqJVPx+MEi7gHica3KwagunhQfBMKKsIi3GIpcV6kZ2Dv
+	 idFemVfjMyb6C61JCGUBCQGFzNSQ0oo6G1YHdteCRDMZKF4TPcL+GiYS+WDNDa+37C
+	 qURQR7yrg7PAP4QDfgoUuCz42ERZTRVJXqvV4ToE1A8cKa4/ghJ0MATZ8esy1NDoN5
+	 TRWB1C1Nsa5Rkub11pdGDc27u0vzYg4cg/IHg3mIkTfB7NufseOxwRMZXDAhGm4ewI
+	 AGK/EtasiqqR0qwCq3xnP3ONQz/r4rBHXUpIR1FJNkOOaoN51ug4UM/E5xZDqFSHbs
+	 uZmU6n0XNgFCg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 06DC6C32750;
+	Wed,  8 May 2024 09:40:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] mm: move highest_order() and next_order() out of the
- THP config
-To: Ryan Roberts <ryan.roberts@arm.com>, akpm@linux-foundation.org,
- hughd@google.com
-Cc: willy@infradead.org, david@redhat.com, ioworker0@gmail.com,
- wangkefeng.wang@huawei.com, ying.huang@intel.com, 21cnbao@gmail.com,
- shy828301@gmail.com, ziy@nvidia.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-References: <cover.1714978902.git.baolin.wang@linux.alibaba.com>
- <d9c0ac9df6f6e6176b09fc1ae58146ec4f8d73f5.1714978902.git.baolin.wang@linux.alibaba.com>
- <9576c979-8a11-48e2-aec4-646acf0d8e26@arm.com>
- <2fcd6dfc-21b7-4e3f-9741-8f0d23d2da5f@linux.alibaba.com>
- <b5592a14-4add-42a4-89aa-e9a54ed7123c@arm.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <b5592a14-4add-42a4-89aa-e9a54ed7123c@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v7 00/12] add DCB and DSCP support for KSZ switches 
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171516123201.8124.6701974455512349009.git-patchwork-notify@kernel.org>
+Date: Wed, 08 May 2024 09:40:32 +0000
+References: <20240503131351.1969097-1-o.rempel@pengutronix.de>
+In-Reply-To: <20240503131351.1969097-1-o.rempel@pengutronix.de>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: davem@davemloft.net, andrew@lunn.ch, edumazet@google.com,
+ f.fainelli@gmail.com, kuba@kernel.org, pabeni@redhat.com, olteanv@gmail.com,
+ woojung.huh@microchip.com, arun.ramadoss@microchip.com,
+ kernel@pengutronix.de, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ UNGLinuxDriver@microchip.com, dsahern@kernel.org, horms@kernel.org,
+ willemb@google.com, san@skov.dk
 
+Hello:
 
+This series was applied to netdev/net-next.git (main)
+by David S. Miller <davem@davemloft.net>:
 
-On 2024/5/8 17:06, Ryan Roberts wrote:
-> On 08/05/2024 03:13, Baolin Wang wrote:
->>
->>
->> On 2024/5/7 18:21, Ryan Roberts wrote:
->>> On 06/05/2024 09:46, Baolin Wang wrote:
->>>> Move highest_order() and next_order() out of the CONFIG_TRANSPARENT_HUGEPAGE
->>>> macro, which can be common functions to be used.
->>>
->>> Sorry if I haven't kept up with the discussion, but why is this needed? I
->>> wouldn't expect a need to iterate over orders if THP is compile-time disabled
->>> because we will never try to allocate THP?
->>
->> Cause I don't want to add some dummy functions to avoid building errors if
->> CONFIG_TRANSPARENT_HUGEPAGE is not enabled in patch 6. Another thought is that
->> the pagecache can also allocate a large folio even when THP is not enabled, so
->> these helpers may be used in the future (not sure though).
+On Fri,  3 May 2024 15:13:39 +0200 you wrote:
+> This patch series is aimed at improving support for DCB (Data Center
+> Bridging) and DSCP (Differentiated Services Code Point) on KSZ switches.
 > 
-> OK, I'll admit I haven't looked at the latter patches yet - I'd like to conclude
-> on the interface and mapping/alignment strategy first.
+> The main goal is to introduce global DSCP and PCP (Priority Code Point)
+> mapping support, addressing the limitation of KSZ switches not having
+> per-port DSCP priority mapping. This involves extending the DSA
+> framework with new callbacks for managing trust settings for global DSCP
+> and PCP maps. Additionally, we introduce IEEE 802.1q helpers for default
+> configurations, benefiting other drivers too.
 > 
-> But it wasn't necessary to access these functions for the anon/private case
-> without CONFIG_TRANSPARENT_HUGEPAGE, so I'm wondering why it's needed for shmem
-> case. I would expect that they don't need to be defined at all.
+> [...]
 
-Currently in the shmem_alloc_and_add_folio() function, the hugepage 
-allocating is not guarded with '#ifdef CONFIG_TRANSPARENT_HUGEPAGE', but 
-rather with 'IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE)', which can lead to 
-some building errors when CONFIG_TRANSPARENT_HUGEPAGE is not enabled. 
-However, this is not a big issue, and I will make some adjustments to 
-avoid defining dummy functions.
+Here is the summary with links:
+  - [net-next,v7,01/12] net: dsa: add support for DCB get/set apptrust configuration
+    https://git.kernel.org/netdev/net-next/c/96c6f337951a
+  - [net-next,v7,02/12] net: dsa: microchip: add IPV information support
+    https://git.kernel.org/netdev/net-next/c/97278f8f109a
+  - [net-next,v7,03/12] net: add IEEE 802.1q specific helpers
+    https://git.kernel.org/netdev/net-next/c/768cf8413883
+  - [net-next,v7,04/12] net: dsa: microchip: add multi queue support for KSZ88X3 variants
+    https://git.kernel.org/netdev/net-next/c/328de4671dd6
+  - [net-next,v7,05/12] net: dsa: microchip: add support for different DCB app configurations
+    https://git.kernel.org/netdev/net-next/c/a16efc61d289
+  - [net-next,v7,06/12] net: dsa: microchip: dcb: add special handling for KSZ88X3 family
+    https://git.kernel.org/netdev/net-next/c/a1ea57710c9d
+  - [net-next,v7,07/12] net: dsa: microchip: enable ETS support for KSZ989X variants
+    https://git.kernel.org/netdev/net-next/c/c631250a24f5
+  - [net-next,v7,08/12] net: dsa: microchip: init predictable IPV to queue mapping for all non KSZ8xxx variants
+    https://git.kernel.org/netdev/net-next/c/3bcb8968654d
+  - [net-next,v7,09/12] net: dsa: microchip: let DCB code do PCP and DSCP policy configuration
+    https://git.kernel.org/netdev/net-next/c/ea1078d94ce0
+  - [net-next,v7,10/12] net: dsa: add support switches global DSCP priority mapping
+    https://git.kernel.org/netdev/net-next/c/5f5109af4753
+  - [net-next,v7,11/12] net: dsa: microchip: add support DSCP priority mapping
+    https://git.kernel.org/netdev/net-next/c/c2e722657f18
+  - [net-next,v7,12/12] selftests: microchip: add test for QoS support on KSZ9477 switch family
+    https://git.kernel.org/netdev/net-next/c/cbc7afffc5ec
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
