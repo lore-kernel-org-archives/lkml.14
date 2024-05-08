@@ -1,37 +1,37 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3112F7D3FE;
-	Wed,  8 May 2024 13:36:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300D284FBF;
+	Wed,  8 May 2024 13:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715175412; cv=none; b=t9PL5M5FVQrcpSlCpx9Np3WnPXJfKThnpQYjJoBxufVkgExMZE9GDSwPUhyHfN2989d36pWeVODGAkrFpiwc+Jk4ooUydARDtqtfEEsP3UrCNPoS3C0UkgNmCIsx2fIklszpNjt07nhXiFY7Nq5hpGedngaGEKeg98UvBUTXNhA=
+	t=1715175412; cv=none; b=rGGc7pphzOld9QE9AjR79hoQkJNs27ps7q5YV1JpY5osnJuyt8UAV9FZvdmxeUd2SLmeAYejT8TsfjxTwvyt/pjht10xHXLuIQQIpmJyyWajrZzo4gD/HidGXe191zfh4NxlgRObsBXJ7DPQq6kGIXzZ6Owen/rjEPqSyUpw8nE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715175412; c=relaxed/simple;
-	bh=fHwvymokB6csrLNCC+00KvTh9NF7HG3v/Py+8WAzgDc=;
+	bh=qEXuc3p5hwOyD6brYLf7OG5VYwINvfEp8zy3rtODKgI=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OvKOBtzLMXn33MehkPWL7IRgGZBiaBWg/YvX7J1zs3jQtvM/RweLup2OsGBfCk/AyuXbb+h0wjblybrVe76hltCrcB9cjOsAXp47lrDdFqUoxFd9mpM+NjtjauzTNHeSa9LxvTmdgaQPNV/6Pt2wxWnw8F4rFT4hXiMaHy0YCdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 MIME-Version:Content-Type; b=O4NvhVRSyc8BMyFhGofMXFbUJXPeCoaPGwVJhXTSMLORdzLALafXoxxa+R3i+WfmAraqs7XRMwuaeCzF5SJHvJ+jGF/XKaehA7TbYf8HMONzPrj5MwaGwYgBwkSLLcVZ5dxyu7RoxPXW237pv+vmR7bGBBaQgrEhbciGlD4ErWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4VZGKz65lVzYnCc;
-	Wed,  8 May 2024 21:32:55 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VZGLX6Lg4z1j1Kh;
+	Wed,  8 May 2024 21:33:24 +0800 (CST)
 Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id BD5C514011A;
-	Wed,  8 May 2024 21:36:46 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 621BB1A0188;
+	Wed,  8 May 2024 21:36:41 +0800 (CST)
 Received: from localhost.localdomain (10.69.192.56) by
  dggpemm500005.china.huawei.com (7.185.36.74) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 8 May 2024 21:36:46 +0800
+ 15.1.2507.35; Wed, 8 May 2024 21:36:41 +0800
 From: Yunsheng Lin <linyunsheng@huawei.com>
 To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
 CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
 	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>, Andrew
  Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>
-Subject: [PATCH net-next v3 05/13] mm: page_frag: use initial zero offset for page_frag_alloc_align()
-Date: Wed, 8 May 2024 21:34:00 +0800
-Message-ID: <20240508133408.54708-6-linyunsheng@huawei.com>
+Subject: [PATCH net-next v3 03/13] mm: page_frag: use free_unref_page() to free page fragment
+Date: Wed, 8 May 2024 21:33:58 +0800
+Message-ID: <20240508133408.54708-4-linyunsheng@huawei.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240508133408.54708-1-linyunsheng@huawei.com>
 References: <20240508133408.54708-1-linyunsheng@huawei.com>
@@ -46,144 +46,65 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
  dggpemm500005.china.huawei.com (7.185.36.74)
 
-We are above to use page_frag_alloc_*() API to not just
-allocate memory for skb->data, but also use them to do
-the memory allocation for skb frag too. Currently the
-implementation of page_frag in mm subsystem is running
-the offset as a countdown rather than count-up value,
-there may have several advantages to that as mentioned
-in [1], but it may have some disadvantages, for example,
-it may disable skb frag coaleasing and more correct cache
-prefetching
+free_the_page() used by page_frag call free_unref_page() or
+__free_pages_ok() depending on pcp_allowed_order(), as the
+max order of page allocated for page_frag is 3, the checking
+in pcp_allowed_order() is unnecessary.
 
-We have a trade-off to make in order to have a unified
-implementation and API for page_frag, so use a initial zero
-offset in this patch, and the following patch will try to
-make some optimization to aovid the disadvantages as much
-as possible.
+So call free_unref_page() directly to free a page_frag page
+to aovid the unnecessary checking.
 
-As offsets is added due to alignment requirement before
-actually checking if the cache is enough, which might make
-it exploitable if caller passes a align value bigger than
-32K mistakenly. As we are allowing order 3 page allocation
-to fail easily under low memory condition, align value bigger
-than PAGE_SIZE is not really allowed, so add a 'align >
-PAGE_SIZE' checking in page_frag_alloc_va_align() to catch
-that.
-
-1. https://lore.kernel.org/all/f4abe71b3439b39d17a6fb2d410180f367cadf5c.camel@gmail.com/
+As the free_the_page() is a static function in page_alloc.c,
+using the new one also allow moving page_frag related code
+to a new file in the next patch.
 
 CC: Alexander Duyck <alexander.duyck@gmail.com>
 Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 ---
- include/linux/page_frag_cache.h |  2 +-
- mm/page_frag_cache.c            | 48 ++++++++++++++-------------------
- 2 files changed, 21 insertions(+), 29 deletions(-)
+ mm/page_alloc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index 635b67ceb939..9da7cbd0ee47 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -32,7 +32,7 @@ static inline void *page_frag_alloc_align(struct page_frag_cache *nc,
- 					  unsigned int fragsz, gfp_t gfp_mask,
- 					  unsigned int align)
- {
--	WARN_ON_ONCE(!is_power_of_2(align));
-+	WARN_ON_ONCE(!is_power_of_2(align) || align > PAGE_SIZE);
- 	return __page_frag_alloc_align(nc, fragsz, gfp_mask, -align);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 14d39f34d336..7adb29f8f364 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -4693,6 +4693,9 @@ static struct page *__page_frag_cache_refill(struct page_frag_cache *nc,
+ 	gfp_t gfp = gfp_mask;
+ 
+ #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
++	/* Ensure free_unref_page() can be used to free the page fragment */
++	BUILD_BUG_ON(PAGE_FRAG_CACHE_MAX_ORDER > PAGE_ALLOC_COSTLY_ORDER);
++
+ 	gfp_mask = (gfp_mask & ~__GFP_DIRECT_RECLAIM) |  __GFP_COMP |
+ 		   __GFP_NOWARN | __GFP_NORETRY | __GFP_NOMEMALLOC;
+ 	page = alloc_pages_node(NUMA_NO_NODE, gfp_mask,
+@@ -4722,7 +4725,7 @@ void __page_frag_cache_drain(struct page *page, unsigned int count)
+ 	VM_BUG_ON_PAGE(page_ref_count(page) == 0, page);
+ 
+ 	if (page_ref_sub_and_test(page, count))
+-		free_the_page(page, compound_order(page));
++		free_unref_page(page, compound_order(page));
  }
+ EXPORT_SYMBOL(__page_frag_cache_drain);
  
-diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
-index 64993b5d1243..152ae5dec58a 100644
---- a/mm/page_frag_cache.c
-+++ b/mm/page_frag_cache.c
-@@ -65,9 +65,8 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
- 			      unsigned int fragsz, gfp_t gfp_mask,
- 			      unsigned int align_mask)
- {
--	unsigned int size = PAGE_SIZE;
-+	unsigned int size, offset;
- 	struct page *page;
--	int offset;
+@@ -4763,7 +4766,7 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+ 			goto refill;
  
- 	if (unlikely(!nc->va)) {
- refill:
-@@ -75,10 +74,6 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
- 		if (!page)
- 			return NULL;
- 
--#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
--		/* if size can vary use size else just use PAGE_SIZE */
--		size = nc->size;
--#endif
- 		/* Even if we own the page, we do not use atomic_set().
- 		 * This would break get_page_unless_zero() users.
- 		 */
-@@ -87,11 +82,25 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
- 		/* reset page count bias and offset to start of new frag */
- 		nc->pfmemalloc = page_is_pfmemalloc(page);
- 		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
--		nc->offset = size;
-+		nc->offset = 0;
- 	}
- 
--	offset = nc->offset - fragsz;
--	if (unlikely(offset < 0)) {
-+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
-+	/* if size can vary use size else just use PAGE_SIZE */
-+	size = nc->size;
-+#else
-+	size = PAGE_SIZE;
-+#endif
-+
-+	offset = __ALIGN_KERNEL_MASK(nc->offset, ~align_mask);
-+	if (unlikely(offset + fragsz > size)) {
-+		/* fragsz is not supposed to be bigger than PAGE_SIZE as we are
-+		 * allowing order 3 page allocation to fail easily under low
-+		 * memory condition.
-+		 */
-+		if (WARN_ON_ONCE(fragsz > PAGE_SIZE))
-+			return NULL;
-+
- 		page = virt_to_page(nc->va);
- 
- 		if (!page_ref_sub_and_test(page, nc->pagecnt_bias))
-@@ -102,33 +111,16 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
+ 		if (unlikely(nc->pfmemalloc)) {
+-			free_the_page(page, compound_order(page));
++			free_unref_page(page, compound_order(page));
  			goto refill;
  		}
  
--#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
--		/* if size can vary use size else just use PAGE_SIZE */
--		size = nc->size;
--#endif
- 		/* OK, page count is 0, we can safely set it */
- 		set_page_count(page, PAGE_FRAG_CACHE_MAX_SIZE + 1);
+@@ -4807,7 +4810,7 @@ void page_frag_free(void *addr)
+ 	struct page *page = virt_to_head_page(addr);
  
- 		/* reset page count bias and offset to start of new frag */
- 		nc->pagecnt_bias = PAGE_FRAG_CACHE_MAX_SIZE + 1;
--		offset = size - fragsz;
--		if (unlikely(offset < 0)) {
--			/*
--			 * The caller is trying to allocate a fragment
--			 * with fragsz > PAGE_SIZE but the cache isn't big
--			 * enough to satisfy the request, this may
--			 * happen in low memory conditions.
--			 * We don't release the cache page because
--			 * it could make memory pressure worse
--			 * so we simply return NULL here.
--			 */
--			return NULL;
--		}
-+		offset = 0;
- 	}
- 
- 	nc->pagecnt_bias--;
--	offset &= align_mask;
--	nc->offset = offset;
-+	nc->offset = offset + fragsz;
- 
- 	return nc->va + offset;
+ 	if (unlikely(put_page_testzero(page)))
+-		free_the_page(page, compound_order(page));
++		free_unref_page(page, compound_order(page));
  }
+ EXPORT_SYMBOL(page_frag_free);
+ 
 -- 
 2.33.0
 
