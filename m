@@ -1,193 +1,236 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48B6385639;
-	Wed,  8 May 2024 14:40:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715179236; cv=none; b=PjKkxTtKclV35XrZotfXFoZNBTcxpLLctt+3OH1j54fFYmQuxbsalt/nG3n+Sb+hSgKGlZoZOb10fQGQM8Pa9W7961U2urWbOBYNtMudDgrtFstE20IOATxGyG6NQRSe1rlUs0SpOKQ7C5S9wTUuFSkC0ozfl5DHfkQsHaaDfGE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715179236; c=relaxed/simple;
-	bh=Ed3e92ntMBI2EJUpaYIV7OyD99mhk3MQm6HsDzueS60=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NB8QA+vmVlAXaLAoa4oS9+fxprRN9790XgKn79570JEorc9Zg7J/OSMKo4D9duQGbKE1Q7ZUcsVYfw1AgfcV2I9bICPevvXcZMTdGWrnC6En7MDs1MtfXk2bEzQVzYu47hjK+WLfBBNF74JYJ7nhUQExTD+dlN8hyg93iQtQxgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ck87vCEI; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B3585639;
+	Wed,  8 May 2024 14:40:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.7
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715179255; cv=fail; b=MqUbQu9s6ktSIJMQAPSHQGUox9IZ1FQy01DWZf/+hNAiyB3IHjdabAH1oZBMcW3wJ7CQ6FISMK1ADGQyuF4oMo86fBr+695tsGHyH7hBzlxPv7WBi3y+SCpemULyrpH5FYkqtEcaeYoD1+3kPAgZhZGSUknvXTa4sDgCRpIgRps=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715179255; c=relaxed/simple;
+	bh=quSkgWE/S7nC2L+AN/iq5OSFVDohT1phMhll2T3nhXY=;
+	h=Message-ID:Date:Subject:From:To:CC:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=I1vF1SOys2iY7tLJy2LFOzPZv2Afl8nguakM9sdsdKncnN0nEkgfI3ZmPiy9HCmL5MzPsmfcQgSjmF46eeBkgdEdmCekdr8AjyBEVLq/2kaqoveI+p3uw9Qu7MJfGJhPR+hx2fN+aICWg+NwoUo1BzJMcyJr/ZzXc+u0+VSZHLY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OEBeMcPt; arc=fail smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ck87vCEI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OEBeMcPt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715179234; x=1746715234;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Ed3e92ntMBI2EJUpaYIV7OyD99mhk3MQm6HsDzueS60=;
-  b=Ck87vCEIoTw7ATym50cKUvhH1/GkU0R2W8Q2jwe6U3H//LsffXv/mtqo
-   KMYEmneRf++eG29DE+hGXftftqqqXzPEDmSe3jDcCIZlbTkxENm2IN7xT
-   fLLNfjrXn/nf91kGkA8MD3R+tLOFxv5uPk+zUOOQM0P38IKAOVdpEz7a9
-   SJBKpVCJ3kwHVdh5t4MXjzGd5lpqJFsA/qF0PqDpDUgT6xVwq4MEjB4Ua
-   XQN1DNn8wf+DqF5ZYI1sNYNpEwf8xOLlvNN9ZAAq02L1kcmn6If1/ndvl
-   GQErcHusnnjX+sGHNTgJ1ndhFdIKFyk/hxxqGxWVRwDt2nF1Kij4KGzV7
-   w==;
-X-CSE-ConnectionGUID: taGRvRtYQxSpxUE/EnYE+Q==
-X-CSE-MsgGUID: AHiyek6bQhSSitFyMtlzPg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="10880018"
+  t=1715179254; x=1746715254;
+  h=message-id:date:subject:from:to:cc:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=quSkgWE/S7nC2L+AN/iq5OSFVDohT1phMhll2T3nhXY=;
+  b=OEBeMcPtGWlEbzAGfmbt/jfMIzTnZgZ2WJPbQ7SNRD5jbtlSFaqgZqmd
+   zK7FSuQrbXT4wMxiDbANAMa3CbLHOEo/QVPqpjhLLucekTOmInXxF825j
+   B/WiLEpEnrtG3NA9J4b3R7dioWfwpZ//hsv4mElSVGFXGlq6tSYoRJLic
+   HTjrFr3yxYexznDZzo5LT1gT3jmrJIiOJDU29hfv+RGXozUPjpwNU/xNa
+   +UESyQ1F8ab74VUd5U1hUS9rpcisu2oCVkcZMegLTDoSXtIeIkvzN1pVN
+   RpGJXMqXHS7ZS3CIa9VE55VH6m7lMaF9zWjt2o8dFhmACeOJxLrSgds+s
+   A==;
+X-CSE-ConnectionGUID: xb337hcqQw6m5MgdWukknw==
+X-CSE-MsgGUID: iQ6huVU/QYe+WCHc7OxSPA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="36423411"
 X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="10880018"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 07:40:33 -0700
-X-CSE-ConnectionGUID: XkQvqP5AR66cRcmpUqT1fw==
-X-CSE-MsgGUID: TwrouHAQTCSGFZ0M3PnIGg==
+   d="scan'208";a="36423411"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 07:40:52 -0700
+X-CSE-ConnectionGUID: Yw3q+8/jQEylfxUdQBcROg==
+X-CSE-MsgGUID: Z+YxRLrGToaKRrJTfhe/yg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
-   d="scan'208";a="29001573"
-Received: from hemanthr-mobl.amr.corp.intel.com (HELO [10.209.17.69]) ([10.209.17.69])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 07:40:32 -0700
-Message-ID: <f82879a5-f3ca-436f-8c4a-96d4c5d90354@intel.com>
-Date: Wed, 8 May 2024 07:40:31 -0700
+   d="scan'208";a="33741765"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 08 May 2024 07:40:52 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 8 May 2024 07:40:51 -0700
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Wed, 8 May 2024 07:40:51 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Wed, 8 May 2024 07:40:51 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.40) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 8 May 2024 07:40:51 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CU+YJH5SRKrj3ri5+EdUmOMDFBGASLxa3IU9DSacE40nbk4AOv+/hm1ECj+2FdYMDIkhOgZ+6iNOPpVNsPnD3svBbHB5z/VesuFsfBCVIWsE7TLnSd1eT1dorWCdIFUY5OdrtgV67b8e+xC3my9rUBDB5vmHUfX/3KNKALxrhZNT0AT3ZhE3jT7YBPfjdxjB1iBiPCH2ipPfjSHvmdNanGmrJGaMG/IyXoUzcz9h+ARGDmyeG9s/E/DDBnYYziDHWQYVnm+sycC3cTd1garovwDUGVtXPi6wN+yFZve7GzMJRnAYDUA+u/pJDlnYvzgQ+pAlvm5kKx2JOtZwoA7ahg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sbUVNgskTph+duwXZBWPIUpJZv1p6LiF8D7rJGbDRf0=;
+ b=FGF0+DJLOX8NfDxxE6TJaNz4N5Zi/LVaS5zLlPbkLVS04tWrHVwjZPt70I2xFDGZqrRCleBYPfovMfVOLdOp0EfFKXihV7ododWZzXCXFpB4PaxHJDzN2Fn2vgNBYpaTx2kU7KLtvVUpRTwdP0TuuMfTiiDMbN4sd/+oPLg8hvttVSM1HBD4vo8CzMZd0Xb7U06QRSjJBfu/0r27MWUiVhgIOO62YO6dkU21TJuBvzHgG0tW/OcsdKMEqigoAUf8zEhcJIbRNAl1leWJ17K3T+lqTBezNvtD+JT16j2nWg+Iy8fq4IWcUuDmR9HV4Q7myciocGnnZKgKQv8z65Nvrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com (2603:10b6:8:1b9::20)
+ by DM4PR11MB6094.namprd11.prod.outlook.com (2603:10b6:8:ab::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.46; Wed, 8 May
+ 2024 14:40:49 +0000
+Received: from DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808]) by DS0PR11MB8718.namprd11.prod.outlook.com
+ ([fe80::4b3b:9dbe:f68c:d808%4]) with mapi id 15.20.7544.041; Wed, 8 May 2024
+ 14:40:49 +0000
+Message-ID: <4038b9d4-6618-46cc-bed8-a0ccd1c92cd2@intel.com>
+Date: Wed, 8 May 2024 16:40:23 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v1 1/1] net: intel: Use *-y instead of *-objs in
+ Makefile
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+CC: Jacob Keller <jacob.e.keller@intel.com>,
+	<intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>, Jesse Brandeburg
+	<jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Richard
+ Cochran" <richardcochran@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>, Jesper Dangaard Brouer
+	<hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
+References: <20240508132315.1121086-1-andriy.shevchenko@linux.intel.com>
+ <6ac025de-9264-4510-ba7f-f9a56c564a80@intel.com>
+ <ZjuLW8jA3MuT0oih@smile.fi.intel.com>
+ <5ab7ae5c-79d2-494e-8986-d18d4a8e74bb@intel.com>
+Content-Language: en-US
+In-Reply-To: <5ab7ae5c-79d2-494e-8986-d18d4a8e74bb@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: WA1P291CA0008.POLP291.PROD.OUTLOOK.COM
+ (2603:10a6:1d0:19::19) To DS0PR11MB8718.namprd11.prod.outlook.com
+ (2603:10b6:8:1b9::20)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] x86/fpu: Extend kernel_fpu_begin_mask() to
- initialize AMX state
-To: "Chang S. Bae" <chang.seok.bae@intel.com>, linux-kernel@vger.kernel.org
-Cc: x86@kernel.org, platform-driver-x86@vger.kernel.org, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
- hdegoede@redhat.com, ilpo.jarvinen@linux.intel.com, tony.luck@intel.com,
- ashok.raj@intel.com, jithu.joseph@intel.com
-References: <20240430212508.105117-1-chang.seok.bae@intel.com>
- <20240507235344.249103-1-chang.seok.bae@intel.com>
- <20240507235344.249103-2-chang.seok.bae@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
- oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
- 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
- ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
- VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
- iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
- c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
- pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
- ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
- QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzUVEYXZpZCBDaHJp
- c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
- LmNvbT7CwXgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
- lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
- MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
- IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
- aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
- I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
- E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
- F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
- CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
- P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
- 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lczsFNBFRjzmoBEACyAxbvUEhd
- GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
- MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
- Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
- lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
- 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
- qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
- BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
- 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
- vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
- FCRl0Bvyj1YZUql+ZkptgGjikQARAQABwsFfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
- l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
- yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
- +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
- asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
- WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
- sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
- KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
- MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
- hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
- vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-In-Reply-To: <20240507235344.249103-2-chang.seok.bae@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB8718:EE_|DM4PR11MB6094:EE_
+X-MS-Office365-Filtering-Correlation-Id: 435d835a-ad3b-4296-3c7b-08dc6f6cda5a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|376005|7416005|1800799015;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?Nm1LVElWR0Q1dXJWL2NQOWVkVEhLR1ZkRXY5eko0MFBjUzNxNFJhL3A0QlJK?=
+ =?utf-8?B?ZURpZDJ0UnlFb3JJeVB0RW9LVDFqN25yeWpIZTZEVEljWXprQitZVDNTSk15?=
+ =?utf-8?B?UXBmUS9iZUhzVTFwTnk3QlBJRVgwclI4SUx3MVBmQUhUdGQvRWxBOGNSVjdT?=
+ =?utf-8?B?MGlidXhvOHp1WDZXWTM3MmNVM3ZrMlFrS2xoOVhnQVgrOUMxRmRWaDdRcFdE?=
+ =?utf-8?B?cks3ZnZKUkV0WUZMc0ZIdGZ1amF6SlNmdGV2OHpscFBKbGNpNk4vZVJPa1JY?=
+ =?utf-8?B?NXI4TjRlZ0k3M3V1RmtSSm41VEN4a1pDY2hYWC9IZFYxZ2Y2QWhwTG0zZWRU?=
+ =?utf-8?B?eklaZUVneGk0R0N0VVJXeW9BcWZ0dVpVL1pHZmlnSUlobzBrUzd6UXowR2ZI?=
+ =?utf-8?B?TGZMZDJsZkoxbldLQlkvYWc1aU1rYnpubTZuclZVVWJINXlqaVdqL0todmZy?=
+ =?utf-8?B?cmJyRTE5M0tYNVFGSmxXUzBKSGYrUjRHOUFteDNwV3ZiSmx3elZzUWphV2p2?=
+ =?utf-8?B?bFd6dzU0YndKZEJzUUpFaUV1cFdLSUlJVUZJaWlEc0JsenJKQUVpQlhwaVdu?=
+ =?utf-8?B?dHozdEc4VFJjQmh1L1h3SG5oeHJCZU5nYjU0TXkraVZ6SEwwV3BuT0RDYmZO?=
+ =?utf-8?B?VWI5dUlSOFJKSlZDc1hyejhQbEJIdlVQTjdmcmkwWDY5NnZuNlZmZHVUR2ky?=
+ =?utf-8?B?djJJQVY4L2FKSWpTMVFTYkNUQW5wZGtsRGR3b3lFLzJvTEVTR0w5eXpuSElp?=
+ =?utf-8?B?cDZwSmNIbFNMbEo3Mjd3d05CNmRwS3FlRFFRREVVUjZOQVhvc2ZiSWxCNUZl?=
+ =?utf-8?B?ckMyNlVIekxPMGpqZm9EOHhYUGp6eUs3Nzh6bStVdGJoRFNVS0h1QUkrREhX?=
+ =?utf-8?B?UzIxZmhjVmRkZVJvSE56M3dIWWVOYnlIdGk3WkhyTjBjbUxYTGFGb1F0dzlt?=
+ =?utf-8?B?OVRTOEtDV2cxV1dMM0Q3bER4SUdBUzk5eHpkeExRVE9xUVp2MGt0Q2V3Q1R4?=
+ =?utf-8?B?ZGtoOXVRSkVnWjJuTlhxN1RUQm1Ybm8vNWNsVkdSeFV2aVpnYkZlTmRFd3VD?=
+ =?utf-8?B?dmhnSzdRYUtFYmw0cGRaY0xBdUJqcm1GdlpuN2MwYXNFOElqRk4xeHh5MXht?=
+ =?utf-8?B?VnRkc256QVJHbmNxYU9uMTZIZHZ6Y0ZmZFVyMHVnZks2Tk1QdkU1MnlIR0hE?=
+ =?utf-8?B?MnVTUkR3RU9lNjNFVW9hL0JHWXdhK1B0aVNVNVBOS0dSNVJmRUt2SmUyWkg0?=
+ =?utf-8?B?cWdPeXNaTXlLajFsMHFLT0RDVGwrQkRkQW9Gdy9semlYZGVaUDlqZEp6NExn?=
+ =?utf-8?B?ZmpDZDh6QWhrMXF5RXBFR1BHYUhYQnJtaEVadDJHOFNUTjI0eXR3STZGa3Yw?=
+ =?utf-8?B?Y2tnay9CcjZuWDhtWFk1NUU1TDhqalJkZ3JIWExDV0FsMUxIaG9QTkhlSDVS?=
+ =?utf-8?B?NFRySWozMmJRYm5hT213OFF6eEF4RVloZjVPdVIyVERjdFM4b1NKK2M2dXhx?=
+ =?utf-8?B?MDNIYVo0N0NuamJ6Ukp2VVhOOEVpcFNtRW1NdkVzR2ZLdjd2RVIya01tcWNV?=
+ =?utf-8?B?SE1XZUVRWlNWYnk3cWJudjlFL0Z5eWpoWjdBTjNlVkJpbGFqUmo5ejFFeGlC?=
+ =?utf-8?B?TEJEQzNmSDhKYkhuYmw2czM0bXlYaXVQcS85dzM4cXFMUjg2SnF4RnJWZWJa?=
+ =?utf-8?B?MVFjdW10alRCczhCZndiVjN5YjIrYzJiUXNPZGV2QTl3YVMwbGNIQVhBPT0=?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8718.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(7416005)(1800799015);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Q0J3Qy95OFBwckZVZ0RHb1pTL1R3d2pMdk5weDlUV2I2YXcvaHExSmRkd0tn?=
+ =?utf-8?B?ME9LdzNFcHl5djk3NzFrcU9MYXdrNE1NeSt6bHE3YkQybmVBZ2Jzc1o4T3da?=
+ =?utf-8?B?am9DM1lVQ0FEUzNWN1VVWnhXVGh6WXh1bFoxYVhVT3QyemY2cWR2cUtGRjdj?=
+ =?utf-8?B?dFhpVTg4L1lUZDlwdERUTkVxTVgwQnRrSDNhOTFaSDlzaTlrMXAxb2tGMm1O?=
+ =?utf-8?B?dENVaXZzTlozQm11enhESloycGkybnVJR1pNaS9uSmtTQk55WDVJOUZSeDd0?=
+ =?utf-8?B?L29sUUd1dUh2QyszSWZyZUtmM1dBdjh0bGFzd2hiOXpRMEcwZzVyVHdOOHJx?=
+ =?utf-8?B?S294S28rOTQ3ZzlKMUM4MzRJUVBRaHJlZVJvWlVFVXZJWDdoY0R5cS9QQ1A4?=
+ =?utf-8?B?aXRIZDR4ZWFBb2o2Q1N5Q0RPa08zZHhrSkdwZ1p0UGEyRHIrWmZhcjJQM1E0?=
+ =?utf-8?B?YXlKMlhaQzN6N1lscTE1a0pidWhUZkFYNkJkaVdZYUNzMjNyc2lFSzJZQmRj?=
+ =?utf-8?B?RWhnSEkrNEY0ZW43a0YwTkVleU5QRzhES1JZcGhtelpRblRiMWlRVi9nTENj?=
+ =?utf-8?B?dXpzQzhDNHVEeitwSWpYRUFYd0h4OWRzeFFWK29XU3N2UGZ0RjUxRGxyb1lY?=
+ =?utf-8?B?M1NUTlY2SmZKcGdXYWlGZ0VtWks3N3ZOVUVJbWJpYVMwWUFEMUk4SUhTWDZE?=
+ =?utf-8?B?TkFyakhSNCtOenN6YUl6dmx6dmw1UUNIazJwYTBUVWw1bTZOU1Rmb0czbEdJ?=
+ =?utf-8?B?eTBPSWNMMXV3RkMxTlNwd1JGY0FWMmFuRmd1Y0VsQlRiVHdaK1dYdVN5NmVv?=
+ =?utf-8?B?dWdJbDY0KyttYU9iOEo4WlVhWnFQYXUvYS9mZ3JvYTZ5TzhmTnFvYzJGZG9R?=
+ =?utf-8?B?SWFkczRxa0lTRS9LM0NBVEhSOW9rYzlwa0EwUlBZQXI2QVNncEZSa3ZGSmU3?=
+ =?utf-8?B?K3FHY0VobzRRMzgvR3ArcjB4dGM4THl3cFR3enBrVlJibVdGZ3dnOSs0TzQz?=
+ =?utf-8?B?cnlkWWJYR0pNeUNUeWJJVm5tTUxUNFBBcHJ4UE5Uc3Z4dFFheE82MEtoOWdS?=
+ =?utf-8?B?TXlQRUtJd0xFK3RkMStMNnBqSWtmZ3FmdGRrSHdKZERISzFiQk1FcGI1VzA2?=
+ =?utf-8?B?bnN0K0ZDMkhKMEE4Tkp4dC9qa0dseWRtS0laT3MxL2gzaEk1cFhLRVM3R2dV?=
+ =?utf-8?B?RWdwQTVyWDdMTHM5Z0NqNzlCR0EvclczV3FrZlFyd254UDBvUzN0RytZT01s?=
+ =?utf-8?B?cnFMRmgxMjhERytwam9kQmd5T2xsUllTUW1SdzdyS04wVkhYZ0NXRzhZUkky?=
+ =?utf-8?B?M1ZxeWRzNUo5aGNJZ0w0OTFRRjhpZmJsM2hTV093MjJVN1RueWVMNEdFdkFR?=
+ =?utf-8?B?NzFpOUR4alBzekU4QnZJS2JNT016RllRUWFrdzJTYzN5U2N4eHVIZUZuaDFy?=
+ =?utf-8?B?ek42U2NtOHlDWDQ2aE1FRU9ITTRzaDNXcVN6UGRoOHZpcjErOXpaVCtWQXBT?=
+ =?utf-8?B?UnFJc2xTK0lSUEpHcTFCUGFmL1luZkRycVgrbHdFQmhuVi8vM1pNd1RLY1Yy?=
+ =?utf-8?B?YXVVVVFLYkdKb09rNUg4ekt5S0xLK1JuaXgrMGdsWDNVMVVmWUdTOWlPWHpK?=
+ =?utf-8?B?SERtTUl6eGlTdTBUK0JPMkNzdWNFazgwSytEb3lZcnJ3c3RCRGdza3dYRmdi?=
+ =?utf-8?B?dmVDZDBvd3cvN3ZYako4VmxGbURJTm80MWtzbkNpKzVrS2syM1VYVU1OQWRC?=
+ =?utf-8?B?czdkc0FHcy9Ib1VoQ2o0b0x0cEhPRGVXbTVUdkJidTRFSE9BMy83Vy93Sk5s?=
+ =?utf-8?B?WTFUazFLaEY4bkl6VWw4K00rMDlWeDdlOUx6WkZmVGxpOFhNVlBjWkZOcjQy?=
+ =?utf-8?B?TlZrS0xhZHFLalBQSEMvVFlURW5oZDZSV21VTGxYQ1dxMjdSdjUzVFR5cUpz?=
+ =?utf-8?B?K1ZsaER5Y2lhRmE5UFRoUGhRSjg5MTBOUjZMUkQwNXdJRzJmN0U3eVRMeXJ1?=
+ =?utf-8?B?UXVCV20xV2JrL3ZuVVlUS2IzNlJmbk9uQTRaNFJSdWVGdWgxWFlEaVZJUmRV?=
+ =?utf-8?B?UUFvdE5ramN5V21SS05rbXBQUnJyNXI4NnpFcFMwYWYvaERhMm10QTlHRWRj?=
+ =?utf-8?B?L0tBUFhLa2NyeUI0VGdSeS9abXE3MmtFOW5JR3JGaWZxV0JpQ05jNGtjZEIy?=
+ =?utf-8?B?UFE9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 435d835a-ad3b-4296-3c7b-08dc6f6cda5a
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8718.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2024 14:40:49.2915
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: HA1d+LKjEpqUwyaCTeymAsVqvPfauQk6sNMiFPkAB5zzPD/4ZtStA8g0X+cp6VWsWEH1ddJyIpfbJ3k5moiz9Z3aF6H0FHDTg6CNdE8fzPg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6094
+X-OriginatorOrg: intel.com
 
-The subject should probably be:
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+Date: Wed, 8 May 2024 16:39:21 +0200
 
-	Allow kernel FPU users to initialize AMX state
-
-On 5/7/24 16:53, Chang S. Bae wrote:
-> The In-Field Scan (IFS) test [1] is a destructive process, overwriting
-> the existing state to test the logic on the fly. As part of this test
-> process, the architectural state is saved before the test begins and
-> then restored upon completion.
-
-This should say "_most_ architectural state".
-
-> However, due to resource constraints in storage, AMX state is excluded
-> from the scope of state recovery. Consequently, AMX state must be in its
-> initialized state for the IFS test to run.
-
-This doesn't mention how this issue got introduced.  Are we all bad at
-reading the SDM? :)
-
-> When AMX workloads are running, an active user AMX state remains even
-> after a context switch, optimizing to reduce the state reload cost. In
-> such cases, the test cannot proceed if it is scheduled.
-
-This is a bit out of the blue.  What does scheduling have do do with IFS?
-
-> System administrators may attempt to mitigate this issue, by arranging
-> AMX workloads not to run on CPUs selected for the tests. However, this
-> approach is disruptive for managing large-scaled systems, diminishing the
-> benefit of the live testing.
-
-I personally prefer to go and mention alternative solutions *after* I've
-discussed the things that are truly relevant to the problem and fix.  I
-think this distracts from the real issue.
-
-> The kernel can help by properly initializing the state before the test.
-> This initialization impacts the performance to some degree. But, this
-> approach is considerably cheaper than adding hardware resources and
-> simpler than a userspace approach.
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Date: Wed, 8 May 2024 17:25:31 +0300
 > 
-> While fpu_idle_fpregs() can initialize the AMX state, its usage should be
-> limited to specialized cases, primarily before entering the sleep state.
-> The restore_fpregs_from_fpstate() function offers a suitable mechanism
-> for initializing fpstate in general, which remains within the core code.
+>> On Wed, May 08, 2024 at 03:35:26PM +0200, Alexander Lobakin wrote:
+>>>> *-objs suffix is reserved rather for (user-space) host programs while
+>>>> usually *-y suffix is used for kernel drivers (although *-objs works
+>>>> for that purpose for now).
+>>>>
+>>>> Let's correct the old usages of *-objs in Makefiles.
+>>>
+>>> Wait, I was sure I've seen somewhere that -objs is more new and
+>>> preferred over -y. 
+>>
+>> Then you are mistaken.
+>>
+>>> See recent dimlib comment where Florian changed -y to
+>>> -objs for example.
+>>
+>> So does he :-)
+>>
+>>> Any documentation reference that -objs is for userspace and we should
+>>> clearly use -y?
+>>
+>> Sure. Luckily it's documented in Documentation/kbuild/makefiles.rst
+>> "Composite Host Programs" (mind the meaning of the word "host"!).
+> 
+> Oh okay, I see. `-objs` is indeed only mentioned in the host chapter.
 
-I'm not sure those last two paragraphs add much value.  I'd try to
-banish most of that content to *after* you talk about the solution.  Or
-maybe put it in the cover letter.
+Reviewed-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 
-> Extend kernel_fpu_begin_mask() to allow the IFS driver to initialize AMX
-> state through restore_fpregs_from_fpstate().
-
-The function names are pretty blatantly obvious from the patch.  No need
-to copy them here.
-
-As I look closer, I'm not sure I think this is a good match for the two
-other KFPU_* flags.  I don't think either KFPU_387 or KFPU_MXCSR causes
-any XFEATURE to be tracked as init.  The SDM says that FNINIT "sets the
-FPU control, status, tag, instruction pointer, and data pointer
-registers to their default states."
-
-Off the top of my head, I don't know how that maps to the XSAVE init
-tracking but I do know that MXCSR has a very weird mapping to the first
-two XSAVE features.
-
-I really think it would be simplest to just have this whole thing do this:
-
-	kernel_fpu_begin();
-
-	// Zap AMX state
-
-	kernel_fpu_end();
-
-Where the zap is either an os_xrstor() or an explicit tile release
-instruction.
-
-It's just a matter of whether you want this to work like a regular old
-kernel FPU user or you want to tie it to *only* being able to run in its
-own kernel thread. -- Aside: I don't think I realized IFS had its own
-thread earlier.
-
+Thanks,
+Olek
