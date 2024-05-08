@@ -1,353 +1,249 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6246E53389;
-	Wed,  8 May 2024 12:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2D36A8A4
+	for <linux-kernel@vger.kernel.org>; Wed,  8 May 2024 12:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715172269; cv=none; b=Dwu46mn9UTTujOLASh4nGGNS8YEDr7yhNyL5xhOz7vwQPITl/5bPEHFN8Fx4haBKeTeohIfQYxPxk/+9ow+LnlIMs9A8E8k9fPFk9qKxBj9arGRoyu9q72t0SuBXR0+WxKSFOXTNeIWeB2XkFGLsmE+7hAkTBND18ILPgmcejYA=
+	t=1715172278; cv=none; b=aIq27TtmTRwSFf9q3rcFNVOPd1q+qAcKeXD+gjDgIakDM2JoJ16SRZOkWZuflMLndAqNqyRmsJTJpH1364X4BHrsE0O7WOGrOquJj/k3500rUuIaIqMRfyefSGmGESaXIoxXrtZ8ZucYcxiIalMfKfU3QoeN6slpvYqkQCjjK30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715172269; c=relaxed/simple;
-	bh=nzMZj/ck9lkSdzOi9Vd77NnubRFko2458oPHDcw0RPU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hLm8H9EVV70IesCYyBMQcZ8YofnPnai939C+TQbuJcjKYyM4u3+HyfgguZmLI0s3puunkORthIMr9Md4siDEaLAYnouvnu7ePhKCucZR35ojhcmTlZKvQEFdzBPQgqll/LR57N9G6xK/UW3aEFwsUSDHK1fqoIVRE9A6s5kyS6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 448Ci9ndD467621, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 448Ci9ndD467621
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 8 May 2024 20:44:09 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Wed, 8 May 2024 20:44:10 +0800
-Received: from RTDOMAIN (172.21.210.160) by RTEXMBS04.realtek.com.tw
- (172.21.6.97) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Wed, 8 May
- 2024 20:44:08 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: <kuba@kernel.org>
-CC: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <andrew@lunn.ch>, <jiri@resnulli.us>, <horms@kernel.org>,
-        <pkshih@realtek.com>, <larry.chiu@realtek.com>,
-        Justin Lai <justinlai0215@realtek.com>
-Subject: [PATCH net-next v18 08/13] rtase: Implement net_device_ops
-Date: Wed, 8 May 2024 20:39:40 +0800
-Message-ID: <20240508123945.201524-9-justinlai0215@realtek.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240508123945.201524-1-justinlai0215@realtek.com>
-References: <20240508123945.201524-1-justinlai0215@realtek.com>
+	s=arc-20240116; t=1715172278; c=relaxed/simple;
+	bh=zmA2+tCDw16RjR/3j2+3tT2/AoPS7qyS7V4GhqwgqXw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U5cI9NRNAnww7JbxpO0AiqCE9Sq9WdZW6wshiuP9xIotVGRiYFCRVMtAbPJsU5FEnuPOQCddkj5R5mUBsstPXzKaFZ6M4fAewLTUCuvBfgPk/Fb/4V6B1FBbIl3gY4OQqp2ig3WaD6ZIXObCaaaH1vMz5Y6l7v8eCBYSrDisRGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=0dlrTVYw; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="0dlrTVYw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1715172274;
+	bh=zmA2+tCDw16RjR/3j2+3tT2/AoPS7qyS7V4GhqwgqXw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=0dlrTVYwZFLMOymDDPlJgMbxax0vrGgshPR1ATXjluKj3gCwGqOe5vshSy1Ca1D90
+	 f2l0qTwdyAXKnHmvaT5ORfPUx3ApHfGv4O1Uc9V6fcDd8LU47uHDPX3W4y6qaTgTYA
+	 WBdL/E2V5xvnWpUTjf0ZGE5l/wfenCVvMY7Czjgkdl14CsdLp9eM36npJVbV56HSqF
+	 YPK2E6LM0FudDvRLGaOHGhLh1QGENj7rSoSL2RqZNJvaYR4K/cIQIoXRmwfo5EgVRg
+	 AgwV+NQhFNE2JtQmEKzkAY6jF+apNbGMD09fq1NgcerZdL3UsPDXaKE2EsfCqf16Io
+	 0UCnpCetXVo6A==
+Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C7A863782112;
+	Wed,  8 May 2024 12:44:33 +0000 (UTC)
+Message-ID: <5de7d6af-54ac-49b7-b5c2-fa9381310288@collabora.com>
+Date: Wed, 8 May 2024 14:44:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTEXH36505.realtek.com.tw (172.21.6.25) To
- RTEXMBS04.realtek.com.tw (172.21.6.97)
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] mailbox: mtk-cmdq: Fix sleeping function called from
+ invalid context
+To: "Jason-JH.Lin" <jason-jh.lin@mediatek.com>,
+ Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+ Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Alexandre Mergnat <amergnat@baylibre.com>,
+ Jason-ch Chen <jason-ch.chen@mediatek.com>,
+ Johnson Wang <johnson.wang@mediatek.com>,
+ Singo Chang <singo.chang@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>,
+ Shawn Sung <shawn.sung@mediatek.com>, dri-devel@lists.freedesktop.org,
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ Project_Global_Chrome_Upstream_Group@mediatek.com,
+ Fei Shao <fshao@chromium.org>
+References: <20240508095143.12023-1-jason-jh.lin@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240508095143.12023-1-jason-jh.lin@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-1. Implement .ndo_set_rx_mode so that the device can change address
-list filtering.
-2. Implement .ndo_set_mac_address so that mac address can be changed.
-3. Implement .ndo_change_mtu so that mtu can be changed.
-4. Implement .ndo_tx_timeout to perform related processing when the
-transmitter does not make any progress.
-5. Implement .ndo_get_stats64 to provide statistics that are called
-when the user wants to get network device usage.
-6. Implement .ndo_vlan_rx_add_vid to register VLAN ID when the device
-supports VLAN filtering.
-7. Implement .ndo_vlan_rx_kill_vid to unregister VLAN ID when the device
-supports VLAN filtering.
-8. Implement the .ndo_setup_tc to enable setting any "tc" scheduler,
-classifier or action on dev.
-9. Implement .ndo_fix_features enables adjusting requested feature flags
-based on device-specific constraints.
-10. Implement .ndo_set_features enables updating device configuration to
-new features.
+Il 08/05/24 11:51, Jason-JH.Lin ha scritto:
+> When we run kernel with lockdebug option, we will get the BUG below:
+> [  106.692124] BUG: sleeping function called from invalid context at drivers/base/power/runtime.c:1164
+> [  106.692190] in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 3616, name: kworker/u17:3
+> [  106.692226] preempt_count: 1, expected: 0
+> [  106.692254] RCU nest depth: 0, expected: 0
+> [  106.692282] INFO: lockdep is turned off.
+> [  106.692306] irq event stamp: 0
+> [  106.692331] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+> [  106.692376] hardirqs last disabled at (0): [<ffffffee15d37fa0>] copy_process+0xc90/0x2ac0
+> [  106.692429] softirqs last  enabled at (0): [<ffffffee15d37fc4>] copy_process+0xcb4/0x2ac0
+> [  106.692473] softirqs last disabled at (0): [<0000000000000000>] 0x0
+> [  106.692513] CPU: 1 PID: 3616 Comm: kworker/u17:3 Not tainted 6.1.87-lockdep-14133-g26e933aca785 #1 6839942e1cf34914b0a366137843dd2366f52aa9
+> [  106.692556] Hardware name: Google Ciri sku0/unprovisioned board (DT)
+> [  106.692586] Workqueue: imgsys_runner imgsys_runner_func
+> [  106.692638] Call trace:
+> [  106.692662]  dump_backtrace+0x100/0x120
+> [  106.692702]  show_stack+0x20/0x2c
+> [  106.692737]  dump_stack_lvl+0x84/0xb4
+> [  106.692775]  dump_stack+0x18/0x48
+> [  106.692809]  __might_resched+0x354/0x4c0
+> [  106.692847]  __might_sleep+0x98/0xe4
+> [  106.692883]  __pm_runtime_resume+0x70/0x124
+> [  106.692921]  cmdq_mbox_send_data+0xe4/0xb1c
+> [  106.692964]  msg_submit+0x194/0x2dc
+> [  106.693003]  mbox_send_message+0x190/0x330
+> [  106.693043]  imgsys_cmdq_sendtask+0x1618/0x2224
+> [  106.693082]  imgsys_runner_func+0xac/0x11c
+> [  106.693118]  process_one_work+0x638/0xf84
+> [  106.693158]  worker_thread+0x808/0xcd0
+> [  106.693196]  kthread+0x24c/0x324
+> [  106.693231]  ret_from_fork+0x10/0x20
+> 
+> We found that there is a spin_lock_irqsave protection in msg_submit()
+> of mailbox.c and it is in the atomic context.
+> So when cmdq driver calls pm_runtime_get_sync() in cmdq_mbox_send_data(),
+> it will get this BUG report.
+> 
+> 1. Change pm_runtime_get_sync() to pm_runtime_get() to avoid using sleep
+>     in atomic context.
+> 2. Move clk_bulk_enable() outside cmdq_runtime_resume() to ensure GCE
+>     clocks are enabled before configuring GCE register.
+> 3. Add used_count to avoid cmdq_runtime_suspend() being called before
+>     calling cmdq_runtime_resume().
+> 
+> Fixes: 8afe816b0c99 ("mailbox: mtk-cmdq-mailbox: Implement Runtime PM with autosuspend")
+> Signed-off-by: Jason-JH.Lin <jason-jh.lin@mediatek.com>
+> ---
+>   drivers/mailbox/mtk-cmdq-mailbox.c | 24 +++++++++++++++---------
+>   1 file changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> index 033aff11f87c..b50f42e69aab 100644
+> --- a/drivers/mailbox/mtk-cmdq-mailbox.c
+> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> @@ -82,6 +82,7 @@ struct cmdq {
+>   	const struct gce_plat	*pdata;
+>   	struct cmdq_thread	*thread;
+>   	struct clk_bulk_data	clocks[CMDQ_GCE_NUM_MAX];
+> +	atomic_t		used_count;
+>   	bool			suspended;
+>   };
+>   
+> @@ -317,14 +318,21 @@ static int cmdq_runtime_resume(struct device *dev)
+>   {
+>   	struct cmdq *cmdq = dev_get_drvdata(dev);
+>   
+> -	return clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks);
+> +	atomic_inc(&cmdq->used_count);
+> +	return 0;
+>   }
+>   
+>   static int cmdq_runtime_suspend(struct device *dev)
+>   {
+>   	struct cmdq *cmdq = dev_get_drvdata(dev);
+>   
+> +	if (atomic_read(&cmdq->used_count) == 0) {
+> +		dev_warn(dev, "%s when used_count is 0!", __func__);
+> +		return -EINVAL;
+> +	}
+> +
+>   	clk_bulk_disable(cmdq->pdata->gce_num, cmdq->clocks);
+> +	atomic_dec(&cmdq->used_count);
+>   	return 0;
+>   }
+>   
+> @@ -392,9 +400,8 @@ static int cmdq_mbox_send_data(struct mbox_chan *chan, void *data)
+>   	/* Client should not flush new tasks if suspended. */
+>   	WARN_ON(cmdq->suspended);
+>   
+> -	ret = pm_runtime_get_sync(cmdq->mbox.dev);
+> -	if (ret < 0)
+> -		return ret;
+> +	WARN_ON(pm_runtime_get(cmdq->mbox.dev) < 0);
 
-Signed-off-by: Justin Lai <justinlai0215@realtek.com>
----
- .../net/ethernet/realtek/rtase/rtase_main.c   | 237 ++++++++++++++++++
- 1 file changed, 237 insertions(+)
+That's a bit sketchy, and I'm afraid that this will break in some other ways.
 
-diff --git a/drivers/net/ethernet/realtek/rtase/rtase_main.c b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-index 4aac9cc134d3..61f12a3b79eb 100644
---- a/drivers/net/ethernet/realtek/rtase/rtase_main.c
-+++ b/drivers/net/ethernet/realtek/rtase/rtase_main.c
-@@ -1440,6 +1440,11 @@ static netdev_tx_t rtase_start_xmit(struct sk_buff *skb,
- 	return NETDEV_TX_BUSY;
- }
- 
-+static void rtase_set_rx_mode(struct net_device *dev)
-+{
-+	rtase_hw_set_rx_packet_filter(dev);
-+}
-+
- static void rtase_enable_eem_write(const struct rtase_private *tp)
- {
- 	u8 val;
-@@ -1472,6 +1477,205 @@ static void rtase_rar_set(const struct rtase_private *tp, const u8 *addr)
- 	rtase_w16(tp, RTASE_LBK_CTRL, RTASE_LBK_ATLD | RTASE_LBK_CLR);
- }
- 
-+static int rtase_set_mac_address(struct net_device *dev, void *p)
-+{
-+	struct rtase_private *tp = netdev_priv(dev);
-+	int ret;
-+
-+	ret = eth_mac_addr(dev, p);
-+	if (ret)
-+		return ret;
-+
-+	rtase_rar_set(tp, dev->dev_addr);
-+
-+	return 0;
-+}
-+
-+static int rtase_change_mtu(struct net_device *dev, int new_mtu)
-+{
-+	dev->mtu = new_mtu;
-+
-+	netdev_update_features(dev);
-+
-+	return 0;
-+}
-+
-+static void rtase_wait_for_quiescence(const struct net_device *dev)
-+{
-+	struct rtase_private *tp = netdev_priv(dev);
-+	struct rtase_int_vector *ivec;
-+	u32 i;
-+
-+	for (i = 0; i < tp->int_nums; i++) {
-+		ivec = &tp->int_vector[i];
-+		synchronize_irq(ivec->irq);
-+		/* wait for any pending NAPI task to complete */
-+		napi_disable(&ivec->napi);
-+	}
-+
-+	rtase_irq_dis_and_clear(tp);
-+
-+	for (i = 0; i < tp->int_nums; i++) {
-+		ivec = &tp->int_vector[i];
-+		napi_enable(&ivec->napi);
-+	}
-+}
-+
-+static void rtase_sw_reset(struct net_device *dev)
-+{
-+	struct rtase_private *tp = netdev_priv(dev);
-+	int ret;
-+
-+	netif_stop_queue(dev);
-+	netif_carrier_off(dev);
-+	rtase_hw_reset(dev);
-+
-+	/* let's wait a bit while any (async) irq lands on */
-+	rtase_wait_for_quiescence(dev);
-+	rtase_tx_clear(tp);
-+	rtase_rx_clear(tp);
-+
-+	ret = rtase_init_ring(dev);
-+	if (ret) {
-+		netdev_err(dev, "unable to init ring\n");
-+		rtase_free_desc(tp);
-+		return;
-+	}
-+
-+	rtase_hw_config(dev);
-+	/* always link, so start to transmit & receive */
-+	rtase_hw_start(dev);
-+
-+	netif_carrier_on(dev);
-+	netif_wake_queue(dev);
-+}
-+
-+static void rtase_dump_tally_counter(const struct rtase_private *tp)
-+{
-+	dma_addr_t paddr = tp->tally_paddr;
-+	u32 cmd = lower_32_bits(paddr);
-+	u32 val;
-+	int err;
-+
-+	rtase_w32(tp, RTASE_DTCCR4, upper_32_bits(paddr));
-+	rtase_w32(tp, RTASE_DTCCR0, cmd);
-+	rtase_w32(tp, RTASE_DTCCR0, cmd | RTASE_COUNTER_DUMP);
-+
-+	err = read_poll_timeout(rtase_r32, val, !(val & RTASE_COUNTER_DUMP),
-+				10, 250, false, tp, RTASE_DTCCR0);
-+
-+	if (err == -ETIMEDOUT)
-+		netdev_err(tp->dev, "error occurred in dump tally counter\n");
-+}
-+
-+static void rtase_dump_state(const struct net_device *dev)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	int max_reg_size = RTASE_PCI_REGS_SIZE;
-+	const struct rtase_counters *counters;
-+	const struct rtase_ring *ring;
-+	u32 dword_rd;
-+	int n = 0;
-+
-+	ring = &tp->tx_ring[0];
-+	netdev_err(dev, "Tx descriptor info:\n");
-+	netdev_err(dev, "Tx curIdx = 0x%x\n", ring->cur_idx);
-+	netdev_err(dev, "Tx dirtyIdx = 0x%x\n", ring->dirty_idx);
-+	netdev_err(dev, "Tx phyAddr = %pad\n", &ring->phy_addr);
-+
-+	ring = &tp->rx_ring[0];
-+	netdev_err(dev, "Rx descriptor info:\n");
-+	netdev_err(dev, "Rx curIdx = 0x%x\n", ring->cur_idx);
-+	netdev_err(dev, "Rx dirtyIdx = 0x%x\n", ring->dirty_idx);
-+	netdev_err(dev, "Rx phyAddr = %pad\n", &ring->phy_addr);
-+
-+	netdev_err(dev, "Device Registers:\n");
-+	netdev_err(dev, "Chip Command = 0x%02x\n",
-+		   rtase_r8(tp, RTASE_CHIP_CMD));
-+	netdev_err(dev, "IMR = %08x\n", rtase_r32(tp, RTASE_IMR0));
-+	netdev_err(dev, "ISR = %08x\n", rtase_r32(tp, RTASE_ISR0));
-+	netdev_err(dev, "Boot Ctrl Reg(0xE004) = %04x\n",
-+		   rtase_r16(tp, RTASE_BOOT_CTL));
-+	netdev_err(dev, "EPHY ISR(0xE014) = %04x\n",
-+		   rtase_r16(tp, RTASE_EPHY_ISR));
-+	netdev_err(dev, "EPHY IMR(0xE016) = %04x\n",
-+		   rtase_r16(tp, RTASE_EPHY_IMR));
-+	netdev_err(dev, "CLKSW SET REG(0xE018) = %04x\n",
-+		   rtase_r16(tp, RTASE_CLKSW_SET));
-+
-+	netdev_err(dev, "Dump PCI Registers:\n");
-+
-+	while (n < max_reg_size) {
-+		if ((n % RTASE_DWORD_MOD) == 0)
-+			netdev_err(tp->dev, "0x%03x:\n", n);
-+
-+		pci_read_config_dword(tp->pdev, n, &dword_rd);
-+		netdev_err(tp->dev, "%08x\n", dword_rd);
-+		n += 4;
-+	}
-+
-+	netdev_err(dev, "Dump tally counter:\n");
-+	counters = tp->tally_vaddr;
-+	rtase_dump_tally_counter(tp);
-+
-+	netdev_err(dev, "tx_packets %lld\n",
-+		   le64_to_cpu(counters->tx_packets));
-+	netdev_err(dev, "rx_packets %lld\n",
-+		   le64_to_cpu(counters->rx_packets));
-+	netdev_err(dev, "tx_errors %lld\n",
-+		   le64_to_cpu(counters->tx_errors));
-+	netdev_err(dev, "rx_errors %d\n",
-+		   le32_to_cpu(counters->rx_errors));
-+	netdev_err(dev, "rx_missed %d\n",
-+		   le16_to_cpu(counters->rx_missed));
-+	netdev_err(dev, "align_errors %d\n",
-+		   le16_to_cpu(counters->align_errors));
-+	netdev_err(dev, "tx_one_collision %d\n",
-+		   le32_to_cpu(counters->tx_one_collision));
-+	netdev_err(dev, "tx_multi_collision %d\n",
-+		   le32_to_cpu(counters->tx_multi_collision));
-+	netdev_err(dev, "rx_unicast %lld\n",
-+		   le64_to_cpu(counters->rx_unicast));
-+	netdev_err(dev, "rx_broadcast %lld\n",
-+		   le64_to_cpu(counters->rx_broadcast));
-+	netdev_err(dev, "rx_multicast %d\n",
-+		   le32_to_cpu(counters->rx_multicast));
-+	netdev_err(dev, "tx_aborted %d\n",
-+		   le16_to_cpu(counters->tx_aborted));
-+	netdev_err(dev, "tx_underun %d\n",
-+		   le16_to_cpu(counters->tx_underun));
-+}
-+
-+static void rtase_tx_timeout(struct net_device *dev, unsigned int txqueue)
-+{
-+	rtase_dump_state(dev);
-+	rtase_sw_reset(dev);
-+}
-+
-+static void rtase_get_stats64(struct net_device *dev,
-+			      struct rtnl_link_stats64 *stats)
-+{
-+	const struct rtase_private *tp = netdev_priv(dev);
-+	const struct rtase_counters *counters;
-+
-+	counters = tp->tally_vaddr;
-+
-+	if (!counters)
-+		return;
-+
-+	netdev_stats_to_stats64(stats, &dev->stats);
-+	dev_fetch_sw_netstats(stats, dev->tstats);
-+
-+	/* fetch additional counter values missing in stats collected by driver
-+	 * from tally counter
-+	 */
-+	rtase_dump_tally_counter(tp);
-+	stats->tx_errors = le64_to_cpu(counters->tx_errors);
-+	stats->rx_missed_errors = le16_to_cpu(counters->rx_missed);
-+	stats->collisions = le32_to_cpu(counters->tx_multi_collision);
-+	stats->tx_aborted_errors = le16_to_cpu(counters->tx_aborted);
-+}
-+
- #ifdef CONFIG_NET_POLL_CONTROLLER
- /* Polling 'interrupt' - used by things like netconsole to send skbs
-  * without having to re-enable interrupts. It's not called while
-@@ -1488,13 +1692,46 @@ static void rtase_netpoll(struct net_device *dev)
- }
- #endif
- 
-+static netdev_features_t rtase_fix_features(struct net_device *dev,
-+					    netdev_features_t features)
-+{
-+	netdev_features_t features_fix = features;
-+
-+	/*  not support TSO for jumbo frames */
-+	if (dev->mtu > ETH_DATA_LEN)
-+		features_fix &= ~NETIF_F_ALL_TSO;
-+
-+	return features_fix;
-+}
-+
-+static int rtase_set_features(struct net_device *dev,
-+			      netdev_features_t features)
-+{
-+	netdev_features_t features_set = features;
-+
-+	features_set &= NETIF_F_RXALL | NETIF_F_RXCSUM |
-+			NETIF_F_HW_VLAN_CTAG_RX;
-+
-+	if (features_set ^ dev->features)
-+		rtase_hw_set_features(dev, features_set);
-+
-+	return 0;
-+}
-+
- static const struct net_device_ops rtase_netdev_ops = {
- 	.ndo_open = rtase_open,
- 	.ndo_stop = rtase_close,
- 	.ndo_start_xmit = rtase_start_xmit,
-+	.ndo_set_rx_mode = rtase_set_rx_mode,
-+	.ndo_set_mac_address = rtase_set_mac_address,
-+	.ndo_change_mtu = rtase_change_mtu,
-+	.ndo_tx_timeout = rtase_tx_timeout,
-+	.ndo_get_stats64 = rtase_get_stats64,
- #ifdef CONFIG_NET_POLL_CONTROLLER
- 	.ndo_poll_controller = rtase_netpoll,
- #endif
-+	.ndo_fix_features = rtase_fix_features,
-+	.ndo_set_features = rtase_set_features,
- };
- 
- static void rtase_get_mac_address(struct net_device *dev)
--- 
-2.34.1
+We could - again - simply change the msg_submit() function in mailbox.c, so that
+it takes into account that a driver may need PM done.
+
+A low effort example (which may be good enough or not) is:
+
+static void msg_submit(struct mbox_chan *chan)
+{
+	unsigned count, idx;
+	unsigned long flags;
+	void *data;
+	int err;
+
+	if (chan->mbox->ops->pm_off) {
+		err = chan->mbox->ops->pm_on();
+		if (err)
+			return err;
+	}
+
+	spin_lock_irqsave(&chan->lock, flags);
+
+	if (!chan->msg_count || chan->active_req) {
+		err = -EBUSY;
+		goto exit;
+	}
+
+	......
+
+	exit:
+	spin_unlock_irqrestore(&chan->lock, flags);
+
+	if (!err && (chan->txdone_method & TXDONE_BY_POLL)) {
+		/* kick start the timer immediately to avoid delays */
+		spin_lock_irqsave(&chan->mbox->poll_hrt_lock, flags);
+		hrtimer_start(&chan->mbox->poll_hrt, 0, HRTIMER_MODE_REL);
+		spin_unlock_irqrestore(&chan->mbox->poll_hrt_lock, flags);
+	}
+
+/* I guess setting it OFF can't fail anyway, so this would be a void function */
+	if (chan->mbox->ops->pm_off)
+		chan->mbox->ops->pm_off();
+}
+
+
+Then we can wire up the two functions in the MediaTek driver - where our mailbox
+only simply needs pm_runtime_get_sync() and pm_runtime_put().
+
+The reason why I'm suggesting a callback is that this would catch the case of
+mailboxes that need "more complicated" flows for ON/OFF.
+
+Jassi, do you like the idea?
+
+If you do, I can eventually go for a real commit with better names than pm_off/on
+if I can find any - so that then Jason can go on with his mtk-cmdq fix on top of
+that.
+
+Cheers,
+Angelo
+
+> +	WARN_ON(clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks));
+>   
+>   	task = kzalloc(sizeof(*task), GFP_ATOMIC);
+>   	if (!task) {
+> @@ -465,7 +472,8 @@ static void cmdq_mbox_shutdown(struct mbox_chan *chan)
+>   	struct cmdq_task *task, *tmp;
+>   	unsigned long flags;
+>   
+> -	WARN_ON(pm_runtime_get_sync(cmdq->mbox.dev) < 0);
+> +	WARN_ON(pm_runtime_get(cmdq->mbox.dev) < 0);
+> +	WARN_ON(clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks));
+>   
+>   	spin_lock_irqsave(&thread->chan->lock, flags);
+>   	if (list_empty(&thread->task_busy_list))
+> @@ -507,11 +515,9 @@ static int cmdq_mbox_flush(struct mbox_chan *chan, unsigned long timeout)
+>   	struct cmdq_task *task, *tmp;
+>   	unsigned long flags;
+>   	u32 enable;
+> -	int ret;
+>   
+> -	ret = pm_runtime_get_sync(cmdq->mbox.dev);
+> -	if (ret < 0)
+> -		return ret;
+> +	WARN_ON(pm_runtime_get(cmdq->mbox.dev) < 0);
+> +	WARN_ON(clk_bulk_enable(cmdq->pdata->gce_num, cmdq->clocks));
+>   
+>   	spin_lock_irqsave(&thread->chan->lock, flags);
+>   	if (list_empty(&thread->task_busy_list))
 
