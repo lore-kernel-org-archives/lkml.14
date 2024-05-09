@@ -1,27 +1,27 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29315149C4F;
-	Thu,  9 May 2024 05:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F611494DF;
+	Thu,  9 May 2024 05:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715232862; cv=none; b=rdkEhHOCwsbQLKQXJA657T9ZJ/Z8hNdV0sD1+cU48m6n7Qc1+MjIua/pep9OmEsQq7V6zCmFbPaBr+pNjBvvGI6QfMb3tN5NYj8/t/6qvoWaqqiXK4F0ZYeOT3R/X6KFIrLixo2KMa8iH/JEHIfSzeshpSXE3UPZrwETV3pBTAs=
+	t=1715232862; cv=none; b=thPbpbKDXMMpCS/fzVT9BM/kuVxvYnEUvb1I+dcJO9N2+bkAWClrJ23Q13RVZVxFotj8pN3iODcYZQxOktYT5siUjTH5r4cejHkrA3Venu1G0WCPaaSxOa0MXS6giJGTO8dbTztt1ajL9hiVABpFPJQ/zhGrreVNWss7/vkVO2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715232862; c=relaxed/simple;
-	bh=m2MfUlMl9KxyWVYEaAkVFeSM4ZuXjRKHohyzQ3AsLrE=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=i4MEZXONSpIciERRspkTJc7qtYfeGgFfOrkXbWlbddqBDeUjiZ8Pncb/VZ/GHNyJUKKF3jsGhnu5yhGAp8zBd3FHszFE59Y5dhqwT+eGaGHBFMIWxKOewjwl+hvlOTXddxUG9AqIwysa3JXfuX4NGiB4MRpG59JEblfMWkySF4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+	bh=fdUH87iHP9ev1kU+ajKaxLKo02sTP5LzeEqw2Aiby1w=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=aU9lwjxWGidA2vWXfWZL0dWNaHTflclQUZICrXxvSF46Bw6p7IA/aWz2dOJOCiYJ0LrD6Glk58X/f8Uel5JxBFrSAULu/IkYay5cCT5ilO4aGOWxar11HTLcDGgx5YGbvJOx7+yx6dZcd/iojWoM6qy/KdpIy47anQWIZaslhIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 68E76201EF4;
-	Thu,  9 May 2024 07:34:19 +0200 (CEST)
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 47EFB1A1881;
+	Thu,  9 May 2024 07:34:18 +0200 (CEST)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 1EBD6200B37;
-	Thu,  9 May 2024 07:34:19 +0200 (CEST)
+	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id F3AC71A1FFD;
+	Thu,  9 May 2024 07:34:17 +0200 (CEST)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 4D140180222F;
-	Thu,  9 May 2024 13:34:17 +0800 (+08)
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 27163181D0FD;
+	Thu,  9 May 2024 13:34:16 +0800 (+08)
 From: Shengjiu Wang <shengjiu.wang@nxp.com>
 To: robh@kernel.org,
 	krzk+dt@kernel.org,
@@ -35,9 +35,9 @@ To: robh@kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	shengjiu.wang@gmail.com
-Subject: [PATCH 2/2] arm64: dts: imx8mp-evk: add bt-sco sound card support
-Date: Thu,  9 May 2024 13:14:58 +0800
-Message-Id: <1715231698-451-3-git-send-email-shengjiu.wang@nxp.com>
+Subject: [PATCH 1/2] arm64: dts: imx8mp: Initialize audio PLLs from audiomix subsystem
+Date: Thu,  9 May 2024 13:14:57 +0800
+Message-Id: <1715231698-451-2-git-send-email-shengjiu.wang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1715231698-451-1-git-send-email-shengjiu.wang@nxp.com>
 References: <1715231698-451-1-git-send-email-shengjiu.wang@nxp.com>
@@ -48,90 +48,29 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Add bt-sco sound card, which is used by BT HFP case.
-It supports wb profile as default
+Initialize audio PLL1 as the parent clock for 8kHz series rates,
+audio PLL2 as the parent clock for 11kHz series rates. that PLL1
+and PLL2 can together support full range of audio sample rates.
 
 Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mp-evk.dts | 44 ++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-index 8be5b2a57f27..b2225cb710b6 100644
---- a/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mp-evk.dts
-@@ -114,6 +114,11 @@ reg_vext_3v3: regulator-vext-3v3 {
- 		regulator-max-microvolt = <3300000>;
- 	};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mp.dtsi b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+index b92abb5a5c53..459c4a54d30e 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mp.dtsi
+@@ -1579,6 +1579,9 @@ audio_blk_ctrl: clock-controller@30e20000 {
+ 					      "sai1", "sai2", "sai3",
+ 					      "sai5", "sai6", "sai7";
+ 				power-domains = <&pgc_audio>;
++				assigned-clocks = <&clk IMX8MP_AUDIO_PLL1>,
++						  <&clk IMX8MP_AUDIO_PLL2>;
++				assigned-clock-rates = <393216000>, <361267200>;
+ 			};
+ 		};
  
-+	audio_codec_bt_sco: audio-codec-bt-sco {
-+		compatible = "linux,bt-sco";
-+		#sound-dai-cells = <1>;
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "wm8960-audio";
-@@ -145,6 +150,25 @@ simple-audio-card,codec {
- 
- 	};
- 
-+	sound-bt-sco {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "bt-sco-audio";
-+		simple-audio-card,format = "dsp_a";
-+		simple-audio-card,bitclock-inversion;
-+		simple-audio-card,frame-master = <&btcpu>;
-+		simple-audio-card,bitclock-master = <&btcpu>;
-+
-+		btcpu: simple-audio-card,cpu {
-+			sound-dai = <&sai2>;
-+			dai-tdm-slot-num = <2>;
-+			dai-tdm-slot-width = <16>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&audio_codec_bt_sco 1>;
-+		};
-+	};
-+
- 	sound-hdmi {
- 		compatible = "fsl,imx-audio-hdmi";
- 		model = "audio-hdmi";
-@@ -608,6 +632,17 @@ &pwm4 {
- 	status = "okay";
- };
- 
-+&sai2 {
-+	#sound-dai-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_sai2>;
-+	assigned-clocks = <&clk IMX8MP_CLK_SAI2>;
-+	assigned-clock-parents = <&clk IMX8MP_AUDIO_PLL1_OUT>;
-+	assigned-clock-rates = <12288000>;
-+	fsl,sai-mclk-direction-output;
-+	status = "okay";
-+};
-+
- &sai3 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_sai3>;
-@@ -880,6 +915,15 @@ MX8MP_IOMUXC_UART3_TXD__UART1_DCE_RTS	0x140
- 		>;
- 	};
- 
-+	pinctrl_sai2: sai2grp {
-+		fsl,pins = <
-+			MX8MP_IOMUXC_SAI2_TXC__AUDIOMIX_SAI2_TX_BCLK	0xd6
-+			MX8MP_IOMUXC_SAI2_TXFS__AUDIOMIX_SAI2_TX_SYNC	0xd6
-+			MX8MP_IOMUXC_SAI2_TXD0__AUDIOMIX_SAI2_TX_DATA00	0xd6
-+			MX8MP_IOMUXC_SAI2_RXD0__AUDIOMIX_SAI2_RX_DATA00	0xd6
-+		>;
-+	};
-+
- 	pinctrl_sai3: sai3grp {
- 		fsl,pins = <
- 			MX8MP_IOMUXC_SAI3_TXFS__AUDIOMIX_SAI3_TX_SYNC	0xd6
 -- 
 2.34.1
 
