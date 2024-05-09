@@ -1,100 +1,269 @@
-Received: from out162-62-57-49.mail.qq.com (out162-62-57-49.mail.qq.com [162.62.57.49])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A06BC14A4DF;
-	Thu,  9 May 2024 09:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCADA1494D9
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 09:36:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715247243; cv=none; b=IoFTKVeQFkZTPVBjpIqFmUVEie6Fm2QwzYHcbMY2taAKHWlt9yypdeb/7k1of2oZEHlqCxZgJhHqfflLlhgNR+M03c5mfNuC26jLgxvsUAQcPP+QFnzf4NZcjXZEcgI16+6CehGTYjhWPi9zJ6aGg46fGDcA4E2ZIbZup7KyCvM=
+	t=1715247370; cv=none; b=UQi06OSr3mMw9VheIRmMcd2/EPE8O42cjV0f2tpNOumLop3hAFYlkDJ+9qPKAEKQyj3a/JQT+Is6T+hK1wyEFVxaUT2jHw6inJ6fM9bD9UT7VWtF8HgQeMcP+TCzWVeHE6ZkCSs+XcPn5AwYC2AfFmJQd0PA/ImqNqO4TyOB6Xs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715247243; c=relaxed/simple;
-	bh=MtCUZOEf09vm2s3UfRmmEbhe99AQfnhKa18eN3mnrso=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=nzfu62I+wxVyDe9fUayoBcsWaS0p7wlEZWdSlxLaiyIVfz61CUQZPGwv3UTnX/PLFuLDpGpzb8rBhQM03bO6sRsU6C7kCZLS7CBL633Ik2I4XnW8pty9AAEC9N3k7Lc2USxBXOhRy1jiMm54Mmwm9Hk577ZT0GwatpasTXW17pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=reG0mO/y; arc=none smtp.client-ip=162.62.57.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+	s=arc-20240116; t=1715247370; c=relaxed/simple;
+	bh=5V0THLtjlGm7lz2Rb8dkX2TumoFDGOdEzv+qTisTZBg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z3rdJou46S0ci9NSEXMBAFXEpKPyPLOEwz+ClialtcDSJe0g0F0TdCtUSs/pSEUM5Xqp6qKwxUpWAdQ6jYd5QqxGfu8BpdhdyNk0A3akafwrxheCmPqeOu6TrXmQhmuhRvCkbSha+wI6a6l6O+ElBHQUfiaNWjKhgpZwO6Q61Dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=LlUd4/FE; arc=none smtp.client-ip=115.124.30.97
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="reG0mO/y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1715247227; bh=uHRrkhKKY/U0upUZfJkXb4BY8bCTGf1SFZ8EyfT1G3g=;
-	h=From:To:Cc:Subject:Date;
-	b=reG0mO/yMD0Allajl/2aMO1ahdJMd1FG86iTLZ031D7u5g0tYM1mYE3kORENzH04s
-	 GQ9UC1LP2QjvCQCjOcF/3MrO5DJk6oNrTrboudF6/TXbLNoe+iijW7tiuiGnvAeRzw
-	 zVyBPSiMtLFK0Vh+p7YsW2wjyYMX9DX/LXbR0ZiU=
-Received: from cyy-pc.lan ([240e:379:225f:c000:ddd2:5a64:482:d6f2])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id 86B97886; Thu, 09 May 2024 17:33:43 +0800
-X-QQ-mid: xmsmtpt1715247223taum3m4ji
-Message-ID: <tencent_B61C1370E7632842D61BB7F9FA0515B44D09@qq.com>
-X-QQ-XMAILINFO: NkHKfw09D6j8uL2HVuJBhrc2zAVCXYqfSMQbCILL5ryFnjPQlfSSZSmyhy0OIS
-	 51hz1Aj5/VjBhn/J3uDwgpLwGwdPxe6mo0HKpyqEVWoVZD1ju4+BSdIZLKYcr1FqxTGvLrKobGz6
-	 9MRknHCRtI6YvQTjMv3elKw/uuseaZvLe+uwd92wJ+4Y/ZrEBJg6rV4kXrp+581iAqZbVyxiE19W
-	 WuqjyKz1jdnZWTG747f/PaHiKP+38krSpqFhgycfkgnsx77GiKoMDxQfI8x8Y8ynZhDQV//Qz+DH
-	 xja4FqphOyVQUcnHNPIf4uVLUaA47Lp18wJpQqGO8sLWnqs8+8gnoYXvOFgHXuzv4rwFCCOPU02C
-	 dgxsiD+mjvY16vcI6QgHkd2+clL+jKlA4liQst7W0+bF7OEvuvmpIksFU703rPDhAQY0lByg1bVG
-	 ooud3Hq4c4KlTsDwIhRKRnbenhW0cfSmOya03euiBpH9xJuJ4WdlsSaQygHYiD76It9XTfoFRpZw
-	 tUTkXSz3rxx4e4pl3SIQROzzZZ0qkcnl4G+Vg1/C3QaTcdEp0eo2xcwrcW6CrY/Sk168Y/YAwTqt
-	 zzQEhV8Z+EqwzKDRo9/tpCfx9ry+bkjCr6VEiK1dlBNkwwmk14el1KiG9m/vN6p79Bvc040hha0O
-	 3p7hySI/w3VOuB9/Xqemjuf+YtRjntvFCkMmknFI9LTnryALuCB/mlExTlcVbY0e2DD4POPIn8Fd
-	 qQPXkgf7XZtsX8q5+kRyWUA5tYZqz7ekw+SJo+QHKvLNhRL6nn4JorQDFnNzolMgQTUkLlS4Xjhp
-	 p7zpW/I7ccH83nQ+Euqv2R3XFEXfHzlFhinZw1Uo78unA2WVwgDed+rOCOkipJwUMTRwI5zgvIdv
-	 b6FoBWxUi16ON2TOOzjICCTvV0QGfeNVVNxKW7D/7HrCnH2TB5xwJHLBl5QXxUC0rglWkdMCB7Gc
-	 zOluQZfO+YuXCG5LlxNL0YfrT1qh/lAlRQpTHEKQCxYrqqYQ98BTPdz9W/qVQBsPHEDBEWuro=
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-From: Yangyu Chen <cyy@cyyself.name>
-To: linux-riscv@lists.infradead.org
-Cc: Conor Dooley <conor@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yangyu Chen <cyy@cyyself.name>
-Subject: [PATCH] riscv: dts: fix isa string for Canaan Kendryte K230
-Date: Thu,  9 May 2024 17:33:11 +0800
-X-OQ-MSGID: <20240509093311.1943337-1-cyy@cyyself.name>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="LlUd4/FE"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1715247365; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=pvNda+d/dgY+J2GX1dZdTaOZdRlBWeQizib67djYoac=;
+	b=LlUd4/FE304IT+LKS+icoj0rJeipkA26ZIcACtISj95vIOZUjjjh5oyX4Vtx7Yt7nXnN6X9UAFMVRGft5l1Wm0ZFQrnd8dCCV//DVXlxrdKGnKyOekDH0+3vMtsciSNvUJKmAPVTU48Yr4wNdxc4CMD9FB1Ol1THinTHuQCh7hI=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R441e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067113;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=21;SR=0;TI=SMTPD_---0W66VJRi_1715247361;
+Received: from 30.97.56.60(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0W66VJRi_1715247361)
+          by smtp.aliyun-inc.com;
+          Thu, 09 May 2024 17:36:03 +0800
+Message-ID: <c49e2663-a7a6-410d-b694-59cd3fb28c78@linux.alibaba.com>
+Date: Thu, 9 May 2024 17:36:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/3] mm/vmscan: avoid split lazyfree THP during
+ shrink_folio_list()
+To: Lance Yang <ioworker0@gmail.com>
+Cc: akpm@linux-foundation.org, willy@infradead.org, sj@kernel.org,
+ maskray@google.com, ziy@nvidia.com, ryan.roberts@arm.com, david@redhat.com,
+ 21cnbao@gmail.com, mhocko@suse.com, fengwei.yin@intel.com,
+ zokeefe@google.com, shy828301@gmail.com, xiehuan09@gmail.com,
+ libang.li@antgroup.com, wangkefeng.wang@huawei.com,
+ songmuchun@bytedance.com, peterx@redhat.com, minchan@kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20240501042700.83974-1-ioworker0@gmail.com>
+ <20240501042700.83974-4-ioworker0@gmail.com>
+ <e0b8a282-973f-41f7-a878-4a287bab81ea@linux.alibaba.com>
+ <CAK1f24=gc7VojzSDyNck-03L03UWR4AFxji8Rw+xMKBg1_M7fw@mail.gmail.com>
+ <CAK1f24=HYM8zAw88apModHZdaLu849PH=JKPrZ3nxGqQWWzoyQ@mail.gmail.com>
+ <8c1d6e06-d84b-4be7-81c8-76e2d8fb9883@linux.alibaba.com>
+ <CAK1f24=+-jtjUpyNEXQyhgtGeqKEXr1tRN89Nzg3WQONAZEMMw@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <CAK1f24=+-jtjUpyNEXQyhgtGeqKEXr1tRN89Nzg3WQONAZEMMw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The original is a string in dts that has no "zfh" or "zvfh" extension,
-but the K230 chip has them, so I am adding them to the dts. This
-patch also reordered the Z* extension in the isa string and used
-canonical order for the category as the first key and then alphabet
-order as the second key to meet RISC-V ISA Extension Naming
-Conventions.
 
-Signed-off-by: Yangyu Chen <cyy@cyyself.name>
----
-prerequisite-patchset: https://lore.kernel.org/linux-riscv/tencent_22BA0425B4DF1CA1713B62E4423C1BFBF809@qq.com/
----
- arch/riscv/boot/dts/canaan/k230.dtsi | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/riscv/boot/dts/canaan/k230.dtsi b/arch/riscv/boot/dts/canaan/k230.dtsi
-index 95c1a3d8fb11..104e08ef5869 100644
---- a/arch/riscv/boot/dts/canaan/k230.dtsi
-+++ b/arch/riscv/boot/dts/canaan/k230.dtsi
-@@ -24,11 +24,12 @@ cpu@0 {
- 			compatible = "thead,c908", "riscv";
- 			device_type = "cpu";
- 			reg = <0>;
--			riscv,isa = "rv64imafdcv_zba_zbb_zbc_zbs_zicbom_zicbop_zicboz_svpbmt";
-+			riscv,isa = "rv64imafdcv_zicbom_zicbop_zicboz_zfh_zba_zbb_zbc_zbs_zvfh_svpbmt";
- 			riscv,isa-base = "rv64i";
--			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "zba", "zbb",
--					       "zbc", "zbs", "zicbom", "zicbop", "zicboz",
--					       "zicntr", "zicsr", "zifencei", "zihpm", "svpbmt";
-+			riscv,isa-extensions = "i", "m", "a", "f", "d", "c", "v", "zicbom",
-+					       "zicbop", "zicboz", "zicntr", "zicsr", "zifencei",
-+					       "zihpm", "zfh", "zba", "zbb", "zbc", "zbs", "zvfh",
-+					       "svpbmt";
- 			riscv,cbom-block-size = <64>;
- 			riscv,cbop-block-size = <64>;
- 			riscv,cboz-block-size = <64>;
--- 
-2.43.0
+On 2024/5/7 19:37, Lance Yang wrote:
+> On Tue, May 7, 2024 at 5:33 PM Baolin Wang
+> <baolin.wang@linux.alibaba.com> wrote:
+>>
+>>
+>>
+>> On 2024/5/7 16:26, Lance Yang wrote:
+>>> On Tue, May 7, 2024 at 2:32 PM Lance Yang <ioworker0@gmail.com> wrote:
+>>>>
+>>>> Hey Baolin,
+>>>>
+>>>> Thanks a lot for taking time to review!
+>>>>
+>>>> On Tue, May 7, 2024 at 12:01 PM Baolin Wang
+>>>> <baolin.wang@linux.alibaba.com> wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 2024/5/1 12:27, Lance Yang wrote:
+>>>>>> When the user no longer requires the pages, they would use
+>>>>>> madvise(MADV_FREE) to mark the pages as lazy free. Subsequently, they
+>>>>>> typically would not re-write to that memory again.
+>>>>>>
+>>>>>> During memory reclaim, if we detect that the large folio and its PMD are
+>>>>>> both still marked as clean and there are no unexpected references
+>>>>>> (such as GUP), so we can just discard the memory lazily, improving the
+>>>>>> efficiency of memory reclamation in this case.  On an Intel i5 CPU, reclaiming 1GiB of lazyfree THPs using
+>>>>>> mem_cgroup_force_empty() results in the following runtimes in seconds
+>>>>>> (shorter is better):
+>>>>>>
+>>>>>> --------------------------------------------
+>>>>>> |     Old       |      New       |  Change  |
+>>>>>> --------------------------------------------
+>>>>>> |   0.683426    |    0.049197    |  -92.80% |
+>>>>>> --------------------------------------------
+>>>>>>
+>>>>>> Suggested-by: Zi Yan <ziy@nvidia.com>
+>>>>>> Suggested-by: David Hildenbrand <david@redhat.com>
+>>>>>> Signed-off-by: Lance Yang <ioworker0@gmail.com>
+>>>>>> ---
+>>>>>>     include/linux/huge_mm.h |  9 +++++
+>>>>>>     mm/huge_memory.c        | 73 +++++++++++++++++++++++++++++++++++++++++
+>>>>>>     mm/rmap.c               |  3 ++
+>>>>>>     3 files changed, 85 insertions(+)
+>>>>>>
+>>>>>> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+>>>>>> index 38c4b5537715..017cee864080 100644
+>>>>>> --- a/include/linux/huge_mm.h
+>>>>>> +++ b/include/linux/huge_mm.h
+>>>>>> @@ -411,6 +411,8 @@ static inline bool thp_migration_supported(void)
+>>>>>>
+>>>>>>     void split_huge_pmd_locked(struct vm_area_struct *vma, unsigned long address,
+>>>>>>                            pmd_t *pmd, bool freeze, struct folio *folio);
+>>>>>> +bool unmap_huge_pmd_locked(struct vm_area_struct *vma, unsigned long addr,
+>>>>>> +                        pmd_t *pmdp, struct folio *folio);
+>>>>>>
+>>>>>>     static inline void align_huge_pmd_range(struct vm_area_struct *vma,
+>>>>>>                                         unsigned long *start,
+>>>>>> @@ -492,6 +494,13 @@ static inline void align_huge_pmd_range(struct vm_area_struct *vma,
+>>>>>>                                         unsigned long *start,
+>>>>>>                                         unsigned long *end) {}
+>>>>>>
+>>>>>> +static inline bool unmap_huge_pmd_locked(struct vm_area_struct *vma,
+>>>>>> +                                      unsigned long addr, pmd_t *pmdp,
+>>>>>> +                                      struct folio *folio)
+>>>>>> +{
+>>>>>> +     return false;
+>>>>>> +}
+>>>>>> +
+>>>>>>     #define split_huge_pud(__vma, __pmd, __address)     \
+>>>>>>         do { } while (0)
+>>>>>>
+>>>>>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>>>>>> index 145505a1dd05..90fdef847a88 100644
+>>>>>> --- a/mm/huge_memory.c
+>>>>>> +++ b/mm/huge_memory.c
+>>>>>> @@ -2690,6 +2690,79 @@ static void unmap_folio(struct folio *folio)
+>>>>>>         try_to_unmap_flush();
+>>>>>>     }
+>>>>>>
+>>>>>> +static bool __discard_trans_pmd_locked(struct vm_area_struct *vma,
+>>>>>> +                                    unsigned long addr, pmd_t *pmdp,
+>>>>>> +                                    struct folio *folio)
+>>>>>> +{
+>>>>>> +     struct mm_struct *mm = vma->vm_mm;
+>>>>>> +     int ref_count, map_count;
+>>>>>> +     pmd_t orig_pmd = *pmdp;
+>>>>>> +     struct mmu_gather tlb;
+>>>>>> +     struct page *page;
+>>>>>> +
+>>>>>> +     if (pmd_dirty(orig_pmd) || folio_test_dirty(folio))
+>>>>>> +             return false;
+>>>>>> +     if (unlikely(!pmd_present(orig_pmd) || !pmd_trans_huge(orig_pmd)))
+>>>>>> +             return false;
+>>>>>> +
+>>>>>> +     page = pmd_page(orig_pmd);
+>>>>>> +     if (unlikely(page_folio(page) != folio))
+>>>>>> +             return false;
+>>>>>> +
+>>>>>> +     tlb_gather_mmu(&tlb, mm);
+>>>>>> +     orig_pmd = pmdp_huge_get_and_clear(mm, addr, pmdp);
+>>>>>> +     tlb_remove_pmd_tlb_entry(&tlb, pmdp, addr);
+>>>>>> +
+>>>>>> +     /*
+>>>>>> +      * Syncing against concurrent GUP-fast:
+>>>>>> +      * - clear PMD; barrier; read refcount
+>>>>>> +      * - inc refcount; barrier; read PMD
+>>>>>> +      */
+>>>>>> +     smp_mb();
+>>>>>> +
+>>>>>> +     ref_count = folio_ref_count(folio);
+>>>>>> +     map_count = folio_mapcount(folio);
+>>>>>> +
+>>>>>> +     /*
+>>>>>> +      * Order reads for folio refcount and dirty flag
+>>>>>> +      * (see comments in __remove_mapping()).
+>>>>>> +      */
+>>>>>> +     smp_rmb();
+>>>>>> +
+>>>>>> +     /*
+>>>>>> +      * If the PMD or folio is redirtied at this point, or if there are
+>>>>>> +      * unexpected references, we will give up to discard this folio
+>>>>>> +      * and remap it.
+>>>>>> +      *
+>>>>>> +      * The only folio refs must be one from isolation plus the rmap(s).
+>>>>>> +      */
+>>>>>> +     if (ref_count != map_count + 1 || folio_test_dirty(folio) ||
+>>>>>> +         pmd_dirty(orig_pmd)) {
+>>>>>> +             set_pmd_at(mm, addr, pmdp, orig_pmd);
+>>>>>> +             return false;
+>>>>>> +     }
+>>>>>> +
+>>>>>> +     folio_remove_rmap_pmd(folio, page, vma);
+>>>>>> +     zap_deposited_table(mm, pmdp);
+>>>>>> +     add_mm_counter(mm, MM_ANONPAGES, -HPAGE_PMD_NR);
+>>>>>> +     folio_put(folio);
+>>>>>
+>>>>> IIUC, you missed handling mlock vma, see mlock_drain_local() in
+>>>>> try_to_unmap_one().
+>>>>
+>>>> Good spot!
+>>>>
+>>>> I suddenly realized that I overlooked another thing: If we detect that a
+>>>> PMD-mapped THP is within the range of the VM_LOCKED VMA, we
+>>>> should check whether the TTU_IGNORE_MLOCK flag is set in
+>>>> try_to_unmap_one(). If the flag is set, we will remove the PMD mapping
+>>>> from the folio. Otherwise, the folio should be mlocked, which avoids
+>>>> splitting the folio and then mlocking each page again.
+>>>
+>>> My previous response above is flawed - sorry :(
+>>>
+>>> If we detect that a PMD-mapped THP is within the range of the
+>>> VM_LOCKED VMA.
+>>>
+>>> 1) If the TTU_IGNORE_MLOCK flag is set, we will try to remove the
+>>> PMD mapping from the folio, as this series has done.
+>>
+>> Right.
+>>
+>>> 2) If the flag is not set, the large folio should be mlocked to prevent it
+>>> from being picked during memory reclaim? Currently, we just leave it
+>>
+>> Yes. From commit 1acbc3f93614 ("mm: handle large folio when large folio
+>> in VM_LOCKED VMA range"), large folios of the mlocked VMA will be
+>> handled during page reclaim phase.
+>>
+>>> as is and do not to mlock it, IIUC.
+>>
+>> Original code already handle the mlock case after the PMD-mapped THP is
+>> split in try_to_unmap_one():
+> 
+> Yep. But this series doesn't do the TTU_SPLIT_HUGE_PMD immediately.
+> 
+>>                   /*
+>>                    * If the folio is in an mlock()d vma, we must not swap
+>> it out.
+>>                    */
+>>                   if (!(flags & TTU_IGNORE_MLOCK) &&
+>>                       (vma->vm_flags & VM_LOCKED)) {
+>>                           /* Restore the mlock which got missed */
+> 
+> IIUC, we could detect a PMD-mapped THP here. So, I'm not sure if we
+> need to mlock it to prevent it from being picked again during memory
+> reclaim. The change is as follows:
+
+For the page reclaim path, folio_check_references() should be able to 
+help restore the mlock of the PMD-mapped THP. However, for other paths 
+that call try_to_unmap(), I believe it is still necessary to check 
+whether the mlock of the PMD-mapped THP was missed.
+
+Below code looks reasonable to me from a quick glance.
+
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index ed7f82036986..2a9d037ab23c 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1673,7 +1673,8 @@ static bool try_to_unmap_one(struct folio
+> *folio, struct vm_area_struct *vma,
+>                  if (!(flags & TTU_IGNORE_MLOCK) &&
+>                      (vma->vm_flags & VM_LOCKED)) {
+>                          /* Restore the mlock which got missed */
+> -                       if (!folio_test_large(folio))
+> +                       if (!folio_test_large(folio) ||
+> +                           (!pvmw.pte && (flags & TTU_SPLIT_HUGE_PMD)))
+>                                  mlock_vma_folio(folio, vma);
+>                          goto walk_done_err;
+>                  }
+> 
 
