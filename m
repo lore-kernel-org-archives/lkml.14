@@ -1,101 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DD2113A3F6
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 13:28:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3A21272A8;
+	Thu,  9 May 2024 13:30:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715261318; cv=none; b=T69W2AVRujnu04WcwPnQO38Kmgr/tchI7z3AXabm4qgoN/LEukdwZJE9eJ1VknNmrLBbMVMPY0R8WmmZGSbSsso1Q9MkbxY73PS1E6AqQBZWoAwolLGiHNc6kxsb14bMNDh7azpFiwR316eRKQBeox3NVsOmnLI2eZEokffcLYk=
+	t=1715261403; cv=none; b=nii++1oYT75O58Y2+aj/4Bg1gL5Z/WYZSyPQCFjiE7yWpd+kFawgomTfZyX9uwp7Zi31nNOSUNwttEHtaHyTDdjWz4LVcf92fp6YTWyKi4piqPaTuQCj6NuVMRK+zDvUHEnCMLFd/sKVwjAf9aYNOq9canaDIhXUHREcICG8EAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715261318; c=relaxed/simple;
-	bh=wAq7VQoIZQxMDiS0TmZ5x9R83JFv4jz3MrrxIGBehzg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PAWGQMpsnzJ/a4jY8D4RMNSgEgVDypln2AYqvnqLNWEhixEHO1olP5ieJXTLV+chjlKS1wz9ejAvQZvF56u6B0xy+N5pjjSaUxKMvZx3RHj0dHi01wEEPsykX/ZiufCBk4LEU1liFV1wvy0mK7ROscjsl3G+39sBXqaLw+ZHGlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB36F106F;
-	Thu,  9 May 2024 06:29:00 -0700 (PDT)
-Received: from [10.1.196.40] (e121345-lin.cambridge.arm.com [10.1.196.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 973BD3F6A8;
-	Thu,  9 May 2024 06:28:34 -0700 (PDT)
-Message-ID: <9af152ec-e68f-4f10-833b-400f9fe87bda@arm.com>
-Date: Thu, 9 May 2024 14:28:33 +0100
+	s=arc-20240116; t=1715261403; c=relaxed/simple;
+	bh=Vqluo3CoEl0yjpeMMYMVlJn59yph0GEYTkGYgj/VXAg=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=ljnyKYGtfyMefbFVKlhzPCgOh/ss/Ort9GSz8JDICS0AjPxRg6jhvJADt9v5t+CmHmJSQAcb2XV760JzJhS65KYW0BOOgARAsznVCYcrJId3Wo32SbUmGvq0pgBDrSFBqBP6lmlKxASZjrW9MiCAdy1TOlp/IaLR2HK9Aa47Hrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lFF3xVA2; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFF3xVA2"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-792b8d989e4so60969885a.2;
+        Thu, 09 May 2024 06:30:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715261401; x=1715866201; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ELRiPzSaiwBksf6U0zKzkjH8xyzzGxI12XOql1C3goM=;
+        b=lFF3xVA2EWnoha8f6ODTFylP6Bu4MiUDRGAeAXLl1zMoZBtRybFaylKVaijy5j8IQt
+         vxaZi/X8How+W8wANNqXM8/x+5n1mCnXCYl5O65+IHlyOX9Bfd5RFA4xR5DTH4mN8oND
+         hIZwyE43T7aBBldCckGUXOXCJfBbP/rFC+jbcv2W2q9IqlNgBQoqrmeggEDotsF69pDa
+         T6Xts02cz5YAXlD9cPoR6dWRgiyAjue63LmA5nnYhL2Fx3oSB1k5ZN1BFEFyraXLNwbA
+         AcNSrz7WIk2D3ftnem9PyjnSZaM9t5RZeBWBN7im45I9jYjFaFjomrWpyxR9E5oMB3wF
+         y9lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715261401; x=1715866201;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ELRiPzSaiwBksf6U0zKzkjH8xyzzGxI12XOql1C3goM=;
+        b=uaU2fzndbg8KTmwaCPNNZQI4CO0wsRMSCOt7CIDkRMZePr0W63gpQ0up5IF0QON9ne
+         GMTgZnlzQY2JzFYoRHo4RNJbuNtkVCdgeJzyB3xIeDDLnrJOPyAYeNjHHWOmZz+Yjnxj
+         xoCTsOBzx8Dpp1A86Qbhhq5guRSsdZ1Aob9da6pPcHTDaFoorH8u/rfOb9jWtYJ5Pnf1
+         kvxyT6hepNEc7BH49wVpRD8Pep/hVCcIZu+sieUPgbn4SRBgrjJAA7G/Tkroy3kRchxh
+         127OucoTxjoUnN+6O6oSaGiVswHpVUH6HFnmbh28K72YmatCjzLndhAWiQu+mvyzuW8r
+         LvzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVeHjTE16+nWVqWbcfzWW4x4FpZLZFRZHxXOh8Lwmqf7wkbGXNrcsZF20Wei1HDYNuVcC1GRxvlCOIoVtjW7+00ChXg7B2L727U2cq1dEoR1JBr4rtPO86VAq7xMsBEdMthorGNTzAqXNR/XP6s6jzeJ26AzhJvWtIA
+X-Gm-Message-State: AOJu0Yww180FRwGfCiCooNj3zPTZWhshgtC+gZDtq1X8zNO554qhbhNO
+	ih7rx1Um9CQbkvyhzYBuAc8yPIIWElf/jhoFYsGiTBlSrh19gDfE
+X-Google-Smtp-Source: AGHT+IGR8QNz4Hr5GnYcPQ/hhmSvnn69uxTLGwX8KFiGnexA4jkVhDNdTatkSydDCIFPLPZqVBRsyg==
+X-Received: by 2002:a05:6214:2581:b0:6a1:4580:9555 with SMTP id 6a1803df08f44-6a1514374bemr63898186d6.16.1715261400783;
+        Thu, 09 May 2024 06:30:00 -0700 (PDT)
+Received: from localhost (164.146.150.34.bc.googleusercontent.com. [34.150.146.164])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f1d7040sm6828186d6.107.2024.05.09.06.29.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 06:30:00 -0700 (PDT)
+Date: Thu, 09 May 2024 09:29:59 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Abhishek Chauhan <quic_abchauha@quicinc.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Andrew Halaney <ahalaney@redhat.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Martin KaFai Lau <martin.lau@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ bpf <bpf@vger.kernel.org>
+Cc: kernel@quicinc.com
+Message-ID: <663ccfd7bc17d_12691429452@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20240508215842.2449798-2-quic_abchauha@quicinc.com>
+References: <20240508215842.2449798-1-quic_abchauha@quicinc.com>
+ <20240508215842.2449798-2-quic_abchauha@quicinc.com>
+Subject: Re: [RFC PATCH bpf-next v7 1/3] net: Rename mono_delivery_time to
+ tstamp_type for scalabilty
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dma-direct: Set SG_DMA_SWIOTLB flag for dma-direct
-To: =?UTF-8?B?UGV0ciBUZXNhxZnDrWs=?= <petr@tesarici.cz>,
- "T.J. Mercier" <tjmercier@google.com>
-Cc: Christoph Hellwig <hch@lst.de>,
- Marek Szyprowski <m.szyprowski@samsung.com>, isaacmanjarres@google.com,
- iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20240503183713.1557480-1-tjmercier@google.com>
- <20240504105319.75eec54a@meshulam.tesarici.cz>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20240504105319.75eec54a@meshulam.tesarici.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-On 04/05/2024 9:53 am, Petr Tesařík wrote:
-> On Fri,  3 May 2024 18:37:12 +0000
-> "T.J. Mercier" <tjmercier@google.com> wrote:
+Abhishek Chauhan wrote:
+> mono_delivery_time was added to check if skb->tstamp has delivery
+> time in mono clock base (i.e. EDT) otherwise skb->tstamp has
+> timestamp in ingress and delivery_time at egress.
 > 
->> As of commit 861370f49ce4 ("iommu/dma: force bouncing if the size is
->> not cacheline-aligned") sg_dma_mark_swiotlb is called when
->> dma_map_sgtable takes the IOMMU path and uses SWIOTLB for some portion
->> of a scatterlist. It is never set for the direct path, so drivers
->> cannot always rely on sg_dma_is_swiotlb to return correctly after
->> calling dma_map_sgtable. Fix this by calling sg_dma_mark_swiotlb in the
->> direct path like it is in the IOMMU path.
->>
->> Signed-off-by: T.J. Mercier <tjmercier@google.com>
->> ---
->>   kernel/dma/direct.c | 4 +++-
->>   1 file changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
->> index 4d543b1e9d57..52f0dcb25ca2 100644
->> --- a/kernel/dma/direct.c
->> +++ b/kernel/dma/direct.c
->> @@ -12,7 +12,7 @@
->>   #include <linux/pfn.h>
->>   #include <linux/vmalloc.h>
->>   #include <linux/set_memory.h>
->> -#include <linux/slab.h>
->> +#include <linux/swiotlb.h>
->>   #include "direct.h"
->>   
->>   /*
->> @@ -497,6 +497,8 @@ int dma_direct_map_sg(struct device *dev, struct scatterlist *sgl, int nents,
->>   			goto out_unmap;
->>   		}
->>   		sg_dma_len(sg) = sg->length;
->> +		if (is_swiotlb_buffer(dev, dma_to_phys(dev, sg->dma_address)))
->> +			sg_dma_mark_swiotlb(sg);
->>   	}
->>   
->>   	return nents;
+> Renaming the bitfield from mono_delivery_time to tstamp_type is for
+> extensibilty for other timestamps such as userspace timestamp
+> (i.e. SO_TXTIME) set via sock opts.
 > 
-> I'm not sure this does the right thing. IIUC when the scatterlist flags
-> include SG_DMA_SWIOTLB, iommu_dma_sync_sg_for_*() will call
-> iommu_dma_sync_single_for_*(), which in turn translates the DMA address
-> to a physical address using iommu_iova_to_phys(). It seems to me that
-> this function may not work correctly if there is no IOMMU, but it also
-> seems to me that the scatterlist may contain such non-IOMMU addresses.
+> As we are renaming the mono_delivery_time to tstamp_type, it makes
+> sense to start assigning tstamp_type based on enum defined
+> in this commit.
+> 
+> Earlier we used bool arg flag to check if the tstamp is mono in
+> function skb_set_delivery_time, Now the signature of the functions
+> accepts tstamp_type to distinguish between mono and real time.
+> 
+> Also skb_set_delivery_type_by_clockid is a new function which accepts
+> clockid to determine the tstamp_type.
+> 
+> In future tstamp_type:1 can be extended to support userspace timestamp
+> by increasing the bitfield.
+> 
+> Link: https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
+> Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
 
-In principle dma-direct *could* make use of the SG_DMA_SWIOTLB flag for 
-an ever-so-slightly cheaper check than is_swiotlb_buffer() in sync_sg 
-and unmap_sg, the same way as iommu-dma does. However the benefit would 
-be a lot less significant than for iommu-dma, where it's really about 
-the overhead of needing to perform iommu_iova_to_phys() translations for 
-every segment every time in order to *get* the right thing to check 
-is_swiotlb_buffer() on - that's what would be unreasonably prohibitive 
-otherwise.
-
-Thanks,
-Robin
+Reviewed-by: Willem de Bruijn <willemb@google.com>
