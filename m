@@ -1,151 +1,181 @@
-Received: from honk.sigxcpu.org (honk.sigxcpu.org [24.134.29.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB34E18E0E;
-	Thu,  9 May 2024 12:08:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=24.134.29.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8609714D297
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 12:08:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715256511; cv=none; b=oAcLX8RZ59jYoTVOiejdWaORwnGzJhv+CKbx5C56DfdXdO7pgSmwqden2x7GB0YjsYIRSJtXyJqI1xVg+q44uks2iAe1j7dMujyfKhvTls9stEPbKfddC7keTNDsz31qh5HpNitpkY1YG5n7n6eDm6aFPJdVK+wOfT7jIZj+YcM=
+	t=1715256516; cv=none; b=Pns4+2r8EMN4/T/gRTqqqJ8RqDydyJe10VKaSczYZ/taAyjPKkYjE+a6KqZOg80JkRj13R/MZoElrIccLQIHq6ApE0FxeNpyToy6kmMkYi1yjihNSgwRaE6OAyXUa6FHKxzDsEDNY2WjoC5I5uIJkkXFZ9BCstOemWgXUTdyAng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715256511; c=relaxed/simple;
-	bh=k+8ktLJhujlCEcrtylMtNbUYtqQY1OvRPCIur+o7it0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IUWbP2kQUVLS7vFZUCGN5GqUUMyMbqyccbLB5Qwse9IzwAwKd6RtNi0bC/ybCrb/g9IR1h/XMc7Q0K1T/QIyHlbkGenmrQ7XDIgaqSDBdit8JHmJkVkkBmVoiEomuuTB+tgdWnRf3wXWv2JZ4yAFu/OFUWeW5NZ3RG6Rxwtx+cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigxcpu.org; spf=pass smtp.mailfrom=sigxcpu.org; dkim=pass (2048-bit key) header.d=sigxcpu.org header.i=@sigxcpu.org header.b=Ph7A3Lic; dkim=pass (2048-bit key) header.d=sigxcpu.org header.i=@sigxcpu.org header.b=Vkx+UJ/E; arc=none smtp.client-ip=24.134.29.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sigxcpu.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sigxcpu.org
+	s=arc-20240116; t=1715256516; c=relaxed/simple;
+	bh=kWgF3tD9Ik2YdBsN+KBUHfHvGZhsFYBdloxc7qbA964=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tTGG1RF67mjBRA98Ca7TUtjrZdJEFxGOZRS5sxwbnHDqh9ds8FUOrSrWqddOQ5t5x4i0GbOcZLBeWl9fc2aCrq8A/0QIm4kDDTXx6gND/CQpdmBLCmWPAYcJP1iIv4ldz6W9t3fO2VVmxY1kW8PX7FEbQL4vhc/Ipc4rBDOn3wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Bub+Bivc; arc=none smtp.client-ip=209.85.210.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sigxcpu.org header.i=@sigxcpu.org header.b="Ph7A3Lic";
-	dkim=pass (2048-bit key) header.d=sigxcpu.org header.i=@sigxcpu.org header.b="Vkx+UJ/E"
-Received: from localhost (localhost [127.0.0.1])
-	by honk.sigxcpu.org (Postfix) with ESMTP id 1A27CFB03;
-	Thu,  9 May 2024 14:00:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sigxcpu.org; s=2024;
-	t=1715256051; bh=k+8ktLJhujlCEcrtylMtNbUYtqQY1OvRPCIur+o7it0=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Ph7A3LicOVk/nBXEyXfAlunaorM4dMrLkzLXKHKotd8w56qjjUfdyYLEAx4QaGiA1
-	 9J+DiXMSDq3EhbUZbIQq/wT2Vq4EFR1r8p9GwhiBbPDAV8YnGQ575xFlGbtdq8Ekp0
-	 XoqLqgCOgzY5CiqnT1p+1ILJzwBkwmCJyVl6IR93Lxw8XiXdn4pt4TD2fUXCurSTK2
-	 jVF/IptTJNiow9Y7b9Sztr8oxMeDwEm2+b8bWK+CvWj7MElnSaLhrutknqAwyLR0Cu
-	 JtwCwNEWQ4hPGDykmaQndAApWvZhc4x2PHeH4yh9vjURDtPUJtRNsZN4FAl0RIgPau
-	 a4KxoPztoK9pg==
-Received: from honk.sigxcpu.org ([127.0.0.1])
-	by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 8-h3AaQ5H_a7; Thu,  9 May 2024 14:00:50 +0200 (CEST)
-From: =?UTF-8?q?Guido=20G=C3=BCnther?= <agx@sigxcpu.org>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=sigxcpu.org; s=2024;
-	t=1715256049; bh=k+8ktLJhujlCEcrtylMtNbUYtqQY1OvRPCIur+o7it0=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Vkx+UJ/Exq6tecjLez5mqSdHP7b7mwB+rJ5xt2OhMz5Mg6o72pQo8Ot7CZ2651eic
-	 Ltv/j8WEmkbEMf9xAemSyNXXcRrgDAbax5/TnwQCy8tYbXuzVplaTCmgSPe3h0Cbee
-	 9EeF9rFIt4coF6ZI3t/TXkEEMU6KO6/gfunLwoWO7Zh1GxH5U+9lhUQ2LpthR680PA
-	 9VKauEOqmgwbO+q1L2zVDUTXqatkhoznShsofquBU7uYXP0UBNjPN43Numg5yF86vX
-	 i6xinTWAMN7jktf70Unb7e/eVkV14yHyE753GZhztm/+aaAEv0+r2FsSxWmErPD0hf
-	 1xK8jEupLRqHw==
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Hermes Zhang <chenhuiz@axis.com>,
-	Tony Lindgren <tony@atomide.com>,
-	linux-input@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Bub+Bivc"
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6eb86b69e65so434252a34.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 05:08:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1715256512; x=1715861312; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nJC14KI5N51a3HwicqFWcq+QiW6+wpgCB8tEHpU3Fus=;
+        b=Bub+BivcoOJb4874MGTs33YFce8MgDeGN7oGRdZcSK+wzmnoZys1C5MvZNQ2jp+Prg
+         QP7Uu4g8+xz6kVKlnMVSSPGpzraRknVblr/QQApriuMJkTF2qIBtgs1+CzIY3c3HHmJr
+         mRfpfcw4Yc67XUNJSdWRLaIDCUiCqC1aPsnni4W0xbjm+qFu5v7UTHxx8BToNVHI0Bs9
+         Ycki7NNEWnI7Np2/ggO+1Q/49jtTdem4lGKjJ70kPzSvy9M8hx7Y6AJgblmmH3vrzxs1
+         Q81Co80vsa16RIr97TZ1kCAgnbqsTwA6co2E1YRHwLAPrpwfPxXWVnA+ssA1lB2tiUKY
+         pvqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715256512; x=1715861312;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nJC14KI5N51a3HwicqFWcq+QiW6+wpgCB8tEHpU3Fus=;
+        b=p4oFFfZGcqXArSsPm514lXOQCM2+wImiwemjie02yqAdcmc3VDNuec+MJgJGQrAlzC
+         XU+B68GOmTDPOeWCSIgpiosuhsqaYrXzoloiO+sTv1RqftGf3hgbZC5q4DmcQFL1XUjr
+         6DZv1TNGbvzomrOaaCrBdGL9G1JNqSIu2VIKAF7i660h7an0qAly6W9vGHZmjoLMWnQT
+         UHuM+iTo+LXSrRAtfL8z2WtLXrZYONL4OEYvE2+2XEZTHYq9PKGWulF3WEBlBcn50Mgi
+         FVl9OkWSnkqEM2GYFBj3IqBQa23vM9ezuWqMs7dZeksIc6jZggTVzNkxmlGl0fwyPZt9
+         4i7g==
+X-Forwarded-Encrypted: i=1; AJvYcCWgessPB/uQDxTC1MFbln2HGucrN9Z+Lo3uPNEMZ0yY1dRS2sqzykjuE8YXdznFRrolZV21OAqfBN3ublz9LCe5OrINm9H0tvjMrf35
+X-Gm-Message-State: AOJu0YxrudQCJ7iDIVQ+AODRbMGSFee6RC6HfayjKRuFqAqK8QtM0gtI
+	6k3xHtVubImfzHKTutub+CEsLKUVhjpHB7M7MlYglp0CsUqV93zGM78CiupjuB4=
+X-Google-Smtp-Source: AGHT+IH1//7mPrENMJuaAc7GRP3ThX3QDeZJnAjj0f7u85adSm4sgjE+6KayPsN8zcIL2M9Mq+lMbQ==
+X-Received: by 2002:a05:6808:1795:b0:3c9:9339:6fba with SMTP id 5614622812f47-3c9933974a7mr1186822b6e.16.1715256512343;
+        Thu, 09 May 2024 05:08:32 -0700 (PDT)
+Received: from anup-ubuntu-vm.localdomain ([103.97.165.210])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3c98fc97a8bsm174350b6e.17.2024.05.09.05.08.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 05:08:31 -0700 (PDT)
+From: Anup Patel <apatel@ventanamicro.com>
+To: Rob Herring <robh@kernel.org>,
+	Saravana Kannan <saravanak@google.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	Sunil V L <sunilvl@ventanamicro.com>,
+	Anup Patel <anup@brainfault.org>,
+	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	phone-devel@vger.kernel.org
-Subject: [PATCH v1 1/1] Input: gpio-keys - expose wakeup keys in sysfs
-Date: Thu,  9 May 2024 14:00:28 +0200
-Message-ID: <2b6eb6c3f68509aa35cdf2e2a586689ae97681ab.1715255980.git.agx@sigxcpu.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1715255980.git.agx@sigxcpu.org>
-References: <cover.1715255980.git.agx@sigxcpu.org>
+	devicetree@vger.kernel.org,
+	Anup Patel <apatel@ventanamicro.com>
+Subject: [PATCH v4] of: property: Add fw_devlink support for interrupt-map property
+Date: Thu,  9 May 2024 17:38:20 +0530
+Message-Id: <20240509120820.1430587-1-apatel@ventanamicro.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This helps user space to figure out which keys should be used to unidle a
-device. E.g on phones the volume rocker should usually not unblank the
-screen.
+Some of the PCI host controllers (such as generic PCI host controller)
+use "interrupt-map" DT property to describe the mapping between PCI
+endpoints and PCI interrupt pins. This is the only case where the
+interrupts are not described in DT.
 
-Signed-off-by: Guido Günther <agx@sigxcpu.org>
+Currently, there is no fw_devlink created based on "interrupt-map"
+DT property so interrupt controller is not guaranteed to be probed
+before the PCI host controller. This affects every platform where
+both PCI host controller and interrupt controllers are probed as
+regular platform devices.
+
+This creates fw_devlink between consumers (PCI host controller) and
+supplier (interrupt controller) based on "interrupt-map" DT property.
+
+Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+Reviewed-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/input/keyboard/gpio_keys.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+Changes since v3:
+- Added a comment about of_irq_parse_raw()
+- Removed redundant NULL assignments to sup_args.np
+Changes since v2:
+- No need for a loop to find #interrupt-cells property value
+- Fix node de-reference leak when index is greater than number
+  of entries in interrupt-map property
+Changes since v1:
+- Updated commit description based on Rob's suggestion
+- Use of_irq_parse_raw() for parsing interrupt-map DT property
+---
+ drivers/of/property.c | 52 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index 9f3bcd41cf67..84f43d1d4375 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -198,7 +198,8 @@ static void gpio_keys_enable_button(struct gpio_button_data *bdata)
-  */
- static ssize_t gpio_keys_attr_show_helper(struct gpio_keys_drvdata *ddata,
- 					  char *buf, unsigned int type,
--					  bool only_disabled)
-+					  bool only_disabled,
-+					  bool only_wakeup)
- {
- 	int n_events = get_n_events_by_type(type);
- 	unsigned long *bits;
-@@ -218,6 +219,9 @@ static ssize_t gpio_keys_attr_show_helper(struct gpio_keys_drvdata *ddata,
- 		if (only_disabled && !bdata->disabled)
- 			continue;
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index a6358ee99b74..2d749a18b037 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1311,6 +1311,57 @@ static struct device_node *parse_interrupts(struct device_node *np,
+ 	return of_irq_parse_one(np, index, &sup_args) ? NULL : sup_args.np;
+ }
  
-+		if (only_wakeup && !bdata->button->wakeup)
-+			continue;
++static struct device_node *parse_interrupt_map(struct device_node *np,
++					       const char *prop_name, int index)
++{
++	const __be32 *imap, *imap_end, *addr;
++	struct of_phandle_args sup_args;
++	u32 addrcells, intcells;
++	int i, imaplen;
 +
- 		__set_bit(*bdata->code, bits);
- 	}
- 
-@@ -297,7 +301,7 @@ static ssize_t gpio_keys_attr_store_helper(struct gpio_keys_drvdata *ddata,
- 	return error;
- }
- 
--#define ATTR_SHOW_FN(name, type, only_disabled)				\
-+#define ATTR_SHOW_FN(name, type, only_disabled, only_wakeup)		\
- static ssize_t gpio_keys_show_##name(struct device *dev,		\
- 				     struct device_attribute *attr,	\
- 				     char *buf)				\
-@@ -306,22 +310,26 @@ static ssize_t gpio_keys_show_##name(struct device *dev,		\
- 	struct gpio_keys_drvdata *ddata = platform_get_drvdata(pdev);	\
- 									\
- 	return gpio_keys_attr_show_helper(ddata, buf,			\
--					  type, only_disabled);		\
-+					  type, only_disabled,		\
-+					  only_wakeup);			\
- }
- 
--ATTR_SHOW_FN(keys, EV_KEY, false);
--ATTR_SHOW_FN(switches, EV_SW, false);
--ATTR_SHOW_FN(disabled_keys, EV_KEY, true);
--ATTR_SHOW_FN(disabled_switches, EV_SW, true);
-+ATTR_SHOW_FN(keys, EV_KEY, false, false);
-+ATTR_SHOW_FN(switches, EV_SW, false, false);
-+ATTR_SHOW_FN(disabled_keys, EV_KEY, true, false);
-+ATTR_SHOW_FN(disabled_switches, EV_SW, true, false);
-+ATTR_SHOW_FN(wakeup_keys, EV_KEY, false, true);
- 
- /*
-  * ATTRIBUTES:
-  *
-  * /sys/devices/platform/gpio-keys/keys [ro]
-  * /sys/devices/platform/gpio-keys/switches [ro]
-+ * /sys/devices/platform/gpio-keys/wakeup_keys [ro]
-  */
- static DEVICE_ATTR(keys, S_IRUGO, gpio_keys_show_keys, NULL);
- static DEVICE_ATTR(switches, S_IRUGO, gpio_keys_show_switches, NULL);
-+static DEVICE_ATTR(wakeup_keys, S_IRUGO, gpio_keys_show_wakeup_keys, NULL);
- 
- #define ATTR_STORE_FN(name, type)					\
- static ssize_t gpio_keys_store_##name(struct device *dev,		\
-@@ -361,6 +369,7 @@ static struct attribute *gpio_keys_attrs[] = {
- 	&dev_attr_switches.attr,
- 	&dev_attr_disabled_keys.attr,
- 	&dev_attr_disabled_switches.attr,
-+	&dev_attr_wakeup_keys.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(gpio_keys);
++	if (!IS_ENABLED(CONFIG_OF_IRQ))
++		return NULL;
++
++	if (strcmp(prop_name, "interrupt-map"))
++		return NULL;
++
++	if (of_property_read_u32(np, "#interrupt-cells", &intcells))
++		return NULL;
++	addrcells = of_bus_n_addr_cells(np);
++
++	imap = of_get_property(np, "interrupt-map", &imaplen);
++	if (!imap || imaplen <= (addrcells + intcells))
++		return NULL;
++	imap_end = imap + imaplen;
++
++	while (imap < imap_end) {
++		addr = imap;
++		imap += addrcells;
++
++		sup_args.np = np;
++		sup_args.args_count = intcells;
++		for (i = 0; i < intcells; i++)
++			sup_args.args[i] = be32_to_cpu(imap[i]);
++		imap += intcells;
++
++		/*
++		 * Upon success, the function of_irq_parse_raw() returns
++		 * interrupt controller DT node pointer in sup_args.np.
++		 */
++		if (of_irq_parse_raw(addr, &sup_args))
++			return NULL;
++
++		if (!index)
++			return sup_args.np;
++
++		of_node_put(sup_args.np);
++		imap += sup_args.args_count + 1;
++		index--;
++	}
++
++	return NULL;
++}
++
+ static struct device_node *parse_remote_endpoint(struct device_node *np,
+ 						 const char *prop_name,
+ 						 int index)
+@@ -1359,6 +1410,7 @@ static const struct supplier_bindings of_supplier_bindings[] = {
+ 	{ .parse_prop = parse_msi_parent, },
+ 	{ .parse_prop = parse_gpio_compat, },
+ 	{ .parse_prop = parse_interrupts, },
++	{ .parse_prop = parse_interrupt_map, },
+ 	{ .parse_prop = parse_regulators, },
+ 	{ .parse_prop = parse_gpio, },
+ 	{ .parse_prop = parse_gpios, },
 -- 
-2.43.0
+2.34.1
 
