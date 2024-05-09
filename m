@@ -1,101 +1,89 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9379BDDD9;
-	Thu,  9 May 2024 06:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117CB1494C9
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 06:50:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715237428; cv=none; b=FrDZyYu7YvPUIPfozpePZQV0yrJ0qzHic1WF9irAG9NzLtdTjyAUo/n7Q8QhEWB1h1uDHmu0XPvwlcXpO+suDvDsTwM/rWHQtOeVcE9zmQdCHH0gjYi4/WnmLP1zGZUYToIyKliYHc1K/+U2CF0F3lrETr4frTY1c1ggF7Bf1Mo=
+	t=1715237433; cv=none; b=rXtJUn7h9eI3Tr+M/k34VRzvrU2T3QNJEedVuFdg1QY4wz/ENQWudSe+8xCxUcWePLLIFFcTKG9+6qw/v0uItPX/qNqlZpffiC6gQDtMhWMwaBDnZFFuJLpev9afNEbd49b2spJCCIdgyyaTDTN7Uvt2tgi+ytumIwh6u0hF/zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715237428; c=relaxed/simple;
-	bh=RSeqe6ed4ewdO4stMEjsqV83ww4odGvJX+LQ9kccDDw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Nq5/uhK6jJ8zpow/53Lyj/0bQmBbXJCSXcG7vcSRQ7xZNfMsifxedsXSqQSEkt+CVUitWij3iI/FsUR1WI3u04TOz6nDkDfETzDHko3E+q2rMbjlJzGULLJit1yEVDWLRmi8YehmVPJ+gh/tEQUDJ+VNR2UvQcWi1OaosRghgiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zez3NFdM; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715237433; c=relaxed/simple;
+	bh=UGxdwghxCgiKyxIFDTHz3NP3FPdZfcDQAcxGu9GCCyI=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=NiTgTiKEUsVXOQkgM6oLF3xkfJqJ3d/2MiHN4YteowZWyaZCfMxBucpjEDPAj2+fdhrp6SEtz0Y6ksYyXPn+EyvO3ZN8m7LQB/uEDWP6Dx9/x8qRNMa5dD2avoEX1SRnuYg2Uvz7E0TqLhtjA8RJcr/8O6He1GdjV5Gq9FD+YGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=G/VgbM0c; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zez3NFdM"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e4b90b03a9so6674971fa.1;
-        Wed, 08 May 2024 23:50:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="G/VgbM0c"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6f4496af4cdso554584b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 23:50:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715237425; x=1715842225; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2UOhhsJgb99pm27SXHK1pVf/ykOOg5LTm9pRGDO0Fjs=;
-        b=Zez3NFdMeQnGYCiu7MmJe5nvUMEpBYbwDLmI/ZdVXg2qrU+MbE9/7u2BPsam9iPzB0
-         kD/GdYtPlX1Jyy5rMA7ez0Bm3BFclvBm3/LEGSkpcIbtTilFfgXD3wz9pqMba273qCcS
-         fHqtOC8RpJpOMhTiOM02vIMseqf4smHY6CWT8/Be4OoMWqRkgarc0yOvtcwrgud6pkzr
-         /WXQU91iYi9IKcd2L4ATJTPLkhAc7AcTuEYCsR1c16vqqX17T7CGSVlyuvD5AfQnmnC2
-         YpBOJHAfMN/w3Ms5tfvAKKNENqhZ+dU29dl1hLdwM3AtI8P8sggwQD0f39pH9FZlZaBa
-         03dg==
+        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1715237430; x=1715842230; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/JUD6JeUeqy4EDOMZvaUaU8rJSme+do2VQmFMoN9eP8=;
+        b=G/VgbM0cM7PLjHeQCTj3EEaO6+kAqfkreOOQEyEselHehEtLTSp2eyxGxDtJE1g894
+         yRJeOcS9sJNwX3i5BcE4MGZoQxmRk+AszWeFueQdDPyaXRz1+PnE0eKRj+kF017vZ72o
+         5GsTXSUIW0B7Xww99VVyTu9G7KNjOTNkcAdxu16MYPf7xk3AEkhjMAeJEBX6spLEWWsf
+         DG4v2PvNxK9eznTwVwhx3ijkIrn3jvILebiATPOcPfEY1b2pYWejuWFLPU0QfUMZlUrF
+         A9Y0ciRe5fhjjse3NcxyJz/oymR7DoqL0Vc4I9b/kV/kbCD0km6m1dh6B9p8OKUXOspu
+         6mWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715237425; x=1715842225;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2UOhhsJgb99pm27SXHK1pVf/ykOOg5LTm9pRGDO0Fjs=;
-        b=SPbGLQQ4l6fT5is9jtKcVwXdkWVu6cpz3iqO9+izVYRFsx+s1agge0ldT6dC4SoJ+U
-         y6sahXsQxOn+ClmfPJo3i3YDSSlXJm8gBvcu1urkPh/fZEROmNX22Kcucj+9qpnc1/yg
-         qxTJHn+hnbggCyNx8YYY6PteA97HTtEiyVDZSF3voztakY2zBiOlZXr/xoOBvKs6J6Uv
-         Phmrem8iY3lxQwEQniCVmImIOm+E2/Ilo5uGkrp/4P59aFm6051nyOgkFXIj/QqODQj3
-         1f7USZBnh94bGTuAk7CbECz6ZsqA/JmMm0BRI/pOYSXWUZbos01BmwcynC3Yx2m5LrMl
-         am5A==
-X-Forwarded-Encrypted: i=1; AJvYcCWMq3YRte85F4Smc8eWU+uQIRZGBjdnfNFe/S1NVJ+5n0PtcRsbHlYmNegbTJmgmBmGxwiBC7/2dl8s8drYCdiH0nYMl0FmeXMMOQJJLoB5JyrZYwd8H7K6LzEGAU0tFgk3keUT
-X-Gm-Message-State: AOJu0YxiWMyJUAcWRFR9rrscM4/XrMqpDvFGxC37np7I0a5YSCwfl+iv
-	MroaIu+Md0NvI4oKfAIzsD4xhX7W1HANSeQDr4oxb0QOAOjgQP//
-X-Google-Smtp-Source: AGHT+IFdtu14ZmyI84Ks3pnhLvcdac1FmVj0U13JvxDP7AMPhUTOAmsM9uMthlsZwwvco4EdRUWDNQ==
-X-Received: by 2002:a05:651c:b29:b0:2e2:db99:c35e with SMTP id 38308e7fff4ca-2e44738a829mr35982021fa.12.1715237424463;
-        Wed, 08 May 2024 23:50:24 -0700 (PDT)
-Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fa9dbab53sm31431165e9.13.2024.05.08.23.50.23
+        d=1e100.net; s=20230601; t=1715237430; x=1715842230;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/JUD6JeUeqy4EDOMZvaUaU8rJSme+do2VQmFMoN9eP8=;
+        b=D8dETJ/+qiyS3OKskXN5bJakLA0KRV2FYd41rpoImZX3fumQ/3Zxc3zfUG9CQb/952
+         NQfMMOv30yIJJXtWZWvicCriZR22ztGN0XjRob9qjUqMhzeIOHgaUtqOCcY8gUnS4EwS
+         AywxvhmEhVhy9mHSZEeCjI0agvKRGvHjyWA45rkXIic0WtAhCFXOBmLPBBWculQnRNRF
+         MMX0/q6CAQUGtEiHr5hawoUtVQRKgLhwboXMQu2Tj+SPuqbY+Q6MKc07JBhZF9GxCz86
+         jtrIWjFsRB4t45P9qLEf7wQ7Nc+KFHM9GdhvUfNd+iDjJ122Oe8YpqA9HxGy/Elyiy4d
+         kDvg==
+X-Forwarded-Encrypted: i=1; AJvYcCVobFgKbdw8Dk0WrG8jAUqQ9yOEuVr6KrFBdxG6SidM8XD7tkpiy2efHBaghc61LXz/hhNPeqboRr4+sMJ9TXiL/QOG/lBM/0SyGE40
+X-Gm-Message-State: AOJu0YyLjTcPHGMzp45ae1A2KCSytp5SAQnwDo6Zn8LthFDnzqL+BXfb
+	YN/W0d/ugDnQDEDkuGrvdpZP38PK8HYWA7qUUyBm2sb4YsMunAXAYzoN0q5pVWg=
+X-Google-Smtp-Source: AGHT+IGIlroM64N0tzcOuwqZINRbt4eE7exWvM0jiOPyVjAiOkfOGMjYLCS5hbxf7kIlKYsqyYhiQQ==
+X-Received: by 2002:a05:6a00:1b55:b0:6ea:7b29:3ab7 with SMTP id d2e1a72fcca58-6f49c27f72bmr4931054b3a.23.1715237430274;
+        Wed, 08 May 2024 23:50:30 -0700 (PDT)
+Received: from lvzhaoxiong-KLVC-WXX9.huaqin.com ([116.66.212.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a84b6bsm633939b3a.74.2024.05.08.23.50.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 23:50:23 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Woojung Huh <woojung.huh@microchip.com>,
-	UNGLinuxDriver@microchip.com,
-	Andrew Lunn <andrew@lunn.ch>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Vladimir Oltean <olteanv@gmail.com>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] net: dsa: microchip: Fix spellig mistake "configur" -> "configure"
-Date: Thu,  9 May 2024 07:50:23 +0100
-Message-Id: <20240509065023.3033397-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        Wed, 08 May 2024 23:50:29 -0700 (PDT)
+From: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+To: dmitry.torokhov@gmail.com,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jikos@kernel.org,
+	benjamin.tissoires@redhat.co,
+	dianders@google.com,
+	hsinyi@google.com
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+Subject: [PATCH v1 0/2] Add starry bindings and driver
+Date: Thu,  9 May 2024 14:49:57 +0800
+Message-Id: <20240509064959.23550-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-There is a spelling mistake in a dev_err message. Fix it.
+Add bindings and driver for starry.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/net/dsa/microchip/ksz_dcb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Zhaoxiong Lv (2):
+  dt-bindings: display: panel: Add Starry-er88577 support
+  drm/panel: starry: add new panel driver
 
-diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
-index 5e520c02afd7..484945a9c5fb 100644
---- a/drivers/net/dsa/microchip/ksz_dcb.c
-+++ b/drivers/net/dsa/microchip/ksz_dcb.c
-@@ -220,7 +220,7 @@ static int ksz88x3_port_set_default_prio_quirks(struct ksz_device *dev, int port
- 			return ret;
- 
- 		if (!(port2_data & KSZ8_PORT_802_1P_ENABLE)) {
--			dev_err(dev->dev, "Not possible to configur port priority on Port 1 if PCP apptrust on Port 2 is disabled\n");
-+			dev_err(dev->dev, "Not possible to configure port priority on Port 1 if PCP apptrust on Port 2 is disabled\n");
- 			return -EINVAL;
- 		}
- 	}
+ .../display/panel/starry,er88577.yaml         |  59 +++
+ drivers/gpu/drm/panel/panel-starry-er88577.c  | 444 ++++++++++++++++++
+ 2 files changed, 503 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/starry,er88577.yaml
+ create mode 100644 drivers/gpu/drm/panel/panel-starry-er88577.c
+
 -- 
-2.39.2
+2.17.1
 
