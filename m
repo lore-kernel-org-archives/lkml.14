@@ -1,103 +1,138 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FCB137757
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 20:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BBF137923;
+	Thu,  9 May 2024 20:01:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715284918; cv=none; b=axNLLFEerpzbwQCBgnuwDtxjobnYBW8SVp026HC7ZmCVmxdcx1KlUhMtl9NazWkvn83j6qjamwuOe2KKDSdtb8KdEUvwX28dmqrkccrdrq7nCSBgxpgCOGVlTm5SpKZ9Znlb6TGKJUJidd4W14WSKzAlGII1IX7fVrk6Ajydz88=
+	t=1715284918; cv=none; b=oKsCvW+PJSBNJBZsbD988KKIrheydO8n7jT/Ij5G/gfpIwNDik7/fUqTQ1gkN6xWJu90xqB0ErS93B/ZmdjIkAnjFU+Jy/nqPlqhR58SyDaMJaTdgeYFQJzz1fAnMRlODvB6Mej4LH4Pu/+wwn5rHl45SJKvN8fYBTz0w0Jdu4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715284918; c=relaxed/simple;
-	bh=lWLGmZvaxA9RBlByfmCfZky8EH90Zb+6S+z65rzDbew=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uI1lqwP+epJbCu+MfzfVn7m1Zh2IlPZaE5WiZS7r/IzPQ31U+CvZjKoMSyiLq20tZPOw4SQ0MoAaHd3a4efNdd49cV/lGsE3+82A7ALkwfqo31HU9fivHBe41hvB5ADGXpJnB/UMG25LrZQxpKAr8cimLJDE9q3uVR5BaA4HRes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bMGqhXRp; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
+	bh=MjekaYglvxnoUU0c4VwltXNfI+gRitDEcGsolq9SIpQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L2hr79HVBFvHO1GteWCXRG41g8bKmYqWkcZ+WZgWJLhncR3mqwzv9mZEiszgpQMHLoYnERW+W/AJIgjEbmSuggWCJH5SVPWb+/Mg7QlgC57AynB7EjNhpCe8zyfIj34b9uPXPp9bXiFDEw3H0GSW3yCTFjdDN41WhBFQIY15E2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=ZwA/zztk; arc=none smtp.client-ip=37.205.15.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bMGqhXRp"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be26af113so21326757b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 13:01:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715284915; x=1715889715; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7hWPJomGop1o1vSO/WNR00I+KyAYhO7ZfPBKMyVYJ3k=;
-        b=bMGqhXRpecO3D6FFX7NPimCA4hS/TN+qWy7xAikSq6ZRHE19E5VcBjnz+yzGuSl/le
-         7MaEqbZ+5oZ35HepiEKUenSkM/r5QwdhkiJhUIpEjeSwN73VS6y/fav1H5Fh8szqveBn
-         TwvX1RDXjXFpop/kFj1xttSlxffHOdXQj6sEwomFN9o6wsP+LU+ayufYHIdYGW/gW/4F
-         +chjslXanSEOIOkmcZ6EGXNuvMsay5GuLaIc1nrF2fJhtHLuWvyvg/yLTL4cwKpPb/ea
-         2VIo/NvmlG4ZJ1J3VAwR9DAin1cZM59CxD1i3ZDc1N2HgFQebiqFp+j4PESz3+kN6VMe
-         hIqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715284915; x=1715889715;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7hWPJomGop1o1vSO/WNR00I+KyAYhO7ZfPBKMyVYJ3k=;
-        b=oUtKRaUep2X6WekIUHWu84hZErLKneUklR1LzubgL5BlAKdvjO/yzA+ykNqyHEtbwn
-         2y+Ud0MQhzxter51nHB2NTkG2gi/TCjL9l5H+lqVy7Xf9TdDrHhp2YTtDOfECyROe8qF
-         2Hl2pOr5hLigFESM255ii7B/Ke+tL+HjOg6Dqb7ySlHWgnwIvFKQsvljdCyEE03VO9Rf
-         fQ/jH6H9R8gbpE9XOQx9jGmJ2dtVI4h8GGIeBkp6MG2QSXN2Q8i+V651h8cp9kpf9N7/
-         hZOL+pELbTUIO02a0pJ6pN7oX1q191argRre3/EkGFZyck5gej51NB2nAM+DkgOTFwRy
-         jvUQ==
-X-Gm-Message-State: AOJu0YyEvdOamCMnlFrHqbFaSH0fZwTuqK3vIVAqrB6RgdyT2xKL9ylq
-	K8uqcY20s3dRIYYQrkYbcocKz8OiPUCTw3nnelkPjSfaQXrVVsi6b4aYWsnKGyukpaSxzVPrn9C
-	hIQ==
-X-Google-Smtp-Source: AGHT+IHpbKZq4QkjTflQ8ArARtMBvh0PZ9C9VKKW9QcnoVDxM8W2W8fLFQ/oTQAQRdxFasvDcO10UKeRsB8=
-X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
- (user=edliaw job=sendgmr) by 2002:a05:690c:490d:b0:611:2c40:e8d0 with SMTP id
- 00721157ae682-622affa3fadmr1378917b3.3.1715284914803; Thu, 09 May 2024
- 13:01:54 -0700 (PDT)
-Date: Thu,  9 May 2024 19:58:16 +0000
-In-Reply-To: <20240509200022.253089-1-edliaw@google.com>
+	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="ZwA/zztk"
+Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by bee.tesarici.cz (Postfix) with ESMTPSA id 068B31C3276;
+	Thu,  9 May 2024 22:01:49 +0200 (CEST)
+Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
+	t=1715284909; bh=EVqEcpbQt5wTkwvxHRqJKUX2tSGchUs142WzCK5AFSY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZwA/zztkya4irG3ezVLRCaSAAlnzPdiOIBiiEon2zfOQD1oCH+/jV4aOyLkcw2dKj
+	 6STNO4zn6TomTuMe98g7qHSNrzMC3fBies86Lrhy9XqgDSfPQPPiab9pM8ofFYupat
+	 iPWnjaJdNAwdPhMo7d3UmtseInNGvL2AEWf7EE+ycwjQZSmkR74bSf2ZwxHJzMEuKD
+	 NSuHD/Tkw6cVqPn9Q8AphAkGEp6yKOSIeUQ0h1obhSXwqixsqNnnbA/en8PzrCp1c+
+	 sng8Bokv2fh/jpyxchYQM1NcTT2RhqiOl50Hsv4yPv2BBKWEL7rkIKRYxfRoK1K4Vg
+	 Z2ZUsC5vaMoUQ==
+Date: Thu, 9 May 2024 22:01:47 +0200
+From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet
+ <corbet@lwn.net>, Tianyu Lan <Tianyu.Lan@microsoft.com>,
+ mhklinux@outlook.com, robin.murphy@arm.com, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] doc: swiotlb: Document SWIOTLB areas parameter
+Message-ID: <20240509220147.3b0a0073@meshulam.tesarici.cz>
+In-Reply-To: <CABdmKX229OjjzQ9BYC96QtwKdVyqdYEkLaBi1GN4oDNMD5SDpQ@mail.gmail.com>
+References: <20240507013502.3095744-1-tjmercier@google.com>
+	<20240507013502.3095744-2-tjmercier@google.com>
+	<20240509081403.28c424d5@meshulam.tesarici.cz>
+	<CABdmKX229OjjzQ9BYC96QtwKdVyqdYEkLaBi1GN4oDNMD5SDpQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240509200022.253089-1-edliaw@google.com>
-X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
-Message-ID: <20240509200022.253089-25-edliaw@google.com>
-Subject: [PATCH v3 24/68] selftests/iommu: Drop duplicate -D_GNU_SOURCE
-From: Edward Liaw <edliaw@google.com>
-To: shuah@kernel.org, "=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>, 
-	"=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>, Christian Brauner <brauner@kernel.org>, 
-	Richard Cochran <richardcochran@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kernel-team@android.com, Edward Liaw <edliaw@google.com>, 
-	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, bpf@vger.kernel.org, 
-	John Hubbard <jhubbard@nvidia.com>, Muhammad Usama Anjum <usama.anjum@collabora.com>, iommu@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
--D_GNU_SOURCE can be de-duplicated here, as it is added by lib.mk.
+On Thu, 9 May 2024 09:04:16 -0700
+"T.J. Mercier" <tjmercier@google.com> wrote:
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Signed-off-by: Edward Liaw <edliaw@google.com>
----
- tools/testing/selftests/iommu/Makefile | 2 --
- 1 file changed, 2 deletions(-)
+> On Wed, May 8, 2024 at 11:14=E2=80=AFPM Petr Tesa=C5=99=C3=ADk <petr@tesa=
+rici.cz> wrote:
+> >
+> > On Tue,  7 May 2024 01:34:59 +0000
+> > "T.J. Mercier" <tjmercier@google.com> wrote:
+> > =20
+> > > Commit 20347fca71a3 ("swiotlb: split up the global swiotlb lock") add=
+ed
+> > > the ability to specify the number of SWIOTLB areas, but boot-options.=
+rst
+> > > was not updated as part of that commit.
+> > >
+> > > Reported-by: Michael Kelley <mhklinux@outlook.com>
+> > > Fixes: 20347fca71a3 ("swiotlb: split up the global swiotlb lock")
+> > > Signed-off-by: T.J. Mercier <tjmercier@google.com>
+> > > ---
+> > >  Documentation/arch/x86/x86_64/boot-options.rst | 4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/Documentation/arch/x86/x86_64/boot-options.rst b/Documen=
+tation/arch/x86/x86_64/boot-options.rst
+> > > index a37139d1752f..18161657b301 100644
+> > > --- a/Documentation/arch/x86/x86_64/boot-options.rst
+> > > +++ b/Documentation/arch/x86/x86_64/boot-options.rst
+> > > @@ -287,9 +287,11 @@ iommu options only relevant to the AMD GART hard=
+ware IOMMU:
+> > >  iommu options only relevant to the software bounce buffering (SWIOTL=
+B) IOMMU
+> > >  implementation:
+> > >
+> > > -    swiotlb=3D<slots>[,force,noforce]
+> > > +    swiotlb=3D<slots>[,<areas>,force,noforce] =20
+> >
+> > This is not quite how this parameter is parsed. All the following
+> > specifications are valid:
+> >
+> > - swiotlb=3D512        // only slots
+> > - swiotlb=3D,4         // only areas
+> > - swiotlb=3D512,4      // slots and areas
+> > - swiotlb=3Dforce      // default size
+> > - swiotlb=3D512,force  // default areas
+> > - swiotlb=3D512,4,force // explicitly specify everything
+> >
+> > I believe the syntax should be somethig like:
+> >
+> >   swiotlb=3D{ | [<slots>][,<areas>],}{ force | noforce }
+> >
+> > Petr T
+> > =20
+> What does the leading | mean in front of slots?  How about brackets
 
-diff --git a/tools/testing/selftests/iommu/Makefile b/tools/testing/selftests/iommu/Makefile
-index 32c5fdfd0eef..fd6477911f24 100644
---- a/tools/testing/selftests/iommu/Makefile
-+++ b/tools/testing/selftests/iommu/Makefile
-@@ -2,8 +2,6 @@
- CFLAGS += -Wall -O2 -Wno-unused-function
- CFLAGS += $(KHDR_INCLUDES)
- 
--CFLAGS += -D_GNU_SOURCE
--
- TEST_GEN_PROGS :=
- TEST_GEN_PROGS += iommufd
- TEST_GEN_PROGS += iommufd_fail_nth
--- 
-2.45.0.118.g7fe29c98d7-goog
+I wanted to mark somehow that "force" and "noforce" alone do not
+require a leading comma, but if you specify slots and/or areas, the
+comma is required, like you write below.
 
+> around force/noforce since they're also optional and mutually
+> exclusive?
+
+Right. I missed that.
+
+> The Rebooting section uses double brackets instead of
+> braces for groupings like that.
+
+TBH I don't know what syntax is used here. Use anything that can capture
+the variants I listed above.
+
+> Only weird thing here is the
+> force/noforce comma being potentially unneeded, but that's getting
+> pretty picky and I think the intent is clear.
+>=20
+> swiotlb=3D[<slots>][,<areas>][, [force] | [noforce] ]
+
+No objections from my side.
+
+Petr T
