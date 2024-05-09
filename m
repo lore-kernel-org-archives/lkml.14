@@ -1,118 +1,166 @@
-Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99DD813D289
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 08:56:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.110.167.99
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDF813D289
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 08:56:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715244968; cv=none; b=NlDxq2xqOLIwIG/xMwKtWMAOQakGHPMCiUTtX2ABbGwsyKYBnBdIGwL/ITUAZPit33VIuiUTns4IGFgDpyKe2U8oMivYIvyOM3Zn3MStqhr7Nc9tPZUf6IhEW9El76roqjWuh3NlIuJj1uvH3F8Ri2S7Ty+ATNtUAAnoD7iTVxI=
+	t=1715244998; cv=none; b=lUipcaR0KCmwrQFLORAV2Zn/KkWOcdHqFpF7buuADPeCynbO68D7lrscB1KESaDYVU96xTJjofFeklfAmOgIUh+AyL53+tIXpa4YH+Vi43rgg41wANI42wz6M1xkp+RMEb8YvaIuYOR686DHA3Wm9jXtdz9UjBTThT1Iy76N8fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715244968; c=relaxed/simple;
-	bh=c36C+k9q9dNBLdBPfFzSAMYp3ZZ9Qs7guFDfKKB5zck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Cuecs5ilTn+ggR8euRBR+WXMiPYaVVxxqlkLXNcXJkRSoq7BGD2DdumZ+ZVuM3P7eQpxWTFDpnKZn2rBpNYV/TeOZ583SWAlvt3YQ7k36ctee7MUl93gXHjYo2yb6dh++uWo/xGUMbRWUUHSmjfLDndDcMIigC+cLbUIV9g76vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=203.110.167.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
-X-ASG-Debug-ID: 1715244164-1eb14e507e0caa0001-xx1T2L
-Received: from ZXSHMBX3.zhaoxin.com (ZXSHMBX3.zhaoxin.com [10.28.252.165]) by mx2.zhaoxin.com with ESMTP id 5dTMgisTdkf08vuz (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 09 May 2024 16:42:44 +0800 (CST)
-X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX3.zhaoxin.com
- (10.28.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 9 May
- 2024 16:42:44 +0800
-Received: from [192.168.1.204] (125.76.214.122) by ZXBJMBX03.zhaoxin.com
- (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 9 May
- 2024 16:42:42 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.165
-Message-ID: <1258b765-111c-4538-83e5-8e6aa3cb0936@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 192.168.1.204
-Date: Thu, 9 May 2024 16:42:41 +0800
+	s=arc-20240116; t=1715244998; c=relaxed/simple;
+	bh=hKQYUBLwlyNCoeOE+Q2Xm1KRZvxccgpo7Pa182uqSBo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rNifvlOzkSfiLx3D7mhkk3RS9GRSwC24PA2k/IlY7ds2Ayrc1FlOV3HSMYcfGHph3LRiVdzvZfjfz/X6godEwoi5C8/cyc2SnsvqAWfpRJIrHvIafwaU2TxSm819QkmY/ESW/XcTlgwUzLCUqP6HU8LDQ/G3TU2WPULO2RIA+Eg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rcm3ARhZ; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rcm3ARhZ"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a59ab4f60a6so144317166b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 01:56:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715244995; x=1715849795; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pq74kVZCKggMGSqhPRfk3K/aawyZk/HKiHXpQRgHcaE=;
+        b=Rcm3ARhZw80y71GuBED6PQ8uqyNo+X+UtTHgxXMdGhWig/5WbjKRoUXV7FLdxyM2lI
+         T4EC/dP+O1b+HcsBgP3fErrfnHm34zuOkDvRcipWzg3a/Ks9MVEy1WeflvOt1YWcGZkl
+         QEWZaoQ1V6UPSDNoVcLH1J8HlNEnpbUNSbewjPq50/DJPv8C8v88ZZsxfOGHfd9zhbFX
+         461NYaivmcgiZTpV09VwRH2TTtXZwjMxslsME/yh+/cM3vcGcUmkuRHm/blcISWUEkAU
+         dBxGWCNkTkudMU8233T57ByKpwae39irEvpIxRFAR8RMt97rz3zaT5MBmnMFCJSrZsXe
+         vYxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715244995; x=1715849795;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pq74kVZCKggMGSqhPRfk3K/aawyZk/HKiHXpQRgHcaE=;
+        b=X1f3KmPTJPvb9j7Z3p0K07Sn2+LTgt84kIYVfI9to3V39zx0JUMQ4G5+gHucjgy+/Z
+         aQXPGsuupMqIqOf0FZs+jzoNzcl+YDL1dpD72gYDBgNlaKcMqqw4UmFN7ZdDp1Drd0Fo
+         478unpWRxJSSWShLVxyef6UToHn8YN8rhT9PbN6j3p+Lt4nFMxay6Te95SAjw+MtCEs+
+         s76Es0SlnMpXNP/IW1qJ1VKlDHtbbyjRuw+Fg38l3q0gkA2zQM8UypocBHkGgP1POIkF
+         +87I6cqQDBB3z6+9tZhG0preaZ7nZlbY0Bv1INL0zuAxAjl4lvj9ce63DL8MJOgogG+o
+         VfKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4wDw166Gvl7nPuLcUDlpOf3v9H5gHg+/Vp1co1W+Y/ETA+1f+HRzgtVhjgZWk5gSuyeHMWLLwTI+IJpJw/HiqozgVsOnnR7wLxd/q
+X-Gm-Message-State: AOJu0Yz+oHD0kGP07t7HR4RX7OoyCy08IFV7lc4jK92EU6Z3mR/W/Ty7
+	OcxXrbJlRBIHtR9ne97gsZxrVCiiwyyoeF6dp5bd90LfusCK2sAtpAkgqcSEHk3yaSHUTjWV8tB
+	Cu9sih6iUpwAg1kKEUpfdFa9l7Uc=
+X-Google-Smtp-Source: AGHT+IFf3DIUwmiY+4i/GSvSJb9oJjCKLSIZdz2EWw0j3fhcOrCw1FZQVqPnPxpkqZHcM/2OVrJ96OfTUKuCkyh5E5M=
+X-Received: by 2002:a50:bb48:0:b0:56f:e7b9:e67d with SMTP id
+ 4fb4d7f45d1cf-5731d9d17damr4410968a12.12.1715244994728; Thu, 09 May 2024
+ 01:56:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] PCI: Add AER bits #defines for PCIe to PCI/PCI-X
- Bridge
-To: Bjorn Helgaas <helgaas@kernel.org>
-X-ASG-Orig-Subj: Re: [PATCH v2 2/3] PCI: Add AER bits #defines for PCIe to PCI/PCI-X
- Bridge
-CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-	<tony.luck@intel.com>, <bp@alien8.de>, <bhelgaas@google.com>,
-	<robert.moore@intel.com>, <linux-acpi@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-	<acpica-devel@lists.linux.dev>, <CobeChen@zhaoxin.com>,
-	<TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>, <LeoLiu@zhaoxin.com>
-References: <20240508221009.GA1791183@bhelgaas>
-From: LeoLiu-oc <leoliu-oc@zhaoxin.com>
-In-Reply-To: <20240508221009.GA1791183@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Barracuda-Connect: ZXSHMBX3.zhaoxin.com[10.28.252.165]
-X-Barracuda-Start-Time: 1715244164
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 1723
-X-Barracuda-BRTS-Status: 0
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.124624
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
+References: <20240501042700.83974-1-ioworker0@gmail.com> <20240501042700.83974-3-ioworker0@gmail.com>
+ <0077A412-0AF1-4022-8F49-EE77AE601ECB@nvidia.com> <CAK1f24mRVam3w9CZkq4O0smGUTVUQfdvA48mqsU+NKxMUxdz1A@mail.gmail.com>
+ <B1DA2DA4-AFEA-4541-8DFC-0D815249A064@nvidia.com> <CAK1f24mpt+ZGow4LLdXKZcwopmkZDrM_eh15SnkEgpiBXTmOwA@mail.gmail.com>
+ <10BA9EED-A2BB-44C2-B80A-26527CDFFA50@nvidia.com> <1B2017A4-A252-4C1F-9608-D43ECEAD53B1@nvidia.com>
+ <20240508155253.GK4650@nvidia.com> <30469615-2DDC-467E-A810-5EE8E1CFCB43@nvidia.com>
+ <20240508163526.GM4650@nvidia.com>
+In-Reply-To: <20240508163526.GM4650@nvidia.com>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Thu, 9 May 2024 16:56:23 +0800
+Message-ID: <CAK1f24knjnKkHDp+bRkpfWqe6v5-GPJF=sSWPo6zQUydT9aMaw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] mm/rmap: integrate PMD-mapped folio splitting into
+ pagewalk loop
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Zi Yan <ziy@nvidia.com>, Alistair Popple <apopple@nvidia.com>, akpm@linux-foundation.org, 
+	willy@infradead.org, sj@kernel.org, maskray@google.com, ryan.roberts@arm.com, 
+	david@redhat.com, 21cnbao@gmail.com, mhocko@suse.com, fengwei.yin@intel.com, 
+	zokeefe@google.com, shy828301@gmail.com, xiehuan09@gmail.com, 
+	libang.li@antgroup.com, wangkefeng.wang@huawei.com, songmuchun@bytedance.com, 
+	peterx@redhat.com, minchan@kernel.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Baolin Wang <baolin.wang@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+Hey Jason,
 
+Thanks a lot for clarifying!
 
-在 2024/5/9 6:10, Bjorn Helgaas 写道:
-> 
-> 
-> [这封邮件来自外部发件人 谨防风险]
-> 
-> On Mon, Dec 18, 2023 at 11:04:29AM +0800, LeoLiu-oc wrote:
->> From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
->>
->> Define secondary uncorrectable error mask register, secondary
->> uncorrectable error severity register and secondary error capabilities and
->> control register bits in AER capability for PCIe to PCI/PCI-X Bridge.
->> Please refer to PCIe to PCI/PCI-X Bridge Specification, sec 5.2.3.2,
->> 5.2.3.3 and 5.2.3.4.
-> 
-> Please include the spec revision.  The only one I'm aware of is r1.0.
-> 
-Yes，the PCIe to PCI/PCI-X Bridge Specification version is r1.0.
-I will supplement the protocol version in the next edition.
+On Thu, May 9, 2024 at 12:35=E2=80=AFAM Jason Gunthorpe <jgg@nvidia.com> wr=
+ote:
+>
+> On Wed, May 08, 2024 at 12:22:08PM -0400, Zi Yan wrote:
+> > On 8 May 2024, at 11:52, Jason Gunthorpe wrote:
+> >
+> > > On Wed, May 08, 2024 at 10:56:34AM -0400, Zi Yan wrote:
+> > >
+> > >> Lance is improving try_to_unmap_one() to support unmapping PMD THP a=
+s a whole,
+> > >> so he moves split_huge_pmd_address() inside while (page_vma_mapped_w=
+alk(&pvmw))
+> > >> and after mmu_notifier_invalidate_range_start() as split_huge_pmd_lo=
+cked()
+> > >> and does not include the mmu notifier ops inside split_huge_pmd_addr=
+ess().
+> > >> I wonder if that could cause issues, since the mmu_notifier_invalida=
+te_range_start()
+> > >> before the while loop only has range of the original address and
+> > >> split huge pmd can affect the entire PMD address range and these two=
+ ranges
+> > >> might not be the same.
+> > >
+> > > That does not sound entirely good..
+> > >
+> > > I suppose it depends on what split does, if the MM page table has the
+> > > same translation before and after split then perhaps no invalidation
+> > > is even necessary.
+> >
+> > Before split, it is a PMD mapping to a PMD THP (order-9). After split,
+> > they are 512 PTEs mapping to the same THP. Unless the secondary TLB
+> > does not support PMD mapping and use 512 PTEs instead, it seems to
+> > be an issue from my understanding.
+>
+> I may not recall fully, but I don't think any secondaries are
+> so sensitive to the PMD/PTE distinction.. At least the ones using
+> hmm_range_fault() are not.
+>
+> When the PTE eventually comes up for invalidation then the secondary
+> should wipe out any granual they may have captured.
+>
+> Though, perhaps KVM should be checked carefully.
 
-Yours sincerely
-Leoliu-oc
+Agreed. IIUC,  the secondary mappings are teardown in
+mmu_notifier_invalidate_range_start() and allowed to be established again
+only mmu_notifier_invalidate_range_end(), then all modifications will be
+picked up by the secondary MMU. I just image that the secondary MMU
+like a TLB, where you only invalidate, and then it will be refilled later (=
+after
+mmu_notifier_invalidate_range_end()).
 
->> Signed-off-by: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
->> ---
->>   include/uapi/linux/pci_regs.h | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
->> index a39193213ff2..987c513192e8 100644
->> --- a/include/uapi/linux/pci_regs.h
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -802,6 +802,9 @@
->>   #define  PCI_ERR_ROOT_FATAL_RCV              0x00000040 /* Fatal Received */
->>   #define  PCI_ERR_ROOT_AER_IRQ                0xf8000000 /* Advanced Error Interrupt Message Number */
->>   #define PCI_ERR_ROOT_ERR_SRC 0x34    /* Error Source Identification */
->> +#define PCI_ERR_UNCOR_MASK2  0x30    /* PCIe to PCI/PCI-X Bridge */
->> +#define PCI_ERR_UNCOR_SEVER2 0x34    /* PCIe to PCI/PCI-X Bridge */
->> +#define PCI_ERR_CAP2 0x38    /* PCIe to PCI/PCI-X Bridge */
->>
->>   /* Virtual Channel */
->>   #define PCI_VC_PORT_CAP1     0x04
->> --
->> 2.34.1
->>
+Thanks again for the lesson!
+Lance
+
+>
+> > In terms of two mmu_notifier ranges, first is in the split_huge_pmd_add=
+ress()[1]
+> > and second is in try_to_unmap_one()[2]. When try_to_unmap_one() is unma=
+pping
+> > a subpage in the middle of a PMD THP, the former notifies about the PMD=
+ range
+> > change due to one PMD split into 512 PTEs and the latter only needs to =
+notify
+> > about the invalidation of the unmapped PTE. I do not think the latter c=
+an
+> > replace the former, although a potential optimization can be that the l=
+atter
+> > can be removed as it is included in the range of the former.
+>
+> I think we probably don't need both, either size might be fine, but
+> the larger size is definately fine..
+>
+> > Regarding Lance's current code change, is it OK to change mmu_notifier =
+range
+> > after mmu_notifier_invalidate_range_start()?
+>
+> No, it cannot be changed during a start/stop transaction.
+>
+> Jason
+>
+>
