@@ -1,102 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E80128396;
-	Thu,  9 May 2024 08:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7B7128396
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 08:50:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.0.225.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715244565; cv=none; b=UitPKQ0PfuKTLmBnVqooPIJPf3mL65rjxYhT6V7jgFo9P7Lrf6prbRtDaHfj1fJ9U+GahthirmGr6APb0bDzrYckR8G62QlJPdNwYS2MjrhJq7euHnNDLyZ+bwBbSRrYoBvbUkh1vOyf3PpjXlwHDHP4bHvTREEXPeP3uceiwvs=
+	t=1715244644; cv=none; b=CqTFo8Aq34yZdT2+cozwCoCTbBTwuSSqZlMCp6j+LBNrUvm9lGz2WpTEq+H2adyuS5zz9zPpOs8fsBmNTuhTQHGiCs7bWFqPJCMUZighVRDDBtCU5PpMqPoc9YEmludE4sxMzAkJJbsjKSbJcWaIdqYiAGnA2PsLjY5WlXtPWvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715244565; c=relaxed/simple;
-	bh=+VvcGiY2uFZX5aI1UZuE6DJBPKfYza5f+UNOutxHHjg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bW5eS5skb5NmEPmPsm8BERCHWJro8ln6GMT54euzJBzklhPzBXbr8UclTPHo3b6FFvrMxbDZOAus7mAnFGXNsHCQFc/FSzUKuUsMY9MYTRouW3LbR2UFtZm6KxAzm0Ky8KfzlmbCoDAOmLYKObgbRh8WsCJPoyP27cQfO6gdCUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fMGiwF+Q; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fMGiwF+Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ABEFC116B1;
-	Thu,  9 May 2024 08:49:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715244564;
-	bh=+VvcGiY2uFZX5aI1UZuE6DJBPKfYza5f+UNOutxHHjg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=fMGiwF+QRQHtuA13zW1mIDSkX5pF5ccv2+xViTdAaIGxh6llCSgybZ4FJpEtqcURi
-	 59biNfeZbPHVTGmi+INT9/aB1YWUWusFxhuoYqOvSRgWqjoFxiF0XoISd6DVv32hpX
-	 e/R5vZ1KDpu7uMNZd2qXzNwqr8X0qBo+8BlKx97pGsfPBrgeCtypnWZ+30ZZXUJHkz
-	 o0fsWrA+2T7+T11Cp+WRPgACPzc1KZuWo7XIHP8uovdo1XSfMwetTnDNnVedaxfPgz
-	 Iq2STjs5u7oIYGO+ePl26VicGbbeLYAGrfdmNvDhaF2rcZfqQMss1gD62Ux0lcz00W
-	 kdljiclqTfotw==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1s4zSy-000000000NM-0rIA;
-	Thu, 09 May 2024 10:49:28 +0200
-Date: Thu, 9 May 2024 10:49:28 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Satya Priya <quic_c_skakit@quicinc.com>,
-	Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 02/13] mfd: pm8008: fix regmap irq chip initialisation
-Message-ID: <ZjyOGNAaWjRtOE0s@hovoldconsulting.com>
-References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-3-johan+linaro@kernel.org>
- <ZjknxSsyo20b5_Tm@surfacebook.localdomain>
- <ZjpCL_NQD7X3hasO@hovoldconsulting.com>
- <CAHp75Vf0raEoVmvRKNxDQ7wdAOtwWYp_fQ1m8WBdnWEFGFOrYA@mail.gmail.com>
+	s=arc-20240116; t=1715244644; c=relaxed/simple;
+	bh=kz1qxPyo9dmTKO4NicjXjKlExY5D67C43u5RpO/2nhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nC1IOf1BvXmbuhASyKNKylgo+QynrY9KGHPiGUYxYYyxMLXgKVILg50g5ISwt+mMPSPl20/8hyGi0olccAuGwNpvCnnwDPu7zCiVhNYtUepchD7MEETg4WOa/jRxISCfKJnglFW2zBfc2C1GvqOGQArwy8G/AQq6SZ9gycgICus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com; spf=pass smtp.mailfrom=zhaoxin.com; arc=none smtp.client-ip=210.0.225.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zhaoxin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zhaoxin.com
+X-ASG-Debug-ID: 1715243991-086e2325cc0db20001-xx1T2L
+Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id jcY8zdEvtdy2KSos (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Thu, 09 May 2024 16:39:51 +0800 (CST)
+X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX1.zhaoxin.com
+ (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 9 May
+ 2024 16:39:50 +0800
+Received: from [192.168.1.204] (125.76.214.122) by ZXBJMBX03.zhaoxin.com
+ (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 9 May
+ 2024 16:39:49 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
+Message-ID: <a70d141f-cec1-49b5-99d0-0f9e5f722afd@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 192.168.1.204
+Date: Thu, 9 May 2024 16:39:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] Parse the HEST PCIe AER and set to relevant
+ registers
+To: Bjorn Helgaas <helgaas@kernel.org>
+X-ASG-Orig-Subj: Re: [PATCH v2 0/3] Parse the HEST PCIe AER and set to relevant
+ registers
+CC: <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+	<tony.luck@intel.com>, <bp@alien8.de>, <bhelgaas@google.com>,
+	<robert.moore@intel.com>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<acpica-devel@lists.linux.dev>, <CobeChen@zhaoxin.com>,
+	<TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>, <LeoLiu@zhaoxin.com>
+References: <20240508220436.GA1789788@bhelgaas>
+From: LeoLiu-oc <leoliu-oc@zhaoxin.com>
+In-Reply-To: <20240508220436.GA1789788@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vf0raEoVmvRKNxDQ7wdAOtwWYp_fQ1m8WBdnWEFGFOrYA@mail.gmail.com>
+X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
+X-Barracuda-Start-Time: 1715243991
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 2313
+X-Barracuda-BRTS-Status: 0
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.124625
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
 
-On Tue, May 07, 2024 at 08:16:45PM +0300, Andy Shevchenko wrote:
-> On Tue, May 7, 2024 at 6:01 PM Johan Hovold <johan@kernel.org> wrote:
-> > On Mon, May 06, 2024 at 09:56:05PM +0300, Andy Shevchenko wrote:
-> > > Mon, May 06, 2024 at 05:08:19PM +0200, Johan Hovold kirjoitti:
-> > > > The regmap irq array is potentially shared between multiple PMICs and
+
+
+在 2024/5/9 6:04, Bjorn Helgaas 写道:
 > 
-> ...
 > 
-> > > > -                   dev_err(dev, "Failed to probe irq periphs: %d\n", rc);
-> > > > +                   dev_err(dev, "failed to add IRQ chip: %d\n", rc);
-> > >
-> > > dev_err_probe(...); ?
-> >
-> > This function won't return -EPROBE_DEFER,
+> [这封邮件来自外部发件人 谨防风险]
 > 
-> This is not an argument for a long time (since documentation of
-> dev_err_probe() had been amended to encourage its use for any error
-> cases in probe).
-
-There was apparently a kernel doc update made in December 2023:
-
-	532888a59505 ("driver core: Better advertise dev_err_probe()")
-
-to clarify that people are *allowed* to use it also for functions not
-returning -EPROBE_DEFER. That's hardly a long time ago and, importantly,
-this is of course still nothing that is *required*.
-
-> > and that would be a separate
-> > change in any case.
+> On Mon, Dec 18, 2023 at 11:04:27AM +0800, LeoLiu-oc wrote:
+>> From: LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+>>
+>> According to the Section 18.3.2.4, 18.3.2.5 and 18.3.2.6 in ACPI SPEC
+>> r6.5, the register value form HEST PCI Express AER Structure should be
+>> written to relevant PCIe Device's AER Capabilities.So the purpose of the
+>> patch set is to extract register value from HEST PCI Express AER
+>> structures and program them into PCIe Device's AER registers. Refer to the
+>> ACPI SPEC r6.5 for the more detailed description. This patch is an
+>> effective supplement to _HPP/_HPX method when the Firmware does not
+>> support the _HPP/_HPX method and can be specially configured for the AER
+>> register of the specific device.
+>>
+>> ---
+>>
+>> v1->v2:
+>> - Move the definition of structure "hest_parse_aer_info" to file apei.h.
 > 
-> Sure, but why to add a technical debt? Perhaps a precursor cleanup patch?
+> Just noticed that this removes the ACPICA header dependency problem
+> that Rafael pointed out.  This also applies (with minor offsets) to
+> v6.9-rc1, so it's not very stale.  We're almost to the v6.9 final
+> release, so when v6.10-rc1 is tagged, can you rebase to that and
+> repost this?
+> 
 
-This is not in any way technical debt.
+Thank you very much for your review. I will make a new patch version 
+based on the kernel v6.10-rc1 according to your suggestion.
 
-Johan
+> I assume you have a platform that uses this.  It would be good to
+> mention that in the commit log of patches 1 and 3 so we have some idea
+> of where it's useful and where changes need to be tested.
+> 
+Okay, I will add hardware suitability information for this patch to the 
+commit log.
+
+Yours sincerely
+Leoliu-oc
+
+>> LeoLiuoc (3):
+>>    ACPI/APEI: Add hest_parse_pcie_aer()
+>>    PCI: Add AER bits #defines for PCIe to PCI/PCI-X Bridge
+>>    PCI/ACPI: Add pci_acpi_program_hest_aer_params()
+>>
+>>   drivers/acpi/apei/hest.c      | 69 +++++++++++++++++++++++-
+>>   drivers/pci/pci-acpi.c        | 98 +++++++++++++++++++++++++++++++++++
+>>   drivers/pci/pci.h             |  9 ++++
+>>   drivers/pci/probe.c           |  1 +
+>>   include/acpi/apei.h           | 17 ++++++
+>>   include/uapi/linux/pci_regs.h |  3 ++
+>>   6 files changed, 195 insertions(+), 2 deletions(-)
+>>
+>> --
+>> 2.34.1
+>>
