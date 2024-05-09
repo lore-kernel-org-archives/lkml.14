@@ -1,76 +1,99 @@
-Received: from server.joladcareservices.co.uk (unknown [162.214.0.180])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96BCA376
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 20:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.214.0.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE0D4C618;
+	Thu,  9 May 2024 20:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715286949; cv=none; b=DvGYwEAz5E3GU28yfSEqSaRA370EoX2Uw+6ld9Y99WzBYfRYfACVEETio0nzXhha4EFKNNQcWYSxVdGBcFUMUIwlxybp25GsPiXGRxmJoj7ocI12fbrua6XOqKA84wtkwFNBFP61PaPsByyejhWsjgGpiiN8IlbwA8fMy3ZGZ1s=
+	t=1715287032; cv=none; b=BlNAaMDx0ORVOr+50Bxa3YKMkqYvPlHUb62yKDbDf8gJUbsKUqbHCS1jhRfvydme8dujdJ51hMgiwvxfz8rX/O/ZsoyWOiKbaEwpQJ3Id15b7t25xfYv4ZL7j7AKv9FR+Lm57Grzrx6YvLG4voIzcaKLL9Dej2Ux8/prHlAPtiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715286949; c=relaxed/simple;
-	bh=zx83MejzDDttGLLYlxoEwoFl+NiFfOGqKcUjZEjjEI0=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Udy18jl2ISXxtPJmnOEmIT5TahOLM/S2Cel7tlTeIHZLYAfO8Rj+ZkEQITZme08lcwJd+JjmRzFwOrBzrLdYkjloUnB93fpuHnVYG/YU2xZ3fmvC3AxkxKlCOd9fm9Lz8NwcuTpMgVf+dcbqzEm3suqzhP4erCDUUDtqbrd8jcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=houseofdisruption.com; spf=none smtp.mailfrom=houseofdisruption.com; arc=none smtp.client-ip=162.214.0.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=houseofdisruption.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=houseofdisruption.com
-Received: from [104.223.100.74] (port=65453 helo=houseofdisruption.com)
-	by server.joladcareservices.co.uk with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <akorede@houseofdisruption.com>)
-	id 1s55m8-0004nW-1a
-	for linux-kernel@vger.kernel.org;
-	Thu, 09 May 2024 09:33:39 -0600
-Reply-To: vendorscontractor@servicesetihadaviationgroup.com
-From: Etihad Aviation Group PJSC<akorede@houseofdisruption.com>
-To: linux-kernel@vger.kernel.org
-Subject: Etihad Aviation Group, UAE 2024/2025 projects
-Date: 9 May 2024 08:33:33 -0700
-Message-ID: <20240509083151.5EE69DA45E392683@houseofdisruption.com>
+	s=arc-20240116; t=1715287032; c=relaxed/simple;
+	bh=x7LhucK821k3vSDngfFbnMiXnOtN4rPhBuqtaKRTceA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tbPH7pOY0F6ynYZFbEfzCBWlbM0JuhY9M3e6iLi99FGDeM1/FQodEY5f0eKWbgU8Tj/PFzrZk0dzVRApnrY4Z4AK6YbJN+0q3CZcOL38XDw4pat2wrJrGVRbC7upNh7gOTyZXiqszggZdm7m0LRp66w+n9A9lFuCCUNM8D6lUWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=vBndXtjF; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="vBndXtjF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=Ts0hQ/+xW7g60neUMYTCGyqDcd3REU5NHScQ5L3JXqY=; b=vB
+	ndXtjFxiQyjGyXFPOPqJvLSuYj1dZgBZBtGlR0d534n0nhdN/FqezzvTA6FSRMOSooXTH6Mw2mv+F
+	krBi5WwH8hWLFR/pPsDeq6MRSc/Z3lUJhDrf8OTVPellNItjSPBqaRgngM4K6lIldyp2KxQdeufcG
+	ImLBwCUicnKLxqU=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1s5AVd-00F4zH-4P; Thu, 09 May 2024 22:36:57 +0200
+Date: Thu, 9 May 2024 22:36:57 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: Nicolas Pitre <nico@fluxnic.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: smc91x: Fix m68k kernel compilation for ColdFire CPU
+Message-ID: <98259c2f-b44a-467e-8854-48641984e468@lunn.ch>
+References: <20240509121713.190076-2-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - server.joladcareservices.co.uk
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - houseofdisruption.com
-X-Get-Message-Sender-Via: server.joladcareservices.co.uk: authenticated_id: akorede@houseofdisruption.com
-X-Authenticated-Sender: server.joladcareservices.co.uk: akorede@houseofdisruption.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240509121713.190076-2-thorsten.blum@toblux.com>
 
+On Thu, May 09, 2024 at 02:17:14PM +0200, Thorsten Blum wrote:
+> Compiling the m68k kernel with support for the ColdFire CPU family fails
+> with the following error:
+> 
+> In file included from drivers/net/ethernet/smsc/smc91x.c:80:
+> drivers/net/ethernet/smsc/smc91x.c: In function ‘smc_reset’:
+> drivers/net/ethernet/smsc/smc91x.h:160:40: error: implicit declaration of function ‘_swapw’; did you mean ‘swap’? [-Werror=implicit-function-declaration]
+>   160 | #define SMC_outw(lp, v, a, r)   writew(_swapw(v), (a) + (r))
+>       |                                        ^~~~~~
+> drivers/net/ethernet/smsc/smc91x.h:904:25: note: in expansion of macro ‘SMC_outw’
+>   904 |                         SMC_outw(lp, x, ioaddr, BANK_SELECT);           \
+>       |                         ^~~~~~~~
+> drivers/net/ethernet/smsc/smc91x.c:250:9: note: in expansion of macro ‘SMC_SELECT_BANK’
+>   250 |         SMC_SELECT_BANK(lp, 2);
+>       |         ^~~~~~~~~~~~~~~
+> cc1: some warnings being treated as errors
+> 
+> The function _swapw() was removed in commit d97cf70af097 ("m68k: use
+> asm-generic/io.h for non-MMU io access functions"), but is still used in
+> drivers/net/ethernet/smsc/smc91x.h.
+> 
+> Re-adding the previously deleted _swapw() function resolves the error.
 
+This seems like the wrong fix.
 
-Attn: Sir/Madam,
+commit d97cf70af09721ef416c61faa44543e3b84c9a55
+Author: Greg Ungerer <gerg@linux-m68k.org>
+Date:   Fri Mar 23 23:39:10 2018 +1000
 
-Greetings from  Etihad Aviation Group, UAE.
+    m68k: use asm-generic/io.h for non-MMU io access functions
+    
+    There is nothing really special about the non-MMU m68k IO access functions.
+    So we can easily switch to using the asm-generic/io.h functions.
 
-We are inviting your esteemed company for Vendor/Contractor=20
-Partnership registration with Etihad Aviation Group, UAE=20
-2024/2025 projects.
+So it rather than put something back which there is an aim to remove,
+please find the generic replacement. This _swapw() swaps a 16 bit
+word. The generic for that is swab16().
 
-These projects are open for all companies around the world. If=20
-you have intention to participate in the process, please confirm=20
-your interest by asking for Vendor Questionnaire and EOI.
+I'm also surprised it took 6 years to find this. Has something else
+changed recently?
 
-Your prompt response would be greatly appreciated as it will help=20
-us expedite the vendor/contractor selection process.
+    Andrew
 
-Looking forward to your reply.
-
-Kind Regards,
-
-Mr.George Ibrahim
-Contractors Coordinator
-Group Procurement & Contracts Shared Services Center
-Etihad Aviation Group PJSC
-Etihad Airways - Head office, New Airport Road,
-Khalifa City, PO Box 35566, Abu Dhabi
-United Arab Emirates.
+---
+pw-bot: cr
