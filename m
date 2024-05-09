@@ -1,105 +1,177 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2498D1A2C09
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 18:39:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C92F7711E;
+	Thu,  9 May 2024 18:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715279966; cv=none; b=isn0eC4VAKZPGGbAf5SQFp49VJv2PvTZZRZBKUWjm6ejoY6IZCa/6TLysXPkf110/8KJohnVEmzsuyjzzLfUDweK4y6j50z/1nz+dIDcPbxHX5eyQwn4bIYCmfEa8odpzbQIIU7VLeKkLoUyTZjhH9xKpZTTX+7qpOOhCdfCHUc=
+	t=1715279968; cv=none; b=CGH4haPL0JGqMuVpCvpfHPBRcpRUqQNvnLclE0VfsMZ1q8Q2ncEUhZHRwwN+7WlIzSE5vrigCYriOQATJl8PbFAwqqCciD+o6VQiAH2S5wPAWBrSB30QDfw6Kaq8vV/No4WDAW+2ESmuZ6ocXEQltIuarRaLQT/qj62ZGUYlTPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715279966; c=relaxed/simple;
-	bh=eJ9IVERHhky971S0DcjHHKpGh5uHfCRuKvsYihoB6wA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mui9PgOFXYGBNO1L+3dZS7dcAWZuakasB7v4z/jUKq9laWYrXqxhNJPmRB24687cb7b/UTCN2V8MdP1FRJ5OJDUtfe4aLssclnLUwPy0BNJCz+9scB2gnJij2PGu9GtDO7rMaHF0HkiehVrzpzkpFx5CIPpDnqnPkk4dr25AXCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=adTeBkAR; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1715279968; c=relaxed/simple;
+	bh=YFk7gfrCyhRUbiaBKEU6P8eXBw7FlSAj1nozW8WnlUo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tuENfi07cQrQAjF3hQom9Ru8jfG1BjEM3+9eE1GyxcJ03ys34dzCGKINEHmOzX59Ynp5jHK2m/hw0kDEa8Mo0DcJIcABgJksTvTk5XQSIfajjFg1XlX2toQiWwb2Nmw/NnejzoUVg33gBdDfqW/ag6jRlCzDWtibWj+IbCjb1Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sxDXrfqk; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="adTeBkAR"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-573137ba8d7so4261873a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 11:39:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1715279962; x=1715884762; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fqOAT+gv91pKFh1YCYnEhtgE7NzT8BCjrBwFy+U+dzg=;
-        b=adTeBkARsSZ8vrx3Vyx4gqT32PUH0y3/Cu0hZ/rADfmbLwfYUxtZLfakmVAlaHRCLu
-         K5RChHRpa7IocyFLXGra2qQ66uJe/9nH/+Mge9Qq1XP9cQX/6JwkfGj5VtYzi3rq/vnt
-         XYdSx4XWSfRBYBQTv+uhN/LkV0H5UJXcuSkY4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715279962; x=1715884762;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fqOAT+gv91pKFh1YCYnEhtgE7NzT8BCjrBwFy+U+dzg=;
-        b=g9OpOo+emhd4KrfMUlyu9DJMaP1HlxtCmBrEKuoIeVRfh0t3J5VPgz0iSRmiCwN62L
-         fNTqcs3Lc9gz9O2FrrM9XauSzph5W5DYU6hXhChLIc1eJYWpwr9Mx2kP7hkWg7W33BCY
-         qYyMM72pm4RLoecaqhF8BCoMHuBk0BDWBL2r4q4hEPHA6wnh//6NfZxHQW58tNPf+3af
-         ik1qH1uAvdDb8eNDy9Up4LkQ0qidNMcVEs/xOSEnWrQuLthcec6ag07+QsWiwzdr/17M
-         0pKLL2NRltxuY1xKu7CjoTsswk1FzGcmH7It9ZJ/Ehwzyi/mIAdCTOM7I6BvmOVy7KDJ
-         PYtg==
-X-Forwarded-Encrypted: i=1; AJvYcCXZMMuh8phoTnGBQny74r74cR3XGqtZUFPx9Bpfj0iNUgRuXMsznUzk3Hpog/Mms/jseo8IkYyGDU5tNuyXijluGYiY3MOyCenZYoCk
-X-Gm-Message-State: AOJu0YxFZVXoxSqgso0yGGkH3yDRqEfNmoEiQTJcR4yfiVviBOFff7RA
-	IV2G/Rnoq+oKw69l7Ypde31waiE2+lJUqqC17Yb4cn9weUWRWd6Lw/HrlBrM4x/xw2Cz5PONgKQ
-	00vw5KA==
-X-Google-Smtp-Source: AGHT+IEWqxsjOSJpVfX4hYURgHe+ICN9y3VD+H4kzYAnwhmf/fwV3KngLCJEf9e2Xs/g61F/+QOWyg==
-X-Received: by 2002:a50:a6d7:0:b0:572:d4de:ed08 with SMTP id 4fb4d7f45d1cf-5734d6f3317mr470729a12.16.1715279962351;
-        Thu, 09 May 2024 11:39:22 -0700 (PDT)
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com. [209.85.218.52])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c32710bsm945978a12.93.2024.05.09.11.39.21
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 May 2024 11:39:21 -0700 (PDT)
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a59a352bbd9so216847066b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 11:39:21 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUK7LWmFBgHEE43RxK1nYcD0A5ZlWHSlhyEon/DZVlVzFSDt4IWqgwMmryAciki5tG1zUea9EvlfWB1jvi5JeDcgPlnHYeVwbfXGepb
-X-Received: by 2002:a17:906:410b:b0:a59:ad76:b371 with SMTP id
- a640c23a62f3a-a5a2d292a8amr45358966b.26.1715279960933; Thu, 09 May 2024
- 11:39:20 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sxDXrfqk"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 449Icp2o059675;
+	Thu, 9 May 2024 13:38:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1715279931;
+	bh=+EBsg+MBavvoLe4uw8H9uyV1BuH7NSV3Xnw72/49t8I=;
+	h=From:To:CC:Subject:Date;
+	b=sxDXrfqk2zVS185lviPF7OTRtVV01UEs9crR72p8RdzBPcT22jZrNj9t59nfysEq6
+	 8MaHm48CW1GzF1Oq1gt25Z9E9yjnhnFbAhckDFzKc3Zi6nUMYCGfSlF7YhOIYqzElE
+	 kvSi6wRGSPj92mlySBa3ecplabnAzPPHf7mIWmzE=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 449Icpqc028334
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 9 May 2024 13:38:51 -0500
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 9
+ May 2024 13:38:51 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 9 May 2024 13:38:50 -0500
+Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 449Ico8E003719;
+	Thu, 9 May 2024 13:38:50 -0500
+From: Devarsh Thakkar <devarsht@ti.com>
+To: <mchehab@kernel.org>, <robh@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <hverkuil-cisco@xs4all.nl>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>
+CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
+        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
+        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
+        <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
+        <nicolas@ndufresne.ca>, <akpm@linux-foundation.org>,
+        <gregkh@linuxfoundation.org>, <andriy.shevchenko@linux.intel.com>,
+        <adobriyan@gmail.com>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
+        <daniel@ffwll.ch>, <jani.nikula@intel.com>,
+        <linux-rockchip@lists.infradead.org>
+Subject: [PATCH v7 0/8] [PATCH v7 0/8] Add V4L2 M2M Driver for E5010 JPEG Encoder
+Date: Fri, 10 May 2024 00:08:49 +0530
+Message-ID: <20240509183849.4060521-1-devarsht@ti.com>
+X-Mailer: git-send-email 2.39.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202404291502.612E0A10@keescook> <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
- <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
- <202405081354.B0A8194B3C@keescook> <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
- <202405081949.0565810E46@keescook> <20240509140854.GF3620298@mit.edu>
- <CAHk-=wgKyP2ffZPa6aKYtytzzFibiNVN5MS=D2cn7_UGCECKdw@mail.gmail.com>
- <20240509175417.GR2118490@ZenIV> <CAHk-=wgXm15gZHvt8waSFhXS9yZTfvMV95xyvNtPc6FSEA_rvA@mail.gmail.com>
-In-Reply-To: <CAHk-=wgXm15gZHvt8waSFhXS9yZTfvMV95xyvNtPc6FSEA_rvA@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 9 May 2024 11:39:04 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgBprh=8Us-MtwH9sVNELZK2hdOkFn3EoauwecYgtXOCQ@mail.gmail.com>
-Message-ID: <CAHk-=wgBprh=8Us-MtwH9sVNELZK2hdOkFn3EoauwecYgtXOCQ@mail.gmail.com>
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, Kees Cook <keescook@chromium.org>, 
-	Justin Stitt <justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On Thu, 9 May 2024 at 11:08, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
->  Any half-way decent compiler will end up optimizing away the shifts
-> and adds for the high bits because they see the assignment to
-> 'all_bits'. There's no point in generating high bits that just get
-> thrown away.
+This adds support for V4L2 M2M based driver for E5010 JPEG Encoder
+which is a stateful JPEG encoder from Imagination technologies
+and is present in TI AM62A SoC.
 
-.. it might also actually be a good idea *IF* we were to have some
-kind of "implicit cast drops bits" warning, in that the compiler for
-that case wouldn't remove the upper bits calculation, but would
-trigger a warning if they are non-zero.
+While adding support for it, following additional framework changes were
+made:
+ - Moved reference quantization and huffman tables provided in
+   ITU-T-REC-T.81 to v4l2-jpeg.c as suggested in mailing list [1].
+ - Add macros to round to closest integer (either higher or lower) while
+   rounding in order of 2.
 
-So there are actually potential advantages to just always apparently
-doing the full 64-bit arithmetic.
+v4l2-compliance test :
+Link: https://gist.github.com/devarsht/1f039c631ca953a57f405cfce1b69e49
 
-Without debug warnings, it's a no-op that the compiler will just skip.
-And with some hypothetical debug flag, it would be a "you are now
-losing the high bits of the time value when assigning the result to a
-limited 32-bit time_t" warning.
+E5010 JPEG Encoder Manual tests :
 
-             Linus
+Performance:
+Link: https://gist.github.com/devarsht/c40672944fd71c9a53ab55adbfd9e28b
+
+Functionality:
+Link: https://gist.github.com/devarsht/8e88fcaabff016bb2bac83d89c9d23ce
+
+Compression Quality:
+Link: https://gist.github.com/devarsht/cbcc7cd97e8c48ba1486caa2b7884655
+
+Multi Instance:
+Link: https://gist.github.com/devarsht/22c2fca08cd3441fb40f2c7a4cebc95a
+
+Crop support:
+Link: https://gist.github.com/devarsht/de6f5142f678bb1a5338abfd9f814abd
+
+Runtime PM:
+Link: https://gist.github.com/devarsht/70cd95d4440ddc678489d93885ddd4dd
+
+[1]: 
+https://lore.kernel.org/all/de46aefe-36da-4e1a-b4fa-b375b2749181@xs4all.nl/
+
+Changelog:
+V6->V7:
+ - Fix cropping support
+ - Move reference huffman and quantization tables to v4l2-jpeg.c
+ - Fix suspend/resume use-case
+
+Patch-Diff between the series :
+
+V3->V4 Range diff :
+https://gist.github.com/devarsht/22a744d999080de6e813bcfb5a596272
+
+V4->V5 Range diff :
+https://gist.github.com/devarsht/298790af819f299a0a05fec89371097b
+
+V5->V6 Range diff :
+https://gist.github.com/devarsht/c89180ac2b0d2814614f2b59d0705c19
+
+V6->V7 Range diff :
+https://gist.github.com/devarsht/1db185b1e187eaf397e9e4c37066777e
+
+Previous patch series:
+V2: https://lore.kernel.org/all/20230727112546.2201995-1-devarsht@ti.com/
+V3: https://lore.kernel.org/all/20230816152210.4080779-1-devarsht@ti.com/
+V4: https://lore.kernel.org/all/20240205114239.924697-1-devarsht@ti.com/
+V5: https://lore.kernel.org/all/20240215134641.3381478-1-devarsht@ti.com/
+V6: https://lore.kernel.org/all/20240228141140.3530612-1-devarsht@ti.com/
+
+Devarsh Thakkar (8):
+  media: dt-bindings: Add Imagination E5010 JPEG Encoder
+  media: imagination: Add E5010 JPEG Encoder driver
+  media: v4l2-jpeg: Export reference quantization and huffman tables
+  media: imagination: Use exported tables from v4l2-jpeg core
+  media: verisilcon : Use exported tables from v4l2-jpeg for hantro
+    codec
+  math.h Add macros to round to closest specified power of 2
+  media: imagination: Round to closest multiple for cropping region
+  gpu: ipu-v3: Use generic macro for rounding to nearest multiple
+
+ .../bindings/media/img,e5010-jpeg-enc.yaml    |   75 +
+ MAINTAINERS                                   |    7 +
+ drivers/gpu/ipu-v3/ipu-image-convert.c        |    4 +-
+ drivers/media/platform/Kconfig                |    1 +
+ drivers/media/platform/Makefile               |    1 +
+ drivers/media/platform/imagination/Kconfig    |   12 +
+ drivers/media/platform/imagination/Makefile   |    3 +
+ .../platform/imagination/e5010-core-regs.h    |  585 ++++++
+ .../platform/imagination/e5010-jpeg-enc-hw.c  |  267 +++
+ .../platform/imagination/e5010-jpeg-enc-hw.h  |   42 +
+ .../platform/imagination/e5010-jpeg-enc.c     | 1646 +++++++++++++++++
+ .../platform/imagination/e5010-jpeg-enc.h     |  168 ++
+ .../platform/imagination/e5010-mmu-regs.h     |  311 ++++
+ .../media/platform/verisilicon/hantro_jpeg.c  |  128 +-
+ drivers/media/v4l2-core/v4l2-jpeg.c           |  162 +-
+ include/linux/math.h                          |   36 +
+ include/media/v4l2-jpeg.h                     |   11 +
+ 17 files changed, 3341 insertions(+), 118 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/img,e5010-jpeg-enc.yaml
+ create mode 100644 drivers/media/platform/imagination/Kconfig
+ create mode 100644 drivers/media/platform/imagination/Makefile
+ create mode 100644 drivers/media/platform/imagination/e5010-core-regs.h
+ create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc-hw.c
+ create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc-hw.h
+ create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc.c
+ create mode 100644 drivers/media/platform/imagination/e5010-jpeg-enc.h
+ create mode 100644 drivers/media/platform/imagination/e5010-mmu-regs.h
+
+-- 
+2.39.1
+
