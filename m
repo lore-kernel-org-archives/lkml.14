@@ -1,138 +1,102 @@
-Received: from bee.tesarici.cz (bee.tesarici.cz [37.205.15.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BBF137923;
-	Thu,  9 May 2024 20:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.205.15.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422C61386CF
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 20:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715284918; cv=none; b=oKsCvW+PJSBNJBZsbD988KKIrheydO8n7jT/Ij5G/gfpIwNDik7/fUqTQ1gkN6xWJu90xqB0ErS93B/ZmdjIkAnjFU+Jy/nqPlqhR58SyDaMJaTdgeYFQJzz1fAnMRlODvB6Mej4LH4Pu/+wwn5rHl45SJKvN8fYBTz0w0Jdu4U=
+	t=1715284919; cv=none; b=uu95XLDFF6kCq2jjkf+T42MF2r56BONihrNRHMudzr13OK6fu9Z+AtnRB1zmkIwS2AdtctcV4OJfceio+ORzfSpZuvKLpIb4RDmN7z5pbznkGjBLmX0vFw4dQ195jDJ0gueRFlWer6r0SD+kCL9748DyZdwlieXbTLNWqdItbKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715284918; c=relaxed/simple;
-	bh=MjekaYglvxnoUU0c4VwltXNfI+gRitDEcGsolq9SIpQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L2hr79HVBFvHO1GteWCXRG41g8bKmYqWkcZ+WZgWJLhncR3mqwzv9mZEiszgpQMHLoYnERW+W/AJIgjEbmSuggWCJH5SVPWb+/Mg7QlgC57AynB7EjNhpCe8zyfIj34b9uPXPp9bXiFDEw3H0GSW3yCTFjdDN41WhBFQIY15E2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz; spf=pass smtp.mailfrom=tesarici.cz; dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b=ZwA/zztk; arc=none smtp.client-ip=37.205.15.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tesarici.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tesarici.cz
+	s=arc-20240116; t=1715284919; c=relaxed/simple;
+	bh=pT+XZwZoOeLRlGPh8pZw/75/DuYvyGsmPHR7OeRuxIA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=CLdw0UBOCgl3pHQkEDNJHhRnf8fYVaptgN1olkBOc/jRdFJlOaXbPX0i7735bGMflMNPuHTTForG4/JV4GstIXEG5/qpoHtefenp7QwrOoj23G2FuZdYVJ3MwJMjAxHdo0rblLORsMVniQUH209sImGO4AVI40bA2+vXcupdjaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SN8esj6P; arc=none smtp.client-ip=209.85.219.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tesarici.cz header.i=@tesarici.cz header.b="ZwA/zztk"
-Received: from meshulam.tesarici.cz (dynamic-2a00-1028-83b8-1e7a-4427-cc85-6706-c595.ipv6.o2.cz [IPv6:2a00:1028:83b8:1e7a:4427:cc85:6706:c595])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by bee.tesarici.cz (Postfix) with ESMTPSA id 068B31C3276;
-	Thu,  9 May 2024 22:01:49 +0200 (CEST)
-Authentication-Results: mail.tesarici.cz; dmarc=fail (p=quarantine dis=none) header.from=tesarici.cz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tesarici.cz; s=mail;
-	t=1715284909; bh=EVqEcpbQt5wTkwvxHRqJKUX2tSGchUs142WzCK5AFSY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZwA/zztkya4irG3ezVLRCaSAAlnzPdiOIBiiEon2zfOQD1oCH+/jV4aOyLkcw2dKj
-	 6STNO4zn6TomTuMe98g7qHSNrzMC3fBies86Lrhy9XqgDSfPQPPiab9pM8ofFYupat
-	 iPWnjaJdNAwdPhMo7d3UmtseInNGvL2AEWf7EE+ycwjQZSmkR74bSf2ZwxHJzMEuKD
-	 NSuHD/Tkw6cVqPn9Q8AphAkGEp6yKOSIeUQ0h1obhSXwqixsqNnnbA/en8PzrCp1c+
-	 sng8Bokv2fh/jpyxchYQM1NcTT2RhqiOl50Hsv4yPv2BBKWEL7rkIKRYxfRoK1K4Vg
-	 Z2ZUsC5vaMoUQ==
-Date: Thu, 9 May 2024 22:01:47 +0200
-From: Petr =?UTF-8?B?VGVzYcWZw61r?= <petr@tesarici.cz>
-To: "T.J. Mercier" <tjmercier@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet
- <corbet@lwn.net>, Tianyu Lan <Tianyu.Lan@microsoft.com>,
- mhklinux@outlook.com, robin.murphy@arm.com, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] doc: swiotlb: Document SWIOTLB areas parameter
-Message-ID: <20240509220147.3b0a0073@meshulam.tesarici.cz>
-In-Reply-To: <CABdmKX229OjjzQ9BYC96QtwKdVyqdYEkLaBi1GN4oDNMD5SDpQ@mail.gmail.com>
-References: <20240507013502.3095744-1-tjmercier@google.com>
-	<20240507013502.3095744-2-tjmercier@google.com>
-	<20240509081403.28c424d5@meshulam.tesarici.cz>
-	<CABdmKX229OjjzQ9BYC96QtwKdVyqdYEkLaBi1GN4oDNMD5SDpQ@mail.gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SN8esj6P"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dc6b269686aso1822945276.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 13:01:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715284917; x=1715889717; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=M28n04MiCB7Rki3XUCV56t9NRfCH7Yl0gF/ySSCW1F0=;
+        b=SN8esj6PlFLoH9EqdS6xZcr5jJ7OJxmljsN2sEnwZPD4Ri8gxIkGxlumG8n5yBxv71
+         KMB/58Wbpqrk4Q0E7z4DToiQCx3Ysdk6inUuB0ayfHUQl1vQVdCk5PhiE7L4fDshm1xo
+         VQYr7hM274WrfMkut9AOOFCrJ8BZu+d027DJYZAj/SMuCyGMm7Amx262l57j11NFJm/R
+         UCzRAs1gZ3ALQ76uCivG1PnNIZSTzFMDoXRAf2h9fAKsAboPZwOoUFchnivgxqP3pigd
+         H2ttxDtXP/O1itgDEIzfgjKUli7Y+PJfPGx+D8yME22RP6gMs/KOpf9CGeXbxkS8xh83
+         lFng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715284917; x=1715889717;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M28n04MiCB7Rki3XUCV56t9NRfCH7Yl0gF/ySSCW1F0=;
+        b=K3oFEqrbL2A7mNgfk7iOIGlmEsDx6e/lOtyc5PMgGx3pjQw5zGVmrg20q1Wr/60F9n
+         NL1zbrEKZ4nEzdpCD/FlA89S4TF+2j8tGG0nRl1YMNHqW7PpFDE7NW34OOcv3CVC45Cw
+         9CTEsQlzMLa7WSo3+LLhvlEr7fVxf/dmzWJtaVkG9YocS2nBL0c8OYPWzROIM4dZLs0W
+         Q2sbHAZBF3AEqtqIafrOzuFxUNuEPuepLeCxxkrPFxYoc2EZCDdDDnKo/W/tBOB7Kmo5
+         3QQQv3vPyepgXxc+oBt2C997uWboFNiSJbQ+odIQ1sm3/5ZXmsZkazJi9iyawaFkfu4y
+         3OWQ==
+X-Gm-Message-State: AOJu0YzqY/lQdhBnsQdvUFl4SxyZ/MtjHyEVdrQ5d5GH2ckI72+uHmGn
+	AzpC4fdxjuuCMDJVQwgvR6geKNK3tU9OqFRcNdvEDloKFozsYwsz+NjW8AUsNOJ4n1jmNoKT1+f
+	g+w==
+X-Google-Smtp-Source: AGHT+IHWuDbcMQme6+YKWpzBKBlieTWCJg0j/ENyLXdW3EFA6jYO7wvSVmCsFiuxu9QxPYdg7/f2jHZsKVs=
+X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
+ (user=edliaw job=sendgmr) by 2002:a05:6902:20ca:b0:dd9:2d94:cd8a with SMTP id
+ 3f1490d57ef6-dee4f4f51bamr60630276.9.1715284917151; Thu, 09 May 2024 13:01:57
+ -0700 (PDT)
+Date: Thu,  9 May 2024 19:58:17 +0000
+In-Reply-To: <20240509200022.253089-1-edliaw@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20240509200022.253089-1-edliaw@google.com>
+X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
+Message-ID: <20240509200022.253089-26-edliaw@google.com>
+Subject: [PATCH v3 25/68] selftests/ipc: Drop define _GNU_SOURCE
+From: Edward Liaw <edliaw@google.com>
+To: shuah@kernel.org, "=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>, 
+	"=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>, Christian Brauner <brauner@kernel.org>, 
+	Richard Cochran <richardcochran@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, Edward Liaw <edliaw@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kernel-team@android.com, linux-security-module@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-riscv@lists.infradead.org, bpf@vger.kernel.org, 
+	John Hubbard <jhubbard@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 9 May 2024 09:04:16 -0700
-"T.J. Mercier" <tjmercier@google.com> wrote:
+_GNU_SOURCE is provided by lib.mk, so it should be dropped to prevent
+redefinition warnings.
 
-> On Wed, May 8, 2024 at 11:14=E2=80=AFPM Petr Tesa=C5=99=C3=ADk <petr@tesa=
-rici.cz> wrote:
-> >
-> > On Tue,  7 May 2024 01:34:59 +0000
-> > "T.J. Mercier" <tjmercier@google.com> wrote:
-> > =20
-> > > Commit 20347fca71a3 ("swiotlb: split up the global swiotlb lock") add=
-ed
-> > > the ability to specify the number of SWIOTLB areas, but boot-options.=
-rst
-> > > was not updated as part of that commit.
-> > >
-> > > Reported-by: Michael Kelley <mhklinux@outlook.com>
-> > > Fixes: 20347fca71a3 ("swiotlb: split up the global swiotlb lock")
-> > > Signed-off-by: T.J. Mercier <tjmercier@google.com>
-> > > ---
-> > >  Documentation/arch/x86/x86_64/boot-options.rst | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/arch/x86/x86_64/boot-options.rst b/Documen=
-tation/arch/x86/x86_64/boot-options.rst
-> > > index a37139d1752f..18161657b301 100644
-> > > --- a/Documentation/arch/x86/x86_64/boot-options.rst
-> > > +++ b/Documentation/arch/x86/x86_64/boot-options.rst
-> > > @@ -287,9 +287,11 @@ iommu options only relevant to the AMD GART hard=
-ware IOMMU:
-> > >  iommu options only relevant to the software bounce buffering (SWIOTL=
-B) IOMMU
-> > >  implementation:
-> > >
-> > > -    swiotlb=3D<slots>[,force,noforce]
-> > > +    swiotlb=3D<slots>[,<areas>,force,noforce] =20
-> >
-> > This is not quite how this parameter is parsed. All the following
-> > specifications are valid:
-> >
-> > - swiotlb=3D512        // only slots
-> > - swiotlb=3D,4         // only areas
-> > - swiotlb=3D512,4      // slots and areas
-> > - swiotlb=3Dforce      // default size
-> > - swiotlb=3D512,force  // default areas
-> > - swiotlb=3D512,4,force // explicitly specify everything
-> >
-> > I believe the syntax should be somethig like:
-> >
-> >   swiotlb=3D{ | [<slots>][,<areas>],}{ force | noforce }
-> >
-> > Petr T
-> > =20
-> What does the leading | mean in front of slots?  How about brackets
+Fixes: 809216233555 ("selftests/harness: remove use of LINE_MAX")
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+Signed-off-by: Edward Liaw <edliaw@google.com>
+---
+ tools/testing/selftests/ipc/msgque.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-I wanted to mark somehow that "force" and "noforce" alone do not
-require a leading comma, but if you specify slots and/or areas, the
-comma is required, like you write below.
+diff --git a/tools/testing/selftests/ipc/msgque.c b/tools/testing/selftests/ipc/msgque.c
+index c75ea4094870..45aba6aa8e1d 100644
+--- a/tools/testing/selftests/ipc/msgque.c
++++ b/tools/testing/selftests/ipc/msgque.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <stdlib.h>
+ #include <stdio.h>
+ #include <string.h>
+-- 
+2.45.0.118.g7fe29c98d7-goog
 
-> around force/noforce since they're also optional and mutually
-> exclusive?
-
-Right. I missed that.
-
-> The Rebooting section uses double brackets instead of
-> braces for groupings like that.
-
-TBH I don't know what syntax is used here. Use anything that can capture
-the variants I listed above.
-
-> Only weird thing here is the
-> force/noforce comma being potentially unneeded, but that's getting
-> pretty picky and I think the intent is clear.
->=20
-> swiotlb=3D[<slots>][,<areas>][, [force] | [noforce] ]
-
-No objections from my side.
-
-Petr T
