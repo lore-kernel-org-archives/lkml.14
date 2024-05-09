@@ -1,54 +1,54 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D586A86248
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 20:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4166680C1D
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 20:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715284858; cv=none; b=WECFiT5LPaZddiV3rffiTL4KRJMixSxgY8WARR/PoFLqk9ps5WApiIBNngSFVC319bxt5uzk7D6lrJM5YPjjwvj+e2LGu3bCVd3c/ebSNuN6Iwdo458gN/w4z89t/jcPVsY0cV0uaSQdE+W+rqLQKVXyZFu09rYf9LtsMWm8wMs=
+	t=1715284871; cv=none; b=ffFVgbFv1n7DT2f4kiFS6CXbDJqEU6Dvm+MclDD61hkJBmv/GK61bszaRkoO6ekbaHSlVYszwFi6scG30ccEZUMj1NbzxMYn8Hj1w3TTnH+Zr47AaJ1mTXdhPaqqNimma0LR6CTVE1vfX4datHBB/b9mxD6XbBVbTKvwxv352/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715284858; c=relaxed/simple;
-	bh=euHNwBS6Epsw1wGiLajK2FBLzSmnArw8M3ba7LO9eJs=;
+	s=arc-20240116; t=1715284871; c=relaxed/simple;
+	bh=FoY+8htLD+tcBfSG58OctRNszBURt/6xq3bm1HJ3AsI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MZ1/HVx56fJcSTSUIm9NXv9k5W3Us3P836s0Nav1NqEtY2P21f+k1CmYqJsiqBvqstrS/PGrGiXvL6GzDS+SwExj8PdllzFRLcOrTKwyk4ajZs4AjJijD7U2k6+gH8wA7rE+0eUkC88XBYvdEKeYuJlhGuiT6nJevjlKdSVmmLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hH9xnUGm; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=GEOr+YmdO+DMxONvfvb1EPzjYttxIvXieumSDDoYFqvYX78cXiCuzbK+kiAsZCf73/OeBv/fw1iYGs1pPh08/vHOwiHPD983F+qHc/b7Ez0YFvhCZvgeA9Erawjxxj4froG7+4NF/HdlntewNDy+7BXUfbAAbnCBwbbvn1SEjnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QM5pMXYv; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hH9xnUGm"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61be4601434so22565627b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 13:00:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QM5pMXYv"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5c66a69ec8eso1031184a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 13:01:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715284855; x=1715889655; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715284870; x=1715889670; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fSnXkY+i8xBz8FisUXSmsQkSZaie1U2SXlbBYlPacTk=;
-        b=hH9xnUGmDdeKavQ7o3KXJnb3ZTFuAhk/hFxA7x8b7NccNKEZbYrGeYFfVX46BIOc8R
-         GTNFLhz/QQ8PRfhBvKicPlEtACEWhl8n0tcFLIyYyYSe1xAJK/TBoCmNTUI4gwbhYGhg
-         /INfWYsEMmM5j9cHoXcnd6TXXy6Xpu4FZgAufoSwFQMDofvEdDmljU4zPXvT5EyzKEpl
-         aTRo2qUyuHCvR41kRDC4QFOF93IaJmcaxqpfpq5Qllx+2T+97xE7zYl++jLsxla28H+m
-         iJ82WyXpAc0Hi/o4ULjWJ75t+Y5sILr5b4ohKUSZ4on/rFr99Tbm+kanF67fsSk38BT0
-         PSCA==
+        bh=I0i1BJHEHfvwlJBsnQikq6I2sYMm72umBUDvidl3EP0=;
+        b=QM5pMXYvuIjT+hJwvm7ZqbR2i7wUFCbW0Lpb/KmQCl7s/7e5Q6AJI/F5oeWeS+S4Kt
+         L51nrwbkKa2XnPeWPS3B7KES9Lox3Xld0m0X9D+qln5QOXtAgynPOE12zxD+4H2NlVup
+         PjqrEFtqN3rtn/SNK4k9lJINHVKe8tHNcHYR1ZTadGtRUBwhz/LizigH19dz70NOnjJ5
+         cCFbvInbXf3KkBlzXnGh9kUAmLDSrbBZogLV8P/eLRpnMYd6+dJ5TSJulBratq8aUqYw
+         5XdIwsSBEe5dbdgsHnmW9JqTuEaQXlZwih4GBMU6/nmD//hJyOrBLihZrTAyejzHLkOb
+         bx+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715284855; x=1715889655;
+        d=1e100.net; s=20230601; t=1715284870; x=1715889670;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fSnXkY+i8xBz8FisUXSmsQkSZaie1U2SXlbBYlPacTk=;
-        b=bAm2iUuzeyhcJMhixmWwlwQ3xhVG6ITNH4+zyLJKz2eix0K5HJH6p9Hwaot1wIDaAm
-         dktT9FML/U7ptxrFdQrjgNTHncjG+8c/JPtb8pXDaKCA25ZkDvNibWyHpjK5u6w7i9fA
-         Q9jYRzwRqT8ZA7LibKvNIZQB1gxnjxahWW4VS+kOMNshVWE2aFFhSDsGqYeoZ4c/VrB8
-         FqwKXtBjSenzPZ2T/s2Z6SwL4kQFWY5+E4iNk1Bf7qwgzjLVEYTg2q/9w3PfgRNGpIX9
-         uhMF58oeE900od0NNhZ3jIO+1EMHkj++936FcRUjFPbeQ/rNFfeF4Pz3i9bPXdzSfB7c
-         0Ugw==
-X-Gm-Message-State: AOJu0YwuOB//HzNF/gbZaaasVC2CBLaIEyaMEat0ukzJKZyVfWt1JgZl
-	hMZ1OUiAyjqeAljlfooKg/Dsnlzh8dtQnpRu14RGbhA0ttKyJV/BcqPbEiRqeJ92nc9D3BeJjfJ
-	qdg==
-X-Google-Smtp-Source: AGHT+IGojUkNrisAmY+TVjQpynkG2w84qahgUw1mqZZfDgiCsUKwxR/6LFnDu05hn55cxfE5RMPak7RAuao=
+        bh=I0i1BJHEHfvwlJBsnQikq6I2sYMm72umBUDvidl3EP0=;
+        b=NPGbqWuSGLfxJiWePMmyvViVyC4Et6gs5DQkCrgrmevNProRyzFr2dZcTLBrUuQBC6
+         9L3ILbtaZxMUWomGGhT4vab36I2vD+c2NAI8mMneIy423h53g8YeaqLbIBMaUQ6UKOzi
+         tan5dSOiVxIPIKTEbiYY6o0N0/IdCquzPOQ+XMPqZRtM83Je7OF4JTXj4xhfU1NMfYdg
+         NUVIGNZo80s4ZAERSx23eBjN+cUPc7Ny0v65WH0tyKgKaHikyuXPuK2/7VAwj282y7x6
+         BUYkAVP5tyiYLPXNIM2PN6FWtUxTwRnjJehAuaGyhezJm8/rrk6hTCGt4r1Mbg9NshZm
+         hERw==
+X-Gm-Message-State: AOJu0YxoUbf8bi4yq/0vFa/k0CmDaHfKI519vHhARns8hBfxK2kVFMio
+	Mz1A67TxX/EZ9ECyz+xsX9hDCCRXZk06+1+LVMcYDEqb54JlJonrM/Acus0KkANO3S6L08sSLiQ
+	hLA==
+X-Google-Smtp-Source: AGHT+IFudhQt1fRt6J0kI3URdQQI5Scuqc2zHiG+e3HEB09m93On8QGiFupoq3VY6GmzMw99gIVvhuFAdzI=
 X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
- (user=edliaw job=sendgmr) by 2002:a25:a443:0:b0:de5:9e4b:fbb with SMTP id
- 3f1490d57ef6-dee4f363e51mr139553276.6.1715284854975; Thu, 09 May 2024
- 13:00:54 -0700 (PDT)
-Date: Thu,  9 May 2024 19:57:57 +0000
+ (user=edliaw job=sendgmr) by 2002:a63:7749:0:b0:5f7:651b:fed8 with SMTP id
+ 41be03b00d2f7-637427ab755mr973a12.12.1715284869580; Thu, 09 May 2024 13:01:09
+ -0700 (PDT)
+Date: Thu,  9 May 2024 19:57:59 +0000
 In-Reply-To: <20240509200022.253089-1-edliaw@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -58,8 +58,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240509200022.253089-1-edliaw@google.com>
 X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
-Message-ID: <20240509200022.253089-6-edliaw@google.com>
-Subject: [PATCH v3 05/68] selftests/arm64: Drop duplicate -D_GNU_SOURCE
+Message-ID: <20240509200022.253089-8-edliaw@google.com>
+Subject: [PATCH v3 07/68] selftests/breakpoints: Drop define _GNU_SOURCE
 From: Edward Liaw <edliaw@google.com>
 To: shuah@kernel.org, "=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>, 
 	"=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>, Christian Brauner <brauner@kernel.org>, 
@@ -68,34 +68,51 @@ To: shuah@kernel.org, "=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>
 	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
 	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
 	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+	Andrew Morton <akpm@linux-foundation.org>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>, Edward Liaw <edliaw@google.com>
 Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kernel-team@android.com, Edward Liaw <edliaw@google.com>, 
-	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, bpf@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
+	kernel-team@android.com, linux-security-module@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-riscv@lists.infradead.org, bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
--D_GNU_SOURCE can be de-duplicated here, as it is added by lib.mk.
+_GNU_SOURCE is provided by lib.mk, so it should be dropped to prevent
+redefinition warnings.
 
+Fixes: 809216233555 ("selftests/harness: remove use of LINE_MAX")
 Signed-off-by: Edward Liaw <edliaw@google.com>
 ---
- tools/testing/selftests/arm64/signal/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/breakpoints/breakpoint_test_arm64.c   | 3 ---
+ tools/testing/selftests/breakpoints/step_after_suspend_test.c | 3 ---
+ 2 files changed, 6 deletions(-)
 
-diff --git a/tools/testing/selftests/arm64/signal/Makefile b/tools/testing/selftests/arm64/signal/Makefile
-index 8f5febaf1a9a..37c8207b99cf 100644
---- a/tools/testing/selftests/arm64/signal/Makefile
-+++ b/tools/testing/selftests/arm64/signal/Makefile
-@@ -2,7 +2,7 @@
- # Copyright (C) 2019 ARM Limited
- 
- # Additional include paths needed by kselftest.h and local headers
--CFLAGS += -D_GNU_SOURCE -std=gnu99 -I.
-+CFLAGS += -std=gnu99 -I.
- 
- SRCS := $(filter-out testcases/testcases.c,$(wildcard testcases/*.c))
- PROGS := $(patsubst %.c,%,$(SRCS))
--- 
+diff --git a/tools/testing/selftests/breakpoints/breakpoint_test_arm64.c b/tools/testing/selftests/breakpoints/breakpoint_test_arm64.c
+index e7041816085a..e5a95187ac12 100644
+--- a/tools/testing/selftests/breakpoints/breakpoint_test_arm64.c
++++ b/tools/testing/selftests/breakpoints/breakpoint_test_arm64.c
+@@ -7,9 +7,6 @@
+  * Code modified by Pratyush Anand <panand@redhat.com>
+  * for testing different byte select for each access size.
+  */
+-
+-#define _GNU_SOURCE
+-
+ #include <asm/ptrace.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
+diff --git a/tools/testing/selftests/breakpoints/step_after_suspend_test.c b/tools/testing/selftests/breakpoints/step_after_suspend_test.c
+index b8703c499d28..695c10893fa4 100644
+--- a/tools/testing/selftests/breakpoints/step_after_suspend_test.c
++++ b/tools/testing/selftests/breakpoints/step_after_suspend_test.c
+@@ -2,9 +2,6 @@
+ /*
+  * Copyright (C) 2016 Google, Inc.
+  */
+-
+-#define _GNU_SOURCE
+-
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <sched.h>
+--
 2.45.0.118.g7fe29c98d7-goog
 
