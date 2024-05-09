@@ -1,104 +1,219 @@
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 624EE7F464;
-	Thu,  9 May 2024 18:40:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E126D3D3AC
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 18:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715280025; cv=none; b=Mnip7EOASOJopHr8stijz/z4x4YmwNy4AZEGea1vZALcQOyfK7JlqMcG9h6EtSCJDb3QFMMsJNyDLePmdsJ79ACuErrbtKf3qlTUf9Nn7JnXKWnUPhOJ4TzaCjosgH4tCwrImj+FLn2f2QYbK6YVwq0NMLxH0JfolA0LDyzPc+s=
+	t=1715280090; cv=none; b=jT+0woIKHufvxkzJH8ViAN2Dabhi7UegOrn3BE9klLc+Rg1m8/fWpCmgIzqnn08CRcK++l4/YcvMbaU6+Aeeaqzoqo8Th4P2J7IRrWgBY+ZeuIdr38tr87Q/xSsBnT0hvPhl4zP5KBw4sZg/FlhRNRjZzJYOc3yaw0qeaUtMwzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715280025; c=relaxed/simple;
-	bh=KyiYvMhETDO/noTBCSz8ORoc9EKNT/4TwTv3zc5evPk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Rwygd8pF3vNpqomGhsNYqFStct5H3ysvUbCxy1Pp5NvY2XmSMvLKqpndSBNIxQmtRChmocjO8D4szNJ/gCTOSErJVaIQS9FYly1V5AhaUVuBlxFSrJuv+qfS35qWMEDFPKnGeXxrO/Cfq1n8+ozOAg+UGGSknvRuIAqtVj9exSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=l4O12OvF; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1715280090; c=relaxed/simple;
+	bh=z6XHl5llDJyiHPA78/v4DUNEAeOPZTfmTPQPFm4H3Nk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=XwqcPx7s7lOuA01XU8st2MKd+ZL5AT92YbyIeHMjBc+CvlUnZ9/JubDAQVZAKrZ1Ea73lw/nLqhChF0cYZWItaVTegAthNNfykO1gADB+BTnGUWkrw9UZm9Nn7DNOYMWTIIiqus8TxZTufSY+f5sZFW3Q7oNdXXSzKEO7Z1rsrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L0eH3QZX; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="l4O12OvF"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 449IeCwH059877;
-	Thu, 9 May 2024 13:40:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715280012;
-	bh=aMNcaysqDJDn+h1D5ugEv/Q4TocmhRT2g7o4pHDXixo=;
-	h=From:To:CC:Subject:Date;
-	b=l4O12OvFcUPsy8dMLaXN0DGXhKBtkvcCCBIzSVNQLeejlbIbypSyde7w63neEf3UN
-	 w8MuW4kx4Bvg2A6JnMhOxMW/tk0DZ/P/iDeniKChGtU4oLrfrUPp5ZZqdiH09HpsmK
-	 2Wu9xoAL9qCQSQ27Y3i16FP+nfurCTA7iEAc1254=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 449IeCLN070670
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 9 May 2024 13:40:12 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 9
- May 2024 13:40:11 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 9 May 2024 13:40:11 -0500
-Received: from localhost (ti.dhcp.ti.com [172.24.227.95] (may be forged))
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 449IeBEc006178;
-	Thu, 9 May 2024 13:40:11 -0500
-From: Devarsh Thakkar <devarsht@ti.com>
-To: <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
-        <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.gaignard@collabora.com>, <sebastian.fricke@collabora.com>,
-        <p.zabel@pengutronix.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>
-CC: <laurent.pinchart@ideasonboard.com>, <praneeth@ti.com>, <nm@ti.com>,
-        <vigneshr@ti.com>, <a-bhatia1@ti.com>, <j-luthra@ti.com>,
-        <b-brnich@ti.com>, <detheridge@ti.com>, <p-mantena@ti.com>,
-        <vijayp@ti.com>, <devarsht@ti.com>, <andrzej.p@collabora.com>,
-        <nicolas@ndufresne.ca>, <akpm@linux-foundation.org>,
-        <gregkh@linuxfoundation.org>, <andriy.shevchenko@linux.intel.com>,
-        <adobriyan@gmail.com>, <jani.nikula@intel.com>
-Subject: [PATCH v7 8/8] gpu: ipu-v3: Use generic macro for rounding to nearest multiple
-Date: Fri, 10 May 2024 00:10:10 +0530
-Message-ID: <20240509184010.4065359-1-devarsht@ti.com>
-X-Mailer: git-send-email 2.39.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L0eH3QZX"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a59a9d66a51so277477366b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 11:41:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715280087; x=1715884887; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mqPEfUzcM7hu8r9fmVZs+WucUjP6utXCGhcKPrzzj8I=;
+        b=L0eH3QZXygPjvMUIMMzJ9GOIlykb2QPjVKbNV+1BAeDhhErNfrxUoktUvp+GpCIfcq
+         shAEb11u430KWbv7YLXKjEqYpmCZtQmRQuaoTH8GBhJLy/yjrY7UhdXqhIOIMdlmjMGl
+         PvIoxOmRP1tf5F12ihuBeE+/DWYgRqYed3JVfsKG0F/DhiOpSSY0Mgx+oX5KuhnQ8P7o
+         +wLPUYFTY8rB4QSkNsJDCkRv58jSwhA23JqIwtP0xdezx1PiKJ1QMM7qAcwJi2O3r+J9
+         hH4LDo8L2C6Sq1URWhfam+LaH07BSNlwX/djqrBwrFIRr7GCTvjuOQZXx/yIv80oVUL0
+         Eu0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715280087; x=1715884887;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mqPEfUzcM7hu8r9fmVZs+WucUjP6utXCGhcKPrzzj8I=;
+        b=CsYOTpBQp9qxNifbzLOjoAKZ8JwDMryqhEubdvvUplTVPydFMTD3Cgo59BeWbEKIB/
+         mQoCk7BkOoJ/+OprzR6An/nlssnbZq0fdKUaUsQbHX+w7qoe0rFb3iArW1zaxLuCqw0B
+         goJnL+ioweuWFGhAXvzTqBNxxt7/ZizGcN11DdZ3StGzmD6NtSJm81FC1gxKIhrQgz+5
+         Aabgj9/SLEcGi2D7lFB2Skt2uxJznG79sxoUzJhVpqRltQnHW1jO6bTcuq9GZKy0g9e/
+         OBJmadjRvgnYQebOHtfjuM/D7N/8klsa0prDKxcMX7+oddZZ5WKvTDEONKPNFbDKyztC
+         lRHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUKskV1uellllCHRJl5ofFUcni7WyIyrO02xLvLSfwVI6i4mCropDzFrGUQZppI2OIv9SvB+8LDkPVB9wFLgWyLDK4hzbtsqDaj9Qii
+X-Gm-Message-State: AOJu0YzqDwa4tqA3njyuDARuEV7Q4qaSL6e7gc902hNEgfJrytS63cgO
+	sAub0ZbtkezSI7pGH6YZa44Bz9nye2K+nmy82slrG7e3ZEp73xqS0tGJnPDPQ7w=
+X-Google-Smtp-Source: AGHT+IGhx7HNcYGITxPU9mNn+ku+A6vTT7YBFccM+yXBc7Idaz4Uq4aqT5RpvZSXeN7Mp2i7aNrD6Q==
+X-Received: by 2002:a17:906:aad5:b0:a59:a9c0:57e9 with SMTP id a640c23a62f3a-a5a2d678775mr26706966b.76.1715280086983;
+        Thu, 09 May 2024 11:41:26 -0700 (PDT)
+Received: from [192.168.62.15] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01517sm99929166b.157.2024.05.09.11.41.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 11:41:26 -0700 (PDT)
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Date: Thu, 09 May 2024 20:41:23 +0200
+Subject: [PATCH v2] drm/msm/adreno: De-spaghettify the use of memory
+ barriers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240509-topic-adreno-v2-1-b82a9f99b345@linaro.org>
+X-B4-Tracking: v=1; b=H4sIANIYPWYC/1XMQQrCMBCF4auUWRtJo5HGlfcQF5Nk0g5oUialC
+ KV3N7hS3upbvH+DSsJU4dptILRy5ZIbzKGDMGEeSXFsBqPNWVvt1FJmDgqjUC4KB3dy3pl0MRb
+ aZRZK/P7m7o/mJOWllkkIfyPDf2TtVZtHH7UNfe/i7ckZpRyLjLDvH2cr00SjAAAA
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ Rob Clark <robdclark@chromium.org>, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715280085; l=5092;
+ i=konrad.dybcio@linaro.org; s=20230215; h=from:subject:message-id;
+ bh=z6XHl5llDJyiHPA78/v4DUNEAeOPZTfmTPQPFm4H3Nk=;
+ b=bWXRy6aulY2LTlIiaVEc91Yo7C4I8hLO+xSdtizQpxkFS48xA6mHIfG9nDAHOLmFZvLwxWUvl
+ 6ts9tcSY/TPC54E2eMJRWZyg7uk7mfqLrJeSHz8/kdeQTuvUHduzFyd
+X-Developer-Key: i=konrad.dybcio@linaro.org; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-Use generic macro round_closest_up for rounding to nearest multiple instead
-of using local function.
+Memory barriers help ensure instruction ordering, NOT time and order
+of actual write arrival at other observers (e.g. memory-mapped IP).
+On architectures employing weak memory ordering, the latter can be a
+giant pain point, and it has been as part of this driver.
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+Moreover, the gpu_/gmu_ accessors already use non-relaxed versions of
+readl/writel, which include r/w (respectively) barriers.
+
+Replace the barriers with a readback that ensures the previous writes
+have exited the write buffer (as the CPU must flush the write to the
+register it's trying to read back) and subsequently remove the hack
+introduced in commit b77532803d11 ("drm/msm/a6xx: Poll for GBIF unhalt
+status in hw_init").
+
+Fixes: b77532803d11 ("drm/msm/a6xx: Poll for GBIF unhalt status in hw_init")
+Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 ---
-V1->V6 (No change, patch introduced in V7)
----
- drivers/gpu/ipu-v3/ipu-image-convert.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Changes in v2:
 
-diff --git a/drivers/gpu/ipu-v3/ipu-image-convert.c b/drivers/gpu/ipu-v3/ipu-image-convert.c
-index 841316582ea9..5192a8b5c02c 100644
---- a/drivers/gpu/ipu-v3/ipu-image-convert.c
-+++ b/drivers/gpu/ipu-v3/ipu-image-convert.c
-@@ -477,8 +477,6 @@ static int calc_image_resize_coefficients(struct ipu_image_convert_ctx *ctx,
- 	return 0;
+* Introduce gpu_write_flush() and use it
+* Don't accidentally break a630 by trying to write to non-existent GBIF
+---
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c |  4 +---
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.h | 10 ++++++++++
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 16 ++++------------
+ drivers/gpu/drm/msm/msm_gpu.h         | 14 ++++++++++++--
+ 4 files changed, 27 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 0e3dfd4c2bc8..fb2f8a03da41 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -466,9 +466,7 @@ static int a6xx_rpmh_start(struct a6xx_gmu *gmu)
+ 	int ret;
+ 	u32 val;
+ 
+-	gmu_write(gmu, REG_A6XX_GMU_RSCC_CONTROL_REQ, 1 << 1);
+-	/* Wait for the register to finish posting */
+-	wmb();
++	gmu_write_flush(gmu, REG_A6XX_GMU_RSCC_CONTROL_REQ, BIT(1));
+ 
+ 	ret = gmu_poll_timeout(gmu, REG_A6XX_GMU_RSCC_CONTROL_ACK, val,
+ 		val & (1 << 1), 100, 10000);
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+index 94b6c5cab6f4..ab7f581f0d24 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.h
+@@ -111,6 +111,16 @@ static inline void gmu_write(struct a6xx_gmu *gmu, u32 offset, u32 value)
+ 	writel(value, gmu->mmio + (offset << 2));
  }
  
--#define round_closest(x, y) round_down((x) + (y)/2, (y))
--
- /*
-  * Find the best aligned seam position for the given column / row index.
-  * Rotation and image offsets are out of scope.
-@@ -565,7 +563,7 @@ static void find_best_seam(struct ipu_image_convert_ctx *ctx,
- 		 * The closest input sample position that we could actually
- 		 * start the input tile at, 19.13 fixed point.
- 		 */
--		in_pos_aligned = round_closest(in_pos, 8192U * in_align);
-+		in_pos_aligned = round_closest_up(in_pos, 8192U * in_align);
- 		/* Convert 19.13 fixed point to integer */
- 		in_pos_rounded = in_pos_aligned / 8192U;
++/*
++ * Use for timing-critical writes that must reach the hardware immediately
++ * (to work around write buffering), e.g. for reset registers.
++ */
++static inline void gmu_write_flush(struct a6xx_gmu *gmu, u32 offset, u32 value)
++{
++	gmu_write(gmu, offset, value);
++	gmu_read(gmu, offset);
++}
++
+ static inline void
+ gmu_write_bulk(struct a6xx_gmu *gmu, u32 offset, const u32 *data, u32 size)
+ {
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+index cf0b1de1c071..ef7eaa6d5e5c 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
+@@ -1714,21 +1714,13 @@ static int hw_init(struct msm_gpu *gpu)
  
+ 	/* Clear GBIF halt in case GX domain was not collapsed */
+ 	if (adreno_is_a619_holi(adreno_gpu)) {
+-		gpu_write(gpu, REG_A6XX_GBIF_HALT, 0);
+-		gpu_write(gpu, REG_A6XX_RBBM_GPR0_CNTL, 0);
+-		/* Let's make extra sure that the GPU can access the memory.. */
+-		mb();
++		gpu_write_flush(gpu, REG_A6XX_GBIF_HALT, 0);
++		gpu_write_flush(gpu, REG_A6XX_RBBM_GPR0_CNTL, 0);
+ 	} else if (a6xx_has_gbif(adreno_gpu)) {
+-		gpu_write(gpu, REG_A6XX_GBIF_HALT, 0);
+-		gpu_write(gpu, REG_A6XX_RBBM_GBIF_HALT, 0);
+-		/* Let's make extra sure that the GPU can access the memory.. */
+-		mb();
++		gpu_write_flush(gpu, REG_A6XX_GBIF_HALT, 0);
++		gpu_write_flush(gpu, REG_A6XX_RBBM_GBIF_HALT, 0);
+ 	}
+ 
+-	/* Some GPUs are stubborn and take their sweet time to unhalt GBIF! */
+-	if (adreno_is_a7xx(adreno_gpu) && a6xx_has_gbif(adreno_gpu))
+-		spin_until(!gpu_read(gpu, REG_A6XX_GBIF_HALT_ACK));
+-
+ 	gpu_write(gpu, REG_A6XX_RBBM_SECVID_TSB_CNTL, 0);
+ 
+ 	if (adreno_is_a619_holi(adreno_gpu))
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index a0c1bd6d1d5b..45d00acd5b1b 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -553,14 +553,24 @@ struct msm_gpu_state {
+ 	struct msm_gpu_state_bo *bos;
+ };
+ 
++static inline u32 gpu_read(struct msm_gpu *gpu, u32 reg)
++{
++	return readl(gpu->mmio + (reg << 2));
++}
++
+ static inline void gpu_write(struct msm_gpu *gpu, u32 reg, u32 data)
+ {
+ 	writel(data, gpu->mmio + (reg << 2));
+ }
+ 
+-static inline u32 gpu_read(struct msm_gpu *gpu, u32 reg)
++/*
++ * Use for timing-critical writes that must reach the hardware immediately
++ * (to work around write buffering), e.g. for reset registers.
++ */
++static inline void gpu_write_flush(struct msm_gpu *gpu, u32 reg, u32 data)
+ {
+-	return readl(gpu->mmio + (reg << 2));
++	gpu_write(gpu, reg, data);
++	gpu_read(gpu, reg);
+ }
+ 
+ static inline void gpu_rmw(struct msm_gpu *gpu, u32 reg, u32 mask, u32 or)
+
+---
+base-commit: ec2d9beb604a623a9f5308f7abcff3561e08c155
+change-id: 20240509-topic-adreno-a8939b92f625
+
+Best regards,
 -- 
-2.39.1
+Konrad Dybcio <konrad.dybcio@linaro.org>
 
