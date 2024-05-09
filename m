@@ -1,156 +1,76 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177587F489
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 19:16:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE43B7E576;
+	Thu,  9 May 2024 19:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715282196; cv=none; b=Y7Yr9xH6luFdl1XKjRZKXk+mOBaFqcNSYCZQ6MaXJEKY8TIEw7NSZ8kxN/BuGgmKMn1jh+02bh6H2lesQPFlVWLuQ3Sg97M00Ikq5iwI0AcI7HR0M77EMeKqz95z48VW57je9gw4ZckcevQz46wNoppTJWT1K012dGSANhL792c=
+	t=1715282271; cv=none; b=pakLL+xNZrTYBFMQsxOrH2J+7C7N+fe6a7yp3/f163sG84amUFzg8C+/qgV0eXWSuDbIKp0wwOCdukzumGVW13GXDTu1dSWthz/7Ef+E708z+lAQeiLk1PkCBUTqsVxnM3MDNO7vtGKaeNhdBWyL2SIy1UJ3g44URiTJ4O677N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715282196; c=relaxed/simple;
-	bh=uCzgFU7wXjy37E1QSOA4C4Ah2huDwMghRUAkC14wOZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XuDlZiBujaoTLVU7uieICn6K13X3eV6+E+pr9DpZYBNgm8BvXG7qeZXZEf8AfRWmtyvo39c9e8Z38v80xB84bqbmWG3u792ujcF6JdB8eZy3VrCmlLNNDniBn0OmxYGLDJZs1mobPYp1IE4ETHAuyHZWNAThe/rXwKoYgN5Y4io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=p6BR47fZ; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1715282271; c=relaxed/simple;
+	bh=hfQu/7n4py57ijqfCDeYo/FIb/Jz4TjzngGAo2b5WRo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iAn5PDhB+2qWbZsOtcd2ufkh6ulS/rsWgzmqoLVmuviEp0JEd3I6vNPd2/pI7f8bazofMCjleUp/FRKihmKK7+GCWqNqm7K7FA1MYIp3bTXvXVcnAzmIjSJ5muNfel/yEQfGT0USdiaEDiAELJa2GmzBChUKMchkQBck9S0ZNzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=Edh4Dhng reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="p6BR47fZ"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1eb0e08bfd2so8386615ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 12:16:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715282194; x=1715886994; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WRd0Lx0MMpPCEzZHJ+gP+MBiwgoDsG5pFDJFXbEvS5E=;
-        b=p6BR47fZUkBd+uEdgLV91HLP/3f8tz9FUAZcMX1txl2WZCfGJTdp+7ji7eQ0HJsIou
-         7oDP3spbl6HXwjHBby8bB/D4x6YAMaqRKzXJBlD4nR67TSGhm7SCE647B6SSEUJ8cTnW
-         fXcRNJvRz0Uplw5AzETVF11LV3u0ZPVCdmAn5TnXS5lS4B6G/sQxncQ3DUCtaLGdH6hY
-         0/wmfs5EFIvkcZ8CMM8N9L9EDURm/c51QsQOAne3xTpfu1cKo7jKfC/FSo2cxUBkurQZ
-         kqrKu2kLpo8YPfyXBwxJOGyMy0Bnu8hLZtJ2xHu1VEHHRIaNOdIHaPeK381vB82/GWxY
-         tZrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715282194; x=1715886994;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WRd0Lx0MMpPCEzZHJ+gP+MBiwgoDsG5pFDJFXbEvS5E=;
-        b=TpUCQPfyPPaYOpAaQvy7rBsbdCWbZnlmFT6m7qPySdIlOdJlS0dW4LCUEnMZs2lia8
-         aY1/o/s4wRt/uFOiCPlATjcAbCW0IsILbIcIleazyeQ86nTAZjNzN+9xq1G9zzQoL3no
-         dRaSRgf2Vy32cTMQWf0r1Fg/ipQHhII2r12sjHR6HoQOeLBu2i5JNrFgi1DC6Y55fzEV
-         Uc/hhcF5rfsMX2axftxoU4q0I0f+oLghfjetN1vAq01LdfkCoH+KmDnL/3DcOc9ZwE80
-         VOcqqN/QvXWjhEfQcI6EIHg3GQzV0yJcwd+gUAG4H1yJVfGQvKXtMwa+phW9oK3xmiAl
-         uxHA==
-X-Forwarded-Encrypted: i=1; AJvYcCV7eX6IYhYeebAfXIy8St0P2m8hSGQwJabTEpv9ldhf1pdcDcgSFfELuAvAsr2TtOo2g3dz8MnGrys5nP0auE3OPsuAb+wAp4zrsUzc
-X-Gm-Message-State: AOJu0YyyhvdJNH/MLEkcbm0og/c23mTFTZqHC8JwC3uU0i3ikopZXZK9
-	u+ZuzHmTqHBqYLlcuDXhHV2eVhCR3auUCS0VMiFS6eSAwKCINrSLy+xHDPAGboM=
-X-Google-Smtp-Source: AGHT+IGVLZ1hk7FPNudPJKafIIo2jYjbH8+I3TnNil7Sy8OT8DfcbS5dMB3RJTTTCW5vQbF2H1ruBQ==
-X-Received: by 2002:a17:903:191:b0:1dc:de65:623b with SMTP id d9443c01a7336-1ef4404b8cdmr7695675ad.60.1715282194292;
-        Thu, 09 May 2024 12:16:34 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c13692asm17812885ad.252.2024.05.09.12.16.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 12:16:33 -0700 (PDT)
-Date: Thu, 9 May 2024 12:16:29 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: paul.walmsley@sifive.com, rick.p.edgecombe@intel.com,
-	broonie@kernel.org, Szabolcs.Nagy@arm.com, kito.cheng@sifive.com,
-	keescook@chromium.org, ajones@ventanamicro.com,
-	conor.dooley@microchip.com, cleger@rivosinc.com,
-	atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com,
-	alexghiti@rivosinc.com, samuel.holland@sifive.com, conor@kernel.org,
-	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-mm@kvack.org, linux-arch@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, corbet@lwn.net, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com,
-	akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com,
-	shuah@kernel.org, brauner@kernel.org, andy.chiu@sifive.com,
-	jerry.shih@sifive.com, hankuan.chen@sifive.com,
-	greentime.hu@sifive.com, evan@rivosinc.com, xiao.w.wang@intel.com,
-	apatel@ventanamicro.com, mchitale@ventanamicro.com,
-	dbarboza@ventanamicro.com, sameo@rivosinc.com,
-	shikemeng@huaweicloud.com, willy@infradead.org,
-	vincent.chen@sifive.com, guoren@kernel.org, samitolvanen@google.com,
-	songshuaishuai@tinylab.org, gerg@kernel.org, heiko@sntech.de,
-	bhe@redhat.com, jeeheng.sia@starfivetech.com, cyy@cyyself.name,
-	maskray@google.com, ancientmodern4@gmail.com,
-	mathis.salmen@matsal.de, cuiyunhui@bytedance.com,
-	bgray@linux.ibm.com, mpe@ellerman.id.au, baruch@tkos.co.il,
-	alx@kernel.org, david@redhat.com, catalin.marinas@arm.com,
-	revest@chromium.org, josh@joshtriplett.org, shr@devkernel.io,
-	deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
-	jhubbard@nvidia.com
-Subject: Re: [PATCH v3 29/29] kselftest/riscv: kselftest for user mode cfi
-Message-ID: <Zj0hDT1EZmOaEkCj@debug.ba.rivosinc.com>
-References: <20240403234054.2020347-1-debug@rivosinc.com>
- <20240403234054.2020347-30-debug@rivosinc.com>
- <Zj0UGweLoRD1U9Po@ghost>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="Edh4Dhng"
+Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
+ by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.0.0)
+ id c5fe2c6d1c71ddeb; Thu, 9 May 2024 21:17:46 +0200
+Received: from kreacher.localnet (unknown [195.136.19.94])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 43A37A524E7;
+	Thu,  9 May 2024 21:17:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1715282266;
+	bh=hfQu/7n4py57ijqfCDeYo/FIb/Jz4TjzngGAo2b5WRo=;
+	h=From:To:Cc:Subject:Date;
+	b=Edh4Dhngr1ijKD6Hw/EBI8vPusd/J2iwvj+0k2kQ9VUKTx9SFGqslhsxVaK6yWURs
+	 4DNxBb01m10vi3782LeNZHQnxYQQHohEazNfIYqxigWm2cxnOTxgDd94YUbwR302k7
+	 EgdFRVqXSzsiY7BQAjdwKFs3I75TN1opQzgHBMYuLpv2Lgz9T95+3Q9yVlFbjtjZhV
+	 DRk3D3zh8o5uvr0ayiBFH+02KhPGxbifFKITFqDXYd24Um2C49zmZ3KxQsFYH6rjP5
+	 u8v/zaxkB5M3aIXRf/u68/LNn3pnp9k/JNQSvmzCr6OFqY94+I8yi8BdsD4RvXiMxL
+	 1VYxz0J++UMWQ==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject:
+ [PATCH v1 0/7] thermal/debugfs: Assorted improvements for the 6.11 cycle
+Date: Thu, 09 May 2024 21:02:07 +0200
+Message-ID: <12438864.O9o76ZdvQC@kreacher>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Zj0UGweLoRD1U9Po@ghost>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 195.136.19.94
+X-CLIENT-HOSTNAME: 195.136.19.94
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrvdefvddgudefvdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkggfgtgesthfuredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpeffffffkefgheehffelteeiveeffeevhfelteejvddvieejjeelvdeiheeuveeuffenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrgh
+X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
 
-On Thu, May 09, 2024 at 11:21:15AM -0700, Charlie Jenkins wrote:
->On Wed, Apr 03, 2024 at 04:35:17PM -0700, Deepak Gupta wrote:
->> +
->> +int main(int argc, char *argv[])
->> +{
->> +	int ret = 0;
->> +	unsigned long lpad_status = 0, ss_status = 0;
->> +
->> +	ksft_print_header();
->> +
->> +	ksft_set_plan(RISCV_CFI_SELFTEST_COUNT);
->> +
->> +	ksft_print_msg("starting risc-v tests\n");
->> +
->> +	/*
->> +	 * Landing pad test. Not a lot of kernel changes to support landing
->> +	 * pad for user mode except lighting up a bit in senvcfg via a prctl
->> +	 * Enable landing pad through out the execution of test binary
->> +	 */
->> +	ret = my_syscall5(__NR_prctl, PR_GET_INDIR_BR_LP_STATUS, &lpad_status, 0, 0, 0);
->
->There is an assumption here that the libc supports setting
->INDIR_BR_LP_STATUS but does not support the standard prctl interface
->defined in <sys/prctl.h>. my_syscall5() is defined to fill in gaps in
->the libc, so this test case should also set the status manually rather
->than relying on the libc.
->
->I don't think it's necessary to define my_syscall5() since every libc
->should have a prctl() definition. However, these CFI prctls are very new
->and glibc does not yet support (correct me if I am wrong) it so these
->prctls should be enabled by the test cases.
+Hi Everyone,
 
-In one of my previous patches, it was setting landing pad and shadow stack enabling
-directly via handcrafted prctl macro. I changed it to check for status for following reasons
+This series is for the 6.11 cycle, but since it is ready from my POV,
+here it goes in case people have the time to look at it in the meantime.
 
-- If this binary is compiled with landing pad and shadow stack option then toolchain being used
-   already has libc with shadow stack and landing pad enabling
+The patches in the series address some minor issues in the thermal
+debugfs code and clean it up somewhat.
 
-- Currently upstream glibc toolchain dont have support but libc with toolchain has the support.
+Please refer to the individual patch changelogs for details.
 
-In case of shadow stack enabling, macro is needed and `prctl` function can't be used.
-Because you enter `prctl` function with no shadow stack but exit with shadow stack and will lead to
-fault in its epilog.
+At one point I'm going to put this series on a separate git branch
+for easier access/testing.
 
-Due to all these reasons, kselftests have to be compiled with toolchain with cfi codegen and thus libc
-should have support to light them up. Here tests only checks if they are already lit up, If not it fails.
+Thanks!
 
-Although you're spot on one thing here, since this test is assuming libc already lit-up landing pad and
-shadow stack. It doesn't need macro here for status check of feature and can simply use `prctl` syscall
-interface.
 
->
->- Charlie
->
->> +	if (ret)
+
