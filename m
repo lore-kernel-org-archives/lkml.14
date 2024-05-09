@@ -1,187 +1,189 @@
-Received: from mail-m17229.xmail.ntesmail.com (mail-m17229.xmail.ntesmail.com [45.195.17.229])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C25653;
-	Thu,  9 May 2024 19:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.229
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0DA653;
+	Thu,  9 May 2024 19:02:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715281371; cv=none; b=gS5RyhTAP0IP17+deH6yEFXsfqsGgf2RNAZJDnbwXAijRn9SHbH3AGwPd+DrJsHNRR2q7jQfZk2KWbrliNvn+HTEFqxwxBy3IywJeFvt1GCRtHzzh6Rzzv9JwKnqjJjqJoUozOVusIA5u6kIc0xufq20pEVjdN92Rbueof8ENSs=
+	t=1715281375; cv=none; b=MFlhV7UOj2J9WjEt/Vw0v0+u1+cp33IDisL7KcorK4fiq+LcWQ2TDV5tnt4e+br1X9Oh1IsyibjsfFftnp/qAxeSwIPwGhpaGlyzVz2ANz94nEMJE9i4/+IUtEeSdGAZAcZrUcvfAwuAVyKxQg+0XvJw/c43VExEa/hP+F9pJHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715281371; c=relaxed/simple;
-	bh=4XnBz2lh+7YxriUGIom+RcfBIR64ijJxolblnDjagBQ=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=CHchWtgmZK1r13FgNAiQNW2n+e5sa19I/i7JXuPU/TJT4shnsV4SCOurfsQ1Pcj5ZOz1IRGL0/SEYOsA4tiKjfiKNl+HWBvis6IF5kWHE8f1LPEfnN5HXzOSS8tBaO2rSwrXpZgZILv9EA4/MoRd0na1kWtUvfdu07zASnvvGds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn; spf=none smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.17.229
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
-Received: from [192.168.122.189] (unknown [218.94.118.90])
-	by smtp.qiye.163.com (Hmail) with ESMTPA id 0F263860417;
-	Thu,  9 May 2024 21:03:43 +0800 (CST)
-Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
- Gregory Price <gregory.price@memverge.com>, axboe@kernel.dk,
- linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
-References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
- <66288ac38b770_a96f294c6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <ef34808b-d25d-c953-3407-aa833ad58e61@easystack.cn>
- <ZikhwAAIGFG0UU23@memverge.com>
- <bbf692ec-2109-baf2-aaae-7859a8315025@easystack.cn>
- <ZiuwyIVaKJq8aC6g@memverge.com>
- <98ae27ff-b01a-761d-c1c6-39911a000268@easystack.cn>
- <ZivS86BrfPHopkru@memverge.com>
- <8f373165-dd2b-906f-96da-41be9f27c208@easystack.cn>
- <wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
- <20240503105245.00003676@Huawei.com>
- <5b7f3700-aeee-15af-59a7-8e271a89c850@easystack.cn>
- <20240508131125.00003d2b@Huawei.com>
- <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
- <20240508164417.00006c69@Huawei.com>
- <3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
- <20240509132134.00000ae9@Huawei.com>
-From: Dongsheng Yang <dongsheng.yang@easystack.cn>
-Message-ID: <a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
-Date: Thu, 9 May 2024 21:03:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.4.0
+	s=arc-20240116; t=1715281375; c=relaxed/simple;
+	bh=z8BjbZ0KhLr5lDThTCUSNLL0I0h3odrN0f1OqSGaQhU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Na3uD1vTVTqLy/1iRogEiT8/bxFyLgRslXRwjVDdkhy7txAMLZ5bXkdQXTdPEbocq/yGkx4l1YZpqumpRfUfo7fpo7Sst1EOvju0qynHmqhMWXI9yzfMPsv9f/ZF8T1Um0KmDcbHdgJffF6VGFTRiXFgTCW3fGE/A6hfY5BZyLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EX23izYS; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EX23izYS"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-41c7ac71996so8589185e9.3;
+        Thu, 09 May 2024 12:02:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715281372; x=1715886172; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K0mCUgWpAxxdQAlqmk3AkXAPrSMFLi4xORwnVMsbd4A=;
+        b=EX23izYSb9GqA4m3K4KiBPV3til2EuQJX7/f8M63qGXvMUPX/RB8epuy6Yv0Xg7xNQ
+         28/orNAS0Mkx8wN4/u94JuMajxp8RQP90L46sMA0Shee1rct2en4wp/iWB1d7un7Xb8Y
+         qvB5rCLBEAniQ2eJg+nl73tdVFblIOWANYKBpFUmlPW2elwuhaSJTXNyOrn9B8jm86vB
+         ketOmtZNkVGI2C2qaaYc6SlKZzTeZ/KUU502sHnuUSZy7amsrOIxdzGrSQ4p2+FbLYx6
+         Nw4HgyCT4uSoQj/DxZoN+5HKyx+fHKk8vkpkxK8P0Y8grsgV2m6SgUldeCrGBhdJLOHA
+         Tzvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715281372; x=1715886172;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=K0mCUgWpAxxdQAlqmk3AkXAPrSMFLi4xORwnVMsbd4A=;
+        b=PlNijU5xXRYEjk2CNfWDR9kHxC4kvumJRg2byrF760An0G7P51L8MR9vUVeWtKnS5F
+         R2mplioI/QPatNQ+FjwVHxQiserbq7PPXxnaMJQhsrtcwAr1jqU1/womf4v8NW6wGuhe
+         3mnsxEfb4cVM4eD5LhRw1R0lCpGnLuCnbVPerD/ct93QZzYaYQA1Q5uTwxPARW5G37zx
+         4Kzclq00KMTdiNKPKqY8reBHP82mSU98sx6KmB60kaT3Aesh2fv/qkkdLi8mS0JX8cyv
+         7+fwnS+HMU9rLTq/9PoHM4UdDvjzdqw2CLbuY3TMYi+9PNQX4KltH/xu2ysgPvYaoP9O
+         ioqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWRiDXO+uFJLCKV4ZaKMmqdUjLu4XReEprZJ4ojrxtbRrR9tEy5BF46kxSqkfg0ZoyMfvtmvPYEh6eO5a/eJMOOuPb8dpptpXqhVBzA2FM+3efXIh7fCjDFUKEQ/AeSLlCvI6LkrPmRmhljSKwOll7coL8btN4Ht0nCpxCrVs1TtcB0SgTQ
+X-Gm-Message-State: AOJu0YyXMDpuRfiJQPckAjvT4moKkgRx52Cp1IXA3elDZqJsUqjWr01v
+	/9r9OfvawsHS1/PpReT+elEyHfAkgfzF7/iok9DvTUS87IJJg0q1
+X-Google-Smtp-Source: AGHT+IE0riKnDu956AcGU2f7+WCkij2yDXQzO02wiZCWSJbPC/Nbi/I9scUCCWNWAfXr1C5eSakvpg==
+X-Received: by 2002:adf:e981:0:b0:34c:f5d2:528d with SMTP id ffacd0b85a97d-3504a9580demr296333f8f.43.1715281372304;
+        Thu, 09 May 2024 12:02:52 -0700 (PDT)
+Received: from debian ([146.70.204.204])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fdcdd5788sm20977835e9.13.2024.05.09.12.02.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 May 2024 12:02:51 -0700 (PDT)
+Message-ID: <39829bfe-72d6-45de-bbbb-f487df090973@gmail.com>
+Date: Thu, 9 May 2024 21:02:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240509132134.00000ae9@Huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDGUNNVh1KTB0eSx8ZS0wZSFUZERMWGhIXJBQOD1
-	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
-X-HM-Tid: 0a8f5d73d560023ckunm0f263860417
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ngg6Fjo*FDc*EUo6Aj1JLj5J
-	GggwC0JVSlVKTEpOSU5CQ0lIQ0xIVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
-	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBTE5JTjcG
+Subject: Re: [PATCH net-next v9 2/3] net: gro: move L3 flush checks to
+ tcp_gro_receive and udp_gro_receive_segment
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: alexander.duyck@gmail.com, davem@davemloft.net, dsahern@kernel.org,
+ edumazet@google.com, kuba@kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com,
+ shuah@kernel.org
+References: <20240507162349.130277-1-richardbgobert@gmail.com>
+ <20240507163021.130466-1-richardbgobert@gmail.com>
+ <663cdcb73953_126914294b5@willemb.c.googlers.com.notmuch>
+From: Richard Gobert <richardbgobert@gmail.com>
+In-Reply-To: <663cdcb73953_126914294b5@willemb.c.googlers.com.notmuch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Willem de Bruijn wrote:
+> Richard Gobert wrote:
+>> {inet,ipv6}_gro_receive functions perform flush checks (ttl, flags,
+>> iph->id, ...) against all packets in a loop. These flush checks are used in
+>> all merging UDP and TCP flows.
+>>
+>> These checks need to be done only once and only against the found p skb,
+>> since they only affect flush and not same_flow.
+>>
+>> This patch leverages correct network header offsets from the cb for both
+>> outer and inner network headers - allowing these checks to be done only
+>> once, in tcp_gro_receive and udp_gro_receive_segment. As a result,
+>> NAPI_GRO_CB(p)->flush is not used at all. In addition, flush_id checks are
+>> more declarative and contained in inet_gro_flush, thus removing the need
+>> for flush_id in napi_gro_cb.
+>>
+>> This results in less parsing code for non-loop flush tests for TCP and UDP
+>> flows.
+>>
+>> To make sure results are not within noise range - I've made netfilter drop
+>> all TCP packets, and measured CPU performance in GRO (in this case GRO is
+>> responsible for about 50% of the CPU utilization).
+>>
+>> perf top while replaying 64 parallel IP/TCP streams merging in GRO:
+>> (gro_receive_network_flush is compiled inline to tcp_gro_receive)
+>> net-next:
+>>         6.94% [kernel] [k] inet_gro_receive
+>>         3.02% [kernel] [k] tcp_gro_receive
+>>
+>> patch applied:
+>>         4.27% [kernel] [k] tcp_gro_receive
+>>         4.22% [kernel] [k] inet_gro_receive
+>>
+>> perf top while replaying 64 parallel IP/IP/TCP streams merging in GRO (same
+>> results for any encapsulation, in this case inet_gro_receive is top
+>> offender in net-next)
+>> net-next:
+>>         10.09% [kernel] [k] inet_gro_receive
+>>         2.08% [kernel] [k] tcp_gro_receive
+>>
+>> patch applied:
+>>         6.97% [kernel] [k] inet_gro_receive
+>>         3.68% [kernel] [k] tcp_gro_receive
+>>
+>> Signed-off-by: Richard Gobert <richardbgobert@gmail.com>
+> 
+>> +static inline int inet_gro_flush(const struct iphdr *iph, const struct iphdr *iph2,
+>> +				 struct sk_buff *p, bool outer)
+>> +{
+>> +	const u32 id = ntohl(*(__be32 *)&iph->id);
+>> +	const u32 id2 = ntohl(*(__be32 *)&iph2->id);
+>> +	const u16 ipid_offset = (id >> 16) - (id2 >> 16);
+>> +	const u16 count = NAPI_GRO_CB(p)->count;
+>> +	const u32 df = id & IP_DF;
+>> +	int flush;
+>> +
+>> +	/* All fields must match except length and checksum. */
+>> +	flush = (iph->ttl ^ iph2->ttl) | (iph->tos ^ iph2->tos) | (df ^ (id2 & IP_DF));
+>> +
+>> +	if (outer && df)
+>> +		return flush;
+> 
+>     if (flush)
+>             return 1;
+> 
+> To be able to avoid the two flush | below?
+> Or to avoid adding a branch
+> 
+>     if (flush | (outer && df))
+>             return 1;
+> 
+>> +
+>> +	/* When we receive our second frame we can make a decision on if we
+>> +	 * continue this flow as an atomic flow with a fixed ID or if we use
+>> +	 * an incrementing ID.
+>> +	 */
+>> +	if (count == 1 && df && !ipid_offset)
+>> +		NAPI_GRO_CB(p)->ip_fixedid = true;
+>> +
+>> +	if (NAPI_GRO_CB(p)->ip_fixedid && df)
+>> +		return flush | ipid_offset;
+>> +
+>> +	return flush | (ipid_offset ^ count);
+> 
+> And then simply
+> 
+>     if (NAPI_GRO_CB(p)->ip_fixedid)
+>             return ipid_offset;
+>     else
+>             return ipid_offset ^ count;
+> 
+> Since NAPI_GRO_CB(p)->ip_fixedid is only set if DF is set on the first
+> two segments, and df ^ id2 & IP_DF is tested above, no need to test
+> that again.
+> 
+>> +}
 
+I like the idea, it is more readable.
+We just need to return flush, and not 1 to make it correct (since flush
+could be 0 while outer && df set):
 
-在 2024/5/9 星期四 下午 8:21, Jonathan Cameron 写道:
-> On Thu, 9 May 2024 19:24:28 +0800
-> Dongsheng Yang <dongsheng.yang@easystack.cn> wrote:
-> 
-...
->>> Yes. I think we are going to have to wait on architecture specific clarifications
->>> before any software coherent use case can be guaranteed to work beyond the 3.1 ones
->>> for temporal sharing (only one accessing host at a time) and read only sharing where
->>> writes are dropped anyway so clean write back is irrelevant beyond some noise in
->>> logs possibly (if they do get logged it is considered so rare we don't care!).
->>
->> Hi Jonathan,
->> 	Allow me to discuss further. As described in CXL 3.1:
->> ```
->> Software-managed coherency schemes are complicated by any host or device
->> whose caching agents generate clean writebacks. A “No Clean Writebacks”
->> capability bit is available for a host in the CXL System Description
->> Structure (CSDS; see Section 9.18.1.6) or for a device in the DVSEC CXL
->> Capability2 register (see Section 8.1.3.7).
->> ```
->>
->> If we check and find that the "No clean writeback" bit in both CSDS and
->> DVSEC is set, can we then assume that software cache-coherency is
->> feasible, as outlined below:
->>
->> (1) Both the writer and reader ensure cache flushes. Since there are no
->> clean writebacks, there will be no background data writes.
->>
->> (2) The writer writes data to shared memory and then executes a cache
->> flush. If we trust the "No clean writeback" bit, we can assume that the
->> data in shared memory is coherent.
->>
->> (3) Before reading the data, the reader performs cache invalidation.
->> Since there are no clean writebacks, this invalidation operation will
->> not destroy the data written by the writer. Therefore, the data read by
->> the reader should be the data written by the writer, and since the
->> writer's cache is clean, it will not write data to shared memory during
->> the reader's reading process. Additionally, data integrity can be ensured.
->>
->> The first step for CBD should depend on hardware cache coherence, which
->> is clearer and more feasible. Here, I am just exploring the possibility
->> of software cache coherence, not insisting on implementing software
->> cache-coherency right away. :)
-> 
-> Yes, if a platform sets that bit, you 'should' be fine.  What exact flush
-> is needed is architecture specific however and the DMA related ones
-> may not be sufficient. I'd keep an eye open for arch doc update from the
-> various vendors.
-> 
-> Also, the architecture that motivated that bit existing is a 'moderately
-> large' chip vendor so I'd go so far as to say adoption will be limited
-> unless they resolve that in a future implementation :)
+if (flush | (outer && df))
+		return flush;
 
-Great, I think we've had a good discussion and reached a consensus on 
-this issue. The remaining aspect will depend on hardware updates. Thank 
-you for the information, that helps a lot.
+Not setting NAPI_GRO_CB(p)->ip_fixedid when flush==1 is a slight change
+from the previous behaviour.
+AFAIU it is ok since it doesn't change GRO logic - p will be flushed from
+gro_list and NAPI_GRO_CB becomes irrelevant.
+Removing the DF check is nice, I also think we can avoid a branch
+while keeping the code readable as follows:
 
-Thanx
-> 
-> Jonathan
-> 
->>
->> Thanx
->>>    
->>>>>       
->>>>>>
->>>>>> CBD can initially support (3), and then transition to (1) when hardware
->>>>>> supports cache-coherency. If there's sufficient market demand, we can
->>>>>> also consider supporting (2).
->>>>> I'd assume only (3) works.  The others rely on assumptions I don't think
->>>>
->>>> I guess you mean (1), the hardware cache-coherency way, right?
->>>
->>> Indeed - oops!
->>> Hardware coherency is the way to go, or a well defined and clearly document
->>> description of how to play with the various host architectures.
->>>
->>> Jonathan
->>>
->>>    
->>>>
->>>> :)
->>>> Thanx
->>>>   
->>>>> you can rely on.
->>>>>
->>>>> Fun fun fun,
->>>>>
->>>>> Jonathan
->>>>>       
->>>>>>
->>>>>> How does this approach sound?
->>>>>>
->>>>>> Thanx
->>>>>>>
->>>>>>> J
->>>>>>>          
->>>>>>>>
->>>>>>>> Keep in mind that I don't think anybody has cxl 3 devices or CPUs yet, and
->>>>>>>> shared memory is not explicitly legal in cxl 2, so there are things a cpu
->>>>>>>> could do (or not do) in a cxl 2 environment that are not illegal because
->>>>>>>> they should not be observable in a no-shared-memory environment.
->>>>>>>>
->>>>>>>> CBD is interesting work, though for some of the reasons above I'm somewhat
->>>>>>>> skeptical of shared memory as an IPC mechanism.
->>>>>>>>
->>>>>>>> Regards,
->>>>>>>> John
->>>>>>>>
->>>>>>>>
->>>>>>>>         
->>>>>>>
->>>>>>> .
->>>>>>>          
->>>>>
->>>>> .
->>>>>       
->>>
->>>    
-> 
+return ipid_offset ^ (count * !NAPI_GRO_CB(p)->ip_fixedid);
