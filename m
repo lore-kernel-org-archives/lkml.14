@@ -1,289 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075C815ECD2
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 15:09:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B2A912FF9B;
+	Thu,  9 May 2024 15:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715267351; cv=none; b=mv4KM2KO4DIJTLZZrtCAVRf+UXDHmRBgODDSrcJ3iXimzjAAIm8clxqtMZwe1MT66Ie7yUSymbpjg0GfCOQ1C9ETqjbz6WnMoYwpPsReWPB0aKwSZcU/KoxuzrNgW2AHh/MzHHIviYjVSapbw7fJRV4E35NcU0DWoPmGzL71vxo=
+	t=1715267493; cv=none; b=ifT8W+iyyMD/bw19qK9hR0FFasNAH2FSq1wmu8tEW4nvrAmMtDwNf2EQQH1Lw3i7corpTeBK9L/loO64eo7zDItu1vKpE9D61f55gC+AodbHwlnn8WfKaDXkgKkeF0sngIRilVzXyokwIH3z3IpYh2RusEuNCOkPrd/ewMaxaAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715267351; c=relaxed/simple;
-	bh=p0bzdgqScGLY3NTRrGszv0pdu5PN/NKXhQcbQ53Yb7c=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=COp9nTTA4AmJFnZC3xDQO1RmYKXZO3oj859963DwxQCVsfsvEZA71pHknzET5jziEmEybnDB/LlxmezEmXaoqLufz5gLEKh/Vjp7uuU0TJ+96F1yPLN+c0DG9MJAvPQzo3lQZfyGrkM4PMN0VaXJLdA3tZHm5/GjVU1a7NoujGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N465iBVv; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N465iBVv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715267348; x=1746803348;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=p0bzdgqScGLY3NTRrGszv0pdu5PN/NKXhQcbQ53Yb7c=;
-  b=N465iBVv1+T4zEklHU8iDFOD8OErjwMSCnAxRID5HtoaB5G7hc1ydM4+
-   I6y91bJrPa+bUJww+VqDlVPxD8c3ISPH1qXkjTHN5KiN3hgAt317+uCUY
-   JoTTz2J4WN8sOx26qKmPUplHcnnXd131fpmBkty+yJwiEOlzjemG2cRJW
-   O6FEW+Ujfsquxo2I0NjH4zj6ZRgj9wG73aF9d9OKU7sqBwTUIshExxR/C
-   GGD4Xd4G3Q3bgNwCw6LtZFWVAgfl8oDoUcMzmKtpzZ4R9LJ9sO6QqF7rn
-   k2hjoWHaWXmQj++Ip2V4mlUpebxMl6wzykKakccrHLwLW2/JS1kjxuCJl
-   g==;
-X-CSE-ConnectionGUID: xKOEkfVoRjKF2Ng6D+tkZg==
-X-CSE-MsgGUID: 1FOJPNM6QlK2udigU6Oq1w==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11043206"
-X-IronPort-AV: E=Sophos;i="6.08,148,1712646000"; 
-   d="scan'208";a="11043206"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 08:09:08 -0700
-X-CSE-ConnectionGUID: +theORTNTz2er3lgz09WvA==
-X-CSE-MsgGUID: 3GLSkGRGQgSE20XawlTygQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,148,1712646000"; 
-   d="scan'208";a="29343070"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 09 May 2024 08:09:05 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s55OJ-00051Q-2A;
-	Thu, 09 May 2024 15:09:03 +0000
-Date: Thu, 9 May 2024 23:08:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Samuel Holland <samuel.holland@sifive.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Stephen Boyd <sboyd@kernel.org>
-Subject: WARNING: modpost: "__udelay" [drivers/clk/sifive/sifive-prci.ko] has
- no CRC!
-Message-ID: <202405092355.qp8bSldx-lkp@intel.com>
+	s=arc-20240116; t=1715267493; c=relaxed/simple;
+	bh=GPbYouet8G2wsKDht1TdOXTnqgewPV/olDc41m19SKs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VK5a8EA5jiFGOXKRXgxZFO9qa8brZztCqwbUf29xlEGTEw+zKJhCXTYtGbuNqhuhRUq95+MnbJcuN6+m7qGJwzSdB/y2rTAPGB5d44aKTt29/hNMRk+UmtGRdcoXQfaut+kg8n+rW30nbsBCjgusJStCeZIpxAw7t2T71WQs8jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39396106F;
+	Thu,  9 May 2024 08:11:56 -0700 (PDT)
+Received: from [10.1.28.39] (e122027.cambridge.arm.com [10.1.28.39])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB8F63F641;
+	Thu,  9 May 2024 08:11:27 -0700 (PDT)
+Message-ID: <ce83b3b8-2246-4006-a111-f2da0740bd8e@arm.com>
+Date: Thu, 9 May 2024 16:11:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dma: fix DMA sync for drivers not calling dma_set_mask*()
+To: Alexander Lobakin <aleksander.lobakin@intel.com>,
+ Christoph Hellwig <hch@lst.de>
+Cc: Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Magnus Karlsson <magnus.karlsson@intel.com>,
+ nex.sw.ncis.osdt.itp.upstreaming@intel.com, bpf@vger.kernel.org,
+ netdev@vger.kernel.org, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20240509144616.938519-1-aleksander.lobakin@intel.com>
+From: Steven Price <steven.price@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20240509144616.938519-1-aleksander.lobakin@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Samuel,
+On 09/05/2024 15:46, Alexander Lobakin wrote:
+> There are several reports that the DMA sync shortcut broke non-coherent
+> devices.
+> dev->dma_need_sync is false after the &device allocation and if a driver
+> didn't call dma_set_mask*(), it will still be false even if the device
+> is not DMA-coherent and thus needs synchronizing. Due to historical
+> reasons, there's still a lot of drivers not calling it.
+> Invert the boolean, so that the sync will be performed by default and
+> the shortcut will be enabled only when calling dma_set_mask*().
+> 
+> Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Closes: https://lore.kernel.org/lkml/46160534-5003-4809-a408-6b3a3f4921e9@samsung.com
+> Reported-by: Steven Price <steven.price@arm.com>
+> Closes: https://lore.kernel.org/lkml/010686f5-3049-46a1-8230-7752a1b433ff@arm.com
+> Fixes: 32ba8b823252 ("dma: avoid redundant calls for sync operations")
+> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 
-First bad commit (maybe != root cause):
+Tested-by: Steven Price <steven.price@arm.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   45db3ab70092637967967bfd8e6144017638563c
-commit: c8e1d8ae6aba7521d96d5cde21384edde1f06d3d clk: sifive: Allow building the driver as a module
-date:   7 months ago
-config: sparc-randconfig-r051-20240309 (https://download.01.org/0day-ci/archive/20240509/202405092355.qp8bSldx-lkp@intel.com/config)
-compiler: sparc-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240509/202405092355.qp8bSldx-lkp@intel.com/reproduce)
+Thanks for the quick fix.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405092355.qp8bSldx-lkp@intel.com/
+Note that the fixes hash (32ba8b823252) is not the one in linux-next -
+that's f406c8e4b770. If the branch is getting rebased then no problem, I
+just thought I should point that out.
 
-All warnings (new ones prefixed by >>, old ones prefixed by <<):
+Thanks,
+Steve
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/vivaldi-fmap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/input/tests/input_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/hwmon/mr75203.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/counter/ftm-quaddec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/core/dev_addr_lists_test.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/802/p8022.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/802/psnap.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/802/fddi.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/802/stp.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/netlink/netlink_diag.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ip_gre.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ip_vti.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/ah4.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/esp4.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/ipv4/tunnel4.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/atm/lec.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/caif/chnl_net.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/key/af_key.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/bridge/bridge.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/kcm/kcm.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/tipc/diag.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/nfc/nci/nci.o
-WARNING: modpost: missing MODULE_DESCRIPTION() in net/nfc/nfc_digital.o
-ERROR: modpost: "ebus_dma_irq_enable" [drivers/parport/parport_pc.ko] undefined!
-ERROR: modpost: "ebus_dma_unregister" [drivers/parport/parport_pc.ko] undefined!
-ERROR: modpost: "ebus_dma_enable" [drivers/parport/parport_pc.ko] undefined!
-ERROR: modpost: "ebus_dma_prepare" [drivers/parport/parport_pc.ko] undefined!
-ERROR: modpost: "ebus_dma_request" [drivers/parport/parport_pc.ko] undefined!
-ERROR: modpost: "ebus_dma_residue" [drivers/parport/parport_pc.ko] undefined!
-ERROR: modpost: "ebus_dma_register" [drivers/parport/parport_pc.ko] undefined!
-WARNING: modpost: EXPORT symbol "empty_zero_page" [vmlinux] version generation failed, symbol will not be versioned.
-Is "empty_zero_page" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "__udelay" [vmlinux] version generation failed, symbol will not be versioned.
-Is "__udelay" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "__ndelay" [vmlinux] version generation failed, symbol will not be versioned.
-Is "__ndelay" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "__ashldi3" [vmlinux] version generation failed, symbol will not be versioned.
-Is "__ashldi3" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "__ashrdi3" [vmlinux] version generation failed, symbol will not be versioned.
-Is "__ashrdi3" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "bzero_1page" [vmlinux] version generation failed, symbol will not be versioned.
-Is "bzero_1page" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "__copy_1page" [vmlinux] version generation failed, symbol will not be versioned.
-Is "__copy_1page" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "__divdi3" [vmlinux] version generation failed, symbol will not be versioned.
-Is "__divdi3" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "___rw_read_enter" [vmlinux] version generation failed, symbol will not be versioned.
-Is "___rw_read_enter" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "___rw_read_exit" [vmlinux] version generation failed, symbol will not be versioned.
-Is "___rw_read_exit" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "___rw_read_try" [vmlinux] version generation failed, symbol will not be versioned.
-Is "___rw_read_try" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "___rw_write_enter" [vmlinux] version generation failed, symbol will not be versioned.
-Is "___rw_write_enter" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "__lshrdi3" [vmlinux] version generation failed, symbol will not be versioned.
-Is "__lshrdi3" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: EXPORT symbol "__muldi3" [vmlinux] version generation failed, symbol will not be versioned.
-Is "__muldi3" prototyped in <asm/asm-prototypes.h>?
-WARNING: modpost: "__udelay" [kernel/rcu/rcuscale.ko] has no CRC!
-WARNING: modpost: "__ashldi3" [fs/xfs/xfs.ko] has no CRC!
-WARNING: modpost: "__udelay" [fs/xfs/xfs.ko] has no CRC!
-WARNING: modpost: "__lshrdi3" [fs/xfs/xfs.ko] has no CRC!
-WARNING: modpost: "__ashldi3" [fs/btrfs/btrfs.ko] has no CRC!
-WARNING: modpost: "__lshrdi3" [fs/btrfs/btrfs.ko] has no CRC!
-WARNING: modpost: "empty_zero_page" [lib/crypto/libchacha20poly1305.ko] has no CRC!
-WARNING: modpost: "__lshrdi3" [lib/test_scanf.ko] has no CRC!
-WARNING: modpost: "__udelay" [lib/test_lockup.ko] has no CRC!
-WARNING: modpost: "__ndelay" [lib/test_lockup.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/phy/amlogic/phy-meson-axg-pcie.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/phy/broadcom/phy-brcm-sata.ko] has no CRC!
-WARNING: modpost: "__ndelay" [drivers/phy/cadence/phy-cadence-torrent.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/phy/cadence/phy-cadence-salvo.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/phy/mediatek/phy-mtk-mipi-dsi-drv.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/phy/qualcomm/phy-qcom-m31.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/phy/ralink/phy-ralink-usb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/phy/rockchip/phy-rockchip-inno-usb2.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/phy/rockchip/phy-rockchip-typec.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/phy/sunplus/phy-sunplus-usb2.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/pinctrl/bcm/pinctrl-bcm2835.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/pinctrl/qcom/pinctrl-msm.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/gpio/gpio-aggregator.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/pci/controller/dwc/pci-meson.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/pci/controller/pci-aardvark.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/pci/controller/pcie-mediatek.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/pci/controller/pcie-brcmstb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/core/fb_ddc.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/cyber2000fb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/matrox/matroxfb_DAC1064.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/riva/rivafb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/aty/aty128fb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/neofb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/s3fb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/cirrusfb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/s1d13xxxfb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/carminefb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/mb862xx/mb862xxfb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/video/fbdev/da8xx-fb.ko] has no CRC!
->> WARNING: modpost: "__udelay" [drivers/clk/sifive/sifive-prci.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/clk/sprd/clk-sprd.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/clk/sunxi-ng/sunxi-ccu.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/clk/clk-cs2000-cp.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/dma/mediatek/mtk-cqdma.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/dma/xilinx/xilinx_dpdma.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/dma/altera-msgdma.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/dma/idma64.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/dma/tegra210-adma.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/soc/qcom/qcom_rpmh.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/regulator/ti-abb-regulator.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/reset/reset-berlin.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/reset/reset-imx7.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/char/hw_random/ba431-rng.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/char/hw_random/geode-rng.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/char/hw_random/mxc-rnga.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/char/hw_random/ingenic-rng.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/char/hw_random/st-rng.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/char/hw_random/xgene-rng.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/char/hw_random/stm32-rng.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/char/hw_random/mtk-rng.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/parport/parport_pc.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/misc/altera-stapl/altera-stapl.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/misc/dw-xdata-pcie.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/mfd/ene-kb3930.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/mfd/axp20x.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/mfd/si476x-core.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/mfd/ssbi.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/mfd/atmel-hlcdc.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/mfd/rn5t618.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/mfd/acer-ec-a500.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/arcmsr/arcmsr.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/aacraid/aacraid.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/aic94xx/aic94xx.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/fdomain.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/qla1280.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/qla2xxx/qla2xxx.ko] has no CRC!
-WARNING: modpost: "__ndelay" [drivers/scsi/qla2xxx/qla2xxx.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/bfa/bfa.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/dmx3191d.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/esp_scsi.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/am53c974.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/megaraid.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/mpt3sas/mpt3sas.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/sun_esp.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/myrb.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/ppa.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/imm.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/stex.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/scsi/mvumi.ko] has no CRC!
-WARNING: modpost: "__lshrdi3" [drivers/scsi/sd_mod.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/phy/bcm7xxx.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/phy/icplus.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/phy/microchip_t1s.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/mdio/mdio-ipq4019.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/mdio/mdio-moxart.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/mdio/mdio-mux-meson-g12a.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/mdio/mdio-mux-meson-gxl.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/can/c_can/c_can.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/can/c_can/c_can_platform.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/can/flexcan/flexcan.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/can/m_can/m_can.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/adaptec/starfire.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/aquantia/atlantic/atlantic.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/atheros/atlx/atl1.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/atheros/atlx/atl2.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/atheros/atl1c/atl1c.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/broadcom/bnxt/bnxt_en.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/chelsio/cxgb3/cxgb3.ko] has no CRC!
-WARNING: modpost: "__ashldi3" [drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/chelsio/cxgb4/cxgb4.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/chelsio/cxgb4vf/cxgb4vf.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/cisco/enic/enic.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/emulex/benet/be2net.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/freescale/gianfar_driver.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/hisilicon/hns/hns_dsaf.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/marvell/mv643xx_eth.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/marvell/mvneta.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/marvell/skge.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/marvell/sky2.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/smsc/smsc9420.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/altera/altera_tse.ko] has no CRC!
-WARNING: modpost: "__ndelay" [drivers/net/ethernet/dnet.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/ethernet/korina.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/arcnet/arcnet.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/arcnet/com90xx.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/arcnet/com90io.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/arcnet/com20020.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/net/fddi/defxx.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/firewire/firewire-ohci.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/auxdisplay/hd44780.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/auxdisplay/lcd2s.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/usb/phy/phy-am335x-control.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/usb/cdns3/cdns-usb-common.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/usb/host/ehci-hcd.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/usb/host/ehci-platform.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/usb/host/oxu210hp-hcd.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/usb/host/isp1362-hcd.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/usb/host/xhci-hcd.ko] has no CRC!
-WARNING: modpost: "__udelay" [drivers/usb/host/xhci-pci-renesas.ko] has no CRC!
+> ---
+>  include/linux/device.h      |  4 ++--
+>  include/linux/dma-map-ops.h |  4 ++--
+>  include/linux/dma-mapping.h |  2 +-
+>  kernel/dma/mapping.c        | 10 +++++-----
+>  kernel/dma/swiotlb.c        |  2 +-
+>  5 files changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index ed95b829f05b..d4b50accff26 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -691,7 +691,7 @@ struct device_physical_location {
+>   *		and optionall (if the coherent mask is large enough) also
+>   *		for dma allocations.  This flag is managed by the dma ops
+>   *		instance from ->dma_supported.
+> - * @dma_need_sync: The device needs performing DMA sync operations.
+> + * @dma_skip_sync: DMA sync operations can be skipped for coherent buffers.
+>   *
+>   * At the lowest level, every device in a Linux system is represented by an
+>   * instance of struct device. The device structure contains the information
+> @@ -805,7 +805,7 @@ struct device {
+>  	bool			dma_ops_bypass : 1;
+>  #endif
+>  #ifdef CONFIG_DMA_NEED_SYNC
+> -	bool			dma_need_sync:1;
+> +	bool			dma_skip_sync:1;
+>  #endif
+>  };
+>  
+> diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
+> index 4893cb89cb52..5217b922d29f 100644
+> --- a/include/linux/dma-map-ops.h
+> +++ b/include/linux/dma-map-ops.h
+> @@ -280,8 +280,8 @@ static inline void dma_reset_need_sync(struct device *dev)
+>  {
+>  #ifdef CONFIG_DMA_NEED_SYNC
+>  	/* Reset it only once so that the function can be called on hotpath */
+> -	if (unlikely(!dev->dma_need_sync))
+> -		dev->dma_need_sync = true;
+> +	if (unlikely(dev->dma_skip_sync))
+> +		dev->dma_skip_sync = false;
+>  #endif
+>  }
+>  
+> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+> index eb4e15893b6c..f693aafe221f 100644
+> --- a/include/linux/dma-mapping.h
+> +++ b/include/linux/dma-mapping.h
+> @@ -295,7 +295,7 @@ bool __dma_need_sync(struct device *dev, dma_addr_t dma_addr);
+>  static inline bool dma_dev_need_sync(const struct device *dev)
+>  {
+>  	/* Always call DMA sync operations when debugging is enabled */
+> -	return dev->dma_need_sync || IS_ENABLED(CONFIG_DMA_API_DEBUG);
+> +	return !dev->dma_skip_sync || IS_ENABLED(CONFIG_DMA_API_DEBUG);
+>  }
+>  
+>  static inline void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr,
+> diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
+> index 3524bc92c37f..3f77c3f8d16d 100644
+> --- a/kernel/dma/mapping.c
+> +++ b/kernel/dma/mapping.c
+> @@ -392,7 +392,7 @@ bool __dma_need_sync(struct device *dev, dma_addr_t dma_addr)
+>  
+>  	if (dma_map_direct(dev, ops))
+>  		/*
+> -		 * dma_need_sync could've been reset on first SWIOTLB buffer
+> +		 * dma_skip_sync could've been reset on first SWIOTLB buffer
+>  		 * mapping, but @dma_addr is not necessary an SWIOTLB buffer.
+>  		 * In this case, fall back to more granular check.
+>  		 */
+> @@ -407,20 +407,20 @@ static void dma_setup_need_sync(struct device *dev)
+>  
+>  	if (dma_map_direct(dev, ops) || (ops->flags & DMA_F_CAN_SKIP_SYNC))
+>  		/*
+> -		 * dma_need_sync will be reset to %true on first SWIOTLB buffer
+> +		 * dma_skip_sync will be reset to %false on first SWIOTLB buffer
+>  		 * mapping, if any. During the device initialization, it's
+>  		 * enough to check only for the DMA coherence.
+>  		 */
+> -		dev->dma_need_sync = !dev_is_dma_coherent(dev);
+> +		dev->dma_skip_sync = dev_is_dma_coherent(dev);
+>  	else if (!ops->sync_single_for_device && !ops->sync_single_for_cpu &&
+>  		 !ops->sync_sg_for_device && !ops->sync_sg_for_cpu)
+>  		/*
+>  		 * Synchronization is not possible when none of DMA sync ops
+>  		 * is set.
+>  		 */
+> -		dev->dma_need_sync = false;
+> +		dev->dma_skip_sync = true;
+>  	else
+> -		dev->dma_need_sync = true;
+> +		dev->dma_skip_sync = false;
+>  }
+>  #else /* !CONFIG_DMA_NEED_SYNC */
+>  static inline void dma_setup_need_sync(struct device *dev) { }
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index ae3e593eaadb..068134697cf1 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -1409,7 +1409,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
+>  	}
+>  
+>  	/*
+> -	 * If dma_need_sync wasn't set, reset it on first SWIOTLB buffer
+> +	 * If dma_skip_sync was set, reset it on first SWIOTLB buffer
+>  	 * mapping to always sync SWIOTLB buffers.
+>  	 */
+>  	dma_reset_need_sync(dev);
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
