@@ -1,97 +1,103 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9CD2152785
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 13:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA661514F4;
+	Thu,  9 May 2024 13:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715262085; cv=none; b=sj51X9ZduxPdnlb9Xg/XT6at/oqAGXUNm+hMyiKttRiuTUSxrXDeaeOtInnozPokoy3WIQqEoJ4W6ffPtWZCzaY6mXtUBLRvlMFIHLq7ZGT5wBwSaqVnEtvB1UXqDUQWsZ1DJjozRXZ7e6M5k4eX4exHv3uIq2u5FhHfIN4HbTU=
+	t=1715262105; cv=none; b=LTB/SyhlApWdAY6wvVIrXAFAv9d7XHm0xhEeIRROBTGNf5Z28Ddi4s0JUH8G5WT/oPTAbdv7KAYoSd5qD/4Czf2HDQfF9VA5B1p+RFXVsBk9Wp8yDZyswyw7qREIqs4F7QttVujuBt3Q4/NZah/C5CFL5p7B6BUD8oHb6GbLjac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715262085; c=relaxed/simple;
-	bh=vY9i+evApO63hkDWccFZxgOb//cUZG1X+nOWjYtYIO4=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=K5QXt6AFFzFO5ZXnfGCDft+qClS+WRwzoDQP1S31IgY4McwjKihi/WZyc+E0QW6hhRZUKXX5fQeShn2AjWQMkVX5xeWLPiVYYvzVHS4d47y0i8biDXET10YYRctoIsNC8uGl7mwid9zDGbQ+O/Y/EAcTKLnjoWE4APBSZEq2tYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DaRyqVh4; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715262105; c=relaxed/simple;
+	bh=byWCUfWH9G9t798Z/UalQqwNars7ub6qY+Y8p84jINs=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=Hr/t3UoCwnUuzVHJyHIIGSjsqakGdGXRGMMtksVfLHzSodatFh5LzJ7zcv7zkKaJFBk0pTrPRWRnDFxA46uyYe9pMdw7USUaBf1Tu+y1dbXPlglKnKbIVMk7PfADjkxRJiGjlK/m/kjn4MEJWWTQaN+V1Vl/fed1D3/mGbNwU78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C4hvl+jf; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DaRyqVh4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715262082;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Sjo+IhXcSXsH1FGysWSOqgI3mPHUJyrP5qGIrqAgaJM=;
-	b=DaRyqVh4+SiI5PBY17CFusgqoY10YhtWbsc5e3R2egd52u6SPQY/ZUKRZmzBgYzsRoTDAm
-	x8P9w4YF1i7Iz5HYgGXPCSCuAJKYJT/niMbSOa/GyTCrP2iUVMiSV9bdltxwyxafvK+clA
-	nhkEw4DIatwVY+XlFuI1U+tSAYKquXo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-422-SGW5cwOyM7GL8KaooEBPcA-1; Thu, 09 May 2024 09:41:16 -0400
-X-MC-Unique: SGW5cwOyM7GL8KaooEBPcA-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DFABF8030C1;
-	Thu,  9 May 2024 13:41:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.34])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 5D236464C58;
-	Thu,  9 May 2024 13:41:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Max Kellermann <max.kellermann@ionos.com>, Jan Kara <jack@suse.com>
-cc: dhowells@redhat.com, Christian Brauner <brauner@kernel.org>,
-    linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: [PATCH] ext4: Don't reduce symlink i_mode by umask if no ACL support
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4hvl+jf"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-792c34f891eso20209385a.1;
+        Thu, 09 May 2024 06:41:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715262103; x=1715866903; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q/hDoEEEO+Anwz6S3zgshZvUzJLkImXA0wUVfV3KGBY=;
+        b=C4hvl+jfhFTh5fKDxniDVYXjJuR6PAcXUe3yrKecKq9tHN8eUeUWAppSh6ij89U7xX
+         FEKMArdZVNE+WR3cpmum+hkRmJlz7BJr2Y54EqK8+4Mdd2RlbHcH/Ypm/yKMGRq8iAud
+         NZohwae9L0xHPTV5IjYgXesfg5wvk/n09HWDntMHzX2XBWdQf0WEaznMKHFNRdPT956k
+         e7IzePCVb1wmTHmOtNkYtumDAQMzhOHbwpdL68JpNdNQvus07VNSZqR1OOwgsReXIqDJ
+         gj5BBvWec54ETJXCX4SlT8IscwENu9/t1yual1HUUon/KgQLczNphOOGQBahgJBTxxTL
+         kLaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715262103; x=1715866903;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=q/hDoEEEO+Anwz6S3zgshZvUzJLkImXA0wUVfV3KGBY=;
+        b=IRK8ag25z9Tu7rqQyzrrfzgQ2rb0g+nWQz5Eh9V0sAWsMkN1LtycClvBA/nxJTWCTS
+         fB6Gwz+aBje/CW0/xd0vrD537kh7yzYcCxhNAxG6Scd9+VQLdTpKQpFE9d6F0QgQGjXD
+         nlLTCGJZb39IIwPIoutnJZdlu0xv+42IKAiIpnz1FqGeGEoLqVkp6rxzUHnYcGLSMlba
+         smvHDVAyHE8hnWwZvun3Yk7AHP9hfXrFhV8NTPGDPHBY2pW9cawjR3Zqj0ZPTBvj4NCg
+         URMTcfRu+EH/8Dfw+so41xUARbuLRKKmXemsVqp5tH+yQ3fGtIWirIjaWF9M08rmbt1E
+         n2/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX0TepOL0eynDPRIkG74RQhJCphU1bwKBjCaI5sf84pjW3sDlUrZopmZIZJjhZBbaLElk4fKnygazWYMBqxrSVsCcEGO2uCdLKKjFoc/dsXnZPiH30J9TFs/Fsjlr7qmRExGXGURvMaEsJApxLT81VENJB4z/8P9Kue
+X-Gm-Message-State: AOJu0YzlEZlwhlzKRhkaMXqLm0yP2hHli68JlYvwwM5P+/5XmFuohXjb
+	ceBL1xonJGgm/nQp6mwubItxa2/pkyz0K5w8hpC15tyEZ8RCnV+r
+X-Google-Smtp-Source: AGHT+IEC6zx5G5aGb3z2zBxSi/6jyKi3pIt3NFO1UVMHHOItQUwIpMf6Iy2ywJx3RO14fJpdZhA0sw==
+X-Received: by 2002:a37:c243:0:b0:792:960c:80cd with SMTP id af79cd13be357-792b276b341mr626867185a.74.1715262103063;
+        Thu, 09 May 2024 06:41:43 -0700 (PDT)
+Received: from localhost (164.146.150.34.bc.googleusercontent.com. [34.150.146.164])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-792bf310848sm68698485a.110.2024.05.09.06.41.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 06:41:42 -0700 (PDT)
+Date: Thu, 09 May 2024 09:41:42 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Abhishek Chauhan <quic_abchauha@quicinc.com>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Andrew Halaney <ahalaney@redhat.com>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Martin KaFai Lau <martin.lau@kernel.org>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, 
+ Daniel Borkmann <daniel@iogearbox.net>, 
+ bpf <bpf@vger.kernel.org>
+Cc: kernel@quicinc.com
+Message-ID: <663cd29678007_12691429440@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20240508215842.2449798-3-quic_abchauha@quicinc.com>
+References: <20240508215842.2449798-1-quic_abchauha@quicinc.com>
+ <20240508215842.2449798-3-quic_abchauha@quicinc.com>
+Subject: Re: [RFC PATCH bpf-next v7 2/3] net: Add additional bit to support
+ clockid_t timestamp type
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1553598.1715262072.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 May 2024 14:41:12 +0100
-Message-ID: <1553599.1715262072@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-If CONFIG_EXT4_FS_POSIX_ACL=3Dn then the fallback version of ext4_init_acl=
-()
-will mask off the umask bits from the new inode's i_mode.  This should not
-be done if the inode is a symlink.  If CONFIG_EXT4_FS_POSIX_ACL=3Dy, then =
-we
-go through posix_acl_create() instead which does the right thing with
-symlinks.
+Abhishek Chauhan wrote:
+> tstamp_type is now set based on actual clockid_t compressed
+> into 2 bits.
+> 
+> To make the design scalable for future needs this commit bring in
+> the change to extend the tstamp_type:1 to tstamp_type:2 to support
+> other clockid_t timestamp.
+> 
+> We now support CLOCK_TAI as part of tstamp_type as part of this
+> commit with exisiting support CLOCK_MONOTONIC and CLOCK_REALTIME.
+> 
+> Link: https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
+> Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
 
-Fix this by making the fallback version of ext4_init_acl() do nothing if
-inode is a symlink.
+Reviewed-by: Willem de Bruijn <willemb@google.com>
 
-Fixes: 484fd6c1de13 ("ext4: apply umask if ACL support is disabled")
-Signed-off-by: David Howells <dhowells@redhat.com>
----
- fs/ext4/acl.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/fs/ext4/acl.h b/fs/ext4/acl.h
-index ef4c19e5f570..566625286442 100644
---- a/fs/ext4/acl.h
-+++ b/fs/ext4/acl.h
-@@ -71,7 +71,8 @@ ext4_init_acl(handle_t *handle, struct inode *inode, str=
-uct inode *dir)
- 	/* usually, the umask is applied by posix_acl_create(), but if
- 	   ext4 ACL support is disabled at compile time, we need to do
- 	   it here, because posix_acl_create() will never be called */
--	inode->i_mode &=3D ~current_umask();
-+	if (!S_ISLNK(inode->i_mode))
-+		inode->i_mode &=3D ~current_umask();
- =
-
- 	return 0;
- }
-
+For the non-BPF parts.
