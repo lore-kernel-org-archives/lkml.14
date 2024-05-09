@@ -1,156 +1,623 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A21376FC;
-	Thu,  9 May 2024 00:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E3310A1F;
+	Thu,  9 May 2024 00:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715215367; cv=none; b=qupYuFmSHB3+f5FJ+MobW5hrL8N7hReAJmlAhcqFUtTd77uAqeBespkzIWO6spKx1nWY8FgsanG21KlnRdJTcWUIwDZVC0MxHzt/1gT21iUklxYkbCr1EGa5FWSQHh4/THfZ1od3vmOI0/7lBsN/K8NPONJfR9fQ+Wm1f3ingsE=
+	t=1715215503; cv=none; b=vEgIwTag0eEjQD9uX2smw72NckdefHI623t01TgyT6dXXa/Faxty2vxS++DQWsKU/8jFCrht7TXrvXZZTF27+6zPbiXG/SjxW/Mdp5PaGchyGfAyfToqGPYMxtNG9Tzq60E1ZntTb8ucS3Boz74atq0hfKCPG3g4IpryzLMRau8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715215367; c=relaxed/simple;
-	bh=yMcVIWeEy97ZjKAUkHxNI+odNAy+ZoUDCqohKsxBv1k=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=o/Pa2r71PvkCT8LccVpOdO2CABjmDyUGeUdO6KJtl4BTA2qbWEiLqL2XQJhfMcTqcG+MAJkGhhtya1/hLW2J3PIoDcnDpec7kMlSR1tjFeelC96123gHGPzZsMsrzlfzZxNZWSidJLmjiO1FmBMu4HMp/tGnt8lNWCZZTsItkfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=IA40vaTa; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715215503; c=relaxed/simple;
+	bh=WVHtNljGpj4u18niXFyP3IP1K5P1hjMmkE4XUd2J5+4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nxKkroX1tuPZKrisqmUdXtjV0koh8oscdSnh2UHZAleJQ9c03NisSCj1tY1K4LvAH0fh3c4Mv6zOuMBNrYu09bo2s/vKa0heIBXUp6NacH13WMbDmL9GKcDRLN3CLmamUGJad1CnwRATozsnBsqMH1+FJuOxGohJeWWmJIBwZ5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=U0t0scC6; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="IA40vaTa"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 448BZrIM002462;
-	Thu, 9 May 2024 00:42:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:from:to:cc:references
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=S4gM+pVUJ5Q6pLxDg6wjqkjqYaNOpOAT6Tz8qpd8mM8=; b=IA
-	40vaTaODHqMcYjc0YZYQOnmiSqEm6zgJaBJgVDHvoBeFkY5lwIhSW6iPWPM2hjA7
-	ZBeTmxAMvw4H4dki8xkpZq7FozPLdbcGzF1A8Cyk7ExeALZQI4ij5IwI4RyW1aXm
-	Uny+vLtozkTb0ClVwuYrzlG9FLs1A3HSgm7ofu7wPL6r1utpYdcByoRgh3hGIhJC
-	soE6Aj+309FQ0R4jvTmAOZjTdbYYt7duaBHTGFmgQOR4ACKlJ6zWS6KyqEummdzr
-	5ktQNYnJleUIUwLYhfpDAjkqRpX9FIXHVLlQFT9a6c8Me7ddJRT+1z6YKeQYVW5w
-	XmxhGm0V+ApZnSVHDcHA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y08ne1hnw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 00:42:12 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4490gAJu019359
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 9 May 2024 00:42:10 GMT
-Received: from [10.110.126.205] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 8 May 2024
- 17:42:09 -0700
-Message-ID: <a0d19e7c-8fb0-e93a-d79b-319d8339504a@quicinc.com>
-Date: Wed, 8 May 2024 17:42:09 -0700
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U0t0scC6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=p4w5MoMB38DN/Tg8kqUxVog4ZJJdmPG/YvyxaE2aVjE=; b=U0t0scC6BqoggumMzzzpHfKbAC
+	l5flUebn83u9hy3Shi9Zqbfw6GKJcYJHRPpvAcmvz2ylLgsYeaiE9++trYywOSQtiDpbRcCdmSfSD
+	kuNRn2zV9xQdJtgIMK8Uf6Tgahd2Pvesnubpx9s27aygt14bWnKnr2Mw5f9XRIk6oLa+XA2DoO1t0
+	LkNNsOK8dJFe5zdE8QcB/z9o4t9gXeCQ5WSTPbVRmuX39RFNttxi1eOrLc/YcaFg77Mqhme53y9zI
+	9q0GUTsoEhGA/e7WhM3YqLKN70q/Gaz7wY/aYogTDOvbZI1W7fidgvDSGlCYk7A7ySDbk5HmM8k7+
+	o15H3z5A==;
+Received: from [50.53.4.147] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s4rtz-0000000HQZY-1MJO;
+	Thu, 09 May 2024 00:44:51 +0000
+Message-ID: <0ac5219b-b756-4a8d-ba31-21601eb1e7f4@infradead.org>
+Date: Wed, 8 May 2024 17:44:50 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v21 34/39] ALSA: usb-audio: Add USB offloading capable
- kcontrol
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 12/13] mm: page_frag: update documentation for
+ page_frag
+To: Yunsheng Lin <linyunsheng@huawei.com>, davem@davemloft.net,
+ kuba@kernel.org, pabeni@redhat.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Alexander Duyck <alexander.duyck@gmail.com>, Jonathan Corbet
+ <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-mm@kvack.org, linux-doc@vger.kernel.org
+References: <20240508133408.54708-1-linyunsheng@huawei.com>
+ <20240508133408.54708-13-linyunsheng@huawei.com>
 Content-Language: en-US
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
-        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
-        <lgirdwood@gmail.com>, <andersson@kernel.org>, <krzk+dt@kernel.org>,
-        <gregkh@linuxfoundation.org>, <Thinh.Nguyen@synopsys.com>,
-        <broonie@kernel.org>, <bgoswami@quicinc.com>, <tiwai@suse.com>,
-        <bagasdotme@gmail.com>, <robh@kernel.org>, <konrad.dybcio@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>
-References: <20240507195116.9464-1-quic_wcheng@quicinc.com>
- <20240507195116.9464-35-quic_wcheng@quicinc.com>
- <4ce8ee3b-21d3-4aa3-8fd5-7dcccc2b8abe@linux.intel.com>
- <a602e121-28e0-3255-87bb-c75355926125@quicinc.com>
-In-Reply-To: <a602e121-28e0-3255-87bb-c75355926125@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240508133408.54708-13-linyunsheng@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: E4KjvUFRQ8zlDlU_RC6jOoWXubnoPsOR
-X-Proofpoint-ORIG-GUID: E4KjvUFRQ8zlDlU_RC6jOoWXubnoPsOR
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-08_09,2024-05-08_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- malwarescore=0 suspectscore=0 spamscore=0 impostorscore=0 phishscore=0
- adultscore=0 clxscore=1015 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405010000
- definitions=main-2405090002
 
-Hi Pierre,
 
-On 5/8/2024 12:41 PM, Wesley Cheng wrote:
-> Hi Pierre,
-> 
-> On 5/7/2024 2:37 PM, Pierre-Louis Bossart wrote:
->>
->>
->> On 5/7/24 14:51, Wesley Cheng wrote:
->>> In order to allow userspace/applications know about USB offloading 
->>> status,
->>> expose a sound kcontrol that fetches information about which sound card
->>> index is associated with the ASoC platform card supporting 
->>> offloading.  In
->>> the USB audio offloading framework, the ASoC BE DAI link is the entity
->>> responsible for registering to the SOC USB layer.  SOC USB will 
->>> expose more
->>> details about the current offloading status, which includes the USB 
->>> sound
->>> card and USB PCM device indexes currently being used.
->>>
->>> It is expected for the USB offloading driver to add the kcontrol to the
->>> sound card associated with the USB audio device.  An example output 
->>> would
->>> look like:
->>>
->>> tinymix -D 1 get 'USB Offload Playback Capable Card'
->>> 0 (range -1->32)
->>
->> You already gave the following examples in patch 29:
->>
->> "
->> USB offloading idle:
->> tinymix -D 0 get 'USB Offload Playback Route Status'
->> -->-1, -1 (range -1->32)
->>
->> USB offloading active(USB card#1 pcm#0):
->> tinymix -D 0 get 'USB Offload Playback Route Status'
->> -->1, 0 (range -1->32)
->> "
->>
->> Can you clarify how many controls there would be in the end?
-> 
-> For USB offload situations, there will be a set of controls for playback 
-> status and playback select.  The offload jack will also be there to tell 
-> us if there is an offload path available for the platform ASoC sound card.
-> 
->> Also isn't tinymix -D N going to give you the controls for card N?
->>
-> 
-> Yes, since the offload portion is handled as a DPCM DAI link to the 
-> platform ASoC card, it will be included as a kcontrol for that.
-> 
-> Thanks
-> Wesley Cheng
-> 
-> 
 
-Sorry for responding again.  I read your email again, and wanted to also 
-add that aside from the above, which are all within the ASoC layer, as 
-we discussed previously, we should have a kcontrol in the USB SND card 
-to determine if there is an ASoC platform card capable of offloading. 
-This is also available from the SND card created by the USB audio device.
+On 5/8/24 6:34 AM, Yunsheng Lin wrote:
+> Update documentation about design, implementation and API usages
+> for page_frag.
+> 
+> CC: Alexander Duyck <alexander.duyck@gmail.com>
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> ---
+>  Documentation/mm/page_frags.rst | 156 +++++++++++++++++++++++++++++++-
+>  include/linux/page_frag_cache.h |  96 ++++++++++++++++++++
+>  mm/page_frag_cache.c            |  65 ++++++++++++-
+>  3 files changed, 314 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/mm/page_frags.rst b/Documentation/mm/page_frags.rst
+> index 503ca6cdb804..9c25c0fd81f0 100644
+> --- a/Documentation/mm/page_frags.rst
+> +++ b/Documentation/mm/page_frags.rst
+> @@ -1,3 +1,5 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+>  ==============
+>  Page fragments
+>  ==============
+> @@ -40,4 +42,156 @@ page via a single call.  The advantage to doing this is that it allows for
+>  cleaning up the multiple references that were added to a page in order to
+>  avoid calling get_page per allocation.
+>  
+> -Alexander Duyck, Nov 29, 2016.
+> +
+> +Architecture overview
+> +=====================
+> +
+> +.. code-block:: none
+> +
+> +                +----------------------+
+> +                | page_frag API caller |
+> +                +----------------------+
+> +                            ^
+> +                            |
+> +                            |
+> +                            |
+> +                            v
+> +    +------------------------------------------------+
+> +    |             request page fragment              |
+> +    +------------------------------------------------+
+> +        ^                      ^                   ^
+> +        |                      | Cache not enough  |
+> +        | Cache empty          v                   |
+> +        |             +-----------------+          |
+> +        |             | drain old cache |          |
+> +        |             +-----------------+          |
+> +        |                      ^                   |
+> +        |                      |                   |
+> +        v                      v                   |
+> +    +----------------------------------+           |
+> +    |  refill cache with order 3 page  |           |
+> +    +----------------------------------+           |
+> +     ^                  ^                          |
+> +     |                  |                          |
+> +     |                  | Refill failed            |
+> +     |                  |                          | Cache is enough
+> +     |                  |                          |
+> +     |                  v                          |
+> +     |    +----------------------------------+     |
+> +     |    |  refill cache with order 0 page  |     |
+> +     |    +----------------------------------+     |
+> +     |                       ^                     |
+> +     | Refill succeed        |                     |
+> +     |                       | Refill succeed      |
+> +     |                       |                     |
+> +     v                       v                     v
+> +    +------------------------------------------------+
+> +    |         allocate fragment from cache           |
+> +    +------------------------------------------------+
+> +
+> +API interface
+> +=============
+> +As the design and implementation of page_frag API implies, the allocation side
+> +does not allow concurrent calling. Instead it is assumed that the caller must
+> +ensure there is not concurrent alloc calling to the same page_frag_cache
+> +instance by using its own lock or rely on some lockless guarantee like NAPI
+> +softirq.
+> +
+> +Depending on different aligning requirement, the page_frag API caller may call
+> +page_frag_alloc*_align*() to ensure the returned virtual address or offset of
+> +the page is aligned according to the 'align/alignment' parameter. Note the size
+> +of the allocated fragment is not aligned, the caller need to provide a aligned
 
-Thanks
-Wesley Cheng
+                                                        needs to provide an aligned
+
+> +fragsz if there is a alignment requirement for the size of the fragment.
+
+                      an alignment
+
+> +
+> +Depending on different use cases, callers expecting to deal with va, page or
+> +both va and page for them may call page_frag_alloc_va*, page_frag_alloc_pg*,
+> +or page_frag_alloc* API accordingly.
+> +
+> +There is also a use case that need minimum memory in order for forward
+
+                                 needs
+
+> +progressing, but more performant if more memory is available. Using
+
+   progress,
+
+> +page_frag_alloc_prepare() and page_frag_alloc_commit() related API, the caller
+> +requests the minimum memory it need and the prepare API will return the maximum
+
+                                  needs
+
+> +size of the fragment returned, the caller needs to either call the commit API to
+
+                        returned. The caller
+
+> +report how much memory it actually uses, or not do so if deciding to not use any
+> +memory.
+> +
+> +.. kernel-doc:: include/linux/page_frag_cache.h
+> +   :identifiers: page_frag_cache_init page_frag_cache_is_pfmemalloc
+> +                 page_frag_cache_page_offset page_frag_alloc_va
+> +                 page_frag_alloc_va_align page_frag_alloc_va_prepare_align
+> +                 page_frag_alloc_probe page_frag_alloc_commit
+> +                 page_frag_alloc_commit_noref
+> +
+> +.. kernel-doc:: mm/page_frag_cache.c
+> +   :identifiers: __page_frag_alloc_va_align page_frag_alloc_va_prepare
+> +		 page_frag_alloc_pg_prepare page_frag_alloc_prepare
+> +		 page_frag_cache_drain page_frag_free_va
+> +
+> +Coding examples
+> +===============
+> +
+> +Init & Drain API
+> +----------------
+> +
+> +.. code-block:: c
+> +
+> +   page_frag_cache_init(pfrag);
+> +   ...
+> +   page_frag_cache_drain(pfrag);
+> +
+> +
+> +Alloc & Free API
+> +----------------
+> +
+> +.. code-block:: c
+> +
+> +    void *va;
+> +
+> +    va = page_frag_alloc_va_align(pfrag, size, gfp, align);
+> +    if (!va)
+> +        goto do_error;
+> +
+> +    err = do_something(va, size);
+> +    if (err) {
+> +        page_frag_free_va(va);
+> +        goto do_error;
+> +    }
+> +
+> +Prepare & Commit API
+> +--------------------
+> +
+> +.. code-block:: c
+> +
+> +    unsigned int offset, size;
+> +    bool merge = true;
+> +    struct page *page;
+> +    void *va;
+> +
+> +    size = 32U;
+> +    page = page_frag_alloc_prepare(pfrag, &offset, &size, &va);
+> +    if (!page)
+> +        goto wait_for_space;
+> +
+> +    copy = min_t(int, copy, size);
+
+declare copy?
+
+> +    if (!skb_can_coalesce(skb, i, page, offset)) {
+> +        if (i >= max_skb_frags)
+> +            goto new_segment;
+> +
+> +        merge = false;
+> +    }
+> +
+> +    copy = mem_schedule(copy);
+> +    if (!copy)
+> +        goto wait_for_space;
+> +
+> +    err = copy_from_iter_full_nocache(va, copy, iter);
+> +    if (err)
+> +        goto do_error;
+> +
+> +    if (merge) {
+> +        skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
+> +        page_frag_alloc_commit_noref(pfrag, offset, copy);
+> +    } else {
+> +        skb_fill_page_desc(skb, i, page, offset, copy);
+> +        page_frag_alloc_commit(pfrag, offset, copy);
+> +    }
+> diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
+> index 30893638155b..8925397262a1 100644
+> --- a/include/linux/page_frag_cache.h
+> +++ b/include/linux/page_frag_cache.h
+> @@ -61,11 +61,28 @@ struct page_frag_cache {
+>  #endif
+>  };
+>  
+> +/**
+> + * page_frag_cache_init() - Init page_frag cache.
+> + * @nc: page_frag cache from which to init
+> + *
+> + * Inline helper to init the page_frag cache.
+> + */
+>  static inline void page_frag_cache_init(struct page_frag_cache *nc)
+>  {
+>  	memset(nc, 0, sizeof(*nc));
+>  }
+>  
+> +/**
+> + * page_frag_cache_is_pfmemalloc() - Check for pfmemalloc.
+> + * @nc: page_frag cache from which to check
+> + *
+> + * Used to check if the current page in page_frag cache is pfmemalloc'ed.
+> + * It has the same calling context expection as the alloc API.
+> + *
+> + * Return:
+> + * Return true if the current page in page_frag cache is pfmemalloc'ed,
+
+Drop the (second) word "Return"...
+
+> + * otherwise return false.
+> + */
+>  static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
+>  {
+>  	return encoded_page_pfmemalloc(nc->encoded_va);
+> @@ -92,6 +109,19 @@ void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
+>  				 unsigned int fragsz, gfp_t gfp_mask,
+>  				 unsigned int align_mask);
+>  
+> +/**
+> + * page_frag_alloc_va_align() - Alloc a page fragment with aligning requirement.
+> + * @nc: page_frag cache from which to allocate
+> + * @fragsz: the requested fragment size
+> + * @gfp_mask: the allocation gfp to use when cache need to be refilled
+
+                                                      needs
+
+> + * @align: the requested aligning requirement for 'va'
+
+                 or                                  @va
+
+> + *
+> + * WARN_ON_ONCE() checking for 'align' before allocing a page fragment from
+> + * page_frag cache with aligning requirement for 'va'.
+
+                    or                              @va.
+
+> + *
+> + * Return:
+> + * Return va of the page fragment, otherwise return NULL.
+
+Drop the second "Return".
+
+> + */
+>  static inline void *page_frag_alloc_va_align(struct page_frag_cache *nc,
+>  					     unsigned int fragsz,
+>  					     gfp_t gfp_mask, unsigned int align)
+> @@ -100,11 +130,32 @@ static inline void *page_frag_alloc_va_align(struct page_frag_cache *nc,
+>  	return __page_frag_alloc_va_align(nc, fragsz, gfp_mask, -align);
+>  }
+>  
+> +/**
+> + * page_frag_cache_page_offset() - Return the current page fragment's offset.
+> + * @nc: page_frag cache from which to check
+> + *
+> + * The API is only used in net/sched/em_meta.c for historical reason, do not use
+
+                                                                 reasons; do not use
+
+> + * it for new caller unless there is a strong reason.
+
+                 callers
+
+> + *
+> + * Return:
+> + * Return the offset of the current page fragment in the page_frag cache.
+
+Drop second "Return".
+
+> + */
+>  static inline unsigned int page_frag_cache_page_offset(const struct page_frag_cache *nc)
+>  {
+>  	return __page_frag_cache_page_offset(nc->encoded_va, nc->remaining);
+>  }
+>  
+> +/**
+> + * page_frag_alloc_va() - Alloc a page fragment.
+> + * @nc: page_frag cache from which to allocate
+> + * @fragsz: the requested fragment size
+> + * @gfp_mask: the allocation gfp to use when cache need to be refilled
+
+                                                      needs
+
+> + *
+> + * Get a page fragment from page_frag cache.
+> + *
+> + * Return:
+> + * Return va of the page fragment, otherwise return NULL.
+
+Drop second "Return".
+
+> + */
+>  static inline void *page_frag_alloc_va(struct page_frag_cache *nc,
+>  				       unsigned int fragsz, gfp_t gfp_mask)
+>  {
+> @@ -114,6 +165,21 @@ static inline void *page_frag_alloc_va(struct page_frag_cache *nc,
+>  void *page_frag_alloc_va_prepare(struct page_frag_cache *nc, unsigned int *fragsz,
+>  				 gfp_t gfp);
+>  
+> +/**
+> + * page_frag_alloc_va_prepare_align() - Prepare allocing a page fragment with
+> + * aligning requirement.
+> + * @nc: page_frag cache from which to prepare
+> + * @fragsz: in as the requested size, out as the available size
+> + * @gfp: the allocation gfp to use when cache need to be refilled
+
+                                                 needs
+
+> + * @align: the requested aligning requirement for 'va'
+
+                                       or            @va
+
+> + *
+> + * WARN_ON_ONCE() checking for 'align' before preparing an aligned page fragment
+> + * with minimum size of ‘fragsz’, 'fragsz' is also used to report the maximum
+
+                           'fragsz'. 'fragsz' is
+(don't use fancy single quote marks above)
+
+> + * size of the page fragment the caller can use.
+> + *
+> + * Return:
+> + * Return va of the page fragment, otherwise return NULL.
+
+Drop second "Return".
+
+> + */
+>  static inline void *page_frag_alloc_va_prepare_align(struct page_frag_cache *nc,
+>  						     unsigned int *fragsz,
+>  						     gfp_t gfp,
+> @@ -148,6 +214,19 @@ static inline struct encoded_va *__page_frag_alloc_probe(struct page_frag_cache
+>  	return encoded_va;
+>  }
+>  
+> +/**
+> + * page_frag_alloc_probe - Probe the avaiable page fragment.
+
+                                        available
+
+> + * @nc: page_frag cache from which to probe
+> + * @offset: out as the offset of the page fragment
+> + * @fragsz: in as the requested size, out as the available size
+> + * @va: out as the virtual address of the returned page fragment
+> + *
+> + * Probe the current available memory to caller without doing cache refilling.
+> + * If the cache is empty, return NULL.
+> + *
+> + * Return:
+> + * Return the page fragment, otherwise return NULL.
+
+Drop the second "Return".
+
+> + */
+>  #define page_frag_alloc_probe(nc, offset, fragsz, va)			\
+>  ({									\
+>  	struct encoded_va *__encoded_va;				\
+> @@ -162,6 +241,13 @@ static inline struct encoded_va *__page_frag_alloc_probe(struct page_frag_cache
+>  	__page;								\
+>  })
+>  
+> +/**
+> + * page_frag_alloc_commit - Commit allocing a page fragment.
+> + * @nc: page_frag cache from which to commit
+> + * @fragsz: size of the page fragment has been used
+> + *
+> + * Commit the alloc preparing by passing the actual used size.
+> + */
+>  static inline void page_frag_alloc_commit(struct page_frag_cache *nc,
+>  					  unsigned int fragsz)
+>  {
+> @@ -170,6 +256,16 @@ static inline void page_frag_alloc_commit(struct page_frag_cache *nc,
+>  	nc->remaining -= fragsz;
+>  }
+>  
+> +/**
+> + * page_frag_alloc_commit_noref - Commit allocing a page fragment without taking
+> + * page refcount.
+> + * @nc: page_frag cache from which to commit
+> + * @fragsz: size of the page fragment has been used
+> + *
+> + * Commit the alloc preparing by passing the actual used size, but not taking
+> + * page refcount. Mostly used for fragmemt coaleasing case when the current
+
+                                     fragment coalescing
+
+> + * fragmemt can share the same refcount with previous fragmemt.
+
+      fragment                                           fragment.
+
+> + */
+>  static inline void page_frag_alloc_commit_noref(struct page_frag_cache *nc,
+>  						unsigned int fragsz)
+>  {
+> diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
+> index eb8bf59b26bb..85e23d5cbdcc 100644
+> --- a/mm/page_frag_cache.c
+> +++ b/mm/page_frag_cache.c
+> @@ -89,6 +89,18 @@ static struct page *page_frag_cache_refill(struct page_frag_cache *nc,
+>  	return __page_frag_cache_refill(nc, gfp_mask);
+>  }
+>  
+> +/**
+> + * page_frag_alloc_va_prepare() - Prepare allocing a page fragment.
+> + * @nc: page_frag cache from which to prepare
+> + * @fragsz: in as the requested size, out as the available size
+> + * @gfp: the allocation gfp to use when cache need to be refilled
+
+                                                 needs
+
+> + *
+> + * Prepare a page fragment with minimum size of ‘fragsz’, 'fragsz' is also used
+
+                                                   'fragsz'. 'fragsz'
+(don't use fancy single quote marks)
+
+> + * to report the maximum size of the page fragment the caller can use.
+> + *
+> + * Return:
+> + * Return va of the page fragment, otherwise return NULL.
+
+Drop second "Return".
+
+> + */
+>  void *page_frag_alloc_va_prepare(struct page_frag_cache *nc,
+>  				 unsigned int *fragsz, gfp_t gfp)
+>  {
+> @@ -111,6 +123,19 @@ void *page_frag_alloc_va_prepare(struct page_frag_cache *nc,
+>  }
+>  EXPORT_SYMBOL(page_frag_alloc_va_prepare);
+>  
+> +/**
+> + * page_frag_alloc_pg_prepare - Prepare allocing a page fragment.
+> + * @nc: page_frag cache from which to prepare
+> + * @offset: out as the offset of the page fragment
+> + * @fragsz: in as the requested size, out as the available size
+> + * @gfp: the allocation gfp to use when cache need to be refilled
+> + *
+> + * Prepare a page fragment with minimum size of ‘fragsz’, 'fragsz' is also used
+
+                                                   'fragsz'. 'fragsz'
+(don't use fancy single quote marks)
+
+> + * to report the maximum size of the page fragment the caller can use.
+> + *
+> + * Return:
+> + * Return the page fragment, otherwise return NULL.
+
+Drop second "Return".
+
+> + */
+>  struct page *page_frag_alloc_pg_prepare(struct page_frag_cache *nc,
+>  					unsigned int *offset,
+>  					unsigned int *fragsz, gfp_t gfp)
+> @@ -141,6 +166,21 @@ struct page *page_frag_alloc_pg_prepare(struct page_frag_cache *nc,
+>  }
+>  EXPORT_SYMBOL(page_frag_alloc_pg_prepare);
+>  
+> +/**
+> + * page_frag_alloc_prepare - Prepare allocing a page fragment.
+> + * @nc: page_frag cache from which to prepare
+> + * @offset: out as the offset of the page fragment
+> + * @fragsz: in as the requested size, out as the available size
+> + * @va: out as the virtual address of the returned page fragment
+> + * @gfp: the allocation gfp to use when cache need to be refilled
+> + *
+> + * Prepare a page fragment with minimum size of ‘fragsz’, 'fragsz' is also used
+
+                                                   'fragsz'. 'fragsz'
+(don't use fancy single quote marks)
+
+You could also (in several places) refer to the variables as
+                                                    @fragsz. @fragsz
+
+> + * to report the maximum size of the page fragment. Return both 'page' and 'va'
+> + * of the fragment to the caller.
+> + *
+> + * Return:
+> + * Return the page fragment, otherwise return NULL.
+
+Drop second "Return". But the paragraph above says that both @page and @va
+are returned. How is that done?
+
+> + */
+>  struct page *page_frag_alloc_prepare(struct page_frag_cache *nc,
+>  				     unsigned int *offset,
+>  				     unsigned int *fragsz,
+> @@ -173,6 +213,10 @@ struct page *page_frag_alloc_prepare(struct page_frag_cache *nc,
+>  }
+>  EXPORT_SYMBOL(page_frag_alloc_prepare);
+>  
+> +/**
+> + * page_frag_cache_drain - Drain the current page from page_frag cache.
+> + * @nc: page_frag cache from which to drain
+> + */
+>  void page_frag_cache_drain(struct page_frag_cache *nc)
+>  {
+>  	if (!nc->encoded_va)
+> @@ -193,6 +237,19 @@ void __page_frag_cache_drain(struct page *page, unsigned int count)
+>  }
+>  EXPORT_SYMBOL(__page_frag_cache_drain);
+>  
+> +/**
+> + * __page_frag_alloc_va_align() - Alloc a page fragment with aligning
+> + * requirement.
+> + * @nc: page_frag cache from which to allocate
+> + * @fragsz: the requested fragment size
+> + * @gfp_mask: the allocation gfp to use when cache need to be refilled
+> + * @align_mask: the requested aligning requirement for the 'va'
+> + *
+> + * Get a page fragment from page_frag cache with aligning requirement.
+> + *
+> + * Return:
+> + * Return va of the page fragment, otherwise return NULL.
+
+Drop the second "Return".
+
+> + */
+>  void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
+>  				 unsigned int fragsz, gfp_t gfp_mask,
+>  				 unsigned int align_mask)
+> @@ -263,8 +320,12 @@ void *__page_frag_alloc_va_align(struct page_frag_cache *nc,
+>  }
+>  EXPORT_SYMBOL(__page_frag_alloc_va_align);
+>  
+> -/*
+> - * Frees a page fragment allocated out of either a compound or order 0 page.
+> +/**
+> + * page_frag_free_va - Free a page fragment.
+> + * @addr: va of page fragment to be freed
+> + *
+> + * Free a page fragment allocated out of either a compound or order 0 page by
+> + * virtual address.
+>   */
+>  void page_frag_free_va(void *addr)
+>  {
+
+
+thanks.
+-- 
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
