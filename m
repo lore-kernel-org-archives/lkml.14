@@ -1,166 +1,142 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551EC13CA80
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 07:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 731F4148318
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 07:33:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715240014; cv=none; b=uzT59xWbSDA0YhZfGIuI06jrCtaoFlsybyz+ZiN7au6LUgtyhHbujUJxcbf4IMHO4goEsUiA7gsZkoaJ2aIPYY5h0kLAPQMA9eNxPW9J0jDQ0vme+G44Jn5iOox2NVNTfJyyckHOegfS98T6V13IZZABToT38+yUDtomz7SUt3I=
+	t=1715240035; cv=none; b=mZ2uALJlFAV2jBAHLC0utvxQKtHfgq0/oWphZcDmZSX10kaCFkbuKAr8KRKtNodDShuArIpfKhHYgwXWZ8Xd3WOhT9yzjm4PzJVIstHyjQ5cFGGOczvQNAt2SRQN6IiA+m+eEN3dqbFa7YQNB4eb23qlrCuwhXtvPxjGPZbYBD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715240014; c=relaxed/simple;
-	bh=nbhUY7Hy2FzYizNiopTHPz08Vlzquy3DunIbzZLwKEg=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=r0fzNWMPNaj1xLuS3ZFYtoli42+XqCrWBdrjyVCcs0mZ/gma3f/HtRXUnkJRaGL+k5qzu3E80K1WAuXBKHRX6+P6GIcpO0Rxetg0Wgo/JhFovUzTK0E4z6OkE8RksCEziPMu3CP/QEJTvBwvWti+J35I+4STYTl+Beolp8SEOrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7dec4e29827so53294539f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 00:33:32 -0700 (PDT)
+	s=arc-20240116; t=1715240035; c=relaxed/simple;
+	bh=f1DDzJv3xHeLtz/8Uh38H6uqD2mqnmTd8LGL7fsQk2Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YGHF8i7IvN9ZQyVhwHbIq1EJ1dt/h2NSj+vQIf7j6tunhXYNn71z8DaQfIamgSEoOqhNtqzcxXOvN7e38C3nDaCjKYi8dO1ue1uLQdsWNkWSPx6SmKio3R8za6QDBcOrh/rvKsA3urr2ytgx2x6dMUC3gRQ+J1YRFKnslx2vp/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=aqfQ01hI; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="aqfQ01hI"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1e9ffd3f96eso4611805ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 00:33:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1715240033; x=1715844833; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+aKuxY2Fk4OLcsa0CSr6w7+nYt28fnnuhVioZfggdrc=;
+        b=aqfQ01hIYY6LFNp/UQ5dLvubDCRG2/sLLSALQUBi+Wlplrx5tk2Wx5rdy/FJPMWMLI
+         zjGNDZGSl8+Aay5pLWs3V1ncqpUwnPrD8B5bK1pBums+YbqOizIDpn//cX8Do0+moepi
+         nuxLZ5uU8tTJlCW5rlfmTQRuqCsEuwpE5T4gZ3mY6BGk+2ls7gNpTFYHp9ZcC49FSO1P
+         +bd0pqsih40lvi0ApqXUKbLHdHD5B+6rX89NjUbry4HeyG+ty44px2pK6tzqVqIoGnhO
+         lAvnXludBgkIgs/3LQ8O/vJDJeNw/4tFlqK01xHLE/MJR/d410QFFgJVTv7xey3gDFVB
+         dOVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715240011; x=1715844811;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4o0VroiBOaqLrId7oLYRQ2ZetAUouWdNSkk+nerX6Mo=;
-        b=DWLLcznyfQhH7/GIrSVJKf0IhprzKJ3U+lirstnW+Mxt+vMcNKJSy7915J1qjbeaAG
-         HnQWKHoWdb9iNhf59TNkh/JYUXME8cvSsiiNeELebktHhkLMjOHGjx6fcVClNZ7bC/zZ
-         8WOXCIWlaCB6S0n9ZDtrTbID7FM3tsAyAH4sfOC0rTmBtiGG7fkEDCqR3tIgObXfW5NY
-         ACrLSP5OshPBk0AedPRG6NlkUuEg4efw+rfTRvYyuj9ELMjgxnJFHnr9LrbF4IBxgwat
-         BPLIHKKmOCKD77eiaRVZwT/mlvAgOufI0DrJ/eRKJNjxV7TehJxhauq896ZQqGHQzXeQ
-         ptHw==
-X-Forwarded-Encrypted: i=1; AJvYcCVQzvBdv21/lUAY7Fq2bo09gUKGwUDBDJdMkIPVko0JJveTRQSHFltGm/5bCr5FXELOvUXHuvUGVoqhTZgTvidg9tFiKODUKvSQOsFR
-X-Gm-Message-State: AOJu0Yw7RxtU/NQb8Wjg9/lr8BaQl23Bau5t+9/wA2BSa/2Zjnh/6Psh
-	Vefp09GcE1tQzjYQPWh4l2ojhTtGOs+WGqWh8o7vhy8pWr9yjhb2giaYN+TS07SfJ++OGH9CGad
-	yttyygl2d1aIH4xjFc3AH/q+117wMkPoGIdU6JtmSai2qIGbGuUgcurA=
-X-Google-Smtp-Source: AGHT+IF8VT0V3MBeA2mEa87OCQ6rVDGFscddAAUp5v3UkiOBD81uKu4NZp/AVcJCqmfbYzSZeCa/8AAD+wJPVKOOD2NegzqUHxzP
+        d=1e100.net; s=20230601; t=1715240033; x=1715844833;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+aKuxY2Fk4OLcsa0CSr6w7+nYt28fnnuhVioZfggdrc=;
+        b=tpqgxT5u50pklICo7KqAf8+7Nr1wcAaTM35VfyLm1LJm2qjdy7Tf0Au7pPPFFrCBh7
+         FUHRAOB7K580Cif7WqjO/9btwOOXjSf/h72xHSm5RSaf3Eu/urcvvVj3Fnfm1fX81dIh
+         EbNkJtj4T9/g9Z3sJJCZwYxHPvxahh0YVqkl6LInWVQqz/ankvsg/ean7Eu3/1GjSMAf
+         jRHXjbH8jaTVEs8OYJC+7GYnhHMkSndSY3fpOBu1CZPsajqXPacmB+x4XhJVbPsirSGn
+         l3cRNhoAvUdIDBhaC5R/SL3H0BrMQmvFa/mwrdDlLimW3BCOAbvgmNYzIe9F6/rvap2b
+         f1Ow==
+X-Forwarded-Encrypted: i=1; AJvYcCXF6xLRTgcmDfouOG6oKi+ehSPPz7h4hwVLFuSt/YujEpyEalLSaji2/qKfZTtSzzbE1+ohtRibEA0KPVNSIhHP2AYZ1eKcn8LMKeT+
+X-Gm-Message-State: AOJu0YygxPg0z2AbQnyn4j5AVuU+YkWWryTw0vTq3/BVjsi5ifl4ai+b
+	NUpkuamXwYCzo78yW3Qan7LilMTYSmDV8zDAQztRbawJ8XBjdjmkk5QbvHdzeRZvfk5EpW01HH3
+	jDvM=
+X-Google-Smtp-Source: AGHT+IGAYwKBi2oqjWz3LiGpENreMeENH67yYk920FAgS7TcHb0bpY6oL9Li9tUP+YyE2Ur4qM9EGA==
+X-Received: by 2002:a17:903:40ce:b0:1ea:9596:11eb with SMTP id d9443c01a7336-1eeb07973fcmr50940325ad.60.1715240032758;
+        Thu, 09 May 2024 00:33:52 -0700 (PDT)
+Received: from L6YN4KR4K9.bytedance.net ([61.213.176.14])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0badcbacsm7519045ad.97.2024.05.09.00.33.47
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Thu, 09 May 2024 00:33:52 -0700 (PDT)
+From: Yunhui Cui <cuiyunhui@bytedance.com>
+To: rafael@kernel.org,
+	lenb@kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	sunilvl@ventanamicro.com,
+	aou@eecs.berkeley.edu,
+	linux-riscv@lists.infradead.org,
+	bhelgaas@google.com,
+	james.morse@arm.com,
+	jhugo@codeaurora.org,
+	jeremy.linton@arm.com,
+	john.garry@huawei.com,
+	Jonathan.Cameron@huawei.com,
+	pierre.gondois@arm.com,
+	sudeep.holla@arm.com,
+	tiantao6@huawei.com
+Cc: Yunhui Cui <cuiyunhui@bytedance.com>
+Subject: [PATCH v5 1/3] riscv: cacheinfo: remove the useless input parameter (node) of ci_leaf_init()
+Date: Thu,  9 May 2024 15:32:58 +0800
+Message-Id: <20240509073300.4968-1-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:641c:b0:7da:1885:e198 with SMTP id
- ca18e2360f4ac-7e18fbed198mr6957039f.0.1715240011477; Thu, 09 May 2024
- 00:33:31 -0700 (PDT)
-Date: Thu, 09 May 2024 00:33:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000096c7e30618006f15@google.com>
-Subject: [syzbot] [fs?] KASAN: use-after-free Read in sysv_new_inode (2)
-From: syzbot <syzbot+8d075c0e52baab2345e2@syzkaller.appspotmail.com>
-To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+ci_leaf_init() is a declared static function. The implementation of the
+function body and the caller do not use the parameter (struct device_node
+*node) input parameter, so remove it.
 
-syzbot found the following issue on:
-
-HEAD commit:    1c9135d29e9e Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=150ebfdf180000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7d2d53e64c7e6a4f
-dashboard link: https://syzkaller.appspot.com/bug?extid=8d075c0e52baab2345e2
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=132e5e04980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1031edbc980000
-
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/52dd1b4921ab/disk-1c9135d2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1a4f1788dc25/vmlinux-1c9135d2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b8d8ebd42a80/Image-1c9135d2.gz.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/816a43fa80f6/mount_0.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8d075c0e52baab2345e2@syzkaller.appspotmail.com
-
-loop0: rw=0, sector=17669878, nr_sectors = 2 limit=128
-Buffer I/O error on dev loop0, logical block 8834939, async page read
-==================================================================
-BUG: KASAN: use-after-free in sysv_new_inode+0xd24/0xe9c fs/sysv/ialloc.c:153
-Read of size 2 at addr ffff0000dee091ce by task syz-executor425/6318
-
-CPU: 0 PID: 6318 Comm: syz-executor425 Not tainted 6.9.0-rc7-syzkaller-g1c9135d29e9e #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-Call trace:
- dump_backtrace+0x1b8/0x1e4 arch/arm64/kernel/stacktrace.c:317
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:324
- __dump_stack lib/dump_stack.c:88 [inline]
- dump_stack_lvl+0xe4/0x150 lib/dump_stack.c:114
- print_address_description mm/kasan/report.c:377 [inline]
- print_report+0x198/0x538 mm/kasan/report.c:488
- kasan_report+0xd8/0x138 mm/kasan/report.c:601
- __asan_report_load2_noabort+0x20/0x2c mm/kasan/report_generic.c:379
- sysv_new_inode+0xd24/0xe9c fs/sysv/ialloc.c:153
- sysv_mknod+0x5c/0x100 fs/sysv/namei.c:53
- sysv_create+0x38/0x4c fs/sysv/namei.c:67
- lookup_open fs/namei.c:3497 [inline]
- open_last_lookups fs/namei.c:3566 [inline]
- path_openat+0xfb4/0x2830 fs/namei.c:3796
- do_filp_open+0x1bc/0x3cc fs/namei.c:3826
- do_sys_openat2+0x124/0x1b8 fs/open.c:1406
- do_sys_open fs/open.c:1421 [inline]
- __do_sys_openat fs/open.c:1437 [inline]
- __se_sys_openat fs/open.c:1432 [inline]
- __arm64_sys_openat+0x1f0/0x240 fs/open.c:1432
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x1 pfn:0x11ee09
-flags: 0x5ffc00000000000(node=0|zone=2|lastcpupid=0x7ff)
-page_type: 0xffffffff()
-raw: 05ffc00000000000 fffffdffc373ab48 fffffdffc3799848 0000000000000000
-raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff0000dee09080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff0000dee09100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->ffff0000dee09180: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                                              ^
- ffff0000dee09200: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff0000dee09280: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
-syz-executor425: attempt to access beyond end of device
-loop0: rw=0, sector=6491536, nr_sectors = 2 limit=128
-Buffer I/O error on dev loop0, logical block 3245768, async page read
-syz-executor425: attempt to access beyond end of device
-loop0: rw=0, sector=17666806, nr_sectors = 2 limit=128
-Buffer I/O error on dev loop0, logical block 8833403, async page read
-syz-executor425: attempt to access beyond end of device
-loop0: rw=0, sector=26539618, nr_sectors = 2 limit=128
-Buffer I/O error on dev loop0, logical block 13269809, async page read
-syz-executor425: attempt to access beyond end of device
-loop0: rw=0, sector=16147212, nr_sectors = 2 limit=128
-Buffer I/O error on dev loop0, logical block 8073606, async page read
-
-
+Fixes: 6a24915145c9 ("Revert "riscv: Set more data to cacheinfo"")
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+Reviewed-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/riscv/kernel/cacheinfo.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
+index 09e9b88110d1..30a6878287ad 100644
+--- a/arch/riscv/kernel/cacheinfo.c
++++ b/arch/riscv/kernel/cacheinfo.c
+@@ -64,7 +64,6 @@ uintptr_t get_cache_geometry(u32 level, enum cache_type type)
+ }
+ 
+ static void ci_leaf_init(struct cacheinfo *this_leaf,
+-			 struct device_node *node,
+ 			 enum cache_type type, unsigned int level)
+ {
+ 	this_leaf->level = level;
+@@ -80,11 +79,11 @@ int populate_cache_leaves(unsigned int cpu)
+ 	int levels = 1, level = 1;
+ 
+ 	if (of_property_read_bool(np, "cache-size"))
+-		ci_leaf_init(this_leaf++, np, CACHE_TYPE_UNIFIED, level);
++		ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+ 	if (of_property_read_bool(np, "i-cache-size"))
+-		ci_leaf_init(this_leaf++, np, CACHE_TYPE_INST, level);
++		ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+ 	if (of_property_read_bool(np, "d-cache-size"))
+-		ci_leaf_init(this_leaf++, np, CACHE_TYPE_DATA, level);
++		ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+ 
+ 	prev = np;
+ 	while ((np = of_find_next_cache_node(np))) {
+@@ -97,11 +96,11 @@ int populate_cache_leaves(unsigned int cpu)
+ 		if (level <= levels)
+ 			break;
+ 		if (of_property_read_bool(np, "cache-size"))
+-			ci_leaf_init(this_leaf++, np, CACHE_TYPE_UNIFIED, level);
++			ci_leaf_init(this_leaf++, CACHE_TYPE_UNIFIED, level);
+ 		if (of_property_read_bool(np, "i-cache-size"))
+-			ci_leaf_init(this_leaf++, np, CACHE_TYPE_INST, level);
++			ci_leaf_init(this_leaf++, CACHE_TYPE_INST, level);
+ 		if (of_property_read_bool(np, "d-cache-size"))
+-			ci_leaf_init(this_leaf++, np, CACHE_TYPE_DATA, level);
++			ci_leaf_init(this_leaf++, CACHE_TYPE_DATA, level);
+ 		levels = level;
+ 	}
+ 	of_node_put(np);
+-- 
+2.20.1
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
