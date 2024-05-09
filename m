@@ -1,137 +1,158 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F9516F26D;
-	Thu,  9 May 2024 15:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B5916F286;
+	Thu,  9 May 2024 15:53:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715270008; cv=none; b=alI9heszSN2DVB15jgrV+XUnx3ZeEG5ptk8M5HvHBNH1WNlkW9FpL/qk5CEIFpc9D88qvr9IY7V5ReHtGlxQ5bcS/U089/SdrZEVcQxnxVNdATWfbvFSqiLEMzyxKSgxC3lsXa/ZtPCmJT9XPhqhgag+zsfzPy9r9iujK48ll40=
+	t=1715270041; cv=none; b=VCVhfX3RuQDhFOYCSUjsKAy4k3/5RYsQ9mwt/yZfE53d/hCcp3pdQaCl4HQDxkWVLfmY1eyNcA0oqu3GzNug07+VPMv2xOI6XRGbQHJy69BwqEGCi3kjd05GhvMSaSPUr/jH3blXt9RsY3Avagj3zBvcjjhaLCPeS8bOYz2YzL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715270008; c=relaxed/simple;
-	bh=ca0mhH4z2TzOV3LkiJrw68Zm27sFUEtVVsbmYGap+N8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=NDziVNIzfJYUEnHm17vOGaavVKMgnmpqZvGoefRJwiHVB+Ubv8FizE0CI+1yjGbhvS3E+2NfHG83nArFC8rCBCOFB5xAyiifF26CcIzB5XsNwhkKjOiBFnKh3wQduVHnVQ4Fq6l15wy9HfjBfzrwRB2tbtZNzhRM+Ty9Ah+DqzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=JRWBagkz; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1715270041; c=relaxed/simple;
+	bh=kgl7POulRwkv6guf3DOlw60s3g+R1sh3voqGVyv5uHA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C8L+oW57gbxAyr00oibiNtFfZCczYHSgaPui1lwGbnbdfQoW+pdwU0lAF2I6KF5qp+AIyhCwIDML+ItCyz8vLVCuvDntveU2ZUtwc+fqNA+M0Mq3o3UUx9g2Q16mhKhzXbquHZgCaqKiPwtXDyX4DWbAzxm53WipOi0spAcBQAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mLK2/COY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=es8J8FjG; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mLK2/COY; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=es8J8FjG; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JRWBagkz"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 992CD40E0192;
-	Thu,  9 May 2024 15:53:15 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id EDO03DZRtCCm; Thu,  9 May 2024 15:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1715269989; bh=9AlP4HXWvzcAtGm0OD798EDYT+YezFL+BRjA+PL3QQo=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=JRWBagkz83LCvujhKF9Dp/sAwPGFUDlcxCW8ueYmVlDISZiCQ2X2M0PfMdp1vpSzT
-	 hXOELsGS2Jdc9HW+J8NcVyrlqh3cZcuPjPFThfBijyaMfcb9Rw1hQwR0AQGjRxUjLX
-	 fILr0KPoCthzrNeIdaPdjiJFUYmmie1Rrj+8gQ4ifvVTt0RB6pZjjhWfojaOVSkQuG
-	 P7vIjTyIN9JhsfK0LeTMLwjBS9gx4vsKA/LDal5pwK7iW8jlJebMYd7DgGAWTxMwBf
-	 Gz+pwTkMhH3V3asQs/nxG0I5GCSGOAc9kT3Lbh0OK011A4blYYD2ystN14in3iE29w
-	 TGIdct2oEfPCp4BBlS9TvKjmxDnqe3ggQYVbP4uQMdnRmvC+kclbI+Iyu/k/7+p0tt
-	 ZrhBx8tndOJGT9rvv68gueiR+SaFem4D5EqPfhfcb4LzqcCpMM2begGcaBl/ksA12C
-	 zs/3eFim5Ark75pZJFlla9L8OnFXA1ZOrWeCS8C5EoJpkwixBJx2xCBjSkO2d4Lzf4
-	 rE+qcu4ug3NStDthC51Ze51661C4KXb/ESlAaVKcZTJrzmpQgb2fhOOl02mnkZGgeM
-	 IvlYEMsnFT6qgHUV/Hx/o9IvVfiZsLqswDTqgxnwES5Xp1A079PWJ1Wf+bmDgE71i8
-	 h03y6BPsWt9FlKZx1JzGzsVw=
-Received: from [IPv6:::1] (unknown [IPv6:2a02:3033:20b:71c3:4495:c4f9:c73d:fb52])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mLK2/COY";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="es8J8FjG";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mLK2/COY";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="es8J8FjG"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B623D40E0249;
-	Thu,  9 May 2024 15:52:22 +0000 (UTC)
-Date: Thu, 09 May 2024 17:52:18 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-CC: Shiju Jose <shiju.jose@huawei.com>,
- "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
- "dave@stgolabs.net" <dave@stgolabs.net>,
- "dave.jiang@intel.com" <dave.jiang@intel.com>,
- "alison.schofield@intel.com" <alison.schofield@intel.com>,
- "vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
- "ira.weiny@intel.com" <ira.weiny@intel.com>,
- "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "david@redhat.com" <david@redhat.com>,
- "Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
- "leo.duran@amd.com" <leo.duran@amd.com>,
- "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
- "rientjes@google.com" <rientjes@google.com>,
- "jiaqiyan@google.com" <jiaqiyan@google.com>,
- "tony.luck@intel.com" <tony.luck@intel.com>,
- "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
- "naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
- "james.morse@arm.com" <james.morse@arm.com>,
- "jthoughton@google.com" <jthoughton@google.com>,
- "somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
- "erdemaktas@google.com" <erdemaktas@google.com>,
- "pgonda@google.com" <pgonda@google.com>,
- "duenwen@google.com" <duenwen@google.com>,
- "mike.malvestuto@intel.com" <mike.malvestuto@intel.com>,
- "gthelen@google.com" <gthelen@google.com>,
- "wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
- "dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
- "wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
- "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
- tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
- "kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
- wanghuiqiang <wanghuiqiang@huawei.com>, Linuxarm <linuxarm@huawei.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240509101939.0000263a@Huawei.com>
-References: <20240419164720.1765-1-shiju.jose@huawei.com> <20240419164720.1765-2-shiju.jose@huawei.com> <20240425101542.GAZiotThrq7bOE9Ieb@fat_crate.local> <63fdbe26b51f4b7c859bfb30287c8673@huawei.com> <20240506103014.GHZjixNhhFkgkMhDg_@fat_crate.local> <e0ce36eb80054440ab877ccee4e606de@huawei.com> <20240508172002.GGZju0QvNfjB7Xm6qL@fat_crate.local> <4ceb38897d854cc095fca1220d49a4d2@huawei.com> <20240508192546.GHZjvRuvtu0XSJbkmz@fat_crate.local> <20240509101939.0000263a@Huawei.com>
-Message-ID: <D9511DC1-1566-473A-A426-111BB1F7F9F0@alien8.de>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 76F14388B9;
+	Thu,  9 May 2024 15:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715270036; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1ENRXJy8TOwBwRPUrho6blMoXPCSHd5Sswn+nQd1Hoc=;
+	b=mLK2/COYDcvh0WfuZFsir5Gt2C9Fpi/+cSUp9GmF6mCcYSzybDkVE4iMEjMsjkmdwTItZD
+	bP1XaXyqJEgIkPI9s20bE+lG/5eNSNn6N3K9jcGjC2qwXmpaemgQW58Z2d1fpsG8pA/kcE
+	3BCKuHVGeumNL7EahtNjU2Mfc+gBPTg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715270036;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1ENRXJy8TOwBwRPUrho6blMoXPCSHd5Sswn+nQd1Hoc=;
+	b=es8J8FjGXagPQbHbDg8VyS2kstKbPNTdaOSvVVxZW1e6aM3bWRE/tQeZA+bH84h973v5Hr
+	PeKt7dh36+wFUJCQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715270036; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1ENRXJy8TOwBwRPUrho6blMoXPCSHd5Sswn+nQd1Hoc=;
+	b=mLK2/COYDcvh0WfuZFsir5Gt2C9Fpi/+cSUp9GmF6mCcYSzybDkVE4iMEjMsjkmdwTItZD
+	bP1XaXyqJEgIkPI9s20bE+lG/5eNSNn6N3K9jcGjC2qwXmpaemgQW58Z2d1fpsG8pA/kcE
+	3BCKuHVGeumNL7EahtNjU2Mfc+gBPTg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715270036;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1ENRXJy8TOwBwRPUrho6blMoXPCSHd5Sswn+nQd1Hoc=;
+	b=es8J8FjGXagPQbHbDg8VyS2kstKbPNTdaOSvVVxZW1e6aM3bWRE/tQeZA+bH84h973v5Hr
+	PeKt7dh36+wFUJCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 696D913941;
+	Thu,  9 May 2024 15:53:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0iG3GZTxPGZ9GwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Thu, 09 May 2024 15:53:56 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 0ECB2A0861; Thu,  9 May 2024 17:53:56 +0200 (CEST)
+Date: Thu, 9 May 2024 17:53:56 +0200
+From: Jan Kara <jack@suse.cz>
+To: Justin Stitt <justinstitt@google.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Bill Wendling <morbo@google.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] fs: remove accidental overflow during wraparound check
+Message-ID: <20240509155356.w274h4blmcykxej6@quack3>
+References: <20240507-b4-sio-vfs_fallocate-v1-1-322f84b97ad5@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240507-b4-sio-vfs_fallocate-v1-1-322f84b97ad5@google.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_COUNT_THREE(0.00)[3];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-On May 9, 2024 11:19:39 AM GMT+02:00, Jonathan Cameron <Jonathan=2ECameron@=
-Huawei=2Ecom> wrote:
->Many subsystem core drivers will probe and create subsystem specific
->sysfs directories on on systems that don't have any hardware needing
->drivers from that subsystem (if someone manually inserts them rather
->than relying on automatic module dependency handling=2E)
->I don't see why this class driver should be different and have to jump
->through hoops to satisfy this requirement=2E
+On Tue 07-05-24 23:17:57, Justin Stitt wrote:
+> Running syzkaller with the newly enabled signed integer overflow
+> sanitizer produces this report:
+> 
+> [  195.401651] ------------[ cut here ]------------
+> [  195.404808] UBSAN: signed-integer-overflow in ../fs/open.c:321:15
+> [  195.408739] 9223372036854775807 + 562984447377399 cannot be represented in type 'loff_t' (aka 'long long')
+> [  195.414683] CPU: 1 PID: 703 Comm: syz-executor.0 Not tainted 6.8.0-rc2-00039-g14de58dbe653-dirty #11
+> [  195.420138] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [  195.425804] Call Trace:
+> [  195.427360]  <TASK>
+> [  195.428791]  dump_stack_lvl+0x93/0xd0
+> [  195.431150]  handle_overflow+0x171/0x1b0
+> [  195.433640]  vfs_fallocate+0x459/0x4f0
 
-You mean it should load because "Look ma, the others do it this way"=2E Do=
-es it make any sense? Of course not=2E
+Well, we compile the kernel with -fno-strict-overflow for a reason so I
+wouldn't consider this a bug. But check_add_overflow() is easier to digest
+since we don't have to worry about type details so I'm for this change.
 
-Are you arguing for the nonsensical "it should load" case because it is si=
-mply easier this way? How hard is that "jump through hoops" thing anyway?
+> @@ -319,8 +320,12 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
+>  	if (!S_ISREG(inode->i_mode) && !S_ISBLK(inode->i_mode))
+>  		return -ENODEV;
+>  
+> -	/* Check for wrap through zero too */
+> -	if (((offset + len) > inode->i_sb->s_maxbytes) || ((offset + len) < 0))
+> +	/* Check for wraparound */
+> +	if (check_add_overflow(offset, len, &sum))
+> +		return -EFBIG;
+> +
+> +	/* Now, check bounds */
+> +	if (sum > inode->i_sb->s_maxbytes || sum < 0)
+>  		return -EFBIG;
 
-You mean it should load so that when booting an allmodconfig kernel there =
-are not enough modules which are loading so lemme load one more=2E And then=
- I need to go and rmmod them all before I need to do localmodconfig and bui=
-ld a tailored kernel for the machine=2E
+But why do you check for sum < 0? We know from previous checks offset >= 0
+&& len > 0 so unless we overflow, sum is guaranteed to be > 0.
 
-Or is there some other reason to load silly modules, use up resources for =
-no good reason whatsoever and bloat the machine?
-
-You mean, f*ck it, right? Who cares=2E=2E=2E
-
-Geez=2E
-
-
---=20
-Sent from a small device: formatting sucks and brevity is inevitable=2E 
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
