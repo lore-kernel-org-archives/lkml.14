@@ -1,98 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC92B13A87A
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 02:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0032913BC13
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 02:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715222961; cv=none; b=jDI/7pwl0O9hn9fL7mndPJClNZ8RaWQEZY2mu+nPhzs9SropKJhT4dLXYdLIew9ATwKiHXHivi9TBTXBfqpeyF0ZbAcL/w3cipW+mcyHiNABedhMed2E/JDshBDvgSk95f+4u5jY7867MEAvQ7GfFBtdBMhDY0oIrSwRlDKbTRg=
+	t=1715223268; cv=none; b=dm5vzKfH7E8mM/RMMjP+81lJM+7cXEf5XhU5ykGM2Qa5Xt3JpmGth7hmucH9BFjsxTFZdMAKM6mSsPZb1pQXxz4BinQP5yuDjC08xT2uzR2L49MPk1wD4nVGGWVWHVQwV8YuXzUkaBMvueteSQqxlmFX/w5BCo/5asGIrunSBYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715222961; c=relaxed/simple;
-	bh=v7wln2xpQLVVAxH/uG3eYmTTj+iPQmXfVO6dtLtvARw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fRnf7Hg6bqRyCdjT4+3zIRne+n625PDM3nDmylX4QFQO+B9rmarwGSuAhWrVrH9CxPUZ+L589va3TWuRKtoa1mhRmz9+hSL+mr1/Szv7KeUpul6G4eeIu2lJuo6/TRtqAqH/C63YMDYUs1FY6DF5x00/5acjk3y5pT3XyJu7KAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOTE8orV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715223268; c=relaxed/simple;
+	bh=px95XfgVdNLSqB1NEtbMqouLoL3ZUqGEDf4VJRKlrNg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f0zmhP5q48dy8hi6mg8lKvryinThK05ziNxx3C98oNM9DRJYWVBfDbuaL0D2MPMpLprMLfVe2JbEYmKW146Pxp7vAp4dQBqbQZJDk0uv2RQP/AvWHZXJjSQQY/t5n9ceYuDEFsITIhMDqtf/2fcbgLeeKpY6Lil3/BARB/b7UMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MQ0Hz/ai; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOTE8orV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49456C113CC;
-	Thu,  9 May 2024 02:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715222961;
-	bh=v7wln2xpQLVVAxH/uG3eYmTTj+iPQmXfVO6dtLtvARw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JOTE8orVPVO0pCaSPeWTSsOdhR4mLpnMOIHDMxxhPdf3yy8pCiRU5lDJd0hY7J00x
-	 Mx/UE3VXLWkUz/2M8t2YCeaQ5aSqDIlfshMCOk5hVeCHCO0/yt1zM8JTeTR/bs7t16
-	 s5z6deoWppPqD5D5F3DLCDiYzW1J1a6dksLxqwNklJdIebFq/DElmARk1U/3kDJEem
-	 la5mdOUaf2panlFP+qGx0dMcoMZC7wyOM9FV8ZF24i4KVougPzhz6oFeDCTFY6+gHj
-	 eWQj5oLv/tSRwewkqqZWGsP7VgC7AIkylDeNnNZz46aBZBAXroenoBWLD8EQ7o5N4z
-	 JKT3ruOfBBo2A==
-Message-ID: <32e097e6-67f1-4f06-bad0-0c7b3afb46f0@kernel.org>
-Date: Thu, 9 May 2024 10:49:16 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MQ0Hz/ai"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6a0badb6892so2694136d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 19:54:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715223266; x=1715828066; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0n5lXWwCrkNw+mZGyoG+6UZQXx93pGBCtpjOq+keWdY=;
+        b=MQ0Hz/aiIh3fGCWR/x2rtu7OJ2Z/DMj2FMHIFrYvJ5Bs4yX2efgDcF/C76eEVc1UAi
+         9Gvn8e6sFMX8M1A1GlkEyqzHTiaTKjQ82bpEIhU/BBKHoYgvX9JxJVyJaQCb6qEpvTA6
+         kc6+eEjibGwZv9RHGIZXlJI5Bo3ILQWjnjuPfRlctMxnjN8N6R+81B+Q8ZOWO8R3tcYH
+         vfEIE3A4eMQxGFzY+Pl1IwQ4+2VC5HLYAdwbQgNbvw2OxkGXEMJnWQVBWcR3z4VWg7gK
+         Ds3dR34aK6Z7a8WGKs1BOiO+RxQtLVvi/1IUhVZLKCzp2yby5o12SCa0Q3jC+Y2aKnBD
+         4fRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715223266; x=1715828066;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0n5lXWwCrkNw+mZGyoG+6UZQXx93pGBCtpjOq+keWdY=;
+        b=t+F8WvwLqal0XH3iO3bUCSbG5wK6th9ni8wK4+gnL+AiLapNDrn6KCaAPZSd0PNDuf
+         9gmRtdIlv88G25DRQBysawSZafB0CkHHfvJmnNLmOPlBCsxs0k+cKLZGJnR7myXXxN7D
+         5tZ6LWhVGzD2p7HFXQwHBbbfaXN7I+f061ZzDsNgq9NcPMi49HL9Qc1BLZNuAmJU1XKI
+         60i4Z5uqxjuWgcM0Dn+GhYTuLRrBytPRMT7iK/SKJjwzFMhPvOS2PT/fzCSivdPcts6F
+         TzYdAiKhI3FQdTicoGP7sepW3lZtpC9gvZuhIgkHZjeeXYOdeqLc1vYMe5iXS0LY6xmK
+         i/Sg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEX3kvfNme4m8Z9a+imdl7zedNql1uxBh84rTK7UibL/pHd97PlYSYmkPNgkGLFAanI3Ql70WhXJQ+DzbKxd49d7Ejt++gAlc+g72L
+X-Gm-Message-State: AOJu0Yyz2MqZwIU/OHKKxWgylE6VvvXBoswC0/3HLnNvonHYIwm+BZwS
+	uHyuReBtCRGNoEUONMM4HExokfKgB9vojNOp/iQyH0IaNwU1qWMXwOVUCVjqHnqS5faEaHc/4iE
+	M/yvkLGKo/dDAyEuBJOwUXoyVf9wcBnIe7ZEB
+X-Google-Smtp-Source: AGHT+IEDRHFaM7QiNDpvS1RM9lXUOxibfeTGoCbE7y0wlHy7q9FA+3L3PbX3ukTv0VKfULn8aem19wicPLE3Tz00mfQ=
+X-Received: by 2002:a05:6214:d66:b0:6a0:c914:2a07 with SMTP id
+ 6a1803df08f44-6a151436c43mr57067126d6.4.1715223265690; Wed, 08 May 2024
+ 19:54:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] f2fs: fix to add missing iput() in gc_data_segment()
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
-References: <20240506103313.773503-1-chao@kernel.org>
- <20240506103313.773503-2-chao@kernel.org> <Zjwc5QGJfm6XXzOX@google.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <Zjwc5QGJfm6XXzOX@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240502211047.2240237-1-maheshb@google.com> <87fruspxgt.ffs@tglx>
+In-Reply-To: <87fruspxgt.ffs@tglx>
+From: =?UTF-8?B?TWFoZXNoIEJhbmRld2FyICjgpK7gpLngpYfgpLYg4KSs4KSC4KSh4KWH4KS14KS+4KSwKQ==?= <maheshb@google.com>
+Date: Wed, 8 May 2024 19:53:58 -0700
+Message-ID: <CAF2d9jigGhpSAj2hnUG2QSvYeSzTvD1FUf7tT8BW1NU8EouyOA@mail.gmail.com>
+Subject: Re: [PATCHv4 net-next] ptp/ioctl: support MONOTONIC_RAW timestamps
+ for PTP_SYS_OFFSET_EXTENDED
+To: Thomas Gleixner <tglx@linutronix.de>, Yuliang Li <yuliangli@google.com>, 
+	Don Hatchett <hatch@google.com>
+Cc: Netdev <netdev@vger.kernel.org>, Linux <linux-kernel@vger.kernel.org>, 
+	David Miller <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Richard Cochran <richardcochran@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Sagi Maimon <maimon.sagi@gmail.com>, Jonathan Corbet <corbet@lwn.net>, John Stultz <jstultz@google.com>, 
+	Mahesh Bandewar <mahesh@bandewar.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2024/5/9 8:46, Jaegeuk Kim wrote:
-> On 05/06, Chao Yu wrote:
->> During gc_data_segment(), if inode state is abnormal, it missed to call
->> iput(), fix it.
->>
->> Fixes: 132e3209789c ("f2fs: remove false alarm on iget failure during GC")
->> Fixes: 9056d6489f5a ("f2fs: fix to do sanity check on inode type during garbage collection")
->> Signed-off-by: Chao Yu <chao@kernel.org>
->> ---
->>   fs/f2fs/gc.c | 9 +++++++--
->>   1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
->> index 8852814dab7f..e86c7f01539a 100644
->> --- a/fs/f2fs/gc.c
->> +++ b/fs/f2fs/gc.c
->> @@ -1554,10 +1554,15 @@ static int gc_data_segment(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
->>   			int err;
->>   
->>   			inode = f2fs_iget(sb, dni.ino);
->> -			if (IS_ERR(inode) || is_bad_inode(inode) ||
->> -					special_file(inode->i_mode))
->> +			if (IS_ERR(inode))
->>   				continue;
->>   
->> +			if (is_bad_inode(inode) ||
->> +					special_file(inode->i_mode)) {
->> +				iput(inode);
-> 
-> iget_failed() called iput()?
+On Wed, May 8, 2024 at 12:35=E2=80=AFAM Thomas Gleixner <tglx@linutronix.de=
+> wrote:
+>
+> On Thu, May 02 2024 at 14:10, Mahesh Bandewar wrote:
+> > The ability to read the PHC (Physical Hardware Clock) alongside
+> > multiple system clocks is currently dependent on the specific
+> > hardware architecture. This limitation restricts the use of
+> > PTP_SYS_OFFSET_PRECISE to certain hardware configurations.
+> >
+> > The generic soultion which would work across all architectures
+> > is to read the PHC along with the latency to perform PHC-read as
+> > offered by PTP_SYS_OFFSET_EXTENDED which provides pre and post
+> > timestamps.  However, these timestamps are currently limited
+> > to the CLOCK_REALTIME timebase. Since CLOCK_REALTIME is affected
+> > by NTP (or similar time synchronization services), it can
+> > experience significant jumps forward or backward. This hinders
+> > the precise latency measurements that PTP_SYS_OFFSET_EXTENDED
+> > is designed to provide.
+>
+> This is really a handwavy argument.
+>
+> Fact is that the time jumps of CLOCK_REALTIME caused by NTP (etc) are
+> rare and significant enough to be easily filtered out. That's why this
+> interface allows you to retrieve more than one sample.
+>
+> Can you please explain which problem you are actually trying to solve?
+>
+> It can't be PTP system time synchronization as that obviously requires
+> CLOCK_REALTIME.
+>
+Let me add a couple of folks from the clock team. @Yuliang Li  @Don Hatchet=
+t
+I'm just a nomad-kernel-net guy trying to fill-in gaps :(
 
-It looks the bad inode was referenced in this context, it needs to be iput()ed
-here.
-
-The bad inode was made in other thread, please check description in commit
-b73e52824c89 ("f2fs: reposition unlock_new_inode to prevent accessing invalid
-inode").
-
-Thanks,
-
-> 
-> 
->> +				continue;
->> +			}
->> +
->>   			err = f2fs_gc_pinned_control(inode, gc_type, segno);
->>   			if (err == -EAGAIN) {
->>   				iput(inode);
->> -- 
->> 2.40.1
+> Thanks,
+>
+>         tglx
