@@ -1,362 +1,230 @@
-Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2067.outbound.protection.outlook.com [40.107.255.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3841148828;
-	Thu,  9 May 2024 03:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715224727; cv=none; b=XMPJclCLdYP3dmw9HP8/vMUcQ1imQzZHRl5GdtbviGeIMo1oyBVxoP24YXFhNgBptmTpWrhAxLTZJm8t8Q5Cm7Fe4rEi6DO6JKlYO956t3TXpoCQs5ERAPZFU1w3ErO1hkli47Gu620nMdejSzySc2LeCDeN/8e3Wg/Aneb2MIU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715224727; c=relaxed/simple;
-	bh=zkn2U5Dn/Ax3O7GpVyBbtoa+H+obFnYJJlCCzDb7A1I=;
-	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=Wq2zCuPYnS9la6yzDFP8+wXTs+Ti3014SUBUzH+3xKviOgp64anUDBrlq8f9ibthfFdnoXKoUkfpySQIOhwT5R0yfzZbWiQ/XJ+Ed4jI6rRto3N3FRdDKe2dkrxkyEhE+LBsCaZtf1wvRQ1/DZMMFF/R2IP8OvZC4N95JUJVRk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 383F72007D5;
-	Thu,  9 May 2024 05:18:44 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id A54E6200AB5;
-	Thu,  9 May 2024 05:18:43 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 8BB97180222F;
-	Thu,  9 May 2024 11:18:41 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shengjiu.wang@gmail.com,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Xiubo.Lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	perex@perex.cz,
-	tiwai@suse.com,
-	alsa-devel@alsa-project.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 4/4] ASoC: fsl_xcvr: Add support for i.MX95 platform
-Date: Thu,  9 May 2024 10:57:40 +0800
-Message-Id: <1715223460-32662-5-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1715223460-32662-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1715223460-32662-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF46D517
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 03:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.67
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715224963; cv=fail; b=Ow7S9jgwRB73a8LRm0fboNkcRNfMk5oeyE9shPCVUqYAQ/RaX5ZUMAXdLTLyt+kDBxjLm6E/RljeNX9G9RhIqIZbhbRTu5jCjGkYb+1VHegDQHIsAhUEo1QGdU/26Y4A0npM3Gqbgc+9wOmwpyaFzFgpJ9YUcOE4awVLV8dv3v0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715224963; c=relaxed/simple;
+	bh=wRcsWkKyUuh1PpAgZf9a98EnxuIfN07ZHvf4bBzyubI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R4Z+H+QtDh+QuAFiWedmRE6n4dTkhnrYgfPnVCtbzu1+71jzTLrB5WvqNR8PEMsHKSWoDnJssHosfmATNUT+jrNcC0n9n9Axh1eD08FR93EqmvtGitQEyPX43PwIlCvdhV9ekFMAKjsYTab3MOzFg1/P//K5UET0WfHW1w39CfI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com; spf=pass smtp.mailfrom=oppo.com; dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b=FQfDhjbN; arc=fail smtp.client-ip=40.107.255.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oppo.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b="FQfDhjbN"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=N+92uK2a3KCd0FU6I2YI9A8dJyl1bk1zKHolSkg7Kw1dCZtlEqBzZtELQ3oAtv99gPuyqvDy/lJREbTxj4YQE593jtykS9dL/5CR08Hk96D7Id+WHeOuJbTFudp2SGhq53Kqv4FGHWWrm4sMmWVYGFtl/L9cL1veLhh5ggDhnsynwNTJhbPh0xfM2QcDzZo21suyY1l/psMum96Fb+L7vDxJC5jbMjcK0m2jdCK6Sr0tqQXvkR0+Z8EQdaPnhwv9gCJ1FrNhUS5mPyEybRScS6HjaE2E9s6/9IE6hKFcodGdC5veIPNESEtY13H9o6lI0AiPf4ajqKUB5nIx1+LT5Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aDy3DBx4GNoLB/Vj8n3bqvRKYtIvbm70I84kBSSdlQM=;
+ b=LMOGuJUe47+ZCTDVfi6bduPJWkAv+1guiYzCx3CDNqXyWWwDuNYtivW4bhGrcGMSWrmn+ofdV3sSFaxmYfzvJAikSBioobXN1SuuugdPG3dcaUlxt++LM+cGbgw2n5hEvqMPQv7dFXM952uH4zqKT1PCnHqwR9riNyzK7GvkRhdZSWrRbF5irCs9DNg4FWss92Vdfh5SKOJOdvksUIIrB4cbolFjWFIjWljSX4Ui2gHXGsR1o6XSaA2Ik2+mmvexpR2WXwHkr4Pls30UpY+MA4dnSF8e4rFMw2sIVVhe8VA7xKJOCP1RRAACi4YEwgmnSEWIak9gJZWfo7eKSLl9FQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 58.252.5.68) smtp.rcpttodomain=linux.alibaba.com smtp.mailfrom=oppo.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=oppo.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oppo.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aDy3DBx4GNoLB/Vj8n3bqvRKYtIvbm70I84kBSSdlQM=;
+ b=FQfDhjbNtSHg6QeQo9A6u5Oqc6jyy4AkTL9WqwUsn6N+ademTdkAf5YMeYuMlu8K6tlJeIKmUgPOjbtNE8WhbLo4GhkERyOQ71W+UzZpUMlIW6UIvwGYXuEKAkAqKr+JdX1TDlwSS7DIVlx8Cl68fTSHcDNH/hO2+mN3a1gQsC8=
+Received: from SG2PR01CA0127.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:40::31) by KL1PR02MB7521.apcprd02.prod.outlook.com
+ (2603:1096:820:118::10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.46; Thu, 9 May
+ 2024 03:22:38 +0000
+Received: from HK3PEPF0000021B.apcprd03.prod.outlook.com
+ (2603:1096:4:40:cafe::e1) by SG2PR01CA0127.outlook.office365.com
+ (2603:1096:4:40::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.46 via Frontend
+ Transport; Thu, 9 May 2024 03:22:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 58.252.5.68)
+ smtp.mailfrom=oppo.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=oppo.com;
+Received-SPF: Pass (protection.outlook.com: domain of oppo.com designates
+ 58.252.5.68 as permitted sender) receiver=protection.outlook.com;
+ client-ip=58.252.5.68; helo=mail.oppo.com; pr=C
+Received: from mail.oppo.com (58.252.5.68) by
+ HK3PEPF0000021B.mail.protection.outlook.com (10.167.8.37) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7544.18 via Frontend Transport; Thu, 9 May 2024 03:22:36 +0000
+Received: from oppo.com (172.16.40.118) by mailappw31.adc.com (172.16.56.198)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 9 May
+ 2024 11:22:35 +0800
+Date: Thu, 9 May 2024 11:22:30 +0800
+From: Hailong Liu <hailong.liu@oppo.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+CC: Barry Song <21cnbao@gmail.com>, <akpm@linux-foundation.org>,
+	<urezki@gmail.com>, <hch@infradead.org>, <lstoakes@gmail.com>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <xiang@kernel.org>,
+	<chao@kernel.org>, Oven <liyangouwen1@oppo.com>
+Subject: Re: [RFC PATCH] mm/vmalloc: fix vmalloc which may return null if
+ called with __GFP_NOFAIL
+Message-ID: <20240509032230.72vtl2cjtg72ydds@oppo.com>
+References: <20240508125808.28882-1-hailong.liu@oppo.com>
+ <CAGsJ_4xN0MBz_73wUvMp74upd9SaQ+TCRJufEj26Y619Rtr7Zw@mail.gmail.com>
+ <20d782ad-c059-4029-9c75-0ef278c98d81@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20d782ad-c059-4029-9c75-0ef278c98d81@linux.alibaba.com>
+X-ClientProxiedBy: mailappw31.adc.com (172.16.56.198) To mailappw31.adc.com
+ (172.16.56.198)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK3PEPF0000021B:EE_|KL1PR02MB7521:EE_
+X-MS-Office365-Filtering-Correlation-Id: e7106abe-e28e-408d-00ac-08dc6fd7462a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|36860700004|7416005|1800799015|376005|82310400017;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UFZldlhIY1cxSXN3N3RUOG55U3R4RXpSTndWNkJHZmVPSERMOFlrbnE2UnBr?=
+ =?utf-8?B?Tldjb2JuazBadEVWK3VhMWoyS0Q2K29rU1FKc3pXY2xlWGYrdFdNcGozem5I?=
+ =?utf-8?B?eVBvTlB1d204djhBU1BzR2x2Z01lVFp4NXhzcU02OTN5RE5LT2Q0SkJLTE1l?=
+ =?utf-8?B?Ry9GM25xOGpaQkZBSUowNFVvY05hV2w1WHRXa2d6VHUrUUZRTmlxOU5paVlq?=
+ =?utf-8?B?dnFNSk9PM1ZEWjhIM01qNGtneFZ6OWtyNHVFdUhQcXE2MUUxUmVaNDJTdWxH?=
+ =?utf-8?B?bVFpbnhQQmcxK2svc1p5UTZwM3lmY2I1TmRodlRwcGsxYWZiVDVwQ29vSG13?=
+ =?utf-8?B?T0dGUVA5cnoyWXMwWnY2d2ZKV3VPZ2lYWGhMaHltNzJhSWx1WFRLaDlmVG5Y?=
+ =?utf-8?B?cVFRODBQNjhlSGcwOE9oYXJtbE1ZOFlXVWE3cjBUWEZiM0RubjY3aCtqampw?=
+ =?utf-8?B?WXJxY0ZMcHBTY2RSaW1NcjljQTg1Mkh0aG0wU3gzQ2IwU2hweGxyMXJuaHcx?=
+ =?utf-8?B?T3ZXU28rYmJBeU90cDJ1Rnh1QWwxbTRzSDlVdnFHWHYyTks4Y1E5eUhMV0h4?=
+ =?utf-8?B?NUJkWDBTUFFZYWZxL0Z2ZUtwajZYSGVwd2c2aUZEUEc0N3ozM2pIVFBTVnhz?=
+ =?utf-8?B?Sjg4WVo2MU5JbSswbE9oZFViaXIwTldFaENZYkdrRG4zWWdSMzhPYXF1UlNa?=
+ =?utf-8?B?SXo0eFZsSTRySTREWU5XWjA2S3VVeEs1ZDY5RE9hZlZkWHZPVFNzaDF5Rm1r?=
+ =?utf-8?B?UEZYeE1wQ0llRVFjV0hIY0FZTDFCalpReUJvSzR6RkxkZjMyNkM5T3lDMUti?=
+ =?utf-8?B?TTgwNkhWRE5TZHVVUC9wT0w3YWRVNXNWOVBWVllzSUlEU2xOSk93Z0xCaFdh?=
+ =?utf-8?B?WEtzYWpiVzlxYzlwT3YrQ1A2anVDaEtpLzluWDZoWTRDVEFtWkFqZFJyUDkv?=
+ =?utf-8?B?L3RCemVWZkpValNkWEh4N1k0d2Rka0N5R2lyek4zWlQ3eFJid2N3NThzeEhk?=
+ =?utf-8?B?TjYwMGZSQlk2OCtldU1QNXIrZlhabGFEZlBVVlZLNjQ0KzB0bDQ0R0xDVUpy?=
+ =?utf-8?B?ZndSaGdaTHBJRUtzZ3BkMXNVT29oenBWZmpsM3YzQ1hkZ0JnV1JSYm4rbWF2?=
+ =?utf-8?B?NWlZREI3bm5SV3laNTVhWWhqN3VsdWlscEFEakFhamRwTUpqTDdzc3B0RzFW?=
+ =?utf-8?B?ZmlwZm5yNFZoRlpsb1AzZVlBR0lhaE82ZXNBM0xoTDNoKzhiTVJONVROVWIv?=
+ =?utf-8?B?VUVKcWdqcDRCRklUZVk4TnhBOER6QnpKSGxLSTFYZzFpRU5ucjBxNTFzQWV1?=
+ =?utf-8?B?VGxnUE14Skt3bHpmYlR2QWF4ZGZBVlh1dlFNa3RNbmd5eVByN3hudnMyRTF2?=
+ =?utf-8?B?VGVCd1dIVG5ZdFdhYTFjekxYbWdqNFJkR2k0ZUw1Y3Nwbk9LcHhZL201ZVAx?=
+ =?utf-8?B?V09yWnJmOXMzZ3VHbTZ6MktHcXRERUVpbUJMdU5DVExmUnladkVYaXJTTnp5?=
+ =?utf-8?B?UVNReC9TMTNkalZIRXNSbWZYOTBMcm1rMDV1S2pBWTRFcTJQdkNJejE4M2J6?=
+ =?utf-8?B?SGNnMkNvZUFCMjFPWGw5OTV6MzR6enJYdmJ4T2cySkIzY1grK0Y4YzB5eDNW?=
+ =?utf-8?B?bzdzUUNWV0s4SUY2NTBsc2p1eHRqRU9wbDRVdnlyeXpXQnZWZEg4OHp4M2hv?=
+ =?utf-8?B?QW1NN1lMR3BaZmgweUJPcVM0clNkNzAyNUg4MW1KbkcvUngrNHFqZmJKZlBh?=
+ =?utf-8?Q?VCRXgiJgyweu6HW9GSeTa7Np41EVmfr6S4eW1oW?=
+X-Forefront-Antispam-Report:
+	CIP:58.252.5.68;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.oppo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(36860700004)(7416005)(1800799015)(376005)(82310400017);DIR:OUT;SFP:1101;
+X-OriginatorOrg: oppo.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2024 03:22:36.4014
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7106abe-e28e-408d-00ac-08dc6fd7462a
+X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f1905eb1-c353-41c5-9516-62b4a54b5ee6;Ip=[58.252.5.68];Helo=[mail.oppo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	HK3PEPF0000021B.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR02MB7521
 
-On i.MX95, the XCVR uses a new PLL in the PHY, which is
-General Purpose (GP) PLL. Add GP PLL configuration support
-in the driver and add the 'pll_ver' flag to distinguish
-different PLL on different platforms.
+On Thu, 09. May 10:39, Gao Xiang wrote:
+> Hi,
+>
+> On 2024/5/9 10:20, Barry Song wrote:
+> > On Thu, May 9, 2024 at 12:58 AM <hailong.liu@oppo.com> wrote:
+> > >
+> > > From: "Hailong.Liu" <hailong.liu@oppo.com>
+> > >
+> > > Commit a421ef303008 ("mm: allow !GFP_KERNEL allocations for kvmalloc")
+> > > includes support for __GFP_NOFAIL, but it presents a conflict with
+> > > commit dd544141b9eb ("vmalloc: back off when the current task is
+> > > OOM-killed"). A possible scenario is as belows:
+> > >
+> > > process-a
+> > > kvcalloc(n, m, GFP_KERNEL | __GFP_NOFAIL)
+> > >      __vmalloc_node_range()
+> > >          __vmalloc_area_node()
+> > >              vm_area_alloc_pages()
+> > >              --> oom-killer send SIGKILL to process-a
+> > >              if (fatal_signal_pending(current)) break;
+> > > --> return NULL;
+> > >
+> > > to fix this, do not check fatal_signal_pending() in vm_area_alloc_pages()
+> > > if __GFP_NOFAIL set.
+> > >
+> > > Reported-by: Oven <liyangouwen1@oppo.com>
+> > > Signed-off-by: Hailong.Liu <hailong.liu@oppo.com>
+> > > ---
+> > >   mm/vmalloc.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > index 6641be0ca80b..2f359d08bf8d 100644
+> > > --- a/mm/vmalloc.c
+> > > +++ b/mm/vmalloc.c
+> > > @@ -3560,7 +3560,7 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
+> > >
+> > >          /* High-order pages or fallback path if "bulk" fails. */
+> > >          while (nr_allocated < nr_pages) {
+> > > -               if (fatal_signal_pending(current))
+> > > +               if (!(gfp & __GFP_NOFAIL) && fatal_signal_pending(current))
+> > >                          break;
+> >
+> > why not !nofail ?
+> >
+> > This seems a correct fix, but it undermines the assumption made in
+> > commit dd544141b9eb
+> >   ("vmalloc: back off when the current task is OOM-killed")
+> >
+> > "
+> >      This may trigger some hidden problems, when caller does not handle
+> >      vmalloc failures, or when rollaback after failed vmalloc calls own
+> >      vmallocs inside.  However all of these scenarios are incorrect: vmalloc
+> >      does not guarantee successful allocation, it has never been called with
+> >      __GFP_NOFAIL and threfore either should not be used for any rollbacks or
+> >      should handle such errors correctly and not lead to critical failures.
+> > "
+j> >
+> > If a significant kvmalloc operation is performed with the NOFAIL flag, it risks
+> > reverting the fix intended to address the OOM-killer issue in commit
+> > dd544141b9eb.
+> > Should we indeed permit the NOFAIL flag for large kvmalloc allocations?
+>
+> Just from my perspective, I don't really care about kmalloc, vmalloc
+> or kvmalloc (__GFP_NOFAIL).  I even don't care if it returns three
+> order-0 pages or a high-order page.   I just would like to need a
+> virtual consecutive buffer (even it works slowly.) with __GFP_NOFAIL.
+>
+> Because in some cases, writing fallback code may be tough and hard to
+> test if such fallback path is correct since it only triggers in extreme
+> workloads, and even such buffers are just used in a very short lifetime.
+> Also see other FS discussion of __GFP_NOFAIL, e.g.
+> https://lore.kernel.org/all/ZcUQfzfQ9R8X0s47@tiehlicka/
+>
+> In the worst cases, it usually just needs < 5 order-0 pages (for many
+> cases it only needs one page), but with kmalloc it will trigger WARN
+> if it occurs to > order-1 allocation. as I mentioned before.
+>
+> With my limited understanding I don't see why it could any problem with
+> kvmalloc(__GFP_NOFAIL) since it has no difference of kmalloc(GFP_NOFAIL)
+> with order-0 allocation.
+>
+I totally agree with you. so I fixed this in vmalloc or not in erofs. However,
+there are still some extreme scenarios that cause vmalloc to return NULL,
+such as vmap failure. Let's see what the mm experts think.
 
-The XCVR also use PHY but limited for SPDIF only case
-Add 'use_phy' flag to distinguish these platforms.
+>
+> Thanks,
+> Gao XIang
+>
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Chancel Liu <chancel.liu@nxp.com>
----
- sound/soc/fsl/fsl_xcvr.c | 120 +++++++++++++++++++++++++--------------
- sound/soc/fsl/fsl_xcvr.h |  91 +++++++++++++++++++++++++++++
- 2 files changed, 168 insertions(+), 43 deletions(-)
+--
 
-diff --git a/sound/soc/fsl/fsl_xcvr.c b/sound/soc/fsl/fsl_xcvr.c
-index 0ffa10e924ef..6b1715ac67c5 100644
---- a/sound/soc/fsl/fsl_xcvr.c
-+++ b/sound/soc/fsl/fsl_xcvr.c
-@@ -20,10 +20,17 @@
- 
- #define FSL_XCVR_CAPDS_SIZE	256
- 
-+enum fsl_xcvr_pll_verison {
-+	PLL_MX8MP,
-+	PLL_MX95,
-+};
-+
- struct fsl_xcvr_soc_data {
- 	const char *fw_name;
- 	bool spdif_only;
- 	bool use_edma;
-+	bool use_phy;
-+	enum fsl_xcvr_pll_verison pll_ver;
- };
- 
- struct fsl_xcvr {
-@@ -265,10 +272,10 @@ static int fsl_xcvr_ai_write(struct fsl_xcvr *xcvr, u8 reg, u32 data, bool phy)
- static int fsl_xcvr_en_phy_pll(struct fsl_xcvr *xcvr, u32 freq, bool tx)
- {
- 	struct device *dev = &xcvr->pdev->dev;
--	u32 i, div = 0, log2;
-+	u32 i, div = 0, log2, val;
- 	int ret;
- 
--	if (xcvr->soc_data->spdif_only)
-+	if (!xcvr->soc_data->use_phy)
- 		return 0;
- 
- 	for (i = 0; i < ARRAY_SIZE(fsl_xcvr_pll_cfg); i++) {
-@@ -291,45 +298,62 @@ static int fsl_xcvr_en_phy_pll(struct fsl_xcvr *xcvr, u32 freq, bool tx)
- 		return ret;
- 	}
- 
--	/* PLL: BANDGAP_SET: EN_VBG (enable bandgap) */
--	fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_BANDGAP_SET,
--			  FSL_XCVR_PLL_BANDGAP_EN_VBG, 0);
--
--	/* PLL: CTRL0: DIV_INTEGER */
--	fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_CTRL0, fsl_xcvr_pll_cfg[i].mfi, 0);
--	/* PLL: NUMERATOR: MFN */
--	fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_NUM, fsl_xcvr_pll_cfg[i].mfn, 0);
--	/* PLL: DENOMINATOR: MFD */
--	fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_DEN, fsl_xcvr_pll_cfg[i].mfd, 0);
--	/* PLL: CTRL0_SET: HOLD_RING_OFF, POWER_UP */
--	fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_CTRL0_SET,
--			  FSL_XCVR_PLL_CTRL0_HROFF | FSL_XCVR_PLL_CTRL0_PWP, 0);
--	udelay(25);
--	/* PLL: CTRL0: Clear Hold Ring Off */
--	fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_CTRL0_CLR,
--			  FSL_XCVR_PLL_CTRL0_HROFF, 0);
--	udelay(100);
--	if (tx) { /* TX is enabled for SPDIF only */
--		/* PLL: POSTDIV: PDIV0 */
--		fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_PDIV,
--				  FSL_XCVR_PLL_PDIVx(log2, 0), 0);
--		/* PLL: CTRL_SET: CLKMUX0_EN */
--		fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_CTRL0_SET,
--				  FSL_XCVR_PLL_CTRL0_CM0_EN, 0);
--	} else if (xcvr->mode == FSL_XCVR_MODE_EARC) { /* eARC RX */
--		/* PLL: POSTDIV: PDIV1 */
--		fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_PDIV,
--				  FSL_XCVR_PLL_PDIVx(log2, 1), 0);
--		/* PLL: CTRL_SET: CLKMUX1_EN */
--		fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_CTRL0_SET,
--				  FSL_XCVR_PLL_CTRL0_CM1_EN, 0);
--	} else { /* SPDIF / ARC RX */
--		/* PLL: POSTDIV: PDIV2 */
--		fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_PDIV,
--				  FSL_XCVR_PLL_PDIVx(log2, 2), 0);
--		/* PLL: CTRL_SET: CLKMUX2_EN */
-+	switch (xcvr->soc_data->pll_ver) {
-+	case PLL_MX8MP:
-+		/* PLL: BANDGAP_SET: EN_VBG (enable bandgap) */
-+		fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_BANDGAP_SET,
-+				  FSL_XCVR_PLL_BANDGAP_EN_VBG, 0);
-+
-+		/* PLL: CTRL0: DIV_INTEGER */
-+		fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_CTRL0, fsl_xcvr_pll_cfg[i].mfi, 0);
-+		/* PLL: NUMERATOR: MFN */
-+		fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_NUM, fsl_xcvr_pll_cfg[i].mfn, 0);
-+		/* PLL: DENOMINATOR: MFD */
-+		fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_DEN, fsl_xcvr_pll_cfg[i].mfd, 0);
-+		/* PLL: CTRL0_SET: HOLD_RING_OFF, POWER_UP */
- 		fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_CTRL0_SET,
--				  FSL_XCVR_PLL_CTRL0_CM2_EN, 0);
-+				  FSL_XCVR_PLL_CTRL0_HROFF | FSL_XCVR_PLL_CTRL0_PWP, 0);
-+		udelay(25);
-+		/* PLL: CTRL0: Clear Hold Ring Off */
-+		fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_CTRL0_CLR,
-+				  FSL_XCVR_PLL_CTRL0_HROFF, 0);
-+		udelay(100);
-+		if (tx) { /* TX is enabled for SPDIF only */
-+			/* PLL: POSTDIV: PDIV0 */
-+			fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_PDIV,
-+					  FSL_XCVR_PLL_PDIVx(log2, 0), 0);
-+			/* PLL: CTRL_SET: CLKMUX0_EN */
-+			fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_CTRL0_SET,
-+					  FSL_XCVR_PLL_CTRL0_CM0_EN, 0);
-+		} else if (xcvr->mode == FSL_XCVR_MODE_EARC) { /* eARC RX */
-+			/* PLL: POSTDIV: PDIV1 */
-+			fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_PDIV,
-+					  FSL_XCVR_PLL_PDIVx(log2, 1), 0);
-+			/* PLL: CTRL_SET: CLKMUX1_EN */
-+			fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_CTRL0_SET,
-+					  FSL_XCVR_PLL_CTRL0_CM1_EN, 0);
-+		} else { /* SPDIF / ARC RX */
-+			/* PLL: POSTDIV: PDIV2 */
-+			fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_PDIV,
-+					  FSL_XCVR_PLL_PDIVx(log2, 2), 0);
-+			/* PLL: CTRL_SET: CLKMUX2_EN */
-+			fsl_xcvr_ai_write(xcvr, FSL_XCVR_PLL_CTRL0_SET,
-+					  FSL_XCVR_PLL_CTRL0_CM2_EN, 0);
-+		}
-+		break;
-+	case PLL_MX95:
-+		val = fsl_xcvr_pll_cfg[i].mfi << FSL_XCVR_GP_PLL_DIV_MFI_SHIFT | div;
-+		fsl_xcvr_ai_write(xcvr, FSL_XCVR_GP_PLL_DIV, val, 0);
-+		val = fsl_xcvr_pll_cfg[i].mfn << FSL_XCVR_GP_PLL_NUMERATOR_MFN_SHIFT;
-+		fsl_xcvr_ai_write(xcvr, FSL_XCVR_GP_PLL_NUMERATOR, val, 0);
-+		fsl_xcvr_ai_write(xcvr, FSL_XCVR_GP_PLL_DENOMINATOR,
-+				  fsl_xcvr_pll_cfg[i].mfd, 0);
-+		val = FSL_XCVR_GP_PLL_CTRL_POWERUP | FSL_XCVR_GP_PLL_CTRL_CLKMUX_EN;
-+		fsl_xcvr_ai_write(xcvr, FSL_XCVR_GP_PLL_CTRL, val, 0);
-+		break;
-+	default:
-+		dev_err(dev, "Error for PLL version %d\n", xcvr->soc_data->pll_ver);
-+		return -EINVAL;
- 	}
- 
- 	if (xcvr->mode == FSL_XCVR_MODE_EARC) { /* eARC mode */
-@@ -378,7 +402,7 @@ static int fsl_xcvr_en_aud_pll(struct fsl_xcvr *xcvr, u32 freq)
- 		return ret;
- 	}
- 
--	if (xcvr->soc_data->spdif_only)
-+	if (!xcvr->soc_data->use_phy)
- 		return 0;
- 	/* Release AI interface from reset */
- 	ret = regmap_write(xcvr->regmap, FSL_XCVR_PHY_AI_CTRL_SET,
-@@ -1022,7 +1046,7 @@ static bool fsl_xcvr_readable_reg(struct device *dev, unsigned int reg)
- {
- 	struct fsl_xcvr *xcvr = dev_get_drvdata(dev);
- 
--	if (xcvr->soc_data->spdif_only)
-+	if (!xcvr->soc_data->use_phy)
- 		if ((reg >= FSL_XCVR_IER && reg <= FSL_XCVR_PHY_AI_RDATA) ||
- 		    reg > FSL_XCVR_TX_DPTH_BCRR)
- 			return false;
-@@ -1095,7 +1119,7 @@ static bool fsl_xcvr_writeable_reg(struct device *dev, unsigned int reg)
- {
- 	struct fsl_xcvr *xcvr = dev_get_drvdata(dev);
- 
--	if (xcvr->soc_data->spdif_only)
-+	if (!xcvr->soc_data->use_phy)
- 		if (reg >= FSL_XCVR_IER && reg <= FSL_XCVR_PHY_AI_RDATA)
- 			return false;
- 	switch (reg) {
-@@ -1239,6 +1263,8 @@ static irqreturn_t irq0_isr(int irq, void *devid)
- 
- static const struct fsl_xcvr_soc_data fsl_xcvr_imx8mp_data = {
- 	.fw_name = "imx/xcvr/xcvr-imx8mp.bin",
-+	.use_phy = true,
-+	.pll_ver = PLL_MX8MP,
- };
- 
- static const struct fsl_xcvr_soc_data fsl_xcvr_imx93_data = {
-@@ -1246,9 +1272,17 @@ static const struct fsl_xcvr_soc_data fsl_xcvr_imx93_data = {
- 	.use_edma = true,
- };
- 
-+static const struct fsl_xcvr_soc_data fsl_xcvr_imx95_data = {
-+	.spdif_only = true,
-+	.use_phy = true,
-+	.use_edma = true,
-+	.pll_ver = PLL_MX95,
-+};
-+
- static const struct of_device_id fsl_xcvr_dt_ids[] = {
- 	{ .compatible = "fsl,imx8mp-xcvr", .data = &fsl_xcvr_imx8mp_data },
- 	{ .compatible = "fsl,imx93-xcvr", .data = &fsl_xcvr_imx93_data},
-+	{ .compatible = "fsl,imx95-xcvr", .data = &fsl_xcvr_imx95_data},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, fsl_xcvr_dt_ids);
-diff --git a/sound/soc/fsl/fsl_xcvr.h b/sound/soc/fsl/fsl_xcvr.h
-index 044058fc6aa2..882428592e1a 100644
---- a/sound/soc/fsl/fsl_xcvr.h
-+++ b/sound/soc/fsl/fsl_xcvr.h
-@@ -291,4 +291,95 @@
- #define FSL_XCVR_RX_CS_BUFF_1		0xA0 /* Second RX CS buffer */
- #define FSL_XCVR_CAP_DATA_STR		0x300 /* Capabilities data structure */
- 
-+/* GP PLL Registers */
-+#define FSL_XCVR_GP_PLL_CTRL			0x00
-+#define FSL_XCVR_GP_PLL_CTRL_SET		0x04
-+#define FSL_XCVR_GP_PLL_CTRL_CLR		0x08
-+#define FSL_XCVR_GP_PLL_CTRL_TOG		0x0C
-+#define FSL_XCVR_GP_PLL_ANA_PRG			0x10
-+#define FSL_XCVR_GP_PLL_ANA_PRG_SET		0x14
-+#define FSL_XCVR_GP_PLL_ANA_PRG_CLR		0x18
-+#define FSL_XCVR_GP_PLL_ANA_PRG_TOG		0x1C
-+#define FSL_XCVR_GP_PLL_TEST			0x20
-+#define FSL_XCVR_GP_PLL_TEST_SET		0x24
-+#define FSL_XCVR_GP_PLL_TEST_CLR		0x28
-+#define FSL_XCVR_GP_PLL_TEST_TOG		0x2C
-+#define FSL_XCVR_GP_PLL_SPREAD_SPECTRUM		0x30
-+#define FSL_XCVR_GP_PLL_SPREAD_SPECTRUM_SET	0x34
-+#define FSL_XCVR_GP_PLL_SPREAD_SPECTRUM_CLR	0x38
-+#define FSL_XCVR_GP_PLL_SPREAD_SPECTRUM_TOG	0x3C
-+#define FSL_XCVR_GP_PLL_NUMERATOR		0x40
-+#define FSL_XCVR_GP_PLL_NUMERATOR_SET		0x44
-+#define FSL_XCVR_GP_PLL_NUMERATOR_CLR		0x48
-+#define FSL_XCVR_GP_PLL_NUMERATOR_TOG		0x4C
-+#define FSL_XCVR_GP_PLL_DENOMINATOR		0x50
-+#define FSL_XCVR_GP_PLL_DENOMINATOR_SET		0x54
-+#define FSL_XCVR_GP_PLL_DENOMINATOR_CLR		0x58
-+#define FSL_XCVR_GP_PLL_DENOMINATOR_TOG		0x5C
-+#define FSL_XCVR_GP_PLL_DIV			0x60
-+#define FSL_XCVR_GP_PLL_DIV_SET			0x64
-+#define FSL_XCVR_GP_PLL_DIV_CLR			0x68
-+#define FSL_XCVR_GP_PLL_DIV_TOG			0x6C
-+#define FSL_XCVR_GP_PLL_DFS_CTRL0		0x70
-+#define FSL_XCVR_GP_PLL_DFS_CTRL0_SET		0x74
-+#define FSL_XCVR_GP_PLL_DFS_CTRL0_CLR		0x78
-+#define FSL_XCVR_GP_PLL_DFS_CTRL0_TOG		0x7C
-+#define FSL_XCVR_GP_PLL_DFS_DIV0		0x80
-+#define FSL_XCVR_GP_PLL_DFS_DIV0_SET		0x84
-+#define FSL_XCVR_GP_PLL_DFS_DIV0_CLR		0x88
-+#define FSL_XCVR_GP_PLL_DFS_DIV0_TOG		0x8C
-+#define FSL_XCVR_GP_PLL_DFS_CTRL1		0x90
-+#define FSL_XCVR_GP_PLL_DFS_CTRL1_SET		0x94
-+#define FSL_XCVR_GP_PLL_DFS_CTRL1_CLR		0x98
-+#define FSL_XCVR_GP_PLL_DFS_CTRL1_TOG		0x9C
-+#define FSL_XCVR_GP_PLL_DFS_DIV1		0xA0
-+#define FSL_XCVR_GP_PLL_DFS_DIV1_SET		0xA4
-+#define FSL_XCVR_GP_PLL_DFS_DIV1_CLR		0xA8
-+#define FSL_XCVR_GP_PLL_DFS_DIV1_TOG		0xAC
-+#define FSL_XCVR_GP_PLL_DFS_CTRL2		0xB0
-+#define FSL_XCVR_GP_PLL_DFS_CTRL2_SET		0xB4
-+#define FSL_XCVR_GP_PLL_DFS_CTRL2_CLR		0xB8
-+#define FSL_XCVR_GP_PLL_DFS_CTRL2_TOG		0xBC
-+#define FSL_XCVR_GP_PLL_DFS_DIV2		0xC0
-+#define FSL_XCVR_GP_PLL_DFS_DIV2_SET		0xC4
-+#define FSL_XCVR_GP_PLL_DFS_DIV2_CLR		0xC8
-+#define FSL_XCVR_GP_PLL_DFS_DIV2_TOG		0xCC
-+#define FSL_XCVR_GP_PLL_DFS_CTRL3		0xD0
-+#define FSL_XCVR_GP_PLL_DFS_CTRL3_SET		0xD4
-+#define FSL_XCVR_GP_PLL_DFS_CTRL3_CLR		0xD8
-+#define FSL_XCVR_GP_PLL_DFS_CTRL3_TOG		0xDC
-+#define FSL_XCVR_GP_PLL_DFS_DIV3		0xE0
-+#define FSL_XCVR_GP_PLL_DFS_DIV3_SET		0xE4
-+#define FSL_XCVR_GP_PLL_DFS_DIV3_CLR		0xE8
-+#define FSL_XCVR_GP_PLL_DFS_DIV3_TOG		0xEC
-+#define FSL_XCVR_GP_PLL_STATUS			0xF0
-+#define FSL_XCVR_GP_PLL_STATUS_SET		0xF4
-+#define FSL_XCVR_GP_PLL_STATUS_CLR		0xF8
-+#define FSL_XCVR_GP_PLL_STATUS_TOG		0xFC
-+
-+/* GP PLL Control Register */
-+#define FSL_XCVR_GP_PLL_CTRL_LBYPASS		BIT(31)
-+#define FSL_XCVR_GP_PLL_CTRL_HCS		BIT(16)
-+#define FSL_XCVR_GP_PLL_CTRL_MSD		BIT(12)
-+#define FSL_XCVR_GP_PLL_CTRL_DITHER_EN3		BIT(11)
-+#define FSL_XCVR_GP_PLL_CTRL_DITHER_EN2		BIT(10)
-+#define FSL_XCVR_GP_PLL_CTRL_DITHER_EN1		BIT(9)
-+#define FSL_XCVR_GP_PLL_CTRL_SPREADCTL		BIT(8)
-+#define FSL_XCVR_GP_PLL_CTRL_CLKMUX_BYPASS	BIT(2)
-+#define FSL_XCVR_GP_PLL_CTRL_CLKMUX_EN		BIT(1)
-+#define FSL_XCVR_GP_PLL_CTRL_POWERUP		BIT(0)
-+
-+/* GP PLL Numerator Register */
-+#define FSL_XCVR_GP_PLL_NUMERATOR_MFN_SHIFT	2
-+#define FSL_XCVR_GP_PLL_NUMERATOR_MFN		GENMASK(31, 2)
-+
-+/* GP PLL Denominator Register */
-+#define FSL_XCVR_GP_PLL_DENOMINATOR_MFD		GENMASK(29, 0)
-+
-+/* GP PLL Dividers Register */
-+#define FSL_XCVR_GP_PLL_DIV_MFI_SHIFT		16
-+#define FSL_XCVR_GP_PLL_DIV_MFI			GENMASK(24, 16)
-+#define FSL_XCVR_GP_PLL_DIV_RDIV		GENMASK(15, 13)
-+#define FSL_XCVR_GP_PLL_DIV_ODIV		GENMASK(7, 0)
-+
- #endif /* __FSL_XCVR_H */
--- 
-2.34.1
-
+Best Regards,
+Hailong.
