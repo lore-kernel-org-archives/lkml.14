@@ -1,538 +1,165 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7856013C9CA
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 06:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E157C0AB
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 06:52:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715237456; cv=none; b=nYRXN0GkF7+oKcxUYUrU6y3mK0J28f/YUErf+IUUzQo1uK1XMFkTzrC60vgBoqsEenS/fjrzzBrhbhtvU9sCWAv5RdovVlJoBoqtigDGGEN4woHwfKdy/dqzPetZDFxhPRtL5Qhm0ZRXIaSquZzhA3zlXVG2QqM44S8cihcVlUs=
+	t=1715237527; cv=none; b=gm2JzhObTR228A1W//R1vWR2gT1NQgaNw/938j5OQXogssocXf+74aiat7YoMZlG+W5/6E3R8KS7TNqTQk6PzLIjD4GFLYEwD8+BEjpJbEJFNCa4fuG4sbMbl10KrlREfQ+Sk0Bmh0u4IwHxRwXulpMnKDAdu9DYVvZDGuEErg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715237456; c=relaxed/simple;
-	bh=6xdJjoH8iKgPmc9V8+faNqURhaHIK920izcn4AdSfJ0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=nlakvbwrMZEp9Z8uYsYov9vp4m9MaJUXG4VLqHBOGIjFfPdV62y4lTbphkB57R8/yf9lBz4XEowHBoSIGwLTbxH2sC4cJ7h1CpSrq4YwBqQFt+b+8wOqkvt9j0jsISYIZKQx9xF8TeS/QdiGoDdSCCtbjBX6NOolobeypS/pzvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=0LccvNcX; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
+	s=arc-20240116; t=1715237527; c=relaxed/simple;
+	bh=rOxCVpuvUmbACYXpkXKZKRD3h2JXgl6Ma28qOmXdJFk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=L3RaHO3TuqBNzCOss0WOiE4OYhY/pSU7Z5MynDaVLOtS6IaAjfXjoCZGPVl8na0a53eCXe3IKZFjRxZBle5A7UEH5cclF/FWRsRK2YgfnjlqKU0HJU9vXBcXigMen1nAqkQhszqLrKXtsQfzwqiwmMsb+NNv+vgED2qwf9I929w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bcDDk0fh; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="0LccvNcX"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6f4521ad6c0so522873b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 23:50:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bcDDk0fh"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a59cdf7cd78so126420966b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 23:52:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1715237453; x=1715842253; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=dOKfR8Zs+zXZtgGCWke+lQSxlZ4beIJqcgZ7v+DFp4o=;
-        b=0LccvNcXBHIWt4nFFaZL97TXW/W5OKFvmAICIuPbUaVt+Lgfan3XsK5wx5DeHZFbqM
-         lk8QOGTn8+vn4rMIxDyZ7/RuTtGLAqSC2UL7rUWkvePZnhYGiUkXNX+b+kxeaRej2FQR
-         dxlRJoK04QwmS2+2Mf4K4ttBBIFYv2+9uqlfvxrg/CcjJ/R1YYN7yKWJKthS2YH8l7Hf
-         4D1pxpblFtSLdpZg+1W2+AHljKVLCFjj485Gh4sLGALBe0Yfs8uWBipymAarjLWftyOS
-         TzB3Tpy+MVBchcJnaFm71gu+kRl4eSdk64TtTNx2cXP/KRml0kOinraFVw1TV15dCWwa
-         /9mA==
+        d=linaro.org; s=google; t=1715237523; x=1715842323; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7rnP8lifwF80Zq93ecat3fo7l4f28X4MCb0bTfRERyQ=;
+        b=bcDDk0fhV6fH9poBnJOcTWuLPAyx1KxlO484Cdfxdb22oPFkdDivXS6q2VydScC629
+         Zj4hxL5I+Om9eKbpDP//BmeUytn8MJgUW4GF0Qz7bdCP6iwAwjrhmzsF7hVc83EX9iOF
+         eQ+EjWJzYqGeLl0h5w35C5QceYoEi0cVrn+YodrIyhzkxZP0EsiuivEk88+HJHD+n/WR
+         0MmnHIIXws3OEihsEwO4UyUm0I+xmHBBJnTdKyIDUM+LGNX+rs+3ye+srXzvwMb4Mk5n
+         jg7038BeY+r42HrlrLGyPUZr4Xt8nDia4uxF2qrSWscxKz/Tr7Spgp2y6ARYqw6BlPQc
+         PooQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715237453; x=1715842253;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dOKfR8Zs+zXZtgGCWke+lQSxlZ4beIJqcgZ7v+DFp4o=;
-        b=BRHj5qyaZgzwHI4JBQ8hgxheEe4uA8wpPE+2JeYbm/u9loNmhEWhAnYi7iUWz9VKr+
-         oNjxlO1SspFvhr+a9jmTdqhHFVenBSLMK/gBTpnNWMuwpjicfx3AqIikH19Jlc/DEjMj
-         7asZ9YQKWCuUwVhZSV81v1ucnC1IFT8gXaQY/k8OwytnLCxWFyC6Wt4I6YoBwj8YX48d
-         PKZvhLYADRT+N32/PcyEZAUMQBCSmzGKeYK0Adl4KXvPSQbL/VZ9AAEVwsmlF6hDhDYG
-         G9ZnwbifHsPDcECCqN/te7Gmj/v7g4G3Zz8Ws0OgbfjpLNRFZ/ebX3T3/t46XwKxqNMD
-         URLg==
-X-Forwarded-Encrypted: i=1; AJvYcCUEJAHzvFEtKPUNvNmLKUxOItNtHgnNrTo0nK5OrDgyNSaVhANzmf9EXPu5Z3c9Yy6p5ehuNOJ4TTiRXuhIba4J/APoBsOA5nvlnIjM
-X-Gm-Message-State: AOJu0YywYt5a/sNaNhdNR4O5yT8ZJG7w0tCr6Uy83mxf+qN55+SBjbid
-	vs+/QS3+fCLUkAfE9YnhhyhK0jnZK7IuoWl+q7JyHlIThXydwQL5l9m6DLSg4OE=
-X-Google-Smtp-Source: AGHT+IH7oUpRsfY2uAIkkDmR5RlkEVTDwlurUU+E5x1S2CIzGJyPC8OX7gAzhE668xJ1KCj66cJBvA==
-X-Received: by 2002:aa7:8a02:0:b0:6f4:3fe7:7aa9 with SMTP id d2e1a72fcca58-6f49c21341fmr5011948b3a.10.1715237452797;
-        Wed, 08 May 2024 23:50:52 -0700 (PDT)
-Received: from lvzhaoxiong-KLVC-WXX9.huaqin.com ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a84b6bsm633939b3a.74.2024.05.08.23.50.50
+        d=1e100.net; s=20230601; t=1715237523; x=1715842323;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7rnP8lifwF80Zq93ecat3fo7l4f28X4MCb0bTfRERyQ=;
+        b=qrGyU4yCtWUma0xHUwzCRf3fbyGpfkdU+fjAKHGRlFXnurgvTXcUI9PP3RUi1PiV1n
+         uA0DHr6xtwLnAwwTIjPG2fm2XDstinG3Q4XRTtE9gIgn7CPRGf+DtG+BV1y65hjSoRa7
+         04tIWzEg3bG78Padd8xmhy/TkFwlSICNxsikTfpPaR06QNad3TRIVyWlA4l5F1YUm9dF
+         c7hJ9pVifaQJI4bDzAbj1uLoK9Lb/3d0SzgvscM+JGvSZEeV2Uf2W25KP+Zes3lcJ/Km
+         Dlbv0Gh8xPGu0OC1UiDrzEVGGb4fy/4Cfn5AOMdEX1zUzd9giJZQWVwYBOyz4xTk1+Ky
+         m2Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCVpN9uqr2i4V5+HyEgz48oEx/478JMNe6I8kzIKdMC0tQx7Z54EuQ+imscWwADREkor5kGpYd8uEEJRYVAU79YVPaKGHbDSCvduiPIt
+X-Gm-Message-State: AOJu0YxpOVbUAciCxeselWVRbb/JJgl5lAkxbGdrwy6t8S9gmi3BkvyG
+	kqTjH9O7wsuNvMTOLcpQQEgjC+d25hqNOqHDu+aOSJyLqy12uWaXFQE/t3U0Urk=
+X-Google-Smtp-Source: AGHT+IFdc13lszpf7lxX/nmLUxwCIGMYlPf62pSkNTQt4xpiimPjtHkcnxTGJfCijKqU+LZx+421gg==
+X-Received: by 2002:a17:906:3c08:b0:a5a:15ac:13fa with SMTP id a640c23a62f3a-a5a15ac1545mr60104166b.38.1715237522834;
+        Wed, 08 May 2024 23:52:02 -0700 (PDT)
+Received: from [127.0.1.1] ([178.197.206.169])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c81b4sm40730966b.113.2024.05.08.23.52.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 23:50:52 -0700 (PDT)
-From: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-To: dmitry.torokhov@gmail.com,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jikos@kernel.org,
-	benjamin.tissoires@redhat.co,
-	dianders@google.com,
-	hsinyi@google.com
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-Subject: [PATCH v1 2/2] drm/panel: starry: add new panel driver
-Date: Thu,  9 May 2024 14:49:59 +0800
-Message-Id: <20240509064959.23550-3-lvzhaoxiong@huaqin.corp-partner.google.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20240509064959.23550-1-lvzhaoxiong@huaqin.corp-partner.google.com>
-References: <20240509064959.23550-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+        Wed, 08 May 2024 23:52:02 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 0/4] ASoC: qcom: x1e80100: Correct channel mapping
+Date: Thu, 09 May 2024 08:51:51 +0200
+Message-Id: <20240509-asoc-x1e80100-4-channel-mapping-v3-0-6f874552d7b2@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIdyPGYC/43NTQ6CMBCG4auQrh0zLZQfV97DuChlgCbYktY0G
+ MLdLax0pct3Mnm+lQXyhgK7ZCvzFE0wzqbITxnTo7IDgelSM4GiQIkVqOA0LJxq5IhQwP5laYK
+ HmmdjByAlexRtQ2VVs6TMnnqzHAu3e+rRhKfzr2Mw8v36vx05ILRcaJ4TKim762Ss8u7s/MB2P
+ IpPsP4NigRqTX2jylLJSnyB27a9AS0hH3sgAQAA
+To: James Schulman <james.schulman@cirrus.com>, 
+ David Rhodes <david.rhodes@cirrus.com>, 
+ Richard Fitzgerald <rf@opensource.cirrus.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+ Banajit Goswami <bgoswami@quicinc.com>
+Cc: alsa-devel@alsa-project.org, patches@opensource.cirrus.com, 
+ linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Charles Keepax <ckeepax@opensource.cirrus.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2549;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=rOxCVpuvUmbACYXpkXKZKRD3h2JXgl6Ma28qOmXdJFk=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmPHKK+jVIzjueNuFIpjzLc9l0An3OYN7GlvfDY
+ r/bfc0O8A+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjxyigAKCRDBN2bmhouD
+ 1xX3EACFu/Wuja+nxzB5jFUGdRcGxTyLQNgkhNQkHXBONE9jJdNSUm0BlyHE78b6wPVxwiYbuyM
+ kkSxNw0UlZOHUrLn8eSWXDJYVXXOqDFUM5P4TXS3UVPbGguTL5hw6CZJWbDkVTGCgQ7PR1+ghWj
+ J64mXAZdnY+BjQ7PPvP5MpxdfuHIrJu0jcNI6/Jgfam0GDcCADhXHzmITQsjZyjAUhKDolhSpVy
+ Ln1DNg2myYcHCYSb+eZieOC68XEDzDCb5gkdLL95xe+36rXWVgN3obOsVXys4WSiIEXMKse6Lm9
+ NYbCRq/OXov1nG0EFDae55WzY3upKHAGWNib3cGW7UDZ2MUkR7X501nII5BDB0s3SilXNmXmAuM
+ sZT1/pufvqXxCCndfx8fwiarp1LVpwMaeHL262ODAcgSY/TPxQsGWjekujtAIVxJ2FRoounknfk
+ rLN+umADyowLivtNDX/2rNywtuhhPHKVzMZz/wB/MAU6Ik82b9x0EIPawIkZMhnu8ENg9OddgeF
+ LGnFCfSYP3OdxNPG6+Wun3P1mcB5MZmJ3Ujn5nPq0BtnT5r0sO0XkRBDzJSGiIj0v0Q9vte3CiA
+ fywMS6aYF2xRvq94fU4wJgfda3xHAmEI7ktV7xD9UWFCOpRfVdk/c0rM9NmSUzf8x7HGzMx4fza
+ SL4xj09R6U4NphQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-The starry panel is based on ER88577 controller.
-Add a driver for it.
+Hi,
 
-Signed-off-by: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+First patch is a build dependency.
+
+Changes in v3:
+- Add missing Charles' Ack
+- Link to v2: https://lore.kernel.org/r/20240508-asoc-x1e80100-4-channel-mapping-v2-0-ccef9a66a572@linaro.org
+
+Changes in v2:
+- Re-work most of the idea according to Srini comments: set channel
+  mapping for backend DAIs, not frontend.
+- Patch #1: no changes
+- Patch #2 is entirely replaced - now channel mapping is implemented in
+  q6apm-lpass-dais.
+- Patch #3: rework to new approach, but most of the code stays.
+- Patch #4: rework significantly, because only backend DAIs is now
+  affected.
+- Link to v1: https://lore.kernel.org/r/20240507-asoc-x1e80100-4-channel-mapping-v1-0-b12c13e0a55d@linaro.org
+
+Description
+===========
+X1E80100 CRD is the first board, which comes with four speakers, so we
+still keep fixing and adding missing pieces.
+
+The board has speaker arranged as left front+back and then right
+front+back.  Using default channel mapping causes front right speaker to
+play left back stream.
+
+Adjust the channel maps for frontend DAIs to fix stereo and four-channel
+playback.
+
+Best regards,
+Krzysztof
+
 ---
- drivers/gpu/drm/panel/panel-starry-er88577.c | 444 +++++++++++++++++++
- 1 file changed, 444 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-starry-er88577.c
+Krzysztof Kozlowski (4):
+      ASoC: Constify channel mapping array arguments in set_channel_map()
+      ASoC: qcom: q6apm-lpass-dais: Implement proper channel mapping
+      ASoC: qcom: qdsp6: Set channel mapping instead of fixed defaults
+      ASoC: qcom: x1e80100: Correct channel mapping
 
-diff --git a/drivers/gpu/drm/panel/panel-starry-er88577.c b/drivers/gpu/drm/panel/panel-starry-er88577.c
-new file mode 100644
-index 000000000000..dfeae549adc5
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-starry-er88577.c
-@@ -0,0 +1,444 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Panels based on the ER88577B display controller.
-+ * Author: Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <drm/drm_connector.h>
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_panel.h>
-+
-+#include <video/mipi_display.h>
-+
-+struct panel_desc {
-+	const struct drm_display_mode *modes;
-+	unsigned int bpc;
-+
-+	/**
-+	 * @width_mm: width of the panel's active display area
-+	 * @height_mm: height of the panel's active display area
-+	 */
-+	struct {
-+		unsigned int width_mm;
-+		unsigned int height_mm;
-+	} size;
-+
-+	unsigned long mode_flags;
-+	enum mipi_dsi_pixel_format format;
-+	const struct panel_init_cmd *init_cmds;
-+	unsigned int lanes;
-+	bool discharge_on_disable;
-+	bool lp11_before_reset;
-+};
-+
-+struct starry_panel {
-+	struct drm_panel base;
-+	struct mipi_dsi_device *dsi;
-+
-+	const struct panel_desc *desc;
-+
-+	enum drm_panel_orientation orientation;
-+	struct regulator *pp3300;
-+	struct gpio_desc *enable_gpio;
-+};
-+
-+enum dsi_cmd_type {
-+	INIT_DCS_CMD,
-+	DELAY_CMD,
-+};
-+
-+struct panel_init_cmd {
-+	enum dsi_cmd_type type;
-+	size_t len;
-+	const char *data;
-+};
-+
-+#define _INIT_DCS_CMD(...) { \
-+	.type = INIT_DCS_CMD, \
-+	.len = sizeof((char[]){__VA_ARGS__}), \
-+	.data = (char[]){__VA_ARGS__} }
-+
-+#define _INIT_DELAY_CMD(...) { \
-+	.type = DELAY_CMD,\
-+	.len = sizeof((char[]){__VA_ARGS__}), \
-+	.data = (char[]){__VA_ARGS__} }
-+
-+static const struct panel_init_cmd starry_er88577_init_cmd[] = {
-+	_INIT_DELAY_CMD(120),
-+	_INIT_DCS_CMD(0xE0, 0xAB, 0xBA),
-+	_INIT_DCS_CMD(0xE1, 0xBA, 0xAB),
-+	_INIT_DCS_CMD(0xB1, 0x10, 0x01, 0x47, 0xFF),
-+	_INIT_DCS_CMD(0xB2, 0x0C, 0x14, 0x04, 0x50, 0x50, 0x14),
-+	_INIT_DCS_CMD(0xB3, 0x56, 0x53, 0x00),
-+	_INIT_DCS_CMD(0xB4, 0x33, 0x30, 0x04),
-+	_INIT_DCS_CMD(0xB6, 0xB0, 0x00, 0x00, 0x10, 0x00, 0x10, 0x00),
-+	_INIT_DCS_CMD(0xB8, 0x05, 0x12, 0x29, 0x49, 0x40),
-+	_INIT_DCS_CMD(0xB9, 0x7C, 0x61, 0x4F, 0x42, 0x3E, 0x2D, 0x31, 0x1A, 0x33, 0x33, 0x33, 0x52, 0x40, 0x47, 0x38, 0x34, 0x26, 0x0E, 0x06, 0x7C, 0x61, 0x4F, 0x42, 0x3E, 0x2D, 0x31, 0x1A, 0x33, 0x33, 0x33, 0x52, 0x40, 0x47, 0x38, 0x34, 0x26, 0x0E, 0x06),
-+	_INIT_DCS_CMD(0xC0, 0xCC, 0x76, 0x12, 0x34, 0x44, 0x44, 0x44, 0x44, 0x98, 0x04, 0x98, 0x04, 0x0F, 0x00, 0x00, 0xC1),
-+	_INIT_DCS_CMD(0xC1, 0x54, 0x94, 0x02, 0x85, 0x9F, 0x00, 0x6F, 0x00, 0x54, 0x00),
-+	_INIT_DCS_CMD(0xC2, 0x17, 0x09, 0x08, 0x89, 0x08, 0x11, 0x22, 0x20, 0x44, 0xFF, 0x18, 0x00),
-+	_INIT_DCS_CMD(0xC3, 0x87, 0x47, 0x05, 0x05, 0x1C, 0x1C, 0x1D, 0x1D, 0x02, 0x1E, 0x1E, 0x1F, 0x1F, 0x0F, 0x0F, 0x0D, 0x0D, 0x13, 0x13, 0x11, 0x11, 0x24),
-+	_INIT_DCS_CMD(0xC4, 0x06, 0x06, 0x04, 0x04, 0x1C, 0x1C, 0x1D, 0x1D, 0x02, 0x1E, 0x1E, 0x1F, 0x1F, 0x0E, 0x0E, 0x0C, 0x0C, 0x12, 0x12, 0x10, 0x10, 0x24),
-+
-+	_INIT_DCS_CMD(0xC8, 0x21, 0x00, 0x31, 0x42, 0x34, 0x16),
-+	_INIT_DCS_CMD(0xCA, 0xCB, 0x43),
-+	_INIT_DCS_CMD(0xCD, 0x0E, 0x4B, 0x4B, 0x20, 0x19, 0x6B, 0x06, 0xB3),
-+	_INIT_DCS_CMD(0xD2, 0xE3, 0x2B, 0x38, 0x08),
-+	_INIT_DCS_CMD(0xD4, 0x00, 0x01, 0x00, 0x0E, 0x04, 0x44, 0x08, 0x10, 0x00, 0x00, 0x00),
-+	_INIT_DCS_CMD(0xE6, 0x80, 0x09, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF),
-+	_INIT_DCS_CMD(0xF0, 0x12, 0x03, 0x20, 0x00, 0xFF),
-+	_INIT_DCS_CMD(0xF3, 0x00),
-+
-+	_INIT_DCS_CMD(0X11),
-+	_INIT_DELAY_CMD(120),
-+	_INIT_DCS_CMD(0X29),
-+	_INIT_DELAY_CMD(20),
-+	{},
-+};
-+
-+static inline struct starry_panel *to_starry_panel(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct starry_panel, base);
-+}
-+
-+static int starry_panel_init_dcs_cmd(struct starry_panel *starry)
-+{
-+	struct mipi_dsi_device *dsi = starry->dsi;
-+	struct drm_panel *panel = &starry->base;
-+	int i, err = 0;
-+
-+	if (starry->desc->init_cmds) {
-+		const struct panel_init_cmd *init_cmds = starry->desc->init_cmds;
-+
-+		for (i = 0; init_cmds[i].len != 0; i++) {
-+			const struct panel_init_cmd *cmd = &init_cmds[i];
-+
-+			switch (cmd->type) {
-+			case DELAY_CMD:
-+				msleep(cmd->data[0]);
-+				err = 0;
-+				break;
-+
-+			case INIT_DCS_CMD:
-+				err = mipi_dsi_dcs_write(dsi, cmd->data[0],
-+							 cmd->len <= 1 ? NULL :
-+							 &cmd->data[1],
-+							 cmd->len - 1);
-+				break;
-+
-+			default:
-+				err = -EINVAL;
-+			}
-+
-+			if (err < 0) {
-+				dev_err(panel->dev,
-+					"failed to write command %u\n", i);
-+				return err;
-+			}
-+		}
-+	}
-+	return 0;
-+}
-+
-+static int starry_panel_enter_sleep_mode(struct starry_panel *starry)
-+{
-+	struct mipi_dsi_device *dsi = starry->dsi;
-+	int ret;
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	usleep_range(1000, 2000);
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int starry_panel_disable(struct drm_panel *panel)
-+{
-+	struct starry_panel *starry = to_starry_panel(panel);
-+	int ret;
-+
-+	ret = starry_panel_enter_sleep_mode(starry);
-+	if (ret < 0) {
-+		dev_err(panel->dev, "failed to set panel off: %d\n", ret);
-+		return ret;
-+	}
-+
-+	msleep(120);
-+
-+	return 0;
-+}
-+
-+static int starry_panel_unprepare(struct drm_panel *panel)
-+{
-+	struct starry_panel *starry = to_starry_panel(panel);
-+	int err;
-+/*
-+	err = mipi_dsi_dcs_enter_sleep_mode(starry->dsi);
-+	if (err < 0) {
-+		dev_err(panel->dev, "failed to enter sleep mode: %d\n", err);
-+		return err;
-+	}
-+*/
-+	gpiod_set_value_cansleep(starry->enable_gpio, 0);
-+
-+	/* T15: 2ms */
-+	usleep_range(1000, 2000);
-+
-+	err = regulator_disable(starry->pp3300);
-+	if (err < 0)
-+		return err;
-+
-+	return 0;
-+}
-+
-+static int starry_panel_prepare(struct drm_panel *panel)
-+{
-+	struct starry_panel *starry = to_starry_panel(panel);
-+	int ret;
-+
-+	gpiod_set_value(starry->enable_gpio, 0);
-+
-+	printk(KERN_ERR "lvzhaoxiong--1");
-+
-+	ret = regulator_enable(starry->pp3300);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* T1: 5ms */
-+	usleep_range(5000, 6000);
-+
-+	if (starry->desc->lp11_before_reset) {
-+		mipi_dsi_dcs_nop(starry->dsi);
-+		usleep_range(1000, 2000);
-+	}
-+	printk(KERN_ERR "lvzhaoxiong--3");
-+
-+	/* T: 60ms*/
-+	msleep(60);
-+
-+	gpiod_set_value_cansleep(starry->enable_gpio, 1);
-+
-+	ret = starry_panel_init_dcs_cmd(starry);
-+	if (ret < 0) {
-+		dev_err(panel->dev, "failed to init panel: %d\n", ret);
-+		goto poweroff;
-+	}
-+	printk(KERN_ERR "lvzhaoxiong--3");
-+
-+	return 0;
-+
-+poweroff:
-+	regulator_disable(starry->pp3300);
-+		/* T6: 2ms */
-+	usleep_range(1000, 2000);
-+	gpiod_set_value(starry->enable_gpio, 0);
-+
-+	return ret;
-+}
-+
-+static int starry_panel_enable(struct drm_panel *panel)
-+{
-+	msleep(130);
-+	return 0;
-+}
-+
-+static const struct drm_display_mode starry_er88577_default_mode = {
-+	.clock = 77380,
-+	.hdisplay = 800,
-+	.hsync_start = 800 + 80,
-+	.hsync_end = 800 + 80 + 20,
-+	.htotal = 800 + 80 + 20 + 80,
-+	.vdisplay = 1280,
-+	.vsync_start = 1280 + 20,
-+	.vsync_end = 1280 + 20 + 4,
-+	.vtotal = 1280 + 20 + 4 + 12,
-+	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-+};
-+
-+static const struct panel_desc starry_er88577_desc = {
-+	.modes = &starry_er88577_default_mode,
-+	.bpc = 8,
-+	.size = {
-+		.width_mm = 135,
-+		.height_mm = 216,
-+	},
-+	.lanes = 4,
-+	.format = MIPI_DSI_FMT_RGB888,
-+	.mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_SYNC_PULSE |
-+		      MIPI_DSI_MODE_LPM,
-+	.init_cmds = starry_er88577_init_cmd,
-+	.lp11_before_reset = true,
-+};
-+
-+static int starry_panel_get_modes(struct drm_panel *panel,
-+			       struct drm_connector *connector)
-+{
-+	struct starry_panel *starry = to_starry_panel(panel);
-+	const struct drm_display_mode *m = starry->desc->modes;
-+	struct drm_display_mode *mode;
-+
-+	mode = drm_mode_duplicate(connector->dev, m);
-+	if (!mode) {
-+		dev_err(panel->dev, "failed to add mode %ux%u@%u\n",
-+			m->hdisplay, m->vdisplay, drm_mode_vrefresh(m));
-+		return -ENOMEM;
-+	}
-+
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+	drm_mode_set_name(mode);
-+	drm_mode_probed_add(connector, mode);
-+
-+	connector->display_info.width_mm = starry->desc->size.width_mm;
-+	connector->display_info.height_mm = starry->desc->size.height_mm;
-+	connector->display_info.bpc = starry->desc->bpc;
-+
-+	return 1;
-+}
-+
-+static enum drm_panel_orientation starry_panel_get_orientation(struct drm_panel *panel)
-+{
-+	struct starry_panel *starry = to_starry_panel(panel);
-+
-+	return starry->orientation;
-+}
-+
-+static const struct drm_panel_funcs starry_panel_funcs = {
-+	.disable = starry_panel_disable,
-+	.unprepare = starry_panel_unprepare,
-+	.prepare = starry_panel_prepare,
-+	.enable = starry_panel_enable,
-+	.get_modes = starry_panel_get_modes,
-+	.get_orientation = starry_panel_get_orientation,
-+};
-+
-+static int starry_panel_add(struct starry_panel *starry)
-+{
-+	struct device *dev = &starry->dsi->dev;
-+	int err;
-+
-+	starry->pp3300 = devm_regulator_get(dev, "pp3300");
-+	if (IS_ERR(starry->pp3300))
-+		return PTR_ERR(starry->pp3300);
-+
-+
-+	starry->enable_gpio = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
-+	if (IS_ERR(starry->enable_gpio)) {
-+		dev_err(dev, "cannot get reset-gpios %ld\n",
-+			PTR_ERR(starry->enable_gpio));
-+		return PTR_ERR(starry->enable_gpio);
-+	}
-+
-+	gpiod_set_value(starry->enable_gpio, 0);
-+
-+	drm_panel_init(&starry->base, dev, &starry_panel_funcs,
-+		       DRM_MODE_CONNECTOR_DSI);
-+	err = of_drm_get_panel_orientation(dev->of_node, &starry->orientation);
-+	if (err < 0) {
-+		dev_err(dev, "%pOF: failed to get orientation %d\n", dev->of_node, err);
-+		return err;
-+	}
-+
-+	err = drm_panel_of_backlight(&starry->base);
-+	if (err)
-+		return err;
-+
-+	starry->base.funcs = &starry_panel_funcs;
-+	starry->base.dev = &starry->dsi->dev;
-+
-+	drm_panel_add(&starry->base);
-+
-+	return 0;
-+}
-+
-+static int starry_panel_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct starry_panel *starry;
-+	int ret;
-+	const struct panel_desc *desc;
-+
-+	starry = devm_kzalloc(&dsi->dev, sizeof(*starry), GFP_KERNEL);
-+	if (!starry)
-+		return -ENOMEM;
-+
-+	desc = of_device_get_match_data(&dsi->dev);
-+	dsi->lanes = desc->lanes;
-+	dsi->format = desc->format;
-+	dsi->mode_flags = desc->mode_flags;
-+	starry->desc = desc;
-+	starry->dsi = dsi;
-+	ret = starry_panel_add(starry);
-+	if (ret < 0)
-+		return ret;
-+
-+	mipi_dsi_set_drvdata(dsi, starry);
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret)
-+		drm_panel_remove(&starry->base);
-+
-+	printk(KERN_ERR "lvzhaoxiong--0");
-+
-+	return ret;
-+}
-+
-+static void starry_panel_shutdown(struct mipi_dsi_device *dsi)
-+{
-+	struct starry_panel *starry = mipi_dsi_get_drvdata(dsi);
-+
-+	drm_panel_disable(&starry->base);
-+	drm_panel_unprepare(&starry->base);
-+}
-+
-+static void starry_panel_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct starry_panel *starry = mipi_dsi_get_drvdata(dsi);
-+	int ret;
-+
-+	starry_panel_shutdown(dsi);
-+
-+	ret = mipi_dsi_detach(dsi);
-+	if (ret < 0)
-+		dev_err(&dsi->dev, "failed to detach from DSI host: %d\n", ret);
-+
-+	if (starry->base.dev)
-+		drm_panel_remove(&starry->base);
-+}
-+
-+static const struct of_device_id starry_of_match[] = {
-+	{ .compatible = "starry,er88577",
-+	  .data = &starry_er88577_desc
-+	},
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, starry_of_match);
-+
-+static struct mipi_dsi_driver starry_panel_driver = {
-+	.driver = {
-+		.name = "panel-starry-er88577",
-+		.of_match_table = starry_of_match,
-+	},
-+	.probe = starry_panel_probe,
-+	.remove = starry_panel_remove,
-+	.shutdown = starry_panel_shutdown,
-+};
-+module_mipi_dsi_driver(starry_panel_driver);
-+
-+MODULE_AUTHOR("Zhaoxiong Lv <lvzhaoxiong@huaqin.corp-partner.google.com>");
-+MODULE_DESCRIPTION("starry er88577b 800x1280 video mode panel driver");
-+MODULE_LICENSE("GPL v2");
+ include/sound/cs35l41.h                 |  4 ++--
+ include/sound/soc-dai.h                 |  8 ++++----
+ sound/soc/codecs/adau7118.c             |  6 ++++--
+ sound/soc/codecs/cs35l41-lib.c          |  4 ++--
+ sound/soc/codecs/cs35l41.c              |  3 ++-
+ sound/soc/codecs/max98504.c             |  6 ++++--
+ sound/soc/codecs/wcd9335.c              |  6 ++++--
+ sound/soc/codecs/wcd934x.c              |  6 ++++--
+ sound/soc/qcom/qdsp6/audioreach.c       | 30 +++++++-----------------------
+ sound/soc/qcom/qdsp6/audioreach.h       |  2 +-
+ sound/soc/qcom/qdsp6/q6afe-dai.c        | 16 ++++++++++------
+ sound/soc/qcom/qdsp6/q6apm-dai.c        |  2 ++
+ sound/soc/qcom/qdsp6/q6apm-lpass-dais.c | 21 +++++++++++++--------
+ sound/soc/qcom/x1e80100.c               | 18 ++++++++++++++++++
+ sound/soc/soc-dai.c                     |  4 ++--
+ 15 files changed, 79 insertions(+), 57 deletions(-)
+---
+base-commit: 2b84edefcad14934796fad37b16512b6a2ca467e
+change-id: 20240507-asoc-x1e80100-4-channel-mapping-ea5f02b9e678
+
+Best regards,
 -- 
-2.17.1
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
