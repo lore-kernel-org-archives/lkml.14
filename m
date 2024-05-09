@@ -1,107 +1,158 @@
-Received: from submarine.notk.org (62-210-214-84.rev.poneytelecom.eu [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E810F1292CF;
-	Thu,  9 May 2024 21:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from mail-oo1-f48.google.com (mail-oo1-f48.google.com [209.85.161.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C2F51292E6
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 22:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715291973; cv=none; b=LaY44bBGBHP63n3XLuTEiz/CO+3UnUolzxW62CGSdccFx7o+ZLfCOuT59Uyp46heH+/9Tn2E70FWlIBDMHzN2mUNuTgxBYNC1FaHP9VVbVhI9bzvCMYl/GjpqOr7wp1b3oRTzQaVJr8GpCgYL8oHtwbBBSzpvAGIgj+XniZ+LZg=
+	t=1715292090; cv=none; b=ujYznMJOWt/9LiGsMeVnif2GL/w/1Hmuh25fhg1jXHL16oaPw7mcU20qGy4dPp4aG8F2ArHHEgMSYqvRsfPSKWnlNvCVib1Sh3c2sJiHV5Ef8/ZUWgFVwlFnj0Yhc9CVZ3OuQVNypRgszeFmf4SESamzgKA00YtkTTg9+rMHlmM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715291973; c=relaxed/simple;
-	bh=vQTSqcXkDJPaIBbcnpAEzAyTOeOOsBcfw+OQRd5OE80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tATYds8wxdUXg7cYJZBhIXZlJprS1kXVJtU85JTa4frr2gb2fjwtT4e6LHcsucRSMexe+2naTAuIe+p1SPtpjIoV+PchgQjJD324x/7A+OqFy41rIf8P6xgrAGk8rzY3ALoQDGPCnE+4SXTcqPnT9dH3evCzG+wM//pCQSNrYMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=Djm6UYGC; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	s=arc-20240116; t=1715292090; c=relaxed/simple;
+	bh=eTFM0lR+pV19/1K9nIEi52f8o0e9EXmBU+po3xooddM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rJGlKqqJY+fRi84EF6079lquYF8tLsi8sEfppAay3NP4iYDR66kwrOr76W7SCE1RdwCbEqwSEZSARwZCfvNhcI71TCMmagVIJJaqWtpijHAJuJuQNOwmVVnhaCVNHvaRUSz0UVhPhgydYwhU6Y6AEJVvWIP9swVFNuY5tcaHXzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XbODzUHS; arc=none smtp.client-ip=209.85.161.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="Djm6UYGC"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 0229B14C2DB;
-	Thu,  9 May 2024 23:59:24 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1715291968;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0iPoojjKgcH+TQ6GRd67EtYx4kNvRFbwZWP5w+OBCKw=;
-	b=Djm6UYGCuu4rndXevZy7UP2V8BnEec3M++zEJPI9+UUWspmBHME3aJJgPzG0EtX/Qbakl+
-	fUD3h3feYQuTeH3vT5gZNg57//xeLlImnRxZhccjywu8anD1O4dP7HZf1JfLL9cp9SFhpP
-	A+HA0ljILkymtIQsNriFR/NVrFPpIXk2nKHNe8mTO4xGwl58xuIFbe0xnwnEWQLkOvJqb2
-	nL/8ROkwZtDeimF4aNo18n90M3ytNfXk3RxjCosx90mdkIpqyqqq2FAMWdj5/wcOoZTued
-	JA9gvEOBDA4a2I4SAOBgHNVOeA981BsnbJ+4YnF4tzHbSZp0S5UqUmng7r+mrg==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id d6740ee3;
-	Thu, 9 May 2024 21:59:20 +0000 (UTC)
-Date: Fri, 10 May 2024 06:59:05 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] perf parse-events: pass parse_state to
- add_tracepoint
-Message-ID: <Zj1HKQVuQDQtk5cK@codewreck.org>
-References: <20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org>
- <20240505-perf_digit-v2-1-6ece307fdaad@codewreck.org>
- <CAP-5=fUmeyd3BR7njJEDQ-=qkpvLPMoQO-7De+3mqLaSOoZZxw@mail.gmail.com>
- <Zj0--YbYSm-s9vRh@x1>
- <Zj1EK8cO-Vxc-YuJ@x1>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XbODzUHS"
+Received: by mail-oo1-f48.google.com with SMTP id 006d021491bc7-5aa28cde736so805777eaf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 15:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715292087; x=1715896887; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qZVCnwpSsnSCs9fQXtvRvnFquz+a/pLR0kXJSXFyRYE=;
+        b=XbODzUHSPCAZhBqt2SCVvCf2VPGhkSGFf6gmm8wKt+o8qaLjb9NSt4jLzgQeNuTtXZ
+         8ZFtmeiPDNW+yj5NFZcI3lKGFJ415mhpt633jFbucX/CfxJnIShu8DlonsMefnwe8kr6
+         PWb/fJyhMm9NSMjE4Ockm2DWyRVlchgwTSundHb7eG1qTEKTrZv5lI59fpvYw2vGoFv9
+         HhyS++rud5bRn3Tq5oYNEz8IOeeKc3viailTQ8ONN9z737Kpx7p3O3ZxTQ2NI/bYNcac
+         vp36tYTk6jHTdYGRlLzdjmWYEHnhdVwZWfHc2oDjhut6qSH591SLoILXDINjOlyjjdV3
+         NKFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715292087; x=1715896887;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qZVCnwpSsnSCs9fQXtvRvnFquz+a/pLR0kXJSXFyRYE=;
+        b=A/pwlTjXLgZKMcacFXnOo4AbODw8Fc3RDi6TxnmbBXU8ea+FcaxJ/Trk/Ci4+22RtW
+         4WMbtZ3OZ70bhXRuOiRjTbs1uhusaOgZ58sbJg2aoh83fWKGprj8fEv1NFBL7Mr6HA1i
+         K1WSTPfLlKsr1r+IKAKkR+zEvvWdmoQoWnKwSvrqnNf/mfUK3oCNKhmOF7x2OG4ew8EA
+         rN5Ao2/+VokDqV2KsV6O/B+smk7/ondiQIJvFBggzLpehGDhhSwgJTWNUjl769uj2M+/
+         HdQ/uPARSFPHbFyhraKDn0kjJePUFtmjng63v/ZMyM389bntZ+5wWyynPo4D2pr6p4PK
+         bI3A==
+X-Forwarded-Encrypted: i=1; AJvYcCUSp0n/Sh0mgfGu+mMFWAudVQ9+P89QWW9CEwvvu5vNT9gdMr5tjxkXGmovlrgKbnU/7mXmFSAZgciyMCXhQUir/q2AAJBZv14UYGbk
+X-Gm-Message-State: AOJu0Yz4uJPfTXPRtJYeIh1s/qBU60GPysvXNT7kkOizryHV4sm6iaph
+	dNr1oOU+78PZrfoXaU1EE8EbH7Nx8gWLsU/2zKszg6mvrtI94DWbGYd5JXjbrlREs7DF9wp349n
+	DOxaUXca+5sdfpi/vSoU780FsB3LzWC8iQ/+w
+X-Google-Smtp-Source: AGHT+IFpfKHeAJ/sLsyM3Lqv/tlwttE2S4Wv1c320CoQA2YSLvZHSj8nXYLIh/V4Chy5bfd4fN2VsBQBoGoTLlan748=
+X-Received: by 2002:a05:6358:7e41:b0:17e:bfb8:dd86 with SMTP id
+ e5c5f4694b2df-193bb401498mr92029755d.3.1715292087108; Thu, 09 May 2024
+ 15:01:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zj1EK8cO-Vxc-YuJ@x1>
+References: <20240506-b4-sio-scrollback-delta-v1-1-4164d162a2b8@google.com> <f7775510-09d8-41ef-97b2-0457e721a9ec@kernel.org>
+In-Reply-To: <f7775510-09d8-41ef-97b2-0457e721a9ec@kernel.org>
+From: Justin Stitt <justinstitt@google.com>
+Date: Thu, 9 May 2024 15:01:14 -0700
+Message-ID: <CAFhGd8qkYYQZi37Tsj-V5pN5S4xhcyUeAZj1of2kTXG+EtVMgg@mail.gmail.com>
+Subject: Re: [PATCH] tty: vt: saturate scrollback_delta to avoid overflow
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Arnaldo Carvalho de Melo wrote on Thu, May 09, 2024 at 06:46:19PM -0300:
-> ⬢[acme@toolbox perf-tools-next]$ git log --oneline -1 ; time make -C tools/perf build-test
-> [...]
-> tests/parse-events.c:2274:26: error: ‘test__checkevent_tracepoint’ undeclared here (not in a function); did you mean ‘test__checkevent_breakpoint’?
->  2274 |                 .check = test__checkevent_tracepoint,
->       |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~
->       |                          test__checkevent_breakpoint
-> make[6]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:105: tests/parse-events.o] Error 1
-> make[6]: *** Waiting for unfinished jobs....
+Hi,
 
-Sorry, didn't know about build-test; I've confirmed the problem [and
-will eventually want to check how to build this cleanly on nixos, it's a
-pain to shuffle the patch around to rebuild perf...]
+On Wed, May 8, 2024 at 11:31=E2=80=AFPM Jiri Slaby <jirislaby@kernel.org> w=
+rote:
+>
+>
+> And what is actually broken, given signed overflow is well defined under
+> the -fwrapv wings?
+>
+
+well-defined code can still be broken.
+
+We want to better safeguard against accidental overflow as this is the
+root cause of many bugs/vulnerabilities. So, in this spirit, we
+recently enhanced the signed-integer-overflow sanitizer and its
+ability to function with -fwrapv enabled [1]. On the Kernel side of
+things, Kees' tree [2] has done a lot of the groundwork to get this
+sanitizer enabled and less noisy.
+
+WIth all that being said, my solution to this problem in this
+particular instance is not the most elegant, as you rightly pointed
+out.
 
 
-It looks like the test case just needs an extra ifdef for
-LIBTRACEEVEENT?
+> > diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> > index 9b5b98dfc8b4..b4768336868e 100644
+> > --- a/drivers/tty/vt/vt.c
+> > +++ b/drivers/tty/vt/vt.c
+> > @@ -308,7 +308,14 @@ static inline void scrolldelta(int lines)
+> >       /* FIXME */
+> >       /* scrolldelta needs some kind of consistency lock, but the BKL w=
+as
+> >          and still is not protecting versus the scheduled back end */
+> > -     scrollback_delta +=3D lines;
+> > +
+> > +     /* saturate scrollback_delta so that it never wraps around */
+> > +     if (lines > 0 && unlikely(INT_MAX - lines < scrollback_delta))
+> > +             scrollback_delta =3D INT_MAX;
+> > +     else if (lines < 0 && unlikely(INT_MIN - lines > scrollback_delta=
+))
+> > +             scrollback_delta =3D INT_MIN;
+> > +     else
+> > +             scrollback_delta +=3D lines;
+>
+> NACK, this is horrid.
 
-----
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index 417d4782a520..edc2adcf1bae 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -2269,11 +2269,13 @@ static const struct evlist_test test__events[] = {
- 		.check = test__checkevent_breakpoint_2_events,
- 		/* 3 */
- 	},
-+#ifdef HAVE_LIBTRACEEVENT
- 	{
- 		.name = "9p:9p_client_req",
- 		.check = test__checkevent_tracepoint,
- 		/* 4 */
- 	},
-+#endif
- };
- 
- static const struct evlist_test test__events_pmu[] = {
-----
+Agreed.
 
-I'll send a v4 with that rolled in after confirming the full build-test
-passes.
+Does an implementation like this look any better?
 
--- 
-Dominique Martinet | Asmadeus
+static inline void scrolldelta(int lines)
+{
+        ...
+        /* saturate scrollback_delta so that it never wraps around */
+        if (lines > 0)
+                scrollback_delta =3D min(scrollback_delta, INT_MAX -
+lines) + lines;
+        else
+                scrollback_delta =3D max(scrollback_delta, INT_MIN -
+lines) + lines;
+        schedule_console_callback();
+}
+
+Accounting for the possibility of both underflow and overflow is what
+is making this code a bit bloated but if this new approach looks good
+enough I can send a v2.
+
+>
+> Introduce a helper for this in overflow.h if we have none yet.
+
+We have these but for unsigned (size_t) types. I'm open to adding
+signed_saturating_add(addend1, addend2, ceiling, floor) or something
+similar.
+
+>
+> thanks,
+> --
+> js
+> suse labs
+>
+
+[1]: https://github.com/llvm/llvm-project/pull/82432
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=
+=3Ddev/v6.8-rc2/signed-overflow-sanitizer
+
+Thanks
+Justin
