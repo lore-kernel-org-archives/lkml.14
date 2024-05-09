@@ -1,125 +1,148 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEB314BF92;
-	Thu,  9 May 2024 12:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADC3E14C596;
+	Thu,  9 May 2024 12:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715256449; cv=none; b=cwHzmoR8NHihal9kgyoqsTgwcd+RIWNo4vP3jcNN0FjJ+4LtygfbRqj7y7kLi8SJnaBpJqdKZbUnVy2gfbsxX9LXeN1Q8Je/flmWTQaxpsVeQuXYvnm6QpL+4HP4lA7eFiPtET+ELuRds9VPigS2tDvGrPu/eZidrmKaS8i1F6g=
+	t=1715256449; cv=none; b=eOslDjA0kQR5Gh2+xKjQoPkNb8PpuY8YJNSlN9v1wdyH/6lLSI02Fo0o0SqvdLGanZ2paVLWzDOuVMAmItMOl+avCJRKFK4L4C2E4TnZEaBGDyhQ+XtFSI8wslJImYfmpXDif9o3jxuwMRXVCBA0KSOEST47Qw+1f4oCHvgLkEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715256449; c=relaxed/simple;
-	bh=b3Lw6QyOOe/F0A2wbbC5aMnHbGBJhpHoP64jYjfjjKA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fKrwhfOG01DriXHhOOFUJGxMzMFRHI3Ddmu8LRb8bkm0tiCXQmDwX3frvdMWDipbKYCHcDhZ8MahVaINpL0pXW+ZW9HyZAVOllIgx3BRCewj5BNIWp1HByVSK6oUKSfOh2Drjy92tiZnkwGXM6rvMZGlOkhL3bq5gcQ71zYeJpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AB4+tWfl; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	bh=FVF1vPUJcgITD5TmHRdOszxgJ3LOiez8Bu93Wt/3l4Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=g+rttXlHMKGot8Ipf90/LN23koqtE0n49/5dCQ9qN4SmJ9uCDe9GCpYMBfEW4AQ3XwTxi1vDu80U3H9wvVapUDcgD0/+kYQ4l8SCE8Zx/05dXKZTNeQFVVQl1tCV6DZHnGGK2Q2AjoM5Jg+wi2SD1bmsFoF9s26z93tf7eLLKzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bFgScjXV; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AB4+tWfl"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 449AwH8o010769;
-	Thu, 9 May 2024 12:07:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=pp1;
- bh=wB/RWoAJV2Kfx9dgeYhfSibcvHgEFIlPM4CBDF2TtHk=;
- b=AB4+tWfl8spiWQqwneYWVcKOFIuDl7ua2n1SJa74QISK6sCl52gpfiL0C75UqSxDdxyt
- Xjea4wpL11Tnh8N+nChF0DlaR2xoQ4bHbFo+aFas64Knuv30aG6Xe0yxFOTZUcngZlVp
- 1psr2jPtxGTN/QUwsELFfBfCKqxuSZ040fI722yz8KgN+/HSf4qwpWs55vLyaC765JBi
- 68+nrfGF2D8emaHwK6OuQ0rwZCLYH09MRsdcPGpGxxBMA5RHV/xh4CGCHx6ClQQ5ss1/
- lgDmshvKYr+XqVJ9uXVYwosupxw+dcla/FFUs7Vd1FFTsQODipPPTyWl2WNiIqI4zgyI Yg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y0w6rg4ub-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 12:07:06 +0000
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 449C76je020859;
-	Thu, 9 May 2024 12:07:06 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y0w6rg4u7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 12:07:06 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 449Bn23i009823;
-	Thu, 9 May 2024 12:07:05 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xyshutpgd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 12:07:05 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 449C70Ih57016742
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 9 May 2024 12:07:02 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 054E620043;
-	Thu,  9 May 2024 12:07:00 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1198120040;
-	Thu,  9 May 2024 12:06:57 +0000 (GMT)
-Received: from li-a50b8fcc-3415-11b2-a85c-f1daa4f09788.in.ibm.com (unknown [9.109.241.85])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  9 May 2024 12:06:56 +0000 (GMT)
-From: Krishna Kumar <krishnak@linux.ibm.com>
-To: mpe@ellerman.id.au, npiggin@gmail.com
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, brking@linux.vnet.ibm.com,
-        gbatra@linux.ibm.com, aneesh.kumar@kernel.org,
-        christophe.leroy@csgroup.eu, nathanl@linux.ibm.com,
-        bhelgaas@google.com, oohall@gmail.com, tpearson@raptorengineering.com,
-        mahesh.salgaonkar@in.ibm.com, Krishna Kumar <krishnak@linux.ibm.com>
-Subject: [PATCH 0/2] PCI hotplug driver fixes
-Date: Thu,  9 May 2024 17:35:52 +0530
-Message-ID: <20240509120644.653577-1-krishnak@linux.ibm.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bFgScjXV"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41ba1ba55ffso4446815e9.1;
+        Thu, 09 May 2024 05:07:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715256446; x=1715861246; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q+bLe4/l+mvEUfFbA3v+BR5qf/S1rNc4PFO2a3ch0KQ=;
+        b=bFgScjXVta7aePnZodtBZ5bGhSmEsn4UYiY8HXIpM1wlaw6iGmgHQi7xswDo9nPZUo
+         tgaMOSxybpWUN3EaVJZ3N2hA1sQ3j1X/UsKz/fb1GxKtYI7+o4gRyG8EEkX9uw3dnpwC
+         gp3OcZQ8Z6BKIl2ZBksamAx8HG5y3guZkctro9maYUZAwUmTnvqFvrBommCT/YLdMqQe
+         mbnfDF3k/Dh5QolmmTePL49Gr+HnkQUL42GhQbCMbK67mkuYc/m8SenPeaoQ3RwFWBiJ
+         7rvNyGfP72sxHFd0GdIr3goQQiH5cfJtEw8g1S/OvumrFuGLzRahRNsqrARSZ+IngDmy
+         gyMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715256446; x=1715861246;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=q+bLe4/l+mvEUfFbA3v+BR5qf/S1rNc4PFO2a3ch0KQ=;
+        b=gL1Bg0IUcQFqlL3mlFhgBp9ImWTb00R1RDYJvP6rb1ksdSUxMbzLs/CtqIGCYsc+oT
+         VX/uqztq9R1O8j3kZzKM0FvzdIw5qblniwhs2Nmw4NTc/ArKPlLPXNvwHbRp72NGy4Wt
+         josZ15jP4SvUL5mst1ZTAjFZrKGASR78XLJ5ERMzqTUvezmqQthRVtAEbwF8QMYDbVvg
+         mSxuArzR+27XboNUPmQWkgVERoIhz+SKdBXnnTxtalwX65OMQij0AXUNg/hYUCvayTy8
+         JrWUV59bqDCgsnh4O7SP6KGo+aPU6QGcempkzkQl+Tk6v3sviZ0OtnmMt2usrDGHCa5O
+         ZGHg==
+X-Forwarded-Encrypted: i=1; AJvYcCUGAtfcGy8Hly/20DU52N5Qde8vnKP9ngoIweXdqr6EefTTJO6Znjlj8NVA6iPA43+XvRBCZoH0qDwc3WhcVE6ikrWr8cTWTXLiNpVKUT6OOc10S+IHho0KDwuF3JnMRNWlfw4oWLJUFKe1adS2Nc+SJgpkGlEUKJClK1mT6BMbPi1HLw==
+X-Gm-Message-State: AOJu0YwKaJ82WegX6/lZKy63NlGUTBjTaaW2i2QZfB4AY0z/I/GT6E7F
+	PibEx9KmLLQCQZfrfM29wlx+4L5v557uMtkMysCk8gbnHUdk09s=
+X-Google-Smtp-Source: AGHT+IHtoArrqD0dnvqLAhLONFA8xc0foDIiP2c2dDm/g4xMVPSUsPLYrXXxqeAb6C9ioPtRQlXv6w==
+X-Received: by 2002:a05:600c:354a:b0:41b:f24a:b590 with SMTP id 5b1f17b1804b1-41fbc91f3e4mr21505645e9.3.1715256446176;
+        Thu, 09 May 2024 05:07:26 -0700 (PDT)
+Received: from U4.lan ([2a02:810b:f40:4600:b44:d8c3:6fa8:c46f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccce1912sm24112005e9.11.2024.05.09.05.07.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 05:07:25 -0700 (PDT)
+From: Alex Bee <knaerzche@gmail.com>
+To: Sandy Huang <hjc@rock-chips.com>,
+	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
+	Andy Yan <andy.yan@rock-chips.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>
+Cc: dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	Alex Bee <knaerzche@gmail.com>
+Subject: [PATCH v2 5/7] drm/rockchip: dsi: Add support for RK3128
+Date: Thu,  9 May 2024 14:07:13 +0200
+Message-ID: <20240509120715.86694-6-knaerzche@gmail.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20240509120715.86694-1-knaerzche@gmail.com>
+References: <20240509120715.86694-1-knaerzche@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: EONjMsdldPhPf2sVN8g05O0_NZS1G4S_
-X-Proofpoint-GUID: MhXk9jPgL08IGT3MtvuJymytL3kTsmxG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-09_06,2024-05-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 mlxscore=0 bulkscore=0 clxscore=1011 suspectscore=0
- impostorscore=0 phishscore=0 malwarescore=0 spamscore=0 priorityscore=1501
- mlxlogscore=673 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405090080
 
-The fix of Powerpc hotplug driver (drivers/pci/hotplug/pnv_php.c)
-addresses below two issues.
+The DesignWare MIPI DSI controller found RK3128 SoCs supports up to 4 DSI
+data lanes. Similar to PX30/RK356x/RV1126 it uses an external D-PHY.
 
-1. Kernel Crash during hot unplug of bridge/switch slot.
+Signed-off-by: Alex Bee <knaerzche@gmail.com>
+---
+changes since v1:
+ - none
 
-2. DPC-Support Enablement - Previously, when we do a hot-unplug
-operation on a bridge slot, all the ports and devices behind the
-bridge-ports would be hot-unplugged/offline, but when we do a hot-plug
-operation on the same bridge slot, all the ports and devices behind the
-bridge would not get hot-plugged/online. In this case, Only the first
-port of the bridge gets enabled and the remaining port/devices remain
-unplugged/offline.  After the fix, The hot-unplug and hot-plug
-operations on the slot associated with the bridge started behaving
-correctly and became in sync. Now, after the hot plug operation on the
-same slot, all the bridge ports and devices behind the bridge become
-hot-plugged/online/restored in the same manner as it was before the
-hot-unplug operation.
+ .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-
-
-Krishna Kumar (2):
-  pci/hotplug/pnv_php: Fix hotplug driver crash on Powernv
-  arch/powerpc: hotplug driver bridge support
-
- arch/powerpc/include/asm/ppc-pci.h |  4 +++
- arch/powerpc/kernel/pci-hotplug.c  |  5 ++--
- arch/powerpc/kernel/pci_dn.c       | 42 ++++++++++++++++++++++++++++++
- drivers/pci/hotplug/pnv_php.c      |  3 +--
- 4 files changed, 49 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+index 6ed64cc35275..17fd5260218a 100644
+--- a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+@@ -153,6 +153,11 @@
+ #define PX30_DSI_TURNDISABLE		BIT(5)
+ #define PX30_DSI_LCDC_SEL		BIT(0)
+ 
++#define RK3128_GRF_LVDS_CON0		0x0150
++#define RK3128_DSI_FORCETXSTOPMODE	GENMASK(13, 10)
++#define RK3128_DSI_FORCERXMODE		BIT(9)
++#define RK3128_DSI_TURNDISABLE		BIT(8)
++
+ #define RK3288_GRF_SOC_CON6		0x025c
+ #define RK3288_DSI0_LCDC_SEL		BIT(6)
+ #define RK3288_DSI1_LCDC_SEL		BIT(9)
+@@ -1518,6 +1523,18 @@ static const struct rockchip_dw_dsi_chip_data px30_chip_data[] = {
+ 	{ /* sentinel */ }
+ };
+ 
++static const struct rockchip_dw_dsi_chip_data rk3128_chip_data[] = {
++	{
++		.reg = 0x10110000,
++		.lanecfg1_grf_reg = RK3128_GRF_LVDS_CON0,
++		.lanecfg1 = HIWORD_UPDATE(0, RK3128_DSI_TURNDISABLE |
++					     RK3128_DSI_FORCERXMODE |
++					     RK3128_DSI_FORCETXSTOPMODE),
++		.max_data_lanes = 4,
++	},
++	{ /* sentinel */ }
++};
++
+ static const struct rockchip_dw_dsi_chip_data rk3288_chip_data[] = {
+ 	{
+ 		.reg = 0xff960000,
+@@ -1695,6 +1712,9 @@ static const struct of_device_id dw_mipi_dsi_rockchip_dt_ids[] = {
+ 	{
+ 	 .compatible = "rockchip,px30-mipi-dsi",
+ 	 .data = &px30_chip_data,
++	}, {
++	 .compatible = "rockchip,rk3128-mipi-dsi",
++	 .data = &rk3128_chip_data,
+ 	}, {
+ 	 .compatible = "rockchip,rk3288-mipi-dsi",
+ 	 .data = &rk3288_chip_data,
 -- 
-2.44.0
+2.43.2
 
