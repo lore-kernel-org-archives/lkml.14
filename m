@@ -1,177 +1,125 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8E414BFAB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCEB314BF92;
 	Thu,  9 May 2024 12:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715256448; cv=none; b=FROmdvKhT5pAgllUqBP3xgM8b5nPr3UvfX1mYn8jd/Hu9ed7zjn0NJkLJwTSCYF1qWehtYoumufPYT20XaF6vGVyI0CoiDQwnY0aYHj+KaHYDjaT8SbRaJ/9qxf9Uhn4Pi3qrUoOESRqCBRC7nu0zdIJA8T8I5Rsm8gszeugCuE=
+	t=1715256449; cv=none; b=cwHzmoR8NHihal9kgyoqsTgwcd+RIWNo4vP3jcNN0FjJ+4LtygfbRqj7y7kLi8SJnaBpJqdKZbUnVy2gfbsxX9LXeN1Q8Je/flmWTQaxpsVeQuXYvnm6QpL+4HP4lA7eFiPtET+ELuRds9VPigS2tDvGrPu/eZidrmKaS8i1F6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715256448; c=relaxed/simple;
-	bh=sGGeW//7ieucPKqK6xhCiFsbFbyWjbSB0+Tb1XQxe9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uz/j8+8gVVcR1qKBA2Wn5Cb6N8Mz+jzIixa/Er3UXil0ViqZldQGuCthMZuKOVexwk+/3nRFLWLwXX43X5hLis7/pstf1h2c9f9YXTkb4Hwu/w3HGaceNQ+JiuYaz20cZaEk3LCJg2Bn587+DwxbYAeXYiJcbQOsnJzj9nh1XRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S4k958xo; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715256449; c=relaxed/simple;
+	bh=b3Lw6QyOOe/F0A2wbbC5aMnHbGBJhpHoP64jYjfjjKA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fKrwhfOG01DriXHhOOFUJGxMzMFRHI3Ddmu8LRb8bkm0tiCXQmDwX3frvdMWDipbKYCHcDhZ8MahVaINpL0pXW+ZW9HyZAVOllIgx3BRCewj5BNIWp1HByVSK6oUKSfOh2Drjy92tiZnkwGXM6rvMZGlOkhL3bq5gcQ71zYeJpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AB4+tWfl; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S4k958xo"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51fb14816f6so1061580e87.0;
-        Thu, 09 May 2024 05:07:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715256445; x=1715861245; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q8klZW1X3Sda14Lq0eRI1WDVW4JJJl7xuMqHEZ5sEhE=;
-        b=S4k958xo1qyeosNK4Mrxn8jlYFTfqdvrdl9hfJi9g3mjyiQY063BBVnUccM0fWUWz0
-         X1+N17W2COTTs9EZ3/Z2YPm2fiNV89j5XCS5YXkky2RrmXD6BjGF5mZjKjXGx08R4nBp
-         r2F7zWlLWLPJKGHLpAdgpKU3h6Uy7I6dn4cc/4MXKp2Eg0qkFC4LdFr/uHefq7TKBbmP
-         XBkZHDiYs43QIovOdX0zTXC18cRwATW0+MAx0pfArXyC7X4+Jc/FB0SwaQpFcBHMsAEC
-         yISpvz5/ulLmR3opPPSrpMJq7ki9A+DGAA21OJJCYt+lF9eM5F9PTEx8YrTWRtTZlkCF
-         s86A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715256445; x=1715861245;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q8klZW1X3Sda14Lq0eRI1WDVW4JJJl7xuMqHEZ5sEhE=;
-        b=iNOigJd9PNSfghxWBNyTPQf0c62Hg99KILAzVyf1oWVWTetwHMADh077bitQ/+b2Yq
-         M5DysfkzCmHXpJp3M0j03kj/92xq5bmJ0qV00zTrYLnc1l+doDVSK98O8LtfG2pA8RSC
-         MIfSGLaZk17fYykAktx1UVw+bbtkDC+0y8HJxLRLlj9XL3Cx3D0iLk6bhU1opNQUKust
-         2qG9NrH3dUHUSwtM8SG392ebmk9/G4URGhe+0YNztP4PlZdNB3u8ebnbZR68a8IdLuha
-         6hyO9maGCLV534O9o7wFDpj9EWpt8+4pn2bFPmE+Kk3+4YYsAnwAtAN8tbNY8ic2xatr
-         Ou3w==
-X-Forwarded-Encrypted: i=1; AJvYcCXVMOaQwkYPMNvIUbsECNYhBj6uJyW0Az5lgABcVOcjPJ1PItHKefQ2dolznZHXguK2kejIxClZonSfHRM81WXAtzpQ3m5UK244ZOkMnUUf6awsIAryM7yXXj2EQeBmqZgEXcicZxSJG7+EzVhu+XA58LmfR25eIOM5gE1PR/4j3/a6ag==
-X-Gm-Message-State: AOJu0Yx9JFL6CyX4tDcqmX5KoaFUtCsFKyff1QLyQ49Uliv3qZ8g9V8S
-	9NXftgxRmr2oFIsLKEELu0qoiNHETyBgFx0aNtnA2qEcDEAYCBQ=
-X-Google-Smtp-Source: AGHT+IFecuxCJWM/nUWDhGJ7gBSfItZDqcg8FMCaOxeHy6FMY+wOyJdPzB48iweW2PiFVOX6Z6J58A==
-X-Received: by 2002:a05:6512:210a:b0:51d:9921:20f7 with SMTP id 2adb3069b0e04-5217c56f496mr3116279e87.40.1715256445211;
-        Thu, 09 May 2024 05:07:25 -0700 (PDT)
-Received: from U4.lan ([2a02:810b:f40:4600:b44:d8c3:6fa8:c46f])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccce1912sm24112005e9.11.2024.05.09.05.07.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 05:07:24 -0700 (PDT)
-From: Alex Bee <knaerzche@gmail.com>
-To: Sandy Huang <hjc@rock-chips.com>,
-	=?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>,
-	Andy Yan <andy.yan@rock-chips.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: dri-devel@lists.freedesktop.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	Alex Bee <knaerzche@gmail.com>
-Subject: [PATCH v2 4/7] drm/rockchip: dsi: Support optional AHB clock
-Date: Thu,  9 May 2024 14:07:12 +0200
-Message-ID: <20240509120715.86694-5-knaerzche@gmail.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240509120715.86694-1-knaerzche@gmail.com>
-References: <20240509120715.86694-1-knaerzche@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AB4+tWfl"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 449AwH8o010769;
+	Thu, 9 May 2024 12:07:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=pp1;
+ bh=wB/RWoAJV2Kfx9dgeYhfSibcvHgEFIlPM4CBDF2TtHk=;
+ b=AB4+tWfl8spiWQqwneYWVcKOFIuDl7ua2n1SJa74QISK6sCl52gpfiL0C75UqSxDdxyt
+ Xjea4wpL11Tnh8N+nChF0DlaR2xoQ4bHbFo+aFas64Knuv30aG6Xe0yxFOTZUcngZlVp
+ 1psr2jPtxGTN/QUwsELFfBfCKqxuSZ040fI722yz8KgN+/HSf4qwpWs55vLyaC765JBi
+ 68+nrfGF2D8emaHwK6OuQ0rwZCLYH09MRsdcPGpGxxBMA5RHV/xh4CGCHx6ClQQ5ss1/
+ lgDmshvKYr+XqVJ9uXVYwosupxw+dcla/FFUs7Vd1FFTsQODipPPTyWl2WNiIqI4zgyI Yg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y0w6rg4ub-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 May 2024 12:07:06 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 449C76je020859;
+	Thu, 9 May 2024 12:07:06 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y0w6rg4u7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 May 2024 12:07:06 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 449Bn23i009823;
+	Thu, 9 May 2024 12:07:05 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3xyshutpgd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 May 2024 12:07:05 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 449C70Ih57016742
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 9 May 2024 12:07:02 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 054E620043;
+	Thu,  9 May 2024 12:07:00 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1198120040;
+	Thu,  9 May 2024 12:06:57 +0000 (GMT)
+Received: from li-a50b8fcc-3415-11b2-a85c-f1daa4f09788.in.ibm.com (unknown [9.109.241.85])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  9 May 2024 12:06:56 +0000 (GMT)
+From: Krishna Kumar <krishnak@linux.ibm.com>
+To: mpe@ellerman.id.au, npiggin@gmail.com
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, brking@linux.vnet.ibm.com,
+        gbatra@linux.ibm.com, aneesh.kumar@kernel.org,
+        christophe.leroy@csgroup.eu, nathanl@linux.ibm.com,
+        bhelgaas@google.com, oohall@gmail.com, tpearson@raptorengineering.com,
+        mahesh.salgaonkar@in.ibm.com, Krishna Kumar <krishnak@linux.ibm.com>
+Subject: [PATCH 0/2] PCI hotplug driver fixes
+Date: Thu,  9 May 2024 17:35:52 +0530
+Message-ID: <20240509120644.653577-1-krishnak@linux.ibm.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: EONjMsdldPhPf2sVN8g05O0_NZS1G4S_
+X-Proofpoint-GUID: MhXk9jPgL08IGT3MtvuJymytL3kTsmxG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-09_06,2024-05-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 mlxscore=0 bulkscore=0 clxscore=1011 suspectscore=0
+ impostorscore=0 phishscore=0 malwarescore=0 spamscore=0 priorityscore=1501
+ mlxlogscore=673 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2405010000 definitions=main-2405090080
 
-Some integrations of the IP additionally have an AHB clock which has to be
-enabled before accessing the registers is possible.
+The fix of Powerpc hotplug driver (drivers/pci/hotplug/pnv_php.c)
+addresses below two issues.
 
-Add support for it as an optional clock.
+1. Kernel Crash during hot unplug of bridge/switch slot.
 
-Signed-off-by: Alex Bee <knaerzche@gmail.com>
----
-changes since v1:
- - new patch
+2. DPC-Support Enablement - Previously, when we do a hot-unplug
+operation on a bridge slot, all the ports and devices behind the
+bridge-ports would be hot-unplugged/offline, but when we do a hot-plug
+operation on the same bridge slot, all the ports and devices behind the
+bridge would not get hot-plugged/online. In this case, Only the first
+port of the bridge gets enabled and the remaining port/devices remain
+unplugged/offline.  After the fix, The hot-unplug and hot-plug
+operations on the slot associated with the bridge started behaving
+correctly and became in sync. Now, after the hot plug operation on the
+same slot, all the bridge ports and devices behind the bridge become
+hot-plugged/online/restored in the same manner as it was before the
+hot-unplug operation.
 
- .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-index 4cc8ed8f4fbd..6ed64cc35275 100644
---- a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
-@@ -265,6 +265,7 @@ struct dw_mipi_dsi_rockchip {
- 	struct clk *pllref_clk;
- 	struct clk *grf_clk;
- 	struct clk *phy_cfg_clk;
-+	struct clk *ahb_clk;
- 
- 	/* dual-channel */
- 	bool is_slave;
-@@ -1153,7 +1154,15 @@ static int dw_mipi_dsi_dphy_init(struct phy *phy)
- 			goto err_init;
- 		}
- 
-+		ret = clk_prepare_enable(dsi->ahb_clk);
-+		if (ret) {
-+			clk_disable_unprepare(dsi->grf_clk);
-+			clk_disable_unprepare(dsi->pclk);
-+			goto err_init;
-+		}
-+
- 		ret = dsi->cdata->dphy_rx_init(phy);
-+		clk_disable_unprepare(dsi->ahb_clk);
- 		clk_disable_unprepare(dsi->grf_clk);
- 		clk_disable_unprepare(dsi->pclk);
- 		if (ret < 0)
-@@ -1240,6 +1249,12 @@ static int dw_mipi_dsi_dphy_power_on(struct phy *phy)
- 		goto err_phy_cfg_clk;
- 	}
- 
-+	ret = clk_prepare_enable(dsi->ahb_clk);
-+	if (ret) {
-+		DRM_DEV_ERROR(dsi->dev, "Failed to enable ahb_clk: %d\n", ret);
-+		goto err_ahb_clk;
-+	}
-+
- 	/* do soc-variant specific init */
- 	if (dsi->cdata->dphy_rx_power_on) {
- 		ret = dsi->cdata->dphy_rx_power_on(phy);
-@@ -1269,6 +1284,8 @@ static int dw_mipi_dsi_dphy_power_on(struct phy *phy)
- 	return ret;
- 
- err_pwr_on:
-+	clk_disable_unprepare(dsi->ahb_clk);
-+err_ahb_clk:
- 	clk_disable_unprepare(dsi->phy_cfg_clk);
- err_phy_cfg_clk:
- 	clk_disable_unprepare(dsi->grf_clk);
-@@ -1296,6 +1313,7 @@ static int dw_mipi_dsi_dphy_power_off(struct phy *phy)
- 			DRM_DEV_ERROR(dsi->dev, "hardware-specific phy shutdown failed: %d\n", ret);
- 	}
- 
-+	clk_disable_unprepare(dsi->ahb_clk);
- 	clk_disable_unprepare(dsi->grf_clk);
- 	clk_disable_unprepare(dsi->pclk);
- 
-@@ -1429,6 +1447,13 @@ static int dw_mipi_dsi_rockchip_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	dsi->ahb_clk = devm_clk_get_optional(dev, "ahb");
-+	if (IS_ERR(dsi->ahb_clk)) {
-+		ret = PTR_ERR(dsi->ahb_clk);
-+		DRM_DEV_ERROR(dev, "Unable to get ahb_clk: %d\n", ret);
-+		return ret;
-+	}
-+
- 	dsi->grf_regmap = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
- 	if (IS_ERR(dsi->grf_regmap)) {
- 		DRM_DEV_ERROR(dev, "Unable to get rockchip,grf\n");
+
+Krishna Kumar (2):
+  pci/hotplug/pnv_php: Fix hotplug driver crash on Powernv
+  arch/powerpc: hotplug driver bridge support
+
+ arch/powerpc/include/asm/ppc-pci.h |  4 +++
+ arch/powerpc/kernel/pci-hotplug.c  |  5 ++--
+ arch/powerpc/kernel/pci_dn.c       | 42 ++++++++++++++++++++++++++++++
+ drivers/pci/hotplug/pnv_php.c      |  3 +--
+ 4 files changed, 49 insertions(+), 5 deletions(-)
+
 -- 
-2.43.2
+2.44.0
 
