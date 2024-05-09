@@ -1,239 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE53129A67;
-	Thu,  9 May 2024 21:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD76680055;
+	Thu,  9 May 2024 21:38:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715290532; cv=none; b=VLp5qsW9KIVltr38/yR1pVNrP2pT+Q72uenBlBLd4tSzijrUZMxwJv1FO9JhaVSF61myAC9xqi3JuipKxW64OjpKUMd/ZgHK4bOe4FbWSuI3mzYjm2FP5PAsXmDrmx7kNIhnAEqlSXn/8Zu5iFowk5MydYWZUx6keT5JAxd8/FM=
+	t=1715290709; cv=none; b=c6NuruEdNkK8N2YddgZKk8ewDlzXK4UKU396snyhFbwi/XHq3szyFqmNXw6Iupv7rPr3ALWAQvYz2IA8f+RKuNenI8DbogU2zr0i+MnDcOq4JIFLWeYX/oNa5Yz2upSwzeNnsJCXfVoPi0x3najWOhdhgbaJ2SMja1uhK1QH74w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715290532; c=relaxed/simple;
-	bh=lPh/nEqoGgLssGU9u/530CpaLB+yT+jCGmsBtzdaaQ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BhkCXmnxHsfP0PpoNCRvwynh5Imq9BD8MypjLpapDMKyfOaFB9KvygLzRrRZnOuZPBLOBdRDJ/JeFTHqtej4XrO1WUHVywsbDCEyhBCyAe+3g5SUwnvN2Me8TsdeT7hqidhUEaAPqoNYJtYKEXwW/RzTmlKfQ8Yb7rC8AYzNptQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LjAeEoVP; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715290709; c=relaxed/simple;
+	bh=yWPX1AFHH2oExxi38GsDYw2RAIkGJktuI3QA9EyICcA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=kMz1XhJY+NqtqQuX4tcNAxxmjGrOdQDhBqR5M+GhWf34RTilPlH0aKUcKfn21aZkaNa/NEDdFKPt/8piQs9PVSrYc40i0xBE9mOXtTxiZWqxR/B3Cz9B/wxbv4ZSfFFPqy8bL/TSMefTxV/yR/WTgUrOHqYgNpDTh+JwsQ/X/fA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=FnW1WTQd; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LjAeEoVP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715290530; x=1746826530;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lPh/nEqoGgLssGU9u/530CpaLB+yT+jCGmsBtzdaaQ8=;
-  b=LjAeEoVPVAFUC+99WvJfi0yLkaY84DyHdVIakvpW2Cj1LfteC6SjXcQi
-   TGfannFZGBSlkyZ97vo9w5iC+zNbJZzf2+8hNnnznc3tY7f8H8sYV1JNl
-   t39/SPnkIzvOjfmSN5+tcuThbbHFJqN479ZzQjb1cKsW836s3oWsESj6j
-   zj9rYAs6uUFRfAw2tIxJx6VyRWD5uVgJALucieUGzCFjnjZnWJhG5r+W2
-   aqn7+QtZiXcYg+WCP0/kduMZ5Ww3XT5H3S+g7MIDbmDxPcYKk45qgsopX
-   kwnLZMcMxuXtHof6M0u0ogFQIQ2ljoVGBOx+PF/cFMGX8K6+Lcrp6mzaJ
-   Q==;
-X-CSE-ConnectionGUID: OGv083x5SsOGUdCjNtyzEA==
-X-CSE-MsgGUID: UxWGLMjAQQ2oF/T9DU2NgA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="14195728"
-X-IronPort-AV: E=Sophos;i="6.08,149,1712646000"; 
-   d="scan'208";a="14195728"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 14:35:30 -0700
-X-CSE-ConnectionGUID: jZEUWdnKQRWUgZS/vlvJXg==
-X-CSE-MsgGUID: NoyrwYZmT1qL4g3agHmioQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,149,1712646000"; 
-   d="scan'208";a="34240486"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 09 May 2024 14:35:26 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s5BQA-0005OV-2x;
-	Thu, 09 May 2024 21:35:22 +0000
-Date: Fri, 10 May 2024 05:34:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dan Carpenter <error27@gmail.com>,
-	Trond Myklebust <Trond.Myklebust@netapp.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, Anna Schumaker <anna@kernel.org>,
-	linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 1/2] SUNRPC: prevent integer overflow in XDR_QUADLEN()
-Message-ID: <202405100514.9QcoLUdp-lkp@intel.com>
-References: <bbf929d6-18d2-4b7e-a660-a19460af0a3c@moroto.mountain>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="FnW1WTQd"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 449KsuID020451;
+	Thu, 9 May 2024 21:38:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=pAqbv8FC1GGiAfW8jfg1f2NttdRya0AXcZ6HKnPki+8=; b=Fn
+	W1WTQdGqe13RoyGRQKo+QXs+ltPSNGAdsVaaFE2m5jx2NU0wmprUpAk86p2dH43A
+	4xgajmSMkzygbE6YiQdNdN1kS5WhfrC5S3zqQNpcPQhlnKufNHprJAaUoW4awJvz
+	v5h38ZSOhY/PILcnK9JGvCAqYMQ7C8qPhd2/JlQeImcOCJUkMwD0+CEcFUFf02cA
+	wXGYm30O+AOCNYxMWnp41LTUqIbjc1qZNcDsj1nx+MZ4IcJTbKSSDrRo8eQrckjH
+	YxUjWNuzO+LZCFpi8QHijTgB8UM959VwC5LHXpavN897cKb7daSwu0ikQAOzKtZ4
+	Arhu9UJg63+p68lSEeXw==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y09ejupn1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 May 2024 21:38:05 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 449Lc3IH021191
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 9 May 2024 21:38:03 GMT
+Received: from [10.71.112.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 9 May 2024
+ 14:38:02 -0700
+Message-ID: <21ead53d-773b-ab8c-2d7d-cf4419b9a7ea@quicinc.com>
+Date: Thu, 9 May 2024 14:38:01 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bbf929d6-18d2-4b7e-a660-a19460af0a3c@moroto.mountain>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v21 22/39] ALSA: usb-audio: Prevent starting of audio
+ stream if in use
+Content-Language: en-US
+To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
+        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
+        <lgirdwood@gmail.com>, <andersson@kernel.org>, <krzk+dt@kernel.org>,
+        <gregkh@linuxfoundation.org>, <Thinh.Nguyen@synopsys.com>,
+        <broonie@kernel.org>, <bgoswami@quicinc.com>, <tiwai@suse.com>,
+        <bagasdotme@gmail.com>, <robh@kernel.org>, <konrad.dybcio@linaro.org>
+CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <alsa-devel@alsa-project.org>
+References: <20240507195116.9464-1-quic_wcheng@quicinc.com>
+ <20240507195116.9464-23-quic_wcheng@quicinc.com>
+ <1e98935e-e35a-49e0-bbbf-ff326d40b581@linux.intel.com>
+ <066fe096-a9d3-2498-275d-185f709e9a02@quicinc.com>
+ <c97a0563-c4ce-45cd-8141-ee9be1e01899@linux.intel.com>
+From: Wesley Cheng <quic_wcheng@quicinc.com>
+In-Reply-To: <c97a0563-c4ce-45cd-8141-ee9be1e01899@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: bKrP1y1Vmj7qvp-m7b477taU24e9uToI
+X-Proofpoint-ORIG-GUID: bKrP1y1Vmj7qvp-m7b477taU24e9uToI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-09_12,2024-05-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 mlxlogscore=822 malwarescore=0
+ bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405090152
 
-Hi Dan,
+Hi Pierre,
 
-kernel test robot noticed the following build errors:
+On 5/9/2024 6:01 AM, Pierre-Louis Bossart wrote:
+> 
+> 
+> On 5/8/24 18:40, Wesley Cheng wrote:
+>> Hi Pierre,
+>>
+>> On 5/7/2024 2:20 PM, Pierre-Louis Bossart wrote:
+>>>
+>>>> If a PCM device is already in use, the check will return an error to
+>>>> userspace notifying that the stream is currently busy.  This ensures
+>>>> that
+>>>> only one path is using the USB substream.
+>>>
+>>> What was the point of having a "USB Mixer" then?
+>>
+>> The USB mixer is intended to enable/route the USB offloading path to the
+>> audio DSP, and is for controlling the ASoC specific entities.  This
+>> change is needed to resolve any contention between the USB SND PCM
+>> device (non offload path) and the ASoC USB BE DAI (offload path).
+> 
+> Not following, sorry. Is the "USB Mixer" some sort of hardware entity
+> related to USB offload or just a pure DAPM processing widget handling
+> volume and actual mixing between streams?
+> 
 
-[auto build test ERROR on trondmy-nfs/linux-next]
-[also build test ERROR on linus/master v6.9-rc7 next-20240509]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+It controls which Multimedia (ASM) stream can be routed to the USB BE DAI.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dan-Carpenter/SUNRPC-prevent-integer-overflow-in-XDR_QUADLEN/20240509-185141
-base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-patch link:    https://lore.kernel.org/r/bbf929d6-18d2-4b7e-a660-a19460af0a3c%40moroto.mountain
-patch subject: [PATCH 1/2] SUNRPC: prevent integer overflow in XDR_QUADLEN()
-config: s390-defconfig (https://download.01.org/0day-ci/archive/20240510/202405100514.9QcoLUdp-lkp@intel.com/config)
-compiler: clang version 19.0.0git (https://github.com/llvm/llvm-project b910bebc300dafb30569cecc3017b446ea8eafa0)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240510/202405100514.9QcoLUdp-lkp@intel.com/reproduce)
+> I was trying to get clarity on whether there can be multiple streams
+> mixed before going to the USB endpoint. The commit message "only one
+> path is using the USB substream" is ambiguous, not sure if you are
+> referring to mutual exclusion between offloaded and non-offloaded paths,
+> or number of streams when offloaded is supported. Different concepts/levels.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405100514.9QcoLUdp-lkp@intel.com/
+Ideally we shouldn't.  Only one ASM stream should be allowed to open the 
+USB AFE port at a time.
 
-All errors (new ones prefixed by >>):
-
-   In file included from include/linux/highmem.h:10:
-   In file included from include/linux/mm.h:2188:
-   include/linux/vmstat.h:508:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     508 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     509 |                            item];
-         |                            ~~~~
-   include/linux/vmstat.h:515:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     515 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     516 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:522:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     522 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:527:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     527 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     528 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:536:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     536 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     537 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   In file included from fs/nfsd/nfs4callback.c:34:
-   In file included from include/linux/nfs4.h:19:
-   In file included from include/linux/sunrpc/msg_prot.h:205:
-   In file included from include/linux/inet.h:42:
-   In file included from include/net/net_namespace.h:43:
-   In file included from include/linux/skbuff.h:28:
-   In file included from include/linux/dma-mapping.h:11:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:547:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     547 |         val = __raw_readb(PCI_IOBASE + addr);
-         |                           ~~~~~~~~~~ ^
-   include/asm-generic/io.h:560:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     560 |         val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
-      37 | #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
-     102 | #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
-         |                                                      ^
-   In file included from fs/nfsd/nfs4callback.c:34:
-   In file included from include/linux/nfs4.h:19:
-   In file included from include/linux/sunrpc/msg_prot.h:205:
-   In file included from include/linux/inet.h:42:
-   In file included from include/net/net_namespace.h:43:
-   In file included from include/linux/skbuff.h:28:
-   In file included from include/linux/dma-mapping.h:11:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:573:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     573 |         val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
-         |                                                         ~~~~~~~~~~ ^
-   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
-      35 | #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
-         |                                                           ^
-   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
-     115 | #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
-         |                                                      ^
-   In file included from fs/nfsd/nfs4callback.c:34:
-   In file included from include/linux/nfs4.h:19:
-   In file included from include/linux/sunrpc/msg_prot.h:205:
-   In file included from include/linux/inet.h:42:
-   In file included from include/net/net_namespace.h:43:
-   In file included from include/linux/skbuff.h:28:
-   In file included from include/linux/dma-mapping.h:11:
-   In file included from include/linux/scatterlist.h:9:
-   In file included from arch/s390/include/asm/io.h:78:
-   include/asm-generic/io.h:584:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     584 |         __raw_writeb(value, PCI_IOBASE + addr);
-         |                             ~~~~~~~~~~ ^
-   include/asm-generic/io.h:594:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     594 |         __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:604:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     604 |         __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
-         |                                                       ~~~~~~~~~~ ^
-   include/asm-generic/io.h:692:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     692 |         readsb(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:700:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     700 |         readsw(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:708:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     708 |         readsl(PCI_IOBASE + addr, buffer, count);
-         |                ~~~~~~~~~~ ^
-   include/asm-generic/io.h:717:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     717 |         writesb(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:726:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     726 |         writesw(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
-   include/asm-generic/io.h:735:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
-     735 |         writesl(PCI_IOBASE + addr, buffer, count);
-         |                 ~~~~~~~~~~ ^
->> fs/nfsd/nfs4callback.c:832:2: error: initializer element is not a compile-time constant
-     832 |         PROC(CB_OFFLOAD,        COMPOUND,       cb_offload,     cb_offload),
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   fs/nfsd/nfs4callback.c:819:15: note: expanded from macro 'PROC'
-     819 |         .p_arglen  = NFS4_enc_##argtype##_sz,                           \
-         |                      ^~~~~~~~~~~~~~~~~~~~~~~
-   <scratch space>:133:1: note: expanded from here
-     133 | NFS4_enc_cb_offload_sz
-         | ^~~~~~~~~~~~~~~~~~~~~~
-   fs/nfsd/xdr4cb.h:43:33: note: expanded from macro 'NFS4_enc_cb_offload_sz'
-      43 | #define NFS4_enc_cb_offload_sz          (cb_compound_enc_hdr_sz +       \
-         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      44 |                                         cb_sequence_enc_sz +            \
-         |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      45 |                                         enc_nfs4_fh_sz +                \
-         |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      46 |                                         enc_stateid_sz +                \
-         |                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      47 |                                         enc_cb_offload_info_sz)
-         |                                         ~~~~~~~~~~~~~~~~~~~~~~~
-   17 warnings and 1 error generated.
-
-
-vim +832 fs/nfsd/nfs4callback.c
-
-^1da177e4c3f415 Linus Torvalds    2005-04-16  824  
-499b4988109e91b Christoph Hellwig 2017-05-12  825  static const struct rpc_procinfo nfs4_cb_procedures[] = {
-7d93bd71cb3e262 Chuck Lever       2010-12-14  826  	PROC(CB_NULL,	NULL,		cb_null,	cb_null),
-7d93bd71cb3e262 Chuck Lever       2010-12-14  827  	PROC(CB_RECALL,	COMPOUND,	cb_recall,	cb_recall),
-c5c707f96fc9a6e Christoph Hellwig 2014-09-23  828  #ifdef CONFIG_NFSD_PNFS
-c5c707f96fc9a6e Christoph Hellwig 2014-09-23  829  	PROC(CB_LAYOUT,	COMPOUND,	cb_layout,	cb_layout),
-c5c707f96fc9a6e Christoph Hellwig 2014-09-23  830  #endif
-a188620ebd294b1 Jeff Layton       2016-09-16  831  	PROC(CB_NOTIFY_LOCK,	COMPOUND,	cb_notify_lock,	cb_notify_lock),
-9eb190fca8f9056 Olga Kornievskaia 2018-07-20 @832  	PROC(CB_OFFLOAD,	COMPOUND,	cb_offload,	cb_offload),
-3959066b697b5df Dai Ngo           2022-11-16  833  	PROC(CB_RECALL_ANY,	COMPOUND,	cb_recall_any,	cb_recall_any),
-^1da177e4c3f415 Linus Torvalds    2005-04-16  834  };
-^1da177e4c3f415 Linus Torvalds    2005-04-16  835  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks
+Wesley Cheng
