@@ -1,166 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6411149E1A;
-	Thu,  9 May 2024 08:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CAB13D289
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 08:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715244709; cv=none; b=u0xlrlaskNKCVHCYGXuw3Ipsbf1SDn810f2cVMAEvoWw33Tp8qRtU/sA6tu8gql/aUm3jqEpe5rECGXCdgBlh9rOYksYvcuVr3chBy0m3yDic5oKbfTQrIblZzCJVSSuSE4a9kJzX90M4z/dKA5y4Pj4IonaZpJpNVFBIvONS5o=
+	t=1715244743; cv=none; b=kjVD6cPN2a46i0LNccuJZ3OGXcBnUcR/TN64XjksLCCNmpAzhXF/yjmGGWCkhtrM6lN6n179QiqIrVHGTe6nxbg6sS85xAvjPuVpydbnBVrkZWoWjPHGVTFm9yiukHYD/Ri4IInNl0XAX66E3t+R115vKiFgj7w5zzO0waa/Jws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715244709; c=relaxed/simple;
-	bh=Az9fax1STcMENsVQEQmFXQ/rTEnN4aysqC/HQhN2KX8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jYkAGnlsR73Ena4YXiG3tpaSpkwHEkTflaIaQFZPhX0VWUSWk7CdlJFglj6I77rQlGxg3nq3u2rIXUvJ87ZfqC524ZPXitVlF5l/wf0EC6iQh0oe20+Ffrr262LgL5USMefkYxrp9lZX80Isx7z7kkT5nL8kP5EJ4HntU3PnpG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d3x05SIU; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d3x05SIU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715244707; x=1746780707;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Az9fax1STcMENsVQEQmFXQ/rTEnN4aysqC/HQhN2KX8=;
-  b=d3x05SIU2hvo1DIQFYIxG24xxi+LlW3kbn3q8mc3i2snUrQmHt+mWFVG
-   XIvo/0j2yPOGTj3onN2YPhyMlqqsISgb3VMRLUlPNhHlkC67C9qe4oKGJ
-   qN73beUBp3CwkU0ojFOarwptCqAmx6SfE2knKDk+DCuDRvFMCG8zV26A/
-   n2wtonqhbvG3i0UYxZrlzFrhOkVFXeGk2Em6dIW3DfUixbYd7E9g1FjwT
-   P/UbSAzKOQVINUJF1ujJbfzOaP+nZwtNgcZ7BRGI8cWhH6Av91qu4Wqm6
-   pUR1m4zyDp+2IIUU+QOMYRGaEGGvXAwckvyMZG0tG1+VQschzBbOB/s/L
-   w==;
-X-CSE-ConnectionGUID: /o/pwH88RqK6QnNAKJF6Qw==
-X-CSE-MsgGUID: 2sdG1kPUSVqlf6BugKrZKw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="14104021"
-X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
-   d="scan'208";a="14104021"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 01:51:47 -0700
-X-CSE-ConnectionGUID: WNz+ekTQRHqKX3HNhu576w==
-X-CSE-MsgGUID: T4JtGmhySwqhx4RJWSIPHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
-   d="scan'208";a="29061096"
-Received: from unknown (HELO SPR-S2600BT.bj.intel.com) ([10.240.192.124])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 01:51:39 -0700
-From: Zhenzhong Duan <zhenzhong.duan@intel.com>
-To: linux-pci@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org,
-	linux-acpi@vger.kernel.org,
-	rafael@kernel.org,
-	lenb@kernel.org,
-	james.morse@arm.com,
-	tony.luck@intel.com,
-	bp@alien8.de,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	bhelgaas@google.com,
-	helgaas@kernel.org,
-	mahesh@linux.ibm.com,
-	oohall@gmail.com,
-	linmiaohe@huawei.com,
-	shiju.jose@huawei.com,
-	adam.c.preble@intel.com,
-	lukas@wunner.de,
-	Smita.KoralahalliChannabasappa@amd.com,
-	rrichter@amd.com,
-	linux-cxl@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	erwin.tsaur@intel.com,
-	sathyanarayanan.kuppuswamy@intel.com,
-	dan.j.williams@intel.com,
-	feiting.wanyan@intel.com,
-	yudong.wang@intel.com,
-	chao.p.peng@intel.com,
-	qingshun.wang@linux.intel.com,
-	Zhenzhong Duan <zhenzhong.duan@intel.com>
-Subject: [PATCH v4 3/3] PCI/AER: Clear UNCOR_STATUS bits that might be ANFE
-Date: Thu,  9 May 2024 16:48:33 +0800
-Message-Id: <20240509084833.2147767-4-zhenzhong.duan@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240509084833.2147767-1-zhenzhong.duan@intel.com>
-References: <20240509084833.2147767-1-zhenzhong.duan@intel.com>
+	s=arc-20240116; t=1715244743; c=relaxed/simple;
+	bh=aS+jJPZZRPiKHCX180z4+IsZWClUBunHD4Mtlw9ESBg=;
+	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=fvoS4sGDWGwcTXciVRu9LLa7WT5tBKYOphtY8XxoP4Kx39Szx9xRKd6QZ2cnzL8ljNUWhmCtgiB/J+gFj7NaMtPKmTDOQtxulKuOdhX29X86/1w/WdGAyuTwrmm1vi/k1VIpRNXGswkN6GJ3TTBfsJxkwVFN02psGCQYxpwBo+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VZlzs1QQJzvXbS;
+	Thu,  9 May 2024 16:48:57 +0800 (CST)
+Received: from canpemm500002.china.huawei.com (unknown [7.192.104.244])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6099C18007E;
+	Thu,  9 May 2024 16:52:18 +0800 (CST)
+Received: from [10.173.135.154] (10.173.135.154) by
+ canpemm500002.china.huawei.com (7.192.104.244) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 9 May 2024 16:52:17 +0800
+Subject: Re: [PATCH 3/3] mm/memory-failure: send SIGBUS in the event of thp
+ split fail
+To: Jane Chu <jane.chu@oracle.com>, <nao.horiguchi@gmail.com>,
+	<akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20240501232458.3919593-1-jane.chu@oracle.com>
+ <20240501232458.3919593-4-jane.chu@oracle.com>
+ <2e51deff-24ca-32d5-dbd2-9077f860723c@huawei.com>
+ <56448498-96e4-4350-a915-15b97294bc62@oracle.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
+Message-ID: <9092ae5b-4910-95c6-14b6-a884f6fa9361@huawei.com>
+Date: Thu, 9 May 2024 16:52:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <56448498-96e4-4350-a915-15b97294bc62@oracle.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500002.china.huawei.com (7.192.104.244)
 
-When processing an ANFE, ideally both correctable error(CE) status and
-uncorrectable error(UE) status should be cleared. However, there is no
-way to fully identify the UE associated with ANFE. Even worse, Non-Fatal
-Error(NFE) may set the same UE status bit as ANFE. Treating an ANFE as
-NFE will bring some issues, i.e., breaking softwore probing; treating
-NFE as ANFE will make us ignoring some UEs which need active recover
-operation. To avoid clearing UEs that are not ANFE by accident, the
-most conservative route is taken here: If any of the NFE Detected bits
-is set in Device Status, do not touch UE status, they should be cleared
-later by the UE handler. Otherwise, a specific set of UEs that may be
-raised as ANFE according to the PCIe specification will be cleared if
-their corresponding severity is Non-Fatal.
+On 2024/5/9 0:56, Jane Chu wrote:
+> On 5/8/2024 2:03 AM, Miaohe Lin wrote:
+> 
+>> On 2024/5/2 7:24, Jane Chu wrote:
+>>> When handle hwpoison in a GUP longterm pin'ed thp page,
+>>> try_to_split_thp_page() will fail. And at this point, there is little else
+>>> the kernel could do except sending a SIGBUS to the user process, thus
+>>> give it a chance to recover.
+>> It seems the user process will still receive SIGBUS via kill_accessing_process()
+>> when (re-)access thp later. So they should have a chance to recover already.
+>> Or am I miss something?
+> 
+> The concern is about real UE consumption in which case, it's desirable to kill the process ASAP without having to relying on subsequent access.  Also to honor processes' MCE-early-kill request. kill_accessing_process() is very conservative in that, it doesn't check other processes that have the poisoned page mapped.
 
-For instance, previously when kernel receives an ANFE with Poisoned TLP
-in OS native AER mode, only status of CE will be reported and cleared:
+I see. Thanks for your explanation.
+Thanks.
+.
 
-  AER: Correctable error message received from 0000:b7:02.0
-  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
-    device [8086:0db0] error status/mask=00002000/00000000
-     [13] NonFatalErr
-
-If the kernel receives a Malformed TLP after that, two UEs will be
-reported, which is unexpected. Malformed TLP Header is lost since
-the previous ANFE gated the TLP header logs:
-
-  PCIe Bus Error: severity="Uncorrectable (Fatal), type=Transaction Layer, (Receiver ID)
-    device [8086:0db0] error status/mask=00041000/00180020
-     [12] TLP                    (First)
-     [18] MalfTLP
-
-Now, for the same scenario, both CE status and related UE status will be
-reported and cleared after ANFE:
-
-  AER: Correctable error message received from 0000:b7:02.0
-  PCIe Bus Error: severity=Correctable, type=Transaction Layer, (Receiver ID)
-    device [8086:0db0] error status/mask=00002000/00000000
-     [13] NonFatalErr
-    Uncorrectable errors that may cause Advisory Non-Fatal:
-     [18] TLP
-
-Tested-by: Yudong Wang <yudong.wang@intel.com>
-Co-developed-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-Signed-off-by: "Wang, Qingshun" <qingshun.wang@linux.intel.com>
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@intel.com>
----
- drivers/pci/pcie/aer.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index ed435f09ac27..6a6a3a40569a 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1115,9 +1115,14 @@ static void pci_aer_handle_error(struct pci_dev *dev, struct aer_err_info *info)
- 		 * Correctable error does not need software intervention.
- 		 * No need to go through error recovery process.
- 		 */
--		if (aer)
-+		if (aer) {
- 			pci_write_config_dword(dev, aer + PCI_ERR_COR_STATUS,
- 					info->status);
-+			if (info->anfe_status)
-+				pci_write_config_dword(dev,
-+						       aer + PCI_ERR_UNCOR_STATUS,
-+						       info->anfe_status);
-+		}
- 		if (pcie_aer_is_native(dev)) {
- 			struct pci_driver *pdrv = dev->driver;
- 
--- 
-2.34.1
+> 
+> thanks,
+> 
+> -jane
+> 
+>>
+>> Thanks.
+>> .
+>>
+>>
+> .
 
