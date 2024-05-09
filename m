@@ -1,124 +1,121 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA60149C46
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 06:25:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52A0147C6C;
+	Thu,  9 May 2024 06:28:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715235912; cv=none; b=EWqNeJDw6NN4Czw4RJ5teV1RNofW7u8Z2YBJFBLf6mPFBF9Wf9BvFWf6zwm9Egu6xrXiT6eACpceHXtNexpYzEj/mZ6L6vEPosVzN6xaSWtIBU/V1J65eqX95CHNuhyPL99KH6sYmhfCMDEig1BemhT74zdBL5DgeUo8VbjrYIw=
+	t=1715236142; cv=none; b=OU9kWjH81BcamILvBv4SdlD4g5Nh5bf/UJ1v8whg9o4ljFFus3JKhOJ1nsuPwAHj/Zydvi/DqTxQ9IJgU8ek897eDEi0mW/EZVItQB+H6MKNVXWbM0AknoBzlfQ1SeDnRXpuzTodkj5U0HPIpItLPH+Kw+YKEchWc+Z/q+GZ+aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715235912; c=relaxed/simple;
-	bh=VNcxAJhzV4XCG5GoklhPtD4pLaEeiWoa5ws6sH32y9s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DPv906f7kDARpDdPu3jAAMrSPzR/+AR42tNIr7st6HPUGSAp8fKCtbHWBHSlHEJMgZx+olfJFSeS7MYXbqPSf0xetw+iWTOYv3mu2PDZ/v8A31J54ob6g/mdLV2hRB2Ik+8KZCEvtZCE6274ScuWvf17pUqAGYQvnsRbZiSCiRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=g35u+fgr; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+	s=arc-20240116; t=1715236142; c=relaxed/simple;
+	bh=6ez9Lqfhbd340o4y9vgQktizgcEqn2zc2QMhtm6j9Oo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iuBvBK1OQuh/xfh2L4/rMY58n84e3gl9D7CeKYe72BZqQqRMI79ksplxL9nkTuY1LYyR2+N4XcMoEGWdy9i5CBNvskHPT/GyBnU4PM7To5WwBeqOCCwBbunrWZN/BJ+MkZMP+9rRrL6sSjgH2T77IzsqpmA9ULjL5T4QDhqpaZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=qXwiv2Qh; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="g35u+fgr"
-Received: from cwcc.thunk.org (pool-173-48-113-2.bstnma.fios.verizon.net [173.48.113.2])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 4496Ou82016809
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 9 May 2024 02:24:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-	t=1715235898; bh=ghnNBj3hwVBKClwY8+GVmXVmpft6HAMGF8LKN8YstWA=;
-	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
-	b=g35u+fgrzPJpcdsphmKFB4oyiRmCgoMPMXTwe5SxmGQyuRcBmqr+8evkVSmYGB0SC
-	 9agbUpFnxIgr9AGEROLi5aU/vDvRFLuXBIUZxuDKUAZzVTvctSvuNLhqDlCcV7BEd4
-	 gRqYPqxzXRK6UHifcjhW9XvXgfBaxa63vfSMNSuimF+noX/Ai3LpG7MiCqWnKxxWS4
-	 c3wEEXJnqLVUYUrk5Gaj/u0CmsBVAcMwJMMqW0+VuKhEZR0jqkZY0fX/LdJOqDNHV3
-	 wQky6eqgStDqJZjkh2MHa3IhFgkaVAApjRJ6LWZhKmtp6RIRuL28nZ+z+QImK/+t2V
-	 wsJ7GAPnKM1XQ==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-	id 865F015C026D; Thu, 09 May 2024 02:24:56 -0400 (EDT)
-Date: Thu, 9 May 2024 02:24:56 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Rob Herring <robh@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Serial <linux-serial@vger.kernel.org>,
-        Elvis <elvisimprsntr@gmail.com>
-Subject: Re: Fwd: Add method to allow switching kernel level PPS signal from
- DCD to CTS serial pin
-Message-ID: <20240509062456.GE3620298@mit.edu>
-References: <Zjra2GZIDC7BPoZx@archie.me>
- <2024050853-basin-salsa-32bb@gregkh>
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="qXwiv2Qh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1715236122; x=1715840922; i=markus.elfring@web.de;
+	bh=qI8eEoxlnq/rtJxkh/NHiyGK6SIHgwqdPIuCrkX4CoQ=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=qXwiv2Qhg5/TJ4AAAjT5N1MKgf9mFaEG+C14/pgVfisSI2hwSX05+UjTah4vnLiq
+	 4NpJgN+ORlNXsSolT9ymxW5TL9hr5BRjCJT+sAKPwtNiBNFID4RUhc7hl4TWUgT4I
+	 P+2HopVLTX7NTocrdJrXhB7WN/nQ7bq4kKU8WW+SspO5KeyvLSm8lpNEyWHD+oDXI
+	 Pkb5c24nhjdqeR8Il1hDHvTwjdBTWydacXzpJz3ZE9a/a9/JGOPqJLt39wS4eHjiX
+	 4ck8D6fCXUPZrXLeB9aKQ/0fXb6UVlJOq7lnaIXBP6ovtYr5wgOhjDq9hdQIqItwz
+	 +UaZh/R+p5ij3kIaEA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb006
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mcpuw-1seqJk2QXi-00ZlrX; Thu, 09
+ May 2024 08:28:42 +0200
+Message-ID: <a407d12f-6845-4f51-a112-6bdc17641ff1@web.de>
+Date: Thu, 9 May 2024 08:28:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024050853-basin-salsa-32bb@gregkh>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] time/tick-sched: idle load balancing when nohz_full
+ cpu becomes idle.
+To: Levi Yun <ppbuk5246@gmail.com>, kernel-janitors@vger.kernel.org,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <20240508172621.30069-1-ppbuk5246@gmail.com>
+ <20240508192213.31050-1-ppbuk5246@gmail.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240508192213.31050-1-ppbuk5246@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1INbcY5FfjRWXmY7EYIG9fWe0ZA28urskb0AEX0UuqmQknXemwo
+ 6aL7b5TTk9/I0Gq8p1gIcWoAUP/G3niPjwib9Sig0BWttoixFQvRLxbKjNV9dBk7zKIYhJi
+ v+W7P/vWbDs+x/PrUgA29lskoAaW2PGNURzk1DufKAc86pSEZ/IGtv2E8rX0BhEW3POx9vu
+ PXdA5mvm+X5m+vXhK5DmA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:VQqKqKPXP9Q=;Sy19RzSEH5REP179ojt6y9bn5Af
+ BTmggMFcoXwYL8dH2hFzuVMCMnDbn7MLLkAn4AEh7But3T+25jYFixSfMhySXKAvhDXx6LSsi
+ tz727qrk10Yh9SrZlk4Ogy1IzfZX/fbnkW7aNIefNUWyJEF9icPkrLVTv0Ik3cjIHJR0vRN8P
+ 1YWrekTjWsTp2b4VxXqZkqn/OFnyhsyL1Ecm/F5kazpWcI0r5AD4gaTr1xX9VHwmMmUw1iUeg
+ qv5eNYpLM12MNeIhuBaoqlS/72ODEsQO0QVONndEmide0XlBDA7Mmx3X+6UCgRQol/B+uwBZb
+ 2Ln/r4kYnS8aVPDBCzqd32xWVdnf6PJFQObMeh0BSF61X2Kuu8HyObfoPGdoD6042UG1+GlOw
+ Xn7LyaZSUHjLAmx4s9Dn4tthOrFfe7b9CUJaxKjz1l8yW9H8D84zm/EdmY79kr4BuSQvXnZ8n
+ 4faw5yO0DQ8C0lUjdjAby+B4lzSwGJth1KSSk6nWcO/jb79o6T/IYkj0Syr9W3NvgAbypVIhg
+ KVt+FYIWQpr3uUZDUNLQSSRWhtY0phzS2eF57fyu64pS7xb1sjVqGRO4QBx8IOoY/8Pkg1aA4
+ 5rH3MbucpnyH0ywlSWu7QZDTJvfF/ITJbsViZwrMhyiMfvkh3FM/SnCJV2GR2MRI3dpVBuKDP
+ Xtjf+mHdMH3rHC1ZoN8LzWDdzpX87WUjz/LIsNetEcuZOh9uO8GS1RGtmRQDHSDvN7E9kQ3Zh
+ ghlYDellhGOpEss9Ivp/7IdqTcIghO/KlkVROU19jgNf9Q7yM/+zggEAgQ29anYCfXpm0UDmo
+ aJx6axTv+tU4PomGjVrRJeTBbseOSV7DJ/4nwILB3+cFg=
 
-On Wed, May 08, 2024 at 07:28:35PM +0100, Greg Kroah-Hartman wrote:
-> On Wed, May 08, 2024 at 08:52:24AM +0700, Bagas Sanjaya wrote:
-> > What do you think about above feature request?
-> 
-> We will be glad to review any submitted patches for any features.
-> patches in bugzilla are not viable for obvious reasons.
+> When nohz_full CPU stops tick in tick_nohz_irq_exit(),
+> It wouldn't be chosen to perform idle load balancing because it doesn't
+> call nohz_balance_enter_idle() in tick_nohz_idle_stop_tick() when it
+> becomes idle.
+>
+> tick_nohz_idle_stop_tick() is only called in idle state and
+> nohz_balance_enter_idle() tracks the CPU which is part of nohz.idle_cpus=
+_mask
+> with rq->nohz_tick_stopped.
+>
+> Change tick_nohz_idle_stop_tick() to call nohz_balance_enter_idle()
+> without checking !was_stopped so that nohz_full cpu can be chosen to
+> perform idle load balancing when it enters idle state.
 
-Bagas,
+Would you eventually like to add the tag =E2=80=9CFixes=E2=80=9D once more=
+?
 
-Note that the feature request is related to PPS, so per the
-MAINTAINERS file entry:
 
-PPS SUPPORT
-M:	Rodolfo Giometti <giometti@enneenne.com>
-L:	linuxpps@ml.enneenne.com (subscribers-only)
-S:	Maintained
-W:	http://wiki.enneenne.com/index.php/LinuxPPS_support
-F:	Documentation/ABI/testing/sysfs-pps
-F:	Documentation/devicetree/bindings/pps/pps-gpio.yaml
-F:	Documentation/driver-api/pps.rst
-F:	drivers/pps/
-F:	include/linux/pps*.h
-F:	include/uapi/linux/pps.h
+=E2=80=A6
+> +++ b/kernel/time/tick-sched.c
+> @@ -1228,8 +1228,10 @@ void tick_nohz_idle_stop_tick(void)
+>  		ts->idle_sleeps++;
+>  		ts->idle_expires =3D expires;
+>
+> -		if (!was_stopped && tick_sched_flag_test(ts, TS_FLAG_STOPPED)) {
+> -			ts->idle_jiffies =3D ts->last_jiffies;
+> +		if (tick_sched_flag_test(ts, TS_FLAG_STOPPED)) {
+> +			if (!was_stopped)
+> +				ts->idle_jiffies =3D ts->last_jiffies;
+> +
+>  			nohz_balance_enter_idle(cpu);
+>  		}
+=E2=80=A6
 
-I'd suggest that you reach out to Rondolfo as the maintainer, or to
-the linuxpps mailing list.
+I interpret these diff data in the way that you propose to reorder
+two condition checks.
 
-First of all, looking at the patch referenced in the bugzilla (which
-is actually found in github), it appears that the person who made the
-request via Bugzilla is different from the the person who authored the
-patch (apparently, github.com/not1337).
+But I wonder still how =E2=80=9Cgood=E2=80=9D the presented change descrip=
+tion fits to
+the suggested source code adjustment.
 
-Secondly, the patch is really quite hacky.  First, the termonology
-used of "4wire" is non-standard (e.g., uised nowhere but at
-github.com/not1337/pss-stuff), and misleading.  A cable which only has
-RxD, TxD, RTS, and CTS is not going to work well without GND, so "4
-wire" is quite the misnomer".  This termonology is also not used by
-FreeBSD, BTW.  Secondly, unconditionally mapping CTS to DCD when
-setting a magic UART-level attribute is a bit hacky, since it will do
-this magic ad-hoc mapping all of the time, not only if the PPS line
-discpline is selected.
-
-Now, I haven't been the tty maintainer in quite a while, but in my
-opinion, a much cleaner way would be to plumb a new tty ldisc
-function, cts_change, which is analogous to the dcd_change function
-(which was introduced specifically for pps_ldisc).  Then for bonus
-points, consider using the pps capture mode mde that FreeeBSD's UART
-driver, including the invert option and narrow pulse mode, and eschew
-using the non-standard "4wire" naming terminology.
-
-Finally, note that the way kernel development works is that it's not
-enough for a user to ask for a feature.  Someone has to create a high
-quality, clean, maintainable patch.  Note all random hacks found in
-random Bugzilla or Github git trees are suitable for inclusion in the
-upstream kernel.  And if you don't know how to evaluate the patch for
-quality, it might not be best thing to just ask the bugzilla requester
-to follow the Submitting Patches procedure, given that (a) they might
-not be a kernel developer, and (b) it might just frustrate the
-bugzilla requester and maintainer if the patch isn't sufficient high
-quality, especially if you've managed to set expectations that all the
-bugzilla requestor needs to do is to submit the patch and it will be
-accepted.
-
-Cheers,
-
-					- Ted
+Regards,
+Markus
