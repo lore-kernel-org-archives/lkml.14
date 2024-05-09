@@ -1,205 +1,99 @@
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04BAA14A09D
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 08:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8102714A0B8;
+	Thu,  9 May 2024 08:57:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715245035; cv=none; b=YBJbKtLg+tD5j1G4wpq82B3zcwGD0yFtBEaZysx7wIDBjZGIvJFuoyN7BBUSxUdJzvIwsEYOwPQk6mDHjo0GK3lXJa4VoSZ7kdw2lHsyxW0zc9JoKtP4PLusIhkeom6wniDcEuj/EcoUBpZYHPmlfRRP3WRz9achOnhHd2bCnGc=
+	t=1715245074; cv=none; b=iM4wUIfn/9SrjXuQdVHCjaBgu9Bk+cZ5JzoU4v6ZbOyWInc1npH2ikEPpZ9SW+oAe++iHE9MXC2PIXeRIL24kvYrOO2sY98IXz86qqMCd9RjCseMO+dA2xW315IHGwBb5w/JnUMRNb4RGwYmKABMUm2qDf+gIJC/yL1dbQa5JEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715245035; c=relaxed/simple;
-	bh=zmrIhCP7JxRQY/Beh0wu2cp0ImuYtIcEh7ZxUNRpu8U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aQH+IzarrWV06/Fcff+Cy5diuMxcXY7P7H4zyAEXAXDU+Tw94BAjgrpZj0G7VvZF4M0ZFDvreXFUcV87+6//5lY9NTGiw8FZxdKCuMwe4iTnvBM6gu8f7FP4LKwKe02hBkOE2ibO3MT1b+0OjBcj6hYE9LT2YhhxTh1dE8RcQlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DkUeArbY; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715245074; c=relaxed/simple;
+	bh=ERBm4CPFRavg/qmw/LpsN4foKtvtDY+mu84TopSSqb8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oWaceZQcYR1zqnbZ6GwT13n63OL+VfBcvUAece2edybDP3VApZQeCeCgkQ3Zh9JNZyMyyq5IpLrY35UA6W0i0C1mvfF9iV6Xp03FDJT4dtkkzyMC01jW+u0Cb2qTKXMlHQXmMoyJVoLJAtrYzEEl9b3Ne8ufAc4ivLHAlVoQky0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SqR3R/7e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DkUeArbY"
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7f170dc5f70so227064241.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 01:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715245033; x=1715849833; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hfKhm+2hvPQl8Oso+dQHqxM5T+rG2L/B/sQ5bPGSyGY=;
-        b=DkUeArbY3sPRoJw2MYj9kp3ZmXybLXh6Qv4jMVWbkgTFWCGhGyp8Z+1/Vd09Bhh78P
-         Td10qhS/EV04sw0dHKDPtupti+eCHvClcddEB9mz/Ec/aZ35I08RboykpQPrgcm8ryYm
-         vIkEIxuJnu8O/bYJgaO7cIna9L56ac1BnC3DsQm2rhjmyPCJvkcyLsbeDNMK3xr2V8RW
-         iWjaCzZByodL0Mp2ibIScb9qc5AvlCXF6MP0zJb1IO2ICRRBXVBdFvBch4RdOoRQeGot
-         sSLKBHgzJPUqW/XRBeAM+vvL3RL7UmACh5xQ1ABmW8yyd3qM2vIqzM8r4gyPe08OMNiZ
-         iJDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715245033; x=1715849833;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hfKhm+2hvPQl8Oso+dQHqxM5T+rG2L/B/sQ5bPGSyGY=;
-        b=qT0t1ys9qTrbwPhRN8/r027eegc7aw7BDX93OzH2sBuV+GgaSPNrhIcIq2WOK7l1Zs
-         r1tTxzU5m8dQGL2Lyw16208uDupJ35MtGHvs62otO7WFeNQ5levQBET8oKlBhCq6sZpT
-         FVdzD2PhMh7P7mIRTacaRcvnwg+BqpH9W0gpDgWYDUDJuCSkfS1DkEQqgv5jqdfqNli3
-         l2pfTs0G/5JoK4KX7CluPwG5PIJv4d+yxch0xDlVSf3P2MIpLw5nOqGOg1S0aJXMuUAQ
-         cRClz8dtSvsnqsDgWMM5HsWtL80Xr3mYC2br6VE+qUOIO1Q6YUmSDdfQqbw54Hn6sMZY
-         L47Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU8cNOClPPZucQ4bpwNq6aRu4uvjQ8Fs72BiaUUI9+OtFCdkPbzwmUgqd55yViyLTkplzYiiNOFcAZYjUf59Zp2iwO6AWzPd/Wzcok0
-X-Gm-Message-State: AOJu0YxJYJue61hkPvA0l0FmfS86q7VpYLTFSIT5JtiEAg0Tx9evnu1D
-	tq0bIimYR/+7VDDiCfTRnDTkEJE10Cb0MRFsWYh2+dO1bx7ryY6ekajSqCBdMGyI9E1iFfk6igS
-	S5WPj+3h0YGi+PUarXQ1of4cw56k=
-X-Google-Smtp-Source: AGHT+IFYUDF9N+GGbD4pPAwt0Qso0dyrFmiNKcjQMb09BOpKvCTUFL9zPSEJaYJ38fr6aytRinvJmqD7kfFiAp1NNPg=
-X-Received: by 2002:a05:6102:345:b0:47e:f593:2b8a with SMTP id
- ada2fe7eead31-47f3c38ff83mr4773563137.24.1715245032831; Thu, 09 May 2024
- 01:57:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SqR3R/7e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03848C116B1;
+	Thu,  9 May 2024 08:57:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715245074;
+	bh=ERBm4CPFRavg/qmw/LpsN4foKtvtDY+mu84TopSSqb8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SqR3R/7ekBvH3+juAkmyN3yZdrt+dfsdBGohZapBilU5zsq2ZhSItHTsCUgG9a1Nk
+	 Tossf2tdkzJBkqOeOMCHlBHcXnU2MeQZchV/kKI4rRUMFabTeVoQZLZh1tBXpqYw3F
+	 R5iThVGGicpxUTSI6V3n85DgErHjrDgl0dLZZWUDewB/On4tDoOE8gNhubEoGzbP3f
+	 f4QwdGi5c5OI2c+zk5v+7QOPNLryQ6zFFuA6xQn36BKGkBMzgTlVwT+t9nI9xbgh5w
+	 r3KSERbNOtv9jX5pbcXRdT6xnaV/aPLDAlz3ol2DTUsi8augHNwCMeb+bI8dv1avQv
+	 ZIw003VLPVdCA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1s4zbC-000000000Zt-1IT1;
+	Thu, 09 May 2024 10:57:58 +0200
+Date: Thu, 9 May 2024 10:57:58 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Das Srinagesh <quic_gurus@quicinc.com>,
+	Satya Priya <quic_c_skakit@quicinc.com>,
+	Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
+Message-ID: <ZjyQFrqHT2HBOWY6@hovoldconsulting.com>
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
+ <20240506150830.23709-13-johan+linaro@kernel.org>
+ <Zjkq_nWyvc6bUtiu@surfacebook.localdomain>
+ <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
+ <CAHp75VdUFMvkj-r76H7GFZdpcoh_nb8v6CBj4wBHztNhiaWULQ@mail.gmail.com>
+ <8d2ea17c-f91e-4e14-a239-e5e999f6ac50@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240508125808.28882-1-hailong.liu@oppo.com> <Zjx_6F3Fti_EBD_e@tiehlicka>
- <20240509080636.bauxbgpqdluzpein@oppo.com> <CAGsJ_4wLF2+O2ydr8EvPqgrsOPsWStUxpzRvi3rJpktU_FSP1w@mail.gmail.com>
-In-Reply-To: <CAGsJ_4wLF2+O2ydr8EvPqgrsOPsWStUxpzRvi3rJpktU_FSP1w@mail.gmail.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Thu, 9 May 2024 20:57:00 +1200
-Message-ID: <CAGsJ_4xqg7+xwsbXpU1yp_HkTBcpJwRN-ErEwzOZx915hgsyrQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm/vmalloc: fix vmalloc which may return null if
- called with __GFP_NOFAIL
-To: Hailong Liu <hailong.liu@oppo.com>
-Cc: Michal Hocko <mhocko@suse.com>, akpm@linux-foundation.org, urezki@gmail.com, 
-	hch@infradead.org, lstoakes@gmail.com, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, xiang@kernel.org, chao@kernel.org, 
-	Oven <liyangouwen1@oppo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8d2ea17c-f91e-4e14-a239-e5e999f6ac50@linaro.org>
 
-On Thu, May 9, 2024 at 8:32=E2=80=AFPM Barry Song <21cnbao@gmail.com> wrote=
-:
->
-> On Thu, May 9, 2024 at 8:21=E2=80=AFPM Hailong Liu <hailong.liu@oppo.com>=
- wrote:
-> >
-> > On Thu, 09. May 09:48, Michal Hocko wrote:
-> > > On Wed 08-05-24 20:58:08, hailong.liu@oppo.com wrote:
-> > > > From: "Hailong.Liu" <hailong.liu@oppo.com>
-> > > >
-> > > > Commit a421ef303008 ("mm: allow !GFP_KERNEL allocations for kvmallo=
-c")
-> > > > includes support for __GFP_NOFAIL, but it presents a conflict with
-> > > > commit dd544141b9eb ("vmalloc: back off when the current task is
-> > > > OOM-killed"). A possible scenario is as belows:
-> > > >
-> > > > process-a
-> > > > kvcalloc(n, m, GFP_KERNEL | __GFP_NOFAIL)
-> > > >     __vmalloc_node_range()
-> > > >     __vmalloc_area_node()
-> > > >         vm_area_alloc_pages()
-> > > >             --> oom-killer send SIGKILL to process-a
-> > > >             if (fatal_signal_pending(current)) break;
-> > > > --> return NULL;
-> > > >
-> > > > to fix this, do not check fatal_signal_pending() in vm_area_alloc_p=
-ages()
-> > > > if __GFP_NOFAIL set.
-> > > >
-> > > > Reported-by: Oven <liyangouwen1@oppo.com>
-> > > > Signed-off-by: Hailong.Liu <hailong.liu@oppo.com>
-> > > > ---
-> > > >  mm/vmalloc.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > > > index 6641be0ca80b..2f359d08bf8d 100644
-> > > > --- a/mm/vmalloc.c
-> > > > +++ b/mm/vmalloc.c
-> > > > @@ -3560,7 +3560,7 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
-> > > >
-> > > >     /* High-order pages or fallback path if "bulk" fails. */
-> > > >     while (nr_allocated < nr_pages) {
-> > > > -           if (fatal_signal_pending(current))
-> > > > +           if (!(gfp & __GFP_NOFAIL) && fatal_signal_pending(curre=
-nt))
-> > >
-> > > Use nofail instead of gfp & __GFP_NOFAIL.
-> > >
-> > > Other than that looks good to me. After that is fixed, please feel fr=
-ee
-> > > to add Acked-by: Michal Hocko <mhocko@suse.com>
-> > >
-> > > I believe this should also have Fixes: 9376130c390a ("mm/vmalloc: add=
- support for __GFP_NOFAIL")
-> > > --
-> > > Michal Hocko
-> > > SUSE Labs
-> >
-> > Thanks for the review and the Ack!
-> >
-> > Add Fixes in V2 patch.
-> >
-> > IIUC, nofail could not used for this case.
-> >
-> >         /*
-> >          * For order-0 pages we make use of bulk allocator, if
-> >          * the page array is partly or not at all populated due
-> >          * to fails, fallback to a single page allocator that is
-> >          * more permissive.
-> >          */
-> >         if (!order) {
-> >                 /* bulk allocator doesn't support nofail req. officiall=
-y */
-> >                 xxx
-> > -> nofail =3D false;
->
-> isn't it another bug that needs a fix?
+On Tue, May 07, 2024 at 08:14:43PM +0200, Krzysztof Kozlowski wrote:
+> On 07/05/2024 19:22, Andy Shevchenko wrote:
+> > On Tue, May 7, 2024 at 6:44 PM Johan Hovold <johan@kernel.org> wrote:
+> >> On Mon, May 06, 2024 at 10:09:50PM +0300, Andy Shevchenko wrote:
+> >>> Mon, May 06, 2024 at 05:08:29PM +0200, Johan Hovold kirjoitti:
 
-Upon further examination, it's not a bug, but we can still utilize 'nofail'=
-.
-The current code is very hard to read about gfp and "nofail" :-)
+> >>>> +MODULE_ALIAS("platform:qcom-pm8008-regulator");
+> >>>
+> >>> Use ID table instead.
+> >>
+> >> No, the driver is not using an id-table for matching so the alias is
+> >> needed for module auto-loading.
+> > 
+> > Then create one. Added Krzysztof for that. (He is working on dropping
+> > MODULE_ALIAS() in cases like this one)
+> 
+> Yeah, please use ID table, since this is a driver (unless I missed
+> something). Module alias does not scale, leads to stale and duplicated
+> entries, so should not be used as substitute of ID table. Alias is
+> suitable for different cases.
 
-maybe:
+There's no scalability issue here. If the driver uses driver name
+matching then there will always be exactly one alias needed.
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 6641be0ca80b..7c66fe16c2ad 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -3498,7 +3498,7 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
- {
-        unsigned int nr_allocated =3D 0;
-        gfp_t alloc_gfp =3D gfp;
--       bool nofail =3D false;
-+       bool nofail =3D !!(gfp & __GFP_NOFAIL);
-        struct page *page;
-        int i;
+That said, we may use a platform device id table instead of matching on
+parent compatible if subdrivers are going to be reused by multiple
+devices. I'll consider that.
 
-@@ -3555,7 +3555,6 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
-                 * and compaction etc.
-                 */
-                alloc_gfp &=3D ~__GFP_NOFAIL;
--               nofail =3D true;
-        }
-
-        /* High-order pages or fallback path if "bulk" fails. */
-
->
-> >         } else if (gfp & __GFP_NOFAIL) {
-> >                 /*
-> >                  * Higher order nofail allocations are really expensive=
- and
-> >                  * potentially dangerous (pre-mature OOM, disruptive re=
-claim
-> >                  * and compaction etc.
-> >                  */
-> >                 alloc_gfp &=3D ~__GFP_NOFAIL;
-> >                 nofail =3D true;
-> >         }
-> >
-> >         /* High-order pages or fallback path if "bulk" fails. */
-> >         while (nr_allocated < nr_pages) {
-> >
-> > -> nofail is false here if bulk allocator fails.
-> >                 if (fatal_signal_pending(current))
-> >                         break;
-> >
-> > --
-> >
-> > Best Regards,
-> > Hailong.
+Johan
