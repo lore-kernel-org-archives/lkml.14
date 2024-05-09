@@ -1,300 +1,77 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E65C7E583;
-	Thu,  9 May 2024 19:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0907FBA3
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 19:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715283922; cv=none; b=EcFhmBZz7eWQEYtpYciQIBVMVhTk0xhxnn6acwocLHAJPrE1PDtRV2vL9YkKvYDh4rHzqbPgZGO+Gz4PxJ7/9sVQlfUTv9+JG6iBuSI3kRcv/h8p/MCOzyqsHLWjCPYXW7MIpLxQnPAae4BVhfsY7Pti8tAdOieTFoPokLV/cM8=
+	t=1715284025; cv=none; b=bTadDgq1C+LhomHNJXy+ZaJ11G2RWmZOhVNfM3bB9A5FscCf8rVtA3tL8a/aRKJtu7KaLOPNE+GsaXGsIdPRypHh08i23oG7RkdvIbpoA0/idRqs0Byh6A/KJYHrZhF2XCLOLInLMizBzAtWWajbvvBjdmKK8YuhNwfOCSdEBQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715283922; c=relaxed/simple;
-	bh=PADhBWwzIvV+KcMYknF6nguY74DMj0qhRPGeCokk5XM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Idu+F3umCLsZkdXetFtxXhJFElxlE/vcF/+dH14pt+oT48ZgCE9Y4uwKHVRX0mHeED2pJXzJF7vMSqb/q9V6uQq5Z0JK7JM7eDTueIrPX9pQr8LQzenc+19K4fWE+WqgYBFFnn+U0nc0i6ahT4pGFhOsr+UMPTyQp1xDLmevp+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-61c4ebd0c99so849026a12.0;
-        Thu, 09 May 2024 12:45:20 -0700 (PDT)
+	s=arc-20240116; t=1715284025; c=relaxed/simple;
+	bh=Kc+4KbDEOPf2dGokV72TS0X0dQSm9vXGDWnMVG+oKpg=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=upufHGN8dRy20spVO5v6by30D4YJ840/Hs8IGzem4FaqdBYjvM/Te9SMvjm1UxMCeHhM1mDFvV3UwItK16uxEbtirxS2XQTmvfHwHW4aFFlS2wWUtWqOSQGn+Nfr0+Jjp3cRnR4kMcdv1OyfAgGZQd+dGdujXPbtNbfeBM5AfFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7e1a9dabe13so104521039f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 12:47:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715283920; x=1715888720;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xjFpFxlZq5IzKOtG9JnnZmqQAVF+8NQXdt9aFMsAxpY=;
-        b=FCOwL+r+1D7fPMyO5WzSgw7iiotk+mR6wSrNd6a1yLFVqhYJz2nwAJJs3/UqrsugsA
-         IYnpvsBpFEzS/Ioy+zSiEomi2cPtdn7gA2o4PlBKxOuQRLxv45TAs7SNdgltWJRf2WKL
-         AG1YefkZ7ly66urclerUgYz3SfrJgIVKcT5btltROhpmCbB64sj62H1vlt1omgbovxUt
-         x/Ij6btX+dNGydEYu7eh6PVWhiHQ16g7w53BQz5ie79NE6rK3z5+eyrPIiQ7AKaQTXeE
-         O61+XBCZvmxWujY2CD6/pT+VRj1FhneyqLzLwWGnhXnWpiY0qKKAx7lvOsALb2pL7rFz
-         mKAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoPAMoyFM/p9kMNgtKlueus2NQjSvJqwKPpVFV2tLSNNp9+wQqj2GIQwTtxxKNJZYFNQQ5E5tctPNVtuZmuwfxor1DFP9xlgImrcoD+/qfPhKc7+glH4mAm6EbgGeuNocv9zUX9fuA37Pnf071VexT+2Ar+MCMUsxk8Pg3Vlyb7kpPgQ==
-X-Gm-Message-State: AOJu0YwwwzjTbSwV48FGdDZxTva4OoOtzOlVf+bYCvBMIeWg4A9V+1jp
-	qOHEcYUPx72Ewa2eB2jtZIdAH/y7967elQpvSt5jabI68H4HHKUEQTwEW8TQll+wVNN+5KJpeiJ
-	Ofz1y+elqFc3HOHLmCVTRavU0HxE=
-X-Google-Smtp-Source: AGHT+IEdAq35jjHOPKv3ygxw0++9RQ/dc5hcpeP2qnTH/zTrDWZpO7uMAd3iGsPvW0Ncmwri2RrQay06I+W/ldenb60=
-X-Received: by 2002:a17:90a:51a2:b0:2b4:329e:e373 with SMTP id
- 98e67ed59e1d1-2b6cc45030bmr532105a91.6.1715283919743; Thu, 09 May 2024
- 12:45:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715284023; x=1715888823;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eUpDWeNdwTu/kjq1nCV2ON4vsT4uwa9sN0FBco+5YAA=;
+        b=wOrFfRP5CsfEMqRmCVSkoxajvTa44qsXij/7PnDAy5m/plD1fmxUWyrK1kSHcovIk5
+         FR80Pdd5hedR+5X/99nfPZBOol2eDoL/ZqUu1jDDVMkyN82aX1ZAyCPgDjLDcB2Ajv4u
+         QPe+6PrQ0blvYKS/WXkgRVAyK4JUBARH12SvmLoHilHOrHYw9KhnoM7i38FN4M6RFQ1+
+         XxEN57+a5dJiWDh8EKz1lzT0gqi5icAdwQNSXdQHD7sdjSfTRXVY+nNlURnYwmQHzxE+
+         6+PN5Tk84waLKRkQ32WagZ9FJxi4WgAVo1nV2G/OvL4WJVyPUxdlOm0K7FOXI6EaWsOq
+         +8ug==
+X-Forwarded-Encrypted: i=1; AJvYcCXhsRBhZnUrayFV60fZhVgb14M6PU0fZXr75/w0iMw22CVklTpMcrNt322psGWF/JAm3n7FNJidBGMoPI/Ri/LU8NBrw2h55OkeShdF
+X-Gm-Message-State: AOJu0YxqlrpF1OaRULAENvKdoU2lGwPXSxNCxERPKIiJyZ7fX+2n2iKT
+	2X6cE6uu/btDtixGF2F8hcR9lwf5krF9ula7dxKRt3TvzNlZllnZToM/UnMEAUdFnQiMUckcI3S
+	DRGT0HgH/mmTwX+bVNZln2YKNl6BMICiMmf2ZRR7WS7hf4HGnjFdppEw=
+X-Google-Smtp-Source: AGHT+IFL7mpUk3NvnsMAFAD0opjcqCMStNVhCeAo6AMI+GlYk2KsYMOEnWkz4hm+4MpqDd+OAdaM3pp3FucnoGoAOtmsWL18I/gC
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240502000602.753861-1-yabinc@google.com>
-In-Reply-To: <20240502000602.753861-1-yabinc@google.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 9 May 2024 12:45:08 -0700
-Message-ID: <CAM9d7cj2WUdbXz1E4kQCYY=7tO+C9XXQidMJuQNp=WP6dudLkw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf/core: Save raw sample data conditionally based on
- sample type
-To: Yabin Cui <yabinc@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org
+X-Received: by 2002:a05:6638:2727:b0:488:7bb2:c9fd with SMTP id
+ 8926c6da1cb9f-48959341c45mr32573173.6.1715284022834; Thu, 09 May 2024
+ 12:47:02 -0700 (PDT)
+Date: Thu, 09 May 2024 12:47:02 -0700
+In-Reply-To: <0000000000009f0651061647bd5e@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000decb7906180aae28@google.com>
+Subject: Re: [syzbot] [fs?] WARNING in stashed_dentry_prune (2)
+From: syzbot <syzbot+e25ef173c0758ea764de@syzkaller.appspotmail.com>
+To: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hello,
+syzbot has bisected this issue to:
 
-On Wed, May 1, 2024 at 5:06=E2=80=AFPM Yabin Cui <yabinc@google.com> wrote:
->
-> Currently, space for raw sample data is always allocated within sample
-> records for both BPF output and tracepoint events. This leads to unused
-> space in sample records when raw sample data is not requested.
+commit 2558e3b23112adb82a558bab616890a790a38bc6
+Author: Christian Brauner <brauner@kernel.org>
+Date:   Wed Feb 21 08:59:51 2024 +0000
 
-Oh, I thought it was ok because even if it sets _RAW bit in the
-data->sample_flags unconditionally, perf_prepare_sample() and
-perf_output_sample() checks the original event's attr->sample_type
-so the raw data won't be recorded.
+    libfs: add stashed_dentry_prune()
 
-But I've realized that it increased data->dyn_size already. :(
-Which means the sample would have garbage at the end.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=111fb9d4980000
+start commit:   443574b03387 riscv, bpf: Fix kfunc parameters incompatibil..
+git tree:       bpf
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=131fb9d4980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=151fb9d4980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6fb1be60a193d440
+dashboard link: https://syzkaller.appspot.com/bug?extid=e25ef173c0758ea764de
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fb63f3180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e68f6d180000
 
-I need to check if there are other places that made the same
-mistake for other sample types.
+Reported-by: syzbot+e25ef173c0758ea764de@syzkaller.appspotmail.com
+Fixes: 2558e3b23112 ("libfs: add stashed_dentry_prune()")
 
->
-> This patch checks sample type of an event before saving raw sample data
-> in both BPF output and tracepoint event handling logic. Raw sample data
-> will only be saved if explicitly requested, reducing overhead when it
-> is not needed.
->
-> Fixes: 0a9081cf0a11 ("perf/core: Add perf_sample_save_raw_data() helper")
-> Signed-off-by: Yabin Cui <yabinc@google.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
-
-> ---
->
-> Changes since v1:
->  - Check event->attr.sample_type & PERF_SAMPLE_RAW before
->    calling perf_sample_save_raw_data().
->  - Subject has been changed to reflect the change of solution.
->
-> Original commit message from v1:
-> perf/core: Trim dyn_size if raw data is absent
->
->  kernel/events/core.c     | 37 ++++++++++++++++++++-----------------
->  kernel/trace/bpf_trace.c | 12 +++++++-----
->  2 files changed, 27 insertions(+), 22 deletions(-)
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 724e6d7e128f..dc5f3147feef 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10120,9 +10120,9 @@ static struct pmu perf_tracepoint =3D {
->  };
->
->  static int perf_tp_filter_match(struct perf_event *event,
-> -                               struct perf_sample_data *data)
-> +                               struct perf_raw_record *raw)
->  {
-> -       void *record =3D data->raw->frag.data;
-> +       void *record =3D raw->frag.data;
->
->         /* only top level events have filters set */
->         if (event->parent)
-> @@ -10134,7 +10134,7 @@ static int perf_tp_filter_match(struct perf_event=
- *event,
->  }
->
->  static int perf_tp_event_match(struct perf_event *event,
-> -                               struct perf_sample_data *data,
-> +                               struct perf_raw_record *raw,
->                                 struct pt_regs *regs)
->  {
->         if (event->hw.state & PERF_HES_STOPPED)
-> @@ -10145,7 +10145,7 @@ static int perf_tp_event_match(struct perf_event =
-*event,
->         if (event->attr.exclude_kernel && !user_mode(regs))
->                 return 0;
->
-> -       if (!perf_tp_filter_match(event, data))
-> +       if (!perf_tp_filter_match(event, raw))
->                 return 0;
->
->         return 1;
-> @@ -10171,6 +10171,7 @@ EXPORT_SYMBOL_GPL(perf_trace_run_bpf_submit);
->  static void __perf_tp_event_target_task(u64 count, void *record,
->                                         struct pt_regs *regs,
->                                         struct perf_sample_data *data,
-> +                                       struct perf_raw_record *raw,
->                                         struct perf_event *event)
->  {
->         struct trace_entry *entry =3D record;
-> @@ -10180,13 +10181,18 @@ static void __perf_tp_event_target_task(u64 cou=
-nt, void *record,
->         /* Cannot deliver synchronous signal to other task. */
->         if (event->attr.sigtrap)
->                 return;
-> -       if (perf_tp_event_match(event, data, regs))
-> +       if (perf_tp_event_match(event, raw, regs)) {
-> +               perf_sample_data_init(data, 0, 0);
-> +               if (event->attr.sample_type & PERF_SAMPLE_RAW)
-> +                       perf_sample_save_raw_data(data, raw);
->                 perf_swevent_event(event, count, data, regs);
-> +       }
->  }
->
->  static void perf_tp_event_target_task(u64 count, void *record,
->                                       struct pt_regs *regs,
->                                       struct perf_sample_data *data,
-> +                                     struct perf_raw_record *raw,
->                                       struct perf_event_context *ctx)
->  {
->         unsigned int cpu =3D smp_processor_id();
-> @@ -10194,15 +10200,15 @@ static void perf_tp_event_target_task(u64 count=
-, void *record,
->         struct perf_event *event, *sibling;
->
->         perf_event_groups_for_cpu_pmu(event, &ctx->pinned_groups, cpu, pm=
-u) {
-> -               __perf_tp_event_target_task(count, record, regs, data, ev=
-ent);
-> +               __perf_tp_event_target_task(count, record, regs, data, ra=
-w, event);
->                 for_each_sibling_event(sibling, event)
-> -                       __perf_tp_event_target_task(count, record, regs, =
-data, sibling);
-> +                       __perf_tp_event_target_task(count, record, regs, =
-data, raw, sibling);
->         }
->
->         perf_event_groups_for_cpu_pmu(event, &ctx->flexible_groups, cpu, =
-pmu) {
-> -               __perf_tp_event_target_task(count, record, regs, data, ev=
-ent);
-> +               __perf_tp_event_target_task(count, record, regs, data, ra=
-w, event);
->                 for_each_sibling_event(sibling, event)
-> -                       __perf_tp_event_target_task(count, record, regs, =
-data, sibling);
-> +                       __perf_tp_event_target_task(count, record, regs, =
-data, raw, sibling);
->         }
->  }
->
-> @@ -10220,15 +10226,10 @@ void perf_tp_event(u16 event_type, u64 count, v=
-oid *record, int entry_size,
->                 },
->         };
->
-> -       perf_sample_data_init(&data, 0, 0);
-> -       perf_sample_save_raw_data(&data, &raw);
-> -
->         perf_trace_buf_update(record, event_type);
->
->         hlist_for_each_entry_rcu(event, head, hlist_entry) {
-> -               if (perf_tp_event_match(event, &data, regs)) {
-> -                       perf_swevent_event(event, count, &data, regs);
-> -
-> +               if (perf_tp_event_match(event, &raw, regs)) {
->                         /*
->                          * Here use the same on-stack perf_sample_data,
->                          * some members in data are event-specific and
-> @@ -10238,7 +10239,9 @@ void perf_tp_event(u16 event_type, u64 count, voi=
-d *record, int entry_size,
->                          * because data->sample_flags is set.
->                          */
->                         perf_sample_data_init(&data, 0, 0);
-> -                       perf_sample_save_raw_data(&data, &raw);
-> +                       if (event->attr.sample_type & PERF_SAMPLE_RAW)
-> +                               perf_sample_save_raw_data(&data, &raw);
-> +                       perf_swevent_event(event, count, &data, regs);
->                 }
->         }
->
-> @@ -10255,7 +10258,7 @@ void perf_tp_event(u16 event_type, u64 count, voi=
-d *record, int entry_size,
->                         goto unlock;
->
->                 raw_spin_lock(&ctx->lock);
-> -               perf_tp_event_target_task(count, record, regs, &data, ctx=
-);
-> +               perf_tp_event_target_task(count, record, regs, &data, &ra=
-w, ctx);
->                 raw_spin_unlock(&ctx->lock);
->  unlock:
->                 rcu_read_unlock();
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 9dc605f08a23..4b3ff71b4c0a 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -620,7 +620,8 @@ static const struct bpf_func_proto bpf_perf_event_rea=
-d_value_proto =3D {
->
->  static __always_inline u64
->  __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
-> -                       u64 flags, struct perf_sample_data *sd)
-> +                       u64 flags, struct perf_raw_record *raw,
-> +                       struct perf_sample_data *sd)
->  {
->         struct bpf_array *array =3D container_of(map, struct bpf_array, m=
-ap);
->         unsigned int cpu =3D smp_processor_id();
-> @@ -645,6 +646,9 @@ __bpf_perf_event_output(struct pt_regs *regs, struct =
-bpf_map *map,
->         if (unlikely(event->oncpu !=3D cpu))
->                 return -EOPNOTSUPP;
->
-> +       if (event->attr.sample_type & PERF_SAMPLE_RAW)
-> +               perf_sample_save_raw_data(sd, raw);
-> +
->         return perf_event_output(event, sd, regs);
->  }
->
-> @@ -688,9 +692,8 @@ BPF_CALL_5(bpf_perf_event_output, struct pt_regs *, r=
-egs, struct bpf_map *, map,
->         }
->
->         perf_sample_data_init(sd, 0, 0);
-> -       perf_sample_save_raw_data(sd, &raw);
->
-> -       err =3D __bpf_perf_event_output(regs, map, flags, sd);
-> +       err =3D __bpf_perf_event_output(regs, map, flags, &raw, sd);
->  out:
->         this_cpu_dec(bpf_trace_nest_level);
->         preempt_enable();
-> @@ -749,9 +752,8 @@ u64 bpf_event_output(struct bpf_map *map, u64 flags, =
-void *meta, u64 meta_size,
->
->         perf_fetch_caller_regs(regs);
->         perf_sample_data_init(sd, 0, 0);
-> -       perf_sample_save_raw_data(sd, &raw);
->
-> -       ret =3D __bpf_perf_event_output(regs, map, flags, sd);
-> +       ret =3D __bpf_perf_event_output(regs, map, flags, &raw, sd);
->  out:
->         this_cpu_dec(bpf_event_output_nest_level);
->         preempt_enable();
-> --
-> 2.45.0.rc0.197.gbae5840b3b-goog
->
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
