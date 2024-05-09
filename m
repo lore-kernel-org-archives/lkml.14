@@ -1,114 +1,186 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76016129A6F;
-	Thu,  9 May 2024 23:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A6012D776
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 23:26:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715296933; cv=none; b=WzH1ggb0JPpHqPrKsaN3W1GfQUnCVIbzDpqTZS5uuOUAzXb8ZtLKS48ibXHkCGntOneY09fozyrMAqefmCPCzupk9eHGde4s+E2wc5E0sGz2yNK2aEEw26Is1PJ0q9U2UXgyq4RVr2Sq5c9bUZa8lKLHEB0I6CAI004fNUBGVTU=
+	t=1715297193; cv=none; b=rJam75QegvYParYUoUyZefAArrE0UZ7k21jA4dqFsm439U6VrTkQfHsLtn4w5fCteBRM2ujrsMVezYIXgHQl10C4RJhhVuMrDmwUzXuTQHW8m0PlSSHVboiITTO7M/9D34oN2r11n3m4LxCbB4fw3bLNN6gM6suls7as2k8A/Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715296933; c=relaxed/simple;
-	bh=hDrY//Uiqhy+HCq634k7pNbJivqBAegZvoPN3T2Hg94=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=cXo4+pr+xh/JHerIOI5/lGYHnP17mt3GkgnEWrb8CXSjxWd8Ib8t62tNhhsdKHWpAGIY4wz0s40tx8SyfPkW6w1Aq3tWZeVnhHIN2sT4p89cyO3dCLMdHhNVbdFBz1e3D3IIQQ5VSZcORIiXWviiSU6GgHqsVRCFakICnUn0oyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=TCxLAsxu; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1715297193; c=relaxed/simple;
+	bh=TtTIVr+7zspIAFnpGX8YJqM+7kUQcGBFCu/z/SDDPAw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TMROV/ENT4NedW0utDfqiXzt+Wln2ciunqYzCQwzvHeH/nedft5/VGSlYSQU/ltbwP4ENR5zgFTNLJWNZ04ZgYJuoM4EVHE9/kvQJ88UCx73ZkqyUmJ17QIz5NdwHeG3xSErcgqVFrhPjqFQE5ssBRE/JlNd1r/Zzc/iG6+XaIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Lx7l0FQi; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TCxLAsxu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1715296926;
-	bh=2XRqo6Zz6CVYNzebclt601u06+nXtaM0cV/6U2ljK9M=;
-	h=Date:From:To:Cc:Subject:From;
-	b=TCxLAsxuA/IQDf0eFqWRRE+NIPfJw0h34vh8SmT1+MN2Il7HLeM6xDCbdwXDmsZit
-	 /CH7G8JSLbhl8Cr9hMbUez4jLMOwERNGYKOENMv6xf+bjw76cBQY7xTCspxDBXEOnt
-	 ZsPLmisg0VSxCkX7JdfXHG2EsLl+xlsaOq3c0HPWREJ+Z8f61OtBRdysXzryDU2CZS
-	 0YcZw90gwMkv1dEpoOWbCS49gxH7BpbbJhItCNlWcwy2P6/iUWoCehwyBeeXrKLD5e
-	 VmbnYA8OMXJS0EG5lt7QaYPyOs0ZaQRQg3nQnAemSe542aOd0gWGdVe8++iuUjl0J2
-	 R+eSRynjyoQog==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Vb7MK40Zfz4wyY;
-	Fri, 10 May 2024 09:22:05 +1000 (AEST)
-Date: Fri, 10 May 2024 09:22:02 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Tao Su <tao1.su@linux.intel.com>
-Subject: linux-next: manual merge of the mm tree with Linus' tree
-Message-ID: <20240510092202.5d7df5a6@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Lx7l0FQi"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1e4c4fb6af3so8866965ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 16:26:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715297189; x=1715901989; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KoGFJaD8EljLtrVmLvtlC7K76bro4/HY8QoalZin5IY=;
+        b=Lx7l0FQi4l2AV47jWZ+VdWcHjpBJJ50cuf66IdLPN5DJBpFCsCL5cOb7Pd6WvraVrO
+         fwDBtXG18LhZ+tqD5QD1EQV1xfuKIKiqMkXg6ttYPMwspAeLvjO/kTpBxz4Bs6mtU7VT
+         ko1nj7g5RAuEErvxeIIehgBJ1O2GAGsEwNCKxaKe8aA+G223tRZURDCnpsxuvZ8yGqfe
+         EHGVdlC+qp2S2Fh1UG4BROVluQtpvv9JxjX6RBgWzgg0nLkpImRL3eUN5PfGad2iwuWo
+         76D4o3q9CSOiJPtXhAtY9LukNUJFx774Pe2WyzhPuZWnWUjUnA/Eq8fPTE0OiL9vEDYW
+         skZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715297189; x=1715901989;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KoGFJaD8EljLtrVmLvtlC7K76bro4/HY8QoalZin5IY=;
+        b=pPtDSosE5+aq9rPI2T5pKqR9ZflMys1CAwDdvisZj0Yw+5N56WvL3r5nqE5RSTOP6O
+         gdT7PTUVoUD/lZOO6TBkZIAD+IltKh7AtnGFW7kOJDrDQDasdfJB4+BmU6ys1aMsb3bc
+         C2O1/l5bCbYEQ7CIFpNPMSxa0RuVjvnJOR7Ccqzb4L2zTEkmq7Rhqwuu0OPw1OxxytDo
+         DbXoGnOJiSA1cL13qp+pq/Wi5W4i+8/0wOvYYpoUn26nZedkUrIg3R84sCkhB4Aez5Qd
+         6MVSilpBBkZuXhdlBfz42sDvUhbXOxE7d+YoItZK0Q40oASlVgp2TrEHOhD2Rqip9e6M
+         ozrQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWBNSjNdzMKZ/gQEarITaESnuXMN6BmW9JQkHbw5vmJU4gJ1r9N71mUuV4Dr112rX7jkzBVTvqtr+Kp0UbS+vGT5knE+Tfkm1bJN4v0
+X-Gm-Message-State: AOJu0Yyvl7zUacCpklzAOPvA588vE+9XE1E5CVz916EqZdjkGeMf0vn/
+	KqdvHJPKdIzBDkkrMGMNpU0P3rz36B/cpDwEPU9Z5e+wWH+hgtFPErZQ9LsmZts=
+X-Google-Smtp-Source: AGHT+IEwp50qVSxIKzd3GeAEglFyHmirCQzUqIVxpG0w7MU50Y7SrsfbjsJXYlPTm4I0tHeIzltszA==
+X-Received: by 2002:a17:902:c402:b0:1eb:e40:3f74 with SMTP id d9443c01a7336-1ef432a092emr15262985ad.32.1715297189377;
+        Thu, 09 May 2024 16:26:29 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d1758sm19701355ad.28.2024.05.09.16.26.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 16:26:28 -0700 (PDT)
+Date: Thu, 9 May 2024 16:26:24 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, paul.walmsley@sifive.com,
+	rick.p.edgecombe@intel.com, broonie@kernel.org,
+	Szabolcs.Nagy@arm.com, kito.cheng@sifive.com, keescook@chromium.org,
+	ajones@ventanamicro.com, conor.dooley@microchip.com,
+	cleger@rivosinc.com, atishp@atishpatra.org, alex@ghiti.fr,
+	bjorn@rivosinc.com, alexghiti@rivosinc.com,
+	samuel.holland@sifive.com, linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	corbet@lwn.net, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com,
+	akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com,
+	shuah@kernel.org, brauner@kernel.org, andy.chiu@sifive.com,
+	jerry.shih@sifive.com, hankuan.chen@sifive.com,
+	greentime.hu@sifive.com, evan@rivosinc.com, xiao.w.wang@intel.com,
+	charlie@rivosinc.com, apatel@ventanamicro.com,
+	mchitale@ventanamicro.com, dbarboza@ventanamicro.com,
+	sameo@rivosinc.com, shikemeng@huaweicloud.com, willy@infradead.org,
+	vincent.chen@sifive.com, guoren@kernel.org, samitolvanen@google.com,
+	songshuaishuai@tinylab.org, gerg@kernel.org, heiko@sntech.de,
+	bhe@redhat.com, jeeheng.sia@starfivetech.com, cyy@cyyself.name,
+	maskray@google.com, ancientmodern4@gmail.com,
+	mathis.salmen@matsal.de, cuiyunhui@bytedance.com,
+	bgray@linux.ibm.com, mpe@ellerman.id.au, baruch@tkos.co.il,
+	alx@kernel.org, david@redhat.com, catalin.marinas@arm.com,
+	revest@chromium.org, josh@joshtriplett.org, shr@devkernel.io,
+	deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
+	jhubbard@nvidia.com
+Subject: Re: [PATCH v3 04/29] riscv: zicfilp / zicfiss in dt-bindings
+ (extensions.yaml)
+Message-ID: <Zj1boEJG4ijcdNi0@debug.ba.rivosinc.com>
+References: <20240403234054.2020347-1-debug@rivosinc.com>
+ <20240403234054.2020347-5-debug@rivosinc.com>
+ <20240410115806.GA4044117-robh@kernel.org>
+ <CAKC1njSsZ6wfvJtXkp4J4J6wXFtU92W9JGca-atKxBy8UvUwRg@mail.gmail.com>
+ <20240415194105.GA94432-robh@kernel.org>
+ <Zh6c0FH2OvrfDLje@debug.ba.rivosinc.com>
+ <20240509-cornflake-foyer-e6589c2bc364@spud>
+ <Zj0aAiZiTrt9ACjj@debug.ba.rivosinc.com>
+ <20240509-clatter-crewmate-9755669b9452@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UMbiVPOBNRoNU7ZDd1PCN63";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240509-clatter-crewmate-9755669b9452@spud>
 
---Sig_/UMbiVPOBNRoNU7ZDd1PCN63
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 09, 2024 at 09:32:49PM +0100, Conor Dooley wrote:
+>On Thu, May 09, 2024 at 11:46:26AM -0700, Deepak Gupta wrote:
+>> On Thu, May 09, 2024 at 07:14:26PM +0100, Conor Dooley wrote:
+>> > On Tue, Apr 16, 2024 at 08:44:16AM -0700, Deepak Gupta wrote:
+>> > > On Mon, Apr 15, 2024 at 02:41:05PM -0500, Rob Herring wrote:
+>> > > > On Wed, Apr 10, 2024 at 02:37:21PM -0700, Deepak Gupta wrote:
+>> > > > > On Wed, Apr 10, 2024 at 4:58 AM Rob Herring <robh@kernel.org> wrote:
+>> > > > > >
+>> > > > > > On Wed, Apr 03, 2024 at 04:34:52PM -0700, Deepak Gupta wrote:
+>> > > > > > > Make an entry for cfi extensions in extensions.yaml.
+>> > > > > > >
+>> > > > > > > Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+>> > > > > > > ---
+>> > > > > > >  .../devicetree/bindings/riscv/extensions.yaml          | 10 ++++++++++
+>> > > > > > >  1 file changed, 10 insertions(+)
+>> > > > > > >
+>> > > > > > > diff --git a/Documentation/devicetree/bindings/riscv/extensions.yaml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+>> > > > > > > index 63d81dc895e5..45b87ad6cc1c 100644
+>> > > > > > > --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+>> > > > > > > +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+>> > > > > > > @@ -317,6 +317,16 @@ properties:
+>> > > > > > >              The standard Zicboz extension for cache-block zeroing as ratified
+>> > > > > > >              in commit 3dd606f ("Create cmobase-v1.0.pdf") of riscv-CMOs.
+>> > > > > > >
+>> > > > > > > +        - const: zicfilp
+>> > > > > > > +          description:
+>> > > > > > > +            The standard Zicfilp extension for enforcing forward edge control-flow
+>> > > > > > > +            integrity in commit 3a20dc9 of riscv-cfi and is in public review.
+>> > > > > >
+>> > > > > > Does in public review mean the commit sha is going to change?
+>> > > > > >
+>> > > > >
+>> > > > > Less likely. Next step after public review is to gather comments from
+>> > > > > public review.
+>> > > > > If something is really pressing and needs to be addressed, then yes
+>> > > > > this will change.
+>> > > > > Else this gets ratified as it is.
+>> > > >
+>> > > > If the commit sha can change, then it is useless. What's the guarantee
+>> > > > someone is going to remember to update it if it changes?
+>> > >
+>> > > Sorry for late reply.
+>> > >
+>> > > I was following existing wordings and patterns for messaging in this file.
+>> > > You would rather have me remove sha and only mention that spec is in public
+>> > > review?
+>> >
+>> > Nope, having a commit sha is desired. None of this is mergeable until at
+>> > least the spec becomes frozen, so the sha can be updated at that point
+>> > to the freeze state - or better yet to the ratified state. Being in
+>> > public review is not sufficient.
+>>
+>> Spec is frozen.
+>> As per RVI spec lifecycle, spec freeze is a prior step to public review.
+>> Public review concluded on 25th April
+>> https://lists.riscv.org/g/tech-ss-lp-cfi/message/91
+>>
+>> Next step is ratification whenever board meets.
+>
+>Ah, I did the "silly" thing of looking on the RVI website at extension
+>status (because I never know the order of things) and these two
+>extensions were marked on there as being in the inception phase, so I
+>incorrectly assumed that "public review" came before freeze.
+>Freeze is the standard that we have been applying so far, but if
+>ratification is imminent, and nothing has changed in the review period,
+>then it seems sane to just pick the freeze point for the definition.
 
-Hi all,
+Yeah I don't think wiki is that regularly updated.
+But take a look at Ratification-Ready list of specs here
+https://wiki.riscv.org/display/HOME/RISC-V+Specification+Status
 
-Today's linux-next merge of the mm tree got a conflict in:
+>
+>Cheers,
+>Conor.
 
-  tools/testing/selftests/kselftest_harness.h
 
-between commit:
-
-  caed8eba2215 ("selftests: kselftest_harness: fix Clang warning about zero=
--length format")
-
-from Linus' tree and commit:
-
-  89bc631bb87f ("Revert "selftests/harness: remove use of LINE_MAX"")
-
-from the mm-nonmm-unstable branch of the mm tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc tools/testing/selftests/kselftest_harness.h
-index d98702b6955d,7eca89267962..000000000000
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@@ -1208,8 -1201,7 +1204,7 @@@ void __run_test(struct __fixture_metada
-  		diagnostic =3D "unknown";
- =20
-  	ksft_test_result_code(t->exit_code, test_name,
- -			      diagnostic ? "%s" : "", diagnostic);
- +			      diagnostic ? "%s" : NULL, diagnostic);
-- 	free(test_name);
-  }
- =20
-  static int test_harness_run(int argc, char **argv)
-
---Sig_/UMbiVPOBNRoNU7ZDd1PCN63
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmY9WpoACgkQAVBC80lX
-0Gzx7Af/csdy9gKml+ESzh/6FujKznPX23xqzbgVonDIEHEwjIRCM0qiNk2mKseG
-sa4KgquC3dpzCnwa6CUwFcwZ6gvnZdNmvyWKkDN9NIKaHNDW31eRF3S2HI0b6+zZ
-eTcwhhL5NadKYHzNjnSDG5txe02FpgpbLJROLSW0TQgOXLY6d4qs0EXPLb8nK7KI
-Fu2T1WmIb0W3VQlHaeZ2JWUeJX6lR+hCrUED04XW8zifJllsoa+Oz82Sn0t4FoD/
-o47P5lLejs8Gr7t8yaBhtQYy4AGhLJ4DCsSBibZynPygoNa4eQTbKJiLTF08Crkw
-cNBJuYAkle0b6ZXVo5IJdnsEI4gkxg==
-=dSVX
------END PGP SIGNATURE-----
-
---Sig_/UMbiVPOBNRoNU7ZDd1PCN63--
