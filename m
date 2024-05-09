@@ -1,174 +1,70 @@
-Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F08D1DDEB
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 03:17:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4601DDEB;
+	Thu,  9 May 2024 03:18:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715224682; cv=none; b=sb+kqsiCViAd8eTV7hIo0CzD4WI65nviBwYMbJF68cWTMi1y4Z3HEKhjBubQG9pbfvPpguHB90nIsthxcYKjkpAMUx5peSD+30HfQXpk/XRqrdzFQn/TDya58SlZOwtLwJhb7QmIzLoDXabfI+NdbUHvXoJs/aLYIo1+Fs4C+2Y=
+	t=1715224721; cv=none; b=T02Q8ckx1u/y2eMiCBL6bgSxy44Che/xql82W8+gzlUkNWrjDxf8THoqpQ2jEKIuyAjb1ua7qFkNWrCRA3Oem8y3BW0sbWmF67DwoxQszzU6kd9ISvOSVmcclQm0jV1CLNS8Pf96pvO97DO4VTIclvtSZPwSALcxjZPmi2f17U8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715224682; c=relaxed/simple;
-	bh=O1LF+1WwuiO61NvWh6v4wD8HfaJ8BIoTXYSzCTQmYKY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=icX8N5aHWWGKiWdd7Ly3/iMhgSWOUUGkFYxreTJ6H9LpHIEqhFj4WpOD+z/q8DLxYtte7uP8rly33lfR+cxYrPvAeKRVW7N8hrnchBJXaSKJfJVhgWR7C1qCrIfiGxmyjwtKYqVA3WprTq/z821glUY/b01P3X5scY9hV5D8d2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ie/rV9Ai; arc=none smtp.client-ip=115.124.30.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ie/rV9Ai"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1715224677; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=bJbpI4Ykw2bPEOET9QEYBge5aKOtp0FuvaBCPXYq4j8=;
-	b=ie/rV9AiPdVq499F/55o8QEytk35qC6N7I5QRXAdNwrZqbBdmPBCREq4qmVhF23U6Bh8H2VVywjwx3dyG6297HgHmvlbLjPhiFfX3UBuDg9IZU/fsdfBMyn0cXgPtAD6fK9JHNrkQaDkcJ0IpkAIswfjWOylL3TywvojCB9Ymw8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R621e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067110;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0W65OPA9_1715224674;
-Received: from 30.97.48.191(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W65OPA9_1715224674)
-          by smtp.aliyun-inc.com;
-          Thu, 09 May 2024 11:17:56 +0800
-Message-ID: <edf204e5-1b06-4079-8116-62b517bc98e1@linux.alibaba.com>
-Date: Thu, 9 May 2024 11:17:54 +0800
+	s=arc-20240116; t=1715224721; c=relaxed/simple;
+	bh=FEu9+pGrH6Ue95etWUKSQKyGUULlshNpk9Nh/JCzfmQ=;
+	h=From:To:Subject:Date:Message-Id; b=MX/1qQNnAKZjfEpLyyrXDF0Fz7fh7eGVkF/cnD9puu5RkEIU3aafJVkgjbaEg0lPmHqULRaduwwYXMuXDp2Kgznp15Z4reLJJZ3/J0Ibvov9/IO7CRyIMEW+aBxIR9/wYiYVdbJRR9ww9J7+JBR0KyINyVm1TX3UDTv/9d44vAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 505D9200AAA;
+	Thu,  9 May 2024 05:18:38 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 03CDD2007D5;
+	Thu,  9 May 2024 05:18:38 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id CEF81180222F;
+	Thu,  9 May 2024 11:18:35 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shengjiu.wang@gmail.com,
+	linux-sound@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Xiubo.Lee@gmail.com,
+	festevam@gmail.com,
+	nicoleotsuka@gmail.com,
+	perex@perex.cz,
+	tiwai@suse.com,
+	alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH 0/4] ASoC: fsl_xcvr: Support i.MX95 platform
+Date: Thu,  9 May 2024 10:57:36 +0800
+Message-Id: <1715223460-32662-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] mm/vmalloc: fix vmalloc which may return null if
- called with __GFP_NOFAIL
-To: Barry Song <21cnbao@gmail.com>
-Cc: hailong.liu@oppo.com, akpm@linux-foundation.org, urezki@gmail.com,
- hch@infradead.org, lstoakes@gmail.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, xiang@kernel.org, chao@kernel.org,
- Oven <liyangouwen1@oppo.com>
-References: <20240508125808.28882-1-hailong.liu@oppo.com>
- <CAGsJ_4xN0MBz_73wUvMp74upd9SaQ+TCRJufEj26Y619Rtr7Zw@mail.gmail.com>
- <20d782ad-c059-4029-9c75-0ef278c98d81@linux.alibaba.com>
- <CAGsJ_4xoqdd7+vWAnAdaib_NM8Snf=pxkThT1-b0aU-CPaQBYA@mail.gmail.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <CAGsJ_4xoqdd7+vWAnAdaib_NM8Snf=pxkThT1-b0aU-CPaQBYA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
+On i.MX95 wakeup domain, there is one instance of Audio XCVR
+supporting SPDIF mode with a connection to the Audio XCVR physical
+interface.
 
+Shengjiu Wang (4):
+  ASoC: dt-bindings: fsl,xcvr: Add compatible string for i.MX95
+  ASoC: dt-bindings: fsl,xcvr: Add two PLL clock sources
+  ASoC: fsl_xcvr: Support reparent pll clocks for phy_clk
+  ASoC: fsl_xcvr: Add support for i.MX95 platform
 
-On 2024/5/9 11:09, Barry Song wrote:
-> On Thu, May 9, 2024 at 2:39 PM Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
->>
->> Hi,
->>
->> On 2024/5/9 10:20, Barry Song wrote:
->>> On Thu, May 9, 2024 at 12:58 AM <hailong.liu@oppo.com> wrote:
->>>>
->>>> From: "Hailong.Liu" <hailong.liu@oppo.com>
->>>>
->>>> Commit a421ef303008 ("mm: allow !GFP_KERNEL allocations for kvmalloc")
->>>> includes support for __GFP_NOFAIL, but it presents a conflict with
->>>> commit dd544141b9eb ("vmalloc: back off when the current task is
->>>> OOM-killed"). A possible scenario is as belows:
->>>>
->>>> process-a
->>>> kvcalloc(n, m, GFP_KERNEL | __GFP_NOFAIL)
->>>>       __vmalloc_node_range()
->>>>           __vmalloc_area_node()
->>>>               vm_area_alloc_pages()
->>>>               --> oom-killer send SIGKILL to process-a
->>>>               if (fatal_signal_pending(current)) break;
->>>> --> return NULL;
->>>>
->>>> to fix this, do not check fatal_signal_pending() in vm_area_alloc_pages()
->>>> if __GFP_NOFAIL set.
->>>>
->>>> Reported-by: Oven <liyangouwen1@oppo.com>
->>>> Signed-off-by: Hailong.Liu <hailong.liu@oppo.com>
->>>> ---
->>>>    mm/vmalloc.c | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
->>>> index 6641be0ca80b..2f359d08bf8d 100644
->>>> --- a/mm/vmalloc.c
->>>> +++ b/mm/vmalloc.c
->>>> @@ -3560,7 +3560,7 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
->>>>
->>>>           /* High-order pages or fallback path if "bulk" fails. */
->>>>           while (nr_allocated < nr_pages) {
->>>> -               if (fatal_signal_pending(current))
->>>> +               if (!(gfp & __GFP_NOFAIL) && fatal_signal_pending(current))
->>>>                           break;
->>>
->>> why not !nofail ?
->>>
->>> This seems a correct fix, but it undermines the assumption made in
->>> commit dd544141b9eb
->>>    ("vmalloc: back off when the current task is OOM-killed")
->>>
->>> "
->>>       This may trigger some hidden problems, when caller does not handle
->>>       vmalloc failures, or when rollaback after failed vmalloc calls own
->>>       vmallocs inside.  However all of these scenarios are incorrect: vmalloc
->>>       does not guarantee successful allocation, it has never been called with
->>>       __GFP_NOFAIL and threfore either should not be used for any rollbacks or
->>>       should handle such errors correctly and not lead to critical failures.
->>> "
->>>
->>> If a significant kvmalloc operation is performed with the NOFAIL flag, it risks
->>> reverting the fix intended to address the OOM-killer issue in commit
->>> dd544141b9eb.
->>> Should we indeed permit the NOFAIL flag for large kvmalloc allocations?
->>
->> Just from my perspective, I don't really care about kmalloc, vmalloc
->> or kvmalloc (__GFP_NOFAIL).  I even don't care if it returns three
->> order-0 pages or a high-order page.   I just would like to need a
->> virtual consecutive buffer (even it works slowly.) with __GFP_NOFAIL.
->>
->> Because in some cases, writing fallback code may be tough and hard to
->> test if such fallback path is correct since it only triggers in extreme
->> workloads, and even such buffers are just used in a very short lifetime.
->> Also see other FS discussion of __GFP_NOFAIL, e.g.
->> https://lore.kernel.org/all/ZcUQfzfQ9R8X0s47@tiehlicka/
->>
->> In the worst cases, it usually just needs < 5 order-0 pages (for many
->> cases it only needs one page), but with kmalloc it will trigger WARN
->> if it occurs to > order-1 allocation. as I mentioned before.
->>
->> With my limited understanding I don't see why it could any problem with
->> kvmalloc(__GFP_NOFAIL) since it has no difference of kmalloc(GFP_NOFAIL)
->> with order-0 allocation.
-> 
-> I completely understand that you're not concerned about the origin of
-> the memory,
-> such as whether it's organized by all zero-order pages. However, in the event
-> that someone else allocates a large memory, like several megabytes with the
-> NOFAIL flag, commit dd544141b9eb aims to halt the allocation before success
-> if the process being allocated is targeted for termination of OOM-killer.
-> 
-> With the current patch, we miss the opportunity for early allocation
-> termination.
-> However, if the size of the kvmalloc() is small, as in your case, I
-> believe it should
-> be perfectly fine. but do we have any way to prevent large size allocation with
-> NOFAIL?
+ .../devicetree/bindings/sound/fsl,xcvr.yaml   |   7 +
+ sound/soc/fsl/fsl_xcvr.c                      | 128 ++++++++++++------
+ sound/soc/fsl/fsl_xcvr.h                      |  91 +++++++++++++
+ 3 files changed, 183 insertions(+), 43 deletions(-)
 
-I think large size order-0 virtual consecutive allocation prevention
-should be done by the callers (e.g. EROFS) other than memory subsystem,
-since it totally sounds like caller bugs.
+-- 
+2.34.1
 
-It doesn't make sense for me to block getting a virtual consecutive buffer
-which only needs more than two (e.g. three or five) order-0 pages in the
-extreme cases.
-
-Yes, I need to prevent very insane allocations but it's an on-disk hard
-limitation of a filesystem itself.
-
-Thanks,
-Gao Xiang
-
-> 
->>
->>
->> Thanks,
->> Gao XIang
-> 
-> Thanks
-> Barry
