@@ -1,98 +1,201 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4AC7FBAA;
-	Thu,  9 May 2024 19:17:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BFE7F495
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 19:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715282273; cv=none; b=PEASYpMtfcFs/W5qCBKuNd5x9l0XAczzf2YM8HDTHRHnNcSBiJKjSU+jIfzL7bXR4l+pNX84G5z7RB53Q/Bks0he9B10aW0Vr4E63W9cOdjLbDZg7KMmm+L+DP4n8Ex4xJha+l5LSl3pZ81X42OGNZHGLova1ToGLMY6JbyzQo8=
+	t=1715282273; cv=none; b=Yk7iekwH+cgswBkwajhlweX0Ji92r1FMVIi5wXlknhgpJc0DzULdw92HqpNOPzYJSXWJemjXwCs0UGldlxUnkIW5l2jvmViDjKnRh+SZixoMQr540CynapW0iuHhE3d8TU/fBZcaGVD2n3XQX/hx1uaxi16vbNGSrkZLE8TyKA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715282273; c=relaxed/simple;
-	bh=9TH7xYV2r3k4IZIMImzh8JQm/dLSNPLQ/yaBEE8XBDw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dR0xqYstlS5hx9uyiqUSU7CEi3uMEJRLBddux3thNVjQzQ1BTCXW8lqiF6iiw8f/weOH1Ko0ZgsiINNz6znwHuuZWRSbd1Er9ZryAAIO3fxFY+lK31w/i9BldugQU5GmVdrh1ekkPUiciUvwJ83cOnSLIS8Fvk7HU3QVj6lKnCc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=fail (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=Dv4w2OCI reason="signature verification failed"; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	bh=T036fifrIA1AksrNL7AFJX0e/GPtXPfszP11ZVgPMCM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kazKWjeQnKbvTr/q+u1JPGZMMfcb+adNzv8a/EVbFx/5EJSN2mA/7WWlOyVzjCk35a/4K3dLU+ienDHT0H+YVgv5+mKIjr3mHMnu+YOnV8PrKHlPmR1Rqo2mKFefqv9FyvVikszB7oxVvtQcCbMn5pV26gS56PB8vjsPmtzGYI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=k83wz7aa; arc=none smtp.client-ip=95.215.58.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="Dv4w2OCI"
-Received: from localhost (127.0.0.1) (HELO v370.home.net.pl)
- by /usr/run/smtp (/usr/run/postfix/private/idea_relay_lmtp) via UNIX with SMTP (IdeaSmtpServer 6.0.0)
- id ce133ce02d53c444; Thu, 9 May 2024 21:17:44 +0200
-Received: from kreacher.localnet (unknown [195.136.19.94])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id E80D1A524E7;
-	Thu,  9 May 2024 21:17:43 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1715282264;
-	bh=9TH7xYV2r3k4IZIMImzh8JQm/dLSNPLQ/yaBEE8XBDw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Dv4w2OCI1J0MUee8p9stL1NnwNIrGkty3aNOkThwnyjJB38rnSiD9u0tkIEF6EpCD
-	 rT2grUEW+7UijTfEwiWD1ubPJSLHLkuKXo7WBTMxB0bAFWw6s8bkXm9Vw1vMbbvhxE
-	 bZGyXEqH3bKGYiL2pFyeUj9m70YUWF19HSGy1pQw0GMI2C6THHHIinKpAmFF/Tgjrp
-	 mx3dkW6DIo1ATet7bjRw4lim9jHVv4iTBUxQYQpWlSLCfdCSbUjFI//L6L7bk5Ouvy
-	 AEYnJEMiE37qZ72yKH+M7NxY8T2xk1hwQh9e/JNMp1iLxyC5oD8WQexTFDgeWsbr7X
-	 nmG0tolNs7CbA==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba <lukasz.luba@arm.com>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject:
- [PATCH v1 3/7] thermal/debugfs: Print mitigation timestamp value in
- milliseconds
-Date: Thu, 09 May 2024 21:13:17 +0200
-Message-ID: <1892146.tdWV9SEqCh@kreacher>
-In-Reply-To: <12438864.O9o76ZdvQC@kreacher>
-References: <12438864.O9o76ZdvQC@kreacher>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="k83wz7aa"
+Message-ID: <c929dced-e70e-4f49-b812-026b2677bfd9@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715282268;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KOgzY1WJHW9FwJa+ECKBwfARITf81KjLffAQbrFvkAo=;
+	b=k83wz7aalbejSVXWLHFcLxiKRzT5kSW7NA+WKJgvBtn/C0vIRknQrGxh0peZ867AQccx0/
+	nR/vlBtTtlKgscE9YlpFjWU+jX5QgqrVZ+jSo6aKjstFTWCX8uQX1vZSMUDlUMAwIIEtTW
+	QfHyoynhNjpEEnM2hdGGKz5VjPMlOXE=
+Date: Thu, 9 May 2024 12:17:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 195.136.19.94
-X-CLIENT-HOSTNAME: 195.136.19.94
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvledrvdefvddgudeffecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfjqffogffrnfdpggftiffpkfenuceurghilhhouhhtmecuudehtdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkjghfggfgtgesthhqredttddtjeenucfhrhhomhepfdftrghfrggvlhculfdrucghhihsohgtkhhifdcuoehrjhifsehrjhifhihsohgtkhhirdhnvghtqeenucggtffrrghtthgvrhhnpedtvdefgeelvdefvdevveehvdetfeefhedvueeiudekieeltdetgfdviefhgfetteenucfkphepudelhedrudefiedrudelrdelgeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduleehrddufeeirdduledrleegpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqpdhnsggprhgtphhtthhopeehpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehluhhkrghsiidrlhhusggrsegrrhhmrdgtohhmpdhrtghpthhtohepuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrgh
-X-DCC--Metrics: v370.home.net.pl 1024; Body=5 Fuz1=5 Fuz2=5
+Subject: Re: [RFC PATCH bpf-next v7 3/3] selftests/bpf: Handle forwarding of
+ UDP CLOCK_TAI packets
+To: Abhishek Chauhan <quic_abchauha@quicinc.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Andrew Halaney <ahalaney@redhat.com>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Martin KaFai Lau <martin.lau@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, bpf <bpf@vger.kernel.org>,
+ kernel@quicinc.com
+References: <20240508215842.2449798-1-quic_abchauha@quicinc.com>
+ <20240508215842.2449798-4-quic_abchauha@quicinc.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <20240508215842.2449798-4-quic_abchauha@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-=46rom: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 5/8/24 2:58 PM, Abhishek Chauhan wrote:
+> With changes in the design to forward CLOCK_TAI in the skbuff
+> framework,  existing selftest framework needs modification
+> to handle forwarding of UDP packets with CLOCK_TAI as clockid.
 
-Because mitigation episode duration is printed in milliseconds, there
-is no reason to print timestamp information for mitigation episodes in
-smaller units which also makes it somewhat harder to interpret the
-numbers.
+The set lgtm. I have a few final nits on the test.
 
-Print it in milliseconds for consistency.
+> 
+> Link: https://lore.kernel.org/netdev/bc037db4-58bb-4861-ac31-a361a93841d3@linux.dev/
+> Signed-off-by: Abhishek Chauhan <quic_abchauha@quicinc.com>
+> ---
+> Changes since v7
+> - Fixed  issues in the ctx_rewrite.c
+>    with respect to dissembly in both
+>    .read and .write
+> 
+> Changes since v6
+> - Moved all the selftest to another patch
+> 
+> Changes since v1 - v5
+> - Patch was not present
+> 
+>   tools/include/uapi/linux/bpf.h                | 15 ++++---
+>   .../selftests/bpf/prog_tests/ctx_rewrite.c    | 10 +++--
+>   .../selftests/bpf/prog_tests/tc_redirect.c    |  3 --
+>   .../selftests/bpf/progs/test_tc_dtime.c       | 39 +++++++++----------
+>   4 files changed, 34 insertions(+), 33 deletions(-)
+> 
+> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+> index 90706a47f6ff..25ea393cf084 100644
+> --- a/tools/include/uapi/linux/bpf.h
+> +++ b/tools/include/uapi/linux/bpf.h
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-=2D--
- drivers/thermal/thermal_debugfs.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+nit. Please move this bpf.h sync changes to patch 2 where the uapi changes happen.
 
-Index: linux-pm/drivers/thermal/thermal_debugfs.c
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=2D-- linux-pm.orig/drivers/thermal/thermal_debugfs.c
-+++ linux-pm/drivers/thermal/thermal_debugfs.c
-@@ -789,8 +789,8 @@ static int tze_seq_show(struct seq_file
- 		c =3D '=3D';
- 	}
-=20
-=2D	seq_printf(s, ",-Mitigation at %lluus, duration%c%llums\n",
-=2D		   ktime_to_us(tze->timestamp), c, duration_ms);
-+	seq_printf(s, ",-Mitigation at %llums, duration%c%llums\n",
-+		   ktime_to_ms(tze->timestamp), c, duration_ms);
-=20
- 	seq_printf(s, "| trip |     type | temp(=C2=B0mC) | hyst(=C2=B0mC) |  dur=
-ation   |  avg(=C2=B0mC) |  min(=C2=B0mC) |  max(=C2=B0mC) |\n");
-=20
+> @@ -6207,12 +6207,17 @@ union {					\
+>   	__u64 :64;			\
+>   } __attribute__((aligned(8)))
+>   
+> +/* The enum used in skb->tstamp_type. It specifies the clock type
+> + * of the time stored in the skb->tstamp.
+> + */
+>   enum {
+> -	BPF_SKB_TSTAMP_UNSPEC,
+> -	BPF_SKB_TSTAMP_DELIVERY_MONO,	/* tstamp has mono delivery time */
+> -	/* For any BPF_SKB_TSTAMP_* that the bpf prog cannot handle,
+> -	 * the bpf prog should handle it like BPF_SKB_TSTAMP_UNSPEC
+> -	 * and try to deduce it by ingress, egress or skb->sk->sk_clockid.
+> +	BPF_SKB_TSTAMP_UNSPEC = 0,		/* DEPRECATED */
+> +	BPF_SKB_TSTAMP_DELIVERY_MONO = 1,	/* DEPRECATED */
+> +	BPF_SKB_CLOCK_REALTIME = 0,
+> +	BPF_SKB_CLOCK_MONOTONIC = 1,
+> +	BPF_SKB_CLOCK_TAI = 2,
+> +	/* For any future BPF_SKB_CLOCK_* that the bpf prog cannot handle,
+> +	 * the bpf prog can try to deduce it by ingress/egress/skb->sk->sk_clockid.
+>   	 */
+>   };
+>   
+> diff --git a/tools/testing/selftests/bpf/prog_tests/ctx_rewrite.c b/tools/testing/selftests/bpf/prog_tests/ctx_rewrite.c
+> index 3b7c57fe55a5..08b6391f2f56 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/ctx_rewrite.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/ctx_rewrite.c
+> @@ -69,15 +69,17 @@ static struct test_case test_cases[] = {
+>   	{
+>   		N(SCHED_CLS, struct __sk_buff, tstamp),
+>   		.read  = "r11 = *(u8 *)($ctx + sk_buff::__mono_tc_offset);"
+> -			 "w11 &= 3;"
+> -			 "if w11 != 0x3 goto pc+2;"
+> +			 "if w11 & 0x4 goto pc+1;"
+> +			 "goto pc+4;"
+> +			 "if w11 & 0x3 goto pc+1;"
+> +			 "goto pc+2;"
+>   			 "$dst = 0;"
+>   			 "goto pc+1;"
+>   			 "$dst = *(u64 *)($ctx + sk_buff::tstamp);",
+>   		.write = "r11 = *(u8 *)($ctx + sk_buff::__mono_tc_offset);"
+> -			 "if w11 & 0x2 goto pc+1;"
+> +			 "if w11 & 0x4 goto pc+1;"
+>   			 "goto pc+2;"
+> -			 "w11 &= -2;"
+> +			 "w11 &= -4;"
+>   			 "*(u8 *)($ctx + sk_buff::__mono_tc_offset) = r11;"
+>   			 "*(u64 *)($ctx + sk_buff::tstamp) = $src;",
+>   	},
+> diff --git a/tools/testing/selftests/bpf/prog_tests/tc_redirect.c b/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
+> index b1073d36d77a..327d51f59142 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/tc_redirect.c
+> @@ -890,9 +890,6 @@ static void test_udp_dtime(struct test_tc_dtime *skel, int family, bool bpf_fwd)
+>   
+>   	ASSERT_EQ(dtimes[INGRESS_FWDNS_P100], 0,
+>   		  dtime_cnt_str(t, INGRESS_FWDNS_P100));
+> -	/* non mono delivery time is not forwarded */
+> -	ASSERT_EQ(dtimes[INGRESS_FWDNS_P101], 0,
+> -		  dtime_cnt_str(t, INGRESS_FWDNS_P101));
+>   	for (i = EGRESS_FWDNS_P100; i < SET_DTIME; i++)
+>   		ASSERT_GT(dtimes[i], 0, dtime_cnt_str(t, i));
+>   
+> diff --git a/tools/testing/selftests/bpf/progs/test_tc_dtime.c b/tools/testing/selftests/bpf/progs/test_tc_dtime.c
+> index 74ec09f040b7..21f5be202e4b 100644
+> --- a/tools/testing/selftests/bpf/progs/test_tc_dtime.c
+> +++ b/tools/testing/selftests/bpf/progs/test_tc_dtime.c
+> @@ -222,13 +222,19 @@ int egress_host(struct __sk_buff *skb)
+>   		return TC_ACT_OK;
+>   
+>   	if (skb_proto(skb_type) == IPPROTO_TCP) {
+> -		if (skb->tstamp_type == BPF_SKB_TSTAMP_DELIVERY_MONO &&
+> +		if (skb->tstamp_type == BPF_SKB_CLOCK_MONOTONIC &&
+> +		    skb->tstamp)
+> +			inc_dtimes(EGRESS_ENDHOST);
+> +		else
+> +			inc_errs(EGRESS_ENDHOST);
+> +	} else if (skb_proto(skb_type) == IPPROTO_UDP) {
+> +		if (skb->tstamp_type == BPF_SKB_CLOCK_TAI &&
+>   		    skb->tstamp)
+>   			inc_dtimes(EGRESS_ENDHOST);
+>   		else
+>   			inc_errs(EGRESS_ENDHOST);
+>   	} else {
+> -		if (skb->tstamp_type == BPF_SKB_TSTAMP_UNSPEC &&
+> +		if (skb->tstamp_type == BPF_SKB_CLOCK_REALTIME &&
+>   		    skb->tstamp)
 
+Since the UDP+TAI can be handled properly in the above "else if" case now, I 
+would like to further tighten the bolt on detecting the non-zero REALTIME 
+skb->tstamp here since it should not happen at egress. Something like:
 
+	} else {
+		if (skb->tstamp_type == BPF_SKB_CLOCK_REALTIME &&
+		    skb->tstamp)
+			inc_errs(EGRESS_ENDHOST);
+	}
+
+I ran the test (w or w/o the above inc_errs changes) in a loop and it 
+consistently passes now.
+
+Other than the above small nits, in the next re-spin, please remove the RFC tag 
+and you can carry my reviewed-by to all 3 patches. Thanks.
+
+Reviewed-by: Martin KaFai Lau <martin.lau@kernel.org>
+
+>   			inc_dtimes(EGRESS_ENDHOST);
+>   		else
 
