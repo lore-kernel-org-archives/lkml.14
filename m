@@ -1,61 +1,60 @@
 Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F22DDF78
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 06:52:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46AF914830B
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 06:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715237528; cv=none; b=kX2PSWoBkblhuz5ZJDyaa9ZvSvRWaZIu9kPCFN9fyaoXXUpbAKWYPlzDc8tyhNS3RJ5pSL/7Kv+rvMeH7AuZUTMZcva67Z7EMVe80YViaFaLdMMKSAFGPuosG2DnMBzGUHXua3UR+pJcYUupIgsAoWhxkPIY2JXUp41PRYfELq0=
+	t=1715237533; cv=none; b=Cq+aaTgHxGxSd5WlzF5Fgx1mZIK/1fVWar0sDAxlNHeJQQWIsLQuo3duh/lWF3nv6P5vVZ1vAV3qIUubxCi+TiKVKQwpCmjRvLPWfagCiVxUCY9aJ4Ud/3bpicBY4ULVuW+oqKEIxOgsXM8KCCWGcvkv3auBKHPGP1eld223sb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715237528; c=relaxed/simple;
-	bh=YiPURdRPIqAFJS7UD4kJYMYIGLJ4QXIZkdL79YJ68+A=;
+	s=arc-20240116; t=1715237533; c=relaxed/simple;
+	bh=RVNDo+PUPNeV1sa0OC/s/rwZqNAdhw3yPx+40/ruZ0I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sFF+f92Ime/THV6VpKZG6/h1/KkSBZDH4rp7sDRoRLJ2Tx66qMG9Vrq8MUMQmmA6qoJsWdZpXtdmiVxTxRUCDH7xVor9CRf78nWC1jtOOlqih24pUDWKIxM8m+hlduzofrOYVLfK2ezRVLm5j8Nx1eKFxGeKxOn7LEfI7AzSZlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qa9GreiK; arc=none smtp.client-ip=209.85.218.49
+	 In-Reply-To:To:Cc; b=BC1CTYPJQjfPccYs1IhyIgUwFeKDuoD6M4SWentfxw/xBFVO8n6grGLTau0xjdci0z0uuetDeDFc9lSTntqsWhwogQZIm/DFpoVpd3Uv79691M+ZB04Ca/oBwZpLC9cKFJMb4BszCGkZu35NAABA1yg3cMFXuJd/d7DacV1V0X8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=M8EhKIKS; arc=none smtp.client-ip=209.85.218.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qa9GreiK"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a59a17fcc6bso114970366b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 23:52:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M8EhKIKS"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a59a8f0d941so116291766b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 23:52:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715237524; x=1715842324; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1715237529; x=1715842329; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=z9/i8BMDeVDAZrB3rSBEhJW+evUNFSRGKXs16mcLiyI=;
-        b=qa9GreiK8GAAHAXxfec3BU3pysoiv4rSX0HvBmX36CzcKxZMtfYS/6nlmVxuxPQ8Yu
-         y/LBd4Pi9E4Fv1Po5LpE1AD5zCj3facWfOkZunRRjHSo8DC+AseHOqaVv4oIR/CAJLbJ
-         2tnTM+e8Xz8fBD4QJi6WgJ4Uk5kTv2vvZYJ62yIotdG2K8FhZNrN32bpNRhJYn5HMVRw
-         kxvN287R2YS4dAYtWn3oyfGU2Fmq9Lr9MwYNSL2iDbffL8+7y54Le+jkG8JEl+yMPPjt
-         XdIC7H5naZq/DJBxpKU/xz7EGNwYfkoX+sKymNIi1NeEuat10A7r7lbDdtCvuz7atNcA
-         mPsg==
+        bh=sm/iyvA/oRf8IDDwCG6199y51shfGYvzaBKbXuvmT5Q=;
+        b=M8EhKIKSHZFQb100NC89UU1xw9FdpDBlMCukprNMrRbzbXtEByFxNkJ1sSnXu6Or6z
+         0MvRc4NxuaI5tgJbIZ4756JER0Z9+tVLuPWXfpADci9WWGT2ScP8/STtj3w37bZt9Tr6
+         Y0V24JZ9x2wPux4Wbu2AlzHW59bsiEzShaZqoWgzeUtIGRRzmsw1RR6qenr1UwEp7I8u
+         BXxwbHEJdWJeKsvUw368YHNoO+rpN7p62ibpDdSKPN5vhz/Ox7UBDHwF0PJILdpeBU0o
+         iXPaFwApZZbRwILuzolcrxzhQFSmiw2cSgd74aRptkPtodbNKQBh5njKMO4E4dpW7H9p
+         mELg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715237524; x=1715842324;
+        d=1e100.net; s=20230601; t=1715237529; x=1715842329;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z9/i8BMDeVDAZrB3rSBEhJW+evUNFSRGKXs16mcLiyI=;
-        b=cXXSrTpUgze2WNDFAG3AOMs5iISPuzNswvE3/ym8SyLT87y6shcHyCDtoUeF+KPXry
-         w4M+1QRnJPP3m91cJ3ScKzALqP8yQiILSKDCWrYSrVOFEYYw67WM0SEWIbRoSF1XzmGA
-         PvjolQO64Rt4Rv8Q2hwP16Ba4KpKup5P2c0HH1hGa5SBxl8Hjh8ILE/RMXZgGM5XWpL7
-         mzkSUPGsNxytCoQGYMq4cAaASSWCbWI2gcWcrrL0ujg0LHyp3bPbVNMYBSyc313iD6KP
-         ciWd96OYLu/2/Cytl0JqsKLOH8yngnZL4pTiHpRFeKqI+33YVE6y2kSLXXzpuTAp2b6w
-         dCkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXtd+OmFOb7lhzzwOlOb954BbanTufShVXAIU+z1FaKyV0XgrET+r7ye5JVD2mQGzBJmeUke7wRVF4I8dCsq5t0Dw7fuVrKXt055SUy
-X-Gm-Message-State: AOJu0YwgQ0kSfzyy5PIv26UOWLzhSpypqjQ8zt+YXR3F/XpzHLbTguw6
-	aPubQvhksyMn9/GM6Psy7K7/jfYe5lQZZk5iSfbmNPSZTvscI5ntStzjgHlz3dA=
-X-Google-Smtp-Source: AGHT+IETEpwMfLeq2gPmmhB/rIv1CeVgmU43nMRAnZc98Fdcu1wvTdb+YCThOZtvV9r7aFlTbVsw2A==
-X-Received: by 2002:a17:907:9919:b0:a59:af54:1657 with SMTP id a640c23a62f3a-a59fb949134mr302210966b.16.1715237524556;
-        Wed, 08 May 2024 23:52:04 -0700 (PDT)
+        bh=sm/iyvA/oRf8IDDwCG6199y51shfGYvzaBKbXuvmT5Q=;
+        b=fv2p1DKpVCJyZHERwX35Rfzgj9lbTMHF5t0fTHFDKO5lxINflk1aixowc5nh2j2tHA
+         JcMD2QTqvLwf7TSJThvkA/1zGiXf7rYnhs0bcR5arXrrCiS3rw4k6U3izaC4mTXkrdWc
+         YB3e5L5si3oT6mDKblyE4Cy3uKa/fcPGPepQd9p73X6qzbDbDaECto3SFTV/48vQUDYB
+         0qSzVkcHfVBDR0LXSeiR4Otr4YinhXG7xrrAtXfCzidoCN6jESeJ6tOMkKbut4hX5Dzm
+         mMAOy4PNFu53/wSzfMeCFrof/HW5V5lB1oVsfCANdB6W1g9CKenFIkUuJ830NT+ATB1a
+         Vf+g==
+X-Forwarded-Encrypted: i=1; AJvYcCU+vkheL//rdYRVRPDOp35lsGGdBE3wBQsRd3EeSoLEN7YIFr+iX+K39agmEluJouRTTc0mx/uRFrPcbPdktxsWEhgBqFmHWeVQcOEg
+X-Gm-Message-State: AOJu0YyxAT3HOb72rP2MZqPOangnf+70xjhDU0y4Mj8xD5g9DNg2xbFS
+	bxpUl2Ve2GSC68RZJJe5V0TCZnEP0SFh7yHI7D3ppQf9DHxNq1ZXAPt/donNKzE=
+X-Google-Smtp-Source: AGHT+IEMC0ilJJg70QPm8lCy30IW4I4keeEdeUIMfIvXhDrQwwAW7AyVSUXqZdNZWj/o+Uu0TeE/GQ==
+X-Received: by 2002:a17:906:4f90:b0:a55:9dec:355f with SMTP id a640c23a62f3a-a59fb9f33ebmr248070566b.70.1715237529734;
+        Wed, 08 May 2024 23:52:09 -0700 (PDT)
 Received: from [127.0.1.1] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c81b4sm40730966b.113.2024.05.08.23.52.03
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c81b4sm40730966b.113.2024.05.08.23.52.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 23:52:04 -0700 (PDT)
+        Wed, 08 May 2024 23:52:09 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Thu, 09 May 2024 08:51:52 +0200
-Subject: [PATCH v3 1/4] ASoC: Constify channel mapping array arguments in
- set_channel_map()
+Date: Thu, 09 May 2024 08:51:55 +0200
+Subject: [PATCH v3 4/4] ASoC: qcom: x1e80100: Correct channel mapping
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,7 +63,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240509-asoc-x1e80100-4-channel-mapping-v3-1-6f874552d7b2@linaro.org>
+Message-Id: <20240509-asoc-x1e80100-4-channel-mapping-v3-4-6f874552d7b2@linaro.org>
 References: <20240509-asoc-x1e80100-4-channel-mapping-v3-0-6f874552d7b2@linaro.org>
 In-Reply-To: <20240509-asoc-x1e80100-4-channel-mapping-v3-0-6f874552d7b2@linaro.org>
 To: James Schulman <james.schulman@cirrus.com>, 
@@ -78,265 +77,76 @@ To: James Schulman <james.schulman@cirrus.com>,
  Banajit Goswami <bgoswami@quicinc.com>
 Cc: alsa-devel@alsa-project.org, patches@opensource.cirrus.com, 
  linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Charles Keepax <ckeepax@opensource.cirrus.com>, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10094;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1580;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=YiPURdRPIqAFJS7UD4kJYMYIGLJ4QXIZkdL79YJ68+A=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmPHKNw3apeixozr0FFijgWAjGbg2V+BjPJqhOb
- bNc6tEt/VWJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjxyjQAKCRDBN2bmhouD
- 1/beD/0WGM4JWNGkjHY4M130mPvsMf2h3h8pBA4enfEGLgJE5QoaDEPYHV3DQNSI9fLADfXBIMA
- HFqsEADTZDc82fh+qmtIvy4r72s+YfyFJNPUR6S6l7iUrO1oyc6CiQjEubNER3pIvRyhARdEYkS
- n5AUUAoEbiTIdizlj3BWODmJAZIsNnEpy8IQR3gd/EVLb902iJi6eGlD8r3/RHPYWhtKJ66Bjvo
- wlXUFUHL8qjp/IdkVknlsFixbWvNEw4sOeYJvI+/d4LsI7Rx9Eae12PKwEFg1Uq1maO/T1DLpKi
- +AsgV7uYmEdAO5yE38iPtF5o1Fz6kolz9MhmsBM8F/NUJDp5aGFna3bGH9ahZJHfQ25A1KB9aZv
- 0MUYyDc/guAY0kSYgdk5Gb/cjBMeJjwhn/idh/CjE7JHoAbmW3Rovxg3WV9oDq1JCVrLVNdTOJl
- WXMVnTAmXUQS5SPLHFk0HrbmqWRVspAQWHimD4QE7Vg7NDaHdFmgOQRUUMCfqTz+pAfU6YkGOLw
- UH8d97CYmXs/7HgJUvkiayt9tnvUkWVn29Cwk+GuEV66/JzYPMreC/9zmqV+Fq0jnCnnuzNbjXa
- D0P0tDH5eGeHdIKVH7ez5kBF21S/dPfux+vuY2w8/acwJjWvbmqDXyNaCcOvki5PxHnnUWOoE2B
- LCkOO6c6PeIzc5A==
+ bh=RVNDo+PUPNeV1sa0OC/s/rwZqNAdhw3yPx+40/ruZ0I=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmPHKQ6q9dlK6QeYXKuhYX2fKXvqRW/b0nGYjRh
+ 2E7JweWLsOJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjxykAAKCRDBN2bmhouD
+ 1ykRD/9phzYxpFTOlOqgN9zWlD7Rfrfe3bxuQU5kFU+icEpDFo8F2hCsSFLI6uQ4Z2cf41uaO/8
+ g+xLf4Xze1eJsiPrInQunZIDKmC4SmmNTgLUYEr8fz9Y4ZVy598pMWb7OwcaIJgz0bF2x8YlvJ6
+ l0uTy0KvJsjOgob1sCevdxjc+fOIrsMhCJj6HkwiZqKqkG97A+/hywM1gUietOPg7RoLBIxTpBv
+ Dcgthuky0Tx2XwVYvJVnvpJkGfxsZeNFe4vsd5+i4ssCusVsceNk5MnyuKRs0qLvG5t9MB+61Vr
+ x9h3Sq22Zh0wzNINkwmeAWFgxUp4YoFi2IeppBIMeGNAC9PulfGEXkA7KtNBA7YrWm+9dEbpZNA
+ H0H69uHC2QLIVM35t9oW2CBABgYrBA9HIfHMPR6lse8TYEtE0tQLQd6JS6EqOYNPYqxcgcUIEQL
+ qgtWHgYcVkAwbSQS9aJRA8A729jSf6ilIVP9e9K0LumKdC8lrf1Ivt1q4UmK24EAZLspjfKazFM
+ EUJWFcCP7h3y/S3Q3jHZmOHv68J6EEN6v5ZjLBvGA/yEaOIRMKPr6y8Q7zpLsJzIhpcC8IFNhUa
+ uHVltcm89oAAtDJ8TCAWRvRSBfp7qNuORz2hIsR60MQ5tf4Z6A7/1uDaLsNKw35Gz/p0BBty/Dz
+ NFTTxIY5KEnSu1g==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-There is no need for implementations of DAI set_channel_map() to modify
-contents of passed arrays with actual channel mapping.  Additionally,
-the caller keeps full ownership of the array.
+X1E80100 CRD board comes with four speakers arranged as left front+back
+and then right front+back.  Using default channel mapping causes front
+right speaker to play left back stream.
 
-Constify these pointer arguments so the code will be safer and easier to
-read (documenting the caller's ownership).
-
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
 ---
 
 Changes in v2:
-1. None
+1. Rework significantly, because only backend DAIs is now affected.
 ---
- include/sound/cs35l41.h                 |  4 ++--
- include/sound/soc-dai.h                 |  8 ++++----
- sound/soc/codecs/adau7118.c             |  6 ++++--
- sound/soc/codecs/cs35l41-lib.c          |  4 ++--
- sound/soc/codecs/cs35l41.c              |  3 ++-
- sound/soc/codecs/max98504.c             |  6 ++++--
- sound/soc/codecs/wcd9335.c              |  6 ++++--
- sound/soc/codecs/wcd934x.c              |  6 ++++--
- sound/soc/qcom/qdsp6/q6afe-dai.c        | 16 ++++++++++------
- sound/soc/qcom/qdsp6/q6apm-lpass-dais.c |  6 ++++--
- sound/soc/soc-dai.c                     |  4 ++--
- 11 files changed, 42 insertions(+), 27 deletions(-)
+ sound/soc/qcom/x1e80100.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/include/sound/cs35l41.h b/include/sound/cs35l41.h
-index bb70782d15d0..43c6a9ef8d9f 100644
---- a/include/sound/cs35l41.h
-+++ b/include/sound/cs35l41.h
-@@ -896,8 +896,8 @@ int cs35l41_test_key_lock(struct device *dev, struct regmap *regmap);
- int cs35l41_otp_unpack(struct device *dev, struct regmap *regmap);
- int cs35l41_register_errata_patch(struct device *dev, struct regmap *reg, unsigned int reg_revid);
- int cs35l41_set_channels(struct device *dev, struct regmap *reg,
--			 unsigned int tx_num, unsigned int *tx_slot,
--			 unsigned int rx_num, unsigned int *rx_slot);
-+			 unsigned int tx_num, const unsigned int *tx_slot,
-+			 unsigned int rx_num, const unsigned int *rx_slot);
- int cs35l41_gpio_config(struct regmap *regmap, struct cs35l41_hw_cfg *hw_cfg);
- void cs35l41_configure_cs_dsp(struct device *dev, struct regmap *reg, struct cs_dsp *dsp);
- int cs35l41_set_cspl_mbox_cmd(struct device *dev, struct regmap *regmap,
-diff --git a/include/sound/soc-dai.h b/include/sound/soc-dai.h
-index adcd8719d343..15ef268c9845 100644
---- a/include/sound/soc-dai.h
-+++ b/include/sound/soc-dai.h
-@@ -188,8 +188,8 @@ int snd_soc_dai_set_tdm_slot(struct snd_soc_dai *dai,
- 	unsigned int tx_mask, unsigned int rx_mask, int slots, int slot_width);
+diff --git a/sound/soc/qcom/x1e80100.c b/sound/soc/qcom/x1e80100.c
+index c3c8bf7ffb5b..27f34c0873ab 100644
+--- a/sound/soc/qcom/x1e80100.c
++++ b/sound/soc/qcom/x1e80100.c
+@@ -12,6 +12,7 @@
  
- int snd_soc_dai_set_channel_map(struct snd_soc_dai *dai,
--	unsigned int tx_num, unsigned int *tx_slot,
--	unsigned int rx_num, unsigned int *rx_slot);
-+	unsigned int tx_num, const unsigned int *tx_slot,
-+	unsigned int rx_num, const unsigned int *rx_slot);
+ #include "common.h"
+ #include "qdsp6/q6afe.h"
++#include "qdsp6/q6dsp-common.h"
+ #include "sdw.h"
  
- int snd_soc_dai_set_tristate(struct snd_soc_dai *dai, int tristate);
+ struct x1e80100_snd_data {
+@@ -80,6 +81,23 @@ static int x1e80100_snd_prepare(struct snd_pcm_substream *substream)
+ 	struct snd_soc_dai *cpu_dai = snd_soc_rtd_to_cpu(rtd, 0);
+ 	struct x1e80100_snd_data *data = snd_soc_card_get_drvdata(rtd->card);
+ 	struct sdw_stream_runtime *sruntime = data->sruntime[cpu_dai->id];
++	const unsigned int rx_slot[4] = { PCM_CHANNEL_FL,
++					  PCM_CHANNEL_LB,
++					  PCM_CHANNEL_FR,
++					  PCM_CHANNEL_RB };
++	int ret;
++
++	switch (cpu_dai->id) {
++	case WSA_CODEC_DMA_RX_0:
++	case WSA_CODEC_DMA_RX_1:
++		ret = snd_soc_dai_set_channel_map(cpu_dai, 0, NULL,
++						  ARRAY_SIZE(rx_slot), rx_slot);
++		if (ret)
++			return ret;
++		break;
++	default:
++		break;
++	}
  
-@@ -305,8 +305,8 @@ struct snd_soc_dai_ops {
- 		unsigned int tx_mask, unsigned int rx_mask,
- 		int slots, int slot_width);
- 	int (*set_channel_map)(struct snd_soc_dai *dai,
--		unsigned int tx_num, unsigned int *tx_slot,
--		unsigned int rx_num, unsigned int *rx_slot);
-+		unsigned int tx_num, const unsigned int *tx_slot,
-+		unsigned int rx_num, const unsigned int *rx_slot);
- 	int (*get_channel_map)(struct snd_soc_dai *dai,
- 			unsigned int *tx_num, unsigned int *tx_slot,
- 			unsigned int *rx_num, unsigned int *rx_slot);
-diff --git a/sound/soc/codecs/adau7118.c b/sound/soc/codecs/adau7118.c
-index a663d37e5776..abc4764697a5 100644
---- a/sound/soc/codecs/adau7118.c
-+++ b/sound/soc/codecs/adau7118.c
-@@ -121,8 +121,10 @@ static const struct snd_soc_dapm_widget adau7118_widgets[] = {
- };
- 
- static int adau7118_set_channel_map(struct snd_soc_dai *dai,
--				    unsigned int tx_num, unsigned int *tx_slot,
--				    unsigned int rx_num, unsigned int *rx_slot)
-+				    unsigned int tx_num,
-+				    const unsigned int *tx_slot,
-+				    unsigned int rx_num,
-+				    const unsigned int *rx_slot)
- {
- 	struct adau7118_data *st =
- 		snd_soc_component_get_drvdata(dai->component);
-diff --git a/sound/soc/codecs/cs35l41-lib.c b/sound/soc/codecs/cs35l41-lib.c
-index e9993a39f7d0..1702f26049d3 100644
---- a/sound/soc/codecs/cs35l41-lib.c
-+++ b/sound/soc/codecs/cs35l41-lib.c
-@@ -936,8 +936,8 @@ int cs35l41_register_errata_patch(struct device *dev, struct regmap *reg, unsign
- EXPORT_SYMBOL_GPL(cs35l41_register_errata_patch);
- 
- int cs35l41_set_channels(struct device *dev, struct regmap *reg,
--			 unsigned int tx_num, unsigned int *tx_slot,
--			 unsigned int rx_num, unsigned int *rx_slot)
-+			 unsigned int tx_num, const unsigned int *tx_slot,
-+			 unsigned int rx_num, const unsigned int *rx_slot)
- {
- 	unsigned int val, mask;
- 	int i;
-diff --git a/sound/soc/codecs/cs35l41.c b/sound/soc/codecs/cs35l41.c
-index cb25c33cc9b9..1688c2c688f0 100644
---- a/sound/soc/codecs/cs35l41.c
-+++ b/sound/soc/codecs/cs35l41.c
-@@ -673,7 +673,8 @@ static const struct snd_soc_dapm_route cs35l41_audio_map[] = {
- };
- 
- static int cs35l41_set_channel_map(struct snd_soc_dai *dai, unsigned int tx_n,
--				   unsigned int *tx_slot, unsigned int rx_n, unsigned int *rx_slot)
-+				   const unsigned int *tx_slot,
-+				   unsigned int rx_n, const unsigned int *rx_slot)
- {
- 	struct cs35l41_private *cs35l41 = snd_soc_component_get_drvdata(dai->component);
- 
-diff --git a/sound/soc/codecs/max98504.c b/sound/soc/codecs/max98504.c
-index 93412b966b33..6b6a7ece4cec 100644
---- a/sound/soc/codecs/max98504.c
-+++ b/sound/soc/codecs/max98504.c
-@@ -220,8 +220,10 @@ static int max98504_set_tdm_slot(struct snd_soc_dai *dai,
- 	return 0;
- }
- static int max98504_set_channel_map(struct snd_soc_dai *dai,
--		unsigned int tx_num, unsigned int *tx_slot,
--		unsigned int rx_num, unsigned int *rx_slot)
-+				    unsigned int tx_num,
-+				    const unsigned int *tx_slot,
-+				    unsigned int rx_num,
-+				    const unsigned int *rx_slot)
- {
- 	struct max98504_priv *max98504 = snd_soc_dai_get_drvdata(dai);
- 	struct regmap *map = max98504->regmap;
-diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
-index deb15b95992d..42a99978fe5a 100644
---- a/sound/soc/codecs/wcd9335.c
-+++ b/sound/soc/codecs/wcd9335.c
-@@ -1983,8 +1983,10 @@ static int wcd9335_trigger(struct snd_pcm_substream *substream, int cmd,
- }
- 
- static int wcd9335_set_channel_map(struct snd_soc_dai *dai,
--				   unsigned int tx_num, unsigned int *tx_slot,
--				   unsigned int rx_num, unsigned int *rx_slot)
-+				   unsigned int tx_num,
-+				   const unsigned int *tx_slot,
-+				   unsigned int rx_num,
-+				   const unsigned int *rx_slot)
- {
- 	struct wcd9335_codec *wcd;
- 	int i;
-diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
-index de870c7819ca..fcad2c9fba55 100644
---- a/sound/soc/codecs/wcd934x.c
-+++ b/sound/soc/codecs/wcd934x.c
-@@ -1923,8 +1923,10 @@ static int wcd934x_trigger(struct snd_pcm_substream *substream, int cmd,
- }
- 
- static int wcd934x_set_channel_map(struct snd_soc_dai *dai,
--				   unsigned int tx_num, unsigned int *tx_slot,
--				   unsigned int rx_num, unsigned int *rx_slot)
-+				   unsigned int tx_num,
-+				   const unsigned int *tx_slot,
-+				   unsigned int rx_num,
-+				   const unsigned int *rx_slot)
- {
- 	struct wcd934x_codec *wcd;
- 	int i;
-diff --git a/sound/soc/qcom/qdsp6/q6afe-dai.c b/sound/soc/qcom/qdsp6/q6afe-dai.c
-index a9c4f896a7df..7d9628cda875 100644
---- a/sound/soc/qcom/qdsp6/q6afe-dai.c
-+++ b/sound/soc/qcom/qdsp6/q6afe-dai.c
-@@ -172,8 +172,8 @@ static int q6tdm_set_tdm_slot(struct snd_soc_dai *dai,
- }
- 
- static int q6tdm_set_channel_map(struct snd_soc_dai *dai,
--				unsigned int tx_num, unsigned int *tx_slot,
--				unsigned int rx_num, unsigned int *rx_slot)
-+				unsigned int tx_num, const unsigned int *tx_slot,
-+				unsigned int rx_num, const unsigned int *rx_slot)
- {
- 
- 	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
-@@ -250,8 +250,10 @@ static int q6tdm_hw_params(struct snd_pcm_substream *substream,
- }
- 
- static int q6dma_set_channel_map(struct snd_soc_dai *dai,
--				 unsigned int tx_num, unsigned int *tx_ch_mask,
--				 unsigned int rx_num, unsigned int *rx_ch_mask)
-+				 unsigned int tx_num,
-+				 const unsigned int *tx_ch_mask,
-+				 unsigned int rx_num,
-+				 const unsigned int *rx_ch_mask)
- {
- 
- 	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
-@@ -407,8 +409,10 @@ static int q6afe_dai_prepare(struct snd_pcm_substream *substream,
- }
- 
- static int q6slim_set_channel_map(struct snd_soc_dai *dai,
--				unsigned int tx_num, unsigned int *tx_slot,
--				unsigned int rx_num, unsigned int *rx_slot)
-+				  unsigned int tx_num,
-+				  const unsigned int *tx_slot,
-+				  unsigned int rx_num,
-+				  const unsigned int *rx_slot)
- {
- 	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
- 	struct q6afe_port_config *pcfg = &dai_data->port_config[dai->id];
-diff --git a/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c b/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
-index 68a38f63a2db..6bfbb52345e1 100644
---- a/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
-+++ b/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
-@@ -25,8 +25,10 @@ struct q6apm_lpass_dai_data {
- };
- 
- static int q6dma_set_channel_map(struct snd_soc_dai *dai,
--				 unsigned int tx_num, unsigned int *tx_ch_mask,
--				 unsigned int rx_num, unsigned int *rx_ch_mask)
-+				 unsigned int tx_num,
-+				 const unsigned int *tx_ch_mask,
-+				 unsigned int rx_num,
-+				 const unsigned int *rx_ch_mask)
- {
- 
- 	struct q6apm_lpass_dai_data *dai_data = dev_get_drvdata(dai->dev);
-diff --git a/sound/soc/soc-dai.c b/sound/soc/soc-dai.c
-index fefe394dce72..03afd5efb24c 100644
---- a/sound/soc/soc-dai.c
-+++ b/sound/soc/soc-dai.c
-@@ -304,8 +304,8 @@ EXPORT_SYMBOL_GPL(snd_soc_dai_set_tdm_slot);
-  * configure the relationship between channel number and TDM slot number.
-  */
- int snd_soc_dai_set_channel_map(struct snd_soc_dai *dai,
--				unsigned int tx_num, unsigned int *tx_slot,
--				unsigned int rx_num, unsigned int *rx_slot)
-+				unsigned int tx_num, const unsigned int *tx_slot,
-+				unsigned int rx_num, const unsigned int *rx_slot)
- {
- 	int ret = -ENOTSUPP;
- 
+ 	return qcom_snd_sdw_prepare(substream, sruntime,
+ 				    &data->stream_prepared[cpu_dai->id]);
 
 -- 
 2.43.0
