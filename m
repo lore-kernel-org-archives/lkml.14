@@ -1,106 +1,118 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B0F13C8F8
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 08:58:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 617DF14A0A9
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 08:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715245094; cv=none; b=eRl1rSHT6NVgkPDQb8xdhGGnYm4n8j9FipoDKPoRaCxV4n60BwhObwq2DK6HRugwCBQy6OD3J/1MSA1u0rnmJz7Tv0wPK4xqhkXxJPUUIK9Ch5idJge43TNUMwXLrnbWYtxqJ4Wpxqn06oM3qidQjmynjjSFDxIhiQDb7+Q0XWs=
+	t=1715245114; cv=none; b=Ce842K6F9xUhznApqvLe+WOFwqVSf5J0HFYthg3OlDaQ/nJmU5UyWcXUblOCZjwiF3eKv6EF+kpuDBcoms/FsDDzlJVkL+dR1QRaby+KRaL9hmy5Ak76mfAZwLMesOMHol8Cj5fH0SVa55pODIGJGuSKA1otP/1MZRusphKfsLY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715245094; c=relaxed/simple;
-	bh=Xu2WCirexobQIh25VikC3MIOnC63W3f4KDUKltXAkeA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hhyXpeXjP3Z9GX3OQdygIUW4LyXwC78vDemEh2+uxwNTJ3Wz44nrXR/kIKhsZ6TvrmicJzGd8LkmTGdtb/iKG/Ovn3JAeaJAKOQ1WyONvmb83r49vCJZe4IbL8XD7I+5GWc0lapRfWvVvErxLchuVApwU1yk23y3pV6JlPKmdBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 3dbb7bfa0de211ef9305a59a3cc225df-20240509
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.37,REQID:4de40844-5ccd-4772-b5d8-70320bbaec82,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-11,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-1
-X-CID-INFO: VERSION:1.1.37,REQID:4de40844-5ccd-4772-b5d8-70320bbaec82,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-11,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-1
-X-CID-META: VersionHash:6f543d0,CLOUDID:8d15c9d744e307d403f4a7dd4da8004e,BulkI
-	D:240509165804T4MFGNYY,BulkQuantity:0,Recheck:0,SF:25|17|19|44|66|102,TC:n
-	il,Content:0,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,CO
-	L:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-CTIC-Tags:
-	HR_CC_CHARSET, HR_CC_CHARSET_NUM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME
-	HR_CC_NO_NAME, HR_CHARSET, HR_CHARSET_NUM, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_LANG
-	HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN
-	HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NAME, DN_TRUSTED
-	SRC_TRUSTED, SA_TRUSTED, SA_EXISTED, SN_TRUSTED, SN_EXISTED
-	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD
-	CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1
-	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-X-UUID: 3dbb7bfa0de211ef9305a59a3cc225df-20240509
-X-User: oushixiong@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.169)] by mailgw.kylinos.cn
-	(envelope-from <oushixiong@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 931486327; Thu, 09 May 2024 16:58:02 +0800
-From: oushixiong <oushixiong@kylinos.cn>
-To: Alex Deucher <alexander.deucher@amd.com>
-Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Xinhui.Pan@amd.com,
-	Shixiong Ou <oushixiong@kylinos.cn>
-Subject: [PATCH] drm/radeon: Delay Connector detecting when HPD singals is unstable
-Date: Thu,  9 May 2024 16:57:58 +0800
-Message-Id: <20240509085758.123046-1-oushixiong@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1715245114; c=relaxed/simple;
+	bh=97XaKPKk8jzzUIcm5De7fw/1qqOPyK9C7NjAdmsO8Gw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZCWpVlpdMxfq8BC+nS+i66ABbRee0JnBLMdeqwI3ch8EWrte+JFg9e5nAkZDXt4sGFksU67UnwCfGXtW7eHX1ParNlLe5V4ZzLEG7SrjIpIuUp9L+RarpaJZQy52jpIZHX1iNQiN0z/M1QCfc9Yy2jq6QihRXU1D6VdEDr7pSlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IfA2w+S6; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IfA2w+S6"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2e0b2ddc5d1so7328481fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 01:58:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715245110; x=1715849910; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0Wiz5MoTmXNXCF7A/NdDpUQr0zJjTgt8byvzglF4DEc=;
+        b=IfA2w+S6HCDmvwOLjwXXQBAT1CcGA4UuB/B1r3j8NrX92oeME0u5hIws7qlDYgecde
+         JmFAHvoo/Zj+E/iR48ZA3j7XNoI6qaJbWSswvDd7e1rWfunx6UHpe6NQgZMp9Vl4YGRa
+         hPFeSplKOsUS2RvIGswPCauFdlPiDuLiyrDWE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715245110; x=1715849910;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0Wiz5MoTmXNXCF7A/NdDpUQr0zJjTgt8byvzglF4DEc=;
+        b=WF/9NX9ju1hf0rAtWYWqiMphO68b9jf4P9ptgxJiRFkQt6pumQIKLDyyMb3HAABJJD
+         QDpL0nDmahGBy38zcKo2IItYKvHh0NglP0NCZnXMEdHOE3dMWY1JIKsMO6QSI2NI+lUH
+         aZChdQgWIilANhSXnBJvOH/To/g8gSid6miODhqSow9UPGSpPc2RXP4z9V3SEXYBZbam
+         lNptbjsiMcPvKoxgciAPFMAxY+Ak3qvC6fPYZWEOS7HGYR6HvX8NY+ZGmR9CebkbTvrT
+         CvOjgooLG7FdVVFD0YiJTI9hydCKkS2g3UWow2jMq2KmGkJJ/z4DgMeHVaNosD/pQT7c
+         PPTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXfCLk8w/w8BnXHrT2iA04kLKTFpInJADmclfwjYEB3Y5m+6BkrlWYUqQDMGLzISUwUHTKdmLsUcUCvBlirYrqXs7fyod6EXuuyMHYN
+X-Gm-Message-State: AOJu0YyMfgoFI8xr2HDqnyiFO0YV2Q/UWxEbIudFrlpzFHbEmyrth7pS
+	oms8vAR8vy0CKP1k+JAH1usTzgkg5j0Hh3/H/WSy9kkJwP4kD6eQByGlLssehpTgSjS3Qq6g8zu
+	+HrtycHQSCfUlKAqbMtZUT9IKnykwIbg6LYI2
+X-Google-Smtp-Source: AGHT+IH9ObFL6J8WFDRyP8J9A5dWQL9UrJwiJ65mOUZ6bLzWBgApqNI6WPFqJ6HGRFDelg160CI2ttiR8RE+Eg7y928=
+X-Received: by 2002:a2e:99d4:0:b0:2de:c6b5:2888 with SMTP id
+ 38308e7fff4ca-2e447194771mr32704081fa.3.1715245110374; Thu, 09 May 2024
+ 01:58:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240509-8192-tdm-v1-1-530b54645763@chromium.org>
+In-Reply-To: <20240509-8192-tdm-v1-1-530b54645763@chromium.org>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Thu, 9 May 2024 16:58:19 +0800
+Message-ID: <CAGXv+5HYsKFpHWXE45N+4K1LbKA1Lan8rDHm6=+YvsY0CXKoMg@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: mediatek: mt8192: fix register configuration for tdm
+To: Hsin-Te Yuan <yuanhsinte@chromium.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Jiaxin Yu <jiaxin.yu@mediatek.com>, linux-sound@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
+On Thu, May 9, 2024 at 3:31=E2=80=AFPM Hsin-Te Yuan <yuanhsinte@chromium.or=
+g> wrote:
+>
+> For DSP_A, data is a BCK cycle behind LRCK trigger edge. For DSP_B, this
+> delay doesn't exist. Fix the delay configuration to match the standard.
+>
+> Fixes: 52fcd65414abfc ("ASoC: mediatek: mt8192: support tdm in platform d=
+river")
+> Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
 
-In some causes, HPD signals will jitter when plugging in
-or unplugging HDMI.
+Reviewed-by: Chen-Yu Tsai <wenst@chromium.org>
 
-Rescheduling the hotplug work for a second when EDID may still be
-readable but HDP is disconnected, and fixes this issue.
-
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
----
- drivers/gpu/drm/radeon/radeon_connectors.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
-index b84b58926106..cf0114ca59a4 100644
---- a/drivers/gpu/drm/radeon/radeon_connectors.c
-+++ b/drivers/gpu/drm/radeon/radeon_connectors.c
-@@ -1267,6 +1267,16 @@ radeon_dvi_detect(struct drm_connector *connector, bool force)
- 			goto exit;
- 		}
- 	}
-+
-+	if (dret && radeon_connector->hpd.hpd != RADEON_HPD_NONE &&
-+	    !radeon_hpd_sense(rdev, radeon_connector->hpd.hpd) &&
-+	    connector->connector_type == DRM_MODE_CONNECTOR_HDMIA) {
-+		DRM_DEBUG_KMS("EDID is readable when HPD disconnected\n");
-+		schedule_delayed_work(&rdev->hotplug_work, msecs_to_jiffies(1000));
-+		ret = connector_status_disconnected;
-+		goto exit;
-+	}
-+
- 	if (dret) {
- 		radeon_connector->detected_by_load = false;
- 		radeon_connector_free_edid(connector);
--- 
-2.17.1
-
+> ---
+>  sound/soc/mediatek/mt8192/mt8192-dai-tdm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/sound/soc/mediatek/mt8192/mt8192-dai-tdm.c b/sound/soc/media=
+tek/mt8192/mt8192-dai-tdm.c
+> index 9ce06821c7d0f..49440db370af0 100644
+> --- a/sound/soc/mediatek/mt8192/mt8192-dai-tdm.c
+> +++ b/sound/soc/mediatek/mt8192/mt8192-dai-tdm.c
+> @@ -566,10 +566,10 @@ static int mtk_dai_tdm_hw_params(struct snd_pcm_sub=
+stream *substream,
+>                 tdm_con |=3D 1 << DELAY_DATA_SFT;
+>                 tdm_con |=3D get_tdm_lrck_width(format) << LRCK_TDM_WIDTH=
+_SFT;
+>         } else if (tdm_priv->tdm_out_mode =3D=3D TDM_OUT_DSP_A) {
+> -               tdm_con |=3D 0 << DELAY_DATA_SFT;
+> +               tdm_con |=3D 1 << DELAY_DATA_SFT;
+>                 tdm_con |=3D 0 << LRCK_TDM_WIDTH_SFT;
+>         } else if (tdm_priv->tdm_out_mode =3D=3D TDM_OUT_DSP_B) {
+> -               tdm_con |=3D 1 << DELAY_DATA_SFT;
+> +               tdm_con |=3D 0 << DELAY_DATA_SFT;
+>                 tdm_con |=3D 0 << LRCK_TDM_WIDTH_SFT;
+>         }
+>
+>
+> ---
+> base-commit: 45db3ab70092637967967bfd8e6144017638563c
+> change-id: 20240509-8192-tdm-cbf2a73c9dd3
+>
+> Best regards,
+> --
+> Hsin-Te Yuan <yuanhsinte@chromium.org>
+>
+>
