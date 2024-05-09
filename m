@@ -1,283 +1,164 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp1.tecnico.ulisboa.pt (smtp1.tecnico.ulisboa.pt [193.136.128.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48C113174D
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 11:54:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB6C12FB3F;
+	Thu,  9 May 2024 11:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715255671; cv=none; b=ssgZm+L4nqEH3+G1CyF9qAcfmjxW0yN4hnSqItv8k7RnuocKdHXxnQDGpxnbqvlHMVvTpJ71z3gASacJjL9uXcGNFmk0vB/EpROx1G08nefbpsO15iCxvoZ3MDF+w2WwMKmJgXEbcaipToqsAitKgCP7OFKqKENmMoSs+CpzIBo=
+	t=1715255766; cv=none; b=FuysAR942dOb0wHdbS24ONOOzEyfBZDkVa8IyQ/116TlSRdRniZq1H8nNhLuhdkkDh/zmFqAHpUGpPed7RvNi7XokeBwHrlZyKwbP7F/igU9OnU3OfTPUtwiXaZyUK7NWbEkWKcabdPuRzHzayB06ccS6WeCJjJtVTsJrJHHNEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715255671; c=relaxed/simple;
-	bh=vfzbXmrl/AwHVMDZUI8PRatAwjjoI5XimVa1uLdey4s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NCVZE1PhRAhB/lRSj3lNWKDIS7La3Jte0DBmATpuJc++TCWMgS1QHysSCkc5N0Sue6gKiVNU/728WGEQEanP5G72LzdLNTOk/8y+u5LVJ++0VX0lWE+RJqyJqrtOR/ygTWITLE8SD7Jnj56+4DNd0cb2OiZPz8E/InVtBi4eR08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YmsDNynS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715255766; c=relaxed/simple;
+	bh=2a4WGdNJa0aUKW/hYfKjmycnkRx12il4Ew/dHWz0o1M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=o0rnj6iReT48bGy+Xhx/cgGt7YpvjRwq8l6Ij97ulkh2mmeO0O6JyZ014sqMPsJExoYnCblMu1dKeHn9QcTdcW8lYGpmKU0vsgZou6AwF+u/hdDxnDUUz9Yt65yX/4PwD6eb9LTJkDnP7rsKqR7lVbtCEC18W2ZKdpX+iYJ5TTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=qzztiXAk; arc=none smtp.client-ip=193.136.128.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YmsDNynS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715255668;
+	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="qzztiXAk"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTP id 38D836003C11;
+	Thu,  9 May 2024 12:50:45 +0100 (WEST)
+X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
+Received: from smtp1.tecnico.ulisboa.pt ([127.0.0.1])
+ by localhost (smtp1.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
+ with LMTP id 7raz_5ZZ9ckV; Thu,  9 May 2024 12:50:43 +0100 (WEST)
+Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
+	by smtp1.tecnico.ulisboa.pt (Postfix) with ESMTPS id EC5436003C0B;
+	Thu,  9 May 2024 12:50:42 +0100 (WEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
+	s=mail; t=1715255443;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Y3JZ5LkzbJDwZzWqwn1ukS8ZJVZyGGaxdZIhbOgoOzQ=;
-	b=YmsDNynSyQC9W1LUBFSyvYDdqUY9hff9d8Z9/xmx44L4HxgGbiwgA1fX9Y3aXk6DC572jh
-	d3bXcMvL6j1FHDuNmbzQOiBR54aBCrbQhIn2GrQZ5osW5p1dY4DheTtpUmXJoQcEu/Wb2s
-	B2OJziqy1jBgSN4gQS8Dqa+hutvjfuU=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-206-Nd94kMKCP5WJOtrd0EZe4Q-1; Thu,
- 09 May 2024 07:54:25 -0400
-X-MC-Unique: Nd94kMKCP5WJOtrd0EZe4Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3F8601C3F0FB;
-	Thu,  9 May 2024 11:54:25 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.225.82])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0670136EC;
-	Thu,  9 May 2024 11:54:23 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: kuba@kernel.org,
-	davem@davemloft.net,
-	netdev@vger.kernel.org,
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=qrAMwJH6vJusA1DpEsGg7JE4BX5Fr4Y5uKHuSoJyReo=;
+	b=qzztiXAktPgwcH0cvG5DQiw7pCSXr7pnLEo/H4wFuis4hsTEIlRWmiG5ggKiUntqAwWq4C
+	8kpesgdKeQ+x1GuPA9Z2YwWhcESFLU3zqv8vRuoAg9OXnhXZ0+1oUdFjCUolVn0zf9+XMy
+	Cb3ymyvaxy8QTw7Gy9jYjKc3bxvYyd8=
+Received: from diogo-gram.home (unknown [IPv6:2a01:14:8070:dc60:4589:2164:1bc5:2670])
+	(Authenticated sender: ist187313)
+	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 170D13600A3;
+	Thu,  9 May 2024 12:50:41 +0100 (WEST)
+Date: Thu, 9 May 2024 12:50:36 +0100
+From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+To: heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, 
+	lk@c--e.de, u.kleine-koenig@pengutronix.de, linux-usb@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] Networking for v6.9-rc8
-Date: Thu,  9 May 2024 13:54:11 +0200
-Message-ID: <20240509115411.30032-1-pabeni@redhat.com>
+Cc: diogo.ivo@tecnico.ulisboa.pt
+Subject: [RFC PATCH] usb: typec: ucsi_acpi: Add LG Gram quirk
+Message-ID: <5qc55gruhn4pmutiukohauki5dehba6n2k22jgvpt7i3hafkon@v2ng2a33o7vv>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Linus!
+Some LG Gram laptops report a bogus connector change event after a
+GET_PDOS command for the partner's source PDOs, which disappears from
+the CCI after acknowledging the command. However, the subsequent
+GET_CONNECTOR_STATUS in ucsi_handle_connector_change() still reports
+this bogus change in bits 5 and 6, leading to the UCSI core re-checking
+the partner's source PDOs and thus to an infinite loop.
 
-The following changes since commit 545c494465d24b10a4370545ba213c0916f70b95:
+Fix this by adding a quirk that signals when a potentially buggy GET_PDOS
+command is used, checks the status change report and clears it if it is a
+bogus event before sending it to the UCSI core.
 
-  Merge tag 'net-6.9-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2024-05-02 08:51:47 -0700)
+[Sending as RFC both to see if this is a good idea and so that more
+users can test it to gather all the models affected by this bug.]
 
-are available in the Git repository at:
+Signed-off-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
+---
+ drivers/usb/typec/ucsi/ucsi_acpi.c | 60 ++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git net-6.9-rc8
-
-for you to fetch changes up to 6e7ffa180a532b6fe2e22aa6182e02ce988a43aa:
-
-  net: dsa: mv88e6xxx: read cmode on mv88e6320/21 serdes only ports (2024-05-09 11:48:20 +0200)
-
-----------------------------------------------------------------
-Including fixes from bluetooth and IPsec.
-
-The bridge patch is actually a follow-up to a recent fix in the same
-area. We have a pending v6.8 AF_UNIX regression; it should be solved
-soon, but not in time for this PR.
-
-Current release - regressions:
-
- - eth: ks8851: Queue RX packets in IRQ handler instead of disabling BHs
-
- - net: bridge: fix corrupted ethernet header on multicast-to-unicast
-
-Current release - new code bugs:
-
- - xfrm: fix possible bad pointer derferencing in error path
-
-Previous releases - regressionis:
-
- - core: fix out-of-bounds access in ops_init
-
- - ipv6:
-   - fix potential uninit-value access in __ip6_make_skb()
-   - fib6_rules: avoid possible NULL dereference in fib6_rule_action()
-
- - tcp: use refcount_inc_not_zero() in tcp_twsk_unique().
-
- - rtnetlink: correct nested IFLA_VF_VLAN_LIST attribute validation
-
- - rxrpc: fix congestion control algorithm
-
- - bluetooth:
-   - l2cap: fix slab-use-after-free in l2cap_connect()
-   - msft: fix slab-use-after-free in msft_do_close()
-
- - eth: hns3: fix kernel crash when devlink reload during initialization
-
- - eth: dsa: mv88e6xxx: add phylink_get_caps for the mv88e6320/21 family
-
-Previous releases - always broken:
-
- - xfrm: preserve vlan tags for transport mode software GRO
-
- - tcp: defer shutdown(SEND_SHUTDOWN) for TCP_SYN_RECV sockets
-
- - eth: hns3: keep using user config after hardware reset
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-
-----------------------------------------------------------------
-Antony Antony (2):
-      xfrm: fix possible derferencing in error path
-      xfrm: Correct spelling mistake in xfrm.h comment
-
-Chen-Yu Tsai (1):
-      arm64: dts: mediatek: mt8183-pico6: Fix bluetooth node
-
-Daniel Golle (1):
-      dt-bindings: net: mediatek: remove wrongly added clocks and SerDes
-
-David Howells (2):
-      rxrpc: Fix congestion control algorithm
-      rxrpc: Only transmit one ACK per jumbo packet received
-
-Donald Hunter (1):
-      netlink: specs: Add missing bridge linkinfo attrs
-
-Duoming Zhou (2):
-      Bluetooth: Fix use-after-free bugs caused by sco_sock_timeout
-      Bluetooth: l2cap: fix null-ptr-deref in l2cap_chan_timeout
-
-Eric Dumazet (4):
-      tcp: defer shutdown(SEND_SHUTDOWN) for TCP_SYN_RECV sockets
-      phonet: fix rtm_phonet_notify() skb allocation
-      ipv6: fib6_rules: avoid possible NULL dereference in fib6_rule_action()
-      ipv6: prevent NULL dereference in ip6_output()
-
-Felix Fietkau (1):
-      net: bridge: fix corrupted ethernet header on multicast-to-unicast
-
-Gregor Herburger (1):
-      net: phy: marvell-88q2xxx: add support for Rev B1 and B2
-
-Gregory Detal (1):
-      mptcp: only allow set existing scheduler for net.mptcp.scheduler
-
-Ido Schimmel (1):
-      selftests: test_bridge_neigh_suppress.sh: Fix failures due to duplicate MAC
-
-Jakub Kicinski (3):
-      Merge tag 'for-net-2024-05-03' of git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth
-      Merge tag 'ipsec-2024-05-02' of git://git.kernel.org/pub/scm/linux/kernel/git/klassert/ipsec
-      Merge branch 'rxrpc-miscellaneous-fixes'
-
-Jian Shen (1):
-      net: hns3: direct return when receive a unknown mailbox message
-
-Johan Hovold (7):
-      Bluetooth: qca: fix wcn3991 device address check
-      Bluetooth: qca: add missing firmware sanity checks
-      Bluetooth: qca: fix NVM configuration parsing
-      Bluetooth: qca: generalise device address check
-      Bluetooth: qca: fix info leak when fetching fw build id
-      Bluetooth: qca: fix info leak when fetching board id
-      Bluetooth: qca: fix firmware check error path
-
-Kuniyuki Iwashima (1):
-      tcp: Use refcount_inc_not_zero() in tcp_twsk_unique().
-
-Lukasz Majewski (1):
-      hsr: Simplify code for announcing HSR nodes timer setup
-
-Marek Vasut (1):
-      net: ks8851: Queue RX packets in IRQ handler instead of disabling BHs
-
-Paolo Abeni (1):
-      Merge branch 'there-are-some-bugfix-for-the-hns3-ethernet-driver'
-
-Paul Davey (1):
-      xfrm: Preserve vlan tags for transport mode software GRO
-
-Peiyang Wang (4):
-      net: hns3: using user configure after hardware reset
-      net: hns3: change type of numa_node_mask as nodemask_t
-      net: hns3: release PTP resources if pf initialization failed
-      net: hns3: use appropriate barrier function after setting a bit value
-
-Potnuri Bharat Teja (1):
-      MAINTAINERS: update cxgb4 and cxgb3 network drivers maintainer
-
-Roded Zats (1):
-      rtnetlink: Correct nested IFLA_VF_VLAN_LIST attribute validation
-
-Shigeru Yoshida (1):
-      ipv6: Fix potential uninit-value access in __ip6_make_skb()
-
-Steffen Bätz (2):
-      net: dsa: mv88e6xxx: add phylink_get_caps for the mv88e6320/21 family
-      net: dsa: mv88e6xxx: read cmode on mv88e6320/21 serdes only ports
-
-Sungwoo Kim (3):
-      Bluetooth: L2CAP: Fix slab-use-after-free in l2cap_connect()
-      Bluetooth: msft: fix slab-use-after-free in msft_do_close()
-      Bluetooth: HCI: Fix potential null-ptr-deref
-
-Tetsuo Handa (1):
-      nfc: nci: Fix kcov check in nci_rx_work()
-
-Thadeu Lima de Souza Cascardo (1):
-      net: fix out-of-bounds access in ops_init
-
-Vincent Duvert (1):
-      appletalk: Improve handling of broadcast packets
-
-Wen Gu (1):
-      net/smc: fix neighbour and rtable leak in smc_ib_find_route()
-
-Yonglong Liu (2):
-      net: hns3: fix port vlan filter not disabled issue
-      net: hns3: fix kernel crash when devlink reload during initialization
-
- .../devicetree/bindings/net/mediatek,net.yaml      |  22 +---
- Documentation/netlink/specs/rt_link.yaml           |   6 ++
- MAINTAINERS                                        |   6 +-
- .../dts/mediatek/mt8183-kukui-jacuzzi-pico6.dts    |   3 +-
- drivers/bluetooth/btqca.c                          | 110 +++++++++++++++----
- drivers/bluetooth/btqca.h                          |   3 +-
- drivers/net/dsa/mv88e6xxx/chip.c                   |  39 +++++--
- drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   2 +-
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    |  52 ++++-----
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   5 +-
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_mbx.c |   7 +-
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  20 ++--
- .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   2 +-
- drivers/net/ethernet/micrel/ks8851_common.c        |  16 +--
- drivers/net/phy/marvell-88q2xxx.c                  | 119 ++++++++++++++++++---
- include/linux/skbuff.h                             |  15 +++
- include/net/xfrm.h                                 |   3 +
- include/uapi/linux/xfrm.h                          |   2 +-
- net/appletalk/ddp.c                                |  19 +++-
- net/bluetooth/hci_core.c                           |   3 +-
- net/bluetooth/hci_event.c                          |   2 +
- net/bluetooth/l2cap_core.c                         |  24 +++--
- net/bluetooth/msft.c                               |   2 +-
- net/bluetooth/msft.h                               |   4 +-
- net/bluetooth/sco.c                                |   4 +
- net/bridge/br_forward.c                            |   9 +-
- net/core/net_namespace.c                           |  13 ++-
- net/core/rtnetlink.c                               |   2 +-
- net/hsr/hsr_device.c                               |  27 +++--
- net/ipv4/tcp.c                                     |   4 +-
- net/ipv4/tcp_input.c                               |   2 +
- net/ipv4/tcp_ipv4.c                                |   8 +-
- net/ipv4/tcp_output.c                              |   4 +-
- net/ipv4/xfrm4_input.c                             |   6 +-
- net/ipv6/fib6_rules.c                              |   6 +-
- net/ipv6/ip6_output.c                              |   4 +-
- net/ipv6/xfrm6_input.c                             |   6 +-
- net/mptcp/ctrl.c                                   |  39 ++++++-
- net/nfc/nci/core.c                                 |   1 +
- net/phonet/pn_netlink.c                            |   2 +-
- net/rxrpc/ar-internal.h                            |   2 +-
- net/rxrpc/call_object.c                            |   7 +-
- net/rxrpc/input.c                                  |  49 ++++++---
- net/smc/smc_ib.c                                   |  19 ++--
- net/xfrm/xfrm_input.c                              |   8 ++
- net/xfrm/xfrm_policy.c                             |   2 +
- .../selftests/net/test_bridge_neigh_suppress.sh    |  14 +--
- 47 files changed, 519 insertions(+), 205 deletions(-)
+diff --git a/drivers/usb/typec/ucsi/ucsi_acpi.c b/drivers/usb/typec/ucsi/ucsi_acpi.c
+index 8d112c3edae5..c67607f68b44 100644
+--- a/drivers/usb/typec/ucsi/ucsi_acpi.c
++++ b/drivers/usb/typec/ucsi/ucsi_acpi.c
+@@ -25,6 +25,7 @@ struct ucsi_acpi {
+ 	unsigned long flags;
+ #define UCSI_ACPI_COMMAND_PENDING	1
+ #define UCSI_ACPI_ACK_PENDING		2
++#define UCSI_ACPI_CHECK_BOGUS_EVENT	4
+ 	guid_t guid;
+ 	u64 cmd;
+ };
+@@ -128,6 +129,58 @@ static const struct ucsi_operations ucsi_zenbook_ops = {
+ 	.async_write = ucsi_acpi_async_write
+ };
+ 
++static int ucsi_gram_read(struct ucsi *ucsi, unsigned int offset,
++			  void *val, size_t val_len)
++{
++	u16 bogus_change = UCSI_CONSTAT_POWER_LEVEL_CHANGE |
++			   UCSI_CONSTAT_PDOS_CHANGE;
++	struct ucsi_acpi *ua = ucsi_get_drvdata(ucsi);
++	struct ucsi_connector_status *status;
++	int ret;
++
++	ret = ucsi_acpi_read(ucsi, offset, val, val_len);
++	if (ret < 0)
++		return ret;
++
++	if (UCSI_COMMAND(ua->cmd) == UCSI_GET_CONNECTOR_STATUS &&
++	    ua->flags & UCSI_ACPI_CHECK_BOGUS_EVENT &&
++	    offset == UCSI_MESSAGE_IN) {
++		status = (struct ucsi_connector_status *)val;
++
++		/* Clear the bogus change */
++		if (status->change == bogus_change)
++			status->change = 0;
++
++		ua->flags &= ~UCSI_ACPI_CHECK_BOGUS_EVENT;
++	}
++
++	return ret;
++}
++
++static int ucsi_gram_sync_write(struct ucsi *ucsi, unsigned int offset,
++				const void *val, size_t val_len)
++{
++	struct ucsi_acpi *ua = ucsi_get_drvdata(ucsi);
++	int ret;
++
++	ret = ucsi_acpi_sync_write(ucsi, offset, val, val_len);
++	if (ret < 0)
++		return ret;
++
++	if (UCSI_COMMAND(ua->cmd) == UCSI_GET_PDOS &&
++	    ua->cmd & UCSI_GET_PDOS_PARTNER_PDO(1) &&
++	    ua->cmd & UCSI_GET_PDOS_SRC_PDOS)
++		ua->flags |= UCSI_ACPI_CHECK_BOGUS_EVENT;
++
++	return ret;
++}
++
++static const struct ucsi_operations ucsi_gram_ops = {
++	.read = ucsi_gram_read,
++	.sync_write = ucsi_gram_sync_write,
++	.async_write = ucsi_acpi_async_write
++};
++
+ static const struct dmi_system_id ucsi_acpi_quirks[] = {
+ 	{
+ 		.matches = {
+@@ -136,6 +189,13 @@ static const struct dmi_system_id ucsi_acpi_quirks[] = {
+ 		},
+ 		.driver_data = (void *)&ucsi_zenbook_ops,
+ 	},
++	{
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "LG Electronics"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "Z90Q"),
++		},
++		.driver_data = (void *)&ucsi_gram_ops,
++	},
+ 	{ }
+ };
+ 
+-- 
+2.45.0
 
