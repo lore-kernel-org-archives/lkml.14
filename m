@@ -1,99 +1,159 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61A7770F3
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 18:14:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32FD1770FE;
+	Thu,  9 May 2024 18:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715278472; cv=none; b=Ln0cuhctPbMOtEjKZE7KoEPJUb4bhPXxZgF23yYW2MZUsZg6PyaDdpjQxfr6lN9Tuna0JniKoOr4hOJScAthqlzspt4wQ0xyii+4AgFqsPZskBPe0U7CeiM6MoQnajeoKmfdUm8HDjx8Rs3ZGe6V9ShskFJlf03MzZ0Zwg1cifE=
+	t=1715278482; cv=none; b=IVftg/zfhAyqaM12GenL1/z9GbFxOtlmctWk0cdvubWmjxeA8AyiHG0aqHGpc0IRD3SJEKY5iOwYHhzQCC5cJ4Be+wiRF8XXr4hgaG0s7GYtrsGrQQZbInJojn1kgaS8x3/kayYcfHKCp4e6t447pgwKbu8B57UoEB7vD86AEGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715278472; c=relaxed/simple;
-	bh=YkVHyBMrNVy/mhlt5buLaXZgmPiU5YnVS2XKhBxY72k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AVxur4umSzh8duvHRQ0Vw6leepuTUBlw6k8DlIfVhhsPzcpOVOdJ3+qDkDicq/svCyhVmry+qIgp19Pd4IAyD7UyqRFo8x1CzDWzQldfiWV+Kt0xVFRNx+nj8jLcJNFZSykQnIv/7YQFyavU32Fz+NyShVjEoEjXAyZCMqls7lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kr3JPGOi; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715278482; c=relaxed/simple;
+	bh=hRafjKR2nz/ik0Ybw1Y2FxPsUTThAfB6fkIwc8yWrHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BvLoyYEyQKrNJ9P0s3tZwVDnEgP1aOL8wlaU9jMIuhDgk8N8SpXqSZBVypfQjEO+R6grIIYoK+CVjYeqacpPizU8+hUmTTtHXFCLu1DEO167MiUZ1jCPvwHDjcmVhWJGh3EGZ2fmuCxYTl1+ASf2xVp8HkRZcIYmVVlVggbagcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CcnwgtVC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kr3JPGOi"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41b2119da94so8209095e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 11:14:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715278469; x=1715883269; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YkVHyBMrNVy/mhlt5buLaXZgmPiU5YnVS2XKhBxY72k=;
-        b=kr3JPGOiZtreb+q5PZSImrMaWUe9socviXLAWzEA1JL0qf8mZMfluXMSLdUz6NsHs8
-         DeZ818hm86s64cXjh1aW12CEa6pOwV27coRnI9YPMMn5Qf9fKAGq0QmNvTPs9VtLGxbE
-         TNsI21bXF0jo3sTJHgxk3jAIxiJ5rKcMTHc79p1ThwkmKg+DLNcCfrG9/yxapFOjLNH0
-         aKOMRAAGCMsY11CgU9sNEiOme3ZQhusElXd6+HRFCK2CvZofn5JSJ8s7cEKbtRyUKD4i
-         V6Gg4SfuJFjZa3AUIbEWgIMk6cftkodznRGPLAK/NvGlu9VjM9kE6F5tG/v1NTiZ2rua
-         82gQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715278469; x=1715883269;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YkVHyBMrNVy/mhlt5buLaXZgmPiU5YnVS2XKhBxY72k=;
-        b=SkozeV+yEiO0VMQY4pxG3Y2LyyMnvO/rNyxaLceRzj6RABgF/X8Qu9UqEO86a78aRd
-         mIunTBuQBHH0oDVLoyhzrqmo/exPQfFTE/b0aHASX9ewqdcY8soU4vwOhxhXsy8PwRWm
-         f43GQgSB9gHa1WuLpoWS0pWSFMp0Aopf1bmD3WDcz8EtmDQyRyT2HspXCvFDz3UQXCBT
-         LCTZsEx3TdtiHgITChsMiD18LE833h3LZDtQwmdma5xLz4o5L7oUy01Iy1BJw5HomO/Z
-         4TWmrlrL/Rcc876sinlgM/ydp2J0pL7uAtReSnX+tbXq2xesEey8+dS/mRPrYn6eqs0n
-         Y8pA==
-X-Forwarded-Encrypted: i=1; AJvYcCXKiMbOXjkuWx37KHcpz+65xX9NBFvJ59BR4mRmJawoIr/tfcIKZKe8JxPl1OdCUgC+pJr9yD5VJez/qP/OycbmlshADz1q2YMrXqKB
-X-Gm-Message-State: AOJu0YyE0GIo/1mwrc1uW93+9nLJSgdxgOlVWtTJsPUNUpd6OVyVx3hs
-	0F+Z0vUp5u0cjaheTkI8Xrdj+qO5YYCHWJi7/s46Ng0tvejHgP7FTUMsCuZXWjlHDjVIkHnHFyV
-	4nhKTdPG0BqklTW9HHCKf6dXjnha2jZzeLDOHkI/idDjOrIk6OA==
-X-Google-Smtp-Source: AGHT+IFEBzEdjhOEiKmfPO2uLKnUu7B6VTjtb2JD+mFLsKtCP1/91pTQm4Kr4v+etrsn+JFIt5PnkJ+q3Hjl87Bdr9Y=
-X-Received: by 2002:adf:e80b:0:b0:34c:77bc:6c51 with SMTP id
- ffacd0b85a97d-3504a61c6a0mr249933f8f.1.1715278469112; Thu, 09 May 2024
- 11:14:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CcnwgtVC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7996C116B1;
+	Thu,  9 May 2024 18:14:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715278482;
+	bh=hRafjKR2nz/ik0Ybw1Y2FxPsUTThAfB6fkIwc8yWrHs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CcnwgtVCG7xfa9ZqQX9x5aPbB8jIN4eai6HbmPjX9FQGjkRwgfJVizpa671LV5kCx
+	 9QcKPdInn/8JQKidSZN9Eu35JSLnJY15KbOhzGq2w8HE2bY9uZkyk0U+HBxZ7kiM+V
+	 aysA3CouUg5fksg2k89YsqHNjChC1e+QIExkTm0ZKsenA/hFkA7dd0bD95DC+Uf844
+	 S+V1pAlVgGoxrbl2rRuhbFPPz1m/SuYxirzNkqJDLeYRmYySS3s37N8IkpGSb7eQDm
+	 BjuX/N9hoEsXnMZUjzWd0dYjjFNG4QGZO2CS7ceb+lKr8CXBBTstrnjgSa7sJEb+st
+	 WQf+eKiLwhByQ==
+Date: Thu, 9 May 2024 19:14:26 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Deepak Gupta <debug@rivosinc.com>
+Cc: Rob Herring <robh@kernel.org>, paul.walmsley@sifive.com,
+	rick.p.edgecombe@intel.com, broonie@kernel.org,
+	Szabolcs.Nagy@arm.com, kito.cheng@sifive.com, keescook@chromium.org,
+	ajones@ventanamicro.com, conor.dooley@microchip.com,
+	cleger@rivosinc.com, atishp@atishpatra.org, alex@ghiti.fr,
+	bjorn@rivosinc.com, alexghiti@rivosinc.com,
+	samuel.holland@sifive.com, linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-mm@kvack.org,
+	linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	corbet@lwn.net, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com,
+	akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com,
+	shuah@kernel.org, brauner@kernel.org, andy.chiu@sifive.com,
+	jerry.shih@sifive.com, hankuan.chen@sifive.com,
+	greentime.hu@sifive.com, evan@rivosinc.com, xiao.w.wang@intel.com,
+	charlie@rivosinc.com, apatel@ventanamicro.com,
+	mchitale@ventanamicro.com, dbarboza@ventanamicro.com,
+	sameo@rivosinc.com, shikemeng@huaweicloud.com, willy@infradead.org,
+	vincent.chen@sifive.com, guoren@kernel.org, samitolvanen@google.com,
+	songshuaishuai@tinylab.org, gerg@kernel.org, heiko@sntech.de,
+	bhe@redhat.com, jeeheng.sia@starfivetech.com, cyy@cyyself.name,
+	maskray@google.com, ancientmodern4@gmail.com,
+	mathis.salmen@matsal.de, cuiyunhui@bytedance.com,
+	bgray@linux.ibm.com, mpe@ellerman.id.au, baruch@tkos.co.il,
+	alx@kernel.org, david@redhat.com, catalin.marinas@arm.com,
+	revest@chromium.org, josh@joshtriplett.org, shr@devkernel.io,
+	deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
+	jhubbard@nvidia.com
+Subject: Re: [PATCH v3 04/29] riscv: zicfilp / zicfiss in dt-bindings
+ (extensions.yaml)
+Message-ID: <20240509-cornflake-foyer-e6589c2bc364@spud>
+References: <20240403234054.2020347-1-debug@rivosinc.com>
+ <20240403234054.2020347-5-debug@rivosinc.com>
+ <20240410115806.GA4044117-robh@kernel.org>
+ <CAKC1njSsZ6wfvJtXkp4J4J6wXFtU92W9JGca-atKxBy8UvUwRg@mail.gmail.com>
+ <20240415194105.GA94432-robh@kernel.org>
+ <Zh6c0FH2OvrfDLje@debug.ba.rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240509100148.22384-1-osalvador@suse.de> <ZjzO4xH97Lu2UgEu@x1n>
-In-Reply-To: <ZjzO4xH97Lu2UgEu@x1n>
-From: Axel Rasmussen <axelrasmussen@google.com>
-Date: Thu, 9 May 2024 11:13:50 -0700
-Message-ID: <CAJHvVcjP6PS-m4dTTTF2MhDiaZ_U9WPfWO=JZZwGpHaA8o=qtA@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Minor fixups for hugetlb fault path
-To: Peter Xu <peterx@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Muchun Song <muchun.song@linux.dev>, Liu Shixin <liushixin2@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="JhRnWmWpnp4za6Qf"
+Content-Disposition: inline
+In-Reply-To: <Zh6c0FH2OvrfDLje@debug.ba.rivosinc.com>
+
+
+--JhRnWmWpnp4za6Qf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 9, 2024 at 6:26=E2=80=AFAM Peter Xu <peterx@redhat.com> wrote:
->
-> On Thu, May 09, 2024 at 12:01:46PM +0200, Oscar Salvador wrote:
-> > Hi,
-> >
-> > this series contains a couple of fixups for hugetlb_fault and hugetlb_w=
-p
-> > respectively, where a VM_FAULT_SET_HINDEX call was missing.
-> >
-> > I did not bother with a Fixes tag because the missing piece here is tha=
-t
-> > we will not report to userspace the right extension of the faulty area
-> > by adjusting struct kernel_siginfo.si_addr_lsb, but I do not consider t=
-hat
-> > to be a big issue because I assume that userspace already knows the siz=
-e
-> > of the mapping anyway.
->
-> Acked-by: Peter Xu <peterx@redhat.com>
+On Tue, Apr 16, 2024 at 08:44:16AM -0700, Deepak Gupta wrote:
+> On Mon, Apr 15, 2024 at 02:41:05PM -0500, Rob Herring wrote:
+> > On Wed, Apr 10, 2024 at 02:37:21PM -0700, Deepak Gupta wrote:
+> > > On Wed, Apr 10, 2024 at 4:58=E2=80=AFAM Rob Herring <robh@kernel.org>=
+ wrote:
+> > > >
+> > > > On Wed, Apr 03, 2024 at 04:34:52PM -0700, Deepak Gupta wrote:
+> > > > > Make an entry for cfi extensions in extensions.yaml.
+> > > > >
+> > > > > Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+> > > > > ---
+> > > > >  .../devicetree/bindings/riscv/extensions.yaml          | 10 ++++=
+++++++
+> > > > >  1 file changed, 10 insertions(+)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/riscv/extensions.y=
+aml b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> > > > > index 63d81dc895e5..45b87ad6cc1c 100644
+> > > > > --- a/Documentation/devicetree/bindings/riscv/extensions.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/riscv/extensions.yaml
+> > > > > @@ -317,6 +317,16 @@ properties:
+> > > > >              The standard Zicboz extension for cache-block zeroin=
+g as ratified
+> > > > >              in commit 3dd606f ("Create cmobase-v1.0.pdf") of ris=
+cv-CMOs.
+> > > > >
+> > > > > +        - const: zicfilp
+> > > > > +          description:
+> > > > > +            The standard Zicfilp extension for enforcing forward=
+ edge control-flow
+> > > > > +            integrity in commit 3a20dc9 of riscv-cfi and is in p=
+ublic review.
+> > > >
+> > > > Does in public review mean the commit sha is going to change?
+> > > >
+> > >=20
+> > > Less likely. Next step after public review is to gather comments from
+> > > public review.
+> > > If something is really pressing and needs to be addressed, then yes
+> > > this will change.
+> > > Else this gets ratified as it is.
+> >=20
+> > If the commit sha can change, then it is useless. What's the guarantee
+> > someone is going to remember to update it if it changes?
+>=20
+> Sorry for late reply.
+>=20
+> I was following existing wordings and patterns for messaging in this file.
+> You would rather have me remove sha and only mention that spec is in publ=
+ic
+> review?
 
-Looks correct to me as well. Thanks!
+Nope, having a commit sha is desired. None of this is mergeable until at
+least the spec becomes frozen, so the sha can be updated at that point
+to the freeze state - or better yet to the ratified state. Being in
+public review is not sufficient.
 
-Acked-by: Axel Rasmussen <axelrasmussen@google.com>
+Cheers,
+Conor
 
->
-> --
-> Peter Xu
->
+--JhRnWmWpnp4za6Qf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZj0SggAKCRB4tDGHoIJi
+0mvjAP9d3Qz1PVGc/kOj+XdEfO1FrKoEF9VSW9XYGpnlZvSRVAEAhzTts4ymraHs
+rig86vUonyRRKcngwn/ZR5KdPHqJ3ws=
+=NfI8
+-----END PGP SIGNATURE-----
+
+--JhRnWmWpnp4za6Qf--
