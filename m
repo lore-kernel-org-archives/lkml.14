@@ -1,188 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F15015EFC7
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 15:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CB4C14A612
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 15:16:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715267700; cv=none; b=YUOtKkTz1a9j22DAJABfjan+eCP5sQJFVjKX9yZ9Tr+U0vE40LDVmie7N31orrkH9K6FAuHfy/vYtLYSlPzKDuj0ZFs24M10HdLwMUCt6ryef8xiTqEE7XQvi3BIqJ5cj96VOE+s29RCE7Dp54T1if9mY+NpjHKEkuXUaY4oiSI=
+	t=1715267804; cv=none; b=uNM5UCYTpMwyYsLe/q7EcDhosW4E43iC5k/aOtbY+AZrRWBE3vVE1oanLFc5XVDdHO2bq5/vlueRO+1O7/EDaaBoL0nhalDbnp2lWUA2y1WnVewPJmvHiXMbEPF+bsPqKHWJZ53OpeK7IVBJnJoEirOVAw7QR7GrxXLEvRomfDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715267700; c=relaxed/simple;
-	bh=sc74tBRMVvyTIdXQ9GqJohO+ywn2hU9eX2MnEwP3XK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CUBv773rFKeZ/W7qeTDIFtNLyTdUQ9xQAH58XDVLPzqCpx3Lx0uY9vF+JEYHxcQSbO5iURBdpYOtPI0Z3Ah9SkoPIbUDynf0Ogf9k87bO1VfKN+WxBEZbGwm8d56EIXfeFbzZ/zHKx1xQGQDQkaimRrp8ut8D1aGbYcqCQcwOtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=inQckuKn; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715267804; c=relaxed/simple;
+	bh=rENpYzuzYep+kKpc+ClGh2Jqy7GxYlD0JOeoKeVYATU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=WIOfhgSEPIjsQiivtkWJ9Xu31FGH8x8/4R0KJDQctdsnJ7EpmGtXIBqCaZBg6YO16wkB7L1PY5jnjx/5nvfzg47Z0Omvxc8uvUBN5YiV5rKTTRGt1EoEC+hqwI+XJED9JBwaxhYgVR89qJrvXfLVj1LZryb6RzxqOM9vzkTaZuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tKoN2z+0; arc=none smtp.client-ip=95.215.58.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="inQckuKn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715267686;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tKoN2z+0"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715267799;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UYnzWWSL9wgQpzexR+ABGgs/vlGO/GpNcmd0n9BQDz0=;
-	b=inQckuKnIif0KWePcgt2p+wlpODGZ0WQxffGsXNcKrMJ1njnLW4KLrsV/2etm/YSYB7nWB
-	q5dzGrSyF3sWJneAKDJFgld/6O6v2DyW1dO7QcipP65ytZIuD7hQGqeep7b2XIufhtacPj
-	dIEjTc1yXhVHtIEe/shOx30XDsxkfyY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-416-DXZ-1WvIMXO1hQdBwgvjqw-1; Thu, 09 May 2024 11:14:42 -0400
-X-MC-Unique: DXZ-1WvIMXO1hQdBwgvjqw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0CD58857A81;
-	Thu,  9 May 2024 15:14:42 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.91])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 0F1C24A43EE;
-	Thu,  9 May 2024 15:14:38 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  9 May 2024 17:13:16 +0200 (CEST)
-Date: Thu, 9 May 2024 17:13:12 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 25/48] rcu: Mark writes to rcu_sync ->gp_count field
-Message-ID: <20240509151312.GA22612@redhat.com>
-References: <20240507093530.3043-1-urezki@gmail.com>
- <20240507093530.3043-26-urezki@gmail.com>
- <ZjpAsYJIfzYSKgdA@redhat.com>
- <4c9e89b5-c981-4809-8bc2-247563ce04e9@paulmck-laptop>
+	bh=WuV7M9mHf7zLGoXyvtH3Is1VnuTrzUZ1N2ISvLJru+k=;
+	b=tKoN2z+02HEGPxaMBMX19ZneYgaEWjlQx1yjDRa+5EtNM+Tk4h+QyONWXsiZlzBqwIkM0v
+	y02jbP0F9WK/J4dQxTDaCsJa9HxkYxUlN07D+ppV/DoxZeEABmqSngg/D+YBoNgF7iuP38
+	uWCX/WykcZyS911GVQsXeGumCrHpsR8=
+From: Luis Henriques <luis.henriques@linux.dev>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org,  linux-fsdevel@vger.kernel.org,
+  linux-mm@kvack.org,  linux-kernel@vger.kernel.org,  tytso@mit.edu,
+  adilger.kernel@dilger.ca,  jack@suse.cz,  ritesh.list@gmail.com,
+  hch@infradead.org,  djwong@kernel.org,  willy@infradead.org,
+  zokeefe@google.com,  yi.zhang@huawei.com,  chengzhihao1@huawei.com,
+  yukuai3@huawei.com,  wangkefeng.wang@huawei.com
+Subject: Re: [PATCH v3 03/26] ext4: correct the hole length returned by
+ ext4_map_blocks()
+In-Reply-To: <20240127015825.1608160-4-yi.zhang@huaweicloud.com> (Zhang Yi's
+	message of "Sat, 27 Jan 2024 09:58:02 +0800")
+References: <20240127015825.1608160-1-yi.zhang@huaweicloud.com>
+	<20240127015825.1608160-4-yi.zhang@huaweicloud.com>
+Date: Thu, 09 May 2024 16:16:34 +0100
+Message-ID: <87zfszuib1.fsf@brahms.olymp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c9e89b5-c981-4809-8bc2-247563ce04e9@paulmck-laptop>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Type: text/plain
+X-Migadu-Flow: FLOW_OUT
 
-On 05/07, Paul E. McKenney wrote:
->
-> On Tue, May 07, 2024 at 10:54:41AM -0400, Oleg Nesterov wrote:
-> > Hello,
-> >
-> > I feel I don't really like this patch but I am travelling without my working
-> > laptop, can't read the source code ;) Quite possibly I am wrong, I'll return
-> > to this when I get back on May 10.
->
-> By the stricter data-race rules used in RCU code [1], this is a bug that
-> needs to be fixed.
+On Sat 27 Jan 2024 09:58:02 AM +08, Zhang Yi wrote;
+<...>
+> +static ext4_lblk_t ext4_ext_determine_insert_hole(struct inode *inode,
+> +						  struct ext4_ext_path *path,
+> +						  ext4_lblk_t lblk)
+> +{
+> +	ext4_lblk_t hole_start, len;
+> +	struct extent_status es;
+> +
+> +	hole_start = lblk;
+> +	len = ext4_ext_find_hole(inode, path, &hole_start);
+> +again:
+> +	ext4_es_find_extent_range(inode, &ext4_es_is_delayed, hole_start,
+> +				  hole_start + len - 1, &es);
+> +	if (!es.es_len)
+> +		goto insert_hole;
+> +
+> +	/*
+> +	 * There's a delalloc extent in the hole, handle it if the delalloc
+> +	 * extent is in front of, behind and straddle the queried range.
+> +	 */
+> +	if (lblk >= es.es_lblk + es.es_len) {
+> +		/*
+> +		 * The delalloc extent is in front of the queried range,
+> +		 * find again from the queried start block.
+> +		 */
+> +		len -= lblk - hole_start;
+> +		hole_start = lblk;
+> +		goto again;
 
-Now that I can read the code... Sorry, still can't understand.
+It's looks like it's easy to trigger an infinite loop here using fstest
+generic/039.  If I understand it correctly (which doesn't happen as often
+as I'd like), this is due to an integer overflow in the 'if' condition,
+and should be fixed with the patch below.
 
-> which is read locklessly,
+From 3117af2f8dacad37a2722850421f31075ae9e88d Mon Sep 17 00:00:00 2001
+From: "Luis Henriques (SUSE)" <luis.henriques@linux.dev>
+Date: Thu, 9 May 2024 15:53:01 +0100
+Subject: [PATCH] ext4: fix infinite loop caused by integer overflow
 
-Where???
+An integer overflow will happen if the extent_status len is set to
+EXT_MAX_BLOCKS (0xffffffff).  This may cause an infinite loop in function
+ext4_ext_determine_insert_hole(), easily reproducible using fstest
+generic/039.
 
-OK, OK, we have
+Fixes: 6430dea07e85 ("ext4: correct the hole length returned by ext4_map_blocks()")
+Signed-off-by: Luis Henriques (SUSE) <luis.henriques@linux.dev>
+---
+ fs/ext4/extents.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	// rcu_sync_exit()
-	WARN_ON_ONCE(READ_ONCE(rsp->gp_count) == 0)
-
-and
-
-	// rcu_sync_dtor()
-	WARN_ON_ONCE(READ_ONCE(rsp->gp_count));
-
-other than that ->gp_count is always accessed under ->rss_lock.
-
-And yes, at least WARN_ON_ONCE() in rcu_sync_exit() can obviously race with
-rcu_sync_enter/exit which update gp_count. I think this is fine correctness-wise.
-
-But OK, we need to please KCSAN (or is there another problem I missed ???)
-
-We can move these WARN_ON()'s into the ->rss_lock protected section.
-
-Or perhaps we can use data_race(rsp->gp_count) ? To be honest I thought
-that READ_ONCE() should be enough...
-
-Or we can simply kill these WARN_ON_ONCE()'s.
-
-I don't understand why should we add more WRITE_ONCE()'s into the critical
-section protected by ->rss_lock.
-
-Help! ;)
-
-Oleg.
-
-
-which in turn results in a data race.  The fix is to mark
-> the updates (as below) with WRITE_ONCE().
->
-> Or is there something in one or the other of these updates to ->gp_count
-> that excludes lockless readers?  (I am not seeing it, but you know this
-> code way better than I do!)
->
-> 							Thanx, Paul
->
-> [1] https://docs.google.com/document/d/1FwZaXSg3A55ivVoWffA9iMuhJ3_Gmj_E494dLYjjyLQ/edit?usp=sharing
->
-> > Oleg.
-> >
-> > On 05/07, Uladzislau Rezki (Sony) wrote:
-> > >
-> > > From: "Paul E. McKenney" <paulmck@kernel.org>
-> > >
-> > > The rcu_sync structure's ->gp_count field is updated under the protection
-> > > of ->rss_lock, but read locklessly, and KCSAN noted the data race.
-> > > This commit therefore uses WRITE_ONCE() to do this update to clearly
-> > > document its racy nature.
-> > >
-> > > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > > Cc: Oleg Nesterov <oleg@redhat.com>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > > ---
-> > >  kernel/rcu/sync.c | 8 ++++++--
-> > >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
-> > > index 86df878a2fee..6c2bd9001adc 100644
-> > > --- a/kernel/rcu/sync.c
-> > > +++ b/kernel/rcu/sync.c
-> > > @@ -122,7 +122,7 @@ void rcu_sync_enter(struct rcu_sync *rsp)
-> > >  		 * we are called at early boot time but this shouldn't happen.
-> > >  		 */
-> > >  	}
-> > > -	rsp->gp_count++;
-> > > +	WRITE_ONCE(rsp->gp_count, rsp->gp_count + 1);
-> > >  	spin_unlock_irq(&rsp->rss_lock);
-> > >
-> > >  	if (gp_state == GP_IDLE) {
-> > > @@ -151,11 +151,15 @@ void rcu_sync_enter(struct rcu_sync *rsp)
-> > >   */
-> > >  void rcu_sync_exit(struct rcu_sync *rsp)
-> > >  {
-> > > +	int gpc;
-> > > +
-> > >  	WARN_ON_ONCE(READ_ONCE(rsp->gp_state) == GP_IDLE);
-> > >  	WARN_ON_ONCE(READ_ONCE(rsp->gp_count) == 0);
-> > >
-> > >  	spin_lock_irq(&rsp->rss_lock);
-> > > -	if (!--rsp->gp_count) {
-> > > +	gpc = rsp->gp_count - 1;
-> > > +	WRITE_ONCE(rsp->gp_count, gpc);
-> > > +	if (!gpc) {
-> > >  		if (rsp->gp_state == GP_PASSED) {
-> > >  			WRITE_ONCE(rsp->gp_state, GP_EXIT);
-> > >  			rcu_sync_call(rsp);
-> > > --
-> > > 2.39.2
-> > >
-> >
->
-
+diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+index e57054bdc5fd..193121b394f9 100644
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -4064,7 +4064,7 @@ static ext4_lblk_t ext4_ext_determine_insert_hole(struct inode *inode,
+ 	 * There's a delalloc extent in the hole, handle it if the delalloc
+ 	 * extent is in front of, behind and straddle the queried range.
+ 	 */
+-	if (lblk >= es.es_lblk + es.es_len) {
++	if (lblk >= ((__u64) es.es_lblk) + es.es_len) {
+ 		/*
+ 		 * The delalloc extent is in front of the queried range,
+ 		 * find again from the queried start block.
