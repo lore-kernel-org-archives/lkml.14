@@ -1,136 +1,110 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D3EE653;
-	Thu,  9 May 2024 19:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3227EEE7
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 19:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715282071; cv=none; b=Wt+3+bD0AlqFbyzdO6JLT9nOWSftf+wiVZcfOCRKZmjkESdpxpOoOu+2G3Xdg03s+NQ6oaR5WeH2TC2m6mG3Xd9KCU002aeMJe0TEFJbK7hvAytmIFbppFfKLDySZg1Kl2YPw0fSwykvo8+w/8aMVoXFRM3/r3AUVSlMwU72/Yg=
+	t=1715282162; cv=none; b=V76JRviImmltvMfiE2pRghBuBfTnBDHys5roTx65TTCmb0UE/VzE+Oh/WqPOnHqddM1jbtOqTqb1CCnpooiWwktDsGsVYr4tuFEljgb3sT4wbnUU+dRwU3ktXZW163RCOXE1BVQgSYZm/Z+1lana2hgX1nl3tmTN/SbwuYMC0EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715282071; c=relaxed/simple;
-	bh=55uIyhvRazOrYmXsUorRKX/hLBSNZkkIXyAqYGXQeW4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WnHfrMiYHxM3Y2cwLLS3eky9NqyUatd59Tu0lQtMBIOwagbm17P3fs3WPGLb55Fo7mlxV1ZhyEl3v2V633nln3AchfBfrOtweFzcuu/4OTohMGCb5ayKgVxD0OYSG4Z8e/VbIRpT2X/7b/oivBeWEbNAhtjCrFCLlLlyryGRe+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MCKmDq4J; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715282162; c=relaxed/simple;
+	bh=f5hTjmwtrBNmeRfEZwqwz3MoeEtUyLOcEt2AbxYcVbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bfrCXtiESEpVHeBgpz4pWxkrcvPJmF0SUqYMqdSRGCGIXgky/SE0OmKMioNqj+3quVvFSMSnz+VzRXdNLfuK7FtiHTzai5PxwBIpIHTwwmE5lJC3e0j8CiIXAV7CcSeVKOf8GzmR0xxlnnvexd2jvVKQHuZ+EjcX6ELevXMYOwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZBcnF8Ym; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MCKmDq4J"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 449H7UCP022556;
-	Thu, 9 May 2024 19:14:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=Job5O8NkP0R4AlK4uRJi8s4BqP6t1RW3dw1GphMw1YI=; b=MC
-	KmDq4JJ/HRd1cN9OkV5uK7mBkx78NuFYQGVRjfCh9luZOzEyxjrYOxyW12CHmnSL
-	0GPBNgxwFz6XWMlhZaZi5kvETp2YAbDnIybIFiIKeArJeOOLmtiLlUZza0MlMIP1
-	in4DDzUT9HOe16V7Ygr241NvYam8htI5FjgWPx3QenTo/P/L0SuSRLtfidUkZwoh
-	svVCLBOs5KWrHpjz2rA9sJAs/lM5gPYp3UBXl45YCtqaIoxYQTn4AAgXPyU4PiJx
-	sYXkY150RuwzXLWp4AkTTd2PjlgmnIS0hH9vYdMVbpEWtVoWJaWDjIy35vDXyF+e
-	O7w8dmyvfFTzeQKDc5UQ==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y09frbeh2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 19:14:23 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 449JELBu009782
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 9 May 2024 19:14:21 GMT
-Received: from [10.110.104.129] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 9 May 2024
- 12:14:20 -0700
-Message-ID: <151f3503-d7ce-b11d-0658-1d26a47b1920@quicinc.com>
-Date: Thu, 9 May 2024 12:14:19 -0700
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZBcnF8Ym"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a59a64db066so316880766b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 12:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1715282158; x=1715886958; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=C9PPjpFCo1HBrR3dhTun969JD1naScZ8g1ToZzUTce0=;
+        b=ZBcnF8YmhrjyvmPATrpxIJwnO/LAVDHVpKlE2c2K0TTYwfVyk9f3esVGbFrHqF70n7
+         dlptd/NDbOgWA8FsY8w0ZecCKbH23DM236FhxJ9dY/rAXpG5bWE+9XnOs8dhTzPLfDvb
+         uqR1LLMUB1GxE8mixDpUWggKypq9UmjV7DQkM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715282158; x=1715886958;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C9PPjpFCo1HBrR3dhTun969JD1naScZ8g1ToZzUTce0=;
+        b=kRD1kc6W5iN4ALNjz5H1ToqRYIDOFuPzYudwq4ktPmiHA7omfKQvOyzHL+VhWcIw/j
+         /nwDVPzgBxbYvZ6JZeruukgtNspAYkFdwk7UUUcrSPzcxNQVnyhj/Xb5/4lH/SWuH0ie
+         NagERzPfa43DMgfGiyrKRvMZVEKrmh5v26BJ550WEOcmw/ScNSGtWz2O+sseJP0LJkWX
+         AnGinlG512Bu+LbQtl3uPPbjC/Vmron3A2mF0mWrpV/Nc3cMmCN5ybzoWJw1PJXr35VM
+         7akxMlcKoDpxjJ6H3e3HYgmKBrgXgDDtSRJdsNbygZI2Wz7vIJA6igzpCXXHqALC+d9F
+         bbUg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQsjn/Ic1Fk93KvbOsRDyM6qv+Jh11u0Gau3Q/Fs8nBer24pIwdm9EVTrmcA3KdfHJu+BUY/9FEiGLMNvSgl+CDsDAP4sE0tQdT8ZH
+X-Gm-Message-State: AOJu0YzkBe5u+1lCYcPEFrRvpnKeZQiSFWPtVMguey33BgGe5mcgUMVU
+	426JButwCf+Ana/d2pfL1WTPXjMJIUG871rhXObZaYB0ha2pkGHNiqS/DU8ydQvwUS6pqrvGhji
+	i3yeHdg==
+X-Google-Smtp-Source: AGHT+IHq5fD2MbPQl2PRK0m59BgcnSyrMm32j7q6/9EbTIisAWkmaLnBnag8YWoR0nDsmxvHuXb6GQ==
+X-Received: by 2002:a17:907:20a2:b0:a59:a3ef:21f9 with SMTP id a640c23a62f3a-a5a2d6656b2mr33290266b.52.1715282158415;
+        Thu, 09 May 2024 12:15:58 -0700 (PDT)
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781d1fcsm102989466b.35.2024.05.09.12.15.57
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 May 2024 12:15:57 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a599c55055dso332163066b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 12:15:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWJp9foXcNrwkASZ5w2PYq4ophlVH5eHpOSyU5pTBG0WRep4BfortuycXtXJF3C7BR13lErR2xCuXmTjvUAKyufULs18Ep9pO8PnSPM
+X-Received: by 2002:a17:906:f88c:b0:a59:c52b:9938 with SMTP id
+ a640c23a62f3a-a5a2d6653bamr36083966b.55.1715282157122; Thu, 09 May 2024
+ 12:15:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] drm/msm/dpu: guard ctl irq callback register/unregister
-Content-Language: en-US
-To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <trabarni@gmail.com>,
-        Rob Clark
-	<robdclark@gmail.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sean
- Paul <sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David
- Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20240509-ctl_irq-v1-1-9433f2da9dc7@gmail.com>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20240509-ctl_irq-v1-1-9433f2da9dc7@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: lG684409fAEPbZxsC47Ga5AyAgy9Lur7
-X-Proofpoint-GUID: lG684409fAEPbZxsC47Ga5AyAgy9Lur7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-09_10,2024-05-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
- spamscore=0 lowpriorityscore=0 bulkscore=0 phishscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405090135
+References: <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook> <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+ <202405081949.0565810E46@keescook> <20240509140854.GF3620298@mit.edu>
+ <CAHk-=wgKyP2ffZPa6aKYtytzzFibiNVN5MS=D2cn7_UGCECKdw@mail.gmail.com>
+ <20240509175417.GR2118490@ZenIV> <CAHk-=wgXm15gZHvt8waSFhXS9yZTfvMV95xyvNtPc6FSEA_rvA@mail.gmail.com>
+ <CAHk-=wgBprh=8Us-MtwH9sVNELZK2hdOkFn3EoauwecYgtXOCQ@mail.gmail.com> <20240509184806.GS2118490@ZenIV>
+In-Reply-To: <20240509184806.GS2118490@ZenIV>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 9 May 2024 12:15:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjHA8Di-cpT0pKcScwcWNVYRFvmhBwMrug=Mj5WUwa2rw@mail.gmail.com>
+Message-ID: <CAHk-=wjHA8Di-cpT0pKcScwcWNVYRFvmhBwMrug=Mj5WUwa2rw@mail.gmail.com>
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: "Theodore Ts'o" <tytso@mit.edu>, Kees Cook <keescook@chromium.org>, 
+	Justin Stitt <justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
+On Thu, 9 May 2024 at 11:48, Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> FWIW, the thing that somewhat worries me about having a helper along
+> the lines of combine_to_u64(low, high) is that
+>         foo->splat = combine_to_u64(something, something_else);
+> would be inviting hard-to-catch brainos -
+>         foo->splat = combine_to_u64(something_else, something);
 
+Yeah, we'd have to be very clear about naming and ordering. So it
+would probably have to be something like
 
-On 5/9/2024 10:52 AM, Barnabás Czémán wrote:
-> CTLs on older qualcomm SOCs like msm8953 and msm8996 has not got interrupts,
-> so better to skip CTL irq callback register/unregister
-> make dpu_ctl_cfg be able to define without intr_start.
-> 
+        result = combine_to_u64_hi_lo(high, low);
 
-Thanks for the patch.
+to be easy to use.
 
-Have msm8953 and msm8996 migrated to DPU or is there a series planned to 
-migrate them?
+The good news is that if you *do* get it wrong despite clear naming,
+the resulting value will be so obviously wrong that it's generally a
+"Duh!" thing if you do any testing what-so-ever.
 
-The change itself is correct but without the catalogs for those chipsets 
-merged, we will never hit this path.
+Of course, I say that as somebody who always points out that I haven't
+tested my own patches at all, and they are "something like this,
+perhaps?".
 
+But having "hi_lo" kind of naming would hopefully make it really
+obvious even when just looking at the source code.
 
-> Signed-off-by: Barnabás Czémán <trabarni@gmail.com>
-> ---
->   drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-> index 489be1c0c704..250d83af53a4 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_encoder_phys_cmd.c
-> @@ -298,7 +298,7 @@ static void dpu_encoder_phys_cmd_irq_enable(struct dpu_encoder_phys *phys_enc)
->   				       phys_enc);
->   	dpu_encoder_phys_cmd_control_vblank_irq(phys_enc, true);
->   
-> -	if (dpu_encoder_phys_cmd_is_master(phys_enc))
-> +	if (dpu_encoder_phys_cmd_is_master(phys_enc) && phys_enc->irq[INTR_IDX_CTL_START])
->   		dpu_core_irq_register_callback(phys_enc->dpu_kms,
->   					       phys_enc->irq[INTR_IDX_CTL_START],
->   					       dpu_encoder_phys_cmd_ctl_start_irq,
-> @@ -311,7 +311,7 @@ static void dpu_encoder_phys_cmd_irq_disable(struct dpu_encoder_phys *phys_enc)
->   					   phys_enc->hw_pp->idx - PINGPONG_0,
->   					   phys_enc->vblank_refcount);
->   
-> -	if (dpu_encoder_phys_cmd_is_master(phys_enc))
-> +	if (dpu_encoder_phys_cmd_is_master(phys_enc) && phys_enc->irq[INTR_IDX_CTL_START])
->   		dpu_core_irq_unregister_callback(phys_enc->dpu_kms,
->   						 phys_enc->irq[INTR_IDX_CTL_START]);
->   
-> 
-> ---
-> base-commit: 704ba27ac55579704ba1289392448b0c66b56258
-> change-id: 20240509-ctl_irq-a90b2d7a0bf5
-> 
-> Best regards,
+              Linus
