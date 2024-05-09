@@ -1,203 +1,187 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m17229.xmail.ntesmail.com (mail-m17229.xmail.ntesmail.com [45.195.17.229])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91B17F483
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 19:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C25653;
+	Thu,  9 May 2024 19:02:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.195.17.229
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715281252; cv=none; b=WYk5wloP2EueBO1PmbUhBtMAsR2nTxABVkgNFO612Hs/1zsoU3TolVnmOQeaYXNX5+vP3X+AAkzi3iA4RVDsZA+F4OxzlT/WW/eT5gW3FCd9UgSu8YR+hcgLNy6Xv1yhgnTPjoVLyUGJZcyBzpi2bnD26xeTYK+sYwQKpDzhRpw=
+	t=1715281371; cv=none; b=gS5RyhTAP0IP17+deH6yEFXsfqsGgf2RNAZJDnbwXAijRn9SHbH3AGwPd+DrJsHNRR2q7jQfZk2KWbrliNvn+HTEFqxwxBy3IywJeFvt1GCRtHzzh6Rzzv9JwKnqjJjqJoUozOVusIA5u6kIc0xufq20pEVjdN92Rbueof8ENSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715281252; c=relaxed/simple;
-	bh=xF39L+hs0TY+8aNmea7VYtJ+NEfSYKkZrUTY8FQHMiE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d7/n8ErayhdLfDa7TaSpQ6RUEchWYLL1iqrfLzsVfSfhiv7VYmnNAGZZfiUc3veVjQ994C1pI1fMSN3KRqXVS4l8XZfAlu2E8bNOLLDUY2jVR62H45dS85BvNfu68AqxyUgli5AKIK9V1IE0xpnptEZBZYla6CkNnBQ3kAwMJJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=JJqxJHRe; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="JJqxJHRe"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6f44bcbaae7so1116387b3a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 12:00:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715281242; x=1715886042; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=suVrTFWe4Q9EJfAXikAfGsbIG5FwHp88I8wjDmo5qhw=;
-        b=JJqxJHRelJ7QcM2PM36uXftB9ooQUS6iPJ+3M48VB7n1Rt0Qvw8nwkvwQdK7vDOnbS
-         aGOCUnx0yvWjP5VLhv8aqijkQH2PhO71MfbI8y33/IpWtnZiY6xNDPK0U8dCpwyd0xpG
-         3dlf94UK2jlFf37YfJTq20Hjh3qjs16ULJthd1fBhrPnwa34PZTYrTwDx0jC2sU1i/0n
-         vsGn9/NidfMsoQPz+QPJfwiNmFIVVlgzvW7oSE4yaFwoFEz1PjPZqXy+FpRLbeyIDEsN
-         mr50KSsUPaB3x61aY+qwHMBle46w/Gy+HE1Vj0UoExGhiAFSeN5W4WLz23Ex5zBWYhf/
-         CT5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715281242; x=1715886042;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=suVrTFWe4Q9EJfAXikAfGsbIG5FwHp88I8wjDmo5qhw=;
-        b=lh8Nu5vheDaEH4IjDaVym8NjpGUaTgasfD/dRdOnN3VBBeIAmbw84Lxz7SqsBW+TQD
-         XKQOVgl4M1YFbD3e3P+nIuQ7BO3iT7u9EKngECSIz1Z8A3P9IHc4WSN5Ijo+DFFUI3Lo
-         BwdXgdcCAxGDIVB+d9orBpGM+7OTwFOd6Sj/LSnwcqF061RST4Vrq4ls8gupaFbyFSZv
-         rheWRRjbZHWgnXY13gdZBnBAcNsXgteV8p0WnL8qYILN9jY5vX55PJn+fezv6/VETF+7
-         p/26FVYF9fm2XWx4XAdikqJOTXUy2TUSRCCpXoVINcG/FdG3QRyrzaNXXm5BOU+5AhpB
-         S6+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWWk2XjiSI4LY42dOWd0oQSOkoCUlVYQoMVFWIMRWIlPlNOarYEXMydRPuyyvAZP97ZHR4z0eCda0DCbX25NUfCx8ZmMT6EcFeIOYi0
-X-Gm-Message-State: AOJu0YyGkJ2wKfa13kc7xBy0mJg/TKytnEUN6vouoDmzB0b8kZ2xGFZR
-	WJgBc6GH/Ihs0jkcAA0mdcmM0tvCwI6XNMJpp3fn2NoNSzC6vT5kbc7VY6kf6+4=
-X-Google-Smtp-Source: AGHT+IHE3J/hwAQsHqywRim+p5Loya/dtj3SbYe2Ez8JQSaJRUzBly/edfRtpEMzoFQPu7m0vRKdfQ==
-X-Received: by 2002:a05:6300:8002:b0:1af:62a6:e2 with SMTP id adf61e73a8af0-1afde1fb753mr598976637.56.1715281241943;
-        Thu, 09 May 2024 12:00:41 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2a6654asm1626451b3a.43.2024.05.09.12.00.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 12:00:41 -0700 (PDT)
-Date: Thu, 9 May 2024 12:00:36 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: paul.walmsley@sifive.com, rick.p.edgecombe@intel.com,
-	broonie@kernel.org, Szabolcs.Nagy@arm.com, kito.cheng@sifive.com,
-	keescook@chromium.org, ajones@ventanamicro.com,
-	conor.dooley@microchip.com, cleger@rivosinc.com,
-	atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com,
-	alexghiti@rivosinc.com, samuel.holland@sifive.com, conor@kernel.org,
-	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-mm@kvack.org, linux-arch@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, corbet@lwn.net, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com,
-	akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com,
-	shuah@kernel.org, brauner@kernel.org, andy.chiu@sifive.com,
-	jerry.shih@sifive.com, hankuan.chen@sifive.com,
-	greentime.hu@sifive.com, evan@rivosinc.com, xiao.w.wang@intel.com,
-	apatel@ventanamicro.com, mchitale@ventanamicro.com,
-	dbarboza@ventanamicro.com, sameo@rivosinc.com,
-	shikemeng@huaweicloud.com, willy@infradead.org,
-	vincent.chen@sifive.com, guoren@kernel.org, samitolvanen@google.com,
-	songshuaishuai@tinylab.org, gerg@kernel.org, heiko@sntech.de,
-	bhe@redhat.com, jeeheng.sia@starfivetech.com, cyy@cyyself.name,
-	maskray@google.com, ancientmodern4@gmail.com,
-	mathis.salmen@matsal.de, cuiyunhui@bytedance.com,
-	bgray@linux.ibm.com, mpe@ellerman.id.au, baruch@tkos.co.il,
-	alx@kernel.org, david@redhat.com, catalin.marinas@arm.com,
-	revest@chromium.org, josh@joshtriplett.org, shr@devkernel.io,
-	deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
-	jhubbard@nvidia.com
-Subject: Re: [PATCH v3 01/29] riscv: envcfg save and restore on task switching
-Message-ID: <Zj0dVJ20D05ELAoH@debug.ba.rivosinc.com>
-References: <20240403234054.2020347-1-debug@rivosinc.com>
- <20240403234054.2020347-2-debug@rivosinc.com>
- <ZjwUhvLBv13qi77a@ghost>
+	s=arc-20240116; t=1715281371; c=relaxed/simple;
+	bh=4XnBz2lh+7YxriUGIom+RcfBIR64ijJxolblnDjagBQ=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=CHchWtgmZK1r13FgNAiQNW2n+e5sa19I/i7JXuPU/TJT4shnsV4SCOurfsQ1Pcj5ZOz1IRGL0/SEYOsA4tiKjfiKNl+HWBvis6IF5kWHE8f1LPEfnN5HXzOSS8tBaO2rSwrXpZgZILv9EA4/MoRd0na1kWtUvfdu07zASnvvGds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn; spf=none smtp.mailfrom=easystack.cn; arc=none smtp.client-ip=45.195.17.229
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=easystack.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=easystack.cn
+Received: from [192.168.122.189] (unknown [218.94.118.90])
+	by smtp.qiye.163.com (Hmail) with ESMTPA id 0F263860417;
+	Thu,  9 May 2024 21:03:43 +0800 (CST)
+Subject: Re: [PATCH RFC 0/7] block: Introduce CBD (CXL Block Device)
+To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: John Groves <John@groves.net>, Dan Williams <dan.j.williams@intel.com>,
+ Gregory Price <gregory.price@memverge.com>, axboe@kernel.dk,
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-cxl@vger.kernel.org, nvdimm@lists.linux.dev
+References: <20240422071606.52637-1-dongsheng.yang@easystack.cn>
+ <66288ac38b770_a96f294c6@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+ <ef34808b-d25d-c953-3407-aa833ad58e61@easystack.cn>
+ <ZikhwAAIGFG0UU23@memverge.com>
+ <bbf692ec-2109-baf2-aaae-7859a8315025@easystack.cn>
+ <ZiuwyIVaKJq8aC6g@memverge.com>
+ <98ae27ff-b01a-761d-c1c6-39911a000268@easystack.cn>
+ <ZivS86BrfPHopkru@memverge.com>
+ <8f373165-dd2b-906f-96da-41be9f27c208@easystack.cn>
+ <wold3g5ww63cwqo7rlwevqcpmlen3fl3lbtbq3qrmveoh2hale@e7carkmumnub>
+ <20240503105245.00003676@Huawei.com>
+ <5b7f3700-aeee-15af-59a7-8e271a89c850@easystack.cn>
+ <20240508131125.00003d2b@Huawei.com>
+ <ef0ee621-a2d2-e59a-f601-e072e8790f06@easystack.cn>
+ <20240508164417.00006c69@Huawei.com>
+ <3d547577-e8f2-8765-0f63-07d1700fcefc@easystack.cn>
+ <20240509132134.00000ae9@Huawei.com>
+From: Dongsheng Yang <dongsheng.yang@easystack.cn>
+Message-ID: <a571be12-2fd3-e0ee-a914-0a6e2c46bdbc@easystack.cn>
+Date: Thu, 9 May 2024 21:03:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.4.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <ZjwUhvLBv13qi77a@ghost>
+In-Reply-To: <20240509132134.00000ae9@Huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFJQjdXWS1ZQUlXWQ8JGhUIEh9ZQVlDGUNNVh1KTB0eSx8ZS0wZSFUZERMWGhIXJBQOD1
+	lXWRgSC1lBWUlKQ1VCT1VKSkNVQktZV1kWGg8SFR0UWUFZT0tIVUpNT0lMTlVKS0tVSkJLS1kG
+X-HM-Tid: 0a8f5d73d560023ckunm0f263860417
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ngg6Fjo*FDc*EUo6Aj1JLj5J
+	GggwC0JVSlVKTEpOSU5CQ0lIQ0xIVTMWGhIXVR8UFRwIEx4VHFUCGhUcOx4aCAIIDxoYEFUYFUVZ
+	V1kSC1lBWUlKQ1VCT1VKSkNVQktZV1kIAVlBTE5JTjcG
 
-On Wed, May 08, 2024 at 05:10:46PM -0700, Charlie Jenkins wrote:
->On Wed, Apr 03, 2024 at 04:34:49PM -0700, Deepak Gupta wrote:
->> envcfg CSR defines enabling bits for cache management instructions and
->> soon will control enabling for control flow integrity and pointer
->> masking features.
+
+
+在 2024/5/9 星期四 下午 8:21, Jonathan Cameron 写道:
+> On Thu, 9 May 2024 19:24:28 +0800
+> Dongsheng Yang <dongsheng.yang@easystack.cn> wrote:
+> 
+...
+>>> Yes. I think we are going to have to wait on architecture specific clarifications
+>>> before any software coherent use case can be guaranteed to work beyond the 3.1 ones
+>>> for temporal sharing (only one accessing host at a time) and read only sharing where
+>>> writes are dropped anyway so clean write back is irrelevant beyond some noise in
+>>> logs possibly (if they do get logged it is considered so rare we don't care!).
 >>
->> Control flow integrity enabling for forward cfi and backward cfi are
->> controlled via envcfg and thus need to be enabled on per thread basis.
+>> Hi Jonathan,
+>> 	Allow me to discuss further. As described in CXL 3.1:
+>> ```
+>> Software-managed coherency schemes are complicated by any host or device
+>> whose caching agents generate clean writebacks. A “No Clean Writebacks”
+>> capability bit is available for a host in the CXL System Description
+>> Structure (CSDS; see Section 9.18.1.6) or for a device in the DVSEC CXL
+>> Capability2 register (see Section 8.1.3.7).
+>> ```
 >>
->> This patch creates a place holder for envcfg CSR in `thread_info` and
->> adds logic to save and restore on task switching.
+>> If we check and find that the "No clean writeback" bit in both CSDS and
+>> DVSEC is set, can we then assume that software cache-coherency is
+>> feasible, as outlined below:
 >>
->> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
->> ---
->>  arch/riscv/include/asm/switch_to.h   | 10 ++++++++++
->>  arch/riscv/include/asm/thread_info.h |  1 +
->>  2 files changed, 11 insertions(+)
+>> (1) Both the writer and reader ensure cache flushes. Since there are no
+>> clean writebacks, there will be no background data writes.
 >>
->> diff --git a/arch/riscv/include/asm/switch_to.h b/arch/riscv/include/asm/switch_to.h
->> index 7efdb0584d47..2d9a00a30394 100644
->> --- a/arch/riscv/include/asm/switch_to.h
->> +++ b/arch/riscv/include/asm/switch_to.h
->> @@ -69,6 +69,15 @@ static __always_inline bool has_fpu(void) { return false; }
->>  #define __switch_to_fpu(__prev, __next) do { } while (0)
->>  #endif
+>> (2) The writer writes data to shared memory and then executes a cache
+>> flush. If we trust the "No clean writeback" bit, we can assume that the
+>> data in shared memory is coherent.
 >>
->> +static inline void __switch_to_envcfg(struct task_struct *next)
->> +{
->> +	register unsigned long envcfg = next->thread_info.envcfg;
->
->This doesn't need the register storage class.
->
-
-yeah. will fix it. thanks.
-
->> +
->> +	asm volatile (ALTERNATIVE("nop", "csrw " __stringify(CSR_ENVCFG) ", %0", 0,
->> +							  RISCV_ISA_EXT_XLINUXENVCFG, 1)
->> +							  :: "r" (envcfg) : "memory");
->> +}
->> +
->
->Something like:
->
->static inline void __switch_to_envcfg(struct task_struct *next)
->{
->	if (riscv_has_extension_unlikely(RISCV_ISA_EXT_XLINUXENVCFG))
->		csr_write(CSR_ENVCFG, next->thread_info.envcfg);
->}
->
->would be easier to read, but the alternative you have written doesn't
->have the jump that riscv_has_extension_unlikely has so what you have
->will be more performant.
-
-Yeah looked at codegen of `riscv_has_extension_unlikely` and I didn't like un-necessary jumps,
-specially in switch_to path. All I want is a CSR write. So used alternative to patch nop with
-CSR write.
-
->
->Does envcfg need to be save/restored always or just with
->CONFIG_RISCV_USER_CFI?
-
-There is no save (no read of CSR). Only restore (writes to CSR).
-
-There are pointer masking patches from Samuel Holland where senvcfg needs to be context
-switched on per task basis.
-https://lore.kernel.org/lkml/20240319215915.832127-1-samuel.holland@sifive.com/T/
-
-Given that this CSR controls user execution environment and is per task basis, I thought its
-better to not wrap it under CONFIG_RISCV_USER_CFI and rather make it dependend on
-RISCV_ISA_EXT_XLINUXENVCFG. If any of the extensions which require senvcfg, then simply
-restore this CSR on per task basis.
-
->
->- Charlie
->
->>  extern struct task_struct *__switch_to(struct task_struct *,
->>  				       struct task_struct *);
+>> (3) Before reading the data, the reader performs cache invalidation.
+>> Since there are no clean writebacks, this invalidation operation will
+>> not destroy the data written by the writer. Therefore, the data read by
+>> the reader should be the data written by the writer, and since the
+>> writer's cache is clean, it will not write data to shared memory during
+>> the reader's reading process. Additionally, data integrity can be ensured.
 >>
->> @@ -80,6 +89,7 @@ do {							\
->>  		__switch_to_fpu(__prev, __next);	\
->>  	if (has_vector())					\
->>  		__switch_to_vector(__prev, __next);	\
->> +	__switch_to_envcfg(__next);				\
->>  	((last) = __switch_to(__prev, __next));		\
->>  } while (0)
+>> The first step for CBD should depend on hardware cache coherence, which
+>> is clearer and more feasible. Here, I am just exploring the possibility
+>> of software cache coherence, not insisting on implementing software
+>> cache-coherency right away. :)
+> 
+> Yes, if a platform sets that bit, you 'should' be fine.  What exact flush
+> is needed is architecture specific however and the DMA related ones
+> may not be sufficient. I'd keep an eye open for arch doc update from the
+> various vendors.
+> 
+> Also, the architecture that motivated that bit existing is a 'moderately
+> large' chip vendor so I'd go so far as to say adoption will be limited
+> unless they resolve that in a future implementation :)
+
+Great, I think we've had a good discussion and reached a consensus on 
+this issue. The remaining aspect will depend on hardware updates. Thank 
+you for the information, that helps a lot.
+
+Thanx
+> 
+> Jonathan
+> 
 >>
->> diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
->> index 5d473343634b..a503bdc2f6dd 100644
->> --- a/arch/riscv/include/asm/thread_info.h
->> +++ b/arch/riscv/include/asm/thread_info.h
->> @@ -56,6 +56,7 @@ struct thread_info {
->>  	long			user_sp;	/* User stack pointer */
->>  	int			cpu;
->>  	unsigned long		syscall_work;	/* SYSCALL_WORK_ flags */
->> +	unsigned long envcfg;
->>  #ifdef CONFIG_SHADOW_CALL_STACK
->>  	void			*scs_base;
->>  	void			*scs_sp;
->> --
->> 2.43.2
->>
+>> Thanx
+>>>    
+>>>>>       
+>>>>>>
+>>>>>> CBD can initially support (3), and then transition to (1) when hardware
+>>>>>> supports cache-coherency. If there's sufficient market demand, we can
+>>>>>> also consider supporting (2).
+>>>>> I'd assume only (3) works.  The others rely on assumptions I don't think
+>>>>
+>>>> I guess you mean (1), the hardware cache-coherency way, right?
+>>>
+>>> Indeed - oops!
+>>> Hardware coherency is the way to go, or a well defined and clearly document
+>>> description of how to play with the various host architectures.
+>>>
+>>> Jonathan
+>>>
+>>>    
+>>>>
+>>>> :)
+>>>> Thanx
+>>>>   
+>>>>> you can rely on.
+>>>>>
+>>>>> Fun fun fun,
+>>>>>
+>>>>> Jonathan
+>>>>>       
+>>>>>>
+>>>>>> How does this approach sound?
+>>>>>>
+>>>>>> Thanx
+>>>>>>>
+>>>>>>> J
+>>>>>>>          
+>>>>>>>>
+>>>>>>>> Keep in mind that I don't think anybody has cxl 3 devices or CPUs yet, and
+>>>>>>>> shared memory is not explicitly legal in cxl 2, so there are things a cpu
+>>>>>>>> could do (or not do) in a cxl 2 environment that are not illegal because
+>>>>>>>> they should not be observable in a no-shared-memory environment.
+>>>>>>>>
+>>>>>>>> CBD is interesting work, though for some of the reasons above I'm somewhat
+>>>>>>>> skeptical of shared memory as an IPC mechanism.
+>>>>>>>>
+>>>>>>>> Regards,
+>>>>>>>> John
+>>>>>>>>
+>>>>>>>>
+>>>>>>>>         
+>>>>>>>
+>>>>>>> .
+>>>>>>>          
+>>>>>
+>>>>> .
+>>>>>       
+>>>
+>>>    
+> 
