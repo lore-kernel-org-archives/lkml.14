@@ -1,249 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA1C85C58
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 20:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC47C29AF;
+	Thu,  9 May 2024 20:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715286603; cv=none; b=FINTMWEOaNPNaV+9jyJR04bDOFJs2RZ7S0sNewRF2Q6ym84FanesoPExH6sQyZPD4hgFMacIOIrtEi9Ay01lVrY7F5QQsE84xFnRTYI31oHI8IMyjWzrhmNaSIG/A9tiz0KmwFaoHSVQyuf6BqA8vwjmDikUhHLySeLAR4FVJLg=
+	t=1715286683; cv=none; b=MxfK+HHZExRviTnS776143pl/fQuXzpFfRB1DTbA1SnNXBNI9mn3aQfIbPI4IYSNB9w4rw9xzaZCjRkKctJQRKpuDsP2/rTijmU2FMkcjfSoU7KxqLUC0JyP+dS9y1uHQebOTsXazlE87ZWmzPE0ZfMM6Emass15cQhWO0J2hgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715286603; c=relaxed/simple;
-	bh=eNAmxq3lHO49+/SNLedIGploRL6CnH2ikjNGrBws2iY=;
+	s=arc-20240116; t=1715286683; c=relaxed/simple;
+	bh=3hRwl2K12SkRKNM78wLsl/4te3kJ4BT9nZoF6sCbxbA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-type; b=C5kuK7ux8CZuySXG5LXCGTX8A6bFGWtnb4d6aTINXotHx9+i/xjPAFuAAmVek1zPtam5lte6CuVRsEXT6Skv7f5BkK4kWQBuS8WmXwGvAgDMFUqKxkqVv4pvtM9DYZV+8e8FzuEyaI344qQ6hLsf6maxOL32rCckdM8jWfJZcKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=E+v94yl6; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version; b=Y6ORVS9/MHH8gFbRDYwZJhLkNKqr4JFJxkH3AUoj/kOCYYaeKjIfN4DoLs0hiYYB0PB6o8mTYUvLL4WU5l/kc4AFBDplL53pYWIbh7vOyD1Qfrs0/9Jgyk7g0RaRAs3k2tTyroZFVLLfc1v7dFAPKndPczpRGUSojeAyZTH37mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fIhFWTXo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E+v94yl6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715286579;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NGxW8Mvj6Pxwb/9/pUcbbfAB9MGxQT1x04XniCRF2Dw=;
-	b=E+v94yl6Q5NGJQGw95b8gJlOAQZ/t28VesD/T9BQtfK+cFRi1/W27DH34KO0NWYp1Kdm7v
-	sr+lyEnbTZvzXyaP9Oa74onzrQOWOiTQHbIitTLzbz20OKCkgzR9w1A1VPwcNTw5tcQDMm
-	65evKRef5yWyww6ccSFTZyLWAFlP/Iw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-124-s-K8c1XPNU6jPs7ghnrvMg-1; Thu, 09 May 2024 16:29:34 -0400
-X-MC-Unique: s-K8c1XPNU6jPs7ghnrvMg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8946B8030A6;
-	Thu,  9 May 2024 20:29:33 +0000 (UTC)
-Received: from jmeneghi.bos.com (unknown [10.22.16.53])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0861620C62D7;
-	Thu,  9 May 2024 20:29:32 +0000 (UTC)
-From: John Meneghini <jmeneghi@redhat.com>
-To: kbusch@kernel.org,
-	hch@lst.de,
-	sagi@grimberg.me,
-	emilne@redhat.com
-Cc: linux-nvme@lists.infradead.org,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIhFWTXo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BEF6C116B1;
+	Thu,  9 May 2024 20:31:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715286683;
+	bh=3hRwl2K12SkRKNM78wLsl/4te3kJ4BT9nZoF6sCbxbA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fIhFWTXoUfrZEXYXnNpjyqAaUa4FKNKp1liB8UAZMze9KVv4hdAFmJylc4iA2ekx7
+	 0fhwWAgIWjmCNyvHeQ0baHNbtDX7ycaHfa2SXUNVmD1OT3lznGSH7W9ZOMYVq8XzPS
+	 XNdetjkAICbPLl6ZcBlFpBrF6uOo19eNlFEH04hmul98ViHyviLWxshHNPkuB4YW8R
+	 j/XqzRH4eUz9DNnhN6j1c2zTJ4wOzQvR5+5d/39yVSA5AWK7LBuN0WnPSyQoM+Na7F
+	 +byhIpw32XvdJTGUefGzhSRK/x2pK5XgOnr0McvVxwaDjfNk0mDdQZSj4xrD1fIuDV
+	 XVepSil5D0/gg==
+From: SeongJae Park <sj@kernel.org>
+To: Edward Liaw <edliaw@google.com>
+Cc: SeongJae Park <sj@kernel.org>,
+	shuah@kernel.org,
+	"=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>,
+	"=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
 	linux-kernel@vger.kernel.org,
-	jmeneghi@redhat.com,
-	jrani@purestorage.com,
-	randyj@purestorage.com,
-	hare@kernel.org,
-	constg@il.ibm.com,
-	aviv.coro@ibm.com
-Subject: [PATCH v2 1/3] nvme: multipath: Implemented new iopolicy "queue-depth"
-Date: Thu,  9 May 2024 16:29:27 -0400
-Message-Id: <20240509202929.831680-2-jmeneghi@redhat.com>
-In-Reply-To: <20231107212331.9413-1-emilne@redhat.com>
-References: <20231107212331.9413-1-emilne@redhat.com>
+	linux-kselftest@vger.kernel.org,
+	kernel-team@android.com,
+	linux-security-module@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	bpf@vger.kernel.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	mathieu.desnoyers@efficios.com
+Subject: Re: [PATCH v3 13/68] selftests/damon: Drop define _GNU_SOURCE
+Date: Thu,  9 May 2024 13:31:13 -0700
+Message-Id: <20240509203113.63537-1-sj@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240509200022.253089-14-edliaw@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-From: "Ewan D. Milne" <emilne@redhat.com>
+Hi Edward,
 
-The existing iopolicies are inefficient in some cases, such as
-the presence of a path with high latency. The round-robin
-policy would use that path equally with faster paths, which
-results in sub-optimal performance.
+On Thu,  9 May 2024 19:58:05 +0000 Edward Liaw <edliaw@google.com> wrote:
 
-The queue-depth policy instead sends I/O requests down the path
-with the least amount of requests in its request queue. Paths
-with lower latency will clear requests more quickly and have less
-requests in their queues compared to "bad" paths. The aim is to
-use those paths the most to bring down overall latency.
+> _GNU_SOURCE is provided by lib.mk, so it should be dropped to prevent
+> redefinition warnings.
+> 
+> Fixes: 809216233555 ("selftests/harness: remove use of LINE_MAX")
 
-This implementation adds an atomic variable to the nvme_ctrl
-struct to represent the queue depth. It is updated each time a
-request specific to that controller starts or ends.
+I show Mathieu's comment on this[1].  I have no strong opinion on this, but if
+you conclude to remove or change this line, please apply same change to this
+patch.
 
-[edm: patch developed by Thomas Song @ Pure Storage, fixed whitespace
-      and compilation warnings, updated MODULE_PARM description, and
-      fixed potential issue with ->current_path[] being used]
+[1] https://lore.kernel.org/638a7831-493c-4917-9b22-5aa663e9ee84@efficios.com
 
-Tested-by: John Meneghini <jmeneghi@redhat.com>
-Co-developed-by: Thomas Song <tsong@purestorage.com>
-Signed-off-by: Thomas Song <tsong@purestorage.com>
-Signed-off-by: Ewan D. Milne <emilne@redhat.com>
----
- drivers/nvme/host/multipath.c | 59 +++++++++++++++++++++++++++++++++--
- drivers/nvme/host/nvme.h      |  2 ++
- 2 files changed, 58 insertions(+), 3 deletions(-)
+> Signed-off-by: Edward Liaw <edliaw@google.com>
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index d16e976ae1a4..3603dd2c785f 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -17,6 +17,7 @@ MODULE_PARM_DESC(multipath,
- static const char *nvme_iopolicy_names[] = {
- 	[NVME_IOPOLICY_NUMA]	= "numa",
- 	[NVME_IOPOLICY_RR]	= "round-robin",
-+	[NVME_IOPOLICY_QD]      = "queue-depth",
- };
- 
- static int iopolicy = NVME_IOPOLICY_NUMA;
-@@ -29,6 +30,8 @@ static int nvme_set_iopolicy(const char *val, const struct kernel_param *kp)
- 		iopolicy = NVME_IOPOLICY_NUMA;
- 	else if (!strncmp(val, "round-robin", 11))
- 		iopolicy = NVME_IOPOLICY_RR;
-+	else if (!strncmp(val, "queue-depth", 11))
-+		iopolicy = NVME_IOPOLICY_QD;
- 	else
- 		return -EINVAL;
- 
-@@ -43,7 +46,7 @@ static int nvme_get_iopolicy(char *buf, const struct kernel_param *kp)
- module_param_call(iopolicy, nvme_set_iopolicy, nvme_get_iopolicy,
- 	&iopolicy, 0644);
- MODULE_PARM_DESC(iopolicy,
--	"Default multipath I/O policy; 'numa' (default) or 'round-robin'");
-+	"Default multipath I/O policy; 'numa' (default) , 'round-robin' or 'queue-depth'");
- 
- void nvme_mpath_default_iopolicy(struct nvme_subsystem *subsys)
- {
-@@ -130,6 +133,7 @@ void nvme_mpath_start_request(struct request *rq)
- 	if (!blk_queue_io_stat(disk->queue) || blk_rq_is_passthrough(rq))
- 		return;
- 
-+	atomic_inc(&ns->ctrl->nr_active);
- 	nvme_req(rq)->flags |= NVME_MPATH_IO_STATS;
- 	nvme_req(rq)->start_time = bdev_start_io_acct(disk->part0, req_op(rq),
- 						      jiffies);
-@@ -142,6 +146,8 @@ void nvme_mpath_end_request(struct request *rq)
- 
- 	if (!(nvme_req(rq)->flags & NVME_MPATH_IO_STATS))
- 		return;
-+
-+	atomic_dec(&ns->ctrl->nr_active);
- 	bdev_end_io_acct(ns->head->disk->part0, req_op(rq),
- 			 blk_rq_bytes(rq) >> SECTOR_SHIFT,
- 			 nvme_req(rq)->start_time);
-@@ -331,6 +337,40 @@ static struct nvme_ns *nvme_round_robin_path(struct nvme_ns_head *head,
- 	return found;
- }
- 
-+static struct nvme_ns *nvme_queue_depth_path(struct nvme_ns_head *head)
-+{
-+	struct nvme_ns *best_opt = NULL, *best_nonopt = NULL, *ns;
-+	unsigned int min_depth_opt = UINT_MAX, min_depth_nonopt = UINT_MAX;
-+	unsigned int depth;
-+
-+	list_for_each_entry_rcu(ns, &head->list, siblings) {
-+		if (nvme_path_is_disabled(ns))
-+			continue;
-+
-+		depth = atomic_read(&ns->ctrl->nr_active);
-+
-+		switch (ns->ana_state) {
-+		case NVME_ANA_OPTIMIZED:
-+			if (depth < min_depth_opt) {
-+				min_depth_opt = depth;
-+				best_opt = ns;
-+			}
-+			break;
-+
-+		case NVME_ANA_NONOPTIMIZED:
-+			if (depth < min_depth_nonopt) {
-+				min_depth_nonopt = depth;
-+				best_nonopt = ns;
-+			}
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+	return best_opt ? best_opt : best_nonopt;
-+}
-+
- static inline bool nvme_path_is_optimized(struct nvme_ns *ns)
- {
- 	return nvme_ctrl_state(ns->ctrl) == NVME_CTRL_LIVE &&
-@@ -339,15 +379,27 @@ static inline bool nvme_path_is_optimized(struct nvme_ns *ns)
- 
- inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
- {
--	int node = numa_node_id();
-+	int iopolicy = READ_ONCE(head->subsys->iopolicy);
-+	int node;
- 	struct nvme_ns *ns;
- 
-+	/*
-+	 * queue-depth iopolicy does not need to reference ->current_path
-+	 * but round-robin needs the last path used to advance to the
-+	 * next one, and numa will continue to use the last path unless
-+	 * it is or has become not optimized
-+	 */
-+	if (iopolicy == NVME_IOPOLICY_QD)
-+		return nvme_queue_depth_path(head);
-+
-+	node = numa_node_id();
- 	ns = srcu_dereference(head->current_path[node], &head->srcu);
- 	if (unlikely(!ns))
- 		return __nvme_find_path(head, node);
- 
--	if (READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_RR)
-+	if (iopolicy == NVME_IOPOLICY_RR)
- 		return nvme_round_robin_path(head, node, ns);
-+
- 	if (unlikely(!nvme_path_is_optimized(ns)))
- 		return __nvme_find_path(head, node);
- 	return ns;
-@@ -906,6 +958,7 @@ void nvme_mpath_init_ctrl(struct nvme_ctrl *ctrl)
- 	mutex_init(&ctrl->ana_lock);
- 	timer_setup(&ctrl->anatt_timer, nvme_anatt_timeout, 0);
- 	INIT_WORK(&ctrl->ana_work, nvme_ana_work);
-+	atomic_set(&ctrl->nr_active, 0);
- }
- 
- int nvme_mpath_init_identify(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 05532c281177..e23e17ab94b9 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -359,6 +359,7 @@ struct nvme_ctrl {
- 	size_t ana_log_size;
- 	struct timer_list anatt_timer;
- 	struct work_struct ana_work;
-+	atomic_t nr_active;
- #endif
- 
- #ifdef CONFIG_NVME_HOST_AUTH
-@@ -407,6 +408,7 @@ static inline enum nvme_ctrl_state nvme_ctrl_state(struct nvme_ctrl *ctrl)
- enum nvme_iopolicy {
- 	NVME_IOPOLICY_NUMA,
- 	NVME_IOPOLICY_RR,
-+	NVME_IOPOLICY_QD,
- };
- 
- struct nvme_subsystem {
--- 
-2.39.3
+I also added trivial comments that coming from my personal and humble
+preferrence below.  Other than the above and the below comments,
 
+Reviewed-by: SeongJae Park <sj@kernel.org>
+
+> ---
+>  tools/testing/selftests/damon/debugfs_target_ids_pid_leak.c    | 3 ---
+>  .../damon/debugfs_target_ids_read_before_terminate_race.c      | 2 --
+>  2 files changed, 5 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/damon/debugfs_target_ids_pid_leak.c b/tools/testing/selftests/damon/debugfs_target_ids_pid_leak.c
+> index 0cc2eef7d142..7a17a03d555c 100644
+> --- a/tools/testing/selftests/damon/debugfs_target_ids_pid_leak.c
+> +++ b/tools/testing/selftests/damon/debugfs_target_ids_pid_leak.c
+> @@ -2,9 +2,6 @@
+>  /*
+>   * Author: SeongJae Park <sj@kernel.org>
+>   */
+> -
+> -#define _GNU_SOURCE
+> -
+>  #include <fcntl.h>
+
+I'd prefer having one empty line between the comment and includes.
+
+>  #include <stdbool.h>
+>  #include <stdint.h>
+> diff --git a/tools/testing/selftests/damon/debugfs_target_ids_read_before_terminate_race.c b/tools/testing/selftests/damon/debugfs_target_ids_read_before_terminate_race.c
+> index b06f52a8ce2d..4aeac55ac93e 100644
+> --- a/tools/testing/selftests/damon/debugfs_target_ids_read_before_terminate_race.c
+> +++ b/tools/testing/selftests/damon/debugfs_target_ids_read_before_terminate_race.c
+> @@ -2,8 +2,6 @@
+>  /*
+>   * Author: SeongJae Park <sj@kernel.org>
+>   */
+> -#define _GNU_SOURCE
+> -
+>  #include <fcntl.h>
+
+Ditto.
+
+And I realize I also forgot adding one empty line before the above #define
+line.  That's why I'm saying this is just a trivial comment :)
+
+>  #include <stdbool.h>
+>  #include <stdint.h>
+> -- 
+> 2.45.0.118.g7fe29c98d7-goog
+
+
+Thanks,
+SJ
