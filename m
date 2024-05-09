@@ -1,108 +1,108 @@
-Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F4AE13D26D;
-	Thu,  9 May 2024 02:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6991810A11;
+	Thu,  9 May 2024 02:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715220221; cv=none; b=iQBDukAWRyRAIzKfaKWR6qSB5QX+XsbOI6ha3QRb/kUaCOSnc1dtTIID6Il+h4PhQw4sYsjtn6sluHvvIcRzDDbD438Y3ZNPUWV1+jsHCswvU2mYac+0xYS2FZUeLx9u/4pjxSwAQfwNsDPlOYslvbG0Cx2AKWS7Q6QxAUealKA=
+	t=1715220370; cv=none; b=rkjomwLFqlXyfEBiKmnDznvEYdm7rFYn8Cgqf8F26fzccJInNpKRqBJmDI9i0RnY+pX/pEkAi7NwL5q4Rc2qqGafUbHcRIktDRc8POx9UeNWwWyj/f2rgecIr4JKQ3nyXpwrnhHZQDv/FW3My5R9SAII7ooaGtxbzrDVL8KTHFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715220221; c=relaxed/simple;
-	bh=eUwcL9aI2F0Cu45RR1S0pmgtx3YEe7LfV3/UpkyDPg4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=LLbXpEICAGFckcI9fk9JHkQOycYBwtvvhy1mKru2+qg0olO7v5VqVNy6TB+xv6L5IbZgqZ6iO2++/Eh31l/R9jBboATup1L/qmZHO4gxPD96+UV6wLOHkgLDwRNdamD3hI2423cUjadi/nV9kHK0d7DrrGFKiKJJWBvS1MdWykA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id EAD1E1A1829;
-	Thu,  9 May 2024 04:03:32 +0200 (CEST)
-Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-	by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id AD2D11A156B;
-	Thu,  9 May 2024 04:03:32 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 9D509180222F;
-	Thu,  9 May 2024 10:03:30 +0800 (+08)
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: abelvesa@kernel.org,
-	peng.fan@nxp.com,
-	mturquette@baylibre.com,
-	sboyd@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	marex@denx.de,
-	imx@lists.linux.dev,
-	shengjiu.wang@gmail.com
-Cc: linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH v2 4/4] clk: imx: clk-audiomix: Corrent parent clock for earc_phy and audpll
-Date: Thu,  9 May 2024 09:43:58 +0800
-Message-Id: <1715219038-32453-5-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1715219038-32453-1-git-send-email-shengjiu.wang@nxp.com>
-References: <1715219038-32453-1-git-send-email-shengjiu.wang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+	s=arc-20240116; t=1715220370; c=relaxed/simple;
+	bh=G7cFv9cF2cnjfjAGz44Yc56GefLQLwiyJxe2ewKnFKM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qOe82ZJ/W51ZnSDyhjcdCuqK2/FjlYdiYhZj84zZ5d/3ucT97y6gk1wcB3d163Ntm5SpDCtOTj1b3aWJoB2R7wDWbCi1M/XQKi83RG4yqMgJy4geJSjZENiW7wnPVGAOruYk2BdPafd3k8ZWu9pcM4mzo/5r0sagCWzDzCMmRDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HIFk27fG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HIFk27fG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED654C4AF0A;
+	Thu,  9 May 2024 02:06:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715220369;
+	bh=G7cFv9cF2cnjfjAGz44Yc56GefLQLwiyJxe2ewKnFKM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=HIFk27fGvuQXEVMRzZy91iuiEyQjcTGd/3F+LVE/v2tcAYAAIAHOB0SqJ5p+6mHKH
+	 Hm71icex8Xie6TrK9DbNytuDsmayLDCbM4suzT0LNOCxCYKaixYUlSbcPPW+38WOG4
+	 5BIIyPQJ2jqPkuZmA2a8o1Cc1bNlw83WRkF2afJib4mTOMObnb1aiLBEP/elcSRcoF
+	 zZ2MA4OVsXruvYEuvudWLfDPIrglzfBAUSm3ykIKQI317nBke33EjS7KzyZxIoQ+FU
+	 2WCovFUeeg0io2DLXwDvgIcYVtnAKcXsIk9Ayv5SvZ2niiC/AaVXgHT5kIMrg6mXyb
+	 L1jKwf4OL0a1w==
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-51ff65b1e14so302266e87.2;
+        Wed, 08 May 2024 19:06:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVa+furTq9QhUZ8ikrP68f6drVNAxUlUGhCLx4+L7o27YwFM9+ZPi7ImmGOstRiDAbZcpYqt5T83Q4pxt3hVWQ473FKIYJtbUtOSacSCVTxdnSIxzJ8RPKjkjRujgwSmmzZ8+VCefSGjWvDsQ==
+X-Gm-Message-State: AOJu0YyoTcB6B0XIKmf2pcdZ6yK9WwbU8ifxxqjHeImd3Co0+Go53Dml
+	woYrJIxrxZL6QZgO4LYmrk5YRJoGCYGC0oCQnCxLu3Pix+1zmjOqkKKidVvzZBxROeAdTrz78Vm
+	ynWM6FXd1mBELL++TlJCrjtZA+0M=
+X-Google-Smtp-Source: AGHT+IG9jgW2EhldqJEU5OYVfvoRjo0wlRA5x/+WH/NBhi4EjV49pvu6Eqy1EviqeUURrwJaBPOetOpoppVu/vQSytA=
+X-Received: by 2002:a05:6512:3a8c:b0:521:b2b5:5ab2 with SMTP id
+ 2adb3069b0e04-521b2b55ab6mr2522757e87.46.1715220367602; Wed, 08 May 2024
+ 19:06:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240507230440.3384949-1-quic_abhinavk@quicinc.com> <CAD=FV=Xa6LJEWZwdUXvFVPQ0-qnDZroDi6tkZaLFHiarJ2gyew@mail.gmail.com>
+In-Reply-To: <CAD=FV=Xa6LJEWZwdUXvFVPQ0-qnDZroDi6tkZaLFHiarJ2gyew@mail.gmail.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
+Date: Thu, 9 May 2024 11:05:31 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARZu1Jrqibn-PvjAa=dQwikMdWVH9d9oKwpe007JeVC6Q@mail.gmail.com>
+Message-ID: <CAK7LNARZu1Jrqibn-PvjAa=dQwikMdWVH9d9oKwpe007JeVC6Q@mail.gmail.com>
+Subject: Re: [PATCH] drm/msm: remove python 3.9 dependency for compiling msm
+To: Doug Anderson <dianders@chromium.org>
+Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>, freedreno@lists.freedesktop.org, 
+	Rob Clark <robdclark@gmail.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
+	seanpaul@chromium.org, swboyd@chromium.org, quic_jesszhan@quicinc.com, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-According to Reference Manual of i.MX8MP
-The parent clock of "earc_phy" is "sai_pll_out_div2",
-The parent clock of "audpll" is "osc_24m".
+On Thu, May 9, 2024 at 9:28=E2=80=AFAM Doug Anderson <dianders@chromium.org=
+> wrote:
+>
+> Hi,
+>
+> On Tue, May 7, 2024 at 4:05=E2=80=AFPM Abhinav Kumar <quic_abhinavk@quici=
+nccom> wrote:
+> >
+> > Since commit 5acf49119630 ("drm/msm: import gen_header.py script from M=
+esa"),
+> > compilation is broken on machines having python versions older than 3.9
+> > due to dependency on argparse.BooleanOptionalAction.
+> >
+> > Switch to use simple bool for the validate flag to remove the dependenc=
+y.
+> >
+> > Fixes: 5acf49119630 ("drm/msm: import gen_header.py script from Mesa")
+> > Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> > ---
+> >  drivers/gpu/drm/msm/registers/gen_header.py | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> No idea if we're supposed to allow python as a build dependency. That
+> being said, I can confirm that this fixes the problem for me since I
+> ran into it too [1].
+>
+> Tested-by: Douglas Anderson <dianders@chromium.org>
+>
+> [1] https://lore.kernel.org/r/CAD=3DFV=3DXnpS-=3DCookKxzFM8og9WCSEMxfESmf=
+TYH811438qg4ng@mail.gmail.com
+>
 
-Add CLK_GATE_PARENT() macro for usage of specifying parent clock.
 
-Fixes: 6cd95f7b151c ("clk: imx: imx8mp: Add audiomix block control")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- drivers/clk/imx/clk-imx8mp-audiomix.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+I do not like Perl.
 
-diff --git a/drivers/clk/imx/clk-imx8mp-audiomix.c b/drivers/clk/imx/clk-imx8mp-audiomix.c
-index 6ed44cd5001b..11a29bd46a9e 100644
---- a/drivers/clk/imx/clk-imx8mp-audiomix.c
-+++ b/drivers/clk/imx/clk-imx8mp-audiomix.c
-@@ -157,6 +157,15 @@ static const struct clk_parent_data clk_imx8mp_audiomix_pll_bypass_sels[] = {
- 		PDM_SEL, 2, 0						\
- 	}
- 
-+#define CLK_GATE_PARENT(gname, cname, pname)						\
-+	{								\
-+		gname"_cg",						\
-+		IMX8MP_CLK_AUDIOMIX_##cname,				\
-+		{ .fw_name = pname, .name = pname }, NULL, 1,		\
-+		CLKEN0 + 4 * !!(IMX8MP_CLK_AUDIOMIX_##cname / 32),	\
-+		1, IMX8MP_CLK_AUDIOMIX_##cname % 32			\
-+	}
-+
- struct clk_imx8mp_audiomix_sel {
- 	const char			*name;
- 	int				clkid;
-@@ -174,14 +183,14 @@ static struct clk_imx8mp_audiomix_sel sels[] = {
- 	CLK_GATE("earc", EARC_IPG),
- 	CLK_GATE("ocrama", OCRAMA_IPG),
- 	CLK_GATE("aud2htx", AUD2HTX_IPG),
--	CLK_GATE("earc_phy", EARC_PHY),
-+	CLK_GATE_PARENT("earc_phy", EARC_PHY, "sai_pll_out_div2"),
- 	CLK_GATE("sdma2", SDMA2_ROOT),
- 	CLK_GATE("sdma3", SDMA3_ROOT),
- 	CLK_GATE("spba2", SPBA2_ROOT),
- 	CLK_GATE("dsp", DSP_ROOT),
- 	CLK_GATE("dspdbg", DSPDBG_ROOT),
- 	CLK_GATE("edma", EDMA_ROOT),
--	CLK_GATE("audpll", AUDPLL_ROOT),
-+	CLK_GATE_PARENT("audpll", AUDPLL_ROOT, "osc_24m"),
- 	CLK_GATE("mu2", MU2_ROOT),
- 	CLK_GATE("mu3", MU3_ROOT),
- 	CLK_PDM,
--- 
-2.34.1
+IMHO, Python should be OK if Perl is OK.
+I agree that the required version should be
+documented changes.rst, at least.
 
+
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
