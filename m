@@ -1,103 +1,132 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33F00129A7A
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 20:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5053129E76;
+	Thu,  9 May 2024 20:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715284876; cv=none; b=Hqge0U8xCsqssdIaaXdGSqFLHc7QRprch3QOj7Wi8nfilEwGeshPlnA5rGvOu2v7w37r+d/Kt0yAz4vQRfxXsvT0brPtNc1jkX6F3xLotN//g7ObeomeW0bfFGTQKA3FGFBYAyUAxDc9RZSGQdqr/BYqFAsN2ecmXhlUY7B2UjY=
+	t=1715284877; cv=none; b=VPlUZyzfwnZtyPF88VF+MHkLxsEJrkP1mNnlwHs06kLIJzPqs2I/vNi5eYKPJ7m5Lj2TUywth3BZNpdkXqj543pf+gp4jp0WDXJnZFh8Q9wcuh04UVRfIxhftQwpgvstaFPS7TzGs+iO0nU/3hnSyzW+ZjNtGjCKlEAaptxyx7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715284876; c=relaxed/simple;
-	bh=nVA7WynaYFBVsnuTAeEB3HhV8hTaJ/3V0zzotuqqx3U=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WhN77aRs2CZz0eoWJPN8Dh2ewjkYDfbjLInyQRIYDZLnJdWEXRoc6fNNk0r9leq1RauNLaOb8Uez40YFZCQ2V4A2HY7Oa4Zb8Wi7P6v/jqCqZ1kFpYVc+V3OnXSN+pOYPLyLxf+ug2anbAjMCYMy0f093RhVkcO8l3R3xYfGxlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N2E5/RyY; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
+	s=arc-20240116; t=1715284877; c=relaxed/simple;
+	bh=sRaSSg2FFDTPDk8c0zgqQf1W2ss6flB+SQnVqYy9dz0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Rp9eAEda9Kp1JQlOyhlHngfZsKXhfB7l5263lmNinRT/C4OY57Kph7lvwXVBykZcN7GMHx3OCkf1IUu1Bsxx3y2LqU++QcBfDv7tBmZLjquKKKdFWOxjDhG4gljlrsKfOF7ykb1x+IIRTJX44zjnDvQAaGG2VypnlTi1xQEU5WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Y0RCS5xi; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N2E5/RyY"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61b028ae5easo20822287b3.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 13:01:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715284874; x=1715889674; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vKajnWgRPRIusaCsN3ehDRoTdZ5to7bBmZ+li5CBaYY=;
-        b=N2E5/RyY3Sofe4tQmN1U7Texo3jUIp41vSmRp3qfu64rUQJKWKqDmhYjuWVvpModnd
-         blvx/c0WoXXJFilyGK01v7JPVbZki13roJgOBEm+U+K/NALmNJVVLN94OJGysuENYjvH
-         AMGezGUtvHA+mlhev1JOwEEKXGmGpuSuT+WzfNl6S/DN+OmMBCfdtApJBLlzkpfXui1W
-         yo695cblr5w9R01mYtxWRvKKu/v4aT4clsVekRna6C9AApMADKj6hK5ohHF+C4X6AB7V
-         5BY95UjMSYr5f3PE46CyYKFQmw1nd7qJjfEUhwLQwB1sDg3CJr6fiGmvH0UKXH3RiecZ
-         S69A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715284874; x=1715889674;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vKajnWgRPRIusaCsN3ehDRoTdZ5to7bBmZ+li5CBaYY=;
-        b=DiPxmMIhDXQpdcjQaHmmSCf9ZRAQZ4EOoBgvebf8LCQyHmm0EIpLF59q9z2k6UxSQn
-         Ko9IVAe86FAlEy0IDuI2sxhNemeUF8ESQZLRt/jvPCatckMivoEDd62y75taO55bpAsL
-         YNKuA3bfaGxrduIWvJdJ7vU8sTZMFA078g8MVwEVEhGxtLDCQYlpfNJ5TOSf+JiyG7Yt
-         rXZfZiAm0SszERn8ZjRtShyEBDoToavh4RoJJ0KE1yeiluy5NvB01XIrbnO0HuyRNlKS
-         ZeFIouJxDrv/8r7J5s69q/fkTrEQ3h7HiPYWECRKS9wBusFCbczzY0hQmSEZFSRzqxpC
-         5H/Q==
-X-Gm-Message-State: AOJu0Yy3dzmNho1Dg1pLFD3kGHbGQ+R83jOGEQsqhMf4NiMx4boxRpwQ
-	qsyh4S2DmZI2BVuBBVHKc5oSuML2bsB4iEoJ4PsUIIUavN5IU1LGn16pTw/LwL73QOWVxNdDgT6
-	1oA==
-X-Google-Smtp-Source: AGHT+IG8BlqL9c7H6gT7HJqAjPMzqcZbchjuSJZoZPXFaFuFxFzRUA/yGwhzK4FApgVn7UGcsEa39MLwACI=
-X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
- (user=edliaw job=sendgmr) by 2002:a05:690c:4508:b0:615:e53:1c1 with SMTP id
- 00721157ae682-622afff693amr1508007b3.7.1715284874424; Thu, 09 May 2024
- 13:01:14 -0700 (PDT)
-Date: Thu,  9 May 2024 19:58:01 +0000
-In-Reply-To: <20240509200022.253089-1-edliaw@google.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Y0RCS5xi"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 449B7BB4006645;
+	Thu, 9 May 2024 18:59:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=TGevrFxx2sEOPvGB+uwSE8YqKDHduVwVRYRlUxcJcic=; b=Y0
+	RCS5xi8DUFJJFXkFIvslJpUQrX4N2B3rw2xR16vtDShPPd+qYZIuNsuxZ8i6m4fc
+	7sv6KhcKZSZi7c7QPjJ9wFHg9qg7QGVQt/snMIATkReTj2iuIbCpa3/ALDME/h2B
+	CU7nyRmq6odr22bXb3x44XSJ0rPwr9nR7AxroyipgFa+PXmO9HUJNZ1CM0yxMbFX
+	duZCvXpDtkiw1xsot3uNogv4dk35QIk1CJFL2qZ/2v/glgh5QRyU3/dDK6KTsk8B
+	+YnTz2quCwc3krndrS/xLXeunhRMKGwonDR7tfPtXM+ymDcBxxXnyH9HAl60UaVR
+	id5pYbUb6pp0XEgHAJgA==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y07wfup54-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 09 May 2024 18:59:55 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 449IxsG5018864
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 9 May 2024 18:59:54 GMT
+Received: from [10.110.104.129] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 9 May 2024
+ 11:59:53 -0700
+Message-ID: <1e043ff3-58e0-7fd0-00b6-9117bc81e9ff@quicinc.com>
+Date: Thu, 9 May 2024 11:59:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240509200022.253089-1-edliaw@google.com>
-X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
-Message-ID: <20240509200022.253089-10-edliaw@google.com>
-Subject: [PATCH v3 09/68] selftests/capabilities: Drop define _GNU_SOURCE
-From: Edward Liaw <edliaw@google.com>
-To: shuah@kernel.org, "=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>, 
-	"=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>, Christian Brauner <brauner@kernel.org>, 
-	Richard Cochran <richardcochran@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
-	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Edward Liaw <edliaw@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	kernel-team@android.com, linux-security-module@vger.kernel.org, 
-	netdev@vger.kernel.org, linux-riscv@lists.infradead.org, bpf@vger.kernel.org, 
-	John Hubbard <jhubbard@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] docs: document python version used for compilation
+Content-Language: en-US
+To: Jonathan Corbet <corbet@lwn.net>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul
+	<sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>
+CC: <workflows@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>
+References: <20240509-python-version-v1-1-a7dda3a95b5f@linaro.org>
+ <87o79faq4a.fsf@meer.lwn.net>
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <87o79faq4a.fsf@meer.lwn.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: UTN9o-NiCFp8SHChNih0iPS8RnlyCSRO
+X-Proofpoint-ORIG-GUID: UTN9o-NiCFp8SHChNih0iPS8RnlyCSRO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-09_10,2024-05-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ spamscore=0 priorityscore=1501 suspectscore=0 bulkscore=0 phishscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405010000
+ definitions=main-2405090133
 
-_GNU_SOURCE is provided by lib.mk, so it should be dropped to prevent
-redefinition warnings.
 
-Fixes: 809216233555 ("selftests/harness: remove use of LINE_MAX")
-Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
-Signed-off-by: Edward Liaw <edliaw@google.com>
----
- tools/testing/selftests/capabilities/test_execve.c | 2 --
- 1 file changed, 2 deletions(-)
 
-diff --git a/tools/testing/selftests/capabilities/test_execve.c b/tools/testing/selftests/capabilities/test_execve.c
-index 7cde07a5df78..e3954b88c3ee 100644
---- a/tools/testing/selftests/capabilities/test_execve.c
-+++ b/tools/testing/selftests/capabilities/test_execve.c
-@@ -1,6 +1,4 @@
- // SPDX-License-Identifier: GPL-2.0
--#define _GNU_SOURCE
--
- #include <cap-ng.h>
- #include <linux/capability.h>
- #include <stdbool.h>
--- 
-2.45.0.118.g7fe29c98d7-goog
+On 5/9/2024 9:48 AM, Jonathan Corbet wrote:
+> Dmitry Baryshkov <dmitry.baryshkov@linaro.org> writes:
+> 
+>> The drm/msm driver had adopted using Python3 script to generate register
+>> header files instead of shipping pre-generated header files. Document
+>> the minimal Python version supported by the script.
+>>
+>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>> ---
+>>   Documentation/process/changes.rst | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
+>> index 5685d7bfe4d0..8d225a9f65a2 100644
+>> --- a/Documentation/process/changes.rst
+>> +++ b/Documentation/process/changes.rst
+>> @@ -63,6 +63,7 @@ cpio                   any              cpio --version
+>>   GNU tar                1.28             tar --version
+>>   gtags (optional)       6.6.5            gtags --version
+>>   mkimage (optional)     2017.01          mkimage --version
+>> +Python (optional)      3.5.x            python3 --version
+>>   ====================== ===============  ========================================
+> 
+> Is it really optional - can you build the driver without it?
+> 
 
+True, we cannot build the driver now without it. So we should be 
+dropping the optional tag.
+
+With that addressed,
+
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+
+> This document needs some help... I'm missing a number of things that are
+> *not* marked as "optional" (jfsutils, reiserfsprogs, pcmciautils, ppp,
+> ...) and somehow my system works fine :)  It would be nice to document
+> *why* users might need a specific tool.
+> 
+> But I guess we aren't going to do that now.  I can apply this, but I do
+> wonder about the "optional" marking.
+> 
+> Thanks,
+> 
+> jon
