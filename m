@@ -1,156 +1,122 @@
-Received: from mail-io1-f70.google.com (mail-io1-f70.google.com [209.85.166.70])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB25013C801
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 08:04:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17FD413C9C4;
+	Thu,  9 May 2024 08:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715241872; cv=none; b=qGcjR089GjU9BYF92iN1M0IA2tFDKI8UPY6PVx7C/3Rk5PgAD6jVjuhh2iup1w7hxo5TB4KKSpRg3DoC+3uov3OepOBBdD4ql6ZqFczQWvqz817cXC+lfThDyZwqA8SYmQPv3CWK1qfc8Xvr4vGGKc0m7qjspm1XPaM3URmttVo=
+	t=1715242109; cv=none; b=R+2Kl7VXU5Is/6YTTve8ropHA82GJodYd+VzHSBZnjmtNPWIocMnEItm5zGcxbFBtxSSxwZw4c93vHV8VhYlygkIOubZGZ0N/eme4UHWNuByLSMSFGkOw4I8xji/fqZbZpVABCtCvJxEqbh7yxLa2tPyWgVTe7f/y7kj4Nurf08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715241872; c=relaxed/simple;
-	bh=AOAGAwHKkno5a95ONp8pj3QT+1lZ+pzzTkKRt1yTzM0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=sdoHISIZHospO+3x7eD4V2+hB3iOQu8OCcL/J0LAq4Sly087tbkjSOKg5CRkQHaib9SPaQenRp6dRFsb4KXzZr14Xy9/PayKfCkkxnz6kpC93y2dKt2EWw4d8UHFbO3FQLXNKcR9kRX5m5i4a0uy1oAK5Xv7shs2fjdfSW9aAqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f70.google.com with SMTP id ca18e2360f4ac-7da41da873bso72696639f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 01:04:30 -0700 (PDT)
+	s=arc-20240116; t=1715242109; c=relaxed/simple;
+	bh=gGihO4uBNHk9osA5UTXwEkO6FL32D0ENpNDtkOv5YG4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=K6CtBOXdrJT2eYWsgjO/NZCzEV+4Ucenz01qDdXf2mv+gOGWotXTtJJbesGLwu7/k1Hhu6b6DISlMT0RtQfBnWcT9ZitLxikIYhol/gLjHJ3Ke268mHXUM7tsyytcJpeTpXb12bazmA9NrAFrRIeqv0R1ZSeFCXnkP/d+UTLttY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SBZjU86l; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SBZjU86l"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2e3e1ad0b19so8239661fa.0;
+        Thu, 09 May 2024 01:08:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715242106; x=1715846906; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Va5CBhgS4YlEntgDj+lB7xMw3P3JCYpHFdQk9HzfcS0=;
+        b=SBZjU86lm6uSWDf2ZfXO+5AT9zYjHvbJvAjOrXQwII7BMozoSEN3PCa896561MSL+W
+         5+htEm94O4VTFkf5uaT/fMHbh4XcIGVcEA3jT0l4jlGzXkyzsAwfo4uTvyNDcydXFSAg
+         UuLvMQ8GC03br6DEoAULEqp9VgDCglI7/G3IblbiOCt0miZgBmhPOldyTXOiaeZTw96N
+         369oJ4GCd0aaNaAbS1B5R0rLrIH16nS9qRJX9bszfy6PwS5si8pbC4RzZAG2gcXkUXPB
+         u6tXVmtF7iYVwOQ90+760VHSDf1TzsCCgh/q00iwQuDh9NLif5GDUJYMEOczxmue//N7
+         V9sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715241870; x=1715846670;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FKNzW6w0GewPH7g4yc3G6iWNlN/MKnU/QLnxdRBlVl4=;
-        b=UB1THkfM/fmXzRNXsnl6U0uJvW98J6RKyTIGP8xPEGx7DtfHrjwIKnEIMyxHPiMrCq
-         xjxkezpmYFiMntvMttSy1j5m2PiCBu/Y+8tw7y0A+KW6rpNQgTttsEFp7rU25EGT0fCz
-         IudjczuIY8jd6D8h29XLAAvA1t5KtfLcU0tMEfOh/5Ki0NoCyveNdvnG0Am/vbTbyK/B
-         EkHGeyICOCrJ8SrD1NlL+tTUAmnn/1Ye7GAwUXtOpQknWYWvRe4qWwqWu2yAmKAvSK/N
-         C8VG1AdKReB35Umvp0a+xNeXHn5kIvIa84qY/QZj5yxgG6JXA9dLqjFSiETtstb16Wgl
-         atuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWeTEKcs9zN8Ugg8H2Heb4KiuFd+Scg4GXN1NI6QbZsAADIaonnxQMDOGS2AOqDEHYDbLLASjR8V5ZkXTBt1jsiMHXus86KWLxh5mrY
-X-Gm-Message-State: AOJu0YxPzJYHTc7J9xASoRbDoU+LD6ATBB4RJgcLs53jMrbCKjt5D8Co
-	pxCCamzauQowwx5UJFbgASF2cLqG3i1IQcuuUyMyDkndhbnhrLVTQyMgUMgFcBvgL45el6tHvYU
-	Pd+o6FPHjFfKyaLlPBgEadAk27xrsaAr8ZhWmnSfyhj45DlgKqx1AwSY=
-X-Google-Smtp-Source: AGHT+IHKGgxbY5fqxkbP30isurw6G9OrQUxxEknM75ilSFKZGVSWSIHomwUVfIAw9zBTFFHJ/oakdb4R3yl5nBX9hcKPw2IGKlvo
+        d=1e100.net; s=20230601; t=1715242106; x=1715846906;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Va5CBhgS4YlEntgDj+lB7xMw3P3JCYpHFdQk9HzfcS0=;
+        b=bg59yyEIGAL09CEAbpQalfBX1LXNcaCnMOO/cbGLLzpYJQkzLFJ+PN+O5S/zjOxEF/
+         gtnEZalMWReqpd31VfLgL503bbrfE/lBtXer9YoMm3KBRR5ldcxVokMxqFCr2EKARWbS
+         VHdA976CgJRKwAxmZHVVvkceJNbDN3TdVGOvOS1FscX1nLWF3+94Ysf/xIjM9p6QkC5t
+         vlRWPsw5tDrZ5pLZ8cI+mrb4S8u/AJuBMiLYaha7bWfaoSDsu8xX+ocDsz9pV8c4WAmQ
+         qlF15lQj1G3sB0xpN4Z4LiMvAMPXiLNWcYPBbji30Grs5FKaeXUg3dKxL4fFA8Fn4TRs
+         rh1Q==
+X-Forwarded-Encrypted: i=1; AJvYcCX/sq7xly46ASiDcUNsXtzAoD/nRRLaxMw56UPadaSVcFI6qWX1JCx5jvLeM/b1+SK79Wa/qQ207DY519yPgFt6In78xNoFArfqjQ7QUgDMd4XgGIwanAEvoec2X/4bfs9zNg2EwNAf
+X-Gm-Message-State: AOJu0Ywq5ViXJW/ndUKkvDjofxDFrF1QBjCrUkxZXccOj4/7CWmfFd8b
+	uPYFLbOpnpyrDuLPzW0kcRKoqm+CPQzgxfUXjsSObOxf3tauEDCV9UgTI391
+X-Google-Smtp-Source: AGHT+IHw5kJvcuqlfuDNh48yh3D1+EoKZYjlJf5IGaHB4/GOviTBm0Q+n9TvIng/h2Z39xb/KSM1zQ==
+X-Received: by 2002:a2e:a613:0:b0:2d9:f7f8:3e87 with SMTP id 38308e7fff4ca-2e4475a0fcemr31361781fa.32.1715242105694;
+        Thu, 09 May 2024 01:08:25 -0700 (PDT)
+Received: from [169.254.60.140] (57657817.unconfigured.pool.telekom.hu. [87.101.120.23])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-41f9bc3b12fsm23029565e9.0.2024.05.09.01.08.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 01:08:25 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Date: Thu, 09 May 2024 10:08:04 +0200
+Subject: [PATCH] clk: qcom: apss-ipq-pll: remove 'config_ctl_hi_val' from
+ Stromer pll configs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:1610:b0:488:e34a:5f72 with SMTP id
- 8926c6da1cb9f-488fd6f24eamr324837173.2.1715241870232; Thu, 09 May 2024
- 01:04:30 -0700 (PDT)
-Date: Thu, 09 May 2024 01:04:30 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000611ffc061800de0d@google.com>
-Subject: [syzbot] [bcachefs?] kernel BUG in __journal_res_get
-From: syzbot <syzbot+c60cd352aedb109528bf@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, kent.overstreet@linux.dev, 
-	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240509-stromer-config-ctl-v1-1-6034e17b28d5@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAGOEPGYC/x3MSwqEMBBF0a1Ijbsg/jDtVhoHEp9aYCdSCSKIe
+ zc4PIN7L4pQQaS+uEhxSJTgM8pPQW4d/QKWKZsqUzWmNV+OScMfyi74WRZ2aWPrAAvbdihryuG
+ umOV8p7/hvh+7Qv6QZAAAAA==
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Gokul Sriram Palanisamy <quic_gokulsri@quicinc.com>, 
+ Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>, 
+ Gabor Juhos <j4g8y7@gmail.com>
+X-Mailer: b4 0.13.0
 
-Hello,
+Since the CONFIG_CTL register is only 32 bits wide in the Stromer
+and Stromer Plus PLLs , the 'config_ctl_hi_val' values from the
+IPQ5018 and IPQ5332 configurations are not used so remove those.
 
-syzbot found the following issue on:
+No functional changes.
 
-HEAD commit:    1c9135d29e9e Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=112d6eb8980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=7d2d53e64c7e6a4f
-dashboard link: https://syzkaller.appspot.com/bug?extid=c60cd352aedb109528bf
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=120c63bc980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1360afff180000
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+Based on 'qcom-clk-for-6.10'
+---
+ drivers/clk/qcom/apss-ipq-pll.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/52dd1b4921ab/disk-1c9135d2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/1a4f1788dc25/vmlinux-1c9135d2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/b8d8ebd42a80/Image-1c9135d2.gz.xz
-mounted in repro #1: https://storage.googleapis.com/syzbot-assets/4034fbab270b/mount_0.gz
-mounted in repro #2: https://storage.googleapis.com/syzbot-assets/fb9b707711cf/mount_1.gz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c60cd352aedb109528bf@syzkaller.appspotmail.com
-
-  bp_start          7, fixing
-bcachefs (loop0): alloc_read... done
-bcachefs (loop0): stripes_read... done
-bcachefs (loop0): snapshots_read... done
-------------[ cut here ]------------
-kernel BUG at fs/bcachefs/journal.c:370!
-Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 PID: 6237 Comm: syz-executor338 Not tainted 6.9.0-rc7-syzkaller-g1c9135d29e9e #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : journal_entry_open fs/bcachefs/journal.c:370 [inline]
-pc : __journal_res_get+0x1d64/0x1f6c fs/bcachefs/journal.c:555
-lr : journal_entry_open fs/bcachefs/journal.c:370 [inline]
-lr : __journal_res_get+0x1d64/0x1f6c fs/bcachefs/journal.c:555
-sp : ffff80009c676980
-x29: ffff80009c676be0 x28: ffff80009c676b20 x27: 00000000003ffffe
-x26: ffff0000dcdca7c0 x25: ffff0000dcd80870 x24: ffff0000dcdca7b8
-x23: dfff800000000000 x22: 1fffe0001b9b94d5 x21: 0111110080100107
-x20: 1fffe0001b9b9430 x19: ffff0000dcdca180 x18: ffff80009c676880
-x17: 000000000000caa6 x16: ffff800080331e9c x15: 0000000000000001
-x14: 1fffe0001b9b94f7 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff60001b9b94f8 x10: 0000000000ff0100 x9 : 0000000000000000
-x8 : ffff0000d0f6bc80 x7 : ffff8000828e150c x6 : 0000000000000000
-x5 : 0000000000000000 x4 : 0000000000000001 x3 : ffff8000828e163c
-x2 : 0000000000000000 x1 : 0000000000000002 x0 : 0000000000000000
-Call trace:
- journal_entry_open fs/bcachefs/journal.c:370 [inline]
- __journal_res_get+0x1d64/0x1f6c fs/bcachefs/journal.c:555
- bch2_journal_res_get_slowpath+0x9c/0x2a4 fs/bcachefs/journal.c:617
- bch2_journal_res_get+0x124/0x1b4 fs/bcachefs/journal.h:382
- bch2_journal_meta+0x9c/0x268 fs/bcachefs/journal.c:832
- bch2_fs_recovery+0x2f4c/0x4854 fs/bcachefs/recovery.c:798
- bch2_fs_start+0x30c/0x53c fs/bcachefs/super.c:1043
- bch2_fs_open+0x8b4/0xb64 fs/bcachefs/super.c:2102
- bch2_mount+0x558/0xe10 fs/bcachefs/fs.c:1903
- legacy_get_tree+0xd4/0x16c fs/fs_context.c:662
- vfs_get_tree+0x90/0x288 fs/super.c:1779
- do_new_mount+0x278/0x900 fs/namespace.c:3352
- path_mount+0x590/0xe04 fs/namespace.c:3679
- do_mount fs/namespace.c:3692 [inline]
- __do_sys_mount fs/namespace.c:3898 [inline]
- __se_sys_mount fs/namespace.c:3875 [inline]
- __arm64_sys_mount+0x45c/0x594 fs/namespace.c:3875
- __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
- el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
- el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
- el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
-Code: 17ffff9c 9771bacd d4210000 9771bacb (d4210000) 
----[ end trace 0000000000000000 ]---
-
+diff --git a/drivers/clk/qcom/apss-ipq-pll.c b/drivers/clk/qcom/apss-ipq-pll.c
+index 5f7f537e4ecb..e8632db2c542 100644
+--- a/drivers/clk/qcom/apss-ipq-pll.c
++++ b/drivers/clk/qcom/apss-ipq-pll.c
+@@ -70,7 +70,6 @@ static struct clk_alpha_pll ipq_pll_stromer_plus = {
+ static const struct alpha_pll_config ipq5018_pll_config = {
+ 	.l = 0x2a,
+ 	.config_ctl_val = 0x4001075b,
+-	.config_ctl_hi_val = 0x304,
+ 	.main_output_mask = BIT(0),
+ 	.aux_output_mask = BIT(1),
+ 	.early_output_mask = BIT(3),
+@@ -84,7 +83,6 @@ static const struct alpha_pll_config ipq5018_pll_config = {
+ static const struct alpha_pll_config ipq5332_pll_config = {
+ 	.l = 0x2d,
+ 	.config_ctl_val = 0x4001075b,
+-	.config_ctl_hi_val = 0x304,
+ 	.main_output_mask = BIT(0),
+ 	.aux_output_mask = BIT(1),
+ 	.early_output_mask = BIT(3),
 
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+base-commit: 3c5b3e17b8fd1f1add5a9477306c355fab126977
+change-id: 20240509-stromer-config-ctl-8cee8e857e13
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Best regards,
+-- 
+Gabor Juhos <j4g8y7@gmail.com>
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
