@@ -1,133 +1,91 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB5514A097;
-	Thu,  9 May 2024 08:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B8F14A4DB
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 08:18:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715242659; cv=none; b=e9cLLxRzLiE1AwENWxIJo7INezKePmCadNHzRuW9BR/FsKKpM9WiDfgDgLSZbwfbOK+bgJjww0OVZrOYiegdZGRooXCETBDg5kXRgYEDfeMlg8C81XvQjtLUHqPRA2wI9F87Ec3OopWcZiPd96n0I6gkECS7UpqPL7moA2RxqNk=
+	t=1715242700; cv=none; b=PySJd+m/ZzaF2IEPirkf7YmJuA27JkiFne4oRBFicmTp/PSUYFgNlP1tqO9Iw9702JwH/wTBEtkkQ6PNrbuDeKzmySWcnMJeZOsQGGPZcOY9Ke9RFCbvLc3qKZ344iVFbx2A5KMHTDcECorHnAxZgthNr+ZqM3MX/FZ0A97ZUTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715242659; c=relaxed/simple;
-	bh=lMaYXea0/pL6iEr0T3fEYaeD0BO/p+aXtvy3hTqRvxI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kbh7LLR62n4O7ae+2OSSAxD0UTCi1RoH4fdagB9p2W0WZHHzUkhFyFH/7bpGB2yYBcY7V9dG3Qw1tYrnPN0TXyzupN7brwOvIQnBbywbLugsroAwNPIH+4FlgkmmH9LZ3OcpZSZAxmRg9ItWOZExgohxfSPo4PfphHZpZR39RcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=AZUB6qGS; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1715242700; c=relaxed/simple;
+	bh=WWkRZNcU1ZOfKgeuPdomK3ItRurd92AN6Edqxlu76Rg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To; b=OqBMnCFv0Njjp0q0M0ugj+DlNf8RuuwP9cgRnbqolKtWJYjeL0g+QBZ/dnF8DYymkvnMOGQIg/8iDdru/7GWIrrLODRCP5nP24n2ilzycGThmIkjnSAdBQL/tayB35BOTPLyE8XEnJuXh3qt15D0wyVDBLauvTyUzUk4/omFmzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Y9DsulsY; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="AZUB6qGS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1715242656; x=1746778656;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=lMaYXea0/pL6iEr0T3fEYaeD0BO/p+aXtvy3hTqRvxI=;
-  b=AZUB6qGSZYcgcW/c8X1Bb+pHRm2EZk+XUjUcPSje9xqkhq0AUDCDRRQB
-   5NrO6KtDRBFcLFqRmDQY+lbzZtQP+VPulxmFsTycoIoJevMxORq0TSKIu
-   Ae6GjwwurjyXFXM0cEDSK0om0GDY1bHO8XbgVmeeJMItj8VP8/OUPxjTx
-   MAdxX0okqu9Bfg2fduW6cDj9hhUzQXL+ikEXE/9VQBjc1rIlpj8a3GDUr
-   FjngvC44BTfDPDyH4CK/72CBf7dFPBmUfpbR2GnNpuRwCMyiwP6qC4pMm
-   pFKyZwt8yozeor6mOehDCAXJXpOhaSB1/BX8EkMMS13fHRMDWaVlZMfJs
-   g==;
-X-CSE-ConnectionGUID: 0mKwrjsVTF+mfP6kb6VBzw==
-X-CSE-MsgGUID: w51U2VCEQquHoJanXOK8gQ==
-X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
-   d="asc'?scan'208";a="26482894"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 May 2024 01:17:34 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 9 May 2024 01:17:24 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Thu, 9 May 2024 01:17:20 -0700
-Date: Thu, 9 May 2024 09:17:09 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-CC: Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec
-	<jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Evan Green
-	<evan@rivosinc.com>, =?iso-8859-1?Q?Cl=E9ment_L=E9ger?=
-	<cleger@rivosinc.com>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
-	<shuah@kernel.org>, <linux-riscv@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Palmer Dabbelt
-	<palmer@rivosinc.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-doc@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>
-Subject: Re: [PATCH v6 03/17] riscv: vector: Use vlenb from DT
-Message-ID: <20240509-quickly-nibble-01cdb4e541ee@wendy>
-References: <20240503-dev-charlie-support_thead_vector_6_9-v6-0-cb7624e65d82@rivosinc.com>
- <20240503-dev-charlie-support_thead_vector_6_9-v6-3-cb7624e65d82@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Y9DsulsY"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 09CB1FF807;
+	Thu,  9 May 2024 08:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715242681;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=tnhTHq3+chm+k9TwdAZbwwShRi/4O5m2qm/IN/fZxRo=;
+	b=Y9DsulsYAveM94mSWZN47X1XoH5C1n1CSExouwEBREvufNAhxzxfjJc+g7MDhvpB1Nh3Ue
+	Fda/NykOsZ+IrF5ZI3dzPZfXaCa+Om+Qydmk/T1U08zk6pAgBbDvVs/vEpTGOEjLMDel+o
+	S96U0XpwRwMcNgVVSotTrQs9Lx2gkZieIWbZrxwPz3zTz9YyAqsQnnNN7FirFcC7A4kxEY
+	+VZlt9ooeL5kDglSH4LB7ndy/W6tGauQbSTbgbJkD2JR+z49fBX1WJ40diqsEUzfdDLjwe
+	0WI/kugf8r6uhlbX/TQJ6fR2+l/UkWDzUr/sfr45OsvJsSA4vhlBzznc0bMovQ==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Date: Thu, 09 May 2024 10:17:22 +0200
+Subject: [PATCH v2 2/3] scripts/decode_stacktrace.sh: clarify command line
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ftL9clxrsKa3hb4u"
-Content-Disposition: inline
-In-Reply-To: <20240503-dev-charlie-support_thead_vector_6_9-v6-3-cb7624e65d82@rivosinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240509-decode_stacktrace-find_module-improvements-v2-2-887fb6d5acb9@bootlin.com>
+References: <20240509-decode_stacktrace-find_module-improvements-v2-0-887fb6d5acb9@bootlin.com>
+In-Reply-To: <20240509-decode_stacktrace-find_module-improvements-v2-0-887fb6d5acb9@bootlin.com>
+To: Konstantin Khlebnikov <koct9i@gmail.com>, 
+ Stephen Boyd <swboyd@chromium.org>, Sasha Levin <sashal@kernel.org>, 
+ =?utf-8?q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
---ftL9clxrsKa3hb4u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The syntax as expressed by usage() is not entirely correct: "<modules
+path>" cannot be passed without "<base path>|auto". Additionally human
+reading of this syntax can be subject to misunderstanding due the mixture
+of '|' and '[]'.
 
-Hey Charlie,
+Improve readability in various ways:
+ * rewrite using two lines for the two allowed usages
+ * add square brackets around "<vmlinux>" as it is optional when using
+   debuginfod-find
+ * move "<modules path>" to inside the square brackets of the 2nd
+   positional parameter
+ * use underscores instead of spaces in <...> strings
 
-Just me being a pain again...
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+---
+ scripts/decode_stacktrace.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-On Fri, May 03, 2024 at 11:18:18AM -0700, Charlie Jenkins wrote:
-> @@ -671,6 +713,11 @@ void __init riscv_fill_hwcap(void)
->  			pr_info("Falling back to deprecated \"riscv,isa\"\n");
->  			riscv_fill_hwcap_from_isa_string(isa2hwcap);
->  		}
-> +
-> +		if (elf_hwcap & COMPAT_HWCAP_ISA_V && has_riscv_homogeneous_vlenb() < 0) {
-> +			pr_warn("Unsupported heterogeneous vlen detected, vector extension disabled.\n");
-> +			elf_hwcap &= ~COMPAT_HWCAP_ISA_V;
-> +		}
->  	}
+diff --git a/scripts/decode_stacktrace.sh b/scripts/decode_stacktrace.sh
+index 7f3fb5e82707..b56e79060e9f 100755
+--- a/scripts/decode_stacktrace.sh
++++ b/scripts/decode_stacktrace.sh
+@@ -5,7 +5,8 @@
+ 
+ usage() {
+ 	echo "Usage:"
+-	echo "	$0 -r <release> | <vmlinux> [<base path>|auto] [<modules path>]"
++	echo "	$0 -r <release>"
++	echo "	$0 [<vmlinux> [<base_path>|auto [<modules_path>]]]"
+ }
+ 
+ # Try to find a Rust demangler
 
-After replying to Andy this morning about doing some dependency checking
-for vector-reliant extensions I realised that we're actually doing this
-check too late to be useful for that case.
-Say for Zvkb we want to check if vector has been enabled before marking
-the extension available, and without Clement's series that re-works the
-riscv_isa_extension_check(), we need to ensure that vector support isn't
-gonna get turned after we've already marked Zvkb as usable. If we could
-move the riscv_has_homogeneous_vlenb() call before probing extensions we
-could then examine the result in riscv_isa_extension_check() for V and
-make sure it doesn't get enabled in the first place, rather than
-clearing it after the fact.
+-- 
+2.34.1
 
-There's a whole load of moving pieces between different series here at
-the moment though, I wish some of it would land so that I could send
-some cleanup patches for what I think is inconsistency on top :) I
-wouldn't mind if this landed as-is, it's still an improvement and the
-user I mention above doesn't actually exist yet.
-
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
---ftL9clxrsKa3hb4u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjyGhQAKCRB4tDGHoIJi
-0u56AP95eBVgYwPh58UnZa0lZuyLzeDG6PlD0hXLsOA0eWnxUwEAqvt6X42WuHh8
-3JcdzsXkKeCVaTmE3NYKMOyV9FDU3Q4=
-=JxGW
------END PGP SIGNATURE-----
-
---ftL9clxrsKa3hb4u--
