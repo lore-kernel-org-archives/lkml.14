@@ -1,93 +1,93 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B0714BF8F;
-	Thu,  9 May 2024 12:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F258131724;
+	Thu,  9 May 2024 12:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715257350; cv=none; b=OcuU3klH5F9p4t6U4A0osrzokED6gAHwL6VSe4T+Ho/GbvIzvgJH+NaFT6j5fWWjIkZdvdbeZRm804F2ZXbcNLvXeKVJJvGoYtLECBTQWTMkAETtpIbrh7QVUUIEB9Br75Ec+q6JooYEXy79k6u65kJenlI/Mi79C85J+OHU8I0=
+	t=1715257598; cv=none; b=GOeqnkcs6tOmK3i27LPe/BAPS8MkS5VMUCdVKjISAE3VXNvaRxiWOCqv0cJoKa8mb11XgUlXNQ66Uq4YEOQm7h8umiRC6aZFy+kSwQzYPmsjW20j2lBgOKnzwYhqlvcBRT69OogSTKGwzWImcenlLIz0hBQ41SmYaeECFKAhxAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715257350; c=relaxed/simple;
-	bh=uDM27zrD39kvvURwdlNFw/NK0u0FOAXSDBMaCJTa3lI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EK0qZ85UBgGcNtxamB+ni5DJ0XJgf8dL5XcfZ0CXfdSTLduBNbDwSeWEXcIcbcIFVCkhjn6+YgoMsJulCWmp3TX01pb3EATHFwGlCgFKV9tokXuRp2SG8nofjO2uwKxVvtHnbsPe91zbQkiGtnllgAG043PWmSheJT5sGrfmC+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
-Received: from i53875b5d.versanet.de ([83.135.91.93] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1s52mU-0007xX-8U; Thu, 09 May 2024 14:21:50 +0200
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-To: Sandy Huang <hjc@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Alex Bee <knaerzche@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
- Alex Bee <knaerzche@gmail.com>, sebastian.reichel@collabora.com
-Subject: Re: [PATCH v2 0/7] Add DSI support for RK3128
-Date: Thu, 09 May 2024 14:21:47 +0200
-Message-ID: <38423821.XM6RcZxFsP@diego>
-In-Reply-To: <20240509120715.86694-1-knaerzche@gmail.com>
-References: <20240509120715.86694-1-knaerzche@gmail.com>
+	s=arc-20240116; t=1715257598; c=relaxed/simple;
+	bh=muhLaR/99OohMazNTK3EQ6x8cOUF9aDaLDgAy9OKcnI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VNymEGVD2WZeTZVWog9vRF7eYt6qbKeMIyrWcM0S1MvHOvxXxH3e+aiEpmIiqQuuaAFb/MV1Zzd1AmlzerSGb/V3tbg0smQSct0v0q98BmvCIKfzrkS32iDAJOdO1oW5NN7iaLL9w3QYKJosHg9ADmgBCWTh10Cnqcty1bXYrpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PmJnbjrE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PmJnbjrE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2964C116B1;
+	Thu,  9 May 2024 12:26:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715257598;
+	bh=muhLaR/99OohMazNTK3EQ6x8cOUF9aDaLDgAy9OKcnI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PmJnbjrEYJyK+T9V3AkzDCD8reMggyIyDpOGh93DB3EZkpRXPqj7aAaOWdSqQ5w/L
+	 YNEbf/Z5fa7OAGgLeejIvByuaYEMJrIq6aWXIXyyPQ6nrEIg5R0LHrYa//E/wIBP/j
+	 IEz3b+I1yG4lagxa9xL3i0G38xY2lwM/u9oOA+OFMN2Sxg6dbk4OyVh636daaLduYS
+	 N8U+FfTFuoHHAhEk3Ziw7DZfjXkFMdWwQZe3u1x9laGlytrtcJNshV26iKqS89Qps2
+	 cYsBuFmVwjykBlskqISRp8RjP0BStukDIykVjWQDnO9Kxg2GQKAnwchHK8KPp6FH5B
+	 HbTnJHd4gIX0A==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1s52rC-000000004wl-0Rll;
+	Thu, 09 May 2024 14:26:42 +0200
+Date: Thu, 9 May 2024 14:26:42 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
+	Mark Brown <broonie@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Das Srinagesh <quic_gurus@quicinc.com>,
+	Satya Priya <quic_c_skakit@quicinc.com>,
+	Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
+Message-ID: <ZjzBAvgFt4UnPapk@hovoldconsulting.com>
+References: <20240506150830.23709-1-johan+linaro@kernel.org>
+ <20240506150830.23709-13-johan+linaro@kernel.org>
+ <Zjkq_nWyvc6bUtiu@surfacebook.localdomain>
+ <ZjpMeVk_HiixZUEu@hovoldconsulting.com>
+ <CAHp75VdUFMvkj-r76H7GFZdpcoh_nb8v6CBj4wBHztNhiaWULQ@mail.gmail.com>
+ <8d2ea17c-f91e-4e14-a239-e5e999f6ac50@linaro.org>
+ <ZjyQFrqHT2HBOWY6@hovoldconsulting.com>
+ <1df61b7c-29c4-4537-a0b6-75785606eeae@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1df61b7c-29c4-4537-a0b6-75785606eeae@kernel.org>
 
-Hi Alex,
+On Thu, May 09, 2024 at 12:48:18PM +0200, Krzysztof Kozlowski wrote:
+> On 09/05/2024 10:57, Johan Hovold wrote:
+> > On Tue, May 07, 2024 at 08:14:43PM +0200, Krzysztof Kozlowski wrote:
+> >> On 07/05/2024 19:22, Andy Shevchenko wrote:
 
-Am Donnerstag, 9. Mai 2024, 14:07:08 CEST schrieb Alex Bee:
-> This series aims to add support for the DesignWare MIPI DSI controller and
-> the Innoslicon D-PHY found in RK3128 SoCs. The code additions are rather
-> tiny: It only need some code in the Rockchip dw-mipi-dsi glue layer for
-> this SoC, add support for an additional clock and do some changes in the
-> SoC's clock driver. Support for the phy was already added when the
-> Innosilicon D-PHY driver was initially submitted. I tested it with a
-> 800x1280 DSI panel where all 4 lanes that are supported are used.
+> >> Yeah, please use ID table, since this is a driver (unless I missed
+> >> something). Module alias does not scale, leads to stale and duplicated
+> >> entries, so should not be used as substitute of ID table. Alias is
+> >> suitable for different cases.
+> > 
+> > There's no scalability issue here. If the driver uses driver name
+> > matching then there will always be exactly one alias needed.
 > 
-> changes in v2:
->   To improve power-efficiency when the DSI controller is not in use, I
->   dropped the patch which made hclk_vio_h2p a critical clock and instead
->   added support for an AHB clock to the DSI controller driver and updated
->   the bindings and the addition to the SoC DT accordingly.
+> And then we add one more ID with driver data and how does it scale?
 
-The naming already suggests that hclk_vio_h2p is not a clock-part of
-the actual dsi controller, but more an internal thing inside the clock
-controller.
+That's what I wrote in the part of my reply that you left out. If a
+driver is going to be used for multiple devices, then a module id table
+makes sense, but there is no need to go around adding redundant tables
+just for the sake of it when a simple alias will do.
 
-At least naming and perceived functionality would suggest a chain of
-	hclk_vio -> hclk_vio_h2p -> pclk_mipi
-
-In any case, I really don't see hclk_vio_h2p to be in the realm of the
-actual DSI controller, but more a part of clock-controller / interconnect.
-Similar to the NIU clocks for the interconnect.
-
-rk3588 actually tries to implement this already and while the
-gate-link clocks are described as "recent", I think this definitly the same
-concept used a most/all older Rockchip SoCs, just nobody cared about that
-till now ;-) [0] .
-
-So TL;DR I'd really prefer to not leak CRU-details into the DSI controller.
-
-
-Heiko
-
-[0] Which reminds me that I should look at Sebastian's make GATE-LINK
-actually-work-patch.
-
-
-
-
+Johan
