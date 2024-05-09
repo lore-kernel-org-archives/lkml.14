@@ -1,118 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4A86BE68;
-	Thu,  9 May 2024 09:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D449214AD1A;
+	Thu,  9 May 2024 09:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715248595; cv=none; b=NWgZl+LptOdGgm0kQHazBOibozwWlb0Bi2KX6IaloACF8U+Y1CPUKUsF2Dle00O4K1QadJ7GySf4N2jJHAjfS9FtRLJ2XKDNznEq/lZeRD6v1EqM8Ho7iDcc1R/gnu+u8wZMYFoo+dpwE2oY8jqO88dgqSCmyfRTtCLoKAo9/nU=
+	t=1715248755; cv=none; b=DYsvwfEuyKDGdrgkQX021zohTjzEPNCoXNCmgoxzd/mwDwvhblYZJUVIOxXzGhFkCMtvPFJ6EK6o4cMb16gZpEGWzn2sEPxi18itn48x/RT+vsUTPDz0wwZD3PwDCMNzxSbfj81MmQKYQuTOdPxL2JrOwHN3EIhODAVHlCsXoGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715248595; c=relaxed/simple;
-	bh=bkdnPTqguEmErPjetrOrTQt4B1ja9Q8ssDLo3J3S05o=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tc3nJ1Zz6cyGFfqsco5msY7IwSkaeLASOCWPPtjylHIsXXNaoYk2gceB1yidVebA1LpV9RVc8A1NKuXpiufM8C+KC9FSvy2lfp2k4whdYbUv+DWviKClnKdY8sr2SQVH7WsWq2fHfSgm/rt8wOtFDWsp2I5trrSnMelcuZv0o+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF7C0106F;
-	Thu,  9 May 2024 02:56:51 -0700 (PDT)
-Received: from e116581.blr.arm.com (e116581.arm.com [10.162.40.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D9FD63F6A8;
-	Thu,  9 May 2024 02:56:23 -0700 (PDT)
-From: Dev Jain <dev.jain@arm.com>
-To: akpm@linux-foundation.org,
-	shuah@kernel.org
-Cc: linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Anshuman.Khandual@arm.com,
-	Dev Jain <dev.jain@arm.com>
-Subject: [PATCH] selftests/mm: hugetlb_madv_vs_map: Avoid test skipping by querying hugepage size at runtime
-Date: Thu,  9 May 2024 15:24:47 +0530
-Message-Id: <20240509095447.3791573-1-dev.jain@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1715248755; c=relaxed/simple;
+	bh=BB2DcXhMKYh62r1Ocs7rjwSUnV/aJvw4WfGPrdq9u58=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NB338JrDacGoKveXBL8Tm0zynStnqLC40Oz73SVMdhnEe9EymkniVRThCfYltbl82wb/UAj+rWV1TClNiUNFv1uX1W5SZyXicON/aARUeyfRRSFGAmSaPM4Q4hcQolCRe+Kp+Nc6gy83fs1GHFGzeExxPy2MbW2DRQyxjhPqroY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HConBOP9; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HConBOP9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715248753; x=1746784753;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BB2DcXhMKYh62r1Ocs7rjwSUnV/aJvw4WfGPrdq9u58=;
+  b=HConBOP9B8OaNU/E7H9Y9LvmCYJckvMB2Axshd4k2R/J+6EV3Zt5WesD
+   Ej8V/QrDT7EBkDLXJifpA2u27Ouk9OmOcbkjbP/H+MBAPucbZIh7eD5Av
+   JO555qN4Ovgh2mqoTpLbiEETbGokCreveFx3mLNGoVhV0VcOaZQh+I3+L
+   c/WNlqrq/aZcR3+01/+lW6LrVD9ev4yIX/+hZoUVV/cFysaxDH909qqCe
+   jGC9nH4Xf+lDK2+42lXh/Uff8UTqCsR4A2WuB6vF/8j0Gpx29H5RvNfm8
+   PqlSP6ErUrQ7NhpnUkQvFaQdspFtwqs2AyiuELhkcihSJ4kxOsjLohLZc
+   A==;
+X-CSE-ConnectionGUID: rOuFClrUTN6RBvXAKZVQ1Q==
+X-CSE-MsgGUID: 0GW9m8q+QY6westoi+ZLSQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="21831038"
+X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
+   d="scan'208";a="21831038"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 02:59:11 -0700
+X-CSE-ConnectionGUID: 33+lCoDlRF28UMLgk5vpNg==
+X-CSE-MsgGUID: BSOR0QIaQXmZuur+vbCRoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
+   d="scan'208";a="66629975"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 09 May 2024 02:59:10 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s50YM-0004jg-2i;
+	Thu, 09 May 2024 09:59:06 +0000
+Date: Thu, 9 May 2024 17:58:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ekansh Gupta <quic_ekangupt@quicinc.com>,
+	srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: Paul Gazzillo <paul@pgazz.com>,
+	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
+	oe-kbuild-all@lists.linux.dev, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 5/5] misc: fastrpc: Add static PD restart support
+Message-ID: <202405091717.OoQCyKE1-lkp@intel.com>
+References: <20240508054250.2922-6-quic_ekangupt@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240508054250.2922-6-quic_ekangupt@quicinc.com>
 
-Currently, the size used in mmap() is statically defined, leading to
-skipping of the test on a hugepage size other than 2 MB, since munmap()
-won't free the hugepage for a size greater than 2 MB. Hence, query the
-size at runtime.
+Hi Ekansh,
 
-Also, there is no reason why a hugepage allocation should fail, since we
-are using a simple mmap() using MAP_HUGETLB; hence, instead of skipping
-the test, make it fail.
- 
-Signed-off-by: Dev Jain <dev.jain@arm.com>
----
- tools/testing/selftests/mm/hugetlb_madv_vs_map.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+kernel test robot noticed the following build warnings:
 
-diff --git a/tools/testing/selftests/mm/hugetlb_madv_vs_map.c b/tools/testing/selftests/mm/hugetlb_madv_vs_map.c
-index d01e8d4901d0..8f122a0f0828 100644
---- a/tools/testing/selftests/mm/hugetlb_madv_vs_map.c
-+++ b/tools/testing/selftests/mm/hugetlb_madv_vs_map.c
-@@ -27,9 +27,9 @@
- #include "vm_util.h"
- #include "../kselftest.h"
- 
--#define MMAP_SIZE (1 << 21)
- #define INLOOP_ITER 100
- 
-+size_t mmap_size;
- char *huge_ptr;
- 
- /* Touch the memory while it is being madvised() */
-@@ -44,7 +44,7 @@ void *touch(void *unused)
- void *madv(void *unused)
- {
- 	for (int i = 0; i < INLOOP_ITER; i++)
--		madvise(huge_ptr, MMAP_SIZE, MADV_DONTNEED);
-+		madvise(huge_ptr, mmap_size, MADV_DONTNEED);
- 
- 	return NULL;
- }
-@@ -59,7 +59,7 @@ void *map_extra(void *unused)
- 	void *ptr;
- 
- 	for (int i = 0; i < INLOOP_ITER; i++) {
--		ptr = mmap(NULL, MMAP_SIZE, PROT_READ | PROT_WRITE,
-+		ptr = mmap(NULL, mmap_size, PROT_READ | PROT_WRITE,
- 			   MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB,
- 			   -1, 0);
- 
-@@ -93,14 +93,16 @@ int main(void)
- 			       free_hugepages);
- 	}
- 
-+	mmap_size = default_huge_page_size();
-+
- 	while (max--) {
--		huge_ptr = mmap(NULL, MMAP_SIZE, PROT_READ | PROT_WRITE,
-+		huge_ptr = mmap(NULL, mmap_size, PROT_READ | PROT_WRITE,
- 				MAP_PRIVATE | MAP_ANONYMOUS | MAP_HUGETLB,
- 				-1, 0);
- 
- 		if ((unsigned long)huge_ptr == -1) {
--			ksft_exit_skip("Failed to allocated huge page\n");
--			return KSFT_SKIP;
-+			ksft_test_result_fail("Failed to allocate huge page\n");
-+			return KSFT_FAIL;
- 		}
- 
- 		pthread_create(&thread1, NULL, madv, NULL);
-@@ -117,7 +119,7 @@ int main(void)
- 		}
- 
- 		/* Unmap and restart */
--		munmap(huge_ptr, MMAP_SIZE);
-+		munmap(huge_ptr, mmap_size);
- 	}
- 
- 	return KSFT_PASS;
+[auto build test WARNING on char-misc/char-misc-testing]
+[also build test WARNING on char-misc/char-misc-next char-misc/char-misc-linus linus/master v6.9-rc7 next-20240509]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Ekansh-Gupta/misc-fastrpc-Redesign-remote-heap-management/20240508-134613
+base:   char-misc/char-misc-testing
+patch link:    https://lore.kernel.org/r/20240508054250.2922-6-quic_ekangupt%40quicinc.com
+patch subject: [PATCH v1 5/5] misc: fastrpc: Add static PD restart support
+config: i386-kismet-CONFIG_QCOM_PDR_HELPERS-CONFIG_QCOM_FASTRPC-0-0 (https://download.01.org/0day-ci/archive/20240509/202405091717.OoQCyKE1-lkp@intel.com/config)
+reproduce: (https://download.01.org/0day-ci/archive/20240509/202405091717.OoQCyKE1-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405091717.OoQCyKE1-lkp@intel.com/
+
+kismet warnings: (new ones prefixed by >>)
+>> kismet: WARNING: unmet direct dependencies detected for QCOM_PDR_HELPERS when selected by QCOM_FASTRPC
+   WARNING: unmet direct dependencies detected for QCOM_PDR_HELPERS
+     Depends on [n]: NET [=n]
+     Selected by [y]:
+     - QCOM_FASTRPC [=y] && (ARCH_QCOM || COMPILE_TEST [=y]) && RPMSG [=y]
+
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
