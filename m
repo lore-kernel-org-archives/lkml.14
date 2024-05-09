@@ -1,128 +1,137 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA71A12FB0A
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 11:05:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C550913049B
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 11:06:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715252742; cv=none; b=Neh+gCzpQs5jox70nKP7KMMxdr/xL2n6FNpSLRYN25Fp37ZRt7HDo5v6gOgjDmTuhTo6yXiYH9VCI0eRATb4CJCbdo/EV8pp1OymEZmZhb3LuZv9CYW8A7A90tP2hIVANOkQ2ZCIynvL3IkVTdqOZh2JBtRvNHlPOYiqaD9zSLw=
+	t=1715252788; cv=none; b=X7hxq2wG5jEzm1p2ydC9vGOIMEAq79/GefDLa+1eiSJ8WwDTCLUGI2U3w0YHfBUGt/75sXkgkNCLPp/ofqUmcs/YNVZGDn8syBWAPHrPIfZL7hHASpnnbElHljk4X0+t1HpVZVw9/CXylGOc/teak4rZoY0HysJOb/rmiTBH+cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715252742; c=relaxed/simple;
-	bh=qYcuYJcsvd932hxxmJk2Q5337yfwZq0inWZSf6fynXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oZo49FeqO1+DYfGAk+3KA6G9fg2O+It/6dyO9jO20JW2k6LSZMy1EI4KTKrZ8bQ7TxjjbyzQQ3YS4rCDDZCbE5d5wdWQJObvbybSxnExuIxEEpXTdP3gNPDfnt1kRqdqg2cg7+VP2mFyuKkI6UJyvA4amdDXO176Phy4DtzjwgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zPOaFnk9; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zPOaFnk9"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a5a1192c664so195782066b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 04:05:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715252739; x=1715857539; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=if+Id8ngxnktCMRBldLjA3n7XZopNpgwUvJ4D4xVr5Y=;
-        b=zPOaFnk9b6rXGU5RlrZhduk7WdbLkZY/Y2Zt+DyvvyF2p0xKMd6C9PY7EmSNBmnOU0
-         TSGR8uymEe8+r/ojrs2fejvhABjDItOI7R1ODT3gkn8AQJvqmTBqQAOL++UtCAqemojX
-         u6pa5Dh3Ijit5eKM3gy3+UPn4z30oP116BQp+r61SnoqEec29zCBKd/Cu2RhGkUHYbQb
-         nL2DVuveJQ/WFnBd8KhSkLu5T2mb0QyW1SJeIMqx4E3FmoWtGnV4tmq0ROUulpc/n+TI
-         znIwD5xAQfxeXidG+a7Q7i3C1F3ScG3NomFGt7YoNv8nLtLWq18oJxhxlsC3GaOSJRHU
-         KhZQ==
+	s=arc-20240116; t=1715252788; c=relaxed/simple;
+	bh=ecK8QbwY+FbLhxp6lSCIUfjMi/AkMP6XgV33l1ouTVM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Fj20DkNH4Tg/8JoJYabcdA5pn9exqzXLVojjfbienzPcU/e/atBXX041+BsxtWUReMKmg/RzvO2H5p+Vd8UbmjFtqp8SBUywlfdDjgyAml7c4R97RCyhpJv1a8LW8BtYuLehdoLvaTGC7MXppzCb4htQfDQb066kCOfADrh+8xE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a59a387fbc9so184015466b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 04:06:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715252739; x=1715857539;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=if+Id8ngxnktCMRBldLjA3n7XZopNpgwUvJ4D4xVr5Y=;
-        b=qMPZwEVwP39CqfPy6gXUUhtYslbsjjaGBbKfIeodqd+twx3eN4GkNHCMLo11ZM92ix
-         CFL+s0MdJHFVaFVwS2CdBK76ZAm+W79K9dfw/8Zi9JoDK/V5f2aUKgwkY6p3ClrhYtzj
-         mj2gFsTF5e3Bl6Pg+0Yoqm7BTYcV+GVLPZ++BT8pKhojNVnP0xme4ND6i1e6DUVzgoo2
-         ZI2Q/4E8ECH8FELf5UyYdWAtDZ40v7zOIID6RRUW5Xmp2+u2j3wJl0PgepZPTGSEpvz2
-         mfzM0KaMlpgI7X/0No1ORaOwg2B7ZyxDTsTop+ZjGkyup2/Y1hVblOJo6/bgxJN31OqR
-         A61g==
-X-Forwarded-Encrypted: i=1; AJvYcCWirXCZAA93dB07YUKVLIuSOz8kzdDecduK1OFSNUEXdvEdpBswY+7Fxvir6ywUCg34s8b6+2sPwH+pzAxU7B6nvtzenTVmMOH6Ebor
-X-Gm-Message-State: AOJu0YzzxirbGxvpeYKemrIQW4Bku6Orbo4s47+H0+4Alg1WxrHRam33
-	jqDJFNgDDysLxVr9yhgYz6BMr72BZGdYv95Yn9GubRYz4yHUzHQjDzpUvNQo+w==
-X-Google-Smtp-Source: AGHT+IE0nAIbR0Q+rxqoyGrg+GpqFGhchDBkR0I2Wpg9W7zOo88pRNhNnSdEOFZc6wJp37mJt0hKEg==
-X-Received: by 2002:a17:907:7084:b0:a59:a64d:c5b9 with SMTP id a640c23a62f3a-a59fb9dcd97mr514760566b.76.1715252738913;
-        Thu, 09 May 2024 04:05:38 -0700 (PDT)
-Received: from google.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b17555sm61158766b.189.2024.05.09.04.05.38
+        d=1e100.net; s=20230601; t=1715252784; x=1715857584;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/LOIjIMPO5ush8EPTSynnMiO8zIIbVtcBE/cd84blNw=;
+        b=Yzb3zbpBidxa8eML3gJD8Oir+s+h5geLNGrAMkH43h1rMhs/pwNctbmQwoZSyc19/+
+         t6iOzb5myncgbnkPetQ7Dd+j/iHAYU7J/7j/joFtOfRhthOHktfZCUsjJKf3bPm/pW2d
+         pMCQDuHQ4VmzK0nId/DjwA59unGPamaZNyX68ODW2FkKushAXewuvB/siaqXFkpWyrWR
+         4izmc0qw7xQaXw6+yqSQJdzV+3AZS9w1IF2kr0aFUpJN9FipxUAz1JgbiQXw74V5QK9m
+         1PfXviotyCjMAN9lwCdP9PN5gIY3iBUB3wNT7ReKXJ6Wg/zFSFiL198MxZ2iBY1Ahlql
+         VE1A==
+X-Forwarded-Encrypted: i=1; AJvYcCW1ZWCPo65JJeQ561rN3WP+0KvoTyknKoPwQrr9ZVk3o02kC+2AV5ZXXYFVodUURJkQimCPJSYb4qGFQOnk86k7tvPDKxIYRs3IuR5i
+X-Gm-Message-State: AOJu0YylxPshuHeDhp8ZyxhBIWe/B4DC1zqdcH8rw2eOLE8ulfRkY6+X
+	MbTB1AS43kNHdnMVuOaGZedR3SizPdkUEzdbFGs82BiBlsyGrCzS
+X-Google-Smtp-Source: AGHT+IFv50vbS7G34ZPIAFTwl7ijWXO9Zfn6DELJkCn77gEcJv4UYypJew7dQkQjwEnBcVv4Na7GWA==
+X-Received: by 2002:a17:906:e211:b0:a59:ab57:7413 with SMTP id a640c23a62f3a-a59fb9e7488mr309642266b.73.1715252783829;
+        Thu, 09 May 2024 04:06:23 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-119.fbsv.net. [2a03:2880:30ff:77::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17892444sm61867766b.76.2024.05.09.04.06.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 04:05:38 -0700 (PDT)
-Date: Thu, 9 May 2024 12:05:30 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
-	kernel-team@android.com, rdunlap@infradead.org, rppt@kernel.org,
-	david@redhat.com, linux-mm@kvack.org
-Subject: Re: [PATCH v22 2/5] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <Zjyt-nX3el5nnDPm@google.com>
-References: <20240430111354.637356-1-vdonnefort@google.com>
- <20240430111354.637356-3-vdonnefort@google.com>
- <20240507223402.206d6ddc@rorschach.local.home>
+        Thu, 09 May 2024 04:06:23 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: paulmck@kernel.org,
+	linux-kernel@vger.kernel.org (open list:DEBUGOBJECTS:)
+Subject: [PATCH] debugobjects: Fix potential data race in debug_objects_maxchain
+Date: Thu,  9 May 2024 04:06:11 -0700
+Message-ID: <20240509110612.768196-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507223402.206d6ddc@rorschach.local.home>
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 07, 2024 at 10:34:02PM -0400, Steven Rostedt wrote:
-> On Tue, 30 Apr 2024 12:13:51 +0100
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > +#ifdef CONFIG_MMU
-> > +static int __rb_map_vma(struct ring_buffer_per_cpu *cpu_buffer,
-> > +			struct vm_area_struct *vma)
-> > +{
-> > +	unsigned long nr_subbufs, nr_pages, vma_pages, pgoff = vma->vm_pgoff;
-> > +	unsigned int subbuf_pages, subbuf_order;
-> > +	struct page **pages;
-> > +	int p = 0, s = 0;
-> > +	int err;
-> > +
-> > +	/* Refuse MP_PRIVATE or writable mappings */
-> > +	if (vma->vm_flags & VM_WRITE || vma->vm_flags & VM_EXEC ||
-> > +	    !(vma->vm_flags & VM_MAYSHARE))
-> > +		return -EPERM;
-> > +
-> > +	/*
-> > +	 * Make sure the mapping cannot become writable later. Also tell the VM
-> > +	 * to not touch these pages (VM_DONTCOPY | VM_DONTEXPAND). Finally,
-> > +	 * prevent migration, GUP and dump (VM_IO).
-> > +	 */
-> > +	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTEXPAND | VM_IO, VM_MAYWRITE);
-> 
-> Do we really need the VM_IO?
-> 
-> When testing this in gdb, I would get:
-> 
-> (gdb) p tmap->map->subbuf_size
-> Cannot access memory at address 0x7ffff7fc2008
-> 
-> It appears that you can't ptrace IO memory. When I removed that flag,
-> gdb has no problem reading that memory.
+KCSAN has identified a potential data race in debugobjects, where the
+global variable debug_objects_maxchain is accessed for both reading and
+writing simultaneously in separate and parallel data paths. This results
+in the following splat printed by KCSAN:
 
-Yeah, VM_IO indeed implies DONTDUMP. VM_IO was part of Linus recommendations.
-But perhaps, VM_DONTEXPAND and MIXEDMAP (implicitely set by vm_insert_pages) are
-enough protection?
+	BUG: KCSAN: data-race in debug_check_no_obj_freed / debug_object_activate
 
-I don't see how anything could use GUP there and as David pointed-out on the
-previous version, it doesn't event prevent the GUP-fast path.
+	write to 0xffffffff847ccfc8 of 4 bytes by task 734 on cpu 41:
+	debug_object_activate (lib/debugobjects.c:199
+			       lib/debugobjects.c:564 lib/debugobjects.c:710)
+	call_rcu (kernel/rcu/rcu.h:227
+		  kernel/rcu/tree.c:2719 kernel/rcu/tree.c:2838)
+	security_inode_free (security/security.c:1626)
+	__destroy_inode (./include/linux/fsnotify.h:222 fs/inode.c:287)
+	evict (fs/inode.c:310 fs/inode.c:682)
+	iput (fs/inode.c:1769)
+	dentry_unlink_inode (fs/dcache.c:401)
+	__dentry_kill (fs/dcache.c:?)
+	dput (fs/dcache.c:846)
+	__fput (fs/file_table.c:431)
+	____fput (fs/file_table.c:451)
+	task_work_run (kernel/task_work.c:181)
+	do_exit (kernel/exit.c:879)
+	do_group_exit (kernel/exit.c:1027)
+	__pfx___ia32_sys_exit_group (kernel/exit.c:1038)
+	x64_sys_call (arch/x86/entry/syscall_64.c:33)
+	do_syscall_64 (arch/x86/entry/common.c:?)
+	entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
 
-> 
-> I think we should drop that flag.
-> 
-> Can you send a v23 with that removed, Shuah's update, and also the
-> change below:
+	read to 0xffffffff847ccfc8 of 4 bytes by task 384 on cpu 31:
+	debug_check_no_obj_freed (lib/debugobjects.c:1000 lib/debugobjects.c:1019)
+	kfree (mm/slub.c:2081 mm/slub.c:4280 mm/slub.c:4390)
+	percpu_ref_exit (lib/percpu-refcount.c:147)
+	css_free_rwork_fn (kernel/cgroup/cgroup.c:5357)
+	process_scheduled_works (kernel/workqueue.c:3272 kernel/workqueue.c:3348)
+	worker_thread (./include/linux/list.h:373
+			kernel/workqueue.c:955 kernel/workqueue.c:3430)
+	kthread (kernel/kthread.c:389)
+	ret_from_fork (arch/x86/kernel/process.c:153)
+	ret_from_fork_asm (arch/x86/entry/entry_64.S:257)
 
-Ack.
+	value changed: 0x00000070 -> 0x00000071
 
-[...]
+Include READ_ONCE()/WRITE_ONCE() annotations on the accesses to
+debug_objects_maxchain to prevent potential data corruption, explicitly
+indicating that this data is shared across two parallel data paths.
+
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ lib/debugobjects.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+index fb12a9bacd2f..fbd262aa6b29 100644
+--- a/lib/debugobjects.c
++++ b/lib/debugobjects.c
+@@ -195,8 +195,8 @@ static struct debug_obj *lookup_object(void *addr, struct debug_bucket *b)
+ 		if (obj->object == addr)
+ 			return obj;
+ 	}
+-	if (cnt > debug_objects_maxchain)
+-		debug_objects_maxchain = cnt;
++	if (cnt > READ_ONCE(debug_objects_maxchain))
++		WRITE_ONCE(debug_objects_maxchain, cnt);
+ 
+ 	return NULL;
+ }
+@@ -997,8 +997,8 @@ static void __debug_check_no_obj_freed(const void *address, unsigned long size)
+ 		}
+ 		raw_spin_unlock_irqrestore(&db->lock, flags);
+ 
+-		if (cnt > debug_objects_maxchain)
+-			debug_objects_maxchain = cnt;
++		if (cnt > READ_ONCE(debug_objects_maxchain))
++			WRITE_ONCE(debug_objects_maxchain, cnt);
+ 
+ 		objs_checked += cnt;
+ 	}
+-- 
+2.43.0
+
