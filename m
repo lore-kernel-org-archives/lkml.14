@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A183F13C683;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A148E13BC0A;
 	Thu,  9 May 2024 02:00:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715220029; cv=none; b=QdQmQZnwBj0T2tjlbYD3bRs8ycjojcxaPr1TUlO8dav2OoVtUc8yI26de+xXWbtrxfj4y8q5TzV68PU2f+XYxJ67gapC1m/xENORyMEYhjajresaMCj5GzEs5MncqFbs6e9yWdaZsrlOkemhlnIaqVllLj/9OlFNVvWupF0SgOM=
+	t=1715220029; cv=none; b=i6fP/dTchmZjsI/dD5VirR/kuPtV7wi36+JrDv2g+jtUpG4qjkDi5hKO7F/fqN97NFrUKSyKeA3QvK9nUUyeJFlAtZYArW01P0BfW+qCrLHV188Gjzn1o8o1HdrCRzlMdRtzWrX40/TrQw/BKe0BNSH4IA8XOzo5WLzdIoQqSUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715220029; c=relaxed/simple;
-	bh=4FAUsU5mVbqb7YAyLX76pu1HOYCKM/90jyHr1I3lBOY=;
+	bh=5uUBO7EpVJSHQ9Pq0QpAYzMRCljyCpo7HxEVbl3AQe4=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=M/upj7oeLhXRO81giEKnk8yuLz/t9DE2wjKG3Twd13QlzoOr8ebOA1HRdyMzv8D/zsdsUvMW8zspabbJG+BU0fHpELUjRRzDfak4LZiPtUn+Z7lavvNe+iCsotpiub1NnYuzaI9xkAPMsW9VmiSU+OKEX4/6gft0Yy8QXFTSccI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9dwTcno; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=gW1/AverQR954QC8K9NYehn4GT2HR3DLXQkl3qVPWotl7mpA6N5uMlReV7fEvXTzV8fxsuK0smnRfHxlm0acuz2y1LVhIfS/S+S8AaiaqMQDw+2OnllORrnLlvL2MkTLNlLY/RIjIkxren+7lyymXxSR0bjcvDBsjVcotPynGJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eed7ld8h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9dwTcno"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 38E40C32783;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eed7ld8h"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3DDE7C3277B;
 	Thu,  9 May 2024 02:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715220029;
-	bh=4FAUsU5mVbqb7YAyLX76pu1HOYCKM/90jyHr1I3lBOY=;
+	bh=5uUBO7EpVJSHQ9Pq0QpAYzMRCljyCpo7HxEVbl3AQe4=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=E9dwTcnoBoWs1VjrsjgnLBl+iq8wZFwWptcmNAbutBxpV/+KMNwJHr4AV/AhFpISn
-	 fbkA9l4GhK3fcdSzXQ3I6ahkmJcbRhCgflbj4pXlHx9+JHNNqPC8qa8EQ/g7Sq1lrh
-	 uD/znpGGv6GCPMHNvBAWUdNdLYdjtutztfTtZ8Czm9hO6WxXHwlq7qLvaTWMxMMHmV
-	 Ct2Vq3KsH0aeLil75MRX5tmwhX4cqQM33R0JF8irSUAVXTnNfLi0dxl6IEYCGj1Ieh
-	 aUYhUbKXC89nNvjwtkfpsZ9aLxlvKqNug7CLTyohZCVr4nK9ckzOAsH8gUxYirLbHO
-	 oA9YelZJZRkQQ==
+	b=Eed7ld8hwrxI+x/T/ZpvQ1aapIhxqzGTSeKKGvSfAPD+r6j88dZTRsbrxoYXgS8W9
+	 aOGFFQjx4+xC3v868EtWoPa8uE/Y7qH8nowYVfmaTrIqFpTO5eLeMAvjzCMNpJI9LD
+	 f71OkBU55l4JgTETe9VTZhQI8rbfgZGDbjFBgDLgInFgr6wp+LaSSxiHUXQ3gJVPKN
+	 HUTI8pbJx42b13hquh50QmxVKehNY79s62PmZIZlcJsB8VWUOfS5z7MTqxviWXx2Fp
+	 ii+QXDq4pAKgGc4tYbG3LIO3YGIbAJZjwJwl4JOfeUyZMG4f5CukaGRBguY3E/Hq8J
+	 XH8P+koiZwd6A==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 21C16C43614;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2B8E3C43335;
 	Thu,  9 May 2024 02:00:29 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,43 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [net PATCH v2] hsr: Simplify code for announcing HSR nodes timer
- setup
+Subject: Re: [PATCH v2] dt-bindings: net: mediatek: remove wrongly added clocks
+ and SerDes
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171522002913.32544.11720704507207514169.git-patchwork-notify@kernel.org>
+ <171522002917.32544.14758011676552549517.git-patchwork-notify@kernel.org>
 Date: Thu, 09 May 2024 02:00:29 +0000
-References: <20240507111214.3519800-1-lukma@denx.de>
-In-Reply-To: <20240507111214.3519800-1-lukma@denx.de>
-To: Lukasz Majewski <lukma@denx.de>
-Cc: kuba@kernel.org, netdev@vger.kernel.org, pabeni@redhat.com,
- edumazet@google.com, olteanv@gmail.com, davem@davemloft.net,
- o.rempel@pengutronix.de, Tristram.Ha@microchip.com, bigeasy@linutronix.de,
- r-gunasekaran@ti.com, horms@kernel.org, n.zhandarovich@fintech.ru,
- m-karicheri2@ti.com, Arvid.Brodin@xdin.com, dan.carpenter@linaro.org,
- ricardo@marliere.net, casper.casan@gmail.com, linux-kernel@vger.kernel.org
+References: <1569290b21cc787a424469ed74456a7e976b102d.1715084326.git.daniel@makrotopia.org>
+In-Reply-To: <1569290b21cc787a424469ed74456a7e976b102d.1715084326.git.daniel@makrotopia.org>
+To: Daniel Golle <daniel@makrotopia.org>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
+ lorenzo@kernel.org, nbd@nbd.name, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 
 Hello:
 
 This patch was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue,  7 May 2024 13:12:14 +0200 you wrote:
-> Up till now the code to start HSR announce timer, which triggers sending
-> supervisory frames, was assuming that hsr_netdev_notify() would be called
-> at least twice for hsrX interface. This was required to have different
-> values for old and current values of network device's operstate.
+On Tue, 7 May 2024 13:20:43 +0100 you wrote:
+> Several clocks as well as both sgmiisys phandles were added by mistake
+> to the Ethernet bindings for MT7988. Also, the total number of clocks
+> didn't match with the actual number of items listed.
 > 
-> This is problematic for a case where hsrX interface is already in the
-> operational state when hsr_netdev_notify() is called, so timer is not
-> configured to trigger and as a result the hsrX is not sending supervisory
-> frames to HSR ring.
+> This happened because the vendor driver which served as a reference uses
+> a high number of syscon phandles to access various parts of the SoC
+> which wasn't acceptable upstream. Hence several parts which have never
+> previously been supported (such SerDes PHY and USXGMII PCS) are going to
+> be implemented by separate drivers. As a result the device tree will
+> look much more sane.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,v2] hsr: Simplify code for announcing HSR nodes timer setup
-    https://git.kernel.org/netdev/net/c/4893b8b3ef8d
+  - [v2] dt-bindings: net: mediatek: remove wrongly added clocks and SerDes
+    https://git.kernel.org/netdev/net/c/cc349b0771dc
 
 You are awesome, thank you!
 -- 
