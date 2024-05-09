@@ -1,117 +1,203 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D63A1FAA;
-	Thu,  9 May 2024 12:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A79913B590
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 12:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715258915; cv=none; b=SEgZWC+VEXprQWcUivVMuTHg3pvIUPOu7pB+8U48kyXv9zrl9O6ybz9HVAZ2JDyRNSn8gOMbNJTW2UpFGyv967vraN+VmB1bptl2OCWhc4mABxPauVvIqt/6JfPqXTDbuoQDnUs9eNCZuqZFaq+qYjMgGisaSYJnIBIBwlWLcaM=
+	t=1715259193; cv=none; b=r8HRrse1dO8Y0pQZEpPzp1R6albKFE1alEjoDjO7iBgEMyf1iJC1hZIL7G3LxM6tQEBsrEXqlQ9LTTE58CZOIoPyPZ3k5kWzT7yyZjCcPLera50oK5EYOQF1DDPM/NbtIZiyP4ToQesra9xXC25jZeYw4g+lxphSsKlweBrJ1+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715258915; c=relaxed/simple;
-	bh=sZSzNB9H37MEPXqIR+iA9PYBkNUyh3pO2Ijg3kkZTKs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZP32qWbT0wBKgHxazJgNjpg4vCT0UtE1stiXoENfBT5W+ijV4kvOrV0fiRnL7KwJ8nr2C5iBwiEVTlupNeZw5MORBNODtGkjBhechr5xMerp6EIqAlywb4YrVehqAumiAUIhagFVMJ1Cps0vFrE9w+vqVC9BQbrhTZya6Pvwg7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4VZsJ44ngvz4f3n5n;
-	Thu,  9 May 2024 20:48:20 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 8E6F21A09E0;
-	Thu,  9 May 2024 20:48:30 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAX6REdxjxmuxLDMA--.45709S4;
-	Thu, 09 May 2024 20:48:30 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: axboe@kernel.dk
-Cc: linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH RESEND for-6.10/block] block: add plug while submitting IO
-Date: Thu,  9 May 2024 20:38:25 +0800
-Message-Id: <20240509123825.3225207-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1715259193; c=relaxed/simple;
+	bh=tHJUV8jemlCBNR0e9dyQ6K2sM3GE6d2f862tqmw8smw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YIEAOVq6qfbUd4AXh8ngOqrVL3OgNQHDQK/FjpsHjLX2fHYasgcOIaPtkOkfHraY49O0DDkZdvAapntpKURAXfuCl2DOXxPhEsttp7cbWj795nNVj9bWKR/72WRGmcIAa/KWwg4COcOrxDnHsRZJOQGAJyFlkiifd802ii30tEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=poGlvMif; arc=none smtp.client-ip=209.85.128.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="poGlvMif"
+Received: by mail-wm1-f65.google.com with SMTP id 5b1f17b1804b1-41b79451153so6068095e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 05:53:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715259190; x=1715863990; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=psmu9THAqsGOKJL0eF6J9cwaZgQkJwTOQ1cnvhZ/MDc=;
+        b=poGlvMifEmbkA+gNMbrdSSnnUH2Rrt9YZyT/XQFGLDOfe9cdozqvVdlqrcg6pTZFB6
+         gEkb1Q4Cal3j+FVDiHx4xrhf15UFkqvnaYmkUmtzKkNUq5Fju9pRsED626aTS0kDhDu8
+         99Q6EtiW475CCRSZUsGfuVSug270vpb35U07P3QIwSKH/ImQNab6Ki3q6GMiQqeCLfpe
+         2fc9sEvp7NKPcx5Dl+BOeb9KZa17SlI/KSngRwJnB7UVxFKyV1ayXiNxUaCF/KW6OUCS
+         w3XBam4IIDiHpzKmudQeakhbd76N0RzuoExMEY4fdZmiP5hOdLCWtRUJvsVHu93xtDz8
+         O6mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715259190; x=1715863990;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=psmu9THAqsGOKJL0eF6J9cwaZgQkJwTOQ1cnvhZ/MDc=;
+        b=pR9NDpZux8J4YVB/R+RLV+sS6QY/UavrhOlh6l5O4WyzfNJVmlhHh5ZujQ8i+3h/6Q
+         5MwtGeX3OKUw7qRxcIq1V+e3iUrVNV+n+8Kk38OMI+SqjmVyZZV3e/FMMDmuRTBanyCC
+         Zh+jBK1+hx8K8WTytlINErt3g10QJI7zrKDB1pVmbBAMv4oCanmJ/2S/7zAfI6aL0zBw
+         NxKxzHiG3R8WMh8Ny8n4Q9O/p2L8NpDnF7b7jgXqk1LPcFUg6Ik2dGZd2I9hBFpPYGbk
+         4mk974iu64a5pj8QfwMJhapato1y6dnBwI84w27GWUEhjLLX3kDqTI7CwavlVEntcU37
+         77JA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0rlLNA0CqzNtbVpkBGt8m2pv/k9HThv/r6VU37ZwjD93R5ssgTuCQZnHjCx1KkiJZQKIMFN30Z8A7fkDb+hmqi8DVqe+2//KYWVcU
+X-Gm-Message-State: AOJu0YyZL7ycuIZTV0yI+KxerBiS4PXUhHU0vsuV1qUzXLNhOqtHrl3t
+	OgxsK2cVF089Fgo20q+WVN7RG9T9YbiUl2HuIw2zgo2C1r1RDv4XG763XIiHaI4=
+X-Google-Smtp-Source: AGHT+IEt0Gt7AfywVRXND++7a2GFpREKsqIdQ+FWSI0zCgsC5v88rnKoatYR7kECZuQT2qkjfB/c+w==
+X-Received: by 2002:a05:600c:46ca:b0:41c:7bd:5a84 with SMTP id 5b1f17b1804b1-41f71bc9fa4mr47777675e9.17.1715259189896;
+        Thu, 09 May 2024 05:53:09 -0700 (PDT)
+Received: from [127.0.0.1] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccbe9011sm25058525e9.7.2024.05.09.05.53.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 05:53:09 -0700 (PDT)
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Date: Thu, 09 May 2024 13:53:07 +0100
+Subject: [PATCH v3] media: i2c: Fix imx412 exposure control
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX6REdxjxmuxLDMA--.45709S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFW3Cw45WFW8ArWDJw45trb_yoW8Xr4Upr
-	4Y93ZxKFWUWrs2vw48XFy7GF1ftF1DWr17Aay5ua9xtr1j9r4qqwnav348Za4rCr48WrW3
-	Ar93Kr98Gw4xCrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyC14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
-	67AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUZa9-UUUUU=
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240509-b4-linux-next-camss-x13s-mmsol-integration-in-test-imx577-fix-v3-1-3f7e15ddc280@linaro.org>
+X-B4-Tracking: v=1; b=H4sIADLHPGYC/63OMW7DMAwF0KsEmstCkmU57ZR7BBnkmHIIxFIhK
+ oaKwHcvk627N/4//MenYiyErL4PT1VwJaacJHQfB3W9hTQj0CRZWW2d7rWH0cGd0qNBwlbhGhZ
+ maKZjWBbOd6BUcS6hyozcUJEr0NL6YYBIDaKJiF4P2jujxPgpKPXbP18k34hrLr/vd1bzaveSV
+ wMG3NiFL2f9OOHxJGOh5M9cZvWiV7srZ4Wz6H0f9WDjMf7jtm37A1yHPPl6AQAA
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ "Paul J. Murphy" <paul.j.murphy@intel.com>, 
+ Martina Krasteva <quic_mkrastev@quicinc.com>, 
+ Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, 
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
+ Jacopo Mondi <jacopo.mondi@ideasonboard.com>, 
+ Gjorgji Rosikopulos <quic_grosikop@quicinc.com>
+X-Mailer: b4 0.13-dev-26615
 
-From: Yu Kuai <yukuai3@huawei.com>
+Currently we have the following algorithm to calculate what value should be
+written to the exposure control of imx412.
 
-So that if caller didn't use plug, for example, __blkdev_direct_IO_simple()
-and __blkdev_direct_IO_async(), block layer can still benefit from caching
-nsec time in the plug.
+lpfr = imx412->vblank + imx412->cur_mode->height;
+shutter = lpfr - exposure;
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
+The 'shutter' value is given to IMX412_REG_EXPOSURE_CIT however, the above
+algorithm will result in the value given to IMX412_REG_EXPOSURE_CIT
+decreasing as the requested exposure value from user-space goes up.
+
+e.g.
+[ 2255.713989] imx412 20-001a: Received exp 1608, analog gain 0
+[ 2255.714002] imx412 20-001a: Set exp 1608, analog gain 0, shutter 1938, lpfr 3546
+[ 2256.302770] imx412 20-001a: Received exp 2586, analog gain 100
+[ 2256.302800] imx412 20-001a: Set exp 2586, analog gain 100, shutter 960, lpfr 3546
+[ 2256.753755] imx412 20-001a: Received exp 3524, analog gain 110
+[ 2256.753772] imx412 20-001a: Set exp 3524, analog gain 110, shutter 22, lpfr 3546
+
+This behaviour results in the image having less exposure as the requested
+exposure value from user-space increases.
+
+Other sensor drivers such as ov5675, imx218, hid556 and others take the
+requested exposure value and use the value directly.
+
+Take the example of the above cited sensor drivers and directly apply the
+requested exposure value from user-space. The 'lpfr' variable still
+functions as before but the 'shutter' variable can be dispensed with as a
+result.
+
+Once done a similar run of the test application requesting higher exposure
+looks like this, with 'exp' written directly to the sensor.
+
+[  133.207884] imx412 20-001a: Received exp 1608, analog gain 0
+[  133.207899] imx412 20-001a: Set exp 1608, analog gain 0, lpfr 3546
+[  133.905309] imx412 20-001a: Received exp 2844, analog gain 100
+[  133.905344] imx412 20-001a: Set exp 2844, analog gain 100, lpfr 3546
+[  134.241705] imx412 20-001a: Received exp 3524, analog gain 110
+[  134.241775] imx412 20-001a: Set exp 3524, analog gain 110, lpfr 3546
+
+The result is then setting the sensor exposure to lower values results in
+darker, less exposure images and vice versa with higher exposure values.
+
+Fixes: 9214e86c0cc1 ("media: i2c: Add imx412 camera sensor driver")
+Tested-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org> # qrb5165-rb5/imx577
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+Reviewed-by: Gjorgji Rosikopulos <quic_grosikop@quicinc.com>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- block/blk-core.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+Using libcamera/SoftISP on a Qualcomm RB5 with the imx577 sensor I found
+that unlike on other platforms such as the Lenovo x13s/ov5675 the image was
+constantly getting darker and darker.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 9ead80d6c6f0..8566bbd8aeba 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -646,11 +646,13 @@ static void __submit_bio(struct bio *bio)
- static void __submit_bio_noacct(struct bio *bio)
+At first I assumed a bug in SoftISP but, looking into the code it appeared
+SoftISP was requesting higher and higher exposure values which resulted in
+the image getting progressively darker.
+
+To my mind the software contract between user-space and kernel should be
+increasing exposure requests always meant higher exposure but, to be
+certain I asked around on IRC.
+
+Those polled agreed in principle that the software contract was consistent
+across sensors.
+
+Looking at the range of imx sensors, it appears this particular error has
+been replicated a number of times but, I haven't so far really drilled into
+each sensor.
+
+As a first pass I'm submitting the fix for the sensor I have but, I expect
+if this fix is acceptable upstream it should be pushed to most of the imx
+sensors with what seems to be copy/paste code for the exposure.
+---
+Changes in v3:
+- Fixes non sequitur in commit log
+- Applies RB from Jacopo and Gjorgji
+- Link to v2: https://lore.kernel.org/r/20240506-b4-linux-next-camss-x13s-mmsol-integration-in-test-imx577-fix-v2-1-2e665f072f8f@linaro.org
+
+Changes in v2:
+- Fix typo in patch 42 -> 412
+- Link to v1: https://lore.kernel.org/r/20240506-b4-linux-next-camss-x13s-mmsol-integration-in-test-imx577-fix-v1-1-4b3a9426bde8@linaro.org
+---
+ drivers/media/i2c/imx412.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/media/i2c/imx412.c b/drivers/media/i2c/imx412.c
+index 0efce329525e4..7d1f7af0a9dff 100644
+--- a/drivers/media/i2c/imx412.c
++++ b/drivers/media/i2c/imx412.c
+@@ -542,14 +542,13 @@ static int imx412_update_controls(struct imx412 *imx412,
+  */
+ static int imx412_update_exp_gain(struct imx412 *imx412, u32 exposure, u32 gain)
  {
- 	struct bio_list bio_list_on_stack[2];
-+	struct blk_plug plug;
+-	u32 lpfr, shutter;
++	u32 lpfr;
+ 	int ret;
  
- 	BUG_ON(bio->bi_next);
+ 	lpfr = imx412->vblank + imx412->cur_mode->height;
+-	shutter = lpfr - exposure;
  
- 	bio_list_init(&bio_list_on_stack[0]);
- 	current->bio_list = bio_list_on_stack;
-+	blk_start_plug(&plug);
+-	dev_dbg(imx412->dev, "Set exp %u, analog gain %u, shutter %u, lpfr %u",
+-		exposure, gain, shutter, lpfr);
++	dev_dbg(imx412->dev, "Set exp %u, analog gain %u, lpfr %u",
++		exposure, gain, lpfr);
  
- 	do {
- 		struct request_queue *q = bdev_get_queue(bio->bi_bdev);
-@@ -684,19 +686,23 @@ static void __submit_bio_noacct(struct bio *bio)
- 		bio_list_merge(&bio_list_on_stack[0], &bio_list_on_stack[1]);
- 	} while ((bio = bio_list_pop(&bio_list_on_stack[0])));
+ 	ret = imx412_write_reg(imx412, IMX412_REG_HOLD, 1, 1);
+ 	if (ret)
+@@ -559,7 +558,7 @@ static int imx412_update_exp_gain(struct imx412 *imx412, u32 exposure, u32 gain)
+ 	if (ret)
+ 		goto error_release_group_hold;
  
-+	blk_finish_plug(&plug);
- 	current->bio_list = NULL;
- }
+-	ret = imx412_write_reg(imx412, IMX412_REG_EXPOSURE_CIT, 2, shutter);
++	ret = imx412_write_reg(imx412, IMX412_REG_EXPOSURE_CIT, 2, exposure);
+ 	if (ret)
+ 		goto error_release_group_hold;
  
- static void __submit_bio_noacct_mq(struct bio *bio)
- {
- 	struct bio_list bio_list[2] = { };
-+	struct blk_plug plug;
- 
- 	current->bio_list = bio_list;
-+	blk_start_plug(&plug);
- 
- 	do {
- 		__submit_bio(bio);
- 	} while ((bio = bio_list_pop(&bio_list[0])));
- 
-+	blk_finish_plug(&plug);
- 	current->bio_list = NULL;
- }
- 
+
+---
+base-commit: ff3959189f1b97e99497183d76ab9b007bec4c88
+change-id: 20240506-b4-linux-next-camss-x13s-mmsol-integration-in-test-imx577-fix-f1fee6070641
+
+Best regards,
 -- 
-2.39.2
+Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
