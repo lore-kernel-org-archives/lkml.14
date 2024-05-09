@@ -1,131 +1,178 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BB085264
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 21:42:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100C28594C;
+	Thu,  9 May 2024 21:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715290933; cv=none; b=APdez6dlGzOEXbeYZpmosF1e0D7ASqwS6XgsvZ+lXKch014u04Zu07C6XAVr9LL7mt8M81SpjbBZzuUFYxn3ri8V7VGHMuXmNLBGUIFhhUps2MQoj0iZajHkMDFyJgeayphfmCToQZyEf2AOWyHFUT488zSy43R6Mtg/owes8lA=
+	t=1715290984; cv=none; b=U3BcSPstmWqTa+jVmmLoZCGH+2X6CTn9CyTP8/8NwaaF4JTjVF0Aue/J+Q5HicSxgKhVW7o9RNlPqTQm5uzNBY6cE6iMjYfIgW4vLZwVRQXhfVpfzjCBvLRIFne1+QgySRecwdVj9JHrPmgbIkVcntSldnpbcjYRVd6Nvc+CpEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715290933; c=relaxed/simple;
-	bh=wP+7wj0GQxTLjS1RBn+5MHXwXji8frVrT0a+yqSGftI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j6HeQkGeMqiVttMja5U9JJsY7lU3+LteCqzmxVXZgYJxBfeRsgYgpNOI/SfxnXpsTu/2fnlVTmoexjko+vsdib5oZPju/FGfxAUdqP8zSvP2cyjP+YfQ1jSAuuea6/FubhuCMI7FJfDsdkH2JUYEZh+r+VmrZWnSM4xPeZfX//k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=eTVqphzn; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1715290984; c=relaxed/simple;
+	bh=jYlo5TQS0AnXYq32ycelwNFKPF0VaUE7YGHwtFDwiW8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NWXgH5PlVbG4URyZSDfAjPUgJMgnLuQLHFgPx3O6nrTWsGQCFLJBQng+nelVpUG2oBmpjovmVKYz1AA9kD758qt9gb5vXGSOpVx/U9ATweBSjkVVtg2dVvFiDeTCfn+j9G1hvfYfuShIurkButZnYwiDPYe+BU+qBij9Qd5A30U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EFXd/X54; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="eTVqphzn"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a59a352bbd9so241514966b.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 14:42:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1715290929; x=1715895729; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mWiEw6OZOjWrMlF7JIfpMQ4VjNqi64jS5UnPYz95OZ8=;
-        b=eTVqphznEInDiS0VczP2VH9UF64/BJfL7J8XhAWxO57KqR8nM9Y+bdEcdMyBeRLpGO
-         FqEih12Qf+pWy1tJ2TEspOFyl9IxqiNMAFJzzLNsNizHu4HFP9edfEJH1+1/RrYTe2al
-         HGveGpWjcynEkH5L1g2f71izsxYZPr/dSUcxfmiTma3KYoaZqKmxyNeh926LdoF3xVoD
-         nFTI124ZrMkDlYKeq1MMFQK8bw1ihoIbXkdCd3xQw9GPp2UoVapytDiYmFCe+dTetnF8
-         JAbu9x4GGg4+cLPMWElH6S1V/ob93h1wuOwzdyTq4PDR7ZGKg7yMvgdnCZY9PB42FWPJ
-         KXvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715290929; x=1715895729;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mWiEw6OZOjWrMlF7JIfpMQ4VjNqi64jS5UnPYz95OZ8=;
-        b=NcVLRDup3thOTNA9jShSE/MFGj6mkoizmXwob+FmwNXSATpaVom3DvA8NReAJagx3f
-         VWXquMt6dO2M0htFIQkc/WKL4ArhDhLYIyGLC368r2gR3DG8xcPtv5uxsDJDpF4vQazH
-         lMuZ3HKQ8N1cFPoeswhT7NMDipWrX6MOShlhEN2E/FrUlEH5JSSxwZ7RdCx9Yax4ojXB
-         10nGPaafmVakj+0u3bPCiJdVMeBNXXuGXpkvTOl6n/eiPAqLFAUhCTT8rZ2vOzFjgY4c
-         tE2j0u1t4VWBm8EwWX0wFJRfT4Zhlx6UFyJ2bszalkcqkCpILDB9sZt6Z4L2a9+SGaOo
-         rxKw==
-X-Forwarded-Encrypted: i=1; AJvYcCUq40TGPzjtpJauxTC0wV4zUicH64Dx8NXn4q5Qg5CopUd6Mn91gSHO2re9LuebPfAjjFC9OTysC7UZvAbubiGfePbXBYWmri+WUzGV
-X-Gm-Message-State: AOJu0YyOBtJa1LW1rM0LL6T737kyDiest/IzmzFHZK9BFoR6DeaYQ9eV
-	hk0GM/d1k1C3suvpBW75FaNPUc60jdKuMTRQul4hnQaqV/NCCkVQk4YZxUEY3pg=
-X-Google-Smtp-Source: AGHT+IGTpPDGkQCDLZt6tcLLMFMDJc5KKSgY3+50vm30L4sanYzfyVqp2bPZ6X5+JuA63Tj/y5DeVA==
-X-Received: by 2002:a17:906:5613:b0:a59:ccc3:544 with SMTP id a640c23a62f3a-a5a1155b4f4mr356392966b.2.1715290929531;
-        Thu, 09 May 2024 14:42:09 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01598sm116496666b.178.2024.05.09.14.42.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 14:42:09 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: arnd@arndb.de
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	gerg@linux-m68k.org,
-	glaubitz@physik.fu-berlin.de,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	nico@fluxnic.net,
-	pabeni@redhat.com,
-	thorsten.blum@toblux.com,
-	andrew@lunn.ch
-Subject: [PATCH v2] net: smc91x: Fix m68k kernel compilation for ColdFire CPU
-Date: Thu,  9 May 2024 23:37:45 +0200
-Message-ID: <20240509213743.175221-3-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <2ef3df08-ffc7-4925-82bf-0813c8b0b439@app.fastmail.com>
-References: <2ef3df08-ffc7-4925-82bf-0813c8b0b439@app.fastmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EFXd/X54"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E7F9C116B1;
+	Thu,  9 May 2024 21:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715290983;
+	bh=jYlo5TQS0AnXYq32ycelwNFKPF0VaUE7YGHwtFDwiW8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EFXd/X54w7+lDfRAkiscYpZgXlzW7czFvKUgANnwcVlrWYQYDW+0XTrwPqLm9ftrZ
+	 9OlpMWWbeUSv+h3VjYIwjw6FRgEWA3nnwUlbMYoLkbX+D2cwPp4w8Arz8dr9rf9Acw
+	 YtrGX/kzgGeDG9zyyjih5dR3JsYhUBPGvDKU4Wdw8M1uq0e+Ydx5u/KG2kTMCrsqcd
+	 z5Imt0yqYSiqpoTlhp/w8YEY7DBw5KF0ItKi7JJiMQTBwb/O8yyOX4a9E7zbRKj4c4
+	 tvh7TYZH0/muj2ZlWjKacdv8M5i4lzBUMY+v3nJ6w+6HemnNqgE991tQhkqWyhkN1l
+	 f2S60zbOcfpdQ==
+Date: Thu, 9 May 2024 18:43:00 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf tracepoint: Don't scan all tracepoints to test
+ if one exists
+Message-ID: <Zj1DZMB3fzVMPyzE@x1>
+References: <20240509153245.1990426-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240509153245.1990426-1-irogers@google.com>
 
-Compiling the m68k kernel with support for the ColdFire CPU family fails
-with the following error:
+On Thu, May 09, 2024 at 08:32:45AM -0700, Ian Rogers wrote:
+> In is_valid_tracepoint, rather than scanning
+> "/sys/kernel/tracing/events/*/*" skipping any path where
+> "/sys/kernel/tracing/events/*/*/id" doesn't exist, and then testing if
+> "*:*" matches the tracepoint name, just use the given tracepoint name
+> replace the ':' with '/' and see if the id file exists. This turns a
+> nested directory search into a single file available test.
+> 
+> Rather than return 1 for valid and 0 for invalid, return true and
+> false.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> v2. Fix potential uninitialized use on memory allocation failure path.
 
-In file included from drivers/net/ethernet/smsc/smc91x.c:80:
-drivers/net/ethernet/smsc/smc91x.c: In function ‘smc_reset’:
-drivers/net/ethernet/smsc/smc91x.h:160:40: error: implicit declaration of function ‘_swapw’; did you mean ‘swap’? [-Werror=implicit-function-declaration]
-  160 | #define SMC_outw(lp, v, a, r)   writew(_swapw(v), (a) + (r))
-      |                                        ^~~~~~
-drivers/net/ethernet/smsc/smc91x.h:904:25: note: in expansion of macro ‘SMC_outw’
-  904 |                         SMC_outw(lp, x, ioaddr, BANK_SELECT);           \
-      |                         ^~~~~~~~
-drivers/net/ethernet/smsc/smc91x.c:250:9: note: in expansion of macro ‘SMC_SELECT_BANK’
-  250 |         SMC_SELECT_BANK(lp, 2);
-      |         ^~~~~~~~~~~~~~~
-cc1: some warnings being treated as errors
 
-The function _swapw() was removed in commit d97cf70af097 ("m68k: use
-asm-generic/io.h for non-MMU io access functions"), but is still used in
-drivers/net/ethernet/smsc/smc91x.h.
 
-Use ioread16be() and iowrite16be() to resolve the error.
+Thanks, applied to perf-tools-next,
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
-Changes in v2:
-- Use ioread16be() and iowrite16be() directly instead of re-adding
-  _swapw() as suggested by Arnd Bergmann and Andrew Lunn
----
- drivers/net/ethernet/smsc/smc91x.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+- Arnaldo
 
-diff --git a/drivers/net/ethernet/smsc/smc91x.h b/drivers/net/ethernet/smsc/smc91x.h
-index 46eee747c699..45ef5ac0788a 100644
---- a/drivers/net/ethernet/smsc/smc91x.h
-+++ b/drivers/net/ethernet/smsc/smc91x.h
-@@ -156,8 +156,8 @@ static inline void mcf_outsw(void *a, unsigned char *p, int l)
- 		writew(*wp++, a);
- }
- 
--#define SMC_inw(a, r)		_swapw(readw((a) + (r)))
--#define SMC_outw(lp, v, a, r)	writew(_swapw(v), (a) + (r))
-+#define SMC_inw(a, r)		ioread16be((a) + (r))
-+#define SMC_outw(lp, v, a, r)	iowrite16be(v, (a) + (r))
- #define SMC_insw(a, r, p, l)	mcf_insw(a + r, p, l)
- #define SMC_outsw(a, r, p, l)	mcf_outsw(a + r, p, l)
- 
--- 
-2.45.0
-
+> ---
+>  tools/perf/util/tracepoint.c | 56 ++++++++++++++----------------------
+>  tools/perf/util/tracepoint.h |  3 +-
+>  2 files changed, 24 insertions(+), 35 deletions(-)
+> 
+> diff --git a/tools/perf/util/tracepoint.c b/tools/perf/util/tracepoint.c
+> index 92dd8b455b90..bb06d10fbe37 100644
+> --- a/tools/perf/util/tracepoint.c
+> +++ b/tools/perf/util/tracepoint.c
+> @@ -4,10 +4,12 @@
+>  #include <errno.h>
+>  #include <fcntl.h>
+>  #include <stdio.h>
+> +#include <stdlib.h>
+>  #include <sys/param.h>
+>  #include <unistd.h>
+>  
+>  #include <api/fs/tracing_path.h>
+> +#include "fncache.h"
+>  
+>  int tp_event_has_id(const char *dir_path, struct dirent *evt_dir)
+>  {
+> @@ -26,39 +28,25 @@ int tp_event_has_id(const char *dir_path, struct dirent *evt_dir)
+>  /*
+>   * Check whether event is in <debugfs_mount_point>/tracing/events
+>   */
+> -int is_valid_tracepoint(const char *event_string)
+> +bool is_valid_tracepoint(const char *event_string)
+>  {
+> -	DIR *sys_dir, *evt_dir;
+> -	struct dirent *sys_dirent, *evt_dirent;
+> -	char evt_path[MAXPATHLEN];
+> -	char *dir_path;
+> -
+> -	sys_dir = tracing_events__opendir();
+> -	if (!sys_dir)
+> -		return 0;
+> -
+> -	for_each_subsystem(sys_dir, sys_dirent) {
+> -		dir_path = get_events_file(sys_dirent->d_name);
+> -		if (!dir_path)
+> -			continue;
+> -		evt_dir = opendir(dir_path);
+> -		if (!evt_dir)
+> -			goto next;
+> -
+> -		for_each_event(dir_path, evt_dir, evt_dirent) {
+> -			snprintf(evt_path, MAXPATHLEN, "%s:%s",
+> -				 sys_dirent->d_name, evt_dirent->d_name);
+> -			if (!strcmp(evt_path, event_string)) {
+> -				closedir(evt_dir);
+> -				put_events_file(dir_path);
+> -				closedir(sys_dir);
+> -				return 1;
+> -			}
+> -		}
+> -		closedir(evt_dir);
+> -next:
+> -		put_events_file(dir_path);
+> -	}
+> -	closedir(sys_dir);
+> -	return 0;
+> +	char *dst, *path = malloc(strlen(event_string) + 4); /* Space for "/id\0". */
+> +	const char *src;
+> +	bool have_file = false; /* Conservatively return false if memory allocation failed. */
+> +
+> +	if (!path)
+> +		return false;
+> +
+> +	/* Copy event_string replacing the ':' with '/'. */
+> +	for (src = event_string, dst = path; *src; src++, dst++)
+> +		*dst = (*src == ':') ? '/' : *src;
+> +	/* Add "/id\0". */
+> +	memcpy(dst, "/id", 4);
+> +
+> +	dst = get_events_file(path);
+> +	if (dst)
+> +		have_file = file_available(dst);
+> +	free(dst);
+> +	free(path);
+> +	return have_file;
+>  }
+> diff --git a/tools/perf/util/tracepoint.h b/tools/perf/util/tracepoint.h
+> index c4a110fe87d7..65ccb01fc312 100644
+> --- a/tools/perf/util/tracepoint.h
+> +++ b/tools/perf/util/tracepoint.h
+> @@ -4,6 +4,7 @@
+>  
+>  #include <dirent.h>
+>  #include <string.h>
+> +#include <stdbool.h>
+>  
+>  int tp_event_has_id(const char *dir_path, struct dirent *evt_dir);
+>  
+> @@ -20,6 +21,6 @@ int tp_event_has_id(const char *dir_path, struct dirent *evt_dir);
+>  		    (strcmp(sys_dirent->d_name, ".")) &&	\
+>  		    (strcmp(sys_dirent->d_name, "..")))
+>  
+> -int is_valid_tracepoint(const char *event_string);
+> +bool is_valid_tracepoint(const char *event_string);
+>  
+>  #endif /* __PERF_TRACEPOINT_H */
+> -- 
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
