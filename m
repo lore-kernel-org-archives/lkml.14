@@ -1,83 +1,121 @@
-Received: from smtp2.tecnico.ulisboa.pt (smtp2.tecnico.ulisboa.pt [193.136.128.22])
+Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1E315E811;
-	Thu,  9 May 2024 15:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.136.128.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A3D12A179;
+	Thu,  9 May 2024 15:38:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715268958; cv=none; b=VXnLRVfl7c+8cfYr2QxLNkkiefSkP9ILBi+yAQdBhnN4dCpG9yMtgoPf94o0I8Guwnxut9BXaAgUOCUUWqm++hjZoO7vR16lwU+J7vlfhO2c3zc/o5gL5zOCbX4vPSPLnMshznLPBMlwruGC6D6uUe2OTJBP1t22W9yGfdiQTpQ=
+	t=1715269098; cv=none; b=bjKAKIF4sqhNBqX7LcZ1pa0gDg+By3Gxn7o4zGFWMVSP54LKhXYodt4W5Nv5Swrdj5DLGjJKX8RxcYhi5IreXTBXKfrqrd5kZXq6VOfZwePTE242dIXuu5fDa0RaFatR74VrFnzLZIKikL2yNdEuPzi2bkhqQYHijeBpZ1Yngxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715268958; c=relaxed/simple;
-	bh=0IwlJOke6CGpKn6GzMdc7ZgMSv9NEztsvyiYpNUTvoY=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RvrE3rj/y7OHn2Vs5qvcN1BQ22Aa15Mz9LoGLe4wAjt/+t5hvgr5b3XHCoEV4dXXxA/gjtLlK9Lu98MtfhwIxKEQzA+KxgnNaXXO2suESxhqe6VpdgYehNfPbgV90D+GL5CtRuzao1Dg87kSHL34cRTyS6MpgE1yxFo2dfk743I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt; spf=pass smtp.mailfrom=tecnico.ulisboa.pt; dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b=CU2NyNob; arc=none smtp.client-ip=193.136.128.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tecnico.ulisboa.pt
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tecnico.ulisboa.pt
+	s=arc-20240116; t=1715269098; c=relaxed/simple;
+	bh=nANHlT8bQuzaSmFK3lwpS7Cj4BPy1dbSvsaWfROiQuQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LNgFo3//ZuQ+/JuGMqaZYmjWuRg27I/wXvE5PIA3Sepsy0skYgK3NNJfSbMmuFoZ8jqhhYEUIIR9Vghr1mImk0FsqGd2XmK+45AyezDZI6A2Ps+FYM8c7gesAj3gqBsoL5nLKDycdX9QpRv7yLoHhCYKFCjrhkwHYMhFxTarKLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=l2NteKRJ; arc=none smtp.client-ip=78.40.148.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tecnico.ulisboa.pt header.i=@tecnico.ulisboa.pt header.b="CU2NyNob"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp2.tecnico.ulisboa.pt (Postfix) with ESMTP id 7245B24543D;
-	Thu,  9 May 2024 16:27:50 +0100 (WEST)
-X-Virus-Scanned: by amavis-2.13.0 (20230106) (Debian) at tecnico.ulisboa.pt
-Received: from smtp2.tecnico.ulisboa.pt ([127.0.0.1])
- by localhost (smtp2.tecnico.ulisboa.pt [127.0.0.1]) (amavis, port 10025)
- with LMTP id 7CMGq9N0DNpK; Thu,  9 May 2024 16:27:48 +0100 (WEST)
-Received: from mail1.tecnico.ulisboa.pt (mail1.ist.utl.pt [IPv6:2001:690:2100:1::b3dd:b9ac])
-	by smtp2.tecnico.ulisboa.pt (Postfix) with ESMTPS id DBA242453F5;
-	Thu,  9 May 2024 16:27:47 +0100 (WEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tecnico.ulisboa.pt;
-	s=mail; t=1715268468;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xOzTJIUOd/eGZ7Rkf6Lh1ZnSkkcXA6C+E/1fEogp20w=;
-	b=CU2NyNob9VPf66D1AeOFrHBj6evmHMz4ShGTDidF7nPR0S6wHJ0CSbhlKQ9xZEVMOZtnnR
-	Cq+1n+6remb86TsNHtIguzauh4Ild9wmhtJ8FFydY3pdx5PDMlyPvTHEOF7zGeCjMNhLHY
-	1aCF2W4DbL1edcRa5086fFSJucJG1H8=
-Received: from diogo-gram.home (unknown [IPv6:2a01:14:8070:dc60:4589:2164:1bc5:2670])
-	(Authenticated sender: ist187313)
-	by mail1.tecnico.ulisboa.pt (Postfix) with ESMTPSA id 4CBAC3600AE;
-	Thu,  9 May 2024 16:27:47 +0100 (WEST)
-Date: Thu, 9 May 2024 16:27:41 +0100
-From: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-To: heikki.krogerus@linux.intel.com, gregkh@linuxfoundation.org, 
-	lk@c--e.de, u.kleine-koenig@pengutronix.de, linux-usb@vger.kernel.org, 
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="l2NteKRJ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
+	MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=50SVXh7j8YqDqiQBc6TkcGnGUn+l90zrT0o1BlM2Ags=; b=l2NteKRJVsFxAzIoByojnt/Vfu
+	qGc+PJQHO+cCUCM6K4zGy6fOQD5KE+qffxitaRdbqmKL5FVtNuvHqa1CUlzu9Dd2/QgtUgGQfmXdD
+	6HHEkXyCZ8e1zJVkxBx6tUYdJdsjIJTQF2XY+fNNcCHzSwtscyCuT9OFRzvQLn0X+KnpYwRmybtAi
+	mu/DURR1YvT4emFjagxsU1an1mnNDGaEOR3m4AN++mm/crvPkK3CcqbYwLReek35RrX8ONz0XZ004
+	PS2E0AmL6FxHEC1zYtrUPgjkl4gidrmvmNdZ2riFTfsxHbbSFHd0eRchxnv9/V+oH5owo6jzDCxCJ
+	EkdfNMQQ==;
+Received: from [167.98.27.226] (helo=ct-lt-2504.office.codethink.co.uk)
+	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1s55qI-000cg5-FA; Thu, 09 May 2024 16:37:59 +0100
+From: Ivan Orlov <ivan.orlov@codethink.co.uk>
+To: pbonzini@redhat.com,
+	shuah@kernel.org
+Cc: Ivan Orlov <ivan.orlov@codethink.co.uk>,
+	kvm@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] usb: typec: ucsi_acpi: Add LG Gram quirk
-Message-ID: <5fh2v2dcjjcgg3qgvbhlsf24kfigzzbv3sq5ykjuwyjodbqzsa@kf7crcyswm5y>
-References: <5qc55gruhn4pmutiukohauki5dehba6n2k22jgvpt7i3hafkon@v2ng2a33o7vv>
+Subject: [PATCH] KVM: selftests: Check API version when creating VM
+Date: Thu,  9 May 2024 16:37:57 +0100
+Message-Id: <20240509153757.42032-1-ivan.orlov@codethink.co.uk>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5qc55gruhn4pmutiukohauki5dehba6n2k22jgvpt7i3hafkon@v2ng2a33o7vv>
+Content-Transfer-Encoding: 8bit
+Sender: ivan.orlov@codethink.co.uk
 
-On Thu, May 09, 2024 at 12:50:36PM GMT, Diogo Ivo wrote:
-> Some LG Gram laptops report a bogus connector change event after a
-> GET_PDOS command for the partner's source PDOs, which disappears from
-> the CCI after acknowledging the command. However, the subsequent
-> GET_CONNECTOR_STATUS in ucsi_handle_connector_change() still reports
-> this bogus change in bits 5 and 6, leading to the UCSI core re-checking
-> the partner's source PDOs and thus to an infinite loop.
-> 
-> Fix this by adding a quirk that signals when a potentially buggy GET_PDOS
-> command is used, checks the status change report and clears it if it is a
-> bogus event before sending it to the UCSI core.
-> 
-> [Sending as RFC both to see if this is a good idea and so that more
-> users can test it to gather all the models affected by this bug.]
-> 
-> Signed-off-by: Diogo Ivo <diogo.ivo@tecnico.ulisboa.pt>
-> ---
+As it is said in the docs, we should always check the KVM API version
+before running the KVM-based applications. Add the function which
+queries the current KVM API version through `ioctl` to the `kvm_util.c`
+file.
 
-I just realized that I should be using the {set, test, clear}_bit()
-functions in the patch I sent, sorry for that. With this in mind it
-would still be good to hear what you think about it.
+Add a new TEST_REQUIRE statement to the `vm_open` function in order
+to verify the version of the KVM API before creating a VM.
 
-Best regards,
-Diogo
+Signed-off-by: Ivan Orlov <ivan.orlov@codethink.co.uk>
+---
+ .../testing/selftests/kvm/include/kvm_util_base.h  |  2 ++
+ tools/testing/selftests/kvm/lib/kvm_util.c         | 14 ++++++++++++++
+ 2 files changed, 16 insertions(+)
+
+diff --git a/tools/testing/selftests/kvm/include/kvm_util_base.h b/tools/testing/selftests/kvm/include/kvm_util_base.h
+index 3e0db283a46a..d7a83387ae33 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util_base.h
++++ b/tools/testing/selftests/kvm/include/kvm_util_base.h
+@@ -38,6 +38,7 @@
+ #define kvm_static_assert(expr, ...) __kvm_static_assert(expr, ##__VA_ARGS__, #expr)
+ 
+ #define KVM_DEV_PATH "/dev/kvm"
++#define KVM_DEFAULT_API_VERSION 12
+ #define KVM_MAX_VCPUS 512
+ 
+ #define NSEC_PER_SEC 1000000000L
+@@ -275,6 +276,7 @@ int get_kvm_intel_param_integer(const char *param);
+ int get_kvm_amd_param_integer(const char *param);
+ 
+ unsigned int kvm_check_cap(long cap);
++int kvm_get_api_version(void);
+ 
+ static inline bool kvm_has_cap(long cap)
+ {
+diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+index b2262b5fad9e..58a5deccb388 100644
+--- a/tools/testing/selftests/kvm/lib/kvm_util.c
++++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+@@ -176,6 +176,19 @@ unsigned int kvm_check_cap(long cap)
+ 	return (unsigned int)ret;
+ }
+ 
++int kvm_get_api_version(void)
++{
++	int ret;
++	int kvm_fd;
++
++	kvm_fd = open_kvm_dev_path_or_exit();
++	ret = __kvm_ioctl(kvm_fd, KVM_GET_API_VERSION, NULL);
++
++	close(kvm_fd);
++
++	return ret;
++}
++
+ void vm_enable_dirty_ring(struct kvm_vm *vm, uint32_t ring_size)
+ {
+ 	if (vm_check_cap(vm, KVM_CAP_DIRTY_LOG_RING_ACQ_REL))
+@@ -190,6 +203,7 @@ static void vm_open(struct kvm_vm *vm)
+ 	vm->kvm_fd = _open_kvm_dev_path_or_exit(O_RDWR);
+ 
+ 	TEST_REQUIRE(kvm_has_cap(KVM_CAP_IMMEDIATE_EXIT));
++	TEST_REQUIRE(kvm_get_api_version() == KVM_DEFAULT_API_VERSION);
+ 
+ 	vm->fd = __kvm_ioctl(vm->kvm_fd, KVM_CREATE_VM, (void *)vm->type);
+ 	TEST_ASSERT(vm->fd >= 0, KVM_IOCTL_ERROR(KVM_CREATE_VM, vm->fd));
+-- 
+2.34.1
+
