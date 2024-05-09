@@ -1,59 +1,61 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E157C0AB
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 06:52:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A69F13C801
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 06:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715237527; cv=none; b=gm2JzhObTR228A1W//R1vWR2gT1NQgaNw/938j5OQXogssocXf+74aiat7YoMZlG+W5/6E3R8KS7TNqTQk6PzLIjD4GFLYEwD8+BEjpJbEJFNCa4fuG4sbMbl10KrlREfQ+Sk0Bmh0u4IwHxRwXulpMnKDAdu9DYVvZDGuEErg4=
+	t=1715237529; cv=none; b=tym/4s/PiodtH0YUmaj5jjVCS0Qz5vcMn3AknYjimn2cZOQltknULxullPRA3Lp7pXfUgvACh0Hc5n5zwYDA09m1PKZs0xWxeI+yCp20J46pA03wmrYYFZLXWiVzXInUmc3eVjuROoBnpduLJfZF0yiN/9M3FEYO3h+k1gO2Sek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715237527; c=relaxed/simple;
-	bh=rOxCVpuvUmbACYXpkXKZKRD3h2JXgl6Ma28qOmXdJFk=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=L3RaHO3TuqBNzCOss0WOiE4OYhY/pSU7Z5MynDaVLOtS6IaAjfXjoCZGPVl8na0a53eCXe3IKZFjRxZBle5A7UEH5cclF/FWRsRK2YgfnjlqKU0HJU9vXBcXigMen1nAqkQhszqLrKXtsQfzwqiwmMsb+NNv+vgED2qwf9I929w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bcDDk0fh; arc=none smtp.client-ip=209.85.218.49
+	s=arc-20240116; t=1715237529; c=relaxed/simple;
+	bh=d+whTvaCUFBkWJxrgaqvE8kSJoAykKqRo1KOv90DlbU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ldb00JmWh7plEsF3CXBPEPXzrs2ryKLUdPkHAihKm5/bsakGR54txCi52lJABcwuYUpVBUwp05kq8tUbl5Eef8lzJ8HuqyJ9WaNjNjQUneX7/o0M1qmTQzTpfohTFoM3siO3AoLOYpswJFmt8odBbPQThJClCaxC2rhEyhnULoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JpbWUyvA; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bcDDk0fh"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a59cdf7cd78so126420966b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 23:52:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JpbWUyvA"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-573137ba8d7so3043421a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 23:52:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715237523; x=1715842323; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7rnP8lifwF80Zq93ecat3fo7l4f28X4MCb0bTfRERyQ=;
-        b=bcDDk0fhV6fH9poBnJOcTWuLPAyx1KxlO484Cdfxdb22oPFkdDivXS6q2VydScC629
-         Zj4hxL5I+Om9eKbpDP//BmeUytn8MJgUW4GF0Qz7bdCP6iwAwjrhmzsF7hVc83EX9iOF
-         eQ+EjWJzYqGeLl0h5w35C5QceYoEi0cVrn+YodrIyhzkxZP0EsiuivEk88+HJHD+n/WR
-         0MmnHIIXws3OEihsEwO4UyUm0I+xmHBBJnTdKyIDUM+LGNX+rs+3ye+srXzvwMb4Mk5n
-         jg7038BeY+r42HrlrLGyPUZr4Xt8nDia4uxF2qrSWscxKz/Tr7Spgp2y6ARYqw6BlPQc
-         PooQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715237523; x=1715842323;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1715237526; x=1715842326; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7rnP8lifwF80Zq93ecat3fo7l4f28X4MCb0bTfRERyQ=;
-        b=qrGyU4yCtWUma0xHUwzCRf3fbyGpfkdU+fjAKHGRlFXnurgvTXcUI9PP3RUi1PiV1n
-         uA0DHr6xtwLnAwwTIjPG2fm2XDstinG3Q4XRTtE9gIgn7CPRGf+DtG+BV1y65hjSoRa7
-         04tIWzEg3bG78Padd8xmhy/TkFwlSICNxsikTfpPaR06QNad3TRIVyWlA4l5F1YUm9dF
-         c7hJ9pVifaQJI4bDzAbj1uLoK9Lb/3d0SzgvscM+JGvSZEeV2Uf2W25KP+Zes3lcJ/Km
-         Dlbv0Gh8xPGu0OC1UiDrzEVGGb4fy/4Cfn5AOMdEX1zUzd9giJZQWVwYBOyz4xTk1+Ky
-         m2Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCVpN9uqr2i4V5+HyEgz48oEx/478JMNe6I8kzIKdMC0tQx7Z54EuQ+imscWwADREkor5kGpYd8uEEJRYVAU79YVPaKGHbDSCvduiPIt
-X-Gm-Message-State: AOJu0YxpOVbUAciCxeselWVRbb/JJgl5lAkxbGdrwy6t8S9gmi3BkvyG
-	kqTjH9O7wsuNvMTOLcpQQEgjC+d25hqNOqHDu+aOSJyLqy12uWaXFQE/t3U0Urk=
-X-Google-Smtp-Source: AGHT+IFdc13lszpf7lxX/nmLUxwCIGMYlPf62pSkNTQt4xpiimPjtHkcnxTGJfCijKqU+LZx+421gg==
-X-Received: by 2002:a17:906:3c08:b0:a5a:15ac:13fa with SMTP id a640c23a62f3a-a5a15ac1545mr60104166b.38.1715237522834;
-        Wed, 08 May 2024 23:52:02 -0700 (PDT)
+        bh=0J7Cge03mHzKytqfe46M5SWmiJDYT6L/0iD5WUZ2XNk=;
+        b=JpbWUyvAVP7zWnwVMZINWZu12kWmwNhM0vpNcctev5gTNV6RSj/eLQco4JbOD3Fl4r
+         RNhBIRbgi4KEV6hQc8Dc5of8g5uFNovXn1iP/Pr77wIthXimK0GzpEBQTa8y+o+3vWdv
+         papBOMW58zeVG0C3xBuqXqQ8BtayMc74IQHDPONvHrmIN4odfsjtZdawHTdrM2FrdTYB
+         s3pZR6dv7eQ2SwVPO9MTCoI1adHcYRAl0YL8E92T59dMJu8vIuD0hrsY/MWmyFBbHIrJ
+         D2qLFPTBxuo5rlTxGXF6S8YkVlP0VqHoALI/RKOhJmrW68JPHRkmnDHi5VJOsD7hgcMy
+         wyWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715237526; x=1715842326;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0J7Cge03mHzKytqfe46M5SWmiJDYT6L/0iD5WUZ2XNk=;
+        b=V2c85I/NMWs+x6dAZMt20xOS/eHJxTojb2CcK/QNLCQ3FYg4rR0mmwZsLICjAg5Lp7
+         tQXR4JLLVMFv1uAwyMSzBWKYodY4lRSnkKGXI4bl3e6VLgR//L4ap+KpuoBasyiIl+6O
+         6dP0IgTV2QqbEKsOzyKRJTWUmEeavRdlJPp/qxDMwgcZJrhtYUOxmrseLn06IbrkV9Xt
+         j59nT9JCoDeHqXay90Fs7/yQnxvy/uNnvC11+fnB8SGWKqi0jXB7gcx6NuC4ssm2bKmT
+         kVNW+Tb0/Z2uN8cdvq6ptUvbMfZmGRInyPqowCAU/0ufV6KPqdphqQAGQGhfdQ74i3fr
+         93/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWFixaSuXWYjImHF8uyDTTzfFwOGHfoPOem0Vcl2pPZKyrcCswE7dfuNSoKqs0IQ1StQWkSCHMOhYkNeequ2WhaARLWljx1cowgkk3V
+X-Gm-Message-State: AOJu0Yy56vEUb69jhiEz40M2tq0s76/2Sfcwm4+QeIXF8Z/WRgj02QYE
+	ZbrmQSHasRby91PEDo/93E6dAnUdxdFJh/YUh1fTe4gkNNK5MyZ9ZjF+cJHjMHo=
+X-Google-Smtp-Source: AGHT+IH4IKNh6xpMCbzmAZuvEhTaQU2/vdq+j0ULoUFdsjxmj+MDwNstEIfCxKnQbGOb9UNNxYbSYw==
+X-Received: by 2002:a17:906:1d59:b0:a59:bf27:5f2e with SMTP id a640c23a62f3a-a5a11682723mr138739566b.20.1715237526603;
+        Wed, 08 May 2024 23:52:06 -0700 (PDT)
 Received: from [127.0.1.1] ([178.197.206.169])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c81b4sm40730966b.113.2024.05.08.23.52.01
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c81b4sm40730966b.113.2024.05.08.23.52.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 23:52:02 -0700 (PDT)
+        Wed, 08 May 2024 23:52:06 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v3 0/4] ASoC: qcom: x1e80100: Correct channel mapping
-Date: Thu, 09 May 2024 08:51:51 +0200
-Message-Id: <20240509-asoc-x1e80100-4-channel-mapping-v3-0-6f874552d7b2@linaro.org>
+Date: Thu, 09 May 2024 08:51:53 +0200
+Subject: [PATCH v3 2/4] ASoC: qcom: q6apm-lpass-dais: Implement proper
+ channel mapping
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,10 +64,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIdyPGYC/43NTQ6CMBCG4auQrh0zLZQfV97DuChlgCbYktY0G
- MLdLax0pct3Mnm+lQXyhgK7ZCvzFE0wzqbITxnTo7IDgelSM4GiQIkVqOA0LJxq5IhQwP5laYK
- HmmdjByAlexRtQ2VVs6TMnnqzHAu3e+rRhKfzr2Mw8v36vx05ILRcaJ4TKim762Ss8u7s/MB2P
- IpPsP4NigRqTX2jylLJSnyB27a9AS0hH3sgAQAA
+Message-Id: <20240509-asoc-x1e80100-4-channel-mapping-v3-2-6f874552d7b2@linaro.org>
+References: <20240509-asoc-x1e80100-4-channel-mapping-v3-0-6f874552d7b2@linaro.org>
+In-Reply-To: <20240509-asoc-x1e80100-4-channel-mapping-v3-0-6f874552d7b2@linaro.org>
 To: James Schulman <james.schulman@cirrus.com>, 
  David Rhodes <david.rhodes@cirrus.com>, 
  Richard Fitzgerald <rf@opensource.cirrus.com>, 
@@ -77,89 +78,103 @@ To: James Schulman <james.schulman@cirrus.com>,
  Banajit Goswami <bgoswami@quicinc.com>
 Cc: alsa-devel@alsa-project.org, patches@opensource.cirrus.com, 
  linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Charles Keepax <ckeepax@opensource.cirrus.com>, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2549;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2494;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=rOxCVpuvUmbACYXpkXKZKRD3h2JXgl6Ma28qOmXdJFk=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmPHKK+jVIzjueNuFIpjzLc9l0An3OYN7GlvfDY
- r/bfc0O8A+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjxyigAKCRDBN2bmhouD
- 1xX3EACFu/Wuja+nxzB5jFUGdRcGxTyLQNgkhNQkHXBONE9jJdNSUm0BlyHE78b6wPVxwiYbuyM
- kkSxNw0UlZOHUrLn8eSWXDJYVXXOqDFUM5P4TXS3UVPbGguTL5hw6CZJWbDkVTGCgQ7PR1+ghWj
- J64mXAZdnY+BjQ7PPvP5MpxdfuHIrJu0jcNI6/Jgfam0GDcCADhXHzmITQsjZyjAUhKDolhSpVy
- Ln1DNg2myYcHCYSb+eZieOC68XEDzDCb5gkdLL95xe+36rXWVgN3obOsVXys4WSiIEXMKse6Lm9
- NYbCRq/OXov1nG0EFDae55WzY3upKHAGWNib3cGW7UDZ2MUkR7X501nII5BDB0s3SilXNmXmAuM
- sZT1/pufvqXxCCndfx8fwiarp1LVpwMaeHL262ODAcgSY/TPxQsGWjekujtAIVxJ2FRoounknfk
- rLN+umADyowLivtNDX/2rNywtuhhPHKVzMZz/wB/MAU6Ik82b9x0EIPawIkZMhnu8ENg9OddgeF
- LGnFCfSYP3OdxNPG6+Wun3P1mcB5MZmJ3Ujn5nPq0BtnT5r0sO0XkRBDzJSGiIj0v0Q9vte3CiA
- fywMS6aYF2xRvq94fU4wJgfda3xHAmEI7ktV7xD9UWFCOpRfVdk/c0rM9NmSUzf8x7HGzMx4fza
- SL4xj09R6U4NphQ==
+ bh=d+whTvaCUFBkWJxrgaqvE8kSJoAykKqRo1KOv90DlbU=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBmPHKObjbPYBWnxiwlH8jsOSlJbKFmyvJBSfmlT
+ eN8kByPWESJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCZjxyjgAKCRDBN2bmhouD
+ 18JbD/9TSwfYyfYQp7SbyFFtB/5vWzBB/5ob3Y49B4bnnmlY5PltbLl93/4+Yo1P7bJxbIEldpF
+ w8rMSBJ3btQPJh/NCLQ3Q0+smAbIGO6JXLsSc5FqeZOz+wWRCkw4DCWOkSvDsNnFBsYM+JKe8e0
+ FDwkrk/jt42QYhs9hq+Hga75z9QhSPDU7q/6at15xDiHzWTfNik8p3omeqXPPmJPe2YADmunJnV
+ +h1LszPO9ae3mYoMXWTNVS48xHMAXZt0uDZcVXGTjB9R0Qk7/pBM6vSBufclDHu6VHBVGvAxe5O
+ oSGbc+LyG1d+cqETUS8wmQMwcATzOF8VV061XMZ3nzA3x9HzvRg/+Mc+0SnlVmHbps+RqfHfGEh
+ csSEq3Mu7t7Q+udgVovepeUAdgNRar7Lkz/AGPEsZ8DGtwJJedYTlLqtBqJrf/UYL+SYVHJfNAl
+ KFOMFaUdDXtPmKaelga4R7Xb6xYbBdJWL4MNtw9LTbAyejDa6lJfHPt7Pz5FxV/YQYwIdDdoa0Q
+ LD7BLTTFSHNZFsBoi/h1Bon/WIDdjRqYJfjds+7DT9fGqvO1ifHLM2Q57Vqu7fyUfgCcXMwjt2F
+ 1xPzwJbvAOGt+AiopgDaCB3s8DyqvXTUH1r1zed9B8bpSRrvlCNBzC/beCkYB0Q+mA0py9InfEZ
+ jtI6YUTw1yQnUiw==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Hi,
+The set_channel_map() implementation in q6apm-lpass-dais driver was
+copying older pre-Audioreach code from q6afe-dai driver, but not really
+using it.  The code sets active channel mask based on passed channel
+mapping, but Audioreach code does not use that mask ever.  Audioreach
+module configuration does have on the other hand proper channel mapping
+field, which should supersed that active channel mask.
 
-First patch is a build dependency.
+Drop the unused active channel mask and implement proper mapping of
+channels in q6apm-lpass-dais driver.
 
-Changes in v3:
-- Add missing Charles' Ack
-- Link to v2: https://lore.kernel.org/r/20240508-asoc-x1e80100-4-channel-mapping-v2-0-ccef9a66a572@linaro.org
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+---
 
 Changes in v2:
-- Re-work most of the idea according to Srini comments: set channel
-  mapping for backend DAIs, not frontend.
-- Patch #1: no changes
-- Patch #2 is entirely replaced - now channel mapping is implemented in
-  q6apm-lpass-dais.
-- Patch #3: rework to new approach, but most of the code stays.
-- Patch #4: rework significantly, because only backend DAIs is now
-  affected.
-- Link to v1: https://lore.kernel.org/r/20240507-asoc-x1e80100-4-channel-mapping-v1-0-b12c13e0a55d@linaro.org
-
-Description
-===========
-X1E80100 CRD is the first board, which comes with four speakers, so we
-still keep fixing and adding missing pieces.
-
-The board has speaker arranged as left front+back and then right
-front+back.  Using default channel mapping causes front right speaker to
-play left back stream.
-
-Adjust the channel maps for frontend DAIs to fix stereo and four-channel
-playback.
-
-Best regards,
-Krzysztof
-
+1. Entirely replaced - now channel mapping is implemented in
+   q6apm-lpass-dais.
 ---
-Krzysztof Kozlowski (4):
-      ASoC: Constify channel mapping array arguments in set_channel_map()
-      ASoC: qcom: q6apm-lpass-dais: Implement proper channel mapping
-      ASoC: qcom: qdsp6: Set channel mapping instead of fixed defaults
-      ASoC: qcom: x1e80100: Correct channel mapping
+ sound/soc/qcom/qdsp6/audioreach.h       |  1 -
+ sound/soc/qcom/qdsp6/q6apm-lpass-dais.c | 10 +++++-----
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
- include/sound/cs35l41.h                 |  4 ++--
- include/sound/soc-dai.h                 |  8 ++++----
- sound/soc/codecs/adau7118.c             |  6 ++++--
- sound/soc/codecs/cs35l41-lib.c          |  4 ++--
- sound/soc/codecs/cs35l41.c              |  3 ++-
- sound/soc/codecs/max98504.c             |  6 ++++--
- sound/soc/codecs/wcd9335.c              |  6 ++++--
- sound/soc/codecs/wcd934x.c              |  6 ++++--
- sound/soc/qcom/qdsp6/audioreach.c       | 30 +++++++-----------------------
- sound/soc/qcom/qdsp6/audioreach.h       |  2 +-
- sound/soc/qcom/qdsp6/q6afe-dai.c        | 16 ++++++++++------
- sound/soc/qcom/qdsp6/q6apm-dai.c        |  2 ++
- sound/soc/qcom/qdsp6/q6apm-lpass-dais.c | 21 +++++++++++++--------
- sound/soc/qcom/x1e80100.c               | 18 ++++++++++++++++++
- sound/soc/soc-dai.c                     |  4 ++--
- 15 files changed, 79 insertions(+), 57 deletions(-)
----
-base-commit: 2b84edefcad14934796fad37b16512b6a2ca467e
-change-id: 20240507-asoc-x1e80100-4-channel-mapping-ea5f02b9e678
+diff --git a/sound/soc/qcom/qdsp6/audioreach.h b/sound/soc/qcom/qdsp6/audioreach.h
+index 2c82917b7162..eb9306280988 100644
+--- a/sound/soc/qcom/qdsp6/audioreach.h
++++ b/sound/soc/qcom/qdsp6/audioreach.h
+@@ -755,7 +755,6 @@ struct audioreach_module_config {
+ 
+ 	u16	data_format;
+ 	u16	num_channels;
+-	u16	active_channels_mask;
+ 	u16	dp_idx;
+ 	u32	channel_allocation;
+ 	u32	sd_line_mask;
+diff --git a/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c b/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
+index 6bfbb52345e1..a4ad1d0e6abd 100644
+--- a/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
++++ b/sound/soc/qcom/qdsp6/q6apm-lpass-dais.c
+@@ -33,7 +33,7 @@ static int q6dma_set_channel_map(struct snd_soc_dai *dai,
+ 
+ 	struct q6apm_lpass_dai_data *dai_data = dev_get_drvdata(dai->dev);
+ 	struct audioreach_module_config *cfg = &dai_data->module_config[dai->id];
+-	int ch_mask;
++	int i;
+ 
+ 	switch (dai->id) {
+ 	case WSA_CODEC_DMA_TX_0:
+@@ -58,7 +58,8 @@ static int q6dma_set_channel_map(struct snd_soc_dai *dai,
+ 				tx_num);
+ 			return -EINVAL;
+ 		}
+-		ch_mask = *tx_ch_mask;
++		for (i = 0; i < tx_num; i++)
++			cfg->channel_map[i] = tx_ch_mask[i];
+ 
+ 		break;
+ 	case WSA_CODEC_DMA_RX_0:
+@@ -81,7 +82,8 @@ static int q6dma_set_channel_map(struct snd_soc_dai *dai,
+ 				rx_num);
+ 			return -EINVAL;
+ 		}
+-		ch_mask = *rx_ch_mask;
++		for (i = 0; i < rx_num; i++)
++			cfg->channel_map[i] = rx_ch_mask[i];
+ 
+ 		break;
+ 	default:
+@@ -90,8 +92,6 @@ static int q6dma_set_channel_map(struct snd_soc_dai *dai,
+ 		return -EINVAL;
+ 	}
+ 
+-	cfg->active_channels_mask = ch_mask;
+-
+ 	return 0;
+ }
+ 
 
-Best regards,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.43.0
 
