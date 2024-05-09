@@ -1,87 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB42414B091;
-	Thu,  9 May 2024 12:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 508C514B95A;
+	Thu,  9 May 2024 12:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715257226; cv=none; b=YdLJ49ekwLeEPivWDOuwyARZpwm4HTrmPDf/Mbg0Kka2hjpE9gnOYe0IPU4iTT5/CumdrxpgJkR98I30OTA3CJgS0/MI/xxs1ycEp3cOirTcF6GomDC/7Xm8VDe+mX/jxn1DuEpIiqga6Ukwu+/WdT+9+dwarofnH70A30/Znfs=
+	t=1715257280; cv=none; b=ObOY/NE/ikqP7qZxqLWLFj8XEdTeWp5DrGt0gDOXbWBbTVIncL9M/AXOptFSkk+cVBCpY+2DobAwtTESzYIfSX8ET83nOsC9E0k+ZcYMffJjAvhCScICSQ2LrZquozgCQWAvi34C1c2RhM+dHkVdGMP8uGgiXEJf3cRKf5Hxrzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715257226; c=relaxed/simple;
-	bh=h3t85u57Kt6KbmQLMuFWHWJfsb393pB2tMS6O7Z9wvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RfMB/nlsnwuvctMrqNgmg/voYbfn4MSiG+86Is8/q3dsJjGERVD8xLGhuI0nMvLEFW4Ad3nm633UI8QelAsdjVZ5AzFcOB6J0qoGEwVPeMPYaGtchcd8iMPQSZwuXWxJSkAXZbtf29iEIqtpbwE5Ux4JWm6o4chIQfUGewCGzzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZOw4Qrg0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOw4Qrg0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B836C116B1;
-	Thu,  9 May 2024 12:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715257226;
-	bh=h3t85u57Kt6KbmQLMuFWHWJfsb393pB2tMS6O7Z9wvM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZOw4Qrg0aNgq0oMW7VJ0fFngyxp1MXdaeU/9D+WUoZIYuKgDpjrRlj65e3/q/Nt4n
-	 idN8MagmO1eHsVaVHAoeJsrmW0l8QfJXJJP4c4/n0k76ZBcIyJvi9yn5CFVx/PIN9J
-	 0wQHsrVzXHA14ua9Q28S2yUKNWAfHFOyo0KrklxoURlbVW9IKxHplost4PXb7jzoV0
-	 4xpa0wmyT6ctPpRuZilSZWxxb2TglsDf1M8HgwgQwQNJ54yb5E+080bdpxW58FvcPg
-	 bZOYcui7rSUfjaCHKAGPJCBUzLsR6l/BgGxmMndrV8eG+l4kHWmyR1fu5p0S5e03Ub
-	 QM7iOudQiY3lA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1s52lC-000000004oO-0DEd;
-	Thu, 09 May 2024 14:20:30 +0200
-Date: Thu, 9 May 2024 14:20:30 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Stephen Boyd <swboyd@chromium.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Johan Hovold <johan+linaro@kernel.org>, Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Brown <broonie@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Das Srinagesh <quic_gurus@quicinc.com>,
-	Satya Priya <quic_c_skakit@quicinc.com>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH 12/13] regulator: add pm8008 pmic regulator driver
-Message-ID: <Zjy_jp2f-aY5mAR6@hovoldconsulting.com>
-References: <20240506150830.23709-1-johan+linaro@kernel.org>
- <20240506150830.23709-13-johan+linaro@kernel.org>
- <CAE-0n52KTZ8G2VuvrDgJ9kAE61YULXY4u6nPP3CYWpg1CBjbXA@mail.gmail.com>
- <Zjy8Zj_naFQ2Ri0M@surfacebook.localdomain>
+	s=arc-20240116; t=1715257280; c=relaxed/simple;
+	bh=FBOz4KJeoP60Kqz3cObH8n4DVo36OPuIdh1Oe10s+Fo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pVl93QwMSaSA6Y2bE0F8Y4qzb3p7XGFW/bpewPvRkjYjwwtp+2Uxsf4N8VCXfGy97/3fCM4+CRDUz0sgtD7/we0lNxHAa0l6jzAnJtGHaWmfaxOGehipZadxcfaH55dBJcBUwKUML+Swpuj03PFn6z+M/frpIQqrDjbndC8QaFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VZrhf6s90z4f3jcq;
+	Thu,  9 May 2024 20:21:06 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 4FBE61A0F2D;
+	Thu,  9 May 2024 20:21:15 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBHZQ63vzxm7lfBMA--.51358S4;
+	Thu, 09 May 2024 20:21:13 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	chenhuacai@kernel.org,
+	tj@kernel.org,
+	josef@toxicpanda.com,
+	victor@mojatatu.com,
+	raven@themaw.net,
+	yukuai3@huawei.com,
+	twoerner@gmail.com,
+	zhaotianrui@loongson.cn,
+	svenjoac@gmx.de,
+	jhs@mojatatu.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	cgroups@vger.kernel.org,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH for-6.10/block 0/2] blk-throtl: delete throtl low and lay initialization
+Date: Thu,  9 May 2024 20:11:05 +0800
+Message-Id: <20240509121107.3195568-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zjy8Zj_naFQ2Ri0M@surfacebook.localdomain>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBHZQ63vzxm7lfBMA--.51358S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrurWDur43XFWfXF1xCw4Durg_yoWfJrc_XF
+	98C3WkJFn7Aw1kC3yUtr95uFnFk342gr1jgFyYyFW7XFn7X3ZrAws3tr4a9rsxua95Crsx
+	JrWkXF1DZr1IqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbxkFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
+	Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrV
+	AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCI
+	c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
+	AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVW8
+	JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7VUb
+	QVy7UUUUU==
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Thu, May 09, 2024 at 03:07:02PM +0300, Andy Shevchenko wrote:
-> Wed, May 08, 2024 at 10:37:50PM +0000, Stephen Boyd kirjoitti:
-> > Quoting Johan Hovold (2024-05-06 08:08:29)
-> 
-> ...
-> 
-> > > +               BUILD_BUG_ON((ARRAY_SIZE(pldo_ranges) != 1) ||
-> > 
-> > This should be an && not || right?
-> 
-> > > +                               (ARRAY_SIZE(nldo_ranges) != 1));
-> 
-> In any case BUILD_BUG_ON() is not encouraged for such cases, it would be much
-> better to have a static_assert() near to one of those arrays.
+From: Yu Kuai <yukuai3@huawei.com>
 
-I think the reason it is placed here is that the above line reads:
+Tested with the new blktests:
 
-	rdesc->n_linear_ranges = 1;
+https://lore.kernel.org/all/20240420084505.3624763-1-yukuai1@huaweicloud.com/
 
-and that would need to change if anyone expands the arrays.
+Changes from RFC:
+ - remove patches to support build blk-throtl as module;
+ - add ack tag for patch 1, also rebase on the top of for-6.10/block;
+ - some small changes for patch 2;
 
-Johan
+Yu Kuai (2):
+  blk-throttle: remove CONFIG_BLK_DEV_THROTTLING_LOW
+  blk-throttle: delay initialization until configuration
+
+ Documentation/ABI/stable/sysfs-block       |  12 -
+ arch/loongarch/configs/loongson3_defconfig |   1 -
+ block/Kconfig                              |  11 -
+ block/bio.c                                |   1 -
+ block/blk-cgroup.c                         |   6 -
+ block/blk-stat.c                           |   3 -
+ block/blk-sysfs.c                          |   8 -
+ block/blk-throttle.c                       | 996 +++------------------
+ block/blk-throttle.h                       |  46 +-
+ block/blk.h                                |  11 -
+ 10 files changed, 127 insertions(+), 968 deletions(-)
+
+-- 
+2.39.2
+
