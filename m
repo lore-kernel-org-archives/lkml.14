@@ -1,199 +1,213 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2042.outbound.protection.outlook.com [40.107.243.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A889929A2;
-	Thu,  9 May 2024 20:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715288123; cv=none; b=dCt0nkP/sV+rUuSlspF/icX8WL9oHG2u2oNWbuuLXUaDiMEEqTta6g54Lq2B7hiS6uc690TLeQn/sVKlVuUTs0eI0QMCtHCShvupEufFwMDZAYzSlCXN3q8hEhGjd14ybcF9JEbY+RRhsDYcH6QfHdOZiudhXq+P8iU1QC250QA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715288123; c=relaxed/simple;
-	bh=+z3b5cB5EyGsqbqTU1g9z3SO/tunSYPElHlQobnABqg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KxCjd6Yvq3GYYa7EXiwr3LTez8hlqEOEZb+dcQBl9bQjFgBFmpRC9i0R7Wn32jPOSP08WzqsG2Bj4AsHbq2301ha5gJ09DviQ3def1mjiubMrfTEr5Pj8OqaS3AR9dvOoeC+rmKh/UdgU81/FXhSblbouCMDjBHcJElxn5eBUSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-61c4ebd0c99so886867a12.0;
-        Thu, 09 May 2024 13:55:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715288121; x=1715892921;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6SeDxTMUgi4LQzDaIf3nLrPy70uwzF3gPdETUheci2c=;
-        b=tDarZ46XqqG/J2CiASJK7GgslLGKwsX/WGGLboIEHQ+yAFf/JLeG+IIqTgXryWZOm6
-         YP8RyS7Kh84jNklaz8iWRfCE3hCQcsB3DK/sw6riyGBg10BhlGoHslNkZKXbA/6b30vM
-         dDDyfZL8oKXobyO148Ox5CcaXllGGD1h6OlYYCbMbrMiwCGJ5gYagdonlsDIdVoJaaMw
-         gP9Gwr2uyzvlUJZN5Ee1Wb8kF1f/tdjQIGY395kzEtjy4GXWdEj4Q2iCBlesJghrVSyh
-         AzjnOd3/uzuZDd5XEh6i8lzeV7dt/rqUSfUHK2NG9e+V+syemcXth8O2LwEBfako5HTS
-         /AzA==
-X-Forwarded-Encrypted: i=1; AJvYcCWkYv9vDTykHQ9uTNuiz1N7PAw+hYDH0UdEHeCaVxXf76yLtwdIpX6YfDs2EIu728E6wyBfNe0B1MQN9b1JEEtJaQzBuPa+xwQFFI3ht3z+q4hHoagtCFakOlPBZPEaynxg2r6RlgYl3lJqK4PpoQ==
-X-Gm-Message-State: AOJu0Yx4F1r3vhjupCCmJveaGQn+hfS9i2zS/5sRZ96kcO/utCLC2e6z
-	aIZrinx2yNhm5/ViiPczfv9ULQNKrWOGhPWiZ4WJZ7rL39FVCxtBafU7C37EnJT2uwDMmOoKQ+q
-	jMBRL7c7v4esov+aBXp8iI8lkYxU=
-X-Google-Smtp-Source: AGHT+IGt7dUBfj7vMg0wI6ai8p0bGzNoXrhnZsLwOgnLclMfrb2jDrhK/Kigc+vuxjYxxWNl1dT8N/6AVYpASWN8wPY=
-X-Received: by 2002:a17:90a:db97:b0:2b2:7e94:4073 with SMTP id
- 98e67ed59e1d1-2b6cc76d73cmr727950a91.14.1715288121009; Thu, 09 May 2024
- 13:55:21 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0263211;
+	Thu,  9 May 2024 20:58:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715288299; cv=fail; b=HSwpS1s1/Py1aolmCJmJIHrJkpVWp86I073tUm6wy1ZpjWQDmkDF7mnWKNseAYcSlyTuS3ImC1AWElzOeR8+f6eRDE19b+GrAQkjT5rCa91TWBJCcXCnTnLAn7K7DfIGsQTvOh/cFLkAR49g/E2T07pYHneOeAKHuaRLWQH1YaM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715288299; c=relaxed/simple;
+	bh=RXzQSM0VvplM+j/yYYy0tL/rsy3L/OD4dUYOZxJurr8=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 Content-Type:MIME-Version; b=PGGJwuAgyX4/vakEohrwLXU4hIsOacSDNjTbuF6WlddAGOCLzex2hwocnVOlNvdDKVodUsc9BRKJ9IkI9+yghqEgQaGA+CharIZsMAGLDBC8CiMN5yg6FyKfU7EO8uEr3rh87JgEUQ0C4Hvy/gW78KjroRsDo5Mxe7+HrJ4Vuuw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=s+80X008; arc=fail smtp.client-ip=40.107.243.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="s+80X008"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SFZ14FiVZ8WgtpO1R8qJmOx6PpAk2iZx7hTXVpe8H/ib4ccIeFgdIY3d98D08XXTB1ua1QOSM+muiuQBzW60YUgB6cd/fT1m7jnO+YfHM0C4nh01rYsb2VOxxOYi84aWekDZa/+1j+TiZJE0UbPNPs6abEHiCbxFwjEC9U9dsWH6EMIwq7c2dDJtSDJXy+NBRdNgQgZN7ADIzaifmvkG9INPRLLEwpQ376LpF1U4TwKaaKZ/VpKL9eGbF5ppfvnK035WXFnKPEv50Rky95Mk5du2iJ9jKHukyY0DtEYOufJI1jzG708zp3+xi4NdMsdLmNickTcvIakxBLVP8+423w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gCTJ7R+QlG7B3LzKqs/bhyGTzMon8D5NuIMl+FBzwH4=;
+ b=kr9oIQDNHckbLNtMJ+b1h+aWsTziiLyBk43EFwwOX3zuEO+t8tj8+fenaYDAjF5WJQOmbQMqIrRBeclQpa8u6xqDMJmpoJXZhgfeirMNePCqinT15rj6X54JlPcPew1m4Qv2OlYaI/OabUNvMw/VJz+pZNdZD17Fzhd0q3mQlqSzXe0ovSofNWXfr6RPG0FtQPWb52iIN4gjz2PTWjCJnPhidzHOG+ToEYx8aAxTdkW+9g8t/vMNoKJQA7eFoHITUC3tKQ2nXzMNL6KHgMPqQEZZX9qbO3RySfk1A+7wQbalQ74kra2N+7XC0ITkHEKp/wR1Xf5TwZG4BEyQMNGDSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gCTJ7R+QlG7B3LzKqs/bhyGTzMon8D5NuIMl+FBzwH4=;
+ b=s+80X008suqJqvKlzo+Nvfq/d0uOfaU/iv7UG5oRMoqJZHRVVcmcAcjuxeVaIr9Dl7APJciEd+Rkn9S7UIY3Bc01HKPmm0Coax5kdf3q1GRzv+0Ms1xsVlhMd7hgNwBeEroCbSQmLLyv/5E0fgnUB44bmFuen1+nXTG1wswBNMlrKpkZju+oad2kXO6RnPxPW0IIIsXbwofbOVZI6ImHlKNstf5yJXwa9y0dpqcpxARHNDM/LiFZ5/6DYSXBjWmrg/E5H8JZC5+G/35phtFqAZD1XplLEepyiwLcXwXiYOTbNUEx26y0BscaJ8ySGKHCX0qvsDrDCTq/ryG+N1YDFQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com (2603:10b6:8:130::6) by
+ SJ0PR12MB7007.namprd12.prod.outlook.com (2603:10b6:a03:486::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7544.47; Thu, 9 May 2024 20:58:12 +0000
+Received: from DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::80b6:af9b:3a9a:9309]) by DS0PR12MB7726.namprd12.prod.outlook.com
+ ([fe80::80b6:af9b:3a9a:9309%7]) with mapi id 15.20.7544.045; Thu, 9 May 2024
+ 20:58:10 +0000
+References: <fa2d39cf-b0df-4674-979d-b775d5077bce@deltatee.com>
+ <20240509174204.GV4718@ziepe.ca>
+User-agent: mu4e 1.10.8; emacs 29.1
+From: Alistair Popple <apopple@nvidia.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Logan Gunthorpe <logang@deltatee.com>, Martin Oliveira
+ <Martin.Oliveira@eideticom.com>, Christoph Hellwig <hch@lst.de>, Dan
+ Williams <dan.j.williams@intel.com>, LKML <linux-kernel@vger.kernel.org>,
+ "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: P2PDMA in Userspace RDMA
+Date: Thu, 09 May 2024 13:48:31 -0700
+In-reply-to: <20240509174204.GV4718@ziepe.ca>
+Message-ID: <87cypuvh2i.fsf@nvdebian.thelocal>
+Content-Type: text/plain
+X-ClientProxiedBy: SY5P282CA0066.AUSP282.PROD.OUTLOOK.COM
+ (2603:10c6:10:203::11) To DS0PR12MB7726.namprd12.prod.outlook.com
+ (2603:10b6:8:130::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240506121906.76639-1-atrajeev@linux.vnet.ibm.com>
- <20240506121906.76639-5-atrajeev@linux.vnet.ibm.com> <f2efdb9d-e636-4678-b492-83d3a28d8134@csgroup.eu>
- <E21FF3FD-1080-4A6C-99B0-7239AD831532@linux.vnet.ibm.com>
-In-Reply-To: <E21FF3FD-1080-4A6C-99B0-7239AD831532@linux.vnet.ibm.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 9 May 2024 13:55:09 -0700
-Message-ID: <CAM9d7cjz-_6m7mPATeRETFudz8+u=JYw20Kn6WutEKZ2f6VUyg@mail.gmail.com>
-Subject: Re: [PATCH V2 4/9] tools/perf: Add support to capture and parse raw
- instruction in objdump
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Ian Rogers <irogers@google.com>, "jolsa@kernel.org" <jolsa@kernel.org>, 
-	"adrian.hunter@intel.com" <adrian.hunter@intel.com>, 
-	"segher@kernel.crashing.org" <segher@kernel.crashing.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "maddy@linux.ibm.com" <maddy@linux.ibm.com>, 
-	"kjain@linux.ibm.com" <kjain@linux.ibm.com>, 
-	"disgoel@linux.vnet.ibm.com" <disgoel@linux.vnet.ibm.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"akanksha@linux.ibm.com" <akanksha@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR12MB7726:EE_|SJ0PR12MB7007:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7ee3c650-0993-42c2-1f45-08dc706abbe9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|366007|1800799015|376005;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?yAxgoPdvrF4FBhmboPpBKGb+wZIhY07Z7vcTVM4JaX5svkCThyDrw7DCoMRe?=
+ =?us-ascii?Q?g6Gql/btsbOQf5/wLb1PwCUzyhekeCll7StQB9xX646dh2mo6kCKqBCpdd2G?=
+ =?us-ascii?Q?d6SToqbO7Lm3zvMXhOu/EgTy/o9Gl/7tMxt/XX3VRv7di+RKARIqnnU3fdGL?=
+ =?us-ascii?Q?KSbg7whQfOXGj8MP4M5v8hqsaFyCclXbOCAIHiJXIKsUadsF1LVJt4VaYLrK?=
+ =?us-ascii?Q?GcX0dhEj9KTbIhX/bHhnSkbKuG5ckQKner9Jioe5p+pE/r7md1ElbpGQldBh?=
+ =?us-ascii?Q?oWtCY7X+z84r1ih0DH+r0AWUJ7erV1DtzyGUunGRkHO0v+vxpZzjbp/JIujp?=
+ =?us-ascii?Q?chu96vd16tB0lj6ABhIV2VhhgQr5ERsqEi9JK6FHNS+0RLaoXAGuDSxPUTHC?=
+ =?us-ascii?Q?ascqpSoAHpXK+ZE9yYK9HbVP+PEYWCso/DZGEtFq66mNZf6lFbqjLp0SIzdP?=
+ =?us-ascii?Q?3upTM/a3TQKhyqpGVla9FhEgG1Qsxl9D1U6QXjDFywoTSZJrbwyOadL8cpXD?=
+ =?us-ascii?Q?80+le9WiI/aIj8Lf5yNI7VQzOSHwxFF7OtutIWy9d/Fmj9Q/RTeRLv495OXo?=
+ =?us-ascii?Q?SKZ2O++iwfyVJQLleyGhrzaxja2cg0IROvho9BNxfkfeqTFroU4x5J9uapYB?=
+ =?us-ascii?Q?sRFnCP5RvgCWtqHCS9QHVkc/0y7pmjDWmX2ZPL7JY0+dSkTIc8IYWMXE1Gbx?=
+ =?us-ascii?Q?41G3jRcApLX2eY2RaIpWhvQLF/kFDpKX7im58HBcpCA6az30YAVpXwRCP8Rp?=
+ =?us-ascii?Q?kAucapwWk3PQUdCySHbNwxvjWORxYkpm+n20hGBUzPZBFTE6OC9EqLHjXUsQ?=
+ =?us-ascii?Q?GzIF0thbEw++VEVlkM0vpoQ0F6KF1i6Nnq5C4aiXH/sw1Y1FN5QFBzf2G0xu?=
+ =?us-ascii?Q?jOetjo/Lp1QCsHSZxncoWR5ZxASZ+EfmQA42JznwKy5dOWUxhl7qus+/GHYb?=
+ =?us-ascii?Q?JQ0XRuNG3CaC9Xrx5r81XTLoXR7vOubXRVGLy4xklvIQm1oBIzae2smSy+3A?=
+ =?us-ascii?Q?C854khBewyI3z11AZ34Tix1XWXWsM+IlXbhcBwsSu0nXBO1DdHeryN/rP9Q2?=
+ =?us-ascii?Q?mJmfp1esVacTMNtNGFi5qky2jfPqBpbMvYkoAVsPNl8SRWuAbhqAocLzsrdG?=
+ =?us-ascii?Q?4Zki84cboCsNIwsgTZe+Iz0qK7u8B0i6DsprI6qSSdS0LtYNf0Bb8SptQ2XJ?=
+ =?us-ascii?Q?LKYv1SSkS4/dRQ1n2spqV0S+5o/O6tYV8I7RmgJ4DiNRG4iJ/rS0MCEAi35S?=
+ =?us-ascii?Q?WpLotZjxdd2jiOsNoe2/GWUzbAKGLLOFQ90KUo27IQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR12MB7726.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(376005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?MnMmbHkPzFwhjZ2KMi6sAO35Xbl8JQJRkSg0WBOclBSTua6lRXq5bxrvfIXk?=
+ =?us-ascii?Q?vmzOhAQgKO9FqMJs4GCs2NUyKRNzLnekOfA6BI4h2Gz44msLSsZ1ggBv+HC+?=
+ =?us-ascii?Q?hVdkM4ULqkMjZ5HX+Pi5Byw0U+MkdBNVcpEA0mIYFDRcKqPuUappUBURkGCP?=
+ =?us-ascii?Q?pJN1UHYKgpXT6AVWoWh9kpGERCVXgOH1XhD7iyXedDuUbGWmy0GOVwfjV3GP?=
+ =?us-ascii?Q?Qq+pigVb8UBPAPqLtHa6OHrOmDAYKuwhECUpFjwrXCPXNG5EiYb1WEhmQHWC?=
+ =?us-ascii?Q?WMlH2Q67Xnq82vnyctUfPOT8uKQZNJqcCbDIEgjQIMOI63cEXTgol8Hb5XAh?=
+ =?us-ascii?Q?LJnRZvtMc9Hjt/3SoIxbcsfbC+hNJL4DZ168dRVqHl77FuNY08g6B4cXzPsl?=
+ =?us-ascii?Q?8bh24bTT2XK/Xr5QcO9ERuz1lyd+d8+31yQDUs/YXxO8EEu5rhMm6wG/yk0h?=
+ =?us-ascii?Q?uArJkhyhW0vTYfb3QxITDOeDG2rOnh1PJE3nN1webgXRp1UAsW82vudoQB30?=
+ =?us-ascii?Q?bxom2qSJd2jm8LeuwktYztteBV5oiUea3X32CSn+vlVWzK30YDNGYfDnKzHp?=
+ =?us-ascii?Q?3qJmt2ZhqFnve7/2ZW7QApdIxHFwykm/CCxdwSCL9rq1uHpenUs+UCrsGjJU?=
+ =?us-ascii?Q?gx42RGBj5rqrGulUeOe+6Mzy853q0zK/1q7i4eBxJ68QU3IZ3JZuB/Ex6OzM?=
+ =?us-ascii?Q?/aUDPo9Vo8yv/cX0mlbsyPAt1xnaqd59RPJvpdE3/JIC8DyHDN2mvhIDh6bq?=
+ =?us-ascii?Q?mGQnFUZxz9EZeqpEqQhoEoKHihrQcvp/GBUGk9VTZ8xUtT6Ttqfg8KrMwTdr?=
+ =?us-ascii?Q?MCNJ68Jfa5CMZAF5XycaXFDZyv1OGSM/h7E7vrl0E/Qq9Rakjzjd/DEcsqJ1?=
+ =?us-ascii?Q?hhB/I8lvSdYY0KknzwQTVqGcL32/TOZbrAKhlRD487huCUfmq1LFyicKF0Do?=
+ =?us-ascii?Q?MSqCDJW8rN9d6oeG/ljv9YYYROeo/Ttrls36os2saDXTYspmFzCQc7n+ujGJ?=
+ =?us-ascii?Q?vWkKBGZBoc4vpCrgV+W22bTTS0CCR9lgPUwbkyCtoweSq9yJPiOG+1XWwY8r?=
+ =?us-ascii?Q?om4Xp1IRvnH6wShDdyvwh6zgfBRDHdYaflCQVv8eEn0TjylSDiOkEBuy3q6h?=
+ =?us-ascii?Q?cN/eqc9rbzEc2ffWr65g7SX27HPAwHzY8TNirOjn/TKMiM6KVlLSpihQVyIn?=
+ =?us-ascii?Q?x4ctZ2h0LhD9iLAXtuLQdKYUGCbBUqfMc6dG9pcMv3G59EicSUH2HVyT78fY?=
+ =?us-ascii?Q?BfjXn/BiqeDLlOYqfzfB4hj6SbjYtiy0EIKT44HJJsph5D0K5xkSYQVO8dw/?=
+ =?us-ascii?Q?T0yox23yWiZXhhLiu3LKaqkD7iLGRdIweAxNCIxIJAJQ4dZ5hosgyXM5adhW?=
+ =?us-ascii?Q?FDBKm5uw/sDaR/rAjC+o+5V4utekCkmVIGRqObL3Jzrj1tSirWIO5CTIz2fa?=
+ =?us-ascii?Q?zy219FysG1JIc9HiOg05yD5vWEMnwCLgI+/Dr5asjJblvBfZaYmfH8x1Y5E8?=
+ =?us-ascii?Q?UiuSPg5oaSleVC+sZT5PucDiUMVlUcEvfVzOFNA8dCqeP6Z/OI+npW/FnYLv?=
+ =?us-ascii?Q?F9LXbOKarsBFBfhi9iSZd7JsTlg91UFobxAlOWnb?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ee3c650-0993-42c2-1f45-08dc706abbe9
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR12MB7726.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2024 20:58:10.6060
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3ybgJm0wThpGbkCHBtKHrueOCZwwVGfdVKWJcv44DtqBERYiXU6T8Tn/ZTK5mrBuJ+T//bDW09uX1WeMWlyo1A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7007
 
-On Thu, May 9, 2024 at 10:27=E2=80=AFAM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
->
->
->
-> > On 7 May 2024, at 3:05=E2=80=AFPM, Christophe Leroy <christophe.leroy@c=
-sgroup.eu> wrote:
-> >
-> >
-> >
-> > Le 06/05/2024 =C3=A0 14:19, Athira Rajeev a =C3=A9crit :
-> >> Add support to capture and parse raw instruction in objdump.
-> >
-> > What's the purpose of using 'objdump' for reading raw instructions ?
-> > Can't they be read directly without invoking 'objdump' ? It looks odd t=
-o
-> > me to use objdump to provide readable text and then parse it back.
->
-> Hi Christophe,
->
-> Thanks for your review comments.
->
-> Current implementation for data type profiling on X86 uses "objdump" tool=
- to get the disassembled code.
-> And then the objdump result lines are parsed to get the instruction name =
-and register fields. The initial patchset I posted to enable the data type =
-profiling feature in powerpc was using the same way by getting disassembled=
- code from objdump and parsing the disassembled lines. But in V2, we are in=
-troducing change for powerpc to use "raw instruction" and fetch opcode, reg=
- fields from the raw instruction.
->
-> I tried to explain below that current objdump uses option "--no-show-raw-=
-insn" which doesn't capture raw instruction.  So to capture raw instruction=
-, V2 patchset has changes to use default option "--show-raw-insn" and get t=
-he raw instruction [ for powerpc ] along with human readable annotation [ w=
-hich is used by other archs ]. Since perf tool already has objdump implemen=
-tation in place, I went in the direction to enhance it to use "--show-raw-i=
-nsn" for powerpc purpose.
->
-> But as you mentioned, we can directly read raw instruction without using =
-"objdump" tool.
-> perf has support to read object code. The dso open/read utilities and hel=
-per functions are already present in "util/dso.c" And "dso__data_read_offse=
-t" function reads data from dso file offset. We can use these functions and=
- I can make changes to directly read binary instruction without using objdu=
-mp.
->
-> Namhyung, Arnaldo, Christophe
-> Looking for your valuable feedback on this approach. Please suggest if th=
-is approach looks fine
 
-Looks like you want to implement instruction decoding
-like in arch/x86/lib/{insn,inat}.c.  I think it's ok to do that
-but you need to decide which way is more convenient.
+Jason Gunthorpe <jgg@ziepe.ca> writes:
 
-Also it works on the struct disasm_line so you need to
-fill in the necessary info when not using objdump.  As
-long as it produces the same output I don't care much
-if you use objdump or not.  Actually it uses libcapstone
-to disassemble x86 instructions if possible.  Maybe you
-can use that on powerpc too.
+> On Thu, May 09, 2024 at 11:31:33AM -0600, Logan Gunthorpe wrote:
+>> Hi Jason,
+>> 
+>> We've become interested again in enabling P2PDMA transactions with
+>> userspace RDMA and the NVMe CMBs we are already exporting to userspace
+>> from our previous work.
+>> 
+>> Enabling FOLL_PCI_P2PDMA in ib_umem_get is almost a trivial change, but
+>> there are two issues holding us back.
+>> 
+>> The biggest issue is that we disallowed FOLL_LONGTERM with
+>> FOLL_PCI_P2PDMA out of concern that P2PDMA had the same problem as
+>> fs-dax.
+>
+> Yeah, it was not a great outcome of that issue.
 
-Thanks,
-Namhyung
+I recently came across this trying to do something similar with io_uring
+to mapped P2PDMA pages for testing purposes. I commented out the
+FOLL_PCI_P2PDMA check but it hung/stalled during process teardown so
+there might be something there.
 
+>> See [1] to review the discussion from 2 years ago. However, in
+>> trying to understand the problem again, I'm not sure that concern was
+>> valid. In P2PDMA, unmap_mapping_range() is strictly only called on
+>> driver unbind when everything is getting torn down[2]. The next thing
+>> that happens immediately after the unmap is the tear down of the pgmap
+>> which drops the elevated reference on the pages and waits for all page's
+>> reference counts to go back to zero. This will effectively wait until
+>> all longterm pins involving the memory have been released. This can
+>> cause a hang on unbind but, in your words, its "annoying not critical".
 >
+> Yes
 >
-> Thanks
-> Athira
-> >
-> >> Currently, the perf tool infrastructure uses "--no-show-raw-insn" opti=
-on
-> >> with "objdump" while disassemble. Example from powerpc with this optio=
-n
-> >> for an instruction address is:
-> >
-> > Yes and that makes sense because the purpose of objdump is to provide
-> > human readable annotations, not to perform automated analysis. Am I
-> > missing something ?
-> >
-> >>
-> >> Snippet from:
-> >> objdump  --start-address=3D<address> --stop-address=3D<address>  -d --=
-no-show-raw-insn -C <vmlinux>
-> >>
-> >> c0000000010224b4: lwz     r10,0(r9)
-> >>
-> >> This line "lwz r10,0(r9)" is parsed to extract instruction name,
-> >> registers names and offset. Also to find whether there is a memory
-> >> reference in the operands, "memory_ref_char" field of objdump is used.
-> >> For x86, "(" is used as memory_ref_char to tackle instructions of the
-> >> form "mov  (%rax), %rcx".
-> >>
-> >> In case of powerpc, not all instructions using "(" are the only memory
-> >> instructions. Example, above instruction can also be of extended form =
-(X
-> >> form) "lwzx r10,0,r19". Inorder to easy identify the instruction categ=
-ory
-> >> and extract the source/target registers, patch adds support to use raw
-> >> instruction. With raw instruction, macros are added to extract opcode
-> >> and register fields.
-> >>
-> >> "struct ins_operands" and "struct ins" is updated to carry opcode and
-> >> raw instruction binary code (raw_insn). Function "disasm_line__parse"
-> >> is updated to fill the raw instruction hex value and opcode in newly
-> >> added fields. There is no changes in existing code paths, which parses
-> >> the disassembled code. The architecture using the instruction name and
-> >> present approach is not altered. Since this approach targets powerpc,
-> >> the macro implementation is added for powerpc as of now.
-> >>
-> >> Example:
-> >> representation using --show-raw-insn in objdump gives result:
-> >>
-> >> 38 01 81 e8     ld      r4,312(r1)
-> >>
-> >> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
-> >> this translates to instruction form: "ld RT,DS(RA)" and binary code
-> >> as:
-> >> _____________________________________
-> >> | 58 |  RT  |  RA |      DS       | |
-> >> -------------------------------------
-> >> 0    6     11    16              30 31
-> >>
-> >> Function "disasm_line__parse" is updated to capture:
-> >>
-> >> line:    38 01 81 e8     ld      r4,312(r1)
-> >> opcode and raw instruction "38 01 81 e8"
-> >> Raw instruction is used later to extract the reg/offset fields.
-> >>
-> >> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> >> ---
+> But you are looking at the code as it is right now, and stuff has been
+> quitely fixed with the pgmap refcount area since. I think it is
+> probably good now. IIRC it was pushed over the finish line when the
+> ZONE_DEVICE/PRIVATE pages were converted to have normal reference
+> counting.
+
+But P2P DMA pages are still in the off-by-one reference counting
+scheme. My RFR series[1] (aims) to fix that, although the pgmap
+refcounting scheme needs a closer look because I think doing the page
+refcounting properly allows some cleanups there.
+
+[1] - https://lore.kernel.org/linux-mm/cover.fe275e9819458a4bbb9451b888cafb88af8867d4.1712796818.git-series.apopple@nvidia.com/
+
+> If p2p is following the new ZONE_DEVICE scheme then it should be fine.
 >
+> It would be good to read over Alistair's latest series fixing up fsdax
+> refcounts to see if anything pops out as problematic specifically with
+> the P2P case.
+>
+> Otherwise a careful check through is probably all that is needed.
+>
+>> The other issue we hit when enabling this feature is the check for
+>> vma_needs_dirty_tracking() in writable_file_mapping_allowed() during the
+>> gup flow. This hits because the p2pdma code is using the common
+>> sysfs/kernfs infrastructure to create the VMA which installs a
+>> page_mkwrite operator()[4] to change the file update time on write. 
+>
+> Ah.
+>
+>> I don't think this feature really makes any sense for the P2PDMA
+>> sysfs file which is really operating as an allocator in userspace --
+>> the time on the file does not really need to reflect the last write
+>> of some process that wrote to memory allocated using it. 
+>
+> Right, you shouldn't have mkwrite for these pages.
+>
+> Jason
+
