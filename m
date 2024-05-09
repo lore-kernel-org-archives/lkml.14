@@ -1,168 +1,99 @@
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9906A1292CF
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 22:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660B512839E
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 22:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715292090; cv=none; b=CpGMR6jqT2DWOtq19CFfAflVYqOdhDefhKDpcR/NIDtXKpeSLb8xEx32/E4KTiSzwLDwAjO/6JZnR/UqSj63NblySGzsM8GNGfQIPeLhHwY1e9zfOti+iEYGO+dtc2oL/ClUJYsXkoBjI3vQ54sR09okgPCWXnuH4BuYaAwN/VM=
+	t=1715292262; cv=none; b=h5+lQkghtA3cUJw9sVJChlj+SYhnAu24ZgK0k9s0jMSvp21fK74xaRTtzew8PGtarpfc/qz4FOSDaqEFzAr4pWURu9ftEVu4BnOl+/ZH1Pyy/B8/1DotQxcC/FkFn69wOaCs4aXimgljV3fdAOzP7APrX2efuQ3KKmjQPPEKHLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715292090; c=relaxed/simple;
-	bh=c2+wGxwVoVYy08ApVv3oL/wqVIdU1UZ9aPHrnR2RtRk=;
+	s=arc-20240116; t=1715292262; c=relaxed/simple;
+	bh=OgJHhmIVrHJ1rqU9C9cLleVIC11QJQgCtRwBNIfc5aY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KTbo/K01CyWV3tf82+rLFM5dVaqSCDs9MBrnXghLV+rf16zZ7S3Q5sVVZbP3XW6P6pqjG3+BVQ7ji1MS8L6gtsQzWpou/zMeXxD0YkjaGvTvz0PKQukzbmyxv95EvJgehjf+jWtHkHuYVbNqSJWf9nrg+wVkmS5Wf3lYaqvuMjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Xv5yUcpG; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 To:Cc:Content-Type; b=FYmeWL8kK9WVOR2ottUthdyjnIFjLT3ZXEc4hF7Amm6KZtdjmxyxckevPGqF0aDvI4OzlH0jlmlPf4Ko/C2qn+w8E3viMBCg/7uOqfOWyhchDwzQR3xltV4MN+kKwWPEc7pw4US3Yl7WaFcJ7hq7AxmIxMcDo/awBDzprpWnX24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i7MkVkAM; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Xv5yUcpG"
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2e2b468ea12so12121771fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 15:01:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i7MkVkAM"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6f0ea2c726aso102299a34.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 15:04:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715292086; x=1715896886; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1715292260; x=1715897060; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xnHYOWAhVzx2MCZups8we2bGRU6BNZU/YkcsQyEzx7M=;
-        b=Xv5yUcpGuZtnsk43qJvifVUz3nx8ne9Gea7ryNvnPXEdpROkry3G58XKVch4fshDKx
-         4p2C3U9QoGLZcCWRLq/ppKw8qmrP8ZnM4E+tPcxsa83aRTgMDSC5QHvWulgRs5HTBuF8
-         93IjFbDNrJEyzie4Jlgytbn3+l9kYGysGSvZI6I84XOE+cm1yOqwuR9N02PqUwmWCkMw
-         c/ashvf1Y+IswlidsViuzrlDoe1kaliIs8OatsBx49ikaMVUYzAik7IQVCTiLHuv6/k3
-         51xx1XjFJ+csrTs97NzZsN/32OXmWRsZNthsHT0HqnSRyWmMgAQhL92jYkLDex43GRkY
-         S3sQ==
+        bh=eaMGWwE54MRwQe9MKn89HK8vqNbPvDPLq1+qzXPGB6k=;
+        b=i7MkVkAMBzPh/YgcMzJTj0BpTkhKa1M76CkeCG78rwjiARncOTqDqZeN0BjEQq9IGD
+         4Fg4h66nw7oSekJh9EP5cg8rMzW1P+Ast8qIBhgvNAzfvPOgS4vMgHvq+UijhdL6UaFn
+         hTsNpJ8+Pc/HQDCo0Dn/5EYm4+WdxPNsfeuxNxs33aIQaHi1CIyDISDI6kcwtWZSj6m4
+         MZDzdLZK1m6ZtPupVUwIMDkEv4kk0z4GRJ3ZkKRLYum3EytByCr92AkP4T5ZqGr03HyC
+         QkLu4CO9Oi080yDa+qq1YMICGGQZ+Bcf7PlOLkvW3nEIufZh6uZqwEwFeMXlwtPqO91u
+         Y1ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715292086; x=1715896886;
+        d=1e100.net; s=20230601; t=1715292260; x=1715897060;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xnHYOWAhVzx2MCZups8we2bGRU6BNZU/YkcsQyEzx7M=;
-        b=eqrXdM7RXU1pGiYqddZZtW+JKt2lxX4gQprtKFm1jZa5b+REHrigBE76WRqedQqgDA
-         ODG7TOQcvdsofasdw3bQOKhVPFQkGzd2kLkOIyJ5ddFucwA9oQJl/06FIlFr5ZLbKYUa
-         +90l3U6pWrasY+6k/6zsWrB6AZMYyFUoYRCWO6480YET+Vl+vW/ZDJNee4GsBRFFrImP
-         FQnRkkwMfaQp4+cfM3avMTCEgXXnR6Y3HkARDv3KQua1dBhXtE1T8S9SzhMd6cPECdru
-         Cf5oQxAWOAxUPLcjXZ3s0l0mr379lzq42rIn1SGVA+zu1JTEUpRng7ePgrX+k3Ff/6PB
-         ozlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWI60+f1wEWNVRIHfctst+Zn/vAN+Lou5nbJ8+PWL4h7QoNZl3n+yMb4Tacfz/Yl0TvcTHV3GHoYzFpdWkJINXVQOoq2SyVD4zCrwYO
-X-Gm-Message-State: AOJu0YzbPh40Cpr8u+0WBKbcZNwl8n4NoMtZOkLxIqVrh5ylEdUxpJL7
-	IJQrYenw+U+B3c4zpRVDm5q/lY/63vIa4wPZfuiFWuPGFD6stfh5A9UeuN1mqPTXWotV7g0Sm9C
-	N1JWzfvfSZLJz1X+pv9Knx+8wPqzqQafm28NQIA==
-X-Google-Smtp-Source: AGHT+IGmkxEYjc0NQpRPLrFtYmBmIEh6mip5P+yeU1oy78tdUBlhMD93wRggNq3UrVCx80wRD2xGwsM288TElhwGXLY=
-X-Received: by 2002:a2e:b617:0:b0:2e3:331e:e33d with SMTP id
- 38308e7fff4ca-2e4b11109fbmr10692811fa.11.1715292085685; Thu, 09 May 2024
- 15:01:25 -0700 (PDT)
+        bh=eaMGWwE54MRwQe9MKn89HK8vqNbPvDPLq1+qzXPGB6k=;
+        b=WbcyhiVxFaGJZ1ToWJgzriV8UKq/FKXeKKfXwkjV8wiBreVHWMhqdp/awhxeSg9DJs
+         tFu1j6uZY+cfbeBTYQAec7KJr8/0Q7meMHUR1hQvDJeE6I89fucKZVsv0akduFDrBfeq
+         UaYs/QZUCbKTMqXmKYRbAZS14h7xGFqRl7PVon5s9AtDYQxYYCf5jqpZ20t9aN0yDuYJ
+         1AZmXNshpDJjNfGcwQnHtPp06fo0jC7j1aMzdIIu9M318UpAfpIjbUarMfv/YkyfeM7d
+         pEQd1VI8XAlxIdwPpTOIDYZfTSZUmS2amYNjfR+NE3rSZbXrzgZcSYytafcPjzNdFIrO
+         gQmA==
+X-Forwarded-Encrypted: i=1; AJvYcCWRuHY9DBIeAFcjU3m5YbPYzJfHj+8GFW+fCdhKSdZw9q8wABZYamnw0FRyddqszL9B2IZZEriraJqCOh0Y7UdBFCX/7CEFv+aAoT/H
+X-Gm-Message-State: AOJu0YxTil+hW3u1pjf/ytg1pKhyUxZQG1QVv+0k5zRjwkqmMWeLNEW8
+	0XY6HGVxvCqvvTvf0axUAmmpopNdFEbB/XZcUw1mFHTqYWo9Frmx2HI+QvD+ZZ0sSXM6oWHBsGR
+	GSlUb+xuOGqdpK5Ozq0WrOPrknT5bQxEtDyen
+X-Google-Smtp-Source: AGHT+IGOrX7CymOEEesjDKbsfowT/rCu7eZVPPyV31UhJCy/YotrYfiCNXVJAu6ojtjG96eAKvVU1kdO7vspfPuqgL4=
+X-Received: by 2002:a05:6808:1688:b0:3c7:41ba:102f with SMTP id
+ 5614622812f47-3c997074664mr1087661b6e.34.1715292259867; Thu, 09 May 2024
+ 15:04:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240501-adding-new-ad738x-driver-v6-0-3c0741154728@baylibre.com>
- <20240501-adding-new-ad738x-driver-v6-9-3c0741154728@baylibre.com>
- <20240506151725.10cf025e@jic23-huawei> <CAMknhBFx-KVPRbm1xmKeU8ZaA7qt_c0_6eiUT-5kqTWVAvf3hw@mail.gmail.com>
- <20240508122556.00005f71@Huawei.com>
-In-Reply-To: <20240508122556.00005f71@Huawei.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Thu, 9 May 2024 17:01:14 -0500
-Message-ID: <CAMknhBH=R2D4yu6Psnh+gv=OpCNAEwi8fpvMcJd0n9-SBfNWqg@mail.gmail.com>
-Subject: Re: [PATCH RFC v6 09/10] iio: adc: ad7380: add support for rolling
- average oversampling mode
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Julien Stephan <jstephan@baylibre.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
-	=?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	kernel test robot <lkp@intel.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240506-b4-sio-scrollback-delta-v1-1-4164d162a2b8@google.com>
+ <f7775510-09d8-41ef-97b2-0457e721a9ec@kernel.org> <CAFhGd8qkYYQZi37Tsj-V5pN5S4xhcyUeAZj1of2kTXG+EtVMgg@mail.gmail.com>
+In-Reply-To: <CAFhGd8qkYYQZi37Tsj-V5pN5S4xhcyUeAZj1of2kTXG+EtVMgg@mail.gmail.com>
+From: Justin Stitt <justinstitt@google.com>
+Date: Thu, 9 May 2024 15:04:07 -0700
+Message-ID: <CAFhGd8oZy5aKjp-mVhh2d3U3tzTMzVRAfE039gvBACC0AdDNQw@mail.gmail.com>
+Subject: Re: [PATCH] tty: vt: saturate scrollback_delta to avoid overflow
+To: Jiri Slaby <jirislaby@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Bill Wendling <morbo@google.com>, linux-kernel@vger.kernel.org, 
+	linux-serial@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 8, 2024 at 6:26=E2=80=AFAM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+On Thu, May 9, 2024 at 3:01=E2=80=AFPM Justin Stitt <justinstitt@google.com=
+> wrote:
 >
-> On Mon, 6 May 2024 10:04:10 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
 >
-> > On Mon, May 6, 2024 at 9:17=E2=80=AFAM Jonathan Cameron <jic23@kernel.o=
-rg> wrote:
-> > >
-> > > On Wed, 01 May 2024 16:55:42 +0200
-> > > Julien Stephan <jstephan@baylibre.com> wrote:
-> > >
-> > > > Adds support for rolling average oversampling mode.
-> > > >
-> > > > Rolling oversampling mode uses a first in, first out (FIFO) buffer =
-of
-> > > > the most recent samples in the averaging calculation, allowing the =
-ADC
-> > > > throughput rate and output data rate to stay the same, since we onl=
-y need
-> > > > to take only one sample for each new conversion.
-> > > >
-> > > > The FIFO length is 8, thus the available oversampling ratios are 1,=
- 2, 4, 8
-> > > > in this mode (vs 1,  2, 4, 8, 16, 32 for the normal average)
-> > >
-> > > Ah. I should have read on!
-> > >
-> > > >
-> > > > In order to be able to change the averaging mode, this commit also =
-adds
-> > > > the new "oversampling_mode" and "oversampling_mode_available" custo=
-m
-> > > > attributes along with the according documentation file in
-> > > > Documentation/ABI/testing/sysfs-bus-iio-adc-ad7380 since no standar=
-d
-> > > > attributes correspond to this use case.
-> > >
-> > > This comes to the comment I stuck in the previous patch.
-> > >
-> > > To most people this is not a form of oversampling because the data ra=
-te
-> > > remains unchanged. It's a cheap low pass filter (boxcar) Google point=
-ed me at:
-> > > https://dsp.stackexchange.com/questions/9966/what-is-the-cut-off-freq=
-uency-of-a-moving-average-filter
-> > >
-> > > in_voltage_low_pass_3db_frequency would be the most appropriate stand=
-ard
-> > > ABI for this if we do treat it as a low pass filter control.
-> > >
-> > > I'm not necessarily saying we don't want new ABI for this, but I woul=
-d
-> > > like to consider the pros and cons of just using the 3db frequency.
-> > >
-> > > So would that work for this part or am I missing something?
-> > >
-> >
-> > I like the idea. But from the link, it looks like the 3dB frequency
-> > depends on the sampling frequency which is unknown (e.g. could come
-> > from hrtimer trigger).
-> >
-> > Would it be reasonable to calculate the 3db frequency at the max
-> > sample rate that the chip allows and just use those numbers?
-> >
-> Ah. So looking at datasheet the normal average oversampling is
-> self clocked, but this version is not.
+> Agreed.
 >
-> So, I'll ask the dumb question.  What is this feature for?
-> We have to pump the SPI bus anyway why not just do the maths in
-> userspace?  Oversampling is normally about data rate reduction
-> with a bonus in precision obtained.
+> Does an implementation like this look any better?
 >
-> Jonathan
->
+> static inline void scrolldelta(int lines)
+> {
+>         ...
+>         /* saturate scrollback_delta so that it never wraps around */
+>         if (lines > 0)
+>                 scrollback_delta =3D min(scrollback_delta, INT_MAX -
+> lines) + lines;
+>         else
+>                 scrollback_delta =3D max(scrollback_delta, INT_MIN -
+> lines) + lines;
+>         schedule_console_callback();
+> }
 
-I asked the apps engineers and the answer I got is that it a way to
-enable oversampling while still maintaining a high sample rate.
+I apologize for this formatting, gmail ate my tabs.
 
-Another thing to consider here is that we can only enable the extra
-resolution bits if oversampling is enabled (normal or rolling mode).
-The chip might not work right if we try to enable the extra bits
-without oversampling enabled.
+Note to self, do NOT copy/paste from vim to gmail's web client.
 
-So my thinking is perhaps it is better to keep the rolling mode as
-oversampling rather than trying to call it a low pass filter. As you
-said, normal mode is about data rate reduction with bonus precision.
-Rolling average oversampling mode then would then just be for the
-bonus precision.
+> Thanks
+> Justin
