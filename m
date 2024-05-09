@@ -1,56 +1,67 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B82613C9A9;
-	Thu,  9 May 2024 07:48:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AF414830B
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 07:49:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715240886; cv=none; b=Ot5TBiaDUCotQtM6gFSE06c8e1avCsNmdjqaizAp5QZVyPTy+g4vAiWZit2i/J7AQDs+RFdus5iXesLqO4cg0cv/Cm90yt0ANK/zG3E4IB8Sf5j2q4mEVNECu0/et5kKoM3YTu3ZE3Yky3mAkWXHd5tC/04FajVFGkxtKLNgPMU=
+	t=1715240945; cv=none; b=CuheiZQJUU7KYvGGeooCTJPHGBFAJCXXdE9usJee74anVT+T2llGGXqvDQ4PUmhWs5oQIl6jRI0i/P+MjAbOi1EagBES0W89X8PcqrpNlosB5s8kqBPk4hNGaRO9JbDjQ08kH1SyYFoTVcRt1n5JG7C6yNcOaVsCjAgPGEt1iaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715240886; c=relaxed/simple;
-	bh=kN+bKRWuS9MvO+76b3+xoXzaruyf/lT+taQHwjLtY14=;
+	s=arc-20240116; t=1715240945; c=relaxed/simple;
+	bh=l8MvONk0+ApKLplnhCqModGKWNpgifqCliqom2TOBsY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iKCnPT7yJXNSvFpiHPKARhwxK28XsVB9chZdk6NmXd3a4vqdl2D34wdV6MXPIgE70Qiz6sbBFohq2xQvW2h+10QhppgApnYLtHh3XUh8GytBan6H/SpnPb4fcDGHiznTBazIablLB+iUQZSyzEtGam9Mg7jdOB1bSZfYRrkM3aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a599eedc8eeso139755966b.1;
-        Thu, 09 May 2024 00:48:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715240883; x=1715845683;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DxfOpPMsocBoDaEIN71vPXTKGsCKIeOGUMJaK6ulrpg=;
-        b=NP7jrO7BF1cC9oleKfv2/H+LAA0u8jKf8K2H3mtvH899fyZAM37Y5d4FlM9FRI4Cn0
-         oXaL9vMWRDTapmol1OEdRwwgOhR9/laEOoVg8Jw2MuqIMbMtngKgqyCqm8MFDQjvjwGW
-         XapHXJwEeE1HjanIot6jeLGvubDAhQ8tmMXuUqxI9Z3CL5DhECIIM/FPehwZ8tC51O9m
-         Yzr4xmnK9EWqokFMHsszb69PontEMWEqavRnJFo3XtPQg0Zctm27M7/EYNLsXkFWvNZU
-         gkufQ3HaNstTyjirJKc3/XaSYfsbcdccWJAGYicJ2hScfg2/uoV3DHb8FrM0q6pMNNN8
-         zuig==
-X-Forwarded-Encrypted: i=1; AJvYcCWA8evcqQojlj7NPLgTm68n2sF8El/Weh/2f9WMocvHwkqsdGqHtEp5kSfUitt+G88vlkH5FYEWJtsF8Jp4jdC74YEn9Jjc0VbcqKKanitQ9Al4mRJ/apAvonvj4riTlhl33Dtv3xQobT3vteI=
-X-Gm-Message-State: AOJu0YxOD9dUVlL701CcLI7ImEOkmIIUNgqg0ApUllquzqGXfoKXQqMo
-	jPAOZSiOrjbOB1aoCYuPQx8wYawoNL8L9GZKV3Pki5pF3mqoFAHzCvsf7A==
-X-Google-Smtp-Source: AGHT+IEsCEKh9Z9Jdg775iWofQ3lVXXivWgv02ahksqj0qaQJVuDtBqjcMD77dWZbIcqAK5u4pyzKg==
-X-Received: by 2002:a50:8e4a:0:b0:572:a731:dd14 with SMTP id 4fb4d7f45d1cf-5731da5b711mr3204050a12.28.1715240882494;
-        Thu, 09 May 2024 00:48:02 -0700 (PDT)
-Received: from gmail.com (fwdproxy-lla-003.fbsv.net. [2a03:2880:30ff:3::face:b00c])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733bea6592sm422836a12.2.2024.05.09.00.48.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 00:48:02 -0700 (PDT)
-Date: Thu, 9 May 2024 00:48:00 -0700
-From: Breno Leitao <leitao@debian.org>
-To: Ping-Ke Shih <pkshih@realtek.com>
-Cc: Kalle Valo <kvalo@kernel.org>, "leit@meta.com" <leit@meta.com>,
-	"open list:REALTEK WIRELESS DRIVER (rtw89)" <linux-wireless@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH wireless] wifi: rtw89: Un-embed dummy device
-Message-ID: <Zjx/sKB++v8FJMXx@gmail.com>
-References: <20240424182351.3936556-1-leitao@debian.org>
- <f46ae94488d1468e9a9a669320e4cfb9@realtek.com>
- <87ttjqgf2r.fsf@kernel.org>
- <87mspigex0.fsf@kernel.org>
- <acda4194c8d44690b05b83adccb3aa22@realtek.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EylKXe/63x98aFkgE/axGwoUZXScN/q1eDqoPR5rbaW/5cHtFwyOVV5sjKys7NWFhZunm+puKNFMpVEBakjZlpGzS2I8yTHQ/t5Kj5tZ1FHboksbuucXRpF2DYd0dTlgkae+yNV39xBMrzGgVCThu8tlQfqysphM5FPnPOUWBo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=q5Hcz/HP; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=q5Hcz/HP; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="q5Hcz/HP";
+	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="q5Hcz/HP"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id A28A05FA04;
+	Thu,  9 May 2024 07:49:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1715240941; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iwS77UEIDIui68vRbwx9BsX+4DYZiA+lBLJ3muE9lSE=;
+	b=q5Hcz/HPTPEbZVRbLf25WP16dpAneCdFIqp+3UOpQl6GzhmOzloD9a3aQUxBHiH2WhHooD
+	L1W73nBPDGlG2ANr1SWD8mTmk8O7cl6iEcn6Omyr82nKEeSKQJ1NWRxxDhXOjXF+VFPa/a
+	tAMw5eAnXNzHyr8m+dcBWyhhSX74rW8=
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+	t=1715240941; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iwS77UEIDIui68vRbwx9BsX+4DYZiA+lBLJ3muE9lSE=;
+	b=q5Hcz/HPTPEbZVRbLf25WP16dpAneCdFIqp+3UOpQl6GzhmOzloD9a3aQUxBHiH2WhHooD
+	L1W73nBPDGlG2ANr1SWD8mTmk8O7cl6iEcn6Omyr82nKEeSKQJ1NWRxxDhXOjXF+VFPa/a
+	tAMw5eAnXNzHyr8m+dcBWyhhSX74rW8=
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 76E4D13941;
+	Thu,  9 May 2024 07:49:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0y4yG+1/PGb6EgAAD6G6ig
+	(envelope-from <mhocko@suse.com>); Thu, 09 May 2024 07:49:01 +0000
+Date: Thu, 9 May 2024 09:48:56 +0200
+From: Michal Hocko <mhocko@suse.com>
+To: hailong.liu@oppo.com
+Cc: akpm@linux-foundation.org, urezki@gmail.com, hch@infradead.org,
+	lstoakes@gmail.com, 21cnbao@gmail.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, xiang@kernel.org, chao@kernel.org,
+	Oven <liyangouwen1@oppo.com>
+Subject: Re: [RFC PATCH] mm/vmalloc: fix vmalloc which may return null if
+ called with __GFP_NOFAIL
+Message-ID: <Zjx_6F3Fti_EBD_e@tiehlicka>
+References: <20240508125808.28882-1-hailong.liu@oppo.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,44 +70,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <acda4194c8d44690b05b83adccb3aa22@realtek.com>
+In-Reply-To: <20240508125808.28882-1-hailong.liu@oppo.com>
+X-Spam-Flag: NO
+X-Spam-Score: -3.40
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.40 / 50.00];
+	BAYES_HAM(-2.60)[98.21%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_TLS_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.com:s=susede1];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[linux-foundation.org,gmail.com,infradead.org,kvack.org,vger.kernel.org,kernel.org,oppo.com];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email]
 
-On Thu, Apr 25, 2024 at 06:15:21AM +0000, Ping-Ke Shih wrote:
-> Kalle Valo <kvalo@kernel.org> wrote:
-> > Kalle Valo <kvalo@kernel.org> writes:
-> > 
-> > > Ping-Ke Shih <pkshih@realtek.com> writes:
-> > >
-> > >> Breno Leitao <leitao@debian.org> wrote:
-> > >>> Embedding net_device into structures prohibits the usage of flexible
-> > >>> arrays in the net_device structure. For more details, see the discussion
-> > >>> at [1].
-> > >>>
-> > >>> Un-embed the net_device from the private struct by converting it
-> > >>> into a pointer. Then use the leverage the new alloc_netdev_dummy()
-> > >>> helper to allocate and initialize dummy devices.
-> > >>>
-> > >>> [1] https://lore.kernel.org/all/20240229225910.79e224cf@kernel.org/
-> > >>>
-> > >>> Signed-off-by: Breno Leitao <leitao@debian.org>
-> > >>
-> > >> I think this patch should go via net-next tree, because wireless-next tree
-> > >> doesn't have patch of dummy devices yet.
-> > >>
-> > >> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-> > >
-> > > FWIW I sent the wireless-next pull request yesterday and once it pulled
-> > > we will fast forward wireless-next to latest net-next.
-> > 
-> > Oh, I just realised that this is not CCed to netdev so their patchwork
-> > won't even see the patch. Ping, I recommend that you wait for the
-> > dependency commits to trickle down to your tree and then apply the
-> > patch. That's the simplest approach and no need to resend anything.
+On Wed 08-05-24 20:58:08, hailong.liu@oppo.com wrote:
+> From: "Hailong.Liu" <hailong.liu@oppo.com>
 > 
-> Okay. If we don't hurry to get this patch merged, I will apply this patch
-> to my tree.
+> Commit a421ef303008 ("mm: allow !GFP_KERNEL allocations for kvmalloc")
+> includes support for __GFP_NOFAIL, but it presents a conflict with
+> commit dd544141b9eb ("vmalloc: back off when the current task is
+> OOM-killed"). A possible scenario is as belows:
+> 
+> process-a
+> kvcalloc(n, m, GFP_KERNEL | __GFP_NOFAIL)
+>     __vmalloc_node_range()
+> 	__vmalloc_area_node()
+> 	    vm_area_alloc_pages()
+>             --> oom-killer send SIGKILL to process-a
+>             if (fatal_signal_pending(current)) break;
+> --> return NULL;
+> 
+> to fix this, do not check fatal_signal_pending() in vm_area_alloc_pages()
+> if __GFP_NOFAIL set.
+> 
+> Reported-by: Oven <liyangouwen1@oppo.com>
+> Signed-off-by: Hailong.Liu <hailong.liu@oppo.com>
+> ---
+>  mm/vmalloc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index 6641be0ca80b..2f359d08bf8d 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -3560,7 +3560,7 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
+> 
+>  	/* High-order pages or fallback path if "bulk" fails. */
+>  	while (nr_allocated < nr_pages) {
+> -		if (fatal_signal_pending(current))
+> +		if (!(gfp & __GFP_NOFAIL) && fatal_signal_pending(current))
 
-There is no hurry to get this patch merged.
+Use nofail instead of gfp & __GFP_NOFAIL.
 
-Out of curiosity, why don't you rebase your tree to net-next/linux-next
-frequently?
+Other than that looks good to me. After that is fixed, please feel free
+to add Acked-by: Michal Hocko <mhocko@suse.com>
+
+I believe this should also have Fixes: 9376130c390a ("mm/vmalloc: add support for __GFP_NOFAIL")
+-- 
+Michal Hocko
+SUSE Labs
