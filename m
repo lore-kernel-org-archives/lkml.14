@@ -1,168 +1,155 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f73.google.com (mail-io1-f73.google.com [209.85.166.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D7385C5E;
-	Thu,  9 May 2024 21:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EF5126F2F
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 21:35:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715290473; cv=none; b=SZ6Mb/ttoZ/zOvt4iralrrWEYq5+KgJKph0cDRcVKwGUziD1tSmeFTVuJKCWbZ8QIoI7cz/ucnk4xnWJarPaOycyTTeUl43/hoHpOpFvIlcwAnYlH7pxUQKs6vFi8G8+C5WhaWKdLQl9shsLzg+RLYv7RvzABymzBN7c6M7/DrE=
+	t=1715290508; cv=none; b=dvud3lh4VVnMtxIGGK13r+gO9wmF/Wo/0K7f8CBjIRVtM9f/T0MHoEfL/7aBkHkMKXVNolCe6rPUR3qeToDqC9F0/acsu/E1iJBxH5PmDmB/BinPOnugbfVaNBpKyx/1PbVGbzsl9+M70K8b9A7V3+9kid06tHABBNHtZe1Qzgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715290473; c=relaxed/simple;
-	bh=DMClA2EG4om7tUuZOout4+5pUV7yCTXmqNhHE4600xM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=csa6fCgUv9fF8ZEjNxY/qcefXwrQnJ4KZlrBrqDh5GI6doF+u+ULFrEPDoexDfaX/K4lbBSMairkAwBvtYJAO9CyCiBeivwzsja4YvWRGKl6N9hFxE39I3Pk1QRexoPpMYmc2rIL7NoCrxgdaJ/vRwNBPzCnYaepsPFgMMMJDOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=LI9r2ZDo; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715290508; c=relaxed/simple;
+	bh=uv7v4MLGPmkr51z3KG/Rh+hiMOP4ZZ4Gh3YiVTDYvFA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=lleVO0NhsG5Tnry9IXQXDAlmYRxqhJja5mkKdxZ1+3u5H2ARKUZTiVCLp0PmD/x3PQ3rarGt2EkB7KeiZ415zM5rfcpzNGIdikwPLRWP51Z6IPzcwOA5WuhFvGnPEe5LE0llO+AfYNmXs2v9qXRiePZ4l2NWJv5SUOwClXxawpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QK3JNBrc; arc=none smtp.client-ip=209.85.166.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--justinstitt.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="LI9r2ZDo"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 449KtB8X012405;
-	Thu, 9 May 2024 21:34:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=cIukUmTAz21I3U9U4WGeVwO7Ge0VeW/gUAEvuX3Cztc=; b=LI
-	9r2ZDod4f1CfRw0lzzeck32b+xIyPiWNzUzL70jaE0GWi79OrRqe7hiTMCQnshjR
-	M+YlIEWTxolltwsRLJ54IH3eQAVAfx6gcOgoYnTbqddSIGXfr4qbfsg6nT68hFqO
-	QD+/f7xVKlSdtjj19rpQSd71bm2wPqoPodM2bvcyFL0IrobV0qXFffIAnj3Ryx4J
-	JkuENjg/HdYm0UBiz4/P7WlHIMudK0ofQWhMMPONf+EumzP5KCSW7HoT6VWYJtZN
-	zWuTKpTSAZ6kshg6Mmp5jHEUYmxIwgY55lQPpGltrPb6wjXOMB58KgHKcBKe7MS2
-	WRXOLrTOkp1Gwm7T7XUw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y09f5unjr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 21:34:07 +0000 (GMT)
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 449LY6PO000667
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 9 May 2024 21:34:06 GMT
-Received: from [10.71.112.114] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 9 May 2024
- 14:34:05 -0700
-Message-ID: <d0c1e6a8-3caa-3530-d49a-a8b820d19cf1@quicinc.com>
-Date: Thu, 9 May 2024 14:34:01 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QK3JNBrc"
+Received: by mail-io1-f73.google.com with SMTP id ca18e2360f4ac-7d6bf30c9e3so143969139f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 14:35:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715290505; x=1715895305; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3ImQHVo+vcC5MB5qhHl7DBcXB3jiIy8A/c5k1YsEXD8=;
+        b=QK3JNBrcSu/NcL1suArpqCa8gQtQNQR+tgaNL2KSrFscI6VSuhIQ/ttF8JTLC9UC7h
+         A4OIguVzNL/J/qmy5Pjpgq/z7D5XYY82LpOff8nfvYGR2kUkXnYu0vlrgOFa62/2989A
+         RZQkyHGVM4GdVr1bTwsywHUiM7sSwzf1SEEFVVfWOqaQhZzAIZmG21fjMQ7ROlCZLy2s
+         9eIvAZrwKAS+gKyUpPx0nmV/eUY9Iihn2wsHfjAmp+jJs1QR5+kkULhbJS+fFFfl8vWo
+         3+H6cbDX8paWaVIjS0Km+1wlirsvoJI6km313R5hfufBi8/dlBJk/P8ze1MveVy05uiK
+         wHIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715290505; x=1715895305;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3ImQHVo+vcC5MB5qhHl7DBcXB3jiIy8A/c5k1YsEXD8=;
+        b=uQpYD/MlkR4EX+ucNPjRagtLARBFs0A8VPQITQgJm35G2it8yLPtCTN0DT5YqSQDcR
+         yArLg0pHepPXJxfsPCUjnRt6576X+cstj6GsLeXk+vz0PjySCK9Wr5Wec09njWPfZuM7
+         zGUeDKrSUolLpyeG3zteANupmtiD7YpDdX2RQrjhKvd2NiAUgdQV3x24jqW3OxZP80Tt
+         o0iuihiBtoCjZ0Bvf3KAjIOakmNBJohq5Q+vJ1ic0O4dMKKsUAtMbdQLJ+KjhdqYm/MU
+         6PvlXph49E9XPstj/M8l+jZUd5TtAe0JSMgctOA0uJJCGIoYTT/IYbHkjJeMNBb7cITs
+         nmCg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSodQPcWw1UcummH5t/1nIOgIZy8T/YOyWW/drvTnukJYOAFKot8nsbUF1hnmavOQFGoEjR4J7TjgzKe/Bt4jx9DTVTNo5828uwwUd
+X-Gm-Message-State: AOJu0Yx65yzFtQvTVI6cVdyCIzPeLcCDn541Hx2PtSY8uDQRGGhkyqm4
+	ExdbGOK7HnpX/tLfuYDhaikI2IB7XJZX/RJRMpG0KEtDkRwjcxj8uX+8QdHInGGTgnToSrxCI18
+	ZHjgVaFc+jGJ1LU9lZCBfIA==
+X-Google-Smtp-Source: AGHT+IEiRdYq8Wex8h99nh5WydPpX7Vq4lpKhEWtZ+gSr9d2J4XqXwoNHRMO2CMehVVFUu1nF4aO/lTCJhlUg5Bhmg==
+X-Received: from jstitt-linux1.c.googlers.com ([fda3:e722:ac3:cc00:2b:ff92:c0a8:23b5])
+ (user=justinstitt job=sendgmr) by 2002:a92:d583:0:b0:36c:4844:2836 with SMTP
+ id e9e14a558f8ab-36cc13899e6mr147835ab.0.1715290504877; Thu, 09 May 2024
+ 14:35:04 -0700 (PDT)
+Date: Thu, 09 May 2024 21:34:58 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v21 09/39] ASoC: qcom: qdsp6: Introduce USB AFE port to
- q6dsp
-To: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        <srinivas.kandagatla@linaro.org>, <mathias.nyman@intel.com>,
-        <perex@perex.cz>, <conor+dt@kernel.org>, <corbet@lwn.net>,
-        <lgirdwood@gmail.com>, <andersson@kernel.org>, <krzk+dt@kernel.org>,
-        <gregkh@linuxfoundation.org>, <Thinh.Nguyen@synopsys.com>,
-        <broonie@kernel.org>, <bgoswami@quicinc.com>, <tiwai@suse.com>,
-        <bagasdotme@gmail.com>, <robh@kernel.org>, <konrad.dybcio@linaro.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-sound@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <alsa-devel@alsa-project.org>
-References: <20240507195116.9464-1-quic_wcheng@quicinc.com>
- <20240507195116.9464-10-quic_wcheng@quicinc.com>
- <9bd1ec72-71ea-4a1c-b795-af6e7687ca07@linux.intel.com>
- <0a4d7c2b-ac7d-7bd4-f97e-db60944a1d39@quicinc.com>
- <726e7006-30b4-4525-84c8-4fb2ef380994@linux.intel.com>
-Content-Language: en-US
-From: Wesley Cheng <quic_wcheng@quicinc.com>
-In-Reply-To: <726e7006-30b4-4525-84c8-4fb2ef380994@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ElA1DleWGwoZYGAQNwZNxyKuF9wVF_HB
-X-Proofpoint-ORIG-GUID: ElA1DleWGwoZYGAQNwZNxyKuF9wVF_HB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-09_12,2024-05-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- phishscore=0 suspectscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
- impostorscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
- mlxlogscore=576 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405010000 definitions=main-2405090152
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAIFBPWYC/x2M0QpAQBAAf0X7bGtdh/gVScct9gXtCXX5d5fHq
+ ZmJEFiFA7RZBOVLguxbgiLPYFrdtjCKTwyGjKWSGhwtJgeVnR9ulZORrCtqb6kyxJC6Q3mW539 2/ft+srErTWMAAAA=
+X-Developer-Key: i=justinstitt@google.com; a=ed25519; pk=tC3hNkJQTpNX/gLKxTNQKDmiQl6QjBNCGKJINqAdJsE=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715290503; l=3178;
+ i=justinstitt@google.com; s=20230717; h=from:subject:message-id;
+ bh=uv7v4MLGPmkr51z3KG/Rh+hiMOP4ZZ4Gh3YiVTDYvFA=; b=moZCMobUhHuu5mlPuDlnNyf1lyGJPFFtu9MPpPL6JANzBLFDu+rnxPw5+YcK4vY3CvBZCb8No
+ IgZlxxdOpElBUyRvDC0EZAHJ7C5+t0Jtsl5u7iJZKAXlCc4UzjVKcU4
+X-Mailer: b4 0.12.3
+Message-ID: <20240509-b4-sio-read_write-v1-1-06bec2022697@google.com>
+Subject: [PATCH] fs: fix unintentional arithmetic wraparound in offset calculation
+From: Justin Stitt <justinstitt@google.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-hardening@vger.kernel.org, 
+	Justin Stitt <justinstitt@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-Hi Pierre,
+When running syzkaller with the newly reintroduced signed integer
+overflow sanitizer we encounter this report:
 
-On 5/9/2024 5:54 AM, Pierre-Louis Bossart wrote:
-> 
-> 
-> 
->>> Wait, is this saying you will have exactly one PCM device/FE DAI
->>> connected to the USB BE DAI exposed in patch 11?
->>>
->>>> +    SND_SOC_DAPM_MIXER("USB Mixer", SND_SOC_NOPM, 0, 0,
->>>> +               usb_mixer_controls,
->>>> +               ARRAY_SIZE(usb_mixer_controls)),
->>>> +
->>>
->>> And then what is the role of the USB mixer if you only have one input?
->>>
->>> I must be missing something.
->>>
->>
->> Not sure if this is a QCOM specific implementation, but the way the DT
->> is defined for the USB offload path is as follows:
->>
->>      usb-dai-link {
->>          link-name = "USB Playback";
->>
->>          cpu {
->>              sound-dai = <&q6afedai USB_RX>;
->>          };
->>
->>          codec {
->>              sound-dai = <&usbdai USB_RX>;
->>          };
->>
->>          platform {
->>              sound-dai = <&q6routing>;
->>          };
->>      };
->>
->> Based on our DT parser helper API (qcom_snd_parse_of()) this isn't going
->> to create a PCM device.  The PCM devices are created for nodes that
->> don't have a codec and platform defined:
->>
->>      mm1-dai-link {
->>          link-name = "MultiMedia1";
->>          cpu {
->>              sound-dai = <&q6asmdai      MSM_FRONTEND_DAI_MULTIMEDIA1>;
->>          };
->>      };
->>
->> The ASM path is the entity that defines the number of PCM devices that
->> is created for the QC ASoC platform card, and is where the actual PCM
->> data is sent over to the DSP.  So there could be several PCM devices
->> that can use the USB BE DAI.
-> 
-> ok, but then how would this work with the ALSA controls reporting which
-> PCM device can be used? I didn't see a mechanism allowing for more than
-> one offloaded device, IIRC the control reported just ONE PCM device number.
+[   67.991989] ------------[ cut here ]------------
+[   67.995501] UBSAN: signed-integer-overflow in ../fs/read_write.c:91:10
+[   68.000067] 9223372036854775807 + 4096 cannot be represented in type 'loff_t' (aka 'long long')
+[   68.006266] CPU: 4 PID: 10851 Comm: syz-executor.5 Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
+[   68.012353] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[   68.018983] Call Trace:
+[   68.020803]  <TASK>
+[   68.022540]  dump_stack_lvl+0x93/0xd0
+[   68.025222]  handle_overflow+0x171/0x1b0
+[   68.028053]  generic_file_llseek_size+0x35b/0x380
+...
 
-With respects to the PCM devices exposed by the ASoC card, the USB Mixer 
-controls which "Multimedia" (ASM) path can be routed to the USB BE DAI.
+Historically, the signed integer overflow sanitizer did not work in the
+kernel due to its interaction with `-fwrapv` but this has since been
+changed [1] in the newest version of Clang. It was re-enabled in the
+kernel with Commit 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow
+sanitizer").
 
-The kcontrols you are mentioning are controlling which USB card and USB 
-PCM device to execute the offloading on.  As of now, at least for the 
-QCOM implementation, we support only offloading on one path/USB 
-interface.  I can't comment on how other offloading solutions look like, 
-but we pass the USB PCM and card index as part of our AFE port open 
-command (done from USB BE DAI).  This will result in a USB QMI message 
-back (from ADSP) to our USB SND offload driver, which carries all the 
-information about the selected card and PCM index to execute offloading on.
+Since @offset is later limited by @maxsize, we can proactively safeguard
+against exceeding that value and also dodge some accidental overflow
+(which may cause bad file access):
 
-One thing I can do is to actually make the kcontrols for selecting the 
-PCM and card devices to look at the num_supported_streams.  This would 
-at least allow for vendors that have support for more potential 
-offloading streams to select more than one.
+	loff_t vfs_setpos(struct file *file, loff_t offset, loff_t maxsize)
+	{
+		if (offset < 0 && !unsigned_offsets(file))
+			return -EINVAL;
+		if (offset > maxsize)
+			return -EINVAL;
+		...
 
-Thanks
-Wesley Cheng
+Link: https://github.com/llvm/llvm-project/pull/82432 [1]
+Closes: https://github.com/KSPP/linux/issues/358
+Cc: linux-hardening@vger.kernel.org
+Signed-off-by: Justin Stitt <justinstitt@google.com>
+---
+Here's the syzkaller reproducer:
+| # {Threaded:false Repeat:false RepeatTimes:0 Procs:1 Slowdown:1 Sandbox:
+| # SandboxArg:0 Leak:false NetInjection:false NetDevices:false
+| # NetReset:false Cgroups:false BinfmtMisc:false CloseFDs:false KCSAN:false
+| # DevlinkPCI:false NicVF:false USB:false VhciInjection:false Wifi:false
+| # IEEE802154:false Sysctl:false Swap:false UseTmpDir:false
+| # HandleSegv:false Repro:false Trace:false LegacyOptions:{Collide:false
+| # Fault:false FaultCall:0 FaultNth:0}}
+| r0 = openat$sysfs(0xffffffffffffff9c, &(0x7f0000000000)='/sys/kernel/address_bits', 0x0, 0x98)
+| lseek(r0, 0x7fffffffffffffff, 0x2)
+
+... which was used against Kees' tree here (v6.8rc2):
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=wip/v6.9-rc2/unsigned-overflow-sanitizer
+
+... with this config:
+https://gist.github.com/JustinStitt/824976568b0f228ccbcbe49f3dee9bf4
+---
+ fs/read_write.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/read_write.c b/fs/read_write.c
+index d4c036e82b6c..10c3eaa5ef55 100644
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -88,7 +88,7 @@ generic_file_llseek_size(struct file *file, loff_t offset, int whence,
+ {
+ 	switch (whence) {
+ 	case SEEK_END:
+-		offset += eof;
++		offset = min_t(loff_t, offset, maxsize - eof) + eof;
+ 		break;
+ 	case SEEK_CUR:
+ 		/*
+
+---
+base-commit: 0106679839f7c69632b3b9833c3268c316c0a9fc
+change-id: 20240509-b4-sio-read_write-04a17d40620e
+
+Best regards,
+--
+Justin Stitt <justinstitt@google.com>
+
