@@ -1,132 +1,850 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5053129E76;
-	Thu,  9 May 2024 20:01:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C090D80039
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 20:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715284877; cv=none; b=VPlUZyzfwnZtyPF88VF+MHkLxsEJrkP1mNnlwHs06kLIJzPqs2I/vNi5eYKPJ7m5Lj2TUywth3BZNpdkXqj543pf+gp4jp0WDXJnZFh8Q9wcuh04UVRfIxhftQwpgvstaFPS7TzGs+iO0nU/3hnSyzW+ZjNtGjCKlEAaptxyx7Q=
+	t=1715284870; cv=none; b=OOtH1fonM8KXqyExwOZx45NcfHJMWOXUiKhb2KD5FqFtdni/3l0GGNrIyYjJ5AiHuKtoeprCQdFMzMTkAtb8foZHBmlhBcr7zm04W7tB+UghB5mBZmQHXw2XhhAZPK2fgxPa69U+hy+eclylGawof30B70x8786RQCl1m4abP8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715284877; c=relaxed/simple;
-	bh=sRaSSg2FFDTPDk8c0zgqQf1W2ss6flB+SQnVqYy9dz0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Rp9eAEda9Kp1JQlOyhlHngfZsKXhfB7l5263lmNinRT/C4OY57Kph7lvwXVBykZcN7GMHx3OCkf1IUu1Bsxx3y2LqU++QcBfDv7tBmZLjquKKKdFWOxjDhG4gljlrsKfOF7ykb1x+IIRTJX44zjnDvQAaGG2VypnlTi1xQEU5WY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Y0RCS5xi; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1715284870; c=relaxed/simple;
+	bh=BywuTfRWMV89KZ9QCNZ0lzu6VQ7k0zP/IBsIKLI3ytA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=brUZLsT5VNYMApztGpAhm4+DAFzQTt6wOfUHgQ8DjFl3pzUZI/b5rH7y4WHTjrrfAvyN/D/PPGJaY8HCn6c/LeiqmpDvTsUil4Z8GM7dNcBlesNsvtii2nzuZ9ApzYkICKuH6g6rhePT9VVfdD1k3XHSGSjxu8BOM9jUzVK1EtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AwLtsB6C; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Y0RCS5xi"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 449B7BB4006645;
-	Thu, 9 May 2024 18:59:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=TGevrFxx2sEOPvGB+uwSE8YqKDHduVwVRYRlUxcJcic=; b=Y0
-	RCS5xi8DUFJJFXkFIvslJpUQrX4N2B3rw2xR16vtDShPPd+qYZIuNsuxZ8i6m4fc
-	7sv6KhcKZSZi7c7QPjJ9wFHg9qg7QGVQt/snMIATkReTj2iuIbCpa3/ALDME/h2B
-	CU7nyRmq6odr22bXb3x44XSJ0rPwr9nR7AxroyipgFa+PXmO9HUJNZ1CM0yxMbFX
-	duZCvXpDtkiw1xsot3uNogv4dk35QIk1CJFL2qZ/2v/glgh5QRyU3/dDK6KTsk8B
-	+YnTz2quCwc3krndrS/xLXeunhRMKGwonDR7tfPtXM+ymDcBxxXnyH9HAl60UaVR
-	id5pYbUb6pp0XEgHAJgA==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y07wfup54-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 18:59:55 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 449IxsG5018864
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 9 May 2024 18:59:54 GMT
-Received: from [10.110.104.129] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 9 May 2024
- 11:59:53 -0700
-Message-ID: <1e043ff3-58e0-7fd0-00b6-9117bc81e9ff@quicinc.com>
-Date: Thu, 9 May 2024 11:59:52 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AwLtsB6C"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6f467b9e948so1252511b3a.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 13:01:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715284867; x=1715889667; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=YbNfWdZqwCgP5Pz0h9FCkFX5FCC2CTEzcGds39PN8sE=;
+        b=AwLtsB6C0HI6y+pSxYtqSPHtIAKFQAVJPVEDL8Lu0QoDL0rthHO0EZi7A6PDUiCt4f
+         Iiuf70T/7GlGpDkmP3DfKAj4E/axmpM3Y8/jvL5BRFq1gJGyb6GgLMC2Lsp8booma2q8
+         lM/03vv69PNH65b4UQZKVdnzmucsMYe+Jh2waUPd+mLyqu1biG6uexL+MH3vqlOuHBNL
+         h+9ERA4EPnAVYpcTOGit70ZmNsvQxBGqL7YR23jepBYt2eo9WxcF+THujq0kvF6mnNM9
+         W1ts7Fnb38Pz6bKJcRQ/Tlb5iQZOc8xdxnsBKoZUfejL9/1PaS8jvRDEhlxdQfA9oVUU
+         trWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715284867; x=1715889667;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YbNfWdZqwCgP5Pz0h9FCkFX5FCC2CTEzcGds39PN8sE=;
+        b=QQbscpEHldpXGI2Sr9mpAQuMp65QrofrEv7Iraa9Q14vgQbT7iygp3JddSnYaNnxbm
+         tLKG/1rxUXC3VJ2mqdJjVEsp2tx1Ai+GhnwQobbI50/aW0Dm7TIkxgIZv7vlX/+FS5uZ
+         Z6l1Jys2qZTsBQAtmGzG2oVlGznfbh7OUqXm7D1SZu4M1vYL+EqghjRtICvfry+M8QqO
+         Zi/p+awV8yyZLoz4eLGlQY6VDmcXmoID7Sv04LcEtO8tCXTB1lLP65itXzJYNyVqCVuf
+         J/EA1GYzXQNo2GfeAUKoYMHSIe3DZmM4pBbwz5Wlltq7H6NuIz+mY3LKxyE6L5hjbiAb
+         vOGg==
+X-Gm-Message-State: AOJu0Yy4j7pNgLXqOLXdxNQYh1GylhlyrfEerl89iSc5aSDVausoFpLx
+	1TxJKF04DzadDB5EtSkOldx2OOfvJOlCJmOBFaLLug0ymvdzMWUJTULKxngOPnqeFyyElFcUIne
+	jxw==
+X-Google-Smtp-Source: AGHT+IEWn0NJLdJVm8i3nXGNqhMT3erMoL6+SEwGmAotS98GMnAZKIncf6dhlt5bk6pE2nlhU8Kro/+E0ms=
+X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
+ (user=edliaw job=sendgmr) by 2002:a05:6a00:3c91:b0:6ea:aafa:815c with SMTP id
+ d2e1a72fcca58-6f4e0263dd0mr24703b3a.1.1715284867136; Thu, 09 May 2024
+ 13:01:07 -0700 (PDT)
+Date: Thu,  9 May 2024 19:57:58 +0000
+In-Reply-To: <20240509200022.253089-1-edliaw@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] docs: document python version used for compilation
-Content-Language: en-US
-To: Jonathan Corbet <corbet@lwn.net>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul
-	<sean@poorly.run>,
-        Marijn Suijten <marijn.suijten@somainline.org>
-CC: <workflows@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Masahiro Yamada <masahiroy@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>
-References: <20240509-python-version-v1-1-a7dda3a95b5f@linaro.org>
- <87o79faq4a.fsf@meer.lwn.net>
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <87o79faq4a.fsf@meer.lwn.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: UTN9o-NiCFp8SHChNih0iPS8RnlyCSRO
-X-Proofpoint-ORIG-GUID: UTN9o-NiCFp8SHChNih0iPS8RnlyCSRO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-09_10,2024-05-09_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- spamscore=0 priorityscore=1501 suspectscore=0 bulkscore=0 phishscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405010000
- definitions=main-2405090133
+Mime-Version: 1.0
+References: <20240509200022.253089-1-edliaw@google.com>
+X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
+Message-ID: <20240509200022.253089-7-edliaw@google.com>
+Subject: [PATCH v3 06/68] selftests/bpf: Drop define _GNU_SOURCE
+From: Edward Liaw <edliaw@google.com>
+To: shuah@kernel.org, "=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>, 
+	"=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>, Christian Brauner <brauner@kernel.org>, 
+	Richard Cochran <richardcochran@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Mykola Lysenko <mykolal@fb.com>, "=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?=" <bjorn@kernel.org>, 
+	Magnus Karlsson <magnus.karlsson@intel.com>, 
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>, Jonathan Lemon <jonathan.lemon@gmail.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Edward Liaw <edliaw@google.com>, 
+	Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kernel-team@android.com, linux-security-module@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-riscv@lists.infradead.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+_GNU_SOURCE is provided by lib.mk, so it should be dropped to prevent
+redefinition warnings.
 
+Fixes: 809216233555 ("selftests/harness: remove use of LINE_MAX")
+Signed-off-by: Edward Liaw <edliaw@google.com>
+---
+ tools/testing/selftests/bpf/bench.c                            | 1 -
+ tools/testing/selftests/bpf/benchs/bench_trigger.c             | 1 -
+ tools/testing/selftests/bpf/cgroup_helpers.c                   | 1 -
+ tools/testing/selftests/bpf/map_tests/task_storage_map.c       | 1 -
+ tools/testing/selftests/bpf/network_helpers.c                  | 2 --
+ tools/testing/selftests/bpf/prog_tests/bind_perm.c             | 1 -
+ tools/testing/selftests/bpf/prog_tests/bpf_cookie.c            | 1 -
+ tools/testing/selftests/bpf/prog_tests/bpf_iter_setsockopt.c   | 1 -
+ tools/testing/selftests/bpf/prog_tests/bpf_obj_pinning.c       | 1 -
+ tools/testing/selftests/bpf/prog_tests/btf_endian.c            | 1 -
+ tools/testing/selftests/bpf/prog_tests/btf_skc_cls_ingress.c   | 2 --
+ tools/testing/selftests/bpf/prog_tests/cgrp_kfunc.c            | 2 --
+ tools/testing/selftests/bpf/prog_tests/cgrp_local_storage.c    | 2 --
+ tools/testing/selftests/bpf/prog_tests/cls_redirect.c          | 3 ---
+ tools/testing/selftests/bpf/prog_tests/connect_ping.c          | 2 --
+ tools/testing/selftests/bpf/prog_tests/core_retro.c            | 1 -
+ tools/testing/selftests/bpf/prog_tests/d_path.c                | 1 -
+ tools/testing/selftests/bpf/prog_tests/deny_namespace.c        | 1 -
+ tools/testing/selftests/bpf/prog_tests/fexit_sleep.c           | 1 -
+ .../testing/selftests/bpf/prog_tests/flow_dissector_reattach.c | 2 --
+ tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c      | 1 -
+ tools/testing/selftests/bpf/prog_tests/htab_reuse.c            | 1 -
+ tools/testing/selftests/bpf/prog_tests/htab_update.c           | 1 -
+ tools/testing/selftests/bpf/prog_tests/map_in_map.c            | 1 -
+ tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c   | 2 --
+ tools/testing/selftests/bpf/prog_tests/perf_branches.c         | 1 -
+ tools/testing/selftests/bpf/prog_tests/perf_buffer.c           | 1 -
+ tools/testing/selftests/bpf/prog_tests/perf_event_stackmap.c   | 1 -
+ tools/testing/selftests/bpf/prog_tests/perf_link.c             | 1 -
+ tools/testing/selftests/bpf/prog_tests/perf_skip.c             | 2 --
+ tools/testing/selftests/bpf/prog_tests/preempted_bpf_ma_op.c   | 1 -
+ tools/testing/selftests/bpf/prog_tests/rcu_read_lock.c         | 2 --
+ tools/testing/selftests/bpf/prog_tests/reg_bounds.c            | 2 --
+ tools/testing/selftests/bpf/prog_tests/ringbuf.c               | 1 -
+ tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c         | 1 -
+ tools/testing/selftests/bpf/prog_tests/setget_sockopt.c        | 2 --
+ tools/testing/selftests/bpf/prog_tests/sk_assign.c             | 2 --
+ tools/testing/selftests/bpf/prog_tests/sk_lookup.c             | 2 --
+ tools/testing/selftests/bpf/prog_tests/sock_fields.c           | 2 --
+ tools/testing/selftests/bpf/prog_tests/task_kfunc.c            | 2 --
+ tools/testing/selftests/bpf/prog_tests/task_local_storage.c    | 2 --
+ tools/testing/selftests/bpf/prog_tests/task_pt_regs.c          | 1 -
+ tools/testing/selftests/bpf/prog_tests/tcp_custom_syncookie.c  | 2 --
+ tools/testing/selftests/bpf/prog_tests/tcp_hdr_options.c       | 2 --
+ tools/testing/selftests/bpf/prog_tests/test_bpf_ma.c           | 1 -
+ .../testing/selftests/bpf/prog_tests/test_bpf_syscall_macro.c  | 1 -
+ tools/testing/selftests/bpf/prog_tests/test_bpffs.c            | 1 -
+ tools/testing/selftests/bpf/prog_tests/test_overhead.c         | 1 -
+ tools/testing/selftests/bpf/prog_tests/token.c                 | 1 -
+ tools/testing/selftests/bpf/prog_tests/trace_ext.c             | 2 --
+ tools/testing/selftests/bpf/prog_tests/trampoline_count.c      | 1 -
+ tools/testing/selftests/bpf/prog_tests/user_ringbuf.c          | 2 --
+ tools/testing/selftests/bpf/prog_tests/xdp_bonding.c           | 2 --
+ tools/testing/selftests/bpf/prog_tests/xdp_synproxy.c          | 2 --
+ tools/testing/selftests/bpf/test_flow_dissector.c              | 3 ---
+ tools/testing/selftests/bpf/test_lru_map.c                     | 1 -
+ tools/testing/selftests/bpf/test_progs.c                       | 1 -
+ tools/testing/selftests/bpf/test_sock_addr.c                   | 3 ---
+ tools/testing/selftests/bpf/test_tcpnotify_user.c              | 1 -
+ tools/testing/selftests/bpf/veristat.c                         | 1 -
+ tools/testing/selftests/bpf/xskxceiver.c                       | 2 --
+ 61 files changed, 90 deletions(-)
 
-On 5/9/2024 9:48 AM, Jonathan Corbet wrote:
-> Dmitry Baryshkov <dmitry.baryshkov@linaro.org> writes:
-> 
->> The drm/msm driver had adopted using Python3 script to generate register
->> header files instead of shipping pre-generated header files. Document
->> the minimal Python version supported by the script.
->>
->> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> ---
->>   Documentation/process/changes.rst | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/process/changes.rst b/Documentation/process/changes.rst
->> index 5685d7bfe4d0..8d225a9f65a2 100644
->> --- a/Documentation/process/changes.rst
->> +++ b/Documentation/process/changes.rst
->> @@ -63,6 +63,7 @@ cpio                   any              cpio --version
->>   GNU tar                1.28             tar --version
->>   gtags (optional)       6.6.5            gtags --version
->>   mkimage (optional)     2017.01          mkimage --version
->> +Python (optional)      3.5.x            python3 --version
->>   ====================== ===============  ========================================
-> 
-> Is it really optional - can you build the driver without it?
-> 
+diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
+index 627b74ae041b..ab06bd67a22c 100644
+--- a/tools/testing/selftests/bpf/bench.c
++++ b/tools/testing/selftests/bpf/bench.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2020 Facebook */
+-#define _GNU_SOURCE
+ #include <argp.h>
+ #include <linux/compiler.h>
+ #include <sys/time.h>
+diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/testing/selftests/bpf/benchs/bench_trigger.c
+index 4b05539f167d..dc84469cbfa6 100644
+--- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
++++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2020 Facebook */
+-#define _GNU_SOURCE
+ #include <argp.h>
+ #include <unistd.h>
+ #include <stdint.h>
+diff --git a/tools/testing/selftests/bpf/cgroup_helpers.c b/tools/testing/selftests/bpf/cgroup_helpers.c
+index 23bb9a9e6a7d..3040ba7cc9ba 100644
+--- a/tools/testing/selftests/bpf/cgroup_helpers.c
++++ b/tools/testing/selftests/bpf/cgroup_helpers.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <sys/mount.h>
+ #include <sys/stat.h>
+diff --git a/tools/testing/selftests/bpf/map_tests/task_storage_map.c b/tools/testing/selftests/bpf/map_tests/task_storage_map.c
+index 7d050364efca..89ff4ed5c59b 100644
+--- a/tools/testing/selftests/bpf/map_tests/task_storage_map.c
++++ b/tools/testing/selftests/bpf/map_tests/task_storage_map.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (C) 2022. Huawei Technologies Co., Ltd */
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <unistd.h>
+ #include <stdlib.h>
+diff --git a/tools/testing/selftests/bpf/network_helpers.c b/tools/testing/selftests/bpf/network_helpers.c
+index 054d26e383e0..e4020cf19424 100644
+--- a/tools/testing/selftests/bpf/network_helpers.c
++++ b/tools/testing/selftests/bpf/network_helpers.c
+@@ -1,6 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+-#define _GNU_SOURCE
+-
+ #include <errno.h>
+ #include <stdbool.h>
+ #include <stdio.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/bind_perm.c b/tools/testing/selftests/bpf/prog_tests/bind_perm.c
+index f7cd129cb82b..c3839f425ba5 100644
+--- a/tools/testing/selftests/bpf/prog_tests/bind_perm.c
++++ b/tools/testing/selftests/bpf/prog_tests/bind_perm.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <stdlib.h>
+ #include <sys/types.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c b/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c
+index 4407ea428e77..a47f453dd7e8 100644
+--- a/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c
++++ b/tools/testing/selftests/bpf/prog_tests/bpf_cookie.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2021 Facebook */
+-#define _GNU_SOURCE
+ #include <pthread.h>
+ #include <sched.h>
+ #include <sys/syscall.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_iter_setsockopt.c b/tools/testing/selftests/bpf/prog_tests/bpf_iter_setsockopt.c
+index b52ff8ce34db..be8a401eb07a 100644
+--- a/tools/testing/selftests/bpf/prog_tests/bpf_iter_setsockopt.c
++++ b/tools/testing/selftests/bpf/prog_tests/bpf_iter_setsockopt.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2021 Facebook */
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <test_progs.h>
+ #include "network_helpers.h"
+diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_obj_pinning.c b/tools/testing/selftests/bpf/prog_tests/bpf_obj_pinning.c
+index ee0458a5ce78..e33129203194 100644
+--- a/tools/testing/selftests/bpf/prog_tests/bpf_obj_pinning.c
++++ b/tools/testing/selftests/bpf/prog_tests/bpf_obj_pinning.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2023 Meta Platforms, Inc. and affiliates. */
+-#define _GNU_SOURCE
+ #include <test_progs.h>
+ #include <bpf/btf.h>
+ #include <fcntl.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/btf_endian.c b/tools/testing/selftests/bpf/prog_tests/btf_endian.c
+index 5b9f84dbeb43..460b117507bb 100644
+--- a/tools/testing/selftests/bpf/prog_tests/btf_endian.c
++++ b/tools/testing/selftests/bpf/prog_tests/btf_endian.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2020 Facebook */
+-#define _GNU_SOURCE
+ #include <string.h>
+ #include <byteswap.h>
+ #include <test_progs.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/btf_skc_cls_ingress.c b/tools/testing/selftests/bpf/prog_tests/btf_skc_cls_ingress.c
+index ef4d6a3ae423..1a90d6638147 100644
+--- a/tools/testing/selftests/bpf/prog_tests/btf_skc_cls_ingress.c
++++ b/tools/testing/selftests/bpf/prog_tests/btf_skc_cls_ingress.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2020 Facebook */
+-
+-#define _GNU_SOURCE
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
+ #include <unistd.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/cgrp_kfunc.c b/tools/testing/selftests/bpf/prog_tests/cgrp_kfunc.c
+index adda85f97058..7f1a6ffdda98 100644
+--- a/tools/testing/selftests/bpf/prog_tests/cgrp_kfunc.c
++++ b/tools/testing/selftests/bpf/prog_tests/cgrp_kfunc.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2022 Meta Platforms, Inc. and affiliates. */
+-
+-#define _GNU_SOURCE
+ #include <cgroup_helpers.h>
+ #include <test_progs.h>
+ 
+diff --git a/tools/testing/selftests/bpf/prog_tests/cgrp_local_storage.c b/tools/testing/selftests/bpf/prog_tests/cgrp_local_storage.c
+index 747761572098..accd25c2b638 100644
+--- a/tools/testing/selftests/bpf/prog_tests/cgrp_local_storage.c
++++ b/tools/testing/selftests/bpf/prog_tests/cgrp_local_storage.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2022 Meta Platforms, Inc. and affiliates.*/
+-
+-#define _GNU_SOURCE
+ #include <unistd.h>
+ #include <sys/syscall.h>
+ #include <sys/types.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/cls_redirect.c b/tools/testing/selftests/bpf/prog_tests/cls_redirect.c
+index 34b59f6baca1..598461560fa1 100644
+--- a/tools/testing/selftests/bpf/prog_tests/cls_redirect.c
++++ b/tools/testing/selftests/bpf/prog_tests/cls_redirect.c
+@@ -1,8 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0 OR BSD-3-Clause
+ // Copyright (c) 2020 Cloudflare
+-
+-#define _GNU_SOURCE
+-
+ #include <arpa/inet.h>
+ #include <string.h>
+ 
+diff --git a/tools/testing/selftests/bpf/prog_tests/connect_ping.c b/tools/testing/selftests/bpf/prog_tests/connect_ping.c
+index 40fe571f2fe7..f315f09391f7 100644
+--- a/tools/testing/selftests/bpf/prog_tests/connect_ping.c
++++ b/tools/testing/selftests/bpf/prog_tests/connect_ping.c
+@@ -3,8 +3,6 @@
+ /*
+  * Copyright 2022 Google LLC.
+  */
+-
+-#define _GNU_SOURCE
+ #include <sys/mount.h>
+ 
+ #include "test_progs.h"
+diff --git a/tools/testing/selftests/bpf/prog_tests/core_retro.c b/tools/testing/selftests/bpf/prog_tests/core_retro.c
+index 4a2c256c8db6..bb1b2ae3502f 100644
+--- a/tools/testing/selftests/bpf/prog_tests/core_retro.c
++++ b/tools/testing/selftests/bpf/prog_tests/core_retro.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (c) 2020 Facebook
+-#define _GNU_SOURCE
+ #include <test_progs.h>
+ #include "test_core_retro.skel.h"
+ 
+diff --git a/tools/testing/selftests/bpf/prog_tests/d_path.c b/tools/testing/selftests/bpf/prog_tests/d_path.c
+index ccc768592e66..7f172296c4a1 100644
+--- a/tools/testing/selftests/bpf/prog_tests/d_path.c
++++ b/tools/testing/selftests/bpf/prog_tests/d_path.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <test_progs.h>
+ #include <sys/stat.h>
+ #include <linux/sched.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/deny_namespace.c b/tools/testing/selftests/bpf/prog_tests/deny_namespace.c
+index 1bc6241b755b..ff8d03a906a3 100644
+--- a/tools/testing/selftests/bpf/prog_tests/deny_namespace.c
++++ b/tools/testing/selftests/bpf/prog_tests/deny_namespace.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <test_progs.h>
+ #include "test_deny_namespace.skel.h"
+ #include <sched.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/fexit_sleep.c b/tools/testing/selftests/bpf/prog_tests/fexit_sleep.c
+index f949647dbbc2..4f58a08db082 100644
+--- a/tools/testing/selftests/bpf/prog_tests/fexit_sleep.c
++++ b/tools/testing/selftests/bpf/prog_tests/fexit_sleep.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2021 Facebook */
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <test_progs.h>
+ #include <time.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/flow_dissector_reattach.c b/tools/testing/selftests/bpf/prog_tests/flow_dissector_reattach.c
+index 9333f7346d15..1f64ffc9a036 100644
+--- a/tools/testing/selftests/bpf/prog_tests/flow_dissector_reattach.c
++++ b/tools/testing/selftests/bpf/prog_tests/flow_dissector_reattach.c
+@@ -2,8 +2,6 @@
+ /*
+  * Tests for attaching, detaching, and replacing flow_dissector BPF program.
+  */
+-
+-#define _GNU_SOURCE
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <sched.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c b/tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c
+index 858e0575f502..080a94cde2dc 100644
+--- a/tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c
++++ b/tools/testing/selftests/bpf/prog_tests/get_stack_raw_tp.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <pthread.h>
+ #include <sched.h>
+ #include <sys/socket.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/htab_reuse.c b/tools/testing/selftests/bpf/prog_tests/htab_reuse.c
+index a742dd994d60..c80f97405cc2 100644
+--- a/tools/testing/selftests/bpf/prog_tests/htab_reuse.c
++++ b/tools/testing/selftests/bpf/prog_tests/htab_reuse.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (C) 2023. Huawei Technologies Co., Ltd */
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <stdbool.h>
+ #include <test_progs.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/htab_update.c b/tools/testing/selftests/bpf/prog_tests/htab_update.c
+index 2bc85f4814f4..37fa7fd75858 100644
+--- a/tools/testing/selftests/bpf/prog_tests/htab_update.c
++++ b/tools/testing/selftests/bpf/prog_tests/htab_update.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (C) 2022. Huawei Technologies Co., Ltd */
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <stdbool.h>
+ #include <test_progs.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/map_in_map.c b/tools/testing/selftests/bpf/prog_tests/map_in_map.c
+index d2a10eb4e5b5..51157f4f4ad6 100644
+--- a/tools/testing/selftests/bpf/prog_tests/map_in_map.c
++++ b/tools/testing/selftests/bpf/prog_tests/map_in_map.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (C) 2023. Huawei Technologies Co., Ltd */
+-#define _GNU_SOURCE
+ #include <unistd.h>
+ #include <sys/syscall.h>
+ #include <test_progs.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c b/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c
+index e72d75d6baa7..fa8c570584d3 100644
+--- a/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c
++++ b/tools/testing/selftests/bpf/prog_tests/ns_current_pid_tgid.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2020 Carlos Neira cneirabustos@gmail.com */
+-
+-#define _GNU_SOURCE
+ #include <test_progs.h>
+ #include "test_ns_current_pid_tgid.skel.h"
+ #include <sys/stat.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/perf_branches.c b/tools/testing/selftests/bpf/prog_tests/perf_branches.c
+index bc24f83339d6..d7b6e9405260 100644
+--- a/tools/testing/selftests/bpf/prog_tests/perf_branches.c
++++ b/tools/testing/selftests/bpf/prog_tests/perf_branches.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <pthread.h>
+ #include <sched.h>
+ #include <sys/socket.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/perf_buffer.c b/tools/testing/selftests/bpf/prog_tests/perf_buffer.c
+index 5fc2b3a0711e..d3775af00b0b 100644
+--- a/tools/testing/selftests/bpf/prog_tests/perf_buffer.c
++++ b/tools/testing/selftests/bpf/prog_tests/perf_buffer.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <pthread.h>
+ #include <sched.h>
+ #include <sys/socket.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/perf_event_stackmap.c b/tools/testing/selftests/bpf/prog_tests/perf_event_stackmap.c
+index f4aad35afae1..5edbeaf45459 100644
+--- a/tools/testing/selftests/bpf/prog_tests/perf_event_stackmap.c
++++ b/tools/testing/selftests/bpf/prog_tests/perf_event_stackmap.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (c) 2020 Facebook
+-#define _GNU_SOURCE
+ #include <pthread.h>
+ #include <sched.h>
+ #include <test_progs.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/perf_link.c b/tools/testing/selftests/bpf/prog_tests/perf_link.c
+index 3a25f1c743a1..083680a47748 100644
+--- a/tools/testing/selftests/bpf/prog_tests/perf_link.c
++++ b/tools/testing/selftests/bpf/prog_tests/perf_link.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2021 Facebook */
+-#define _GNU_SOURCE
+ #include <pthread.h>
+ #include <sched.h>
+ #include <test_progs.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/perf_skip.c b/tools/testing/selftests/bpf/prog_tests/perf_skip.c
+index 37d8618800e4..92bee9815834 100644
+--- a/tools/testing/selftests/bpf/prog_tests/perf_skip.c
++++ b/tools/testing/selftests/bpf/prog_tests/perf_skip.c
+@@ -1,6 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+-
+ #include <test_progs.h>
+ #include "test_perf_skip.skel.h"
+ #include <linux/compiler.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/preempted_bpf_ma_op.c b/tools/testing/selftests/bpf/prog_tests/preempted_bpf_ma_op.c
+index 3a2ec3923fca..63356b8410e8 100644
+--- a/tools/testing/selftests/bpf/prog_tests/preempted_bpf_ma_op.c
++++ b/tools/testing/selftests/bpf/prog_tests/preempted_bpf_ma_op.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (C) 2023. Huawei Technologies Co., Ltd */
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <pthread.h>
+ #include <stdbool.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/rcu_read_lock.c b/tools/testing/selftests/bpf/prog_tests/rcu_read_lock.c
+index a1f7e7378a64..da4391d9105d 100644
+--- a/tools/testing/selftests/bpf/prog_tests/rcu_read_lock.c
++++ b/tools/testing/selftests/bpf/prog_tests/rcu_read_lock.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2022 Meta Platforms, Inc. and affiliates.*/
+-
+-#define _GNU_SOURCE
+ #include <unistd.h>
+ #include <sys/syscall.h>
+ #include <sys/types.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/reg_bounds.c b/tools/testing/selftests/bpf/prog_tests/reg_bounds.c
+index eb74363f9f70..ba59d6ef1c57 100644
+--- a/tools/testing/selftests/bpf/prog_tests/reg_bounds.c
++++ b/tools/testing/selftests/bpf/prog_tests/reg_bounds.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2023 Meta Platforms, Inc. and affiliates. */
+-
+-#define _GNU_SOURCE
+ #include <limits.h>
+ #include <test_progs.h>
+ #include <linux/filter.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/ringbuf.c b/tools/testing/selftests/bpf/prog_tests/ringbuf.c
+index 4c6f42dae409..0091a42f88ce 100644
+--- a/tools/testing/selftests/bpf/prog_tests/ringbuf.c
++++ b/tools/testing/selftests/bpf/prog_tests/ringbuf.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <linux/compiler.h>
+ #include <asm/barrier.h>
+ #include <test_progs.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c b/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c
+index 58522195081b..3dce8575fbb4 100644
+--- a/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c
++++ b/tools/testing/selftests/bpf/prog_tests/ringbuf_multi.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <test_progs.h>
+ #include <sys/epoll.h>
+ #include "test_ringbuf_multi.skel.h"
+diff --git a/tools/testing/selftests/bpf/prog_tests/setget_sockopt.c b/tools/testing/selftests/bpf/prog_tests/setget_sockopt.c
+index 7d4a9b3d3722..fc20202d87c8 100644
+--- a/tools/testing/selftests/bpf/prog_tests/setget_sockopt.c
++++ b/tools/testing/selftests/bpf/prog_tests/setget_sockopt.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) Meta Platforms, Inc. and affiliates. */
+-
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <linux/socket.h>
+ #include <linux/tls.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/sk_assign.c b/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+index 0b9bd1d6f7cc..da3e2e98a894 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sk_assign.c
++++ b/tools/testing/selftests/bpf/prog_tests/sk_assign.c
+@@ -7,8 +7,6 @@
+  * socket, regardless of whether the port or address destination of the traffic
+  * matches the port.
+  */
+-
+-#define _GNU_SOURCE
+ #include <fcntl.h>
+ #include <signal.h>
+ #include <stdlib.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/sk_lookup.c b/tools/testing/selftests/bpf/prog_tests/sk_lookup.c
+index 597d0467a926..86d4831133db 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sk_lookup.c
++++ b/tools/testing/selftests/bpf/prog_tests/sk_lookup.c
+@@ -13,8 +13,6 @@
+  *
+  * Tests run in a dedicated network namespace.
+  */
+-
+-#define _GNU_SOURCE
+ #include <arpa/inet.h>
+ #include <assert.h>
+ #include <errno.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/sock_fields.c b/tools/testing/selftests/bpf/prog_tests/sock_fields.c
+index 7d23166c77af..8159bcac07df 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sock_fields.c
++++ b/tools/testing/selftests/bpf/prog_tests/sock_fields.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2019 Facebook */
+-
+-#define _GNU_SOURCE
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
+ #include <unistd.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/task_kfunc.c b/tools/testing/selftests/bpf/prog_tests/task_kfunc.c
+index d4579f735398..a3964524120f 100644
+--- a/tools/testing/selftests/bpf/prog_tests/task_kfunc.c
++++ b/tools/testing/selftests/bpf/prog_tests/task_kfunc.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2022 Meta Platforms, Inc. and affiliates. */
+-
+-#define _GNU_SOURCE
+ #include <sys/wait.h>
+ #include <test_progs.h>
+ #include <unistd.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/task_local_storage.c b/tools/testing/selftests/bpf/prog_tests/task_local_storage.c
+index c33c05161a9e..6ba2ea723d4e 100644
+--- a/tools/testing/selftests/bpf/prog_tests/task_local_storage.c
++++ b/tools/testing/selftests/bpf/prog_tests/task_local_storage.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2021 Facebook */
+-
+-#define _GNU_SOURCE         /* See feature_test_macros(7) */
+ #include <unistd.h>
+ #include <sched.h>
+ #include <pthread.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/task_pt_regs.c b/tools/testing/selftests/bpf/prog_tests/task_pt_regs.c
+index f000734a3d1f..87237ecdb3eb 100644
+--- a/tools/testing/selftests/bpf/prog_tests/task_pt_regs.c
++++ b/tools/testing/selftests/bpf/prog_tests/task_pt_regs.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <test_progs.h>
+ #include "test_task_pt_regs.skel.h"
+ 
+diff --git a/tools/testing/selftests/bpf/prog_tests/tcp_custom_syncookie.c b/tools/testing/selftests/bpf/prog_tests/tcp_custom_syncookie.c
+index eaf441dc7e79..05f1b3aa5ebd 100644
+--- a/tools/testing/selftests/bpf/prog_tests/tcp_custom_syncookie.c
++++ b/tools/testing/selftests/bpf/prog_tests/tcp_custom_syncookie.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright Amazon.com Inc. or its affiliates. */
+-
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <stdlib.h>
+ #include <net/if.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/tcp_hdr_options.c b/tools/testing/selftests/bpf/prog_tests/tcp_hdr_options.c
+index 56685fc03c7e..664d8c111c25 100644
+--- a/tools/testing/selftests/bpf/prog_tests/tcp_hdr_options.c
++++ b/tools/testing/selftests/bpf/prog_tests/tcp_hdr_options.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2020 Facebook */
+-
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/test_bpf_ma.c b/tools/testing/selftests/bpf/prog_tests/test_bpf_ma.c
+index ccae0b31ac6c..fbc510772bf8 100644
+--- a/tools/testing/selftests/bpf/prog_tests/test_bpf_ma.c
++++ b/tools/testing/selftests/bpf/prog_tests/test_bpf_ma.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (C) 2023. Huawei Technologies Co., Ltd */
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <pthread.h>
+ #include <stdbool.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/test_bpf_syscall_macro.c b/tools/testing/selftests/bpf/prog_tests/test_bpf_syscall_macro.c
+index 2900c5e9a016..fcc045e1942d 100644
+--- a/tools/testing/selftests/bpf/prog_tests/test_bpf_syscall_macro.c
++++ b/tools/testing/selftests/bpf/prog_tests/test_bpf_syscall_macro.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright 2022 Sony Group Corporation */
+-#define _GNU_SOURCE
+ #include <fcntl.h>
+ #include <sys/prctl.h>
+ #include <test_progs.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/test_bpffs.c b/tools/testing/selftests/bpf/prog_tests/test_bpffs.c
+index ea933fd151c3..c685d13bd6f8 100644
+--- a/tools/testing/selftests/bpf/prog_tests/test_bpffs.c
++++ b/tools/testing/selftests/bpf/prog_tests/test_bpffs.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2020 Facebook */
+-#define _GNU_SOURCE
+ #include <stdio.h>
+ #include <sched.h>
+ #include <sys/mount.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/test_overhead.c b/tools/testing/selftests/bpf/prog_tests/test_overhead.c
+index f27013e38d03..f9d9ee8f2fa4 100644
+--- a/tools/testing/selftests/bpf/prog_tests/test_overhead.c
++++ b/tools/testing/selftests/bpf/prog_tests/test_overhead.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright (c) 2019 Facebook */
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <sys/prctl.h>
+ #include <test_progs.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/token.c b/tools/testing/selftests/bpf/prog_tests/token.c
+index fc4a175d8d76..0b43aeda54a2 100644
+--- a/tools/testing/selftests/bpf/prog_tests/token.c
++++ b/tools/testing/selftests/bpf/prog_tests/token.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2023 Meta Platforms, Inc. and affiliates. */
+-#define _GNU_SOURCE
+ #include <test_progs.h>
+ #include <bpf/btf.h>
+ #include "cap_helpers.h"
+diff --git a/tools/testing/selftests/bpf/prog_tests/trace_ext.c b/tools/testing/selftests/bpf/prog_tests/trace_ext.c
+index aabdff7bea3e..f389bd922ef3 100644
+--- a/tools/testing/selftests/bpf/prog_tests/trace_ext.c
++++ b/tools/testing/selftests/bpf/prog_tests/trace_ext.c
+@@ -1,6 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-
+-#define _GNU_SOURCE
+ #include <test_progs.h>
+ #include <network_helpers.h>
+ #include <sys/stat.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/trampoline_count.c b/tools/testing/selftests/bpf/prog_tests/trampoline_count.c
+index 6cd7349d4a2b..f21d7b7dd05e 100644
+--- a/tools/testing/selftests/bpf/prog_tests/trampoline_count.c
++++ b/tools/testing/selftests/bpf/prog_tests/trampoline_count.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+-#define _GNU_SOURCE
+ #include <test_progs.h>
+ 
+ struct inst {
+diff --git a/tools/testing/selftests/bpf/prog_tests/user_ringbuf.c b/tools/testing/selftests/bpf/prog_tests/user_ringbuf.c
+index e51721df14fc..7532139c8dbd 100644
+--- a/tools/testing/selftests/bpf/prog_tests/user_ringbuf.c
++++ b/tools/testing/selftests/bpf/prog_tests/user_ringbuf.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ /* Copyright (c) 2022 Meta Platforms, Inc. and affiliates. */
+-
+-#define _GNU_SOURCE
+ #include <linux/compiler.h>
+ #include <linux/ring_buffer.h>
+ #include <pthread.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/xdp_bonding.c b/tools/testing/selftests/bpf/prog_tests/xdp_bonding.c
+index 6d8b54124cb3..ca2e652a0716 100644
+--- a/tools/testing/selftests/bpf/prog_tests/xdp_bonding.c
++++ b/tools/testing/selftests/bpf/prog_tests/xdp_bonding.c
+@@ -8,8 +8,6 @@
+  * are correctly loaded onto the slave devices and XDP_TX'd
+  * packets are balanced using bonding.
+  */
+-
+-#define _GNU_SOURCE
+ #include <sched.h>
+ #include <net/if.h>
+ #include <linux/if_link.h>
+diff --git a/tools/testing/selftests/bpf/prog_tests/xdp_synproxy.c b/tools/testing/selftests/bpf/prog_tests/xdp_synproxy.c
+index 8b50a992d233..9496b576e6f5 100644
+--- a/tools/testing/selftests/bpf/prog_tests/xdp_synproxy.c
++++ b/tools/testing/selftests/bpf/prog_tests/xdp_synproxy.c
+@@ -1,7 +1,5 @@
+ // SPDX-License-Identifier: LGPL-2.1 OR BSD-2-Clause
+ /* Copyright (c) 2022, NVIDIA CORPORATION & AFFILIATES. All rights reserved. */
+-
+-#define _GNU_SOURCE
+ #include <test_progs.h>
+ #include <network_helpers.h>
+ #include <ctype.h>
+diff --git a/tools/testing/selftests/bpf/test_flow_dissector.c b/tools/testing/selftests/bpf/test_flow_dissector.c
+index 571cc076dd7d..e427c7e5dd94 100644
+--- a/tools/testing/selftests/bpf/test_flow_dissector.c
++++ b/tools/testing/selftests/bpf/test_flow_dissector.c
+@@ -6,9 +6,6 @@
+  * GRE/GUE/BARE outer layer 4, where bare is IPIP/SIT/IPv4-in-IPv6/..
+  * IPv4/IPv6    inner layer 3
+  */
+-
+-#define _GNU_SOURCE
+-
+ #include <stddef.h>
+ #include <arpa/inet.h>
+ #include <asm/byteorder.h>
+diff --git a/tools/testing/selftests/bpf/test_lru_map.c b/tools/testing/selftests/bpf/test_lru_map.c
+index 4d0650cfb5cd..82ca6df67eab 100644
+--- a/tools/testing/selftests/bpf/test_lru_map.c
++++ b/tools/testing/selftests/bpf/test_lru_map.c
+@@ -2,7 +2,6 @@
+ /*
+  * Copyright (c) 2016 Facebook
+  */
+-#define _GNU_SOURCE
+ #include <stdio.h>
+ #include <unistd.h>
+ #include <errno.h>
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index 89ff704e9dad..87b77f4f1ee5 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -1,7 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /* Copyright (c) 2017 Facebook
+  */
+-#define _GNU_SOURCE
+ #include "test_progs.h"
+ #include "testing_helpers.h"
+ #include "cgroup_helpers.h"
+diff --git a/tools/testing/selftests/bpf/test_sock_addr.c b/tools/testing/selftests/bpf/test_sock_addr.c
+index aa2198a0f24d..5c0a304ecd84 100644
+--- a/tools/testing/selftests/bpf/test_sock_addr.c
++++ b/tools/testing/selftests/bpf/test_sock_addr.c
+@@ -1,8 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0
+ // Copyright (c) 2018 Facebook
+-
+-#define _GNU_SOURCE
+-
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <unistd.h>
+diff --git a/tools/testing/selftests/bpf/test_tcpnotify_user.c b/tools/testing/selftests/bpf/test_tcpnotify_user.c
+index 595194453ff8..b415f6457a49 100644
+--- a/tools/testing/selftests/bpf/test_tcpnotify_user.c
++++ b/tools/testing/selftests/bpf/test_tcpnotify_user.c
+@@ -1,5 +1,4 @@
+ // SPDX-License-Identifier: GPL-2.0
+-#define _GNU_SOURCE
+ #include <pthread.h>
+ #include <inttypes.h>
+ #include <stdio.h>
+diff --git a/tools/testing/selftests/bpf/veristat.c b/tools/testing/selftests/bpf/veristat.c
+index b2854238d4a0..d720947a7896 100644
+--- a/tools/testing/selftests/bpf/veristat.c
++++ b/tools/testing/selftests/bpf/veristat.c
+@@ -1,6 +1,5 @@
+ // SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+ /* Copyright (c) 2022 Meta Platforms, Inc. and affiliates. */
+-#define _GNU_SOURCE
+ #include <argp.h>
+ #include <string.h>
+ #include <stdlib.h>
+diff --git a/tools/testing/selftests/bpf/xskxceiver.c b/tools/testing/selftests/bpf/xskxceiver.c
+index 2eac0895b0a1..101e37a0cb1b 100644
+--- a/tools/testing/selftests/bpf/xskxceiver.c
++++ b/tools/testing/selftests/bpf/xskxceiver.c
+@@ -70,8 +70,6 @@
+  * To enable L2 - L4 headers and payload dump of each packet on STDOUT, add
+  * parameter -D to params array in test_xsk.sh, i.e. params=("-S" "-D")
+  */
+-
+-#define _GNU_SOURCE
+ #include <assert.h>
+ #include <fcntl.h>
+ #include <errno.h>
+-- 
+2.45.0.118.g7fe29c98d7-goog
 
-True, we cannot build the driver now without it. So we should be 
-dropping the optional tag.
-
-With that addressed,
-
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
-
-> This document needs some help... I'm missing a number of things that are
-> *not* marked as "optional" (jfsutils, reiserfsprogs, pcmciautils, ppp,
-> ...) and somehow my system works fine :)  It would be nice to document
-> *why* users might need a specific tool.
-> 
-> But I guess we aren't going to do that now.  I can apply this, but I do
-> wonder about the "optional" marking.
-> 
-> Thanks,
-> 
-> jon
