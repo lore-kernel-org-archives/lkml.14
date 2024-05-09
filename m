@@ -1,79 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B672913BAE3;
-	Thu,  9 May 2024 12:46:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07216146D7B;
+	Thu,  9 May 2024 12:47:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715258817; cv=none; b=V9dXHcQXRxgEfOl13z0i3S92LEPhl9RZTbVOKSAbKJzou0iVSZNeX59kEnqK7ANKFbd+gr/EvH3qcaVzGPLIPC9t0GDJod34jAEbtHOmlFKRtBF03yGztAlebWZiDqlWqEkeaeBy9EryXNnpFWJZbgSnv2FyhBHt4ygwyQ+ilQ4=
+	t=1715258849; cv=none; b=tchuUoTZ2ebTpLTBR3BxGQMe+OI1e5aMGVwITM0GUBvXcA+Z8bz7oypZjzz5LBVhC8IghD4ixgPaOPpv53UyIp/WdyaTDNvLlJAvTus+j1hmm11ml37uTKWqB21EcuNT73sOM8KPZg+ZKxLJOYgO1jGp1yo4d7zzYBgUHo0jWSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715258817; c=relaxed/simple;
-	bh=Y1puUf3Rn4PFEIfYWjo05C5VlGgGVxqEMZoIhApAwoE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dJmO1sxx8jCR1DM2/MaECwS1fxcpxzDcFxeR3I0KkZFHcXlKNxAfT2Oec/HnH5frzFSMvZ+Voe/6kZyQNc0WrxsB5a92rIUPeb2P9gmdBIKPBa6NwLVPbDJ0JK+SqYNALztuiY6DlJBScvThtdbV3oijvMpCuayAxIK4SqUn7hQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AQoXxdBT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AQoXxdBT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09D71C116B1;
-	Thu,  9 May 2024 12:46:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715258817;
-	bh=Y1puUf3Rn4PFEIfYWjo05C5VlGgGVxqEMZoIhApAwoE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AQoXxdBT+Gf6/1FnwrPKEUEL8un/LA/u/2/sGpDCC3rxgKcoqyWXiIYW010ItlUum
-	 CLW5mYm545cimXqZBYmCGhgG0TDtnkqwrORVR4iSIbEqIRhyhcrt3kwfXNkXg6K64O
-	 w/OV3lp+KVg/vrgpg6Otpk5K6rEE7UjvK0+ZQ/3ke7FMj3+1HjaVBF4DAXoz4gPzwI
-	 0n+UHl6L4pv6WqF0RUQ69KZCeD51zRNa7aM9mIiyeZyDaYmsZpsgrROCD8g6oq1W5t
-	 bWTjyIxOyJS//5RBCY/Nlq3g0oX9RTKZSdE+TICUdGYgN2wahiJLQ61bVw8OeIOqkv
-	 DvX0r1wcBJS5w==
-Date: Thu, 9 May 2024 08:46:55 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Joerg Roedel <jroedel@suse.de>, yong.wu@mediatek.com,
-	joro@8bytes.org, will@kernel.org, matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com, iommu@lists.linux.dev,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH AUTOSEL 4.19 7/7] iommu: mtk: fix module autoloading
-Message-ID: <ZjzFv38K2fudS_zQ@sashalap>
-References: <20240422232040.1616527-1-sashal@kernel.org>
- <20240422232040.1616527-7-sashal@kernel.org>
- <Zied1/2cELhaQupG@duo.ucw.cz>
+	s=arc-20240116; t=1715258849; c=relaxed/simple;
+	bh=94OTiQNVw96KBqdSWjcw8KSMyl7GYa6XYujHM5DDG3U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iaRG9cSCCYxJSNzfO19DuZwNPYjui8Hts7cVTNWWUkiHbMT+lV3Yem5qXx7NN0d2+V6ptTcYipRviJeT1p1eJp95o9YlqQUWxUbFiaaTy/Z45hLE+6sp1D6hp6Ymw7V+wZZ7RRGEvkXf9N9pToQPe4xvLLTIPMUvSaqtvZDUa8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VZsGq26byz4f3knp;
+	Thu,  9 May 2024 20:47:15 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id A20071A0568;
+	Thu,  9 May 2024 20:47:23 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgAX5g7ZxTxm7wHDMA--.34199S4;
+	Thu, 09 May 2024 20:47:23 +0800 (CST)
+From: Yu Kuai <yukuai1@huaweicloud.com>
+To: axboe@kernel.dk,
+	ming.lei@redhat.com,
+	hch@infradead.org,
+	mpatocka@redhat.com,
+	snitzer@redhat.com
+Cc: linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	yukuai3@huawei.com,
+	yukuai1@huaweicloud.com,
+	yi.zhang@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH v2 for-6.10/block 0/2] block: fix user-aware inaccurate util
+Date: Thu,  9 May 2024 20:37:15 +0800
+Message-Id: <20240509123717.3223892-1-yukuai1@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <Zied1/2cELhaQupG@duo.ucw.cz>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgAX5g7ZxTxm7wHDMA--.34199S4
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYx7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87
+	Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE
+	6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72
+	CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7
+	M4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
+	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
+	b7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
+	vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1l
+	IxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUdHUDUUUUU=
+X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
 
-On Tue, Apr 23, 2024 at 01:39:03PM +0200, Pavel Machek wrote:
->Hi!
->
->> [ Upstream commit 7537e31df80cb58c27f3b6fef702534ea87a5957 ]
->>
->> Add MODULE_DEVICE_TABLE(), so modules could be properly autoloaded
->> based on the alias from of_device_id table.
->
->This patch is queued for 4.19 and 5.15, but not 5.10. I believe that's
->wrong.
+From: Yu Kuai <yukuai3@huawei.com>
 
-Heh, this is funny. It fails to build on 5.10:
+Changes in v2:
+ - just replace blk_mq_in_flight() with part_in_flight() for
+ diskstats_show() and part_stat_show() in patch 2;
 
-drivers/iommu/mtk_iommu.c:872:1: warning: data definition has no type or storage class
-   872 | MODULE_DEVICE_TABLE(of, mtk_iommu_of_ids);
-       | ^~~~~~~~~~~~~~~~~~~
-drivers/iommu/mtk_iommu.c:872:1: error: type defaults to 'int' in declaration of 'MODULE_DEVICE_TABLE' [-Werror=implicit-int]
-drivers/iommu/mtk_iommu.c:872:1: warning: parameter names (without types) in function declaration
-cc1: some warnings being treated as errors
-make[2]: *** [scripts/Makefile.build:286: drivers/iommu/mtk_iommu.o] Error 1
+Yu Kuai (2):
+  block: support to account io_ticks precisely
+  block: fix that util can be greater than 100%
 
-But not on any of the older trees.
+ block/blk-core.c  |  9 +++++----
+ block/blk-merge.c |  2 ++
+ block/blk-mq.c    |  4 ++++
+ block/blk.h       |  1 +
+ block/genhd.c     | 14 +++-----------
+ 5 files changed, 15 insertions(+), 15 deletions(-)
 
 -- 
-Thanks,
-Sasha
+2.39.2
+
