@@ -1,48 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F34814A612;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F39A16F0E0;
 	Thu,  9 May 2024 15:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715268676; cv=none; b=slm5hV+T76K1cg82AP44hjbs4goKPdN+CwPTcY7/SH1utUggX2C67l4GyAn7Ek63jq13DpNQ0UiGtyrMn3R71mmF8ERag7f/QS6qBmNkm6u8k0Co9tyH1nZ6W2JYd/Fe7kygo/yZcBVevo71WdR7AUPWNp0YzajHucBK5gMQaZ8=
+	t=1715268676; cv=none; b=AagUb+UdwOVR2pYNwtDsTMAPQAcj6oEbPpv5ArSAU0EiwPf8gyrFHmZaeM1d1ocxEVN2CMKBphA1r6mPhG6z2Dn3AUx5u+XeyjGnFqeqrn5lVSjOIgmNc1HASIF7s5qJvlE/sSvKSjSImueayT603jEUikKBzLQcguP6NtbO35M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715268676; c=relaxed/simple;
-	bh=E1T+WvvKQJ/1nv6nEvXpTe9Sga5sVZOQiVRom7AV5uQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YBLetPmD6Mm3WyT/nfvEOjriRT8hRfQqvdcKGyzv5OVwir17YMJ0nzNg+5jMKhOMSjPzgLynRvNil5gjkv20o2K3U2qkYCJrj1eFRUkS/MgQPh0z03B8Zg50XEz5y5QFtXO/xMV6QT0viB7DVM8+SCm92BV/egCnETTcUIwSX7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJ29uykF; arc=none smtp.client-ip=10.30.226.201
+	bh=6dJFzoz5/zPfJ2iN6WbR60T4ax8pQQwJWw+X5KaXXVM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RqvQQnqS/46zOmGk9gsK5VdKbne6JUx9eAY6dZpjvFx4Zh9O6v/Y4f4Gw7722RXJ4OmAqerj5Yng+gAVBC27Axn/iIEHAILC1It2XUQhjervp/8gl63WvFLmd01odE1AhrpknbegewlMfDH8DDV9KlNSEDGdldIkFaVuHJ4YYPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kRya/aK2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJ29uykF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 233D4C2BD11;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kRya/aK2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 256F8C4AF0B;
 	Thu,  9 May 2024 15:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715268676;
-	bh=E1T+WvvKQJ/1nv6nEvXpTe9Sga5sVZOQiVRom7AV5uQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FJ29uykFQL3ACOuqQURRxlGidNafj5oQb6JnqYrJTZ+igXr14m9qaQcXnV8r2PpuI
-	 8oKsmxqeElmZVd/V+fA7Z812L+J5qPfm0NQwhr/c8xXZ2O47DO7j1sfZAkBjf7h2iw
-	 1i+ci9rIy2DTaNHJsSwTFaIkZQ85dZC2vxbThxa3fvXjqfd8Cj6+Ug1fUYe1rciV7g
-	 mur4fq7pC1V8Fu2Wt9/iKO4JnGgmNn7vWmaOK45IuKSBMj9KbsAa7lA5GS5rbfyHm6
-	 E5Z7X4fBFvXI429BaS5k7zR5gPvmK5Y4qpq08TRMQcPH1sep/bVlCQXvAHmCUMG5eI
-	 TQop7fnXwcFrQ==
+	bh=6dJFzoz5/zPfJ2iN6WbR60T4ax8pQQwJWw+X5KaXXVM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=kRya/aK2RBV9u5OnjE/IwaEJG7bykOEM9DXVA/obwlUPNN0NTHgsBY+8B8V3bOljW
+	 D3PZzukHqR7s+Q0qujXF8jQR5Bu+BAy/BQCR3Yzt4VKAhx31Ytu5nqduqPt59PrJEk
+	 BzOPKmDLQ49Hsytwea0qHLHilTsFsOVqp8IFVgn41X0iXiofWJzth6INYNWbQh9NEb
+	 9ZbY/hGReOUWR9ezk0iaanZeKdgQjSbPp3PNWINLMDDT7EayWHBMuZapN5h8kHs/MN
+	 3xmSqn7ZgYMmt4m6pz+nF84/GYPJyGv3HLv2xtKE21oifKoSQP6E9YemOt0Y8O7C8q
+	 a+5Th+alpxFWQ==
 Received: by wens.tw (Postfix, from userid 1000)
-	id 9E69B5FB60; Thu,  9 May 2024 23:31:13 +0800 (CST)
+	id BB4A95FD4B; Thu,  9 May 2024 23:31:13 +0800 (CST)
 From: Chen-Yu Tsai <wens@kernel.org>
 To: Mark Brown <broonie@kernel.org>
-Cc: Chen-Yu Tsai <wens@csie.org>,
+Cc: Samuel Holland <samuel@sholland.org>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
 	linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev
-Subject: [PATCH v6 0/2] regulator: sun20i: Add Allwinner D1 LDOs driver
-Date: Thu,  9 May 2024 23:31:05 +0800
-Message-Id: <20240509153107.438220-1-wens@kernel.org>
+	linux-sunxi@lists.linux.dev,
+	Andre Przywara <andre.przywara@arm.com>,
+	Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v6 2/2] regulator: sun20i: Add Allwinner D1 LDOs driver
+Date: Thu,  9 May 2024 23:31:07 +0800
+Message-Id: <20240509153107.438220-3-wens@kernel.org>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240509153107.438220-1-wens@kernel.org>
+References: <20240509153107.438220-1-wens@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,84 +55,220 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Samuel Holland <samuel@sholland.org>
 
-Hi,
+D1 contains two pairs of LDOs, "analog" LDOs and "system" LDOs. They are
+similar and can share a driver, but only the system LDOs have a DT
+binding defined so far.
 
-This is v6 of the Allwinner D1 LDO driver series, separated by subsystem.
-I've picked up this work from Samuel.  This part contains just the
-regulator driver bits. The sunxi SRAM binding part will be sent out after
-the merge window due to a conflict in next.
+The system LDOs have a single linear range. The voltage step is not an
+integer, so a custom .list_voltage is needed to get the rounding right.
 
-Unlike what the original cover letter mentioned, it is perfectly OK to
-merge this part separately. The SRAM driver changes were already merged
-some time ago, and the SRAM bindings depend on the regulator bindings,
-not the other way around.
-
-Changes in v6:
-- Include linux/of.h in the regulator driver to fix the "implicit
-  declaration of function of_'device_get_match_data'" and unknown
-  type 'struct of_device_id' errors.
-
-
-Original cover letter:
-
-This series adds the binding and driver for one of the two pairs of LDOs
-inside the Allwinner D1 SoC. I am splitting up the two pairs of LDOs to
-unblock merging the SoC devicetree; the analog LDOs depend on the audio
-codec binding, but they are not required to boot.
-
-A binding and driver change is required for the SRAM controller, to
-accept the regulators device as its child node.
-
-The example for the regulator device binding is in SRAM controller
-binding document, per Rob's request to keep MFD examples in one place.
-
-Because of this, at least the first 3 patches need to be taken together
-through the regulator tree, though it should be fine to merge the whole
-series that way.
-
-Changes in v5:
- - Correct the voltage calculation for the non-linearity around 1.6 V.
-
-Changes in v4:
- - Fix the order of the maintainer/description sections
- - Replace unevaluatedProperties with "additionalProperties: false"
- - Drop the analog LDOs until the codec binding is ready
- - Drop the analog LDOs until the codec binding is ready
- - Remove unevaluatedProperties from regulators schema reference
- - Check the compatible string instead of the node name
-
-Changes in v3:
- - Add "reg" property to bindings
- - Add "unevaluatedProperties: true" to regulator nodes
- - Minor changes to regulator node name patterns
- - Remove system-ldos example (now added in the parent binding)
- - Adjust control flow in sun20i_regulator_get_regmap() for clarity
- - Require the regulators node to have a unit address
- - Reference the regulator schema from the SRAM controller schema
- - Move the system LDOs example to the SRAM controller schema
- - Reorder the patches so the example passes validation
-
-Changes in v2:
- - Remove syscon property from bindings
- - Update binding examples to fix warnings and provide context
- - Use decimal numbers for .n_voltages instead of field widths
- - Get the regmap from the parent device instead of a property/phandle
-
-
-Samuel Holland (2):
-  regulator: dt-bindings: Add Allwinner D1 system LDOs
-  regulator: sun20i: Add Allwinner D1 LDOs driver
-
- .../allwinner,sun20i-d1-system-ldos.yaml      |  37 +++++
- drivers/regulator/Kconfig                     |   8 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/sun20i-regulator.c          | 157 ++++++++++++++++++
- 4 files changed, 203 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/allwinner,sun20i-d1-system-ldos.yaml
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/regulator/Kconfig            |   8 ++
+ drivers/regulator/Makefile           |   1 +
+ drivers/regulator/sun20i-regulator.c | 157 +++++++++++++++++++++++++++
+ 3 files changed, 166 insertions(+)
  create mode 100644 drivers/regulator/sun20i-regulator.c
 
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 7db0a29b5b8d..acdb02a4ac0c 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -1415,6 +1415,14 @@ config REGULATOR_STW481X_VMMC
+ 	  This driver supports the internal VMMC regulator in the STw481x
+ 	  PMIC chips.
+ 
++config REGULATOR_SUN20I
++	tristate "Allwinner D1 internal LDOs"
++	depends on ARCH_SUNXI || COMPILE_TEST
++	select MFD_SYSCON
++	default ARCH_SUNXI
++	help
++	  This driver supports the internal LDOs in the Allwinner D1 SoC.
++
+ config REGULATOR_SY7636A
+ 	tristate "Silergy SY7636A voltage regulator"
+ 	depends on MFD_SY7636A
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 46fb569e6be8..ba15fa5f30ad 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -163,6 +163,7 @@ obj-$(CONFIG_REGULATOR_STM32_VREFBUF) += stm32-vrefbuf.o
+ obj-$(CONFIG_REGULATOR_STM32_PWR) += stm32-pwr.o
+ obj-$(CONFIG_REGULATOR_STPMIC1) += stpmic1_regulator.o
+ obj-$(CONFIG_REGULATOR_STW481X_VMMC) += stw481x-vmmc.o
++obj-$(CONFIG_REGULATOR_SUN20I) += sun20i-regulator.o
+ obj-$(CONFIG_REGULATOR_SY7636A) += sy7636a-regulator.o
+ obj-$(CONFIG_REGULATOR_SY8106A) += sy8106a-regulator.o
+ obj-$(CONFIG_REGULATOR_SY8824X) += sy8824x.o
+diff --git a/drivers/regulator/sun20i-regulator.c b/drivers/regulator/sun20i-regulator.c
+new file mode 100644
+index 000000000000..e09be44859e7
+--- /dev/null
++++ b/drivers/regulator/sun20i-regulator.c
+@@ -0,0 +1,157 @@
++// SPDX-License-Identifier: GPL-2.0-only
++//
++// Copyright (c) 2021-2022 Samuel Holland <samuel@sholland.org>
++//
++
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++
++#define SUN20I_SYS_LDO_CTRL_REG		0x150
++
++struct sun20i_regulator_data {
++	const struct regulator_desc	*descs;
++	unsigned int			ndescs;
++};
++
++/* regulator_list_voltage_linear() modified for the non-integral uV_step. */
++static int sun20i_d1_system_ldo_list_voltage(struct regulator_dev *rdev,
++					     unsigned int selector)
++{
++	const struct regulator_desc *desc = rdev->desc;
++	unsigned int fraction, uV;
++
++	if (selector >= desc->n_voltages)
++		return -EINVAL;
++
++	uV = desc->min_uV + (desc->uV_step * selector);
++	fraction = selector + (desc->min_uV % 4);
++
++	if (uV > 1606667)
++		uV += 6667;
++	else
++		fraction++;
++
++	/* Produce correctly-rounded absolute voltages. */
++	return uV + (fraction / 3);
++}
++
++static const struct regulator_ops sun20i_d1_system_ldo_ops = {
++	.list_voltage		= sun20i_d1_system_ldo_list_voltage,
++	.map_voltage		= regulator_map_voltage_ascend,
++	.set_voltage_sel	= regulator_set_voltage_sel_regmap,
++	.get_voltage_sel	= regulator_get_voltage_sel_regmap,
++};
++
++static const struct regulator_desc sun20i_d1_system_ldo_descs[] = {
++	{
++		.name		= "ldoa",
++		.supply_name	= "ldo-in",
++		.of_match	= "ldoa",
++		.ops		= &sun20i_d1_system_ldo_ops,
++		.type		= REGULATOR_VOLTAGE,
++		.owner		= THIS_MODULE,
++		.n_voltages	= 32,
++		.min_uV		= 1593333,
++		.uV_step	= 13333, /* repeating */
++		.vsel_reg	= SUN20I_SYS_LDO_CTRL_REG,
++		.vsel_mask	= GENMASK(7, 0),
++	},
++	{
++		.name		= "ldob",
++		.supply_name	= "ldo-in",
++		.of_match	= "ldob",
++		.ops		= &sun20i_d1_system_ldo_ops,
++		.type		= REGULATOR_VOLTAGE,
++		.owner		= THIS_MODULE,
++		.n_voltages	= 64,
++		.min_uV		= 1166666,
++		.uV_step	= 13333, /* repeating */
++		.vsel_reg	= SUN20I_SYS_LDO_CTRL_REG,
++		.vsel_mask	= GENMASK(15, 8),
++	},
++};
++
++static const struct sun20i_regulator_data sun20i_d1_system_ldos = {
++	.descs	= sun20i_d1_system_ldo_descs,
++	.ndescs	= ARRAY_SIZE(sun20i_d1_system_ldo_descs),
++};
++
++static struct regmap *sun20i_regulator_get_regmap(struct device *dev)
++{
++	struct regmap *regmap;
++
++	/*
++	 * First try the syscon interface. The system control device is not
++	 * compatible with "syscon", so fall back to getting the regmap from
++	 * its platform device. This is ugly, but required for devicetree
++	 * backward compatibility.
++	 */
++	regmap = syscon_node_to_regmap(dev->parent->of_node);
++	if (!IS_ERR(regmap))
++		return regmap;
++
++	regmap = dev_get_regmap(dev->parent, NULL);
++	if (regmap)
++		return regmap;
++
++	return ERR_PTR(-EPROBE_DEFER);
++}
++
++static int sun20i_regulator_probe(struct platform_device *pdev)
++{
++	const struct sun20i_regulator_data *data;
++	struct device *dev = &pdev->dev;
++	struct regulator_config config;
++	struct regmap *regmap;
++
++	data = of_device_get_match_data(dev);
++	if (!data)
++		return -EINVAL;
++
++	regmap = sun20i_regulator_get_regmap(dev);
++	if (IS_ERR(regmap))
++		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to get regmap\n");
++
++	config = (struct regulator_config) {
++		.dev	= dev,
++		.regmap	= regmap,
++	};
++
++	for (unsigned int i = 0; i < data->ndescs; ++i) {
++		const struct regulator_desc *desc = &data->descs[i];
++		struct regulator_dev *rdev;
++
++		rdev = devm_regulator_register(dev, desc, &config);
++		if (IS_ERR(rdev))
++			return PTR_ERR(rdev);
++	}
++
++	return 0;
++}
++
++static const struct of_device_id sun20i_regulator_of_match[] = {
++	{
++		.compatible = "allwinner,sun20i-d1-system-ldos",
++		.data = &sun20i_d1_system_ldos,
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, sun20i_regulator_of_match);
++
++static struct platform_driver sun20i_regulator_driver = {
++	.probe	= sun20i_regulator_probe,
++	.driver	= {
++		.name		= "sun20i-regulator",
++		.of_match_table	= sun20i_regulator_of_match,
++	},
++};
++module_platform_driver(sun20i_regulator_driver);
++
++MODULE_AUTHOR("Samuel Holland <samuel@sholland.org>");
++MODULE_DESCRIPTION("Allwinner D1 internal LDO driver");
++MODULE_LICENSE("GPL");
 -- 
 2.39.2
 
