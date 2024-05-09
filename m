@@ -1,88 +1,103 @@
-Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED58BC2C6;
-	Thu,  9 May 2024 20:37:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC3C578C98
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 20:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715287066; cv=none; b=eelgS0gD+O39ol9FAPLvaGHXJ5Xea8f7m1I1bsanZ2wpP+L9gGp2JhN9GLYrezsLgxJkzDP1VLzyS5JTX1TfeD718bRNtq/LXx61KdZgWi0V9SW7zCUEhxpZi/ba+87eL6iNpxOyC6tfZ2FXdUpOPrBcFipR1T5YhPfyGavtQro=
+	t=1715287154; cv=none; b=PETkZgSKlra9xIf5daTAbt7ZLLKCv1f2E/XaznE1eSxfAu2yg0wv1li4BE5NXITU+UyVj5BY330CN1OyonbxXSLKHADj8a9YTvn9M0vhP4ZvqKwQ3AqLIxEA3Ru+fmpokVximpBzJMcxhHr6VInQIzN0ZqgmLHtWxrDIuDF5pN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715287066; c=relaxed/simple;
-	bh=Nu8yKBaS56CMBP5odvTg9R8vfM1PHiuEmDmPEvzkkxw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OCG+MLHz1hJc81kaPeKn6V5Vir9oGXsL87vr03qDYm8gcixIap5g3wRVyUiIUIWjdw6ZCuIHp85FPO/RqhC3Db4nGtmlcrLqpjOA/4yFry6RbMHtvVMwyD2eidl1CAbSyrm5/Yam9Tcy3vmozACQmRCV/a7mbxhyfKtODX5YpPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=67.231.148.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 449J48x4022119;
-	Thu, 9 May 2024 13:37:24 -0700
-Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
-	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3y0qpbvcp9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 May 2024 13:37:24 -0700 (PDT)
-Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
- DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.4; Thu, 9 May 2024 13:37:23 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
- (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Thu, 9 May 2024 13:37:23 -0700
-Received: from Dell2s-9.sclab.marvell.com (unknown [10.110.150.250])
-	by maili.marvell.com (Postfix) with ESMTP id D1D0D3F703F;
-	Thu,  9 May 2024 13:37:22 -0700 (PDT)
-From: Vasyl Gomonovych <gomonovych@gmail.com>
-To: <lpieralisi@kernel.org>, <guohanjun@huawei.com>, <sudeep.holla@arm.com>,
-        <rafael@kernel.org>, <lenb@kernel.org>
-CC: Vasyl Gomonovych <gomonovych@gmail.com>, <linux-acpi@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] ACPI: AGDI: Add missing newline to log
-Date: Thu, 9 May 2024 13:36:15 -0700
-Message-ID: <20240509203657.3377168-1-gomonovych@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1715287154; c=relaxed/simple;
+	bh=OFtfeZMgbGqPFPCcL0g1X880SGx7GmE9rDbCocfF/LE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=IYGGJTW3phKlFtv83XkEADenhzrGfmcFzG2PkuQ+kf2ZnImaJuPmhu9BCWTJ41+erG7dBf53CeVwwLmmTIcTWOFtxTKRnLjzT38wg6SXDg9WdDe8s3brVADQyLfYhui2aCKld307a+qhRpVxtJhnAikL8n9CCRvnbRtEaKYlCHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vNJnzrOL; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--axelrasmussen.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vNJnzrOL"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc6b26783b4so1776963276.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 13:39:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715287152; x=1715891952; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8H0foUzLc+DNKUibRdC2bbcsFy9WZnKfOBJjcXN9vjM=;
+        b=vNJnzrOLy9dtBOv0ba9LKcFPEXHLb4vETgVR1+DEnxWA/2Llp7054SwpVxOLMTmmch
+         yrgmndLe62SmbpnRH4RUmyezYwCTxXBMzKF3reMCANWkNbsCxb3Auc8PKLsAOSUFSf1A
+         KkG0PRBghKW285bglVQrD5gaNbQfMFoh0PMyWJNp5LzZHtzBSJxyGWTdVx1YdcA74nex
+         zfePHah3PkGaorYayqFAkEK9HcUuXk8yaEqSsKMwZ3D1HaGsrH7nXH9cPvRXk+85/40m
+         NB4WWBWgKorq3JwwPq83xH3zeRrvG7JcwqFioXglU1mS3zok1r72/MNjzmGo6+bb5g72
+         KQqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715287152; x=1715891952;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8H0foUzLc+DNKUibRdC2bbcsFy9WZnKfOBJjcXN9vjM=;
+        b=naq17/l0Mxf2qC3U5ymzDO0VGahBu73RpRF14Dsh4Zqs3nv90TA+HMH5w7qb31RcxN
+         k8egsuu/U8ffNLieUQr6o+xc+GGohqksUMR7BYtWuGuCG3D8Gayk5f3F1friTiTHBVSK
+         uobYZWtx3MiR9Ag87EN3wXkHFalz5UoGxlFKyNxBgk/Hgq62GyugRAMN2aTJLgJJFK0n
+         d/MOEKSJytbDkYd25QVfbA4fNjcm6PsvQU41iWetnEAQHz65SAydTeDD6kdc5KaSYzVP
+         l6gxoVzm28BlPcfZrUiObDL5AANYPDmhOxJMsMvmzQfuzLgKsUfDSqFPxkJ9kZ9HvUuq
+         ALvg==
+X-Forwarded-Encrypted: i=1; AJvYcCUkiIO17EVT2P3skYN5gJBdh04S/8P6+/B/V/p8UnD7pqsjD+fLs/tx/SqHbCRmQJ1DPehppX32vMtrRrGxJvW6fdAaV+f2fue6n/pf
+X-Gm-Message-State: AOJu0Yzka5lzBf3TDirryZwoJYLO0+R2zykuj51SKHzZDbvJbZaCSifp
+	F29P5gDjZHl05IICdfOjnaqAtL5AwZxf88eLzIuk2CoDx6QwSEqs+wVYk8u+7zn3NdubeVHoMGB
+	TXD9+CKiR6j/I6cZcxW0ov5fFXmla8g==
+X-Google-Smtp-Source: AGHT+IHw+Ly/UkJisBJVqZ94ZjHYJRR327iKkqlhJCNLn3MTfbX2oJhIScyImN5vnpoTsLVJRylwSVasWSMq7OxW06/3
+X-Received: from axel.svl.corp.google.com ([2620:15c:2a3:200:22b1:9c9e:3544:83b8])
+ (user=axelrasmussen job=sendgmr) by 2002:a25:1982:0:b0:dcd:2f3e:4d18 with
+ SMTP id 3f1490d57ef6-dee4f364f84mr62533276.12.1715287151918; Thu, 09 May 2024
+ 13:39:11 -0700 (PDT)
+Date: Thu,  9 May 2024 13:39:06 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: kRC2rY97doE9Vlyyg8xOert3WoW0Iopk
-X-Proofpoint-ORIG-GUID: kRC2rY97doE9Vlyyg8xOert3WoW0Iopk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-09_12,2024-05-09_01,2023-05-22_02
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
+Message-ID: <20240509203907.504891-1-axelrasmussen@google.com>
+Subject: [PATCH 0/1] arch/fault: don't print logs for simulated poison errors
+From: Axel Rasmussen <axelrasmussen@google.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Helge Deller <deller@gmx.de>, 
+	Ingo Molnar <mingo@redhat.com>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, John Hubbard <jhubbard@nvidia.com>, 
+	Liu Shixin <liushixin2@huawei.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
+	Michael Ellerman <mpe@ellerman.id.au>, Muchun Song <muchun.song@linux.dev>, 
+	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, 
+	Oscar Salvador <osalvador@suse.de>, Peter Xu <peterx@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Axel Rasmussen <axelrasmussen@google.com>, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux-parisc@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-It is assumed that log statement print a newline, fix two
-missing ones.
+This patch expects to be applied on top of both of the following related
+fixes:
 
-Signed-off-by: Vasyl Gomonovych <gomonovych@gmail.com>
----
- drivers/acpi/arm64/agdi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+- x86/fault: speed up uffd-unit-test by 10x: rate-limit "MCE: Killing" logs
+  https://lore.kernel.org/r/20240507022939.236896-1-jhubbard@nvidia.com
+- [0/2] Minor fixups for hugetlb fault path
+  https://lore.kernel.org/r/20240509100148.22384-1-osalvador@suse.de
 
-diff --git a/drivers/acpi/arm64/agdi.c b/drivers/acpi/arm64/agdi.c
-index f5f21dd0d277e9612c444c62843b7bece450706f..5d0548f3194a3352ce6b4931c8ea4a445359e21a 100644
---- a/drivers/acpi/arm64/agdi.c
-+++ b/drivers/acpi/arm64/agdi.c
-@@ -32,7 +32,7 @@ static int agdi_sdei_probe(struct platform_device *pdev,
- 
- 	err = sdei_event_register(adata->sdei_event, agdi_sdei_handler, pdev);
- 	if (err) {
--		dev_err(&pdev->dev, "Failed to register for SDEI event %d",
-+		dev_err(&pdev->dev, "Failed to register for SDEI event %d\n",
- 			adata->sdei_event);
- 		return err;
- 	}
-@@ -104,7 +104,7 @@ void __init acpi_agdi_init(void)
- 		return;
- 
- 	if (agdi_table->flags & ACPI_AGDI_SIGNALING_MODE) {
--		pr_warn("Interrupt signaling is not supported");
-+		pr_warn("Interrupt signaling is not supported\n");
- 		goto err_put_table;
- 	}
- 
--- 
-2.43.0
+The latter is in mm-unstable currently, but the former is not (yet?). It
+would need to be taken before this patch for it to apply cleanly.
+
+Axel Rasmussen (1):
+  arch/fault: don't print logs for simulated poison errors
+
+ arch/parisc/mm/fault.c   | 7 +++++--
+ arch/powerpc/mm/fault.c  | 6 ++++--
+ arch/x86/mm/fault.c      | 6 ++++--
+ include/linux/mm_types.h | 5 +++++
+ mm/hugetlb.c             | 3 ++-
+ mm/memory.c              | 2 +-
+ 6 files changed, 21 insertions(+), 8 deletions(-)
+
+--
+2.45.0.118.g7fe29c98d7-goog
 
