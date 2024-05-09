@@ -1,121 +1,89 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0970CDDA9
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 16:33:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39E014C70;
+	Thu,  9 May 2024 16:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715272384; cv=none; b=m4/TGbl/ZVlN+YVkfk3uoz4BY+l9j27se1b+EM3S9wKAHRF4Jm0BQ5TtjXp4JjuP9np2yOxvjD1elR8fiO2Z8rZ+F+i6yYp4lhk86fG/4t4JCyjmU5G7ER4InlZoyva14R7MjvNSSIvL0gJDhlVkKBcvkqF9x0eokdmxAnvEZZw=
+	t=1715272493; cv=none; b=Y95HA9WWjnHhWsfzkborl4DXIP/MjEC5y+z0ciGfB0tHK9IoXc8EEz1LHAOuB7vqKYz7kkMYpxZt+cQvFB+DlJrGQ9RqROy/pY5opu7cXKchQuOeF+vem9BFOnDl9R3ihPoRDYtWwBVq6aYEgbWaSl74Znpr6HqU6dEGPDlXWpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715272384; c=relaxed/simple;
-	bh=nqAYF5wVmuQsqlDaMYBXVqjzNMIgAKg+oEBJYr1yuxM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ICqDuyVY1UQYrtv49wd8WRb1LGBIlx1pl9eJEyEgwiuw0amUHP9UNQLsmITFNze688mwIOUy08V54V+eVouxSTyxI9stAoc2eMxipacP2eZHGQJ5Kobpk+1RDRC+2DSYyAo5cpRgyVjzV8xduSVbuDYnJuajQ4rZtSRiaX7nQrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jsqKPLPI; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715272493; c=relaxed/simple;
+	bh=q0AaOfH/xeZ1opuIwk+1614/WumleULWnD3ETLFHCUU=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=pj4HEbjiZFSwaq0jhJ9cLDpjNoeLddlEtk8u9qfe9In/Vh3l+tr7OacAOj7hiEi37cbUVeNbJfAML9dYgk4etxyZ78E0ln5Z2VXfUcjG2bOoN09XEFJy/xxoaiOPPkkzgKXYK+NbB4XB7R95sq+zOBvMFaNtPSXXF89t5lolBk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=jf1R7ps9; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jsqKPLPI"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1ec92e355bfso9236425ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 09:33:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715272382; x=1715877182; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vd1yEer3c+rasLGQTSYbENadeYi0nH2D19RAy3R+AKg=;
-        b=jsqKPLPIlIMLZLD2hLEbA2rj0N0UaAY+tmJUSPpP7xrKy4WqYvSxPkzhQlB/lgqEfR
-         lGe1KBMxxlNzfmX7bElIBM1+3c/xuipKsZhwd5xAOmeNr13B+oMQTbj/0h4/GCEg2B6l
-         L/C9iGnH5amWe1eT1QcA/KubqLu0yb++LgNMJVlXWxFdHYhQ85G7qPnILFbOVTQ3dU6B
-         wcNx4fQr0AMC2l2egTBBGOiK88M7R1eSGHevYaRtzJa5HN9byLjmKnldLzODA8R64Mb3
-         OhdvOMW5sG2KaeTEBwkL+9+MOOe3QHoasKOgASeCjogNoBedVAFENyuMsooS/cPoLngx
-         RAxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715272382; x=1715877182;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vd1yEer3c+rasLGQTSYbENadeYi0nH2D19RAy3R+AKg=;
-        b=BT7+Zat0i5SbdjKCLLnGcz7psyuZ8ZrmL7GzmPc3skxkTiPEHerMQRQEl3vU/P5o0k
-         z+yhmnHnYhMIU4RqclYxFdVJ1eCDxvEtZmRhAm3pENWiwQQQam3T3Ow+Uh1deQKuzpYq
-         PKzIfHFpOjXZLciXxV4qMPJsfBnRmTVms0nrRug9/AsITpjYiM+tH2g1DTpQqG5+JnSH
-         N+eUG3vC5EEbEgQpv0meFBeMGmiJBicXef8wzjwYpb7VDvdu1q8KMs4YhV1xDf61v0Bi
-         IBCIzIDFcNCSWmazaWKyglZH/kBaFogJBWAeiFXrUqt6KMQ/MiRPUX4M4dAAfDzh/vGD
-         4slA==
-X-Forwarded-Encrypted: i=1; AJvYcCXexuUPKbQ7NhATBHAJ9XRhhcAXBQr9iotmiacmotIszMmiu9o5CIeB1+65YOhp8jjZYnU0BKTnXsBhL+0rjz77e+bcg1X77AGnm7+A
-X-Gm-Message-State: AOJu0YwrlKCAeXnLj0xu66ADfOShARUqiK435MVijZAsPMvm38WlVzyc
-	igBO4nfnQaHDZaO6wZcCfemfqEQyBFJBIIVOFAzMzKLCTLf1RL9X
-X-Google-Smtp-Source: AGHT+IHL3RnjKR49FfcF6YhqnajThZS2hJcHHc9gMKjC4TCL2BBM1AMzJxm5tb2gVWlCj9i4tmaINw==
-X-Received: by 2002:a17:903:289:b0:1e6:114c:2e54 with SMTP id d9443c01a7336-1ef44050ea8mr1441855ad.69.1715272382189;
-        Thu, 09 May 2024 09:33:02 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf31a93sm16521815ad.134.2024.05.09.09.33.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 09:33:01 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 9 May 2024 09:32:59 -0700
-From: Guenter Roeck <linux@roeck-us.net>
-To: Lakshmi Yadlapati <lakshmiy@us.ibm.com>
-Cc: jdelvare@suse.com, ninad@linux.ibm.com, eajames@linux.ibm.com,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] hwmon: (ucd90320) Increase delay from 250 to 500us
-Message-ID: <6ea76e83-f623-4bf8-9594-dc882cda6c81@roeck-us.net>
-References: <20240507194603.1305750-1-lakshmiy@us.ibm.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="jf1R7ps9"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9ACBA40E024D;
+	Thu,  9 May 2024 16:34:48 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id QP0d6lsQxiD7; Thu,  9 May 2024 16:34:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1715272484; bh=pDCGskOSimKeyexxfwWubPEdlEM0VbPzNoGnc2/6mqM=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=jf1R7ps9RHJlTXHsLhNfzpcklaWa1eCxh5Y0WyP3uMvgZuT1cvDI9jE1O7PcI91Pd
+	 gtVS+JDqXIJa/GyNGF61YYGZ9FasMQd+MygnDgkQLKJF2VN/NNwuIAGULEFfZsYNnv
+	 zH+l91E5hn9oP2iEe7hsIujWhc3DmGKTPKs0rPg90yNIrn82HsvUpS/EJyOZ3/Efv/
+	 xGZFp5CS5mhDLTsD10omF2YeJDTA4+biemKphMRaZz94uTX52WORBNCtsmjPzBifCR
+	 ghDyjOoPxy3VIsEHm2jqIC1NQmDxnYciNaKEWVBRaVI5hPJyq6MzIkluGzgcI6ICov
+	 IwvmT9mr7MOiyd5JE9yffaVSn0jPT1gX/wPapo7yaiyQeXu6HtZCguYdQwxDx9lghc
+	 Q9wFNFmZNelox/Prgf5n7vTfxFO7lIaKIJmuAKMSEC3UHd2cSuADIqOOBaUfajj8kU
+	 d+wN2S9zqq6DMzv05wOcjhP6BgVftcaP9JLk+b9pkzY9TSqPcIRhbhRLpmuoVVgFxw
+	 NN3cU1S0Xu2PWoJuUS98KqSt4dKIYX+qWgh8UuXnCbbqoZzkNO6oineVWXl2p4K5pW
+	 VPJbkaPCcDfIxiXxCwDDkQ3qQMiBZFJerOt12/322SxSCgy4SausT4IIvffg/y9guC
+	 M+iMfuWi5MRP+5OVvo1DRJsI=
+Received: from [IPv6:::1] (unknown [IPv6:2a02:3033:20b:71c3:4495:c4f9:c73d:fb52])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CE8BB40E0249;
+	Thu,  9 May 2024 16:34:31 +0000 (UTC)
+Date: Thu, 09 May 2024 18:12:02 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Yuan, Perry" <Perry.Yuan@amd.com>
+CC: "rafael.j.wysocki@intel.com" <rafael.j.wysocki@intel.com>,
+ "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+ "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+ "Huang, Ray" <Ray.Huang@amd.com>,
+ "Shenoy, Gautham Ranjal" <gautham.shenoy@amd.com>,
+ "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+ "Huang, Shimmer" <Shimmer.Huang@amd.com>,
+ "Du, Xiaojian" <Xiaojian.Du@amd.com>,
+ "Meng, Li (Jassmine)" <Li.Meng@amd.com>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v10 0/7] AMD Pstate Driver Core Performance Boost
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CYYPR12MB865543653A46840345CFD2139CE62@CYYPR12MB8655.namprd12.prod.outlook.com>
+References: <cover.1715152592.git.perry.yuan@amd.com> <20240508081845.GAZjs1ZS7atvvdsOOd@fat_crate.local> <CYYPR12MB865543653A46840345CFD2139CE62@CYYPR12MB8655.namprd12.prod.outlook.com>
+Message-ID: <CF8E8900-4CA5-47AD-B149-27F04087FEEA@alien8.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507194603.1305750-1-lakshmiy@us.ibm.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, May 07, 2024 at 02:46:03PM -0500, Lakshmi Yadlapati wrote:
-> Following the failure observed with a delay of 250us, experiments were
-> conducted with various delays. It was found that a delay of 350us
-> effectively mitigated the issue.
-> 
-> To provide a more optimal solution while still allowing a margin for
-> stability, the delay is being adjusted to 500us.
-> 
-> Signed-off-by: Lakshmi Yadlapati <lakshmiy@us.ibm.com>
+On May 9, 2024 6:01:09 PM GMT+02:00, "Yuan, Perry" <Perry=2EYuan@amd=2Ecom>=
+ wrote:
+>I understand your point,  the patch set has taken very long-time review s=
+ince version 1,
+>I would like to get this done as soon as possible with reviewers support,=
+  then we can deliver the feature to users who have been waiting long enoug=
+h=2E
 
-Why did you not send this patch to the hardware monitoring mailing list ?
-Such an omission all but guarantees that it gets lost, so you should not
-be surprised if that happens with your patches if you do that on a regular
-basis.
+Spamming maintainers with it is going to help with that how exactly?=20
 
-I am going to apply your patch (fortunately I still had it in my inbox),
-but please keep that in mind for the future if you want your patches
-applied.
 
-Thanks,
-Guenter
-
-> ---
->  drivers/hwmon/pmbus/ucd9000.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/ucd9000.c b/drivers/hwmon/pmbus/ucd9000.c
-> index 8d9d422450e5..d817c719b90b 100644
-> --- a/drivers/hwmon/pmbus/ucd9000.c
-> +++ b/drivers/hwmon/pmbus/ucd9000.c
-> @@ -80,11 +80,11 @@ struct ucd9000_debugfs_entry {
->   * It has been observed that the UCD90320 randomly fails register access when
->   * doing another access right on the back of a register write. To mitigate this
->   * make sure that there is a minimum delay between a write access and the
-> - * following access. The 250us is based on experimental data. At a delay of
-> - * 200us the issue seems to go away. Add a bit of extra margin to allow for
-> + * following access. The 500 is based on experimental data. At a delay of
-> + * 350us the issue seems to go away. Add a bit of extra margin to allow for
->   * system to system differences.
->   */
-> -#define UCD90320_WAIT_DELAY_US 250
-> +#define UCD90320_WAIT_DELAY_US 500
->  
->  static inline void ucd90320_wait(const struct ucd9000_data *data)
->  {
-> -- 
-> 2.40.1
-> 
+--=20
+Sent from a small device: formatting sucks and brevity is inevitable=2E 
