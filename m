@@ -1,122 +1,176 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBE086240
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 21:33:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1E5A86249
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 21:34:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715290428; cv=none; b=rtHyAQ2Rn9BEoLNrgXCoG4rSh1HUNYylcjI2QfS1Xkh1O/bID9uE8K3u6IlaR15ecEpb+uxnioL//th5X6u5oTjGhw+zMabZMM2IJbQqxj5wFKW4zoxyzQ5sW2D4t+ahd9s5EpCXnZp13RXPw1l80MYlZXk0IAqEJMocg95WLnU=
+	t=1715290455; cv=none; b=W6ijddd13YMc+0JnW1BPkpluURsUkvjoTDzizopwYwg4+2oJxUb1jEmOcTS/fxupYaHWqmtY18U3+TqRZe7ur/tmxgSlNHQ1QzBusCN8bmQBxXovA7yTLv4yY8s8+lA7CQ5nBMmlOYYKD8rc67FcIoGrZvlaE07uWi/5dFq6ApI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715290428; c=relaxed/simple;
-	bh=7Qd7kioQIn6Ug3QVYIeKDHVOfBDjLq7+QwL5mOTHriA=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=nCRx21Ht1fdVJgpoH2omfJko6LctDbZiuoBbdDZelgOndS5PnYrVDAI75BJVHHCfyi8r3pKVD5DqI4x7MBwTKUTDTWErkTjmCowkpoKkKCZdVJfsnVGlLAhUoc/m4E/RWvM0sEOCD1Z40TONT0/clDv30Fyehr21wFSoP/jlqHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ija/fl61; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715290455; c=relaxed/simple;
+	bh=dsIYCA7Gw9+kyy1UZZp5UyZsCiWcpS/kpqrtbClwnUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fLQclkF9RPQe1va1C9wl661Mw45lVgUo7W7VFuAIB2p4K53a8C9E2LpuvpVwZa3zj0aGIp1i1lC7ytiHou7FPDKgzI2RlZey8FMuubTUrcGFHBBvzT/lYT0dywV5bSAGimsszJLAOTL5Dn2SFisyjFyKuGRFDEje/H32M5LQ/zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZNOT+4tM; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ija/fl61"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715290426;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZNOT+4tM"
+Message-ID: <32f0a97d-ab02-40ab-b637-e2a0583a5746@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715290452;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=IcaQVOny0rQHUK0pL7eF7lEuZY7XrpmUt/qtfJiKS4s=;
-	b=Ija/fl61EQLZSiq338Weocqjqz0pwGyeBRbAufp0RDa27x7SqISjBA8S1oa5DClQ3PSGrQ
-	3idD7y33wuqm531tQFQ1jOsmG/NdYXHvgsMU3oiFy9yoHujUCMqREidwenzb5NIxZSG95I
-	HIVkbvA9qd52fjz/JmKfpYjL5qLX8t8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-84-SXXJHLiOO2OSZBwSwPH1GA-1; Thu, 09 May 2024 17:33:43 -0400
-X-MC-Unique: SXXJHLiOO2OSZBwSwPH1GA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 046A38030A4;
-	Thu,  9 May 2024 21:33:42 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.34])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 12FA0116F842;
-	Thu,  9 May 2024 21:33:37 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <Zj0ErxVBE3DYT2Ea@gpd>
-References: <Zj0ErxVBE3DYT2Ea@gpd> <20231221132400.1601991-1-dhowells@redhat.com> <20231221132400.1601991-41-dhowells@redhat.com>
-To: Andrea Righi <andrea.righi@canonical.com>
-Cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
-    Steve French <smfrench@gmail.com>,
-    Matthew Wilcox <willy@infradead.org>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Paulo Alcantara <pc@manguebit.com>,
-    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Dominique Martinet <asmadeus@codewreck.org>,
-    Eric Van Hensbergen <ericvh@kernel.org>,
-    Ilya Dryomov <idryomov@gmail.com>,
-    Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
-    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-    linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org, Latchesar Ionkov <lucho@ionkov.net>,
-    Christian Schoenebeck <linux_oss@crudebyte.com>
-Subject: Re: [PATCH v5 40/40] 9p: Use netfslib read/write_iter
+	bh=CdGTO0c0Cfcs7uqDH0QslfK8bkzGZyWFzx0EviU8asY=;
+	b=ZNOT+4tMIRW3uV6JUqKuVkAyB2/XwJ1wJGc0Qup+F1zzFzimWIpxpR80AQ4kerTB1915hW
+	k+PcBTXH6wMtmFWrLJ96VghNbSXGVAvJBXLGsa/WjNsJba12IKsKtIS/v7sxegqMSFWPuX
+	yR1Q6+AexXD0rWnxI2dmQUeZryJxgcA=
+Date: Thu, 9 May 2024 17:34:08 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1567251.1715290417.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 May 2024 22:33:37 +0100
-Message-ID: <1567252.1715290417@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Subject: Re: [PATCH v2 2/7] PCI: xilinx-nwl: Fix off-by-one
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+ Michal Simek <michal.simek@amd.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Thippeswamy Havalige <thippeswamy.havalige@amd.com>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org, Bharat Kumar Gogada <bharatku@xilinx.com>
+References: <20240508015917.GA1746057@bhelgaas>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Sean Anderson <sean.anderson@linux.dev>
+In-Reply-To: <20240508015917.GA1746057@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Andrea Righi <andrea.righi@canonical.com> wrote:
+On 5/7/24 21:59, Bjorn Helgaas wrote:
+> Maybe the subject could include something about why this is important,
+> e.g., it's IRQ-related, we mask/unmask the wrong thing, etc?
+> 
+> On Mon, May 06, 2024 at 12:15:05PM -0400, Sean Anderson wrote:
+>> IRQs start at 0, so we don't need to subtract 1.
+> 
+> What does "IRQ" refer to here?  Something to do with INTx, I guess,
+> but apparently not PCI_INTERRUPT_PIN, since 0 in that register means
+> the device doesn't use INTx, and 1=INTA, 2=INTB, etc.
 
-> On Thu, Dec 21, 2023 at 01:23:35PM +0000, David Howells wrote:
-> > Use netfslib's read and write iteration helpers, allowing netfslib to =
-take
-> > over the management of the page cache for 9p files and to manage local=
- disk
-> > caching.  In particular, this eliminates write_begin, write_end, write=
-page
-> > and all mentions of struct page and struct folio from 9p.
-> > =
+This refers to INTx. MSGF_LEG_MASK is laid out with INTA in bit 0, INTB
+in bit 1, INTC in bit 2, and INTD in bit 3. Hardware IRQ numbers start
+at 0, and we register PCI_NUM_INTX irqs. So by subtracting 1, we try to
+set the -1st bit when enabling INTA.
 
-> > Note that netfslib now offers the possibility of write-through caching=
- if
-> > that is desirable for 9p: just set the NETFS_ICTX_WRITETHROUGH flag in
-> > v9inode->netfs.flags in v9fs_set_netfs_context().
-> > =
+> I assume this fixes a bug, e.g., we mask/unmask the wrong INTx?  What
+> does this look like for a user?  Unexpected IRQs?
 
-> > Note also this is untested as I can't get ganesha.nfsd to correctly pa=
-rse
-> > the config to turn on 9p support.
-> =
+Without this patch I get the following splat:
 
-> It looks like this patch has introduced a regression with autopkgtest,
-> see: https://bugs.launchpad.net/bugs/2056461
-> =
+[    5.037483] ================================================================================
+[    5.046260] UBSAN: shift-out-of-bounds in ../drivers/pci/controller/pcie-xilinx-nwl.c:389:11
+[    5.054983] shift exponent 18446744073709551615 is too large for 32-bit type 'int'
+[    5.062813] CPU: 1 PID: 61 Comm: kworker/u10:1 Not tainted 6.6.20+ #268
+[    5.070008] Hardware name: xlnx,zynqmp (DT)
+[    5.074348] Workqueue: events_unbound deferred_probe_work_func
+[    5.080410] Call trace:
+[    5.082958] dump_backtrace (arch/arm64/kernel/stacktrace.c:235) 
+[    5.086850] show_stack (arch/arm64/kernel/stacktrace.c:242) 
+[    5.090292] dump_stack_lvl (lib/dump_stack.c:107) 
+[    5.094095] dump_stack (lib/dump_stack.c:114) 
+[    5.097540] __ubsan_handle_shift_out_of_bounds (lib/ubsan.c:218 lib/ubsan.c:387) 
+[    5.103227] nwl_unmask_leg_irq (drivers/pci/controller/pcie-xilinx-nwl.c:389 (discriminator 1)) 
+[    5.107386] irq_enable (kernel/irq/internals.h:234 kernel/irq/chip.c:170 kernel/irq/chip.c:439 kernel/irq/chip.c:432 kernel/irq/chip.c:345) 
+[    5.110838] __irq_startup (kernel/irq/internals.h:239 kernel/irq/chip.c:180 kernel/irq/chip.c:250) 
+[    5.114552] irq_startup (kernel/irq/chip.c:270) 
+[    5.118266] __setup_irq (kernel/irq/manage.c:1800) 
+[    5.121982] request_threaded_irq (kernel/irq/manage.c:2206) 
+[    5.126412] pcie_pme_probe (include/linux/interrupt.h:168 drivers/pci/pcie/pme.c:348) 
+[    5.130303] pcie_port_probe_service (drivers/pci/pcie/portdrv.c:528) 
+[    5.134915] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:658) 
+[    5.138720] __driver_probe_device (drivers/base/dd.c:800) 
+[    5.143236] driver_probe_device (drivers/base/dd.c:830) 
+[    5.147571] __device_attach_driver (drivers/base/dd.c:959) 
+[    5.152179] bus_for_each_drv (drivers/base/bus.c:457) 
+[    5.156163] __device_attach (drivers/base/dd.c:1032) 
+[    5.160147] device_initial_probe (drivers/base/dd.c:1080) 
+[    5.164488] bus_probe_device (drivers/base/bus.c:532) 
+[    5.168471] device_add (drivers/base/core.c:3638) 
+[    5.172098] device_register (drivers/base/core.c:3714) 
+[    5.175994] pcie_portdrv_probe (drivers/pci/pcie/portdrv.c:309 drivers/pci/pcie/portdrv.c:363 drivers/pci/pcie/portdrv.c:695) 
+[    5.180338] pci_device_probe (drivers/pci/pci-driver.c:324 drivers/pci/pci-driver.c:392 drivers/pci/pci-driver.c:417 drivers/pci/pci-driver.c:460) 
+[    5.184410] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:658) 
+[    5.188213] __driver_probe_device (drivers/base/dd.c:800) 
+[    5.192729] driver_probe_device (drivers/base/dd.c:830) 
+[    5.197064] __device_attach_driver (drivers/base/dd.c:959) 
+[    5.201672] bus_for_each_drv (drivers/base/bus.c:457) 
+[    5.205657] __device_attach (drivers/base/dd.c:1032) 
+[    5.209641] device_attach (drivers/base/dd.c:1074) 
+[    5.213357] pci_bus_add_device (drivers/pci/bus.c:352) 
+[    5.217518] pci_bus_add_devices (drivers/pci/bus.c:371 (discriminator 2)) 
+[    5.221774] pci_host_probe (drivers/pci/probe.c:3099) 
+[    5.225581] nwl_pcie_probe (drivers/pci/controller/pcie-xilinx-nwl.c:938) 
+[    5.229562] platform_probe (drivers/base/platform.c:1404) 
+[    5.233367] really_probe (drivers/base/dd.c:579 drivers/base/dd.c:658) 
+[    5.237169] __driver_probe_device (drivers/base/dd.c:800) 
+[    5.241685] driver_probe_device (drivers/base/dd.c:830) 
+[    5.246020] __device_attach_driver (drivers/base/dd.c:959) 
+[    5.250628] bus_for_each_drv (drivers/base/bus.c:457) 
+[    5.254612] __device_attach (drivers/base/dd.c:1032) 
+[    5.258596] device_initial_probe (drivers/base/dd.c:1080) 
+[    5.262938] bus_probe_device (drivers/base/bus.c:532) 
+[    5.266920] deferred_probe_work_func (drivers/base/dd.c:124) 
+[    5.271619] process_one_work (arch/arm64/include/asm/jump_label.h:21 include/linux/jump_label.h:207 include/trace/events/workqueue.h:108 kernel/workqueue.c:2632) 
+[    5.275788] worker_thread (kernel/workqueue.c:2694 (discriminator 2) kernel/workqueue.c:2781 (discriminator 2)) 
+[    5.279686] kthread (kernel/kthread.c:388) 
+[    5.283048] ret_from_fork (arch/arm64/kernel/entry.S:862) 
+[    5.286765] ================================================================================
 
-> I haven't looked at the details yet, I just did some bisecting and
-> apparently reverting this one seems to fix the problem.
-> =
+> 9a181e1093af is from seven years ago.  Should we be surprised that we
+> haven't tripped over this before?
 
-> Let me know if you want me to test something in particular or if you
-> already have a potential fix. Otherwise I'll take a look.
+I suppose no one enables UBSAN on this platform.
 
-Do you have a reproducer?
+--Sean
 
-I'll be at LSF next week, so if I can't fix it tomorrow, I won't be able t=
-o
-poke at it until after that.
-
-David
-
+>> Fixes: 9a181e1093af ("PCI: xilinx-nwl: Modify IRQ chip for legacy interrupts")
+>> Cc: <stable@vger.kernel.org>
+>> Signed-off-by: Sean Anderson <sean.anderson@linux.dev>
+>> ---
+>> 
+>> (no changes since v1)
+>> 
+>>  drivers/pci/controller/pcie-xilinx-nwl.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c b/drivers/pci/controller/pcie-xilinx-nwl.c
+>> index 0408f4d612b5..437927e3bcca 100644
+>> --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+>> +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+>> @@ -371,7 +371,7 @@ static void nwl_mask_intx_irq(struct irq_data *data)
+>>  	u32 mask;
+>>  	u32 val;
+>>  
+>> -	mask = 1 << (data->hwirq - 1);
+>> +	mask = 1 << data->hwirq;
+>>  	raw_spin_lock_irqsave(&pcie->leg_mask_lock, flags);
+>>  	val = nwl_bridge_readl(pcie, MSGF_LEG_MASK);
+>>  	nwl_bridge_writel(pcie, (val & (~mask)), MSGF_LEG_MASK);
+>> @@ -385,7 +385,7 @@ static void nwl_unmask_intx_irq(struct irq_data *data)
+>>  	u32 mask;
+>>  	u32 val;
+>>  
+>> -	mask = 1 << (data->hwirq - 1);
+>> +	mask = 1 << data->hwirq;
+>>  	raw_spin_lock_irqsave(&pcie->leg_mask_lock, flags);
+>>  	val = nwl_bridge_readl(pcie, MSGF_LEG_MASK);
+>>  	nwl_bridge_writel(pcie, (val | mask), MSGF_LEG_MASK);
+>> -- 
+>> 2.35.1.1320.gc452695387.dirty
+>> 
