@@ -1,110 +1,156 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3227EEE7
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 19:16:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177587F489
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 19:16:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715282162; cv=none; b=V76JRviImmltvMfiE2pRghBuBfTnBDHys5roTx65TTCmb0UE/VzE+Oh/WqPOnHqddM1jbtOqTqb1CCnpooiWwktDsGsVYr4tuFEljgb3sT4wbnUU+dRwU3ktXZW163RCOXE1BVQgSYZm/Z+1lana2hgX1nl3tmTN/SbwuYMC0EM=
+	t=1715282196; cv=none; b=Y7Yr9xH6luFdl1XKjRZKXk+mOBaFqcNSYCZQ6MaXJEKY8TIEw7NSZ8kxN/BuGgmKMn1jh+02bh6H2lesQPFlVWLuQ3Sg97M00Ikq5iwI0AcI7HR0M77EMeKqz95z48VW57je9gw4ZckcevQz46wNoppTJWT1K012dGSANhL792c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715282162; c=relaxed/simple;
-	bh=f5hTjmwtrBNmeRfEZwqwz3MoeEtUyLOcEt2AbxYcVbw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bfrCXtiESEpVHeBgpz4pWxkrcvPJmF0SUqYMqdSRGCGIXgky/SE0OmKMioNqj+3quVvFSMSnz+VzRXdNLfuK7FtiHTzai5PxwBIpIHTwwmE5lJC3e0j8CiIXAV7CcSeVKOf8GzmR0xxlnnvexd2jvVKQHuZ+EjcX6ELevXMYOwk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZBcnF8Ym; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1715282196; c=relaxed/simple;
+	bh=uCzgFU7wXjy37E1QSOA4C4Ah2huDwMghRUAkC14wOZE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XuDlZiBujaoTLVU7uieICn6K13X3eV6+E+pr9DpZYBNgm8BvXG7qeZXZEf8AfRWmtyvo39c9e8Z38v80xB84bqbmWG3u792ujcF6JdB8eZy3VrCmlLNNDniBn0OmxYGLDJZs1mobPYp1IE4ETHAuyHZWNAThe/rXwKoYgN5Y4io=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=p6BR47fZ; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZBcnF8Ym"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a59a64db066so316880766b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 12:15:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="p6BR47fZ"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1eb0e08bfd2so8386615ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 12:16:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1715282158; x=1715886958; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=C9PPjpFCo1HBrR3dhTun969JD1naScZ8g1ToZzUTce0=;
-        b=ZBcnF8YmhrjyvmPATrpxIJwnO/LAVDHVpKlE2c2K0TTYwfVyk9f3esVGbFrHqF70n7
-         dlptd/NDbOgWA8FsY8w0ZecCKbH23DM236FhxJ9dY/rAXpG5bWE+9XnOs8dhTzPLfDvb
-         uqR1LLMUB1GxE8mixDpUWggKypq9UmjV7DQkM=
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715282194; x=1715886994; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WRd0Lx0MMpPCEzZHJ+gP+MBiwgoDsG5pFDJFXbEvS5E=;
+        b=p6BR47fZUkBd+uEdgLV91HLP/3f8tz9FUAZcMX1txl2WZCfGJTdp+7ji7eQ0HJsIou
+         7oDP3spbl6HXwjHBby8bB/D4x6YAMaqRKzXJBlD4nR67TSGhm7SCE647B6SSEUJ8cTnW
+         fXcRNJvRz0Uplw5AzETVF11LV3u0ZPVCdmAn5TnXS5lS4B6G/sQxncQ3DUCtaLGdH6hY
+         0/wmfs5EFIvkcZ8CMM8N9L9EDURm/c51QsQOAne3xTpfu1cKo7jKfC/FSo2cxUBkurQZ
+         kqrKu2kLpo8YPfyXBwxJOGyMy0Bnu8hLZtJ2xHu1VEHHRIaNOdIHaPeK381vB82/GWxY
+         tZrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715282158; x=1715886958;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C9PPjpFCo1HBrR3dhTun969JD1naScZ8g1ToZzUTce0=;
-        b=kRD1kc6W5iN4ALNjz5H1ToqRYIDOFuPzYudwq4ktPmiHA7omfKQvOyzHL+VhWcIw/j
-         /nwDVPzgBxbYvZ6JZeruukgtNspAYkFdwk7UUUcrSPzcxNQVnyhj/Xb5/4lH/SWuH0ie
-         NagERzPfa43DMgfGiyrKRvMZVEKrmh5v26BJ550WEOcmw/ScNSGtWz2O+sseJP0LJkWX
-         AnGinlG512Bu+LbQtl3uPPbjC/Vmron3A2mF0mWrpV/Nc3cMmCN5ybzoWJw1PJXr35VM
-         7akxMlcKoDpxjJ6H3e3HYgmKBrgXgDDtSRJdsNbygZI2Wz7vIJA6igzpCXXHqALC+d9F
-         bbUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQsjn/Ic1Fk93KvbOsRDyM6qv+Jh11u0Gau3Q/Fs8nBer24pIwdm9EVTrmcA3KdfHJu+BUY/9FEiGLMNvSgl+CDsDAP4sE0tQdT8ZH
-X-Gm-Message-State: AOJu0YzkBe5u+1lCYcPEFrRvpnKeZQiSFWPtVMguey33BgGe5mcgUMVU
-	426JButwCf+Ana/d2pfL1WTPXjMJIUG871rhXObZaYB0ha2pkGHNiqS/DU8ydQvwUS6pqrvGhji
-	i3yeHdg==
-X-Google-Smtp-Source: AGHT+IHq5fD2MbPQl2PRK0m59BgcnSyrMm32j7q6/9EbTIisAWkmaLnBnag8YWoR0nDsmxvHuXb6GQ==
-X-Received: by 2002:a17:907:20a2:b0:a59:a3ef:21f9 with SMTP id a640c23a62f3a-a5a2d6656b2mr33290266b.52.1715282158415;
-        Thu, 09 May 2024 12:15:58 -0700 (PDT)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781d1fcsm102989466b.35.2024.05.09.12.15.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 May 2024 12:15:57 -0700 (PDT)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a599c55055dso332163066b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 12:15:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWJp9foXcNrwkASZ5w2PYq4ophlVH5eHpOSyU5pTBG0WRep4BfortuycXtXJF3C7BR13lErR2xCuXmTjvUAKyufULs18Ep9pO8PnSPM
-X-Received: by 2002:a17:906:f88c:b0:a59:c52b:9938 with SMTP id
- a640c23a62f3a-a5a2d6653bamr36083966b.55.1715282157122; Thu, 09 May 2024
- 12:15:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715282194; x=1715886994;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WRd0Lx0MMpPCEzZHJ+gP+MBiwgoDsG5pFDJFXbEvS5E=;
+        b=TpUCQPfyPPaYOpAaQvy7rBsbdCWbZnlmFT6m7qPySdIlOdJlS0dW4LCUEnMZs2lia8
+         aY1/o/s4wRt/uFOiCPlATjcAbCW0IsILbIcIleazyeQ86nTAZjNzN+9xq1G9zzQoL3no
+         dRaSRgf2Vy32cTMQWf0r1Fg/ipQHhII2r12sjHR6HoQOeLBu2i5JNrFgi1DC6Y55fzEV
+         Uc/hhcF5rfsMX2axftxoU4q0I0f+oLghfjetN1vAq01LdfkCoH+KmDnL/3DcOc9ZwE80
+         VOcqqN/QvXWjhEfQcI6EIHg3GQzV0yJcwd+gUAG4H1yJVfGQvKXtMwa+phW9oK3xmiAl
+         uxHA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7eX6IYhYeebAfXIy8St0P2m8hSGQwJabTEpv9ldhf1pdcDcgSFfELuAvAsr2TtOo2g3dz8MnGrys5nP0auE3OPsuAb+wAp4zrsUzc
+X-Gm-Message-State: AOJu0YyyhvdJNH/MLEkcbm0og/c23mTFTZqHC8JwC3uU0i3ikopZXZK9
+	u+ZuzHmTqHBqYLlcuDXhHV2eVhCR3auUCS0VMiFS6eSAwKCINrSLy+xHDPAGboM=
+X-Google-Smtp-Source: AGHT+IGVLZ1hk7FPNudPJKafIIo2jYjbH8+I3TnNil7Sy8OT8DfcbS5dMB3RJTTTCW5vQbF2H1ruBQ==
+X-Received: by 2002:a17:903:191:b0:1dc:de65:623b with SMTP id d9443c01a7336-1ef4404b8cdmr7695675ad.60.1715282194292;
+        Thu, 09 May 2024 12:16:34 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c13692asm17812885ad.252.2024.05.09.12.16.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 12:16:33 -0700 (PDT)
+Date: Thu, 9 May 2024 12:16:29 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: paul.walmsley@sifive.com, rick.p.edgecombe@intel.com,
+	broonie@kernel.org, Szabolcs.Nagy@arm.com, kito.cheng@sifive.com,
+	keescook@chromium.org, ajones@ventanamicro.com,
+	conor.dooley@microchip.com, cleger@rivosinc.com,
+	atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com,
+	alexghiti@rivosinc.com, samuel.holland@sifive.com, conor@kernel.org,
+	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-mm@kvack.org, linux-arch@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, corbet@lwn.net, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com,
+	akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com,
+	shuah@kernel.org, brauner@kernel.org, andy.chiu@sifive.com,
+	jerry.shih@sifive.com, hankuan.chen@sifive.com,
+	greentime.hu@sifive.com, evan@rivosinc.com, xiao.w.wang@intel.com,
+	apatel@ventanamicro.com, mchitale@ventanamicro.com,
+	dbarboza@ventanamicro.com, sameo@rivosinc.com,
+	shikemeng@huaweicloud.com, willy@infradead.org,
+	vincent.chen@sifive.com, guoren@kernel.org, samitolvanen@google.com,
+	songshuaishuai@tinylab.org, gerg@kernel.org, heiko@sntech.de,
+	bhe@redhat.com, jeeheng.sia@starfivetech.com, cyy@cyyself.name,
+	maskray@google.com, ancientmodern4@gmail.com,
+	mathis.salmen@matsal.de, cuiyunhui@bytedance.com,
+	bgray@linux.ibm.com, mpe@ellerman.id.au, baruch@tkos.co.il,
+	alx@kernel.org, david@redhat.com, catalin.marinas@arm.com,
+	revest@chromium.org, josh@joshtriplett.org, shr@devkernel.io,
+	deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
+	jhubbard@nvidia.com
+Subject: Re: [PATCH v3 29/29] kselftest/riscv: kselftest for user mode cfi
+Message-ID: <Zj0hDT1EZmOaEkCj@debug.ba.rivosinc.com>
+References: <20240403234054.2020347-1-debug@rivosinc.com>
+ <20240403234054.2020347-30-debug@rivosinc.com>
+ <Zj0UGweLoRD1U9Po@ghost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202405081144.D5FCC44A@keescook> <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
- <202405081354.B0A8194B3C@keescook> <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
- <202405081949.0565810E46@keescook> <20240509140854.GF3620298@mit.edu>
- <CAHk-=wgKyP2ffZPa6aKYtytzzFibiNVN5MS=D2cn7_UGCECKdw@mail.gmail.com>
- <20240509175417.GR2118490@ZenIV> <CAHk-=wgXm15gZHvt8waSFhXS9yZTfvMV95xyvNtPc6FSEA_rvA@mail.gmail.com>
- <CAHk-=wgBprh=8Us-MtwH9sVNELZK2hdOkFn3EoauwecYgtXOCQ@mail.gmail.com> <20240509184806.GS2118490@ZenIV>
-In-Reply-To: <20240509184806.GS2118490@ZenIV>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 9 May 2024 12:15:40 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjHA8Di-cpT0pKcScwcWNVYRFvmhBwMrug=Mj5WUwa2rw@mail.gmail.com>
-Message-ID: <CAHk-=wjHA8Di-cpT0pKcScwcWNVYRFvmhBwMrug=Mj5WUwa2rw@mail.gmail.com>
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-To: Al Viro <viro@zeniv.linux.org.uk>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, Kees Cook <keescook@chromium.org>, 
-	Justin Stitt <justinstitt@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Mark Rutland <mark.rutland@arm.com>, linux-hardening@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <Zj0UGweLoRD1U9Po@ghost>
 
-On Thu, 9 May 2024 at 11:48, Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Thu, May 09, 2024 at 11:21:15AM -0700, Charlie Jenkins wrote:
+>On Wed, Apr 03, 2024 at 04:35:17PM -0700, Deepak Gupta wrote:
+>> +
+>> +int main(int argc, char *argv[])
+>> +{
+>> +	int ret = 0;
+>> +	unsigned long lpad_status = 0, ss_status = 0;
+>> +
+>> +	ksft_print_header();
+>> +
+>> +	ksft_set_plan(RISCV_CFI_SELFTEST_COUNT);
+>> +
+>> +	ksft_print_msg("starting risc-v tests\n");
+>> +
+>> +	/*
+>> +	 * Landing pad test. Not a lot of kernel changes to support landing
+>> +	 * pad for user mode except lighting up a bit in senvcfg via a prctl
+>> +	 * Enable landing pad through out the execution of test binary
+>> +	 */
+>> +	ret = my_syscall5(__NR_prctl, PR_GET_INDIR_BR_LP_STATUS, &lpad_status, 0, 0, 0);
 >
-> FWIW, the thing that somewhat worries me about having a helper along
-> the lines of combine_to_u64(low, high) is that
->         foo->splat = combine_to_u64(something, something_else);
-> would be inviting hard-to-catch brainos -
->         foo->splat = combine_to_u64(something_else, something);
+>There is an assumption here that the libc supports setting
+>INDIR_BR_LP_STATUS but does not support the standard prctl interface
+>defined in <sys/prctl.h>. my_syscall5() is defined to fill in gaps in
+>the libc, so this test case should also set the status manually rather
+>than relying on the libc.
+>
+>I don't think it's necessary to define my_syscall5() since every libc
+>should have a prctl() definition. However, these CFI prctls are very new
+>and glibc does not yet support (correct me if I am wrong) it so these
+>prctls should be enabled by the test cases.
 
-Yeah, we'd have to be very clear about naming and ordering. So it
-would probably have to be something like
+In one of my previous patches, it was setting landing pad and shadow stack enabling
+directly via handcrafted prctl macro. I changed it to check for status for following reasons
 
-        result = combine_to_u64_hi_lo(high, low);
+- If this binary is compiled with landing pad and shadow stack option then toolchain being used
+   already has libc with shadow stack and landing pad enabling
 
-to be easy to use.
+- Currently upstream glibc toolchain dont have support but libc with toolchain has the support.
 
-The good news is that if you *do* get it wrong despite clear naming,
-the resulting value will be so obviously wrong that it's generally a
-"Duh!" thing if you do any testing what-so-ever.
+In case of shadow stack enabling, macro is needed and `prctl` function can't be used.
+Because you enter `prctl` function with no shadow stack but exit with shadow stack and will lead to
+fault in its epilog.
 
-Of course, I say that as somebody who always points out that I haven't
-tested my own patches at all, and they are "something like this,
-perhaps?".
+Due to all these reasons, kselftests have to be compiled with toolchain with cfi codegen and thus libc
+should have support to light them up. Here tests only checks if they are already lit up, If not it fails.
 
-But having "hi_lo" kind of naming would hopefully make it really
-obvious even when just looking at the source code.
+Although you're spot on one thing here, since this test is assuming libc already lit-up landing pad and
+shadow stack. It doesn't need macro here for status check of feature and can simply use `prctl` syscall
+interface.
 
-              Linus
+>
+>- Charlie
+>
+>> +	if (ret)
