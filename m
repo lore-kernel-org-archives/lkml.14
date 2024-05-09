@@ -1,109 +1,166 @@
-Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E3113C830
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 07:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551EC13CA80
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 07:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715239897; cv=none; b=T45JPjuQqHaer9baxeqVJaYunTnaBLjETGr36V5/JRBdDu6oyaCe3FNpKalh+9IKlsni0uJsBQO51V707nfbOqQHMtQjSnZLF+MuDWMXI4cV7vw1zYPXcmTxQjDhcN70CUf7RnoTJ7ie2kpYhCBVZ6ZLZ1xb6RSOJAg8mfY7cCw=
+	t=1715240014; cv=none; b=uzT59xWbSDA0YhZfGIuI06jrCtaoFlsybyz+ZiN7au6LUgtyhHbujUJxcbf4IMHO4goEsUiA7gsZkoaJ2aIPYY5h0kLAPQMA9eNxPW9J0jDQ0vme+G44Jn5iOox2NVNTfJyyckHOegfS98T6V13IZZABToT38+yUDtomz7SUt3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715239897; c=relaxed/simple;
-	bh=hKlzg7n2M91QHuHzIH/i/jIkyPsZmX7wBR+g4EMToUY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=BxFHS3tZ5luKk3P4o8cKkgxwBL30Z44C52dgdBiXlb6PhYp7KdFah9G7wKvtHxbkModmEIZLAUJobxDAcSsx62TXDNKFu3oy5aCcJu0o2OIwWqfSf7W4SXhyUTP2QuZfdnALACoSrvABgEYgk9U/HOSaVM+3cISigkVXhDZZyzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Lr/LXdoM; arc=none smtp.client-ip=209.85.161.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lr/LXdoM"
-Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5b2733389f9so138979eaf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 00:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715239895; x=1715844695; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yFIJqrgUYRufZO44ifi0BeHH43Pj5mRVkX8VaE4POmU=;
-        b=Lr/LXdoMbExDeLTbSKvH0ycJjU5V9bM7H0nFJRN5U0jfbF8CvKMGkociBxhie2YERj
-         yOvmCYLeI3vRMQ7CUU13LEA6Nt0kknsMkdeHvpjtpeCJ0bHz0ioyopVD4dePZpCptJ5w
-         tYaT0UsBg/NnC13AwQTy+N4vZ3sgb58gauj40=
+	s=arc-20240116; t=1715240014; c=relaxed/simple;
+	bh=nbhUY7Hy2FzYizNiopTHPz08Vlzquy3DunIbzZLwKEg=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=r0fzNWMPNaj1xLuS3ZFYtoli42+XqCrWBdrjyVCcs0mZ/gma3f/HtRXUnkJRaGL+k5qzu3E80K1WAuXBKHRX6+P6GIcpO0Rxetg0Wgo/JhFovUzTK0E4z6OkE8RksCEziPMu3CP/QEJTvBwvWti+J35I+4STYTl+Beolp8SEOrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7dec4e29827so53294539f.2
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 00:33:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715239895; x=1715844695;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yFIJqrgUYRufZO44ifi0BeHH43Pj5mRVkX8VaE4POmU=;
-        b=C0AjWf7U1deYcl/1mCQly2/46WD8fwHgKjPGD+RRIM19rsedkVOivptqann1qFy058
-         bEl12x/5x7+dIOBVZoQtEIXXt38EAMWIb6smrvlkeEr9EfN2bflWy3sCScWWuDaHVjF2
-         wIE3TFrZCY228Iy/VCgzShCneqwnUKxJ/QcVM1FA9bQ5shmTyxXJxTos1K06Y0R4z6oU
-         kXNAQrHyHUVjcs8MiIYMgQQESgpXwzhAgYaoIF6LX9d/z99EX9fjnDkpdAGJ1gSxVFn/
-         4cqtbfJcBGy4eHfywQu5U24XUdm18Ok+v5OszHf0tIwKfTrD/wDOtWpaAnQHwZy83pSv
-         SKTg==
-X-Forwarded-Encrypted: i=1; AJvYcCWOtpnqlMK/te4hI9aMSfUCLVaf8gvYItlPA297lhytTnDvOl3KmSV7Vj7xlfBtaczqqgb6nNUj/Y3tNIiAbTpAWoT0MwSIdN504fYh
-X-Gm-Message-State: AOJu0Ywfhi/4RZg0dVpRWQtZRGLXw/7nZ5tvW1RYwl2evgNxKQHmfyyB
-	IJW2XDE/KJyMsxigs2ZdVZpp/iAHgcKMih3lHUfDquktF9OOYnSxfiQP0QyPOQ==
-X-Google-Smtp-Source: AGHT+IFxCbiVVPSFIyPcWAzqs1t5rme6BYl/0xBEXZ775m3VFUNpwbdtD+YpUNB1N0N06kSsvGevfg==
-X-Received: by 2002:a05:6358:54a2:b0:18e:a0ce:a35c with SMTP id e5c5f4694b2df-192d2c2b383mr578760355d.14.1715239895370;
-        Thu, 09 May 2024 00:31:35 -0700 (PDT)
-Received: from yuanhsinte1.c.googlers.com (150.221.124.34.bc.googleusercontent.com. [34.124.221.150])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-63411346d46sm586459a12.79.2024.05.09.00.31.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 00:31:34 -0700 (PDT)
-From: Hsin-Te Yuan <yuanhsinte@chromium.org>
-Date: Thu, 09 May 2024 07:31:29 +0000
-Subject: [PATCH] ASoC: mediatek: mt8192: fix register configuration for tdm
+        d=1e100.net; s=20230601; t=1715240011; x=1715844811;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4o0VroiBOaqLrId7oLYRQ2ZetAUouWdNSkk+nerX6Mo=;
+        b=DWLLcznyfQhH7/GIrSVJKf0IhprzKJ3U+lirstnW+Mxt+vMcNKJSy7915J1qjbeaAG
+         HnQWKHoWdb9iNhf59TNkh/JYUXME8cvSsiiNeELebktHhkLMjOHGjx6fcVClNZ7bC/zZ
+         8WOXCIWlaCB6S0n9ZDtrTbID7FM3tsAyAH4sfOC0rTmBtiGG7fkEDCqR3tIgObXfW5NY
+         ACrLSP5OshPBk0AedPRG6NlkUuEg4efw+rfTRvYyuj9ELMjgxnJFHnr9LrbF4IBxgwat
+         BPLIHKKmOCKD77eiaRVZwT/mlvAgOufI0DrJ/eRKJNjxV7TehJxhauq896ZQqGHQzXeQ
+         ptHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVQzvBdv21/lUAY7Fq2bo09gUKGwUDBDJdMkIPVko0JJveTRQSHFltGm/5bCr5FXELOvUXHuvUGVoqhTZgTvidg9tFiKODUKvSQOsFR
+X-Gm-Message-State: AOJu0Yw7RxtU/NQb8Wjg9/lr8BaQl23Bau5t+9/wA2BSa/2Zjnh/6Psh
+	Vefp09GcE1tQzjYQPWh4l2ojhTtGOs+WGqWh8o7vhy8pWr9yjhb2giaYN+TS07SfJ++OGH9CGad
+	yttyygl2d1aIH4xjFc3AH/q+117wMkPoGIdU6JtmSai2qIGbGuUgcurA=
+X-Google-Smtp-Source: AGHT+IF8VT0V3MBeA2mEa87OCQ6rVDGFscddAAUp5v3UkiOBD81uKu4NZp/AVcJCqmfbYzSZeCa/8AAD+wJPVKOOD2NegzqUHxzP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240509-8192-tdm-v1-1-530b54645763@chromium.org>
-X-B4-Tracking: v=1; b=H4sIANB7PGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDUwNLXQtDSyPdkpRc3eSkNKNEc+Nky5QUYyWg8oKi1LTMCrBR0bG1tQD
- PHd/7WgAAAA==
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Jiaxin Yu <jiaxin.yu@mediatek.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- Hsin-Te Yuan <yuanhsinte@chromium.org>
-X-Mailer: b4 0.12.4
+X-Received: by 2002:a05:6602:641c:b0:7da:1885:e198 with SMTP id
+ ca18e2360f4ac-7e18fbed198mr6957039f.0.1715240011477; Thu, 09 May 2024
+ 00:33:31 -0700 (PDT)
+Date: Thu, 09 May 2024 00:33:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000096c7e30618006f15@google.com>
+Subject: [syzbot] [fs?] KASAN: use-after-free Read in sysv_new_inode (2)
+From: syzbot <syzbot+8d075c0e52baab2345e2@syzkaller.appspotmail.com>
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-For DSP_A, data is a BCK cycle behind LRCK trigger edge. For DSP_B, this
-delay doesn't exist. Fix the delay configuration to match the standard.
+Hello,
 
-Fixes: 52fcd65414abfc ("ASoC: mediatek: mt8192: support tdm in platform driver")
-Signed-off-by: Hsin-Te Yuan <yuanhsinte@chromium.org>
+syzbot found the following issue on:
+
+HEAD commit:    1c9135d29e9e Merge branch 'for-next/core' into for-kernelci
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
+console output: https://syzkaller.appspot.com/x/log.txt?x=150ebfdf180000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7d2d53e64c7e6a4f
+dashboard link: https://syzkaller.appspot.com/bug?extid=8d075c0e52baab2345e2
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: arm64
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=132e5e04980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1031edbc980000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/52dd1b4921ab/disk-1c9135d2.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1a4f1788dc25/vmlinux-1c9135d2.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b8d8ebd42a80/Image-1c9135d2.gz.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/816a43fa80f6/mount_0.gz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+8d075c0e52baab2345e2@syzkaller.appspotmail.com
+
+loop0: rw=0, sector=17669878, nr_sectors = 2 limit=128
+Buffer I/O error on dev loop0, logical block 8834939, async page read
+==================================================================
+BUG: KASAN: use-after-free in sysv_new_inode+0xd24/0xe9c fs/sysv/ialloc.c:153
+Read of size 2 at addr ffff0000dee091ce by task syz-executor425/6318
+
+CPU: 0 PID: 6318 Comm: syz-executor425 Not tainted 6.9.0-rc7-syzkaller-g1c9135d29e9e #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
+Call trace:
+ dump_backtrace+0x1b8/0x1e4 arch/arm64/kernel/stacktrace.c:317
+ show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:324
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0xe4/0x150 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x198/0x538 mm/kasan/report.c:488
+ kasan_report+0xd8/0x138 mm/kasan/report.c:601
+ __asan_report_load2_noabort+0x20/0x2c mm/kasan/report_generic.c:379
+ sysv_new_inode+0xd24/0xe9c fs/sysv/ialloc.c:153
+ sysv_mknod+0x5c/0x100 fs/sysv/namei.c:53
+ sysv_create+0x38/0x4c fs/sysv/namei.c:67
+ lookup_open fs/namei.c:3497 [inline]
+ open_last_lookups fs/namei.c:3566 [inline]
+ path_openat+0xfb4/0x2830 fs/namei.c:3796
+ do_filp_open+0x1bc/0x3cc fs/namei.c:3826
+ do_sys_openat2+0x124/0x1b8 fs/open.c:1406
+ do_sys_open fs/open.c:1421 [inline]
+ __do_sys_openat fs/open.c:1437 [inline]
+ __se_sys_openat fs/open.c:1432 [inline]
+ __arm64_sys_openat+0x1f0/0x240 fs/open.c:1432
+ __invoke_syscall arch/arm64/kernel/syscall.c:34 [inline]
+ invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:48
+ el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:133
+ do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:152
+ el0_svc+0x54/0x168 arch/arm64/kernel/entry-common.c:712
+ el0t_64_sync_handler+0x84/0xfc arch/arm64/kernel/entry-common.c:730
+ el0t_64_sync+0x190/0x194 arch/arm64/kernel/entry.S:598
+
+The buggy address belongs to the physical page:
+page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x1 pfn:0x11ee09
+flags: 0x5ffc00000000000(node=0|zone=2|lastcpupid=0x7ff)
+page_type: 0xffffffff()
+raw: 05ffc00000000000 fffffdffc373ab48 fffffdffc3799848 0000000000000000
+raw: 0000000000000001 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff0000dee09080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff0000dee09100: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>ffff0000dee09180: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+                                              ^
+ ffff0000dee09200: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+ ffff0000dee09280: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+==================================================================
+syz-executor425: attempt to access beyond end of device
+loop0: rw=0, sector=6491536, nr_sectors = 2 limit=128
+Buffer I/O error on dev loop0, logical block 3245768, async page read
+syz-executor425: attempt to access beyond end of device
+loop0: rw=0, sector=17666806, nr_sectors = 2 limit=128
+Buffer I/O error on dev loop0, logical block 8833403, async page read
+syz-executor425: attempt to access beyond end of device
+loop0: rw=0, sector=26539618, nr_sectors = 2 limit=128
+Buffer I/O error on dev loop0, logical block 13269809, async page read
+syz-executor425: attempt to access beyond end of device
+loop0: rw=0, sector=16147212, nr_sectors = 2 limit=128
+Buffer I/O error on dev loop0, logical block 8073606, async page read
+
+
 ---
- sound/soc/mediatek/mt8192/mt8192-dai-tdm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/sound/soc/mediatek/mt8192/mt8192-dai-tdm.c b/sound/soc/mediatek/mt8192/mt8192-dai-tdm.c
-index 9ce06821c7d0f..49440db370af0 100644
---- a/sound/soc/mediatek/mt8192/mt8192-dai-tdm.c
-+++ b/sound/soc/mediatek/mt8192/mt8192-dai-tdm.c
-@@ -566,10 +566,10 @@ static int mtk_dai_tdm_hw_params(struct snd_pcm_substream *substream,
- 		tdm_con |= 1 << DELAY_DATA_SFT;
- 		tdm_con |= get_tdm_lrck_width(format) << LRCK_TDM_WIDTH_SFT;
- 	} else if (tdm_priv->tdm_out_mode == TDM_OUT_DSP_A) {
--		tdm_con |= 0 << DELAY_DATA_SFT;
-+		tdm_con |= 1 << DELAY_DATA_SFT;
- 		tdm_con |= 0 << LRCK_TDM_WIDTH_SFT;
- 	} else if (tdm_priv->tdm_out_mode == TDM_OUT_DSP_B) {
--		tdm_con |= 1 << DELAY_DATA_SFT;
-+		tdm_con |= 0 << DELAY_DATA_SFT;
- 		tdm_con |= 0 << LRCK_TDM_WIDTH_SFT;
- 	}
- 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
----
-base-commit: 45db3ab70092637967967bfd8e6144017638563c
-change-id: 20240509-8192-tdm-cbf2a73c9dd3
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Best regards,
--- 
-Hsin-Te Yuan <yuanhsinte@chromium.org>
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
