@@ -1,40 +1,41 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4047101E3;
-	Thu,  9 May 2024 09:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB9C101E3;
+	Thu,  9 May 2024 09:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715248476; cv=none; b=Guu6eaTEROBgKXlsQoj+TA/Kp8F63KXz3S3d4yjEJF201czMZ4Da+kGBeomFlVu5dbYTVgNsq6Ul4pZJYme7Dl93fWePXdaY53HGXwWmNEVHvPTy1pdCAUhP4ymSxNCWe4b613Q0rZd2QUzR5MNdVvN6Bjl/PpKO6nBmOVUf6gU=
+	t=1715248518; cv=none; b=MQrAJ8/Im2JjQ1pImaOTOanynGnqXazJXrUDLOJgnEoPJY4tkx8DJt4ms4ZVjabv1gIn5AfJe96lAi7bo7VFGsnNlHiMWIW+Ex41wwdhq5nYUtFwdoTZQ+gCEJXgvCBKlw1FrmhkwfI/YmhFTCeQxS2AMU3njV27EP66p6ZjOyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715248476; c=relaxed/simple;
-	bh=vlum46Tb8PK1ROm2H5JtmPI6YiTvRNegUq7mRooArb4=;
+	s=arc-20240116; t=1715248518; c=relaxed/simple;
+	bh=yrD/QtiUP7raTVg4YwCBZ7H+mXiDO6gGM1MH4II/Grs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vBilxlkS8ZkAg5+KwBg4vdsHY+tSGFDjhMjXL2KuV3Pca4eGFFJY+WSlh1IMgiiDqAwCwCTysmt2EBlO5yE6Ui11zHqf4e50pEVHLVVaH31u2dareE/Wcis5gPQ7m7w0mD48jBZ38NdGmBf+x0108JkyL15Kz79vufA2RsFoZEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=njHpLvDQ; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	 In-Reply-To:Content-Type; b=WfuIVNB8mAoJipHe+ZUwfxAdnNoWS0AZQI8T2kFqV4zKFsvb7t1pTxL35shJWeuizMgcVn6OIB++m67tEkR3UDNgoyKVrAYg6lFnpLk/obNiR1hYwlgGe1ke3dgcuHqrWuvUihtrEVlvXVQJ35joz41+VzorVNwDkAC4NRM+bwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=jaNb/HMB; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="njHpLvDQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715248472;
-	bh=vlum46Tb8PK1ROm2H5JtmPI6YiTvRNegUq7mRooArb4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=njHpLvDQoHLR62SJqkphCa4t2y6tge0nUhsPjiEp71pkNWsyrAN9BxUS304Kx7X7p
-	 gNzc+DR86MGpZTq+PcN5NGK7RqX1XBRruJSACmb0wweYeaAXtNL9djgi9y32NYf7Fp
-	 z7IBKnI5nwAd7fhzO8nGjt/Kl/UTDQaQRXAETNW7sYcIYYl3xj6ufid1lfBQmy9dOr
-	 1JKijGa9ezVTF6Aj3opG0KkReV/MAVHTvZx24CDxcp7a9nysq14/ymKDQ+MAVnSeez
-	 9hsjM1FNr3fdjZEE7DZu18QYbwQvt3fFVSNeBM7HbE06eEI+geyYFFWJQoOCfG+UVr
-	 1szJShnvwrpvA==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id C518637820FA;
-	Thu,  9 May 2024 09:54:31 +0000 (UTC)
-Message-ID: <2aefd938-f70a-4133-a3a8-9c96464c9f5f@collabora.com>
-Date: Thu, 9 May 2024 11:54:31 +0200
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="jaNb/HMB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1715248509; x=1715853309; i=markus.elfring@web.de;
+	bh=yrD/QtiUP7raTVg4YwCBZ7H+mXiDO6gGM1MH4II/Grs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=jaNb/HMBNLDiJ0b8Dl6mr92ZZ0B0zDlSF7+nWkGvI8ZtKQnk16FAvCQNj3AdrIn9
+	 RuGBMIE1ou5FP+NBIVt88QMevCscbvO3Ed1c20v7gBkNaDkxszQ4LqY5Rlk0AynY9
+	 CoUtJN/O9COYLQg/+rnf6aDDfcEINoSZ5hq463dO1kUUixYTFuN0b0TtYbhYs9iAX
+	 dJ/iqrYYdOzgZjE4KpVccE7iOKS7AkUnIYfKGXEeOU1OOJFc6/wHbozwy8CWlL9gg
+	 d0pEiEeOeFWDZLcQhdeGzoJLFZDMCDlm5gnQdmIyQXW8NVt+T7XCeTb+TStKm1SgZ
+	 OXXzRyK3MSPda1/0HQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N2BI2-1skD2J0L2U-00tG1W; Thu, 09
+ May 2024 11:55:09 +0200
+Message-ID: <336c0653-9876-4268-a798-3e316b3d7f26@web.de>
+Date: Thu, 9 May 2024 11:55:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,149 +43,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] media: mediatek: vcodec: add decoder command to
- support stateless decoder
-To: Yunfei Dong <yunfei.dong@mediatek.com>,
- =?UTF-8?Q?N=C3=ADcolas_F_=2E_R_=2E_A_=2E_Prado?= <nfraprado@collabora.com>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>,
- Benjamin Gaignard <benjamin.gaignard@collabora.com>,
- Nathan Hebert <nhebert@chromium.org>,
- Sebastian Fricke <sebastian.fricke@collabora.com>
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>, Fritz Koenig <frkoenig@chromium.org>,
- Daniel Vetter <daniel@ffwll.ch>, Steve Cho <stevecho@chromium.org>,
- linux-media@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-References: <20240316081344.4262-1-yunfei.dong@mediatek.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20240316081344.4262-1-yunfei.dong@mediatek.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: [v4] time/tick-sched: idle load balancing when nohz_full cpu
+ becomes idle.
+To: Levi Yun <ppbuk5246@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>
+References: <20240508172621.30069-1-ppbuk5246@gmail.com>
+ <20240509092931.35209-2-ppbuk5246@gmail.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240509092931.35209-2-ppbuk5246@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:mRsGSphSdKcWayvWVJ8HzFyaVhXjvqms4KqJYG9jxLLE5kKokYt
+ 6XsL5ElLYFFMyvBNNDUJktAouATyTnhVZlgdpxQTSbVaYHbKzPfOuZkjXmpFuWggPsZ7QNk
+ KkRtsaXW+OmHizladr4q2IgVsOflIyRshulQ/2f77PkwtBLmmzqx2pYfNo6A7iSsKuOINme
+ gNsSZW+r8hUjMex0KUnkg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:h0gNp7QchA8=;mkdnxuLzwbR+meQwfmi7wvbFJkF
+ WjBo3X7sPLvGnyTzK90ALKbRw3erYTYuZSEUGzDd87W7vgSita2a/Spc2KzdrpT9Q5ISN9avy
+ m6lqsKZ03fj5wLVVq0kqhSeAOEvYxsmvVbigRwOxEAums2W1nUJgEcHxXPGFQ45zxe87Ijjli
+ ONVDsHVFAF3qpaPvSgtPHJUph668FGGiuNMV/UMcw/jgGHXDN/+p+84w8DTd2jbrewf3Zs1pj
+ OPhqjFKC40iIbRZF0dEXigDPnEWPNTrNIyAH+nKpqrvCrbVunJyHwzamp+j4E/8L4S5MyIcAU
+ /iboN7T7HlJKjXqjbL8oNvSr5KcCGTIJonTbv1Wi8DfeLIQ2W+moMJBzA/kgdbnW5KdOXniDY
+ jXZ0l2kzTJ1NtM7o9Q4AY+YoKr5bAI28N6MWxqvMueVkM7g851rdzg+OgRDli1jpqtxXhMGWY
+ BhdMDGyvy11edasnQGAs3OZQlmu7Z01cx7XDdyi3JOOw4KZEtuYP0541MeBim2pTYcus3NJmx
+ 9RiLQOXAQyMOKP9yuZfTj9V8KarA+pMOfx80SbznENVnfV3a6WTffxPwHgKcDFhs/M+qhZagA
+ s3xMiZyi3c8GB7ftBw1j9h5ui7acchw7djLFGIU1s9v8aL4MfUDy4C9NC0FpNR/NaDeZu5gvb
+ DG3fRh8yjOzUj95jXkMwLUvLH9+URCLM+Jyfkhnqk/GOp0qgTz4kAfTpyJVkqqZoLsWM2vBpC
+ 7kEscGIjRyRScq9gj2tad+chCQ6Z53LF9v6dGzSPqV1h7dE/zghpBEYpu0s5hclRsba05DVu8
+ W+cKT9Y2qnnPiFUlHIu3DrbU9Mw9HgHVyfUpQ1UlXGFaw=
 
-Il 16/03/24 09:13, Yunfei Dong ha scritto:
-> The supported decoder commands are different for stateless and
-> stateful architecture. Add stateless decoder commands to fix
-> the v4l2-compliance test error below.
-> 
-> Codec ioctls:
->      VIDIOC_ENCODER_CMD returned -1 (Inappropriate ioctl for device)
->      VIDIOC_TRY_ENCODER_CMD returned -1 (Inappropriate ioctl for device)
->   test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->      VIDIOC_G_ENC_INDEX returned -1 (Inappropriate ioctl for device)
->   test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->      VIDIOC_DECODER_CMD returned -1 (Invalid argument)
->      VIDIOC_TRY_DECODER_CMD returned -1 (Invalid argument)
->      VIDIOC_TRY_DECODER_CMD returned -1 (Invalid argument)
->      fail: v4l2-test-codecs.cpp(126): ret
->   test VIDIOC_(TRY_)DECODER_CMD: FAIL
-> 
-> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+=E2=80=A6
+> Currently, tick_nohz_idle_stop_tick() is only called in idle state and
+> it calls nohz_balance_enter_idle(). this function tracks the CPU
+> which is part of nohz.idle_cpus_mask with rq->nohz_tick_stopped properly=
+.
+=E2=80=A6
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+* How did you notice improvement possibilities for such data processing?
 
-Nicolas, Sebastian, anything to add?
+* I hope that a few remaining wording =E2=80=9Cweaknesses=E2=80=9D can be =
+adjusted accordingly.
 
-Cheers,
-Angelo
-
-> ---
-> changed with v1:
-> - remove the static function prefix.
-> - fix some messages not reasonable.
-> ---
->   .../mediatek/vcodec/decoder/mtk_vcodec_dec.c  | 60 +++++++++++++++++--
->   1 file changed, 54 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-> index ba742f0e391d..c2b64a528028 100644
-> --- a/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-> +++ b/drivers/media/platform/mediatek/vcodec/decoder/mtk_vcodec_dec.c
-> @@ -80,21 +80,18 @@ static struct mtk_q_data *mtk_vdec_get_q_data(struct mtk_vcodec_dec_ctx *ctx,
->   	return &ctx->q_data[MTK_Q_DATA_DST];
->   }
->   
-> -static int vidioc_try_decoder_cmd(struct file *file, void *priv,
-> -				struct v4l2_decoder_cmd *cmd)
-> +static int stateful_try_decoder_cmd(struct file *file, void *priv, struct v4l2_decoder_cmd *cmd)
->   {
->   	return v4l2_m2m_ioctl_try_decoder_cmd(file, priv, cmd);
->   }
->   
-> -
-> -static int vidioc_decoder_cmd(struct file *file, void *priv,
-> -				struct v4l2_decoder_cmd *cmd)
-> +static int stateful_decoder_cmd(struct file *file, void *priv, struct v4l2_decoder_cmd *cmd)
->   {
->   	struct mtk_vcodec_dec_ctx *ctx = fh_to_dec_ctx(priv);
->   	struct vb2_queue *src_vq, *dst_vq;
->   	int ret;
->   
-> -	ret = vidioc_try_decoder_cmd(file, priv, cmd);
-> +	ret = stateful_try_decoder_cmd(file, priv, cmd);
->   	if (ret)
->   		return ret;
->   
-> @@ -128,6 +125,57 @@ static int vidioc_decoder_cmd(struct file *file, void *priv,
->   	return 0;
->   }
->   
-> +static int stateless_try_decoder_cmd(struct file *file, void *priv, struct v4l2_decoder_cmd *cmd)
-> +{
-> +	return v4l2_m2m_ioctl_stateless_try_decoder_cmd(file, priv, cmd);
-> +}
-> +
-> +static int stateless_decoder_cmd(struct file *file, void *priv, struct v4l2_decoder_cmd *cmd)
-> +{
-> +	struct mtk_vcodec_dec_ctx *ctx = fh_to_dec_ctx(priv);
-> +	int ret;
-> +
-> +	ret = v4l2_m2m_ioctl_stateless_try_decoder_cmd(file, priv, cmd);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mtk_v4l2_vdec_dbg(3, ctx, "decoder cmd=%u", cmd->cmd);
-> +	switch (cmd->cmd) {
-> +	case V4L2_DEC_CMD_FLUSH:
-> +		/*
-> +		 * If the flag of the output buffer is equals V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF,
-> +		 * this command will prevent dequeueing the capture buffer containing the last
-> +		 * decoded frame. Or do nothing
-> +		 */
-> +		break;
-> +	default:
-> +		mtk_v4l2_vdec_err(ctx, "invalid stateless decoder cmd=%u", cmd->cmd);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int vidioc_try_decoder_cmd(struct file *file, void *priv, struct v4l2_decoder_cmd *cmd)
-> +{
-> +	struct mtk_vcodec_dec_ctx *ctx = fh_to_dec_ctx(priv);
-> +
-> +	if (ctx->dev->vdec_pdata->uses_stateless_api)
-> +		return stateless_try_decoder_cmd(file, priv, cmd);
-> +
-> +	return stateful_try_decoder_cmd(file, priv, cmd);
-> +}
-> +
-> +static int vidioc_decoder_cmd(struct file *file, void *priv, struct v4l2_decoder_cmd *cmd)
-> +{
-> +	struct mtk_vcodec_dec_ctx *ctx = fh_to_dec_ctx(priv);
-> +
-> +	if (ctx->dev->vdec_pdata->uses_stateless_api)
-> +		return stateless_decoder_cmd(file, priv, cmd);
-> +
-> +	return stateful_decoder_cmd(file, priv, cmd);
-> +}
-> +
->   void mtk_vdec_unlock(struct mtk_vcodec_dec_ctx *ctx)
->   {
->   	mutex_unlock(&ctx->dev->dec_mutex[ctx->hw_id]);
-
-
-
+Regards,
+Markus
