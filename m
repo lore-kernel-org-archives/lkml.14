@@ -1,40 +1,77 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E2F130A4D;
-	Thu,  9 May 2024 11:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DDB12FF93
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 11:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715254133; cv=none; b=XEGXTr5xq9L6UvRdlIbDa/+TXGJ+KHZG6c/9vL1cE6FVQQloKZFlxDonQC4ag5AFEsCcsgSY5ibTfvSQCuFeX/zAyg4rYIvwizSa4oSh96GtVGdV1xpm/9QGXPjiqUmqhN3KteVgsnkun9bBuaDCSl0VABCKS+d+KgeQ+QEpCn8=
+	t=1715254279; cv=none; b=aa6hELWuI9q3WumG8w5HcpOLwkXsaA0/G7guEih8ZX/DLTYC72s1HykxIYZUfCLWKzv3IkE+8yIvendxotk839mizXsZGsUFRQxmbdAbzfybTA7/3Ct3fFlapNEbif6tp9I3sWsc02QJcumEYogJx02jAiUTw5csbnNzTC91Q7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715254133; c=relaxed/simple;
-	bh=sP2NP3C9j/mWnfkH0TckSp5PWwPjr51og+mRQV3iKoI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TzHI1X57GRvDcW+FmbE9pRaUCd4xMBKzIZP0Cx8MKdnn6ntUg5VL7RPzksM6q2v6JbVNeI9gCkycEBl/U7wcp8qVcpAlXsUtqCgHW6I5rpMydDoUeP+wCO9ceT0XTeO3FI0ZfILwjNi+bMfMP51DDEnVb3ejJSiQxYUV6vddERk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4VZqSJ1qzgztTVs;
-	Thu,  9 May 2024 19:25:20 +0800 (CST)
-Received: from dggpeml500012.china.huawei.com (unknown [7.185.36.15])
-	by mail.maildlp.com (Postfix) with ESMTPS id 7A1011800CA;
-	Thu,  9 May 2024 19:28:47 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 9 May 2024 19:28:47 +0800
-From: Zheng Yejian <zhengyejian1@huawei.com>
-To: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <mark.rutland@arm.com>,
-	<mathieu.desnoyers@efficios.com>
-CC: <Markus.Elfring@web.de>, <linux-kernel@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
-Subject: [PATCH v4] ftrace: Fix possible use-after-free issue in ftrace_location()
-Date: Fri, 10 May 2024 03:28:59 +0800
-Message-ID: <20240509192859.1273558-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240401125543.1282845-1-zhengyejian1@huawei.com>
-References: <20240401125543.1282845-1-zhengyejian1@huawei.com>
+	s=arc-20240116; t=1715254279; c=relaxed/simple;
+	bh=KbSJqTXIym8X1LZZSbDqHy2oc5PTnuYaFn9rlqkiybc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XhE7u3TlM/Pf7L5S3XKeGUgwB9hS7IdQoLZ6aoQbLh1UkSHr5qMAKtKA+TNnSzzXnb3SyfEZTxHMtEJk0QG++AGv1mZ1EcYQkv+lEKrfmqDOvGGE4Ln6wwsJuReeNgCkmXK5r/5dVkcbwx/V51Vvc05uLmcLvrIk0cKxz6Usp3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CgcvKIg8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CgcvKIg8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715254276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=kZ1oYNvf/jlHzYagQ7dAZFEVJALyTuqemntwu0w6jKw=;
+	b=CgcvKIg8TkwcLe8NWm7mS+8ORrGWGXJa1T+i7a2s9zpruDBKKynVz2w7RpOLXJdC64G1Jw
+	pA5DKiIlYJgmvA9kbmfdUy4DtEYIO83Lh3tn8s8t6v4dI1hwW0yrzJ/qpWTm1yhED7f7zz
+	b9VRAwaqrGBFcxLO9QokgEFr0z4bEzY=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-367-5WV20ux4MQmwWP1g_MQsmA-1; Thu, 09 May 2024 07:31:15 -0400
+X-MC-Unique: 5WV20ux4MQmwWP1g_MQsmA-1
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-5cf35636346so628930a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 04:31:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715254274; x=1715859074;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kZ1oYNvf/jlHzYagQ7dAZFEVJALyTuqemntwu0w6jKw=;
+        b=YUIvLmZXnZIIrg31mHuOF4+BNcH3pAKNdKiuRl5lptNOvU7GHy5LORPdM5p0ML/gma
+         w9/Uh6Rf8go1nDm4nmasDZOLQuSfXsfnUZzODOvGtDveHEvHlBkq7IhgYQTVTp6C9s19
+         mAqFVRMkKG9Gilqy1oI+8V4aYms8tJR49aEMmG8Q6jnDLXCeYaNTNoGTg2opU8EFYUGJ
+         0E0hbm6OVNBMxq/Prg2wjj3vTQQS64rn+yUsFnZ9Q9ZAYWtzLAP1MdsfI9IbWq/SfW+J
+         cMKYXAIX1/cJIc5F7IzSqWYDmxIFRmaamV9BzPY3yERlZFozVhTattYBz91/1HK/Mn1+
+         n0PA==
+X-Forwarded-Encrypted: i=1; AJvYcCUgqERFnSXMZaQbDpDq3n98ql3gvWlU+Tf9R/deKzsTMW5xGgzxvoZ+MWjQkzrX576dQ3UYOCCqxFWFzFfHbaOIMewN2f2rIUHtq4wh
+X-Gm-Message-State: AOJu0YxZSh0P+rVZQG32VIig0dPhRrNAayQzSeJ8o5xjA8kN6Ak/gQH7
+	nOyj4eTAPBRnvJzetxgdyWhp/F6KeSLuiJdqOjtlbxS90k5kzrGfvXwekKTB3qksECnBAZERYTB
+	ZOtKjjeWg1FznT0UD6gdV2EVqStMEBugT4OZmin8VrmzfuI7XddAC153rhzieFg==
+X-Received: by 2002:a05:6a20:9494:b0:1af:c0f9:b155 with SMTP id adf61e73a8af0-1afc8d8eb58mr5402213637.38.1715254274439;
+        Thu, 09 May 2024 04:31:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEznRBomI8zqavjnHRv+qhrEvXhhgPA38IG4MHjby0WMFKowdUH6+SUrWT3PbTYHv67iCKEGw==
+X-Received: by 2002:a05:6a20:9494:b0:1af:c0f9:b155 with SMTP id adf61e73a8af0-1afc8d8eb58mr5402187637.38.1715254274006;
+        Thu, 09 May 2024 04:31:14 -0700 (PDT)
+Received: from zeus.elecom ([240b:10:83a2:bd00:6e35:f2f5:2e21:ae3a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c2567ccsm12023495ad.301.2024.05.09.04.31.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 04:31:13 -0700 (PDT)
+From: Ryosuke Yasuoka <ryasuoka@redhat.com>
+To: krzk@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org
+Cc: Ryosuke Yasuoka <ryasuoka@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	syoshida@redhat.com,
+	syzbot+d7b4dc6cd50410152534@syzkaller.appspotmail.com
+Subject: [PATCH net v4] nfc: nci: Fix uninit-value in nci_rx_work
+Date: Thu,  9 May 2024 20:30:33 +0900
+Message-ID: <20240509113036.362290-1-ryasuoka@redhat.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,182 +79,114 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500012.china.huawei.com (7.185.36.15)
 
-KASAN reports a bug:
+syzbot reported the following uninit-value access issue [1]
 
-  BUG: KASAN: use-after-free in ftrace_location+0x90/0x120
-  Read of size 8 at addr ffff888141d40010 by task insmod/424
-  CPU: 8 PID: 424 Comm: insmod Tainted: G        W          6.9.0-rc2+
-  [...]
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x68/0xa0
-   print_report+0xcf/0x610
-   kasan_report+0xb5/0xe0
-   ftrace_location+0x90/0x120
-   register_kprobe+0x14b/0xa40
-   kprobe_init+0x2d/0xff0 [kprobe_example]
-   do_one_initcall+0x8f/0x2d0
-   do_init_module+0x13a/0x3c0
-   load_module+0x3082/0x33d0
-   init_module_from_file+0xd2/0x130
-   __x64_sys_finit_module+0x306/0x440
-   do_syscall_64+0x68/0x140
-   entry_SYSCALL_64_after_hwframe+0x71/0x79
+nci_rx_work() parses received packet from ndev->rx_q. It should be
+validated header size, payload size and total packet size before
+processing the packet. If an invalid packet is detected, it should be
+silently discarded.
 
-The root cause is that, in lookup_rec(), ftrace record of some address
-is being searched in ftrace pages of some module, but those ftrace pages
-at the same time is being freed in ftrace_release_mod() as the
-corresponding module is being deleted:
-
-           CPU1                       |      CPU2
-  register_kprobes() {                | delete_module() {
-    check_kprobe_address_safe() {     |
-      arch_check_ftrace_location() {  |
-        ftrace_location() {           |
-          lookup_rec() // USE!        |   ftrace_release_mod() // Free!
-
-To fix this issue:
-  1. Hold rcu lock as accessing ftrace pages in ftrace_location_range();
-  2. Use ftrace_location_range() instead of lookup_rec() in
-     ftrace_location();
-  3. Call synchronize_rcu() before freeing any ftrace pages both in
-     ftrace_process_locs()/ftrace_release_mod()/ftrace_free_mem().
-
-Fixes: ae6aa16fdc16 ("kprobes: introduce ftrace based optimization")
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+Fixes: d24b03535e5e ("nfc: nci: Fix uninit-value in nci_dev_up and nci_ntf_packet")
+Reported-and-tested-by: syzbot+d7b4dc6cd50410152534@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=d7b4dc6cd50410152534 [1]
+Signed-off-by: Ryosuke Yasuoka <ryasuoka@redhat.com>
 ---
- kernel/trace/ftrace.c | 39 +++++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 16 deletions(-)
+v4
+- v3 patch uses goto statement and it makes codes complicated. So this
+  patch simply calls kfree_skb inside loop and remove goto statement.
+- [2] inserted kcov_remote_stop() to fix kcov check. However, as we
+  discuss about my v3 patch [3], it should not exit the for statement
+  and should continue processing subsequent packets. This patch removes
+  them and simply insert continue statement.
 
-v4:
- - Simply add rcu locking into ftrace_location_range() as suggested by Steve.
-   Link: https://lore.kernel.org/linux-trace-kernel/20240502170743.15a5ff1c@gandalf.local.home/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git/commit/?id=19e35f24750d
 
-v3:
- - Complete the commit description and add Suggested-by tag
- - Add comments around where synchronize_rcu() is called
- - Link: https://lore.kernel.org/linux-trace-kernel/20240417032830.1764690-1-zhengyejian1@huawei.com/
+v3
+https://lore.kernel.org/netdev/20240502082323.250739-1-ryasuoka@redhat.com/T/
+- As Simon pointed out, the valid packets will reach invalid_pkt_free
+and kfree_skb(skb) after being handled correctly in switch statement.
+It can lead to double free issues, which is not intended. So this patch
+uses "continue" instead of "break" in switch statement.
 
-v2:
- - Link: https://lore.kernel.org/all/20240416112459.1444612-1-zhengyejian1@huawei.com/
- - Use RCU lock instead of holding ftrace_lock as suggested by Steve.
-   Link: https://lore.kernel.org/all/20240410112823.1d084c8f@gandalf.local.home/
+- In the current implementation, once zero payload size is detected, the
+for statement exits. It should continue processing subsequent packets. 
+So this patch just frees skb in invalid_pkt_free when the invalid 
+packets are detected. [3]
 
-v1:
- - Link: https://lore.kernel.org/all/20240401125543.1282845-1-zhengyejian1@huawei.com/
+v2
+https://lore.kernel.org/lkml/20240428134525.GW516117@kernel.org/T/
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index da1710499698..1e12df9bb531 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1595,12 +1595,15 @@ static struct dyn_ftrace *lookup_rec(unsigned long start, unsigned long end)
- unsigned long ftrace_location_range(unsigned long start, unsigned long end)
- {
- 	struct dyn_ftrace *rec;
-+	unsigned long ip = 0;
- 
-+	rcu_read_lock();
- 	rec = lookup_rec(start, end);
- 	if (rec)
--		return rec->ip;
-+		ip = rec->ip;
-+	rcu_read_unlock();
- 
--	return 0;
-+	return ip;
+- The v1 patch only checked whether skb->len is zero. This patch also
+  checks header size, payload size and total packet size.
+
+
+v1
+https://lore.kernel.org/linux-kernel/CANn89iJrQevxPFLCj2P=U+XSisYD0jqrUQpa=zWMXTjj5+RriA@mail.gmail.com/T/
+
+ net/nfc/nci/core.c | 30 ++++++++++++++++++++++++------
+ 1 file changed, 24 insertions(+), 6 deletions(-)
+
+diff --git a/net/nfc/nci/core.c b/net/nfc/nci/core.c
+index b133dc55304c..0aaff30cb68f 100644
+--- a/net/nfc/nci/core.c
++++ b/net/nfc/nci/core.c
+@@ -1463,6 +1463,16 @@ int nci_core_ntf_packet(struct nci_dev *ndev, __u16 opcode,
+ 				 ndev->ops->n_core_ops);
  }
  
- /**
-@@ -1614,25 +1617,22 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-  */
- unsigned long ftrace_location(unsigned long ip)
- {
--	struct dyn_ftrace *rec;
-+	unsigned long loc;
- 	unsigned long offset;
- 	unsigned long size;
- 
--	rec = lookup_rec(ip, ip);
--	if (!rec) {
-+	loc = ftrace_location_range(ip, ip);
-+	if (!loc) {
- 		if (!kallsyms_lookup_size_offset(ip, &size, &offset))
- 			goto out;
- 
- 		/* map sym+0 to __fentry__ */
- 		if (!offset)
--			rec = lookup_rec(ip, ip + size - 1);
-+			loc = ftrace_location_range(ip, ip + size - 1);
- 	}
- 
--	if (rec)
--		return rec->ip;
--
- out:
--	return 0;
-+	return loc;
- }
- 
- /**
-@@ -6596,6 +6596,8 @@ static int ftrace_process_locs(struct module *mod,
- 	/* We should have used all pages unless we skipped some */
- 	if (pg_unuse) {
- 		WARN_ON(!skipped);
-+		/* Need to synchronize with ftrace_location_range() */
-+		synchronize_rcu();
- 		ftrace_free_pages(pg_unuse);
- 	}
- 	return ret;
-@@ -6809,6 +6811,9 @@ void ftrace_release_mod(struct module *mod)
-  out_unlock:
- 	mutex_unlock(&ftrace_lock);
- 
-+	/* Need to synchronize with ftrace_location_range() */
-+	if (tmp_page)
-+		synchronize_rcu();
- 	for (pg = tmp_page; pg; pg = tmp_page) {
- 
- 		/* Needs to be called outside of ftrace_lock */
-@@ -7142,6 +7147,7 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
- 	unsigned long start = (unsigned long)(start_ptr);
- 	unsigned long end = (unsigned long)(end_ptr);
- 	struct ftrace_page **last_pg = &ftrace_pages_start;
-+	struct ftrace_page *tmp_page = NULL;
- 	struct ftrace_page *pg;
- 	struct dyn_ftrace *rec;
- 	struct dyn_ftrace key;
-@@ -7183,12 +7189,8 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
- 		ftrace_update_tot_cnt--;
- 		if (!pg->index) {
- 			*last_pg = pg->next;
--			if (pg->records) {
--				free_pages((unsigned long)pg->records, pg->order);
--				ftrace_number_of_pages -= 1 << pg->order;
--			}
--			ftrace_number_of_groups--;
--			kfree(pg);
-+			pg->next = tmp_page;
-+			tmp_page = pg;
- 			pg = container_of(last_pg, struct ftrace_page, next);
- 			if (!(*last_pg))
- 				ftrace_pages = pg;
-@@ -7205,6 +7207,11 @@ void ftrace_free_mem(struct module *mod, void *start_ptr, void *end_ptr)
- 		clear_func_from_hashes(func);
- 		kfree(func);
- 	}
-+	/* Need to synchronize with ftrace_location_range() */
-+	if (tmp_page) {
-+		synchronize_rcu();
-+		ftrace_free_pages(tmp_page);
++static bool nci_valid_size(struct sk_buff *skb, unsigned int header_size)
++{
++	if (skb->len < header_size ||
++	    !nci_plen(skb->data) ||
++	    skb->len < header_size + nci_plen(skb->data)) {
++		return false;
 +	}
- }
++	return true;
++}
++
+ /* ---- NCI TX Data worker thread ---- */
  
- void __init ftrace_free_init_mem(void)
+ static void nci_tx_work(struct work_struct *work)
+@@ -1516,24 +1526,32 @@ static void nci_rx_work(struct work_struct *work)
+ 		nfc_send_to_raw_sock(ndev->nfc_dev, skb,
+ 				     RAW_PAYLOAD_NCI, NFC_DIRECTION_RX);
+ 
+-		if (!nci_plen(skb->data)) {
++		if (!skb->len) {
+ 			kfree_skb(skb);
+-			kcov_remote_stop();
+-			break;
++			continue;
+ 		}
+ 
+ 		/* Process frame */
+ 		switch (nci_mt(skb->data)) {
+ 		case NCI_MT_RSP_PKT:
+-			nci_rsp_packet(ndev, skb);
++			if (nci_valid_size(skb, NCI_CTRL_HDR_SIZE))
++				nci_rsp_packet(ndev, skb);
++			else
++				kfree_skb(skb);
+ 			break;
+ 
+ 		case NCI_MT_NTF_PKT:
+-			nci_ntf_packet(ndev, skb);
++			if (nci_valid_size(skb, NCI_CTRL_HDR_SIZE))
++				nci_ntf_packet(ndev, skb);
++			else
++				kfree_skb(skb);
+ 			break;
+ 
+ 		case NCI_MT_DATA_PKT:
+-			nci_rx_data_packet(ndev, skb);
++			if (nci_valid_size(skb, NCI_DATA_HDR_SIZE))
++				nci_rx_data_packet(ndev, skb);
++			else
++				kfree_skb(skb);
+ 			break;
+ 
+ 		default:
 -- 
-2.25.1
+2.44.0
 
