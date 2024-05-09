@@ -1,200 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3641A291;
-	Thu,  9 May 2024 14:47:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F04E12A179
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 14:51:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715266022; cv=none; b=gQlvuQGf4MtndP7j5d7v+ELT4B/d8YGxv8uK2by/avkkqGG0+G8YD1l9fL149kFAu/PAx3pBJVcAJbbRrtpzs0q+1PIxYrrsPh+FTh1KnYwRilYPX7SX74IpBYxZuKBO5tx68uVVlIoyCSsYrUwJ0vFwey7ktMGCkKGJJitdJ3Q=
+	t=1715266302; cv=none; b=Vv4km0jjpdlWN/VrpvUf34SkczEMGGqDjIUi/96QUWshux2di3x3pslI9d7kSSEkti9qj4WYw2uAsqeACrWMvZLFkvURM0VfstuXC8rBkaJgYwhVcN7labYx91r3sIENL5rLmwv8g0Lf1zluXX1Wv+6cVEiZahfyJ2t2dVNiJ0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715266022; c=relaxed/simple;
-	bh=44nu8TQxim7F3121JfCwQxg3SRkVOTAgI+q5yLgxXI8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rcAzPGLKLtB3ogsUbKpT/Ow82wHgtF2urIXwNbv/hSrbZ+xxOOuQA4xcwMsrH0ch3yI2fvvjfW2Es9Wwip9Pgj8wKjWaq4HX0mSfdjGY9NexIbGrMaSJvTAa9KJgGnOCp8NTvv4PdThOw+0RmsX7T/vvEXTfu15+w1N7/fLs/QM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P0lEfVc/; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715266302; c=relaxed/simple;
+	bh=ROuxEhTpbRtsfE1hnzOUvo+e32DRlMNGBViWysD4b0A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pnQgQScvBM/Ql9JRVQrZYOl3GDXita6//HE0JT1rDNNXrSIh4UAvbC8Ini2uIX+GJiw2VPHzRBNfMOIVd8rR+8Nl84wsrFG70b8bx4+vJ9hn7VAHtF2duXfrWFD6//l0mKt6oUYL7Egsodqfs48nAa153dxwOzlQ5BlrJO+gJgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b=dqCnAh1B; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P0lEfVc/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715266021; x=1746802021;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=44nu8TQxim7F3121JfCwQxg3SRkVOTAgI+q5yLgxXI8=;
-  b=P0lEfVc/s//qXkMO627xZy+p0BBx7WJJJ0g4j6v0EFv3W2VbF6eHhIqx
-   xqf4bVWpl2+dQGB9kzC8of36SZ3ocUOcgrkqs78j/q0d8euETfOJYKBh0
-   1XiVEgnxyoKmM5BB/x+37ZQh+PqRGPrWie5WGK//2hq6PrRNYLr18HZ0d
-   AyCCEcYG8NxqyChLZrNMQal3svf63oZ04gYHfo6F4XafrJ5yobh+RLf5f
-   A7DMdf3NzJmKlJaAOqWkO64qC8SCEXs/RalcWxjvUrTwEJfyO4qum/3zC
-   cxqi3Zr/WIY/QyAKiaLwHlCIX+CXgHLv3MSO4QuuI3AplMmU4aUzMDpb2
-   A==;
-X-CSE-ConnectionGUID: CbB/oyKlTlq2wMwVOZKbKQ==
-X-CSE-MsgGUID: js4hFtT2R7um2Kt/2su+7A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="11052035"
-X-IronPort-AV: E=Sophos;i="6.08,148,1712646000"; 
-   d="scan'208";a="11052035"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 07:47:00 -0700
-X-CSE-ConnectionGUID: tiVKl2c0RcGZ8zyTSJAfAw==
-X-CSE-MsgGUID: WSHUraYDR+CfMCbB9uynSw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,148,1712646000"; 
-   d="scan'208";a="34119686"
-Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by orviesa004.jf.intel.com with ESMTP; 09 May 2024 07:46:56 -0700
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-To: Christoph Hellwig <hch@lst.de>
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Steven Price <steven.price@arm.com>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Magnus Karlsson <magnus.karlsson@intel.com>,
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dma: fix DMA sync for drivers not calling dma_set_mask*()
-Date: Thu,  9 May 2024 16:46:16 +0200
-Message-ID: <20240509144616.938519-1-aleksander.lobakin@intel.com>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (2048-bit key) header.d=mit.edu header.i=@mit.edu header.b="dqCnAh1B"
+Received: from cwcc.thunk.org (pool-173-48-113-2.bstnma.fios.verizon.net [173.48.113.2])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 449EpO0m025071
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 9 May 2024 10:51:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
+	t=1715266288; bh=2rkEFPmAsmSs8bT9V5fpjO3Bmf+kooXnTHTcPwtoDyU=;
+	h=Date:From:Subject:Message-ID:MIME-Version:Content-Type;
+	b=dqCnAh1BbLC4UUZqacrs2RhKEUbD1BMQI787FnPh0381EMB0HKLqo/8ChzOndcjFF
+	 Ff7f6DQ79rxj/usVfMc3B0mk0FHLqezX4AW8zcALNEN2n5Gaj6clKYcoFkR21J+vhk
+	 +PH6O+XX5Wp5CP+pbN+sqgVYSJtPWGmKC26Ecu2dE/QTZimw3AdYNVNBhGyfS1qfZE
+	 QYxDkG4Ey+vMUYe24LNge+fRZ/QyuOuPlMmeEibZgdrq91HigjePWCflbW6LCU/7vJ
+	 Eq3ehcZsTsF0EUMZ2cxGxWKOwXD7b6N1Y0X9FZEwQ4E2df02Z8zx8lkjbVkCAO0jc9
+	 rQY8thg16H7QQ==
+Received: by cwcc.thunk.org (Postfix, from userid 15806)
+	id A812215C026D; Thu, 09 May 2024 10:51:24 -0400 (EDT)
+Date: Thu, 9 May 2024 10:51:24 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Mikhail Ukhin <mish.uxin2012@yandex.ru>
+Cc: stable@vger.kernel.org, Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michail Ivanov <iwanov-23@bk.ru>,
+        Pavel Koshutin <koshutin.pavel@yandex.ru>,
+        lvc-project@linuxtesting.org, Ritesh Harjani <ritesh.list@gmail.com>,
+        Artem Sadovnikov <ancowi69@gmail.com>
+Subject: Re: [PATCH v2] ext4: fix i_data_sem unlock order in
+ ext4_ind_migrate()
+Message-ID: <20240509145124.GH3620298@mit.edu>
+References: <20240405210803.9152-1-mish.uxin2012@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240405210803.9152-1-mish.uxin2012@yandex.ru>
 
-There are several reports that the DMA sync shortcut broke non-coherent
-devices.
-dev->dma_need_sync is false after the &device allocation and if a driver
-didn't call dma_set_mask*(), it will still be false even if the device
-is not DMA-coherent and thus needs synchronizing. Due to historical
-reasons, there's still a lot of drivers not calling it.
-Invert the boolean, so that the sync will be performed by default and
-the shortcut will be enabled only when calling dma_set_mask*().
+On Sat, Apr 06, 2024 at 12:08:03AM +0300, Mikhail Ukhin wrote:
+> Fuzzing reports a possible deadlock in jbd2_log_wait_commit.
+> 
+> The problem occurs in ext4_ind_migrate due to an incorrect order of
+> unlocking of the journal and write semaphores - the order of unlocking
+> must be the reverse of the order of locking.
+> 
+> Found by Linux Verification Center (linuxtesting.org) with syzkaller.
+> 
+> Reviewed-by: Ritesh Harjani (IBM) <ritesh.list@gmail.com>
+> Signed-off-by: Artem Sadovnikov <ancowi69@gmail.com>
+> Signed-off-by: Mikhail Ukhin <mish.uxin2012@yandex.ru>
 
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Closes: https://lore.kernel.org/lkml/46160534-5003-4809-a408-6b3a3f4921e9@samsung.com
-Reported-by: Steven Price <steven.price@arm.com>
-Closes: https://lore.kernel.org/lkml/010686f5-3049-46a1-8230-7752a1b433ff@arm.com
-Fixes: 32ba8b823252 ("dma: avoid redundant calls for sync operations")
-Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
----
- include/linux/device.h      |  4 ++--
- include/linux/dma-map-ops.h |  4 ++--
- include/linux/dma-mapping.h |  2 +-
- kernel/dma/mapping.c        | 10 +++++-----
- kernel/dma/swiotlb.c        |  2 +-
- 5 files changed, 11 insertions(+), 11 deletions(-)
+Thanks.  This has been addressed by commit 00d873c17e29 ("ext4: avoid
+deadlock in fs reclaim with page writeback"), with the same code
+change.
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index ed95b829f05b..d4b50accff26 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -691,7 +691,7 @@ struct device_physical_location {
-  *		and optionall (if the coherent mask is large enough) also
-  *		for dma allocations.  This flag is managed by the dma ops
-  *		instance from ->dma_supported.
-- * @dma_need_sync: The device needs performing DMA sync operations.
-+ * @dma_skip_sync: DMA sync operations can be skipped for coherent buffers.
-  *
-  * At the lowest level, every device in a Linux system is represented by an
-  * instance of struct device. The device structure contains the information
-@@ -805,7 +805,7 @@ struct device {
- 	bool			dma_ops_bypass : 1;
- #endif
- #ifdef CONFIG_DMA_NEED_SYNC
--	bool			dma_need_sync:1;
-+	bool			dma_skip_sync:1;
- #endif
- };
- 
-diff --git a/include/linux/dma-map-ops.h b/include/linux/dma-map-ops.h
-index 4893cb89cb52..5217b922d29f 100644
---- a/include/linux/dma-map-ops.h
-+++ b/include/linux/dma-map-ops.h
-@@ -280,8 +280,8 @@ static inline void dma_reset_need_sync(struct device *dev)
- {
- #ifdef CONFIG_DMA_NEED_SYNC
- 	/* Reset it only once so that the function can be called on hotpath */
--	if (unlikely(!dev->dma_need_sync))
--		dev->dma_need_sync = true;
-+	if (unlikely(dev->dma_skip_sync))
-+		dev->dma_skip_sync = false;
- #endif
- }
- 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index eb4e15893b6c..f693aafe221f 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -295,7 +295,7 @@ bool __dma_need_sync(struct device *dev, dma_addr_t dma_addr);
- static inline bool dma_dev_need_sync(const struct device *dev)
- {
- 	/* Always call DMA sync operations when debugging is enabled */
--	return dev->dma_need_sync || IS_ENABLED(CONFIG_DMA_API_DEBUG);
-+	return !dev->dma_skip_sync || IS_ENABLED(CONFIG_DMA_API_DEBUG);
- }
- 
- static inline void dma_sync_single_for_cpu(struct device *dev, dma_addr_t addr,
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 3524bc92c37f..3f77c3f8d16d 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -392,7 +392,7 @@ bool __dma_need_sync(struct device *dev, dma_addr_t dma_addr)
- 
- 	if (dma_map_direct(dev, ops))
- 		/*
--		 * dma_need_sync could've been reset on first SWIOTLB buffer
-+		 * dma_skip_sync could've been reset on first SWIOTLB buffer
- 		 * mapping, but @dma_addr is not necessary an SWIOTLB buffer.
- 		 * In this case, fall back to more granular check.
- 		 */
-@@ -407,20 +407,20 @@ static void dma_setup_need_sync(struct device *dev)
- 
- 	if (dma_map_direct(dev, ops) || (ops->flags & DMA_F_CAN_SKIP_SYNC))
- 		/*
--		 * dma_need_sync will be reset to %true on first SWIOTLB buffer
-+		 * dma_skip_sync will be reset to %false on first SWIOTLB buffer
- 		 * mapping, if any. During the device initialization, it's
- 		 * enough to check only for the DMA coherence.
- 		 */
--		dev->dma_need_sync = !dev_is_dma_coherent(dev);
-+		dev->dma_skip_sync = dev_is_dma_coherent(dev);
- 	else if (!ops->sync_single_for_device && !ops->sync_single_for_cpu &&
- 		 !ops->sync_sg_for_device && !ops->sync_sg_for_cpu)
- 		/*
- 		 * Synchronization is not possible when none of DMA sync ops
- 		 * is set.
- 		 */
--		dev->dma_need_sync = false;
-+		dev->dma_skip_sync = true;
- 	else
--		dev->dma_need_sync = true;
-+		dev->dma_skip_sync = false;
- }
- #else /* !CONFIG_DMA_NEED_SYNC */
- static inline void dma_setup_need_sync(struct device *dev) { }
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index ae3e593eaadb..068134697cf1 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -1409,7 +1409,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
- 	}
- 
- 	/*
--	 * If dma_need_sync wasn't set, reset it on first SWIOTLB buffer
-+	 * If dma_skip_sync was set, reset it on first SWIOTLB buffer
- 	 * mapping to always sync SWIOTLB buffers.
- 	 */
- 	dma_reset_need_sync(dev);
--- 
-2.45.0
-
+						- Ted
