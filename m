@@ -1,163 +1,101 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7717C0AB;
-	Thu,  9 May 2024 06:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9379BDDD9;
+	Thu,  9 May 2024 06:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715237298; cv=none; b=GnGm8bxVnIVA5MoVO5ulLLC0vmPJbjOrAZ+aVRUALS9noyU2olab+akVCuENOWCxgVc87K3/UKWFIdk5z8LzfwXIrTKVSinilSop/QnjCcLAC70rPwHcgFeKXo3L8Pm1Knb1DJXmeoKm2Vlc0JxdnIYVOmrYV1SloeaSKumq6kQ=
+	t=1715237428; cv=none; b=FrDZyYu7YvPUIPfozpePZQV0yrJ0qzHic1WF9irAG9NzLtdTjyAUo/n7Q8QhEWB1h1uDHmu0XPvwlcXpO+suDvDsTwM/rWHQtOeVcE9zmQdCHH0gjYi4/WnmLP1zGZUYToIyKliYHc1K/+U2CF0F3lrETr4frTY1c1ggF7Bf1Mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715237298; c=relaxed/simple;
-	bh=9fO7Sh5EZvY64yUxjL2+G14A1JjtaSjuLrIZNlIVsr4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=j6lpEtuKora+trukyx/sk8HmAzMjr+9Cl06UGXp0fXVe6o1nhKWHr3F4pk3al2Lnm4E9EDBHp3I+s3UeIVaDJrPZyZFpdCue0Thoxh4hrWDRz1HHrvP7UIIqM/Toazb5ETJ53+uyw0Sopr18GZbJr/v00J4xNCCNMBSyf1g0OD0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CDUPRgcS; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1715237428; c=relaxed/simple;
+	bh=RSeqe6ed4ewdO4stMEjsqV83ww4odGvJX+LQ9kccDDw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Nq5/uhK6jJ8zpow/53Lyj/0bQmBbXJCSXcG7vcSRQ7xZNfMsifxedsXSqQSEkt+CVUitWij3iI/FsUR1WI3u04TOz6nDkDfETzDHko3E+q2rMbjlJzGULLJit1yEVDWLRmi8YehmVPJ+gh/tEQUDJ+VNR2UvQcWi1OaosRghgiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zez3NFdM; arc=none smtp.client-ip=209.85.208.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CDUPRgcS"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1eeabda8590so3728975ad.0;
-        Wed, 08 May 2024 23:48:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zez3NFdM"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2e4b90b03a9so6674971fa.1;
+        Wed, 08 May 2024 23:50:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715237296; x=1715842096; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1715237425; x=1715842225; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jZJ/qPvhWmaN0bPAlkl54j0+0U9B8BSbeBplUAy1OJA=;
-        b=CDUPRgcSqfh3fEqXSLLVUrtUUgLjvBBTDLKpN2V3AcO58FV7Fs7YVVUUPffa/DGohX
-         OsOQvKtbtnJx35xexgZqyXx/idaJvE9jhcETVo1NRc9jCZZdHWlCOCFTSpEVGPU9aAMO
-         /JU+5AKMUiYE3YOM7lcunrP3EffMdPJZgIOkHYTX0jKwSm8di5GJ6hsPsEUWdbtP138G
-         TWfIj0KAzRWZgwrndxjGu4XBPsH53zzXobYktTmKmrHH6U7aIfOXkN7IeRRJUpWyl9iS
-         viSX6fbWp7VV7FkI3XfUEmfAtOV7fBag7RLLUhRNu0JXUKzpov350hQnbTKMEykvK9qZ
-         IbUg==
+        bh=2UOhhsJgb99pm27SXHK1pVf/ykOOg5LTm9pRGDO0Fjs=;
+        b=Zez3NFdMeQnGYCiu7MmJe5nvUMEpBYbwDLmI/ZdVXg2qrU+MbE9/7u2BPsam9iPzB0
+         kD/GdYtPlX1Jyy5rMA7ez0Bm3BFclvBm3/LEGSkpcIbtTilFfgXD3wz9pqMba273qCcS
+         fHqtOC8RpJpOMhTiOM02vIMseqf4smHY6CWT8/Be4OoMWqRkgarc0yOvtcwrgud6pkzr
+         /WXQU91iYi9IKcd2L4ATJTPLkhAc7AcTuEYCsR1c16vqqX17T7CGSVlyuvD5AfQnmnC2
+         YpBOJHAfMN/w3Ms5tfvAKKNENqhZ+dU29dl1hLdwM3AtI8P8sggwQD0f39pH9FZlZaBa
+         03dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715237296; x=1715842096;
+        d=1e100.net; s=20230601; t=1715237425; x=1715842225;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=jZJ/qPvhWmaN0bPAlkl54j0+0U9B8BSbeBplUAy1OJA=;
-        b=RPlE8r6gwbd9p7ojpXEf62NTXJNHX5u269y6krgF8Zmymtu+JPBIGafMdaA2o6YA8i
-         B+XGtYd1nlj6YLwxSTRrfuWtWWx+ZFeA9ZWg3QW1+4ODZzWOqb0v2APb9ja5Z2uusr6C
-         /KKQbFaQg1B6tRJT4NpUBpC527ASm675k19rHNuWvQNI8eZmNQqKn7WBnnS1RPJUUjGk
-         r7dDIARcMsyhmurUrh2VKxDKaUcgI8OarU7b7oL2Wunn8OuytAR49Dec6IH60sSDBPeo
-         jhULk8AnEeaRj0F+qmn+F1xcNxEkWcV4XMUpMNqxCnZ6Qkzq4t0wG5ilf61f+9+3jd0F
-         zCPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVxdCf47EIElc2egvPLHXosQiToi70pCQdoDq5JjmdgkaiX6N6Dj5pfRfuMS84l5BpFx85EBAxsyBFWXzNdefSuOjhx6uoOT8Rnj/OjtIUFVpIhYnMe03ZhxjL1q5rvnsS9dLTuwHMirBuEasAX6IZRkljx1gDT5osqFuYRzd4+18IJmbCUR38OPg==
-X-Gm-Message-State: AOJu0YwH+YhL+gh7uZTZ/fE8ZcI+vH0xEFf2MNaSubJJ4Bcy8pfgFY8c
-	gH3yr/ZwWgA3mhPAP1wWpkON5Oq0lmUR1RvYyUR3AJNyTGONTqST
-X-Google-Smtp-Source: AGHT+IHuANNmgdYBKLvlqBD4TQvuUL2BgBfhsM6ZChKBoBdTPu/89MPDHwGCEaMcOqarwXUh+xlqsw==
-X-Received: by 2002:a17:903:2451:b0:1eb:57a9:53f1 with SMTP id d9443c01a7336-1eeb03a56a8mr59339955ad.1.1715237295838;
-        Wed, 08 May 2024 23:48:15 -0700 (PDT)
-Received: from localhost.localdomain ([113.30.217.222])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf31da2sm6685885ad.165.2024.05.08.23.48.12
+        bh=2UOhhsJgb99pm27SXHK1pVf/ykOOg5LTm9pRGDO0Fjs=;
+        b=SPbGLQQ4l6fT5is9jtKcVwXdkWVu6cpz3iqO9+izVYRFsx+s1agge0ldT6dC4SoJ+U
+         y6sahXsQxOn+ClmfPJo3i3YDSSlXJm8gBvcu1urkPh/fZEROmNX22Kcucj+9qpnc1/yg
+         qxTJHn+hnbggCyNx8YYY6PteA97HTtEiyVDZSF3voztakY2zBiOlZXr/xoOBvKs6J6Uv
+         Phmrem8iY3lxQwEQniCVmImIOm+E2/Ilo5uGkrp/4P59aFm6051nyOgkFXIj/QqODQj3
+         1f7USZBnh94bGTuAk7CbECz6ZsqA/JmMm0BRI/pOYSXWUZbos01BmwcynC3Yx2m5LrMl
+         am5A==
+X-Forwarded-Encrypted: i=1; AJvYcCWMq3YRte85F4Smc8eWU+uQIRZGBjdnfNFe/S1NVJ+5n0PtcRsbHlYmNegbTJmgmBmGxwiBC7/2dl8s8drYCdiH0nYMl0FmeXMMOQJJLoB5JyrZYwd8H7K6LzEGAU0tFgk3keUT
+X-Gm-Message-State: AOJu0YxiWMyJUAcWRFR9rrscM4/XrMqpDvFGxC37np7I0a5YSCwfl+iv
+	MroaIu+Md0NvI4oKfAIzsD4xhX7W1HANSeQDr4oxb0QOAOjgQP//
+X-Google-Smtp-Source: AGHT+IFdtu14ZmyI84Ks3pnhLvcdac1FmVj0U13JvxDP7AMPhUTOAmsM9uMthlsZwwvco4EdRUWDNQ==
+X-Received: by 2002:a05:651c:b29:b0:2e2:db99:c35e with SMTP id 38308e7fff4ca-2e44738a829mr35982021fa.12.1715237424463;
+        Wed, 08 May 2024 23:50:24 -0700 (PDT)
+Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fa9dbab53sm31431165e9.13.2024.05.08.23.50.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 23:48:15 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Chanwoo Choi <cw00.choi@samsung.com>,
-	MyungJoo Ham <myungjoo.ham@samsung.com>,
-	Kyungmin Park <kyungmin.park@samsung.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Anand Moon <linux.amoon@gmail.com>,
-	linux-pm@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+        Wed, 08 May 2024 23:50:23 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Woojung Huh <woojung.huh@microchip.com>,
+	UNGLinuxDriver@microchip.com,
+	Andrew Lunn <andrew@lunn.ch>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Vladimir Oltean <olteanv@gmail.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4] PM / devfreq: exynos: Use Use devm_clk_get_enabled() helpers
-Date: Thu,  9 May 2024 12:17:48 +0530
-Message-ID: <20240509064754.10082-1-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.44.0
+Subject: [PATCH][next] net: dsa: microchip: Fix spellig mistake "configur" -> "configure"
+Date: Thu,  9 May 2024 07:50:23 +0100
+Message-Id: <20240509065023.3033397-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-The devm_clk_get_enabled() helpers:
-    - call devm_clk_get()
-    - call clk_prepare_enable() and register what is needed in order to
-     call clk_disable_unprepare() when needed, as a managed resource.
+There is a spelling mistake in a dev_err message. Fix it.
 
-This simplifies the code and avoids the calls to clk_disable_unprepare().
-
-While at it, use dev_err_probe consistently, and use its return value
-to return the error code.
-
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
-V4 - wrap up the error messagee within 80 char
-v3 - No change
-v2 - No change
----
- drivers/devfreq/exynos-bus.c | 22 +++++-----------------
- 1 file changed, 5 insertions(+), 17 deletions(-)
+ drivers/net/dsa/microchip/ksz_dcb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/exynos-bus.c b/drivers/devfreq/exynos-bus.c
-index 00118580905a..7d06c476d8e9 100644
---- a/drivers/devfreq/exynos-bus.c
-+++ b/drivers/devfreq/exynos-bus.c
-@@ -160,7 +160,6 @@ static void exynos_bus_exit(struct device *dev)
- 	platform_device_unregister(bus->icc_pdev);
+diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
+index 5e520c02afd7..484945a9c5fb 100644
+--- a/drivers/net/dsa/microchip/ksz_dcb.c
++++ b/drivers/net/dsa/microchip/ksz_dcb.c
+@@ -220,7 +220,7 @@ static int ksz88x3_port_set_default_prio_quirks(struct ksz_device *dev, int port
+ 			return ret;
  
- 	dev_pm_opp_of_remove_table(dev);
--	clk_disable_unprepare(bus->clk);
- 	dev_pm_opp_put_regulators(bus->opp_token);
- }
- 
-@@ -171,7 +170,6 @@ static void exynos_bus_passive_exit(struct device *dev)
- 	platform_device_unregister(bus->icc_pdev);
- 
- 	dev_pm_opp_of_remove_table(dev);
--	clk_disable_unprepare(bus->clk);
- }
- 
- static int exynos_bus_parent_parse_of(struct device_node *np,
-@@ -247,23 +245,16 @@ static int exynos_bus_parse_of(struct device_node *np,
- 	int ret;
- 
- 	/* Get the clock to provide each bus with source clock */
--	bus->clk = devm_clk_get(dev, "bus");
--	if (IS_ERR(bus->clk)) {
--		dev_err(dev, "failed to get bus clock\n");
--		return PTR_ERR(bus->clk);
--	}
--
--	ret = clk_prepare_enable(bus->clk);
--	if (ret < 0) {
--		dev_err(dev, "failed to get enable clock\n");
--		return ret;
--	}
-+	bus->clk = devm_clk_get_enabled(dev, "bus");
-+	if (IS_ERR(bus->clk))
-+		return dev_err_probe(dev, PTR_ERR(bus->clk),
-+				"failed to get bus clock\n");
- 
- 	/* Get the freq and voltage from OPP table to scale the bus freq */
- 	ret = dev_pm_opp_of_add_table(dev);
- 	if (ret < 0) {
- 		dev_err(dev, "failed to get OPP table\n");
--		goto err_clk;
-+		return ret;
+ 		if (!(port2_data & KSZ8_PORT_802_1P_ENABLE)) {
+-			dev_err(dev->dev, "Not possible to configur port priority on Port 1 if PCP apptrust on Port 2 is disabled\n");
++			dev_err(dev->dev, "Not possible to configure port priority on Port 1 if PCP apptrust on Port 2 is disabled\n");
+ 			return -EINVAL;
+ 		}
  	}
- 
- 	rate = clk_get_rate(bus->clk);
-@@ -281,8 +272,6 @@ static int exynos_bus_parse_of(struct device_node *np,
- 
- err_opp:
- 	dev_pm_opp_of_remove_table(dev);
--err_clk:
--	clk_disable_unprepare(bus->clk);
- 
- 	return ret;
- }
-@@ -453,7 +442,6 @@ static int exynos_bus_probe(struct platform_device *pdev)
- 
- err:
- 	dev_pm_opp_of_remove_table(dev);
--	clk_disable_unprepare(bus->clk);
- err_reg:
- 	dev_pm_opp_put_regulators(bus->opp_token);
- 
 -- 
-2.44.0
+2.39.2
 
