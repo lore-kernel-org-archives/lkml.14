@@ -1,390 +1,119 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1AD7D26D;
-	Thu,  9 May 2024 05:27:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 505FE1494AD
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 05:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715232481; cv=none; b=aCdjJg6egPmsflsN86QPrTOgwP8EpNCNYygLpebM/MtHAzdcTEaNL1XXUyLdDP7JxvteOzhMfmdyOZK6cJ7ewIW+6oql4UQelmAKrhjdh50c0HiM9am1l8j69LuIL5/gjvpqFsbFL9xWBU5NeVZQdGUDImj7aIFEwA6W/yekLjo=
+	t=1715232690; cv=none; b=koCfyIYnc6t9Iqs/S1YMGFBzjkAXvbqpqVYoGRGJlqx20UmOGEKqaPsvIMNQrZw4V4OtsXBfhGauK4dZLLTcnmx6Kq9PHc4tx21UwJ12Tb7zVJK53mKI3xaO3lKz5BTjB6mWUw6wWrJV6yqqqsEsIYNDi3rOiWbjn3CfNleQzew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715232481; c=relaxed/simple;
-	bh=I+47XEFh6b5rmRmXEQTYGFLVH6Rq1Q5dtD9kAXMcZ8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=edUx6Gx57c+GLka7fiup2LT5I7xM7WlEaWZGdzctg46/4YxbZkTCXzy4xlZdlR7C8agMEwEOKX9JBOwqhVtyyttTTaC+NrU1sbm4XerqEZQsLb5HSxSEJjgAQ/RU256YQMcuadgrgqnHSZwlbXu6Cd3YFW1c5n/6P5Dj/H939UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=A7qBwnct; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1715232690; c=relaxed/simple;
+	bh=pTEExq5eYMtvhoUpicI957vBqyqltPGfA+Tl2tQLAcs=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=s6pXTt+/M9yvCT6kl9ELAMgfQge3+UDp6Q9NYmpq6Y9M9qxNmaKkPag7+hy1wU8TO6TXXWtwq9If52qTEhHDFucTClxl159XPRHLCMYjv3Glf/OhdoS0WnmLR7aWwqaCbl70c1NTYMchaB0w6DQepNbMp7Kg/Um3cGhDP1mIfhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k9lvic1W; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="A7qBwnct"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1715232470;
-	bh=OiFjr8eeBnrjys+NcVU77ir+RjvKVv2n+fpJPVk/DvI=;
-	h=Date:From:To:Cc:Subject:From;
-	b=A7qBwnctxLYj6CWQ/gu3tTziGN8G7GVcrZCkKM2vhtGpLh0JoxR+1nQtIN/WzY4gx
-	 Un/VPA5JzGpPGhFwt8R3SHsLS52lwCgD1jjgnFgk084vJEj8cM8lDeHgwSmx49zHMf
-	 xyl3Xrf7UADo9FLYflBl1gHDk9ZQNplXoAe2OORgtleuOp8fLSZlbT2MCz+0w0aNN5
-	 7GK3+npV8QtcmM2nK3kQnnqNBH8d/u8TgoGEBRhrnsfmseHezZdNEjct8fwqLpiPNQ
-	 SbwBwXtZJPFFUdVwrASsMZopYnvZe6XmE+rHU9GvwYUtviZ7cjdc7ypNs/zfINuCI9
-	 z6Voun3lDa3hQ==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VZgWn1yqCz4x3C;
-	Thu,  9 May 2024 15:27:49 +1000 (AEST)
-Date: Thu, 9 May 2024 15:27:45 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Kent Overstreet <kent.overstreet@linux.dev>, Kuan-Wei Chiu
- <visitorckw@gmail.com>, Jens Axboe <axboe@kernel.dk>
-Cc: Coly Li <colyli@suse.de>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Matthew Mirvish <matthew@mm12.xyz>
-Subject: linux-next: manual merge of the refactor-heap tree with the block
- tree
-Message-ID: <20240509152745.08af752f@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k9lvic1W"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-de59d580f61so912313276.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 22:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715232688; x=1715837488; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=s5aJbLYHe6GqC/mebjTDicObCEBB4J8UKwRZUPYrQKM=;
+        b=k9lvic1WVExRqjvzs0Q5uAR/g8NeZ3rt681E/9Ofi/6BOSSJmAbT4xZs+A6zy0NkMS
+         fK1NsOsx/JWur+39Uwqn4zylRHtdBC1exPcI1nqG6jIvwcwv0oO1SRfdAtjvZxc15hkj
+         CV+fA1RrPDFhBp7YBe7vUThILrHbZItiES5RKf2TGGgdv0XlvgomZfmAbgBmxMwIs2nb
+         jyErxe33BRLzxrtvfW1RkCA4dp0p94V3j6xR7cRr8cvu5JZvSk56JwAC2s6KySNTOsmg
+         2wytWwW2TUz9FJ1els29nL/AExpRk31NlReSkCSO+HtkdCu3bUmGAsaxPWbUEUftVHL4
+         U3jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715232688; x=1715837488;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s5aJbLYHe6GqC/mebjTDicObCEBB4J8UKwRZUPYrQKM=;
+        b=ZxqEnyZu4DhP9zvJ56C5ka1PP5O7JLnrqOCmONNC7nQWDqGi0Afy0f1gbsUt3ZiC2v
+         mysRTgUt18tPLb6JNfcjSov2Hv/Irc3fvE4rNihjqtepqX8wuzjEm+jM0+MXbtUqpBIC
+         Awz5EAff131ya1Z/ZjKT1k+5EmHdaRhnpWjuHEoKZAGcDGLs/k56RTVJNX3F8pZ/u3Yo
+         3dE5HQJ0fgpvVcFFnqJHTOwd4kxRzu9AX7gkCYVZJrcRKb2WRqJRXMkynnYuAGGX31cH
+         2Z3hFUzkz8TfHQhxJPH7qliYLPzk6NcNll+QKAtoGyRUWNlnn93KTk4lfemFB/5yI22E
+         O0Uw==
+X-Forwarded-Encrypted: i=1; AJvYcCXii6n2mhbUcxpLK1Jpp89Uiar4dH+BLkJB/p7jWr6hPSSV+NjuC/Ac9OZ8lOJ1h1ONW5NEn/fHqVkvJthnoGa3YXLmmr0/OqAxs4sh
+X-Gm-Message-State: AOJu0YxQYD4xGlpbsrGF7u7GORTLQ6szkETGRqGzOq30rS9bq6g84gSM
+	CG/4dGBFvFmXeYzhhhzNljgBEm1mxY6J0I59FroYwGWxvURCKxqsYnwDHzGruELxb7ANVAtUDTw
+	1t1Q5QA==
+X-Google-Smtp-Source: AGHT+IGMmqrphMvD9VLuxJoc4Pax2f9fdE3/23sT3qktgwrSIK8nZxvg7UwlBEM4ZnP0aJgflzMDAhAM20Fd
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3887:270c:55a5:15aa])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1025:b0:de5:9e4b:fbb with SMTP id
+ 3f1490d57ef6-debb9d85224mr1445450276.6.1715232688300; Wed, 08 May 2024
+ 22:31:28 -0700 (PDT)
+Date: Wed,  8 May 2024 22:31:23 -0700
+Message-Id: <20240509053123.1918093-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/DC6FJK+sWMJ3qdz3Dr6HroC";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+Subject: [PATCH v1] perf lock: Avoid memory leaks from strdup
+From: Ian Rogers <irogers@google.com>
+To: zhaimingbing <zhaimingbing@cmss.chinamobile.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
---Sig_/DC6FJK+sWMJ3qdz3Dr6HroC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Leak sanitizer complains about the strdup-ed arguments not being freed
+and given cmd_record doesn't modify the given strings, remove the
+strdups.
 
-Hi all,
+Original discussion in this patch:
+https://lore.kernel.org/lkml/20240430184156.1824083-1-irogers@google.com/
 
-Today's linux-next merge of the refactor-heap tree got conflicts in:
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-lock.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
-  drivers/md/bcache/bset.c
-  drivers/md/bcache/bset.h
-  drivers/md/bcache/btree.c
-  drivers/md/bcache/writeback.c
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 230461280e45..7007d26fe654 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -2275,23 +2275,13 @@ static int __cmd_record(int argc, const char **argv)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(record_args); i++)
+-		rec_argv[i] = strdup(record_args[i]);
++		rec_argv[i] = record_args[i];
+ 
+ 	for (j = 0; j < nr_tracepoints; j++) {
+-		const char *ev_name;
+-
+-		if (has_lock_stat)
+-			ev_name = strdup(lock_tracepoints[j].name);
+-		else
+-			ev_name = strdup(contention_tracepoints[j].name);
+-
+-		if (!ev_name) {
+-			free(rec_argv);
+-			return -ENOMEM;
+-		}
+-
+ 		rec_argv[i++] = "-e";
+-		rec_argv[i++] = ev_name;
++		rec_argv[i++] = has_lock_stat
++			? lock_tracepoints[j].name
++			: contention_tracepoints[j].name;
+ 	}
+ 
+ 	for (j = 0; j < nr_callgraph_args; j++, i++)
+-- 
+2.45.0.rc1.225.g2a3ae87e7f-goog
 
-between commit:
-
-  3a861560ccb3 ("bcache: fix variable length array abuse in btree_iter")
-
-from the block tree and commit:
-
-  afa5721abaaa ("bcache: Remove heap-related macros and switch to generic m=
-in_heap")
-
-from the refactor-heap tree.
-
-Ok, these conflicts are too extensive, so I am dropping the refactor-heap
-tree for today.  I suggest you all get together and sort something out.
-
-I fixed it up (see above) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-Here are the conflicts:
-
-diff --cc drivers/md/bcache/bset.c
-index 463eb13bd0b2,bd97d8626887..000000000000
---- a/drivers/md/bcache/bset.c
-+++ b/drivers/md/bcache/bset.c
-@@@ -54,9 -54,11 +54,11 @@@ void bch_dump_bucket(struct btree_keys=20
-  int __bch_count_data(struct btree_keys *b)
-  {
-  	unsigned int ret =3D 0;
- -	struct btree_iter iter;
- +	struct btree_iter_stack iter;
-  	struct bkey *k;
- =20
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+=20
-  	if (b->ops->is_extents)
-  		for_each_key(b, k, &iter)
-  			ret +=3D KEY_SIZE(k);
-@@@ -67,9 -69,11 +69,11 @@@ void __bch_check_keys(struct btree_key
-  {
-  	va_list args;
-  	struct bkey *k, *p =3D NULL;
- -	struct btree_iter iter;
- +	struct btree_iter_stack iter;
-  	const char *err;
- =20
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+=20
-  	for_each_key(b, k, &iter) {
-  		if (b->ops->is_extents) {
-  			err =3D "Keys out of order";
-@@@ -1094,24 -1109,30 +1109,35 @@@ static inline bool btree_iter_end(struc
-  void bch_btree_iter_push(struct btree_iter *iter, struct bkey *k,
-  			 struct bkey *end)
-  {
-+ 	const struct min_heap_callbacks callbacks =3D {
-+ 		.less =3D new_btree_iter_cmp,
-+ 		.swp =3D new_btree_iter_swap,
-+ 	};
-+=20
-  	if (k !=3D end)
-- 		BUG_ON(!heap_add(iter,
-- 				 ((struct btree_iter_set) { k, end }),
-- 				 btree_iter_cmp));
-+ 		BUG_ON(!min_heap_push(&iter->heap,
-+ 				 &((struct btree_iter_set) { k, end }),
-+ 				 &callbacks,
-+ 				 NULL));
-  }
- =20
- -static struct bkey *__bch_btree_iter_init(struct btree_keys *b,
- -					  struct btree_iter *iter,
- -					  struct bkey *search,
- -					  struct bset_tree *start)
- +static struct bkey *__bch_btree_iter_stack_init(struct btree_keys *b,
- +						struct btree_iter_stack *iter,
- +						struct bkey *search,
- +						struct bset_tree *start)
-  {
-  	struct bkey *ret =3D NULL;
- =20
-++<<<<<<< HEAD
- +	iter->iter.size =3D ARRAY_SIZE(iter->stack_data);
- +	iter->iter.used =3D 0;
-++=3D=3D=3D=3D=3D=3D=3D
-+ 	iter->heap.size =3D ARRAY_SIZE(iter->heap.preallocated);
-+ 	iter->heap.nr =3D 0;
-++>>>>>>> refactor-heap/refactor-heap
- =20
-  #ifdef CONFIG_BCACHE_DEBUG
- -	iter->b =3D b;
- +	iter->iter.b =3D b;
-  #endif
- =20
-  	for (; start <=3D bset_tree_last(b); start++) {
-@@@ -1293,10 -1324,11 +1329,15 @@@ void bch_btree_sort_partial(struct btre
-  			    struct bset_sort_state *state)
-  {
-  	size_t order =3D b->page_order, keys =3D 0;
- -	struct btree_iter iter;
- +	struct btree_iter_stack iter;
-  	int oldsize =3D bch_count_data(b);
- =20
-++<<<<<<< HEAD
- +	__bch_btree_iter_stack_init(b, &iter, NULL, &b->set[start]);
-++=3D=3D=3D=3D=3D=3D=3D
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+ 	__bch_btree_iter_init(b, &iter, NULL, &b->set[start]);
-++>>>>>>> refactor-heap/refactor-heap
- =20
-  	if (start) {
-  		unsigned int i;
-@@@ -1323,11 -1355,13 +1364,17 @@@ void bch_btree_sort_into(struct btree_k
-  			 struct bset_sort_state *state)
-  {
-  	uint64_t start_time =3D local_clock();
- -	struct btree_iter iter;
- +	struct btree_iter_stack iter;
- =20
-++<<<<<<< HEAD
- +	bch_btree_iter_stack_init(b, &iter, NULL);
-++=3D=3D=3D=3D=3D=3D=3D
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+=20
-+ 	bch_btree_iter_init(b, &iter, NULL);
-++>>>>>>> refactor-heap/refactor-heap
- =20
- -	btree_mergesort(b, new->set->data, &iter, false, true);
- +	btree_mergesort(b, new->set->data, &iter.iter, false, true);
- =20
-  	bch_time_stats_update(&state->time, start_time);
- =20
-diff --cc drivers/md/bcache/bset.h
-index 011f6062c4c0,f79441acd4c1..000000000000
---- a/drivers/md/bcache/bset.h
-+++ b/drivers/md/bcache/bset.h
-@@@ -318,17 -323,7 +323,20 @@@ struct btree_iter=20
-  #ifdef CONFIG_BCACHE_DEBUG
-  	struct btree_keys *b;
-  #endif
-++<<<<<<< HEAD
- +	struct btree_iter_set {
- +		struct bkey *k, *end;
- +	} data[];
- +};
- +
- +/* Fixed-size btree_iter that can be allocated on the stack */
- +
- +struct btree_iter_stack {
- +	struct btree_iter iter;
- +	struct btree_iter_set stack_data[MAX_BSETS];
-++=3D=3D=3D=3D=3D=3D=3D
-+ 	MIN_HEAP_PREALLOCATED(struct btree_iter_set, btree_iter_heap, MAX_BSETS)=
- heap;
-++>>>>>>> refactor-heap/refactor-heap
-  };
- =20
-  typedef bool (*ptr_filter_fn)(struct btree_keys *b, const struct bkey *k);
-diff --cc drivers/md/bcache/btree.c
-index d011a7154d33,a2bb86d52ad4..000000000000
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@@ -1309,9 -1309,11 +1309,11 @@@ static bool btree_gc_mark_node(struct b
-  	uint8_t stale =3D 0;
-  	unsigned int keys =3D 0, good_keys =3D 0;
-  	struct bkey *k;
- -	struct btree_iter iter;
- +	struct btree_iter_stack iter;
-  	struct bset_tree *t;
- =20
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+=20
-  	gc->nodes++;
- =20
-  	for_each_key_filter(&b->keys, k, &iter, bch_ptr_invalid) {
-@@@ -1570,9 -1572,11 +1572,11 @@@ static int btree_gc_rewrite_node(struc
-  static unsigned int btree_gc_count_keys(struct btree *b)
-  {
-  	struct bkey *k;
- -	struct btree_iter iter;
- +	struct btree_iter_stack iter;
-  	unsigned int ret =3D 0;
- =20
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+=20
-  	for_each_key_filter(&b->keys, k, &iter, bch_ptr_bad)
-  		ret +=3D bkey_u64s(k);
- =20
-@@@ -1615,7 -1619,8 +1619,12 @@@ static int btree_gc_recurse(struct btre
-  	struct gc_merge_info r[GC_MERGE_NODES];
-  	struct gc_merge_info *i, *last =3D r + ARRAY_SIZE(r) - 1;
- =20
-++<<<<<<< HEAD
- +	bch_btree_iter_stack_init(&b->keys, &iter, &b->c->gc_done);
-++=3D=3D=3D=3D=3D=3D=3D
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+ 	bch_btree_iter_init(&b->keys, &iter, &b->c->gc_done);
-++>>>>>>> refactor-heap/refactor-heap
- =20
-  	for (i =3D r; i < r + ARRAY_SIZE(r); i++)
-  		i->b =3D ERR_PTR(-EINTR);
-@@@ -1912,8 -1916,10 +1921,10 @@@ static int bch_btree_check_recurse(stru
-  {
-  	int ret =3D 0;
-  	struct bkey *k, *p =3D NULL;
- -	struct btree_iter iter;
- +	struct btree_iter_stack iter;
- =20
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+=20
-  	for_each_key_filter(&b->keys, k, &iter, bch_ptr_invalid)
-  		bch_initial_mark_key(b->c, b->level, k);
- =20
-@@@ -1959,9 -1965,11 +1970,11 @@@ static int bch_btree_check_thread(void=20
-  	cur_idx =3D prev_idx =3D 0;
-  	ret =3D 0;
- =20
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+=20
-  	/* root node keys are checked before thread created */
- -	bch_btree_iter_init(&c->root->keys, &iter, NULL);
- -	k =3D bch_btree_iter_next_filter(&iter, &c->root->keys, bch_ptr_bad);
- +	bch_btree_iter_stack_init(&c->root->keys, &iter, NULL);
- +	k =3D bch_btree_iter_next_filter(&iter.iter, &c->root->keys, bch_ptr_bad=
-);
-  	BUG_ON(!k);
- =20
-  	p =3D k;
-@@@ -2052,9 -2060,11 +2065,11 @@@ int bch_btree_check(struct cache_set *c
-  	int ret =3D 0;
-  	int i;
-  	struct bkey *k =3D NULL;
- -	struct btree_iter iter;
- +	struct btree_iter_stack iter;
-  	struct btree_check_state check_state;
- =20
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+=20
-  	/* check and mark root node keys */
-  	for_each_key_filter(&c->root->keys, k, &iter, bch_ptr_invalid)
-  		bch_initial_mark_key(c, c->root->level, k);
-@@@ -2548,11 -2558,12 +2563,16 @@@ static int bch_btree_map_nodes_recurse(
- =20
-  	if (b->level) {
-  		struct bkey *k;
- -		struct btree_iter iter;
- +		struct btree_iter_stack iter;
- =20
-++<<<<<<< HEAD
- +		bch_btree_iter_stack_init(&b->keys, &iter, from);
-++=3D=3D=3D=3D=3D=3D=3D
-+ 		min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+ 		bch_btree_iter_init(&b->keys, &iter, from);
-++>>>>>>> refactor-heap/refactor-heap
- =20
- -		while ((k =3D bch_btree_iter_next_filter(&iter, &b->keys,
- +		while ((k =3D bch_btree_iter_next_filter(&iter.iter, &b->keys,
-  						       bch_ptr_bad))) {
-  			ret =3D bcache_btree(map_nodes_recurse, k, b,
-  				    op, from, fn, flags);
-@@@ -2581,12 -2592,12 +2601,17 @@@ int bch_btree_map_keys_recurse(struct b
-  {
-  	int ret =3D MAP_CONTINUE;
-  	struct bkey *k;
- -	struct btree_iter iter;
- +	struct btree_iter_stack iter;
- =20
-++<<<<<<< HEAD
- +	bch_btree_iter_stack_init(&b->keys, &iter, from);
-++=3D=3D=3D=3D=3D=3D=3D
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+ 	bch_btree_iter_init(&b->keys, &iter, from);
-++>>>>>>> refactor-heap/refactor-heap
- =20
- -	while ((k =3D bch_btree_iter_next_filter(&iter, &b->keys, bch_ptr_bad)))=
- {
- +	while ((k =3D bch_btree_iter_next_filter(&iter.iter, &b->keys,
- +					       bch_ptr_bad))) {
-  		ret =3D !b->level
-  			? fn(op, b, k)
-  			: bcache_btree(map_keys_recurse, k,
-diff --cc drivers/md/bcache/writeback.c
-index 792e070ccf38,c1d28e365910..000000000000
---- a/drivers/md/bcache/writeback.c
-+++ b/drivers/md/bcache/writeback.c
-@@@ -915,8 -915,9 +915,14 @@@ static int bch_dirty_init_thread(void *
-  	k =3D p =3D NULL;
-  	prev_idx =3D 0;
- =20
-++<<<<<<< HEAD
- +	bch_btree_iter_stack_init(&c->root->keys, &iter, NULL);
- +	k =3D bch_btree_iter_next_filter(&iter.iter, &c->root->keys, bch_ptr_bad=
-);
-++=3D=3D=3D=3D=3D=3D=3D
-+ 	min_heap_init(&iter.heap, NULL, MAX_BSETS);
-+ 	bch_btree_iter_init(&c->root->keys, &iter, NULL);
-+ 	k =3D bch_btree_iter_next_filter(&iter, &c->root->keys, bch_ptr_bad);
-++>>>>>>> refactor-heap/refactor-heap
-  	BUG_ON(!k);
- =20
-  	p =3D k;
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/DC6FJK+sWMJ3qdz3Dr6HroC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmY8XtEACgkQAVBC80lX
-0Gx1cQgAlnYis1F3QZ9ig6G74MI7kIXKWQc4Fee7xsRxk4lHC4hEhHF9ekzE1HVt
-kq1+lmwbzjh0J4nAcez0wLuVJ63+n5WVWaeXMLgAIXM7x1FsgmaHb0Op7NVxzXtx
-8sNYm+wcLLmdYS59+/VDYuhx9dSSPR7/ZwFuO1RG05+fRb5ekTsOxy9NvJ7jHUxl
-+VvRu1Bbp8MAafULTKNTii9OEqX5ZLSMSw7emOl1AxyxrOJEtT5kTyfHN1aGo78C
-jHlIvqUUzkMhKkcd5Rq5qezDAM8+vu7GR6l1XiQbPsiux9wlbHj1ZGzjQ5aPR1g3
-iwZ12JM6gZ94Sgfk31j2r+X2TgoIoQ==
-=IZts
------END PGP SIGNATURE-----
-
---Sig_/DC6FJK+sWMJ3qdz3Dr6HroC--
