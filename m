@@ -1,193 +1,120 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D32D528;
-	Thu,  9 May 2024 06:31:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB70624
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 06:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715236267; cv=none; b=aIcPTvybErnHcNiZeGpNVZb5H9uzbsY806+JNELy4FsZoZ4v0x/hXzhwiQXUZi5n9M9JvNHYdxHE2vZQov5K9vhu+ylGs4Z5XX8ERg7GRzlvXghTR/OwLRldS+mFAwpGwcH0mYJc+p16ytXgRUZ/P+mdQMpfOX4OYA5WPLYBdtM=
+	t=1715236397; cv=none; b=hQskRXb5Ao7MvlhgT9QAyqVOw5lJBfj51loEJ1OLHzKjSxjJfeQ5X6w0kWAoo6KXTeN9m1N8jrb0vVRR0YZsWVB/4yxwlNkp/wCqFz2rIowciFMi2QyB1WPm7MwqiUsT8jsMBZ5xFLUoTP+MtOn9MGFvYgjeEQrK+5eoJZ5k6wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715236267; c=relaxed/simple;
-	bh=sR91nbWIRwOyq6K9ElyuyadwZV3hd1M+0aO46y81gUw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Sk5Di5Ptmw/qOZ2BbnIjVt6JXZxohPdFknftw6xN8Ynn0nlvkObLDsYAEeJAcusfw602Tifqo6nOLChP6ACzI4dOp/V7Pw6OM+gJBv9gRmC+usBT8TE2OFNt3Jy5oJKKbtNuaW/nFk7XnVHjhrFed8vpKaUnzXAkOKEAQe2sCNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-34db6a29a1eso416372f8f.1;
-        Wed, 08 May 2024 23:31:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715236263; x=1715841063;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iwtvTU9dGUsxu7W/GoS4WNvaRYIcCkqPS/0Zbq6tVQ8=;
-        b=qCGjzBEdIXKHbK+p07WfseF01GyGzb/gLkx0cPzTkQRZ7S8yum0PXdtfCOOKR3m6ay
-         MfTHaH9i9MsjbBmojo6+TFQlGsFTMImH6ipCtB27whXysly6OUoTcLj5uSLrvPzfsSSs
-         rWGEQouo8IxzLu3jcyXuDOEl4bjE1mOld7SoopLJehu/twd3CkgVgJr+YY8KJjLQs58N
-         Qe7liUDmDKGnYFzGEltCYY7+GjJ/P4vc8CoJR0l81kAddxvRkR9hCHB4GCZ2BDvsJgHO
-         I+6XOXxCfgiFpSWzH3FDyFvq80KL0kYz1tmx2O/DziKBacXoKj3NEnkjAnibJSSC6GsB
-         GiEA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZcFBDnpeSHa5TuTic2f3Gc6b5mbjBB6Z3QSmrI6FAT3TAnWCwXLlY6WdgElBkzN+SRN33dAZ/Hf+OYKq8XOS4YqyJaGr+5Pwu2Noz
-X-Gm-Message-State: AOJu0YxYPw76aadJ6pQv4q4SojrwpmRXJNxS1OsNz5T2xMavF/7YCWa7
-	H9BAUhMD/9XVscgkcG+vIZ4KJfJPo7eY7tplpLD56q1mt0XL8qxo
-X-Google-Smtp-Source: AGHT+IGBHtp5fkttoPxbAN5MSJVlWFzCxprEicfYj7+RDXM7lxtsi5BISTb6L83Noc0GVY5FtQ86ag==
-X-Received: by 2002:a5d:4571:0:b0:34a:cc2:1a34 with SMTP id ffacd0b85a97d-34fca2448b7mr3367482f8f.42.1715236263404;
-        Wed, 08 May 2024 23:31:03 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b79bc83sm794033f8f.16.2024.05.08.23.31.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 08 May 2024 23:31:02 -0700 (PDT)
-Message-ID: <f7775510-09d8-41ef-97b2-0457e721a9ec@kernel.org>
-Date: Thu, 9 May 2024 08:31:02 +0200
+	s=arc-20240116; t=1715236397; c=relaxed/simple;
+	bh=ALQUMWvMvMPXewq2UxuhZ3CMh5beYFyrw94nEcp+/a8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LH6Yonx0sbrMbRp55ErrXnVdk5Px4VFJU+Fe/VoIzQ5XKdjyVogWFi1ANdEj6BDOZg5jl8Kd6UKJfMhWvtydy/AwQwCAWm+MCB0xnYrfp1XP+Tl0Hw35PxJZDZSV2O+Q2adNn5lICwF48f6bFIanwjfOCia83h+c0jv0hy/cT8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Wv+vaHy4; arc=none smtp.client-ip=95.215.58.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Wv+vaHy4"
+Date: Wed, 8 May 2024 23:33:07 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715236393;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UHtr7m6si+trM2Dv317fWhouVoPBtQqoBHj5VW99r0A=;
+	b=Wv+vaHy4pFsFYU7gj/FuDvS5+mWemGN38atWuybzD/uHeaBVhzqHleqn2k+R+Q12jHQvTf
+	nyMsl1E8GnEBMtm8XvOde/W0Px6jtQF0nvTKt6VxYytOmIh6AWass6MZ2SO0n36ThNP5GO
+	1GeheQHHeCsHtv/BuWPCzQSJWr4+A3U=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Roman Gushchin <roman.gushchin@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Muchun Song <muchun.song@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal Hocko <mhocko@kernel.org>, Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, gthelen@google.coma, rientjes@google.com
+Subject: Re: [PATCH rfc 0/9] mm: memcg: separate legacy cgroup v1 code and
+ put under config option
+Message-ID: <jf44dfyaenz6xmn2hcodaginrshw5d5hfhmakdxtj4x6szk6b2@cr2rxamkgj2m>
+References: <20240509034138.2207186-1-roman.gushchin@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tty: vt: saturate scrollback_delta to avoid overflow
-To: Justin Stitt <justinstitt@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20240506-b4-sio-scrollback-delta-v1-1-4164d162a2b8@google.com>
-Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <20240506-b4-sio-scrollback-delta-v1-1-4164d162a2b8@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240509034138.2207186-1-roman.gushchin@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On 06. 05. 24, 20:55, Justin Stitt wrote:
-> Using the signed overflow sanitizer with syzkaller produces this UBSAN
-> report:
+On Wed, May 08, 2024 at 08:41:29PM -0700, Roman Gushchin wrote:
+> Cgroups v2 have been around for a while and many users have fully adopted them,
+> so they never use cgroups v1 features and functionality. Yet they have to "pay"
+> for the cgroup v1 support anyway:
+> 1) the kernel binary contains useless cgroup v1 code,
+> 2) some common structures like task_struct and mem_cgroup have never used
+>    cgroup v1-specific members,
+> 3) some code paths have additional checks which are not needed.
 > 
-> [   31.304043] ------------[ cut here ]------------
-> [   31.304048] UBSAN: signed-integer-overflow in ../drivers/tty/vt/vt.c:309:19
-> [   31.304055] -2147483648 + -1073741824 cannot be represented in type 'int'
-> [   31.304066] CPU: 1 PID: 3894 Comm: syz-executor Not tainted 6.8.0-rc2-00035-gb3ef86b5a957 #1
-> [   31.304073] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
-> [   31.304077] Call Trace:
-> [   31.304080]  <TASK>
-> [   31.304083]  dump_stack_lvl+0x93/0xd0
-> [   31.304177]  handle_overflow+0x171/0x1b0
-> [   31.304186]  scrollfront+0xcb/0xd0
-> [   31.304196]  tioclinux+0x3cc/0x450
-> [   31.304205]  tty_ioctl+0x7fc/0xc00
-
-The rest of the stack trace can be trimmed:
-
-> [   31.304212]  ? __pfx_tty_ioctl+0x10/0x10
-> [   31.304219]  __se_sys_ioctl+0xe0/0x140
-> [   31.304228]  do_syscall_64+0xd7/0x1b0
-> [   31.304236]  ? arch_exit_to_user_mode_prepare+0x11/0x60
-> [   31.304244]  entry_SYSCALL_64_after_hwframe+0x6f/0x77
-> [   31.304254] RIP: 0033:0x7fc3902ae539
-> [   31.304263] Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 14 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 8
-> [   31.304282] RSP: 002b:00007ffc8a457998 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> [   31.304289] RAX: ffffffffffffffda RBX: 00007fc3903e2f80 RCX: 00007fc3902ae539
-> [   31.304293] RDX: 0000000020000040 RSI: 000000000000541c RDI: 0000000000000003
-> [   31.304297] RBP: 00007fc39030d496 R08: 0000000000000000 R09: 0000000000000000
-> [   31.304300] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> [   31.304304] R13: 0000000000000800 R14: 00007fc3903e2f80 R15: 00007fc3903e2f80
-> [   31.304310]  </TASK>
-> [   31.304371] ---[ end trace ]---
+> Cgroup v1's memory controller has a number of features that are not supported
+> by cgroup v2 and their implementation is pretty much self contained.
+> Most notably, these features are: soft limit reclaim, oom handling in userspace,
+> complicated event notification system, charge migration.
 > 
-> This is caused by the scrollback_delta overflowing. Historically, the
-> signed integer overflow sanitizer did not work in the kernel due to its
-> interaction with `-fwrapv` but this has since been changed [1] in the
-> newest version of Clang; It being re-enabled in the kernel with Commit
-> 557f8c582a9ba8ab ("ubsan: Reintroduce signed overflow sanitizer").
+> Cgroup v1-specific code in memcontrol.c is close to 4k lines in size and it's
+> intervened with generic and cgroup v2-specific code. It's a burden on
+> developers and maintainers.
 > 
-> Note that it would be difficult to reproduce this bug in a non-fuzzing
-> scenario as it requires inputting tons of scroll inputs via keyboard
-> before the scheduled console callback has had a chance to update.
-> Nonetheless, let's saturate scrollback_delta so it stays clamped to
-> integer bounds without wrapping around.
-
-And what is actually broken, given signed overflow is well defined under 
-the -fwrapv wings?
-
-> [1]: https://github.com/llvm/llvm-project/pull/82432
+> This patchset aims to solve these problems by:
+> 1) moving cgroup v1-specific memcg code to the new mm/memcontrol-v1.c file,
+> 2) putting definitions shared by memcontrol.c and memcontrol-v1.c into the
+>    mm/internal.h header
+> 3) introducing the CONFIG_MEMCG_V1 config option, turned on by default
+> 4) making memcontrol-v1.c to compile only if CONFIG_MEMCG_V1 is set
+> 5) putting unused struct memory_cgroup and task_struct members under
+>    CONFIG_MEMCG_V1 as well.
 > 
-> Closes: https://github.com/KSPP/linux/issues/351
-> Signed-off-by: Justin Stitt <justinstitt@google.com>
-> ---
-> Note: I am using Kees' SIO tree as a base:
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=dev/v6.8-rc2/signed-overflow-sanitizer
-> ---
->   drivers/tty/vt/vt.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
+> This is an RFC version, which is not 100% polished yet, so but it would be great
+> to discuss and agree on the overall approach.
 > 
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index 9b5b98dfc8b4..b4768336868e 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -308,7 +308,14 @@ static inline void scrolldelta(int lines)
->   	/* FIXME */
->   	/* scrolldelta needs some kind of consistency lock, but the BKL was
->   	   and still is not protecting versus the scheduled back end */
-> -	scrollback_delta += lines;
-> +
-> +	/* saturate scrollback_delta so that it never wraps around */
-> +	if (lines > 0 && unlikely(INT_MAX - lines < scrollback_delta))
-> +		scrollback_delta = INT_MAX;
-> +	else if (lines < 0 && unlikely(INT_MIN - lines > scrollback_delta))
-> +		scrollback_delta = INT_MIN;
-> +	else
-> +		scrollback_delta += lines;
+> Some open questions, opinions are appreciated:
+> 1) I consider renaming non-static functions in memcontrol-v1.c to have
+>    mem_cgroup_v1_ prefix. Is this a good idea?
+> 2) Do we want to extend it beyond the memory controller? Should
+> 3) Is it better to use a new include/linux/memcontrol-v1.h instead of
+>    mm/internal.h? Or mm/memcontrol-v1.h.
+> 
 
-NACK, this is horrid.
+Hi Roman,
 
-Introduce a helper for this in overflow.h if we have none yet.
+A very timely and important topic and we should definitely talk about it
+during LSFMM as well. I have been thinking about this problem for quite
+sometime and I am getting more and more convinced that we should aim to
+completely deprecate memcg-v1.
+
+More specifically:
+
+1. What are the memcg-v1 features which have no alternative in memcg-v2
+and are blocker for memcg-v1 users? (setting aside the cgroup v2
+structual restrictions)
+
+2. What are unused memcg-v1 features which we should start deprecating?
+
+IMO we should systematically start deprecating memcg-v1 features and
+start unblocking the users stuck on memcg-v1.
+
+Now regarding the proposal in this series, I think it can be a first
+step but should not give an impression that we are done. The only
+concern I have is the potential of "out of sight, out of mind" situation
+with this change but if we keep the momentum of deprecation of memcg-v1
+it should be fine.
+
+I have CCed Greg and David from Google to get their opinion on what
+memcg-v1 features are blocker for their memcg-v2 migration and if they
+have concern in deprecation of memcg-v1 features.
+
+Anyone else still on memcg-v1, please do provide your input.
 
 thanks,
--- 
-js
-suse labs
-
+Shakeel
