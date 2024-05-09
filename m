@@ -1,57 +1,58 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9328213CFA9
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 01:53:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 994BC13DDA1
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 01:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715219610; cv=none; b=DCSqp9JJbrhTHzXxhEMcgtT6uJq6BgJRr4LGQUnghKnT26f6g66USVPypX4f8FYqQxSHqLffi4Gqrzjpn0EByx5EsiPl5ZPN+rW/CEELl65feIguhD+wgAziNUcmJlxisyinXqOfNuDAm/+anNEEzEHP/VwCf6nm9lpWZ/C4rzA=
+	t=1715219631; cv=none; b=cJoMVjfn9X0USNqdabPQkpI9SAy7ZqHPpdzGZ5cKfCQbyB36AlvcPWB8qJaNGdqTnDKIM9DNVLq+bxnTXspps4cm6CMBjLxbG8HvFcns/9r4BbMO3VO/yNDa6/0DhifekjAsrZyJZ+oCkd4Z9bD/6OVMKumkC1buzub1ogPtk0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715219610; c=relaxed/simple;
-	bh=0lwbgqJpSOteIM1oVHMd18A6vqi+jpNyWcCXbL+DzJU=;
+	s=arc-20240116; t=1715219631; c=relaxed/simple;
+	bh=3nwo/SInj4wmrovcKTFziVm6y4+hsi02LkwMFGRy6YY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UrCG7b72XD+2xBSWoF913aJKy9gKNhbLLYdcG9s3Z+LpoTeMc03gaHD2IgBMnz+NEqy0lpJJKyWDcefFBFzg3xKGUV2Wp9SGL3WgOg9+5sarfAA/7HzNeYfjjppBWX7oYaNEsPfkZw+D1sVaF5kvu8Udtr9W2Ez77O3pBkOZvdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=srmwMhiz; arc=none smtp.client-ip=209.85.214.181
+	 MIME-Version; b=AVNniZKERxMbYti+KzsJiH69fAhzi9NTWWOON/t311NkQUrcE1WU6IUWhrwYq1BN2QaJgpCVALRPlP1afHZEil4k/ENpyo/8LetOvl1p3hINnhKUFmUg9Ee1czkGMOlALYh5X4iSc3sjew0GPzTRUX9exNx8YrhpoO2AHaYam4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b=OENnU9yB; arc=none smtp.client-ip=209.85.160.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="srmwMhiz"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ee12baa01cso2392135ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 18:53:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=huaqin-corp-partner-google-com.20230601.gappssmtp.com header.i=@huaqin-corp-partner-google-com.20230601.gappssmtp.com header.b="OENnU9yB"
+Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-23f29434da2so262515fac.3
+        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 18:53:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1715219601; x=1715824401; darn=vger.kernel.org;
+        d=huaqin-corp-partner-google-com.20230601.gappssmtp.com; s=20230601; t=1715219612; x=1715824412; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bxqnVN8UJgjtUcypSEa8Q8vmTJk11ggZjob1mhOhIrM=;
-        b=srmwMhizFCxxB+M+XITyaBL1eOmv9xtgXL4UyGZgospDbUOep6vKcBzsNVr7EU2bt2
-         uro4Me/aqXzL0ni2ASTxRm0/xW8OWZ7azMn/tb62c6OEd2ErpAt0lA1N4QJ0GhBBuBdK
-         xdEfIOozG4cqV8qkfe3WUghf1L8ZWlyaO43bFXbWuhP3P5kjFijEC3fARij3yIp3LddC
-         KFo//VW6Rkv/bIW5m1juSJkKwawS1kpUS1AQMWSTkcThEjG1TFdvDuNYz9TON6FTcp6p
-         ykLQxksCUh8ePRGyVOIMzqhKVotkgUAYTGS2eXfxvGd02NB6as77LImAkDtSbfEdsHgX
-         ysfA==
+        bh=Lx35MtfPKU1z5v4/AzGpN1bIj57li6ybeEXD3S52BqY=;
+        b=OENnU9yBZcAsi7VhEe7M5EPPHmVTro86HGYGNUElyw086eNcX+bFxOgZp2lIDiWMB9
+         WAaEqwFyaFagWWbXHG2hFTk5yQeGD1nI112FFNIty8VRbAi2a79bYk9uX2IIhi2s95oK
+         VmYoI68G0h3n+m5TdIxDANjyo/rAiEXEaxicNhJUZZbr/wJ7QaQBGRtInGlnWxibuLBL
+         L19Di6vV1gAEfrl5/GVk97W4erhgSbTnAzkRByWKd8psK4B+dne3q7o4+eg/grU8blGw
+         HBxiARvUxqPQWLOSOc+P31WooZKFcWII7dCbXV+msCuJskFF7tzOP/E1sjENSlugnLqY
+         /SXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715219601; x=1715824401;
+        d=1e100.net; s=20230601; t=1715219612; x=1715824412;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bxqnVN8UJgjtUcypSEa8Q8vmTJk11ggZjob1mhOhIrM=;
-        b=pY1W832FDuiLqMAWfFSUqLtWy4I0pMkVZaKGE+3xZAKo7VL2oKwtQXc8hoG7K3gNv6
-         ejRXP+6zdJa/Cu7zeE6DFPAJutJBP95gRIpKfShCK3KO7YK1aBEoBjc0VY/sauvYWhFF
-         mHQqRtw2h3YA4gXHQaUHvYfvKOssQRViOie02LsNYUgMyj569CMrqtuko9PXe5doD66D
-         vv7iWQhqbZN4sB3z2rh55jHVcuaRq97iW1fkuUDTBjEtEK+oup+6Ars2/oRzw0Ve16Ax
-         lak3t5eohyCX9CaFsx56MNFePv1wzXgn3GXagQbVoClnHkIs7hWnTXbI84qFJ0/1ycIp
-         VJ5A==
-X-Forwarded-Encrypted: i=1; AJvYcCW/sCW0br9lzZkgMCDSzawABBSBTYBTXzI3X+DWotDQrr8BAZLQM7663RRqT2VfikwiooqEPwQFPvattBEa+hqhq3FWVPVqhkWv733g
-X-Gm-Message-State: AOJu0YxS3gcHjf1tPC0xx10pVI1f7t7zk43ehbiuYfdkRpq5IwKoMZeg
-	/kyy6U7Q1RWvRd+Tq+qfbHt1+F4/QipmgcAqCvorZybbFAUtsok1XpsBfDb77Lk=
-X-Google-Smtp-Source: AGHT+IHfTCrdnSCVYjBG5W24NcACBbQHWiiOrpEfYqS/fL0BabmdR3Tk52ZoofwEHKo/VMAnKUTE3A==
-X-Received: by 2002:a17:902:ecc6:b0:1e2:6d57:c1bb with SMTP id d9443c01a7336-1eeb05938ddmr59121815ad.21.1715219600789;
-        Wed, 08 May 2024 18:53:20 -0700 (PDT)
+        bh=Lx35MtfPKU1z5v4/AzGpN1bIj57li6ybeEXD3S52BqY=;
+        b=KCOR7mz0pIwLsyZHuDp6lSRGhZkPWI0kBXx9mDagdtwTZbrfuOLbkVaYPCv+HiJo3h
+         KMYBO7ygnuUvweLvnpAHdP1BasDefazeUSmm2L4NFhZigDROEzUxVf3jK7NXHa2Nryun
+         groZd6j794nm+qVobxjXS1TBbbhla27JtJiqbpVbhoa7ZQbbw/Fi2xtKJr1AdZiXCyre
+         YSZPnyUp4BWxaepF/MNnrOuzIZbzfN03kN1/k10yPwIZA9ls3X2FEpq8ZqTpcFb+4Cpq
+         otQDviQej9rh/stIVZwF8LPPIt3vKxAWi5hLWfZCeW7xycxGH9z/EtKPJOK8sgtTA6rT
+         PRwg==
+X-Forwarded-Encrypted: i=1; AJvYcCXkU8tvngInWzs45XuzgfKPyO+CKBbNDF59r2e3+/KCeQ6oGSAPIFjXbcs6i9ApdbzZW+0v5olkSm4rfp8EJfPH4UVviBUmdQl7lhNa
+X-Gm-Message-State: AOJu0Ywzb/Hcwu0w4iH502r3tt7uGW0uqCr0J1plYtJN0LBtqZldR7LQ
+	ZId//vqGwhhcP6CK26DLzP3ofulVhEYKqx06uwPwcbYW+bRqNCg1j6lIS7PdlXQk3qvYxaxz6bM
+	w
+X-Google-Smtp-Source: AGHT+IHJSZFIfS5xEh0VYynEI+hNT8DbM98p64k5a8t/tHhPiGVa1E/Bp9MzbasyxjF78NI1dQYQSQ==
+X-Received: by 2002:a17:903:1212:b0:1eb:5344:6a01 with SMTP id d9443c01a7336-1eeb09ae715mr55580745ad.44.1715219591726;
+        Wed, 08 May 2024 18:53:11 -0700 (PDT)
 Received: from localhost.localdomain ([116.66.212.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d15dfsm2117465ad.62.2024.05.08.18.53.18
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d15dfsm2117465ad.62.2024.05.08.18.53.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 18:53:20 -0700 (PDT)
+        Wed, 08 May 2024 18:53:11 -0700 (PDT)
 From: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
 To: sam@ravnborg.org,
 	neil.armstrong@linaro.org,
@@ -66,10 +67,11 @@ Cc: dri-devel@lists.freedesktop.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	xuxinxiong@huaqin.corp-partner.google.com,
-	Cong Yang <yangcong5@huaqin.corp-partner.google.com>
-Subject: [PATCH v5 7/7] drm/panel: himax-hx83102: Support for IVO t109nw41 MIPI-DSI panel
-Date: Thu,  9 May 2024 09:52:07 +0800
-Message-Id: <20240509015207.3271370-8-yangcong5@huaqin.corp-partner.google.com>
+	Cong Yang <yangcong5@huaqin.corp-partner.google.com>,
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: [PATCH v5 4/7] dt-bindings: display: panel: Add compatible for BOE nv110wum-l60
+Date: Thu,  9 May 2024 09:52:04 +0800
+Message-Id: <20240509015207.3271370-5-yangcong5@huaqin.corp-partner.google.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240509015207.3271370-1-yangcong5@huaqin.corp-partner.google.com>
 References: <20240509015207.3271370-1-yangcong5@huaqin.corp-partner.google.com>
@@ -81,192 +83,47 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The IVO t109nw41 is a 11.0" WUXGA TFT LCD panel, use hx83102 controller
-which fits in nicely with the existing panel-himax-hx83102 driver. Hence,
-we add a new compatible with panel specific config.
+The BOE nv110wum-l60 is a 11.0" WUXGA TFT LCD panel with himax-hx83102
+controller. Hence, we add a new compatible with panel specific config.
 
 Signed-off-by: Cong Yang <yangcong5@huaqin.corp-partner.google.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
 Chage since V5:
 
-- Adjust inital cmds indentation and check accum_err before calling mdelay in init().
-- Adjust somes inital cmds to Optimize gamma.
+- No change.
 
-V4: https://lore.kernel.org/all/20240507135234.1356855-8-yangcong5@huaqin.corp-partner.google.com
+V4: https://lore.kernel.org/all/20240507135234.1356855-5-yangcong5@huaqin.corp-partner.google.com
 
 Chage since V4:
 
-- inital cmds use lowercasehex.
+- No change.
 
-V3: https://lore.kernel.org/all/20240424023010.2099949-8-yangcong5@huaqin.corp-partner.google.com
+V3: https://lore.kernel.org/all/20240424023010.2099949-5-yangcong5@huaqin.corp-partner.google.com
 
 Chage since V3:
 
-- Depend Dous'series [1].
-[1]: https://lore.kernel.org/all/20240501154251.3302887-1-dianders@chromium.org
+- Update commit message.
 
-V2: https://lore.kernel.org/all/20240422090310.3311429-8-yangcong5@huaqin.corp-partner.google.com
+V2: https://lore.kernel.org/all/20240422090310.3311429-5-yangcong5@huaqin.corp-partner.google.com
 
 ---
- drivers/gpu/drm/panel/panel-himax-hx83102.c | 131 ++++++++++++++++++++
- 1 file changed, 131 insertions(+)
+ .../devicetree/bindings/display/panel/himax,hx83102.yaml        | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/gpu/drm/panel/panel-himax-hx83102.c b/drivers/gpu/drm/panel/panel-himax-hx83102.c
-index f1273e1c92d2..03a82e48da11 100644
---- a/drivers/gpu/drm/panel/panel-himax-hx83102.c
-+++ b/drivers/gpu/drm/panel/panel-himax-hx83102.c
-@@ -293,6 +293,112 @@ static int boe_nv110wum_init(struct hx83102 *ctx)
- 	return 0;
- };
- 
-+static int ivo_t109nw41_init(struct hx83102 *ctx)
-+{
-+	struct mipi_dsi_multi_context dsi_ctx = { .dsi = ctx->dsi };
-+
-+	msleep(60);
-+
-+	hx83102_enable_extended_cmds(&dsi_ctx, true);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPOWER, 0x2c, 0xed, 0xed, 0x0f, 0xcf, 0x42,
-+				     0xf5, 0x39, 0x36, 0x36, 0x36, 0x36, 0x32, 0x8b, 0x11, 0x65, 0x00, 0x88,
-+				     0xfa, 0xff, 0xff, 0x8f, 0xff, 0x08, 0xd6, 0x33);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETDISP, 0x00, 0x47, 0xb0, 0x80, 0x00, 0x12,
-+				     0x71, 0x3c, 0xa3, 0x22, 0x20, 0x00, 0x00, 0x88, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCYC, 0x35, 0x35, 0x43, 0x43, 0x35, 0x35,
-+				     0x30, 0x7a, 0x30, 0x7a, 0x01, 0x9d);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xcd);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETMIPI, 0x84);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETVDC, 0x1b, 0x04);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_BE, 0x20);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPTBA, 0xfc, 0xc4);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSTBA, 0x34, 0x34, 0x22, 0x11, 0x22, 0xa0,
-+				     0x31, 0x08, 0xf5, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xcc);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTCON, 0x80);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xd3);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTCON, 0x22);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc6);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETRAMDMY, 0x97);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPWM, 0x00, 0x1e, 0x13, 0x88, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCLOCK, 0x08, 0x13, 0x07, 0x00, 0x0f, 0x34);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPANEL, 0x02, 0x03, 0x44);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc4);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCASCADE, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPCTRL, 0x07, 0x06, 0x00, 0x02, 0x04, 0x2c,
-+				     0xff);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP0, 0x06, 0x00, 0x00, 0x00, 0x00, 0x08,
-+				     0x08, 0x08, 0x08, 0x37, 0x07, 0x64, 0x7c, 0x11, 0x11, 0x03, 0x03, 0x32,
-+				     0x10, 0x0e, 0x00, 0x0e, 0x32, 0x17, 0x97, 0x07, 0x97, 0x32, 0x00, 0x02,
-+				     0x00, 0x02, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP1, 0x25, 0x24, 0x25, 0x24, 0x18, 0x18,
-+				     0x18, 0x18, 0x07, 0x06, 0x07, 0x06, 0x05, 0x04, 0x05, 0x04, 0x03, 0x02,
-+				     0x03, 0x02, 0x01, 0x00, 0x01, 0x00, 0x1e, 0x1e, 0x1e, 0x1e, 0x1f, 0x1f,
-+				     0x1f, 0x1f, 0x21, 0x20, 0x21, 0x20, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18,
-+				     0x18, 0x18);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP3, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xa0,
-+				     0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xa0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGMA, 0x04, 0x04, 0x06, 0x0a, 0x0a, 0x05,
-+				     0x12, 0x14, 0x17, 0x13, 0x2c, 0x33, 0x39, 0x4b, 0x4c, 0x56, 0x61, 0x78,
-+				     0x7a, 0x41, 0x50, 0x68, 0x73, 0x04, 0x04, 0x06, 0x0a, 0x0a, 0x05, 0x12,
-+				     0x14, 0x17, 0x13, 0x2c, 0x33, 0x39, 0x4b, 0x4c, 0x56, 0x61, 0x78, 0x7a,
-+				     0x41, 0x50, 0x68, 0x73);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTP1, 0x07, 0x10, 0x10, 0x1a, 0x26, 0x9e,
-+				     0x00, 0x4f, 0xa0, 0x14, 0x14, 0x00, 0x00, 0x00, 0x00, 0x12, 0x0a, 0x02,
-+				     0x02, 0x00, 0x33, 0x02, 0x04, 0x18, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPOWER, 0x01, 0x7f, 0x11, 0xfd);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCLOCK, 0x86);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP0, 0x00, 0x00, 0x04, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP3, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xa0,
-+				     0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xa0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTP1, 0x02, 0x00, 0x2b, 0x01, 0x7e, 0x0f,
-+				     0x7e, 0x10, 0xa0, 0x00, 0x00, 0x77, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x02);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETPTBA, 0xf2);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCLOCK, 0x03, 0x07, 0x00, 0x10, 0x79);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETGIP3, 0xff, 0xff, 0xff, 0xff, 0xfa, 0xa0,
-+				     0xff, 0xff, 0xff, 0xff, 0xfa, 0xa0);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETTP1, 0xfe, 0x01, 0xfe, 0x01, 0xfe, 0x01,
-+				     0x00, 0x00, 0x00, 0x23, 0x00, 0x23, 0x81, 0x02, 0x40, 0x00, 0x20, 0x6e,
-+				     0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x03);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xa0,
-+				     0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xa0, 0xff, 0xff, 0xff, 0xff, 0xfa, 0xa0,
-+				     0xff, 0xff, 0xff, 0xff, 0xfa, 0xa0, 0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xa0,
-+				     0xaa, 0xaa, 0xaa, 0xaa, 0xaa, 0xa0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+				     0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc6);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETCYC, 0x03, 0xff, 0xf8);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_E1, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x00);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_UNKNOWN_D2, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc4);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETMIPI, 0x96);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x01);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0xc5);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETMIPI, 0x4f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETSPCCMD, 0x3f);
-+	mipi_dsi_dcs_write_seq_multi(&dsi_ctx, HX83102_SETBANK, 0x00);
-+	if (dsi_ctx.accum_err)
-+		return dsi_ctx.accum_err;
-+
-+	msleep(60);
-+
-+	return 0;
-+};
-+
- static const struct drm_display_mode starry_mode = {
- 	.clock = 162680,
- 	.hdisplay = 1200,
-@@ -337,6 +443,28 @@ static const struct hx83102_panel_desc boe_nv110wum_desc = {
- 	.init = boe_nv110wum_init,
- };
- 
-+static const struct drm_display_mode ivo_t109nw41_default_mode = {
-+	.clock = 166400,
-+	.hdisplay = 1200,
-+	.hsync_start = 1200 + 75,
-+	.hsync_end = 1200 + 75 + 20,
-+	.htotal = 1200 + 75 + 20 + 55,
-+	.vdisplay = 1920,
-+	.vsync_start = 1920 + 115,
-+	.vsync_end = 1920 + 115 + 8,
-+	.vtotal = 1920 + 115 + 8 + 12,
-+	.type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
-+};
-+
-+static const struct hx83102_panel_desc ivo_t109nw41_desc = {
-+	.modes = &ivo_t109nw41_default_mode,
-+	.size = {
-+		.width_mm = 147,
-+		.height_mm = 235,
-+	},
-+	.init = ivo_t109nw41_init,
-+};
-+
- static int hx83102_enable(struct drm_panel *panel)
- {
- 	struct hx83102 *ctx = panel_to_hx83102(panel);
-@@ -588,6 +716,9 @@ static const struct of_device_id hx83102_of_match[] = {
- 	{ .compatible = "boe,nv110wum-l60",
- 	.data = &boe_nv110wum_desc
- 	},
-+	{ .compatible = "ivo,t109nw41",
-+	  .data = &ivo_t109nw41_desc
-+	},
- 	{ .compatible = "starry,himax83102-j02",
- 	  .data = &starry_desc
- 	},
+diff --git a/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml b/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml
+index fc584b5088ff..baf8b053e375 100644
+--- a/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml
++++ b/Documentation/devicetree/bindings/display/panel/himax,hx83102.yaml
+@@ -16,6 +16,8 @@ properties:
+   compatible:
+     items:
+       - enum:
++          # Boe nv110wum-l60 11.0" WUXGA TFT LCD panel
++          - boe,nv110wum-l60
+           # STARRY himax83102-j02 10.51" WUXGA TFT LCD panel
+           - starry,himax83102-j02
+       - const: himax,hx83102
 -- 
 2.25.1
 
