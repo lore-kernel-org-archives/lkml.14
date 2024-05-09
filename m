@@ -1,64 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6916C14B088
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 09:06:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA13C14C5BF
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 09:06:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715245564; cv=none; b=E36ZZrSvayE2z4Awcf3xAEmJdgRLjracpMdWmEITl2b55AVFxVG3j4mGzPTj2ID5umkOM2JOXqljp056YArSI+t8Id/zRcDavbeYqIEdrDrkOs6mARq0+sDLOsFAGesIVl34kkFbno8utx4qS81RqFWr/prmvoJWBjRPovSv5UY=
+	t=1715245572; cv=none; b=DxXdB4lBfiBODR7xh0irkzMju2qI9I6ZNcH4lMHEHvy7c/V+FG27P+HxsY0tTWGjwfZjIhyNFYVlBm0W5Hpft8uL7uUFIG3qtqu8pAoQ0Toha1QViCdY0fCzLyqvaP9wS2Tlb3avcgWDz8NGWCiD0BYNoml+pH7AoyaxpetG+sY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715245564; c=relaxed/simple;
-	bh=OFH17WrVzwX/MXoE2GaSMOO560zidpmx0RE36uVrj1Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PJw84Vmha6D0CzgRHRqoK1yevSokmgRoD9AxknQ8ZEYVtOBCB+JXCKdlsvgKnWa4UXTOqqIH/j8/hX0Q+FCqwFsIYcLrPwHsFR72Ml6O0DGma5VjmHv/OrHwMgdQOJLsZ/RUE72e4/Ob7NgCe5eXCt4n1PECxIXFLKzoRlAgU3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LAKUtnJB; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LAKUtnJB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715245561;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gv9KSYkm1B2yQrSW3Vp2Cj13w+VeZkMij45pxdKg3N4=;
-	b=LAKUtnJB531Df/s3HAWvBmVLjFUWf5ZkHFvhPO1q0Py9WURfvMyCsAhKbbCyQgMdzi69yV
-	w8eE5zwv86+BbTXh/XhYDMmfVOZEREZA2RZaVhHX0nDsUbKWQHRZeFzLLsatu4y7s5q20P
-	yO7lCjGy9+7p+ofiat0+wD4AtzHtjrI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-439-e1X46GC_PUOK7sO3RPiO-w-1; Thu, 09 May 2024 05:05:56 -0400
-X-MC-Unique: e1X46GC_PUOK7sO3RPiO-w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3582885A58C;
-	Thu,  9 May 2024 09:05:55 +0000 (UTC)
-Received: from virt-mtcollins-01.lab.eng.rdu2.redhat.com (virt-mtcollins-01.lab.eng.rdu2.redhat.com [10.8.1.196])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 255F0105480A;
-	Thu,  9 May 2024 09:05:55 +0000 (UTC)
-From: Shaoqin Huang <shahuang@redhat.com>
-To: Oliver Upton <oliver.upton@linux.dev>,
-	Marc Zyngier <maz@kernel.org>,
-	kvmarm@lists.linux.dev
-Cc: Shaoqin Huang <shahuang@redhat.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
+	s=arc-20240116; t=1715245572; c=relaxed/simple;
+	bh=vYC5NvNJ4aJ9CJ6rl24BmigQQLD96y14k7heirDSbpc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=UP0SGO5pYUbkFt5nc7eA7RwNZ0MHCURkZbKO6Q1YMBNBLp2TTn+yale7U9kSCv4I9Y+ORJimvIuGNAk6FxDgPz+Mrrdbj6775SJvdyfmEAgVehpYjDnZejmY0KJCpk0kqXzNKfzOmpvK+dCwverPRzuXg+6HSs/4LvlqV+gev3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 5b94af880de311ef9305a59a3cc225df-20240509
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.37,REQID:f99393cb-0013-4c06-972b-1c94c77f2aa8,IP:10,
+	URL:0,TC:0,Content:-25,EDM:25,RT:0,SF:-11,FILE:0,BULK:0,RULE:Release_Ham,A
+	CTION:release,TS:-1
+X-CID-INFO: VERSION:1.1.37,REQID:f99393cb-0013-4c06-972b-1c94c77f2aa8,IP:10,UR
+	L:0,TC:0,Content:-25,EDM:25,RT:0,SF:-11,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:-1
+X-CID-META: VersionHash:6f543d0,CLOUDID:03449bcc8d4fcf2644a010ca5f18e3b8,BulkI
+	D:240509170604U15SBRAY,BulkQuantity:0,Recheck:0,SF:66|25|17|19|44|102,TC:n
+	il,Content:0,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL
+	:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NAME
+	DN_TRUSTED, SRC_TRUSTED, SA_TRUSTED, SA_EXISTED, SN_TRUSTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
+	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
+	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-UUID: 5b94af880de311ef9305a59a3cc225df-20240509
+X-User: oushixiong@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.169)] by mailgw.kylinos.cn
+	(envelope-from <oushixiong@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 95223455; Thu, 09 May 2024 17:06:01 +0800
+From: oushixiong <oushixiong@kylinos.cn>
+To: Xinliang Liu <xinliang.liu@linaro.org>
+Cc: Tian Tao <tiantao6@hisilicon.com>,
+	Xinwei Kong <kong.kongxinwei@hisilicon.com>,
+	Sumit Semwal <sumit.semwal@linaro.org>,
+	Yongqin Liu <yongqin.liu@linaro.org>,
+	John Stultz <jstultz@google.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v8 2/3] KVM: selftests: aarch64: Introduce pmu_event_filter_test
-Date: Thu,  9 May 2024 05:05:39 -0400
-Message-Id: <20240509090544.2063429-3-shahuang@redhat.com>
-In-Reply-To: <20240509090544.2063429-1-shahuang@redhat.com>
-References: <20240509090544.2063429-1-shahuang@redhat.com>
+	Shixiong Ou <oushixiong@kylinos.cn>
+Subject: [PATCH] drm/hisilicon: Fix a NULL pointer access when call hibmc_unload
+Date: Thu,  9 May 2024 17:05:01 +0800
+Message-Id: <20240509090501.127975-1-oushixiong@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,350 +69,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 
-Introduce pmu_event_filter_test for arm64 platforms. The test configures
-PMUv3 for a vCPU, and sets different pmu event filters for the vCPU, and
-check if the guest can see those events which user allow and can't use
-those events which use deny.
+From: Shixiong Ou <oushixiong@kylinos.cn>
 
-This test refactor the create_vpmu_vm() and make it a wrapper for
-__create_vpmu_vm(), which allows some extra init code before
-KVM_ARM_VCPU_PMU_V3_INIT.
+If Calling hibmc_mm_init() failed in hibmc_load(), the hibmc_unload()
+will access a NULL pointer, as it don't call ww_mutex_init() to
+initialize mode_config.connection_mutex but try to lock it when
+calling drm_atomic_helper_shutdown().
 
-And this test use the KVM_ARM_VCPU_PMU_V3_FILTER attribute to set the
-pmu event filter in KVM. And choose to filter two common event
-branches_retired and instructions_retired, and let the guest to check if
-it see the right pmceid register.
+[   50.939211][  0] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000018
+	......
+[   51.149882][  0] Call trace:
+[   51.152750][  0]  ww_mutex_lock+0xf0/0x1e0
+[   51.156829][  0]  drm_modeset_lock+0x184/0x2c0
+[   51.161254][  0]  drm_modeset_lock_all_ctx+0x98/0x188
+[   51.166284][  0]  drm_atomic_helper_shutdown+0xa4/0x128
+[   51.171487][  0]  hibmc_unload+0x50/0x2f0
+[   51.175479][  0]  hibmc_load+0x5d8/0x888
+[   51.179386][  0]  drm_dev_register+0x280/0x558
+[   51.183811][  0]  drm_get_pci_dev+0x140/0x3c8
+[   51.188150][  0]  hibmc_pci_probe+0x148/0x190
+[   51.192489][  0]  local_pci_probe+0xc4/0x180
+[   51.196742][  0]  pci_device_probe+0x328/0x530
+[   51.201167][  0]  really_probe+0x498/0x9a0
+[   51.205248][  0]  driver_probe_device+0x224/0x308
+[   51.209932][  0]  device_driver_attach+0xec/0x128
+[   51.214616][  0]  __driver_attach+0x144/0x280
+[   51.218955][  0]  bus_for_each_dev+0x120/0x1a0
+[   51.223380][  0]  driver_attach+0x48/0x60
+[   51.227372][  0]  bus_add_driver+0x328/0x578
+[   51.231625][  0]  driver_register+0x148/0x398
+[   51.235965][  0]  __pci_register_driver+0x15c/0x1c8
+[   51.240823][  0]  hibmc_init+0x2c/0x34
+[   51.244557][  0]  do_one_initcall+0xc8/0x4a8
+[   51.248810][  0]  kernel_init_freeable+0x678/0x75c
+[   51.253582][  0]  kernel_init+0x18/0x128
+[   51.257489][  0]  ret_from_fork+0x10/0x18
 
-Signed-off-by: Shaoqin Huang <shahuang@redhat.com>
+Add a initialized flag to avoid this.
+
+Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
 ---
- tools/testing/selftests/kvm/Makefile          |   1 +
- .../kvm/aarch64/pmu_event_filter_test.c       | 303 ++++++++++++++++++
- 2 files changed, 304 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c | 8 ++++++--
+ drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h | 1 +
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index e78cac712229..964443e1a603 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -152,6 +152,7 @@ TEST_GEN_PROGS_aarch64 += aarch64/aarch32_id_regs
- TEST_GEN_PROGS_aarch64 += aarch64/debug-exceptions
- TEST_GEN_PROGS_aarch64 += aarch64/hypercalls
- TEST_GEN_PROGS_aarch64 += aarch64/page_fault_test
-+TEST_GEN_PROGS_aarch64 += aarch64/pmu_event_filter_test
- TEST_GEN_PROGS_aarch64 += aarch64/psci_test
- TEST_GEN_PROGS_aarch64 += aarch64/set_id_regs
- TEST_GEN_PROGS_aarch64 += aarch64/smccc_filter
-diff --git a/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c b/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
-new file mode 100644
-index 000000000000..fb0fde1ed436
---- /dev/null
-+++ b/tools/testing/selftests/kvm/aarch64/pmu_event_filter_test.c
-@@ -0,0 +1,303 @@
-+
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * pmu_event_filter_test - Test user limit pmu event for guest.
-+ *
-+ * Copyright (c) 2023 Red Hat, Inc.
-+ *
-+ * This test checks if the guest only see the limited pmu event that userspace
-+ * sets, if the guest can use those events which user allow, and if the guest
-+ * can't use those events which user deny.
-+ * This test runs only when KVM_CAP_ARM_PMU_V3, KVM_ARM_VCPU_PMU_V3_FILTER
-+ * is supported on the host.
-+ */
-+#include <kvm_util.h>
-+#include <processor.h>
-+#include <vgic.h>
-+#include <vpmu.h>
-+#include <test_util.h>
-+#include <perf/arm_pmuv3.h>
-+
-+struct pmu_common_event_ids {
-+	uint64_t pmceid0;
-+	uint64_t pmceid1;
-+} max_pmce, expected_pmce;
-+
-+struct vpmu_vm {
-+	struct kvm_vm *vm;
-+	struct kvm_vcpu *vcpu;
-+	int gic_fd;
-+};
-+
-+static struct vpmu_vm vpmu_vm;
-+
-+#define FILTER_NR 10
-+
-+struct test_desc {
-+	const char *name;
-+	struct kvm_pmu_event_filter filter[FILTER_NR];
-+};
-+
-+#define __DEFINE_FILTER(base, num, act)		\
-+	((struct kvm_pmu_event_filter) {	\
-+		.base_event	= base,		\
-+		.nevents	= num,		\
-+		.action		= act,		\
-+	})
-+
-+#define DEFINE_FILTER(base, act) __DEFINE_FILTER(base, 1, act)
-+
-+static void guest_code(void)
-+{
-+	uint64_t pmceid0 = read_sysreg(pmceid0_el0);
-+	uint64_t pmceid1 = read_sysreg(pmceid1_el0);
-+
-+	GUEST_ASSERT_EQ(expected_pmce.pmceid0, pmceid0);
-+	GUEST_ASSERT_EQ(expected_pmce.pmceid1, pmceid1);
-+
-+	GUEST_DONE();
-+}
-+
-+static void guest_get_pmceid(void)
-+{
-+	max_pmce.pmceid0 = read_sysreg(pmceid0_el0);
-+	max_pmce.pmceid1 = read_sysreg(pmceid1_el0);
-+
-+	GUEST_DONE();
-+}
-+
-+static void run_vcpu(struct kvm_vcpu *vcpu)
-+{
-+	struct ucall uc;
-+
-+	while (1) {
-+		vcpu_run(vcpu);
-+		switch (get_ucall(vcpu, &uc)) {
-+		case UCALL_DONE:
-+			return;
-+		case UCALL_ABORT:
-+			REPORT_GUEST_ASSERT(uc);
-+			break;
-+		default:
-+			TEST_FAIL("Unknown ucall %lu", uc.cmd);
-+		}
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+index 57c21ec452b7..343f64d66e75 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
+@@ -99,6 +99,7 @@ static int hibmc_kms_init(struct hibmc_drm_private *priv)
+ 	ret = drmm_mode_config_init(dev);
+ 	if (ret)
+ 		return ret;
++	priv->mode_config_initialized = true;
+ 
+ 	dev->mode_config.min_width = 0;
+ 	dev->mode_config.min_height = 0;
+@@ -240,9 +241,12 @@ static int hibmc_hw_init(struct hibmc_drm_private *priv)
+ static int hibmc_unload(struct drm_device *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
++	struct hibmc_drm_private *priv = to_hibmc_drm_private(dev);
+ 
+-	drm_atomic_helper_shutdown(dev);
+-
++	if(priv->mode_config_initialized){
++		drm_atomic_helper_shutdown(dev);
++		priv->mode_config_initialized = false;
 +	}
-+}
-+
-+static void set_pmce(struct pmu_common_event_ids *pmce, int action, int event)
-+{
-+	int base = 0;
-+	uint64_t *pmceid = NULL;
-+
-+	if (event >= 0x4000) {
-+		event -= 0x4000;
-+		base = 32;
-+	}
-+
-+	if (event >= 0 && event <= 0x1F) {
-+		pmceid = &pmce->pmceid0;
-+	} else if (event >= 0x20 && event <= 0x3F) {
-+		event -= 0x20;
-+		pmceid = &pmce->pmceid1;
-+	} else {
-+		return;
-+	}
-+
-+	event += base;
-+	if (action == KVM_PMU_EVENT_ALLOW)
-+		*pmceid |= BIT(event);
-+	else
-+		*pmceid &= ~BIT(event);
-+}
-+
-+static void prepare_expected_pmce(struct kvm_pmu_event_filter *filter)
-+{
-+	struct pmu_common_event_ids pmce_mask = { ~0, ~0 };
-+	bool first_filter = true;
-+	int i;
-+
-+	while (filter && filter->nevents != 0) {
-+		if (first_filter) {
-+			if (filter->action == KVM_PMU_EVENT_ALLOW)
-+				memset(&pmce_mask, 0, sizeof(pmce_mask));
-+			first_filter = false;
-+		}
-+
-+		for (i = 0; i < filter->nevents; i++)
-+			set_pmce(&pmce_mask, filter->action,
-+				 filter->base_event + i);
-+
-+		filter++;
-+	}
-+
-+	expected_pmce.pmceid0 = max_pmce.pmceid0 & pmce_mask.pmceid0;
-+	expected_pmce.pmceid1 = max_pmce.pmceid1 & pmce_mask.pmceid1;
-+}
-+
-+static void pmu_event_filter_init(struct kvm_pmu_event_filter *filter)
-+{
-+	while (filter && filter->nevents != 0) {
-+		kvm_device_attr_set(vpmu_vm.vcpu->fd,
-+				    KVM_ARM_VCPU_PMU_V3_CTRL,
-+				    KVM_ARM_VCPU_PMU_V3_FILTER,
-+				    filter);
-+		filter++;
-+	}
-+}
-+
-+/* Create a VM that has one vCPU with PMUv3 configured. */
-+static void create_vpmu_vm_with_filter(void *guest_code,
-+				       struct kvm_pmu_event_filter *filter)
-+{
-+	uint64_t irq = 23;
-+
-+	/* The test creates the vpmu_vm multiple times. Ensure a clean state */
-+	memset(&vpmu_vm, 0, sizeof(vpmu_vm));
-+
-+	vpmu_vm.vm = vm_create(1);
-+	vpmu_vm.vcpu = vm_vcpu_add_with_vpmu(vpmu_vm.vm, 0, guest_code);
-+	vpmu_vm.gic_fd = vgic_v3_setup(vpmu_vm.vm, 1, 64);
-+	__TEST_REQUIRE(vpmu_vm.gic_fd >= 0,
-+		       "Failed to create vgic-v3, skipping");
-+
-+	pmu_event_filter_init(filter);
-+
-+	/* Initialize vPMU */
-+	vpmu_set_irq(vpmu_vm.vcpu, irq);
-+	vpmu_init(vpmu_vm.vcpu);
-+}
-+
-+static void create_vpmu_vm(void *guest_code)
-+{
-+	create_vpmu_vm_with_filter(guest_code, NULL);
-+}
-+
-+static void destroy_vpmu_vm(void)
-+{
-+	close(vpmu_vm.gic_fd);
-+	kvm_vm_free(vpmu_vm.vm);
-+}
-+
-+static void run_test(struct test_desc *t)
-+{
-+	pr_info("Test: %s\n", t->name);
-+
-+	create_vpmu_vm_with_filter(guest_code, t->filter);
-+	prepare_expected_pmce(t->filter);
-+	sync_global_to_guest(vpmu_vm.vm, expected_pmce);
-+
-+	run_vcpu(vpmu_vm.vcpu);
-+
-+	destroy_vpmu_vm();
-+}
-+
-+static struct test_desc tests[] = {
-+	{
-+		.name = "without_filter",
-+		.filter = {
-+			{ 0 }
-+		},
-+	},
-+	{
-+		.name = "member_allow_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_SW_INCR, 0),
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_INST_RETIRED, 0),
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_BR_RETIRED, 0),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "member_deny_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_SW_INCR, 1),
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_INST_RETIRED, 1),
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_BR_RETIRED, 1),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "not_member_deny_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_SW_INCR, 1),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "not_member_allow_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_SW_INCR, 0),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "deny_chain_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_CHAIN, 1),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "deny_cpu_cycles_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_CPU_CYCLES, 1),
-+			{ 0 },
-+		},
-+	},
-+	{
-+		.name = "cancel_filter",
-+		.filter = {
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_CPU_CYCLES, 0),
-+			DEFINE_FILTER(ARMV8_PMUV3_PERFCTR_CPU_CYCLES, 1),
-+		},
-+	},
-+	{
-+		.name = "multiple_filter",
-+		.filter = {
-+			__DEFINE_FILTER(0x0, 0x10, 0),
-+			__DEFINE_FILTER(0x6, 0x3, 1),
-+		},
-+	},
-+	{ 0 }
-+};
-+
-+static void run_tests(void)
-+{
-+	struct test_desc *t;
-+
-+	for (t = &tests[0]; t->name; t++)
-+		run_test(t);
-+}
-+
-+int used_pmu_events[] = {
-+       ARMV8_PMUV3_PERFCTR_BR_RETIRED,
-+       ARMV8_PMUV3_PERFCTR_INST_RETIRED,
-+       ARMV8_PMUV3_PERFCTR_CHAIN,
-+};
-+
-+static bool kvm_pmu_support_events(void)
-+{
-+	struct pmu_common_event_ids used_pmce = { 0, 0 };
-+
-+	create_vpmu_vm(guest_get_pmceid);
-+
-+	memset(&max_pmce, 0, sizeof(max_pmce));
-+	sync_global_to_guest(vpmu_vm.vm, max_pmce);
-+	run_vcpu(vpmu_vm.vcpu);
-+	sync_global_from_guest(vpmu_vm.vm, max_pmce);
-+	destroy_vpmu_vm();
-+
-+	for (int i = 0; i < ARRAY_SIZE(used_pmu_events); i++)
-+		set_pmce(&used_pmce, KVM_PMU_EVENT_ALLOW, used_pmu_events[i]);
-+
-+	return ((max_pmce.pmceid0 & used_pmce.pmceid0) == used_pmce.pmceid0) &&
-+	       ((max_pmce.pmceid1 & used_pmce.pmceid1) == used_pmce.pmceid1);
-+}
-+
-+int main(void)
-+{
-+	TEST_REQUIRE(kvm_has_cap(KVM_CAP_ARM_PMU_V3));
-+	TEST_REQUIRE(kvm_pmu_support_events());
-+
-+	run_tests();
-+}
+ 	free_irq(pdev->irq, dev);
+ 
+ 	pci_disable_msi(to_pci_dev(dev->dev));
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+index 207aa3f660b0..08fd7cb59bb5 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+@@ -37,6 +37,7 @@ struct hibmc_drm_private {
+ 	struct drm_crtc crtc;
+ 	struct drm_encoder encoder;
+ 	struct hibmc_connector connector;
++	bool mode_config_initialized;
+ };
+ 
+ static inline struct hibmc_connector *to_hibmc_connector(struct drm_connector *connector)
 -- 
-2.40.1
+2.25.1
 
