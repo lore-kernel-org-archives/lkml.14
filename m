@@ -1,84 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from inva021.nxp.com (inva021.nxp.com [92.121.34.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A148E13BC0A;
-	Thu,  9 May 2024 02:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854A810A11;
+	Thu,  9 May 2024 02:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=92.121.34.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715220029; cv=none; b=i6fP/dTchmZjsI/dD5VirR/kuPtV7wi36+JrDv2g+jtUpG4qjkDi5hKO7F/fqN97NFrUKSyKeA3QvK9nUUyeJFlAtZYArW01P0BfW+qCrLHV188Gjzn1o8o1HdrCRzlMdRtzWrX40/TrQw/BKe0BNSH4IA8XOzo5WLzdIoQqSUA=
+	t=1715220216; cv=none; b=m0f0mTDMq9mDuDea0RHUS9heishePI0pWG2h83uIefLQ/993T/IjmaHUbkEoBNwK13LBt78ep7M15esX5IxKE6xfuW9DvnUbzBhu1fjkK4GmkYUMitvCD/bdfoEzV2o+297ylHSjfTBiWFD2IuFrydW/INKlk8GB2ek+y8o4/h4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715220029; c=relaxed/simple;
-	bh=5uUBO7EpVJSHQ9Pq0QpAYzMRCljyCpo7HxEVbl3AQe4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=gW1/AverQR954QC8K9NYehn4GT2HR3DLXQkl3qVPWotl7mpA6N5uMlReV7fEvXTzV8fxsuK0smnRfHxlm0acuz2y1LVhIfS/S+S8AaiaqMQDw+2OnllORrnLlvL2MkTLNlLY/RIjIkxren+7lyymXxSR0bjcvDBsjVcotPynGJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eed7ld8h; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eed7ld8h"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3DDE7C3277B;
-	Thu,  9 May 2024 02:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715220029;
-	bh=5uUBO7EpVJSHQ9Pq0QpAYzMRCljyCpo7HxEVbl3AQe4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Eed7ld8hwrxI+x/T/ZpvQ1aapIhxqzGTSeKKGvSfAPD+r6j88dZTRsbrxoYXgS8W9
-	 aOGFFQjx4+xC3v868EtWoPa8uE/Y7qH8nowYVfmaTrIqFpTO5eLeMAvjzCMNpJI9LD
-	 f71OkBU55l4JgTETe9VTZhQI8rbfgZGDbjFBgDLgInFgr6wp+LaSSxiHUXQ3gJVPKN
-	 HUTI8pbJx42b13hquh50QmxVKehNY79s62PmZIZlcJsB8VWUOfS5z7MTqxviWXx2Fp
-	 ii+QXDq4pAKgGc4tYbG3LIO3YGIbAJZjwJwl4JOfeUyZMG4f5CukaGRBguY3E/Hq8J
-	 XH8P+koiZwd6A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2B8E3C43335;
-	Thu,  9 May 2024 02:00:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1715220216; c=relaxed/simple;
+	bh=c6XIgSQ/dc58EUSEJ1tEuyH3zh/U7hLPp2W9pGYTvXA=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=EE/cDY3m0AlFoXrVK5wAyp8dkJ2Z9xd/C/TMhUuBrk2weos2QT3zZJWBXWNbnqrYqDJOnwINf1OpBtRlca6DFz7yrPOvnofg/mzeaAwX4Uaxy0mfgGU6jd7CsNiy5Shdo7mSwLYRRuUAweW5w8zvZYO/nidTK2qnqJIg4ESA62M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; arc=none smtp.client-ip=92.121.34.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ACFE2201857;
+	Thu,  9 May 2024 04:03:26 +0200 (CEST)
+Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
+	by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 718F0200A78;
+	Thu,  9 May 2024 04:03:26 +0200 (CEST)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+	by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 5A849181D0FC;
+	Thu,  9 May 2024 10:03:24 +0800 (+08)
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
+To: abelvesa@kernel.org,
+	peng.fan@nxp.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	marex@denx.de,
+	imx@lists.linux.dev,
+	shengjiu.wang@gmail.com
+Cc: linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: [PATCH v2 0/4] clk: imx: clk-audiomix: Improvement for audiomix
+Date: Thu,  9 May 2024 09:43:54 +0800
+Message-Id: <1715219038-32453-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] dt-bindings: net: mediatek: remove wrongly added clocks
- and SerDes
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171522002917.32544.14758011676552549517.git-patchwork-notify@kernel.org>
-Date: Thu, 09 May 2024 02:00:29 +0000
-References: <1569290b21cc787a424469ed74456a7e976b102d.1715084326.git.daniel@makrotopia.org>
-In-Reply-To: <1569290b21cc787a424469ed74456a7e976b102d.1715084326.git.daniel@makrotopia.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com,
- lorenzo@kernel.org, nbd@nbd.name, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 
-Hello:
+Some improvement for audiomix driver:
+Add reset controller for EARC function
+Add CLK_SET_RATE_PARENT flags for clocks
+Corrent parent clock for earc_phy and audpll clocks.
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+changes in v2:
+- add more info in commit messages.
 
-On Tue, 7 May 2024 13:20:43 +0100 you wrote:
-> Several clocks as well as both sgmiisys phandles were added by mistake
-> to the Ethernet bindings for MT7988. Also, the total number of clocks
-> didn't match with the actual number of items listed.
-> 
-> This happened because the vendor driver which served as a reference uses
-> a high number of syscon phandles to access various parts of the SoC
-> which wasn't acceptable upstream. Hence several parts which have never
-> previously been supported (such SerDes PHY and USXGMII PCS) are going to
-> be implemented by separate drivers. As a result the device tree will
-> look much more sane.
-> 
-> [...]
+Shengjiu Wang (4):
+  dt-bindings: clock: imx8mp: Add #reset-cells property
+  clk: imx: clk-audiomix: Add reset controller
+  clk: imx: clk-audiomix: Add CLK_SET_RATE_PARENT flags for clocks
+  clk: imx: clk-audiomix: Corrent parent clock for earc_phy and audpll
 
-Here is the summary with links:
-  - [v2] dt-bindings: net: mediatek: remove wrongly added clocks and SerDes
-    https://git.kernel.org/netdev/net/c/cc349b0771dc
+ .../bindings/clock/imx8mp-audiomix.yaml       |   3 +
+ drivers/clk/imx/clk-imx8mp-audiomix.c         | 105 +++++++++++++++++-
+ 2 files changed, 102 insertions(+), 6 deletions(-)
 
-You are awesome, thank you!
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.34.1
 
