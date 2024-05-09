@@ -1,145 +1,189 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0183A1494C8
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 10:48:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388CB130487
+	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 10:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715251715; cv=none; b=NYYgQBLvI1lFgty1B87+aIygqaOuPph6TzYHfeMS59DNCnrt4+GP82NMtzhS1nwGqvZIvapxfH3jgNqf4xPa/pi5QnaLnXDHeaNWh5bI8YTHN3XY0XgtsPaeNkbU4dgl6y1rY0RQA1oiobYboNmaF0Yli0MgJFMezXlOF21Wrfw=
+	t=1715251728; cv=none; b=kMwmmGNeQ2u/imT9tMyZYo1bJrYje1GeLwdwk9gjDLeNohmvCZfT+qBdG2qsuFjBHm5IO2Mgb7W7hTGplKML/qxeJx3sJJ3ZHDyDfgGCeJGM86EkN88RvrHJQvHqf1E3IchXi6JT3nR1eRD4fLn7/HcxXo1v/wZ0Z8OI+SWdI4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715251715; c=relaxed/simple;
-	bh=VctdIYRcYMl7yCi7G1Sb3DLUqDmPUVxcD0SKJgmAr9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Pf/vpAy5APOan+uGX7OQ+QdxXN7XbbTvd3nkw3/O5yUFrXrMqfgCZT8LY5Du1wZKJiuXt7Y1Knxoy2ToD4ScZYQAQOY6QRIQSTH8Jrl7Z54Kd2n6DsNmsll717PbU3bPvZCUUmnic0Oxv4D1lULRZWOsD2kBvS+V8U9bExE7lFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bGqMW6j+; arc=none smtp.client-ip=209.85.208.41
+	s=arc-20240116; t=1715251728; c=relaxed/simple;
+	bh=gcpdIFHr8ER34Z3GWGDwVi8dmpRY0WZC3XvZC+2j07g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Aac+si/DPQZOju8JSrEjMVme5eNGfpYv5BLspr+l+uNnTdoD7ekXQ7jneFoCWsdXMWkg25h5iaS66GwttSNGWOMMrtqApjK3kFHXxiPMjj5f62m4IHDyyT0/Am+XTF/KdMUPUDRbIj9FYxFGM1+a7q0AokAuYE6bE+iJHYZ+Xiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sDjbA+k8; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bGqMW6j+"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57342829409so467070a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 03:48:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sDjbA+k8"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a59cf8140d0so163782566b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 03:48:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715251712; x=1715856512; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qD5o65PhiAwg7/piV822tTYM++wRvUpFA3lGrCXfalk=;
-        b=bGqMW6j+jXVuenXgpVoj/r7W/X56zuyNfYC59cTEW0HJZj4lGTfPsXe/OAONJFGEAK
-         iKq2VgfwIyHesubOBkMzd52cI4esnDHVKfGbI0ffenAY7civHWX24qWb3DsszQrzWbAH
-         kaTJif5rSzm0IBtZXte39/nUjtS3tkzbK3VrUHrg/GHaYF//pvFiw4ynWOZ0dDgA06Zv
-         a8JBOCuZAmXCOYZj2sI7xVcpRCdFo88LvNGU6wUz179MHNheYKJp1jybGo31mcY6XGBe
-         +ZWgEkPK+KtfJHm1HEZXVlG/XPVyy0Ubn9Wc4EovauKzzFgKA9XVquo1z8L4epzdJvER
-         /ALw==
+        d=linaro.org; s=google; t=1715251724; x=1715856524; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QnzQs4M8STg8v5mtXmoZjumL7kiGXFglN5V5NIOcQXY=;
+        b=sDjbA+k8EdKzEaw9SXcZO7tbWFoeYXGVbtOdO9+oiOkf/6zFj09tF1z77WGHF0aKKk
+         PlZbk7jC9Fy9W2soNYc62vLn1YmSS+sZ5flB6purxzLYabjX4rL8UzFdbxSfnKn9+F1j
+         rJuLNsERkHncd7hK7420xHwiR3Ut6DZ529C/6M+wQvuy0sOTJWW6hrjag0LObHjUHsyv
+         uhW2YvN/U5Grhi6q00nyKbn9UfyOcQHVoqN8za4vetihv6yBRaDkEdC4Jvu/xp/JxYE1
+         OdEKWXYbaltrio15qfP1ussHtFubS00oxspqprFml/woOPIGrOD2xV9xTBo25w4RQT6B
+         dM+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715251712; x=1715856512;
-        h=in-reply-to:content-disposition:mime-version:message-id:subject:cc
-         :to:from:date:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qD5o65PhiAwg7/piV822tTYM++wRvUpFA3lGrCXfalk=;
-        b=mhlTBpRqUBDtxR/WAP8+XIA05Ydj4LPGhtqREAKcqI3dB8MzbyAzO+3VP66Wg8MKR4
-         Q5Qa4dzMbyf3ZFdc6izza3n5sxDYAbCZLxYNNpuiBKVwAIwkBEJwmwcvpZYqX6hNrG+P
-         0EsrZNLYO+UPwsVljNdYvcKiIC5ypp8EOmInBuJYwYy4RbjKL0hpiFZMaDIXaoRS9AzL
-         8c4byYwC9k9MMY1Wug0lzRLjQbRWBgLZuYLfskK1J/4hKhAvjIDSghAzAOORtOvg630B
-         bfpUMGx56bcTEgCNSiO4vg5Bsd9hQxSY4hfnyKrjOoGUXGzoe14NY8Kzn3XsXzfCHrIx
-         FrOg==
-X-Forwarded-Encrypted: i=1; AJvYcCXTI1rzfMcw/3TrThDecVsXO2wVTERlIpcHPGmCc4/p2lUna2msSbvzE73gPwA2RiD8zvgVISVMKB793+SiooRAxH/2kPKB0IQf8pbB
-X-Gm-Message-State: AOJu0YwjCacjGyCQFBPMI77h0JccgfzCfG+739L9pyXxw44a8Z61YahT
-	UntqLHfN+IaexBG9z2lgNDIuCfzmeNETl00SQ91xGXdwY83uRO8/0gk30ECxYXbHOm/JHJUpfDl
-	e
-X-Google-Smtp-Source: AGHT+IGqDgXNiTu5L0LP3FiH0Qhn/LQ5EXyCt8R1SOSC3IM0XZ62ypkMejfMBZXujtcgLGfguVX/ig==
-X-Received: by 2002:a50:d696:0:b0:572:a6fe:f7e7 with SMTP id 4fb4d7f45d1cf-5733294be26mr1553752a12.20.1715251712324;
-        Thu, 09 May 2024 03:48:32 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c2c7d79sm570649a12.59.2024.05.09.03.48.31
+        d=1e100.net; s=20230601; t=1715251724; x=1715856524;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QnzQs4M8STg8v5mtXmoZjumL7kiGXFglN5V5NIOcQXY=;
+        b=IKkbzTYJ4F3NLIXCiAeEwQdgvAZnLJY2UnhJp+SMho13gTNh88u0jI0+0PS/3Oi1Ef
+         xDB8oOm72EkI/6kO22NAvT0p5UlOFwoGcnEbOjc/w7VqQrF5LArowUBEfgRsinrb3qAe
+         +AZlBBjtuQmAkl0HgtYZx0hydR7hs/oayqKqjVsnfqlXoK7S9YWVJLlT5grmU61Frhps
+         kh8oS/8p++ODA4JJMF1PHSp7ADw64ATbQuAJ75IjLu4VE22WtRzvioGrTz5gHllZ4zW6
+         037pUzPLjHnhKto30KqAsH1ol1gbbklnd5fVcFwkk591ugG80Gh2rGeIr3KGZX7FEaDW
+         9e3g==
+X-Forwarded-Encrypted: i=1; AJvYcCV0/C94svyTOqB6/Zi78r7eJNdijOrlTp0JbaytBlNynObt5rGcABbF0fcM2+ZNnWo1lIgxirPy/YME25WbyyVi2xvLX8S9R0/E2oFu
+X-Gm-Message-State: AOJu0YyHlsIHDk0257LsuX8ib3+65ak1xXuRyJLFFECjE6CMDn32X3+O
+	5ftZt23fkMzpwoAKV3jqRpVjdcUw1B+bgdFHfBfgXNS33Se6gR/+gqZB1ROBxpUPeoeoTUyUinV
+	2
+X-Google-Smtp-Source: AGHT+IHczS5CGAbdxg981H0G+SH61xNrLiSFw+Z1T9VXSEXNVrCC1Lb8qrk7DjDkFnik5BB2nKDB1A==
+X-Received: by 2002:a17:906:61a:b0:a59:9ef3:f6df with SMTP id a640c23a62f3a-a59fb941d7bmr290673566b.22.1715251724582;
+        Thu, 09 May 2024 03:48:44 -0700 (PDT)
+Received: from krzk-bin.. ([178.197.206.169])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17894d85sm60195966b.72.2024.05.09.03.48.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 03:48:32 -0700 (PDT)
-Date: Thu, 9 May 2024 13:48:28 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, linux-nfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH 2/2] NFSD: harden svcxdr_dupstr() and svcxdr_tmpalloc()
- against integer overflows
-Message-ID: <babdb32b-3f3a-4e46-8cbb-26f0ca49cc61@moroto.mountain>
+        Thu, 09 May 2024 03:48:43 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	devicetree@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH 2/5] ARM: dts: imx: correct choice of panel native mode
+Date: Thu,  9 May 2024 12:48:35 +0200
+Message-ID: <20240509104838.216773-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240509104838.216773-1-krzysztof.kozlowski@linaro.org>
+References: <20240509104838.216773-1-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <332d1149-988e-4ece-8aef-1e3fb8bf8af4@moroto.mountain>
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
 
-These lengths come from xdr_stream_decode_u32() and so we should be a
-bit careful with them.  Use size_add() and struct_size() to avoid
-integer overflows.  Saving size_add()/struct_size() results to a u32 is
-unsafe because it truncates away the high bits.
+Bindings and Linux driver expect native-mode to be a phandle to one of
+the timings node, not a boolean property.  Correct the DTS to fix
+dtbs_check warnings like:
 
-Also generally storing sizes in longs is safer.  Most systems these days
-use 64 bit CPUs.  It's harder for an addition to overflow 64 bits than
-it is to overflow 32 bits.  Also functions like vmalloc() can
-successfully allocate UINT_MAX bytes, but nothing can allocate ULONG_MAX
-bytes.
+  imx53-m53evk.dtb: display-timings: timing-800x480p60: 'native-mode' does not match any of the regexes: 'pinctrl-[0-9]+'
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+This should not have actual effect for Linux kernel (no real bug
+affecting choice of native-mode), because the first timing node is
+chosen in absence of proper native-mode property.
+
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-I think my patch 1 fixes any real issues.  It's hard to assign a Fixes
-tag to this.
+ arch/arm/boot/dts/nxp/imx/imx51-apf51dev.dts         | 2 +-
+ arch/arm/boot/dts/nxp/imx/imx51-ts4800.dts           | 2 +-
+ arch/arm/boot/dts/nxp/imx/imx53-m53evk.dts           | 2 +-
+ arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos2_4.dts | 2 +-
+ arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_4.dts  | 2 +-
+ arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_7.dts  | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
- fs/nfsd/nfs4xdr.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index c7bfd2180e3f..42b41d55d4ed 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -118,11 +118,11 @@ static int zero_clientid(clientid_t *clid)
-  * operation described in @argp finishes.
-  */
- static void *
--svcxdr_tmpalloc(struct nfsd4_compoundargs *argp, u32 len)
-+svcxdr_tmpalloc(struct nfsd4_compoundargs *argp, size_t len)
- {
- 	struct svcxdr_tmpbuf *tb;
+diff --git a/arch/arm/boot/dts/nxp/imx/imx51-apf51dev.dts b/arch/arm/boot/dts/nxp/imx/imx51-apf51dev.dts
+index f72e109342bc..de6b7607510a 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx51-apf51dev.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx51-apf51dev.dts
+@@ -25,8 +25,8 @@ disp1 {
+ 		pinctrl-0 = <&pinctrl_ipu_disp1>;
  
--	tb = kmalloc(sizeof(*tb) + len, GFP_KERNEL);
-+	tb = kmalloc(struct_size(tb, buf, len), GFP_KERNEL);
- 	if (!tb)
- 		return NULL;
- 	tb->next = argp->to_free;
-@@ -138,9 +138,9 @@ svcxdr_tmpalloc(struct nfsd4_compoundargs *argp, u32 len)
-  * buffer might end on a page boundary.
-  */
- static char *
--svcxdr_dupstr(struct nfsd4_compoundargs *argp, void *buf, u32 len)
-+svcxdr_dupstr(struct nfsd4_compoundargs *argp, void *buf, size_t len)
- {
--	char *p = svcxdr_tmpalloc(argp, len + 1);
-+	char *p = svcxdr_tmpalloc(argp, size_add(len, 1));
+ 		display-timings {
++			native-mode = <&timing0>;
+ 			timing0: timing-lw700 {
+-				native-mode;
+ 				clock-frequency = <33000033>;
+ 				hactive = <800>;
+ 				vactive = <480>;
+diff --git a/arch/arm/boot/dts/nxp/imx/imx51-ts4800.dts b/arch/arm/boot/dts/nxp/imx/imx51-ts4800.dts
+index 87a34cbdf233..079bd3d14999 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx51-ts4800.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx51-ts4800.dts
+@@ -58,8 +58,8 @@ display1: disp1 {
+ 		pinctrl-0 = <&pinctrl_lcd>;
  
- 	if (!p)
- 		return NULL;
-@@ -150,7 +150,7 @@ svcxdr_dupstr(struct nfsd4_compoundargs *argp, void *buf, u32 len)
- }
+ 		display-timings {
++			native-mode = <&timing0>;
+ 			timing0: timing-800x480p60 {
+-				native-mode;
+ 				clock-frequency = <30066000>;
+ 				hactive = <800>;
+ 				vactive = <480>;
+diff --git a/arch/arm/boot/dts/nxp/imx/imx53-m53evk.dts b/arch/arm/boot/dts/nxp/imx/imx53-m53evk.dts
+index f0f92ee7ba95..ba0c62994f75 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx53-m53evk.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx53-m53evk.dts
+@@ -17,8 +17,8 @@ display1: disp1 {
+ 		pinctrl-0 = <&pinctrl_ipu_disp1>;
  
- static void *
--svcxdr_savemem(struct nfsd4_compoundargs *argp, __be32 *p, u32 len)
-+svcxdr_savemem(struct nfsd4_compoundargs *argp, __be32 *p, size_t len)
- {
- 	__be32 *tmp;
+ 		display-timings {
++			native-mode = <&timing0>;
+ 			timing0: timing-800x480p60 {
+-				native-mode;
+ 				clock-frequency = <31500000>;
+ 				hactive = <800>;
+ 				vactive = <480>;
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos2_4.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos2_4.dts
+index c75606fc4abd..ec806b8d503a 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos2_4.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos2_4.dts
+@@ -85,8 +85,8 @@ lcd_panel: display@0 {
+ 		power-on-delay = <10>;
  
-@@ -2146,7 +2146,7 @@ nfsd4_decode_clone(struct nfsd4_compoundargs *argp, union nfsd4_op_u *u)
-  */
- static __be32
- nfsd4_vbuf_from_vector(struct nfsd4_compoundargs *argp, struct xdr_buf *xdr,
--		       char **bufp, u32 buflen)
-+		       char **bufp, size_t buflen)
- {
- 	struct page **pages = xdr->pages;
- 	struct kvec *head = xdr->head;
+ 		display-timings {
++			native-mode = <&timing0>;
+ 			timing0: timing-480x800p57 {
+-				native-mode;
+ 				clock-frequency = <27000027>;
+ 				hactive = <480>;
+ 				vactive = <800>;
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_4.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_4.dts
+index 0d86927819c2..9ec038f1d0ff 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_4.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_4.dts
+@@ -36,8 +36,8 @@ display0: disp0 {
+ 		status = "okay";
+ 
+ 		display-timings {
++			native-mode = <&timing0>;
+ 			timing0: timing-480x800p60 {
+-				native-mode;
+ 				clock-frequency = <30000000>;
+ 				hactive = <480>;
+ 				vactive = <800>;
+diff --git a/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_7.dts b/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_7.dts
+index 66271daf97d9..b3129832f471 100644
+--- a/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_7.dts
++++ b/arch/arm/boot/dts/nxp/imx/imx6dl-aristainetos_7.dts
+@@ -25,8 +25,8 @@ display0: disp0 {
+ 		status = "okay";
+ 
+ 		display-timings {
++			native-mode = <&timing0>;
+ 			timing0: timing-800x480p60 {
+-				native-mode;
+ 				clock-frequency = <33246000>;
+ 				hactive = <800>;
+ 				vactive = <480>;
 -- 
 2.43.0
 
