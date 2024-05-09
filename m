@@ -1,243 +1,141 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out198-7.us.a.mail.aliyun.com (out198-7.us.a.mail.aliyun.com [47.90.198.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAE6624
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 06:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC99C624;
+	Thu,  9 May 2024 06:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715237804; cv=none; b=Kh4wkUVWGR0qZOFPB1lEpK5fM+5aBfOdst3/5yPwtIEdq15Xm3/NZSevouPmhQCNfGB4f4wp1eiRuiVB6oAA1Dhe+enMaaSy3UFSUjeu00jfT193p/7sN1WxIFlb8LngL+z2e+LFZH5Wa5PcOoncBKb6uoYDNltoK3Ln2WhCw7o=
+	t=1715237814; cv=none; b=qFKUBu83w5dk24zp4y5DIHCbbjRH/Igfw9zjmjHIsHeuWXkz16/7a2CtrEV/ZA7f7ILEFfM299Tl1li5jSYKnv/2Z+Jm7LoJ+qEFMdjWsuaaSuaOyoeb3rSw67w+dQqbfN+v07WFPio4kH6LqmYWnHQPGcfawB94ZLj6dS8T+O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715237804; c=relaxed/simple;
-	bh=qMk1PdT+iPPJAba1vs0taTftishgYTmWVXA0TThaZfo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W6U0AvZNlh+2g4Fw7HaIJmKnk9PT7fXm4nOh7QL8Z9N6F9aLKi6WozZx25TtVa8AzCfujLr0DUx2LWd1THV4SSLUi/+f4XpD7j/df8FOb+zHaTIJ/wq27yeXHoZr5ElJca1PonR6P1meCS5nKqS3DazI5emwq/IAkS8BOAfWjH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=TtbtRhxC; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TtbtRhxC"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-620314aa1d7so5676207b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 08 May 2024 23:56:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1715237802; x=1715842602; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VaF65Mth8rDaiy1Bx7eDA2aD8YWaoQ7AgHRL/QGNHIg=;
-        b=TtbtRhxCHBFjy6bHolE3ZrCu96bdCOh13MQ+kXrhp9dMfcPglz3SLoc4BrSbvlL4dX
-         7MUoNBKH27UCtkjgWfVjl3thZFWqBpJqy5wZ3eNZDKn1+G/KxH7Ug+gdPDNO4Px/+HA+
-         E93FUMS3jI6aXzlseFgT0y++0ck0Ewp72md4v0qvvfAB8/cD4M/oWU8zfJq8u+ILhxNR
-         iPa+oWYEp6x8Zmvo7H+j1Y8tzsDTt+yqJAEFOVRNiuIclcXl7xLpDXXY/OWTmgTs8ogk
-         mLISZcKSBgoFxKJJDp4uYddqwOfZ8u+jMfgZ5W7/K6FObwwwegBsWc7GGzhz1aQYQQOM
-         bNvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715237802; x=1715842602;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VaF65Mth8rDaiy1Bx7eDA2aD8YWaoQ7AgHRL/QGNHIg=;
-        b=eY8O+FePajKGpr5qM7pK8QySzYTKf4G4dwHYgN3vwPYWyly0oRAunJL/gd5XzhnJVt
-         1dtg2KAsKVp7vqDleXBD2q2jh4SoiHnXVasfNsnYtJp5gH+EqfavU7dZWbYjPxwSCEHb
-         nvfAzsyoNapQyi+pihbfojfMkq1OW2Wk+Z7xDaeXzVBBhdaQQJkGP6DnVdNWWgI+hvYX
-         5nrLR5fm2nZL9towJAftme4BeO5agoPBEzti1qJIIZxcHqpONQvo2Muyhms2m/wIDmMY
-         xGPP07Y6/JSfzDeKRtoDhNDw45klVo+c9LJ5A3MJRCLeq9OaTpgWl6pADlgJxELUTQ5j
-         SOkw==
-X-Forwarded-Encrypted: i=1; AJvYcCVz9fNWkUQV+1Oan1f8G/OrE524KLY6Hz9XOCEhO5sErch/0nuLPkOvN1Hvxv4fT8sGs/qHEW3/r1LNkMHoGcmTXZSKLQaLjwuAmkfv
-X-Gm-Message-State: AOJu0Yx/+w79/MznCC23hbAloOMWjCdLXwCsplQxCz1V5+HyZPAm1NDh
-	eaCOrpnC03LLAvDwj6X++52hCMzy0i6iqOQ19S6qPLmzEYg6vT8LE89f29azyu5I5fqB/BZ29sM
-	rL7txxOzPM7am6kp618AjXlQBjMK5f/48qkd8Xg==
-X-Google-Smtp-Source: AGHT+IFcRu416dvzSI2zoj2G7WcOFjTosCWbtC1c8KEzGSwEnHegTPHoEH/G3MULJAHlFRyEU5wzPOnrCvubOCTr4OM=
-X-Received: by 2002:a81:928c:0:b0:61b:3304:cdc7 with SMTP id
- 00721157ae682-62085a747b9mr50296887b3.29.1715237801602; Wed, 08 May 2024
- 23:56:41 -0700 (PDT)
+	s=arc-20240116; t=1715237814; c=relaxed/simple;
+	bh=Wi6Yn3ylUtLS0MS/YnsihDpLq/1i9V4m5nklGqU9x68=;
+	h=Date:From:To:Cc:Message-ID:Subject:MIME-Version:Content-Type; b=YBKPOIYIuUU334D06QBx9vBAfX3MMwbXHH8ID1K2jHiwUfShXKgSGoSxYPO7HkeSrfH4smlAizuzhCTne2oDbzCiEuCam4LkCzgJn+c/k+KLA08iZwV1dutBRg3LD/+b6CQhu/XKkRqxFNO7rwP+KIuv087xrFmmkyF3ILVW9Ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ubisectech.com; spf=pass smtp.mailfrom=ubisectech.com; arc=none smtp.client-ip=47.90.198.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ubisectech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ubisectech.com
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07507384|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.38847-0.00208838-0.609442;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047187;MF=bugreport@ubisectech.com;NM=1;PH=DW;RN=3;RT=3;SR=0;TI=W4_0.2.3_v5ForWebDing_21128455_1715236856460_o7001c236;
+Received: from WS-web (bugreport@ubisectech.com[W4_0.2.3_v5ForWebDing_21128455_1715236856460_o7001c236]) at Thu, 09 May 2024 14:40:57 +0800
+Date: Thu, 09 May 2024 14:40:57 +0800
+From: "Ubisectech Sirius" <bugreport@ubisectech.com>
+To: "linux-trace-kernel" <linux-trace-kernel@vger.kernel.org>,
+  "linux-kernel" <linux-kernel@vger.kernel.org>
+Cc: "kent.overstreet" <kent.overstreet@linux.dev>
+Reply-To: "Ubisectech Sirius" <bugreport@ubisectech.com>
+Message-ID: <38599e68-c9e8-4cb9-8ee4-bd08d75a894f.bugreport@ubisectech.com>
+Subject: =?UTF-8?B?Z2VuZXJhbCBwcm90ZWN0aW9uIGZhdWx0IGluIGNyeXB0b19za2NpcGhlcl9lbmNyeXB0?=
+X-Mailer: [Alimail-Mailagent revision 4293][W4_0.2.3][v5ForWebDing][Chrome]
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240412-zve-detection-v4-0-e0c45bb6b253@sifive.com>
- <20240412-zve-detection-v4-7-e0c45bb6b253@sifive.com> <20240418-brook-chili-4d3e61d1a55c@wendy>
- <20240418155256.GA2410@sol.localdomain> <20240418-ultimatum-yam-11de4b063b83@spud>
- <20240418173203.GA1081@sol.localdomain> <20240418173946.GB1081@sol.localdomain>
- <20240418-sterling-sanding-d59c3b0a2aaa@spud>
-In-Reply-To: <20240418-sterling-sanding-d59c3b0a2aaa@spud>
-From: Andy Chiu <andy.chiu@sifive.com>
-Date: Thu, 9 May 2024 14:56:30 +0800
-Message-ID: <CABgGipU74TA3KgCH4pPuRefbnYt3q6RKcQwfyspenisEtY6eqw@mail.gmail.com>
-Subject: Re: [PATCH v4 7/9] riscv: vector: adjust minimum Vector requirement
- to ZVE32X
-To: Conor Dooley <conor@kernel.org>
-Cc: Eric Biggers <ebiggers@kernel.org>, Conor Dooley <conor.dooley@microchip.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Heiko Stuebner <heiko@sntech.de>, Guo Ren <guoren@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Jonathan Corbet <corbet@lwn.net>, Evan Green <evan@rivosinc.com>, 
-	=?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>, 
-	Shuah Khan <shuah@kernel.org>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>, 
-	Vincent Chen <vincent.chen@sifive.com>, Greentime Hu <greentime.hu@sifive.com>, 
-	devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, Joel Granados <j.granados@samsung.com>, 
-	Jerry Shih <jerry.shih@sifive.com>
+x-aliyun-im-through: {"mailThroughImNew":true}
+x-aliyun-mail-creator: W4_0.2.3_v5ForWebDing_M3LTW96aWxsYS81LjAgKFdpbmRvd3MgTlQgMTAuMDsgV2luNjQ7IHg2NCkgQXBwbGVXZWJLaXQvNTM3LjM2IChLSFRNTCwgbGlrZSBHZWNrbykgQ2hyb21lLzEyNC4wLjAuMCBTYWZhcmkvNTM3LjM2vN
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 
-Hi Conor,
-
-On Fri, Apr 19, 2024 at 2:26=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> On Thu, Apr 18, 2024 at 10:39:46AM -0700, Eric Biggers wrote:
-> > On Thu, Apr 18, 2024 at 10:32:03AM -0700, Eric Biggers wrote:
-> > > On Thu, Apr 18, 2024 at 05:53:55PM +0100, Conor Dooley wrote:
-> > > > > If it would be useful to do so, we should be able to enable some =
-of the code
-> > > > > with a smaller VLEN and/or EEW once it has been tested in those c=
-onfigurations.
-> > > > > Some of it should work, but some of it won't be able to work.  (F=
-or example, the
-> > > > > SHA512 instructions require EEW=3D=3D64.)
-> > > > >
-> > > > > Also note that currently all the RISC-V vector crypto code only s=
-upports riscv64
-> > > > > (XLEN=3D64).  Similarly, that could be relaxed in the future if p=
-eople really need
-> > > > > the vector crypto acceleration on 32-bit CPUs...  But similarly, =
-the code would
-> > > > > need to be revised and tested in that configuration.
-> > > > >
-> > > > > > Eric/Jerry (although read the previous paragraph too):
-> > > > > > I noticed that the sha256 glue code calls crypto_simd_usable(),=
- and in
-> > > > > > turn may_use_simd() before kernel_vector_begin(). The chacha20 =
-glue code
-> > > > > > does not call either, which seems to violate the edict in
-> > > > > > kernel_vector_begin()'s kerneldoc:
-> > > > > > "Must not be called unless may_use_simd() returns true."
-> > > > >
-> > > > > skcipher algorithms can only be invoked in process and softirq co=
-ntext.  This
-> > > > > differs from shash algorithms which can be invoked in any context=
-.
-> > > > >
-> > > > > My understanding is that, like arm64, RISC-V always allows non-ne=
-sted
-> > > > > kernel-mode vector to be used in process and softirq context -- a=
-nd in fact,
-> > > > > this was intentionally done in order to support use cases like th=
-is.  So that's
-> > > > > why the RISC-V skcipher algorithms don't check for may_use_simd()=
- before calling
-> > > > > kernel_vector_begin().
-> > > >
-> > > > I see, thanks for explaining that. I think you should probably chec=
-k
-> > > > somewhere if has_vector() returns true in that driver though before
-> > > > using vector instructions. Only checking vlen seems to me like rely=
-ing on
-> > > > an implementation detail and if we set vlen for the T-Head/0.7.1 ve=
-ctor
-> > > > it'd be fooled. That said, I don't think that any of the 0.7.1 vect=
-or
-> > > > systems actually support Zvkb, but I hope you get my drift.
-> > >
-> > > All the algorithms check for at least one of the vector crypto extens=
-ions being
-> > > supported, for example Zvkb.  'if (riscv_isa_extension_available(NULL=
-, ZVKB))'
-> > > should return whether the ratified version of Zvkb is supported, and =
-likewise
-> > > for the other vector crypto extensions.  The ratified version of the =
-vector
-> > > crypto extensions depends on the ratified version of the vector exten=
-sion.
->
-> That's great if it does require that the version of the vector extension
-> must be standard. Higher quality spec than most if it does. But
-> "supported" in the context of riscv_isa_extension_available() means that
-> the hardware supports it (or set of harts), not that the currently
-> running kernel does. The Kconfig deps that must be met for the code to be
-> built at least mean the kernel is built with vector support, leaving only
-> "the kernel was built with vector support and the hardware supports vecto=
-r
-> but for $reason the kernel refused to enable it".
->
-> I'm not sure if that final condition is actually possible with the system
-> ending up in a broken state, however - I'm not sure that we ever do turn
-> off access to the VPU at present (after we mark it usable), and if we do
-> it doesn't get reflected in has_vector() so the kernel and userspace woul=
-d
-> both break, with what a crypto driver does probably being the least of
-> your worries.
->
-> > > So
-> > > there should be no issue.  If there is, the RISC-V core architecture =
-code needs
-> > > to be fixed to not declare that extensions are supported when they ar=
-e actually
-> > > incompatible non-standard versions of those extensions.  Incompatible
-> > > non-standard extensions should be represented as separate extensions.
-> > >
-> >
-> > It probably makes sense to check has_vector() to exclude Zve* for now, =
-though.
->
-> I think you might actually be better served at present, given the code ca=
-n
-> only be built if the core vector code is, by using
-> riscv_isa_extension_available(NULL, v). That way you know for sure that
-> you're getting the ratified extension and nothing else.
->
-> Prior to this conversation I thought that has_vector() should return true
-> if there's a standard compliant vector unit available - given all users
-> Andy added only need Zve32x.
->
-> > I am just concerned about how you're suggesting that non-standard exten=
-sions
-> > might be pretending to be standard ones and individual users of kernel-=
-mode
-> > vector would need to work around that.
->
-> I am absolutely not suggesting that non-standard extensions should
-> masquerade as standard ones, I don't know where you got that from. What
-> I said was that a non-standard vector extension could reuse riscv_v_vlen
-> (and should IMO for simplicity reasons), not that any of the APIs we have
-> for checking extension availability would lie and say it was standard.
-> riscv_v_vlen having a value greater than 128 is not one of those APIs ;)
->
-> > I think that neither has_vector() nor
-> > 'if (riscv_isa_extension_available(NULL, ZVKB))' should return true if =
-the CPU's
-> > vector extension is non-standard.
->
-> riscv_isa_extension_available(NULL, ZVKB) only checks whether the extensi=
-on
-> was present in DT or ACPI for all harts. It doesn't check whether or not
-> the required config option for vector has been set or anything related
-> to dependencies. has_vector() at least checks that the vector core has
-> been enabled (and uses the alternative-patched version of the check
-> given it is used in some hotter paths). That's kinda moot for code
-> that's only built if the vector core stuff is enabled as I said above
-> though.
->
-> We could of course make riscv_isa_extension_available() check
-> extension dependencies, but I'd rather leave dt validation to the dt
-> tooling (apparently ACPI tables are never wrong...). Either would allow
-> you to rely on the crypto extensions present only when the standard vecto=
-r
-> extensions unless someone's DT/ACPI stuff is shite, but then they keep th=
-e
-> pieces IMO :)
-
-Should we check if "v" presents for vector crypto extensions in
-riscv_isa_extension_check()? We are not checking this for now. So a
-kernel compiled with RISCV_ISA_V still has a problem if its isa-string
-includes any of vector crypto ("zvbb, zvkg, etc") but not "v".
-
->
-> Hope that makes sense?
-> Conor.
-
-Cheers,
-Andy
+SGVsbG8uCldlIGFyZSBVYmlzZWN0ZWNoIFNpcml1cyBUZWFtLCB0aGUgdnVsbmVyYWJpbGl0eSBs
+YWIgb2YgQ2hpbmEgVmFsaWFudFNlYy4gUmVjZW50bHksIG91ciB0ZWFtIGhhcyBkaXNjb3ZlcmVk
+IGEgaXNzdWUgaW4gTGludXgga2VybmVsIDYuNy4gQXR0YWNoZWQgdG8gdGhlIGVtYWlsIHdlcmUg
+YSBQb0MgZmlsZSBvZiB0aGUgaXNzdWUuCgpTdGFjayBkdW1wOgoKYmNhY2hlZnMgKGxvb3AwKTog
+ZXJyb3IgdmFsaWRhdGluZyBidHJlZSBub2RlIG9uIGxvb3AwIGF0IGJ0cmVlIGV4dGVudHMgbGV2
+ZWwgMC8wCiAgdTY0cyAxMSB0eXBlIGJ0cmVlX3B0cl92MiBTUE9TX01BWCBsZW4gMCB2ZXIgMDog
+c2VxIDgzNDI2ZmNiNjc4ODZjYmUgd3JpdHRlbiAxNiBtaW5fa2V5IFBPU19NSU4gZHVyYWJpbGl0
+eTogMSBwdHI6IDA6Mjc6MCBnZW4gMAogIG5vZGUgb2Zmc2V0IDAgYnNldCB1NjRzIDA6IHVua25v
+d24gY2hlY2tzdW0gdHlwZSA0LCBmaXhpbmcKZ2VuZXJhbCBwcm90ZWN0aW9uIGZhdWx0LCBwcm9i
+YWJseSBmb3Igbm9uLWNhbm9uaWNhbCBhZGRyZXNzIDB4ZGZmZmZjMDAwMDAwMDAwNDogMDAwMCBb
+IzFdIFBSRUVNUFQgU01QIEtBU0FOIE5PUFRJCktBU0FOOiBudWxsLXB0ci1kZXJlZiBpbiByYW5n
+ZSBbMHgwMDAwMDAwMDAwMDAwMDIwLTB4MDAwMDAwMDAwMDAwMDAyN10KQ1BVOiAwIFBJRDogMjU4
+OTIgQ29tbTogc3l6LWV4ZWN1dG9yLjAgTm90IHRhaW50ZWQgNi43LjAgIzIKSGFyZHdhcmUgbmFt
+ZTogUUVNVSBTdGFuZGFyZCBQQyAoaTQ0MEZYICsgUElJWCwgMTk5NiksIEJJT1MgMS4xNS4wLTEg
+MDQvMDEvMjAxNApSSVA6IDAwMTA6Y3J5cHRvX3NrY2lwaGVyX2FsZyBpbmNsdWRlL2NyeXB0by9z
+a2NpcGhlci5oOjM4NyBbaW5saW5lXQpSSVA6IDAwMTA6Y3J5cHRvX3NrY2lwaGVyX2VuY3J5cHQr
+MHg0OC8weDE3MCBjcnlwdG8vc2tjaXBoZXIuYzo2NTYKQ29kZTogNDggODkgZmEgNDggYzEgZWEg
+MDMgODAgM2MgMDIgMDAgMGYgODUgMTcgMDEgMDAgMDAgNDggYjggMDAgMDAgMDAgMDAgMDAgZmMg
+ZmYgZGYgNDggOGIgNWQgNDAgNDggOGQgN2IgMTggNDggODkgZmEgNDggYzEgZWEgMDMgPDgwPiAz
+YyAwMiAwMCAwZiA4NSAwOCAwMSAwMCAwMCA0OCA4ZCA3YiAwNCA0YyA4YiA2MyAxOCA0OCBiOCAw
+MCAwMApSU1A6IDAwMTg6ZmZmZmM5MDAwMmQ0NjM4OCBFRkxBR1M6IDAwMDEwMjAyClJBWDogZGZm
+ZmZjMDAwMDAwMDAwMCBSQlg6IDAwMDAwMDAwMDAwMDAwMDggUkNYOiBmZmZmYzkwMDBlMDRhMDAw
+ClJEWDogMDAwMDAwMDAwMDAwMDAwNCBSU0k6IGZmZmZmZmZmODQxNjJiNTAgUkRJOiAwMDAwMDAw
+MDAwMDAwMDIwClJCUDogZmZmZmM5MDAwMmQ0NjNmOCBSMDg6IDAwMDAwMDAwMDAwMDAwMjAgUjA5
+OiAwMDAwMDAwMDAwMDAwMDAxClIxMDogMDAwMDAwMDAwMDAwMDAwMSBSMTE6IDAwMDAwMDAwMDAw
+MDAwMDAgUjEyOiAwMDAwMDAwMDAwMDAwMDA4ClIxMzogMDAwMDAwMDAwMDAwMDAyMCBSMTQ6IGZm
+ZmY4ODgwMTEzM2Q2MDAgUjE1OiBmZmZmYzkwMDAyZDQ2N2Q4CkZTOiAgMDAwMDdmZGQwMTc0YjY0
+MCgwMDAwKSBHUzpmZmZmODg4MDJjNjAwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDAK
+Q1M6ICAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMwpDUjI6IDAw
+MDAwMDFiMmRmMjEwMDAgQ1IzOiAwMDAwMDAwMDU3MzE0MDAwIENSNDogMDAwMDAwMDAwMDc1MGVm
+MApEUjA6IDAwMDAwMDAwMDAwMDAwMDAgRFIxOiAwMDAwMDAwMDAwMDAwMDAwIERSMjogMDAwMDAw
+MDAwMDAwMDAwMApEUjM6IDAwMDAwMDAwMDAwMDAwMDAgRFI2OiAwMDAwMDAwMGZmZmUwZmYwIERS
+NzogMDAwMDAwMDAwMDAwMDQwMApQS1JVOiA1NTU1NTU1NApDYWxsIFRyYWNlOgogPFRBU0s+CiBk
+b19lbmNyeXB0X3NnKzB4YmMvMHgxNTAgZnMvYmNhY2hlZnMvY2hlY2tzdW0uYzoxMDcKIGRvX2Vu
+Y3J5cHQrMHgyN2QvMHg0MzAgZnMvYmNhY2hlZnMvY2hlY2tzdW0uYzoxNDkKIGdlbl9wb2x5X2tl
+eS5pc3JhLjArMHgxNDQvMHgzMTAgZnMvYmNhY2hlZnMvY2hlY2tzdW0uYzoxOTAKIGJjaDJfY2hl
+Y2tzdW0rMHgxYmMvMHgyYjAgZnMvYmNhY2hlZnMvY2hlY2tzdW0uYzoyMjYKIGJjaDJfYnRyZWVf
+bm9kZV9yZWFkX2RvbmUrMHg3NWIvMHg0NWEwIGZzL2JjYWNoZWZzL2J0cmVlX2lvLmM6MTAwMwog
+YnRyZWVfbm9kZV9yZWFkX3dvcmsrMHg3N2YvMHgxMGUwIGZzL2JjYWNoZWZzL2J0cmVlX2lvLmM6
+MTI2MgogYmNoMl9idHJlZV9ub2RlX3JlYWQrMHhlZjMvMHgxNDYwIGZzL2JjYWNoZWZzL2J0cmVl
+X2lvLmM6MTY0MQogX19iY2gyX2J0cmVlX3Jvb3RfcmVhZCBmcy9iY2FjaGVmcy9idHJlZV9pby5j
+OjE2ODAgW2lubGluZV0KIGJjaDJfYnRyZWVfcm9vdF9yZWFkKzB4MmJjLzB4NjcwIGZzL2JjYWNo
+ZWZzL2J0cmVlX2lvLmM6MTcwNAogcmVhZF9idHJlZV9yb290cyBmcy9iY2FjaGVmcy9yZWNvdmVy
+eS5jOjM4NCBbaW5saW5lXQogYmNoMl9mc19yZWNvdmVyeSsweDI4YjAvMHg1MmQwIGZzL2JjYWNo
+ZWZzL3JlY292ZXJ5LmM6OTE0CiBiY2gyX2ZzX3N0YXJ0KzB4MzY1LzB4NWUwIGZzL2JjYWNoZWZz
+L3N1cGVyLmM6OTc4CiBiY2gyX2ZzX29wZW4rMHgxYWM5LzB4Mzg5MCBmcy9iY2FjaGVmcy9zdXBl
+ci5jOjE5NjgKIGJjaDJfbW91bnQrMHg1MzgvMHgxM2MwIGZzL2JjYWNoZWZzL2ZzLmM6MTg2Mwog
+bGVnYWN5X2dldF90cmVlKzB4MTA5LzB4MjIwIGZzL2ZzX2NvbnRleHQuYzo2NjIKIHZmc19nZXRf
+dHJlZSsweDkzLzB4MzgwIGZzL3N1cGVyLmM6MTc3MQogZG9fbmV3X21vdW50IGZzL25hbWVzcGFj
+ZS5jOjMzMzcgW2lubGluZV0KIHBhdGhfbW91bnQrMHg2NzkvMHgxZTQwIGZzL25hbWVzcGFjZS5j
+OjM2NjQKIGRvX21vdW50IGZzL25hbWVzcGFjZS5jOjM2NzcgW2lubGluZV0KIF9fZG9fc3lzX21v
+dW50IGZzL25hbWVzcGFjZS5jOjM4ODYgW2lubGluZV0KIF9fc2Vfc3lzX21vdW50IGZzL25hbWVz
+cGFjZS5jOjM4NjMgW2lubGluZV0KIF9feDY0X3N5c19tb3VudCsweDI4Ny8weDMxMCBmcy9uYW1l
+c3BhY2UuYzozODYzCiBkb19zeXNjYWxsX3g2NCBhcmNoL3g4Ni9lbnRyeS9jb21tb24uYzo1MiBb
+aW5saW5lXQogZG9fc3lzY2FsbF82NCsweDQzLzB4MTIwIGFyY2gveDg2L2VudHJ5L2NvbW1vbi5j
+OjgzCiBlbnRyeV9TWVNDQUxMXzY0X2FmdGVyX2h3ZnJhbWUrMHg2Zi8weDc3ClJJUDogMDAzMzow
+eDdmZGQwMGE5MWIzZQpDb2RlOiA0OCBjNyBjMCBmZiBmZiBmZiBmZiBlYiBhYSBlOCBiZSAwZCAw
+MCAwMCA2NiAyZSAwZiAxZiA4NCAwMCAwMCAwMCAwMCAwMCAwZiAxZiA0MCAwMCBmMyAwZiAxZSBm
+YSA0OSA4OSBjYSBiOCBhNSAwMCAwMCAwMCAwZiAwNSA8NDg+IDNkIDAxIGYwIGZmIGZmIDczIDAx
+IGMzIDQ4IGM3IGMxIGIwIGZmIGZmIGZmIGY3IGQ4IDY0IDg5IDAxIDQ4ClJTUDogMDAyYjowMDAw
+N2ZkZDAxNzRhZTM4IEVGTEFHUzogMDAwMDAyMDIgT1JJR19SQVg6IDAwMDAwMDAwMDAwMDAwYTUK
+UkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJCWDogMDAwMDAwMDAwMDAxMTlmYyBSQ1g6IDAwMDA3ZmRk
+MDBhOTFiM2UKUkRYOiAwMDAwMDAwMDIwMDExYTAwIFJTSTogMDAwMDAwMDAyMDAwMDA0MCBSREk6
+IDAwMDA3ZmRkMDE3NGFlOTAKUkJQOiAwMDAwN2ZkZDAxNzRhZWQwIFIwODogMDAwMDdmZGQwMTc0
+YWVkMCBSMDk6IDAwMDAwMDAwMDAwMDAwMDEKUjEwOiAwMDAwMDAwMDAwMDAwMDAxIFIxMTogMDAw
+MDAwMDAwMDAwMDIwMiBSMTI6IDAwMDAwMDAwMjAwMTFhMDAKUjEzOiAwMDAwMDAwMDIwMDAwMDQw
+IFIxNDogMDAwMDdmZGQwMTc0YWU5MCBSMTU6IDAwMDAwMDAwMjAwMDAxMDAKIDwvVEFTSz4KTW9k
+dWxlcyBsaW5rZWQgaW46Ci0tLVsgZW5kIHRyYWNlIDAwMDAwMDAwMDAwMDAwMDAgXS0tLQpSSVA6
+IDAwMTA6Y3J5cHRvX3NrY2lwaGVyX2FsZyBpbmNsdWRlL2NyeXB0by9za2NpcGhlci5oOjM4NyBb
+aW5saW5lXQpSSVA6IDAwMTA6Y3J5cHRvX3NrY2lwaGVyX2VuY3J5cHQrMHg0OC8weDE3MCBjcnlw
+dG8vc2tjaXBoZXIuYzo2NTYKQ29kZTogNDggODkgZmEgNDggYzEgZWEgMDMgODAgM2MgMDIgMDAg
+MGYgODUgMTcgMDEgMDAgMDAgNDggYjggMDAgMDAgMDAgMDAgMDAgZmMgZmYgZGYgNDggOGIgNWQg
+NDAgNDggOGQgN2IgMTggNDggODkgZmEgNDggYzEgZWEgMDMgPDgwPiAzYyAwMiAwMCAwZiA4NSAw
+OCAwMSAwMCAwMCA0OCA4ZCA3YiAwNCA0YyA4YiA2MyAxOCA0OCBiOCAwMCAwMApSU1A6IDAwMTg6
+ZmZmZmM5MDAwMmQ0NjM4OCBFRkxBR1M6IDAwMDEwMjAyClJBWDogZGZmZmZjMDAwMDAwMDAwMCBS
+Qlg6IDAwMDAwMDAwMDAwMDAwMDggUkNYOiBmZmZmYzkwMDBlMDRhMDAwClJEWDogMDAwMDAwMDAw
+MDAwMDAwNCBSU0k6IGZmZmZmZmZmODQxNjJiNTAgUkRJOiAwMDAwMDAwMDAwMDAwMDIwClJCUDog
+ZmZmZmM5MDAwMmQ0NjNmOCBSMDg6IDAwMDAwMDAwMDAwMDAwMjAgUjA5OiAwMDAwMDAwMDAwMDAw
+MDAxClIxMDogMDAwMDAwMDAwMDAwMDAwMSBSMTE6IDAwMDAwMDAwMDAwMDAwMDAgUjEyOiAwMDAw
+MDAwMDAwMDAwMDA4ClIxMzogMDAwMDAwMDAwMDAwMDAyMCBSMTQ6IGZmZmY4ODgwMTEzM2Q2MDAg
+UjE1OiBmZmZmYzkwMDAyZDQ2N2Q4CkZTOiAgMDAwMDdmZGQwMTc0YjY0MCgwMDAwKSBHUzpmZmZm
+ODg4MDJjNjAwMDAwKDAwMDApIGtubEdTOjAwMDAwMDAwMDAwMDAwMDAKQ1M6ICAwMDEwIERTOiAw
+MDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMwpDUjI6IDAwMDA1NWU0Y2QyNzgxMjAg
+Q1IzOiAwMDAwMDAwMDU3MzE0MDAwIENSNDogMDAwMDAwMDAwMDc1MGVmMApEUjA6IDAwMDAwMDAw
+MDAwMDAwMDAgRFIxOiAwMDAwMDAwMDAwMDAwMDAwIERSMjogMDAwMDAwMDAwMDAwMDAwMApEUjM6
+IDAwMDAwMDAwMDAwMDAwMDAgRFI2OiAwMDAwMDAwMGZmZmUwZmYwIERSNzogMDAwMDAwMDAwMDAw
+MDQwMApQS1JVOiA1NTU1NTU1NAotLS0tLS0tLS0tLS0tLS0tCkNvZGUgZGlzYXNzZW1ibHkgKGJl
+c3QgZ3Vlc3MpOgogICAwOiAgIDQ4IDg5IGZhICAgICAgICAgICAgICAgIG1vdiAgICAlcmRpLCVy
+ZHgKICAgMzogICA0OCBjMSBlYSAwMyAgICAgICAgICAgICBzaHIgICAgJDB4MywlcmR4CiAgIDc6
+ICAgODAgM2MgMDIgMDAgICAgICAgICAgICAgY21wYiAgICQweDAsKCVyZHgsJXJheCwxKQogICBi
+OiAgIDBmIDg1IDE3IDAxIDAwIDAwICAgICAgIGpuZSAgICAweDEyOAogIDExOiAgIDQ4IGI4IDAw
+IDAwIDAwIDAwIDAwICAgIG1vdmFicyAkMHhkZmZmZmMwMDAwMDAwMDAwLCVyYXgKICAxODogICBm
+YyBmZiBkZgogIDFiOiAgIDQ4IDhiIDVkIDQwICAgICAgICAgICAgIG1vdiAgICAweDQwKCVyYnAp
+LCVyYngKICAxZjogICA0OCA4ZCA3YiAxOCAgICAgICAgICAgICBsZWEgICAgMHgxOCglcmJ4KSwl
+cmRpCiAgMjM6ICAgNDggODkgZmEgICAgICAgICAgICAgICAgbW92ICAgICVyZGksJXJkeAogIDI2
+OiAgIDQ4IGMxIGVhIDAzICAgICAgICAgICAgIHNociAgICAkMHgzLCVyZHgKKiAyYTogICA4MCAz
+YyAwMiAwMCAgICAgICAgICAgICBjbXBiICAgJDB4MCwoJXJkeCwlcmF4LDEpIDwtLSB0cmFwcGlu
+ZyBpbnN0cnVjdGlvbgogIDJlOiAgIDBmIDg1IDA4IDAxIDAwIDAwICAgICAgIGpuZSAgICAweDEz
+YwogIDM0OiAgIDQ4IDhkIDdiIDA0ICAgICAgICAgICAgIGxlYSAgICAweDQoJXJieCksJXJkaQog
+IDM4OiAgIDRjIDhiIDYzIDE4ICAgICAgICAgICAgIG1vdiAgICAweDE4KCVyYngpLCVyMTIKICAz
+YzogICA0OCAgICAgICAgICAgICAgICAgICAgICByZXguVwogIDNkOiAgIGI4ICAgICAgICAgICAg
+ICAgICAgICAgIC5ieXRlIDB4YjgKClRoYW5rIHlvdSBmb3IgdGFraW5nIHRoZSB0aW1lIHRvIHJl
+YWQgdGhpcyBlbWFpbCBhbmQgd2UgbG9vayBmb3J3YXJkIHRvIHdvcmtpbmcgd2l0aCB5b3UgZnVy
+dGhlci4KCgoKCgoKCgoKCg==
