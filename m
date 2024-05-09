@@ -1,131 +1,94 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mout.web.de (mout.web.de [212.227.15.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75D514A623;
-	Thu,  9 May 2024 09:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C45101E3;
+	Thu,  9 May 2024 09:40:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715247476; cv=none; b=WKSG9RIjEJbIZPx5d4o+uC6eEWdovyYqA3VAEsLccyx3JLlhXmkYX2Db72KiLZ0GWpyXN0vc5gx9kPCsH3QszeddqK1wHxN5+bAN1hXH0i8o8knaJA4Dlh1bwHXHM5rO+6ehZCtsIDAPdLX1Z3rtGmd4jPyYMlrvlTmF3q1nICk=
+	t=1715247622; cv=none; b=ks+lyAcah9yx+z6gJ4iA2/ws1ZRcJHU3iMWImVl0KSjg4RfrvYGNor8P4isqBB+kmt8LdNVg5H5tGRq//sYoK00pUT2F7bHHQmZRxk7FGFidKUdJ6KX8FZPcc5v0fWc/wkfQTu5MorEx7ldtdzrT+kbEkRGR5EzNhAe6X2qHNr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715247476; c=relaxed/simple;
-	bh=nCmtM3PPtkCoXwwU+/6RNPeQ2uQPktbAwJaR92+1eFU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=e53yxBn6LP3OrlJHZkE+uYaud30mamzW0R2XEG/Qb1N9AexFQ2kpILoVb3Sb1NDuYbOvRjAoFWY7XsQOHsAl2I6AZMv+9VulfMdkmTM327moVqv9flVDteS0TKgoL9sKM7nqfFQegTu/v+swzD6N76BunvPas0aGkOgn7tIzWZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4VZn0g0sP6z67byP;
-	Thu,  9 May 2024 17:34:43 +0800 (CST)
-Received: from lhrpeml500001.china.huawei.com (unknown [7.191.163.213])
-	by mail.maildlp.com (Postfix) with ESMTPS id 84B831404F4;
-	Thu,  9 May 2024 17:37:51 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- lhrpeml500001.china.huawei.com (7.191.163.213) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 9 May 2024 10:37:51 +0100
-Received: from lhrpeml500005.china.huawei.com ([7.191.163.240]) by
- lhrpeml500005.china.huawei.com ([7.191.163.240]) with mapi id 15.01.2507.039;
- Thu, 9 May 2024 10:37:51 +0100
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To: Alex Williamson <alex.williamson@redhat.com>, liulongfang
-	<liulongfang@huawei.com>
-CC: "jgg@nvidia.com" <jgg@nvidia.com>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linuxarm@openeuler.org" <linuxarm@openeuler.org>
-Subject: RE: [PATCH v6 2/5] hisi_acc_vfio_pci: modify the register location of
- the XQC address
-Thread-Topic: [PATCH v6 2/5] hisi_acc_vfio_pci: modify the register location
- of the XQC address
-Thread-Index: AQHalxSYiMUGo9i0CEeMRf9rOEDS3LGFqjoAgAXIF4CAAET0AIABOcaAgACzG4CAAQ/SgA==
-Date: Thu, 9 May 2024 09:37:51 +0000
-Message-ID: <ed07017d74f147b28a069660100e3ad1@huawei.com>
-References: <20240425132322.12041-1-liulongfang@huawei.com>
-	<20240425132322.12041-3-liulongfang@huawei.com>
-	<20240503101138.7921401f.alex.williamson@redhat.com>
-	<bc4fd179-265a-cbd8-afcb-358748ece897@huawei.com>
-	<20240507063552.705cb1b6.alex.williamson@redhat.com>
-	<3911fd96-a872-c352-b0ab-0eb2ae982037@huawei.com>
- <20240508115957.1c13dd12.alex.williamson@redhat.com>
-In-Reply-To: <20240508115957.1c13dd12.alex.williamson@redhat.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1715247622; c=relaxed/simple;
+	bh=PLqcAN8ylArfPy5ldczpzKsQ/Yhs9FiS8nAfLWVoAV8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bj6srfD1UKq/ofAexP3j7pDQjy8IYJ0EzxwADP+NSMK4kmES6OmiVWv5ShOdd67bEQROACs4Wl9UKQdfhasKS+bKMFqUzmilD5WJQcHUY7zRKfpLJVv8CLGBh5hMnikNoHQUbxgXtwR14UIJF5P3E2GJFtgU/9xKSIhu3SpSK30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=P9MFooZ1; arc=none smtp.client-ip=212.227.15.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="P9MFooZ1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1715247611; x=1715852411; i=markus.elfring@web.de;
+	bh=6erL+CJ4MEwWtXIGFAdsov7RXqeTqbfmoi4OzhKygbo=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=P9MFooZ1Wqu8Em+CFbA5PJTLKKvz0WpStWS4rWbwZOUPQsNzFU4o9mms5ve+nvvM
+	 W5KXE/Og0bKo0AmEme2KaUmRK1OzyMlg+GygKBqjR/KlR39MUjCjZ36v817GKkHXa
+	 LALzfKs2sDARizsu5cTMe8+to5YPJCN3sPVhJ5cKj72XncBDdxB0bkm05JNLRy2xf
+	 Fb51fiTw7xIgusC0HJSq3Bytu9zm9E5lTnFZjaXoPb1DWsTV0NlPp5DdSSDoWbYDY
+	 ZClhN9b35Zg2w1EW2op2932LWREX5iVCr2tlC3GtvXztyfwDNClM0TlV5n+Apr8yv
+	 Nu/lvztd3PD027IW3w==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1My6pf-1sopqG31f5-016gBF; Thu, 09
+ May 2024 11:40:11 +0200
+Message-ID: <18e3ebff-8993-410a-867f-0c84b9b4aed4@web.de>
+Date: Thu, 9 May 2024 11:40:11 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [v3] time/tick-sched: idle load balancing when nohz_full cpu
+ becomes idle.
+To: Yun Levi <ppbuk5246@gmail.com>
+Cc: kernel-janitors@vger.kernel.org,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+References: <20240508172621.30069-1-ppbuk5246@gmail.com>
+ <20240508192213.31050-1-ppbuk5246@gmail.com>
+ <a407d12f-6845-4f51-a112-6bdc17641ff1@web.de>
+ <CAM7-yPS6ecODhv-FQpYE5OE_LufmtKRg4htp9JH6MBUF03N4rA@mail.gmail.com>
+ <5886464d-a867-471e-858e-b4ed732a1d76@web.de>
+ <CAM7-yPT7z6phHOUVOMxebRxiqw6un1N3hQK6O2AeRfmnJhK4kA@mail.gmail.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <CAM7-yPT7z6phHOUVOMxebRxiqw6un1N3hQK6O2AeRfmnJhK4kA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:VJCrJve63aysRIr3OKSw5877IVAPEWuDxxp8pJ9t5Yd2XCdCM0/
+ BA3VtWX+DSPZ6Bnxx+Xd7JGkVTdwDITRIGk5OJePFoniOUzIDLMepnbZLQAjiZaYJGVoeIq
+ 8xL7pN0zBDzgzlVU8voXV4ftiW4gqYAIFDAXkbxIsRoJqeie5DncfgW37POqoaQrHksEe82
+ eqDpRpanI1Tfh2bcXJ96g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:+PhBIwKqQb4=;3X2bBdyy7d+64fKrECW3jxmelDp
+ 309eeMfaPQYhXQSwsY7xbdIU9cAfdSI+kW1BaByelzGJ44mGYfoTX1mQZ+KWxpbVyRM+TLVXV
+ SC3y0BWGgMAex8rGh37SUxKI7Zp2r0J3QXX3MtKRpB7+TQ2F/czPgpvt9tyB69MQ3nHIJXARP
+ yNAvGlz1LJ8+aE+07Xpw4HyfEimvRL3T8OOa50qL7D9wKU+0+AyHK5c/kzT9UIZzGlHrlEK+d
+ AHQOW79DFosPVTJkZVb0WWJLJP40eeMtQDuHQjzo+Si6lDlC0UBy4EbdFevd+VVHfkUp8Pkln
+ Pt5nxS97kE8XECsGrTO5QrQ+I5EAeeCfDu9E38cJwZChUgKWvnOTpVijMJDrblLQ4hkLMPKil
+ VQGef0YEG6gJvju3RlgalaG5ys1tpvgCqslYE0e9jriJHYB4mJcPpAeMDXgXI+qVv96H0xoiG
+ 3VwMLEANYvrgD4w3q5d5Ymyz9rHmuR+SZJCwzTdyClmha+YbZlKYylrMnoXkauNoBcSyYOuyU
+ XHO3KErv0fedG6eI/qfemKAoeA0L8kMMrzDlUFb4t54lHFFayf1x5lyueDN0MJoSidciovv+Q
+ l2/wUl+kmxRa62kWhiC4svtuNDnYSDy35huA5m5l4WT0GNLRCoikAcoIkUiunyb+kultCbMyz
+ 6i3btsTJkR0N4kek6gG0AjbD6TzIgih51h8ur8ESwPNroKN8aaHux8JMfx1kbfahsjVuLCJRN
+ MBFolp1T/BAksmbH2pyCwwoSI/Q/mLrJEFBJwDp4Cd+yrPtjLWf4fv0KOiCGNwthQ5L9ibWkp
+ Z9rbjVW64EZ3uo2KQqdCzhWRwXDj0M/XlPM1o+jrpKo2s=
 
+>> * How do you think about stress condition ordering concerns around
+>>   the system configuration =E2=80=9Cnohz_full=E2=80=9D?
+>
+> Well.. regardless of the stress condition, it wants to fix the
+> inconsistent behavior
+> happening when enter "idle state"
 
+Were any special test cases or related analysis tools involved
+in the discovery of improvable software behaviour?
 
-> -----Original Message-----
-> From: Alex Williamson <alex.williamson@redhat.com>
-> Sent: Wednesday, May 8, 2024 7:00 PM
-> To: liulongfang <liulongfang@huawei.com>
-> Cc: jgg@nvidia.com; Shameerali Kolothum Thodi
-> <shameerali.kolothum.thodi@huawei.com>; Jonathan Cameron
-> <jonathan.cameron@huawei.com>; kvm@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linuxarm@openeuler.org
-> Subject: Re: [PATCH v6 2/5] hisi_acc_vfio_pci: modify the register locati=
-on of
-> the XQC address
-
-[...]
-=20
-> > HiSilicon accelerator equipment can perform general services after
-> completing live migration.
-> > This kind of business is executed through the user mode driver and only
-> needs to use SQE and CQE.
-> >
-> > At the same time, this device can also perform kernel-mode services in =
-the
-> VM through the crypto
-> > subsystem. This kind of service requires the use of EQE.
-> >
-> > Finally, if the device is abnormal, the driver needs to perform a devic=
-e
-> reset, and AEQE needs to
-> > be used in this case.
-> >
-> > Therefore, a complete device live migration function needs to ensure th=
-at
-> device functions are
-> > normal in all these scenarios.
-> > Therefore, this data still needs to be migrated.
->=20
-> Ok, I had jumped to an in-kernel host driver in reference to "kernel
-> mode" rather than a guest kernel.  Migrating with bad data only affects
-> the current configuration of the device, reloading a guest driver to
-> update these registers or a reset of the device would allow proper
-> operation of the device, correct?
-
-Yes, after talking to Longfang, the device RAS will trigger a reset and
-would function after reset.
-
->=20
-> But I think this still isn't really a complete solution, we know
-> there's a bug in the migration data stream, so not only would we fix
-> the data stream, but I think we should also take measures to prevent
-> loading a known bad data stream.  AIUI migration of this device while
-> running in kernel mode (ie. a kernel driver within a guest VM) is
-> broken.  Therefore, the least we can do in a new kernel, knowing that
-> there was previously a bug in the migration data stream, is to fail to
-> load that migration data because it risks this scenario where the
-> device is broken after migration.  Shouldn't we then also increment a
-> migration version field in the data stream to block migrations that
-> risk this breakage, or barring that, change the magic data field to
-> prevent the migration?  Thanks,
-
-Ok. We could add a new ACC_DEV_MAGIC_V2 and prevent the migration
-in vf_qm_check_match(). The only concern here is that, it will completely
-block old kernel to new kernel migration and since we can recover the
-device after the reset whether it is too restrictive or not.
-
-Thanks,
-Shameer
+Regards,
+Markus
