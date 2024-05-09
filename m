@@ -1,211 +1,397 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2057.outbound.protection.outlook.com [40.107.105.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656482C184
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 01:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715219239; cv=none; b=iu6+dxDSza+WVGPXw7J22fBlubCnxbomvr4EDuWjLxcWTy3ONvpLgZAS9njUVG0Xn/NU81fHGH4/s2W700TBteXOOlZfh1ui/W2nhnDvc+QNoDTjBfhetpo1jDkgegpV4aLR7WON7I9Sbu5AgIxeQSG5aQNTbYqlG2SRGiy3E2k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715219239; c=relaxed/simple;
-	bh=KeHPrs4pW+t1XtkdnCJ1pc1+inm1Hl3eeey3OvNnWac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=tz60Hh9XJphq8Pe8B2gqjOT6S7K0onms+UIgxgRiZaXX5IezEVZhKi52nCHpafK2huSOFiOAUJ+NVJnp6v87v3ydLT7lFKJ2c/0wJZnbnnbjf5hXxkmcbh/T0m4JMuPTnkChsPZk6Js8aXcM7jwUuv1gq/N2WlAP2l4cPAaqtqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4VZZZ14vYxzNwN3;
-	Thu,  9 May 2024 09:44:25 +0800 (CST)
-Received: from dggpemm100001.china.huawei.com (unknown [7.185.36.93])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1EA491400D7;
-	Thu,  9 May 2024 09:47:13 +0800 (CST)
-Received: from [10.174.177.243] (10.174.177.243) by
- dggpemm100001.china.huawei.com (7.185.36.93) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 9 May 2024 09:47:12 +0800
-Message-ID: <51d48776-ac72-432a-b768-92e7fa0ecd4b@huawei.com>
-Date: Thu, 9 May 2024 09:47:12 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47DFE3F9FC;
+	Thu,  9 May 2024 01:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715219370; cv=fail; b=jyug+SzBD3fmMlOOkre4XQbjsTH5T71W9k8zueCKSfM4KzbDxb7OLHJSwOZ2nuDLu+ryGqaIB/84hIK+JP4ECGtdVlU4Mwpgv2WOjFeI9iaoHI0mmC5mjVmK27iRP61wPDJxlrUnjHGBO4D5u1jVn0gorPrf2PrK8zLYZ7HKcBo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715219370; c=relaxed/simple;
+	bh=VJ71iT4TaGUqlwW/Dq5pOEehwiqamVJzcp/zcwEAAXM=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=AUEjCoRpcIlrmiyquzEmyEjs+cOjaKvK8sk/DH+RerneVgDzI6IJE49YrXVbqpkRmkArUYKW83Xg8WP6lSc/z288FeaBVqG9uUzeLfNrzQ4uaFwKEb/U0IsgzSWDKz1HmV/7L371P+1HxoaDPQurZKmWqQnwmpNpw04Wrju4Er8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=YLHQ7ooQ; arc=fail smtp.client-ip=40.107.105.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YLHQ7ooQ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aVGYNSIH2l2NXFt6Yt7eFaKAtu4qFQ82KqHyeZ9J4VpQdZ/BeURZmlwkpHIcMtBgJD1cl5hq+pOl53C2JjVbeBMV3HBWxGtCZf3cQlf8yQYUjw9SArPtXj8NzXkfJIClJRtpj9YXl9J/Q+20OLo4gtBAT1kjKbndhRZ9ZBh+Ab7CZuJPBRH5zIfYcwl5yvlr1brvKTuvo9hU6nU8qgCUDylTkMWtHFUyazLVgVFjpilA83wvN9l5ZafiTOlIE9UtsHwEDcfC04uJwe+2hiLzDvq8CIePn6CtH8GJlhKLqudbDlH9BpLjwwh24JKkZFcIP5Ypbg4cRk13XpkEViOjqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/m0+tv90vMZFn7i1/6uTfRTSwqocicSApsOPbTk/tsk=;
+ b=bnQEQUS1WmeYM7e22r7WYpe4LcO+QTtclOyfGZiGUu8sPKMtR2CmMR58mEiFi+u4biSwpS9NnkhbigwrYylAKvxW7f9gF9LjSjR/wf64JOLajgMUOF0GvtH08pJMuwFCRFb/2GIuGJ/1okVGyPhARYjZC4xEUQefdiVu1zppYhDivQRVEtc1zBkNBhtap3eYL06QPUm2eUCQFrh4WJfhs25rwIYRAHeAODCYvgyJjsTLJO7tny/DDxsrCwMNtyPhMwsSSHwnXk4Lqww/1jyPBBuSRAla2eZOxDgSPMdQSBNhKeSgogQ7WXSMHVYHDnX7T7GiegRBjRvkKjha4BDsJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/m0+tv90vMZFn7i1/6uTfRTSwqocicSApsOPbTk/tsk=;
+ b=YLHQ7ooQ/s+/UFpQ0E25IPNIvQCGr2iRyPxaweNRVOIOPY+Kz1QSCryJt1OlC2ah+Fhv2g4BJHgFhIEYhBe9jy8BfM0GCHIVprMI2O6mCCDTib3YcHoMo0TZxrqVLLeEq4JLai6koyKubKlP3P8FIArco8lCBZKp6sAoLBVLPNE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS4PR04MB9386.eurprd04.prod.outlook.com (2603:10a6:20b:4e9::8)
+ by PA2PR04MB10087.eurprd04.prod.outlook.com (2603:10a6:102:40b::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.45; Thu, 9 May
+ 2024 01:49:24 +0000
+Received: from AS4PR04MB9386.eurprd04.prod.outlook.com
+ ([fe80::4f24:3f44:d5b1:70ba]) by AS4PR04MB9386.eurprd04.prod.outlook.com
+ ([fe80::4f24:3f44:d5b1:70ba%7]) with mapi id 15.20.7544.046; Thu, 9 May 2024
+ 01:49:24 +0000
+From: Joy Zou <joy.zou@nxp.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	imx@lists.linux.dev (open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE),
+	linux-kernel@vger.kernel.org (open list)
+Cc: Joy Zou <joy.zou@nxp.com>
+Subject: [PATCH] arm64: dts: imx93-11x11-evk: reoder lpi2c2 and lpi2c3 label
+Date: Thu,  9 May 2024 09:57:08 +0800
+Message-Id: <20240509015709.3668405-1-joy.zou@nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR01CA0180.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:28::36) To AS4PR04MB9386.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4e9::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH] mm: align larger anonymous mappings on THP
- boundaries
-Content-Language: en-US
-To: Yang Shi <shy828301@gmail.com>
-CC: Ryan Roberts <ryan.roberts@arm.com>, David Hildenbrand <david@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>, Yang Shi <yang@os.amperecomputing.com>,
-	<riel@surriel.com>, <cl@linux.com>, <akpm@linux-foundation.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, Ze Zuo
-	<zuoze1@huawei.com>
-References: <20231214223423.1133074-1-yang@os.amperecomputing.com>
- <Zav3UK7ESNxCMjyP@casper.infradead.org>
- <b75cb59a-734f-43d5-b565-fc9bb8c5ed05@arm.com>
- <CAHbLzkpT6padaDo8GimCcQReSGybQn_ntzj+wsZbTXe3urtK-g@mail.gmail.com>
- <bad7ec4a-1507-4ec4-996a-ea29d07d47a0@arm.com>
- <CAHbLzkrtcsU=pW13AyAMvF72A03fUV5iFcM0HwQoEemeajtqxg@mail.gmail.com>
- <b84e2799-2b6c-4670-b017-3a04ec18c0f2@arm.com>
- <dea802da-2e5e-4c91-b817-43afdde68958@huawei.com>
- <1dc9a561-55f7-4d65-8b86-8a40fa0e84f9@arm.com>
- <6016c0e9-b567-4205-8368-1f1c76184a28@huawei.com>
- <2c14d9ad-c5a3-4f29-a6eb-633cdf3a5e9e@redhat.com>
- <da24d8bb-3723-48fa-86f4-8b24457d3556@huawei.com>
- <2b403705-a03c-4cfe-8d95-b38dd83fca52@arm.com>
- <CAHbLzkq9BQFfpjxG_ozrgzWOO3XJmtre-mgY03McY6guVn7U9g@mail.gmail.com>
- <281aebf1-0bff-4858-b479-866eb05b9e94@huawei.com>
- <219cb8e3-a77b-468b-9d69-0b3e386f93f6@arm.com>
- <7d8c43b6-b1ef-428e-9d6a-1c26284feb26@huawei.com>
- <CAHbLzkpYWusx85nPD_Ywxvg5cLuxVLMhu91NO8-zidgBjKN7yg@mail.gmail.com>
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-In-Reply-To: <CAHbLzkpYWusx85nPD_Ywxvg5cLuxVLMhu91NO8-zidgBjKN7yg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm100001.china.huawei.com (7.185.36.93)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS4PR04MB9386:EE_|PA2PR04MB10087:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5be7c87c-10c2-4d1b-6f75-08dc6fca40d9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|7416005|52116005|1800799015|376005|366007|38350700005|921011;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?0vLi2jX2l/sx9GTx5dm1IEYbCzqrpEuta+fzq5jiwNplq5D+43MsyfYNaBnR?=
+ =?us-ascii?Q?krXG4PZk1puGnCtstB6XdfHkZFui2bDmHiWbQypbDktYlD4bOlyWh7Lmoed2?=
+ =?us-ascii?Q?rClrhciIscFfTEeCRp6mRDvN9+mGE3n/JHA5UUtZhqzpC5HKg/p3B3ZhqJjS?=
+ =?us-ascii?Q?L825ZTdnRNk9Grpo7AkeYhf34vPxEPzunzkT42J9PdYX+k8SoItRnrxm11Pk?=
+ =?us-ascii?Q?LMIGUnKiDXEM4TEBLDiMEBUECLntv0bsp2SOtutvJ0+lbBIbi7ofJl/ECVGh?=
+ =?us-ascii?Q?KSgR9AYjZkr0uvnNFkKy3aAyC9gFWdsldPLw34NA9/eORoO/yum3D7ksaA3X?=
+ =?us-ascii?Q?4H7cAFoBjIL8HLkFAAKi9oCd/nUmWkHickKZjuQS1rOOJN5d00B6kN14yOG5?=
+ =?us-ascii?Q?d8OMc6ib16kGEaMdRBgVp0FuysR3g0z/wHtgbpWj27AphE6smS8MYeOSZ7PF?=
+ =?us-ascii?Q?uOJUnLFgsqsK5mFHE8kO+pgOsfPAE5O+XGQlqjCZMw850XDKCrGClZHn5pGf?=
+ =?us-ascii?Q?LegGe13oP8FU1dxbl3ENvaRNJAFZlBxyItZmaJV6gdQuIEw8IGX2XdWbpW4s?=
+ =?us-ascii?Q?d64Fn/AD/abR3svKCc0oxvoc5QsBQdwdP2e2AOWaTvt1EQlT7x+EmUJ0oYqz?=
+ =?us-ascii?Q?jxh/OAG9+wW9yH6VxMtSfLIi7xsNEFSI8U60S2gT5MDCYRZNjftI+nE0/Gwe?=
+ =?us-ascii?Q?lMysQspm84iOT6rZQEmxGvyHcqV4NCDH7d1Zc1cQumESntChnnygNF1/mh7D?=
+ =?us-ascii?Q?R668SU4AVbn1EgxUAcL1fsQLgsTQnVk+6qs/rfM4zfwxUxTTotl4a93ke37N?=
+ =?us-ascii?Q?0keUvKAXq/dDKt31M75PY+HObmWV9dVNA042IcMBzqz9FlX8JmCalSiMYZ4N?=
+ =?us-ascii?Q?//0/ulekovmkuy2xrBlhwdQKycFxLY0OoThIk0mxxgwqk94zsGE4EMfLt7Lv?=
+ =?us-ascii?Q?AbX/TbJJvqmqUyRrIwXPCC375QYWuNKipAvcs9+Xbw69GHiiT9RcUNg5YorK?=
+ =?us-ascii?Q?eoQTedPQtd/WtA2e7kanj8tDRdw45Zl0mem6EJM3vCYsnJv1aNVpnB2ahAlx?=
+ =?us-ascii?Q?+fNYvOosRlYKO08WhYgfA0VPVVVAn3RE6H/d3VZvrJsh9V2n/5kZluYGSdsU?=
+ =?us-ascii?Q?qPWpeuRA+nWkfhoxJ4s4BPfFNk1tFPj313IwJQbmiCgjycovoTx7Iqr2BgLP?=
+ =?us-ascii?Q?zEUNuJ+MXCelkkmNpD0YErPrt0a1p6dSY1i5VPxphcV1r4+34IuZ964N9Etn?=
+ =?us-ascii?Q?X1nEa7GnL2egpfNlebld4cNzbyp4CxJ5GimUplXQF+pSD5Zyzb93jQwK1IiM?=
+ =?us-ascii?Q?kCnwUBBzHOmjQi/31otmte6DkE9AVZP+FnloZY6UTXA6ca9P2GOHSXwYFsNR?=
+ =?us-ascii?Q?1b95fGk=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS4PR04MB9386.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(52116005)(1800799015)(376005)(366007)(38350700005)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?9vxRFiO+R9WApyXUCAc60ohs/VH4Pa0qdnpttWbGJ/fy0HhetC2VWApzJet7?=
+ =?us-ascii?Q?v/+xe4P24xSLsi+6RJzOg/YZpSwt0TLHOugvH2c4YgUI/ZzQ3Ut7F7kXATN8?=
+ =?us-ascii?Q?LxtyRwK99FSgvMFxkiZiPPAFtz8EVnPmkh36N6Gwd6PL2X8gIDk8aL85HjIG?=
+ =?us-ascii?Q?arvLArQNFYmkvXEYigOEKS3O3ZMkso/jPTm2gFowVEKYMcIIbIfAprLjGkk4?=
+ =?us-ascii?Q?WThLMWXipfhFRhfStgDy3zopMAFlTXmpPCJk6L6DSp1VeY9JlLT6dQg6vSXk?=
+ =?us-ascii?Q?tqMR9iYCLeK0llCOXFc7o6khCCUg/w54PYEBU7aRD2g1hq5w1q4BehboG6VP?=
+ =?us-ascii?Q?+aPxYAE88jtEjzZ5ZMD2xyok+SuNXDXfPrFiuhYJmOsy6/GmOOJqk8FelgYI?=
+ =?us-ascii?Q?hmvBsCK8STsKy4Oc59krx/fyY2IyvWfdcBBTw5J2ICgQTNWjQHEAiD01Af4O?=
+ =?us-ascii?Q?W4y0YzH2kYKBO6LbVmtUbEfE5eRNC7xsxlYVU2LN8oSIywCPlCsBSLZSuxqy?=
+ =?us-ascii?Q?0Mf+iQHUwriIyLFOpxXCXT+rkd9lR6cThj6vMOUhtap5SSDgZPyMZIWsinbH?=
+ =?us-ascii?Q?tqdKnvezoQqF98FEIq/SviWMQBYIA0e+09KGVkdby6jUS+r5cBXrIYAgmz7e?=
+ =?us-ascii?Q?X3VNrFGpPciF0f40U5hJtzwaPkFa6T866KiqkOAri8rP5YVJGvuRBgc/jIha?=
+ =?us-ascii?Q?3BBKafbgcpxrXTf4kUDAWXJzdyjE1d+GEtZeqVI21qeIaiaxNZj2HOG4ctJv?=
+ =?us-ascii?Q?alVMQvsXLx/NHYF4L8BIOxeXKe/rfZgdh9AKH5Y0EmgQom94s4VNEm3iO8ki?=
+ =?us-ascii?Q?B5e3wOT821ctqK1we9Sxj4VTWYBeJxjoo8YwIfcYWHJYGtFz3LOI44GiLs8/?=
+ =?us-ascii?Q?t3Q3UNz/9xSoL3Qw5oSl5OM8m038ytmpxYLKtP+93+sT+YuIPal5m22zvbsf?=
+ =?us-ascii?Q?jush77//vdtTVLCSod1Z3NvrUDZZasx5fQEI6q5cZBg+MK6dFHXkpYbvSVvR?=
+ =?us-ascii?Q?lVrV2sL9z+gDjLCgmS/Hyc1I9+RDe6TXWd1DOJRyIfbIDYLc9vMEuX9/hjfg?=
+ =?us-ascii?Q?1aXidWAA5CGh7RD8JpTdnikR/zxAJMqbOOF+3BhzwetO05TFNXE6jK7BNc+I?=
+ =?us-ascii?Q?6TyLDbIM4DU7txS3bcoFx19YrxXef+G1eTEU8AT1Ll3h15Ec2qFkmxcaxQZu?=
+ =?us-ascii?Q?XHzi269Sik1Pg7Cx8w5Y2uUeOTgEFHky7i9GTbaZrSkx4GsLQWoa7/AUx0Us?=
+ =?us-ascii?Q?PsSEfvP6rclhcXX4kKLdpVDW0wRyRZuXv2nHIi6fhDJxiug/FGxTHw0LPLrm?=
+ =?us-ascii?Q?5fiHz4qG5tkH396TlO8JSqYSs3h6nXpDze8wrrnuYncjr3LWWfGzGF5T/OtM?=
+ =?us-ascii?Q?yY2JEro2q4eJ9lVAtu5YQRea3iMDOWzxK8zaj6AE+xZgzfYtboCAge2ZXQPJ?=
+ =?us-ascii?Q?QRFfBVtCKoeFo/B/qpNO6rywT8i2A7rNKogthJmoJn3S9xiuNebq1bW/lVWD?=
+ =?us-ascii?Q?LGf6G79r0WkSySxCSLwEgBvQHcBoB3SQoAV3JHFvRyT4jNbS/iUpfS8zmuOq?=
+ =?us-ascii?Q?7HNAGpltWtKXBI630gt53+wOKHNxANKcleCPT+lK?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5be7c87c-10c2-4d1b-6f75-08dc6fca40d9
+X-MS-Exchange-CrossTenant-AuthSource: AS4PR04MB9386.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2024 01:49:24.3443
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7MeMe8dpJ9rbEP1E1Bbp3WY524IS36RWJRI8SqPzGBfua87ZjwOJFA9nGYAq4gDe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10087
 
+Reorder lpi2c2 and lpi2c3 label in alphabetical order.
 
+Signed-off-by: Joy Zou <joy.zou@nxp.com>
+---
+ .../boot/dts/freescale/imx93-11x11-evk.dts    | 217 +++++++++---------
+ 1 file changed, 105 insertions(+), 112 deletions(-)
 
-On 2024/5/8 23:25, Yang Shi wrote:
-> On Wed, May 8, 2024 at 6:37 AM Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
->>
->>
->>
->> On 2024/5/8 16:36, Ryan Roberts wrote:
->>> On 08/05/2024 08:48, Kefeng Wang wrote:
->>>>
->>>>
->>>> On 2024/5/8 1:17, Yang Shi wrote:
->>>>> On Tue, May 7, 2024 at 8:53 AM Ryan Roberts <ryan.roberts@arm.com> wrote:
->>>>>>
->>>>>> On 07/05/2024 14:53, Kefeng Wang wrote:
->>>>>>>
->>>>>>>
->>>>>>> On 2024/5/7 19:13, David Hildenbrand wrote:
->>>>>>>>
->>>>>>>>> https://github.com/intel/lmbench/blob/master/src/lat_mem_rd.c#L95
->>>>>>>>>
->>>>>>>>>> suggest. If you want to try something semi-randomly; it might be useful
->>>>>>>>>> to rule
->>>>>>>>>> out the arm64 contpte feature. I don't see how that would be interacting
->>>>>>>>>> here if
->>>>>>>>>> mTHP is disabled (is it?). But its new for 6.9 and arm64 only. Disable with
->>>>>>>>>> ARM64_CONTPTE (needs EXPERT) at compile time.
->>>>>>>>> I don't enabled mTHP, so it should be not related about ARM64_CONTPTE,
->>>>>>>>> but will have a try.
->>>>>>>
->>>>>>> After ARM64_CONTPTE disabled, memory read latency is similar with ARM64_CONTPTE
->>>>>>> enabled(default 6.9-rc7), still larger than align anon reverted.
->>>>>>
->>>>>> OK thanks for trying.
->>>>>>
->>>>>> Looking at the source for lmbench, its malloc'ing (512M + 8K) up front and using
->>>>>> that for all sizes. That will presumably be considered "large" by malloc and
->>>>>> will be allocated using mmap. So with the patch, it will be 2M aligned. Without
->>>>>> it, it probably won't. I'm still struggling to understand why not aligning it in
->>>>>> virtual space would make it more performant though...
->>>>>
->>>>> Yeah, I'm confused too.
->>>> Me too, I get a smaps[_rollup] for 0.09375M size, the biggest difference
->>>> for anon shows below, and all attached.
->>>
->>> OK, a bit more insight; during initialization, the test makes 2 big malloc
->>> calls; the first is 1M and the second is 512M+8K. I think those 2 are the 2 vmas
->>> below (malloc is adding an extra page to the allocation, presumably for
->>> management structures).
->>>
->>> With efa7df3e3bb5 applied, the 1M allocation is allocated at a non-THP-aligned
->>> address. All of its pages are populated (see permutation() which allocates and
->>> writes it) but none of them are THP (obviously - its only 1M and THP is only
->>> enabled for 2M). But the 512M region is allocated at a THP-aligned address. And
->>> the first page is populated with a THP (presumably faulted when malloc writes to
->>> its control structure page before the application even sees the allocated buffer.
->>>
->>> In contrast, when efa7df3e3bb5 is reverted, neither of the vmas are THP-aligned,
->>> and therefore the 512M region abutts the 1M region and the vmas are merged in
->>> the kernel. So we end up with the single 525328 kB region. There are no THPs
->>> allocated here (due to alignment constraiints) so we end up with the 1M region
->>> fully populated with 4K pages as before, and only the malloc control page plus
->>> the parts of the buffer that the application actually touches being populated in
->>> the 512M region.
->>>
->>> As far as I can tell, the application never touches the 1M region during the
->>> test so it should be cache-cold. It only touches the first part of the 512M
->>> buffer it needs for the size of the test (96K here?). The latency of allocating
->>> the THP will have been consumed during test setup so I doubt we are seeing that
->>> in the test results and I don't see why having a single TLB entry vs 96K/4K=24
->>> entries would make it slower.
->>
->> It is strange, and even more stranger, I got another machine(old machine
->> 128 core and the new machine 96 core, but with same L1/L2 cache size
->> per-core), the new machine without this issue, will contact with our
->> hardware team, maybe some different configurations(prefetch or some
->> other similar hardware configurations) , thank for all the suggestion
->> and analysis!
-> 
-> Yes, the benchmark result strongly relies on cache and memory
-> subsystem. See the below analysis.
-> 
->>
->>
->>>
->>> It would be interesting to know the address that gets returned from malloc for
->>> the 512M region if that's possible to get (in both cases)? I guess it is offset
->>> into the first page. Perhaps it is offset such that with the THP alignment case
->>> the 96K of interest ends up straddling 3 cache lines (cache line is 64K I
->>> assume?), but for the unaligned case, it ends up nicely packed in 2?
->>
->> CC zuoze, please help to check this.
->>
->> Thank again.
->>>
->>> Thanks,
->>> Ryan
->>>
->>>>
->>>> 1) with efa7df3e3bb5 smaps
->>>>
->>>> ffff68e00000-ffff88e03000 rw-p 00000000 00:00 0
->>>> Size:             524300 kB
->>>> KernelPageSize:        4 kB
->>>> MMUPageSize:           4 kB
->>>> Rss:                2048 kB
->>>> Pss:                2048 kB
->>>> Pss_Dirty:          2048 kB
->>>> Shared_Clean:          0 kB
->>>> Shared_Dirty:          0 kB
->>>> Private_Clean:         0 kB
->>>> Private_Dirty:      2048 kB
->>>> Referenced:         2048 kB
->>>> Anonymous:          2048 kB // we have 1 anon thp
->>>> KSM:                   0 kB
->>>> LazyFree:              0 kB
->>>> AnonHugePages:      2048 kB
->>>
->>> Yes one 2M THP shown here.
-> 
-> You have THP allocated. W/o commit efa7df3e3bb5 the address may be not
-> PMD aligned (it still could be, but just not that likely), the base
-> pages were allocated. To get an apple to apple comparison, you need to
-> disable THP by setting /sys/kernel/mm/transparent_hugepage/enabled to
-> madvise or never, then you will get base pages too (IIRC lmbench
-> doesn't call MADV_HUGEPAGE).
-
-Yes, we tested no THP(disable by sysfs) before, no different w/ or w/o
-this efa7df3e3bb5.
-
-> 
-> The address alignment or page size may have a negative impact to your
-> CPU's cache and memory subsystem, for example, hw prefetcher. But I
-> saw a slight improvement with THP on my machine. So the behavior
-> strongly depends on the hardware.
-> 
-I hope this efa7df3e3bb5 could improve performance so I backport it
-into our kernel, but found the above issue, and same result when retest
-with the 6.9-rc7, since different hardware show different results, we
-will test more hardware and try to contact with hardware team, thanks 
-for your help.
+diff --git a/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts b/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
+index d400d85f42a9..6be1eb920c02 100644
+--- a/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx93-11x11-evk.dts
+@@ -105,6 +105,104 @@ &mu2 {
+ 	status = "okay";
+ };
+ 
++&lpi2c2 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	clock-frequency = <400000>;
++	pinctrl-names = "default", "sleep";
++	pinctrl-0 = <&pinctrl_lpi2c2>;
++	pinctrl-1 = <&pinctrl_lpi2c2>;
++	status = "okay";
++
++	pcal6524: gpio@22 {
++		compatible = "nxp,pcal6524";
++		reg = <0x22>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pcal6524>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <27 IRQ_TYPE_LEVEL_LOW>;
++	};
++
++	pmic@25 {
++		compatible = "nxp,pca9451a";
++		reg = <0x25>;
++		interrupt-parent = <&pcal6524>;
++		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
++
++		regulators {
++			buck1: BUCK1 {
++				regulator-name = "BUCK1";
++				regulator-min-microvolt = <610000>;
++				regulator-max-microvolt = <950000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <3125>;
++			};
++
++			buck2: BUCK2 {
++				regulator-name = "BUCK2";
++				regulator-min-microvolt = <600000>;
++				regulator-max-microvolt = <670000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-ramp-delay = <3125>;
++			};
++
++			buck4: BUCK4{
++				regulator-name = "BUCK4";
++				regulator-min-microvolt = <1620000>;
++				regulator-max-microvolt = <3400000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck5: BUCK5{
++				regulator-name = "BUCK5";
++				regulator-min-microvolt = <1620000>;
++				regulator-max-microvolt = <3400000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			buck6: BUCK6 {
++				regulator-name = "BUCK6";
++				regulator-min-microvolt = <1060000>;
++				regulator-max-microvolt = <1140000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo1: LDO1 {
++				regulator-name = "LDO1";
++				regulator-min-microvolt = <1620000>;
++				regulator-max-microvolt = <1980000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo4: LDO4 {
++				regulator-name = "LDO4";
++				regulator-min-microvolt = <800000>;
++				regulator-max-microvolt = <840000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo5: LDO5 {
++				regulator-name = "LDO5";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
++};
++
+ &lpi2c3 {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+@@ -113,6 +211,13 @@ &lpi2c3 {
+ 	pinctrl-0 = <&pinctrl_lpi2c3>;
+ 	status = "okay";
+ 
++	pcf2131: rtc@53 {
++		compatible = "nxp,pcf2131";
++		reg = <0x53>;
++		interrupt-parent = <&pcal6524>;
++		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
++	};
++
+ 	ptn5110: tcpc@50 {
+ 		compatible = "nxp,ptn5110", "tcpci";
+ 		reg = <0x50>;
+@@ -304,118 +409,6 @@ &wdog3 {
+ 	status = "okay";
+ };
+ 
+-&lpi2c2 {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	clock-frequency = <400000>;
+-	pinctrl-names = "default", "sleep";
+-	pinctrl-0 = <&pinctrl_lpi2c2>;
+-	pinctrl-1 = <&pinctrl_lpi2c2>;
+-	status = "okay";
+-
+-	pcal6524: gpio@22 {
+-		compatible = "nxp,pcal6524";
+-		reg = <0x22>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_pcal6524>;
+-		gpio-controller;
+-		#gpio-cells = <2>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-		interrupt-parent = <&gpio3>;
+-		interrupts = <27 IRQ_TYPE_LEVEL_LOW>;
+-	};
+-
+-	pmic@25 {
+-		compatible = "nxp,pca9451a";
+-		reg = <0x25>;
+-		interrupt-parent = <&pcal6524>;
+-		interrupts = <11 IRQ_TYPE_EDGE_FALLING>;
+-
+-		regulators {
+-			buck1: BUCK1 {
+-				regulator-name = "BUCK1";
+-				regulator-min-microvolt = <610000>;
+-				regulator-max-microvolt = <950000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <3125>;
+-			};
+-
+-			buck2: BUCK2 {
+-				regulator-name = "BUCK2";
+-				regulator-min-microvolt = <600000>;
+-				regulator-max-microvolt = <670000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-				regulator-ramp-delay = <3125>;
+-			};
+-
+-			buck4: BUCK4{
+-				regulator-name = "BUCK4";
+-				regulator-min-microvolt = <1620000>;
+-				regulator-max-microvolt = <3400000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			buck5: BUCK5{
+-				regulator-name = "BUCK5";
+-				regulator-min-microvolt = <1620000>;
+-				regulator-max-microvolt = <3400000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			buck6: BUCK6 {
+-				regulator-name = "BUCK6";
+-				regulator-min-microvolt = <1060000>;
+-				regulator-max-microvolt = <1140000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			ldo1: LDO1 {
+-				regulator-name = "LDO1";
+-				regulator-min-microvolt = <1620000>;
+-				regulator-max-microvolt = <1980000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			ldo4: LDO4 {
+-				regulator-name = "LDO4";
+-				regulator-min-microvolt = <800000>;
+-				regulator-max-microvolt = <840000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-
+-			ldo5: LDO5 {
+-				regulator-name = "LDO5";
+-				regulator-min-microvolt = <1800000>;
+-				regulator-max-microvolt = <3300000>;
+-				regulator-boot-on;
+-				regulator-always-on;
+-			};
+-		};
+-	};
+-};
+-
+-&lpi2c3 {
+-	clock-frequency = <400000>;
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_lpi2c3>;
+-	status = "okay";
+-
+-	pcf2131: rtc@53 {
+-		compatible = "nxp,pcf2131";
+-		reg = <0x53>;
+-		interrupt-parent = <&pcal6524>;
+-		interrupts = <1 IRQ_TYPE_EDGE_FALLING>;
+-	};
+-};
+-
+ &iomuxc {
+ 	pinctrl_eqos: eqosgrp {
+ 		fsl,pins = <
+-- 
+2.37.1
 
