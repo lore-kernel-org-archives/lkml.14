@@ -1,284 +1,224 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13001129E62
-	for <linux-kernel@vger.kernel.org>; Thu,  9 May 2024 23:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715295796; cv=none; b=UFi8r7p+dLO6FpCI1gYd9DSiCz5+itTEQq4mM9gagqJ/RUUcHdOmphQ2ipTBgkmtBefT+YDc0s2QUppcJF2MbT2M5xxvgnErFoWQbfpmeE434LMoqJngFGNZA/MeAKF7QM/qcLvWLOf36ef0bu61N77b2tUfHH8s7uVbo1dQtHA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715295796; c=relaxed/simple;
-	bh=ougFZIosBTctHM8zWtMpj8Ny38PANKNU6OYVXuPbtLc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s9H3cGZtDFRih2iqc0zcyQqvZLp+6W45Sa5+SjrKxrV+vmbhvRsETluwGVzIBoJITn1555oQDm4So3cKquKIfHsP/MyqMYIPNAKfPgjQylUWlRPPoMU2x09iSdJh+zqd2LuHQbpQFo6gb4cELJaTCl0plYNoEPowyHWHzvaYRg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Bz0Mn4KH; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92411292E6;
+	Thu,  9 May 2024 23:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715295815; cv=fail; b=RzpMmDHNWEVuIbmVYY0EW/uw6+W9o8rQAF2uWvlwJPX78Hg/W1a/A65OSyfQKwaTxAIR9hsp0RLZsA0CIXyS4VzbyZatnwan5WrN4GfcljhSfUJw+sbv4AAqDYowqT2wJ2eVzEaAhxLwwmt5yTO7zl5SX6n12YzZSG0j2pb72ZI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715295815; c=relaxed/simple;
+	bh=OPWU5+ix3aqGPvoCdrj9AWV5ve05Hc09CyLmUz2F+Ws=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=kRniI5+VQh1pRIGkYlpBOgVtzwW1r2j5KehUvyUgrbq9LStpfhEmRFLNmJHYNO+er+bTIBUMrD7xR5egpRJksyPOjEXobvuihx+RRH1wCfiU3Pv5/LPGVOvufKnVfHKB+XPp9ZcB1SwQODwn5Klv3thPA74zJPhgiob3OTZbT+c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UMigAKh9; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bz0Mn4KH"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41fe54cb0e3so5528525e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 16:03:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715295792; x=1715900592; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cPbSvLzfel2aidHv4944fpA4agv4jm4lmrU+rS2yRC4=;
-        b=Bz0Mn4KH+LsXaKm37WnHMPcyUH5RBOUurbFAU5WiZgP/4AT1fIYuImcdSB9Bph118N
-         hnC8b8OR41TqTAhdp9eYcLDmKGi+ro2WUJg/17kXJrBK8GJX1eklQjxWeDeHdYkDBlA9
-         V4ozYePVfHQ9MMSLulAG89Ur2izUJafkvZcSb8WMfJUb0wX2fToKIRARbVymNT4W/cS0
-         CM4HDL/COWzaziG5tBN+DifTKYjuG9zlEmxApxh3itH5Qf8ADKcswMfLTbUv/GrAXshm
-         UPTwU60rRgjMuHqZg9XlYnbr3eKhZ27mKZfQ29Ukkc6C6XM47Cqzi0A0NS3vVvwjE/8X
-         7SNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715295792; x=1715900592;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cPbSvLzfel2aidHv4944fpA4agv4jm4lmrU+rS2yRC4=;
-        b=oplkbbZFRsvvKqxgWJOdcVZQOuAFefgF/WbBcqfVsSkSR/0edVFihPILnArjn+6MyH
-         /dak5jOdl6qUUyoPU8Vwwi59Mf0SG5s/S1NpLgcvv8REx/h+E2SCQNysmKvvMi12Ylpc
-         hWfQz9bKnf/8yFbUTzbXP0aVg3YQ88fzhMrhiSL17Yz90Y0PtKW1iIv9KigFMpJBdn7y
-         6lMB0j8wNFlDIYbzIZ4GEhGAF79Khg9Bu+R/6yoxMBCVQ1Boepath+0Qw1ym+eYoUlKi
-         x6Y206XJzAFhQtRjrO+FqV9K58FdlB/R0fdaG5jf/QKWgziFxVo9rj/Cb3Ld5Na9Jfij
-         nJ5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXghy4rCCjKnfZMBvqk6WhHr5SlDDnC++e1+AVHta1Ycy9t1uVpUKl5Lhiwl+hgQ2MXReuNRNaW7T1kmqOLaKZTYaMXvrGeS5F6NRd9
-X-Gm-Message-State: AOJu0YxbIdP1E0rASeEGXEhu8n/BzVyE4Gq/K2TTUa0MLnMrxdyiRxXT
-	eW+78034nQZ+H7ocCfFg0+NYSigzXLKV7stz4E1QwA/s6/SJoGIWOl1HjNgXrdGuYdY8UyCLMWi
-	n/QVWT4LbaKlHQ6wnMdg/E1D5OaMhyvdeYjSc
-X-Google-Smtp-Source: AGHT+IFhmWSmgHAekjGKzRtk8e+YHHuEDjTnB0xuUIijeYWCpcIdqwfIqifcfRX9laqU/XyPu9INnEX+SjRuGN5KTmg=
-X-Received: by 2002:a05:6000:e43:b0:34e:21cd:dbf3 with SMTP id
- ffacd0b85a97d-3504a73ec96mr677219f8f.36.1715295792241; Thu, 09 May 2024
- 16:03:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UMigAKh9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715295814; x=1746831814;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=OPWU5+ix3aqGPvoCdrj9AWV5ve05Hc09CyLmUz2F+Ws=;
+  b=UMigAKh9G8HzJMCaYkhuJj00Hfox8/HrUhWid3ClxEdOV48aW/RAJP/w
+   o9lapb/2S6Pj1KCivcfanmvH9bohmfWVOr3sCW9C6PplG7u2+1jG59i2Q
+   3p6HxqkHxnoXfevSUjlepekE7tFFUa3Q4997nY/WHe69vAj7vkDr4Hh/2
+   w1/rLO/8BEhVjNGqWS47LRhBdXMgpsYoMqyKx26cfOUZ93u06L58XZaBt
+   8EbaqZX+HIpRoHFSLdkmpFPfR83UICYs/3ghVNbqd7Es8N7xyY7JHXRVC
+   MWAdndVHXzqKRscg0ukzTrzm272QdHfP2XAhxn48pBsIANKotvZwIyMyJ
+   w==;
+X-CSE-ConnectionGUID: +hYPlPslSVSLQCtiKiU6QQ==
+X-CSE-MsgGUID: dHExVIHQTLezdUw2WutmYw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11412680"
+X-IronPort-AV: E=Sophos;i="6.08,149,1712646000"; 
+   d="scan'208";a="11412680"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 16:03:33 -0700
+X-CSE-ConnectionGUID: 39k5i6SJSW2XgS4JKO+4kg==
+X-CSE-MsgGUID: Qt15jePoSVqrbmgFp0g3ZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,149,1712646000"; 
+   d="scan'208";a="29445675"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 09 May 2024 16:03:32 -0700
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 9 May 2024 16:03:32 -0700
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 9 May 2024 16:03:31 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Thu, 9 May 2024 16:03:31 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Thu, 9 May 2024 16:03:31 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QLXd68NPVr+dZrzTPCGJ6y8XOBODorhNKLis+JDVZU+HiGo17+OEgmOS1SixR1fKMiLOdsUvUZaUlubznwg4bhrzQQw2bTmtPvoUK49tU/aj638Opx8sQsghSra43cKs+g67njk/eT9x12uExUoWPoExNRCjA1mfQ7IwGZEhvYMjvIn0H/XuEN+1T8rMtKAVaFQi8G2jtkhZq0TlM4CzFmkav6ZxcaVP4JaBCD7kkTQQlE0D3nxLTOPa3egvBQdBhNIqAXYXJhBT26pzFVuKyIdtntUu9IQaIiXc/MOKIs3V2kS3ZlyTuanIHqGCMH8o6MMsmahfZYLrl/xg+EpeZA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OPWU5+ix3aqGPvoCdrj9AWV5ve05Hc09CyLmUz2F+Ws=;
+ b=NisPNsE2KYsMULXN/qo1kj4QsDgB+G5qtpqCNNefO2wACAo3bEPhntoHJuQ6PAqGt3a/BWwSarcOR9aejv16ICCGdQO+919tZuuOUn0yxmKAtCjVqckrxYkEGYb3ZaZtRlA6KTecuD7kr7qNXCEDJ4KxG+lqC2Z+FUToJuzSVIQ7d681dn+Dus0i/SgLVwZx6AZTTamTRowJdj413l4qVlD5XzNAgaAYTdRlbYj3WK5bZYc+9yI04NemFzGfoYq8o1Ry6PlCRIJwsIN79ufCZSqv2lhu5fPD9vjJp7htLXzDzjXBN9O4QcYoMn2W3GtxpdhwN7oZm6TVIncPSuJOHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from MW4PR11MB5911.namprd11.prod.outlook.com (2603:10b6:303:16b::16)
+ by DM6PR11MB4706.namprd11.prod.outlook.com (2603:10b6:5:2a5::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.47; Thu, 9 May
+ 2024 23:03:27 +0000
+Received: from MW4PR11MB5911.namprd11.prod.outlook.com
+ ([fe80::6446:3cb8:5fd5:c636]) by MW4PR11MB5911.namprd11.prod.outlook.com
+ ([fe80::6446:3cb8:5fd5:c636%7]) with mapi id 15.20.7544.046; Thu, 9 May 2024
+ 23:03:27 +0000
+From: "Singh, Krishneil K" <krishneil.k.singh@intel.com>
+To: Simon Horman <horms@kernel.org>, "Lobakin, Aleksander"
+	<aleksander.lobakin@intel.com>
+CC: "Drewek, Wojciech" <wojciech.drewek@intel.com>, "netdev@vger.kernel.org"
+	<netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Eric Dumazet <edumazet@google.com>, "Kubiak,
+ Michal" <michal.kubiak@intel.com>, "intel-wired-lan@lists.osuosl.org"
+	<intel-wired-lan@lists.osuosl.org>, NEX SW NCIS OSDT ITP Upstreaming
+	<nex.sw.ncis.osdt.itp.upstreaming@intel.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "David S. Miller"
+	<davem@davemloft.net>
+Subject: RE: [Intel-wired-lan] [PATCH iwl] idpf: don't enable NAPI and
+ interrupts prior to allocating Rx buffers
+Thread-Topic: [Intel-wired-lan] [PATCH iwl] idpf: don't enable NAPI and
+ interrupts prior to allocating Rx buffers
+Thread-Index: AQHal+hNhMcZHvVF2kSeEm3ZM1H/ILF/OdQAgBBgYsA=
+Date: Thu, 9 May 2024 23:03:27 +0000
+Message-ID: <MW4PR11MB591159578D0D2AFDB0CB8917BAE62@MW4PR11MB5911.namprd11.prod.outlook.com>
+References: <20240426144408.1353962-1-aleksander.lobakin@intel.com>
+ <20240429125742.GX516117@kernel.org>
+In-Reply-To: <20240429125742.GX516117@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MW4PR11MB5911:EE_|DM6PR11MB4706:EE_
+x-ms-office365-filtering-correlation-id: e71a554c-7041-4592-eabe-08dc707c3cd2
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230031|366007|376005|1800799015|38070700009;
+x-microsoft-antispam-message-info: =?us-ascii?Q?x+RQEVjloA+Qz3DmY5hQE6H18zIwAk8Zb5koILhsoiQJGsRep4jr8NWahQY5?=
+ =?us-ascii?Q?nQqvwhs+F3Bg/jveufuyA9naaNTq6Pq+FVeBwelofBChGtQ+uZ5j4qzRmhiR?=
+ =?us-ascii?Q?5Tm127FkcznQZIhPa2kRDpd/vJPH32477ECEMRYQVb96tjKG2W8soVHlPEYe?=
+ =?us-ascii?Q?zomU5QfV4UK+STRJgSCs709jiIwS0i7z5TwRoCiNdFamAx9upzeIaQAnEyR4?=
+ =?us-ascii?Q?48+mytxyC5GpQ3/u8VuYX/8Jii7M6riW/Ee/ILxrh7DhGQMWDIQnwC2YeAcK?=
+ =?us-ascii?Q?XTwPubpSNyZXQI/t0mjKAG+XWtK3LUMePF/puWUuRkuLTjKC36E9DDq/y+Gw?=
+ =?us-ascii?Q?dC8kjAn3Ik6ChhNWEvh1aelgp/NDhBDxhabslNhFFWT5kZ3hagDQDdmnxoEQ?=
+ =?us-ascii?Q?oLgnx9en89oHI0p/AINjd+NfmU8hSUmBErmo47rzIWb6hTVoXUEslNlC1vip?=
+ =?us-ascii?Q?3Pc1xDUrk92nSy/LPCp22s+Fmj89qY5cxwj3YcERUawp4qbOTWsN1M8XQMWj?=
+ =?us-ascii?Q?u1KnAXNfCd8yRG1OxVwCDMCHEihnev8Rquhqde38ugpqwmEb5GyaD7fprZ93?=
+ =?us-ascii?Q?wfAYspwmvNl76SCwI5W6gtsrR33HiMqz5asrGQSifPDOIwQtr02YkkU7RZlz?=
+ =?us-ascii?Q?ulW5OCzbMVBqHrFz0FTkxB90OVHLRzIJhN1rvZy/YXD3N9jnMYmf813TwFfl?=
+ =?us-ascii?Q?YkWF0x7guhcMkzLybjPQWhdkV8o7Wy8s7a/zRp3NF/nVAj6RktOBObcLUY8m?=
+ =?us-ascii?Q?WZKCxt/zicnPvxUKIGQeEk7NMNi5jyUQTVPsEpD/aNj2tCCgq/Shg0U/RLe/?=
+ =?us-ascii?Q?qb4wfsit+tiDt16n022PHDq+K5V/sZK9eXZkzG9mI5mOIi/OaBh1kAXwQOe8?=
+ =?us-ascii?Q?AaqlXycWOHOMG+vHwa0Lpk2+PQNYWdvsND1iPL93yjY11dfpsjj9l4D3N8qx?=
+ =?us-ascii?Q?Vy+c5Y0N1Wzl/+IEB8Yj0Gi8x3/QUcr71TnQfRMJkRJh5lRMENZDNSprNVhe?=
+ =?us-ascii?Q?KNSfUuWQuisbcS44qg96WYyG64nKQYZLe2WXly2NRytcLRw4oqRxu0KAhT79?=
+ =?us-ascii?Q?WRRw9W0+Tul5/7Q+fH+YP5Yx8/SArhrFG2KkwLCQMPY8mpAizWuLV+fkXfRs?=
+ =?us-ascii?Q?6Pk/BZW/tqlmzhc/O3aUpa4gL3wWqw1cJ8u+SHmXec4D+J/8K5L/h1Iwjdnn?=
+ =?us-ascii?Q?lzFBLvYuQKH9oh4JyKLb8HcTzilQX4AexX9zXly6EtA5PdisQzCdJcbp6kkx?=
+ =?us-ascii?Q?Wf5fS9P1NFBrPKpYFyIM79TbS48gzQDc8eZCXmDCPAd45MeQrUTCI04R+6KT?=
+ =?us-ascii?Q?uZUvD6FQSyYo2yWgpqb2/qfnjrua7dItHgd9eECTdPcpPg=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR11MB5911.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?RBxKIZyKYZgj7WBYb6gR1F97sYK6B5Gmd6FzgCFlxnah8rykhfAO34uZoRpG?=
+ =?us-ascii?Q?RntwQXR9mSNzaaxYenICAlvjf3Ysi8+3t5Q4lLvKvFvVYU5UnbrFBVTFeGGq?=
+ =?us-ascii?Q?2Y+ede1wBy2Wr+x2UR2OFXS9F/tn8tPWtOB21diAOiu9OP+nmoWlfloT0P6N?=
+ =?us-ascii?Q?V712fL7j32t8hkRcTjPR/6K+OJNXhVx9nibLlprCafgqF5fGfrJOrKs1IBOR?=
+ =?us-ascii?Q?pmnmhoDyb3tqwROwfVvrKfMq+fw5uM4sXO/XTrO77kYY0yVSdgt5OLqsro8a?=
+ =?us-ascii?Q?WkI+PEfLOWTe2H3aN7t35pbJ1c5D1vyo71COTgZ72m+QUifSuNnxWdaduxuz?=
+ =?us-ascii?Q?0jW0BlKfK0vPDinikRFVvYV/04vLYGY8Zzw9fe2sIZPbftfuBRHktqUgFvUB?=
+ =?us-ascii?Q?RbHfWApePUW6Y3Ag24kYo4x1VoKDWwACcz0s9ybL2pxHLhZV2T+z1r1oo0SO?=
+ =?us-ascii?Q?Wvzyev1xq5v7rD2F64ph30n99Gbxv7MTVW3VP7kNKnYCZfEJWrNux/h6Ygf9?=
+ =?us-ascii?Q?jQjOxjgK8mHbF7nqwCz37aqX28e3sqgDLpYfraswQfg5jRMYpE4VV6mEp9rG?=
+ =?us-ascii?Q?rNWt6zokRR3fsFwC3+E0EzHAzwwQC/xeVxX4PVQjkEchVN4e/Ua4Q+TqBgVR?=
+ =?us-ascii?Q?r7czvHCKfDPBnbfUsKD3cOBS4jQbSeERN57/hI+trXjx9Q24FDvGpacDDQ5l?=
+ =?us-ascii?Q?EnheDLku1gPpcI6aHucKKwB7hiHO1VJaeRiFjpkkTISIL4a7nk4OJLOjHXjr?=
+ =?us-ascii?Q?dMfnW7kuOF+9FQDdNM3bd8D1HMPAZDyjqirbVAlPQKDC+GO6yIqBj0ucrNnq?=
+ =?us-ascii?Q?vTOU+nohse/uZIQ1z75GXq3a6qPAZPBu2RMg9ytJcFEwO8FukbqXDT4Qa8UF?=
+ =?us-ascii?Q?iZq5ZuCY+iMajz9My47l01NNB4PGbqzYF3ghY/J9Jejp/k9NDnwmST1jUN6Q?=
+ =?us-ascii?Q?SqHNm8BcpKJrEeae147LOOW3zigpKjhiX0UAcgII4QDUq/fWASKCs47i4p+p?=
+ =?us-ascii?Q?FFebsmnDTlFEAvMpG84+h1/BsWpgMhs/EkYLJ46gU71XrUqzKxQqcLZ9uluN?=
+ =?us-ascii?Q?uwmEQ9HgDR+lxGN3jkaoE1b9sO9MIaWYleXTnEtm0RjDNBSmxMc0BS9Vokna?=
+ =?us-ascii?Q?bDTL7ddUtuiUtpkVjCgQmq/vCJ0m16/95d4zUVOyW5AK3B7y5fkp9jTXrEJw?=
+ =?us-ascii?Q?ij1ToOMqBzGloV2bdSCK6AyO+9WrVkjy2o7vPxBTGwUF6ASgb83fXu7W8ZmZ?=
+ =?us-ascii?Q?7jIPv2lkxJwb6zuRMXB0AwBDHgEYQbW7LmIQu5iIWTkzKbhdp7ADJaUT4uX/?=
+ =?us-ascii?Q?jfTXJFTk5ETvJWDAJ5U72/elTyWunGe1b6QmYK++d2Mn2PUWO1CLhqLcIuuW?=
+ =?us-ascii?Q?YOaeCCeqNY9a3Dqukri6eZDj4UY+Y+rClOuwnNiRimFo3bzBMI/kb2uRUL3g?=
+ =?us-ascii?Q?8gtS5bUBt7KuKV+x7zWgxx37WjSVAN9nx6D6ZMz/rqCViR6t/E07h8IIDj3y?=
+ =?us-ascii?Q?hl15jvcjOR6/00YknKbja2fpBEOKrGzE9p4tFsPGbwoRXw2ZA2Qd34MxJi7Q?=
+ =?us-ascii?Q?NhJGiB/VMfE+5q8vZRBPEvKgyrj2thkIOHxyBG9Znc5m+hSJSCjf6GYAAfo1?=
+ =?us-ascii?Q?Cg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240509203907.504891-1-axelrasmussen@google.com>
- <20240509203907.504891-2-axelrasmussen@google.com> <Zj06qh2U0wTwAZLK@x1n>
-In-Reply-To: <Zj06qh2U0wTwAZLK@x1n>
-From: Axel Rasmussen <axelrasmussen@google.com>
-Date: Thu, 9 May 2024 16:02:33 -0700
-Message-ID: <CAJHvVcj1+GQoweAU0X=0Q-jx2ZC1yUsm1GsCQLsFRQ8fCzNWNw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] arch/fault: don't print logs for simulated poison errors
-To: Peter Xu <peterx@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Andy Lutomirski <luto@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	David Hildenbrand <david@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Helge Deller <deller@gmx.de>, 
-	Ingo Molnar <mingo@redhat.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, John Hubbard <jhubbard@nvidia.com>, 
-	Liu Shixin <liushixin2@huawei.com>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, 
-	Michael Ellerman <mpe@ellerman.id.au>, Muchun Song <muchun.song@linux.dev>, 
-	"Naveen N. Rao" <naveen.n.rao@linux.ibm.com>, Nicholas Piggin <npiggin@gmail.com>, 
-	Oscar Salvador <osalvador@suse.de>, Peter Zijlstra <peterz@infradead.org>, 
-	Suren Baghdasaryan <surenb@google.com>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, linux-parisc@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW4PR11MB5911.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e71a554c-7041-4592-eabe-08dc707c3cd2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 May 2024 23:03:27.8081
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: axHfGpAbhsNdUoElfTahel5KHJBbmL5yKqK+enKq9VF2aDxT/Sm7LiXgi1FtjlnQf/q6StpFLzMRgUFlVdl0v3jhMGZAJVNYfl5vUhAv/N8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4706
+X-OriginatorOrg: intel.com
 
-On Thu, May 9, 2024 at 2:05=E2=80=AFPM Peter Xu <peterx@redhat.com> wrote:
->
-> On Thu, May 09, 2024 at 01:39:07PM -0700, Axel Rasmussen wrote:
-> > For real MCEs, various architectures print log messages when poisoned
-> > memory is accessed (which results in a SIGBUS). These messages can be
-> > important for users to understand the issue.
+> -----Original Message-----
+> From: Intel-wired-lan <intel-wired-lan-bounces@osuosl.org> On Behalf Of
+> Simon Horman
+> Sent: Monday, April 29, 2024 5:58 AM
+> To: Lobakin, Aleksander <aleksander.lobakin@intel.com>
+> Cc: Drewek, Wojciech <wojciech.drewek@intel.com>;
+> netdev@vger.kernel.org; linux-kernel@vger.kernel.org; Eric Dumazet
+> <edumazet@google.com>; Kubiak, Michal <michal.kubiak@intel.com>; intel-
+> wired-lan@lists.osuosl.org; NEX SW NCIS OSDT ITP Upstreaming
+> <nex.sw.ncis.osdt.itp.upstreaming@intel.com>; Jakub Kicinski
+> <kuba@kernel.org>; Paolo Abeni <pabeni@redhat.com>; David S. Miller
+> <davem@davemloft.net>
+> Subject: Re: [Intel-wired-lan] [PATCH iwl] idpf: don't enable NAPI and
+> interrupts prior to allocating Rx buffers
+>=20
+> On Fri, Apr 26, 2024 at 04:44:08PM +0200, Alexander Lobakin wrote:
+> > Currently, idpf enables NAPI and interrupts prior to allocating Rx
+> > buffers.
+> > This may lead to frame loss (there are no buffers to place incoming
+> > frames) and even crashes on quick ifup-ifdown. Interrupts must be
+> > enabled only after all the resources are here and available.
+> > Split interrupt init into two phases: initialization and enabling,
+> > and perform the second only after the queues are fully initialized.
+> > Note that we can't just move interrupt initialization down the init
+> > process, as the queues must have correct a ::q_vector pointer set
+> > and NAPI already added in order to allocate buffers correctly.
+> > Also, during the deinit process, disable HW interrupts first and
+> > only then disable NAPI. Otherwise, there can be a HW event leading
+> > to napi_schedule(), but the NAPI will already be unavailable.
 > >
-> > On the other hand, we have the userfaultfd UFFDIO_POISON operation,
-> > which can "simulate" memory poisoning. That particular process will get
->
-> It also coveres swapin errors as we talked before, so not always SIM.
->
-> I was thinking we should also do that report for swapin errors, however
-> then I noticed it wasn't reported before the replacement of pte markers,
-> in commit 15520a3f04, since 2022:
->
-> @@ -3727,8 +3731,6 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
->                         put_page(vmf->page);
->                 } else if (is_hwpoison_entry(entry)) {
->                         ret =3D VM_FAULT_HWPOISON;
-> -               } else if (is_swapin_error_entry(entry)) {
-> -                       ret =3D VM_FAULT_SIGBUS;
->                 } else if (is_pte_marker_entry(entry)) {
->                         ret =3D handle_pte_marker(vmf);
->                 } else {
->
-> So I am guessing it could be fine to just turn this report off to syslog.
-> There will be a back-and-forth on this behavior, but hopefully this is ev=
-en
-> rarer than hwpoison so nobody will notice.
->
-> With that, the idea looks valid to me, but perhaps a rename is needed.
-> Maybe _QUIESCE or _SILENT?
+> > Fixes: d4d558718266 ("idpf: initialize interrupts and enable vport")
+> > Reported-by: Michal Kubiak <michal.kubiak@intel.com>
+> > Reviewed-by: Wojciech Drewek <wojciech.drewek@intel.com>
+> > Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
+>=20
+> Reviewed-by: Simon Horman <horms@kernel.org>
 
-Ah, I had forgotten about the swapin error case.
-
-I think it still makes sense to silence the log in that case; if we
-consider a scenario like disk error, it could seem weird to get an MCE
-message for that, since the physical memory is fine and it wouldn't
-show up in mcelog or similar.
-
-I like _SILENT, I'll do the rename and update my comments to better
-explain in v2.
-
->
-> > SIGBUS on access to the memory, but this effect is tied to an MM, rathe=
-r
-> > than being global like a real poison event. So, we don't want to log
-> > about this case to the global kernel log; instead, let the process
-> > itself log or whatever else it wants to do. This avoids spamming the
-> > kernel log, and avoids e.g. drowning out real events with simulated
-> > ones.
-> >
-> > To identify this situation, add a new VM_FAULT_HWPOISON_SIM flag. This
-> > is expected to be set *in addition to* one of the existing
-> > VM_FAULT_HWPOISON or VM_FAULT_HWPOISON_LARGE flags (which are mutually
-> > exclusive).
-> >
-> > Signed-off-by: Axel Rasmussen <axelrasmussen@google.com>
-> > ---
-> >  arch/parisc/mm/fault.c   | 7 +++++--
-> >  arch/powerpc/mm/fault.c  | 6 ++++--
-> >  arch/x86/mm/fault.c      | 6 ++++--
-> >  include/linux/mm_types.h | 5 +++++
-> >  mm/hugetlb.c             | 3 ++-
-> >  mm/memory.c              | 2 +-
-> >  6 files changed, 21 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/arch/parisc/mm/fault.c b/arch/parisc/mm/fault.c
-> > index c39de84e98b0..e5370bcadf27 100644
-> > --- a/arch/parisc/mm/fault.c
-> > +++ b/arch/parisc/mm/fault.c
-> > @@ -400,9 +400,12 @@ void do_page_fault(struct pt_regs *regs, unsigned =
-long code,
-> >  #ifdef CONFIG_MEMORY_FAILURE
-> >               if (fault & (VM_FAULT_HWPOISON|VM_FAULT_HWPOISON_LARGE)) =
-{
-> >                       unsigned int lsb =3D 0;
-> > -                     printk(KERN_ERR
-> > +
-> > +                     if (!(fault & VM_FAULT_HWPOISON_SIM)) {
-> > +                             pr_err(
-> >       "MCE: Killing %s:%d due to hardware memory corruption fault at %0=
-8lx\n",
-> > -                     tsk->comm, tsk->pid, address);
-> > +                             tsk->comm, tsk->pid, address);
-> > +                     }
-> >                       /*
-> >                        * Either small page or large page may be poisone=
-d.
-> >                        * In other words, VM_FAULT_HWPOISON_LARGE and
-> > diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-> > index 53335ae21a40..ac5e8a3c7fba 100644
-> > --- a/arch/powerpc/mm/fault.c
-> > +++ b/arch/powerpc/mm/fault.c
-> > @@ -140,8 +140,10 @@ static int do_sigbus(struct pt_regs *regs, unsigne=
-d long address,
-> >       if (fault & (VM_FAULT_HWPOISON|VM_FAULT_HWPOISON_LARGE)) {
-> >               unsigned int lsb =3D 0; /* shutup gcc */
-> >
-> > -             pr_err("MCE: Killing %s:%d due to hardware memory corrupt=
-ion fault at %lx\n",
-> > -                     current->comm, current->pid, address);
-> > +             if (!(fault & VM_FAULT_HWPOISON_SIM)) {
-> > +                     pr_err("MCE: Killing %s:%d due to hardware memory=
- corruption fault at %lx\n",
-> > +                             current->comm, current->pid, address);
-> > +             }
-> >
-> >               if (fault & VM_FAULT_HWPOISON_LARGE)
-> >                       lsb =3D hstate_index_to_shift(VM_FAULT_GET_HINDEX=
-(fault));
-> > diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
-> > index e4f3c7721f45..16d077a3ad14 100644
-> > --- a/arch/x86/mm/fault.c
-> > +++ b/arch/x86/mm/fault.c
-> > @@ -928,9 +928,11 @@ do_sigbus(struct pt_regs *regs, unsigned long erro=
-r_code, unsigned long address,
-> >               struct task_struct *tsk =3D current;
-> >               unsigned lsb =3D 0;
-> >
-> > -             pr_err_ratelimited(
-> > +             if (!(fault & VM_FAULT_HWPOISON_SIM)) {
-> > +                     pr_err_ratelimited(
-> >       "MCE: Killing %s:%d due to hardware memory corruption fault at %l=
-x\n",
-> > -                     tsk->comm, tsk->pid, address);
-> > +                             tsk->comm, tsk->pid, address);
-> > +             }
-> >               if (fault & VM_FAULT_HWPOISON_LARGE)
-> >                       lsb =3D hstate_index_to_shift(VM_FAULT_GET_HINDEX=
-(fault));
-> >               if (fault & VM_FAULT_HWPOISON)
-> > diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-> > index 5240bd7bca33..7f8fc3efc5b2 100644
-> > --- a/include/linux/mm_types.h
-> > +++ b/include/linux/mm_types.h
-> > @@ -1226,6 +1226,9 @@ typedef __bitwise unsigned int vm_fault_t;
-> >   * @VM_FAULT_HWPOISON_LARGE: Hit poisoned large page. Index encoded
-> >   *                           in upper bits
-> >   * @VM_FAULT_SIGSEGV:                segmentation fault
-> > + * @VM_FAULT_HWPOISON_SIM    Hit poisoned, PTE marker; this indicates =
-a
-> > + *                           simulated poison (e.g. via usefaultfd's
-> > + *                              UFFDIO_POISON), not a "real" hwerror.
-> >   * @VM_FAULT_NOPAGE:         ->fault installed the pte, not return pag=
-e
-> >   * @VM_FAULT_LOCKED:         ->fault locked the returned page
-> >   * @VM_FAULT_RETRY:          ->fault blocked, must retry
-> > @@ -1245,6 +1248,7 @@ enum vm_fault_reason {
-> >       VM_FAULT_HWPOISON       =3D (__force vm_fault_t)0x000010,
-> >       VM_FAULT_HWPOISON_LARGE =3D (__force vm_fault_t)0x000020,
-> >       VM_FAULT_SIGSEGV        =3D (__force vm_fault_t)0x000040,
-> > +     VM_FAULT_HWPOISON_SIM   =3D (__force vm_fault_t)0x000080,
-> >       VM_FAULT_NOPAGE         =3D (__force vm_fault_t)0x000100,
-> >       VM_FAULT_LOCKED         =3D (__force vm_fault_t)0x000200,
-> >       VM_FAULT_RETRY          =3D (__force vm_fault_t)0x000400,
-> > @@ -1270,6 +1274,7 @@ enum vm_fault_reason {
-> >       { VM_FAULT_HWPOISON,            "HWPOISON" },   \
-> >       { VM_FAULT_HWPOISON_LARGE,      "HWPOISON_LARGE" },     \
-> >       { VM_FAULT_SIGSEGV,             "SIGSEGV" },    \
-> > +     { VM_FAULT_HWPOISON_SIM,        "HWPOISON_SIM" },       \
-> >       { VM_FAULT_NOPAGE,              "NOPAGE" },     \
-> >       { VM_FAULT_LOCKED,              "LOCKED" },     \
-> >       { VM_FAULT_RETRY,               "RETRY" },      \
-> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > index 65456230cc71..2b4e0173e806 100644
-> > --- a/mm/hugetlb.c
-> > +++ b/mm/hugetlb.c
-> > @@ -6485,7 +6485,8 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, st=
-ruct vm_area_struct *vma,
-> >                               pte_marker_get(pte_to_swp_entry(entry));
-> >
-> >                       if (marker & PTE_MARKER_POISONED) {
-> > -                             ret =3D VM_FAULT_HWPOISON_LARGE |
-> > +                             ret =3D VM_FAULT_HWPOISON_SIM |
-> > +                                   VM_FAULT_HWPOISON_LARGE |
-> >                                     VM_FAULT_SET_HINDEX(hstate_index(h)=
-);
-> >                               goto out_mutex;
-> >                       }
-> > diff --git a/mm/memory.c b/mm/memory.c
-> > index d2155ced45f8..29a833b996ae 100644
-> > --- a/mm/memory.c
-> > +++ b/mm/memory.c
-> > @@ -3910,7 +3910,7 @@ static vm_fault_t handle_pte_marker(struct vm_fau=
-lt *vmf)
-> >
-> >       /* Higher priority than uffd-wp when data corrupted */
-> >       if (marker & PTE_MARKER_POISONED)
-> > -             return VM_FAULT_HWPOISON;
-> > +             return VM_FAULT_HWPOISON | VM_FAULT_HWPOISON_SIM;
-> >
-> >       if (pte_marker_entry_uffd_wp(entry))
-> >               return pte_marker_handle_uffd_wp(vmf);
-> > --
-> > 2.45.0.118.g7fe29c98d7-goog
-> >
->
-> --
-> Peter Xu
->
+Tested-by: Krishneil Singh <krishneil.k.singh@intel.com>
