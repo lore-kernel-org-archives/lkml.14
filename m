@@ -1,140 +1,122 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35C513C9C0;
-	Thu,  9 May 2024 07:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3847314830B;
+	Thu,  9 May 2024 07:49:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715240953; cv=none; b=GD2fjvZDuvIzq7pJoemrMGRte+hTs8PNoJnf39nqDGAZOGO3gcdczQBeNrJPggv77PQ+8Kiu2FkvgMQcbEY5lwYiSc1uH+WqiKK3IJ/UZP49EhQGVZmIv3mB2C90mmVa1eB78FgDy2+nUE6GhPcLVXfLnqs4wZBIuldMm3nUATI=
+	t=1715240985; cv=none; b=FOVyS56dFLSGGcizZF98eSETto72Mj/6nXR79nq+DDvLFOrjqi9psqr0xMGXOy9kPD9AMGXIdnNu2CFT04QfoKqtc5o4edRKOLSw4vnTNP0NfRK1Oln1SY2yLKcqcIh9INgNVo2evxZ8o8kVoBz/3MApEHFGX6FxYJlPxSI6M2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715240953; c=relaxed/simple;
-	bh=sDwPafMpIIsl7Mu2sC8mUTOsijZlaGt+V4EsD8yPch4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hp1GKOd+InBotM3fe/O0nvBulhag2NM3S+Jou3RvBd0sqm2BooRUv9Jgu24zE4tPMGZlGFmvHEY8tuvbGwegoXulLWc6wCtY5+arcI+mJFzwsfvMg7lW7odFquxE+npCt55E1VnubiIQtvtBIo44lTjKoPQ2Qyj7WEp3XFFngbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=sibTL0dW; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="sibTL0dW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1715240950; x=1746776950;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sDwPafMpIIsl7Mu2sC8mUTOsijZlaGt+V4EsD8yPch4=;
-  b=sibTL0dWHltkqoG9/79SI/g3961GGl49C0NOZk1xzzGFx5uxjPTDYSqM
-   m97+EU60v2YFxWuZ7Qvl8EjJCi6ItYpj6X3bUlV88oHgGxLEtbWyk5RMo
-   qR4FnTK/EhHaVkfA7f1YJ5DJGsUstvOzTuJP/Yf3xBNkjYO7YVXpPnvkg
-   kIN093h3owUFPCNhDpY5qegz4aPYGmnOUeGXtozQG5JGBY95AscCw5Ems
-   SFDhcdVGIQck758msQv3unoMbsRGKoN+gVzOMYM6fjIceqhdGuK6cEhKm
-   o7L9J1+t+Dwl5Tr2N3gHpaguzoeN0xUoD/FioUwJ/lW4jQsv8p66kq/f+
-   g==;
-X-CSE-ConnectionGUID: b4TAGUWbRRaXvl7Tlp/mVw==
-X-CSE-MsgGUID: 0hMmNNlFTQa1/hvoYYDwrg==
-X-IronPort-AV: E=Sophos;i="6.08,147,1712646000"; 
-   d="asc'?scan'208";a="191609229"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 09 May 2024 00:49:03 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 9 May 2024 00:48:23 -0700
-Received: from wendy (10.10.85.11) by chn-vm-ex03.mchp-main.com (10.10.85.151)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
- Transport; Thu, 9 May 2024 00:48:19 -0700
-Date: Thu, 9 May 2024 08:48:09 +0100
-From: Conor Dooley <conor.dooley@microchip.com>
-To: Andy Chiu <andy.chiu@sifive.com>
-CC: Conor Dooley <conor@kernel.org>, Eric Biggers <ebiggers@kernel.org>, Paul
- Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Heiko Stuebner <heiko@sntech.de>, Guo Ren
-	<guoren@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Evan
- Green <evan@rivosinc.com>, =?iso-8859-1?Q?Cl=E9ment_L=E9ger?=
-	<cleger@rivosinc.com>, Shuah Khan <shuah@kernel.org>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Palmer
- Dabbelt <palmer@rivosinc.com>, Vincent Chen <vincent.chen@sifive.com>,
-	Greentime Hu <greentime.hu@sifive.com>, <devicetree@vger.kernel.org>,
-	<linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>, Joel Granados
-	<j.granados@samsung.com>, Jerry Shih <jerry.shih@sifive.com>
-Subject: Re: [PATCH v4 7/9] riscv: vector: adjust minimum Vector requirement
- to ZVE32X
-Message-ID: <20240509-mandatory-monsieur-dfa4d7881fa9@wendy>
-References: <20240412-zve-detection-v4-0-e0c45bb6b253@sifive.com>
- <20240412-zve-detection-v4-7-e0c45bb6b253@sifive.com>
- <20240418-brook-chili-4d3e61d1a55c@wendy>
- <20240418155256.GA2410@sol.localdomain>
- <20240418-ultimatum-yam-11de4b063b83@spud>
- <20240418173203.GA1081@sol.localdomain>
- <20240418173946.GB1081@sol.localdomain>
- <20240418-sterling-sanding-d59c3b0a2aaa@spud>
- <CABgGipU74TA3KgCH4pPuRefbnYt3q6RKcQwfyspenisEtY6eqw@mail.gmail.com>
+	s=arc-20240116; t=1715240985; c=relaxed/simple;
+	bh=XwjQRiMTAg/84BTvf/RpSGn4fZ4AJjKPZy2KIBZ5+gM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F3cxIR+Fe30odET9G07muf3pDnIkL0b0AITmaXeRK8biYrmYxKCDzc58TrFNrozEabtX7Jy1QIBeMVGYRMsAa9z1LajH+oLFOgJZi44PhaHffMKE/xi2BgkUM25oNwISkyRzuiQPqhqh/ML/BoJw4lVHoP0t4TUtGPgKFTU7d2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 293CAC116B1;
+	Thu,  9 May 2024 07:49:43 +0000 (UTC)
+Date: Thu, 9 May 2024 08:49:40 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: "T.J. Mercier" <tjmercier@google.com>
+Cc: Christoph Hellwig <hch@lst.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Robin Murphy <robin.murphy@arm.com>, isaacmanjarres@google.com,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dma-direct: Set SG_DMA_SWIOTLB flag for dma-direct
+Message-ID: <ZjyAFE4Fk_r7KnDA@arm.com>
+References: <20240506052955.GA4923@lst.de>
+ <CABdmKX1XNTtoPTvfsJRobim8pHdDjPsKx=qVovVZDh5GEbKCfQ@mail.gmail.com>
+ <20240506160244.GA16248@lst.de>
+ <CABdmKX1n98+bw+1kewz=wdqq2Nbpaxao_Lx-Gq8oKGNUEP4ytQ@mail.gmail.com>
+ <20240506161906.GA17237@lst.de>
+ <CABdmKX3s_HnxciDA3XGM8Qj0kLY8OWENg+ifexrON4VYVbuLsA@mail.gmail.com>
+ <20240507054314.GA31814@lst.de>
+ <CABdmKX3PgcXaRUH3L7OV+POMiMd5L6pEF4fLXYPgfmQUNu_trg@mail.gmail.com>
+ <Zju0JOx_ij1qH-34@arm.com>
+ <CABdmKX3LANk-0ThrQ86ay5EnToM38gVH3oddBUnXq=9cmS0gCQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ILfmNxMoEmQr18uK"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CABgGipU74TA3KgCH4pPuRefbnYt3q6RKcQwfyspenisEtY6eqw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CABdmKX3LANk-0ThrQ86ay5EnToM38gVH3oddBUnXq=9cmS0gCQ@mail.gmail.com>
 
---ILfmNxMoEmQr18uK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 08, 2024 at 01:14:41PM -0700, T.J. Mercier wrote:
+> On Wed, May 8, 2024 at 10:19 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > On Tue, May 07, 2024 at 01:07:25PM -0700, T.J. Mercier wrote:
+> > > On Mon, May 6, 2024 at 10:43 PM Christoph Hellwig <hch@lst.de> wrote:
+> > > > On Mon, May 06, 2024 at 09:39:53AM -0700, T.J. Mercier wrote:
+> > > > > > You should not check, you simply must handle it by doing the proper
+> > > > > > DMA API based ownership management.
+> > > > >
+> > > > > That doesn't really work for uncached buffers.
+> > > >
+> > > > What uncached buffers?
+> > >
+> > > For example these ones:
+> > > https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/drivers/dma-buf/heaps/system_heap.c#141
+> > >
+> > > Vendors have their own drivers that also export uncached buffers in a
+> > > similar way.
+[...]
+> > I think in general buffer sharing with multiple dma_map_*() calls on the
+> > same buffer and DMA_ATTR_SKIP_CPU_SYNC is incompatible with bouncing,
+> > irrespective of the kmalloc() minalign series. If you do this for a
+> > 32-bit device and one of the pages is outside the ZONE_DMA32 range,
+> > you'd get a similar behaviour.
+> >
+> > From the kmalloc() minumum alignment perspective, it makes sense to skip
+> > the bouncing if DMA_ATTR_SKIP_CPU_SYNC is passed. We also skip the
+> > bouncing if the direction is DMA_TO_DEVICE or the device is fully
+> > coherent.
+> >
+> > A completely untested patch below. It doesn't solve other problems with
+> > bouncing you may have with your out of tree patches and, as Christoph
+> > said, checking in your driver whether the DMA address is a swiotlb
+> > buffer is completely wrong.
+> 
+> This is where I must be missing something. Is the main opposition that
+> the *driver* is checking for swiotlb use (instead of inside the DMA
+> API)?
 
-On Thu, May 09, 2024 at 02:56:30PM +0800, Andy Chiu wrote:
-> Hi Conor,
->=20
-> Should we check if "v" presents for vector crypto extensions in
-> riscv_isa_extension_check()? We are not checking this for now. So a
-> kernel compiled with RISCV_ISA_V still has a problem if its isa-string
-> includes any of vector crypto ("zvbb, zvkg, etc") but not "v".
+I see the swiotlb use as some internal detail of the DMA API
+implementation that should not leak outside this framework.
 
+> Because it sounds like we agree it's a bad idea to attempt
+> bouncing + DMA_ATTR_SKIP_CPU_SYNC.
 
-Yeah, one of the things I took away from this discussion is that we need
-to improve the implementation of both the methods we have at the moment
-for drivers etc to check if extensions are present and usable.
-In general, I don't think checks like that are "safe" to do in
-riscv_isa_extension_check(), because the dependencies may not all have
-been resolved when we probe an extension (Clement's current Zca etc
-series improves the situation though by only calling the checks after
-we probe all extensions).
+It's not necessarily the DMA_ATTR_SKIP_CPU_SYNC but rather the usage
+model of sharing a buffer between multiple devices. The DMA API is
+mostly tailored around CPU <-> single device ownership and the bouncing
+works fine. When sharing the same buffer with multiple devices, calling
+dma_map_*() on a buffer can potentially create multiple copies of the
+original CPU buffer. It may be fine _if_ the devices don't communicate
+between themselves using such buffer, otherwise the model is broken
+(sync or no sync). The additional issue with DMA_ATTR_SKIP_CPU_SYNC is
+when you use it on subsequent dma_map_*() calls assuming that the sync
+was already done on the first dma_map_*() call but with bouncing it's
+another dma location (ignoring the Android specific patches).
 
-The simple V cases are all fine though - the DT binding and ACPI rules
-for compatible strings all mandate that single-letter extensions must
-come before multi-letter ones. For riscv,isa-extensions we control the
-probe ordering and probe V before any multi-letter stuff. Additionally,
-we should make it a requirement for V to be present if things that
-depend on it are.
+I think we should prevent bouncing if DMA_ATTR_SKIP_CPU_SYNC is passed.
+However, this is not sufficient with a proper use of the DMA API since
+the first dma_map_*() without this attribute can still do the bouncing.
+IMHO what we need is a DMA_ATTR_NO_BOUNCE or DMA_ATTR_SHARED that will
+be used on the first map and potentially on subsequent calls in
+combination with DMA_ATTR_SKIP_CPU_SYNC (though we could use the latter
+to imply "shared"). The downside is that mapping may fail if the
+coherent mask is too narrow.
 
-That said, is it permitted by the specs to have any of the extensions
-you mention without the full V extension, but with one of the cut-down
-variants you mention here? If not, I'd be more interested in figuring
-out the non-extension dependencies: whether or not the kernel itself
-supports vector and if the kernel has opted to disable vector due to
-detecting that harts have mismatching vector lengths.
+Anyway, the definitive answer should come from the DMA API maintainers.
 
-TL;DR: I think we should add some checks in riscv_isa_extension_check().
+> This code looks like it almost gets there, but it'd still reach
+> swiotlb_map (instead of DMA_MAPPING_ERROR) with DMA_ATTR_SKIP_CPU_SYNC
+> set for force_bounce or if the dma_capable check fails.
 
-Thanks,
-Conor.
+My quick patch was mainly to ensure the kmalloc() alignment patches do
+not make the situation worse.
 
-
---ILfmNxMoEmQr18uK
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZjx/qQAKCRB4tDGHoIJi
-0nmVAP9L+cHjupn5RAFkHpZYc5Cnnq2E5GdciRokz+M5dfaZiwEA9ymnxi2cQa7X
-f5iK/7u9QwmQNblOabpPI5z1wq28rAo=
-=dW2A
------END PGP SIGNATURE-----
-
---ILfmNxMoEmQr18uK--
+-- 
+Catalin
