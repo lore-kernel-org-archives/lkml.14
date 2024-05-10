@@ -1,22 +1,22 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A312155354
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:28:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AA9F161920
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:28:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715322535; cv=none; b=f7wROwoSREuviuvXveA0XiaKJXGzwvYOd3Klgu/my7oGGcqW1CUBOP9dxkCevLME7iGHL5bmnyqaz1rmjF5Z8FPU7j+uXFWnYuDqWi8hxgIdB+2VIyA47D1oWW9QMTzPezHzYZklJPrrSZYEabJ4Xi9AdjNJFpMcta9KNT1Wvos=
+	t=1715322538; cv=none; b=VWA4UI/UO/UHY6SSMAe2WFA8DOu9FEaVXxryv7ck0eOz83sjmtGKWOQXZiVL+iBpYPcBeebo3FUK4HZTCwCFtcg8+wM0f0EHHd7XSfY3J32+OQVkJaLcfPaHHFYoRsk+xYeGyOFev62aJd8smVlSlW88KmN5bgrKG90TroAfh1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715322535; c=relaxed/simple;
-	bh=iFBRIunLr5FaLPK0cnjjauLqwMdrLWAyqeUoZfL3CGI=;
+	s=arc-20240116; t=1715322538; c=relaxed/simple;
+	bh=SjStDidQObO2LvRJnVozzhbgVVCPf5LDF7cTuOyL0xg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jr5RV4XAoMz9flWN+90X67JfyUPdLcR/ghelB5QDhIzvQqzABrrVwzEA8eUljsSRbzsEZpG0qmxNgNZVBFAs4tpSTscyLrdQnbOlkMtQJ9h5kjAiH7rvuJJLbr9+40Th17xD4qbIiFJKd0lT7g1fwg2bRqSG/Ub3Vs2piP5OZLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YeDkS+MA; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qifx2WUO; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=QFRB1n1sfPYMjnm9kyDE7EJUp8Ger+sMJRwE66FcwQXV1V0Z9Hh6Vv+/x9qT+chHX4Rs8uG8o6l0y1t6LUzhJVip2Im13hDrs/OXMJzDoiR/o+EsxHs1QFyDdvrmdffAsDMxkfzreNvGkj2UIWhpbMG5GNf6hb7tgH1EMdHF+sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hWdBlhnh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qixzu2G5; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YeDkS+MA";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qifx2WUO"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hWdBlhnh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qixzu2G5"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1715322531;
@@ -24,30 +24,30 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nWsN9bO3jB/lWfoYhOeMN5QCJhLSpnjL/e1CFXcgkFc=;
-	b=YeDkS+MAiZHerM1m6HstkCIZ/MvU3HL3aeD4du/wwgYWeF4OzoZsFqYelfTKmU7kIeONSz
-	LsOuHChlYmZvXgc8eajqeT8Ytjt2t0+fnS3T6VjUAdN/jqWXBkW3ueKsYiVMz5yHTyzJMN
-	BfTPHgNFZo6Arqb8jnW7sOepDcQXUEp1Iiyf/kJl8hcCwSLYxQn2bkaWQLK+JnoQQJs0Vf
-	yG9iV4QJj5ujfhKMbDfyt6uED//pCe4lKcU2YwYdGE9SBKHqezUeVb5Zec4ikJjPm+S9r4
-	Wmh71b8m6qiJz8vuNcCab9zgJwTm3cY4HUfAxeh7onwz4Y8I4rdyO77cDFp+fQ==
+	bh=uUj2+QY4yHVaTP+Z3xu9XzUVGT256iYtfuxPIy3zZGw=;
+	b=hWdBlhnhnkLUsdOO7KNRM7oQJc4W7CYCCGcne8gyHRuKcWxd9y4/csOkBDMaRw6Y8yiwd/
+	8gKxKXx+oJOBBClXYKFvctPy6tZz2SKVlzl56CtBVSw9WgXua5KGB086OcqtgUdxzaMuPJ
+	aOh5HB8UZLD+nFMA5NSLYLyx2zcMphsIviWjbGmDLnsaX5fRdai1wzuPXcYe/WGY7K9oU7
+	GtuYCvvHGBhfdYqPO1iPhFzZ0PguIr5TB/oKsWAZyoYv1hzZUuGXq1rk5/zSLIpCzqlIff
+	CQQfGN7YOfkeKqp23epeYj86vA4u+eVnymcHwqoFa7AvrW4mX+UERg91zjZhiw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1715322531;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nWsN9bO3jB/lWfoYhOeMN5QCJhLSpnjL/e1CFXcgkFc=;
-	b=qifx2WUO5dCFrOMeAhxuDRTwUnmqnwHwLebBadT4MnZQ+O9ajcO4VceJNqhIGjwz9TF2oN
-	rwE21Hk+YUoiNlCw==
+	bh=uUj2+QY4yHVaTP+Z3xu9XzUVGT256iYtfuxPIy3zZGw=;
+	b=qixzu2G5QM3S57DoFmxPWMeaaq9ODLwpMOKRAOJoVs9C1XOAR6STtUT2avMcuyMuNVLExf
+	xaWP8KRJ3pp52ZDQ==
 To: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 2/7] riscv: replace va_kernel_pa_offset with va_kernel_data_pa_offset on XIP
-Date: Fri, 10 May 2024 08:28:40 +0200
-Message-Id: <133e7cd43a67abfed96bc246ae5f8a870edde684.1715286093.git.namcao@linutronix.de>
+Subject: [PATCH 5/7] riscv: drop the use of XIP_OFFSET in kernel_mapping_va_to_pa()
+Date: Fri, 10 May 2024 08:28:43 +0200
+Message-Id: <5439a181cdd7ba185d55457200ddda2d2efa5eb1.1715286093.git.namcao@linutronix.de>
 In-Reply-To: <cover.1715286093.git.namcao@linutronix.de>
 References: <cover.1715286093.git.namcao@linutronix.de>
 Precedence: bulk
@@ -58,115 +58,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On XIP kernel, the name "va_kernel_pa_offset" is misleading: unlike
-"normal" kernel, it is not the virtual-physical address offset of kernel
-mapping, it is the offset of kernel mapping's first virtual address to
-first physical address in DRAM, which is not meaningful because the
-kernel's first physical address is not in DRAM.
+XIP_OFFSET is the hard-coded offset of writable data section within the
+kernel.
 
-For XIP kernel, there are 2 different offsets because the read-only part of
-the kernel resides in ROM while the rest is in RAM. The offset to ROM is in
-kernel_map.va_kernel_xip_pa_offset, while the offset to RAM is not stored
-anywhere: it is calculated on-the-fly.
+By hard-coding this value, the read-only section of the kernel (which is
+placed before the writable data section) is restricted in size.
 
-Remove this confusing "va_kernel_pa_offset" and add
-"va_kernel_data_pa_offset" as its replacement. This new variable is the
-offset of virtual mapping of the kernel's data portion to the corresponding
-physical addresses.
+As a preparation to remove this hard-coded macro XIP_OFFSET entirely,
+remove the use of XIP_OFFSET in kernel_mapping_va_to_pa(). The macro
+XIP_OFFSET is used in this case to check if the virtual address is mapped
+to Flash or to RAM. The same check can be done with kernel_map.xiprom_sz.
 
 Signed-off-by: Nam Cao <namcao@linutronix.de>
 ---
- arch/riscv/include/asm/page.h | 25 +++++++++++++++++++------
- arch/riscv/mm/init.c          |  4 +++-
- 2 files changed, 22 insertions(+), 7 deletions(-)
+ arch/riscv/include/asm/page.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/riscv/include/asm/page.h b/arch/riscv/include/asm/page.h
-index 115ac98b8d72..14d0de928f9b 100644
+index 14d0de928f9b..bcd77df15835 100644
 --- a/arch/riscv/include/asm/page.h
 +++ b/arch/riscv/include/asm/page.h
-@@ -112,11 +112,13 @@ struct kernel_mapping {
- 	/* Offset between linear mapping virtual address and kernel load address */
- 	unsigned long va_pa_offset;
- 	/* Offset between kernel mapping virtual address and kernel load address */
--	unsigned long va_kernel_pa_offset;
--	unsigned long va_kernel_xip_pa_offset;
+@@ -159,7 +159,7 @@ phys_addr_t linear_mapping_va_to_pa(unsigned long x);
  #ifdef CONFIG_XIP_KERNEL
-+	unsigned long va_kernel_xip_pa_offset;
-+	unsigned long va_kernel_data_pa_offset;
- 	uintptr_t xiprom;
- 	uintptr_t xiprom_sz;
-+#else
-+	unsigned long va_kernel_pa_offset;
- #endif
- };
- 
-@@ -134,12 +136,18 @@ extern phys_addr_t phys_ram_base;
- #else
- void *linear_mapping_pa_to_va(unsigned long x);
- #endif
-+
-+#ifdef CONFIG_XIP_KERNEL
- #define kernel_mapping_pa_to_va(y)	({					\
- 	unsigned long _y = (unsigned long)(y);					\
--	(IS_ENABLED(CONFIG_XIP_KERNEL) && _y < phys_ram_base) ?			\
-+	(_y < phys_ram_base) ?							\
- 		(void *)(_y + kernel_map.va_kernel_xip_pa_offset) :		\
--		(void *)(_y + kernel_map.va_kernel_pa_offset + XIP_OFFSET);	\
-+		(void *)(_y + kernel_map.va_kernel_data_pa_offset);		\
- 	})
-+#else
-+#define kernel_mapping_pa_to_va(y) (void *)((unsigned long)(y) + kernel_map.va_kernel_pa_offset)
-+#endif
-+
- #define __pa_to_va_nodebug(x)		linear_mapping_pa_to_va(x)
- 
- #ifndef CONFIG_DEBUG_VIRTUAL
-@@ -147,12 +155,17 @@ void *linear_mapping_pa_to_va(unsigned long x);
- #else
- phys_addr_t linear_mapping_va_to_pa(unsigned long x);
- #endif
-+
-+#ifdef CONFIG_XIP_KERNEL
  #define kernel_mapping_va_to_pa(y) ({						\
  	unsigned long _y = (unsigned long)(y);					\
--	(IS_ENABLED(CONFIG_XIP_KERNEL) && _y < kernel_map.virt_addr + XIP_OFFSET) ? \
-+	(_y < kernel_map.virt_addr + XIP_OFFSET) ?				\
+-	(_y < kernel_map.virt_addr + XIP_OFFSET) ?				\
++	(_y < kernel_map.virt_addr + kernel_map.xiprom_sz) ?			\
  		(_y - kernel_map.va_kernel_xip_pa_offset) :			\
--		(_y - kernel_map.va_kernel_pa_offset - XIP_OFFSET);		\
-+		(_y - kernel_map.va_kernel_data_pa_offset);			\
+ 		(_y - kernel_map.va_kernel_data_pa_offset);			\
  	})
-+#else
-+#define kernel_mapping_va_to_pa(y) ((unsigned long)(y) - kernel_map.va_kernel_pa_offset)
-+#endif
- 
- #define __va_to_pa_nodebug(x)	({						\
- 	unsigned long _x = x;							\
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 5e3ec076ab95..9846c6924509 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -1089,10 +1089,13 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
- 	kernel_map.size = (uintptr_t)(&_end) - (uintptr_t)(&_start);
- 
- 	kernel_map.va_kernel_xip_pa_offset = kernel_map.virt_addr - kernel_map.xiprom;
-+	kernel_map.va_kernel_data_pa_offset = kernel_map.virt_addr - kernel_map.phys_addr
-+						+ (uintptr_t)&_sdata - (uintptr_t)&_start;
- #else
- 	kernel_map.page_offset = _AC(CONFIG_PAGE_OFFSET, UL);
- 	kernel_map.phys_addr = (uintptr_t)(&_start);
- 	kernel_map.size = (uintptr_t)(&_end) - kernel_map.phys_addr;
-+	kernel_map.va_kernel_pa_offset = kernel_map.virt_addr - kernel_map.phys_addr;
- #endif
- 
- #if defined(CONFIG_64BIT) && !defined(CONFIG_XIP_KERNEL)
-@@ -1114,7 +1117,6 @@ asmlinkage void __init setup_vm(uintptr_t dtb_pa)
- 	 */
- 	kernel_map.va_pa_offset = IS_ENABLED(CONFIG_64BIT) ?
- 				0UL : PAGE_OFFSET - kernel_map.phys_addr;
--	kernel_map.va_kernel_pa_offset = kernel_map.virt_addr - kernel_map.phys_addr;
- 
- 	/*
- 	 * The default maximal physical memory size is KERN_VIRT_SIZE for 32-bit
 -- 
 2.39.2
 
