@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A5EB14BF92
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:52:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85B6915E810
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:52:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715323948; cv=none; b=l2r78McH+Ks+fY97bY9W2buSkIn+7xYRMB01O2ph1s65TETaflyNWFsIsI3i2SiGsSyoJyzO+VigehsUrair2gBW0RWNNLQHYQQkzsapHuffqgDrzCwJDtVww9psAtwRVKGlTTuCw/hoDNEmNiJIB4VhPXEGYGeL9fTGcGh8pkQ=
+	t=1715323952; cv=none; b=Uy1AD/qAtb4hXOmlx+NNd0lM+gLAAOQZaEzO6OcC/Zd8qgOdqDLH0W2ZYerSVhFZpPig60Ajvb329pz2kzlTT3/t7FQQpMjugWzX/2g+V8bVd0Znc+kx4fCGz3O58Ii5uyt8uD2zpoiZSAX8nPdvexzVYIsO4SwRYxg9XDxUYdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715323948; c=relaxed/simple;
-	bh=QJmJAn9T6fj1xBTxwSS8IUITFXhbj571jqpIZLhKgnw=;
-	h=From:To:Cc:Subject:Date:Message-Id; b=X8V7GytYSypk1fN86+CIGUJBtQvngyIUEKdBHN2OnRmahbysDnp9tYteKhCl/WrYHrv05dhu/bXCz+BKdGjU9YsadLcsxbnLPpNG8pDjgO3jYWCSwqCXy22c8a/4FofbEfQQv+5pqGvL17uxpp/ambzmivzlNmb78CM+WXW6ZwE=
+	s=arc-20240116; t=1715323952; c=relaxed/simple;
+	bh=jZYYEN22FwfgAv99f+tq0XQ/kj/yrRu6yCvqz8y5jmU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=R9www4ELfJq4kjFP1YBpWbZntNShKPRY+5CcBQsSZ+hmL0wa5EP//ja2RCYXsWOMwfzHGquOqT8tRU3iBdNGfZDQFhbWxYnfbEnm5jFi44NCT1XlczzEewqojWhQCCcd5epOz9V063qU5uft8ECIpsbNKjXLeKmR8jSLSEDrPRE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-bf-663dc4212ff6
+X-AuditID: a67dfc5b-d6dff70000001748-d8-663dc421ab13
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -30,34 +30,36 @@ Cc: kernel_team@skhynix.com,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com,
 	rjgolo@gmail.com
-Subject: [PATCH v10 00/12] LUF(Lazy Unmap Flush) reducing tlb numbers over 90%
-Date: Fri, 10 May 2024 15:51:54 +0900
-Message-Id: <20240510065206.76078-1-byungchul@sk.com>
+Subject: [PATCH v10 05/12] mm: buddy: make room for a new variable, ugen, in struct page
+Date: Fri, 10 May 2024 15:51:59 +0900
+Message-Id: <20240510065206.76078-6-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsXC9ZZnka7iEds0gzd94hZz1q9hs/i84R+b
-	xYsN7YwWX9f/YrZ4+qmPxeLyrjlsFvfW/Ge1OL9rLavFjqX7mCwuHVjAZHG89wCTxfx7n9ks
-	Nm+aymxxfMpURovfP4CKT86azOIg4PG9tY/FY+esu+weCzaVemxeoeWxeM9LJo9NqzrZPDZ9
-	msTu8e7cOXaPEzN+s3jMOxno8X7fVTaPrb/sPBqnXmPz+LxJLoAvissmJTUnsyy1SN8ugSuj
-	+4FUwbyJjBW/2jewNjAezOpi5OSQEDCRWHzvEjuMPe/+XFYQm01AXeLGjZ/MILaIgJnEwdY/
-	YDXMAneZJA70s4HYwgJ+Ers+/wGzWQRUJa6e/8ICYvMKmEp03lkKNVNeYvWGA0BzuIDs22wS
-	/9s3MUEkJCUOrrjBMoGRewEjwypGocy8stzEzBwTvYzKvMwKveT83E2MwFBeVvsnegfjpwvB
-	hxgFOBiVeHh3bLZJE2JNLCuuzD3EKMHBrCTCW1VjnSbEm5JYWZValB9fVJqTWnyIUZqDRUmc
-	1+hbeYqQQHpiSWp2ampBahFMlomDU6qBcX7li4NFm8qLFOb+n1L4NW/175DSte8iDHokfwud
-	t9CsFPL4EdPSfq35v+jGZ0zbm5WF0hYZe70v83X075+6e1P6g/jGRSHHU6V2SMfVfP9/hf3J
-	DyVps5BU3ceaK0Syb/44O/mNgO32ntTJ2bc2L2e4kz5LKIgzsK1V9l3oE7N99flfD/5/qcRS
-	nJFoqMVcVJwIAHjNim9hAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKLMWRmVeSWpSXmKPExsXC5WfdrKt4xDbNYOknLos569ewWXze8I/N
-	4sWGdkaLr+t/MVs8/dTHYnF47klWi8u75rBZ3Fvzn9Xi/K61rBY7lu5jsrh0YAGTxfHeA0wW
-	8+99ZrPYvGkqs8XxKVMZLX7/ACo+OWsyi4Ogx/fWPhaPnbPusnss2FTqsXmFlsfiPS+ZPDat
-	6mTz2PRpErvHu3Pn2D1OzPjN4jHvZKDH+31X2TwWv/jA5LH1l51H49RrbB6fN8kF8Edx2aSk
-	5mSWpRbp2yVwZXQ/kCqYN5Gx4lf7BtYGxoNZXYycHBICJhLz7s9lBbHZBNQlbtz4yQxiiwiY
-	SRxs/cMOYjML3GWSONDPBmILC/hJ7Pr8B8xmEVCVuHr+CwuIzStgKtF5Zyk7xEx5idUbDjBP
-	YORYwMiwilEkM68sNzEzx1SvODujMi+zQi85P3cTIzAwl9X+mbiD8ctl90OMAhyMSjy8Ozbb
-	pAmxJpYVV+YeYpTgYFYS4a2qsU4T4k1JrKxKLcqPLyrNSS0+xCjNwaIkzusVnpogJJCeWJKa
-	nZpakFoEk2Xi4JRqYLyzN5Pr87HnC656Vyw8MPXDJMa1r71uf5A/xFSXOWX6FY3PAg9urJJO
-	DTtdrxx4/HKN0ZzUTa0HXu05Vde0tjfIIXPvXsla/zzNicJbH09t+v+v9GQF6y6Z7owXm14f
-	U/df2Ntw2u9g0/Hvcuu3PH3WJNYpdfe70qQU4dinVVorSzRO/Yn8rnhViaU4I9FQi7moOBEA
-	mlrLqUgCAAA=
+In-Reply-To: <20240510065206.76078-1-byungchul@sk.com>
+References: <20240510065206.76078-1-byungchul@sk.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrELMWRmVeSWpSXmKPExsXC9ZZnoa7iEds0g9XTlCzmrF/DZvF5wz82
+	ixcb2hktvq7/xWzx9FMfi8XlXXPYLO6t+c9qcX7XWlaLHUv3MVlcOrCAyeJ47wEmi/n3PrNZ
+	bN40ldni+JSpjBa/fwAVn5w1mcVBwON7ax+Lx85Zd9k9Fmwq9di8Qstj8Z6XTB6bVnWyeWz6
+	NInd4925c+weJ2b8ZvGYdzLQ4/2+q2weW3/ZeTROvcbm8XmTXABfFJdNSmpOZllqkb5dAlfG
+	gm8P2QquqlQc7pzE0sDYJtvFyMkhIWAi8X3GPHYY+/m3CawgNpuAusSNGz+ZQWwRATOJg61/
+	wGqYBe4ySRzoZwOxhQUiJO69WsjUxcjOwSKgKnHYvouRg4NXwFTidAMTxEB5idUbDoAN4QQa
+	8mHZDLC4EFBJx4OJjBA1n9kkWlcGQ9iSEgdX3GCZwMi7gJFhFaNQZl5ZbmJmjoleRmVeZoVe
+	cn7uJkZgyC+r/RO9g/HTheBDjAIcjEo8vDs226QJsSaWFVfmHmKU4GBWEuGtqrFOE+JNSays
+	Si3Kjy8qzUktPsQozcGiJM5r9K08RUggPbEkNTs1tSC1CCbLxMEp1cDoWPRIju/nDkU3n6tZ
+	C+4zX1a1u+z/zbMq9umZiScz50g8msSxyOA524uMjwueF8Yvm9cTIGBw+U2ZTTlr2Xd9tt+T
+	m466iezMjWgu2T1747+M3NOT8+V2ZU2L37W550fDqwSX2TXbMiasesS84+jT3OJviz5N52xf
+	V+H6Q2di1fMNc1t+h5dkKLEUZyQaajEXFScCAFsp97R1AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrFLMWRmVeSWpSXmKPExsXC5WfdrKt4xDbN4E27hMWc9WvYLD5v+Mdm
+	8WJDO6PF1/W/mC2efupjsTg89ySrxeVdc9gs7q35z2pxftdaVosdS/cxWVw6sIDJ4njvASaL
+	+fc+s1ls3jSV2eL4lKmMFr9/ABWfnDWZxUHQ43trH4vHzll32T0WbCr12LxCy2PxnpdMHptW
+	dbJ5bPo0id3j3blz7B4nZvxm8Zh3MtDj/b6rbB6LX3xg8tj6y86jceo1No/Pm+QC+KO4bFJS
+	czLLUov07RK4MhZ8e8hWcFWl4nDnJJYGxjbZLkZODgkBE4nn3yawgthsAuoSN278ZAaxRQTM
+	JA62/mEHsZkF7jJJHOhnA7GFBSIk7r1ayNTFyM7BIqAqcdi+i5GDg1fAVOJ0AxPEQHmJ1RsO
+	gA3hBBryYdkMsLgQUEnHg4mMExi5FjAyrGIUycwry03MzDHVK87OqMzLrNBLzs/dxAgM4WW1
+	fybuYPxy2f0QowAHoxIP747NNmlCrIllxZW5hxglOJiVRHiraqzThHhTEiurUovy44tKc1KL
+	DzFKc7AoifN6hacmCAmkJ5akZqemFqQWwWSZODilGhgltu8Mvux5OU+RNT9R8EXD9N7dcw/o
+	ce3xzUlPt2xb+Ch41YPtuZa7j16ynLjiySLmwzELlzuvX1LpaiOSYqn1syizrXC5fvjqS1cb
+	/zfeYJ/KbT7TfmPLzXtFh59x9W+41rngjMC5rU/S/af//W+pf33G41pR7ln/DpjnsJ7j4DaV
+	Dq958f+aEktxRqKhFnNRcSIAGjUyt10CAAA=
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -65,401 +67,148 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Hi everyone,
+Functionally, no change.  This is a preparation for luf mechanism that
+tracks need of tlb flush for each page residing in buddy, using a
+generation number in struct page.
 
-While I'm working with a tiered memory system e.g. CXL memory, I have
-been facing migration overhead esp. tlb shootdown on promotion or
-demotion between different tiers.  Yeah..  most tlb shootdowns on
-migration through hinting fault can be avoided thanks to Huang Ying's
-work, commit 4d4b6d66db ("mm,unmap: avoid flushing tlb in batch if PTE
-is inaccessible").  See the following link for more information:
+Fortunately, since the private field in struct page is used only to
+store page order in buddy, ranging from 0 to MAX_PAGE_ORDER, that can be
+covered with unsigned short int.  So splitted it into two smaller ones,
+order and ugen, so that the both can be used in buddy at the same time.
 
-https://lore.kernel.org/lkml/20231115025755.GA29979@system.software.com/
-
-However, it's only for migration through hinting fault.  I thought it'd
-be much better if we have a general mechanism to reduce all the tlb
-numbers that we can apply to any unmap code, that we normally believe
-tlb flush should be followed.
-
-I'm suggesting a new mechanism, LUF(Lazy Unmap Flush), defers tlb flush
-until folios that have been unmapped and freed, eventually get allocated
-again.  It's safe for folios that had been mapped read-only and were
-unmapped, since the contents of the folios don't change while staying in
-pcp or buddy so we can still read the data through the stale tlb entries.
-
-tlb flush can be defered when folios get unmapped as long as it
-guarantees to perform tlb flush needed, before the folios actually
-become used, of course, only if all the corresponding ptes don't have
-write permission.  Otherwise, the system will get messed up.
-
-To achieve that:
-
-   1. For the folios that map only to non-writable tlb entries, prevent
-      tlb flush during unmapping but perform it just before the folios
-      actually become used, out of buddy or pcp.
-
-   2. When any non-writable ptes change to writable e.g. through fault
-      handler, give up luf mechanism and perform tlb flush required
-      right away.
-
-   3. When a writable mapping is created e.g. through mmap(), give up
-      luf mechanism and perform tlb flush required right away.
-
-No matter what type of workload is used for performance evaluation, the
-result would be positive thanks to the unconditional reduction of tlb
-flushes, tlb misses and interrupts.  For the test, I picked up one of
-the most popular and heavy workload, llama.cpp that is a
-LLM(Large Language Model) inference engine.
-
-The result would depend on memory latency and how often reclaim runs,
-which implies tlb miss overhead and how many times unmapping happens.
-In my system, the result shows:
-
-   1. tlb flushes are reduced about 95%.
-   2. tlb misses(itlb) are reduced about 80%.
-   3. tlb misses(dtlb store) are reduced about 57%.
-   4. tlb misses(dtlb load) are reduced about 24%.
-   5. tlb shootdown interrupts are reduced about 95%.
-   6. The test program runtime is reduced about 5%.
-
-The test environment and the result is like:
-
-   Machine: bare metal, x86_64, Intel(R) Xeon(R) Gold 6430
-   CPU: 1 socket 64 core with hyper thread on
-   Numa: 2 nodes (64 CPUs DRAM 42GB, no CPUs CXL expander 98GB)
-   Config: swap off, numa balancing tiering on, demotion enabled
-
-   The test set:
-
-      llama.cpp/main -m $(70G_model1) -p "who are you?" -s 1 -t 15 -n 20 &
-      llama.cpp/main -m $(70G_model2) -p "who are you?" -s 1 -t 15 -n 20 &
-      llama.cpp/main -m $(70G_model3) -p "who are you?" -s 1 -t 15 -n 20 &
-      wait
-
-      where -t: nr of threads, -s: seed used to make the runtime stable,
-      -n: nr of tokens that determines the runtime, -p: prompt to ask,
-      -m: LLM model to use.
-
-   Run the test set 10 times successively with caches dropped every run
-   via 'echo 3 > /proc/sys/vm/drop_caches'.  Each inference prints its
-   runtime at the end of each.
-
-   1. Runtime from the output of llama.cpp:
-
-   BEFORE
-   ------
-   llama_print_timings:       total time = 1002461.95 ms /    24 tokens
-   llama_print_timings:       total time = 1044978.38 ms /    24 tokens
-   llama_print_timings:       total time = 1000653.09 ms /    24 tokens
-   llama_print_timings:       total time = 1047104.80 ms /    24 tokens
-   llama_print_timings:       total time = 1069430.36 ms /    24 tokens
-   llama_print_timings:       total time = 1068201.16 ms /    24 tokens
-   llama_print_timings:       total time = 1078092.59 ms /    24 tokens
-   llama_print_timings:       total time = 1073200.45 ms /    24 tokens
-   llama_print_timings:       total time = 1067136.00 ms /    24 tokens
-   llama_print_timings:       total time = 1076442.56 ms /    24 tokens
-   llama_print_timings:       total time = 1004142.64 ms /    24 tokens
-   llama_print_timings:       total time = 1042942.65 ms /    24 tokens
-   llama_print_timings:       total time =  999933.76 ms /    24 tokens
-   llama_print_timings:       total time = 1046548.83 ms /    24 tokens
-   llama_print_timings:       total time = 1068671.48 ms /    24 tokens
-   llama_print_timings:       total time = 1068285.76 ms /    24 tokens
-   llama_print_timings:       total time = 1077789.63 ms /    24 tokens
-   llama_print_timings:       total time = 1071558.93 ms /    24 tokens
-   llama_print_timings:       total time = 1066181.55 ms /    24 tokens
-   llama_print_timings:       total time = 1076767.53 ms /    24 tokens
-   llama_print_timings:       total time = 1004065.63 ms /    24 tokens
-   llama_print_timings:       total time = 1044522.13 ms /    24 tokens
-   llama_print_timings:       total time =  999725.33 ms /    24 tokens
-   llama_print_timings:       total time = 1047510.77 ms /    24 tokens
-   llama_print_timings:       total time = 1068010.27 ms /    24 tokens
-   llama_print_timings:       total time = 1068999.31 ms /    24 tokens
-   llama_print_timings:       total time = 1077648.05 ms /    24 tokens
-   llama_print_timings:       total time = 1071378.96 ms /    24 tokens
-   llama_print_timings:       total time = 1066326.32 ms /    24 tokens
-   llama_print_timings:       total time = 1077088.92 ms /    24 tokens
-
-   AFTER
-   -----
-   llama_print_timings:       total time =  988522.03 ms /    24 tokens
-   llama_print_timings:       total time =  997204.52 ms /    24 tokens
-   llama_print_timings:       total time =  996605.86 ms /    24 tokens
-   llama_print_timings:       total time =  991985.50 ms /    24 tokens
-   llama_print_timings:       total time = 1035143.31 ms /    24 tokens
-   llama_print_timings:       total time =  993660.18 ms /    24 tokens
-   llama_print_timings:       total time =  983082.14 ms /    24 tokens
-   llama_print_timings:       total time =  990431.36 ms /    24 tokens
-   llama_print_timings:       total time =  992707.09 ms /    24 tokens
-   llama_print_timings:       total time =  992673.27 ms /    24 tokens
-   llama_print_timings:       total time =  989285.43 ms /    24 tokens
-   llama_print_timings:       total time =  996710.06 ms /    24 tokens
-   llama_print_timings:       total time =  996534.64 ms /    24 tokens
-   llama_print_timings:       total time =  991344.17 ms /    24 tokens
-   llama_print_timings:       total time = 1035210.84 ms /    24 tokens
-   llama_print_timings:       total time =  994714.13 ms /    24 tokens
-   llama_print_timings:       total time =  984184.15 ms /    24 tokens
-   llama_print_timings:       total time =  990909.45 ms /    24 tokens
-   llama_print_timings:       total time =  991881.48 ms /    24 tokens
-   llama_print_timings:       total time =  993918.03 ms /    24 tokens
-   llama_print_timings:       total time =  990061.34 ms /    24 tokens
-   llama_print_timings:       total time =  998076.69 ms /    24 tokens
-   llama_print_timings:       total time =  997082.59 ms /    24 tokens
-   llama_print_timings:       total time =  990677.58 ms /    24 tokens
-   llama_print_timings:       total time = 1036054.94 ms /    24 tokens
-   llama_print_timings:       total time =  994125.93 ms /    24 tokens
-   llama_print_timings:       total time =  982467.01 ms /    24 tokens
-   llama_print_timings:       total time =  990191.60 ms /    24 tokens
-   llama_print_timings:       total time =  993319.24 ms /    24 tokens
-   llama_print_timings:       total time =  992540.57 ms /    24 tokens
-
-   2. tlb shootdowns from 'cat /proc/interrupts':
-
-   BEFORE
-   ------
-   TLB:
-   125553646  141418810  161932620  176853972  186655697  190399283
-   192143823  196414038  192872439  193313658  193395617  192521416
-   190788161  195067598  198016061  193607347  194293972  190786732
-   191545637  194856822  191801931  189634535  190399803  196365922
-   195268398  190115840  188050050  193194908  195317617  190820190
-   190164820  185556071  226797214  229592631  216112464  209909495
-   205575979  205950252  204948111  197999795  198892232  205287952
-   199344631  195015158  195869844  198858745  195692876  200961904
-   203463252  205921722  199850838  206145986  199613202  199961345
-   200129577  203020521  207873649  203697671  197093386  204243803
-   205993323  200934664  204193128  194435376  TLB shootdowns
-
-   AFTER
-   -----
-   TLB:
-     5648092    6610142    7032849    7882308    8088518    8352310
-     8656536    8705136    8647426    8905583    8985408    8704522
-     8884344    9026261    8929974    8869066    8877575    8810096
-     8770984    8754503    8801694    8865925    8787524    8656432
-     8755912    8682034    8773935    8832925    8797997    8515777
-     8481240    8891258   10595243   10285973    9756935    9573681
-     9398968    9069244    9242984    8899009    9310690    9029095
-     9069758    9105825    9092703    9270202    9460287    9258546
-     9180415    9232723    9270611    9175020    9490420    9360316
-     9420818    9057663    9525631    9310152    9152242    8654483
-     9181804    9050847    8919916    8883856  TLB shootdowns
-
-   3. tlb numbers from 'perf stat' per test set:
-
-   BEFORE
-   ------
-   3163679332	dTLB-load-misses
-   2017751856	dTLB-store-misses
-   327092903	iTLB-load-misses
-   1357543886	tlb:tlb_flush
-
-   AFTER
-   -----
-   2394694609	dTLB-load-misses
-   861144167	dTLB-store-misses
-   64055579	iTLB-load-misses
-   69175002	tlb:tlb_flush
-
+Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
+ include/linux/mm_types.h | 40 +++++++++++++++++++++++++++++++++-------
+ mm/internal.h            |  4 ++--
+ mm/page_alloc.c          | 13 ++++++++-----
+ 3 files changed, 43 insertions(+), 14 deletions(-)
 
-Changes from v9:
-
-	1. Expand the candidate to apply this mechanism:
-
-	   BEFORE - The souce folios at any type of migration.
-	   AFTER  - Any folios that have been unmapped and freed.
-
-	2. Change the workload for test:
-
-	   BEFORE - XSBench
-	   AFTER  - llama.cpp (one of the most popluar real workload)
-
-	3. Change the test environment:
-
-	   BEFORE - qemu machine, too small DRAM(1GB), large remote mem
-	   AFTER  - bare metal, real CXL memory, practical memory size
-
-	4. Rename the mechanism from MIGRC(Migration Read Copy) to
-	   LUF(Lazy Unmap Flush) to reflect the current version of the
-	   mechanism can be applied not only to unmap during migration
-	   but any unmap code e.g. unmap in shrink_folio_list().
-
-	5. Fix build error for riscv. (feedbacked by kernel test bot)
-
-	6. Supplement commit messages to describe what this mechanism is
-	   for, especially in the patches for arch code. (feedbacked by
-	   Thomas Gleixner)
-
-	7. Clean up some trivial things.
-
-Changes from v8:
-
-	1. Rebase on akpm/mm.git mm-unstable as of April 18, 2024.
-	2. Supplement comments and commit message.
-	3. Change the candidate to apply migrc mechanism:
-
-	   BEFORE - The source folios at demotion and promotion.
-	   AFTER  - The souce folios at any type of migration.
-
-	4. Change how migrc mechanism works:
-
-	   BEFORE - Reduce tlb flushes by deferring folio_free() for
-	            source folios during demotion and promotion.
-	   AFTER  - Reduce tlb flushes by deferring tlb flush until they
-	            actually become used, out of pcp or buddy. The
-		    current version of migrc does *not* defer calling
-	            folio_free() but let it go as it is as the same as
-		    vanilla kernel, with the folios marked kind of 'need
-		    to tlb flush'. And then handle the flush when the
-		    page exits from pcp or buddy so as to prevent
-		    changing vm stats e.g. free pages.
-
-Changes from v7:
-
-	1. Rewrite cover letter to explain what 'migrc' mechasism is.
-	   (feedbacked by Andrew Morton)
-	2. Supplement the commit message of a patch 'mm: Add APIs to
-	   free a folio directly to the buddy bypassing pcp'.
-	   (feedbacked by Andrew Morton)
-
-Changes from v6:
-
-	1. Fix build errors in case of
-	   CONFIG_ARCH_WANT_BATCHED_UNMAP_tlb_FLUSH disabled by moving
-	   migrc_flush_{start,end}() calls from arch code to
-	   try_to_unmap_flush() in mm/rmap.c.
-
-Changes from v5:
-
-	1. Fix build errors in case of CONFIG_MIGRATION disabled or
-	   CONFIG_HWPOISON_INJECT moduled. (feedbacked by kernel test
-	   bot and Raymond Jay Golo)
-	2. Organize migrc code with two kconfigs, CONFIG_MIGRATION and
-	   CONFIG_ARCH_WANT_BATCHED_UNMAP_tlb_FLUSH.
-
-Changes from v4:
-
-	1. Rebase on v6.7.
-	2. Fix build errors in arm64 that is doing nothing for tlb flush
-	   but has CONFIG_ARCH_WANT_BATCHED_UNMAP_tlb_FLUSH. (reported
-	   by kernel test robot)
-	3. Don't use any page flag. So the system would give up migrc
-	   mechanism more often but it's okay. The final improvement is
-	   good enough.
-	4. Instead, optimize full tlb flush(arch_tlbbatch_flush()) by
-	   avoiding redundant CPUs from tlb flush.
-
-Changes from v3:
-
-	1. Don't use the kconfig, CONFIG_MIGRC, and remove sysctl knob,
-	   migrc_enable. (feedbacked by Nadav)
-	2. Remove the optimization skipping CPUs that have already
-	   performed tlb flushes needed by any reason when performing
-	   tlb flushes by migrc because I can't tell the performance
-	   difference between w/ the optimization and w/o that.
-	   (feedbacked by Nadav)
-	3. Minimize arch-specific code. While at it, move all the migrc
-           declarations and inline functions from include/linux/mm.h to
-           mm/internal.h (feedbacked by Dave Hansen, Nadav)
-	4. Separate a part making migrc paused when the system is in
-	   high memory pressure to another patch. (feedbacked by Nadav)
-	5. Rename:
-	      a. arch_tlbbatch_clean() to arch_tlbbatch_clear(),
-	      b. tlb_ubc_nowr to tlb_ubc_ro,
-	      c. migrc_try_flush_free_folios() to migrc_flush_free_folios(),
-	      d. migrc_stop to migrc_pause.
-	   (feedbacked by Nadav)
-	6. Use ->lru list_head instead of introducing a new llist_head.
-	   (feedbacked by Nadav)
-	7. Use non-atomic operations of page-flag when it's safe.
-	   (feedbacked by Nadav)
-	8. Use stack instead of keeping a pointer of 'struct migrc_req'
-	   in struct task, which is for manipulating it locally.
-	   (feedbacked by Nadav)
-	9. Replace a lot of simple functions to inline functions placed
-	   in a header, mm/internal.h. (feedbacked by Nadav)
-	10. Add additional sufficient comments. (feedbacked by Nadav)
-	11. Remove a lot of wrapper functions. (feedbacked by Nadav)
-
-Changes from RFC v2:
-
-	1. Remove additional occupation in struct page. To do that,
-	   unioned with lru field for migrc's list and added a page
-	   flag. I know page flag is a thing that we don't like to add
-	   but no choice because migrc should distinguish folios under
-	   migrc's control from others. Instead, I force migrc to be
-	   used only on 64 bit system to mitigate you guys from getting
-	   angry.
-	2. Remove meaningless internal object allocator that I
-	   introduced to minimize impact onto the system. However, a ton
-	   of tests showed there was no difference.
-	3. Stop migrc from working when the system is in high memory
-	   pressure like about to perform direct reclaim. At the
-	   condition where the swap mechanism is heavily used, I found
-	   the system suffered from regression without this control.
-	4. Exclude folios that pte_dirty() == true from migrc's interest
-	   so that migrc can work simpler.
-	5. Combine several patches that work tightly coupled to one.
-	6. Add sufficient comments for better review.
-	7. Manage migrc's request in per-node manner (from globally).
-	8. Add tlb miss improvement in commit message.
-	9. Test with more CPUs(4 -> 16) to see bigger improvement.
-
-Changes from RFC:
-
-	1. Fix a bug triggered when a destination folio at the previous
-	   migration becomes a source folio at the next migration,
-	   before the folio gets handled properly so that the folio can
-	   play with another migration. There was inconsistency in the
-	   folio's state. Fixed it.
-	2. Split the patch set into more pieces so that the folks can
-	   review better. (Feedbacked by Nadav Amit)
-	3. Fix a wrong usage of barrier e.g. smp_mb__after_atomic().
-	   (Feedbacked by Nadav Amit)
-	4. Tried to add sufficient comments to explain the patch set
-	   better. (Feedbacked by Nadav Amit)
-
-Byungchul Park (12):
-  x86/tlb: add APIs manipulating tlb batch's arch data
-  arm64: tlbflush: add APIs manipulating tlb batch's arch data
-  riscv, tlb: add APIs manipulating tlb batch's arch data
-  x86/tlb, riscv/tlb, mm/rmap: separate arch_tlbbatch_clear() out of
-    arch_tlbbatch_flush()
-  mm: buddy: make room for a new variable, ugen, in struct page
-  mm: add folio_put_ugen() to deliver unmap generation number to pcp or
-    buddy
-  mm: add a parameter, unmap generation number, to free_unref_folios()
-  mm/rmap: recognize read-only tlb entries during batched tlb flush
-  mm: implement LUF(Lazy Unmap Flush) defering tlb flush when folios get
-    unmapped
-  mm: separate move/undo parts from migrate_pages_batch()
-  mm, migrate: apply luf mechanism to unmapping during migration
-  mm, vmscan: apply luf mechanism to unmapping during folio reclaim
-
- arch/arm64/include/asm/tlbflush.h |  18 ++
- arch/riscv/include/asm/tlbflush.h |  21 ++
- arch/riscv/mm/tlbflush.c          |   1 -
- arch/x86/include/asm/tlbflush.h   |  18 ++
- arch/x86/mm/tlb.c                 |   2 -
- include/linux/mm.h                |  22 ++
- include/linux/mm_types.h          |  40 +++-
- include/linux/rmap.h              |   7 +-
- include/linux/sched.h             |  11 +
- mm/compaction.c                   |  10 +
- mm/internal.h                     | 115 +++++++++-
- mm/memory.c                       |   8 +
- mm/migrate.c                      | 184 ++++++++++------
- mm/mmap.c                         |   8 +
- mm/page_alloc.c                   | 157 +++++++++++---
- mm/page_isolation.c               |   6 +
- mm/page_reporting.c               |  10 +
- mm/rmap.c                         | 345 +++++++++++++++++++++++++++++-
- mm/swap.c                         |  18 +-
- mm/vmscan.c                       |  29 ++-
- 20 files changed, 904 insertions(+), 126 deletions(-)
-
-
-base-commit: f52bcd4a9f6058704a6f6b6b50418f579defd4fe
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index db0adf5721cc..cd4ec0d10ffb 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -108,13 +108,25 @@ struct page {
+ 				pgoff_t index;		/* Our offset within mapping. */
+ 				unsigned long share;	/* share count for fsdax */
+ 			};
+-			/**
+-			 * @private: Mapping-private opaque data.
+-			 * Usually used for buffer_heads if PagePrivate.
+-			 * Used for swp_entry_t if PageSwapCache.
+-			 * Indicates order in the buddy system if PageBuddy.
+-			 */
+-			unsigned long private;
++			union {
++				/**
++				 * @private: Mapping-private opaque data.
++				 * Usually used for buffer_heads if PagePrivate.
++				 * Used for swp_entry_t if PageSwapCache.
++				 */
++				unsigned long private;
++				struct {
++					/*
++					 * Indicates order in the buddy system if PageBuddy.
++					 */
++					unsigned short int order;
++					/*
++					 * Tracks need of tlb flush used by luf,
++					 * which stands for lazy unmap flush.
++					 */
++					unsigned short int ugen;
++				};
++			};
+ 		};
+ 		struct {	/* page_pool used by netstack */
+ 			/**
+@@ -521,6 +533,20 @@ static inline void set_page_private(struct page *page, unsigned long private)
+ 	page->private = private;
+ }
+ 
++#define page_buddy_order(page)		((page)->order)
++
++static inline void set_page_buddy_order(struct page *page, unsigned int order)
++{
++	page->order = (unsigned short int)order;
++}
++
++#define page_buddy_ugen(page)		((page)->ugen)
++
++static inline void set_page_buddy_ugen(struct page *page, unsigned short int ugen)
++{
++	page->ugen = ugen;
++}
++
+ static inline void *folio_get_private(struct folio *folio)
+ {
+ 	return folio->private;
+diff --git a/mm/internal.h b/mm/internal.h
+index c6483f73ec13..eb9c7d8650fc 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -453,7 +453,7 @@ struct alloc_context {
+ static inline unsigned int buddy_order(struct page *page)
+ {
+ 	/* PageBuddy() must be checked by the caller */
+-	return page_private(page);
++	return page_buddy_order(page);
+ }
+ 
+ /*
+@@ -467,7 +467,7 @@ static inline unsigned int buddy_order(struct page *page)
+  * times, potentially observing different values in the tests and the actual
+  * use of the result.
+  */
+-#define buddy_order_unsafe(page)	READ_ONCE(page_private(page))
++#define buddy_order_unsafe(page)	READ_ONCE(page_buddy_order(page))
+ 
+ /*
+  * This function checks whether a page is free && is the buddy
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 33d4a1be927b..917b22b429d1 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -565,9 +565,12 @@ void prep_compound_page(struct page *page, unsigned int order)
+ 	prep_compound_head(page, order);
+ }
+ 
+-static inline void set_buddy_order(struct page *page, unsigned int order)
++static inline void set_buddy_order_ugen(struct page *page,
++					unsigned int order,
++					unsigned short int ugen)
+ {
+-	set_page_private(page, order);
++	set_page_buddy_order(page, order);
++	set_page_buddy_ugen(page, order);
+ 	__SetPageBuddy(page);
+ }
+ 
+@@ -834,7 +837,7 @@ static inline void __free_one_page(struct page *page,
+ 	}
+ 
+ done_merging:
+-	set_buddy_order(page, order);
++	set_buddy_order_ugen(page, order, 0);
+ 
+ 	if (fpi_flags & FPI_TO_TAIL)
+ 		to_tail = true;
+@@ -1344,7 +1347,7 @@ static inline void expand(struct zone *zone, struct page *page,
+ 			continue;
+ 
+ 		__add_to_free_list(&page[size], zone, high, migratetype, false);
+-		set_buddy_order(&page[size], high);
++		set_buddy_order_ugen(&page[size], high, 0);
+ 		nr_added += size;
+ 	}
+ 	account_freepages(zone, nr_added, migratetype);
+@@ -6802,7 +6805,7 @@ static void break_down_buddy_pages(struct zone *zone, struct page *page,
+ 			continue;
+ 
+ 		add_to_free_list(current_buddy, zone, high, migratetype, false);
+-		set_buddy_order(current_buddy, high);
++		set_buddy_order_ugen(current_buddy, high, 0);
+ 	}
+ }
+ 
 -- 
 2.17.1
 
