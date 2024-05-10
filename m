@@ -1,17 +1,17 @@
 Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5997715FA69
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:52:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC9BC16089A
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:52:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715323955; cv=none; b=riojtmZlRsYQCodnNBC9DAvQDSCEgr1BtFhJpINfp9Y2dvFuuBQzhO1jqZ83NVF6t38KZZXW4AeKhNG7YoIszYe/I6e2hTgfpI68sPTDM16LwuWdWbnlGzBjgiPVD1e+VK6hf9B0FJrGzd9zl8yq9wfQkE6wpbZgpKuizqnRUb0=
+	t=1715323956; cv=none; b=k10YxKZmsm6MyP6uUEnLDB6l9fNJ2tXxXLK0Twk5ptTd/S7PGXBtg8v6zTUQT6T4YAaYSEg6PkgigW36xgu5On/ylnMiLQpx3hZo3TvaBjJGL27fOA82pQs2ucmkEJ0fqcg7aXUNJzCeWdJDyyu1H/TxcOIV8yNHA4Dzd1EDCg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715323955; c=relaxed/simple;
-	bh=xOipXr+cjpVMSPVu2Y4ZfW+Vz9mOk0CKTRO1jFnPGOQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=V126LfE4PlRgRV6ZAqIrczkEFMLTcpy7gJYGDlHGWgUZkX815KrmGfI7pUnj3tnV1v0K5IWHepkm0HeeV4k6xv+KM+xaMvHFZ6Gh3A1bEA6klRFIXEGNxTgI6ITvf5KN7UGuCfhyKcqO48SpLE6a7USGQoy3tTd7ptshbbZJTJc=
+	s=arc-20240116; t=1715323956; c=relaxed/simple;
+	bh=QDy6Q/69jLgOsCJzKYXGtVHNQoTMgPNlJ5uoJnME6j0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=DG0WhZ2x8PzgxyuRKmUDPWhbsTAkrD6CuPYjSiJGxGakNztb5vHk4spJmTsFMMLmJ3y+KJTVVBD8ERBfibIdnjbAAGWOq65Mm+PMOwHtoLho6Eg36jRI7llCtTO4FZUQ+DeyDbMP8rBFWktvE4NbhzCSV9sOvcI5toamlLj/axY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-d6dff70000001748-dd-663dc4212a6f
+X-AuditID: a67dfc5b-d6dff70000001748-ec-663dc42128e6
 From: Byungchul Park <byungchul@sk.com>
 To: linux-kernel@vger.kernel.org,
 	linux-mm@kvack.org
@@ -30,36 +30,36 @@ Cc: kernel_team@skhynix.com,
 	bp@alien8.de,
 	dave.hansen@linux.intel.com,
 	rjgolo@gmail.com
-Subject: [PATCH v10 06/12] mm: add folio_put_ugen() to deliver unmap generation number to pcp or buddy
-Date: Fri, 10 May 2024 15:52:00 +0900
-Message-Id: <20240510065206.76078-7-byungchul@sk.com>
+Subject: [PATCH v10 09/12] mm: implement LUF(Lazy Unmap Flush) defering tlb flush when folios get unmapped
+Date: Fri, 10 May 2024 15:52:03 +0900
+Message-Id: <20240510065206.76078-10-byungchul@sk.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240510065206.76078-1-byungchul@sk.com>
 References: <20240510065206.76078-1-byungchul@sk.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBLMWRmVeSWpSXmKPExsXC9ZZnka7iEds0g0N71C3mrF/DZvF5wz82
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrOLMWRmVeSWpSXmKPExsXC9ZZnoa7iEds0g7uzjSzmrF/DZvF5wz82
 	ixcb2hktvq7/xWzx9FMfi8XlXXPYLO6t+c9qcX7XWlaLHUv3MVlcOrCAyeJ47wEmi/n3PrNZ
 	bN40ldni+JSpjBa/fwAVn5w1mcVBwON7ax+Lx85Zd9k9Fmwq9di8Qstj8Z6XTB6bVnWyeWz6
 	NInd4925c+weJ2b8ZvGYdzLQ4/2+q2weW3/ZeTROvcbm8XmTXABfFJdNSmpOZllqkb5dAlfG
-	5dkdbAVndzFW/J97mqWB8etUxi5GTg4JAROJF62P2GDsK1M7WEFsNgF1iRs3fjKD2CICZhIH
-	W/+wg9jMAneZJA70g9ULC6RJbH13FizOIqAq8WzxZTCbV8BU4se0W8wQM+UlVm84AGZzAs35
-	sGwGE4gtBFTT8WAi0A1cQDXv2ST+fp3CCtEgKXFwxQ2WCYy8CxgZVjEKZeaV5SZm5pjoZVTm
-	ZVboJefnbmIEhv+y2j/ROxg/XQg+xCjAwajEw7tjs02aEGtiWXFl7iFGCQ5mJRHeqhrrNCHe
-	lMTKqtSi/Pii0pzU4kOM0hwsSuK8Rt/KU4QE0hNLUrNTUwtSi2CyTBycUg2MrDXhsxes6LiV
-	03Hkp41/2vxTn+8tlNQ/0/xZbc/Mwsd8LhK57bm50vqX+zSnZt1YPGHNuYs5O21KOuatNlsV
-	Xfn9STTbqx85MkEHRflS428cvZW8jqnnyfLVsx/86vL+y3H07qtTQQ+uVj5MNP5vpVESaqrj
-	3iMY/fxQnkxVj7P7v6uWdeJNSizFGYmGWsxFxYkAOEIO1XsCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrPLMWRmVeSWpSXmKPExsXC5WfdrKt4xDbNYN0VaYs569ewWXze8I/N
-	4sWGdkaLr+t/MVs8/dTHYnF47klWi8u75rBZ3Fvzn9Xi/K61rBY7lu5jsrh0YAGTxfHeA0wW
-	8+99ZrPYvGkqs8XxKVMZLX7/ACo+OWsyi4Ogx/fWPhaPnbPusnss2FTqsXmFlsfiPS+ZPDat
-	6mTz2PRpErvHu3Pn2D1OzPjN4jHvZKDH+31X2TwWv/jA5LH1l51H49RrbB6fN8kF8Edx2aSk
-	5mSWpRbp2yVwZVye3cFWcHYXY8X/uadZGhi/TmXsYuTkkBAwkbgytYMVxGYTUJe4ceMnM4gt
-	ImAmcbD1DzuIzSxwl0niQD8biC0skCax9d1ZsDiLgKrEs8WXwWxeAVOJH9NuMUPMlJdYveEA
-	mM0JNOfDshlMILYQUE3Hg4mMExi5FjAyrGIUycwry03MzDHVK87OqMzLrNBLzs/dxAgM5mW1
-	fybuYPxy2f0QowAHoxIP747NNmlCrIllxZW5hxglOJiVRHiraqzThHhTEiurUovy44tKc1KL
-	DzFKc7AoifN6hacmCAmkJ5akZqemFqQWwWSZODilGhijt9x4o3vqQ/nR/+baJ7m6Q+7WGPSd
-	Vi+yqL7nIKCWmr+u7+OnVK/9W2vywrc4feB7wcd/cfGfq59m9r2JFSntC79RKfx/33zGuHB/
-	00f/WT6zzVF1eNBvkmn1d4pU82rHXiGWtqBca9bb4v5CmZKbtzSa1333ONx966/V281t7d5f
-	MiKEKpVYijMSDbWYi4oTATFQ56JiAgAA
+	5kkf2Qs+7WGsuN6Y3cB4u5+xi5GTQ0LARGL+wYVsMHbv+58sIDabgLrEjRs/mUFsEQEziYOt
+	f9hBbGaBu0wSB/rB6oUFsiT6Lu5mBbFZBFQltvw+D2bzAtWfvvIVar68xOoNB8DmcALFPyyb
+	wQRiCwmYSnQ8mAhUwwVU855N4mT7BFaIBkmJgytusExg5F3AyLCKUSgzryw3MTPHRC+jMi+z
+	Qi85P3cTIzD4l9X+id7B+OlC8CFGAQ5GJR7eHZtt0oRYE8uKK3MPMUpwMCuJ8FbVWKcJ8aYk
+	VlalFuXHF5XmpBYfYpTmYFES5zX6Vp4iJJCeWJKanZpakFoEk2Xi4JRqYFSJsT6+4JOG2fGI
+	AIM7f5/81PF4Oat7WeDJVdxs9+ozfrmUBPbbHplmt+kB5+aV0cuvz1tyaZESO9PLyK0Huj9t
+	v8IhsU1ULED68qtrc1Zv4GbZUPBjefSJXkZzfbP4SoYbUTMzdopq+ntnOQTtdGJ6abnvYqYD
+	96tMa2/2HQ9ip9esUCvy2qTEUpyRaKjFXFScCAB7n2jNegIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrHLMWRmVeSWpSXmKPExsXC5WfdrKt4xDbNYF2TusWc9WvYLD5v+Mdm
+	8WJDO6PF1/W/mC2efupjsTg89ySrxeVdc9gs7q35z2pxftdaVosdS/cxWVw6sIDJ4njvASaL
+	+fc+s1ls3jSV2eL4lKmMFr9/ABWfnDWZxUHQ43trH4vHzll32T0WbCr12LxCy2PxnpdMHptW
+	dbJ5bPo0id3j3blz7B4nZvxm8Zh3MtDj/b6rbB6LX3xg8tj6y86jceo1No/Pm+QC+KO4bFJS
+	czLLUov07RK4MjZP+she8GkPY8X1xuwGxtv9jF2MnBwSAiYSve9/soDYbALqEjdu/GQGsUUE
+	zCQOtv5hB7GZBe4ySRzoZwOxhQWyJPou7mYFsVkEVCW2/D4PZvMC1Z++8hVqprzE6g0HwOZw
+	AsU/LJvBBGILCZhKdDyYyDiBkWsBI8MqRpHMvLLcxMwcU73i7IzKvMwKveT83E2MwFBeVvtn
+	4g7GL5fdDzEKcDAq8fDu2GyTJsSaWFZcmXuIUYKDWUmEt6rGOk2INyWxsiq1KD++qDQntfgQ
+	ozQHi5I4r1d4aoKQQHpiSWp2ampBahFMlomDU6qBMf7jlMfxXAc/ixerSFZk7rH2ymi9qluo
+	5yPy78WZlKWmeYr35Dru6Bis+bLxj8yc9/IbD740OitS+c3sgNy9Pq91VxVrrv30jU1Qf/Lu
+	GtutOcnP2ZoYxIqE+r5mdnxPCWKyeZy7q27XroQpjc/avJ88OfvntjjP170Chzx+Ku6cp5iY
+	tVm2TYmlOCPRUIu5qDgRAFu35t9hAgAA
 X-CFilter-Loop: Reflected
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -67,719 +67,699 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 
-Introduced a new API, folio_put_ugen(), to deliver unmap generation
-number to pcp or buddy that will be used by luf mechanism to track need
-of tlb flush for each page residing in pcp or buddy.
+A new mechanism, LUF(Lazy Unmap Flush), defers tlb flush until folios
+that have been unmapped and freed, eventually get allocated again.  It's
+safe for folios that had been mapped read-only and were unmapped, since
+the contents of the folios don't change while staying in pcp or buddy
+so we can still read the data through the stale tlb entries.
 
-For now, the delivery should work for the following call path that is of
-releasing source folios during migration:
+tlb flush can be defered when folios get unmapped as long as it
+guarantees to perform tlb flush needed, before the folios actually
+become used, of course, only if all the corresponding ptes don't have
+write permission.  Otherwise, the system will get messed up.
 
-	folio_put_ugen()
-	   __folio_put_ugen()
-	      free_unref_page()
-	         free_unref_page_commit()
-	         free_one_page()
-	            __free_one_page()
+To achieve that:
 
-The generation number should be handed over properly when pages travel
-between pcp and buddy, and must do necessary handling on exit from pcp
-or buddy.  This patch doesn't include actual body for tlb flush on the
-exit, which will be filled by the main patch of luf mechanism.
+   1. For the folios that map only to non-writable tlb entries, prevent
+      tlb flush during unmapping but perform it just before the folios
+      actually become used, out of buddy or pcp.
+
+   2. When any non-writable ptes change to writable e.g. through fault
+      handler, give up luf mechanism and perform tlb flush required
+      right away.
+
+   3. When a writable mapping is created e.g. through mmap(), give up
+      luf mechanism and perform tlb flush required right away.
+
+No matter what type of workload is used for performance evaluation, the
+result would be positive thanks to the unconditional reduction of tlb
+flushes, tlb misses and interrupts.  For the test, I picked up one of
+the most popular and heavy workload, llama.cpp that is a
+LLM(Large Language Model) inference engine.
+
+The result would depend on memory latency and how often reclaim runs,
+which implies tlb miss overhead and how many times unmapping happens.
+In my system, the result shows:
+
+   1. tlb flushes are reduced about 95%.
+   2. tlb misses(itlb) are reduced about 80%.
+   3. tlb misses(dtlb store) are reduced about 57%.
+   4. tlb misses(dtlb load) are reduced about 24%.
+   5. tlb shootdown interrupts are reduced about 95%.
+   6. The test program runtime is reduced about 5%.
+
+The test environment and the result is like:
+
+   Machine: bare metal, x86_64, Intel(R) Xeon(R) Gold 6430
+   CPU: 1 socket 64 core with hyper thread on
+   Numa: 2 nodes (64 CPUs DRAM 42GB, no CPUs CXL expander 98GB)
+   Config: swap off, numa balancing tiering on, demotion enabled
+
+   The test set:
+
+      llama.cpp/main -m $(70G_model1) -p "who are you?" -s 1 -t 15 -n 20 &
+      llama.cpp/main -m $(70G_model2) -p "who are you?" -s 1 -t 15 -n 20 &
+      llama.cpp/main -m $(70G_model3) -p "who are you?" -s 1 -t 15 -n 20 &
+      wait
+
+      where -t: nr of threads, -s: seed used to make the runtime stable,
+      -n: nr of tokens that determines the runtime, -p: prompt to ask,
+      -m: LLM model to use.
+
+   Run the test set 10 times successively with caches dropped every run
+   via 'echo 3 > /proc/sys/vm/drop_caches'.  Each inference prints its
+   runtime at the end of each.
+
+   1. Runtime from the output of llama.cpp:
+
+   BEFORE
+   ------
+   llama_print_timings:       total time = 1002461.95 ms /    24 tokens
+   llama_print_timings:       total time = 1044978.38 ms /    24 tokens
+   llama_print_timings:       total time = 1000653.09 ms /    24 tokens
+   llama_print_timings:       total time = 1047104.80 ms /    24 tokens
+   llama_print_timings:       total time = 1069430.36 ms /    24 tokens
+   llama_print_timings:       total time = 1068201.16 ms /    24 tokens
+   llama_print_timings:       total time = 1078092.59 ms /    24 tokens
+   llama_print_timings:       total time = 1073200.45 ms /    24 tokens
+   llama_print_timings:       total time = 1067136.00 ms /    24 tokens
+   llama_print_timings:       total time = 1076442.56 ms /    24 tokens
+   llama_print_timings:       total time = 1004142.64 ms /    24 tokens
+   llama_print_timings:       total time = 1042942.65 ms /    24 tokens
+   llama_print_timings:       total time =  999933.76 ms /    24 tokens
+   llama_print_timings:       total time = 1046548.83 ms /    24 tokens
+   llama_print_timings:       total time = 1068671.48 ms /    24 tokens
+   llama_print_timings:       total time = 1068285.76 ms /    24 tokens
+   llama_print_timings:       total time = 1077789.63 ms /    24 tokens
+   llama_print_timings:       total time = 1071558.93 ms /    24 tokens
+   llama_print_timings:       total time = 1066181.55 ms /    24 tokens
+   llama_print_timings:       total time = 1076767.53 ms /    24 tokens
+   llama_print_timings:       total time = 1004065.63 ms /    24 tokens
+   llama_print_timings:       total time = 1044522.13 ms /    24 tokens
+   llama_print_timings:       total time =  999725.33 ms /    24 tokens
+   llama_print_timings:       total time = 1047510.77 ms /    24 tokens
+   llama_print_timings:       total time = 1068010.27 ms /    24 tokens
+   llama_print_timings:       total time = 1068999.31 ms /    24 tokens
+   llama_print_timings:       total time = 1077648.05 ms /    24 tokens
+   llama_print_timings:       total time = 1071378.96 ms /    24 tokens
+   llama_print_timings:       total time = 1066326.32 ms /    24 tokens
+   llama_print_timings:       total time = 1077088.92 ms /    24 tokens
+
+   AFTER
+   -----
+   llama_print_timings:       total time =  988522.03 ms /    24 tokens
+   llama_print_timings:       total time =  997204.52 ms /    24 tokens
+   llama_print_timings:       total time =  996605.86 ms /    24 tokens
+   llama_print_timings:       total time =  991985.50 ms /    24 tokens
+   llama_print_timings:       total time = 1035143.31 ms /    24 tokens
+   llama_print_timings:       total time =  993660.18 ms /    24 tokens
+   llama_print_timings:       total time =  983082.14 ms /    24 tokens
+   llama_print_timings:       total time =  990431.36 ms /    24 tokens
+   llama_print_timings:       total time =  992707.09 ms /    24 tokens
+   llama_print_timings:       total time =  992673.27 ms /    24 tokens
+   llama_print_timings:       total time =  989285.43 ms /    24 tokens
+   llama_print_timings:       total time =  996710.06 ms /    24 tokens
+   llama_print_timings:       total time =  996534.64 ms /    24 tokens
+   llama_print_timings:       total time =  991344.17 ms /    24 tokens
+   llama_print_timings:       total time = 1035210.84 ms /    24 tokens
+   llama_print_timings:       total time =  994714.13 ms /    24 tokens
+   llama_print_timings:       total time =  984184.15 ms /    24 tokens
+   llama_print_timings:       total time =  990909.45 ms /    24 tokens
+   llama_print_timings:       total time =  991881.48 ms /    24 tokens
+   llama_print_timings:       total time =  993918.03 ms /    24 tokens
+   llama_print_timings:       total time =  990061.34 ms /    24 tokens
+   llama_print_timings:       total time =  998076.69 ms /    24 tokens
+   llama_print_timings:       total time =  997082.59 ms /    24 tokens
+   llama_print_timings:       total time =  990677.58 ms /    24 tokens
+   llama_print_timings:       total time = 1036054.94 ms /    24 tokens
+   llama_print_timings:       total time =  994125.93 ms /    24 tokens
+   llama_print_timings:       total time =  982467.01 ms /    24 tokens
+   llama_print_timings:       total time =  990191.60 ms /    24 tokens
+   llama_print_timings:       total time =  993319.24 ms /    24 tokens
+   llama_print_timings:       total time =  992540.57 ms /    24 tokens
+
+   2. tlb shootdowns from 'cat /proc/interrupts':
+
+   BEFORE
+   ------
+   TLB:
+   125553646  141418810  161932620  176853972  186655697  190399283
+   192143823  196414038  192872439  193313658  193395617  192521416
+   190788161  195067598  198016061  193607347  194293972  190786732
+   191545637  194856822  191801931  189634535  190399803  196365922
+   195268398  190115840  188050050  193194908  195317617  190820190
+   190164820  185556071  226797214  229592631  216112464  209909495
+   205575979  205950252  204948111  197999795  198892232  205287952
+   199344631  195015158  195869844  198858745  195692876  200961904
+   203463252  205921722  199850838  206145986  199613202  199961345
+   200129577  203020521  207873649  203697671  197093386  204243803
+   205993323  200934664  204193128  194435376  TLB shootdowns
+
+   AFTER
+   -----
+   TLB:
+     5648092    6610142    7032849    7882308    8088518    8352310
+     8656536    8705136    8647426    8905583    8985408    8704522
+     8884344    9026261    8929974    8869066    8877575    8810096
+     8770984    8754503    8801694    8865925    8787524    8656432
+     8755912    8682034    8773935    8832925    8797997    8515777
+     8481240    8891258   10595243   10285973    9756935    9573681
+     9398968    9069244    9242984    8899009    9310690    9029095
+     9069758    9105825    9092703    9270202    9460287    9258546
+     9180415    9232723    9270611    9175020    9490420    9360316
+     9420818    9057663    9525631    9310152    9152242    8654483
+     9181804    9050847    8919916    8883856  TLB shootdowns
+
+   3. tlb numbers from 'perf stat' per test set:
+
+   BEFORE
+   ------
+   3163679332	dTLB-load-misses
+   2017751856	dTLB-store-misses
+   327092903	iTLB-load-misses
+   1357543886	tlb:tlb_flush
+
+   AFTER
+   -----
+   2394694609	dTLB-load-misses
+   861144167	dTLB-store-misses
+   64055579	iTLB-load-misses
+   69175002	tlb:tlb_flush
 
 Signed-off-by: Byungchul Park <byungchul@sk.com>
 ---
- include/linux/mm.h    |  22 +++++++
- include/linux/sched.h |   1 +
- mm/compaction.c       |  10 +++
- mm/internal.h         |  70 +++++++++++++++++++-
- mm/page_alloc.c       | 144 ++++++++++++++++++++++++++++++++++--------
- mm/page_isolation.c   |   6 ++
- mm/page_reporting.c   |  10 +++
- mm/swap.c             |  12 +++-
- 8 files changed, 247 insertions(+), 28 deletions(-)
+ include/linux/sched.h |   9 ++
+ mm/internal.h         |  43 +++++-
+ mm/memory.c           |   8 ++
+ mm/mmap.c             |   8 ++
+ mm/rmap.c             | 308 +++++++++++++++++++++++++++++++++++++++++-
+ 5 files changed, 366 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index dc33f8269fb5..2369ebedb8bd 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1312,6 +1312,7 @@ static inline struct folio *virt_to_folio(const void *x)
- }
- 
- void __folio_put(struct folio *folio);
-+void __folio_put_ugen(struct folio *folio, unsigned short int ugen);
- 
- void put_pages_list(struct list_head *pages);
- 
-@@ -1509,6 +1510,27 @@ static inline void folio_put(struct folio *folio)
- 		__folio_put(folio);
- }
- 
-+/**
-+ * folio_put_ugen - Decrement the last reference count on a folio.
-+ * @folio: The folio.
-+ * @ugen: The unmap generation # of TLB flush that the folio requires.
-+ *
-+ * The folio's reference count should be one since the only user, folio
-+ * migration code, calls folio_put_ugen() only when the folio has no
-+ * reference else.  The memory will be released back to the page
-+ * allocator and may be used by another allocation immediately.  Do not
-+ * access the memory or the struct folio after calling folio_put_ugen().
-+ *
-+ * Context: May be called in process or interrupt context, but not in NMI
-+ * context.  May be called while holding a spinlock.
-+ */
-+static inline void folio_put_ugen(struct folio *folio, unsigned short int ugen)
-+{
-+	if (WARN_ON(!folio_put_testzero(folio)))
-+		return;
-+	__folio_put_ugen(folio, ugen);
-+}
-+
- /**
-  * folio_put_refs - Reduce the reference count on a folio.
-  * @folio: The folio.
 diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 4118b3f959c3..2aa48adad226 100644
+index 0915390b1b5e..6f83703ec284 100644
 --- a/include/linux/sched.h
 +++ b/include/linux/sched.h
-@@ -1339,6 +1339,7 @@ struct task_struct {
- #endif
+@@ -1340,8 +1340,17 @@ struct task_struct {
  
  	struct tlbflush_unmap_batch	tlb_ubc;
-+	unsigned short int		ugen;
- 
- 	/* Cache last used pipe for splice(): */
- 	struct pipe_inode_info		*splice_pipe;
-diff --git a/mm/compaction.c b/mm/compaction.c
-index e731d45befc7..13799fbb2a9a 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -701,6 +701,11 @@ static unsigned long isolate_freepages_block(struct compact_control *cc,
- 	if (locked)
- 		spin_unlock_irqrestore(&cc->zone->lock, flags);
- 
-+	/*
-+	 * Check and flush before using the isolated pages.
-+	 */
-+	check_flush_task_ugen();
-+
- 	/*
- 	 * Be careful to not go outside of the pageblock.
- 	 */
-@@ -1673,6 +1678,11 @@ static void fast_isolate_freepages(struct compact_control *cc)
- 
- 		spin_unlock_irqrestore(&cc->zone->lock, flags);
- 
-+		/*
-+		 * Check and flush before using the isolated pages.
-+		 */
-+		check_flush_task_ugen();
-+
- 		/* Skip fast search if enough freepages isolated */
- 		if (cc->nr_freepages >= cc->nr_migratepages)
- 			break;
-diff --git a/mm/internal.h b/mm/internal.h
-index eb9c7d8650fc..332662047c17 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -638,7 +638,7 @@ extern bool free_pages_prepare(struct page *page, unsigned int order);
- 
- extern int user_min_free_kbytes;
- 
--void free_unref_page(struct page *page, unsigned int order);
-+void free_unref_page(struct page *page, unsigned int order, unsigned short int ugen);
- void free_unref_folios(struct folio_batch *fbatch);
- 
- extern void zone_pcp_reset(struct zone *zone);
-@@ -1512,4 +1512,72 @@ static inline void shrinker_debugfs_remove(struct dentry *debugfs_entry,
- void workingset_update_node(struct xa_node *node);
- extern struct list_lru shadow_nodes;
+ 	struct tlbflush_unmap_batch	tlb_ubc_ro;
++	struct tlbflush_unmap_batch	tlb_ubc_luf;
+ 	unsigned short int		ugen;
  
 +#if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
-+static inline unsigned short int ugen_latest(unsigned short int a, unsigned short int b)
-+{
-+	if (!a || !b)
-+		return a + b;
-+
 +	/*
-+	 * The ugen is wrapped around so let's use this trick.
++	 * whether all the mappings of a folio during unmap are read-only
++	 * so that luf can work on the folio
 +	 */
-+	if ((short int)(a - b) < 0)
-+		return b;
-+	else
-+		return a;
-+}
++	bool				can_luf;
++#endif
 +
-+static inline void update_task_ugen(unsigned short int ugen)
+ 	/* Cache last used pipe for splice(): */
+ 	struct pipe_inode_info		*splice_pipe;
+ 
+diff --git a/mm/internal.h b/mm/internal.h
+index 805f0e6ecab4..2a44194f5d39 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -1517,6 +1517,38 @@ void workingset_update_node(struct xa_node *node);
+ extern struct list_lru shadow_nodes;
+ 
+ #if defined(CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH)
++unsigned short int try_to_unmap_luf(void);
++void check_luf_flush(unsigned short int ugen);
++void luf_flush(void);
++
++/*
++ * Reset the indicator indicating there are no writable mappings at the
++ * beginning of every rmap traverse for unmap.  luf can work only when
++ * all the mappings are read-only.
++ */
++static inline void can_luf_init(void)
 +{
-+	current->ugen = ugen_latest(current->ugen, ugen);
-+}
-+
-+static inline unsigned short int hand_over_task_ugen(void)
-+{
-+	unsigned short int ret = current->ugen;
-+
-+	current->ugen = 0;
-+	return ret;
-+}
-+
-+static inline void check_flush_task_ugen(void)
-+{
-+	/*
-+	 * XXX: luf mechanism will handle this. For now, do nothing but
-+	 * reset current's ugen to finalize this turn.
-+	 */
-+	current->ugen = 0;
++	current->can_luf = true;
 +}
 +
 +/*
-+ * Check the constratints of what luf currently supports.
++ * Mark the folio is not applicable to luf once it found a writble or
++ * dirty pte during rmap traverse for unmap.
 + */
-+static inline bool can_luf_folio(struct folio *f)
++static inline void can_luf_fail(void)
 +{
-+	bool can_luf = true;
-+
-+	/*
-+	 * XXX: Remove the constraint once luf handles zone device folio.
-+	 */
-+	can_luf = can_luf && likely(!folio_is_zone_device(f));
-+
-+	/*
-+	 * XXX: Remove the constraint once luf handles hugetlb folio.
-+	 */
-+	can_luf = can_luf && likely(!folio_test_hugetlb(f));
-+
-+	/*
-+	 * XXX: Remove the constraint once luf handles large folio.
-+	 */
-+	can_luf = can_luf && likely(!folio_test_large(f));
-+
-+	return can_luf;
++	current->can_luf = false;
 +}
-+#else /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
-+static inline unsigned short int ugen_latest(unsigned short int a, unsigned short int b) { return 0; }
-+static inline void update_task_ugen(unsigned short int ugen) {}
-+static inline unsigned short int hand_over_task_ugen(void) { return 0; }
-+static inline void check_flush_task_ugen(void) {}
-+static inline bool can_luf_folio(struct folio *f) { return false; }
-+#endif
- #endif	/* __MM_INTERNAL_H */
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 917b22b429d1..2cd278c207d1 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -696,6 +696,7 @@ static inline void __del_page_from_free_list(struct page *page, struct zone *zon
- 	if (page_reported(page))
- 		__ClearPageReported(page);
- 
-+	update_task_ugen(page_buddy_ugen(page));
- 	list_del(&page->buddy_list);
- 	__ClearPageBuddy(page);
- 	set_page_private(page, 0);
-@@ -768,7 +769,7 @@ buddy_merge_likely(unsigned long pfn, unsigned long buddy_pfn,
- static inline void __free_one_page(struct page *page,
- 		unsigned long pfn,
- 		struct zone *zone, unsigned int order,
--		int migratetype, fpi_t fpi_flags)
-+		int migratetype, fpi_t fpi_flags, unsigned short int ugen)
- {
- 	struct capture_control *capc = task_capc(zone);
- 	unsigned long buddy_pfn = 0;
-@@ -783,12 +784,22 @@ static inline void __free_one_page(struct page *page,
- 	VM_BUG_ON_PAGE(pfn & ((1 << order) - 1), page);
- 	VM_BUG_ON_PAGE(bad_range(zone, page), page);
- 
-+	/*
-+	 * Ensure private is zero before using it inside buddy.
-+	 */
-+	set_page_private(page, 0);
 +
- 	account_freepages(zone, 1 << order, migratetype);
- 
- 	while (order < MAX_PAGE_ORDER) {
- 		int buddy_mt = migratetype;
- 
- 		if (compaction_capture(capc, page, order, migratetype)) {
-+			/*
-+			 * Capturer will check_flush_task_ugen() through
-+			 * prep_new_page().
-+			 */
-+			update_task_ugen(ugen);
- 			account_freepages(zone, -(1 << order), migratetype);
- 			return;
- 		}
-@@ -819,6 +830,11 @@ static inline void __free_one_page(struct page *page,
- 		if (page_is_guard(buddy))
- 			clear_page_guard(zone, buddy, order);
- 		else
-+			/*
-+			 * __del_page_from_free_list() updates current's
-+			 * ugen that pairs with hand_over_task_ugen() below
-+			 * in this funtion.
-+			 */
- 			__del_page_from_free_list(buddy, zone, order, buddy_mt);
- 
- 		if (unlikely(buddy_mt != migratetype)) {
-@@ -837,7 +853,8 @@ static inline void __free_one_page(struct page *page,
- 	}
- 
- done_merging:
--	set_buddy_order_ugen(page, order, 0);
-+	ugen = ugen_latest(ugen, hand_over_task_ugen());
-+	set_buddy_order_ugen(page, order, ugen);
- 
- 	if (fpi_flags & FPI_TO_TAIL)
- 		to_tail = true;
-@@ -1048,6 +1065,11 @@ __always_inline bool free_pages_prepare(struct page *page,
- 
- 	VM_BUG_ON_PAGE(PageTail(page), page);
- 
-+	/*
-+	 * Ensure private is zero before using it inside pcp.
-+	 */
-+	set_page_private(page, 0);
-+
- 	trace_mm_page_free(page, order);
- 	kmsan_free_page(page, order);
- 
-@@ -1179,17 +1201,23 @@ static void free_pcppages_bulk(struct zone *zone, int count,
- 		do {
- 			unsigned long pfn;
- 			int mt;
-+			unsigned short int ugen;
- 
- 			page = list_last_entry(list, struct page, pcp_list);
- 			pfn = page_to_pfn(page);
- 			mt = get_pfnblock_migratetype(page, pfn);
- 
-+			/*
-+			 * pcp uses private to store ugen.
-+			 */
-+			ugen = page_private(page);
-+
- 			/* must delete to avoid corrupting pcp list */
- 			list_del(&page->pcp_list);
- 			count -= nr_pages;
- 			pcp->count -= nr_pages;
- 
--			__free_one_page(page, pfn, zone, order, mt, FPI_NONE);
-+			__free_one_page(page, pfn, zone, order, mt, FPI_NONE, ugen);
- 			trace_mm_page_pcpu_drain(page, order, mt);
- 		} while (count > 0 && !list_empty(list));
- 	}
-@@ -1199,14 +1227,14 @@ static void free_pcppages_bulk(struct zone *zone, int count,
- 
- static void free_one_page(struct zone *zone, struct page *page,
- 			  unsigned long pfn, unsigned int order,
--			  fpi_t fpi_flags)
-+			  fpi_t fpi_flags, unsigned short int ugen)
- {
- 	unsigned long flags;
- 	int migratetype;
- 
- 	spin_lock_irqsave(&zone->lock, flags);
- 	migratetype = get_pfnblock_migratetype(page, pfn);
--	__free_one_page(page, pfn, zone, order, migratetype, fpi_flags);
-+	__free_one_page(page, pfn, zone, order, migratetype, fpi_flags, ugen);
- 	spin_unlock_irqrestore(&zone->lock, flags);
- }
- 
-@@ -1219,7 +1247,7 @@ static void __free_pages_ok(struct page *page, unsigned int order,
- 	if (!free_pages_prepare(page, order))
- 		return;
- 
--	free_one_page(zone, page, pfn, order, fpi_flags);
-+	free_one_page(zone, page, pfn, order, fpi_flags, 0);
- 
- 	__count_vm_events(PGFREE, 1 << order);
- }
-@@ -1484,6 +1512,10 @@ inline void post_alloc_hook(struct page *page, unsigned int order,
- static void prep_new_page(struct page *page, unsigned int order, gfp_t gfp_flags,
- 							unsigned int alloc_flags)
- {
-+	/*
-+	 * Check and flush before using the pages.
-+	 */
-+	check_flush_task_ugen();
- 	post_alloc_hook(page, order, gfp_flags);
- 
- 	if (order && (gfp_flags & __GFP_COMP))
-@@ -1519,6 +1551,10 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
- 		page = get_page_from_free_area(area, migratetype);
- 		if (!page)
- 			continue;
-+		/*
-+		 * del_page_from_free_list() updates current's ugen that
-+		 * pairs with check_flush_task_ugen() in prep_new_page().
-+		 */
- 		del_page_from_free_list(page, zone, current_order, migratetype);
- 		expand(zone, page, order, current_order, migratetype);
- 		trace_mm_page_alloc_zone_locked(page, order, migratetype,
-@@ -1681,7 +1717,8 @@ static unsigned long find_large_buddy(unsigned long start_pfn)
- 
- /* Split a multi-block free page into its individual pageblocks */
- static void split_large_buddy(struct zone *zone, struct page *page,
--			      unsigned long pfn, int order)
-+			      unsigned long pfn, int order,
-+			      unsigned short int ugen)
- {
- 	unsigned long end_pfn = pfn + (1 << order);
- 
-@@ -1694,7 +1731,7 @@ static void split_large_buddy(struct zone *zone, struct page *page,
- 	while (pfn != end_pfn) {
- 		int mt = get_pfnblock_migratetype(page, pfn);
- 
--		__free_one_page(page, pfn, zone, pageblock_order, mt, FPI_NONE);
-+		__free_one_page(page, pfn, zone, pageblock_order, mt, FPI_NONE, ugen);
- 		pfn += pageblock_nr_pages;
- 		page = pfn_to_page(pfn);
- 	}
-@@ -1736,22 +1773,34 @@ bool move_freepages_block_isolate(struct zone *zone, struct page *page,
- 	if (pfn != start_pfn) {
- 		struct page *buddy = pfn_to_page(pfn);
- 		int order = buddy_order(buddy);
-+		unsigned short int ugen;
- 
-+		/*
-+		 * del_page_from_free_list() updates current's ugen that
-+		 * pairs with the following hand_over_task_ugen().
-+		 */
- 		del_page_from_free_list(buddy, zone, order,
- 					get_pfnblock_migratetype(buddy, pfn));
-+		ugen = hand_over_task_ugen();
- 		set_pageblock_migratetype(page, migratetype);
--		split_large_buddy(zone, buddy, pfn, order);
-+		split_large_buddy(zone, buddy, pfn, order, ugen);
- 		return true;
- 	}
- 
- 	/* We're the starting block of a larger buddy */
- 	if (PageBuddy(page) && buddy_order(page) > pageblock_order) {
- 		int order = buddy_order(page);
-+		unsigned short int ugen;
- 
-+		/*
-+		 * del_page_from_free_list() updates current's ugen that
-+		 * pairs with the following hand_over_task_ugen().
-+		 */
- 		del_page_from_free_list(page, zone, order,
- 					get_pfnblock_migratetype(page, pfn));
-+		ugen = hand_over_task_ugen();
- 		set_pageblock_migratetype(page, migratetype);
--		split_large_buddy(zone, page, pfn, order);
-+		split_large_buddy(zone, page, pfn, order, ugen);
- 		return true;
- 	}
- move:
-@@ -1871,6 +1920,10 @@ steal_suitable_fallback(struct zone *zone, struct page *page,
- 
- 	/* Take ownership for orders >= pageblock_order */
- 	if (current_order >= pageblock_order) {
-+		/*
-+		 * del_page_from_free_list() updates current's ugen that
-+		 * pairs with check_flush_task_ugen() in prep_new_page().
-+		 */
- 		del_page_from_free_list(page, zone, current_order, block_type);
- 		change_pageblock_range(page, current_order, start_type);
- 		expand(zone, page, order, current_order, start_type);
-@@ -1926,6 +1979,10 @@ steal_suitable_fallback(struct zone *zone, struct page *page,
- 	}
- 
- single_page:
-+	/*
-+	 * del_page_from_free_list() updates current's ugen that pairs
-+	 * with check_flush_task_ugen() in prep_new_page().
-+	 */
- 	del_page_from_free_list(page, zone, current_order, block_type);
- 	expand(zone, page, order, current_order, block_type);
- 	return page;
-@@ -2547,7 +2604,7 @@ static int nr_pcp_high(struct per_cpu_pages *pcp, struct zone *zone,
- 
- static void free_unref_page_commit(struct zone *zone, struct per_cpu_pages *pcp,
- 				   struct page *page, int migratetype,
--				   unsigned int order)
-+				   unsigned int order, unsigned short int ugen)
- {
- 	int high, batch;
- 	int pindex;
-@@ -2561,6 +2618,11 @@ static void free_unref_page_commit(struct zone *zone, struct per_cpu_pages *pcp,
- 	pcp->alloc_factor >>= 1;
- 	__count_vm_events(PGFREE, 1 << order);
- 	pindex = order_to_pindex(migratetype, order);
-+
-+	/*
-+	 * pcp uses private to store ugen.
-+	 */
-+	set_page_private(page, ugen);
- 	list_add(&page->pcp_list, &pcp->lists[pindex]);
- 	pcp->count += 1 << order;
- 
-@@ -2596,7 +2658,8 @@ static void free_unref_page_commit(struct zone *zone, struct per_cpu_pages *pcp,
- /*
-  * Free a pcp page
-  */
--void free_unref_page(struct page *page, unsigned int order)
-+void free_unref_page(struct page *page, unsigned int order,
-+		     unsigned short int ugen)
- {
- 	unsigned long __maybe_unused UP_flags;
- 	struct per_cpu_pages *pcp;
-@@ -2622,7 +2685,7 @@ void free_unref_page(struct page *page, unsigned int order)
- 	migratetype = get_pfnblock_migratetype(page, pfn);
- 	if (unlikely(migratetype >= MIGRATE_PCPTYPES)) {
- 		if (unlikely(is_migrate_isolate(migratetype))) {
--			free_one_page(page_zone(page), page, pfn, order, FPI_NONE);
-+			free_one_page(page_zone(page), page, pfn, order, FPI_NONE, ugen);
- 			return;
- 		}
- 		migratetype = MIGRATE_MOVABLE;
-@@ -2632,10 +2695,10 @@ void free_unref_page(struct page *page, unsigned int order)
- 	pcp_trylock_prepare(UP_flags);
- 	pcp = pcp_spin_trylock(zone->per_cpu_pageset);
- 	if (pcp) {
--		free_unref_page_commit(zone, pcp, page, migratetype, order);
-+		free_unref_page_commit(zone, pcp, page, migratetype, order, ugen);
- 		pcp_spin_unlock(pcp);
- 	} else {
--		free_one_page(zone, page, pfn, order, FPI_NONE);
-+		free_one_page(zone, page, pfn, order, FPI_NONE, ugen);
- 	}
- 	pcp_trylock_finish(UP_flags);
- }
-@@ -2666,7 +2729,7 @@ void free_unref_folios(struct folio_batch *folios)
- 		 */
- 		if (!pcp_allowed_order(order)) {
- 			free_one_page(folio_zone(folio), &folio->page,
--				      pfn, order, FPI_NONE);
-+				      pfn, order, FPI_NONE, 0);
- 			continue;
- 		}
- 		folio->private = (void *)(unsigned long)order;
-@@ -2702,7 +2765,7 @@ void free_unref_folios(struct folio_batch *folios)
- 			 */
- 			if (is_migrate_isolate(migratetype)) {
- 				free_one_page(zone, &folio->page, pfn,
--					      order, FPI_NONE);
-+					      order, FPI_NONE, 0);
- 				continue;
- 			}
- 
-@@ -2715,7 +2778,7 @@ void free_unref_folios(struct folio_batch *folios)
- 			if (unlikely(!pcp)) {
- 				pcp_trylock_finish(UP_flags);
- 				free_one_page(zone, &folio->page, pfn,
--					      order, FPI_NONE);
-+					      order, FPI_NONE, 0);
- 				continue;
- 			}
- 			locked_zone = zone;
-@@ -2730,7 +2793,7 @@ void free_unref_folios(struct folio_batch *folios)
- 
- 		trace_mm_page_free_batched(&folio->page);
- 		free_unref_page_commit(zone, pcp, &folio->page, migratetype,
--				order);
-+				order, 0);
- 	}
- 
- 	if (pcp) {
-@@ -2781,6 +2844,11 @@ int __isolate_free_page(struct page *page, unsigned int order)
- 			return 0;
- 	}
- 
-+	/*
-+	 * del_page_from_free_list() updates current's ugen. The user of
-+	 * the isolated page should check_flush_task_ugen() before using
-+	 * it.
-+	 */
- 	del_page_from_free_list(page, zone, order, mt);
- 
- 	/*
-@@ -2822,7 +2890,7 @@ void __putback_isolated_page(struct page *page, unsigned int order, int mt)
- 
- 	/* Return isolated page to tail of freelist. */
- 	__free_one_page(page, page_to_pfn(page), zone, order, mt,
--			FPI_SKIP_REPORT_NOTIFY | FPI_TO_TAIL);
-+			FPI_SKIP_REPORT_NOTIFY | FPI_TO_TAIL, 0);
- }
- 
- /*
-@@ -2965,6 +3033,11 @@ struct page *__rmqueue_pcplist(struct zone *zone, unsigned int order,
- 		}
- 
- 		page = list_first_entry(list, struct page, pcp_list);
-+
-+		/*
-+		 * Pairs with check_flush_task_ugen() in prep_new_page().
-+		 */
-+		update_task_ugen(page_private(page));
- 		list_del(&page->pcp_list);
- 		pcp->count -= 1 << order;
- 	} while (check_new_pages(page, order));
-@@ -4791,11 +4864,11 @@ void __free_pages(struct page *page, unsigned int order)
- 	struct alloc_tag *tag = pgalloc_tag_get(page);
- 
- 	if (put_page_testzero(page))
--		free_unref_page(page, order);
-+		free_unref_page(page, order, 0);
- 	else if (!head) {
- 		pgalloc_tag_sub_pages(tag, (1 << order) - 1);
- 		while (order-- > 0)
--			free_unref_page(page + (1 << order), order);
-+			free_unref_page(page + (1 << order), order, 0);
- 	}
- }
- EXPORT_SYMBOL(__free_pages);
-@@ -4857,7 +4930,7 @@ void __page_frag_cache_drain(struct page *page, unsigned int count)
- 	VM_BUG_ON_PAGE(page_ref_count(page) == 0, page);
- 
- 	if (page_ref_sub_and_test(page, count))
--		free_unref_page(page, compound_order(page));
-+		free_unref_page(page, compound_order(page), 0);
- }
- EXPORT_SYMBOL(__page_frag_cache_drain);
- 
-@@ -4898,7 +4971,7 @@ void *__page_frag_alloc_align(struct page_frag_cache *nc,
- 			goto refill;
- 
- 		if (unlikely(nc->pfmemalloc)) {
--			free_unref_page(page, compound_order(page));
-+			free_unref_page(page, compound_order(page), 0);
- 			goto refill;
- 		}
- 
-@@ -4942,7 +5015,7 @@ void page_frag_free(void *addr)
- 	struct page *page = virt_to_head_page(addr);
- 
- 	if (unlikely(put_page_testzero(page)))
--		free_unref_page(page, compound_order(page));
-+		free_unref_page(page, compound_order(page), 0);
- }
- EXPORT_SYMBOL(page_frag_free);
- 
-@@ -6751,10 +6824,19 @@ void __offline_isolated_pages(unsigned long start_pfn, unsigned long end_pfn)
- 		BUG_ON(!PageBuddy(page));
- 		VM_WARN_ON(get_pageblock_migratetype(page) != MIGRATE_ISOLATE);
- 		order = buddy_order(page);
-+		/*
-+		 * del_page_from_free_list() updates current's ugen that
-+		 * pairs with check_flush_task_ugen() below in this function.
-+		 */
- 		del_page_from_free_list(page, zone, order, MIGRATE_ISOLATE);
- 		pfn += (1 << order);
- 	}
- 	spin_unlock_irqrestore(&zone->lock, flags);
-+
-+	/*
-+	 * Check and flush before using it.
-+	 */
-+	check_flush_task_ugen();
- }
- #endif
- 
-@@ -6830,6 +6912,11 @@ bool take_page_off_buddy(struct page *page)
- 			int migratetype = get_pfnblock_migratetype(page_head,
- 								   pfn_head);
- 
-+			/*
-+			 * del_page_from_free_list() updates current's
-+			 * ugen that pairs with check_flush_task_ugen() below
-+			 * in this function.
-+			 */
- 			del_page_from_free_list(page_head, zone, page_order,
- 						migratetype);
- 			break_down_buddy_pages(zone, page_head, page, 0,
-@@ -6842,6 +6929,11 @@ bool take_page_off_buddy(struct page *page)
- 			break;
- 	}
- 	spin_unlock_irqrestore(&zone->lock, flags);
-+
-+	/*
-+	 * Check and flush before using it.
-+	 */
-+	check_flush_task_ugen();
- 	return ret;
- }
- 
-@@ -6860,7 +6952,7 @@ bool put_page_back_buddy(struct page *page)
- 		int migratetype = get_pfnblock_migratetype(page, pfn);
- 
- 		ClearPageHWPoisonTakenOff(page);
--		__free_one_page(page, pfn, zone, 0, migratetype, FPI_NONE);
-+		__free_one_page(page, pfn, zone, 0, migratetype, FPI_NONE, 0);
- 		if (TestClearPageHWPoison(page)) {
- 			ret = true;
- 		}
-diff --git a/mm/page_isolation.c b/mm/page_isolation.c
-index 042937d5abe4..5823da60a621 100644
---- a/mm/page_isolation.c
-+++ b/mm/page_isolation.c
-@@ -260,6 +260,12 @@ static void unset_migratetype_isolate(struct page *page, int migratetype)
- 	zone->nr_isolate_pageblock--;
- out:
- 	spin_unlock_irqrestore(&zone->lock, flags);
-+
-+	/*
-+	 * Check and flush for the pages that have been isolated.
-+	 */
-+	if (isolated_page)
-+		check_flush_task_ugen();
- }
- 
- static inline struct page *
-diff --git a/mm/page_reporting.c b/mm/page_reporting.c
-index e4c428e61d8c..4f94a3ea1b22 100644
---- a/mm/page_reporting.c
-+++ b/mm/page_reporting.c
-@@ -221,6 +221,11 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 		/* release lock before waiting on report processing */
- 		spin_unlock_irq(&zone->lock);
- 
-+		/*
-+		 * Check and flush before using the isolated pages.
-+		 */
-+		check_flush_task_ugen();
-+
- 		/* begin processing pages in local list */
- 		err = prdev->report(prdev, sgl, PAGE_REPORTING_CAPACITY);
- 
-@@ -253,6 +258,11 @@ page_reporting_cycle(struct page_reporting_dev_info *prdev, struct zone *zone,
- 
- 	spin_unlock_irq(&zone->lock);
- 
-+	/*
-+	 * Check and flush before using the isolated pages.
-+	 */
-+	check_flush_task_ugen();
-+
- 	return err;
- }
- 
-diff --git a/mm/swap.c b/mm/swap.c
-index f0d478eee292..0fc5a5e8457f 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -126,10 +126,20 @@ void __folio_put(struct folio *folio)
- 	if (folio_test_large(folio) && folio_test_large_rmappable(folio))
- 		folio_undo_large_rmappable(folio);
- 	mem_cgroup_uncharge(folio);
--	free_unref_page(&folio->page, folio_order(folio));
-+	free_unref_page(&folio->page, folio_order(folio), 0);
- }
- EXPORT_SYMBOL(__folio_put);
- 
-+void __folio_put_ugen(struct folio *folio, unsigned short int ugen)
++/*
++ * Check if all the mappings are read-only and read-only mappings even
++ * exist.
++ */
++static inline bool can_luf_test(void)
 +{
-+	if (WARN_ON(!can_luf_folio(folio)))
++	return current->can_luf && current->tlb_ubc_ro.flush_required;
++}
++
+ static inline unsigned short int ugen_latest(unsigned short int a, unsigned short int b)
+ {
+ 	if (!a || !b)
+@@ -1546,10 +1578,7 @@ static inline unsigned short int hand_over_task_ugen(void)
+ 
+ static inline void check_flush_task_ugen(void)
+ {
+-	/*
+-	 * XXX: luf mechanism will handle this. For now, do nothing but
+-	 * reset current's ugen to finalize this turn.
+-	 */
++	check_luf_flush(current->ugen);
+ 	current->ugen = 0;
+ }
+ 
+@@ -1578,6 +1607,12 @@ static inline bool can_luf_folio(struct folio *f)
+ 	return can_luf;
+ }
+ #else /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */
++static inline unsigned short int try_to_unmap_luf(void) { return 0; }
++static inline void check_luf_flush(unsigned short int ugen) {}
++static inline void luf_flush(void) {}
++static inline void can_luf_init(void) {}
++static inline void can_luf_fail(void) {}
++static inline bool can_luf_test(void) { return false; }
+ static inline unsigned short int ugen_latest(unsigned short int a, unsigned short int b) { return 0; }
+ static inline void update_task_ugen(unsigned short int ugen) {}
+ static inline unsigned short int hand_over_task_ugen(void) { return 0; }
+diff --git a/mm/memory.c b/mm/memory.c
+index 33d87b64d15d..f218c275d307 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -3617,6 +3617,14 @@ static vm_fault_t do_wp_page(struct vm_fault *vmf)
+ 	if (vmf->page)
+ 		folio = page_folio(vmf->page);
+ 
++	/*
++	 * The folio may or may not be one that is under luf's control
++	 * and might be about to change its permission to writable.
++	 * Conservatively give up deferring tlb flush just in case.
++	 */
++	if (folio)
++		luf_flush();
++
+ 	/*
+ 	 * Shared mapping: we are guaranteed to have VM_WRITE and
+ 	 * FAULT_FLAG_WRITE set at this point.
+diff --git a/mm/mmap.c b/mm/mmap.c
+index 47363e7f7ea2..3b3bece4b079 100644
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -1271,6 +1271,14 @@ unsigned long do_mmap(struct file *file, unsigned long addr,
+ 			pkey = 0;
+ 	}
+ 
++	/*
++	 * This mmap may or may not be mapping to ones that is under
++	 * luf's control.  However, conservatively give up deferring tlb
++	 * flush just in case.
++	 */
++	if (prot & PROT_WRITE)
++		luf_flush();
++
+ 	/* Do simple checking here so the lower-level routines won't have
+ 	 * to. we assume access permissions have been handled by the open
+ 	 * of the memory object, so we don't do any here.
+diff --git a/mm/rmap.c b/mm/rmap.c
+index 328b5e2217e6..e42783c02114 100644
+--- a/mm/rmap.c
++++ b/mm/rmap.c
+@@ -635,6 +635,270 @@ struct anon_vma *folio_lock_anon_vma_read(struct folio *folio,
+ }
+ 
+ #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
++static struct tlbflush_unmap_batch luf_ubc;
++static DEFINE_SPINLOCK(luf_lock);
++
++/*
++ * Don't be zero to distinguish from invalid ugen, 0.
++ */
++static unsigned short int ugen_next(unsigned short int a)
++{
++	return a + 1 ?: a + 2;
++}
++
++static bool ugen_before(unsigned short int a, unsigned short int b)
++{
++	return (short int)(a - b) < 0;
++}
++
++/*
++ * Need to synchronize between tlb flush and managing pending CPUs in
++ * luf_ubc.  Take a look at the following scenario, where CPU0 is in
++ * try_to_unmap_flush() and CPU1 is in migrate_pages_batch():
++ *
++ *	CPU0			CPU1
++ *	----			----
++ *	tlb flush
++ *				unmap folios (needing tlb flush)
++ *				add pending CPUs to luf_ubc
++ *				<-- not performed tlb flush needed by
++ *				    the unmap above yet but the request
++ *				    will be cleared by CPU0 shortly. bug!
++ *	clear the CPUs from luf_ubc
++ *
++ * The pending CPUs added in CPU1 should not be cleared from luf_ubc
++ * in CPU0 because the tlb flush for luf_ubc added in CPU1 has not
++ * been performed this turn.  To avoid this, using 'on_flushing'
++ * variable, prevent adding pending CPUs to luf_ubc and give up luf
++ * mechanism if someone is in the middle of tlb flush, like:
++ *
++ *	CPU0			CPU1
++ *	----			----
++ *	on_flushing++
++ *	tlb flush
++ *				unmap folios (needing tlb flush)
++ *				if on_flushing == 0:
++ *				   add pending CPUs to luf_ubc
++ *				else: <-- hit
++ *				   give up luf mechanism
++ *	clear the CPUs from luf_ubc
++ *	on_flushing--
++ *
++ * Only the following case would be allowed for luf mechanism to work:
++ *
++ *	CPU0			CPU1
++ *	----			----
++ *				unmap folios (needing tlb flush)
++ *				if on_flushing == 0: <-- hit
++ *				   add pending CPUs to luf_ubc
++ *				else:
++ *				   give up luf mechanism
++ *	on_flushing++
++ *	tlb flush
++ *	clear the CPUs from luf_ubc
++ *	on_flushing--
++ */
++static int on_flushing;
++
++/*
++ * When more than one thread enter check_luf_flush() at the same
++ * time, each should wait for the request on progress to be done to
++ * avoid the following scenario, where the both CPUs are in
++ * check_luf_flush():
++ *
++ *	CPU0			CPU1
++ *	----			----
++ *	if !luf_ubc.flush_required:
++ *	   return
++ *	luf_ubc.flush_required = false
++ *				if !luf_ubc.flush_requied: <-- hit
++ *				   return <-- not performed tlb flush
++ *				              needed yet but return. bug!
++ *				luf_ubc.flush_required = false
++ *				try_to_unmap_flush()
++ *				finalize
++ *	try_to_unmap_flush() <-- performs tlb flush needed
++ *	finalize
++ *
++ * So it should be handled:
++ *
++ *	CPU0			CPU1
++ *	----			----
++ *	atomically execute {
++ *	   if luf_on_flushing:
++ *	      wait for the completion
++ *	      return
++ *	   if !luf_ubc.flush_required:
++ *	      return
++ *	   luf_ubc.flush_required = false
++ *	   luf_on_flushing = true
++ *	}
++ *				atomically execute {
++ *				   if luf_on_flushing: <-- hit
++ *				      wait for the completion
++ *				      return <-- tlb flush needed is done
++ *				   if !luf_ubc.flush_requied:
++ *				      return
++ *				   luf_ubc.flush_required = false
++ *				   luf_on_flushing = true
++ *				}
++ *
++ *				try_to_unmap_flush()
++ *				luf_on_flushing = false
++ *				finalize
++ *	try_to_unmap_flush() <-- performs tlb flush needed
++ *	luf_on_flushing = false
++ *	finalize
++ */
++static bool luf_on_flushing;
++
++/*
++ * Generation number for the current request of deferred tlb flush.
++ */
++static unsigned short int luf_gen;
++
++/*
++ * Generation number for the next request.
++ */
++static unsigned short int luf_gen_next = 1;
++
++/*
++ * Generation number for the latest request handled.
++ */
++static unsigned short int luf_gen_done;
++
++unsigned short int try_to_unmap_luf(void)
++{
++	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
++	struct tlbflush_unmap_batch *tlb_ubc_luf = &current->tlb_ubc_luf;
++	unsigned long flags;
++	unsigned short int ugen;
++
++	if (!spin_trylock_irqsave(&luf_lock, flags)) {
++		/*
++		 * Give up luf mechanism.  Just let tlb flush needed
++		 * handled by try_to_unmap_flush() at the caller side.
++		 */
++		fold_ubc(tlb_ubc, tlb_ubc_luf);
++		return 0;
++	}
++
++	if (on_flushing || luf_on_flushing) {
++		spin_unlock_irqrestore(&luf_lock, flags);
++
++		/*
++		 * Give up luf mechanism.  Just let tlb flush needed
++		 * handled by try_to_unmap_flush() at the caller side.
++		 */
++		fold_ubc(tlb_ubc, tlb_ubc_luf);
++		return 0;
++	}
++
++	fold_ubc(&luf_ubc, tlb_ubc_luf);
++	ugen = luf_gen = luf_gen_next;
++	spin_unlock_irqrestore(&luf_lock, flags);
++
++	return ugen;
++}
++
++static void rmap_flush_start(void)
++{
++	unsigned long flags;
++
++	spin_lock_irqsave(&luf_lock, flags);
++	on_flushing++;
++	spin_unlock_irqrestore(&luf_lock, flags);
++}
++
++static void rmap_flush_end(struct tlbflush_unmap_batch *batch)
++{
++	unsigned long flags;
++
++	spin_lock_irqsave(&luf_lock, flags);
++	if (arch_tlbbatch_done(&luf_ubc.arch, &batch->arch)) {
++		luf_ubc.flush_required = false;
++		luf_ubc.writable = false;
++	}
++	on_flushing--;
++	spin_unlock_irqrestore(&luf_lock, flags);
++}
++
++/*
++ * It must be guaranteed to have completed tlb flush requested on return.
++ */
++void check_luf_flush(unsigned short int ugen)
++{
++	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
++	unsigned long flags;
++
++	/*
++	 * Nothing has been requested.  We are done.
++	 */
++	if (!ugen)
++		return;
++retry:
++	/*
++	 * We can see a larger value than or equal to luf_gen_done,
++	 * which means the tlb flush we need has been done.
++	 */
++	if (!ugen_before(READ_ONCE(luf_gen_done), ugen))
 +		return;
 +
-+	page_cache_release(folio);
-+	mem_cgroup_uncharge(folio);
-+	free_unref_page(&folio->page, 0, ugen);
++	spin_lock_irqsave(&luf_lock, flags);
++
++	/*
++	 * With luf_lock held, we might read luf_gen_done updated.
++	 */
++	if (ugen_next(luf_gen_done) != ugen) {
++		spin_unlock_irqrestore(&luf_lock, flags);
++		return;
++	}
++
++	/*
++	 * Others are already working for us.
++	 */
++	if (luf_on_flushing) {
++		spin_unlock_irqrestore(&luf_lock, flags);
++		goto retry;
++	}
++
++	if (!luf_ubc.flush_required) {
++		spin_unlock_irqrestore(&luf_lock, flags);
++		return;
++	}
++
++	fold_ubc(tlb_ubc, &luf_ubc);
++	luf_gen_next = ugen_next(luf_gen);
++	luf_on_flushing = true;
++	spin_unlock_irqrestore(&luf_lock, flags);
++
++	try_to_unmap_flush();
++
++	spin_lock_irqsave(&luf_lock, flags);
++	luf_on_flushing = false;
++
++	/*
++	 * luf_gen_done can be read by another with luf_lock not
++	 * held so use WRITE_ONCE() to prevent tearing.
++	 */
++	WRITE_ONCE(luf_gen_done, ugen);
++	spin_unlock_irqrestore(&luf_lock, flags);
 +}
 +
- /**
-  * put_pages_list() - release a list of pages
-  * @pages: list of pages threaded on page->lru
++void luf_flush(void)
++{
++	unsigned long flags;
++	unsigned short int ugen;
++
++	/*
++	 * Obtain the latest ugen number.
++	 */
++	spin_lock_irqsave(&luf_lock, flags);
++	ugen = luf_gen;
++	spin_unlock_irqrestore(&luf_lock, flags);
++
++	check_luf_flush(ugen);
++}
+ 
+ void fold_ubc(struct tlbflush_unmap_batch *dst,
+ 	      struct tlbflush_unmap_batch *src)
+@@ -666,13 +930,15 @@ void fold_ubc(struct tlbflush_unmap_batch *dst,
+ void try_to_unmap_flush(void)
+ {
+ 	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
+-	struct tlbflush_unmap_batch *tlb_ubc_ro = &current->tlb_ubc_ro;
++	struct tlbflush_unmap_batch *tlb_ubc_luf = &current->tlb_ubc_luf;
+ 
+-	fold_ubc(tlb_ubc, tlb_ubc_ro);
++	fold_ubc(tlb_ubc, tlb_ubc_luf);
+ 	if (!tlb_ubc->flush_required)
+ 		return;
+ 
++	rmap_flush_start();
+ 	arch_tlbbatch_flush(&tlb_ubc->arch);
++	rmap_flush_end(tlb_ubc);
+ 	arch_tlbbatch_clear(&tlb_ubc->arch);
+ 	tlb_ubc->flush_required = false;
+ 	tlb_ubc->writable = false;
+@@ -682,9 +948,9 @@ void try_to_unmap_flush(void)
+ void try_to_unmap_flush_dirty(void)
+ {
+ 	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
+-	struct tlbflush_unmap_batch *tlb_ubc_ro = &current->tlb_ubc_ro;
++	struct tlbflush_unmap_batch *tlb_ubc_luf = &current->tlb_ubc_luf;
+ 
+-	if (tlb_ubc->writable || tlb_ubc_ro->writable)
++	if (tlb_ubc->writable || tlb_ubc_luf->writable)
+ 		try_to_unmap_flush();
+ }
+ 
+@@ -708,9 +974,15 @@ static void set_tlb_ubc_flush_pending(struct mm_struct *mm, pte_t pteval,
+ 	if (!pte_accessible(mm, pteval))
+ 		return;
+ 
+-	if (pte_write(pteval))
++	if (pte_write(pteval)) {
+ 		tlb_ubc = &current->tlb_ubc;
+-	else
++
++		/*
++		 * luf cannot work with the folio once it found a
++		 * writable or dirty mapping on it.
++		 */
++		can_luf_fail();
++	} else
+ 		tlb_ubc = &current->tlb_ubc_ro;
+ 
+ 	arch_tlbbatch_add_pending(&tlb_ubc->arch, mm, uaddr);
+@@ -1976,11 +2248,23 @@ void try_to_unmap(struct folio *folio, enum ttu_flags flags)
+ 		.done = folio_not_mapped,
+ 		.anon_lock = folio_lock_anon_vma_read,
+ 	};
++	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
++	struct tlbflush_unmap_batch *tlb_ubc_ro = &current->tlb_ubc_ro;
++	struct tlbflush_unmap_batch *tlb_ubc_luf = &current->tlb_ubc_luf;
++	bool can_luf;
++
++	can_luf_init();
+ 
+ 	if (flags & TTU_RMAP_LOCKED)
+ 		rmap_walk_locked(folio, &rwc);
+ 	else
+ 		rmap_walk(folio, &rwc);
++
++	can_luf = can_luf_folio(folio) && can_luf_test();
++	if (can_luf)
++		fold_ubc(tlb_ubc_luf, tlb_ubc_ro);
++	else
++		fold_ubc(tlb_ubc, tlb_ubc_ro);
+ }
+ 
+ /*
+@@ -2325,6 +2609,10 @@ void try_to_migrate(struct folio *folio, enum ttu_flags flags)
+ 		.done = folio_not_mapped,
+ 		.anon_lock = folio_lock_anon_vma_read,
+ 	};
++	struct tlbflush_unmap_batch *tlb_ubc = &current->tlb_ubc;
++	struct tlbflush_unmap_batch *tlb_ubc_ro = &current->tlb_ubc_ro;
++	struct tlbflush_unmap_batch *tlb_ubc_luf = &current->tlb_ubc_luf;
++	bool can_luf;
+ 
+ 	/*
+ 	 * Migration always ignores mlock and only supports TTU_RMAP_LOCKED and
+@@ -2349,10 +2637,18 @@ void try_to_migrate(struct folio *folio, enum ttu_flags flags)
+ 	if (!folio_test_ksm(folio) && folio_test_anon(folio))
+ 		rwc.invalid_vma = invalid_migration_vma;
+ 
++	can_luf_init();
++
+ 	if (flags & TTU_RMAP_LOCKED)
+ 		rmap_walk_locked(folio, &rwc);
+ 	else
+ 		rmap_walk(folio, &rwc);
++
++	can_luf = can_luf_folio(folio) && can_luf_test();
++	if (can_luf)
++		fold_ubc(tlb_ubc_luf, tlb_ubc_ro);
++	else
++		fold_ubc(tlb_ubc, tlb_ubc_ro);
+ }
+ 
+ #ifdef CONFIG_DEVICE_PRIVATE
 -- 
 2.17.1
 
