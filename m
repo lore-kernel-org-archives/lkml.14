@@ -1,130 +1,209 @@
-Received: from fhigh1-smtp.messagingengine.com (fhigh1-smtp.messagingengine.com [103.168.172.152])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE3A10965
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 21:12:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DD5213B597
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 21:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715375579; cv=none; b=tyuu7zhJ0K/VsIySFy+UtyJr/iD39BtfH18C3Fgufdw791de8SqExlzYo0kgjuTBz67tTN7V72gUkmz1WXH7thNDA8W5o/EKvL/6dP74JsppS5gJPR3pUlla7z+0hT//ggPi96oP0NnpPfv+pNoYuYs37LuP+uqvP7cyKWrivhU=
+	t=1715375708; cv=none; b=I16msPVZNvC3smEnilcQ/zx9sqBJFfjTpYRDIZKj4NGvwzE/m/WQEkdByEw4IY9CNnO4/LDLQ8+XDbFKMdJzSCq/xBRFg4Ew7QYzWFG/aN1yX2dy8P6bQ3FAc5VgnvGsz4fOQdovxsTwr0F//6x8qqdtB1KAXgN4XXduUILrt44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715375579; c=relaxed/simple;
-	bh=lv0fRbNf5vALFTpjW9XOcTk13frFXgHh6micYP5akM8=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=YLCEa09dPhTon6zx47EnQ26G9CO9dvuyXdmlLFaqm4uGiheomMmxmRaq84NWCqQXctmGr+09ACpRZooKNY2ZCn6dXreWamYd99rt0i9pvSxOOf30RJIVPFpfkjMJ/E4p015c9LQmm+kCRCjJ2o0Ut5o96LMngHK9O6JmbkSe4DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=i3udHqOD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ATiCSB+w; arc=none smtp.client-ip=103.168.172.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="i3udHqOD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ATiCSB+w"
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfhigh.nyi.internal (Postfix) with ESMTP id B6B9611400D1;
-	Fri, 10 May 2024 17:12:56 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 10 May 2024 17:12:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1715375576; x=1715461976; bh=+A04hSqDZA
-	fectEaYhevQbQt0vFNJTAi4AGu5xEjLfA=; b=i3udHqODbkODbXptIFeddoxgHF
-	tFGEh/0FArlo2trZdU5uqsfAuZl+BHQdTTRoHYNgdfKScnrRqYoglQmAEorZqSUf
-	SrVz4RR6wzsQ8wW58KBgrBnR/smNoAYyvCnX09UclSes2pN+Zw4J/wid05cjduCG
-	f/matfYQTt913t+ehYTTd7ACUG0/5csSPlWpWB8lV5YW7u8lea8l9G1ebh60pgVC
-	jz9pdgegVJiNyE9vOg1Q6tPjLVpaVgbea/dmBPvTH6iFo6kCSNutXcqYYOVRBSDj
-	aSqCG9Y99KadtEa3hrvAffB4egqbPjaOh2xYrHUNeGVrcMyjDEwzz5TMjKgw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1715375576; x=1715461976; bh=+A04hSqDZAfectEaYhevQbQt0vFN
-	JTAi4AGu5xEjLfA=; b=ATiCSB+wTsfOUI0nkbRZTn/iCLWw+g0vKfVAI68h2PUp
-	v49GQtMAA6fF4j/273y5jcTraO3xBfaq+0bMKk5T6h8xYf65dbS8FViUKZA9q77y
-	yk0NSFZtMjEaxIamHI6JuAGIvVxrkikYv2Dwt4+h1ELfhARaQ0dVqkBQ+E9QFUXY
-	fmR+mwUF+4SFbqRoLER/vqM5VCdPqryuNHjYQGCdhxqLpCCeeK7wTtVJktpsaHhu
-	lmHsVDlrPqeOsadjsmx3eEsr9HiZqv5wVzJOOwe2JlYNDR5P0MK33/t0O7WcFLN6
-	ec2SuW/gf6Di08mhu0u1k8soPyLan+IhGJpIwwFREQ==
-X-ME-Sender: <xms:2I0-Zs3XPeZpCNrbvAWoDRlTUpPfwSz4jSvBH23MZEIjASi6MXp3Zg>
-    <xme:2I0-ZnEsKZe3voudtPN7rbjpUJwEqru8kAGPwZHaiNC2kJLV9fwl36zVd7BbZUKb_
-    asBD4Dd3Z1BR_hsYvo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdefkedgudehjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeevhfffledtgeehfeffhfdtgedvheejtdfgkeeuvefgudffteettdekkeeu
-    feehudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:2I0-Zk7KAUjSqsYxkkysamZNh7aIoKOTC_Sa7AC2KNwa8E9Ho6mtFA>
-    <xmx:2I0-Zl2jUK35iJcfFmTCNX793ULkNDiXeg1vRLkftx-sAylE6rSNAQ>
-    <xmx:2I0-ZvHgGro0z1qbAz78L_szkgBDwGMs6_qbrEozj4hmbEL8cDvrbw>
-    <xmx:2I0-Zu_onECDtITEoO5TFZxIXfDWx-mBhn8XYmlyAB-FY0eFOkQoLA>
-    <xmx:2I0-ZnDdGcq8nhxotnDycL4AAQx49G7_uiliRC1DUYMyUbMfV4JGcy-o>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 7105EB6008D; Fri, 10 May 2024 17:12:56 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-443-g0dc955c2a-fm-20240507.001-g0dc955c2
+	s=arc-20240116; t=1715375708; c=relaxed/simple;
+	bh=CfRgQ4O3FLma9WD+HWpo6N4bagp3UwWFygtTgB2J2Es=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rx/JyeAMVuGJkPfoh6zEm2J4jNgkFJC+Xbf4gVS1+AEqu5FcmZqFP2IMJzzp8rc3MbFw0fvKYL+Aw1A61t9wfv6sf1uglVtarK3vqyWDZ8MIVfKpEXlAnURACcIQip5mz5MoW1FBw+N9SQvkwOipFad9oya7dNgBreyIcHI+cio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s5Xa2-0005b4-Hi; Fri, 10 May 2024 23:15:02 +0200
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s5Xa2-000hLJ-3k; Fri, 10 May 2024 23:15:02 +0200
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1s5Xa2-002H8M-06;
+	Fri, 10 May 2024 23:15:02 +0200
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org,
+	kernel@pengutronix.de
+Subject: [PATCH] eeprom: Drop explicit initialization of struct i2c_device_id::driver_data to 0
+Date: Fri, 10 May 2024 23:14:54 +0200
+Message-ID: <20240510211454.2274614-2-u.kleine-koenig@pengutronix.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <0d70e9ef-5291-4134-b41f-183b1233b39b@app.fastmail.com>
-In-Reply-To: <fa20b5a4-a131-49b4-9597-15886435a288@app.fastmail.com>
-References: <fa20b5a4-a131-49b4-9597-15886435a288@app.fastmail.com>
-Date: Fri, 10 May 2024 23:12:36 +0200
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Linus Torvalds" <torvalds@linux-foundation.org>
-Cc: soc@kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: [GIT PULL 3/4] soc: arm code changes for 6.10
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4368; i=u.kleine-koenig@pengutronix.de; h=from:subject; bh=CfRgQ4O3FLma9WD+HWpo6N4bagp3UwWFygtTgB2J2Es=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBmPo5P7Y593d6ajJj3oGKxDcBmxQMC3TvrnLOB0 qFf3YoCadKJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZj6OTwAKCRCPgPtYfRL+ Ts32B/4k4lqap2GqDeTq+ngKtfcQ9irLerPCFaeeUjxnjC3djBycQ5RGcRa+BJqR+OUp9bZg7nG S1W77+E4vobGM7JyCtL9JQNbK/N2a2PEOYu6RhBXr6qyE1EejfrbuhiZsbNc52G6VTcidm/WRtp VGcecYSdASeKVNL3Fb8okFewdxe8cKUsxmDs8TyDQjjqf+zHITki7zY+zOinafhvbjrJ7DpIZel RH8Dn9viCNOfkfSTXtwf5cerT+LX6mnAOnkWWWEzA/ZddyGdQRDElbTCnwB+KZe5zwx5jFSdTib GHXnpIZU0fus4HNsuF6xd2cUT9Y8XlOf+CcefazQfKWmcNT6
+X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-The following changes since commit fec50db7033ea478773b159e0e2efb135270e3b7:
+These drivers don't use the driver_data member of struct i2c_device_id,
+so don't explicitly initialize this member.
 
-  Linux 6.9-rc3 (2024-04-07 13:22:46 -0700)
+This prepares putting driver_data in an anonymous union which requires
+either no initialization or named designators. But it's also a nice
+cleanup on its own.
 
-are available in the Git repository at:
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+---
+ drivers/misc/eeprom/ee1004.c      |  2 +-
+ drivers/misc/eeprom/idt_89hpesx.c | 96 +++++++++++++++----------------
+ drivers/misc/eeprom/max6875.c     |  2 +-
+ 3 files changed, 50 insertions(+), 50 deletions(-)
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/soc-arm-6.10
+diff --git a/drivers/misc/eeprom/ee1004.c b/drivers/misc/eeprom/ee1004.c
+index 21feebc3044c..bf4f65dc6d9a 100644
+--- a/drivers/misc/eeprom/ee1004.c
++++ b/drivers/misc/eeprom/ee1004.c
+@@ -52,7 +52,7 @@ static struct ee1004_bus_data {
+ } ee1004_bus_data[EE1004_MAX_BUSSES];
+ 
+ static const struct i2c_device_id ee1004_ids[] = {
+-	{ "ee1004", 0 },
++	{ "ee1004" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, ee1004_ids);
+diff --git a/drivers/misc/eeprom/idt_89hpesx.c b/drivers/misc/eeprom/idt_89hpesx.c
+index 327afb866b21..43421fe37d33 100644
+--- a/drivers/misc/eeprom/idt_89hpesx.c
++++ b/drivers/misc/eeprom/idt_89hpesx.c
+@@ -1426,58 +1426,58 @@ MODULE_DEVICE_TABLE(i2c, ee_ids);
+  * idt_ids - supported IDT 89HPESx devices
+  */
+ static const struct i2c_device_id idt_ids[] = {
+-	{ "89hpes8nt2", 0 },
+-	{ "89hpes12nt3", 0 },
++	{ "89hpes8nt2" },
++	{ "89hpes12nt3" },
+ 
+-	{ "89hpes24nt6ag2", 0 },
+-	{ "89hpes32nt8ag2", 0 },
+-	{ "89hpes32nt8bg2", 0 },
+-	{ "89hpes12nt12g2", 0 },
+-	{ "89hpes16nt16g2", 0 },
+-	{ "89hpes24nt24g2", 0 },
+-	{ "89hpes32nt24ag2", 0 },
+-	{ "89hpes32nt24bg2", 0 },
++	{ "89hpes24nt6ag2" },
++	{ "89hpes32nt8ag2" },
++	{ "89hpes32nt8bg2" },
++	{ "89hpes12nt12g2" },
++	{ "89hpes16nt16g2" },
++	{ "89hpes24nt24g2" },
++	{ "89hpes32nt24ag2" },
++	{ "89hpes32nt24bg2" },
+ 
+-	{ "89hpes12n3", 0 },
+-	{ "89hpes12n3a", 0 },
+-	{ "89hpes24n3", 0 },
+-	{ "89hpes24n3a", 0 },
++	{ "89hpes12n3" },
++	{ "89hpes12n3a" },
++	{ "89hpes24n3" },
++	{ "89hpes24n3a" },
+ 
+-	{ "89hpes32h8", 0 },
+-	{ "89hpes32h8g2", 0 },
+-	{ "89hpes48h12", 0 },
+-	{ "89hpes48h12g2", 0 },
+-	{ "89hpes48h12ag2", 0 },
+-	{ "89hpes16h16", 0 },
+-	{ "89hpes22h16", 0 },
+-	{ "89hpes22h16g2", 0 },
+-	{ "89hpes34h16", 0 },
+-	{ "89hpes34h16g2", 0 },
+-	{ "89hpes64h16", 0 },
+-	{ "89hpes64h16g2", 0 },
+-	{ "89hpes64h16ag2", 0 },
++	{ "89hpes32h8" },
++	{ "89hpes32h8g2" },
++	{ "89hpes48h12" },
++	{ "89hpes48h12g2" },
++	{ "89hpes48h12ag2" },
++	{ "89hpes16h16" },
++	{ "89hpes22h16" },
++	{ "89hpes22h16g2" },
++	{ "89hpes34h16" },
++	{ "89hpes34h16g2" },
++	{ "89hpes64h16" },
++	{ "89hpes64h16g2" },
++	{ "89hpes64h16ag2" },
+ 
+-	/* { "89hpes3t3", 0 }, // No SMBus-slave iface */
+-	{ "89hpes12t3g2", 0 },
+-	{ "89hpes24t3g2", 0 },
+-	/* { "89hpes4t4", 0 }, // No SMBus-slave iface */
+-	{ "89hpes16t4", 0 },
+-	{ "89hpes4t4g2", 0 },
+-	{ "89hpes10t4g2", 0 },
+-	{ "89hpes16t4g2", 0 },
+-	{ "89hpes16t4ag2", 0 },
+-	{ "89hpes5t5", 0 },
+-	{ "89hpes6t5", 0 },
+-	{ "89hpes8t5", 0 },
+-	{ "89hpes8t5a", 0 },
+-	{ "89hpes24t6", 0 },
+-	{ "89hpes6t6g2", 0 },
+-	{ "89hpes24t6g2", 0 },
+-	{ "89hpes16t7", 0 },
+-	{ "89hpes32t8", 0 },
+-	{ "89hpes32t8g2", 0 },
+-	{ "89hpes48t12", 0 },
+-	{ "89hpes48t12g2", 0 },
++	/* { "89hpes3t3" }, // No SMBus-slave iface */
++	{ "89hpes12t3g2" },
++	{ "89hpes24t3g2" },
++	/* { "89hpes4t4" }, // No SMBus-slave iface */
++	{ "89hpes16t4" },
++	{ "89hpes4t4g2" },
++	{ "89hpes10t4g2" },
++	{ "89hpes16t4g2" },
++	{ "89hpes16t4ag2" },
++	{ "89hpes5t5" },
++	{ "89hpes6t5" },
++	{ "89hpes8t5" },
++	{ "89hpes8t5a" },
++	{ "89hpes24t6" },
++	{ "89hpes6t6g2" },
++	{ "89hpes24t6g2" },
++	{ "89hpes16t7" },
++	{ "89hpes32t8" },
++	{ "89hpes32t8g2" },
++	{ "89hpes48t12" },
++	{ "89hpes48t12g2" },
+ 	{ /* END OF LIST */ }
+ };
+ MODULE_DEVICE_TABLE(i2c, idt_ids);
+diff --git a/drivers/misc/eeprom/max6875.c b/drivers/misc/eeprom/max6875.c
+index cb6b1efeafe0..6fab2ffa736b 100644
+--- a/drivers/misc/eeprom/max6875.c
++++ b/drivers/misc/eeprom/max6875.c
+@@ -183,7 +183,7 @@ static void max6875_remove(struct i2c_client *client)
+ }
+ 
+ static const struct i2c_device_id max6875_id[] = {
+-	{ "max6875", 0 },
++	{ "max6875" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, max6875_id);
 
-for you to fetch changes up to 428ae88ef519f2009fac37563de76ffa6f93046f:
+base-commit: 75fa778d74b786a1608d55d655d42b480a6fa8bd
+-- 
+2.43.0
 
-  arm64: add Airoha EN7581 platform (2024-05-10 15:56:20 +0200)
-
-----------------------------------------------------------------
-soc: arm code changes for 6.10
-
-The code changes are fairly minimal, there is a bit of conversion of
-the old orion5x platform to modern gpio descriptors, the Kconfig entry
-for the added EN7581 platform and a sysfs change for the i.MX PMU
-device.
-
-----------------------------------------------------------------
-Arnd Bergmann (2):
-      Merge tag 'imx-soc-6.10' of git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux into soc/arm
-      Merge tag 'mvebu-arm-6.10-1' of git://git.kernel.org/pub/scm/linux/kernel/git/gclement/mvebu into soc/arm
-
-Daniel Danzberger (1):
-      arm64: add Airoha EN7581 platform
-
-Jonathan Cameron (1):
-      ARM: imx: Assign parents for mmdc event_source devices
-
-Linus Walleij (5):
-      ARM: orion5x: Convert D2Net board to GPIO descriptors for LEDs
-      ARM: orion5x: Convert DNS323 board to GPIO descriptors for LEDs
-      ARM: orion5x: Convert MV2120 board to GPIO descriptors for LEDs
-      ARM: orion5x: Convert Net2big board to GPIO descriptors for LEDs
-      ARM: orion5x: Convert TS409 board to GPIO descriptors for LEDs
-
- arch/arm/mach-imx/mmdc.c              |  1 +
- arch/arm/mach-orion5x/board-d2net.c   | 16 +++++++--
- arch/arm/mach-orion5x/dns323-setup.c  | 63 ++++++++++++++++++++++++++---------
- arch/arm/mach-orion5x/mv2120-setup.c  | 29 +++++++++++-----
- arch/arm/mach-orion5x/net2big-setup.c | 21 +++++++++---
- arch/arm/mach-orion5x/ts409-setup.c   | 25 +++++++++-----
- arch/arm64/Kconfig.platforms          |  7 ++++
- 7 files changed, 124 insertions(+), 38 deletions(-)
