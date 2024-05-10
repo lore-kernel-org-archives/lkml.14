@@ -1,100 +1,131 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C187F
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 00:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E771391
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 00:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715299588; cv=none; b=awhpBgQa0AuY2yUZITXJ/NNmYPi1LL+mfpbHZAOcY5+J2yCU6VV9SBgdy/2v9sx+ubtlDnrW6bUQjbVh4BA3XFZbjGPUTVVLLpxwe8bBhRpDihrPDX1lJj0nIq2lpl2Fa5JeBwb/IIwobxudOaVUF7dJOw487lNspUL35GrWo4M=
+	t=1715299743; cv=none; b=LpGTmTwDRQ8oCwYVTzWjaOTlGQ3nFlatYWgeABxgaIst+ns16kCbYg/BQ9M1atw+sXYDVSj+OsXrXEZObnYnutKShkjRy1g6/v+7AL0JqMfixfPqNUR2PGK/N4iI3uO21sLup9OfGHx3Yo5TkVPyiU+CpzMitul+ll8gZ5PoGnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715299588; c=relaxed/simple;
-	bh=GLOG80HgKLQomRdNUGeLi4tSJE/YjuubP50efidlOaw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ja2Jtj8kPDJOVgzcaeSLJbPts0tm7jyKmGJjeNjjbg332zAAvysLrysXQJAHJcjEFxY1NEaDmZMlJs6inID4d3qNv2/I6z9cxVCtijrI7nAIOFTN+bQ1c7m8+I98T2Em1TKfigy8AqtNm6om3isL8ITCG7DBvefEFGXdGZHWUoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oMwUfgml; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715299743; c=relaxed/simple;
+	bh=5+QjSJTDZDNs5LVpnFKjIsPkpeAYO79PdZNw5dzhpsw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=dBFG0qcp2QGqzzHoc8S7To6lAsjQxy5226UTlXAMnSBEAeTKypfVlJQS7eDyG1Zly/qR+XsmjTLt6DpD3snqH7Wzj0Gtuj42kxWQdcB8oElpWY4ptxfJcXUPPSQeDhQkych6/u5t2bmTRAxK451NWsbO4bZucxKqUyHiHRzFQMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h9tgdsDK; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edliaw.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oMwUfgml"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41f9ce16ed8so15143235e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 17:06:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h9tgdsDK"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6f47c380709so1117743b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 17:09:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715299586; x=1715904386; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A9bM9WgcUeLqnHcG3u0KhZ5y00qqpThdPur7Fomuotk=;
-        b=oMwUfgml4KO6zohBzwROs1yRS9tJhUGd0u0TwdRy+PTo4fF93C3tdnngMsNbwj5/OT
-         y9Pqjzt3QTsqLvsFKVZdFvrG8I6QMkDr20Vq64FWVNR3sdd1we8Tl9/+ldmmvUTmhcit
-         A6buEBJSJ/Z+z0/iCQA1GuP89oGL090pVy1rmu2lL/p9Y/SMg0PfxBmmjqsGCFBhS73c
-         sVcdGFjB+8yxVZ3IbW2YuXkhlCL7TiIl1v7oLycMjB3dE4o07A6/S10Tp3/r+a7IoYfJ
-         oq8d5sX3FoIEL7UPT7niXLQbuA/IFOeOjQxC3VQO45GhJpEGJZPtHAElrAARqUPFPOZY
-         ACyA==
+        d=google.com; s=20230601; t=1715299742; x=1715904542; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dNdh0DGLEI6gEofoq5pc03LS982vJLdNlPLV5JPTShI=;
+        b=h9tgdsDKQonzlutSxCpCwGPMTCbcvMrqZzF0AYdIrIxrWxUrqXprVaPq5cqWJ8MOr3
+         lgB1BrOO1VUoc1t7uBAH8Spm9+4hydxfZeA/fTwFn4OlH1kA3okrvCYxzmJtmhXOMJvj
+         PfLN0FY7JYKfNcvgmL484uWG9RdvMzHAkWFVaUvtCwg3mIsNc9SGCpCVM7ekCOI5A3UZ
+         lp/818zvDFq2fU3xGgCUz14NpxLekjhfyuoSVkaZZsXJbMroJFeEZ/L38UIhV/Ghn+oS
+         LGwe0l7lagho55QJxjRBItBP+neCI58B3RSBHPG6FT3nVkXcH3aZSOIZZyC3RC9cFXuS
+         LtKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715299586; x=1715904386;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=A9bM9WgcUeLqnHcG3u0KhZ5y00qqpThdPur7Fomuotk=;
-        b=G6I7zaWcqWzqJgzPdzW+rrues/dT4m57bN3EdDOBXwYpHW7+PIcZ+INZvPOLVdFMNp
-         RStgY1u5BlawBj71NP7vjej5J7yWsAOOvcL9Nd4JIqqYkbK8jasUPojIaRy7pTzsjjgc
-         WAHeZRjSA5JTTGYyQk35oOi+X/QFMwaIp58UoBXPtDTEmXXWo6QXi3YqNvyXdLJ9Jzpk
-         HA2PKl1PSEiuqcNbQGQb1T5wpqVg4BzqqdfYASKg4tX/ic49tj1XBTCiENgPHwGJmRGp
-         FWsJz3LC1kcyG7m9y8Z5Jtx8eXB1OSQEktWSEocvqk03olwlK77laCSGVPG8RkBDd7SJ
-         LVcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpEqjDve0Uo50xkpGSlGxoeKhSiWUVkMiGe7jFcZktf1HYS/nbYRCDsFSrqgG62bH1pcP2CpWbFd9UXjNQbSATA06zKqa57eX+0vhy
-X-Gm-Message-State: AOJu0YyKXBkcJPzWYvGItHr9YSDBAfKVxhDJJJQNr1R6s74oVPXAEOOT
-	z+iC9p+CiNsIO+HPPq6pTFz2W9+ZRWJa4rkY1YcENGVzW8JdoVTBtb1RhEMIkhQ=
-X-Google-Smtp-Source: AGHT+IGmrKpJP+pGW+74voCnBlphBkplUtmn1tBmjBnekPxUzsEhla98/zmE5Y3eodeDMb+5+jCYMg==
-X-Received: by 2002:a05:600c:3b86:b0:41c:2313:da8d with SMTP id 5b1f17b1804b1-41fea539615mr11429115e9.0.1715299585791;
-        Thu, 09 May 2024 17:06:25 -0700 (PDT)
-Received: from [192.168.0.3] ([176.61.106.227])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccee9318sm41856005e9.30.2024.05.09.17.06.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 May 2024 17:06:25 -0700 (PDT)
-Message-ID: <8ac97153-0e27-47c8-ad86-d1840ac17c3a@linaro.org>
-Date: Fri, 10 May 2024 01:06:24 +0100
+        d=1e100.net; s=20230601; t=1715299742; x=1715904542;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dNdh0DGLEI6gEofoq5pc03LS982vJLdNlPLV5JPTShI=;
+        b=h9ktHXFRuDjnLCuDWHNRXrQ3Q/D/UpM7enALVBpdKNde36uXY7U5ZBUEKuAAlFNRsw
+         dyoOH46hpLJr8F/hbIIGxo2k5Qks+dDr91T8zb4BtqSSV7MAqnYobhMlNx4LwqPzOfhj
+         iCK6mfPYxf91HwxVDTC6GdLQKSaixqQTmrsYmRLQLcSJ1Yq03YLn869CYDsIZOdIkgF2
+         37krDpjFEzo1KXMYuGuaBOlkNLA1yk4zqLGGVzzU76SUVx5daotREHEmuTnvVlRaRamT
+         Nc9p+WluAMI+3UTWebEHgrlDUbbf5NCpN89LUHmLjA1apNyr8NCh/tzUrfi5pVD+UFMW
+         j6iw==
+X-Gm-Message-State: AOJu0YzzRnaaPDcXMV5IO7s7x9Qb3ENug1dBgXHobYYKXCeiM/wKgvCf
+	iMo2mxzLIEZjx1RYVh1qsEtyVxHDdRovQPCsrAadCH/eLv7GI+lkRVSnwNOWJ+yFLwNPUPHiw5R
+	6iA==
+X-Google-Smtp-Source: AGHT+IGtTUZs+3MsCtZfU8WOyARtKSKltxR3na4oeEBppwpGfuKUIqgIQ9le2QPvBBObPpo5IStZo3NSvjc=
+X-Received: from edliaw.c.googlers.com ([fda3:e722:ac3:cc00:24:72f4:c0a8:305d])
+ (user=edliaw job=sendgmr) by 2002:a05:6a00:3c8a:b0:6f3:f447:57df with SMTP id
+ d2e1a72fcca58-6f4e029a229mr27317b3a.1.1715299741860; Thu, 09 May 2024
+ 17:09:01 -0700 (PDT)
+Date: Fri, 10 May 2024 00:06:18 +0000
+In-Reply-To: <20240510000842.410729-1-edliaw@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 17/18] media: venus: Refactor
- hfi_session_fill_buffer_pkt
-To: Ricardo Ribalda <ribalda@chromium.org>,
- Michael Tretter <m.tretter@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Michal Simek <michal.simek@amd.com>, Andy Walls <awalls@md.metrocast.net>,
- Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
- Hans Verkuil <hverkuil-cisco@xs4all.nl>
-References: <20240507-cocci-flexarray-v2-0-7aea262cf065@chromium.org>
- <20240507-cocci-flexarray-v2-17-7aea262cf065@chromium.org>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20240507-cocci-flexarray-v2-17-7aea262cf065@chromium.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20240510000842.410729-1-edliaw@google.com>
+X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
+Message-ID: <20240510000842.410729-2-edliaw@google.com>
+Subject: [PATCH v4 01/66] selftests: Compile with -D_GNU_SOURCE when including lib.mk
+From: Edward Liaw <edliaw@google.com>
+To: shuah@kernel.org, "=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?=" <mic@digikod.net>, 
+	"=?UTF-8?q?G=C3=BCnther=20Noack?=" <gnoack@google.com>, Christian Brauner <brauner@kernel.org>, 
+	Richard Cochran <richardcochran@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, 
+	Jesper Dangaard Brouer <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	kernel-team@android.com, Edward Liaw <edliaw@google.com>, 
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, bpf@vger.kernel.org, 
+	John Hubbard <jhubbard@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On 07/05/2024 17:27, Ricardo Ribalda wrote:
-> -	u32 data[1];
-> +	u32 extradata_size;
+lib.mk will add -D_GNU_SOURCE to CFLAGS by default.  This will make it
+unnecessary to add #define _GNU_SOURCE in the source code.
 
-A correct functional change but again please keep the name to `data` not 
-`extradata_size`
-
-Then add
-
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-
+Suggested-by: John Hubbard <jhubbard@nvidia.com>
+Signed-off-by: Edward Liaw <edliaw@google.com>
 ---
-bod
+ tools/testing/selftests/Makefile | 4 ++--
+ tools/testing/selftests/lib.mk   | 5 ++++-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+index f0431e6cb67e..9039f3709aff 100644
+--- a/tools/testing/selftests/Makefile
++++ b/tools/testing/selftests/Makefile
+@@ -170,11 +170,11 @@ ifneq ($(KBUILD_OUTPUT),)
+   # $(realpath ...) resolves symlinks
+   abs_objtree := $(realpath $(abs_objtree))
+   BUILD := $(abs_objtree)/kselftest
+-  KHDR_INCLUDES := -D_GNU_SOURCE -isystem ${abs_objtree}/usr/include
++  KHDR_INCLUDES := -isystem ${abs_objtree}/usr/include
+ else
+   BUILD := $(CURDIR)
+   abs_srctree := $(shell cd $(top_srcdir) && pwd)
+-  KHDR_INCLUDES := -D_GNU_SOURCE -isystem ${abs_srctree}/usr/include
++  KHDR_INCLUDES := -isystem ${abs_srctree}/usr/include
+   DEFAULT_INSTALL_HDR_PATH := 1
+ endif
+
+diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
+index 3023e0e2f58f..e782f4c96aee 100644
+--- a/tools/testing/selftests/lib.mk
++++ b/tools/testing/selftests/lib.mk
+@@ -67,7 +67,7 @@ MAKEFLAGS += --no-print-directory
+ endif
+
+ ifeq ($(KHDR_INCLUDES),)
+-KHDR_INCLUDES := -D_GNU_SOURCE -isystem $(top_srcdir)/usr/include
++KHDR_INCLUDES := -isystem $(top_srcdir)/usr/include
+ endif
+
+ # In order to use newer items that haven't yet been added to the user's system
+@@ -188,6 +188,9 @@ endef
+ clean: $(if $(TEST_GEN_MODS_DIR),clean_mods_dir)
+ 	$(CLEAN)
+
++# Build with _GNU_SOURCE by default
++CFLAGS += -D_GNU_SOURCE
++
+ # Enables to extend CFLAGS and LDFLAGS from command line, e.g.
+ # make USERCFLAGS=-Werror USERLDFLAGS=-static
+ CFLAGS += $(USERCFLAGS)
+--
+2.45.0.118.g7fe29c98d7-goog
+
