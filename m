@@ -1,118 +1,77 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mslow1.mail.gandi.net (mslow1.mail.gandi.net [217.70.178.240])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B3B3E48C
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 18:43:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 752A743ADF;
+	Fri, 10 May 2024 18:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.240
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715366620; cv=none; b=VamJIGp6h4HZ0if7+FMXkIyjW/1Nmo7mG1SgtT46CCOdtCF1MQVgxduBRl8vmzN/hyJ+VHoOG9YQw+DBhIWznYhMAJCjL9pEz5D92DN8u/8KhcKHE9kDAZLcQW/igyNtJXWp/jSVbHo/hnV6J8b8pOYnVkGidKaL102j7ewKcGY=
+	t=1715366622; cv=none; b=FV7NC1t+OuKsvBmkw9m1ejm/vdVWNTyMJXGWyYFK2YCpF+DjBLrwMKO6rndmCvIvdecz6imXcC7rwLPEUTg3HbleMuX6ABvd5w2G7OetA/BLUW/I+lOB+FJphGpR1zu1FHHYfekP1IZeFGkLF+yqolFPA8lXZIQNcdYo8OIlRyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715366620; c=relaxed/simple;
-	bh=bPIwwSWz7vhLPkw2Y7IUkySooH/UFfl9RPgbQvpMT1Q=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PGA50l/jsWK2yOwD+ScwBdWbwZYCWdE6eoboDdi38hQPtKeqCPoYV9CuGL6knzVOaG44LdjS7dOZauWX8mB/yQfBVnijlyVc0xqQkfwI5DR9iDNo7OqcqOoAsOjr1inQbQ9Q5wHCTkYols1NS3OHRBFtNgKkaSiKgqaMtmoUVUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EMaS2WYk; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com
+	s=arc-20240116; t=1715366622; c=relaxed/simple;
+	bh=i8Y+CF0/msLe+CrT7MBQOBx8WllRoivm74sS5P5A44o=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=X5RJ7At/2Hw9VMKeCU5zR6xdaJeO56tw80tVl+FrskhzGfhZPs024vhMAaco/G5+fGSK1q9CWALpTw3Jv+scgolrPbgqSnW4kIz5ldOg3aWzNys/2NLDxOqGQULqAH23xZrIcc7FSQ2ZQAsAjHwBnrunBGJn9WuT53+JLENpS74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gtucker.io; spf=pass smtp.mailfrom=gtucker.io; dkim=pass (2048-bit key) header.d=gtucker.io header.i=@gtucker.io header.b=NVpkUZ1D; arc=none smtp.client-ip=217.70.178.240
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gtucker.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gtucker.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EMaS2WYk"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-61be8f7ed6eso27405747b3.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 11:43:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715366618; x=1715971418; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3leKVp6DbOZKt/BkP9hZjqxScIgMDd3b3vJx/j0Aby4=;
-        b=EMaS2WYkbIhvSmYlF4THbt56fWrbxMNAFU61GNmmeRwGXAf3/nXb8b42DdQcWrE4+A
-         CvD1v/fcygFSRp99Y31jGCzjTzO+iwU5piRu7jVfVHPAH4fsD1xCYMr8cVUgudkhBKyD
-         Vv6avvdbT9eJm+BnZ08aI0X7HohEgF9RHWgvexzVUqjsyV6WtEAtzMyHP0T1E0dxKcra
-         ARkBdnBqfZ+CGojc4ls3mLxrCkPuzBMLQfiEgbEHU0T3yIVJ+mDiDkWbHdidHJ8fQhJD
-         V4RI7zvETjauRhFNaXIJLGKjOVBF7Pt4dehm4SKoI8vRspSHYSfF3lC1lU3FL79CRYsP
-         L/9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715366618; x=1715971418;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3leKVp6DbOZKt/BkP9hZjqxScIgMDd3b3vJx/j0Aby4=;
-        b=JkEdx5QtOn16qwkqWoE1QqhfIlYDfvEPk7h/6Qj3bMiH0Ijl9xe9aBYB1bOoJ/eKm8
-         sx7HwI2X/MTyg+gtAYQ7VXWbzPiYAbZA3kHz5DD5HquVzDnBoeqk5oMTEgTEdTBWP/v8
-         hAa5I9HeOTH9+ndK8yMGYgznWm7XBBkxCiRQUPJSLbIOqHVnBfohgiVietpCpzXLIT1q
-         vwD7LI4cxK/kqwRxwTBeaf1iXeyPS0IhISKye8dvhKY+AxcDci2W1d1+fQjcjbUOmQLQ
-         4czgnTj5Wa5DD5WqaVWW0TOq8aJCEk5fgO4AyCttE3zyZ4RO6XmsfDpsThlPY6Uf0odR
-         7SyA==
-X-Forwarded-Encrypted: i=1; AJvYcCWBOvTRCZdbOhwN+45H8BahiUJQJ4N8DeiQeB2UkbiWlCuWKS87ZGwn+U17CPLQgKukANEjiGsGm2VzKTZnibxykxVJIGE1YS3MhhqP
-X-Gm-Message-State: AOJu0Yx6JC2zb2etoV3q5IIUJGjW0k246DuZ6jd/Psfzc84Fj9TYEQ3e
-	oSewWuqmv9Xzm0hrV3RFsJxLKj4C7cjySKp1R84vmYJc/+scSQQ2euLXyBBAhpqasdY29DBVbiD
-	Bgg==
-X-Google-Smtp-Source: AGHT+IH0Hl7sTOqR41zDK1Dxc6Amfcy0YB0Fkd2Xj5M07oxreTYb6CYyg15guWzK5gZbo9fvojMWUZHuFdk=
-X-Received: from jthies.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:23db])
- (user=jthies job=sendgmr) by 2002:a05:690c:6202:b0:611:5a9d:bb0e with SMTP id
- 00721157ae682-622af90c63bmr9600407b3.4.1715366617882; Fri, 10 May 2024
- 11:43:37 -0700 (PDT)
-Date: Fri, 10 May 2024 18:43:21 +0000
-In-Reply-To: <20240510184324.2944101-1-jthies@google.com>
+	dkim=pass (2048-bit key) header.d=gtucker.io header.i=@gtucker.io header.b="NVpkUZ1D"
+Received: from relay6-d.mail.gandi.net (unknown [IPv6:2001:4b98:dc4:8::226])
+	by mslow1.mail.gandi.net (Postfix) with ESMTP id 81A60C2612;
+	Fri, 10 May 2024 18:43:33 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5FBE9C0003;
+	Fri, 10 May 2024 18:43:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gtucker.io; s=gm1;
+	t=1715366606;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zTCULRYllt+dMGIqGygx1xMSb3Ax/XJV4B6sfUxpVsg=;
+	b=NVpkUZ1DWirf0zfndgu1mtPACxiCq1wmzE/fGaaIWIbTMlfVZauqP7pV5ywIzcAhYd7mKe
+	i6z7OCiQioyVZ9lyO05j/9qwKFT+DgntbHYmFIJqHQdJdTFxqFoASXBJHB5wG6YnFEHOg8
+	niCTEmmO1eAsWn+dNOUDe5b9P+mmCCq28SbAnM/B6ncsoIAb87JWz/pQXObnsiAj8e7PMx
+	dIUMGS+SnY2ZgfivD7nokta74tT/0XcXDt6vDjRq0owLYu0nBX6EXtsrlmblN/sNfjQL/K
+	Sx71HupuYly4sS0bxFU8h5vJYCcF41w4crA9c4BXWroC2G3/nXW0AygtWAZPOg==
+Message-ID: <aba2b2c0-ebb9-45e3-b14a-2321b7770e03@gtucker.io>
+Date: Fri, 10 May 2024 20:43:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240510184324.2944101-1-jthies@google.com>
-X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
-Message-ID: <20240510184324.2944101-2-jthies@google.com>
-Subject: [PATCH v4 1/4] usb: typec: ucsi: Fix null pointer dereference in trace
-From: Jameson Thies <jthies@google.com>
-To: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org
-Cc: jthies@google.com, pmalani@chromium.org, bleung@google.com, 
-	abhishekpandit@chromium.org, andersson@kernel.org, 
-	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com, 
-	gregkh@linuxfoundation.org, hdegoede@redhat.com, neil.armstrong@linaro.org, 
-	rajaram.regupathy@intel.com, saranya.gopal@intel.com, 
-	linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-GB
+To: automated-testing@lists.yoctoproject.org, kernelci@lists.linux.dev,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kunit-dev@googlegroups.com
+Cc: Shuah Khan <skhan@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+From: Guillaume Tucker <gtucker@gtucker.io>
+Subject: Kernel Testing & Dependability Micro-Conference at LPC 2024
+Organization: gtucker.io
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: gtucker@gtucker.io
 
-From: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Hello,
 
-ucsi_register_altmode checks IS_ERR for the alt pointer and treats
-NULL as valid. When CONFIG_TYPEC_DP_ALTMODE is not enabled,
-ucsi_register_displayport returns NULL which causes a NULL pointer
-dereference in trace. Rather than return NULL, call
-typec_port_register_altmode to register DisplayPort alternate mode
-as a non-controllable mode when CONFIG_TYPEC_DP_ALTMODE is not enabled.
+We're pleased to announce the return of the Kernel Testing &
+Dependability Micro-Conference at Linux Plumbers 2024:
 
-Reviewed-by: Benson Leung <bleung@chromium.org>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Jameson Thies <jthies@google.com>
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
-Changes in V4:
-- Updated commit message.
+  https://lpc.events/event/18/contributions/1665/
 
-Changes in V3:
-- Returns typec_port_register_altmode call from
-ucsi_register_displayport when CONFIG_TYPEC_DP_ALTMODE is not enabled.
-Updated commit message.
+You can already submit proposals by selecting the micro-conf in
+the Track drop-down list:
 
-Changes in V2:
-- Checks for error response from ucsi_register_displayport when
-registering DisplayPort alternate mode.
+  https://lpc.events/login/?next=/event/18/abstracts/%23submit-abstract
 
- drivers/usb/typec/ucsi/ucsi.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please note that the deadline for submissions is *Sunday 16th June*
 
-diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-index c4d103db9d0f8..f66224a270bc6 100644
---- a/drivers/usb/typec/ucsi/ucsi.h
-+++ b/drivers/usb/typec/ucsi/ucsi.h
-@@ -496,7 +496,7 @@ ucsi_register_displayport(struct ucsi_connector *con,
- 			  bool override, int offset,
- 			  struct typec_altmode_desc *desc)
- {
--	return NULL;
-+	return typec_port_register_altmode(con->port, desc);
- }
- 
- static inline void
--- 
-2.45.0.118.g7fe29c98d7-goog
+The event description contains a list of suggested topics
+inherited from past editions.  Is there anything in particular
+you would like to see discussed this year?
 
+Knowing people's interests helps with triaging proposals and
+making the micro-conf as relevant as possible.  See you there!
+
+Thanks,
+Guillaume & Shuah & Sasha
