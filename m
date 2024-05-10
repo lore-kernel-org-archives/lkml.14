@@ -1,180 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F23417C98;
-	Fri, 10 May 2024 20:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD0FC4E1D9
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 20:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715371967; cv=none; b=LRnrDKfmXyM4D+IrjLNsQmWm8ZlIczH55OrW63H1No4Dod24viKEOa/KIV7gG8bp0MK+FZKNRfNYZTYLrp+ZYV4pyoi54f6NYx1hcTY0M3pHGswCFqc3jscX1L91OhBwuQ9lHFz21ACej+LkD9acd7s6RQzY/i+EITlsxaR48go=
+	t=1715371971; cv=none; b=Mhfa6DQe+gyaTsoGPbrj3R89Mem8bxMYbFeuoqmRbkLyQwvPywnd6AKx28KX2Xu/NudnLWyXGbDZgTxYHBQhDgToO5Cnh55dmDYtWxh0PPjEC52Vcf4iF8PNK7JuucZTbFDVIEia187emjp6cPHGHIoEmxY+LmxfSl6OUhIvY5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715371967; c=relaxed/simple;
-	bh=ZKkZcljk702AJTFuuPtYmlTSrAuvKM1awKsEM9YYpzo=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=DxLDnGaqn8oWfYIT0zVIY5aXfFsdM5Vn3YTGliHEsOcBtMiIINEsB7WmPYML7jt0ZaoDYG8GiWT5dR05ARLInlYUaNp/ovafH0ukgANuVC4dlcqZOuWg+bGudzdH93YqvZgAemaixfHfY4fGB/fBfAbNHg33E3YyEciC0xEa9MM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHhKc+PF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715371971; c=relaxed/simple;
+	bh=E2yyzJi7pvQ7IjCAnfV4/Fd8YyDvl4Ls7jX/rVuTpBs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Pb9zzL+TTOG+O3WZlUbDzI1jUenJuhDy/JLtB1l+P5I32xjN63RwSKtkkwfanmnzaJ3pKHN+MGN1Ga0MWNEU18O/kHbXPGPTsqTocSEPkJyFhFee/Jq9Pj84waiWIPMcL2nXpskj3D2lvNH9ODv7OL+hajJyDlbZ8+zfkVUuVic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2kW1kZAR; arc=none smtp.client-ip=209.85.210.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jthies.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHhKc+PF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BF5C2BD11;
-	Fri, 10 May 2024 20:12:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715371966;
-	bh=ZKkZcljk702AJTFuuPtYmlTSrAuvKM1awKsEM9YYpzo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=jHhKc+PF6mzL0eDQlg59ykEtL7LsttfPnDOrHXJEx26ldPk7Lu1EZu/jucg10O8Aa
-	 uZf0ITXjbUD7061Y/uduLsBiyxayoMqXomL6WzmIePeEixiQI8/hHjMZqiYxqsQ4V+
-	 YjhrHEeWeNVeF9GmkFA7yglUdG7ZJqY6lNdRj9+BXovO0e16QnR24uRZWowFelilcL
-	 uCvQ+NL/Rs8zh2sNPisquSEKqRbE5qhue4TuSOSe79mzOnuAhgk4WN5A7EhXC5be2w
-	 mCvAcZmTVTRNYpy2G0TRWWuih22mhPzWvy8GIV+VuFXG9G6C8bjBibwh3CcppxZxGu
-	 /ifsv0jE22iug==
-Message-ID: <8ca61099580bdbf3550f0029b6381bcc.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2kW1kZAR"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-6f44dcb8eb0so1477064b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 13:12:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715371969; x=1715976769; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=E+QoEhuET8KXsAWSA3L6WJ3MCLFr9ZSP16+d5LyOa1E=;
+        b=2kW1kZARYRGW1jfR9AejpUOSrHQF2IEsL82a9Gp7JAI+edriJzxkV4M+b6Mel17IWa
+         3Bcv/nb9A8MfII+c+mFGFLIql8jbQyllw0+ERvFHhrm/YDhS3nsu2g15tDiWhyS56jR2
+         e+aixgv646oPeY42mxpEVJEq9LKM4RV80FFjKhW8vigWNoIi+Og1e7Tc7xLz/LZybF7G
+         pKGx57HHDaJ4OVrwX7ssfbef+3DtYxfA0JebwzBbwRqrtV8sIT/IoF7HqeUdaGihaf4i
+         cujLjyRYKfmOL65BrwFYlILO15Ifoyu9zCrCplJVWqopIu5cXy32UCmsBLKHKjcrW+r9
+         AwDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715371969; x=1715976769;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E+QoEhuET8KXsAWSA3L6WJ3MCLFr9ZSP16+d5LyOa1E=;
+        b=n0cEnhkoXw5oNhWc5bW41D9xKEP/mvJ1WLgmeOPWpvanL32JlcWXHFf3dQRP+MuGC8
+         G1pO8xhuZs3habpgppSwhuCJLxc5MNqGXIwC1Yi/1k7fHzdfCtKPSbbDqBN1VFEoOzOB
+         pvf2szyX0ZmytkqJApvpzhFuFwXwB9NVlDhulw5hqhh1TFDjW1hkuNqVE7SeQY3L5qFp
+         4p8+L5cWsAbDwLpq8voiqatSac73fLUF3etUuVchh6gU9ZGLk4/MDrypAAtCizgU0q8I
+         u2EJG4KGa9yDkEUisIzZaYnTM+RulPKBST07P9IlHHgIU4BSHIB+EZ7m91HJ76cEtZRS
+         WKmw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4udHp+iltCPBG25E1nRKlYmAxjpNOSFiYPE59Gy50pQBcw3khJjr3awHORrc3cmdnVlbv8Po41XZDgd+eZ8LFogXUuhVKLpDfs10b
+X-Gm-Message-State: AOJu0YwGj6qHd1K1TV7bDm3qTBdpvf2Fnnx2KTsXVCxJ3r2JuAyrYaDS
+	HV6pHMz4G1lNZdoZyc5EUuuQQqoXd3fmrZ8WSO/veBpgcZGa3NdzwGcVIoRLXyTBc39oo/pZbxS
+	0Xw==
+X-Google-Smtp-Source: AGHT+IFs1e87h8KOhbNcGMSDSwIiTKrsKb+IUnsrUsf6sb54ZanLcLBN5mfD9Cu83qm0ycTKpkjBerKRFEQ=
+X-Received: from jthies.c.googlers.com ([fda3:e722:ac3:cc00:20:ed76:c0a8:23db])
+ (user=jthies job=sendgmr) by 2002:a05:6a00:1384:b0:6ec:f5b8:58cc with SMTP id
+ d2e1a72fcca58-6f4e0395b9dmr128675b3a.6.1715371968689; Fri, 10 May 2024
+ 13:12:48 -0700 (PDT)
+Date: Fri, 10 May 2024 20:12:40 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CABVgOS=+SnMN6qG4DWRXjbHZB_87nsZdfOmPVv8yHTpCqozkWA@mail.gmail.com>
-References: <20240422232404.213174-1-sboyd@kernel.org> <20240422232404.213174-6-sboyd@kernel.org> <CABVgOSk=jGzj55v+YWzOBCsG7Wdk68pyZr0VdAYftybv+5X67A@mail.gmail.com> <431171223433496db0a85072be5c83ba.sboyd@kernel.org> <CABVgOS=+SnMN6qG4DWRXjbHZB_87nsZdfOmPVv8yHTpCqozkWA@mail.gmail.com>
-Subject: Re: [PATCH v4 05/10] platform: Add test managed platform_device/driver APIs
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, patches@lists.linux.dev, kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org, devicetree@vger.kernel.org, Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rafael J . Wysocki <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Daniel Latypov <dlatypov@google.com>, Christian Marangi <ansuelsmth@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Maxime Ripard <maxime@cerno.tech>
-To: David Gow <davidgow@google.com>
-Date: Fri, 10 May 2024 13:12:44 -0700
-User-Agent: alot/0.10
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
+Message-ID: <20240510201244.2968152-1-jthies@google.com>
+Subject: [PATCH v5 0/4] usb: typec: ucsi: Update UCSI alternate mode
+From: Jameson Thies <jthies@google.com>
+To: heikki.krogerus@linux.intel.com, linux-usb@vger.kernel.org
+Cc: jthies@google.com, pmalani@chromium.org, bleung@google.com, 
+	abhishekpandit@chromium.org, andersson@kernel.org, 
+	dmitry.baryshkov@linaro.org, fabrice.gasnier@foss.st.com, 
+	gregkh@linuxfoundation.org, hdegoede@redhat.com, neil.armstrong@linaro.org, 
+	rajaram.regupathy@intel.com, saranya.gopal@intel.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Quoting David Gow (2024-05-04 01:30:34)
-> On Fri, 3 May 2024 at 09:04, Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting David Gow (2024-05-01 00:55:46)
-> > > On Tue, 23 Apr 2024 at 07:24, Stephen Boyd <sboyd@kernel.org> wrote:
-> > > > diff --git a/Documentation/dev-tools/kunit/api/platformdevice.rst b=
-/Documentation/dev-tools/kunit/api/platformdevice.rst
-> > > > new file mode 100644
-> > > > index 000000000000..b228fb6558c2
-> > > > --- /dev/null
-> > > > +++ b/Documentation/dev-tools/kunit/api/platformdevice.rst
-> > > > @@ -0,0 +1,10 @@
-> > > > +.. SPDX-License-Identifier: GPL-2.0
-> > > > +
-> > > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > +Platform Device API
-> > > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > +
-> > > > +The KUnit platform device API is used to test platform devices.
-> > > > +
-> > > > +.. kernel-doc:: drivers/base/test/platform_kunit.c
-> > > > +   :export:
-> > > > diff --git a/drivers/base/test/Makefile b/drivers/base/test/Makefile
-> > > > index e321dfc7e922..740aef267fbe 100644
-> > > > --- a/drivers/base/test/Makefile
-> > > > +++ b/drivers/base/test/Makefile
-> > > > @@ -1,8 +1,11 @@
-> > > >  # SPDX-License-Identifier: GPL-2.0
-> > > >  obj-$(CONFIG_TEST_ASYNC_DRIVER_PROBE)  +=3D test_async_driver_prob=
-e.o
-> > > >
-> > > > +obj-$(CONFIG_KUNIT) +=3D platform_kunit.o
-> > > > +
-> > >
-> > > Do we want this to be part of the kunit.ko module (and hence,
-> > > probably, under lib/kunit), or to keep this as a separate module.
-> > > I'm tempted, personally, to treat this as a part of KUnit, and have it
-> > > be part of the same module. There are a couple of reasons for this:
-> > > - It's nice to have CONFIG_KUNIT produce only one module. If we want
-> > > this to be separate, I'd be tempted to put it behind its own kconfig
-> > > entry.
-> > > - The name platform_kunit.ko suggests (to me, at least) that this is
-> > > the test for platform devices, not the implementation of the helper.
-> >
-> > I was following *_kunit as "helpers" and *_test as the test. Only
-> > loosely based on the documentation that mentions to use _test or _kunit
-> > for test files. Maybe it should have _kunit_helpers postfix?
->=20
-> Yeah, the style guide currently suggests that *_test is the default
-> for tests, but that _kunit may also be used for tests if _test is
-> already used for non-KUnit tests:
-> https://docs.kernel.org/dev-tools/kunit/style.html#test-file-and-module-n=
-ames
->=20
-> DRM has drm_kunit_helpers, so _kunit_helpers seems like a good suffix
-> to settle on.
+Hi Heikki,
 
-Alright, I'll rename the files.
+This series appliess some changes to the UCSI driver to help support AP
+driven alternate mode entry. This includes...
 
->=20
-> > Following the single module design should I merge the tests for this
-> > code into kunit-test.c? And do the same sort of thing for clk helpers?
-> > That sounds like it won't scale very well if everything is in one modul=
-e.
->=20
-> I don't think it's as important that the tests live in the same
-> module. It's nice from an ergonomic point-of-view to only have to
-> modprobe the one thing, but we've already let that ship sail somewhat
-> with string-stream-test.
->=20
-> Either way, splitting up kunit-test.c is something we'll almost
-> certainly want to do at some point, and we can always put them into
-> the same module even if they're different source files if we have to.
+1. An update to the altmode sysfs group after registration to make
+"active" writable.
+2. A change to the ucsi_partner_task delay when queuing
+ucsi_check_altmodes to prevent it from running before other discovery
+functions.
+3. An update to always define a number of alternate modes for partners
+and plugs.
 
-Alright.
+Not related to AP driven altmode entry, there is an additional fix for a
+null derefrence in this series.
 
->=20
-> >
-> > Shouldn't the wrapper code for subsystems live in those subsystems like
-> > drm_kunit_helpers.c does? Maybe the struct device kunit wrappers should
-> > be moved out to drivers/base/? lib/kunit can stay focused on providing
-> > pure kunit code then.
->=20
-> I tend to agree that wrapper code for subsystems should live in those
-> subsystems, especially if the subsystems are relatively self-contained
-> (i.e., the helpers are used to test that subsystem itself, rather than
-> exported for other parts of the kernel to use to test interactions
-> with said subsystem). For 'core' parts of the kernel, I think it makes
-> it easier to make these obviously part of KUnit (e.g. kunit_kzalloc()
-> is easier to have within KUnit, rather than as a part of the
-> allocators).
->=20
-> The struct device wrappers have the problem that they rely on the
-> kunit_bus being registered, which is currently done when the kunit
-> module is loaded. So it hooks more deeply into KUnit than is
-> comfortable to do from drivers/base. So we've treated it as a 'core'
-> part of the kernel.
+I tested the series on a ChromeOS v6.8 kernel merged with usb-testing.
+That build had some additinal patches to enable a PPM in ChromeOS. Let
+me know if you have any questions.
 
-Ok, thanks. The kzalloc wrappers look like the best example here. They
-are so essential that they are in lib/kunit. The platform bus is built
-into the kernel all the time, similar to mm, so I can see it being
-essential and desired to have the wrappers in lib/kunit.
+Thanks,
+Jameson
 
->=20
-> Ultimately, it's a grey area, so I can live with this going either
-> way, depending on the actual helpers, so long as we don't end up with
-> lots of half-in/half-out helpers, which behave a bit like both. (For
-> example, at the moment, helpers which live outside lib/kunit are
-> documented and have headers in the respective subsystems'
-> directories.)
->=20
-> FWIW, my gut feeling for what's "most consistent" with what we've done
-> so far is:
-> 1. platform_device helpers should live alongside the current managed
-> device stuff, which is currently in lib/kunit
-> 2. clk helpers should probably live in clk
-> 3. of/of_overlay sits a bit in the middle, but having thought more
-> about it, it'd probably lean towards having it be part of 'of', not
-> 'kunit.
+Changes in V5:
+- Fixed signed off by line order.
 
-Sounds good. I'll follow this route.
+Changes in V4:
+- Updates to the commit messages.
 
->=20
-> But all of this is, to some extent, just bikeshedding, so as long as
-> we pick somewhere to put them, and don't mix things up too much, I
-> don't think it matters exactly what side of this fuzzy line they end
-> up on.
->=20
+Changes in V3:
+- Returns typec_port_register_altmode call from
+ucsi_register_displayport when CONFIG_TYPEC_DP_ALTMODE is not enabled.
 
-Yeah. My final hesitation is that it will be "too easy" to make devices
-that live on the platform_bus when they should really be on the
-kunit_bus. I guess we'll have to watch out for folks making platform
-devices that don't use any other platform device APIs like IO resources,
-etc.
+Changes in V2:
+- Checks for error response from ucsi_register_displayport when
+registering DisplayPort alternate mode.
+
+Abhishek Pandit-Subedi (2):
+  usb: typec: ucsi: Fix null pointer dereference in trace
+  usb: typec: Update sysfs when setting ops
+
+Jameson Thies (2):
+  usb: typec: ucsi: Delay alternate mode discovery
+  usb: typec: ucsi: Always set number of alternate modes
+
+ drivers/usb/typec/altmodes/displayport.c |  2 +-
+ drivers/usb/typec/class.c                | 18 +++++++++++++++++-
+ drivers/usb/typec/ucsi/displayport.c     |  2 +-
+ drivers/usb/typec/ucsi/ucsi.c            | 18 +++++++++++++-----
+ drivers/usb/typec/ucsi/ucsi.h            |  2 +-
+ include/linux/usb/typec.h                |  3 +++
+ 6 files changed, 36 insertions(+), 9 deletions(-)
+
+
+base-commit: e4306116b5e93748b3eaa7666aa55c390b48a8f4
+-- 
+2.45.0.118.g7fe29c98d7-goog
+
