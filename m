@@ -1,63 +1,66 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3556715217A
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 05:38:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C365515E800
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 05:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715319486; cv=none; b=ij0VejOnVuiQj5su0IdlhdMZg37986ibZU1zbCZXmHuhjJKzq3B6Di6G5WB+lgMz5NyrFTjJ+fZIfZHnohTIwcKrhwd/mlGXRSNuT/EeHhBV2/IFCurNmvCehKrsyy89HBDoMY+UOIJeEpjOXcd793wB9ZXRDwMR4MG3p/e26Lc=
+	t=1715319491; cv=none; b=tJZan7rTgIWsfIhGQtJhFnDsQFJIeu214AvLfu6T/n47g83X06inz2sGf5Hf41FFt/ufr0KkRj2hshOPL56sQzfGEMb3uIk0V8gnales7z1FUzZLN6Jy3shRiYkV+sovUmAaeVq1tQOWszgU9D89pNiqLmu//G/VEEpVarLOrPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715319486; c=relaxed/simple;
-	bh=slEtYCfWIhr8biE7XSNhRtKBTqVpKRtQjsG53b28TGU=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=Of4KiHuiOtAMhgtGV44nzS7Dw43NfpzK8JbC3Sv1rw4BiQGt9+OZqplIVJgIX2hPtoZHM9E86vK7utX+FeSypSMwjkclshucZTig2SmotyKS3RIj1nSnrOzGPpxm414LGryzBezhDondb4RFIdpfXdeYD0OYv/jdHvJEtolydxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ow318hcG; arc=none smtp.client-ip=209.85.128.202
+	s=arc-20240116; t=1715319491; c=relaxed/simple;
+	bh=zNU/+vvLwssObyq665v420J21ONwE2lm3SPbdGLqo8o=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=BWhpY0IUwRTV1/gg0cSwWMsDT9Ove+0YCybBrcj6O6j3lyxZ/gm5uiT9WuckfQxaGTM/F1hY3tKbZGO7ETdg5+tc0S0rzu8G3NI/IJ0oIzc5bTyeeCpH5P6c/YhNL4zuxhqANTzen7USy8+m54SVxzTFHWdwe9D/b1NENPaBh0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E9Ay2NYv; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ow318hcG"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61beaa137acso26066057b3.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 22:38:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E9Ay2NYv"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be4601434so30386637b3.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 22:38:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715319484; x=1715924284; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qRnQ9X+E01Wjh7aw9HSdFUGOAwjIttVy/fHoTKboCKE=;
-        b=Ow318hcGE76bjHwuZ1cHYKjCwPN4+zd7KVCAhcM7YHnO8uV7gASY5Zw1mCnAKnhdv0
-         3H7qBfxR1wepkKAIMtbSPmQdmuAvViXR/HcXkO09rLS+q/8cFW0NunBfnDPrWXrypLvo
-         ofDM9Uqhe3zUjjBdU5QPSw+0IPZKqb5KHOxkHEZ9Z2bvHXPiR1OlyxsajE59kaX67xjY
-         7v3ZPRIHgsdL4d7zCdFW/qRzR0XGUUm6lJ/Xtyi4rI12mCZvi1vgsO0T4vV5nIi62IY2
-         eoAP0XuEclknqF5GSr0pTNlLQnUerZie2TnqbgWVIt6z4pv267dPxI+K5MZwx4okvYCN
-         GIIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715319484; x=1715924284;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1715319489; x=1715924289; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qRnQ9X+E01Wjh7aw9HSdFUGOAwjIttVy/fHoTKboCKE=;
-        b=BcA/Iw0IHob9ULexmZQY0w7xbGGwil255fbsQAFeLlB5ZpZH7RbT3e1G1Z8Db4y174
-         CRSuAIkEZCH052o/KZg/G536EW039b0bY4ZucFo+6eyw9pJBNhDdORIVjorNuRRHn468
-         pC2lX9gxnmPhfeXDlOCKUX9YN6wucvEurqj2A/PhcVKa6yzMZNdHHEaLz7tp4TM9UHaH
-         CvmFiHr+F3yLwpPRZLULJiIN2LW6Ihv+U+1OUkDaDdnNbeVzfA+go09V3ke+14O7xPL2
-         YlTZj5K/h/YKbwU7pm4kEx7+KvaVoQWFk6IcxplJQBKJiJCdL2sfsSEGrqZLv6YiHLS3
-         895A==
-X-Forwarded-Encrypted: i=1; AJvYcCUdgCjwvh3AtA6RXwtjk7bKu3CUshgi6Emc1Wyg6MF8+FAdvZiQKwqO8Yt9xTo0C6sPIXlL5hiSh8zjhPz7xNkUeAkPycmFB5xCM92r
-X-Gm-Message-State: AOJu0YwPuV3DOMgs2bNrNcCT8YVMcI90prniIVb4vRX2pg6cOpL49L6a
-	cni/sQbVd9Rwf+nIm9hE7xbD+MJr5VoaSkdZqsvAqGp13U3gvWXJnAGJEC9CULIm+gNboiWli8C
-	SFL7DSA==
-X-Google-Smtp-Source: AGHT+IHWovI0a7yoCvT5NcytTQIcFejcvg0GmjVsmKX73kR7VrRBxxnVvHZPNfZGC+BVlbbGbJyzwZO3vTwK
+        bh=U81cdFZOryTWzARq4P9O2qKcBTbob0BFWgpG3EYHhxM=;
+        b=E9Ay2NYvkOyVjbvspBHGn2SUF5FAS5vWERXYyVUdbqm86SmN90aurIgG9tsiWqNGdT
+         aKPQJQeEONSvpOTKNswD8nJgAXIEoyazcu7mJVk1HmVlnlz6pCdnbXtyDJDPib3akSwT
+         mBfBFrGu3fWlSyNiMP58SosJ2KDMkNMHjqDriupJEt7IcIGM/kvJ40Q1Hy6OP2XJQ/Pk
+         plxRkB0TFj/zzLaLYHxUlTaeILCBIpa9KsUZMydMSprsPl9rmyIKB1sqc1ngM4lr/KGX
+         jGcJ3g5ffs1D1dZCqs4gLZRHAkJWWUGlqpBABK+eU1kYrD9W6qrfGV2ADgRz3Uey8xEy
+         +S4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715319489; x=1715924289;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=U81cdFZOryTWzARq4P9O2qKcBTbob0BFWgpG3EYHhxM=;
+        b=Pj7zcgiTQdHyQoy7ERCxXriY/UdnGbd+ZcA3RofYkEHw6GS8Qf/n+pPONIACyjTLqp
+         7+PLLggt60N6lxP5GJKg9I4DmP5Elf8zFmp4t+JJ+fNZA9zuRwVGwqXVX7h23a9BLZiQ
+         DHO5lCbDzMxipcrcsOxNEb9ufyqA30ZGLe1imq0o+iEYbVL1AX0WbzmG9fEgJS1q2tI0
+         Sk+vjzzpyjvI2JMIWNI1YI8Cn/c+zHUB9Tl/rhD7nhFj1zLGTq9NjhqoWATsvKFnJIzt
+         Fu1byDHd/7qjW9ngZtJr7TuUJFzk39MbD/2b9xWKZT5JF1FvcV8HVsFlbqEmPyreuq1r
+         od5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUPN85lkyLcDe9c3Lq8hj/YmxqbevQb0HZvVgDo8H2mv5VDixS4MfaTw4+Ih4JGS2NCc8Spa2b3qaLJ8qwjr3mwLrvWHZaqCGPTItaD
+X-Gm-Message-State: AOJu0Yz3m9EJbn2ozVTj9dhdasQzbyy6y7egJHZhXRnLMTqIdkXuG0Ks
+	umMUMLCJZ/npgkPowrgLHmiywg+eOpwKecuGBVJzcjgXSKbnuKRC0aDjciQFf9ZR5ihtq6+RBeR
+	F7CH6jw==
+X-Google-Smtp-Source: AGHT+IFRjnvnZQt14aMD9YvF6AMr7sQg6gNtp9//xebqaPSpiEn6kA1W44VXfwdCT4L4dEfFyxzpxvgkU6NV
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:79ed:c375:51e3:ed39])
- (user=irogers job=sendgmr) by 2002:a25:aa4a:0:b0:de5:1ea2:fc6f with SMTP id
- 3f1490d57ef6-dee4f1962e3mr96944276.6.1715319484195; Thu, 09 May 2024 22:38:04
- -0700 (PDT)
-Date: Thu,  9 May 2024 22:37:00 -0700
-Message-Id: <20240510053705.2462258-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:284:b0:614:f416:9415 with SMTP id
+ 00721157ae682-622b0163084mr4450367b3.7.1715319488741; Thu, 09 May 2024
+ 22:38:08 -0700 (PDT)
+Date: Thu,  9 May 2024 22:37:02 -0700
+In-Reply-To: <20240510053705.2462258-1-irogers@google.com>
+Message-Id: <20240510053705.2462258-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240510053705.2462258-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
-Subject: [PATCH v3 0/5] Event parsing fixes
+Subject: [PATCH v3 2/5] perf stat: Uniquify event name improvements
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,49 +75,171 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-For the default events, parse from strings rather than use pre-cooked
-perf_event_attr. This fixes non-x86 heterogeneous CPUs where legacy
-hardware events wouldn't be opened for all PMUs. v2 was previously
-just patch 3 but it is extended in v3 to incorporate related fixes.
+Without aggregation on Intel:
+```
+$ perf stat -e instructions,cycles ...
+```
+Will use "cycles" for the name of the legacy cycles event but as
+"instructions" has a sysfs name it will and a "[cpu]" PMU suffix. This
+often breaks things as the space between the event and the PMU name
+look like an extra column. The existing uniquify logic was also
+uniquifying in cases when all events are core and not with uncore
+events, it was not correctly handling modifiers, etc.
 
-When a sysfs/json event is used in preference to a legacy event, allow
-evsel__match to still function using a saved hardware config
-number. This fixes hard coded metrics in stat-shadow for events like
-"instructions" on Intel that have a sysfs file.
+Change the logic so that an initial pass that can disable
+uniquification is run. For individual counters, disable uniquification
+in more cases such as for consistency with legacy events or for
+libpfm4 events. Don't use the "[pmu]" style suffix in uniquification,
+always use "pmu/.../". Change how modifiers/terms are handled in the
+uniquification so that they look like parse-able events.
 
-Fix/improve uniquifying event names fixing the test "102: perf stat
-metrics (shadow stat) test:" that was broken by a formatting issue
-when the sysfs instructions event was used.
+This fixes "102: perf stat metrics (shadow stat) test:" that has been
+failing due to "instructions [cpu]" breaking its column/awk logic when
+values aren't aggregated. This started happening when instructions
+could match a sysfs rather than a legacy event, so the fixes tag
+reflects this.
 
-Having evsel->pmu_name and evsel->pmu->name is confusing, get rid of
-the former. Fix/improve evsel__sys_has_perf_metrics in the process.
+Fixes: 617824a7f0f7 ("perf parse-events: Prefer sysfs/JSON hardware events over legacy")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/stat-display.c | 101 +++++++++++++++++++++++++--------
+ 1 file changed, 78 insertions(+), 23 deletions(-)
 
-Ian Rogers (5):
-  perf evsel: Add alternate_hw_config and use in evsel__match
-  perf stat: Uniquify event name improvements
-  perf stat: Remove evlist__add_default_attrs use strings
-  perf evsel x86: Make evsel__has_perf_metrics work for legacy events
-  perf evsel: Remove pmu_name
-
- tools/perf/arch/x86/util/evlist.c |  74 +-------
- tools/perf/arch/x86/util/evsel.c  |  35 +++-
- tools/perf/builtin-diff.c         |   6 +-
- tools/perf/builtin-stat.c         | 291 ++++++++++++------------------
- tools/perf/tests/parse-events.c   |   2 +-
- tools/perf/util/evlist.c          |  46 +----
- tools/perf/util/evlist.h          |  12 --
- tools/perf/util/evsel.c           |  28 ++-
- tools/perf/util/evsel.h           |  22 +--
- tools/perf/util/metricgroup.c     |   4 +-
- tools/perf/util/parse-events.c    |  52 ++++--
- tools/perf/util/parse-events.h    |   6 +
- tools/perf/util/pmu.c             |   6 +-
- tools/perf/util/pmu.h             |   2 +-
- tools/perf/util/stat-display.c    | 101 ++++++++---
- tools/perf/util/stat-shadow.c     |  14 +-
- tools/perf/util/stat.c            |   2 +-
- 17 files changed, 305 insertions(+), 398 deletions(-)
-
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index bfc1d705f437..ea11e3437444 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -868,38 +868,66 @@ static void printout(struct perf_stat_config *config, struct outstate *os,
+ 
+ static void uniquify_event_name(struct evsel *counter)
+ {
+-	char *new_name;
+-	char *config;
+-	int ret = 0;
++	const char *name, *pmu_name;
++	char *new_name, *config;
++	int ret;
+ 
+-	if (counter->uniquified_name || counter->use_config_name ||
+-	    !counter->pmu_name || !strncmp(evsel__name(counter), counter->pmu_name,
+-					   strlen(counter->pmu_name)))
++	/* The evsel was already uniquified. */
++	if (counter->uniquified_name)
+ 		return;
+ 
+-	config = strchr(counter->name, '/');
++	/* Avoid checking to uniquify twice. */
++	counter->uniquified_name = true;
++
++	/* The evsel has a "name=" config term or is from libpfm. */
++	if (counter->use_config_name || counter->is_libpfm_event)
++		return;
++
++	/* Legacy no PMU event, don't uniquify. */
++	if  (!counter->pmu ||
++	     (counter->pmu->type < PERF_TYPE_MAX && counter->pmu->type != PERF_TYPE_RAW))
++		return;
++
++	/* A sysfs or json event replacing a legacy event, don't uniquify. */
++	if (counter->pmu->is_core && counter->alternate_hw_config != PERF_COUNT_HW_MAX)
++		return;
++
++	name = evsel__name(counter);
++	pmu_name = counter->pmu->name;
++	/* Already prefixed by the PMU name. */
++	if (!strncmp(name, pmu_name, strlen(pmu_name)))
++		return;
++
++	config = strchr(name, '/');
+ 	if (config) {
+-		if (asprintf(&new_name,
+-			     "%s%s", counter->pmu_name, config) > 0) {
+-			free(counter->name);
+-			counter->name = new_name;
+-		}
+-	} else {
+-		if (evsel__is_hybrid(counter)) {
+-			ret = asprintf(&new_name, "%s/%s/",
+-				       counter->pmu_name, counter->name);
++		int len = config - name;
++
++		if (config[1] == '/') {
++			/* case: event// */
++			ret = asprintf(&new_name, "%s/%.*s/%s", pmu_name, len, name, config + 2);
+ 		} else {
+-			ret = asprintf(&new_name, "%s [%s]",
+-				       counter->name, counter->pmu_name);
++			/* case: event/.../ */
++			ret = asprintf(&new_name, "%s/%.*s,%s", pmu_name, len, name, config + 1);
+ 		}
++	} else {
++		config = strchr(name, ':');
++		if (config) {
++			/* case: event:.. */
++			int len = config - name;
+ 
+-		if (ret) {
+-			free(counter->name);
+-			counter->name = new_name;
++			ret = asprintf(&new_name, "%s/%.*s/%s", pmu_name, len, name, config + 1);
++		} else {
++			/* case: event */
++			ret = asprintf(&new_name, "%s/%s/", pmu_name, name);
+ 		}
+ 	}
+-
+-	counter->uniquified_name = true;
++	if (ret > 0) {
++		free(counter->name);
++		counter->name = new_name;
++	} else {
++		/* ENOMEM from asprintf. */
++		counter->uniquified_name = false;
++	}
+ }
+ 
+ static bool hybrid_uniquify(struct evsel *evsel, struct perf_stat_config *config)
+@@ -1541,6 +1569,31 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
+ 		print_metric_end(config, os);
+ }
+ 
++static void disable_uniquify(struct evlist *evlist)
++{
++	struct evsel *counter;
++	struct perf_pmu *last_pmu = NULL;
++	bool first = true;
++
++	evlist__for_each_entry(evlist, counter) {
++		/* If PMUs vary then uniquify can be useful. */
++		if (!first && counter->pmu != last_pmu)
++			return;
++		first = false;
++		if (counter->pmu) {
++			/* Allow uniquify for uncore PMUs. */
++			if (!counter->pmu->is_core)
++				return;
++			/* Keep hybrid event names uniquified for clarity. */
++			if (perf_pmus__num_core_pmus() > 1)
++				return;
++		}
++	}
++	evlist__for_each_entry_continue(evlist, counter) {
++		counter->uniquified_name = true;
++	}
++}
++
+ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *config,
+ 			    struct target *_target, struct timespec *ts,
+ 			    int argc, const char **argv)
+@@ -1554,6 +1607,8 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+ 		.first = true,
+ 	};
+ 
++	disable_uniquify(evlist);
++
+ 	if (config->iostat_run)
+ 		evlist->selected = evlist__first(evlist);
+ 
 -- 
 2.45.0.118.g7fe29c98d7-goog
 
