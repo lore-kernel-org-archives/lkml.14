@@ -1,105 +1,201 @@
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52E0481BA
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 21:53:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8F4481BA;
+	Fri, 10 May 2024 21:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715378036; cv=none; b=aE8R2Ui8zSJKnZqOs3kKYav4V5bluXn+1YYNN4uuwpO+aOB3HSdGS+xYXJCnIkGN6pP2z/zZa0u2ZiW3pRdUiHdsed9r+y274hr0Bw/asy/xuT8Eta9+CcY7LxqLn7l3kfK/ELpxhy1S4LdkqGtcCnTKnCrtpMfj4inOVW015kM=
+	t=1715378045; cv=none; b=s3vApijLMhAF0mHb81envsY6REVKsSA01dgOyTvF7dNMbCWNZnlE9XR55lNdmLpxvi3x52uiUclaw9+Q4kmBgMdTVH00+6kloAxyrS91WbcMerSCtaL2mafCemV9dmvLQ2fIDpIElMO6lxm2chXYEjQf14kL3uBrHl0DKPXwDQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715378036; c=relaxed/simple;
-	bh=WI908szRHCH1XNL6Uf3+xanagydATcFvI/XQegG64Ak=;
+	s=arc-20240116; t=1715378045; c=relaxed/simple;
+	bh=i/FPnuI27T+fA3b9H6PAA9JAHScCbdUPH69z4ZLw0As=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ulJZnAQFumwFlREkUxXfwYOxB8dH967ZzVTOXDYG3iPwBIcYV78L4bMzxVQyK0xDlraYoss+0glk5+o7Me4kZj53vDp9LCDGXNonkqQEjGBWJt8oGmLgthYBkd7U/lkJbQ+8amhE/4+oEWmEP2iIcAjTo7AtKDT7qkI1lcvwrSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Vg7jpKrZ; arc=none smtp.client-ip=209.85.219.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vg7jpKrZ"
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6a0ce3e823fso15951226d6.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 14:53:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715378033; x=1715982833; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=g/extV98TSdFy/1bGvQt4l7C040wMqG+QLoAthDMEcc=;
-        b=Vg7jpKrZbVGxn4ndrTL5lNLXBXaqFwdHijsyUhBosdgW4GiFq/STjzhlA75o9ieN23
-         ysUnQBRJ/O65/3lnuv7eEYU/FTal0vX7goUi+OF+qCXohDPco7vFs0b6Fh8ZlvnMwhkz
-         CDkNNp0bY486RDDvEmwREgm/yl+Ga9X8uiw1E=
+	 To:Cc:Content-Type; b=RqNgqNSjcAa+FasXl5MHINZjfMBUvwIB1OuibUiFUjnO9KQ0pmi00cf+Xa9+ssfzeyqmZq2Xnj17i66SNA+vmcI3E68RN+Oxq/vauWPxd81+TJNxNyvchxh7iSk2pmck5gwSDV4y0PMXjqe/FhcHILU/0wqdXZAw8QiNAeGjXnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-61eba9f9c5dso1998770a12.0;
+        Fri, 10 May 2024 14:54:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715378033; x=1715982833;
+        d=1e100.net; s=20230601; t=1715378043; x=1715982843;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=g/extV98TSdFy/1bGvQt4l7C040wMqG+QLoAthDMEcc=;
-        b=onwTO8FdxD+WeKHMzEcJ0aUJ9FBLMMBWlEL6ShaTGT5NetTOZQqC+WG76mOlWAlGzi
-         kSt1DcraQE8pGrjCI8l988fbxMPgXuRYdLWB0n39NFflYNpJ9yIqrkgbgw43HED4vsAX
-         PrXInS2Scfv/BNwLdUlMI7QpD6HvVhyQsSjB50WS3Em15u5Li/KReyFuHp/cg8CBrMGt
-         k72E59gs3/D0a2ubwOcdCWaZt84Lbf9L+QzEGGQD/kH7+TObPe9e1G5qhd4TCiqK0VSt
-         Xs5b0NI9phlOLC3CgS6GHiHZE4SScuXdYA9GBLjlXj1gyQxN1xkOat+435B/z0YobfVM
-         tPfw==
-X-Forwarded-Encrypted: i=1; AJvYcCUfDTBF+b9u+PKclYx1DLeMyOWWn/o1ypRTjbVIeJiYvwGHTTWvzJgcGcJvyYnvv0WmpceBcwKhctVT4Zw3+79WwD9nKWWgBHXZVVEp
-X-Gm-Message-State: AOJu0YwGfTceBuWJbR1ZhcUHKP3HD78UGnlZdQfx0oxcz9HpcHNgpAgW
-	YWgNfae34jYkZAbKxZpOOJ1Kjk7sigYcZj3WxBsGAmvt5PqML/zu3lXLyS1a6zTLdjBNF/wgvF8
-	=
-X-Google-Smtp-Source: AGHT+IHkQ4LLsixzFsn5dZ9gVHZpxp6utfBC142vhx5ePJwIOwpEgD3sGq5LusOgNt3j6YCWL58BuA==
-X-Received: by 2002:a05:6214:3913:b0:6a0:b705:27db with SMTP id 6a1803df08f44-6a16819ec5bmr35566426d6.13.1715378033485;
-        Fri, 10 May 2024 14:53:53 -0700 (PDT)
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com. [209.85.160.176])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f18656esm20700386d6.53.2024.05.10.14.53.53
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 May 2024 14:53:53 -0700 (PDT)
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-43df9ac3ebcso98801cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 14:53:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVqCwD3v5RMoGakeRcC2xwcF9mNC4sVwg3LNre+J7Duv1HM4Jpw0nKVeTQ2WL0u6hwpqfiKlmqkUpUbkiHYGCz+LvFE7b3YhGoJZD/C
-X-Received: by 2002:a05:622a:192a:b0:439:d5e3:1f31 with SMTP id
- d75a77b69052e-43e094b27d5mr781411cf.4.1715377636922; Fri, 10 May 2024
- 14:47:16 -0700 (PDT)
+        bh=FRPvGQxpDBclplaY0IKUR/KgWVjuexGs9D8VWLdD0zU=;
+        b=r78OqZBEgTGlt1Kez5nuJmBDXAcAoGWuFCncdlp4333L1VgChg8Yq5pTuSmrwi/pdu
+         r8vUTmE2u4crd5y8j2SeLsdEUu0hNj65pF4x8D2c7ht1IwtZeEzUt0vg+wwiIA7lubNn
+         MmtezP6FD1rvqyn+UO27xIvRKc5uPkPOKu7Kpj8keZZ2k15vgGTwhsqadzC7SQMksohm
+         Bmp6IGipLdHf1mmwS2gZc3NLkAgfo5nodL3wZcIfrvnSqmSrq+OQ3yw0gv6Gw9nsqDBb
+         LI7BkYlZBxCJ21d93Szug3WrmjJQVVD3XH1WKnHBn3vnnXzUDn8/iHvBmXwXZo6nhTr4
+         Wkfg==
+X-Forwarded-Encrypted: i=1; AJvYcCXc292VLmugAad4Vgf3cjOV4hnEdGfxMvT6eTGA+UARNoGtYsFIx4BGd28zD+qZBz3St+9Cpk1gR5zCQfb+cHWgZyGQs7XxHltesAHZQSI1l94G7GXCfenDH7A1ZYhRp/FVN45IegmNnFBL3yIeLg==
+X-Gm-Message-State: AOJu0YyORQJ03bJ3hRYMr5vDrXN1AYjWfQ/xC6csa9Grt2Qh3HrTI2VR
+	uXvFuC9nLOLEyBr5g7fzrGAuq/dGqWsNRMmBwf5ZBJbHBWzH6//g3DhyAPD1g03Mwbv1WOeDNoJ
+	GyDwmN1ELeh4Bn+uKpE7NX/iigOesaQ==
+X-Google-Smtp-Source: AGHT+IF+odiXxybI5aBALPA5XYdwFgLzxBXMq8LAvT+QwarjaK6YnmsBVgjhS2oUkvm+YZXvpHu/EqZjmzMp+/0l6zE=
+X-Received: by 2002:a17:90a:9404:b0:2b3:a79a:7e4b with SMTP id
+ 98e67ed59e1d1-2b6cc76d24amr3721113a91.22.1715378042862; Fri, 10 May 2024
+ 14:54:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240510-dsi-panels-upd-api-v1-0-317c78a0dcc8@linaro.org> <20240510-dsi-panels-upd-api-v1-6-317c78a0dcc8@linaro.org>
-In-Reply-To: <20240510-dsi-panels-upd-api-v1-6-317c78a0dcc8@linaro.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 10 May 2024 14:47:05 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=Uu2=6c_3Q44BK384cgSLX=++_bBbg6=CCqBaXnqcEK=g@mail.gmail.com>
-Message-ID: <CAD=FV=Uu2=6c_3Q44BK384cgSLX=++_bBbg6=CCqBaXnqcEK=g@mail.gmail.com>
-Subject: Re: [PATCH RFC 6/7] drm/panel: lg-sw43408: add missing error handling
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Sam Ravnborg <sam@ravnborg.org>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	Vinod Koul <vkoul@kernel.org>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
+References: <20240509060541.1928390-1-irogers@google.com> <Zj4tVDdY3CzU7KZM@x1>
+ <CAP-5=fWhSfZyWh3ye3WYmPBTEKsqRAd-ZrZjaT68=RVqb-m4kA@mail.gmail.com>
+In-Reply-To: <CAP-5=fWhSfZyWh3ye3WYmPBTEKsqRAd-ZrZjaT68=RVqb-m4kA@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 10 May 2024 14:53:51 -0700
+Message-ID: <CAM9d7cgos57-56NOevzFb+KwgSHZxjNPHddnf2fK-ypF6Ao7bg@mail.gmail.com>
+Subject: Re: [PATCH v1] perf tracepoint: Don't scan all tracepoints to test if
+ one exists
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Ian and Arnaldo,
 
-On Thu, May 9, 2024 at 3:37=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
+On Fri, May 10, 2024 at 7:29=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> Add missing error handling for the mipi_dsi_ functions that actually
-> return error code instead of silently ignoring it.
 >
-> Fixes: 069a6c0e94f9 ("drm: panel: Add LG sw43408 panel driver")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/gpu/drm/panel/panel-lg-sw43408.c | 33 ++++++++++++++++++++++++++=
-------
->  1 file changed, 27 insertions(+), 6 deletions(-)
+>
+> On Fri, May 10, 2024, 7:21=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kern=
+el.org> wrote:
+>>
+>> On Wed, May 08, 2024 at 11:05:41PM -0700, Ian Rogers wrote:
+>> > In is_valid_tracepoint, rather than scanning
+>> > "/sys/kernel/tracing/events/*/*" skipping any path where
+>> > "/sys/kernel/tracing/events/*/*/id" doesn't exist, and then testing if
+>> > "*:*" matches the tracepoint name, just use the given tracepoint name
+>> > replace the ':' with '/' and see if the id file exists. This turns a
+>> > nested directory search into a single file available test.
+>> >
+>> > Rather than return 1 for valid and 0 for invalid, return true and
+>> > false.
+>> >
+>> > Signed-off-by: Ian Rogers <irogers@google.com>
+>> > ---
+>> >  tools/perf/util/tracepoint.c | 53 ++++++++++++++---------------------=
+-
+>> >  tools/perf/util/tracepoint.h |  3 +-
+>> >  2 files changed, 23 insertions(+), 33 deletions(-)
+>> >
+>> > diff --git a/tools/perf/util/tracepoint.c b/tools/perf/util/tracepoint=
+.c
+>> > index 92dd8b455b90..cca6808f7951 100644
+>> > --- a/tools/perf/util/tracepoint.c
+>> > +++ b/tools/perf/util/tracepoint.c
+>> > @@ -4,10 +4,12 @@
+>> >  #include <errno.h>
+>> >  #include <fcntl.h>
+>> >  #include <stdio.h>
+>> > +#include <stdlib.h>
+>> >  #include <sys/param.h>
+>> >  #include <unistd.h>
+>> >
+>> >  #include <api/fs/tracing_path.h>
+>> > +#include "fncache.h"
+>> >
+>> >  int tp_event_has_id(const char *dir_path, struct dirent *evt_dir)
+>> >  {
+>> > @@ -26,39 +28,26 @@ int tp_event_has_id(const char *dir_path, struct d=
+irent *evt_dir)
+>> >  /*
+>> >   * Check whether event is in <debugfs_mount_point>/tracing/events
+>> >   */
+>> > -int is_valid_tracepoint(const char *event_string)
+>> > +bool is_valid_tracepoint(const char *event_string)
+>> >  {
+>> > -     DIR *sys_dir, *evt_dir;
+>> > -     struct dirent *sys_dirent, *evt_dirent;
+>> > -     char evt_path[MAXPATHLEN];
+>> > -     char *dir_path;
+>> > -
+>> > -     sys_dir =3D tracing_events__opendir();
+>> > -     if (!sys_dir)
+>> > -             return 0;
+>> > +     char *dst, *path =3D malloc(strlen(event_string) + 4); /* Space =
+for "/id\0". */
+>> > +     const char *src;
+>> > +     bool have_file;
+>> >
+>> > -     for_each_subsystem(sys_dir, sys_dirent) {
+>> > -             dir_path =3D get_events_file(sys_dirent->d_name);
+>> > -             if (!dir_path)
+>> > -                     continue;
+>> > -             evt_dir =3D opendir(dir_path);
+>> > -             if (!evt_dir)
+>> > -                     goto next;
+>> > -
+>> > -             for_each_event(dir_path, evt_dir, evt_dirent) {
+>> > -                     snprintf(evt_path, MAXPATHLEN, "%s:%s",
+>> > -                              sys_dirent->d_name, evt_dirent->d_name)=
+;
+>> > -                     if (!strcmp(evt_path, event_string)) {
+>> > -                             closedir(evt_dir);
+>> > -                             put_events_file(dir_path);
+>> > -                             closedir(sys_dir);
+>> > -                             return 1;
+>> > -                     }
+>> > -             }
+>> > -             closedir(evt_dir);
+>> > -next:
+>> > -             put_events_file(dir_path);
+>> > +     if (!path) {
+>> > +             /* Conservatively return false if memory allocation fail=
+ed. */
+>> > +             return false;
+>> >       }
+>> > -     closedir(sys_dir);
+>> > -     return 0;
+>> > +     /* Copy event_string replacing the ':' with '/'. */
+>> > +     for (src =3D event_string, dst =3D path; *src; src++, dst++)
+>> > +             *dst =3D (*src =3D=3D ':') ? '/' : *src;
+>> > +     /* Add "/id\0". */
+>> > +     memcpy(dst, "/id", 4);
+>> > +
+>> > +     dst =3D get_events_file(path);
+>> > +     if (dst)
+>> > +             have_file =3D file_available(dst);
 
-Looks right to me. Only slight nit would be that I'd put this as the
-first patch in the series to make it obvious to anyone backporting it
-to older kernels that it doesn't have any dependencies on the earlier
-patches in the series. It's fairly obvious so this isn't a huge deal,
-but still could be nice.
+Off-topic.  But it seems we don't release fncache entries.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Thanks,
+Namhyung
+
+>
+>> > +     free(dst);
+>> > +     free(path);
+>> > +     return have_file;
+>> >  }
+>> > diff --git a/tools/perf/util/tracepoint.h b/tools/perf/util/tracepoint=
+.h
+>> > index c4a110fe87d7..65ccb01fc312 100644
+>> > --- a/tools/perf/util/tracepoint.h
+>> > +++ b/tools/perf/util/tracepoint.h
+>> > @@ -4,6 +4,7 @@
+>> >
+>> >  #include <dirent.h>
+>> >  #include <string.h>
+>> > +#include <stdbool.h>
+>> >
+>> >  int tp_event_has_id(const char *dir_path, struct dirent *evt_dir);
+>> >
+>> > @@ -20,6 +21,6 @@ int tp_event_has_id(const char *dir_path, struct dir=
+ent *evt_dir);
+>> >                   (strcmp(sys_dirent->d_name, ".")) &&        \
+>> >                   (strcmp(sys_dirent->d_name, "..")))
+>> >
+>> > -int is_valid_tracepoint(const char *event_string);
+>> > +bool is_valid_tracepoint(const char *event_string);
+>> >
+>> >  #endif /* __PERF_TRACEPOINT_H */
+>> > --
+>> > 2.45.0.rc1.225.g2a3ae87e7f-goog
