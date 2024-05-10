@@ -1,94 +1,105 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B156D15F40B;
-	Fri, 10 May 2024 08:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A7620309
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 08:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715328786; cv=none; b=opIimh3+rgHSTLtLTNEcoBC1k2TdWvHXCyXQBvQPyQFFhEKfgKS5L6hHNRN9mb+RI19PoPZeKy8/5lljFfnGG1nGOseOd0GYD6oXA6n091ILjbp3NleQMyTAnPmM23rrCLr8c2YfAXhagXDFjmUIz+hMAaEjcOhHlOVdt+4GZ94=
+	t=1715329028; cv=none; b=t+gLOz97/1PX9pr9M3dmms4a/XPzCSx6CHRTfsM0FBuMm+ywxg/txaKb4PLn3g+eafVbQB1ZHU3FErHXNa4kDJiR7CaxYyZA9JiC/1i/0uhS9g3bvgHmqKbQg/zy2ru4RdpbNV6lDJ8NaxD7kcnIdSjrqjzbEO6vtAfuH3mwQdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715328786; c=relaxed/simple;
-	bh=TZfiS6lrEsk38Jd6m1IXLmMxfZu6DuG/Z0mv+clT1Q8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=b1cxLKf8ipPZKjYzFxUlkh1pMYqiXt0HAJ+o4jc8QhrvsxzLBQYleAsgcmYVKNWj5YbFS2Rb/PTr6tgmob7t8vPvcy19aUm6MtaZNv4QvuPTxVpZn87EA1asF7YilUX54TKXv5mVbNxEUeHtkEzp8yz9UZsdwzWCBnYOCx64GDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 44A8CTnmC2567408, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 44A8CTnmC2567408
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 10 May 2024 16:12:29 +0800
-Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 10 May 2024 16:12:29 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Fri, 10 May 2024 16:12:28 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7]) by
- RTEXMBS04.realtek.com.tw ([fe80::1a1:9ae3:e313:52e7%5]) with mapi id
- 15.01.2507.035; Fri, 10 May 2024 16:12:28 +0800
-From: Justin Lai <justinlai0215@realtek.com>
-To: Jakub Kicinski <kuba@kernel.org>
-CC: "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com"
-	<edumazet@google.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "andrew@lunn.ch"
-	<andrew@lunn.ch>,
-        "jiri@resnulli.us" <jiri@resnulli.us>,
-        "horms@kernel.org"
-	<horms@kernel.org>,
-        Ping-Ke Shih <pkshih@realtek.com>,
-        Larry Chiu
-	<larry.chiu@realtek.com>
-Subject: RE: [PATCH net-next v18 10/13] rtase: Implement ethtool function
-Thread-Topic: [PATCH net-next v18 10/13] rtase: Implement ethtool function
-Thread-Index: AQHaoUWgPXTTB14VD0aoQIyqdMTInbGPTwiAgADR5MA=
-Date: Fri, 10 May 2024 08:12:28 +0000
-Message-ID: <b5c86321761f4d24921b3a4a1f02c694@realtek.com>
-References: <20240508123945.201524-1-justinlai0215@realtek.com>
-	<20240508123945.201524-11-justinlai0215@realtek.com>
- <20240509204047.149e226e@kernel.org>
-In-Reply-To: <20240509204047.149e226e@kernel.org>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1715329028; c=relaxed/simple;
+	bh=3ZDwHzsfGWUbx3aEP4Hd/f3NEWbuvIEMGcIBveCseHI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PuuHL0ZRyi6qUfMmAJ4VcOM6rWOQUw/Lg0SrF0GoqoqFEDmPKLkU4F+XEe4TSPNbpXrzH7oRxEf4QwZ4y+AuFKD6IyEnTBbpw8yukWBeAmkgQYS26MdssmV1rdA219zo8RGBnnHVAGgmuckbUCGXlYOyLXhSj3bpfOiBAkjyesg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AxmllSwk; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AxmllSwk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88BE0C113CC;
+	Fri, 10 May 2024 08:17:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1715329027;
+	bh=3ZDwHzsfGWUbx3aEP4Hd/f3NEWbuvIEMGcIBveCseHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AxmllSwk1PKimxkjWGI+xVbv2XdXeALb32vl6iCT8ro/0zNi7eAu575eXmDq15uf3
+	 FB/F1ZYzWhJxFUSkxMdlbK+4aGftv22e+1ynyu6fr3bTfI6/LwrQ3nGL12fVdxubaa
+	 a0xZ+cLyNchKaiZJISJsDlJOpTWCAEfBSzDlFaTY=
+Date: Fri, 10 May 2024 09:17:05 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
+Cc: michal.simek@amd.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 RESEND] drivers: soc: xilinx: check return status of
+ get_api_version()
+Message-ID: <2024051034-surfacing-length-eae9@gregkh>
+References: <20240509043629.21506-1-jay.buddhabhatti@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240509043629.21506-1-jay.buddhabhatti@amd.com>
 
-> On Wed, 8 May 2024 20:39:42 +0800 Justin Lai wrote:
-> > +     data[0] =3D le64_to_cpu(counters->tx_packets);
-> > +     data[1] =3D le64_to_cpu(counters->rx_packets);
-> > +     data[2] =3D le64_to_cpu(counters->tx_errors);
-> > +     data[3] =3D le32_to_cpu(counters->rx_errors);
-> > +     data[4] =3D le16_to_cpu(counters->rx_missed);
-> > +     data[5] =3D le16_to_cpu(counters->align_errors);
-> > +     data[6] =3D le32_to_cpu(counters->tx_one_collision);
-> > +     data[7] =3D le32_to_cpu(counters->tx_multi_collision);
-> > +     data[8] =3D le64_to_cpu(counters->rx_unicast);
-> > +     data[9] =3D le64_to_cpu(counters->rx_broadcast);
-> > +     data[10] =3D le32_to_cpu(counters->rx_multicast);
-> > +     data[11] =3D le16_to_cpu(counters->tx_aborted);
-> > +     data[12] =3D le16_to_cpu(counters->tx_underun);
->=20
-> Please limit stats you report in ethtool -S to just the stats for which p=
-roper
-> interfaces don't exist. Don't duplicate what's already reported via
-> rtase_get_stats64(), also take a look at what can be reported via various
-> *_stats members of struct ethtool_ops.
 
-OK, I will check this part and modify it.
+
+On Wed, May 08, 2024 at 09:36:29PM -0700, Jay Buddhabhatti wrote:
+> Currently return status is not getting checked for get_api_version
+> and because of that for x86 arch we are getting below smatch error.
+> 
+>     CC      drivers/soc/xilinx/zynqmp_power.o
+> drivers/soc/xilinx/zynqmp_power.c: In function 'zynqmp_pm_probe':
+> drivers/soc/xilinx/zynqmp_power.c:295:12: warning: 'pm_api_version' is
+> used uninitialized [-Wuninitialized]
+>     295 |         if (pm_api_version < ZYNQMP_PM_VERSION)
+>         |            ^
+>     CHECK   drivers/soc/xilinx/zynqmp_power.c
+> drivers/soc/xilinx/zynqmp_power.c:295 zynqmp_pm_probe() error:
+> uninitialized symbol 'pm_api_version'.
+> 
+> So, check return status of pm_get_api_version and return error in case
+> of failure to avoid checking uninitialized pm_api_version variable.
+> 
+> Fixes: b9b3a8be28b3 ("firmware: xilinx: Remove eemi ops for get_api_version")
+> Signed-off-by: Jay Buddhabhatti <jay.buddhabhatti@amd.com>
+> ---
+> V1: https://lore.kernel.org/lkml/20240424063118.23200-1-jay.buddhabhatti@amd.com/
+> V1->V2: Removed AMD copyright
+> ---
+
+Why is this a RESEND?
+
+Also my bot had issues:
+
+--------
+
+Hi,
+
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
+
+You are receiving this message because of the following common error(s)
+as indicated below:
+
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
+
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
+
+thanks,
+
+greg k-h's patch email bot
