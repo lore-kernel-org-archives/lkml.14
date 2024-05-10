@@ -1,167 +1,226 @@
-Received: from pidgin.makrotopia.org (pidgin.makrotopia.org [185.142.180.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D10B013D24E;
-	Fri, 10 May 2024 23:14:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.142.180.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E1E13D250
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 23:21:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715382892; cv=none; b=SmR32djcgS4atCqo9PyNvVYr9tiNQL7+HhbUg+Ba8lmZeJWKzoRj3AWGlo/ULbOLz2M/5n2Ul36fCEtpJRdBhmUqTPbKn9QgMrYFysjl+5WWQ/it39Ayg0YOBJlU6uB3J2FgHjtDqya35WxEDjWxPpmW7MTAT9cPUMfPVBlF8ik=
+	t=1715383298; cv=none; b=nrY0VAfwtsywr3UA6oJGyAHYJrwtpCBC0UZS0c3lPhuOfta/eA7U/5B9dgMICoR5qwioWWo/L4HBZ/MlP9ZeGIL4a1zl8mFGGAeZ6QJTaHWjW5bVJ7ZJi/Xd/RXPtsHO0L7w9d7xHuDwuiWIvdjqZ5skAfMQ7TJ8ea/DwDsL+TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715382892; c=relaxed/simple;
-	bh=Pc7GFzBDdxx+C5kRi7y59nePkuWmI3j6CE75W4o17Oc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dho7QYYybktbZ+sbFPzu5q3DizBl1Ub1jVBCIfqwofoODPoP8yb5dTxWj+M/tUKYrWVATu+aQGVhWrYBc9UDWjiXmnWELTwajmz48K4GdL5qaBCydnFMWCZzppLdh0yU+Q/L48GVjl0tivcYe1AVTO26aAC0gkji6DVPTAbAIPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org; spf=pass smtp.mailfrom=makrotopia.org; arc=none smtp.client-ip=185.142.180.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=makrotopia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=makrotopia.org
-Received: from local
-	by pidgin.makrotopia.org with esmtpsa (TLS1.3:TLS_AES_256_GCM_SHA384:256)
-	 (Exim 4.97.1)
-	(envelope-from <daniel@makrotopia.org>)
-	id 1s5ZRe-000000000Jm-01WF;
-	Fri, 10 May 2024 23:14:30 +0000
-Date: Sat, 11 May 2024 00:14:25 +0100
-From: Daniel Golle <daniel@makrotopia.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	William Zhang <william.zhang@broadcom.com>,
-	Anand Gore <anand.gore@broadcom.com>,
-	Kursad Oney <kursad.oney@broadcom.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-	=?iso-8859-1?Q?Fern=E1ndez?= Rojas <noltari@gmail.com>,
-	Sven Schwermer <sven.schwermer@disruptive-technologies.com>,
-	linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	netdev@vger.kernel.org
-Subject: Re: [net-next PATCH v10 3/5] net: phy: add support for PHY LEDs
- polarity modes
-Message-ID: <Zj6qURAmoED2QywF@makrotopia.org>
-References: <20240125203702.4552-1-ansuelsmth@gmail.com>
- <20240125203702.4552-4-ansuelsmth@gmail.com>
+	s=arc-20240116; t=1715383298; c=relaxed/simple;
+	bh=0kA+CRNkKTBA6hSiOuG7oV2Ep3RdtN0eU0HRWoBGQOM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=blgMuV4ly1QpHIxgjM47SeUoDrYpkX8Efel1KUUCEVHCW8+lfnMmhrVQnJNxw4TofMW8PFHqAbPh0Iz17vCLP3wpCvwkkvP7mwFXwqANYVz/zuK+USgPMn/boljmnNKr2Iq7qPp0sSS27UrydYX+r9Fy/i1KAYlghG1lVj0OHEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J1PReMeK; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--almasrymina.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J1PReMeK"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6202fd268c1so43213417b3.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 16:21:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715383295; x=1715988095; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MdPPwqmw2OB2eps2P/fXT/DBVgNwUukZ4bhTdtZp228=;
+        b=J1PReMeKqbcAnOocv+c4AjpbeBvfnkUX+c8r1WSgwHIi8fPFQF3d+I51ulR0AN+MW4
+         153EMRg9rnxGrYpsUqOnUTdo2AXMlQAO8ZU1jAufYw0JoUy+QTSQqvIA7tSRCkIGwn/n
+         gs5bIjFbCHLg96sZaP4zMb/Xr8H37EhC5tO/Qp9w1EjwKqdtjPFKZtdb+0yZxQ5U/ERc
+         r+E4et9ANUtkMXvlra/s7kEG3vkOngby1QyKuyyE7df2/P2AhFZsUUsItJa8JuYgOa+5
+         N+h4wl2ACGHbNUpA+eQ6MTUbZeKE2N6RSFoIH6CoENT+3DGvQbhrPWMJq4LBW/y4qkTw
+         uzAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715383295; x=1715988095;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MdPPwqmw2OB2eps2P/fXT/DBVgNwUukZ4bhTdtZp228=;
+        b=dyMAzn15oiz0s5Hk9T3CmR/Bxj11ybKJZgdi4N3DE7pjTHVzosf+idpFnZCNE5RpDB
+         7Q1Zy0f7g3IDyR0VHzcjXA4bILVZ/dO2rG7YFsxrD+qWR8/fwYIwvloJATZeSixfBpKd
+         qbzVdFimxaQGYjTJq4A72xwCDbEmivm39nBxJaDFdgmdYdvH6YLue5BuL3cxs1WR8LI6
+         LRUCwPT4OdGWTw1DpnqSQaKS4enH21mauBxJS+kAD3422pVIYJRCMCGTvTpq9ZnMHWa0
+         ZJj7VlEK7hBAJj0pV0ouDJzxeplg8DkTR+w+XZa6rX8I833iWTNp9O4wLFgs0cKOJYNR
+         Skkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWp4anXhk/GkSR/peNJDXbjZm1iNenp6oZm7rKgeGB2/2fDpDi4uYyhxKz/66aS4Z8GOnloofCmzKDmORwQyUrRikhUbU+i60cmwIJ5
+X-Gm-Message-State: AOJu0Yytjf4ZSwEbtdeV8p45Ch0lQalfL0RtEz37lIgVp8tgD0lWuD9b
+	Gayy3s2/WQnpgyTK40OAeTWuq9lJlbJGZmg2N8NeHIrICZSD2ueZwJU1G+77TgkRcbqarjdd4gN
+	B/dBuStlEK4Fj1LxFn9Xi+A==
+X-Google-Smtp-Source: AGHT+IHMXabhPnmA8ZNpFjS6LuGhr4/4Qtsxh1KKctSTjcGfvpS/yXd7v1SAm2EHkPFeDF0lY3JAnqUdXw/wbkGhCQ==
+X-Received: from almasrymina.svl.corp.google.com ([2620:15c:2c4:200:3428:1b4e:e75a:d31b])
+ (user=almasrymina job=sendgmr) by 2002:a05:690c:c9d:b0:618:8e4b:f49d with
+ SMTP id 00721157ae682-622aff868c9mr10915787b3.4.1715383294779; Fri, 10 May
+ 2024 16:21:34 -0700 (PDT)
+Date: Fri, 10 May 2024 16:21:12 -0700
+In-Reply-To: <20240510232128.1105145-1-almasrymina@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240125203702.4552-4-ansuelsmth@gmail.com>
+Mime-Version: 1.0
+References: <20240510232128.1105145-1-almasrymina@google.com>
+X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
+Message-ID: <20240510232128.1105145-2-almasrymina@google.com>
+Subject: [PATCH net-next v9 01/14] netdev: add netdev_rx_queue_restart()
+From: Mina Almasry <almasrymina@google.com>
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-alpha@vger.kernel.org, 
+	linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, 
+	sparclinux@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	linux-arch@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org
+Cc: Mina Almasry <almasrymina@google.com>, Donald Hunter <donald.hunter@gmail.com>, 
+	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Richard Henderson <richard.henderson@linaro.org>, 
+	Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Matt Turner <mattst88@gmail.com>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, Helge Deller <deller@gmx.de>, 
+	Andreas Larsson <andreas@gaisler.com>, Jesper Dangaard Brouer <hawk@kernel.org>, 
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, David Ahern <dsahern@kernel.org>, 
+	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Shuah Khan <shuah@kernel.org>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, 
+	"=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>, Pavel Begunkov <asml.silence@gmail.com>, 
+	David Wei <dw@davidwei.uk>, Jason Gunthorpe <jgg@ziepe.ca>, Yunsheng Lin <linyunsheng@huawei.com>, 
+	Shailend Chand <shailend@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Jeroen de Borst <jeroendb@google.com>, 
+	Praveen Kaligineedi <pkaligineedi@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Christian,
-Hi Andrew,
+Add netdev_rx_queue_restart() function to netdev_rx_queue.h
 
-On Thu, Jan 25, 2024 at 09:36:59PM +0100, Christian Marangi wrote:
-> Add support for PHY LEDs polarity modes. Some PHY require LED to be set
-> to active low to be turned ON. Adds support for this by declaring
-> active-low property in DT.
-> 
-> PHY driver needs to declare .led_polarity_set() to configure LED
-> polarity modes. Function will pass the index with the LED index and a
-> bitmap with all the required modes to set.
-> 
-> Current supported modes are:
-> - active-low with the flag PHY_LED_ACTIVE_LOW. LED is set to active-low
->   to turn it ON.
-> - inactive-high-impedance with the flag PHY_LED_INACTIVE_HIGH_IMPEDANCE.
->   LED is set to high impedance to turn it OFF.
+Signed-off-by: David Wei <dw@davidwei.uk>
+Signed-off-by: Mina Almasry <almasrymina@google.com>
 
-Wanting to make use of this I noticed that polarity settings are only
-applied once in of_phy_led(), which is not sufficient for my use-case:
+---
 
-I'm writing a LED driver for Aquantia PHYs and those PHYs reset the
-polarity mode every time a PHY reset is triggered.
+v9: https://lore.kernel.org/all/20240502045410.3524155-4-dw@davidwei.uk/
+(submitted by David).
+- fixed SPDX license identifier (Simon).
+- Rebased on top of merged queue API definition, and changed
+  implementation to match that.
+- Replace rtnl_lock() with rtnl_is_locked() to make it useable from my
+  netlink code where rtnl is already locked.
 
-I ended up writing the patch below, but I'm not sure if phy_init_hw
-should take care of this or if the polarity modes should be stored in
-memory allocated by the PHY driver and re-applied by the driver after
-reset (eg. in .config_init). Kinda depends on taste and on how common
-this behavior is in practise, so I thought the best is to reach out to
-discuss.
+---
+ include/net/netdev_rx_queue.h |  3 ++
+ net/core/Makefile             |  1 +
+ net/core/netdev_rx_queue.c    | 74 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 78 insertions(+)
+ create mode 100644 net/core/netdev_rx_queue.c
 
-Let me know what you think.
-
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 616bd7ba46cb..1624884fd627 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1251,6 +1251,7 @@ static int phy_poll_reset(struct phy_device *phydev)
- int phy_init_hw(struct phy_device *phydev)
- {
- 	int ret = 0;
-+	struct phy_led *phyled;
- 
- 	/* Deassert the reset signal */
- 	phy_device_reset(phydev, 0);
-@@ -1285,6 +1286,17 @@ int phy_init_hw(struct phy_device *phydev)
- 			return ret;
- 	}
- 
-+	if (phydev->drv->led_polarity_set) {
-+		list_for_each_entry(phyled, &phydev->leds, list) {
-+			if (!phyled->polarity_modes)
-+				continue;
+diff --git a/include/net/netdev_rx_queue.h b/include/net/netdev_rx_queue.h
+index aa1716fb0e53c..e78ca52d67fbf 100644
+--- a/include/net/netdev_rx_queue.h
++++ b/include/net/netdev_rx_queue.h
+@@ -54,4 +54,7 @@ get_netdev_rx_queue_index(struct netdev_rx_queue *queue)
+ 	return index;
+ }
+ #endif
 +
-+			ret = phydev->drv->led_polarity_set(phydev, phyled->index, phyled->polarity_modes);
-+			if (ret)
-+				return ret;
-+		}
++int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq);
++
+ #endif
+diff --git a/net/core/Makefile b/net/core/Makefile
+index 62be9aef25285..f82232b358a2c 100644
+--- a/net/core/Makefile
++++ b/net/core/Makefile
+@@ -19,6 +19,7 @@ obj-$(CONFIG_NETDEV_ADDR_LIST_TEST) += dev_addr_lists_test.o
+ 
+ obj-y += net-sysfs.o
+ obj-y += hotdata.o
++obj-y += netdev_rx_queue.o
+ obj-$(CONFIG_PAGE_POOL) += page_pool.o page_pool_user.o
+ obj-$(CONFIG_PROC_FS) += net-procfs.o
+ obj-$(CONFIG_NET_PKTGEN) += pktgen.o
+diff --git a/net/core/netdev_rx_queue.c b/net/core/netdev_rx_queue.c
+new file mode 100644
+index 0000000000000..b3899358e5a9c
+--- /dev/null
++++ b/net/core/netdev_rx_queue.c
+@@ -0,0 +1,74 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++
++#include <linux/netdevice.h>
++#include <net/netdev_queues.h>
++#include <net/netdev_rx_queue.h>
++
++int netdev_rx_queue_restart(struct net_device *dev, unsigned int rxq_idx)
++{
++	void *new_mem, *old_mem;
++	int err;
++
++	if (!dev->queue_mgmt_ops->ndo_queue_stop ||
++	    !dev->queue_mgmt_ops->ndo_queue_mem_free ||
++	    !dev->queue_mgmt_ops->ndo_queue_mem_alloc ||
++	    !dev->queue_mgmt_ops->ndo_queue_start)
++		return -EOPNOTSUPP;
++
++	DEBUG_NET_WARN_ON_ONCE(!rtnl_is_locked());
++
++	new_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
++	if (!new_mem)
++		return -ENOMEM;
++
++	old_mem = kvzalloc(dev->queue_mgmt_ops->ndo_queue_mem_size, GFP_KERNEL);
++	if (!old_mem) {
++		err = -ENOMEM;
++		goto err_free_new_mem;
 +	}
 +
- 	return 0;
- }
- EXPORT_SYMBOL(phy_init_hw);
-@@ -3316,7 +3328,6 @@ static int of_phy_led(struct phy_device *phydev,
- 	struct device *dev = &phydev->mdio.dev;
- 	struct led_init_data init_data = {};
- 	struct led_classdev *cdev;
--	unsigned long modes = 0;
- 	struct phy_led *phyled;
- 	u32 index;
- 	int err;
-@@ -3335,18 +3346,14 @@ static int of_phy_led(struct phy_device *phydev,
- 		return -EINVAL;
- 
- 	if (of_property_read_bool(led, "active-low"))
--		set_bit(PHY_LED_ACTIVE_LOW, &modes);
-+		set_bit(PHY_LED_ACTIVE_LOW, &phyled->polarity_modes);
- 	if (of_property_read_bool(led, "inactive-high-impedance"))
--		set_bit(PHY_LED_INACTIVE_HIGH_IMPEDANCE, &modes);
-+		set_bit(PHY_LED_INACTIVE_HIGH_IMPEDANCE, &phyled->polarity_modes);
- 
--	if (modes) {
-+	if (phyled->polarity_modes) {
- 		/* Return error if asked to set polarity modes but not supported */
- 		if (!phydev->drv->led_polarity_set)
- 			return -EINVAL;
--
--		err = phydev->drv->led_polarity_set(phydev, index, modes);
--		if (err)
--			return err;
- 	}
- 
- 	phyled->index = index;
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index 3ddfe7fe781a..7c8bd72e6fee 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -888,6 +888,7 @@ struct phy_led {
- 	struct list_head list;
- 	struct phy_device *phydev;
- 	struct led_classdev led_cdev;
-+	unsigned long polarity_modes;
- 	u8 index;
- };
- 
++	err = dev->queue_mgmt_ops->ndo_queue_mem_alloc(dev, new_mem, rxq_idx);
++	if (err)
++		goto err_free_old_mem;
++
++	err = dev->queue_mgmt_ops->ndo_queue_stop(dev, old_mem, rxq_idx);
++	if (err)
++		goto err_free_new_queue_mem;
++
++	err = dev->queue_mgmt_ops->ndo_queue_start(dev, new_mem, rxq_idx);
++	if (err)
++		goto err_start_queue;
++
++	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, old_mem);
++
++	kvfree(old_mem);
++	kvfree(new_mem);
++
++	return 0;
++
++err_start_queue:
++	/* Restarting the queue with old_mem should be successful as we haven't
++	 * changed any of the queue configuration, and there is not much we can
++	 * do to recover from a failure here.
++	 *
++	 * WARN if the we fail to recover the old rx queue, and at least free
++	 * old_mem so we don't also leak that.
++	 */
++	if (dev->queue_mgmt_ops->ndo_queue_start(dev, old_mem, rxq_idx)) {
++		WARN(1,
++		     "Failed to restart old queue in error path. RX queue %d may be unhealthy.",
++		     rxq_idx);
++		dev->queue_mgmt_ops->ndo_queue_mem_free(dev, &old_mem);
++	}
++
++err_free_new_queue_mem:
++	dev->queue_mgmt_ops->ndo_queue_mem_free(dev, new_mem);
++
++err_free_old_mem:
++	kvfree(old_mem);
++
++err_free_new_mem:
++	kvfree(new_mem);
++
++	return err;
++}
+-- 
+2.45.0.118.g7fe29c98d7-goog
+
