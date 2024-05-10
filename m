@@ -1,82 +1,159 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665481635B7
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 09:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B0D14E2D5;
+	Fri, 10 May 2024 09:24:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715333047; cv=none; b=HPZsNDfUHc8QmhswMEa0yjDFd2EIBw2LH4TBd16+LHF0cRDFcYbOLXGR2chlSlhjmHIivzo8HfWvl+N1EmXkA4K8z2IzLrhEySkz0k3bKPTmn6P98+ZmLVEgPAI7uoFHD3t4f11/OxuiZ3VdChMfWP3v3eWkKnkZbR3/tFaC2G8=
+	t=1715333093; cv=none; b=tYi6nAapk9OAcmEO7F2nqn4Gdb9B7bhf75dqv1xlKn9ENmtWHz1SC+R/Yx9yNl7c9KiHx8Fj0Axq7lSkIUx10jvIIuW7gmKGSWwhpWNw6Er3jrFOK+gYLMWcCXOaD2OuEzDGeznHYuTtyJJMXP6K2YGeKDpKc2c4fO3XsxWhG64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715333047; c=relaxed/simple;
-	bh=PzEAvfubVdzbr1Rad2HFxtO4tJenQDkig1qLCknoPWc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QNQIZZTRKkeD7HYzhJcYkhRD9qq/O/QUZISTIwETJwA8ZYz0BJOC7LDzWYG3rwvc+qsTY2Xe9HWGVwvXz0LGjGZ4jU39AKlb0uuYd8uXNNOJSkFc3GURmCSu+GAza/Yw6reFMRtoyz5QScgDjlcEZwhi+7827Jc2SKyWS2HD9pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=J6PKm0iI; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="J6PKm0iI"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52192578b95so2008433e87.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 02:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1715333043; x=1715937843; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=PzEAvfubVdzbr1Rad2HFxtO4tJenQDkig1qLCknoPWc=;
-        b=J6PKm0iI97liOMawv3Xf9F+UDm4jxYDjniXPPya1MdYTGRZBuD9xww8atsOT72KmPy
-         vzcNzQJjQ7uZmNterneF6Fn8+aVSK6hWZmLkkVHxcZhLJ0rI8C/wKgJG3uq4HvpnqtN+
-         FFa3PMHWziX/JqRbiXM1g5cxOy6w8HXSmxlqk=
+	s=arc-20240116; t=1715333093; c=relaxed/simple;
+	bh=IPPPpjykbtN9x08ZRo+eTV5my0h+MJzXLIVtb+chsEo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dvd1Ly4A3lWFgK/DFLgNYx9CXQF3LaXImzWNu4OGQAx5wbpVNglg9U7qHvR0Cl5XAPEMutkH+t7VPndNNb/fJyun/EI7rmcq2l0FyLaXSRQJHlii443lLZ3quzrqf9SXE3btKQeUKVx1ORo1HsdSOHn65A7tjZ2RWcQGlG/+iOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a599eedc8eeso464568366b.1;
+        Fri, 10 May 2024 02:24:51 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715333043; x=1715937843;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1715333090; x=1715937890;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PzEAvfubVdzbr1Rad2HFxtO4tJenQDkig1qLCknoPWc=;
-        b=C/2axvIlH+xqiaHyFtlWhgHmA1mud9fzpGQ8+dw/YyNte4eXGc896sfSUirS769wsr
-         z6XLt4LVY7wJCiCCkvG5mSQH0pyW9RhKU4EHPyID8YBH3eugun6f9hOjhbsNzhPTjJZO
-         NXn/vUTnKDPkM0xJ4pe4euxI2ni3yVCotlY3Lj05Q+oQpPSYHDnN6z9xraeApCIiqQwu
-         fhU6x4ue0wPVPk1e9Bn+FP838Qho81tOPbm/oCNtrdLvYlXyat9CYXi46LGZ+1ZG8eZl
-         8A4p25uy9lo+kNsRZTIjlkvRKXYctR7w1zu+Vp/ZJv1UQOF+foGPhuzelci9EMzJDD5e
-         G4Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPgStnuLjSKtr42ERei1XFgRqsM4katz8F3LfZjsL7/k9nB9HtJhEze/E0NyzLNENhUon0ZEb1uFZ6V0ONl6Tdso86CiVkNtUhcRNI
-X-Gm-Message-State: AOJu0Yw8oQFRsUh0+WmJRFINjobb52YHUWdfF3kQWQU0gApPrnyAF9gg
-	3r3sT+9ib7NloScnQZD3cD5EuGAXtTHU0pukRJ/G5HlzRoE/ViF3A+itAVr6XPiCAxh2wpLCvuy
-	S6Wl+pCnMrWQ+RlTuKyGxiwjnKvTC47Z3Cwo1eXYvzgrZVz+h
-X-Google-Smtp-Source: AGHT+IEBQo/Qbfl2WC+0rK4SGXKb1MtU+UuvKOJs0bGdaUK/2EFugpwAD8QMjqigbM55196R57Wz0hxTuWlnljjn/MU=
-X-Received: by 2002:a17:907:6d01:b0:a59:9f3e:b1ca with SMTP id
- a640c23a62f3a-a5a2d6657camr156437666b.55.1715332611232; Fri, 10 May 2024
- 02:16:51 -0700 (PDT)
+        bh=ZDbpDRkbSbko8yRciJ3Il22WfPCRLNyZHa1ErroF7aI=;
+        b=rR2NTcIi3OUK4c77Op/a13/Qqnv5DXtdufW+YJ/kFtM28k32hfuvung7/Zu5pgS1E+
+         dK5ycm+V2Oda2qkHb3duTY9VoD5L8pdCEd46k9mV+FRs4HvlnmLFUxfLknNiWC/XG6Ge
+         LWzTlNmdex/bBw9zZIK2b5TDwolglNxYXAc9uR4k1OgwDd7gK788Azc3UYq6HU6EzS21
+         3QxCZG4y2Orao3fphnvg90tvTcxiXu1pmhwBT+nUqaddiwOB3LstSRkC2vHsxQUKxPwV
+         483cW9qmnTy2wU+DnY0x43W41AtAe2mhReTCgabnO/T4d3p5VLOogtwT3OXvk6X6aGEc
+         k1LA==
+X-Forwarded-Encrypted: i=1; AJvYcCWomWV25Sk0Ew4EFmrH/ZrMiftAJqnqQedZfC7Ih0maBp32j5XANPaHx8SjaPkNFKEYV9joQA+9+5r6SadJKBegr5oRBYayzf/RGOVvIwNWNOEa1Yd/6BuP9bYfdH2nnZI8dnZyFhTfBFklam+vN9vFnZp5D3gB90Nr
+X-Gm-Message-State: AOJu0YyEE1FZm8ePR55Q6xXDX4ErUPL0NX0GJ5hrU+v/pAWu/t2tfKGc
+	WNr8WgmoPZTpuwaQvw8cF7U4SuhusGCXOAn8lATBACdah/bMj1pf
+X-Google-Smtp-Source: AGHT+IEc/PKfiUJKg1onag1vG+4wLXesYxjoHUri/YIGdHynkSyqSG7ThqKpga0fHxFOKLxBxdaRIQ==
+X-Received: by 2002:a17:906:3618:b0:a59:9c14:a774 with SMTP id a640c23a62f3a-a5a2d680d90mr136109666b.74.1715333089780;
+        Fri, 10 May 2024 02:24:49 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-009.fbsv.net. [2a03:2880:30ff:9::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b17f37sm162865666b.224.2024.05.10.02.24.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 May 2024 02:24:49 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: Paolo Bonzini <pbonzini@redhat.com>,
+	Rik van Riel <riel@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Avi Kivity <avi@redhat.com>
+Cc: rbc@meta.com,
+	paulmck@kernel.org,
+	stable@vger.kernel.org,
+	kvm@vger.kernel.org (open list:KERNEL VIRTUAL MACHINE (KVM)),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] KVM: Fix a data race on last_boosted_vcpu in kvm_vcpu_on_spin()
+Date: Fri, 10 May 2024 02:23:52 -0700
+Message-ID: <20240510092353.2261824-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240509122154.782930-1-houtao@huaweicloud.com>
-In-Reply-To: <20240509122154.782930-1-houtao@huaweicloud.com>
-From: Miklos Szeredi <miklos@szeredi.hu>
-Date: Fri, 10 May 2024 11:16:40 +0200
-Message-ID: <CAJfpegvJgFfJmDZXw7NBGZ5WASdxTy+EVjQxBSydAq1oARCntw@mail.gmail.com>
-Subject: Re: [PATCH 0/2] fuse: two tiny fixes for fuse_resend()
-To: Hou Tao <houtao@huaweicloud.com>
-Cc: linux-fsdevel@vger.kernel.org, Zhao Chen <winters.zc@antgroup.com>, 
-	linux-kernel@vger.kernel.org, houtao1@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 9 May 2024 at 14:21, Hou Tao <houtao@huaweicloud.com> wrote:
->
-> From: Hou Tao <houtao1@huawei.com>
->
-> Hi,
->
-> The patch set just includes two tiny fixes for fuse_resend(). Patch #1
-> replaces __set_bit() by set_bit() to set FR_PENDING atomically. Patch #2
-> clears FR_SENT when moving requests from processing lists to pending
-> list.
->
-> Please check the individual patches for more details. And comments are
-> always welcome.
+Use {READ,WRITE}_ONCE() to access kvm->last_boosted_vcpu to ensure the
+loads and stores are atomic.  In the extremely unlikely scenario the
+compiler tears the stores, it's theoretically possible for KVM to attempt
+to get a vCPU using an out-of-bounds index, e.g. if the write is split
+into multiple 8-bit stores, and is paired with a 32-bit load on a VM with
+257 vCPUs:
 
-Applied, thanks.
+  CPU0                              CPU1
+  last_boosted_vcpu = 0xff;
 
-Miklos
+                                    (last_boosted_vcpu = 0x100)
+                                    last_boosted_vcpu[15:8] = 0x01;
+  i = (last_boosted_vcpu = 0x1ff)
+                                    last_boosted_vcpu[7:0] = 0x00;
+
+  vcpu = kvm->vcpu_array[0x1ff];
+
+As detected by KCSAN:
+
+  BUG: KCSAN: data-race in kvm_vcpu_on_spin [kvm] / kvm_vcpu_on_spin [kvm]
+
+  write to 0xffffc90025a92344 of 4 bytes by task 4340 on cpu 16:
+  kvm_vcpu_on_spin (arch/x86/kvm/../../../virt/kvm/kvm_main.c:4112) kvm
+  handle_pause (arch/x86/kvm/vmx/vmx.c:5929) kvm_intel
+  vmx_handle_exit (arch/x86/kvm/vmx/vmx.c:?
+		 arch/x86/kvm/vmx/vmx.c:6606) kvm_intel
+  vcpu_run (arch/x86/kvm/x86.c:11107 arch/x86/kvm/x86.c:11211) kvm
+  kvm_arch_vcpu_ioctl_run (arch/x86/kvm/x86.c:?) kvm
+  kvm_vcpu_ioctl (arch/x86/kvm/../../../virt/kvm/kvm_main.c:?) kvm
+  __se_sys_ioctl (fs/ioctl.c:52 fs/ioctl.c:904 fs/ioctl.c:890)
+  __x64_sys_ioctl (fs/ioctl.c:890)
+  x64_sys_call (arch/x86/entry/syscall_64.c:33)
+  do_syscall_64 (arch/x86/entry/common.c:?)
+  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+
+  read to 0xffffc90025a92344 of 4 bytes by task 4342 on cpu 4:
+  kvm_vcpu_on_spin (arch/x86/kvm/../../../virt/kvm/kvm_main.c:4069) kvm
+  handle_pause (arch/x86/kvm/vmx/vmx.c:5929) kvm_intel
+  vmx_handle_exit (arch/x86/kvm/vmx/vmx.c:?
+			arch/x86/kvm/vmx/vmx.c:6606) kvm_intel
+  vcpu_run (arch/x86/kvm/x86.c:11107 arch/x86/kvm/x86.c:11211) kvm
+  kvm_arch_vcpu_ioctl_run (arch/x86/kvm/x86.c:?) kvm
+  kvm_vcpu_ioctl (arch/x86/kvm/../../../virt/kvm/kvm_main.c:?) kvm
+  __se_sys_ioctl (fs/ioctl.c:52 fs/ioctl.c:904 fs/ioctl.c:890)
+  __x64_sys_ioctl (fs/ioctl.c:890)
+  x64_sys_call (arch/x86/entry/syscall_64.c:33)
+  do_syscall_64 (arch/x86/entry/common.c:?)
+  entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
+
+  value changed: 0x00000012 -> 0x00000000
+
+Fixes: 217ece6129f2 ("KVM: use yield_to instead of sleep in kvm_vcpu_on_spin")
+Cc: stable@vger.kernel.org
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+Changelog:
+v2: 
+	* Reworded the git commit as suggested by Sean
+	* Dropped the me->kvm->last_boosted_vcpu in favor of
+	  kvm->last_boosted_vcpu as suggested by Sean
+v1:
+	* https://lore.kernel.org/all/20240509090146.146153-1-leitao@debian.org/
+
+---
+ virt/kvm/kvm_main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index ff0a20565f90..d9ce063c76f9 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4066,12 +4066,13 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *me, bool yield_to_kernel_mode)
+ {
+ 	struct kvm *kvm = me->kvm;
+ 	struct kvm_vcpu *vcpu;
+-	int last_boosted_vcpu = me->kvm->last_boosted_vcpu;
++	int last_boosted_vcpu;
+ 	unsigned long i;
+ 	int yielded = 0;
+ 	int try = 3;
+ 	int pass;
+ 
++	last_boosted_vcpu = READ_ONCE(kvm->last_boosted_vcpu);
+ 	kvm_vcpu_set_in_spin_loop(me, true);
+ 	/*
+ 	 * We boost the priority of a VCPU that is runnable but not
+@@ -4109,7 +4110,7 @@ void kvm_vcpu_on_spin(struct kvm_vcpu *me, bool yield_to_kernel_mode)
+ 
+ 			yielded = kvm_vcpu_yield_to(vcpu);
+ 			if (yielded > 0) {
+-				kvm->last_boosted_vcpu = i;
++				WRITE_ONCE(kvm->last_boosted_vcpu, i);
+ 				break;
+ 			} else if (yielded < 0) {
+ 				try--;
+-- 
+2.43.0
+
