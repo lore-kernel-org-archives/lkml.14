@@ -1,237 +1,105 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6355515FA9D
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 09:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C478E1607A3
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 09:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715332141; cv=none; b=EKxoXuIPw3K3Z0Y27yLHIi5knigVTpZn1kac1bQQpZhmucJX1TK3bczPr87J+AWOOckFONVW7PMvYRdwXBK+8LsrGv4CnBxIvq8JRYgaQWRd1XG8VIG+4z5D5CB9rqd9OkrKcTOW11H/QNrDJWu0Jj1GtH88pXVwfCBIDUQbAHQ=
+	t=1715332183; cv=none; b=K+HfQcfxpBYPFYU9WfSXlTWyItqFltSK9gqIUvbXqasMbdGePbK9ewVIWRJ678KC/diMa+sMeNSW7nqPgP0tiC8ty3iwujGLfHvV9l6dd34dtqc7gqx6GrCy+J9g8SDFmqK8+52AeHMIyj6QRLJUGcAdsAWqx1GSpOZtYOqqImg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715332141; c=relaxed/simple;
-	bh=I04nZi4eDHjXV0NwFmOXhSYav1tj+JZIjFxquAOBChw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nGOOmdfMFevYB6RRKvCJOxXgYfOoB+jzWoB9abcDkoM+jlJ2VE9W1MNjDuMwp6EsTVVqZwXEROodsLf6HvSRQ16R+ahTCiFZtX+ccqxMIiGG0E3mXCGqdwNH7NszE9m8Me9JE9QSrSvNXrIvjtkOUaFEyNFTrMe63dAKkDIhcFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eCRjb0bv; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715332183; c=relaxed/simple;
+	bh=9yIdtQp3ur1f9Zjf3zmNi4wTquzd2hcg9pPvEGak2SI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BlAq+9NRUq65WpvXFCcoFiUz+JuuOWATE5z5O4S/RQBXawxTs/I6I8WatnYdK7dbXNrH8rtnXge3iSSp3iyHleH0lPpChTtAuM1cDbUTWxjbGk5bcdCt4Hy1ST1JNqZzoSQsdiG+It9EuFuqxCr6AkUF4XusuchzhJmkVwvzmL8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=cn+6fzU9; arc=none smtp.client-ip=209.85.210.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eCRjb0bv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715332138;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=G0EvWCNfwA9x7KaIVr6ruCAINAZy8qYnlw/yafFrBXk=;
-	b=eCRjb0bvCjYso5g9pOuR8+O1awLRFLCo6t7a/U4JbLJ+KuHuYGQ/v3WL5zyEsgipHCKunG
-	rraxz7vuMUhUJGfS+4o77vG/oAub5AhxS/5UQuANcDDvwuwSKe8NMr37rg8M3upaiDOWGd
-	uYbwkCDxWIy0Akg+trLkTCh6IMDsa0o=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-117-P6WCIJl4MZWzY1hAMHkBrA-1; Fri, 10 May 2024 05:08:54 -0400
-X-MC-Unique: P6WCIJl4MZWzY1hAMHkBrA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3EBE7800206;
-	Fri, 10 May 2024 09:08:54 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.192.109])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0A6A9200A612;
-	Fri, 10 May 2024 09:08:51 +0000 (UTC)
-From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-To: davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>,
-	stable@vger.kernel.org,
-	Isaac Ganoung <inventor500@vivaldi.net>,
-	Yongqin Liu <yongqin.liu@linaro.org>
-Subject: [PATCH] net: usb: ax88179_178a: fix link status when link is set to down/up
-Date: Fri, 10 May 2024 11:08:28 +0200
-Message-ID: <20240510090846.328201-1-jtornosm@redhat.com>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="cn+6fzU9"
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6f0e79215a9so496200a34.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 02:09:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1715332180; x=1715936980; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9yIdtQp3ur1f9Zjf3zmNi4wTquzd2hcg9pPvEGak2SI=;
+        b=cn+6fzU9CQbKSFu+3w/g/5GrIUNAywHSk3egpBiaip5T2mB3gXKAR1R1PtDaUEtJmY
+         b/GUCk0x1qJvdp4t4DcHaYsYHYrpmT/z5Y5gMk3MpdfW2dczAzr+Mex1ElWfnjqfMRZT
+         Tna9AQODstVHiiFmY6YAv3afkfbZ0sUWNf95HS/tqqfpgtzlq3h13Uf0iY+L4MhpzfBJ
+         KHSFUbm1vQbGrIxdCwVZXFUsOJXrRn6EA6C1qu6gCSnqcbYZGTIlE5hOLoefhFLRftIB
+         6gpSGhtvOCfVcqzFkONQGFtTtkvKWh1DJ/GaxeX4Nz9UJfsL+OnQAuB05HDMcLxrnblN
+         0EjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715332180; x=1715936980;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9yIdtQp3ur1f9Zjf3zmNi4wTquzd2hcg9pPvEGak2SI=;
+        b=Wo9XRlwIR/NvrqQS2aI1dZ4yqoVzZEZrTXlmcM51VHqeZ4/V+yMepES+/Bis05Dlpe
+         D/dtn+U0uOKWmE2/bQIGV+qNh2B0SQXJ0ociXLWHWJGAnIAQC20JEeOSE0GCthPFbcGx
+         eCNZ3a4BHaAZHTuskc7ed3Iu2ZF/Rmm5V/8rmDI8dsD4VBGJ9PIWgUnmL5hxskw5/Gej
+         X804jN3EfZuD3VBn0jFiyMfxVmjGTKN9KryOD04ChmJ2ADWj27OMJsVpQX+IaA7zzZiu
+         QULCnEVN4RTjSl+81shyHCIGeN3y0L84tigxsMm3bLFpwnwD3QAofUjDELV7D5vHqm3l
+         /V9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUPodr5r6wOZNr92WvP5T2hNbY1Y6kC0VgfSZMPHASHFwD18ZOirqTA/dZH2nYczwnO2fHxvuzJyWbeE1bR+sY4zo0KpEXH2XyjQZxh
+X-Gm-Message-State: AOJu0Yx5r9DJO3IeEHhaq2/mzFAW3Sg5XqN8Mz28NZAapVnMQIudSfhE
+	ntWgAQKc8KJedM2/NTPfwAg9sFgDHN/+EWLS1Gx+RldNV7g/8nRGRrWbnnrlBksGVfb8ga/lSVj
+	/GrO/XMbspsJp0wNxodINd4y05Y3y8YUXcjq51w==
+X-Google-Smtp-Source: AGHT+IFJUZsn5cCFuDu7+oE0uV3M2KrJJj2xWvL4ycCzP3mzWGKzZ6Zvm6RZSzXcZCEZoX2rhgdaX1mskMRMuYwjnB4=
+X-Received: by 2002:a05:6870:6387:b0:233:5f71:4461 with SMTP id
+ 586e51a60fabf-24172fc60b6mr2387986fac.55.1715332179485; Fri, 10 May 2024
+ 02:09:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+References: <20240509073300.4968-1-cuiyunhui@bytedance.com>
+ <20240509073300.4968-2-cuiyunhui@bytedance.com> <ZjzrXnOc5AAost4O@bogus>
+In-Reply-To: <ZjzrXnOc5AAost4O@bogus>
+From: yunhui cui <cuiyunhui@bytedance.com>
+Date: Fri, 10 May 2024 17:09:28 +0800
+Message-ID: <CAEEQ3wkHc-EaRPKLivZoxO6jKXv9bigbYhacWouL7+KbgbwWpQ@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH v5 2/3] riscv: cacheinfo: initialize
+ cacheinfo's level and type from ACPI PPTT
+To: Sudeep Holla <sudeep.holla@arm.com>, Palmer Dabbelt <palmer@dabbelt.com>
+Cc: rafael@kernel.org, lenb@kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, paul.walmsley@sifive.com, 
+	sunilvl@ventanamicro.com, aou@eecs.berkeley.edu, 
+	linux-riscv@lists.infradead.org, bhelgaas@google.com, james.morse@arm.com, 
+	jhugo@codeaurora.org, jeremy.linton@arm.com, john.garry@huawei.com, 
+	Jonathan.Cameron@huawei.com, pierre.gondois@arm.com, tiantao6@huawei.com, 
+	Conor Dooley <conor.dooley@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The idea was to keep only one reset at initialization stage in order to
-reduce the total delay, or the reset from usbnet_probe or the reset from
-usbnet_open.
+Hi Palmer,
 
-I have seen that restarting from usbnet_probe is necessary to avoid doing
-too complex things. But when the link is set to down/up (for example to
-configure a different mac address) the link is not correctly recovered
-unless a reset is commanded from usbnet_open.
+There are already related Reviewed-by, Gentle ping...
 
-So, detect the initialization stage (first call) to not reset from
-usbnet_open after the reset from usbnet_probe and after this stage, always
-reset from usbnet_open too (when the link needs to be rechecked).
+On Thu, May 9, 2024 at 11:27=E2=80=AFPM Sudeep Holla <sudeep.holla@arm.com>=
+ wrote:
+>
+> On Thu, May 09, 2024 at 03:32:59PM +0800, Yunhui Cui wrote:
+> > Before cacheinfo can be built correctly, we need to initialize level
+> > and type. Since RISC-V currently does not have a register group that
+> > describes cache-related attributes like ARM64, we cannot obtain them
+> > directly, so now we obtain cache leaves from the ACPI PPTT table
+> > (acpi_get_cache_info()) and set the cache type through split_levels.
+> >
+> > Suggested-by: Jeremy Linton <jeremy.linton@arm.com>
+> > Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
+>
+> I am not sure why you have not added my reviewed-by as I was happy with
+> v3 onwards IIRC. Anyways, I will give it again =F0=9F=98=84
+>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+>
+> --
+> Regards,
+> Sudeep
 
-Apply to all the possible devices, the behavior now is going to be the same.
-
-cc: stable@vger.kernel.org # 6.6+
-Fixes: 56f78615bcb1 ("net: usb: ax88179_178a: avoid writing the mac address before first reading")
-Reported-by: Isaac Ganoung <inventor500@vivaldi.net>
-Reported-by: Yongqin Liu <yongqin.liu@linaro.org>
-Signed-off-by: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
----
- drivers/net/usb/ax88179_178a.c | 37 ++++++++++++++++++++++++----------
- 1 file changed, 26 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index 377be0d9ef14..a0edb410f746 100644
---- a/drivers/net/usb/ax88179_178a.c
-+++ b/drivers/net/usb/ax88179_178a.c
-@@ -174,6 +174,7 @@ struct ax88179_data {
- 	u32 wol_supported;
- 	u32 wolopts;
- 	u8 disconnecting;
-+	u8 initialized;
- };
- 
- struct ax88179_int_data {
-@@ -1672,6 +1673,18 @@ static int ax88179_reset(struct usbnet *dev)
- 	return 0;
- }
- 
-+static int ax88179_net_reset(struct usbnet *dev)
-+{
-+	struct ax88179_data *ax179_data = dev->driver_priv;
-+
-+	if (ax179_data->initialized)
-+		ax88179_reset(dev);
-+	else
-+		ax179_data->initialized = 1;
-+
-+	return 0;
-+}
-+
- static int ax88179_stop(struct usbnet *dev)
- {
- 	u16 tmp16;
-@@ -1691,6 +1704,7 @@ static const struct driver_info ax88179_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
-+	.reset = ax88179_net_reset,
- 	.stop = ax88179_stop,
- 	.flags = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1703,6 +1717,7 @@ static const struct driver_info ax88178a_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
-+	.reset = ax88179_net_reset,
- 	.stop = ax88179_stop,
- 	.flags = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1715,7 +1730,7 @@ static const struct driver_info cypress_GX3_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset = ax88179_reset,
-+	.reset = ax88179_net_reset,
- 	.stop = ax88179_stop,
- 	.flags = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1728,7 +1743,7 @@ static const struct driver_info dlink_dub1312_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset = ax88179_reset,
-+	.reset = ax88179_net_reset,
- 	.stop = ax88179_stop,
- 	.flags = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1741,7 +1756,7 @@ static const struct driver_info sitecom_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset = ax88179_reset,
-+	.reset = ax88179_net_reset,
- 	.stop = ax88179_stop,
- 	.flags = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1754,7 +1769,7 @@ static const struct driver_info samsung_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset = ax88179_reset,
-+	.reset = ax88179_net_reset,
- 	.stop = ax88179_stop,
- 	.flags = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1767,7 +1782,7 @@ static const struct driver_info lenovo_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset = ax88179_reset,
-+	.reset = ax88179_net_reset,
- 	.stop = ax88179_stop,
- 	.flags = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1780,7 +1795,7 @@ static const struct driver_info belkin_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset	= ax88179_reset,
-+	.reset	= ax88179_net_reset,
- 	.stop	= ax88179_stop,
- 	.flags	= FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1793,7 +1808,7 @@ static const struct driver_info toshiba_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset	= ax88179_reset,
-+	.reset	= ax88179_net_reset,
- 	.stop = ax88179_stop,
- 	.flags	= FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1806,7 +1821,7 @@ static const struct driver_info mct_info = {
- 	.unbind	= ax88179_unbind,
- 	.status	= ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset	= ax88179_reset,
-+	.reset	= ax88179_net_reset,
- 	.stop	= ax88179_stop,
- 	.flags	= FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1819,7 +1834,7 @@ static const struct driver_info at_umc2000_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset  = ax88179_reset,
-+	.reset  = ax88179_net_reset,
- 	.stop   = ax88179_stop,
- 	.flags  = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1832,7 +1847,7 @@ static const struct driver_info at_umc200_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset  = ax88179_reset,
-+	.reset  = ax88179_net_reset,
- 	.stop   = ax88179_stop,
- 	.flags  = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
-@@ -1845,7 +1860,7 @@ static const struct driver_info at_umc2000sp_info = {
- 	.unbind = ax88179_unbind,
- 	.status = ax88179_status,
- 	.link_reset = ax88179_link_reset,
--	.reset  = ax88179_reset,
-+	.reset  = ax88179_net_reset,
- 	.stop   = ax88179_stop,
- 	.flags  = FLAG_ETHER | FLAG_FRAMING_AX,
- 	.rx_fixup = ax88179_rx_fixup,
--- 
-2.44.0
-
+Thanks=EF=BC=8C
+Yunhui
