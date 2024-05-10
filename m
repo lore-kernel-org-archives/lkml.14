@@ -1,69 +1,78 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B59131192;
-	Fri, 10 May 2024 08:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1EF15FA7D;
+	Fri, 10 May 2024 08:12:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715328764; cv=none; b=FjVWntseeUEqeZhwFMsOixsznqRZpe6OKub4kPDi2t9+YSheq5zI6rLuDKC0Zu1+ly7kQGOFYcAuNZ6XW483ab+dMepgUlLznWriE1gBZTiiUBwR8lkUgu4TXhpM06M4Z4CcIgPQ6qErhvB6THhb5UcY+WsjEXOElt9RJTUjNj0=
+	t=1715328765; cv=none; b=q6ue/+uGMftA1YQoECtBoNZYrXGBQYQ597I47Gq8TQw6g57oiK+XGSjpje38f753mZUjO8qEyQIbcjQYjI9TCSmJ65wyk3y3pjOKxjXe8mpVNiXaBEK79pHmYCwTOI0ZwH6k5pp61W0cmYBUC62Y5c9xCW5VQx7/ZtFBZae1lzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715328764; c=relaxed/simple;
-	bh=/oP7Bpr10/EZ8eMNvRVeS4AOS3RDhZayb83Of5+S7Uc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=O9yku/uoKKqjFe917098zQAQzIx3d+2hTaXgA24z95vdjoaqIZioq7LW7c/jGjisMrHbk6AGzc1843WZyJNLonB+pHR4JYc18esbqtPn8EZuXF/+u1htL6V+M0Cd0jppKoLhVfqR9Dn2K9PCFK9qpE3zIOclzPrFjXjg0oQ8+Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1s5LMh-00DHkn-1Q;
-	Fri, 10 May 2024 16:12:28 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 10 May 2024 16:12:28 +0800
-Date: Fri, 10 May 2024 16:12:28 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Christoph Hellwig <hch@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCHv3 00/19] zram: convert to custom compression API and
- allow algorithms tuning
-Message-ID: <Zj3W7OK9kDpneKXR@gondor.apana.org.au>
-References: <20240508074223.652784-1-senozhatsky@chromium.org>
- <ZjzFB2CzCh1NKlfw@infradead.org>
- <20240510051509.GI8623@google.com>
- <Zj3PXKcpqUPuFJRu@gondor.apana.org.au>
- <20240510080827.GB950946@google.com>
+	s=arc-20240116; t=1715328765; c=relaxed/simple;
+	bh=63LkKxQnPfNPFz4Ce8J7HQ+Gp+UglZPRuwLqfkkEBus=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:From:To:Cc:
+	 References:In-Reply-To; b=ika6esgrg/O9Gn2xmzsUEjYXz2naMOrKpM3xfW9Futt9znu1qq9QIth1RIQHK1Cra4e+8KTxMU4g9djOMzSvzj37KM0/NpjgawCmmJUmP/UwZpKt3vrPUJPy2K6/xzHeo8/d3qYlBep/8V1sQP5xHj+Wv3laJLMipEkOwvFO13o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ml0DaCEw; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ml0DaCEw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC741C113CC;
+	Fri, 10 May 2024 08:12:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715328764;
+	bh=63LkKxQnPfNPFz4Ce8J7HQ+Gp+UglZPRuwLqfkkEBus=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=Ml0DaCEwmyQJ+cPHaXugULPb202ZJ8XY/7ZY2ttRkJoRrBw1snl+vKk/Hrmoj9xt2
+	 gQeK5NkRW30ddPPzFoxvcABS5IEGuYgcc607+72b2ModNQj5oDuoU1s7HEy2DtOm63
+	 Ld21K2lyXEzS2XwAEfdgrLpheYWs79xqNSR83usZxSG99urtXZo6WiWozjJmzNWQn6
+	 Q1dkCPph2QpigJ+mpvIeWfZU5oJVZg/gN2NW8k+pPAfCACD+9lONTCDG0L7PNUvWj4
+	 bA6t4y3ldK5WD17Gxti7jwB1SOGWvjSF3fN3MW+SKLuqTwlNMRzf/1R5+bKmFVzJYS
+	 DrUf4fB0rfNaQ==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240510080827.GB950946@google.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 10 May 2024 11:12:40 +0300
+Message-Id: <D15TAQ4AQ2KO.28SP4AL9V89BL@kernel.org>
+Subject: Re: [GIT PULL] TPM DEVICE DRIVER: tpmdd-next-6.10-rc1
+From: "Jarkko Sakkinen" <jarkko@kernel.org>
+To: "Jarkko Sakkinen" <jarkko@kernel.org>, "Linus Torvalds"
+ <torvalds@linux-foundation.org>
+Cc: "Peter Huewe" <peterhuewe@gmx.de>, "Jason Gunthorpe" <jgg@ziepe.ca>,
+ "David Howells" <dhowells@redhat.com>, <keyrings@vger.kernel.org>,
+ <linux-integrity@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.17.0
+References: <D15DSV117DQZ.3GJOTXCTGZHE9@kernel.org>
+In-Reply-To: <D15DSV117DQZ.3GJOTXCTGZHE9@kernel.org>
 
-On Fri, May 10, 2024 at 05:08:27PM +0900, Sergey Senozhatsky wrote:
+On Thu May 9, 2024 at 11:04 PM EEST, Jarkko Sakkinen wrote:
+> Hi,
 >
-> For some algorithms params needs to be set before ctx is created.
-> For example zstd, crypto/zstd calls zstd_get_params(ZSTD_DEF_LEVEL, 0)
-> to estimate workspace size, which misses the opportunity to configure
-> it an way zram/zswap can benefit from, because those work with PAGE_SIZE
-> source buffer.  So for zram zstd_get_params(ZSTD_DEF_LEVEL, PAGE_SIZE)
-> is much better (it saves 1.2MB per ctx, which is per-CPU in zram).  Not
-> to mention that zstd_get_params(param->level, 0) is what we need at the
-> end.
+> These are the changes for the TPM driver with a single major new
+> feature: TPM bus encryption and integrity protection. The key pair
+> on TPM side is generated from so called null random seed per power
+> on of the machine [1]. This supports the TPM encryption of the hard
+> drive by adding layer of protection against bus interposer attacks.
+>
+> Other than the pull request a few minor fixes and documentation for
+> tpm_tis to clarify basics of TPM localities for future patch review
+> discussions (will be extended and refined over times, just a seed).
+>
+> [1] https://lore.kernel.org/linux-integrity/20240429202811.13643-1-James.=
+Bottomley@HansenPartnership.com/
 
-For these algorithms where the overhead of allocating a default
-set of parameters and then changing them on a setparam call is
-too high, we could stipulate that the tfm can only be used after
-a setparam call (just as we require a setkey before cipher ops).
+Two former PR's (keys, trusted keys) look a bit different as I realized
+that my current script does not scale too well. So I do in future use
+a method where the subsystem name is picked from MAINTAINERS and I have
+crafted aerc templates [1] for each subsystem (also CC lists need
+tuning).
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+This will get better and more polished as I get my scripting more
+polished. If anything went wrong, it is mostly because process changes
+have their glitches :-)
+
+https://man.archlinux.org/man/aerc-templates.7.en
+
+BR, Jarkko
