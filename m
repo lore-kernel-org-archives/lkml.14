@@ -1,47 +1,67 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D31E150992;
-	Fri, 10 May 2024 11:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1221D16ABC3;
+	Fri, 10 May 2024 11:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715339114; cv=none; b=jYutWZKMr1o9U5W72EO97rCArGWGW88eKNPwDpgcA8FJrgswlPQ/mI+OBT0WHN1hLUGmvvrvdcM6pMqTmEDX9aBtILU5R3EbU/GPlqJC4D6EXzEdfmFU1TcXdjwxe+EFyPPRfmS/1AtOCcT4Xkb2EsqpjJ61aFsRWBYEfZxSdzI=
+	t=1715339139; cv=none; b=WAjRISKWFF7fB7gjLhA3lgGS3M7mFkLJdFHi1W/kwnHG9E5WgfgpMipaZ6v/XeccFUJfhnLNHBOIZPBIePxIK4SsZjgV+NgcFBbnYtEC/TncF8Ztmtea0JwbN9e4ITf60fRdKrM14QyEv0aZS9MPtdZUqi8XPlau2DSyrY+TOGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715339114; c=relaxed/simple;
-	bh=tydwP5A3OPrgNyBAKfKX/KIV43KM+TOnhyDYU5r2RY8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NWtJU/0nyB9MJGmOQOIE3Edyi+xEttY0FvH12e3kwzRlRD9AVjwvRxk99JQzDEUB+BCCa6mpgRRdA5MNTJngm6HEVHKX6gK7WuUVGoI9qqgKzwboQlIlP0Q8BwLti8KIN3bXIl58UXvM1hwPSAzaisfLAuDqKrprqZ3mWAM+ezw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=OUZSqGm1; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	s=arc-20240116; t=1715339139; c=relaxed/simple;
+	bh=Hyy5BxHIgcuy/mWcHVUxtmJ6Ufl2y8saMP4OWvAQpdQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iXcQW0TWpBRfupogtjKJ/+vpnMnQQ3g6gG42ee4/laIIKrSNaGwBfeXNbso7yHvvGdEi2lx7RnE8M7753PJJ4fITiUuRQPjGcPMwSHvG8F9jrg/r0zjA+icEL7+Lr3bT/+obPZCf269B/S2jdkEaoL5bMxqKO2V1GRY43hMVHJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pvhpW5hj; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="OUZSqGm1"
-Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 2CF7B1FE20;
-	Fri, 10 May 2024 13:05:02 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1715339102;
-	bh=n+vro3UQ/j2LdI39fnWzlmxREsNKNpHEcj7IkmRy0HE=; h=From:To:Subject;
-	b=OUZSqGm1rDswBuxd9yZuLD302EQO6bkAO6NinsrDgIB+xrBCHmi+N/xq6FtbCJmU0
-	 VHMIySZQKQ0LjWRrsqL1rO20m/cu6cVRFzTYZJ2rCQUP/c+J7F43ZR4CGxpMKQNs5f
-	 PJThnA2ywtyi7HCnjUpGXAt4FcvlQt2588X5jIGrus+8L+Q8iDP+D+u3IEixT3ti3p
-	 YZ3+TqiZQGlzo/uOfKJsxRjbxdDTeRi+2mlmrKIzL9GaxJOJW0Mvf9hRKMgaXj9zYN
-	 t4qCAjedETI2sfpVAewmxl4eeu10TOEhxlpumTGacNxu4qVbbWO0t+YNxQ5o69qYV9
-	 vpPoP6bWVkR/A==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Brian Norris <briannorris@chromium.org>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	Kalle Valo <kvalo@kernel.org>
-Cc: Rafael Beims <rafael.beims@toradex.com>,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tsung-hsien.hsieh@nxp.com,
-	David Lin <yu-hao.lin@nxp.com>,
-	stable@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v1] wifi: mwifiex: Fix interface type change
-Date: Fri, 10 May 2024 13:04:58 +0200
-Message-Id: <20240510110458.15475-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pvhpW5hj"
+X-UUID: 3858353c0ebd11ef8065b7b53f7091ad-20240510
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=kpRLxFp1HniKMgGxgeGEPO0SSPqHobCE+LsRmF4NMto=;
+	b=pvhpW5hj2YNG0F4cXbOQvaxS1Kh8OHJ89wIUS55tbsOURE77hW3bpD8q0M3SRPeOMY4SBAVk8PdaPM1dBLePN8vH5hH9SMuUbpAMUd06ViL0vSyXO6MSm7Ji4wNBlXxa/WQJ8oebGbwsg2WxHgDt/n7lapHdOoWQNRF1f9c0z8Y=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.38,REQID:c9705c32-425e-4ca0-b8c8-2e5db76f7ddf,IP:0,U
+	RL:25,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:82c5f88,CLOUDID:1bcb3287-8d4f-477b-89d2-1e3bdbef96d1,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+	RL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES
+	:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_ULN,TF_CID_SPAM_SNR
+X-UUID: 3858353c0ebd11ef8065b7b53f7091ad-20240510
+Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw02.mediatek.com
+	(envelope-from <liankun.yang@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 1906352426; Fri, 10 May 2024 19:05:32 +0800
+Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
+ mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Fri, 10 May 2024 19:05:31 +0800
+Received: from mszsdhlt06.gcn.mediatek.inc (10.16.6.206) by
+ mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.26 via Frontend Transport; Fri, 10 May 2024 19:05:30 +0800
+From: Liankun Yang <liankun.yang@mediatek.com>
+To: <chunkuang.hu@kernel.org>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
+	<daniel@ffwll.ch>, <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<chunfeng.yun@mediatek.com>, <vkoul@kernel.org>, <kishon@kernel.org>,
+	<matthias.bgg@gmail.com>, <angelogioacchino.delregno@collabora.com>,
+	<jitao.shi@mediatek.com>, <mac.shen@mediatek.com>,
+	<liankun.yang@mediatek.com>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>
+CC: <dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>
+Subject: [PATCH v2 2/2] Add dp PHY dt-bindings
+Date: Fri, 10 May 2024 19:04:15 +0800
+Message-ID: <20240510110523.12524-3-liankun.yang@mediatek.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240510110523.12524-1-liankun.yang@mediatek.com>
+References: <20240510110523.12524-1-liankun.yang@mediatek.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,40 +69,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-From: Rafael Beims <rafael.beims@toradex.com>
+Add dp PHY dt-bindings.
 
-When changing the interface type we also need to update the bss_num, the
-driver private data is searched based on a unique (bss_type, bss_num)
-tuple, therefore every time bss_type changes, bss_num must also change.
+Changeds in v2:
+- Add dp PHY dt-bindings.
+https://patchwork.kernel.org/project/linux-mediatek/patch/
+20240403040517.3279-1-liankun.yang@mediatek.com/
 
-This fixes for example an issue in which, after the mode changed, a
-wireless scan on the changed interface would not finish, leading to
-repeated -EBUSY messages to userspace when other scan requests were
-sent.
-
-Fixes: c606008b7062 ("mwifiex: Properly initialize private structure on interface type changes")
-Cc: stable@vger.kernel.org
-Signed-off-by: Rafael Beims <rafael.beims@toradex.com>
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+Signed-off-by: Liankun Yang <liankun.yang@mediatek.com>
 ---
- drivers/net/wireless/marvell/mwifiex/cfg80211.c | 2 ++
- 1 file changed, 2 insertions(+)
+ .../display/mediatek/mediatek.phy-dp.yaml     | 45 +++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek.phy-dp.yaml
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/cfg80211.c b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-index b909a7665e9c..155eb0fab12a 100644
---- a/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-+++ b/drivers/net/wireless/marvell/mwifiex/cfg80211.c
-@@ -926,6 +926,8 @@ mwifiex_init_new_priv_params(struct mwifiex_private *priv,
- 		return -EOPNOTSUPP;
- 	}
- 
-+	priv->bss_num = mwifiex_get_unused_bss_num(adapter, priv->bss_type);
+diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek.phy-dp.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek.phy-dp.yaml
+index 000000000000..476bc329363f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/mediatek/mediatek.phy-dp.yaml
+@@ -0,0 +1,45 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/mediatek/mediatek,phy-dp.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	spin_lock_irqsave(&adapter->main_proc_lock, flags);
- 	adapter->main_locked = false;
- 	spin_unlock_irqrestore(&adapter->main_proc_lock, flags);
++title: MediaTek Display Port Controller
++
++maintainers:
++  - Mac shen <mac.shen@mediatek.com>
++  - Liankun yang <Liankun.yang@mediatek.com>
++
++description: |
++  Special settings need to be configured by MediaTek DP based on the actual
++  hardware situation. For example, when using a certain brand's docking
++  station for display projection, garbage may appear. Adjusting the specific
++  ssc value can resolve this issue.
++
++properties:
++  status: disabled
++    description: |
++      Since the DP driver has already registered the DP PHY device
++      through mtk_dp_register_phy(), so the status is disabled.
++
++  dp-ssc-setting:
++    - ssc-delta-hbr
++    description: Specific values are set based on the actual HW situation.
++
++required:
++  - status
++  - dp-ssc-setting
++
++examples:
++  - |
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        phy-dp@1c600000 {
++          status = "disabled";
++          dp-ssc-setting {
++            ssc-delta-hbr = <0x01fe>;
++          }
++        };
++    };
 -- 
-2.39.2
+2.18.0
 
