@@ -1,293 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25BAE15FA94;
-	Fri, 10 May 2024 10:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B80D1635B5;
+	Fri, 10 May 2024 10:05:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715335459; cv=none; b=Z+262sPogkPiyjpug6iXZJVcGLcwGl84bKM2GymsCI1Ya+XdXsXrbwmnJ2a/SjrV/As6Kg55g9N3Y5lP0NwIk0JxrecenGzgqOq6z3akAgyPzB0/Bq9Mhc2HJd6Jzmt7e9bIaTGxu2JE5Bdby2wfROgexG3NC81IzsP8hQacIJ4=
+	t=1715335538; cv=none; b=Lf+G9gfyG6ca2eu5ox6S60yvJlg1AuR4YGNRiZZX+GMeMoWhzeDfgQTcTZWHv/XUB3g1o6C5JCiXoZ+1PFa2nkA8VOm7RsqNm32zoOkbpCFJ/eqIll4eAflo8y51VJuxN+vZVm4QQJAZXlu7gXK2khO/Ob6J4w2Oebnt1vu+mRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715335459; c=relaxed/simple;
-	bh=SjH/KsxiLWlk197KXHmyaRxAxOGe2ynKfwkAvbBEGLY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F/KVgaFnu1QnX/tLEQGXxk8ORU4rfrpxHSX26mWvUogyQ3IznWSvbfkG8daveTMbG8fPme6xzVU10Ywjgdd4d+CK1pyICXUhqIwybntlBP5JWDDeNXB74IL2J1DHSaSJi0eAoP0DahoUksfouAJ2PI1pSUBjbwg3kGMOk/pF4Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+TNfM/S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715335538; c=relaxed/simple;
+	bh=bNxY+o7w/EluTDohpX6Vmx9RgZAOBzGsaVfZ2SgYTKc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OehfXSDRRPIuM+7JEJXWc1Y5jwavGKT1RBoY1/efh3xjI5OJy8RWufd7KyMF800dGbH+i0ow7Rtz/6k/MYkXsVviBoCX0yBKzMa04C2rVR1xNrnFHCSsJfz+qM16cQPIGGeB05Lt62Yi+zHxu64nAUjtuEEDfqL0lkyCqB1qfbg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DHzdP4Vw; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+TNfM/S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94ABDC113CC;
-	Fri, 10 May 2024 10:04:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715335458;
-	bh=SjH/KsxiLWlk197KXHmyaRxAxOGe2ynKfwkAvbBEGLY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J+TNfM/S4aaCDRqeTdXknOR150uWQ14OWTFaB9h7z98368IzNQ0h7xqrnF/pN9V94
-	 adpcNNzsP5v75yS1hhjmcgtgwG7awrAbYxI5a7nlUDEv6dg0zg+9cBO0+beaOpjdlT
-	 mT7GcpYioEYDhVh20faWw2kXOjWwVyCpl5X7oAsKAa+GwkK7xC8g+4o9xi/R5O88z2
-	 FA+QxuuWu/kf77q8X7oXj+S3seTtRCM05C2WTe+0dJNlosgLXyKP6dOSmouVa8rzan
-	 vYcGiFLPkNOu6qlQP42hnkc6LqYCj6SBgJmgCzXm2FZcVxmurQ5j6TYlYS/FDR+iYF
-	 U7IUbCuOGMxmw==
-Date: Fri, 10 May 2024 12:04:12 +0200
-From: Benjamin Tissoires <bentiss@kernel.org>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>, 
-	Alexei Starovoitov <ast@kernel.org>, John Fastabend <john.fastabend@gmail.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] bpf: verifier: allow arrays of progs to be used in
- sleepable context
-Message-ID: <ex6qpofzgl5arf2trs4c6rm7tectt6tpz63edkxvj62smpcxra@4e2yjyfbc34m>
-References: <7344022a-6f59-7cbf-ee45-6b7d59114be6@iogearbox.net>
- <un4jw2ef45vu3vwojpjca3wezso7fdp5gih7np73f4pmsmhmaj@csm3ix2ygd5i>
- <35nbgxc7hqyef3iobfvhbftxtbxb3dfz574gbba4kwvbo6os4v@sya7ul5i6mmd>
- <CAADnVQJaG8kDaJr5LV29ces+gVpgARLAWiUvE9Ee5huuiW5X=Q@mail.gmail.com>
- <mhkzkf4e23uvljtmwizwcxyuyat2tmfxn33xb4t7waafgmsa66@mcrzpj3b6ssx>
- <CAADnVQLJ=nxp3bZYYMJd0yrUtMNx2DcvYXXmbGKBQAiG85kSLQ@mail.gmail.com>
- <xt2zckipzs24eur4ozdo64uoxfed6jm3qixxgnp3o2gogjmosc@723s2u7jbsaz>
- <CAADnVQK9qeMmzxE-aivmue-CF_hn1EFUTUAZyaMRqy2cW6j73A@mail.gmail.com>
- <b5r55f2uan7qm5h34nfu2qmoap2gm3ox3dtp2kjpaxebjrzxvp@zqx23ecrnj4q>
- <CAADnVQLxjW411h-Wr2shMFNi_D7FK661yBZjYj2pUTwwhafc-A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHzdP4Vw"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a59a64db066so464919266b.3;
+        Fri, 10 May 2024 03:05:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715335535; x=1715940335; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jvyJt6mXT3ke3TNec2g3jJkXUKl8h7wFAhJ349b/sWE=;
+        b=DHzdP4VwUq5QXS9O4PdsB9psOZy1DfGXfKm+JVu/tL/rDHeJcLNHChP8JhDL8+fExC
+         /bct8r71jAK/zQ2hAw6S/EfNvQ749sA/HvtZUekCrGudhWX73SJGDbWLTrCC/ceBxKQl
+         gPeD9CzaApk/ZyOtvIvUyuzdXTGnHxIIxt4T1aOCa8oTRy+infabTgSu8+OvBzzGBwwq
+         YJdM41qk669eP0kidZQzvqVHltt6jCJcGwx0T9vYgBy4sWx0pbk2SzVWXAFcPmSQ8BfX
+         lSZhOxSqJwdTNR+1SRNlkw7VG3AFNtN1L+DNrWWcggmnv2pcloIbJe383snBZii6roZF
+         mssg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715335535; x=1715940335;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jvyJt6mXT3ke3TNec2g3jJkXUKl8h7wFAhJ349b/sWE=;
+        b=H7OSC55fj4Iz5bPicXkwabwU/puzti0jXeSPDG9nMqAiH+BWRPppQvN5typyjfpvpS
+         S4NCnZkT2/xHWzaP1i5VDhjv/hG8DdncD4wjbuV2RMtTS0a+by7yH6s3Tyen1A2jP6ql
+         r8L0I8Pdac3OvrV2Ge2MjsrtKT+fMu4VNQj0XJTBDs/iVnS9KlWuQbt7f0zzLWWE+Zd5
+         uUEdFrTzCEpYDt3vVyDof+dfc0/plIN/zid9j7HL3HV0a9Agg95Bj9dtWtmWYDiE24uJ
+         sggeSarWyw/TmMHh9s1VXLWY7XDmoWlOoCAxKSJo7YARMRsEb6nWgs2Z0j94u92xY7PH
+         s/dw==
+X-Forwarded-Encrypted: i=1; AJvYcCUz/Ml2JKHiw5Fq7x/CEHPr+UJZ5ECedWfp/Cp3sTHzfJ4KIDT0e6Xs4E/8Yw0n+B0Fbkxk/Xf2moGeJ7IGo1wR+S261lKegEF6AOWAqqmhaPjTTb9qhBzrIuPu4wy0rzRXXIhSo65QcB4wDxScqmdNnCaxe0IoCcT8XOgkcfpW5GZ+7w==
+X-Gm-Message-State: AOJu0YzCZsfegC3w0ZPGnN2Yfl5P6PlCfvV0mMH4YyhZ/IW9q6Dpx6V3
+	Q6tZeXmNDOByl+e/Yp3ZpMS3zq90GcOOOlX1iQiLBFPgbgE5GOuP
+X-Google-Smtp-Source: AGHT+IGa90M9SKT4W839DqYKUjMyqadXlmKJvXXAnlyhf9gjRGzZ+Yt9tUAVrfALpDcuKwCII9ApPw==
+X-Received: by 2002:a50:baeb:0:b0:56e:2ebc:5c4 with SMTP id 4fb4d7f45d1cf-5734d5ceae0mr1478379a12.20.1715335535307;
+        Fri, 10 May 2024 03:05:35 -0700 (PDT)
+Received: from [192.168.0.105] (c7.campus.utcluj.ro. [193.226.6.226])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c2c7d3esm1655178a12.73.2024.05.10.03.05.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 May 2024 03:05:34 -0700 (PDT)
+Message-ID: <73365049-670b-4068-a159-fbdd0539f5a9@gmail.com>
+Date: Fri, 10 May 2024 13:05:32 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQLxjW411h-Wr2shMFNi_D7FK661yBZjYj2pUTwwhafc-A@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 5/6] dt-bindings: iio: adc: ad7192: Add AD7194 support
+To: Conor Dooley <conor@kernel.org>
+Cc: michael.hennerich@analog.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ alexandru.tachici@analog.com, lars@metafoo.de, jic23@kernel.org,
+ robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ lgirdwood@gmail.com, broonie@kernel.org, andy@kernel.org,
+ nuno.sa@analog.com, marcelo.schmitt@analog.com, bigunclemax@gmail.com,
+ dlechner@baylibre.com, okan.sahin@analog.com, fr0st61te@gmail.com,
+ alisa.roman@analog.com, marcus.folkesson@gmail.com, schnelle@linux.ibm.com,
+ liambeguin@gmail.com
+References: <20240430162946.589423-1-alisa.roman@analog.com>
+ <20240430162946.589423-6-alisa.roman@analog.com>
+ <20240430-winnings-wrongness-32328ccfe3b5@spud>
+Content-Language: en-US
+From: Alisa-Dariana Roman <alisadariana@gmail.com>
+In-Reply-To: <20240430-winnings-wrongness-32328ccfe3b5@spud>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On May 08 2024, Alexei Starovoitov wrote:
-> On Wed, May 8, 2024 at 4:53 AM Benjamin Tissoires <bentiss@kernel.org> wrote:
-> >
-> > On May 07 2024, Alexei Starovoitov wrote:
-> > > On Tue, May 7, 2024 at 6:32 AM Benjamin Tissoires <bentiss@kernel.org> wrote:
-> > > >
-> > > > Yes, exactly that. See [0] for my current WIP. I've just sent it, not
-> > > > for reviews, but so you see what I meant here.
-> > >
-> > > The patches helped to understand, for sure, and on surface
-> > > they kind of make sense, but without seeing what is that
-> > > hid specific kfunc that will use it
-> > > it's hard to make a call.
-> >
-> > I've posted my HID WIP on [1]. It probably won't compile as my local
-> > original branch was having a merge of HID and bpf trees.
+On 30.04.2024 20:21, Conor Dooley wrote:
+> On Tue, Apr 30, 2024 at 07:29:45PM +0300, Alisa-Dariana Roman wrote:
+>> +      diff-channels:
+>> +        description:
+>> +          Both inputs can be connected to pins AIN1 to AIN16 by choosing the
+>> +          appropriate value from 1 to 16.
+>> +        items:
+>> +          minimum: 1
+>> +          maximum: 16
+>> +
+>> +      single-channel:
+>> +        description:
+>> +          Positive input can be connected to pins AIN1 to AIN16 by choosing the
+>> +          appropriate value from 1 to 16. Negative input is connected to AINCOM.
+>> +        items:
+>> +          minimum: 1
+>> +          maximum: 16
 > 
-> Thanks for this context.
-> Now it makes a lot more sense.
-> And the first patches look fine and simplification is impressive,
-> but this part:
-> +     SEC("syscall")
-> +     int name(struct attach_prog_args *ctx)
-> +     {
-> +       ctx->retval = hid_bpf_attach_prog_impl(ctx->hid,
-> +                                                 type,
-> +                                                 __##name,
-> +                           ctx->insert_head ? HID_BPF_FLAG_INSERT_HEAD :
-> +                                                 HID_BPF_FLAG_NONE,
-> +                                                 NULL);
-> 
-> is too odd.
-> Essentially you're adding a kfunc on hid side just to call it
-> from a temporary "syscall" program to register another prog.
-> A fake prog just to call a kfunc is a bit too much.
-> 
-> The overall mechanism is pretty much a customized struct-ops.
-> 
-> I think struct-ops infra provides better api-s, safety guarantees,
-> bpf_link support, prog management including reentrance check, etc.
+> Up to 16 differential channels and 16 single-ended channels, but only 16
+> pins? Would the number of differential channels not max out at 8?
 
-Ack!
+Hello, Conor! I really appreciate the feedback!
 
-> It needs to be parametrized, so it's not just
-> SEC("struct_ops/kern_callback_name")
-> so that the skeleton loading phase can pass device id or something.
+The way I thought about it, the only thing constraining the number of 
+channels is the reg number (minimum: 0, maximum: 271). 272 channels 
+cover all possible combinations (16*16 differential and 16 single ended) 
+and I thought there is no need for anything stricter. I added items: 
+minimum:1 maximum:16 to make sure the numbers are from 1 to 16, 
+corresponding to AIN1-AIN16.
 
-I'm not sure how to parametrize staticaly. I can rely on the modalias,
-but then that might not be ideal. Right now my loader gets called by a
-udev rule, and then call a .probe syscall. If this returns success, then
-the bpf programs are attached to the given hid device.
+Please let me know what should be improved!
 
-I saw that the struct_ops can have "data" fields. If we can change the
-static value before calling attach, I should have a register callback
-being able to retrieve that hid id, and then attach the struct_ops to
-the correct hid device in the jump table. Anyway, I'll test this later.
+Kind regards,
+Alisa-Dariana Roman.
 
-Something along:
-
-SEC(".struct_ops")
-struct hid_bpf_ops dummy_1 = {
-        .input_event = (void *)test_1,
-        .rdesc_fixup = (void *)test_2,
-        .hw_raw_request = (void *)test_sleepable,
-        .hid_id = 0,
-};
-
-And in the loader, I call __load(), change the value ->hid_id, and then
-__attach().
-
-> 
-> > > The (u64)(long) casting concerns and prog lifetime are
-> > > difficult to get right. The verifier won't help and it all
-> > > will fall on code reviews.
-> >
-> > yeah, this is a concern.
-> 
-> Not only that. The special kfunc does migrate_disable
-> before calling callback, but it needs rcu_lock or tracing lock,
-> plus reentrance checks.
-> 
-> >
-> > > So I'd rather not go this route.
-> > > Let's explore first what exactly the goal here.
-> > > We've talked about sleepable tail_calls, this async callbacks
-> > > from hid kfuncs, and struct-ops.
-> > > Maybe none of them fit well and we need something else.
-> > > Could you please explain (maybe once again) what is the end goal?
-> >
-> > right now I need 4 hooks in HID, the first 2 are already upstream:
-> > - whenever I need to retrieve the report descriptor (this happens in a
-> >   sleepable context, but non sleepable is fine)
-> > - whenever I receive an event from a device (non sleepable context, this
-> >   is coming from a hard IRQ context)
-> > - whenever someone tries to write to the device through
-> >   hid_hw_raw_request (original context is sleepable, and for being able
-> >   to communicate with the device we need sleepable context in bpf)
-> > - same but from hid_hw_output_report
-> >
-> > Again, the first 2 are working just fine.
-> >
-> > Implementing the latter twos requires sleepable context because we
-> > might:
-> >
-> > 1. a request is made from user-space
-> > 2. we jump into hid-bpf
-> > 3. the bpf program "converts" the request from report ID 1 to 2 (because
-> > we export a slightly different API)
-> > 4. the bpf program directly emits hid_bpf_raw_request (sleepable
-> > operation)
-> > 5. the bpf program returns the correct value
-> > 6. hid-core doesn't attempt to communicate with the device as bpf
-> > already did.
-> >
-> > In the series, I also realized that I need sleepable and non sleepable
-> > contexts for this kind of situation, because I want tracing and
-> > firewalling available (non sleepable context), while still allowing to
-> > communicate with the device. But when you communicate with the device
-> > from bpf, the sleepable bpf program is not invoked or this allows
-> > infinite loops.
-> 
-> I don't get the point about infinite loops.
-
-If I don´t put restrictions on how the bpf program communicate with the
-device I might have:
-
-1. someone calls hid_hw_raw_request from hidraw
-2. bpf jumps into filter for hid_hw_raw_request
-3. the bpf program calls hid_bpf_raw_request (which internally calls
-hid_hw_raw_request)
-4. go back to 2.
-
-But again, not a big deal: if I do not allow entering a sleepable bpf
-program from hid_bpf_raw_request (so from a bpf program), instead of 4.
-above, we prevent entering the same bpf program as the program in 2.
-needs to be sleepable.
-
-> fyi struct_ops already supports sleepable and non-sleepable callbacks.
-> See progs/dummy_st_ops_success.c
-> SEC(".struct_ops")
-> struct bpf_dummy_ops dummy_1 = {
->         .test_1 = (void *)test_1,
->         .test_2 = (void *)test_2,
->         .test_sleepable = (void *)test_sleepable,
-> };
-> 
-> two callbacks are normal and another one is sleepable.
-> 
-> The generated bpf trampoline will have the right
-> __bpf_prog_enter* wrappers for all 3 progs,
-> so the kernel code will be just do ops->callback_name().
-
-Great!
-
-So I think I have most of the pieces available... I just need to write
-the code :)
-
-> 
-> > >
-> > > > Last time I checked, I thought struct_ops were only for defining one set
-> > > > of operations. And you could overwrite them exactly once.
-> > > > But after reading more carefully how it was used in tcp_cong.c, it seems
-> > > > we can have multiple programs which define the same struct_ops, and then
-> > > > it's the kernel which will choose which one needs to be run.
-> > >
-> > > struct-ops is pretty much a mechanism for kernel to define
-> > > a set of callbacks and bpf prog to provide implementation for
-> > > these callbacks. The kernel choses when to call them.
-> > > tcp-bpf is one such user. sched_ext is another and more advanced.
-> > > Currently struct-ops bpf prog loading/attaching mechanism
-> > > only specifies the struct-ops. There is no device-id argument,
-> > > but that can be extended and kernel can keep per-device a set
-> > > of bpf progs.
-> > > struct-ops is a bit of overkill if you have only one callback.
-> > > It's typically for a set of callbacks.
-> >
-> > In the end I have 4. However, I might have programs that overwrite twice
-> > the same callback (see the 2 SEC("fmod_ret/hid_bpf_device_event") in
-> > [2]).
-> >
-> > >
-> > > > Last, I'm not entirely sure how I can specify which struct_ops needs to be
-> > > > attached to which device, but it's worth a shot. I've already realized
-> > > > that I would probably have to drop the current way of HID-BPF is running,
-> > > > so now it's just technical bits to assemble :)
-> > >
-> > > You need to call different bpf progs per device, right?
-> >
-> > yes
-> >
-> > > If indirect call is fine from performance pov,
-> > > then tailcall or struct_ops+device_argument might fit.
-> >
-> > performance is not a requirement. It's better if we have low latency but
-> > we are not talking the same requirements than network.
-> >
-> > >
-> > > If you want max perf with direct calls then
-> > > we'd need to generalize xdp dispatcher.
-> >
-> > I'll need to have a deeper look at it, yeah.
-> >
-> > >
-> > > So far it sounds that tailcalls might be the best actually,
-> > > since prog lifetime is handled by prog array map.
-> > > Maybe instead of bpf_tail_call helper we should add a kfunc that
-> > > will operate on prog array differently?
-> > > (if current bpf_tail_call semantics don't fit).
-> >
-> > Actually I'd like to remove bpf_tail_call entirely, because it requires
-> > to pre-load a BPF program at boot, and in some situations (RHEL) this
-> > creates issues. I haven't been able to debug what was happening, I
-> > couldn't reproduce it myself, but removing that bit would be nice :)
-> 
-> We probably need to debug it anyway, since it sounds that it's
-> related to preloaded bpf skeleton and not tail_call logic itself.
-
-I really think this happens with RHEL because some part are backported and
-some are not. So unless we get upstream reports, it's more likely a RHEL
-only issue (which makes things even harder to debug for me).
-
-> 
-> After looking through all that it seems to me that
-> parametrized struct-ops is the way to go.
-
-Yeah, I think so too. I'll proabbly start working on it next Monday.
-
-Thanks a lot for all of your feedback :)
-
-Cheers,
-Benjamin
