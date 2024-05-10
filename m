@@ -1,76 +1,68 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5BC016F0C6
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 11:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAE8165FB6;
+	Fri, 10 May 2024 11:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715340385; cv=none; b=cnXndC3M67MWRPZ+V6vyxE9+Js7JJeGzjZskz1Ne7fdN3zT5EM+eplpoCIJdHh9ArwlaSaJUMMotnEAnKwYRNSeyauttBgPO7SVksDfH9dPEY3dXCLVDMvD31BvaAFMjXvyzzg0sWTEaQHmkF08xc+V7c7GXKWpt2w4arWTL5w4=
+	t=1715340405; cv=none; b=axlhXD5HKN3u68SpeEcYdbEaCGfhHVKZovx+JtxAXzyBetqHh32YKGpY1UXIbsBddsNh2touqY33Bjnt1MF4fkQoyrd0iucyPDEgOvxdd1LJoGJmh2MCB6z6MoyoWh9xYVkLN0YuuUCjQKBJduv0lZc2o7jsMwLvuezZPUmRLjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715340385; c=relaxed/simple;
-	bh=1STldVQ9ytbzdRMlFlbM0PQFwnF8z17mKW67CjrCmj4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=K6Vl8n9yWV8mOYbxwwodhHVcPSUtyJluQYCBfPiUmbe10iwjXEKHN6VCLrYZNBP53PgCeVvoYIx1xLjXp5dSJ+WNhUCeUCOKgTMPUgaM2D2ReYbwLG2jamwAUzT+NtmzQcSLjx86COCtMls2RbgDHKXTS/fwzvQaIKe5OnUVE1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from fsav412.sakura.ne.jp (fsav412.sakura.ne.jp [133.242.250.111])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 44ABPMFb077870;
-	Fri, 10 May 2024 20:25:22 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav412.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav412.sakura.ne.jp);
- Fri, 10 May 2024 20:25:22 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav412.sakura.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 44ABPMLm077864
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Fri, 10 May 2024 20:25:22 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <a4586446-2318-4220-8610-0d5a99e0ad6c@I-love.SAKURA.ne.jp>
-Date: Fri, 10 May 2024 20:25:22 +0900
+	s=arc-20240116; t=1715340405; c=relaxed/simple;
+	bh=JXW03WRU6z1mXtc+Z7yE/kyIm40/gmp1UYrc/DpS7LI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mDyEKOyVbCRrnRccj3CtrDfB9E8NHkODKBwpEXPMh1I6bbObfZ2UTJ1aySW0OX5jEuvlRDT60kdwBiuHeibPbrSnrAZJBPKtTx2YcJRSdARRvCJ9NXIVZV3QshXCmebBleMSFGhXoUroz3ScF69dEDhq8IIIQPnL/A9xqQZe6vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DUZRXq4n; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DUZRXq4n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A937C113CC;
+	Fri, 10 May 2024 11:26:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715340405;
+	bh=JXW03WRU6z1mXtc+Z7yE/kyIm40/gmp1UYrc/DpS7LI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DUZRXq4n7GHCm0Qm/ZxRmmGVHb/vxC3POataZ0dLbh2hkldPeO75VuQ7q2nJY+E3I
+	 95vBoWXVcYzjWGwkTPrk3IuP9GyUGEGXmmYrD11vt/g9EkGzg1Oc16Ok77fAlWokH+
+	 T+5kTkHJ0VOjFesVN40hC2uUWoKM6MbK/XG4Ml3Di3aK/wJODBr1Ssi2eXeziVH26T
+	 eqkYCNQJFSrCpXKyX1OF3nsJLr5uPHtJ2Q8ut8Jkbw/tXh6huDuYsDg3baeh2HLLhT
+	 SWpn54s2exPO1nnyEqfF5IgV14geTmaABr+c7cXkp5g13L/znL/cDH5RotgpESallW
+	 cBsSoeyVTjqwg==
+Date: Fri, 10 May 2024 12:26:40 +0100
+From: Simon Horman <horms@kernel.org>
+To: =?utf-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Manish Chopra <manishc@marvell.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Subject: Re: [PATCH net-next v2 01/14] net: qede: use extack in
+ qede_flow_parse_ports()
+Message-ID: <20240510112640.GD2347895@kernel.org>
+References: <20240508143404.95901-1-ast@fiberby.net>
+ <20240508143404.95901-2-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH (REPOST)] profiling: initialize prof_cpu_mask from
- profile_online_cpu()
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-To: Hugh Dickins <hughd@google.com>, Ingo Molnar <mingo@redhat.com>,
-        akpm@linux-foundation.org
-Cc: tglx@linutronix.de, paskripkin@gmail.com, rostedt@goodmis.org,
-        glider@google.com, ebiederm@xmission.com, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+b1a83ab2a9eb9321fbdd@syzkaller.appspotmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <000000000000d6b55e060d6bc390@google.com>
- <7227c8d1-08f6-4f95-ad0f-d5c3e47d874d@I-love.SAKURA.ne.jp>
- <85edf211-aa30-4671-93e0-5173b3f7adf2@I-love.SAKURA.ne.jp>
- <239eadaf-d694-4dff-89b9-b476be35f4e9@I-love.SAKURA.ne.jp>
- <60011cc3-b9fc-49c8-b0c0-35aafe46f313@I-love.SAKURA.ne.jp>
-Content-Language: en-US
-In-Reply-To: <60011cc3-b9fc-49c8-b0c0-35aafe46f313@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240508143404.95901-2-ast@fiberby.net>
 
-On 2024/05/05 15:18, Tetsuo Handa wrote:
-> On 2024/04/27 15:51, Tetsuo Handa wrote:
->> Can somebody test this patch? I don't know how not using
->> cpu_possible_mask affects expected profile data collection
->> (especially when written to /sys/kernel/profiling interface
->> when some of CPUs are offline).
+On Wed, May 08, 2024 at 02:33:49PM +0000, Asbjørn Sloth Tønnesen wrote:
+> Convert qede_flow_parse_ports to use extack,
+> and drop the edev argument.
 > 
-> I confirmed that writing to /sys/kernel/profiling while some of
-> /sys/devices/system/cpu/cpu$num/online are 0 will not affect profile data
-> collection, for profile_online_cpu() is called (and corresponding bit is set)
-> when /sys/devices/system/cpu/cpu$num/online becomes 1. Thus, I consider that
-> this patch itself is correct and safe.
+> Convert DP_NOTICE call to use NL_SET_ERR_MSG_MOD instead.
+> 
+> In calls to qede_flow_parse_ports(), use NULL as extack
+> for now, until a subsequent patch makes extack available.
+> 
+> Only compile tested.
+> 
+> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 
-Can someone take this patch and
-https://lkml.kernel.org/r/20230423012744.24320-1-chenzhongjin@huawei.com ?
-These bugs remain unfixed due to lack of someone who can take patches...
+Reviewed-by: Simon Horman <horms@kernel.org>
 
