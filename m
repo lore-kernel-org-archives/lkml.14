@@ -1,68 +1,72 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3183C152786
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 05:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840D31527AA;
+	Fri, 10 May 2024 05:25:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715318118; cv=none; b=G1/yTGliJLT639kXHlnXzNA05RhbVR8Yr5iODl3g/PwK6eYdzhtqyRBinKiQaksNcB3QqnunDmKQLrOY7o5anagz88wtj4HD4B6xC8/aFSkTvrbHvYoOfZBz1TtuaDXTxSwpP/HI2jAMdhBTVAmfLwyokIayDtM2GTxJM6c2tbE=
+	t=1715318757; cv=none; b=Gjg8n/zTLLGIUcs3MZIy/7OkpHyCNoe/UoItoNpa1RWe5VGzpaFpd8BoHvUfENRMzDDTKdAfbZAJF8LbJi0PqgDukuJ3ERLiLkvw4uP/GKcstl4xYmRt6yVnJ28IQVS7ww5ZAjjnJliLrjbxMeAYR8ZGAS49sU7B55RCSMeCKbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715318118; c=relaxed/simple;
-	bh=5g9aqIrd/CSisewRoD5xcikITn2+u3Jq5S9fr5CZlsU=;
+	s=arc-20240116; t=1715318757; c=relaxed/simple;
+	bh=FkGLtnlZ8fZVob3oYQ/PzCDEhIp08hyLY4qDOsXcQKI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LcsfYZw69ahyqeXrJcBvlleBA/GCXMW768K18MxgI65c4I3yrbYUMogMAZ8BbOwO1xbRo8Hxmet3gJA1D1dZJyTNTNmXn0CIkd2TF6OWXQGYfAxzEycWX6ZHnflb3SC5EZSxNZgpE/Tc1QNq3ZxtLnPqIaPGR6P/TQ5bdd0qg5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=jAYtvQCS; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=tv3uFQ1KkwZe5jkDhGeVBcEkfQX8P4YIxNPCcoZ9g/xEpU7i7zx7wBavtifBo6Xe/B6ICLeZfgfk4kVGSpbyovU2qKvu4lJ4wLNvPe2itkTiSgMMgiuopqQ+zps1o3Bb4sRRD4z+6IkaJD/59X7LiVcZ+MouKX3zA82xyBvGJ2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VNyDCe8M; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jAYtvQCS"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ee38966529so19511665ad.1
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 22:15:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715318114; x=1715922914; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wgyaaXbsvqD2LsppPxdAFhGM87M6tpgqLYTXW/9G1I0=;
-        b=jAYtvQCSKlJWdnaFqFm4oNeLQoEAzIowF/acMcKaHs4OpQBRIWGiZJUEeH+ZvjeJgB
-         xYZpWOX60x7zP9W/IenR4AthpIH/GQJ1zjGLFM5iA/87NR1MUNmphfBYMNWUVOI4cP5h
-         fYgF1do73z6V0w0IBpWiaBUOKMzkB0Fgx61IU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715318114; x=1715922914;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wgyaaXbsvqD2LsppPxdAFhGM87M6tpgqLYTXW/9G1I0=;
-        b=vROSHe8tRE5cj2Xq9TBqq3iSaoAz7NWBlXK+L222GELBFhAFeJjGBwtTNKKU1V/q3O
-         15O8Fu9H/ZEMwPYp1fqJcqwo43HL40r6hdoaHu4s+M01AxpweOG4B/6WtF9hrMTV/CO8
-         mte2yeBvwfcRfEcvOONdPYejV/lr22mpKOjyFsQDHChzFWm6z4GvwDzorgj9QOALG/ut
-         4hlAga8MOWCT3C47P/kBSYxeMdS9u/Fv+NCgiDhmpwSETFhCtQm1kMXrP5uiBVQ7Iz7I
-         vzPaZMSpgb6235osWB+NPlsy1e0H3mc7A3yTJDqP5GlFO4w7bEQgsmCQ0jprodJiGXmC
-         /9Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCX/FoKAnUQl20DPMlfiz3JTcHklC5ITCjkRnj/5a55BINYDLUQTd8bYIdd0g6QaATb2Gu7a/OqTS7OhDqwKNuWVwak3p+iK/lzv4sQz
-X-Gm-Message-State: AOJu0YxP9P23RLDtIO87nRgl5sn2Ir0heEkQ3FEIDqgEXJ7hAMxgLO/F
-	TEfbQJ5i7RxB7F4Sr+H94TMGbSZBqKLQHK0veZPt6410xCTh80HOpTR3BF5dQw==
-X-Google-Smtp-Source: AGHT+IH7Hm/lOPljffiTQlTyKmy5eyFByNf3HR9v7FBg8O8DcfEkdnc1sFp0c5lqNAE+UzNDn6j1fQ==
-X-Received: by 2002:a17:902:f68f:b0:1e0:9964:76f4 with SMTP id d9443c01a7336-1ef42e6e646mr25664035ad.14.1715318114238;
-        Thu, 09 May 2024 22:15:14 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:de58:3aa6:b644:b8e9])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c136b2fsm23433415ad.241.2024.05.09.22.15.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 22:15:13 -0700 (PDT)
-Date: Fri, 10 May 2024 14:15:09 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	linux-crypto@vger.kernel.org
-Subject: Re: [PATCHv3 00/19] zram: convert to custom compression API and
- allow algorithms tuning
-Message-ID: <20240510051509.GI8623@google.com>
-References: <20240508074223.652784-1-senozhatsky@chromium.org>
- <ZjzFB2CzCh1NKlfw@infradead.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VNyDCe8M"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715318755; x=1746854755;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FkGLtnlZ8fZVob3oYQ/PzCDEhIp08hyLY4qDOsXcQKI=;
+  b=VNyDCe8M13HL3tGr8BrTLRTMZUlF1qKpwyrDRsw2YK8F2CNE6/CkJzZR
+   fE7lx12Erbyg1QnlHs2Y24d4ZaoRPTICHVeEn7jrNFhRFqAwXfCWjx4fW
+   1nQ10QtLIqodAEhI+VZ6IE9MFkCPQsfxhJgQz0eGGLSuqoY66c6owcZce
+   h8ueINClmEHjv6Fdd2WWWeqLCoZyDbe/JsFLkced4xPB+AaiMIABdSgu7
+   M546Y8XaI8BcP0zysxGYAbv1YlzzI9iVEXg+V+eEn/2IW/SrvmO7nt2iS
+   u3vwPhUxgfu+Oj5Xt77iC2f7mmMMJsrrlGbIhP7mlS6t9uGfqdWp1F8r/
+   Q==;
+X-CSE-ConnectionGUID: w4RWOogKSy2ttL6nEuYLLw==
+X-CSE-MsgGUID: ibc02tQPQ+WM5JORLjCwXQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="15089629"
+X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
+   d="scan'208";a="15089629"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2024 22:25:54 -0700
+X-CSE-ConnectionGUID: 7XnWVU9sTXid/yjQ40wPAQ==
+X-CSE-MsgGUID: mLOqxVP1SeScPTOAxiYdZw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
+   d="scan'208";a="34151806"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 09 May 2024 22:25:48 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s5IlN-0005lZ-0v;
+	Fri, 10 May 2024 05:25:45 +0000
+Date: Fri, 10 May 2024 13:24:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
+	mingo@redhat.com, tglx@linutronix.de
+Cc: oe-kbuild-all@lists.linux.dev, x86@kernel.org, netdev@vger.kernel.org,
+	richardcochran@gmail.com, linux-input@vger.kernel.org,
+	dmitry.torokhov@gmail.com, zackr@vmware.com,
+	linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
+	timothym@vmware.com, akaher@vmware.com,
+	dri-devel@lists.freedesktop.org, daniel@ffwll.ch, airlied@gmail.com,
+	tzimmermann@suse.de, mripard@kernel.org,
+	maarten.lankhorst@linux.intel.com, horms@kernel.org,
+	kirill.shutemov@linux.intel.com,
+	Alexey Makhalov <alexey.makhalov@broadcom.com>,
+	Nadav Amit <nadav.amit@gmail.com>, Jeff Sipek <jsipek@vmware.com>
+Subject: Re: [PATCH v9 3/8] x86/vmware: Introduce VMware hypercall API
+Message-ID: <202405101333.vdlWwpgr-lkp@intel.com>
+References: <20240506215305.30756-4-alexey.makhalov@broadcom.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,64 +75,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZjzFB2CzCh1NKlfw@infradead.org>
+In-Reply-To: <20240506215305.30756-4-alexey.makhalov@broadcom.com>
 
-On (24/05/09 05:43), Christoph Hellwig wrote:
-> On Wed, May 08, 2024 at 04:41:53PM +0900, Sergey Senozhatsky wrote:
-> > 	This patch set moves zram from crypto API to a custom compression
-> > API which allows us to tune and configure compression algorithms,
-> > something that crypto API, unfortunately, doesn't support.
-> 
-> [...]
-> 
-> >  21 files changed, 1203 insertions(+), 111 deletions(-)
-> 
-> Why can't it?
+Hi Alexey,
 
-Well, I asked crypto folks if that's doable and the only reply was
-"did you try using compression libs directly".  And that's not a
-bad response, I take it.
+kernel test robot noticed the following build errors:
 
-The handling of parameters becomes quite intrusive very quickly.
-It's not as simple as just passing a new "struct crypto_tfm" to all
-sort of API abstractions that crypto has, it's a little more than that.
+[auto build test ERROR on drm-misc/drm-misc-next]
+[also build test ERROR on dtor-input/next dtor-input/for-linus linus/master v6.9-rc7 next-20240509]
+[cannot apply to tip/x86/vmware]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Just as an example.  For zstd we can work in two modes
-1) load the dictionary by_copy
-2) load the dictionary by_ref
+url:    https://github.com/intel-lab-lkp/linux/commits/Alexey-Makhalov/x86-vmware-Move-common-macros-to-vmware-h/20240507-055606
+base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
+patch link:    https://lore.kernel.org/r/20240506215305.30756-4-alexey.makhalov%40broadcom.com
+patch subject: [PATCH v9 3/8] x86/vmware: Introduce VMware hypercall API
+config: x86_64-buildonly-randconfig-003-20240510 (https://download.01.org/0day-ci/archive/20240510/202405101333.vdlWwpgr-lkp@intel.com/config)
+compiler: gcc-11 (Ubuntu 11.4.0-4ubuntu1) 11.4.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240510/202405101333.vdlWwpgr-lkp@intel.com/reproduce)
 
-In (2) we need to guarantee that the dictionary memory outlives any
-comp contexts, so cyrpto_tfm-s now begin to have "external" dependency.
-But if we load the dictionary by_ref then what we can do is a
-pre-processing of the dictionary buffer - we get CDict and DDict
-pointers (specific only to zstd backend) which all contexts now can
-share (contexts access C/D Dict in read-only mode).  For this we need
-to have a pre-processing stage somewhere in the API and keep the
-"compression's backend private data" somewhere, then somehow pass it to
-context cra_init and release that memory when all context were destroyed.
-In zram I just went with "we do only by_ref" and handle all the
-dependencies/guarantees, it's very simple because all of this stays
-in zram.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405101333.vdlWwpgr-lkp@intel.com/
 
-But in general case, a typical crypto API usage
+All errors (new ones prefixed by >>):
 
-	tfm = crypto_alloc_comp(comp->name, 0, 0);
+   ld: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: in function `vmw_close_channel':
+>> vmwgfx_msg.c:(.text+0xaf): undefined reference to `vmware_hypercall_mode'
+   ld: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: in function `vmw_port_hb_in':
+   vmwgfx_msg.c:(.text+0x2c4): undefined reference to `vmware_hypercall_mode'
+   ld: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: in function `vmw_port_hb_out':
+   vmwgfx_msg.c:(.text+0x604): undefined reference to `vmware_hypercall_mode'
+   ld: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: in function `vmw_send_msg':
+   vmwgfx_msg.c:(.text+0x8b0): undefined reference to `vmware_hypercall_mode'
+   ld: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: in function `vmw_open_channel.constprop.0':
+   vmwgfx_msg.c:(.text+0x9e8): undefined reference to `vmware_hypercall_mode'
+   ld: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o:vmwgfx_msg.c:(.text+0xc3c): more undefined references to `vmware_hypercall_mode' follow
 
-should become much more complex.  I'd say that, probably, developing
-an entirely new sub-set of API would be simpler.
-
-So I implemented a simple zram comp API.  I can't tell how much effort
-it'll be to handle all of this in crypto, I'm not really familiar with
-crypto, and I'm not sure if crypto API folks are even interested.
-
-> This is an awful lot of crazy code duplication just
-> to pass a few parameters.
-
-I see what you mean, but the majority of the code is unique, there
-isn't too much code duplication in fact.  Params handling is unique,
-dictionary handling is unique, zstd implementation is entirely
-different and pretty much specific to zram (we don't handle all sort
-of cases that zstd API support, we focus on things that we need),
-lz4/lz4hc implementations are also different, etc. etc.  Things like
-lzo/lzorle may count as code duplication, but those are like 20 lines
-of code or maybe even less (which isn't that crazy).
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
