@@ -1,103 +1,107 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F5AE14A098;
-	Fri, 10 May 2024 04:02:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19F5C142E66;
+	Fri, 10 May 2024 04:07:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715313780; cv=none; b=Y4xtAYnSox1R1npq4TiCxrK4xGLPWBzAPJ3+0w9dAxQqSsvLohCQTUmiTNkdSS4mQ3B9LVkM0WZeYxtQh7A4LK40WdPXDT992liqbiwuHz25+L1fiHxtJmqHF+nPpEGeqsjCPiuQ2VUUFjpTP9JEGQPn4obcdcRJe+RYk3zhmH8=
+	t=1715314026; cv=none; b=KxnTMNcwNrvktjkYBh1N5TWNJV7nRH68o0gQNZzK84W/MTlwK2PPlEG0J4aroOHK8ycUAOXdZYdrJOtCAQQO9kbMNig3HPGE9vFvmGrItgiOTVV75wNQVOtdoTckilBwvfFZ9UoSqnnVDeOJu3Sw9+DtW43nKxuXMKNGAM+/B/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715313780; c=relaxed/simple;
-	bh=jvSmy0FOqXnRlpmANSVHSxZbSvwbfOidyhPqHt9kz0I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=efuQ4ctE4ewoxZpq2uC6L0SgSCXCOzIevJ/uUSOjVyTAHerP8cuqZ8Sslfe9b2s03MjkhNyZMhyQsnFKG6/PzV9MYpDmDkdP6rcd6+Wp2Mh8KMGHYgJGte5qbQUOEeciCQSehrYVZnQHAnQRKbLACzCQP9Nn7aH7aUHEIhQpGk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kuJ13vB4; arc=none smtp.client-ip=209.85.166.179
+	s=arc-20240116; t=1715314026; c=relaxed/simple;
+	bh=0q8yaNH1A/SfdimQk6S6iL+CGfUXVf8m1RNrCjILjxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ebg6DMD/MqNPvdv7g2lnrS0kSaigp6cU1FSxsAsk8n0eQWnsvFkd0dcnQPscvSBFv6vpDvTv4Tv0sCu2QlvQ7ohmKWPkNQeNCmmlMCtu7RtLbYpNVVCPREHM68G/4iPLoF4aYw2jV8xs9C+W/in+zj8pmkYeRRnUAKyIi8Kde4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipqmAhVm; arc=none smtp.client-ip=209.85.161.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kuJ13vB4"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-36c5eedd124so6777535ab.2;
-        Thu, 09 May 2024 21:02:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipqmAhVm"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5b27cc76e9aso194686eaf.2;
+        Thu, 09 May 2024 21:07:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715313770; x=1715918570; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OEJsQFf2xgBkjpapTfqeer4vWYgNIVVXGtaAWZEXf5Q=;
-        b=kuJ13vB4G2VWJVwmeubBZsY001g6m4EbbqZAmb7qKeKqRftjVE51Xvv1JZybsC905b
-         O+ajYibx9y9bPrUOXWXsFBnDXLu8JIFn0POc3n7zp/KdKMGpdE0UZz/tNcytkMoOnxgg
-         mZf10acfZnqvebk5F0GsTZA1Oh1OLx+Hv07t2PbvBOWpPMT6CCA4cH18zhrOki+6jLgw
-         YcnBEFm1qn3/z4g4gMEmzvp/dRGpAfLi43CC0f62SbYcA3PgCgzRcPK9W1N1QmTTr/Uz
-         1kNk5cuzTJ4/B4/XX9TmIGE5BrEo30piASJrO++6ahjYn5SbLiEvf1z7n34Qv6M2n8gT
-         7/wQ==
+        d=gmail.com; s=20230601; t=1715314024; x=1715918824; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zQ7ZoNviSnHC/g2meGJKV3qnWk+1KxyO8OjUrJK9GVc=;
+        b=ipqmAhVmbrPFnxJJm/bqqq7M+D5qeS7HY2LvzWX0vVC7/AcKU+BemGyZCtRDWGMxAm
+         PzS718Pq06Xw8+vGc3rLaDlac8H/hlbnbH3hh5Tx+YH5dmQ4ZVzDvc4kcjbuloAYM+gS
+         vyalme9bb4raZ9/BEg/NH4RTL8aDyOP2QlfZ8gXoaY4D7MOzFbi+9fp5KO0LbtjJ3nGQ
+         gA14efgtNChoO/cx9RFEMuc2q/f0LU7wXmlMoDdVsr5cIq+6LZgNs1MdgoWmFrwovXye
+         HICd8D0mVg+P+FjYa4E96FsWqD8shExeIJalXoA56hujEJqfU8xPANuGqyxFZdpVMypl
+         tEzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715313770; x=1715918570;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OEJsQFf2xgBkjpapTfqeer4vWYgNIVVXGtaAWZEXf5Q=;
-        b=FrejcXdxugf/02RyFF3sMn6nGs07+KYDE/jK49ofWD5m68nzBjz4JM+lFjJHKIO1WT
-         Hav/PVSEmEE04nAa037DdHvosedO5Z4zIN4LNfcyrFovNCHPKFsr1C3EXXbSdOgpDGmX
-         H9CIxDrO8mRZ630webACmLaTNMC3uj+9cWYY6MGRsWCdBu3G+oOKrN3jKfuE8evbGdW+
-         aBu9YjtvZzInQ3qTRKTgtNLlexzEx6Mfg9dae7Dq0aXrHSgT6Qicaepi4FdsN+RgQS2+
-         Hodzm1hgg4QhqBPKthM5S38H6ZW90wFxYe41eHIH7bYNBTxi0PKJncDFOQ7Bz329Ekmb
-         xvlg==
-X-Forwarded-Encrypted: i=1; AJvYcCVLlXG/rgPCGBglnZV7p7vpr36MJFJQZAA9wXhjkOOBcma8b6VQ4Ge90wKThEDO7Tu1ugzggb/+RnuFDMRcVsysFTDMMS7o75iBxtxvuLJlF39HjyGNKtE3JE6HIibdnsC+dTIDRhiXVCF0rp8UlcKBooUXWa+4dNjFvrFeLOCfNzx9AA==
-X-Gm-Message-State: AOJu0YzI9o1NY6ec86X0kyfC3UWNTfu5QHXRMq/tVeet/R/ltRCW44fH
-	BHsirDmgXznCOheGXQ7gcdqoQwv20s0i8R4wVj6x51Mwfwcu2bPOeYSdGcDM1yUg1vTfRlBpJ5j
-	QEV9I4fXck4oDWhVnKPiTNM0aLek=
-X-Google-Smtp-Source: AGHT+IF/DRHYkgq9YNV2uNigtRq8cxq3EAkCVJLj/pteVRJ9Grp/Sf/n2cJ8GF/Gh2HUaqN1IhBXSRvg/7uJWGVE1Uc=
-X-Received: by 2002:a05:6e02:1909:b0:36c:f0b:4f55 with SMTP id
- e9e14a558f8ab-36cc14f7bcdmr18846195ab.26.1715313770452; Thu, 09 May 2024
- 21:02:50 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715314024; x=1715918824;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zQ7ZoNviSnHC/g2meGJKV3qnWk+1KxyO8OjUrJK9GVc=;
+        b=fNutedZuGIaod1V79xYzj8Dj9N1/VQEpyr362prZptVr9hGL0gb2Yq0i5buXG5WW0U
+         Gkh1ZG/Ptw4zjMukMfb3TcRFKKOOXQEu5Dd45BQF0mcFlFA1jSxDQwh/4GkhhrtrTiPQ
+         RawgDph2cIOEafhOmSY/U1Y8FPVk8GHb3P0Dj4cSCOl0S66aWdZxjreQko3TVGBeLORE
+         q0GJvHnbVcMaSWFf5XUpV+pDxT5kDVOFO2EU9u2UgmFwuUnv7IrEwrEzAe1Uacufrzkc
+         DAgPcl282GqfxB2IwdA1Km0JlAKUvjyfTk43B/KKt86NEWGwmeBL1rM65QRD6oSP8Yip
+         BYcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW99NS1Vj3uwBkFmJK+LLDnC6D8r3NgSrT0K2oIHaseMhlJsVVhDfI8pBOShNIYzSyYk5voEBZDl6cxkCdSYu3URem9ITn3mrmD9h7cULFbqIKzN0RU2dpCeDZ2qJIvXnDciEME
+X-Gm-Message-State: AOJu0YwYt/sTTsH9jhKmANTutxzy/xDaaFZfijA1pqx35v6NlKSEOr9Y
+	QRJHJgFJliXe0GPTbAQpEPClbK3ZKQqo2o2nj1o+PoVinTYE2gn1e/M40w==
+X-Google-Smtp-Source: AGHT+IHof3l3bj/wMmMu4y7yYHakp8mH1JiJTRdJUXrQe4JohJLQ7OjjKxvFtg6N4Otn3+YSejVRUA==
+X-Received: by 2002:a05:6870:cb94:b0:239:6927:6826 with SMTP id 586e51a60fabf-241721ade50mr2031899fac.0.1715314024076;
+        Thu, 09 May 2024 21:07:04 -0700 (PDT)
+Received: from hoboy.vegasvil.org ([2600:1700:2430:6f6f:e2d5:5eff:fea5:802f])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2412a679cfasm627099fac.26.2024.05.09.21.07.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 May 2024 21:07:03 -0700 (PDT)
+Date: Thu, 9 May 2024 21:07:00 -0700
+From: Richard Cochran <richardcochran@gmail.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mahesh Bandewar <maheshb@google.com>, Netdev <netdev@vger.kernel.org>,
+	Linux <linux-kernel@vger.kernel.org>,
+	David Miller <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Arnd Bergmann <arnd@arndb.de>, Sagi Maimon <maimon.sagi@gmail.com>,
+	Jonathan Corbet <corbet@lwn.net>, John Stultz <jstultz@google.com>,
+	Mahesh Bandewar <mahesh@bandewar.net>
+Subject: Re: [PATCHv4 net-next] ptp/ioctl: support MONOTONIC_RAW timestamps
+ for PTP_SYS_OFFSET_EXTENDED
+Message-ID: <Zj2dZJAfOdag-M1H@hoboy.vegasvil.org>
+References: <20240502211047.2240237-1-maheshb@google.com>
+ <ZjsDJ-adNCBQIbG1@hoboy.vegasvil.org>
+ <87cypwpxbh.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1715219038-32453-1-git-send-email-shengjiu.wang@nxp.com>
- <1715219038-32453-3-git-send-email-shengjiu.wang@nxp.com> <0d10a689504be61c50b186d89ddbf9d1.sboyd@kernel.org>
-In-Reply-To: <0d10a689504be61c50b186d89ddbf9d1.sboyd@kernel.org>
-From: Shengjiu Wang <shengjiu.wang@gmail.com>
-Date: Fri, 10 May 2024 12:02:39 +0800
-Message-ID: <CAA+D8AP9uS1ePxSeSUPGCGe42U5sNguZYQS3d-9T305d2iVbhQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] clk: imx: clk-audiomix: Add reset controller
-To: Stephen Boyd <sboyd@kernel.org>, p.zabel@pengutronix.de
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, abelvesa@kernel.org, conor+dt@kernel.org, 
-	festevam@gmail.com, imx@lists.linux.dev, kernel@pengutronix.de, 
-	krzk+dt@kernel.org, marex@denx.de, mturquette@baylibre.com, peng.fan@nxp.com, 
-	robh@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org, 
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87cypwpxbh.ffs@tglx>
 
-On Fri, May 10, 2024 at 6:04=E2=80=AFAM Stephen Boyd <sboyd@kernel.org> wro=
-te:
->
-> Quoting Shengjiu Wang (2024-05-08 18:43:56)
-> > Audiomix block control can be a reset controller for
-> > Enhanced Audio Return Channel (EARC), which is one of
-> > modules in this audiomix subsystem.
-> >
-> > The EARC PHY software reset and EARC controller software
-> > reset need to be supported.
->
-> Can you move this to drivers/reset and use auxiliary device APIs to do
-> that? The idea would be to have reset maintainers review reset code.
+Thomas,
 
-Thanks for your comments.
+On Wed, May 08, 2024 at 09:38:58AM +0200, Thomas Gleixner wrote:
+> On Tue, May 07 2024 at 21:44, Richard Cochran wrote:
+> > On Thu, May 02, 2024 at 02:10:47PM -0700, Mahesh Bandewar wrote:
+> >> + * History:
+> >> + * v1: Initial implementation.
+> >> + *
+> >> + * v2: Use the first word of the reserved-field for @clockid. That's
+> >> + *     backward compatible since v1 expects all three reserved words
+> >> + *     (@rsv[3]) to be 0 while the clockid (first word in v2) for
+> >> + *     CLOCK_REALTIME is '0'.
 
-This is a minor reset control only for XCVR devices, two reset bits
-are accessed.
+...
 
-If we move to an auxiliary device,  we need to define a new header file
-and a new driver, which will bring more code size and complexity.
+> I agree that it wants to be in the commit message, but having the
+> version information in the kernel-doc which describes the UAPI is
+> sensible and useful. That's where I'd look first and asking a user to
+> dig up this information on lore is not really helpful.
 
-So is it necessary to separate it to another auxiliary driver/device?
+But writing "v1, v2" doesn't make sense for this code.  There never
+was a "v1" for this ioctl.  At the very least, the change should be
+identified by kernel version (or git SHA).
 
-And add Philipp Zabel in loop for review.
+Thanks,
+Richard
 
-Best Regards
-Shengjiu Wang
