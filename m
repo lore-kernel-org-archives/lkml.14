@@ -1,79 +1,45 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF7261E502;
-	Fri, 10 May 2024 16:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154B5446BD;
+	Fri, 10 May 2024 16:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715358139; cv=none; b=n+pr9YsXpmCSp1eRbSwjfYRVK/agvMK3LX4Mtg8APOtnG2TrH+YQ/nfmK7IAYD+JVFOat8Fuh9a7hAW0CJBuWeRIpk6yDV58jSNsQf9zLG45GYREq0IggZwKa0ivxqUklp60LRgKYBOyKJ5kekJIjYbZ8SI8Nw2We0JTJTl/l7Y=
+	t=1715358141; cv=none; b=gOTJNGjJnavmxX9uRZ0N/WeyDJVS9dyJ9EpxJAKzhA9xTJkQvcN+niuJz4ocUlXQsfeW6cqi3l50f1uUpKIkGppXsv5qF5ITvDdGSCoXZns5D1hufXFM9oD+T1XXsh58KefjEuMZYOrhXRwW/d25czbmb0xdxQ66VJ9Yk7XfwQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715358139; c=relaxed/simple;
-	bh=stogIKj8+hYZVSkbsvVvCqugo9i6JwMiNtwTeMU4yKg=;
+	s=arc-20240116; t=1715358141; c=relaxed/simple;
+	bh=f5Lyl73/buxOPCrNGhmeGwJJGuEKE+nFnd9kTzyxINg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LT1XnKT5tX/xSEaCN0lMatLT+SXORauT0mn4ObqHJb53npdbHO9fjfIkOiv6QCBkj2wmOnAZ2Vbs/nV3L3xU3O1xmz8/DAtmF5b9akZX7r+J15Vg+pjNgezrcwEjw/tzdlirMJp+buiYqCMDXejs/s1aT+c4uDKYDN7ir71o3kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2eShj/Nm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KwVBqgvl; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=gu2fNfHlwcJxcmLwigU/XTEVj6hJS1VYj5gZtDcCiw/D5SEdFL5dziN6D2LAO3PT8LB3eTVB2PBR1JYjaJMEGtDDQSKinOW2/gtptvYKLc8JmZSw3P73DOzbpjM8nwa7MkXkt3hSBLhgikshBGc8krkyNUO+NiG9BvxQz/yiNH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=i0d056CB; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2eShj/Nm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KwVBqgvl"
-Date: Fri, 10 May 2024 18:22:14 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1715358136;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iPtpHGApZXozzh1sZxS1i2Tmk587abOSGlWr8H4ibcg=;
-	b=2eShj/NmLmytxxN5WI1wco6aozQn7VY0Hq5nQJEQZS+Cf1yBzGOaDxWKVEi7pePUrfr9dw
-	tVjV0yOrPtifsAbZSsS57l952UBPTRowZbp0GYogVxHAwHL2aYqRzO9BDWW7mCttuZt7bR
-	sWiweOdtZT01+I20KOeK+XBax6e0nDhTGP68rcM9HGsbcYUseQaOprN8uqB7plAI4Fw9aR
-	hA96AmPQsns+Uxn1gT7A4am/O8KeQaaqziq1+8spUrhjoHIXEakWLZDfOkSv2HSpCnKYCj
-	OpHZjtQDlV+aIfVgl+Yfyp1oJbNI6oriQCZru3+Bo1qvW9RBaKeeG56M6cTyNA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1715358136;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iPtpHGApZXozzh1sZxS1i2Tmk587abOSGlWr8H4ibcg=;
-	b=KwVBqgvlOC0PIW0klVHR8tZ7CORFnwP6nFMqdQ9H1Nyim76TtK+iTU/ZBDsvYFtgpOXcIu
-	mmzI0kOmkAOeAoDg==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Network Development <netdev@vger.kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Yonghong Song <yonghong.song@linux.dev>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH net-next 14/15 v2] net: Reference bpf_redirect_info via
- task_struct on PREEMPT_RT.
-Message-ID: <20240510162214.zNWRKgFU@linutronix.de>
-References: <20240503182957.1042122-1-bigeasy@linutronix.de>
- <20240503182957.1042122-15-bigeasy@linutronix.de>
- <87y18mohhp.fsf@toke.dk>
- <CAADnVQJkiwaYXUo+LyKoV96VFFCFL0VY5Jgpuv_0oypksrnciA@mail.gmail.com>
- <20240507123636.cTnT7TvU@linutronix.de>
- <93062ce7-8dfa-48a9-a4ad-24c5a3993b41@kernel.org>
- <20240510162121.f-tvqcyf@linutronix.de>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="i0d056CB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
+	In-Reply-To:References; bh=jteZ0Puod1sISdOydEueJECfJg+J6qXBz+kx/rQs/VY=; b=i0
+	d056CBXtLAnuBEGPK3M2nRjkWiCBcubeqSymv+R03oAd2lBoif2/NnxOGH0XbGDpgKDKNCaBcKJnG
+	RO9MkWAdG5HP+5fNWXcRneBsNoWVn3OrRzP8+bMAB4IYEpY66FmHUGkutW9vwPb16cMHR2h1jFWRG
+	c+n+Sy75kioeUFs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1s5T0J-00F9SY-It; Fri, 10 May 2024 18:21:51 +0200
+Date: Fri, 10 May 2024 18:21:51 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Thorsten Blum <thorsten.blum@toblux.com>
+Cc: arnd@arndb.de, davem@davemloft.net, edumazet@google.com,
+	gerg@linux-m68k.org, glaubitz@physik.fu-berlin.de, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	nico@fluxnic.net, pabeni@redhat.com
+Subject: Re: [PATCH v3] net: smc91x: Fix m68k kernel compilation for ColdFire
+ CPU
+Message-ID: <d9b4b726-7c31-4fbb-936e-e4ee505a66a1@lunn.ch>
+References: <20240509213743.175221-3-thorsten.blum@toblux.com>
+ <20240510113054.186648-2-thorsten.blum@toblux.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,106 +48,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240510162121.f-tvqcyf@linutronix.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240510113054.186648-2-thorsten.blum@toblux.com>
 
-On 2024-05-10 18:21:24 [+0200], To Jesper Dangaard Brouer wrote:
-> The XDP redirect process is two staged:
-=E2=80=A6
-On 2024-05-07 15:27:44 [+0200], Jesper Dangaard Brouer wrote:
->=20
-> I need/want to echo Toke's request to benchmark these changes.
+On Fri, May 10, 2024 at 01:30:55PM +0200, Thorsten Blum wrote:
+> Compiling the m68k kernel with support for the ColdFire CPU family fails
+> with the following error:
+> 
+> In file included from drivers/net/ethernet/smsc/smc91x.c:80:
+> drivers/net/ethernet/smsc/smc91x.c: In function ‘smc_reset’:
+> drivers/net/ethernet/smsc/smc91x.h:160:40: error: implicit declaration of function ‘_swapw’; did you mean ‘swap’? [-Werror=implicit-function-declaration]
+>   160 | #define SMC_outw(lp, v, a, r)   writew(_swapw(v), (a) + (r))
+>       |                                        ^~~~~~
+> drivers/net/ethernet/smsc/smc91x.h:904:25: note: in expansion of macro ‘SMC_outw’
+>   904 |                         SMC_outw(lp, x, ioaddr, BANK_SELECT);           \
+>       |                         ^~~~~~~~
+> drivers/net/ethernet/smsc/smc91x.c:250:9: note: in expansion of macro ‘SMC_SELECT_BANK’
+>   250 |         SMC_SELECT_BANK(lp, 2);
+>       |         ^~~~~~~~~~~~~~~
+> cc1: some warnings being treated as errors
+> 
+> The function _swapw() was removed in commit d97cf70af097 ("m68k: use
+> asm-generic/io.h for non-MMU io access functions"), but is still used in
+> drivers/net/ethernet/smsc/smc91x.h.
+> 
+> Use ioread16be() and iowrite16be() to resolve the error.
+> 
+> Fixes: d97cf70af097 ("m68k: use asm-generic/io.h for non-MMU io access functions")
+> Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+> ---
+> Changes in v2:
+> - Use ioread16be() and iowrite16be() directly instead of re-adding
+>   _swapw() as suggested by Arnd Bergmann and Andrew Lunn
+> 
+> Changes in v3:
+> - Add Fixes: tag
 
-I have:
-boxA: ixgbe
-boxB: i40e
+This is for net.
 
-Both are bigger NUMA boxes. I have to patch ixgbe to ignore the 64CPU
-limit and I boot box with only 64CPUs. The IOMMU has been disabled on
-both box as well as CPU mitigations. The link is 10G.
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-The base for testing I have is commit a17ef9e6c2c1c ("net_sched:
-sch_sfq: annotate data-races around q->perturb_period") which I used to
-rebase my series on top of.
-
-pktgen_sample03_burst_single_flow.sh has been used to send packets and
-"xdp-bench drop $nic -e" to receive them.
-
-baseline
-~~~~~~~~
-boxB -> boxA | gov performance
--t2 (to pktgen)
-| receive total 14,854,233 pkt/s        14,854,233 drop/s                0 =
-error/s     =20
-
--t1 (to pktgen)
-| receive total 10,642,895 pkt/s        10,642,895 drop/s                0 =
-error/s     =20
-
-
-boxB -> boxA | gov powersave
--t2 (to pktgen)
-  receive total 10,196,085 pkt/s        10,196,085 drop/s                0 =
-error/s     =20
-  receive total 10,187,254 pkt/s        10,187,254 drop/s                0 =
-error/s     =20
-  receive total 10,553,298 pkt/s        10,553,298 drop/s                0 =
-error/s
-
--t1
-  receive total 10,427,732 pkt/s        10,427,732 drop/s                0 =
-error/s     =20
-
-=3D=3D=3D=3D=3D=3D
-boxA -> boxB (-t1) gov performance
-performace:
-  receive total 13,171,962 pkt/s        13,171,962 drop/s                0 =
-error/s     =20
-  receive total 13,368,344 pkt/s        13,368,344 drop/s                0 =
-error/s
-
-powersave:
-  receive total 13,343,136 pkt/s        13,343,136 drop/s                0 =
-error/s     =20
-  receive total 13,220,326 pkt/s        13,220,326 drop/s                0 =
-error/s     =20
-
-(I the CPU governor had no impact, just noise)
-
-The series applied (with updated 14/15)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-boxB -> boxA | gov performance
--t2:
-  receive total  14,880,199 pkt/s        14,880,199 drop/s                0=
- error/s
-
--t1:
-  receive total  10,769,082 pkt/s        10,769,082 drop/s                0=
- error/s     =20
-
-boxB -> boxA | gov powersave
--t2:
- receive total   11,163,323 pkt/s        11,163,323 drop/s                0=
- error/s     =20
-
--t1:
- receive total   10,756,515 pkt/s        10,756,515 drop/s                0=
- error/s     =20
-
-boxA -> boxB | gov perfomance
-
- receive total  13,395,919 pkt/s        13,395,919 drop/s                0 =
-error/s     =20
-
-boxA -> boxB | gov perfomance
- receive total  13,290,527 pkt/s        13,290,527 drop/s                0 =
-error/s
-
-
-Based on my numbers, there is just noise.  BoxA hit the CPU limit during
-receive while lowering the CPU-freq. BoxB seems to be unaffected by
-lowing CPU frequency during receive.
-
-I can't comment on anything >10G due to HW limits.
-
-Sebastian
+    Andrew
