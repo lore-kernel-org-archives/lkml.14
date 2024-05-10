@@ -1,228 +1,343 @@
-Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2043.outbound.protection.outlook.com [40.107.117.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B577F4AEFA;
-	Fri, 10 May 2024 10:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.117.43
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715335314; cv=fail; b=a/DiTRMtkEGVVkYgqxQvUMa0s6y+XJfdRPaj1cqMLS3OHuCrk/badRkVIw5NT91wY3llsiWVUxMeMvsbbIrDBb5QvQ5kUxaPxl62ApeReLDM6S4RjWtKiIWiHmpzjG4r2j7y8l7/57juxjKmh4L+8WBgTLmDe4khGxuDZ5AS5rQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715335314; c=relaxed/simple;
-	bh=JGXVP3NkGWZ8c53BS/ygyeWVONyrdRcIEzpgczXEeg4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=koaxZfze5cBSpIBhV0viXkvbJQ5bmDtugpm5JqkQkk5oiFS56ou3TUIiqeQlxrNnvVFdJ+4lVNHX5TkHz2Us45ioNFXxvoPujb40zV7rMnalgHYl25qHnp08HWEMuFSyMJQzINoq9QQZ6eaYIHGXncbLV+O4LZ3NANIarjfhYDQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com; spf=pass smtp.mailfrom=oppo.com; dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b=jkhq5wjO; arc=fail smtp.client-ip=40.107.117.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oppo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oppo.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 830301635CA;
+	Fri, 10 May 2024 10:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715335433; cv=none; b=gRqgS4Tzjkg6OyeE5/sFawKi3CE8alHWNa+PNbZ4f+zrteBMC1wE23LnWZ1aOuNRDcATkhmpbrY1xvpKu/OV0Y8QETvhDYWun60GegWUyVbJDxvxYFKuDgPk5Zz9/p2kFamkW4abLRi+TQLCO7NK1vWBQYrytDtqfbChn99Cw1s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715335433; c=relaxed/simple;
+	bh=fgdtPgMJvngaGk9B43OLHUDTq5XQ2ILmViQl2hnJmxs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HpYN8r2ivkjeW5vDZRvAFOZzIGVKUC+vZE79tHaZ6PoqTE3v4xwFx6iuQ+mp3Qu0pKPLNl40bH2EHHXPNljhixcTQyC1yG8B53HVjuYxIZSVyF3Umz1DhbP0MI5zJ4uols+HvMvZ6iLIavw8c4CmPsGsZzTz/RhSerqxRreS8wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jmGLk4aT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XutS4Lgq; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=jmGLk4aT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=XutS4Lgq; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=oppo.com header.i=@oppo.com header.b="jkhq5wjO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XuTDO2qLskf141dEw6aN0mplcGa/HezeVoWvZsoXKBlEqrEssKfDeBnT4mHSRLLpR13dSQDYSNo5hiKu2RI5nIWCjkptfaU8X7I+qhRX4vPECyopWB2YFTuIkmMN5cCCSJ0TmAaRYHUOF4Pa/zLlOiLZB7LrlLQKoh5gv0uApe6T+mi+6jw210Cz5ncX59LjMhmcvGNPUB5YXOepoFTUh6jlLqPLskVlr85ZfwmDnyjbbDMcu7Cf9iEuJqTSzgmGvZPSUIHOQkXsJ8Cunls80DIFrlube8/BBd34H/q37g4AoGBHx4ESRLJr5StgmzYaXSgmMEyD5ihDNAFWVCUPFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uKLdzosIdGgv2QIDSek4xu8G6B6eszpULhk2vpR/8V0=;
- b=Z8+WEyMbCn79JRO4vKTr9J7A0mSB5HKjUzcm0ZDRZciocnHynlGORayS0+bFLT18PzNV+T8qeWXCsN0gdZo0kTCwQgPOxjq0Oa/9IyZ6rbE59PXFeeKuGKGH9jlHMvqPD+vcWm7zZ4Mi9T1P8LF7LbhHyc9QX8rVkNNM2oB+dNxxgwDpDtFaFLIjGVrcLQ7WulMFbhe90Sq2HI8AD6TKESBR+GEB3MtYQ7Tk3DYxcvqcT9FNXtlZq8oTyKMIDdiOfAAQy8EE/nJqVuFhEB2ae5mrEzwx9MWXSrdIg8zOfIhZqCKqf6aLcVk8alcGt5sltFrcRrBkX5MzUijEZkaO5A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 58.252.5.68) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=oppo.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=oppo.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oppo.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uKLdzosIdGgv2QIDSek4xu8G6B6eszpULhk2vpR/8V0=;
- b=jkhq5wjOc3FA9o0JSljxEXySM2DKNRLDdgd7t0RywNs7kj6aXd/IUq6sdNn2uHdrYfTklQP57KVTNIg2cqvaIwUs/lCq3wZnqny04zHMTIZ3tYHh+acLA9gAE+MA3I+I6klmF609MVy9ZWp0qsh7rBhOeJjvt7w1AYlqQ+dbN2g=
-Received: from SI2PR06CA0011.apcprd06.prod.outlook.com (2603:1096:4:186::16)
- by PUZPR02MB6307.apcprd02.prod.outlook.com (2603:1096:301:f9::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.45; Fri, 10 May
- 2024 10:01:47 +0000
-Received: from SG1PEPF000082E8.apcprd02.prod.outlook.com
- (2603:1096:4:186:cafe::3b) by SI2PR06CA0011.outlook.office365.com
- (2603:1096:4:186::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.49 via Frontend
- Transport; Fri, 10 May 2024 10:01:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 58.252.5.68)
- smtp.mailfrom=oppo.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=oppo.com;
-Received-SPF: Pass (protection.outlook.com: domain of oppo.com designates
- 58.252.5.68 as permitted sender) receiver=protection.outlook.com;
- client-ip=58.252.5.68; helo=mail.oppo.com; pr=C
-Received: from mail.oppo.com (58.252.5.68) by
- SG1PEPF000082E8.mail.protection.outlook.com (10.167.240.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Fri, 10 May 2024 10:01:46 +0000
-Received: from PH80250894.adc.com (172.16.40.118) by mailappw31.adc.com
- (172.16.56.198) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 10 May
- 2024 18:01:46 +0800
-From: <hailong.liu@oppo.com>
-To: <akpm@linux-foundation.org>
-CC: <urezki@gmail.com>, <hch@infradead.org>, <lstoakes@gmail.com>,
-	<21cnbao@gmail.com>, <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-	<xiang@kernel.org>, <chao@kernel.org>, <mhocko@suse.com>, Hailong.Liu
-	<hailong.liu@oppo.com>, <stable@vger.kernel.org>, Oven
-	<liyangouwen1@oppo.com>
-Subject: [PATCH v2] mm/vmalloc: fix vmalloc which may return null if called with __GFP_NOFAIL
-Date: Fri, 10 May 2024 18:01:31 +0800
-Message-ID: <20240510100131.1865-1-hailong.liu@oppo.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jmGLk4aT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XutS4Lgq";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="jmGLk4aT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="XutS4Lgq"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 986EA612FA;
+	Fri, 10 May 2024 10:03:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1715335429; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zMpepoHPQGFvD0N3kbkFGaQjjEC2A4z9p2yUgksG/QY=;
+	b=jmGLk4aTsvKTn2DTOvJl46nbSrVv5jVpUAAj5t8+j+9733x3rV7l87j8+UPCAE2wgmUqTK
+	wNpKJLsGnrIt1V4FlzUKlaIA4unjZHi+4zj7sy9VkKX5DqHG0CwtcRYjmojmcwFqYWlsuH
+	AGb6zwJ9b9mZevi3ZrXS9IdH0Pb4nDY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1715335429;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zMpepoHPQGFvD0N3kbkFGaQjjEC2A4z9p2yUgksG/QY=;
+	b=XutS4Lgq0Rb2gINEoE/Q6JPJJjiR1KrvuhLGDQ+twpcXDPsyJ0okEK/EwOEJhG0y8bWeOw
+	/ZOEYbglpWa1shCQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1715335429; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zMpepoHPQGFvD0N3kbkFGaQjjEC2A4z9p2yUgksG/QY=;
+	b=jmGLk4aTsvKTn2DTOvJl46nbSrVv5jVpUAAj5t8+j+9733x3rV7l87j8+UPCAE2wgmUqTK
+	wNpKJLsGnrIt1V4FlzUKlaIA4unjZHi+4zj7sy9VkKX5DqHG0CwtcRYjmojmcwFqYWlsuH
+	AGb6zwJ9b9mZevi3ZrXS9IdH0Pb4nDY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1715335429;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zMpepoHPQGFvD0N3kbkFGaQjjEC2A4z9p2yUgksG/QY=;
+	b=XutS4Lgq0Rb2gINEoE/Q6JPJJjiR1KrvuhLGDQ+twpcXDPsyJ0okEK/EwOEJhG0y8bWeOw
+	/ZOEYbglpWa1shCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id EF3371386E;
+	Fri, 10 May 2024 10:03:48 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id fNN0OATxPWZyQQAAD6G6ig
+	(envelope-from <hare@suse.de>); Fri, 10 May 2024 10:03:48 +0000
+Message-ID: <1d338bad-39ad-4669-bb87-35c5a242e130@suse.de>
+Date: Fri, 10 May 2024 12:03:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] nvme: add 'latency' iopolicy
+Content-Language: en-US
+To: Damien Le Moal <dlemoal@kernel.org>, John Meneghini
+ <jmeneghi@redhat.com>, tj@kernel.org, josef@toxicpanda.com, axboe@kernel.dk,
+ kbusch@kernel.org, hch@lst.de, sagi@grimberg.me, emilne@redhat.com,
+ hare@kernel.org
+Cc: linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+ linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org,
+ jrani@purestorage.com, randyj@purestorage.com, aviv.coro@ibm.com
+References: <20240403141756.88233-1-hare@kernel.org>
+ <20240509204324.832846-3-jmeneghi@redhat.com>
+ <2ac54036-6245-466f-b8fa-aaf56db72d1e@kernel.org>
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <2ac54036-6245-466f-b8fa-aaf56db72d1e@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: mailappw31.adc.com (172.16.56.198) To mailappw31.adc.com
- (172.16.56.198)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG1PEPF000082E8:EE_|PUZPR02MB6307:EE_
-X-MS-Office365-Filtering-Correlation-Id: 23494940-940c-4c52-9147-08dc70d83426
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|82310400017|36860700004|7416005|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?DwffEpv7IPxFQp9+odnMvj11TR7agAqakRvnRVBODm+sP3jNqLNFNmfsWPv3?=
- =?us-ascii?Q?taWsxU3tSwxUHmtRgKwoMKnrxMqKMQ2FmKmAdMwg+0FT1fsaf8NluNiqVNu9?=
- =?us-ascii?Q?5aHEK16pRHFMS2zCO7yYGfsj8NMpniX3+Ei1VVO4zFdD3bH36uICuP16EPig?=
- =?us-ascii?Q?PkCD36dTtZqmlqMIAtka4HlR5wNyCYrM9G6/iGQQadU2VPM2CS6d+t1zjnym?=
- =?us-ascii?Q?6goZvZ9owT2CwW4W0/t11t5jUa4HKnp/qtAZ9pKS81gK7zDLk1PpVT57h4Ul?=
- =?us-ascii?Q?8jEfyC1/JDsVfIAmT74BFat3hgVyaO5yIFJufgH9dGT1vgA6X5MGV2jA+ShZ?=
- =?us-ascii?Q?FLkZ7WlozqFu3R7U6NO2eZdBopcZpanOoGZ4aNq86BXk0kZj+HFukZyTHO7S?=
- =?us-ascii?Q?eL+rKgL3DjA64HFp+igEVCMaAs34HMF1r5JxzOtEgepPHcgBfr/jndkcjNjs?=
- =?us-ascii?Q?G17lCcAMtuQojR51jcYUP84y8e1/xcjURANu/WJZcRjLFCn6qYcr4+3XXIEF?=
- =?us-ascii?Q?GT2G4GuHJRluik7dEjKX1bU5S9uF91yuSjg1kSLUxKRjZt/6Lxd23Nk/EyRy?=
- =?us-ascii?Q?oAWodcpsFRumrh17+ABnSGfcFNr3w+gQ+tL7TW119W+3C6xjiDNgtE0fM7gV?=
- =?us-ascii?Q?1fFNHC8kq/YfhQ5Rf5aZhPFhCmpy9IzKHoAHyWtfhGD2lzhLutLCtt/OreoA?=
- =?us-ascii?Q?094/ZUP0dVOIcNM9iPpctwuLnRVizDIe/yH+3HdoHMH00ixVOlZDx77GbEEO?=
- =?us-ascii?Q?3eqALR6d2PZha+KabuhpOW8ZpH5DQZy5QAcN8gzhBox2UjKTY9tf0nVUrmz5?=
- =?us-ascii?Q?QcxdrBhnN6u9CCojw2oURy5h9GewJn4tIg6zBYxdL0c0NzaQ3/RVkF5AV2aS?=
- =?us-ascii?Q?dsvChOmfhbD2GdGIw2cCjNzlWcZSGlh90fBLogg3e6VI0vBuo2DKFRpN1DdY?=
- =?us-ascii?Q?f4aSB1zOzybgTjkL1stXcGmSj58NMeRHUjrKA3pamWRyz5Zd1Qqh3N1Pq2g9?=
- =?us-ascii?Q?NfKZmfHINbvFOcmkUHnn7XhIVzHX9WMdcVHqaLB/YKcq90jwPkjUXrc2miLu?=
- =?us-ascii?Q?s0EwEVHvYHhUnvjzbbpz3gW0gMY2XcpJpYqPyukb0lPBnr2G3XZKCaF0rQeg?=
- =?us-ascii?Q?bRRKW27wOoT1c4MjyLz5jyBbkcaBJPae7wejmguGc4bbb5PCNGN67NvywIiH?=
- =?us-ascii?Q?BL5iPkWFFprUyyLuUXFunfYVfF9WBHpdSxM/gI8C2IeCBI6CrK/XdZbQ05/N?=
- =?us-ascii?Q?XIhK7cyECvP9gWI/5IQEufXgXvkL3vH3+D2QifevBuI9E+XNVUQ3q62C+nVV?=
- =?us-ascii?Q?4dEkw7VQq8/3vgjlLUc+U0MQ?=
-X-Forefront-Antispam-Report:
-	CIP:58.252.5.68;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.oppo.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(82310400017)(36860700004)(7416005)(376005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: oppo.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2024 10:01:46.9019
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 23494940-940c-4c52-9147-08dc70d83426
-X-MS-Exchange-CrossTenant-Id: f1905eb1-c353-41c5-9516-62b4a54b5ee6
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f1905eb1-c353-41c5-9516-62b4a54b5ee6;Ip=[58.252.5.68];Helo=[mail.oppo.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG1PEPF000082E8.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR02MB6307
+X-Spam-Flag: NO
+X-Spam-Score: -4.29
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.29 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	XM_UA_NO_VERSION(0.01)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
 
-From: "Hailong.Liu" <hailong.liu@oppo.com>
+On 5/10/24 09:17, Damien Le Moal wrote:
+> On 5/10/24 05:43, John Meneghini wrote:
+>> From: Hannes Reinecke <hare@kernel.org>
+>>
+>> Add a latency-based I/O policy for multipathing. It uses the blk-nodelat
+>> latency tracker to provide latencies for each node, and schedules
+>> I/O on the path with the least latency for the submitting node.
+>>
+>> Signed-off-by: Hannes Reinecke <hare@kernel.org>
+>>
+>> Make this compile when CONFIG_BLK_NODE_LATENCY is not set.
+>> Advertise the 'latency' iopolicy in modinfo.
+>>
+>> Signed-off-by: John Meneghini <jmeneghi@redhat.com>
+>> ---
+>>   drivers/nvme/host/multipath.c | 63 ++++++++++++++++++++++++++++++-----
+>>   drivers/nvme/host/nvme.h      |  1 +
+>>   2 files changed, 55 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+>> index d916a5ddf5d4..e9330bb1990b 100644
+>> --- a/drivers/nvme/host/multipath.c
+>> +++ b/drivers/nvme/host/multipath.c
+>> @@ -18,6 +18,7 @@ static const char *nvme_iopolicy_names[] = {
+>>   	[NVME_IOPOLICY_NUMA]	= "numa",
+>>   	[NVME_IOPOLICY_RR]	= "round-robin",
+>>   	[NVME_IOPOLICY_QD]      = "queue-depth",
+>> +	[NVME_IOPOLICY_LAT]	= "latency",
+>>   };
+>>   
+>>   static int iopolicy = NVME_IOPOLICY_NUMA;
+>> @@ -32,6 +33,10 @@ static int nvme_set_iopolicy(const char *val, const struct kernel_param *kp)
+>>   		iopolicy = NVME_IOPOLICY_RR;
+>>   	else if (!strncmp(val, "queue-depth", 11))
+>>   		iopolicy = NVME_IOPOLICY_QD;
+>> +#ifdef CONFIG_BLK_NODE_LATENCY
+>> +	else if (!strncmp(val, "latency", 7))
+>> +		iopolicy = NVME_IOPOLICY_LAT;
+>> +#endif
+>>   	else
+>>   		return -EINVAL;
+>>   
+>> @@ -43,10 +48,36 @@ static int nvme_get_iopolicy(char *buf, const struct kernel_param *kp)
+>>   	return sprintf(buf, "%s\n", nvme_iopolicy_names[iopolicy]);
+>>   }
+>>   
+>> +static int nvme_activate_iopolicy(struct nvme_subsystem *subsys, int iopolicy)
+>> +{
+>> +	struct nvme_ns_head *h;
+>> +	struct nvme_ns *ns;
+>> +	bool enable = iopolicy == NVME_IOPOLICY_LAT;
+>> +	int ret = 0;
+>> +
+>> +	mutex_lock(&subsys->lock);
+>> +	list_for_each_entry(h, &subsys->nsheads, entry) {
+>> +		list_for_each_entry_rcu(ns, &h->list, siblings) {
+>> +			if (enable) {
+>> +				ret = blk_nlat_enable(ns->disk);
+>> +				if (ret)
+>> +					break;
+>> +			} else
+>> +				blk_nlat_disable(ns->disk);
+> 
+> Missing curly brackets for the else.
+> 
+Ok.
 
-commit a421ef303008 ("mm: allow !GFP_KERNEL allocations for kvmalloc")
-includes support for __GFP_NOFAIL, but it presents a conflict with
-commit dd544141b9eb ("vmalloc: back off when the current task is
-OOM-killed"). A possible scenario is as follows:
+>> +		}
+>> +	}
+>> +	mutex_unlock(&subsys->lock);
+>> +	return ret;
+>> +}
+>> +
+>>   module_param_call(iopolicy, nvme_set_iopolicy, nvme_get_iopolicy,
+>>   	&iopolicy, 0644);
+>>   MODULE_PARM_DESC(iopolicy,
+>> +#if defined(CONFIG_BLK_NODE_LATENCY)
+> 
+> What is so special about the latency policy that it needs to be conditionally
+> defined ? I missed that point. Why not drop CONFIG_BLK_NODE_LATENCY ?
+> 
+The 'latency' policy is using the blk-rqos infrastructure, which in 
+itself might not be compiled in.
+So we don't want the user to give a false impression here.
 
-process-a
-__vmalloc_node_range(GFP_KERNEL | __GFP_NOFAIL)
-    __vmalloc_area_node()
-        vm_area_alloc_pages()
-		--> oom-killer send SIGKILL to process-a
-        if (fatal_signal_pending(current)) break;
---> return NULL;
+>> +	"Default multipath I/O policy; 'numa' (default) , 'round-robin', 'queue-depth' or 'latency'");
+>> +#else
+>>   	"Default multipath I/O policy; 'numa' (default) , 'round-robin' or 'queue-depth'");
+>> +#endif
+>>   
+>>   void nvme_mpath_default_iopolicy(struct nvme_subsystem *subsys)
+>>   {
+>> @@ -250,14 +281,16 @@ static struct nvme_ns *__nvme_find_path(struct nvme_ns_head *head, int node)
+>>   {
+>>   	int found_distance = INT_MAX, fallback_distance = INT_MAX, distance;
+>>   	struct nvme_ns *found = NULL, *fallback = NULL, *ns;
+>> +	int iopolicy = READ_ONCE(head->subsys->iopolicy);
+>>   
+>>   	list_for_each_entry_rcu(ns, &head->list, siblings) {
+>>   		if (nvme_path_is_disabled(ns))
+>>   			continue;
+>>   
+>> -		if (ns->ctrl->numa_node != NUMA_NO_NODE &&
+>> -		    READ_ONCE(head->subsys->iopolicy) == NVME_IOPOLICY_NUMA)
+>> +		if (iopolicy == NVME_IOPOLICY_NUMA)
+>>   			distance = node_distance(node, ns->ctrl->numa_node);
+>> +		else if (iopolicy == NVME_IOPOLICY_LAT)
+>> +			distance = blk_nlat_latency(ns->disk, node);
+>>   		else
+>>   			distance = LOCAL_DISTANCE;
+>>   
+>> @@ -381,8 +414,8 @@ static inline bool nvme_path_is_optimized(struct nvme_ns *ns)
+>>   
+>>   inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
+>>   {
+>> -	int iopolicy = READ_ONCE(head->subsys->iopolicy);
+>>   	int node;
+>> +	int iopolicy = READ_ONCE(head->subsys->iopolicy);
+> 
+> No need to move this line.
+> 
+Sure.
 
-To fix this, do not check fatal_signal_pending() in vm_area_alloc_pages()
-if __GFP_NOFAIL set.
+>>   	struct nvme_ns *ns;
+>>   
+>>   	/*
+>> @@ -401,8 +434,8 @@ inline struct nvme_ns *nvme_find_path(struct nvme_ns_head *head)
+>>   
+>>   	if (iopolicy == NVME_IOPOLICY_RR)
+>>   		return nvme_round_robin_path(head, node, ns);
+>> -
+>> -	if (unlikely(!nvme_path_is_optimized(ns)))
+>> +	if (iopolicy == NVME_IOPOLICY_LAT ||
+>> +	    unlikely(!nvme_path_is_optimized(ns)))
+>>   		return __nvme_find_path(head, node);
+>>   	return ns;
+>>   }
+>> @@ -872,15 +905,18 @@ static ssize_t nvme_subsys_iopolicy_store(struct device *dev,
+>>   {
+>>   	struct nvme_subsystem *subsys =
+>>   		container_of(dev, struct nvme_subsystem, dev);
+>> -	int i;
+>> +	int i, ret;
+>>   
+>>   	for (i = 0; i < ARRAY_SIZE(nvme_iopolicy_names); i++) {
+>>   		if (sysfs_streq(buf, nvme_iopolicy_names[i])) {
+>> -			nvme_subsys_iopolicy_update(subsys, i);
+>> -			return count;
+>> +			ret = nvme_activate_iopolicy(subsys, i);
+>> +			if (!ret) {
+>> +				nvme_subsys_iopolicy_update(subsys, i);
+>> +				return count;
+>> +			}
+>> +			return ret;
+> 
+> It would be nicer to have this as:
+> 
+> 			if (ret)
+> 				break
+> 			nvme_subsys_iopolicy_update(subsys, i);
+> 			return count;
+> 
 
-Fixes: 9376130c390a ("mm/vmalloc: add support for __GFP_NOFAIL")
-Cc: <stable@vger.kernel.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Suggested-by: Barry Song <21cnbao@gmail.com>
-Reported-by: Oven <liyangouwen1@oppo.com>
-Signed-off-by: Hailong.Liu <hailong.liu@oppo.com>
----
- mm/vmalloc.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Ok.
 
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 125427cbdb87..109272b8ee2e 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -3492,7 +3492,7 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
- {
- 	unsigned int nr_allocated = 0;
- 	gfp_t alloc_gfp = gfp;
--	bool nofail = false;
-+	bool nofail = gfp & __GFP_NOFAIL;
- 	struct page *page;
- 	int i;
+>>   		}
+>>   	}
+>> -
+> 
+> whiteline change.
+> 
+>>   	return -EINVAL;
+> 
+> And "return ret;" here with ret initialized to -EINVAL when declared.
+> 
+Ok.
 
-@@ -3549,12 +3549,11 @@ vm_area_alloc_pages(gfp_t gfp, int nid,
- 		 * and compaction etc.
- 		 */
- 		alloc_gfp &= ~__GFP_NOFAIL;
--		nofail = true;
- 	}
+>>   }
+>>   SUBSYS_ATTR_RW(iopolicy, S_IRUGO | S_IWUSR,
+>> @@ -916,6 +952,15 @@ static int nvme_lookup_ana_group_desc(struct nvme_ctrl *ctrl,
+>>   
+>>   void nvme_mpath_add_disk(struct nvme_ns *ns, __le32 anagrpid)
+>>   {
+>> +	if (!blk_nlat_init(ns->disk) &&
+>> +	    READ_ONCE(ns->head->subsys->iopolicy) == NVME_IOPOLICY_LAT) {
+>> +		int ret = blk_nlat_enable(ns->disk);
+>> +
+>> +		if (unlikely(ret))
+>> +			pr_warn("%s: Failed to enable latency tracking, error %d\n",
+>> +				ns->disk->disk_name, ret);
+>> +	}
+>> +
+>>   	if (nvme_ctrl_use_ana(ns->ctrl)) {
+>>   		struct nvme_ana_group_desc desc = {
+>>   			.grpid = anagrpid,
+>> diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+>> index a557b4577c01..66bf003a6c48 100644
+>> --- a/drivers/nvme/host/nvme.h
+>> +++ b/drivers/nvme/host/nvme.h
+>> @@ -411,6 +411,7 @@ enum nvme_iopolicy {
+>>   	NVME_IOPOLICY_NUMA,
+>>   	NVME_IOPOLICY_RR,
+>>   	NVME_IOPOLICY_QD,
+>> +	NVME_IOPOLICY_LAT,
+>>   };
+>>   
+>>   struct nvme_subsystem {
+> 
 
- 	/* High-order pages or fallback path if "bulk" fails. */
- 	while (nr_allocated < nr_pages) {
--		if (fatal_signal_pending(current))
-+		if (!nofail && fatal_signal_pending(current))
- 			break;
+Cheers,
 
- 		if (nid == NUMA_NO_NODE)
----
-Changes since RFC v1 [1]:
-- Remove RFC tag
-- Add fixes, per Michal
-- Use nofail instead of gfp & __GFP_NOFAIL, per Barry & Michal
-- Modify commit log, per Barry
-
-[1] https://lore.kernel.org/all/20240508125808.28882-1-hailong.liu@oppo.com/
-
-This issue occurred during OPLUS KASAN TEST. Below is part of the log
--> oom-killer sends signal to process
-[65731.222840] [ T1308] oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=/,mems_allowed=0,global_oom,task_memcg=/apps/uid_10198,task=gs.intelligence,pid=32454,uid=10198
-
-[65731.259685] [T32454] Call trace:
-[65731.259698] [T32454]  dump_backtrace+0xf4/0x118
-[65731.259734] [T32454]  show_stack+0x18/0x24
-[65731.259756] [T32454]  dump_stack_lvl+0x60/0x7c
-[65731.259781] [T32454]  dump_stack+0x18/0x38
-[65731.259800] [T32454]  mrdump_common_die+0x250/0x39c [mrdump]
-[65731.259936] [T32454]  ipanic_die+0x20/0x34 [mrdump]
-[65731.260019] [T32454]  atomic_notifier_call_chain+0xb4/0xfc
-[65731.260047] [T32454]  notify_die+0x114/0x198
-[65731.260073] [T32454]  die+0xf4/0x5b4
-[65731.260098] [T32454]  die_kernel_fault+0x80/0x98
-[65731.260124] [T32454]  __do_kernel_fault+0x160/0x2a8
-[65731.260146] [T32454]  do_bad_area+0x68/0x148
-[65731.260174] [T32454]  do_mem_abort+0x151c/0x1b34
-[65731.260204] [T32454]  el1_abort+0x3c/0x5c
-[65731.260227] [T32454]  el1h_64_sync_handler+0x54/0x90
-[65731.260248] [T32454]  el1h_64_sync+0x68/0x6c
-
-[65731.260269] [T32454]  z_erofs_decompress_queue+0x7f0/0x2258
---> be->decompressed_pages = kvcalloc(be->nr_pages, sizeof(struct page *), GFP_KERNEL | __GFP_NOFAIL);
-	kernel panic by NULL pointer dereference.
-	erofs assume kvmalloc with __GFP_NOFAIL never return NULL.
-[65731.260293] [T32454]  z_erofs_runqueue+0xf30/0x104c
-[65731.260314] [T32454]  z_erofs_readahead+0x4f0/0x968
-[65731.260339] [T32454]  read_pages+0x170/0xadc
-[65731.260364] [T32454]  page_cache_ra_unbounded+0x874/0xf30
-[65731.260388] [T32454]  page_cache_ra_order+0x24c/0x714
-[65731.260411] [T32454]  filemap_fault+0xbf0/0x1a74
-[65731.260437] [T32454]  __do_fault+0xd0/0x33c
-[65731.260462] [T32454]  handle_mm_fault+0xf74/0x3fe0
-[65731.260486] [T32454]  do_mem_abort+0x54c/0x1b34
-[65731.260509] [T32454]  el0_da+0x44/0x94
-[65731.260531] [T32454]  el0t_64_sync_handler+0x98/0xb4
-[65731.260553] [T32454]  el0t_64_sync+0x198/0x19c
---
-2.34.1
+Hannes
+-- 
+Dr. Hannes Reinecke                Kernel Storage Architect
+hare@suse.de                              +49 911 74053 688
+SUSE Software Solutions GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 36809 (AG Nürnberg), GF: Ivo Totev, Andrew McDonald,
+Werner Knoblich
 
