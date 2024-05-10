@@ -1,170 +1,101 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 584D515217A
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 07:10:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C32B15217A;
+	Fri, 10 May 2024 07:10:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715325047; cv=none; b=ffo96dq9MjdvOx3ddqfJNddS3dymHGzDqd4RRj75Iw3LTNKsAtEbUNYr3tNC3ZXKgI0mSaEcQP4NOPQP+YlZD9Iz/mGXEmURQbbJAiLz7KyXj334xWsMld9fjCVirSmpSsl8B4YgR3n/EYIskN0yUDFdeAHuSIZv14h9WGBWPsQ=
+	t=1715325054; cv=none; b=qIkkcymTXeGPFKeREJG93yqfh4NXSdw53SD0i3sFedmJgeciiYRAX/EhzMr7LfWMXMrAagWG7HVkLk+8kLtVb1FefOs8uZDUV2vteARLNPCm/EAdFa/mFj0xrFnRqI7phML6HCAfouw3KatTYH9j6Vto+fBLrPk8Kq5Nhtnp87Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715325047; c=relaxed/simple;
-	bh=ue7jMTgddF+8Izjutih7fFIKqxvyCwXaYGnYdXk7WUo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=trH5vCCKVRfrL4TGxLZuh1Jd9LjP15vrC07mLkdsX86sOuFd7R9+6bayzIyGcMVvCt8WleT0H5+ZVEJCUXrMHXGd+VGrn17qw7L4yHRAvpudtaquH2P3Pmwy+KAhNZjJUCpt79kfq2HbJHrZU9I10T/hhuLMXJuCUxt3VYmMdGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m0yIwXJT; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715325054; c=relaxed/simple;
+	bh=91uA+O7LaVa+y2/MyVhYHsTtYOICk/7/5I17xeo8sEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VM0T6uLcyTU43ME7yrY73BIL+oeepULiEHXLQp+hcfPBTbCWvDL52FyGot8Y4cPGr2Si4Q7nD3O88a8cSSrWTptcWV/+pEwG4fHihjysCEv+dUaOs7HDMv0aoom/S6iIamlTEQKmTli49N8JC1Hc4mJ2wX6bWhjGfLZbD3DCJVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=JetRuolg; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m0yIwXJT"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso1266368a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 00:10:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715325045; x=1715929845; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uVljsLizj8mP9c78/jZ2/IPg3S8NkJuDIppx14crPK4=;
-        b=m0yIwXJTA9Px+KLfRWt+qb+vaF6QtZTPFZpwoteBr5hIni9+OMmC1nP1B5gRT3VtfV
-         G0pLIRp9reRmtOKr6+Q7KbKgNkmwBS1r7TDo9jNN6N2p+xVrg8BOIrbejKkMZ+vG4oRe
-         1BKJlPq19l9F+XooU8B5Tocu0XDUwAxcve3xbj2ULmxb2VcMUu04fPgyN0TpAA2bqowV
-         yPhkaXLimTf7XBg8NoO0PrCYADinWXXuh+nblUWnZILoeGtUB4qSHougWOdDgl7IfhL7
-         CRJ+xgZN/T5g7ITX5kX8Qf/LRGS0O2HGwaOhBE0Mrq20ZZVZj6dPW2RleCLY6qA4A7XS
-         70wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715325045; x=1715929845;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uVljsLizj8mP9c78/jZ2/IPg3S8NkJuDIppx14crPK4=;
-        b=gsR9be5pqGndfyRHdj7R8sSZlsl1lw7mZQuTNzfLecAAdOhwbtiCgqjFoXssN7e5Qr
-         ozpNAirBrlUcWIOcaIjUHQFmEUxfOhXyA/mYC2FVhB8OHtWPjxFwxcgwl93zcUqqtxDH
-         HJ0zofqVjt3bzdSndCcFBvIDlL7mvjvbUdtUNqLAZd/QrtNUxrf7Hy70d1PiSSuL4Imp
-         yuRU7HjCQHdCXiHiAi75o2F+V3VU38aTISYw2rJNXaJEXxYLvNNV6xut2UNvtYpzdEuB
-         VJyErayje8MGOKq77BCiNRXKoNyv9dnYxH+KDGYfFr62K+ajVAd4V59bc72z1BRY4Ege
-         NgJw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFWJEs+0BSPYD+WWt10QUJBLWDcOuDKrG8gzQyTayfv/sPAe2NpXb+Tsz8NOJjBdvqTFCdYexacRyqDxcMk3K6Xo/dYJJekDYNGx/v
-X-Gm-Message-State: AOJu0YzGozgvTZinsZQTLqgStAWTPnM7j8niReFebfk/vSw7GwVOcduX
-	hhjqy7tFgJMVwLBiA4BaklV0JV1pnnIRsdGoJaUNH+TYzh418jxR9V4gXRI4+eccMwI3v6Ejyd8
-	ldBMl5qPVSc9dtPxhehFAkms6f4k=
-X-Google-Smtp-Source: AGHT+IF9rZ9n8tSjSA58jwlP66LzJNDN8/JzJWa7zXl65JzLQFRx/MPhn99g9O+7T+04G3i6KEDTkfwPRzgbC+cuBuI=
-X-Received: by 2002:a17:90a:4589:b0:2a5:2ef2:4ce4 with SMTP id
- 98e67ed59e1d1-2b6ccd85d1amr1723878a91.41.1715325045544; Fri, 10 May 2024
- 00:10:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JetRuolg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1715325050;
+	bh=91uA+O7LaVa+y2/MyVhYHsTtYOICk/7/5I17xeo8sEU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=JetRuolg62V2a1Dbfd//ggCWvcVJGOfChv62JAStKKEKPGAkMg07x9t/WaT2gS+YQ
+	 BypybJwy97qPLpWKeGGmF+5I9IpdvdZI1omI5Uw86VvddGPeX2diObFaEEGewRF1Wn
+	 q0etvda5jR4/cL/ykVcWYyHF63t6Ya0HL/f0ZfKp0ceLwrJAbl6Lk4sX8oyaxx2pWd
+	 61uaBsVM5+CYdv3ObgatKb/P1o7BD2TqEfXLpyL5n5Tyx76RZXMyWGxtZzvMAUY4Fx
+	 nqK3Dsamd+tJJa73lXueKj+dmW6c4J0CFCwbcU8RvLvTwcM4zBCgBHfjO3rOw/5hRV
+	 KmbAjrmilgd4w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VbKmB3mKTz4wcn;
+	Fri, 10 May 2024 17:10:50 +1000 (AEST)
+Date: Fri, 10 May 2024 17:10:49 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko
+ <andriy.shevchenko@linux.intel.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the gpio-brgl tree with the
+ gpio-brgl-fixes tree
+Message-ID: <20240510171049.2e0e3c56@canb.auug.org.au>
+In-Reply-To: <20240510170827.2b655636@canb.auug.org.au>
+References: <20240510153212.246fbf31@canb.auug.org.au>
+	<CACMJSev6EDeLdQ0e7A7f6AMhh08FznA67x5ONG+vSseC5QLt6A@mail.gmail.com>
+	<20240510170827.2b655636@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240509-jdi-use-disable-v1-1-5c175b2ea1ee@gmail.com>
- <rpita5o6za64p7tamasssb2fja6h6ipr5cibh6gs7klkijyk6r@mausrcet2ycx> <CAGsSOWWAotJPz+o8HSYTrXtq6H7Vrw9KXZX1jDZLgqfudKsnyg@mail.gmail.com>
-In-Reply-To: <CAGsSOWWAotJPz+o8HSYTrXtq6H7Vrw9KXZX1jDZLgqfudKsnyg@mail.gmail.com>
-From: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <trabarni@gmail.com>
-Date: Fri, 10 May 2024 09:10:34 +0200
-Message-ID: <CAGsSOWX9YcuBpxQZ5kPm6zbMbM6iZqPK3bk=dgKyUZPjq++GXQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/panel: jdi-fhd-r63452: move DCS off commands to disable
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Sam Ravnborg <sam@ravnborg.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_/TiryxWMPeUDXpac3mjWVpQ1";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/TiryxWMPeUDXpac3mjWVpQ1
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 10, 2024 at 8:46=E2=80=AFAM Barnab=C3=A1s Cz=C3=A9m=C3=A1n <tra=
-barni@gmail.com> wrote:
+Hi Stephen,
+
+On Fri, 10 May 2024 17:08:27 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
 >
-> On Fri, May 10, 2024 at 2:56=E2=80=AFAM Dmitry Baryshkov
-> <dmitry.baryshkov@linaro.org> wrote:
+> Hi Bartosz,
+>=20
+> On Fri, 10 May 2024 08:33:37 +0200 Bartosz Golaszewski <bartosz.golaszews=
+ki@linaro.org> wrote:
 > >
-> > On Thu, May 09, 2024 at 08:14:07PM +0200, Barnab=C3=A1s Cz=C3=A9m=C3=A1=
-n wrote:
-> > > Move DCS off commands from .unprepare to .disable so that they
-> > > actually reach the DSI host.
-> > >
-> > > Signed-off-by: Barnab=C3=A1s Cz=C3=A9m=C3=A1n <trabarni@gmail.com>
-> > > ---
-> > >  drivers/gpu/drm/panel/panel-jdi-fhd-r63452.c | 12 ++++++++++--
-> > >  1 file changed, 10 insertions(+), 2 deletions(-)
-> >
-> > I don't think this is correct. If the driver sends enable commands in
-> > prepare, it should be able to send commands during unprepare too.
-> >
-> It cannot send commands in unprepare, there are multiple panel drivers
-> what do the same.
-> Every panel drivers which have DCS commands to be sent in unprepare
-> has similar error messages with mdp5/dpu.
->
-> [   92.322564] panel-td4320-boeplus c994000.dsi.0: sending command
-> 0x28 failed: -22
-> [   92.322635] panel-td4320-boeplus c994000.dsi.0: Failed to
-> un-initialize panel: -22
->
->
-Here is the error messages, these are comes from unprepare by every panel o=
-ff:
-[  121.295290] panel-jdi-fhd-r63452 994000.dsi.0: transmit data failed: -22
-[  121.295368] panel-jdi-fhd-r63452 994000.dsi.0: Failed to
-un-initialize panel: -22
-[  184.783019] panel-jdi-fhd-r63452 994000.dsi.0: transmit data failed: -22
-[  184.783066] panel-jdi-fhd-r63452 994000.dsi.0: Failed to
-un-initialize panel: -22
-with this patch these errors no more.
-.prepare works because of this flag ctx->panel.prepare_prev_first =3D true;
-> > >
-> > > diff --git a/drivers/gpu/drm/panel/panel-jdi-fhd-r63452.c b/drivers/g=
-pu/drm/panel/panel-jdi-fhd-r63452.c
-> > > index 483dc88d16d8..f7222974d6ed 100644
-> > > --- a/drivers/gpu/drm/panel/panel-jdi-fhd-r63452.c
-> > > +++ b/drivers/gpu/drm/panel/panel-jdi-fhd-r63452.c
-> > > @@ -169,6 +169,15 @@ static int jdi_fhd_r63452_prepare(struct drm_pan=
-el *panel)
-> > >  }
-> > >
-> > >  static int jdi_fhd_r63452_unprepare(struct drm_panel *panel)
-> > > +{
-> > > +     struct jdi_fhd_r63452 *ctx =3D to_jdi_fhd_r63452(panel);
-> > > +
-> > > +     gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int jdi_fhd_r63452_disable(struct drm_panel *panel)
-> > >  {
-> > >       struct jdi_fhd_r63452 *ctx =3D to_jdi_fhd_r63452(panel);
-> > >       struct device *dev =3D &ctx->dsi->dev;
-> > > @@ -178,8 +187,6 @@ static int jdi_fhd_r63452_unprepare(struct drm_pa=
-nel *panel)
-> > >       if (ret < 0)
-> > >               dev_err(dev, "Failed to un-initialize panel: %d\n", ret=
-);
-> > >
-> > > -     gpiod_set_value_cansleep(ctx->reset_gpio, 1);
-> > > -
-> > >       return 0;
-> > >  }
-> > >
-> > > @@ -219,6 +226,7 @@ static int jdi_fhd_r63452_get_modes(struct drm_pa=
-nel *panel,
-> > >  static const struct drm_panel_funcs jdi_fhd_r63452_panel_funcs =3D {
-> > >       .prepare =3D jdi_fhd_r63452_prepare,
-> > >       .unprepare =3D jdi_fhd_r63452_unprepare,
-> > > +     .disable =3D jdi_fhd_r63452_disable,
-> > >       .get_modes =3D jdi_fhd_r63452_get_modes,
-> > >  };
-> > >
-> > >
-> > > ---
-> > > base-commit: 704ba27ac55579704ba1289392448b0c66b56258
-> > > change-id: 20240509-jdi-use-disable-ee29098d9c81
-> > >
-> > > Best regards,
-> > > --
-> > > Barnab=C3=A1s Cz=C3=A9m=C3=A1n <trabarni@gmail.com>
-> > >
-> >
-> > --
-> > With best wishes
-> > Dmitry
+> > Thanks! I will send the fixes upstream today and then pull v6.9 into
+> > my tree before the merge window PR to fix this conflict. =20
+>=20
+> Or you could just merge your for-current branch into your for-next
+> branch and avoid possible issues with all the rest of v6.9 ...
+
+Or, since it is a pretty simple conflict, just do not merge and just
+mention the conflict to Linus in your merge window PR.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/TiryxWMPeUDXpac3mjWVpQ1
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmY9yHkACgkQAVBC80lX
+0GzLTwf6AwCZOAHCAJk9sixP1L2st70phXQsjSmCehEzPvLHsKHCwujWFm7xAMV3
+lrwDfroCla7emvSpq4RCiic24GbNNfRjONdQwr70ECMdtqfks9dsauaOoxfy4HlS
+H8wM+qHufygwR+ZsQ5/ZGsX9Kv8rAirLAp18ei/p2Hlb6ywUrSw28icKvguJiGGU
+l9q6f0Q1AVpyuA2tRt8nvhbud/FJt5RpLzBFSnHrvdu7NsipfjEJTOpAiSV7U7vv
+oOI913yfGJtFheHz8uZWve3H48Z0BB42OqhYtmqA9cU6XKtLzkC/Axk8fadF8nYu
+eGhHI68Pj/tL3MwffliapxEXBibQEQ==
+=P9ZB
+-----END PGP SIGNATURE-----
+
+--Sig_/TiryxWMPeUDXpac3mjWVpQ1--
