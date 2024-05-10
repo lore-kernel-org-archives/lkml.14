@@ -1,186 +1,73 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84B415FA62;
-	Fri, 10 May 2024 07:37:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB36114A0AD;
+	Fri, 10 May 2024 07:40:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715326665; cv=none; b=K4gKWXL1QADU+DN3vWWupkbob1VfOxO8wPVolYEuL3cRzICvA9fVjupjDfQnIo5laTzFmbDP729OWXNnDM8M3YioK8Wpb+Rl9RFROZYCQHC3N9IrZGg5gMzVbVAyfu+zwfR/pehEDvrQJpN/Q+P+CnyOnaLruOakHRJGIGVnasM=
+	t=1715326847; cv=none; b=qLyAARZmdiLk8mOhyRxZpZ9q4GnTqlLzID9fgDmhEGv1L6SJv4QlfN8rsMiybXRZ+Inl2FE5ouea27OHQ1D3pM8D4K6gL2j9bC8/NAWQ4KhbxVV2rYKxuXKlBa78KCr4eLzUjU70MxhT9GG8iA94O5aX+veRyHbmOATHNlFm0os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715326665; c=relaxed/simple;
-	bh=q0ODQo1/fKkt5jwjA8LMTgrwpxwI3PEWS6up4ckYCN0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rBYfhiACOqWIALmF/AshpUXYL8FSHgrWqNN9MYPcrUk4CLTuN9hYRf6qRkpzDprA7jP3G1c4ofTmX9TwQQzOkQmHWkDobe1mObbfJWoP0GG8W3Ds2dOoMfMoYOg0+IEiA77tIgOIZoHqONdLRo5+vVl5iuI7Qi5VoWrq5NCYqqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=heLlFnaM; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="heLlFnaM"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E6E0D240007;
-	Fri, 10 May 2024 07:37:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715326655;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=R70rkyRP1Hf1pp49vShPfEGxoK1eDHjp1Cs21gNxWro=;
-	b=heLlFnaMMiSW6jgN/C5enaGjr6fn6SrEoe5RGt8BIgAwJDNd+ln2EFWgjywe0FpYb00RAB
-	+QUYBt4Kp8daKpNb8wruc/L75oaDtKLMIVkwaQWhbRgGYllWs8u9lhv9ut88SqaDDKzvwQ
-	96inZQ1FlFy5rd4MSDBQ+QDVu9y1RTU9KjJpWhd8q3v07OSOyzcEmfQTUMjnK2FN7Q2gMR
-	U3ph/NWuTgprwVUMqKSJFkkkIoT9RcMPnnyZ8jby4bSny7+LA+mUXgl4CE9sQP6BeCvRvL
-	VE+47LiVVWSHtWYDr8VdSKgRvlkttNcL9+0k8EoF0n5hWbHob1X3lIoNv8t/rA==
-From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Fri, 10 May 2024 09:38:10 +0200
-Subject: [PATCH net-next v6 3/7] net: stmmac: Make stmmac_xpcs_setup()
- generic to all PCS devices
+	s=arc-20240116; t=1715326847; c=relaxed/simple;
+	bh=4P5ZgoP/b2LxVlyXCnK4MCQuRxhGO9eRPBLoDnFhz0Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=N5D8J4wgB7IsO5cHHsB+ls4mJndJYkgREDAd9Euie2EQnRqRniaOJesx6iFILylGXCVNgCti9VAg60X22BhLjwiv6aJsykZD6gJRjCOqCgL/Mpqj+Sg2Ksex95sfIg/UXxZZGF21c48ol3g8IUZZDUKhLGgZohKmrXGkFeHmGsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1s5KrU-00DHCj-0g;
+	Fri, 10 May 2024 15:40:13 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 10 May 2024 15:40:12 +0800
+Date: Fri, 10 May 2024 15:40:12 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Christoph Hellwig <hch@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Minchan Kim <minchan@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	linux-crypto@vger.kernel.org
+Subject: Re: [PATCHv3 00/19] zram: convert to custom compression API and
+ allow algorithms tuning
+Message-ID: <Zj3PXKcpqUPuFJRu@gondor.apana.org.au>
+References: <20240508074223.652784-1-senozhatsky@chromium.org>
+ <ZjzFB2CzCh1NKlfw@infradead.org>
+ <20240510051509.GI8623@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240510-rzn1-gmac1-v6-3-b63942be334c@bootlin.com>
-References: <20240510-rzn1-gmac1-v6-0-b63942be334c@bootlin.com>
-In-Reply-To: <20240510-rzn1-gmac1-v6-0-b63942be334c@bootlin.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Geert Uytterhoeven <geert+renesas@glider.be>, 
- Magnus Damm <magnus.damm@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>, 
- Jose Abreu <joabreu@synopsys.com>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Russell King <linux@armlinux.org.uk>, 
- =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <clement.leger@bootlin.com>, 
- Serge Semin <fancer.lancer@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, 
- Romain Gantois <romain.gantois@bootlin.com>
-X-Mailer: b4 0.13.0
-X-GND-Sasl: romain.gantois@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240510051509.GI8623@google.com>
 
-From: Serge Semin <fancer.lancer@gmail.com>
+On Fri, May 10, 2024 at 02:15:09PM +0900, Sergey Senozhatsky wrote:
+>
+> Well, I asked crypto folks if that's doable and the only reply was
+> "did you try using compression libs directly".  And that's not a
+> bad response, I take it.
 
-A pcs_init() callback will be introduced to stmmac in a future patch. This
-new function will be called during the hardware initialization phase.
-Instead of separately initializing XPCS and PCS components, let's group all
-PCS-related hardware initialization logic in the current
-stmmac_xpcs_setup() function.
+Sorry, I've been busy but I was going to get back to you on this.
+ 
+> But in general case, a typical crypto API usage
+> 
+> 	tfm = crypto_alloc_comp(comp->name, 0, 0);
+> 
+> should become much more complex.  I'd say that, probably, developing
+> an entirely new sub-set of API would be simpler.
 
-Rename stmmac_xpcs_setup() to stmmac_pcs_setup() and move the conditional
-call to stmmac_xpcs_setup() inside the function itself.
+We could easily add a setparams interface for acomp to support
+this.  The form of parameters would be specific to each individual
+algorithm (but obviously all drivers for the same algorithm must
+use the same format).
 
-Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-Co-developed-by: Romain Gantois <romain.gantois@bootlin.com>
-Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac.h      |  2 +-
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 10 ++++----
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 28 ++++++++++++++---------
- 3 files changed, 22 insertions(+), 18 deletions(-)
+Let me hack something up for you.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac.h b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-index badfe686a5702..ed38099ca7406 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac.h
-@@ -360,7 +360,7 @@ enum stmmac_state {
- int stmmac_mdio_unregister(struct net_device *ndev);
- int stmmac_mdio_register(struct net_device *ndev);
- int stmmac_mdio_reset(struct mii_bus *mii);
--int stmmac_xpcs_setup(struct mii_bus *mii);
-+int stmmac_pcs_setup(struct net_device *ndev);
- void stmmac_pcs_clean(struct net_device *ndev);
- void stmmac_set_ethtool_ops(struct net_device *netdev);
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 0ac99c132733d..ef285b3c56ab9 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -7754,11 +7754,9 @@ int stmmac_dvr_probe(struct device *device,
- 	if (priv->plat->speed_mode_2500)
- 		priv->plat->speed_mode_2500(ndev, priv->plat->bsp_priv);
- 
--	if (priv->plat->mdio_bus_data && priv->plat->mdio_bus_data->has_xpcs) {
--		ret = stmmac_xpcs_setup(priv->mii);
--		if (ret)
--			goto error_xpcs_setup;
--	}
-+	ret = stmmac_pcs_setup(ndev);
-+	if (ret)
-+		goto error_pcs_setup;
- 
- 	ret = stmmac_phy_setup(priv);
- 	if (ret) {
-@@ -7791,7 +7789,7 @@ int stmmac_dvr_probe(struct device *device,
- 	phylink_destroy(priv->phylink);
- error_phy_setup:
- 	stmmac_pcs_clean(ndev);
--error_xpcs_setup:
-+error_pcs_setup:
- 	if (priv->hw->pcs != STMMAC_PCS_TBI &&
- 	    priv->hw->pcs != STMMAC_PCS_RTBI)
- 		stmmac_mdio_unregister(ndev);
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index 73ba9901a4439..778d79cdb2e6d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -495,31 +495,37 @@ int stmmac_mdio_reset(struct mii_bus *bus)
- 	return 0;
- }
- 
--int stmmac_xpcs_setup(struct mii_bus *bus)
-+int stmmac_pcs_setup(struct net_device *ndev)
- {
--	struct net_device *ndev = bus->priv;
- 	struct stmmac_priv *priv;
- 	struct dw_xpcs *xpcs;
-+	int ret = -ENODEV;
- 	int mode, addr;
- 
- 	priv = netdev_priv(ndev);
- 	mode = priv->plat->phy_interface;
- 
--	/* Try to probe the XPCS by scanning all addresses. */
--	for (addr = 0; addr < PHY_MAX_ADDR; addr++) {
--		xpcs = xpcs_create_mdiodev(bus, addr, mode);
--		if (IS_ERR(xpcs))
--			continue;
-+	if (priv->plat->mdio_bus_data && priv->plat->mdio_bus_data->has_xpcs) {
-+		/* Try to probe the XPCS by scanning all addresses */
-+		for (addr = 0; addr < PHY_MAX_ADDR; addr++) {
-+			xpcs = xpcs_create_mdiodev(priv->mii, addr, mode);
-+			if (IS_ERR(xpcs))
-+				continue;
- 
--		priv->hw->xpcs = xpcs;
--		break;
-+			ret = 0;
-+			break;
-+		}
-+	} else {
-+		return 0;
- 	}
- 
--	if (!priv->hw->xpcs) {
-+	if (ret) {
- 		dev_warn(priv->device, "No xPCS found\n");
--		return -ENODEV;
-+		return ret;
- 	}
- 
-+	priv->hw->xpcs = xpcs;
-+
- 	return 0;
- }
- 
-
+Cheers,
 -- 
-2.44.0
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
