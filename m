@@ -1,243 +1,89 @@
-Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C306D5339A
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 08:37:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51EA5339A;
+	Fri, 10 May 2024 08:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715330278; cv=none; b=jAQNtb+EfudX9Zd5aFoyO1sFzAEnO2aSiJZouCh19aeGlSIRXMxq+5ce8CJitQiM2mI1+qtB5Gpbu3BTAZxoG6e27r2JLaizkdkM4qzDtmvYb82QUnnXGNcWBXYXXIPJMSE16rhvq7yKjA9zBMdzRj4uyd8zOpj5P4+wNEIJpbo=
+	t=1715330294; cv=none; b=RXtRQvV25ng0ljJztXybyzVY5C6AqRYnek3zjM8jSzSTVro/Sx84OMOxHUQ3Zf9yra+oSYQ196EMlWO2EgV/qkFi2t2YGz2separnQIy59yPFySuT1/l2JRsYl/9Ef8CzzteVWA/hmnLjovF+2rRiIu+qiBVt0xZQslw5Rb4/J4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715330278; c=relaxed/simple;
-	bh=D6MqpekUEL0sSXzIVwtxlgQvE9xvL+OOtP7S3xFSxbk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H5naUULHy51fYxVzmIJd0p8Hbk6LkgqZi81PUT+IZotJ9lZSA8qNtfdm044mq+ugwtXRoim/lxsMNsq9pd0KaVsJwoFlJjI3E0k2Pe8dnimk/fLI9Um/msmAbcNuH5uv5g/HVq7PAe0mSZI/7IJJSXi7J3lssxh+zqowd+sVVPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VYESdqjU; arc=none smtp.client-ip=209.85.219.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VYESdqjU"
-Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-de462f3d992so1835073276.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 01:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715330276; x=1715935076; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/tC+GCN44EEZRchaMTsHP5n1JMgFOgSzdTOREHbqQhI=;
-        b=VYESdqjUJUgOO0LbiyXqPq3vMYlePD8NISdDey7Qc8tF2QGT2qqrahItHq6fMfwUOS
-         Ste0JixeVNrNFceML3Q0RL47IffgTIlyONJL3/uir0KObGk2Q817++n+O6TSehIHoQNG
-         kvS5ab57bLFIjOwvk23n+a9Ut/FotS51cSpPG5NjnA1ZvOnSWmrj9sIOSjkv5ssF5rNr
-         iRWglxQyheqErB6Hq5Rxmy+wt4FYOMhG3f6ixn6uCQu6kK2NC8dxI1lsjYrfMZa2DBjS
-         QBxwarmM7A4G8aM/RcFbrUx34/Ka9TSY5Abd3HcYDKA7dNFcbVRQ1BiEP5pcFt3BYta1
-         7DrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715330276; x=1715935076;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/tC+GCN44EEZRchaMTsHP5n1JMgFOgSzdTOREHbqQhI=;
-        b=AcAkFZr10tzYWrjmislD/BSojFvQNiv8RjIOm3OZLNpAcrcfE27xLVR6hStf5s1scG
-         WEf8x3fkJ5P8e5rhl9rRAKEF0RV/p65+g0LhWpQZwRLV8XnsA6F2/CLwooLyRnq+gyDI
-         ETX5CveLC2FGZNbmUS8Jf2AYciXctajDsZHX0U0/andE5/In7iwWbcUi/9b+ZFjMdRub
-         t0bk0FmOOV5VWXfODyKhQPQxNc8dJAdVWfanriq1QUqGe63QR6o6dIDbiTCmCXp9nNXz
-         SNlVx0Vae4aGRDt9LNUtfpMn3VuLUO8VFg1lM+RV3B44Q+NTztj8V6i9GJFelp4q76/7
-         m84g==
-X-Forwarded-Encrypted: i=1; AJvYcCVKprsEx5HUGhpJJtVNbErzc7/acKpk6koo1A76MFt1KbGAaxg0cS39J3Evr2SEO8/xtDEQQk8xhGUVwWTYHj9uXRg1fICGkSrB98tV
-X-Gm-Message-State: AOJu0YzGMjU838m7FdedIqidmS8xIL5IEO9hyvCNBB3Ub/DDYdL1WzSK
-	GuX01QWIXTLHg5I7WkB8CYvzI6klhPQB9aFIIkgysro9cQDhFqwPdEBNqCX5CL5H5/m6kfg5KMt
-	s8siUEAZ5W/cSSlkg82EHJZoGynRreE/KPngSNQ==
-X-Google-Smtp-Source: AGHT+IET5/u7vcEkHgwhA2M2F4hEEgTYB63BmDSsSAmJF8lejgW48Dvwqv/0BRckb7KXT+yc1pHf+StnjzTyAKBQdK0=
-X-Received: by 2002:a25:c583:0:b0:de7:61db:9fa0 with SMTP id
- 3f1490d57ef6-dee4f2e35b4mr2224213276.22.1715330275768; Fri, 10 May 2024
- 01:37:55 -0700 (PDT)
+	s=arc-20240116; t=1715330294; c=relaxed/simple;
+	bh=OoaGjiTfFRyZbV8sGqmZGR1G4m2IHxOtwyPSE8x1PAA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rS4ph2/MzSaukvxa7op8pGAIkM8r/RPSc9SQ2WdMXpym2akmMeAbLAEe1k54ofncoF0JGwUWzRfpglWDvL5k75+qPP5h2eiJ1JYuMsTlO4e5u10yFXYBL8K5qIN5z6TWo5HriniythsaDjomjgjwsv/hPWK3Hrb6YYRlUrLuPrk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowAC3vACX2z1mdfUMCg--.13096S2;
+	Fri, 10 May 2024 16:32:24 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: andersson@kernel.org,
+	konrad.dybcio@linaro.org
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] soc: qcom: pmic_glink: Handle the return value of pmic_glink_init
+Date: Fri, 10 May 2024 16:31:56 +0800
+Message-Id: <20240510083156.1996783-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2eb72832e852c80e5c11cd69e7d2f14cefd8b1cb.1712903998.git.viresh.kumar@linaro.org>
- <e6fc06eb-fe52-4cb3-b412-a602369ee875@leemhuis.info>
-In-Reply-To: <e6fc06eb-fe52-4cb3-b412-a602369ee875@leemhuis.info>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Fri, 10 May 2024 10:37:18 +0200
-Message-ID: <CAPDyKFoHoKK-RZsGwnZhbW9_ZRQtL1MFZBuVVLMx-MxL2cQQbw@mail.gmail.com>
-Subject: Re: [PATCH V2] OPP: Fix required_opp_tables for multiple genpds using
- same table
-To: Thorsten Leemhuis <regressions@leemhuis.info>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Viresh Kumar <vireshk@kernel.org>, 
-	Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, 
-	Vladimir Lypak <vladimir.lypak@gmail.com>, linux-kernel@vger.kernel.org, 
-	Linux kernel regressions list <regressions@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowAC3vACX2z1mdfUMCg--.13096S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Jw1rury5Cw47XryrAr1UKFg_yoWDCFcE9r
+	n7ZFy7Xr4jgrsxK3W7ur13u34SkFZ0vwsaqa1SqF9xtasxJw40qr4UZF13CFy5Xw18ZF1D
+	KryDGryfAryI9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb2kFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r106r15McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8ZwCF
+	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+	r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+	1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvE
+	x4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUjwL05UUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Thu, 9 May 2024 at 14:35, Thorsten Leemhuis
-<regressions@leemhuis.info> wrote:
->
->
->
-> On 12.04.24 08:41, Viresh Kumar wrote:
-> > The required_opp_tables parsing is not perfect, as the OPP core does the
-> > parsing solely based on the DT node pointers.
-> >
-> > The core sets the required_opp_tables entry to the first OPP table in
-> > the "opp_tables" list, that matches with the node pointer.
-> >
-> > If the target DT OPP table is used by multiple devices and they all
-> > create separate instances of 'struct opp_table' from it, then it is
-> > possible that the required_opp_tables entry may be set to the incorrect
-> > sibling device.
-> >
-> > Unfortunately, there is no clear way to initialize the right values
-> > during the initial parsing and we need to do this at a later point of
-> > time.
-> >
-> > Cross check the OPP table again while the genpds are attached and fix
-> > them if required.
-> >
-> > Also add a new API for the genpd core to fetch the device pointer for
-> > the genpd.
-> >
-> > Cc: Thorsten Leemhuis <regressions@leemhuis.info>
-> > Reported-by: Vladimir Lypak <vladimir.lypak@gmail.com>
-> > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218682
->
-> Did this fall through the cracks? Just wondering, as from here it looks
-> like for about four weeks now nothing happened to fix the regression
-> linked above. But I might have missed something. Or is everybody waiting
-> for a test from the reporter?
->
-> Ciao, Thorsten
+As platform_driver_register() and register_rpmsg_driver() can return
+error numbers, it should be better to check the return value and deal
+with the exception.
 
-Hi Thorsten,
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ drivers/soc/qcom/pmic_glink.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-I have chatted a bit with Viresh about this problem offlist, while
-both me and him are/have been on vacations. Sorry for the delay and
-confusion.
+diff --git a/drivers/soc/qcom/pmic_glink.c b/drivers/soc/qcom/pmic_glink.c
+index 40fb09d69014..8534a9692c45 100644
+--- a/drivers/soc/qcom/pmic_glink.c
++++ b/drivers/soc/qcom/pmic_glink.c
+@@ -369,8 +369,17 @@ static struct platform_driver pmic_glink_driver = {
+ 
+ static int pmic_glink_init(void)
+ {
+-	platform_driver_register(&pmic_glink_driver);
+-	register_rpmsg_driver(&pmic_glink_rpmsg_driver);
++	int ret;
++
++	ret = platform_driver_register(&pmic_glink_driver);
++	if (ret < 0)
++		return ret;
++
++	ret = register_rpmsg_driver(&pmic_glink_rpmsg_driver);
++	if (ret < 0) {
++		platform_driver_unregister(&pmic_glink_driver);
++		return ret;
++	}
+ 
+ 	return 0;
+ }
+-- 
+2.25.1
 
-The latest update from my side is that I am working on a solution,
-that aim to remove the entire dev|devm_pm_opp_detach_genpd() API.
-Instead, the plan is to move consumer drivers to use
-dev_pm_domain_attach_list() to attach multiple PM domains per device.
-When it comes to hooking up the required-opps-tables/devs, I think
-genpd should be able to manage this during the device attach process.
-In this way, consumer drivers shouldn't need to care about this at
-all.
-
-That said, I am hoping that $subject patch should not be needed.
-Although, I need a bit more time before I am ready to post a patchset
-for the above.
-
-What do you think?
-
-Kind regards
-Uffe
-
->
->
-> > Co-developed-by: Vladimir Lypak <vladimir.lypak@gmail.com>
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> > V2:
-> > - Fix an `if` condition.
-> > - s/Bugzilla/Closes/ and change ordering.
-> >
-> >  drivers/opp/core.c        | 31 ++++++++++++++++++++++++++++++-
-> >  drivers/pmdomain/core.c   | 10 ++++++++++
-> >  include/linux/pm_domain.h |  6 ++++++
-> >  3 files changed, 46 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-> > index e233734b7220..cb4611fe1b5b 100644
-> > --- a/drivers/opp/core.c
-> > +++ b/drivers/opp/core.c
-> > @@ -2394,7 +2394,8 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
-> >  static int _opp_attach_genpd(struct opp_table *opp_table, struct device *dev,
-> >                       const char * const *names, struct device ***virt_devs)
-> >  {
-> > -     struct device *virt_dev;
-> > +     struct device *virt_dev, *gdev;
-> > +     struct opp_table *genpd_table;
-> >       int index = 0, ret = -EINVAL;
-> >       const char * const *name = names;
-> >
-> > @@ -2427,6 +2428,34 @@ static int _opp_attach_genpd(struct opp_table *opp_table, struct device *dev,
-> >                       goto err;
-> >               }
-> >
-> > +             /*
-> > +              * The required_opp_tables parsing is not perfect, as the OPP
-> > +              * core does the parsing solely based on the DT node pointers.
-> > +              * The core sets the required_opp_tables entry to the first OPP
-> > +              * table in the "opp_tables" list, that matches with the node
-> > +              * pointer.
-> > +              *
-> > +              * If the target DT OPP table is used by multiple devices and
-> > +              * they all create separate instances of 'struct opp_table' from
-> > +              * it, then it is possible that the required_opp_tables entry
-> > +              * may be set to the incorrect sibling device.
-> > +              *
-> > +              * Cross check it again and fix if required.
-> > +              */
-> > +             gdev = dev_to_genpd_dev(virt_dev);
-> > +             if (IS_ERR(gdev))
-> > +                     return PTR_ERR(gdev);
-> > +
-> > +             genpd_table = _find_opp_table(gdev);
-> > +             if (!IS_ERR(genpd_table)) {
-> > +                     if (genpd_table != opp_table->required_opp_tables[index]) {
-> > +                             dev_pm_opp_put_opp_table(opp_table->required_opp_tables[index]);
-> > +                             opp_table->required_opp_tables[index] = genpd_table;
-> > +                     } else {
-> > +                             dev_pm_opp_put_opp_table(genpd_table);
-> > +                     }
-> > +             }
-> > +
-> >               /*
-> >                * Add the virtual genpd device as a user of the OPP table, so
-> >                * we can call dev_pm_opp_set_opp() on it directly.
-> > diff --git a/drivers/pmdomain/core.c b/drivers/pmdomain/core.c
-> > index 4215ffd9b11c..c40eda92a85a 100644
-> > --- a/drivers/pmdomain/core.c
-> > +++ b/drivers/pmdomain/core.c
-> > @@ -184,6 +184,16 @@ static struct generic_pm_domain *dev_to_genpd(struct device *dev)
-> >       return pd_to_genpd(dev->pm_domain);
-> >  }
-> >
-> > +struct device *dev_to_genpd_dev(struct device *dev)
-> > +{
-> > +     struct generic_pm_domain *genpd = dev_to_genpd(dev);
-> > +
-> > +     if (IS_ERR(genpd))
-> > +             return ERR_CAST(genpd);
-> > +
-> > +     return &genpd->dev;
-> > +}
-> > +
-> >  static int genpd_stop_dev(const struct generic_pm_domain *genpd,
-> >                         struct device *dev)
-> >  {
-> > diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-> > index 772d3280d35f..f24546a3d3db 100644
-> > --- a/include/linux/pm_domain.h
-> > +++ b/include/linux/pm_domain.h
-> > @@ -260,6 +260,7 @@ int pm_genpd_remove_subdomain(struct generic_pm_domain *genpd,
-> >  int pm_genpd_init(struct generic_pm_domain *genpd,
-> >                 struct dev_power_governor *gov, bool is_off);
-> >  int pm_genpd_remove(struct generic_pm_domain *genpd);
-> > +struct device *dev_to_genpd_dev(struct device *dev);
-> >  int dev_pm_genpd_set_performance_state(struct device *dev, unsigned int state);
-> >  int dev_pm_genpd_add_notifier(struct device *dev, struct notifier_block *nb);
-> >  int dev_pm_genpd_remove_notifier(struct device *dev);
-> > @@ -307,6 +308,11 @@ static inline int pm_genpd_remove(struct generic_pm_domain *genpd)
-> >       return -EOPNOTSUPP;
-> >  }
-> >
-> > +static inline struct device *dev_to_genpd_dev(struct device *dev)
-> > +{
-> > +     return ERR_PTR(-EOPNOTSUPP);
-> > +}
-> > +
-> >  static inline int dev_pm_genpd_set_performance_state(struct device *dev,
-> >                                                    unsigned int state)
-> >  {
