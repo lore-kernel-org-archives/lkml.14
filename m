@@ -1,39 +1,39 @@
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CC3015ECDF;
-	Fri, 10 May 2024 07:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DC2115ECEC;
+	Fri, 10 May 2024 07:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715326661; cv=none; b=llHSH73SReM8kAqzJUoWRidXE/IB2LivCzpK2evrC3PeZ1JTxhOpR5m1ueOFQ56MDLcen6bGNFcTybk7m0CL+siAT82Dd2SIuCNIctSTKlDODHEKzXMNX2cMesW1OZI05n7/3O8ngwe2moWPLWzHF3Jq+HiqbshKjFyDrOxcvu8=
+	t=1715326663; cv=none; b=qu1It+Yxywva7pygjpv1VoLZR2Vq5tkndLzyH/50Ffcg105At4fFELCrhhi69kZjl7x/wuM7wuyK80t+OOLb0DQ+KmhmD+GlYoFXQkbDfOzZ+K8+huNjUTg2fYgj5UrexvVGIb+bLHie+M7nL2CykzaDueW3kMIdFPObUcb0pMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715326661; c=relaxed/simple;
-	bh=WfbHQ9J7Vj6Au6Wu1gSPNi7Hq04hHOwQv7EbexUSc80=;
+	s=arc-20240116; t=1715326663; c=relaxed/simple;
+	bh=8ENOqewMW99QWcS2EvbxlHeThnWJBf0dwQB/ui5W9gg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=BZDNkhUyfHQrnt2GlxfsWdnvdb4VdyCk37LvoxnrAnyb79WvGz7MemhoJsJWXY568fhiElXGi7bXG3g3Ewp8KZ6WUDtluso+laHy9VEUCWhtrjs1AMPcCLp0QQxBixqbuKtXxXfPeSEF2OO6TSizpM04ZGqZ9vLJTlhrqYaEr+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jGW2gCmV; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=fOtuyEHkQfTjRZ6dt3Tyj0fycC5HWKpDapkkdt1edZWaz9Dq3XiqX+/vn/Wg6ArfvvcIJv0l9w+rvwS+ceiceuWQ+umwBgvLUcNCtyjg+1IyigxYdO3WA17j0bLVSwm0U+M7L5I5qpI3ueGnyBwYGPsezpo7IitJ1W6w4MrWZwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LqDnZnJb; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jGW2gCmV"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 66B1824000B;
-	Fri, 10 May 2024 07:37:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LqDnZnJb"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A471F240002;
+	Fri, 10 May 2024 07:37:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715326657;
+	t=1715326652;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=V7+0uNrudWCYDEwJNq5iDZw6vcb4ldKLdBbxspu2IAY=;
-	b=jGW2gCmV3ThXUnNrfZF0SfU1rOsvJSUbMg2BP6DK1fPpjjOr6KPlwCHrtRcDvIIh4bjoCS
-	E6B9fGmUCGPiE3Dy+d2oxjTmrEO24EzT7E16hGClCCdpldDlV1mqClmr6Pa1+IgPts0ecy
-	Ja9K9+/jnE96gMptFEhfEy7poRbq8L0pbZaLXQ7WMCYEd6hApaRZBRWpXRGqtQ51UzNJfh
-	eecuzk2KUPy5YxDcQNOSXydHfxl4yVTAyJoo2eaSuE0LZzMTBtATHCb4nMQLPLk6O3wE4v
-	OIwfV1u6TlrbvgMZMKklh6BNUasCrfvvxRrVoCbfP4iR2HsiA9SAEQCCPM2eQA==
+	bh=eXa4EdnQqRxUOEPvkBPgsUUIstZOOeI7Xe83F05iy1I=;
+	b=LqDnZnJbZthewQjg+2uUE69ksHn0nPImSO221PykvOnTnEr3tDzquCTqZdo0iJNyu/O0CO
+	G6XibLEpECB1Na8bSsLpvRgya6UsYQDaLVPYMdemnB8BmQCd1M66WdSzP0tV0xS0trq6Tc
+	9jI1wDf2Bj9z6yhVSELCJWvb50w+Irs+LV8agz5mV2b90y2keTd36lt1zjcNTjZRRitZAM
+	L2E8xRuQ3T566BBQ7b6RTd0fo0FlgbYMKQsS8uQFgXtINuyEWiIg18/QXb4iNfNgyr91FV
+	c1olN3qAwCiI0LcJ/0icwy4T3chG6V1zNg6vCVKratkF6kz96/JtVFlgrr/ZEg==
 From: Romain Gantois <romain.gantois@bootlin.com>
-Date: Fri, 10 May 2024 09:38:12 +0200
-Subject: [PATCH net-next v6 5/7] net: stmmac: dwmac-socfpga: use
- pcs_init/pcs_exit
+Date: Fri, 10 May 2024 09:38:08 +0200
+Subject: [PATCH net-next v6 1/7] dt-bindings: net: renesas,rzn1-gmac:
+ Document RZ/N1 GMAC support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,8 +41,8 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240510-rzn1-gmac1-v6-5-b63942be334c@bootlin.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240510-rzn1-gmac1-v6-1-b63942be334c@bootlin.com>
 References: <20240510-rzn1-gmac1-v6-0-b63942be334c@bootlin.com>
 In-Reply-To: <20240510-rzn1-gmac1-v6-0-b63942be334c@bootlin.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -62,176 +62,99 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
  linux-arm-kernel@lists.infradead.org, 
- "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
- Maxime Chevallier <maxime.chevallier@bootlin.com>, 
  Romain Gantois <romain.gantois@bootlin.com>
 X-Mailer: b4 0.13.0
 X-GND-Sasl: romain.gantois@bootlin.com
 
-From: "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>
+From: Clément Léger <clement.leger@bootlin.com>
 
-Use the newly introduced pcs_init() and pcs_exit() operations to
-create and destroy the PCS instance at a more appropriate moment during
-the driver lifecycle, thereby avoiding publishing a network device to
-userspace that has not yet finished its PCS initialisation.
+The RZ/N1 series of MPUs feature up to two Gigabit Ethernet controllers.
+These controllers are based on Synopsys IPs. They can be connected to
+RZ/N1 RGMII/RMII converters.
 
-There are other similar issues with this driver which remain
-unaddressed, but these are out of scope for this patch.
+Add a binding that describes these GMAC devices.
 
-Signed-off-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-[rgantois: removed second parameters of new callbacks]
+Signed-off-by: Clément Léger <clement.leger@bootlin.com>
+[rgantois: commit log]
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Romain Gantois <romain.gantois@bootlin.com>
 ---
- .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    | 107 ++++++++++-----------
- 1 file changed, 53 insertions(+), 54 deletions(-)
+ .../devicetree/bindings/net/renesas,rzn1-gmac.yaml | 66 ++++++++++++++++++++++
+ 1 file changed, 66 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-index 12b4a80ea3aa1..b3d45f9dfb556 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -379,6 +379,56 @@ static int socfpga_gen10_set_phy_mode(struct socfpga_dwmac *dwmac)
- 	return 0;
- }
- 
-+static int socfpga_dwmac_pcs_init(struct stmmac_priv *priv)
-+{
-+	struct socfpga_dwmac *dwmac = priv->plat->bsp_priv;
-+	struct regmap_config pcs_regmap_cfg = {
-+		.reg_bits = 16,
-+		.val_bits = 16,
-+		.reg_shift = REGMAP_UPSHIFT(1),
-+	};
-+	struct mdio_regmap_config mrc;
-+	struct regmap *pcs_regmap;
-+	struct phylink_pcs *pcs;
-+	struct mii_bus *pcs_bus;
+diff --git a/Documentation/devicetree/bindings/net/renesas,rzn1-gmac.yaml b/Documentation/devicetree/bindings/net/renesas,rzn1-gmac.yaml
+new file mode 100644
+index 0000000000000..d9a8d586e260c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/renesas,rzn1-gmac.yaml
+@@ -0,0 +1,66 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/renesas,rzn1-gmac.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	if (!dwmac->tse_pcs_base)
-+		return 0;
++title: Renesas GMAC
 +
-+	pcs_regmap = devm_regmap_init_mmio(priv->device, dwmac->tse_pcs_base,
-+					   &pcs_regmap_cfg);
-+	if (IS_ERR(pcs_regmap))
-+		return PTR_ERR(pcs_regmap);
++maintainers:
++  - Romain Gantois <romain.gantois@bootlin.com>
 +
-+	memset(&mrc, 0, sizeof(mrc));
-+	mrc.regmap = pcs_regmap;
-+	mrc.parent = priv->device;
-+	mrc.valid_addr = 0x0;
-+	mrc.autoscan = false;
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - renesas,r9a06g032-gmac
++          - renesas,rzn1-gmac
++  required:
++    - compatible
 +
-+	/* Can't use ndev->name here because it will not have been initialised,
-+	 * and in any case, the user can rename network interfaces at runtime.
-+	 */
-+	snprintf(mrc.name, MII_BUS_ID_SIZE, "%s-pcs-mii",
-+		 dev_name(priv->device));
-+	pcs_bus = devm_mdio_regmap_register(priv->device, &mrc);
-+	if (IS_ERR(pcs_bus))
-+		return PTR_ERR(pcs_bus);
++allOf:
++  - $ref: snps,dwmac.yaml#
 +
-+	pcs = lynx_pcs_create_mdiodev(pcs_bus, 0);
-+	if (IS_ERR(pcs))
-+		return PTR_ERR(pcs);
++properties:
++  compatible:
++    items:
++      - enum:
++          - renesas,r9a06g032-gmac
++      - const: renesas,rzn1-gmac
++      - const: snps,dwmac
 +
-+	priv->hw->phylink_pcs = pcs;
-+	return 0;
-+}
++  pcs-handle:
++    description:
++      phandle pointing to a PCS sub-node compatible with
++      renesas,rzn1-miic.yaml#
 +
-+static void socfpga_dwmac_pcs_exit(struct stmmac_priv *priv)
-+{
-+	if (priv->hw->phylink_pcs)
-+		lynx_pcs_destroy(priv->hw->phylink_pcs);
-+}
++required:
++  - compatible
 +
- static int socfpga_dwmac_probe(struct platform_device *pdev)
- {
- 	struct plat_stmmacenet_data *plat_dat;
-@@ -426,6 +476,8 @@ static int socfpga_dwmac_probe(struct platform_device *pdev)
- 	dwmac->ops = ops;
- 	plat_dat->bsp_priv = dwmac;
- 	plat_dat->fix_mac_speed = socfpga_dwmac_fix_mac_speed;
-+	plat_dat->pcs_init = socfpga_dwmac_pcs_init;
-+	plat_dat->pcs_exit = socfpga_dwmac_pcs_exit;
- 
- 	ret = stmmac_dvr_probe(&pdev->dev, plat_dat, &stmmac_res);
- 	if (ret)
-@@ -444,48 +496,6 @@ static int socfpga_dwmac_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_dvr_remove;
- 
--	/* Create a regmap for the PCS so that it can be used by the PCS driver,
--	 * if we have such a PCS
--	 */
--	if (dwmac->tse_pcs_base) {
--		struct regmap_config pcs_regmap_cfg;
--		struct mdio_regmap_config mrc;
--		struct regmap *pcs_regmap;
--		struct mii_bus *pcs_bus;
--
--		memset(&pcs_regmap_cfg, 0, sizeof(pcs_regmap_cfg));
--		memset(&mrc, 0, sizeof(mrc));
--
--		pcs_regmap_cfg.reg_bits = 16;
--		pcs_regmap_cfg.val_bits = 16;
--		pcs_regmap_cfg.reg_shift = REGMAP_UPSHIFT(1);
--
--		pcs_regmap = devm_regmap_init_mmio(&pdev->dev, dwmac->tse_pcs_base,
--						   &pcs_regmap_cfg);
--		if (IS_ERR(pcs_regmap)) {
--			ret = PTR_ERR(pcs_regmap);
--			goto err_dvr_remove;
--		}
--
--		mrc.regmap = pcs_regmap;
--		mrc.parent = &pdev->dev;
--		mrc.valid_addr = 0x0;
--		mrc.autoscan = false;
--
--		snprintf(mrc.name, MII_BUS_ID_SIZE, "%s-pcs-mii", ndev->name);
--		pcs_bus = devm_mdio_regmap_register(&pdev->dev, &mrc);
--		if (IS_ERR(pcs_bus)) {
--			ret = PTR_ERR(pcs_bus);
--			goto err_dvr_remove;
--		}
--
--		stpriv->hw->phylink_pcs = lynx_pcs_create_mdiodev(pcs_bus, 0);
--		if (IS_ERR(stpriv->hw->phylink_pcs)) {
--			ret = PTR_ERR(stpriv->hw->phylink_pcs);
--			goto err_dvr_remove;
--		}
--	}
--
- 	return 0;
- 
- err_dvr_remove:
-@@ -494,17 +504,6 @@ static int socfpga_dwmac_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static void socfpga_dwmac_remove(struct platform_device *pdev)
--{
--	struct net_device *ndev = platform_get_drvdata(pdev);
--	struct stmmac_priv *priv = netdev_priv(ndev);
--	struct phylink_pcs *pcs = priv->hw->phylink_pcs;
--
--	stmmac_pltfr_remove(pdev);
--
--	lynx_pcs_destroy(pcs);
--}
--
- #ifdef CONFIG_PM_SLEEP
- static int socfpga_dwmac_resume(struct device *dev)
- {
-@@ -576,7 +575,7 @@ MODULE_DEVICE_TABLE(of, socfpga_dwmac_match);
- 
- static struct platform_driver socfpga_dwmac_driver = {
- 	.probe  = socfpga_dwmac_probe,
--	.remove_new = socfpga_dwmac_remove,
-+	.remove_new = stmmac_pltfr_remove,
- 	.driver = {
- 		.name           = "socfpga-dwmac",
- 		.pm		= &socfpga_dwmac_pm_ops,
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r9a06g032-sysctrl.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    ethernet@44000000 {
++      compatible = "renesas,r9a06g032-gmac", "renesas,rzn1-gmac", "snps,dwmac";
++      reg = <0x44000000 0x2000>;
++      interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
++                   <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++      interrupt-names = "macirq", "eth_wake_irq", "eth_lpi";
++      clock-names = "stmmaceth";
++      clocks = <&sysctrl R9A06G032_HCLK_GMAC0>;
++      power-domains = <&sysctrl>;
++      snps,multicast-filter-bins = <256>;
++      snps,perfect-filter-entries = <128>;
++      tx-fifo-depth = <2048>;
++      rx-fifo-depth = <4096>;
++      pcs-handle = <&mii_conv1>;
++      phy-mode = "mii";
++    };
++
++...
 
 -- 
 2.44.0
