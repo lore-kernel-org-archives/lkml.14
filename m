@@ -1,638 +1,421 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0134F171E76;
-	Fri, 10 May 2024 16:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152251A2C3A;
+	Fri, 10 May 2024 16:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715358088; cv=none; b=CYlUDHl77CmMfVH0Kpe56oQXOz0bB4+Wxc6WnMVqB8MqFc62xqW36byijZvMD15aFqFsRW6jmVjPO+47wRtyjlTV1sumyxvsGoE20ahG8zYMo8v9XbZM5VteJud1YESZy7ebQNT+mPcYKhLu1zz+8lkEEDB0/m02LAl25ESgd6Q=
+	t=1715358120; cv=none; b=nt6RTrZ4XBOM5AXymHjtLk8BPSEX0Z2CsHOylzLoQVmsMgXPIsWwnVUKSzk+Qson+14j0JhwUuK0sA6LtbChL7t6BlA05Inx2x9wmZeRuzebbkVzyAL3SehI2U4KA2bV8a26fP40YWZOXZO3rlL34lVyZDsvKcLC7A3fqbQJQZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715358088; c=relaxed/simple;
-	bh=vMlkPeH6JxL5b/yKFLD7CelBd/orVqGedcAfgjF9ftA=;
+	s=arc-20240116; t=1715358120; c=relaxed/simple;
+	bh=t65f4jnK9Y0kArp0L6VpbmFAs/ipV4rc1P0xnazLwXg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CPICEDXDuoGf9F/OENx71DvAf79fZNEW/U9M6bEkmjcr3n/pMlyU1Tpi1UP51RPrcs6syXiRZe78yFIQTppR21riJtRQDkiTHP9WXvyBvkXR3PddBmamwxhsai3E7jdLWuIW62QaNBHacNotWBBynfHh3PgSUJZX751ivXGgCtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PUL9pVBF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=g4MpkWL1; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=qqJ224wmzrEj1218xcSt8LafQ7yWZv0DOZuQ7RUJ8DJMyx7gn9itSpxyHlV0s1hx516yxUbpN3KTWLy10s3EDyaDaP24vuYEjpROcn6hVvLs5qzDJB+AHa0UHeXFk2Hmhb+62RWrwY0h3mvhIJkuJXx/HflzgT79/0KxMb5WXgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fmb5TIUj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PUL9pVBF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="g4MpkWL1"
-Date: Fri, 10 May 2024 18:21:21 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1715358083;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8nVPtJtktHi7PW4FK7Jr4tokdZqphPa5sW/ri//XpwU=;
-	b=PUL9pVBFj8qmwcguXTyiWsIcu8RMZfKVzkgAD1yhmEAZH07fiILItb43gHbv8PVkU73EV7
-	d4a4Fxfv4KYfXL+C+kj9gd4TcNBWopPy4Nve4RlFn6tSSoIjcksNk5mFUf0Rj/AN07GCQa
-	HmFVnhDF4Npf/bh0gIzhxPABv2el8TsnRn1q1FihMybmbISQfwA2936pCF0tvYEO95yf+U
-	MyKdMQWnzdvI2BX/M3V1mGXaxsHmATi08kFZFWdwNWK6JnZHUzlkXOoAU86dahJvsag0Ms
-	27cJx+PnXDhqKx/osOcR56r6z3AHlAV9M56gh20EBPnoTRwPisdp0CI1aHoPSA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1715358083;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8nVPtJtktHi7PW4FK7Jr4tokdZqphPa5sW/ri//XpwU=;
-	b=g4MpkWL1hcNi9KBbX+vqf2Ir5zKcOE3KsyiaeySJ6RwbztNm1mMh/yPkOxAebmKos/DKe+
-	xphoMwO8jBH9FHBA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-	Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Network Development <netdev@vger.kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Eric Dumazet <edumazet@google.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fmb5TIUj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 876CBC113CC;
+	Fri, 10 May 2024 16:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715358119;
+	bh=t65f4jnK9Y0kArp0L6VpbmFAs/ipV4rc1P0xnazLwXg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Fmb5TIUjJ4cLj3bc7HmEKIirJtt7QqidVefu7pz5XqmAOhl76CobbYOFgtL5ZvWpy
+	 sflTYymAun5jLWet2ilqZym4E94K9fnX+Y15uzLF+wXNdS9Ruh+P6maKdUzon5XLxF
+	 x4nO6BTZWkN8dvLoZMEQjtFCJJlvc6FoIkP5dY8Q5XGAXiVYffpd1k6z0z0Uz6o/Jk
+	 JGB2j/YtDjb04PbDkIyWFk8uIHZlwvCPG5U/kAkgL0Ei7N5UgXfZUZ4McPkb5/aN8T
+	 DRyg4V72E7AjcORZzybmEu4ZeiigeQmoCyOCEiDEKvmWZ2xxoX+gn0Xhuv78h2Gz24
+	 zeedRO4Q9WldQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 20CF1CE094C; Fri, 10 May 2024 09:21:59 -0700 (PDT)
+Date: Fri, 10 May 2024 09:21:59 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Leonardo Bras <leobras@redhat.com>
+Cc: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
 	Frederic Weisbecker <frederic@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>, Will Deacon <will@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>, Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Yonghong Song <yonghong.song@linux.dev>, bpf <bpf@vger.kernel.org>
-Subject: [PATCH net-next 14/15 v2] net: Reference bpf_redirect_info via
- task_struct on PREEMPT_RT.
-Message-ID: <20240510162121.f-tvqcyf@linutronix.de>
-References: <20240503182957.1042122-1-bigeasy@linutronix.de>
- <20240503182957.1042122-15-bigeasy@linutronix.de>
- <87y18mohhp.fsf@toke.dk>
- <CAADnVQJkiwaYXUo+LyKoV96VFFCFL0VY5Jgpuv_0oypksrnciA@mail.gmail.com>
- <20240507123636.cTnT7TvU@linutronix.de>
- <93062ce7-8dfa-48a9-a4ad-24c5a3993b41@kernel.org>
+	Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rcu@vger.kernel.org
+Subject: Re: [RFC PATCH v1 0/2] Avoid rcu_core() if CPU just left guest vcpu
+Message-ID: <a5784417-d65d-45c2-a66f-310a494b9827@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <ZjrClk4Lqw_cLO5A@google.com>
+ <Zjroo8OsYcVJLsYO@LeoBras>
+ <b44962dd-7b8a-4201-90b7-4c39ba20e28d@paulmck-laptop>
+ <ZjsZVUdmDXZOn10l@LeoBras>
+ <ZjuFuZHKUy7n6-sG@google.com>
+ <5fd66909-1250-4a91-aa71-93cb36ed4ad5@paulmck-laptop>
+ <ZjyGefTZ8ThZukNG@LeoBras>
+ <Zjyh-qRt3YewHsdP@LeoBras>
+ <09a8f4f6-a692-4586-bb68-b0a524b7a5d8@paulmck-laptop>
+ <Zj5GEK8bt3061TiD@LeoBras>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <93062ce7-8dfa-48a9-a4ad-24c5a3993b41@kernel.org>
+In-Reply-To: <Zj5GEK8bt3061TiD@LeoBras>
 
-The XDP redirect process is two staged:
-- bpf_prog_run_xdp() is invoked to run a eBPF program which inspects the
-  packet and makes decisions. While doing that, the per-CPU variable
-  bpf_redirect_info is used.
+On Fri, May 10, 2024 at 01:06:40PM -0300, Leonardo Bras wrote:
+> On Thu, May 09, 2024 at 04:45:53PM -0700, Paul E. McKenney wrote:
+> > On Thu, May 09, 2024 at 07:14:18AM -0300, Leonardo Bras wrote:
+> > > On Thu, May 09, 2024 at 05:16:57AM -0300, Leonardo Bras wrote:
+> > 
+> > [ . . . ]
+> > 
+> > > > Here I suppose something like this can take care of not needing to convert 
+> > > > ms -> jiffies every rcu_pending():
+> > > > 
+> > > > +	nocb_patience_delay = msecs_to_jiffies(nocb_patience_delay);
+> > > > 
+> > > 
+> > > Uh, there is more to it, actually. We need to make sure the user 
+> > > understands that we are rounding-down the value to multiple of a jiffy 
+> > > period, so it's not a surprise if the delay value is not exactly the same 
+> > > as the passed on kernel cmdline.
+> > > 
+> > > So something like bellow diff should be ok, as this behavior is explained 
+> > > in the docs, and pr_info() will print the effective value.
+> > > 
+> > > What do you think?
+> > 
+> > Good point, and I have taken your advice on making the documentation
+> > say what it does.
+> 
+> Thanks :)
+> 
+> > 
+> > > Thanks!
+> > > Leo
+> > > 
+> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > > index 0a3b0fd1910e..9a50be9fd9eb 100644
+> > > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > > @@ -4974,20 +4974,28 @@
+> > >                         otherwise be caused by callback floods through
+> > >                         use of the ->nocb_bypass list.  However, in the
+> > >                         common non-flooded case, RCU queues directly to
+> > >                         the main ->cblist in order to avoid the extra
+> > >                         overhead of the ->nocb_bypass list and its lock.
+> > >                         But if there are too many callbacks queued during
+> > >                         a single jiffy, RCU pre-queues the callbacks into
+> > >                         the ->nocb_bypass queue.  The definition of "too
+> > >                         many" is supplied by this kernel boot parameter.
+> > >  
+> > > +       rcutree.nocb_patience_delay= [KNL]
+> > > +                       On callback-offloaded (rcu_nocbs) CPUs, avoid
+> > > +                       disturbing RCU unless the grace period has
+> > > +                       reached the specified age in milliseconds.
+> > > +                       Defaults to zero.  Large values will be capped
+> > > +                       at five seconds. Values rounded-down to a multiple
+> > > +                       of a jiffy period.
+> > > +
+> > >         rcutree.qhimark= [KNL]
+> > >                         Set threshold of queued RCU callbacks beyond which
+> > >                         batch limiting is disabled.
+> > >  
+> > >         rcutree.qlowmark= [KNL]
+> > >                         Set threshold of queued RCU callbacks below which
+> > >                         batch limiting is re-enabled.
+> > >  
+> > >         rcutree.qovld= [KNL]
+> > >                         Set threshold of queued RCU callbacks beyond which
+> > > diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
+> > > index fcf2b4aa3441..62ede401420f 100644
+> > > --- a/kernel/rcu/tree.h
+> > > +++ b/kernel/rcu/tree.h
+> > > @@ -512,20 +512,21 @@ do {                                                              \
+> > >         local_irq_save(flags);                                  \
+> > >         if (rcu_segcblist_is_offloaded(&(rdp)->cblist)) \
+> > >                 raw_spin_lock(&(rdp)->nocb_lock);               \
+> > >  } while (0)
+> > >  #else /* #ifdef CONFIG_RCU_NOCB_CPU */
+> > >  #define rcu_nocb_lock_irqsave(rdp, flags) local_irq_save(flags)
+> > >  #endif /* #else #ifdef CONFIG_RCU_NOCB_CPU */
+> > >  
+> > >  static void rcu_bind_gp_kthread(void);
+> > >  static bool rcu_nohz_full_cpu(void);
+> > > +static bool rcu_on_patience_delay(void);
+> > 
+> > I don't think we need an access function, but will check below.
+> > 
+> > >  /* Forward declarations for tree_stall.h */
+> > >  static void record_gp_stall_check_time(void);
+> > >  static void rcu_iw_handler(struct irq_work *iwp);
+> > >  static void check_cpu_stall(struct rcu_data *rdp);
+> > >  static void rcu_check_gp_start_stall(struct rcu_node *rnp, struct rcu_data *rdp,
+> > >                                      const unsigned long gpssdelay);
+> > >  
+> > >  /* Forward declarations for tree_exp.h. */
+> > >  static void sync_rcu_do_polled_gp(struct work_struct *wp);
+> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+> > > index 340bbefe5f65..639243b0410f 100644
+> > > --- a/kernel/rcu/tree_plugin.h
+> > > +++ b/kernel/rcu/tree_plugin.h
+> > > @@ -5,20 +5,21 @@
+> > >   * or preemptible semantics.
+> > >   *
+> > >   * Copyright Red Hat, 2009
+> > >   * Copyright IBM Corporation, 2009
+> > >   *
+> > >   * Author: Ingo Molnar <mingo@elte.hu>
+> > >   *        Paul E. McKenney <paulmck@linux.ibm.com>
+> > >   */
+> > >  
+> > >  #include "../locking/rtmutex_common.h"
+> > > +#include <linux/jiffies.h>
+> > 
+> > This is already pulled in by the enclosing tree.c file, so it should not
+> > be necessary to include it again. 
+> 
+> Even better :)
+> 
+> > (Or did you get a build failure when
+> > leaving this out?)
+> 
+> I didn't, it's just that my editor complained the symbols were not getting 
+> properly resolved, so I included it and it was fixed. But since clangd is 
+> know to make some mistakes, I should have compile-test'd before adding it.
 
-- Afterwards xdp_do_redirect() is invoked and accesses bpf_redirect_info
-  and it may also access other per-CPU variables like xskmap_flush_list.
+Ah, got it!  ;-)
 
-At the very end of the NAPI callback, xdp_do_flush() is invoked which
-does not access bpf_redirect_info but will touch the individual per-CPU
-lists.
+> > >  static bool rcu_rdp_is_offloaded(struct rcu_data *rdp)
+> > >  {
+> > >         /*
+> > >          * In order to read the offloaded state of an rdp in a safe
+> > >          * and stable way and prevent from its value to be changed
+> > >          * under us, we must either hold the barrier mutex, the cpu
+> > >          * hotplug lock (read or write) or the nocb lock. Local
+> > >          * non-preemptible reads are also safe. NOCB kthreads and
+> > >          * timers have their own means of synchronization against the
+> > > @@ -86,20 +87,33 @@ static void __init rcu_bootup_announce_oddness(void)
+> > >         if (rcu_kick_kthreads)
+> > >                 pr_info("\tKick kthreads if too-long grace period.\n");
+> > >         if (IS_ENABLED(CONFIG_DEBUG_OBJECTS_RCU_HEAD))
+> > >                 pr_info("\tRCU callback double-/use-after-free debug is enabled.\n");
+> > >         if (gp_preinit_delay)
+> > >                 pr_info("\tRCU debug GP pre-init slowdown %d jiffies.\n", gp_preinit_delay);
+> > >         if (gp_init_delay)
+> > >                 pr_info("\tRCU debug GP init slowdown %d jiffies.\n", gp_init_delay);
+> > >         if (gp_cleanup_delay)
+> > >                 pr_info("\tRCU debug GP cleanup slowdown %d jiffies.\n", gp_cleanup_delay);
+> > > +       if (nocb_patience_delay < 0) {
+> > > +               pr_info("\tRCU NOCB CPU patience negative (%d), resetting to zero.\n",
+> > > +                       nocb_patience_delay);
+> > > +               nocb_patience_delay = 0;
+> > > +       } else if (nocb_patience_delay > 5 * MSEC_PER_SEC) {
+> > > +               pr_info("\tRCU NOCB CPU patience too large (%d), resetting to %ld.\n",
+> > > +                       nocb_patience_delay, 5 * MSEC_PER_SEC);
+> > > +               nocb_patience_delay = msecs_to_jiffies(5 * MSEC_PER_SEC);
+> > > +       } else if (nocb_patience_delay) {
+> > > +               nocb_patience_delay = msecs_to_jiffies(nocb_patience_delay);
+> > > +               pr_info("\tRCU NOCB CPU patience set to %d milliseconds.\n",
+> > > +                       jiffies_to_msecs(nocb_patience_delay);
+> > > +       }
+> > 
+> > I just did this here at the end:
+> > 
+> > 	nocb_patience_delay_jiffies = msecs_to_jiffies(nocb_patience_delay);
+> > 
+> > Ah, you are wanting to print out the milliseconds after the rounding
+> > to jiffies.
+> 
+> That's right, just to make sure the user gets the effective patience time, 
+> instead of the before-rounding one, which was on input.
+> 
+> > I am going to hold off on that for the moment, but I hear your request
+> > and I have not yet said "no".  ;-)
+> 
+> Sure :)
+> It's just something I think it's nice to have (as a user).
 
-The per-CPU variables are only used in the NAPI callback hence disabling
-bottom halves is the only protection mechanism. Users from preemptible
-context (like cpu_map_kthread_run()) explicitly disable bottom halves
-for protections reasons.
-Without locking in local_bh_disable() on PREEMPT_RT this data structure
-requires explicit locking.
+If you would like to do a separate patch adding this, here are the
+requirements:
 
-PREEMPT_RT has forced-threaded interrupts enabled and every
-NAPI-callback runs in a thread. If each thread has its own data
-structure then locking can be avoided.
+o	If the current code prints nothing, nothing additional should
+	be printed.
 
-Create a struct bpf_net_context which contains struct bpf_redirect_info.
-Define the variable on stack, use bpf_net_ctx_set() to save a pointer to
-it. Use the __free() annotation to automatically reset the pointer once
-function returns.
-The bpf_net_ctx_set() may nest. For instance a function can be used from
-within NET_RX_SOFTIRQ/ net_rx_action which uses bpf_net_ctx_set() and
-NET_TX_SOFTIRQ which does not. Therefore only the first invocations
-updates the pointer.
-Use bpf_net_ctx_get_ri() as a wrapper to retrieve the current struct
-bpf_redirect_info.
+o	If the rounding ended up with the same value (as it should in
+	systems with HZ=1000), nothing additional should be printed.
 
-On PREEMPT_RT the pointer to bpf_net_context is saved task's
-task_struct. On non-PREEMPT_RT builds the pointer saved in a per-CPU
-variable (which is always NODE-local memory). Using always the
-bpf_net_context approach has the advantage that there is almost zero
-differences between PREEMPT_RT and non-PREEMPT_RT builds.
+o	Your choice as to whether or not you want to print out the
+	jiffies value.
 
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>
-Cc: Eduard Zingerman <eddyz87@gmail.com>
-Cc: Hao Luo <haoluo@google.com>
-Cc: Jesper Dangaard Brouer <hawk@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@kernel.org>
-Cc: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Song Liu <song@kernel.org>
-Cc: Stanislav Fomichev <sdf@google.com>
-Cc: Toke H=C3=B8iland-J=C3=B8rgensen <toke@redhat.com>
-Cc: Yonghong Song <yonghong.song@linux.dev>
-Cc: bpf@vger.kernel.org
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/linux/filter.h | 42 ++++++++++++++++++++++++++++++++-----
- include/linux/sched.h  |  3 +++
- kernel/bpf/cpumap.c    |  3 +++
- kernel/fork.c          |  1 +
- net/bpf/test_run.c     | 11 +++++++++-
- net/core/dev.c         | 19 ++++++++++++++++-
- net/core/filter.c      | 47 +++++++++++++++++++-----------------------
- net/core/lwt_bpf.c     |  3 +++
- 8 files changed, 96 insertions(+), 33 deletions(-)
+o	If the additional message is on a new line, it needs to be
+	indented so that it is clear that it is subordinate to the
+	previous message.
 
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index d5fea03cb6e61..6db5a68db6ee1 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -744,7 +744,39 @@ struct bpf_redirect_info {
- 	struct bpf_nh_params nh;
- };
-=20
--DECLARE_PER_CPU(struct bpf_redirect_info, bpf_redirect_info);
-+struct bpf_net_context {
-+	struct bpf_redirect_info ri;
-+};
-+
-+static inline struct bpf_net_context *bpf_net_ctx_set(struct bpf_net_conte=
-xt *bpf_net_ctx)
-+{
-+	struct task_struct *tsk =3D current;
-+
-+	if (tsk->bpf_net_context !=3D NULL)
-+		return NULL;
-+	tsk->bpf_net_context =3D bpf_net_ctx;
-+	return bpf_net_ctx;
-+}
-+
-+static inline void bpf_net_ctx_clear(struct bpf_net_context *bpf_net_ctx)
-+{
-+	if (bpf_net_ctx)
-+		current->bpf_net_context =3D NULL;
-+}
-+
-+static inline struct bpf_net_context *bpf_net_ctx_get(void)
-+{
-+	return current->bpf_net_context;
-+}
-+
-+static inline struct bpf_redirect_info *bpf_net_ctx_get_ri(void)
-+{
-+	struct bpf_net_context *bpf_net_ctx =3D bpf_net_ctx_get();
-+
-+	return &bpf_net_ctx->ri;
-+}
-+
-+DEFINE_FREE(bpf_net_ctx_clear, struct bpf_net_context *, bpf_net_ctx_clear=
-(_T));
-=20
- /* flags for bpf_redirect_info kern_flags */
- #define BPF_RI_F_RF_NO_DIRECT	BIT(0)	/* no napi_direct on return_frame */
-@@ -1021,21 +1053,21 @@ void bpf_clear_redirect_map(struct bpf_map *map);
-=20
- static inline bool xdp_return_frame_no_direct(void)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
- 	return ri->kern_flags & BPF_RI_F_RF_NO_DIRECT;
- }
-=20
- static inline void xdp_set_return_frame_no_direct(void)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
- 	ri->kern_flags |=3D BPF_RI_F_RF_NO_DIRECT;
- }
-=20
- static inline void xdp_clear_return_frame_no_direct(void)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
- 	ri->kern_flags &=3D ~BPF_RI_F_RF_NO_DIRECT;
- }
-@@ -1591,7 +1623,7 @@ static __always_inline long __bpf_xdp_redirect_map(st=
-ruct bpf_map *map, u64 inde
- 						   u64 flags, const u64 flag_mask,
- 						   void *lookup_elem(struct bpf_map *map, u32 key))
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
- 	const u64 action_mask =3D XDP_ABORTED | XDP_DROP | XDP_PASS | XDP_TX;
-=20
- 	/* Lower bits of the flags are used as return code on lookup failure */
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 6779d3b8f2578..cc9be45de6606 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -53,6 +53,7 @@ struct bio_list;
- struct blk_plug;
- struct bpf_local_storage;
- struct bpf_run_ctx;
-+struct bpf_net_context;
- struct capture_control;
- struct cfs_rq;
- struct fs_struct;
-@@ -1504,6 +1505,8 @@ struct task_struct {
- 	/* Used for BPF run context */
- 	struct bpf_run_ctx		*bpf_ctx;
- #endif
-+	/* Used by BPF for per-TASK xdp storage */
-+	struct bpf_net_context		*bpf_net_context;
-=20
- #ifdef CONFIG_GCC_PLUGIN_STACKLEAK
- 	unsigned long			lowest_stack;
-diff --git a/kernel/bpf/cpumap.c b/kernel/bpf/cpumap.c
-index a8e34416e960f..66974bd027109 100644
---- a/kernel/bpf/cpumap.c
-+++ b/kernel/bpf/cpumap.c
-@@ -240,12 +240,14 @@ static int cpu_map_bpf_prog_run(struct bpf_cpu_map_en=
-try *rcpu, void **frames,
- 				int xdp_n, struct xdp_cpumap_stats *stats,
- 				struct list_head *list)
- {
-+	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
- 	int nframes;
-=20
- 	if (!rcpu->prog)
- 		return xdp_n;
-=20
- 	rcu_read_lock_bh();
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
-=20
- 	nframes =3D cpu_map_bpf_prog_run_xdp(rcpu, frames, xdp_n, stats);
-=20
-@@ -255,6 +257,7 @@ static int cpu_map_bpf_prog_run(struct bpf_cpu_map_entr=
-y *rcpu, void **frames,
- 	if (unlikely(!list_empty(list)))
- 		cpu_map_bpf_prog_run_skb(rcpu, list, stats);
-=20
-+	bpf_net_ctx_clear(bpf_net_ctx);
- 	rcu_read_unlock_bh(); /* resched point, may call do_softirq() */
-=20
- 	return nframes;
-diff --git a/kernel/fork.c b/kernel/fork.c
-index aebb3e6c96dc6..aa61c9bca62be 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2355,6 +2355,7 @@ __latent_entropy struct task_struct *copy_process(
- 	RCU_INIT_POINTER(p->bpf_storage, NULL);
- 	p->bpf_ctx =3D NULL;
- #endif
-+	p->bpf_net_context =3D  NULL;
-=20
- 	/* Perform scheduler related setup. Assign this task to a CPU. */
- 	retval =3D sched_fork(clone_flags, p);
-diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-index f6aad4ed2ab2f..600cc8e428c1a 100644
---- a/net/bpf/test_run.c
-+++ b/net/bpf/test_run.c
-@@ -283,9 +283,10 @@ static int xdp_recv_frames(struct xdp_frame **frames, =
-int nframes,
- static int xdp_test_run_batch(struct xdp_test_data *xdp, struct bpf_prog *=
-prog,
- 			      u32 repeat)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
- 	int err =3D 0, act, ret, i, nframes =3D 0, batch_sz;
- 	struct xdp_frame **frames =3D xdp->frames;
-+	struct bpf_redirect_info *ri;
- 	struct xdp_page_head *head;
- 	struct xdp_frame *frm;
- 	bool redirect =3D false;
-@@ -295,6 +296,8 @@ static int xdp_test_run_batch(struct xdp_test_data *xdp=
-, struct bpf_prog *prog,
- 	batch_sz =3D min_t(u32, repeat, xdp->batch_size);
-=20
- 	local_bh_disable();
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
-+	ri =3D bpf_net_ctx_get_ri();
- 	xdp_set_return_frame_no_direct();
-=20
- 	for (i =3D 0; i < batch_sz; i++) {
-@@ -359,6 +362,7 @@ static int xdp_test_run_batch(struct xdp_test_data *xdp=
-, struct bpf_prog *prog,
- 	}
-=20
- 	xdp_clear_return_frame_no_direct();
-+	bpf_net_ctx_clear(bpf_net_ctx);
- 	local_bh_enable();
- 	return err;
- }
-@@ -394,6 +398,7 @@ static int bpf_test_run_xdp_live(struct bpf_prog *prog,=
- struct xdp_buff *ctx,
- static int bpf_test_run(struct bpf_prog *prog, void *ctx, u32 repeat,
- 			u32 *retval, u32 *time, bool xdp)
- {
-+	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
- 	struct bpf_prog_array_item item =3D {.prog =3D prog};
- 	struct bpf_run_ctx *old_ctx;
- 	struct bpf_cg_run_ctx run_ctx;
-@@ -419,10 +424,14 @@ static int bpf_test_run(struct bpf_prog *prog, void *=
-ctx, u32 repeat,
- 	do {
- 		run_ctx.prog_item =3D &item;
- 		local_bh_disable();
-+		bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
-+
- 		if (xdp)
- 			*retval =3D bpf_prog_run_xdp(prog, ctx);
- 		else
- 			*retval =3D bpf_prog_run(prog, ctx);
-+
-+		bpf_net_ctx_clear(bpf_net_ctx);
- 		local_bh_enable();
- 	} while (bpf_test_timer_continue(&t, 1, repeat, &ret, time));
- 	bpf_reset_run_ctx(old_ctx);
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 1503883ce15a4..42c05ab53ee86 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -4031,11 +4031,15 @@ sch_handle_ingress(struct sk_buff *skb, struct pack=
-et_type **pt_prev, int *ret,
- 		   struct net_device *orig_dev, bool *another)
- {
- 	struct bpf_mprog_entry *entry =3D rcu_dereference_bh(skb->dev->tcx_ingres=
-s);
-+	struct bpf_net_context *bpf_net_ctx __free(bpf_net_ctx_clear) =3D NULL;
- 	enum skb_drop_reason drop_reason =3D SKB_DROP_REASON_TC_INGRESS;
-+	struct bpf_net_context __bpf_net_ctx;
- 	int sch_ret;
-=20
- 	if (!entry)
- 		return skb;
-+
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
- 	if (*pt_prev) {
- 		*ret =3D deliver_skb(skb, *pt_prev, orig_dev);
- 		*pt_prev =3D NULL;
-@@ -4086,13 +4090,17 @@ sch_handle_ingress(struct sk_buff *skb, struct pack=
-et_type **pt_prev, int *ret,
- static __always_inline struct sk_buff *
- sch_handle_egress(struct sk_buff *skb, int *ret, struct net_device *dev)
- {
-+	struct bpf_net_context *bpf_net_ctx __free(bpf_net_ctx_clear) =3D NULL;
- 	struct bpf_mprog_entry *entry =3D rcu_dereference_bh(dev->tcx_egress);
- 	enum skb_drop_reason drop_reason =3D SKB_DROP_REASON_TC_EGRESS;
-+	struct bpf_net_context __bpf_net_ctx;
- 	int sch_ret;
-=20
- 	if (!entry)
- 		return skb;
-=20
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
-+
- 	/* qdisc_skb_cb(skb)->pkt_len & tcx_set_ingress() was
- 	 * already set by the caller.
- 	 */
-@@ -6357,13 +6365,15 @@ static void __napi_busy_loop(unsigned int napi_id,
- 		      bool (*loop_end)(void *, unsigned long),
- 		      void *loop_end_arg, unsigned flags, u16 budget)
- {
-+	struct bpf_net_context *bpf_net_ctx __free(bpf_net_ctx_clear) =3D NULL;
- 	unsigned long start_time =3D loop_end ? busy_loop_current_time() : 0;
- 	int (*napi_poll)(struct napi_struct *napi, int budget);
-+	struct bpf_net_context __bpf_net_ctx;
- 	void *have_poll_lock =3D NULL;
- 	struct napi_struct *napi;
-=20
- 	WARN_ON_ONCE(!rcu_read_lock_held());
--
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
- restart:
- 	napi_poll =3D NULL;
-=20
-@@ -6834,6 +6844,7 @@ static int napi_thread_wait(struct napi_struct *napi)
-=20
- static void napi_threaded_poll_loop(struct napi_struct *napi)
- {
-+	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
- 	struct softnet_data *sd;
- 	unsigned long last_qs =3D jiffies;
-=20
-@@ -6842,6 +6853,8 @@ static void napi_threaded_poll_loop(struct napi_struc=
-t *napi)
- 		void *have;
-=20
- 		local_bh_disable();
-+		bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
-+
- 		sd =3D this_cpu_ptr(&softnet_data);
- 		sd->in_napi_threaded_poll =3D true;
-=20
-@@ -6857,6 +6870,7 @@ static void napi_threaded_poll_loop(struct napi_struc=
-t *napi)
- 			net_rps_action_and_irq_enable(sd);
- 		}
- 		skb_defer_free_flush(sd);
-+		bpf_net_ctx_clear(bpf_net_ctx);
- 		local_bh_enable();
-=20
- 		if (!repoll)
-@@ -6879,13 +6893,16 @@ static int napi_threaded_poll(void *data)
-=20
- static __latent_entropy void net_rx_action(struct softirq_action *h)
- {
-+	struct bpf_net_context *bpf_net_ctx __free(bpf_net_ctx_clear) =3D NULL;
- 	struct softnet_data *sd =3D this_cpu_ptr(&softnet_data);
- 	unsigned long time_limit =3D jiffies +
- 		usecs_to_jiffies(READ_ONCE(net_hotdata.netdev_budget_usecs));
- 	int budget =3D READ_ONCE(net_hotdata.netdev_budget);
-+	struct bpf_net_context __bpf_net_ctx;
- 	LIST_HEAD(list);
- 	LIST_HEAD(repoll);
-=20
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
- start:
- 	sd->in_net_rx_action =3D true;
- 	local_irq_disable();
-diff --git a/net/core/filter.c b/net/core/filter.c
-index e95b235a1e4f4..25ec2a76afb42 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -2475,9 +2475,6 @@ static const struct bpf_func_proto bpf_clone_redirect=
-_proto =3D {
- 	.arg3_type      =3D ARG_ANYTHING,
- };
-=20
--DEFINE_PER_CPU(struct bpf_redirect_info, bpf_redirect_info);
--EXPORT_PER_CPU_SYMBOL_GPL(bpf_redirect_info);
--
- static struct net_device *skb_get_peer_dev(struct net_device *dev)
- {
- 	const struct net_device_ops *ops =3D dev->netdev_ops;
-@@ -2490,7 +2487,7 @@ static struct net_device *skb_get_peer_dev(struct net=
-_device *dev)
-=20
- int skb_do_redirect(struct sk_buff *skb)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
- 	struct net *net =3D dev_net(skb->dev);
- 	struct net_device *dev;
- 	u32 flags =3D ri->flags;
-@@ -2523,7 +2520,7 @@ int skb_do_redirect(struct sk_buff *skb)
-=20
- BPF_CALL_2(bpf_redirect, u32, ifindex, u64, flags)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
- 	if (unlikely(flags & (~(BPF_F_INGRESS) | BPF_F_REDIRECT_INTERNAL)))
- 		return TC_ACT_SHOT;
-@@ -2544,7 +2541,7 @@ static const struct bpf_func_proto bpf_redirect_proto=
- =3D {
-=20
- BPF_CALL_2(bpf_redirect_peer, u32, ifindex, u64, flags)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
- 	if (unlikely(flags))
- 		return TC_ACT_SHOT;
-@@ -2566,7 +2563,7 @@ static const struct bpf_func_proto bpf_redirect_peer_=
-proto =3D {
- BPF_CALL_4(bpf_redirect_neigh, u32, ifindex, struct bpf_redir_neigh *, par=
-ams,
- 	   int, plen, u64, flags)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
- 	if (unlikely((plen && plen < sizeof(*params)) || flags))
- 		return TC_ACT_SHOT;
-@@ -4294,19 +4291,17 @@ void xdp_do_check_flushed(struct napi_struct *napi)
-=20
- void bpf_clear_redirect_map(struct bpf_map *map)
- {
--	struct bpf_redirect_info *ri;
--	int cpu;
--
--	for_each_possible_cpu(cpu) {
--		ri =3D per_cpu_ptr(&bpf_redirect_info, cpu);
--		/* Avoid polluting remote cacheline due to writes if
--		 * not needed. Once we pass this test, we need the
--		 * cmpxchg() to make sure it hasn't been changed in
--		 * the meantime by remote CPU.
--		 */
--		if (unlikely(READ_ONCE(ri->map) =3D=3D map))
--			cmpxchg(&ri->map, map, NULL);
--	}
-+	/* ri->map is assigned in __bpf_xdp_redirect_map() from within a eBPF
-+	 * program/ during NAPI callback. It is used during
-+	 * xdp_do_generic_redirect_map()/ __xdp_do_redirect_frame() from the
-+	 * redirect callback afterwards. ri->map is cleared after usage.
-+	 * The path has no explicit RCU read section but the local_bh_disable()
-+	 * is also a RCU read section which makes the complete softirq callback
-+	 * RCU protected. This in turn makes ri->map RCU protected and it is
-+	 * sufficient to wait a grace period to ensure that no "ri->map =3D=3D ma=
-p"
-+	 * exists. dev_map_free() removes the map from the list and then
-+	 * invokes synchronize_rcu() after calling this function.
-+	 */
- }
-=20
- DEFINE_STATIC_KEY_FALSE(bpf_master_redirect_enabled_key);
-@@ -4314,8 +4309,8 @@ EXPORT_SYMBOL_GPL(bpf_master_redirect_enabled_key);
-=20
- u32 xdp_master_redirect(struct xdp_buff *xdp)
- {
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
- 	struct net_device *master, *slave;
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-=20
- 	master =3D netdev_master_upper_dev_get_rcu(xdp->rxq->dev);
- 	slave =3D master->netdev_ops->ndo_xdp_get_xmit_slave(master, xdp);
-@@ -4432,7 +4427,7 @@ static __always_inline int __xdp_do_redirect_frame(st=
-ruct bpf_redirect_info *ri,
- int xdp_do_redirect(struct net_device *dev, struct xdp_buff *xdp,
- 		    struct bpf_prog *xdp_prog)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
- 	enum bpf_map_type map_type =3D ri->map_type;
-=20
- 	if (map_type =3D=3D BPF_MAP_TYPE_XSKMAP)
-@@ -4446,7 +4441,7 @@ EXPORT_SYMBOL_GPL(xdp_do_redirect);
- int xdp_do_redirect_frame(struct net_device *dev, struct xdp_buff *xdp,
- 			  struct xdp_frame *xdpf, struct bpf_prog *xdp_prog)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
- 	enum bpf_map_type map_type =3D ri->map_type;
-=20
- 	if (map_type =3D=3D BPF_MAP_TYPE_XSKMAP)
-@@ -4463,7 +4458,7 @@ static int xdp_do_generic_redirect_map(struct net_dev=
-ice *dev,
- 				       enum bpf_map_type map_type, u32 map_id,
- 				       u32 flags)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
- 	struct bpf_map *map;
- 	int err;
-=20
-@@ -4517,7 +4512,7 @@ static int xdp_do_generic_redirect_map(struct net_dev=
-ice *dev,
- int xdp_do_generic_redirect(struct net_device *dev, struct sk_buff *skb,
- 			    struct xdp_buff *xdp, struct bpf_prog *xdp_prog)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
- 	enum bpf_map_type map_type =3D ri->map_type;
- 	void *fwd =3D ri->tgt_value;
- 	u32 map_id =3D ri->map_id;
-@@ -4553,7 +4548,7 @@ int xdp_do_generic_redirect(struct net_device *dev, s=
-truct sk_buff *skb,
-=20
- BPF_CALL_2(bpf_xdp_redirect, u32, ifindex, u64, flags)
- {
--	struct bpf_redirect_info *ri =3D this_cpu_ptr(&bpf_redirect_info);
-+	struct bpf_redirect_info *ri =3D bpf_net_ctx_get_ri();
-=20
- 	if (unlikely(flags))
- 		return XDP_ABORTED;
-diff --git a/net/core/lwt_bpf.c b/net/core/lwt_bpf.c
-index a94943681e5aa..afb05f58b64c5 100644
---- a/net/core/lwt_bpf.c
-+++ b/net/core/lwt_bpf.c
-@@ -38,12 +38,14 @@ static inline struct bpf_lwt *bpf_lwt_lwtunnel(struct l=
-wtunnel_state *lwt)
- static int run_lwt_bpf(struct sk_buff *skb, struct bpf_lwt_prog *lwt,
- 		       struct dst_entry *dst, bool can_redirect)
- {
-+	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
- 	int ret;
-=20
- 	/* Disabling BH is needed to protect per-CPU bpf_redirect_info between
- 	 * BPF prog and skb_do_redirect().
- 	 */
- 	local_bh_disable();
-+	bpf_net_ctx =3D bpf_net_ctx_set(&__bpf_net_ctx);
- 	bpf_compute_data_pointers(skb);
- 	ret =3D bpf_prog_run_save_cb(lwt->prog, skb);
-=20
-@@ -76,6 +78,7 @@ static int run_lwt_bpf(struct sk_buff *skb, struct bpf_lw=
-t_prog *lwt,
- 		break;
- 	}
-=20
-+	bpf_net_ctx_clear(bpf_net_ctx);
- 	local_bh_enable();
-=20
- 	return ret;
---=20
-2.43.0
+	Otherwise, you can use pr_cont() to continue the previous
+	line, of course being careful about "\n".
 
+Probably also something that I am forgetting, but that is most of it.
+
+> > >         if (!use_softirq)
+> > >                 pr_info("\tRCU_SOFTIRQ processing moved to rcuc kthreads.\n");
+> > >         if (IS_ENABLED(CONFIG_RCU_EQS_DEBUG))
+> > >                 pr_info("\tRCU debug extended QS entry/exit.\n");
+> > >         rcupdate_announce_bootup_oddness();
+> > >  }
+> > >  
+> > >  #ifdef CONFIG_PREEMPT_RCU
+> > >  
+> > >  static void rcu_report_exp_rnp(struct rcu_node *rnp, bool wake);
+> > > @@ -1260,10 +1274,29 @@ static bool rcu_nohz_full_cpu(void)
+> > >  
+> > >  /*
+> > >   * Bind the RCU grace-period kthreads to the housekeeping CPU.
+> > >   */
+> > >  static void rcu_bind_gp_kthread(void)
+> > >  {
+> > >         if (!tick_nohz_full_enabled())
+> > >                 return;
+> > >         housekeeping_affine(current, HK_TYPE_RCU);
+> > >  }
+> > > +
+> > > +/*
+> > > + * Is this CPU a NO_HZ_FULL CPU that should ignore RCU if the time since the
+> > > + * start of current grace period is smaller than nocb_patience_delay ?
+> > > + *
+> > > + * This code relies on the fact that all NO_HZ_FULL CPUs are also
+> > > + * RCU_NOCB_CPU CPUs.
+> > > + */
+> > > +static bool rcu_on_patience_delay(void)
+> > > +{
+> > > +#ifdef CONFIG_NO_HZ_FULL
+> > 
+> > You lost me on this one.  Why do we need the #ifdef instead of
+> > IS_ENABLED()?  Also, please note that rcu_nohz_full_cpu() is already a
+> > compile-time @false in CONFIG_NO_HZ_FULL=n kernels.
+> 
+> You are right. rcu_nohz_full_cpu() has a high chance of being inlined on
+> 	if ((...) && rcu_nohz_full_cpu())
+> And since it returns false, this whole statement will be compiled out, and 
+> the new function will not exist in CONFIG_NO_HZ_FULL=n, so there  is no 
+> need to test it.
+
+Very good!  You had me going there for a bit.  ;-)
+
+> > > +       if (!nocb_patience_delay)
+> > > +               return false;
+> > 
+> > We get this automatically with the comparison below, right?
+> 
+> Right
+> 
+> >   If so, we
+> > are not gaining much by creating the helper function.  Or am I missing
+> > some trick here?
+> 
+> Well, it's a fastpath. Up to here, we just need to read 
+> nocb_patience_delay{,_jiffies} from memory.
+
+Just nocb_patience_delay_jiffies, correct?  Unless I am missing something,
+nocb_patience_delay is unused after boot.
+
+> If we don't include the fastpath we have to read jiffies and 
+> rcu_state.gp_start, which can take extra time: up to 2 cache misses.
+> 
+> I thought it could be relevant, as we reduce the overhead of the new 
+> parameter when it's disabled (patience=0). 
+> 
+> Do you think that could be relevant?
+
+Well, the hardware's opinion is what matters.  ;-)
+
+But the caller's code path reads jiffies a few times, so it should
+be hot in the cache, correct?
+
+But that does lead to another topic, namely the possibility of tagging
+nocb_patience_delay_jiffies with __read_mostly.  And there might be
+a number of other of RCU's variables that could be similarly tagged
+in order to avoid false sharing.  (But is there any false sharing?
+This might be worth testing.)
+
+							Thanx, Paul
+
+> Thanks!
+> Leo
+> 
+> > 
+> > 							Thanx, Paul
+> > 
+> > > +       if (time_before(jiffies, READ_ONCE(rcu_state.gp_start) + nocb_patience_delay))
+> > > +               return true;
+> > > +#endif /* #ifdef CONFIG_NO_HZ_FULL */
+> > > +       return false;
+> > > +}
+> > > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > > index 7560e204198b..7a2d94370ab4 100644
+> > > --- a/kernel/rcu/tree.c
+> > > +++ b/kernel/rcu/tree.c
+> > > @@ -169,20 +169,22 @@ static int kthread_prio = IS_ENABLED(CONFIG_RCU_BOOST) ? 1 : 0;
+> > >  module_param(kthread_prio, int, 0444);
+> > >  
+> > >  /* Delay in jiffies for grace-period initialization delays, debug only. */
+> > >  
+> > >  static int gp_preinit_delay;
+> > >  module_param(gp_preinit_delay, int, 0444);
+> > >  static int gp_init_delay;
+> > >  module_param(gp_init_delay, int, 0444);
+> > >  static int gp_cleanup_delay;
+> > >  module_param(gp_cleanup_delay, int, 0444);
+> > > +static int nocb_patience_delay;
+> > > +module_param(nocb_patience_delay, int, 0444);
+> > >  
+> > >  // Add delay to rcu_read_unlock() for strict grace periods.
+> > >  static int rcu_unlock_delay;
+> > >  #ifdef CONFIG_RCU_STRICT_GRACE_PERIOD
+> > >  module_param(rcu_unlock_delay, int, 0444);
+> > >  #endif
+> > >  
+> > >  /*
+> > >   * This rcu parameter is runtime-read-only. It reflects
+> > >   * a minimum allowed number of objects which can be cached
+> > > @@ -4340,25 +4342,27 @@ static int rcu_pending(int user)
+> > >         lockdep_assert_irqs_disabled();
+> > >  
+> > >         /* Check for CPU stalls, if enabled. */
+> > >         check_cpu_stall(rdp);
+> > >  
+> > >         /* Does this CPU need a deferred NOCB wakeup? */
+> > >         if (rcu_nocb_need_deferred_wakeup(rdp, RCU_NOCB_WAKE))
+> > >                 return 1;
+> > >  
+> > >         /* Is this a nohz_full CPU in userspace or idle?  (Ignore RCU if so.) */
+> > > -       if ((user || rcu_is_cpu_rrupt_from_idle()) && rcu_nohz_full_cpu())
+> > > +       gp_in_progress = rcu_gp_in_progress();
+> > > +       if ((user || rcu_is_cpu_rrupt_from_idle() ||
+> > > +            (gp_in_progress && rcu_on_patience_delay())) &&
+> > > +           rcu_nohz_full_cpu())
+> > >                 return 0;
+> > >  
+> > >         /* Is the RCU core waiting for a quiescent state from this CPU? */
+> > > -       gp_in_progress = rcu_gp_in_progress();
+> > >         if (rdp->core_needs_qs && !rdp->cpu_no_qs.b.norm && gp_in_progress)
+> > >                 return 1;
+> > >  
+> > >         /* Does this CPU have callbacks ready to invoke? */
+> > >         if (!rcu_rdp_is_offloaded(rdp) &&
+> > >             rcu_segcblist_ready_cbs(&rdp->cblist))
+> > >                 return 1;
+> > >  
+> > >         /* Has RCU gone idle with this CPU needing another grace period? */
+> > >         if (!gp_in_progress && rcu_segcblist_is_enabled(&rdp->cblist) &&
+> > > 
+> > > 
+> > > 
+> > 
+> 
+> 
