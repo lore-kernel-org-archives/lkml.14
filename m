@@ -1,137 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B430554662;
-	Fri, 10 May 2024 11:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DF6854662;
+	Fri, 10 May 2024 11:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715340120; cv=none; b=OAuByqCNrLmNBXIN5hKuqtAnFNQCIfZvsrx2tpQlJEDX4mtFFjsVXr/vW7vocLohGsYXdEGXGRKo8o5xR/h0XijYvEcRzS5mQ6BEXJwLwcB882YadPgp2JN+doUOCxfC9jdobH9++xjaU/8evbqUu22jXRrFZYXrVvAmdGUUpRw=
+	t=1715340130; cv=none; b=KvNJFoMqC1bYb2W29pta+O1f2WFQgtx2SG+rplv+Zh3rQ5bG+6Ysa4lDmljgjFaQRmlkflKOnFNCWYns/L9VmElQlMixWgyyZUxE0P3a0aF7CAWbiRWWnHvYQQk/cZsdbRgHnsj3r+8u7T6mqYNK0wTpcTwApbP+j3g3bL1/oN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715340120; c=relaxed/simple;
-	bh=HSGNzI8VBlGMlvbRbsd2ObIVJhvcS30eOk4bSfP6pl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SGKBWPHDdtCNKpKZ6UiiuxFXjZ+YG5hxF3B93eAjLsyy7yhkO2q4cmyr6D4noWE5PEypxIcqVLWW63RTun8ExXvErUNq+yGq8B7BCtAtwBeZ0h89+2gqVntE4rQ2jK+jRhYeiRMKaKrjBwSQsjYkbZzOQXWmtNFVqLezuLktTsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihXfjw4m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715340130; c=relaxed/simple;
+	bh=mSAKbILicGZ2jA5iMQsYhrs50+CCyAKG0Vj/7T7WIbs=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=u6rV5+jKMnb4zL/KKmGeLTGkp+IGH3ZW8ivr40/vSA2+FnELCsk1nqCaTmfAjBuNLPKoBDMBSy55KBcfJSgLXFPp72KcR0/HImlzijbAziRlEuavyxlKG3RPjJ+G3xkBTpzWL5oL8dQlCUUk71Wv9owVkurbOku75Jw8MZ3eCI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=A/6t1HAQ; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihXfjw4m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77CA4C113CC;
-	Fri, 10 May 2024 11:21:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715340120;
-	bh=HSGNzI8VBlGMlvbRbsd2ObIVJhvcS30eOk4bSfP6pl0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ihXfjw4mBP7X4WTIHWRYrSBF3iVhrYj3c4Dx5l+jpT+FTgsJffGRO9vSgHrM7zUOj
-	 kOlXC4rU0xe8kX/Vro7lspV3JguR6RF+N1ERTAjFiVCf/vbxcdUh20Di/13AdAq4Jn
-	 2SAEzUwnAIMnIsr5M7XU0f+0eH2wk9EACxYDCsz2wqfhADAPo3+ydQi3lMo4PurSPs
-	 UT8KJCpOPJznFR3FMg1H8MQgq1cVEexFlEc6dV24BAvOi3yEzJgZ16+zZhNvXj67YS
-	 o+iYYnxGzKicaIfalY9tSWfJYYggbPz/0e3U4c5WZ66vLghF5pUzH8QinBEBLaiZVB
-	 wY7PMNUvznMoQ==
-Date: Fri, 10 May 2024 12:21:52 +0100
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Jani Nikula <jani.nikula@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Sean Paul <sean@poorly.run>, Marijn Suijten
- <marijn.suijten@somainline.org>, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada
- <masahiroy@kernel.org>, linux-arm-msm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: Re: [PATCH] docs: document python version used for compilation
-Message-ID: <20240510122152.76e79ac9@sal.lan>
-In-Reply-To: <CAA8EJprcjDnpsriXOrRO4cVh5Sm9KDbHbsyKePru=6pn0-bfJA@mail.gmail.com>
-References: <20240509-python-version-v1-1-a7dda3a95b5f@linaro.org>
-	<878r0ijdh5.fsf@intel.com>
-	<20240510102036.3ea40b37@sal.lan>
-	<87o79ehtbz.fsf@intel.com>
-	<CAA8EJprcjDnpsriXOrRO4cVh5Sm9KDbHbsyKePru=6pn0-bfJA@mail.gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="A/6t1HAQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1715340127;
+	bh=mSAKbILicGZ2jA5iMQsYhrs50+CCyAKG0Vj/7T7WIbs=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=A/6t1HAQ00Bj/IZpnkIEAylqRa9rLnfmYz/sCKuUB6k1TPeLsjsFqOPIfTBwTbfF+
+	 hNIdfIbUWitan2i4UUPD1UpcGmF5C6ZouZVjnRCys4z4Nk9Bx0LdH0iZRN0SLuXD6l
+	 HRlXrcqJ5CQOw534nw9RCz82ihmHofCPlnYt3J5ntuFWq9fvamRzSEq4CkEUgLyAKl
+	 mcSiKT+Ml58yxsduGrCdn4kYavQHEdUutFDHtpuhufu+pD+kkAlx4RcfPDTYAz0LVX
+	 IdWWXhh1e/4m2rYTkvJQ7hYpY/c7IknWzwlB3/dKn8t1tcukxa/tvVQlU94bEJ/XHO
+	 VKWCFNAx6NfMg==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id A8AFD3782185;
+	Fri, 10 May 2024 11:22:02 +0000 (UTC)
+Message-ID: <e3d20115-df52-4d1f-98d6-928277f9ca36@collabora.com>
+Date: Fri, 10 May 2024 16:22:27 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Kunwu Chan <chentao@kylinos.cn>
+Subject: Re: [PATCH bpf-next v2 2/4] selftests/bpf/sockopt: Add a null pointer
+ check for the run_test
+To: kunwu.chan@linux.dev, ast@kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@google.com, haoluo@google.com, jolsa@kernel.org, mykolal@fb.com,
+ shuah@kernel.org, kunwu.chan@hotmail.com
+References: <20240510095803.472840-1-kunwu.chan@linux.dev>
+ <20240510095803.472840-3-kunwu.chan@linux.dev>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240510095803.472840-3-kunwu.chan@linux.dev>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Em Fri, 10 May 2024 13:39:17 +0300
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org> escreveu:
+On 5/10/24 2:58 PM, kunwu.chan@linux.dev wrote:
+> From: Kunwu Chan <chentao@kylinos.cn>
+> 
+> There is a 'malloc' call, which can be unsuccessful.
+> Add the malloc failure checking to avoid possible null
+> dereference and give more information
+> about test fail reasons.
+> 
+> Signed-off-by: Kunwu Chan <chentao@kylinos.cn>
+LGTM
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-> On Fri, 10 May 2024 at 13:09, Jani Nikula <jani.nikula@intel.com> wrote:
-> >
-> > On Fri, 10 May 2024, Mauro Carvalho Chehab <mchehab@kernel.org> wrote: =
-=20
-> > > Em Fri, 10 May 2024 11:08:38 +0300
-> > > Jani Nikula <jani.nikula@intel.com> escreveu:
-> > > =20
-> > >> On Thu, 09 May 2024, Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =
-wrote: =20
-> > >> > The drm/msm driver had adopted using Python3 script to generate re=
-gister
-> > >> > header files instead of shipping pre-generated header files. Docum=
-ent
-> > >> > the minimal Python version supported by the script.
-> > >> >
-> > >> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > >> > ---
-> > >> >  Documentation/process/changes.rst | 1 +
-> > >> >  1 file changed, 1 insertion(+)
-> > >> >
-> > >> > diff --git a/Documentation/process/changes.rst b/Documentation/pro=
-cess/changes.rst
-> > >> > index 5685d7bfe4d0..8d225a9f65a2 100644
-> > >> > --- a/Documentation/process/changes.rst
-> > >> > +++ b/Documentation/process/changes.rst
-> > >> > @@ -63,6 +63,7 @@ cpio                   any              cpio --v=
-ersion
-> > >> >  GNU tar                1.28             tar --version
-> > >> >  gtags (optional)       6.6.5            gtags --version
-> > >> >  mkimage (optional)     2017.01          mkimage --version
-> > >> > +Python (optional)      3.5.x            python3 --version =20
-> > >>
-> > >> Python 3.5 reached end-of-life 3=C2=BD years ago [1]. What's the poi=
-nt in
-> > >> using anything older than the oldest supported version of Python,
-> > >> i.e. 3.8 at this time? =20
-> > >
-> > > What's the point of breaking compilation with on older distros?
-> > > The idea of minimal versions here is to specify the absolute minimum
-> > > version that it is required for the build to happen. If 3.5 is
-> > > the minimal one, then be it. =20
-> >
-> > AFAICT 3.5 was an arbitrary rather than a deliberate choice. We should
-> > at least be aware *why* we'd be sticking to old versions. =20
->=20
-> From my side, the 3.5 was chosen basing on the previous feedback from
-> Jon Hunter: https://lore.kernel.org/dri-devel/20240412165407.42163-1-jona=
-thanh@nvidia.com/
->=20
-> After checking distros that I can easily use, I don't think I will be
-> able to test the script with Python versions earlier than 3.7.3
-> (Debian oldoldstable).
-> I can try setting up Debian stretch (old-old-old-stable), which has
-> Python 3.5 and so cover the needs of Jon.
+> ---
+>  tools/testing/selftests/bpf/prog_tests/sockopt.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/sockopt.c b/tools/testing/selftests/bpf/prog_tests/sockopt.c
+> index 5a4491d4edfe..bde63e1f74dc 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/sockopt.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/sockopt.c
+> @@ -1100,6 +1100,12 @@ static int run_test(int cgroup_fd, struct sockopt_test *test, bool use_io_uring)
+>  		}
+>  
+>  		optval = malloc(test->get_optlen);
+> +		if (!optval) {
+> +			log_err("Failed to allocate memory");
+> +			ret = -1;
+> +			goto close_sock_fd;
+> +		}
+> +
+>  		memset(optval, 0, test->get_optlen);
+>  		socklen_t optlen = test->get_optlen;
+>  		socklen_t expected_get_optlen = test->get_optlen_ret ?:
 
-Fedora 40 supports version 3.6 and above (plus 2.7):
-	https://developer.fedoraproject.org/tech/languages/python/multiple-pythons=
-.html
-
-You could do something similar with Ubuntu/Debian:
-	https://askubuntu.com/questions/682869/how-do-i-install-a-different-python=
--version-using-apt-get
-
-Once an old version is installed, you can enable it with:
-
-	$ python3.6 -m venv v3.6  # create the environment
-	$ . v3.6/bin/activate
-
-Then, if needed, install whatever dependencies are needed with pip,
-inside the venv (for instance if you want to also test Sphinx, you
-can install it there via pip).
-
-I guess it should be possible to use a similar venv procedure with
-older versions, but you may need to compile it from the sources if
-you don't have binaries available for your distro.
-
-Regards,
-Mauro
+-- 
+BR,
+Muhammad Usama Anjum
