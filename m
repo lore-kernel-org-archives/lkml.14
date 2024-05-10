@@ -1,475 +1,233 @@
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECB81635CA;
-	Fri, 10 May 2024 09:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA876160880;
+	Fri, 10 May 2024 09:11:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715332197; cv=none; b=JczbFuu7WLO5tAObD6War6L/E4FTU9tGaoHa2R1QGDZ+gHCLM1WaiNBEeqVUb9qw0WdEsiVfXvkhmnif8c5lNhCyp8i9Ode9NDhFANAioqpFB9iklxa2trgLMUbvGtz3GPfPR3FHOcVssSl1iJbXvaveIDMZgt6wNUxsXgVkfYo=
+	t=1715332267; cv=none; b=okNUW1BbwGf+pC9NZWSdCQj/HQaFdGWujowDN5i0pk22IEL5p6UIm6rUwlcbgh1GQMZ5n7wXlKUXpIQ/M6bggBCwPKxLaSm+9JQzxeChdqEuM3S3/WqhMJkViXgQMvQYhLhSzmruJTtoL3X5cEfJS1jC3wVK/vecYX3oDIy1Y44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715332197; c=relaxed/simple;
-	bh=m/mGEoNEHrMXKlVRGWGRbnzLOl5oWYxY2hcPwWeFD8A=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TEk7Bol5srgmVxUdhCv5NClsfGUWngOhVAqHFm58uFvphb87sa09vlI5gGQECjncN2aNUqOaOVxjDpbisZqpTFjxv4NvSGsOP/nV/f80jSb0xgl6AG3YAwIKlUJhovtOqzdpOzMBL82MeFkjiJEpK6MDRC19nc2F8dIpopkAfCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=rf1rJCgs; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+	s=arc-20240116; t=1715332267; c=relaxed/simple;
+	bh=iy7T+nDEmQevJHgHb9cm4kq3bs7CgLJ1Dtnev5Merg0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sNLm8dQapLdzxw8Rq+I7dz2yJARqIHtT0/cxV817F9t4xN0K+c9wIfYiJYA0wK9FzqoqCcvmbX9qEcXBXdVSVCXWu4fuasGUVB5Zzp7G/b48TmRDecKtxyNKe+Ch++Vy0+uoXzzKAW3fSQVPgBc3GHtI21Rolos8THupWK50Fsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NRWdVhOC; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="rf1rJCgs"
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id A73D9120008;
-	Fri, 10 May 2024 12:09:46 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru A73D9120008
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1715332186;
-	bh=SmdMrw/p8e6szSRa+4BtLFr31j+jV1j69OFcWCrisJU=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=rf1rJCgshX3NBdeU7s68ZSWtgeJSJFjcehvZpQ85JOo0niZzny4/ljxaE22DMXAlk
-	 6/ymU7ZnzqizVY3oP4TceId1a1n5LdgrIwTf0ADz2F+G54TFEuPk40B+9GU0nahoyv
-	 5mKTX/7Ur1JhtPhV3YNN8Fuafeo49fF7iFdxu3IbExgA0Ce5L6MaANF5Nma9bkZ94w
-	 S4oHFBBkoG7rhrL2VSYcId9JthrqpqfR9EWxfDjdtWZXtlNNhRdjScZRMEsDgKr6Eg
-	 QYH3gNs4n3iQBBBf4HQ0YWu+yqZEYpjuxowiBRylbq15hivX//kiNTNh2SEPA3yqWe
-	 xy1lSpJoj7yfg==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri, 10 May 2024 12:09:46 +0300 (MSK)
-Received: from CAB-WSD-L081021.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 10 May 2024 12:09:46 +0300
-From: Dmitry Rokosov <ddrokosov@salutedevices.com>
-To: <neil.armstrong@linaro.org>, <jbrunet@baylibre.com>,
-	<mturquette@baylibre.com>, <sboyd@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <khilman@baylibre.com>,
-	<martin.blumenstingl@googlemail.com>
-CC: <jian.hu@amlogic.com>, <kernel@sberdevices.ru>, <rockosov@gmail.com>,
-	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, Dmitry Rokosov
-	<ddrokosov@salutedevices.com>
-Subject: [PATCH v2 7/7] clk: meson: a1: add Amlogic A1 CPU clock controller driver
-Date: Fri, 10 May 2024 12:08:59 +0300
-Message-ID: <20240510090933.19464-8-ddrokosov@salutedevices.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240510090933.19464-1-ddrokosov@salutedevices.com>
-References: <20240510090933.19464-1-ddrokosov@salutedevices.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NRWdVhOC"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2b6215bcd03so485140a91.1;
+        Fri, 10 May 2024 02:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715332263; x=1715937063; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VyERfLizY6BgQpVDrcWfYPOa4d57tfajrLUm4Pmk48A=;
+        b=NRWdVhOCa561i8IV/o6EZ0ff888HpZbZHU91SWpoXsIgRT0lTcmLDya+QbpDKZPP6P
+         CmJqdW8PPPRLgvVM5eL8PZUO6qokPBDGlsdZLisBzsgWZyLZhVulS+JWBvUQMGWigsNm
+         pxQKE1/fVA33vEmsGOYSWZJh4wbD9ca+ricprIgdInHhFzdxIuU3QhbzzlKemEtKSoj0
+         2nu468r3Fk0j/o4dMDdVPW1+GjfAZGM/ZnMOMyPD0TXkJvBxoI/6jE6FEeqrrTqSrW5O
+         aDhTuWnAcXlnD7TSecoypvvYjHEfUUv3VLRYNOWcUg7Yp9YVD+xf/SPteiBdja8wostF
+         u5yA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715332263; x=1715937063;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VyERfLizY6BgQpVDrcWfYPOa4d57tfajrLUm4Pmk48A=;
+        b=N2bEMCAYkl8s6mjKK8IvcSN8TFeMHmYU7vesmo5Cnd0ArDY0+XTuHk53Y83rEYobYn
+         bOCRebmMHm4j3Wz7uJF2FEp02oAB3F+CZ0qrEOMR1xZXagzK5gAS+DkHWZmwEvD/yT4G
+         nIBPQ2P53dhHC9+sfkzEIuNt5Ut4IM6KzDkeqOBIlO+ZjSkXWowJBfWr2bANMWIAoVXF
+         SRrXTC5lEUh/hQeFWQKjeKOE1eUingEQSbyDYyaoCCG8kEdI/tyS3HBF1UmyZuMrcn5C
+         MXo7F9DNJC68idRr8cj+jQWpTtFQ+gPgL5idIimkjWjGvw2CGWv5gEBziZ5xNHPtThKi
+         RhoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWcIF7m5726Pkmb/Wih2R0zHYhJVPL8SZzEd2UKHnJ3QuPgwl42RDoUTuGz+sytwHUBFDVxRYKYY2mpXoLNKpj9jRH+32PbHfKq3IqjZsdoEhYZhttaIIh+veTeZu8CWfRzylsifBEQJw==
+X-Gm-Message-State: AOJu0YzOni/X9c19BjK/T0RjdodAKRBQZQjOTUE8S4Q6MVN02hmnGKr8
+	OC+2kd+Ri5VvK1ci18QR0meQD7Es1oraf1EFOQ8KJWr72yJOoW9+
+X-Google-Smtp-Source: AGHT+IG6LoL7ehLAK7aJd4+hkhkaXGvXN764Pbud5L3mtmcuM9ZR6CtHCi03gTwJKAXL80A+Iubwxw==
+X-Received: by 2002:a17:902:cec6:b0:1eb:ac3c:e39f with SMTP id d9443c01a7336-1ef441b5da6mr23105225ad.6.1715332262517;
+        Fri, 10 May 2024 02:11:02 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d35fcsm28053615ad.25.2024.05.10.02.11.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 May 2024 02:11:01 -0700 (PDT)
+Date: Fri, 10 May 2024 17:10:59 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Matthew Mirvish <matthew@mm12.xyz>
+Cc: Kent Overstreet <kent.overstreet@linux.dev>, Coly Li <colyli@suse.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the refactor-heap tree with the
+ block tree
+Message-ID: <Zj3kowGa9XzJ0yak@visitorckw-System-Product-Name>
+References: <20240509152745.08af752f@canb.auug.org.au>
+ <te64v6zwwor6jkco6uiu2zz7ern6ijhyu5okfvdz3bmj3w5qfp@mx4zdniwymqj>
+ <Zj1RzZdtfL7UQax1@visitorckw-System-Product-Name>
+ <buehluxvo234sj7onzl6wwjmuslmnkh7g6vnpru23kpti6qmpp@7nqak2ser7mw>
+ <Zj2PX6Fy3BEnQc50@visitorckw-System-Product-Name>
+ <20240510034618.GA3161190@mm12.xyz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 185158 [May 10 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 19 0.3.19 07c7fa124d1a1dc9662cdc5aace418c06ae99d2b, {Tracking_from_domain_doesnt_match_to}, 100.64.160.123:7.1.2;salutedevices.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/05/10 07:36:00 #25144647
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240510034618.GA3161190@mm12.xyz>
 
-The CPU clock controller plays a general role in the Amlogic A1 SoC
-family by generating CPU clocks. As an APB slave module, it offers the
-capability to inherit the CPU clock from two sources: the internal fixed
-clock known as 'cpu fixed clock' and the external input provided by the
-A1 PLL clock controller, referred to as 'syspll'.
+On Thu, May 09, 2024 at 11:46:18PM -0400, Matthew Mirvish wrote:
+> On Fri, May 10, 2024 at 11:07:11AM +0800, Kuan-Wei Chiu wrote:
+> > On Thu, May 09, 2024 at 07:16:31PM -0400, Kent Overstreet wrote:
+> > > On Fri, May 10, 2024 at 06:44:29AM +0800, Kuan-Wei Chiu wrote:
+> > > > On Thu, May 09, 2024 at 03:58:57PM -0400, Kent Overstreet wrote:
+> > > > > On Thu, May 09, 2024 at 03:27:45PM +1000, Stephen Rothwell wrote:
+> > > > > > Hi all,
+> > > > > > 
+> > > > > > Today's linux-next merge of the refactor-heap tree got conflicts in:
+> > > > > > 
+> > > > > >   drivers/md/bcache/bset.c
+> > > > > >   drivers/md/bcache/bset.h
+> > > > > >   drivers/md/bcache/btree.c
+> > > > > >   drivers/md/bcache/writeback.c
+> > > > > > 
+> > > > > > between commit:
+> > > > > > 
+> > > > > >   3a861560ccb3 ("bcache: fix variable length array abuse in btree_iter")
+> > > > > > 
+> > > > > > from the block tree and commit:
+> > > > > > 
+> > > > > >   afa5721abaaa ("bcache: Remove heap-related macros and switch to generic min_heap")
+> > > > > > 
+> > > > > > from the refactor-heap tree.
+> > > > > > 
+> > > > > > Ok, these conflicts are too extensive, so I am dropping the refactor-heap
+> > > > > > tree for today.  I suggest you all get together and sort something out.
+> > > > > 
+> > > > > Coli and Kuan, you guys will need to get this sorted out quick if we
+> > > > > want refactor-heap to make the merge window
+> > > > 
+> > > > Hi Coli and Kent,
+> > > > 
+> > > > If I understand correctly, the reported bug is because we attempted to
+> > > > point (heap)->data to a dynamically allocated memory , but at that time
+> > > > (heap)->data was not a regular pointer but a fixed size array with a
+> > > > length of MAX_BSETS.
+> > > > 
+> > > > In my refactor heap patch series, I introduced a preallocated array and
+> > > > decided in min_heap_init() whether the data pointer should point to an
+> > > > incoming pointer or to the preallocated array. Therefore, I am
+> > > > wondering if my patch might have unintentionally fixed this bug?
+> > > > 
+> > > > I am unsure how to reproduce the reported issue. Could you assist me in
+> > > > verifying whether my assumption is correct?
+> > > 
+> > > This is a merge conflict, not a runtime. Can you rebase onto Coli's
+> > > tree? We'll have to retest.
+> > 
+> > Oh, sorry for the misunderstanding I caused. When I mentioned "bug" [1]
+> > earlier, I was referring to the bug addressed in
+> > 3a861560ccb3 ("bcache: fix variable length array abuse in btree_iter"),
+> > not a merge conflict.
+> > 
+> > Here are the results after the rebase:
+> > https://github.com/visitorckw/linux.git refactor-heap
+> > 
+> > [1]: https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2039368
+> 
+> The ubuntu kernels build with UBSAN now, and the bug reported is just a
+> UBSAN warning. The original implementation's iterator has a fixed size
+> sets array that is indexed out of bounds when the iterator is allocated
+> on the heap with more space -- the patch restructures it a bit to have a
+> single iterator type with a flexible array and then a larger "stack"
+> type which embeds the iterator along with the preallocated region.
+> 
+> I took a brief look at the refactor-heap branch but I'm not entirely
+> sure what's going on with the new min heaps: in the one place where the
+> larger iterators are used (in bch_btree_node_read_done) it doesn't look
+> like the heap is ever initialized (perhaps since the old iter_init
+> wasn't used here because of the special case it got missed in the
+> refactor?) With the new heaps it should be fairly easy to fix though;
+> just change the fill_iter mempool to be allocating only the minheap data
+> arrays and setup iter->heap.data properly with that instead.
 
-It is important for the driver to handle cpu_clk rate switching
-effectively by transitioning to the CPU fixed clock to avoid any
-potential execution freezes.
+Thank you, Matthew.
+Not initializing the heap's data pointer was indeed my mistake.
+Following your advice, I made the following modifications to the code
+on the refactor-heap branch in my github repo. I hope this time it
+works well.
 
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
----
- drivers/clk/meson/Kconfig  |  10 ++
- drivers/clk/meson/Makefile |   1 +
- drivers/clk/meson/a1-cpu.c | 331 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 342 insertions(+)
- create mode 100644 drivers/clk/meson/a1-cpu.c
+Regards,
+Kuan-Wei
 
-diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
-index 80c4a18c83d2..148d4495eee3 100644
---- a/drivers/clk/meson/Kconfig
-+++ b/drivers/clk/meson/Kconfig
-@@ -111,6 +111,16 @@ config COMMON_CLK_AXG_AUDIO
- 	  Support for the audio clock controller on AmLogic A113D devices,
- 	  aka axg, Say Y if you want audio subsystem to work.
- 
-+config COMMON_CLK_A1_CPU
-+	tristate "Amlogic A1 SoC CPU controller support"
-+	depends on ARM64
-+	select COMMON_CLK_MESON_REGMAP
-+	select COMMON_CLK_MESON_CLKC_UTILS
-+	help
-+	  Support for the CPU clock controller on Amlogic A113L based
-+	  device, A1 SoC Family. Say Y if you want A1 CPU clock controller
-+	  to work.
-+
- config COMMON_CLK_A1_PLL
- 	tristate "Amlogic A1 SoC PLL controller support"
- 	depends on ARM64
-diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
-index 4968fc7ad555..2a06eb0303d6 100644
---- a/drivers/clk/meson/Makefile
-+++ b/drivers/clk/meson/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_COMMON_CLK_MESON_AUDIO_RSTC) += meson-audio-rstc.o
- 
- obj-$(CONFIG_COMMON_CLK_AXG) += axg.o axg-aoclk.o
- obj-$(CONFIG_COMMON_CLK_AXG_AUDIO) += axg-audio.o
-+obj-$(CONFIG_COMMON_CLK_A1_CPU) += a1-cpu.o
- obj-$(CONFIG_COMMON_CLK_A1_PLL) += a1-pll.o
- obj-$(CONFIG_COMMON_CLK_A1_PERIPHERALS) += a1-peripherals.o
- obj-$(CONFIG_COMMON_CLK_A1_AUDIO) += a1-audio.o
-diff --git a/drivers/clk/meson/a1-cpu.c b/drivers/clk/meson/a1-cpu.c
-new file mode 100644
-index 000000000000..a9edabeafea9
---- /dev/null
-+++ b/drivers/clk/meson/a1-cpu.c
-@@ -0,0 +1,331 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Amlogic A1 SoC family CPU Clock Controller driver.
-+ *
-+ * Copyright (c) 2024, SaluteDevices. All Rights Reserved.
-+ * Author: Dmitry Rokosov <ddrokosov@salutedevices.com>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/platform_device.h>
-+#include "clk-regmap.h"
-+#include "meson-clkc-utils.h"
-+
-+#include <dt-bindings/clock/amlogic,a1-cpu-clkc.h>
-+
-+/* CPU Clock Controller register offset */
-+#define CPUCTRL_CLK_CTRL0	0x0
-+#define CPUCTRL_CLK_CTRL1	0x4
-+
-+static u32 cpu_fsource_sel_table[] = { 0, 1, 2 };
-+static const struct clk_parent_data cpu_fsource_sel_parents[] = {
-+	{ .fw_name = "xtal" },
-+	{ .fw_name = "fclk_div2" },
-+	{ .fw_name = "fclk_div3" },
-+};
-+
-+static struct clk_regmap cpu_fsource_sel0 = {
-+	.data = &(struct clk_regmap_mux_data) {
-+		.offset = CPUCTRL_CLK_CTRL0,
-+		.mask = 0x3,
-+		.shift = 0,
-+		.table = cpu_fsource_sel_table,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_fsource_sel0",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_data = cpu_fsource_sel_parents,
-+		.num_parents = ARRAY_SIZE(cpu_fsource_sel_parents),
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap cpu_fsource_div0 = {
-+	.data = &(struct clk_regmap_div_data) {
-+		.offset = CPUCTRL_CLK_CTRL0,
-+		.shift = 4,
-+		.width = 6,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_fsource_div0",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&cpu_fsource_sel0.hw
-+		},
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap cpu_fsel0 = {
-+	.data = &(struct clk_regmap_mux_data) {
-+		.offset = CPUCTRL_CLK_CTRL0,
-+		.mask = 0x1,
-+		.shift = 2,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_fsel0",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&cpu_fsource_sel0.hw,
-+			&cpu_fsource_div0.hw,
-+		},
-+		.num_parents = 2,
-+		.flags = CLK_SET_RATE_GATE | CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap cpu_fsource_sel1 = {
-+	.data = &(struct clk_regmap_mux_data) {
-+		.offset = CPUCTRL_CLK_CTRL0,
-+		.mask = 0x3,
-+		.shift = 16,
-+		.table = cpu_fsource_sel_table,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_fsource_sel1",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_data = cpu_fsource_sel_parents,
-+		.num_parents = ARRAY_SIZE(cpu_fsource_sel_parents),
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap cpu_fsource_div1 = {
-+	.data = &(struct clk_regmap_div_data) {
-+		.offset = CPUCTRL_CLK_CTRL0,
-+		.shift = 20,
-+		.width = 6,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_fsource_div1",
-+		.ops = &clk_regmap_divider_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&cpu_fsource_sel1.hw
-+		},
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap cpu_fsel1 = {
-+	.data = &(struct clk_regmap_mux_data) {
-+		.offset = CPUCTRL_CLK_CTRL0,
-+		.mask = 0x1,
-+		.shift = 18,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_fsel1",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&cpu_fsource_sel1.hw,
-+			&cpu_fsource_div1.hw,
-+		},
-+		.num_parents = 2,
-+		.flags = CLK_SET_RATE_GATE | CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap cpu_fclk = {
-+	.data = &(struct clk_regmap_mux_data) {
-+		.offset = CPUCTRL_CLK_CTRL0,
-+		.mask = 0x1,
-+		.shift = 10,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_fclk",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_hws = (const struct clk_hw *[]) {
-+			&cpu_fsel0.hw,
-+			&cpu_fsel1.hw,
-+		},
-+		.num_parents = 2,
-+		.flags = CLK_SET_RATE_PARENT,
-+	},
-+};
-+
-+static struct clk_regmap cpu_clk = {
-+	.data = &(struct clk_regmap_mux_data) {
-+		.offset = CPUCTRL_CLK_CTRL0,
-+		.mask = 0x1,
-+		.shift = 11,
-+	},
-+	.hw.init = &(struct clk_init_data) {
-+		.name = "cpu_clk",
-+		.ops = &clk_regmap_mux_ops,
-+		.parent_data = (const struct clk_parent_data []) {
-+			{ .hw = &cpu_fclk.hw },
-+			{ .fw_name = "sys_pll", },
-+		},
-+		.num_parents = 2,
-+		.flags = CLK_SET_RATE_PARENT | CLK_IS_CRITICAL,
-+	},
-+};
-+
-+/* Array of all clocks registered by this provider */
-+static struct clk_hw *a1_cpu_hw_clks[] = {
-+	[CLKID_CPU_FSOURCE_SEL0]	= &cpu_fsource_sel0.hw,
-+	[CLKID_CPU_FSOURCE_DIV0]	= &cpu_fsource_div0.hw,
-+	[CLKID_CPU_FSEL0]		= &cpu_fsel0.hw,
-+	[CLKID_CPU_FSOURCE_SEL1]	= &cpu_fsource_sel1.hw,
-+	[CLKID_CPU_FSOURCE_DIV1]	= &cpu_fsource_div1.hw,
-+	[CLKID_CPU_FSEL1]		= &cpu_fsel1.hw,
-+	[CLKID_CPU_FCLK]		= &cpu_fclk.hw,
-+	[CLKID_CPU_CLK]			= &cpu_clk.hw,
-+};
-+
-+static struct clk_regmap *const a1_cpu_regmaps[] = {
-+	&cpu_fsource_sel0,
-+	&cpu_fsource_div0,
-+	&cpu_fsel0,
-+	&cpu_fsource_sel1,
-+	&cpu_fsource_div1,
-+	&cpu_fsel1,
-+	&cpu_fclk,
-+	&cpu_clk,
-+};
-+
-+static struct regmap_config a1_cpu_regmap_cfg = {
-+	.reg_bits   = 32,
-+	.val_bits   = 32,
-+	.reg_stride = 4,
-+	.max_register = CPUCTRL_CLK_CTRL1,
-+};
-+
-+static struct meson_clk_hw_data a1_cpu_clks = {
-+	.hws = a1_cpu_hw_clks,
-+	.num = ARRAY_SIZE(a1_cpu_hw_clks),
-+};
-+
-+struct a1_sys_pll_nb_data {
-+	struct notifier_block nb;
-+	struct clk_hw *cpu_clk;
-+	struct clk_hw *cpu_fclk;
-+	struct clk *sys_pll;
-+};
-+
-+static int meson_a1_sys_pll_notifier_cb(struct notifier_block *nb,
-+					unsigned long event, void *data)
-+{
-+	struct a1_sys_pll_nb_data *nbd;
-+	int ret = 0;
-+
-+	nbd = container_of(nb, struct a1_sys_pll_nb_data, nb);
-+
-+	switch (event) {
-+	case PRE_RATE_CHANGE:
-+		/*
-+		 * Clock sys_pll will be changed to feed cpu_clk,
-+		 * configure cpu_clk to use cpu_fclk fixed clock.
-+		 */
-+		ret = clk_hw_set_parent(nbd->cpu_clk, nbd->cpu_fclk);
-+
-+		/* Wait for clock propagation */
-+		if (!ret)
-+			udelay(100);
-+
-+		break;
-+
-+	case POST_RATE_CHANGE:
-+		 /*
-+		  * Clock sys_pll rate has ben calculated,
-+		  * switch back cpu_clk to sys_pll
-+		  */
-+		ret = clk_set_parent(nbd->cpu_clk->clk, nbd->sys_pll);
-+
-+		/* Wait for clock propagation */
-+		if (!ret)
-+			udelay(100);
-+		break;
-+
-+	default:
-+		pr_warn("Unknown event %lu for sys_pll notifier\n", event);
-+		break;
-+	}
-+
-+	return notifier_from_errno(ret);
-+}
-+
-+static struct a1_sys_pll_nb_data a1_sys_pll_nb_data = {
-+	.nb.notifier_call = meson_a1_sys_pll_notifier_cb,
-+	.cpu_clk = &cpu_clk.hw,
-+	.cpu_fclk = &cpu_fclk.hw,
-+};
-+
-+static int meson_a1_dvfs_setup(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct clk *sys_pll;
-+	int ret;
-+
-+	/* Setup clock notifier for sys_pll clk */
-+	sys_pll = devm_clk_get(dev, "sys_pll");
-+	if (IS_ERR(sys_pll))
-+		return dev_err_probe(dev, PTR_ERR(sys_pll),
-+				     "can't get sys_pll as notifier clock\n");
-+
-+	a1_sys_pll_nb_data.sys_pll = sys_pll;
-+	ret = devm_clk_notifier_register(dev, sys_pll,
-+					 &a1_sys_pll_nb_data.nb);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "can't register sys_pll notifier\n");
-+
-+	return ret;
-+}
-+
-+static int meson_a1_cpu_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	void __iomem *base;
-+	struct regmap *map;
-+	int clkid, i, err;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return dev_err_probe(dev, PTR_ERR(base),
-+				     "can't ioremap resource\n");
-+
-+	map = devm_regmap_init_mmio(dev, base, &a1_cpu_regmap_cfg);
-+	if (IS_ERR(map))
-+		return dev_err_probe(dev, PTR_ERR(map),
-+				     "can't init regmap mmio region\n");
-+
-+	/* Populate regmap for the regmap backed clocks */
-+	for (i = 0; i < ARRAY_SIZE(a1_cpu_regmaps); i++)
-+		a1_cpu_regmaps[i]->map = map;
-+
-+	for (clkid = 0; clkid < a1_cpu_clks.num; clkid++) {
-+		err = devm_clk_hw_register(dev, a1_cpu_clks.hws[clkid]);
-+		if (err)
-+			return dev_err_probe(dev, err,
-+					     "clock[%d] registration failed\n",
-+					     clkid);
-+	}
-+
-+	err = devm_of_clk_add_hw_provider(dev, meson_clk_hw_get, &a1_cpu_clks);
-+	if (err)
-+		return dev_err_probe(dev, err, "can't add clk hw provider\n");
-+
-+	return meson_a1_dvfs_setup(pdev);
-+}
-+
-+static const struct of_device_id a1_cpu_clkc_match_table[] = {
-+	{ .compatible = "amlogic,a1-cpu-clkc", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, a1_cpu_clkc_match_table);
-+
-+static struct platform_driver a1_cpu_clkc_driver = {
-+	.probe = meson_a1_cpu_probe,
-+	.driver = {
-+		.name = "a1-cpu-clkc",
-+		.of_match_table = a1_cpu_clkc_match_table,
-+	},
-+};
-+
-+module_platform_driver(a1_cpu_clkc_driver);
-+MODULE_AUTHOR("Dmitry Rokosov <ddrokosov@salutedevices.com>");
-+MODULE_LICENSE("GPL");
--- 
-2.43.0
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index a2bb86d52ad4..ce9d729bc8ff 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -149,19 +149,19 @@ void bch_btree_node_read_done(struct btree *b)
+ {
+ 	const char *err = "bad btree header";
+ 	struct bset *i = btree_bset_first(b);
+-	struct btree_iter *iter;
++	struct btree_iter iter;
+
+ 	/*
+ 	 * c->fill_iter can allocate an iterator with more memory space
+ 	 * than static MAX_BSETS.
+ 	 * See the comment arount cache_set->fill_iter.
+ 	 */
+-	iter = mempool_alloc(&b->c->fill_iter, GFP_NOIO);
+-	iter->heap.size = b->c->cache->sb.bucket_size / b->c->cache->sb.block_size;
+-	iter->heap.nr = 0;
++	iter.heap.data = mempool_alloc(&b->c->fill_iter, GFP_NOIO);
++	iter.heap.size = b->c->cache->sb.bucket_size / b->c->cache->sb.block_size;
++	iter.heap.nr = 0;
+
+ #ifdef CONFIG_BCACHE_DEBUG
+-	iter->b = &b->keys;
++	iter.b = &b->keys;
+ #endif
+
+ 	if (!i->seq)
+@@ -199,7 +199,7 @@ void bch_btree_node_read_done(struct btree *b)
+ 		if (i != b->keys.set[0].data && !i->keys)
+ 			goto err;
+
+-		bch_btree_iter_push(iter, i->start, bset_bkey_last(i));
++		bch_btree_iter_push(&iter, i->start, bset_bkey_last(i));
+
+ 		b->written += set_blocks(i, block_bytes(b->c->cache));
+ 	}
+@@ -211,7 +211,7 @@ void bch_btree_node_read_done(struct btree *b)
+ 		if (i->seq == b->keys.set[0].data->seq)
+ 			goto err;
+
+-	bch_btree_sort_and_fix_extents(&b->keys, iter, &b->c->sort);
++	bch_btree_sort_and_fix_extents(&b->keys, &iter, &b->c->sort);
+
+ 	i = b->keys.set[0].data;
+ 	err = "short btree key";
+@@ -223,7 +223,7 @@ void bch_btree_node_read_done(struct btree *b)
+ 		bch_bset_init_next(&b->keys, write_block(b),
+ 				   bset_magic(&b->c->cache->sb));
+ out:
+-	mempool_free(iter, &b->c->fill_iter);
++	mempool_free(iter.heap.data, &b->c->fill_iter);
+ 	return;
+ err:
+ 	set_btree_node_io_error(b);
+diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
+index cba09660148a..c6f5592996a8 100644
+--- a/drivers/md/bcache/super.c
++++ b/drivers/md/bcache/super.c
+@@ -1914,8 +1914,7 @@ struct cache_set *bch_cache_set_alloc(struct cache_sb *sb)
+ 	INIT_LIST_HEAD(&c->btree_cache_freed);
+ 	INIT_LIST_HEAD(&c->data_buckets);
+
+-	iter_size = sizeof(struct btree_iter) +
+-		    ((meta_bucket_pages(sb) * PAGE_SECTORS) / sb->block_size) *
++	iter_size = ((meta_bucket_pages(sb) * PAGE_SECTORS) / sb->block_size) *
+ 			    sizeof(struct btree_iter_set);
+
+ 	c->devices = kcalloc(c->nr_uuids, sizeof(void *), GFP_KERNEL);
 
