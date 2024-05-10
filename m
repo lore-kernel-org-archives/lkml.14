@@ -1,103 +1,105 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EBA646
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 00:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56BF01396
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 00:05:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715299508; cv=none; b=NsrOUXKZLJr3ekqJWKSo8CaCD5lwUNeRVzTDvCRynVBH+X2UGISlfh2XK8vyDRTmfavo1GBd1Ls7tKoFWKZ/JEeWdtGcnRjQOvuPBaud7j8vj7LzfbR7U36DUCEDOKAAt1eHBGD4Y1IXuGAtUCm9KD/MQxbXBI/dqkw8xYpWKKc=
+	t=1715299509; cv=none; b=k2P9umf/M1Ul/Yq5fPkci9I8o1o4fIor04HRsXIakclkgts0BLy8MPTk9vfCr0sktY++Pp4xvsNf7w0O4zTOrlH1IzWBAkpbsbTS3FW0F9u6urNcLe53NEmygQik3RMgLTQDWg5/a9q8tMm43AQHIDFyHUtMHvs3VT9YYGVGAkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715299508; c=relaxed/simple;
-	bh=EavCetVSCgCq8a1RaVsXoOaflK2PYWCs6cIGsY45SPs=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=F7UHEg+Dm/69bIsgbvV8yLRkcDuXQIKd6G0m2qdJEvefBYAvFoTJ+ppelcxWE/kTUSz2+FBvnXx25pZOVeF1ftghUrZeNoWU4jkmvj8EtzDEJxXy/H21j1dAForNCO0VqqdyQT7eWXLmjMKYXlyCPNbrftaF0fTfwiO44CqqwRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=V4Rr3vEU; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
+	s=arc-20240116; t=1715299509; c=relaxed/simple;
+	bh=E0lmq8MX+4Jk/oyYQbE2kOJ5yJ6GrU9UxEZJ7muUZBw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f3FS4rXq0V/Rruhx4Riv8L2ojaDq8rBluAN80f99H53LFr3h+JxisecuXz7xFPkYuqTh4ajbgY/aL59d00VwtINAmzV6f72fr5BphCSuOT6oRcjoIQljWbKymUg/GmBgYBud/OhZVn0aJIBg0x5sF7wJ2e+6G9ZnowyLlnPDn8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qQcLfqtU; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="V4Rr3vEU"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc647f65573so2969043276.2
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 17:05:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qQcLfqtU"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3504ad82a64so297436f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 17:05:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715299506; x=1715904306; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=6eqm/BqIluFQHvpRuckwNPKwG5hWXwTVWnnYkmrJGUM=;
-        b=V4Rr3vEUcZWKPNh4YW0gJjYQr/4dOw5JseSRg5xD3YYEFpP0Xkw7t7/E+eZqVcO3pu
-         59E86u9ohhWvmP6ZovTTGoki4ra03h8dndP7byhPDoAikm3V835l40RqrOfAlD4PwASd
-         ubtIoHXl0KU+6LgGLMaR0AQ2xRus6ooyVctjt1aAkfVIFdCjIQHd3XCSsLCOCNLQhrpP
-         O4EweZ3Lu+EUcrk1j5vjDfUWxMJNRosirtE7GPMndqBN/nEJHd0f7Ik0Orfd0UvTy4XM
-         UuivO139DEYuhS7TAJaQvEmFe7ynt3s2NDNkeZ474PQdDMqOEUqmXhNmaCaLmkHnfWwW
-         YLsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715299506; x=1715904306;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=linaro.org; s=google; t=1715299505; x=1715904305; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=6eqm/BqIluFQHvpRuckwNPKwG5hWXwTVWnnYkmrJGUM=;
-        b=SMQImFsaRRzHOLH11sct5Vqk+TamvPg4jIoaQbVU8QK0dFBgRZmsCTGcEMe6Ocr/vu
-         HbC3Xa9nCqNJf9iMEnm3yFo/JgWxwr8pijGlzrsp0u1vHRn0EPrTOD4J52Fn2vjUk8mN
-         buFN81BdupmNacpa7dXzXS7dPp2gRUBhZBxopOEo36FJ2doWv/sZQh/xYpSFcvYmfnqK
-         3hp78o2WTyCRYmBt7ozor95Uzv0SxcPBmORlH78UqzXm7lVjtqNUr9wTlRwV3GljfIpy
-         e9fAKVyyh1AoMRapcF6oRhqW5ycdP/nBdTvbkpwiLxxFBQzjMfpGqLznUKInwAZ0ggtE
-         93oA==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ1ja+2lnKmSi9afIasXP4sIoHinDQnAnxX3iqeep3C4R6feDP5SB+oPfOGz31fhoLW1hDVSi3BKG4NhE8WOi13WY40NK+RmK3z8TD
-X-Gm-Message-State: AOJu0YzYVk/LxwPLte1kvIz/BHaml8EITo6I9nNxmN/46rPFFrhzcNbn
-	9HXjhXRftOnP28FP+ZAV4G3xyXUfnoLPLCihWJEdwwiub5KAJG6N+/LDN6SLqPDKI85tLxI0bPQ
-	X
-X-Google-Smtp-Source: AGHT+IHWZ1QbRc7CocmE11JfF95PsYEf4cv12KCkp3UCAxnICrsEj6dkC5JTWIEWOGCF8OhmKEJRJ8tMNX4=
-X-Received: from yabinc-desktop.mtv.corp.google.com ([2620:15c:211:202:1b7d:8132:c198:e24f])
- (user=yabinc job=sendgmr) by 2002:a25:7486:0:b0:de5:2325:72a1 with SMTP id
- 3f1490d57ef6-dee4f192850mr277203276.4.1715299505730; Thu, 09 May 2024
- 17:05:05 -0700 (PDT)
-Date: Thu,  9 May 2024 17:04:59 -0700
+        bh=ZJDvHxVDamFulMq6bCsnACysSO0ggfMo1ZnPMiLHLuw=;
+        b=qQcLfqtUUIqjU8fledlVGfAuSC5VqHup0NMuSDiYxHZ1YoP8oYPgt7CEEoQEAilTMt
+         0F6nJSTHT1Z2v4u53KALrEey+amxdvpz/KCbmyJ+fmYYGOeO7SO+YpYCKqH5wWL84Yu1
+         L5zgXDNpjQNGn/QoIS5Tl4bNQ6ovgcKapy3aPtIiumSrEmtJGZva7CIm3dwxpgq6Edwn
+         lNeYljIn+WPQFZqEa3GN6Hd3ZH+yX2pqVi+nhnh89qyjZepd3Yv+G4jBwDW8RoJYw6S5
+         F8WaPbXLKybQQMSV4dsvtwMAW/iTQXhqH055e8KLsbcXpWpvvEDu6FOfIyIG8GYlVDPY
+         rujA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715299505; x=1715904305;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZJDvHxVDamFulMq6bCsnACysSO0ggfMo1ZnPMiLHLuw=;
+        b=olQk8UCGfnuReS9SK49u9ZVIFY83YPWoQ8tY3sWQfAbBs6b8tHXutCcWFYS5Dq4owc
+         ydwVz6mQuDx1mQNdpdUxkEq/mVWBM9a1FehkGFCkA3v6X5sZrgFhuYJInT01Cd4qRsGj
+         Sa7YolkSOpaGGP+aCaU8KV2eLxqD0lCmwAaw7fnre8f2G7kAyjRD2HKQvS+my7EjQVyf
+         XBAKo5NrQxIyNt8G+snsKnyA2Dlwgqizlh/u9E6pKYg6oiy/te0MGcBp54ZKOiNgeIit
+         O1pVDP20O7gVcp1+WMMr6Jv8NX8qrWbeVyDpWsyPw0AyEonhd3trBzdT05lKLBtK7Rn9
+         of6g==
+X-Forwarded-Encrypted: i=1; AJvYcCV2hPBBfmaSMtnuAcl4OSmhuOtPV0vIFWQc/jA4dVQuEcYOg2LPuoT6PomVL1UWq99rt7j3qjKfM/rvQBx6zBhA5RyOxoZPwos4jvse
+X-Gm-Message-State: AOJu0Yxsx83ZipA81W2TQSZScaQfJ1GEWb8YLyYn2ohQX3AaHsE7/WLf
+	MogIohNSxP2CPetFGExTTzA62/2zA4kcHR2jpM9tN1mbQDV8VhqK/uP7kXs+NGQ=
+X-Google-Smtp-Source: AGHT+IFpw7GCMJ/CWM5hZlVcjWf7EKF9fdl13h7/3kbc8DbQMnrhoSKZWHzaiBl0vtLlRUdYmpM5nw==
+X-Received: by 2002:a05:6000:cc6:b0:343:7cef:993d with SMTP id ffacd0b85a97d-3504a96a111mr747947f8f.61.1715299505664;
+        Thu, 09 May 2024 17:05:05 -0700 (PDT)
+Received: from [192.168.0.3] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502baad1f0sm2955412f8f.89.2024.05.09.17.05.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 May 2024 17:05:05 -0700 (PDT)
+Message-ID: <b49a7014-163d-4805-8580-da2802311f26@linaro.org>
+Date: Fri, 10 May 2024 01:05:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
-Message-ID: <20240510000502.1257463-1-yabinc@google.com>
-Subject: [PATCH v3 0/3] perf:core: Save raw sample data
-From: Yabin Cui <yabinc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Yabin Cui <yabinc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 16/18] media: venus: Refactor hfi_sys_get_property_pkt
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Michael Tretter <m.tretter@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Michal Simek <michal.simek@amd.com>, Andy Walls <awalls@md.metrocast.net>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+ Hans Verkuil <hverkuil-cisco@xs4all.nl>
+References: <20240507-cocci-flexarray-v2-0-7aea262cf065@chromium.org>
+ <20240507-cocci-flexarray-v2-16-7aea262cf065@chromium.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240507-cocci-flexarray-v2-16-7aea262cf065@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Changes since v1:
- - Check event->attr.sample_type & PERF_SAMPLE_RAW before
-   calling perf_sample_save_raw_data().
- - Subject has been changed to reflect the change of solution.
+On 07/05/2024 17:27, Ricardo Ribalda wrote:
+> -struct hfi_sys_get_property_pkt {
+> +struct hfi_sys_get_version_pkt {
+>   	struct hfi_pkt_hdr hdr;
+> -	u32 num_properties;
 
-Changes since v2:
- - Move sample_type check into perf_sample_save_raw_data().
- - (New patch) Move sample_type check into perf_sample_save_callchain().
- - (New patch) Move sample_type check into perf_sample_save_brstack().
+Disagree with the structure name change - the structure describes the 
+packet which in this case is a get property packet. The data field 
+identifies the packet to the firmware.
 
-Original commit message from v1:
-perf/core: Trim dyn_size if raw data is absent
+If I were to end up reading kernel code and firmware code it is easier 
+on the programmer to match both ends of the protocol with a common 
+namespace.
 
-Yabin Cui (3):
-  perf/core: Save raw sample data conditionally based on sample type
-  perf: core: Check sample_type in perf_sample_save_callchain
-  perf: core: Check sample_type in perf_sample_save_brstack
+Please retain the name of the packet `hfi_sys_get_property_pkt` and the 
+existing `num_countsathing` in this driver keeping `num_properites`
 
- arch/s390/kernel/perf_cpum_cf.c    |  2 +-
- arch/s390/kernel/perf_pai_crypto.c |  2 +-
- arch/s390/kernel/perf_pai_ext.c    |  2 +-
- arch/x86/events/amd/core.c         |  3 +--
- arch/x86/events/amd/ibs.c          |  5 ++---
- arch/x86/events/core.c             |  3 +--
- arch/x86/events/intel/ds.c         |  9 +++-----
- include/linux/perf_event.h         | 10 +++++++++
- kernel/events/core.c               | 35 +++++++++++++++---------------
- kernel/trace/bpf_trace.c           | 11 +++++-----
- 10 files changed, 44 insertions(+), 38 deletions(-)
-
--- 
-2.45.0.118.g7fe29c98d7-goog
-
+---
+bod
