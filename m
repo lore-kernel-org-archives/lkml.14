@@ -1,105 +1,120 @@
-Received: from 008.lax.mailroute.net (008.lax.mailroute.net [199.89.1.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14181E502;
-	Fri, 10 May 2024 16:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.1.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A92D172798
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 16:21:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715358072; cv=none; b=MBKleKfZrNIlgmnnD4WqTrb9KCpKdo7dq549Y63WfZe/jc+UMTO3FLX0cO2PXaToR1XaFySjOSL2W9XXlH8+BwqyKCEC/vv971jVyt/MqLFjiD1F4zJRXrxjuAodC+u9R2xbzImSOOhEQPpGcwg7ioq90XHZGiqFUYaWCiyQeeA=
+	t=1715358081; cv=none; b=nH8NP+M2uNNr9AzHNqAqcXKNamb4hIPLIe/UajOYnkBjs+e+LZOKP3AjRlT5pm0kUEZ7RxLkbg1Cr0/87u0LLAG3ahKd6JwkRhEdk4weinzk9po2Npnb/hBD+wUkz4WjhRVcV/aBLpBJhUE5gzXQXDPN5GmDsCoQ6k5EjsZF7XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715358072; c=relaxed/simple;
-	bh=9eVFeI4MVw3d17iTqq4yVn7+uRkW7sAAFJQNg15myGY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZXo1YSGQuzBGkIL/f9n9N/o3bikuwX5QaaeIm/625sX6tHGzSly7Zj8/l2MOPink+UlqMzMemcVXTQf2oEl206DZ3VIrx95bL9Kf7V0wpuQeMcyJ8FIkOEi9PQUgCtNYD2K0rO1NX8ylxdk6GdF1zWhQKIn9l0CH3v8OGu/qPgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=n18lc6a2; arc=none smtp.client-ip=199.89.1.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1715358081; c=relaxed/simple;
+	bh=8aU0aZOb2y9DUg+lZw8BCNxpFVehcs41OsBX/b+s5tA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gdvpAe8HKxr2P3Z1llVj6RwAkIejPItWiE2ExsYZhOxyEldV0407XJ42AvjiNa7ThptmkG0cZs1r8doYzZhnb34knOSHvdBR3wghYJvsvl/aBYMhB38di4Mx7+M0AYDgWyiVav9uDcog7o8ma8irtLDZUlngjRYFEFoazlDWMQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JVIw+3Sd; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="n18lc6a2"
-Received: from localhost (localhost [127.0.0.1])
-	by 008.lax.mailroute.net (Postfix) with ESMTP id 4VbYz43zB0z6Cnk8y;
-	Fri, 10 May 2024 16:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1715358062; x=1717950063; bh=QOddt5IKXRCkImqqK6vka+M2
-	kOA6v8rGcyELCFfSJJc=; b=n18lc6a2Ps6drLfgczpjOnaevfy+D88JeI39N2ox
-	QBRLMO/rQ2SwBx61cyyY5IP6wC5INT6BNaGFgVEzyZH3af3BQ10jnH7orkfoYvUM
-	0vbMiKZtBqKk/2RrRuki24FzIdJR+aVrmvLinHcZFwtvHVRtfWnVHesK3H+kQVoE
-	UnXTgfZzs/jP0Z8PTzFklx2q/xCRH1FrdsINOULe370AVemgXBQE5PeokfJTlYWt
-	cv4tORr9LR9NbX7UTC4dDzTjwaxXkQCdGyeWmoNWbmjsyrOe9CWfyVcX7d0saUOO
-	GEYNPbmB7LP9CBfuwfmNBcnYIk7TNWUAKgqNUbwVBnPR7Q==
-X-Virus-Scanned: by MailRoute
-Received: from 008.lax.mailroute.net ([127.0.0.1])
- by localhost (008.lax [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id A3-vK-S9u8rf; Fri, 10 May 2024 16:21:02 +0000 (UTC)
-Received: from [192.168.3.219] (c-73-231-117-72.hsd1.ca.comcast.net [73.231.117.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 008.lax.mailroute.net (Postfix) with ESMTPSA id 4VbYz05VYwz6Cnk8s;
-	Fri, 10 May 2024 16:21:00 +0000 (UTC)
-Message-ID: <d037f37a-4722-4a1d-a282-63355a97a1a1@acm.org>
-Date: Fri, 10 May 2024 09:20:58 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JVIw+3Sd"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-de46b113a5dso2086059276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 09:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715358078; x=1715962878; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eFE3n+MZyxeo0bNjBIjsCbl4GDn+4HbpNAkc84Q2m38=;
+        b=JVIw+3SdPraslrAkUD+qP1EL8SvbtmlAA6hZ5bM4Hw8/qeRwI5JrXO2iIcpmaMpgZs
+         Zun4MxTUSoxsj+OY6wfTpiRVvcFwG/VNn/FwP2F/nNraLxBkp44rQmv3eA2pHkfSKtAL
+         7vhxxDi/sAQ1DTbJsLD+xp0e6srravEyfLRnxbzZF2b0VNMivyFLE90e/5HtgUVnpovV
+         gFW6bmVp78XTzYRQNGARB/YWcbQ3v4VntRu5mBCVLfKx0Ap+EQPMWQVPJS1amcWJ7RlS
+         9Ldf9PhdtDUTp98JzMKzKawmmUSSI7IyeZocfMbQtjH3rro+q/77A40a8w6V3KbBXUSu
+         0DQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715358078; x=1715962878;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eFE3n+MZyxeo0bNjBIjsCbl4GDn+4HbpNAkc84Q2m38=;
+        b=PvgaphYUVeIqbWWcBuL2VnAJu15HaZlUJ2Czp2DzPbVsQM7tfDXYwSvnfz8rgJQDM/
+         Vk0AC5NcUz+FyUtwGYQz54ZYzzQ368Reg7UOq6UJpJ9oDjH5or5iwD7YYVu4Qr+RO35y
+         t1MAE3y/PCuMsISArctOh5VkKhKk1/OErIiDpRoLoDBEhJC0wsVXNzxrN6rmOXKKeO7d
+         LtBgQ+BZLL7pmGcG4axjv9tnXB4eXkA9E10ydxCO6Wjhc3rysUu8LQJqocltVWDe9MWX
+         bxeveCYXBY7D1RyO85DUJxwiA02UprO3mRghnGY0Yr5nYcROlg/j8xUYqThzJju1+3qf
+         yPpg==
+X-Forwarded-Encrypted: i=1; AJvYcCV8uisqxxKv/HHzjiVDE5fndDCz0nHJTq5Is9ELXcCc4AwZ1wraIyDZjBuNSzbx8WA/4zJbF62CbdIuS9BTux3FE3xnDN3cC+VWEpw9
+X-Gm-Message-State: AOJu0YyD3J0cRB4mz4LdvYgirNh6K/DUIad+DEmtuuSAvKu+1Fut7KPN
+	5Xj4Jd3Wm9Onzh2FoBtq7gFvyNCZ4omfu7RdtK5HM0pZH7wGqgP5fb3l12ooXKLZB/VrUEW4aTE
+	eKnww5QSQjiJxH9hfRqG/KrU47Fi5CfD1N7nU
+X-Google-Smtp-Source: AGHT+IG1DyUD3fKZKxA634315t5oE5P95Q7TTzvjl87/l/KT7ajBuikVKoMlofkpK08Ducvn1mCsxmnORAB/OPa4VDU=
+X-Received: by 2002:a25:bc8f:0:b0:dee:6346:b856 with SMTP id
+ 3f1490d57ef6-dee6346bbaemr42235276.34.1715358077724; Fri, 10 May 2024
+ 09:21:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] block: Annotate a racy read in blk_do_io_stat()
-To: paulmck@kernel.org
-Cc: Breno Leitao <leitao@debian.org>, Jens Axboe <axboe@kernel.dk>,
- "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>
-References: <20240510141921.883231-1-leitao@debian.org>
- <ef8c5f6d-17e3-4504-8560-b970912b9eae@acm.org>
- <de92101c-f9c4-4af4-95f4-19a6f59b636f@paulmck-laptop>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <de92101c-f9c4-4af4-95f4-19a6f59b636f@paulmck-laptop>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20240509-b4-sio-read_write-v1-1-06bec2022697@google.com> <20240510151508.hajqjxsn7rghk3dj@quack3>
+In-Reply-To: <20240510151508.hajqjxsn7rghk3dj@quack3>
+From: Justin Stitt <justinstitt@google.com>
+Date: Fri, 10 May 2024 09:21:06 -0700
+Message-ID: <CAFhGd8qbUYXmgiFuLGQ7dWXFUtZacvT82wD4jSS-xNTvtzXKGQ@mail.gmail.com>
+Subject: Re: [PATCH] fs: fix unintentional arithmetic wraparound in offset calculation
+To: Jan Kara <jack@suse.cz>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
+	Nathan Chancellor <nathan@kernel.org>, Bill Wendling <morbo@google.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 5/10/24 8:41 AM, Paul E. McKenney wrote:
-> On Fri, May 10, 2024 at 07:28:41AM -0700, Bart Van Assche wrote:
->> On 5/10/24 07:19, Breno Leitao wrote:
->>> diff --git a/block/blk.h b/block/blk.h
->>> index d9f584984bc4..57a1d73a0718 100644
->>> --- a/block/blk.h
->>> +++ b/block/blk.h
->>> @@ -353,7 +353,8 @@ int blk_dev_init(void);
->>>     */
->>>    static inline bool blk_do_io_stat(struct request *rq)
->>>    {
->>> -	return (rq->rq_flags & RQF_IO_STAT) && !blk_rq_is_passthrough(rq);
->>> +	/* Disk stats reading isn=E2=80=99t critical, let it race */
->>> +	return (data_race(rq->rq_flags) & RQF_IO_STAT) && !blk_rq_is_passth=
-rough(rq);
->>>    }
->>>    void update_io_ticks(struct block_device *part, unsigned long now,=
- bool end);
->>
->> Why to annotate this race with data_race() instead of READ_ONCE()? Are
->> there any cases in which it is better to use data_race() than
->> READ_ONCE()?
->=20
-> We use this pattern quite a bit in RCU.  For example, suppose that we
-> have a variable that is accessed only under a given lock, except that i=
-t
-> is also locklessly accessed for diagnostics or statistics.  Then having
-> unmarked (normal C language) accesses under the lock and data_race()
-> for that statistics enables KCSAN to flag other (buggy) lockless access=
-es.
+On Fri, May 10, 2024 at 8:15=E2=80=AFAM Jan Kara <jack@suse.cz> wrote:
+>
+> On Thu 09-05-24 21:34:58, Justin Stitt wrote:
+> > ---
+> >  fs/read_write.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/fs/read_write.c b/fs/read_write.c
+> > index d4c036e82b6c..10c3eaa5ef55 100644
+> > --- a/fs/read_write.c
+> > +++ b/fs/read_write.c
+> > @@ -88,7 +88,7 @@ generic_file_llseek_size(struct file *file, loff_t of=
+fset, int whence,
+> >  {
+> >       switch (whence) {
+> >       case SEEK_END:
+> > -             offset +=3D eof;
+> > +             offset =3D min_t(loff_t, offset, maxsize - eof) + eof;
+>
+> Well, but by this you change the behavior of seek(2) for huge offsets.
+> Previously we'd return -EINVAL (from following vfs_setpos()), now we set
+> position to maxsize. I don't think that is desirable?
 
-Can using data_race() instead of READ_ONCE() result in incorrect code
-generation, e.g. the compiler emitting a read twice and reading two
-different values?
+RIght, we shouldn't change the current behavior. This patch needs rethinkin=
+g.
 
-Thanks,
+>
+> Also the addition in SEEK_CUR could overflow in the same way AFAICT so we
+> could treat that in one patch so that the whole function is fixed at once=
+?
 
-Bart.
+Yep let's include that one as well. However, I'm going to hold off on
+sending a new version until the discussion about how to handle
+overflow comes to a conclusion; as suggested by Greg [1]. I made too
+many assumptions about how folks want overflow to be handled. In the
+case of this patch, a simple check_add_overflow() should be okay and
+match the behavior, but let's wait and see.
 
+>
+>                                                                 Honza
+> --
+> Jan Kara <jack@suse.com>
+> SUSE Labs, CR
+
+[1]: https://lore.kernel.org/all/2024051039-bankable-liking-e836@gregkh/
+
+Thanks
+Justin
