@@ -1,101 +1,68 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83794770E7;
-	Fri, 10 May 2024 11:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD5C17082A;
+	Fri, 10 May 2024 11:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715340515; cv=none; b=eXdzCIAnXyRgvw/zr7KSBnixG3DApFbKvH7zdiHtSHfju8SfgtwpplzM8r5bJSGGX6bZFbohaTovb+RHB4E9NhCO8/GhhboVBC3MwwvsAuLy1oaQ35v434m7PKc1NXiuu37jlziNSLugDVebqtSHRKPAumkRM74O5JLv3Fu6wNY=
+	t=1715340517; cv=none; b=KQQoM5Buc5GnRbacMvo9/KjavIhzGKQ5wePVuIa2jQHoJbWBUFD4bcw68pMfXuEUw3Jip9NEIPDte2EQUpEPfbSc7JobLMafWLcpPWbCRgNU6XHawXKNAPq4gdOieivk9ugUVB0ldfkFiOXCyQs8yd7Xp9+TQZu6ghRCyNTrGGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715340515; c=relaxed/simple;
-	bh=ZLmyf/SB9k8bTUf14Biaey4u/W6IvmiD6BOPwOaZAe8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=YZJ5/uuwZe1/b0mXflvkg6NoIjbSotkuhqY4Jpcpe/88h4awvLVqbS5vdXqyszbUNPpazo0rRaD2Gv1fwyBag9FavonX6cOqqv98FWl1MutYvoCY9UUBEpfo3GX4U+VkQUHRpctsFOnyXhmz7DChRNm9a1+Msk8A+hN0ku35mdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MonlHVN8; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715340517; c=relaxed/simple;
+	bh=VjidK1s4OWd/3MT51iGA2Jy+KprZUVq1rMsqwlZarsg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sgt8Fvl6xpQIf0cx9B3daYhyfFptHKxvq+jzhGt0McZVYY3vvf1FU4SIXDNpSp0PR40t3Ehyl6llDk6iRzhwGGaPXEcTox0skaYpNVWjNCun89ozl+UxbJa8Byq+lrePqqsrMLtA+BM/T1yzN/I9TsS9cUOim1ZkWGlBsMg82CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iaI9S+Ow; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MonlHVN8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715340513; x=1746876513;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ZLmyf/SB9k8bTUf14Biaey4u/W6IvmiD6BOPwOaZAe8=;
-  b=MonlHVN8XvPnuT+AAfZvuNe11lkw3bNh/RbYRZA114Ql+kk40prv8OPK
-   VrdYt1Lf1F+0jPzFjnULvTEh7C03MX1c/wIVhAQVqphtSL8JNcSsXTGkT
-   RvtUl6dTCWbiJqnUYnuIoB9M1weJPpt5aUerDIt+UJJ1ZtmJfwh7RB6bv
-   28hkuGZOJl/OqaBuso7TPinP8UG3zc6JOFXjr+zexhpo7gpUpcEj4OlW0
-   d1pgNvlMjSCLEUKzoEBXqCXUt6RHy73Y9lIGbHW+nQZGI+RtSs/v1ptiu
-   /hi8cdfKWYYIu4Kjm1g3adxF+ZU0BW2uHrHGLRg88QZ7A9pA0b5mRkFV/
-   A==;
-X-CSE-ConnectionGUID: sU266BowRiSf+LFA7e6+aA==
-X-CSE-MsgGUID: EJjBhLcJTqafrsE34MNt6Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="21913191"
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="21913191"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 04:28:31 -0700
-X-CSE-ConnectionGUID: wN6vl6IcTgSEOcr+1toScA==
-X-CSE-MsgGUID: 5lvBBX4ORUi2dE00CEmXoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="30138439"
-Received: from fdefranc-mobl3.ger.corp.intel.com (HELO fdefranc-mobl3.intel.com) ([10.245.246.191])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 04:28:28 -0700
-From: "Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org,
-	Dan Williams <dan.j.williams@intel.com>,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: [RFC PATCH v2 0/3] Make ELOG log and trace consistently with GHES 
-Date: Fri, 10 May 2024 13:21:44 +0200
-Message-ID: <20240510112740.667445-1-fabio.m.de.francesco@linux.intel.com>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iaI9S+Ow"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BCB9C2BD11;
+	Fri, 10 May 2024 11:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715340516;
+	bh=VjidK1s4OWd/3MT51iGA2Jy+KprZUVq1rMsqwlZarsg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iaI9S+OwFS9NEUT/5eixzrMiTE5eZDdAf3P+HUUyzjKTzVCMZHIASt1OH79PJmEfe
+	 7XbvV/XakUNGN+KdrF/d5cYw2oFTehq9YLoQ9ugyMsVmlbtktPqFJBzVI315X0Evdf
+	 VWRSXkB5BlhjJRsZAmilOS6WzKjJIFfU1G+eLqpCG1wbRzsj5cg2MUNp5qwf1a50lu
+	 mXQLkUJ4HFHq+scpvlZMNTF/cJPushGLkcsjWRiZHbdM+7R7mEP+F8U23MRFwi+o53
+	 Ms/pmOCYKXjGjI5jthCQTEgGkv3Fm4KyR4r6MzmEdTrxqm+Uli8ed6WjFY2dP9bR41
+	 iLHeo0uvLCdEA==
+Date: Fri, 10 May 2024 12:28:31 +0100
+From: Simon Horman <horms@kernel.org>
+To: =?utf-8?Q?Asbj=C3=B8rn_Sloth_T=C3=B8nnesen?= <ast@fiberby.net>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Manish Chopra <manishc@marvell.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>
+Subject: Re: [PATCH net-next v2 07/14] net: qede: use extack in
+ qede_flow_parse_tcp_v4()
+Message-ID: <20240510112831.GJ2347895@kernel.org>
+References: <20240508143404.95901-1-ast@fiberby.net>
+ <20240508143404.95901-8-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240508143404.95901-8-ast@fiberby.net>
 
-When Firmware First is enabled, BIOS handles errors first and then it
-makes them available to the kernel via the Common Platform Error Record
-(CPER) sections (UEFI 2.10 Appendix N). Linux parses the CPER sections
-via two similar paths, ELOG and GHES.
+On Wed, May 08, 2024 at 02:33:55PM +0000, Asbjørn Sloth Tønnesen wrote:
+> Convert qede_flow_parse_tcp_v4() to take extack,
+> and drop the edev argument.
+> 
+> Pass extack in call to qede_flow_parse_v4_common().
+> 
+> In call to qede_flow_parse_tcp_v4(), use NULL as extack
+> for now, until a subsequent patch makes extack available.
+> 
+> Only compile tested.
+> 
+> Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
 
-Currently, ELOG and GHES show some inconsistencies in how they print to
-the kernel log as well as in how they report to userspace via trace
-events.
-
-This short series wants to make these two paths act similarly for what
-relates to logging and tracing.
-
---- Changes in v2 ---
-	
-	- 0/3: rework the subject line and the letter.
-        - 1/3: no changes.
-        - 2/3: trace CPER PCIe Section only if CONFIG_ACPI_APEI_PCIEAER
-          is defined; the kernel test robot reported the use of two
-          undefined symbols because the test for the config option was
-          missing; rewrite the subject line and part of commit message.
-        - 3/3: no changes.
-
-Fabio M. De Francesco (3):
-  ACPI: extlog: Trace CPER Non-standard Section Body
-  ACPI: extlog: Trace CPER PCI Express Error Section
-  ACPI: extlog: Make print_extlog_rcd() log unconditionally
-
- drivers/acpi/acpi_extlog.c | 47 ++++++++++++++++++++++++++++++++++----
- drivers/ras/debugfs.c      |  6 -----
- include/linux/ras.h        |  2 --
- 3 files changed, 42 insertions(+), 13 deletions(-)
-
--- 
-2.45.0
+Reviewed-by: Simon Horman <horms@kernel.org>
 
