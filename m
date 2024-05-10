@@ -1,139 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22C6B17BCE;
-	Fri, 10 May 2024 17:47:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0F41CF83;
+	Fri, 10 May 2024 17:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715363236; cv=none; b=b6fvb+oFn2Qu4CkbvaK3GpXrtYISsyIgzRCkkwkqNoasKz8HS106o1HWRHEFm0b1Y3kiLfAogXqcN8SZ5XVsV8xlj+FEXLtUf7REg/qJUYrBd7ZU6oTb293zp42UNPxRdIf5x69Z7ES0iXTRljAkHAixYo9kII9XBevJJrkcVw4=
+	t=1715363255; cv=none; b=YtgFF2O5T9ljzPnGedROw3zuAmPR0Ewq5tVxTHhPKxnPs44Heid4+yoEtjeDwqTPRgooxMAcPFGeh6K5ZnjL4LskCgXyMwj7+jGMUvXgYOgdVCpgNEDh7oKFiImFNLt0caeHSTM4tBRq/vXuSIw4t9E0y6vDeBjc7bjCMXg+/BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715363236; c=relaxed/simple;
-	bh=1Bjsxi6FLuGOj7RtmewtKis8IikuC8YQFkIP8lxG5to=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u5T3lJZqU+pYeeRUMrYRDVBrHjUkNOTTEMDWEjFRkOBgSVvBlWo2Yye1HXn7bbZGQqX3eRIJBywL+2Gy/FSl2oxmnMG6LD6IQhMpvSyRVrhMz7qqxDOrJznj+ey27zrbE6zjCtYoB2ju/NZhsAU338eoF6RDJStx6yVHedVG6Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mo9r8pbZ; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715363255; c=relaxed/simple;
+	bh=QY880VpDrKLYkLIweQTEmSAibAJZgvDYkKXiQyBJy2Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u4D/PTZjtHeuWzK7o+JNSJnS9bGzN9445hwOfd07+Vm29ov5Ym49Vsv/46lF+4bJAPKapKHLqPsP4eHgXdM166nEItanrIrr+K7S5eKTNZSexy0icAfqy8eSQD+EHFW/nVAP+FTnvVKYHP6v49fd7T6zol9TOlzs3E6XpcrASQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=aGYUk32c; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mo9r8pbZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715363233; x=1746899233;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=1Bjsxi6FLuGOj7RtmewtKis8IikuC8YQFkIP8lxG5to=;
-  b=mo9r8pbZaddQo66fKnUFxYa3VXdeT6zw22vXRzy+hrTnO5fvK60sOq7X
-   oTGvodPqOtSKQ61Hs09oCprMqHGmq6TD9BHj7Ggj1XBtP0TXpvu58EvK3
-   47LxBt4bmz5ObdYR78kUqwZdNfmApII5hqmsPU3uZ9ZgDjavOWlfDRVmY
-   ilXBCTgXwYJ0IwTTX8lkgu5Hg1zOD5MEZ74idNXAovMRfHdfI8PS0TlcU
-   7+dLado7JffDbe2plzBOfawUY3VEtTAxHBy4nUPSOZxOOjc75lh3N9QRw
-   po/wZkS9hP1G8emUrTwMZVEbH1H4P6JoWNNj8mDmlI7u5T7eOH+4h0ac4
-   w==;
-X-CSE-ConnectionGUID: erBKYM42T3SkBkru9IGRlw==
-X-CSE-MsgGUID: 9CUYCF3WQ5eBwE8kMPZ6wg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11069"; a="22764913"
-X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="22764913"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 10:47:02 -0700
-X-CSE-ConnectionGUID: 9BuGuE57RSmgVyrAKM/GPQ==
-X-CSE-MsgGUID: qwl5bYPFRgeN0WD4/7PfJw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="29540130"
-Received: from ls.sc.intel.com (HELO localhost) ([172.25.112.31])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 10:47:01 -0700
-Date: Fri, 10 May 2024 10:47:00 -0700
-From: Isaku Yamahata <isaku.yamahata@intel.com>
-To: Sean Christopherson <seanjc@google.com>
-Cc: Michael Roth <michael.roth@amd.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-coco@lists.linux.dev, linux-mm@kvack.org,
-	linux-crypto@vger.kernel.org, x86@kernel.org,
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com,
-	ardb@kernel.org, vkuznets@redhat.com, jmattson@google.com,
-	luto@kernel.org, dave.hansen@linux.intel.com, slp@redhat.com,
-	pgonda@google.com, peterz@infradead.org,
-	srinivas.pandruvada@linux.intel.com, rientjes@google.com,
-	dovmurik@linux.ibm.com, tobin@ibm.com, bp@alien8.de, vbabka@suse.cz,
-	kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com,
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com,
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com,
-	pankaj.gupta@amd.com, liam.merwick@oracle.com, papaluri@amd.com,
-	Isaku Yamahata <isaku.yamahata@intel.com>,
-	isaku.yamahata@linux.intel.com, rick.p.edgecombe@intel.com
-Subject: Re: [PATCH v15 21/23] KVM: MMU: Disable fast path for private
- memslots
-Message-ID: <20240510174700.GB480079@ls.amr.corp.intel.com>
-References: <20240501085210.2213060-1-michael.roth@amd.com>
- <20240510015822.503071-1-michael.roth@amd.com>
- <Zj4lebCMsRvGn7ws@google.com>
- <CABgObfboqrSw8=+yZMDi_k9d6L3AoiU5o8d-sRb9Y5AXDTmp5w@mail.gmail.com>
- <20240510152744.ejdy4jqawc2zd2dt@amd.com>
- <Zj5ETYPTUo9T4Nuf@google.com>
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="aGYUk32c"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1715363237; x=1715968037; i=w_armin@gmx.de;
+	bh=QY880VpDrKLYkLIweQTEmSAibAJZgvDYkKXiQyBJy2Y=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=aGYUk32cac8X+wwRD1t/33aalJItWQnjQwDpAPcmZe0dXWXwj5DxC2E6v9QyuR8e
+	 QPgoYXtZDPdHHI1uWwjXLiCcrYHAbNi+ez9SClnLh40+NZ3VrUKe3+n2NrIrLJKiR
+	 AzcvqGBE1WpwTcll6Dck+xXnk/F7OivoP2PMxWwYvIXjPGlW/ELkfajqqNk9V3yYb
+	 G2jxDxtWdAjWGLhzpXUK3SzpePjZ3Fuw4q5YoyVEDDS59+7YwiwezhBoL28ii8NtD
+	 XEAalDW3nkztTn7qQXtLJXX5Py41OqNtj/fIStRRi6eF2yk0kVJj21plOr6gGZEF1
+	 xtqRXjnfyX1q1zX2Xg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [141.30.226.129] ([141.30.226.129]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MuDXp-1stJZQ347Z-00ucg8; Fri, 10
+ May 2024 19:47:17 +0200
+Message-ID: <269412ef-13de-4192-9289-52e51507e0b5@gmx.de>
+Date: Fri, 10 May 2024 19:47:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zj5ETYPTUo9T4Nuf@google.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] ACPI: EC: Install address space handler at the
+ namespace root
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux ACPI <linux-acpi@vger.kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>,
+ Heikki Krogerus <heikki.krogerus@linux.intel.com>
+References: <5787281.DvuYhMxLoT@kreacher> <4926735.31r3eYUQgx@kreacher>
+ <ac04c433-b0ac-4b82-b8eb-98ac16f872d8@gmx.de>
+ <CAJZ5v0g_NjGHRvhm-N5vQFnOsqnxExSq99v8n_B_6ANoaCga0w@mail.gmail.com>
+ <568291fc-fd79-4f08-9eb7-aed7f5a32345@gmx.de>
+ <Zj5ZdcQeaTo9ImT4@smile.fi.intel.com>
+ <0cdf0af6-851b-4781-83fe-99320c35544f@amd.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <0cdf0af6-851b-4781-83fe-99320c35544f@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:oZbyEHJ0wNGrLD50nPO99adfJf9qe0p9BgAn4ydUTA/NNyXvVGd
+ fNPu7BnQdCEgBvkJZ417/g1o9PwIhuB9NMDK6iD4qT7IqDu6me5RTrEqc5Op9iKcD3z39C3
+ fL5ZzdRsVZ1g8MiVj7okBkmhmHpf3/VfFMYw2w7cyucpsXC7yGtSWRGAi0nnKQZQ09JGI8Y
+ NLjVHuIOLZMnlpVQn8R1g==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:oHUl/hDCxWo=;AzpTXZuB7plqogmUY/9bxEW6iGX
+ Ewm3HzbOe3pmKMFxHG4HntAWL8KH4LWyKlwlIBpKHyJztif8b6flVLJEqo+iFHNh1d473yYgY
+ P9//MohkIYqL2yuIJo7YHerdZLqlNYGpgwZdPtyYSbi0nZsAEFisdbtrPfyvLZVhHkiPCvxL/
+ zj2ufifdfa+yjHsi8K37Zk6kMY36tlu975kjS4m8l85O90norHuJ5FN8SkP3R2WI2tYofMoWn
+ 65vJWxR8VucdHwaF97hFtnCXtXwQAX6uK03sfmrYTR7gHKcjnwxJUvNoCNp21TGcI5g0NJLGM
+ J3YE1zfln3MbqWS0+6PhEZGsYRsU/gXjbeuYMjP0kgpmhLCrMiPCCSV/C3wJBOix+6laJ8L6n
+ b+kZiwHrqOPlSKKM/Jlfhm6kGn1qCIfSSCN2hTy/QykJHAmW+SVCDjS1rV52zmJqv5P21apTU
+ rnLdlB+b2rOR06IPU90UjSzl2w4aYA00RzG/o4weFPQVl8FTWQJKNmeqlNxxdYxAHbaxUG0Wg
+ WW78hhSZK+C3odfLo78AFIcxwS9YjiFCXrtt05OP75FxMko1ii1w3hEC3I8KIU68Fvy7qy170
+ OjYy9/RFWDusfO9Q8ldnQPjLIM1lqHv15Ds0gUo6P058R83M+nCndQID2ZA6UHeXVbLvDwiLf
+ PyLDsqk53QGQ3fLKVap0FZz+R8ro6tytW4BhFvFMQ1gS59sv3+7fLzmnV5hmDm6ZKDmfVQXY8
+ yk6aOofW58GBiA3nPrS3Z33B1H1uZa7d7ZUHu2/XD53G4VhM5dkBkAw22Tuk07/VcYbXhWUYG
+ Sr1ZM6qYPEuFp18VUgOkscJ5RDiruYr+pUzoW53CJmzS4=
 
-On Fri, May 10, 2024 at 08:59:09AM -0700,
-Sean Christopherson <seanjc@google.com> wrote:
+Am 10.05.24 um 19:40 schrieb Mario Limonciello:
 
-> On Fri, May 10, 2024, Michael Roth wrote:
-> > On Fri, May 10, 2024 at 03:50:26PM +0200, Paolo Bonzini wrote:
-> > > On Fri, May 10, 2024 at 3:47 PM Sean Christopherson <seanjc@google.com> wrote:
-> > > >
-> > > > > +      * Since software-protected VMs don't have a notion of a shared vs.
-> > > > > +      * private that's separate from what KVM is tracking, the above
-> > > > > +      * KVM_EXIT_MEMORY_FAULT condition wouldn't occur, so avoid the
-> > > > > +      * special handling for that case for now.
-> > > >
-> > > > Very technically, it can occur if userspace _just_ modified the attributes.  And
-> > > > as I've said multiple times, at least for now, I want to avoid special casing
-> > > > SW-protected VMs unless it is *absolutely* necessary, because their sole purpose
-> > > > is to allow testing flows that are impossible to excercise without SNP/TDX hardware.
-> > > 
-> > > Yep, it is not like they have to be optimized.
-> > 
-> > Ok, I thought there were maybe some future plans to use sw-protected VMs
-> > to get some added protections from userspace. But even then there'd
-> > probably still be extra considerations for how to handle access tracking
-> > so white-listing them probably isn't right anyway.
-> > 
-> > I was also partly tempted to take this route because it would cover this
-> > TDX patch as well:
-> > 
-> >   https://lore.kernel.org/lkml/91c797997b57056224571e22362321a23947172f.1705965635.git.isaku.yamahata@intel.com/
-> 
-> Hmm, I'm pretty sure that patch is trying to fix the exact same issue you are
-> fixing, just in a less precise way.  S-EPT entries only support RWX=0 and RWX=111b,
-> i.e. it should be impossible to have a write-fault to a present S-EPT entry.
-> 
-> And if TDX is running afoul of this code:
-> 
-> 	if (!fault->present)
-> 		return !kvm_ad_enabled();
-> 
-> then KVM should do the sane thing and require A/D support be enabled for TDX.
-> 
-> And if it's something else entirely, that changelog has some explaining to do.
+> On 5/10/2024 12:29, Andy Shevchenko wrote:
+>> On Fri, May 10, 2024 at 06:52:41PM +0200, Armin Wolf wrote:
+>>> Am 10.05.24 um 18:41 schrieb Rafael J. Wysocki:
+>>>> On Fri, May 10, 2024 at 6:10=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> w=
+rote:
+>>>>> Am 10.05.24 um 16:03 schrieb Rafael J. Wysocki:
+>>>>>
+>>>>>> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>>>>>
+>>>>>> It is reported that _DSM evaluation fails in ucsi_acpi_dsm() on
+>>>>>> Lenovo
+>>>>>> IdeaPad Pro 5 due to a missing address space handler for the EC
+>>>>>> address
+>>>>>> space:
+>>>>>>
+>>>>>> =C2=A0=C2=A0=C2=A0 ACPI Error: No handler for Region [ECSI] (000000=
+007b8176ee)
+>>>>>> [EmbeddedControl] (20230628/evregion-130)
+>>>>>>
+>>>>>> This happens because the EC driver only registers the EC address
+>>>>>> space
+>>>>>> handler for operation regions defined in the EC device scope of the
+>>>>>> ACPI namespace while the operation region being accessed by the _DS=
+M
+>>>>>> in question is located beyond that scope.
+>>>>>>
+>>>>>> To address this, modify the ACPI EC driver to install the EC addres=
+s
+>>>>>> space handler at the root of the ACPI namespace.
+>>>>>>
+>>>>>> Note that this change is consistent with some examples in the ACPI
+>>>>>> specification in which EC operation regions located outside the EC
+>>>>>> device scope are used (for example, see Section 9.17.15 in ACPI
+>>>>>> 6.5),
+>>>>>> so the current behavior of the EC driver is arguably questionable.
+>>>>> Hi,
+>>>>>
+>>>>> the patch itself looks good to me, but i wonder what happens if
+>>>>> multiple
+>>>>> ACPI EC devices are present. How would we handle such a situation?
+>>>> I'm wondering if this is a theoretical question or do you have any
+>>>> existing or planned systems in mind?
+>>>>
+>>>> ec_read(), ec_write() and ec_transaction() use only the first EC that
+>>>> has been found anyway.
+>>>
+>>> Its a theoretical question, i do not know of any systems which have
+>>> more than
+>>> one ACPI EC device.
+>>
+>> The specification is clear about this case in the "ACPI Embedded
+>> Controller
+>> Interface Specification":
+>>
+>> =C2=A0 "The ACPI standard supports multiple embedded controllers in a s=
+ystem,
+>> =C2=A0=C2=A0 each with its own resources. Each embedded controller has =
+a flat
+>> =C2=A0=C2=A0 byte-addressable I/O space, currently defined as 256 bytes=
+."
+>>
+>> However, I haven't checked deeper, so it might be a leftover in the
+>> documentation.
+>>
+>> The OperationRegion() has no reference to the EC (or in general,
+>> device) which
+>> we need to speak to. The only possibility to declare OpRegion() for
+>> the second+
+>> EC is to use vendor specific RegionSpace, AFAIU. So, even if ACPI
+>> specification
+>> supports 2+ ECs, it doesn't support OpRegion():s for them under the sam=
+e
+>> RegionSpace.
+>>
+>> That said, the commit message might be extended to summarize this,
+>> but at
+>> the same time I see no way how this series can break anything even in
+>> 2+ ECs
+>> environments.
+>
+> It's deviating from the patch, but in practice /why/ would you even
+> want to have a design with two ECs?=C2=A0 In general that is going to me=
+an
+> a much more complex state machine with synchronizing the interaction
+> between both of them and the host.
+>
+> Understanding the benefit of such a design might make it easier to
+> hypothesize impacts.
+>
+I am not saying that such designs would make sense, it was a theoretical q=
+uestion only.
 
-Yes, it's for KVM_EXIT_MEMORY_FAULT case.  Because Secure-EPT has non-present or
-all RWX allowed, fast page fault always returns RET_PF_INVALID by
-is_shadow_present_pte() check.
+Maybe we can just add a small note to the Linux ACPI documentation saying =
+that we only
+support a single EC device?
 
-I lightly tested the patch at [1] and it works for TDX KVM.
+Thanks,
+Armin Wolf
 
-[1] https://github.com/mdroth/linux/commit/39643f9f6da6265d39d633a703c53997985c1208
-
-Just in case for that patch,
-Reviewed-by: Isaku Yamahata <isaku.yamahata@intel.com>
--- 
-Isaku Yamahata <isaku.yamahata@intel.com>
+>>
+>>> This patch would prevent any ACPI ECs other than the first one from
+>>> probing,
+>>> since they would fail to register their address space handler.
+>>> I am just curious if/how we want to handle such situations.
+>>
+>
