@@ -1,142 +1,149 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E04621340;
-	Fri, 10 May 2024 11:39:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6CD12AAC0;
+	Fri, 10 May 2024 11:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715341161; cv=none; b=ThLnPiIDqssLzxy5NeOHGGNnTjDPeo8yaLKsTgBW/+ccTOWB0z7chxzbVOKGMiQhV+1akY4yIrhM/prXYDJyR/qc+w7IWYVRWguts6+xCg1xXXWs3L+a9t2bMkpipSi58bAV1aFcETrnTXtuzTMRchiXvrAb2+2KfChN5ujX1tw=
+	t=1715341250; cv=none; b=cg1xHhKAj5QiiSvZ8Cm4jZlk8uMyH0KQV516dzgCh9bk5drN1pScqZ2gniOd8/EX1McGyZ3NWq2FTsF6csQ8tQLwLjWkMUPNZ/uATGzXbxaNEFxTioyhdBx4e61I7kKeuHtVvGHf2lOAsRHFS08YEWaEgTH6nGK/harJXZ7RlSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715341161; c=relaxed/simple;
-	bh=gBgODkg3DdI9NzHPa1K7qm2JszTbSglDjzlA/h4YKWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uDsiAw70Modtv15d8qJFMSt6cdvb9mjAqvYyiHcFK3BeerDj+AJw5ikNO5du27Q89cj4o2BvVoDrYI+AHEhXy4DU4eO/ovR0MYL+aSNewvyjt+oKtvlYWZqZSOOXrZ+PcizMxxNwSx+OrOMyOUa/WtwU4up3xa/QWe4MvQqy3kM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tcF4nxlg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715341250; c=relaxed/simple;
+	bh=RbjHDzPLh3E9GZ4X448sxcxJtPFQU9RPmN+GEiL/x1Q=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iMdyJmaxcc8IbjrrMdpxk5zmpVCA92m0jLX+n8CyTF7zY2UGWQGWBssM/wIxiKucYFdCiW4vxyyMRC8+HOfnOVIYrKfgaT+SwDmRLtEsrETJhs9WbVm0eCdXCc6WdbtHYZ9a2EENlR2mhrbIkiEw1F/jhVQuP9Dhfo16WCv1StM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=fpq2/Tqa; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tcF4nxlg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD37EC113CC;
-	Fri, 10 May 2024 11:39:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715341160;
-	bh=gBgODkg3DdI9NzHPa1K7qm2JszTbSglDjzlA/h4YKWM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tcF4nxlg0QDEweWZwzWRCeVMhoRIu7J1gmdn73ynftzzX5dbSA1P4W8ujpGv0+jrm
-	 nbOzvPAqUbgaOYo/PdyUL81APw3bP5ZqUlEA1bv2v06ThVSZ+1EGMPEOkJGIiyfYGJ
-	 kCkxZxWZtBeI1+Ib7DROy4aZjp3wcPfVzFz4kwz+SAnlI9U2RPXX7ELddRRwyhmnGF
-	 djstVSRcMGs3bD5X3DNa8uPLVYL5h5TL6IyZsAv6NnYu8t3K0W+2r1dDyIki3R/AJK
-	 NVBFC0k1dteGFqP6NSb5O4MZkFfK9HiWqs8V/gqLo9ApsQQzr7m7Unm72abzdxhsLM
-	 EC1q/CFOAekrQ==
-Date: Fri, 10 May 2024 12:39:11 +0100
-From: Mauro Carvalho Chehab <mchehab@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Jani Nikula <jani.nikula@intel.com>, Jonathan Corbet <corbet@lwn.net>,
- Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Sean Paul <sean@poorly.run>, Marijn Suijten
- <marijn.suijten@somainline.org>, workflows@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada
- <masahiroy@kernel.org>, linux-arm-msm@vger.kernel.org,
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, Jon
- Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH] docs: document python version used for compilation
-Message-ID: <20240510123911.34f050b5@sal.lan>
-In-Reply-To: <CAA8EJprcjDnpsriXOrRO4cVh5Sm9KDbHbsyKePru=6pn0-bfJA@mail.gmail.com>
-References: <20240509-python-version-v1-1-a7dda3a95b5f@linaro.org>
-	<878r0ijdh5.fsf@intel.com>
-	<20240510102036.3ea40b37@sal.lan>
-	<87o79ehtbz.fsf@intel.com>
-	<CAA8EJprcjDnpsriXOrRO4cVh5Sm9KDbHbsyKePru=6pn0-bfJA@mail.gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="fpq2/Tqa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1715341247;
+	bh=RbjHDzPLh3E9GZ4X448sxcxJtPFQU9RPmN+GEiL/x1Q=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=fpq2/TqaNL7f3UaZ+UQN/qSIUoh9uCAtxlI2Iqx2Z8dMa5r/1XjfKuZKyt2/EwbCX
+	 NWn8yQmhDGEAkdSsi/RCowaD80p+3RHQ/xJeZ4hTfbE19T2BzQ9uQ1tpCrzSwcirb8
+	 zc+37ScXWx4v0HCcXeLPuqzqF1/TkzDWg/XB9stQPgCejUC5t8Z7I+iHG/gkIKf+H2
+	 uIprfcL6j5ZFxElBSutbM2Yncn0EOrnhATsPqpDrFLcStLVjAhAj0N4HrvnFaUI663
+	 RC/uvES+J9wTiyqHqh/S6jDUGEHcs7YubbXRfX6EUtXVmdOCReH+iQJo6IbaI2B044
+	 TMCN5EghWTakw==
+Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: usama.anjum)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 109393782185;
+	Fri, 10 May 2024 11:40:43 +0000 (UTC)
+Message-ID: <17a9be15-5e4f-4aed-a2b1-b3aa2defbfc9@collabora.com>
+Date: Fri, 10 May 2024 16:41:08 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ David Hildenbrand <david@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ SeongJae Park <sj@kernel.org>, Valentin Obst <kernel@valentinobst.de>,
+ linux-kselftest@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+ llvm@lists.linux.dev
+Subject: Re: [PATCH v2] selftests/mqueue: fix 5 warnings about signed/unsigned
+ mismatches
+To: John Hubbard <jhubbard@nvidia.com>, Shuah Khan <shuah@kernel.org>
+References: <20240508200028.272513-1-jhubbard@nvidia.com>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20240508200028.272513-1-jhubbard@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Em Fri, 10 May 2024 13:39:17 +0300
-Dmitry Baryshkov <dmitry.baryshkov@linaro.org> escreveu:
+On 5/9/24 1:00 AM, John Hubbard wrote:
+> When building with clang, via:
+> 
+>     make LLVM=1 -C tools/testing/selftest
+> 
+> ...clang warns about several cases of using a signed integer for the
+> priority argument to mq_receive(3), which expects an unsigned int.
+> 
+> Fix this by declaring the type as unsigned int in all cases.
+> 
+> Also, both input and output priority are unsigned, per the man pages, so
+> let's change the type of both priorities throughout, even though clang
+> did not warn about the prio_out variable.
+> 
+> Also, add an argument name to test->func(), in order to address another
+> warning from clang.
+> 
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+LGTM
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-> On Fri, 10 May 2024 at 13:09, Jani Nikula <jani.nikula@intel.com> wrote:
-> >
-> > On Fri, 10 May 2024, Mauro Carvalho Chehab <mchehab@kernel.org> wrote: =
-=20
-> > > Em Fri, 10 May 2024 11:08:38 +0300
-> > > Jani Nikula <jani.nikula@intel.com> escreveu:
-> > > =20
-> > >> On Thu, 09 May 2024, Dmitry Baryshkov <dmitry.baryshkov@linaro.org> =
-wrote: =20
-> > >> > The drm/msm driver had adopted using Python3 script to generate re=
-gister
-> > >> > header files instead of shipping pre-generated header files. Docum=
-ent
-> > >> > the minimal Python version supported by the script.
-> > >> >
-> > >> > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > >> > ---
-> > >> >  Documentation/process/changes.rst | 1 +
-> > >> >  1 file changed, 1 insertion(+)
-> > >> >
-> > >> > diff --git a/Documentation/process/changes.rst b/Documentation/pro=
-cess/changes.rst
-> > >> > index 5685d7bfe4d0..8d225a9f65a2 100644
-> > >> > --- a/Documentation/process/changes.rst
-> > >> > +++ b/Documentation/process/changes.rst
-> > >> > @@ -63,6 +63,7 @@ cpio                   any              cpio --v=
-ersion
-> > >> >  GNU tar                1.28             tar --version
-> > >> >  gtags (optional)       6.6.5            gtags --version
-> > >> >  mkimage (optional)     2017.01          mkimage --version
-> > >> > +Python (optional)      3.5.x            python3 --version =20
-> > >>
-> > >> Python 3.5 reached end-of-life 3=C2=BD years ago [1]. What's the poi=
-nt in
-> > >> using anything older than the oldest supported version of Python,
-> > >> i.e. 3.8 at this time? =20
-> > >
-> > > What's the point of breaking compilation with on older distros?
-> > > The idea of minimal versions here is to specify the absolute minimum
-> > > version that it is required for the build to happen. If 3.5 is
-> > > the minimal one, then be it. =20
-> >
-> > AFAICT 3.5 was an arbitrary rather than a deliberate choice. We should
-> > at least be aware *why* we'd be sticking to old versions. =20
->=20
-> From my side, the 3.5 was chosen basing on the previous feedback from
-> Jon Hunter: https://lore.kernel.org/dri-devel/20240412165407.42163-1-jona=
-thanh@nvidia.com/
+> ---
+>  tools/testing/selftests/mqueue/mq_perf_tests.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/mqueue/mq_perf_tests.c b/tools/testing/selftests/mqueue/mq_perf_tests.c
+> index 5c16159d0bcd..9380c656581f 100644
+> --- a/tools/testing/selftests/mqueue/mq_perf_tests.c
+> +++ b/tools/testing/selftests/mqueue/mq_perf_tests.c
+> @@ -323,7 +323,8 @@ void *fake_cont_thread(void *arg)
+>  void *cont_thread(void *arg)
+>  {
+>  	char buff[MSG_SIZE];
+> -	int i, priority;
+> +	int i;
+> +	unsigned int priority;
+>  
+>  	for (i = 0; i < num_cpus_to_pin; i++)
+>  		if (cpu_threads[i] == pthread_self())
+> @@ -373,27 +374,27 @@ void *cont_thread(void *arg)
+>  
+>  struct test {
+>  	char *desc;
+> -	void (*func)(int *);
+> +	void (*func)(unsigned int *prio);
+>  };
+>  
+> -void const_prio(int *prio)
+> +void const_prio(unsigned int *prio)
+>  {
+>  	return;
+>  }
+>  
+> -void inc_prio(int *prio)
+> +void inc_prio(unsigned int *prio)
+>  {
+>  	if (++*prio == mq_prio_max)
+>  		*prio = 0;
+>  }
+>  
+> -void dec_prio(int *prio)
+> +void dec_prio(unsigned int *prio)
+>  {
+>  	if (--*prio < 0)
+>  		*prio = mq_prio_max - 1;
+>  }
+>  
+> -void random_prio(int *prio)
+> +void random_prio(unsigned int *prio)
+>  {
+>  	*prio = random() % mq_prio_max;
+>  }
+> @@ -425,7 +426,7 @@ struct test test2[] = {
+>  void *perf_test_thread(void *arg)
+>  {
+>  	char buff[MSG_SIZE];
+> -	int prio_out, prio_in;
+> +	unsigned int prio_out, prio_in;
+>  	int i;
+>  	clockid_t clock;
+>  	pthread_t *t;
+> 
+> base-commit: 45db3ab70092637967967bfd8e6144017638563c
+> prerequisite-patch-id: b901ece2a5b78503e2fb5480f20e304d36a0ea27
 
-Patch there seems small/simple enough if it is all it takes for 3.5.
-
-Yet, it would be nice to hear from Jon Hunter about the rationale
-for 3.5 support (if any).
-
-> > Minimum versions here also means sticking to features available in said
-> > versions, for Python just as well as for GCC or any other tool. That's
-> > not zero cost.
-> >
-> > I guess there are two angles here too. The absolute minimum version
-> > currently required, and the, uh, maximum the minimum version can be
-> > safely bumped to. Say, you want to use a feature not available in the
-> > current minimum, how far up can you bump the version to?
-> >
-> > Could we define and document the criteria (e.g. based on distros as you
-> > suggest below) so we don't have to repeat the discussion?
-
-Agreed. While we should not bump version randomly, defining a
-criteria about when we should update the requirement sounds a great idea.
-
-For me, the criteria is:
-
-- the minimal version shall be at least the minimal one required for the
-  Kernel to build at the most used LTS distros that are not EOL, e. g.:=20
-  Debian, openSUSE/SUSE, CentOS/RHEL and Ubuntu LTS[1].
-
-[1] In practice, Ubuntu LTS usually has a python version newer than
-    Debian LTS, and CentOS versions are identical to RHEL ones, so
-    I guess checking for Debian, openSUSE, SUSE and RHEL should be
-    enough.
-
-Regards,
-Mauro
+-- 
+BR,
+Muhammad Usama Anjum
