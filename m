@@ -1,188 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A06C168AFC;
-	Fri, 10 May 2024 11:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001031649CF;
+	Fri, 10 May 2024 11:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715339770; cv=none; b=F435gCvNJRkR1LK5ob1njNOPOFGQcFfyUUCbi3dA5RXntOv8mB/6KXi893OY93JnID5153IsGS2syuEd9SOzVX48KZ0jClyNuW90HC+HCY/clRgv+i1ojhNZ27AqGLYgRCEsfrRl0ocMD053L5/fwMK78qyboGA3+2QSH8vEueI=
+	t=1715339936; cv=none; b=XRW76Vp07F4spGbhb/6IkFlmvDVl4KfJ4iYXfzHabRxfo5x09T/rKGjz83i70X6e53kc+OiT+HGtm5iOSnRChpFjU6edeMZwu4ONXrI35UxqYq6tSF9XLHxU+2xo3Aje6058Mob6UllH/SUQEZA7TMBvB0tHqgdFXBUlq9hEM6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715339770; c=relaxed/simple;
-	bh=sGgUoq64ukXJEkWA8KSCNU0OnOILxYfhvciCisZjFS8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uWYmXwVQiUbk/OJD219j4lpjLIfpExEg2vKEaOUTO9793A66uv5Ec/jZcKaXe5mvbIzAi7TQTIg106jOO0vxiBsA5RIZ3ADAmpAXOnUpw9MHmzuwib/YoVKXyofn9434a282d6xMFKgN9NGW/TKKovXaRbOImEzzQqiQxYE7UvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K/uWJNfD; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715339936; c=relaxed/simple;
+	bh=ToKtFZmWWfuV2kB4dgliCIRKJEwH1p0nGQ2UWd5XBY8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rdPd6Cc18nRFprjjFjGSX+z1X8AtedVA2uGzdryjMzV0ci4xIlygu2xHaRj9X4acE6JdStxY4YnVn6gBGZMc5x7IzgsD5/+Uww/WkCEjHgpUC9rsNe1ZHrfCAoQR2oSWFGGZwzWBu8A2SIuhxmqFUVI33pxy0TI6q7O6VqGqjMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VOVv8Xv6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K/uWJNfD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715339769; x=1746875769;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sGgUoq64ukXJEkWA8KSCNU0OnOILxYfhvciCisZjFS8=;
-  b=K/uWJNfDu3MAPKL72lcOFiJ4H15cQotN0CGt7BwjjDe6eCfGLEHJJHmB
-   cFkNbnkTXFGC3QX45ZWaxTELP3GLoYw/gCS6y09Nf0zaiP08LrqSTghWZ
-   /YEFUmwSPer2i4qvNB7czK9gXg9pNf6xBRVjAwxxm27ul5JHNmSlPuTPL
-   Fb109wybVKqLD9yeQcmopZi/dm4bPfeh7ng0QMQx46w0ngNBqO/iEGYr4
-   BZFbZ1iqRYorWjjAL9t/afKTVrRr7aVUoXvAUaQLQ8m+SzVIb8tVnYQ4G
-   9Ql1UrZvFTO7oXrkQb9KvHTY2bHegOodGm2yM+EaJ3RMyWtCWcCWGD7pT
-   w==;
-X-CSE-ConnectionGUID: B5pFXlTKR+2Fh3xT6DC3fQ==
-X-CSE-MsgGUID: odSxpJOVSXuuRUQhbBTryw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="21912054"
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="21912054"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 04:16:08 -0700
-X-CSE-ConnectionGUID: jb+w7XGGQ02HwCUQGaZaEA==
-X-CSE-MsgGUID: iH5OkXXvTq6ev/CCD+YCLQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="30137472"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa008.jf.intel.com with ESMTP; 10 May 2024 04:16:03 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s5OEL-000635-08;
-	Fri, 10 May 2024 11:16:01 +0000
-Date: Fri, 10 May 2024 19:15:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Yabin Cui <yabinc@google.com>, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-	Yabin Cui <yabinc@google.com>
-Subject: Re: [PATCH v3 3/3] perf: core: Check sample_type in
- perf_sample_save_brstack
-Message-ID: <202405101833.EmbmRFbl-lkp@intel.com>
-References: <20240510002424.1277314-4-yabinc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VOVv8Xv6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ED82C32781;
+	Fri, 10 May 2024 11:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715339935;
+	bh=ToKtFZmWWfuV2kB4dgliCIRKJEwH1p0nGQ2UWd5XBY8=;
+	h=From:Subject:Date:To:Cc:From;
+	b=VOVv8Xv6x4AizlMth+HSrzcMq+nwcXrZFNHpXjfzCiasb3vPhHH/jpYqQjOB1semh
+	 4bCf4cTeLY2LbOPNq0pW9gIvJ1JVpOidMwqmkBgG5JYCAp4w4jrBFDJVzPSxyOyZrl
+	 a6yTdv/1RKJ+9sH+i+ZyKd8+VlegT6eVSiQYfsgOZ8qmwTu2ZeUDYk8JaZXJIh+uj7
+	 aKwWnVQcPUsJEVObmnC1AYpGo+N8l1ZRfoc5YjqHgJmCLTl71oz86jKTqC91SpAk9q
+	 5zhnb6Tkov1GflbscAlRs1ZjxU+QKxWU7DgsLSAeJoiw3qjnc3XFrls4YMdpcUmPVy
+	 0tHmU8REydFpQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/8] mptcp: small improvements, fix and clean-ups
+Date: Fri, 10 May 2024 13:18:30 +0200
+Message-Id: <20240510-upstream-net-next-20240509-misc-improvements-v1-0-4f25579e62ba@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240510002424.1277314-4-yabinc@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIYCPmYC/z2NQQqDMBBFryKz7kA0UbRXKV1YO+osEsNMFEG8e
+ 4NQF3/x+PDeAUrCpPAsDhDaWHkJGcpHAcPch4mQv5mhMpUztelwjZqEeo+BUt6e8L4864Dsoyw
+ beQpJsXUf69qutM1oISuj0Mj7lXvBXwDv8/wB5SXhP4gAAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Gregory Detal <gregory.detal@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2272; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=ToKtFZmWWfuV2kB4dgliCIRKJEwH1p0nGQ2UWd5XBY8=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmPgKb40RMvXAQbuIZdUe5MCpWgEaHtuMhc+kNi
+ 27sWrPX59+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZj4CmwAKCRD2t4JPQmmg
+ c39eD/wIOKzgRhEkfB7BQnj6iiGzb250Jqy05mJkKTGrj8M2azzTr8ImQ7eER8FRAWn9dgWRRhO
+ TmLr6iQvrUdiSwgg3sq5NY9Nn2jP8ORJJ/xMYxv1Ji1yh4dA7KS8kKa9NCJUwGTiKkYnrzmiP5y
+ XM9Bx3lvDYVoUQX9fl6dq7OhNeRgxhT+7nsODS8T/VfKp4Pi4ai5zyXKmTdyi5SvZJINRpfhO98
+ ycd2PoYXlvtR8JpsgjzMly7/TVuBM1vVhj3aELddw077gphEEBDn/jZge+DcvAydMotQXx+IHAb
+ PzGJ9zG3cLb1D9DJbOskmScdGRSk8ucGSnsf4lb643z1A91L3OIYz04fecqTe28gA/axaezpNYu
+ ZGeJkTXGUdBHg06W6pKra/An/t7le3/cr5XUM4N6h8+iXV8+mQf0rI1sgPJ/sQ/lOuit8yMzBVk
+ LTBxx5ttHS99Ic5dYChE2q4g5Pgjy8BIHs3IC76CPZ4gU/01UfHcJsicSRNzfQwoMGSbRvauhJ8
+ VkUCmWws7CH29ucp5TZUhazB2CskDzW+kqpTXw072TIhPI6vnK6LNvACSCX0XbsZddK7ITqn6w/
+ Q0YiUQxWnNFJj6vXmfw3zIrEdC+E3VZh7PPKUgY7nxB9pDckYxSA0U7FElIoX0q1Bw4Bkx+ujsn
+ biqrIU2MldtIX0g==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Yabin,
+This series contain mostly unrelated patches:
 
-kernel test robot noticed the following build errors:
+- The two first patches can be seen as "fixes". They are part of this
+  series for -next because it looks like the last batch of fixes for
+  v6.9 has already been sent. These fixes are not urgent, so they can
+  wait if an unlikely v6.9-rc8 is published. About the two patches:
+    - Patch 1 fixes getsockopt(SO_KEEPALIVE) support on MPTCP sockets
+    - Patch 2 makes sure the full TCP keep-alive feature is supported,
+      not just SO_KEEPALIVE.
 
-[auto build test ERROR on perf-tools-next/perf-tools-next]
-[also build test ERROR on tip/perf/core linus/master v6.9-rc7 next-20240510]
-[cannot apply to acme/perf/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+- Patch 3 is a small optimisation when getsockopt(MPTCP_INFO) is used
+  without buffer, just to check if MPTCP is still being used: no
+  fallback to TCP.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Yabin-Cui/perf-core-Save-raw-sample-data-conditionally-based-on-sample-type/20240510-083817
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git perf-tools-next
-patch link:    https://lore.kernel.org/r/20240510002424.1277314-4-yabinc%40google.com
-patch subject: [PATCH v3 3/3] perf: core: Check sample_type in perf_sample_save_brstack
-config: x86_64-buildonly-randconfig-001-20240510 (https://download.01.org/0day-ci/archive/20240510/202405101833.EmbmRFbl-lkp@intel.com/config)
-compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240510/202405101833.EmbmRFbl-lkp@intel.com/reproduce)
+- Patch 4 adds net.mptcp.available_schedulers sysctl knob to list packet
+  schedulers, similar to net.ipv4.tcp_available_congestion_control.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405101833.EmbmRFbl-lkp@intel.com/
+- Patch 5 and 6 fix CheckPatch warnings: "prefer strscpy over strcpy"
+  and "else is not generally useful after a break or return".
 
-All errors (new ones prefixed by >>):
+- Patch 7 and 8 remove and add header includes to avoid unused ones, and
+  add missing ones to be self-contained.
 
-   In file included from include/linux/trace_events.h:10,
-                    from include/trace/syscall.h:7,
-                    from include/linux/syscalls.h:93,
-                    from kernel/time/itimer.c:10:
-   include/linux/perf_event.h: In function 'perf_sample_save_brstack':
->> include/linux/perf_event.h:1279:14: error: implicit declaration of function 'has_branch_stack' [-Werror=implicit-function-declaration]
-    1279 |         if (!has_branch_stack(event))
-         |              ^~~~~~~~~~~~~~~~
-   include/linux/perf_event.h: At top level:
->> include/linux/perf_event.h:1671:20: error: conflicting types for 'has_branch_stack'; have 'bool(struct perf_event *)' {aka '_Bool(struct perf_event *)'}
-    1671 | static inline bool has_branch_stack(struct perf_event *event)
-         |                    ^~~~~~~~~~~~~~~~
-   include/linux/perf_event.h:1279:14: note: previous implicit declaration of 'has_branch_stack' with type 'int()'
-    1279 |         if (!has_branch_stack(event))
-         |              ^~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
---
-   In file included from include/linux/trace_events.h:10,
-                    from include/trace/syscall.h:7,
-                    from include/linux/syscalls.h:93,
-                    from kernel/time/hrtimer.c:30:
-   include/linux/perf_event.h: In function 'perf_sample_save_brstack':
->> include/linux/perf_event.h:1279:14: error: implicit declaration of function 'has_branch_stack' [-Werror=implicit-function-declaration]
-    1279 |         if (!has_branch_stack(event))
-         |              ^~~~~~~~~~~~~~~~
-   include/linux/perf_event.h: At top level:
->> include/linux/perf_event.h:1671:20: error: conflicting types for 'has_branch_stack'; have 'bool(struct perf_event *)' {aka '_Bool(struct perf_event *)'}
-    1671 | static inline bool has_branch_stack(struct perf_event *event)
-         |                    ^~~~~~~~~~~~~~~~
-   include/linux/perf_event.h:1279:14: note: previous implicit declaration of 'has_branch_stack' with type 'int()'
-    1279 |         if (!has_branch_stack(event))
-         |              ^~~~~~~~~~~~~~~~
-   kernel/time/hrtimer.c:121:35: warning: initialized field overwritten [-Woverride-init]
-     121 |         [CLOCK_REALTIME]        = HRTIMER_BASE_REALTIME,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~
-   kernel/time/hrtimer.c:121:35: note: (near initialization for 'hrtimer_clock_to_base_table[0]')
-   kernel/time/hrtimer.c:122:35: warning: initialized field overwritten [-Woverride-init]
-     122 |         [CLOCK_MONOTONIC]       = HRTIMER_BASE_MONOTONIC,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~~
-   kernel/time/hrtimer.c:122:35: note: (near initialization for 'hrtimer_clock_to_base_table[1]')
-   kernel/time/hrtimer.c:123:35: warning: initialized field overwritten [-Woverride-init]
-     123 |         [CLOCK_BOOTTIME]        = HRTIMER_BASE_BOOTTIME,
-         |                                   ^~~~~~~~~~~~~~~~~~~~~
-   kernel/time/hrtimer.c:123:35: note: (near initialization for 'hrtimer_clock_to_base_table[7]')
-   kernel/time/hrtimer.c:124:35: warning: initialized field overwritten [-Woverride-init]
-     124 |         [CLOCK_TAI]             = HRTIMER_BASE_TAI,
-         |                                   ^~~~~~~~~~~~~~~~
-   kernel/time/hrtimer.c:124:35: note: (near initialization for 'hrtimer_clock_to_base_table[11]')
-   cc1: some warnings being treated as errors
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Gregory Detal (1):
+      mptcp: add net.mptcp.available_schedulers
 
+Matthieu Baerts (NGI0) (7):
+      mptcp: SO_KEEPALIVE: fix getsockopt support
+      mptcp: fix full TCP keep-alive support
+      mptcp: sockopt: info: stop early if no buffer
+      mptcp: prefer strscpy over strcpy
+      mptcp: remove unnecessary else statements
+      mptcp: move mptcp_pm_gen.h's include
+      mptcp: include inet_common in mib.h
 
-vim +/has_branch_stack +1279 include/linux/perf_event.h
+ include/net/mptcp.h      |  3 +++
+ net/mptcp/ctrl.c         | 29 +++++++++++++++++++--
+ net/mptcp/mib.h          |  2 ++
+ net/mptcp/pm_netlink.c   |  1 +
+ net/mptcp/pm_userspace.c |  1 +
+ net/mptcp/protocol.c     |  5 ++--
+ net/mptcp/protocol.h     |  6 +++--
+ net/mptcp/sched.c        | 22 ++++++++++++++++
+ net/mptcp/sockopt.c      | 66 +++++++++++++++++++++++++++++++++++++++++++++---
+ net/mptcp/subflow.c      | 32 ++++++++++++-----------
+ 10 files changed, 143 insertions(+), 24 deletions(-)
+---
+base-commit: 383eed2de529287337d9153a5084d4291a7c69f2
+change-id: 20240509-upstream-net-next-20240509-misc-improvements-84b3489136f3
 
-  1271	
-  1272	static inline void perf_sample_save_brstack(struct perf_sample_data *data,
-  1273						    struct perf_event *event,
-  1274						    struct perf_branch_stack *brs,
-  1275						    u64 *brs_cntr)
-  1276	{
-  1277		int size = sizeof(u64); /* nr */
-  1278	
-> 1279		if (!has_branch_stack(event))
-  1280			return;
-  1281	
-  1282		if (branch_sample_hw_index(event))
-  1283			size += sizeof(u64);
-  1284		size += brs->nr * sizeof(struct perf_branch_entry);
-  1285	
-  1286		/*
-  1287		 * The extension space for counters is appended after the
-  1288		 * struct perf_branch_stack. It is used to store the occurrences
-  1289		 * of events of each branch.
-  1290		 */
-  1291		if (brs_cntr)
-  1292			size += brs->nr * sizeof(u64);
-  1293	
-  1294		data->br_stack = brs;
-  1295		data->br_stack_cntr = brs_cntr;
-  1296		data->dyn_size += size;
-  1297		data->sample_flags |= PERF_SAMPLE_BRANCH_STACK;
-  1298	}
-  1299	
-
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
