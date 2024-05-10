@@ -1,60 +1,62 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5754D17109E;
-	Fri, 10 May 2024 15:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE9917164B;
+	Fri, 10 May 2024 15:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715354809; cv=none; b=SlkrscntGegJHlEuaQolJVjnqwDrCObko2FHA0W79g6la2GatO9iF+AV172vdB/9ROyS417Wkuh0vBLv0S2IEPjGw9rfR+5nsrhpmDi5H2pZrYHMYMWN5YUsr+YaWciHEFPA/ZvtNJsOk8p/cinlVnq3SiGRPzK2PlxlE+lLOy4=
+	t=1715354842; cv=none; b=q1nZ+aovbIVuTtHltuhqLWQ+vPpcUszEfyrm9F3iTirCkrZiIjrym0QsA1y4P9zSMNHUksF/lcd68aof0AvTSFnqWRNMoi68dAunQEsyP2rTTPP55CS7fmOy6u8IGkNWRp6QJlgjisSWjvIkpADfuRNU5hbnzsJVbGVgKd8Zl/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715354809; c=relaxed/simple;
-	bh=WZ4TGuN2dW7cNy4EbwRGnB4/IoAEcv+5igcpsXySV48=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V3PNZjQcGu7ED5tkKH8DCLD3gA9+F+rrQz+NyRTDGsDPh+LT2j6l/nmK0z+ratKjPzIMHPfsXIeSuA0La346uJIGK7HOlSrAumV8IRDJB1Frp/8aJDslXnDBcJ7+mt+xifAY7Vu/G684DswuIzlzobSPl62wzIwUrOANm+IDeeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fZ7AYfwW; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715354842; c=relaxed/simple;
+	bh=Hvmu0qmiPj5Ycf5xm2DItJEUtysjIM+nHDnEiaTAzEo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r8pT49YkA//epJLCjT/qHqWSB0L4+4T8ReiD1ypvk20atE+PhtkiZ8aRtT9h0h4HAhEji1ytFPku/soAr1vEdenc8tUJxAa2rZhxCA8InwskSnamayGIzhI9E37KTz2oU4WSRDEZJ6cDDKck7+S0M6/kAGxGTSE1gTsTiybqJcE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OfMKvJKZ; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fZ7AYfwW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OfMKvJKZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715354809; x=1746890809;
+  t=1715354841; x=1746890841;
   h=from:to:cc:subject:date:message-id:mime-version:
    content-transfer-encoding;
-  bh=WZ4TGuN2dW7cNy4EbwRGnB4/IoAEcv+5igcpsXySV48=;
-  b=fZ7AYfwWK3TVftVQrfys77GJpWfMjD2cvVi69J8Q2n/ooBr7WGBnlxFZ
-   kNxkFUt0sxn1qfEnjEJHqR0n9Dz8GUnIyqxpsrhQKDQQY4bJPrQvJeCI1
-   5fQB6qsLOnphAVGJd6jYejWmaqTxhNMKq7SMjLWrFvPd1EfRepM+M6+ij
-   omPbg9xDtI1z41sbPndhuJ6MlNVf6oX0FKu5p2E8DQtXGQ5xUXCkDRSqN
-   yvDiVFPfitRvdGZQ5vGlQxvknatsfglCHsmPpb6eiy3bx2Am+/lfas5GH
-   Eue6WA10QLDGUME0ehh6JLB+lxqfZtW2S1pfJlzbM3oCeddYqR630vPEd
-   g==;
-X-CSE-ConnectionGUID: AwWSGOIBS5eTk4LgV/5YTA==
-X-CSE-MsgGUID: bmlaT52yRBysECpAh3zkrg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="33853116"
+  bh=Hvmu0qmiPj5Ycf5xm2DItJEUtysjIM+nHDnEiaTAzEo=;
+  b=OfMKvJKZ0MJkvu7iACby14smmxuYHmuKusdDYh3YSoDn8IASQdHDLmhV
+   9/KaL7vLLs7cEhepTck1sNP3U/Z6fK/Ogih5zEC24MMKtWkSb/yWC4zqx
+   erzLNSkIb2ppXYsiF5UWf3YD9ivKqhBu5HuP5b2gUQUoDlgXzl72+QJgF
+   4JCclu5PuINjErKuE5n3LVJs2z1QHneGEe50cBBdYphOgl6281XPyf+zF
+   MU4a8ldumlyF0+B6PGEczdi2t0O7aYqlUac7g09lvym8UZxwJw1OUpy/K
+   mHWH7azhl7h8ND30ug05fg86qvbcR2bkzg5okbMGZ1xjnF5sdvapEkd4w
+   Q==;
+X-CSE-ConnectionGUID: 5C1KLhOBTPSTz0UY+ES9rg==
+X-CSE-MsgGUID: CXpt7swhTP2lv0vbRUV37w==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="15152536"
 X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="33853116"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 08:26:48 -0700
-X-CSE-ConnectionGUID: /fs8JJapR6CHsb9uccIbLA==
-X-CSE-MsgGUID: ojovpLzbRRSLkx7ziSC9pQ==
+   d="scan'208";a="15152536"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 08:27:20 -0700
+X-CSE-ConnectionGUID: mJnKh+05SiCO4F6dz7jhHA==
+X-CSE-MsgGUID: e1pJtLvwQ8S1QqPIA4qM1w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="29655034"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 10 May 2024 08:26:45 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 3B4441AC; Fri, 10 May 2024 18:26:43 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	linux-usb@vger.kernel.org,
+   d="scan'208";a="30208229"
+Received: from newjersey.igk.intel.com ([10.102.20.203])
+  by orviesa008.jf.intel.com with ESMTP; 10 May 2024 08:27:17 -0700
+From: Alexander Lobakin <aleksander.lobakin@intel.com>
+To: intel-wired-lan@lists.osuosl.org
+Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
+	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 1/1] usb: fotg210: Add missing kernel doc description
-Date: Fri, 10 May 2024 18:26:22 +0300
-Message-ID: <20240510152641.2421298-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
+Subject: [PATCH RFC iwl-next 00/12] idpf: XDP chapter I: convert Rx to libeth
+Date: Fri, 10 May 2024 17:26:08 +0200
+Message-ID: <20240510152620.2227312-1-aleksander.lobakin@intel.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,31 +65,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-kernel-doc validator is not happy:
+Applies on top of "idpf: don't enable NAPI and interrupts prior to
+allocating Rx buffers" from Tony's tree.
+Sent as RFC as we're at the end of the development cycle and several
+kdocs are messed up. I'll fix them when sending non-RFC after the window
+opens.
 
-  warning: Function parameter or struct member 'fotg' not described in 'fotg210_vbus'
+XDP for idpf is currently 5 chapters:
+* convert Rx to libeth (this);
+* convert Tx and stats to libeth;
+* generic XDP and XSk code changes;
+* actual XDP for idpf via libeth_xdp;
+* XSk for idpf (^).
 
-Add missing description.
+Part I does the following:
+* splits &idpf_queue into 4 (RQ, SQ, FQ, CQ) and puts them on a diet;
+* ensures optimal cacheline placement, strictly asserts CL sizes;
+* moves currently unused/dead singleq mode out of line;
+* reuses libeth's Rx ptype definitions and helpers;
+* uses libeth's Rx buffer management for both header and payload;
+* eliminates memcpy()s and coherent DMA uses on hotpath, uses
+  napi_build_skb() instead of in-place short skb allocation.
 
-Fixes: 3e679bde529e ("usb: fotg210-udc: Implement VBUS session")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-v2: fixed typo (LKP, Greg)
- drivers/usb/fotg210/fotg210-core.c | 1 +
- 1 file changed, 1 insertion(+)
+Most idpf patches, except for the queue split, removes more lines
+than adds.
+Expect far better memory utilization and +5-8% on Rx depending on
+the case (+17% on skb XDP_DROP :>).
 
-diff --git a/drivers/usb/fotg210/fotg210-core.c b/drivers/usb/fotg210/fotg210-core.c
-index 958fc40eae86..0655afe7f977 100644
---- a/drivers/usb/fotg210/fotg210-core.c
-+++ b/drivers/usb/fotg210/fotg210-core.c
-@@ -95,6 +95,7 @@ static int fotg210_gemini_init(struct fotg210 *fotg, struct resource *res,
- 
- /**
-  * fotg210_vbus() - Called by gadget driver to enable/disable VBUS
-+ * @fotg: pointer to a private fotg210 object
-  * @enable: true to enable VBUS, false to disable VBUS
-  */
- void fotg210_vbus(struct fotg210 *fotg, bool enable)
+Alexander Lobakin (12):
+  libeth: add cacheline / struct alignment helpers
+  idpf: stop using macros for accessing queue descriptors
+  idpf: split &idpf_queue into 4 strictly-typed queue structures
+  idpf: avoid bloating &idpf_q_vector with big %NR_CPUS
+  idpf: strictly assert cachelines of queue and queue vector structures
+  idpf: merge singleq and splitq &net_device_ops
+  idpf: compile singleq code only under default-n CONFIG_IDPF_SINGLEQ
+  idpf: reuse libeth's definitions of parsed ptype structures
+  idpf: remove legacy Page Pool Ethtool stats
+  libeth: support different types of buffers for Rx
+  idpf: convert header split mode to libeth + napi_build_skb()
+  idpf: use libeth Rx buffer management for payload buffer
+
+ drivers/net/ethernet/intel/Kconfig            |   13 +-
+ drivers/net/ethernet/intel/idpf/Kconfig       |   25 +
+ drivers/net/ethernet/intel/idpf/Makefile      |    3 +-
+ drivers/net/ethernet/intel/idpf/idpf.h        |   10 +-
+ .../net/ethernet/intel/idpf/idpf_lan_txrx.h   |    2 +
+ drivers/net/ethernet/intel/idpf/idpf_txrx.h   |  746 ++++-----
+ include/net/libeth/cache.h                    |   64 +
+ include/net/libeth/rx.h                       |   19 +
+ .../net/ethernet/intel/idpf/idpf_ethtool.c    |  152 +-
+ drivers/net/ethernet/intel/idpf/idpf_lib.c    |   88 +-
+ drivers/net/ethernet/intel/idpf/idpf_main.c   |    1 +
+ .../ethernet/intel/idpf/idpf_singleq_txrx.c   |  311 ++--
+ drivers/net/ethernet/intel/idpf/idpf_txrx.c   | 1405 +++++++++--------
+ .../net/ethernet/intel/idpf/idpf_virtchnl.c   |  175 +-
+ drivers/net/ethernet/intel/libeth/rx.c        |  122 +-
+ 15 files changed, 1726 insertions(+), 1410 deletions(-)
+ create mode 100644 drivers/net/ethernet/intel/idpf/Kconfig
+ create mode 100644 include/net/libeth/cache.h
+
 -- 
-2.43.0.rc1.1336.g36b5255a03ac
+2.45.0
 
