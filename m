@@ -1,83 +1,95 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741CB1527A8
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:11:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8FF14D716
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715321509; cv=none; b=CDq7mHn0mpvGf5HdN7Mqs0WaeRxSkqfWXUMQvC0AEjUv/tgurWGaSSw7EZ5EAhj6d5bm32iEniQpoWe9gTgXi0qkeI6KzKJsmhCTzI5eNcGYTJNGaTHjlp0uawitEYntiOJ/gJkPPYudiar9L/sRX2ajfAnnSg1E1DAA5vbYnyk=
+	t=1715321647; cv=none; b=p86Wa3JseWvQXrhC2m0vFVmphRnt9/rZKrMfVC1RS0L/RzFp7cO33GEpDs0sZSAt+JdQkec2Zpha9pqq8nkHanmViojjpXhoeAhG7q5OVNl9qLoNSZYCJRtFZLENonObDf5wb01P6zBX+iwDs0yG5xgDN8tTq013UF1Lq/wglBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715321509; c=relaxed/simple;
-	bh=HlmC0UjiQtAoSWC6vjrGsiGGVG3ulYA6PNHXK+VQfuw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ImIm1N8VD+NuHf8KTR4ZBBJOCcWpyCv3J29PqdkbGfsTPakfGGWojgD1rqahjpGiteKN6yma/DblezRU06MM4dzQa+6RIX8wSN6WW4XD3E64wZVVAnxolUHXdrfu6eUIx5lX67FsqkreRGwYxBPRfaZZqgtkF3RGzIaN0KlksDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=p0xkDhDG; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1715321647; c=relaxed/simple;
+	bh=GcGGzGvYTnpARMt/AI5IU7S4k5OFyk1tpsWpYMoYjcY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Df7kAR43GxV1p/CIoHR6GdwNcMsS8TB4D8OvDbkub3Gzw0ugm2U9XnRKUM4eD3mn0pKdbNo+PcJCjtTaZHVs7iFTuEekC1WwwMMBhVlQGl4UmEcJVZVxFSRRmcdfMxFpa8fI2BkVWBgDE5lF9QCvyR+3UQZAupaF12wYI4GJ5jE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VcxfVZkH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="p0xkDhDG"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1715321505;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=hZhrcUEaCz3NJloTVX6GrdenLDm/0pV21Z4CgXpXVSA=;
-	b=p0xkDhDGFMw1npOCcR14CTUBw/AEO3G+1Kq0u3L63DlCquZLcXQPdrgJu8u33ak2kuFK58
-	Xju/XvaUBXg2rjm5kG27Z07mfklV5ILpzote/iFp8MrESY6xk75TwNeDQX5aIh9mvCInIX
-	UcnuT2giowntxKmEOOjQ1N3ISe557F8=
-From: Youling Tang <youling.tang@linux.dev>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Youling Tang <tangyouling@kylinos.cn>
-Subject: [PATCH] bcachefs: set FMODE_CAN_ODIRECT instead of a dummy direct_IO method
-Date: Fri, 10 May 2024 14:10:58 +0800
-Message-Id: <20240510061058.316819-1-youling.tang@linux.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VcxfVZkH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD07C113CC;
+	Fri, 10 May 2024 06:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715321646;
+	bh=GcGGzGvYTnpARMt/AI5IU7S4k5OFyk1tpsWpYMoYjcY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VcxfVZkHI2PN9GT/A6Ie2JpUCLXvDZ445sFIKtu6SteAEJNjUEIQmcSPtTL9Gaff4
+	 9F+i4dcWBCvQA+c2jHCvTcK0vTrEC72EQLiig7BopziafxXVX2gXJMX5OO7+kxyr0U
+	 p9U39b+JKiWRmO1xfVlfNzTKz8cRpti/PQnJsXkmEu7iwKFV97iUz3NhPSNUJt3O6G
+	 blDtJy+LTrw51bUX2cjujeqpByvrjN81pldB/ef8JVDGxdlKmoCR5PBsVS8RBdrIwF
+	 +xrQyRCT0mnb8Wh4oYrc7VdpvOdpR+NOnu1ivJh0UNUwHvAGF2ggVlRalqTlrAKONo
+	 weeHegGwXFt+Q==
+Date: Fri, 10 May 2024 07:14:04 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: andriy.shevchenko@linux.intel.com, lgirdwood@gmail.com, perex@perex.cz,
+	pierre-louis.bossart@linux.intel.com, 13916275206@139.com,
+	alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+	liam.r.girdwood@intel.com, bard.liao@intel.com,
+	yung-chuan.liao@linux.intel.com, kevin-lu@ti.com,
+	cameron.berkenpas@gmail.com, tiwai@suse.de, baojun.xu@ti.com,
+	soyer@irl.hu, Baojun.Xu@fpt.com
+Subject: Re: [PATCH v4 2/3] ALSA: ASoc/tas2781: Fix wrong loading calibrated
+ data sequence
+Message-ID: <Zj27LHKXSFXx_6G2@finisterre.sirena.org.uk>
+References: <20240510034123.1181-1-shenghao-ding@ti.com>
+ <20240510034123.1181-2-shenghao-ding@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="XFZRnGJeJ9yJiLPF"
+Content-Disposition: inline
+In-Reply-To: <20240510034123.1181-2-shenghao-ding@ti.com>
+X-Cookie: Did I SELL OUT yet??
 
-From: Youling Tang <tangyouling@kylinos.cn>
 
-Since commit a2ad63daa88b ("VFS: add FMODE_CAN_ODIRECT file flag") file
-systems can just set the FMODE_CAN_ODIRECT flag at open time instead of
-wiring up a dummy direct_IO method to indicate support for direct I/O.
-Do that for bcachefs so that noop_direct_IO can eventually be removed.
+--XFZRnGJeJ9yJiLPF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Similar to commit b29434999371 ("xfs: set FMODE_CAN_ODIRECT instead of
-a dummy direct_IO method").
+On Fri, May 10, 2024 at 11:41:20AM +0800, Shenghao Ding wrote:
 
-Signed-off-by: Youling Tang <tangyouling@kylinos.cn>
----
- fs/bcachefs/fs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+>  - Divide one patch into two individual patches. compiling warning patch
+>    has been upstream in another patch (Fixes: 1ae14f3520b1 ("ASoC: tas2781:
+>    Fix a warning reported by robot kernel test"))
 
-diff --git a/fs/bcachefs/fs.c b/fs/bcachefs/fs.c
-index a8d71cec1c17..7ef41ce2d8c6 100644
---- a/fs/bcachefs/fs.c
-+++ b/fs/bcachefs/fs.c
-@@ -1142,6 +1142,8 @@ static int bch2_open(struct inode *vinode, struct file *file)
- 			return ret;
- 	}
- 
-+	file->f_mode |= FMODE_CAN_ODIRECT;
-+
- 	return generic_file_open(vinode, file);
- }
- 
-@@ -1234,7 +1236,6 @@ static const struct address_space_operations bch_address_space_operations = {
- 	.write_end	= bch2_write_end,
- 	.invalidate_folio = bch2_invalidate_folio,
- 	.release_folio	= bch2_release_folio,
--	.direct_IO	= noop_direct_IO,
- #ifdef CONFIG_MIGRATION
- 	.migrate_folio	= filemap_migrate_folio,
- #endif
--- 
-2.34.1
+Oh, I see what's going on - when you split a patch up into several
+patches each individual patch needs to have it's own changelog
+describing what's going on in that specific patch.  If you just
+replicate the changelog you had for the original patch into each of the
+split patches it will inevitably not describe the separated out patches
+well.
 
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
+
+--XFZRnGJeJ9yJiLPF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmY9uysACgkQJNaLcl1U
+h9C/xQf/cyPxlEXFdtS915Zzymf6A2TgMO5OeS1+5HrB001oEMTyOX9DmHRVNiZG
+53thK9VMJPUFZcw/qrjxtTRSV8Uf2zOx7YtC7QXCyonB3HM4MwRk6wvmF0n1AV/u
+jBamorjme2Bfv1lqfPvv/guVNWhl0AUOWnDlBNYfU9Q71/MBADrixWHqACG0GLO1
+MvgUgBYHXSj9uUbtcLNhyUY4chDk6lx7L2DP8lIC8dGrxK7r5W4j1y8Wodnn5RlB
+oehwsucjA/N5Pgw7ZuXRAcaXnZYgsdVPIlG7IKGjBXhAh0aK5+QDtWR9Td6bfmsb
+La3dh+SC1AEosVa63EqnSlaFgs1R4A==
+=VKsH
+-----END PGP SIGNATURE-----
+
+--XFZRnGJeJ9yJiLPF--
