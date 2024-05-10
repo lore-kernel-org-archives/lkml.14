@@ -1,206 +1,157 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3396481BA
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 21:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0A71BDC8
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 21:47:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715377636; cv=none; b=iJtDXux50CurB6TxmC/QsF+h8lnYG+h1RxNVk0Y2XjmydafTwO6vd/6oRWypkW0yNawbBaljU55oe885LZ+hWBueEVn/s+G7LU7wwV60FH3EBD06azv3Az1Ymj6f1EzxV1JEF45C/H6OVT9IsZ0Lh00Xbi4u8vqml848sF4awy4=
+	t=1715377649; cv=none; b=SNOIAZ1mBzn2652RA0GmAnD3eyi/9dhN0x1X2x6V82c9PdaFD28PrgO2twovM1bPN5gyzcMXf2iZLOqa8c5VfL2Bx9BPa0DVthx4YWHm9Yn+XlzH8HOTY+4izvJoGWE1z7hAXLIRQfj3zWckFqWioFsqyQT2uwcuTUi6LRHq4/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715377636; c=relaxed/simple;
-	bh=PczQFVKU2g8mbrPgOSIlEjPauyxY2U7QXL7opZRlBrI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qu3+Kwg4ZpaJUm6xhj4mkCrYJ5/FA+ngcTy120h97NzovhQuvQr4x1WyHoWLX/ujL1FrEtxNeC0eIwvux82w9mFvOHqhEqh1FZ02s2xVKm9I7Po7llezkFUrHRAxzmYIBl9UzHH0j8QyAO+CD3D80RFtyRsNs+7aHaXm25j09ns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=h0ssYcVr; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715377649; c=relaxed/simple;
+	bh=5PYGqPb7LxaoIJQZEfb1VXfIqZRIfuMWFVa30lwrHLk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KQiaU+Kof287iT1nPUFnhLSuCKUU5G8zuldgewwwAxGJv+yCBRB2Z35B29Q0U1WbcfIVUhQcXRK7P/4plbF0wf/OAAMQ9jK+E/Jgr4aLlk31s5jILDn+XoZbvbRA4FSxWchLDHLIKGLW82lwH8Viw5nLYucUKqQuc+IGW4pv0T0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=VVr3Cjty; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h0ssYcVr"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6a04c581ee3so8670186d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 14:47:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="VVr3Cjty"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1ed012c1afbso20430665ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 14:47:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715377631; x=1715982431; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S2YIl+MQvRGvQIN5Fz+YZaIiDbAnY60xDJHXBLWCOro=;
-        b=h0ssYcVr0mp7avnRe6l1YSL5ZYyCWUr3zCA+aNoiai8IW9zyKdJLJknjcpjaiOTZcV
-         DVE2nqaSicl7J+/ds4yxBlzWksduGuqFowXte1kPXNhAUbvOblsXhhf+Ya9uLJkfyXJL
-         3RetHPIkHDm0pRW8Q1qudffMuZkeKwTsQmcyE=
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715377647; x=1715982447; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/hdC9JzZ0lCEDEfdvCSKJ054LE730kwHqEMbc1syn4Y=;
+        b=VVr3CjtyftxFz2H8JrzjP40ruQbp2vWE5vWgrcPOmlKbcTTsiTpzwUPUPw9doQxO5d
+         aJZND96hUf8FfhLID379wb/mheLiqCrWVkJvZ6x0ZpJg2sypTBbO069OVDUg8T9W5v4V
+         CEs00/AM3rrgj+2DoJr8HCAuiB6yDpeacVGhdCQC75xTsFAhsI1eaaH8hE1v7zOEbPSJ
+         S9jcq6CvBq597R6AXjz00bRqonpAgeJvS5iNvQYwNWRKfAtXXfwe0FKgzPe6J9dH1NS8
+         YPoj8RhGFQDPbrmXqM68Ty284g0CW1Azt2wY68Q1METBy6Sx6LyMDx8VQCO2luLNX12B
+         WN9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715377631; x=1715982431;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S2YIl+MQvRGvQIN5Fz+YZaIiDbAnY60xDJHXBLWCOro=;
-        b=Jx+cBxiCAf6f2FiEQnSQGFgrGSUZZbzOZYrCotBQLOkj3IuRULSid680G5SW4iKGHf
-         bIlJL7g3L/7z7gtn0RM/6FO+Z77aWUMyxYLg/SCyjwl9Q4ESvEyDvt7QOAn10Tvl2j0z
-         lkiayzuu/N2HCauqSmWLBvzbE8LDUxnrA34R01rLcrMRI7zD/6GV5DLHChDq0a38oDGD
-         0J0sHiimOvnyRLDFY++CI0r3zPHWPxTSxCjepTFt/FcQDrhwu9MqVzP3Zp6aIbN6NQ6y
-         JZXizfIsMy21QVEnulYtvcJHkMpLtTbbDqUclSj0R58+QZiD+8vERFQYWb3hIUgT9144
-         Jilw==
-X-Forwarded-Encrypted: i=1; AJvYcCUe5ISBnTqibaLrCB/OUgcXjpjaW3YdeTuLzYOi2Q94exyQcbGQ55sYCOO9Dx00l4+xJeqGhHyPwEz1qu1BkRzjLYDCVLagqmlshm5h
-X-Gm-Message-State: AOJu0Yzy+kKLBs0usDnv4Ab1T6u7M/oToQD7gBIJeXOz7nFhRAnO5sA4
-	yEAd4LYeSPI/U+fJrTknFx7FK9WrD5h6yjVgo6piryNfhruMS7IfnaimVwpFPPqDH3vTeDQGyyk
-	=
-X-Google-Smtp-Source: AGHT+IG78q2PGlEcwQqhFzPohFbbt5pSkWevJfrhLFgo//25sEVu0QOOn1jk6DHiMrxWYA5SkDC49Q==
-X-Received: by 2002:a05:6214:4288:b0:6a0:c79f:b5bb with SMTP id 6a1803df08f44-6a16817c457mr48269946d6.24.1715377631423;
-        Fri, 10 May 2024 14:47:11 -0700 (PDT)
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com. [209.85.160.176])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f194d16sm20670176d6.66.2024.05.10.14.47.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 May 2024 14:47:00 -0700 (PDT)
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-439b1c72676so42111cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 14:47:00 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWjHQny9ucYLpv/SNs9wT6awBJ68XY7u6H1lWlKR2SW26fAAMzRsf2agY8UjYgm8WVqnRxJUsDl4C7p/9WmWbhhNHZ+f6C6WSld9wLW
-X-Received: by 2002:a05:622a:5883:b0:437:c89e:245b with SMTP id
- d75a77b69052e-43e0a1d2a53mr207461cf.15.1715377619819; Fri, 10 May 2024
- 14:46:59 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715377647; x=1715982447;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/hdC9JzZ0lCEDEfdvCSKJ054LE730kwHqEMbc1syn4Y=;
+        b=lAYzblp7jbz6T0qxsL09/mqccPm/Ak8AJLmR4AcUL0BM1DzwkXzMzZ7yc2DrrV6NJh
+         RCF9ffg1OgwYY7ugtMVZAdSYvMQETgZRmzU8zvUST24enfsEJJBAXH8SVn8ifwR8XFmW
+         4a/UW2K63uglzU2ztbuJlrKJzGNqanYgZzW4z7ZANt0bIiR4wFEbOW0ybMGGG7xx9F9w
+         fe0ztZFYD5dbWLNRRwyUAmnka5dITMBfQ4kmEUXKYzp729C05717WjtETRUTDxSiPFeE
+         DdG/7DSB0Nt6WIKDCLvI6C1pQz4dvquDouD+ytcVRLdwHAf9xuUNxhV2X+KsBwuwHZVA
+         +vDg==
+X-Forwarded-Encrypted: i=1; AJvYcCX5GOyoBH3XON8TeY9cuj+4AkMPZmzLu40ZINY5yPPe88EMtdsErW8OVp+zmMopfBfgwoUhsPGaHaWNJ9AozXDyL5++JD128boz4tXe
+X-Gm-Message-State: AOJu0Yx1QMFdKdbi2dxgO2bXMXu+NtnGGLIHqq3A47njeughLWyBS7QR
+	P4VtLyKsRWKmYrcQlKdQpM5brgueQCE5jOd+FHr1PAjx1nqAKzza9XbRDhTThRY=
+X-Google-Smtp-Source: AGHT+IEl8b0mhum+JV+b5DTSd1d3OjZ5PkTdYwtDqzJoyrI4CLabnHCiu4RAY/rQcDa9u2oMv/FfGA==
+X-Received: by 2002:a17:903:234c:b0:1e8:682b:7f67 with SMTP id d9443c01a7336-1ef432a0c85mr53371555ad.29.1715377647449;
+        Fri, 10 May 2024 14:47:27 -0700 (PDT)
+Received: from ghost ([2601:647:5700:6860:629e:3f2:f321:6c])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c038ce5sm36930875ad.195.2024.05.10.14.47.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 May 2024 14:47:27 -0700 (PDT)
+Date: Fri, 10 May 2024 14:47:24 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Evan Green <evan@rivosinc.com>,
+	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>,
+	Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@rivosinc.com>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v6 06/17] riscv: Add vendor extensions to /proc/cpuinfo
+Message-ID: <Zj6V7N96odmFk4ni@ghost>
+References: <20240503-dev-charlie-support_thead_vector_6_9-v6-0-cb7624e65d82@rivosinc.com>
+ <20240503-dev-charlie-support_thead_vector_6_9-v6-6-cb7624e65d82@rivosinc.com>
+ <20240507-divisive-swoop-c2737a2d9a9f@spud>
+ <20240510-childcare-outlook-d18e3cc5ccb3@spud>
+ <Zj6QxisrBZSWq7ax@ghost>
+ <20240510-unexposed-desecrate-e30674d4530b@spud>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240510-dsi-panels-upd-api-v1-0-317c78a0dcc8@linaro.org> <20240510-dsi-panels-upd-api-v1-5-317c78a0dcc8@linaro.org>
-In-Reply-To: <20240510-dsi-panels-upd-api-v1-5-317c78a0dcc8@linaro.org>
-From: Doug Anderson <dianders@chromium.org>
-Date: Fri, 10 May 2024 14:46:48 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=VG7fSNoSo61T71PdciXHPVZhUE1Gr-8_sBXXsJZ9MGiw@mail.gmail.com>
-Message-ID: <CAD=FV=VG7fSNoSo61T71PdciXHPVZhUE1Gr-8_sBXXsJZ9MGiw@mail.gmail.com>
-Subject: Re: [PATCH RFC 5/7] drm/panel: novatek-nt36672e: use wrapped MIPI DCS functions
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
-	Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang <quic_jesszhan@quicinc.com>, 
-	Sam Ravnborg <sam@ravnborg.org>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Caleb Connolly <caleb.connolly@linaro.org>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	Vinod Koul <vkoul@kernel.org>, dri-devel@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240510-unexposed-desecrate-e30674d4530b@spud>
 
-Hi,
+On Fri, May 10, 2024 at 10:32:19PM +0100, Conor Dooley wrote:
+> On Fri, May 10, 2024 at 02:25:26PM -0700, Charlie Jenkins wrote:
+> > On Fri, May 10, 2024 at 09:50:32PM +0100, Conor Dooley wrote:
+> > > On Tue, May 07, 2024 at 06:03:19PM +0100, Conor Dooley wrote:
+> > > > On Fri, May 03, 2024 at 11:18:21AM -0700, Charlie Jenkins wrote:
+> > > > > All of the supported vendor extensions that have been listed in
+> > > > > riscv_isa_vendor_ext_list can be exported through /proc/cpuinfo.
+> > > > > 
+> > > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > 
+> > > > This seems fine, thanks for updating this interface :)
+> > > > 
+> > > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> > > 
+> > > Hmm, actually the automation on patchwork is complaining a bunch about
+> > > the series, but I think that's mostly false positives except for this
+> > > patch. The nommu defconfigs are prob the easiest way to reproduce this:
+> > >   /build/tmp.QPMRM3oUNu/arch/riscv/kernel/vendor_extensions.c:41:55: error: 'struct riscv_isa_vendor_ext_data_list' has no member named 'vendor_bitmap'
+> > >   /build/tmp.QPMRM3oUNu/arch/riscv/kernel/vendor_extensions.c:42:60: error: 'struct riscv_isa_vendor_ext_data_list' has no member named 'per_hart_vendor_bitmap'; did you mean 'per_hart_isa_bitmap'?
+> > >   /build/tmp.QPMRM3oUNu/arch/riscv/kernel/vendor_extensions.c:43:60: error: 'struct riscv_isa_vendor_ext_data_list' has no member named 'bitmap_size'
+> > > 
+> > > Cheers,
+> > > Conor.
+> > 
+> > The false negatives always throw me off.
+> 
+> Aye, it's pretty frustrating for me trying to report anything. Any time
+> a bunch of headers change produces a bunch of file rebuilds and
+> therefore warnings. That should in theory be caught by the fact that we
+> apply the patch & build, jump back to HEAD~1, build that & grab the
+> "before" warning state and then jump forward, rebuild the patch and
+> gather the "after" state. The idea is that that is an apples:apples
+> comparison as the same files will need to be rebuilt for both but it is
+> falling over somewhere. Maybe I'll have time to look into that soonTM.
+> 
+> > The errors are also offset by
+> > one patch.
+> 
+> Ye, that's my bad I think. In a rush off to another patch before the
+> thought I had on it left my brain and just pressed reply on the wrong
+> email. Sorry bout that :)
+> 
 
-On Thu, May 9, 2024 at 3:37=E2=80=AFPM Dmitry Baryshkov
-<dmitry.baryshkov@linaro.org> wrote:
->
-> Remove conditional code and always use mipi_dsi_dcs_*multi() wrappers to
-> simplify driver's init/exit code. This also includes passing context to
-> the init_sequence() function instead of passing the DSI device.
->
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> ---
->  drivers/gpu/drm/panel/panel-novatek-nt36672e.c | 587 ++++++++++++-------=
-------
->  1 file changed, 281 insertions(+), 306 deletions(-)
+The error message in full is:
 
-One note is that we might not be able to land ${SUBJECT} patch since
-the patch it's based on [1] doesn't have any Reviewed-by tags. Just
-sayin'. ;-)
-
-[1] https://lore.kernel.org/r/20240508135148.v4.6.I3c08a7d02c467d2bc88da14e=
-513ea4c8649fce45@changeid
+Patch 7/17: Test 2/12: .github/scripts/patches/tests/build_rv64_clang_allmodconfig.sh
+  Redirect to /build/tmp.OCcmyhkGEw and /build/tmp.TsjyVLqMfy
+  Tree base:
+  fefb1e9ecc34 ("riscv: Add vendor extensions to /proc/cpuinfo")
+  Building the whole tree with the patch
+  ../arch/riscv/kernel/vendor_extensions.c:41:42: error: no member named 'vendor_bitmap' in 'struct riscv_isa_vendor_ext_data_list'
+  ../arch/riscv/kernel/vendor_extensions.c:42:46: error: no member named 'per_hart_vendor_bitmap' in 'struct riscv_isa_vendor_ext_data_list'; did you mean 'per_hart_isa_bitmap'?
+  ../arch/riscv/kernel/vendor_extensions.c:43:47: error: no member named 'bitmap_size' in 'struct riscv_isa_vendor_ext_data_list'
 
 
-> @@ -381,61 +377,40 @@ static int nt36672e_power_off(struct nt36672e_panel=
- *ctx)
->         return ret;
->  }
->
-> -static int nt36672e_on(struct nt36672e_panel *ctx)
-> +static int nt36672e_on(struct nt36672e_panel *panel)
+It knows it's on patch 7 but then it prints the title of patch 6.
 
-Small nit that I think of the variable "panel" as referring to a
-"struct drm_panel". I'd personally rather this be named something
-else, like "nt36672e".
+- Charlie
+
+> > This was actually introduced in the following patch "riscv:
+> > Introduce vendor variants of extension helpers" because I accidentally
+> > fixed this issue in the patch "riscv: cpufeature: Extract common
+> > elements from extension checking" instead of the one it was introduced
+> > in.
+> 
 
 
->  {
-> -       struct mipi_dsi_device *dsi =3D ctx->dsi;
-> -       const struct panel_desc *desc =3D ctx->desc;
-> -       int ret =3D 0;
-> +       struct mipi_dsi_multi_context ctx =3D { .dsi =3D panel->dsi };
-> +       struct mipi_dsi_device *dsi =3D panel->dsi;
-> +       const struct panel_desc *desc =3D panel->desc;
->
->         dsi->mode_flags |=3D MIPI_DSI_MODE_LPM;
->
-> -       if (desc->init_sequence) {
-> -               ret =3D desc->init_sequence(dsi);
-> -               if (ret < 0) {
-> -                       dev_err(&dsi->dev, "panel init sequence failed: %=
-d\n", ret);
-> -                       return ret;
-> -               }
-> -       }
-> +       if (desc->init_sequence)
-> +               desc->init_sequence(&ctx);
->
-> -       ret =3D mipi_dsi_dcs_exit_sleep_mode(dsi);
-> -       if (ret < 0) {
-> -               dev_err(&dsi->dev, "Failed to exit sleep mode: %d\n", ret=
-);
-> -               return ret;
-> -       }
-> -       msleep(120);
-> +       mipi_dsi_dcs_exit_sleep_mode_multi(&ctx);
-> +       mipi_dsi_msleep(&ctx, 120);
->
-> -       ret =3D mipi_dsi_dcs_set_display_on(dsi);
-> -       if (ret < 0) {
-> -               dev_err(&dsi->dev, "Failed to set display on: %d\n", ret)=
-;
-> -               return ret;
-> -       }
-> -       msleep(100);
-> +       mipi_dsi_dcs_set_display_on_multi(&ctx);
->
-> -       return 0;
-> +       mipi_dsi_msleep(&ctx, 100);
-> +
-> +       return ctx.accum_err;
->  }
->
-> -static int nt36672e_off(struct nt36672e_panel *ctx)
-> +static int nt36672e_off(struct nt36672e_panel *panel)
->  {
-> -       struct mipi_dsi_device *dsi =3D ctx->dsi;
-> -       int ret =3D 0;
-> +       struct mipi_dsi_multi_context ctx =3D { .dsi =3D panel->dsi };
->
-> -       dsi->mode_flags &=3D ~MIPI_DSI_MODE_LPM;
-> +       panel->dsi->mode_flags &=3D ~MIPI_DSI_MODE_LPM;
->
-> -       ret =3D mipi_dsi_dcs_set_display_off(dsi);
-> -       if (ret < 0) {
-> -               dev_err(&dsi->dev, "Failed to set display off: %d\n", ret=
-);
-> -               return ret;
-> -       }
-> -       msleep(20);
-> +       mipi_dsi_dcs_set_display_off_multi(&ctx);
-> +       mipi_dsi_msleep(&ctx, 20);
->
-> -       ret =3D mipi_dsi_dcs_enter_sleep_mode(dsi);
-> -       if (ret < 0) {
-> -               dev_err(&dsi->dev, "Failed to enter sleep mode: %d\n", re=
-t);
-> -               return ret;
-> -       }
-> -       msleep(60);
-> +       mipi_dsi_dcs_enter_sleep_mode_multi(&ctx);
-> +       mipi_dsi_msleep(&ctx, 60);
->
-> -       return 0;
-> +       return ctx.accum_err;
->  }
-
-nit: similar to other patches in the series, the callers of
-nt36672e_on() and nt36672e_off() should be able to get rid of their
-error prints.
-
-In any case:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
