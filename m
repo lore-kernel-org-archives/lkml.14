@@ -1,114 +1,77 @@
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35E3B2D627;
-	Fri, 10 May 2024 17:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 059EC1F954
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 17:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715363260; cv=none; b=idX50NuQ88rVq2X7omKATG3vRC24Lk3/3Jhvp4TxRiMUkdDepgUHTQiBoD4l3f91B2M58qk6dQQTQ3/StZ9jp19dH+7OQkthFBdqfz0wYqR01xY+4ypEyIF9okeHkm5KLuAFHBfBMRPbyDC89qRpYYVMLuEKvKh6E2NrmF7zDv8=
+	t=1715363267; cv=none; b=uvf3DML/yUz6AlM3C+KZECWwVwlwA7KSNOgETHhvWr4qZ+2lQKv/V6ct4RPwDTcyl59CoEyjrMYM5gzLz4PFVPWQI6yYzTRF5btMObGJED88iG6ZnYOqk67sIypqfLnzfL97CG8xL3h2NwHQ4OBjq82zpJfNV+sKx5V3h31iOS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715363260; c=relaxed/simple;
-	bh=ZvztaxVhFppW+dunKXuw5owT3lFMAfjH/4VZOrtHlFo=;
+	s=arc-20240116; t=1715363267; c=relaxed/simple;
+	bh=wtIQIip5nVPfkbjixVWdphytuwonMdaHcOLroeIqLNo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nASwAaTNSgju11U+wN5LzUZnYJvtylwGhKxWo2siDQaj711w+laphPLtMuI92OrQbFPX+dPvoeoR0Z8sqfQU9cFoRchReTWwVYANNofbI7v8F6nRcU0aSXOB+wirPGY1+bx/7fI61ruUIU3kdFxsn7rUL7w8RKb/eLLv1R5tmtU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RZFqhXuh; arc=none smtp.client-ip=209.85.218.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=d8sju3OKvbdBe+gb3sGpaQC6rdVdDOceo/pxRB+V77ZMh6RS2WjrahhG0KVdVt+eOlkJjUgIzgiGFZGUzy50giR/lIjQAveqg7mlY9CYTaugb4EPsBjlJv1UZkN+Qd4UIiCgiWDK54sjH1yzVck1TluJlZesrrGMRMOwwxGOX0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s9o3owcH; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZFqhXuh"
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a5a1054cf61so594509666b.1;
-        Fri, 10 May 2024 10:47:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s9o3owcH"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5724736770cso789a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 10:47:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715363257; x=1715968057; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZvztaxVhFppW+dunKXuw5owT3lFMAfjH/4VZOrtHlFo=;
-        b=RZFqhXuh437CAqz3SRxvaNOafNasf8w9W46z4V1RbQyMLT/Nblu9L4IDu0s4fGf7tE
-         t5WByT1yaKK6pkuMx4fKxapfdU1J2n1OKvo2P5psrc7WvtF1312O9zEFbeTrssW0gCsJ
-         XiMaS9W6GDQHMYfvtN0RfjV7eUhonTIctTtVc+852/Sc+gEBdYvg33xi+/KjZRudYqAZ
-         zmul8PZvTijhViQYO7+YEx0Hnz2kXAbaHI1TyaFWLz16TJzFjFu4fTZt1NUJe1BjyCvW
-         V7zfYPagpAsuka+LPwVWKXcIvXJypKyN+JoyR2kIeVP+YoIHj7+46TelIUOV6bXoocA8
-         4wVw==
+        d=google.com; s=20230601; t=1715363264; x=1715968064; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=wtIQIip5nVPfkbjixVWdphytuwonMdaHcOLroeIqLNo=;
+        b=s9o3owcHBlN0toIX6BKL0MzUXBeLlkQL6SZ4zEQE32E0GloumirZ417QDlmBZ0NrhC
+         sH+xN1mnTienVbnHSErnxstvVIxfJZKzL/Wu9aywNdItoMJtgALS9esesmit1Tska0+z
+         nZ5ChHFtiCio4iprFxbhFhTexHx4XzDWQE3ENOgJPmgRQRIZKdra6Zy3/vZDOR5sxTPP
+         35MVlV9XdficZ4H1nCIOn0PVd3RX+Gmj4ryhgB83Zr/ci2HBWXOekQaclnTl1xMK5kbQ
+         CjCpVh+2Wsl9REFxg0slxrmC74vhhnrpPboC7nU2flYzmhodqr7RY8L6/FT3W7WLYH1w
+         sTXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715363257; x=1715968057;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZvztaxVhFppW+dunKXuw5owT3lFMAfjH/4VZOrtHlFo=;
-        b=T9BGxiMSEF+8fVLpAXz38CXBBzqqonXM1iZdOvTrhqLj1EBMGFD4sHn8Y9KwZSp//3
-         SyanEn2Yl1wxPPxdXZbsl/l6SwSgdXmgAhOvJEgqeijrPh8lMQHolFrl/Znv12TmAhgO
-         12FlRvSyu+zC7EHVXaBUdxXNru0vAQw7jFKVHp35yj/Nm42TrQcagVypjDGHgbzusPhz
-         6OkiZbXWatYZeKK0TcsE841KJmHworg4nzOjOmeMvHGR8jqxttq+r5azd8naWigUJ1kI
-         ZoxFHzuzypqamM28D36/wg8ohRIoyErbD+GuinU4gj6jnYJP4af5q/Bb4r3eG8/nQpBE
-         2zcg==
-X-Forwarded-Encrypted: i=1; AJvYcCWecf4XOj2AmPQsagsVepMAvrKsRTubfS6rQmiXRUEmrPezPhFZh7eVvrA70ZRSlRsFIuD65/beBmwuhdcZlR8YZcD39W4cTqxCiet9Zi3msgAnMyEoPdfBAHRzevKif4Ljou7BoxSuXg==
-X-Gm-Message-State: AOJu0Yy79mxO3OZ2jrDE7sTkMbqXZu8FtoJqy2WiafRvLxAxoK/jyiWn
-	4Ydj5yERxtu0x/1PEbAM7wB+t2ucwjFLQh95HZ02ZXw4DVx7li8JB8dZR2urtZ33KQHY7qHKuxf
-	glPeIv3X0J1amphVpz4rNfB1HmKzEkmId
-X-Google-Smtp-Source: AGHT+IFfIjdEBYXeEGAPCOmCf/e6psY+NI/VvqYiZJKMo1u8WflwScJdqblBG2EQsiGiUdDwHUx407iPQd76Yd/9lWI=
-X-Received: by 2002:a17:906:a010:b0:a59:a9c0:57e6 with SMTP id
- a640c23a62f3a-a5a2d675dafmr294429166b.75.1715363257287; Fri, 10 May 2024
- 10:47:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715363264; x=1715968064;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wtIQIip5nVPfkbjixVWdphytuwonMdaHcOLroeIqLNo=;
+        b=fN//YnGSrspPSetC9BH33eV8FeJiW9rl+lFn7XffBM/XeQuBMT3SwwRm+a6iixLkGG
+         0uRg7oGpdtBIWLvOyp/HJJ33R8f6h+IBmK8TmHwZf8meck3sC8mt1+o4J1F0BU75sRUU
+         LoHCDJmBRVBPSr6YktSwkhFW58FRtKOEtag8/chMq0HV+DGdRovkGjujgd0Ei6Ul7GjO
+         5NuU7RcB0AfCsTSOmjny+rD4yfhEojhTw0XdEQMHJstOV3rKjj/sGSyzKEkdeqGCrCwo
+         PCK8fjqyLu7Os9UxyEnpfe+19yGnzeu1o/92q/594SzofV0JstTuMFjIkNH4XiNHgQY7
+         OUsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVerYR5bHSJin+ACs6YiDFzMYQIcS9ldj823mxR8IeD/RpDo5AJvDjp1eukZXE2dJqjp4NfKNXo9GJ+eJWgta0WFmaUOduES4+OiZ7C
+X-Gm-Message-State: AOJu0YxKjWosLZENTJQiZZPp2YOwKcvVW6zh+vwskXevEAJ/P5aziOHT
+	g7JB71T+tpBddmxJpKAb4BlspT57ukEKbVqhy0Ze0/Kep29patMpxcU+IRgcWxaqS26hhk2RPRy
+	7X/f7tnyq8EC45wvjA8mxWju3NsVTUnqcM9ZP
+X-Google-Smtp-Source: AGHT+IHa5FsJxGeGgllWY9Q4tH+ll2VsmZa3DhLaRjKNVSrW18OHO9wNIjfKJEwokkqsTG8piczzmGTMpNstjiLBz5M=
+X-Received: by 2002:a05:6402:1e87:b0:572:554b:ec4f with SMTP id
+ 4fb4d7f45d1cf-574499eff4cmr162a12.3.1715363264154; Fri, 10 May 2024 10:47:44
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240508144741.1270912-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=Me3XOy6HfqjxDQBwnSW9pOCtK_Ry7keJ2LiXGFB88t4nA@mail.gmail.com>
- <ZjzWlNdDVVBRD-Ma@surfacebook.localdomain> <CAMRc=MeuAQgos+=GmYr0X+5Pi+foJaRNwuNM0D3b4-FwxoD2mg@mail.gmail.com>
- <Zj5AZMycTCPUoT-l@smile.fi.intel.com> <Zj5B5ONDI7DB86on@smile.fi.intel.com>
- <Zj5F8tidsVPkDGEi@smile.fi.intel.com> <CAMRc=Mfq50x5RUM76yYXG9hGh4vGTO2hTgFeO8Ty1Z0p3oo_2Q@mail.gmail.com>
-In-Reply-To: <CAMRc=Mfq50x5RUM76yYXG9hGh4vGTO2hTgFeO8Ty1Z0p3oo_2Q@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 10 May 2024 20:47:00 +0300
-Message-ID: <CAHp75Ve1sNmq00OLz51gSTr5XEwOYNpMy7+RO8Pc=Wts9ZSh9Q@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Return label, if set, for IRQ only line
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+References: <20240503003920.1482447-1-jthies@google.com> <20240503003920.1482447-2-jthies@google.com>
+ <Zjiq4PrL2ju8FOUz@kuha.fi.intel.com> <2024051010-hungrily-scholar-7d23@gregkh>
+In-Reply-To: <2024051010-hungrily-scholar-7d23@gregkh>
+From: Jameson Thies <jthies@google.com>
+Date: Fri, 10 May 2024 10:47:32 -0700
+Message-ID: <CAMFSARfBu1vBbuA-jMgD0fWJL1_zfQ2X1P0XB-ysQNrJL7+B5g@mail.gmail.com>
+Subject: Re: [PATCH v3 1/4] usb: typec: ucsi: Fix null pointer dereference in trace
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>, linux-usb@vger.kernel.org, 
+	pmalani@chromium.org, bleung@google.com, abhishekpandit@chromium.org, 
+	andersson@kernel.org, dmitry.baryshkov@linaro.org, 
+	fabrice.gasnier@foss.st.com, hdegoede@redhat.com, neil.armstrong@linaro.org, 
+	rajaram.regupathy@intel.com, saranya.gopal@intel.com, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 10, 2024 at 8:30=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
-> On Fri, May 10, 2024 at 6:06=E2=80=AFPM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Fri, May 10, 2024 at 06:48:52PM +0300, Andy Shevchenko wrote:
-> > > On Fri, May 10, 2024 at 06:42:28PM +0300, Andy Shevchenko wrote:
-> > > > On Thu, May 09, 2024 at 04:23:07PM +0200, Bartosz Golaszewski wrote=
-:
-> > > > > On Thu, May 9, 2024 at 3:58=E2=80=AFPM Andy Shevchenko
-> > > > > <andy.shevchenko@gmail.com> wrote:
+Thank you for the feedback, I'll post a v4 series fixing these issues.
 
-...
-
-> > > > > Fair enough but I would like to know what your bigger plan is bef=
-ore
-> > > > > picking this up.
-> > > >
-> > > > I stand corrected, this patch has an immediate effect on the generi=
-c
-> > > > gpiolib_dbg_show() which does *not* use the above mentioned call..
-> > >
-> > > Ah, but it doesn't use gpiod_get_label() in the else branch either...
-> > >
-> > > I want to amend the else branch there to print similar or reuse the m=
-ain one.
-> > > For the latter I have locally a patch to modify gpiolib_dbg_show() to=
- show
-> > > the interrupt lines as well even if they are not requested.
-> >
-> > I just shared that patch, if you are okay with both, it would be nice
-> > to have them applied.
->
-> Not for this merge window, we'll see in two weeks.
-
-No hurry, I'm fine with your schedule.
-
---=20
-With Best Regards,
-Andy Shevchenko
+Thanks,
+Jameson
