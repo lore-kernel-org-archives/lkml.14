@@ -1,260 +1,121 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5E0175545
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 16:22:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C06174EF3;
+	Fri, 10 May 2024 16:25:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715358145; cv=none; b=K25MU11cZpz9kxCdimFIOFlEYLSjgDVZp4V/7DbxiYm2bwooAdjzrG8zqYbgscyYvfuq9t+CqsgbSHQVjfkuDzRL2Jod/GmO6PQb1D2Uc/jwE1NSL7r/+GjzqwuVYAZ1nE1y55v4OAHmlH9oAGKf5txMpJQ3h7vXuSlfD5xB1aU=
+	t=1715358355; cv=none; b=IXd04HtKpEPnuK4wQS5S68WRTlwXWy4uJC2cLBcZLyj/S8X5xA/9JdIaUBy3NVNjn8XJaNAArrUCnKb3Z8GkrOsB6VuFrmr9HAJll83f25s/S8dWDDJ3chsdu3CqCtW2FZgcVJ2kh7GHJSIJEq7zii+hH+dG9mpx/UOQBDBhhQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715358145; c=relaxed/simple;
-	bh=u74CTH8bkR/6+1/nMcqAE4Ha/tcLk2jclSRHENcGDpY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jk6t2HPOobnmIUCPx++zVugWwVJc1uye+TYmbykKbx4/3PpH8DIGtWmAkkwCZSwB0VpscRRIw4Xt3ibk1aChYAYMZmP6nXyBwrKsQB6tCymAaWJjrlQI1PwrD4J46uVMQN67RzZI1L4xqDNrIR2IaK6/NuDyNyeaZi7CoSYZ0C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sKWCwvy3; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715358355; c=relaxed/simple;
+	bh=0Q07Odd3y+t4wAzGOPyRX38Uvk3uimk5F2XxDAfgMPw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WorznTTXSe+lSuVt/4ImWSG6zTMl6anLd74vY+Hun7hL+uaRd/wRfSnD5GVPSU8MATREkBDzgtegzcqQp+QYZbte4zFoEjcBmAgf5I2eHZW6r/YlnHT0K1xuO8XNxnfvaQ9yUPb8ikSCOBB3P8LDoIoD6MJAhG+vVhphsOfXtGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=O5ocVbBU; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sKWCwvy3"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-52232d0e5ceso224627e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 09:22:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715358140; x=1715962940; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8HsOPUxHaBpYmZlNT890ywYtohgsUb5QMIi2B10Vcd8=;
-        b=sKWCwvy3iC3+/lKcczsnDimom6e5r0Nxf5udZyHSeZsL+1TyQdo6nviYYTfBDlZZPK
-         aL4o7nOHv9RelvY/JVumeKIbKryicDIW8aGHv3Zqbzap52TV5d5qMHkNVrcSec+vk+Ct
-         0xWgdcO30Xs1OZZcb0xqATiXdG/m3p88C/fjd1onGUeWiPLtkYzqTl03ghlPboLBgIR2
-         jeKlNzUT7Icbn0hX03+kB2YSPwDa/aGPTH5FaMTjqa5PSNqhnirsbVZ/6+Dz9uXqcSF+
-         rmB8I4YcY/irv6ZqsKCLgQ+d++rg2FaFkhjRfhx52WlOLyUDzy6bHcdVvV5GDM3tjL1n
-         u1EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715358140; x=1715962940;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8HsOPUxHaBpYmZlNT890ywYtohgsUb5QMIi2B10Vcd8=;
-        b=uRh9VyoA6MwTqOoElFS0lmDD3DM9rLs73o6OTw7ZyNLzxz5R+9ICuW+p9HYrGToe3q
-         4qODXUF1pQiO1YZwdPTIHMAYj38LqeudNN8e/Jh/OzhJNlk1FcKLaT9oBS7cn9PQEE+y
-         kSkgLWSHQ8Qj+O2qoJOG8CHCIFo3AjXSBAA6xtrITXdviwbgrBWNZEN8XmkGdW+SpSaW
-         bPDnb9jN03tnyHeST0ujHP6ctImVqqcTcSNWAJGfvNUXr+y9kGNZJds+PvuOXolHHMcN
-         whAArlEtmnVRugb+RnPYaGEtdKIwlu8PW9upT6Mw202ynvT07rL31pfTpdKeyIC6Zo4W
-         7ejw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4lSg8WLhc6xpwrwbRIbPdxpOfIr/eD882jN++aClGILtbgosbqrSruj8CmmEu1IV1D/vRYYf1QfNKclPZmvwwm0XvuABtOGWqUWkl
-X-Gm-Message-State: AOJu0YxoGl/0ErIjqf2+LOv/4dtqjAFIaYS0ndFfDVmdiuw0rtIdySA5
-	cZt/bZJCfYlZKkK7Pes1YE3wfexDpOe/X0DDFzv+biD5z5liHoLqFFgyVdeJjLrFwHUo0VxyGD9
-	/9UTGNGV7W3rfLoyMk7aS8stydNxgbTHPUWmW
-X-Google-Smtp-Source: AGHT+IH2KIcF78KlQb7EAGESCG2yw9jrYqThZThtmmFt4FRjxZ1BqwNQiQVQTwLloGlhLb4SduhLkIqqRmVTvsHCz2M=
-X-Received: by 2002:a05:6512:388f:b0:51d:5f0b:816f with SMTP id
- 2adb3069b0e04-5220fc7950dmr1953400e87.15.1715358139674; Fri, 10 May 2024
- 09:22:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="O5ocVbBU"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44ADKuMX028302;
+	Fri, 10 May 2024 16:25:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=kiiBO0sNrgVZAN/cV8grFZwEXi4MRNC8Hf5cpfM1SPk=; b=O5
+	ocVbBUe69+zH6Jv3ISFCG1r/serXG6pqoXdSBpE3156LHDSD7OkCVTetjpZiqbtL
+	Mhkr7rIrwP3kD7DOaM/hYcohOXglnHgSpS6k7iqK6FQ2ifGKI3amwywMXRJU/MBb
+	xT6CeqWyuRz32drIkfoIREaXi8MSWsfINqd/WG6Jk2L37XgIsN0OrA006LrB4P+g
+	hfoHpv6rmxdydSOukTQOwrRd39ZjsvddiEeGDdFOX99wawTf22TdKtaq9c2XrNh5
+	hoptfov+AMzqBjytqwri5Qs48MPYiDSb73Z0+oNHTwDrrF88D+y92cOSxQuAgs8n
+	U91WVFx5MJ0aPWcsN16Q==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y16w0t15v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 May 2024 16:25:42 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44AGPeXB021519
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 10 May 2024 16:25:40 GMT
+Received: from [10.216.44.233] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 10 May
+ 2024 09:25:35 -0700
+Message-ID: <21cedacd-f454-4eb8-9b2b-33a14592a6c1@quicinc.com>
+Date: Fri, 10 May 2024 21:55:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240510152620.2227312-1-aleksander.lobakin@intel.com> <20240510152620.2227312-9-aleksander.lobakin@intel.com>
-In-Reply-To: <20240510152620.2227312-9-aleksander.lobakin@intel.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Fri, 10 May 2024 09:22:05 -0700
-Message-ID: <CAHS8izO7agxQ6nbc=BoK5KuYd_jgVLgJTbZbmEUqarfVn300Tw@mail.gmail.com>
-Subject: Re: [PATCH RFC iwl-next 08/12] idpf: reuse libeth's definitions of
- parsed ptype structures
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, Tony Nguyen <anthony.l.nguyen@intel.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	nex.sw.ncis.osdt.itp.upstreaming@intel.com, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] clk: qcom: apss-ipq-pll: remove 'config_ctl_hi_val' from
+ Stromer pll configs
+To: Konrad Dybcio <konrad.dybcio@linaro.org>, Gabor Juhos <j4g8y7@gmail.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette
+	<mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Varadarajan Narayanan
+	<quic_varada@quicinc.com>,
+        Gokul Sriram Palanisamy
+	<quic_gokulsri@quicinc.com>
+References: <20240509-stromer-config-ctl-v1-1-6034e17b28d5@gmail.com>
+ <baa81202-f129-4ec2-baca-6ca8b476a37d@linaro.org>
+Content-Language: en-US
+From: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+In-Reply-To: <baa81202-f129-4ec2-baca-6ca8b476a37d@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: mugNdDju9wveCC9R1YfeAOOsRGr6nTNa
+X-Proofpoint-ORIG-GUID: mugNdDju9wveCC9R1YfeAOOsRGr6nTNa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-10_12,2024-05-10_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ mlxlogscore=668 clxscore=1011 suspectscore=0 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 adultscore=0 bulkscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405010000 definitions=main-2405100119
 
-On Fri, May 10, 2024 at 8:30=E2=80=AFAM Alexander Lobakin
-<aleksander.lobakin@intel.com> wrote:
->
-> idpf's in-kernel parsed ptype structure is almost identical to the one
-> used in the previous Intel drivers, which means it can be converted to
-> use libeth's definitions and even helpers. The only difference is that
-> it doesn't use a constant table (libie), rather than one obtained from
-> the device.
-> Remove the driver counterpart and use libeth's helpers for hashes and
-> checksums. This slightly optimizes skb fields processing due to faster
-> checks. Also don't define big static array of ptypes in &idpf_vport --
-> allocate them dynamically. The pointer to it is anyway cached in
-> &idpf_rx_queue.
->
-> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-> ---
->  drivers/net/ethernet/intel/idpf/Kconfig       |   1 +
->  drivers/net/ethernet/intel/idpf/idpf.h        |   2 +-
->  drivers/net/ethernet/intel/idpf/idpf_txrx.h   |  88 +-----------
->  drivers/net/ethernet/intel/idpf/idpf_lib.c    |   3 +
->  drivers/net/ethernet/intel/idpf/idpf_main.c   |   1 +
->  .../ethernet/intel/idpf/idpf_singleq_txrx.c   | 113 +++++++---------
->  drivers/net/ethernet/intel/idpf/idpf_txrx.c   | 125 +++++++-----------
->  .../net/ethernet/intel/idpf/idpf_virtchnl.c   |  69 ++++++----
->  8 files changed, 151 insertions(+), 251 deletions(-)
->
-...
->   * idpf_send_get_rx_ptype_msg - Send virtchnl for ptype info
->   * @vport: virtual port data structure
-> @@ -2526,7 +2541,7 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport *v=
-port)
->  {
->         struct virtchnl2_get_ptype_info *get_ptype_info __free(kfree) =3D=
- NULL;
->         struct virtchnl2_get_ptype_info *ptype_info __free(kfree) =3D NUL=
-L;
-> -       struct idpf_rx_ptype_decoded *ptype_lkup =3D vport->rx_ptype_lkup=
-;
-> +       struct libeth_rx_pt *ptype_lkup __free(kfree) =3D NULL;
->         int max_ptype, ptypes_recvd =3D 0, ptype_offset;
->         struct idpf_adapter *adapter =3D vport->adapter;
->         struct idpf_vc_xn_params xn_params =3D {};
-> @@ -2534,12 +2549,17 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport =
-*vport)
->         ssize_t reply_sz;
->         int i, j, k;
->
-> +       if (vport->rx_ptype_lkup)
-> +               return 0;
-> +
->         if (idpf_is_queue_model_split(vport->rxq_model))
->                 max_ptype =3D IDPF_RX_MAX_PTYPE;
->         else
->                 max_ptype =3D IDPF_RX_MAX_BASE_PTYPE;
->
-> -       memset(vport->rx_ptype_lkup, 0, sizeof(vport->rx_ptype_lkup));
-> +       ptype_lkup =3D kcalloc(max_ptype, sizeof(*ptype_lkup), GFP_KERNEL=
-);
-> +       if (!ptype_lkup)
-> +               return -ENOMEM;
->
->         get_ptype_info =3D kzalloc(sizeof(*get_ptype_info), GFP_KERNEL);
->         if (!get_ptype_info)
-> @@ -2604,9 +2624,6 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport *v=
-port)
->                         else
->                                 k =3D ptype->ptype_id_8;
->
-> -                       if (ptype->proto_id_count)
-> -                               ptype_lkup[k].known =3D 1;
-> -
->                         for (j =3D 0; j < ptype->proto_id_count; j++) {
->                                 id =3D le16_to_cpu(ptype->proto_id[j]);
->                                 switch (id) {
-> @@ -2614,18 +2631,18 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport =
-*vport)
->                                         if (pstate.tunnel_state =3D=3D
->                                                         IDPF_PTYPE_TUNNEL=
-_IP) {
->                                                 ptype_lkup[k].tunnel_type=
- =3D
-> -                                               IDPF_RX_PTYPE_TUNNEL_IP_G=
-RENAT;
-> +                                               LIBETH_RX_PT_TUNNEL_IP_GR=
-ENAT;
->                                                 pstate.tunnel_state |=3D
->                                                 IDPF_PTYPE_TUNNEL_IP_GREN=
-AT;
->                                         }
->                                         break;
->                                 case VIRTCHNL2_PROTO_HDR_MAC:
->                                         ptype_lkup[k].outer_ip =3D
-> -                                               IDPF_RX_PTYPE_OUTER_L2;
-> +                                               LIBETH_RX_PT_OUTER_L2;
->                                         if (pstate.tunnel_state =3D=3D
->                                                         IDPF_TUN_IP_GRE) =
-{
->                                                 ptype_lkup[k].tunnel_type=
- =3D
-> -                                               IDPF_RX_PTYPE_TUNNEL_IP_G=
-RENAT_MAC;
-> +                                               LIBETH_RX_PT_TUNNEL_IP_GR=
-ENAT_MAC;
->                                                 pstate.tunnel_state |=3D
->                                                 IDPF_PTYPE_TUNNEL_IP_GREN=
-AT_MAC;
->                                         }
-> @@ -2652,23 +2669,23 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport =
-*vport)
->                                         break;
->                                 case VIRTCHNL2_PROTO_HDR_UDP:
->                                         ptype_lkup[k].inner_prot =3D
-> -                                       IDPF_RX_PTYPE_INNER_PROT_UDP;
-> +                                       LIBETH_RX_PT_INNER_UDP;
->                                         break;
->                                 case VIRTCHNL2_PROTO_HDR_TCP:
->                                         ptype_lkup[k].inner_prot =3D
-> -                                       IDPF_RX_PTYPE_INNER_PROT_TCP;
-> +                                       LIBETH_RX_PT_INNER_TCP;
->                                         break;
->                                 case VIRTCHNL2_PROTO_HDR_SCTP:
->                                         ptype_lkup[k].inner_prot =3D
-> -                                       IDPF_RX_PTYPE_INNER_PROT_SCTP;
-> +                                       LIBETH_RX_PT_INNER_SCTP;
->                                         break;
->                                 case VIRTCHNL2_PROTO_HDR_ICMP:
->                                         ptype_lkup[k].inner_prot =3D
-> -                                       IDPF_RX_PTYPE_INNER_PROT_ICMP;
-> +                                       LIBETH_RX_PT_INNER_ICMP;
->                                         break;
->                                 case VIRTCHNL2_PROTO_HDR_PAY:
->                                         ptype_lkup[k].payload_layer =3D
-> -                                               IDPF_RX_PTYPE_PAYLOAD_LAY=
-ER_PAY2;
-> +                                               LIBETH_RX_PT_PAYLOAD_L2;
->                                         break;
->                                 case VIRTCHNL2_PROTO_HDR_ICMPV6:
->                                 case VIRTCHNL2_PROTO_HDR_IPV6_EH:
-> @@ -2722,9 +2739,13 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport *=
-vport)
->                                         break;
->                                 }
->                         }
-> +
-> +                       idpf_finalize_ptype_lookup(&ptype_lkup[k]);
->                 }
->         }
->
-> +       vport->rx_ptype_lkup =3D no_free_ptr(ptype_lkup);
-> +
 
-Hi Olek,
 
-I think you need to also patch up the early return from
-idpf_send_get_rx_ptype_msg, otherwise vport->rx_ptype_lkup is not set
-and I run into a later crash. Something like:
+On 5/10/2024 12:23 AM, Konrad Dybcio wrote:
+> On 9.05.2024 10:08 AM, Gabor Juhos wrote:
+>> Since the CONFIG_CTL register is only 32 bits wide in the Stromer
+>> and Stromer Plus PLLs , the 'config_ctl_hi_val' values from the
+>> IPQ5018 and IPQ5332 configurations are not used so remove those.
+>>
+>> No functional changes.
+>>
+>> Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+>> ---
+> 
+> Hm, it sounds suspicious that we'd have these settings then.. Could somebody from
+> QC please confirm that everything's alright here?
 
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-index a0aaa849df24..80d9c09ff407 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-@@ -2629,7 +2629,7 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport *vpo=
-rt)
-                        /* 0xFFFF indicates end of ptypes */
-                        if (le16_to_cpu(ptype->ptype_id_10) =3D=3D
-                                                        IDPF_INVALID_PTYPE_=
-ID)
--                               return 0;
-+                               goto done;
 
-                        if (idpf_is_queue_model_split(vport->rxq_model))
-                                k =3D le16_to_cpu(ptype->ptype_id_10);
-@@ -2756,6 +2756,7 @@ int idpf_send_get_rx_ptype_msg(struct idpf_vport *vpo=
-rt)
-                }
-        }
+I checked the HW doc and yes in both IPQ5018 and IPQ5332 CONFIG_CTL_U 
+register is not implemented. I see offset of CONFIG_CTL_U register is 
+removed in the change[1] by Gabor.
 
-+done:
-        vport->rx_ptype_lkup =3D no_free_ptr(ptype_lkup);
+Given that, should we also drop the pll_has_64bit_config() if block from 
+clk_stromer_pll_configure function?
 
-        return 0;
+Nevertheless, for this patch
 
---=20
-Thanks,
-Mina
+Reviewed-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com>
+
+
+[1] 
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=4f2bc4acbb19
+
+> 
+> Konrad
