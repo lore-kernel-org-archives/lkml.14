@@ -1,180 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40243224DE
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD5515E5D2
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:26:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715322334; cv=none; b=WcYdyeQ4cp2woel43P2YjPSlWBugnKxcGk8HMDy0ifTqtOSIqgGl/gpBVOvxZG/v3ZLKbDAo/8ZAT66PEapxg4PpNNRmAEN7IY3i1pl1jNKUP8mrxrXS1xxfSFc6QPp4M5v27IXEoQ0Kx1I7kZCq+K4Oxo6suCzvCWhxqXcHMPo=
+	t=1715322391; cv=none; b=DapxgnvdD/MYEViOSP4RHLjQnr0G66E43duERTgs6ZzA6JwyLr1lNAUEBEfb6piN14HInDiI11QBVGUUnpejR6vIykW2Rpktxq01OOSMtEZDMWOXjOL9YddmYNB5HYKJ+g1qbZyJFoJMZSGZNS3cKzpm1/tNv1CFtKOdqgHx1a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715322334; c=relaxed/simple;
-	bh=p0NRJPhcoFWHgBvTdTZyPt4A1HB4xQ+Q8YtpJD+CbzI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FeA7XLoMUge4+O3eI8KVhqGp1KfPul1mmUVZHd/PW2NNmEgVehINVRXS5iYYR02o8yso+5tStpCW2B4D7S2QpSdWO/kfqA8VM3Htr9ApI95+XZPDs2180DVjwabwnAR4/CTE7OB1ruEjXsUWqHkdca6v/7s6lJugkGnr1f0v59c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ieVR9oL6; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715322391; c=relaxed/simple;
+	bh=jqEa403Ip4Q6H3qKGudKAM9jGLLfwsy4VGx1KPzYp8o=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=AlWO1awEn+UlBZCO9tuKFVmGaYgzmORzOSv+hvZ3wzL2RDO+YvyUF+cpaBNwfKcENlc9QR1Y4plVTQVNPIXJThT3tLBHfdI8yPNW/7wGvY1N1dmHhOYuuH5j/A3ps426dGitfE+7pMFbeZnElUfgS0Bd8abDnvtFoSPhB1q9azY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=Ifn5HH/1; arc=none smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ieVR9oL6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715322332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GHgrKMZJMRwygDDtmV6g8fUqPzYJOIm+nsZVqZObz4k=;
-	b=ieVR9oL6/GQfDIR+I0Xunuvf+P2xEUOYHTvzOjBdex2DXG2PfrkIFhGYT7PDZMVK2hDO70
-	BKCwx2ppkHWlvqPqGuTWyM3FsAewDj8tv2IjnAt23a4pCbk4ijP/xAdWYA7xqtGgVn9/Ym
-	z7t2nJjM/W7JntvjPVmtKzG1g+RV2bM=
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com
- [209.85.218.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-533-pyyzR1HPMuWDKMTTGNhKNw-1; Fri, 10 May 2024 02:25:28 -0400
-X-MC-Unique: pyyzR1HPMuWDKMTTGNhKNw-1
-Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a59aedbd9a9so121112766b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 23:25:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715322327; x=1715927127;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GHgrKMZJMRwygDDtmV6g8fUqPzYJOIm+nsZVqZObz4k=;
-        b=hanpei5z35bBA4/JlNNM8PlKYiJr9yZHzfGp0Zdcn+CAsulT5u3wupFVp5I2OEiSs4
-         UC+Uv/bEbHVZAbGXWG++vnCKkhgj8evDgwCY870CGE8PmJaGXnaWoqGRKvBZvNWVk/U+
-         lB6vrqqNVTj8jTgXPkAgMnvBpBhPgkCcJcGwRDgoVFMAU2wcOxATMvlt0WnQMU1CUhId
-         QcgUQclxkyU56cDs2TWM6064miEJdffAx5FKa4cBmuEJhZ3Vl59tiq3pnENA4c5SV1xD
-         hiasgcXsI1b3cCS36prHchs7+P3btCBLCrgsbXh5qbGoZ4h/gChBCX1R/LDl+aNlgPQM
-         4PNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVYShZYBFvfIDW9TFnJ4sVQRNgEjoP4HsdfXdewkBa3SsMJD9/jBA2QEyCmbgndcVMpbWiSkQY7yKD0KuRJ5KkyH+KQ0uhzFmODZ0zC
-X-Gm-Message-State: AOJu0YyHEJLqrRTsCdFSLDCrH8r5I5NUZG0M09GWpWLA72gfgNXvgSvg
-	K5MXjAf1lQJrIbX52DvIesqtKAVVUcYKLHOFNDzLLEO5GpR39/WG1rz6TxtaamC52VvsNptn813
-	1+AaZY7D+Ry3ct17NVDKaCJ9KqMpGu0a/uDuyTJvmo6cwLwkwDShQiH1h5HHzug==
-X-Received: by 2002:a17:906:ecb4:b0:a59:a7b7:2b8f with SMTP id a640c23a62f3a-a5a2d54c68bmr108844466b.9.1715322326901;
-        Thu, 09 May 2024 23:25:26 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEj6J2YPmDM5j+YZTmExKVoSBFRbr1zcqMvmS5VCfBlN4G58bHtGF73RCSRm31LKwAixyOgPw==
-X-Received: by 2002:a17:906:ecb4:b0:a59:a7b7:2b8f with SMTP id a640c23a62f3a-a5a2d54c68bmr108842866b.9.1715322326490;
-        Thu, 09 May 2024 23:25:26 -0700 (PDT)
-Received: from [172.16.2.75] (5920ab7b.static.cust.trined.nl. [89.32.171.123])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a179c7c59sm150686166b.137.2024.05.09.23.25.25
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2024 23:25:25 -0700 (PDT)
-From: Eelco Chaudron <echaudro@redhat.com>
-To: Ilya Maximets <i.maximets@ovn.org>
-Cc: netdev@vger.kernel.org, dev@openvswitch.org,
- Antonin Bas <antonin.bas@broadcom.com>, linux-kernel@vger.kernel.org,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, "David S. Miller" <davem@davemloft.net>
-Subject: Re: [ovs-dev] [PATCH net] net: openvswitch: fix overwriting ct
- original tuple for ICMPv6
-Date: Fri, 10 May 2024 08:25:24 +0200
-X-Mailer: MailMate (1.14r6029)
-Message-ID: <339289BC-47E8-4B7C-A7D2-F53A6BA54CD0@redhat.com>
-In-Reply-To: <20240509094228.1035477-1-i.maximets@ovn.org>
-References: <20240509094228.1035477-1-i.maximets@ovn.org>
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ifn5HH/1"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44A5t5Pv016630;
+	Fri, 10 May 2024 06:26:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2023-11-20;
+ bh=uBRlM7MJKT+rrKvwlBySf0eucmcAfjmJ5dD+RRq8pvY=;
+ b=Ifn5HH/16jXv/KuOyh0nU7ZLOCsuKELF+k0X9V9hWXtSrm2ohy/Omb5WgHC2u7/8UTkj
+ /aNgAVKlFaQnD8OwSgRkHmdFUS4nJK80kxrKf6wCNUul/ixRVKtOLdrUe3/IJzZ3BtL0
+ 5qzayJ0RJ5IqrjOofx2TK3QfCGSyDP7h02vAoHydjq+jQ7gx9trzJT8vylYQ5KXFZMqa
+ HC/DFgxYodABvbZYlNn3KCgWZtaOCKWAtHFH6iBc1Mo5IOTFR5hr+WMEWpkdJa/Uubur
+ wFy3XgAIUHOJC6HxTL2g8eZWqUdWZC6uwcMUtObkRcL9SWrZnqwBSFRVXusEUexd2Fi4 FA== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3y1a0j88g4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 10 May 2024 06:26:17 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 44A5vUjI020104;
+	Fri, 10 May 2024 06:26:16 GMT
+Received: from brm-x62-16.us.oracle.com (brm-x62-16.us.oracle.com [10.80.150.37])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3xysfpghcd-3;
+	Fri, 10 May 2024 06:26:16 +0000
+From: Jane Chu <jane.chu@oracle.com>
+To: linmiaohe@huawei.com, nao.horiguchi@gmail.com, akpm@linux-foundation.org,
+        osalvador@suse.de, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/5] mm/madvise: Add MF_ACTION_REQUIRED to madvise(MADV_HWPOISON)
+Date: Fri, 10 May 2024 00:25:59 -0600
+Message-Id: <20240510062602.901510-3-jane.chu@oracle.com>
+X-Mailer: git-send-email 2.39.3
+In-Reply-To: <20240510062602.901510-1-jane.chu@oracle.com>
+References: <20240510062602.901510-1-jane.chu@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-10_04,2024-05-10_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 adultscore=0 malwarescore=0
+ mlxlogscore=999 phishscore=0 mlxscore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2405010000
+ definitions=main-2405100044
+X-Proofpoint-ORIG-GUID: RkkUKBZtDn54AUwSlFAoI0xSgUT30iF6
+X-Proofpoint-GUID: RkkUKBZtDn54AUwSlFAoI0xSgUT30iF6
 
+The soft hwpoison injector via madvise(MADV_HWPOISON) operates in
+a synchrous way in a sense, the injector is also a process under
+test, and should it have the poisoned page mapped in its address
+space, it should legitimately get killed as much as in a real UE
+situation.
 
+Signed-off-by: Jane Chu <jane.chu@oracle.com>
+---
+ mm/madvise.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 9 May 2024, at 11:38, Ilya Maximets wrote:
-
-> OVS_PACKET_CMD_EXECUTE has 3 main attributes:
->  - OVS_PACKET_ATTR_KEY - Packet metadata in a netlink format.
->  - OVS_PACKET_ATTR_PACKET - Binary packet content.
->  - OVS_PACKET_ATTR_ACTIONS - Actions to execute on the packet.
->
-> OVS_PACKET_ATTR_KEY is parsed first to populate sw_flow_key structure
-> with the metadata like conntrack state, input port, recirculation id,
-> etc.  Then the packet itself gets parsed to populate the rest of the
-> keys from the packet headers.
->
-> Whenever the packet parsing code starts parsing the ICMPv6 header, it
-> first zeroes out fields in the key corresponding to Neighbor Discovery
-> information even if it is not an ND packet.
->
-> It is an 'ipv6.nd' field.  However, the 'ipv6' is a union that shares
-> the space between 'nd' and 'ct_orig' that holds the original tuple
-> conntrack metadata parsed from the OVS_PACKET_ATTR_KEY.
->
-> ND packets should not normally have conntrack state, so it's fine to
-> share the space, but normal ICMPv6 Echo packets or maybe other types of=
-
-> ICMPv6 can have the state attached and it should not be overwritten.
->
-> The issue results in all but the last 4 bytes of the destination
-> address being wiped from the original conntrack tuple leading to
-> incorrect packet matching and potentially executing wrong actions
-> in case this packet recirculates within the datapath or goes back
-> to userspace.
->
-> ND fields should not be accessed in non-ND packets, so not clearing
-> them should be fine.  Executing memset() only for actual ND packets to
-> avoid the issue.
->
-> Initializing the whole thing before parsing is needed because ND packet=
-
-> may not contain all the options.
->
-> The issue only affects the OVS_PACKET_CMD_EXECUTE path and doesn't
-> affect packets entering OVS datapath from network interfaces, because
-> in this case CT metadata is populated from skb after the packet is
-> already parsed.
->
-> Fixes: 9dd7f8907c37 ("openvswitch: Add original direction conntrack tup=
-le to sw_flow_key.")
-> Reported-by: Antonin Bas <antonin.bas@broadcom.com>
-> Closes: https://github.com/openvswitch/ovs-issues/issues/327
-> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
-
-This patch looks good to me.
-
-Acked-by: Eelco Chaudron <echaudro@redhat.com>
-
-> ---
->
-> Note: I'm working on a selftest for this issue, but it requires some
-> ground work first to add support for OVS_PACKET_CMD_EXECUTE into
-> opnevswitch selftests as well as parsing of ct tuples.  So it is going
-> to be a separate patch set.
->
->  net/openvswitch/flow.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/net/openvswitch/flow.c b/net/openvswitch/flow.c
-> index 33b21a0c0548..8a848ce72e29 100644
-> --- a/net/openvswitch/flow.c
-> +++ b/net/openvswitch/flow.c
-> @@ -561,7 +561,6 @@ static int parse_icmpv6(struct sk_buff *skb, struct=
- sw_flow_key *key,
->  	 */
->  	key->tp.src =3D htons(icmp->icmp6_type);
->  	key->tp.dst =3D htons(icmp->icmp6_code);
-> -	memset(&key->ipv6.nd, 0, sizeof(key->ipv6.nd));
->
->  	if (icmp->icmp6_code =3D=3D 0 &&
->  	    (icmp->icmp6_type =3D=3D NDISC_NEIGHBOUR_SOLICITATION ||
-> @@ -570,6 +569,8 @@ static int parse_icmpv6(struct sk_buff *skb, struct=
- sw_flow_key *key,
->  		struct nd_msg *nd;
->  		int offset;
->
-> +		memset(&key->ipv6.nd, 0, sizeof(key->ipv6.nd));
-> +
->  		/* In order to process neighbor discovery options, we need the
->  		 * entire packet.
->  		 */
-> -- =
-
-> 2.44.0
->
-> _______________________________________________
-> dev mailing list
-> dev@openvswitch.org
-> https://mail.openvswitch.org/mailman/listinfo/ovs-dev
+diff --git a/mm/madvise.c b/mm/madvise.c
+index c8ba3f3eb54d..d8a01d7b2860 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -1147,7 +1147,7 @@ static int madvise_inject_error(int behavior,
+ 		} else {
+ 			pr_info("Injecting memory failure for pfn %#lx at process virtual address %#lx\n",
+ 				 pfn, start);
+-			ret = memory_failure(pfn, MF_COUNT_INCREASED | MF_SW_SIMULATED);
++			ret = memory_failure(pfn, MF_ACTION_REQUIRED | MF_COUNT_INCREASED | MF_SW_SIMULATED);
+ 			if (ret == -EOPNOTSUPP)
+ 				ret = 0;
+ 		}
+-- 
+2.39.3
 
