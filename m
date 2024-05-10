@@ -1,115 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49361E502;
-	Fri, 10 May 2024 15:33:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC52612D219;
+	Fri, 10 May 2024 15:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.121
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715355221; cv=none; b=QPwcPcQxgnaEeszrOIwHDXxnUvtXxdvpY19bz0Um0U6A2B6c8dt8r4v+RtoSTaNxIKmMU9Yn/u0l7SYwTIMhXA9Xz8qWHEDLngjjCHFB5B3rrUwSd3hiJnu1YHxEwhGiHLY9DxxAT2Y8GMm9HZwf0A2/EemxBKDLi3188OUE0m4=
+	t=1715355400; cv=none; b=ezcR4iF4Xdb6CgjhmImfOHcQpsLt08cCLqQkd9y/jSNEhq4PCqAZNlLebXKOLHnvs+W0QmehnovQUfBye8TRqPqLfsXuzJ/9AjPJk+S3JI13/p3MeMMd3BWN+devhZ+N/Jhb8U/jPw4+v3qvVbBke5AlPCVpByaBL4M9of3jkWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715355221; c=relaxed/simple;
-	bh=FyxosxiDRe7kVFCrtSH8YTzfIKGevBBbWmNlhONBN+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YsnWjpG6oAtzeRjVQpSYXW5DgUGTDf5+r986oJG05TCfrdhbly78qYnMsbLMkWJOfU6PfkAee7Cf3sNF1CiGyYfYmVc1hx8oeLcNogtuVVeJ6RALEQQGQyowcw18He1ppuaY7BBwsg4Hl6O1n+agscX/5CEEGheJ/hNHuGO5YXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FcOHoUCA; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715355400; c=relaxed/simple;
+	bh=QMfpkQludxXhsugxZyOrTb2FWc/qFIHL73MvV9noS3c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Vn7wlpc82yDFb0aKRtrzUPeqr+/av+TKh0FQtTRx6D7rZhyVZKNh/xhNvQw2ORTkzLkqgARphxoihktZtQ8LM1SRPD7yjt6NWlhqyhg16ZIjvR82z4ar81PCBGKZEB7iihEN67N9ctAUoFKRVKcMfqOK9GQM4MJejA2PBikwgzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=It/JJGnK; arc=none smtp.client-ip=185.125.188.121
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FcOHoUCA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715355220; x=1746891220;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FyxosxiDRe7kVFCrtSH8YTzfIKGevBBbWmNlhONBN+4=;
-  b=FcOHoUCA3bNdNmI7gslYF1hKweA0i3tcyoyRzW+4qADsvDpXuqaNYFvj
-   tVNAT1w4hjpytKu+ruajkAxjBR+zgTQ1LzvPQFmEEyJnKZXpqBl22Sm4U
-   jvF/mhfHMIagzpPA4apwfJzmnnAKULSxLUtCx87Pg57t0j1uhKSVRJnGQ
-   zvBPzWhyOCcH4IDE9038G8vLdJwtW3MdVGrDsCXVLAJ1unsK19P0SqpaN
-   wzBJdpRYlchJb3tEdl8Ym5dNRoWGyjsZXhCCgYBDN0XeHx52Iu+SshGBm
-   wol+kEouprza9BRaYwfFAlk+qAf7x7gFPK6QCR0wbDFhbNlCyAWuQ6dkB
-   A==;
-X-CSE-ConnectionGUID: YAZIw3trSb2wRJ72spQlbA==
-X-CSE-MsgGUID: 2/a8OrCtQlekDlSiY9/reA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="11473311"
-X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="11473311"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 08:33:39 -0700
-X-CSE-ConnectionGUID: 89FEUiuBR0m5PfFMMwgE1w==
-X-CSE-MsgGUID: GBexyAV4TMKoXywh+6+7qQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="34090819"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 08:33:33 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s5SFV-000000069Cb-2rTA;
-	Fri, 10 May 2024 18:33:29 +0300
-Date: Fri, 10 May 2024 18:33:29 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Devarsh Thakkar <devarsht@ti.com>, mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, benjamin.gaignard@collabora.com,
-	sebastian.fricke@collabora.com, p.zabel@pengutronix.de,
-	airlied@gmail.com, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-	praneeth@ti.com, nm@ti.com, vigneshr@ti.com, a-bhatia1@ti.com,
-	j-luthra@ti.com, b-brnich@ti.com, detheridge@ti.com,
-	p-mantena@ti.com, vijayp@ti.com, andrzej.p@collabora.com,
-	nicolas@ndufresne.ca, akpm@linux-foundation.org,
-	gregkh@linuxfoundation.org, adobriyan@gmail.com,
-	jani.nikula@intel.com
-Subject: Re: [PATCH v7 8/8] gpu: ipu-v3: Use generic macro for rounding to
- nearest multiple
-Message-ID: <Zj4-SfdNjRHxpHhe@smile.fi.intel.com>
-References: <20240509184010.4065359-1-devarsht@ti.com>
- <Zj43WDlT1aFpgdVv@smile.fi.intel.com>
- <20240510151642.GA17158@pendragon.ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="It/JJGnK"
+Received: from [10.55.0.156] (unknown [149.11.192.251])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id A48743F771;
+	Fri, 10 May 2024 15:36:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1715355390;
+	bh=u+GdyKh268Fb5UNHxMTYeYVWSxNUeJD1XDf2/qYIsHI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type;
+	b=It/JJGnKiNcCB8/dhxUAG6BEooni4KMs2jbNd50Py2pgLNg5u0rpR/wVt6ahI/9AX
+	 a1d5RJCEE2U+nzbxK6LDfZA/xoLOP2Ref8heo2Fw0Tkyj+atIsnoT2NiusLMIT3Rlt
+	 9Nz7JjmnloFAhcEaP2WkCGcZ7zh5HZdxFdiKx4+Xm8NjbUlC9C8yyDYYMrbDCP65xZ
+	 8A/3ltjfBo/0kqTeDb9zkdZAMzNTk3NgmFPDsVbwfMiWatgZAdA7qCTb/ttLfB5FGo
+	 Hn5ywXiJcTOfoVvkJfsNPEmuE9MXFXHTBoY2ddFWtM8tacN5c5RJxrzYYtzAOzXPcV
+	 odfQZurmqijWg==
+Message-ID: <2a9553a9-47b9-4eb9-ae55-a77bdd14e8c4@canonical.com>
+Date: Fri, 10 May 2024 08:36:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240510151642.GA17158@pendragon.ideasonboard.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] apparmor: use kvfree_sensitive to free data->data
+To: Fedor Pchelkin <pchelkin@ispras.ru>
+Cc: Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ "Serge E. Hallyn" <serge@hallyn.com>, William Hua
+ <william.hua@canonical.com>, apparmor@lists.ubuntu.com,
+ linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+ lvc-project@linuxtesting.org, Alexey Khoroshilov <khoroshilov@ispras.ru>,
+ stable@vger.kernel.org
+References: <20240201142450.30510-1-pchelkin@ispras.ru>
+Content-Language: en-US
+From: John Johansen <john.johansen@canonical.com>
+Autocrypt: addr=john.johansen@canonical.com; keydata=
+ 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 lT9Q
+Organization: Canonical
+In-Reply-To: <20240201142450.30510-1-pchelkin@ispras.ru>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 10, 2024 at 06:16:42PM +0300, Laurent Pinchart wrote:
-> On Fri, May 10, 2024 at 06:03:52PM +0300, Andy Shevchenko wrote:
-> > On Fri, May 10, 2024 at 12:10:10AM +0530, Devarsh Thakkar wrote:
-> > > Use generic macro round_closest_up for rounding to nearest multiple instead
-> > 
-> > round_closest_up()
-> > 
-> > We refer to the functions as func().
-> > 
-> > > of using local function.
-
-...
-
-> > > @@ -565,7 +563,7 @@ static void find_best_seam(struct ipu_image_convert_ctx *ctx,
-> > >  		 * The closest input sample position that we could actually
-> > >  		 * start the input tile at, 19.13 fixed point.
-> > >  		 */
-> > > -		in_pos_aligned = round_closest(in_pos, 8192U * in_align);
-> > > +		in_pos_aligned = round_closest_up(in_pos, 8192U * in_align);
-> > >  		/* Convert 19.13 fixed point to integer */
-> > >  		in_pos_rounded = in_pos_aligned / 8192U;
-> > 
-> > Oh, these seems to be better to use either ALIGN*(), or PFN_*() / PAGE_*()
-> > families of macros. What the semantic of 8192 is?
+On 2/1/24 06:24, Fedor Pchelkin wrote:
+> Inside unpack_profile() data->data is allocated using kvmemdup() so it
+> should be freed with the corresponding kvfree_sensitive().
 > 
-> The comment mentions 19.13 fixed point, so I assume that's the
-> fractional part of the integer. It doesn't seem related to pages.
+> Also add missing data->data release for rhashtable insertion failure path
+> in unpack_profile().
+> 
+> Found by Linux Verification Center (linuxtesting.org).
+> 
+> Fixes: e025be0f26d5 ("apparmor: support querying extended trusted helper extra data")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Fedor Pchelkin <pchelkin@ispras.ru>
 
-Okay, and align word in all those variable names?
+Acked-by: John Johansen <john.johansen@canonical.com>
 
--- 
-With Best Regards,
-Andy Shevchenko
+I have pulled this into my tree
 
+> ---
+>   security/apparmor/policy.c        | 2 +-
+>   security/apparmor/policy_unpack.c | 1 +
+>   2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/security/apparmor/policy.c b/security/apparmor/policy.c
+> index 957654d253dd..14df15e35695 100644
+> --- a/security/apparmor/policy.c
+> +++ b/security/apparmor/policy.c
+> @@ -225,7 +225,7 @@ static void aa_free_data(void *ptr, void *arg)
+>   {
+>   	struct aa_data *data = ptr;
+>   
+> -	kfree_sensitive(data->data);
+> +	kvfree_sensitive(data->data, data->size);
+>   	kfree_sensitive(data->key);
+>   	kfree_sensitive(data);
+>   }
+> diff --git a/security/apparmor/policy_unpack.c b/security/apparmor/policy_unpack.c
+> index 5e578ef0ddff..75452acd0e35 100644
+> --- a/security/apparmor/policy_unpack.c
+> +++ b/security/apparmor/policy_unpack.c
+> @@ -1071,6 +1071,7 @@ static struct aa_profile *unpack_profile(struct aa_ext *e, char **ns_name)
+>   
+>   			if (rhashtable_insert_fast(profile->data, &data->head,
+>   						   profile->data->p)) {
+> +				kvfree_sensitive(data->data, data->size);
+>   				kfree_sensitive(data->key);
+>   				kfree_sensitive(data);
+>   				info = "failed to insert data to table";
 
