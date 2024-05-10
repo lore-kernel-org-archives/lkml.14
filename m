@@ -1,110 +1,222 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F93017BA2
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 17:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E9017579
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 17:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715361972; cv=none; b=OV+r6qW1f/ufJ72CVjHLRM207/rErLygcpvVoZ6watEt611MT/Bt6LeHY+U4ZkQsv8AfLVSEnDvC368lgPGcFNb+AVMUzh8xgFAwL2wvfp4rXNEBgObHcqhGoJOVWprYBS6zBUgSDR++qTWMlI9huDbJPJIsUEHmvcSBPlnYWVo=
+	t=1715362115; cv=none; b=J1opuhBckWnH+YS97VI1V6dewaPvwKu9c9Qmob+3wAiXhP9wJFBBrlFW77kpEeZ3AmE73jwO/3uciPG/KUoz57ntTaDzankirFXmwq3RCMW5pQ2gTPpQS2wH66RwEWkhQhDXYBebiq7WHyObVyekTr3P19+CBifnmGnCX+dAC7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715361972; c=relaxed/simple;
-	bh=EsLzXB6Gs7ZQtkmepgwzqKCcyMI9oEm1j34c4xvtcr8=;
+	s=arc-20240116; t=1715362115; c=relaxed/simple;
+	bh=qf8oKr6WwamfpnpYFNCQqPVeWG4DFXu0MVvhKXbSr5Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tG5rXCGajW1QmZxwMh+O3wn/mpwhFyZIY+s/orZWrJlIKMsUeXoqKZnS3gwrVzgjo7lt4YiqPsFq3PgGG2foH00HKI8FMTc/NoNnSHWE1qW6zkKKKbtIVCEoh8628p2PyupGwkOsuYbHtEBe+b3KyFwWJP2wnGl1m3abRzbUinM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ItjquVAK; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 To:Cc:Content-Type; b=mo/Rfgi8nnya0Bkli5LDnYjskxiLOvH2U9eloMOXC0yvxJbe/+1JRAW4wZurESQyMVxtDkZVh/EDkRf/eTh+70w/q5+lDZXRLsZNV6J6mRIZRecOUbFxfIhe79NwSkJO/KQWqnmoEaH9no/pcfXpeVw3YiPp7LVJg739LnTY6iA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NwdxzvCv; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ItjquVAK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715361968;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=v0uH1Y67e/JYlAU3ZBz+NOGOD31UpxofQKkMvjjtZOo=;
-	b=ItjquVAKjF37OWt4ojFjYS8JkuzNqVBwkgiCSRRHnwtJRsaIKVGA2xyobmNGjymYVlidFa
-	FPDUJdmLoxml/d1q637zrkvsPqV8UYHqjym5nNZa/3nIKn3FDXLd9sLhaqIhp51xIeQNzm
-	OH3zPdYpaxq+VFbyvyE27GYMTce8VIk=
-Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
- [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-482-M7ZI8PHjO2Ws8osqmLei5A-1; Fri, 10 May 2024 13:25:48 -0400
-X-MC-Unique: M7ZI8PHjO2Ws8osqmLei5A-1
-Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2e41bd70238so21488441fa.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 10:25:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NwdxzvCv"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2e3e18c23f9so28820231fa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 10:28:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715362111; x=1715966911; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T3rbohNuOg29gHEbrkJJS5rW7/8AkwQEBcxPdlAaH+o=;
+        b=NwdxzvCvSYkZWtXUm1h0wXCioq734I5bnshzbtHQLyjiHJtWgejmrinMFOqZFPCkKW
+         7FB4QKCLbu/8Q+ZgWCVpO41NoPRhu0+K4M8tizRhuG4A10Z7HtxZJztObzsjaTV+fO/m
+         n2O84BWhFYG+VU3wJ0gvVOOF1UPnHIYnsyf2j2d8RT0QuzL4cXay2iKuBeumQsCMA7iT
+         yjj9YtsYoz53ZLMZ/9Ov+4md3zDariQNcs95/LzGREo7bC67Et9E/vU+iZzwpS8cQ7Fx
+         C3zXv0Tb1zAnzA1aQkregal1bAZeG6ShN1SRz6nQa2AazBbkN2f4kPlQWrv0Tb7ZqVct
+         EBaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715361947; x=1715966747;
+        d=1e100.net; s=20230601; t=1715362111; x=1715966911;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=v0uH1Y67e/JYlAU3ZBz+NOGOD31UpxofQKkMvjjtZOo=;
-        b=ZAp0lXXHwZTruMRGs9/pfg9ORd9tQarswf2pjYxxXkMwweR72lrm8pUHG2jR5dKyzt
-         V1QmaLvc/xYBTOvyzZWWSbRJhyOSL2Yfm0UTEKICD8PHACLYDeL9vGr0oPBs1GbpU3FS
-         eDkUtOmOqReKKkz3VsGGf8BAY4eKWsxqC5KAqL9sPVaw6FCALNxJcdkuw+R/OLLAbYsV
-         tq7qJSNz7OoCrtGkn+5k57KfUgAE9CrY6EJwUx3wawHRJCiQPNma9bH1UoRJcIufGpXM
-         VmW+oiZwO+4RM46qBrMLxBUucrh1S96OT0sTo4ZuRCnSJppUI7XMaUPhreWCtx/+Robo
-         ZQ8g==
-X-Forwarded-Encrypted: i=1; AJvYcCXNsPgr/TovQXWYl5vKm7UkqAg8+Va73thmuyhpAHekjydqaZiQfk37RPInCYSAsKpPL8Ktzlrdq35kkZW4AyWz+2/cekth6JOU1Dot
-X-Gm-Message-State: AOJu0Yysu3NXZfXA4D3z8wzlkAbpCaHoeMWGfKO2KnG9XR9EDJONFsHY
-	zOHudahDcaqwgwwdEpZXv9b7t6EHGnkV9AzAn4ztjlBtMsQ1yqp1AIAFaMVYqYtUJ23DJ2OF2bv
-	AV6E12YCySJofolg59PqxIcht/CnPLGNOrVHzyQJJjvYJycCb2pTFKcyPqVa3FQ5B/BI9aq5lvN
-	MhDtGp6zsEQwTcHyQJEE2yiwe8FNHYS0FcQ2nR
-X-Received: by 2002:a19:a40f:0:b0:522:f6:9268 with SMTP id 2adb3069b0e04-5220fc7eed8mr1904839e87.31.1715361947343;
-        Fri, 10 May 2024 10:25:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH+3UgqTDnmRVAiNjyATZxMd/ldNZtXGyYEy7zEh+oH8PVqYii06B+EkIez4lJParuMv/x2eUO16iD1lvVu4gU=
-X-Received: by 2002:a19:a40f:0:b0:522:f6:9268 with SMTP id 2adb3069b0e04-5220fc7eed8mr1904804e87.31.1715361946880;
- Fri, 10 May 2024 10:25:46 -0700 (PDT)
+        bh=T3rbohNuOg29gHEbrkJJS5rW7/8AkwQEBcxPdlAaH+o=;
+        b=IFzmqnyaanQFpC0U0OHBMqZJZXPULu0Ycwptg79iYlT+xKdbqH370/zSQztlvRiiTC
+         i9Jqy4yExt89Hg6t4/7ZJx3D48abw3qxebFxROMh2EUwrXB4lwMriiqEQkhNmmwT+iqC
+         z/ABlwAG7UD0vjYBquBBa/ZgDdkLe8lZoJ5cgpLBmMXIl6td5Pp0ytv7q2kRLbmWAc9l
+         YGd+ehhV+bVyXM0vDKBgyMCjp4SXdHHHeIw+WMG3XXUIu2l1zLUXVbeQ808Dj0yDC7qD
+         E806nI3Cjm1Ig3MiD5arqTG3gOU/VAR95eANhZgf0zCE13A1zRFMWFwIynDls8TdhM19
+         12XA==
+X-Forwarded-Encrypted: i=1; AJvYcCVKr6qHIsFwIWgY15uz9+Z+fYcZ+M4R69merqdPsSYZj86qhKlzuzyiNMUr4Dt6N5uaw+yUSEfMkTu1tepB4fy7c9xEBZLUpWh52GNM
+X-Gm-Message-State: AOJu0YwqeKM4ofFRiqkTAfp+oJ2yhFiBm10+B8LJIIFewbBjIAbC+sPm
+	Kb6kBb3DFCnk2sA670+hlQmTc/blPvm6Qd0cMXRtkRDWi0uT4tFvAz0QZavOrTnsrdw5eJvJveu
+	V4c7JtISPc2/YxcvABBjCH03oGyFDjbjyqu9CAPmhtngMwy8M2vI=
+X-Google-Smtp-Source: AGHT+IFMvUPgTMGdHDvPMkxljT5mGM8cFkPuvoW6GLn0zBzdmPBKzcNovEPni24+gskmvrblYDYdOBqIoJzuri6qSfk=
+X-Received: by 2002:a2e:8847:0:b0:2e2:2791:983e with SMTP id
+ 38308e7fff4ca-2e51fd451femr20534891fa.13.1715362110805; Fri, 10 May 2024
+ 10:28:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240501085210.2213060-1-michael.roth@amd.com>
- <20240510015822.503071-1-michael.roth@amd.com> <20240510015822.503071-2-michael.roth@amd.com>
- <Zj4oFffc7OQivyV-@google.com> <566b57c0-27cd-4591-bded-9a397a1d44d5@redhat.com>
- <20240510163719.pnwdwarsbgmcop3h@amd.com> <a47e7b49-96d2-4e7b-ae39-a3bfe6b0ed83@redhat.com>
-In-Reply-To: <a47e7b49-96d2-4e7b-ae39-a3bfe6b0ed83@redhat.com>
-From: Paolo Bonzini <pbonzini@redhat.com>
-Date: Fri, 10 May 2024 19:25:34 +0200
-Message-ID: <CABgObfaJaDr38BsTYRrMQzYr-wK8cLW+TJr5ewsgBEcm8ghb3g@mail.gmail.com>
-Subject: Re: [PATCH v15 22/23] KVM: SEV: Fix return code interpretation for
- RMP nested page faults
-To: Michael Roth <michael.roth@amd.com>
-Cc: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
-	linux-mm@kvack.org, linux-crypto@vger.kernel.org, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, 
-	jroedel@suse.de, thomas.lendacky@amd.com, hpa@zytor.com, ardb@kernel.org, 
-	vkuznets@redhat.com, jmattson@google.com, luto@kernel.org, 
-	dave.hansen@linux.intel.com, slp@redhat.com, pgonda@google.com, 
-	peterz@infradead.org, srinivas.pandruvada@linux.intel.com, 
-	rientjes@google.com, dovmurik@linux.ibm.com, tobin@ibm.com, bp@alien8.de, 
-	vbabka@suse.cz, kirill@shutemov.name, ak@linux.intel.com, tony.luck@intel.com, 
-	sathyanarayanan.kuppuswamy@linux.intel.com, alpergun@google.com, 
-	jarkko@kernel.org, ashish.kalra@amd.com, nikunj.dadhania@amd.com, 
-	pankaj.gupta@amd.com, liam.merwick@oracle.com, papaluri@amd.com
+References: <20240510064053.278257-1-Mariel.Tinaco@analog.com> <20240510064053.278257-2-Mariel.Tinaco@analog.com>
+In-Reply-To: <20240510064053.278257-2-Mariel.Tinaco@analog.com>
+From: David Lechner <dlechner@baylibre.com>
+Date: Fri, 10 May 2024 12:28:19 -0500
+Message-ID: <CAMknhBFXk07HbP_pPg5wkW-9Ah2-66kGzZFvcvBNrbjfguHb4g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: dac: add docs for ad8460
+To: Mariel Tinaco <Mariel.Tinaco@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Marcelo Schmitt <marcelo.schmitt1@gmail.com>, 
+	Dimitri Fedrau <dima.fedrau@gmail.com>, Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 10, 2024 at 6:59=E2=80=AFPM Paolo Bonzini <pbonzini@redhat.com>=
- wrote:
-> Well, the merge window starts next sunday, doesn't it?  If there's an
-> -rc8 I agree there's some leeway, but that is not too likely.
+On Fri, May 10, 2024 at 1:42=E2=80=AFAM Mariel Tinaco <Mariel.Tinaco@analog=
+.com> wrote:
 >
-> >> Once we sort out the loose ends of patches 21-23, you could send
-> >> it as a pull request.
-> > Ok, as a pull request against kvm/next, or kvm/queue?
+> This adds the bindings documentation for the 14-bit
+> High Voltage, High Current, Waveform Generator
+> Digital-to-Analog converter.
 >
-> Against kvm/next.
+> Signed-off-by: Mariel Tinaco <Mariel.Tinaco@analog.com>
+> ---
+>  .../bindings/iio/dac/adi,ad8460.yaml          | 67 +++++++++++++++++++
+>  MAINTAINERS                                   |  7 ++
+>  2 files changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/adi,ad8460.=
+yaml
+>
+> diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad8460.yaml b/=
+Documentation/devicetree/bindings/iio/dac/adi,ad8460.yaml
+> new file mode 100644
+> index 000000000..924f76209
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad8460.yaml
+> @@ -0,0 +1,67 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2024 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/dac/adi,ad8460.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD8460 DAC
+> +
+> +maintainers:
+> +  - Mariel Tinaco <mariel.tinaco@analog.com>
+> +
+> +description: |
+> +  Analog Devices AD8460 110 V High Voltage, 1 A High Current,
+> +  Arbitrary Waveform Generator with Integrated 14-Bit High Speed DAC
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/ad=
+8460.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad8460
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  spi-max-frequency:
+> +    maximum: 20000000
+> +
+> +  vref-supply:
 
-Ah no, only kvm/queue has the preparatory hooks - they make no sense
-without something that uses them.  kvm/queue is ready now.
+It would be nice to make the property name match the pin name since
+there is more than one reference voltage input.
 
-Also, please send the pull request "QEMU style", i.e. with patches
-as replies.
+refio-1p2v-supply:
 
-If there's an -rc8, I'll probably pull it on Thursday morning.
+> +    description: Drive voltage in the range of 1.2V maximum to as low as
+> +      low as 0.12V through the REF_IO pin to adjust full scale output sp=
+an
 
-Paolo
+I don't seen anything in the datasheet named REF_IO. Is this a typo
+and it should be REFIO_1P2V?
 
+> +
+> +  clocks:
+> +    description: The clock for the DAC. This is the sync clock
+> +
+> +  adi,rset-ohms:
+> +    description: Specify value of external resistor connected to FS_ADJ =
+pin
+> +      to establish internal HVDAC's reference current I_REF
+> +    minimum: 2000
+> +    maximum: 20000
+> +
+
+I see lots more pins on the datasheet, many of which should be trivial
+to add bindings for (we prefer to have the bindings as complete as
+possible even if the driver doesn't implement everything). Potential
+candidates:
+
+sdn-reset-gpios: (active high)
+reset-gpios: (active low)
+sdn-io-gpios: (active high)
+
+hvcc-supply:
+hvee-supply:
+vcc-5v-supply:
+vref-5v-supply:
+dvdd-3p3v-supply:
+avdd-3p3v-supply:
+
+It also looks like there is a parallel interface for data, so I would
+expect to see an io-backends property that links to the PHY used for
+handling that.
+
+
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +allOf:
+> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +
+> +    spi {
+> +        dac@0 {
+> +            compatible =3D "adi,ad8460";
+> +            reg =3D <0>;
+> +            spi-max-frequency =3D <8000000>;
+> +            adi,rset-ohms =3D <2000>;
+> +
+> +            vref-supply =3D <&vrefio>;
+> +            clocks =3D <&sync_ext_clk>;
+> +        };
+> +    };
+> +
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 758c202ec..dae93df2a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1234,6 +1234,13 @@ W:       https://ez.analog.com/linux-software-driv=
+ers
+>  F:     Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+>  F:     drivers/iio/adc/ad7780.c
+>
+> +ANALOG DEVICES INC AD8460 DRIVER
+> +M:     Mariel Tinaco <Mariel.Tinaco@analog.com>
+> +L:     linux-iio@vger.kernel.org
+> +S:     Supported
+> +W:     https://ez.analog.com/linux-software-drivers
+> +F:     Documentation/devicetree/bindings/iio/dac/adi,ad8460.yaml
+> +
+>  ANALOG DEVICES INC AD9739a DRIVER
+>  M:     Nuno Sa <nuno.sa@analog.com>
+>  M:     Dragos Bogdan <dragos.bogdan@analog.com>
+> --
+> 2.34.1
+>
+>
