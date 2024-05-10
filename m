@@ -1,40 +1,40 @@
 Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79E8A168AEE;
-	Fri, 10 May 2024 10:11:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC248161935
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 10:11:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715335898; cv=none; b=lrESvuR4ipJZHWyS31lMg/N4qFJtvQ/r1f2QWdNIKm4phqKm+GuJLVuF20UXhUlokqf8tyyIRILcHKSRRwqnZTc5BPe9koMwUQ/ceJYgeWFgByORoIoDQF2lLjy/hBzb9K5WX1ZAodxX/Wrq9eKo/jGFRTxlF/U6SXGBdKt2Bk0=
+	t=1715335912; cv=none; b=KTU+ce3VzpiuKGFP2s/A4MkXz1dkdckxq/TrE8FiTrNJMFYHX8jtQ1/vFWfK9x/i5g4MLfPXp5v3BO219pzwAoA05nf2j9fOtR4bwLOB3uhgJLteKcVzJO3Vj+9NkD6UhyLe681gMoVJ3X/pQ3NrZuXpfv7l8V1zxt9En8UPeKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715335898; c=relaxed/simple;
-	bh=c1waZ+eyh/3LEv2xQyu5LjuVf0SWbog1966q3KjkEqw=;
+	s=arc-20240116; t=1715335912; c=relaxed/simple;
+	bh=vtrYm/vQSHim3jgRX04nOQj9guH68BZEvaolheL2Xv0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YtNlyYH6Pl8Ccl0z2REiQLej2aYx7J6E6RnFYtnDFj4dZDApSKOFl59mpo1z+2dCBn1pZa6dAajN2snkGuBNSClaihqD4lEdxLVtfGKmqZr0Hn6irfRUN86gIC8uP/3Eg3Gzf8SGQNq3Lg32PvWvL3DM4VWKVYZkGQ8IgMVVfL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=xJk+hOhp; arc=none smtp.client-ip=46.235.227.194
+	 In-Reply-To:Content-Type; b=FCld/bIsCvzycnUiIRUqeFyS/3Gc5LJOKtVXIcOOnS1a8MHrv/xkN504wCl2nOtLBDJTisTU06bZik7f9a+teqmXqIGPPlb7/3/W+3DPr9gByCi/iafXzjKH5zALR0WxANg9t9nXGuKy/A/Rvaene0TP6d+ME61ryJpxlyDIzQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=2IQqdwqP; arc=none smtp.client-ip=46.235.227.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="xJk+hOhp"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="2IQqdwqP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715335884;
-	bh=c1waZ+eyh/3LEv2xQyu5LjuVf0SWbog1966q3KjkEqw=;
+	s=mail; t=1715335550;
+	bh=vtrYm/vQSHim3jgRX04nOQj9guH68BZEvaolheL2Xv0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=xJk+hOhpaV0T+ju3F8+sGmHBtzFTyVUG4277e8N/HYwbkr3BX3CzBx/+wcN2hgGpe
-	 y3AQfCENjfRWsQqdzX9NFQcE6TCs0Uotjwtt9fg9LZId1pbDM11ZYIgJo4uNpzZkdY
-	 PnTqo9/+m/7JFxbRrFDEoqFkqIJ0VZ6crTG9McyI4maP8wggHhvKx30Wg8XTzClStG
-	 9FwDc0JokaW1oDrkqv4OxNLzVAO+B3GnAKvPKu5ny7tz7dWVkxfryNJjCzGuw1FWRn
-	 SruPRMpQcZD28dXZLjtT+UObBpWlZRpJ164RAFgDp6ZALOCqDHsItLhm9U+1Qm20Vt
-	 af9aDi8aR6llA==
+	b=2IQqdwqPtoZkkk19USWWt8xgqlcwa+gPD66JC9VAEpwOYIPtXk4CcL340IG3zLdxP
+	 nzVp/rwU70UIPRcxvhfHIAobSvLl++PUysKOpB++6Q2BiGJvL4zoPGhKuK52g3RbCJ
+	 sUcfDpqiOIe43x1vzTgceS5gGHgqIdDsvw1WuhyHTjzO8LQJRL3MdvPT8U5xiYubn/
+	 l7/HEJNl93y2U8hJN0yc7i6GMo1sFCkhbR2EQJA8v4P7sMAAZyG1tVvGCrU5ew6Ew/
+	 WxdygCOQ+rLS/K6NZCU7LvPUAHPqq/v+4+UKcbchzpBVRKRbRfkdTqHhcvOm39v6x9
+	 olb7rHKz8B05g==
 Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 1D92A3782185;
-	Fri, 10 May 2024 10:11:22 +0000 (UTC)
-Message-ID: <d95cafca-bc4c-4571-a6ed-b66b6f63a579@collabora.com>
-Date: Fri, 10 May 2024 12:11:21 +0200
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 92DD6378217A;
+	Fri, 10 May 2024 10:05:49 +0000 (UTC)
+Message-ID: <8d624845-7450-485c-8000-0194bcf56458@collabora.com>
+Date: Fri, 10 May 2024 12:05:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,57 +42,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/1] nvmem: Change return type of reg read/write to
- ssize_t
-To: Joy Chakraborty <joychakr@google.com>, Hector Martin <marcan@marcan.st>,
- Sven Peter <sven@svenpeter.dev>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>,
- Vladimir Zapolskiy <vz@mleia.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>,
- Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Claudiu Beznea <claudiu.beznea@tuxon.dev>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>, Heiko Stuebner <heiko@sntech.de>,
- Orson Zhai <orsonzhai@gmail.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Vincent Shih <vincent.sunplus@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Rafal Milecki <rafal@milecki.pl>,
- Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
- Masami Hiramatsu <mhiramat@kernel.org>, Michal Simek <michal.simek@amd.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, asahi@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev,
- manugautam@google.com
-References: <20240510082929.3792559-1-joychakr@google.com>
- <20240510082929.3792559-2-joychakr@google.com>
+Subject: Re: [PATCH v1 1/1] Support YUV422 for DPTX.
+To: Liankun Yang <liankun.yang@mediatek.com>, chunkuang.hu@kernel.org,
+ p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
+ matthias.bgg@gmail.com, jitao.shi@mediatek.com, mac.shen@mediatek.com
+Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240510021810.19302-1-liankun.yang@mediatek.com>
 From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Content-Language: en-US
-In-Reply-To: <20240510082929.3792559-2-joychakr@google.com>
+In-Reply-To: <20240510021810.19302-1-liankun.yang@mediatek.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Il 10/05/24 10:29, Joy Chakraborty ha scritto:
-> Change return type of reg_read() and reg_write() callback to ssize_t for
-> nvmem suppliers to return number of bytes read/written to the nvmem core.
+Il 10/05/24 04:15, Liankun Yang ha scritto:
+> Adjust the training sequence.Detects the actual link condition
+> and calculates the bandwidth where the relevant resolution resides.
 > 
-> Currently nvmem core assumes the amount of data read/written is equal
-> to what it has requested from the supplier, this return code facilitates
-> better error handling in the nvmem core.
+> The bandwidth is recalculated and modes that exceed the bandwidth are
+> filtered.
 > 
-> Signed-off-by: Joy Chakraborty <joychakr@google.com>
+> Example Modify bandwidth filtering requirements.
+> 
+> Signed-off-by: Liankun Yang <liankun.yang@mediatek.com>
+> ---
+>   drivers/gpu/drm/mediatek/mtk_dp.c | 81 ++++++++++++++++++-------------
+>   1 file changed, 46 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dp.c b/drivers/gpu/drm/mediatek/mtk_dp.c
+> index 2136a596efa1..3e645bd6fe27 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dp.c
+> @@ -66,6 +66,13 @@ enum {
+>   	MTK_DP_CAL_MAX,
+>   };
+>   
+> +enum mtk_dp_color_format {
+> +	MTK_DP_COLOR_FORMAT_RGB = 0,
+> +	MTK_DP_COLOR_FORMAT_YUV422 = 0x1,
+> +	MTK_DP_COLOR_FORMAT_YUV444 = 0x2,
+> +	MTK_DP_COLOR_FORMAT_YUV420 = 0x3,
+> +};
 
-For MediaTek:
+This is giving the same values as drm_dp.h, hence unneeded.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+> +
+>   struct mtk_dp_train_info {
+>   	bool sink_ssc;
+>   	bool cable_plugged_in;
+> @@ -84,7 +91,7 @@ struct mtk_dp_audio_cfg {
+>   };
+>   
+>   struct mtk_dp_info {
+> -	enum dp_pixelformat format;
+> +	enum mtk_dp_color_format format;
+>   	struct videomode vm;
+>   	struct mtk_dp_audio_cfg audio_cur_cfg;
+>   };
+> @@ -457,7 +464,7 @@ static void mtk_dp_set_msa(struct mtk_dp *mtk_dp)
 
+..snip..
 
+> @@ -1888,9 +1896,28 @@ static irqreturn_t mtk_dp_hpd_event_thread(int hpd, void *dev)
+>   			memset(&mtk_dp->info.audio_cur_cfg, 0,
+>   			       sizeof(mtk_dp->info.audio_cur_cfg));
+>   
+> +			mtk_dp->enabled = false;
+> +			/* power off aux */
+> +			mtk_dp_update_bits(mtk_dp, MTK_DP_TOP_PWR_STATE,
+> +			       DP_PWR_STATE_BANDGAP_TPLL,
+> +			       DP_PWR_STATE_MASK);
+> +
+
+This commit is not even based on upstream, so you haven't even tested it upstream.
+
+Don't send untested commits.
+There's nothing to review here.
+
+Regards,
+Angelo
