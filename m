@@ -1,250 +1,93 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1743171647
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 15:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5754D17109E;
+	Fri, 10 May 2024 15:26:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715354639; cv=none; b=me7nB6lPnQdPiBDwsE6LmB1r9v4VGXxsTmdmDZtJFdDCGPVJuQ0AmkW1o+LHBvRe14RqQe18LP65akCQlKANR70D1BBRtO5y3ljVMQ7rdob6WivSnbibduL3YThrlq/QQnpNH4w7gEgMYWlv1L3h+O586mkk0n8ujPYxmFvKGMw=
+	t=1715354809; cv=none; b=SlkrscntGegJHlEuaQolJVjnqwDrCObko2FHA0W79g6la2GatO9iF+AV172vdB/9ROyS417Wkuh0vBLv0S2IEPjGw9rfR+5nsrhpmDi5H2pZrYHMYMWN5YUsr+YaWciHEFPA/ZvtNJsOk8p/cinlVnq3SiGRPzK2PlxlE+lLOy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715354639; c=relaxed/simple;
-	bh=LSok61qLtd0K7YrwozvngADJVpGHf9jEEUNeNiy5Mf8=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Brq/ustGgafY6KOz+trFABWLe/j0dCN5FxDyxZoW0FhJ1DzSc0UzG79QWwgoPEpzq+3lIH1JDceIVbzrdSDDOElodUwGOJ+HionVOjMBmwgGDC+zPM18n0ES+eGvtxN3l3BOtJ/GlJW0ozE6up+QINqwYCQE0A/813tWPp2S6Qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=PDQQy5hG; arc=none smtp.client-ip=209.85.160.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1715354809; c=relaxed/simple;
+	bh=WZ4TGuN2dW7cNy4EbwRGnB4/IoAEcv+5igcpsXySV48=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V3PNZjQcGu7ED5tkKH8DCLD3gA9+F+rrQz+NyRTDGsDPh+LT2j6l/nmK0z+ratKjPzIMHPfsXIeSuA0La346uJIGK7HOlSrAumV8IRDJB1Frp/8aJDslXnDBcJ7+mt+xifAY7Vu/G684DswuIzlzobSPl62wzIwUrOANm+IDeeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fZ7AYfwW; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="PDQQy5hG"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-43de92e234dso21869591cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 08:23:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1715354637; x=1715959437; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=rOmwLQZvL1ACiD5QhGHyJllYMD1IusDJxUQbTnYPrzw=;
-        b=PDQQy5hG97wjAd7rU0JNmER5gsud2b5VSXJRBmjp1ckaMczHLJ1eszwI3N9cfWdk9B
-         nCg4sAs11yECLleqkkKTfhm6eWBXZZ1UzVRRdCsf5Cx5/9I5wrA3hClJo5FLhV1nBn3B
-         fBYBY8a5yuC/BqlDOJlXCKjuHsalOgE92vcsw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715354637; x=1715959437;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rOmwLQZvL1ACiD5QhGHyJllYMD1IusDJxUQbTnYPrzw=;
-        b=rUi0MjwbKsXiLlGe+9MoxG+AyipGAo4C9Zjm71+lS483adocizhchWQfP7sQtpWhxT
-         qOKre4pOgf3AydYsKzJx2xA7p58TNY56GyP6zvjQF4IHI1SQz29OOMQjOgWarQjBQ04e
-         hPxLIxJreFPtKayUB/+bG7eBB8bf/We0+TgVNbETZqSbDB6IjwmgV60qvyQ1ET4cAXew
-         RhTQ6AdbtMi3ixkVKNvX2kwQMuB9qV3LzhUxAhr/mTOC1BaTLnkUHroTGSM3WuzswDJX
-         zSGSQKgZhIhGVS/aic7XsAeU3upbVuyV1pW2P9/mOgUUBFqkptYrTScSdDiDxgnxnCjZ
-         5J6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXExoQZhZoTxlR+jfKbWewcpMiiD7KK0Fh7KqZ8DX+uzfUZV5rFqPwA4PygVjIksB5ootRW5nB2QVJmt3HJrVche7Y3P71bbYO52dhp
-X-Gm-Message-State: AOJu0YwUeLnDhdKQowQC0cmf/wemlvPO6a78f+Rcv5NZ4VHR3MIoAjbY
-	Rl46/N6BdEywqNGMyfseiFwyclp1fUn62fLWO3JNUrFNZ7fX8YiVHJojmIqHhw==
-X-Google-Smtp-Source: AGHT+IHV6Ws12uTBmJmAaVeILdQjt846dUrLn68L+gaVQZz+zJhIDBIPDl0YTLbkzwnx9UGaO0uIAw==
-X-Received: by 2002:ac8:580c:0:b0:43a:b66d:1a67 with SMTP id d75a77b69052e-43dfce3d0camr59087601cf.29.1715354636655;
-        Fri, 10 May 2024 08:23:56 -0700 (PDT)
-Received: from C02YVCJELVCG.dhcp.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43df54b5a3asm22254341cf.11.2024.05.10.08.23.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 May 2024 08:23:56 -0700 (PDT)
-From: Andy Gospodarek <andrew.gospodarek@broadcom.com>
-X-Google-Original-From: Andy Gospodarek <gospo@broadcom.com>
-Date: Fri, 10 May 2024 11:23:48 -0400
-To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-Cc: Ajit Khaparde <ajit.khaparde@broadcom.com>,
-	Wei Huang <wei.huang2@amd.com>, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	netdev@vger.kernel.org, bhelgaas@google.com, corbet@lwn.net,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, alex.williamson@redhat.com,
-	michael.chan@broadcom.com, manoj.panicker2@amd.com,
-	Eric.VanTassell@amd.com
-Subject: Re: [PATCH V1 8/9] bnxt_en: Add TPH support in BNXT driver
-Message-ID: <Zj48BPYoFU1ISaiL@C02YVCJELVCG.dhcp.broadcom.net>
-References: <20240509162741.1937586-1-wei.huang2@amd.com>
- <20240509162741.1937586-9-wei.huang2@amd.com>
- <868a4758-2873-4ede-83e5-65f42cb12b81@linux.dev>
- <CACZ4nhuBMOX8s1ODcJOvvCKp-VsOPHShEUHAsPvB75Yv2823qA@mail.gmail.com>
- <4c6a8b86-6544-4c99-a0f2-030e2ec4e98f@linux.dev>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fZ7AYfwW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715354809; x=1746890809;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=WZ4TGuN2dW7cNy4EbwRGnB4/IoAEcv+5igcpsXySV48=;
+  b=fZ7AYfwWK3TVftVQrfys77GJpWfMjD2cvVi69J8Q2n/ooBr7WGBnlxFZ
+   kNxkFUt0sxn1qfEnjEJHqR0n9Dz8GUnIyqxpsrhQKDQQY4bJPrQvJeCI1
+   5fQB6qsLOnphAVGJd6jYejWmaqTxhNMKq7SMjLWrFvPd1EfRepM+M6+ij
+   omPbg9xDtI1z41sbPndhuJ6MlNVf6oX0FKu5p2E8DQtXGQ5xUXCkDRSqN
+   yvDiVFPfitRvdGZQ5vGlQxvknatsfglCHsmPpb6eiy3bx2Am+/lfas5GH
+   Eue6WA10QLDGUME0ehh6JLB+lxqfZtW2S1pfJlzbM3oCeddYqR630vPEd
+   g==;
+X-CSE-ConnectionGUID: AwWSGOIBS5eTk4LgV/5YTA==
+X-CSE-MsgGUID: bmlaT52yRBysECpAh3zkrg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="33853116"
+X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
+   d="scan'208";a="33853116"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 08:26:48 -0700
+X-CSE-ConnectionGUID: /fs8JJapR6CHsb9uccIbLA==
+X-CSE-MsgGUID: ojovpLzbRRSLkx7ziSC9pQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
+   d="scan'208";a="29655034"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa009.fm.intel.com with ESMTP; 10 May 2024 08:26:45 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 3B4441AC; Fri, 10 May 2024 18:26:43 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 1/1] usb: fotg210: Add missing kernel doc description
+Date: Fri, 10 May 2024 18:26:22 +0300
+Message-ID: <20240510152641.2421298-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1336.g36b5255a03ac
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <4c6a8b86-6544-4c99-a0f2-030e2ec4e98f@linux.dev>
 
-On Fri, May 10, 2024 at 11:35:35AM +0100, Vadim Fedorenko wrote:
-> On 10.05.2024 04:55, Ajit Khaparde wrote:
-> > On Thu, May 9, 2024 at 2:50 PM Vadim Fedorenko
-> > <vadim.fedorenko@linux.dev> wrote:
-> > > 
-> > > On 09/05/2024 17:27, Wei Huang wrote:
-> > > > From: Manoj Panicker <manoj.panicker2@amd.com>
-> > > > 
-> > > > As a usage example, this patch implements TPH support in Broadcom BNXT
-> > > > device driver by invoking pcie_tph_set_st() function when interrupt
-> > > > affinity is changed.
-> > > > 
-> > > > Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
-> > > > Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
-> > > > Reviewed-by: Wei Huang <wei.huang2@amd.com>
-> > > > Signed-off-by: Manoj Panicker <manoj.panicker2@amd.com>
-> > > > ---
-> > > >    drivers/net/ethernet/broadcom/bnxt/bnxt.c | 51 +++++++++++++++++++++++
-> > > >    drivers/net/ethernet/broadcom/bnxt/bnxt.h |  4 ++
-> > > >    2 files changed, 55 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> > > > index 2c2ee79c4d77..be9c17566fb4 100644
-> > > > --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> > > > +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> > > > @@ -55,6 +55,7 @@
-> > > >    #include <net/page_pool/helpers.h>
-> > > >    #include <linux/align.h>
-> > > >    #include <net/netdev_queues.h>
-> > > > +#include <linux/pci-tph.h>
-> > > > 
-> > > >    #include "bnxt_hsi.h"
-> > > >    #include "bnxt.h"
-> > > > @@ -10491,6 +10492,7 @@ static void bnxt_free_irq(struct bnxt *bp)
-> > > >                                free_cpumask_var(irq->cpu_mask);
-> > > >                                irq->have_cpumask = 0;
-> > > >                        }
-> > > > +                     irq_set_affinity_notifier(irq->vector, NULL);
-> > > >                        free_irq(irq->vector, bp->bnapi[i]);
-> > > >                }
-> > > > 
-> > > > @@ -10498,6 +10500,45 @@ static void bnxt_free_irq(struct bnxt *bp)
-> > > >        }
-> > > >    }
-> > > > 
-> > > > +static void bnxt_rtnl_lock_sp(struct bnxt *bp);
-> > > > +static void bnxt_rtnl_unlock_sp(struct bnxt *bp);
-> > > > +static void bnxt_irq_affinity_notify(struct irq_affinity_notify *notify,
-> > > > +                                  const cpumask_t *mask)
-> > > > +{
-> > > > +     struct bnxt_irq *irq;
-> > > > +
-> > > > +     irq = container_of(notify, struct bnxt_irq, affinity_notify);
-> > > > +     cpumask_copy(irq->cpu_mask, mask);
-> > > > +
-> > > > +     if (!pcie_tph_set_st(irq->bp->pdev, irq->msix_nr,
-> > > > +                          cpumask_first(irq->cpu_mask),
-> > > > +                          TPH_MEM_TYPE_VM, PCI_TPH_REQ_TPH_ONLY))
-> > > > +             pr_err("error in configuring steering tag\n");
-> > > > +
-> > > > +     if (netif_running(irq->bp->dev)) {
-> > > > +             rtnl_lock();
-> > > > +             bnxt_close_nic(irq->bp, false, false);
-> > > > +             bnxt_open_nic(irq->bp, false, false);
-> > > > +             rtnl_unlock();
-> > > > +     }
-> > > 
-> > > Is it really needed? It will cause link flap and pause in the traffic
-> > > service for the device. Why the device needs full restart in this case?
-> > 
-> > In that sequence only the rings are recreated for the hardware to sync
-> > up the tags.
-> > 
-> > Actually its not a full restart. There is no link reinit or other
-> > heavy lifting in this sequence.
-> > The pause in traffic may be momentary. Do IRQ/CPU affinities change frequently?
-> > Probably not?
-> 
-> From what I can see in bnxt_en, proper validation of link_re_init parameter is
-> not (yet?) implemented, __bnxt_open_nic will unconditionally call
-> netif_carrier_off() which will be treated as loss of carrier with counters
-> increment and proper events posted. Changes to CPU affinities were
-> non-disruptive before the patch, but now it may break user-space
-> assumptions.
+kernel-doc validator is not happy:
 
-From my testing the link should not flap.  I just fired up a recent net-next
-and confirmed the same by calling $ ethtool -G ens7f0np0 rx 1024 which does a
-similar bnxt_close_nic(bp, false, false)/bnxt_open_nic(bp, false, false) as
-this patch.  Link remained up -- even with a non-Broadocm link-partner.
+  warning: Function parameter or struct member 'fotg' not described in 'fotg210_vbus'
 
-> Does FW need full rings re-init to update target value, which is one u32 write?
-> It looks like overkill TBH.
+Add missing description.
 
-Full rings do not, but the initialization of that particular ring associated
-with this irq does need to be done.  On my list of things we need to do in
-bnxt_en is implement the new ndo_queue_stop/start and ndo_queue_mem_alloc/free
-operations and once those are done we could make a switch as that may be less
-disruptive.
+Fixes: 3e679bde529e ("usb: fotg210-udc: Implement VBUS session")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+v2: fixed typo (LKP, Greg)
+ drivers/usb/fotg210/fotg210-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> And yes, affinities can be change on fly according to the changes of the
-> workload on the host.
-> 
-> > > 
-> > > 
-> > > > +}
-> > > > +
-> > > > +static void bnxt_irq_affinity_release(struct kref __always_unused *ref)
-> > > > +{
-> > > > +}
-> > > > +
-> > > > +static inline void __bnxt_register_notify_irqchanges(struct bnxt_irq *irq)
-> > > 
-> > > No inlines in .c files, please. Let compiler decide what to inline.
-> > > 
-> > > > +{
-> > > > +     struct irq_affinity_notify *notify;
-> > > > +
-> > > > +     notify = &irq->affinity_notify;
-> > > > +     notify->irq = irq->vector;
-> > > > +     notify->notify = bnxt_irq_affinity_notify;
-> > > > +     notify->release = bnxt_irq_affinity_release;
-> > > > +
-> > > > +     irq_set_affinity_notifier(irq->vector, notify);
-> > > > +}
-> > > > +
-> > > >    static int bnxt_request_irq(struct bnxt *bp)
-> > > >    {
-> > > >        int i, j, rc = 0;
-> > > > @@ -10543,6 +10584,7 @@ static int bnxt_request_irq(struct bnxt *bp)
-> > > >                        int numa_node = dev_to_node(&bp->pdev->dev);
-> > > > 
-> > > >                        irq->have_cpumask = 1;
-> > > > +                     irq->msix_nr = map_idx;
-> > > >                        cpumask_set_cpu(cpumask_local_spread(i, numa_node),
-> > > >                                        irq->cpu_mask);
-> > > >                        rc = irq_set_affinity_hint(irq->vector, irq->cpu_mask);
-> > > > @@ -10552,6 +10594,15 @@ static int bnxt_request_irq(struct bnxt *bp)
-> > > >                                            irq->vector);
-> > > >                                break;
-> > > >                        }
-> > > > +
-> > > > +                     if (!pcie_tph_set_st(bp->pdev, i,
-> > > > +                                          cpumask_first(irq->cpu_mask),
-> > > > +                                          TPH_MEM_TYPE_VM, PCI_TPH_REQ_TPH_ONLY)) {
-> > > > +                             netdev_err(bp->dev, "error in setting steering tag\n");
-> > > > +                     } else {
-> > > > +                             irq->bp = bp;
-> > > > +                             __bnxt_register_notify_irqchanges(irq);
-> > > > +                     }
-> > > >                }
-> > > >        }
-> > > >        return rc;
-> > > > diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-> > > > index dd849e715c9b..0d3442590bb4 100644
-> > > > --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-> > > > +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-> > > > @@ -1195,6 +1195,10 @@ struct bnxt_irq {
-> > > >        u8              have_cpumask:1;
-> > > >        char            name[IFNAMSIZ + 2];
-> > > >        cpumask_var_t   cpu_mask;
-> > > > +
-> > > > +     int             msix_nr;
-> > > > +     struct bnxt     *bp;
-> > > > +     struct irq_affinity_notify affinity_notify;
-> > > >    };
-> > > > 
-> > > >    #define HWRM_RING_ALLOC_TX  0x1
-> > > 
-> 
+diff --git a/drivers/usb/fotg210/fotg210-core.c b/drivers/usb/fotg210/fotg210-core.c
+index 958fc40eae86..0655afe7f977 100644
+--- a/drivers/usb/fotg210/fotg210-core.c
++++ b/drivers/usb/fotg210/fotg210-core.c
+@@ -95,6 +95,7 @@ static int fotg210_gemini_init(struct fotg210 *fotg, struct resource *res,
+ 
+ /**
+  * fotg210_vbus() - Called by gadget driver to enable/disable VBUS
++ * @fotg: pointer to a private fotg210 object
+  * @enable: true to enable VBUS, false to disable VBUS
+  */
+ void fotg210_vbus(struct fotg210 *fotg, bool enable)
+-- 
+2.43.0.rc1.1336.g36b5255a03ac
+
