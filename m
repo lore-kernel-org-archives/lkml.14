@@ -1,85 +1,103 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from smtpcmd14162.aruba.it (smtpcmd14162.aruba.it [62.149.156.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3E016DEAA;
-	Fri, 10 May 2024 11:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5FBA135A63
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 11:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.156.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715339142; cv=none; b=gRV4N0Jj7yr/3+9Mf9LDeJzDcdQiUvJAALBapRlqI61IaijdXz9sonzHC44v986ZqeS7Rh8LoNPxD3bla/KeI9Zwqb0f7RfVacSrrsSbCsqSXAPTf6vHiKFgFeaIc9V/HPLOcyrs4TK6RSHZMQevz+12TGxvB46AHRApWa+a4tQ=
+	t=1715339213; cv=none; b=MBwzNBjBX/mMyOva0PFrDo8VIVOcoHsHc5hQrGh0o15O1rvsTNseF0DCXOxnlqV/+oI0uyAVYMD3AljKQ1pE2dawB/ZBnaugUHE7yC5rt3dlQUn0kVQTVXPgCD8kZp6KLfldmp6AjDqXPhudKojuXa9pHt4k/8vo4pqblBf2r9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715339142; c=relaxed/simple;
-	bh=fTQieSSPk6zvsenfQS/vs44rX5pS0/4VdRY3Z1Y5ycI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dA4R0WuPbOF1D1MSHKJLppTBzKESspW6it4zi8XoTkg+hXHgqWo3XAJyXfggcUOZ6Us7CWblnwr/18t4rF8V8lJ8tdcq0mJaoHB4kgpFgG7NMLq9f189P58XR1wzWcWBRXDXFyRrrazkjnugzo4UDxhUO/BJLfMq3yofgDmh7Ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=HaunucPg; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1715339213; c=relaxed/simple;
+	bh=BH9sLo0LcajSeSGIaiRPV99KE+nEZ4OheC8n4KCWD+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RrYhhRVIVeQMMMFheiwsfCmy1vj23qMP0fbRacvS1XKdbJqgnv5/FHK2tlu5tvAiHC7C/8xjQXKlPj/p4N5kZUBtw8JDi++cMQXNWzCw3BuZAM4dAI2Hif2u/07lQyFmnIroV1U/s9AQuD4OQhada3y6BLssZAKP620Tfi/+Neo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com; spf=pass smtp.mailfrom=engicam.com; dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b=fbp++X+o; arc=none smtp.client-ip=62.149.156.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=engicam.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=engicam.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="HaunucPg"
-X-UUID: 378870540ebd11efb92737409a0e9459-20240510
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=IOhnNl2jAPwhb2LKbFuYNt+ww3POwT1hakzjLf5nXUw=;
-	b=HaunucPg8EE2ibzNkyLWK4/7IoKosolm1lhtwXDooSIwlG3OepXthCSDRyd4H04D81LI7eZXMhdip3gjXSUuSxHAqRnqhmpk6i741oKpfjTYBhAAIaV8wVC5Ou29/8J+LDiq8tElXvDFF9lZ2//OwRSwx15P2Nb76A+1h3Lf9FA=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.38,REQID:4637b63c-f67e-40b4-9866-14f3c1733656,IP:0,U
-	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:82c5f88,CLOUDID:e966b283-4f93-4875-95e7-8c66ea833d57,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-	RL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,
-	SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
-X-CID-BVR: 0,NGT
-X-CID-BAS: 0,NGT,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-UUID: 378870540ebd11efb92737409a0e9459-20240510
-Received: from mtkmbs09n1.mediatek.inc [(172.21.101.35)] by mailgw01.mediatek.com
-	(envelope-from <liankun.yang@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 444881989; Fri, 10 May 2024 19:05:31 +0800
-Received: from mtkmbs13n1.mediatek.inc (172.21.101.193) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Fri, 10 May 2024 19:05:30 +0800
-Received: from mszsdhlt06.gcn.mediatek.inc (10.16.6.206) by
- mtkmbs13n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.26 via Frontend Transport; Fri, 10 May 2024 19:05:29 +0800
-From: Liankun Yang <liankun.yang@mediatek.com>
-To: <chunkuang.hu@kernel.org>, <p.zabel@pengutronix.de>, <airlied@gmail.com>,
-	<daniel@ffwll.ch>, <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<chunfeng.yun@mediatek.com>, <vkoul@kernel.org>, <kishon@kernel.org>,
-	<matthias.bgg@gmail.com>, <angelogioacchino.delregno@collabora.com>,
-	<jitao.shi@mediatek.com>, <mac.shen@mediatek.com>,
-	<liankun.yang@mediatek.com>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-CC: <dri-devel@lists.freedesktop.org>, <linux-mediatek@lists.infradead.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>
-Subject: [PATCH v2 0/2] Add PHY-dp bindings 
-Date: Fri, 10 May 2024 19:04:13 +0800
-Message-ID: <20240510110523.12524-1-liankun.yang@mediatek.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=aruba.it header.i=@aruba.it header.b="fbp++X+o"
+Received: from engicam ([146.241.26.65])
+	by Aruba Outgoing Smtp  with ESMTPSA
+	id 5O2NsPhhm0ADe5O2Psfycw; Fri, 10 May 2024 13:03:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1715339021; bh=BH9sLo0LcajSeSGIaiRPV99KE+nEZ4OheC8n4KCWD+k=;
+	h=Date:From:To:Subject:MIME-Version:Content-Type;
+	b=fbp++X+oLDW5C7+NqVSzS+XJfhsQi/teCs7aSLC8D3j6wbDVFzd8f6VWEFd9zlu2H
+	 ORwyLc3RkZaoBkhCX7jVGSxK3xWMntkcyBvKlcUPYPX78rIS93yqYy6Rsrk+rNqJo3
+	 jAKAhYbgrBQZPmRaL/wmruYjJjjGn4KMAVdn2x3ymutCq5OkR00vfTVp6xG4Je1yz7
+	 NLHrkfTLYW8im87cP6iokT8jHHPSAOBlJNOLBHmeWl8lbHXHGa23Jf+TZBQG2zbkpz
+	 o0lv0AbG2DcvkyjxkVHihJ/ApJDWatnfIQ/QWIMq7e9D9NTjVeMmsYDDSLCn5vjM4t
+	 gUxVxElIR4eNg==
+Date: Fri, 10 May 2024 13:03:39 +0200
+From: Fabio Aiuto <fabio.aiuto@engicam.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Matteo Lisi <matteo.lisi@engicam.com>,
+	Mirko Ardinghi <mirko.ardinghi@engicam.com>
+Subject: Re: [PATCH v3 1/2] regulator: dt-bindings: pca9450: add PMIC_RST_B
+ warm reset property
+Message-ID: <Zj3/C2NJmCmNpJL1@engicam>
+References: <20240411165801.143160-1-fabio.aiuto@engicam.com>
+ <20240411165801.143160-2-fabio.aiuto@engicam.com>
+ <e86812b3-a3aa-4bdb-9b32-a0339f0f76b5@kernel.org>
+ <ZhjhCvVNezy9r7P4@engicam>
+ <bd1e6507-dee4-4dcf-bbd3-50539270cd63@kernel.org>
+ <Zhq8ibYrZH05/AQt@engicam>
+ <46fe43d0-28be-4acb-b0d4-dacd84fef8e5@kernel.org>
+ <Zh0ImzJZrxw4Xia+@engicam>
+ <ecde24c3-55ba-45cc-8af9-94504dc4dcb9@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ecde24c3-55ba-45cc-8af9-94504dc4dcb9@kernel.org>
+X-CMAE-Envelope: MS4xfJB/g+E6+AbcjQs0pxsFNysyl/3kxRZASA0xPH0ENp61IAGllwJRgg09NdRgmUm0e6dK748/n464eKGiwOIiPnbuq98uXflejoz7dOoTmCZ0vgJ2qlAX
+ ISOxgUD5az6TQuZZlWLLCTJh4q4R1QADDgfCv7L8T7WXlmJQCk/5wTPddAF7mu42uH4VnqoU6VLyo5bG46umv3LQw/0FESXr2PaOfOsmCSaRDo05L9kBrcXF
+ yOmLUgVAvn1ItFw0JN87IGB20C8evHcVnAvNL9uwANEfu9mSpiIKJk3NSu+ROKM2j5cSWlYFFEDrT700YtBGmQF9oHNgEUCY1tcSseXe9U1UDMQfJZOgM84q
+ kv9ehfW4jGzLNWcWVmUgnm/yD2qPqe3fqqk6R1F3AAOhgYvELfw0p0C7JErDi+LO5lijoSzZgarHj4RMksPbcBwzE3lFae/ur17JBlgKQQkpd7+aO5A=
 
-Update write DP phyd register and add phy-dp bindings.
+Dear Krzysztof,
 
-Liankun Yang (2):
-  Add write DP phyd register from parse dts
-  Add dp PHY dt-bindings
+Il Thu, May 02, 2024 at 09:54:29AM +0200, Krzysztof Kozlowski ha scritto:
+> On 15/04/2024 12:59, Fabio Aiuto wrote:
+> > Dear Krzysztof,
+> > 
+> > Il Sat, Apr 13, 2024 at 11:40:18PM +0200, Krzysztof Kozlowski ha scritto:
+> >> On 13/04/2024 19:10, Fabio Aiuto wrote:
+> >>> Dear Krzysztof,
+> >>>
+> >>> Il Sat, Apr 13, 2024 at 12:58:35PM +0200, Krzysztof Kozlowski ha scritto:
+> >>>> On 12/04/2024 09:21, Fabio Aiuto wrote:
+> >>>>> Dear Krzysztof,
+> >>>>>
+> >>>>> Il Thu, Apr 11, 2024 at 09:52:12PM +0200, Krzysztof Kozlowski ha scritto:
+> >>>>>> On 11/04/2024 18:58, Fabio Aiuto wrote:
+> > <snip> 
+> >> I don't understand what is the use case. You wrote runtime does not
+> >> solve your use case. What is the use case?
+> > 
+> > We experimented problems on some boards with SD card, if a cold reset
+> > is done when the card is powered back on it completely freezes, the way
+> > devices behave when unpowered for such short intervals is design specific,
+> > not an OS policy.
+> > 
+> 
+> Then describe the actual hardware issue, not instruct OS how to behave.
+> In the property name and description.
 
- .../display/mediatek/mediatek.phy-dp.yaml     | 45 +++++++++++++++++++
- drivers/phy/mediatek/phy-mtk-dp.c             | 37 +++++++++++++++
- 2 files changed, 82 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek.phy-dp.yaml
+Unfortunately we don't know the details of the hardware issue at the moment.
 
--- 
-2.18.0
+kr,
 
+fabio
+
+> 
+> Best regards,
+> Krzysztof
+> 
