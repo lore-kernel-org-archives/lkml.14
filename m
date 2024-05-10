@@ -1,93 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384BB12C539
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 13:52:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D3912C46B;
+	Fri, 10 May 2024 13:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715349151; cv=none; b=CBeJCcM/LfEoGMliWUx3ZBvPWucW3xj/1sIB1UmprULhjhWfIZL8IHuDNfJ2NwuSd/hzJY4Gl2hTWqSR7KKGr4QF5q7I74+UwjF/mNK+X9lhk28G62gQlAEbJSSY6QDd5aZbR0R2w0FpB/Ka48wlYZQPVRk0ZTfk9YjpY+m3uWQ=
+	t=1715349188; cv=none; b=VhxhDAVhVc/Mfum4O+enlE6Mf3cdWb2X+ApqGsKpnE74e9zgBXv6mhMhpP7XdEFf7mW2PPMsUPfiNosi1i10R+0L/2HAIyUaHb1SY4iJw1rN56fhRRXemgSTCp3Xc2CnmieQZhLMPuMUA6X8wxOehUbI5NR7yIaAwVGWR+/Qcw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715349151; c=relaxed/simple;
-	bh=8WQKOarhlV+n52hs+H1jjdRUk7esOoGpFkk8kHxEvRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iFCt9NHNhRyiLNQZ+18izh99y/znLVc6FuGChC1iC/UbZ18Dw4M52Xc49uqQE0XGoA8dyt+/uPHWGe+I7d/ckwZihb0pyxD/jZ5rST24+i7V+WLrgxxiphNIjyZTSupTxZmr9EOxpPg9C2NiJ2vqizP3O6NQW0Dfol2gGXxYsNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HLbacjPM; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715349188; c=relaxed/simple;
+	bh=6KpXMrLeritzB8bNaBffhCqm+rUB+tqQRQjkCVrSwOg=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=PbR+04Fg5EPhbPTqKcmH1+cFFA6wW3IRzCYhQjOoIh2+gW88pPn3YRRuaiykdW06od2GhGEyZHBw5/FKCcfs3v5oawVnxGBCcA5F/cUzm0RsSM9Eur4Lm+eWb908rdZxCFj7TdWm/Sphib5WfAgLCvI7ttHPsok/1i2XWYLwzCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A64OWzCE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HLbacjPM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715349149;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8WQKOarhlV+n52hs+H1jjdRUk7esOoGpFkk8kHxEvRo=;
-	b=HLbacjPMQqrnFIZLRGVmCsiGs4JFVWCSX6ukQc8VfC891AueadFjDqu1OSzagAKJUrrdDR
-	GgXhnCZY03z85vMl9wfYINP89HzElPKhLsZXf/GzlyJ6bVCAs44PEdaoZIersWqOZt5r54
-	9GQsQKC0qqmDouRTP9L/f7Emenok6s0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-487-AV0Th6AeOAm7wyofLfpVvg-1; Fri, 10 May 2024 09:52:26 -0400
-X-MC-Unique: AV0Th6AeOAm7wyofLfpVvg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5CA13857A81;
-	Fri, 10 May 2024 13:52:25 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.196])
-	by smtp.corp.redhat.com (Postfix) with SMTP id 22B35CF5E1B;
-	Fri, 10 May 2024 13:52:23 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 10 May 2024 15:51:00 +0200 (CEST)
-Date: Fri, 10 May 2024 15:50:57 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH 25/48] rcu: Mark writes to rcu_sync ->gp_count field
-Message-ID: <20240510135057.GC24764@redhat.com>
-References: <20240507093530.3043-1-urezki@gmail.com>
- <20240507093530.3043-26-urezki@gmail.com>
- <ZjpAsYJIfzYSKgdA@redhat.com>
- <4c9e89b5-c981-4809-8bc2-247563ce04e9@paulmck-laptop>
- <20240510131849.GB24764@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A64OWzCE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D53BC113CC;
+	Fri, 10 May 2024 13:53:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715349188;
+	bh=6KpXMrLeritzB8bNaBffhCqm+rUB+tqQRQjkCVrSwOg=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=A64OWzCEMg4DcJItwWnY/nQEN6c08na6QOnzyyA16EkwyYPWJ0jqdPmypqBP4bPWm
+	 aMs0AL9rwpbVHg1YxLozM2876hLrD+tfiPoHgmt33/rS4iubuU2khWvDeLwHFJCu0C
+	 iNJIv9QfrfvN6SO6RMmb348ykhR/eLLtTsby5SoNDTiz+c0/AHSdlTBHKygkAsTUdQ
+	 FGbRxxawWdHBachzf/P47ZiJ9ealbDgrhjRXW7J6EQIQzlGh+Aa8PTHNVuCak4A4eD
+	 6ML1uJJeDIl7bSuY1ckxngyoXYlQWIl6VeL6FvID6dQP+HGn/8bZTOzPZgWA4QnVB0
+	 FFIvO/XokF11A==
+Date: Fri, 10 May 2024 08:53:06 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240510131849.GB24764@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Frank Wunderlich <linux@fw-web.de>
+Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+ Stephen Boyd <sboyd@kernel.org>, linux-leds@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, 
+ Frank Wunderlich <frank-w@public-files.de>, 
+ Eric Woudstra <ericwouds@gmail.com>, Tianling Shen <cnsztl@immortalwrt.org>, 
+ Jakub Kicinski <kuba@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+ Pavel Machek <pavel@ucw.cz>, Conor Dooley <conor+dt@kernel.org>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Michael Turquette <mturquette@baylibre.com>, Lee Jones <lee@kernel.org>, 
+ Eric Dumazet <edumazet@google.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, netdev@vger.kernel.org, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+In-Reply-To: <20240510095707.6895-1-linux@fw-web.de>
+References: <20240510095707.6895-1-linux@fw-web.de>
+Message-Id: <171534910744.4114753.13367969845540831259.robh@kernel.org>
+Subject: Re: [PATCH v3 0/2] Add Bananapi R3 Mini
 
-On 05/10, Oleg Nesterov wrote:
->
-> On 05/07, Paul E. McKenney wrote:
-> >
-> > By the stricter data-race rules used in RCU code [1],
-> ...
-> > [1] https://docs.google.com/document/d/1FwZaXSg3A55ivVoWffA9iMuhJ3_Gmj_E494dLYjjyLQ/edit?usp=sharing
->
-> I am getting more and more confused...
->
-> Does this mean that KCSAN/etc treats the files in kernel/rcu/
-> differently than the "Rest of Kernel"? Or what?
->
-> And how is it enforced?
 
-I can only find the strnstr(buf, "rcu") checks in skip_report(),
-but they only cover the KCSAN_REPORT_VALUE_CHANGE_ONLY case...
+On Fri, 10 May 2024 11:57:05 +0200, Frank Wunderlich wrote:
+> From: Frank Wunderlich <frank-w@public-files.de>
+> 
+> Add mt7986 based BananaPi R3 Mini SBC.
+> 
+> changes in v3:
+> - fixed unicde parenthesis in commit description of dts patch
+> - dropped "dts:" from title of binding patch
+> - added AB to binding and RB to dts patch
+> 
+> changes in v2:
+> - dropped patches for unrealated binding fixes which are already fixed in next.
+> - add missing node for nand
+> - add some information about the board in description
+> 
+> change dts based on review from angelo+krzysztof
+> 
+>  - drop fan status
+>  - rename phy14 to phy0 and phy15 to phy1
+>  - drop default-trigger from phys and so also the binding-patch
+>  - use regulator names based on regexp regulator-[0-9]+v[0-9]+
+>  - add comment for pwm
+> 
+> Frank Wunderlich (2):
+>   dt-bindings: arm64: mediatek: add BananaPi R3 Mini
+>   arm64: dts: mediatek: Add  mt7986 based Bananapi R3 Mini
+> 
+>  .../devicetree/bindings/arm/mediatek.yaml     |   1 +
+>  arch/arm64/boot/dts/mediatek/Makefile         |   1 +
+>  .../mediatek/mt7986a-bananapi-bpi-r3-mini.dts | 493 ++++++++++++++++++
+>  3 files changed, 495 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-mini.dts
+> 
+> --
+> 2.34.1
+> 
+> 
+> 
 
-Oleg.
+
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+New warnings running 'make CHECK_DTBS=y mediatek/mt7986a-bananapi-bpi-r3-mini.dtb' for 20240510095707.6895-1-linux@fw-web.de:
+
+arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-mini.dtb: crypto@10320000: interrupts: [[0, 116, 4], [0, 117, 4], [0, 118, 4], [0, 119, 4]] is too short
+	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
+arch/arm64/boot/dts/mediatek/mt7986a-bananapi-bpi-r3-mini.dtb: crypto@10320000: interrupt-names: ['ring0', 'ring1', 'ring2', 'ring3'] is too short
+	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
+
+
+
+
 
