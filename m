@@ -1,68 +1,55 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95C017109C;
-	Fri, 10 May 2024 15:52:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2022171E45;
+	Fri, 10 May 2024 15:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715356356; cv=none; b=L58/itCy454pAg8Fjc2cWzQkhAgiWxyZ8YNV4/1aVjF6QZd2ZKPHvclGhtkKgSqWxnkN50Y2Tfs5dqCpm7baKsQ5dYHQ0qyZQvJiBnQWswJrhTkBPdayoQcRekDZ0++Nl58CoJk3rnINnZFzSWv+s4Icr4IhIw87oVyU+548iHk=
+	t=1715356382; cv=none; b=mtteT2HOOzCGo//OlFeVu6EMjYchI73CEheOTUsCqAr0kmDZereOj83YIb92jhN3uT31d91CUGGbmJHRVMYKmNAjx0irRCsVqXt7rR7/vtc/OIEEhqLNO7pyvjWF5rIBWS2N3MAT5aRK4iXm4+r+L6KGb7ICD0QS4v32OhDqH5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715356356; c=relaxed/simple;
-	bh=KbDSJ8sPoqUrtBTRtD44bCSBAhAd8j8GTBlXUJayVTo=;
+	s=arc-20240116; t=1715356382; c=relaxed/simple;
+	bh=+4sZXvm3Gqi4I8ILFKfuPYd/ZE/h973QVzTsoLlBtS0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SVElIey4VASUxiRGNxSAJPUR6Fj3MSfLFpCmZT1MrJfh0hVT5caitDmvJi2fWOoqN+fo760DkwIn+zo35Aw1PTfTX9NEI7IbZXRHVReo5nSSCCA0KyiXhatwibiNN1Dv5E2eyL4aTMKmFeYpUy/2HjB9hfovdfYwApBRxjVMEbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=cPmonIHv; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="cPmonIHv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=kgU5xDXwFs4QEjcHU4kuuCpha5X8eRsJv6GJUqZKdTQ=; b=cPmonIHvlTOPUe5pIJgg2HJ/qz
-	eAOZt0HRWk9ANyinjkSfgJ96aPpC8iEoLUnqkZLpC1H3whU5XEbtPFsBxCJpkJ1HbW21YeWHlUGFr
-	eUgFQE2DmtPSFNv2giA0Cx9DVQ4U1RCKFQfOqGr7CNMMs5mxILIOW1NbwizV1Lx0nr7/JRNthmKHV
-	TMTAKiNii1V+8WvX+LyK3lfodxtZC1OgeSh7QfMWGwqWzVzbi/k4sY402xw1XF5g+gNvej+0gcTpE
-	SvcRfQMjHRgEZMb1/TfH7yMYXzM2ZdMVj0ARRaE+artlqr1bUkUq5g7BCmBuaK5wja37qrWhmKEUQ
-	6c87ObCA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:42940)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1s5SXW-0007aJ-2n;
-	Fri, 10 May 2024 16:52:07 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1s5SXT-0003Qx-Bi; Fri, 10 May 2024 16:52:03 +0100
-Date: Fri, 10 May 2024 16:52:03 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Romain Gantois <romain.gantois@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Jose Abreu <joabreu@synopsys.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	=?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <clement.leger@bootlin.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	netdev@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH net-next v6 2/7] net: stmmac: Add dedicated XPCS cleanup
- method
-Message-ID: <Zj5Co6wk4RV67vt5@shell.armlinux.org.uk>
-References: <20240510-rzn1-gmac1-v6-0-b63942be334c@bootlin.com>
- <20240510-rzn1-gmac1-v6-2-b63942be334c@bootlin.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=faI9os51+AWgO7N0ZogRKy86OMErqApC2SkmR7Nm3iLINZ+tgKxsU8zyX1QXhIug6IQwpn7Nmecz6ORjZxnW6UebozlZ5ewpph3CL3sDrOue4MmdUf4MQWFG9taoawAyDc6njanTZyV/n02gS9pGP1zzZDpGMoxDjWaScGPUGUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a59b097b202so523783766b.0;
+        Fri, 10 May 2024 08:53:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715356379; x=1715961179;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M6CSLBPD1JVMRDYt44OaDJisYcYfySjJVMAGDPBFUPo=;
+        b=Jkpc22ZIEavjR7+x75kzURYd0eefPe4jKXc0PccY/l0oUaer6K5n6SpyKBqApmc9Ia
+         96pZ7DJCL3XN2JK9jLgv1iqZlaXxJ6geBycrbN4/6AbykqT+NpBTifuYAD6Wd7cce5C5
+         zQWWAC8qYqDnkHy+xBEUx3UzqWFteDAA8nHNGegkMDCMCo+MMBfFLRXELfUZjcW4Llc+
+         rRH1jutDtX7TRrYhUm1+SMAYSwXJOB3XxQDSdHw6nd5AhIYj8vb6YcRlsxDLn9F5lxoi
+         U9Qdmqi3VioYwJ8Wnrqc3Hya0dqwVHFiO6W6M20FXVpWk+yoqv1d7XrIozbX+OSboege
+         +Lrg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/DavawiZTzoA8qPteD2BCsCnrmmldjDJkL7KsUChsYUqgfBVvYzsXNV4Nt/RzIP3ggenfKsqw0Qtj3Gqz6aQNc0E/ESv3ULP3vVFwZbz3TRUEUzmLdgtP0dzieTItV013
+X-Gm-Message-State: AOJu0YwRN6XpFKFxVHplO2682AbK4L1Mx1vczBKxzxuiffVRvDIxXKfK
+	nyr76QKhO0h2YuMheYgbR/477zjdiT2UC6a86i6yMsgNFvUL6A1F
+X-Google-Smtp-Source: AGHT+IGGUnNynG/k0GDVF79CArCVvLyER6wOL8kRk1i8NIAeVdxtYGo1FbEbz3miTo1c4Q/lus1HuQ==
+X-Received: by 2002:a17:906:852:b0:a59:aa0d:6d with SMTP id a640c23a62f3a-a5a2d6287b5mr189905166b.62.1715356379024;
+        Fri, 10 May 2024 08:52:59 -0700 (PDT)
+Received: from gmail.com (fwdproxy-lla-008.fbsv.net. [2a03:2880:30ff:8::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01797sm198406466b.176.2024.05.10.08.52.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 May 2024 08:52:58 -0700 (PDT)
+Date: Fri, 10 May 2024 08:52:56 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, rbc@meta.com, paulmck@kernel.org,
+	"open list:KERNEL VIRTUAL MACHINE (KVM)" <kvm@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] KVM: Addressing a possible race in kvm_vcpu_on_spin:
+Message-ID: <Zj5C2Psbm8EY+Q4F@gmail.com>
+References: <20240509090146.146153-1-leitao@debian.org>
+ <Zjz9CLAIxRXlWe0F@google.com>
+ <Zj3ksShWaFSWstii@gmail.com>
+ <Zj4xkoMZh8zJdKyq@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,31 +58,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240510-rzn1-gmac1-v6-2-b63942be334c@bootlin.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <Zj4xkoMZh8zJdKyq@google.com>
 
-On Fri, May 10, 2024 at 09:38:09AM +0200, Romain Gantois wrote:
-> From: Serge Semin <fancer.lancer@gmail.com>
+On Fri, May 10, 2024 at 07:39:14AM -0700, Sean Christopherson wrote:
+> On Fri, May 10, 2024, Breno Leitao wrote:
+> > > IMO, reworking it to be like this is more straightforward:
+> > > 
+> > > 	int nr_vcpus, start, i, idx, yielded;
+> > > 	struct kvm *kvm = me->kvm;
+> > > 	struct kvm_vcpu *vcpu;
+> > > 	int try = 3;
+> > > 
+> > > 	nr_vcpus = atomic_read(&kvm->online_vcpus);
+> > > 	if (nr_vcpus < 2)
+> > > 		return;
+> > > 
+> > > 	/* Pairs with the smp_wmb() in kvm_vm_ioctl_create_vcpu(). */
+> > > 	smp_rmb();
+> > 
+> > Why do you need this now? Isn't the RCU read lock in xa_load() enough?
 > 
-> Currently the XPCS handler destruction is performed in the
-> stmmac_mdio_unregister() method. It doesn't look good because the handler
-> isn't originally created in the corresponding protagonist
-> stmmac_mdio_unregister(), but in the stmmac_xpcs_setup() function. In
-> order to have more coherent MDIO and XPCS setup/cleanup procedures,
-> let's move the DW XPCS destruction to the dedicated stmmac_pcs_clean()
-> method.
+> No.  RCU read lock doesn't suffice, because on kernels without PREEMPT_COUNT
+> rcu_read_lock() may be a literal nop.  There may be a _compiler_ barrier, but
+> smp_rmb() requires more than a compiler barrier on many architectures.
+
+Makes sense. In fact, it makes sense to have an explicit barrier in-between
+the xarray modify operations and reading/storing online_vcpus.
+
+> > > 	kvm_vcpu_set_in_spin_loop(me, true);
+> > > 
+> > > 	start = READ_ONCE(kvm->last_boosted_vcpu) + 1;
+> > > 	for (i = 0; i < nr_vcpus; i++) {
+> > 
+> > Why do you need to started at the last boosted vcpu? I.e, why not
+> > starting at 0 and skipping me->vcpu_idx and kvm->last_boosted_vcpu?
 > 
-> This method will also be used to cleanup PCS hardware using the
-> pcs_exit() callback that will be introduced to stmmac in a subsequent
-> patch.
+> To provide round-robin style yielding in order to (hopefully) yield to the vCPU
+> that is holding a spinlock (or some other asset that is causing a vCPU to spin
+> in kernel mode).
 > 
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-> Co-developed-by: Romain Gantois <romain.gantois@bootlin.com>
+> E.g. if there are 4 vCPUs all running on a single CPU, vCPU3 gets preempted while
+> holding a spinlock, and all vCPUs are contented for said spinlock then starting
+> at vCPU0 every time would result in vCPU1 yielding to vCPU0, and vCPU0 yielding
+> back to vCPU1, indefinitely.
 
-Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
-
-Thanks!
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Makes sense, this would always privilege vCPU 0 in favor of the last
+vCPU. 100% clear. Thanks!
