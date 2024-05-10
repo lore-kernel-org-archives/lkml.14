@@ -1,135 +1,136 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C23A1649A7
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 11:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BDA165FDB
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 11:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715340684; cv=none; b=nkId6fUKLVw5aHzG5J2qenH2YwrqSppzzbMxSZSKX1UeI0+qvdw4ZmiVaQ2tlOMGYJEq8GCPeIUlCZAB2IFKH3zCUgjaq6ogLQ6YRRn5NLvn65zZROZK1nRBQ1hVoO4LVA3OzsMhnD+tyfkZvBaOoacKHTCZcFf4M8SRrB2KpeY=
+	t=1715340804; cv=none; b=L6yp75YBRIdO4UcmIHN9P5qY3CMvZQI5S17P4dK592MHmPoAg/UUSVjn6fnJ+PzIkbi5c+jjSMtNJvphDjupzZ7Nu2Q5xhZtu51s7u+qYnR4Na1goT60LYED9au4EuML04kU9PHsTk7NSZbj2Yhdpiqkg5RSTATPdGlr6S1+KzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715340684; c=relaxed/simple;
-	bh=j9nzsjB8ZKN5OEzUlhmbXTCrNTlkvkyve4S9+JzLx3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TlGINHTyb98dsWaiw3AJvYym0oe4Uyh+jBEmc2jAtMnu+/kn6BhX85/6MeEbDfm6dh+KwPiiWF1ns4CyNJJN8dVe94cC0ciNECfQJ5/BtuVolYeodlgRxw20zS3r/Yzx/nbe/LdVNarUfnw+Q/StHFXi+MSQ7GokVn3thrDzylk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=MozL53ih; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1715340804; c=relaxed/simple;
+	bh=HrkrZp+/n0k/6V53rE3JbD0UBV428A770HYxzG7Hupk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fTDCM/cOI/5nCHhluBXzMkoW8j7bLtt4V8aNjs79ps7zGqGvnR0OgmVg3MmxotOsVC8pgnPvy/XDriBKschF0aqvCaiWIBdscgg6cFehxSgkenFYYedBXHkKlMWMsMEQboMC4Y4fgLVblQ7UsbVbWyS5qGBZbD2TBe9vfhzPaxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HCfZpGBY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="MozL53ih"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a59c5c9c6aeso469144966b.2
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 04:31:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1715340679; x=1715945479; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ka1+pk2geib/J7YLFiKu4r03GZT40+nA2E2uYjpMTOk=;
-        b=MozL53ih/i1Bvx7NVVn0ZxZdsKg7rnyF7Hyo0irZxY4QHXc6cQR0c+6aE+K0ebWNJo
-         9zxwSPbZ6oCFIIETIfsJP09awBHZrfXzlGTmU4urUJzeZdEx3SenltpwSiuNojDU5Vyk
-         iLFuGJAsRD8P/oqMdosTJKHq/0bxirLYZoawVqld6T+923Rxpzod0xZJx35Ed1xo/rx4
-         SFFqzLRbyx7ykLqNuROPOG40k9WznVHW5TyOJR8roLBToYXhHuDNArYJUxauxBCFeMnB
-         avuCUMug+yy2kGC8ZU3vYwL9N3aMKOIbbcyFno5PqW8Y9uFcAyiELCgTqTUSD2+/ZLhM
-         zYwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715340679; x=1715945479;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ka1+pk2geib/J7YLFiKu4r03GZT40+nA2E2uYjpMTOk=;
-        b=WFQl5gi50f5qYlEkkepHL9RPNLqxlvoODWoFqScCZLLRHRDAZ7E17ZFe5EBRxeh/1Z
-         7oPCOvL9J/PmMJVYK3t8RNxTlIQsigqdWLgkWT9/jeALCStKQRfG5l4RFRtSilXpP7G0
-         rAniEtCDuMfGiPMJIh7xTMOPn4GYTDILNrtsCbh6OlSwXQqNjw98NU9FxfWQEx0g7YxC
-         JQah/OlqwFdpmHyRh5ibWkzzRSNQNSdhr/99QB5oewYl+I2v4KCLCT1l77FfcUt6lp9b
-         DB3lpeH+3SgTLet8HH0eTDGzFaYD3wfa14vP2pzlRrc5FWzi9XFb1MiymSr44/188z5W
-         VTXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHk2MFCtkYXGqEDWdeKk9HfQoHwb5buby1bF3IgBf579G1RSoSdjmr015aRlbw94m2hI1WYsHWTMm1IavsKNptBPhN6ri21kWCVl7f
-X-Gm-Message-State: AOJu0YwT5h0rLH+1QWs8PbXPbJDjIcFi8HObQiFowHziEEaevVRNnJ2c
-	6VIuep2R9JmKhKP7kdFAyR46oUfGTDeKsxZgcAsKxL9eSzJSVVxRBVfnwppD41Q=
-X-Google-Smtp-Source: AGHT+IFd+1aMcsICY/YHsevY1zrNmPQWHgy87tSrQJHc4ec18XtFpWfX1JVZFQt5CdbgMWOYAkrSdg==
-X-Received: by 2002:a17:906:7084:b0:a58:96fc:bb53 with SMTP id a640c23a62f3a-a5a2d5c7f02mr169164866b.20.1715340679364;
-        Fri, 10 May 2024 04:31:19 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781d5afsm176254166b.3.2024.05.10.04.31.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 May 2024 04:31:18 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: thorsten.blum@toblux.com
-Cc: andrew@lunn.ch,
-	arnd@arndb.de,
-	davem@davemloft.net,
-	edumazet@google.com,
-	gerg@linux-m68k.org,
-	glaubitz@physik.fu-berlin.de,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org,
-	nico@fluxnic.net,
-	pabeni@redhat.com
-Subject: [PATCH v3] net: smc91x: Fix m68k kernel compilation for ColdFire CPU
-Date: Fri, 10 May 2024 13:30:55 +0200
-Message-ID: <20240510113054.186648-2-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.0
-In-Reply-To: <20240509213743.175221-3-thorsten.blum@toblux.com>
-References: <20240509213743.175221-3-thorsten.blum@toblux.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HCfZpGBY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715340802;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=g2/qqYRhFWlKB3W1SwI+1uiNp1F5LJ9jGM/cRZ481m0=;
+	b=HCfZpGBY3Zl+E87BDf3w4poc/0ngKc8pp7esvTQa1LSnOqN95OIThkgoQX7vEOtJZDTS1z
+	HePsi3/Nni+J2ui6K/A4lRJ1RYzI1Fk48UoGsxnIllKgeg1rCvZRf4+bYpIVjPgrS8VNzw
+	b3BrVTwj1OsYb/FZHiSIcBfJbpMVvo4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-356-CpMeO0AuNmSaiywsnJtJ6A-1; Fri, 10 May 2024 07:33:18 -0400
+X-MC-Unique: CpMeO0AuNmSaiywsnJtJ6A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1ADBD81227E;
+	Fri, 10 May 2024 11:33:18 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.196])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 509ED44E3AF9;
+	Fri, 10 May 2024 11:33:15 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 10 May 2024 13:31:52 +0200 (CEST)
+Date: Fri, 10 May 2024 13:31:49 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 25/48] rcu: Mark writes to rcu_sync ->gp_count field
+Message-ID: <20240510113149.GA24764@redhat.com>
+References: <20240507093530.3043-1-urezki@gmail.com>
+ <20240507093530.3043-26-urezki@gmail.com>
+ <ZjpAsYJIfzYSKgdA@redhat.com>
+ <4c9e89b5-c981-4809-8bc2-247563ce04e9@paulmck-laptop>
+ <20240509151312.GA22612@redhat.com>
+ <f0a02cfe-7fc2-494c-8734-e5583f42a8f7@paulmck-laptop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f0a02cfe-7fc2-494c-8734-e5583f42a8f7@paulmck-laptop>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-Compiling the m68k kernel with support for the ColdFire CPU family fails
-with the following error:
+On 05/09, Paul E. McKenney wrote:
+>
+> On Thu, May 09, 2024 at 05:13:12PM +0200, Oleg Nesterov wrote:
+> >
+> > We can move these WARN_ON()'s into the ->rss_lock protected section.
+> >
+> > Or perhaps we can use data_race(rsp->gp_count) ? To be honest I thought
+> > that READ_ONCE() should be enough...
+> >
+> > Or we can simply kill these WARN_ON_ONCE()'s.
+>
+> Or we could move those WARN_ON_ONCE() under the lock.
 
-In file included from drivers/net/ethernet/smsc/smc91x.c:80:
-drivers/net/ethernet/smsc/smc91x.c: In function ‘smc_reset’:
-drivers/net/ethernet/smsc/smc91x.h:160:40: error: implicit declaration of function ‘_swapw’; did you mean ‘swap’? [-Werror=implicit-function-declaration]
-  160 | #define SMC_outw(lp, v, a, r)   writew(_swapw(v), (a) + (r))
-      |                                        ^~~~~~
-drivers/net/ethernet/smsc/smc91x.h:904:25: note: in expansion of macro ‘SMC_outw’
-  904 |                         SMC_outw(lp, x, ioaddr, BANK_SELECT);           \
-      |                         ^~~~~~~~
-drivers/net/ethernet/smsc/smc91x.c:250:9: note: in expansion of macro ‘SMC_SELECT_BANK’
-  250 |         SMC_SELECT_BANK(lp, 2);
-      |         ^~~~~~~~~~~~~~~
-cc1: some warnings being treated as errors
+Sure, see above.
 
-The function _swapw() was removed in commit d97cf70af097 ("m68k: use
-asm-generic/io.h for non-MMU io access functions"), but is still used in
-drivers/net/ethernet/smsc/smc91x.h.
+But could you help me to understand this magic? I naively thought
+that READ_ONCE() is always "safe"...
 
-Use ioread16be() and iowrite16be() to resolve the error.
+So, unless I am totally confused it turns out that, say,
 
-Fixes: d97cf70af097 ("m68k: use asm-generic/io.h for non-MMU io access functions")
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
-Changes in v2:
-- Use ioread16be() and iowrite16be() directly instead of re-adding
-  _swapw() as suggested by Arnd Bergmann and Andrew Lunn
+	CPU 0			CPU 1
+	-----			-----
 
-Changes in v3:
-- Add Fixes: tag
----
- drivers/net/ethernet/smsc/smc91x.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+	spin_lock(LOCK);
+	++X;			READ_ONCE(X); // data race
+	spin_unlock(LOCK);
 
-diff --git a/drivers/net/ethernet/smsc/smc91x.h b/drivers/net/ethernet/smsc/smc91x.h
-index 46eee747c699..45ef5ac0788a 100644
---- a/drivers/net/ethernet/smsc/smc91x.h
-+++ b/drivers/net/ethernet/smsc/smc91x.h
-@@ -156,8 +156,8 @@ static inline void mcf_outsw(void *a, unsigned char *p, int l)
- 		writew(*wp++, a);
- }
- 
--#define SMC_inw(a, r)		_swapw(readw((a) + (r)))
--#define SMC_outw(lp, v, a, r)	writew(_swapw(v), (a) + (r))
-+#define SMC_inw(a, r)		ioread16be((a) + (r))
-+#define SMC_outw(lp, v, a, r)	iowrite16be(v, (a) + (r))
- #define SMC_insw(a, r, p, l)	mcf_insw(a + r, p, l)
- #define SMC_outsw(a, r, p, l)	mcf_outsw(a + r, p, l)
- 
--- 
-2.45.0
+is data-racy accoring to KCSAN, while
+
+	CPU 0			CPU 1
+	-----			-----
+
+	spin_lock(LOCK);
+	WRITE_ONCE(X, X+1);	READ_ONCE(X); // no data race
+	spin_unlock(LOCK);
+
+is not.
+
+Why is that?
+
+Trying to read Documentation/dev-tools/kcsan.rst... it says
+
+	KCSAN is aware of *marked atomic operations* (``READ_ONCE``, WRITE_ONCE``,
+
+	...
+
+	if all accesses to a variable that is accessed concurrently are properly
+	marked, KCSAN will never trigger a watchpoint
+
+but how can KCSAN detect that all accesses to X are properly marked? I see nothing
+KCSAN-related in the definition of WRITE_ONCE() or READ_ONCE().
+
+And what does the "all accesses" above actually mean? The 2nd version does
+
+	WRITE_ONCE(X, X+1);
+
+but "X + 1" is the plain/unmarked access?
+
+Thanks,
+
+Oleg.
 
