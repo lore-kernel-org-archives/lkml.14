@@ -1,152 +1,125 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB3F816F296;
-	Fri, 10 May 2024 12:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4147716E890
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 12:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715342818; cv=none; b=q4OZFfNVzDepReH4TpSbQfw7Q8pZXUrpIFG5u8MEgr7+uxPKrG8rNBWAkziCOpRSKw2BFMqC6BbDtX7EyQ+lwTckJ3R/OvazDeWfnsUrFl8FdcXFbaXFEUt6NnDSWdFbzmHD4H0hM44Qvmtt3i3P6RGk8fdV85afcDAy2HQsCDc=
+	t=1715342875; cv=none; b=GmUmtR6g+31CdB9sKjdX6KaxlhbFocYyxvVXikr/FJDkbq13BAsL/Jo8rU7Ctrc2F60fn/+GUHf0aMbJ7le2d50Dg+oaRej54LB1T9+jjLafV9V7f36E6ctYA4QvgEWpy1iYZHRNfHRbpACa9pnNjjlr7+KvZvI/K8IBtc14KPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715342818; c=relaxed/simple;
-	bh=g4vwY7Rm39oLvhxj4PQq6HqNHGET+DLV/YkHzXIxdHU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e6bEMNhPBODdrpWtV3oVyPFHpzPvMAwJZrD8vEIn7Ftvw+N8WjV/Fake+Pv0YfywJnGoU2aKAikO75zUU208P9Hzk6WNky5uYDISimfwseR3ZkoRvravxXvVm3YLe2vG/wvQlnU9nlxqDZyP0PnYswbS+8RlTe+6d5gQdg+rRng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=R/4RG5DX; arc=none smtp.client-ip=220.130.44.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+	s=arc-20240116; t=1715342875; c=relaxed/simple;
+	bh=+rwSFH/zIjdRn0ZdlCd5K4VvXhbl8g2LjsMF51uWTXA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=orf6l7KyNLSoq4eG6xRQ7JsHeI94tl6lqpL/WfmkDAxbEo/CaVEZ3g0txqIXmmlaB4sL+eP+K2C1XtwU5NDfzAgetKzDZ6jltSkCBUUtPSkRjCaOkFnWSnJpcdbXPEt00RPDyYw/GukZ4TG7zsqxyfP50vrcyXy+ofUfMh0wTn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IlIJWvEB; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=huaqin.corp-partner.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaqin.corp-partner.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="R/4RG5DX"
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1715342807;
-	bh=kaxYcbrb/9Pnuq7HbvF6NNsDEjH/9/v3t51VOdwTq+s=; l=3451;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=R/4RG5DX87sAnovzHbiNuoNjR7l4h77JzrCqhUOLrcQLNyYOJhTUh61ZHTJRm7ABt
-	 C2l1kPubmfUsqY87rZSfobdlPey8j7/zV38R0YWUvKRhT0/V4cp4eb+d4IPE3p4PfI
-	 UAu9uVHAuFEhVZBMFCHxexMrWQp1HuILQjHKVIBmxFU3a1dMvCBjM33pPwr16oun3B
-	 aq2iPnxrzWvSiFJ8sPyT9qp92frVNzL9hazZ/JUna3nJfdtC6MY3idOAE9j6CG9o/M
-	 zSU9yQzutV3mXayvOb2WOL/HxWSNbbnJvYCECrT4otFlucgZhrwhe/A/46QgyHa151
-	 PJVnKNp4PVYAg==
-Received: from 192.168.10.47
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(3213204:0:AUTH_RELAY)
-	(envelope-from <alina_yu@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Fri, 10 May 2024 20:06:33 +0800 (CST)
-Received: from ex3.rt.l (192.168.10.46) by ex4.rt.l (192.168.10.47) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 10 May
- 2024 20:06:33 +0800
-Received: from linuxcarl2.richtek.com (192.168.10.154) by ex3.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
- Transport; Fri, 10 May 2024 20:06:33 +0800
-From: Alina Yu <alina_yu@richtek.com>
-To: <lgirdwood@gmail.com>, <broonie@kernel.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<alina_yu@richtek.com>, <johnny_lai@richtek.com>, <cy_huang@richtek.com>
-Subject: [PATCH v3 5/6] regulator: rtq2208: Fix LDO to be compatible with both fixed and adjustable vout
-Date: Fri, 10 May 2024 20:06:24 +0800
-Message-ID: <ed344f9e3b9a87e6f14fa6b1c061687d4c97240a.1715340537.git.alina_yu@richtek.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1715340537.git.alina_yu@richtek.com>
-References: <cover.1715340537.git.alina_yu@richtek.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IlIJWvEB"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a59ab4f60a6so433053666b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 05:07:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715342870; x=1715947670; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dXNTsezNdWYZnRG6QT+6065F4f+qKGd7L1PVmOIUWNk=;
+        b=IlIJWvEBid6tQaUBNNY7c9LcsxG3oIhCsqiGNO4uYGdS+YKBGCip9MQNvlRttgZ9g+
+         Efzrrf/TLll7+vyoPayi3kmp1WljMoCuCSHE+XolxpLxIt197pXw0DzirnPbxWUVrKxe
+         jdNEMAuTI4tK65HEbwHpr49ziTIlg//svGvCIxa6PdXzYY7y2fIgK3SmibEdr5d/lHHS
+         DG2fkDQq/ZR8IX1jeICDS/VhhHvWhxJyeqZwSG0U2hKUMGljXpPtr1pscSHcSpLpLnap
+         HaILT3b9GZlRLPuR8YFTMyLc2UJc2t81sYX/U1qkCEanafJr8P/s4ws1JBNJLdjjX8Ad
+         nN3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715342870; x=1715947670;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dXNTsezNdWYZnRG6QT+6065F4f+qKGd7L1PVmOIUWNk=;
+        b=VNFkXhOBQc3t/E+V2Aix8ttg4mr3Z8eVWoR8KPxnrh7XSH3Oi3lzvotGNQXbOjlBvk
+         4RfoeNmJKZ3lcjrrIe8fgr/veEr/xTFAccP80OyCtHKL0waLI+FT6SWhG55An4LoB7te
+         jETZMg7hUjRt7kb7bFfIWoKRja2JUJrqQG9p8a0Kw+NObAIJpLzDSe4KNmIXWsRHGBwY
+         EXvlrwEtfeOVo1bozNp7iIO5T2T5JUlRWZL3jW9CbZRzKz/1lGfv8GBW6z5tEiJIvLx0
+         q9u4pbKoqPQXMfxxIA4/W23IOhJlWGbgGoTnuoAmrc/4LBbgCHk1SQCro3S+h1qjYjzn
+         DE5g==
+X-Forwarded-Encrypted: i=1; AJvYcCXprXoexTPOZxIEhNnBoNGBE2qBjvgQ6LTGX3fXjUwFGXrxlMDGGkS8IyICGD5rTvtZh68hxI87onZXhNESiIEgUQXqVtBjTbpyhY5I
+X-Gm-Message-State: AOJu0Yw3ZFtwEUiJG4wn8dTGYnSfLZyYbIwgcTJ9npifnI0uV5IQVpoc
+	eUbtIrLIF8O5MLwJlP6MTik8X2jZDvb4ZMsblrlbrxj+ehNfo27mEF7NDQNfvH+pFbwSG9TSmnh
+	SAWDmtLWrzuJEnj4WqhjuyGL+nzdiMpATV+PDSw==
+X-Google-Smtp-Source: AGHT+IEkHxt5s7tS/c4364g3R4A35U02lj+aw795XFRizFnPsmEQIe0dq0uquDwKAXYE18v7icvEqSCP0RKxgMk+VtM=
+X-Received: by 2002:a50:9e61:0:b0:56e:23e3:bdc2 with SMTP id
+ 4fb4d7f45d1cf-5734d5cf9b4mr2375799a12.13.1715342870410; Fri, 10 May 2024
+ 05:07:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20240509064336.9803-1-lvzhaoxiong@huaqin.corp-partner.google.com>
+ <20240509064336.9803-2-lvzhaoxiong@huaqin.corp-partner.google.com> <CAD=FV=Ugm+-ziY+8f93KOChvmkbf_MdxEOoyJP5WJq70m-aOGQ@mail.gmail.com>
+In-Reply-To: <CAD=FV=Ugm+-ziY+8f93KOChvmkbf_MdxEOoyJP5WJq70m-aOGQ@mail.gmail.com>
+From: zhaoxiong lv <lvzhaoxiong@huaqin.corp-partner.google.com>
+Date: Fri, 10 May 2024 20:07:39 +0800
+Message-ID: <CA+6=WdT=eoh+qc=O+YzxmugotZvkfcdXxiK4S9Mg++6EtR8vkg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] HID: i2c-hid: elan: Add ili2900 timing
+To: Doug Anderson <dianders@google.com>
+Cc: dmitry.torokhov@gmail.com, robh@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, jikos@kernel.org, 
+	benjamin.tissoires@redhat.co, hsinyi@google.com, 
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In this patch, LDO's adjustable and fixed Vout settings are compatible.
-The LDO Vout ability depends on "richtek,fixed-microvolt".
-If adjustable, the Vout can be set to either 1800mV or 3300mV.
+hi Doug
 
-Signed-off-by: Alina Yu <alina_yu@richtek.com>
----
-v3
-- Add "richtek,fixed-microvolt" to specify LDO fixed voltage
-- Check specified desc->fixed_uV matches with constraints->min_uV and constraints->max_uV
----
- drivers/regulator/rtq2208-regulator.c | 43 ++++++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 6 deletions(-)
+Sorry, This patch was accidentally sent when sending other patches.
+Please ignore this patch.
 
-diff --git a/drivers/regulator/rtq2208-regulator.c b/drivers/regulator/rtq2208-regulator.c
-index 2e9387f..c2c1689 100644
---- a/drivers/regulator/rtq2208-regulator.c
-+++ b/drivers/regulator/rtq2208-regulator.c
-@@ -219,7 +219,7 @@ static const struct regulator_ops rtq2208_regulator_buck_ops = {
- 	.set_suspend_mode = rtq2208_set_suspend_mode,
- };
- 
--static const struct regulator_ops rtq2208_regulator_ldo_ops = {
-+static const struct regulator_ops rtq2208_regulator_ldo_fix_ops = {
- 	.enable = regulator_enable_regmap,
- 	.disable = regulator_disable_regmap,
- 	.is_enabled = regulator_is_enabled_regmap,
-@@ -228,6 +228,23 @@ static const struct regulator_ops rtq2208_regulator_ldo_ops = {
- 	.set_suspend_disable = rtq2208_set_suspend_disable,
- };
- 
-+static const struct regulator_ops rtq2208_regulator_ldo_adj_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_table,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_active_discharge = regulator_set_active_discharge_regmap,
-+	.set_suspend_enable = rtq2208_set_suspend_enable,
-+	.set_suspend_disable = rtq2208_set_suspend_disable,
-+};
-+
-+static const unsigned int rtq2208_ldo_volt_table[] = {
-+	1800000,
-+	3300000,
-+};
-+
- static struct of_regulator_match rtq2208_ldo_match[] = {
- 	{.name = "ldo2", },
- 	{.name = "ldo1", },
-@@ -358,8 +375,9 @@ static int rtq2208_of_get_ldo_dvs_ability(struct device *dev)
- {
- 	struct device_node *np;
- 	struct of_regulator_match *match;
--	struct rtq2208_regulator_desc *rdesc;
-+	struct regulator_desc *desc;
- 	struct regulator_init_data *init_data;
-+	u32 fixed_uV;
- 	int ret, i;
- 
- 	if (!dev->of_node)
-@@ -379,13 +397,26 @@ static int rtq2208_of_get_ldo_dvs_ability(struct device *dev)
- 	for (i = 0; i < ARRAY_SIZE(rtq2208_ldo_match); i++) {
- 		match = rtq2208_ldo_match + i;
- 		init_data = match->init_data;
--		rdesc = (struct rtq2208_regulator_desc *)match->driver_data;
-+		desc = (struct regulator_desc *)match->desc;
- 
--		if (!init_data || !rdesc)
-+		if (!init_data || !desc)
- 			continue;
- 
--		if (init_data->constraints.min_uV == init_data->constraints.max_uV)
--			rdesc->desc.fixed_uV = init_data->constraints.min_uV;
-+		/* specify working fixed voltage if the propery exists */
-+		ret = of_property_read_u32(match->of_node, "richtek,fixed-microvolt", &fixed_uV);
-+
-+		if (!ret) {
-+			if (fixed_uV != init_data->constraints.min_uV ||
-+				fixed_uV != init_data->constraints.max_uV)
-+				return -EINVAL;
-+			desc->n_voltages = 1;
-+			desc->fixed_uV = fixed_uV;
-+			desc->ops = &rtq2208_regulator_ldo_fix_ops;
-+		} else {
-+			desc->n_voltages = ARRAY_SIZE(rtq2208_ldo_volt_table);
-+			desc->volt_table = rtq2208_ldo_volt_table;
-+			desc->ops = &rtq2208_regulator_ldo_adj_ops;
-+		}
- 	}
- 
- 	return 0;
--- 
-2.7.4
+>  Also: other than the main power supply, there is no difference between
 
+> this and the ili2901. If you actually do have a main power supply,
+> then you probably don't need a new table. You probably don't even need
+> your own compatible string and in the device tree you could just
+> specify:
+
+> compatible =3D "ilitek,ili2900, "ilitek,ili2901";
+
+> ...which says "I actually have an ILI 2900, but if you don't have any
+> special driver for the ILI 2900 it's likely that the driver for the
+> ILI 2901 will work because the hardware is almost the same."
+
+In addition, in the previous patch, we have made modifications based
+on your suggestions. "ilitek ili2900" and "ilitek ili2901" use the
+same driver. Upstream may not be needed in the future. Thank you for
+your previous suggestions.
+[1] https://lore.kernel.org/r/CAD=3DFV=3DX5tk0tCcDa+vLnu0aoas1TDWuqvkMzM-27=
+8dOCX8K1gw@mail.gmail.com
+
+
+On Thu, May 9, 2024 at 10:35=E2=80=AFPM Doug Anderson <dianders@google.com>=
+ wrote:
+>
+> Hi,
+>
+> On Wed, May 8, 2024 at 11:43=E2=80=AFPM Zhaoxiong Lv
+> <lvzhaoxiong@huaqin.corp-partner.google.com> wrote:
+> >
+> > From: lvzhaoxiong <lvzhaoxiong@huaqin.corp-partner.google.com>
+> >
+> > ILI2900 requires reset to pull down time greater than 10ms,
+> > so the configuration post_power_delay_ms is 10, and the chipset
+> > initial time is required to be greater than 100ms,
+> > so the post_gpio_reset_on_delay_ms is set to 100.
+> >
+> > Signed-off-by: lvzhaoxiong <lvzhaoxiong@huaqin.corp-partner.google.com>
+> > ---
+> >  drivers/hid/i2c-hid/i2c-hid-of-elan.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+>
+> You silently ignored pretty much all of the feedback from the previous
+> version [1], so I'm not planning to review this version.
+>
+> [1] https://lore.kernel.org/r/CAD=3DFV=3DX5tk0tCcDa+vLnu0aoas1TDWuqvkMzM-=
+278dOCX8K1gw@mail.gmail.com
