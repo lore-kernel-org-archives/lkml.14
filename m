@@ -1,80 +1,102 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1124150994
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CCC1311BA
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:11:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715321319; cv=none; b=I9nJ0P4IdPFrSZe7n49A6UqjlEwwmJx0ORf+HQowgVdTnRHJXYi1quhEgwIuLORqo8lTuG5hvffRVo6junYmotOHC/xQ4gkuACt8Xl/RoE+6tXLyJRwHV/R6WKm/ux1EurPO2iMZ9psRzEJsF4+xYFL3lSxSoalUW929EHSf4Vs=
+	t=1715321491; cv=none; b=OCRSLIJQT2XAXkvRv4d9/FPgIKYCIS7ycWRQDPohfOY5H8v0Xc+r2O4fGxwccyuIfx9I6N/JCPI754jDukdOXuTEtRqKBcBF8vVcaR83s1KxkX9qxGW9yuvM65tYxitMsvTy/Lc43s9/WF+9aD6ZAixwVv+WYeQwt6gOWwgqNC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715321319; c=relaxed/simple;
-	bh=kzukn/78bSXY5Dhhy5AMZbJ50Gz3t4CkRwtDVGuL+mQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FZnoVlotHnYuqww/lE/BVIjhzDS80JpPThk2rR3qslagq4JVoFFHYtvoiVklVphsS0MhgIR/LwW9MuTuWV2PCwWHB/HiUr5JxWF2YWTxqlUlQ3DOluDg/WFZ4lUytQpTwS9m/B+S/PBykVYgQDEeRNHLIrsboYdpUVF+NzjZBTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Mg2GLgvd; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715321491; c=relaxed/simple;
+	bh=tVmNsvP0F79RlUZxEG/LA65KskpKIapcIo/v8yoB4ak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KTU9UX9A/aNW1xQiyHHqMyTVk7O6ZUKoBU6Zhyw/XFCLQmGhmw+S1Z54rmpjUy0xK82I7gUmn85pERz5mUAboo/xIk+NE3VstCo2PGGHn5DIVhutoujz85UFfX/cI4l2kcIAMibOZKHe9bIah7ddGmh8B6XKikPnvCu0GwZIZzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKIkVsf1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mg2GLgvd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715321316;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kzukn/78bSXY5Dhhy5AMZbJ50Gz3t4CkRwtDVGuL+mQ=;
-	b=Mg2GLgvdSPwn3YHQQiY1FDcGBWw2xmpYE4bL8H0vRlt2jSXwrL4pKiZbvNygOo76Q9pBRR
-	R1jlk9eRmh+W8x+d9G2ahLIl7gPbDHyXAPI3UOxf6DEBlHO7t2cGpyU78HO9YDsWVDQBoS
-	0so9Eu7rm9ECukUbjk3wv+Z/hMAyVq4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-612-Xn8wAd2VPgKC4kJP3uTGqQ-1; Fri, 10 May 2024 02:08:31 -0400
-X-MC-Unique: Xn8wAd2VPgKC4kJP3uTGqQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 91B2081227E;
-	Fri, 10 May 2024 06:08:30 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.39.192.109])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 731E81002048;
-	Fri, 10 May 2024 06:08:27 +0000 (UTC)
-From: Jose Ignacio Tornos Martinez <jtornosm@redhat.com>
-To: jefferymiller@google.com
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	inventor500@vivaldi.net,
-	jarkko.palviainen@gmail.com,
-	jtornosm@redhat.com,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-usb@vger.kernel.org,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	stable@vger.kernel.org,
-	vadim.fedorenko@linux.dev
-Subject: Re: [PATCH v2] net: usb: ax88179_178a: avoid writing the mac address before first reading
-Date: Fri, 10 May 2024 08:08:24 +0200
-Message-ID: <20240510060826.44673-1-jtornosm@redhat.com>
-In-Reply-To: <CAAzPG9M+KNowPwkoYo+QftrN3u6zdN1cWq0XMvgS8UBEmWt+0g@mail.gmail.com>
-References: <CAAzPG9M+KNowPwkoYo+QftrN3u6zdN1cWq0XMvgS8UBEmWt+0g@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKIkVsf1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45F38C113CC;
+	Fri, 10 May 2024 06:11:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715321490;
+	bh=tVmNsvP0F79RlUZxEG/LA65KskpKIapcIo/v8yoB4ak=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jKIkVsf1od6aPk7MnyWPjHXMFynzPXSzitJyehux5ITdgempS7Ky/BGauZ1LFfr4q
+	 u48+U1egGclO8lOKUPkEgr3ZTGLNo8Wiqbin0UlmczIbxjbgfqPh5sdlEFcjWRhMDq
+	 3vF3AWWbTz6kh7d5Q21DwCRwnFmNo16Kde9vF5A2GSPKfZu+9XTXYgE3r3JFnWvYCd
+	 wX7ECcY52y6b7haB1rNgqUHT9uJgVZPuNYigZwD1N+2viHnTTWV4HadJgtSL2hGJc4
+	 DcrHbLCrjSszwUsRy4Iy1y058wBu57KGjOOuSIZeHRgW9FvOXDemw0Yycz/3FDYfKK
+	 H6eArB6YW8+0A==
+Date: Fri, 10 May 2024 07:11:27 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Shenghao Ding <shenghao-ding@ti.com>
+Cc: andriy.shevchenko@linux.intel.com, lgirdwood@gmail.com, perex@perex.cz,
+	pierre-louis.bossart@linux.intel.com, 13916275206@139.com,
+	alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+	liam.r.girdwood@intel.com, bard.liao@intel.com,
+	yung-chuan.liao@linux.intel.com, kevin-lu@ti.com,
+	cameron.berkenpas@gmail.com, tiwai@suse.de, baojun.xu@ti.com,
+	soyer@irl.hu, Baojun.Xu@fpt.com
+Subject: Re: [PATCH v4 1/3] ALSA: ASoc/tas2781: Fix wrong loading calibrated
+ data sequence
+Message-ID: <Zj26j5CrWA9PZI3l@finisterre.sirena.org.uk>
+References: <20240510034123.1181-1-shenghao-ding@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="IBGLJYrAp7PURpSa"
+Content-Disposition: inline
+In-Reply-To: <20240510034123.1181-1-shenghao-ding@ti.com>
+X-Cookie: Did I SELL OUT yet??
 
-Hello Jeffery,
 
-Sorry for the inconveniences.
+--IBGLJYrAp7PURpSa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I am working on it, the fix will be very soon.
+On Fri, May 10, 2024 at 11:41:19AM +0800, Shenghao Ding wrote:
 
-Best regards
-José Ignacio
+> Calibrated data will be set to default after loading DSP config params,
+> which will cause speaker protection work abnormally. Reload calibrated
+> data after loading DSP config params.
 
+This changelog...
+
+> -#ifndef __TASDEVICE_DSP_H__
+> -#define __TASDEVICE_DSP_H__
+> +#ifndef __TAS2781_DSP_H__
+> +#define __TAS2781_DSP_H__
+> =20
+>  #define MAIN_ALL_DEVICES			0x0d
+>  #define MAIN_DEVICE_A				0x01
+> @@ -180,7 +180,6 @@ void tasdevice_calbin_remove(void *context);
+>  int tasdevice_select_tuningprm_cfg(void *context, int prm,
+>  	int cfg_no, int rca_conf_no);
+>  int tasdevice_prmg_load(void *context, int prm_no);
+> -int tasdevice_prmg_calibdata_load(void *context, int prm_no);
+>  void tasdevice_tuning_switch(void *context, int state);
+>  int tas2781_load_calibration(void *context, char *file_name,
+>  	unsigned short i);
+
+=2E..doesn't seem to have much relationship with the change?
+
+--IBGLJYrAp7PURpSa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmY9uo4ACgkQJNaLcl1U
+h9D4agf+I0bZ1B3cEZzcn8kwAbokayZK3bWdqamWTuNLb3Vcx2uhyC4/bvRK5qQn
+J6hS0j9LlmPaTipkl0Y7ztNShtj4T1VRNBY9RN3zRg9WuGh6ruQNGjFZO5gLMlr6
+pg6e0ZfZ1Ja76r2kTsr4VzmBuhuoaDSpemsDCbCHHj3ibiHVobR7k2T0YnBoOGyQ
+je4perE+5AwpAYiUrQUJklo14YYepi+ofoALKisnmpHva6wKFeq6L3l3IacPFBvM
+cmODN8eF+LcZWc9GEd7SRIkmW9esFWti/G84NItQC2V6v9JaIDG4APXcFYPAWn1N
+9s0AEBIhbb8SzQnWR1ajUfJH6zQR3A==
+=r0T+
+-----END PGP SIGNATURE-----
+
+--IBGLJYrAp7PURpSa--
