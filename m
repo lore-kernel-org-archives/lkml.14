@@ -1,66 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0E616D4CE;
-	Fri, 10 May 2024 11:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBE321340;
+	Fri, 10 May 2024 11:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715339459; cv=none; b=dFOj9hxNL/mX2CAJS00OhUojSSpVIQvcOmOWyeBGS50M3UGuUybd4h0q5kBbcZYwdoYIgqIdk+dO1AduTKsY1mIhxxp68Xqmz25eXJTreKg9d+SaNzVcVPApBVoR+o0p2xqXqf94wBYJuBOyOa/kE+OT/7RWNj6Aohwu5Py2uIU=
+	t=1715339459; cv=none; b=BfXTNnW8kZqfE+fbkSRxZPJoMuuya04IK/bQFFkcr/wRCJNn59SNjsSeleuOjAXzzC2ouPEiOZhKcYIVwmbDcktUDE/r6bpcT/CqTpjpgcwYYyr9gx8mV/oZLXoWx8UAysdF5YyrCzYSp7eG6pqj493gpVliz0oSY0M6Lv5B7ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715339459; c=relaxed/simple;
-	bh=9gTWzmt1z4GD+jm/pZ50mbT4PBlMbw6qc3rQyCSAAA0=;
+	bh=WARjXBjaXmZapGq0zOvicZwFNttRZAAucDmrkNJsgm8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=inzVfGTspt12Cb5BoW3jsqvflaOtWqSBP+CdtNGAYNcHW7WC5021MJc9EMiu5vMxAfanevCa1mqksJk+5S38hk7BC0yzGG+BcA+DEFMAW41Sd+4GLVtXIh6m59bUcJ41i2ju7t5GrPn5JyJ7YmsHLRbPw5D70Cnam9wjFgc7WJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Rl+eRDW+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BzCu77xi; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=sWMd0yZjmOqC+IrHo693eDqnYvvnJQxn5kGAH24ogiNZJfRBAyFsx96PfzPFKNagHwTEUoafdWtj1wV3LsyIkmzuAS3DvuxkrAMdzixy9kSugxq7fjEn0GCfXwze2Y9n1Ky9LNMRTQq3RvobsKwxVrM8wJRPuTH6Ofqe4HbtcZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=snl4n13I; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sg5Nvm9I; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Rl+eRDW+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BzCu77xi"
-Date: Fri, 10 May 2024 11:10:55 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="snl4n13I";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sg5Nvm9I"
+Date: Fri, 10 May 2024 11:10:56 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1715339455;
+	s=2020; t=1715339456;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=To+nEpF1B7iGXMF1FT6e20YCqgeRYFMcq4UkcTtNKTk=;
-	b=Rl+eRDW+YLO6x5csAJTb7vh8tBd6B7ncQUA0HmBXrGx1vDX5r6p6TVrQw6A9vSI052JuZO
-	HoDrha2oGk/m/LxF8CXOqCniWrswkwFM0oqgWjZuRFQCPS5D+MBDDuMM1hT2uClZ0r7cUp
-	jtPzrKheVrzvlh7AaQ/7O4gysAV7dYnNo3ke8zKiNCN08qEch/3fQZ9c4s7qr+R7wuJFHX
-	a9fMDrGz1QHh+XlGzTLqX0/z/AS2O47wm9DeQDASMHuCbYC4yew6slj9lk2YYNQMS6tWkh
-	CSy0cQbZMQH9OpkJW8zTcUBN0/vzmL/xrjQ7EAPJkaITwzkIf2jVIPExP0lPow==
+	bh=+nqJjVWBCGlLKjOFQA9kWPXiu6byz0/fW41RnTPxi74=;
+	b=snl4n13IbM3sIwPfJ/6tJ8sJ6lsdGVXgAKQAvhhfOcb01g9tR4yMuTw7Pg6gcYpca0CJ28
+	r2h2aLsN+CPIRX3upnY76nJpN4gmh1iECniarhy0hm0FJwlSPbkEBXHDsvlzW3BMMUIAbM
+	Ts61d9M5tfkMwL9P74e+m7O+qPedutEPjGKuOYfpGBuyVocy6jqOaJZiFTS2eVdhLuVeBZ
+	cjb1ani0Er/6uqTCmFO9/74I8BhqGrdFXwhMplzRJJuRJBKKQSmramUxMz5u5JrMA4PwEv
+	ujkGEZ9dW8FsArlxFDhZlsMCVBJt9XkKdZHUgdiEkZ8Jtr1HbmWgIE7LRci6Fg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1715339455;
+	s=2020e; t=1715339456;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=To+nEpF1B7iGXMF1FT6e20YCqgeRYFMcq4UkcTtNKTk=;
-	b=BzCu77xiLOkTn0F0F12PqLVd1/NijeFln1TABfzTp0JAhaYeS+fRu5qy6O96eZqpeD0rZo
-	0VKtqqf01YvYgfCw==
-From: "tip-bot2 for Stephen Boyd" <tip-bot2@linutronix.de>
+	bh=+nqJjVWBCGlLKjOFQA9kWPXiu6byz0/fW41RnTPxi74=;
+	b=sg5Nvm9IdlF3x2sexJkjO4bebMt7EZ807iYO9bKbZrJ8OfbEykS5F9PuJXURIp85d9s7jm
+	wDlTVTM5JHuceUBw==
+From: "tip-bot2 for Lad Prabhakar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] clocksource/drivers/arm_arch_timer: Mark
- hisi_161010101_oem_info const
-Cc: dann frazier <dann.frazier@canonical.com>,
- Hanjun Guo <hanjun.guo@linaro.org>, Marc Zyngier <maz@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <swboyd@chromium.org>,
- Hanjun Guo <guohanjun@huawei.com>, Daniel Lezcano <daniel.lezcano@linaro.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20240502233447.420888-1-swboyd@chromium.org>
-References: <20240502233447.420888-1-swboyd@chromium.org>
+Subject: [tip: timers/core] dt-bindings: timer: renesas: ostm: Document
+ Renesas RZ/V2H(P) SoC
+Cc: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Conor Dooley <conor.dooley@microchip.com>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20240322151219.885832-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240322151219.885832-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <171533945522.10875.14417926141466251581.tip-bot2@tip-bot2>
+Message-ID: <171533945631.10875.9914941562694538725.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,40 +70,46 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     2030a7e11f161b4067bd4eadd984cdb36446fcca
-Gitweb:        https://git.kernel.org/tip/2030a7e11f161b4067bd4eadd984cdb36446fcca
-Author:        Stephen Boyd <swboyd@chromium.org>
-AuthorDate:    Thu, 02 May 2024 16:34:46 -07:00
+Commit-ID:     6402eb802deb312e33c24699f68fb7775b2c7386
+Gitweb:        https://git.kernel.org/tip/6402eb802deb312e33c24699f68fb7775b2c7386
+Author:        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+AuthorDate:    Fri, 22 Mar 2024 15:12:18 
 Committer:     Daniel Lezcano <daniel.lezcano@linaro.org>
-CommitterDate: Fri, 10 May 2024 10:43:21 +02:00
+CommitterDate: Fri, 10 May 2024 10:41:52 +02:00
 
-clocksource/drivers/arm_arch_timer: Mark hisi_161010101_oem_info const
+dt-bindings: timer: renesas: ostm: Document Renesas RZ/V2H(P) SoC
 
-This isn't modified at runtime. Mark it const so it can move to
-read-only data.
+Document the General Timer Module (a.k.a OSTM) block on Renesas RZ/V2H(P)
+("R9A09G057") SoC, which is identical to the one found on the RZ/A1H and
+RZ/G2L SoCs. Add the "renesas,r9a09g057-ostm" compatible string for the
+RZ/V2H(P) SoC.
 
-Cc: dann frazier <dann.frazier@canonical.com>
-Cc: Hanjun Guo <hanjun.guo@linaro.org>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Hanjun Guo <guohanjun@huawei.com>
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20240502233447.420888-1-swboyd@chromium.org
+Link: https://lore.kernel.org/r/20240322151219.885832-2-prabhakar.mahadev-lad.rj@bp.renesas.com
 ---
- drivers/clocksource/arm_arch_timer.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/timer/renesas,ostm.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
-index 8d4a520..5bb43cc 100644
---- a/drivers/clocksource/arm_arch_timer.c
-+++ b/drivers/clocksource/arm_arch_timer.c
-@@ -331,7 +331,7 @@ static u64 notrace hisi_161010101_read_cntvct_el0(void)
- 	return __hisi_161010101_read_reg(cntvct_el0);
- }
+diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.yaml b/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
+index 8b06a68..e8c6421 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
++++ b/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
+@@ -26,6 +26,7 @@ properties:
+           - renesas,r9a07g043-ostm # RZ/G2UL and RZ/Five
+           - renesas,r9a07g044-ostm # RZ/G2{L,LC}
+           - renesas,r9a07g054-ostm # RZ/V2L
++          - renesas,r9a09g057-ostm # RZ/V2H(P)
+       - const: renesas,ostm        # Generic
  
--static struct ate_acpi_oem_info hisi_161010101_oem_info[] = {
-+static const struct ate_acpi_oem_info hisi_161010101_oem_info[] = {
- 	/*
- 	 * Note that trailing spaces are required to properly match
- 	 * the OEM table information.
+   reg:
+@@ -58,6 +59,7 @@ if:
+           - renesas,r9a07g043-ostm
+           - renesas,r9a07g044-ostm
+           - renesas,r9a07g054-ostm
++          - renesas,r9a09g057-ostm
+ then:
+   required:
+     - resets
