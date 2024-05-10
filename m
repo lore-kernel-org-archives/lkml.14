@@ -1,445 +1,181 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2083.outbound.protection.outlook.com [40.107.243.83])
+Received: from fout4-smtp.messagingengine.com (fout4-smtp.messagingengine.com [103.168.172.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35CA510965;
-	Fri, 10 May 2024 21:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715375827; cv=fail; b=qUWVUCWB57i06F+pBVTeNRktsq69/p7Avqpg8OoiqGl9BTllzpdYjES8UFvz6Xjv5+DozMxQ1dC/pAJk7H65tycePQ3TjCRyRJoDYh/oDrCTAOppThUEGEoR487BtYrvU3ZcNkPigZ2EI+/RXP/3Gc2p0a1WbBwzIQ/d6OlNCVY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715375827; c=relaxed/simple;
-	bh=TdNxHHKH2EbpTqFZiKuFqqUIp7P7PwKuvZEqXvI+yHc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hwJP3jRGN7/ZO1EXbYEr5j7SX4b+1J6spLqs3HxlxvO8Ywi1nCuXZzObtQwqSI61qeZ4TseEkqvGZdbTTmHAeQsXCbmufEVqHk/jKBSjwyR8/5A/UZnTevuA3kyV7e4k12favbDBNmCXkF8iyYRd4KhhaY/yGmWu2ND2gXbBix0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YezYwwGh; arc=fail smtp.client-ip=40.107.243.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F00F524DC;
+	Fri, 10 May 2024 21:17:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715375844; cv=none; b=n31wW6X2RUcVgEyr8zH0Ir8zeey0lhyMhuXBb4Ujkcl6MpkHO7yFEtiFCfGzg6fAtv2rcneSD7wdZziaKLaOZvdle9qHUVEsu3XxU2unIdwTm3ZSatXZF4s+fW4ZQd+6QOJZMPAZuWg0pFfSrce9WnvbYn4C56DvoFfulxw2NVU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715375844; c=relaxed/simple;
+	bh=bWQC6lV3mqoeD87LJGVSqVODNca3khuMuUy0rf87F6U=;
+	h=MIME-Version:Message-Id:Date:From:To:Cc:Subject:Content-Type; b=cauKENsxQk5TR9RNlGJkZGzAIkVlBFp4BZEIxl+SzpjT93Kmo4LMk/wMo9PBXdB3aMpKFXVpnCDsSuf2aYnUi3Alz09jC6rXp9K8VSA14eIYxDCT0BFq9ZSG7f+RRTndFHvmYk6GfBFV3dFjQ/4C4cmA1eWIt/RzKDEz+AxfqxY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=YXuAbqT9; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=OixIMjMA; arc=none smtp.client-ip=103.168.172.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YezYwwGh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XkhYAwo6YQbUdW4uIyVhL1Hv0aZBVL1XjWOifzq+Hao2XBaJB/wkgceCu3tB0SUyDx7NUHm/WpmNbKfjikeB7qHslErQ2OCPFwKTp5sEhBWChM8hVRdV/q9yciwAtqqLjxAKAS4kbBBQTu1OsP4p0cC1ScuOn5A0sOZcRA+2v1QcLteEezqRgXeM++yBUiw2Td4T53l/2rtnciRWNVr3UbLPdUqwrXUXx31YIJThEi1zcy8XA+7u+sBo/mlsxirw1AFCguxhmZxl0T13XTITeD0KslxPzjPlFDzNfjdinC+H7VlvReSlBojugGcnBcvpQ0PnP7yyfsG7jjCysbyc3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QlA6wwvx5NMnfKyPenKsCZ7bQrqbmcr4ATyGSvj81Es=;
- b=Eap0w3LQHi8wqa/S2sdJcxgaMyyXZ1vh6s1JmYNXuPpboBSwvvOCo6tZEYFS1LoBjjSJWAPZ+p2wAmfhpSQ4tgo1NzHBP90ruUEJWj0IlDg+gD0eGxUevDq+hRRQIFVj/jy2z8G1v0TZFE7ozAtEUXHiWWcbcLIVVfOjZXywA0UjWbw3dS7qbZ4d5+6gCx+uZMUurCMJLbCF+qWDlicop++LO4+BctTkgpOO9UcLv3M5sGFluLWO9YDzoiU0SBj5vyZfhhx6Dl/G0C9sfZk/Fke5ogteurvdiCc0O4BYz4yD67kN8Mv/WYyPgy7cMwffRUZFMa1S55u46mC5igQUxA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QlA6wwvx5NMnfKyPenKsCZ7bQrqbmcr4ATyGSvj81Es=;
- b=YezYwwGhRTTA17dcVnmr+lnuaykt1Q8a9lJDk85af1sFOLkIrzQ19sMKTn6h1kb/v3kZNjYuzciQ9sAza7t1DcolecJhaWM+LY2y1FEgOKMND3kt24EVzBKbAQGARkFtIZlosMU+vYdfnNb/U3x5j6XUZHvhlQhiiSx9Wzl4e/c=
-Received: from BN1PR10CA0016.namprd10.prod.outlook.com (2603:10b6:408:e0::21)
- by DS0PR12MB6605.namprd12.prod.outlook.com (2603:10b6:8:d3::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.48; Fri, 10 May
- 2024 21:17:02 +0000
-Received: from BN1PEPF00004686.namprd03.prod.outlook.com
- (2603:10b6:408:e0:cafe::bb) by BN1PR10CA0016.outlook.office365.com
- (2603:10b6:408:e0::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.51 via Frontend
- Transport; Fri, 10 May 2024 21:17:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN1PEPF00004686.mail.protection.outlook.com (10.167.243.91) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Fri, 10 May 2024 21:17:02 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 10 May
- 2024 16:17:02 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-CC: <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Sean Christopherson
-	<seanjc@google.com>, Brijesh Singh <brijesh.singh@amd.com>, Ashish Kalra
-	<ashish.kalra@amd.com>
-Subject: [PULL 10/19] KVM: SEV: Add support to handle RMP nested page faults
-Date: Fri, 10 May 2024 16:10:15 -0500
-Message-ID: <20240510211024.556136-11-michael.roth@amd.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240510211024.556136-1-michael.roth@amd.com>
-References: <20240510211024.556136-1-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="YXuAbqT9";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OixIMjMA"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.nyi.internal (Postfix) with ESMTP id 4E95D1380198;
+	Fri, 10 May 2024 17:17:22 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Fri, 10 May 2024 17:17:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:message-id:mime-version:reply-to:subject:subject:to:to; s=fm3;
+	 t=1715375842; x=1715462242; bh=v3H+7HXF8T+kySUKuBhyYMuYXxAB8OA6
+	iDwne/b21KE=; b=YXuAbqT9odp4Wd11GgM9g5Q29Culb08siw95U5RYJ5XOCLw4
+	GWjq00oV91SD7t1gKvHBgOvkVawee4wIdjvIEVpv1SJ/Znd73OOAzFfYYBQMqgPd
+	bXMPMAtfRuH70Vp2eIH5kVHZliFnlTi4NCnvcVSYp7kO1iNxmWwrUQjABq+TBlr0
+	sHMz+CNnRHdeRfQOKJP2253DS2Nxk1XDrWJ4ml2fXLmUf296pCI7Yv+0J8ULLJqS
+	jmYWlgrb/N+Rrm6zCCdd1UV/bIRWf5Kckvg1C9C0+AK+5hw6xLSbnO3dkpNUHPZM
+	S1xpXI6GdgTfd5fdNDINXQoePvTP3qouGGeb5g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:message-id
+	:mime-version:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1715375842; x=1715462242; bh=v3H+7HXF8T+kySUKuBhyYMuYXxAB8OA6iDw
+	ne/b21KE=; b=OixIMjMADNdAFad7PnzhrJCIvXXSi5TJ3SbdOaPIRI7DM04aYxR
+	GrFbkVYSfZp/rg9xtMFn0KDFHdxj0jmixwaxYlxO5tcaO+uU2Mr5e8r/AqIQXSJv
+	7GDJtRxtvYepJHi5Angb3LlVo1krhd8jqGjysXMrQLPDvaKjryXA/RA0l7w8BE/e
+	uZVYHklG3IqVXRy7IugbOM2810/c5WaMZnhmu/nsE20G8G0Ac0TSiBlOqQIsPLlx
+	AHfWRTI43nx7hZKGi9ncJbHsd3t7H9oy5D8BGMW/+uGes1YuhzjoZv2lRquGL7TD
+	b/lEVIwuNh+see4f130gOybftFpSt88Wh9g==
+X-ME-Sender: <xms:4o4-ZnFiQrWvmwNxrCLRIq2JDKXDuI61W-SarcHcX3uRjIyr68nlSw>
+    <xme:4o4-ZkWM19fFY18XkOFvP--4p06qohk6SA-MFjNJS2CfKiayte9ciJyfixBOjyj-3
+    2goUhYrPhpZVPfyaUw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdefkedgudehkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfffhffvvefutgesthdtredtreertdenucfhrhhomhepfdetrhhn
+    ugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtth
+    gvrhhnpeeffeeuhfekjeevtddvtdelledttddtjeegvdfhtdduvdfhueekudeihfejtefg
+    ieenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuvehluhhsthgvrhfuihiivgeptd
+    enucfrrghrrghmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:4o4-ZpIPyauUECv2dvZbW-fXrJDQlMxENdbbVTRBG4jkMhBixm6eOQ>
+    <xmx:4o4-ZlE5FAT5SJ-eNGW3lFkv4qjH860E4rcl9VbsDRWazVWoICOY3g>
+    <xmx:4o4-ZtXxCjlteTo5h93zkAATKZQKkpRI-9EdzCFCaz-a2wbZM3pYaQ>
+    <xmx:4o4-ZgPyMEZQ_ZSqfvbzeO0jO9AUOSBC_-AiAaGqZblxPLLsRe8lRQ>
+    <xmx:4o4-ZjwKFW4XhBOwH2DrpdqN8uKgRMjYNYE73BSe2B4ZokFb-B1UT9CZ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id EE73CB6008D; Fri, 10 May 2024 17:17:21 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-443-g0dc955c2a-fm-20240507.001-g0dc955c2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-Id: <71feb004-82ef-4c7b-9e21-0264607e4b20@app.fastmail.com>
+Date: Fri, 10 May 2024 23:17:01 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>,
+ "Thorsten Blum" <thorsten.blum@toblux.com>
+Subject: [GIT PULL] asm-generic cleanups for 6.10
 Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00004686:EE_|DS0PR12MB6605:EE_
-X-MS-Office365-Filtering-Correlation-Id: 45d6774b-6c35-464a-1407-08dc71368948
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|36860700004|82310400017|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?nlw3w5E3mPko//NAdL6IEkCqAh71tJQvSX1dq/SqDieDUgri+K6t6OL+7IcQ?=
- =?us-ascii?Q?UzUPgwQeVI+q9xliQmfZc3C2JxhZoxWLnrfyjXPtzfGcpoONE8yOKC1AZ0R8?=
- =?us-ascii?Q?coPqUK9FMj+F7G6cFec25NcH10wen1GVlVd8W2bwsAU2JOiTCD7OMYJu2lYf?=
- =?us-ascii?Q?O7mDgBqE+/Z8dyAyO2b5PB3BlTpryuL8xAnQ0piSGUrL4SE0X+6/tD7ANrVA?=
- =?us-ascii?Q?wQuP+KXwA5PRJg5lxxZ4BNh3kQa9G/cDIfK1niSc6D7QxgnAenJLwSXLM8+d?=
- =?us-ascii?Q?98cGHf2Aq8PuBISVHRHt8d4qtbe+YdXTYUaeFuouymYvzrZQ3dQ5FX74us61?=
- =?us-ascii?Q?ZW0xleuRUhCx7JTl9HjkF4lDIu9UsdjER/EtYSSawH5Cq94uNxZYe43w8bcf?=
- =?us-ascii?Q?5M+McXBmvCPXuhGSSPjfq4d2dDI1Vbuk21DoY7SxWopE0ogcoE23G0We5dk5?=
- =?us-ascii?Q?jiZNuOUtMkne5FAdgOmpifDta2jyH2u9I53ornSCiAoH192AHgqLg+Tast6E?=
- =?us-ascii?Q?NG1WFuvPtjbpmgp46O31V/qnHClHDH9hu7fXbpcW4pdXEkKeb6XTZfZPHxny?=
- =?us-ascii?Q?2S4quRiGW4ysbkH4LfgaNxTE0upX10LJ4+e9I8gr8IP4WCHcnjGzdd4i2Qsi?=
- =?us-ascii?Q?32EQSmAasrzZfVhBaYcXHkTJkmLM10VtM84YEMsldYVVUPwRjL/ALy2dKlrp?=
- =?us-ascii?Q?3EBJxq5ZgLbOHwUW/AMgwAUdO8yekBde9nIaKjDHzwXZakgsjJnU5Z47KnB9?=
- =?us-ascii?Q?kZd4BKpsY79cWXxYIggiVAEEi30bqopDN9qGuGFZLV7zHoG2INwyKTxraHgL?=
- =?us-ascii?Q?m1l3gWdCmfqmn/i5x2T4L5ba1zbbUOblEe/TluyZTijrhgI/EeYpeps70crJ?=
- =?us-ascii?Q?5NpqzxsarZ8DqlEE3YLW5RgUCsegE2wY/AjNQw7MkZyBOrhg+SGQbRiAyEQa?=
- =?us-ascii?Q?2l1BtSDQnXDi5DANV5k70Bfmv3vEHmrnR+IB3wrvuSbeN9LRL4SPvkXL4AGk?=
- =?us-ascii?Q?b6v/upv0wnvZsFOF4O+tDZXNcxiZSwlpeNduBkBb/V4AwuDtmLQn2rq76ImV?=
- =?us-ascii?Q?Qkn2OqOyYWCiEhyMG6G9Y81ihd357UHtExhCXB4L1CLe7apmH157OCNk9X4a?=
- =?us-ascii?Q?145hErIp7mvBUBO2vsyTcZ/Zne64hG2U3zcasjEcWFr0rxT+HKik/JzqKJpt?=
- =?us-ascii?Q?bd1YZsrkyWJTmkodplG3rjYBhVlv1p/GPuJHgUMHgenDbbla/a4ONfiARQLi?=
- =?us-ascii?Q?0q0ZDk3RuMkFWkrZp3+yqyOCzhBG2TTMppjEKoAkVTkSBMtUfnKp1xRySfht?=
- =?us-ascii?Q?qEqR5xBIfK15Sd7joyhINX+j0E0Np1sg2VgTKj2cKuT2SrdmYvg4IHxjvUxR?=
- =?us-ascii?Q?Xm+XutQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400017)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2024 21:17:02.4674
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 45d6774b-6c35-464a-1407-08dc71368948
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00004686.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB6605
 
-From: Brijesh Singh <brijesh.singh@amd.com>
+The following changes since commit e67572cd2204894179d89bd7b984072f19313b03:
 
-When SEV-SNP is enabled in the guest, the hardware places restrictions
-on all memory accesses based on the contents of the RMP table. When
-hardware encounters RMP check failure caused by the guest memory access
-it raises the #NPF. The error code contains additional information on
-the access type. See the APM volume 2 for additional information.
+  Linux 6.9-rc6 (2024-04-28 13:47:24 -0700)
 
-When using gmem, RMP faults resulting from mismatches between the state
-in the RMP table vs. what the guest expects via its page table result
-in KVM_EXIT_MEMORY_FAULTs being forwarded to userspace to handle. This
-means the only expected case that needs to be handled in the kernel is
-when the page size of the entry in the RMP table is larger than the
-mapping in the nested page table, in which case a PSMASH instruction
-needs to be issued to split the large RMP entry into individual 4K
-entries so that subsequent accesses can succeed.
+are available in the Git repository at:
 
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Co-developed-by: Michael Roth <michael.roth@amd.com>
-Signed-off-by: Michael Roth <michael.roth@amd.com>
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Message-ID: <20240501085210.2213060-12-michael.roth@amd.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/include/asm/kvm_host.h |   1 +
- arch/x86/include/asm/sev.h      |   3 +
- arch/x86/kvm/mmu.h              |   2 -
- arch/x86/kvm/mmu/mmu.c          |   1 +
- arch/x86/kvm/svm/sev.c          | 109 ++++++++++++++++++++++++++++++++
- arch/x86/kvm/svm/svm.c          |  14 ++--
- arch/x86/kvm/svm/svm.h          |   3 +
- arch/x86/kvm/trace.h            |  31 +++++++++
- arch/x86/kvm/x86.c              |   1 +
- 9 files changed, 159 insertions(+), 6 deletions(-)
+  https://git.kernel.org/pub/scm/linux/kernel/git/arnd/asm-generic.git asm-generic-6.10
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index ea992f9b6e68..5830d42232da 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1945,6 +1945,7 @@ void kvm_mmu_slot_leaf_clear_dirty(struct kvm *kvm,
- 				   const struct kvm_memory_slot *memslot);
- void kvm_mmu_invalidate_mmio_sptes(struct kvm *kvm, u64 gen);
- void kvm_mmu_change_mmu_pages(struct kvm *kvm, unsigned long kvm_nr_mmu_pages);
-+void kvm_zap_gfn_range(struct kvm *kvm, gfn_t gfn_start, gfn_t gfn_end);
- 
- int load_pdptrs(struct kvm_vcpu *vcpu, unsigned long cr3);
- 
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 93ed60080cfe..14394407245c 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -91,6 +91,9 @@ extern bool handle_vc_boot_ghcb(struct pt_regs *regs);
- /* RMUPDATE detected 4K page and 2MB page overlap. */
- #define RMPUPDATE_FAIL_OVERLAP		4
- 
-+/* PSMASH failed due to concurrent access by another CPU */
-+#define PSMASH_FAIL_INUSE		3
-+
- /* RMP page size */
- #define RMP_PG_SIZE_4K			0
- #define RMP_PG_SIZE_2M			1
-diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
-index 2343c9f00e31..e3cb35b9396d 100644
---- a/arch/x86/kvm/mmu.h
-+++ b/arch/x86/kvm/mmu.h
-@@ -251,8 +251,6 @@ static inline bool kvm_mmu_honors_guest_mtrrs(struct kvm *kvm)
- 	return __kvm_mmu_honors_guest_mtrrs(kvm_arch_has_noncoherent_dma(kvm));
- }
- 
--void kvm_zap_gfn_range(struct kvm *kvm, gfn_t gfn_start, gfn_t gfn_end);
--
- int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu);
- 
- int kvm_mmu_post_init_vm(struct kvm *kvm);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 9c7ab06ce454..83025fe2d17d 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -6783,6 +6783,7 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
- 
- 	return need_tlb_flush;
- }
-+EXPORT_SYMBOL_GPL(kvm_zap_gfn_range);
- 
- static void kvm_rmap_zap_collapsible_sptes(struct kvm *kvm,
- 					   const struct kvm_memory_slot *slot)
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 46669431b53d..515bd6154a4b 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -3465,6 +3465,23 @@ static void set_ghcb_msr(struct vcpu_svm *svm, u64 value)
- 	svm->vmcb->control.ghcb_gpa = value;
- }
- 
-+static int snp_rmptable_psmash(kvm_pfn_t pfn)
-+{
-+	int ret;
-+
-+	pfn = pfn & ~(KVM_PAGES_PER_HPAGE(PG_LEVEL_2M) - 1);
-+
-+	/*
-+	 * PSMASH_FAIL_INUSE indicates another processor is modifying the
-+	 * entry, so retry until that's no longer the case.
-+	 */
-+	do {
-+		ret = psmash(pfn);
-+	} while (ret == PSMASH_FAIL_INUSE);
-+
-+	return ret;
-+}
-+
- static int snp_complete_psc_msr(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
-@@ -4229,3 +4246,95 @@ struct page *snp_safe_alloc_page(struct kvm_vcpu *vcpu)
- 
- 	return p;
- }
-+
-+void sev_handle_rmp_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code)
-+{
-+	struct kvm_memory_slot *slot;
-+	struct kvm *kvm = vcpu->kvm;
-+	int order, rmp_level, ret;
-+	bool assigned;
-+	kvm_pfn_t pfn;
-+	gfn_t gfn;
-+
-+	gfn = gpa >> PAGE_SHIFT;
-+
-+	/*
-+	 * The only time RMP faults occur for shared pages is when the guest is
-+	 * triggering an RMP fault for an implicit page-state change from
-+	 * shared->private. Implicit page-state changes are forwarded to
-+	 * userspace via KVM_EXIT_MEMORY_FAULT events, however, so RMP faults
-+	 * for shared pages should not end up here.
-+	 */
-+	if (!kvm_mem_is_private(kvm, gfn)) {
-+		pr_warn_ratelimited("SEV: Unexpected RMP fault for non-private GPA 0x%llx\n",
-+				    gpa);
-+		return;
-+	}
-+
-+	slot = gfn_to_memslot(kvm, gfn);
-+	if (!kvm_slot_can_be_private(slot)) {
-+		pr_warn_ratelimited("SEV: Unexpected RMP fault, non-private slot for GPA 0x%llx\n",
-+				    gpa);
-+		return;
-+	}
-+
-+	ret = kvm_gmem_get_pfn(kvm, slot, gfn, &pfn, &order);
-+	if (ret) {
-+		pr_warn_ratelimited("SEV: Unexpected RMP fault, no backing page for private GPA 0x%llx\n",
-+				    gpa);
-+		return;
-+	}
-+
-+	ret = snp_lookup_rmpentry(pfn, &assigned, &rmp_level);
-+	if (ret || !assigned) {
-+		pr_warn_ratelimited("SEV: Unexpected RMP fault, no assigned RMP entry found for GPA 0x%llx PFN 0x%llx error %d\n",
-+				    gpa, pfn, ret);
-+		goto out_no_trace;
-+	}
-+
-+	/*
-+	 * There are 2 cases where a PSMASH may be needed to resolve an #NPF
-+	 * with PFERR_GUEST_RMP_BIT set:
-+	 *
-+	 * 1) RMPADJUST/PVALIDATE can trigger an #NPF with PFERR_GUEST_SIZEM
-+	 *    bit set if the guest issues them with a smaller granularity than
-+	 *    what is indicated by the page-size bit in the 2MB RMP entry for
-+	 *    the PFN that backs the GPA.
-+	 *
-+	 * 2) Guest access via NPT can trigger an #NPF if the NPT mapping is
-+	 *    smaller than what is indicated by the 2MB RMP entry for the PFN
-+	 *    that backs the GPA.
-+	 *
-+	 * In both these cases, the corresponding 2M RMP entry needs to
-+	 * be PSMASH'd to 512 4K RMP entries.  If the RMP entry is already
-+	 * split into 4K RMP entries, then this is likely a spurious case which
-+	 * can occur when there are concurrent accesses by the guest to a 2MB
-+	 * GPA range that is backed by a 2MB-aligned PFN who's RMP entry is in
-+	 * the process of being PMASH'd into 4K entries. These cases should
-+	 * resolve automatically on subsequent accesses, so just ignore them
-+	 * here.
-+	 */
-+	if (rmp_level == PG_LEVEL_4K)
-+		goto out;
-+
-+	ret = snp_rmptable_psmash(pfn);
-+	if (ret) {
-+		/*
-+		 * Look it up again. If it's 4K now then the PSMASH may have
-+		 * raced with another process and the issue has already resolved
-+		 * itself.
-+		 */
-+		if (!snp_lookup_rmpentry(pfn, &assigned, &rmp_level) &&
-+		    assigned && rmp_level == PG_LEVEL_4K)
-+			goto out;
-+
-+		pr_warn_ratelimited("SEV: Unable to split RMP entry for GPA 0x%llx PFN 0x%llx ret %d\n",
-+				    gpa, pfn, ret);
-+	}
-+
-+	kvm_zap_gfn_range(kvm, gfn, gfn + PTRS_PER_PMD);
-+out:
-+	trace_kvm_rmp_fault(vcpu, gpa, pfn, error_code, rmp_level, ret);
-+out_no_trace:
-+	put_page(pfn_to_page(pfn));
-+}
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 66d5e2e46a66..bdaf39571817 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -2044,6 +2044,7 @@ static int pf_interception(struct kvm_vcpu *vcpu)
- static int npf_interception(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_svm *svm = to_svm(vcpu);
-+	int rc;
- 
- 	u64 fault_address = svm->vmcb->control.exit_info_2;
- 	u64 error_code = svm->vmcb->control.exit_info_1;
-@@ -2061,10 +2062,15 @@ static int npf_interception(struct kvm_vcpu *vcpu)
- 		error_code |= PFERR_PRIVATE_ACCESS;
- 
- 	trace_kvm_page_fault(vcpu, fault_address, error_code);
--	return kvm_mmu_page_fault(vcpu, fault_address, error_code,
--			static_cpu_has(X86_FEATURE_DECODEASSISTS) ?
--			svm->vmcb->control.insn_bytes : NULL,
--			svm->vmcb->control.insn_len);
-+	rc = kvm_mmu_page_fault(vcpu, fault_address, error_code,
-+				static_cpu_has(X86_FEATURE_DECODEASSISTS) ?
-+				svm->vmcb->control.insn_bytes : NULL,
-+				svm->vmcb->control.insn_len);
-+
-+	if (rc > 0 && error_code & PFERR_GUEST_RMP_MASK)
-+		sev_handle_rmp_fault(vcpu, fault_address, error_code);
-+
-+	return rc;
- }
- 
- static int db_interception(struct kvm_vcpu *vcpu)
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 32d37ef5f580..36b573427b85 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -728,6 +728,7 @@ void sev_hardware_unsetup(void);
- int sev_cpu_init(struct svm_cpu_data *sd);
- int sev_dev_get_attr(u32 group, u64 attr, u64 *val);
- extern unsigned int max_sev_asid;
-+void sev_handle_rmp_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code);
- #else
- static inline struct page *snp_safe_alloc_page(struct kvm_vcpu *vcpu) {
- 	return alloc_page(GFP_KERNEL_ACCOUNT | __GFP_ZERO);
-@@ -741,6 +742,8 @@ static inline void sev_hardware_unsetup(void) {}
- static inline int sev_cpu_init(struct svm_cpu_data *sd) { return 0; }
- static inline int sev_dev_get_attr(u32 group, u64 attr, u64 *val) { return -ENXIO; }
- #define max_sev_asid 0
-+static inline void sev_handle_rmp_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u64 error_code) {}
-+
- #endif
- 
- /* vmenter.S */
-diff --git a/arch/x86/kvm/trace.h b/arch/x86/kvm/trace.h
-index c6b4b1728006..3531a187d5d9 100644
---- a/arch/x86/kvm/trace.h
-+++ b/arch/x86/kvm/trace.h
-@@ -1834,6 +1834,37 @@ TRACE_EVENT(kvm_vmgexit_msr_protocol_exit,
- 		  __entry->vcpu_id, __entry->ghcb_gpa, __entry->result)
- );
- 
-+/*
-+ * Tracepoint for #NPFs due to RMP faults.
-+ */
-+TRACE_EVENT(kvm_rmp_fault,
-+	TP_PROTO(struct kvm_vcpu *vcpu, u64 gpa, u64 pfn, u64 error_code,
-+		 int rmp_level, int psmash_ret),
-+	TP_ARGS(vcpu, gpa, pfn, error_code, rmp_level, psmash_ret),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned int, vcpu_id)
-+		__field(u64, gpa)
-+		__field(u64, pfn)
-+		__field(u64, error_code)
-+		__field(int, rmp_level)
-+		__field(int, psmash_ret)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->vcpu_id	= vcpu->vcpu_id;
-+		__entry->gpa		= gpa;
-+		__entry->pfn		= pfn;
-+		__entry->error_code	= error_code;
-+		__entry->rmp_level	= rmp_level;
-+		__entry->psmash_ret	= psmash_ret;
-+	),
-+
-+	TP_printk("vcpu %u gpa %016llx pfn 0x%llx error_code 0x%llx rmp_level %d psmash_ret %d",
-+		  __entry->vcpu_id, __entry->gpa, __entry->pfn,
-+		  __entry->error_code, __entry->rmp_level, __entry->psmash_ret)
-+);
-+
- #endif /* _TRACE_KVM_H */
- 
- #undef TRACE_INCLUDE_PATH
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index be43c77315ce..60ebe3ee9118 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -14003,6 +14003,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_vmgexit_enter);
- EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_vmgexit_exit);
- EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_vmgexit_msr_protocol_enter);
- EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_vmgexit_msr_protocol_exit);
-+EXPORT_TRACEPOINT_SYMBOL_GPL(kvm_rmp_fault);
- 
- static int __init kvm_x86_init(void)
- {
--- 
-2.25.1
+for you to fetch changes up to e7cda7fe37ff1ece39bd2bf35ea68b1175395d95:
 
+  bug: Improve comment (2024-05-07 14:20:48 +0200)
+
+----------------------------------------------------------------
+asm-generic cleanups for 6.10
+
+These are a few cross-architecture cleanup patches:
+
+ - Thomas Zimmermann works on separating fbdev support from the asm/video.h
+   contents that may be used by either the old fbdev drivers or the
+   newer drm display code.
+
+ - Thorsten Blum contributes cleanups for the generic bitops code
+   and asm-generic/bug.h
+
+ - I remove the orphaned include/asm-generic/page.h header that used to
+   included by long-removed mmu-less architectures.
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      asm-generic: remove unused asm-generic/page.h
+
+Thomas Zimmermann (3):
+      arch: Select fbdev helpers with CONFIG_VIDEO
+      arch: Remove struct fb_info from video helpers
+      arch: Rename fbdev header and source files
+
+Thorsten Blum (2):
+      bitops: Change function return types from long to int
+      bug: Improve comment
+
+ arch/arc/include/asm/fb.h                    |   8 ---
+ arch/arm/include/asm/fb.h                    |   6 --
+ arch/arm64/include/asm/fb.h                  |  10 ---
+ arch/loongarch/include/asm/{fb.h => video.h} |   8 +--
+ arch/m68k/include/asm/{fb.h => video.h}      |   8 +--
+ arch/mips/include/asm/{fb.h => video.h}      |  12 ++--
+ arch/parisc/Makefile                         |   2 +-
+ arch/parisc/include/asm/fb.h                 |  14 ----
+ arch/parisc/include/asm/video.h              |  16 +++++
+ arch/parisc/video/Makefile                   |   2 +-
+ arch/parisc/video/{fbdev.c => video-sti.c}   |   9 +--
+ arch/powerpc/include/asm/{fb.h => video.h}   |   8 +--
+ arch/powerpc/kernel/pci-common.c             |   2 +-
+ arch/sh/include/asm/fb.h                     |   7 --
+ arch/sparc/Makefile                          |   4 +-
+ arch/sparc/include/asm/{fb.h => video.h}     |  15 ++--
+ arch/sparc/video/Makefile                    |   2 +-
+ arch/sparc/video/fbdev.c                     |  26 -------
+ arch/sparc/video/video.c                     |  25 +++++++
+ arch/um/include/asm/Kbuild                   |   2 +-
+ arch/x86/Makefile                            |   2 +-
+ arch/x86/include/asm/fb.h                    |  19 -----
+ arch/x86/include/asm/video.h                 |  21 ++++++
+ arch/x86/video/Makefile                      |   3 +-
+ arch/x86/video/{fbdev.c => video.c}          |  21 +++---
+ drivers/video/fbdev/core/fbcon.c             |   2 +-
+ include/asm-generic/Kbuild                   |   2 +-
+ include/asm-generic/bitops/__ffs.h           |   4 +-
+ include/asm-generic/bitops/__fls.h           |   4 +-
+ include/asm-generic/bitops/builtin-__ffs.h   |   2 +-
+ include/asm-generic/bitops/builtin-__fls.h   |   2 +-
+ include/asm-generic/bug.h                    |   2 +-
+ include/asm-generic/page.h                   | 103 ---------------------------
+ include/asm-generic/{fb.h => video.h}        |  17 ++---
+ include/linux/bitops.h                       |   6 +-
+ include/linux/fb.h                           |   2 +-
+ tools/include/asm-generic/bitops/__ffs.h     |   4 +-
+ tools/include/asm-generic/bitops/__fls.h     |   4 +-
+ tools/include/linux/bitops.h                 |   2 +-
+ 39 files changed, 139 insertions(+), 269 deletions(-)
+ delete mode 100644 arch/arc/include/asm/fb.h
+ delete mode 100644 arch/arm/include/asm/fb.h
+ delete mode 100644 arch/arm64/include/asm/fb.h
+ rename arch/loongarch/include/asm/{fb.h => video.h} (86%)
+ rename arch/m68k/include/asm/{fb.h => video.h} (86%)
+ rename arch/mips/include/asm/{fb.h => video.h} (76%)
+ delete mode 100644 arch/parisc/include/asm/fb.h
+ create mode 100644 arch/parisc/include/asm/video.h
+ rename arch/parisc/video/{fbdev.c => video-sti.c} (78%)
+ rename arch/powerpc/include/asm/{fb.h => video.h} (76%)
+ delete mode 100644 arch/sh/include/asm/fb.h
+ rename arch/sparc/include/asm/{fb.h => video.h} (75%)
+ delete mode 100644 arch/sparc/video/fbdev.c
+ create mode 100644 arch/sparc/video/video.c
+ delete mode 100644 arch/x86/include/asm/fb.h
+ create mode 100644 arch/x86/include/asm/video.h
+ rename arch/x86/video/{fbdev.c => video.c} (66%)
+ delete mode 100644 include/asm-generic/page.h
+ rename include/asm-generic/{fb.h => video.h} (89%)
