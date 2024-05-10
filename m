@@ -1,85 +1,125 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307F7127E05
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 14:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1597A12C494
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 14:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715350697; cv=none; b=bOyf0DEwhg2ml0SveRuBajzN5Ef7E62m8sIN7oEy5+7GVYSj1T2PQAGsvrxcbzRhcL8y4yeMGRczj8yUNfsT70YLrIqRyxySvReIkqRMKvKJ0Z9DFJEtPPq83a+nnJ/2MkoAMlcI+2Q4yZeIpQDnoPsL0QJg97TSn/XXZWXQDp4=
+	t=1715350759; cv=none; b=h7O1HOklgkUbk03q8jjRRKY03Vdn+j3B2f25vqDq2LIMoTLvfZP0kVPPLArw1nxNUTHFDh6icsWhXNZ5ipLJx1ibBBxPrzGUilzlv4MERGqrUTofVIOzSS6Hf1Ur/C8G8gQdCrBrNfkzUzcJmo/5TJSyodimcLDyXhOHN5DT2KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715350697; c=relaxed/simple;
-	bh=iny9NAYFkawb5vEejd8kZ3wAYfN4EbJIZcN7un0e330=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QTcHuSBXWQdAg+9MlC7DV8F0xee+JuwFZhzUFfytPgh/ucoXMR3LvOte2cxVvYupJMKmpYzdiBENRO5p98jVMkFiVGxrdqhpP+dsIdA32aaDHWJzWvcZwuvmAVYM/rV2T+VYnQyb9Hd/cD553z+59Bvxr9nkNDR03oMdEWjgT8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=iPWzhsRE; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1715350759; c=relaxed/simple;
+	bh=xxx4t59lacJdCYKqV1TwqAC4SVodzhIeAGYW6khLtXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JW7h5v4Dw+1uArc6J2cMhZj8Ei9iOtN+lkC8z1FLiYcRscwwMwFTOMluwy7n0tM359DAX9H8NoSjtSeek8yQgvlg9B0j4KYalp5nLYIzulHzYNjt/uKKNjp+IdQIfBhX7lW6PLVvbvj8i87ekoZ6YYobIEB2v5YUGhYRCM+rH7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=omrWThs4; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="iPWzhsRE"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-792bd1f5b38so162395785a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 07:18:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="omrWThs4"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2e538a264f7so11439641fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 07:19:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1715350694; x=1715955494; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iny9NAYFkawb5vEejd8kZ3wAYfN4EbJIZcN7un0e330=;
-        b=iPWzhsREhsiqbKcuyIdFOAAQd8vO0lEGxLWgWdBVydJkJEIjxp3dvPJ4fhHgxZuZ7C
-         wmaoL3nUItcyk2jBKaNlVnlvkTdBGJmcxagQp7QqmmesY3XKL7NF4Hb5e3rAP4w1o1Cp
-         kjcEPiRoXEa4BBVuSj6LPP0yU4QWxeHSPkr4YmEs4xNmCTDXpyU/OI7JKC9XXDJ6Ex6N
-         6zWWLwSc2qmBVsmNtaQ5PK6KXaep+kcfzuZKYQV3+xqe72pSAglgjZLGs5KsPuU5cIhH
-         rLzzklUkTSy2yrGPEJ1zao6FzYXsefHodYPYaPsEn6pnP25znF9XdNh4BS8EA96yLPUc
-         GRaQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715350754; x=1715955554; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p2Vlnws5FiAdjm8Du8XlBvr/Ou/c9kQRn48QLmV0BFs=;
+        b=omrWThs4Nv+j/ZDfWNiUKVjk9RZL2eE494DUT6Pj2My0lTtFxCzxmuLdZNTlGjdUJ8
+         LVchddRJ/OrsdmsSu7esGYAWu3T9YGgxZ9FoYkt8b5865ReoQQrK8rz2lg+OXBSite/4
+         A6g9Ui3X61sPnSzzTa9jlP0oPU/F59p9iMQl74z8aIZUbb9j8imdRolMC5Q4eagfsxO0
+         182U5SFXkYr0vftFrkq5bY4SuwKMjjqE66IQRaB/UHtwGBYbU2n7Pmh6GjEtM16h8vaG
+         BXY2KCfpb34EXjEFPZnBhasXY3nBKJSfmeezhkS8seYrPxQ6KQTXmsVm8xzoWCjK7vJX
+         6ykQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715350694; x=1715955494;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iny9NAYFkawb5vEejd8kZ3wAYfN4EbJIZcN7un0e330=;
-        b=PCnlt2SSZiYm2cHDWwyVc7AAFDoD74NyL9eWnDsBR8DWlrH1wLeDCYC0foG1GocYDS
-         tWZToM6issqp5DkbVUitxlF+R63XVQfvs3rs8Ml2ujm1ChYxHSQ1nb9Jgi/y3ynWo0bK
-         wotU1o/qB7sJYlZbIaXjwZoBmIbtPxIdaVLJJZ9AayJjFYpxJteHQRVqHqmlwb7Ftjlk
-         uHWybCa963MstEme3YyGI19DYrWLwUNkevQTMkz1KNLlCXvvuu2cPIt7NQdDrJdJMFgb
-         QNhoO5z7uPpK5u5m9biL+Nl/RuY9XRCjXnFN2h7r1MHxlj9x6sJXVXxUULQTsn+TXk4r
-         EAOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqUfnQoYzaJwNU7CTfd7pVhWBi8scGeoS58sRx1oyMrvuuQPRdg8ntgATrpkBsOpCx137uOCfCOMQ9pxTsGp1JXQvI3/8EFjrvoTJc
-X-Gm-Message-State: AOJu0Yz7THygx3c2wYAW2IgHMPOUUdVNJpGAS8ZGaXKGN/770pllOQAl
-	uYm4dajzy2XyogkHhLbQaizApszgjSVgBg42q85B5JL29t4d2jxT8ziSW/0bL1w=
-X-Google-Smtp-Source: AGHT+IGF8Hf6u75vxVzZlBEuOVkPdAAnVvnOkZHWQQVTs9nXF5wdtKiVEYG94zmAXPgqXYnf444mTw==
-X-Received: by 2002:a05:6214:4343:b0:6a0:cd28:ffaa with SMTP id 6a1803df08f44-6a16816031amr35228036d6.25.1715350693964;
-        Fri, 10 May 2024 07:18:13 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f1cd3aasm17662896d6.84.2024.05.10.07.18.12
+        d=1e100.net; s=20230601; t=1715350754; x=1715955554;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p2Vlnws5FiAdjm8Du8XlBvr/Ou/c9kQRn48QLmV0BFs=;
+        b=vyWNfe66wnf8gn+eblBqrbDxuPa7i7uLK7aWf/VBTq5ubcbMUsD2y3xfWiiwPQ1tvU
+         wW6LUb4/GPBPH0Yf5wQx1BMrDXvP59lzIc1UVZ2Z2vgKB+xy4yDhtmCRYB7ItQ0nBovR
+         kQfqIadUjGggOaHFs6y/hBt/ckbgOtkNQRWKVR55Yl8Cz68oJ4yw1G6PCsIdGrA5fytH
+         5VvRcWP1aQOWOjINYp4HloGKEKrjbyKGF2qLxztHqYS7siKbMVQOZSuC296vqwIXEJHi
+         wK/DEgR+HMRcI0VdRSSrI2DVqNkkDhtHq0jqXAJ9rMdG4QcDGDTM+kyj5+mY1slOSgTp
+         TfSg==
+X-Forwarded-Encrypted: i=1; AJvYcCXKxzn9ZM3Z0N9Vrq8tLsZyEnB7wj+T7oJka8jrNZWj/pYH3Am25+L66lG4t34kJu5JIxQrEkHJgWWdBr08ou4DphdSUjMiNdE7VhSS
+X-Gm-Message-State: AOJu0Yw7sq0oGlGY5zDsYOn2aV90ErS8z0bc27bVYvrhXDPTnFlJN8j0
+	T4ho+AFygl7KZ2L73RoNm63nGxndcJS9+51wPmzBbWxmAL0Ncl1YBTSkt5EpTA0=
+X-Google-Smtp-Source: AGHT+IGpJWrJsfoOoQk4zUMuiUHP+YlLGjm6rvptjOJOKUVTGe3fh/K/iMDcN0xqxLz1thXwhYEQOg==
+X-Received: by 2002:a2e:b0d9:0:b0:2d6:c43e:f0b3 with SMTP id 38308e7fff4ca-2e5203a50a2mr16994981fa.50.1715350754136;
+        Fri, 10 May 2024 07:19:14 -0700 (PDT)
+Received: from localhost.localdomain (host-79-47-39-74.retail.telecomitalia.it. [79.47.39.74])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fd97e842csm56111875e9.24.2024.05.10.07.19.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 May 2024 07:18:13 -0700 (PDT)
-Date: Fri, 10 May 2024 10:18:12 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Michal Hocko <mhocko@kernel.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH rfc 0/9] mm: memcg: separate legacy cgroup v1 code and
- put under config option
-Message-ID: <20240510141812.GA1090700@cmpxchg.org>
-References: <20240509034138.2207186-1-roman.gushchin@linux.dev>
- <20240509142205.GC374370@cmpxchg.org>
- <20240509143635.GD374370@cmpxchg.org>
- <ZjzkWt-ut902Qa7N@P9FQF9L96D.corp.robot.car>
+        Fri, 10 May 2024 07:19:13 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+To: jic23@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: nuno.sa@analog.com,
+	lars@metafoo.de,
+	Michael.Hennerich@analog.com,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Angelo Dureghello <adureghello@baylibre.com>
+Subject: [PATCH 1/3] dt-bindings: iio: dac: add ad35xxr single output variants
+Date: Fri, 10 May 2024 16:18:34 +0200
+Message-ID: <20240510141836.1624009-1-adureghello@baylibre.org>
+X-Mailer: git-send-email 2.45.0.rc1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZjzkWt-ut902Qa7N@P9FQF9L96D.corp.robot.car>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 09, 2024 at 07:57:30AM -0700, Roman Gushchin wrote:
-> So maybe mm/memcontrol-v1.h for definitions shared between v1 and v2
-> and keep exported functions in include/linux/memcontrol.h? There are
-> only few of them.
+From: Angelo Dureghello <adureghello@baylibre.com>
 
-That sounds best to me.
+Add support for ad3541r and ad3551r single output variants.
+
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+---
+ .../devicetree/bindings/iio/dac/adi,ad3552r.yaml       | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad3552r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad3552r.yaml
+index 8265d709094d..17442cdfbe27 100644
+--- a/Documentation/devicetree/bindings/iio/dac/adi,ad3552r.yaml
++++ b/Documentation/devicetree/bindings/iio/dac/adi,ad3552r.yaml
+@@ -19,7 +19,9 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - adi,ad3541r
+       - adi,ad3542r
++      - adi,ad3551r
+       - adi,ad3552r
+ 
+   reg:
+@@ -128,7 +130,9 @@ allOf:
+       properties:
+         compatible:
+           contains:
+-            const: adi,ad3542r
++            enum:
++              - adi,ad3541r
++              - adi,ad3542r
+     then:
+       patternProperties:
+         "^channel@([0-1])$":
+@@ -158,7 +162,9 @@ allOf:
+       properties:
+         compatible:
+           contains:
+-            const: adi,ad3552r
++            enum:
++              - adi,ad3551r
++              - adi,ad3552r
+     then:
+       patternProperties:
+         "^channel@([0-1])$":
+-- 
+2.45.0.rc1
+
