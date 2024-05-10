@@ -1,292 +1,209 @@
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-DB5-obe.outbound.protection.outlook.com (mail-db5eur02on2059.outbound.protection.outlook.com [40.107.249.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24E0D148837
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 03:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715310650; cv=none; b=tamricF+5YjhTg2KX3Vb4U7+B1Y8VqhdC8Izs0JirAJlMpq/cpiiBUkqfuPow9M5NrISOreS05P19KibiuHZYRmPiVPm73KupFPmumnIqRWyNuiztT9WBdJPoCZTGNF6GJOZvnbCSz16OILLJySUuU4ZaHiM8WIPj2rGVJHOYFg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715310650; c=relaxed/simple;
-	bh=G9+JsAN9VBOUFU6FD2XkNqeWaHcVEN2jYzSHbA7vWwY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MX/7VxC3IbrknaDAp/XkEPf07OPLLd9FyaB63jz5UVO3cu7/sXUnSSNhN4hqAcro87cKF1CCFZH2CZqahNEulvkCo+tbgaXXChBnNGYsPbLrfaGH1d4vEb2WakuGEjbrmFRZ9l6ZLWsH8RMtfDs3Gxowcj6/UqewGysLpgJaKzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=TWh8bvFP; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C698E33CD1;
+	Fri, 10 May 2024 03:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.249.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715310715; cv=fail; b=HNZGhoQYYtD3HJ1XiYecqZDaSL7CyPA00ixAgQKHQJKJQjHitqj4JzIGB9veOl7JnFg+lLnxeTzAyFb9siQw8l/v8H2Widp/6j+C0Z9wW4nj4HOg4bMdD/eGHUCDtD0RcsK2UWONlgHO+X8NGHBjhD3yIok0hWHsFYDkrgGSKio=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715310715; c=relaxed/simple;
+	bh=YtyTpdvrQ5zl7BSEMed4Pj2k2OlKSFatIr7+BP2lbIo=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=QMo5M/RlH3tsJ04hGWXSb8TLnblRGjRTRVKQ5EvKDxDxqn7KSB3r2qJko4wtaFTqj+CZDiexSJ+sj5c4C8HnP5WSNQvE3yv300rbiESj3ZhcSwEOsMOXV6zny+cYLVjfUXbp3CkD6yHjia76XvPjg7BlTNeRX6DM9b9j9wGNxlQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=iXzfx4zq; arc=fail smtp.client-ip=40.107.249.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="TWh8bvFP"
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-7f8df927790so486702241.3
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 20:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1715310648; x=1715915448; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rAHyEe4wsWXx/DPIQLwnHQufY4tXIB/DbEkvQstYHB4=;
-        b=TWh8bvFPmOk+uaIuo+z/kBYgSdXCMMfDhRigbJtqVAONvslxDQr/kUq0wem/468QR3
-         vIBYhASSKT+f6yO4tOlqLJufRoi37ryHF/uc6Hpl6nbWD/HOAeo8zGAJTHbdl4jlFmro
-         mH/bBJs2g87rq4fK/UOalXY89UaAgQMSWvz0M=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715310648; x=1715915448;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rAHyEe4wsWXx/DPIQLwnHQufY4tXIB/DbEkvQstYHB4=;
-        b=pVdaLCUvZOk0fDOFiM+Sx1c9iAVPSFqWtRlPXIVd8nzzZGtoJpCcmrGtSMMOCeWQI4
-         3SeLe6cKVB0iWxXxM+Guqzf67JfZkIxhpZ+JDyGALCXnehuqZi+c6IOCH+XKxB8W4qeF
-         Z1xDNYweyxFcfBH2X09X/yjmYOuWYYWgoIboh+axI9ipryvzLgeOY/ASEsfjdSoARpgX
-         QPThVFFgFqoGAU+AJ2afkzahryjQo2GBMvMTPW/TjPietwBbmgXv1e4D0iIEAMVWT5aV
-         JDHjb0U8reLgUApu21GvwOr96v+5iW40g8/ddJOa0KnPxL1NmYK6cAY6k3Spj9R7pAYF
-         fDPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUu+a+slsOYnDS21UecCHwqOJF0kDpdwF+ax94Whfh/yqzVCVaWXXEitm71Ou5An213+Q8DenNcKhwV1uxln7uIw7VzD7/zYMqy52BL
-X-Gm-Message-State: AOJu0YwlJ0HJtfoAVoJFkuziF5zMsy7yz7wNMgF0yBINuZ9Hsww9WG4s
-	3PvTdosU4h2uAsBfGgMza+jKvZ+wza8UqDrajGdF4+i9vD5RUD/cDP1ugKDmk1NmLp2kLhx0S4e
-	UbHoJS+SZjWSCtwuk2flvJbj8lIBpiKnsyZsT
-X-Google-Smtp-Source: AGHT+IFJuSX44NqVs2r/U5GHYoXwdi1J6G95y/KWwvepUrEc9R8Vmh0ux8iHyli1z0reSz3HIpuODRWo/SoDmXr0E2E=
-X-Received: by 2002:a05:6102:4187:b0:47c:2a81:a98 with SMTP id
- ada2fe7eead31-48077e176fbmr1877791137.20.1715310647325; Thu, 09 May 2024
- 20:10:47 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="iXzfx4zq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J/WEDBdcuDm+A7V4WuOlyD0CRS8Pcq9Myqf0bcrvdvjyBezjqruyrx3XXdUpLiQAh6Xvy/b2dWnQTF+C5Wy9piPq7tIgNaHV1rT/ug+Vg27/44rYU6+d1xxPKlsSXYoNlWe5iXAr2naWMAdi2HI6wff49fNTct/uFLoqVFe2pqylWnzA83+Q3bDh6pof8zkZf5pkEh0wjrgC0LXlJJhS5MNlRQSQU5+kf57d2M2js9cUQp8x0MO5x5cc3R4Mp8LmTGcn17Y5ZvzQPU55XrnSkoEhnwF75uhdTPQTufd7vv4vZzRzQb9SUSWXxCKjymcag3pn0NQ1JE49nIOiUGcWoA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=bP11g84Vnuc+0uP0MR0IJjhbNvIU2a/0hUAFSbXXWPI=;
+ b=HvWPcje3e8rOzA41pRK5we8g8mP/6Y2qANyZqgGzr6CUYpqEtrMdAYnH0Sayg5mHkbmfRe+vqmophbNFFtrTGZwCYZOoR9Xq42M7Q/8ALf//Nx5fewsz6W3lbIaHYG99hKeVsUAY3XFSsAJduruTobIpTRo2yMgaix5h82jiO4nF1MbArz7ae/dXyYVwiWsqUzl3pzs4xEzBAklBISvQA92diEtMFlugTNjpEja0xLfz/to01cOS0nT79q+9YdSgObmZ+VWT3q4AjDIdMb9GcOOUcUNVETGD/LvbKjOCi9Y1IL5Si0t5guIsZAeV3uA/tinrEGPfnAEYRKN+ZpKNVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=bP11g84Vnuc+0uP0MR0IJjhbNvIU2a/0hUAFSbXXWPI=;
+ b=iXzfx4zqG8JNdPlmEVJoRNfE330300rKNFU/ujimHjF7aqVjNE9hjxpBnKSNwWuDyyF8eg04A/duOcUP4I0XeTwLf1qpXghqqRpExxMWdl1kiKzY+ceRZkLUCgwNwKaAnhaiWDO/t4ucKeVvTpSt7Bj210HGVeot2S6UBELF7FY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by GVXPR04MB10135.eurprd04.prod.outlook.com (2603:10a6:150:1c0::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.47; Fri, 10 May
+ 2024 03:11:50 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7544.046; Fri, 10 May 2024
+ 03:11:50 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Subject: [PATCH v2 0/2] firmware: arm_scmi: add notification completion
+ channel
+Date: Fri, 10 May 2024 11:19:46 +0800
+Message-Id: <20240510-scmi-notify-v2-0-e994cf14ef86@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFOSPWYC/23MQQ6DIBCF4auYWZcGUQN21Xs0LigMdRaCAUM0h
+ ruXuu7yf8n7TkgYCRM8mhMiZkoUfA1xa8DM2n+Qka0NgoueD1yyZBZiPmzkDsYlKqnVe9Sig/p
+ YIzraL+011Z4pbSEeF57b3/rfyS3jrHUWnRlVb4fu6ff1bsICUynlC+1QTyKkAAAA
+To: Sudeep Holla <sudeep.holla@arm.com>, 
+ Cristian Marussi <cristian.marussi@arm.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715311198; l=1618;
+ i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
+ bh=YtyTpdvrQ5zl7BSEMed4Pj2k2OlKSFatIr7+BP2lbIo=;
+ b=f7DAUG+W7vauCfSk6iYdQieRMfEGTbAn9vvYCYwnpeXDiWoGehSXf7HlILCorJreQ3HKN6SOb
+ x681+V7diudBLH8WMkuioSkHFsb4anfM4sNb/haqB84r7ijuEXhdqhC
+X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
+ pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
+X-ClientProxiedBy: SG2PR01CA0148.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:8f::28) To DU0PR04MB9417.eurprd04.prod.outlook.com
+ (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240509162741.1937586-1-wei.huang2@amd.com> <20240509162741.1937586-9-wei.huang2@amd.com>
-In-Reply-To: <20240509162741.1937586-9-wei.huang2@amd.com>
-From: Somnath Kotur <somnath.kotur@broadcom.com>
-Date: Fri, 10 May 2024 08:40:34 +0530
-Message-ID: <CAOBf=msuCassc=XAQ3DFVwKEfrT9sJfwnkEmEsYaySv=Aa3q7g@mail.gmail.com>
-Subject: Re: [PATCH V1 8/9] bnxt_en: Add TPH support in BNXT driver
-To: Wei Huang <wei.huang2@amd.com>
-Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, netdev@vger.kernel.org, bhelgaas@google.com, 
-	corbet@lwn.net, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, alex.williamson@redhat.com, gospo@broadcom.com, 
-	michael.chan@broadcom.com, ajit.khaparde@broadcom.com, 
-	manoj.panicker2@amd.com, Eric.VanTassell@amd.com
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="000000000000dff0df061810e186"
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|GVXPR04MB10135:EE_
+X-MS-Office365-Filtering-Correlation-Id: efdc46f5-ee5e-4a45-1ff5-08dc709eef2a
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|1800799015|376005|366007|52116005|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NnFrVzNnV3g0Tm00eE9valFTS3ZLSUl2cVRsQ2ZVSHBPcVNseFpObm40MklX?=
+ =?utf-8?B?SjBlN0w4cE9pZ1ZQbUpKSHJIc1grNVY1S0pYUWR0T05Ua05wdnVHeGI4VlM5?=
+ =?utf-8?B?eFpJT0pNSUswYklBbnIvQVkvOVlBUm9rWWlDMVdnK1VBemdCSGcyc3NqUDN1?=
+ =?utf-8?B?ZXlNdVVDTHdrZFFRRVB3cmVDQkFCOHhtZzhJUDQrRlA3VlVZMTh3TnVnaVNr?=
+ =?utf-8?B?WmVmMDgwSk5KQUhZTWlpZEZGeWUwUTVPME5ldkRxV2dLUDR4V2h1Rk1aNmRk?=
+ =?utf-8?B?ZmNLaWRGdzc4aitzdEZnUnA5dVN3eHBlTDFjWTYxTWthSzV5Y0hmS2tjcjJr?=
+ =?utf-8?B?b1kzb0UzaTd0VEZrcWZhdUJPNnd5SWZVYTlUbzRzVjZZZEZWUzFQS1NRSTVF?=
+ =?utf-8?B?c3dtS3ZUMVhkeHJEV3k4UzJwNUZ2bXlKSm5KQkFMM0c0NjMxOSsxczQ3cmk0?=
+ =?utf-8?B?YkFZT2QvbmRybHN2MW9hVzAvMGdOVzYzVkVwVjZjdmo5VTFQT3VpNFZWNGxk?=
+ =?utf-8?B?YUJwOUl3MnFJOUlld1hhdzNhVnZ3dS8rb2Nrd1ovay9jWkE1T21Hd0Q4TDN4?=
+ =?utf-8?B?QWtHSC82L0VYelNaVzdtb0FyLzhWZjIvZnl1WDdENVNYVmRwWHdYQVhucDdi?=
+ =?utf-8?B?N2RTMzRjRUxsR0ZDVGpnWnJaWGVITUd6VWJOTEt2a1lqenJVUGJHb2pxRzR6?=
+ =?utf-8?B?aEhNS3pKM0dwUXNJLzlSVU1WcHFZTzBKem56VnVKNk91SXI4UnpyaEZ1b2or?=
+ =?utf-8?B?QUpCK20za0UxNVhEYkk3dUVUZG16Z2ZaTVh6Yzhta1NTU0U2VjNrNXVvK2pp?=
+ =?utf-8?B?aVRUZjYzTGJ6dlp2dkZnMFhILzNTZnJqRjVTcE96Y0d0ZG9nSGJRMnc1L1ZK?=
+ =?utf-8?B?VmM5VVQ5NllWazlwNWlldXd6T3orWUprRTAxcmlRV2hmZ2ExUkE0UitZMitk?=
+ =?utf-8?B?UFJNR2kzdTJuQ096eEprdllTVXE1bnNZcldPTnVkUWhBYmtmVU9HZ2Y5VmNi?=
+ =?utf-8?B?RURNNWQzMXQvaERzanFoYjN4R0xYWnE1VHZHbk1lTDhodVZOaldPb1NlZE9o?=
+ =?utf-8?B?aDNNeHUzYjlKR2lrNnZ4c1JrT3NBMUNVMTlUdHR2TlhkampwanNwcFVZNGZZ?=
+ =?utf-8?B?TklJd2FkdkF6VU55RnhXbUxxOGh6Zi8wWXhIc0NQRVdiaHRnVVdxa3NJbTNT?=
+ =?utf-8?B?V3U4Wm5vYU1pdXN4b2ZWWHdJVXdwVEZWdDZCRWVZMTZwNnRhWjZTdnU5SUFr?=
+ =?utf-8?B?NXZIVWZmUUxtc2RUejd0RUE2Syt3M2l4ZWZqM1Y4YytyN1dEeWpmY2MxcEhG?=
+ =?utf-8?B?RTFDTXFIOU8vYXN6MDJnS1FMK0tkMEdCNUVUSDlMaHZyVDViR3k2UCtqTEYv?=
+ =?utf-8?B?RSs1TThjMHcyaUdRNjdoMnN2MnhUOTJJb3lRRzB1VWxDT3FFWWwvQ29tUmxP?=
+ =?utf-8?B?UTdhdTZjNG1OVmh6ZldXMzFYNnROdXY4L2txcU1qam5zK0E3a1RwT3NPU0pW?=
+ =?utf-8?B?Z1VWUTIxelQzWURzZ2ozVjJyck0xU3VlTlRtcXdkTGlRWWpnbnNlT0VWbTFK?=
+ =?utf-8?B?eHAzc0h3eGtwc0oyR2VZak9MMGV4azlRZ21xSHgzSTVOV3hlOVZvTVByZ3dw?=
+ =?utf-8?B?NlhpU2Zxc3pMejhqamNmLy84c2c4bE83MlZ3dnZKNy80Tm9VR2FwQW5SSE9a?=
+ =?utf-8?B?eGtPcXhmc1pDUUNseGUvb0R6UGJIU0tIcWg3U1pkT0FseE9IR2I4OXNRPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007)(52116005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Ymx5ajlhVENVaTBRNXIzUEdMdnc5dDBzRmlnMU9PdFY4YnhOVDdrQ3Q3MEs1?=
+ =?utf-8?B?c1BpRUJuc1FHZk45czhLd1czeEhjalRuNThHcjIwbktUdUZLcSt2SW5TVy9P?=
+ =?utf-8?B?TER0eVBTdDFqVW1CVWJSYkIveDNMSEZpUk5LSFE4elpDeHhwM0JlSXpwY1lh?=
+ =?utf-8?B?WFgrZDVBVURoTE05ZzAxV0dZV2F6V1o2ZXFSazBWQUYzOGwwV1hDTi9DODQ1?=
+ =?utf-8?B?U21ISWpTSVFwb3RpN0kyNGhWbDhlSmlPNmtPVkgrLzlCK2hZUFZHc0NEOWwz?=
+ =?utf-8?B?TktrcWdSZHAvQmlyUVRZMWpDN2pPTUJ0cUREYTQrTXp6WDFOcFl4ajVIbzZh?=
+ =?utf-8?B?QW5xNjFveTlWci81V2NZQWxwS2E5UEgwVUFBNjVpUFJ1bUJvZmRMLzZwMVA1?=
+ =?utf-8?B?TE45ZDVGbmtmL3c0TkY3WXM3M3JPTjZ3YW01UTBDaG1KQjc5Ykc2djlzRGg3?=
+ =?utf-8?B?ekZYZEdFNGsxUnBscUtVeGFVYXdudEZ1Q3BNaUhwUFgxSGd3WURpTTd6MXU3?=
+ =?utf-8?B?UzVsaWpoaGJsUFBNN2RNUm5yN0J5YmY3SEZQRVBBRForWmprbnJqR1JveDBD?=
+ =?utf-8?B?UzR4b2dmNEJhWjFOdDJ2djBTYVJKNTFhczhNazZNSWpmb1Q3VUxqR0c3Umg0?=
+ =?utf-8?B?bGpCcWtoakJlNnNCanZ5ak5BckpXRnVaZlpvayszK1VodWVJRkh0WStUL05s?=
+ =?utf-8?B?aCswc3A4MlVFM1NOQTN2WUtrN0JaKzlubit1OWtBY0dhYVEvR0NYT0J6Y1hl?=
+ =?utf-8?B?b21Fdk80NnZNS1lYSFNiZTJNMGZxMndBcFBSVTl1emNaNzdSUVdmdDQycUpE?=
+ =?utf-8?B?bWNoWlFCMmNlck8zSXVTQ3NZeGUzNk1DdEpNTlJ6SEFNN1lCaUVNUVlWdTRG?=
+ =?utf-8?B?WlRQSzVBaFVJMXBUbnNwL2NEZ1V6OWJYbmE5SHhkeVVSOFJpK3lIdzlVOFor?=
+ =?utf-8?B?M3FteXdIZmdpSDllQTd1Z3JBa2VRbGkySkltdTRTdVpMaCt0K044WHdsUG5Q?=
+ =?utf-8?B?WDRXbHVId0plbkdiUzV6Um9NUFVDTG5QMm1xRDg5VzdaOGxsSEVWaUV1d2ZZ?=
+ =?utf-8?B?WUp5VUJRS0hrU3BidXpSWEZhRjFTQ004d0RjOXFhZlJJNCtCKzBxMi93MEJk?=
+ =?utf-8?B?RTJEbTZ6b3RSU1JyTkVLZVpnL0RwSGxNTW9xWmliVSt1VzhsV25IZUcxYlVs?=
+ =?utf-8?B?SWdLR0o0bmhCSHJreSs3cHpTNDVBbVZib0xHWTlSNFlCeGxkaGxVWVRuakV4?=
+ =?utf-8?B?MjJEWDFjTFQya0s0UHlOdkUwVXQ4MlM5WDVRcFdqeUl0Z0tsWExLNjY4VVp6?=
+ =?utf-8?B?R29JdDA3ODAveDFXMjYzU2hjZDQycGlJRG1LcEMyNVdTZjFJZVcrbzQwYVdx?=
+ =?utf-8?B?VWJ2c0J6QnB5Z0JuVjI5SjlKRWVMWXpBM09Jc3NIalY4dUE4anhiUVR1RGov?=
+ =?utf-8?B?T2ZVSDRvdE5lYTBzajJFa0loVjFacHFiUGtDVUdxbmNZOUpFYmtRVmZxSmk0?=
+ =?utf-8?B?aVU4UDFhbGZpRW9PRHZ5SHBPYnJURGNReTc0TmUvQXAvZFVLUUZHNFZLdWh2?=
+ =?utf-8?B?U2xpWVJjL3p3OThuRk1mMGpyQ2c3TU5TYWk3djErazNSTytjdnRsaHpUWHhh?=
+ =?utf-8?B?N0xTQXIzNWtsUlJreE03VTBjUzRRZjVQd1FwVDZCZVBDQ1VhaTg2Q0lheUll?=
+ =?utf-8?B?SmdJTk9ZbTZsb2VZdW9TeU5yRVF1TEdBUlkwVVFyMUNBdklDL01kcVo5Mll3?=
+ =?utf-8?B?OHFsN1NUK0F2MU53VllmQVF1aXFiZC9ObW1Dd3JVU1Z0NDZMNzdYUXhaak1Q?=
+ =?utf-8?B?YWhYM2tSeVh4T3BqMDJsMFJPT0t1cUZVYWJVT1BTUVRWMVpvM3Z0MG1BdzY4?=
+ =?utf-8?B?TDN1aFIxRGZtL1NRSE5BSjZzdmw2RWpBRGxqRmVHU3F4R2NjSVdneE5wdGhx?=
+ =?utf-8?B?YjFrMmlhUlBzYVJSd212RXJINnkwdVEyeWpCL0dKWnJ5aGkrMDhYRWEwSFdZ?=
+ =?utf-8?B?QXQ0WnEvbGM2UkpqYTJYaVNxY3pjajU4aU95VUE5eHcyckwzUjFvSW1sRXFW?=
+ =?utf-8?B?a09POExIdGpZd24zdHNhRTgrcDFiNXJnaXRFWEhvSWJ0U2R6SWEyOGNOQ2Ro?=
+ =?utf-8?Q?bM7bKAKOZ4l4YdofZwLaf58tF?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: efdc46f5-ee5e-4a45-1ff5-08dc709eef2a
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2024 03:11:50.2773
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4v7MsRe7zfZfjtv2V/mo+I99cYJO+NaqAoTblAOMIwM7DDS3T/DgBOMtI80Sz+EWmET08H6+NJRL2V8+LJtGqQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10135
 
---000000000000dff0df061810e186
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Per spec:
+Completion interrupts This transport supports polling or interrupt driven
+modes of communication. In interrupt mode, when the callee completes
+processing a message, it raises an interrupt to the caller. Hardware
+support for completion interrupts is optional.
 
-On Thu, May 9, 2024 at 10:02=E2=80=AFPM Wei Huang <wei.huang2@amd.com> wrot=
-e:
->
-> From: Manoj Panicker <manoj.panicker2@amd.com>
->
-> As a usage example, this patch implements TPH support in Broadcom BNXT
-> device driver by invoking pcie_tph_set_st() function when interrupt
-> affinity is changed.
->
-> Reviewed-by: Ajit Khaparde <ajit.khaparde@broadcom.com>
-> Reviewed-by: Andy Gospodarek <andrew.gospodarek@broadcom.com>
-> Reviewed-by: Wei Huang <wei.huang2@amd.com>
-> Signed-off-by: Manoj Panicker <manoj.panicker2@amd.com>
-> ---
->  drivers/net/ethernet/broadcom/bnxt/bnxt.c | 51 +++++++++++++++++++++++
->  drivers/net/ethernet/broadcom/bnxt/bnxt.h |  4 ++
->  2 files changed, 55 insertions(+)
->
-> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethe=
-rnet/broadcom/bnxt/bnxt.c
-> index 2c2ee79c4d77..be9c17566fb4 100644
-> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-> @@ -55,6 +55,7 @@
->  #include <net/page_pool/helpers.h>
->  #include <linux/align.h>
->  #include <net/netdev_queues.h>
-> +#include <linux/pci-tph.h>
->
->  #include "bnxt_hsi.h"
->  #include "bnxt.h"
-> @@ -10491,6 +10492,7 @@ static void bnxt_free_irq(struct bnxt *bp)
->                                 free_cpumask_var(irq->cpu_mask);
->                                 irq->have_cpumask =3D 0;
->                         }
-> +                       irq_set_affinity_notifier(irq->vector, NULL);
->                         free_irq(irq->vector, bp->bnapi[i]);
->                 }
->
-> @@ -10498,6 +10500,45 @@ static void bnxt_free_irq(struct bnxt *bp)
->         }
->  }
->
-> +static void bnxt_rtnl_lock_sp(struct bnxt *bp);
-> +static void bnxt_rtnl_unlock_sp(struct bnxt *bp);
-> +static void bnxt_irq_affinity_notify(struct irq_affinity_notify *notify,
-> +                                    const cpumask_t *mask)
-> +{
-> +       struct bnxt_irq *irq;
-> +
-> +       irq =3D container_of(notify, struct bnxt_irq, affinity_notify);
-> +       cpumask_copy(irq->cpu_mask, mask);
-> +
-> +       if (!pcie_tph_set_st(irq->bp->pdev, irq->msix_nr,
-> +                            cpumask_first(irq->cpu_mask),
-> +                            TPH_MEM_TYPE_VM, PCI_TPH_REQ_TPH_ONLY))
-> +               pr_err("error in configuring steering tag\n");
-> +
-> +       if (netif_running(irq->bp->dev)) {
-> +               rtnl_lock();
-> +               bnxt_close_nic(irq->bp, false, false);
-> +               bnxt_open_nic(irq->bp, false, false);
-> +               rtnl_unlock();
-> +       }
-> +}
-> +
-> +static void bnxt_irq_affinity_release(struct kref __always_unused *ref)
-> +{
-> +}
-> +
-> +static inline void __bnxt_register_notify_irqchanges(struct bnxt_irq *ir=
-q)
-> +{
-> +       struct irq_affinity_notify *notify;
-> +
-> +       notify =3D &irq->affinity_notify;
-> +       notify->irq =3D irq->vector;
-> +       notify->notify =3D bnxt_irq_affinity_notify;
-> +       notify->release =3D bnxt_irq_affinity_release;
-> +
-> +       irq_set_affinity_notifier(irq->vector, notify);
-> +}
-> +
->  static int bnxt_request_irq(struct bnxt *bp)
->  {
->         int i, j, rc =3D 0;
-> @@ -10543,6 +10584,7 @@ static int bnxt_request_irq(struct bnxt *bp)
->                         int numa_node =3D dev_to_node(&bp->pdev->dev);
->
->                         irq->have_cpumask =3D 1;
-> +                       irq->msix_nr =3D map_idx;
->                         cpumask_set_cpu(cpumask_local_spread(i, numa_node=
-),
->                                         irq->cpu_mask);
->                         rc =3D irq_set_affinity_hint(irq->vector, irq->cp=
-u_mask);
-> @@ -10552,6 +10594,15 @@ static int bnxt_request_irq(struct bnxt *bp)
->                                             irq->vector);
->                                 break;
->                         }
-> +
-> +                       if (!pcie_tph_set_st(bp->pdev, i,
-> +                                            cpumask_first(irq->cpu_mask)=
-,
-> +                                            TPH_MEM_TYPE_VM, PCI_TPH_REQ=
-_TPH_ONLY)) {
-> +                               netdev_err(bp->dev, "error in setting ste=
-ering tag\n");
-> +                       } else {
-> +                               irq->bp =3D bp;
-> +                               __bnxt_register_notify_irqchanges(irq);
-> +                       }
->                 }
->         }
->         return rc;
-> diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.h b/drivers/net/ethe=
-rnet/broadcom/bnxt/bnxt.h
-> index dd849e715c9b..0d3442590bb4 100644
-> --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-> +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.h
-> @@ -1195,6 +1195,10 @@ struct bnxt_irq {
->         u8              have_cpumask:1;
->         char            name[IFNAMSIZ + 2];
->         cpumask_var_t   cpu_mask;
-> +
-> +       int             msix_nr;
-> +       struct bnxt     *bp;
-> +       struct irq_affinity_notify affinity_notify;
->  };
->
->  #define HWRM_RING_ALLOC_TX     0x1
-> --
-> 2.44.0
->
->
-Reviewed-by: Somnath Kotur <somnath.kotur@broadcom.com>
+i.MX95 SCMI firmware is fully interrupt driven, so Platform expects
+completion interrupt for Platform to Agent(P2A) notifictions.
 
---000000000000dff0df061810e186
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Add another optional mailbox channel for Agent to notify Platform that
+notification message has been accepted
 
-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
-nSGLsSobByQoGh1GyLfFTXI7QOGn/6qvrJ7x9Oem5V7miUTD0wGAIozD7MCVoluf5Psa4Q2a5AFV
-gROLty059Ex4oK55Op/0e3Aa/a8hZD/tPBT3WE70owdiCwIDAQABo4IB2zCCAdcwDgYDVR0PAQH/
-BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3VyZS5nbG9i
-YWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEGCCsGAQUF
-BzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAy
-MDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93d3cuZ2xv
-YmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6hjhodHRw
-Oi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNybDAlBgNV
-HREEHjAcgRpzb21uYXRoLmtvdHVyQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAf
-BgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUabMpSsFcjDNUWMvGf76o
-yB7jBJUwDQYJKoZIhvcNAQELBQADggEBAJBDQpQ1TqY57vpQbwtXYP0N01q8J3tfNA/K2vOiNOpv
-IufqZ5WKdKEtmT21nujCeuaCQ6SmpWqCUJVkLd+u/sHR62vCo8j2fb1pTkA7jeuCAuT9YMPRE86M
-sUphsGDq2ylriQ7y5kvl728hZ0Oakm3xUCnZ9DYS/32sFGSZyrCGZipTBnjK4n5uLQ0yekSLACiD
-R0zi4nzkbhwXqDbDaB+Duk52ec/Vj4xuc2uWu9rTmJNVjdk0qu9vh48xcd/BzrlmwY0crGTijAC/
-r4x2/y9OfG0FyVmakU0qwDnZX982aa66tXnKNgae2k20WCDVMM5FPTrbMsQyz6Hrv3bg6qgxggJt
-MIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYD
-VQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgx6wAr6NdQY0sTG
-G7cwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIHWb6CVByNUeKT9WdKLXET+1bIF1
-UmOFoE9yd+mYBVhqMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI0
-MDUxMDAzMTA0OFowaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsG
-CWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEHMAsGCWCGSAFl
-AwQCATANBgkqhkiG9w0BAQEFAASCAQClK6L/ZX5ZyvUJU+OxAFO9vzpKDl9ffWUFn+Gf6XkP8O3p
-zyKmsQrldHwkHD+5Zo881jCwOunoFEGkBYqEz//CEFQ4ui8lMRCPiI4pJWL55855KBF3lB02lQmy
-2f21KvfGxO+E+UIZlCKZC1gXcxtRToRFN1VRa14m0ppK9qO8+wY9eM95vOil11QiImc3dMk3Ib8Q
-a4jqw/8P5RVpzhK80RcIcqROQApR2GZp5rdKoE2G+jiXdvoz/LKqund9nwwFxWckJYtocqzI6X+9
-/f72RLLLDe4yFkvXlLB8dQhlsty95yLr+Eg9fx4/nGn54ZoX9LHZOD/XXYBnzwNjtXCc
---000000000000dff0df061810e186--
+After notification channel status become freed, Agent will use the
+new mailbox channel to send completion interrupt to Platform.
+
+Add shmem_channel_intr_enabled to check channel flags.
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+Changes in v2:
+- Support bidirectional channel and update commit log to include
+  bidirectional channel in patch 2.
+- Link to v1: https://lore.kernel.org/r/20240507-scmi-notify-v1-0-1fdefc984d53@nxp.com
+
+---
+Peng Fan (2):
+      dt-bindings: firmware: arm,scmi: Support notification completion channel
+      firmware: arm_scmi: mailbox: support P2A channel completion
+
+ .../devicetree/bindings/firmware/arm,scmi.yaml     | 12 +++--
+ drivers/firmware/arm_scmi/common.h                 |  1 +
+ drivers/firmware/arm_scmi/mailbox.c                | 60 +++++++++++++++++++---
+ drivers/firmware/arm_scmi/shmem.c                  |  5 ++
+ 4 files changed, 68 insertions(+), 10 deletions(-)
+---
+base-commit: 9221b2819b8a4196eecf5476d66201be60fbcf29
+change-id: 20240507-scmi-notify-07e87a8b9a23
+
+Best regards,
+-- 
+Peng Fan <peng.fan@nxp.com>
+
