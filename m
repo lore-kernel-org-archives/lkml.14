@@ -1,193 +1,289 @@
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01rlnn2078.outbound.protection.outlook.com [40.95.54.78])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2040.outbound.protection.outlook.com [40.107.92.40])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DCC8B64E;
-	Fri, 10 May 2024 00:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.95.54.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EC8CA4E;
+	Fri, 10 May 2024 00:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.40
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715302636; cv=fail; b=GsLeDme1DveL1HoKNS6WDXAdvv70PLl63mTlhXrq8steC8rS0sZ95WwSjXx6RL91ZU4D8jE7JzRaoJPCedm3q6EGKTDKx/oVaHh77PjlPU7uDObvYGKoxfoAhEE1BCF8AxT2ndW2e2iEKE6KZhURRC5tL/MZQYnwYGI7b4m+wD8=
+	t=1715302644; cv=fail; b=eHcsKbOwU34axmXjOdzSJWsbsYlNCBP6X8PIo8GMOne2YAPDUmLkWA7Qz5GVWSzOmNusZns5MTC+qCa0gXMC+2OkVbLXdBz9odSd7iczbTPxISLT+bSAiQSeP+Jqol6gtp0GwMrND+OCYYywdpjaaSMugmS3OR88vwm59rBwh64=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715302636; c=relaxed/simple;
-	bh=SkdF342MSDV52iyq1of2MtkfwfmArsqJ2RVqcDgH3Y4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G23jAWjOoFf/CowlrzvlSiK9c4HRxht2V0N6/jaJSmRohZ16tt0exl4hsabYEN40AbeNIyZ/LO0zd6cfilD+wjV4hRCV0WJ4R/9cX8FFmXAJ2HjO2cnh3SX+2z4Dr20t/osWemw3GHlw89X87SjATYPp2NZwUcdBsPoKC0Rt+Cg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=none smtp.mailfrom=taln60.nuvoton.co.il; dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b=m4IsL/rt; arc=fail smtp.client-ip=40.95.54.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=taln60.nuvoton.co.il
+	s=arc-20240116; t=1715302644; c=relaxed/simple;
+	bh=YMQctb6mCqNiwVSpxKpCvsOzvCNltWnLDce5PEVjDW4=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fU2+wbZ9qZILNM8c98ZF/OmJUZ8Ym2gDAYRZvkYyt6TPlm3zWCapelAjBgBZOXdqIbeYOeMd3QS7ftUDY3dyIAamCGXr1Hb0wcYPVxd++HSzdTiFjRurVETxmOu6uhEHTZA202iPbLyMdl4DCEtvvwd7h9V4MVF+ZwDOr7LYxoc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NLa5ABvf; arc=fail smtp.client-ip=40.107.92.40
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="m4IsL/rt"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NLa5ABvf"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cRMiDoV5S5dTrPpvABBQKRLwhAkX2wMtred/ar5ZbjGIZa6VrliIL6SLvgh84/VZAlVlPS7rtqFrvfQP+b8p34PMYxxIFcOmPKJmaJI7bcg9m4wtsBa8Gi096JQB9wUq/jDDhJbd2L+dA5Zv09Mx6EtX+QvTKEqdP93GRyt0Cp/TODadiWs+PAPZBmQ2HWJzb70/aAlwv10NYmSZe3Mpg5nERkXXGz35Wjlsae4VaI+o3xL7wVwu2maZZeDNHq/2fMnh36E1of+FWIIYD4xVoy+KWvhuiUlb8tILGLs52uXU0KlnMouGbOPBMFRGYyZDawlHOhSIoCSskcO2HGet6A==
+ b=IpUTNBIy7YVNyieDPBC5aFAikjnFDmi5FyqdYL9mknTvRI81Jq4QkskMbcseKIIue1O/sBrHTJfAa8gj/cttmqzoI+VeDX0Oil1IW1g8FYE8A9bFP19OuN8GacxoR2YmdOF4DFnQXake5GUe8NXe6IqkRYAvJiTjN58h68eRRna1CNhHswogKq7SyO9Psi+9K9kVy28MCGhwdXbIv2QJg7YJZmXKIQeZqDI7Ro+pqgG4nVD6KM4x2v6SWsbEmyNv5Nk9MLIWKM/K1f6HEUqKhmyBp7H1R2YB7pCxY7ukU3v6x0S8rSe2aR9AZUa3R6HjALIle8BX0BzdMl/lYDA+IQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Kll1jnDgC8UqNW1en5+WDEEQHOk9Mo+Og2ra2fjhu/U=;
- b=OXmfEOr1qTLUqsFlhySCNtmZRSwDkWi1zMfaad4wx+Xl7cbEFcLqMtf7k+7edzc9KPijjuLPznRSWY4/1BdwOtu1D3kT2IO3EhI2+PvXjQ3cdZ/LYs91nQPkulOT1+Co0E/yZSXff4WgsQYNMX9iKYaZGhkzv0SOT7YuKMcJsUwDUX1He/VQ0A67ynhopouylkoobMO4UgB0p1LYhXg35m88FxYsBRO9QCnjgvdbkmLLMoWsXUCsFR9uayLczOHm8Y9KSwwMxcptFMk+FAdNsAjYXJkWNFis4czMSRfox/ygTLQV0oLR9D8lTXnCegbGeQOGEtVVMo7ETErpm57FTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 175.98.123.7) smtp.rcpttodomain=baylibre.com
- smtp.mailfrom=taln60.nuvoton.co.il; dmarc=fail (p=none sp=quarantine pct=100)
- action=none header.from=gmail.com; dkim=none (message not signed); arc=none
- (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ bh=oxxHAcjKsfiM4aH8VPjR2k5AW3ROt6gqeSlr2Eiy+q8=;
+ b=TUSaHkZuJkU4BHvTboGg88Uvh9fjOuMQgBX2GicNJJuU6KzI8L5jjHbjHZ0C3Sj1yl3JeYYb7t+x4LxJ8cYE2hQzZnwvf61h4zxHuh6gHQEv+UwiPIzqJ8GdUE2hkDrjphmLO4PYkRUZGiAm0ccaTDut6gXXzmaNImozdlqEDMak2xIMKPY/VzuA/q1awAk4YWXuxyVz/1F/oY73TgJM4cio7c329Mkkrni2Vus8HPL1EGkvm52dH2nYgXM3X9hkUrFFC1QbeWL85/+8DDIpwCABCN3hMbaDgMAanmV4Z6vT+9uNMwfFd/3skPmXVsYYbFneGqfMWN+5YxrbGgvPfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Kll1jnDgC8UqNW1en5+WDEEQHOk9Mo+Og2ra2fjhu/U=;
- b=m4IsL/rtm2orq4wZmxnSUlxwkbV+88/lboSrj7SE/ADJBstG3s36w/ky2sy6M1QWFY2RpDHhKIvE0wuRdewLdfdAAs12ym2djI1Ixzc4DcqlxsEm+cxDb8MeQxk+1JKyQVjc3bKupJVdaogP2p6BJNErnhmIi4/KC8IhIUtKrwY=
-Received: from SI2P153CA0001.APCP153.PROD.OUTLOOK.COM (2603:1096:4:140::7) by
- KL1PR03MB8897.apcprd03.prod.outlook.com (2603:1096:820:144::11) with
+ bh=oxxHAcjKsfiM4aH8VPjR2k5AW3ROt6gqeSlr2Eiy+q8=;
+ b=NLa5ABvf3VmLi6HqoZfMPTgQTGDby5FVI6Ro1nF3DesAY8l2HC4HeKIca3JMykehId0zWDKCyXnK0IXgJQsYaKXqC/17+KoHjrpAbcVR1qXcjPK0MYTGuNK08TG5RkCcxYU7VoAvJEnvPX8Y7vqgnJWYu46qBpxXxiabo1PBuNg=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
+ by MW4PR12MB6828.namprd12.prod.outlook.com (2603:10b6:303:209::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.13; Thu, 9 May
- 2024 19:24:17 +0000
-Received: from SG2PEPF000B66CA.apcprd03.prod.outlook.com
- (2603:1096:4:140:cafe::ff) by SI2P153CA0001.outlook.office365.com
- (2603:1096:4:140::7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7587.12 via Frontend
- Transport; Thu, 9 May 2024 19:24:17 +0000
-X-MS-Exchange-Authentication-Results: spf=none (sender IP is 175.98.123.7)
- smtp.mailfrom=taln60.nuvoton.co.il; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=gmail.com;
-Received-SPF: None (protection.outlook.com: taln60.nuvoton.co.il does not
- designate permitted sender hosts)
-Received: from NTHCCAS02.nuvoton.com (175.98.123.7) by
- SG2PEPF000B66CA.mail.protection.outlook.com (10.167.240.22) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7544.18 via Frontend Transport; Thu, 9 May 2024 19:24:16 +0000
-Received: from NTHCML01B.nuvoton.com (10.1.8.178) by NTHCCAS02.nuvoton.com
- (10.1.9.121) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.14; Fri, 10 May
- 2024 03:24:14 +0800
-Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCML01B.nuvoton.com
- (10.1.8.178) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.14; Fri, 10 May
- 2024 03:24:14 +0800
-Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
- (10.1.8.28) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
- Transport; Fri, 10 May 2024 03:24:13 +0800
-Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
-	by taln58.nuvoton.co.il (Postfix) with ESMTP id 1F82B5F66C;
-	Thu,  9 May 2024 22:24:13 +0300 (IDT)
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10070)
-	id 1DE5ADC0BCE; Thu,  9 May 2024 22:24:13 +0300 (IDT)
-From: Tomer Maimon <tmaimon77@gmail.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>, <p.zabel@pengutronix.de>,
-	<robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-	<tali.perry1@gmail.com>, <joel@jms.id.au>, <venture@google.com>,
-	<yuenn@google.com>, <benjaminfair@google.com>
-CC: <openbmc@lists.ozlabs.org>, <linux-clk@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>, Tomer Maimon
-	<tmaimon77@gmail.com>
-Subject: [PATCH v24 1/4] dt-bindings: reset: npcm: add clock properties
-Date: Thu, 9 May 2024 22:24:08 +0300
-Message-ID: <20240509192411.2432066-2-tmaimon77@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240509192411.2432066-1-tmaimon77@gmail.com>
-References: <20240509192411.2432066-1-tmaimon77@gmail.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.46; Fri, 10 May
+ 2024 00:57:18 +0000
+Received: from MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
+ ([fe80::b0ef:2936:fec1:3a87%4]) with mapi id 15.20.7544.047; Fri, 10 May 2024
+ 00:57:18 +0000
+Message-ID: <380a91e1-248a-7d35-4da2-2bad2ddc6005@amd.com>
+Date: Thu, 9 May 2024 19:57:12 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Reply-To: babu.moger@amd.com
+Subject: Re: [RFC PATCH v3 00/17] x86/resctrl : Support AMD Assignable
+ Bandwidth Monitoring Counters (ABMC)
+Content-Language: en-US
+From: "Moger, Babu" <bmoger@amd.com>
+To: Peter Newman <peternewman@google.com>,
+ Reinette Chatre <reinette.chatre@intel.com>
+Cc: babu.moger@amd.com, corbet@lwn.net, fenghua.yu@intel.com,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ paulmck@kernel.org, rdunlap@infradead.org, tj@kernel.org,
+ peterz@infradead.org, yanjiewtw@gmail.com, kim.phillips@amd.com,
+ lukas.bulwahn@gmail.com, seanjc@google.com, jmattson@google.com,
+ leitao@debian.org, jpoimboe@kernel.org, rick.p.edgecombe@intel.com,
+ kirill.shutemov@linux.intel.com, jithu.joseph@intel.com,
+ kai.huang@intel.com, kan.liang@linux.intel.com,
+ daniel.sneddon@linux.intel.com, pbonzini@redhat.com, sandipan.das@amd.com,
+ ilpo.jarvinen@linux.intel.com, maciej.wieczor-retman@intel.com,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, eranian@google.com,
+ james.morse@arm.com
+References: <cover.1711674410.git.babu.moger@amd.com>
+ <CALPaoCjZ3oLdKymJjASt0aqtd0GGOme7LavvYOtPYTb_rA-mYQ@mail.gmail.com>
+ <b35dc4e9-7e8b-42ed-9a51-ae50d521cf4b@amd.com>
+ <CALPaoChxYoJx8eR48EkSKf-hu2p2myQJLZEhj_Pq6O4R15-=5A@mail.gmail.com>
+ <6edffe1b-e9a9-4995-8172-353efc189666@amd.com>
+ <ab2a6a4b-3740-47c6-9443-e6bb7a0c1adb@intel.com>
+ <CALPaoCiYFKeASPMDwzzaHLw4JiMtBB6DTyVPgt0Voe3c3Tav_A@mail.gmail.com>
+ <b725e4ca-8602-eb26-9d47-914526621f52@amd.com>
+In-Reply-To: <b725e4ca-8602-eb26-9d47-914526621f52@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA1PR02CA0015.namprd02.prod.outlook.com
+ (2603:10b6:806:2cf::19) To MW3PR12MB4553.namprd12.prod.outlook.com
+ (2603:10b6:303:2c::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-NotSetDelaration: True
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SG2PEPF000B66CA:EE_|KL1PR03MB8897:EE_
-X-MS-Office365-Filtering-Correlation-Id: f1b0bfa0-156d-4ffa-3b3c-08dc705d9dd9
-X-MS-Exchange-SenderADCheck: 2
-X-MS-Exchange-AntiSpam-Relay: 1
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|35950700004|7093399003|82310400017|7416005|61400799018|48200799009|921011|35450700002;
+X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|MW4PR12MB6828:EE_
+X-MS-Office365-Filtering-Correlation-Id: 398c74a7-1b79-43f5-2233-08dc708c23da
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|376005|366007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?8BfNsKpXUYhHNcnnLYzjPaTlCrjL78yaTR23wjVjedLGP9+RRD93oqT4r/y3?=
- =?us-ascii?Q?Ds/8IlFw7ineFJ/WkIVrijfzb93yq6tP9u8SVxHwP/LlKi4d7xE0TeIVPHXV?=
- =?us-ascii?Q?Mow5DcZH+2uoAVKH+pv8rCNFJz5w8mrRHR1An1JfV22SSyhwkwi6uhSGQ769?=
- =?us-ascii?Q?cv7vyGJ48fz+z/JV0ZH3fKKXmqsHhuJM/rT2CifhmsDhiUIL74vgm4+aqI8P?=
- =?us-ascii?Q?sA2z0v30lUtaE/4plspciGzIwFt9HZ5pPTCq4l0ZgbonZ8qhUoCI5HbZbzwV?=
- =?us-ascii?Q?Lueoy+iVVZVGX4F2jKKqO/2hy2XSaleDtzeHEBHajVbuuP7X8D8E6hIQ4PvZ?=
- =?us-ascii?Q?AsIjsdE1pSjWs6tcbVBRgbM15PKsFy5EUbg+Ami0EAPu+mTAJAlfKXrIbJPz?=
- =?us-ascii?Q?v8JMFkWtQd5HGpwZKe2r1zob35DGRjK1nlsCDR4ASNk3Vn8B+yoP2hYlVGfO?=
- =?us-ascii?Q?L5XYNt39ViqiKn4WGBP2Y/FrA1XAu+q9bCzekEhS0HBAC5WdhxRoNwCku/PR?=
- =?us-ascii?Q?sp0Lm5cCM6aJd4o5tmFZNH59+fcSxQJQV3o6AGuW66CHY9tr7z1IMXEqOI5w?=
- =?us-ascii?Q?CAVsG4IlTe1IiCLeg7iIWliOEJmT+ouAaLBjpeuVSvD1v5MH6drZogN22Sdp?=
- =?us-ascii?Q?i25I+eaRRHAVL07D43qYTZdlQrI0opBnhT0TeT3rN8amBk/cg+JuhgN/M78X?=
- =?us-ascii?Q?8PX3nCvMWcqPlP7fJUYbd/bnYY186Dk8/XE/feV+KDAJ8QCp7PiUQUJpTj8I?=
- =?us-ascii?Q?Gn5qBmmg6JWJNtjMsMRezlHaqM0vE8j64WY/FSUIv3qYEubPt3hW+UtsGUr1?=
- =?us-ascii?Q?rMDCV0C7Xcfldpg9FUU2vq3ZT3k+bJgWwShFcFP09Ur6dQJ7IYfqs4UkvWpb?=
- =?us-ascii?Q?gPMMLuysa9wieG/GHP9LI4Iw5ySWDdvy7hwaylzp3Zy9eknRrHip2+kCEptB?=
- =?us-ascii?Q?HOIbjOaKPsCT36OWBrhQUzM9mXXMOOCZaWH5IXj9AeJkTxstnBfO4+msgH8T?=
- =?us-ascii?Q?0Kwsjqus0yk/zB9m0bAsGv0oF4JHo1rRp8u8vzaexMywf2NSpsN2EpGQUK3p?=
- =?us-ascii?Q?gc2s1tRn6lnQNsHAiDcASmGvxC3n7clL0luhTNid7nf3c3zJgh9Xv29V3/Ai?=
- =?us-ascii?Q?wKc0loAcsxUZ3jU1aC0Px6xaIVn29wlJk2h2aYhFnb68OMygqSFEPwtdDwcC?=
- =?us-ascii?Q?sE7KpikpwY8XBsCIFIQG7bMWgfxndkc6BW2XUNrlHnzX/2abyJc5xbncO0ee?=
- =?us-ascii?Q?Qnse57TgqpEfcNSwVNB8U1BpnWgXEoosX49s20MCtMqjE0uGMrzP7HboYgDj?=
- =?us-ascii?Q?InwafR+l7ya9PgE3ChFdYMzbnb+Iy5MpGgtSrpZTUs6M7pe2rSZqhBrfG72U?=
- =?us-ascii?Q?praW8xoA0JFFIX9if4STvlZjzAmrvX/N9GDolralGXElY9v/ePBCDDuGuEx8?=
- =?us-ascii?Q?3/+viIFVmJ8O2v5k5inFNVM1P7tgSQjs?=
+	=?utf-8?B?dWdCSUpBZ1lJUEdwU3NqaEVYN2huRTZFZ0lXS01sVDZqTllkRlc3TDJHbC91?=
+ =?utf-8?B?Z1ppYzlUUGJxNTdaMkhBVmhRQ1F4c1k3SFVsaTlBUm9GSTJyR1FLcGFUWmFG?=
+ =?utf-8?B?eWhmVzh3N1JFTkFLNHc5RXZOYlc2RFVBclgzT1k4TlcxOWJ3YmlreTZqaHF2?=
+ =?utf-8?B?bHBRNXBjZnZyUmRjc0UvM0VrU28zUVJGclc4ZGorQmxsQklCb1hxQjhRY1ZB?=
+ =?utf-8?B?NUxDZmVEekoyTzZCWGNOWWxtRXJsUkl5MTRpVFQ4RUlSTE91VEI3cnhodkZo?=
+ =?utf-8?B?K28vanlqTXJMRUpuUXQwaG1mOURBWkJEU21vdUZOb1QzYkdPZFFnOS9QY3Fj?=
+ =?utf-8?B?UnV1ek1lWHN5QXpiM1BMemxlVVY4ODA1Qm9WSGx6S0FlN001WkpnVzlhemRV?=
+ =?utf-8?B?RUpkajNjM3ZaMFQxVVRtT2RmZU5OamhWdVJBMXJEcmtvd1ZJQXg1Wmw2STZM?=
+ =?utf-8?B?OSs4eGJxcFhEcSswTW1WMGJ5c1hPV24vak5PL0gwV20xeEttVDBjaGZqbEhj?=
+ =?utf-8?B?OTh5QTBlNjhVR29semN2ZERBS3kxVzR2OC93UlBneDVSNkNuN2VpVTNJTCtX?=
+ =?utf-8?B?cExPYktVRVJCV1hUKzJBamVUMGNXRmUxQlVUSHY0UTAzckRmSzFJNG5kYmhs?=
+ =?utf-8?B?TC9XdTdpeTIxVjVZRDZkQmFIbG9PdXJJaVFoek54NUU3QzZKLzFmSWRSME54?=
+ =?utf-8?B?NlZKOEw3SFdmaVRUbHpGWlhpWVE4WG8zM1JHS2VPakYvNktTMm8wUnFxOWhz?=
+ =?utf-8?B?bVlJMnhucnFGa2ZXdmtnQmZVd1U2b1VxbVNnRWpCL3d3ZHFyTk5nUGpLaDhI?=
+ =?utf-8?B?RXN1OHQ5ZFZ3MUJwbHZtelBYRXBCL1Q3WUVBRTNkcThhak5NNEsxWVZkRU0x?=
+ =?utf-8?B?c3Q4dFptNUg2aWhGdEVwbGM0d1o5VTBZVHZ4VU1zZzNqbUFMckJNVFc2akpP?=
+ =?utf-8?B?U0V1L3N6eHhNVnhLeGxrRUVOOWwvRjZjTnZsSStBdlJ5Zzc3cng5S3FmS1hW?=
+ =?utf-8?B?d0FtUUFPVjY1QU5DZm1xdXEwZk9hL050ZlRYK3FDbVYva0J6enIvaUJkR3h4?=
+ =?utf-8?B?SjVPWGlUaExDT2ZGcFNpQmk4aksveE1ndDAwWGNoT3c5ZGRsVDhxeWI3dktp?=
+ =?utf-8?B?UC9ZN0I1STRKYzEzT3VUQ1crekVWU0VKWU5oREs1ODV4ditiOW93eXF0TWlQ?=
+ =?utf-8?B?MlY1V05mcWJZTURlSmNnNG1PakU2MzIra0tyRkVJVmNzNmRQR2JFaEVuRVVt?=
+ =?utf-8?B?WG1uNFNCN0hjQlk4cVF6RG1nYmp2TkIwTHZsSkI0Vk5IK1FFYUtPYldMVmN0?=
+ =?utf-8?B?ZXB1TGtQMHNJa2pEUXBCV20vc2pXNEk2a0Nrb0RRLzFDSXZRaHo1Wm1jaUFR?=
+ =?utf-8?B?Q0lGaFpERFYzbkpxdkQvR24xRFZWclpraUV6cG4xcC9reW1iT3NZb2NEUjdD?=
+ =?utf-8?B?UFFHVjdGYVNLaTJ1TUtzZ1g3OTFEY0RlRUw4UTdxeVRYdktFeC9qN3ZLUjg3?=
+ =?utf-8?B?K2U4MmwxbDNLQ1VJNlNwMVpUaCtSRjE5aWdvNXBwcmZZWWMxeG9oK25EZ2Vm?=
+ =?utf-8?B?VStEYXpPV0xHY21wVnNKd21XYUFtQjVkU1h1TUlYczFWWDhyMGxReXF2d1dC?=
+ =?utf-8?Q?45qnEigR84h5D0G9uHfKyO4qBQMu7r9yMi6I9jS6Kp1w=3D?=
 X-Forefront-Antispam-Report:
-	CIP:175.98.123.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS02.nuvoton.com;PTR:175-98-123-7.static.tfn.net.tw;CAT:NONE;SFS:(13230031)(376005)(35950700004)(7093399003)(82310400017)(7416005)(61400799018)(48200799009)(921011)(35450700002);DIR:OUT;SFP:1022;
-X-OriginatorOrg: nuvoton.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 May 2024 19:24:16.1359
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(376005)(366007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NjJBZTlmOVZHdDNEUldLT242bG1ybXNMQm9PVW96TzdNVFR5aEowZldYdEV6?=
+ =?utf-8?B?dHB5VzZnc3FPUzRSN05IVE5wSnFkQm0yY1d1dHhCdmxHazJDWUREV2FXUDRq?=
+ =?utf-8?B?Z3NLRUdWelJFZHQ3aFNhb3ZDTHgvUTFiNE8rLzdQVjlzVWdCb0pQbVRaeGow?=
+ =?utf-8?B?dFREUnpuM1pwQlFGcU5wNFhyakh1RFV4VFAyeXdmSWtYdTJKUllaOFdHZlJG?=
+ =?utf-8?B?cG5ONHQvZUpLQURmcHdya1VDVm1iWXZOVnQ2Z2hQRTZiTDNhQTk4czBXOEpK?=
+ =?utf-8?B?YjYzbW9zcTliMnozbmxEaytabFpEZFZOQUN5a1A1TXZXK3ViZHg2SCtpSUlS?=
+ =?utf-8?B?RWV0eFRhcW9YenhTejZieHF6TVFURWl0SjJpOERUVzdVcWcycUpIQTErREJN?=
+ =?utf-8?B?ZUtlL29mS0dyeHRvYmpNZ0cyMlFTRFg2WisxMmVPa1FmR1JDVStTTUZWWHRL?=
+ =?utf-8?B?NC9aaW03VTg5Z0Q2ZFU2ZjdSRjBJWkRMcFl6c3ZIS3NzbDRxY1ZsdFJNNHJh?=
+ =?utf-8?B?MTFUdm9qREFQcEx3Vk9RTGtLMWJ1c0h4TnJoUHczWkNGRmhlWEE0THowSjVO?=
+ =?utf-8?B?NU5hNC9JNElGNDc0ZndBZ1kvT0lpSWxXSGE5TFRBWVNQdjdyNjdQUmhETW5L?=
+ =?utf-8?B?SVZYejJiNXVRWHo1bHl4dWdtZUZYVEpuSXNpejdXTDgrME5RN2pZSUhSd2M5?=
+ =?utf-8?B?cnA1WVhrbU1LdzJPbUVURC9EVng2RlJ1QzBhV3dqczlBdEpSNG9PbWVwUUJr?=
+ =?utf-8?B?OVY1RldUYXVROGtZTnNnbjdMTm9iYVFTbjc2eDRMV2xoc1ZpazZrL3ZhSW5a?=
+ =?utf-8?B?OE1ad1lQckFkN0FnNUJVK3VIVHBFRU5BV2VubFk3OFRtSE5UVm5sZmR2cDJB?=
+ =?utf-8?B?VmdEVGc2TVRPbk0yTldNUXRheW5iNjhKdlM5bjRNY2cxRm5jTjBKa0s3K1hE?=
+ =?utf-8?B?ZS9ad3VFb25tdXVrMTZNNmlzUFFUb2JaaUR4WCtGV2NMTy9ic2dIdWVhZGJC?=
+ =?utf-8?B?TEd5dTVXTnZiSEhpaEdiNWlxRFJNaXVyR3lHUWRSWEc0eHFQbEhwNVlTdjln?=
+ =?utf-8?B?Wm9Za2R1ZGVBeVpIb0lpR1h0K25FNG9vZExEcmxQRjNsTnp2MlJJZlRoWmNy?=
+ =?utf-8?B?REp5ZmdMNEJBb2RXc2JLbXB6L2dZbVVnT1R3eGNkN0ptdWdSUzdIeE81TXRr?=
+ =?utf-8?B?UlYrZFZUMlBETkJIZGMvOFJIQjFJOGtuSEZQbE1ybGJHd1dmTkZ3MFdDQU5Q?=
+ =?utf-8?B?N0Y0cjB0MldnQnlUR2h3WFYzWnc5NTgwL1pBcUxWVUcxN1d3WTA4ak8ySnFO?=
+ =?utf-8?B?VHR4eGFIVkpSQnM3anQ2L0hORWI3ZTk2N2tMM29VaXR5SnVhMVcxK1FnTGl0?=
+ =?utf-8?B?UDR6L1Z0c0JMeW9wcFhPbXdMRTBYTWxMQkRzZFRkNUpBQ3AzcDE3WFJweVc1?=
+ =?utf-8?B?ZkU5eVpnV2hOM3gyaUlhZkF2Z29GRmY4eDZYdXFzWW1wK25ob0x5SWo1d0hW?=
+ =?utf-8?B?R1I0R0h0QWtIOE9vMG54UE5vZmY2M0h2THVIQ2tTNDdtZ1FmbE84V3U5ZG55?=
+ =?utf-8?B?RnBCZ256RU1XYlBRS2FoUDQ5RDUwMlJJUTJwQzFjWTl6UnMzV21GdVpvS1Vj?=
+ =?utf-8?B?RWE5TE1rSHJYU094SllJKy9MMWlVckNPTzJXb1BXZEZmaU9tYmtSV3lDdmti?=
+ =?utf-8?B?MFZrU0szMUNJbW5Od3U5Qnp5RjBrdUtqM0VJaTZJWXExclduMjY0OVZHOFJK?=
+ =?utf-8?B?TFE1RTVXZW9IekZ6UTlGSXYyYitFSjYrOFVZTUlOSHQ3Z2xrbVZvamI1NnJo?=
+ =?utf-8?B?NitDblA0a3ZxVnRCL0tFOFp2cWQxQXgycHZRTklZTVU3Y2VSc2Z0VmZ0bGJ3?=
+ =?utf-8?B?QWVwWU16NUI5UkR3eG1RSlRvNVRPM2VVWExJL3k5dXJiYkZ3N0s4NUJwd1RO?=
+ =?utf-8?B?Ymx4Mk1QUVBKZ2tHY2svb3EvaHBQdFBKVXhkaWRYZm5WMVB4M0JYdmEzZ3U1?=
+ =?utf-8?B?cHlMMlVMQTF1TE0rSGd2RDRweC9WcmVMWncrdGtsWW10MmpHS0Q5L3JqNXM1?=
+ =?utf-8?B?YW1XTzlXYTVGaFVyNkEzdXlwcHZPb0JUUVQvdE4yRWMrTUpQcUtsZXMwQ2Z2?=
+ =?utf-8?Q?uexY=3D?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 398c74a7-1b79-43f5-2233-08dc708c23da
+X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2024 00:57:18.0406
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1b0bfa0-156d-4ffa-3b3c-08dc705d9dd9
-X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[175.98.123.7];Helo=[NTHCCAS02.nuvoton.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SG2PEPF000B66CA.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: KL1PR03MB8897
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 53zOHuPy0TY4CpQ9SORHfdBicy0er2rfuM1EaCXlJJroB+woys5/LjBTFviGPEZt
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6828
 
-Adding 25MHz reference clock and clock-cell properties to NPCM reset
-document due to the registration of the npcm8xx clock auxiliary bus device
-in the NPCM reset driver
+Hi Peter/Reinette,
 
-The NPCM8xx clock auxiliary bus device has been registered in the NPCM
-reset driver because the reset and the clock share the same register
-region.
+On 5/3/2024 3:44 PM, Moger, Babu wrote:
+> Hi Peter,
+> 
+> On 5/2/2024 7:57 PM, Peter Newman wrote:
+>> Hi Reinette,
+>>
+>> On Thu, May 2, 2024 at 4:21 PM Reinette Chatre
+>> <reinette.chatre@intel.com> wrote:
+>>>
+>>> Hi Peter and Babu,
+>>>
+>>> On 5/2/2024 1:14 PM, Moger, Babu wrote:
+>>>> Are you suggesting to enable ABMC by default when available?
+>>>
+>>> I do think ABMC should be enabled by default when available and it looks
+>>> to be what this series aims to do [1]. The way I reason about this is
+>>> that legacy user space gets more reliable monitoring behavior without
+>>> needing to change behavior.
+>>
+>> I don't like that for a monitor assignment-aware user, following the
+>> creation of new monitoring groups, there will be less monitors
+>> available for assignment. If the user wants precise control over where
+>> monitors are allocated, they would need to manually unassign the
+>> automatically-assigned monitor after creating new groups.
+>>
+>> It's an annoyance, but I'm not sure if it would break any realistic
+>> usage model. Maybe if the monitoring agent operates independently of
+> 
+> Yes. Its annoyance.
+> 
+> But if you think about it, normal users don't create too many groups.
+> They wont have to worry about assign/unassign headache if we enable 
+> monitor assignment automatically. Also there is pqos tool which uses 
+> this interface. It does not have to know about assign/unassign stuff.
+> 
+> 
+>> whoever creates monitoring groups it could result in brief periods
+>> where less monitors than expected are available because whoever just
+>> created a new monitoring group hasn't given the automatically-assigned
+>> monitors back yet.
+>>
+>>>
+>>> I thought there was discussion about communicating to user space
+>>> when an attempt is made to read data from an event that does not
+>>> have a counter assigned. Something like below but I did not notice this
+>>> in this series.
+>>>
+>>> # cat /sys/fs/resctrl/mon_data/mon_L3_00/mbm_total_bytes
+>>> Unassigned
+>>>
+>>>>
+>>>> Then provide the mount option switch back to legacy mode?
+>>>> I am fine with that if we all agree on that.
+>>>
+>>> Why is a mount option needed? I think we should avoid requiring a 
+>>> remount
+>>> unless required and I would like to understand why it is required here.
+>>>
+>>> Peter: could you please elaborate what you mean with it makes it more
+>>> difficult for the FS code to generically manage monitor assignment?
+>>>
+>>> Why would user space be required to recreate all control and monitor
+>>> groups if wanting to change how memory bandwidth monitoring is done?
+>>
+>> I was looking at this more from the perspective of whether it's
+>> necessary to support the live transition of the groups' configuration
+>> back and forth between programming models.  I find it very unlikely
+>> for the userspace controller software to change its mind about the
+>> programming model for monitoring in a running system, so I thought
+>> this would be in the same category as choosing at mount time whether
+>> or not to use CDP or the MBA software controller.
+> 
+> Good point about the mount option is, we don't create extra files for 
+> monitor assignment in /sys/fs/resctrl when we mount with legacy option.
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- .../bindings/reset/nuvoton,npcm750-reset.yaml  | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+I think we still have not decided about the "mount" option for switching 
+to legacy monitoring. Mount option seems safe at this point. We don't 
+have to deal with extra files in resctrl filesystem with dynamic switching.
+> 
+>>
+>> Also, in the software implementation of monitor assignment for older
+>> AMD processors, which is based on allocating a subset of RMIDs, I'm
+>> concerned that the context switch handler would want to read the
+>> monitors associated with the incoming thread's current group to
+>> determine whether it should use one of the tracked RMIDs. I believe it
+>> would be cleaner if the lifetime of the generic monitor-tracking
+>> structures would last until the static branches gating
+>> __resctrl_sched_in() could be disabled.
+>>
+>>>
+>>>  From this implementation it has been difficult to understand the impact
+>>> of switching between ABMC and legacy.
+>>
+>> I'll see if there's a good way to share my software monitor assignment
+>> prototype so it's clearer how the user interface would interact with
+>> diverse implementations. Unfortunately, it's difficult to see the
+>> required abstraction boundaries without the fs/resctrl refactoring
+>> changes[1] applied. It would also require my changes[2] for reading a
+>> thread's RMID from the FS structures to prevent monitor assignments
+>> from forcing an update of all task_structs in the system.
+>>
+>> -Peter
+>>
+>> [1] 
+>> https://lore.kernel.org/lkml/20240426150537.8094-1-Dave.Martin@arm.com/
+>> [2] 
+>> https://lore.kernel.org/lkml/20240325172707.73966-1-peternewman@google.com/ 
+>>
+>>
+> 
 
-diff --git a/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml b/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml
-index d82e65e37cc0..18db4de13098 100644
---- a/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml
-+++ b/Documentation/devicetree/bindings/reset/nuvoton,npcm750-reset.yaml
-@@ -21,6 +21,13 @@ properties:
-   '#reset-cells':
-     const: 2
- 
-+  '#clock-cells':
-+    const: 1
-+
-+  clocks:
-+    items:
-+      - description: specify external 25MHz referance clock.
-+
-   nuvoton,sysgcr:
-     $ref: /schemas/types.yaml#/definitions/phandle
-     description: a phandle to access GCR registers.
-@@ -39,6 +46,17 @@ required:
-   - '#reset-cells'
-   - nuvoton,sysgcr
- 
-+if:
-+  properties:
-+    compatible:
-+      contains:
-+        enum:
-+          - nuvoton,npcm845-reset
-+then:
-+  required:
-+    - '#clock-cells'
-+    - clocks
-+
- additionalProperties: false
- 
- examples:
 -- 
-2.34.1
-
+- Babu Moger
