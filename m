@@ -1,95 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D50712C46B;
-	Fri, 10 May 2024 13:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384BB12C539
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 13:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715349136; cv=none; b=nssW72WKJe7s5AQMjTtpI9Ph2G7n50zDPkwGxELBFHjKK9hbNp60A9Hr+nQnZ+fkMmBxcTGAdO4DYHs9HLlu0QNdXU2UZn2YNsyMtsh4FXaq4+IhcmudMXONWEuRfAFRpmKdEji+kpCSVxFI2B8QfzZRbXWtzn1twDFCQGS+wGM=
+	t=1715349151; cv=none; b=CBeJCcM/LfEoGMliWUx3ZBvPWucW3xj/1sIB1UmprULhjhWfIZL8IHuDNfJ2NwuSd/hzJY4Gl2hTWqSR7KKGr4QF5q7I74+UwjF/mNK+X9lhk28G62gQlAEbJSSY6QDd5aZbR0R2w0FpB/Ka48wlYZQPVRk0ZTfk9YjpY+m3uWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715349136; c=relaxed/simple;
-	bh=P03mPsNFGR0/RNBmpmCMETYGOpewXcdJhDQnp92x98U=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=RdToRcoMLJhLFfSeALD9wMw59LWr+hiO6Q14FTRysi/LZzIfSJwN9l3Dwc+wSn1+ifQrXCbPWB+GmpQirR56oCkACHhO3wfA6djQmcFHDHPerrmWqe2rj5ReW8dclXzddCW+mwn4PJbNilPqjWaJjtaPuc5jwdSQTuPMUoWObCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CdTIbV3p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715349151; c=relaxed/simple;
+	bh=8WQKOarhlV+n52hs+H1jjdRUk7esOoGpFkk8kHxEvRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iFCt9NHNhRyiLNQZ+18izh99y/znLVc6FuGChC1iC/UbZ18Dw4M52Xc49uqQE0XGoA8dyt+/uPHWGe+I7d/ckwZihb0pyxD/jZ5rST24+i7V+WLrgxxiphNIjyZTSupTxZmr9EOxpPg9C2NiJ2vqizP3O6NQW0Dfol2gGXxYsNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HLbacjPM; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CdTIbV3p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0484C32781;
-	Fri, 10 May 2024 13:52:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715349135;
-	bh=P03mPsNFGR0/RNBmpmCMETYGOpewXcdJhDQnp92x98U=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=CdTIbV3p+4e9dZYYzb9p0raW2kJxdErUtvbB2gTyAlJgbePLaNavSF0S+hRtzQvJv
-	 giA7CUdN2YZIOrk7XANyrFY5jsFCDzKxHXQZpHQGR1fp1Rod9/9XPQEuumQYSe1sZA
-	 1nAY/DLONdV+kC3ws88a7/6D5wCLzwQzyIWzG36sWz3EQSt2g6X8RsArbllW9jORcJ
-	 XJjrNAh5Hlv7JwWB+zX/POAWBGZglSTpJ0O8FqsYHc6ZBnHv6wY4owV2OOVdyv2zkx
-	 bXo/67Gzzo878XtRdQDgTa/2OViokNXOj50RP4qPSvGeeXyzfBT1/JPujSSXHzU6ca
-	 WZgiTxD7fU92Q==
-From: Kalle Valo <kvalo@kernel.org>
-To: Jeff Johnson <quic_jjohnson@quicinc.com>
-Cc: Ansuel Smith <ansuelsmth@gmail.com>,  "David S. Miller"
- <davem@davemloft.net>,  Eric Dumazet <edumazet@google.com>,  Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>,
-  <linux-kernel@vger.kernel.org>,  <ath10k@lists.infradead.org>,
-  <linux-wireless@vger.kernel.org>,  <netdev@vger.kernel.org>,  Sebastian
- Gottschall <s.gottschall@dd-wrt.com>,  Steve deRosier
- <derosier@cal-sierra.com>,  Stefan Lippers-Hollmann <s.l-h@gmx.de>
-Subject: Re: [PATCH v14] ath10k: add LED and GPIO controlling support for
- various chipsets
-References: <20230611080505.17393-1-ansuelsmth@gmail.com>
-	<878rcjbaqs.fsf@kernel.org>
-	<648cdebb.5d0a0220.be7f8.a096@mx.google.com>
-	<648ded2a.df0a0220.b78de.4603@mx.google.com>
-	<CA+_ehUzzVq_sVTgVCM+r=oLp=GNn-6nJRBG=bndJjrRDhCodaw@mail.gmail.com>
-	<87v83nlhb3.fsf@kernel.org>
-	<7585e7c3-8be6-45a6-96b3-ecb4b98b12d8@quicinc.com>
-	<cce2700c-e54f-4a50-b3f0-0b8a82b961a4@quicinc.com>
-Date: Fri, 10 May 2024 16:52:11 +0300
-In-Reply-To: <cce2700c-e54f-4a50-b3f0-0b8a82b961a4@quicinc.com> (Jeff
-	Johnson's message of "Thu, 9 May 2024 09:48:08 -0700")
-Message-ID: <875xvllqpg.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HLbacjPM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715349149;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8WQKOarhlV+n52hs+H1jjdRUk7esOoGpFkk8kHxEvRo=;
+	b=HLbacjPMQqrnFIZLRGVmCsiGs4JFVWCSX6ukQc8VfC891AueadFjDqu1OSzagAKJUrrdDR
+	GgXhnCZY03z85vMl9wfYINP89HzElPKhLsZXf/GzlyJ6bVCAs44PEdaoZIersWqOZt5r54
+	9GQsQKC0qqmDouRTP9L/f7Emenok6s0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-487-AV0Th6AeOAm7wyofLfpVvg-1; Fri, 10 May 2024 09:52:26 -0400
+X-MC-Unique: AV0Th6AeOAm7wyofLfpVvg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5CA13857A81;
+	Fri, 10 May 2024 13:52:25 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.196])
+	by smtp.corp.redhat.com (Postfix) with SMTP id 22B35CF5E1B;
+	Fri, 10 May 2024 13:52:23 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Fri, 10 May 2024 15:51:00 +0200 (CEST)
+Date: Fri, 10 May 2024 15:50:57 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 25/48] rcu: Mark writes to rcu_sync ->gp_count field
+Message-ID: <20240510135057.GC24764@redhat.com>
+References: <20240507093530.3043-1-urezki@gmail.com>
+ <20240507093530.3043-26-urezki@gmail.com>
+ <ZjpAsYJIfzYSKgdA@redhat.com>
+ <4c9e89b5-c981-4809-8bc2-247563ce04e9@paulmck-laptop>
+ <20240510131849.GB24764@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240510131849.GB24764@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
-Jeff Johnson <quic_jjohnson@quicinc.com> writes:
-
-> On 5/9/2024 9:37 AM, Jeff Johnson wrote:
->> On 5/8/2024 9:50 PM, Kalle Valo wrote:
->>> Sorry for the delay but finally I looked at this again. I decided to
->>> just remove the fixme and otherwise it looks good for me. Please check
->>> my changes:
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=688130a66ed49f20ca0ce02c3987f6a474f7c93a
->>>
->> 
->> I have a question about the copyrights in the two new files:
->> + * Copyright (c) 2018-2023, The Linux Foundation. All rights reserved.
->> 
->> My understanding is that Qualcomm's affiliation with Linux Foundation via Code
->> Aurora ended in December 2021, and hence any contributions in 2022-2023 should
->> be the copyright of Qualcomm Innovation Center, Inc.
->> 
->> 
+On 05/10, Oleg Nesterov wrote:
 >
-> ok it seems like Kalle's v13 had:
->  + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> On 05/07, Paul E. McKenney wrote:
+> >
+> > By the stricter data-race rules used in RCU code [1],
+> ...
+> > [1] https://docs.google.com/document/d/1FwZaXSg3A55ivVoWffA9iMuhJ3_Gmj_E494dLYjjyLQ/edit?usp=sharing
 >
-> and Ansuel's v14 has:
->  + * Copyright (c) 2018-2023, The Linux Foundation. All rights reserved.
+> I am getting more and more confused...
 >
-> So Ansuel, is your work on behalf of The Linux Foundation?
+> Does this mean that KCSAN/etc treats the files in kernel/rcu/
+> differently than the "Rest of Kernel"? Or what?
+>
+> And how is it enforced?
 
-BTW in the pending branch I can change the copyright back to original so
-no need to resend because of this. But I'll need guidance from Ansuel.
+I can only find the strnstr(buf, "rcu") checks in skip_report(),
+but they only cover the KCSAN_REPORT_VALUE_CHANGE_ONLY case...
 
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
+Oleg.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
