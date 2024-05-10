@@ -1,168 +1,176 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC95F12BF21
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 13:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC725127E0D
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 13:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715347611; cv=none; b=IaIEix2LnbMezDANT7L+GFDl1A0eyCvrNyv9Kpx6hiMHc6BK+UuV8Rs6pLGcRvlHHU0XZXNp+nGbeDeKNxRXeTKl/yhoFvRcQnP5Lr8AXnEZNqEl6JuibRTLI5uxoPe/WdByLpML7rMHEVJ8ufCfJ/+iFnOyKaVVNFcChfjzK8w=
+	t=1715347702; cv=none; b=HbJNEY4tuKGpqxfVTH0b9V8mDkKM7RdBMhz1Tit3uUn43TRMjdw28fN08CUldsZdlGB37P+Vixu4d50fdnnoJwCV4MMFCfSyUIwvP3ouwOuiZbLciw7c+ujEmPDvS+SQPt8jVrUFzdcycmP9KzvGsOSnsyNCf6cSsx4uoe7ieOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715347611; c=relaxed/simple;
-	bh=Ptqv9/UW3AsNmkl/pJs5+10YJOZ9fx/1CAxitID4Ki0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Fl6bi8HHk2Oq56CoLeIfG++1zuIsKLoFqBazaQTmnwzdmizMR1zWDiM/IInaTBVN+GgVYZkDgdBgTBqEhAAs+FweH3P7dVMlwC8KiFakiwRQNi/NAuPNZWUE2juEHxvmHJf0b6TdUKJueaqeJ+QLkgTj+nJAqWUdfMZYMq3tdXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=tbQNBYv1; dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b=tbQNBYv1; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="tbQNBYv1";
-	dkim=pass (1024-bit key) header.d=suse.com header.i=@suse.com header.b="tbQNBYv1"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DA54D3EE5F;
-	Fri, 10 May 2024 13:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715347607; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1neooF3mgFb2Ddvo0cNo073MdM8ntyg4Z5+TI/To1Kw=;
-	b=tbQNBYv1lmYZAGyalO4mAfwP7QwGulUxps7d9B0PgH0qvlMmlyg5MXTDCllCtazbcrzawM
-	rhn4MWki0abWLgsRsxbIIjoZYZOLIwxKnV7mgFiFzAa3fygHB9+v+Ei87EK7WHkTmgPJty
-	rhTdQ7hPX8HYsu6AVEU4MWcE5hvP3ws=
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1715347607; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1neooF3mgFb2Ddvo0cNo073MdM8ntyg4Z5+TI/To1Kw=;
-	b=tbQNBYv1lmYZAGyalO4mAfwP7QwGulUxps7d9B0PgH0qvlMmlyg5MXTDCllCtazbcrzawM
-	rhn4MWki0abWLgsRsxbIIjoZYZOLIwxKnV7mgFiFzAa3fygHB9+v+Ei87EK7WHkTmgPJty
-	rhTdQ7hPX8HYsu6AVEU4MWcE5hvP3ws=
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9EE82139AA;
-	Fri, 10 May 2024 13:26:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id rS1BApYgPmaMBAAAD6G6ig
-	(envelope-from <mhocko@suse.com>); Fri, 10 May 2024 13:26:46 +0000
-Date: Fri, 10 May 2024 15:26:35 +0200
-From: Michal Hocko <mhocko@suse.com>
-To: Roman Gushchin <roman.gushchin@linux.dev>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Matthew Wilcox <willy@infradead.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH rfc 6/9] mm: memcg: move cgroup v1 oom handling code into
- memcontrol-v1.c
-Message-ID: <Zj4gi-vOxLZi2van@tiehlicka>
-References: <20240509034138.2207186-1-roman.gushchin@linux.dev>
- <20240509034138.2207186-7-roman.gushchin@linux.dev>
+	s=arc-20240116; t=1715347702; c=relaxed/simple;
+	bh=EGfMHM/e17V+TY+MO2iQIR8Vb263lScsvwNmu7geQ/U=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uVnFOacXfkCt4MagPM8rPSfBxUAN66OvES9aUwQRfyOndmBffb8mjmb7dTkCHbZkDkG7k6bhM9zFFq94k4Wiy2YyhDZPVmwyXNmGj9IzZaoUxLfpFQIRNxa/TLp6fQSy9gLfFaoIbKN61OMduKKhjI1XzNvCUbufc1gzgfWXUn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-7e1964b70e2so227781239f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:28:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715347700; x=1715952500;
+        h=content-transfer-encoding:to:from:subject:message-id:date
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TSQQY9/6Se3eHqOviSCpoULuEJvdI1rJKRpLPKQqSqs=;
+        b=lrP6EhN8AP5q8x1Ss1CGQyajh2KIeqLXMyCYp4VcBZrK4ZoG/9NIDgSf1hq2BaWTqh
+         HO8dFrp7tC2rF6M4Qzq5W28kzlNeeLjsTF8JCJyxnKnlCB+JfBULuo1uweQ8lWNLKJuw
+         orn+LBog/Q8H5POrJtFdXLbbjfOmw9ZU7sH58OasNDfXPzYnCVO4TWb8gsqt3vi1lSUS
+         PpAei1amSxFXBB4tqYS9IV60Alq+LT+9YRKbuZgeyTAfudvOhruHlDAhtRKQ2R0eXtgg
+         OquhYIyAe0v8EXuIvd76reTptk0I0x+6AfIraw3ORPbeDpd7C1rujJp9R6m5BxoUiedv
+         koYA==
+X-Forwarded-Encrypted: i=1; AJvYcCXuyOriNB0oK3CCa/wAN2AkZ4mw27zNX2eFeLUknSWmZNAS7S852PaKV/jo3zdTWW9zganmruuRdSFX3Xh/PyvxcUR5o5jlkRv5x3Pl
+X-Gm-Message-State: AOJu0YyFLswBUk4f5aZrQoAJky+ggNomp/NFHcN0AW081Ea1Fzt291NF
+	zDHh1a4MeHIgMxowD9TnC9Ls7W0OTiMIXNdc8YTHEOHLzVmzmzfRdnFowx44yO10C2n7dtkCM2G
+	skStDdtDLHG81pM3fKQN4z0Xny/+xgWKGXqWDUvUEIi0FeLkODasZCt4=
+X-Google-Smtp-Source: AGHT+IGJExUYxPd8CAMlcFIKliveeAPDQDmtcHqv89Yk0eRnA0U9mdSOPqI9n4OdirQM58m7o0JcYEebkVFXSk/X+fJJM5SrBQRp
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240509034138.2207186-7-roman.gushchin@linux.dev>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-2.44 / 50.00];
-	BAYES_HAM(-1.64)[92.72%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.com:s=susede1];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Score: -2.44
-X-Spam-Flag: NO
+X-Received: by 2002:a05:6638:8523:b0:488:59cc:eb41 with SMTP id
+ 8926c6da1cb9f-48959eb6a06mr177842173.3.1715347700133; Fri, 10 May 2024
+ 06:28:20 -0700 (PDT)
+Date: Fri, 10 May 2024 06:28:20 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000553d3f0618198200@google.com>
+Subject: [syzbot] [lsm?] WARNING in collect_domain_accesses
+From: syzbot <syzbot+bf4903dc7e12b18ebc87@syzkaller.appspotmail.com>
+To: gnoack3000@gmail.com, jmorris@namei.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, llvm@lists.linux.dev, mic@digikod.net, 
+	nathan@kernel.org, ndesaulniers@google.com, paul@paul-moore.com, 
+	serge@hallyn.com, syzkaller-bugs@googlegroups.com, trix@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed 08-05-24 20:41:35, Roman Gushchin wrote:
-[...]
-> @@ -1747,106 +1623,14 @@ static bool mem_cgroup_oom(struct mem_cgroup *memcg, gfp_t mask, int order)
->  
->  	memcg_memory_event(memcg, MEMCG_OOM);
->  
-> -	/*
-> -	 * We are in the middle of the charge context here, so we
-> -	 * don't want to block when potentially sitting on a callstack
-> -	 * that holds all kinds of filesystem and mm locks.
-> -	 *
-> -	 * cgroup1 allows disabling the OOM killer and waiting for outside
-> -	 * handling until the charge can succeed; remember the context and put
-> -	 * the task to sleep at the end of the page fault when all locks are
-> -	 * released.
-> -	 *
-> -	 * On the other hand, in-kernel OOM killer allows for an async victim
-> -	 * memory reclaim (oom_reaper) and that means that we are not solely
-> -	 * relying on the oom victim to make a forward progress and we can
-> -	 * invoke the oom killer here.
-> -	 *
-> -	 * Please note that mem_cgroup_out_of_memory might fail to find a
-> -	 * victim and then we have to bail out from the charge path.
-> -	 */
-> -	if (READ_ONCE(memcg->oom_kill_disable)) {
-> -		if (current->in_user_fault) {
-> -			css_get(&memcg->css);
-> -			current->memcg_in_oom = memcg;
-> -			current->memcg_oom_gfp_mask = mask;
-> -			current->memcg_oom_order = order;
-> -		}
-> +	if (!mem_cgroup_v1_oom_prepare(memcg, mask, order, &locked))
->  		return false;
-> -	}
-> -
-> -	mem_cgroup_mark_under_oom(memcg);
-> -
-> -	locked = mem_cgroup_oom_trylock(memcg);
+Hello,
 
-This really confused me because this looks like the oom locking is
-removed for v2 but this is not the case because
-mem_cgroup_v1_oom_prepare is not really v1 only code - in other words
-this is not going to be just return false for CONFIG_MEMCG_V1=n.
+syzbot found the following issue on:
 
-It makes sense to move the userspace oom handling out to the v1 file. I
-would keep mem_cgroup_mark_under_oom here. I am not sure about the oom
-locking thing because I think we can make it v1 only. For v2 I guess we
-can go without this locking as the oom path is already locked and it
-implements overkilling prevention (oom_evaluate_task) as it walks all
-processes in the oom hierarchy. 
+HEAD commit:    45db3ab70092 Merge tag '6.9-rc7-ksmbd-fixes' of git://git..=
+.
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=3D13b36604980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3D6d14c12b661fb43
+dashboard link: https://syzkaller.appspot.com/bug?extid=3Dbf4903dc7e12b18eb=
+c87
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debia=
+n) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D100235b898000=
+0
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D10d57c5c980000
 
-> -
-> -	if (locked)
-> -		mem_cgroup_oom_notify(memcg);
-> -
-> -	mem_cgroup_unmark_under_oom(memcg);
->  	ret = mem_cgroup_out_of_memory(memcg, mask, order);
-> -
-> -	if (locked)
-> -		mem_cgroup_oom_unlock(memcg);
-> +	mem_cgroup_v1_oom_finish(memcg, &locked);
->  
->  	return ret;
->  }
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/580d5c8a46be/disk-=
+45db3ab7.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/9f8c7366d3dc/vmlinux-=
+45db3ab7.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3207c810f03e/bzI=
+mage-45db3ab7.xz
 
--- 
-Michal Hocko
-SUSE Labs
+The issue was bisected to:
+
+commit 55e55920bbe3ccf516022c51f5527e7d026b8f1d
+Author: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
+Date:   Wed Aug 31 20:38:40 2022 +0000
+
+    landlock: Fix file reparenting without explicit LANDLOCK_ACCESS_FS_REFE=
+R
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D109badd49800=
+00
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=3D129badd49800=
+00
+console output: https://syzkaller.appspot.com/x/log.txt?x=3D149badd4980000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit=
+:
+Reported-by: syzbot+bf4903dc7e12b18ebc87@syzkaller.appspotmail.com
+Fixes: 55e55920bbe3 ("landlock: Fix file reparenting without explicit LANDL=
+OCK_ACCESS_FS_REFER")
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 5081 at security/landlock/fs.c:880 collect_domain_acce=
+sses+0x251/0x2b0 security/landlock/fs.c:880
+Modules linked in:
+CPU: 0 PID: 5081 Comm: syz-executor216 Not tainted 6.9.0-rc7-syzkaller-0005=
+6-g45db3ab70092 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Goo=
+gle 04/02/2024
+RIP: 0010:collect_domain_accesses+0x251/0x2b0 security/landlock/fs.c:880
+Code: e8 b4 e0 a1 fd eb 08 e8 bd c2 25 fd 40 b5 01 89 e8 48 83 c4 08 5b 41 =
+5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 a0 c2 25 fd 90 <0f> 0b 90 31 ed 4=
+9 89 df eb c9 e8 90 c2 25 fd 90 0f 0b 90 eb cd 44
+RSP: 0018:ffffc900035f7ba0 EFLAGS: 00010293
+RAX: ffffffff847045e0 RBX: ffff88801d6be178 RCX: ffff88801fc28000
+RDX: 0000000000000000 RSI: 0000000000003fff RDI: ffff88801d6be1c8
+RBP: 0000000000000000 R08: ffffffff846fccdb R09: 1ffffffff1f51f15
+R10: dffffc0000000000 R11: fffffbfff1f51f16 R12: ffffc900035f7c80
+R13: 0000000000003fff R14: ffff88807f4542f0 R15: ffff88801d6be178
+FS:  000055555cfaa380(0000) GS:ffff8880b9400000(0000) knlGS:000000000000000=
+0
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000000066c7e0 CR3: 000000002c1b4000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ current_check_refer_path+0x9b6/0xe70 security/landlock/fs.c:1001
+ security_path_link+0xc5/0x120 security/security.c:1894
+ do_linkat+0x2db/0x760 fs/namei.c:4673
+ __do_sys_linkat fs/namei.c:4704 [inline]
+ __se_sys_linkat fs/namei.c:4701 [inline]
+ __x64_sys_linkat+0xdd/0xf0 fs/namei.c:4701
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7eff2d2bb329
+Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 =
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff f=
+f 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff0aacff18 EFLAGS: 00000246 ORIG_RAX: 0000000000000109
+RAX: ffffffffffffffda RBX: 00007fff0aad00e8 RCX: 00007eff2d2bb329
+RDX: 00000000ffffff9c RSI: 0000000020000000 RDI: 00000000ffffff9c
+RBP: 00007eff2d32e610 R08: 0000000000000000 R09: 00007fff0aad00e8
+R10: 0000000020000700 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fff0aad00d8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisectio=
+n
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
