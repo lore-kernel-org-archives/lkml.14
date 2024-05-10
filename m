@@ -1,199 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653561708AA
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 14:16:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F873F8D1;
+	Fri, 10 May 2024 14:17:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715350583; cv=none; b=jLWzfdA7rf88vzkbFmH1Kz2lYUu8anfbbZX4dOcD+0JPpD/KocgekuchIVQFjYDos7ivWReYQtZQVpibGCqMIyseReFb+tAfm4bse1S/E3X3xv93t5mBFIIaR43DzgQsPNjx0DLJfCmdQgVGbdSfJFmrqOvgAIIHrIDvVoDSLao=
+	t=1715350624; cv=none; b=Ao3tAUELDaR2TTNb2mbVtDkF5VTBf3EkZWd7+qUdp0787FoQgfYqLv0M9fN4NiUxFo/GFEjt4Y/bMjbBJ2RxGsIuEK01zVOcJFZuZsvYqCW/QYghziwYhRyhwcr36fE2jlvCkieuVHuq8CcLzVIVIM2duRnqId1V9rqu3KJsS/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715350583; c=relaxed/simple;
-	bh=LWT5muQ6EvbK7R49PsITf57E7icfTAGw5v2HHqnwnDI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p5K0uie7O2SgYif8q07y7eEEgJrS23kjgiKucq83Bh2T7O6RIeaNFKi7mSMt/MQyM2+AqYZtgbylaTehD/fEht6/TQ3VKzi1jh7ORTp6XYd2AHaJOutTF3q1wCXJ/ZcnWEVWkuGVy/7UycRzzj2/GrC3IRNCNxg5JNFlCmDMvck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UiCi6nKo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715350624; c=relaxed/simple;
+	bh=V450PsVFKYuLz/CjQ5KVeg3wqYL5FGkcrDqCeTiCgww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QY2TdYyAnLmXi5DcKSY58daNSKxGRPgSs3eMqXt3o/uupqz830QQYlpZPO742DejStKP7dmxAJYJoywRCa0vbohpEZRwtZty8PM1o0DHYBmqpvMNQsZpwCw/2xUjCKZo1QWPBKkg+1wcJLR0cC2m1MUNd3Yc74NFUpdUgALMTUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+ocGzjW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UiCi6nKo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40436C2BBFC;
-	Fri, 10 May 2024 14:16:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+ocGzjW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21174C113CC;
+	Fri, 10 May 2024 14:17:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715350582;
-	bh=LWT5muQ6EvbK7R49PsITf57E7icfTAGw5v2HHqnwnDI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UiCi6nKo1wPUYj8UGJs/JwwSz79+fnyd/cAOhiQ9d5VKg0gP263lk4MayBwUv1BI2
-	 pke8fwkW3a3Hp6xyq1Sjqc8KyhBoTUPeIWg+005woYK19td8LlBZHHx4GwS6XletOs
-	 vrilkWbp1XJI11gKB08nZ3H7opUBJWybWxD52qFn/521uoVHwgXS76Scdh+69locIV
-	 Q4veFVvtODO6yov3LH4Qr9VUfnc1jgw9jRFQYsGRsrOiOjfIM65KVI7/I47R1V5b9K
-	 Rt88fMnSBmi58oFefoxiOkhyhIRRwEf+HXp60hKbKuOo3fj5ttvlxNEc8lkPhg1bki
-	 nCmOxHbZZNlnA==
-Message-ID: <948ecc86-63f5-48bb-b71c-61d57cbf446c@kernel.org>
-Date: Fri, 10 May 2024 22:16:18 +0800
+	s=k20201202; t=1715350623;
+	bh=V450PsVFKYuLz/CjQ5KVeg3wqYL5FGkcrDqCeTiCgww=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q+ocGzjWS4vHjZml0C7t25uCD7NfD9xoTBfNCQwEMwNXA2c5JhqEQOTWTP7bjW54C
+	 gDQsceixmbfHBaaqZFd5eS0DqcbxSkLS5dET3l+EDUION8wB39IdzngRyxhlfZy4aM
+	 OmxWcDVFsTL0SsjBJn7D1rg146sx+dtVjslXIzwaVr/5AmoZS5cdb/BCctZBttNu1W
+	 qxZi92HgtWPEsIwQJ352XeQGTMS7QszVM2VJsacB0OhLgGo23lsiD4pa1LZ+ERXRii
+	 FtmVabvdSCn11qll6YcaTTE4DAZBaNAmJc2XEE9B42lEzGfVjp9BRgM21szFbec2eS
+	 oHmqybYxI9PEw==
+Date: Fri, 10 May 2024 11:17:00 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1] libsubcmd: Fix parse-options memory leak
+Message-ID: <Zj4sXKG9WNY_bDa2@x1>
+References: <20240509052015.1914670-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] f2fs: fix to do sanity check on i_nid for inline_data
- inode
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: linux-f2fs-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org,
- syzbot+848062ba19c8782ca5c8@syzkaller.appspotmail.com
-References: <20240506103313.773503-1-chao@kernel.org>
- <20240506103313.773503-3-chao@kernel.org> <ZjzxWp4-wmpCzBeB@google.com>
- <b58d0a62-9491-4b77-a3be-70331f849bb8@kernel.org>
- <Zj2WWpHmHaWKbDgG@google.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <Zj2WWpHmHaWKbDgG@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240509052015.1914670-1-irogers@google.com>
 
-On 2024/5/10 11:36, Jaegeuk Kim wrote:
-> On 05/10, Chao Yu wrote:
->> On 2024/5/9 23:52, Jaegeuk Kim wrote:
->>> On 05/06, Chao Yu wrote:
->>>> syzbot reports a f2fs bug as below:
->>>>
->>>> ------------[ cut here ]------------
->>>> kernel BUG at fs/f2fs/inline.c:258!
->>>> CPU: 1 PID: 34 Comm: kworker/u8:2 Not tainted 6.9.0-rc6-syzkaller-00012-g9e4bc4bcae01 #0
->>>> RIP: 0010:f2fs_write_inline_data+0x781/0x790 fs/f2fs/inline.c:258
->>>> Call Trace:
->>>>    f2fs_write_single_data_page+0xb65/0x1d60 fs/f2fs/data.c:2834
->>>>    f2fs_write_cache_pages fs/f2fs/data.c:3133 [inline]
->>>>    __f2fs_write_data_pages fs/f2fs/data.c:3288 [inline]
->>>>    f2fs_write_data_pages+0x1efe/0x3a90 fs/f2fs/data.c:3315
->>>>    do_writepages+0x35b/0x870 mm/page-writeback.c:2612
->>>>    __writeback_single_inode+0x165/0x10b0 fs/fs-writeback.c:1650
->>>>    writeback_sb_inodes+0x905/0x1260 fs/fs-writeback.c:1941
->>>>    wb_writeback+0x457/0xce0 fs/fs-writeback.c:2117
->>>>    wb_do_writeback fs/fs-writeback.c:2264 [inline]
->>>>    wb_workfn+0x410/0x1090 fs/fs-writeback.c:2304
->>>>    process_one_work kernel/workqueue.c:3254 [inline]
->>>>    process_scheduled_works+0xa12/0x17c0 kernel/workqueue.c:3335
->>>>    worker_thread+0x86d/0xd70 kernel/workqueue.c:3416
->>>>    kthread+0x2f2/0x390 kernel/kthread.c:388
->>>>    ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
->>>>    ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
->>>>
->>>> The root cause is: inline_data inode can be fuzzed, so that there may
->>>> be valid blkaddr in its direct node, once f2fs triggers background GC
->>>> to migrate the block, it will hit f2fs_bug_on() during dirty page
->>>> writeback.
->>>>
->>>> Let's add sanity check on i_nid field for inline_data inode, meanwhile,
->>>> forbid to migrate inline_data inode's data block to fix this issue.
->>>>
->>>> Reported-by: syzbot+848062ba19c8782ca5c8@syzkaller.appspotmail.com
->>>> Closes: https://lore.kernel.org/linux-f2fs-devel/000000000000d103ce06174d7ec3@google.com
->>>> Signed-off-by: Chao Yu <chao@kernel.org>
->>>> ---
->>>>    fs/f2fs/f2fs.h   |  2 +-
->>>>    fs/f2fs/gc.c     |  6 ++++++
->>>>    fs/f2fs/inline.c | 17 ++++++++++++++++-
->>>>    fs/f2fs/inode.c  |  2 +-
->>>>    4 files changed, 24 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>>> index fced2b7652f4..c876813b5532 100644
->>>> --- a/fs/f2fs/f2fs.h
->>>> +++ b/fs/f2fs/f2fs.h
->>>> @@ -4146,7 +4146,7 @@ extern struct kmem_cache *f2fs_inode_entry_slab;
->>>>     * inline.c
->>>>     */
->>>>    bool f2fs_may_inline_data(struct inode *inode);
->>>> -bool f2fs_sanity_check_inline_data(struct inode *inode);
->>>> +bool f2fs_sanity_check_inline_data(struct inode *inode, struct page *ipage);
->>>>    bool f2fs_may_inline_dentry(struct inode *inode);
->>>>    void f2fs_do_read_inline_data(struct page *page, struct page *ipage);
->>>>    void f2fs_truncate_inline_inode(struct inode *inode,
->>>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
->>>> index e86c7f01539a..041957750478 100644
->>>> --- a/fs/f2fs/gc.c
->>>> +++ b/fs/f2fs/gc.c
->>>> @@ -1563,6 +1563,12 @@ static int gc_data_segment(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
->>>>    				continue;
->>>>    			}
->>>> +			if (f2fs_has_inline_data(inode)) {
->>>> +				iput(inode);
->>>> +				set_sbi_flag(sbi, SBI_NEED_FSCK);
->>>> +				continue;
->>>
->>> Any race condtion to get this as false alarm?
->>
->> Since there is no reproducer for the bug, I doubt it was caused by metadata
->> fuzzing, something like this:
->>
->> - inline inode has one valid blkaddr in i_addr or in dnode reference by i_nid;
->> - SIT/SSA entry of the block is valid;
->> - background GC migrates the block;
->> - kworker writeback it, and trigger the bug_on().
+On Wed, May 08, 2024 at 10:20:15PM -0700, Ian Rogers wrote:
+> If a usage string is built in parse_options_subcommand, also free it.
+
+Thanks, applied to perf-tools-next,
+
+- Arnaldo
+ 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/subcmd/parse-options.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 > 
-> Wasn't detected by sanity_check_inode?
-
-I fuzzed non-inline inode w/ below metadata fields:
-- i_blocks = 1
-- i_size = 2048
-- i_inline |= 0x02
-
-sanity_check_inode() doesn't complain.
-
-Thanks,
-
-> 
->>
->> Thoughts?
->>
->> Thanks,
->>
->>>
->>>> +			}
->>>> +
->>>>    			err = f2fs_gc_pinned_control(inode, gc_type, segno);
->>>>    			if (err == -EAGAIN) {
->>>>    				iput(inode);
->>>> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
->>>> index ac00423f117b..067600fed3d4 100644
->>>> --- a/fs/f2fs/inline.c
->>>> +++ b/fs/f2fs/inline.c
->>>> @@ -33,11 +33,26 @@ bool f2fs_may_inline_data(struct inode *inode)
->>>>    	return !f2fs_post_read_required(inode);
->>>>    }
->>>> -bool f2fs_sanity_check_inline_data(struct inode *inode)
->>>> +static bool has_node_blocks(struct inode *inode, struct page *ipage)
->>>> +{
->>>> +	struct f2fs_inode *ri = F2FS_INODE(ipage);
->>>> +	int i;
->>>> +
->>>> +	for (i = 0; i < DEF_NIDS_PER_INODE; i++) {
->>>> +		if (ri->i_nid[i])
->>>> +			return true;
->>>> +	}
->>>> +	return false;
->>>> +}
->>>> +
->>>> +bool f2fs_sanity_check_inline_data(struct inode *inode, struct page *ipage)
->>>>    {
->>>>    	if (!f2fs_has_inline_data(inode))
->>>>    		return false;
->>>> +	if (has_node_blocks(inode, ipage))
->>>> +		return false;
->>>> +
->>>>    	if (!support_inline_data(inode))
->>>>    		return true;
->>>> diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
->>>> index c26effdce9aa..1423cd27a477 100644
->>>> --- a/fs/f2fs/inode.c
->>>> +++ b/fs/f2fs/inode.c
->>>> @@ -343,7 +343,7 @@ static bool sanity_check_inode(struct inode *inode, struct page *node_page)
->>>>    		}
->>>>    	}
->>>> -	if (f2fs_sanity_check_inline_data(inode)) {
->>>> +	if (f2fs_sanity_check_inline_data(inode, node_page)) {
->>>>    		f2fs_warn(sbi, "%s: inode (ino=%lx, mode=%u) should not have inline_data, run fsck to fix",
->>>>    			  __func__, inode->i_ino, inode->i_mode);
->>>>    		return false;
->>>> -- 
->>>> 2.40.1
+> diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
+> index 9fa75943f2ed..d943d78b787e 100644
+> --- a/tools/lib/subcmd/parse-options.c
+> +++ b/tools/lib/subcmd/parse-options.c
+> @@ -633,11 +633,10 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
+>  			const char *const subcommands[], const char *usagestr[], int flags)
+>  {
+>  	struct parse_opt_ctx_t ctx;
+> +	char *buf = NULL;
+>  
+>  	/* build usage string if it's not provided */
+>  	if (subcommands && !usagestr[0]) {
+> -		char *buf = NULL;
+> -
+>  		astrcatf(&buf, "%s %s [<options>] {", subcmd_config.exec_name, argv[0]);
+>  
+>  		for (int i = 0; subcommands[i]; i++) {
+> @@ -679,7 +678,10 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
+>  			astrcatf(&error_buf, "unknown switch `%c'", *ctx.opt);
+>  		usage_with_options(usagestr, options);
+>  	}
+> -
+> +	if (buf) {
+> +		usagestr[0] = NULL;
+> +		free(buf);
+> +	}
+>  	return parse_options_end(&ctx);
+>  }
+>  
+> -- 
+> 2.45.0.rc1.225.g2a3ae87e7f-goog
