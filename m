@@ -1,96 +1,98 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589DC1581E3
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 08:47:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6198215FD03;
+	Fri, 10 May 2024 08:48:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715330849; cv=none; b=seAezH1W/nOcaMQ+r5Tkj5neTi03zdtAeoyrzDKJjvcFHhseYpKAL/cPRApeJ6VMmrv/UJPSmrH4cXHfwvG05aOF97gbN/kW+p1p0nGR+JbcnpsETgOEOn0bLBPHJ936jDBvZk9R/y7rlpcphcZIb7DpII3EY3tdPUUHVMhz5bg=
+	t=1715330896; cv=none; b=mQe+V81HqvkNyV6zn5xr5CQceW7jxEIZUjFiqWW7H2Blik1ZK1k4v0LRtr4mB6l3n93mobD18AhyBU8x5w+ViD//9IJjYj8m/mEkAiPV1P5U05WbBViq5Vu52L2cmWrIcER5qO7wwvX1V9S/0JsSXv0Mu0g1Mhdwc66NFqi+dDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715330849; c=relaxed/simple;
-	bh=exOJw8EAR1YSuOnAFdCSIBAXxjg49TrN6aACOGqPHQk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Vi4aEl6CXBwicSS/fvJL2EBqd2PCL5ZI5f7JZ4VP8u4j0uSOpg1itbjNtRHr3zkyC0lFMnX7W1xY/IceFdiNTF2q4fhXok+r5FiyE0sZxkrHbniPH3R/MK2diJ+ErgmRhDR0RxzlRe8GEDckdD9Doxs7+4egL85NEq7mZoWnPRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-7da41da873bso230658539f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 01:47:28 -0700 (PDT)
+	s=arc-20240116; t=1715330896; c=relaxed/simple;
+	bh=YwWoSGlLIoFU199bT7cNXYZ8yB+nQBY+wMA4w6hUZu8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Pr6F3lssa2/yDQ2QQ2e/wUQ882mY5jTiXCRxj8cvyWWontV3I960WUJC5LPIzCqeeu2rC7JK0YsPO0lvEOn1mbBSfePaP+lPnBLYYuVf+7ukM9UzsigAcKyJuGbbL/f9dMf+4DKvakIsoccTKSCfEQJq8lTsvvUM1yqJPrc++Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R7KdH4hj; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7KdH4hj"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-41ffad2426eso2721745e9.3;
+        Fri, 10 May 2024 01:48:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715330894; x=1715935694; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=VolhuYhozBmZNG1Kf46/MgpdEY1r+F/GHz7XyCKXqc0=;
+        b=R7KdH4hjS+jcwpHN4dGOujfKNjKDz/aJ8RkmawaWX24ft+nJ6pnPe2wkvISdrrk4my
+         p1ROj6RCED5eL9mzJlxIZ3Qci06Tdh2Lkx/qkU2HtrBfgMk/z5KQJZ1vKLm2gm2y32WU
+         u57J4qjvYk9KIsaGVlOGwPvVw336iBauXtndxZ50NY8xz3e+zhEDAFoDTk39kk5nO1y6
+         PoLwfPZLnne6L5nAhk1tiC2VhOt126PvO8+HSfQzCQ3tZKGFppdvCBS5fHSFkJcKq1lP
+         yzd2KxguARyogtx8EpIVKhSo9YpnU9/2N3G3CTnGM+bheC2NEAb5lW5Kw9RNJYzVnlMZ
+         v/Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715330847; x=1715935647;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XpD9qVq4Hpwd5UROK+voy9ilNo5bK/m4WK9c2Y2l9SM=;
-        b=xBBNChEvexDS5vDJeOaWh+6hQH0/pLExT8jy1fJN4/dIx5AZTK+vd0i9zgAaIxKU5E
-         EdtCPtGENGTrLscSF36ZUJbSVlS47K6Jm3H6vH3b7JebZ7NixfpSO/yJPacX0nlQ79x8
-         ZdrMGz6VQ0POPrNBzNCKpoZBi7JOzIbc6zQ3/VVREzV9wlVNu339LleCensE+1pt7pm9
-         VR4ZjpEAPrCP/azQ7DWS099R3UF6Ml1wk968M20/GZmilsrBzHnh9Z4S1S59hC1VkgVV
-         vJV/5JMLwj+CW3u30vUuhXaCx94nyUYlXO83RQNH29tMCxEcbHZ2SB6Ph5YnB+43clX2
-         8YtA==
-X-Gm-Message-State: AOJu0YxgkWjmJ1x21RvthfLLT5ql7IM4R0iT9FTYbY/T34hwYb8JVMR3
-	YgaSWtdbYMRcRZl478yEatZmAYgPFgOfSTI0MODaK7Agkm4jmX9kJbZAbpqm2LQMqY8SpAmLA8H
-	AjXg/aaD7PhC3ryX9bhDLKVRSb4tHllb8PpO00GbdWXSSRoLOiiLGNmY=
-X-Google-Smtp-Source: AGHT+IGxycv88vad4phESjnL4Kc3pCnpyejTbFRKAfqcwbLA2at4ZWScHJpWqE0DWpR8ymshVeU6XxVgAECa9w2L/tMibRf8Vri7
+        d=1e100.net; s=20230601; t=1715330894; x=1715935694;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VolhuYhozBmZNG1Kf46/MgpdEY1r+F/GHz7XyCKXqc0=;
+        b=bBd4Gy8Rieoeg2cPbhaNHTpqMFIZfh6pdncVFLdGVFVrobQrfFuZE0lK+sDqCEjID+
+         CpVW7B0UEKWOLThIjr+a2//FyUEio0ZUaqJq0sIpeMYm+YwqDf02FG0SznYShgfYN8hQ
+         MVN6A1RC9SH5VNMX+56hNfeyo5SZQNTI/9weM0xmkTahue02oyywRJp3G4APcHAZDicv
+         8b6ZTgBlAglQjbPoD1Zqe7iOdYsA6oYslLDRJRmuEm3IqFyzaFky3w9JMNc/QepKIa/H
+         TxPVuSFKDx0JE2hGO4VUFyhrMiGTh4SD7/UJorA5cQjfRhhaXyn0OoXR+SJcJcev8Ahy
+         r7lg==
+X-Forwarded-Encrypted: i=1; AJvYcCWGZ5lcx9bBkZ9fwRHEF7dC/U83RwS4NwWdT1hHQxeGQWXQRIsOgW2GgLGL3AYVoGaqAOl8yT5uMH+zV1F0OZF6egl/WFS8L72wPbas7RTPxJf+aeBH7BoZklcFtNy9S/GCVhp5GrkGhlwNJr5gufLHWJsSr5r3SB0LleURk4GsN7xGfbe/
+X-Gm-Message-State: AOJu0YwFS8YOFvHZDxKnL82tWfPIcJp6N7pWtlkWsJwITGNyAmbW0sM8
+	9ElQquin+EMowzRMYPtxOgBXqY16mmnU0iNnxO6iDSbfI0xDNYzY
+X-Google-Smtp-Source: AGHT+IFylAv7LOFuzY145nB/4IYG4/bbhSBLCA1Eg1Scf4HzbayFRvNarWugAMyAu0IKfah1845XwQ==
+X-Received: by 2002:a05:600c:3508:b0:41b:f116:8868 with SMTP id 5b1f17b1804b1-41feaa38a79mr21592845e9.12.1715330893439;
+        Fri, 10 May 2024 01:48:13 -0700 (PDT)
+Received: from localhost (craw-09-b2-v4wan-169726-cust2117.vm24.cable.virginm.net. [92.238.24.70])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccbe8e3csm55952055e9.1.2024.05.10.01.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 May 2024 01:48:12 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Shuah Khan <shuah@kernel.org>,
+	netdev@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] selftest: epoll_busy_poll: Fix spelling mistake "couldnt" -> "couldn't"
+Date: Fri, 10 May 2024 09:48:11 +0100
+Message-Id: <20240510084811.3299685-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6638:8305:b0:487:100b:9212 with SMTP id
- 8926c6da1cb9f-48958af8591mr131917173.3.1715330847426; Fri, 10 May 2024
- 01:47:27 -0700 (PDT)
-Date: Fri, 10 May 2024 01:47:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d556f50618159550@google.com>
-Subject: [syzbot] Monthly usb report (May 2024)
-From: syzbot <syzbot+list7b488901ebb9fc4e944d@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hello usb maintainers/developers,
+There is a spelling mistake in a TH_LOG message. Fix it.
 
-This is a 31-day syzbot report for the usb subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/usb
-
-During the period, 5 new issues were detected and 0 were fixed.
-In total, 74 issues are still open and 333 have been fixed so far.
-
-Some of the still happening issues:
-
-Ref  Crashes Repro Title
-<1>  2933    Yes   KMSAN: uninit-value in dib3000mb_attach (2)
-                   https://syzkaller.appspot.com/bug?extid=c88fc0ebe0d5935c70da
-<2>  869     Yes   general protection fault in ir_raw_event_store_with_filter
-                   https://syzkaller.appspot.com/bug?extid=34008406ee9a31b13c73
-<3>  644     Yes   INFO: task hung in hub_port_init (3)
-                   https://syzkaller.appspot.com/bug?extid=b6f11035e572f08bc20f
-<4>  636     Yes   INFO: task hung in usbdev_open (2)
-                   https://syzkaller.appspot.com/bug?extid=b73659f5bb96fac34820
-<5>  405     Yes   INFO: task hung in r871xu_dev_remove
-                   https://syzkaller.appspot.com/bug?extid=f39c1dad0b7db49ca4a8
-<6>  353     Yes   INFO: rcu detected stall in hub_event
-                   https://syzkaller.appspot.com/bug?extid=ec5f884c4a135aa0dbb9
-<7>  304     Yes   KASAN: use-after-free Read in v4l2_fh_init
-                   https://syzkaller.appspot.com/bug?extid=c025d34b8eaa54c571b8
-<8>  275     No    INFO: task hung in hub_event (3)
-                   https://syzkaller.appspot.com/bug?extid=a7edecbf389d11a369d4
-<9>  261     Yes   INFO: task hung in get_bMaxPacketSize0
-                   https://syzkaller.appspot.com/bug?extid=f7ac46d91cf13b4591a4
-<10> 231     Yes   INFO: rcu detected stall in syscall_exit_to_user_mode (2)
-                   https://syzkaller.appspot.com/bug?extid=a68ef3b1f46bc3aced5c
-
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ tools/testing/selftests/net/epoll_busy_poll.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
+diff --git a/tools/testing/selftests/net/epoll_busy_poll.c b/tools/testing/selftests/net/epoll_busy_poll.c
+index 9dd2830fd67c..16e457c2f877 100644
+--- a/tools/testing/selftests/net/epoll_busy_poll.c
++++ b/tools/testing/selftests/net/epoll_busy_poll.c
+@@ -232,7 +232,7 @@ TEST_F(epoll_busy_poll, test_set_invalid)
+ 
+ 	ret = cap_set_flag(self->caps, CAP_EFFECTIVE, 1, net_admin, CAP_CLEAR);
+ 	EXPECT_EQ(0, ret)
+-		TH_LOG("couldnt clear CAP_NET_ADMIN");
++		TH_LOG("couldn't clear CAP_NET_ADMIN");
+ 
+ 	ret = cap_set_proc(self->caps);
+ 	EXPECT_EQ(0, ret)
+-- 
+2.39.2
 
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
