@@ -1,119 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A5681311B9;
-	Fri, 10 May 2024 07:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C89D620309;
+	Fri, 10 May 2024 07:37:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715326380; cv=none; b=WrCZE10nZhqLIPTefOo9U0zU2WYbskAaVL+CU7h/KtL3dVj4s/2iraZS97c7Ht3TJfKVLmlkSCi2nU2ikHGzeJIwK2BRzc+PJq+Add+ni2njbRv8AaODmRoxrCb7TQUhHmdkLqwZAuuaeYtLaxM6UCGJApDL7IPki1eF00ddzHA=
+	t=1715326661; cv=none; b=HAH6a+lA9MqFL5BywVwvpbacRTvxX8xzVMVexrvNan9Wu1otf9NghnfKiTv0z+u8psXqtOYLPjdu28qjV6QmWxuQsfoHQxFpzV6o1yo7h257+yaSVY2G1FXriJwrqRSw7jVyUyBL+u0fEnHPOt4JzIETvrz6bwsdBFiIVVLv9FY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715326380; c=relaxed/simple;
-	bh=ByEC9kiMaabF3vVkEOp8v75OMBj+coHKSUUUS2mNNEA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q+/O89H9F9Ry9HlNUrNjYwMFOehPCeRSjywsDWC+sxTU7xv8I6xZ5zlvrW5hIyCTwt9nMjFDGB4UOA4qTEHuOP1pcZLDD4yILpIH2ghchJ4N+KrmSKiPquj6sDitZfX32QyomtR9ROYPBEHNS1FQVG0YT8K1uTxgOF/+1g0X1xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=edgCFKau; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715326661; c=relaxed/simple;
+	bh=3DM0ZO+FogVDbU8drIbqsYxQvfnaP9UJ+hCwt+7eglo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MaDsbSVWZPk96h6hf5kLZ890XkubO40PiP4TaFSMlSEYR3T/vHhJiiq6AJWcXW4QS5O6+uUbVNBjkoYGbYSG/6uwcutqEGNC4ogh9iZCvCU+YlOX1vugiZ0zsiAOx+OwvqpJ87ZKDnl0vCm1nX38keKg1LHokC9uAaIAthrdvrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HVqaqDuU; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="edgCFKau"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715326378; x=1746862378;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=ByEC9kiMaabF3vVkEOp8v75OMBj+coHKSUUUS2mNNEA=;
-  b=edgCFKauxBiN6Fvb2QgyEqZvaoVcoCK8xIhGWzVcxo8kEf+LLmO68tPN
-   sT7dI9zDb443eoYEzJsE5S9kHr+ot9jNJX14n+JhcGTUEqjNEOBFUYOdh
-   udJZ1R9IaGP709RSeUSgeA8pWiRlquVRGR+5ZpBuiDU//zPoJHk2PIa4n
-   1qCfxztafrEva7MtdmIZF4DSfiL6IaNcOlwG90+MU8a3mmfM83PKjjK5P
-   yMbeQ4wtQqz54ZsnAR98IDGGootS036hVf+Ph3J+G8gb1m+GlAU+/UI5+
-   gXGoaFGDMkB+TVr6Pvkq/uDbIpwp2zB3kRo1T/ivB2OGDN1YBnkh2weOo
-   w==;
-X-CSE-ConnectionGUID: iNgg0imQSbCJeGBncwQCyw==
-X-CSE-MsgGUID: Al4nNiqbTF61MpUASuzhBQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="14245272"
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="14245272"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 00:32:58 -0700
-X-CSE-ConnectionGUID: ybRwEvJsRIG5YlmeO+pHBg==
-X-CSE-MsgGUID: mvMVWbM1Qkmt1ZMeJojlcQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,150,1712646000"; 
-   d="scan'208";a="29589840"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by fmviesa010.fm.intel.com with ESMTP; 10 May 2024 00:32:51 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s5KkK-0005qp-2s;
-	Fri, 10 May 2024 07:32:48 +0000
-Date: Fri, 10 May 2024 15:31:51 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
-	bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
-	mingo@redhat.com, tglx@linutronix.de
-Cc: oe-kbuild-all@lists.linux.dev, x86@kernel.org, netdev@vger.kernel.org,
-	richardcochran@gmail.com, linux-input@vger.kernel.org,
-	dmitry.torokhov@gmail.com, zackr@vmware.com,
-	linux-graphics-maintainer@vmware.com, pv-drivers@vmware.com,
-	timothym@vmware.com, akaher@vmware.com,
-	dri-devel@lists.freedesktop.org, daniel@ffwll.ch, airlied@gmail.com,
-	tzimmermann@suse.de, mripard@kernel.org,
-	maarten.lankhorst@linux.intel.com, horms@kernel.org,
-	kirill.shutemov@linux.intel.com,
-	Alexey Makhalov <alexey.makhalov@broadcom.com>,
-	Nadav Amit <nadav.amit@gmail.com>,
-	Zack Rusin <zack.rusin@broadcom.com>
-Subject: Re: [PATCH v9 6/8] drm/vmwgfx: Use VMware hypercall API
-Message-ID: <202405101512.NJRbYcaH-lkp@intel.com>
-References: <20240506215305.30756-7-alexey.makhalov@broadcom.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HVqaqDuU"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id EA74A240003;
+	Fri, 10 May 2024 07:37:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715326651;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=h2r7Nv7nCfZb/d+nWyCikbcMpA1yPgiBcyKQtN4s7+U=;
+	b=HVqaqDuUKY4tv6ElBmXqh4YOznvxtKcIqGfKVkA3B3N6aCUawihmHcyczf+0EttQiGtfaJ
+	KswtiN2jvbT5kR3lt/ou4ENGYtwCF1H9gh34Bid0pZliuyk1Ya9DB0i/c9FhF5tnAUmQwM
+	h64L+DNcCHUDEdUXth2Jq5Nixi9xVMsSr+Gowh56hk71FQx8f0Vx5EfdV7dMWwUO83n2C3
+	7trZcmYZAOnA9scwLOvM4ccxV0FuAk7W+DrODqREiRHzdsB7OCr9FL8W4wfhANrJfBc6mE
+	/l/VqtHrVwKAo1jcZLuu0LBoWT646tqOUryZ617YMu1L65UEpXKwxAsGqfRjnQ==
+From: Romain Gantois <romain.gantois@bootlin.com>
+Subject: [PATCH net-next v6 0/7] net: stmmac: Add support for RZN1 GMAC
+ devices
+Date: Fri, 10 May 2024 09:38:07 +0200
+Message-Id: <20240510-rzn1-gmac1-v6-0-b63942be334c@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240506215305.30756-7-alexey.makhalov@broadcom.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAN/OPWYC/23NwW7DIBAE0F+JOJcK1osNPfU/qh7wekmQGqiwZ
+ aWN/O9FPhm5x9HozTzFzCXyLN4uT1F4jXPMqYb+5SLo5tOVZZxqFqAAFSqQ5Tdpeb170rK3hoI
+ dXDcpFhV8Fw7xsY99iMSLTPxYxGdtbnFecvnZX1a99/8NrloqaUaGEazDydL7mPPyFdMr5fs+t
+ MIRuwZDxYMjjyZAoMGdcXfA2jS4q9iPGgIQotLTGeMBAzYYK7YGfD0mVqTO2BxwpxpsKu4h9MZ
+ bDKhti7dt+wOrUsIjpAEAAA==
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Geert Uytterhoeven <geert+renesas@glider.be>, 
+ Magnus Damm <magnus.damm@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Jose Abreu <joabreu@synopsys.com>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ =?utf-8?q?Cl=C3=A9ment_L=C3=A9ger?= <clement.leger@bootlin.com>, 
+ Serge Semin <fancer.lancer@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, 
+ Romain Gantois <romain.gantois@bootlin.com>, 
+ "Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, 
+ Maxime Chevallier <maxime.chevallier@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: romain.gantois@bootlin.com
 
-Hi Alexey,
+Hello everyone,
 
-kernel test robot noticed the following build errors:
+This is version six of my series that adds support for a Gigabit Ethernet
+controller featured in the Renesas r9a06g032 SoC, of the RZ/N1 family. This
+GMAC device is based on a Synopsys IP and is compatible with the stmmac driver.
 
-[auto build test ERROR on drm-misc/drm-misc-next]
-[also build test ERROR on dtor-input/next dtor-input/for-linus linus/master v6.9-rc7 next-20240509]
-[cannot apply to tip/x86/vmware]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+My former colleague Clément Léger originally sent a series for this driver,
+but an issue in bringing up the PCS clock had blocked the upstreaming
+process. This issue has since been resolved by the following series:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexey-Makhalov/x86-vmware-Move-common-macros-to-vmware-h/20240507-055606
-base:   git://anongit.freedesktop.org/drm/drm-misc drm-misc-next
-patch link:    https://lore.kernel.org/r/20240506215305.30756-7-alexey.makhalov%40broadcom.com
-patch subject: [PATCH v9 6/8] drm/vmwgfx: Use VMware hypercall API
-config: x86_64-buildonly-randconfig-003-20240510 (https://download.01.org/0day-ci/archive/20240510/202405101512.NJRbYcaH-lkp@intel.com/config)
-compiler: gcc-11 (Ubuntu 11.4.0-4ubuntu1) 11.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240510/202405101512.NJRbYcaH-lkp@intel.com/reproduce)
+https://lore.kernel.org/all/20240326-rxc_bugfix-v6-0-24a74e5c761f@bootlin.com/
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405101512.NJRbYcaH-lkp@intel.com/
+This series consists of a devicetree binding describing the RZN1 GMAC
+controller IP, a node for the GMAC1 device in the r9a06g032 SoC device
+tree, and the GMAC driver itself which is a glue layer in stmmac.
 
-All errors (new ones prefixed by >>):
+There are also two patches by Russell that improve pcs initialization handling
+in stmmac.
 
-   ld: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: in function `vmw_port_hb_out':
-   vmwgfx_msg.c:(.text+0x182): undefined reference to `vmware_hypercall_mode'
-   ld: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: in function `vmw_send_msg':
-   vmwgfx_msg.c:(.text+0x46d): undefined reference to `vmware_hypercall_mode'
-   ld: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o: in function `vmw_recv_msg':
-   vmwgfx_msg.c:(.text+0x6f4): undefined reference to `vmware_hypercall_mode'
->> ld: vmwgfx_msg.c:(.text+0x875): undefined reference to `vmware_hypercall_mode'
-   ld: vmwgfx_msg.c:(.text+0xae0): undefined reference to `vmware_hypercall_mode'
-   ld: drivers/gpu/drm/vmwgfx/vmwgfx_msg.o:vmwgfx_msg.c:(.text+0x136e): more undefined references to `vmware_hypercall_mode' follow
+Best Regards,
 
+Romain Gantois
+
+---
+Changes in v6:
+- Changed stmmac_pcs_clean() prototype to match stmmac_pcs_setup()
+- Link to v5: https://lore.kernel.org/r/20240430-rzn1-gmac1-v5-0-62f65a84f418@bootlin.com
+
+Changes in v5:
+- Refactored the stmmac_xpcs_setup() function to group together XPCS and PCS
+  setup logic.
+- Added a stmmac_pcs_clean() function as a counterpart to stmmac_pcs_setup()
+- Link to v4: https://lore.kernel.org/r/20240424-rzn1-gmac1-v4-0-852a5f2ce0c0@bootlin.com
+
+Changes in v4:
+- Removed the second parameters of the new pcs_init/exit() callbacks
+- Removed unnecessary interrupt-parent reference in gmac1 device node
+- Link to v3: https://lore.kernel.org/r/20240415-rzn1-gmac1-v3-0-ab12f2c4401d@bootlin.com
+
+Changes in v3:
+- Fixed a typo in the socfpga patch
+- Link to v2: https://lore.kernel.org/r/20240409-rzn1-gmac1-v2-0-79ca45f2fc79@bootlin.com
+
+Changes in v2:
+- Add pcs_init/exit callbacks in stmmac to solve race condition
+- Use pcs_init/exit callbacks in dwmac_socfpga glue layer
+- Miscellaneous device tree binding corrections
+- Link to v1: https://lore.kernel.org/r/20240402-rzn1-gmac1-v1-0-5be2b2894d8c@bootlin.com
+
+---
+Clément Léger (3):
+      dt-bindings: net: renesas,rzn1-gmac: Document RZ/N1 GMAC support
+      net: stmmac: add support for RZ/N1 GMAC
+      ARM: dts: r9a06g032: describe GMAC1
+
+Russell King (Oracle) (2):
+      net: stmmac: introduce pcs_init/pcs_exit stmmac operations
+      net: stmmac: dwmac-socfpga: use pcs_init/pcs_exit
+
+Serge Semin (2):
+      net: stmmac: Add dedicated XPCS cleanup method
+      net: stmmac: Make stmmac_xpcs_setup() generic to all PCS devices
+
+ .../devicetree/bindings/net/renesas,rzn1-gmac.yaml |  66 +++++++++++++
+ MAINTAINERS                                        |   6 ++
+ arch/arm/boot/dts/renesas/r9a06g032.dtsi           |  18 ++++
+ drivers/net/ethernet/stmicro/stmmac/Kconfig        |  12 +++
+ drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rzn1.c   |  86 +++++++++++++++++
+ .../net/ethernet/stmicro/stmmac/dwmac-socfpga.c    | 107 ++++++++++-----------
+ drivers/net/ethernet/stmicro/stmmac/stmmac.h       |   3 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c  |  14 +--
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c  |  50 +++++++---
+ include/linux/stmmac.h                             |   2 +
+ 11 files changed, 289 insertions(+), 76 deletions(-)
+---
+base-commit: 383eed2de529287337d9153a5084d4291a7c69f2
+change-id: 20240402-rzn1-gmac1-685cf8793d0e
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Romain Gantois <romain.gantois@bootlin.com>
+
