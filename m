@@ -1,111 +1,123 @@
-Received: from mout.web.de (mout.web.de [212.227.15.4])
+Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF72716E894;
-	Fri, 10 May 2024 11:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C26B16F0E5
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 11:52:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715341960; cv=none; b=lAVQXgqpeEU73SmQm0kz9MAnCwEV31q3orKu0Qcm3U9R9UbvsdhqeuLcX5gSJNcPetn/Xb65Imx7zkNSCBlXaA8YitB/TsT5OmsSfXL2ijZ2L3Iu8P2Bg89Ve3NNXiBdNQenAz9NmTRSn7h5VzZHD964riAs0+LJCQsM4bf1tNc=
+	t=1715341979; cv=none; b=om1cgrshkLCslgrfAuEFGjypSqEbjemO0ujOZJ9wrbu9bOnT9Q2G4eHCkhPaVFT2Umzgq8lx9aqe2IAojeWbqsIOLCMJTi/KMLVyUrE8A3iZeUez2FNRFvKArOiDJsX4V4Oej+9506OYspRCHArJ9LjdYPJdA78qW5a/17WeWHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715341960; c=relaxed/simple;
-	bh=Guh5VZYFKjMQLQAhP0rT6QQW4U6WTlMZkptsToslItY=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=MAvgN+iFsVcWWVx6ZNwvXJr9I11RuCuJCfx6OO6RRtgNupJt8INXfVgMjZwHqueB5TEh6UeGQdrIxogRCEqwijdINK/GgbbRkRs/bpjpssD+AUH4Ie1aBWH7ZnRblm32PgvkSYgVtvUTubLDGCV2eZ+FVx7shq/nj0WlHyMwtsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=XLgQjyR8; arc=none smtp.client-ip=212.227.15.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1715341979; c=relaxed/simple;
+	bh=XT/MGGf6FqoaFBbWz/kB4SnUy6ZwYybEOphKp8bB/sc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XZcx+aft2bZyh2uXLxCCMwWeVfrOBYzHNqKnJ4GwATBZR8PYXJrdrHhQ84PGhPzIkg7CEBkgeaMY2up3MRqmLkZHMWnuP+oHwpvZKURausbveuduu7f/G0wZl7tY+TC5CDFvb/rd5oEAEqBwbnVnawVxxZIjZ2TEiXwhUnTArjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=xv87/W2m; arc=none smtp.client-ip=95.215.58.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="XLgQjyR8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1715341932; x=1715946732; i=markus.elfring@web.de;
-	bh=Guh5VZYFKjMQLQAhP0rT6QQW4U6WTlMZkptsToslItY=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=XLgQjyR8o5LvICfsb0u5ZSGz0WKBZuQObQz1CC4A/RdHQC1mkUNuRFDq0RKWOuX2
-	 4Vh3Z2E8fTlYIQFr1KQ3xcre7plemsno4ihzvGIck1oIxlJJ6DhrXgzIeASaN8S9m
-	 mLDt2Sx9kU4xDSwuCoy00ahXy6HFJB38wwQZbhkPmL0Ka7xIZ76CfzIvusjeMT3Dp
-	 ElCJETM8faTfjNepQhplv/sQck65JKd1sC2J/Kc1D8unQqvhXDvbM+j30AgImo2bC
-	 DWYql6S+3ZqMZYzriInlgdVW7frjtXr2KmpgQKKu6KAYHJqM4yel4kJee38/EzjBB
-	 FcZpzegQ2PeHE29OJg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1M3Euv-1s2N3R1q17-003k5f; Fri, 10
- May 2024 13:52:12 +0200
-Message-ID: <51d46ce7-ea0f-401d-ad72-4bfb3f2474c5@web.de>
-Date: Fri, 10 May 2024 13:52:11 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="xv87/W2m"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715341976;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Sn5xOAgv1svZ21tOX1itCUqNjVaJTe3E3Ka7POAje4c=;
+	b=xv87/W2mVBIZxUvRcC43sR2bcohwTQIjuNvnLpv6icr6FDrxnP32YVaIitfZxYPFlxqr81
+	sN2GuV6bXniKaXL5vsqjbbYlK6iIhhnFfiGvAT9Gn31cFtl2lNHU7pabZLes5mPvuH16sl
+	ozV01DWLApGkG3sG+vha3K5ZDWW67IU=
+From: "Luis Henriques (SUSE)" <luis.henriques@linux.dev>
+To: Theodore Ts'o <tytso@mit.edu>,
+	Andreas Dilger <adilger@dilger.ca>,
+	Zhang Yi <yi.zhang@huaweicloud.com>,
+	Harshad Shirwadkar <harshadshirwadkar@gmail.com>
+Cc: linux-ext4@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Luis Henriques (SUSE)" <luis.henriques@linux.dev>
+Subject: [PATCH] ext4: fix infinite loop when replaying fast_commit
+Date: Fri, 10 May 2024 12:52:52 +0100
+Message-ID: <20240510115252.11850-1-luis.henriques@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Caleb Connolly <caleb.connolly@linaro.org>,
- ~postmarketos/upstreaming@lists.sr.ht, devicetree@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konrad.dybcio@linaro.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Alexander Martinz <amartinz@shiftphones.com>,
- Luca Weiss <luca.weiss@fairphone.com>
-References: <0da17f9c-29bd-443d-882a-69c339288a02@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: qcom: Add QCM6490 SHIFTphone 8
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <0da17f9c-29bd-443d-882a-69c339288a02@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:+WcrWbrfOAtjFAQjN239/ZcsvvDaUEx+Q4x5acrBpy64bQb1nOh
- E6PdwlrmT01+dEVPBsaCLXuMBZNrf7UAdTQccD+EFN82VlS6TkmmH5t4vPB6UrgjI4n7zS7
- QPstY3HUPIroifjvAMswTqtwrXminHtVff6OpkTSqjeodvnQG+h/44kre1oaYlpJI25WfZa
- 6C+6vf/RV7zRkNgj7zvHQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:eu5yCl4Qhw8=;9WFX63WP+SrIbyhdZy92EN5NqFx
- yWzDMhqCDgtX/Go3i31xOtdil+FjrqfQOWNO4V8z2JNbFbk+PSUR6/lB0CC40fQ+KXjC4KeJg
- cpNcdbYJFPOoiVogowpRhrBLDECsvLC6m3jT4zNLD6YGcjvl7Q3/0AAVR6c5e+nOt6Rs9r2vu
- bT/Hyi2bRoGm+AX7v91XTMwRbAOSW+GcO+10J+RBrc7fk3hMie2slICEzUCgb2I+paRZAL1rr
- OTvpZW1VXpoSZC4sBGk82rQfi/aAz11K/GkA0w+vRa9Eg4B7XnGA7AXcOg30pansLyndKDRO0
- buIwN1GAIHAp2hl04wa4LNmd6l10rV7/t04U29NL0RKG9z25A4+/TkIuSO6PkjV1SOsxTjSpg
- OwdjvzZp62SM1MOf34ej1Jg75yHzgHqyXfotV526k42dZ1YCRiqMe1TQCtvb6zfmF8YHke3wp
- OdKxJx2eB5LbiDTW19xQgh+qLkf0z3o8/6UGbcSZbOWYBAn6tEEVvD351MrH+0/dO+PxHqP/+
- f7s9It1cVy0XNNMRXg52xvv5pQTF0JubBv2RVCNTmhYLhEzfXDqJlyagZu5EAXsoORWLJlc/d
- YcKJyf/auc/hDdCuTRj8TMNDOWRmK8ODfoImURSy8ZFfH4SlooOHebTPGmwdFqhXhOBhENwbp
- NlMwxSIAEpSpXhqPtcMzq2Uj+8Nqk8XVYzlJW5ZmUyTxetKJf5aBXLWpVEmH91IGDsKfxDcGY
- TSGp1+cExGP5fJJSjyLke0aYq/qGrgON/pRNp0cX8EFhyPUv4IZenyelbw+5Uk77hastQ/QdB
- ncShkFn1iE7t/InH/cSnMIkmFR34jLcHcEmLdY1nGaNWU=
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-> > > The SHIFTphone 8 (codename otter) is a smartphone based on the QCM64=
-90
-> > > SoC.
-> >
-> > * I suggest to move the last word into the first text line.
-> >
-> > * Please add an imperative wording for a better change description.
->
-> Feel free to ignore all comments from Markus
+When doing fast_commit replay an infinite loop may occur due to an
+uninitialized extent_status struct.  ext4_ext_determine_insert_hole() does
+not detect the replay and calls ext4_es_find_extent_range(), which will
+return immediately without initializing the 'es' variable.
 
-I hope that such a hint can be reconsidered.
+Because 'es' contains garbage, an integer overflow may happen causing an
+infinite loop in this function, easily reproducible using fstest generic/039.
 
+This commit fixes this issue by detecting the replay in function
+ext4_ext_determine_insert_hole().  It also adds initialization code to the
+error path in function ext4_es_find_extent_range().
 
-> (or implement them - up to you).
+Thanks to Zhang Yi, for figuring out the real problem!
 
-This would be nicer also according to another known information source.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?h=3Dv6.9-rc7#n94
+Fixes: 8016e29f4362 ("ext4: fast commit recovery path")
+Signed-off-by: Luis Henriques (SUSE) <luis.henriques@linux.dev>
+---
+Hi!
 
+Two comments:
+1) The change in ext4_ext_map_blocks() could probably use the min_not_zero
+   macro instead.  I decided not to do so simply because I wasn't sure if
+   that would be safe, but I'm fine changing that if you think it is.
 
-> He is banned from mailing lists
+2) I thought about returning 'EXT_MAX_BLOCKS' instead of '0' in
+   ext4_lblk_t ext4_ext_determine_insert_hole(), which would then avoid
+   the extra change to ext4_ext_map_blocks().  '0' sounds like the right
+   value to return, but I'm also OK using 'EXT_MAX_BLOCKS' instead.
 
-This was the case for a while.
+And again thanks to Zhang Yi for pointing me the *real* problem!
 
+ fs/ext4/extents.c        | 6 +++++-
+ fs/ext4/extents_status.c | 5 ++++-
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-> and ignored by most of the maintainers.
-
-Several contributors occasionally adjust their change tolerance,
-don't they?
-
-Regards,
-Markus
+diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+index e57054bdc5fd..b5bfcb6c18a0 100644
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -4052,6 +4052,9 @@ static ext4_lblk_t ext4_ext_determine_insert_hole(struct inode *inode,
+ 	ext4_lblk_t hole_start, len;
+ 	struct extent_status es;
+ 
++	if (EXT4_SB(inode->i_sb)->s_mount_state & EXT4_FC_REPLAY)
++		return 0;
++
+ 	hole_start = lblk;
+ 	len = ext4_ext_find_hole(inode, path, &hole_start);
+ again:
+@@ -4226,7 +4229,8 @@ int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
+ 		len = ext4_ext_determine_insert_hole(inode, path, map->m_lblk);
+ 
+ 		map->m_pblk = 0;
+-		map->m_len = min_t(unsigned int, map->m_len, len);
++		if (len > 0)
++			map->m_len = min_t(unsigned int, map->m_len, len);
+ 		goto out;
+ 	}
+ 
+diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
+index 4a00e2f019d9..acb9616ca119 100644
+--- a/fs/ext4/extents_status.c
++++ b/fs/ext4/extents_status.c
+@@ -310,8 +310,11 @@ void ext4_es_find_extent_range(struct inode *inode,
+ 			       ext4_lblk_t lblk, ext4_lblk_t end,
+ 			       struct extent_status *es)
+ {
+-	if (EXT4_SB(inode->i_sb)->s_mount_state & EXT4_FC_REPLAY)
++	if (EXT4_SB(inode->i_sb)->s_mount_state & EXT4_FC_REPLAY) {
++		/* Initialize extent to zero */
++		es->es_lblk = es->es_len = es->es_pblk = 0;
+ 		return;
++	}
+ 
+ 	trace_ext4_es_find_extent_range_enter(inode, lblk);
+ 
