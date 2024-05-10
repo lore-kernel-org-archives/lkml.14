@@ -1,238 +1,180 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C134CB4E;
-	Fri, 10 May 2024 20:09:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F23417C98;
+	Fri, 10 May 2024 20:12:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715371746; cv=none; b=iiNUw/MA/q2qwRi9B5VNWjJCw26QQmRkkYpS7KDavvN2AssejpFgk99HNaA1ZybxhA0KogOm9FL9+or5d1kx02lxhc1cv1dNtkuNVr0L6GWapV6lT6O9hRvkLZHxfjEW1ezN3Sxso0lFIR6+7iltyvGurfHCXopAaF7xev66a/E=
+	t=1715371967; cv=none; b=LRnrDKfmXyM4D+IrjLNsQmWm8ZlIczH55OrW63H1No4Dod24viKEOa/KIV7gG8bp0MK+FZKNRfNYZTYLrp+ZYV4pyoi54f6NYx1hcTY0M3pHGswCFqc3jscX1L91OhBwuQ9lHFz21ACej+LkD9acd7s6RQzY/i+EITlsxaR48go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715371746; c=relaxed/simple;
-	bh=WbY0QNkzU5FHLjWQNa5GB+HlPBZoGMhX888ryhFyDBc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K4mxW7tuoTczwOKT7lIu2iBU20+skC/uWNK2jkRhZn4AJf6jYFL6nEz4c4PZb9rhI1vbNtSoqF/hmfMJDK3+dBuWl4OKIBDCDK202MchcfLTslzflEkM/ZK+DN4SXcE42nMR7s2xqKQERudJ+d2io93VIDzwyDlQ0iAJngtqm6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TB6vkmI6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715371967; c=relaxed/simple;
+	bh=ZKkZcljk702AJTFuuPtYmlTSrAuvKM1awKsEM9YYpzo=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=DxLDnGaqn8oWfYIT0zVIY5aXfFsdM5Vn3YTGliHEsOcBtMiIINEsB7WmPYML7jt0ZaoDYG8GiWT5dR05ARLInlYUaNp/ovafH0ukgANuVC4dlcqZOuWg+bGudzdH93YqvZgAemaixfHfY4fGB/fBfAbNHg33E3YyEciC0xEa9MM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jHhKc+PF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TB6vkmI6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 300EAC113CC;
-	Fri, 10 May 2024 20:09:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jHhKc+PF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9BF5C2BD11;
+	Fri, 10 May 2024 20:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715371745;
-	bh=WbY0QNkzU5FHLjWQNa5GB+HlPBZoGMhX888ryhFyDBc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TB6vkmI6rFllxSJs8EHd0yoIgd0lapuu5TAuXQ2LflMUEDDpyNzx+T/I/YG236rQq
-	 aUQuwWa7DFKFyYRFVZ8So9IASCbEwkphWQHb9YWA+hu6b5WUP7sSNgNI2GJnU+vB7A
-	 dkBKJB8/FFvKV8yHYEAoPRiJPheHjc66p3dg+L0o3940G1GCyN2EMklIkyHcGBQFhF
-	 se8Utg8w6oSjUDQ+eop1vWT34TEyL8Z4uEk25GFKuvMVsbefe+Oz8LF1eiuXTb0orZ
-	 zZ8DgP3iwaC9L+L7+mnjJi4tdK9jj+ham/mwihAnUCKono3YPqi+ljfPryWrqoMYNa
-	 qyQl+ET7CntbQ==
-Date: Fri, 10 May 2024 15:09:03 -0500
-From: Rob Herring <robh@kernel.org>
-To: Pankaj Gupta <pankaj.gupta@nxp.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/4] dt-bindings: arm: fsl: add imx-se-fw binding doc
-Message-ID: <20240510200903.GA628922-robh@kernel.org>
-References: <20240510-imx-se-if-v1-0-27c5a674916d@nxp.com>
- <20240510-imx-se-if-v1-2-27c5a674916d@nxp.com>
+	s=k20201202; t=1715371966;
+	bh=ZKkZcljk702AJTFuuPtYmlTSrAuvKM1awKsEM9YYpzo=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=jHhKc+PF6mzL0eDQlg59ykEtL7LsttfPnDOrHXJEx26ldPk7Lu1EZu/jucg10O8Aa
+	 uZf0ITXjbUD7061Y/uduLsBiyxayoMqXomL6WzmIePeEixiQI8/hHjMZqiYxqsQ4V+
+	 YjhrHEeWeNVeF9GmkFA7yglUdG7ZJqY6lNdRj9+BXovO0e16QnR24uRZWowFelilcL
+	 uCvQ+NL/Rs8zh2sNPisquSEKqRbE5qhue4TuSOSe79mzOnuAhgk4WN5A7EhXC5be2w
+	 mCvAcZmTVTRNYpy2G0TRWWuih22mhPzWvy8GIV+VuFXG9G6C8bjBibwh3CcppxZxGu
+	 /ifsv0jE22iug==
+Message-ID: <8ca61099580bdbf3550f0029b6381bcc.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240510-imx-se-if-v1-2-27c5a674916d@nxp.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CABVgOS=+SnMN6qG4DWRXjbHZB_87nsZdfOmPVv8yHTpCqozkWA@mail.gmail.com>
+References: <20240422232404.213174-1-sboyd@kernel.org> <20240422232404.213174-6-sboyd@kernel.org> <CABVgOSk=jGzj55v+YWzOBCsG7Wdk68pyZr0VdAYftybv+5X67A@mail.gmail.com> <431171223433496db0a85072be5c83ba.sboyd@kernel.org> <CABVgOS=+SnMN6qG4DWRXjbHZB_87nsZdfOmPVv8yHTpCqozkWA@mail.gmail.com>
+Subject: Re: [PATCH v4 05/10] platform: Add test managed platform_device/driver APIs
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, patches@lists.linux.dev, kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org, devicetree@vger.kernel.org, Brendan Higgins <brendan.higgins@linux.dev>, Rae Moar <rmoar@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rafael J . Wysocki <rafael@kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>, Daniel Latypov <dlatypov@google.com>, Christian Marangi <ansuelsmth@gmail.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Maxime Ripard <maxime@cerno.tech>
+To: David Gow <davidgow@google.com>
+Date: Fri, 10 May 2024 13:12:44 -0700
+User-Agent: alot/0.10
 
-On Fri, May 10, 2024 at 06:57:28PM +0530, Pankaj Gupta wrote:
-> The NXP security hardware IP(s) like: i.MX EdgeLock Enclave, V2X etc.,
-> creates an embedded secure enclave within the SoC boundary to enable
-> features like:
-> - HSM
-> - SHE
-> - V2X
-> 
-> Secure-Enclave(s) communication interface are typically via message
-> unit, i.e., based on mailbox linux kernel driver. This driver enables
-> communication ensuring well defined message sequence protocol between
-> Application Core and enclave's firmware.
-> 
-> Driver configures multiple misc-device on the MU, for multiple
-> user-space applications, to be able to communicate over single MU.
-> 
-> It exists on some i.MX processors. e.g. i.MX8ULP, i.MX93 etc.
-> 
-> Signed-off-by: Pankaj Gupta <pankaj.gupta@nxp.com>
-> ---
->  .../devicetree/bindings/firmware/fsl,imx-se.yaml   | 186 +++++++++++++++++++++
->  1 file changed, 186 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/firmware/fsl,imx-se.yaml b/Documentation/devicetree/bindings/firmware/fsl,imx-se.yaml
-> new file mode 100644
-> index 000000000000..a858ef6965cb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/fsl,imx-se.yaml
-> @@ -0,0 +1,186 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/firmware/fsl,imx-se.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP i.MX HW Secure Enclave(s) EdgeLock Enclave
-> +
-> +maintainers:
-> +  - Pankaj Gupta <pankaj.gupta@nxp.com>
-> +
-> +description: |
-> +  NXP's SoC may contain one or multiple embedded secure-enclave HW
-> +  IP(s) like i.MX EdgeLock Enclave, V2X etc. These NXP's HW IP(s)
-> +  enables features like
-> +    - Hardware Security Module (HSM),
-> +    - Security Hardware Extension (SHE), and
-> +    - Vehicular to Anything (V2X)
-> +
-> +  Communication interface to the secure-enclaves is based on the
-> +  messaging unit(s).
-> +
-> +properties:
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  compatible:
-> +    enum:
-> +      - fsl,imx8ulp-ele
-> +      - fsl,imx93-ele
+Quoting David Gow (2024-05-04 01:30:34)
+> On Fri, 3 May 2024 at 09:04, Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting David Gow (2024-05-01 00:55:46)
+> > > On Tue, 23 Apr 2024 at 07:24, Stephen Boyd <sboyd@kernel.org> wrote:
+> > > > diff --git a/Documentation/dev-tools/kunit/api/platformdevice.rst b=
+/Documentation/dev-tools/kunit/api/platformdevice.rst
+> > > > new file mode 100644
+> > > > index 000000000000..b228fb6558c2
+> > > > --- /dev/null
+> > > > +++ b/Documentation/dev-tools/kunit/api/platformdevice.rst
+> > > > @@ -0,0 +1,10 @@
+> > > > +.. SPDX-License-Identifier: GPL-2.0
+> > > > +
+> > > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > +Platform Device API
+> > > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > +
+> > > > +The KUnit platform device API is used to test platform devices.
+> > > > +
+> > > > +.. kernel-doc:: drivers/base/test/platform_kunit.c
+> > > > +   :export:
+> > > > diff --git a/drivers/base/test/Makefile b/drivers/base/test/Makefile
+> > > > index e321dfc7e922..740aef267fbe 100644
+> > > > --- a/drivers/base/test/Makefile
+> > > > +++ b/drivers/base/test/Makefile
+> > > > @@ -1,8 +1,11 @@
+> > > >  # SPDX-License-Identifier: GPL-2.0
+> > > >  obj-$(CONFIG_TEST_ASYNC_DRIVER_PROBE)  +=3D test_async_driver_prob=
+e.o
+> > > >
+> > > > +obj-$(CONFIG_KUNIT) +=3D platform_kunit.o
+> > > > +
+> > >
+> > > Do we want this to be part of the kunit.ko module (and hence,
+> > > probably, under lib/kunit), or to keep this as a separate module.
+> > > I'm tempted, personally, to treat this as a part of KUnit, and have it
+> > > be part of the same module. There are a couple of reasons for this:
+> > > - It's nice to have CONFIG_KUNIT produce only one module. If we want
+> > > this to be separate, I'd be tempted to put it behind its own kconfig
+> > > entry.
+> > > - The name platform_kunit.ko suggests (to me, at least) that this is
+> > > the test for platform devices, not the implementation of the helper.
+> >
+> > I was following *_kunit as "helpers" and *_test as the test. Only
+> > loosely based on the documentation that mentions to use _test or _kunit
+> > for test files. Maybe it should have _kunit_helpers postfix?
+>=20
+> Yeah, the style guide currently suggests that *_test is the default
+> for tests, but that _kunit may also be used for tests if _test is
+> already used for non-KUnit tests:
+> https://docs.kernel.org/dev-tools/kunit/style.html#test-file-and-module-n=
+ames
+>=20
+> DRM has drm_kunit_helpers, so _kunit_helpers seems like a good suffix
+> to settle on.
 
-You basically have 0 properties in the parent node. What's the point of 
-it? Either just get rid of it and define the child nodes independently 
-or make the parent contain all the resources.
+Alright, I'll rename the files.
 
-> +
-> +patternProperties:
-> +  "^[0-9a-z]*-if@[0-9]+$":
+>=20
+> > Following the single module design should I merge the tests for this
+> > code into kunit-test.c? And do the same sort of thing for clk helpers?
+> > That sounds like it won't scale very well if everything is in one modul=
+e.
+>=20
+> I don't think it's as important that the tests live in the same
+> module. It's nice from an ergonomic point-of-view to only have to
+> modprobe the one thing, but we've already let that ship sail somewhat
+> with string-stream-test.
+>=20
+> Either way, splitting up kunit-test.c is something we'll almost
+> certainly want to do at some point, and we can always put them into
+> the same module even if they're different source files if we have to.
 
-unit-addresses are hex. 
+Alright.
 
-> +    type: object
-> +    description:
-> +      Communication interface to secure-enclave node, that defines hardware
-> +      properties to required to establish the communication. There can be
-> +      multiple interfaces to the same secure-enclave. Each interface is
-> +      enumerated with reg property. It optionally defines properties
-> +      depending on the compatible string and interface enum identifier.
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +        description: Identifier of the communication interface to secure-enclave.
+>=20
+> >
+> > Shouldn't the wrapper code for subsystems live in those subsystems like
+> > drm_kunit_helpers.c does? Maybe the struct device kunit wrappers should
+> > be moved out to drivers/base/? lib/kunit can stay focused on providing
+> > pure kunit code then.
+>=20
+> I tend to agree that wrapper code for subsystems should live in those
+> subsystems, especially if the subsystems are relatively self-contained
+> (i.e., the helpers are used to test that subsystem itself, rather than
+> exported for other parts of the kernel to use to test interactions
+> with said subsystem). For 'core' parts of the kernel, I think it makes
+> it easier to make these obviously part of KUnit (e.g. kunit_kzalloc()
+> is easier to have within KUnit, rather than as a part of the
+> allocators).
+>=20
+> The struct device wrappers have the problem that they rely on the
+> kunit_bus being registered, which is currently done when the kunit
+> module is loaded. So it hooks more deeply into KUnit than is
+> comfortable to do from drivers/base. So we've treated it as a 'core'
+> part of the kernel.
 
-What are the identifiers based on? Is the value significant to s/w? Kind 
-of looks like you just made up indices.
+Ok, thanks. The kzalloc wrappers look like the best example here. They
+are so essential that they are in lib/kunit. The platform bus is built
+into the kernel all the time, similar to mm, so I can see it being
+essential and desired to have the wrappers in lib/kunit.
 
-How many child nodes do you have? Is it fixed per SoC?
+>=20
+> Ultimately, it's a grey area, so I can live with this going either
+> way, depending on the actual helpers, so long as we don't end up with
+> lots of half-in/half-out helpers, which behave a bit like both. (For
+> example, at the moment, helpers which live outside lib/kunit are
+> documented and have headers in the respective subsystems'
+> directories.)
+>=20
+> FWIW, my gut feeling for what's "most consistent" with what we've done
+> so far is:
+> 1. platform_device helpers should live alongside the current managed
+> device stuff, which is currently in lib/kunit
+> 2. clk helpers should probably live in clk
+> 3. of/of_overlay sits a bit in the middle, but having thought more
+> about it, it'd probably lean towards having it be part of 'of', not
+> 'kunit.
 
-> +
-> +      mboxes:
-> +        description: contain a list of phandles to mailboxes.
-> +        items:
-> +          - description: Specify the mailbox used to send message to se firmware
-> +          - description: Specify the mailbox used to receive message from se firmware
-> +
-> +      mbox-names:
-> +        items:
-> +          - const: tx
-> +          - const: rx
-> +          - const: txdb
-> +          - const: rxdb
-> +        minItems: 2
-> +
-> +      memory-region:
-> +        description: contains a list of phandles to reserved external memory.
-> +        items:
-> +          - description: It is used by secure-enclave firmware. It is an optional
-> +              property based on compatible and identifier to communication interface.
-> +              (see bindings/reserved-memory/reserved-memory.txt)
-> +
-> +      sram:
-> +        description: contains a list of phandles to sram.
-> +        $ref: /schemas/types.yaml#/definitions/phandle-array
-> +        items:
-> +          - description: Phandle to the device SRAM. It is an optional property
-> +              based on compatible and identifier to communication interface.
-> +
-> +    required:
-> +      - reg
-> +      - mboxes
-> +      - mbox-names
-> +
-> +allOf:
-> +  # memory-region
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - fsl,imx8ulp-ele
-> +              - fsl,imx93-ele
+Sounds good. I'll follow this route.
 
-What else would they contain? Those are the only compatibles defined 
-here.
+>=20
+> But all of this is, to some extent, just bikeshedding, so as long as
+> we pick somewhere to put them, and don't mix things up too much, I
+> don't think it matters exactly what side of this fuzzy line they end
+> up on.
+>=20
 
-> +    then:
-> +      patternProperties:
-> +        "^[0-9a-z]*-if@[0-9]+$":
-> +          allOf:
-> +            - if:
-
-These conditionals are hard to follow. Probably a sign some of this 
-needs to be separate or simplified.
-
-> +                properties:
-> +                  reg:
-> +                    items:
-> +                      - enum:
-> +                          - 0
-> +              then:
-> +                required:
-> +                  - memory-region
-> +              else:
-> +                not:
-> +                  required:
-> +                    - memory-region
-> +  # sram
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - fsl,imx8ulp-ele
-> +    then:
-> +      patternProperties:
-> +        "^[0-9a-z]*-if@[0-9]+$":
-> +          allOf:
-> +            - if:
-> +                properties:
-> +                  reg:
-> +                    items:
-> +                      - enum:
-> +                          - 0
-> +              then:
-> +                required:
-> +                  - sram
-> +              else:
-> +                not:
-> +                  required:
-> +                    - sram
-> +
-> +additionalProperties: false
+Yeah. My final hesitation is that it will be "too easy" to make devices
+that live on the platform_bus when they should really be on the
+kunit_bus. I guess we'll have to watch out for folks making platform
+devices that don't use any other platform device APIs like IO resources,
+etc.
