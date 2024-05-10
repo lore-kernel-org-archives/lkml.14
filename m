@@ -1,77 +1,82 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB75A14E2D5;
-	Fri, 10 May 2024 09:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665481635B7
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 09:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715333042; cv=none; b=pH8Vl4GMp3SbggVSgxPJR3JACpsxqxh4JQVo2X4sFPV5a6a01ePwQn7463jwY2T39aTsL8VxmaLxEPaTXY4A3STUMcbE+1CsZzr0VpJgwCVlqvA+NUC2IEZy7Jv/4QvsI1QzMHqqqEvSmZ6eH3JKl8yLt8CgRZJg0noLZJpS7j4=
+	t=1715333047; cv=none; b=HPZsNDfUHc8QmhswMEa0yjDFd2EIBw2LH4TBd16+LHF0cRDFcYbOLXGR2chlSlhjmHIivzo8HfWvl+N1EmXkA4K8z2IzLrhEySkz0k3bKPTmn6P98+ZmLVEgPAI7uoFHD3t4f11/OxuiZ3VdChMfWP3v3eWkKnkZbR3/tFaC2G8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715333042; c=relaxed/simple;
-	bh=1haYH3ovXTB+9lxBHQncIc19qHitIh/c2PcuOnw0G5I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SG19ZjiK0eu7ppCff2mj/7Sr9348DN4W2k9eGXYsoL1s+7OoG3rGqzfnXVeKefG0OKDzwGUmbDrCV58PmkLacRok1DnrK9Nkn/SIS08U3z0NDjiamW4QJw+bVr18uFw+trF6s+Zg9ytzFeDGHgfOm+FXtMAwkEGxJfG/3UDvA5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1s5MTS-00DKHE-2l;
-	Fri, 10 May 2024 17:23:31 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 10 May 2024 17:23:31 +0800
-Date: Fri, 10 May 2024 17:23:31 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: davem@davemloft.net, nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] crypto: atmel-sha204a - read out otp zone
-Message-ID: <Zj3nk_W9VflufS-n@gondor.apana.org.au>
-References: <20240503211054.1231-1-l.rubusch@gmail.com>
+	s=arc-20240116; t=1715333047; c=relaxed/simple;
+	bh=PzEAvfubVdzbr1Rad2HFxtO4tJenQDkig1qLCknoPWc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QNQIZZTRKkeD7HYzhJcYkhRD9qq/O/QUZISTIwETJwA8ZYz0BJOC7LDzWYG3rwvc+qsTY2Xe9HWGVwvXz0LGjGZ4jU39AKlb0uuYd8uXNNOJSkFc3GURmCSu+GAza/Yw6reFMRtoyz5QScgDjlcEZwhi+7827Jc2SKyWS2HD9pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=J6PKm0iI; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="J6PKm0iI"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52192578b95so2008433e87.2
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 02:24:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1715333043; x=1715937843; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PzEAvfubVdzbr1Rad2HFxtO4tJenQDkig1qLCknoPWc=;
+        b=J6PKm0iI97liOMawv3Xf9F+UDm4jxYDjniXPPya1MdYTGRZBuD9xww8atsOT72KmPy
+         vzcNzQJjQ7uZmNterneF6Fn8+aVSK6hWZmLkkVHxcZhLJ0rI8C/wKgJG3uq4HvpnqtN+
+         FFa3PMHWziX/JqRbiXM1g5cxOy6w8HXSmxlqk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715333043; x=1715937843;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PzEAvfubVdzbr1Rad2HFxtO4tJenQDkig1qLCknoPWc=;
+        b=C/2axvIlH+xqiaHyFtlWhgHmA1mud9fzpGQ8+dw/YyNte4eXGc896sfSUirS769wsr
+         z6XLt4LVY7wJCiCCkvG5mSQH0pyW9RhKU4EHPyID8YBH3eugun6f9hOjhbsNzhPTjJZO
+         NXn/vUTnKDPkM0xJ4pe4euxI2ni3yVCotlY3Lj05Q+oQpPSYHDnN6z9xraeApCIiqQwu
+         fhU6x4ue0wPVPk1e9Bn+FP838Qho81tOPbm/oCNtrdLvYlXyat9CYXi46LGZ+1ZG8eZl
+         8A4p25uy9lo+kNsRZTIjlkvRKXYctR7w1zu+Vp/ZJv1UQOF+foGPhuzelci9EMzJDD5e
+         G4Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPgStnuLjSKtr42ERei1XFgRqsM4katz8F3LfZjsL7/k9nB9HtJhEze/E0NyzLNENhUon0ZEb1uFZ6V0ONl6Tdso86CiVkNtUhcRNI
+X-Gm-Message-State: AOJu0Yw8oQFRsUh0+WmJRFINjobb52YHUWdfF3kQWQU0gApPrnyAF9gg
+	3r3sT+9ib7NloScnQZD3cD5EuGAXtTHU0pukRJ/G5HlzRoE/ViF3A+itAVr6XPiCAxh2wpLCvuy
+	S6Wl+pCnMrWQ+RlTuKyGxiwjnKvTC47Z3Cwo1eXYvzgrZVz+h
+X-Google-Smtp-Source: AGHT+IEBQo/Qbfl2WC+0rK4SGXKb1MtU+UuvKOJs0bGdaUK/2EFugpwAD8QMjqigbM55196R57Wz0hxTuWlnljjn/MU=
+X-Received: by 2002:a17:907:6d01:b0:a59:9f3e:b1ca with SMTP id
+ a640c23a62f3a-a5a2d6657camr156437666b.55.1715332611232; Fri, 10 May 2024
+ 02:16:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503211054.1231-1-l.rubusch@gmail.com>
+References: <20240509122154.782930-1-houtao@huaweicloud.com>
+In-Reply-To: <20240509122154.782930-1-houtao@huaweicloud.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Fri, 10 May 2024 11:16:40 +0200
+Message-ID: <CAJfpegvJgFfJmDZXw7NBGZ5WASdxTy+EVjQxBSydAq1oARCntw@mail.gmail.com>
+Subject: Re: [PATCH 0/2] fuse: two tiny fixes for fuse_resend()
+To: Hou Tao <houtao@huaweicloud.com>
+Cc: linux-fsdevel@vger.kernel.org, Zhao Chen <winters.zc@antgroup.com>, 
+	linux-kernel@vger.kernel.org, houtao1@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, May 03, 2024 at 09:10:50PM +0000, Lothar Rubusch wrote:
-> Read out otp memory zone of this secure eeprom and rng chip. The chip
-> has an otp zone and data zone, both still not accessed. The otp zone
-> can be used to store persistently serial numbers or similar, if externally
-> pre-configured. In any way the Atmel SHA204a needs to be preconfgured and
-> fuse locked in order to be useful also for the already implemented RNG
-> functionality. Placing data into the otp zone is optional. If empty, the
-> chip returns 0xff on all field. The implementation passes the content to
-> a new sysfs handle to userspace. If the chip is locked or not accessible
-> no sysfs handle is set.
-> 
-> Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
-> ---
-> v1 -> v2
-> - fix typo in commit title
-> - drop patch: remove unused includes
-> 
-> Lothar Rubusch (4):
->   crypto: atmel-i2c - add missing arg description
->   crypto: atmel-i2c - rename read function
->   crypto: atmel-sha204a - add reading from otp zone
->   crypto: atmel-sha204a - provide the otp content
-> 
->  drivers/crypto/atmel-i2c.c     | 30 +++++++++++++--
->  drivers/crypto/atmel-i2c.h     |  8 +++-
->  drivers/crypto/atmel-sha204a.c | 68 ++++++++++++++++++++++++++++++++++
->  3 files changed, 102 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.25.1
+On Thu, 9 May 2024 at 14:21, Hou Tao <houtao@huaweicloud.com> wrote:
+>
+> From: Hou Tao <houtao1@huawei.com>
+>
+> Hi,
+>
+> The patch set just includes two tiny fixes for fuse_resend(). Patch #1
+> replaces __set_bit() by set_bit() to set FR_PENDING atomically. Patch #2
+> clears FR_SENT when moving requests from processing lists to pending
+> list.
+>
+> Please check the individual patches for more details. And comments are
+> always welcome.
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Applied, thanks.
+
+Miklos
