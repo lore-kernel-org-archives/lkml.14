@@ -1,118 +1,124 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B80D1635B5;
-	Fri, 10 May 2024 10:05:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B1E165FA1;
+	Fri, 10 May 2024 10:07:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715335538; cv=none; b=Lf+G9gfyG6ca2eu5ox6S60yvJlg1AuR4YGNRiZZX+GMeMoWhzeDfgQTcTZWHv/XUB3g1o6C5JCiXoZ+1PFa2nkA8VOm7RsqNm32zoOkbpCFJ/eqIll4eAflo8y51VJuxN+vZVm4QQJAZXlu7gXK2khO/Ob6J4w2Oebnt1vu+mRw=
+	t=1715335641; cv=none; b=bB1ROzI4dfQL0U4edS1Qxwg45C7JViyl64cNCUx+amD/mYDmJby2Do3b3LDp/yZ7+/RdH9UxlZV/Jl8dlH5TqMCIxxnAkbIVlDwalRp8bIDnadTxn+i382ez770oEwSZBPse/ja0Av6+9o/kJcBTKWRv/79USlViMGOfRNMabos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715335538; c=relaxed/simple;
-	bh=bNxY+o7w/EluTDohpX6Vmx9RgZAOBzGsaVfZ2SgYTKc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OehfXSDRRPIuM+7JEJXWc1Y5jwavGKT1RBoY1/efh3xjI5OJy8RWufd7KyMF800dGbH+i0ow7Rtz/6k/MYkXsVviBoCX0yBKzMa04C2rVR1xNrnFHCSsJfz+qM16cQPIGGeB05Lt62Yi+zHxu64nAUjtuEEDfqL0lkyCqB1qfbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DHzdP4Vw; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715335641; c=relaxed/simple;
+	bh=ifYU/c+8V7OWSd9aaCKHF7gpCqv7cSdHzl7rv5oFs0w=;
+	h=MIME-Version:Content-Type:Date:Message-ID:Subject:From:To:CC:
+	 References:In-Reply-To; b=YhNoo8dTXzI9xhXo434xheWu7y4cS7i46GNXu0iiHxPXUSUY7ZXD0de3TW9tkr0v2CS3bUfmEbWOQgbzdg///Smde2sdMBcVKDhNw0j4Q5ULgB9mgbi2QCG+V48aYCICsRfil+6CRAIL8DIgaVtQRfEBNgL8imKn3XwtEtAVSUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.es; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=u8uF0CBu; arc=none smtp.client-ip=99.78.197.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.es
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DHzdP4Vw"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a59a64db066so464919266b.3;
-        Fri, 10 May 2024 03:05:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="u8uF0CBu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715335535; x=1715940335; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jvyJt6mXT3ke3TNec2g3jJkXUKl8h7wFAhJ349b/sWE=;
-        b=DHzdP4VwUq5QXS9O4PdsB9psOZy1DfGXfKm+JVu/tL/rDHeJcLNHChP8JhDL8+fExC
-         /bct8r71jAK/zQ2hAw6S/EfNvQ749sA/HvtZUekCrGudhWX73SJGDbWLTrCC/ceBxKQl
-         gPeD9CzaApk/ZyOtvIvUyuzdXTGnHxIIxt4T1aOCa8oTRy+infabTgSu8+OvBzzGBwwq
-         YJdM41qk669eP0kidZQzvqVHltt6jCJcGwx0T9vYgBy4sWx0pbk2SzVWXAFcPmSQ8BfX
-         lSZhOxSqJwdTNR+1SRNlkw7VG3AFNtN1L+DNrWWcggmnv2pcloIbJe383snBZii6roZF
-         mssg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715335535; x=1715940335;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jvyJt6mXT3ke3TNec2g3jJkXUKl8h7wFAhJ349b/sWE=;
-        b=H7OSC55fj4Iz5bPicXkwabwU/puzti0jXeSPDG9nMqAiH+BWRPppQvN5typyjfpvpS
-         S4NCnZkT2/xHWzaP1i5VDhjv/hG8DdncD4wjbuV2RMtTS0a+by7yH6s3Tyen1A2jP6ql
-         r8L0I8Pdac3OvrV2Ge2MjsrtKT+fMu4VNQj0XJTBDs/iVnS9KlWuQbt7f0zzLWWE+Zd5
-         uUEdFrTzCEpYDt3vVyDof+dfc0/plIN/zid9j7HL3HV0a9Agg95Bj9dtWtmWYDiE24uJ
-         sggeSarWyw/TmMHh9s1VXLWY7XDmoWlOoCAxKSJo7YARMRsEb6nWgs2Z0j94u92xY7PH
-         s/dw==
-X-Forwarded-Encrypted: i=1; AJvYcCUz/Ml2JKHiw5Fq7x/CEHPr+UJZ5ECedWfp/Cp3sTHzfJ4KIDT0e6Xs4E/8Yw0n+B0Fbkxk/Xf2moGeJ7IGo1wR+S261lKegEF6AOWAqqmhaPjTTb9qhBzrIuPu4wy0rzRXXIhSo65QcB4wDxScqmdNnCaxe0IoCcT8XOgkcfpW5GZ+7w==
-X-Gm-Message-State: AOJu0YzCZsfegC3w0ZPGnN2Yfl5P6PlCfvV0mMH4YyhZ/IW9q6Dpx6V3
-	Q6tZeXmNDOByl+e/Yp3ZpMS3zq90GcOOOlX1iQiLBFPgbgE5GOuP
-X-Google-Smtp-Source: AGHT+IGa90M9SKT4W839DqYKUjMyqadXlmKJvXXAnlyhf9gjRGzZ+Yt9tUAVrfALpDcuKwCII9ApPw==
-X-Received: by 2002:a50:baeb:0:b0:56e:2ebc:5c4 with SMTP id 4fb4d7f45d1cf-5734d5ceae0mr1478379a12.20.1715335535307;
-        Fri, 10 May 2024 03:05:35 -0700 (PDT)
-Received: from [192.168.0.105] (c7.campus.utcluj.ro. [193.226.6.226])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733c2c7d3esm1655178a12.73.2024.05.10.03.05.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 10 May 2024 03:05:34 -0700 (PDT)
-Message-ID: <73365049-670b-4068-a159-fbdd0539f5a9@gmail.com>
-Date: Fri, 10 May 2024 13:05:32 +0300
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1715335639; x=1746871639;
+  h=mime-version:content-transfer-encoding:date:message-id:
+   subject:from:to:cc:references:in-reply-to;
+  bh=ODj1UcfgLsilkOJ93AaBzpY+nLn2txKitmtJHEr2EDY=;
+  b=u8uF0CBug7c8zCvsxafKEvq0CDaBFQOMRdoDAtvAPf0o9JmSmUYIrbcd
+   8TMqV3Ny4NIBTlnCoa1vEds+0gHqP9iuyEqAQUw1JfywNJof5GxrLbPYe
+   iCLegTlVnHLZbVrZQVmWEj9Hxdln8O6Wz8aY2aLdaYMWupiifYGtj3XcQ
+   Y=;
+X-IronPort-AV: E=Sophos;i="6.08,150,1712620800"; 
+   d="scan'208";a="88359429"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 10:07:15 +0000
+Received: from EX19MTAEUC002.ant.amazon.com [10.0.10.100:54770]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.14.131:2525] with esmtp (Farcaster)
+ id 0c298036-b7a6-49e7-b4ba-4e0b449ad4e5; Fri, 10 May 2024 10:07:14 +0000 (UTC)
+X-Farcaster-Flow-ID: 0c298036-b7a6-49e7-b4ba-4e0b449ad4e5
+Received: from EX19D004EUC001.ant.amazon.com (10.252.51.190) by
+ EX19MTAEUC002.ant.amazon.com (10.252.51.245) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 10 May 2024 10:07:13 +0000
+Received: from localhost (10.13.235.138) by EX19D004EUC001.ant.amazon.com
+ (10.252.51.190) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.28; Fri, 10 May
+ 2024 10:07:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 5/6] dt-bindings: iio: adc: ad7192: Add AD7194 support
-To: Conor Dooley <conor@kernel.org>
-Cc: michael.hennerich@analog.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- alexandru.tachici@analog.com, lars@metafoo.de, jic23@kernel.org,
- robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- lgirdwood@gmail.com, broonie@kernel.org, andy@kernel.org,
- nuno.sa@analog.com, marcelo.schmitt@analog.com, bigunclemax@gmail.com,
- dlechner@baylibre.com, okan.sahin@analog.com, fr0st61te@gmail.com,
- alisa.roman@analog.com, marcus.folkesson@gmail.com, schnelle@linux.ibm.com,
- liambeguin@gmail.com
-References: <20240430162946.589423-1-alisa.roman@analog.com>
- <20240430162946.589423-6-alisa.roman@analog.com>
- <20240430-winnings-wrongness-32328ccfe3b5@spud>
-Content-Language: en-US
-From: Alisa-Dariana Roman <alisadariana@gmail.com>
-In-Reply-To: <20240430-winnings-wrongness-32328ccfe3b5@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Date: Fri, 10 May 2024 10:07:00 +0000
+Message-ID: <D15VQ97L5M8J.1TDNQE6KLW6JO@amazon.com>
+Subject: Re: [RFC PATCH v3 3/5] KVM: x86: Add notifications for Heki policy
+ configuration and violation
+From: Nicolas Saenz Julienne <nsaenz@amazon.com>
+To: Sean Christopherson <seanjc@google.com>,
+	=?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+CC: Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, "Kees
+ Cook" <keescook@chromium.org>, Paolo Bonzini <pbonzini@redhat.com>, "Thomas
+ Gleixner" <tglx@linutronix.de>, Vitaly Kuznetsov <vkuznets@redhat.com>,
+	Wanpeng Li <wanpengli@tencent.com>, Rick P Edgecombe
+	<rick.p.edgecombe@intel.com>, Alexander Graf <graf@amazon.com>, Angelina Vu
+	<angelinavu@linux.microsoft.com>, Anna Trikalinou
+	<atrikalinou@microsoft.com>, Chao Peng <chao.p.peng@linux.intel.com>,
+	"Forrest Yuan Yu" <yuanyu@google.com>, James Gowans <jgowans@amazon.com>,
+	James Morris <jamorris@linux.microsoft.com>, John Andersen
+	<john.s.andersen@intel.com>, "Madhavan T . Venkataraman"
+	<madvenka@linux.microsoft.com>, Marian Rotariu <marian.c.rotariu@gmail.com>,
+	=?utf-8?q?Mihai_Don=C8=9Bu?= <mdontu@bitdefender.com>,
+	=?utf-8?q?Nicu=C8=99or_C=C3=AE=C8=9Bu?= <nicu.citu@icloud.com>, Thara
+ Gopinath <tgopinath@microsoft.com>, "Trilok Soni" <quic_tsoni@quicinc.com>,
+	Wei Liu <wei.liu@kernel.org>, Will Deacon <will@kernel.org>, Yu Zhang
+	<yu.c.zhang@linux.intel.com>, =?utf-8?q?=C8=98tefan_=C8=98icleru?=
+	<ssicleru@bitdefender.com>, <dev@lists.cloudhypervisor.org>,
+	<kvm@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+	<linux-hyperv@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-security-module@vger.kernel.org>, <qemu-devel@nongnu.org>,
+	<virtualization@lists.linux-foundation.org>, <x86@kernel.org>,
+	<xen-devel@lists.xenproject.org>
+X-Mailer: aerc 0.16.0-127-gec0f4a50cf77
+References: <20240503131910.307630-1-mic@digikod.net>
+ <20240503131910.307630-4-mic@digikod.net> <ZjTuqV-AxQQRWwUW@google.com>
+ <20240506.ohwe7eewu0oB@digikod.net> <ZjmFPZd5q_hEBdBz@google.com>
+ <20240507.ieghomae0UoC@digikod.net> <ZjpTxt-Bxia3bRwB@google.com>
+In-Reply-To: <ZjpTxt-Bxia3bRwB@google.com>
+X-ClientProxiedBy: EX19D036UWC002.ant.amazon.com (10.13.139.242) To
+ EX19D004EUC001.ant.amazon.com (10.252.51.190)
 
-On 30.04.2024 20:21, Conor Dooley wrote:
-> On Tue, Apr 30, 2024 at 07:29:45PM +0300, Alisa-Dariana Roman wrote:
->> +      diff-channels:
->> +        description:
->> +          Both inputs can be connected to pins AIN1 to AIN16 by choosing the
->> +          appropriate value from 1 to 16.
->> +        items:
->> +          minimum: 1
->> +          maximum: 16
->> +
->> +      single-channel:
->> +        description:
->> +          Positive input can be connected to pins AIN1 to AIN16 by choosing the
->> +          appropriate value from 1 to 16. Negative input is connected to AINCOM.
->> +        items:
->> +          minimum: 1
->> +          maximum: 16
-> 
-> Up to 16 differential channels and 16 single-ended channels, but only 16
-> pins? Would the number of differential channels not max out at 8?
+On Tue May 7, 2024 at 4:16 PM UTC, Sean Christopherson wrote:
+> > If yes, that would indeed require a *lot* of work for something we're n=
+ot
+> > sure will be accepted later on.
+>
+> Yes and no.  The AWS folks are pursuing VSM support in KVM+QEMU, and SVSM=
+ support
+> is trending toward the paired VM+vCPU model.  IMO, it's entirely feasible=
+ to
+> design KVM support such that much of the development load can be shared b=
+etween
+> the projects.  And having 2+ use cases for a feature (set) makes it _much=
+_ more
+> likely that the feature(s) will be accepted.
 
-Hello, Conor! I really appreciate the feedback!
+Since Sean mentioned our VSM efforts, a small update. We were able to
+validate the concept of one KVM VM per VTL as discussed in LPC. Right
+now only for single CPU guests, but are in the late stages of bringing
+up MP support. The resulting KVM code is small, and most will be
+uncontroversial (I hope). If other obligations allow it, we plan on
+having something suitable for review in the coming months.
 
-The way I thought about it, the only thing constraining the number of 
-channels is the reg number (minimum: 0, maximum: 271). 272 channels 
-cover all possible combinations (16*16 differential and 16 single ended) 
-and I thought there is no need for anything stricter. I added items: 
-minimum:1 maximum:16 to make sure the numbers are from 1 to 16, 
-corresponding to AIN1-AIN16.
+Our implementation aims to implement all the VSM spec necessary to run
+with Microsoft Credential Guard. But note that some aspects necessary
+for HVCI are not covered, especially the ones that depend on MBEC
+support, or some categories of secure intercepts.
 
-Please let me know what should be improved!
+Development happens
+https://github.com/vianpl/{linux,qemu,kvm-unit-tests} and the vsm-next
+branch, but I'd advice against looking into it until we add some order
+to the rework. Regardless, feel free to get in touch.
 
-Kind regards,
-Alisa-Dariana Roman.
-
+Nicolas
