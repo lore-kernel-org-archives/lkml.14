@@ -1,144 +1,100 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5D87F
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 00:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C187F
+	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 00:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715299525; cv=none; b=ry6prbM59a3/nblrNGoz05E4waV9XbO90Ay/TIEi3UVgpU7XMcDp83W1TvWue1d+22dk7aign+hGmCKRzci5eYMrueASQr9Gn+jHA+9ZiYJ7CBgdY3J1ArSueNC61NW7b7OvyGSpG/c0/Wdi2o/Ntg51CrKFBSZLEuUWShHOUos=
+	t=1715299588; cv=none; b=awhpBgQa0AuY2yUZITXJ/NNmYPi1LL+mfpbHZAOcY5+J2yCU6VV9SBgdy/2v9sx+ubtlDnrW6bUQjbVh4BA3XFZbjGPUTVVLLpxwe8bBhRpDihrPDX1lJj0nIq2lpl2Fa5JeBwb/IIwobxudOaVUF7dJOw487lNspUL35GrWo4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715299525; c=relaxed/simple;
-	bh=cGpULC1B1HXkvRfCSn3TdeH+Xj5EwEpr4DGLnTg+pCQ=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=TGeg8i5G+TbkNBFDOPnZ9DhVM2XiZWB99ZZNa18zRUMsIQdE41aSrbRqJE/cQvO4g2DIi4LudMbrFBVsxcdVR3gGDLSCauXxIlDr+heC0f3XOEEz+zcK3iLH0sHCXWw1PN5Y5rZRauDhp8RKIb4Q5vns7H4JBx12uEzsvhZooBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1GtDOigs; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--yabinc.bounces.google.com
+	s=arc-20240116; t=1715299588; c=relaxed/simple;
+	bh=GLOG80HgKLQomRdNUGeLi4tSJE/YjuubP50efidlOaw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ja2Jtj8kPDJOVgzcaeSLJbPts0tm7jyKmGJjeNjjbg332zAAvysLrysXQJAHJcjEFxY1NEaDmZMlJs6inID4d3qNv2/I6z9cxVCtijrI7nAIOFTN+bQ1c7m8+I98T2Em1TKfigy8AqtNm6om3isL8ITCG7DBvefEFGXdGZHWUoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oMwUfgml; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1GtDOigs"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-61be8f7ed6eso17622397b3.0
-        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 17:05:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oMwUfgml"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-41f9ce16ed8so15143235e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 09 May 2024 17:06:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715299523; x=1715904323; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ot0TEs4BvD2J9QyiZT5bC39KllHj7+HFnRVXvIw7CTU=;
-        b=1GtDOigsg5jSoXkWIBd0iOs/bvORgsA0dp9i8Pw9v6bPM3zeqJH0w94Q+/XodM3CT7
-         q4SX4sjCybMXUdaTjgNlRUFYBfpyDFNxHgKjaMpNFpU6UcWIj0Pm1wFbfeYtZA7cJpMH
-         jVuuTT6ZR5oSNuiDtBa98fqHK7zS2XPtiGlE70CPViVECq+MXsUrzx9aoFSD8ZW27y/z
-         EM4dSqKAyBbHM3wgnnMp3s13c5nRD0y3bBkzLaVm31jAfA4DDndWfP0rs08CNbAreTuh
-         EHL2HYRErZJB0+ZSLmJeBGAXXnwuZEyZAL97yB3hQoNG5Dsm9HEtUtcMxCIAUh6ZN7P3
-         7W8Q==
+        d=linaro.org; s=google; t=1715299586; x=1715904386; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=A9bM9WgcUeLqnHcG3u0KhZ5y00qqpThdPur7Fomuotk=;
+        b=oMwUfgml4KO6zohBzwROs1yRS9tJhUGd0u0TwdRy+PTo4fF93C3tdnngMsNbwj5/OT
+         y9Pqjzt3QTsqLvsFKVZdFvrG8I6QMkDr20Vq64FWVNR3sdd1we8Tl9/+ldmmvUTmhcit
+         A6buEBJSJ/Z+z0/iCQA1GuP89oGL090pVy1rmu2lL/p9Y/SMg0PfxBmmjqsGCFBhS73c
+         sVcdGFjB+8yxVZ3IbW2YuXkhlCL7TiIl1v7oLycMjB3dE4o07A6/S10Tp3/r+a7IoYfJ
+         oq8d5sX3FoIEL7UPT7niXLQbuA/IFOeOjQxC3VQO45GhJpEGJZPtHAElrAARqUPFPOZY
+         ACyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715299523; x=1715904323;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ot0TEs4BvD2J9QyiZT5bC39KllHj7+HFnRVXvIw7CTU=;
-        b=eTX8VB/M21mXjYrSd3KR+C2YUWzP152hUCK95xN9ORLHkR3FyXDSMMGWnJKZ9jCQ7Q
-         q6XFnuSyLcY2LOA3hUxVA9YdVuFzQzdzBtnbKCvivR+lYun7no/hqWhz9fk57JzB/Q3l
-         zb/Bv+ynNeFL5jn72uPmV3bUDUdr1aCTEI1sx62n8zg+g2lBK0/Oel0p8XblFk98Pa5n
-         U4Ps+0RzLvIoXG1UP6t7PutPQlwgFCGGGQdMHLlh/HUE0/1T4w6ioYZYxsV1Hp5bn4hA
-         6mPWwcz3QH+0bgPFppP6vNHEBH5UBu2F1gaAoCkDOh3tJXqGBrxq/nhjdqhhqiit9z4C
-         P60w==
-X-Forwarded-Encrypted: i=1; AJvYcCXwgI8syEN1d4kGcToPYOf1/vtz5ErqLT9lPXWo7zQgQsmUdUjRlpTV1WRvXF98bal+Vq0H3BlSXenMGkA/r4mc7/eFZQ+O/kpSAYBd
-X-Gm-Message-State: AOJu0Yy6U+la79g0Av7EVZb53pz3Tx9S1O4dx4qcA9MDyreeslkZf7A4
-	z5wc/VxLjgSWWbmwvIlfVNp5SUNSC3GU6J+rLdH97LX8pohln1Tn8uUGpNEUVjzv9BU3uoPneUh
-	T
-X-Google-Smtp-Source: AGHT+IEzy2h7K/VLaBZePrcCIRcOhw+P3u9Sa/loYEqzI4OLeWzMuuO/Li8UARzyxANE6fra/VW9xs+tfLs=
-X-Received: from yabinc-desktop.mtv.corp.google.com ([2620:15c:211:202:1b7d:8132:c198:e24f])
- (user=yabinc job=sendgmr) by 2002:a05:690c:6904:b0:611:6f24:62b1 with SMTP id
- 00721157ae682-622af7a98aamr3561297b3.1.1715299522736; Thu, 09 May 2024
- 17:05:22 -0700 (PDT)
-Date: Thu,  9 May 2024 17:05:02 -0700
-In-Reply-To: <20240510000502.1257463-1-yabinc@google.com>
+        d=1e100.net; s=20230601; t=1715299586; x=1715904386;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=A9bM9WgcUeLqnHcG3u0KhZ5y00qqpThdPur7Fomuotk=;
+        b=G6I7zaWcqWzqJgzPdzW+rrues/dT4m57bN3EdDOBXwYpHW7+PIcZ+INZvPOLVdFMNp
+         RStgY1u5BlawBj71NP7vjej5J7yWsAOOvcL9Nd4JIqqYkbK8jasUPojIaRy7pTzsjjgc
+         WAHeZRjSA5JTTGYyQk35oOi+X/QFMwaIp58UoBXPtDTEmXXWo6QXi3YqNvyXdLJ9Jzpk
+         HA2PKl1PSEiuqcNbQGQb1T5wpqVg4BzqqdfYASKg4tX/ic49tj1XBTCiENgPHwGJmRGp
+         FWsJz3LC1kcyG7m9y8Z5Jtx8eXB1OSQEktWSEocvqk03olwlK77laCSGVPG8RkBDd7SJ
+         LVcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXpEqjDve0Uo50xkpGSlGxoeKhSiWUVkMiGe7jFcZktf1HYS/nbYRCDsFSrqgG62bH1pcP2CpWbFd9UXjNQbSATA06zKqa57eX+0vhy
+X-Gm-Message-State: AOJu0YyKXBkcJPzWYvGItHr9YSDBAfKVxhDJJJQNr1R6s74oVPXAEOOT
+	z+iC9p+CiNsIO+HPPq6pTFz2W9+ZRWJa4rkY1YcENGVzW8JdoVTBtb1RhEMIkhQ=
+X-Google-Smtp-Source: AGHT+IGmrKpJP+pGW+74voCnBlphBkplUtmn1tBmjBnekPxUzsEhla98/zmE5Y3eodeDMb+5+jCYMg==
+X-Received: by 2002:a05:600c:3b86:b0:41c:2313:da8d with SMTP id 5b1f17b1804b1-41fea539615mr11429115e9.0.1715299585791;
+        Thu, 09 May 2024 17:06:25 -0700 (PDT)
+Received: from [192.168.0.3] ([176.61.106.227])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccee9318sm41856005e9.30.2024.05.09.17.06.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 May 2024 17:06:25 -0700 (PDT)
+Message-ID: <8ac97153-0e27-47c8-ad86-d1840ac17c3a@linaro.org>
+Date: Fri, 10 May 2024 01:06:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240510000502.1257463-1-yabinc@google.com>
-X-Mailer: git-send-email 2.45.0.118.g7fe29c98d7-goog
-Message-ID: <20240510000502.1257463-4-yabinc@google.com>
-Subject: [PATCH v3 3/3] perf: core: Check sample_type in perf_sample_save_brstack
-From: Yabin Cui <yabinc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, Yabin Cui <yabinc@google.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 17/18] media: venus: Refactor
+ hfi_session_fill_buffer_pkt
+To: Ricardo Ribalda <ribalda@chromium.org>,
+ Michael Tretter <m.tretter@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Michal Simek <michal.simek@amd.com>, Andy Walls <awalls@md.metrocast.net>,
+ Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+ Hans Verkuil <hverkuil-cisco@xs4all.nl>
+References: <20240507-cocci-flexarray-v2-0-7aea262cf065@chromium.org>
+ <20240507-cocci-flexarray-v2-17-7aea262cf065@chromium.org>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20240507-cocci-flexarray-v2-17-7aea262cf065@chromium.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Check sample_type in perf_sample_save_brstack() to prevent
-saving branch stack data when it isn't required.
+On 07/05/2024 17:27, Ricardo Ribalda wrote:
+> -	u32 data[1];
+> +	u32 extradata_size;
 
-Suggested-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Yabin Cui <yabinc@google.com>
+A correct functional change but again please keep the name to `data` not 
+`extradata_size`
+
+Then add
+
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+
 ---
- arch/x86/events/amd/core.c | 3 +--
- arch/x86/events/core.c     | 3 +--
- arch/x86/events/intel/ds.c | 3 +--
- include/linux/perf_event.h | 3 +++
- 4 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 985ef3b47919..fb9bf3aa1b42 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -967,8 +967,7 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
- 		if (!x86_perf_event_set_period(event))
- 			continue;
- 
--		if (has_branch_stack(event))
--			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
-+		perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
- 
- 		if (perf_event_overflow(event, &data, regs))
- 			x86_pmu_stop(event, 0);
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 5b0dd07b1ef1..ff5577315938 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1702,8 +1702,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
- 
- 		perf_sample_data_init(&data, 0, event->hw.last_period);
- 
--		if (has_branch_stack(event))
--			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
-+		perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
- 
- 		if (perf_event_overflow(event, &data, regs))
- 			x86_pmu_stop(event, 0);
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index c2b5585aa6d1..f25236ffa28f 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1754,8 +1754,7 @@ static void setup_pebs_fixed_sample_data(struct perf_event *event,
- 	if (x86_pmu.intel_cap.pebs_format >= 3)
- 		setup_pebs_time(event, data, pebs->tsc);
- 
--	if (has_branch_stack(event))
--		perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
-+	perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
- }
- 
- static void adaptive_pebs_save_regs(struct pt_regs *regs,
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 8617815456b0..8cff96782446 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -1276,6 +1276,9 @@ static inline void perf_sample_save_brstack(struct perf_sample_data *data,
- {
- 	int size = sizeof(u64); /* nr */
- 
-+	if (!has_branch_stack(event))
-+		return;
-+
- 	if (branch_sample_hw_index(event))
- 		size += sizeof(u64);
- 	size += brs->nr * sizeof(struct perf_branch_entry);
--- 
-2.45.0.118.g7fe29c98d7-goog
-
+bod
