@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689C012C526;
-	Fri, 10 May 2024 15:27:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0217175563;
+	Fri, 10 May 2024 15:27:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715354869; cv=none; b=nRwnTJqgjNk2ZowQV/Hd+WkU2FHTjr/ee+juu9T2crszp/rvf0dRDnAdiFouD71+KKNmE06EgVJfluv0JYlbwnW830Mya8/E0/+Z0aHmnG5JgRpdbayl5qpRWcex/TPl24xILXf51nRTa9tUBSFQoY7Wj9Fe73/kSHpZLk1hVxc=
+	t=1715354880; cv=none; b=HRh8SfOE8gq1et3S8+hcBIbxPQoVLTpJd4qRpSNXpSKJz176MROazYHZ62q+2Eb7o9XUONqX7N+t7n/0ru8JYRqMxfX/KjhuN7l7mQaVPF5XSVSHx5qD7bzCtQ6bcNCGn4Bst2DDG8gBGVcuioNOvFHxx9eMwjJfQKYrO8hCvrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715354869; c=relaxed/simple;
-	bh=IicC0xPQgpcazt740r57XpVtwR2n0DTaEXjZkC02oQc=;
+	s=arc-20240116; t=1715354880; c=relaxed/simple;
+	bh=4E8x16GtYqW9ZgGDgsswEilQ5kdpYMVqNd0tVHyXroI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PzK1uiLBXM9hROGJ+0IgAo+7w6yGucA5P4P0eiat69T02B0FxyQp8PPjaDFvs1sQIJfqyPK7qxxWqz4gpRA96iq2PtU9TqBb1RAqS9dsqLwPEhq5or96f3jotvYRk/1LWQ8hmRX8lhp6JVgn/H2oICW5VuUyLAYDMYy+8e4eOyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NVWplveO; arc=none smtp.client-ip=192.198.163.12
+	 MIME-Version; b=ebx/seAvHlomqV4I4XloR8WHbzx4/RYLewnOLD02c8gdz3A9jlmw8NSZwk8QebxJC6LigRkrXLcpyX5o2b9pw/WspraORfcUAIBI0N8WgAiiYrkEhjtWGeU3v+nCrxFmqAUOFcrgauJ+Mv5QeZ9pBdQPDzQ2tjr0Tx6kE2BRse8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GE+88mAG; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NVWplveO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GE+88mAG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715354853; x=1746890853;
+  t=1715354865; x=1746890865;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=IicC0xPQgpcazt740r57XpVtwR2n0DTaEXjZkC02oQc=;
-  b=NVWplveOkbLPSbAFyvj+D6cZkWnwOaxC+BQFT9Kv6q22I4YJniT13K88
-   9dgQ85HlgYJjJrYN78Zs70iba05BBNWHAW0KCfpE2itu5tGPQQKDAqQQR
-   RNwMqBQGw84R2TXw51GtyK4N12oDFDlG1HGTdwZsFjtJ3DLUq9H/xiNui
-   0vW4bwhnu8WD3qLChOzMUWQAa5lEHUk4Mf/z0ctiLhLahZnXA9mn46BMG
-   xqPChwyd9ynY9Zj8RzVvmgt4mgTDciPuAbkXgwHGKJeC1GVBLbZo621/1
-   IsO4Jn9CT65HwZoF4kzQ35F34UjkBWV5R74UQBw7lrEEm+rwVBCiEr6N+
-   A==;
-X-CSE-ConnectionGUID: IUOYOIH8T8OxxB/3nD615g==
-X-CSE-MsgGUID: yhQNTqLnTZeUYrIQpIADHA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="15152589"
+  bh=4E8x16GtYqW9ZgGDgsswEilQ5kdpYMVqNd0tVHyXroI=;
+  b=GE+88mAG6q7azU1NO5TLC4jryiAy84J9hL4ttudYVttMAUVY9ZvBgFg3
+   YfIICXtNpRh/kl5zZx8vThCUT/VFfMPZVRiaihxSwJHKyhB997iCjeQGE
+   j0yW1CLK6sCucfglX6a3/Or6VJ+mmFfOjUfe36wur+4mkRJUKwcbckwVg
+   1taxZt7TaXsNxy66QmoRz2xWZBITVhnlMN/8JOXGJjz1xCjt8l0ehk7p0
+   cdt65rdW2mjgJMbzRZxmf3pXBS6tyQw84o0XEeAa7B+R88ratagSl6bl/
+   6Y9rplLfDIpGZHTKHE/PTT4HECV4LACLo/vqwLejq6eZLewva3LTcf0VO
+   Q==;
+X-CSE-ConnectionGUID: uhNFiX9cQlS324SP+rSc3w==
+X-CSE-MsgGUID: 3e0zmx/DQ6Kprs2llTFIEw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11068"; a="15152615"
 X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="15152589"
+   d="scan'208";a="15152615"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 08:27:32 -0700
-X-CSE-ConnectionGUID: 5OjfPU3uT+GseBQ3EZKkmQ==
-X-CSE-MsgGUID: xHfSdIytQPeJCZShT2K+0w==
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2024 08:27:38 -0700
+X-CSE-ConnectionGUID: ZUMWnBRuQjmXIhXkicuANA==
+X-CSE-MsgGUID: 0FdBlTKTSASh8tjNm6WxSw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,151,1712646000"; 
-   d="scan'208";a="30208262"
+   d="scan'208";a="30208273"
 Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by orviesa008.jf.intel.com with ESMTP; 10 May 2024 08:27:29 -0700
+  by orviesa008.jf.intel.com with ESMTP; 10 May 2024 08:27:35 -0700
 From: Alexander Lobakin <aleksander.lobakin@intel.com>
 To: intel-wired-lan@lists.osuosl.org
 Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
@@ -54,9 +54,9 @@ Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
 	nex.sw.ncis.osdt.itp.upstreaming@intel.com,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RFC iwl-next 04/12] idpf: avoid bloating &idpf_q_vector with big %NR_CPUS
-Date: Fri, 10 May 2024 17:26:12 +0200
-Message-ID: <20240510152620.2227312-5-aleksander.lobakin@intel.com>
+Subject: [PATCH RFC iwl-next 06/12] idpf: merge singleq and splitq &net_device_ops
+Date: Fri, 10 May 2024 17:26:14 +0200
+Message-ID: <20240510152620.2227312-7-aleksander.lobakin@intel.com>
 X-Mailer: git-send-email 2.45.0
 In-Reply-To: <20240510152620.2227312-1-aleksander.lobakin@intel.com>
 References: <20240510152620.2227312-1-aleksander.lobakin@intel.com>
@@ -68,173 +68,175 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-With CONFIG_MAXSMP, sizeof(cpumask_t) is 1 Kb. The queue vector
-structure has them embedded, which means 1 additional Kb of not
-really hotpath data.
-We have cpumask_var_t, which is either an embedded cpumask or a pointer
-for allocating it dynamically when it's big. Use it instead of plain
-cpumasks and put &idpf_q_vector on a good diet.
-Also remove redundant pointer to the interrupt name from the structure.
-request_irq() saves it and free_irq() returns it on deinit, so that you
-can free the memory.
+It makes no sense to have a second &net_device_ops struct (800 bytes of
+rodata) with only one difference in .ndo_start_xmit, which can easily
+be just one `if`. This `if` is a drop in the ocean and you won't see
+any difference.
+Define unified idpf_xmit_start(). The preparation for sending is the
+same, just call either idpf_tx_splitq_frame() or idpf_tx_singleq_frame()
+depending on the active model to actually map and send the skb.
 
 Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
 ---
- drivers/net/ethernet/intel/idpf/idpf_txrx.h |  7 +++----
- drivers/net/ethernet/intel/idpf/idpf_lib.c  | 13 ++++++-------
- drivers/net/ethernet/intel/idpf/idpf_txrx.c | 20 +++++++++++++-------
- 3 files changed, 22 insertions(+), 18 deletions(-)
+ drivers/net/ethernet/intel/idpf/idpf_txrx.h   |  7 ++---
+ drivers/net/ethernet/intel/idpf/idpf_lib.c    | 26 +++-------------
+ .../ethernet/intel/idpf/idpf_singleq_txrx.c   | 31 ++-----------------
+ drivers/net/ethernet/intel/idpf/idpf_txrx.c   | 10 +++---
+ 4 files changed, 15 insertions(+), 59 deletions(-)
 
 diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.h b/drivers/net/ethernet/intel/idpf/idpf_txrx.h
-index fb645c6887b3..428b82b4de80 100644
+index 0192d33744ff..015aba5abb3c 100644
 --- a/drivers/net/ethernet/intel/idpf/idpf_txrx.h
 +++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.h
-@@ -505,7 +505,6 @@ struct idpf_intr_reg {
- /**
-  * struct idpf_q_vector
-  * @vport: Vport back pointer
-- * @affinity_mask: CPU affinity mask
-  * @napi: napi handler
-  * @v_idx: Vector index
-  * @intr_reg: See struct idpf_intr_reg
-@@ -526,11 +525,10 @@ struct idpf_intr_reg {
-  * @num_bufq: Number of buffer queues
-  * @bufq: Array of buffer queues to service
-  * @total_events: Number of interrupts processed
-- * @name: Queue vector name
-+ * @affinity_mask: CPU affinity mask
-  */
- struct idpf_q_vector {
- 	struct idpf_vport *vport;
--	cpumask_t affinity_mask;
- 	struct napi_struct napi;
- 	u16 v_idx;
- 	struct idpf_intr_reg intr_reg;
-@@ -556,7 +554,8 @@ struct idpf_q_vector {
- 	struct idpf_buf_queue **bufq;
- 
- 	u16 total_events;
--	char *name;
-+
-+	cpumask_var_t affinity_mask;
- };
- 
- struct idpf_rx_queue_stats {
+@@ -1190,10 +1190,9 @@ bool idpf_chk_linearize(struct sk_buff *skb, unsigned int max_bufs,
+ 			unsigned int count);
+ int idpf_tx_maybe_stop_common(struct idpf_tx_queue *tx_q, unsigned int size);
+ void idpf_tx_timeout(struct net_device *netdev, unsigned int txqueue);
+-netdev_tx_t idpf_tx_splitq_start(struct sk_buff *skb,
+-				 struct net_device *netdev);
+-netdev_tx_t idpf_tx_singleq_start(struct sk_buff *skb,
+-				  struct net_device *netdev);
++netdev_tx_t idpf_tx_singleq_frame(struct sk_buff *skb,
++				  struct idpf_tx_queue *tx_q);
++netdev_tx_t idpf_tx_start(struct sk_buff *skb, struct net_device *netdev);
+ bool idpf_rx_singleq_buf_hw_alloc_all(struct idpf_rx_queue *rxq,
+ 				      u16 cleaned_count);
+ int idpf_tso(struct sk_buff *skb, struct idpf_tx_offload_params *off);
 diff --git a/drivers/net/ethernet/intel/idpf/idpf_lib.c b/drivers/net/ethernet/intel/idpf/idpf_lib.c
-index 3e8b24430dd8..a8be09a89943 100644
+index a8be09a89943..fe91475c7b4c 100644
 --- a/drivers/net/ethernet/intel/idpf/idpf_lib.c
 +++ b/drivers/net/ethernet/intel/idpf/idpf_lib.c
-@@ -69,7 +69,7 @@ static void idpf_deinit_vector_stack(struct idpf_adapter *adapter)
- static void idpf_mb_intr_rel_irq(struct idpf_adapter *adapter)
- {
- 	clear_bit(IDPF_MB_INTR_MODE, adapter->flags);
--	free_irq(adapter->msix_entries[0].vector, adapter);
-+	kfree(free_irq(adapter->msix_entries[0].vector, adapter));
- 	queue_delayed_work(adapter->mbx_wq, &adapter->mbx_task, 0);
+@@ -4,8 +4,7 @@
+ #include "idpf.h"
+ #include "idpf_virtchnl.h"
+ 
+-static const struct net_device_ops idpf_netdev_ops_splitq;
+-static const struct net_device_ops idpf_netdev_ops_singleq;
++static const struct net_device_ops idpf_netdev_ops;
+ 
+ /**
+  * idpf_init_vector_stack - Fill the MSIX vector stack with vector index
+@@ -764,10 +763,7 @@ static int idpf_cfg_netdev(struct idpf_vport *vport)
+ 	}
+ 
+ 	/* assign netdev_ops */
+-	if (idpf_is_queue_model_split(vport->txq_model))
+-		netdev->netdev_ops = &idpf_netdev_ops_splitq;
+-	else
+-		netdev->netdev_ops = &idpf_netdev_ops_singleq;
++	netdev->netdev_ops = &idpf_netdev_ops;
+ 
+ 	/* setup watchdog timeout value to be 5 second */
+ 	netdev->watchdog_timeo = 5 * HZ;
+@@ -2353,24 +2349,10 @@ void idpf_free_dma_mem(struct idpf_hw *hw, struct idpf_dma_mem *mem)
+ 	mem->pa = 0;
  }
  
-@@ -124,15 +124,14 @@ static void idpf_mb_irq_enable(struct idpf_adapter *adapter)
+-static const struct net_device_ops idpf_netdev_ops_splitq = {
+-	.ndo_open = idpf_open,
+-	.ndo_stop = idpf_stop,
+-	.ndo_start_xmit = idpf_tx_splitq_start,
+-	.ndo_features_check = idpf_features_check,
+-	.ndo_set_rx_mode = idpf_set_rx_mode,
+-	.ndo_validate_addr = eth_validate_addr,
+-	.ndo_set_mac_address = idpf_set_mac,
+-	.ndo_change_mtu = idpf_change_mtu,
+-	.ndo_get_stats64 = idpf_get_stats64,
+-	.ndo_set_features = idpf_set_features,
+-	.ndo_tx_timeout = idpf_tx_timeout,
+-};
+-
+-static const struct net_device_ops idpf_netdev_ops_singleq = {
++static const struct net_device_ops idpf_netdev_ops = {
+ 	.ndo_open = idpf_open,
+ 	.ndo_stop = idpf_stop,
+-	.ndo_start_xmit = idpf_tx_singleq_start,
++	.ndo_start_xmit = idpf_tx_start,
+ 	.ndo_features_check = idpf_features_check,
+ 	.ndo_set_rx_mode = idpf_set_rx_mode,
+ 	.ndo_validate_addr = eth_validate_addr,
+diff --git a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
+index b51f7cd6db01..a3b60a2dfcaa 100644
+--- a/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
++++ b/drivers/net/ethernet/intel/idpf/idpf_singleq_txrx.c
+@@ -351,8 +351,8 @@ static void idpf_tx_singleq_build_ctx_desc(struct idpf_tx_queue *txq,
+  *
+  * Returns NETDEV_TX_OK if sent, else an error code
   */
- static int idpf_mb_intr_req_irq(struct idpf_adapter *adapter)
+-static netdev_tx_t idpf_tx_singleq_frame(struct sk_buff *skb,
+-					 struct idpf_tx_queue *tx_q)
++netdev_tx_t idpf_tx_singleq_frame(struct sk_buff *skb,
++				  struct idpf_tx_queue *tx_q)
  {
--	struct idpf_q_vector *mb_vector = &adapter->mb_vector;
- 	int irq_num, mb_vidx = 0, err;
-+	char *name;
+ 	struct idpf_tx_offload_params offload = { };
+ 	struct idpf_tx_buf *first;
+@@ -408,33 +408,6 @@ static netdev_tx_t idpf_tx_singleq_frame(struct sk_buff *skb,
+ 	return idpf_tx_drop_skb(tx_q, skb);
+ }
  
- 	irq_num = adapter->msix_entries[mb_vidx].vector;
--	mb_vector->name = kasprintf(GFP_KERNEL, "%s-%s-%d",
--				    dev_driver_string(&adapter->pdev->dev),
--				    "Mailbox", mb_vidx);
--	err = request_irq(irq_num, adapter->irq_mb_handler, 0,
--			  mb_vector->name, adapter);
-+	name = kasprintf(GFP_KERNEL, "%s-%s-%d",
-+			 dev_driver_string(&adapter->pdev->dev),
-+			 "Mailbox", mb_vidx);
-+	err = request_irq(irq_num, adapter->irq_mb_handler, 0, name, adapter);
- 	if (err) {
- 		dev_err(&adapter->pdev->dev,
- 			"IRQ request for mailbox failed, error: %d\n", err);
+-/**
+- * idpf_tx_singleq_start - Selects the right Tx queue to send buffer
+- * @skb: send buffer
+- * @netdev: network interface device structure
+- *
+- * Returns NETDEV_TX_OK if sent, else an error code
+- */
+-netdev_tx_t idpf_tx_singleq_start(struct sk_buff *skb,
+-				  struct net_device *netdev)
+-{
+-	struct idpf_vport *vport = idpf_netdev_to_vport(netdev);
+-	struct idpf_tx_queue *tx_q;
+-
+-	tx_q = vport->txqs[skb_get_queue_mapping(skb)];
+-
+-	/* hardware can't handle really short frames, hardware padding works
+-	 * beyond this point
+-	 */
+-	if (skb_put_padto(skb, IDPF_TX_MIN_PKT_LEN)) {
+-		idpf_tx_buf_hw_update(tx_q, tx_q->next_to_use, false);
+-
+-		return NETDEV_TX_OK;
+-	}
+-
+-	return idpf_tx_singleq_frame(skb, tx_q);
+-}
+-
+ /**
+  * idpf_tx_singleq_clean - Reclaim resources from queue
+  * @tx_q: Tx queue to clean
 diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-index 211c403a4c98..500754795cc8 100644
+index 500754795cc8..4aa5ee781bd7 100644
 --- a/drivers/net/ethernet/intel/idpf/idpf_txrx.c
 +++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-@@ -3613,6 +3613,8 @@ void idpf_vport_intr_rel(struct idpf_vport *vport)
- 		q_vector->tx = NULL;
- 		kfree(q_vector->rx);
- 		q_vector->rx = NULL;
-+
-+		free_cpumask_var(q_vector->affinity_mask);
- 	}
- 
- 	/* Clean up the mapping of queues to vectors */
-@@ -3661,7 +3663,7 @@ static void idpf_vport_intr_rel_irq(struct idpf_vport *vport)
- 
- 		/* clear the affinity_mask in the IRQ descriptor */
- 		irq_set_affinity_hint(irq_num, NULL);
--		free_irq(irq_num, q_vector);
-+		kfree(free_irq(irq_num, q_vector));
- 	}
+@@ -2849,14 +2849,13 @@ static netdev_tx_t idpf_tx_splitq_frame(struct sk_buff *skb,
  }
  
-@@ -3812,6 +3814,7 @@ static int idpf_vport_intr_req_irq(struct idpf_vport *vport, char *basename)
- 
- 	for (vector = 0; vector < vport->num_q_vectors; vector++) {
- 		struct idpf_q_vector *q_vector = &vport->q_vectors[vector];
-+		char *name;
- 
- 		vidx = vport->q_vector_idxs[vector];
- 		irq_num = adapter->msix_entries[vidx].vector;
-@@ -3825,18 +3828,18 @@ static int idpf_vport_intr_req_irq(struct idpf_vport *vport, char *basename)
- 		else
- 			continue;
- 
--		q_vector->name = kasprintf(GFP_KERNEL, "%s-%s-%d",
--					   basename, vec_name, vidx);
-+		name = kasprintf(GFP_KERNEL, "%s-%s-%d", basename, vec_name,
-+				 vidx);
- 
- 		err = request_irq(irq_num, idpf_vport_intr_clean_queues, 0,
--				  q_vector->name, q_vector);
-+				  name, q_vector);
- 		if (err) {
- 			netdev_err(vport->netdev,
- 				   "Request_irq failed, error: %d\n", err);
- 			goto free_q_irqs;
- 		}
- 		/* assign the mask for this irq */
--		irq_set_affinity_hint(irq_num, &q_vector->affinity_mask);
-+		irq_set_affinity_hint(irq_num, q_vector->affinity_mask);
+ /**
+- * idpf_tx_splitq_start - Selects the right Tx queue to send buffer
++ * idpf_tx_start - Selects the right Tx queue to send buffer
+  * @skb: send buffer
+  * @netdev: network interface device structure
+  *
+  * Returns NETDEV_TX_OK if sent, else an error code
+  */
+-netdev_tx_t idpf_tx_splitq_start(struct sk_buff *skb,
+-				 struct net_device *netdev)
++netdev_tx_t idpf_tx_start(struct sk_buff *skb, struct net_device *netdev)
+ {
+ 	struct idpf_vport *vport = idpf_netdev_to_vport(netdev);
+ 	struct idpf_tx_queue *tx_q;
+@@ -2878,7 +2877,10 @@ netdev_tx_t idpf_tx_splitq_start(struct sk_buff *skb,
+ 		return NETDEV_TX_OK;
  	}
  
- 	return 0;
-@@ -3845,7 +3848,7 @@ static int idpf_vport_intr_req_irq(struct idpf_vport *vport, char *basename)
- 	while (--vector >= 0) {
- 		vidx = vport->q_vector_idxs[vector];
- 		irq_num = adapter->msix_entries[vidx].vector;
--		free_irq(irq_num, &vport->q_vectors[vector]);
-+		kfree(free_irq(irq_num, &vport->q_vectors[vector]));
- 	}
- 
- 	return err;
-@@ -4255,7 +4258,7 @@ static void idpf_vport_intr_napi_add_all(struct idpf_vport *vport)
- 
- 		/* only set affinity_mask if the CPU is online */
- 		if (cpu_online(v_idx))
--			cpumask_set_cpu(v_idx, &q_vector->affinity_mask);
-+			cpumask_set_cpu(v_idx, q_vector->affinity_mask);
- 	}
+-	return idpf_tx_splitq_frame(skb, tx_q);
++	if (idpf_is_queue_model_split(vport->txq_model))
++		return idpf_tx_splitq_frame(skb, tx_q);
++	else
++		return idpf_tx_singleq_frame(skb, tx_q);
  }
  
-@@ -4299,6 +4302,9 @@ int idpf_vport_intr_alloc(struct idpf_vport *vport)
- 		q_vector->rx_intr_mode = IDPF_ITR_DYNAMIC;
- 		q_vector->rx_itr_idx = VIRTCHNL2_ITR_IDX_0;
- 
-+		if (!zalloc_cpumask_var(&q_vector->affinity_mask, GFP_KERNEL))
-+			goto error;
-+
- 		q_vector->tx = kcalloc(txqs_per_vector, sizeof(*q_vector->tx),
- 				       GFP_KERNEL);
- 		if (!q_vector->tx)
+ /**
 -- 
 2.45.0
 
