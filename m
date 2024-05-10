@@ -1,50 +1,55 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2D0153BE2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2921527BE
 	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 06:28:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715322536; cv=none; b=NZi/XA+ETUy/0+qkmKEgix//jXos7KFAkypJkQQKswWYnZWPeVGJTFbIhVJsmbScGUp3XzRJ55pOWpin2yrA9FqIZJjqyl0jt9txHYDBXllKHO2bF7JetMhoQ8/Bo+ODswYAKRwTxIr+72yCwLvl8vUSwRiQ+O19lC49RK+nF9I=
+	t=1715322536; cv=none; b=mpbvr3ugWO4qgwQWfuTVlMcfQWfxRKrnrv5Sf4XBaG/91oxuQSRnncutTYN8bHjC35n7uvsdLgE8SnMmbCaGXgVg8z0apJU0IXa3NmH1QP8HoCB/bXZVVGN+8FTL9mQQW6SmQigEptARAV94eHG/SkTCixV90Yy4313Xwk7H4Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715322536; c=relaxed/simple;
-	bh=jvk7b0LQDo86RhaoPKvODKD7tH5jMXWL2BeqHj+GO3w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Nss45YE35XpVYzyFnWIFzzPIvQkxgtJmVZSuGnG6m3f0WXtMv0ABQs7HPCWtxrzqVZi2R1+dP3uHAaKUb+uoAAko0myUH9gOaG9raaf8avBbmoN3fHtcGEIAlbVHmj4IXurhpMOmS/+s4t8IGQMnTTeON4m0yn7IATXmRGr8PHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LZmENFvc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PR7hUigL; arc=none smtp.client-ip=193.142.43.55
+	bh=Oj78+m6G1YczrGzCR+l3AduE2j6RkVKd1tsAt/vLqbI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OIT84YOdn5huY2fGmNOs6KacB2iZKuteGLR4OIkCm5m8EkEAqm/7aqXR4t7ecqePEZsKrn0Qu2inSwE5DL3hONtBNrJyRL0hFyTPhwnyU2HDuahsf3yclxRrFK3b0vc3Ivubg3sAzYgcCH0P7bpT8abuq0BKNz2EYmlo3kpY7s4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KlKiMcip; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2loGTuDo; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LZmENFvc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PR7hUigL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KlKiMcip";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2loGTuDo"
 From: Nam Cao <namcao@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020; t=1715322531;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1sssw5A/ygmjEBxrlSd+7ue0RV3n8+xaY+HzQNbRFGM=;
-	b=LZmENFvc4euk2x3YKMDS4vZQ6njaWRRmcZhRv6mhgQDO9hm76yMnLcLAclJllAXzEWI+R8
-	DjMXMIQbAuNWUQU6RCme2fe+8LD7SJDor0843GvNcpMwBb9sA10gR33A6RNLBltUFyLQlt
-	lKjiK2m6Ogj39GjYZoyhpfijSF4dbf+9rLTNVsC7in6cDBJABquEZBCCWiUZ32OUd6qtHo
-	k53H64a5hACVKj3W1eCC8TxXG5DPJVaWvnDRArrrvRJi2mOC8JhxiaUGRLmDCAtk2/P/nd
-	zz7c/qo+lPNtYH4bWk6rEBoDWA/SU1RAdM6Mn4T6/KIspEl0mCl5JP29Ao7/tQ==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pEdNR+tmiFh46glcNjBAzC77FOgymIT0T+/PVLfSL7s=;
+	b=KlKiMcipyRc94KL8iUYbRAzqDlI4zs8Xq0+0noofqJFZ6+Z03rsQ/tF4lJiwSmnNfts+sU
+	8VgiEbilBeb7VrQ1a4GLCg4nvx71oFzY60FJ8tiGoXdIc93bIDWulindNSZnSJfMQ+tkCh
+	NQz+rdc35AIjljgR/yO2l6Uw9QVhAQtXnGKob3ZV28kguARX9tRT5SZL2dL1Qjk9Ub7Cde
+	S1Enlqs49Y3EIlnKR+RdNQMFOvnxm6jsNl+Iq0ixzJR6X6bAOLH1khk5XuANTCRhWf9jJm
+	ZPvasPVrCo//Ei8sYPI684zb2CwJPnUb/w+mqTkhMpuRZQT6Knf+kVjHztz/Ug==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
 	s=2020e; t=1715322531;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=1sssw5A/ygmjEBxrlSd+7ue0RV3n8+xaY+HzQNbRFGM=;
-	b=PR7hUigLr/KX3+deEvAwKob4CebeKY++2BeuPPXpRSX1LmYFaGaHGKwQ9QYnLsI910absd
-	h8W+VHwpLEyX2eBg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pEdNR+tmiFh46glcNjBAzC77FOgymIT0T+/PVLfSL7s=;
+	b=2loGTuDozASFvZvntEdkPWBdOcoOTNEpZ1di8OoSUp64VqGnYUJCfO7Qaj0Z0rr2ckLMSB
+	JV/o/a3JJ/+/jPBQ==
 To: Paul Walmsley <paul.walmsley@sifive.com>,
 	Palmer Dabbelt <palmer@dabbelt.com>,
 	Albert Ou <aou@eecs.berkeley.edu>,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
 Cc: Nam Cao <namcao@linutronix.de>
-Subject: [PATCH 0/7] remove size limit on XIP kernel
-Date: Fri, 10 May 2024 08:28:38 +0200
-Message-Id: <cover.1715286093.git.namcao@linutronix.de>
+Subject: [PATCH 3/7] riscv: drop the use of XIP_OFFSET in XIP_FIXUP_OFFSET
+Date: Fri, 10 May 2024 08:28:41 +0200
+Message-Id: <e18d9e8e3540098617d8f5b14859158a63b78594.1715286093.git.namcao@linutronix.de>
+In-Reply-To: <cover.1715286093.git.namcao@linutronix.de>
+References: <cover.1715286093.git.namcao@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,46 +58,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+XIP_OFFSET is the hard-coded offset of writable data section within the
+kernel.
 
-For XIP kernel, the writable data section is always at offset specified in
-XIP_OFFSET, which is hard-coded to 32MB.
+By hard-coding this value, the read-only section of the kernel (which is
+placed before the writable data section) is restricted in size.
 
-Unfortunately, this means the read-only section (placed before the
-writable section) is restricted in size. This causes build failure if the
-kernel gets too large.
+As a preparation to remove this hard-coded macro XIP_OFFSET entirely, stop
+using XIP_OFFSET in XIP_FIXUP_OFFSET. Instead, use CONFIG_PHYS_RAM_BASE and
+_sdata to do the same thing.
 
-This series remove the use of XIP_OFFSET one by one, then remove this
-macro entirely at the end, with the goal of lifting this size restriction.
+While at it, also add a description for XIP_FIXUP_OFFSET.
 
-Also some cleanup and documentation along the way.
+Signed-off-by: Nam Cao <namcao@linutronix.de>
+---
+ arch/riscv/include/asm/xip_fixup.h | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-This series depends on
-    https://lore.kernel.org/linux-riscv/20240508191917.2892064-1-namcao@linutronix.de/
-to apply cleanly, and also depends on
-    https://lore.kernel.org/linux-riscv/20240508173116.2866192-1-namcao@linutronix.de/
-which fixes a boot issue.
-
-Best regards,
-Nam
-
-Nam Cao (7):
-  riscv: cleanup XIP_FIXUP macro
-  riscv: replace va_kernel_pa_offset with va_kernel_data_pa_offset on
-    XIP
-  riscv: drop the use of XIP_OFFSET in XIP_FIXUP_OFFSET
-  riscv: drop the use of XIP_OFFSET in XIP_FIXUP_FLASH_OFFSET
-  riscv: drop the use of XIP_OFFSET in kernel_mapping_va_to_pa()
-  riscv: drop the use of XIP_OFFSET in create_kernel_page_table()
-  riscv: remove limit on the size of read-only section for XIP kernel
-
- arch/riscv/include/asm/page.h       | 25 ++++++++++++++++++------
- arch/riscv/include/asm/pgtable.h    | 18 +++++++----------
- arch/riscv/include/asm/xip_fixup.h  | 30 +++++++++++++++++++++++------
- arch/riscv/kernel/vmlinux-xip.lds.S |  4 ++--
- arch/riscv/mm/init.c                | 11 +++++++----
- 5 files changed, 59 insertions(+), 29 deletions(-)
-
+diff --git a/arch/riscv/include/asm/xip_fixup.h b/arch/riscv/include/asm/xip_fixup.h
+index b65bf6306f69..9ed2cfae09e0 100644
+--- a/arch/riscv/include/asm/xip_fixup.h
++++ b/arch/riscv/include/asm/xip_fixup.h
+@@ -9,8 +9,19 @@
+ 
+ #ifdef CONFIG_XIP_KERNEL
+ .macro XIP_FIXUP_OFFSET reg
+-        REG_L t0, _xip_fixup
++	/* Fix-up address in Flash into address in RAM early during boot before
++	 * MMU is up. Because generated code "thinks" data is in Flash, but it
++	 * is actually in RAM (actually data is also in Flash, but Flash is
++	 * read-only, thus we need to use the data residing in RAM).
++	 *
++	 * The start of data in Flash is _sdata and the start of data in RAM is
++	 * CONFIG_PHYS_RAM_BASE. So this fix-up essentially does this:
++	 * reg += CONFIG_PHYS_RAM_BASE - _start
++	 */
++	li t0, CONFIG_PHYS_RAM_BASE
+         add \reg, \reg, t0
++	la t0, _sdata
++	sub \reg, \reg, t0
+ .endm
+ .macro XIP_FIXUP_FLASH_OFFSET reg
+ 	la t0, __data_loc
+@@ -19,7 +30,6 @@
+ 	add \reg, \reg, t0
+ .endm
+ 
+-_xip_fixup: .dword CONFIG_PHYS_RAM_BASE - CONFIG_XIP_PHYS_ADDR - XIP_OFFSET
+ _xip_phys_offset: .dword CONFIG_XIP_PHYS_ADDR + XIP_OFFSET
+ #else
+ .macro XIP_FIXUP_OFFSET reg
 -- 
 2.39.2
 
