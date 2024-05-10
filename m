@@ -1,98 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413FA12BF39;
-	Fri, 10 May 2024 13:50:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2254912C46B;
+	Fri, 10 May 2024 13:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715349057; cv=none; b=rro70WPxsL7XHT+rKRLHE2jRqeuZgrdOUkCQoCMSFRxA4C08bUQy/OxEcoAuuAJbYmNpj2fNIjUkWTIdjXQxNs0TN0plHcLUIMR9eRXM7yduKeIcmUVg6f39KX+3e9K6OHzYpC/BqGKhTNjIwRaXKYQ9oroLnPvbfY+7DBLtik8=
+	t=1715349132; cv=none; b=E4EMfDtej/wmmnWAeRw/aYbTSsOImzH/nPgLaRSGQbbVGN9wos+Pso9Iu8Faf7jPXpMYEmnKj23xSRzyW0HDPOsaogo93tqy6lBbCPrOKn2XrptmHI34AEUCDhJ3Gp7CrWxOzmVs+3iiTaZT5Y1KepgAd+QqxyGVki+H2XuUTxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715349057; c=relaxed/simple;
-	bh=1o5pwPx9wrewqRpso30hR7MfPzjEudJwCui/sX1m3SY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=MTOjQDoDdllmFL3JwA7Z61KRLVXzwjUnAus8ivv33j09RRhrpiBzheXjqWDpvea3tCX9jvoAulvBpSHmOrmVYurolX3kdd/GswN9u4/wxXRZG25RxSmovqR1sYuUtQVQ1jt5YpuyvGLXpazQmgghyIKAgAe2Jzwf8kYrK3zF7Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OI2Z35V+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715349132; c=relaxed/simple;
+	bh=ry3Mqd5CmjJo1OW6t11otMfSZLHdOycNCf2A3sVc5zw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ImMpl2HbJFde06gs1k8K5EsWeuTZG8ibRi0h+J+x8J3HM+53y7QG+pghzs9XzlyqcVEqz4fmOUvESXngzIuHd+aLQdqrcyH/tC/C4+uQK73aHr/lVinR5QZ00gPiXUM5RPbiiZwlTe9VdjONTlwK5fjbdIuD3+43ULrFqdcJNEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lk41rZJK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OI2Z35V+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 328D6C113CC;
-	Fri, 10 May 2024 13:50:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lk41rZJK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD5F5C113CC;
+	Fri, 10 May 2024 13:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715349056;
-	bh=1o5pwPx9wrewqRpso30hR7MfPzjEudJwCui/sX1m3SY=;
-	h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-	b=OI2Z35V+XCNTV1UDJaNCiVB+oz/Nl7JOH5NMPltS4N0lFk7kFn/c5zRHQoSC8Z4qh
-	 Zu+Yv2b93c6mXPMeMfjo7x32z2RaCH15eSpxMemdO2p7aMrEDR97wk+XMNttsAO0yI
-	 WyqixIrBrcZINuOTeoNdr9tF3VCGLbB6YJuaU7L3MdRPtrlvDAoKaEYgRDb/HZSKfZ
-	 GQYvhnj+/iFIsHrO3VoRRY3n5rXt+KEb+h+d2FClI+qu/PvYV0Br8eB+zmYKJ3bfm5
-	 3dRNQ6E267bfPRfncksQ92R+Wck/iBwS/8eCtGQbVati6pDgYrhyd/bQ7uV6nBQtu5
-	 JkgqRABfTlhBQ==
-From: Kalle Valo <kvalo@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>,  Eric Dumazet
- <edumazet@google.com>,  Jakub Kicinski <kuba@kernel.org>,  Paolo Abeni
- <pabeni@redhat.com>,  linux-kernel@vger.kernel.org,
-  ath10k@lists.infradead.org,  linux-wireless@vger.kernel.org,
-  netdev@vger.kernel.org,  Sebastian Gottschall <s.gottschall@dd-wrt.com>,
-  Steve deRosier <derosier@cal-sierra.com>,  Stefan Lippers-Hollmann
- <s.l-h@gmx.de>
-Subject: Re: [PATCH v14] ath10k: add LED and GPIO controlling support for
- various chipsets
-References: <20230611080505.17393-1-ansuelsmth@gmail.com>
-	<878rcjbaqs.fsf@kernel.org>
-	<648cdebb.5d0a0220.be7f8.a096@mx.google.com>
-	<648ded2a.df0a0220.b78de.4603@mx.google.com>
-	<CA+_ehUzzVq_sVTgVCM+r=oLp=GNn-6nJRBG=bndJjrRDhCodaw@mail.gmail.com>
-	<87v83nlhb3.fsf@kernel.org>
-	<663c9fc7.050a0220.5fb3a.4e87@mx.google.com>
-Date: Fri, 10 May 2024 16:50:52 +0300
-In-Reply-To: <663c9fc7.050a0220.5fb3a.4e87@mx.google.com> (Christian Marangi's
-	message of "Thu, 9 May 2024 12:04:52 +0200")
-Message-ID: <87a5kxlqrn.fsf@kernel.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
+	s=k20201202; t=1715349131;
+	bh=ry3Mqd5CmjJo1OW6t11otMfSZLHdOycNCf2A3sVc5zw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lk41rZJK3VuvbLw/K4mbJGEYZcZtQRKx+pJgrCgPbdgRvxSpLjtJ9yZ/qX7m9yWxN
+	 wZdKh1fDhReCZ2KLxtUH+AnNjlDSX3fFWnvgd0kIZr3YlT5ru2auVr4/t/afrLhskG
+	 yh/SgnmDejtZKH7QezfTnVkxqwo/OJyb+hxqGiwxDlcalJx2jgk3uaqO4IZ7DzTYap
+	 Z6lLZmK6obYPZJCe8ud0Lu+3IKzT/wb7wJZ1TIfCbYPERxRKgcaVv5dE0cPlaVCpF1
+	 KPZhuyUCxl8vm+16EivgnHHnF5/zX/BIxxck7FrznZNvVAoU3pNX9R4pbNK1R0aVK5
+	 mmIlM3k9qpIFg==
+Date: Fri, 10 May 2024 10:52:08 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/3] perf probe: Allow names to start with digits
+Message-ID: <Zj4miD9TguH5FrjL@x1>
+References: <20240510-perf_digit-v4-0-db1553f3233b@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240510-perf_digit-v4-0-db1553f3233b@codewreck.org>
 
-Christian Marangi <ansuelsmth@gmail.com> writes:
+On Fri, May 10, 2024 at 07:24:29AM +0900, Dominique Martinet wrote:
+> This is a rebase of the patch orginally sent almost two years ago here:
+> https://lkml.kernel.org/r/20220612061508.1449636-1-asmadeus@codewreck.org
+> 
+> At the time I was asked to add tests, and Jiri whipped up something to
+> make the test pass even for probes that don't exist on most systems but
+> that ended up never being formatted or sent... I asked what happened of
+> it and got asked to send it myself, but obviously also totally forget
+> about it myself until I needed it again now.
+> 
+> I've taken the diff from that thread, adapted it a little bit to the
+> current master branch and checked things still fall in place -- I didn't
+> see any obvious problem.
 
->> 
->> Sorry for the delay but finally I looked at this again. I decided to
->> just remove the fixme and otherwise it looks good for me. Please check
->> my changes:
->> 
->> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=688130a66ed49f20ca0ce02c3987f6a474f7c93a
->>
->
-> All ok for me, Just I notice the ATH10K_LEDS is not exposed anymore? Is
-> that intended?
+Thanks, applied to perf-tools-next,
 
-Yes. It follows the same idea as other wireless drivers do, for example iwlwifi:
-
-config IWLWIFI_LEDS
-	bool
-	depends on LEDS_CLASS=y || LEDS_CLASS=MAC80211
-	depends on IWLMVM || IWLDVM
-	select LEDS_TRIGGERS
-	select MAC80211_LEDS
-	default y
-
-So what this patch now does:
-
-config ATH10K_LEDS
-	bool
-	depends on ATH10K
-	depends on LEDS_CLASS=y || LEDS_CLASS=MAC80211
-	default y
-
-The idea being that if LEDS_CLASS is enabled then ATH10K_LEDS is
-automatically enabled. But please let us know if something is wrong
-here.
-
--- 
-https://patchwork.kernel.org/project/linux-wireless/list/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+- Arnaldo
+ 
+> Thanks!
+> 
+> To: Arnaldo Carvalho de Melo <acme@kernel.org>
+> To: Jiri Olsa <jolsa@kernel.org>
+> To: Peter Zijlstra <peterz@infradead.org>
+> To: Ingo Molnar <mingo@redhat.com>
+> To: Namhyung Kim <namhyung@kernel.org>
+> To: Mark Rutland <mark.rutland@arm.com>
+> To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> To: Ian Rogers <irogers@google.com>
+> To: Adrian Hunter <adrian.hunter@intel.com>
+> To: Liang, Kan <kan.liang@linux.intel.com>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+> 
+> Changes in v4:
+> - add missing ifdef LIBTRACEEVENT for new test case
+> Note build-test still failed on my setup due to some bpf/cgroup problem,
+> which is more likely a setup problem but means I couldn't verify build
+> all the way:
+> util/bpf_skel/bperf_cgroup.bpf.c:71:10: error: incomplete definition of type 'struct cgroup'
+> - Link to v3: https://lore.kernel.org/r/20240509-perf_digit-v3-0-9036bf7898da@codewreck.org
+> 
+> Changes in v3:
+> - fix evsel__newtp_idx typo in commit 1's message
+> - rebase onto perf-tools-next
+> - add trailers
+> - Link to v2: https://lore.kernel.org/r/20240505-perf_digit-v2-0-6ece307fdaad@codewreck.org
+> 
+> Changes in v2:
+> - update Jiri's email in commit tags
+> - (not a change, but after being brain-dead and Ian helpful
+> reply I'm confirming patch 3/3 works as expected)
+> - Link to v1: https://lore.kernel.org/r/20240407-perf_digit-v1-0-57ec37c63394@codewreck.org
+> 
+> ---
+> Dominique Martinet (3):
+>       perf parse-events: pass parse_state to add_tracepoint
+>       perf parse-events: Add new 'fake_tp' parameter for tests
+>       perf parse: Allow names to start with digits
+> 
+>  tools/perf/tests/parse-events.c | 13 +++++++++++--
+>  tools/perf/tests/pmu-events.c   |  2 +-
+>  tools/perf/util/evlist.c        |  3 ++-
+>  tools/perf/util/evsel.c         | 20 +++++++++++++-------
+>  tools/perf/util/evsel.h         |  4 ++--
+>  tools/perf/util/metricgroup.c   |  3 ++-
+>  tools/perf/util/parse-events.c  | 38 +++++++++++++++++++++++---------------
+>  tools/perf/util/parse-events.h  |  9 ++++++---
+>  tools/perf/util/parse-events.l  |  4 ++--
+>  tools/perf/util/parse-events.y  |  2 +-
+>  10 files changed, 63 insertions(+), 35 deletions(-)
+> ---
+> base-commit: 187c219b57eaf3e1b7a3cab2c6a8b7909bdbf4a9
+> change-id: 20240407-perf_digit-72445b5edb62
+> 
+> Best regards,
+> -- 
+> Dominique Martinet | Asmadeus
