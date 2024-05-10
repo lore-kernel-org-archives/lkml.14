@@ -1,16 +1,15 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F861527A4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F2915217A
 	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 05:38:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715319520; cv=none; b=griXwNwGyCngxgL4Bf8lNfPpuZo/CsZNuYaSTT48WJKCnfbJ2QOxpSPU7YOMGkXxbj1uisRXPZRlOwFPXEK7aUcfMsExKqqrM/apNG35sr2hMCVPgukjrbjUBs5TIjmoM5THjhIoPNU4tYOdCtZya82TD4PO73lqYouGUiZ9tXM=
+	t=1715319521; cv=none; b=h8umkH+XoyrQ//XoW1yluKNN6jlvONMTjOHtFyDIk3IOD8rEe8VuRubl+pmdWDXvYtQCSPAWf0nS2zVYEFQ+MHuQ81sV+9MF1MyMQzhoUR+81DFDiBjLhu/CN+80b260OOV0C9MpvVwqB00RuyPTGkonslaf/xQnZmRQIcAUiEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715319520; c=relaxed/simple;
-	bh=NHVN4MqHOHW3M13mpXs/mfjl7P3OPbQtFM50LxC9nmQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sXIU4njwQ9HAyObes77s97Jd8cvRauFHhSehGFW64h+Rjq4AFKFqlDJDpsTh/fNYCfUi3vqWxJnVgPCooMl+OMRSP9vq2pIqymWYWkMRcXBgtwsOe+7NU3/egAwgujWN42+YxnU6GdWBysQqxh8wwOzODCcPaJOKyNRZJuUNFlk=
+	s=arc-20240116; t=1715319521; c=relaxed/simple;
+	bh=GSpMQSri9vV2W/mPCjfVGmKY0KvOr6Roho9vskVmg4I=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BKVpsAgdOMjjvxguboRsjmvQfCOMlOgDX2okyhyunDnICaFWyQeLOVYzhE95WV07xhbbmNqLO7aTuuiOAKOnKP9gs4QLHMusVDpJ1duZRUUO/jkP19faCS39QHQFcr7KYFlryPoAi4kLzvEd6oxqN5/dEDQMJFfObUezCPt6XHE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,15 +17,15 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s5Ixk-0006Ra-4d; Fri, 10 May 2024 07:38:32 +0200
+	id 1s5Ixk-0006RX-4d; Fri, 10 May 2024 07:38:32 +0200
 Received: from [2a0a:edc0:0:1101:1d::ac] (helo=dude04.red.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s5Ixh-000a4G-Fw; Fri, 10 May 2024 07:38:29 +0200
+	id 1s5Ixh-000a4C-D4; Fri, 10 May 2024 07:38:29 +0200
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1s5Ixh-00A7cR-1M;
+	id 1s5Ixh-00A7bx-15;
 	Fri, 10 May 2024 07:38:29 +0200
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,12 +46,10 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Simon Horman <horms@kernel.org>,
 	Willem de Bruijn <willemb@google.com>,
 	=?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
-Subject: [PATCH net-next v3 3/3] net: dsa: microchip: dcb: set default apptrust to PCP only
-Date: Fri, 10 May 2024 07:38:28 +0200
-Message-Id: <20240510053828.2412516-4-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v3 0/3] net: dsa: microchip: DCB fixes 
+Date: Fri, 10 May 2024 07:38:25 +0200
+Message-Id: <20240510053828.2412516-1-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240510053828.2412516-1-o.rempel@pengutronix.de>
-References: <20240510053828.2412516-1-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,66 +62,23 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Before DCB support, the KSZ driver had only PCP as source of packet
-priority values. To avoid regressions, make PCP only as default value.
-User will need enable DSCP support manually.
+This patch series address recommendation to rename IPV to IPM to avoid
+confusion with IPV name used in 802.1Qci PSFP. And restores default "PCP
+only" configuration as source of priorities to avoid possible
+regressions. 
 
-This patch do not affect other KSZ8 related quirks. User will still be
-warned by setting not support configurations for the port 2.
+change logs are in separate patches.
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Acked-by: Arun Ramadoss <arun.ramadoss@microchip.com>
----
- drivers/net/dsa/microchip/ksz_dcb.c | 21 +++------------------
- 1 file changed, 3 insertions(+), 18 deletions(-)
+Oleksij Rempel (3):
+  net: dsa: microchip: dcb: rename IPV to IPM
+  net: dsa: microchip: dcb: add comments for DSCP related functions
+  net: dsa: microchip: dcb: set default apptrust to PCP only
 
-diff --git a/drivers/net/dsa/microchip/ksz_dcb.c b/drivers/net/dsa/microchip/ksz_dcb.c
-index 07f6742df41bd..dfe2c48e1066a 100644
---- a/drivers/net/dsa/microchip/ksz_dcb.c
-+++ b/drivers/net/dsa/microchip/ksz_dcb.c
-@@ -82,10 +82,6 @@ static const u8 ksz_supported_apptrust[] = {
- 	IEEE_8021QAZ_APP_SEL_DSCP,
- };
- 
--static const u8 ksz8_port2_supported_apptrust[] = {
--	DCB_APP_SEL_PCP,
--};
--
- static const char * const ksz_supported_apptrust_variants[] = {
- 	"empty", "dscp", "pcp", "dscp pcp"
- };
-@@ -771,9 +767,8 @@ int ksz_port_get_apptrust(struct dsa_switch *ds, int port, u8 *sel, int *nsel)
-  */
- int ksz_dcb_init_port(struct ksz_device *dev, int port)
- {
--	const u8 *sel;
-+	const u8 ksz_default_apptrust[] = { DCB_APP_SEL_PCP };
- 	int ret, ipm;
--	int sel_len;
- 
- 	if (is_ksz8(dev)) {
- 		ipm = ieee8021q_tt_to_tc(IEEE8021Q_TT_BE,
-@@ -789,18 +784,8 @@ int ksz_dcb_init_port(struct ksz_device *dev, int port)
- 	if (ret)
- 		return ret;
- 
--	if (ksz_is_ksz88x3(dev) && port == KSZ_PORT_2) {
--		/* KSZ88x3 devices do not support DSCP classification on
--		 * "Port 2.
--		 */
--		sel = ksz8_port2_supported_apptrust;
--		sel_len = ARRAY_SIZE(ksz8_port2_supported_apptrust);
--	} else {
--		sel = ksz_supported_apptrust;
--		sel_len = ARRAY_SIZE(ksz_supported_apptrust);
--	}
--
--	return ksz_port_set_apptrust(dev->ds, port, sel, sel_len);
-+	return ksz_port_set_apptrust(dev->ds, port, ksz_default_apptrust,
-+				     ARRAY_SIZE(ksz_default_apptrust));
- }
- 
- /**
+ drivers/net/dsa/microchip/ksz_common.c |  46 +++++------
+ drivers/net/dsa/microchip/ksz_common.h |   2 +-
+ drivers/net/dsa/microchip/ksz_dcb.c    | 106 ++++++++++++++-----------
+ 3 files changed, 85 insertions(+), 69 deletions(-)
+
 -- 
 2.39.2
 
