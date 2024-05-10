@@ -1,71 +1,59 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5801F16C844
-	for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 11:03:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FE5416ABC3;
+	Fri, 10 May 2024 11:04:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715338999; cv=none; b=gRmY4ZzOYXisFIAStya+FEjg98+/5B068DtU8XOpM4RdsGp8pDKG+o+2f1M3pJpUIqyc6QW08bdREPxgJK1qW0qGYU+azPW1+oLJlZuNcILXOTv/Y+DhDAHxUBXHbJ5qJg20XQdzE/DtorLpf54CcFdih6DjzYEuXAcIXBo0/xk=
+	t=1715339040; cv=none; b=Irn3S6uXqIpPvLi3iN6AGos6lLSda4+o1s8WrQ8A5xr9VoxUqy6zIgur6bIcggLO9Rr2dFtiefKgK1/DTmgZBsNqzyJfBFs2kFhyiXZppzXKLyH9fEmn8t+SiTVaqTofKWyUUcgxnKxc4ZrVGz2W/uTv05ACr1weWKALBvld3Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715338999; c=relaxed/simple;
-	bh=wbz6QLqwAzQ7aZSh96uDYPLlmW+YQ8YBErjkKgtAZf8=;
+	s=arc-20240116; t=1715339040; c=relaxed/simple;
+	bh=h/y/M0WVBu20pfhZoBP9hM8Pp5zsvEnQwe4lkBmsmzY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tKy+M29/44e8RSszPda/+GdXMN47M1PPMOkUGxmX86OHjBJ7u2b3jSFBHJw/lX4T11bEz04r3psL1BjyRuV/bL/obSAMNx/OrDtE3eBk6qNLy98TvGJVOIZp2Br9Ikt+LZOgpZN9rHS7y38yFPDr1u6eSdnXWU7z3YCg11CaSeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OnFXK3LN; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=adtx4tuEsuAwlFHQnaO1RVgPmZ2YfuDzWXHyGrGrEq6O63rCXjMm5XjrJAo10uUGIhF5RxSd+1fJgWvMnxctkGJnZu/KsZrNQFHmrW6kQTPNXGQCoFgbCRYMTUrFcC7UD1rSXB/13GHNI8L6PMJfrYrFTxTV8fwcQ7SaId4Ox/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NPVTcQZl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OnFXK3LN"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-41f9ce16ed8so19345705e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 04:03:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715338996; x=1715943796; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=rZVnCon/go9B9dTERYLh3cVfCiejO45V80tw8yzRpnU=;
-        b=OnFXK3LNd3qIBd4IHPUDyCHe7YFH8K4f1wmX3wkfI5To+NukoQKy7J43XR2X4jTIA/
-         R44N0+B6EN9iawhfyJXrxH0M5TfKQVQ0lR6ZCeDncrpz/93AbKf/DpcnDhDBCP6oozNp
-         pVXXimf2ccp2aDFpByqRAkDMspqkFcVgBxby2q66VSg0NeNkAe+O0jMFeudn0QAsIpLA
-         1QAOT/4McQGJQbYJk615cUv1OXdv26EiH/dSCp079NMLjWjVQEQjJaxxqmxihVhd+iLP
-         lacVvEwSNjw/zEfn8ukiQXA7qJqZD5/1WuZ7GQhsd+w0kLooGdbhuW1Vkca7FyU9/rJT
-         Djxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715338996; x=1715943796;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rZVnCon/go9B9dTERYLh3cVfCiejO45V80tw8yzRpnU=;
-        b=Zd3FIdQDHwk2SCTH27TYlUmV7Zr8/o7HOU+8EZ+fFadQkKbfyu+ixzI/6rrkr5Ta9N
-         CqZRdE8v5e38StgjW+muHBXLxAaRlosMD/VNGALNotXWrXpwvGR6b+aNg9iABjt/e/kc
-         fvjta90yJC+VOjSNzOtQl8Ba0009rc1hbDPkGPlsnQoJWDrs3nGf5MNZdG1bHcuj8CKQ
-         dkCc1FtvNU4m2PxrkCPlk6fywlrxeZfYyVbii+LFXwrdrBW04UmTsdl27hm1MQnO7AGS
-         DIi3iGEa/cK8sPL0P9iJ09amxIhxeZxJ3bN1N0l66heOvM3FeIf4YI6GSyrSa8PYJtOY
-         5CqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUopJDNsdqW67E/NeTNYURhFy5y+LmVNUz+oJGnFHhKwKSoZaTBCFiPNvCKkOwariALCS8FXT5oawP+kp8XyqcxeH++yXGFMMlEZpMY
-X-Gm-Message-State: AOJu0Ywm6YPJf+quH3iJwnOVUHSXWjUQhMBpKeciI+sJ0weKLmjbmiqp
-	fI+V9haw7UVBfNw19kZ8ZwfwNII0Vs9gJjiPx5/auzeKHfzkDbgWa7tAf5SHIDsXIIaW9L0sCuP
-	KdzuA
-X-Google-Smtp-Source: AGHT+IGuWY6L0MSRVOn0uzCJoaOvNXNJY2lGiyGY+cCoQhHxynAUP/AA2bNpVJyYrxN7Tpo1w5Qlhg==
-X-Received: by 2002:a1c:7910:0:b0:41b:bb90:4af with SMTP id 5b1f17b1804b1-41feaa44138mr22551875e9.20.1715338996268;
-        Fri, 10 May 2024 04:03:16 -0700 (PDT)
-Received: from google.com (88.140.78.34.bc.googleusercontent.com. [34.78.140.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccbe8fc6sm59614295e9.4.2024.05.10.04.03.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 May 2024 04:03:16 -0700 (PDT)
-Date: Fri, 10 May 2024 12:03:12 +0100
-From: Vincent Donnefort <vdonnefort@google.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	mathieu.desnoyers@efficios.com, kernel-team@android.com,
-	rdunlap@infradead.org, rppt@kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v22 2/5] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <Zj3-8GHR_EiWY7lB@google.com>
-References: <20240430111354.637356-1-vdonnefort@google.com>
- <20240430111354.637356-3-vdonnefort@google.com>
- <20240507223402.206d6ddc@rorschach.local.home>
- <cc719813-ba73-461f-8b45-4728f926c151@redhat.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NPVTcQZl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C55F9C2BD11;
+	Fri, 10 May 2024 11:03:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1715339040;
+	bh=h/y/M0WVBu20pfhZoBP9hM8Pp5zsvEnQwe4lkBmsmzY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NPVTcQZlQch0YbyPlfN4o1ztVi6Gd8zgxljoG8d74kRXBMgAVIINhuas5DUHLZPr1
+	 Du0yrJRfY581ViE5ABjXktGPOcf+otCU5gaLHU2C8FAj88kqzM1xdKNnK/8MvvE+Lb
+	 pmNKG3TdTIG3LMN9eD/AH6oZu1ixXuChO8wYTsKw=
+Date: Fri, 10 May 2024 12:03:57 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Saravana Kannan <saravanak@google.com>,
+	Paul Kocialkowski <contact@paulk.fr>,
+	=?iso-8859-1?Q?Herv=E9?= Codina <herve.codina@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Subject: Re: [PATCH v2 5/5] misc: add ge-addon-connector driver
+Message-ID: <2024051010-scribble-barbell-d57e@gregkh>
+References: <20240510-hotplug-drm-bridge-v2-0-ec32f2c66d56@bootlin.com>
+ <20240510-hotplug-drm-bridge-v2-5-ec32f2c66d56@bootlin.com>
+ <2024051039-decree-shrimp-45c6@gregkh>
+ <20240510125417.1dddfd5c@booty>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,51 +62,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cc719813-ba73-461f-8b45-4728f926c151@redhat.com>
+In-Reply-To: <20240510125417.1dddfd5c@booty>
 
-[...]
-
+On Fri, May 10, 2024 at 12:54:17PM +0200, Luca Ceresoli wrote:
+> > > +static int sunh_conn_handle_event(struct sunh_conn *conn, bool plugged)
+> > > +{
+> > > +	int err;
 > > > +
-> > > +	while (s < nr_subbufs && p < nr_pages) {
-> > > +		struct page *page = virt_to_page(cpu_buffer->subbuf_ids[s]);
-> > > +		int off = 0;
+> > > +	if (plugged == conn->plugged)
+> > > +		return 0;
 > > > +
-> > > +		for (; off < (1 << (subbuf_order)); off++, page++) {
-> > > +			if (p >= nr_pages)
-> > > +				break;
-> > > +
-> > > +			pages[p++] = page;
-> > > +		}
-> > > +		s++;
-> > > +	}
+> > > +	dev_info(conn->dev, "%s\n", plugged ? "connected" : "disconnected");  
 > > 
-> > The above can be made to:
+> > Please remove debugging code from stuff you want to see merged.
 > > 
-> > 	while (p < nr_pages) {
-> > 		struct page *page;
-> > 		int off = 0;
-> > 
-> > 		if (WARN_ON_ONCE(s >= nr_subbufs))
-> > 			break;
+> > Same for all dev_info() calls here, when drivers work properly, they are
+> > quiet.
 > 
-> I'm not particularly happy about us calling vm_insert_pages with NULL
-> pointers stored in pages.
+> While agree for other dev_info() calls, this one seems quite similar in
+> principle to the link up/down messages that get logged by the MII code
+> at [0]:
 > 
-> Should we instead do
+>   [347229.872315] asix 1-1.3.2:1.0 enx000cf616fecb: link up, 100Mbps,
+>   full-duplex, lpa 0xC5E1 [347229.920449] asix 1-1.3.2:1.0 enx000cf616fecb: link down
 > 
-> if (WARN_ON_ONCE(s >= nr_subbufs)) {
-> 	err = -EINVAL;
-> 	goto out;
-> }
-> 
-> ?
+> In my case it is logging that a removable part of the hardware has been
+> added or removed, which appears useful. Do you think it make sense in
+> this scenario?
 
-I could also nr_pages = p in the event of s >= nr_subbufs... but that
-really that shouldn't happen so let's return an error.
+Nope, sorry, again, when drivers are working properly, they should be
+quiet otherwise they just fill up the log with unneeded messages.
 
-> 
-> -- 
-> Cheers,
-> 
-> David / dhildenb
-> 
+thanks,
+
+greg k-h
