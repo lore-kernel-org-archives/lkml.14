@@ -1,79 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail115-63.sinamail.sina.com.cn (mail115-63.sinamail.sina.com.cn [218.30.115.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1B081A2C17
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 12:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804F27E9
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 12:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=218.30.115.63
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715430943; cv=none; b=e/4bQUMHOl3SY2JuJAyhEF4I5AItGyS9tFX/GYxFCHb+Yo1evY+u0/SVwt55HgyEMWvazv1ymTbekle27bzzvaJ/6+Z1odOmGvJ53vdiLzUepuVsDrmuMaUh7Q8iUl1WxmvpFzelYX9z9vVGeVsAnZT+L0qXfEVmw8JvPpWjVD8=
+	t=1715431043; cv=none; b=N8Dp+xBOBHBIx5mHe0w5oQP+ppZ9pcu+zAqrYBEgJIliejkoxrzcXqEEhfz6izGCJhe/oFb5SwiCS2jiG76Dg4vXmXJd1aybazcfUDm3tO9yH+aSI5YJ6e7CG3dJFuBD6hN+ys3X6Q6fSy75me4x95OgBM60FNSY5o0UxM9YFUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715430943; c=relaxed/simple;
-	bh=AiZ3KfsED5UcOthJP80M3g4oT+hSkP1x6K5KlIFTegU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PM/FxNg6BBCj0jqnH4G8oD5f0UvuIkQKsYi8THND7NHodEFmYtpLZdU22uy6NSm6EBYe0ojjEDQUirxfVgPRGA+SZj+PEwl807gSE1RkVgPWUEpiRLdXUKT1gUJXAWLWg5u+fOvpHaYutpBZEHEsd9INbZEdGObYDcs+NP/FfJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=BhItw/AM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="BhItw/AM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BE02C2BBFC;
-	Sat, 11 May 2024 12:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1715430943;
-	bh=AiZ3KfsED5UcOthJP80M3g4oT+hSkP1x6K5KlIFTegU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BhItw/AMxaZaHzgZ5F0rPFaIBll20uY8DnwXO2MMZ6rhHBI9IrIPiePLlLrkElHU9
-	 Nv8fwnTduMeun6ERsdAH1v+vLSzqIB0qhlgtfDZ9oADb8pEuCm+3JcOh36oRwmGdtt
-	 TRdbOFE75lS0+iPYqB074ocOS9nmBx5nDCErY3Lo=
-Date: Sat, 11 May 2024 13:24:06 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Dominique Martinet <asmadeus@codewreck.org>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: CVE-2022-48655: firmware: arm_scmi: Harden accesses to the reset
- domains
-Message-ID: <2024051146-unengaged-halves-3681@gregkh>
-References: <2024042859-CVE-2022-48655-5feb@gregkh>
- <Zj2Qrt6_kJzqA0-S@codewreck.org>
- <2024051041-resisting-chatroom-32c8@gregkh>
- <Zj4t4q_w6gqzdvhz@codewreck.org>
- <2024051148-fervor-aloft-43a3@gregkh>
+	s=arc-20240116; t=1715431043; c=relaxed/simple;
+	bh=YZp0Vxr+BdcJmQj8h5VeqKm9gQxsitTweWe1L5eYZyE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=hI/595hT3umd+MvwmUglCQZ3g1JYRq+91TqET/Xa1T1RvOJQ34VIO6wdFpKjAXbuSkM5AoEGrbuLqK8Wc8sTmEiXVzzggzqdZYAEaFh2imPFDRN8l3mSiQ2J6SpExy+qs7hiEKaK8BQli4KaASoKxQCySMWiIyLnPgWgGn1AxKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=218.30.115.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([116.24.11.48])
+	by sina.com (10.75.12.45) with ESMTP
+	id 663F667000005FC7; Sat, 11 May 2024 20:37:08 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 20263631457984
+X-SMAIL-UIID: 53D43FB6FA354760A0B2D4506500B9EB-20240511-203708-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+da4ed53f6a834e1bf57f@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [fuse?] WARNING in fuse_request_end
+Date: Sat, 11 May 2024 20:36:55 +0800
+Message-Id: <20240511123655.2700-1-hdanton@sina.com>
+In-Reply-To: <000000000000c27c85061828ca26@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2024051148-fervor-aloft-43a3@gregkh>
+Content-Transfer-Encoding: 8bit
 
-On Sat, May 11, 2024 at 12:59:23PM +0100, Greg Kroah-Hartman wrote:
-> On Fri, May 10, 2024 at 11:23:30PM +0900, Dominique Martinet wrote:
-> > Greg Kroah-Hartman wrote on Fri, May 10, 2024 at 09:55:15AM +0100:
-> > > > I can submit an edit as a patch to vulns.git json, but this doesn't seem
-> > > > overly important so for now a mail will probably do.
-> > > 
-> > > the json and mbox files are generated by tools, so patches to them is
-> > > not a good idea as they will be overwritten the next time the scripts
-> > > are run.
-> > 
-> > Just let me know what's the most convenient; if mail it is I won't
-> > bother :)
-> > 
-> > > > >From a quick look it would seem it fixes arm_scmi from the addition of
-> > > > scmi_domain_reset() in 95a15d80aa0d ("firmware: arm_scmi: Add RESET
-> > > > protocol in SCMI v2.0"), which first appeared in v5.4-rc1, and does not
-> > > > appear to have been backported to older kernels, so v5.4+ can be added
-> > > > as a requirement.
-> > > 
-> > > We can add a "this is where the problem showed up" if you know it, so
-> > > that would be 95a15d80aa0d ("firmware: arm_scmi: Add RESET protocol in
-> > > SCMI v2.0"), correct?
-> > 
-> > Yes; this commit adds the out of bound access.
+On Sat, 11 May 2024 00:42:19 -0700
+> syzbot found the following issue on:
 > 
-> Great, I'll mark the cve as having that as the "vulnerable" commit id,
-> and then re-run the scripts and update the .json file and push it to
-> cve.org when I get back to a better network connection.
+> HEAD commit:    dccb07f2914c Merge tag 'for-6.9-rc7-tag' of git://git.kern..
+> git tree:       upstream
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=119603c0980000
 
-Now updated on the cve.org web site, thanks!
+#syz test https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git  dccb07f2914c
 
-greg k-h
+--- x/fs/fuse/dev.c
++++ y/fs/fuse/dev.c
+@@ -1267,6 +1267,7 @@ static ssize_t fuse_dev_do_read(struct f
+ 
+ 	req = list_entry(fiq->pending.next, struct fuse_req, list);
+ 	clear_bit(FR_PENDING, &req->flags);
++	clear_bit(FR_SENT, &req->flags);
+ 	list_del_init(&req->list);
+ 	spin_unlock(&fiq->lock);
+ 
+--
