@@ -1,57 +1,57 @@
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F1B611E
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 00:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0787910958
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 00:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715388601; cv=none; b=NL8EJY+KJ3YhsTEHum5D/JRjEeJSi8kqsXNnJBxV/eWmxwV97lYE26992eeAmQ1PmB+WBCPtVUlDSu7bM2b7mTTkpti/yYmbOZV7OiEz+mCKsEVt/2irLaYlBr8dMpp+rg0r2kgppQN8ynp6SPYK+c1fqp2YG1s04aX1Lw22+OU=
+	t=1715388603; cv=none; b=oEyf4H1qNfLmyVG6mbNBQ9ua378mObD3ihLezeJpMf/YXytg2ON/glSEW0xpwCwQ2SESPfOihxsdUUEJBV6Vcdb+ib9oeAhlW/Ciy8Fwfs0qAt6fx4QxH62rLVPxtcKr7h+13WohvQ7xcZDfjEip5nDfDBojNUzTiIwCZVMWoP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715388601; c=relaxed/simple;
-	bh=trOA5E6cr+7SXCIy7MjCsAjJshllVgbE52T91gYWCS4=;
+	s=arc-20240116; t=1715388603; c=relaxed/simple;
+	bh=h8IEiY34+3Sx3CIFgaB3bbWMmMeu0qPkNGGmC8siC3M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UE0bwsPDqXdsb7wu8TaSz1sbY8x4T1Q1GsuwDtoHCb71hykjo5TRt9wMcN2/7DWdC46DiKnizxHF159/vYRW4rh751Pv78f4ifJGvYUYoRp6lxAoDrhG5nCnNtGKtGUCi+CZWbcEeMBnl42VbWyHnMOhVQKo7WeBmEWGpGko1oI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=kRhxpUBi; arc=none smtp.client-ip=209.85.161.43
+	 MIME-Version:Content-Type; b=nQVO0bByV3nz/cycYcsenI9CdrJtb9BIYMAmbEY/a83MNbRJQnXwjZGjv9CPFD6oOStTA1M4f4SaQSC4CUW0DQbJ5SfCYReUzhTNg605m4uQpFxNw0gkiqMJle4pZTV2oaJJzCYT2lMdTYgh7zthmvZ3jjvpGJpUYv1LD2WXWsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=I348MkFP; arc=none smtp.client-ip=209.85.161.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="kRhxpUBi"
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-5b283d2b1b4so721500eaf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 17:49:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="I348MkFP"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-5aa28cde736so1517150eaf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 17:50:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715388598; x=1715993398; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715388600; x=1715993400; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=iBA7sAKR0McttWE/pFL/rZ2xrhn9Dfe5dI0ynO4z2uI=;
-        b=kRhxpUBiZ2bjt+Pk7yncaX4o5hIlhYYcwTsSx4AwKv1zEJT/VbOkwT/Wld6jeFghYF
-         9IGAwXvb8ySiglq+nWSV+xYwTKsZdwdtfxvUzGG/CPvscF5hLo2r/yKs4z9WvPvaVgmR
-         tTpg62W84DaCWrfK8ehvcxYVY3B+U0J4Tle8UNnCj7nQLEYdYhwFrph1TYghveG4wqfQ
-         gbm8taHVEJXZl1Gk+Y8QznTsyuIakYZUPEjiM3196nVqj1x7ErlCYkL5gdaz6erV1C4x
-         DxVyDXkHlfUO9Xi45w1vkovpYU+0Q+CAgWb0akDWBGRkH7mk45v5W4rKM2pWGv/9SMB6
-         mZEQ==
+        bh=E9avosEdgbBSX3dha6GG6j80VLMTNNyJjLCB0lyPzg0=;
+        b=I348MkFPYgz4UGsp8pm08TTEs8rDAJdCzNDAolDrrHfWIlgJVdh/HqE5Th2DR/XD56
+         yOz9sTIbVefJpSwAh+cNmAWCtPcKrinC7lMUFFTk97BJBs8GMaeLNv1vpshthz+g0GjL
+         pbDNc0KC3COxrqUq4qyevIya45msb8rjpDVxCZBtGLAxyAaJyVtWBcm2jiNfkvX3c2oF
+         yV+w6cEOUoLNPnbynSeKOz6XOtHE30Sg0QV7WrwTnZZH9CeZyq0V2ut9VFYzpLlDE2y7
+         XYFpjlT6x2FZ6nL5nOPzDArQX4zzeWir3LwS9cH2zRw5BhFIBLdJyaeWRpoqguIOyg5j
+         Ys4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715388598; x=1715993398;
+        d=1e100.net; s=20230601; t=1715388600; x=1715993400;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=iBA7sAKR0McttWE/pFL/rZ2xrhn9Dfe5dI0ynO4z2uI=;
-        b=LX7oENViUJ787jlbaqPovgGfAkGJXhlybNmioK4RWKmbhRUVigYrL3EicHlYvElx87
-         xENtaFhjiz5yrqVDVvJM/6svl9i896bH3HrqbhZXRaNULTLBp8QNIFoAxScXz31bRlEn
-         lxpQTcxiDYP3i6Crkj8re/pXsNZ6g2UZybgCfTt9+G7JoJGoDqEAOhziseHmtNyEavck
-         FQX9KuWT6Q51ZI8sIFgN66sgWHOVEXeyyuv/oQPu2RlzOyiOu0F8IBSJ3oIzvMzHC3vL
-         FnE+7CSJ810NIj8bv4kBs2wfhaAKG6oiyOAcMbrA0XyH6QwiPuJER1+iWf6knbfS7Fwi
-         wOzQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCw/RXxi/TmZFhYk2hYBQ8nfi1YdpwCc1QHK6LoLnyZ05MCk7lZ5zOBwTpnEiTDlnBMChA0e+jkTHdqt0P7RNwWv7+5Ep2bGrgGDoG
-X-Gm-Message-State: AOJu0Yw1k6W2HrOa1JOSLkCiDhvCjHln8htLM16SEAy+5Un+AtJLhmqo
-	TAV98Xa7isaSh0zJDDfZMdjv4Kup6Fhq8u7gLdXDbW92+WnBP59vY5quQMYge1c=
-X-Google-Smtp-Source: AGHT+IFRvVNIdqHmAFp3VONJKZ1EO7R2R6wKqwQ4CFLc4SE6uiCuGQ83poyhcFd37Cu9yDkUnFcxig==
-X-Received: by 2002:a4a:5487:0:b0:5aa:596c:52d0 with SMTP id 006d021491bc7-5b2819a49dbmr4629752eaf.6.1715388598032;
-        Fri, 10 May 2024 17:49:58 -0700 (PDT)
+        bh=E9avosEdgbBSX3dha6GG6j80VLMTNNyJjLCB0lyPzg0=;
+        b=T8JYz/xQ3VIFPPFgIXcyH0pnuCJNyOy15YUX1VGlBadsrruOpxwboyzGOOxqwb8eDc
+         kk0MlIsN931BGnh6XvQEMFR/yUgZK29ulbgS+sKKWs/SO6H00pmyujAWILqczaTOvroH
+         YDWPTux4G3y3cUr/CHugM6ZXK+D42cglXds2Notz4+WAEhdGNAn+5ipXbbrQB711V2XP
+         0HbP7vCOjojDTwBW7QJk8QBnQ++HLK5fXcqRt5aGsfYzLa91KLaBTDwPp5MXJhQtdnmf
+         Vhf/71UM+zXHJ80cQLJYeGLncB2sYL1xNu+qioKVt1ymwbqN2g2Xj9SDjzr5p3WstjL6
+         sgzg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgqqfTKuJmwHPh1DeH3XJeDyYPPY1zftNTmjqaD1leQJ5pCjI1o0BACWEgheMuWUGS+KLwqu2qkhge4NGdyaiqwQwRjDDqiNtt6RQl
+X-Gm-Message-State: AOJu0YwGI0XW+4kecp5RqdyVdLeRPvRmJ64P9lMijG2k6W5GmbiUpfkE
+	kg7QD+FrwlXIsrpTXcIMTc0Zhj9cgxzNB1AWEMns7Rvby/AsgFWQUHfNsl6XZ8A=
+X-Google-Smtp-Source: AGHT+IHUqtShftifs93lP5ZXYqlRl7bulmdlCopbK5h5izie+OAx3wEuV9iUi7VdLK8osidQhFAkdw==
+X-Received: by 2002:a4a:904:0:b0:5b2:bc0:f38b with SMTP id 006d021491bc7-5b281956dc0mr4721017eaf.5.1715388600118;
+        Fri, 10 May 2024 17:50:00 -0700 (PDT)
 Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5b29015a3dbsm321132eaf.46.2024.05.10.17.49.57
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5b29015a3dbsm321132eaf.46.2024.05.10.17.49.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 May 2024 17:49:57 -0700 (PDT)
+        Fri, 10 May 2024 17:49:59 -0700 (PDT)
 From: David Lechner <dlechner@baylibre.com>
 To: Mark Brown <broonie@kernel.org>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -68,9 +68,9 @@ Cc: David Lechner <dlechner@baylibre.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-iio@vger.kernel.org
-Subject: [PATCH RFC v2 2/8] spi: add basic support for SPI offloading
-Date: Fri, 10 May 2024 19:44:25 -0500
-Message-ID: <20240510-dlech-mainline-spi-engine-offload-2-v2-2-8707a870c435@baylibre.com>
+Subject: [PATCH RFC v2 4/8] spi: add offload xfer flags
+Date: Fri, 10 May 2024 19:44:27 -0500
+Message-ID: <20240510-dlech-mainline-spi-engine-offload-2-v2-4-8707a870c435@baylibre.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240510-dlech-mainline-spi-engine-offload-2-v2-0-8707a870c435@baylibre.com>
 References: <20240510-dlech-mainline-spi-engine-offload-2-v2-0-8707a870c435@baylibre.com>
@@ -84,302 +84,103 @@ Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-SPI offloading is a feature that allows the SPI controller to perform
-complex transfers without CPU intervention. This is useful, e.g. for
-high-speed data acquisition.
+Most configuration of SPI offloads is handles opaquely using the ID
+handle that is passed to the various offload functions. However, there
+are some offload features that need to be controller on a per transfer
+basis.
 
-This patch adds the basic infrastructure to support SPI offloading. It
-introduces new callbacks that are to be implemented by controllers with
-offload capabilities.
+This patch adds a flags field to the spi_transfer structure to allow
+specifying such features. The first feature to be added is the ability
+to stream data to/from a hardware sink/source rather than using a tx or
+rx buffer. Additional flags can be added in the future as needed.
 
-On SPI device probe, the standard spi-offloads devicetree property is
-parsed and passed to the controller driver to reserve the resources
-requested by the peripheral via the map_channel() callback.
-
-The peripheral driver can then use spi_offload_prepare() to load a SPI
-message into the offload hardware.
-
-If the controller supports it, this message can then be passed to the
-SPI message queue as if it was a normal message. Future patches will
-will also implement a way to use a hardware trigger to start the message
-transfers rather than going through the message queue.
+A flags field is also added to the controller struct for controllers to
+indicate which flags are supported. This allows for generic checking of
+offload capabilities during __spi_validate() so that each controller
+doesn't have to provide their own validation.
 
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
 
 v2 changes:
 
-This is a rework of "spi: add core support for controllers with offload
-capabilities" from v1.
+This is also split out from "spi: add core support for controllers with
+offload capabilities".
 
-The spi_offload_get() function that Nuno didn't like is gone. Instead,
-there is now a mapping callback that uses the new generic devicetree
-binding to request resources automatically when a SPI device is probed.
-
-The spi_offload_enable/disable() functions for dealing with hardware
-triggers are deferred to a separate patch.
-
-This leaves adding spi_offload_prepare/unprepare() which have been
-reworked to be a bit more robust.
-
-In the previous review, Mark suggested that these functions should not
-be separate from the spi_[un]optimize() functions. I understand the
-reasoning behind that. However, it seems like there are two different
-kinds of things going on here. Currently, spi_optimize() only performs
-operations on the message data structures and doesn't poke any hardware.
-This makes it free to be use by any peripheral without worrying about
-tying up any hardware resources while the message is "optimized". On the
-other hand, spi_offload_prepare() is poking hardware, so we need to be
-more careful about how it is used. And in these cases, we need a way to
-specify exactly which hardware resources it should use, which it is
-currently doing with the extra ID parameter.
+In the previous version, we were using (void *)-1 as a sentinel value
+that could be assigned, e.g. to rx_buf. But this was naive since there
+is core code that would try to dereference this pointer. So instead,
+we've added a new flags field to the spi_transfer structure for this
+sort of thing. This also has the advantage of being able to be used in
+the future for other arbitrary features.
 ---
- drivers/spi/spi.c       | 100 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/spi/spi.h |  57 +++++++++++++++++++++++++++
- 2 files changed, 157 insertions(+)
+ drivers/spi/spi.c       | 10 ++++++++++
+ include/linux/spi/spi.h | 10 ++++++++++
+ 2 files changed, 20 insertions(+)
 
 diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 289feccca376..54b814cea54c 100644
+index 9ad7b04c26a6..4d34ccf91fd4 100644
 --- a/drivers/spi/spi.c
 +++ b/drivers/spi/spi.c
-@@ -2477,6 +2477,28 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
- 	of_spi_parse_dt_cs_delay(nc, &spi->cs_hold, "spi-cs-hold-delay-ns");
- 	of_spi_parse_dt_cs_delay(nc, &spi->cs_inactive, "spi-cs-inactive-delay-ns");
+@@ -4189,6 +4189,16 @@ static int __spi_validate(struct spi_device *spi, struct spi_message *message)
  
-+	/* Offloads */
-+	rc = of_property_count_u32_elems(nc, "spi-offloads");
-+	if (rc > 0) {
-+		int num_ch = rc;
+ 		if (_spi_xfer_word_delay_update(xfer, spi))
+ 			return -EINVAL;
 +
-+		if (!ctlr->offload_ops) {
-+			dev_err(&ctlr->dev, "SPI controller doesn't support offloading\n");
-+			return -EINVAL;
++		/* make sure controller supports required offload features */
++		if (xfer->offload_flags) {
++			if (!message->offload)
++				return -EINVAL;
++
++			if ((xfer->offload_flags & ctlr->offload_xfer_flags)
++			    != xfer->offload_flags)
++				return -EINVAL;
 +		}
-+
-+		for (idx = 0; idx < num_ch; idx++) {
-+			of_property_read_u32_index(nc, "spi-offloads", idx, &value);
-+
-+			rc = ctlr->offload_ops->map_channel(spi, idx, value);
-+			if (rc) {
-+				dev_err(&ctlr->dev, "Failed to map offload channel %d: %d\n",
-+					value, rc);
-+				return rc;
-+			}
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -3231,6 +3253,11 @@ static int spi_controller_check_ops(struct spi_controller *ctlr)
- 		}
  	}
  
-+	if (ctlr->offload_ops && !(ctlr->offload_ops->map_channel &&
-+				   ctlr->offload_ops->prepare &&
-+				   ctlr->offload_ops->unprepare))
-+		return -EINVAL;
-+
- 	return 0;
- }
- 
-@@ -4708,6 +4735,79 @@ int spi_write_then_read(struct spi_device *spi,
- }
- EXPORT_SYMBOL_GPL(spi_write_then_read);
- 
-+/**
-+ * spi_offload_prepare - prepare offload hardware for a transfer
-+ * @spi:	The spi device to use for the transfers.
-+ * @id:		Unique identifier for SPI device with more than one offload.
-+ * @msg:	The SPI message to use for the offload operation.
-+ *
-+ * Requests an offload instance with the specified ID and programs it with the
-+ * provided message.
-+ *
-+ * The message must not be pre-optimized (do not call spi_optimize_message() on
-+ * the message).
-+ *
-+ * Calls must be balanced with spi_offload_unprepare().
-+ *
-+ * Return: 0 on success, else a negative error code.
-+ */
-+int spi_offload_prepare(struct spi_device *spi, unsigned int id,
-+			struct spi_message *msg)
-+{
-+	struct spi_controller *ctlr = spi->controller;
-+	int ret;
-+
-+	if (!ctlr->offload_ops)
-+		return -EOPNOTSUPP;
-+
-+	msg->offload = true;
-+
-+	ret = spi_optimize_message(spi, msg);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&ctlr->io_mutex);
-+	ret = ctlr->offload_ops->prepare(spi, id, msg);
-+	mutex_unlock(&ctlr->io_mutex);
-+
-+	if (ret) {
-+		spi_unoptimize_message(msg);
-+		msg->offload = false;
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(spi_offload_prepare);
-+
-+/**
-+ * spi_offload_unprepare - releases any resources used by spi_offload_prepare()
-+ * @spi:	The same SPI device passed to spi_offload_prepare()
-+ * @id:		The same ID device passed to spi_offload_prepare()
-+ * @msg:	The same SPI message passed to spi_offload_prepare()
-+ *
-+ * Callers must ensure that the offload is no longer in use before calling this
-+ * function, e.g. no in-progress transfers.
-+ */
-+void spi_offload_unprepare(struct spi_device *spi, unsigned int id,
-+			   struct spi_message *msg)
-+{
-+	struct spi_controller *ctlr = spi->controller;
-+
-+	if (!ctlr->offload_ops)
-+		return;
-+
-+	mutex_lock(&ctlr->io_mutex);
-+	ctlr->offload_ops->unprepare(spi, id);
-+	mutex_unlock(&ctlr->io_mutex);
-+
-+	msg->offload = false;
-+	msg->offload_state = NULL;
-+
-+	spi_unoptimize_message(msg);
-+}
-+EXPORT_SYMBOL_GPL(spi_offload_unprepare);
-+
- /*-------------------------------------------------------------------------*/
- 
- #if IS_ENABLED(CONFIG_OF_DYNAMIC)
+ 	message->status = -EINPROGRESS;
 diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index e8e1e798924f..a8fc16c6bf37 100644
+index ec8d875d31ff..42c39c17ba5a 100644
 --- a/include/linux/spi/spi.h
 +++ b/include/linux/spi/spi.h
-@@ -31,6 +31,7 @@ struct spi_transfer;
- struct spi_controller_mem_ops;
- struct spi_controller_mem_caps;
- struct spi_message;
-+struct spi_controller_offload_ops;
- 
- /*
-  * INTERFACES between SPI master-side drivers and SPI slave protocol handlers,
-@@ -500,6 +501,7 @@ extern struct spi_device *spi_new_ancillary_device(struct spi_device *spi, u8 ch
+@@ -501,6 +501,8 @@ extern struct spi_device *spi_new_ancillary_device(struct spi_device *spi, u8 ch
   *	     This field is optional and should only be implemented if the
   *	     controller has native support for memory like operations.
   * @mem_caps: controller capabilities for the handling of memory operations.
-+ * @offload_ops: operations for controllers with offload support.
++ * @offload_xfer_flags: flags supported by this controller for offloading
++ *	transfers. See struct spi_transfer for the list of flags.
+  * @offload_ops: operations for controllers with offload support.
   * @unprepare_message: undo any work done by prepare_message().
   * @slave_abort: abort the ongoing transfer request on an SPI slave controller
-  * @target_abort: abort the ongoing transfer request on an SPI target controller
-@@ -745,6 +747,9 @@ struct spi_controller {
- 	const struct spi_controller_mem_ops *mem_ops;
+@@ -751,6 +753,7 @@ struct spi_controller {
  	const struct spi_controller_mem_caps *mem_caps;
  
-+	/* Operations for controllers with offload support. */
-+	const struct spi_controller_offload_ops *offload_ops;
-+
+ 	/* Operations for controllers with offload support. */
++	unsigned int offload_xfer_flags;
+ 	const struct spi_controller_offload_ops *offload_ops;
+ 
  	/* GPIO chip select */
- 	struct gpio_desc	**cs_gpiods;
- 	bool			use_gpio_descriptors;
-@@ -1114,6 +1119,7 @@ struct spi_transfer {
-  * @pre_optimized: peripheral driver pre-optimized the message
-  * @optimized: the message is in the optimized state
-  * @prepared: spi_prepare_message was called for the this message
-+ * @offload: message is to be used with offload hardware
-  * @status: zero for success, else negative errno
-  * @complete: called to report transaction completions
-  * @context: the argument to complete() when it's called
-@@ -1123,6 +1129,7 @@ struct spi_transfer {
-  * @queue: for use by whichever driver currently owns the message
-  * @state: for use by whichever driver currently owns the message
-  * @opt_state: for use by whichever driver currently owns the message
-+ * @offload_state: for use by whichever driver currently owns the message
-  * @resources: for resource management when the SPI message is processed
-  *
-  * A @spi_message is used to execute an atomic sequence of data transfers,
-@@ -1151,6 +1158,8 @@ struct spi_message {
+@@ -991,6 +994,7 @@ struct spi_res {
+  * @transfer_list: transfers are sequenced through @spi_message.transfers
+  * @tx_sg: Scatterlist for transmit, currently not for client use
+  * @rx_sg: Scatterlist for receive, currently not for client use
++ * @offload_flags: flags for xfers that use special hardware offload features
+  * @ptp_sts_word_pre: The word (subject to bits_per_word semantics) offset
+  *	within @tx_buf for which the SPI device is requesting that the time
+  *	snapshot for this transfer begins. Upon completing the SPI transfer,
+@@ -1107,6 +1111,12 @@ struct spi_transfer {
  
- 	/* spi_prepare_message() was called for this message */
- 	bool			prepared;
-+	/* spi_offload_prepare() was called on this message */
-+	bool			offload;
+ 	u32		effective_speed_hz;
  
- 	/*
- 	 * REVISIT: we might want a flag affecting the behavior of the
-@@ -1183,6 +1192,11 @@ struct spi_message {
- 	 * __spi_optimize_message() and __spi_unoptimize_message().
- 	 */
- 	void			*opt_state;
-+	/*
-+	 * Optional state for use by controller driver between calls to
-+	 * offload_ops->prepare() and offload_ops->unprepare().
-+	 */
-+	void			*offload_state;
- 
- 	/* List of spi_res resources when the SPI message is processed */
- 	struct list_head        resources;
-@@ -1546,6 +1560,49 @@ static inline ssize_t spi_w8r16be(struct spi_device *spi, u8 cmd)
- 
- /*---------------------------------------------------------------------------*/
- 
-+/*
-+ * Offloading support.
-+ *
-+ * Some SPI controllers support offloading of SPI transfers. Essentially,
-+ * this allows the SPI controller to record SPI transfers and then play them
-+ * back later in one go via a single trigger.
-+ */
++	unsigned int	offload_flags;
++/* this is write xfer but TX uses external data stream rather than tx_buf */
++#define SPI_OFFLOAD_XFER_TX_STREAM	BIT(0)
++/* this is read xfer but RX uses external data stream rather than rx_buf */
++#define SPI_OFFLOAD_XFER_RX_STREAM	BIT(1)
 +
-+/**
-+ * struct spi_controller_offload_ops - callbacks for offload support
-+ *
-+ * Drivers for hardware with offload support need to implement all of these
-+ * callbacks.
-+ */
-+struct spi_controller_offload_ops {
-+	/**
-+	 * @map_channel: Callback to reserve an offload instance for the given
-+	 * SPI device. If a SPI device requires more than one instance, then
-+	 * @id is used to differentiate between them. Channels must be unmapped
-+	 * in the struct spi_controller::cleanup() callback.
-+	 */
-+	int (*map_channel)(struct spi_device *spi, unsigned int id,
-+			   unsigned int channel);
-+	/**
-+	 * @prepare: Callback to prepare the offload for the given SPI message.
-+	 * @msg and any of its members (including any xfer->tx_buf) is not
-+	 * guaranteed to be valid beyond the lifetime of this call.
-+	 */
-+	int (*prepare)(struct spi_device *spi, unsigned int id,
-+		       struct spi_message *msg);
-+	/**
-+	 * @unprepare: Callback to release any resources used by prepare().
-+	 */
-+	void (*unprepare)(struct spi_device *spi, unsigned int id);
-+};
-+
-+extern int spi_offload_prepare(struct spi_device *spi, unsigned int id,
-+			       struct spi_message *msg);
-+extern void spi_offload_unprepare(struct spi_device *spi, unsigned int id,
-+				  struct spi_message *msg);
-+
-+/*---------------------------------------------------------------------------*/
-+
- /*
-  * INTERFACE between board init code and SPI infrastructure.
-  *
+ 	unsigned int	ptp_sts_word_pre;
+ 	unsigned int	ptp_sts_word_post;
+ 
 
 -- 
 2.43.2
