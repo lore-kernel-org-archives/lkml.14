@@ -1,81 +1,191 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A5C1C286;
-	Sat, 11 May 2024 17:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AAE31B7F7;
+	Sat, 11 May 2024 17:25:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715447965; cv=none; b=KPSTwGvIJ60tv5/GcjviLVns++jhwIfkYABheS6UZARUIMS0JNmlEb2QaLu/rnaP0ehMWaCfj2Z7gKHsFjFGqECrXLN0s8ydECd57hjbMpQY5tPDVeHOcmebvRQCniU0pGDBeVb5/g6YTdeyEljyaGb+afcg4YX1DEJqe8Wvdhw=
+	t=1715448357; cv=none; b=EXVVkkaDjwGB+uOCLhLNd5SMRJfSCMcW3H7k94fBQD04gqCE2+C2Y//UTskp0aYVPf2jHzBXztPJtBf+WNElMHInWehSGLSVTKLpoUAWiFtqLYMtT/DUZb4Ny8rfHLqil9sqsvvQBeYVkujY3ef6jER46PX56jIgc7Uv9+nxA1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715447965; c=relaxed/simple;
-	bh=JtxrfXquorAq2bYCxyWwuvOZACiGSKXrqHZI31bJbrw=;
+	s=arc-20240116; t=1715448357; c=relaxed/simple;
+	bh=aL3mmxLvwuw3oHrq+8iQZnMxFxtXlmbmE4RA55WoXDM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LYljZr0CS9R/sIobF7hEjqcURfEjqzpeeF/JXeZIpqDt8oiUemA4C3fei17T9ezrENuSBqQVs25z1O8V4e/SZQKiWj/ffu3NUZO/a9x7i22VydHEwwlECSDc/9bZEUj5xSQabwq74T+sxApDCuVeJgh+Bg96/3PhWtIORi6wjbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=xDGCoYOq; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=n+sC77DuSO5mtNeu53Nyn/Np3M71RfekcKAGPL502Exz3yNnQf6Z8+GrAoxFYAFhucKfAKSEj/50Ge6WmIWSHLUv9rSaFK+b2jXSWynhtpE+064Mr8oeVqQB3zoQrY0EMyfpAauIo73OgmNvD7CACaxkYrLE3TPOXNqK4BlUta8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGzbM93d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="xDGCoYOq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=59ogc1letU28eIr+Nqtw/+iuMiLVkRN/Xzvbe5jpoVo=; b=xDGCoYOqA3ZePLHzgyyNU8baNs
-	cMh46enKLDcmsupbkSUaxNCYBv3dbLF3DYISeVT9gQXO7TlumS8YV5niIOTjDNE+aVQ1K/ThimNzB
-	eqFr1Z1IbYywhZernKUwrz8hMWtj+6rrejvhxbntgZd6YA62cGxNdvX4/2tN1ro3Dc4g=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1s5qNH-00FCtF-Gz; Sat, 11 May 2024 19:19:07 +0200
-Date: Sat, 11 May 2024 19:19:07 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Jitendra Vegiraju <jitendra.vegiraju@broadcom.com>,
-	netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com,
-	bcm-kernel-feedback-list@broadcom.com, alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
-	richardcochran@gmail.com, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2, net-next, 2/2] net: stmmac: PCI driver for BCM8958X
- SoC
-Message-ID: <63c3efa6-94a2-40c7-b47d-876ff330d261@lunn.ch>
-References: <20240510000331.154486-3-jitendra.vegiraju@broadcom.com>
- <20240511015924.41457-1-jitendra.vegiraju@broadcom.com>
- <4ede8911-827d-4fad-b327-52c9aa7ed957@lunn.ch>
- <Zj+nBpQn1cqTMJxQ@shell.armlinux.org.uk>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGzbM93d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B339C2BBFC;
+	Sat, 11 May 2024 17:25:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715448356;
+	bh=aL3mmxLvwuw3oHrq+8iQZnMxFxtXlmbmE4RA55WoXDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KGzbM93dmJZR2TWr8nOkCBNZitkkYBjMoKdW4a97qEilIP512QlirK7SKk7vi6mAj
+	 +5fwPi9IhOldE2siZVmd+Kszu7lxzMGELuCEVmua2XfjGSzoxagEUxSceu0/1LPw1B
+	 wvP4hgTCgbgYhfG8n4J1wEa7n+gRYT+iqpZbA4COdIGhECvkN2Ko3lXZYrSBil8g3O
+	 pX1izWtx7M+a2/c1TzPtA7kVIauaS1+yseDUvagmNHTgqTPy6XM5XZk+ZPkJCUthl0
+	 ailMD7XN0d6K2bMT3Dw3YJ9xH9dUCxcp7NWPKiz2hA8/rC7UUk5hOsDSG3beyLh7NO
+	 mT/MeFTfD4yog==
+Date: Sat, 11 May 2024 14:25:53 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Breno Leitao <leitao@debian.org>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>, leit@meta.com,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf list: Fix the --no-desc option
+Message-ID: <Zj-qIbUN2XFBnvP8@x1>
+References: <20240508133518.3204221-1-leitao@debian.org>
+ <Zj-WE1aG7ihtevG3@x1>
+ <CAP-5=fXXYVgb4rnftaiTZTEniGOr5NnpfXJFNqX96GXP6=oTiA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Zj+nBpQn1cqTMJxQ@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXXYVgb4rnftaiTZTEniGOr5NnpfXJFNqX96GXP6=oTiA@mail.gmail.com>
 
-On Sat, May 11, 2024 at 06:12:38PM +0100, Russell King (Oracle) wrote:
-> On Sat, May 11, 2024 at 06:16:52PM +0200, Andrew Lunn wrote:
-> > > +	/* This device interface is directly attached to the switch chip on
-> > > +	 *  the SoC. Since no MDIO is present, register fixed_phy.
-> > > +	 */
-> > > +	brcm_priv->phy_dev =
-> > > +		 fixed_phy_register(PHY_POLL,
-> > > +				    &dwxgmac_brcm_fixed_phy_status, NULL);
-> > > +	if (IS_ERR(brcm_priv->phy_dev)) {
-> > > +		dev_err(&pdev->dev, "%s\tNo PHY/fixed_PHY found\n", __func__);
-> > > +		return -ENODEV;
-> > > +	}
-> > > +	phy_attached_info(brcm_priv->phy_dev);
-> > 
-> > What switch is it? Will there be patches to extend SF2?
+On Sat, May 11, 2024 at 09:11:00AM -0700, Ian Rogers wrote:
+>    On Sat, May 11, 2024, 9:00 AM Arnaldo Carvalho de Melo
+>    <[1]acme@kernel.org> wrote:
 > 
-> ... and why is this legacy fixed_phy even necessary when stmmac uses
-> phylink which supports fixed links, including with custom fixed status?
+>      On Wed, May 08, 2024 at 06:35:17AM -0700, Breno Leitao wrote:
+>      > Currently, the --no-desc option in perf list isn't functioning as
+>      > intended.
+>      >
+>      > This issue arises from the overwriting of struct option->desc with
+>      the
+>      > opposite value of struct option->long_desc. Consequently, whatever
+>      > parse_options() returns at struct option->desc gets overridden
+>      later,
+>      > rendering the --desc or --no-desc arguments ineffective.
+>      >
+>      > To resolve this, set ->desc as true by default and allow
+>      parse_options()
+>      > to adjust it accordingly. This adjustment will fix the --no-desc
+>      > option while preserving the functionality of the other parameters.
+> 
+>      Thanks, applied to perf-tools-next, and added this:
+> 
+>          Committer testing:
+> 
+>          Before:
+> 
+>            $ perf list --no-desc
+>            <SNIP>
+>            cache:
+>              longest_lat_cache.miss
+>                   [Counts the number of cacheable memory requests that
+>      miss in the LLC. Counts on a per core basis. Unit: cpu_atom]
+>              longest_lat_cache.reference
+>                   [Counts the number of cacheable memory requests that
+>      access the LLC. Counts on a per core basis. Unit: cpu_atom]
+>              mem_bound_stalls.ifetch
+>                   [Counts the number of cycles the core is stalled due to
+>      an instruction cache or TLB miss which hit in the L2,LLC,DRAM or
+>      MMIO (Non-DRAM). Unit: cpu_atom]
+>              mem_bound_stalls.ifetch_dram_hit
+>                   [Counts the number of cycles the core is stalled due to
+>      an instruction cache or TLB miss which hit in DRAM or MMIO
+>      (Non-DRAM). Unit: cpu_atom]
+>              mem_bound_stalls.ifetch_l2_hit
+>                   [Counts the number of cycles the core is stalled due to
+>      an instruction cache or TLB miss which hit in the L2 cache. Unit:
+>      cpu_atom]
+>              mem_bound_stalls.ifetch_llc_hit
+>                   [Counts the number of cycles the core is stalled due to
+>      an instruction cache or TLB miss which hit in the LLC or other core
+>      with HITE/F/M. Unit: cpu_atom]
+>            <SNIP>
+> 
+>          After:
+> 
+>            $ perf list --no-desc
+>            <SNIP>
+>              cache:
+>              longest_lat_cache.miss
+>              longest_lat_cache.reference
+>              mem_bound_stalls.ifetch
+>              mem_bound_stalls.ifetch_dram_hit
+>              mem_bound_stalls.ifetch_l2_hit
+>              mem_bound_stalls.ifetch_llc_hit
+>            <SNIP>
+> 
+>          Signed-off-by: Breno Leitao <[2]leitao@debian.org>
+>          Tested-by: Arnaldo Carvalho de Melo <[3]acme@redhat.com>
+> 
+>      - Arnaldo
+> 
+>      > Signed-off-by: Breno Leitao <[4]leitao@debian.org>
+>      > ---
+>      >  tools/perf/builtin-list.c | 2 +-
+>      >  1 file changed, 1 insertion(+), 1 deletion(-)
+>      >
+>      > diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+>      > index 02bf608d585e..58589f67e800 100644
+>      > --- a/tools/perf/builtin-list.c
+>      > +++ b/tools/perf/builtin-list.c
+>      > @@ -491,6 +491,7 @@ int cmd_list(int argc, const char **argv)
+>      >       int i, ret = 0;
+>      >       struct print_state default_ps = {
+>      >               .fp = stdout,
+>      > +             .desc = true,
+>      >       };
+>      >       struct print_state json_ps = {
+>      >               .fp = stdout,
+>      > @@ -563,7 +564,6 @@ int cmd_list(int argc, const char **argv)
+>      >               };
+>      >               ps = &json_ps;
+>      >       } else {
+>      > -             default_ps.desc = !default_ps.long_desc;
+> 
+>    Given this, did you test the long description behavior?
 
-It might be because it is a PCI device, and they are trying to avoid
-DT? Maybe because they have not figured out how to add DT properties
-to a PCI device. It is possible.
+So, without the patch:
 
-	Andrew
+perf list
+<SNIP>
+cache:
+  longest_lat_cache.miss
+       [Counts the number of cacheable memory requests that miss in the LLC. Counts on a per core basis. Unit: cpu_atom]
+<SNIP>
+
+perf list --long-desc
+<SNIP>
+cache:
+  longest_lat_cache.miss
+       [Counts the number of cacheable memory requests that miss in the Last Level Cache (LLC). Requests include demand loads,reads for ownership (RFO),instruction fetches and L1 HW
+        prefetches. If the platform has an L3 cache,the LLC is the L3 cache,otherwise it is the L2 cache. Counts on a per core basis]
+<SNIP>
+
+perf list --no-desc
+<SNIP>
+cache:
+  longest_lat_cache.miss
+       [Counts the number of cacheable memory requests that miss in the LLC. Counts on a per core basis. Unit: cpu_atom]
+<SNIP>
+
+With Breno's patch the default doesn't change, --no-desc gets fixed but
+--long-desc is broken:
+
+perf list --long-desc
+<SNIP>
+cache:
+  longest_lat_cache.miss
+       [Counts the number of cacheable memory requests that miss in the LLC. Counts on a per core basis. Unit: cpu_atom]
+       [Counts the number of cacheable memory requests that miss in the Last Level Cache (LLC). Requests include demand loads,reads for ownership (RFO),instruction fetches and L1 HW
+        prefetches. If the platform has an L3 cache,the LLC is the L3 cache,otherwise it is the L2 cache. Counts on a per core basis]
+<SNIP>
+
+Thanks for asking the question, I'm dropping the patch, Breno, can you
+try again?
+
+- Arnaldo
