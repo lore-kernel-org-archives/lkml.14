@@ -1,128 +1,113 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376595028D;
-	Sat, 11 May 2024 12:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FBB17C8;
+	Sat, 11 May 2024 12:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715431457; cv=none; b=u+Dh+nfsBF6kmW7QscAib/1BVWe4hHWu7xBaCy+2AFLtKVmeRRwhfFypLrp6xxFbK4VriyCcaE6CfdkOdZ8xIPL0OfGEVLP2vJ2DgUzvIGLrS8S+loED5TY/Femb/8cFa2BvPie+8w36m5RysHTphOyqYGLGX3n0Gv4LGHHEfhU=
+	t=1715431683; cv=none; b=shbPVdxMAFVv7X+vckKlczlSNegq0+k0iuixhEhJinfrzqqS+BiiYi7ihSV0fbMHhjCiavLXgHaeP+FjWtHWbjq+UK1vY/RjkSqSoLVKs9t5nWa8JhTqmXFD8l9soFxG5UjTGixtCzqbKDduoth2NoKTgJJHkXB9V4GL03cgBXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715431457; c=relaxed/simple;
-	bh=rAGSY5+dD8abp+PN4nndzwx7t6kgk2/A0M4fxN9D+cQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=J4U0OR25VcdD9KUujT8N6qlcF4DiCfZE6v45LZq2KndAAqtJ1yQswJv2hMQk92f+tD0mLUrfx7kb/W5wNEXiUGjUjqq4qRJV/i1IS+Hc+PxjKS6Ezb9bbqE/j9CvfQLUS2Magk5qKmEz4B8rNAvDIbe5AiUcgJDI5YhjHrISeCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BXYnukba; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715431683; c=relaxed/simple;
+	bh=L6GEnWbRFIUnTLp5ZBj1nZe8npzW7+LcYnKnNImrCg8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JE9ix+TcJKwqOxEjkdp7z6g+77xZiLLXCsQzOdBJUugdu91PHMCNnkayWjDY1ElZ+FggQPqEw0ASKTLUxjc3pb9svSEwBdtdXVYK8zOw3eyu3UM56QC+auAGq1Lqs2/Da50zZW1HI/gkq6Ralv96ipcWh+Aodd0IH7BivlqlyH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vzmo7KOP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXYnukba"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-34db6a299b2so2260976f8f.3;
-        Sat, 11 May 2024 05:44:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715431454; x=1716036254; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=BZ8Z0Aarz6dukVwTSg6oFxXKuRw0aMvSSKkaUBN7Jgo=;
-        b=BXYnukbavfvEKNwNX4rGv6dNqYcYz6QbxjFtxTKmXA4zjUFm5uqW/ep5c0bwwS2U9k
-         VXO0yJzURRqdb5/2fQejaB/78S1h9RQdP03G4y3ZOu6Z5x0foZBMZnOIjgVQ9NnwfL7C
-         d4XLzbv0KQoo1J+ArJaGqx12PavA8xlnqnfDbJEhwBCaVDq6j50w4PfAjzAizGkBpfkO
-         npnnoH02KoDYBHGZdJ7Je2anErY66ioMQzC3n2QjxKz6p+qHupo5qBVdlaHKd0/066sz
-         SYvRwqbZIRZsZf5iBcKNRV56j8EOotoNBlF/Egwb8NCKTeJ9nFX5HVkPmjfZjA6VEFWI
-         yzBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715431454; x=1716036254;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BZ8Z0Aarz6dukVwTSg6oFxXKuRw0aMvSSKkaUBN7Jgo=;
-        b=W9owI03d388hIL+8l9NjVaR+1kK8NezATLHYprMF4p0qDDXIj5ahjLlvXOx5yxmcqH
-         8RXmqvf9DgydAw9JGS0KmiLb5+r5Of9XulUIc+h+l+0sesR1TJi6OOeYRNMSQJkIA09m
-         x0vmL/OBC5XTYkl/CyG/SY7CekHxElNLelO+LC/ihMfwPVrTpl0YSmf+oxaQAq9ETpIs
-         kL15onaPs0pY6OeY2nQ8ZazXnK3kGJIqckrB2rTW14RU2b6NEBUPWwp1xbOZaXLYXAQV
-         Bl96bDw7JdMFTUijSNRb+PFk9miyb2HzpDg9wIiC5/98NZ+6geTmpfYnhXEYFVwYvxuh
-         SCmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUT0oiGos332+IzZMEfe1ctekbCJfogBlD5WWVyTI8cRuA0xrnW/dVDjCDsq8QA836pZhGqtvUs5Pgw9LyAqq/BinrQlB9DJR56CnOgPRkj0uxqAzOGvfamiF6JlhHZy23oNCNa
-X-Gm-Message-State: AOJu0Yy/JbAiCy2QiSPINEpD3htMxsbZu+UIJkTRWzaTGzq1U6WI/VoM
-	aIHP3vhtllw+dmtXQDAFH2dZzagEmOcjabqBLK28U20VQ7Zn74QD
-X-Google-Smtp-Source: AGHT+IHkUpBwdP2Rs+StkRWiK5hqO0KXE+W4zhMPOSox52JFXK9GDaBhCcgl7UPv1pYmQBpqXPckvQ==
-X-Received: by 2002:a05:600c:4f4e:b0:41b:a271:60a9 with SMTP id 5b1f17b1804b1-41feaa2f38bmr41453825e9.6.1715431454258;
-        Sat, 11 May 2024 05:44:14 -0700 (PDT)
-Received: from localhost.localdomain (IGLD-84-229-253-184.inter.net.il. [84.229.253.184])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fd10cf8besm49870535e9.1.2024.05.11.05.44.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 May 2024 05:44:14 -0700 (PDT)
-From: Elad Yifee <eladwf@gmail.com>
-To: 
-Cc: eladwf@gmail.com,
-	Sam.Shih@mediatek.com,
-	steven.liu@mediatek.com,
-	bc-bocun.chen@mediatek.com,
-	SkyLake.Huang@mediatek.com,
-	Henry.Yen@mediatek.com,
-	john@phrozen.org,
-	Felix Fietkau <nbd@nbd.name>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Mark Lee <Mark-MC.Lee@mediatek.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH net RFC] net: ethernet: mtk_eth_soc: ppe: add source port comparison
-Date: Sat, 11 May 2024 15:42:26 +0300
-Message-ID: <20240511124230.13991-1-eladwf@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vzmo7KOP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9F7CC2BBFC;
+	Sat, 11 May 2024 12:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715431682;
+	bh=L6GEnWbRFIUnTLp5ZBj1nZe8npzW7+LcYnKnNImrCg8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vzmo7KOP8imYYP9EUREB9SqsQ0mVwP4UlBMEmp4UUI9JrhCFszuETUr+sobW5mIqI
+	 cNOFhl6Jr0CCjYfCZ36yW53o4k7WeW3ndW5DxN0JJe+cuW+MKWrBEZu4iVj2wec7Eb
+	 Vd3ENik62UjGkZ7q1vX4C/iwqHwMdyW3QeV3PtKHHBtAddUzcU3BBTcO82g6H5GP1O
+	 2yjAkBV8ME6uOst13YEmtCMTSrwvl2RCLxCyYq4SYjp02uqr6cFGhpsCzCp1lOvHhx
+	 sFTXvHK90OM0SsClnWIOnKbefDJC2G1pIVeNCrriMYfitCiDZX/Iqe0yJUg7JJe601
+	 sTr+bFiqVJKMw==
+Date: Sat, 11 May 2024 13:47:57 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Shengjiu Wang <shengjiu.wang@gmail.com>
+Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, lgirdwood@gmail.com,
+	broonie@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Xiubo.Lee@gmail.com,
+	festevam@gmail.com, nicoleotsuka@gmail.com, perex@perex.cz,
+	tiwai@suse.com, alsa-devel@alsa-project.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH 2/4] ASoC: dt-bindings: fsl,xcvr: Add two PLL clock
+ sources
+Message-ID: <20240511-catwalk-ipod-98f3e636360e@spud>
+References: <1715223460-32662-1-git-send-email-shengjiu.wang@nxp.com>
+ <1715223460-32662-3-git-send-email-shengjiu.wang@nxp.com>
+ <20240509-repurpose-dumping-156b57c25960@spud>
+ <CAA+D8AOkDbj_QsF9VescuAfFjKcB8FnOXqwjXVrrBM1Ck4ut4Q@mail.gmail.com>
+ <CAA+D8AOQtwHTLsQcqh_LCvVP5CWXqiHc3-at8jv3B-kA8ORR_w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="BhobfpOXM1U4v7Qe"
+Content-Disposition: inline
+In-Reply-To: <CAA+D8AOQtwHTLsQcqh_LCvVP5CWXqiHc3-at8jv3B-kA8ORR_w@mail.gmail.com>
 
-Resolve packet loss issue on the following conditions:
-	- utilizing multiple GMACs
-	- device has more than 4GB DRAM
-	- using PPE
 
-Signed-off-by: Elad Yifee <eladwf@gmail.com>
----
- drivers/net/ethernet/mediatek/mtk_ppe.c      | 4 ++++
- drivers/net/ethernet/mediatek/mtk_ppe_regs.h | 1 +
- 2 files changed, 5 insertions(+)
+--BhobfpOXM1U4v7Qe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_ppe.c b/drivers/net/ethernet/mediatek/mtk_ppe.c
-index 6ce0db3a1a92..6415ba618ebf 100644
---- a/drivers/net/ethernet/mediatek/mtk_ppe.c
-+++ b/drivers/net/ethernet/mediatek/mtk_ppe.c
-@@ -1053,6 +1053,10 @@ void mtk_ppe_start(struct mtk_ppe *ppe)
- 	      MTK_PPE_GLO_CFG_IP4_L4_CS_DROP |
- 	      MTK_PPE_GLO_CFG_IP4_CS_DROP |
- 	      MTK_PPE_GLO_CFG_FLOW_DROP_UPDATE;
-+
-+	if (mtk_is_netsys_v2_or_greater(ppe->eth))
-+		val |= MTK_PPE_GLO_CFG_SP_CMP_EN;
-+
- 	ppe_w32(ppe, MTK_PPE_GLO_CFG, val);
- 
- 	ppe_w32(ppe, MTK_PPE_DEFAULT_CPU_PORT, 0);
-diff --git a/drivers/net/ethernet/mediatek/mtk_ppe_regs.h b/drivers/net/ethernet/mediatek/mtk_ppe_regs.h
-index 3ce088eef0ef..61fea4b4b65b 100644
---- a/drivers/net/ethernet/mediatek/mtk_ppe_regs.h
-+++ b/drivers/net/ethernet/mediatek/mtk_ppe_regs.h
-@@ -18,6 +18,7 @@
- #define MTK_PPE_GLO_CFG_UDP_LITE_EN		BIT(10)
- #define MTK_PPE_GLO_CFG_UDP_LEN_DROP		BIT(11)
- #define MTK_PPE_GLO_CFG_MCAST_ENTRIES		GNEMASK(13, 12)
-+#define MTK_PPE_GLO_CFG_SP_CMP_EN		BIT(25)
- #define MTK_PPE_GLO_CFG_BUSY			BIT(31)
- 
- #define MTK_PPE_FLOW_CFG			0x204
--- 
-2.44.0
+On Fri, May 10, 2024 at 10:38:30AM +0800, Shengjiu Wang wrote:
+> On Fri, May 10, 2024 at 10:27=E2=80=AFAM Shengjiu Wang <shengjiu.wang@gma=
+il.com> wrote:
+> >
+> > On Fri, May 10, 2024 at 1:14=E2=80=AFAM Conor Dooley <conor@kernel.org>=
+ wrote:
+> > >
+> > > On Thu, May 09, 2024 at 10:57:38AM +0800, Shengjiu Wang wrote:
+> > > > Add two PLL clock sources, they are the parent clocks of the root c=
+lock
+> > > > one is for 8kHz series rates, named as 'pll8k', another one is for
+> > > > 11kHz series rates, named as 'pll11k'. They are optional clocks,
+> > > > if there are such clocks, then the driver can switch between them to
+> > > > support more accurate sample rates.
+> > > >
+> > > > As 'pll8k' and 'pll11k' are optional, then add 'minItems: 4' for
+> > > > clocks and clock-names properties.
+> > >
+> > > Despite the detail given here in the commit message, the series this =
+is
+> > > appearing in and one of the driver patches makes me a bit "suspicious"
+> > > of this patch. Are these newly added clocks available on all devices,=
+ or
+> > > just on the imx95, or?
+> >
+> > These newly added clocks are only available for the imx95 XCVR.
+> >
+>=20
+> Looks like I should merge patch1 & 2 together, patch 3 & 3 together. righ=
+t?
 
+Please, and also add constraints so that the newly added clocks are only
+allowed on the imx95.
+
+Thanks,
+Conor.
+
+--BhobfpOXM1U4v7Qe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZj9o/QAKCRB4tDGHoIJi
+0hihAQCXLcY+nll7YEK6/Ko2DGZ15ldjwMy8rI2F7y5rjxW/cwD9G3UV60KNhoRE
+ivzxxabhzsz8cc1NzjnzrR0RpqNhCgw=
+=I79W
+-----END PGP SIGNATURE-----
+
+--BhobfpOXM1U4v7Qe--
