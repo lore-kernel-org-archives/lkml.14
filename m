@@ -1,134 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from wfhigh4-smtp.messagingengine.com (wfhigh4-smtp.messagingengine.com [64.147.123.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27C859168;
-	Sat, 11 May 2024 16:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715443222; cv=none; b=hCxZtEH1IelOSMPWK3zCGT8sckaCGeZm4ELkRXFC51zryFL5wxVMuJnKMVMtspmv6LQs5PAMiHQf72qxX0mPbdSVi495gZ609GEAAiowzpCe/qOEvouvrkkuKLCdE/ZnYElijYZo+7HRmo6oofh0zl3v41JJAXltCab8LG9l61M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715443222; c=relaxed/simple;
-	bh=4RU5pmRcasLa6t1vQtWaBBhz5hmNj4hjlUm6xeEFBYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Abr68oAOYLO/HFJVxIjBe+RqascvqofELwJGYbXo2z/kM+kDp6VJiiutZuVARN0dBpaBoRyhAq6qtLSrEiVawakUOl1a+Qe/bwcODo914BWY5C4Vua0hjSY9pjhYfmDRKx7mdLlwdzXOJw52TSkY49jeFV+TeXX1z2EV/P4J9xY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZbKFK7Nk; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZbKFK7Nk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2747C2BD11;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEFD58229;
 	Sat, 11 May 2024 16:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715443222;
-	bh=4RU5pmRcasLa6t1vQtWaBBhz5hmNj4hjlUm6xeEFBYA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZbKFK7NkcUtfy8eyfMICBL7Y5FjoJ4D+wkK79WT0kd4QDXPyrKvv3EeWCCXIcCTj9
-	 cMoBUHh8IAfajolbibai/xk+c7rViLljrhZvRuO11fjLaBUcoIH9RdTK8TwgILQ9Co
-	 xfNs1Y2eXkeLNCU31UKOMP9gIPN7CWFUcd+Hd/MjCY5ccuAObxL/1wLHscOZSeBGGF
-	 CJ3h2jia4LiXhGG1QBIkQKJux44DjNnpVL5GELkRiqUTI0BOr5DM6ax73GzlzLSJDI
-	 Bec73GXmWEXEzEJyjSCUy7pWMK3nMehh4xK/wR75YU98EAw++9pSOqrYSp9dsR5K1k
-	 DQV+ntdJrAVCA==
-Date: Sat, 11 May 2024 13:00:19 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>, leit@meta.com,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf list: Fix the --no-desc option
-Message-ID: <Zj-WE1aG7ihtevG3@x1>
-References: <20240508133518.3204221-1-leitao@debian.org>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.155
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715443223; cv=none; b=T2Fwqhl63tPNk1c6Xffe2Jox+myD9I4wCkbbEqqiCVgpJjb8yw1IMiUed7zcAhaEQI8PO73eYQ1Q6Ru2pmb4M8YMh/psMp5XkGss8/5xKBm8i5BJxdV0dE6F6+uhU1/u7QX3ZS6pg4qM6CuUpnvXOgtzAY2rBZSJGY2LH1s+BoQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715443223; c=relaxed/simple;
+	bh=U+UVB4xsBeR9swGFKSPQmDKTBSfdxpeJjE23y7dy0tM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QFXGJHSk0YvwtF4SrhoCFHRjieB9SMyOfALR5xRUtzAjbWDdUoA8JupjfRj5JppLCBAfVSBY3HSPPZBldvc8cOn1RnZiQsdLpPXoiNH65gLmDbH1INtbMYSnxnjzEKX3xphR4UxVcThTd62qqrGVmC8wFz+8GkB2AcIby40uBUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=fsjFzELc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ESe+v6Hr; arc=none smtp.client-ip=64.147.123.155
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="fsjFzELc";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ESe+v6Hr"
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailfhigh.west.internal (Postfix) with ESMTP id 8DBF418000A6;
+	Sat, 11 May 2024 12:00:20 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Sat, 11 May 2024 12:00:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
+	cc:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1715443220;
+	 x=1715529620; bh=taaP0de1JMrUsTaQ5p3XewSALo/OUNM7p36PinVNGQI=; b=
+	fsjFzELc3eyNlFo4JGEEnuUPt6BiMox1ALJstmWL1fB2+D82TdyRJpRoY2uMg/gu
+	uh8TlQZ3kEmMKI4Kl6YkVJvt19+a4eJZotW/vwj6dqLp3dLoUKsZJN19T9qvMudz
+	S8srSjrmryTfApxr+fDD1UWwlvJ760d2b+1QErxBZ7Ggz8QRRaIW2r5E6hHZol9w
+	/qWd0jLWLVD2k/lrepaK6JtqgRMztRkZmlz/Z8EbAhDQ7ALylbnfmm7DblfbNFG0
+	1WYtkj/icJ9/uBBTj8npAaeih9pQI1ryZIgWJBk7nKC/oBc8b7sxRWe404P/pMrT
+	hGHSdPfEAx9GLdUBGhv3Tg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1715443220; x=
+	1715529620; bh=taaP0de1JMrUsTaQ5p3XewSALo/OUNM7p36PinVNGQI=; b=E
+	Se+v6Hrt+xzY4N5CHGJ+KVececDLv2CoixJ8ki1q+Hzr/He7SKDEYjSQP6kO0p/D
+	XHN4v9Hx4N+kmy6LyU+TudwjO/3rXvgBmSuroq5pDanAGl2ChMhDHQ2SrSkqoUyZ
+	WvWoKBv/b2NW+GzckA2VwUJZD6QsS76KvEvJdmiH72agr8F4I8kz59UoORJ08eMa
+	gt6PNX9tUYh2rBKs8cleic6VfvGiuKIX4OtVtbSTv0IqcBECbMxpr55PXW2q5Cdl
+	UomDfSf1hRhrW10jScg1s0ceOa321906ORoP0dTB8rqdd6v63SBjQkupQEr3rbyK
+	xNTAVRcNo0RNVY6w/6VNQ==
+X-ME-Sender: <xms:FJY_ZoxJ7FdjdOrKyGZmSj3LjDP9T24TeouCOADRkxPQft5k2bBVoQ>
+    <xme:FJY_ZsQ0tTbXGKvTFzeo74gpRJ8Q9WLjvm5IXtZsSKqzDyr2DjZP6AIuRHL_cuJGQ
+    kYBuqXNHAlETRGFPdg>
+X-ME-Received: <xmr:FJY_ZqXnn6wlfE8REz7vEzB6fevpR0XtsTbT0mpVXWtu_liu6xWU9yI>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdegtddgleehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeflihgr
+    gihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
+    cuggftrfgrthhtvghrnhepvdekiefhfeevkeeuveetfeelffekgedugefhtdduudeghfeu
+    veegffegudekjeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
+X-ME-Proxy: <xmx:FJY_ZmhLMxGtaNe2fAG_NpzRYFQYCIrMYlSM5s09of_iQaO09S-67Q>
+    <xmx:FJY_ZqBPuljQTOxH2DWB-7jjArWXPnbC2vV1tG_AZV9qpzptl6G6Dw>
+    <xmx:FJY_ZnJDRNO6ejWTmblVX-qToagvP2b_FSGSJgx28c_xLMZ9_i-ZQw>
+    <xmx:FJY_ZhC1XsQsPPWQNJbjDAxNC6jBJUu3msRoAPtmJXxmRGmXNdluZw>
+    <xmx:FJY_ZgB4palDoK6HOCG1Ukgzf1RknW7Aiz_Jh0vHmFEYmgGCq90A-CUt>
+Feedback-ID: ifd894703:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 11 May 2024 12:00:18 -0400 (EDT)
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Date: Sat, 11 May 2024 17:00:11 +0100
+Subject: [PATCH 4/7] MIPS: csrc-r4k: Don't register as sched_clock if unfit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240508133518.3204221-1-leitao@debian.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240511-mips-clks-v1-4-ddb4a10ee9f9@flygoat.com>
+References: <20240511-mips-clks-v1-0-ddb4a10ee9f9@flygoat.com>
+In-Reply-To: <20240511-mips-clks-v1-0-ddb4a10ee9f9@flygoat.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Serge Semin <fancer.lancer@gmail.com>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Jiaxun Yang <jiaxun.yang@flygoat.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1593;
+ i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
+ bh=U+UVB4xsBeR9swGFKSPQmDKTBSfdxpeJjE23y7dy0tM=;
+ b=owGbwMvMwCHmXMhTe71c8zDjabUkhjT7aZxhCwuns22+arsnRadMyG7Ki6lhPkvj2ULbZiz+y
+ jVjg4ReRykLgxgHg6yYIkuIgFLfhsaLC64/yPoDM4eVCWQIAxenAEzET5Xhv99VXtd33x5sEn51
+ 7texgJoSg8mbS3JCuiM/lp5QM0nn9GBk6NhuLqtcGCBW3Mn5vYnN0/z9gS+Zp4JSurPDFLt3uZx
+ mAAA=
+X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
+ fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-On Wed, May 08, 2024 at 06:35:17AM -0700, Breno Leitao wrote:
-> Currently, the --no-desc option in perf list isn't functioning as
-> intended.
-> 
-> This issue arises from the overwriting of struct option->desc with the
-> opposite value of struct option->long_desc. Consequently, whatever
-> parse_options() returns at struct option->desc gets overridden later,
-> rendering the --desc or --no-desc arguments ineffective.
-> 
-> To resolve this, set ->desc as true by default and allow parse_options()
-> to adjust it accordingly. This adjustment will fix the --no-desc
-> option while preserving the functionality of the other parameters.
+When we have more than one CPU in system, counter synchronisation
+overhead can lead to a scenario that sched_clock goes backward when
+being read from different CPUs.
 
+This is accommodated by CONFIG_HAVE_UNSTABLE_SCHED_CLOCK, but it's
+unavailable on 32bit kernel.
 
-Thanks, applied to perf-tools-next, and added this:
+We don't want to risk sched_clock correctness, so if we have multiple
+CPU in system and CONFIG_HAVE_UNSTABLE_SCHED_CLOCK is not set, we just
+don't use counter as sched_clock source.
 
-    Committer testing:
-    
-    Before:
-    
-      $ perf list --no-desc
-      <SNIP>
-      cache:
-        longest_lat_cache.miss
-             [Counts the number of cacheable memory requests that miss in the LLC. Counts on a per core basis. Unit: cpu_atom]
-        longest_lat_cache.reference
-             [Counts the number of cacheable memory requests that access the LLC. Counts on a per core basis. Unit: cpu_atom]
-        mem_bound_stalls.ifetch
-             [Counts the number of cycles the core is stalled due to an instruction cache or TLB miss which hit in the L2,LLC,DRAM or MMIO (Non-DRAM). Unit: cpu_atom]
-        mem_bound_stalls.ifetch_dram_hit
-             [Counts the number of cycles the core is stalled due to an instruction cache or TLB miss which hit in DRAM or MMIO (Non-DRAM). Unit: cpu_atom]
-        mem_bound_stalls.ifetch_l2_hit
-             [Counts the number of cycles the core is stalled due to an instruction cache or TLB miss which hit in the L2 cache. Unit: cpu_atom]
-        mem_bound_stalls.ifetch_llc_hit
-             [Counts the number of cycles the core is stalled due to an instruction cache or TLB miss which hit in the LLC or other core with HITE/F/M. Unit: cpu_atom]
-      <SNIP>
-    
-    After:
-    
-      $ perf list --no-desc
-      <SNIP>
-        cache:
-        longest_lat_cache.miss
-        longest_lat_cache.reference
-        mem_bound_stalls.ifetch
-        mem_bound_stalls.ifetch_dram_hit
-        mem_bound_stalls.ifetch_l2_hit
-        mem_bound_stalls.ifetch_llc_hit
-      <SNIP>
-    
-    Signed-off-by: Breno Leitao <leitao@debian.org>
-    Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+---
+ arch/mips/kernel/csrc-r4k.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-- Arnaldo
+diff --git a/arch/mips/kernel/csrc-r4k.c b/arch/mips/kernel/csrc-r4k.c
+index 5c37e41e8970..18733a2ec594 100644
+--- a/arch/mips/kernel/csrc-r4k.c
++++ b/arch/mips/kernel/csrc-r4k.c
+@@ -68,6 +68,18 @@ static bool rdhwr_count_usable(void)
+ 	return false;
+ }
  
-> Signed-off-by: Breno Leitao <leitao@debian.org>
-> ---
->  tools/perf/builtin-list.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
-> index 02bf608d585e..58589f67e800 100644
-> --- a/tools/perf/builtin-list.c
-> +++ b/tools/perf/builtin-list.c
-> @@ -491,6 +491,7 @@ int cmd_list(int argc, const char **argv)
->  	int i, ret = 0;
->  	struct print_state default_ps = {
->  		.fp = stdout,
-> +		.desc = true,
->  	};
->  	struct print_state json_ps = {
->  		.fp = stdout,
-> @@ -563,7 +564,6 @@ int cmd_list(int argc, const char **argv)
->  		};
->  		ps = &json_ps;
->  	} else {
-> -		default_ps.desc = !default_ps.long_desc;
->  		default_ps.last_topic = strdup("");
->  		assert(default_ps.last_topic);
->  		default_ps.visited_metrics = strlist__new(NULL, NULL);
-> -- 
-> 2.43.0
++static inline __init bool count_can_be_sched_clock(void)
++{
++	if (IS_ENABLED(CONFIG_CPU_FREQ))
++		return false;
++
++	if (num_possible_cpus() > 1 &&
++			!IS_ENABLED(CONFIG_HAVE_UNSTABLE_SCHED_CLOCK))
++		return false;
++
++	return true;
++}
++
+ #ifdef CONFIG_CPU_FREQ
+ 
+ static bool __read_mostly r4k_clock_unstable;
+@@ -125,9 +137,8 @@ int __init init_r4k_clocksource(void)
+ 
+ 	clocksource_register_hz(&clocksource_mips, mips_hpt_frequency);
+ 
+-#ifndef CONFIG_CPU_FREQ
+-	sched_clock_register(r4k_read_sched_clock, 32, mips_hpt_frequency);
+-#endif
++	if (count_can_be_sched_clock())
++		sched_clock_register(r4k_read_sched_clock, 32, mips_hpt_frequency);
+ 
+ 	return 0;
+ }
+
+-- 
+2.34.1
+
