@@ -1,60 +1,62 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA1145BE6
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 21:56:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BB92A1D4
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 21:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715464574; cv=none; b=XWih/5WXzsPnl/0VehUZRkaC1/GjSGSeCD8LxBuo3yttKIgFjC02CinjkMg4thkBILNocVgS50+Dh/7Ct6bOs1py0Stji7m2J76rrcpzpsH30DYhR1saxQZq4ih2yukj4DdurdozozAIWV/XPBMPt5wWSuMNmGRqEZ0xNesHA9M=
+	t=1715464572; cv=none; b=Em03x56HWIKTP8XooPPq5Cb2SkJvOkRQuqH+jsxAYlHKa03lea9HaeV98VmLWbt7eTqKdpMZyjmi8inYZN4unDCbW7d68xlM5aWwvnGUwN7hNChHzOW68Mfy5gajuhUj2rgag/VK61RzOnW8Z+4AZ9Hlj/sFRJ9waU9Aw0Hm66E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715464574; c=relaxed/simple;
-	bh=kSBL6HpSlhkhecDmVbVirL4cyYLi0VVC3JIAe5JCCis=;
+	s=arc-20240116; t=1715464572; c=relaxed/simple;
+	bh=yQDs+0Fh1pwN3+9Sn6IIpcqD4wSdcFS6BiLOBdrJtGA=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=F26p4m9rLibnetBVAxMN80/lW3aCrw+xk/wMzyEd00h6K+V9wReuyWQsk6FxMFJBdmWGfvDCK2OMd5DI+XtxkxnlPNrVAsRVpDYs0anSBf1I/TncNDaungMa6o7iN8ZF73oBf/lanURB5a8aJ3Bd1HrUXMpSkVFHXN7JEsYO0d8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=u3iOwn8r; arc=none smtp.client-ip=209.85.208.175
+	 In-Reply-To:To:Cc; b=gYNgcRDkiFPPWCzM43lhf3YPUozWtQd6HUa/mjBPo5p27Us4fE6XnK+olAEzyE9vwmhXI5Ey4u0aKINwM6Ng34/QxaK62yBKhiohy5R06QxG+rhIdTrhwpYQkFu1vfSZ27zXEkL99tglhiummUbuTyzKpO4rwqAXo/nai04NVgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DAcaYS67; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u3iOwn8r"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2e538a264f7so26454681fa.0
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 14:56:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DAcaYS67"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2e564cad1f6so12937701fa.1
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 14:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715464569; x=1716069369; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1715464568; x=1716069368; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FfgHOEk7b6c+S7H1X1EKSLsqVYxACpR76/AhrJnSZyk=;
-        b=u3iOwn8rztWg6mziJPYuaryrun6kZIHwroibxxWIr15Ibk3wdAWlTieioy3qG5hedW
-         zJW6KkLh/3mN8BSzV0D/OBZYELhPo6RXXPDstxQvz3wGfiJCkcXtLfbFrfy2VJbWidr8
-         5c1eSwVLzTuVoZ1zynZczU/BaN/Stg6Gm0GCZ4AWZzkIljH5WbhjIGxy6j19PG2edZnn
-         pAfsp2n/Vs71JYj/oRi5u4e8DjEVTi5HsUnEuRnTCxgjbf2xKLpHnp6dmMBAvpBMuMqG
-         J7DTv07BKIURZ89H3TxAFQS1nbNz2faaOzeqPVaA/HcTpdKZuW/hIomZcMzjlyRMBXYe
-         d+OQ==
+        bh=pcqYAPPbozgrojXydFWnsOuCPYDao3lghxJWHLuDCDY=;
+        b=DAcaYS67HoGMXFczs09ny7pO4K15MztKh7appqxVNlVGL6n4DOsTJU/Adjyt8jfjHy
+         +zmH/WkdJQYFy9vbk9joEhRfN/9OKd0A/VXaVCE+qAtLhO1G0MApQ7vvtJA7SkfLPak+
+         pXdfh9qRNdtaZTArKW5sF/gYfu3lhUO7pFxL+j4Ihn5JiA/8PoaB3ngkBHKJeicaSpYD
+         SLMEcxk35L5JgqtKUq/8uAiiD32OH/l5PiBbYMfceMVoPQbkNk+DZrEe2fmT2zI3qlt7
+         1eo+Zf+kH8H85iNKrZInn8H6Kxk3OeReyXxRF/eh8EGzhCnim4YNxiCMqCI5fIgTdjYT
+         OiYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715464570; x=1716069370;
+        d=1e100.net; s=20230601; t=1715464568; x=1716069368;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FfgHOEk7b6c+S7H1X1EKSLsqVYxACpR76/AhrJnSZyk=;
-        b=I1+nPkNE0Oumr3fPu9w/saWuj7u+kN5rQuvAC8jOGfdeZub6symy0E7gQ4hrPbcc8J
-         tagYzVX1s/pYscT8DnOBSyP8E09fVafPynnhDDcbIeBv3yCUd69g40OKchXgzoU6NyKC
-         +/yJ4MJoO7Qo4nCw15VRJZUkZkYX6jr0kiz/B6+fd1TgOx3efJAtzOZGvcoBlB0Fnj0B
-         WnKHnVXQtjsbZjm4e1H5qwZMKHxMMUKXU0tbdabIdjMKDaM66/bfP1MCP7WhzMJINBE+
-         XRMWHk/PG55RaoscIIhuEQA4y1RliqyA+0gq5jiC9STA2NFIP2XVtZCUj6aHRQ3oe6iq
-         i+mg==
-X-Forwarded-Encrypted: i=1; AJvYcCUFzBX1sBhKzXdIYCjl0JGlvXTwZfeiLNKyNKsEvxdT4ACddLhha/yI/e2HVAVZCNWsKUf/c6J+aFaTFKftmPxdgSbo/cd2LQOYk4Vv
-X-Gm-Message-State: AOJu0YwoUbDz4aOKnLvp7dcSVZj3HJbDV1glo7vkPPrAG1BYqh975Yti
-	TW035I+Ic8Om8evtAaCeIBKcAzzbnp7Npx/xWiRGNAi1ovIJEpnLTdM3gDc3rqs=
-X-Google-Smtp-Source: AGHT+IFvPcj4V5GoSrF28GDRVh8LmagSae1ENSUHLkUZ2wMCtsjK/hDZ+GayeUMlU77qapc13uZoWA==
-X-Received: by 2002:ac2:4c08:0:b0:51f:33b2:c3f7 with SMTP id 2adb3069b0e04-5220fc7acf6mr3337959e87.28.1715464569694;
-        Sat, 11 May 2024 14:56:09 -0700 (PDT)
+        bh=pcqYAPPbozgrojXydFWnsOuCPYDao3lghxJWHLuDCDY=;
+        b=DKBnTQUea3WN/Vj3PSG8RNNKOx3c5SFkOccfgKFEOrerAW1rvjKOyKwUuetAJ9Bi0b
+         9ZszsOEpyQ/PR7ttmfOf603+ycrlaIBLptCsm+FgJdvPjpygCV+P1fAyGAxTtWqoC3+o
+         uQ7xmbdUqlULjSwDYYhlz/cmBYMtefztwY/wjwELhU5I7kO1dxmTcv8krGRFAno79vnt
+         K52ZWQgX6eGin9/heQXhdrl6lgl+RisMIp+hbZ+90qUe71kJpDYpxTR3Nzkv3pF5Pun8
+         zSeaTkfBMuDb1Tdn7HsvHhAJKDTssGcY4aUcuLeLB5UNjBxd7pQZM4Nq2lMkyqMjKg4A
+         RXAg==
+X-Forwarded-Encrypted: i=1; AJvYcCVuAnm8C+hcwYeByCLGJDCMcVzPnITAbEigf1ukJw2/XoNZNxi8sJtGd3uIF5YTjsYV9yvTNXLQnjZ0fxrIp6bMyMR5OJ7ZJ4wzTzBI
+X-Gm-Message-State: AOJu0YyALMd800bu6E41KNpgNRebvVAh5skMs+fUtfp2bxwHK5KF+74i
+	ErF7GD33Tomqm+1A+i0Mwej3rBUyt9eOB0zG4nuabyLkHmoQgStOAPOBlRYysnGEPx6ZfS7dyZX
+	u
+X-Google-Smtp-Source: AGHT+IHXNbAZeFQp7yXipE3qIsRY873plvAZgirFF0oLvKlajzcszqKU8R842fkFdOfaKmzo/CA3ug==
+X-Received: by 2002:a05:6512:e97:b0:522:3551:35f5 with SMTP id 2adb3069b0e04-5223551366emr2660902e87.14.1715464568076;
+        Sat, 11 May 2024 14:56:08 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f39d31d1sm1127576e87.286.2024.05.11.14.56.09
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f39d31d1sm1127576e87.286.2024.05.11.14.56.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 May 2024 14:56:09 -0700 (PDT)
+        Sat, 11 May 2024 14:56:07 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sun, 12 May 2024 00:56:07 +0300
-Subject: [PATCH v8 5/5] remoteproc: qcom: enable in-kernel PD mapper
+Date: Sun, 12 May 2024 00:56:05 +0300
+Subject: [PATCH v8 3/5] soc: qcom: pdr: extract PDR message marshalling
+ data
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +65,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240512-qcom-pd-mapper-v8-5-5ecbb276fcc0@linaro.org>
+Message-Id: <20240512-qcom-pd-mapper-v8-3-5ecbb276fcc0@linaro.org>
 References: <20240512-qcom-pd-mapper-v8-0-5ecbb276fcc0@linaro.org>
 In-Reply-To: <20240512-qcom-pd-mapper-v8-0-5ecbb276fcc0@linaro.org>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -77,284 +79,751 @@ Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
  Steev Klimaszewski <steev@kali.org>, 
  Alexey Minnekhanov <alexeymin@postmarketos.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9472;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=21949;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=kSBL6HpSlhkhecDmVbVirL4cyYLi0VVC3JIAe5JCCis=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmP+l0xbKuoTRTC+Br1zNjxLbzbypZKrdjv0lGw
- Gr0NJWqIcaJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZj/pdAAKCRCLPIo+Aiko
- 1dcxB/42hnyg6hDXhPKLzE03vxtEACuTDaovzQcaYbXceX50imDaDMk3LnFf/JJKoRbNAVe3aKP
- VnmysQ5Jjodj+NSE4Hki+QHCjR6jW5Vcbxf0nZqqz7DdF9B1J7wmJGMa2tCR05zNJ8cfGB+q2gf
- HW2AHINAQ/kIi+JbUQfcgCLBzRWYTrjcwooOu2rPSwQ22CxmXAZV5D6SeAT4ZFIwfAGMimleVoc
- VcHNzI3Mm93ofSizxReX74JEygtkwaKLiF26FSY66p4ib3aNFvjtuUbbu7IhnePJi+iQWppxmu3
- k+CGoIn4Ti3dJangc/Z93RjKOfQrpT0DUFMfwxArsPmGl6uh
+ bh=yQDs+0Fh1pwN3+9Sn6IIpcqD4wSdcFS6BiLOBdrJtGA=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmP+l0AnGTyUB3hBUh4NPyWIsOXyYdZfTdf+qM4
+ RmQjN0a9USJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZj/pdAAKCRCLPIo+Aiko
+ 1Yh0B/49WONU1NMzmfoex3mnCwWhLgPUF1YmtWZU7KcT0Woz+bF5bLl5XlIaUdmFkSDubv57j5p
+ g4WC+tozTITI3jbdvlhZHrILRLm1vP9WvJuisytpkzip2eKtDXF4WIBqVYe0saWqYxa1Uf8yVXe
+ Q+Mf/YTBF0prn1eFsf33jiXrYtaYnjW+bRnufIXlqSIaYXDe06rs+joiB1g7loyVmBOTG9ocQZO
+ huM6/wjiJLZMcQV4es/iCvQf5UM3DSggvgPnMtGxbWKF752IgGoynJmqSAJvNqoRTxu51icMiao
+ ml95CfaPNayu2tlfoc00KykL1qlKrS3GOpvaeU7FRNYi3Ov+
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Request in-kernel protection domain mapper to be started before starting
-Qualcomm DSP and release it once DSP is stopped. Once all DSPs are
-stopped, the PD mapper will be stopped too.
+The in-kernel PD mapper is going to use same message structures as the
+QCOM_PDR_HELPERS module. Extract message marshalling data to separate
+module that can be used by both PDR helpers and by PD mapper.
 
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Tested-by: Steev Klimaszewski <steev@kali.org>
+Tested-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/remoteproc/qcom_common.c    | 87 +++++++++++++++++++++++++++++++++++++
- drivers/remoteproc/qcom_common.h    | 10 +++++
- drivers/remoteproc/qcom_q6v5_adsp.c |  3 ++
- drivers/remoteproc/qcom_q6v5_mss.c  |  3 ++
- drivers/remoteproc/qcom_q6v5_pas.c  |  3 ++
- drivers/remoteproc/qcom_q6v5_wcss.c |  3 ++
- 6 files changed, 109 insertions(+)
+ drivers/soc/qcom/Kconfig        |   4 +
+ drivers/soc/qcom/Makefile       |   1 +
+ drivers/soc/qcom/pdr_internal.h | 306 ++------------------------------------
+ drivers/soc/qcom/qcom_pdr_msg.c | 319 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 334 insertions(+), 296 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-index 03e5f5d533eb..8c8688f99f0a 100644
---- a/drivers/remoteproc/qcom_common.c
-+++ b/drivers/remoteproc/qcom_common.c
-@@ -13,6 +13,7 @@
- #include <linux/notifier.h>
- #include <linux/remoteproc.h>
- #include <linux/remoteproc/qcom_rproc.h>
-+#include <linux/auxiliary_bus.h>
- #include <linux/rpmsg/qcom_glink.h>
- #include <linux/rpmsg/qcom_smd.h>
- #include <linux/slab.h>
-@@ -25,6 +26,7 @@
- #define to_glink_subdev(d) container_of(d, struct qcom_rproc_glink, subdev)
- #define to_smd_subdev(d) container_of(d, struct qcom_rproc_subdev, subdev)
- #define to_ssr_subdev(d) container_of(d, struct qcom_rproc_ssr, subdev)
-+#define to_pdm_subdev(d) container_of(d, struct qcom_rproc_pdm, subdev)
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index 5af33b0e3470..95973c6b828f 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -75,8 +75,12 @@ config QCOM_OCMEM
+ config QCOM_PDR_HELPERS
+ 	tristate
+ 	select QCOM_QMI_HELPERS
++	select QCOM_PDR_MSG
+ 	depends on NET
  
- #define MAX_NUM_OF_SS           10
- #define MAX_REGION_NAME_LENGTH  16
-@@ -519,5 +521,90 @@ void qcom_remove_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr)
- }
- EXPORT_SYMBOL_GPL(qcom_remove_ssr_subdev);
- 
-+static void pdm_dev_release(struct device *dev)
-+{
-+	struct auxiliary_device *adev = to_auxiliary_dev(dev);
++config QCOM_PDR_MSG
++	tristate
 +
-+	kfree(adev);
-+}
-+
-+static int pdm_notify_prepare(struct rproc_subdev *subdev)
-+{
-+	struct qcom_rproc_pdm *pdm = to_pdm_subdev(subdev);
-+	struct auxiliary_device *adev;
-+	int ret;
-+
-+	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-+	if (!adev)
-+		return -ENOMEM;
-+
-+	adev->dev.parent = pdm->dev;
-+	adev->dev.release = pdm_dev_release;
-+	adev->name = "pd-mapper";
-+	adev->id = pdm->index;
-+
-+	ret = auxiliary_device_init(adev);
-+	if (ret) {
-+		kfree(adev);
-+		return ret;
-+	}
-+
-+	ret = auxiliary_device_add(adev);
-+	if (ret) {
-+		auxiliary_device_uninit(adev);
-+		return ret;
-+	}
-+
-+	pdm->adev = adev;
-+
-+	return 0;
-+}
-+
-+
-+static void pdm_notify_unprepare(struct rproc_subdev *subdev)
-+{
-+	struct qcom_rproc_pdm *pdm = to_pdm_subdev(subdev);
-+
-+	if (!pdm->adev)
-+		return;
-+
-+	auxiliary_device_delete(pdm->adev);
-+	auxiliary_device_uninit(pdm->adev);
-+	pdm->adev = NULL;
-+}
-+
-+/**
-+ * qcom_add_pdm_subdev() - register PD Mapper subdevice
-+ * @rproc:	rproc handle
-+ * @pdm:	PDM subdevice handle
-+ *
-+ * Register @pdm so that Protection Device mapper service is started when the
-+ * DSP is started too.
-+ */
-+void qcom_add_pdm_subdev(struct rproc *rproc, struct qcom_rproc_pdm *pdm)
-+{
-+	pdm->dev = &rproc->dev;
-+	pdm->index = rproc->index;
-+
-+	pdm->subdev.prepare = pdm_notify_prepare;
-+	pdm->subdev.unprepare = pdm_notify_unprepare;
-+
-+	rproc_add_subdev(rproc, &pdm->subdev);
-+}
-+EXPORT_SYMBOL_GPL(qcom_add_pdm_subdev);
-+
-+/**
-+ * qcom_remove_pdm_subdev() - remove PD Mapper subdevice
-+ * @rproc:	rproc handle
-+ * @pdm:	PDM subdevice handle
-+ *
-+ * Remove the PD Mapper subdevice.
-+ */
-+void qcom_remove_pdm_subdev(struct rproc *rproc, struct qcom_rproc_pdm *pdm)
-+{
-+	rproc_remove_subdev(rproc, &pdm->subdev);
-+}
-+EXPORT_SYMBOL_GPL(qcom_remove_pdm_subdev);
-+
- MODULE_DESCRIPTION("Qualcomm Remoteproc helper driver");
- MODULE_LICENSE("GPL v2");
-diff --git a/drivers/remoteproc/qcom_common.h b/drivers/remoteproc/qcom_common.h
-index 9ef4449052a9..b07fbaa091a0 100644
---- a/drivers/remoteproc/qcom_common.h
-+++ b/drivers/remoteproc/qcom_common.h
-@@ -34,6 +34,13 @@ struct qcom_rproc_ssr {
- 	struct qcom_ssr_subsystem *info;
+ config QCOM_PMIC_PDCHARGER_ULOG
+ 	tristate "Qualcomm PMIC PDCharger ULOG driver"
+ 	depends on RPMSG
+diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+index ca0bece0dfff..3110ac3288bc 100644
+--- a/drivers/soc/qcom/Makefile
++++ b/drivers/soc/qcom/Makefile
+@@ -8,6 +8,7 @@ obj-$(CONFIG_QCOM_GSBI)	+=	qcom_gsbi.o
+ obj-$(CONFIG_QCOM_MDT_LOADER)	+= mdt_loader.o
+ obj-$(CONFIG_QCOM_OCMEM)	+= ocmem.o
+ obj-$(CONFIG_QCOM_PDR_HELPERS)	+= pdr_interface.o
++obj-$(CONFIG_QCOM_PDR_MSG)	+= qcom_pdr_msg.o
+ obj-$(CONFIG_QCOM_PMIC_GLINK)	+= pmic_glink.o
+ obj-$(CONFIG_QCOM_PMIC_GLINK)	+= pmic_glink_altmode.o
+ obj-$(CONFIG_QCOM_PMIC_PDCHARGER_ULOG)	+= pmic_pdcharger_ulog.o
+diff --git a/drivers/soc/qcom/pdr_internal.h b/drivers/soc/qcom/pdr_internal.h
+index 03c282b7f17e..7e5bb5a95275 100644
+--- a/drivers/soc/qcom/pdr_internal.h
++++ b/drivers/soc/qcom/pdr_internal.h
+@@ -28,83 +28,12 @@ struct servreg_location_entry {
+ 	u32 instance;
  };
  
-+struct qcom_rproc_pdm {
-+	struct rproc_subdev subdev;
-+	struct device *dev;
-+	int index;
-+	struct auxiliary_device *adev;
+-static const struct qmi_elem_info servreg_location_entry_ei[] = {
+-	{
+-		.data_type      = QMI_STRING,
+-		.elem_len       = SERVREG_NAME_LENGTH + 1,
+-		.elem_size      = sizeof(char),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0,
+-		.offset         = offsetof(struct servreg_location_entry,
+-					   name),
+-	},
+-	{
+-		.data_type      = QMI_UNSIGNED_4_BYTE,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u32),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0,
+-		.offset         = offsetof(struct servreg_location_entry,
+-					   instance),
+-	},
+-	{
+-		.data_type      = QMI_UNSIGNED_1_BYTE,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u8),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0,
+-		.offset         = offsetof(struct servreg_location_entry,
+-					   service_data_valid),
+-	},
+-	{
+-		.data_type      = QMI_UNSIGNED_4_BYTE,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u32),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0,
+-		.offset         = offsetof(struct servreg_location_entry,
+-					   service_data),
+-	},
+-	{}
+-};
+-
+ struct servreg_get_domain_list_req {
+ 	char service_name[SERVREG_NAME_LENGTH + 1];
+ 	u8 domain_offset_valid;
+ 	u32 domain_offset;
+ };
+ 
+-static const struct qmi_elem_info servreg_get_domain_list_req_ei[] = {
+-	{
+-		.data_type      = QMI_STRING,
+-		.elem_len       = SERVREG_NAME_LENGTH + 1,
+-		.elem_size      = sizeof(char),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x01,
+-		.offset         = offsetof(struct servreg_get_domain_list_req,
+-					   service_name),
+-	},
+-	{
+-		.data_type      = QMI_OPT_FLAG,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u8),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x10,
+-		.offset         = offsetof(struct servreg_get_domain_list_req,
+-					   domain_offset_valid),
+-	},
+-	{
+-		.data_type      = QMI_UNSIGNED_4_BYTE,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u32),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x10,
+-		.offset         = offsetof(struct servreg_get_domain_list_req,
+-					   domain_offset),
+-	},
+-	{}
+-};
+-
+ struct servreg_get_domain_list_resp {
+ 	struct qmi_response_type_v01 resp;
+ 	u8 total_domains_valid;
+@@ -116,264 +45,49 @@ struct servreg_get_domain_list_resp {
+ 	struct servreg_location_entry domain_list[SERVREG_DOMAIN_LIST_LENGTH];
+ };
+ 
+-static const struct qmi_elem_info servreg_get_domain_list_resp_ei[] = {
+-	{
+-		.data_type      = QMI_STRUCT,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(struct qmi_response_type_v01),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x02,
+-		.offset         = offsetof(struct servreg_get_domain_list_resp,
+-					   resp),
+-		.ei_array      = qmi_response_type_v01_ei,
+-	},
+-	{
+-		.data_type      = QMI_OPT_FLAG,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u8),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x10,
+-		.offset         = offsetof(struct servreg_get_domain_list_resp,
+-					   total_domains_valid),
+-	},
+-	{
+-		.data_type      = QMI_UNSIGNED_2_BYTE,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u16),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x10,
+-		.offset         = offsetof(struct servreg_get_domain_list_resp,
+-					   total_domains),
+-	},
+-	{
+-		.data_type      = QMI_OPT_FLAG,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u8),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x11,
+-		.offset         = offsetof(struct servreg_get_domain_list_resp,
+-					   db_rev_count_valid),
+-	},
+-	{
+-		.data_type      = QMI_UNSIGNED_2_BYTE,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u16),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x11,
+-		.offset         = offsetof(struct servreg_get_domain_list_resp,
+-					   db_rev_count),
+-	},
+-	{
+-		.data_type      = QMI_OPT_FLAG,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u8),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x12,
+-		.offset         = offsetof(struct servreg_get_domain_list_resp,
+-					   domain_list_valid),
+-	},
+-	{
+-		.data_type      = QMI_DATA_LEN,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u8),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x12,
+-		.offset         = offsetof(struct servreg_get_domain_list_resp,
+-					   domain_list_len),
+-	},
+-	{
+-		.data_type      = QMI_STRUCT,
+-		.elem_len       = SERVREG_DOMAIN_LIST_LENGTH,
+-		.elem_size      = sizeof(struct servreg_location_entry),
+-		.array_type	= VAR_LEN_ARRAY,
+-		.tlv_type       = 0x12,
+-		.offset         = offsetof(struct servreg_get_domain_list_resp,
+-					   domain_list),
+-		.ei_array      = servreg_location_entry_ei,
+-	},
+-	{}
+-};
+-
+ struct servreg_register_listener_req {
+ 	u8 enable;
+ 	char service_path[SERVREG_NAME_LENGTH + 1];
+ };
+ 
+-static const struct qmi_elem_info servreg_register_listener_req_ei[] = {
+-	{
+-		.data_type      = QMI_UNSIGNED_1_BYTE,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u8),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x01,
+-		.offset         = offsetof(struct servreg_register_listener_req,
+-					   enable),
+-	},
+-	{
+-		.data_type      = QMI_STRING,
+-		.elem_len       = SERVREG_NAME_LENGTH + 1,
+-		.elem_size      = sizeof(char),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x02,
+-		.offset         = offsetof(struct servreg_register_listener_req,
+-					   service_path),
+-	},
+-	{}
+-};
+-
+ struct servreg_register_listener_resp {
+ 	struct qmi_response_type_v01 resp;
+ 	u8 curr_state_valid;
+ 	enum servreg_service_state curr_state;
+ };
+ 
+-static const struct qmi_elem_info servreg_register_listener_resp_ei[] = {
+-	{
+-		.data_type      = QMI_STRUCT,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(struct qmi_response_type_v01),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x02,
+-		.offset         = offsetof(struct servreg_register_listener_resp,
+-					   resp),
+-		.ei_array      = qmi_response_type_v01_ei,
+-	},
+-	{
+-		.data_type      = QMI_OPT_FLAG,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u8),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x10,
+-		.offset         = offsetof(struct servreg_register_listener_resp,
+-					   curr_state_valid),
+-	},
+-	{
+-		.data_type      = QMI_SIGNED_4_BYTE_ENUM,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(enum servreg_service_state),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x10,
+-		.offset         = offsetof(struct servreg_register_listener_resp,
+-					   curr_state),
+-	},
+-	{}
+-};
+-
+ struct servreg_restart_pd_req {
+ 	char service_path[SERVREG_NAME_LENGTH + 1];
+ };
+ 
+-static const struct qmi_elem_info servreg_restart_pd_req_ei[] = {
+-	{
+-		.data_type      = QMI_STRING,
+-		.elem_len       = SERVREG_NAME_LENGTH + 1,
+-		.elem_size      = sizeof(char),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x01,
+-		.offset         = offsetof(struct servreg_restart_pd_req,
+-					   service_path),
+-	},
+-	{}
+-};
+-
+ struct servreg_restart_pd_resp {
+ 	struct qmi_response_type_v01 resp;
+ };
+ 
+-static const struct qmi_elem_info servreg_restart_pd_resp_ei[] = {
+-	{
+-		.data_type      = QMI_STRUCT,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(struct qmi_response_type_v01),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x02,
+-		.offset         = offsetof(struct servreg_restart_pd_resp,
+-					   resp),
+-		.ei_array      = qmi_response_type_v01_ei,
+-	},
+-	{}
+-};
+-
+ struct servreg_state_updated_ind {
+ 	enum servreg_service_state curr_state;
+ 	char service_path[SERVREG_NAME_LENGTH + 1];
+ 	u16 transaction_id;
+ };
+ 
+-static const struct qmi_elem_info servreg_state_updated_ind_ei[] = {
+-	{
+-		.data_type      = QMI_SIGNED_4_BYTE_ENUM,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u32),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x01,
+-		.offset         = offsetof(struct servreg_state_updated_ind,
+-					   curr_state),
+-	},
+-	{
+-		.data_type      = QMI_STRING,
+-		.elem_len       = SERVREG_NAME_LENGTH + 1,
+-		.elem_size      = sizeof(char),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x02,
+-		.offset         = offsetof(struct servreg_state_updated_ind,
+-					   service_path),
+-	},
+-	{
+-		.data_type      = QMI_UNSIGNED_2_BYTE,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u16),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x03,
+-		.offset         = offsetof(struct servreg_state_updated_ind,
+-					   transaction_id),
+-	},
+-	{}
+-};
+-
+ struct servreg_set_ack_req {
+ 	char service_path[SERVREG_NAME_LENGTH + 1];
+ 	u16 transaction_id;
+ };
+ 
+-static const struct qmi_elem_info servreg_set_ack_req_ei[] = {
+-	{
+-		.data_type      = QMI_STRING,
+-		.elem_len       = SERVREG_NAME_LENGTH + 1,
+-		.elem_size      = sizeof(char),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x01,
+-		.offset         = offsetof(struct servreg_set_ack_req,
+-					   service_path),
+-	},
+-	{
+-		.data_type      = QMI_UNSIGNED_2_BYTE,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(u16),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x02,
+-		.offset         = offsetof(struct servreg_set_ack_req,
+-					   transaction_id),
+-	},
+-	{}
+-};
+-
+ struct servreg_set_ack_resp {
+ 	struct qmi_response_type_v01 resp;
+ };
+ 
+-static const struct qmi_elem_info servreg_set_ack_resp_ei[] = {
+-	{
+-		.data_type      = QMI_STRUCT,
+-		.elem_len       = 1,
+-		.elem_size      = sizeof(struct qmi_response_type_v01),
+-		.array_type	= NO_ARRAY,
+-		.tlv_type       = 0x02,
+-		.offset         = offsetof(struct servreg_set_ack_resp,
+-					   resp),
+-		.ei_array       = qmi_response_type_v01_ei,
+-	},
+-	{}
+-};
++extern const struct qmi_elem_info servreg_location_entry_ei[];
++extern const struct qmi_elem_info servreg_get_domain_list_req_ei[];
++extern const struct qmi_elem_info servreg_get_domain_list_resp_ei[];
++extern const struct qmi_elem_info servreg_register_listener_req_ei[];
++extern const struct qmi_elem_info servreg_register_listener_resp_ei[];
++extern const struct qmi_elem_info servreg_restart_pd_req_ei[];
++extern const struct qmi_elem_info servreg_restart_pd_resp_ei[];
++extern const struct qmi_elem_info servreg_state_updated_ind_ei[];
++extern const struct qmi_elem_info servreg_set_ack_req_ei[];
++extern const struct qmi_elem_info servreg_set_ack_resp_ei[];
+ 
+ #endif
+diff --git a/drivers/soc/qcom/qcom_pdr_msg.c b/drivers/soc/qcom/qcom_pdr_msg.c
+new file mode 100644
+index 000000000000..9b46f42aa146
+--- /dev/null
++++ b/drivers/soc/qcom/qcom_pdr_msg.c
+@@ -0,0 +1,319 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2020 The Linux Foundation. All rights reserved.
++ */
++
++#include <linux/module.h>
++#include <linux/soc/qcom/qmi.h>
++
++#include "pdr_internal.h"
++
++const struct qmi_elem_info servreg_location_entry_ei[] = {
++	{
++		.data_type      = QMI_STRING,
++		.elem_len       = SERVREG_NAME_LENGTH + 1,
++		.elem_size      = sizeof(char),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0,
++		.offset         = offsetof(struct servreg_location_entry,
++					   name),
++	},
++	{
++		.data_type      = QMI_UNSIGNED_4_BYTE,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u32),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0,
++		.offset         = offsetof(struct servreg_location_entry,
++					   instance),
++	},
++	{
++		.data_type      = QMI_UNSIGNED_1_BYTE,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0,
++		.offset         = offsetof(struct servreg_location_entry,
++					   service_data_valid),
++	},
++	{
++		.data_type      = QMI_UNSIGNED_4_BYTE,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u32),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0,
++		.offset         = offsetof(struct servreg_location_entry,
++					   service_data),
++	},
++	{}
 +};
++EXPORT_SYMBOL_GPL(servreg_location_entry_ei);
 +
- void qcom_minidump(struct rproc *rproc, unsigned int minidump_id,
- 			void (*rproc_dumpfn_t)(struct rproc *rproc,
- 				struct rproc_dump_segment *segment, void *dest, size_t offset,
-@@ -52,6 +59,9 @@ void qcom_add_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr,
- 			 const char *ssr_name);
- void qcom_remove_ssr_subdev(struct rproc *rproc, struct qcom_rproc_ssr *ssr);
- 
-+void qcom_add_pdm_subdev(struct rproc *rproc, struct qcom_rproc_pdm *pdm);
-+void qcom_remove_pdm_subdev(struct rproc *rproc, struct qcom_rproc_pdm *pdm);
++const struct qmi_elem_info servreg_get_domain_list_req_ei[] = {
++	{
++		.data_type      = QMI_STRING,
++		.elem_len       = SERVREG_NAME_LENGTH + 1,
++		.elem_size      = sizeof(char),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x01,
++		.offset         = offsetof(struct servreg_get_domain_list_req,
++					   service_name),
++	},
++	{
++		.data_type      = QMI_OPT_FLAG,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x10,
++		.offset         = offsetof(struct servreg_get_domain_list_req,
++					   domain_offset_valid),
++	},
++	{
++		.data_type      = QMI_UNSIGNED_4_BYTE,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u32),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x10,
++		.offset         = offsetof(struct servreg_get_domain_list_req,
++					   domain_offset),
++	},
++	{}
++};
++EXPORT_SYMBOL_GPL(servreg_get_domain_list_req_ei);
 +
- #if IS_ENABLED(CONFIG_QCOM_SYSMON)
- struct qcom_sysmon *qcom_add_sysmon_subdev(struct rproc *rproc,
- 					   const char *name,
-diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
-index 1d24c9b656a8..572dcb0f055b 100644
---- a/drivers/remoteproc/qcom_q6v5_adsp.c
-+++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-@@ -112,6 +112,7 @@ struct qcom_adsp {
- 	struct dev_pm_domain_list *pd_list;
- 
- 	struct qcom_rproc_glink glink_subdev;
-+	struct qcom_rproc_pdm pdm_subdev;
- 	struct qcom_rproc_ssr ssr_subdev;
- 	struct qcom_sysmon *sysmon;
- 
-@@ -726,6 +727,7 @@ static int adsp_probe(struct platform_device *pdev)
- 		goto disable_pm;
- 
- 	qcom_add_glink_subdev(rproc, &adsp->glink_subdev, desc->ssr_name);
-+	qcom_add_pdm_subdev(rproc, &adsp->pdm_subdev);
- 	qcom_add_ssr_subdev(rproc, &adsp->ssr_subdev, desc->ssr_name);
- 	adsp->sysmon = qcom_add_sysmon_subdev(rproc,
- 					      desc->sysmon_name,
-@@ -755,6 +757,7 @@ static void adsp_remove(struct platform_device *pdev)
- 
- 	qcom_q6v5_deinit(&adsp->q6v5);
- 	qcom_remove_glink_subdev(adsp->rproc, &adsp->glink_subdev);
-+	qcom_remove_pdm_subdev(adsp->rproc, &adsp->pdm_subdev);
- 	qcom_remove_sysmon_subdev(adsp->sysmon);
- 	qcom_remove_ssr_subdev(adsp->rproc, &adsp->ssr_subdev);
- 	qcom_rproc_pds_detach(adsp);
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index 1779fc890e10..2a42215ce8e0 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -228,6 +228,7 @@ struct q6v5 {
- 
- 	struct qcom_rproc_glink glink_subdev;
- 	struct qcom_rproc_subdev smd_subdev;
-+	struct qcom_rproc_pdm pdm_subdev;
- 	struct qcom_rproc_ssr ssr_subdev;
- 	struct qcom_sysmon *sysmon;
- 	struct platform_device *bam_dmux;
-@@ -2102,6 +2103,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	qproc->mba_perm = BIT(QCOM_SCM_VMID_HLOS);
- 	qcom_add_glink_subdev(rproc, &qproc->glink_subdev, "mpss");
- 	qcom_add_smd_subdev(rproc, &qproc->smd_subdev);
-+	qcom_add_pdm_subdev(rproc, &qproc->pdm_subdev);
- 	qcom_add_ssr_subdev(rproc, &qproc->ssr_subdev, "mpss");
- 	qproc->sysmon = qcom_add_sysmon_subdev(rproc, "modem", 0x12);
- 	if (IS_ERR(qproc->sysmon)) {
-@@ -2143,6 +2145,7 @@ static void q6v5_remove(struct platform_device *pdev)
- 	qcom_q6v5_deinit(&qproc->q6v5);
- 	qcom_remove_sysmon_subdev(qproc->sysmon);
- 	qcom_remove_ssr_subdev(rproc, &qproc->ssr_subdev);
-+	qcom_remove_pdm_subdev(rproc, &qproc->pdm_subdev);
- 	qcom_remove_smd_subdev(rproc, &qproc->smd_subdev);
- 	qcom_remove_glink_subdev(rproc, &qproc->glink_subdev);
- 
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index 54d8005d40a3..399c3bc104bd 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -109,6 +109,7 @@ struct qcom_adsp {
- 
- 	struct qcom_rproc_glink glink_subdev;
- 	struct qcom_rproc_subdev smd_subdev;
-+	struct qcom_rproc_pdm pdm_subdev;
- 	struct qcom_rproc_ssr ssr_subdev;
- 	struct qcom_sysmon *sysmon;
- 
-@@ -771,6 +772,7 @@ static int adsp_probe(struct platform_device *pdev)
- 
- 	qcom_add_glink_subdev(rproc, &adsp->glink_subdev, desc->ssr_name);
- 	qcom_add_smd_subdev(rproc, &adsp->smd_subdev);
-+	qcom_add_pdm_subdev(rproc, &adsp->pdm_subdev);
- 	adsp->sysmon = qcom_add_sysmon_subdev(rproc,
- 					      desc->sysmon_name,
- 					      desc->ssctl_id);
-@@ -805,6 +807,7 @@ static void adsp_remove(struct platform_device *pdev)
- 	qcom_remove_glink_subdev(adsp->rproc, &adsp->glink_subdev);
- 	qcom_remove_sysmon_subdev(adsp->sysmon);
- 	qcom_remove_smd_subdev(adsp->rproc, &adsp->smd_subdev);
-+	qcom_remove_pdm_subdev(adsp->rproc, &adsp->pdm_subdev);
- 	qcom_remove_ssr_subdev(adsp->rproc, &adsp->ssr_subdev);
- 	adsp_pds_detach(adsp, adsp->proxy_pds, adsp->proxy_pd_count);
- 	device_init_wakeup(adsp->dev, false);
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index 94f68c919ee6..e913dabae992 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -148,6 +148,7 @@ struct q6v5_wcss {
- 	bool requires_force_stop;
- 
- 	struct qcom_rproc_glink glink_subdev;
-+	struct qcom_rproc_pdm pdm_subdev;
- 	struct qcom_rproc_ssr ssr_subdev;
- };
- 
-@@ -1052,6 +1053,7 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	qcom_add_glink_subdev(rproc, &wcss->glink_subdev, "q6wcss");
-+	qcom_add_pdm_subdev(rproc, &wcss->pdm_subdev);
- 	qcom_add_ssr_subdev(rproc, &wcss->ssr_subdev, "q6wcss");
- 
- 	if (desc->ssctl_id)
-@@ -1074,6 +1076,7 @@ static void q6v5_wcss_remove(struct platform_device *pdev)
- 	struct q6v5_wcss *wcss = rproc->priv;
- 
- 	qcom_q6v5_deinit(&wcss->q6v5);
-+	qcom_remove_pdm_subdev(rproc, &wcss->pdm_subdev);
- 	rproc_del(rproc);
- }
- 
++const struct qmi_elem_info servreg_get_domain_list_resp_ei[] = {
++	{
++		.data_type      = QMI_STRUCT,
++		.elem_len       = 1,
++		.elem_size      = sizeof(struct qmi_response_type_v01),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x02,
++		.offset         = offsetof(struct servreg_get_domain_list_resp,
++					   resp),
++		.ei_array      = qmi_response_type_v01_ei,
++	},
++	{
++		.data_type      = QMI_OPT_FLAG,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x10,
++		.offset         = offsetof(struct servreg_get_domain_list_resp,
++					   total_domains_valid),
++	},
++	{
++		.data_type      = QMI_UNSIGNED_2_BYTE,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u16),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x10,
++		.offset         = offsetof(struct servreg_get_domain_list_resp,
++					   total_domains),
++	},
++	{
++		.data_type      = QMI_OPT_FLAG,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x11,
++		.offset         = offsetof(struct servreg_get_domain_list_resp,
++					   db_rev_count_valid),
++	},
++	{
++		.data_type      = QMI_UNSIGNED_2_BYTE,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u16),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x11,
++		.offset         = offsetof(struct servreg_get_domain_list_resp,
++					   db_rev_count),
++	},
++	{
++		.data_type      = QMI_OPT_FLAG,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x12,
++		.offset         = offsetof(struct servreg_get_domain_list_resp,
++					   domain_list_valid),
++	},
++	{
++		.data_type      = QMI_DATA_LEN,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x12,
++		.offset         = offsetof(struct servreg_get_domain_list_resp,
++					   domain_list_len),
++	},
++	{
++		.data_type      = QMI_STRUCT,
++		.elem_len       = SERVREG_DOMAIN_LIST_LENGTH,
++		.elem_size      = sizeof(struct servreg_location_entry),
++		.array_type	= VAR_LEN_ARRAY,
++		.tlv_type       = 0x12,
++		.offset         = offsetof(struct servreg_get_domain_list_resp,
++					   domain_list),
++		.ei_array      = servreg_location_entry_ei,
++	},
++	{}
++};
++EXPORT_SYMBOL_GPL(servreg_get_domain_list_resp_ei);
++
++const struct qmi_elem_info servreg_register_listener_req_ei[] = {
++	{
++		.data_type      = QMI_UNSIGNED_1_BYTE,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x01,
++		.offset         = offsetof(struct servreg_register_listener_req,
++					   enable),
++	},
++	{
++		.data_type      = QMI_STRING,
++		.elem_len       = SERVREG_NAME_LENGTH + 1,
++		.elem_size      = sizeof(char),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x02,
++		.offset         = offsetof(struct servreg_register_listener_req,
++					   service_path),
++	},
++	{}
++};
++EXPORT_SYMBOL_GPL(servreg_register_listener_req_ei);
++
++const struct qmi_elem_info servreg_register_listener_resp_ei[] = {
++	{
++		.data_type      = QMI_STRUCT,
++		.elem_len       = 1,
++		.elem_size      = sizeof(struct qmi_response_type_v01),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x02,
++		.offset         = offsetof(struct servreg_register_listener_resp,
++					   resp),
++		.ei_array      = qmi_response_type_v01_ei,
++	},
++	{
++		.data_type      = QMI_OPT_FLAG,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u8),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x10,
++		.offset         = offsetof(struct servreg_register_listener_resp,
++					   curr_state_valid),
++	},
++	{
++		.data_type      = QMI_SIGNED_4_BYTE_ENUM,
++		.elem_len       = 1,
++		.elem_size      = sizeof(enum servreg_service_state),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x10,
++		.offset         = offsetof(struct servreg_register_listener_resp,
++					   curr_state),
++	},
++	{}
++};
++EXPORT_SYMBOL_GPL(servreg_register_listener_resp_ei);
++
++const struct qmi_elem_info servreg_restart_pd_req_ei[] = {
++	{
++		.data_type      = QMI_STRING,
++		.elem_len       = SERVREG_NAME_LENGTH + 1,
++		.elem_size      = sizeof(char),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x01,
++		.offset         = offsetof(struct servreg_restart_pd_req,
++					   service_path),
++	},
++	{}
++};
++EXPORT_SYMBOL_GPL(servreg_restart_pd_req_ei);
++
++const struct qmi_elem_info servreg_restart_pd_resp_ei[] = {
++	{
++		.data_type      = QMI_STRUCT,
++		.elem_len       = 1,
++		.elem_size      = sizeof(struct qmi_response_type_v01),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x02,
++		.offset         = offsetof(struct servreg_restart_pd_resp,
++					   resp),
++		.ei_array      = qmi_response_type_v01_ei,
++	},
++	{}
++};
++EXPORT_SYMBOL_GPL(servreg_restart_pd_resp_ei);
++
++const struct qmi_elem_info servreg_state_updated_ind_ei[] = {
++	{
++		.data_type      = QMI_SIGNED_4_BYTE_ENUM,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u32),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x01,
++		.offset         = offsetof(struct servreg_state_updated_ind,
++					   curr_state),
++	},
++	{
++		.data_type      = QMI_STRING,
++		.elem_len       = SERVREG_NAME_LENGTH + 1,
++		.elem_size      = sizeof(char),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x02,
++		.offset         = offsetof(struct servreg_state_updated_ind,
++					   service_path),
++	},
++	{
++		.data_type      = QMI_UNSIGNED_2_BYTE,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u16),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x03,
++		.offset         = offsetof(struct servreg_state_updated_ind,
++					   transaction_id),
++	},
++	{}
++};
++EXPORT_SYMBOL_GPL(servreg_state_updated_ind_ei);
++
++const struct qmi_elem_info servreg_set_ack_req_ei[] = {
++	{
++		.data_type      = QMI_STRING,
++		.elem_len       = SERVREG_NAME_LENGTH + 1,
++		.elem_size      = sizeof(char),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x01,
++		.offset         = offsetof(struct servreg_set_ack_req,
++					   service_path),
++	},
++	{
++		.data_type      = QMI_UNSIGNED_2_BYTE,
++		.elem_len       = 1,
++		.elem_size      = sizeof(u16),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x02,
++		.offset         = offsetof(struct servreg_set_ack_req,
++					   transaction_id),
++	},
++	{}
++};
++EXPORT_SYMBOL_GPL(servreg_set_ack_req_ei);
++
++const struct qmi_elem_info servreg_set_ack_resp_ei[] = {
++	{
++		.data_type      = QMI_STRUCT,
++		.elem_len       = 1,
++		.elem_size      = sizeof(struct qmi_response_type_v01),
++		.array_type	= NO_ARRAY,
++		.tlv_type       = 0x02,
++		.offset         = offsetof(struct servreg_set_ack_resp,
++					   resp),
++		.ei_array       = qmi_response_type_v01_ei,
++	},
++	{}
++};
++EXPORT_SYMBOL_GPL(servreg_set_ack_resp_ei);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("Qualcomm Protection Domain messages data");
 
 -- 
 2.39.2
