@@ -1,106 +1,85 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F90AC8DE;
-	Sat, 11 May 2024 12:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01AAF7E9
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 12:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715431095; cv=none; b=ppAG8MTf7UxzlryUdjTX1LVLbD50pXKha599VGWaooJ189feXrz7y3DI/RQx1H5aZOpm7TY0JxcmFxphPb2nZh5JzEfKishONJDmCa1mvVrgovSCzDif57BVoh+WEFmZZrFOiyAKaAXJ86vDnnsdu5rhr+ObEMJ5iahEtufkg3A=
+	t=1715431377; cv=none; b=XlML8rKPLrwQkSYWHGF5dSyuIIQtalKnyLooffbPnl5F5+nz/Yw5yIahidSYFF2sjdpFZY0upSJpVKziMXG4dFyowke50gU6FWwwMWxy6AEKVS8qv1cHBG52oBOAtFENk0eZU9XUwTyPiLpsHhL/tY/Bi5w0Fo1HWJtv//zBpD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715431095; c=relaxed/simple;
-	bh=pTtfjAhGNdNkddBKTzttOYaB1OFfxS0HrYE/Kf0RfO4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YUCf6q4CJ+3no+7i8+02wPiNialNLvII4ArFU5+G1BmYaaJ+wtEOaW5FZVJbgUd0VGEvNRExpLHAeo9kp7hz+foyAUgHpNWv2fVIvz3bRoIMOJkH9EUbXy+su3Qcu3vZVyRwpIS+ZTwbqy4boPXcYRK/lxpWi2c1lpFYAmQojJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXnNF6XQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715431377; c=relaxed/simple;
+	bh=MeHi4bk5Ajd8/IQPQj4d8hEx3eNYc+Qz7JCRrKuCY1I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=myBvviUu80c8ZSGTII46tsJQKWIkP+qsY8PXaKqXiSK7gBgAW94IK8xDRKP0XB9nXm5hZe/fVWE53eI13QHZqbMLOT+WiHmugEi56GP1qFlicboekAId+Kf0BRvuXL76cYBdBRLznjsJPrZBpkGM8qhFNAZhKYyYv4zxNXoXO1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Rnl2UFX/; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXnNF6XQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDCA4C2BBFC;
-	Sat, 11 May 2024 12:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715431094;
-	bh=pTtfjAhGNdNkddBKTzttOYaB1OFfxS0HrYE/Kf0RfO4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RXnNF6XQRpkbClGeUmn57PI5Mey0MfPVNW/YeSs1ls+g4gnMZ1onx8X0pUWBmRyHI
-	 Tz8DMEm9A0limyW4/H7FTWs19r006d/XtTgX80mToPIntL2fZ4iiySalI8yXaGOK51
-	 JPAtBUZpv/Zfhto88y7rsvn1Hel/KLLapGc4lmBYNWS1Ug+aO0yODnl2c5E/+e/MfH
-	 s6wTTNxWl2djpDZucUcPisoFg/SZmmk2ljSfBF6QBDyyM/BiTRkYttey9oK7GR7ass
-	 qB5NLHrvRJEVdE41k4u45epV6XvCzzGnu7YAYkO4D5wsa3bGPWkVXCEGA5Zy8BBDei
-	 UpVtNOmRSdGRw==
-Date: Sat, 11 May 2024 13:38:10 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Felix Kaechele <felix@kaechele.ca>
-Cc: Job Noorman <job@noorman.info>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-input@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/5] dt-bindings: input: touchscreen: himax,hx83112b:
- add HX83100A
-Message-ID: <20240511-passage-obstruct-70e4c3b37dbd@spud>
-References: <20240511121245.109644-1-felix@kaechele.ca>
- <20240511121245.109644-2-felix@kaechele.ca>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Rnl2UFX/"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1715431374;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5Mlk8jFKvoypD9IZYpI3BVSdxetHEe1rriO0cIJzkmo=;
+	b=Rnl2UFX/CCFkmjgSw8t9xem4X/DuUT4GTH4ZefCtr3W9ufq9lIMQAo9rMIqPcC7Z4lu/ke
+	qkvjoTDCwgIO2jP4xHrEIajjK3jDOfLjDEWbOuTe7VyuJ0NeWV0MynxnFZFsbIL2g60lP9
+	Q6VrTpvROk4YSvqllU8Vox+Q/1Y7ifU=
+From: Sui Jingfeng <sui.jingfeng@linux.dev>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Sui Jingfeng <sui.jingfeng@linux.dev>
+Subject: [PATCH] drm/bridge: Remove a small useless code snippet
+Date: Sat, 11 May 2024 20:42:38 +0800
+Message-ID: <20240511124238.297192-1-sui.jingfeng@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="A7xsnz4pJUUJkkL2"
-Content-Disposition: inline
-In-Reply-To: <20240511121245.109644-2-felix@kaechele.ca>
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
+Because the check on the non-existence (encoder == NULL) has already been
+done in the implementation of drm_bridge_attach() function, and
+drm_bridge_attach() is called earlier. The driver won't get to check point
+even if drm_bridge_attach() fails for some reasons, as it will clear the
+bridge->encoder to NULL and return a negective error code.
 
---A7xsnz4pJUUJkkL2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Therefore, there is no need to check another again. Remove the redundant
+codes at the later.
 
-On Sat, May 11, 2024 at 08:12:22AM -0400, Felix Kaechele wrote:
-> Add a compatible string for the Himax HX83100A touch controller.
->=20
-> Signed-off-by: Felix Kaechele <felix@kaechele.ca>
+Signed-off-by: Sui Jingfeng <sui.jingfeng@linux.dev>
+---
+ drivers/gpu/drm/bridge/simple-bridge.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-Commit message should mention what makes this device incompatible with
-the existing device.
+diff --git a/drivers/gpu/drm/bridge/simple-bridge.c b/drivers/gpu/drm/bridge/simple-bridge.c
+index 28376d0ecd09..3caa918ac2e0 100644
+--- a/drivers/gpu/drm/bridge/simple-bridge.c
++++ b/drivers/gpu/drm/bridge/simple-bridge.c
+@@ -116,11 +116,6 @@ static int simple_bridge_attach(struct drm_bridge *bridge,
+ 	if (flags & DRM_BRIDGE_ATTACH_NO_CONNECTOR)
+ 		return 0;
+ 
+-	if (!bridge->encoder) {
+-		DRM_ERROR("Missing encoder\n");
+-		return -ENODEV;
+-	}
+-
+ 	drm_connector_helper_add(&sbridge->connector,
+ 				 &simple_bridge_con_helper_funcs);
+ 	ret = drm_connector_init_with_ddc(bridge->dev, &sbridge->connector,
+-- 
+2.43.0
 
-Thanks,
-Conor.
-
-> ---
->  .../devicetree/bindings/input/touchscreen/himax,hx83112b.yaml    | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/himax,hx=
-83112b.yaml b/Documentation/devicetree/bindings/input/touchscreen/himax,hx8=
-3112b.yaml
-> index f42b23d532eb..f5cfacb5e966 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/himax,hx83112b.=
-yaml
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/himax,hx83112b.=
-yaml
-> @@ -15,6 +15,7 @@ allOf:
->  properties:
->    compatible:
->      enum:
-> +      - himax,hx83100a
->        - himax,hx83112b
-> =20
->    reg:
-> --=20
-> 2.45.0
->=20
-
---A7xsnz4pJUUJkkL2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZj9msgAKCRB4tDGHoIJi
-0sU2AP4x75uROqsCf5hAItzPs1a76FLSU36pSc9PIX2QsE81wAD/W4rTYtFPzR4J
-iFfHxIoONo99+mqF11MlcofK2Zy6Kws=
-=DVSB
------END PGP SIGNATURE-----
-
---A7xsnz4pJUUJkkL2--
