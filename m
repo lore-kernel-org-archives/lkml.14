@@ -1,46 +1,46 @@
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDC31E526
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A1356459
 	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 15:31:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715441500; cv=none; b=qjBCNAhCKlqqt0apdtYkEK4On4Wf2+n7PR8UdZU43P+tpZtxfR39ccZQGbM+EgDDAr5+wHkfeu04C+HUHv+d1O3B/w15aXZvbSXQj6XkNxrzvlT+ew0AjJuBOq+ejq3pDkZdR+QC0DW9oabzGe3GFnUU6yzlNzur/Ks/hN63qDw=
+	t=1715441500; cv=none; b=TP7UW3AAuguE5CgU8d/wa2UCGYxSWXqogTXRbShOpzUnB2le85D5Ph8jR3OByLIA0xj7V4eoOYu/hzXge0o2fp64jZ6ycNmgGL+AXyy4kG9wM7A6ZYn0UnBl4DqEve/RH26fb7PkhalRXb+MuikmeB4if0O+XZReetU/4fNX4A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715441500; c=relaxed/simple;
-	bh=IX7XsOyOVzCtA2UY/f7d1R1xikEA08HJCbxKjGBTF5s=;
+	bh=ANNJ+TVvg4TDhFapBZYAsag/dWLIk8v766MtEkXddO0=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oM9TOzIuNzeNqnI5ZqewJOuUNNRr+OK76hiIZdtOzNCLBSkFn+Dxf0s72UYXjEznbCzDhd1AXsZJVLVpoE4dusDAkcrV5gafCBUziOtoAb6l0SvjPfUnqysJrjyFLI9vLZplrclrk+LU20nRviuIPAlio5/o6Gc0ptugJrxINMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=B0oG7SBz; arc=none smtp.client-ip=198.47.23.248
+	 MIME-Version:Content-Type; b=RqUT+e6CYQBxjwDC3Hx7DQpq0KR6hJUtfW0v+Ga+DTR5dVGt5rMtPO3VJmUVXAidCrJLqZyNYbGr8r49f+gxRqaJhT9DZNizW6FCw9qD4+mpv7zvGIygUgPiX3fEimcUeRAQh5m9qm1Y6mPclwDHdUdfycQibx5jN1T/IW+B/lA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=t0l2IUfB; arc=none smtp.client-ip=198.47.19.141
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="B0oG7SBz"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44BFUsiL014460;
-	Sat, 11 May 2024 10:30:54 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="t0l2IUfB"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44BFUxEG005131;
+	Sat, 11 May 2024 10:30:59 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715441454;
-	bh=rTTLXewRMxGRuVDb1qnoAQIUWX9dew+c+9tpW5wzk78=;
+	s=ti-com-17Q1; t=1715441459;
+	bh=iqKPnZHcrXnOzmcUUtsWU9g7YNd8v7CH9OIa+I/fqO0=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=B0oG7SBz+v35Te5KAiaNyOQiFGuJp9B1yIpJOIoXaCwdWj1vEUPjYk5iGdUiSGfcM
-	 Wcvs6amqo66AvQgNRPyP3lIRFApNpngx+UIrEmopyFfVGFC4O5+Gh1S3n9nSdOGVhe
-	 UfLy7Iie+Qez+ao+PBcMOGnLpUByuq64R6BryiHI=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44BFUsOk032982
+	b=t0l2IUfB4CpVkig3jZHV8cfHL2jgW6bUN07feBBjyPeSnPJUQdNBLZ3icOGybYY6q
+	 G2OqSqHRvGvIZmK2ATRC0QYlFTKFuXHRFNvgoiMnX3MuU/3T2W81AEDmtN+cS6MaEg
+	 /cWhH0Kmn96ATweQ2eUaPKELmROl2CcCIh4OeHwg=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44BFUxS0098501
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 11 May 2024 10:30:54 -0500
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+	Sat, 11 May 2024 10:30:59 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 11
- May 2024 10:30:54 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 10:30:58 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 11 May 2024 10:30:54 -0500
+ Frontend Transport; Sat, 11 May 2024 10:30:58 -0500
 Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44BFUr1f043147;
-	Sat, 11 May 2024 10:30:54 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44BFUw2S043270;
+	Sat, 11 May 2024 10:30:58 -0500
 From: Aradhya Bhatia <a-bhatia1@ti.com>
 To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
         Andrzej Hajda
@@ -78,9 +78,9 @@ CC: DRI Development List <dri-devel@lists.freedesktop.org>,
 	<j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>,
         Aradhya Bhatia
 	<a-bhatia1@ti.com>
-Subject: [PATCH 1/7] drm/tidss: Add CRTC mode_fixup
-Date: Sat, 11 May 2024 21:00:45 +0530
-Message-ID: <20240511153051.1355825-2-a-bhatia1@ti.com>
+Subject: [PATCH 4/7] drm/bridge: cdns-dsi: Reset the DCS write FIFO
+Date: Sat, 11 May 2024 21:00:48 +0530
+Message-ID: <20240511153051.1355825-5-a-bhatia1@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240511153051.1355825-1-a-bhatia1@ti.com>
 References: <20240511153051.1355825-1-a-bhatia1@ti.com>
@@ -94,45 +94,28 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Add support for mode_fixup for the tidss CRTC.
-
-Some bridges like the cdns-dsi consume the crtc_* timing parameters for
-programming the blanking values. Allow for the normal timing parameters
-to get copied to crtc_* timing params.
+Allow the DCS Write FIFO in the cdns-dsi controller to reset before any
+DCS packet is transmitted to the DSI sink device.
 
 Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
 ---
- drivers/gpu/drm/tidss/tidss_crtc.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
-index 94f8e3178df5..797ef53d9ad2 100644
---- a/drivers/gpu/drm/tidss/tidss_crtc.c
-+++ b/drivers/gpu/drm/tidss/tidss_crtc.c
-@@ -309,12 +309,23 @@ enum drm_mode_status tidss_crtc_mode_valid(struct drm_crtc *crtc,
- 	return dispc_vp_mode_valid(tidss->dispc, tcrtc->hw_videoport, mode);
- }
+diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+index 05d2f4cc50da..87fdd07ca0bc 100644
+--- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
++++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+@@ -1037,6 +1037,9 @@ static ssize_t cdns_dsi_transfer(struct mipi_dsi_host *host,
  
-+static
-+bool tidss_crtc_mode_fixup(struct drm_crtc *crtc,
-+			   const struct drm_display_mode *mode,
-+			   struct drm_display_mode *adjusted_mode)
-+{
-+	drm_mode_set_crtcinfo(adjusted_mode, 0);
+ 	cdns_dsi_init_link(dsi);
+ 
++	/* Reset the DCS Write FIFO */
++	writel(0x00, dsi->regs + DIRECT_CMD_FIFO_RST);
 +
-+	return true;
-+}
-+
- static const struct drm_crtc_helper_funcs tidss_crtc_helper_funcs = {
- 	.atomic_check = tidss_crtc_atomic_check,
- 	.atomic_flush = tidss_crtc_atomic_flush,
- 	.atomic_enable = tidss_crtc_atomic_enable,
- 	.atomic_disable = tidss_crtc_atomic_disable,
- 
-+	.mode_fixup = tidss_crtc_mode_fixup,
- 	.mode_valid = tidss_crtc_mode_valid,
- };
- 
+ 	ret = mipi_dsi_create_packet(&packet, msg);
+ 	if (ret)
+ 		goto out;
 -- 
 2.34.1
 
