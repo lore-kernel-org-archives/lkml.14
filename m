@@ -1,240 +1,154 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2050.outbound.protection.outlook.com [40.107.93.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4195677C
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 00:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715388645; cv=none; b=kKbbCJO18DQ/Qsg5IXaCWbiifdHKUEMgayGQVtmV5xK1N/aRdaXN5i0RPrdtjOnZiYLw4c1AR/qDhibYuotZza3RtdSrlRjrK6TEPzfYdo7nXfWZlzfjTDYbGxq4NA6fYJ8oV6YAO0wHgCvumXXjdOzwOu/tXAOreKiqZOLfG20=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715388645; c=relaxed/simple;
-	bh=29H2ZkSMqUh1NQ71nR4QuJZPnSHhxyUdN/R3ZAzv+1o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hMSuzydAjk0LbMnuCgD17t9/3y6hggk9OkeNhkAqhbl3A2j8vPp6069h4k19ghUP5dPmawccIqV6TWaz5+icMlAF7YBxjwT7Fhi7Qk34QBYNeNnNXvFcJAnaNerCzY4P8bQyetSudKgC5TwJx4DVgz3WZVUvjJETNKIErPQRSFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ORbM1vOT; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9603E1B7E9;
+	Sat, 11 May 2024 00:51:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715388699; cv=fail; b=dqywOgCJ6lBpBkYkf8QLUEPPN3AFvD/1QoR3XTep3MkhBRWFEoM0A7RJSXV1ec5KRiGP3pG5YaO5amapahO3QJDB5rX4lZJiCZs3xg8nwbfQETRjT84W9vbQpXteAvwVuUlPxlnAtBGIcE5dcITJ9wZtAvy+GE/853fkuMf+AZM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715388699; c=relaxed/simple;
+	bh=9qkcSuIbFuZTlEsL1iwwWYbDZxX3vd9VWkdoUo+thHo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TbtzZ6GEKp3+DxB2tm4jmafEwv7+zG3VYtQ/tt38uif0VUy9kKV+wRgUdNx6H70BVkcQRIsc1EdQRORzHUM4ZCbr/rGhWAwziQj6vLKs7/XY4d64OMnz0ZKjlPBvApZxTS97yM0/JkJOIpIdSj+LtOPgqd+6cOCcbgOwh4iVDr4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=t4xBbzlh; arc=fail smtp.client-ip=40.107.93.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ORbM1vOT"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ee0ccf9c2fso63215ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 17:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715388643; x=1715993443; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IpkRXiISMgxYRyuOPXk0L2m29umqlNK9saYU4NgbZio=;
-        b=ORbM1vOTcuBEwUq19USCMObHIovAN0Q1ZSiXVGHEHcmMgllH3vczMCgVCRS2AT1S1r
-         wKg5n4zADa9Sr6PAzTdWU7rrxUKKjQ7qEeqdqhQyJPDjwO+zs+A8mWO1B0D2+d9SNWf1
-         U3pbN+gfBBu9YQBLlDJ112V0Hv74dTWwaTjYJ45chEQgi+hRb+rhrdcNAzwqjAYIFIhZ
-         Xq1qzFGer4tRG4IJKLVVJ7JTSKbjgJ9lllEaIRVRyxOnv4D4boSkj7An4YO2tVWyzCtG
-         guKjoQbFlLBr/Y1zbvnwAT/I5RvminqsZah7hNSddTz4hsSBpDIULSrAPb5azrYad8/G
-         AHmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715388643; x=1715993443;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IpkRXiISMgxYRyuOPXk0L2m29umqlNK9saYU4NgbZio=;
-        b=MaPKpVxTb2xxiJcAj34g+Kdw4oknPw8y7MB31qyeIY2Fk20nCLZWacL5msctfcZtAg
-         Hxt6t2djX18L3rwWSCGSMfDDYnZakQ/Lx229wOgKJPdiKD0orAigLLvvkrWVIe+LeDNk
-         3NuStPzBHaKMFZPRJApkbtaNbQYSK7045QekrLhvlinkgprwpV+8b2lwD7kLPuNpZJJX
-         EDl3C95/sOjgB6UjSFQmHL3oPX/VGhqtuk72E6mYmXqHUOV/dO83DOJeB/qkJbGs4r1S
-         fwzHqpRtu383pXUJHOivi9FL14agtkHXxmNVYGUGMtr/s5A+39JdyOcUlLRLGUkbTfHg
-         D/AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMX/G+7kfNrvQ8yqr0fpuShBBTvIi02cZPu9sH4PXPkuYd34zKXLgF03KPyz0bgS7GMZ6b05RNH4lQUE3wsY1DM3FZl7sicOfIW4tr
-X-Gm-Message-State: AOJu0YxHCzL9euGTjgZ3NlFMpmBjopZsQhF05zRKB2EvHRiwUcjFtpUr
-	KWtdusnIgTNSCValav01NZucOLbzK1MuOni1WTz1hPr9NPIdrWTt4fyMgD5QA5OwJVNmGnlyHYA
-	J+tzq9jXX+dcQPfvlZbIPiAVC4QgORiwh9P0F
-X-Google-Smtp-Source: AGHT+IGcOv4CX/F79iCXQC7gbanIkG/guRxkNZwIoCLpaLG+RFa9IbRJ1e/Fc1r3KeEPT54+/eCX4VqJgF3btD61+AA=
-X-Received: by 2002:a17:903:124b:b0:1e8:6551:e83c with SMTP id
- d9443c01a7336-1f060bba9c6mr501885ad.25.1715388642768; Fri, 10 May 2024
- 17:50:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="t4xBbzlh"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QE0bFF8oEZmbz5Ge49pIMwSFiR2la1fcwfM1nOA+7LemH0o5M0Mu/2mfcChb13DJTgETg92ASun90rNkRWn614hj2gSxSHqo+NzOwD6F3xov/pob6XhlfoFi0p1Vg2NCktqDFynXmwzn734QVPAkExL/r1buorbzlgco1MSz99gHA03veN32VxMn4+iHUA6OLNknIwHQKB7Vaa4p7WvHdT4xUCF3HY4Cuaa8TpWVxxQJKk0sa72+y0mmLHq6UEPUY1cHuPO/LCF1bjOZ9kPnQPUd3fakyyWNyUBa+ER0BhG6G5WS8Q9htJ7e8astKHiTH4ABeqZOkmIP8dVP+U1MvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZE8lhGUfRKARCrEYdO+HJ2L+qCSe7dZhpBPvf7aLCC0=;
+ b=S8CSoxJ5gy38J/Rl5OmoOZOEQCbbfcN/Su6bGozjHIRCc9fIHih4B/Ul7SbL0ymIuymedONRLaJYpCMai+ETOlxJGuyZ/wc3CcLpaN6bBbtEy0hxY7XHuVbyJ4pgYN+eIlXKUwET8sN+G6YDn03reLOrtepTfH5K9hJYZUkK8jPwOjBiJoolGiL13kj+ERjUD6P0GhvmmlBbe/GBTh0UemvxvJZVSVaaRnDRdPIEJ5prVLn54uDSJ00Hw8u2V44x6yCyjWxHf3REY3lERtLYZlSZKIaiKKX5+7ZVDjSOEhbO3OVu1m4oKpwM2zeOf6yCEbAX3We8xnwQv5WJYn3PFA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZE8lhGUfRKARCrEYdO+HJ2L+qCSe7dZhpBPvf7aLCC0=;
+ b=t4xBbzlh7BggZv23j7oS4bmQm5Pr7/IujcAK6eEeunfsJoEXJVJibk5invXoA+uiGHvy5BO2FedkXsr/qsZlbP6IFWwQ+J41W8whOao3wO/KorFuMTmDEXDCeXcr6W1+CzNNZJxnLQtk4G+5AJEQNF7U1EtiPqdEWMmM+9zs7Fs=
+Received: from DS7PR03CA0246.namprd03.prod.outlook.com (2603:10b6:5:3b3::11)
+ by PH0PR12MB8127.namprd12.prod.outlook.com (2603:10b6:510:292::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.48; Sat, 11 May
+ 2024 00:51:35 +0000
+Received: from DS1PEPF00017096.namprd05.prod.outlook.com
+ (2603:10b6:5:3b3:cafe::e4) by DS7PR03CA0246.outlook.office365.com
+ (2603:10b6:5:3b3::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.42 via Frontend
+ Transport; Sat, 11 May 2024 00:51:35 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS1PEPF00017096.mail.protection.outlook.com (10.167.18.100) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7544.18 via Frontend Transport; Sat, 11 May 2024 00:51:34 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Fri, 10 May
+ 2024 19:51:34 -0500
+Received: from xsjtanmays50.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.35 via Frontend
+ Transport; Fri, 10 May 2024 19:51:34 -0500
+From: Tanmay Shah <tanmay.shah@amd.com>
+To: <andersson@kernel.org>, <mathieu.poirier@linaro.org>
+CC: <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	"Tanmay Shah" <tanmay.shah@amd.com>
+Subject: [PATCH v2 0/2] remoteproc: xlnx: Add attach detach ops and sram support
+Date: Fri, 10 May 2024 17:51:24 -0700
+Message-ID: <20240511005126.1240430-1-tanmay.shah@amd.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240510024729.1075732-1-justin.he@arm.com> <20240510024729.1075732-3-justin.he@arm.com>
- <CAP-5=fVGD-pK1igABj0wiq6-KVM+Z4i7rnRhM=Vy7bFHW4pLQA@mail.gmail.com>
- <DBBPR08MB4538A157B81F2BBD2DD9E40DF7E72@DBBPR08MB4538.eurprd08.prod.outlook.com>
- <CAP-5=fWgGOWi_YedpQgdK2DnBvtRk-79GEhKMsTehcfOVtxLNA@mail.gmail.com>
-In-Reply-To: <CAP-5=fWgGOWi_YedpQgdK2DnBvtRk-79GEhKMsTehcfOVtxLNA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 10 May 2024 17:50:29 -0700
-Message-ID: <CAP-5=fULL0KNWA_O0B3r4Q0DA2_FMk=rARhb=z8ySKzFyVwFyw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf pmu: Fix num_events calculation
-To: Justin He <Justin.He@arm.com>, John Garry <john.g.garry@oracle.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <Mark.Rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <James.Clark@arm.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: tanmay.shah@amd.com does not designate
+ permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS1PEPF00017096:EE_|PH0PR12MB8127:EE_
+X-MS-Office365-Filtering-Correlation-Id: 077eff45-8a91-494d-b772-08dc715481ea
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|36860700004|82310400017|1800799015;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?TD//BkmJeeQZ4LOgiuiovn2m3jaWzoRM4KxI9IttAPETAuIriTosxlYcmgIN?=
+ =?us-ascii?Q?3qyq3PZwcL83/xPtg2q8QOAAMA/wEPpRAksvTHitnsx4f/skfK36oy7sWf9H?=
+ =?us-ascii?Q?Jrc2OfH8qg6Bf5iqL/sO1KVgGINpMnHM/YdCUoQ3F9ydodvl9GeDT/HT2X4A?=
+ =?us-ascii?Q?0jmxVqGy2NRI6RH7g7oePeVIG2nhyTPrpzlpIbo1e1o6qGIRUXMezLlmQEAW?=
+ =?us-ascii?Q?70cNdPLa+r0FJCyrzaxGC+LPJtclDaZptrR9uKIlpuG0EaFgSU16yAPIkbWY?=
+ =?us-ascii?Q?LrgeVmq6tsMWKBj7eUUV+sXcR5ygjVUW3V415kLxwHtru+FKYiWLdWSP4rCi?=
+ =?us-ascii?Q?/bN0xh0OsmNYLEbOQ7nU1XR2xLXFMUbQE87LCWgqzeTl1DtQ7eQpmZ2afql7?=
+ =?us-ascii?Q?ZMk8NkfEAfC7Tuf4Kf/IaSY/SGwqTVyRbk4/IFR0/geaVVnUfNWkL4mLCsKo?=
+ =?us-ascii?Q?gkebj7751MOV+hsejXJM30nmhKsWU72nZcoy7fweaiwn9ui3RYxWLu2EyVza?=
+ =?us-ascii?Q?3mM72ZPOgxtqsWg1QIdUo5nlfCUQn+33qiHzjK9JT1e/YF6eWT7x+hH4+KE1?=
+ =?us-ascii?Q?dSZ1QLVYyJH3gbibqpTp2vpCdHe+GxZA9b05qHBYxpqNW1RjmQ4WN/a0F9L5?=
+ =?us-ascii?Q?YgXaVgTWeAFs500jlnk8OKbF+haLTsIWE3IMGpcfgSZ99yeZrsfR/kPJhm0K?=
+ =?us-ascii?Q?D/49eOf60Q+lHWi5t7CBrCLjz9ZCZ5B5o00pLCzo4u33shGGWZKNPC/3epDZ?=
+ =?us-ascii?Q?sobCrjBQxFnU64vNn+alUvg1FyWJxiGyo/yrI2uM8nyakCm8IDfq9YJ1delx?=
+ =?us-ascii?Q?PTO1HL3GbyNebIrmxm7Wp5vdvmrLMMyEiwIJCTyt7J3UJhCCwAuAtNmmBJJQ?=
+ =?us-ascii?Q?EcJGO12kDJ7JIxfNLb7XbCDYEI8+KtbyoOpfFPT4xS7GlBlkpQZEi8imXNuY?=
+ =?us-ascii?Q?jF8dlPta9T76qxOjeO6aap7gD0qtC2OdH2s7XSsiV/iaoILEAk4XQs+yWoOV?=
+ =?us-ascii?Q?+m0MSdfdXi12GC4xvjK3PTkgKGqyTQxgFiJ4tt4fduy78FqiS3yA3oTAvYzS?=
+ =?us-ascii?Q?vjmwSomuHvxO4wrpK+G6lx9tIu5G/Y9IZI+fSFxZfohC+yRVfll0ePCUv826?=
+ =?us-ascii?Q?NqMHBFOdkZx/4A1nuhLn9DBDR3721ZtiJ0+VonN5ZamVoJVtcO7te7MAtdYn?=
+ =?us-ascii?Q?dETwT0pWAWx09Iis59EcAVKC/bW3siilWhjcjPY+f+Hukp3FL8YfwjZVBtiA?=
+ =?us-ascii?Q?owqxtmQjTVMlOXzG1H13SyznIMvs4lsfvJu8trbxiO4d3pnBl/wZU9eThbTO?=
+ =?us-ascii?Q?AOgtico39sWVf9mnCVt80VMgyu40ELjM5XnPZkAECKn1iln/DuBbqk5yvRpb?=
+ =?us-ascii?Q?fu7w2FrpoxdM4Vu4H56gGcxgLIMs?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(36860700004)(82310400017)(1800799015);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2024 00:51:34.9665
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 077eff45-8a91-494d-b772-08dc715481ea
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS1PEPF00017096.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8127
 
-On Fri, May 10, 2024 at 1:41=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Thu, May 9, 2024 at 11:52=E2=80=AFPM Justin He <Justin.He@arm.com> wro=
-te:
-> >
-> > Hi, Ian
-> >
-> > > -----Original Message-----
-> > > From: Ian Rogers <irogers@google.com>
-> > > Sent: Friday, May 10, 2024 2:17 PM
-> > > To: Justin He <Justin.He@arm.com>
-> > > Cc: Peter Zijlstra <peterz@infradead.org>; Ingo Molnar <mingo@redhat.=
-com>;
-> > > Arnaldo Carvalho de Melo <acme@kernel.org>; Namhyung Kim
-> > > <namhyung@kernel.org>; Mark Rutland <Mark.Rutland@arm.com>; Alexander
-> > > Shishkin <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kerne=
-l.org>;
-> > > Adrian Hunter <adrian.hunter@intel.com>; Kan Liang
-> > > <kan.liang@linux.intel.com>; James Clark <James.Clark@arm.com>;
-> > > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org
-> > > Subject: Re: [PATCH 2/2] perf pmu: Fix num_events calculation
-> > >
-> > > On Thu, May 9, 2024 at 7:47=E2=80=AFPM Jia He <justin.he@arm.com> wro=
-te:
-> > > >
-> > > > When pe is NULL in the function perf_pmu__new_alias(), the total
-> > > > number of events is added to loaded_json_aliases. However, if
-> > > > pmu->events_table is NULL and cpu_aliases_added is false, the
-> > > > calculation for the events number in perf_pmu__num_events() is inco=
-rrect.
-> > > >
-> > > > Then cause the error report after "perf list":
-> > > > Unexpected event
-> > > smmuv3_pmcg_3f062/smmuv3_pmcg_3f062/transaction//
-> > > >
-> > > > Fix it by adding loaded_json_aliases in the calculation under the
-> > > > mentioned conditions.
-> > > >
-> > > > Test it also with "perf bench internals pmu-scan" and there is no
-> > > > regression.
-> > > >
-> > > > Fixes: e6ff1eed3584 ("perf pmu: Lazily add JSON events")
-> > > > Signed-off-by: Jia He <justin.he@arm.com>
-> > > > ---
-> > > >  tools/perf/util/pmu.c | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > >
-> > > > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c index
-> > > > a1eef7b2e389..a53224e2ce7e 100644
-> > > > --- a/tools/perf/util/pmu.c
-> > > > +++ b/tools/perf/util/pmu.c
-> > > > @@ -1639,6 +1639,8 @@ size_t perf_pmu__num_events(struct perf_pmu
-> > > *pmu)
-> > > >                  nr +=3D pmu->loaded_json_aliases;
-> > > >         else if (pmu->events_table)
-> > > >                 nr +=3D
-> > > pmu_events_table__num_events(pmu->events_table,
-> > > > pmu) - pmu->loaded_json_aliases;
-> > > > +       else
-> > > > +               nr +=3D pmu->loaded_json_aliases;
-> > >
-> > > Thanks for working on this! The "struct pmu_event *pe" in new_alias i=
-s an entry
-> > > from the json data, and "pmu->events_table" should NULL if there is n=
-o json
-> > > data. I believe the code is assuming that these lines aren't necessar=
-y as it
-> > > shouldn't be possible to load json data if the json events table does=
-n't exist for
-> > > the PMU - if there is no json data then loaded_json_aliases should be=
- 0 and no
-> > > addition is necessary. I'm wondering why this case isn't true for you=
-.
-> > On my Armv8a N2 server, "pmu->events_table" is NULL because perf_pmu__f=
-ind_events_table()
-> > return NULL.
-> >
-> > I also noticed that pmu->loaded_json_aliases is *not* 0. The missing ad=
-ding calculation will cause
-> > perf_pmu__num_events() less than normal case and will trigger latter ch=
-eck failure in
-> > perf_pmus__print_pmu_events__callback().
-> > At last, perf list will report many lines similar as:
-> > Unexpected event smmuv3_pmcg_3f062/smmuv3_pmcg_3f062/transaction//
->
-> The issue is the sys events which currently are ARM only. Here is an
-> lldb stack trace:
-> ```
->     frame #6: 0x0000aaaaabc9b49c
-> perf`__assert_fail(assertion=3D"pmu->events_table",
-> file=3D"tools/perf/util/pmu.c", line=3D522, function=3D"int
-> perf_pmu__new_alias(struct perf_pmu *, const char *, const char *,
-> const char *, FILE *, const struct pmu_event *)")
->     frame #7: 0x0000aaaaab41e018
-> perf`perf_pmu__new_alias(pmu=3D0x00007377e7e09b40,
-> name=3D"hnf_brd_snoops_sent", desc=3D"Counts number of multicast snoops
-> sent (not including SF back invalidation)", val=3D"eventid=3D9,type=3D5",
-> val_fd=3D0x0000000000000000, pe=3D0x0000ffffffffde88) at pmu.c:522:3
->     frame #8: 0x0000aaaaab4175cc
-> perf`pmu_add_sys_aliases_iter_fn(pe=3D0x0000ffffffffde88,
-> table=3D0x0000aaaaac299bb0, vdata=3D0x00007377e7e09b40) at pmu.c:939:3
->     frame #9: 0x0000aaaaaaf6d000
-> perf`pmu_events_table__for_each_event_pmu(table=3D0x0000aaaaac299bb0,
-> pmu=3D0x0000aaaaac299238, fn=3D(perf`pmu_add_sys_aliases_iter_fn at
-> pmu.c:931), data=3D0x00007377e7e09b40) at pmu-events.c:5994:23
->     frame #10: 0x0000aaaaaaf6cd78
-> perf`pmu_events_table__for_each_event(table=3D0x0000aaaaac299bb0,
-> pmu=3D0x0000000000000000, fn=3D(perf`pmu_add_sys_aliases_iter_fn at
-> pmu.c:931), data=3D0x00007377e7e09b40) at pmu-events.c:6057:23
->     frame #11: 0x0000aaaaaaf6ec44
-> perf`pmu_for_each_sys_event(fn=3D(perf`pmu_add_sys_aliases_iter_fn at
-> pmu.c:931), data=3D0x00007377e7e09b40) at pmu-events.c:6295:27
->     frame #12: 0x0000aaaaab41738c
-> perf`pmu_add_sys_aliases(pmu=3D0x00007377e7e09b40) at pmu.c:955:2
->     frame #13: 0x0000aaaaab4179fc
-> perf`perf_pmu__lookup(pmus=3D0x0000aaaaac500970, dirfd=3D34,
-> name=3D"arm_cmn_0") at pmu.c:1037:2
->     frame #14: 0x0000aaaaab4242d0 perf`perf_pmu__find2(dirfd=3D34,
-> name=3D"arm_cmn_0") at pmus.c:161:9
->     frame #15: 0x0000aaaaab421614 perf`pmu_read_sysfs(core_only=3Dfalse)
-> at pmus.c:209:3
->     frame #16: 0x0000aaaaab42278c
-> perf`perf_pmus__scan_skip_duplicates(pmu=3D0x0000000000000000) at
-> pmus.c:297:3
->     frame #17: 0x0000aaaaab422078
-> perf`perf_pmus__print_pmu_events(print_cb=3D0x0000ffffffffec68,
-> print_state=3D0x0000ffffffffecd0) at pmus.c:462:16
->     frame #18: 0x0000aaaaab425d9c
-> perf`print_events(print_cb=3D0x0000ffffffffec68,
-> print_state=3D0x0000ffffffffecd0) at print-events.c:409:2
->     frame #19: 0x0000aaaaab093ef0 perf`cmd_list(argc=3D0,
-> argv=3D0x0000fffffffff340) at builtin-list.c:592:3
->     frame #20: 0x0000aaaaaaf5b490
-> perf`run_builtin(p=3D0x0000aaaaac4e8220, argc=3D1,
-> argv=3D0x0000fffffffff340) at perf.c:349:11
->     frame #21: 0x0000aaaaaaf5a3e0 perf`handle_internal_command(argc=3D1,
-> argv=3D0x0000fffffffff340) at perf.c:402:8
->     frame #22: 0x0000aaaaaaf5b1a0
-> perf`run_argv(argcp=3D0x0000fffffffff1c8, argv=3D0x0000fffffffff1c0) at
-> perf.c:446:2
->     frame #23: 0x0000aaaaaaf59f44 perf`main(argc=3D1,
-> argv=3D0x0000fffffffff340) at perf.c:562:3
-> ```
->
-> As such the fix here is incomplete. There may be both sys json events
-> (detected by PMU/id name) and CPU json events (detected by CPUID). I'm
-> looking into a fix.
+Attach detach ops are needed to connect to remote processor that is
+running before remoteproc driver is probed. Implement remoteproc
+framework ops that enables such use case on AMD-Xilinx platforms.
 
-Patch sent:
-https://lore.kernel.org/lkml/20240511003601.2666907-1-irogers@google.com/
+Remote processor can also use On Chip sram Memory (OCM) for various
+purpose. For example, for fast code execution or data access compare
+to DDR memory. Such sram region is made available to remoteproc nodes
+via "sram" property. Add support in driver to parse and use OCM memory
+via sram property.
 
-Thanks,
-Ian
+Changes in v2:
+  - Fix following sparse warnings
 
-> Thanks,
-> Ian
->
-> > --
-> > Cheers,
-> > Justin (Jia He)
+drivers/remoteproc/xlnx_r5_remoteproc.c:827:21: sparse:    expected struct rsc_tbl_data *rsc_data_va
+drivers/remoteproc/xlnx_r5_remoteproc.c:844:18: sparse:    expected struct resource_table *rsc_addr
+drivers/remoteproc/xlnx_r5_remoteproc.c:898:24: sparse:    expected void volatile [noderef] __iomem *addr
+drivers/remoteproc/xlnx_r5_remoteproc.c:995:26: sparse: warning: Using plain integer as NULL pointer
+
+Tanmay Shah (2):
+  drivers: remoteproc: xlnx: add attach detach support
+  drivers: remoteproc: xlnx: add sram support
+
+ drivers/remoteproc/xlnx_r5_remoteproc.c | 385 +++++++++++++++++++++++-
+ 1 file changed, 380 insertions(+), 5 deletions(-)
+
+
+base-commit: c8d8f841e95bcc07ac8c5621fc171a24f1fd5cdb
+-- 
+2.25.1
+
