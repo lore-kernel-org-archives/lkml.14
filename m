@@ -1,95 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC162D600;
-	Sat, 11 May 2024 10:02:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6AA54750;
+	Sat, 11 May 2024 10:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715421743; cv=none; b=Mk0LmkCIv/Zpp//pJPfBdjYb8HSO7wjh0umMQFZeG0Yc/9sl/39mS5Tzzg4p3eIBVh+qemFgazNEYTN5EErEq+c4z++5Z/mGWEwTfrwhYoqMEJFsMHiqbGPX00VsB7QybnS9vk+NwKajCvFdvA8yM4N+Wv92IN7C2aF9gqGxUPA=
+	t=1715422388; cv=none; b=As9El0uGvEdsybZ+ApFAcgjNL7U91eR4t30WZV+zCKGLZISsG2XCkR6vpqfLtCuxbUgNOh1VhSmvrtwHHP3K8bss54RMDoc0oyweKIcVfiqY15/qWmfp7zG27y3UFiRhv76u4dk9avaXMlFxpi7XrDxgGgndBnk2XoyKOb+9LIA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715421743; c=relaxed/simple;
-	bh=SFHbHpo72eV/0cisApcS/CTZAxVbNx20NHHUp3VFlGY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ngDWR+4ZbvnRXxjfGx9xpIJdJJTfNAtJ/gESjDpsGXPEpMVYlAK2VqgSBXG8i4p9VxFtxpysYwJlPc9z5uwoPOBxZ/EnmUKPFDXr2YdiJ8iUWQKSxpIUKpA6pG+OK6uBqUiFSq2akmpYfCOrrFax9UbUPBJNG8iCP+L/x33J7vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB8CFC2BBFC;
-	Sat, 11 May 2024 10:02:19 +0000 (UTC)
-From: Huacai Chen <chenhuacai@loongson.cn>
-To: Arnd Bergmann <arnd@arndb.de>,
-	Huacai Chen <chenhuacai@kernel.org>
-Cc: loongarch@lists.linux.dev,
-	linux-arch@vger.kernel.org,
-	Xuefeng Li <lixuefeng@loongson.cn>,
-	Guo Ren <guoren@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	linux-kernel@vger.kernel.org,
-	loongson-kernel@lists.loongnix.cn,
-	Huacai Chen <chenhuacai@loongson.cn>,
-	stable@vger.kernel.org
-Subject: [PATCH] LoongArch: Define __ARCH_WANT_NEW_STAT in unistd.h
-Date: Sat, 11 May 2024 18:01:57 +0800
-Message-ID: <20240511100157.2334539-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1715422388; c=relaxed/simple;
+	bh=sY4E2uikkRVPa50fJdTiW26GKT1LoEB7hA3kqOi786o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IofQzolJ7jBGTkj8f5V68H/Z8v8ag6hLEY3x7W2e6FaWp2qYNWcNrQsq3vsR3PavfVgz5fyjYzYmeAlzz04Rkh9JD/wCaRwREj2JATbvooi/7iajN5OlL95zAEGBL0BxFp76I6wHAUODMahcpAVcbTWuac57ZRVuqoq0z343PFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=J7baCJoX; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="J7baCJoX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C630C4AF09;
+	Sat, 11 May 2024 10:13:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1715422388;
+	bh=sY4E2uikkRVPa50fJdTiW26GKT1LoEB7hA3kqOi786o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J7baCJoXTFIuOLfL4afkEaDIDcNcBHiY34IOwFbKvzytrpfdIJHlp9WRcqGDSGCY9
+	 tZHBgrkXjXvVMFAG4JaH2P1OmTJC6A4tKyTcJiHCwjXg3qgRsYguDK7CGYFyK39H55
+	 CCykDM3P32OjwgaBJaa6k7c1SQcDli/PjzFSHCDo=
+Date: Sat, 11 May 2024 11:13:02 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-usb@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] drm/bridge: aux-hpd-bridge: correct
+ devm_drm_dp_hpd_bridge_add() stub
+Message-ID: <2024051133-morphing-cradling-d7b8@gregkh>
+References: <20240511-fix-aux-hpd-stubs-v1-1-98dae71dfaec@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240511-fix-aux-hpd-stubs-v1-1-98dae71dfaec@linaro.org>
 
-Chromium sandbox apparently wants to deny statx [1] so it could properly
-inspect arguments after the sandboxed process later falls back to fstat.
-Because there's currently not a "fd-only" version of statx, so that the
-sandbox has no way to ensure the path argument is empty without being
-able to peek into the sandboxed process's memory. For architectures able
-to do newfstatat though, glibc falls back to newfstatat after getting
--ENOSYS for statx, then the respective SIGSYS handler [2] takes care of
-inspecting the path argument, transforming allowed newfstatat's into
-fstat instead which is allowed and has the same type of return value.
+On Sat, May 11, 2024 at 11:54:30AM +0300, Dmitry Baryshkov wrote:
+> If CONFIG_DRM_AUX_HPD_BRIDGE is not enabled, the aux-bridge.h header
+> provides a stub for the bridge's functions. Correct the arguments list
+> of one of those stubs to match the argument list of the non-stubbed
+> function.
+> 
+> Fixes: e5ca263508f7 ("drm/bridge: aux-hpd: separate allocation and registration")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202405110428.TMCfb1Ut-lkp@intel.com/
+> Cc: Johan Hovold <johan+linaro@kernel.org>
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> ---
+>  include/drm/bridge/aux-bridge.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-But, as LoongArch is the first architecture to not have fstat nor
-newfstatat, the LoongArch glibc does not attempt falling back at all
-when it gets -ENOSYS for statx -- and you see the problem there!
+You beat me to it, thanks!  I'll take this through the usb-next tree as
+we have a commit there that requires this to build properly on 0-day
+testing.
 
-Actually, back when the LoongArch port was under review, people were
-aware of the same problem with sandboxing clone3 [3], so clone was
-eventually kept. Unfortunately it seemed at that time no one had noticed
-statx, so besides restoring fstat/newfstatat to LoongArch uapi (and
-postponing the problem further), it seems inevitable that we would need
-to tackle seccomp deep argument inspection.
-
-However, this is obviously a decision that shouldn't be taken lightly,
-so we just restore fstat/newfstatat by defining __ARCH_WANT_NEW_STAT
-in unistd.h. This is the simplest solution for now, and so we hope the
-community will tackle the long-standing problem of seccomp deep argument
-inspection in the future [4][5].
-
-More infomation please reading this thread [6].
-
-[1] https://chromium-review.googlesource.com/c/chromium/src/+/2823150
-[2] https://chromium.googlesource.com/chromium/src/sandbox/+/c085b51940bd/linux/seccomp-bpf-helpers/sigsys_handlers.cc#355
-[3] https://lore.kernel.org/linux-arch/20220511211231.GG7074@brightrain.aerifal.cx/
-[4] https://lwn.net/Articles/799557/
-[5] https://lpc.events/event/4/contributions/560/attachments/397/640/deep-arg-inspection.pdf
-[6] https://lore.kernel.org/loongarch/20240226-granit-seilschaft-eccc2433014d@brauner/T/#t
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- arch/loongarch/include/uapi/asm/unistd.h | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/loongarch/include/uapi/asm/unistd.h b/arch/loongarch/include/uapi/asm/unistd.h
-index fcb668984f03..b344b1f91715 100644
---- a/arch/loongarch/include/uapi/asm/unistd.h
-+++ b/arch/loongarch/include/uapi/asm/unistd.h
-@@ -1,4 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#define __ARCH_WANT_NEW_STAT
- #define __ARCH_WANT_SYS_CLONE
- #define __ARCH_WANT_SYS_CLONE3
- 
--- 
-2.43.0
-
+greg k-h
