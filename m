@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF97101EE
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AD9F11CBD
 	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 00:50:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715388634; cv=none; b=FFZPVKQ4+4XhCyguD/ja/FcRagrT74w+5lNYLhvtSuLX7ACPkWBGwnRqJ7JOLdF3C2V1LpmoKhsGo1zJOngr1Ra0u1YMgNpMHa+GTGpoAFKOgkOZ+EUel5uICBcktBYyjB44GyeR5oTNI2m3/IiHwmppd2un2xjlBJ+QwoVC63s=
+	t=1715388634; cv=none; b=BeSSgkk2G9NRFcXcHg1S6BXNr+RIhAEspPGUFvRRXzlBHsdO3TYmod4r+/wNixXQNqdkDrtXRqe1WQqXiagj+o/SZX0k38ZCDR+XwpEEcVVrd0RwO1U9fm/EQixbmtQKb2/ayGXUDF5qAQPN7WOkDkCUHzfnog5kZVmtAvmuPdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715388634; c=relaxed/simple;
-	bh=Awf1r273q7gGg010KfrhYdOCJKlxBHOXjUBot6jM11Y=;
+	bh=Pz+ow3JxEINc2wts5BR00ZQMF+TsSbf1YGi3BBPfPxg=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ORARtitVCwNKzJyTeTIinh5pJHdcYdQQc+HmW8RqohQkUXVjHKVxGRn5mrOqdDChBtiGUQZcAxy6/vdLWs2mz6X7CVstwvGw16RdbV8AKaSv02HGmnyltXN09JNW1zyJvQxSh1IrM3GOgFznNaUgnSef5W2CdTFepFtbW4MXaGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y6fM4V4o; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hTWlHfy77ASMEXgRnxGemzbmF1q4QNxq0JKK3wmNEYY1iQhlmEuxJdaqROOWLYHP5nMXX8QDylzlKfaNPBCr/DtNM1z/R32k7oqIlIoaX0wCnxrBjX8z+UsakonydAOddDJbZTKmN7q3Q9eekUMvAKN2kafCks2WfJypjJw7gVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwBXNb7x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y6fM4V4o"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 220EEC4DDE0;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwBXNb7x"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2BFA6C4DDE3;
 	Sat, 11 May 2024 00:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715388634;
-	bh=Awf1r273q7gGg010KfrhYdOCJKlxBHOXjUBot6jM11Y=;
+	bh=Pz+ow3JxEINc2wts5BR00ZQMF+TsSbf1YGi3BBPfPxg=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Y6fM4V4ovkebTJKUcT03MXxdriMrWkQ/KfUhOu2NmPj8mhLHJSWnkjH8oOKQz08WN
-	 mrkDF6jQRtg5QOkS4JGg186iKFr4DgdgS34oSlLy7L6acGQlTaW6X+FfwPW6af2Qxt
-	 1wCTl4ZONlP9d+BiNVXFc25dn+e2OQWHdAekbzdAL4NRepa3dgRnrMuEiOA4uzNUSy
-	 iT3sfCoHh87Q4/E8OZfsj0vNuqAR2PYQ4MvCeMbFjCmX68eQD4P1bqtRiu2aKZNSvh
-	 +WgzgDd7s5LVdqItmnZO/bK/Ca4jo9uxYL33NnEY4EvQ0fPhJA2iDxYlZhSkcoz/ab
-	 Qz6+z3P1d+uyw==
+	b=lwBXNb7xi/6jTNONWTORQWCM0OTldyOVw9RcQyzfhL6TUPOhyyKR+vnyKp8PbO0mi
+	 Ie9T2GmFCklKqn5gYCC78I+69DZcSf9jNvIpXKcvkjaf/yj8czyeUcpME7fn0KPf6/
+	 EfRX/4sc5lnVCWQPcLxNfwgkMzgK87IP67hFr+O+elgezAE9vgW+8wmUrg+VMpXCqh
+	 KVYwn1R8fqGhs1pwIpZs4KCEvoaPRI3ISyfW87gMWnzNxONl/oYfJz40W2TtRGYtmb
+	 vDnXmB4M+TtlAtQJhDGAcLqAu6cznDqNRKebH70ptxjChOeOx1xn8U5TQ5UVaI0XoM
+	 ksCqbF4XXeMeA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 16FBFC54BA3;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 20D5CE7C112;
 	Sat, 11 May 2024 00:50:34 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,16 +37,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to avoid allocating WARM_DATA segment
- for direct IO
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: fix block migration when section is not
+ aligned to pow2
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <171538863409.11229.15179982798559586188.git-patchwork-notify@kernel.org>
+ <171538863413.11229.14009197979317413967.git-patchwork-notify@kernel.org>
 Date: Sat, 11 May 2024 00:50:34 +0000
-References: <20240426093348.377018-1-chao@kernel.org>
-In-Reply-To: <20240426093348.377018-1-chao@kernel.org>
-To: Chao Yu <chao@kernel.org>
-Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
+References: <20240429035142.706356-1-bo.wu@vivo.com>
+In-Reply-To: <20240429035142.706356-1-bo.wu@vivo.com>
+To: Wu Bo <bo.wu@vivo.com>
+Cc: jaegeuk@kernel.org, chao@kernel.org, wubo.oduw@gmail.com,
+ liaoyuanhong@vivo.com, linux-kernel@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net
 
 Hello:
@@ -54,22 +55,19 @@ Hello:
 This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Fri, 26 Apr 2024 17:33:48 +0800 you wrote:
-> If active_log is not 6, we never use WARM_DATA segment, let's
-> avoid allocating WARM_DATA segment for direct IO.
+On Sun, 28 Apr 2024 21:51:42 -0600 you wrote:
+> As for zoned-UFS, f2fs section size is forced to zone size. And zone
+> size may not aligned to pow2.
 > 
-> Signed-off-by: Yunlei He <heyunlei@oppo.com>
-> Signed-off-by: Chao Yu <chao@kernel.org>
-> ---
->  fs/f2fs/data.c    |  3 ++-
->  fs/f2fs/f2fs.h    |  2 +-
->  fs/f2fs/file.c    |  5 +++--
->  fs/f2fs/segment.c | 11 +++++++++--
->  4 files changed, 15 insertions(+), 6 deletions(-)
+> Fixes: 859fca6b706e ("f2fs: swap: support migrating swapfile in aligned write mode")
+> Signed-off-by: Liao Yuanhong <liaoyuanhong@vivo.com>
+> Signed-off-by: Wu Bo <bo.wu@vivo.com>
+> 
+> [...]
 
 Here is the summary with links:
-  - [f2fs-dev] f2fs: fix to avoid allocating WARM_DATA segment for direct IO
-    https://git.kernel.org/jaegeuk/f2fs/c/a320b2f08b3b
+  - [f2fs-dev,v2] f2fs: fix block migration when section is not aligned to pow2
+    https://git.kernel.org/jaegeuk/f2fs/c/aa4074e8fec4
 
 You are awesome, thank you!
 -- 
