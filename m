@@ -1,239 +1,190 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C02895677C;
-	Sat, 11 May 2024 11:37:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A7554F87;
+	Sat, 11 May 2024 11:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715427434; cv=none; b=oba27AEmNlWXbsImLl5QBz6Z+qLAW/EqAL3VmDAWnZ7gkDRBhR8h5LGiWRvQK66PVTZtmyZ3TiPj998phJRNQrIHBHYI8xVtsWCum98vyhDiPDZIy2xy2rNLQGqh98Yvs/DyO8sM+ermNDDEz6QwlJ5+CSJ3v/l8YzpCk0QsEW0=
+	t=1715428056; cv=none; b=K0ImvRHQz750N/HccCfQg47g5JGishLXH6bwXp5x//jOlAAsLlklkaEiehvScxlMeq6FDkt6xchKywRCswlDLNDrAAhHKtFf+2aDO3e6+EEBcwURT6Z+xoY2sZOTt4+2SkwMSWvr4hpLtO0bxeqh/bZbO+r6262G4B/u8hH1zVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715427434; c=relaxed/simple;
-	bh=Mj6BnHzrxInqGSNem33jYFs8lPS6YifOhW/IZyrskjY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jHqmlbSg9VEJzdyJIcBmXu5X3FsiQn06RD9z5h9r45vsxPrhQDgYeqCw1bAiW21Q9U+cRqO3BQKA3paS1zIB0XpllMzb+5/zuJcpDYiUnxBlJhMOavnT0BfaBnoW6Y26hXXXdUunJrZcG6jxnH4zL1CZLeHvOmERfFHasCaM3GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4Vc3cr250Yz4f3jd5;
-	Sat, 11 May 2024 19:37:00 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id B79B71A016E;
-	Sat, 11 May 2024 19:37:08 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgDHlxA+WD9mG0B4MQ--.22689S14;
-	Sat, 11 May 2024 19:37:08 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-ext4@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	tytso@mit.edu,
-	adilger.kernel@dilger.ca,
-	jack@suse.cz,
-	ritesh.list@gmail.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com
-Subject: [PATCH v4 10/10] ext4: make ext4_da_map_blocks() buffer_head unaware
-Date: Sat, 11 May 2024 19:26:19 +0800
-Message-Id: <20240511112619.3656450-11-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240511112619.3656450-1-yi.zhang@huaweicloud.com>
-References: <20240511112619.3656450-1-yi.zhang@huaweicloud.com>
+	s=arc-20240116; t=1715428056; c=relaxed/simple;
+	bh=Ad33EoIdC/2d9QPw323EcuvUf08B04qp9JzIxhTJ6h8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BlB4xkQaSuIDN6Kd8PIlIEyeJh3sQ8zm4MNadd6AMgV6SeYeyn4FU2pKPFuYl0kxHJxIUSyolBjjDqdql9MKaytMxX9EKbSBRnVh13Brn13L8rtiMEFtc7Y1UIKN37VQTF3Zc4r6yyqiC9k6VqY4Q4l9O5+TYWlMMZEexrKNWoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RmGcQl9y; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RmGcQl9y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2DB9C2BBFC;
+	Sat, 11 May 2024 11:47:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715428055;
+	bh=Ad33EoIdC/2d9QPw323EcuvUf08B04qp9JzIxhTJ6h8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RmGcQl9yUW5OTZ2Nb3GPyhm2BoQKtxe1zflzeyb+dtk2tV55rWIb9/e5yHPWT1Fuy
+	 kui8pAqAgXjJr+iwnn+LKQ2lCpZ7GUkEeBsVnVUtE+qXRWW1EMfFPdo65Bu9Km0KtD
+	 BIX8ZDWxc/0xKYhu+evm26zpgxZuJ+fq1QZY442OtNklLXqI16rPXzxWT0WsVoO/O3
+	 g3apNEv5fsSphGQwBavc4t0jZQebSjnw95aTbOIK8aY6ccZPRTIY4qwDPmyBe7dy5J
+	 udQP7OZVBXceG7J5VhBRjXnone/9rblLQiXGHRs3sbjJl/t1x/JSGNB6lp6t3ggGY9
+	 teVItshhMxmEQ==
+Date: Sat, 11 May 2024 12:47:21 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, Julien Stephan
+ <jstephan@baylibre.com>, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, Nuno =?UTF-8?B?U8Oh?=
+ <nuno.sa@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+ kernel test robot <lkp@intel.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC v6 09/10] iio: adc: ad7380: add support for rolling
+ average oversampling mode
+Message-ID: <20240511124721.0d28bc11@jic23-huawei>
+In-Reply-To: <CAMknhBH=R2D4yu6Psnh+gv=OpCNAEwi8fpvMcJd0n9-SBfNWqg@mail.gmail.com>
+References: <20240501-adding-new-ad738x-driver-v6-0-3c0741154728@baylibre.com>
+	<20240501-adding-new-ad738x-driver-v6-9-3c0741154728@baylibre.com>
+	<20240506151725.10cf025e@jic23-huawei>
+	<CAMknhBFx-KVPRbm1xmKeU8ZaA7qt_c0_6eiUT-5kqTWVAvf3hw@mail.gmail.com>
+	<20240508122556.00005f71@Huawei.com>
+	<CAMknhBH=R2D4yu6Psnh+gv=OpCNAEwi8fpvMcJd0n9-SBfNWqg@mail.gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHlxA+WD9mG0B4MQ--.22689S14
-X-Coremail-Antispam: 1UD129KBjvJXoW3WF4kCw4rGr1fuFWxKFykXwb_yoW7Zw4Upr
-	Z3AF1rGr15Ww18ua1ftr15ZF1fK3WjyFW7Kr93GryrA34DCrn3tF1UJF1avas8trZ7Wr1r
-	XF4jqry8ua1IkrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E
-	14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIx
-	kGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAF
-	wI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr
-	0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUA
-	rcfUUUUU=
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Zhang Yi <yi.zhang@huawei.com>
+On Thu, 9 May 2024 17:01:14 -0500
+David Lechner <dlechner@baylibre.com> wrote:
 
-After calling the ext4_da_map_blocks(), a delalloc extent state could
-be identified through the EXT4_MAP_DELAYED flag in map. So factor out
-buffer_head related handles in ext4_da_map_blocks(), make this function
-buffer_head unaware and becomes a common helper, and also update the
-stale function commtents, preparing for the iomap da write path in the
-future.
+> On Wed, May 8, 2024 at 6:26=E2=80=AFAM Jonathan Cameron
+> <Jonathan.Cameron@huawei.com> wrote:
+> >
+> > On Mon, 6 May 2024 10:04:10 -0500
+> > David Lechner <dlechner@baylibre.com> wrote:
+> > =20
+> > > On Mon, May 6, 2024 at 9:17=E2=80=AFAM Jonathan Cameron <jic23@kernel=
+.org> wrote: =20
+> > > >
+> > > > On Wed, 01 May 2024 16:55:42 +0200
+> > > > Julien Stephan <jstephan@baylibre.com> wrote:
+> > > > =20
+> > > > > Adds support for rolling average oversampling mode.
+> > > > >
+> > > > > Rolling oversampling mode uses a first in, first out (FIFO) buffe=
+r of
+> > > > > the most recent samples in the averaging calculation, allowing th=
+e ADC
+> > > > > throughput rate and output data rate to stay the same, since we o=
+nly need
+> > > > > to take only one sample for each new conversion.
+> > > > >
+> > > > > The FIFO length is 8, thus the available oversampling ratios are =
+1, 2, 4, 8
+> > > > > in this mode (vs 1,  2, 4, 8, 16, 32 for the normal average) =20
+> > > >
+> > > > Ah. I should have read on!
+> > > > =20
+> > > > >
+> > > > > In order to be able to change the averaging mode, this commit als=
+o adds
+> > > > > the new "oversampling_mode" and "oversampling_mode_available" cus=
+tom
+> > > > > attributes along with the according documentation file in
+> > > > > Documentation/ABI/testing/sysfs-bus-iio-adc-ad7380 since no stand=
+ard
+> > > > > attributes correspond to this use case. =20
+> > > >
+> > > > This comes to the comment I stuck in the previous patch.
+> > > >
+> > > > To most people this is not a form of oversampling because the data =
+rate
+> > > > remains unchanged. It's a cheap low pass filter (boxcar) Google poi=
+nted me at:
+> > > > https://dsp.stackexchange.com/questions/9966/what-is-the-cut-off-fr=
+equency-of-a-moving-average-filter
+> > > >
+> > > > in_voltage_low_pass_3db_frequency would be the most appropriate sta=
+ndard
+> > > > ABI for this if we do treat it as a low pass filter control.
+> > > >
+> > > > I'm not necessarily saying we don't want new ABI for this, but I wo=
+uld
+> > > > like to consider the pros and cons of just using the 3db frequency.
+> > > >
+> > > > So would that work for this part or am I missing something?
+> > > > =20
+> > >
+> > > I like the idea. But from the link, it looks like the 3dB frequency
+> > > depends on the sampling frequency which is unknown (e.g. could come
+> > > from hrtimer trigger).
+> > >
+> > > Would it be reasonable to calculate the 3db frequency at the max
+> > > sample rate that the chip allows and just use those numbers?
+> > > =20
+> > Ah. So looking at datasheet the normal average oversampling is
+> > self clocked, but this version is not.
+> >
+> > So, I'll ask the dumb question.  What is this feature for?
+> > We have to pump the SPI bus anyway why not just do the maths in
+> > userspace?  Oversampling is normally about data rate reduction
+> > with a bonus in precision obtained.
+> >
+> > Jonathan
+> > =20
+>=20
+> I asked the apps engineers and the answer I got is that it a way to
+> enable oversampling while still maintaining a high sample rate.
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
- fs/ext4/inode.c | 63 ++++++++++++++++++++++++-------------------------
- 1 file changed, 31 insertions(+), 32 deletions(-)
+If I read it correctly (and based on how this is done on some other
+devices) it's exactly the same as not enabling this mode and in
+software adding up the last 8 readings (so software oversampling).
+Data rate is the same and arguably the larger spi transfers that
+might result from their solution are more expensive than doing the
+sum on the CPU.
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index c56386d1b10d..1dba5337382a 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -1745,36 +1745,32 @@ static int ext4_insert_delayed_blocks(struct inode *inode, ext4_lblk_t lblk,
- }
- 
- /*
-- * This function is grabs code from the very beginning of
-- * ext4_map_blocks, but assumes that the caller is from delayed write
-- * time. This function looks up the requested blocks and sets the
-- * buffer delay bit under the protection of i_data_sem.
-+ * Looks up the requested blocks and sets the delalloc extent map.
-+ * First try to look up for the extent entry that contains the requested
-+ * blocks in the extent status tree without i_data_sem, then try to look
-+ * up for the ondisk extent mapping with i_data_sem in read mode,
-+ * finally hold i_data_sem in write mode, looks up again and add a
-+ * delalloc extent entry if it still couldn't find any extent. Pass out
-+ * the mapped extent through @map and return 0 on success.
-  */
--static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
--			      struct buffer_head *bh)
-+static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map)
- {
- 	struct extent_status es;
- 	int retval;
--	sector_t invalid_block = ~((sector_t) 0xffff);
- #ifdef ES_AGGRESSIVE_TEST
- 	struct ext4_map_blocks orig_map;
- 
- 	memcpy(&orig_map, map, sizeof(*map));
- #endif
- 
--	if (invalid_block < ext4_blocks_count(EXT4_SB(inode->i_sb)->s_es))
--		invalid_block = ~0;
--
- 	map->m_flags = 0;
- 	ext_debug(inode, "max_blocks %u, logical block %lu\n", map->m_len,
- 		  (unsigned long) map->m_lblk);
- 
- 	/* Lookup extent status tree firstly */
- 	if (ext4_es_lookup_extent(inode, map->m_lblk, NULL, &es)) {
--		retval = es.es_len - (map->m_lblk - es.es_lblk);
--		if (retval > map->m_len)
--			retval = map->m_len;
--		map->m_len = retval;
-+		map->m_len = min_t(unsigned int, map->m_len,
-+				   es.es_len - (map->m_lblk - es.es_lblk));
- 
- 		if (ext4_es_is_hole(&es))
- 			goto add_delayed;
-@@ -1784,10 +1780,8 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
- 		 * Delayed extent could be allocated by fallocate.
- 		 * So we need to check it.
- 		 */
--		if (ext4_es_is_delayed(&es) && !ext4_es_is_unwritten(&es)) {
--			map_bh(bh, inode->i_sb, invalid_block);
--			set_buffer_new(bh);
--			set_buffer_delay(bh);
-+		if (ext4_es_is_delonly(&es)) {
-+			map->m_flags |= EXT4_MAP_DELAYED;
- 			return 0;
- 		}
- 
-@@ -1802,7 +1796,7 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
- #ifdef ES_AGGRESSIVE_TEST
- 		ext4_map_blocks_es_recheck(NULL, inode, map, &orig_map, 0);
- #endif
--		return retval;
-+		return 0;
- 	}
- 
- 	/*
-@@ -1816,7 +1810,7 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
- 		retval = ext4_map_query_blocks(NULL, inode, map);
- 	up_read(&EXT4_I(inode)->i_data_sem);
- 	if (retval)
--		return retval;
-+		return retval < 0 ? retval : 0;
- 
- add_delayed:
- 	down_write(&EXT4_I(inode)->i_data_sem);
-@@ -1828,10 +1822,8 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
- 	 * the extent status tree.
- 	 */
- 	if (ext4_es_lookup_extent(inode, map->m_lblk, NULL, &es)) {
--		retval = es.es_len - (map->m_lblk - es.es_lblk);
--		if (retval > map->m_len)
--			retval = map->m_len;
--		map->m_len = retval;
-+		map->m_len = min_t(unsigned int, map->m_len,
-+				   es.es_len - (map->m_lblk - es.es_lblk));
- 
- 		if (!ext4_es_is_hole(&es)) {
- 			up_write(&EXT4_I(inode)->i_data_sem);
-@@ -1841,18 +1833,14 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
- 		retval = ext4_map_query_blocks(NULL, inode, map);
- 		if (retval) {
- 			up_write(&EXT4_I(inode)->i_data_sem);
--			return retval;
-+			return retval < 0 ? retval : 0;
- 		}
- 	}
- 
-+	map->m_flags |= EXT4_MAP_DELAYED;
- 	retval = ext4_insert_delayed_blocks(inode, map->m_lblk, map->m_len);
- 	up_write(&EXT4_I(inode)->i_data_sem);
--	if (retval)
--		return retval;
- 
--	map_bh(bh, inode->i_sb, invalid_block);
--	set_buffer_new(bh);
--	set_buffer_delay(bh);
- 	return retval;
- }
- 
-@@ -1872,11 +1860,15 @@ int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
- 			   struct buffer_head *bh, int create)
- {
- 	struct ext4_map_blocks map;
-+	sector_t invalid_block = ~((sector_t) 0xffff);
- 	int ret = 0;
- 
- 	BUG_ON(create == 0);
- 	BUG_ON(bh->b_size != inode->i_sb->s_blocksize);
- 
-+	if (invalid_block < ext4_blocks_count(EXT4_SB(inode->i_sb)->s_es))
-+		invalid_block = ~0;
-+
- 	map.m_lblk = iblock;
- 	map.m_len = 1;
- 
-@@ -1885,10 +1877,17 @@ int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
- 	 * preallocated blocks are unmapped but should treated
- 	 * the same as allocated blocks.
- 	 */
--	ret = ext4_da_map_blocks(inode, &map, bh);
--	if (ret <= 0)
-+	ret = ext4_da_map_blocks(inode, &map);
-+	if (ret < 0)
- 		return ret;
- 
-+	if (map.m_flags & EXT4_MAP_DELAYED) {
-+		map_bh(bh, inode->i_sb, invalid_block);
-+		set_buffer_new(bh);
-+		set_buffer_delay(bh);
-+		return 0;
-+	}
-+
- 	map_bh(bh, inode->i_sb, map.m_pblk);
- 	ext4_update_bh_state(bh, map.m_flags);
- 
--- 
-2.39.2
+A long time back there was IIRC some discussion of implementing
+this sort of filtering as a pluggable component between an IIO
+device driver and the kfifo - idea being to reduce data being
+passed to userspace - there would be no point in doing
+this variant though as the data rate isn't reduced.  It would be
+easy to do as a buffer consumer IIO device that just does maths
+on incoming data before providing it's own kfifo, but no one
+ever implemented it.
+
+>=20
+> Another thing to consider here is that we can only enable the extra
+> resolution bits if oversampling is enabled (normal or rolling mode).
+> The chip might not work right if we try to enable the extra bits
+> without oversampling enabled.
+
+I think the key question is where do those extra bits come from?=20
+If this is conventional oversampling then we just sum up the readings
+and divide by how many there are.
+(A1 + A2 + A3 + A4 + A5 + A6 + A7) / 8
+So sum plus shift right 3.  However you don't actually do the div 8
+you just change the scale to reflect that your new LSB is 1/8th of
+that before giving greater precision. This is giving 2 extra bits, so
+it's slightly worse than the 3 we'd get doing it in software (trade
+off to keep the SPI transfers smaller).  So they are either dropping the
+LSB or just possibly dithering it.
+
+So far I'm not seeing a strong reason to support this functionality.
+
+>=20
+> So my thinking is perhaps it is better to keep the rolling mode as
+> oversampling rather than trying to call it a low pass filter. As you
+> said, normal mode is about data rate reduction with bonus precision.
+> Rolling average oversampling mode then would then just be for the
+> bonus precision.
+
+True if there actually is any. I took another close read through
+the datasheet sections and the description aligns with my assumptions
+above.
+
+Jonathan
+
 
