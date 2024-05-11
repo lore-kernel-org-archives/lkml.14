@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0372512B77;
-	Sat, 11 May 2024 02:00:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855C9179BF;
+	Sat, 11 May 2024 02:00:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715392829; cv=none; b=CV5V2gAA9gHHkOkoWdAocO3EL21Wvh5zc6E2HFX6p1g/Nj+7w8sgO4exd74Crs9dZVEkeLp+m9Snu9RxlOFISeuzMr5/sk5BZY9LH/vIAMO8mZVzO3r2cJMBr27TwPnQNR6vDRdgiGc0G5k2Qtdb5ozCj6nFEDz04UGCQQPSTHI=
+	t=1715392830; cv=none; b=H+M54fpgpFzEwdPHZ/fld0RloqQ/kOMUpEpQo+tKeGqNlfWdRrs5HSBB+1E4LId+tx+9Z1+NDsBPpAvfCR1xLjQDdSCVkHTFzurjX6MnMUFTKXafs1KOXQUP8v3PRGRAK2M+JnLXDwYx9Yg7nBZJmG66Cy2AGxAthQntEhfiynQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715392829; c=relaxed/simple;
-	bh=BgsBAK0JY+nmfeUonGKRUV4Z9iF896Efa6TsEWvZ5xg=;
+	s=arc-20240116; t=1715392830; c=relaxed/simple;
+	bh=Yuwm1/a8iGZhCbhXxZBFNy7CnIg7IU5RtKXHX8JlBL0=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=lc8aQQUoA2h+YJsFm0M6SwmrSsK8NQOAolEUaYroWmv0EQjgh7WvHEFKjnCPHSV/MHM+fQhO18rQszIzBYpspCRTAWUsls3d620twxwkRT39/b7cRrwnQMNBRUgLqTsvWVQHJjAGrIDLd+iS/ojk6+VnvmUUlWzaczRXTxkUefU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gn07Hq5V; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=jyDhouMR/V4qASSJsQv5btlj/heUztiRTNR1WfF8g0VFGiRUixtFMpANFoSOLcwaKbi4C6d7yKfQplD/wGYT4UDr1exSy1wmirA/OCfNyXEurb/KwvxX1GRxFWGuY//Z2ooc4UYZ27rI09HcUOpgS76lDikAHkZdwwkqzA2+O98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5iytCr7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gn07Hq5V"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 8BF9EC2BD10;
-	Sat, 11 May 2024 02:00:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5iytCr7"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 20675C4AF08;
+	Sat, 11 May 2024 02:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715392828;
-	bh=BgsBAK0JY+nmfeUonGKRUV4Z9iF896Efa6TsEWvZ5xg=;
+	s=k20201202; t=1715392830;
+	bh=Yuwm1/a8iGZhCbhXxZBFNy7CnIg7IU5RtKXHX8JlBL0=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gn07Hq5Vshl41f2Qu/7VZ9ai4U62FwlOTMUwGqSR1ymd3/nyI81HzB6/GLBM2P/Op
-	 4uBcZ7s7+D+skH+6tZyscceHWv5+04S7CuZyMYRigz9ILVvlZnN5DnuEBp3n4aaBzY
-	 PwQ15iAHn55/wKSp6PJFV0EKx8pSwH5cSZ+IupKfOwl6lQuVjqf0PcziavTiGbO8hB
-	 M86LrYDztxMUzPPa9oje+/vDaLR4eepsMsegbjw3IdDWHIJtNnI+ZyPU1duw+Aru0A
-	 MxvtD/Tq8kYXQCew1jBxnG1Qn7307See8D84eCo/tk2qzsc8Q/AyeqJflcFrbTRnf0
-	 iO0nQ0hb67jaA==
+	b=e5iytCr7OkXOzSdxy2wclp9A8wwJwVf5Mt8IxQM9NH3VSgYYSHodSaF4MznU0APbF
+	 QmsJa9MC4QPGZmagFeBNGP/R73O9m8Khkb5TQLedYxeFSQWIgmjPbmzV2e2oGsNOIh
+	 NvfXzva7lYqaU85fKbMcsxOrvCD0kGZvi4D1D1+TnMd4JJdQOg2pgTeWOiFzznxMdw
+	 Sr1HbgXJTwvNb04jVc+c6+YGjD+HV/tLBQJ8rk+8T9UFlATorGhJIwmgNhvaUgZhVW
+	 OL+6LSJyVKmDtzGhQUJOWVeEdncPGl0hdsd+sqSXJUDPC8mCtc9dtZ8/FeUbkp08ip
+	 fmKlihY8R8dlA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7A9BDE7C112;
-	Sat, 11 May 2024 02:00:28 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 15D10C32759;
+	Sat, 11 May 2024 02:00:30 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,45 +37,36 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v3 1/2] net: ethernet: mediatek: split tx and rx fields in
- mtk_soc_data struct
+Subject: Re: [PATCH net-next v1 1/1] net: ethernet: adi: adin1110: Replace
+ linux/gpio.h by proper one
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171539282849.14416.4543219653688344298.git-patchwork-notify@kernel.org>
-Date: Sat, 11 May 2024 02:00:28 +0000
-References: <70a799b1f060ec2f57883e88ccb420ac0fb0abb5.1715164770.git.daniel@makrotopia.org>
-In-Reply-To: <70a799b1f060ec2f57883e88ccb420ac0fb0abb5.1715164770.git.daniel@makrotopia.org>
-To: Daniel Golle <daniel@makrotopia.org>
-Cc: nbd@nbd.name, sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com,
- lorenzo@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org
+ <171539283008.14416.409480541220579877.git-patchwork-notify@kernel.org>
+Date: Sat, 11 May 2024 02:00:30 +0000
+References: <20240508114519.972082-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240508114519.972082-1-andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
 
 Hello:
 
-This series was applied to netdev/net.git (main)
+This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Wed, 8 May 2024 11:43:34 +0100 you wrote:
-> From: Lorenzo Bianconi <lorenzo@kernel.org>
+On Wed,  8 May 2024 14:45:19 +0300 you wrote:
+> linux/gpio.h is deprecated and subject to remove.
+> The driver doesn't use it directly, replace it
+> with what is really being used.
 > 
-> Split tx and rx fields in mtk_soc_data struct. This is a preliminary
-> patch to roll back to ADMAv1 for MT7986 and MT7981 SoC in order to fix a
-> hw hang if the device receives a corrupted packet when using ADMAv2.0.
-> 
-> Fixes: 197c9e9b17b1 ("net: ethernet: mtk_eth_soc: introduce support for mt7986 chipset")
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-> 
-> [...]
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/net/ethernet/adi/adin1110.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Here is the summary with links:
-  - [v3,1/2] net: ethernet: mediatek: split tx and rx fields in mtk_soc_data struct
-    https://git.kernel.org/netdev/net/c/ecb51fa37ee2
-  - [v3,2/2] net: ethernet: mediatek: use ADMAv1 instead of ADMAv2.0 on MT7981 and MT7986
-    https://git.kernel.org/netdev/net/c/5e69ff84f3e6
+  - [net-next,v1,1/1] net: ethernet: adi: adin1110: Replace linux/gpio.h by proper one
+    https://git.kernel.org/netdev/net-next/c/84c8b7ad5e74
 
 You are awesome, thank you!
 -- 
