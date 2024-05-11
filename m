@@ -1,45 +1,46 @@
 Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B38B61E526
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 15:31:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B457756459
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 15:31:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715441488; cv=none; b=T51Bk42qaBWi8XdGH3rnaoqWFGEd3FP3LEZX5w8DutqsOXVUkb4gwkbr6ziGl75b1NGbgpfmqve7rBSRyqPsvBsMxlkq3k7EdEFBwv4ybOV6sTPdAb4U6qx5CvZifo9bM4380AiiVXEQR0V8ara2W5yHDieH5RzW7y9gybs6j1Y=
+	t=1715441489; cv=none; b=evWIUtVUobtI76GlrMlEuhjhDi6K18wxu1zrIbKhdp9x19vWZ+N3LM+HY+pjQacfrUMXNK8wZXw7Q1bU4UVCyeY5Gevl2inKyWm+nFfhVKoCPnBhJXiyLiEe/1b0wZjSlfGZ8FyUuJqsneJ2T3hLZScN3bKUZP2RZtpCDNnkLnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715441488; c=relaxed/simple;
-	bh=5bPKUIefG+SidF/ytOOZmWgXAJbR8a44r8C9bst2cXU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D1rknC2D9jTkhWVv5EPWk8A8c2RHX7Cm1d09D+zPtnR9kENNL9E1FjNoT4yQJVKF4MQck+PpDWNuCMUFDanWAZqYCRgdkhWzFIQz8qRpe5/5jex6a6mrWvhPy0Vlw81YAbbJhbxRD27SVyRE8i/O2rG19WT6wmeMRkYMU5S62xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=NUHlM+Le; arc=none smtp.client-ip=198.47.23.249
+	s=arc-20240116; t=1715441489; c=relaxed/simple;
+	bh=aJLlP1xZGilRbOMuDf2KpXBdUG4Gs4qkD3DCEsbueRU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MsGdu/gfla89HSfeQUxkpVnOFRmX9KHTsLoh4/2yyvmlWfdujBn5Eo1/rFqDSEz+6wlDykWRtjYXKpDwMEAgR6RnitvXJzRZoJsvQPljaz4NXevuKtcq2waTv+GeSBZ52SsdftRUvY+XVCNkGrAf0jAuPsiZ+CsDD1KxEJMWYQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=D4yJdfVN; arc=none smtp.client-ip=198.47.23.249
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NUHlM+Le"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44BFUrIa024638;
-	Sat, 11 May 2024 10:30:53 -0500
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="D4yJdfVN"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44BFUvP3024724;
+	Sat, 11 May 2024 10:30:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1715441453;
-	bh=fgSiUiyv+xpJe+wBVVFMUseyZYSFfR7/ITsPxN9R9DI=;
-	h=From:To:CC:Subject:Date;
-	b=NUHlM+LeTfbGoqpC5jccAxMyGXILJhzrA4BCxQYnkpw8eiTw+0itb/gfyg3E7SrFa
-	 QNCMm7qGfd/JhF6KGO3zYZPHms+Y2LTnNO62uxQRa/c/+GwEY70vgSiTL7hjfVNVBm
-	 lmwZttqUSx6S0hg6iZfRUjOYcen2tT/LunIZcprU=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44BFUrcp017845
+	s=ti-com-17Q1; t=1715441457;
+	bh=x/pvU5rR0a3PNbNa2MowlDacRschbmWjyicuIb3k5Qc=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=D4yJdfVNoOsDAST3X8/k681dqr6pl4zCwa663i28WiPgjS8YjKANqeaqmguc0LhXG
+	 jzm+zJWUEHGTPT+l652HyrRI9Cyx5MmpEHOFxekTG3NSNBjZDURKbBhblrv+daf3//
+	 V7/+1FATVrF6tce7oBuRqSLhleolHaM/6BGK2jL4=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44BFUvYj033016
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sat, 11 May 2024 10:30:53 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+	Sat, 11 May 2024 10:30:57 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 11
- May 2024 10:30:52 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ May 2024 10:30:57 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Sat, 11 May 2024 10:30:52 -0500
+ Frontend Transport; Sat, 11 May 2024 10:30:57 -0500
 Received: from localhost (uda0496377.dhcp.ti.com [172.24.227.31])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44BFUqUO074704;
-	Sat, 11 May 2024 10:30:52 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44BFUut8043225;
+	Sat, 11 May 2024 10:30:57 -0500
 From: Aradhya Bhatia <a-bhatia1@ti.com>
 To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
         Andrzej Hajda
@@ -77,10 +78,12 @@ CC: DRI Development List <dri-devel@lists.freedesktop.org>,
 	<j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>,
         Aradhya Bhatia
 	<a-bhatia1@ti.com>
-Subject: [PATCH 0/7] drm/bridge: cdns-dsi: Fix the color-shift issue
-Date: Sat, 11 May 2024 21:00:44 +0530
-Message-ID: <20240511153051.1355825-1-a-bhatia1@ti.com>
+Subject: [PATCH 3/7] drm/bridge: cdns-dsi: Wait for Clk and Data Lanes to be ready
+Date: Sat, 11 May 2024 21:00:47 +0530
+Message-ID: <20240511153051.1355825-4-a-bhatia1@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240511153051.1355825-1-a-bhatia1@ti.com>
+References: <20240511153051.1355825-1-a-bhatia1@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -91,67 +94,56 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hello all,
+Once the DSI Link and DSI Phy are initialized, the code needs to wait
+for Clk and Data Lanes to be ready, before continuing configuration.
+This is in accordance with the DSI Start-up procedure, found in the
+Technical Reference Manual of Texas Instrument's J721E SoC[0] which
+houses this DSI TX controller.
 
-This series provides some crucial fixes and improvements for the Cadence's DSI
-TX (cdns-dsi) controller found commonly in Texas Instruments' J7 family of SoCs
-as well as in AM62P.
+If the previous bridge (or crtc/encoder) are configured pre-maturely,
+the input signal FIFO gets corrupt. This introduces a color-shift on the
+display.
 
-The cdns-dsi bridge consumes the crtc_* timing parameters for programming the
-timing parameters. A patch has been added in tidss to make sure the crtc_*
-timings get populated.
+Allow the driver to wait for the clk and data lanes to get ready during
+DSI enable.
 
-It further adds support for "early_enable" and "late_disable" DRM bridge hooks.
-These hooks are same as the existing "(pre_)enable" and "(post_)disable" hooks,
-except that the early_enable hook gets called before the CRTC is even enabled in
-the display pipeline and the late_disable hook gets called after the CRTC is
-disabled.
-The cdns-dsi controller requires to be enabled before the previous entity
-enables its stream[0]. It's a strict requirement which, if not followed, causes
-the colors to "shift" on the display. Since the previous entity is TIDSS in this
-case, which gets enabled via the tidss_crtc hooks, early_enable/late_disable API
-in the cdns-dsi bridge is the way to solve the issue.
-The early_enable/late_disable APIs also help with the OLDI TXes available on the
-AM62/AM62P SoCs, which will be a part of separate series.
+Fixes: e19233955d9e ("drm/bridge: Add Cadence DSI driver")
+Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+---
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-This spec also requires the Clock and Data Lanes be ready before the DSI TX
-enables its stream[0]. A patch has been added to make the code wait for that to
-happen. Going ahead with further DSI (and DSS configuration), while the lanes
-are not ready, has been found as another reason for shift in colors.
-
-All these patches have been tested on TI's vendor tree kernel with more devices,
-but for the mainline, these patches have been tested with J721E based
-BeagleboneAI64 along with a RaspberryPi 7" DSI panel. The extra patches can be
-found in the "next_dsi_finals-v1-test_rpi" branch of my github fork[1] for
-anyone who would like to test them.
-
-Thanks,
-Aradhya
-
-
-[0]: Section 12.6.5.7.3: Start-up Procesure [For DSI TX controller]
-     in TDA4VM Technical Reference Manual https://www.ti.com/lit/zip/spruil1
-
-[1]: https://github.com/aradhya07/linux-ab/tree/next_dsi_finals-v1-test_rpi
-
-
-Aradhya Bhatia (7):
-  drm/tidss: Add CRTC mode_fixup
-  drm/bridge: cdns-dsi: Fix minor bugs
-  drm/bridge: cdns-dsi: Wait for Clk and Data Lanes to be ready
-  drm/bridge: cdns-dsi: Reset the DCS write FIFO
-  drm/bridge: cdns-dsi: Support atomic bridge APIs
-  drm/bridge: Introduce early_enable and late disable
-  drm/bridge: cdns-dsi: Implement early_enable and late_disable
-
- .../gpu/drm/bridge/cadence/cdns-dsi-core.c    | 91 ++++++++++++++-----
- drivers/gpu/drm/drm_atomic_helper.c           | 67 ++++++++++++++
- drivers/gpu/drm/drm_bridge.c                  | 84 +++++++++++++++++
- drivers/gpu/drm/tidss/tidss_crtc.c            | 11 +++
- include/drm/drm_bridge.h                      | 73 +++++++++++++++
- 5 files changed, 303 insertions(+), 23 deletions(-)
-
-
-base-commit: 75fa778d74b786a1608d55d655d42b480a6fa8bd
+diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+index 557b037bbc67..05d2f4cc50da 100644
+--- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
++++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
+@@ -761,7 +761,7 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
+ 	struct phy_configure_opts_mipi_dphy *phy_cfg = &output->phy_opts.mipi_dphy;
+ 	unsigned long tx_byte_period;
+ 	struct cdns_dsi_cfg dsi_cfg;
+-	u32 tmp, reg_wakeup, div;
++	u32 tmp, reg_wakeup, div, status;
+ 	int nlanes;
+ 
+ 	if (WARN_ON(pm_runtime_get_sync(dsi->base.dev) < 0))
+@@ -778,6 +778,17 @@ static void cdns_dsi_bridge_enable(struct drm_bridge *bridge)
+ 	cdns_dsi_init_link(dsi);
+ 	cdns_dsi_hs_init(dsi);
+ 
++	/*
++	 * Now that the DSI Link and DSI Phy are initialized,
++	 * wait for the CLK and Data Lanes to be ready.
++	 */
++	tmp = CLK_LANE_RDY;
++	for (int i = 0; i < nlanes; i++)
++		tmp |= DATA_LANE_RDY(i);
++
++	WARN_ON_ONCE(readl_poll_timeout(dsi->regs + MCTL_MAIN_STS, status,
++					status & tmp, 100, 0));
++
+ 	writel(HBP_LEN(dsi_cfg.hbp) | HSA_LEN(dsi_cfg.hsa),
+ 	       dsi->regs + VID_HSIZE1);
+ 	writel(HFP_LEN(dsi_cfg.hfp) | HACT_LEN(dsi_cfg.hact),
 -- 
 2.34.1
+
