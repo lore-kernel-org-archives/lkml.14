@@ -1,47 +1,47 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2094.outbound.protection.outlook.com [40.107.241.94])
+Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2117.outbound.protection.outlook.com [40.107.241.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159BA5FBAA;
-	Sat, 11 May 2024 10:44:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.94
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2F10657AE;
+	Sat, 11 May 2024 10:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.117
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715424248; cv=fail; b=L6j0M/tI7gW7wPp0uWLEnPz1xH3GwUUrkXnXtBFJi7YiZ1KoauKrDKvuQveoA7Tswir2lBQishS2em6w51LslUY4RcahZ8bZJVsjmGzHt7s7MbC/F9dKJmYzO2JmfpYiBhJpJaFMPO8LkrUJ++TX9hPxuPra9zDNyOjBptCR3R8=
+	t=1715424252; cv=fail; b=QjF6ZS0zIEV008zlguHxw209bpkAF7AKtQpFu6VsnRu/ZglOPGrjm7xZgXmI3WJfzkVihhhcaXh4ecHOYBcIDVs7moggNDtd2FItvu4vsBTpGND8oCZxrUdhE7rG/CYgJ3EjpGzyw4SB+CRnIPuM428iKoL6zbZDw7k4Bs74Gzc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715424248; c=relaxed/simple;
-	bh=NsWYgxwWADkeUwTDskneezz0oyS7GTeY9YDds2g1o2U=;
+	s=arc-20240116; t=1715424252; c=relaxed/simple;
+	bh=gbj8niS7B+edIY5VnHb5+l4YnChjOlOZ1glPCTdgYpI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=e7pOaSh/wFIANMZPzXgFJgp/mvTps2LnDMDRIK9JeeygJ1p6QqvrG5qjNlfhdXLOVCbaKb/SAtQ8p5xQTZAxt/jlcw3lNOd/Ag9wtBlcLjGLI91C839XUupO9EN/wwuqogKrzPFliPfbZ8Sa4ZoT94LnUCecqLzP1My5BzyBkwE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=syrmia.com; spf=pass smtp.mailfrom=syrmia.com; dkim=pass (1024-bit key) header.d=syrmia.com header.i=@syrmia.com header.b=eXHoVtX+; arc=fail smtp.client-ip=40.107.241.94
+	 Content-Type:MIME-Version; b=AhoR7O308/eg+HGLJLmvh5oKEPuM8LkKSv+5DEFyQdMIybh3xcRhAxsqdBxQG0RMlJGXkqIq2kXJp+bFKdFgWWdBMgDG2gd0VZpafeoEpZ35C9ZCM02CJ63g2JeBAIYyaqN5/2Tkv86tBY06a1tKGkJlO+KjYZVNef8VXQK7VVA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=syrmia.com; spf=pass smtp.mailfrom=syrmia.com; dkim=pass (1024-bit key) header.d=syrmia.com header.i=@syrmia.com header.b=FrbKgALj; arc=fail smtp.client-ip=40.107.241.117
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=syrmia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=syrmia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=syrmia.com header.i=@syrmia.com header.b="eXHoVtX+"
+	dkim=pass (1024-bit key) header.d=syrmia.com header.i=@syrmia.com header.b="FrbKgALj"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XXDIMmGr/l2bBrnNmBk17xdzum5MXBGDdnppymyQgYTW6LUQK80m/ayIxniGsw6ZM829zZbjctjDggGvtuRF7/soNt68ZcZM48205Wh2IEgnUwkzZofZ413bL/MyqqjRpVZY4JMhvERzfcwUYYjWEByOML9WghL+XWT6A1EExqYik5CjGWpzOQPrkVU139stUzQXZCxUZoECF2HyN3OuRRoa79jL1E7gFhhqw+DaTsuHC6rHl/gb+NksmIrT8dxuPSTVtqR6RVUwErIj9ZIFIMBuB+ybC5pL1ZU/emwpW1oJKXLT2k2jVYdSqhqGslGvinVPnBGj7tCTlxdFO9dVsg==
+ b=Yrn4ik+/VwbKb9UAqDCgKeXlLEzdl6uRpfOQt3bt3pRy7SSEwwFvcP8ujDz4yJkDspcSiwkpp7ZICv7Er0V32D+gU5X7ZipK1lf0pMLnH0O4SmuhLj+0wGU1MBa5ZGYtw0uMG/GEg70hA0Y8epAd+6/AGPi8YkxKI4zap1tfVzDIkTHdqFq8kE0Swy7nMEXBkIzUOGfMWpM+VuuwW/LNrKHMSWcd2G3JwgDXjaQcZwWv0wDY82hSXAuFKA0zx8CUkqw33TRI4NgbWg/hcydYpJjzCpEbLm0q/HFQDjNOn3Do8zzreNpff6PfW41wr5QDwT/w9xpmfAKO5Y6ySkkFnw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PfaWHpbZm4r5fXZyRkA7sVboc5pXftUbrYbuEZf6WhQ=;
- b=Cyow0I41gNPlywoRagBk2GtYTEhXZCgIhNaS8wcHq65QO1a077RleTI/Eixhcg0tlMBqKNn65x5Uo+KfuQdLiNR6TlMYODABQGw4EjOFO0BS24+rv5Lwz3sRgZtgsJHCsYgnnVV39fELA/l7MkYZRIx6O2n9KXfxgG9C343XtaT5mLwomelb/IAR01ui8HoKSA+4fqpFgl6TLKVIHDdC9Kq5qRQMtNFUof03mtM7B+TO8DhYlMCQ0B0I3ndSAFTLv51K2bSiKd9V9VvcHdJc/LY2cqZWwaJ1yMD+Dt179Xhue+HrbHxIFrVfeMrT5RH6JAE8JAXCLkjVyTfN/8tYBA==
+ bh=32lTG3IW2XyUQ2zZD9wBltUg6IOcVvaaih9ITzyiNIg=;
+ b=jjtl/wZEtHRGva/VP3UZpp3kKQS9LVXovqhiBV9usnXtS5dw3pgJ9+tKoDAQn2ZKsHPixz52chAhr7F5bkpt+C5G8mSZcqzEBbKaMrbFdq/5ZcjILqK6N0tC9wQD0E8wiOxNzLpIfmFzu6Uj+sZe2ivAgJc7L3G/5gQULM+f7SQt2T89zwDFXs4FkpmxSZQalA3aYNtFEL4cQBPIwhfXJ74KURwoV0scOZQSfAWGNzgOwE2LDvUwD+KHWEV0ztZLkuh3FzcT63XNrlHjZIOJYt/BMyDsaZcWFm9DxuMJUcIWePojBl8nIEi4Q9J+ztYtxjJIk455mVG8QHnsWWAs6Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=syrmia.com; dmarc=pass action=none header.from=syrmia.com;
  dkim=pass header.d=syrmia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=syrmia.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PfaWHpbZm4r5fXZyRkA7sVboc5pXftUbrYbuEZf6WhQ=;
- b=eXHoVtX+CbHAiLOnNguxVWnYkmM11ziHLVKL5UoTR4vdLhG7Xqc3YNa7jCNqXji+oQ/CwWN3Mymluq4YTmpI1kXQVvMD7WoareT63oKMNhHnDbLsv27degUNeQyRASlYyJqn1XtgaoQhtJFX0ihQGoo6nYBaDez3FBc4RXqPTXs=
+ bh=32lTG3IW2XyUQ2zZD9wBltUg6IOcVvaaih9ITzyiNIg=;
+ b=FrbKgALjgJKyEOAul3W3CxwrMR8rCEUC5rjmKoT4GjoiDVdvhwm5QKV+MNHB2qJsSuL6/HziIY9DaLrAb6UBjj/uXdlJ1hktaejUR7WEVoIu/Uae28oBGypdkKL0Y0lMokLOEDJI7dYYWAYLPzjHo98CZ3NCblSqwchzEjSWq1A=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=syrmia.com;
 Received: from AM9PR03MB6916.eurprd03.prod.outlook.com (2603:10a6:20b:2d7::14)
  by GVXPR03MB8449.eurprd03.prod.outlook.com (2603:10a6:150:5::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.45; Sat, 11 May
- 2024 10:43:59 +0000
+ 2024 10:44:02 +0000
 Received: from AM9PR03MB6916.eurprd03.prod.outlook.com
  ([fe80::b417:d676:e3ff:9268]) by AM9PR03MB6916.eurprd03.prod.outlook.com
  ([fe80::b417:d676:e3ff:9268%3]) with mapi id 15.20.7587.018; Sat, 11 May 2024
- 10:43:59 +0000
+ 10:44:02 +0000
 From: Aleksandar Rikalo <aleksandar.rikalo@syrmia.com>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Cc: Aleksandar Rikalo <arikalo@gmail.com>,
@@ -60,9 +60,9 @@ Cc: Aleksandar Rikalo <arikalo@gmail.com>,
 	Serge Semin <fancer.lancer@gmail.com>,
 	Thomas Gleixner <tglx@linutronix.de>,
 	Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH v4 11/14] MIPS: CPS: Boot CPUs in secondary clusters
-Date: Sat, 11 May 2024 12:43:38 +0200
-Message-Id: <20240511104341.151550-12-aleksandar.rikalo@syrmia.com>
+Subject: [PATCH v4 14/14] mips: FDC driver refactor
+Date: Sat, 11 May 2024 12:43:41 +0200
+Message-Id: <20240511104341.151550-15-aleksandar.rikalo@syrmia.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240511104341.151550-1-aleksandar.rikalo@syrmia.com>
 References: <20240511104341.151550-1-aleksandar.rikalo@syrmia.com>
@@ -79,484 +79,328 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: AM9PR03MB6916:EE_|GVXPR03MB8449:EE_
-X-MS-Office365-Filtering-Correlation-Id: a7ac2151-7c3b-4c54-0ec6-08dc71a7440a
+X-MS-Office365-Filtering-Correlation-Id: 7369d48b-a361-4ef6-341b-08dc71a745bb
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230031|366007|7416005|52116005|376005|1800799015|38350700005;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?j73KAsM9F7ihvkjkhqRmwlyZ3Vk1RqkZ/THct5wSshaTghlHfVEyFbvrbvXN?=
- =?us-ascii?Q?9zoCprEKKEg/onGXjGA7h4PzNKpgr1zkX5lKG2oMm+MOdKx1pNFrvcdrI1BR?=
- =?us-ascii?Q?Ivkt0l7agTSfIECYLM1/SS85PZFMdwzitdG83/LkvVGWLIpIWaKWDUtEYJX9?=
- =?us-ascii?Q?+qdKNj2IGPjojEjETg5PDzLCfHnbwuEfInXdoqJGbvdjXensQ6iPwXwTAnRH?=
- =?us-ascii?Q?9XWcZgS/UWgCugr+X4n/41GMlF8hXFCV23ehWmYHP13ytbtnf+uQNbJjJBFB?=
- =?us-ascii?Q?H5w0WEY20S01iQUEOV/TQek3e1cIInjWame02GF8g/l5whpf0d9c5YT5kGS6?=
- =?us-ascii?Q?ffJWuZrRCC7qP/8St//vkQzf8SZx9N7HMJM+7wf6Mhdf9iLToiUlb2506nYP?=
- =?us-ascii?Q?N8EIE8mPSr8DWz9czNoNZP/JkadBaA4SaFnHcnLpMwNV/DDFINFpJo1ewb60?=
- =?us-ascii?Q?JeyLlCyDrmqYKqfz870DOphYgwvVcLbL0zfN/A9GaU9yziFGcoXxUEK6O131?=
- =?us-ascii?Q?pEFDG1DqYTLj5KmRdPi4NDZ29ABoyU8V6Gs9wXA0UCzEFuxKpAr6xWdAjDFz?=
- =?us-ascii?Q?EMzmecvef0PXjauANFDTu6GHL/X+EPhdEOXVi5/ZO+pxO/wcYrLApgdc/v8v?=
- =?us-ascii?Q?6Dqgki1a+rCspkvU+FDrCsLfIs2t79YPFl4M3JSblobetCxbziN5kYKZIOFg?=
- =?us-ascii?Q?Nwl38mCBv8fW6CErDfcWbtSN7ccgOeMBg2aMcQYGcWWrlcWTskZJgam6jLcX?=
- =?us-ascii?Q?LfJv1GVqbq9MicqU3MIMUMI1RkBkwRGwT3j/gIkH6qW9AQTXnbyuRCHytzpx?=
- =?us-ascii?Q?gmduOvB6awHAVF6XCV29zsPSaG8nPh6yjFZivMb3zGxrMT+BLFCBjcIeN6Yq?=
- =?us-ascii?Q?60ifJHYix2n1DhvmKkgVU8UXTnSYHdgILWjn1XYI30azzpDmFpdt44v4bH5O?=
- =?us-ascii?Q?kecZ0Tg37w9MlpjC/tO1MoUuWmX7JheCL8OLRLwrFCJLysarOU1kZ9f5MKAl?=
- =?us-ascii?Q?DDmDSJ+TzeZgoggkE5twvgxt+iUGNCtdMMSgavvMySYl3TwfQIXgnd0ptRv8?=
- =?us-ascii?Q?ySm9qHnrrRH9Ki1/3YRffx442Xe5lOPbpZe3bfe/cPBUVSWRVSMOhnxmRLab?=
- =?us-ascii?Q?EYY07no1GokhmSPE8QhsDIEb0LXEim9uhlwwIc8lDOFvOO4VFoQd+ajUcw7y?=
- =?us-ascii?Q?nzboQWMPRAfFLSOtrezSAZAtrf1PGLhQF3XQAorSrIER9cMbabSOdgHGH6wE?=
- =?us-ascii?Q?dKNpg1Ui0cve0PpxPcF/hbC1C5sNR3rbpf/BcZBD0E8ij2bLc/SHS9IXf+CS?=
- =?us-ascii?Q?6iWSsK1IjTqGRcUG8gN04XBboJxWTqgSZZJbzXWAgD5ihQ=3D=3D?=
+	=?us-ascii?Q?bsTABszupbl5lhiUPwMEsyQ9jTrf1O2Hk29xcId8uAAHF8mk6QohucWTVZXQ?=
+ =?us-ascii?Q?6njSgY12a6MVcKPfevMEpIHX0+bro51TVracl46TKQWqnXdtG2fxisF8cc42?=
+ =?us-ascii?Q?PHcxZ+H8/EDMjb09Ujw5ENCkDmbKJGFeMtbk75ZyghlNywzc/oslxGrGnEZq?=
+ =?us-ascii?Q?rn99pO3SGDGxxXAvX1gdnSTIeRKIfEFvSP3Y0/goqWaVzKrspg7xj4+/+PEF?=
+ =?us-ascii?Q?ek5nE7AVL9XQqPTv+0o2UFwgSg28UwtdEtAs/7Px/Ms+gNvzQEZtPOjxAbY3?=
+ =?us-ascii?Q?9J8irkmV/tieBh+bA/In0LGhOThyHtAS6g1hcF1lf4p2LAMXz3STgNpAiC4r?=
+ =?us-ascii?Q?gG1/BBOnMtlSyyDrYfZ2AAtLPoyYn/tUOETp3RTJPjLeEOmBayMC4+2RtIdw?=
+ =?us-ascii?Q?uGtoOW11E0ddfucn7D7E3ni7WcRtDUUZc729AGYHXVsU9kRjMeszDAOarKXW?=
+ =?us-ascii?Q?v7QxJbGpQ0Ev4YqdgrR/XgHnfZ5NpfcBfUzixoK7HxNQIpeUmKEYAM1h5q2G?=
+ =?us-ascii?Q?DERNUySRHNHKLwKNmsMMxVR5ayDPVmmzTdJlmhg+3DhSBEL0QFbzFTa4BQW4?=
+ =?us-ascii?Q?xENOtlPowYAzlcPLUcNJ4ED6gF0BNRplKfc1zXJlEnbWTztlFQtC9eKo5kM3?=
+ =?us-ascii?Q?+H1vw6dmcMZVbEMmdsMKfJKsTFiqGvBklOBxxuZMYqbyrE7uvBa+h7Mt/FWU?=
+ =?us-ascii?Q?u3H0dPj0hThsytnskPCg4PCVMxmihae51TmpWwR3jPAogXoJAXh3uqisZChu?=
+ =?us-ascii?Q?s5RmNRbE1gfGqGjVoZiL00x1Hb/klzOfWa0yXRBqwFmlri1CScy3j6ft4gE0?=
+ =?us-ascii?Q?d/Wd6LqZPWLm5yVBqMRUaSKHKIjzlbzfbT43MoTQTHJ95W3AEFIi/OLW8IYv?=
+ =?us-ascii?Q?wx1n9w9n0hVHncffRh2Vc1DnmSoF1F2VD+rjqSF7aO+0Qa5mibTV7OJKvI1C?=
+ =?us-ascii?Q?KTl6mP6x/rvMfetUljRS32yLZw1qzZ8sJqW/2I5nFCTTSFIcXTT78fW/R2Mq?=
+ =?us-ascii?Q?pp1V+wP0R1Jsd/rG9rK6fPLZum6QDlXPW+918yX7i5M9jr8Bi6JVGyNlCiNd?=
+ =?us-ascii?Q?d94RA3JVbPyvVT1zhEF6SvmQdQ9XA2uBYOu6gWUy3pKMpCfQsdqI7Xfnsqon?=
+ =?us-ascii?Q?ziC3fifqO1j80vkzSHSC3+TyXjPi9ubPU0UDCLTrHtSf4xCZkSLd2fBtzbrR?=
+ =?us-ascii?Q?4LC7sDwU/Z7bAudx9choe46vqlBvw/SyhfNZr4VFKur8KL5F6EZADdk5VIaW?=
+ =?us-ascii?Q?4fUTZ1fFfhAFR7VSDfM8Dz+r8cxLC4asEW9yfHtiuKHzSF3UVEkzwz+haafj?=
+ =?us-ascii?Q?t5uFbjHz4oDtWTREVKJZLnEyS4i0Eox79nQvadncfgEDlw=3D=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR03MB6916.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(7416005)(52116005)(376005)(1800799015)(38350700005);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?SqNtQRUvMhh+lUINUAkS36r6Sng/OEHBA5N/UnnklQ8WAot/0qv3MTVk9+0T?=
- =?us-ascii?Q?ZzdKBxpEJesC4RDsfTaBAoBrvzHl/bERBvne+4gylFQW+iVp21opjZhvWw9g?=
- =?us-ascii?Q?AgVb5N1F1Jo/Ei+xMpzIrhsNyLDZcs0kDDEyjFfau6UH2wANixiC/6xTu2iM?=
- =?us-ascii?Q?3zc05bRc/II99eyXV59mgf7rG9VA2ct4nA2FMdo7iNoeuief5cZdXH25TdYq?=
- =?us-ascii?Q?r9KaD6nM8GBEG8Pzyfww+dt84wYY6DOeiQakm128iEqkW3IqcKrsN+yh2+KE?=
- =?us-ascii?Q?AFa8cQBKqiYq7j/7Ex1qgTnRCyyXnz5mJm+brLAdYIL75xI40uuoRzdSQrDM?=
- =?us-ascii?Q?Lu/cqVFz23vEFl2Tpbn0PTqoBPrRx5PQjNLWlMldESTW+R4vTEx6iUOE6+9X?=
- =?us-ascii?Q?q9sdbDV2dvnA1U/pvBJN7sBbpVFG7NJ7PslELufronCYHDwKheDSs6ZGhL59?=
- =?us-ascii?Q?nXKqKPGiFhQf/4yf0EEOi+gZtJyPXRErC7xIBZ/gH47fgChsqw++sHl54yBL?=
- =?us-ascii?Q?MNP+BQdTfi/AV4vR3azSPvxe1A+AmNTd1VkzAk7HN5GlatQsu7Zm8+TwdtMI?=
- =?us-ascii?Q?CNV4JdWxjQGzKPnO7uQyEU1tE+M97nofjlel5x+SqRlX5WUFU+DZCrsLKmPL?=
- =?us-ascii?Q?uGVCUSyxJBPGwCxXZ8iDNV/GUlp6ABb2i53W8F9wLDWOyOZWyDrSR7rB5MqO?=
- =?us-ascii?Q?/HgP1XbF4gJ0zpywBFEgKk3VGTnc8QQfchYnS84BUc7SzD3nOvyApbhypbPh?=
- =?us-ascii?Q?HlqlakT3e9fFpcH9vrWHsAGYAfdlLbRThjfSX8VIetNTfpP7DLBmT3V2OWA5?=
- =?us-ascii?Q?h9ADKhF0Go8e+Iyg0ev3apREirQ+7nyK2qWUcbbsefB+R46RIa+BKOXMEFFR?=
- =?us-ascii?Q?seVMH8/q43VdQ8QL8pvVPZ23/FQ0/3An2DaI9bfXVRnx6Piw//ElxjA9nh2X?=
- =?us-ascii?Q?ebRZ6Umvpfvq4xeMYCoXolZ84zddeBgsUaAJMCUSgOs6t/fxsAdvFPLSkbPy?=
- =?us-ascii?Q?jTLFarE5nHXthK9z4SWKwtzpkWyGDsO+8jJEG38PqdbLd0A6gVYwPBvfN2n4?=
- =?us-ascii?Q?5SLPQMPUpiyrv4akmDJj1IEKgzEuO5EYWETUzHwIIZ1fY+90giKm4CatS5EY?=
- =?us-ascii?Q?HaUfKXqqreavR0THsJFO+7roZqoQjqeeJhrPLCdLPnt9e5KWa7MEYaGDOQt7?=
- =?us-ascii?Q?UCb04fGwX8kl57V9IHAv82a8fWhhVKUnvTr0GvGID14yp1rUNRyYFQLbjz/n?=
- =?us-ascii?Q?LxSYy1O0YKjkckv4Rr6ukhK8Njalv54Mqxo2aChQEdxc/qZZUeIZaVI++8/i?=
- =?us-ascii?Q?wkIWyT+2LXpURlW+bzpTfQ8ZeJNXQ6U72KJTqEpIuUpvYP2o2Y0aqPeEaIHz?=
- =?us-ascii?Q?Y78MIwecDZFjaW6uMJvbdwGJaVJn3/N7+DkQE93mGXLwxWYflvN9ymHUVuwl?=
- =?us-ascii?Q?jYJSnRfWvx0MSrk/8dG8eBEr4AOnqa12j3/6VsxZfXl64HR2d93eS3kkVtMz?=
- =?us-ascii?Q?mk6RsY+4/bXdnqGSKJ5qy5TyxU/VBzY7jF3Hnj1Vusc+3MtnwGQUR5WHchYr?=
- =?us-ascii?Q?bZkhJZqugn+BrUijVui40OWVsncbIE347P2cPANp6PCKZYfa2Fz2yY+jDfOd?=
- =?us-ascii?Q?xw=3D=3D?=
+	=?us-ascii?Q?296MJIxsWL44eGOjoUazzwEed4RsQ+LHLz4+ABbnJt3WS31Vaf9iJIaHkWTk?=
+ =?us-ascii?Q?IaKqMDTOxshU30gLGq5UK65sSBPjsbCB3MZ6UA/ssVFYLXi64+TYa888FYWc?=
+ =?us-ascii?Q?kf4HkQwi0XJETQGocW4UkL21/Mo81z/YIYFLE9oz0gcnrHV0k8J1Ozhlfwvv?=
+ =?us-ascii?Q?qsNHIKX4ZeBxMF5VwkiNh9lxyqoOouceQcaDY9biuTOCQ758jetS2mrTHTmd?=
+ =?us-ascii?Q?kk+ycknJe7VbrOETOizC03BNfD8DSvNq71w+Eiidk9+eSO2RdJ5nv2ba27/k?=
+ =?us-ascii?Q?DGkyfwMcr1RLt5O786OLD6qFTklHJdqG1sKzjTh6wMrbRkr/N3fFIAtjCIaA?=
+ =?us-ascii?Q?6gb29liWFv0uGYViH09kGMdJT77xDI+dVwpi9D0mZHvhTTxEZH+FZODUyZOa?=
+ =?us-ascii?Q?I+wf3r5p0KGE5tmZ7z4ujrAUqmcaYoZ4zahV7XPUJEhBF547ItQhCLEnmdVo?=
+ =?us-ascii?Q?WvlSyrexrG2xigSAFbbyvQ1smLlSI1Sar9hCsCqE88NL0WwEByqsX+EbTt8Z?=
+ =?us-ascii?Q?tFPz7gowxj33VMOZijZ3cALN7kyiRG8+B1iQZfRtpEIWbwJwKOL2Kcxe3scK?=
+ =?us-ascii?Q?m0b4iZIXKM67pmBRfNjClL7eyyGBy6P/Y26gfSVq1M/0RrCwLTU9vJYSnaB1?=
+ =?us-ascii?Q?eAsLlKtqDLFv44rRTtjlm+Ue9F+Dy2wQVx+zjTkgXYwctsJMfqOvOTMpwmbB?=
+ =?us-ascii?Q?IeuaqusBE7Wf//74uq2ml/83ZD71daqEGi6MwMzQci6dnIlz7D+WenCg3wV2?=
+ =?us-ascii?Q?HMFhegsN9Xaw8ZWQtaGpyEzlUX4/UdWXGKHW7vflN4HBOqcThycnDxdqDFzU?=
+ =?us-ascii?Q?FdAIWJOqXCWYlyXsE+2P8QVUKuRpmwmNORQLLB7JlYIZ9eB2p+OSG8hBnqYg?=
+ =?us-ascii?Q?c3XcnIPUCa2TZ7ZLIHPjI1Pv8hPC3QCQ5mkvmxdCi7VVs/YqbOB84kabrib+?=
+ =?us-ascii?Q?L4dtPM+nh807wDwQqp3juEDNSkP0GB9WKPMsWKwMWbHfgBhksEEiujX/jFdV?=
+ =?us-ascii?Q?y5sbIGNgq1lmu8FKWhH+MQm8YPGNcItP6piY2ElRRZp0fTR7l+IUUj/gCf0x?=
+ =?us-ascii?Q?chuTlRYNnmC6Nb3c/G93rJ85sZZik6ygJOM+WRyGy+HhKQs6v5f6pmClr18a?=
+ =?us-ascii?Q?OoHEERqK6o4y0ZaUKMzr8OnK/wA1gw71WYp+8oUHqGc/Oh+XEp+d01bNjkDh?=
+ =?us-ascii?Q?6jYCDALJsuB4NbLWRoKK5bHhZaR3MCnbgHkGfi58BFLBHrTsNg9OU4/e0VPV?=
+ =?us-ascii?Q?/By3MoXlyoEzBxaNUT6PzhN5ckcMD69hBZ565/zuh9V4lyPuQHAkfURP3YH6?=
+ =?us-ascii?Q?V03PDUCmFZDqAbi/NCvZapf9dPjfTou876ItK9xvXG5PiruTh4adhyutlO2d?=
+ =?us-ascii?Q?B9TI5h4jY2Aj/APTZIUUdkUpAukLoFeNFznY8/NlLjQP1+OMgcKfcznsI1/0?=
+ =?us-ascii?Q?qo3slMOJgsEf4aoJ57k3xpEoLdWreq6wtcar6zQaUM83hTOdhHwIgjRIaRhD?=
+ =?us-ascii?Q?TycJrcoxH9DaqHWDfwgZo2mcU1lCsdKLdUNo3Ttq0tyENj7L60GQFOGyqS/1?=
+ =?us-ascii?Q?O1719GeWyQuIXaYIzVGwwQJXJpE4Ux91T4qXTrS/BXSCkGO91VcSGS64aWaC?=
+ =?us-ascii?Q?kA=3D=3D?=
 X-OriginatorOrg: syrmia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7ac2151-7c3b-4c54-0ec6-08dc71a7440a
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7369d48b-a361-4ef6-341b-08dc71a745bb
 X-MS-Exchange-CrossTenant-AuthSource: AM9PR03MB6916.eurprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2024 10:43:59.5514
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2024 10:44:02.3948
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 19214a73-c1ab-4e19-8f59-14bdcb09a66e
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: /2kLKd4NJ/HjlM8G9WXYToH63tg4lOXUBDEZjjK/nT+eppMb/ChEE2CSPPl/v4tmSAI5ySZQq06OqGVTw4/jUPjs51edRSuVerRzny0FYTk=
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6lg9L/eqpxzHbKmem2Xp2UkCenmipqQPVtyEkDCoWdUD8/f4d4Xtz+6Hyoy9O0yShTRTeU8ET7XS9W0RuP2dVDfXNJ+E+FKECVMllhnJg5A=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR03MB8449
 
-From: Paul Burton <paulburton@kernel.org>
+Separate the FDC driver code into two parts, common and
+mips-specific.
 
-Probe for & boot CPUs (cores & VPs) in secondary clusters (ie. not the
-cluster that began booting Linux) when they are present in systems with
-CM 3.5 or higher.
+No functional impact.
 
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Signed-off-by: Chao-ying Fu <cfu@wavecomp.com>
-Signed-off-by: Dragan Mladjenovic <dragan.mladjenovic@syrmia.com>
 Signed-off-by: Aleksandar Rikalo <aleksandar.rikalo@syrmia.com>
+Signed-off-by: Djordje Todorovic <djordje.todorovic@syrmia.com>
 ---
- arch/mips/include/asm/mips-cm.h |  18 +++
- arch/mips/include/asm/smp-cps.h |   1 +
- arch/mips/kernel/mips-cm.c      |   4 +-
- arch/mips/kernel/smp-cps.c      | 208 ++++++++++++++++++++++++++++----
- 4 files changed, 207 insertions(+), 24 deletions(-)
+ drivers/tty/mips_fdc/Makefile         |  2 +
+ drivers/tty/mips_fdc/ejtag-fdc-mips.c | 29 ++++++++++++
+ drivers/tty/mips_fdc/ejtag-fdc.c      | 66 +++------------------------
+ drivers/tty/mips_fdc/ejtag-fdc.h      | 55 ++++++++++++++++++++++
+ 4 files changed, 93 insertions(+), 59 deletions(-)
+ create mode 100644 drivers/tty/mips_fdc/ejtag-fdc-mips.c
+ create mode 100644 drivers/tty/mips_fdc/ejtag-fdc.h
 
-diff --git a/arch/mips/include/asm/mips-cm.h b/arch/mips/include/asm/mips-cm.h
-index c2930a75b7e4..65a46b35a218 100644
---- a/arch/mips/include/asm/mips-cm.h
-+++ b/arch/mips/include/asm/mips-cm.h
-@@ -251,6 +251,12 @@ GCR_ACCESSOR_RW(32, 0x130, l2_config)
- GCR_ACCESSOR_RO(32, 0x150, sys_config2)
- #define CM_GCR_SYS_CONFIG2_MAXVPW		GENMASK(3, 0)
- 
-+/* GCR_L2-RAM_CONFIG - Configuration & status of L2 cache RAMs */
-+GCR_ACCESSOR_RW(64, 0x240, l2_ram_config)
-+#define CM_GCR_L2_RAM_CONFIG_PRESENT		BIT(31)
-+#define CM_GCR_L2_RAM_CONFIG_HCI_DONE		BIT(30)
-+#define CM_GCR_L2_RAM_CONFIG_HCI_SUPPORTED	BIT(29)
+diff --git a/drivers/tty/mips_fdc/Makefile b/drivers/tty/mips_fdc/Makefile
+index 03b2781e1090..9e0894a8b342 100644
+--- a/drivers/tty/mips_fdc/Makefile
++++ b/drivers/tty/mips_fdc/Makefile
+@@ -1,2 +1,4 @@
+ # SPDX-License-Identifier: GPL-2.0
+ obj-$(CONFIG_MIPS_EJTAG_FDC_TTY) += ejtag-fdc.o
 +
- /* GCR_L2_PFT_CONTROL - Controls hardware L2 prefetching */
- GCR_ACCESSOR_RW(32, 0x300, l2_pft_control)
- #define CM_GCR_L2_PFT_CONTROL_PAGEMASK		GENMASK(31, 12)
-@@ -262,6 +268,18 @@ GCR_ACCESSOR_RW(32, 0x308, l2_pft_control_b)
- #define CM_GCR_L2_PFT_CONTROL_B_CEN		BIT(8)
- #define CM_GCR_L2_PFT_CONTROL_B_PORTID		GENMASK(7, 0)
- 
-+/* GCR_L2_TAG_ADDR - Access addresses in L2 cache tags */
-+GCR_ACCESSOR_RW(64, 0x600, l2_tag_addr)
++obj-$(CONFIG_MIPS) += ejtag-fdc-mips.o
+diff --git a/drivers/tty/mips_fdc/ejtag-fdc-mips.c b/drivers/tty/mips_fdc/ejtag-fdc-mips.c
+new file mode 100644
+index 000000000000..3942ee818f0b
+--- /dev/null
++++ b/drivers/tty/mips_fdc/ejtag-fdc-mips.c
+@@ -0,0 +1,29 @@
++// SPDX-License-Identifier: GPL-2.0
 +
-+/* GCR_L2_TAG_STATE - Access L2 cache tag state */
-+GCR_ACCESSOR_RW(64, 0x608, l2_tag_state)
++#include "ejtag-fdc.h"
 +
-+/* GCR_L2_DATA - Access data in L2 cache lines */
-+GCR_ACCESSOR_RW(64, 0x610, l2_data)
-+
-+/* GCR_L2_ECC - Access ECC information from L2 cache lines */
-+GCR_ACCESSOR_RW(64, 0x618, l2_ecc)
-+
- /* GCR_L2SM_COP - L2 cache op state machine control */
- GCR_ACCESSOR_RW(32, 0x620, l2sm_cop)
- #define CM_GCR_L2SM_COP_PRESENT			BIT(31)
-diff --git a/arch/mips/include/asm/smp-cps.h b/arch/mips/include/asm/smp-cps.h
-index a629e948a6fd..10d3ebd890cb 100644
---- a/arch/mips/include/asm/smp-cps.h
-+++ b/arch/mips/include/asm/smp-cps.h
-@@ -23,6 +23,7 @@ struct core_boot_config {
- };
- 
- struct cluster_boot_config {
-+	unsigned long *core_power;
- 	struct core_boot_config *core_config;
- };
- 
-diff --git a/arch/mips/kernel/mips-cm.c b/arch/mips/kernel/mips-cm.c
-index 3eb2cfb893e1..9854bc2b6895 100644
---- a/arch/mips/kernel/mips-cm.c
-+++ b/arch/mips/kernel/mips-cm.c
-@@ -308,7 +308,9 @@ void mips_cm_lock_other(unsigned int cluster, unsigned int core,
- 		      FIELD_PREP(CM3_GCR_Cx_OTHER_VP, vp);
- 
- 		if (cm_rev >= CM_REV_CM3_5) {
--			val |= CM_GCR_Cx_OTHER_CLUSTER_EN;
-+			if (cluster != cpu_cluster(&current_cpu_data))
-+				val |= CM_GCR_Cx_OTHER_CLUSTER_EN;
-+			val |= CM_GCR_Cx_OTHER_GIC_EN;
- 			val |= FIELD_PREP(CM_GCR_Cx_OTHER_CLUSTER, cluster);
- 			val |= FIELD_PREP(CM_GCR_Cx_OTHER_BLOCK, block);
- 		} else {
-diff --git a/arch/mips/kernel/smp-cps.c b/arch/mips/kernel/smp-cps.c
-index 1954c9e912b2..ae814fdb930c 100644
---- a/arch/mips/kernel/smp-cps.c
-+++ b/arch/mips/kernel/smp-cps.c
-@@ -36,12 +36,56 @@ enum label_id {
- 
- UASM_L_LA(_not_nmi)
- 
--static DECLARE_BITMAP(core_power, NR_CPUS);
- static uint32_t core_entry_reg;
- static phys_addr_t cps_vec_pa;
- 
- struct cluster_boot_config *mips_cps_cluster_bootcfg;
- 
-+static void power_up_other_cluster(unsigned int cluster)
++void __iomem *get_fdc_regs(void)
 +{
-+	u32 stat, seq_state;
-+	unsigned int timeout;
-+
-+	mips_cm_lock_other(cluster, CM_GCR_Cx_OTHER_CORE_CM, 0,
-+			   CM_GCR_Cx_OTHER_BLOCK_LOCAL);
-+	stat = read_cpc_co_stat_conf();
-+	mips_cm_unlock_other();
-+
-+	seq_state = stat & CPC_Cx_STAT_CONF_SEQSTATE;
-+	seq_state >>= __ffs(CPC_Cx_STAT_CONF_SEQSTATE);
-+	if (seq_state == CPC_Cx_STAT_CONF_SEQSTATE_U5)
-+		return;
-+
-+	/* Set endianness & power up the CM */
-+	mips_cm_lock_other(cluster, 0, 0, CM_GCR_Cx_OTHER_BLOCK_GLOBAL);
-+	write_cpc_redir_sys_config(IS_ENABLED(CONFIG_CPU_BIG_ENDIAN));
-+	write_cpc_redir_pwrup_ctl(1);
-+	mips_cm_unlock_other();
-+
-+	/* Wait for the CM to start up */
-+	timeout = 1000;
-+	mips_cm_lock_other(cluster, CM_GCR_Cx_OTHER_CORE_CM, 0,
-+			   CM_GCR_Cx_OTHER_BLOCK_LOCAL);
-+	while (1) {
-+		stat = read_cpc_co_stat_conf();
-+		seq_state = stat & CPC_Cx_STAT_CONF_SEQSTATE;
-+		seq_state >>= __ffs(CPC_Cx_STAT_CONF_SEQSTATE);
-+		if (seq_state == CPC_Cx_STAT_CONF_SEQSTATE_U5)
-+			break;
-+
-+		if (timeout) {
-+			mdelay(1);
-+			timeout--;
-+		} else {
-+			pr_warn("Waiting for cluster %u CM to power up... STAT_CONF=0x%x\n",
-+				cluster, stat);
-+			mdelay(1000);
-+		}
-+	}
-+
-+	mips_cm_unlock_other();
++	return mips_cdmm_early_probe(0xfd);
 +}
 +
- static unsigned __init core_vpe_count(unsigned int cluster, unsigned core)
- {
- 	return min(smp_max_threads, mips_cps_numvps(cluster, core));
-@@ -152,6 +196,9 @@ static void __init cps_smp_setup(void)
- 			pr_cont(",");
- 		pr_cont("{");
- 
-+		if (mips_cm_revision() >= CM_REV_CM3_5)
-+			power_up_other_cluster(cl);
-+
- 		ncores = mips_cps_numcores(cl);
- 		for (c = 0; c < ncores; c++) {
- 			core_vpes = core_vpe_count(cl, c);
-@@ -179,8 +226,8 @@ static void __init cps_smp_setup(void)
- 
- 	/* Indicate present CPUs (CPU being synonymous with VPE) */
- 	for (v = 0; v < min_t(unsigned, nvpes, NR_CPUS); v++) {
--		set_cpu_possible(v, cpu_cluster(&cpu_data[v]) == 0);
--		set_cpu_present(v, cpu_cluster(&cpu_data[v]) == 0);
-+		set_cpu_possible(v, true);
-+		set_cpu_present(v, true);
- 		__cpu_number_map[v] = v;
- 		__cpu_logical_map[v] = v;
- 	}
-@@ -188,9 +235,6 @@ static void __init cps_smp_setup(void)
- 	/* Set a coherent default CCA (CWB) */
- 	change_c0_config(CONF_CM_CMASK, 0x5);
- 
--	/* Core 0 is powered up (we're running on it) */
--	bitmap_set(core_power, 0, 1);
--
- 	/* Initialise core 0 */
- 	mips_cps_core_init();
- 
-@@ -272,6 +316,10 @@ static void __init cps_prepare_cpus(unsigned int max_cpus)
- 			goto err_out;
- 		mips_cps_cluster_bootcfg[cl].core_config = core_bootcfg;
- 
-+		mips_cps_cluster_bootcfg[cl].core_power =
-+			kcalloc(BITS_TO_LONGS(ncores), sizeof(unsigned long),
-+				GFP_KERNEL);
-+
- 		/* Allocate VPE boot configuration structs */
- 		for (c = 0; c < ncores; c++) {
- 			core_vpes = core_vpe_count(cl, c);
-@@ -283,11 +331,12 @@ static void __init cps_prepare_cpus(unsigned int max_cpus)
- 		}
- 	}
- 
--	/* Mark this CPU as booted */
-+	/* Mark this CPU as powered up & booted */
- 	cl = cpu_cluster(&current_cpu_data);
- 	c = cpu_core(&current_cpu_data);
- 	cluster_bootcfg = &mips_cps_cluster_bootcfg[cl];
- 	core_bootcfg = &cluster_bootcfg->core_config[c];
-+	bitmap_set(cluster_bootcfg->core_power, cpu_core(&current_cpu_data), 1);
- 	atomic_set(&core_bootcfg->vpe_mask, 1 << cpu_vpe_id(&current_cpu_data));
- 
- 	return;
-@@ -315,13 +364,118 @@ static void __init cps_prepare_cpus(unsigned int max_cpus)
- 	}
- }
- 
--static void boot_core(unsigned int core, unsigned int vpe_id)
-+static void init_cluster_l2(void)
- {
--	u32 stat, seq_state;
--	unsigned timeout;
-+	u32 l2_cfg, l2sm_cop, result;
-+
-+	while (1) {
-+		l2_cfg = read_gcr_redir_l2_ram_config();
-+
-+		/* If HCI is not supported, use the state machine below */
-+		if (!(l2_cfg & CM_GCR_L2_RAM_CONFIG_PRESENT))
-+			break;
-+		if (!(l2_cfg & CM_GCR_L2_RAM_CONFIG_HCI_SUPPORTED))
-+			break;
-+
-+		/* If the HCI_DONE bit is set, we're finished */
-+		if (l2_cfg & CM_GCR_L2_RAM_CONFIG_HCI_DONE)
-+			return;
-+	}
-+
-+	l2sm_cop = read_gcr_redir_l2sm_cop();
-+	if (WARN(!(l2sm_cop & CM_GCR_L2SM_COP_PRESENT),
-+		 "L2 init not supported on this system yet"))
-+		return;
-+
-+	/* Clear L2 tag registers */
-+	write_gcr_redir_l2_tag_state(0);
-+	write_gcr_redir_l2_ecc(0);
-+
-+	/* Ensure the L2 tag writes complete before the state machine starts */
-+	mb();
-+
-+	/* Wait for the L2 state machine to be idle */
-+	do {
-+		l2sm_cop = read_gcr_redir_l2sm_cop();
-+	} while (l2sm_cop & CM_GCR_L2SM_COP_RUNNING);
-+
-+	/* Start a store tag operation */
-+	l2sm_cop = CM_GCR_L2SM_COP_TYPE_IDX_STORETAG;
-+	l2sm_cop <<= __ffs(CM_GCR_L2SM_COP_TYPE);
-+	l2sm_cop |= CM_GCR_L2SM_COP_CMD_START;
-+	write_gcr_redir_l2sm_cop(l2sm_cop);
-+
-+	/* Ensure the state machine starts before we poll for completion */
-+	mb();
-+
-+	/* Wait for the operation to be complete */
-+	do {
-+		l2sm_cop = read_gcr_redir_l2sm_cop();
-+		result = l2sm_cop & CM_GCR_L2SM_COP_RESULT;
-+		result >>= __ffs(CM_GCR_L2SM_COP_RESULT);
-+	} while (!result);
-+
-+	WARN(result != CM_GCR_L2SM_COP_RESULT_DONE_OK,
-+	     "L2 state machine failed cache init with error %u\n", result);
++int is_fdc_interrupt(void)
++{
++	return read_c0_cause() & CAUSEF_FDCI;
 +}
 +
-+static void boot_core(unsigned int cluster, unsigned int core,
-+		      unsigned int vpe_id)
-+{
-+	struct cluster_boot_config *cluster_cfg;
-+	u32 access, stat, seq_state;
-+	unsigned int timeout, ncores;
++static const struct mips_cdmm_device_id mips_ejtag_fdc_tty_ids[] = {
++	{ .type = 0xfd },
++	{ }
++};
 +
-+	cluster_cfg = &mips_cps_cluster_bootcfg[cluster];
-+	ncores = mips_cps_numcores(cluster);
-+
-+	if ((cluster != cpu_cluster(&current_cpu_data)) &&
-+	    bitmap_empty(cluster_cfg->core_power, ncores)) {
-+		power_up_other_cluster(cluster);
-+
-+		mips_cm_lock_other(cluster, core, 0,
-+				   CM_GCR_Cx_OTHER_BLOCK_GLOBAL);
-+
-+		/* Ensure cluster GCRs are where we expect */
-+		write_gcr_redir_base(read_gcr_base());
-+		write_gcr_redir_cpc_base(read_gcr_cpc_base());
-+		write_gcr_redir_gic_base(read_gcr_gic_base());
-+
-+		init_cluster_l2();
-+
-+		/* Mirror L2 configuration */
-+		write_gcr_redir_l2_only_sync_base(read_gcr_l2_only_sync_base());
-+		write_gcr_redir_l2_pft_control(read_gcr_l2_pft_control());
-+		write_gcr_redir_l2_pft_control_b(read_gcr_l2_pft_control_b());
-+
-+		/* Mirror ECC/parity setup */
-+		write_gcr_redir_err_control(read_gcr_err_control());
-+
-+		/* Set BEV base */
-+		write_gcr_redir_bev_base(core_entry_reg);
-+
-+		mips_cm_unlock_other();
-+	}
-+
-+	if (cluster != cpu_cluster(&current_cpu_data)) {
-+		mips_cm_lock_other(cluster, core, 0,
-+				   CM_GCR_Cx_OTHER_BLOCK_GLOBAL);
-+
-+		/* Ensure the core can access the GCRs */
-+		access = read_gcr_redir_access();
-+		access |= BIT(core);
-+		write_gcr_redir_access(access);
-+
-+		mips_cm_unlock_other();
-+	} else {
-+		/* Ensure the core can access the GCRs */
-+		access = read_gcr_access();
-+		access |= BIT(core);
-+		write_gcr_access(access);
-+	}
++static struct mips_cdmm_driver mips_ejtag_fdc_tty_driver = {
++	.drv		= {
++		.name	= "mips_ejtag_fdc",
++	},
++	.probe		= mips_ejtag_fdc_tty_probe,
++	.cpu_down	= mips_ejtag_fdc_tty_cpu_down,
++	.cpu_up		= mips_ejtag_fdc_tty_cpu_up,
++	.id_table	= mips_ejtag_fdc_tty_ids,
++};
++builtin_mips_cdmm_driver(mips_ejtag_fdc_tty_driver);
+diff --git a/drivers/tty/mips_fdc/ejtag-fdc.c b/drivers/tty/mips_fdc/ejtag-fdc.c
+index afbf7738c7c4..fecd96118019 100644
+--- a/drivers/tty/mips_fdc/ejtag-fdc.c
++++ b/drivers/tty/mips_fdc/ejtag-fdc.c
+@@ -28,45 +28,9 @@
+ #include <linux/tty_flip.h>
+ #include <linux/uaccess.h>
  
- 	/* Select the appropriate core */
--	mips_cm_lock_other(0, core, 0, CM_GCR_Cx_OTHER_BLOCK_LOCAL);
-+	mips_cm_lock_other(cluster, core, 0, CM_GCR_Cx_OTHER_BLOCK_LOCAL);
+-#include <asm/cdmm.h>
+ #include <asm/irq.h>
  
- 	/* Set its reset vector */
- 	write_gcr_co_reset_base(core_entry_reg);
-@@ -332,9 +486,6 @@ static void boot_core(unsigned int core, unsigned int vpe_id)
- 	/* Start it with the legacy memory map and exception base */
- 	write_gcr_co_reset_ext_base(CM_GCR_Cx_RESET_EXT_BASE_UEB);
- 
--	/* Ensure the core can access the GCRs */
--	set_gcr_access(1 << core);
+-/* Register offsets */
+-#define REG_FDACSR	0x00	/* FDC Access Control and Status Register */
+-#define REG_FDCFG	0x08	/* FDC Configuration Register */
+-#define REG_FDSTAT	0x10	/* FDC Status Register */
+-#define REG_FDRX	0x18	/* FDC Receive Register */
+-#define REG_FDTX(N)	(0x20+0x8*(N))	/* FDC Transmit Register n (0..15) */
 -
- 	if (mips_cpc_present()) {
- 		/* Reset the core */
- 		mips_cpc_lock_other(core);
-@@ -384,7 +535,17 @@ static void boot_core(unsigned int core, unsigned int vpe_id)
- 	mips_cm_unlock_other();
- 
- 	/* The core is now powered up */
--	bitmap_set(core_power, core, 1);
-+	bitmap_set(cluster_cfg->core_power, core, 1);
-+
-+	/*
-+	 * Restore CM_PWRUP=0 so that the CM can power down if all the cores in
-+	 * the cluster do (eg. if they're all removed via hotplug.
-+	 */
-+	if (mips_cm_revision() >= CM_REV_CM3_5) {
-+		mips_cm_lock_other(cluster, 0, 0, CM_GCR_Cx_OTHER_BLOCK_GLOBAL);
-+		write_cpc_redir_pwrup_ctl(0);
-+		mips_cm_unlock_other();
-+	}
- }
- 
- static void remote_vpe_boot(void *dummy)
-@@ -410,10 +571,6 @@ static int cps_boot_secondary(int cpu, struct task_struct *idle)
- 	unsigned int remote;
- 	int err;
- 
--	/* We don't yet support booting CPUs in other clusters */
--	if (cpu_cluster(&cpu_data[cpu]) != cpu_cluster(&raw_current_cpu_data))
--		return -ENOSYS;
+-/* Register fields */
 -
- 	vpe_cfg->pc = (unsigned long)&smp_bootstrap;
- 	vpe_cfg->sp = __KSTK_TOS(idle);
- 	vpe_cfg->gp = (unsigned long)task_thread_info(idle);
-@@ -422,14 +579,15 @@ static int cps_boot_secondary(int cpu, struct task_struct *idle)
+-#define REG_FDCFG_TXINTTHRES_SHIFT	18
+-#define REG_FDCFG_TXINTTHRES		(0x3 << REG_FDCFG_TXINTTHRES_SHIFT)
+-#define REG_FDCFG_TXINTTHRES_DISABLED	(0x0 << REG_FDCFG_TXINTTHRES_SHIFT)
+-#define REG_FDCFG_TXINTTHRES_EMPTY	(0x1 << REG_FDCFG_TXINTTHRES_SHIFT)
+-#define REG_FDCFG_TXINTTHRES_NOTFULL	(0x2 << REG_FDCFG_TXINTTHRES_SHIFT)
+-#define REG_FDCFG_TXINTTHRES_NEAREMPTY	(0x3 << REG_FDCFG_TXINTTHRES_SHIFT)
+-#define REG_FDCFG_RXINTTHRES_SHIFT	16
+-#define REG_FDCFG_RXINTTHRES		(0x3 << REG_FDCFG_RXINTTHRES_SHIFT)
+-#define REG_FDCFG_RXINTTHRES_DISABLED	(0x0 << REG_FDCFG_RXINTTHRES_SHIFT)
+-#define REG_FDCFG_RXINTTHRES_FULL	(0x1 << REG_FDCFG_RXINTTHRES_SHIFT)
+-#define REG_FDCFG_RXINTTHRES_NOTEMPTY	(0x2 << REG_FDCFG_RXINTTHRES_SHIFT)
+-#define REG_FDCFG_RXINTTHRES_NEARFULL	(0x3 << REG_FDCFG_RXINTTHRES_SHIFT)
+-#define REG_FDCFG_TXFIFOSIZE_SHIFT	8
+-#define REG_FDCFG_TXFIFOSIZE		(0xff << REG_FDCFG_TXFIFOSIZE_SHIFT)
+-#define REG_FDCFG_RXFIFOSIZE_SHIFT	0
+-#define REG_FDCFG_RXFIFOSIZE		(0xff << REG_FDCFG_RXFIFOSIZE_SHIFT)
+-
+-#define REG_FDSTAT_TXCOUNT_SHIFT	24
+-#define REG_FDSTAT_TXCOUNT		(0xff << REG_FDSTAT_TXCOUNT_SHIFT)
+-#define REG_FDSTAT_RXCOUNT_SHIFT	16
+-#define REG_FDSTAT_RXCOUNT		(0xff << REG_FDSTAT_RXCOUNT_SHIFT)
+-#define REG_FDSTAT_RXCHAN_SHIFT		4
+-#define REG_FDSTAT_RXCHAN		(0xf << REG_FDSTAT_RXCHAN_SHIFT)
+-#define REG_FDSTAT_RXE			BIT(3)	/* Rx Empty */
+-#define REG_FDSTAT_RXF			BIT(2)	/* Rx Full */
+-#define REG_FDSTAT_TXE			BIT(1)	/* Tx Empty */
+-#define REG_FDSTAT_TXF			BIT(0)	/* Tx Full */
++#include "ejtag-fdc.h"
  
- 	preempt_disable();
- 
--	if (!test_bit(core, core_power)) {
-+	if (!test_bit(core, cluster_cfg->core_power)) {
- 		/* Boot a VPE on a powered down core */
--		boot_core(core, vpe_id);
-+		boot_core(cluster, core, vpe_id);
+ /* Default channel for the early console */
+ #define CONSOLE_CHANNEL      1
+@@ -375,7 +339,7 @@ static int __init mips_ejtag_fdc_console_init(struct mips_ejtag_fdc_console *c)
+ 	if (c->initialised)
  		goto out;
- 	}
+ 	/* Look for the FDC device */
+-	regs = mips_cdmm_early_probe(0xfd);
++	regs = get_fdc_regs();
+ 	if (IS_ERR(regs)) {
+ 		ret = PTR_ERR(regs);
+ 		goto out;
+@@ -664,7 +628,7 @@ static irqreturn_t mips_ejtag_fdc_isr(int irq, void *dev_id)
+ 		return IRQ_NONE;
  
- 	if (cpu_has_vp) {
--		mips_cm_lock_other(0, core, vpe_id, CM_GCR_Cx_OTHER_BLOCK_LOCAL);
-+		mips_cm_lock_other(cluster, core, vpe_id,
-+				   CM_GCR_Cx_OTHER_BLOCK_LOCAL);
- 		write_gcr_co_reset_base(core_entry_reg);
- 		mips_cm_unlock_other();
- 	}
-@@ -636,11 +794,15 @@ static void cps_cpu_die(unsigned int cpu) { }
+ 	/* If no FDC interrupt pending, it wasn't for us */
+-	if (!(read_c0_cause() & CAUSEF_FDCI))
++	if (!is_fdc_interrupt())
+ 		return IRQ_NONE;
  
- static void cps_cleanup_dead_cpu(unsigned cpu)
+ 	mips_ejtag_fdc_handle(priv);
+@@ -882,7 +846,7 @@ int __weak get_c0_fdc_int(void)
+ 	return -1;
+ }
+ 
+-static int mips_ejtag_fdc_tty_probe(struct mips_cdmm_device *dev)
++int mips_ejtag_fdc_tty_probe(struct mips_cdmm_device *dev)
  {
-+	unsigned int cluster = cpu_cluster(&cpu_data[cpu]);
- 	unsigned core = cpu_core(&cpu_data[cpu]);
- 	unsigned int vpe_id = cpu_vpe_id(&cpu_data[cpu]);
- 	ktime_t fail_time;
- 	unsigned stat;
- 	int err;
-+	struct cluster_boot_config *cluster_cfg;
+ 	int ret, nport;
+ 	struct mips_ejtag_fdc_tty_port *dport;
+@@ -1045,7 +1009,7 @@ static int mips_ejtag_fdc_tty_probe(struct mips_cdmm_device *dev)
+ 	return ret;
+ }
+ 
+-static int mips_ejtag_fdc_tty_cpu_down(struct mips_cdmm_device *dev)
++int mips_ejtag_fdc_tty_cpu_down(struct mips_cdmm_device *dev)
+ {
+ 	struct mips_ejtag_fdc_tty *priv = mips_cdmm_get_drvdata(dev);
+ 	unsigned int cfg;
+@@ -1068,7 +1032,7 @@ static int mips_ejtag_fdc_tty_cpu_down(struct mips_cdmm_device *dev)
+ 	return 0;
+ }
+ 
+-static int mips_ejtag_fdc_tty_cpu_up(struct mips_cdmm_device *dev)
++int mips_ejtag_fdc_tty_cpu_up(struct mips_cdmm_device *dev)
+ {
+ 	struct mips_ejtag_fdc_tty *priv = mips_cdmm_get_drvdata(dev);
+ 	unsigned int cfg;
+@@ -1106,22 +1070,6 @@ static int mips_ejtag_fdc_tty_cpu_up(struct mips_cdmm_device *dev)
+ 	return ret;
+ }
+ 
+-static const struct mips_cdmm_device_id mips_ejtag_fdc_tty_ids[] = {
+-	{ .type = 0xfd },
+-	{ }
+-};
+-
+-static struct mips_cdmm_driver mips_ejtag_fdc_tty_driver = {
+-	.drv		= {
+-		.name	= "mips_ejtag_fdc",
+-	},
+-	.probe		= mips_ejtag_fdc_tty_probe,
+-	.cpu_down	= mips_ejtag_fdc_tty_cpu_down,
+-	.cpu_up		= mips_ejtag_fdc_tty_cpu_up,
+-	.id_table	= mips_ejtag_fdc_tty_ids,
+-};
+-builtin_mips_cdmm_driver(mips_ejtag_fdc_tty_driver);
+-
+ static int __init mips_ejtag_fdc_init_console(void)
+ {
+ 	return mips_ejtag_fdc_console_init(&mips_ejtag_fdc_con);
+@@ -1166,7 +1114,7 @@ static void __iomem *kgdbfdc_setup(void)
+ 	regs = mips_ejtag_fdc_con.regs[cpu];
+ 	/* First console output on this CPU? */
+ 	if (!regs) {
+-		regs = mips_cdmm_early_probe(0xfd);
++		regs = get_fdc_regs();
+ 		mips_ejtag_fdc_con.regs[cpu] = regs;
+ 	}
+ 	/* Already tried and failed to find FDC on this CPU? */
+diff --git a/drivers/tty/mips_fdc/ejtag-fdc.h b/drivers/tty/mips_fdc/ejtag-fdc.h
+new file mode 100644
+index 000000000000..62e8fbe1b614
+--- /dev/null
++++ b/drivers/tty/mips_fdc/ejtag-fdc.h
+@@ -0,0 +1,55 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * TTY driver for MIPS EJTAG Fast Debug Channels.
++ *
++ * Copyright (C) 2007-2015 Imagination Technologies Ltd
++ */
 +
-+	cluster_cfg = &mips_cps_cluster_bootcfg[cluster];
- 
- 	/*
- 	 * Now wait for the CPU to actually offline. Without doing this that
-@@ -692,7 +854,7 @@ static void cps_cleanup_dead_cpu(unsigned cpu)
- 		} while (1);
- 
- 		/* Indicate the core is powered off */
--		bitmap_clear(core_power, core, 1);
-+		bitmap_clear(cluster_cfg->core_power, core, 1);
- 	} else if (cpu_has_mipsmt) {
- 		/*
- 		 * Have a CPU with access to the offlined CPUs registers wait
++#ifndef __EJTAG_FDC_H
++#define __EJTAG_FDC_H
++
++#include <asm/cdmm.h>
++
++/* Register offsets */
++#define REG_FDACSR	0x00	/* FDC Access Control and Status Register */
++#define REG_FDCFG	0x08	/* FDC Configuration Register */
++#define REG_FDSTAT	0x10	/* FDC Status Register */
++#define REG_FDRX	0x18	/* FDC Receive Register */
++#define REG_FDTX(N)	(0x20+0x8*(N))	/* FDC Transmit Register n (0..15) */
++
++/* Register fields */
++#define REG_FDCFG_TXINTTHRES_SHIFT	18
++#define REG_FDCFG_TXINTTHRES		(0x3 << REG_FDCFG_TXINTTHRES_SHIFT)
++#define REG_FDCFG_TXINTTHRES_DISABLED	(0x0 << REG_FDCFG_TXINTTHRES_SHIFT)
++#define REG_FDCFG_TXINTTHRES_EMPTY	(0x1 << REG_FDCFG_TXINTTHRES_SHIFT)
++#define REG_FDCFG_TXINTTHRES_NOTFULL	(0x2 << REG_FDCFG_TXINTTHRES_SHIFT)
++#define REG_FDCFG_TXINTTHRES_NEAREMPTY	(0x3 << REG_FDCFG_TXINTTHRES_SHIFT)
++#define REG_FDCFG_RXINTTHRES_SHIFT	16
++#define REG_FDCFG_RXINTTHRES		(0x3 << REG_FDCFG_RXINTTHRES_SHIFT)
++#define REG_FDCFG_RXINTTHRES_DISABLED	(0x0 << REG_FDCFG_RXINTTHRES_SHIFT)
++#define REG_FDCFG_RXINTTHRES_FULL	(0x1 << REG_FDCFG_RXINTTHRES_SHIFT)
++#define REG_FDCFG_RXINTTHRES_NOTEMPTY	(0x2 << REG_FDCFG_RXINTTHRES_SHIFT)
++#define REG_FDCFG_RXINTTHRES_NEARFULL	(0x3 << REG_FDCFG_RXINTTHRES_SHIFT)
++#define REG_FDCFG_TXFIFOSIZE_SHIFT	8
++#define REG_FDCFG_TXFIFOSIZE		(0xff << REG_FDCFG_TXFIFOSIZE_SHIFT)
++#define REG_FDCFG_RXFIFOSIZE_SHIFT	0
++#define REG_FDCFG_RXFIFOSIZE		(0xff << REG_FDCFG_RXFIFOSIZE_SHIFT)
++
++#define REG_FDSTAT_TXCOUNT_SHIFT	24
++#define REG_FDSTAT_TXCOUNT		(0xff << REG_FDSTAT_TXCOUNT_SHIFT)
++#define REG_FDSTAT_RXCOUNT_SHIFT	16
++#define REG_FDSTAT_RXCOUNT		(0xff << REG_FDSTAT_RXCOUNT_SHIFT)
++#define REG_FDSTAT_RXCHAN_SHIFT		4
++#define REG_FDSTAT_RXCHAN		(0xf << REG_FDSTAT_RXCHAN_SHIFT)
++#define REG_FDSTAT_RXE			BIT(3)	/* Rx Empty */
++#define REG_FDSTAT_RXF			BIT(2)	/* Rx Full */
++#define REG_FDSTAT_TXE			BIT(1)	/* Tx Empty */
++#define REG_FDSTAT_TXF			BIT(0)	/* Tx Full */
++
++void __iomem *get_fdc_regs(void);
++int is_fdc_interrupt(void);
++int mips_ejtag_fdc_tty_probe(struct mips_cdmm_device *dev);
++int mips_ejtag_fdc_tty_cpu_down(struct mips_cdmm_device *dev);
++int mips_ejtag_fdc_tty_cpu_up(struct mips_cdmm_device *dev);
++
++#endif /* __EJTAG_FDC_H */
 -- 
 2.25.1
 
