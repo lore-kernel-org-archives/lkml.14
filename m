@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8939312B95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AED212B87
 	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 00:50:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715388634; cv=none; b=gY/9lYsl2oVzpXkc9f1NLIg+azng8oCdS9TPkrQqRg1WWgv/VyZRbnqiJ+muG1RDwAlnXr1Fi3/I2WEkREi0sVME5NvcmqwrAm0gzYWVKFrc2x7hL5yI6x7aLEZbU200Atl/uhR3z5YtpPSOqajXOKxopO3W/uXvBEgM3V8esQM=
+	t=1715388634; cv=none; b=Ah4yb95qlVop25++lBGw4Hz+T35O8lL6ALuMrj0mo4O/lWbW8Ave9hRIxCZvPoQ8nowTnZLjjY+YG9PwnNVFIoKIsmPNURjUKBOEMBi9CV9cGx64QxVJeDcsAFletc6ggtkau0k5vPY+haE4Oo/yYtwE3YkWskyXL+fbQSV4hX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715388634; c=relaxed/simple;
-	bh=AgAMu+gDLWo3EWA4KTgzUI8GgEKMvy5SiUAFAwQuGwM=;
+	bh=f/QziGJMQfc3AVEjvIb2SXkPaytTiSIZVj8Z4dQuuV0=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=JcpTEii7eO6NxfoS6YgPXm0a0Vd1LT4XksnR9t/q6KqpTZn52w9OeqcyoTVDo637ZUNQy1FbVLBcGl8EU4bA7WHqqN6/YL8DKcEGkyDF1COMujW5Tcu7mg6NdPmDf70k5XRfbTUfiFszvrKMYISLogGvy3ZJqm3Jzi0jOOtS1WE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+SrKoc9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=XaigbC5L4UiHDHwLEq+iqk2DGwck/P+jiykUIockD+Z4JG4jVHbBD7xtVM6heUxJnEKOx735fJ53QKBDO0MOt0kWT1Mg11YGa6TBtmOfZxMlUuNAgd/WvES/d/rggh1vQd8v35d0ued+wysFxQlxk91+LIKDfJB4hqUFHZa21Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LKfmjuB/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+SrKoc9"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 482E6C4DDE9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LKfmjuB/"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 01859C4AF10;
 	Sat, 11 May 2024 00:50:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715388634;
-	bh=AgAMu+gDLWo3EWA4KTgzUI8GgEKMvy5SiUAFAwQuGwM=;
+	bh=f/QziGJMQfc3AVEjvIb2SXkPaytTiSIZVj8Z4dQuuV0=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=L+SrKoc9SGVmN++aJfbvFTqyQWyyE23vY5zFm1SD2R+9b78XXzYe001PSUpSUkOFf
-	 CN06CP1/dYC2SkG8L1SlQ6PrffWQmT1V2MiKEO1Zi8RK0PXF2jX6glx+aehE2njMpF
-	 h1N+u6lh2FtjI2AtkE/PtOvvq3gpKQs1wShsEx1yzJ51iASqehniyh+EYdFaU3ZdTz
-	 uVHNmd3RZ62BmBb+2Kvd52Z9IBuC47+NyqrdBhufQWT+mhmjdk92p5FFbrk6xiwHms
-	 OxvJS59nkArUUIGJBIU6Tlo1D9GIrs7zEdvJG2Q0SPqQRrLDu00qd00lc7nBDUkllx
-	 T5QHjCfo+cjMw==
+	b=LKfmjuB/FrMY9Dza4ye4K5aty+xxhteXPrObXZ3zFb8GSxQwcVRPCiXY/TgiQ8kJC
+	 8y366RjZt6V2H4CsMAuY5Xntjgb7UcEnJJ4uNsPMh1uEwBV/Nh1teQhBY2xtF3cKIg
+	 qKblRdK+aRqjeetDfVLWXyo8Krqm0HTTEXfn71sF9p5oGybqt9jQiLQbSnKyX1OxBH
+	 9F1ckx4Won3+N4cuB57k/HRsm0jDPc4/DC1Iex/ckldSmhK8Sb5BMwnTjlidIRO36D
+	 urGIiMx0d6bVh2ioFgkqAt1LUpXjiPuiXGeuNcghcJOGjyCHcdpXEnNQvVNw8yrjy/
+	 0CuraQo5Lw7iA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3C5A0C32759;
-	Sat, 11 May 2024 00:50:34 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id E7716C32759;
+	Sat, 11 May 2024 00:50:33 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,36 +37,34 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH V2] f2fs: fix some ambiguous comments
+Subject: Re: [f2fs-dev] [PATCH] f2fs: remove redundant parameter in
+ is_next_segment_free()
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <171538863424.11229.12572874171964870634.git-patchwork-notify@kernel.org>
-Date: Sat, 11 May 2024 00:50:34 +0000
-References: <1714132889-9423-1-git-send-email-zhiguo.niu@unisoc.com>
-In-Reply-To: <1714132889-9423-1-git-send-email-zhiguo.niu@unisoc.com>
-To: =?utf-8?b?54mb5b+X5Zu9IChaaGlndW8gTml1KSA8emhpZ3VvLm5pdUB1bmlzb2MuY29tPg==?=@ci.codeaurora.org
-Cc: jaegeuk@kernel.org, chao@kernel.org, ke.wang@unisoc.com,
- linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- hongyu.jin@unisoc.com
+ <171538863394.11229.6682600182078372745.git-patchwork-notify@kernel.org>
+Date: Sat, 11 May 2024 00:50:33 +0000
+References: <20240425145528.2925372-1-zhaoyifan@sjtu.edu.cn>
+In-Reply-To: <20240425145528.2925372-1-zhaoyifan@sjtu.edu.cn>
+To: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
+Cc: jaegeuk@kernel.org, chao@kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
 
 Hello:
 
 This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Fri, 26 Apr 2024 20:01:29 +0800 you wrote:
-> After commit d7e9a9037de2 ("f2fs: Support Block Size == Page Size"),
-> Some comments are confused and just correct with block size is 4KB.
+On Thu, 25 Apr 2024 22:55:28 +0800 you wrote:
+> is_next_segment_free() takes a redundant `type` parameter. Remove it.
 > 
-> Signed-off-by: Zhiguo Niu <zhiguo.niu@unisoc.com>
+> Signed-off-by: Yifan Zhao <zhaoyifan@sjtu.edu.cn>
 > ---
-> v2: add comments "support 64 TB disk size for 16K page size"
-> 
-> [...]
+>  fs/f2fs/segment.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 
 Here is the summary with links:
-  - [f2fs-dev,V2] f2fs: fix some ambiguous comments
-    https://git.kernel.org/jaegeuk/f2fs/c/991b6bdf1b00
+  - [f2fs-dev] f2fs: remove redundant parameter in is_next_segment_free()
+    https://git.kernel.org/jaegeuk/f2fs/c/ecd69be71aad
 
 You are awesome, thank you!
 -- 
