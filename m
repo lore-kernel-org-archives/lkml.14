@@ -1,60 +1,61 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60E421DDEA
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 23:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9EC3B2BD
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 23:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715468431; cv=none; b=F0zR/SWGpXRXrWWMH8zlMm6HptHxrUVXUD81F3bbcJunoCIh3mIL4Z0/aAyuNuRy4jzHBt/OuC3yAlZB2MCS8MyPoUsIu4GsY4ggR6bQGumw43JxmaiFXLLiD4ZEPbsqa2m5Gl21UnxbXLvz0Ft9y+OJJknRuvJaqv+825sctbI=
+	t=1715468432; cv=none; b=dyWlJq8zEmvnJBovIAqIqlJm2AehNCz19q/rLA8Fi4i0TtCdmdYaIt87s3a/ozHBlwLQ6O/WaBPHDFXYawgomu6AcqWl1kvlGezPLo+zSqI2h81YbeeaFq9UfLR/3nRG2HyHWl7WN5ELaB1jH4N3Y4BVzhpGUpyK9XXaLUTb97Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715468431; c=relaxed/simple;
-	bh=sjNwNWt1lktWQrmL6beKWmXl2L8FICi4sYx1xY8LX/4=;
+	s=arc-20240116; t=1715468432; c=relaxed/simple;
+	bh=Nb2j0chWOl3K4obprfCylvl2x756Dew7S8N3+vA9f8A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Byov1hTxDcTeiusBjjHUNfuWnAt/DbUtQnOajXOuh8MfThCGm4DFdLpKOdCPo1kORBJdJgG2OmMXy3VKjzR1bC3baowO+x5R7Jnd8zsMKgmdyOpq5m+8AZgIwyEZ5POZKonWCqgZcTarVRsUVX4du2lgSGqR6j6GiojGbMXvY1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a/J+m04T; arc=none smtp.client-ip=209.85.167.42
+	 In-Reply-To:To:Cc; b=tEAGYnbCVu+iCdvWFuCKPfexUs5f5lPGiAO5ShUf6F15pdI2qZdZ/K0TmYfpEJxTzYtpHELjUSTyC4xTISD0ezKV70pHXaq6fBcChYEmPgssnhBDcQHIMIEj+KKWIyCuhjdIzEq5BkF2+BSc6WKAYbzfpNleQb4QZWK7lIw1RQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nnI6b2Xt; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a/J+m04T"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-522297f91bcso1886468e87.3
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 16:00:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nnI6b2Xt"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51f2ebbd8a7so3342241e87.2
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 16:00:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715468427; x=1716073227; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1715468429; x=1716073229; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7ItR8Il0wZKComYTOQXyrvGGchY2JbpvV93y+cdGZEE=;
-        b=a/J+m04TXFA5XouTQXUXbz5zSz6RwapsgTu4cDtae7GzjZpfJzQIl6EDiyBU0DQiAe
-         LWueIRx6IcqAoN3k0PyJSN8nXj0Jz2mlAMA9RQsPOsRPZ75qDfLtTelqFSWjcxSo6Stm
-         9A+sU+P46zkrno2IU0se6ihPDFQKDtrloetsrkz6CED09EWLKM6J4zVtAteJ4Io9Vsa8
-         cWq0nkMAmAfUyrbrc0tlnSMdVymoocDBSSClcx8vVqLNJcfHIr4OlTW5k9dxo/WYhjKI
-         eQXtdo4bNHM1oHZcrWM47LClzdm9ot6kn55haOOvw3UzaUWW8QD52CVDickBisPIfO+0
-         NNsQ==
+        bh=Hu0NGC1822F78E4qEEGMD+epvzx8Hq6ZdfvN33IsmMQ=;
+        b=nnI6b2XtaAaFCxROBIawMZJ6HyZCkBSlh9TrMsjIVQ2L5JUU6h9fckAanVrk2zxR3m
+         DmA5/rivwRQ/KyJ8SecPDzd8MMws55KnF64frp7C4PJ8ppCdFR+btFhqtgBlq4e0HE+s
+         ADXN1h70HaOJlcXiIzHJ/oOE9jUtve0w2CNoBpv0n4L/h/RTRL+90sGFkL55LvAlho/3
+         ijmkI3h7WAasBl/Te1Mk3giC5IeBDzPycw3CZBme0WVSlir/pwb1gnVXLCqsZQAExewL
+         7rRDT3Qc84wHKAl+1L7TsqlBcazKtGaWM5wjhZYiEIo0SPeb2FTphEVo8vFnh90ULept
+         oeww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715468427; x=1716073227;
+        d=1e100.net; s=20230601; t=1715468429; x=1716073229;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7ItR8Il0wZKComYTOQXyrvGGchY2JbpvV93y+cdGZEE=;
-        b=m6XdLXdBnEwhpkKwujccpy3VZ0Svrx9K+djwmJtl8jw3vj2BsWgdnU5mEbUI1snxTY
-         YE5YT8ML/FXYO5GCZf0hCrcLLV0DCMndrnArzJ54jgL18SGZIDpQ1J4akenXtmuLl/Vu
-         zfI2QyN7Uieotfuhqq+9K07azjYPm1KgN1aRN1Z9RImmhVgA3gz/Yo0/WujXAsZcU22m
-         ipsZEWEf9JHYrhis+SvxkQlnc+lTZazwjIqIdb6r8XH7Gd5Kd8MpQO+KIviRwmhuvWVh
-         rxn0n/q/Ck7Np85taIlamhrrhpAsHl5UQo03eqblF1DR9smcbaDn8DTAGjKsA9mGJdZJ
-         Fnxg==
-X-Forwarded-Encrypted: i=1; AJvYcCUslRwHzjMRcqkk307Nd9yYfL6rX7vNaPgSL+J0JR2NFIgWjvRoZ5Ug6zO3oo6DJK0JLnS6597DGsS9dqyb/ebXicnu9KFg74setVRH
-X-Gm-Message-State: AOJu0YzbM1aQrt0upJSEz9rG1SNgPhhBfKZaSzInU9jq9Ja2M3ZvLN2R
-	Dflalb58UMZkff9eFxM4aGEEATrQZnUHQnuf5/Rvzh9ff44NauLk4HWjGpNo+Fc=
-X-Google-Smtp-Source: AGHT+IGupD6xSF5z3LDxw5fpnNiXEVPwrXMtCUrN+VFBtOrmIH4ipNMQ9NazLPourMk+7YDo207urw==
-X-Received: by 2002:a05:6512:ba3:b0:518:8d15:8810 with SMTP id 2adb3069b0e04-5220fc7354cmr5061661e87.14.1715468427451;
-        Sat, 11 May 2024 16:00:27 -0700 (PDT)
+        bh=Hu0NGC1822F78E4qEEGMD+epvzx8Hq6ZdfvN33IsmMQ=;
+        b=sGtkpwPiHT1y3QWk3L2nv2htr7Hq7bSBRBZB0FyFgxwUa2LtY2yTHcPU21B5BXmmFg
+         7tTOnZs3a4ilmdlq2aMEBjbCOgPrM6U7pphDEt49YPxmqjZTs7488Xax10e9t3IYQEeU
+         3+eubrTpcLTKtTdHAlaE+EU9VMNGPRgLoe2v0DfUTlk5BmfylnPls7Gt9KPqj6PNUdr3
+         DdU+5L2hiRISkZTQDiYEjI7Nx/SsRZSd/Bhg48MI9HTikxUJATQny63rJWEgLMUgBojE
+         t+FtWeaKaE9+zrWsf+2ZLan4MASPdK93CNdY/H8JIdgaIkQ96rFF7sayQdtPEPI2MUt4
+         5Q9g==
+X-Forwarded-Encrypted: i=1; AJvYcCW8EgxWZ8dBCUGH27sxzYPWbUrDCrwsyfgzM4hwaOZ9AtKDSl8ZrCQSqZXHdPDOJk9di7sGpf3UJnxsnvpysg2DvM04vINJWKckRhIt
+X-Gm-Message-State: AOJu0Yxs+LAo9Bmb4T0YfQCAacH2zvq4q7kP+sFC+NkIZGfG0EhOICu5
+	N0xV4/WIFy+sUjCN7OWXb1wuL0ZS0KFZqc9jlMKTkHbugGn1mGmjGZ/b8FBONig=
+X-Google-Smtp-Source: AGHT+IFr3JJ2vBf6ZQy+IfFzBDbsVRhgW4zc3ltkOgtdnJYsgPSuJLiHSVasG/nFGY1o3ezKQcVUvQ==
+X-Received: by 2002:ac2:4437:0:b0:519:2d60:d71b with SMTP id 2adb3069b0e04-5220fb748e2mr3750214e87.22.1715468428990;
+        Sat, 11 May 2024 16:00:28 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f38d3717sm1134222e87.173.2024.05.11.16.00.26
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f38d3717sm1134222e87.173.2024.05.11.16.00.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 May 2024 16:00:26 -0700 (PDT)
+        Sat, 11 May 2024 16:00:28 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sun, 12 May 2024 02:00:18 +0300
-Subject: [PATCH v2 1/7] drm/panel: lg-sw43408: add missing error handling
+Date: Sun, 12 May 2024 02:00:20 +0300
+Subject: [PATCH v2 3/7] drm/panel: boe-tv101wum-nl6: use wrapped MIPI DCS
+ functions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,7 +64,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240512-dsi-panels-upd-api-v2-1-e31ca14d102e@linaro.org>
+Message-Id: <20240512-dsi-panels-upd-api-v2-3-e31ca14d102e@linaro.org>
 References: <20240512-dsi-panels-upd-api-v2-0-e31ca14d102e@linaro.org>
 In-Reply-To: <20240512-dsi-panels-upd-api-v2-0-e31ca14d102e@linaro.org>
 To: Douglas Anderson <dianders@chromium.org>, 
@@ -80,101 +81,192 @@ Cc: Cong Yang <yangcong5@huaqin.corp-partner.google.com>,
  dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2884;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4693;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=sjNwNWt1lktWQrmL6beKWmXl2L8FICi4sYx1xY8LX/4=;
- b=owEBbAGT/pANAwAKAYs8ij4CKSjVAcsmYgBmP/iIq2PSj7Y1vez6Rc2QseG7HDNb8trfZ6GFD
- fbOLvZ4cmeJATIEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZj/4iAAKCRCLPIo+Aiko
- 1RPRB/iPkeSgZV6o0AQqVNOnA/LGZ26CD5knxYfdT6mUpksmIdzNgz51P7eJqFplreJORm+ki18
- Ak5BJgGG1G/Le90JBUp2AAfXsWY8Qyc4blaMEuaiR7idSxNgE3dIMdrdKAxvV+Y8Km3qAquwJXw
- XX1uW/CIGcFwAkWYummz3BUUcQvximQ8c1502Q2MWhPeH/LD/Eb3qLSn9gzcXWL90IZXsQqaMrd
- TADER+4+U8OhlF9N29/espaXx4aqOR7cgeJ812G0t+TXDhqUA/nD2ptzrzxANloKyaGOrI1Qnfm
- fPGdECpiiVL/ErgtxppPVEIEBME0FKNDHgTZbbRHeR1R0T4=
+ bh=Nb2j0chWOl3K4obprfCylvl2x756Dew7S8N3+vA9f8A=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmP/iJPUx6S2iov6pW2UiDrNkON3xTRY9bGzjD5
+ M6NaOHeuR6JATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZj/4iQAKCRCLPIo+Aiko
+ 1eFkB/9JXBh7kAEoKU1ZGODiXQ9dFDltFasZEZd5OcbnNrPxpevLyXu0CWhZj2Bn6+lGaZ/TfUR
+ Psn26XBaBBlqancXr61dMYJfulvUJkDEqsWiAg0/KHwm82Z7aWBd5y7I52BR00EI5g/CMYIuTDP
+ o628o7vV2AmVFLEAXfuoisFcYBbeAXsbhIf0SpvmwmMo3ovCgtkm1LbuVhz1uEcfNkeQyaXgzro
+ AXUmpdFU72BV6AkBvd3T+g4gyTJjiEfNCxt7jV4A+2VG+E/Ug+WcPe63OOJyurrC2x6V7Gbpw2M
+ LPoIuKd5xUrtL1U/xgk6pNCXKJN/r1iyGExMS2bjIZZ2NyOw
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-Add missing error handling for the mipi_dsi_ functions that actually
-return error code instead of silently ignoring it.
+Remove conditional code and always use mipi_dsi_dcs_*multi() wrappers to
+simplify driver's init/exit code.
 
-Fixes: 069a6c0e94f9 ("drm: panel: Add LG sw43408 panel driver")
 Reviewed-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
- drivers/gpu/drm/panel/panel-lg-sw43408.c | 33 ++++++++++++++++++++++++++------
- 1 file changed, 27 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c | 81 ++++++--------------------
+ 1 file changed, 19 insertions(+), 62 deletions(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-lg-sw43408.c b/drivers/gpu/drm/panel/panel-lg-sw43408.c
-index 2b3a73696dce..67a98ac508f8 100644
---- a/drivers/gpu/drm/panel/panel-lg-sw43408.c
-+++ b/drivers/gpu/drm/panel/panel-lg-sw43408.c
-@@ -62,16 +62,25 @@ static int sw43408_program(struct drm_panel *panel)
- {
- 	struct sw43408_panel *ctx = to_panel_info(panel);
- 	struct drm_dsc_picture_parameter_set pps;
-+	int ret;
+diff --git a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+index 4b4b125a6c6b..8e839a1749e4 100644
+--- a/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
++++ b/drivers/gpu/drm/panel/panel-boe-tv101wum-nl6.c
+@@ -448,22 +448,16 @@ static int boe_tv110c9m_init(struct boe_panel *boe)
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0x55, 0x00);
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0xbb, 0x13);
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3b, 0x03, 0x96, 0x1a, 0x04, 0x04);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
  
- 	mipi_dsi_dcs_write_seq(ctx->link, MIPI_DCS_SET_GAMMA_CURVE, 0x02);
+-	msleep(100);
++	mipi_dsi_msleep(&ctx, 100);
  
--	mipi_dsi_dcs_set_tear_on(ctx->link, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+	ret = mipi_dsi_dcs_set_tear_on(ctx->link, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+	if (ret < 0) {
-+		dev_err(panel->dev, "Failed to set tearing: %d\n", ret);
-+		return ret;
-+	}
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0x11);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
  
- 	mipi_dsi_dcs_write_seq(ctx->link, 0x53, 0x0c, 0x30);
- 	mipi_dsi_dcs_write_seq(ctx->link, 0x55, 0x00, 0x70, 0xdf, 0x00, 0x70, 0xdf);
- 	mipi_dsi_dcs_write_seq(ctx->link, 0xf7, 0x01, 0x49, 0x0c);
+-	msleep(200);
++	mipi_dsi_msleep(&ctx, 200);
  
--	mipi_dsi_dcs_exit_sleep_mode(ctx->link);
-+	ret = mipi_dsi_dcs_exit_sleep_mode(ctx->link);
-+	if (ret < 0) {
-+		dev_err(panel->dev, "Failed to exit sleep mode: %d\n", ret);
-+		return ret;
-+	}
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0x29);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
  
- 	msleep(135);
- 
-@@ -97,14 +106,22 @@ static int sw43408_program(struct drm_panel *panel)
- 	mipi_dsi_dcs_write_seq(ctx->link, 0x55, 0x04, 0x61, 0xdb, 0x04, 0x70, 0xdb);
- 	mipi_dsi_dcs_write_seq(ctx->link, 0xb0, 0xca);
- 
--	mipi_dsi_dcs_set_display_on(ctx->link);
-+	ret = mipi_dsi_dcs_set_display_on(ctx->link);
-+	if (ret < 0) {
-+		dev_err(panel->dev, "Failed to set display on: %d\n", ret);
-+		return ret;
-+	}
- 
- 	msleep(50);
- 
- 	ctx->link->mode_flags &= ~MIPI_DSI_MODE_LPM;
- 
- 	drm_dsc_pps_payload_pack(&pps, ctx->link->dsc);
--	mipi_dsi_picture_parameter_set(ctx->link, &pps);
-+	ret = mipi_dsi_picture_parameter_set(ctx->link, &pps);
-+	if (ret < 0) {
-+		dev_err(panel->dev, "Failed to set PPS: %d\n", ret);
-+		return ret;
-+	}
- 
- 	ctx->link->mode_flags |= MIPI_DSI_MODE_LPM;
- 
-@@ -113,8 +130,12 @@ static int sw43408_program(struct drm_panel *panel)
- 	 * PPS 1 if pps_identifier is 0
- 	 * PPS 2 if pps_identifier is 1
- 	 */
--	mipi_dsi_compression_mode_ext(ctx->link, true,
--				      MIPI_DSI_COMPRESSION_DSC, 1);
-+	ret = mipi_dsi_compression_mode_ext(ctx->link, true,
-+					    MIPI_DSI_COMPRESSION_DSC, 1);
-+	if (ret < 0) {
-+		dev_err(panel->dev, "Failed to set compression mode: %d\n", ret);
-+		return ret;
-+	}
+-	msleep(100);
++	mipi_dsi_msleep(&ctx, 100);
  
  	return 0;
+ };
+@@ -893,22 +887,16 @@ static int inx_hj110iz_init(struct boe_panel *boe)
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0xb0, 0x01);
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0x35, 0x00);
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0x3b, 0x03, 0xae, 0x1a, 0x04, 0x04);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
+ 
+-	msleep(100);
++	mipi_dsi_msleep(&ctx, 100);
+ 
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0x11);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
+ 
+-	msleep(200);
++	mipi_dsi_msleep(&ctx, 200);
+ 
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0x29);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
+ 
+-	msleep(100);
++	mipi_dsi_msleep(&ctx, 100);
+ 
+ 	return 0;
+ };
+@@ -1207,10 +1195,8 @@ static int boe_init(struct boe_panel *boe)
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0xb3, 0x08);
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0xb0, 0x04);
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0xb8, 0x68);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
+ 
+-	msleep(150);
++	mipi_dsi_msleep(&ctx, 150);
+ 
+ 	return 0;
+ };
+@@ -1222,16 +1208,12 @@ static int auo_kd101n80_45na_init(struct boe_panel *boe)
+ 	msleep(24);
+ 
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0x11);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
+ 
+-	msleep(120);
++	mipi_dsi_msleep(&ctx, 120);
+ 
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0x29);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
+ 
+-	msleep(120);
++	mipi_dsi_msleep(&ctx, 120);
+ 
+ 	return 0;
+ };
+@@ -1283,10 +1265,8 @@ static int auo_b101uan08_3_init(struct boe_panel *boe)
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe5, 0x4f);
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe6, 0x41);
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe7, 0x41);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
+ 
+-	msleep(150);
++	mipi_dsi_msleep(&ctx, 150);
+ 
+ 	return 0;
+ };
+@@ -1385,16 +1365,12 @@ static int starry_qfh032011_53g_init(struct boe_panel *boe)
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe1, 0x23);
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0xe2, 0x07);
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0X11);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
+ 
+-	msleep(120);
++	mipi_dsi_msleep(&ctx, 120);
+ 
+ 	mipi_dsi_dcs_write_seq_multi(&ctx, 0X29);
+-	if (ctx.accum_err)
+-		return ctx.accum_err;
+ 
+-	msleep(80);
++	mipi_dsi_msleep(&ctx, 80);
+ 
+ 	return 0;
+ };
+@@ -1404,38 +1380,19 @@ static inline struct boe_panel *to_boe_panel(struct drm_panel *panel)
+ 	return container_of(panel, struct boe_panel, base);
  }
+ 
+-static int boe_panel_enter_sleep_mode(struct boe_panel *boe)
+-{
+-	struct mipi_dsi_device *dsi = boe->dsi;
+-	int ret;
+-
+-	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+-
+-	ret = mipi_dsi_dcs_set_display_off(dsi);
+-	if (ret < 0)
+-		return ret;
+-
+-	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+-	if (ret < 0)
+-		return ret;
+-
+-	return 0;
+-}
+-
+ static int boe_panel_disable(struct drm_panel *panel)
+ {
+ 	struct boe_panel *boe = to_boe_panel(panel);
+-	int ret;
++	struct mipi_dsi_multi_context ctx = { .dsi = boe->dsi };
+ 
+-	ret = boe_panel_enter_sleep_mode(boe);
+-	if (ret < 0) {
+-		dev_err(panel->dev, "failed to set panel off: %d\n", ret);
+-		return ret;
+-	}
++	boe->dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
+ 
+-	msleep(150);
++	mipi_dsi_dcs_set_display_off_multi(&ctx);
++	mipi_dsi_dcs_enter_sleep_mode_multi(&ctx);
+ 
+-	return 0;
++	mipi_dsi_msleep(&ctx, 150);
++
++	return ctx.accum_err;
+ }
+ 
+ static int boe_panel_unprepare(struct drm_panel *panel)
 
 -- 
 2.39.2
