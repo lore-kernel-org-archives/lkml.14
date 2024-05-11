@@ -1,88 +1,117 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp-8fa9.mail.infomaniak.ch (smtp-8fa9.mail.infomaniak.ch [83.166.143.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E5FFD27A;
-	Sat, 11 May 2024 17:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8F81B800
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 17:15:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715447579; cv=none; b=rFwtp5wHunyJ1hXktedB06VaNYC2dlWvqyLyMxlYbsUSC4tamuu16Ob+tPYc0YRlTtPJp8ECzxV+ntyyCmstUEv8hJJxLlLuD5fUxI+nrLo+N4eIfscm5WvpTOgJTluSvpnw9HQTsnKakqo596x6/rcLRBWHGsAck550TvRKwn0=
+	t=1715447703; cv=none; b=B00JqaeyYmwnr85eGwVScRBPSqklCNH1W/zy/ZGIYHiQA1sLU+MCYi8fEOlLNBTWs1SZERG6EKoUCZcnLjlyWysWd4e66q47KsMp2b3bzb7Dm9oNEwXKjXsEo4tIT4gYjFUe7gvxegAoeNXiAwDQazTWjGkiv73pN0Oky6fWaY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715447579; c=relaxed/simple;
-	bh=Ea+0lH4nexc0bSRa2hoF5FRkiDGoufVtdVxTU4cEfOM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ucKEina5H4JTtFxb4c42/G2/W4UqU1P4iLZ0qhK62X225UgmAJdOeeXQB97ZAco9aTrE3ZpNI/DlZGQccdRyCoCPhol6IXG7DNaQYNtM9Nh1PXp88eKEQxMBlNqMJCwd5dH05/kz0OojYYyNG/brB757eGOtfylsWG9sCC7qVRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=1noDtvzm; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1715447703; c=relaxed/simple;
+	bh=AhSOwC69hM3XlVIjsnSNM0G1yMqhIGrTPTpK23ca25c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c1zYuUkbA2bL38VmnlLwg6R7HOMROJUfXIps0YRC/CrbJsd15oh+aKXmIXeT+P9KaAwMVkjLn8TSqKSS12KzkbSxI0OIXhw9mDG3H/H3XJiNSIgR/XCJJ/1dRQF4I3oYidB5bObHdXSk53JN4X5eWAn00szT61AnIBRLFBkOkmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=v0aCBwDD; arc=none smtp.client-ip=83.166.143.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="1noDtvzm"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=+PYJZKJmp4DNEIJz0QH32REFiAYsuHCbhSQAQyPwHDQ=; b=1noDtvzmo/8NcsHS2R9xnr2nF/
-	+HZYubHFsdnVYYib9Z4ABljM4TQHtabJKRYloqxpCmcUtZ0Gq4xCAxPqdPaSo55mmK8XQlBOUX4pS
-	OsnNiL+moSUHSzGX5//3on5yr9Nk6tDf1w1lp8maVEuk+EYk99alEjby65oXCH3jSMSrin6dJcHz9
-	Ce5ZpGad1DHE87yKIpjwEhSAPbsWX6Pue65cWdIacoVDJAjZAjJVJu3x3T/UtfWRRv2HeE8TDz0Il
-	313vTSJPzuwe9M5308HtX7F5SiNWix7eXwAZi+FtAu/K44SZj112tAe60ewKePUYdXj1B2GMT2ECV
-	OgChaOng==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:41854)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1s5qH3-00005T-1n;
-	Sat, 11 May 2024 18:12:41 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1s5qH0-0004QC-WA; Sat, 11 May 2024 18:12:39 +0100
-Date: Sat, 11 May 2024 18:12:38 +0100
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Jitendra Vegiraju <jitendra.vegiraju@broadcom.com>,
-	netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com,
-	bcm-kernel-feedback-list@broadcom.com, alexandre.torgue@foss.st.com,
-	joabreu@synopsys.com, mcoquelin.stm32@gmail.com,
-	richardcochran@gmail.com, linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2, net-next, 2/2] net: stmmac: PCI driver for BCM8958X
- SoC
-Message-ID: <Zj+nBpQn1cqTMJxQ@shell.armlinux.org.uk>
-References: <20240510000331.154486-3-jitendra.vegiraju@broadcom.com>
- <20240511015924.41457-1-jitendra.vegiraju@broadcom.com>
- <4ede8911-827d-4fad-b327-52c9aa7ed957@lunn.ch>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="v0aCBwDD"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VcC6p6zbbzj2X;
+	Sat, 11 May 2024 19:14:58 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1715447698;
+	bh=olnCKZ/f1+rGHwst2IyLMVXJF0OZbL9TePTxid+W8KM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=v0aCBwDDfrOK0t7ab95u87uh6DmHugSHxoso0UJ0C3NY8Hags0+yZG6SmgkUtU35u
+	 nigJEiH+AIW/8IWMVPV5RsRAOCPJsyxUSCeNiOopbJMgy/l39NLhsPmeib+vd8ZPf5
+	 rp4tfpHe3ulEwt5xSEuMZVZiuooyVwU/crOKJXQk=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VcC6p1DKpzTHD;
+	Sat, 11 May 2024 19:14:58 +0200 (CEST)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Christian Brauner <brauner@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Kees Cook <keescook@chromium.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Mark Brown <broonie@kernel.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Shengyu Li <shengyu.li.evgeny@gmail.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Shuah Khan <skhan@linuxfoundation.org>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Brendan Higgins <brendanhiggins@google.com>,
+	David Gow <davidgow@google.com>,
+	"David S . Miller" <davem@davemloft.net>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Jon Hunter <jonathanh@nvidia.com>,
+	Ron Economos <re@w6rz.net>,
+	Ronald Warsow <rwarsow@gmx.de>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	Will Drewry <wad@chromium.org>,
+	kernel test robot <oliver.sang@intel.com>,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	netdev@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH v7 06/10] selftests/harness: Constify fixture variants
+Date: Sat, 11 May 2024 19:14:41 +0200
+Message-ID: <20240511171445.904356-7-mic@digikod.net>
+In-Reply-To: <20240511171445.904356-1-mic@digikod.net>
+References: <20240511171445.904356-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ede8911-827d-4fad-b327-52c9aa7ed957@lunn.ch>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
-On Sat, May 11, 2024 at 06:16:52PM +0200, Andrew Lunn wrote:
-> > +	/* This device interface is directly attached to the switch chip on
-> > +	 *  the SoC. Since no MDIO is present, register fixed_phy.
-> > +	 */
-> > +	brcm_priv->phy_dev =
-> > +		 fixed_phy_register(PHY_POLL,
-> > +				    &dwxgmac_brcm_fixed_phy_status, NULL);
-> > +	if (IS_ERR(brcm_priv->phy_dev)) {
-> > +		dev_err(&pdev->dev, "%s\tNo PHY/fixed_PHY found\n", __func__);
-> > +		return -ENODEV;
-> > +	}
-> > +	phy_attached_info(brcm_priv->phy_dev);
-> 
-> What switch is it? Will there be patches to extend SF2?
+FIXTURE_VARIANT_ADD() types are passed as const pointers to
+FIXTURE_TEARDOWN().  Make that explicit by constifying the variants
+declarations.
 
-... and why is this legacy fixed_phy even necessary when stmmac uses
-phylink which supports fixed links, including with custom fixed status?
+Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Will Drewry <wad@chromium.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+Link: https://lore.kernel.org/r/20240511171445.904356-7-mic@digikod.net
+---
 
+Changes since v1:
+* Extract change from a bigger patch (suggested by Kees).
+---
+ tools/testing/selftests/kselftest_harness.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
+index 9d7178a71c2c..201040207c85 100644
+--- a/tools/testing/selftests/kselftest_harness.h
++++ b/tools/testing/selftests/kselftest_harness.h
+@@ -338,7 +338,7 @@ static inline pid_t clone3_vfork(void)
+  * variant.
+  */
+ #define FIXTURE_VARIANT_ADD(fixture_name, variant_name) \
+-	extern FIXTURE_VARIANT(fixture_name) \
++	extern const FIXTURE_VARIANT(fixture_name) \
+ 		_##fixture_name##_##variant_name##_variant; \
+ 	static struct __fixture_variant_metadata \
+ 		_##fixture_name##_##variant_name##_object = \
+@@ -350,7 +350,7 @@ static inline pid_t clone3_vfork(void)
+ 		__register_fixture_variant(&_##fixture_name##_fixture_object, \
+ 			&_##fixture_name##_##variant_name##_object);	\
+ 	} \
+-	FIXTURE_VARIANT(fixture_name) \
++	const FIXTURE_VARIANT(fixture_name) \
+ 		_##fixture_name##_##variant_name##_variant =
+ 
+ /**
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+2.45.0
+
