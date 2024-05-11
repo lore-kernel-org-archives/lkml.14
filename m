@@ -1,74 +1,74 @@
-Received: from wfhigh4-smtp.messagingengine.com (wfhigh4-smtp.messagingengine.com [64.147.123.155])
+Received: from wfout1-smtp.messagingengine.com (wfout1-smtp.messagingengine.com [64.147.123.144])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACEFD58229;
-	Sat, 11 May 2024 16:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810D260263;
+	Sat, 11 May 2024 16:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=64.147.123.144
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715443223; cv=none; b=T2Fwqhl63tPNk1c6Xffe2Jox+myD9I4wCkbbEqqiCVgpJjb8yw1IMiUed7zcAhaEQI8PO73eYQ1Q6Ru2pmb4M8YMh/psMp5XkGss8/5xKBm8i5BJxdV0dE6F6+uhU1/u7QX3ZS6pg4qM6CuUpnvXOgtzAY2rBZSJGY2LH1s+BoQ=
+	t=1715443227; cv=none; b=MslQpF8l/2rdOXlFxwghWzxF87lVRg3AAMx/Q9Mq1ccuDrjcsufY4jazbaUSwPD13kX3keDWgkEzhqXn1Q4U4sqd6FQymUDPWkoCjuGXx44iY+XTXh2C6eQinnTUvyquIFU5HR51PR09zh5w99mQMaUwYWTw/No22e863C+a96k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715443223; c=relaxed/simple;
-	bh=U+UVB4xsBeR9swGFKSPQmDKTBSfdxpeJjE23y7dy0tM=;
+	s=arc-20240116; t=1715443227; c=relaxed/simple;
+	bh=LTJ2PdwrtfpyOd9ncjTs/2ypXjc7FhtM/f5PM28BJKg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=QFXGJHSk0YvwtF4SrhoCFHRjieB9SMyOfALR5xRUtzAjbWDdUoA8JupjfRj5JppLCBAfVSBY3HSPPZBldvc8cOn1RnZiQsdLpPXoiNH65gLmDbH1INtbMYSnxnjzEKX3xphR4UxVcThTd62qqrGVmC8wFz+8GkB2AcIby40uBUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=fsjFzELc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ESe+v6Hr; arc=none smtp.client-ip=64.147.123.155
+	 In-Reply-To:To:Cc; b=AoWK0JupGEhN1VltoTWJxTPgYQqjLNRAEFlLyByH2oMN5CGrKB/2KIbp8FPdtGjA9tj3XUpmqVYlWjZLECy7wZt/NqWHwsxl37CqyO4lRSloT9EeZLGPzbwadIZv9/MOqLldpUfNosytnJlwX00fE6040PtEX62nStQwSxcM4mA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com; spf=pass smtp.mailfrom=flygoat.com; dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b=D+6fEmLA; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=NDjqs6yi; arc=none smtp.client-ip=64.147.123.144
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flygoat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="fsjFzELc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ESe+v6Hr"
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailfhigh.west.internal (Postfix) with ESMTP id 8DBF418000A6;
-	Sat, 11 May 2024 12:00:20 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="D+6fEmLA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NDjqs6yi"
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailfout.west.internal (Postfix) with ESMTP id 53B461C000F1;
+	Sat, 11 May 2024 12:00:25 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Sat, 11 May 2024 12:00:21 -0400
+  by compute5.internal (MEProxy); Sat, 11 May 2024 12:00:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; h=
 	cc:cc:content-transfer-encoding:content-type:content-type:date
 	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1715443220;
-	 x=1715529620; bh=taaP0de1JMrUsTaQ5p3XewSALo/OUNM7p36PinVNGQI=; b=
-	fsjFzELc3eyNlFo4JGEEnuUPt6BiMox1ALJstmWL1fB2+D82TdyRJpRoY2uMg/gu
-	uh8TlQZ3kEmMKI4Kl6YkVJvt19+a4eJZotW/vwj6dqLp3dLoUKsZJN19T9qvMudz
-	S8srSjrmryTfApxr+fDD1UWwlvJ760d2b+1QErxBZ7Ggz8QRRaIW2r5E6hHZol9w
-	/qWd0jLWLVD2k/lrepaK6JtqgRMztRkZmlz/Z8EbAhDQ7ALylbnfmm7DblfbNFG0
-	1WYtkj/icJ9/uBBTj8npAaeih9pQI1ryZIgWJBk7nKC/oBc8b7sxRWe404P/pMrT
-	hGHSdPfEAx9GLdUBGhv3Tg==
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1715443224;
+	 x=1715529624; bh=DsfUiYmStvOvLHJLDxVevwp6/j2FmnRSicicLuBbeWs=; b=
+	D+6fEmLAqgCmr3Sn7n+K567v6Q7raaeJu3EHNZYdmKvuWLXRBdQqxmJGgcwbZACO
+	akGMqy8IdpiSQkakblZ3Wy+J2KLY9iJTl4H/d0Y+ogzSWucTPyUihiv6M2X12Doq
+	PuIcLGAKQUTt0Vs6/8BkOyzG9Y+G4TX+5ZP7sZYirrSumvCD9XaTHOWGtuK1PhmI
+	Clklj6XfuJBOmyds/C+1n+o1U71nDFhnSfioy+xWBroLrUVbKssk3Qg2ROMfzIDK
+	Xr2MC7iuPgDLvqUTxTl1zOKhwlPQ0jPK+uhLOrejvUcbYrG6D50E6R32781VGoap
+	rjBpiLCbO4KSnnDRdlqvxg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:content-type:date:date:feedback-id:feedback-id
 	:from:from:in-reply-to:in-reply-to:message-id:mime-version
 	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1715443220; x=
-	1715529620; bh=taaP0de1JMrUsTaQ5p3XewSALo/OUNM7p36PinVNGQI=; b=E
-	Se+v6Hrt+xzY4N5CHGJ+KVececDLv2CoixJ8ki1q+Hzr/He7SKDEYjSQP6kO0p/D
-	XHN4v9Hx4N+kmy6LyU+TudwjO/3rXvgBmSuroq5pDanAGl2ChMhDHQ2SrSkqoUyZ
-	WvWoKBv/b2NW+GzckA2VwUJZD6QsS76KvEvJdmiH72agr8F4I8kz59UoORJ08eMa
-	gt6PNX9tUYh2rBKs8cleic6VfvGiuKIX4OtVtbSTv0IqcBECbMxpr55PXW2q5Cdl
-	UomDfSf1hRhrW10jScg1s0ceOa321906ORoP0dTB8rqdd6v63SBjQkupQEr3rbyK
-	xNTAVRcNo0RNVY6w/6VNQ==
-X-ME-Sender: <xms:FJY_ZoxJ7FdjdOrKyGZmSj3LjDP9T24TeouCOADRkxPQft5k2bBVoQ>
-    <xme:FJY_ZsQ0tTbXGKvTFzeo74gpRJ8Q9WLjvm5IXtZsSKqzDyr2DjZP6AIuRHL_cuJGQ
-    kYBuqXNHAlETRGFPdg>
-X-ME-Received: <xmr:FJY_ZqXnn6wlfE8REz7vEzB6fevpR0XtsTbT0mpVXWtu_liu6xWU9yI>
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1715443224; x=
+	1715529624; bh=DsfUiYmStvOvLHJLDxVevwp6/j2FmnRSicicLuBbeWs=; b=N
+	Djqs6yi4X5/HQTnuDHcmRGzzL/D+3sUpDZab0A95yw6n26Kw+gRhkATlqBP0upPZ
+	CdjxVZqyqfyObk2MkpseL3qjPsr3VHlVSIAezsUc61ddZSV1hLaWk+HU0i28hwrs
+	OVZNgHty4/2Rr7ftrY8HOSNK9ckv+5zdrt4PsqRgJ8xsF0++P0GgZIrJyfGHWx6V
+	ec0ZJpoUimdW+5bHgCJPaBlKdLHVUe7H7CfCE1ul6sEULkJC1+XOh3iH/02eP8CK
+	rEjQ/73mT6YuZGUV+Zj4IL0wFDN3o7Hvw+jB1tLDj2Z7+zivZyQWs5MB6tvft4nK
+	Z98aLy16/8VD7ppAkIqZQ==
+X-ME-Sender: <xms:GJY_ZrwJKoArAtUvEOKHenYXp892HSA_Ga7b8OmOIniV-nswcXd9eg>
+    <xme:GJY_ZjQp659H6hYSM4koghGIz-dOBA5-5Fwg0RxnvYGKQNvl4vmeI6RYJFeWVlz1f
+    V0wAK2lT-sR7g16LUA>
+X-ME-Received: <xmr:GJY_ZlWbdWkzggFqEGIDAk7KrGmrDCgTIC7LyjM6NahNRwAboyGV2lg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvdegtddgleehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
     cujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeflihgr
     gihunhcujggrnhhguceojhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomheqne
     cuggftrfgrthhtvghrnhepvdekiefhfeevkeeuveetfeelffekgedugefhtdduudeghfeu
-    veegffegudekjeelnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
+    veegffegudekjeelnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehmrghilh
     hfrhhomhepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomh
-X-ME-Proxy: <xmx:FJY_ZmhLMxGtaNe2fAG_NpzRYFQYCIrMYlSM5s09of_iQaO09S-67Q>
-    <xmx:FJY_ZqBPuljQTOxH2DWB-7jjArWXPnbC2vV1tG_AZV9qpzptl6G6Dw>
-    <xmx:FJY_ZnJDRNO6ejWTmblVX-qToagvP2b_FSGSJgx28c_xLMZ9_i-ZQw>
-    <xmx:FJY_ZhC1XsQsPPWQNJbjDAxNC6jBJUu3msRoAPtmJXxmRGmXNdluZw>
-    <xmx:FJY_ZgB4palDoK6HOCG1Ukgzf1RknW7Aiz_Jh0vHmFEYmgGCq90A-CUt>
+X-ME-Proxy: <xmx:GJY_Zljt4L2fv8l9QU9EqMA3WDS3OjWMfUmz_DIvKN73sEmxLz9E8w>
+    <xmx:GJY_ZtDiZUcXP4dDRc-v_ubTSOzbB9ElDTJJEEppp-vk-op6afqlLA>
+    <xmx:GJY_ZuIOz-jWdCzcEt88sXn5QeKOaFOWfQyV2_P0XDNJ8BqyoP0ZsQ>
+    <xmx:GJY_ZsDzfU69cMub2lbBGwvPNUivQq2npZf5-0moWQrcwkHL0BA0Ag>
+    <xmx:GJY_ZnBoAY__j7Haypnt9gjWAfyXFYBaBVUWD0eNtasj4mZfF4P2GSLI>
 Feedback-ID: ifd894703:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
- 11 May 2024 12:00:18 -0400 (EDT)
+ 11 May 2024 12:00:23 -0400 (EDT)
 From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Date: Sat, 11 May 2024 17:00:11 +0100
-Subject: [PATCH 4/7] MIPS: csrc-r4k: Don't register as sched_clock if unfit
+Date: Sat, 11 May 2024 17:00:13 +0100
+Subject: [PATCH 6/7] clocksource: mips-gic-timer: Refine rating computation
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,7 +77,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240511-mips-clks-v1-4-ddb4a10ee9f9@flygoat.com>
+Message-Id: <20240511-mips-clks-v1-6-ddb4a10ee9f9@flygoat.com>
 References: <20240511-mips-clks-v1-0-ddb4a10ee9f9@flygoat.com>
 In-Reply-To: <20240511-mips-clks-v1-0-ddb4a10ee9f9@flygoat.com>
 To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
@@ -87,67 +87,46 @@ To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Jiaxun Yang <jiaxun.yang@flygoat.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1593;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1318;
  i=jiaxun.yang@flygoat.com; h=from:subject:message-id;
- bh=U+UVB4xsBeR9swGFKSPQmDKTBSfdxpeJjE23y7dy0tM=;
- b=owGbwMvMwCHmXMhTe71c8zDjabUkhjT7aZxhCwuns22+arsnRadMyG7Ki6lhPkvj2ULbZiz+y
- jVjg4ReRykLgxgHg6yYIkuIgFLfhsaLC64/yPoDM4eVCWQIAxenAEzET5Xhv99VXtd33x5sEn51
- 7texgJoSg8mbS3JCuiM/lp5QM0nn9GBk6NhuLqtcGCBW3Mn5vYnN0/z9gS+Zp4JSurPDFLt3uZx
- mAAA=
+ bh=LTJ2PdwrtfpyOd9ncjTs/2ypXjc7FhtM/f5PM28BJKg=;
+ b=owGbwMvMwCHmXMhTe71c8zDjabUkhjT7aZxhDt9b2IuXV+vqLSm+3HbztMGJzdZ7VrH3ytod/
+ B4tu9y9o5SFQYyDQVZMkSVEQKlvQ+PFBdcfZP2BmcPKBDKEgYtTACbSeYHhv1/ExzL9gBcC0qqZ
+ Ha+T4myDg7cfeKv5aAUT34R7Rqu/RjAyNBpu5G+9YG+4LXba/e7+v6IqOTrzrJO4++7L/rkonPW
+ JCwA=
 X-Developer-Key: i=jiaxun.yang@flygoat.com; a=openpgp;
  fpr=980379BEFEBFBF477EA04EF9C111949073FC0F67
 
-When we have more than one CPU in system, counter synchronisation
-overhead can lead to a scenario that sched_clock goes backward when
-being read from different CPUs.
+It is a good clocksource which usually go as fast as CPU core
+and have a low access latency, so raise the base of rating
+from Good to desired when we know that it has a stable frequency.
 
-This is accommodated by CONFIG_HAVE_UNSTABLE_SCHED_CLOCK, but it's
-unavailable on 32bit kernel.
-
-We don't want to risk sched_clock correctness, so if we have multiple
-CPU in system and CONFIG_HAVE_UNSTABLE_SCHED_CLOCK is not set, we just
-don't use counter as sched_clock source.
+Increase frequency addend dividend to 100000000 (10MHz) to
+reasonably accommodate multi GHz level clock, also cap rating
+within current level.
 
 Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- arch/mips/kernel/csrc-r4k.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/clocksource/mips-gic-timer.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/mips/kernel/csrc-r4k.c b/arch/mips/kernel/csrc-r4k.c
-index 5c37e41e8970..18733a2ec594 100644
---- a/arch/mips/kernel/csrc-r4k.c
-+++ b/arch/mips/kernel/csrc-r4k.c
-@@ -68,6 +68,18 @@ static bool rdhwr_count_usable(void)
- 	return false;
- }
+diff --git a/drivers/clocksource/mips-gic-timer.c b/drivers/clocksource/mips-gic-timer.c
+index b3ae38f36720..67498dc9c5a5 100644
+--- a/drivers/clocksource/mips-gic-timer.c
++++ b/drivers/clocksource/mips-gic-timer.c
+@@ -197,7 +197,11 @@ static int __init __gic_clocksource_init(void)
+ 	gic_clocksource.mask = CLOCKSOURCE_MASK(count_width);
  
-+static inline __init bool count_can_be_sched_clock(void)
-+{
-+	if (IS_ENABLED(CONFIG_CPU_FREQ))
-+		return false;
-+
-+	if (num_possible_cpus() > 1 &&
-+			!IS_ENABLED(CONFIG_HAVE_UNSTABLE_SCHED_CLOCK))
-+		return false;
-+
-+	return true;
-+}
-+
- #ifdef CONFIG_CPU_FREQ
+ 	/* Calculate a somewhat reasonable rating value. */
+-	gic_clocksource.rating = 200 + gic_frequency / 10000000;
++	if (mips_cm_revision() >= CM_REV_CM3 || !IS_ENABLED(CONFIG_CPU_FREQ))
++		gic_clocksource.rating = 300; /* Good when frequecy is stable */
++	else
++		gic_clocksource.rating = 200;
++	gic_clocksource.rating += clamp(gic_frequency / 100000000, 0, 99);
  
- static bool __read_mostly r4k_clock_unstable;
-@@ -125,9 +137,8 @@ int __init init_r4k_clocksource(void)
- 
- 	clocksource_register_hz(&clocksource_mips, mips_hpt_frequency);
- 
--#ifndef CONFIG_CPU_FREQ
--	sched_clock_register(r4k_read_sched_clock, 32, mips_hpt_frequency);
--#endif
-+	if (count_can_be_sched_clock())
-+		sched_clock_register(r4k_read_sched_clock, 32, mips_hpt_frequency);
- 
- 	return 0;
- }
+ 	ret = clocksource_register_hz(&gic_clocksource, gic_frequency);
+ 	if (ret < 0)
 
 -- 
 2.34.1
