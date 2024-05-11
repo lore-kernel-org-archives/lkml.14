@@ -1,33 +1,33 @@
 Received: from smtp-8fa9.mail.infomaniak.ch (smtp-8fa9.mail.infomaniak.ch [83.166.143.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D8F81B800
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 17:15:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993141AAD7
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 17:14:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715447703; cv=none; b=B00JqaeyYmwnr85eGwVScRBPSqklCNH1W/zy/ZGIYHiQA1sLU+MCYi8fEOlLNBTWs1SZERG6EKoUCZcnLjlyWysWd4e66q47KsMp2b3bzb7Dm9oNEwXKjXsEo4tIT4gYjFUe7gvxegAoeNXiAwDQazTWjGkiv73pN0Oky6fWaY4=
+	t=1715447704; cv=none; b=hHs2ow7sschrbgI7r32wm0oVWouzFK0J7ZEkJUqUD9nT1uBmVfzFJAyPGMpZNuEC9nGnLKnaxBqFgTyxWxFzYnWL8O8M5xZc3NxxQowzgLJ5nCcuyzaBkwbIAB9cHKymbynv5OsuRCht/RCRBTIDZDiWTiNaCB/cvJsxVR7za/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715447703; c=relaxed/simple;
-	bh=AhSOwC69hM3XlVIjsnSNM0G1yMqhIGrTPTpK23ca25c=;
+	s=arc-20240116; t=1715447704; c=relaxed/simple;
+	bh=d/W4W0Zv8fV+tSobXMhDdAmNiF9r2yWNLjwjMl+IgTA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c1zYuUkbA2bL38VmnlLwg6R7HOMROJUfXIps0YRC/CrbJsd15oh+aKXmIXeT+P9KaAwMVkjLn8TSqKSS12KzkbSxI0OIXhw9mDG3H/H3XJiNSIgR/XCJJ/1dRQF4I3oYidB5bObHdXSk53JN4X5eWAn00szT61AnIBRLFBkOkmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=v0aCBwDD; arc=none smtp.client-ip=83.166.143.169
+	 MIME-Version:Content-Type; b=HEM+2s5NqDWfpQ6pfDgi19SG9kJy0yGSHuT9cuvwRFJbJIfTF9DxilfgfxFXeoHvKywNkEj9jS5UtCdvwS02++VlN17AxgJv+j5uMHFjk4wCaZvv1c7+6rtQI9RthdCfUOWw4CU5gKc2mwWvTwW2LpaXCVV2IPTwNWbYhCcmCjA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=JusrSq8Y; arc=none smtp.client-ip=83.166.143.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="v0aCBwDD"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="JusrSq8Y"
 Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VcC6p6zbbzj2X;
-	Sat, 11 May 2024 19:14:58 +0200 (CEST)
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VcC6h1LvTzd9l;
+	Sat, 11 May 2024 19:14:52 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1715447698;
-	bh=olnCKZ/f1+rGHwst2IyLMVXJF0OZbL9TePTxid+W8KM=;
+	s=20191114; t=1715447692;
+	bh=aciEDm7ED3PMn/nZ1hHix2LICxSlOq8YgWQVQXDH4y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=v0aCBwDDfrOK0t7ab95u87uh6DmHugSHxoso0UJ0C3NY8Hags0+yZG6SmgkUtU35u
-	 nigJEiH+AIW/8IWMVPV5RsRAOCPJsyxUSCeNiOopbJMgy/l39NLhsPmeib+vd8ZPf5
-	 rp4tfpHe3ulEwt5xSEuMZVZiuooyVwU/crOKJXQk=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VcC6p1DKpzTHD;
-	Sat, 11 May 2024 19:14:58 +0200 (CEST)
+	b=JusrSq8YSd/qEeiRRne+aMzC/jKwJxqRNfmeO37ySk7OypbGg45Ctq33glczlKAGC
+	 57WcEn6jfK6vwfb3RsWe+vwvsuQFk63d7ljhllqZeSAG9NSHeuj6qhAoXvTHJvDSeb
+	 Kgzh5BRqUWqp9UYaW5QoS94Z6fDxM2LlgUysgUCA=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VcC6g3mprzTBS;
+	Sat, 11 May 2024 19:14:51 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Christian Brauner <brauner@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -58,9 +58,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-kselftest@vger.kernel.org,
 	netdev@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH v7 06/10] selftests/harness: Constify fixture variants
-Date: Sat, 11 May 2024 19:14:41 +0200
-Message-ID: <20240511171445.904356-7-mic@digikod.net>
+Subject: [PATCH v7 01/10] selftests/pidfd: Fix config for pidfd_setns_test
+Date: Sat, 11 May 2024 19:14:36 +0200
+Message-ID: <20240511171445.904356-2-mic@digikod.net>
 In-Reply-To: <20240511171445.904356-1-mic@digikod.net>
 References: <20240511171445.904356-1-mic@digikod.net>
 Precedence: bulk
@@ -73,45 +73,33 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-FIXTURE_VARIANT_ADD() types are passed as const pointers to
-FIXTURE_TEARDOWN().  Make that explicit by constifying the variants
-declarations.
+Required by switch_timens() to open /proc/self/ns/time_for_children.
+
+CONFIG_GENERIC_VDSO_TIME_NS is not available on UML, so pidfd_setns_test
+cannot be run successfully on this architecture.
 
 Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Will Drewry <wad@chromium.org>
+Fixes: 2b40c5db73e2 ("selftests/pidfd: add pidfd setns tests")
 Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Christian Brauner <brauner@kernel.org>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240511171445.904356-7-mic@digikod.net
+Link: https://lore.kernel.org/r/20240511171445.904356-2-mic@digikod.net
 ---
+ tools/testing/selftests/pidfd/config | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Changes since v1:
-* Extract change from a bigger patch (suggested by Kees).
----
- tools/testing/selftests/kselftest_harness.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 9d7178a71c2c..201040207c85 100644
---- a/tools/testing/selftests/kselftest_harness.h
-+++ b/tools/testing/selftests/kselftest_harness.h
-@@ -338,7 +338,7 @@ static inline pid_t clone3_vfork(void)
-  * variant.
-  */
- #define FIXTURE_VARIANT_ADD(fixture_name, variant_name) \
--	extern FIXTURE_VARIANT(fixture_name) \
-+	extern const FIXTURE_VARIANT(fixture_name) \
- 		_##fixture_name##_##variant_name##_variant; \
- 	static struct __fixture_variant_metadata \
- 		_##fixture_name##_##variant_name##_object = \
-@@ -350,7 +350,7 @@ static inline pid_t clone3_vfork(void)
- 		__register_fixture_variant(&_##fixture_name##_fixture_object, \
- 			&_##fixture_name##_##variant_name##_object);	\
- 	} \
--	FIXTURE_VARIANT(fixture_name) \
-+	const FIXTURE_VARIANT(fixture_name) \
- 		_##fixture_name##_##variant_name##_variant =
- 
- /**
+diff --git a/tools/testing/selftests/pidfd/config b/tools/testing/selftests/pidfd/config
+index f6f2965e17af..6133524710f7 100644
+--- a/tools/testing/selftests/pidfd/config
++++ b/tools/testing/selftests/pidfd/config
+@@ -3,5 +3,7 @@ CONFIG_IPC_NS=y
+ CONFIG_USER_NS=y
+ CONFIG_PID_NS=y
+ CONFIG_NET_NS=y
++CONFIG_TIME_NS=y
++CONFIG_GENERIC_VDSO_TIME_NS=y
+ CONFIG_CGROUPS=y
+ CONFIG_CHECKPOINT_RESTORE=y
 -- 
 2.45.0
 
