@@ -1,170 +1,159 @@
-Received: from dggsgout11.his.huawei.com (unknown [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6826623DE;
-	Sat, 11 May 2024 07:13:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B9D5C89
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 07:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715411617; cv=none; b=NhYBy96+pd7ssC3i6GwsVsHCy6AGK60M4xE9MCLZ7yQ/G0pUIkGsq+9HQEFNmNYehzSibIOG8plXtUqLwRU9vYovxDTP9LH5C0eqJbkWJCo9W6xZ6BEJpCCHjv483Gk5LuYDeeLDSWHfpzWYOsXx0ykD+DGb79zRQS7yUTHoP8s=
+	t=1715411739; cv=none; b=Ry2ffvJN+YZ6pNApdHv6Sg7996tpCpJUmRIsI/A7RON94ZVKFOxoP+PHImlRPm5jC/nyYIlGz+EZtjJfzGHl1HkLyMGUP/v3LB040yFE1cdutlExVXQhN/Dca2QBzJrJIL7KKBRBwHFU9P5ZP2Z3VXBV6crrzzViPo5hgVhDFT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715411617; c=relaxed/simple;
-	bh=W02rN6+dmjgQHK0sw+P6S03XnBULSaYsnfI6rN3LyVg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rQ+2LPNzyv2vvypcW7CwNSdfGYEBznDlqtkEy3aZ+2Q3GRd+yuFFFhYDZd0Np/BIDGTMRqen69RRujuBAF71hSr4qmY/4QeUlzHOIdx0K2U99hiJaGe/tmew0oqW1GqTLHpWR5MRDxJeRMrM39X+YYmKp5Vf6rDANv2adBfzFCg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vbxmh1NHtz4f3jZ8;
-	Sat, 11 May 2024 15:13:24 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 942C81A016E;
-	Sat, 11 May 2024 15:13:29 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.104.67])
-	by APP1 (Coremail) with SMTP id cCh0CgAX5g6XGj9mhzZnMQ--.38080S4;
-	Sat, 11 May 2024 15:13:29 +0800 (CST)
-From: Yu Kuai <yukuai1@huaweicloud.com>
-To: song@kernel.org
-Cc: linux-raid@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	yukuai3@huawei.com,
-	yukuai1@huaweicloud.com,
-	yi.zhang@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH md-6.10] md: remove parameter check_seq for stop_sync_thread()
-Date: Sat, 11 May 2024 15:03:17 +0800
-Message-Id: <20240511070317.3008687-1-yukuai1@huaweicloud.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1715411739; c=relaxed/simple;
+	bh=kP1V+EtzTHOEEdN5Tn2jtj1uoNnrhiy0O47cc8AcxA4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0e43rQjw4UK/8FRIufuJfyJt4IAhLdMwYt0RcPmp4gHFlzC+bN3BnLAuc8j6wO8p4hBk1vTB+aT6fjcyhOMnLWbYI37gncW7U3lOpEq4Vk30bQqbwQxoJJrlEVVYOwPKhJkIiFO+FaJ5QPqZREmFoc7LQdE4vqjLY8CO3L73XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bQ8Umm6z; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bQ8Umm6z"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1eb24e3a2d9so25170175ad.1
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 00:15:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715411737; x=1716016537; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=pN7vTSTZWouaFkH6aSeXVb/sXxzlUMYk7HqIZeYevwQ=;
+        b=bQ8Umm6zvhdZEy8vmaUvU2Iw+3U4Exz8vwTgIRHmU1+T2F04dp0en5kuEIdr+5tQzo
+         +k7bGjYcwQfTPZoIoQwrmCUzxfUwE54ypPLh4dgQhVYk48QK4F873xf5Sm6kzyHrMbqv
+         Xvrhfeuu2zU+u1viYA5UESzip+io/i7WdnsN38JPvgdV8fr5YrCJzqOJS5SguRw1843M
+         l9MTBCHS6/LZfI+Ql9sEZUvtDsJi1e8k9f5tb+R9ZdsX5s/pcFGLoLSNABEVUvClSFot
+         fbpKjfaCo6BLb9yjTEhJHdbRompR68Fx+q88r9bt3BTpcaiuPSAJfO1kteIcRVkkvWsI
+         9Jzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715411737; x=1716016537;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pN7vTSTZWouaFkH6aSeXVb/sXxzlUMYk7HqIZeYevwQ=;
+        b=od79fUjbrDryQYDB4nWwgr09JtbC4mbUx0cakGZ49fOpnJrPKSZPOJVO7Sil9VlkTq
+         qnxYIHb5u53f2hgXe+3vArapZB6JRy6Ve9gEVilGBVU+BeByAbnCcvBGlTJymEUjRnpr
+         6h2UVe0CRTfk4lCe9nB4KsRzGoeBAxde6X5QzNO53VnuFfhoqJJFsV5O1yKzywcqzjLf
+         e6/UwozkW1SKFVOLtL5pWzV3ItCwekpTkDxRF6PRkdWV6thsmdo2TpBihoaVguxCuS6A
+         ODUOqvLSs0QYTnc8hBpnoPH7Cx/JZvsaztl0AWwKbbpGIQdCBbVqouwZWqtqYKj6yKH/
+         7Z6w==
+X-Forwarded-Encrypted: i=1; AJvYcCVa8LXw2gc938MK8NXRxhNKjPfQPhuWgE0+pIrYhiXmdseeRZ19IhYOBtCnYARaC4l/+L30rChhevWJImBwt77UGJ/UnNePwsPXY8Wv
+X-Gm-Message-State: AOJu0YzS8lP6syL+DWiksXqrvIx7PknE1xRyuCNnV+lMJ1Stbj93qY2m
+	i00m/27dJr6hWvgF/6aqXTWkFcLnc4kGzsdP7xSeyw2d/oDvWpi72Bw4sVj/7g==
+X-Google-Smtp-Source: AGHT+IEY+B1BkjgUqaJCKTMhy5yVKUSG7mNrjc92+kUQaGR7pn2oJDp9knykubItipbI04Y4Mn3Nog==
+X-Received: by 2002:a17:902:6542:b0:1eb:1240:1aea with SMTP id d9443c01a7336-1ef43d12749mr52124555ad.20.1715411736886;
+        Sat, 11 May 2024 00:15:36 -0700 (PDT)
+Received: from thinkpad ([220.158.156.38])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c0369f1sm43017055ad.185.2024.05.11.00.15.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 11 May 2024 00:15:36 -0700 (PDT)
+Date: Sat, 11 May 2024 12:45:32 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org, lukas@wunner.de,
+	mika.westerberg@linux.intel.com, Bjorn Helgaas <helgaas@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH v4 0/4] PCI: Allow D3Hot for PCI bridges in Devicetree
+ based platforms
+Message-ID: <20240511071532.GC6672@thinkpad>
+References: <20240326-pci-bridge-d3-v4-0-f1dce1d1f648@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgAX5g6XGj9mhzZnMQ--.38080S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxGF1ftw18tFW5Cw45GrWDXFb_yoWrJr4rpr
-	WfXF98Ar4UArWfZrW7Ka4DZay5Zrn2qa4DtFy3u3yfJ3Z3trsrGFyY93WUAFykGa4rX3Zx
-	AayrJF43Za4xGr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: 51xn3trlr6x35dzhxuhorxvhhfrp/
+In-Reply-To: <20240326-pci-bridge-d3-v4-0-f1dce1d1f648@linaro.org>
 
-From: Yu Kuai <yukuai3@huawei.com>
+On Tue, Mar 26, 2024 at 04:18:16PM +0530, Manivannan Sadhasivam wrote:
+> Hi,
+> 
+> This series allows D3Hot for PCI bridges in Devicetree based platforms.
+> Even though most of the bridges in Devicetree platforms support D3Hot, PCI
+> core will allow D3Hot only when one of the following conditions are met:
+> 
+> 1. Platform is ACPI based
+> 2. Thunderbolt controller is used
+> 3. pcie_port_pm=force passed in cmdline
+> 
+> While options 1 and 2 do not apply to most of the DT based platforms,
+> option 3 will make the life harder for distro maintainers.
+> 
+> Initially, I tried to fix this issue by using a Devicetree property [1], but
+> that was rejected by Bjorn and it was concluded that D3Hot should be allowed by
+> default for all the Devicetree based platforms.
+> 
+> During the review of v3 series, Bjorn noted several shortcomings of the
+> pci_bridge_d3_possible() API [2] and I tried to address them in this series as
+> well.
+> 
+> But please note that the patches 2 and 3 needs closer review from ACPI and x86
+> folks since I've splitted the D3Hot and D3Cold handling based on my little
+> understanding of the code.
+> 
+> Testing
+> =======
+> 
+> This series is tested on SM8450 based development board on top of [3].
+> 
 
-Caller will always set MD_RECOVERY_FROZEN if check_seq is true, and
-always clear MD_RECOVERY_FROZEN if check_seq is false, hence replace
-the parameter with test_bit() to make code cleaner.
+Bjorn, a gently ping on this series.
 
-Signed-off-by: Yu Kuai <yukuai3@huawei.com>
----
- drivers/md/md.c | 26 +++++++++++---------------
- 1 file changed, 11 insertions(+), 15 deletions(-)
+- Mani
 
-diff --git a/drivers/md/md.c b/drivers/md/md.c
-index 95b0f9642137..d94899621cbf 100644
---- a/drivers/md/md.c
-+++ b/drivers/md/md.c
-@@ -4945,15 +4945,10 @@ action_show(struct mddev *mddev, char *page)
-  * @locked:	if set, reconfig_mutex will still be held after this function
-  *		return; if not set, reconfig_mutex will be released after this
-  *		function return.
-- * @check_seq:	if set, only wait for curent running sync_thread to stop, noted
-- *		that new sync_thread can still start.
-  */
--static void stop_sync_thread(struct mddev *mddev, bool locked, bool check_seq)
-+static void stop_sync_thread(struct mddev *mddev, bool locked)
- {
--	int sync_seq;
--
--	if (check_seq)
--		sync_seq = atomic_read(&mddev->sync_seq);
-+	int sync_seq = atomic_read(&mddev->sync_seq);
- 
- 	if (!test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
- 		if (!locked)
-@@ -4974,7 +4969,8 @@ static void stop_sync_thread(struct mddev *mddev, bool locked, bool check_seq)
- 
- 	wait_event(resync_wait,
- 		   !test_bit(MD_RECOVERY_RUNNING, &mddev->recovery) ||
--		   (check_seq && sync_seq != atomic_read(&mddev->sync_seq)));
-+		   (!test_bit(MD_RECOVERY_FROZEN, &mddev->recovery) &&
-+		    sync_seq != atomic_read(&mddev->sync_seq)));
- 
- 	if (locked)
- 		mddev_lock_nointr(mddev);
-@@ -4985,7 +4981,7 @@ void md_idle_sync_thread(struct mddev *mddev)
- 	lockdep_assert_held(&mddev->reconfig_mutex);
- 
- 	clear_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
--	stop_sync_thread(mddev, true, true);
-+	stop_sync_thread(mddev, true);
- }
- EXPORT_SYMBOL_GPL(md_idle_sync_thread);
- 
-@@ -4994,7 +4990,7 @@ void md_frozen_sync_thread(struct mddev *mddev)
- 	lockdep_assert_held(&mddev->reconfig_mutex);
- 
- 	set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
--	stop_sync_thread(mddev, true, false);
-+	stop_sync_thread(mddev, true);
- }
- EXPORT_SYMBOL_GPL(md_frozen_sync_thread);
- 
-@@ -5019,7 +5015,7 @@ static void idle_sync_thread(struct mddev *mddev)
- 		return;
- 	}
- 
--	stop_sync_thread(mddev, false, true);
-+	stop_sync_thread(mddev, false);
- 	mutex_unlock(&mddev->sync_mutex);
- }
- 
-@@ -5033,7 +5029,7 @@ static void frozen_sync_thread(struct mddev *mddev)
- 		return;
- 	}
- 
--	stop_sync_thread(mddev, false, false);
-+	stop_sync_thread(mddev, false);
- 	mutex_unlock(&mddev->sync_mutex);
- }
- 
-@@ -6529,7 +6525,7 @@ void md_stop_writes(struct mddev *mddev)
- {
- 	mddev_lock_nointr(mddev);
- 	set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
--	stop_sync_thread(mddev, true, false);
-+	stop_sync_thread(mddev, true);
- 	__md_stop_writes(mddev);
- 	mddev_unlock(mddev);
- }
-@@ -6597,7 +6593,7 @@ static int md_set_readonly(struct mddev *mddev)
- 		set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 	}
- 
--	stop_sync_thread(mddev, false, false);
-+	stop_sync_thread(mddev, false);
- 	wait_event(mddev->sb_wait,
- 		   !test_bit(MD_SB_CHANGE_PENDING, &mddev->sb_flags));
- 	mddev_lock_nointr(mddev);
-@@ -6643,7 +6639,7 @@ static int do_md_stop(struct mddev *mddev, int mode)
- 		set_bit(MD_RECOVERY_FROZEN, &mddev->recovery);
- 	}
- 
--	stop_sync_thread(mddev, true, false);
-+	stop_sync_thread(mddev, true);
- 
- 	if (mddev->sysfs_active ||
- 	    test_bit(MD_RECOVERY_RUNNING, &mddev->recovery)) {
+> - Mani
+> 
+> [1] https://lore.kernel.org/linux-pci/20240214-pcie-qcom-bridge-v3-1-3a713bbc1fd7@linaro.org/
+> [2] https://lore.kernel.org/linux-pci/20240305175107.GA539676@bhelgaas/
+> [3] https://lore.kernel.org/linux-arm-msm/20240321-pcie-qcom-bridge-dts-v2-0-1eb790c53e43@linaro.org/
+> 
+> Changes in v4:
+> - Added pci_bridge_d3_possible() rework based on comments from Bjorn
+> - Got rid of the DT property and allowed D3Hot by default on all DT platforms
+> 
+> Changes in v3:
+> - Fixed kdoc, used of_property_present() and dev_of_node() (Lukas)
+> - Link to v2: https://lore.kernel.org/r/20240214-pcie-qcom-bridge-v2-1-9dd6dbb1b817@linaro.org
+> 
+> Changes in v2:
+> - Switched to DT based approach as suggested by Lukas.
+> - Link to v1: https://lore.kernel.org/r/20240202-pcie-qcom-bridge-v1-0-46d7789836c0@linaro.org
+> 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> Manivannan Sadhasivam (4):
+>       PCI/portdrv: Make use of pci_dev::bridge_d3 for checking the D3 possibility
+>       PCI: Rename pci_bridge_d3_possible() to pci_bridge_d3_allowed()
+>       PCI: Decouple D3Hot and D3Cold handling for bridges
+>       PCI: Allow PCI bridges to go to D3Hot on all Devicetree based platforms
+> 
+>  drivers/pci/bus.c          |  2 +-
+>  drivers/pci/pci-acpi.c     |  9 ++---
+>  drivers/pci/pci-sysfs.c    |  2 +-
+>  drivers/pci/pci.c          | 90 ++++++++++++++++++++++++++++++++--------------
+>  drivers/pci/pci.h          | 12 ++++---
+>  drivers/pci/pcie/portdrv.c | 16 ++++-----
+>  drivers/pci/remove.c       |  2 +-
+>  include/linux/pci.h        |  3 +-
+>  8 files changed, 89 insertions(+), 47 deletions(-)
+> ---
+> base-commit: 705c1da8fa4816fb0159b5602fef1df5946a3ee2
+> change-id: 20240320-pci-bridge-d3-092e2beac438
+> 
+> Best regards,
+> -- 
+> Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+
 -- 
-2.39.2
-
+மணிவண்ணன் சதாசிவம்
