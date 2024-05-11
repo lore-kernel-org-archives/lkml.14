@@ -1,187 +1,152 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ACD44F217;
-	Sat, 11 May 2024 06:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0A34F215;
+	Sat, 11 May 2024 06:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715408129; cv=none; b=Wo7UtyhX0GnApSyG50WWf/4XeYoAB5zhdGK5dVEQtTKNGV3scPSa/Z3vykNjdzl2Wd5/I7+7K9zxFyE72q/CHkf7S1q7wBCR2zeg124eLst39/xTrytPEToM5sJc/vUqhdiyp5qO11SiR/1d64vzghb16z8li6Dm0LNRSBP6ICQ=
+	t=1715408667; cv=none; b=NMA4j2ugwxnPFmdV+vlIZz1YLAAgyD7leDGgQZhJvOGeUBmBhPFqmkTK0bPoiSytfKRzA8GWe3FJZIc6S+MDMNzB4M+hQZ7fRUsSrL7tOf5LJClLNQvrBOA81K5uz8MA7Vz79dZ2XUy6LL0vLI1nJ/kSjpwJ2FCjscwqFegv+rI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715408129; c=relaxed/simple;
-	bh=T302qFdGYt9upY98yaaB7NGOiDO4dKh58ZsZOKVG+68=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XK2FP5usF82AcAi8lfHOfDKDwQuJQgfFfeqqgleVGjHjbBVyKy+BCyYqXtKFG9n/OBd0T3XLUFNY1bS9QWdGPKQgC98o3PInD+WOxn0zZ7F6KYCG0b7u/741tLvusIcnIjmHCub2uShajJx2ViuWXlCkGIJeyXqkEKBMxv0g5Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSGut5CK; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSGut5CK"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1e4bf0b3e06so25539585ad.1;
-        Fri, 10 May 2024 23:15:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715408127; x=1716012927; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mk1p9NsMzvwBrXgYJqVUrzqhtMjz3H+uq2RwIwI5Iro=;
-        b=OSGut5CKt3B/CkLdVEt+ozOsmCxzVnUX7ZAy7+B5qzvwgmeCV0sFy5Wg6GUVQkyN+V
-         beBS4Ejq0gywDqTJ8XnYc5UkrG8DWqYvMh2Brb752o0Gp4u0qFQeEjPWzIWP5sEs8JZG
-         zI27JhYLAU+XI9ipZXhh7HQo6nJSg0QEre2Qgp42rIlHOrTy9HzTvaijB5mB9IpVvL08
-         xXEoqdbMX331lrHOpJpzjWNOb2NtI4X56nJR1UNklC6zosgark56MuuZ9moQhlYv+TpO
-         M9cYNC/twRt4d/dIOhQ1mytwsT/ljV40YkBjU6Sw/r1YkHFVGuLiCjiJ1kI5VXNHp5oC
-         QQrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715408127; x=1716012927;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Mk1p9NsMzvwBrXgYJqVUrzqhtMjz3H+uq2RwIwI5Iro=;
-        b=Hw4daIh61ZyQaMYy1mlpIbgHoOfOLPgjp8v1f0dGuvGZoK38As7qd/l6DMYlMCOhyM
-         o/+RNTvoGyeyizYiAAjmw3tqdHNX9pvNq07Mw9WL6W+E6L/kuoWtnunAnJJ792FhTWrI
-         Xf0nr3o3EqVS8toUUCcRs2CbYuSMSQDZl33MHtDKMUEq6Ny+zn/pXm63o7wTf0JD1yHd
-         BjGnftVtnYZwDZ4sCJPz/8O6oR1O1oSLxGDEBcHxMQyIUWMxrzRLONsjyqSuBeUFc5QM
-         RzFplQwm6/hgwvTWtsF51q34oVgGHTUeh1sH4H8p3U+TkZHpzz7ZSSioZl3FtgCyJo1O
-         Vrtw==
-X-Forwarded-Encrypted: i=1; AJvYcCUgwjZ5oFeIUi/x7ynuR/rmPD+tWXR6+ma/jvWCff49n9G11FgYVUCAB8fgmzJ+UUFffUEa5dxYIAvp74AjmThdOa1i7JAgEUfhwoD+nzqIdghY0gxfylXPivy72TLee8OsAegi6GDavPg0eXHe+2yjQoVGGE46FFvtLF5GjTD/+zE3HQ==
-X-Gm-Message-State: AOJu0Yx2es86olCz4uWILjrV9Yuw64uMAKTbuY47b8h0Lxbme/d4gFnI
-	1navbpeek9ayyl6pTeOA5wF+fi4GgD0Xe6cUwaSWAVjeEAcTc5iZ
-X-Google-Smtp-Source: AGHT+IE/5w+T17713VvVQvihpBps/gl8gaAUn7yc0SAhP030RjyD/9WHrSttR/cH4OahChBLKer4zA==
-X-Received: by 2002:a17:902:7082:b0:1e2:1805:52c5 with SMTP id d9443c01a7336-1ef43d28349mr49186255ad.16.1715408126567;
-        Fri, 10 May 2024 23:15:26 -0700 (PDT)
-Received: from localhost.localdomain ([223.178.81.214])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1ef0c15a8fcsm42249005ad.278.2024.05.10.23.15.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 May 2024 23:15:26 -0700 (PDT)
-From: Kanak Shilledar <kanakshilledar@gmail.com>
-To: 
-Cc: wahrenst@gmx.net,
-	Kanak Shilledar <kanakshilledar@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Kanak Shilledar <kanakshilledar111@protonmail.com>,
-	linux-spi@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: spi: brcm,bcm2835-spi: convert to dtschema
-Date: Sat, 11 May 2024 11:44:56 +0530
-Message-Id: <20240511061457.8363-1-kanakshilledar@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1715408667; c=relaxed/simple;
+	bh=5xv07f5Ibu51HbaqexyG2XEUvbwQjsn0EnRz/MNOTuw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=Bg2JnbBZBicJJ+CMYKhXpOBjsZ7YGXwXd3UpBKO9WWzmaNcvoALRBZOQhA2iuSEOYFLQvYkUUMmneseSA9JBGRHPxh3l2YmxjzW+L7Am3kY52xzqLmFr7ou4z8N6EiTRCGn5AQr8ZfDgvU+cNDs8/XEHfZWiyMa3eWk9UhL0kIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Vbwgy0npsz4f3jJ6;
+	Sat, 11 May 2024 14:24:14 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 812051A0572;
+	Sat, 11 May 2024 14:24:19 +0800 (CST)
+Received: from [10.174.179.80] (unknown [10.174.179.80])
+	by APP2 (Coremail) with SMTP id Syh0CgBXfA8RDz9md1mUMg--.18691S3;
+	Sat, 11 May 2024 14:24:19 +0800 (CST)
+Subject: Re: [PATCH] ext4: fix infinite loop when replaying fast_commit
+To: "Luis Henriques (SUSE)" <luis.henriques@linux.dev>
+Cc: linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Theodore Ts'o <tytso@mit.edu>, Andreas Dilger <adilger@dilger.ca>,
+ Harshad Shirwadkar <harshadshirwadkar@gmail.com>
+References: <20240510115252.11850-1-luis.henriques@linux.dev>
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+Message-ID: <2ee78957-b0a6-f346-5957-c4b2ebcea4ce@huaweicloud.com>
+Date: Sat, 11 May 2024 14:24:17 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.12.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240510115252.11850-1-luis.henriques@linux.dev>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:Syh0CgBXfA8RDz9md1mUMg--.18691S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw13JFyrAFW5Zw48XF43Wrg_yoW5uFy8pF
+	9Ivr1DGrs8Way0kay7Gw4UZF1Yka1xC3y7GryfGr1rGF98Jrn3ZF18tFyakas3WrW8J3WY
+	vF40y34jkanIkaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0E
+	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04
+	k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY
+	1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1zuWJUUUUU==
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Convert the Broadcom BCM2835 SPI0 controller to newer DT
-schema. Created DT schema based on the .txt file which had
-`comaptible`, `reg`, `interrupts`, `clocks` as required
-properties.
-Added GPL-2.0 OR BSD-2-Clause License
+On 2024/5/10 19:52, Luis Henriques (SUSE) wrote:
+> When doing fast_commit replay an infinite loop may occur due to an
+> uninitialized extent_status struct.  ext4_ext_determine_insert_hole() does
+> not detect the replay and calls ext4_es_find_extent_range(), which will
+> return immediately without initializing the 'es' variable.
+> 
+> Because 'es' contains garbage, an integer overflow may happen causing an
+> infinite loop in this function, easily reproducible using fstest generic/039.
+> 
+> This commit fixes this issue by detecting the replay in function
+> ext4_ext_determine_insert_hole().  It also adds initialization code to the
+> error path in function ext4_es_find_extent_range().
+> 
+> Thanks to Zhang Yi, for figuring out the real problem!
+> 
+> Fixes: 8016e29f4362 ("ext4: fast commit recovery path")
+> Signed-off-by: Luis Henriques (SUSE) <luis.henriques@linux.dev>
+> ---
+> Hi!
+> 
+> Two comments:
+> 1) The change in ext4_ext_map_blocks() could probably use the min_not_zero
+>    macro instead.  I decided not to do so simply because I wasn't sure if
+>    that would be safe, but I'm fine changing that if you think it is.
+> 
+> 2) I thought about returning 'EXT_MAX_BLOCKS' instead of '0' in
+>    ext4_lblk_t ext4_ext_determine_insert_hole(), which would then avoid
+>    the extra change to ext4_ext_map_blocks().  '0' sounds like the right
+>    value to return, but I'm also OK using 'EXT_MAX_BLOCKS' instead.
+> 
+> And again thanks to Zhang Yi for pointing me the *real* problem!
+> 
+>  fs/ext4/extents.c        | 6 +++++-
+>  fs/ext4/extents_status.c | 5 ++++-
+>  2 files changed, 9 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+> index e57054bdc5fd..b5bfcb6c18a0 100644
+> --- a/fs/ext4/extents.c
+> +++ b/fs/ext4/extents.c
+> @@ -4052,6 +4052,9 @@ static ext4_lblk_t ext4_ext_determine_insert_hole(struct inode *inode,
+>  	ext4_lblk_t hole_start, len;
+>  	struct extent_status es;
+>  
+> +	if (EXT4_SB(inode->i_sb)->s_mount_state & EXT4_FC_REPLAY)
+> +		return 0;
+> +
 
-Signed-off-by: Kanak Shilledar <kanakshilledar@gmail.com>
----
-Changes in v2:
-- Updated the maintainers
----
- .../bindings/spi/brcm,bcm2835-spi.txt         | 23 ---------
- .../bindings/spi/brcm,bcm2835-spi.yaml        | 50 +++++++++++++++++++
- 2 files changed, 50 insertions(+), 23 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
- create mode 100644 Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml
+Sorry, I think it's may not correct. When replaying the jouranl, although
+we don't use the extent statue tree, we still need to query the accurate
+hole length, e.g. please see skip_hole(). If you do this, the hole length
+becomes incorrect, right?
 
-diff --git a/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt b/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
-deleted file mode 100644
-index 3d55dd64b1be..000000000000
---- a/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.txt
-+++ /dev/null
-@@ -1,23 +0,0 @@
--Broadcom BCM2835 SPI0 controller
--
--The BCM2835 contains two forms of SPI master controller, one known simply as
--SPI0, and the other known as the "Universal SPI Master"; part of the
--auxiliary block. This binding applies to the SPI0 controller.
--
--Required properties:
--- compatible: Should be one of "brcm,bcm2835-spi" for BCM2835/2836/2837 or
--  "brcm,bcm2711-spi" for BCM2711 or "brcm,bcm7211-spi" for BCM7211.
--- reg: Should contain register location and length.
--- interrupts: Should contain interrupt.
--- clocks: The clock feeding the SPI controller.
--
--Example:
--
--spi@20204000 {
--	compatible = "brcm,bcm2835-spi";
--	reg = <0x7e204000 0x1000>;
--	interrupts = <2 22>;
--	clocks = <&clk_spi>;
--	#address-cells = <1>;
--	#size-cells = <0>;
--};
-diff --git a/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml b/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml
-new file mode 100644
-index 000000000000..94da68792194
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/brcm,bcm2835-spi.yaml
-@@ -0,0 +1,50 @@
-+# SPDX-License-Identifier: GPL-2.0 OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/brcm,bcm2835-spi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Broadcom BCM2835 SPI0 controller
-+
-+maintainers:
-+  - Florian Fainelli <florian.fainelli@broadcom.com>
-+  - Kanak Shilledar <kanakshilledar111@protonmail.com>
-+  - Stefan Wahren <wahrenst@gmx.net>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    enum:
-+      - brcm,bcm2835-spi
-+      - brcm,bcm2711-spi
-+      - brcm,bcm7211-spi
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - clocks
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    spi@20204000 {
-+        compatible = "brcm,bcm2835-spi";
-+        reg = <0x7e204000 0x1000>;
-+        interrupts = <2 22>;
-+        clocks = <&clk_spi>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
--- 
-2.34.1
+Thanks,
+Yi.
+
+>  	hole_start = lblk;
+>  	len = ext4_ext_find_hole(inode, path, &hole_start);
+>  again:
+> @@ -4226,7 +4229,8 @@ int ext4_ext_map_blocks(handle_t *handle, struct inode *inode,
+>  		len = ext4_ext_determine_insert_hole(inode, path, map->m_lblk);
+>  
+>  		map->m_pblk = 0;
+> -		map->m_len = min_t(unsigned int, map->m_len, len);
+> +		if (len > 0)
+> +			map->m_len = min_t(unsigned int, map->m_len, len);
+>  		goto out;
+>  	}
+>  
+> diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
+> index 4a00e2f019d9..acb9616ca119 100644
+> --- a/fs/ext4/extents_status.c
+> +++ b/fs/ext4/extents_status.c
+> @@ -310,8 +310,11 @@ void ext4_es_find_extent_range(struct inode *inode,
+>  			       ext4_lblk_t lblk, ext4_lblk_t end,
+>  			       struct extent_status *es)
+>  {
+> -	if (EXT4_SB(inode->i_sb)->s_mount_state & EXT4_FC_REPLAY)
+> +	if (EXT4_SB(inode->i_sb)->s_mount_state & EXT4_FC_REPLAY) {
+> +		/* Initialize extent to zero */
+> +		es->es_lblk = es->es_len = es->es_pblk = 0;
+>  		return;
+> +	}
+>  
+>  	trace_ext4_es_find_extent_range_enter(inode, lblk);
+>  
+> 
 
