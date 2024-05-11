@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 309F1DDA3
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 00:50:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3094BD527
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 00:50:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715388634; cv=none; b=K/D9AC7rzDXbIz/xAVIIiXFimKc2T+W6seDmrWdmTTc+EvTjXx8gDPum1RgOfFM70Ah7amwAvUvKusFRWoWUnYd5EJhRBH1uuVutUY/1gfndvmK0XzGtuvVnN2x0rhS43i/CcEo+WP6mIwZSA4n5/trk90Vf40MKS2CzJJR6cyM=
+	t=1715388634; cv=none; b=feJj3/kyWa+2s1ZmAV3/idJe3Xm1F8DgtGTwAY1htuXH4rWlam08jf3GKLmGy07z5n4ox0rURI/4xpQM8LD5MD7MpnyDqC0uWCVkpw0axQsFDWwNB2pEYC0KZBujbdiLGSwuscaeSodiVfTvkmzYKOr72m0JUV1ws17laylJrMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715388634; c=relaxed/simple;
-	bh=R5U8t8MN0hqu7l7yU22M0NMbzTpnmhHxeE8rTHlv+ew=;
+	bh=UURFY8r6IzMFK8eicn2U3n+2WWbClvjMqKKMxWH0TDs=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hWiZKmubsP+L22/lXCnCUAIBGxL8JefWCoakMwJKKcLYR/y5nqECAvjEcw0HU3WC8E+1QF074vkcc4JRX2veEq4ObqIOVxYf/SZD3m7fI7XohI1Y8PZtKedETei57nuGZtZlwiotF0cHiaAi3/PYBnVFx03Lsqgz5KFbDVODK1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gz28MCtp; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=CrTgFSOLBnQrOmNLh5Yp2AT4XPE2VwkhC7EidvdmAZy0pEdm6h+sj0hs9NHzJcrTtvtXn3/N8JkdfnRUS2yukQdAQZbqnwZLkt72pfH7Z4LXzSyKVlWaspVSEsDKSfMvYzmZeDc+ASTXkJcUK5nre3upaP+LYuWE4lktK9oFxLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HxLOwnMY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gz28MCtp"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DB33EC32786;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HxLOwnMY"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D43FBC2BBFC;
 	Sat, 11 May 2024 00:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715388633;
-	bh=R5U8t8MN0hqu7l7yU22M0NMbzTpnmhHxeE8rTHlv+ew=;
+	bh=UURFY8r6IzMFK8eicn2U3n+2WWbClvjMqKKMxWH0TDs=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gz28MCtpXPmTPfefkM4029fWb2/+g9qSGTYfkjjC1VYkUqpXnKjMP2R0EqOztr0Gw
-	 a+J2ITB5JhNUrZ5kfDfQ8ICmXYR60ntCvA9W8d0jNf5Jhq88SvPk7p8vCnosmAJIVU
-	 ChZUWxUyqaEVQlS1z6Wr5E7VaYkce5B5TP6yZIHpIzdfmaALyWt6nHnKBZZRJ2iAdl
-	 OCd+iXfjGZnY11sM33azMkgVfW/OWRAQOyU9bJF7pFZnLCYESpH5sZJrkq0Zx7jnj0
-	 XnGfZcnwdy/+s1JXYO8gFECsfsAATIjmmgFQYitgAExW2gAyXKHqfq5l5eyWyVk6aQ
-	 8hMBfM39yN4Hw==
+	b=HxLOwnMY/pPHJVJ1MP88HcDxMuBc6DsBSNgq6hxeDu6kO5oa1MOEqPRO+1FHJFLVh
+	 O6ax8eKjql05OpHY4kY3byFFdDCD7bMc6I8AHmHzbBeIF4ADOvuThoT8N6luSIpXVZ
+	 SwOpqmnoOd/S2mT+T8uYxBexar4WH/kfqXOnLiGUeLC/v7qmfQLVqaTgkBLz3f9E0e
+	 CtAxqgzTO2vr3+1vqTaDWnSN/g/0dBN14oiqTDgL6lugCzy/G9rX9byYFY+srO7trm
+	 N5HX/fcNcTUVp5i9t6ssUOK0WBRBByC2mp0OLEj7MzX2jB+eaFc1SLUMoXj0gkERAy
+	 1UAt60P0BX9oA==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C3E03C54BA1;
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B37E7E7C114;
 	Sat, 11 May 2024 00:50:33 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
@@ -37,13 +37,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: remove unused GC_FAILURE_PIN
+Subject: Re: [f2fs-dev] [PATCH 1/5] f2fs: compress: fix to update i_compr_blocks
+ correctly
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <171538863379.11229.10303320996620120996.git-patchwork-notify@kernel.org>
+ <171538863373.11229.5565331058940503874.git-patchwork-notify@kernel.org>
 Date: Sat, 11 May 2024 00:50:33 +0000
-References: <20240506104538.778116-1-chao@kernel.org>
-In-Reply-To: <20240506104538.778116-1-chao@kernel.org>
+References: <20240506104140.776986-1-chao@kernel.org>
+In-Reply-To: <20240506104140.776986-1-chao@kernel.org>
 To: Chao Yu <chao@kernel.org>
 Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net
@@ -53,21 +54,27 @@ Hello:
 This series was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Mon,  6 May 2024 18:45:37 +0800 you wrote:
-> After commit 3db1de0e582c ("f2fs: change the current atomic write way"),
-> we removed all GC_FAILURE_ATOMIC usage, let's change i_gc_failures[]
-> array to i_pin_failure for cleanup.
+On Mon,  6 May 2024 18:41:36 +0800 you wrote:
+> Previously, we account reserved blocks and compressed blocks into
+> @compr_blocks, then, f2fs_i_compr_blocks_update(,compr_blocks) will
+> update i_compr_blocks incorrectly, fix it.
 > 
-> Meanwhile, let's define i_current_depth and i_gc_failures as union
-> variable due to they won't be valid at the same time.
+> Meanwhile, for the case all blocks in cluster were reserved, fix to
+> update dn->ofs_in_node correctly.
 > 
 > [...]
 
 Here is the summary with links:
-  - [f2fs-dev,1/2] f2fs: remove unused GC_FAILURE_PIN
-    https://git.kernel.org/jaegeuk/f2fs/c/968c4f72b23c
-  - [f2fs-dev,2/2] f2fs: fix to limit gc_pin_file_threshold
-    https://git.kernel.org/jaegeuk/f2fs/c/c521a6ab4ad7
+  - [f2fs-dev,1/5] f2fs: compress: fix to update i_compr_blocks correctly
+    https://git.kernel.org/jaegeuk/f2fs/c/186e7d71534d
+  - [f2fs-dev,2/5] f2fs: compress: fix error path of inc_valid_block_count()
+    https://git.kernel.org/jaegeuk/f2fs/c/043c832371cd
+  - [f2fs-dev,3/5] f2fs: compress: fix typo in f2fs_reserve_compress_blocks()
+    https://git.kernel.org/jaegeuk/f2fs/c/a3a0bc6c2239
+  - [f2fs-dev,4/5] f2fs: compress: fix to cover {reserve, release}_compress_blocks() w/ cp_rwsem lock
+    https://git.kernel.org/jaegeuk/f2fs/c/0a4ed2d97cb6
+  - [f2fs-dev,5/5] f2fs: compress: don't allow unaligned truncation on released compress inode
+    (no matching commit)
 
 You are awesome, thank you!
 -- 
