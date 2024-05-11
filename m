@@ -1,131 +1,149 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A7053368;
-	Sat, 11 May 2024 13:04:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6C374F5ED;
+	Sat, 11 May 2024 13:08:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715432656; cv=none; b=l+6pmfykZWIrXv2vWdf2j+IdemI2hE7VOI/y+/y3LPjYh1Q+VpwBEAR9oX8N0Jp841gCnqno9cJ9tdUvWIstyctsSF4ZWdgpFFtLmegSdr+PvwdkZIXdyhGXw+SBykn22NhgGOaJApd6+LTOg70uqGkgIDGU9Kigbrv3RQDkIEo=
+	t=1715432889; cv=none; b=S+eWDeuwZTI4d/ZdAqG9pzWRqfnCFYHvGnW7Wm91w48JWi9c7mSWAZPVQ3QiTp/e8xP9EvYoIuLKjO0LhpGMkg5GGWTm3de9Gwlufzlwz8NTJHtf2hzgaKosGIIi0YY0lvxPK1LvNg+ip9ywAH2AoLWGvNz6wHswXU+JOxa3/0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715432656; c=relaxed/simple;
-	bh=yxOj5YfSwj2DTCNzCutbgmJ5WuKiiT3kbxTl71R4Wu4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UO7S1wnTqNZa4YwSwpQEwj99AB7Q0Mt4PK/Qcpj7XvJW8+Vrh7fDzrfQuVV/vv/w4xiUmN1WmKT7eT4IEbzVZBSVP3kmmY1FW0LxyfjPbAg/6sx7yHEdrZHmHZGEhqUXqTgUDqGITQoQyD4bJ/qjRjUefuCBjuUS4GK5kd9L/Js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RcO22sk9; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715432889; c=relaxed/simple;
+	bh=nn5CCGqDXRDW0kal5/Z0nExGsCcCmd7RqOdWPQZZ+Fs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GJzxrj/c/3RFCbTChuRcPipoaQ2OHONumAUyXR1FkzqSALYbslUSfGdh8z8XSMTk/uNu2rYeZAMjfgirBz7S73XSHg04xtC7Qra1GdHn/mTPM77fSHj/oob6m4rQic4/O55AEaS/dffk5C5MFc/ySlyKmbl/JW2B2YO4VcMEiuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DMBV/L0R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcO22sk9"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4200ee47de7so3826155e9.2;
-        Sat, 11 May 2024 06:04:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715432653; x=1716037453; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CrwA2vIrlWfZjdips+U6g09WGPgGGcS7uLLAmHynIVM=;
-        b=RcO22sk9GxqkwZ3rck1Uwsj9MCll4+QgD/Q15jfXjqZpDbtJ+Oepj6hTiSpBWaT/1z
-         75p/NOabouYwV90TrlLfxHJHqMMTBdnEDJyv38bPz3TR9Ft+VlHjNekwFlrAL2PvODgG
-         SQ7Tq6+/v2ZyiTD0U+1fGek/xqP09XIlFo0+MS7/OcWiZtSsp0Qx3xAHrHc0ebhRByaJ
-         JmtwnsAgbFt0KI4UWrLR+W9YDLECzNmFhg1y1uzcCkVwExPvUygI0jDPfdsrcIGR7HXQ
-         g/jqjpBGMff+3supla9V4+1lWr17MyniwGSbQRhE6fs0U/NOvbG7wNnNU5p1vipUUIH8
-         f1ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715432653; x=1716037453;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CrwA2vIrlWfZjdips+U6g09WGPgGGcS7uLLAmHynIVM=;
-        b=totQPlaEJhe5CnhhNefhXv7NjAiXfT9rbJH3Lisk8GLpvXZu8TUm0wFqQeMIAK56iu
-         d4rvwFuDpC804/SoDYo/KHiVKnnbNYVn/KcTFdGXM8Da76UP1hNkY8gF0w1fSvr0oK+P
-         u2d9aya2SGPeM9GQpIHJ582ZFZY6OFrSQLimyLWo/vksXUdm+9ji/4pB/pPOc/FRkmiP
-         anzRMD3LSffZVzIkIlRvdWY6wMYFVzDoh1unGQ3KnANxn6wnTpYMurAEMQZ6New4+VQY
-         rDTSjw/NYI//bRwPJXEFfPHJzaKMXZJu+xLX+BmMJr26pgJCDTiO7F6T6VPenb+Mrzn2
-         4qmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVs6TY97YuvMdfqjkEt/mzK0VfFlH64RfUYFOq65HF6CmXWugPiVtY6OxgNsL2OGuEERs4gXGlfG9e5wTPCEV+PctZG0jmKKeWkRoKD4svmL0lCgKijhqP95xfe13EC0FkINEX7FFCp+Zv/P+mpxsDncmwHnP2Zbi/Y8TVdegGShFTMojU=
-X-Gm-Message-State: AOJu0YxzyYYiBVmClSx5S0D1mXgGdMGL2TV5hdVYR6Jt+BLInMehZAja
-	wpF+NG+JUfMu9UirD4PGBmk51YLh9FiuWDZ4bhp2cBI0hHB1o3Sb
-X-Google-Smtp-Source: AGHT+IH6zVREnewqTrqvb/pUGLF8t9A9Pi6KWKq0s48v6RX42K/A72ugZcftF2KiD4CDa4ZO3tSsYg==
-X-Received: by 2002:a05:600c:4286:b0:418:fe93:22d0 with SMTP id 5b1f17b1804b1-41feaa397f7mr35465605e9.11.1715432652606;
-        Sat, 11 May 2024 06:04:12 -0700 (PDT)
-Received: from localhost.localdomain (93-34-90-105.ip49.fastwebnet.it. [93.34.90.105])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-42010ca475asm15995495e9.16.2024.05.11.06.04.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 May 2024 06:04:12 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Hauke Mehrtens <hauke@hauke-m.de>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Christian Marangi <ansuelsmth@gmail.com>,
-	linux-mips@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Daniel=20Gonz=C3=A1lez=20Cabanelas?= <dgcbueu@gmail.com>,
-	=?UTF-8?q?=C3=81lvaro=20Fern=C3=A1ndez=20Rojas?= <noltari@gmail.com>
-Subject: [PATCH v5 4/4] mips: bmips: enable RAC on BMIPS4350
-Date: Sat, 11 May 2024 15:03:48 +0200
-Message-ID: <20240511130349.23409-5-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240511130349.23409-1-ansuelsmth@gmail.com>
-References: <20240511130349.23409-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DMBV/L0R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08707C2BBFC;
+	Sat, 11 May 2024 13:08:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715432889;
+	bh=nn5CCGqDXRDW0kal5/Z0nExGsCcCmd7RqOdWPQZZ+Fs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DMBV/L0Rf02+pxMLC/ZTNs8StcL5fKgQTU5ppq5oaWJDipa8ukbCHuu/An38u5vZU
+	 NnvuNdjhyXgdTFMGWo8KlgW8zLJmi3r7tGype6lRozJK8NjdT6VfopQtHp/fe1MEnX
+	 SNlppIGviW72sy/N86tNc1o4u9AfAZcoo4x96htViPYEdUyh/egQzsQtT/0S6IIlND
+	 TFqDsQ2KaXVatNx1bFwXu6QFyGvbnmYHwoV42p57DbnAQdI7Hri0K8vHJzciBLqfvz
+	 +CRGOg8oJbrFXEHKBNvNDKDvLyF8imNkO+DwfSnPqPPxj4sWLcOAAAymdDRm15AbLo
+	 LZgR1LdLH6XtQ==
+Date: Sat, 11 May 2024 14:08:03 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Dmitry Rokosov <ddrokosov@salutedevices.com>
+Cc: neil.armstrong@linaro.org, jbrunet@baylibre.com,
+	mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, khilman@baylibre.com,
+	martin.blumenstingl@googlemail.com, jian.hu@amlogic.com,
+	kernel@sberdevices.ru, rockosov@gmail.com,
+	linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/7] dt-bindings: clock: meson: a1: pll: introduce new
+ syspll bindings
+Message-ID: <20240511-secret-barcode-e25c722ddf1d@spud>
+References: <20240510090933.19464-1-ddrokosov@salutedevices.com>
+ <20240510090933.19464-3-ddrokosov@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="BapyMlBTqqZEbUPF"
+Content-Disposition: inline
+In-Reply-To: <20240510090933.19464-3-ddrokosov@salutedevices.com>
 
-From: Daniel González Cabanelas <dgcbueu@gmail.com>
 
-The data RAC is left disabled by the bootloader in some SoCs, at least in
-the core it boots from.
-Enabling this feature increases the performance up to +30% depending on the
-task.
+--BapyMlBTqqZEbUPF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Daniel González Cabanelas <dgcbueu@gmail.com>
-Signed-off-by: Álvaro Fernández Rojas <noltari@gmail.com>
-[ rework code and reduce code duplication ]
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-Acked-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- arch/mips/kernel/smp-bmips.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+On Fri, May 10, 2024 at 12:08:54PM +0300, Dmitry Rokosov wrote:
+> The 'syspll' PLL is a general-purpose PLL designed specifically for the
+> CPU clock. It is capable of producing output frequencies within the
+> range of 768MHz to 1536MHz.
+>=20
+> The clock source sys_pll_div16, being one of the GEN clock parents,
+> plays a crucial role and cannot be tagged as "optional". Unfortunately,
+> it was not implemented earlier due to the cpu clock ctrl driver's
+> pending status on the TODO list.
 
-diff --git a/arch/mips/kernel/smp-bmips.c b/arch/mips/kernel/smp-bmips.c
-index 20e2fb10022d..52324738cbb3 100644
---- a/arch/mips/kernel/smp-bmips.c
-+++ b/arch/mips/kernel/smp-bmips.c
-@@ -626,6 +626,23 @@ void bmips_cpu_setup(void)
- 		__raw_readl(cbr + BMIPS_RAC_ADDRESS_RANGE);
- 		break;
- 
-+	case CPU_BMIPS4350:
-+		u32 rac_addr = BMIPS_RAC_CONFIG_1;
-+
-+		if (!(read_c0_brcm_cmt_local() & (1 << 31)))
-+			rac_addr = BMIPS_RAC_CONFIG;
-+
-+		/* Enable data RAC */
-+		cfg = __raw_readl(cbr + rac_addr);
-+		__raw_writel(cfg | 0xf, cbr + rac_addr);
-+		__raw_readl(cbr + rac_addr);
-+
-+		/* Flush stale data out of the readahead cache */
-+		cfg = __raw_readl(cbr + BMIPS_RAC_CONFIG);
-+		__raw_writel(cfg | 0x100, cbr + BMIPS_RAC_CONFIG);
-+		__raw_readl(cbr + BMIPS_RAC_CONFIG);
-+		break;
-+
- 	case CPU_BMIPS4380:
- 		/* CBG workaround for early BMIPS4380 CPUs */
- 		switch (read_c0_prid()) {
--- 
-2.43.0
+It's fine to not mark it optional in the binding, but it should be
+optional in the driver as otherwise backwards compatibility will be
+broken. Given this is an integral clock driver, sounds like it would
+quite likely break booting on these devices if the driver doesn't treat
+syspll_in as optional.
+A lesson perhaps in describing the hardware entirely, even if the
+drivers don't make use of all the information yet?
 
+Cheers,
+Conor.
+
+>=20
+> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
+> ---
+>  .../devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml     | 7 +++++--
+>  include/dt-bindings/clock/amlogic,a1-pll-clkc.h            | 2 ++
+>  2 files changed, 7 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.=
+yaml b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+> index a59b188a8bf5..fbba57031278 100644
+> --- a/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,a1-pll-clkc.yaml
+> @@ -26,11 +26,13 @@ properties:
+>      items:
+>        - description: input fixpll_in
+>        - description: input hifipll_in
+> +      - description: input syspll_in
+> =20
+>    clock-names:
+>      items:
+>        - const: fixpll_in
+>        - const: hifipll_in
+> +      - const: syspll_in
+> =20
+>  required:
+>    - compatible
+> @@ -53,7 +55,8 @@ examples:
+>              reg =3D <0 0x7c80 0 0x18c>;
+>              #clock-cells =3D <1>;
+>              clocks =3D <&clkc_periphs CLKID_FIXPLL_IN>,
+> -                     <&clkc_periphs CLKID_HIFIPLL_IN>;
+> -            clock-names =3D "fixpll_in", "hifipll_in";
+> +                     <&clkc_periphs CLKID_HIFIPLL_IN>,
+> +                     <&clkc_periphs CLKID_SYSPLL_IN>;
+> +            clock-names =3D "fixpll_in", "hifipll_in", "syspll_in";
+>          };
+>      };
+> diff --git a/include/dt-bindings/clock/amlogic,a1-pll-clkc.h b/include/dt=
+-bindings/clock/amlogic,a1-pll-clkc.h
+> index 2b660c0f2c9f..a702d610589c 100644
+> --- a/include/dt-bindings/clock/amlogic,a1-pll-clkc.h
+> +++ b/include/dt-bindings/clock/amlogic,a1-pll-clkc.h
+> @@ -21,5 +21,7 @@
+>  #define CLKID_FCLK_DIV5		8
+>  #define CLKID_FCLK_DIV7		9
+>  #define CLKID_HIFI_PLL		10
+> +#define CLKID_SYS_PLL		11
+> +#define CLKID_SYS_PLL_DIV16	12
+> =20
+>  #endif /* __A1_PLL_CLKC_H */
+> --=20
+> 2.43.0
+>=20
+>=20
+
+--BapyMlBTqqZEbUPF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZj9tswAKCRB4tDGHoIJi
+0pj2AP9o4HZKD5fAbbwEJlMifsTMl/7hSOmkyRbcNK3IJjs/IwEAovKPd0n+svw5
+TYMMJ7Bah8z91bGRNWgo/Zn/yyRxdw8=
+=ohus
+-----END PGP SIGNATURE-----
+
+--BapyMlBTqqZEbUPF--
