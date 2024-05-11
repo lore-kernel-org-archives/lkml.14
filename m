@@ -1,33 +1,33 @@
-Received: from smtp-8fae.mail.infomaniak.ch (smtp-8fae.mail.infomaniak.ch [83.166.143.174])
+Received: from smtp-42ad.mail.infomaniak.ch (smtp-42ad.mail.infomaniak.ch [84.16.66.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FF057CAC
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 17:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7000467A14
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 17:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715447710; cv=none; b=B1Ad3kOC4KjBU0pZTiS7581BCOhxjrkUOf82QkaIAqoQWlLPYGUE9vCp71rxPZiexgWfdaUKkieqrpNFCc9xGi1SomXuzu69nzmqpIJTYIZZrfFtA90P5aFDCjSGuI++kfEY1je8U5rvKMW2+RNdlXbdSVRGQUh6LBv5tc7zXBM=
+	t=1715447713; cv=none; b=gDPCGE2I3dlkIZcOaBWfg+xNrzMgURPJhrlR4OiPkDzxE1+wznU6ANd+sSkAjPQ1bc0hrcRqC76A+AyXKN5RV529uWrqLvDX14a/yxOtIkydJHQ2UmgkXO5WsSEgRG124xbKi6b4/bQbbOyt8EnDqUkJn8h7bjFJSVPYNKazBWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715447710; c=relaxed/simple;
-	bh=6guh9BQ5rVONa/bVyJCE/mpvREYMTA6JDcfQf6vaLP4=;
+	s=arc-20240116; t=1715447713; c=relaxed/simple;
+	bh=788u9Ll57Ys8HanKTUXYX18fyulkHMSJMNamEoiF3dE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o2szeoKSAqkt+w7HjhcQCxF+0vvzEBiEfDMsGguyh1NczCCfoXVWj5tm2sAhrl7l6lAtM5RwHMjIVt7GEKIAOw6sjP1SfP4dm/NEWZYnZx9Z24NGnizJmKEqQ2rBTyljfL1fuEZ7xzdZlYCgMg8+ARZfJEeaLeAOFma/RPZacFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=yrDpfYn5; arc=none smtp.client-ip=83.166.143.174
+	 MIME-Version:Content-Type; b=tZewLUPZOwHmKhT9La7D2whoAssqqFQJuPC4pnwImVReSpM18MS/pMV3WIrZRkCHWg+6FvCi6/OQHR3qpKFFM0iiP+snPmc9fRgykn0CtXtlskwsSHSn/q0xtKWh9SmgCN01Rs4k6lVSeUO8Zjd7E+CY+DGo2IGxuqtT42ay4Ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=U/jljERU; arc=none smtp.client-ip=84.16.66.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="yrDpfYn5"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="U/jljERU"
 Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VcC6s2hVRzlMR;
-	Sat, 11 May 2024 19:15:01 +0200 (CEST)
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4VcC6v6TSMzkr2;
+	Sat, 11 May 2024 19:15:03 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1715447701;
-	bh=ItMTZYFsQr6hEmRCd+hw3M8K9T4Nec7f+7qfQcftklE=;
+	s=20191114; t=1715447703;
+	bh=iC1DSJl1PeqWX6x9aSS4+KXcksdR90artpUmueb/AB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=yrDpfYn5sBSTPp2UkPB4Uhtvy93ocHWXxkXIgH5aOxQpuhJhFd4X3Yk0NksyC6VeV
-	 bQBRZN2nlNnP6Yie9El0d0KYRTBkqtH47MhExd9rLSiBGE4ON9C7JgmB1zNeRR+zFV
-	 hEtC9AWfiMligrgX+qFyIi2DtUvYY20tndoaIPVw=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VcC6r58Z8z9Rg;
-	Sat, 11 May 2024 19:15:00 +0200 (CEST)
+	b=U/jljERUOqe/Z4nt3Hwt5Pj28zTqnanMqp8O9vWLFujZOzL7mXfibxaPV2aInBVjt
+	 jn4aAQ9WNxHiiwOzj/TWzTYsRS2Ywi1OmWkqiPP2Y+N8A7mY8xxG56gbmoSpvKIwZs
+	 r+QLALDEbqltuGI3sqESUbU/71VJtaTh1bj9WBCU=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4VcC6v0xg5z82q;
+	Sat, 11 May 2024 19:15:03 +0200 (CEST)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Christian Brauner <brauner@kernel.org>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -58,9 +58,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-kselftest@vger.kernel.org,
 	netdev@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH v7 08/10] selftests/harness: Share _metadata between forked processes
-Date: Sat, 11 May 2024 19:14:43 +0200
-Message-ID: <20240511171445.904356-9-mic@digikod.net>
+Subject: [PATCH v7 10/10] selftests/harness: Handle TEST_F()'s explicit exit codes
+Date: Sat, 11 May 2024 19:14:45 +0200
+Message-ID: <20240511171445.904356-11-mic@digikod.net>
 In-Reply-To: <20240511171445.904356-1-mic@digikod.net>
 References: <20240511171445.904356-1-mic@digikod.net>
 Precedence: bulk
@@ -73,99 +73,58 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Unconditionally share _metadata between all forked processes, which
-enables to actually catch errors which were previously ignored.
-
-This is required for a following commit replacing vfork() with clone3()
-and CLONE_VFORK (i.e. not sharing the full memory) .  It should also be
-useful to share _metadata to extend expectations to test process's
-forks.  For instance, this change identified a wrong expectation in
-pidfd_setns_test.
-
-Because this _metadata is used by the new XFAIL_ADD(), use a global
-pointer initialized in TEST_F().  This is OK because only XFAIL_ADD()
-use it, and XFAIL_ADD() already depends on TEST_F().
+If TEST_F() explicitly calls exit(code) with code different than 0, then
+_metadata->exit_code is set to this code (e.g. KVM_ONE_VCPU_TEST()).  We
+need to keep in mind that _metadata->exit_code can be KSFT_SKIP while
+the process exit code is 0.
 
 Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Shuah Khan <shuah@kernel.org>
 Cc: Will Drewry <wad@chromium.org>
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Reported-by: Sean Christopherson <seanjc@google.com>
+Tested-by: Sean Christopherson <seanjc@google.com>
+Closes: https://lore.kernel.org/r/ZjPelW6-AbtYvslu@google.com
+Fixes: 0710a1a73fb4 ("selftests/harness: Merge TEST_F_FORK() into TEST_F()")
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20240511171445.904356-9-mic@digikod.net
+Link: https://lore.kernel.org/r/20240511171445.904356-11-mic@digikod.net
 ---
 
-Changes since v6:
-* Use a global pointer per TEST_F() and complete build of the
-  __test_xfail object in the xfail constructor to fix XFAIL_ADD():
-  https://lore.kernel.org/r/202405100339.vfBe0t9C-lkp@intel.com/
+Changes since v5:
+* Update commit message as suggested by Sean.
 
 Changes since v4:
-* Reset _metadata's aborted and setup_completed fields.
+* Check abort status when the grandchild exited.
+* Keep the _exit(0) calls because _metadata->exit_code is always
+  checked.
+* Only set _metadata->exit_code to WEXITSTATUS() if it is not zero.
 
-Changes since v1:
-* Extract change from a bigger patch (suggested by Kees).
+Changes since v3:
+* New patch mainly from Sean Christopherson.
 ---
- tools/testing/selftests/kselftest_harness.h | 26 ++++++++++++---------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ tools/testing/selftests/kselftest_harness.h | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/kselftest_harness.h b/tools/testing/selftests/kselftest_harness.h
-index 201040207c85..28415798fa60 100644
+index cbedb4a6cf7b..3c8f2965c285 100644
 --- a/tools/testing/selftests/kselftest_harness.h
 +++ b/tools/testing/selftests/kselftest_harness.h
-@@ -430,19 +430,19 @@ static inline pid_t clone3_vfork(void)
+@@ -462,9 +462,13 @@ static inline pid_t clone3_vfork(void)
+ 		munmap(teardown, sizeof(*teardown)); \
+ 		if (self && fixture_name##_teardown_parent) \
+ 			munmap(self, sizeof(*self)); \
+-		if (!WIFEXITED(status) && WIFSIGNALED(status)) \
++		if (WIFEXITED(status)) { \
++			if (WEXITSTATUS(status)) \
++				_metadata->exit_code = WEXITSTATUS(status); \
++		} else if (WIFSIGNALED(status)) { \
+ 			/* Forward signal to __wait_for_test(). */ \
  			kill(getpid(), WTERMSIG(status)); \
++		} \
  		__test_check_assert(_metadata); \
  	} \
--	static struct __test_metadata \
--		      _##fixture_name##_##test_name##_object = { \
--		.name = #test_name, \
--		.fn = &wrapper_##fixture_name##_##test_name, \
--		.fixture = &_##fixture_name##_fixture_object, \
--		.termsig = signal, \
--		.timeout = tmout, \
--		.teardown_parent = false, \
--	 }; \
-+	static struct __test_metadata *_##fixture_name##_##test_name##_object; \
- 	static void __attribute__((constructor)) \
- 			_register_##fixture_name##_##test_name(void) \
- 	{ \
--		__register_test(&_##fixture_name##_##test_name##_object); \
-+		struct __test_metadata *object = mmap(NULL, sizeof(*object), \
-+			PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0); \
-+		object->name = #test_name; \
-+		object->fn = &wrapper_##fixture_name##_##test_name; \
-+		object->fixture = &_##fixture_name##_fixture_object; \
-+		object->termsig = signal; \
-+		object->timeout = tmout; \
-+		_##fixture_name##_##test_name##_object = object; \
-+		__register_test(object); \
- 	} \
- 	static void fixture_name##_##test_name( \
- 		struct __test_metadata __attribute__((unused)) *_metadata, \
-@@ -850,11 +850,12 @@ struct __test_xfail {
- 	{ \
- 		.fixture = &_##fixture_name##_fixture_object, \
- 		.variant = &_##fixture_name##_##variant_name##_object, \
--		.test = &_##fixture_name##_##test_name##_object, \
- 	}; \
- 	static void __attribute__((constructor)) \
- 		_register_##fixture_name##_##variant_name##_##test_name##_xfail(void) \
- 	{ \
-+		_##fixture_name##_##variant_name##_##test_name##_xfail.test = \
-+			_##fixture_name##_##test_name##_object; \
- 		__register_xfail(&_##fixture_name##_##variant_name##_##test_name##_xfail); \
- 	}
- 
-@@ -1181,6 +1182,9 @@ void __run_test(struct __fixture_metadata *f,
- 	/* reset test struct */
- 	t->exit_code = KSFT_PASS;
- 	t->trigger = 0;
-+	t->aborted = false;
-+	t->setup_completed = false;
-+	memset(t->env, 0, sizeof(t->env));
- 	memset(t->results->reason, 0, sizeof(t->results->reason));
- 
- 	if (asprintf(&test_name, "%s%s%s.%s", f->name,
+ 	static struct __test_metadata *_##fixture_name##_##test_name##_object; \
 -- 
 2.45.0
 
