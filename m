@@ -1,60 +1,59 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01EB224B26
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 21:56:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAAA1CD11
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 21:56:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715464570; cv=none; b=WcqAmlzGwV0/utcdhiZDuVsO5fyudq0UicHYjerxcVY4jiERUZqkFjYNbjL1fXDh0oKbQ5F2kwEsOgDQAChJ1UbH6cIxCfTMgYXle3/Fw42WgQRtYkK9tqbbu0780UvyHIMw5OoZkC+BkDdruBpDwsYlnfcGd4ulMo59uBeiHso=
+	t=1715464570; cv=none; b=JT79gxOo9SwqXmTTG0H3lqZ64cBZhHofXa//YRiMyqEqOF9zDYmGUldX8knhNf1tKYFPVvQQlblYaR5aiAHG8KqME9KmXZFcXkwDsoAFZrhhs0lRoTc4J+boL3Hm+Pn5SWUjN4Q/MNfJ5o+i6TbPKjvNu2I/33h4jbpCtBJOJ08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715464570; c=relaxed/simple;
-	bh=owB14EagmPWW4gOZA+FP/m7NDDNKyR5GX/j8+fIMUws=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kjjvcCNg9sycxUrzvL2tDaH76padFQVvJIl5pn37SFQiao8CkUsGU43ccz2QZNbBfWLofbVCEg4fJbrHx3HxBE20IxEoNvvfGoVqDVjmKddH/jdmo3ujoj57nROKJ/wCpndYu+4K5IT9RcEoN66Go297ZBovjnU0k0AxtF+tRjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uCRuRaDv; arc=none smtp.client-ip=209.85.167.51
+	bh=MmtONXg0VMJYQh1EJenBk4C0n/qkfVVHhENrkwyfSSM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=MWR0SfwoH84TwyTWNLzI8hraNzrQmpwrDr2Th4HZ89cFgBAVQHSKg1JG9dY7HEnUEkrf1raur9/auTWM4l6kiqSQcyt6LVdet9h9XYnrbRE//k8tLyiwzon/lFLd7/CDPpsGHq0WSAXCJjbFvLBkNdtt9UMyJeMvbu/aLn5ZxTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W7f4lZjs; arc=none smtp.client-ip=209.85.167.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uCRuRaDv"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51f174e316eso3754634e87.0
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 14:56:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W7f4lZjs"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-51f72a29f13so3971197e87.3
+        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 14:56:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715464567; x=1716069367; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QvgC56LyaFUK4C15m3b/VQxk0Rs7izNvxRwmFZWzOTk=;
-        b=uCRuRaDvTYZu3Dt+uXcG5QSA4Wr0Sdoa5zCLVEajQcoGxQHgTHsFp5sA3zcPKtDuu8
-         4jlypyOttBYRLLXYcfaGRouUtzmM3/FNp+rA2jrZj3LZ1mZogKdgvvAgYEUzvDiCusPX
-         VaRrEQDs3MLHL5W/42+w/Jl3vm7YBxxDMPhwGem29AmBR0MBhl9CQjv575ONdJ0bDma2
-         kY/TxVixp9WxBfgvHVujhXuCnIw+uhlVJFqb1KaN8+scnvyRXy/02JVFQF82FdSdGvQD
-         RzJ+Qh+wlHuIYivy4trJTFVEoPNPj7DgFqplmfnCxQMgBqARS4nJ8/vU2ayaWbEDZCv7
-         jkOw==
+        d=linaro.org; s=google; t=1715464566; x=1716069366; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yc1m16BZ9+LEw8irlKaijazVBePq23WtN2z6YA3QNGM=;
+        b=W7f4lZjs+rWoJ1MlqSYHgt4l2WFfpaoXWZR7pm+9K2BNMdzHqfip5MyjJp4j9TZ9Ff
+         RoCujjmGdavtJQ3ED4lwNCMGEUJ3JoUgiYL3y4Br9Lo/NG1zFG8Q5dpCwgoGgKTJUoT6
+         neQM+umx5JEittvtD0YZd/T9i+LURcZ/57uguxsPbkdEImvY648wfrxhGVfAPUQMkrA4
+         yfhsVi3cq8eQjyNa6bK/eDi/etVkv7Rh5lAQkOGVfr9uT054aMAUHapg2iRKDabqjDp3
+         vxe+IxI+5x3BtHfdhz/g+d2gNss2pBBkGTmF1/f0qpjOaRLe9MUStI+7RvE1lS+rTMN2
+         Qo1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715464567; x=1716069367;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QvgC56LyaFUK4C15m3b/VQxk0Rs7izNvxRwmFZWzOTk=;
-        b=BPFTkR4GCdbdtQsTnS6BzPaVorEkHyZpCI/s6Mf5wfGkKdJhkRyiOOXLt+mG1Lilfr
-         ez4wLKtsyL1CXnGnct/fy8km/davB9q0wNzMjct+Pf+6ymqtsfvUw1d9xfLmymlat22L
-         JYtZ+19iPFarYIq2YI6xH+itB9AGCapgsw6Pcap59zbrfeH//U0rAmdQUa1BeZsgreZP
-         yCOtIJSRFXso9v6FCSHxtEGgT/Ks8o77fo9hueef7Dk/QFRpjORTXmebSaK8EhaL6nPZ
-         PXiYXUr8R2yppb712TVb7/aKn5ZjfEm887zrnDRb7OOt7ex7ehcYJ8mrPbvt5sQ5I7VI
-         aJCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUHN0MGa9CGQIXklJ5yXJiLv+NBFPJK/7UYjTKePQkULKHmMNFRFFcejxz5Xc4AWz38+redb83byL7vs2oipOf7E9ACnCszlRQsed7q
-X-Gm-Message-State: AOJu0YwPAmSaG4kTssfMG8NLR6NZE0igrgFtmMTHO5n+hUKamtDzNjaS
-	7VsUUdoztPUmOlgdYlqtu3KkE4LhNAkGzNOp77JuSbztu10zAYmkmFtGRwMXi64=
-X-Google-Smtp-Source: AGHT+IFYxL4clAyZO6ReuSvucNP2UlUV8QFbhZhfnT8q9vcLw24oEbuwzQ0X+Fur4wC91h8T5liN3Q==
-X-Received: by 2002:ac2:46e7:0:b0:51e:f68b:d266 with SMTP id 2adb3069b0e04-5220fe78ceamr3485972e87.50.1715464567182;
-        Sat, 11 May 2024 14:56:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715464566; x=1716069366;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Yc1m16BZ9+LEw8irlKaijazVBePq23WtN2z6YA3QNGM=;
+        b=s4kAPCVkKR2eB1Hpxcn2qjZVeCYU6jlVf9lsx62OcIG5Fp9F64PJp1T5dii3k0DWBy
+         gf6IYga7++Vyw2YK5bNbO4c3U5FQQ/A+NnRSssebU70SNcfMQnhgYyZDvEdjxKKCyHVI
+         AcQ0JDysqmVfB+o9ZodrGZy2NupGSSXbUOarCW2ma3YqVpYzcUH4ZVxhA+Bfby4iHlit
+         WD30KDAwyndBSIR6Vk+91yP123Sjtu30wwXklVuP3M2ZedWxHRjhxXGzRc2ABQvX6D++
+         F51S+Y4r1OKQ4kXCr+F+l1A4McHKClwlfag1/O/OwvP/+WXFQ300BPiOGPRp/Z2OaJ40
+         5sew==
+X-Forwarded-Encrypted: i=1; AJvYcCWI9gNeo9pnlYDlD2XQd7h47GMaCDH0cSKU0nWt3KgewUlep20uB91fVeZ3ggfErXxFAeNGcrCxXA4l11vw3x0iQ5LIut8Gi4Sp2YmE
+X-Gm-Message-State: AOJu0YyzZajRsG8BWxeALr1YJSnFRY9ooE4/1XxEJlREZGSIUSkOHL8g
+	a6QpaeW0QqIDLKXxoizJiYrDQ71vSKJLYKTZToDgpdNtUutz6hEVReu8MIyujBc=
+X-Google-Smtp-Source: AGHT+IHvrv1xE3a3NTNZDwY4p2kUQ1KmzKMksVgvRf0KgBeZF/jXdxxQRCbl2rolKz8IGJp+0OCr8w==
+X-Received: by 2002:a19:e04c:0:b0:51f:128:4cd2 with SMTP id 2adb3069b0e04-5221006f7a9mr3825479e87.22.1715464565699;
+        Sat, 11 May 2024 14:56:05 -0700 (PDT)
 Received: from umbar.lan ([192.130.178.91])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f39d31d1sm1127576e87.286.2024.05.11.14.56.06
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-521f39d31d1sm1127576e87.286.2024.05.11.14.56.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 11 May 2024 14:56:06 -0700 (PDT)
+        Sat, 11 May 2024 14:56:05 -0700 (PDT)
 From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Sun, 12 May 2024 00:56:04 +0300
-Subject: [PATCH v8 2/5] soc: qcom: pdr: fix parsing of domains lists
+Subject: [PATCH v8 0/5] soc: qcom: add in-kernel pd-mapper implementation
+Date: Sun, 12 May 2024 00:56:02 +0300
+Message-Id: <20240512-qcom-pd-mapper-v8-0-5ecbb276fcc0@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,9 +62,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240512-qcom-pd-mapper-v8-2-5ecbb276fcc0@linaro.org>
-References: <20240512-qcom-pd-mapper-v8-0-5ecbb276fcc0@linaro.org>
-In-Reply-To: <20240512-qcom-pd-mapper-v8-0-5ecbb276fcc0@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAHLpP2YC/3XPTW7DIBAF4KtEXhdrGAYwXfUeVReEnxi1Ni6Or
+ EZR7l4Sqaor1OWT+N48rt0aSgpr93y4diVsaU15rmF4OnRutPMpsORr7hCQQABnny5PbPFssss
+ SCgscvUL0ZD10FS0lxPT1KHx9qzmW+vw8lmB/agRHVACCSPcCiISSjDM/pXO59EdbLuv4nreXj
+ zTbkvtcTvfaMa3nXC6PmRvey/9dtCEDJj1HCwP3xvN91X3SJvaeGi+qV4McouXWcTc0nnaet/e
+ peiSljXNWOqTGy19P3DReVh+EPKo4kA7GNF7tPGLjVfXRKCO1B46gG6/3vv2/rh5k1NEpUgHiH
+ 3+73b4BRtvUgDQCAAA=
 To: Bjorn Andersson <andersson@kernel.org>, 
  Konrad Dybcio <konrad.dybcio@linaro.org>, 
  Sibi Sankar <quic_sibis@quicinc.com>, 
@@ -75,48 +77,130 @@ Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
  Xilin Wu <wuxilin123@gmail.com>, 
  Bryan O'Donoghue <bryan.odonoghue@linaro.org>, 
  Steev Klimaszewski <steev@kali.org>, 
- Alexey Minnekhanov <alexeymin@postmarketos.org>
+ Alexey Minnekhanov <alexeymin@postmarketos.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1150;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4810;
  i=dmitry.baryshkov@linaro.org; h=from:subject:message-id;
- bh=owB14EagmPWW4gOZA+FP/m7NDDNKyR5GX/j8+fIMUws=;
- b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmP+l02sEGrQpRPdi1hPa1DAZOE/JO4CuTM1Dkk
- wrPcB/JaQSJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZj/pdAAKCRCLPIo+Aiko
- 1dAqB/4nkeRSMzX9CaTIhgjF60nM+tE0UzqvRKW1UHEMWlJEbUSgo2xYkBcv9Hu6VcZXnN42ogj
- 4ZHBlplcE/2NEnqRlwrXNu841a7E23gZLTVZCDoh1Li4BstRgOFFiIAY+cnUOM4JBNYc8LsQOdq
- qAVq1PYBbvfBaCjw/yGLqUlbSpZibg6W2klgGs0WIAgz3zO/iFF2zGuGCmk/OoQ/ZK1F0Kku2Qm
- NW4cjv04HgNfWlDH0UwGIDFdLiZP5Ay5AVtm9s7MmM/mIvM4b3VDzKRU7KroXscSNp6aSrtAcTu
- kQHIJA699+tBbqaeCvP/OoMVHN/to1+eLEd8B0vrWwtw2gOe
+ bh=MmtONXg0VMJYQh1EJenBk4C0n/qkfVVHhENrkwyfSSM=;
+ b=owEBbQGS/pANAwAKAYs8ij4CKSjVAcsmYgBmP+l0viIfgANeDXuPjWdFENT6kOVXY32WIaZjH
+ n9gQ6zsptyJATMEAAEKAB0WIQRMcISVXLJjVvC4lX+LPIo+Aiko1QUCZj/pdAAKCRCLPIo+Aiko
+ 1avQCACw8gBh4MdMccSl82b6C8K076SjawSRGp+d6jHM//kCnVoSGu3EB8EErzH5i+rJ4J3lz2x
+ nkPDv4JvLi/irUkOetIwitzlkqo8bgPKHv1x7joGSJqdwLqt+BejqgSYU1DtbSOyoZEobIx245C
+ oqnp5pJCUYgHyI+RXHd6WkAcWXsOuTAOVy8wIE/9/SI+ZbfIk6Mpj7LvzktG+zXbm3uhxCsdcgU
+ OchDGD53e8qI8JKHiGiFi+4AQhOzUDUYlI+k0clvVuwuicknMEdSCzopDnUGXdbHIZYdtBUqU0q
+ o4/99KM21u7O8SxFAU2kkZdkT6LULPjREDMf2jW7kbKReDHt
 X-Developer-Key: i=dmitry.baryshkov@linaro.org; a=openpgp;
  fpr=8F88381DD5C873E4AE487DA5199BF1243632046A
 
-While parsing the domains list, start offsets from 0 rather than from
-domains_read. The domains_read is equal to the total count of the
-domains we have seen, while the domains list in the message starts from
-offset 0.
+Protection domain mapper is a QMI service providing mapping between
+'protection domains' and services supported / allowed in these domains.
+For example such mapping is required for loading of the WiFi firmware or
+for properly starting up the UCSI / altmode / battery manager support.
 
-Fixes: fbe639b44a82 ("soc: qcom: Introduce Protection Domain Restart helpers")
-Tested-by: Steev Klimaszewski <steev@kali.org>
-Tested-by: Alexey Minnekhanov <alexeymin@postmarketos.org>
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+The existing userspace implementation has several issue. It doesn't play
+well with CONFIG_EXTRA_FIRMWARE, it doesn't reread the JSON files if the
+firmware location is changed (or if the firmware was not available at
+the time pd-mapper was started but the corresponding directory is
+mounted later), etc.
+
+However this configuration is largely static and common between
+different platforms. Provide in-kernel service implementing static
+per-platform data.
+
+To: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+To: Sibi Sankar <quic_sibis@quicinc.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-remoteproc@vger.kernel.org
+Cc: Johan Hovold <johan+linaro@kernel.org>
+Cc: Xilin Wu <wuxilin123@gmail.com>
+Cc: "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>
+Cc: Steev Klimaszewski <steev@kali.org>
+Cc: Alexey Minnekhanov <alexeymin@postmarketos.org>
+
+--
+
+Changes in v8:
+- Reworked pd-mapper to register as an rproc_subdev / auxdev
+- Dropped Tested-by from Steev and Alexey from the last patch since the
+  implementation was changed significantly.
+- Add sensors, cdsp and mpss_root domains to 660 config (Alexey
+  Minnekhanov)
+- Added platform entry for sm4250 (used for qrb4210 / RB2)
+- Added locking to the pdr_get_domain_list() (Chris Lew)
+- Remove the call to qmi_del_server() and corresponding API (Chris Lew)
+- In qmi_handle_init() changed 1024 to a defined constant (Chris Lew)
+- Link to v7: https://lore.kernel.org/r/20240424-qcom-pd-mapper-v7-0-05f7fc646e0f@linaro.org
+
+Changes in v7:
+- Fixed modular build (Steev)
+- Link to v6: https://lore.kernel.org/r/20240422-qcom-pd-mapper-v6-0-f96957d01207@linaro.org
+
+Changes in v6:
+- Reworked mutex to fix lockdep issue on deregistration
+- Fixed dependencies between PD-mapper and remoteproc to fix modular
+  builds (Krzysztof)
+- Added EXPORT_SYMBOL_GPL to fix modular builds (Krzysztof)
+- Fixed kerneldocs (Krzysztof)
+- Removed extra pr_debug messages (Krzysztof)
+- Fixed wcss build (Krzysztof)
+- Added platforms which do not require protection domain mapping to
+  silence the notice on those platforms
+- Link to v5: https://lore.kernel.org/r/20240419-qcom-pd-mapper-v5-0-e35b6f847e99@linaro.org
+
+Changes in v5:
+- pdr: drop lock in pdr_register_listener, list_lock is already held (Chris Lew)
+- pd_mapper: reworked to provide static configuration per platform
+  (Bjorn)
+- Link to v4: https://lore.kernel.org/r/20240311-qcom-pd-mapper-v4-0-24679cca5c24@linaro.org
+
+Changes in v4:
+- Fixed missing chunk, reenabled kfree in qmi_del_server (Konrad)
+- Added configuration for sm6350 (Thanks to Luca)
+- Removed RFC tag (Konrad)
+- Link to v3: https://lore.kernel.org/r/20240304-qcom-pd-mapper-v3-0-6858fa1ac1c8@linaro.org
+
+Changes in RFC v3:
+- Send start / stop notifications when PD-mapper domain list is changed
+- Reworked the way PD-mapper treats protection domains, register all of
+  them in a single batch
+- Added SC7180 domains configuration based on TCL Book 14 GO
+- Link to v2: https://lore.kernel.org/r/20240301-qcom-pd-mapper-v2-0-5d12a081d9d1@linaro.org
+
+Changes in RFC v2:
+- Swapped num_domains / domains (Konrad)
+- Fixed an issue with battery not working on sc8280xp
+- Added missing configuration for QCS404
+
 ---
- drivers/soc/qcom/pdr_interface.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Dmitry Baryshkov (5):
+      soc: qcom: pdr: protect locator_addr with the main mutex
+      soc: qcom: pdr: fix parsing of domains lists
+      soc: qcom: pdr: extract PDR message marshalling data
+      soc: qcom: add pd-mapper implementation
+      remoteproc: qcom: enable in-kernel PD mapper
 
-diff --git a/drivers/soc/qcom/pdr_interface.c b/drivers/soc/qcom/pdr_interface.c
-index e014dd2d8ab3..d495ee736519 100644
---- a/drivers/soc/qcom/pdr_interface.c
-+++ b/drivers/soc/qcom/pdr_interface.c
-@@ -422,7 +422,7 @@ static int pdr_locate_service(struct pdr_handle *pdr, struct pdr_service *pds)
- 		if (ret < 0)
- 			goto out;
- 
--		for (i = domains_read; i < resp->domain_list_len; i++) {
-+		for (i = 0; i < resp->domain_list_len; i++) {
- 			entry = &resp->domain_list[i];
- 
- 			if (strnlen(entry->name, sizeof(entry->name)) == sizeof(entry->name))
+ drivers/remoteproc/qcom_common.c    |  87 +++++
+ drivers/remoteproc/qcom_common.h    |  10 +
+ drivers/remoteproc/qcom_q6v5_adsp.c |   3 +
+ drivers/remoteproc/qcom_q6v5_mss.c  |   3 +
+ drivers/remoteproc/qcom_q6v5_pas.c  |   3 +
+ drivers/remoteproc/qcom_q6v5_wcss.c |   3 +
+ drivers/soc/qcom/Kconfig            |  15 +
+ drivers/soc/qcom/Makefile           |   2 +
+ drivers/soc/qcom/pdr_interface.c    |  17 +-
+ drivers/soc/qcom/pdr_internal.h     | 318 ++---------------
+ drivers/soc/qcom/qcom_pd_mapper.c   | 676 ++++++++++++++++++++++++++++++++++++
+ drivers/soc/qcom/qcom_pdr_msg.c     | 353 +++++++++++++++++++
+ 12 files changed, 1190 insertions(+), 300 deletions(-)
+---
+base-commit: e5119bbdaca76cd3c15c3c975d51d840bbfb2488
+change-id: 20240301-qcom-pd-mapper-e12d622d4ad0
 
+Best regards,
 -- 
-2.39.2
+Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
