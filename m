@@ -1,57 +1,57 @@
 Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0968F5C
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 00:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270D2DDA3
+	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 00:49:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715388601; cv=none; b=AVSieAhNY7J73yiiXm9wybFegPCrXE8l6Uqd9dSir99GQAYQOgaaCNmruhzX5AtpcNlK1p0s8XzYQidZG7UciY6gr/OOpApLCoOMRlsXMVG3Mkr1RX0wScyaZgjpdrcLAq49EMoTuQ1nIaSDYYa8jEu46m839iQRqS9Wq/EnNRU=
+	t=1715388602; cv=none; b=AlYatS0385wjsWqLO1o6fTxK6qqXdrw2WVCa1eAlDlOzUjxfXC19FGX/EoFg1B9nS6AUyIWmo/razrAD/gv3Gv2HvDYkJHTBpBsye2HTh6JTE0/qWNpXkN6RGawQTR9JZCdQgajBy2Nc21MvLetwXtwqGOYUyVHt4rp9paqvzMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715388601; c=relaxed/simple;
-	bh=QslN9hiRjif2714MLfUNTy1aeizyH8JMJMB6mPnzuPI=;
+	s=arc-20240116; t=1715388602; c=relaxed/simple;
+	bh=BHMojD3X9bY4SHi0jcrxW7Ha4u/3zvtngRqxXFgXZyc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i9hI2ZX/lfs7U+/0qVptT/vbOYUdUxWHTAetE7F7rdTGeGZe2pYu/vD/tJ72jK11gz9SsL2OMN+nrvmo21GumB3kxywzwl1pUQcYaHuaDf9KCIk95ZkN99jiECeJv71SLEd5+d8ct1F2uw1m9GEofx+cRBaQrswYJuFvMLxFgW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=I+AF6YZv; arc=none smtp.client-ip=209.85.161.41
+	 MIME-Version:Content-Type; b=dUOdR4sdVRC5jqumU34/VZRb+835RMlxY3iZq0lVIoPV5TFZ+fSBxY2bleocpcGVbb7v/kUsiQr18Ic0BK5NMqbCC4JopiOwqm0Dpdn/r0euFzZfzDEGT2esegPgIkzDY7F80TM27923n2EbgC7bT9hLNObpYCbzL/smF2QKGlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=km0bM8UU; arc=none smtp.client-ip=209.85.161.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="I+AF6YZv"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5b27999f889so1014457eaf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 17:49:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="km0bM8UU"
+Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5b27c5603ddso905386eaf.1
+        for <linux-kernel@vger.kernel.org>; Fri, 10 May 2024 17:49:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715388597; x=1715993397; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715388599; x=1715993399; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Wm1JDIpGQ3/Aqds3KMjjWWOJUYPSXntTpGvlaeWf3LY=;
-        b=I+AF6YZvb0ZGtqfxIrQkw4wQE744NHHGfeUB2+wEHvD43mTYqJ2ZarJQdW3ERqrwVb
-         3216460M4XoEsbjvfOhcjNtYa8MFESqGPiOEp3agpE3GpURId0+YTxVSvgIsNrAveWRR
-         Kur18iuO86itQz2qZ6VL75LlRHdL3Bw+3dN9qmYJbkW7wLBgxYc/ky5l8GlZegY17jLl
-         Czsb9EOBKyWCTJwsUxYGYRWgVsmVsvTNyKmY+40iD3jY3xHkohN1/9uooJy3Y+boag2g
-         Y8qUg5Z4Mc1gQODqpnXEPy0eq246RoJX6kKrCtQOc62uR2+2uQkE6q1BS2N5t4XBN4WE
-         55iA==
+        bh=ArLD9QvQN8sa7KIiLAad1A60GsgZ86+t2OLdgGnWFFI=;
+        b=km0bM8UUJOi6Az92hpAatdEWngS05loIKia78sDktc0fZL0f2zFWzJn3rNx3oYoo6/
+         5+uFKVMhgoNHJ4gV9tVd6/riWPPn/n70/WuSs79lB41t7iwErFSCKq4pX/CBqOXl/yv5
+         GUuypa/S1N1RmSBFUllJA2mmOdJBINBtfGBD2RTEdFR6g1cAlAwVbjyVytoKQ29zM9yH
+         mQqlAm0CaiK7ABdBWkcDG/ptbZLndKYBVgmQCi/hhZBhQaMN0sSuAi5KOwtTD5Pq2uLQ
+         BI/z4+DU4Bd9NLlOqrLftD8Jks4+SHzvKIqBqUuYh4X0xDro0d/IE04kM7fxyjvxOXs9
+         WsYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715388597; x=1715993397;
+        d=1e100.net; s=20230601; t=1715388599; x=1715993399;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Wm1JDIpGQ3/Aqds3KMjjWWOJUYPSXntTpGvlaeWf3LY=;
-        b=JBxUFzzpN5F1ugGkpuXBO+Je2FJA19SOj3JbbvEo9QUx2E+WgfFTEoteJzCxKoXOSy
-         5FsprEJaDjUR8jEwcaQ12W8wPVXjuD84cGt+EHr/rV8e+7TstAOQhGsLg+/43epysVOr
-         elMLzA3qkFjmCUf6LRsJz94MfNsBYU/+GMENs0ORlZXXqgrahOjHMi5cWdmjoPnrLRBJ
-         DrebckEJTRwhU+AbaA0qfn46J2owUiCDShXsP5AOXcHlYM/sagpnX8XB7LEBnQMX+b1J
-         uGLdQN8nupwmRjMs7Q7PlYWIf9zNdq2/UpLDxG+u3ELqE/4X65W2AnOUyCGJ1bf+u+E2
-         0Hcg==
-X-Forwarded-Encrypted: i=1; AJvYcCWsPln58/EAncAFtrWS1kKu+KKVZVlMJVnOSHTNRrpRAllCpgT8/aMuOCIKf/hLosrEBR/Cu0JJliiZ91Y9EIfDQH0CX8TOpHkKeRub
-X-Gm-Message-State: AOJu0Yy8IfH5CVBhNPWwhkfIrnAK+WVo5lNTTGrhctwpQ/BdwBVu6bVF
-	BGiXuxooe749GQ2eBoFRzoGS4a+L+yWRmj30j5SUO0M65litC1w6FHL720Yos6I=
-X-Google-Smtp-Source: AGHT+IHIlPJpLdkHvfVzDbw2X1xtwQanIP+eKehd+NyrLExBkWOAZfON5byOulKnrHpJ4Pdp/WT0fg==
-X-Received: by 2002:a4a:907:0:b0:5af:4b39:b7e0 with SMTP id 006d021491bc7-5b2815cd612mr4164258eaf.0.1715388597084;
-        Fri, 10 May 2024 17:49:57 -0700 (PDT)
+        bh=ArLD9QvQN8sa7KIiLAad1A60GsgZ86+t2OLdgGnWFFI=;
+        b=BvHcw2Gt8zw9/rgZCw0SDKPGazDGl8QsEFaB7SC6p2/6Im5d7yzCeVKEwnAHQ2cWtA
+         CFNj1F0DvQCS1VoAJebHyFuB3Dv4OTzofVrJgH+Zaz6AHSj62r39XXf9udTpOjB/JfC9
+         z89U1zDSaweyIS60vWOGX0AWQZvlF1XCnK8aofY/6IHlosCofpcmaPXFQS+UUuWBZgPa
+         t52qAVzEmFW25RhB4ddGc9sbsAdykMqxM+/lf4nEOgDWHcPZI+FiX1L/pQJ2rd5hP7H6
+         SjlKvmUy6q1oQDogUVc0l9L8duv78wqrDiqIb7B//pMhj3/Ow7eOwYlPflAvFmtnMH6f
+         Qwnw==
+X-Forwarded-Encrypted: i=1; AJvYcCUiELfae4ebU4tKPdC77T4wbqQR6NqBKfWxzGlTMkB/hjAzGSlwHRvVPX5m5EL0NSSzX8Jxz1tJquc9LqULHWG5TANpxT2BmKeZRoCY
+X-Gm-Message-State: AOJu0YyFd9sDhr6A4p5u8ulGgNja0VGDT+HQS4wQIRhjVetYEFP3cveM
+	qGdm6TXOloOQr5HLnZlwMngskvl2v137nZPfzpR7o6ek5by5NcbTrL4ec7b9qeY=
+X-Google-Smtp-Source: AGHT+IF67/09uCWR5zHPVGAVldQwFwFzVymB/igxM1Xhk/7xfxTF3T4a8rb7utqBzvpAVGATVOiRkw==
+X-Received: by 2002:a4a:8c08:0:b0:5a4:9977:446b with SMTP id 006d021491bc7-5b2819ad3d5mr3654225eaf.6.1715388599120;
+        Fri, 10 May 2024 17:49:59 -0700 (PDT)
 Received: from freyr.lechnology.com (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5b29015a3dbsm321132eaf.46.2024.05.10.17.49.56
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-5b29015a3dbsm321132eaf.46.2024.05.10.17.49.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 May 2024 17:49:56 -0700 (PDT)
+        Fri, 10 May 2024 17:49:58 -0700 (PDT)
 From: David Lechner <dlechner@baylibre.com>
 To: Mark Brown <broonie@kernel.org>,
 	Jonathan Cameron <jic23@kernel.org>,
@@ -68,9 +68,9 @@ Cc: David Lechner <dlechner@baylibre.com>,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-iio@vger.kernel.org
-Subject: [PATCH RFC v2 1/8] spi: dt-bindings: spi-peripheral-props: add spi-offloads property
-Date: Fri, 10 May 2024 19:44:24 -0500
-Message-ID: <20240510-dlech-mainline-spi-engine-offload-2-v2-1-8707a870c435@baylibre.com>
+Subject: [PATCH RFC v2 3/8] spi: add support for hardware triggered offload
+Date: Fri, 10 May 2024 19:44:26 -0500
+Message-ID: <20240510-dlech-mainline-spi-engine-offload-2-v2-3-8707a870c435@baylibre.com>
 X-Mailer: git-send-email 2.43.2
 In-Reply-To: <20240510-dlech-mainline-spi-engine-offload-2-v2-0-8707a870c435@baylibre.com>
 References: <20240510-dlech-mainline-spi-engine-offload-2-v2-0-8707a870c435@baylibre.com>
@@ -84,62 +84,213 @@ Content-Type: text/plain; charset="utf-8"
 X-Mailer: b4 0.12.4
 Content-Transfer-Encoding: 8bit
 
-This adds a new property to the spi-peripheral-props binding for use
-with peripherals connected to controllers that support offloading.
+This extends the SPI framework to support hardware triggered offloading.
+This allows an arbitrary hardware trigger to be used to start a SPI
+transfer that was previously set up with spi_offload_prepare().
 
-Here, offloading means that the controller has the ability to perform
-complex SPI transactions without CPU intervention in some shape or form.
-
-This property will be used to assign controller offload resources to
-each peripheral that needs them. What these resources are will be
-defined by each specific controller binding.
+Since the hardware trigger can happen at any time, this means the SPI
+bus must be reserved for exclusive use as long as the hardware trigger
+is enabled. Since a hardware trigger could be enabled indefinitely,
+we can't use the existing spi_bus_lock() and spi_bus_unlock() functions,
+otherwise this could cause deadlocks. So we introduce a new flag so that
+any attempt to lock or use the bus will fail with -EBUSY as long as the
+hardware trigger is enabled.
 
 Signed-off-by: David Lechner <dlechner@baylibre.com>
 ---
 
 v2 changes:
 
-In v1, instead of generic SPI bindings, there were only controller-
-specific bindings, so this is a new patch.
+This is split out from "spi: add core support for controllers with
+offload capabilities".
 
-In the previous version I also had an offloads object node that described
-what the offload capabilities were but it was suggested that this was
-not necessary/overcomplicated. So I've gone to the other extreme and
-made it perhaps over-simplified now by requiring all information about
-how each offload is used to be encoded in a single u32.
+Mark suggested that the standard SPI APIs should be aware that the
+hardware trigger is enabled. So I've added some locking for this. Nuno
+suggested that this might be overly strict though, and that we should
+let each individual controller driver decide what to do. For our use
+case though, I think we generally are going to have a single peripheral
+on the SPI bus, so this seems like a reasonable starting place anyway.
 
-We could of course consider using #spi-offload-cells instead for
-allowing encoding multiple parameters for each offload instance if that
-would be preferable.
-
-I also considered adding spi-offload-names that could be used as sort
-of a compatible string (more of an interface name really) in case some
-peripherals may want to support more than 1 specialized type of offload.
+TODO: Currently, spi_bus_lock() always returns 0, so none of the callers
+check the return value. All callers will need to be updated first before
+this can be merged.
 ---
- .../devicetree/bindings/spi/spi-peripheral-props.yaml          | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/spi/spi.c       | 92 +++++++++++++++++++++++++++++++++++++++++++++++--
+ include/linux/spi/spi.h | 17 +++++++++
+ 2 files changed, 107 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml b/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml
-index 15938f81fdce..32991a2d2264 100644
---- a/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml
-+++ b/Documentation/devicetree/bindings/spi/spi-peripheral-props.yaml
-@@ -113,6 +113,16 @@ properties:
-     minItems: 2
-     maxItems: 4
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 54b814cea54c..9ad7b04c26a6 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -4427,7 +4427,7 @@ int spi_async(struct spi_device *spi, struct spi_message *message)
  
-+  spi-offloads:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description:
-+      Array of controller offload instances that are reserved for use by the
-+      peripheral device. The semantic meaning of the values of the array
-+      elements is defined by the controller. For example, it could be a simple
-+      0-based index of the offload instance, or it could be a bitfield where
-+      a few bits represent the assigned hardware trigger, a few bits represent
-+      the assigned RX stream, etc.
+ 	spin_lock_irqsave(&ctlr->bus_lock_spinlock, flags);
+ 
+-	if (ctlr->bus_lock_flag)
++	if (ctlr->bus_lock_flag || ctlr->offload_hw_trigger_enabled)
+ 		ret = -EBUSY;
+ 	else
+ 		ret = __spi_async(spi, message);
+@@ -4572,6 +4572,12 @@ int spi_sync(struct spi_device *spi, struct spi_message *message)
+ 	int ret;
+ 
+ 	mutex_lock(&spi->controller->bus_lock_mutex);
 +
-   st,spi-midi-ns:
-     description: |
-       Only for STM32H7, (Master Inter-Data Idleness) minimum time
++	if (spi->controller->offload_hw_trigger_enabled) {
++		mutex_unlock(&spi->controller->bus_lock_mutex);
++		return -EBUSY;
++	}
++
+ 	ret = __spi_sync(spi, message);
+ 	mutex_unlock(&spi->controller->bus_lock_mutex);
+ 
+@@ -4614,7 +4620,7 @@ EXPORT_SYMBOL_GPL(spi_sync_locked);
+  * exclusive access is over. Data transfer must be done by spi_sync_locked
+  * and spi_async_locked calls when the SPI bus lock is held.
+  *
+- * Return: always zero.
++ * Return: 0 on success, -EBUSY if the bus is reserved by offload hardware.
+  */
+ int spi_bus_lock(struct spi_controller *ctlr)
+ {
+@@ -4622,6 +4628,11 @@ int spi_bus_lock(struct spi_controller *ctlr)
+ 
+ 	mutex_lock(&ctlr->bus_lock_mutex);
+ 
++	if (ctlr->offload_hw_trigger_enabled) {
++		mutex_unlock(&ctlr->bus_lock_mutex);
++		return -EBUSY;
++	}
++
+ 	spin_lock_irqsave(&ctlr->bus_lock_spinlock, flags);
+ 	ctlr->bus_lock_flag = 1;
+ 	spin_unlock_irqrestore(&ctlr->bus_lock_spinlock, flags);
+@@ -4808,6 +4819,83 @@ void spi_offload_unprepare(struct spi_device *spi, unsigned int id,
+ }
+ EXPORT_SYMBOL_GPL(spi_offload_unprepare);
+ 
++/**
++ * spi_offload_hw_trigger_enable - enables hardware trigger for offload
++ * @spi:	The spi device to use for the transfers.
++ * @id:		Unique identifier for SPI device with more than one offload.
++ *
++ * There must be a prepared offload instance with the specified ID (i.e.
++ * spi_offload_prepare() was called with the same ID). This will also reserve
++ * the bus for exclusive use by the offload instance until the hardware trigger
++ * is disabled. Any other attempts to send a transfer or lock the bus will fail
++ * with -EBUSY during this time.
++ *
++ * Calls must be balanced with spi_offload_hw_trigger_disable().
++ *
++ * Context: can sleep
++ * Return: 0 on success, else a negative error code.
++ */
++int spi_offload_hw_trigger_enable(struct spi_device *spi, unsigned int id)
++{
++	struct spi_controller *ctlr = spi->controller;
++	unsigned long flags;
++	int ret;
++
++	if (!ctlr->offload_ops || !ctlr->offload_ops->hw_trigger_enable)
++		return -EOPNOTSUPP;
++
++	mutex_lock(&ctlr->bus_lock_mutex);
++
++	if (ctlr->offload_hw_trigger_enabled) {
++		mutex_unlock(&ctlr->bus_lock_mutex);
++		return -EBUSY;
++	}
++
++	spin_lock_irqsave(&ctlr->bus_lock_spinlock, flags);
++	ctlr->offload_hw_trigger_enabled = true;
++	spin_unlock_irqrestore(&ctlr->bus_lock_spinlock, flags);
++
++	/* TODO: how to wait for empty message queue? */
++
++	mutex_lock(&ctlr->io_mutex);
++	ret = ctlr->offload_ops->hw_trigger_enable(spi, id);
++	mutex_unlock(&ctlr->io_mutex);
++
++	if (ret) {
++		ctlr->offload_hw_trigger_enabled = false;
++		mutex_unlock(&ctlr->bus_lock_mutex);
++		return ret;
++	}
++
++	mutex_unlock(&ctlr->bus_lock_mutex);
++
++	return 0;
++}
++
++/**
++ * spi_offload_hw_trigger_disable - disables hardware trigger for offload
++ * @spi:	The same SPI device passed to spi_offload_hw_trigger_enable()
++ * @id:		The same ID device passed to spi_offload_hw_trigger_enable()
++ *
++ * Disables the hardware trigger for the offload instance with the specified ID
++ * and releases the bus for use by other clients.
++ *
++ * Context: can sleep
++ */
++void spi_offload_hw_trigger_disable(struct spi_device *spi, unsigned int id)
++{
++	struct spi_controller *ctlr = spi->controller;
++
++	if (!ctlr->offload_ops || !ctlr->offload_ops->hw_trigger_disable)
++		return;
++
++	mutex_lock(&ctlr->io_mutex);
++	ctlr->offload_ops->hw_trigger_disable(spi, id);
++	mutex_unlock(&ctlr->io_mutex);
++
++	ctlr->offload_hw_trigger_enabled = false;
++}
++
+ /*-------------------------------------------------------------------------*/
+ 
+ #if IS_ENABLED(CONFIG_OF_DYNAMIC)
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index a8fc16c6bf37..ec8d875d31ff 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -632,6 +632,9 @@ struct spi_controller {
+ 	/* Flag indicating that the SPI bus is locked for exclusive use */
+ 	bool			bus_lock_flag;
+ 
++	/* Flag indicating the bus is reserved for use by hardware trigger */
++	bool			offload_hw_trigger_enabled;
++
+ 	/*
+ 	 * Setup mode and clock, etc (SPI driver may call many times).
+ 	 *
+@@ -1594,12 +1597,26 @@ struct spi_controller_offload_ops {
+ 	 * @unprepare: Callback to release any resources used by prepare().
+ 	 */
+ 	void (*unprepare)(struct spi_device *spi, unsigned int id);
++
++	/**
++	 * @hw_trigger_enable: Callback to enable the hardware trigger for the
++	 * given offload instance.
++	 */
++
++	int (*hw_trigger_enable)(struct spi_device *spi, unsigned int id);
++	/**
++	 * @hw_trigger_disable: Callback to disable the hardware trigger for the
++	 * given offload instance.
++	 */
++	void (*hw_trigger_disable)(struct spi_device *spi, unsigned int id);
+ };
+ 
+ extern int spi_offload_prepare(struct spi_device *spi, unsigned int id,
+ 			       struct spi_message *msg);
+ extern void spi_offload_unprepare(struct spi_device *spi, unsigned int id,
+ 				  struct spi_message *msg);
++extern int spi_offload_hw_trigger_enable(struct spi_device *spi, unsigned int id);
++extern void spi_offload_hw_trigger_disable(struct spi_device *spi, unsigned int id);
+ 
+ /*---------------------------------------------------------------------------*/
+ 
 
 -- 
 2.43.2
