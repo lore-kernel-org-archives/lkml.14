@@ -1,192 +1,92 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outpost1.zedat.fu-berlin.de (outpost1.zedat.fu-berlin.de [130.133.4.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5F91BC3F
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 18:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14361C698;
+	Sat, 11 May 2024 18:49:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=130.133.4.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715453261; cv=none; b=VJSb1OAVO1yFTs3inJq0uWE09LUN5qqRN5qMj5OhJSiJDuVsp83XTFSXifuHMLXXOHrbUJHAvvb+EtI/C1/rmXsV3tdDqw/EDdME9h2GhkLnTQpLbacVO8UAS8Iv+Qo6jtI71aeTgug4FvBejnZnuQR6fxfeM//LRqEd8e1rx3Y=
+	t=1715453354; cv=none; b=T+t/tow3FNX+HypYKX8lOhbp5MxBW9VnLm9FyUx182YGkf12B8FBQxj9DPKLTTtt9i0ooIRBrmnvWB+W+dqxV6hdB9ytl35sfcRjlYNs18xV5xZTHlg01LxCdfVfGP8XCySfkbpm63QlUf4MryrVvSYZxRnLfLiy5Kp79SqpzCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715453261; c=relaxed/simple;
-	bh=YVOdlFgTphP8iWkdNlurQhMrD26ZChBnbBkDzPU2aRQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tArfKUfsNz6pf9hJnoxqxyX5MWwnAqHH/b9KX02L84vil/ZiSd+8NmPK5UWNpRnRpBzb2G8iC9TtsPqs5cYvQLt4twhq57/7QV2s0u7eyo7BrXkOI1q8LGglIhdm8xonPauTmkSFcq4+23ysrnDzVaI4KVvpqsXPcRfxoZ8IPkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=eB1FrXnt; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1715453354; c=relaxed/simple;
+	bh=BuB70vFvE1UbtXbQ9MYZpxeNrNANcHpq7by0jZ/F0dY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ccl+e+BIFpsexh6jAS+/DPadrOBVV5vMY69s7xLMix+y9VHEeu57U0M2hTPCPoiHAlNgQiRj/Q8Ib9eZ3GnhjGU87T/h9sbLCjDlMV36Yiam2qnBat82ZS3PS0a0LFvNSqnGmpWEzbtyurX1+yBBRybgPOu6NiYGr2LVe0L6yhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de; spf=pass smtp.mailfrom=zedat.fu-berlin.de; dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b=O4LTdbdz; arc=none smtp.client-ip=130.133.4.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=physik.fu-berlin.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zedat.fu-berlin.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="eB1FrXnt"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2e09138a2b1so40036041fa.3
-        for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 11:47:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715453257; x=1716058057; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BuJ6CwAMNvaLdIW7Ij5QqE6r9837KCVxY1U3dFFJNyg=;
-        b=eB1FrXntt7AkMenK4PFJm4pXaF5r1aCXKaSCX5JwUGYlnJmtgF/kvQCgh12+GRQYxs
-         qKcGi1e/5UoFNKdpyEPHinAA2bpW8R4aSZksR3DmedxVtJ6mbDYjO2wvEZUTG6+V58rz
-         SLKVsQbdHBahcm+48cEISh9SRGl14/IcMl2KgkFpJ/DtLR9nVj8BVd4x2DjpOV60RxJH
-         F+r0zgVC6CujqiOqvvrTLSh0PsGbvRespqro2SzMrWw9xjGCYLaTWXM28caBxMmtiSaE
-         9dHAQhmKv7rH1c803ETD6QR1CizD+PdKhmKvRZgbXQ9ngaCcfu0PCvuIwscr07x5x5Mo
-         oHgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715453257; x=1716058057;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BuJ6CwAMNvaLdIW7Ij5QqE6r9837KCVxY1U3dFFJNyg=;
-        b=bAFdGSdljklmJhZDnNtL4KVRHxXBNxVKbnT67tMc/NomuY7T2qQakWs/GVdqfjw1Ht
-         LiGpEEv92zmOxl4GEdZhY2966VNfdMn8YKQ42HYlzYujEmGV7JVrpDr+W6jbuGLEmN3+
-         7N4eOnDMIIW/WXQhM9kEirIHrvPUhy5ATbFmmdZ5GpXhy/v6/ExlwNGauzeM2PXwrxFZ
-         2nxXpIOphzbLQHbBDlJswE6wYmNaJYxixmSkZv6AW0SiwGKphpmfNc5ju/AwY+xCtHx4
-         ++I39QiihY2kxRhtXqHLxwsuFyWqWdKxQUq2buzl/JtQ/tcrkAxO8P0UyDPnJZo+gnXK
-         cPsA==
-X-Forwarded-Encrypted: i=1; AJvYcCWhDfNyN+jJIykD7p9jOAnc1//As0DjGf0fX45IgyXj/C1c8uPb+3GblHddMqGwkwJadzopzjHcK/oPDsmlFqv9uGXvzWKsls1n01H8
-X-Gm-Message-State: AOJu0Yyul6xk+ZZ3m1/Hez4j+qrXSatRVwPL5Pk2u+y/AQjVMtK1tUru
-	0xm8sRFI0cOfwKFYbOdCFBy0xiFAuyouImfqXxoNsDcYIwgNfZ66HPJOXm0Yb8szKG1SZo8F5r3
-	2p9YcGLx+NA/0CJ9eNpk9ynrlo1xNPwyJXiy8Pg==
-X-Google-Smtp-Source: AGHT+IGj8EW8cP9HdJkRuf6X8EYKSYb8VGuoFRypZ4xZxIbbcBdpQwwEMt4n9/cs066lBCUiOGPepJWdPvsEQNjXQss=
-X-Received: by 2002:a2e:8794:0:b0:2d8:34ec:54e6 with SMTP id
- 38308e7fff4ca-2e5204ccd8fmr33387821fa.33.1715453257450; Sat, 11 May 2024
- 11:47:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fu-berlin.de header.i=@fu-berlin.de header.b="O4LTdbdz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=fu-berlin.de; s=fub01; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=+C5DKYAlg3cMiKtrMKxk4T7Nydf3Ps1wF3CouTFVjJw=; t=1715453351; x=1716058151; 
+	b=O4LTdbdzXTb5M44NDlmzpcs19iSOZ1wtAKogBQ+Ih7YYMYZJBtFRP5GhkiDwSn/PIW820kjvvgS
+	vO5Q2iItsbANz4GYiszeEMl1eUE+zjFBn0cDgWuEMQ170O+LtUGyInz80Z/y5FJRwEmpjMK++0YpO
+	OFdDUq9ntSsVURym5BGdlh6G9I1/kkxWrlKToib4MBPBSNwhRn5gWXMgNV5bcWc1HEPcJ4ZV1hy7+
+	dArZpRx0NK4Ijq6coQQCYVuTcv2tNXwOc9lQhvjCuZ/F39ZUgxdfL+9YIpEfwvQkoczUIt/JkS9Dd
+	7/e+OJkFBNsbuMRJeO1ickYUYO3hbQXSPbgg==;
+Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
+          by outpost.zedat.fu-berlin.de (Exim 4.97)
+          with esmtps (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@zedat.fu-berlin.de>)
+          id 1s5rmO-00000003WCk-3IU3; Sat, 11 May 2024 20:49:08 +0200
+Received: from dynamic-078-055-008-036.78.55.pool.telefonica.de ([78.55.8.36] helo=suse-laptop.fritz.box)
+          by inpost2.zedat.fu-berlin.de (Exim 4.97)
+          with esmtpsa (TLS1.3)
+          tls TLS_AES_256_GCM_SHA384
+          (envelope-from <glaubitz@physik.fu-berlin.de>)
+          id 1s5rmO-00000002cPb-2NbP; Sat, 11 May 2024 20:49:08 +0200
+Message-ID: <7432d241b538819b603194bfb3a306faf360d4b1.camel@physik.fu-berlin.de>
+Subject: Re: [GIT PULL] alpha: cleanups and build fixes for 6.10
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+To: paulmck@kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Linus Torvalds
+ <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, Linux-Arch
+ <linux-arch@vger.kernel.org>, linux-alpha@vger.kernel.org, Richard
+ Henderson <richard.henderson@linaro.org>, Ivan Kokshaysky
+ <ink@jurassic.park.msu.ru>,  Matt Turner <mattst88@gmail.com>, Alexander
+ Viro <viro@zeniv.linux.org.uk>
+Date: Sat, 11 May 2024 20:49:08 +0200
+In-Reply-To: <46543a98-4767-471a-91be-20fb60ab138b@paulmck-laptop>
+References: <71feb004-82ef-4c7b-9e21-0264607e4b20@app.fastmail.com>
+	 <e383dfe5-814a-4a87-befc-4831a7788f42@app.fastmail.com>
+	 <6e6dae45ffbf7a6ab54175695a3e21207c6f5126.camel@physik.fu-berlin.de>
+	 <46543a98-4767-471a-91be-20fb60ab138b@paulmck-laptop>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240510064053.278257-1-Mariel.Tinaco@analog.com>
- <20240510064053.278257-2-Mariel.Tinaco@analog.com> <CAMknhBFXk07HbP_pPg5wkW-9Ah2-66kGzZFvcvBNrbjfguHb4g@mail.gmail.com>
- <20240511172500.718fe12d@jic23-huawei>
-In-Reply-To: <20240511172500.718fe12d@jic23-huawei>
-From: David Lechner <dlechner@baylibre.com>
-Date: Sat, 11 May 2024 13:47:26 -0500
-Message-ID: <CAMknhBE9mJUXsKYVwHb=6d3tVk9DiODWjqtzv9q+zSer5XqrqQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: iio: dac: add docs for ad8460
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Mariel Tinaco <Mariel.Tinaco@analog.com>, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Marcelo Schmitt <marcelo.schmitt1@gmail.com>, 
-	Dimitri Fedrau <dima.fedrau@gmail.com>, Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Original-Sender: glaubitz@physik.fu-berlin.de
+X-ZEDAT-Hint: PO
 
-On Sat, May 11, 2024 at 11:25=E2=80=AFAM Jonathan Cameron <jic23@kernel.org=
-> wrote:
->
-> On Fri, 10 May 2024 12:28:19 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
->
-> > On Fri, May 10, 2024 at 1:42=E2=80=AFAM Mariel Tinaco <Mariel.Tinaco@an=
-alog.com> wrote:
-> > >
-> > > This adds the bindings documentation for the 14-bit
-> > > High Voltage, High Current, Waveform Generator
-> > > Digital-to-Analog converter.
-> > >
-> > > Signed-off-by: Mariel Tinaco <Mariel.Tinaco@analog.com>
-> > > ---
-> > >  .../bindings/iio/dac/adi,ad8460.yaml          | 67 +++++++++++++++++=
-++
-> > >  MAINTAINERS                                   |  7 ++
-> > >  2 files changed, 74 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/dac/adi,ad8=
-460.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad8460.yam=
-l b/Documentation/devicetree/bindings/iio/dac/adi,ad8460.yaml
-> > > new file mode 100644
-> > > index 000000000..924f76209
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad8460.yaml
-> > > @@ -0,0 +1,67 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > +# Copyright 2024 Analog Devices Inc.
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/iio/dac/adi,ad8460.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Analog Devices AD8460 DAC
-> > > +
-> > > +maintainers:
-> > > +  - Mariel Tinaco <mariel.tinaco@analog.com>
-> > > +
-> > > +description: |
-> > > +  Analog Devices AD8460 110 V High Voltage, 1 A High Current,
-> > > +  Arbitrary Waveform Generator with Integrated 14-Bit High Speed DAC
-> > > +  https://www.analog.com/media/en/technical-documentation/data-sheet=
-s/ad8460.pdf
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - adi,ad8460
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  spi-max-frequency:
-> > > +    maximum: 20000000
-> > > +
-> > > +  vref-supply:
-> >
-> > It would be nice to make the property name match the pin name since
-> > there is more than one reference voltage input.
-> >
-> > refio-1p2v-supply:
-> >
-> > > +    description: Drive voltage in the range of 1.2V maximum to as lo=
-w as
-> > > +      low as 0.12V through the REF_IO pin to adjust full scale outpu=
-t span
-> >
-> > I don't seen anything in the datasheet named REF_IO. Is this a typo
-> > and it should be REFIO_1P2V?
-> >
-> > > +
-> > > +  clocks:
-> > > +    description: The clock for the DAC. This is the sync clock
-> > > +
-> > > +  adi,rset-ohms:
-> > > +    description: Specify value of external resistor connected to FS_=
-ADJ pin
-> > > +      to establish internal HVDAC's reference current I_REF
-> > > +    minimum: 2000
-> > > +    maximum: 20000
-> > > +
-> >
-> > I see lots more pins on the datasheet, many of which should be trivial
-> > to add bindings for (we prefer to have the bindings as complete as
-> > possible even if the driver doesn't implement everything). Potential
-> > candidates:
-> >
-> > sdn-reset-gpios: (active high)
-> > reset-gpios: (active low)
-> > sdn-io-gpios: (active high)
-> >
-> > hvcc-supply:
-> > hvee-supply:
-> > vcc-5v-supply:
-> > vref-5v-supply:
-> > dvdd-3p3v-supply:
-> > avdd-3p3v-supply:
-> >
-> > It also looks like there is a parallel interface for data, so I would
-> > expect to see an io-backends property that links to the PHY used for
-> > handling that.
-> >
-> Ultimately yes, but the parallel interface might require some decisions o=
-n
-> binding that are non obvious until it's actually implemented. So maybe
-> don't need that bit from the start.  The rest I agree should be here.
->
->
+Hi Paul,
 
-Since the driver patch uses a DMA channel that isn't documented here,
-I am assuming that the parallel interface is being used so we do need
-to consider it now. :-)
+On Fri, 2024-05-10 at 15:28 -0700, Paul E. McKenney wrote:
+> > I'm still against dropping pre-EV56 so quickly without a proper phaseou=
+t period.
+> > Why not wait for the next LTS release? AFAIK pre-EV56 support is not br=
+oken, is
+> > it?
+>=20
+> Sadly, yes, it is, and it has been broken in mainline for almost two
+> years.
+
+Could you elaborate what exactly is broken? I'm just trying to understand t=
+he reasoning.
+
+Adrian
+
+--=20
+ .''`.  John Paul Adrian Glaubitz
+: :' :  Debian Developer
+`. `'   Physicist
+  `-    GPG: 62FF 8A75 84E0 2956 9546  0006 7426 3B37 F5B5 F913
