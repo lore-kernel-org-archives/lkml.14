@@ -1,319 +1,246 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA1A17F3
-	for <linux-kernel@vger.kernel.org>; Sat, 11 May 2024 10:13:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9F32F26;
+	Sat, 11 May 2024 10:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715422385; cv=none; b=VGQLqfk0/Yf26cJDv9ju57WuSr0t1zp8sdIRdYXpecqsDcLfKL9lVrRVp1XRimAsTPfeE2W1SjqKvLeJnYhJTbkA5MJZl+qoi5Y4ond5tNC2x/Cafyx2baQLwA4E34+gbK8/OwCbtRJ5srXuk17oh4fmzh7YRPXfVevWclYvQJ8=
+	t=1715422700; cv=none; b=GmomvJ+7wnVHIna4vNxbPvVAJEIvQajdMb4QPF0nH6TP8f7iOIlMPLzVLaQpejntfesdC0+lu3CW/ukSl0H8iQoDh0R4nucsIaYqQcDhh7GQwdlkN/2/6gOV63U1YJ6VbwDNW6n6mPTRj0sB5h2JgcvuosSor13ZYkyQQ5CH/HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715422385; c=relaxed/simple;
-	bh=X9lQ1i8RpWuTDiej6FewivbHJv1S+ML018lXXyggYd8=;
+	s=arc-20240116; t=1715422700; c=relaxed/simple;
+	bh=O0xewY3Y5Jb5OD/3Rs+2TXsH4TbN9Y5C4D+AfGM6Zxg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iXktxYhZyzWIIZD1I588kh/9vdsgXL1Kpysa+pKQAUxxHPu29Nt5qpZH1mnASas+17jWNZgH/Kx508Zm45Wxr8fi+ma3XzSs5dj1PDNaHCvQ6cfAbFlA8I86Ch71xUl9WPTBKGh/jtR0umHjiZE/+SBWgWN0ypHxP4xIhxHQpcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LYYorBf7; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=b5XGo2lialv0qkXvGiihYjCqsgVQiS1JSl+nfaAV4UZ3y3yX6f6Fa6raWY6waz1BIiBfHhRfSwUCnNQTm+EwYEGjVAXwbos3mLsW177j0e57UZSPl85KDHXR3KlEGKgghPDqZhk++vx/397xMJshYViQeoS4b339vb1Yk1Ut+zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=DKtzd3Su; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LYYorBf7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715422383; x=1746958383;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=X9lQ1i8RpWuTDiej6FewivbHJv1S+ML018lXXyggYd8=;
-  b=LYYorBf7+iFEsJIx5NUV+7YM4N5mBdZiUp4oJBNcm7+p8XMiyZycUhJR
-   SxHQ4gvBIeXDo0ezjTQpWDwxrtpewL6oSdspPBFDvDFNL4SKXV+kxdvhS
-   /1V+cBAnetRNvmb4SFYG7Ndy+AwEeGmgEj0Ms8+ImvkFKNxIJfbEPecUL
-   mlRcOo7sEaNBEQAqS5Axdi32RB8ioqqqmJgrshjL3HI8md7CYLjTgD32T
-   mBAYwU4vL9mfzOa+6eNcfsnPQSoeesuVRPlfK8NCf+v9jfnhB/V18qvrx
-   83HUBda7jTy8opWkbt+ZEAZRUivaSILkorZm+7rS718rUQF2oPm4kz2Yu
-   Q==;
-X-CSE-ConnectionGUID: dM7izCs0R6WG5njdM5vfPg==
-X-CSE-MsgGUID: HfpoxqgYRzCYMnL/FVyb4Q==
-X-IronPort-AV: E=McAfee;i="6600,9927,11069"; a="11545194"
-X-IronPort-AV: E=Sophos;i="6.08,153,1712646000"; 
-   d="scan'208";a="11545194"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2024 03:13:02 -0700
-X-CSE-ConnectionGUID: 1HetjDiuTgyfZxyT8d00Vw==
-X-CSE-MsgGUID: 959m47TSSFiOZo/J85m2ig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,153,1712646000"; 
-   d="scan'208";a="29727685"
-Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 11 May 2024 03:12:59 -0700
-Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1s5jir-0007E7-0M;
-	Sat, 11 May 2024 10:12:57 +0000
-Date: Sat, 11 May 2024 18:12:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Kousik Sanagavarapu <five231003@gmail.com>, Nishanth Menon <nm@ti.com>,
-	Santosh Shilimkar <ssantosh@kernel.org>,
-	Julia Lawall <julia.lawall@inria.fr>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Kousik Sanagavarapu <five231003@gmail.com>
-Subject: Re: [PATCH 2/3] soc: ti: knav_qmss_queue: do device_node auto cleanup
-Message-ID: <202405111846.3m9z398l-lkp@intel.com>
-References: <20240510071432.62913-3-five231003@gmail.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="DKtzd3Su"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id D720C40E016A;
+	Sat, 11 May 2024 10:18:13 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id 5d3Fh0OE80Bw; Sat, 11 May 2024 10:18:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1715422690; bh=OWiW3+Pv1PHgnBB9aOP0p9srtw8n5xByedUyYyJohrQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DKtzd3Suq42E445Ys800MflaKzKL/t+f2IE/nuTcCvY+qSzRtYBJX1fUzD6X4bc0w
+	 4lBQt+IiQuJoneh1wnZK35b3FrTZwFEy6Oz24JM2JQpIowf76hBIpPKc4Cp2b3yFYb
+	 Gs9jXbx8WKJEswJL183a/f9ncBJEBABVuSv5iQ+UHZAdp2lmGSR510w8AwTyRjN20V
+	 lpb2XAoIMfGB1ttF6Ic1r5rxq9witRmqaLDBNvJdNqxYQ9i7lRibzcYsUz7/vR5mjy
+	 ItffzVSf/m6opBDMdtBYsLgZmHmkoyvzVHdLZcI1relrEqj6vJO3AXvfYYLWT5H+8j
+	 kB2KxVxBDNXxTBwb4z4XkPndnAk0+l3CDvOEMRdIr/CD6cyqXOPzO2ZrjLhxRFmHjP
+	 VdXtmk+OiA86+br87CaKvlL81SUoN8KgF6T1qE/AiTtuE305nD76ETC3zTKW5iWyKu
+	 Jkd/dSNcUNwQy6yHha7nZ0kZSCbJLZ2kivpcbN7BoOjuhCORY3UhxpbZeCYEbfMxRI
+	 IDZquGjtvp0BjbIr7Aw1c7AiCtMcKxIRRR2RcTV+FiI1glo0pxT7DVnJdFAaLeivMD
+	 9cfHOXQabloDRE6Pa7JS/BAgwwf4DTChNl/RDmtnr43rMIiHCaptgU0XJNWad/1IrH
+	 osI6PeDIC9ZhddFbI0sv+3x4=
+Received: from zn.tnic (pd953020b.dip0.t-ipconnect.de [217.83.2.11])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ECC9E40E022F;
+	Sat, 11 May 2024 10:17:23 +0000 (UTC)
+Date: Sat, 11 May 2024 12:17:19 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Dan Williams <dan.j.williams@intel.com>
+Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Shiju Jose <shiju.jose@huawei.com>,
+	"linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"dave@stgolabs.net" <dave@stgolabs.net>,
+	"dave.jiang@intel.com" <dave.jiang@intel.com>,
+	"alison.schofield@intel.com" <alison.schofield@intel.com>,
+	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>,
+	"ira.weiny@intel.com" <ira.weiny@intel.com>,
+	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"david@redhat.com" <david@redhat.com>,
+	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
+	"leo.duran@amd.com" <leo.duran@amd.com>,
+	"Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>,
+	"jiaqiyan@google.com" <jiaqiyan@google.com>,
+	"tony.luck@intel.com" <tony.luck@intel.com>,
+	"Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+	"rafael@kernel.org" <rafael@kernel.org>,
+	"lenb@kernel.org" <lenb@kernel.org>,
+	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	"jthoughton@google.com" <jthoughton@google.com>,
+	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>,
+	"erdemaktas@google.com" <erdemaktas@google.com>,
+	"pgonda@google.com" <pgonda@google.com>,
+	"duenwen@google.com" <duenwen@google.com>,
+	"mike.malvestuto@intel.com" <mike.malvestuto@intel.com>,
+	"gthelen@google.com" <gthelen@google.com>,
+	"wschwartz@amperecomputing.com" <wschwartz@amperecomputing.com>,
+	"dferguson@amperecomputing.com" <dferguson@amperecomputing.com>,
+	"wbs@os.amperecomputing.com" <wbs@os.amperecomputing.com>,
+	"nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
+	tanxiaofei <tanxiaofei@huawei.com>,
+	"Zengtao (B)" <prime.zeng@hisilicon.com>,
+	"kangkang.shen@futurewei.com" <kangkang.shen@futurewei.com>,
+	wanghuiqiang <wanghuiqiang@huawei.com>,
+	Linuxarm <linuxarm@huawei.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [RFC PATCH v8 01/10] ras: scrub: Add scrub subsystem
+Message-ID: <20240511101705.GAZj9FoVbThp7JUK16@fat_crate.local>
+References: <4ceb38897d854cc095fca1220d49a4d2@huawei.com>
+ <20240508192546.GHZjvRuvtu0XSJbkmz@fat_crate.local>
+ <20240509101939.0000263a@Huawei.com>
+ <D9511DC1-1566-473A-A426-111BB1F7F9F0@alien8.de>
+ <20240509200306.GAZj0r-h5Tnc0ecIOz@fat_crate.local>
+ <663d3e58a0f73_1c0a1929487@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240509215147.GBZj1Fc06Ieg8EQfnR@fat_crate.local>
+ <663d55515a2d9_db82d2941e@dwillia2-xfh.jf.intel.com.notmuch>
+ <20240510092511.GBZj3n9ye_BCSepFZy@fat_crate.local>
+ <663e55c59d9d_3d7b429475@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240510071432.62913-3-five231003@gmail.com>
+In-Reply-To: <663e55c59d9d_3d7b429475@dwillia2-mobl3.amr.corp.intel.com.notmuch>
 
-Hi Kousik,
+On Fri, May 10, 2024 at 10:13:41AM -0700, Dan Williams wrote:
+> In fact this question matches my reaction to the last posting [1], and
+> led to a much improved cover letter and the "Comparison of scrubbing
+> features". To your point there are scrub capabilities already in the
+> kernel and we would need to make a decision about what to do about them.
 
-kernel test robot noticed the following build errors:
+The answer to that question is whether this new userspace usage is going
+to want to control those too.
 
-[auto build test ERROR on clk/clk-next]
-[also build test ERROR on soc/for-next linus/master v6.9-rc7 next-20240510]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+So
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Kousik-Sanagavarapu/soc-ti-pruss-do-device_node-auto-cleanup/20240510-151656
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-patch link:    https://lore.kernel.org/r/20240510071432.62913-3-five231003%40gmail.com
-patch subject: [PATCH 2/3] soc: ti: knav_qmss_queue: do device_node auto cleanup
-config: arm-defconfig (https://download.01.org/0day-ci/archive/20240511/202405111846.3m9z398l-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240511/202405111846.3m9z398l-lkp@intel.com/reproduce)
+"Use case of scrub control feature"
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202405111846.3m9z398l-lkp@intel.com/
+from the cover letter is giving two short sentences about what one would
+do but I'm still meh. A whole subsystem needing a bunch of effort would
+need a lot more justification.
 
-All errors (new ones prefixed by >>):
+So can anyone please elaborate more on the use cases and why this new
+thing is needed?
 
->> drivers/soc/ti/knav_qmss_queue.c:1853:3: error: cannot jump from this goto statement to its label
-                   goto err;
-                   ^
-   drivers/soc/ti/knav_qmss_queue.c:1855:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *regions __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1840:3: error: cannot jump from this goto statement to its label
-                   goto err;
-                   ^
-   drivers/soc/ti/knav_qmss_queue.c:1855:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *regions __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1835:3: error: cannot jump from this goto statement to its label
-                   goto err;
-                   ^
-   drivers/soc/ti/knav_qmss_queue.c:1855:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *regions __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1831:3: error: cannot jump from this goto statement to its label
-                   goto err;
-                   ^
-   drivers/soc/ti/knav_qmss_queue.c:1855:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *regions __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1822:4: error: cannot jump from this goto statement to its label
-                           goto err;
-                           ^
-   drivers/soc/ti/knav_qmss_queue.c:1855:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *regions __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1826:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *queue_pools __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1818:4: error: cannot jump from this goto statement to its label
-                           goto err;
-                           ^
-   drivers/soc/ti/knav_qmss_queue.c:1855:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *regions __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1826:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *queue_pools __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1810:3: error: cannot jump from this goto statement to its label
-                   goto err;
-                   ^
-   drivers/soc/ti/knav_qmss_queue.c:1855:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *regions __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1826:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *queue_pools __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1813:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *pdsps __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1806:3: error: cannot jump from this goto statement to its label
-                   goto err;
-                   ^
-   drivers/soc/ti/knav_qmss_queue.c:1855:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *regions __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1826:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *queue_pools __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1813:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *pdsps __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1795:3: error: cannot jump from this goto statement to its label
-                   goto err;
-                   ^
-   drivers/soc/ti/knav_qmss_queue.c:1855:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *regions __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1826:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *queue_pools __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1813:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *pdsps __free(device_node) =
-                               ^
-   drivers/soc/ti/knav_qmss_queue.c:1801:22: note: jump bypasses initialization of variable with __attribute__((cleanup))
-           struct device_node *qmgrs __free(device_node) =
-                               ^
-   9 errors generated.
+> I called out NVDIMM ARS as one example and am open to exploring
+> converting that to the common scrub ABI, but not block this proposal
+> in the meantime.
+>
+> For me the proposal can be boiled down to, "here we (kernel community)
+> are again with 2 new scrub interfaces to add to the kernel. Lets step
+> back, define a common ABI for ACPI RAS 2 and CXL to stop the
+> proliferation of scrub ABIs, and then make a decision about when/whether
+> to integrate legacy scrub facilities into this new interface".
 
+Fully agreed as long as there's valid users for it and we don't end up
+designing and supporting an interface which people are not sure if
+anyone uses. ras_userspace_consumers() from the other thread
+case-in-point.
 
-vim +1853 drivers/soc/ti/knav_qmss_queue.c
+> [1]: http://lore.kernel.org/r/65d6936952764_1138c7294e@dwillia2-xfh.jf.intel.com.notmuch
+^^^^^
 
-350601b4f7ab45 Murali Karicheri    2018-04-17  1754  
-41f93af900a20d Sandeep Nair        2014-02-28  1755  static int knav_queue_probe(struct platform_device *pdev)
-41f93af900a20d Sandeep Nair        2014-02-28  1756  {
-41f93af900a20d Sandeep Nair        2014-02-28  1757  	struct device_node *node = pdev->dev.of_node;
-41f93af900a20d Sandeep Nair        2014-02-28  1758  	struct device *dev = &pdev->dev;
-41f93af900a20d Sandeep Nair        2014-02-28  1759  	u32 temp[2];
-41f93af900a20d Sandeep Nair        2014-02-28  1760  	int ret;
-41f93af900a20d Sandeep Nair        2014-02-28  1761  
-41f93af900a20d Sandeep Nair        2014-02-28  1762  	if (!node) {
-41f93af900a20d Sandeep Nair        2014-02-28  1763  		dev_err(dev, "device tree info unavailable\n");
-41f93af900a20d Sandeep Nair        2014-02-28  1764  		return -ENODEV;
-41f93af900a20d Sandeep Nair        2014-02-28  1765  	}
-41f93af900a20d Sandeep Nair        2014-02-28  1766  
-41f93af900a20d Sandeep Nair        2014-02-28  1767  	kdev = devm_kzalloc(dev, sizeof(struct knav_device), GFP_KERNEL);
-41f93af900a20d Sandeep Nair        2014-02-28  1768  	if (!kdev) {
-41f93af900a20d Sandeep Nair        2014-02-28  1769  		dev_err(dev, "memory allocation failed\n");
-41f93af900a20d Sandeep Nair        2014-02-28  1770  		return -ENOMEM;
-41f93af900a20d Sandeep Nair        2014-02-28  1771  	}
-41f93af900a20d Sandeep Nair        2014-02-28  1772  
-50c01a942b2874 Rob Herring         2023-10-09  1773  	if (device_get_match_data(dev))
-350601b4f7ab45 Murali Karicheri    2018-04-17  1774  		kdev->version = QMSS_66AK2G;
-350601b4f7ab45 Murali Karicheri    2018-04-17  1775  
-41f93af900a20d Sandeep Nair        2014-02-28  1776  	platform_set_drvdata(pdev, kdev);
-41f93af900a20d Sandeep Nair        2014-02-28  1777  	kdev->dev = dev;
-41f93af900a20d Sandeep Nair        2014-02-28  1778  	INIT_LIST_HEAD(&kdev->queue_ranges);
-41f93af900a20d Sandeep Nair        2014-02-28  1779  	INIT_LIST_HEAD(&kdev->qmgrs);
-41f93af900a20d Sandeep Nair        2014-02-28  1780  	INIT_LIST_HEAD(&kdev->pools);
-41f93af900a20d Sandeep Nair        2014-02-28  1781  	INIT_LIST_HEAD(&kdev->regions);
-41f93af900a20d Sandeep Nair        2014-02-28  1782  	INIT_LIST_HEAD(&kdev->pdsps);
-41f93af900a20d Sandeep Nair        2014-02-28  1783  
-41f93af900a20d Sandeep Nair        2014-02-28  1784  	pm_runtime_enable(&pdev->dev);
-12eeb74925da70 Minghao Chi         2022-04-18  1785  	ret = pm_runtime_resume_and_get(&pdev->dev);
-41f93af900a20d Sandeep Nair        2014-02-28  1786  	if (ret < 0) {
-e961c0f19450fd Zhang Qilong        2022-11-08  1787  		pm_runtime_disable(&pdev->dev);
-41f93af900a20d Sandeep Nair        2014-02-28  1788  		dev_err(dev, "Failed to enable QMSS\n");
-41f93af900a20d Sandeep Nair        2014-02-28  1789  		return ret;
-41f93af900a20d Sandeep Nair        2014-02-28  1790  	}
-41f93af900a20d Sandeep Nair        2014-02-28  1791  
-41f93af900a20d Sandeep Nair        2014-02-28  1792  	if (of_property_read_u32_array(node, "queue-range", temp, 2)) {
-41f93af900a20d Sandeep Nair        2014-02-28  1793  		dev_err(dev, "queue-range not specified\n");
-41f93af900a20d Sandeep Nair        2014-02-28  1794  		ret = -ENODEV;
-41f93af900a20d Sandeep Nair        2014-02-28  1795  		goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1796  	}
-41f93af900a20d Sandeep Nair        2014-02-28  1797  	kdev->base_id    = temp[0];
-41f93af900a20d Sandeep Nair        2014-02-28  1798  	kdev->num_queues = temp[1];
-41f93af900a20d Sandeep Nair        2014-02-28  1799  
-41f93af900a20d Sandeep Nair        2014-02-28  1800  	/* Initialize queue managers using device tree configuration */
-10e6f93cca367b Kousik Sanagavarapu 2024-05-10  1801  	struct device_node *qmgrs __free(device_node) =
-10e6f93cca367b Kousik Sanagavarapu 2024-05-10  1802  			of_get_child_by_name(node, "qmgrs");
-41f93af900a20d Sandeep Nair        2014-02-28  1803  	if (!qmgrs) {
-41f93af900a20d Sandeep Nair        2014-02-28  1804  		dev_err(dev, "queue manager info not specified\n");
-41f93af900a20d Sandeep Nair        2014-02-28  1805  		ret = -ENODEV;
-41f93af900a20d Sandeep Nair        2014-02-28  1806  		goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1807  	}
-41f93af900a20d Sandeep Nair        2014-02-28  1808  	ret = knav_queue_init_qmgrs(kdev, qmgrs);
-41f93af900a20d Sandeep Nair        2014-02-28  1809  	if (ret)
-41f93af900a20d Sandeep Nair        2014-02-28  1810  		goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1811  
-41f93af900a20d Sandeep Nair        2014-02-28  1812  	/* get pdsp configuration values from device tree */
-10e6f93cca367b Kousik Sanagavarapu 2024-05-10  1813  	struct device_node *pdsps __free(device_node) =
-10e6f93cca367b Kousik Sanagavarapu 2024-05-10  1814  			of_get_child_by_name(node, "pdsps");
-41f93af900a20d Sandeep Nair        2014-02-28  1815  	if (pdsps) {
-41f93af900a20d Sandeep Nair        2014-02-28  1816  		ret = knav_queue_init_pdsps(kdev, pdsps);
-41f93af900a20d Sandeep Nair        2014-02-28  1817  		if (ret)
-41f93af900a20d Sandeep Nair        2014-02-28  1818  			goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1819  
-41f93af900a20d Sandeep Nair        2014-02-28  1820  		ret = knav_queue_start_pdsps(kdev);
-41f93af900a20d Sandeep Nair        2014-02-28  1821  		if (ret)
-41f93af900a20d Sandeep Nair        2014-02-28  1822  			goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1823  	}
-41f93af900a20d Sandeep Nair        2014-02-28  1824  
-41f93af900a20d Sandeep Nair        2014-02-28  1825  	/* get usable queue range values from device tree */
-10e6f93cca367b Kousik Sanagavarapu 2024-05-10  1826  	struct device_node *queue_pools __free(device_node) =
-10e6f93cca367b Kousik Sanagavarapu 2024-05-10  1827  			of_get_child_by_name(node, "queue-pools");
-41f93af900a20d Sandeep Nair        2014-02-28  1828  	if (!queue_pools) {
-41f93af900a20d Sandeep Nair        2014-02-28  1829  		dev_err(dev, "queue-pools not specified\n");
-41f93af900a20d Sandeep Nair        2014-02-28  1830  		ret = -ENODEV;
-41f93af900a20d Sandeep Nair        2014-02-28  1831  		goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1832  	}
-41f93af900a20d Sandeep Nair        2014-02-28  1833  	ret = knav_setup_queue_pools(kdev, queue_pools);
-41f93af900a20d Sandeep Nair        2014-02-28  1834  	if (ret)
-41f93af900a20d Sandeep Nair        2014-02-28  1835  		goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1836  
-41f93af900a20d Sandeep Nair        2014-02-28  1837  	ret = knav_get_link_ram(kdev, "linkram0", &kdev->link_rams[0]);
-41f93af900a20d Sandeep Nair        2014-02-28  1838  	if (ret) {
-41f93af900a20d Sandeep Nair        2014-02-28  1839  		dev_err(kdev->dev, "could not setup linking ram\n");
-41f93af900a20d Sandeep Nair        2014-02-28  1840  		goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1841  	}
-41f93af900a20d Sandeep Nair        2014-02-28  1842  
-41f93af900a20d Sandeep Nair        2014-02-28  1843  	ret = knav_get_link_ram(kdev, "linkram1", &kdev->link_rams[1]);
-41f93af900a20d Sandeep Nair        2014-02-28  1844  	if (ret) {
-41f93af900a20d Sandeep Nair        2014-02-28  1845  		/*
-41f93af900a20d Sandeep Nair        2014-02-28  1846  		 * nothing really, we have one linking ram already, so we just
-41f93af900a20d Sandeep Nair        2014-02-28  1847  		 * live within our means
-41f93af900a20d Sandeep Nair        2014-02-28  1848  		 */
-41f93af900a20d Sandeep Nair        2014-02-28  1849  	}
-41f93af900a20d Sandeep Nair        2014-02-28  1850  
-41f93af900a20d Sandeep Nair        2014-02-28  1851  	ret = knav_queue_setup_link_ram(kdev);
-41f93af900a20d Sandeep Nair        2014-02-28  1852  	if (ret)
-41f93af900a20d Sandeep Nair        2014-02-28 @1853  		goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1854  
-10e6f93cca367b Kousik Sanagavarapu 2024-05-10  1855  	struct device_node *regions __free(device_node) =
-10e6f93cca367b Kousik Sanagavarapu 2024-05-10  1856  			of_get_child_by_name(node, "descriptor-regions");
-41f93af900a20d Sandeep Nair        2014-02-28  1857  	if (!regions) {
-41f93af900a20d Sandeep Nair        2014-02-28  1858  		dev_err(dev, "descriptor-regions not specified\n");
-4cba398f37f868 Zhihao Cheng        2020-11-21  1859  		ret = -ENODEV;
-41f93af900a20d Sandeep Nair        2014-02-28  1860  		goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1861  	}
-41f93af900a20d Sandeep Nair        2014-02-28  1862  	ret = knav_queue_setup_regions(kdev, regions);
-41f93af900a20d Sandeep Nair        2014-02-28  1863  	if (ret)
-41f93af900a20d Sandeep Nair        2014-02-28  1864  		goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1865  
-41f93af900a20d Sandeep Nair        2014-02-28  1866  	ret = knav_queue_init_queues(kdev);
-41f93af900a20d Sandeep Nair        2014-02-28  1867  	if (ret < 0) {
-41f93af900a20d Sandeep Nair        2014-02-28  1868  		dev_err(dev, "hwqueue initialization failed\n");
-41f93af900a20d Sandeep Nair        2014-02-28  1869  		goto err;
-41f93af900a20d Sandeep Nair        2014-02-28  1870  	}
-41f93af900a20d Sandeep Nair        2014-02-28  1871  
-41f93af900a20d Sandeep Nair        2014-02-28  1872  	debugfs_create_file("qmss", S_IFREG | S_IRUGO, NULL, NULL,
-74e0e43a09cea3 Qinglang Miao       2020-09-20  1873  			    &knav_queue_debug_fops);
-a2dd6877b43ef1 Murali Karicheri    2018-04-17  1874  	device_ready = true;
-41f93af900a20d Sandeep Nair        2014-02-28  1875  	return 0;
-41f93af900a20d Sandeep Nair        2014-02-28  1876  
-41f93af900a20d Sandeep Nair        2014-02-28  1877  err:
-41f93af900a20d Sandeep Nair        2014-02-28  1878  	knav_queue_stop_pdsps(kdev);
-41f93af900a20d Sandeep Nair        2014-02-28  1879  	knav_queue_free_regions(kdev);
-41f93af900a20d Sandeep Nair        2014-02-28  1880  	knav_free_queue_ranges(kdev);
-41f93af900a20d Sandeep Nair        2014-02-28  1881  	pm_runtime_put_sync(&pdev->dev);
-41f93af900a20d Sandeep Nair        2014-02-28  1882  	pm_runtime_disable(&pdev->dev);
-41f93af900a20d Sandeep Nair        2014-02-28  1883  	return ret;
-41f93af900a20d Sandeep Nair        2014-02-28  1884  }
-41f93af900a20d Sandeep Nair        2014-02-28  1885  
+Ha, you're speaking what I'm thinking here. :-)
+
+> The scrub_core, like edac_core, has no method to detect scrubbing
+> facility, it is simply a passive library waiting for the first
+> scrub_device_register() call.
+
+Well, those scrub things still have methods which are better than
+nothing. EDAC is ancient. But ok, let's just say they're the same for
+the sake of simplicity.
+
+> Yeah, that's backwards. CXL enumeration belongs in the CXL driver and
+> the CXL driver is fully responsible for deciding when to incur the costs
+> of loading scrub_core.
+
+Ok, fair enough.
+
+> Assume that it does and memory_scrub_control_init() finds no scrub
+> facilities in any CXL devices and fails memory_scrub_control_init(). Any
+> module that links to scrub_device_register() will also fail to load
+> because module symbol resolution depends on all modules completing init.
+
+My angle was: scan the system for *all* possible scrub functionalities
+and if none present, then fail. And since they're only two...
+
+> Sure, but that's a driver-probe-time facility, not a module_init-time
+> facility.
+
+Oh well.
+
+> I assume you do not consider edac_core a mess?
+
+The whole EDAC is a mess but that's a whole another story. :-)
+
+> Now, the question of how many legacy scrub interfaces should be
+> considered in this design out of the gate is a worthwhile discussion. I
+> am encouraged that this ABI is at least trying to handle more than 1
+> backend, which makes me feel better that adding a 3rd and 4th might not
+> be prohibitive.
+
+See above.
+
+I'm perfectly fine with: "hey, we have a new scrub API interfacing to
+RAS scrub capability and it is *the* thing to use and all other hw scrub
+functionality should be shoehorned into it.
+
+So this thing's design should at least try to anticipate supporting
+other scrub hw.
+
+Because there's EDAC too. Why isn't this scrub thing part of EDAC? Why
+isn't this scrub API part of edac_core? I mean, this is all RAS so why
+design a whole new thing when the required glue is already there?
+
+We can just as well have a
+
+	/sys/devices/system/edac/scrub/
+
+node hierarchy and have everything there.
+
+Why does it have to be yet another thing?
+
+And if it needs to be separate, who's going to maintain it?
+
+> Which matches what I reacted to on the last posting:
+> 
+>    "Maybe it is self evident to others, but for me there is little in these
+>     changelogs besides 'mechanism exists, enable it'"
+> 
+> ...and to me that feedback was taken to heart with much improved
+> changelogs in this new posting.
+
+Ok.
+
+> This init time feature probing discussion feels like it was born from a
+> micommunication / misunderstanding.
+
+Yes, it seems so, thanks for clarifying things.
+
+I still am unclear on the usecases and how this is supposed to be used
+and also, as mentioned above, we have a *lot* of RAS functionality
+spread around the kernel. Perhaps we should start unifying it instead of
+adding more...
+
+So the big picture and where we're headed to, needs to be clarified first.
+
+Thx.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
