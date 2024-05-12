@@ -1,245 +1,225 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC55320DD2;
-	Sun, 12 May 2024 12:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74F86EEB9;
+	Sun, 12 May 2024 12:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715516525; cv=none; b=J/AxazDtz2E0GVYDGPaPG+Td3+3AUVx5l7G/tuvdQGlfwvyy5rVWEepieVPNQUuU6LbbApcylwwY1tG04nIuWEtF1Pgrf/S7k2Z+2UE1zBsJTZLMZiGAU6uFY8g0piZ7GEtY6F5ijaH12RPAQ3EbkSIDHr2pJ5ex53YQlsyrBVg=
+	t=1715516667; cv=none; b=nofpZIFBC3loBPJbA4cKPghHyNeh09ko6meEXyxdexJiijbJOsztbTSXqPe+wJbea6VGulYb3e2bSaM0R3vtuD2E/ALGxUFEHBByznENZ28hMzwVGRriogNWsJzrcHKeum4wQwie4xTg4glgf8kYTl+0/8+gd2PgL22djEwEuXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715516525; c=relaxed/simple;
-	bh=vXjpiAWnFIFzITKji76szzy+4Es+7EaqG8Svln0Ps1k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T61c/iwmdxKSioTQjiob+9E2oPX77EtcsqvL3ibfDdfIyt+cP5fHBumq+rCyjHb62iqlLQ7OZci2LEoZ5IFGCKe01zdc6QOiBROpePMHWpgAYeVYo2lbEuv+clyR/AGPwoUtGzBOM4KuuF1Y1wurh4sPAAmQ6M0cp+6icMjTduc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YoTqa+xh; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	s=arc-20240116; t=1715516667; c=relaxed/simple;
+	bh=jJMM2i6oq27/0Pl9pcRhPFbuEM/reU2Nwb+eCq9Vdf8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Bftz4EcMqvxowOyJUQQj2gO0M2AB8YfUjQQYt9CJKJ0qkSfTKecb6wgHsxHZ67b/09dwtJ00WDWrqL/SqUc8tDL0Or1VBe+Nd+LjODPFPYXOqPNoB/I6VQRdzWEDJ72VwV9StkSRRpLFXUHXu40z2A6KYaZEXqCFyvdfjAhawJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D3KsXuRn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YoTqa+xh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715516524; x=1747052524;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vXjpiAWnFIFzITKji76szzy+4Es+7EaqG8Svln0Ps1k=;
-  b=YoTqa+xhtTWGjVVm4KtJPhDx5qRjQhTj++Cg9ghiABSbVgMq4yb4+OBK
-   fDwCna8Cb5/GbYtoMPZAeqyQ68FNLQwkI4U4/aM35vV+uIZXNH3MIoqrh
-   jEpoWZvYnf7cGgTssz87CrTFAQ/G9hk8cVElBnLczCco7uKKt0l2ek4RT
-   aVKxqQ0uBkQkf5M7326FXzN2TxOrGjDUAUUq7kj4YqRSO/ubvaUyFl3mG
-   a3UoGK5gkcjcVkIiQQs4Ge0nuaMogxZkClVafUV5MMGjKRbCt+oAWl82n
-   HnLKwryNTDRNvKnmZdBin/6fvQDeH7ybsqhqvVykdx7qpqbX+bWRVBGDp
-   g==;
-X-CSE-ConnectionGUID: iUxcaWb0TZayf5FwPMnOAQ==
-X-CSE-MsgGUID: Iyy5n9uXS/Gizgz0Lc6OMg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="11594200"
-X-IronPort-AV: E=Sophos;i="6.08,155,1712646000"; 
-   d="scan'208";a="11594200"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2024 05:22:01 -0700
-X-CSE-ConnectionGUID: HHCqyTMnSlat9q9u2aGp0Q==
-X-CSE-MsgGUID: jY3JzaDUSZK8fyVyHiksJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,155,1712646000"; 
-   d="scan'208";a="61258777"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa001.fm.intel.com with ESMTP; 12 May 2024 05:21:59 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 3468F354; Sun, 12 May 2024 15:21:58 +0300 (EEST)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-coco@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCHv4 3/4] x86/tdx: Dynamically disable SEPT violations from causing #VEs
-Date: Sun, 12 May 2024 15:21:53 +0300
-Message-ID: <20240512122154.2655269-4-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240512122154.2655269-1-kirill.shutemov@linux.intel.com>
-References: <20240512122154.2655269-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D3KsXuRn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5867FC116B1;
+	Sun, 12 May 2024 12:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715516666;
+	bh=jJMM2i6oq27/0Pl9pcRhPFbuEM/reU2Nwb+eCq9Vdf8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=D3KsXuRnCJ+16tXSEG/XfLG6T+6cRgvgC7EUWX81V3UKFwnymRx1yG9KTAd7hpA8J
+	 ZtTXu4ckcD+bZXNGAbnn6CwTxRVgZIaK1A/otNng8XXRQ2KX6+5KdT7KmZqVw5ltgX
+	 gb4f9tnvbHoaxi2SF85tdnKdYoDRl8B1kIsjZwtVMeQu3B5ZnqoQheYuvn3YRS9H9i
+	 ckyixoUOvj9ZvfFGoLD2nYQ0fwgKzgtc7QgcmomKf6wlVrympasMrEMMNIvPV8Lcw4
+	 IGYMB8XYdju4YCDLj7KlIBufb2qG6RbFXAsWwgvcCTzQRUDrPqPykUdWAezxxcP3bK
+	 Or/nyEEXhI26Q==
+Date: Sun, 12 May 2024 13:24:12 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: lars@metafoo.de, andriy.shevchenko@linux.intel.com,
+ ang.iglesiasg@gmail.com, mazziesaccount@gmail.com, ak@it-klinger.de,
+ petre.rodan@subdimension.ro, phil@raspberrypi.com, 579lpy@gmail.com,
+ linus.walleij@linaro.org, semen.protsenko@linaro.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Jonathan Cameron
+ <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v6 5/9] iio: pressure: bmp280: Refactorize reading
+ functions
+Message-ID: <20240512132412.35d8fe36@jic23-huawei>
+In-Reply-To: <20240508165207.145554-6-vassilisamir@gmail.com>
+References: <20240508165207.145554-1-vassilisamir@gmail.com>
+	<20240508165207.145554-6-vassilisamir@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Memory access #VE's are hard for Linux to handle in contexts like the
-entry code or NMIs.  But other OSes need them for functionality.
-There's a static (pre-guest-boot) way for a VMM to choose one or the
-other.  But VMMs don't always know which OS they are booting, so they
-choose to deliver those #VE's so the "other" OSes will work.  That,
-unfortunately has left us in the lurch and exposed to these
-hard-to-handle #VEs.
+On Wed,  8 May 2024 18:52:03 +0200
+Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
 
-The TDX module has introduced a new feature.  Even if the static
-configuration is "send nasty #VE's", the kernel can dynamically request
-that they be disabled.
+> For BMP18x, BMP28x, BME280, BMP38x the reading of the pressure
+> value requires an update of the t_fine variable which happens
+> through reading the temperature value.
+> 
+> So all the bmpxxx_read_press() functions of the above sensors
+> are internally calling the equivalent bmpxxx_read_temp() function
+> in order to update the t_fine value. By just looking at the code
+> this functionality is a bit hidden and is not easy to understand
+> why those channels are not independent.
+> 
+> This commit tries to clear these things a bit by splitting the
+> bmpxxx_{read/compensate}_{temp/press/humid}() to the following:
+> 
+> i. bmpxxx_read_{temp/press/humid}_adc(): read the raw value from
+> the sensor.
+> 
+> ii. bmpxx_calc_t_fine(): calculate the t_fine variable.
+> 
+> iii. bmpxxx_get_t_fine(): get the t_fine variable.
+> 
+> iv. bmpxxx_compensate_{temp/press/humid}(): compensate the adc
+> values and return the calculated value.
+> 
+> v. bmpxxx_read_{temp/press/humid}(): combine calls of the
+> aforementioned functions to return the requested value.
+> 
+> Suggested-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
+A few minor things inline.  Given I've picked up the 1st 4 patches,
+please base your v7 on top of those.
 
-Check if the feature is available and disable SEPT #VE if possible.
+Thanks,
 
-If the TD allowed to disable/enable SEPT #VEs, the ATTR_SEPT_VE_DISABLE
-attribute is no longer reliable. It reflects the initial state of the
-control for the TD, but it will not be updated if someone (e.g. bootloader)
-changes it before the kernel starts. Kernel must check TDCS_TD_CTLS bit to
-determine if SEPT #VEs are enabled or disabled.
+Jonathan
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Fixes: 373e715e31bf ("x86/tdx: Panic on bad configs that #VE on "private" memory access")
-Cc: stable@vger.kernel.org
----
- arch/x86/coco/tdx/tdx.c           | 88 +++++++++++++++++++++++++------
- arch/x86/include/asm/shared/tdx.h | 11 +++-
- 2 files changed, 83 insertions(+), 16 deletions(-)
+> ---
+>  drivers/iio/pressure/bmp280-core.c | 361 ++++++++++++++++++-----------
+>  drivers/iio/pressure/bmp280.h      |   6 -
+>  2 files changed, 232 insertions(+), 135 deletions(-)
+> 
+> diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+> index dd5c526dacbd..a864f8db8e24 100644
+> --- a/drivers/iio/pressure/bmp280-core.c
+> +++ b/drivers/iio/pressure/bmp280-core.c
+> @@ -288,13 +288,35 @@ static int bme280_read_calib(struct bmp280_data *data)
+>   *
+>   * Taken from BME280 datasheet, Section 4.2.3, "Compensation formula".
+>   */
 
-diff --git a/arch/x86/coco/tdx/tdx.c b/arch/x86/coco/tdx/tdx.c
-index 1ff571cb9177..ba37f4306f4e 100644
---- a/arch/x86/coco/tdx/tdx.c
-+++ b/arch/x86/coco/tdx/tdx.c
-@@ -77,6 +77,20 @@ static inline void tdcall(u64 fn, struct tdx_module_args *args)
- 		panic("TDCALL %lld failed (Buggy TDX module!)\n", fn);
- }
- 
-+/* Read TD-scoped metadata */
-+static inline u64 tdg_vm_rd(u64 field, u64 *value)
-+{
-+	struct tdx_module_args args = {
-+		.rdx = field,
-+	};
-+	u64 ret;
-+
-+	ret = __tdcall_ret(TDG_VM_RD, &args);
-+	*value = args.r8;
-+
-+	return ret;
-+}
-+
- /* Write TD-scoped metadata */
- static inline u64 tdg_vm_wr(u64 field, u64 value, u64 mask)
- {
-@@ -179,6 +193,62 @@ static void __noreturn tdx_panic(const char *msg)
- 		__tdx_hypercall(&args);
- }
- 
-+/*
-+ * The kernel cannot handle #VEs when accessing normal kernel memory. Ensure
-+ * that no #VE will be delivered for accesses to TD-private memory.
-+ *
-+ * TDX 1.0 does not allow the guest to disable SEPT #VE on its own. The VMM
-+ * controls if the guest will receive such #VE with TD attribute
-+ * ATTR_SEPT_VE_DISABLE.
-+ *
-+ * Newer TDX module allows the guest to control if it wants to receive SEPT
-+ * violation #VEs.
-+ *
-+ * Check if the feature is available and disable SEPT #VE if possible.
-+ *
-+ * If the TD allowed to disable/enable SEPT #VEs, the ATTR_SEPT_VE_DISABLE
-+ * attribute is no longer reliable. It reflects the initial state of the
-+ * control for the TD, but it will not be updated if someone (e.g. bootloader)
-+ * changes it before the kernel starts. Kernel must check TDCS_TD_CTLS bit to
-+ * determine if SEPT #VEs are enabled or disabled.
-+ */
-+static void disable_sept_ve(u64 td_attr)
-+{
-+	const char *msg = "TD misconfiguration: SEPT #VE has to be disabled";
-+	bool debug = td_attr & ATTR_DEBUG;
-+	u64 config, controls;
-+
-+	/* Is this TD allowed to disable SEPT #VE */
-+	tdg_vm_rd(TDCS_CONFIG_FLAGS, &config);
-+	if (!(config & TDCS_CONFIG_FLEXIBLE_PENDING_VE)) {
-+		/* No SEPT #VE controls for the guest: check the attribute */
-+		if (td_attr & ATTR_SEPT_VE_DISABLE)
-+			return;
-+
-+		/* Relax SEPT_VE_DISABLE check for debug TD for backtraces */
-+		if (debug)
-+			pr_warn("%s\n", msg);
-+		else
-+			tdx_panic(msg);
-+		return;
-+	}
-+
-+	/* Check if SEPT #VE has been disabled before us */
-+	tdg_vm_rd(TDCS_TD_CTLS, &controls);
-+	if (controls & TD_CTLS_PENDING_VE_DISABLE)
-+		return;
-+
-+	/* Keep #VEs enabled for splats in debugging environments */
-+	if (debug)
-+		return;
-+
-+	/* Disable SEPT #VEs */
-+	tdg_vm_wr(TDCS_TD_CTLS, TD_CTLS_PENDING_VE_DISABLE,
-+		  TD_CTLS_PENDING_VE_DISABLE);
-+
-+	return;
-+}
-+
- static void tdx_setup(u64 *cc_mask)
- {
- 	struct tdx_module_args args = {};
-@@ -204,24 +274,12 @@ static void tdx_setup(u64 *cc_mask)
- 	gpa_width = args.rcx & GENMASK(5, 0);
- 	*cc_mask = BIT_ULL(gpa_width - 1);
- 
-+	td_attr = args.rdx;
-+
- 	/* Kernel does not use NOTIFY_ENABLES and does not need random #VEs */
- 	tdg_vm_wr(TDCS_NOTIFY_ENABLES, 0, -1ULL);
- 
--	/*
--	 * The kernel can not handle #VE's when accessing normal kernel
--	 * memory.  Ensure that no #VE will be delivered for accesses to
--	 * TD-private memory.  Only VMM-shared memory (MMIO) will #VE.
--	 */
--	td_attr = args.rdx;
--	if (!(td_attr & ATTR_SEPT_VE_DISABLE)) {
--		const char *msg = "TD misconfiguration: SEPT_VE_DISABLE attribute must be set.";
--
--		/* Relax SEPT_VE_DISABLE check for debug TD. */
--		if (td_attr & ATTR_DEBUG)
--			pr_warn("%s\n", msg);
--		else
--			tdx_panic(msg);
--	}
-+	disable_sept_ve(td_attr);
- }
- 
- /*
-diff --git a/arch/x86/include/asm/shared/tdx.h b/arch/x86/include/asm/shared/tdx.h
-index fdfd41511b02..fecb2a6e864b 100644
---- a/arch/x86/include/asm/shared/tdx.h
-+++ b/arch/x86/include/asm/shared/tdx.h
-@@ -16,11 +16,20 @@
- #define TDG_VP_VEINFO_GET		3
- #define TDG_MR_REPORT			4
- #define TDG_MEM_PAGE_ACCEPT		6
-+#define TDG_VM_RD			7
- #define TDG_VM_WR			8
- 
--/* TDCS fields. To be used by TDG.VM.WR and TDG.VM.RD module calls */
-+/* TDX TD-Scope Metadata. To be used by TDG.VM.WR and TDG.VM.RD */
-+#define TDCS_CONFIG_FLAGS		0x1110000300000016
-+#define TDCS_TD_CTLS			0x1110000300000017
- #define TDCS_NOTIFY_ENABLES		0x9100000000000010
- 
-+/* TDCS_CONFIG_FLAGS bits */
-+#define TDCS_CONFIG_FLEXIBLE_PENDING_VE	BIT_ULL(1)
-+
-+/* TDCS_TD_CTLS bits */
-+#define TD_CTLS_PENDING_VE_DISABLE	BIT_ULL(0)
-+
- /* TDX hypercall Leaf IDs */
- #define TDVMCALL_MAP_GPA		0x10001
- #define TDVMCALL_GET_QUOTE		0x10002
--- 
-2.43.0
+Seems this comment should probably follow the maths which has moved.
 
+> +static int bme280_read_humid_adc(struct bmp280_data *data, u16 *adc_humidity)
+> +{
+> +	u16 value_humidity;
+> +	int ret;
+> +
+> +	ret = regmap_bulk_read(data->regmap, BME280_REG_HUMIDITY_MSB,
+> +			       &data->be16, sizeof(data->be16));
+> +	if (ret) {
+> +		dev_err(data->dev, "failed to read humidity\n");
+> +		return ret;
+> +	}
+> +
+> +	value_humidity = be16_to_cpu(data->be16);
+> +	if (value_humidity == BMP280_HUMIDITY_SKIPPED) {
+> +		dev_err(data->dev, "reading humidity skipped\n");
+> +		return -EIO;
+> +	}
+> +	*adc_humidity = value_humidity;
+> +
+> +	return 0;
+> +}
+
+...
+> @@ -313,8 +335,29 @@ static u32 bme280_compensate_humidity(struct bmp280_data *data,
+>   *
+>   * Taken from datasheet, Section 3.11.3, "Compensation formula".
+>   */
+Is this comment still relevant here? Seems it should probably move to follow
+that maths.
+
+> -static s32 bmp280_compensate_temp(struct bmp280_data *data,
+> -				  u32 adc_temp)
+> +static int bmp280_read_temp_adc(struct bmp280_data *data, u32 *adc_temp)
+> +{
+
+>  
+>  static int bmp380_read_press(struct bmp280_data *data, int *val, int *val2)
+>  {
+> -	u32 adc_press, comp_press;
+> +	u32 adc_press, comp_press, t_fine;
+>  	int ret;
+>  
+> -	/* Read and compensate for temperature so we get a reading of t_fine */
+> -	ret = bmp380_read_temp(data, NULL, NULL);
+> +	ret = bmp380_get_t_fine(data, &t_fine);
+>  	if (ret)
+>  		return ret;
+>  
+> -	ret = regmap_bulk_read(data->regmap, BMP380_REG_PRESS_XLSB,
+> -			       data->buf, sizeof(data->buf));
+> -	if (ret) {
+> -		dev_err(data->dev, "failed to read pressure\n");
+> +	ret = bmp380_read_press_adc(data, &adc_press);
+> +	if (ret)
+>  		return ret;
+> -	}
+>  
+> -	adc_press = get_unaligned_le24(data->buf);
+> -	if (adc_press == BMP380_PRESS_SKIPPED) {
+> -		dev_err(data->dev, "reading pressure skipped\n");
+> -		return -EIO;
+> -	}
+> -	comp_press = bmp380_compensate_press(data, adc_press);
+> +	comp_press = bmp380_compensate_press(data, adc_press, t_fine);
+>  
+> +	/* IIO units are in kPa */
+
+Probably worth keeping the reference to what the unit of the
+datasheet maths is around.
+
+>  	*val = comp_press;
+> -	/* Compensated pressure is in cPa (centipascals) */
+>  	*val2 = 100000;
+>  
+>  	return IIO_VAL_FRACTIONAL;
+> @@ -1825,7 +1916,7 @@ static int bmp180_wait_for_eoc(struct bmp280_data *data, u8 ctrl_meas)
+>  	return 0;
+>  }
+
+
+> -static u32 bmp180_compensate_press(struct bmp280_data *data, u32 adc_press)
+> +static u32 bmp180_compensate_press(struct bmp280_data *data, u32 adc_press,
+> +				   s32 t_fine)
+>  {
+>  	struct bmp180_calib *calib = &data->calib.bmp180;
+>  	s32 oss = data->oversampling_press;
+> @@ -1965,7 +2068,7 @@ static u32 bmp180_compensate_press(struct bmp280_data *data, u32 adc_press)
+>  	s32 b3, b6;
+>  	u32 b4, b7;
+>  
+> -	b6 = data->t_fine - 4000;
+> +	b6 = t_fine - 4000;
+>  	x1 = (calib->B2 * (b6 * b6 >> 12)) >> 11;
+>  	x2 = calib->AC2 * b6 >> 11;
+>  	x3 = x1 + x2;
+> @@ -1974,7 +2077,7 @@ static u32 bmp180_compensate_press(struct bmp280_data *data, u32 adc_press)
+>  	x2 = (calib->B1 * ((b6 * b6) >> 12)) >> 16;
+>  	x3 = (x1 + x2 + 2) >> 2;
+>  	b4 = calib->AC4 * (u32)(x3 + 32768) >> 15;
+> -	b7 = (adc_press - b3) * (50000 >> oss);
+> +	b7 = (((u32)adc_press) - b3) * (50000 >> oss);
+
+Casting from u32 to u32?
+
+>  	if (b7 < 0x80000000)
+>  		p = (b7 * 2) / b4;
+>  	else
+> @@ -1990,19 +2093,19 @@ static u32 bmp180_compensate_press(struct bmp280_data *data, u32 adc_press)
+>  static int bmp180_read_press(struct bmp280_data *data, int *val, int *val2)
+
+> +	/* IIO units are in kPa */
+
+I think this is an unrelated improvement as original code doesn't have such a comment.
+So shouldn't really be in this patch. If you want to keep it here rather than pushing it
+into an additional patch, mention it in the commit message. "additional comments on base
+units added for consistency" or something like that.
+>  	*val = comp_press;
+>  	*val2 = 1000;
