@@ -1,64 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C3BBF9F7;
-	Sun, 12 May 2024 12:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5261CD13;
+	Sun, 12 May 2024 12:12:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715515894; cv=none; b=B+4FJpdGAMRzghVRYtHdSwTn5rNj9LQdyOt6qBBwcyrDovNMr/L8vuQUj/H+4uSGALrRf0aqMBTCL73HDsWL59sZWPpBr6FOVYuEA5VvcJGk9JAwEAcvOoWZAMWGPL17G+PjIpBmm+lrQtH/cvLisFjwSqpXdQRc0kYOA7Q7EZQ=
+	t=1715515938; cv=none; b=jlRA5Web5+CPu1+tWLpqlcvkUvk6OPQlpzLjIA3Ef/vJlDJQZ7ciHET1o6LbTNVPbmFXwMCzNm1E5pBiwilH8R3GIeMVA3zLLiuz6nCh5vz9KlCmnWopS4KWdVus2t8xAfjV/KBNi0IIpz1Kd5ssg1i387yhQ84ylmrlQculGG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715515894; c=relaxed/simple;
-	bh=u0MxQHi2aW59U0yVeUT6H8+tdanS6j5VOG+chvjIJ8g=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ATOBO7XHHm5w5cRpA3DTXTIo1gflZifQvjdoRcORv2hoOd+Y43u09pzS22ALlPr/SD1VLCSBKGpSn6kihj/4G8A9MBr7fNXnC3fqO3lhTSZaNO2Nkl7NRfKMm7K+mrDComVzqa5pKPHoHuXwOfI2W+kW0qK7vCFcJXwNUA9W/i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aYNC7Fq/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715515938; c=relaxed/simple;
+	bh=uQn2LpSYH3VSkLT8zOSF6zifQuGNp9REuyof47a4VwA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=j+soa6LsFLTjW0aS2FK+x1jd+PBfuQA3TdJck98J91GeyA0fnwtoDib/8z/A+9WMqYVtUGSt8Bn+MjMtYqsHNcEtN2GFlV63pmmoJNBVXPFGWF9BcOZtkl+riv+EQlxg+ZMTPdNzCulyimFQmnDA0zABroXyQNHPO2038X96F9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AqNnZpM3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aYNC7Fq/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01E96C116B1;
-	Sun, 12 May 2024 12:11:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AqNnZpM3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CF572C32783;
+	Sun, 12 May 2024 12:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715515893;
-	bh=u0MxQHi2aW59U0yVeUT6H8+tdanS6j5VOG+chvjIJ8g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aYNC7Fq/rFRw6svjUNCmJIcWBvymenu01cpCMGq1PEIr2HzjRM7+VicVQMVib/ATn
-	 OwWGuaOpekSJUro9dInH9XkL3niCBVYU584YoMkQYOxCpIUM7BU+kebbVfmXgUGb6e
-	 YviRRSP/AwqzzQ5RcX3c7LZFfm1lmG6YJDKANnC8qQGdYCxlFM5gyFMhqNDLx4vrYq
-	 /owWq8/JpCH+eK232a8oa8wzVkqqbHPSndgTqqO5yGC5PQZFmfWTbNnsjaJpASMBpV
-	 YDPWJ8yCPBglBnmpbXxmf6fXulagZk8rs9bzssXT7tAlGh6GCBzWwyU6xdhKcSOptQ
-	 cmPpQL2RLm4eg==
-Date: Sun, 12 May 2024 13:11:20 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Vasileios Amoiridis <vassilisamir@gmail.com>
-Cc: lars@metafoo.de, andriy.shevchenko@linux.intel.com,
- ang.iglesiasg@gmail.com, mazziesaccount@gmail.com, ak@it-klinger.de,
- petre.rodan@subdimension.ro, phil@raspberrypi.com, 579lpy@gmail.com,
- linus.walleij@linaro.org, semen.protsenko@linaro.org,
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 3/9] iio: pressure: bmp280: Make error checks
- consistent
-Message-ID: <20240512131120.28d0cc7a@jic23-huawei>
-In-Reply-To: <20240508165207.145554-4-vassilisamir@gmail.com>
-References: <20240508165207.145554-1-vassilisamir@gmail.com>
-	<20240508165207.145554-4-vassilisamir@gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=k20201202; t=1715515937;
+	bh=uQn2LpSYH3VSkLT8zOSF6zifQuGNp9REuyof47a4VwA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=AqNnZpM3MZ5HNyZPwo2bV4eQ1+sLLGVHhFFC4vZYXptzUoi4p2vuPTCkBk23SLaPQ
+	 E+aiLzKIBT9goBdCFK/VjCEy06HdZXfinaiASvNGbk4WgptoBjCMFMfMMpukJR7BNP
+	 etcIHwtrNTMmButKi9Yh18kLziysGCaMa8h1h3woL/CIL0z+ItfpMo2yFyh33lvzJn
+	 8Cyn65p0NHcS9L2KiZhjx69mKu8H7whT4havYJWa25KIcaQoHfqb9gt3Uo6zghQR5m
+	 7+yr3Qa/kT9+8ygJ83M9KEjP4Mn+JpWI0XuVpLs1krkw4L8bsK1aKmeoDO2Bgh0dUm
+	 pQ6ysO5elyClw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E7AC10F1A;
+	Sun, 12 May 2024 12:12:17 +0000 (UTC)
+From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
+Date: Sun, 12 May 2024 12:12:07 +0000
+Subject: [PATCH 1/2] Bluetooth: hci_bcm4377: Increase boot timeout
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240512-btfix-msgid-v1-1-ab1bd938a7f4@svenpeter.dev>
+References: <20240512-btfix-msgid-v1-0-ab1bd938a7f4@svenpeter.dev>
+In-Reply-To: <20240512-btfix-msgid-v1-0-ab1bd938a7f4@svenpeter.dev>
+To: Hector Martin <marcan@marcan.st>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ Marcel Holtmann <marcel@holtmann.org>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Sven Peter <sven@svenpeter.dev>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715515936; l=1230;
+ i=sven@svenpeter.dev; s=20240512; h=from:subject:message-id;
+ bh=l5zSo1PIT3qiMZokOHqlZSiHEp61gw9G4TR1ydgJdn8=;
+ b=n9bTv01yWWAEQyW+jcLjnXCkBT8m4v+1sdLTdkCYA3JsdBqYIW4HWVo/du2TPgpdY0+vEtEB4
+ T1TnR3JSZ2OAgeOOqyVSTnayjE6KuEhWnqjURCkz09+JQZmZBnRmMWq
+X-Developer-Key: i=sven@svenpeter.dev; a=ed25519;
+ pk=jIiCK29HFM4fFOT2YTiA6N+4N7W+xZYQDGiO0E37bNU=
+X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/20240512 with
+ auth_id=159
+X-Original-From: Sven Peter <sven@svenpeter.dev>
+Reply-To: sven@svenpeter.dev
 
-On Wed,  8 May 2024 18:52:01 +0200
-Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
+From: Hector Martin <marcan@marcan.st>
 
-> The form 'if (ret)' is used in this driver in order to check
-> for returned error values. There are also some places that
-> 'if (ret < 0)' is used but for no specific reason. Change
-> them to 'if (ret)' to make the driver more consistent.
-> 
-> Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
-Applied.
+BCM4388 takes over 2 seconds to boot, so increase the timeout (and also
+fix the units while we're here).
 
-Thanks,
+Signed-off-by: Hector Martin <marcan@marcan.st>
+Reviewed-by: Sven Peter <sven@svenpeter.dev>
+Signed-off-by: Sven Peter <sven@svenpeter.dev>
+---
+ drivers/bluetooth/hci_bcm4377.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/bluetooth/hci_bcm4377.c b/drivers/bluetooth/hci_bcm4377.c
+index 9a7243d5db71..5b818a0e33d6 100644
+--- a/drivers/bluetooth/hci_bcm4377.c
++++ b/drivers/bluetooth/hci_bcm4377.c
+@@ -32,7 +32,8 @@ enum bcm4377_chip {
+ #define BCM4378_DEVICE_ID 0x5f69
+ #define BCM4387_DEVICE_ID 0x5f71
+ 
+-#define BCM4377_TIMEOUT 1000
++#define BCM4377_TIMEOUT msecs_to_jiffies(1000)
++#define BCM4377_BOOT_TIMEOUT msecs_to_jiffies(5000)
+ 
+ /*
+  * These devices only support DMA transactions inside a 32bit window
+@@ -1857,7 +1858,7 @@ static int bcm4377_boot(struct bcm4377_data *bcm4377)
+ 	dev_dbg(&bcm4377->pdev->dev, "waiting for firmware to boot\n");
+ 
+ 	ret = wait_for_completion_interruptible_timeout(&bcm4377->event,
+-							BCM4377_TIMEOUT);
++							BCM4377_BOOT_TIMEOUT);
+ 	if (ret == 0) {
+ 		ret = -ETIMEDOUT;
+ 		goto out_dma_free;
+
+-- 
+2.34.1
+
+
