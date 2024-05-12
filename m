@@ -1,199 +1,233 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2A2740879;
-	Sun, 12 May 2024 15:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41A0740879
+	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 15:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715527547; cv=none; b=OYEoH0cddImmHgl5YS5dfXP7LgyqPJPr1nFseO4zOdSQqFPBf2nuVOfViI5AvbE+mDfBPV+lIfkJZSXNSXhbx94txRmSWqirja37xo6r9Rqzaq2Sg4lyAlLPezS3r7oxlDpLL4CNvlFIslLowYqk3nOuzkQvyExjJ7Mp0NR8AQg=
+	t=1715527786; cv=none; b=GW32LR0CAMSLKGvWUZ4JBamPa8bSuXJc7vj8QaEUin5txcRYIdiW2XA0mMtwA7sogM44RPdaDG1rJn3pjIZlVhPQDwaRAZQ0i+X6mV7BEm1F+VQ7eWXlIv4KAeexBw4yflBFLQgSfmbtNuRRyhLdeJ9rd9fKQGPYsHh6jFciOvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715527547; c=relaxed/simple;
-	bh=3dqNGvZkC+MMnGTynjmV0t4nfsy//bK88jV+fDke0Aw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=icbhWa7PqmHAJczYY8L02iA+wf5MZuuZ0ZGxe8lXYdGOYI3y9uBMCMmxWRrqpiK3UCL50+Qr9f96ov80prZ+g1bL7Ax1z8GfEYehI2DXvRJMc99CP65jDB5HO1MKeSqls15duleyMhOzk3WqqRv/ZLh+3D5/n3Nrbxo/7iv1Zbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s5tlIij+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715527786; c=relaxed/simple;
+	bh=4RtoKskPkzcF0LL91SvIcSP506czT0YJBI/jZVBpUqM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=be8ViDRjdYHAa1ksRuNZq4PeTdrdsNuBOrtLoBHDg6O1zklVEUzflKVDIf1QyOehPsQeKUS9TC/XoEreUs4MtBq9RQ+3Zx7q9ewSO0gT6cuNjfw1uyLYeYr3X2MYRPvoRAaWmuHVpVlxsCSmZlPtF4hyoMT383/eaITlivWrtbM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io; spf=pass smtp.mailfrom=layalina.io; dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b=d5I/Lvst; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=layalina.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=layalina.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s5tlIij+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3B51DC32786;
-	Sun, 12 May 2024 15:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715527547;
-	bh=3dqNGvZkC+MMnGTynjmV0t4nfsy//bK88jV+fDke0Aw=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=s5tlIij+stR1JggmcdjH85syZjmv6GX+Dt3VoKABm/JbSU2pGQCaWIKrT+ddcdDwQ
-	 9jS4vfTciYjB+sFfJIzOhxc7ampxvbZL00hdvfn6pMp0y1oq1wWbCRc1axGR6zDxnG
-	 GopK/fTxa2ERhaLHUxIACMEV4fimNYdn+LZE8NxWa2zZXhTaF+A4zeAc24xFmoxkJJ
-	 zk5i9Xj9GrKfhLxtxym5IhmAqcpKQILUIbNbbAl2ZScc5BTOnw2EYeT1Psoy6+o/GZ
-	 o6dsJtSMH898tkXbYCsDN8M2Xw44xTHRRNSxKOyopYkgUyfvVfH6b9n3wpHhlL0hrQ
-	 QvgCEOM+ladlA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DB7C25B4F;
-	Sun, 12 May 2024 15:25:47 +0000 (UTC)
-From: =?utf-8?q?Noralf_Tr=C3=B8nnes_via_B4_Relay?= <devnull+noralf.tronnes.org@kernel.org>
-Date: Sun, 12 May 2024 17:25:41 +0200
-Subject: [PATCH v2 4/5] drm/mipi-dbi: Add support for DRM_FORMAT_RGB888
+	dkim=pass (2048-bit key) header.d=layalina-io.20230601.gappssmtp.com header.i=@layalina-io.20230601.gappssmtp.com header.b="d5I/Lvst"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-34d99ec52e1so2843944f8f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 08:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=layalina-io.20230601.gappssmtp.com; s=20230601; t=1715527782; x=1716132582; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ulCsNPhkK7JWi+tclLTU2fNAWwgtOLr+Kj0KyEHWc8I=;
+        b=d5I/Lvstd+PxR0uKe8JMadr45EW39ox63U+ErJglqVA+mRvqMOnId009IZruNEHih5
+         9URgPHFayJgU7F9ePVAifthrkkoZIcv7XDxDTWUg5OfkA8PhmRK44eV7b6qLMfjGD78/
+         4YO6wClouGlUVakp5FIUz3YicAmO09/uUgZUDQkcvijfOi2vD+xdiw+zETQ0MKySNDqv
+         ti9KlED4k9tbNLz/BAgAksyHym89f0VT1UgSxBzne2YrjzwGVMuIklg9CZWWKZiYVaxg
+         sC6jO+VqI137EMZxSPKXfrlGnamY5V/0EXFMfuDfWoThCKXCc9Tl4psURpJnTswRZdb0
+         UW4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715527782; x=1716132582;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ulCsNPhkK7JWi+tclLTU2fNAWwgtOLr+Kj0KyEHWc8I=;
+        b=QHgRvhaM0D62zc8/rHN10qmfzC0nDulEQhOQLPCK2aeGaS/OZcYsU+1DGI8Cd/u2e5
+         DMmPM3VErGq/jsiMBHeUQl4S/UJQnqVRu7ugybJwE1zi9HJl3UCql9jIRYOvlCZNQW9m
+         qy7VcQ5tntlRmSax0YJlTXafnoj6kerWcAflpN05/CdW3MXu8wohWfQr4xdh0gC38Kee
+         S8eyA7xoxMqk2M+WxpQ3qnCCXbWdpLQnpz4k9WxTVIUPY2WEoo0V2kp3DWv0wk9fMgHJ
+         Wm+XbyDK8J8j84Nxm+YJB1qNuLtkw2RPgqOYwV+zGWzR5Bnx19fVEap2qWGHpxaMhkbD
+         2P4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUD4Fm1DxjjPA2I4koedoLx11AP8SlHyhdwXS6Az2ewiC6qw1cXF/5JZxntklfZj3wO5pRXWbb7ERMckxSmCCU0ygSrJJj6Gg2uGPS6
+X-Gm-Message-State: AOJu0YzBSTebkv3zvh0vPEFU5NibKgK5bG1aQaQBAWGjoU1Q1pfgiIDv
+	s1HkpjgFsgkqCeM7EA6u4rJSJvs3b8XvikS7yCADwrTd8s9n9kAtzGkHlnlJ2iE=
+X-Google-Smtp-Source: AGHT+IFidXj0Jp6WwIXMOTr0NTyKKQh/6JrlZHr6gpW2TsGF40zRKnrhaGr2bg52AZ3q/wS9ek9uHA==
+X-Received: by 2002:a5d:6405:0:b0:34d:9dff:1119 with SMTP id ffacd0b85a97d-3504aa63350mr5943715f8f.64.1715527781968;
+        Sun, 12 May 2024 08:29:41 -0700 (PDT)
+Received: from airbuntu (host81-157-90-255.range81-157.btcentralplus.com. [81.157.90.255])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b896a29sm9067710f8f.43.2024.05.12.08.29.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 May 2024 08:29:41 -0700 (PDT)
+Date: Sun, 12 May 2024 16:29:39 +0100
+From: Qais Yousef <qyousef@layalina.io>
+To: Christian Loehle <christian.loehle@arm.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org,
+	peterz@infradead.org, juri.lelli@redhat.com, mingo@redhat.com,
+	dietmar.eggemann@arm.com, vschneid@redhat.com,
+	vincent.guittot@linaro.org, Johannes.Thumshirn@wdc.com,
+	adrian.hunter@intel.com, ulf.hansson@linaro.org, andres@anarazel.de,
+	asml.silence@gmail.com, linux-pm@vger.kernel.org,
+	linux-block@vger.kernel.org, io-uring@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] cpufreq/schedutil: Remove iowait boost
+Message-ID: <20240512152939.uua2sritrwg4zobj@airbuntu>
+References: <20240304201625.100619-1-christian.loehle@arm.com>
+ <20240304201625.100619-3-christian.loehle@arm.com>
+ <CAJZ5v0gMni0QJTBJXoVOav=kOtQ9W--NyXAgq+dXA+m-bciG8w@mail.gmail.com>
+ <5060c335-e90a-430f-bca5-c0ee46a49249@arm.com>
+ <CAJZ5v0janPrWRkjcLkFeP9gmTC-nVRF-NQCh6CTET6ENy-_knQ@mail.gmail.com>
+ <20240325023726.itkhlg66uo5kbljx@airbuntu>
+ <d99fd27a-dac5-4c71-b644-1213f51f2ba0@arm.com>
+ <20240429111816.mqok5biihvy46eba@airbuntu>
+ <80da988f-899e-4b93-a648-ffd0680d4000@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240512-panel-mipi-dbi-rgb666-v2-4-49dd266328a0@tronnes.org>
-References: <20240512-panel-mipi-dbi-rgb666-v2-0-49dd266328a0@tronnes.org>
-In-Reply-To: <20240512-panel-mipi-dbi-rgb666-v2-0-49dd266328a0@tronnes.org>
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Kamlesh Gurudasani <kamlesh.gurudasani@gmail.com>, 
- Tommaso Merciai <tommaso.merciai@amarulasolutions.com>, 
- =?utf-8?q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715527545; l=5004;
- i=noralf@tronnes.org; s=20221122; h=from:subject:message-id;
- bh=W6oL0rQmok4cxorsnLB3NONNFaDQoJFHpq/k5uI9z9M=;
- b=W40wPFxyCV22GVgWBzzdUAm6PP694Wn3d2OAV9DFwWt6ksL0Wxnpacxv7FSOuEs/ibZ2f9AIq
- mAlCIniAkkKBtsL1hj0CG6fGVbqfNy4WIk6DEcJMdW6tTf6J4021ypQ
-X-Developer-Key: i=noralf@tronnes.org; a=ed25519;
- pk=0o9is4iddvvlrY3yON5SVtAbgPnVs0LfQsjfqR2Hvz8=
-X-Endpoint-Received: by B4 Relay for noralf@tronnes.org/20221122 with
- auth_id=8
-X-Original-From: =?utf-8?q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
-Reply-To: noralf@tronnes.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <80da988f-899e-4b93-a648-ffd0680d4000@arm.com>
 
-From: Noralf Trønnes <noralf@tronnes.org>
+On 05/07/24 16:19, Christian Loehle wrote:
+> On 29/04/2024 12:18, Qais Yousef wrote:
+> > On 04/19/24 14:42, Christian Loehle wrote:
+> > 
+> >>> I think the major thing we need to be careful about is the behavior when the
+> >>> task is sleeping. I think the boosting will be removed when the task is
+> >>> dequeued and I can bet there will be systems out there where the BLOCK softirq
+> >>> being boosted when the task is sleeping will matter.
+> >>
+> >> Currently I see this mainly protected by the sugov rate_limit_us.
+> >> With the enqueue's being the dominating cpufreq updates it's not really an
+> >> issue, the boost is expected to survive the sleep duration, during which it
+> >> wouldn't be active.
+> >> I did experiment with some sort of 'stickiness' of the boost to the rq, but
+> >> it is somewhat of a pain to deal with if we want to remove it once enqueued
+> >> on a different rq. A sugov 1ms timer is much simpler of course.
+> >> Currently it's not necessary IMO, but for the sake of being future-proof in
+> >> terms of more frequent freq updates I might include it in v2.
+> > 
+> > Making sure things work with purpose would be really great. This implicit
+> > dependency is not great IMHO and make both testing and reasoning about why
+> > things are good or bad harder when analysing real workloads. Especially by non
+> > kernel developers.
+> 
+> Agreed.
+> Even without your proposed changes [1] relying on sugov rate_limit_us is
+> unfortunate.
+> There is a problem with an arbitrarily low rate_limit_us more generally, not
+> just because we kind of rely on the CPU being boosted right before the task is
+> actually enqueued (for the interrupt/softirq part of it), but also because of
+> the latency from requested frequency improvement to actually running on that
+> frequency. If the task is 90% done by the time it sees the improvement and
+> the frequency will be updated (back to a lower one) before the next enqueue,
+> then that's hardly worth the effort.
 
-DRM_FORMAT_RGB888 is 24 bits per pixel and it would be natural to send it
-on the SPI bus using a 24 bits per word transfer. The problem with this
-is that not all SPI controllers support 24 bpw.
+I think that's why iowait boost is done the way it is today. You need to
+sustain the boost as the thing that need it run for a very short amount of
+time..
 
-Since DRM_FORMAT_RGB888 is stored in memory as little endian and the SPI
-bus is big endian we use 8 bpw to always get the same pixel format on the
-bus: b8g8r8.
+Have you looked at how long the iowait boosted tasks run for in your tests?
 
-The MIPI DCS specification lists the standard commands that can be sent
-over the MIPI DBI interface. The set_address_mode (36h) command has one
-bit in the parameter that controls RGB/BGR order. This means that the
-controller can be configured to receive the pixel as BGR.
+> Currently this is covered by rate_limit_us probabillistically and that seems
 
-RGB888 is rarely supported on these controllers but RGB666 is very common.
-All datasheets I have seen do at least support the pixel format option
-where each color is sent as one byte and the 6 MSB's are used.
+Side note. While looking more at the history of rate_limit_us and why it is set
+soo much higher than reported transition_latency by the driver, I am slowly
+reaching the conclusion that what is happening here is similar to introduction
+of down_rate_limit_us in Android. Our ability to predict system requirement is
+not great and we end up with prematurely lowering frequencies, and this rate
+limit just happens to more likely keep it higher so on average you see better
+perf in various workloads. I hope we can improve on this so we don't rely on
+this magic and enable better usage of the hardware ability to transition
+between frequencies fast and be more exact. I am trying to work on this as part
+of my magic margins series. But I think the story is bigger than that..
 
-All this put together means that we can send each pixel as b8g8r8 and an
-RGB666 capable controller sees this as b6x2g6x2r6x2.
+> to be good enough in practice, but it's not very pleasing (and also EAS can't
+> take it into consideration).
+> That's not just exclusive for iowait wakeup tasks of course, but in theory any
+> that is off the rq frequently (and still requests a higher frequency than it can
+> realistically build up through util_avg like through uclamp_min).
 
-Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
----
- drivers/gpu/drm/drm_mipi_dbi.c | 29 +++++++++++++++++++++++++----
- include/drm/drm_mipi_dbi.h     |  5 +++++
- 2 files changed, 30 insertions(+), 4 deletions(-)
+For uclamp_min, if the task RUNNING duration is shorter than the hardware
+ability to apply the boost, I think there's little we can do. The user can opt
+to boost the system in general. Note that this is likely a problem on systems
+with multi-ms transition_delay_us. If the task is running for few 100s us and
+it really wants to be boosted for this short time then a static system wide
+boost is all we can do to guarantee what it wants. The hardware is poor fit for
+the use case in this scenario. And personally I'd push back against introducing
+complexity to deal with such poor fit scenarios. We can already set min freq
+for the policy via sysfs and uclamp_min can still help with task placement for
+HMP systems.
 
-diff --git a/drivers/gpu/drm/drm_mipi_dbi.c b/drivers/gpu/drm/drm_mipi_dbi.c
-index 77f8a828d6e0..eb330676857c 100644
---- a/drivers/gpu/drm/drm_mipi_dbi.c
-+++ b/drivers/gpu/drm/drm_mipi_dbi.c
-@@ -206,6 +206,7 @@ int mipi_dbi_buf_copy(void *dst, struct iosys_map *src, struct drm_framebuffer *
- 		      struct drm_rect *clip, bool swap,
- 		      struct drm_format_conv_state *fmtcnv_state)
- {
-+	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(fb->dev);
- 	struct drm_gem_object *gem = drm_gem_fb_get_obj(fb, 0);
- 	struct iosys_map dst_map = IOSYS_MAP_INIT_VADDR(dst);
- 	int ret;
-@@ -222,8 +223,18 @@ int mipi_dbi_buf_copy(void *dst, struct iosys_map *src, struct drm_framebuffer *
- 		else
- 			drm_fb_memcpy(&dst_map, NULL, src, fb, clip);
- 		break;
-+	case DRM_FORMAT_RGB888:
-+		drm_fb_memcpy(&dst_map, NULL, src, fb, clip);
-+		break;
- 	case DRM_FORMAT_XRGB8888:
--		drm_fb_xrgb8888_to_rgb565(&dst_map, NULL, src, fb, clip, fmtcnv_state, swap);
-+		switch (dbidev->emulation_format) {
-+		case DRM_FORMAT_RGB565:
-+			drm_fb_xrgb8888_to_rgb565(&dst_map, NULL, src, fb, clip, fmtcnv_state, swap);
-+			break;
-+		case DRM_FORMAT_RGB888:
-+			drm_fb_xrgb8888_to_rgb888(&dst_map, NULL, src, fb, clip, fmtcnv_state);
-+			break;
-+		}
- 		break;
- 	default:
- 		drm_err_once(fb->dev, "Format is not supported: %p4cc\n",
-@@ -260,9 +271,11 @@ static void mipi_dbi_fb_dirty(struct iosys_map *src, struct drm_framebuffer *fb,
- 	struct mipi_dbi_dev *dbidev = drm_to_mipi_dbi_dev(fb->dev);
- 	unsigned int height = rect->y2 - rect->y1;
- 	unsigned int width = rect->x2 - rect->x1;
-+	const struct drm_format_info *dst_format;
- 	struct mipi_dbi *dbi = &dbidev->dbi;
- 	bool swap = dbi->swap_bytes;
- 	int ret = 0;
-+	size_t len;
- 	bool full;
- 	void *tr;
- 
-@@ -283,8 +296,13 @@ static void mipi_dbi_fb_dirty(struct iosys_map *src, struct drm_framebuffer *fb,
- 	mipi_dbi_set_window_address(dbidev, rect->x1, rect->x2 - 1, rect->y1,
- 				    rect->y2 - 1);
- 
--	ret = mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START, tr,
--				   width * height * 2);
-+	if (fb->format->format == DRM_FORMAT_XRGB8888)
-+		dst_format = drm_format_info(dbidev->emulation_format);
-+	else
-+		dst_format = fb->format;
-+	len = drm_format_info_min_pitch(dst_format, 0, width) * height;
-+
-+	ret = mipi_dbi_command_buf(dbi, MIPI_DCS_WRITE_MEMORY_START, tr, len);
- err_msg:
- 	if (ret)
- 		drm_err_once(fb->dev, "Failed to update display %d\n", ret);
-@@ -572,7 +590,7 @@ static const uint32_t mipi_dbi_formats[] = {
-  * has one fixed &drm_display_mode which is rotated according to @rotation.
-  * This mode is used to set the mode config min/max width/height properties.
-  *
-- * Use mipi_dbi_dev_init() if you don't need custom formats.
-+ * Use mipi_dbi_dev_init() if you want native RGB565 and emulated XRGB8888 format.
-  *
-  * Note:
-  * Some of the helper functions expects RGB565 to be the default format and the
-@@ -631,6 +649,9 @@ int mipi_dbi_dev_init_with_formats(struct mipi_dbi_dev *dbidev,
- 	drm->mode_config.min_height = dbidev->mode.vdisplay;
- 	drm->mode_config.max_height = dbidev->mode.vdisplay;
- 	dbidev->rotation = rotation;
-+	dbidev->emulation_format = formats[0];
-+	if (formats[0] == DRM_FORMAT_RGB888)
-+		dbidev->dbi.write_memory_bpw = 8;
- 
- 	DRM_DEBUG_KMS("rotation = %u\n", rotation);
- 
-diff --git a/include/drm/drm_mipi_dbi.h b/include/drm/drm_mipi_dbi.h
-index b36596efdcc3..85bf19b98cee 100644
---- a/include/drm/drm_mipi_dbi.h
-+++ b/include/drm/drm_mipi_dbi.h
-@@ -101,6 +101,11 @@ struct mipi_dbi_dev {
- 	 */
- 	struct drm_display_mode mode;
- 
-+	/**
-+	 * @emulation_format: Pixel format to use when emulating XRGB8888
-+	 */
-+	u32 emulation_format;
-+
- 	/**
- 	 * @tx_buf: Buffer used for transfer (copy clip rect area)
- 	 */
+Now the problem we could have which is similar to iowait boost scenario is when
+there's a chaining effect that requires the boost for the duration of the
+chain.
 
--- 
-2.45.0
+I think we can do something about it if we:
 
+	1. Guarantee the chain will run on the same CPU.
+	2. Introduce a 'sticky' flag for the boost to stay while the chain is
+	   running.
+	3. Introduce a start/finish indication for the chain.
 
+I think we can do something like that with sched-qos [1] to tag the chain via
+a cookie and request the boost to apply to them collectively.
+
+Generally, userspace would be better to collapse this chain into a single task
+that runs in one go.
+
+I don't know how often this scenario exists in practice and what limitations
+exist that make the simple collapse solution infeasible.. So I'd leave this
+out until more info is available.
+
+> 
+> >>>
+> >>> FWIW I do have an implementation for per-task iowait boost where I went a step
+> >>> further and converted intel_pstate too and like Christian didn't notice
+> >>> a regression. But I am not sure (rather don't think) I triggered this use case.
+> >>> I can't tell when the systems truly have per-cpu cpufreq control or just appear
+> >>> so and they are actually shared but not visible at linux level.
+> >>
+> >> Please do share your intel_pstate proposal!
+> > 
+> > This is what I had. I haven't been working on this for the past few months, but
+> > I remember tried several tests on different machines then without a problem.
+> > I tried to re-order patches at some point though and I hope I didn't break
+> > something accidentally and forgot the state.
+> > 
+> > https://github.com/torvalds/linux/compare/master...qais-yousef:linux:uclamp-max-aggregation
+> > 
+> 
+> Thanks for sharing, that looks reasonable with consolidating it into uclamp_min.
+> Couple of thoughts on yours, I'm sure you're aware, but consider it me thinking out
+> loud:
+> - iowait boost is taken into consideration for task placement, but with just the
+> 4 steps that made it more aggressive on HMP. (Potentially 2-3 consecutive iowait
+> wakeups to land on the big instead of running at max OPP of a LITTLE).
+
+Yeah I opted to keep the logic the same. I think there are gains to be had even
+without being smarter about the algorithm. But we do need to improve it, yes.
+The current logic is too aggressive and the perf/power trade-off will be tricky
+in practice.
+
+> - If the current iowait boost decay is sensible is questionable, but there should
+> probably be some decay. Taken to the extreme this would mean something
+> like blk_wait_io() demands 1024 utilization, if it waits for a very long time.
+> Repeating myself here, but iowait wakeups itself is tricky to work with (and I
+> try to work around that).
+
+I didn't get you here. But generally the story can go few levels deep yes. My
+approach was to make incremental progress without breaking existing stuff, but
+help move things in the right direction over time. Fixing everything in one go
+will be hard and not productive.
+
+> - The intel_pstate solution will increase boost even if
+> previous_wakeup->iowait_boost > current->iowait_boost
+> right? But using current->iowait_boost is a clever idea.
+
+I forgot the details now. But I seem to remember intel_pstate had its own
+accounting when it sees iowait boost in intel_pstate_hwp_boost_up/down().
+
+Note that the major worry I had is about the softirq not being boosted.
+Although in my testing this didn't seem to show up as things seemed fine. But
+I haven't dug down to see how accidental this was. I could easily see my
+patches making some use case out there not happy as the softirq might not get
+a chance to see the boost. I got distracted with other stuff and didn't get
+back to the topic since then. I am more than happy to support your efforts
+though :)
+
+[1] https://lore.kernel.org/lkml/20230916213316.p36nhgnibsidoggt@airbuntu/
