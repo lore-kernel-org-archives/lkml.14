@@ -1,215 +1,111 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BFEE2AD18
-	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 17:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE71C46430;
+	Sun, 12 May 2024 17:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715534773; cv=none; b=NpgIJF6smQ1BbqiJ0lPyVEPi5iJnhefr+qYh1GO3eajjKtS106i8A9/I+0Rpxq8A2rcBZatKW9ruUVZajss+eYfavLlaon2L7BY8BgPsC0iKxZrYUb1wxF4kUC3nckoN8DVL9w5J1at2oSDsqtn4ayE3qzbtlFTyd62IV+sMao8=
+	t=1715534915; cv=none; b=giX0ih8IjUnLkktoPmj09lizOhGrpJL6sc1EZbsUmeqqcOrC0UdvMn1GjX6zhCI6FA5z8rd2Krsvvkjw0z5G8My9Inh25eZ18fYWyAMNMldjoNWKmrUeVHZLZfxdDyYNdzCKkZsswOoQev0/rTzgO1P5V9jNvWIbKdZWy5bgwj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715534773; c=relaxed/simple;
-	bh=xNMBE1eDq2BkW9ZD3WrYcNezwvFQKpiPbbHlIyqJ+4g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PQHUitPBd5FeLN32zYJTPHJe4uYnRqeD/BQod1n+3tnXeYOkE5zhqLWt6Wjk5JpQLFkCkVjIs29X1X4RhD9yw2CEukEujBSJoC+RdweRGn2UjeZGAZH8Wb+c0/op7boyM/nwQGu31DTjjjdDjcYEuB1/wQVS2SMyj1hIwV2f3HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=WgcqKrFz; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1715534915; c=relaxed/simple;
+	bh=yoD3v95RGwummZEVUok+lA5erasx7wbDTMozE5Oaj3Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=DAK8Htapvqn7zdIgNwDxjPVzm0dKwSmH55BhmnO/phsXw7Holhi+MwmyQKA9lO5r9b1mZ9nJnODw4vShY0p4J0bKzMZNaCns6Zh8Xq3EXBzg2Xwly45/w1f43Uq/zS2/klhDl22wMtOh1dQ7E7W+nmBar5aoVjiYpiCdGK1lNWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0KyCyDK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="WgcqKrFz"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a59a8f0d941so854034466b.2
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 10:26:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715534769; x=1716139569; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6rp1j3tK1OJVirvDudGud0MNNZLke5KUalkhcuIeFIk=;
-        b=WgcqKrFz/D8/nnIJGTQ+aBSAvBw2vQlYgDngvejtOcQDQw0D48zxd5idKU+o+GBVcH
-         UP1LCcYqbRwu9BoCV4KZun6STWEVILZd8CHwq8roWV9XtwLgZaCQUrwa9JDYF4+QMdZe
-         jWnImHbhxDLEUC/P/J/0XI5OoeDNEQyKfldToobB/L3JQ4BqME3qPDR0jSoRVx1O0D4w
-         I1SFLB/T9iFtNB5jQV/9UVjGle3wPgL4XT14VghrIjLH9A/koWe69H9ly9Q6eyv7wS1u
-         V2PxHqXEEZ0gpCLwYWYauiUx4X+FavbRybicvEul7joTaZ43aD50Q9/Us8+HvRaGAGVR
-         jnlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715534769; x=1716139569;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6rp1j3tK1OJVirvDudGud0MNNZLke5KUalkhcuIeFIk=;
-        b=WABdmxkhULB6TvNKOzJPj5qvTwmg6JGTjHyFMI1INWLxA+8rketR++Hr9O0vwkH6O0
-         1E8RJP5ZpdY/ootWw8GfcE9GELc4kLmT0JEEpZnCtK2X8/QhIUKE+FdEI6TXX+FmVzGk
-         gDYSRnhJ4No/FbDVue5ekIwwDvY4O9pS/3mT4gK8IbYIe9sWTXT6nwCxtTEkd1Vhw9tN
-         QjOiKSxLJ/lglGBfJpKCl8bxkqJzIR6X4pD3XJmCqRUTETetnBsVHquPRRqhc0ziDFCQ
-         4q0xRgImEkw6MIrIC5mYDjt4HgVwee2dNaUSh5Q0y0cyzWYlVysAgR2Lvq4afeFkoB8p
-         vAHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXB/WC3CUhJUomwixqG9V8x636wsmDlSzG0vVJj0AL4xNEBieZmnJatS5BMnmmYVHk4qWOJL/pPNhUJysCulNuVXO1WhW7J4/nldyux
-X-Gm-Message-State: AOJu0Ywf5p56HvLfAzOO4qGL11HUuXcZrCPom1zlKyuj1DsNEMyykrc7
-	UL4WDEu14XJ3X8y0aoCCA8DrX4eSPOET+2IhPbZ5oetoGdqfsi19EqzHsMQv4cILWHn6eOlK18Y
-	7U7i+HClNHIspJVjtXr9OxzrfBjsAZHO+BraI6g==
-X-Google-Smtp-Source: AGHT+IGfyPbzeLrU5udFiEWzczMwwxKepDEGvfHppqzXC9YS60xa54DW1mYug80BN/LUVrhw2FhktXpJfB9RmgP7f3M=
-X-Received: by 2002:a17:907:9405:b0:a5a:542d:ae0a with SMTP id
- a640c23a62f3a-a5a542daf06mr279619566b.63.1715534769414; Sun, 12 May 2024
- 10:26:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0KyCyDK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55A47C116B1;
+	Sun, 12 May 2024 17:28:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715534914;
+	bh=yoD3v95RGwummZEVUok+lA5erasx7wbDTMozE5Oaj3Y=;
+	h=Date:From:To:Cc:Subject:Reply-To:From;
+	b=P0KyCyDKaU8O9AlnA1PLjeK92G0I4K0q1u/Uj08VU2XQSGnNQ1GT7g4fIcd3n0Kai
+	 D0eIJg/O3XOXWD2MR4zs8+0T+GaVul08+B5NsJgIKgh4djYrb+l0r2eZ+Ac9kNbI/e
+	 +sMlKnGgWtgZ5X4wVX8Y5jGQL9Xt3xsI4Gc3soxdIGUtxjaAKo9yPLKxqntjdYM0B8
+	 x/Vtx0n5sd5oIQIzkuv8trjn+w+o5XaoX00L9vYS6smr7hXXPuqYZTJIsQAZ8tYRaH
+	 K3E/+hVSy8cRxaUubCWeuWiSw9LvyjWX3w4Pwzt+ok+8PpPLKd8jasTjxNCfmXC4zj
+	 43xHDByEu6lcA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id A10ADCE105C; Sun, 12 May 2024 10:28:33 -0700 (PDT)
+Date: Sun, 12 May 2024 10:28:33 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-csky@vger.kernel.org, kernel-team@meta.com,
+	viro@zeniv.linux.org.uk, elver@google.com,
+	akpm@linux-foundation.org, tglx@linutronix.de, peterz@infradead.org,
+	dianders@chromium.org, pmladek@suse.com, arnd@arndb.de,
+	yujie.liu@intel.com, guoren@kernel.org
+Subject: [GIT PULL] Native and emulated one-byte cmpxcha()g for v6.10
+Message-ID: <a03cbcce-ac01-46e7-9fd5-c4f0b782c8df@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240508113419.18620-1-alexghiti@rivosinc.com> <6d37f914-d139-48ea-be63-c428ac767cc1@arm.com>
-In-Reply-To: <6d37f914-d139-48ea-be63-c428ac767cc1@arm.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Sun, 12 May 2024 19:25:56 +0200
-Message-ID: <CAHVXubhmihZA50pdaek4=fx83ycdOyuYkRmVLPtZk59uKBoWPw@mail.gmail.com>
-Subject: Re: [PATCH RESEND v2 0/9] Merge arm64/riscv hugetlbfs contpte support
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Ryan,
+Hello, Linus,
 
-On Fri, May 10, 2024 at 3:49=E2=80=AFPM Ryan Roberts <ryan.roberts@arm.com>=
- wrote:
->
-> On 08/05/2024 12:34, Alexandre Ghiti wrote:
-> > This patchset intends to merge the contiguous ptes hugetlbfs implementa=
-tion
-> > of arm64 and riscv.
-> >
-> > Both arm64 and riscv support the use of contiguous ptes to map pages th=
-at
-> > are larger than the default page table size, respectively called contpt=
-e
-> > and svnapot.
-> >
-> > The riscv implementation differs from the arm64's in that the LSBs of t=
-he
-> > pfn of a svnapot pte are used to store the size of the mapping, allowin=
-g
-> > for future sizes to be added (for now only 64KB is supported). That's a=
-n
-> > issue for the core mm code which expects to find the *real* pfn a pte p=
-oints
-> > to. Patch 1 fixes that by always returning svnapot ptes with the real p=
-fn
-> > and restores the size of the mapping when it is written to a page table=
-.
-> >
-> > The following patches are just merges of the 2 different implementation=
-s
-> > that currently exist in arm64 and riscv which are very similar. It pave=
-s
-> > the way to the reuse of the recent contpte THP work by Ryan [1] to avoi=
-d
-> > reimplementing the same in riscv.
->
-> Hi Alexandre,
->
-> I've skimmed through this series and the one that moves contpte. I can se=
-e there
-> is definitely value in sharing the implementation, and the rough shape of=
- things
-> seems appropriate. I had some minor concerns about making it harder to im=
-plement
-> potential future arm64 errata workarounds but on reflection, most of the
-> now-shared code is really just wrapping the primitives that are still arc=
-h-specific.
->
-> I'm going to need to spend proper time reviewing it to give detailed feed=
-back,
-> but I'll be out on paternity leave for 3 weeks from end of Monday at the =
-latest.
+Please pull the following cmpxchg()-related changes:
 
-Too bad, I expected to discuss that with you at LSF/MM...But congrats!
-Hope your wife is fine :)
+  git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git tags/cmpxchg.2024.05.11a
+  # HEAD: 5800e77d88c0cd98bc10460df148631afa7b5e4d: csky: Emulate one-byte cmpxchg (2024-05-11 07:07:07 -0700)
 
-> So realistically I won't be able to do the detailed review until at least=
- the
-> first week of June.
->
-> Some high level thoughts:
->
->  - huge_ptep_* functions could be working on different sized huge ptes - =
-arm64
-> supports contpte, pmd, contpmd and pud. Is keeping them in contpte.c
-> appropriate?
+Please note that the commit and tag are quite recent.  However, the
+only change was to add the architecture maintainer'a ack.  The exact
+same change (other than the ack) has been in -next for quite some time.
 
-Hmm indeed, I'll see what I can do.
+Of course, if you would prefer that this exact commit be in -next for a
+decent interval, please let me know and I will be happy to re-send this
+pull request after a few days in -next.
 
-> Perhaps it's better to keep huge_pte and contpte separate? Also, it
-> only works on arm64 because we can get away with calling the lower-level =
-pte
-> functions even when the huge_pte is actually a contpmd/pmd/pud, because t=
-he
-> format is the same. That might present challenges to other arches if the =
-format
-> is different?
+----------------------------------------------------------------
+sparc32,parisc,csky: Provide one-byte and two-byte cmpxchg() support
 
-Yes, but I think that if that happens, we could get away with it by
-choosing the right function depending on the size of the mapping?
+This series provides native one-byte and two-byte cmpxchg() support
+for sparc32 and parisc, courtesy of Al Viro.  This support is provided
+by the same hashed-array-of-locks technique used for the other atomic
+operations provided for these two platforms.
 
->
->  - It might be easier to review if the arm64 stuff is first moved (withou=
-t
-> changes) then modified to make it suitable for riscv, then for riscv to b=
-e
-> hooked up. At the moment I'm trying to follow all 3 parts per-function.
+This series also provides emulated one-byte cmpxchg() support for csky
+using a new cmpxchg_emu_u8() function that uses a four-byte cmpxchg()
+to emulate the one-byte variant.
 
-Ok, let me give it a try during your paternity leave!
+Similar patches for emulation of one-byte cmpxchg() for arc, sh, and
+xtensa have not yet received maintainer acks, so they are slated for
+the v6.11 merge window.
 
->
-> Thanks,
-> Ryan
+----------------------------------------------------------------
+Al Viro (8):
+      sparc32: make __cmpxchg_u32() return u32
+      sparc32: make the first argument of __cmpxchg_u64() volatile u64 *
+      sparc32: unify __cmpxchg_u{32,64}
+      sparc32: add __cmpxchg_u{8,16}() and teach __cmpxchg() to handle those sizes
+      parisc: __cmpxchg_u32(): lift conversion into the callers
+      parisc: unify implementations of __cmpxchg_u{8,32,64}
+      parisc: add missing export of __cmpxchg_u8()
+      parisc: add u16 support to cmpxchg()
 
-Thanks,
+Paul E. McKenney (2):
+      lib: Add one-byte emulation function
+      csky: Emulate one-byte cmpxchg
 
-Alex
-
->
->
-> >
-> > This patchset was tested by running the libhugetlbfs testsuite with 64K=
-B
-> > and 2MB pages on both architectures (on a 4KB base page size arm64 kern=
-el).
-> >
-> > [1] https://lore.kernel.org/linux-arm-kernel/20240215103205.2607016-1-r=
-yan.roberts@arm.com/
-> >
-> > Changes in v2:
-> >   - Rebase on top of 6.9-rc3
-> >
-> > Alexandre Ghiti (9):
-> >   riscv: Restore the pfn in a NAPOT pte when manipulated by core mm cod=
-e
-> >   riscv: Safely remove huge_pte_offset() when manipulating NAPOT ptes
-> >   mm: Use common huge_ptep_get() function for riscv/arm64
-> >   mm: Use common set_huge_pte_at() function for riscv/arm64
-> >   mm: Use common huge_pte_clear() function for riscv/arm64
-> >   mm: Use common huge_ptep_get_and_clear() function for riscv/arm64
-> >   mm: Use common huge_ptep_set_access_flags() function for riscv/arm64
-> >   mm: Use common huge_ptep_set_wrprotect() function for riscv/arm64
-> >   mm: Use common huge_ptep_clear_flush() function for riscv/arm64
-> >
-> >  arch/arm64/Kconfig                  |   1 +
-> >  arch/arm64/include/asm/pgtable.h    |  56 +++++-
-> >  arch/arm64/mm/hugetlbpage.c         | 291 +---------------------------
-> >  arch/riscv/Kconfig                  |   1 +
-> >  arch/riscv/include/asm/hugetlb.h    |   2 +-
-> >  arch/riscv/include/asm/pgtable-64.h |  11 ++
-> >  arch/riscv/include/asm/pgtable.h    | 153 +++++++++++++--
-> >  arch/riscv/mm/hugetlbpage.c         | 227 ----------------------
-> >  arch/riscv/mm/pgtable.c             |   6 +-
-> >  mm/Kconfig                          |   3 +
-> >  mm/Makefile                         |   1 +
-> >  mm/contpte.c                        | 272 ++++++++++++++++++++++++++
-> >  12 files changed, 480 insertions(+), 544 deletions(-)
-> >  create mode 100644 mm/contpte.c
-> >
->
+ arch/Kconfig                        |  3 +++
+ arch/csky/Kconfig                   |  1 +
+ arch/csky/include/asm/cmpxchg.h     | 10 +++++++
+ arch/parisc/include/asm/cmpxchg.h   | 22 +++++++---------
+ arch/parisc/kernel/parisc_ksyms.c   |  2 ++
+ arch/parisc/lib/bitops.c            | 52 ++++++++++++-------------------------
+ arch/sparc/include/asm/cmpxchg_32.h | 20 +++++++-------
+ arch/sparc/lib/atomic32.c           | 45 ++++++++++++++------------------
+ include/linux/cmpxchg-emu.h         | 15 +++++++++++
+ lib/Makefile                        |  1 +
+ lib/cmpxchg-emu.c                   | 45 ++++++++++++++++++++++++++++++++
+ 11 files changed, 133 insertions(+), 83 deletions(-)
+ create mode 100644 include/linux/cmpxchg-emu.h
+ create mode 100644 lib/cmpxchg-emu.c
