@@ -1,122 +1,203 @@
-Received: from smtp1.ms.mff.cuni.cz (smtp-in1.ms.mff.cuni.cz [195.113.20.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D464C18EB0;
-	Sun, 12 May 2024 08:48:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.113.20.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBEA14F98;
+	Sun, 12 May 2024 09:04:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715503729; cv=none; b=bdEWtiu9PWkDQcQarXM9Mv17iSeNes6owevFqLC/IR79Ewuyg0dDBL7fetzZAloUhvAU+RZ+2yen3JtgR/iOMXTp+Ato6/i+AE/TogZKp2lfIhcmdxxE30KQJfwN1bODK4XyDZswduC1/XCoxiW7x55KWjuDRBvvAXTC8WmLDbE=
+	t=1715504648; cv=none; b=BiMs1v+kMNQnLazpJ1nwWe4/HM3k91Y3cCqWAH7qZwh+Dp8D2+Gc14TSNBGciWa4/5XlkxF5ElkYt/Wqy1mHd9YDqyVK69NWEyI5hZ9HtJ6h4UbHWMuXhUxRI1bjrKVigODzfq1o1kcfcA/UEfTPp1sdF/n+3pvT3gHzcV0PnXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715503729; c=relaxed/simple;
-	bh=R8RO8aBLaka55Gq/3lS8uQ8AX1Pmr0nvvosQt44euyo=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:To:From:
-	 References:In-Reply-To; b=K1gjcG0MxIHsQvOSsEi+WJL2YJjC3akaIHfpZ/Qp5S+NHb0EKv2kTsjmnFySym8v0csxooshbqzjFxud1ASKAFRPYuZ2PgF690bc9ykoYu61A3nNpwoqtQC2TAlfq0/Lktoq3/CGhRxSWrRTG7A56R76eB7wRuntYk9/Lda8DYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz; spf=pass smtp.mailfrom=matfyz.cz; dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b=KY+iSqsX; arc=none smtp.client-ip=195.113.20.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=matfyz.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=matfyz.cz
+	s=arc-20240116; t=1715504648; c=relaxed/simple;
+	bh=kxKl9BXWLII/5XSxmShz9Co5it81zM/OD7dKzTsMN9M=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=aW7IzCYoZ/uZ140pXanrMuzBvXK0nqP0kNLk4G0JfatCRi7OpKMvh2qmKqbnwZN+wIXcLZvgis0W6qf07+2DtNCHGPwOTmE+7eG7JX65hCW2mySpNxlbInT6d/lbdKPzMFqNoBY81huBSdpTGjSLeTTbQRu9Dh5FwtJhJF5Qgzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JxS9IeUr; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mff.cuni.cz header.i=@mff.cuni.cz header.b="KY+iSqsX"
-X-SubmittedBy: id balejk@matfyz.cz subject /postalCode=110+2000/O=Univerzita+20Karlova/street=Ovocn+5CxC3+5CxBD+20trh+20560/5/ST=Praha,+20Hlavn+5CxC3+5CxAD+20m+5CxC4+5Cx9Bsto/C=CZ/CN=Karel+20Balej/emailAddress=balejk@matfyz.cz
-	serial F5FD910E8FE2121B897F7E55B84E351D
-	issued by /C=NL/O=GEANT+20Vereniging/CN=GEANT+20Personal+20CA+204
-	auth type TLS.CUNI
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mff.cuni.cz;
-	s=submission; t=1715503699; x=1716803699;
-	bh=jiUz6rePe05psAKtR82w0cLT+peUJK9N46yQy+W+TYY=; h=From;
-	b=KY+iSqsX6oCx8uwjAzbO76XNdc4+hyMpTpm8XPY6iFSLzKkcW/OE7nwki/kHzfLwh
-	 3imGJMt5f/kOHzchM9F00f4konskdrYgkB+aeQHLm918EW17cQwuNeuluUBxp1DVHw
-	 osycE90vYQDMaQJWgvOckDZH3u9EXUlAXRfWdwTrzUId718b1ym5qvuAOfB7c3W/mh
-	 H1sF2MrC6fuCpyyvZVKuQFxY3m4fVseTctZPQRyS7iUhcsHy+hzpUmgSPbzndYyy1N
-	 eDX9pXsdtR9F+TQzmRCtYQt90rZnupQu6Ym30DEKMQyZPVv4mm8fn+3+lFt1OLZeUm
-	 jBcJ5+tzZEYNA==
-Received: from localhost (internet5.mraknet.com [185.200.108.250])
-	(authenticated)
-	by smtp1.ms.mff.cuni.cz (8.16.1/8.16.1) with ESMTPS id 44C8mF33076270
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK);
-	Sun, 12 May 2024 10:48:16 +0200 (CEST)
-	(envelope-from balejk@matfyz.cz)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JxS9IeUr"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2e2c70f0c97so40655291fa.0;
+        Sun, 12 May 2024 02:04:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715504645; x=1716109445; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Om7z4z/nZPkmvzc/xv1BUHiiD4wa9VFdhmgBrAsUs88=;
+        b=JxS9IeUrDPLLrfq1siYrgBfVIR7v86Zlxo6O12hLdyWOULMmQck7GXC8VkJtPOgnpT
+         uR0oEgtslYRYTdCarkf0t9aINHr9I3Xn58AhLxYXwNK0LVE+1RbSnuRU/okc9yUaKO8i
+         eXfMJXBDd8UE9XqzV0rTD+14BpSwzQULMVRD9wcweCMPy1QW2gC+F26QEI7J5Ln3ERVI
+         RZUxoYsN7wImhorAOW4cwooN+XvkISorstFCJoHJQF6SwrNSLp8uD4dgAVA/K/s9y+us
+         UO5amiu2vRDnOcF89+Ry877/4TcFA028PK11XxgeZzeee1Si6KHH+QrrOHC444dvB0iO
+         5iNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715504645; x=1716109445;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Om7z4z/nZPkmvzc/xv1BUHiiD4wa9VFdhmgBrAsUs88=;
+        b=fvl3i8fXhxiY5HMMbs+vxxIvCJXdW4MPpTXRMGgDBVwHxyir7KFxkR0NEtZKOue3U6
+         hfZUeTLveGN472bhv8jCLtLYpC6Mw2ziYQJZL8uGsWDCI/BWPdmbOWLM6zvSAhxDNih/
+         nkyu0W5UfFj1IsG3GHouujswa1a2p0rJTPhvVBEOsxQnVoAgX+TOSXZGR8qzHcxBtozb
+         ImOsLq5nw2R0pdOBU+2AM3WlJSVBz0scOfwbqYK/FW1Vi1gyPNX2eXi88ZYA62NkMB2C
+         kVnl6QqxP3PjP3M+4zrahP54dngCupH0qMbIbvHz24yWU2U02CrykEtmDPDdntllLpo0
+         8JKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCU9g7hwOSPvKDwvLyI8KLMgCr8I6kdiUjt/Y6/dl9BlYtNu9RRK+eIWr5ECDL45tAJHwIr8F9kZLJ3MW62nWahHTd4hSV5WG4VZw3
+X-Gm-Message-State: AOJu0Yz0f4f3VvYcf2lFRqHE9WLGIxQKICbB413OVhfYAVUqB0Rl4AT+
+	fHTmvSlVWaMmnJGpwANLllZkme5GQhuBzbhyoT6mlwjDfA+F9bz0jgVX+0+8
+X-Google-Smtp-Source: AGHT+IGmyKXU7smaDw09zDngJdmSsV9gZLDt6vpCR+JOFX7ZIkID5MSda4g1IoGmjVtbcawOzD+2+Q==
+X-Received: by 2002:a05:6512:158d:b0:519:5df9:d945 with SMTP id 2adb3069b0e04-5220fb77429mr6289711e87.4.1715504644872;
+        Sun, 12 May 2024 02:04:04 -0700 (PDT)
+Received: from kali.localhost (static.47.50.88.23.clients.your-server.de. [23.88.50.47])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781cd9csm431372766b.37.2024.05.12.02.04.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 May 2024 02:04:04 -0700 (PDT)
+From: Kiarash Hajian <kiarash8112hajian@gmail.com>
+Date: Sun, 12 May 2024 05:03:53 -0400
+Subject: [PATCH v4] drm/msm/a6xx: request memory region
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Sun, 12 May 2024 10:48:15 +0200
-Message-Id: <D17JB1SPR5SK.1B6BRVVU2Q6XN@matfyz.cz>
-Subject: Re: [PATCH docs-next v2] docs: handling-regressions.rst: recommend
- using "Closes:" tags
-To: "Thorsten Leemhuis" <linux@leemhuis.info>,
-        "Jonathan Corbet"
- <corbet@lwn.net>, <regressions@lists.linux.dev>,
-        <workflows@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-From: "Karel Balej" <balejk@matfyz.cz>
-References: <20240510183748.13028-1-balejk@matfyz.cz>
- <8ebe6545-de7e-4ee4-b36e-e91e90b90b70@leemhuis.info>
-In-Reply-To: <8ebe6545-de7e-4ee4-b36e-e91e90b90b70@leemhuis.info>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240512-msm-adreno-memory-region-v4-1-3881a64088e6@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAPiFQGYC/43NQQ7CIBAF0KsY1o5hBiriynsYF7RMK4m0Bkyja
+ Xp30VXjwnT5f+a/mUTmFDiL42YSiceQw9CXoLcb0Vxd3zEEX7IgSVpWiBBzBOcT9wNEjkN6QeK
+ ujIDqpsbGVoc9oSjze+I2PL/0+VLyNeRHOf9+GvHTrkBHBARvlDXSoPGaTl104bZrhig+6EhrI
+ SqQbZVqNbGprf2F1BKiP5ACCdIZOjivK4lyCc3z/Aa630hMUgEAAA==
+To: Rob Clark <robdclark@gmail.com>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>, 
+ Marijn Suijten <marijn.suijten@somainline.org>, 
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Kiarash Hajian <kiarash8112hajian@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715504642; l=3699;
+ i=kiarash8112hajian@gmail.com; s=20240409; h=from:subject:message-id;
+ bh=kxKl9BXWLII/5XSxmShz9Co5it81zM/OD7dKzTsMN9M=;
+ b=xRPIc85k3y6TGkCNJxSA4BeWf0WJ7DJiAXVEhvBPjZehWCkKoB4l8MM88zzi4HYJcgmofRN/o
+ fJ3Zn/CLvVnA27wDoh3NXuF70UpNoRuIhMhYVcitDiqaoBICyaolCZo
+X-Developer-Key: i=kiarash8112hajian@gmail.com; a=ed25519;
+ pk=ehVBr28gPcA8cMB/wneVh0Mj6WGkqZoyYRdRNi5+aI0=
 
-Thorsten Leemhuis, 2024-05-12T09:47:31+02:00:
-> On 10.05.24 20:34, Karel Balej wrote:
-> > Update the handling-regressions guide to recommend using "Closes:" tags
-> > rather than "Link:" when referencing fixed reports. The latter was used
-> > originally but now is only recommended when the given patch only fixes
-> > part of the issue, as described in submitting-patches. Briefly mention
-> > that and also note that regzbot currently doesn't make a distinction.
-> >=20
-> > Also fix a typo.
-> >=20
-> > Signed-off-by: Karel Balej <balejk@matfyz.cz>
->
-> Many thx for this, much appreciated. Looks good!
->
-> Acked-by: Thorsten Leemhuis <linux@leemhuis.info>
+The driver's memory regions are currently just ioremap()ed, but not
+reserved through a request. That's not a bug, but having the request is
+a little more robust.
 
-Thanks!
+Implement the region-request through the corresponding managed
+devres-function.
 
-> One quick note:
->
-> > =20
-> >  What's important when fixing regressions
-> >  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > @@ -112,10 +115,16 @@ remember to do what Documentation/process/submitt=
-ing-patches.rst,
-> >  :ref:`Documentation/process/5.Posting.rst <development_posting>`, and
-> >  Documentation/process/stable-kernel-rules.rst already explain in more =
-detail:
-> > =20
-> > - * Point to all places where the issue was reported using "Link:" tags=
-::
-> > + * Point to all places where the issue was reported using "Closes:" ta=
-gs::
-> > =20
-> > -       Link: https://lore.kernel.org/r/30th.anniversary.repost@klaava.=
-Helsinki.FI/
-> > -       Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D1234567890
-> > +       Closes: https://lore.kernel.org/r/30th.anniversary.repost@klaav=
-a.Helsinki.FI/
-> > +       Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D123456789=
-0
-> > +
-> > +   If you are only fixing part of the issue, you may use "Link:" inste=
-ad as
-> > +   described in the first document mentioned above.
->
-> Not totally sure if...
->
-> > Some maintainers may even
-> > +   prefer it over "Closes:" entirely, although the latter is generally
-> > +   recommended.
->
-> ...this sentence really should be here, but whatever.
+Signed-off-by: Kiarash Hajian <kiarash8112hajian@gmail.com>
+---
+Changes in v4:
+- Combine v3 commits into a singel commit
+- Link to v3: https://lore.kernel.org/r/20240512-msm-adreno-memory-region-v3-0-0a728ad45010@gmail.com
 
-I think I can see your point. I added it as it was something you
-mentioned before but looking now at that mail again, I think this is not
-really what you said. So I'm in favour of dropping it.
+Changes in v3:
+- Remove redundant devm_iounmap calls, relying on devres for automatic resource cleanup.
 
-If you give me a go-ahead, I will send v3 with this sentence dropped and
-your Ack added right back.
+Changes in v2:
+- update the subject prefix to "drm/msm/a6xx:", to match the majority of other changes to this file.
+---
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 22 +---------------------
+ 1 file changed, 1 insertion(+), 21 deletions(-)
 
-Thanks, kind regards,
-K. B.
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 8bea8ef26f77..cf0b3b3d8f34 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -524,9 +524,6 @@ static void a6xx_gmu_rpmh_init(struct a6xx_gmu *gmu)
+ 	uint32_t pdc_address_offset;
+ 	bool pdc_in_aop = false;
+ 
+-	if (IS_ERR(pdcptr))
+-		goto err;
+-
+ 	if (adreno_is_a650(adreno_gpu) ||
+ 	    adreno_is_a660_family(adreno_gpu) ||
+ 	    adreno_is_a7xx(adreno_gpu))
+@@ -540,8 +537,6 @@ static void a6xx_gmu_rpmh_init(struct a6xx_gmu *gmu)
+ 
+ 	if (!pdc_in_aop) {
+ 		seqptr = a6xx_gmu_get_mmio(pdev, "gmu_pdc_seq");
+-		if (IS_ERR(seqptr))
+-			goto err;
+ 	}
+ 
+ 	/* Disable SDE clock gating */
+@@ -633,12 +628,6 @@ static void a6xx_gmu_rpmh_init(struct a6xx_gmu *gmu)
+ 	wmb();
+ 
+ 	a6xx_rpmh_stop(gmu);
+-
+-err:
+-	if (!IS_ERR_OR_NULL(pdcptr))
+-		iounmap(pdcptr);
+-	if (!IS_ERR_OR_NULL(seqptr))
+-		iounmap(seqptr);
+ }
+ 
+ /*
+@@ -1503,7 +1492,7 @@ static void __iomem *a6xx_gmu_get_mmio(struct platform_device *pdev,
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	ret = ioremap(res->start, resource_size(res));
++	ret = devm_ioremap_resource(&pdev->dev, res);
+ 	if (!ret) {
+ 		DRM_DEV_ERROR(&pdev->dev, "Unable to map the %s registers\n", name);
+ 		return ERR_PTR(-EINVAL);
+@@ -1613,13 +1602,11 @@ int a6xx_gmu_wrapper_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ 	gmu->mmio = a6xx_gmu_get_mmio(pdev, "gmu");
+ 	if (IS_ERR(gmu->mmio)) {
+ 		ret = PTR_ERR(gmu->mmio);
+-		goto err_mmio;
+ 	}
+ 
+ 	gmu->cxpd = dev_pm_domain_attach_by_name(gmu->dev, "cx");
+ 	if (IS_ERR(gmu->cxpd)) {
+ 		ret = PTR_ERR(gmu->cxpd);
+-		goto err_mmio;
+ 	}
+ 
+ 	if (!device_link_add(gmu->dev, gmu->cxpd, DL_FLAG_PM_RUNTIME)) {
+@@ -1635,7 +1622,6 @@ int a6xx_gmu_wrapper_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ 	gmu->gxpd = dev_pm_domain_attach_by_name(gmu->dev, "gx");
+ 	if (IS_ERR(gmu->gxpd)) {
+ 		ret = PTR_ERR(gmu->gxpd);
+-		goto err_mmio;
+ 	}
+ 
+ 	gmu->initialized = true;
+@@ -1645,9 +1631,6 @@ int a6xx_gmu_wrapper_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ detach_cxpd:
+ 	dev_pm_domain_detach(gmu->cxpd, false);
+ 
+-err_mmio:
+-	iounmap(gmu->mmio);
+-
+ 	/* Drop reference taken in of_find_device_by_node */
+ 	put_device(gmu->dev);
+ 
+@@ -1825,9 +1808,6 @@ int a6xx_gmu_init(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
+ 	dev_pm_domain_detach(gmu->cxpd, false);
+ 
+ err_mmio:
+-	iounmap(gmu->mmio);
+-	if (platform_get_resource_byname(pdev, IORESOURCE_MEM, "rscc"))
+-		iounmap(gmu->rscc);
+ 	free_irq(gmu->gmu_irq, gmu);
+ 	free_irq(gmu->hfi_irq, gmu);
+ 
+
+---
+base-commit: cf87f46fd34d6c19283d9625a7822f20d90b64a4
+change-id: 20240511-msm-adreno-memory-region-2bcb1c958621
+
+Best regards,
+-- 
+Kiarash Hajian <kiarash8112hajian@gmail.com>
+
