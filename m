@@ -1,96 +1,125 @@
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41001E502
-	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 20:48:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.201.40.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EE76380
+	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 20:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715546931; cv=none; b=FuuIIacsM18ev3U1B5IrCTaAEqBbSYHH3fK0EAfwydutowTxP0Z6JAPLOaPRz/RFn9kR3RYnrUPILUPBWgwjFByMNKIFbCpH1lqnb2J6L2kmiaZx9YkKO8PIWmB6ho549GUSb6JFRxYyGUR61KzlLGLsjMpBqylQIkzF5Obxm6g=
+	t=1715547036; cv=none; b=Tm24+P9Y+dluvSC2leEf/rkXFPiJI8attvTZSq0BO6cYw8wHTG9J/5xjufmGUuWax7E2VxFrBeJqStfBL1oTug0Hez6a6Y259ce68QB/NbSJX4IuYC328ZMBNvsz1B99Jmfhm6QeR/8uylL5G0snrrTXJ/tUX5mVrqkwRt3L+C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715546931; c=relaxed/simple;
-	bh=mQz2PVpow/m3oWLabdk1T8VjND6NQfy9quPq/5IXeUo=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=mbCENxJGl4WgRw1tTLPKAM2W0gLy1EyNGm7SH/Ik/WnUFoVTZAGpo2CmHU7uJ0dxjjRXGMoZk+cUL/ww96SzxN/c+rkuzQ/Gp4XIR6UyvI1MnqdRdVWX1SMf74+0STT1IdHXqJG17Wdm07tiG1oA2e8DJ+waXVPeO8tZN0CJajU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=195.201.40.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 216D6647A81E;
-	Sun, 12 May 2024 22:39:08 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id K9RyJ2jP0xmW; Sun, 12 May 2024 22:39:07 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 893EE626FAF9;
-	Sun, 12 May 2024 22:39:07 +0200 (CEST)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id zTe9dMvffljG; Sun, 12 May 2024 22:39:07 +0200 (CEST)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 69F4C647A81E;
-	Sun, 12 May 2024 22:39:07 +0200 (CEST)
-Date: Sun, 12 May 2024 22:39:07 +0200 (CEST)
-From: Richard Weinberger <richard@nod.at>
-To: Artem Chernyshev <artem.chernyshev@red-soft.ru>
-Cc: David Woodhouse <dwmw2@infradead.org>, 
-	linux-mtd <linux-mtd@lists.infradead.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, 
-	lvc-project@linuxtesting.org
-Message-ID: <1371873614.97879.1715546347299.JavaMail.zimbra@nod.at>
-In-Reply-To: <20240329121629.316171-1-artem.chernyshev@red-soft.ru>
-References: <20240329121629.316171-1-artem.chernyshev@red-soft.ru>
-Subject: Re: [PATCH] fs/jffs2: Fix NULL deref in jffs2_scan_dirty_space
+	s=arc-20240116; t=1715547036; c=relaxed/simple;
+	bh=R82jH/CTzlPxLDQ6HiMBIPXQURxxCmUDu8oOAGiCJ1U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iXcjxD07SymSH2CT8GloqfiRCRz+j0a7hwMU3I4/ABRzEE/+Nx224fk7tvlrXTuNb1TOSGAcCt8QlA29evMlFWhOZCS0/giBk2AerGqQwaMALokIp/nNOSArVQZKAb0QG/9HXErDsRB2YouEmqriQ21IFy59DxV3GxdpSq48YUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=slWq8uBA; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="slWq8uBA"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
+	:Subject; bh=bCl1PyZjFro/Rm4AJnAJ16YD5mtSBLN9tWzUw4P6UJk=; b=slWq8uBAkTUH6YqI
+	PthKskQ9dsu83sTwxjyTTMnaHflfKDG2o7JhYQxS6rHqdyhmwx7+Za+7vSIRWTekVAY3446oGag9a
+	1ty2LpN0DJH0gvk5y9l6x0UGnii4nVnPBaek3V2z7OG/4yFG5sM5KMx1//9AYjj75efoTlXKlON8Y
+	QxzasnxhsYZ2InZoMSEg1PXuGjaUkuaXvhYohNEXGbERdqdeYPXCjGphXFNe/IMnAcnwXJRpHjOTT
+	fOGmPSFfvQq9ImvahV9MbYoOcDyU7styOmr+t9hWda1q/q6MSnIbTuJZ+TkPwqSgXfY8kJ+HTHrDO
+	wgKz6EXFMC+Jf0WYow==;
+Received: from dg by mx.treblig.org with local (Exim 4.96)
+	(envelope-from <dg@treblig.org>)
+	id 1s6G9I-000cZr-1J;
+	Sun, 12 May 2024 20:50:24 +0000
+Date: Sun, 12 May 2024 20:50:24 +0000
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
+To: Muni Sekhar <munisekharrms@gmail.com>
+Cc: kernelnewbies <kernelnewbies@kernelnewbies.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Inquiry Regarding Handling of Kernel Crashes
+Message-ID: <ZkErkG77vLkcVaUZ@gallifrey>
+References: <CAHhAz+hcVRU8=SkkoHGRDN5zRvB2HY1-1Y2NQmNwR=07ObSFrQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
-Thread-Topic: fs/jffs2: Fix NULL deref in jffs2_scan_dirty_space
-Thread-Index: y5ad11duY8iSWWYoNLafHLQXdw07tQ==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <CAHhAz+hcVRU8=SkkoHGRDN5zRvB2HY1-1Y2NQmNwR=07ObSFrQ@mail.gmail.com>
+X-Chocolate: 70 percent or better cocoa solids preferably
+X-Operating-System: Linux/6.1.0-21-amd64 (x86_64)
+X-Uptime: 20:42:25 up 4 days,  7:56,  1 user,  load average: 0.09, 0.03, 0.01
+User-Agent: Mutt/2.2.12 (2023-09-09)
 
------ Urspr=C3=BCngliche Mail -----
-> Von: "Artem Chernyshev" <artem.chernyshev@red-soft.ru>
-> An: "David Woodhouse" <dwmw2@infradead.org>, "richard" <richard@nod.at>
-> CC: "Artem Chernyshev" <artem.chernyshev@red-soft.ru>, "linux-mtd" <linux=
--mtd@lists.infradead.org>, "linux-kernel"
-> <linux-kernel@vger.kernel.org>, lvc-project@linuxtesting.org
-> Gesendet: Freitag, 29. M=C3=A4rz 2024 13:16:29
-> Betreff: [PATCH] fs/jffs2: Fix NULL deref in jffs2_scan_dirty_space
+* Muni Sekhar (munisekharrms@gmail.com) wrote:
+> Dear Linux Kernel Community,
 
-> As was mentioned in 2ebf09c2, it is possible to get oops,
-> when marking space dirty in scan, but no previous node exists
->=20
-> It still can be in jffs2_link_node_ref() via deref jeb->last_node.
-> Since all jffs2_scan_dirty_space() callers check value of a
-> function, we can return error code safely.
->=20
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
->=20
-> Signed-off-by: Artem Chernyshev <artem.chernyshev@red-soft.ru>
-> ---
-> fs/jffs2/nodelist.c | 5 ++++-
-> 1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/jffs2/nodelist.c b/fs/jffs2/nodelist.c
-> index b86c78d178c6..6bebf1d64000 100644
-> --- a/fs/jffs2/nodelist.c
-> +++ b/fs/jffs2/nodelist.c
-> @@ -669,8 +669,11 @@ int jffs2_scan_dirty_space(struct jffs2_sb_info *c, =
-struct
-> jffs2_eraseblock *jeb
-> =09=09=09size, jeb->free_size, jeb->wasted_size);
-> =09=09BUG();
-> =09}
-> +=09if (!jeb->last_node) {
-> +=09=09return -EINVAL;
-> +=09}
+Hi,
 
-Did you test this change? I'm not so sure whether returning -EINVAL is
-correct.
+> I hope this email finds you well. I am currently engaged in testing
+> device drivers in Linux kernel mode, and I have encountered various
+> types of kernel crashes during my testing process.
+> 
+> Among these, some examples of kernel crashes include OOPS, lockups and others.
+> 
+> I have a few questions regarding the handling of kernel crashes during testing:
+> 
+> When encountering a kernel crash during testing, is it advisable to
+> continue testing without rebooting the system? Or is it preferable to
+> reboot the system after each kernel crash and then resume testing?
 
-Thanks,
-//richard
+Rebooting is best.
+
+> Can the first kernel crash, whether it is an OOPS,  or any other type
+> crash, potentially lead to subsequent crashes of the same or different
+> types? If so, should debugging efforts focus only on the first kernel
+> crash, or should all subsequent crashes also be considered and
+> addressed?
+
+Yes - not all failures do that, but some will cause follow on crashes;
+looking at the first crash normally gives the most reliable idea
+of what went wrong. But keep all the logs, anything might help you figure
+it out.
+
+> In the event that the system needs to be rebooted after a kernel
+> crash, how can user space test utilities be informed that a kernel
+> crash has occurred? Additionally, how can the system be configured to
+> automatically reboot in the event of a kernel crash?
+
+See Documentation/admin-guide/kernel-parameters.txt  there are 
+quite a few useful ones, in particular:
+     oops=panic   will cause a panic after an oops
+which when you combine it with
+     panic=30
+
+   means an oops will then cause a panic which causes a reboot.
+
+You could also consider using a 'crash kernel' - on a panic
+that lands in a fresh kernel that just saves a memory snapshot
+that you can then try and debug.
+
+Turning on a watchdog as well is good; some kernel bugs just hang
+rather than giving a nice oops.
+
+> I would greatly appreciate any insights or best practices you can
+> share regarding the handling of kernel crashes during testing. Your
+> expertise and guidance on this matter would be invaluable to my
+> testing efforts.
+> 
+> Thank you very much for your time and assistance. I look forward to
+> your response.
+
+Good luck!
+
+Dave
+
+> 
+> 
+> -- 
+> Thanks,
+> Sekhar
+> 
+-- 
+ -----Open up your eyes, open up your mind, open up your code -------   
+/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
+\        dave @ treblig.org |                               | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
