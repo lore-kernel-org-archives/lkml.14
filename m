@@ -1,66 +1,23 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E75D4B5AE;
-	Sun, 12 May 2024 16:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5018617C95;
+	Sun, 12 May 2024 16:26:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715530291; cv=none; b=tjgimkT0UfDzkBrRu+IPGjEtaXj1/jB9pqv6H9DtRBcRzFyRarpc8HYZGwR2J+BWQ2qiiU+PoGoiUORwMFdFS48TBijq8jI+Betw3ocUrpxLkyTpFOry7td4BPqwLj3J5eKeYEowgeg3Hn9qE8FkNlluM9doOzsBR0coQc/urvs=
+	t=1715531175; cv=none; b=EQoQ+DpU9YWUiQQtuzRBDy1TgOi/aho7urfP58v30z97+sV2lYKCCB0d2S7yX3eI4p/16Tr6v3olDxos0/WJQSZPViXy2eVl62sCOl8C3ayhcsc4J1lZzNXyI9IZTr6QckASyhaagW4ZCMy/4ENeZp2c5SDj0nEWsoCwJeBhbXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715530291; c=relaxed/simple;
-	bh=z6P+mS/l0S7hWWQ+krwdaqTCWeyYjiFrKAW/ITNlUzo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Tg/SlWBzqTxhPYucaXUe/QC0x9KvZFYDLfWxDNMu/ujcMDQdqvWWOcn34xw/93U2M4TZjQYqQnKpcpxqMrpIdM1+/w0jad0ddVOm0JjWmAwlggpjOqPjMTnyTJVmvMkL/ZdrAK7FdpHwCHHewC9q/72Oc4ArIUxF+lvItq7MnNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=S3dgf7wN; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="S3dgf7wN"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 44CFjsfZ008978;
-	Sun, 12 May 2024 16:11:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=la6rV0NKorvKyL6sLrf655P9A2HtwgNO+jzNz69HBkw=;
- b=S3dgf7wN+jkfn9S2avR3FgvMyX65oWC5zSyhzByxrH8dAjvSOQw+7kqD/07b07vb6P+/
- S7a2mZm8EpadHwPBr1raITx2raHmiOY8PHtmBF/FMTqWOg2uOPeIGn4L/xbItm9t4qkn
- lbGqHX/yCSCKUPOyMxTIkawFD+BlUyhI4qAlU8GA/rfsof5MpocFyViUqsHYIzOIvmbZ
- 8dSMkBrPncLNQrTxqR1j2PG8fLFicO9p/waFvDB0v2ts/eSab0kGndYezoHiM4OdqPXF
- WVn7xi8lUtMSgDEDbX7/XOsXa9bRX46Tt6zmY6zcVWhvlIncgOgtEUkxinzvzj1SZb/e Jw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y2uk98h1p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 12 May 2024 16:11:08 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 44CGB7J1014668;
-	Sun, 12 May 2024 16:11:07 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3y2uk98h1k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 12 May 2024 16:11:07 +0000
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 44CCeChr018810;
-	Sun, 12 May 2024 16:11:07 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3y2k0t3a3q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 12 May 2024 16:11:06 +0000
-Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 44CGB4NB40567304
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 12 May 2024 16:11:06 GMT
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DF34258055;
-	Sun, 12 May 2024 16:11:03 +0000 (GMT)
-Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A234758043;
-	Sun, 12 May 2024 16:10:55 +0000 (GMT)
-Received: from [9.43.63.99] (unknown [9.43.63.99])
-	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 12 May 2024 16:10:55 +0000 (GMT)
-Message-ID: <50a50ac9-3797-4e7a-be21-ea3b01d64ec4@linux.ibm.com>
-Date: Sun, 12 May 2024 21:40:52 +0530
+	s=arc-20240116; t=1715531175; c=relaxed/simple;
+	bh=PNUnaQvR9cUuMNwBk43kkwU9M5fFExsF302zGnmg9x0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KQWygsx60k4LUKVUx2y7lQ6kUrNKAKczIt99v1rVw4VXZpPlMFctO01RP1D7DFamtfnwbYnvc0uUijwlfwGRSyp+76FtpKClfiNnHP2OGTmwD1ADYkaoDWd4As/Vsvg4GYJwdXbZj0roQlsFDSNiJEsRB4b8dIhnKLU1/FebWUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C222060002;
+	Sun, 12 May 2024 16:24:50 +0000 (UTC)
+Message-ID: <c759444d-fe84-4a61-8448-80fb692c7904@ghiti.fr>
+Date: Sun, 12 May 2024 18:24:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,164 +25,169 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf sched map: Add command-name option to filter the
- output map
-To: acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        acme@redhat.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240417152521.80340-1-vineethr@linux.ibm.com>
+Subject: Re: [PATCH v3 10/29] riscv/mm : ensure PROT_WRITE leads to VM_READ |
+ VM_WRITE
 Content-Language: en-US
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-In-Reply-To: <20240417152521.80340-1-vineethr@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+To: Deepak Gupta <debug@rivosinc.com>, paul.walmsley@sifive.com,
+ rick.p.edgecombe@intel.com, broonie@kernel.org, Szabolcs.Nagy@arm.com,
+ kito.cheng@sifive.com, keescook@chromium.org, ajones@ventanamicro.com,
+ conor.dooley@microchip.com, cleger@rivosinc.com, atishp@atishpatra.org,
+ bjorn@rivosinc.com, alexghiti@rivosinc.com, samuel.holland@sifive.com,
+ conor@kernel.org
+Cc: linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-mm@kvack.org, linux-arch@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, corbet@lwn.net, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com,
+ akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com,
+ Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com,
+ shuah@kernel.org, brauner@kernel.org, andy.chiu@sifive.com,
+ jerry.shih@sifive.com, hankuan.chen@sifive.com, greentime.hu@sifive.com,
+ evan@rivosinc.com, xiao.w.wang@intel.com, charlie@rivosinc.com,
+ apatel@ventanamicro.com, mchitale@ventanamicro.com,
+ dbarboza@ventanamicro.com, sameo@rivosinc.com, shikemeng@huaweicloud.com,
+ willy@infradead.org, vincent.chen@sifive.com, guoren@kernel.org,
+ samitolvanen@google.com, songshuaishuai@tinylab.org, gerg@kernel.org,
+ heiko@sntech.de, bhe@redhat.com, jeeheng.sia@starfivetech.com,
+ cyy@cyyself.name, maskray@google.com, ancientmodern4@gmail.com,
+ mathis.salmen@matsal.de, cuiyunhui@bytedance.com, bgray@linux.ibm.com,
+ mpe@ellerman.id.au, baruch@tkos.co.il, alx@kernel.org, david@redhat.com,
+ catalin.marinas@arm.com, revest@chromium.org, josh@joshtriplett.org,
+ shr@devkernel.io, deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
+ jhubbard@nvidia.com
+References: <20240403234054.2020347-1-debug@rivosinc.com>
+ <20240403234054.2020347-11-debug@rivosinc.com>
+From: Alexandre Ghiti <alex@ghiti.fr>
+In-Reply-To: <20240403234054.2020347-11-debug@rivosinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: JaTpy5YKEc53aHaz9ElckGf3AslPyRnV
-X-Proofpoint-GUID: hoEzRcayGguIDjf17gxV2yGdrMRrAN3L
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-12_11,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- adultscore=0 priorityscore=1501 spamscore=0 suspectscore=0 phishscore=0
- mlxlogscore=999 clxscore=1011 bulkscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2405010000 definitions=main-2405120120
+X-GND-Sasl: alex@ghiti.fr
 
-On 17/04/24 20:55, Madadi Vineeth Reddy wrote:
-> By default, perf sched map prints sched-in events for all the tasks
-> which may not be required all the time as it prints lot of symbols
-> and rows to the terminal.
-> 
-> With --command-name option, one could specify the specific command
-> for which the map has to be shown. This would help in analyzing the
-> CPU usage patterns easier for that specific command. Since multiple
-> PID's might have the same command name, using command-name filter
-> would be more useful for debugging.
-> 
-> For other tasks, instead of printing the symbol, ** is printed and
-> the same . is used to represent idle. ** is used instead of symbol
-> for other tasks because it helps in clear visualization of command
-> of interest and secondly the symbol itself doesn't mean anything
-> because the sched-in of that symbol will not be printed(first sched-in
-> contains pid and the corresponding symbol).
-> 
-> 6.8.0
-> ======
->   *A0                   213864.670142 secs A0 => migration/0:18
->   *.                    213864.670148 secs .  => swapper:0
->    .  *B0               213864.670217 secs B0 => migration/1:21
->    .  *.                213864.670223 secs
->    .   .  *C0           213864.670247 secs C0 => migration/2:26
->    .   .  *.            213864.670252 secs
-> 
-> 6.8.0 + patch (--command-name = schbench)
-> =============
->    **  .   ** *A0       213864.671055 secs A0 => schbench:104834
->   *B0  .   .   A0       213864.671156 secs B0 => schbench:104835
->   *C0  .   .   A0       213864.671187 secs C0 => schbench:104836
->   *D0  .   .   A0       213864.671219 secs D0 => schbench:104837
->   *E0  .   .   A0       213864.671250 secs E0 => schbench:104838
->    E0  .  *D0  A0
-> 
-> This helps in visualizing how a benchmark like schbench is spread over
-> the available cpus while also knowing which cpus are idle(.) and which
-> are not(**). This will be more useful as number of CPUs increase.
-> 
-> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Hi Deepak,
+
+On 04/04/2024 01:34, Deepak Gupta wrote:
+> `arch_calc_vm_prot_bits` is implemented on risc-v to return VM_READ |
+> VM_WRITE if PROT_WRITE is specified. Similarly `riscv_sys_mmap` is
+> updated to convert all incoming PROT_WRITE to (PROT_WRITE | PROT_READ).
+> This is to make sure that any existing apps using PROT_WRITE still work.
+>
+> Earlier `protection_map[VM_WRITE]` used to pick read-write PTE encodings.
+> Now `protection_map[VM_WRITE]` will always pick PAGE_SHADOWSTACK PTE
+> encodings for shadow stack. Above changes ensure that existing apps
+> continue to work because underneath kernel will be picking
+> `protection_map[VM_WRITE|VM_READ]` PTE encodings.
+>
+> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
 > ---
->  tools/perf/Documentation/perf-sched.txt |  4 ++++
->  tools/perf/builtin-sched.c              | 17 ++++++++++++++---
->  2 files changed, 18 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-> index 5fbe42bd599b..b04a37560935 100644
-> --- a/tools/perf/Documentation/perf-sched.txt
-> +++ b/tools/perf/Documentation/perf-sched.txt
-> @@ -94,6 +94,10 @@ OPTIONS for 'perf sched map'
->  --color-pids::
->  	Highlight the given pids.
->  
-> +--command-name::
-> +	Map output only for the given command name.
-> +	(** indicates other tasks while . is idle).
+>   arch/riscv/include/asm/mman.h    | 24 ++++++++++++++++++++++++
+>   arch/riscv/include/asm/pgtable.h |  1 +
+>   arch/riscv/kernel/sys_riscv.c    | 11 +++++++++++
+>   arch/riscv/mm/init.c             |  2 +-
+>   mm/mmap.c                        |  1 +
+>   5 files changed, 38 insertions(+), 1 deletion(-)
+>   create mode 100644 arch/riscv/include/asm/mman.h
+>
+> diff --git a/arch/riscv/include/asm/mman.h b/arch/riscv/include/asm/mman.h
+> new file mode 100644
+> index 000000000000..ef9fedf32546
+> --- /dev/null
+> +++ b/arch/riscv/include/asm/mman.h
+> @@ -0,0 +1,24 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __ASM_MMAN_H__
+> +#define __ASM_MMAN_H__
 > +
->  OPTIONS for 'perf sched timehist'
->  ---------------------------------
->  -k::
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 0fce7d8986c0..e60836da53e5 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -156,6 +156,7 @@ struct perf_sched_map {
->  	const char		*color_pids_str;
->  	struct perf_cpu_map	*color_cpus;
->  	const char		*color_cpus_str;
-> +	const char		*command;
->  	struct perf_cpu_map	*cpus;
->  	const char		*cpus_str;
->  };
-> @@ -1594,8 +1595,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  
->  	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
->  
-> -	printf("  ");
-> -
->  	new_shortname = 0;
->  	if (!tr->shortname[0]) {
->  		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
-> @@ -1605,7 +1604,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  			 */
->  			tr->shortname[0] = '.';
->  			tr->shortname[1] = ' ';
-> -		} else {
-> +		} else if (!sched->map.command || !strcmp(thread__comm_str(sched_in),
-> +								sched->map.command)) {
->  			tr->shortname[0] = sched->next_shortname1;
->  			tr->shortname[1] = sched->next_shortname2;
->  
-> @@ -1618,10 +1618,18 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  				else
->  					sched->next_shortname2 = '0';
->  			}
-> +		} else {
-> +			tr->shortname[0] = '*';
-> +			tr->shortname[1] = '*';
->  		}
->  		new_shortname = 1;
->  	}
->  
-> +	if (sched->map.command && strcmp(thread__comm_str(sched_in), sched->map.command))
-> +		goto skip;
+> +#include <linux/compiler.h>
+> +#include <linux/types.h>
+> +#include <uapi/asm/mman.h>
 > +
-> +	printf("  ");
+> +static inline unsigned long arch_calc_vm_prot_bits(unsigned long prot,
+> +	unsigned long pkey __always_unused)
+> +{
+> +	unsigned long ret = 0;
 > +
->  	for (i = 0; i < cpus_nr; i++) {
->  		struct perf_cpu cpu = {
->  			.cpu = sched->map.comp ? sched->map.comp_cpus[i].cpu : i,
-> @@ -1678,6 +1686,7 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  out:
->  	color_fprintf(stdout, color, "\n");
->  
-> +skip:
->  	thread__put(sched_in);
->  
->  	return 0;
-> @@ -3560,6 +3569,8 @@ int cmd_sched(int argc, const char **argv)
->                      "highlight given CPUs in map"),
->  	OPT_STRING(0, "cpus", &sched.map.cpus_str, "cpus",
->                      "display given CPUs in map"),
-> +	OPT_STRING(0, "command-name", &sched.map.command, "command",
-> +		"map output only for the given command name"),
->  	OPT_PARENT(sched_options)
->  	};
->  	const struct option timehist_options[] = {
+> +	/*
+> +	 * If PROT_WRITE was specified, force it to VM_READ | VM_WRITE.
+> +	 * Only VM_WRITE means shadow stack.
+> +	 */
+> +	if (prot & PROT_WRITE)
+> +		ret = (VM_READ | VM_WRITE);
+> +	return ret;
+> +}
+> +#define arch_calc_vm_prot_bits(prot, pkey) arch_calc_vm_prot_bits(prot, pkey)
+> +
+> +#endif /* ! __ASM_MMAN_H__ */
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+> index 6066822e7396..4d5983bc6766 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -184,6 +184,7 @@ extern struct pt_alloc_ops pt_ops __initdata;
+>   #define PAGE_READ_EXEC		__pgprot(_PAGE_BASE | _PAGE_READ | _PAGE_EXEC)
+>   #define PAGE_WRITE_EXEC		__pgprot(_PAGE_BASE | _PAGE_READ |	\
+>   					 _PAGE_EXEC | _PAGE_WRITE)
+> +#define PAGE_SHADOWSTACK       __pgprot(_PAGE_BASE | _PAGE_WRITE)
+>   
+>   #define PAGE_COPY		PAGE_READ
+>   #define PAGE_COPY_EXEC		PAGE_READ_EXEC
+> diff --git a/arch/riscv/kernel/sys_riscv.c b/arch/riscv/kernel/sys_riscv.c
+> index f1c1416a9f1e..846c36b1b3d5 100644
+> --- a/arch/riscv/kernel/sys_riscv.c
+> +++ b/arch/riscv/kernel/sys_riscv.c
+> @@ -8,6 +8,8 @@
+>   #include <linux/syscalls.h>
+>   #include <asm/cacheflush.h>
+>   #include <asm-generic/mman-common.h>
+> +#include <vdso/vsyscall.h>
+> +#include <asm/mman.h>
+>   
+>   static long riscv_sys_mmap(unsigned long addr, unsigned long len,
+>   			   unsigned long prot, unsigned long flags,
+> @@ -17,6 +19,15 @@ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
+>   	if (unlikely(offset & (~PAGE_MASK >> page_shift_offset)))
+>   		return -EINVAL;
+>   
+> +	/*
+> +	 * If only PROT_WRITE is specified then extend that to PROT_READ
+> +	 * protection_map[VM_WRITE] is now going to select shadow stack encodings.
+> +	 * So specifying PROT_WRITE actually should select protection_map [VM_WRITE | VM_READ]
+> +	 * If user wants to create shadow stack then they should use `map_shadow_stack` syscall.
+> +	 */
+> +	if (unlikely((prot & PROT_WRITE) && !(prot & PROT_READ)))
+> +		prot |= PROT_READ;
+> +
+>   	return ksys_mmap_pgoff(addr, len, prot, flags, fd,
+>   			       offset >> (PAGE_SHIFT - page_shift_offset));
+>   }
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index fa34cf55037b..98e5ece4052a 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -299,7 +299,7 @@ pgd_t early_pg_dir[PTRS_PER_PGD] __initdata __aligned(PAGE_SIZE);
+>   static const pgprot_t protection_map[16] = {
+>   	[VM_NONE]					= PAGE_NONE,
+>   	[VM_READ]					= PAGE_READ,
+> -	[VM_WRITE]					= PAGE_COPY,
+> +	[VM_WRITE]					= PAGE_SHADOWSTACK,
+>   	[VM_WRITE | VM_READ]				= PAGE_COPY,
+>   	[VM_EXEC]					= PAGE_EXEC,
+>   	[VM_EXEC | VM_READ]				= PAGE_READ_EXEC,
+> diff --git a/mm/mmap.c b/mm/mmap.c
+> index d89770eaab6b..57a974f49b00 100644
+> --- a/mm/mmap.c
+> +++ b/mm/mmap.c
+> @@ -47,6 +47,7 @@
+>   #include <linux/oom.h>
+>   #include <linux/sched/mm.h>
+>   #include <linux/ksm.h>
+> +#include <linux/processor.h>
+>   
+>   #include <linux/uaccess.h>
+>   #include <asm/cacheflush.h>
 
-Ping.
 
-Hi all, any comments on this patch?
+What happens if someone restricts the permission to PROT_WRITE using 
+mprotect()? I would say this is an issue since it would turn the pages 
+into shadow stack pages.
 
-Thanks and Regards
-Madadi Vineeth Reddy
+
