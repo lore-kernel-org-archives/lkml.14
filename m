@@ -1,96 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C58C20323;
-	Sun, 12 May 2024 12:12:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2E0210FB;
+	Sun, 12 May 2024 12:13:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715515938; cv=none; b=PjKBDAgsUSCt5lEmlEl0XWfnY2oQQpjoP2R4V/6QdW6pIoQ01+P7Ne5E7ZJxQIEnzV+khCVe739GtSpLcyUIt2g9BNlhvsxEvmRfHSJ1c5EovHRTHfJLZuBNq8zEtbtDcJ0GM/NyQze9yIWPLDLVQEMqAZ+62gNYACYY8RPyCIk=
+	t=1715515997; cv=none; b=dSM+E21SI1GIh6Y3ifIT0oc58cV299eSLW2JfWBOiv7xnJ8KPxMXWghwps2chxzFcxpWfGOCJTFy1dX3ujiEjxt9u4b3yXlsZwbvM5Ki5opx+CUExrIFitYBlaLRTtKHH1HWk213qz/dHcQMSAT9G/LlaMAbcbhbVKGwohA0mZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715515938; c=relaxed/simple;
-	bh=lOIv9CYGdaM8Wpum8P1i2gOjEdfKKm5DnGLmgvog6Z4=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=j0dDIDyKql0tIQFC0f7S/NnZlTb0ezyFJjOI21bDxZVIVHuhiq5cmVSWjCgkRT6t7fCfbf91u4fKBY0DFRxaJgkcuNjMcJ2zUOgH0YuQjLxc9zoa6tqHlfd+BAniC4eQVQAyDip7R+OWSrC9SM2rJsfK0aVi+KHv5Nmtq7oSk4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H7Yot5SR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715515997; c=relaxed/simple;
+	bh=9ecrq6ewkCPgWwI2dBv/kDtPnydKl5OIf4t6YTMMTPM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YVff1PS2uNZamgz+EvhwOzt3hiY+SuIPYsvN8VXWKseleD+hSBuo0437+DTEd5+IySO1N6ClKNH51R8wovNw7J7iJffbxt6v+gw6uATaKQ8oJdofU66O5Y5AoKtdJ/vprTxEuoI8NWRHj7R9NZczLXk0QDdEC2MO+xqHl7esRbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUEj2HC5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H7Yot5SR"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C52D2C116B1;
-	Sun, 12 May 2024 12:12:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUEj2HC5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C22CC116B1;
+	Sun, 12 May 2024 12:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715515937;
-	bh=lOIv9CYGdaM8Wpum8P1i2gOjEdfKKm5DnGLmgvog6Z4=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=H7Yot5SR7bM+tEik8pWRwqRAEyzVhl04jbeFEwCIQqEXeLkHpk527/AIfSY9F9QGs
-	 TpTeDUeh3Us2zNuLhth8jqK7+PBM0v5fi4GtvkkRF1rfPCSRHmCJazFGgRAVwxT3yU
-	 um5ty7Py1qzlgp2fubDrq8YqvSuSXP5XOo7+hCRbv1l5lo1aktw5Nq8iPSdCrZ+DT/
-	 uaR1ecJOh98ZGq9lpRI0v4DOVmsf+g+z4LnT5rGWYHW6t0dxIyiCphEaV05BkzyCkd
-	 zBTKtUA+PF7efPJiMQBPb0kAuPJ08dJFkCu2MfgRBeXuE1rQqhJY5ultxNqJLkEhRi
-	 VGtXZj5q85e3Q==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA205C25B5F;
-	Sun, 12 May 2024 12:12:17 +0000 (UTC)
-From: Sven Peter via B4 Relay <devnull+sven.svenpeter.dev@kernel.org>
-Subject: [PATCH 0/2] Bluetooth: hci_bcm4377 fixes
-Date: Sun, 12 May 2024 12:12:06 +0000
-Message-Id: <20240512-btfix-msgid-v1-0-ab1bd938a7f4@svenpeter.dev>
+	s=k20201202; t=1715515997;
+	bh=9ecrq6ewkCPgWwI2dBv/kDtPnydKl5OIf4t6YTMMTPM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=fUEj2HC5irRdGCzhWGUvrZg3OEGI1RPbWs71u6DaREfu4RQV5BA8Mya5rwOg+spVy
+	 eGOccclJR+/DKa7PMLyh4qo8wqNI9M9JCegaBowmpsNjolGElBd5k3xvyXQ4ps7jHl
+	 4s8SRh88R8xU9ruKsEjrOd3vcBWdcJfLkByoTFehaXp2KGZMu+N60ARUdKrv9tNZ0L
+	 emTgh5t7fA+qrIrqY3zYmzAqSAqWKzQA5zO4FQmF0OoDdH8Pfn8gVN/E0gOQeOl/34
+	 qh+sE7eSeQmDfbjoDvUv/MYQg/EwlDGGxfo8aIACAi0WFp5xUHu59MbVxbLOib5OdM
+	 eAeqjiPcroipw==
+Date: Sun, 12 May 2024 13:13:04 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Vasileios Amoiridis <vassilisamir@gmail.com>
+Cc: lars@metafoo.de, andriy.shevchenko@linux.intel.com,
+ ang.iglesiasg@gmail.com, mazziesaccount@gmail.com, ak@it-klinger.de,
+ petre.rodan@subdimension.ro, phil@raspberrypi.com, 579lpy@gmail.com,
+ linus.walleij@linaro.org, semen.protsenko@linaro.org,
+ linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 4/9] iio: pressure: bmp280: Use unsigned data types
+ for raw sensor data
+Message-ID: <20240512131304.687de3b1@jic23-huawei>
+In-Reply-To: <20240508165207.145554-5-vassilisamir@gmail.com>
+References: <20240508165207.145554-1-vassilisamir@gmail.com>
+	<20240508165207.145554-5-vassilisamir@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIABayQGYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIxMDU0Mj3aSStMwK3dzi9MwU3RRzMwMjy0TzFEtDcyWgjoKiVKAk2LTo2Np
- aAC/1v5RdAAAA
-To: Hector Martin <marcan@marcan.st>, 
- Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Sven Peter <sven@svenpeter.dev>, stable@vger.kernel.org
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715515936; l=990;
- i=sven@svenpeter.dev; s=20240512; h=from:subject:message-id;
- bh=lOIv9CYGdaM8Wpum8P1i2gOjEdfKKm5DnGLmgvog6Z4=;
- b=jo+i34A8NOxsam6xXuE0fOchQDV91L+Thb8dJuNz0ff62D+4IpNSyLKnSj5jHwq69S1kkNjWn
- LBUq4GIaVAvCemQrrixNxdXViAjDxtvuELGEqQxzUC16YPHvmWJTjQy
-X-Developer-Key: i=sven@svenpeter.dev; a=ed25519;
- pk=jIiCK29HFM4fFOT2YTiA6N+4N7W+xZYQDGiO0E37bNU=
-X-Endpoint-Received: by B4 Relay for sven@svenpeter.dev/20240512 with
- auth_id=159
-X-Original-From: Sven Peter <sven@svenpeter.dev>
-Reply-To: sven@svenpeter.dev
 
-Hi,
+On Wed,  8 May 2024 18:52:02 +0200
+Vasileios Amoiridis <vassilisamir@gmail.com> wrote:
 
-There are just two minor fixes from Hector that we've been carrying downstream
-for a while now. One increases the timeout while waiting for the firmware to
-boot which is optional for the controller already supported upstream but
-required for a newer 4388 board for which we'll also submit support soon.
-It also fixes the units for the timeouts which is why I've already included it
-here. The other one fixes a call to bitmap_release_region where we only wanted
-to release a single bit but are actually releasing much more.
+> The raw sensor data that have not been compensated yet cannot be
+> signed values, so use unsigned ones. Also, compensated pressure
+> values cannot be negative so use unsigned also there.
+> 
+> Also, drop redundant cast of data->t_fine variable from s32 to s32.
+> 
+> Signed-off-by: Vasileios Amoiridis <vassilisamir@gmail.com>
+Looks good to me.
 
-Best,
-
-Sven
-
-Signed-off-by: Sven Peter <sven@svenpeter.dev>
----
-Hector Martin (2):
-      Bluetooth: hci_bcm4377: Increase boot timeout
-      Bluetooth: hci_bcm4377: Fix msgid release
-
- drivers/bluetooth/hci_bcm4377.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
----
-base-commit: cf87f46fd34d6c19283d9625a7822f20d90b64a4
-change-id: 20240512-btfix-msgid-d76029a7d917
-
-Best regards,
--- 
-Sven Peter <sven@svenpeter.dev>
-
+Applied.
 
