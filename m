@@ -1,130 +1,141 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45792D04E
-	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 18:37:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75BD24436B
+	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 18:38:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715539047; cv=none; b=Mqma7yOIUQ/602BpzXEgSfP8OZ8EsPnDtxwEQdtZ6xtwXwjW/MHPrT5V+Xd2FTJROHO46YOfDhdcjcX4+1AZdzG8Iz4VrZPdFyoj9S/mhnuM9MyzKU6Vv3eXWC53Ocs1nT8cy/vcAAr7lxtVzWfLvZ0MgGsMwhamKq4BTYCkkOw=
+	t=1715539129; cv=none; b=P2SYJ4ti0WQ6kDY242/I7Jy58cJDlN3CYOq6yIz+Aui09HV+VkmtvrwL+7V+WMrBt4P4iiwpic4Xffx7EmO0xooeorH5SlrDQEA9kd7N6XKlaaiCV+AYtHspcVQNkEGNsj9jfmDWSZcjLZpwSruFLIbJg5f9jXuHO72jqEn3rnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715539047; c=relaxed/simple;
-	bh=EsBxKjiK3YT2IXz67XdPLB6hnSXRyOnEnLz6QQoWq/E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c59LtIuSrNk2rNUDaT5REzh48MnkMdU8nLJh7mg7S2ExPBxXqlhXe4xe24nyQGVU5vD5SiObnfsIq1LQsczJBHuqoPRHg4Fya02/qK0IPQ08E4Xm4mMIhq3AIN11qpeD4OmF8ZmqCTKKpcIJVaT8/uoGBEi4HCqBGmXk3B36uJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=wdMvA4Qv; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1715539129; c=relaxed/simple;
+	bh=X8aQjTXaTz7wY1WVgxn6ivryyj3AJO/0J1TeXIhDaVM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=U49kdra9btwvT6+4vUULFV2tZpnrEC65VUV+hvhhpdgzBlviGr3lYYQohITTxM+46sLvZ+aiwryiws4N68pWOF8XbS9KXjzQw0BNmlad/xLb2JlRYOJ40fr7SCLh9DAlM5qvuw03FANLf0plzB6SCpgZWNta7+UHdy95uKivcrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk; spf=none smtp.mailfrom=metaspace.dk; dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b=g4BXX3PX; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=metaspace.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=metaspace.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="wdMvA4Qv"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ee954e0aa6so26675195ad.3
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 11:37:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=metaspace-dk.20230601.gappssmtp.com header.i=@metaspace-dk.20230601.gappssmtp.com header.b="g4BXX3PX"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-6001399f22bso2427525a12.0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 11:38:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1715539044; x=1716143844; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xvDALX2Uri5RTgIn6pzRLr5p/TpABW6ze+cHJXhnhz0=;
-        b=wdMvA4QvO9dUJ6/CsD1KXqndM/gwWX/PlXL09eiIqLKMVjvLAyYRzkLxxbOa8OgN9K
-         TiiYmLKLrMg71pBy5XAc1Hwp1Fmeli8fVtTmj36MHgcMccKSQk5IfwlCpxUz0rXFYhEG
-         8zPbHhf+BSqCyEcSzNLG09alINutQhD5JTv5w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715539044; x=1716143844;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=metaspace-dk.20230601.gappssmtp.com; s=20230601; t=1715539127; x=1716143927; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xvDALX2Uri5RTgIn6pzRLr5p/TpABW6ze+cHJXhnhz0=;
-        b=Zz4FseiHsd9dUPnVffrixe2LknUiLn/tib6YExSYnVDjX8WOseW4a05n7OP+0ItmQE
-         HQ2DjEcqusHYnZQ156ZljGHQ2psjwCDoZv4a8fJcBi9XGDrR1ktOYeCEgd1CCaeSlz0q
-         JWfJzRHeHX/neDetEFRC9IkMZSzLYU8pz8BliCg4yClz6qa0nQbWEOYWrb9eyBb9RsDv
-         JYAs23SnFFtZqSNRxnYit3+GtH/jp8DXfD3ExdX0V5YkxNMqure/SYwKBbj89sV9Lzwc
-         Bid/vPG22IiXFn23DCOPiloVtie0uFeJzlbLferijWAO8b6phZIxowdayxX1jBTn3gec
-         S2CQ==
-X-Gm-Message-State: AOJu0Yz+H2w0PDA+7BpDBOfYDrkMtkapcySz/0iltuj3j3AKOiDXsYw5
-	KRg3Xgoc8OVUqUcndWQE24E7SUdCnHBKOKYGF2jxBBvV69JTutohMgMb+ti9Rns=
-X-Google-Smtp-Source: AGHT+IFkxbq3Rkzvs5WbT/T22/l24x4EHoOEeAsDjLGj1lSmdme4hW/JDJacIPGNIS8Nz9h/fW+3zQ==
-X-Received: by 2002:a17:903:2442:b0:1e4:17e4:3a1f with SMTP id d9443c01a7336-1ef43d2e2b7mr105905115ad.4.1715539043815;
-        Sun, 12 May 2024 11:37:23 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d1a57sm64970295ad.11.2024.05.12.11.37.22
+        bh=WquW2eXLvuryeDWwo3x+NpX21TqfTU55S+tN12tCkFw=;
+        b=g4BXX3PXyyECLds67bS2H6WXeR/UfrNFHW/SSPh1WHPhmEPD3qKbfqx1Ynhme/N72E
+         pQ0Qh02btSKKdDCnpbdJ9gR0N6LjqobQWe7OBBEGS2bsKlH5YN3lznuXtk8RBgWzOqci
+         SMzfvP4jXW0dKuJ1zFxT6ZP633oH6wi7Z7YZm5ULO9JOk0qhWiV0XWC3qNN1PVejrATs
+         VLwdbHN+ejVh/oXBMnixyP50w5M8hIKWPKAgOfhGVhn60LSadL0RkLVWeZTIOT3P6lID
+         qi45dPtVJykNqzGFk/W1O4XIoGm1A1vh5FQcqcEBXuNuZuCiyQJ/RWyEY1dSIfaU1zIL
+         2Zdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715539127; x=1716143927;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WquW2eXLvuryeDWwo3x+NpX21TqfTU55S+tN12tCkFw=;
+        b=gGVwHHKVf9MNb8ovLyZ4o+XDiKHX8ozBH0R8UL4lqNLhBqY5FBbW66M6ZNwafV2a/f
+         sVUyUnqkTMlUy/G6Hy9Bt7gJqXZ5rw9l/lSczOaV+FnuotHPFggzD4/7a6dpGXzut9i5
+         qqP4+u52+fcAtKQpwFrwYUxRIKE4aBoEVbewKUPaCIJoVdSZAni/FdlQ2oMS/gIOZoeB
+         zW2gIgRNr79Er/DK/DhgL0Zl89tpOYCwZtwYDc6Nr6mOdASNSlSLJRReMc03j6WAPnuZ
+         3rBG/rRjyU1Saz5tMhWSnJXQ4DKMesKkE6VCbieQb3MnEi3e3wl0dME8KLv6poQhSySq
+         tfYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZgOBKShLfoqo2MpX7E8wDmRbL3cdsXUaa8ISz4fP7WfQhcNc4+qMxOBD3VHjJdMR6mT8h2E5tuJJUJkU7a+BHtspX9TqP9dfk0Xt8
+X-Gm-Message-State: AOJu0YxX6plRVFLphLVSnrTTNaXiBgOriCb2XFTVt5PP6cksZEe2reb1
+	B1f4g1xwdZd//oNQF9clDAamn01wGMdGrnJZCbDVHQE0Mt0zqID50fKXJ6s//es=
+X-Google-Smtp-Source: AGHT+IH/CCntDThEMQQPIkw803QnM6CB5WijcOgjbfKOhlQqjrhZ/zTwXG5H6FepkU1HrUZVWQLPDQ==
+X-Received: by 2002:a17:902:7287:b0:1e4:c959:2b65 with SMTP id d9443c01a7336-1ef43e28484mr75605185ad.41.1715539126701;
+        Sun, 12 May 2024 11:38:46 -0700 (PDT)
+Received: from localhost ([50.204.89.33])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d1807sm64897775ad.59.2024.05.12.11.38.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 May 2024 11:37:23 -0700 (PDT)
-Date: Sun, 12 May 2024 11:37:20 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Tariq Toukan <ttoukan.linux@gmail.com>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	mkarsten@uwaterloo.ca, nalramli@fastly.com,
-	Tariq Toukan <tariqt@nvidia.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	"open list:MELLANOX MLX4 core VPI driver" <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH net-next v4 1/3] net/mlx4: Track RX allocation failures
- in a stat
-Message-ID: <ZkEMYDP586iKp1vT@LQ3V64L9R2>
-References: <20240509205057.246191-1-jdamato@fastly.com>
- <20240509205057.246191-2-jdamato@fastly.com>
- <a4efd162-5dc0-4ed1-b875-de12521a6618@gmail.com>
+        Sun, 12 May 2024 11:38:46 -0700 (PDT)
+From: Andreas Hindborg <nmi@metaspace.dk>
+To: Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Keith Busch <kbusch@kernel.org>,
+	Damien Le Moal <Damien.LeMoal@wdc.com>,
+	Bart Van Assche <bvanassche@acm.org>,
+	Hannes Reinecke <hare@suse.de>,
+	Ming Lei <ming.lei@redhat.com>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Cc: Andreas Hindborg <a.hindborg@samsung.com>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Chaitanya Kulkarni <chaitanyak@nvidia.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Yexuan Yang <1182282462@bupt.edu.cn>,
+	=?UTF-8?q?Sergio=20Gonz=C3=A1lez=20Collado?= <sergio.collado@gmail.com>,
+	Joel Granados <j.granados@samsung.com>,
+	"Pankaj Raghav (Samsung)" <kernel@pankajraghav.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Niklas Cassel <Niklas.Cassel@wdc.com>,
+	Philipp Stanner <pstanner@redhat.com>,
+	Conor Dooley <conor@kernel.org>,
+	Johannes Thumshirn <Johannes.Thumshirn@wdc.com>,
+	=?UTF-8?q?Matias=20Bj=C3=B8rling?= <m@bjorling.me>,
+	open list <linux-kernel@vger.kernel.org>,
+	"rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>,
+	"lsf-pc@lists.linux-foundation.org" <lsf-pc@lists.linux-foundation.org>,
+	"gost.dev@samsung.com" <gost.dev@samsung.com>
+Subject: [PATCH 3/3] MAINTAINERS: add entry for Rust block device driver API
+Date: Sun, 12 May 2024 12:39:48 -0600
+Message-ID: <20240512183950.1982353-4-nmi@metaspace.dk>
+X-Mailer: git-send-email 2.44.0
+In-Reply-To: <20240512183950.1982353-1-nmi@metaspace.dk>
+References: <20240512183950.1982353-1-nmi@metaspace.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4efd162-5dc0-4ed1-b875-de12521a6618@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, May 12, 2024 at 11:17:09AM +0300, Tariq Toukan wrote:
-> 
-> 
-> On 09/05/2024 23:50, Joe Damato wrote:
-> > mlx4_en_alloc_frags currently returns -ENOMEM when mlx4_alloc_page
-> > fails but does not increment a stat field when this occurs.
-> > 
-> > A new field called alloc_fail has been added to struct mlx4_en_rx_ring
-> > which is now incremented in mlx4_en_rx_ring when -ENOMEM occurs.
-> > 
-> > Signed-off-by: Joe Damato <jdamato@fastly.com>
-> > Tested-by: Martin Karsten <mkarsten@uwaterloo.ca>
-> > ---
-> >   drivers/net/ethernet/mellanox/mlx4/en_rx.c   | 4 +++-
-> >   drivers/net/ethernet/mellanox/mlx4/mlx4_en.h | 1 +
-> >   2 files changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/net/ethernet/mellanox/mlx4/en_rx.c b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-> > index 8328df8645d5..15c57e9517e9 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-> > +++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
-> > @@ -82,8 +82,10 @@ static int mlx4_en_alloc_frags(struct mlx4_en_priv *priv,
-> >   	for (i = 0; i < priv->num_frags; i++, frags++) {
-> >   		if (!frags->page) {
-> > -			if (mlx4_alloc_page(priv, frags, gfp))
-> > +			if (mlx4_alloc_page(priv, frags, gfp)) {
-> > +				ring->alloc_fail++;
-> >   				return -ENOMEM;
-> > +			}
-> >   			ring->rx_alloc_pages++;
-> >   		}
-> >   		rx_desc->data[i].addr = cpu_to_be64(frags->dma +
-> > diff --git a/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h b/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-> > index efe3f97b874f..cd70df22724b 100644
-> > --- a/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-> > +++ b/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
-> > @@ -355,6 +355,7 @@ struct mlx4_en_rx_ring {
-> >   	unsigned long xdp_tx;
-> >   	unsigned long xdp_tx_full;
-> >   	unsigned long dropped;
-> > +	unsigned long alloc_fail;
-> >   	int hwtstamp_rx_filter;
-> >   	cpumask_var_t affinity_mask;
-> >   	struct xdp_rxq_info xdp_rxq;
-> 
-> Counter should be reset in mlx4_en_clear_stats().
+From: Andreas Hindborg <a.hindborg@samsung.com>
 
-OK, thanks. I'll add that to the v5, alongside any other feedback that
-comes in within the next ~24 hours or so.
+Add an entry for the Rust block device driver abstractions.
 
-> BTW, there are existing counters that are missing there already.
-> We should add them as well, not related to your series though...
+Signed-off-by: Andreas Hindborg <a.hindborg@samsung.com>
+---
+ MAINTAINERS | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Yea, I see what you mean about the other counters. I think those can
-potentially be sent as a 'Fixes' later?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index aea47e04c3a5..eec752f09d43 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3657,6 +3657,20 @@ F:	include/linux/blk*
+ F:	kernel/trace/blktrace.c
+ F:	lib/sbitmap.c
+ 
++BLOCK LAYER DEVICE DRIVER API [RUST]
++M:	Andreas Hindborg <a.hindborg@samsung.com>
++R:	Boqun Feng <boqun.feng@gmail.com>
++L:	linux-block@vger.kernel.org
++L:	rust-for-linux@vger.kernel.org
++S:	Supported
++W:	https://rust-for-linux.com
++B:	https://github.com/Rust-for-Linux/linux/issues
++C:	https://rust-for-linux.zulipchat.com/#narrow/stream/Block
++T:	git https://github.com/Rust-for-Linux/linux.git rust-block-next
++F:	drivers/block/rnull.rs
++F:	rust/kernel/block.rs
++F:	rust/kernel/block/
++
+ BLOCK2MTD DRIVER
+ M:	Joern Engel <joern@lazybastard.org>
+ L:	linux-mtd@lists.infradead.org
+-- 
+2.44.0
+
