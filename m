@@ -1,406 +1,267 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f77.google.com (mail-io1-f77.google.com [209.85.166.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4BED1E49B;
-	Sun, 12 May 2024 19:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93A144E1CF
+	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 19:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715542622; cv=none; b=uU1tZi8qS0UvuJ36C3QNvjS1Lsk5luZdfPnpYJ5HinDxf3srQrP+Moe8ZodlSlM9BQImAljiGuXcHEcjariGE4kG1WCs8mJOusNcrtHDQdcueQG/xNWoM304sh5jXyOZL7qj4sEi6ivPB9OjGRvWkHrb2Jk7LBjUcEJFuv9NSCY=
+	t=1715542956; cv=none; b=mLeqNgAAEG5MicKJHaEif09MMTbCp6oSPFa9PMf7jXeB/6VGcHXUff+x2eQD3lq90ajFxo/xwMZno2XyRXvUMdQGamJghWsW1zcNCQZpDs9MzUKPFbXOnre8XL1cnVYygUexvtC0us1TxjHyJFcMMWPngAEwu/0hqoNg0EHNnrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715542622; c=relaxed/simple;
-	bh=G3fKAHoXNuSOhxG4z6fY0m1GA0VfSM6YMAmFNFcbFIs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=P7Y5A9phh85cMbPYyMorrONIYWrQlmpk4thrwNmZggsU4paQqEVlCaOvnJnY2RicGqCuf61YrCXN4wbRhNw4lOqg4oQEtx8O7RJ8Bj4ARME+Jym8NeEwG08E0K4IAvyvzntfOdQoDNAcF+JbLU4zmOq6Wwjrw/74AaVkcoK2dys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4AKdaBm; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4AKdaBm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EA7CC116B1;
-	Sun, 12 May 2024 19:37:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715542622;
-	bh=G3fKAHoXNuSOhxG4z6fY0m1GA0VfSM6YMAmFNFcbFIs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=F4AKdaBmJKF6MiTekaIcFuljt1y9pAAHHFxActeMtbAVulgDn9sCdvYF6ZotuFbpm
-	 RWM2y44ZKXy+PJWJAwDKGQivqoLuLWmPdEXlLbk8d09uKUFBj10lxlXkIgFJDuO+18
-	 vurXRNl739aGh5X+tTbkA8udQeSqHVY7TqtCRj9PZIBjGUXP88Bvhy4a7QYgrYrRzU
-	 db1uVfBl0Bhj/1j7ISuG1sCE1NV+QE6E04G+u/0yWhAE9N9sf2CWnd8jZsnPwEmUrp
-	 DeJyHL5ruE3LgnV/iip3w+e2Mvzo42FSJjWHN3T4EXHaeTX0Tq7NR4LNY4dkISa606
-	 KmhQgCz9JVpTQ==
-From: SeongJae Park <sj@kernel.org>
-To: 
-Cc: SeongJae Park <sj@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	damon@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org,
-	virtualization@lists.linux.dev,
-	cxiaoyi@amazon.com,
-	sieberf@amazon.com,
-	bodeddub@amazon.com,
-	jiamingy@amazon.com
-Subject: [RFC IDEA v2 0/6] mm/damon: introduce Access/Contiguity-aware Memory Auto-scaling (ACMA)
-Date: Sun, 12 May 2024 12:36:51 -0700
-Message-Id: <20240512193657.79298-1-sj@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1715542956; c=relaxed/simple;
+	bh=d2dOjc8x5dO3/om9et9AkseCZ86N4yjNUyvS0baIIak=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PH6/pNQx0JePLDgNc2iCNxF60Po51KZcN2sfAo4YKLEqKLvozrc/0LsUuyM5mmCAi5Wbmbie1uXkWMtTcGhERzZX6Guowz71YV1hKeQ94yLDY/Wa7RSed863M9fKppZZFYs//0zWaqncR0k5Wwr1NLzsihvp1HSOoqWjQgWIgAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f77.google.com with SMTP id ca18e2360f4ac-7e1d122f75cso190056339f.3
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 12:42:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715542954; x=1716147754;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=swvX3MoEgR7T58qLqXbRm6r0O8bNRwxhXEmLrZYDuZo=;
+        b=Yoic6Ls+Ph1a/jSx8s37xGgOrlvbdZSTaBM7JF7SCbmTED8rRV7qb1v4rQYMpfJrde
+         sNjajb5zakvynj39U/99rv5WkfY/rTvRC+vagW07l0WEMzMf7nI4bzOHMFKDR2GwNdq1
+         X9qel/vjY5P6mCXHX4u7Cf/4XQijZl6ZKhnOsy397CZCxlYXphmiYXsc8VKFj3TrK16b
+         MJOcMMX7ObUE2jNhIx58vBAJrdb5fEkcVn1S78p5Usftv//0xkY23KCDY6zn4NDE9bgi
+         TDV2hGLdGvDcCya1zm5zbOlAegvel8i2lum2pDtwBn1Pes0CreSfqmY0PPE2pzay7xXj
+         0I9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVWP+7n2o6K0JzhK/J4ln93vb0Plrm4drgALg4P4jTWNDASVF+Wehymq5MJC1GyLS1KB1bAOopNwmJwbdniauHT6vZQoWVOr0CLxvYQ
+X-Gm-Message-State: AOJu0YysW/tFAlHO/Fcot2moIZINyJ8zzZ7Gel3SwHfl8eLlE7MYBS87
+	u5CC8VIFItdgKAA5Qvo+/LXqS6Q98qucKFKZIOMYY1WwXxKhZRXdEgPHzcLSzmu3ArXV8Y6BlL+
+	kkJagsOttiyEea+KPX1V7TO6UbhLvXBWP+T5BV45BxiIdHkW3G2NPnBI=
+X-Google-Smtp-Source: AGHT+IG7ctNVN7I9vbc4tZ2ugEA6a1PlvchJIksiD3XHZsS2/19WlnfKOkNt8hQGqaT+HH9wboA8fevXEctX+RjgfIWIBurQCOMv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6638:8305:b0:488:75e3:f3c1 with SMTP id
+ 8926c6da1cb9f-489589d7ba6mr739326173.0.1715542953808; Sun, 12 May 2024
+ 12:42:33 -0700 (PDT)
+Date: Sun, 12 May 2024 12:42:33 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005be0aa061846f8d6@google.com>
+Subject: [syzbot] [v9fs?] KASAN: slab-use-after-free Write in v9fs_free_request
+From: syzbot <syzbot+df038d463cca332e8414@syzkaller.appspotmail.com>
+To: asmadeus@codewreck.org, ericvh@kernel.org, linux-kernel@vger.kernel.org, 
+	linux_oss@crudebyte.com, lucho@ionkov.net, syzkaller-bugs@googlegroups.com, 
+	v9fs@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-Extend DAMOS for access-aware gradual contiguous memory regions
-allocation, and implement a module for efficiently and automatically
-scaling system memory using the feature.
+Hello,
 
-This is not a valid patchset but a summary of the idea and pseudo-code
-level partial implementation examples of the idea.  The implementation
-examples are only for helping people's understanding of the idea and how
-it would be implemented.  The code is not tested at all.  It is even not
-attempted to be compiled ever.
+syzbot found the following issue on:
 
-Motivation: Memory Overcommit Virtual Machine Systems
-=====================================================
+HEAD commit:    ba16c1cf11c9 Merge tag 'edac_urgent_for_v6.9' of git://git..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10bd04e0980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=6d14c12b661fb43
+dashboard link: https://syzkaller.appspot.com/bug?extid=df038d463cca332e8414
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
 
-This work is motivated by an effort to improve efficiency and
-reliability of a memory over-committed virtual machine system operation
-method.  This section describes a business model of such systems, an
-available approach, and its limitations.
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Business Model
---------------
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/064cbe6db807/disk-ba16c1cf.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/64148bd6b9f3/vmlinux-ba16c1cf.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/26dda4f66cf6/bzImage-ba16c1cf.xz
 
-The business services compute/memory resource for users' workloads.  The
-service provider receives the workload from the user, runs the workload
-on their guest virtual machines, and returns the workload's output back
-to the user.  The provider calculates how much of their resource is
-consumed by the workload, and ask the user to pay for the real usage.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+df038d463cca332e8414@syzkaller.appspotmail.com
 
-To maximize the host-level memory utilization while providing the
-highest performance and lowest price to the user, the provider
-overcommit the host's memory and automatically scales the guests' memory
-based on their estimation of the workload's true memory demand in
-runtime.  To avoid low performance or high price resulting from the
-provider's mistakes in the auto-scaling, the user can specify the
-minimum and maximum amount of memory for their guest machine.
+==================================================================
+BUG: KASAN: slab-use-after-free in instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
+BUG: KASAN: slab-use-after-free in atomic_fetch_sub_release include/linux/atomic/atomic-instrumented.h:400 [inline]
+BUG: KASAN: slab-use-after-free in __refcount_sub_and_test include/linux/refcount.h:264 [inline]
+BUG: KASAN: slab-use-after-free in __refcount_dec_and_test include/linux/refcount.h:307 [inline]
+BUG: KASAN: slab-use-after-free in refcount_dec_and_test include/linux/refcount.h:325 [inline]
+BUG: KASAN: slab-use-after-free in p9_fid_put include/net/9p/client.h:275 [inline]
+BUG: KASAN: slab-use-after-free in v9fs_free_request+0x5f/0xe0 fs/9p/vfs_addr.c:128
+Write of size 4 at addr ffff8880624f428c by task kworker/u8:12/18964
 
-  User                              Service Provider
-                                   ┌─────────────────┐
-  workload, min/max memory ──────► │                 │
-                                   │      ???        │
-  workload output, bill    ◄────── │                 │
-                                   └─────────────────┘
+CPU: 1 PID: 18964 Comm: kworker/u8:12 Not tainted 6.9.0-rc7-syzkaller-00188-gba16c1cf11c9 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/02/2024
+Workqueue: events_unbound v9fs_upload_to_server_worker
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0x169/0x550 mm/kasan/report.c:488
+ kasan_report+0x143/0x180 mm/kasan/report.c:601
+ kasan_check_range+0x282/0x290 mm/kasan/generic.c:189
+ instrument_atomic_read_write include/linux/instrumented.h:96 [inline]
+ atomic_fetch_sub_release include/linux/atomic/atomic-instrumented.h:400 [inline]
+ __refcount_sub_and_test include/linux/refcount.h:264 [inline]
+ __refcount_dec_and_test include/linux/refcount.h:307 [inline]
+ refcount_dec_and_test include/linux/refcount.h:325 [inline]
+ p9_fid_put include/net/9p/client.h:275 [inline]
+ v9fs_free_request+0x5f/0xe0 fs/9p/vfs_addr.c:128
+ netfs_free_request+0x246/0x600 fs/netfs/objects.c:97
+ v9fs_upload_to_server fs/9p/vfs_addr.c:36 [inline]
+ v9fs_upload_to_server_worker+0x200/0x3e0 fs/9p/vfs_addr.c:44
+ process_one_work kernel/workqueue.c:3267 [inline]
+ process_scheduled_works+0xa12/0x17c0 kernel/workqueue.c:3348
+ worker_thread+0x86d/0xd70 kernel/workqueue.c:3429
+ kthread+0x2f2/0x390 kernel/kthread.c:388
+ ret_from_fork+0x4d/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
 
-Existing Approach
------------------
+Allocated by task 5219:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
+ __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:387
+ kasan_kmalloc include/linux/kasan.h:211 [inline]
+ kmalloc_trace+0x1db/0x370 mm/slub.c:4003
+ kmalloc include/linux/slab.h:628 [inline]
+ kzalloc include/linux/slab.h:749 [inline]
+ p9_fid_create+0x4f/0x230 net/9p/client.c:853
+ p9_client_walk+0x103/0x690 net/9p/client.c:1154
+ clone_fid fs/9p/fid.h:23 [inline]
+ v9fs_fid_clone fs/9p/fid.h:33 [inline]
+ v9fs_file_open+0x285/0xa60 fs/9p/vfs_file.c:56
+ do_dentry_open+0x909/0x15a0 fs/open.c:955
+ do_open fs/namei.c:3642 [inline]
+ path_openat+0x2860/0x3240 fs/namei.c:3799
+ do_filp_open+0x235/0x490 fs/namei.c:3826
+ do_sys_openat2+0x13e/0x1d0 fs/open.c:1406
+ do_sys_open fs/open.c:1421 [inline]
+ __do_sys_creat fs/open.c:1497 [inline]
+ __se_sys_creat fs/open.c:1491 [inline]
+ __x64_sys_creat+0x123/0x170 fs/open.c:1491
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-It is challenging to estimate real memory demand of guests from the host
-in high accuracy.  Meanwhile, the service provider owns the control of
-both the host and guests.  Therefore they use a guests-driven
-cooperative management.  The guest reports unnecessary pages to the
-host, and the host reallocates the reported pages to other guests.
-Specifically, free pages reporting is being used.
+Freed by task 32641:
+ kasan_save_stack mm/kasan/common.c:47 [inline]
+ kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+ kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:579
+ poison_slab_object+0xa6/0xe0 mm/kasan/common.c:240
+ __kasan_slab_free+0x37/0x60 mm/kasan/common.c:256
+ kasan_slab_free include/linux/kasan.h:184 [inline]
+ slab_free_hook mm/slub.c:2111 [inline]
+ slab_free mm/slub.c:4286 [inline]
+ kfree+0x153/0x3b0 mm/slub.c:4396
+ p9_fid_destroy net/9p/client.c:889 [inline]
+ p9_client_destroy+0x1fb/0x660 net/9p/client.c:1070
+ v9fs_session_close+0x51/0x210 fs/9p/v9fs.c:506
+ v9fs_kill_super+0x5c/0x90 fs/9p/vfs_super.c:196
+ deactivate_locked_super+0xc6/0x130 fs/super.c:472
+ cleanup_mnt+0x426/0x4c0 fs/namespace.c:1267
+ task_work_run+0x251/0x310 kernel/task_work.c:180
+ resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:328 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x168/0x370 kernel/entry/common.c:218
+ do_syscall_64+0x102/0x240 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-The host-level reuse of the page is invisible to guests.  Guests can
-simply use their pages regardless of the reporting.  If a guest access a
-page that reported before, the host detects it via page faults, and give
-the memory back to the guest.
+The buggy address belongs to the object at ffff8880624f4280
+ which belongs to the cache kmalloc-96 of size 96
+The buggy address is located 12 bytes inside of
+ freed 96-byte region [ffff8880624f4280, ffff8880624f42e0)
 
-Unless the guest is memory-frugal, only small amount of the guests'
-memory is reported to the host, and the host-level memory utilization
-drops.  To make the guests be memory-frugal with minimum performance
-impact, the guests run access-aware proactive memory reclamation using
-DAMON.  The basic structure of the system looks like below.
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x624f4
+anon flags: 0xfff00000000800(slab|node=0|zone=1|lastcpupid=0x7ff)
+page_type: 0xffffffff()
+raw: 00fff00000000800 ffff888015041780 ffffea00007efa00 dead000000000005
+raw: 0000000000000000 0000000000200020 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x112c40(GFP_NOFS|__GFP_NOWARN|__GFP_NORETRY|__GFP_HARDWALL), pid 32059, tgid 32059 (syz-executor.0), ts 2629641976105, free_ts 2629624772681
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x1ea/0x210 mm/page_alloc.c:1534
+ prep_new_page mm/page_alloc.c:1541 [inline]
+ get_page_from_freelist+0x3410/0x35b0 mm/page_alloc.c:3317
+ __alloc_pages+0x256/0x6c0 mm/page_alloc.c:4575
+ __alloc_pages_node include/linux/gfp.h:238 [inline]
+ alloc_pages_node include/linux/gfp.h:261 [inline]
+ alloc_slab_page+0x5f/0x160 mm/slub.c:2180
+ allocate_slab mm/slub.c:2343 [inline]
+ new_slab+0x84/0x2f0 mm/slub.c:2396
+ ___slab_alloc+0xc73/0x1260 mm/slub.c:3530
+ __slab_alloc mm/slub.c:3615 [inline]
+ __slab_alloc_node mm/slub.c:3668 [inline]
+ slab_alloc_node mm/slub.c:3841 [inline]
+ __do_kmalloc_node mm/slub.c:3971 [inline]
+ __kmalloc+0x2e5/0x4a0 mm/slub.c:3985
+ kmalloc include/linux/slab.h:632 [inline]
+ kzalloc include/linux/slab.h:749 [inline]
+ tomoyo_encode2 security/tomoyo/realpath.c:45 [inline]
+ tomoyo_encode+0x26f/0x540 security/tomoyo/realpath.c:80
+ tomoyo_realpath_from_path+0x59e/0x5e0 security/tomoyo/realpath.c:283
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_path_perm+0x2b7/0x740 security/tomoyo/file.c:822
+ tomoyo_path_unlink+0xd0/0x110 security/tomoyo/tomoyo.c:162
+ security_path_unlink+0xe3/0x140 security/security.c:1857
+ do_unlinkat+0x3e6/0x830 fs/namei.c:4396
+ __do_sys_unlink fs/namei.c:4447 [inline]
+ __se_sys_unlink fs/namei.c:4445 [inline]
+ __x64_sys_unlink+0x49/0x60 fs/namei.c:4445
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+page last free pid 32059 tgid 32059 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1141 [inline]
+ free_unref_page_prepare+0x986/0xab0 mm/page_alloc.c:2347
+ free_unref_page+0x37/0x3f0 mm/page_alloc.c:2487
+ __slab_free+0x31b/0x3d0 mm/slub.c:4198
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x5e/0xc0 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x14f/0x170 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x23/0x80 mm/kasan/common.c:322
+ kasan_slab_alloc include/linux/kasan.h:201 [inline]
+ slab_post_alloc_hook mm/slub.c:3804 [inline]
+ slab_alloc_node mm/slub.c:3851 [inline]
+ __do_kmalloc_node mm/slub.c:3971 [inline]
+ __kmalloc+0x1e2/0x4a0 mm/slub.c:3985
+ kmalloc include/linux/slab.h:632 [inline]
+ tomoyo_realpath_from_path+0xcf/0x5e0 security/tomoyo/realpath.c:251
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_path_number_perm+0x23a/0x880 security/tomoyo/file.c:723
+ security_file_ioctl+0x77/0xb0 security/security.c:2764
+ __do_sys_ioctl fs/ioctl.c:898 [inline]
+ __se_sys_ioctl+0x47/0x170 fs/ioctl.c:890
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf5/0x240 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
-  ┌─────────────────────────────┐      ┌─────────┐
-  │  Guest 1                    │      │ Guest 2 │
-  │ ┌─────────────────────────┐ │      │         │
-  │ │ DAMON-based ReClamation │ │      │         │
-  │ └────────────┬────────────┘ │      │         │
-  │              │ Reclaim      │      │         │
-  │              ▼              │      │         │
-  │ ┌─────────────────────────┐ │      │         │
-  │ │  Free pages reporting   │ │      │         │
-  │ └────────────┬────────────┘ │      │         │
-  │              │              │      │         │
-  └──────────────┼──────────────┘      └─────────┘
-                 │ Report reclaimed         ▲
-                 ▼ (free) pages             │ Alloc Guest 1
-  ┌───────────────────────────────┐         │ freed memory
-  │            Host               ├─────────┘
-  └───────────────────────────────┘
-
-The guest uses 4 KiB-size regular page by default while the host uses 2
-MiB-size regular page for efficient management of the huge host-level
-memory.  Hence, even if a guest reports a 4 KiB-page, the host cannot
-use it unless its 511 neighbor pages are also reported.  Letting the
-guest reports every 4 KiB-page only increase the reporting overhead.
-Hence the free pages reporting is tuned to work in 2 MiB granularity.
-To avoid fragmented free pages not being reported, guests also
-proactively run memory compaction ('/proc/sys/vm/compact_memory').
-
-The provider further wants to minimize the 'struct page' overhead.  For
-that, the guests continuously estimate real memory demands of the
-running workload, and hot-[un]plug memory blocks with
-'memory_hotplug.memmap_on_memory' so that 'struct page' objects for
-offlined memory blocks can also be deallocated.  The guest kernel is
-modified to let the user space do hot-[un]plug memory blocks, and report
-the hot-unplugged memory block to the host.  This memory
-hot-[un]plugging is also being used to keep the user-specified maximum
-memory limit.
-
-Limitations
------------
-
-The approach uses four kernel features, namely free pages reporting,
-DAMON-based proactive reclamation, compaction, and memory
-hot-[un]plugging.  Utilizing the four kernel features that not designed
-to be used together for the specific case from user space in an
-efficient way is somewhat challenging.
-
-Memory hot-unplugging is slow and easy to fail.  The problem mainly
-comes from the fact that the operation requires isolating and migrating
-pages in the block to other blocks, and the operation works in memory
-block granularity, which is huge compared to pages.  The minimum amount
-of works for doing it is not small, and the probability to meet
-unmovable pages in the huge block is not low.  This makes the
-guest-level memory scaling beocmes slow and unreliable, which results in
-low host-level memory efficiency.
-
-The system-level compaction is not optimized for only the reporting
-purpose.  It could consume resource for compacting some part of memory
-that anyway will not be able to be reported to the host for reuse.
-
-Both hot-unplugging and compaction require pages isolations and
-migrations, which are valid to fail for some reasons.  The operations
-may better to be applied to cold pages first, since cold pages would
-have lower probability to be pinned or making performance impact.  But
-both hot-unplugging and compaction are access pattern oblivious.
-
-There is no control to the reported pages.  This helps keeping the
-system simple, but it makes reusing reported pages unreliable.  Any
-reported page can be accessed again by the guest.  And even if only one
-page among the reported 512 pages are accessed again, the entire 512
-pages need to be returned to the guest.
-
-Both the host and guest systems are under the service provider's
-control, but the workload is not.  Occasional host-level memory pressure
-is hence inevitable.  The host could avoid such situation by setting
-the host-driven hard memory limit on guests.  Balloon drivers like
-methods could be used.  However, such existing mechanisms lacks the
-understanding of the host's different page size and access-oblivious.
-
-Design
-======
-
-We mitigate the limitations by introducing a way to get ownership of
-contiguous memory regions in an access-aware way, implementing a kernel
-module that automatically scales the memory of the system in an
-access/contiguity-aware way, and replacing the approach with the module.
-
-Access-aware Contiguous Memory Allocation
------------------------------------------
-
-As mentioned on the above limitations section, doing page isolations and
-migrations, which are core operations of the memory scaling usage, in
-fine granularity for cold pages first may makes some improvements.
-DAMOS helps applying specific memory operations in an access-aware
-manner.  Therefore, we implement the core operations as DAMOS schemes.
-For this, we design two new DAMOS actions, namely 'alloc' and 'free'.
-
-'Alloc' DAMOS action migrates in-use pages of the DAMOS target memory
-region out of the region, and get the ownership of the pages.  The
-action also receives the granularity of the operation to apply at once.
-In implementation, 'alloc_contig_range()' may simply be used.  For each
-given-granular contig pages that successfully allocated, DAMOS does
-nothing but notifies those to the user.  Then the user can use the pages
-for their purpose.  In other words, 'alloc' DAMOS action takes ownership
-of DAMON-found region of specific access pattern in specific granularity
-and passes it to the user.  For example, the guest of the motivation use
-case can ask DAMOS to 'alloc' cold regions in 2 MiB granularity and
-report those to the host as unnecessary, to scale the memory down.
-
-'Free' DAMOS action returns the ownership of the DAMOS target memory
-region to the system.  Same to 'alloc', the user can specify the
-granularity of each operation.  Before returning the ownership, DAMOS
-notifies the user which pages are gonna be returned to the system, so
-that the user can safely forgive the ownership.  In the page fault based
-memory overcommit use case, the user would need to do nothing for such
-notification, though.
-
-Access/Contiguity-aware Memory Auto-scaling (ACMA)
---------------------------------------------------
-
-Using the two new DAMOS actions, we design a kernel module for replacing
-the abovely mentioned approach.  The module is called
-Access/Contiguity-aware Memory Auto-scaling (ACMA).  ACMA receives three
-user inputs.  Those are the minimum amount of memory to let the system
-use ('min-mem'), the maximum amount of memory to let the system use
-('max-mem'), and the acceptable level of memory pressure
-('mem-pressure').  'Mem-pressure' is represented by memory pressure
-stall information (PSI).  Then, it scales the memory of the system while
-meeting the condition utilizing three DAMON-based operation schemes,
-namely 'reclaim', 'scale-down', and 'scale-up'.
-
-'Reclaim' scheme reclaims memory of the system, coldest pages first,
-aiming the 'mem-pressure' amount of memory pressure.  That is, if the
-system's memory pressure level is lower than 'mem-pressure', it reclaims
-some coldest pages of the system.  The amount of memory to reclaim is
-proportional to distance between current pressure level and
-'mem-pressure'.  If the memory pressure level becomes higher than
-'mem-pressure', it reduces the amount again in a proportional way until
-the memory pressure level becomes same to or lower than 'mem-pressure'.
-This can be implemented as a DAMOS scheme of 'pageout' action with a
-memory pressure type quota tuning goal of 'mem-pressure' value.
-
-'Scale-down' scheme scales the memory down aiming the 'mem-pressure'
-memory pressure.  It is implemented as a DAMOS scheme of 'alloc' action
-with 2 MiB operation granularity.  Similar to 'reclaim' scheme, it has a
-memory pressure type quota tuning goal of 'mem-pressure' target value.
-For each allocated 2 MiB contig pages, it applies a vmemmap-remapping
-based 'struct page' optimization and reports those to the host so that
-the host can reuse.  The scheme has 'address range' type scheme filter.
-The filter makes the scheme to be applied to only the memory block of
-highest physical address that not completely allocated/reported, and in
-the physical address range starting from 'min-mem' and enging at the end
-of the physical address space of the system.  Once current 'scale-down'
-target memory block is entirely allocated/reported, ACMA updates the
-filter to apply the action to next lower-address memory block.
-
-'Scale-up' scheme scales the memory up aiming the 'mem-pressure' memory
-pressure.  It is implemented as a DAMOS scheme of 'free' action with 2
-MiB operation granularity.  It also uses a memory pressure type quota
-tuning goal with 'mem-pressure' target value, but it notifies DAMOS that
-the aggressiveness of the scheme and the memory pressure are inversely
-proportional.  Similar to 'scale-up' scheme, it uses an 'address range'
-type scheme filter.  The filter makes the scheme to be applied to only
-the partially or completely 'alloc'-ed and reported memory block of
-lowest starting address in the physical address range starting from '0'
-and ending at the 'max-mem' of the address space.  Inside the
-to-free-pages notification callback, ACMA cancels the vmemmap-remapping
-based 'struct page' optimization for the pages.  Once current 'scale-up'
-target address range is entirely 'free'-ed, ACMA updates the filter to
-apply the action to the just-hotplugged memory block.
-
-Overall Picture of ACMA-running System
---------------------------------------
-
-Below illustrates how the ACMA's three schemes will be applied to
-different address ranges.  The effective memory size of the system
-starts from 'end' bytes, and automatically be changed depends on the
-real memory pressure of the system.  Once it becomes lower than 'max'
-bytes, it will never get greater than 'max' bytes, since 'scale-up'
-cannot make impact over the limit.  It can also never gets lower than
-'min' bytes because 'scale-down' does not cross the line.  'reclaim'
-scheme makes the system memory-frugal and helps 'scale-down' by making
-free pages that can be migration destinations.  Because all the schemes
-auto-tune their aggressiveness based on 'mem-pressure', the system's
-memory pressure cannot exceed the user-acceptable level.
-
-          Reclaim
-             │
-  ┌──────────┴────────────┐
-  │                       │
-  │          scale-down   │
-                 │
-         ┌───────┴────────┐
-         │                │
-  0      min-mem max-mem  end (memory address)
-  │              │
-  └──────┬───────┘
-         │
-     Scale-up
-
-Ballooning-ACMA Integration
----------------------------
-
-As mentioned on the limitations section above, the host may want to use
-ballooning-like host-driven guest memory limit setup, while existing
-implementation is not access/contiguity-aware.  We integrate ballooning
-driver and ACMA for such a case.  We modify ballooning to set the
-'max-mem' of ACMA instead of the classic page allocation-based
-ballooning inflation.  Specifically, we expose a function for setting
-the 'max-mem' of ACMA, and update virtio-balloon driver's
-virtballoon_changed() to use the function to set effective hard memory
-limit of the guest.  In this way, the host can simply use the classical
-virtio-balloon interface while the ballooning driver is working in the
-access/contiguity-aware efficient way.
-
-Possible Future Usage of Access-aware Memory Allocation
-=======================================================
-
-As mentioned on the motivation section above, this work is motivated by
-the memory over-commit VM systems.  However, we believe similar
-approaches could be used for more use cases.  Introducing two such cases
-below.
-
-Contiguous Memory Allocation
-----------------------------
-
-For contiguous memory allocation, a large contiguous memory pool is
-required.  Current approaches reserve such regions in early boot time
-before the memory is fragmented, or define zones of specific types.  The
-pool can exclusively used for only the contiguous memory allocation, or
-allow non-contiguous memory allocation to use it under special condition
-such as allowing only movable pages.  The second approach improves the
-memory utilization, but sometimes suffers from pages that movable by
-definition, but not easily movable in practice, similar to the memory
-block-level page migration for memory hot unplugging that described on
-the limitation section.  Even without the migration reliability and the
-speed, finding the optimum size of the pool is challenging.
-
-We could use ACMA-like approach for dynamically allocating a memory pool
-for contiguous memory allocation.  It will be similar to ACMA but do not
-report DAMOS-alloc-ed pages to the host.  Instead, use the regions as
-contiguous memory allocation pool.
-
-DRAM Consuming Power Saving
----------------------------
-
-DRAM consumes and emits huge amount of power and carbon, respectively.
-On bare-meta machines, we could scale down memory using ACMA, hot-unplug
-completely DAMOS-alloc-ed memory blocks, and power off the DRAM device if
-the hardware supports such operation.
-
-Discussion Points
-=================
-
-- Is there existing better alternatives for memory over-commit VM
-  systems?
-- Is it ok to reuse pages reporting infrastructure from ACMA?
-- Is it ok to reuse virtio-balloon's interface for ACMA-integration?
-- Will access-aware migration make real benefit?
-- Does future usages of access-aware memory allocation make sense?
-
-SeongJae Park (6):
-  mm/damon: implement DAMOS actions for access-aware contiguous memory
-    allocation
-  mm/damon: add the initial part of access/contiguity-aware memory
-    auto-scaling module
-  mm/page_reporting: implement a function for reporting specific pfn
-    range
-  mm/damon/acma: implement scale down feature
-  mm/damon/acma: implement scale up feature
-  drivers/virtio/virtio_balloon: integrate ACMA and ballooning
-
- drivers/virtio/virtio_balloon.c |  26 ++
- include/linux/damon.h           |  37 +++
- mm/damon/Kconfig                |  10 +
- mm/damon/Makefile               |   1 +
- mm/damon/acma.c                 | 546 ++++++++++++++++++++++++++++++++
- mm/damon/paddr.c                |  93 ++++++
- mm/damon/sysfs-schemes.c        |   4 +
- mm/page_reporting.c             |  27 ++
- 8 files changed, 744 insertions(+)
- create mode 100644 mm/damon/acma.c
+Memory state around the buggy address:
+ ffff8880624f4180: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+ ffff8880624f4200: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+>ffff8880624f4280: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+                      ^
+ ffff8880624f4300: 00 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc
+ ffff8880624f4380: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+==================================================================
 
 
-base-commit: 40475439de721986370c9d26f53596e2bd4e1416
--- 
-2.39.2
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
