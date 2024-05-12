@@ -1,23 +1,40 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5132B1CD1F;
-	Sun, 12 May 2024 17:12:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFDB4B5A6;
+	Sun, 12 May 2024 17:13:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715533940; cv=none; b=pgyBHAb9TT6OKsq8DbPiK79fymyR9KZkeJJ06WNvzaEijuhm9pxlJjaLzz/odyyRihliK9sr3gEVyCp6K0MjSCefrBOBBg/h20lOmtav4XBLDztv9tCx24o6ml2/3Z+ac3oi7JxioT9uZmvIVRLj/qvHW5unPUM1zgsdmnFc4Vw=
+	t=1715533989; cv=none; b=dk7JGY05rLqJkq2ajnb8P2oMpdZ818N/fjSx49FVI0AGorQfuWxp/PcAv2Ul8bwA5e/Sv/xVpOoTfBtlYoWYPIEooAyqNSclwpFO1g4ycygh8netBBrvxxxoWY1zpo1g4tu9NlrWR240P2dygzGJyN36Ov93dKGreRMROVj5qXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715533940; c=relaxed/simple;
-	bh=w6NwSoOtMT0hnPgKaWCq1divH8ZZ5o+3MEIUab+wZAw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SqnJyFofZcmy07XjMWGzHVkXHx2omAl9vm5FxkpgPeuP1IRHYvdxP+iBthgD1b6Z80wvtDPLSJ5NYWbN0SWgQrjwnN/WWK35dLn5X+xlYTnpFvkx43v19gLx4GRmxjj3ruykxW4/2RuMNNyIDqUEHGQ3sr72YXUsTciAoI0dQrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B9EE740007;
-	Sun, 12 May 2024 17:11:03 +0000 (UTC)
-Message-ID: <cbbb6e81-355b-4e07-b1e5-4b3ffe6c79ae@ghiti.fr>
-Date: Sun, 12 May 2024 19:10:59 +0200
+	s=arc-20240116; t=1715533989; c=relaxed/simple;
+	bh=VDSb4DbMpc1FY1UtGk9RbyFh7cLMhvTk2YjT8OE06Y8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=BrVfhOvL5DAVBOsyi6OA47uP1mxoBmJkF8n5tr2mbJNKHQPRC0NVbq43amqjOq/wZH15n3me6VAmNRpyWjrzw7pH9hzd3xGf4BnxcwPcrY50oVZCrxGc4kWfOcKJWNY4t647wIzWL3FpkXWDvC0B9usdGhtpajz8BpVN1wJEaMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=U4cId8CD; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="U4cId8CD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1715533956; x=1716138756; i=markus.elfring@web.de;
+	bh=qcThUF06zC9osZK76mN+mMVo2ws1e0dYwDrXjIgp0WM=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=U4cId8CD2ANuydclzA3kWTobo8MZNoEhKBevF78ibF8GvlzR0re8dlKBhF9RsccS
+	 6WAheIhwudGMfjEAKOHEx2KvrA6mJeXVeIRk886k2Xs8RpwbIKrAX87zBGpPW6Oa8
+	 Cy2PhsG3IQzFjMmcaRTCm7vP2BJtwRZipKo4SOdt4CODUSHmJ5wxEdPKPO+s/bzk/
+	 kv5O5mhvAjuIF7rRE6TuUh+WGP5GgjX7abEV4SZY1tpHZMeF0Rpe+T9xgs2xmB2Y7
+	 fJx0H9wJl9CEx0aU7kbvEQrfz9ZjS08pCr4uTMJebmu6UK4EK1/RUGMLEAC5651HY
+	 nDJQ8FtFNir4XKxqUg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.89.95]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1M1JAm-1s8wqE2Vq6-00H3K2; Sun, 12
+ May 2024 19:12:36 +0200
+Message-ID: <34c7ffeb-1fe9-4e89-a7b6-c6a8be17df90@web.de>
+Date: Sun, 12 May 2024 19:12:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -25,70 +42,63 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 20/29] riscv/kernel: update __show_regs to print shadow
- stack register
-Content-Language: en-US
-To: Deepak Gupta <debug@rivosinc.com>, paul.walmsley@sifive.com,
- rick.p.edgecombe@intel.com, broonie@kernel.org, Szabolcs.Nagy@arm.com,
- kito.cheng@sifive.com, keescook@chromium.org, ajones@ventanamicro.com,
- conor.dooley@microchip.com, cleger@rivosinc.com, atishp@atishpatra.org,
- bjorn@rivosinc.com, alexghiti@rivosinc.com, samuel.holland@sifive.com,
- conor@kernel.org
-Cc: linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-mm@kvack.org, linux-arch@vger.kernel.org,
- linux-kselftest@vger.kernel.org, corbet@lwn.net, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com,
- akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com,
- shuah@kernel.org, brauner@kernel.org, andy.chiu@sifive.com,
- jerry.shih@sifive.com, hankuan.chen@sifive.com, greentime.hu@sifive.com,
- evan@rivosinc.com, xiao.w.wang@intel.com, charlie@rivosinc.com,
- apatel@ventanamicro.com, mchitale@ventanamicro.com,
- dbarboza@ventanamicro.com, sameo@rivosinc.com, shikemeng@huaweicloud.com,
- willy@infradead.org, vincent.chen@sifive.com, guoren@kernel.org,
- samitolvanen@google.com, songshuaishuai@tinylab.org, gerg@kernel.org,
- heiko@sntech.de, bhe@redhat.com, jeeheng.sia@starfivetech.com,
- cyy@cyyself.name, maskray@google.com, ancientmodern4@gmail.com,
- mathis.salmen@matsal.de, cuiyunhui@bytedance.com, bgray@linux.ibm.com,
- mpe@ellerman.id.au, baruch@tkos.co.il, alx@kernel.org, david@redhat.com,
- catalin.marinas@arm.com, revest@chromium.org, josh@joshtriplett.org,
- shr@devkernel.io, deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
- jhubbard@nvidia.com
-References: <20240403234054.2020347-1-debug@rivosinc.com>
- <20240403234054.2020347-21-debug@rivosinc.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20240403234054.2020347-21-debug@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
+To: Hao Ge <gehao@kylinos.cn>, linux-trace-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Steven Rostedt <rostedt@goodmis.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Hao Ge <hao.ge@linux.dev>
+References: <20240511024255.34767-1-hao.ge@linux.dev>
+Subject: Re: [PATCH] eventfs: Directly return NULL to avoid null point
+ dereferenced
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20240511024255.34767-1-hao.ge@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:YJ0QvveAYIQ2kv+x3SshdYGgo8Z5AaQYcpxaqUcvLgas5BPC1+Q
+ yL6w/Ssrgbn4E/gxTyrx8lX777uQx2ISr4JB07wZBWRzZspOv9kJgDO99hMReE5nEwPYRbx
+ 6fw04kW3AU1eW5CEJtvSC6aYPAwgbz+PMKzqPy1Wur/qUurE/VBgt55f7riw+VNKWufO16K
+ 37cpFFPtfakxqrgMn3rDg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:/rt3hg9wDxo=;lMiyN6KiDxzUuuT69+fJAMVnf69
+ 6NhqHDh+ChhgyGsipE/IzRwQyZ+no7qNzgzTF6rAMUQDE1q5DOvftZ1896ln/hbTx/MBqqF2i
+ TD1BQFGcx32XSDDd4INrLdHoEQzfZ5YCN2xRwYD+KldKLps4aRlFUv6ojCLy94GwvhxDr/oXI
+ MZIQGHsfw7dv/Z/z77OmRPUwyz49QpgQTq0I272LQxieeDZokRw0wQPhZSmGErJjHkYegvqAs
+ Pmh+GyNyUjavy/z/f5moUFys71gvJaOGgpwftsKDoKIXjzIW3G2JBDHyWcPFBz3OOfNK9KNdL
+ AXM3VOFYRDWBxyRGLFvpska64oTu7PN51ux55vh7Tz/tvhCnebeMYk3YtkvjAH5hP5AyGQAxr
+ sRxVJoEQokD/uJr8Sbi79TAgOiNtQXzMUq8FKXV1VMcKJUu8u83AEtJf9GWXNesvjPJ4FFYqH
+ 7CKy+RECraT/CXjZ1uQrLBDPMcRKuZj5M8Uk2TypRUsUo31pZ+o2V81BY20wiMNXD6aRDeNGX
+ KCK6KsF6/KKbMRAbK7hTP4PkkKaGZvRuDSDurHV+f8Kg75W6f4a1w6m8+ByIFpfglmkehYkoE
+ r+wzhUH0I0FLfAycC7q0D1kbfpwP2h2xsvNQ4CAvpsv5/LqXX3Go0ZCVbt2yH/n4iuBtZtRec
+ OHIwlfwyd2IwdvV1Ayn/ujtHKy+mVcD9MQklDYFhTRhj1Aw9oO+HHJcaLPqXF2eEfj/WKnCE1
+ V3NbU4pxV0wq3ibiso0Wp1Vn5LgjMQco52gHnJq79ToKgOMiAmSrXUSFWysqJ1VpsR3NBlIB/
+ 07uokY59xhAoCArWMFb2HN7l7RCUNhO0u9rVON7mM1YDk=
 
-On 04/04/2024 01:35, Deepak Gupta wrote:
-> Updating __show_regs to print captured shadow stack pointer as well.
-> On tasks where shadow stack is disabled, it'll simply print 0.
->
-> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> ---
->   arch/riscv/kernel/process.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
-> index ebed7589c51a..079fd6cd6446 100644
-> --- a/arch/riscv/kernel/process.c
-> +++ b/arch/riscv/kernel/process.c
-> @@ -89,8 +89,8 @@ void __show_regs(struct pt_regs *regs)
->   		regs->s8, regs->s9, regs->s10);
->   	pr_cont(" s11: " REG_FMT " t3 : " REG_FMT " t4 : " REG_FMT "\n",
->   		regs->s11, regs->t3, regs->t4);
-> -	pr_cont(" t5 : " REG_FMT " t6 : " REG_FMT "\n",
-> -		regs->t5, regs->t6);
-> +	pr_cont(" t5 : " REG_FMT " t6 : " REG_FMT " ssp : " REG_FMT "\n",
-> +		regs->t5, regs->t6, get_active_shstk(current));
->   
->   	pr_cont("status: " REG_FMT " badaddr: " REG_FMT " cause: " REG_FMT "\n",
->   		regs->status, regs->badaddr, regs->cause);
+> When the condition ei->is_free holds,we return NULL directly to
+> avoid update_events_attr to use NULL point about ei.
+
+* Please avoid typos in the summary phrase and the commit message.
+
+* Would you like to use an imperative wording for an improved change descr=
+iption?
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/=
+Documentation/process/submitting-patches.rst?h=3Dv6.9-rc7#n94
 
 
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+=E2=80=A6
+> +++ b/fs/tracefs/event_inode.c
+> @@ -346,8 +346,7 @@ static struct eventfs_inode *eventfs_find_events(str=
+uct dentry *dentry)
+>  		 * doesn't matter.
+>  		 */
+>  		if (ei->is_freed) {
+> -			ei =3D NULL;
+> -			break;
+> +			return NULL;
+>  		}
+=E2=80=A6
 
+How do you think about to omit curly brackets here?
+
+Regards,
+Markus
