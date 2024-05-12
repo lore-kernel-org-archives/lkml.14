@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AAC83FB8B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2AA2F873;
 	Sun, 12 May 2024 15:25:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715527547; cv=none; b=EYp1wo6icF7tdNVZcmV1pAgUVivzlHUMKdvIAs+VN/CpfImq8Xdk2ahp9XPjyQRb0uuy4EYECbjZ4iWhwDhwT5nTOgqSi2bBOof5zCaUANaNDoZQZ+B1lK7+HkHSXxTK9rvmWBoVhMA9VFrKPSIJIQA5TbwYPhz6UAQB5ZpYQO4=
+	t=1715527547; cv=none; b=YA4RvQpolwTRps5J+fvVHoyXhKxy32MSfAFPHCay/QijKkotO8R5J0KNq/YWOwAbDlblOHa58JIZLARWCrnaGHzk0xSFwCWJ5Q3o24zU+m1I8J7xldlxzvhQiKADLTCvteWBIbvhkcjLmIEHaRgeSdrd8KreABwbSQA+8SPoZp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1715527547; c=relaxed/simple;
-	bh=VxXd1pVTHgFPYpuyHPxoomX3P5xw2HYOOi9eD32Pv50=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T0A3a9AxKmEwlhrTUVNtqwGddNRvHV4kq3+Y8uORpfYsW4c3j8ebX3acTy/BizteEk4NmBWKXRgF63tMDn3jMthhFizDp8EAa8tqdcYocl7EMj4Bhl9185VE6edt9OdLG1I+v8kRW2ddveEIih0nmkz8UAe/DE77Qe5s9NvuPNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFGSdjJq; arc=none smtp.client-ip=10.30.226.201
+	bh=lhIYri0VaZW515AxkaDskA2UPG8MGvocYjopSK7g3Pw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Wp4Zg/0GQGdprXN8CGvZ63y9bs+ZZ5mhPDTegQ5oNWLrDLUE7aDe2LYLIhy0mLPnn4NzZjJmIHM2BK/XcJWqX9PLLhWIQ2bDjwel1DeK6Hd0A3jrM/lmiltnX/487sik4Y9kfw8IXpFe8Ibr1KoDJAl8flXPW/LEOXJlKNodDZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gq3PPCkn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFGSdjJq"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4641EC4AF11;
-	Sun, 12 May 2024 15:25:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gq3PPCkn"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F2A7CC116B1;
+	Sun, 12 May 2024 15:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1715527547;
-	bh=VxXd1pVTHgFPYpuyHPxoomX3P5xw2HYOOi9eD32Pv50=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=dFGSdjJq05nFpLJHZFgRinsGoYsV2u3q13UBxbSAsOiq2/ZgzBP8K2sWH+0vZF4Xl
-	 am9Knl/KwBIXy+9nd/G2246osRwrqqglllTWXMKxE6o+f1pQIseHMB8TefxIwaCsuX
-	 Vtgctp1nSmeQNaShThpVsLJnxZ1p0T77g+tWDLa8wNmnjSEepkZcp2nAq1MOmc94fK
-	 x+0AVRU5BmSE+TnQ5bONeqV49VnJFZjxmtxvU5gtvU94E5QueVdTUrJblBBySlcaWQ
-	 TnXVMZuiNBZ3Xqt9RWGKIuXvj1tCxTL35MhHnNSHyuNI0aGQBhl1Qi6YMcH+qrsMDL
-	 JxA+yrMeIWZzw==
+	bh=lhIYri0VaZW515AxkaDskA2UPG8MGvocYjopSK7g3Pw=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=Gq3PPCknLgA5jRAf2hAjvhbDQR8eP+RHIBtSjyfWrvDO41JA0H5TX2Cz0bMmJvz05
+	 0ecBsVtNeQuQtwNK9M6SZlyM1CQ5DI8/FjZe+yTNebM+d4DOnNcVoq6VzNc1rKFeiL
+	 Sg0JSj0JTze6vkkJKrIOYrAPY57+nwts3x29L/WrIWSxyk0ysEOt+PA0bf0RkffT0z
+	 +ppAXmeLTCvgiahefVpPFCopa/rgpPwfWgxfHZmrmNBD1VNyuWuQmyDPTF9ptIIii9
+	 bIOT+hA4jasTfcDFvhaRqnzhYyfO/x8PDV9f5VCwSo7PBL/DQbYIIj+3IF8aNEl2fD
+	 g5iC/pIhFr/mg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED1CC25B77;
-	Sun, 12 May 2024 15:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BA9C10F1A;
+	Sun, 12 May 2024 15:25:46 +0000 (UTC)
 From: =?utf-8?q?Noralf_Tr=C3=B8nnes_via_B4_Relay?= <devnull+noralf.tronnes.org@kernel.org>
-Date: Sun, 12 May 2024 17:25:42 +0200
-Subject: [PATCH v2 5/5] drm/tiny: panel-mipi-dbi: Support the pixel format
- property
+Subject: [PATCH v2 0/5] drm/tiny: panel-mipi-dbi: Support 18 bits per color
+ RGB666
+Date: Sun, 12 May 2024 17:25:37 +0200
+Message-Id: <20240512-panel-mipi-dbi-rgb666-v2-0-49dd266328a0@tronnes.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240512-panel-mipi-dbi-rgb666-v2-5-49dd266328a0@tronnes.org>
-References: <20240512-panel-mipi-dbi-rgb666-v2-0-49dd266328a0@tronnes.org>
-In-Reply-To: <20240512-panel-mipi-dbi-rgb666-v2-0-49dd266328a0@tronnes.org>
+X-B4-Tracking: v=1; b=H4sIAHHfQGYC/3WNQQ6CMBBFr0Jm7ZjSllZceQ/DosAAk2hLWkI0h
+ Ltbce3yveS/v0GiyJTgWmwQaeXEwWeQpwK6yfmRkPvMIIXUQosKZ+fpgU+eGfuWMY6tMQY1CaX
+ sxfamqyFv50gDv47uvck8cVpCfB83a/m1v2Il7J/iWqJAY+taKu0Gp+i2xOA9pXOIIzT7vn8Ap
+ iCUF7wAAAA=
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
  Jessica Zhang <quic_jesszhan@quicinc.com>, Sam Ravnborg <sam@ravnborg.org>, 
  David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
@@ -58,11 +59,11 @@ Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
  Tommaso Merciai <tommaso.merciai@amarulasolutions.com>, 
  =?utf-8?q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1715527545; l=2926;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715527545; l=3424;
  i=noralf@tronnes.org; s=20221122; h=from:subject:message-id;
- bh=VkhLn8bg4+tzwHP3nVSjku8IqF1KyX0WKDV/6VouitQ=;
- b=mRfFsOMoujbyBk79qJfPAYkXoDM5n4PyHaR8rUjCDEPPG5JsOo7woURRkpWcj+AhydkSnYnPg
- Q3tSS1zKHKJBCrPfqE63WCQjLOTR5Zc+zsvRWMkX1iIbnJhM7xkURAo
+ bh=lhIYri0VaZW515AxkaDskA2UPG8MGvocYjopSK7g3Pw=;
+ b=Hm7kK0xxbaHX6CQpob3kWLmmM048BNaVDwi2knrix2FxbeJoZxjXsSRUnypwyVUXKTOCovlmY
+ oRHFC4Nzee1BvJjgEbiEMaaHLBG3uwcHZSoW+9S4D5M4ekFc3q45eLW
 X-Developer-Key: i=noralf@tronnes.org; a=ed25519;
  pk=0o9is4iddvvlrY3yON5SVtAbgPnVs0LfQsjfqR2Hvz8=
 X-Endpoint-Received: by B4 Relay for noralf@tronnes.org/20221122 with
@@ -70,105 +71,77 @@ X-Endpoint-Received: by B4 Relay for noralf@tronnes.org/20221122 with
 X-Original-From: =?utf-8?q?Noralf_Tr=C3=B8nnes?= <noralf@tronnes.org>
 Reply-To: noralf@tronnes.org
 
-From: Noralf Trønnes <noralf@tronnes.org>
+Hi,
 
-Add support for these pixel format property values:
-- r5g6b5, RGB565
-- b6x2g6x2r6x2, BGR666
+To my suprise I have discovered that the MIPI DBI specification does only
+list RGB111 as a pixel format for the Serial Interface (Type C).
 
-BGR666 is presented to userspace as RGB888. The 2 LSB in each color
-are discarded by the controller. The pixel is sent on the wire using
-8 bits per word (little endian) so the controller sees it as BGR.
+For the parallel interface type (Type A and B) it lists: RGB332, RGB444,
+RGB565, RGB666 and RGB888.
 
-RGB565 is the default if the property is not present.
+I have never read the specification closely enough to discover this always
+assuming that the datasheets for the various MIPI DBI compatible
+controllers I've looked at over the years did follow the specification
+when they supported RGB565 and RGB666 on the serial interface.
+
+So it is quite clear that the industry has chosen to extend the standard
+and provide support for more pixel formats over the serial interface.
+
+drm_mipi_dbi and its predecessor fbtft support only RGB565 over SPI since
+RGB666 uses 3 bytes per pixel instead of 2 bytes, severly impacting the
+framerate.
+
+The reason I started to look at this is that there seem to be an increase
+in cheap SPI displays that is based on the ILI9488 controller. The
+datasheet for this controller states that it supports RGB565, but
+experience[1] shows that this is not true and that the controller only
+supports RGB666 over SPI.
+
+I have known for some time that the ILI9486 controller does not support
+RGB565 over SPI, it only supports RGB111 and RGB666. Some display
+breakoutboard manufacturers have solved this by putting a shift register
+in front of the parallel bus on this controller in order to support
+RGB565. This requires some custom code when writing to the SPI bus as
+shown in the tiny/ili9486.c driver. The downside is that these displays
+are really slow due to the slow shift registers used.
+
+This patchset documents the defacto industry standard wrt pixel formats
+over SPI and adds support for RGB666 in the panel-mipi-dbi driver.
+
+There have been two previous attempts to add a DRM driver for
+ili9488[2][3]. The panel-mipi-dbi driver is a generic MIPI DBI driver
+supporting controller initialization via a firmware file and with the help
+of this patchset it will support ILI9488 based SPI displays.
+
+[1] https://github.com/notro/panel-mipi-dbi/issues/2#issuecomment-2016857690
+[2] https://lore.kernel.org/dri-devel/cover.1592055494.git.kamlesh.gurudasani@gmail.com/
+[3] https://lore.kernel.org/dri-devel/20221018164532.1705215-1-tommaso.merciai@amarulasolutions.com/
 
 Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
 ---
- drivers/gpu/drm/tiny/panel-mipi-dbi.c | 55 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 54 insertions(+), 1 deletion(-)
+Changes in v2:
+- binding: Use 'default: r5g6b5' (Rob)
+- Link to v1: https://lore.kernel.org/r/20240507-panel-mipi-dbi-rgb666-v1-0-6799234afa3e@tronnes.org
 
-diff --git a/drivers/gpu/drm/tiny/panel-mipi-dbi.c b/drivers/gpu/drm/tiny/panel-mipi-dbi.c
-index f80a141fcf36..f3aa2abce314 100644
---- a/drivers/gpu/drm/tiny/panel-mipi-dbi.c
-+++ b/drivers/gpu/drm/tiny/panel-mipi-dbi.c
-@@ -26,6 +26,49 @@
- 
- #include <video/mipi_display.h>
- 
-+struct panel_mipi_dbi_format {
-+	const char *name;
-+	u32 fourcc;
-+	unsigned int bpp;
-+};
-+
-+static const struct panel_mipi_dbi_format panel_mipi_dbi_formats[] = {
-+	{ "r5g6b5", DRM_FORMAT_RGB565, 16 },
-+	{ "b6x2g6x2r6x2", DRM_FORMAT_RGB888, 24 },
-+};
-+
-+static int panel_mipi_dbi_get_format(struct device *dev, u32 *formats, unsigned int *bpp)
-+{
-+	const char *format_name;
-+	unsigned int i;
-+	int ret;
-+
-+	formats[1] = DRM_FORMAT_XRGB8888;
-+
-+	ret = device_property_read_string(dev, "format", &format_name);
-+	if (ret) {
-+		/* Old Device Trees don't have this property */
-+		formats[0] = DRM_FORMAT_RGB565;
-+		*bpp = 16;
-+		return 0;
-+	}
-+
-+	for (i = 0; i < ARRAY_SIZE(panel_mipi_dbi_formats); i++) {
-+		const struct panel_mipi_dbi_format *format = &panel_mipi_dbi_formats[i];
-+
-+		if (strcmp(format_name, format->name))
-+			continue;
-+
-+		formats[0] = format->fourcc;
-+		*bpp = format->bpp;
-+		return 0;
-+	}
-+
-+	dev_err(dev, "Pixel format is not supported: '%s'\n", format_name);
-+
-+	return -EINVAL;
-+}
-+
- static const u8 panel_mipi_dbi_magic[15] = { 'M', 'I', 'P', 'I', ' ', 'D', 'B', 'I',
- 					     0, 0, 0, 0, 0, 0, 0 };
- 
-@@ -276,6 +319,9 @@ static int panel_mipi_dbi_spi_probe(struct spi_device *spi)
- 	struct drm_device *drm;
- 	struct mipi_dbi *dbi;
- 	struct gpio_desc *dc;
-+	unsigned int bpp;
-+	size_t buf_size;
-+	u32 formats[2];
- 	int ret;
- 
- 	dbidev = devm_drm_dev_alloc(dev, &panel_mipi_dbi_driver, struct mipi_dbi_dev, drm);
-@@ -323,7 +369,14 @@ static int panel_mipi_dbi_spi_probe(struct spi_device *spi)
- 	if (IS_ERR(dbidev->driver_private))
- 		return PTR_ERR(dbidev->driver_private);
- 
--	ret = mipi_dbi_dev_init(dbidev, &panel_mipi_dbi_pipe_funcs, &mode, 0);
-+	ret = panel_mipi_dbi_get_format(dev, formats, &bpp);
-+	if (ret)
-+		return ret;
-+
-+	buf_size = DIV_ROUND_UP(mode.hdisplay * mode.vdisplay * bpp, 8);
-+	ret = mipi_dbi_dev_init_with_formats(dbidev, &panel_mipi_dbi_pipe_funcs,
-+					     formats, ARRAY_SIZE(formats),
-+					     &mode, 0, buf_size);
- 	if (ret)
- 		return ret;
- 
+---
+Noralf Trønnes (5):
+      dt-bindings: display: panel: mipi-dbi-spi: Add a pixel format property
+      drm/mipi-dbi: Remove mipi_dbi_machine_little_endian()
+      drm/mipi-dbi: Make bits per word configurable for pixel transfers
+      drm/mipi-dbi: Add support for DRM_FORMAT_RGB888
+      drm/tiny: panel-mipi-dbi: Support the pixel format property
 
+ .../bindings/display/panel/panel-mipi-dbi-spi.yaml | 30 +++++++++
+ drivers/gpu/drm/drm_mipi_dbi.c                     | 76 +++++++++++++++-------
+ drivers/gpu/drm/tiny/panel-mipi-dbi.c              | 55 +++++++++++++++-
+ include/drm/drm_mipi_dbi.h                         | 10 +++
+ 4 files changed, 147 insertions(+), 24 deletions(-)
+---
+base-commit: 0209df3b4731516fe77638bfc52ba2e9629c67cd
+change-id: 20240405-panel-mipi-dbi-rgb666-4e033787d6c9
+
+Best regards,
 -- 
-2.45.0
+Noralf Trønnes <noralf@tronnes.org>
 
 
