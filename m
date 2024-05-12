@@ -1,99 +1,85 @@
-Received: from mailrelay.tugraz.at (mailrelay.tugraz.at [129.27.2.202])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117EA14AAD;
-	Sun, 12 May 2024 08:11:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.27.2.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAAE14286
+	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 08:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715501464; cv=none; b=OK+Ndy7cCSlI+QXgK/fBSSb/U0NMbzDxMYSaO8HC8LjQGMicq86xognNzXnBbwdf2JbqlRdnu4wjijLGrdJDh9DuxJEK0HlInSsjG9GGAIJgyou1FEkytCEEgJAHryimx18EYO+jfiGEWNSSlm8RdYtajnGBwa2OMqEwBCoRAIE=
+	t=1715501705; cv=none; b=WRbW56lFOOdwfw9gwPZArRDkJIN66fzjdziezNQRlUSezCY6rDuweOFmpmlYtJULh/TwWQpueHwCYTLiIN2Pyt8+iCFS7p/EEktQYgGoTMEOqfeD9L7R6rvfTVuq2FKTKwg5G6hrUpV2KfRc9H/1j6N1/8e79gcqA3ea6Tyhing=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715501464; c=relaxed/simple;
-	bh=cBSa91IUA31x5n1Tk1msmI9aJm9T9z5OoASH+Lzq6HM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lD1IT/h3RPHLYJwqt9MrwfWW6A9obVCpDyERGJEsLftyLxvJOh/QnFQDbMnk/0VnL5wj7KT4ynWR2GCB6ktSlZeMbRl8x6AIzSEsFNmyixII3fcUN1YOXH5eryqymQzERC8Mign+lXq/KojCkWHlsSLry12zIhbIEvP9gYuxnUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at; spf=pass smtp.mailfrom=tugraz.at; dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b=rNg9kYmX; arc=none smtp.client-ip=129.27.2.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tugraz.at
+	s=arc-20240116; t=1715501705; c=relaxed/simple;
+	bh=zmyn4ldXcydGOu085bKLxBkxoeRgS7KGn+vebca4B1U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SDD6Zw1UOocKy4frNpzEnKKV2hXXpQR+42kKlIZEkFy0uNJtq/mQK3BWXHn9Aozj2zFozt0ZOjyYb7gU34ZHdxRvD6TFlWr8gfHtqDlT4SnP5PqwKAK9Jr4jf0bDEYir4J1GercYsN463Orddj9Be6EJ+gTIffpt0P8gmSwn0wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QRSsJ+UN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b="rNg9kYmX"
-Received: from [192.168.0.221] (84-115-223-216.cable.dynamic.surfer.at [84.115.223.216])
-	by mailrelay.tugraz.at (Postfix) with ESMTPSA id 4VcZr31J1pz3wGD;
-	Sun, 12 May 2024 10:03:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tugraz.at;
-	s=mailrelay; t=1715501012;
-	bh=8wKF3K1/gl/lH7BcMOVIXNsu0KRDMkF4mJrrwAUkDLg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=rNg9kYmXyzo63IZjtvX3G5h14CNg1OLPp4PDyztzbnWPiEiNhWWwsaXmugrpO510o
-	 ph04ITw5+J2TpDrP8YeD9MEvJjmqb+dDljz539cstMwIbj+4aKTPDRlGmYeiUWrhw+
-	 5OSCu34jwCJ1Lmv/68J2j3xW4Oa3c+ULLrqjQ9XY=
-Message-ID: <59f731ab619673afec4956fce6832a1cd5324fb8.camel@tugraz.at>
-Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
-From: Martin Uecker <uecker@tugraz.at>
-To: Linus Torvalds <torvalds@linux-foundation.org>, Kees Cook
-	 <keescook@chromium.org>
-Cc: Justin Stitt <justinstitt@google.com>, Peter Zijlstra
- <peterz@infradead.org>,  Mark Rutland <mark.rutland@arm.com>,
- linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev
-Date: Sun, 12 May 2024 10:03:30 +0200
-In-Reply-To: <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
-References: <202404291502.612E0A10@keescook>
-	 <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
-	 <202405081144.D5FCC44A@keescook>
-	 <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
-	 <202405081354.B0A8194B3C@keescook>
-	 <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QRSsJ+UN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1715501702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=meYZleFwX1lq0/EColt3Ez1OL0qo//O5LwnO/aFGWTg=;
+	b=QRSsJ+UNzlPEHJofyXOgIOSjoWk7qP038tr+Evi6epPKQM9VRW2ftA40IBZKsY2isSvXBI
+	LCgh0eeGYT3nN3wlKTQfaO2eQmeMDeZi3UNa60ciQdfBBNhHLWfid7CflP/Soy6w9s80Ag
+	xmkN/uv8/QBVLYTMD6W/93inZqtMOzw=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-103-7sa_3yHFN2yKCLApz7bdcQ-1; Sun,
+ 12 May 2024 04:14:59 -0400
+X-MC-Unique: 7sa_3yHFN2yKCLApz7bdcQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 341573801ED2;
+	Sun, 12 May 2024 08:14:59 +0000 (UTC)
+Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 177F947B;
+	Sun, 12 May 2024 08:14:59 +0000 (UTC)
+From: Paolo Bonzini <pbonzini@redhat.com>
+To: torvalds@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: [GIT PULL] Final KVM change for Linux 6.9
+Date: Sun, 12 May 2024 04:14:58 -0400
+Message-ID: <20240512081458.4022758-1-pbonzini@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TUG-Backscatter-control: G/VXY7/6zeyuAY/PU2/0qw
-X-Spam-Scanner: SpamAssassin 3.003001 
-X-Spam-Score-relay: -1.9
-X-Scanned-By: MIMEDefang 2.74 on 129.27.10.116
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Am Mittwoch, dem 08.05.2024 um 16:47 -0700 schrieb Linus Torvalds:
-> On Wed, 8 May 2024 at 15:54, Kees Cook <keescook@chromium.org> wrote:
-> >=20
-...
->=20
-> No, the only point where that actually failed was then when a
-> (non-overflowing, non-wrapping) final value was assigned to a 16-bit
-> field, ie the problem only ever happened at the final assignment:
->=20
->         event->read_size =3D size;
->=20
-> where no overflow had ever happened before that.
->=20
-> So in *that* case, you actually have a much more interesting
-> situation. Not wrap-around, not overflow, but "implicit cast drops
-> significant bits".
->=20
-> And yes, I do think implicit integer casts are dangerous. Often *more*
-> dangerous than arithmetic overflow and wrapping. We've had absolutely
-> tons of them. Some of our most traditional bugs have very much been
-> about implicit casting losing bits and causing problems as a result.
+Linus,
 
-In principle, GCC has -Wconversions which looks like that it is
-meant to catch this.  It seems not entirely stupid, e.g. it warns=C2=A0
-about=C2=A0 the first assignment and not the second (x86):
+The following changes since commit 16c20208b9c2fff73015ad4e609072feafbf81ad:
 
-void f(int i)
-{
-    unsigned short y =3D i;
-    unsigned short x =3D i & 0xFFF;
-}
+  Merge tag 'kvmarm-fixes-6.9-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2024-04-30 13:50:55 -0400)
 
-But I guess it still could be smarter. Or does it have to be a
-sanitizer because compile-time will always have too many false=C2=A0
-positives?
+are available in the Git repository at:
 
-Martin
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus-6.9
 
+for you to fetch changes up to 0a9c28bec202bbd14ae3fd184522490e5f5498b5:
 
+  Merge tag 'kvm-s390-master-6.9-1' of git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into HEAD (2024-05-07 13:01:39 -0400)
+
+----------------------------------------------------------------
+s390:
+
+* Fix NULL pointer read on ioctl(KVM_CHECK_EXTENSION) for /dev/kvm.
+
+----------------------------------------------------------------
+Jean-Philippe Brucker (1):
+      KVM: s390: Check kvm pointer when testing KVM_CAP_S390_HPAGE_1M
+
+Paolo Bonzini (1):
+      Merge tag 'kvm-s390-master-6.9-1' of git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into HEAD
+
+ arch/s390/kvm/kvm-s390.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
