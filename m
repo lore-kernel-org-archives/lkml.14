@@ -1,85 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEAAE14286
-	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 08:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D183D6A;
+	Sun, 12 May 2024 08:17:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715501705; cv=none; b=WRbW56lFOOdwfw9gwPZArRDkJIN66fzjdziezNQRlUSezCY6rDuweOFmpmlYtJULh/TwWQpueHwCYTLiIN2Pyt8+iCFS7p/EEktQYgGoTMEOqfeD9L7R6rvfTVuq2FKTKwg5G6hrUpV2KfRc9H/1j6N1/8e79gcqA3ea6Tyhing=
+	t=1715501836; cv=none; b=bJY6URcaAGlWNXSBYh3nALVOeG4uihpDl6LJAFTYzZ2SHWmtk/JdqAGq6z/SNjX5WEBIAtJUWoqwiq5WME2zKrgxiyuSdZ0Gmuh7O5pY7SJnLhs4o3UfSK1l10Q0lhUCIe+aOcM+ClN235aXokrIMfUEGjxbAI9GkiN+z7ME7Ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715501705; c=relaxed/simple;
-	bh=zmyn4ldXcydGOu085bKLxBkxoeRgS7KGn+vebca4B1U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SDD6Zw1UOocKy4frNpzEnKKV2hXXpQR+42kKlIZEkFy0uNJtq/mQK3BWXHn9Aozj2zFozt0ZOjyYb7gU34ZHdxRvD6TFlWr8gfHtqDlT4SnP5PqwKAK9Jr4jf0bDEYir4J1GercYsN463Orddj9Be6EJ+gTIffpt0P8gmSwn0wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QRSsJ+UN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715501836; c=relaxed/simple;
+	bh=SxRgOz9FrW2nOJVIYf9MsvTis9bo2V8NngiZT8z0rTE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AUArncCdoX82+ACqCSPuxDIOSmKy1kB1y8822Q8noci8rhlegrbMFA1WvrplaSS6ObcocYbkNi7TR+a6JXPkY8x4ILH1ts8zsJepWRvuFiyrOmwxBD8/tdc08W5bi5JSmvG9z48f2x94mSCXcixummPerBylNjMCgcWaZEKXQ+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h4fZLsuq; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QRSsJ+UN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715501702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=meYZleFwX1lq0/EColt3Ez1OL0qo//O5LwnO/aFGWTg=;
-	b=QRSsJ+UNzlPEHJofyXOgIOSjoWk7qP038tr+Evi6epPKQM9VRW2ftA40IBZKsY2isSvXBI
-	LCgh0eeGYT3nN3wlKTQfaO2eQmeMDeZi3UNa60ciQdfBBNhHLWfid7CflP/Soy6w9s80Ag
-	xmkN/uv8/QBVLYTMD6W/93inZqtMOzw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-103-7sa_3yHFN2yKCLApz7bdcQ-1; Sun,
- 12 May 2024 04:14:59 -0400
-X-MC-Unique: 7sa_3yHFN2yKCLApz7bdcQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 341573801ED2;
-	Sun, 12 May 2024 08:14:59 +0000 (UTC)
-Received: from virtlab701.virt.lab.eng.bos.redhat.com (virtlab701.virt.lab.eng.bos.redhat.com [10.19.152.228])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 177F947B;
-	Sun, 12 May 2024 08:14:59 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [GIT PULL] Final KVM change for Linux 6.9
-Date: Sun, 12 May 2024 04:14:58 -0400
-Message-ID: <20240512081458.4022758-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h4fZLsuq"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-41fd5dc0480so19753155e9.1;
+        Sun, 12 May 2024 01:17:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715501833; x=1716106633; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xXlhXUYBz2j7T8no4wkelMyXb8COeQGHIUfPVvUbzMs=;
+        b=h4fZLsuqvgItmXZzEhyMv3Zu2i8hPCgebsBP7OEHB6rqRwlJuyp4tgBCf5TxUqD0cO
+         dbYLvtLpSUCVU5auEW+Mnuew6ewuy73/1ISp8GmI2EE0C4tAcdl67CVoNmEl6ulJEdL9
+         55GCQIvxG35iEiC/fvRM4XhObASXNkFlgqtCbzciWfRsAqMPYCoaayThGY+V4pyG9JhI
+         OGyRB7tHZEoMzVIconxZgaPh3g7spxoOZGcnrhpxsBB4caHUHZRnnfXAvu1ooWNKUfis
+         WO7Q1R2xq6TZVARXSd850XIaQB5kGmwNVQnzyHxCxupEX/cwJygSNLsU+9TWNSi+WQhG
+         /Ukg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715501833; x=1716106633;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xXlhXUYBz2j7T8no4wkelMyXb8COeQGHIUfPVvUbzMs=;
+        b=qnQSE6ahOl10+UDuwlA6dHAeBg81MCWLeu+w4Gbh1PfTjz2pqI56Yokr4Dz5qtKmsg
+         I6NlYn2dQNsdkHRlvLblZbSYBk5UvPgZ/VJwdS2QFB8/BFSj5rcDpwwwQLX34YZfdAs0
+         FKyTa5HmoYI3lpQPpwikro69qQzRddr57plEDiQmknShjoURFMhsyv3V5sRJTr3z+2WT
+         ZeEXyoxw3fd3IFZOIw1uMOCVHynJskY5PP26KgoyVbuPebFCSlbflZRorCPOGv7Eyv0u
+         JM2wMcRVFOYj8G1J/sBhJChISfw3Jntz1VbZIfXDYSMNlLtNMOGhKiMtFp/aRxHH1Cvg
+         4R6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV2JF30/84kyraR9Rq4mNU+7BuqL+Xq3rtO3KQaB6HqaSBJrmATVaorlSMrCfhmBG9QYYVTrAM1o879BYNdr4DBy7H+zlNXKwYf/R0f1Af2AP6ALKVNv+ZY5p37Je4tNcuoF6gORpWWWRjoX8jHgCjz5Ac0C1oIlc8F7mWzkpLrvA==
+X-Gm-Message-State: AOJu0Yw9gLj6/HLZeMFtLd3HE6+OCeNMSY2Zwtny/jcuU1ncemc0OVqP
+	lRmfec3BHYwv2SWWupY6KjL1WizhQn4Vl/8LCUT8+LTuQEWts6oL
+X-Google-Smtp-Source: AGHT+IEOalB+778r4CqlSVXIAWe1JPzos5Do/QR+Dve78YpSIk5eyo9JJnTF5MDxO8/0sqUEO1y2aQ==
+X-Received: by 2002:a05:600c:3582:b0:418:29d4:1964 with SMTP id 5b1f17b1804b1-41fea539b5amr50417525e9.0.1715501833128;
+        Sun, 12 May 2024 01:17:13 -0700 (PDT)
+Received: from [172.27.21.17] ([193.47.165.251])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-41fccce25casm120049505e9.20.2024.05.12.01.17.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 12 May 2024 01:17:12 -0700 (PDT)
+Message-ID: <a4efd162-5dc0-4ed1-b875-de12521a6618@gmail.com>
+Date: Sun, 12 May 2024 11:17:09 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v4 1/3] net/mlx4: Track RX allocation failures in
+ a stat
+To: Joe Damato <jdamato@fastly.com>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: mkarsten@uwaterloo.ca, nalramli@fastly.com,
+ Tariq Toukan <tariqt@nvidia.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ "open list:MELLANOX MLX4 core VPI driver" <linux-rdma@vger.kernel.org>,
+ Tariq Toukan <tariqt@nvidia.com>
+References: <20240509205057.246191-1-jdamato@fastly.com>
+ <20240509205057.246191-2-jdamato@fastly.com>
+Content-Language: en-US
+From: Tariq Toukan <ttoukan.linux@gmail.com>
+In-Reply-To: <20240509205057.246191-2-jdamato@fastly.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Linus,
 
-The following changes since commit 16c20208b9c2fff73015ad4e609072feafbf81ad:
 
-  Merge tag 'kvmarm-fixes-6.9-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2024-04-30 13:50:55 -0400)
+On 09/05/2024 23:50, Joe Damato wrote:
+> mlx4_en_alloc_frags currently returns -ENOMEM when mlx4_alloc_page
+> fails but does not increment a stat field when this occurs.
+> 
+> A new field called alloc_fail has been added to struct mlx4_en_rx_ring
+> which is now incremented in mlx4_en_rx_ring when -ENOMEM occurs.
+> 
+> Signed-off-by: Joe Damato <jdamato@fastly.com>
+> Tested-by: Martin Karsten <mkarsten@uwaterloo.ca>
+> ---
+>   drivers/net/ethernet/mellanox/mlx4/en_rx.c   | 4 +++-
+>   drivers/net/ethernet/mellanox/mlx4/mlx4_en.h | 1 +
+>   2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/en_rx.c b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
+> index 8328df8645d5..15c57e9517e9 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/en_rx.c
+> +++ b/drivers/net/ethernet/mellanox/mlx4/en_rx.c
+> @@ -82,8 +82,10 @@ static int mlx4_en_alloc_frags(struct mlx4_en_priv *priv,
+>   
+>   	for (i = 0; i < priv->num_frags; i++, frags++) {
+>   		if (!frags->page) {
+> -			if (mlx4_alloc_page(priv, frags, gfp))
+> +			if (mlx4_alloc_page(priv, frags, gfp)) {
+> +				ring->alloc_fail++;
+>   				return -ENOMEM;
+> +			}
+>   			ring->rx_alloc_pages++;
+>   		}
+>   		rx_desc->data[i].addr = cpu_to_be64(frags->dma +
+> diff --git a/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h b/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
+> index efe3f97b874f..cd70df22724b 100644
+> --- a/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
+> +++ b/drivers/net/ethernet/mellanox/mlx4/mlx4_en.h
+> @@ -355,6 +355,7 @@ struct mlx4_en_rx_ring {
+>   	unsigned long xdp_tx;
+>   	unsigned long xdp_tx_full;
+>   	unsigned long dropped;
+> +	unsigned long alloc_fail;
+>   	int hwtstamp_rx_filter;
+>   	cpumask_var_t affinity_mask;
+>   	struct xdp_rxq_info xdp_rxq;
 
-are available in the Git repository at:
+Counter should be reset in mlx4_en_clear_stats().
 
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus-6.9
-
-for you to fetch changes up to 0a9c28bec202bbd14ae3fd184522490e5f5498b5:
-
-  Merge tag 'kvm-s390-master-6.9-1' of git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into HEAD (2024-05-07 13:01:39 -0400)
-
-----------------------------------------------------------------
-s390:
-
-* Fix NULL pointer read on ioctl(KVM_CHECK_EXTENSION) for /dev/kvm.
-
-----------------------------------------------------------------
-Jean-Philippe Brucker (1):
-      KVM: s390: Check kvm pointer when testing KVM_CAP_S390_HPAGE_1M
-
-Paolo Bonzini (1):
-      Merge tag 'kvm-s390-master-6.9-1' of git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into HEAD
-
- arch/s390/kvm/kvm-s390.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
+BTW, there are existing counters that are missing there already.
+We should add them as well, not related to your series though...
