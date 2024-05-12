@@ -1,131 +1,149 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75DC246435;
-	Sun, 12 May 2024 16:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD8233985;
+	Sun, 12 May 2024 16:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715531557; cv=none; b=iOlizaY6Lh39MC7rxK6Nl4j+TMaOglhtmJDN+DsmT4qpuS2BOj7dXZgTiAagCulWyPL/LR7aeNRaHXt9nXTcwDOo42eZajLIOy55mpxDXqNj6baijZFfDW0aQ9IrBUoCHdvi/bbpW2iN0/DlxmtYWRWFnIBYYfqm2Epx2l8rDYM=
+	t=1715532286; cv=none; b=fZOukxGsyWKNu9KWViFd28toZS958tGE2Xl16NW0PqVeo4Q1Nw7B+3YOD/+bQLBr6XjhFIR04sHHYOWnA1KD1Hs7LhIjiOcp/prD9IdHInft8GLkj1nQaosVL/kEWxsvbZW5qjgsXkihDxnYUDKoVkzbUyoIetwSeUCUHPPaMS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715531557; c=relaxed/simple;
-	bh=2fmYuzsF53sotwxXlB7hG9j2/QIAXITmWcD/TyP5X6I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dEJHo4k6cYlS7JZbmn2dJxcuMAWrgAOmafrmA0Rsd01Sj3r/pq8q9VZv60XGKl1Mp6RtS3jlt6uZMgkt6qbMjOJBZA3u7MX57/1/sAD7qQk7ezqYm/kAHGCvxyHhA/spULKibS89pZu0rWyOZRnk6fb6oeoNly06C9IzDHKxEDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C83DD40004;
-	Sun, 12 May 2024 16:31:25 +0000 (UTC)
-Message-ID: <276fa17b-cd62-433d-b0ec-fa98c65a46ca@ghiti.fr>
-Date: Sun, 12 May 2024 18:31:24 +0200
+	s=arc-20240116; t=1715532286; c=relaxed/simple;
+	bh=c56SAsIRlV6GLObSq1hH1Rvq8m0Fmhd1QaC7JH93tCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iMXls7maCSOVkHgWxbXdwefg7RlZw4zLyW4R4V0qCt9HObT6QiqFxpqQYi7hfuaJYbe4MyRQMGnOOLW3l36dH1bs/VOk5xikGf5Iy2UfEayAE9LJKoqSXagIMnQ988SkUMrPupm8tZ1GBvWXV6VZGxnVe6biAGIFjOw8MK0PMhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=xiS8wpMG; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="xiS8wpMG"
+Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 940691FC1D;
+	Sun, 12 May 2024 18:44:39 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1715532279;
+	bh=y8g4w0GWcQosP0yLlaIzTp7hrfG0+IeoYR8ymAM4Vxo=;
+	h=Received:From:To:Subject;
+	b=xiS8wpMGPkUeYKLKwocNyJlF6WEEYRBVZbItYRlLNVqh4a1OerBOWHoOVmUuZN+p1
+	 2vn8Rbmkx0jxnA93kuwApaqQZhV2jbrjnwCfySKjCcxvGa1R7Ey5Jyyse7lPsa1Xzj
+	 YiGhVauggOe3xV63kePyF0s6kWsfhrlu/NiRPkSen3eKEPxS077LalvY/Cuw9v1TVL
+	 H+cyX+tvk1LfM4pXaDWCHveaMMxDXfs5LJ4w4g9UVo1t6uxU0WKwu6eALYcm30Pz/C
+	 3AB/b88rRfmr+GpGYGBz2UoqOe8y31y0JXfeHgKILtU+ekeRNz1DRi73YjYmBh/z/J
+	 Y51gbgNmln/WQ==
+Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
+	id 3FBF97F9B8; Sun, 12 May 2024 18:44:39 +0200 (CEST)
+Date: Sun, 12 May 2024 18:44:39 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Aradhya Bhatia <a-bhatia1@ti.com>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Jyri Sarha <jyri.sarha@iki.fi>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	DRI Development List <dri-devel@lists.freedesktop.org>,
+	Devicetree List <devicetree@vger.kernel.org>,
+	Linux Kernel List <linux-kernel@vger.kernel.org>,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Praneeth Bajjuri <praneeth@ti.com>, Udit Kumar <u-kumar1@ti.com>,
+	Alexander Sverdlin <alexander.sverdlin@siemens.com>,
+	Randolph Sapp <rs@ti.com>, Devarsh Thakkar <devarsht@ti.com>,
+	Jayesh Choudhary <j-choudhary@ti.com>, Jai Luthra <j-luthra@ti.com>
+Subject: Re: [PATCH 4/4] drm/tidss: Add OLDI bridge support
+Message-ID: <ZkDx94qEVv65FquF@gaggiata.pivistrello.it>
+References: <20240511193055.1686149-1-a-bhatia1@ti.com>
+ <20240511193055.1686149-5-a-bhatia1@ti.com>
+ <ZkCsfH1qeSsXyQz4@gaggiata.pivistrello.it>
+ <e34dc434-7922-4b47-bc41-c06f13366194@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 13/29] riscv mmu: write protect and shadow stack
-To: Deepak Gupta <debug@rivosinc.com>, paul.walmsley@sifive.com,
- rick.p.edgecombe@intel.com, broonie@kernel.org, Szabolcs.Nagy@arm.com,
- kito.cheng@sifive.com, keescook@chromium.org, ajones@ventanamicro.com,
- conor.dooley@microchip.com, cleger@rivosinc.com, atishp@atishpatra.org,
- bjorn@rivosinc.com, alexghiti@rivosinc.com, samuel.holland@sifive.com,
- conor@kernel.org
-Cc: linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-mm@kvack.org, linux-arch@vger.kernel.org,
- linux-kselftest@vger.kernel.org, corbet@lwn.net, palmer@dabbelt.com,
- aou@eecs.berkeley.edu, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com,
- akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com,
- Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com,
- shuah@kernel.org, brauner@kernel.org, andy.chiu@sifive.com,
- jerry.shih@sifive.com, hankuan.chen@sifive.com, greentime.hu@sifive.com,
- evan@rivosinc.com, xiao.w.wang@intel.com, charlie@rivosinc.com,
- apatel@ventanamicro.com, mchitale@ventanamicro.com,
- dbarboza@ventanamicro.com, sameo@rivosinc.com, shikemeng@huaweicloud.com,
- willy@infradead.org, vincent.chen@sifive.com, guoren@kernel.org,
- samitolvanen@google.com, songshuaishuai@tinylab.org, gerg@kernel.org,
- heiko@sntech.de, bhe@redhat.com, jeeheng.sia@starfivetech.com,
- cyy@cyyself.name, maskray@google.com, ancientmodern4@gmail.com,
- mathis.salmen@matsal.de, cuiyunhui@bytedance.com, bgray@linux.ibm.com,
- mpe@ellerman.id.au, baruch@tkos.co.il, alx@kernel.org, david@redhat.com,
- catalin.marinas@arm.com, revest@chromium.org, josh@joshtriplett.org,
- shr@devkernel.io, deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
- jhubbard@nvidia.com
-References: <20240403234054.2020347-1-debug@rivosinc.com>
- <20240403234054.2020347-14-debug@rivosinc.com>
-Content-Language: en-US
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20240403234054.2020347-14-debug@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e34dc434-7922-4b47-bc41-c06f13366194@ti.com>
 
-On 04/04/2024 01:35, Deepak Gupta wrote:
-> `fork` implements copy on write (COW) by making pages readonly in child
-> and parent both.
->
-> ptep_set_wrprotect and pte_wrprotect clears _PAGE_WRITE in PTE.
-> Assumption is that page is readable and on fault copy on write happens.
->
-> To implement COW on such pages,
+Hello Aradhya,
 
+On Sun, May 12, 2024 at 08:53:12PM +0530, Aradhya Bhatia wrote:
+> On 12/05/24 17:18, Francesco Dolcini wrote:
+> > On Sun, May 12, 2024 at 01:00:55AM +0530, Aradhya Bhatia wrote:
+> >> Up till now, the OLDI support in tidss was integrated within the tidss dispc.
+> >> This was fine till the OLDI was one-to-mapped with the DSS video-port (VP).
+> >> The AM62 and AM62P SoCs have 2 OLDI TXes that can support dual-lvds / lvds-clone
+> >> modes.
+> >>
+> >> Add OLDI TXes as separate DRM bridge entities to better support the new LVDS
+> >> configurations.
+> >>
+> >> Signed-off-by: Aradhya Bhatia <a-bhatia1@ti.com>
+> >> ---
+> >>  drivers/gpu/drm/tidss/Makefile      |   3 +-
+> >>  drivers/gpu/drm/tidss/tidss_dispc.c |  11 +-
+> >>  drivers/gpu/drm/tidss/tidss_dispc.h |   4 +
+> >>  drivers/gpu/drm/tidss/tidss_drv.c   |  13 +-
+> >>  drivers/gpu/drm/tidss/tidss_drv.h   |   4 +
+> >>  drivers/gpu/drm/tidss/tidss_oldi.c  | 568 ++++++++++++++++++++++++++++
+> >>  drivers/gpu/drm/tidss/tidss_oldi.h  |  73 ++++
+> >>  7 files changed, 673 insertions(+), 3 deletions(-)
+> >>  create mode 100644 drivers/gpu/drm/tidss/tidss_oldi.c
+> >>  create mode 100644 drivers/gpu/drm/tidss/tidss_oldi.h
+> >>
+> >> diff --git a/drivers/gpu/drm/tidss/tidss_oldi.h b/drivers/gpu/drm/tidss/tidss_oldi.h
+> >> new file mode 100644
+> >> index 000000000000..5ad02ddea11a
+> >> --- /dev/null
+> >> +++ b/drivers/gpu/drm/tidss/tidss_oldi.h
+> >> @@ -0,0 +1,73 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> >> +/*
+> >> + * Copyright (C) 2023 - Texas Instruments Incorporated
+> >> + *
+> >> + * Aradhya Bhatia <a-bhati1@ti.com>
+> >> + */
+> >> +
+> >> +#ifndef __TIDSS_OLDI_H__
+> >> +#define __TIDSS_OLDI_H__
+> >> +
+> >> +#include <linux/media-bus-format.h>
+> >> +
+> >> +#include "tidss_drv.h"
+> >> +#include "tidss_dispc.h"
+> >> +
+> >> +struct tidss_oldi;
+> > 
+> > why do you need this here? 
+> 
+> So that struct tidss_device can store pointers to struct tidss_oldi
+> instances.
 
-I guess you mean "shadow stack pages" here.
+on this and ...
 
+> >> +#define OLDI_IDLE_CLK_HZ	25000000 /*25 MHz */
+> > this is used only on a single C files, move it there?
+> > 
+> > I would consider this comment in general for this header file,
+> > from a quick check most of this is used only in tidss_oldi.c.
+> 
+> Apart from struct tidss_device being able to access struct tidss_oldi,
+> there is no direct access to any of the above.
+> 
+> Perhaps I can move the idle clock definition into the C file.
+> 
+> However, before tidss_oldi.h, all the register definitions have been
+> stored in tidss_dispc_regs.h. It just seemed right to keep them out in
+> the header file and maintain the status quo.
 
->   clearing up W bit makes them XWR = 000.
-> This will result in wrong PTE setting which says no perms but V=1 and PFN
-> field pointing to final page. Instead desired behavior is to turn it into
-> a readable page, take an access (load/store) fault on sspush/sspop
-> (shadow stack) and then perform COW on such pages.
-> This way regular reads
-> would still be allowed and not lead to COW maintaining current behavior
-> of COW on non-shadow stack but writeable memory.
->
-> On the other hand it doesn't interfere with existing COW for read-write
-> memory. Assumption is always that _PAGE_READ must have been set and thus
-> setting _PAGE_READ is harmless.
->
-> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> ---
->   arch/riscv/include/asm/pgtable.h | 12 ++++++++++--
->   1 file changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index 9b837239d3e8..7a1c2a98d272 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -398,7 +398,7 @@ static inline int pte_special(pte_t pte)
->   
->   static inline pte_t pte_wrprotect(pte_t pte)
->   {
-> -	return __pte(pte_val(pte) & ~(_PAGE_WRITE));
-> +	return __pte((pte_val(pte) & ~(_PAGE_WRITE)) | (_PAGE_READ));
->   }
->   
->   /* static inline pte_t pte_mkread(pte_t pte) */
-> @@ -581,7 +581,15 @@ static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
->   static inline void ptep_set_wrprotect(struct mm_struct *mm,
->   				      unsigned long address, pte_t *ptep)
->   {
-> -	atomic_long_and(~(unsigned long)_PAGE_WRITE, (atomic_long_t *)ptep);
-> +	volatile pte_t read_pte = *ptep;
-> +	/*
-> +	 * ptep_set_wrprotect can be called for shadow stack ranges too.
-> +	 * shadow stack memory is XWR = 010 and thus clearing _PAGE_WRITE will lead to
-> +	 * encoding 000b which is wrong encoding with V = 1. This should lead to page fault
-> +	 * but we dont want this wrong configuration to be set in page tables.
-> +	 */
-> +	atomic_long_set((atomic_long_t *)ptep,
-> +			((pte_val(read_pte) & ~(unsigned long)_PAGE_WRITE) | _PAGE_READ));
->   }
->   
->   #define __HAVE_ARCH_PTEP_CLEAR_YOUNG_FLUSH
+... this they are probably more of a personal taste topic, just go
+for whatever you and the actual maintainer (tomi?) prefer.
 
-
-Doesn't making the shadow stack page readable allow "normal" loads to 
-access the page? If it does, isn't that an issue (security-wise)?
+Thanks,
+Francesco
 
