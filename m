@@ -1,99 +1,177 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8E017BA8
-	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 17:10:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EDB4CDF9;
+	Sun, 12 May 2024 17:11:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715533842; cv=none; b=foSUcK3SD9BBwDsDxyZjNICIurMW8ECyzzojDtcfM/5deap5w7LxBuZ61cdk7wlh+H7VbYKr+amxLuOVKjhvSbJarOp9wK1Dqs6AZuYw1CoJ+hmaYPbxf6dyHutQJo3R2jWlatspn7COY+vVCFPvF5Zg3BpeCuBJoLjxFhF4jXY=
+	t=1715533867; cv=none; b=q6Q1t+nySevKgGMUEkeesW6IcLWbvlmZ9RnfbOi2cZvwCHEh+3vd4dYdltflPVhZA7JGndA95pSy6a5mmpMMlLZajhrtym49FaOEWLh34SLPGqI5t1RLj3oBZ3Rve8OAQaqBt9GDAAn0DRzZ5+AJJqw43kzHqlwwlue5vHOxGxs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715533842; c=relaxed/simple;
-	bh=wg0YA5FfYfZ8HOevPWPvq2wELw/oMeox03SJfTjBQlE=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=NgEwJHhDmklLYL6i7breKxo89E8QTJcuAMNanwXq3jV4WQkxlLnNx5sUoDXCHn9s/2ihw3HP6Dzg+N6t6y3lsvvIO0RC3pDIa0XES+RvWcPTTbLKfe87cvlE+79mBv1hBsIU8hBQEhrWvTsFpardw2NUXKRUzB7/UxjcRCrqmN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jN0tFug0; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715533867; c=relaxed/simple;
+	bh=VzGeKoslKNbw1gw65/BLyxBwwDzyJ5nPATxrOsC5LtE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LqbR7T56nrbw6JOdVA+SbZh7TGw1w7xT+l/Ieij7/zCZNgnOCntxfsSnnk7w329As6DYXShCxK/jX3c3qghyeT3dYLtaFJdYoL24bN9ZMebB+5oH4h9hfERHLLW8l/xLjkx/jsLtzLvokxpAhsbnFRSpe2/TGwRZ8x9JOQoZ3iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rd1+OPEh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jN0tFug0"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-deb99fa47b6so4160947276.0
-        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 10:10:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715533840; x=1716138640; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pLHWq8okXTT3owCXn5JBWfo9jEYt7ZAZy8OoSAdnKBQ=;
-        b=jN0tFug0QKBsK6cP/owzz4/rEuOWVs1oRH6naqlg10jDbYHnjVYWvG6bj4PjPrreTp
-         BW4XgTo8ioj9K7+e/ke2u87cibjecrnZxZfRnTBbdq00vTVkAT28fzKoA4dzVPfVaS2W
-         KACdGaqkLwIEP2+DwjFyyYW8PyMc73XXFNvELCCNEHsiSqpp5n0cgcHtkl0NYkmAMwIu
-         zR2134fHKj5RjVsCp6Ya63597G6pd375r1UnrgZSZf46iSI2pci8d9eVjAhOncQAKHic
-         vBYGRbNisWlFZ35Gw7GVXmqpp/Xzwub1X3oiI/VKDlRipfAgszScZvE1lxEbpDB8uWik
-         WIcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715533840; x=1716138640;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pLHWq8okXTT3owCXn5JBWfo9jEYt7ZAZy8OoSAdnKBQ=;
-        b=UyTShtaT22Vzhc5Q+5YP34nWHK4yQRhXmjEgOtmiCQlIoL8pAoOvqmBdo2ZqRDCt4o
-         Flzz7unryXg1bwn0yWjgvHFU3pmDs3XRsvvdQYhYALec/LPDw8XurCgFA55nLcjJneh7
-         1pIqk5IJKG7fLhpWx3A7uO/hBKLZZr6PRx9uWZULbtAsz4zyD0pCrcsu08zDtS+WSVvI
-         1CSv2ay0thT+g9KfLvd71yP9dAlPSs79msCE7lxfmY66RrLTlwWkAZZBphigpEExMoop
-         RYr+4LxNLIW4/uEcPti9Ig3f4nfQX5heS30w3cGKUbK7RMfNcdijRV2BQkPLrKenMRc4
-         LriQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbQsE5y3Dnq4+3MQl4rFF/6BRthzyWMytuEeIf+B5IFbdZ5AAZi2xW+qEN/cCZZGsZACvSHMMxJODdR9sRelGS+0gau6K4IuN5s2Sn
-X-Gm-Message-State: AOJu0YympZx3D1vzfQI1aVf3FN7X8hEss97xdSuA2fHY3PiZDSY87v2J
-	QE5uhd9WiSxR3zO7jp7ADpjS9tpks3rxGlGy4khjpW8rko8fclqHIhyhtvo+flKvVUl+gv5Ojko
-	uyN3J5qKZd5n0qCdC4CbAai03cOhbUkWB
-X-Google-Smtp-Source: AGHT+IEDpeH2dfC9SObBecr1zT8K8XIMs3o18jZrmqGxMDkioKgPjCFNyr2fTOudsRkmNhm3ncX7ibtkRCLblKRlouA=
-X-Received: by 2002:a25:8102:0:b0:dc2:41de:b744 with SMTP id
- 3f1490d57ef6-dee4f338307mr6344893276.32.1715533840227; Sun, 12 May 2024
- 10:10:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rd1+OPEh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C38FC116B1;
+	Sun, 12 May 2024 17:11:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715533866;
+	bh=VzGeKoslKNbw1gw65/BLyxBwwDzyJ5nPATxrOsC5LtE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Rd1+OPEhC6k5RANKKZEX9xTvEs6L7vgAsmaHdJAcB1XdcN1szp9hN2FVUg+t0KIKc
+	 jv0llclutcC5JsWuSBkycpwuUTuPGhSUqo0N8vukvZkK0bMcUbCeI4YyL4OLFwXuJ+
+	 KmNQpGHp1Mdf8EaptC6zyYrywklLf+ZwlvU4QA92qNGG5YjiUlpX+tXaTba4ZuutD9
+	 Fo+wPPF3HT25LyuB3HfMZR4pvDxaRh4veF1mDTWQgEkk2F/6MNeYiyPr8hYuHp0h6l
+	 zJCY9fNPDnRizcIZpIA9hqKf8NoXK4c3JSFPVKDfzFpBf0fRh7CMm5ycvUpeswgT4/
+	 KuV+vz57Zhj0Q==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id E05F7CE105C; Sun, 12 May 2024 10:11:05 -0700 (PDT)
+Date: Sun, 12 May 2024 10:11:05 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
+	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Hillf Danton <hdanton@sina.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] rcu/sync: don't read rcu_sync->gp_count lockless
+Message-ID: <bbc3648c-0965-41d1-b245-3a4ca0c9629c@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240507093530.3043-1-urezki@gmail.com>
+ <20240507093530.3043-26-urezki@gmail.com>
+ <20240512111948.GC7541@redhat.com>
+ <550cf35c-4fb3-4f06-95b2-9206425d74cc@paulmck-laptop>
+ <20240512165529.GD7541@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Muni Sekhar <munisekharrms@gmail.com>
-Date: Sun, 12 May 2024 22:40:29 +0530
-Message-ID: <CAHhAz+hcVRU8=SkkoHGRDN5zRvB2HY1-1Y2NQmNwR=07ObSFrQ@mail.gmail.com>
-Subject: Inquiry Regarding Handling of Kernel Crashes
-To: kernelnewbies <kernelnewbies@kernelnewbies.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240512165529.GD7541@redhat.com>
 
-Dear Linux Kernel Community,
+On Sun, May 12, 2024 at 06:55:29PM +0200, Oleg Nesterov wrote:
+> On 05/12, Paul E. McKenney wrote:
+> >
+> > --- a/kernel/rcu/sync.c
+> > +++ b/kernel/rcu/sync.c
+> > @@ -151,15 +151,11 @@ void rcu_sync_enter(struct rcu_sync *rsp)
+> >   */
+> >  void rcu_sync_exit(struct rcu_sync *rsp)
+> >  {
+> > -	int gpc;
+> > -
+> >  	WARN_ON_ONCE(READ_ONCE(rsp->gp_state) == GP_IDLE);
+> > -	WARN_ON_ONCE(READ_ONCE(rsp->gp_count) == 0);
+> >
+> >  	spin_lock_irq(&rsp->rss_lock);
+> > -	gpc = rsp->gp_count - 1;
+> > -	WRITE_ONCE(rsp->gp_count, gpc);
+> > -	if (!gpc) {
+> > +	WARN_ON_ONCE(rsp->gp_count == 0);
+> > +	if (!--rsp->gp_count) {
+> >  		if (rsp->gp_state == GP_PASSED) {
+> >  			WRITE_ONCE(rsp->gp_state, GP_EXIT);
+> >  			rcu_sync_call(rsp);
+> > @@ -178,10 +174,10 @@ void rcu_sync_dtor(struct rcu_sync *rsp)
+> >  {
+> >  	int gp_state;
+> >
+> > -	WARN_ON_ONCE(READ_ONCE(rsp->gp_count));
+> >  	WARN_ON_ONCE(READ_ONCE(rsp->gp_state) == GP_PASSED);
+> >
+> >  	spin_lock_irq(&rsp->rss_lock);
+> > +	WARN_ON_ONCE(rsp->gp_count);
+> >  	if (rsp->gp_state == GP_REPLAY)
+> >  		WRITE_ONCE(rsp->gp_state, GP_EXIT);
+> >  	gp_state = rsp->gp_state;
+> 
+> Thanks Paul!
+> 
+> But then I think this change can also revert this chunk from the previous
+> patch:
+> 
+> 	@@ -122,7 +122,7 @@ void rcu_sync_enter(struct rcu_sync *rsp)
+> 			 * we are called at early boot time but this shouldn't happen.
+> 			 */
+> 		}
+> 	-	rsp->gp_count++;
+> 	+	WRITE_ONCE(rsp->gp_count, rsp->gp_count + 1);
+> 		spin_unlock_irq(&rsp->rss_lock);
+> 	 
+> 		if (gp_state == GP_IDLE) {
 
-I hope this email finds you well. I am currently engaged in testing
-device drivers in Linux kernel mode, and I have encountered various
-types of kernel crashes during my testing process.
+Good catch, thank you!  How about like this?
 
-Among these, some examples of kernel crashes include OOPS, lockups and others.
+							Thanx, Paul
 
-I have a few questions regarding the handling of kernel crashes during testing:
+------------------------------------------------------------------------
 
-When encountering a kernel crash during testing, is it advisable to
-continue testing without rebooting the system? Or is it preferable to
-reboot the system after each kernel crash and then resume testing?
+commit 3e75ce9876396a770a0fcd8eecd83b9f6469f49c
+Author: Oleg Nesterov <oleg@redhat.com>
+Date:   Sun May 12 08:02:07 2024 -0700
 
-Can the first kernel crash, whether it is an OOPS,  or any other type
-crash, potentially lead to subsequent crashes of the same or different
-types? If so, should debugging efforts focus only on the first kernel
-crash, or should all subsequent crashes also be considered and
-addressed?
+    rcu: Eliminate lockless accesses to rcu_sync->gp_count
+    
+    The rcu_sync structure's ->gp_count field is always accessed under the
+    protection of that same structure's ->rss_lock field, with the exception
+    of a pair of WARN_ON_ONCE() calls just prior to acquiring that lock in
+    functions rcu_sync_exit() and rcu_sync_dtor().  These lockless accesses
+    are unnecessary and impair KCSAN's ability to catch bugs that might be
+    inserted via other lockless accesses.
+    
+    This commit therefore moves those WARN_ON_ONCE() calls under the lock.
+    
+    Signed-off-by: Oleg Nesterov <oleg@redhat.com>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 
-In the event that the system needs to be rebooted after a kernel
-crash, how can user space test utilities be informed that a kernel
-crash has occurred? Additionally, how can the system be configured to
-automatically reboot in the event of a kernel crash?
-
-I would greatly appreciate any insights or best practices you can
-share regarding the handling of kernel crashes during testing. Your
-expertise and guidance on this matter would be invaluable to my
-testing efforts.
-
-Thank you very much for your time and assistance. I look forward to
-your response.
-
-
--- 
-Thanks,
-Sekhar
+diff --git a/kernel/rcu/sync.c b/kernel/rcu/sync.c
+index 6c2bd9001adcd..da60a9947c005 100644
+--- a/kernel/rcu/sync.c
++++ b/kernel/rcu/sync.c
+@@ -122,7 +122,7 @@ void rcu_sync_enter(struct rcu_sync *rsp)
+ 		 * we are called at early boot time but this shouldn't happen.
+ 		 */
+ 	}
+-	WRITE_ONCE(rsp->gp_count, rsp->gp_count + 1);
++	rsp->gp_count++;
+ 	spin_unlock_irq(&rsp->rss_lock);
+ 
+ 	if (gp_state == GP_IDLE) {
+@@ -151,15 +151,11 @@ void rcu_sync_enter(struct rcu_sync *rsp)
+  */
+ void rcu_sync_exit(struct rcu_sync *rsp)
+ {
+-	int gpc;
+-
+ 	WARN_ON_ONCE(READ_ONCE(rsp->gp_state) == GP_IDLE);
+-	WARN_ON_ONCE(READ_ONCE(rsp->gp_count) == 0);
+ 
+ 	spin_lock_irq(&rsp->rss_lock);
+-	gpc = rsp->gp_count - 1;
+-	WRITE_ONCE(rsp->gp_count, gpc);
+-	if (!gpc) {
++	WARN_ON_ONCE(rsp->gp_count == 0);
++	if (!--rsp->gp_count) {
+ 		if (rsp->gp_state == GP_PASSED) {
+ 			WRITE_ONCE(rsp->gp_state, GP_EXIT);
+ 			rcu_sync_call(rsp);
+@@ -178,10 +174,10 @@ void rcu_sync_dtor(struct rcu_sync *rsp)
+ {
+ 	int gp_state;
+ 
+-	WARN_ON_ONCE(READ_ONCE(rsp->gp_count));
+ 	WARN_ON_ONCE(READ_ONCE(rsp->gp_state) == GP_PASSED);
+ 
+ 	spin_lock_irq(&rsp->rss_lock);
++	WARN_ON_ONCE(rsp->gp_count);
+ 	if (rsp->gp_state == GP_REPLAY)
+ 		WRITE_ONCE(rsp->gp_state, GP_EXIT);
+ 	gp_state = rsp->gp_state;
