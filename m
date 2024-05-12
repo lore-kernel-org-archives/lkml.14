@@ -1,86 +1,89 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BE4153BE7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C65153BE8;
 	Mon, 13 May 2024 13:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715607702; cv=none; b=esfM9nBZ+wa+sC9hwaSykhE2PrisFCUkvBaSsvId+WmZc4g84HnwL/K1fQXefDlwtZx+0NmZOP2QJmKdyq573Bgk5g9fZb9AgpHjASsz5u6eaMRNolOfinDztbsoww8J6mRAXBEcrRhS87lfEKP9X6gmsf4Icay3JPxIcPpu2yI=
+	t=1715607701; cv=none; b=Sy/g6Sn0bVUG4IoxGaYLtyYW+1uHvzzqGv4o8SxAtdYjcRl1BUCLEdBgmH2I3CavVYeM8uBNpbVCCcrobmGLI+vPNLyol/2lbc7HgFt1HlIU4FQjyMshqhV8fzLFGUAahZo2em8A+NQZAThF9b5zVwBr+GgEwtVNBtlV9Q8jy7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715607702; c=relaxed/simple;
-	bh=bnKv9hUuEE6isl5vUdapDAM5AvVUq4o+jPsROipumjY=;
+	s=arc-20240116; t=1715607701; c=relaxed/simple;
+	bh=KR/9uJU9rmLDbLzKcSjLEZv5MtnjWTM5oESX4OTBg+k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JXeD5mTfizhX015lwB/VaQAQJI1+UzL1JLed9K4n1RJrcxJSVUj9soXXIPpp1gZNhKjBmCxp1AP3JWd09BHyGctdYQ7i5KOpMgdQUcBv+r4HWCZxnoDyA+C8OrfZVeyfOtlAzUyeTyYrZs3fWc5At54g2BVuuAjIZMDeNhpOtIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=U0SzHXu5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7HE3OQMp; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=U0SzHXu5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=7HE3OQMp; arc=none smtp.client-ip=195.135.223.130
+	 Content-Type:Content-Disposition:In-Reply-To; b=K2+2c9fkqaSMVSWvlB90WouqXSEvGN78ilDvGArlQkhXHP0IBmo4MPbc21enKQpsRDKFcUs30U/wkquay1gQGugoineQvqQuZEG0SN5sWvTkcO+sCrDsRJ3KvGYF79sUR/6dBCUVW4M9Co8ZOucpDxHX+dHMRejS0GnpvW1fuFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=aI0vR582; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cTov7oaU; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=aI0vR582; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=cTov7oaU; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="U0SzHXu5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7HE3OQMp";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="U0SzHXu5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="7HE3OQMp"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="aI0vR582";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cTov7oaU";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="aI0vR582";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="cTov7oaU"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 32E1434A54;
-	Mon, 13 May 2024 13:41:36 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 406735C0D8;
+	Mon, 13 May 2024 13:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1715607696; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1715607697; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jv6058otnH+uK/D6TMYgyXy8L3PlzLOlJi3KPN9MW6o=;
-	b=U0SzHXu5ved92dklWliu0gYyGvo2cTWCquM9Y5M3it/6DiwO0i553RnYUqNGTL0YUas9Sp
-	sDnIemX53089ua98IqFMLRCcdp2W9SAUoP8od1L03jaJq2Gtc9S55o7uUaMR0iYmIielbg
-	exL6dH2IU1X8A3OyfshVIAd/9cjnkAs=
+	bh=XjOuq6k+UpFL6BOoWHjHlN/QO0POrewyeMCKLvGq9mY=;
+	b=aI0vR582CIcPsYV0tQz0aC//8YSPwCdK+8u8okJHJigk6LGlm0pAueX2lWe1I/dUsGqx5N
+	SyFUmB2QUn4WlBMk7SFterGI2qnnaYKOsqBtu70DNMjtKuPcvmnTlnlvmev0H7wyehVY+0
+	HM8py9i91J4LWGOHwzan1AIYZw/Jopg=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1715607696;
+	s=susede2_ed25519; t=1715607697;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jv6058otnH+uK/D6TMYgyXy8L3PlzLOlJi3KPN9MW6o=;
-	b=7HE3OQMpygvUyUhHq2kzt5qk9OJipVG1QL5pcyuj0by8rzEUcNv4KQLuijCvaIGnki+lvf
-	DPblRSs22o6rkNAA==
-Authentication-Results: smtp-out1.suse.de;
-	none
+	bh=XjOuq6k+UpFL6BOoWHjHlN/QO0POrewyeMCKLvGq9mY=;
+	b=cTov7oaU2nUcYWqILxvh0NkD0Nr3KxScREMNY/2vXP3q0P7Uw28JcDFpj7CGnyee3uvffG
+	5SD4s27K7Hi39QCA==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=aI0vR582;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=cTov7oaU
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1715607696; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1715607697; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jv6058otnH+uK/D6TMYgyXy8L3PlzLOlJi3KPN9MW6o=;
-	b=U0SzHXu5ved92dklWliu0gYyGvo2cTWCquM9Y5M3it/6DiwO0i553RnYUqNGTL0YUas9Sp
-	sDnIemX53089ua98IqFMLRCcdp2W9SAUoP8od1L03jaJq2Gtc9S55o7uUaMR0iYmIielbg
-	exL6dH2IU1X8A3OyfshVIAd/9cjnkAs=
+	bh=XjOuq6k+UpFL6BOoWHjHlN/QO0POrewyeMCKLvGq9mY=;
+	b=aI0vR582CIcPsYV0tQz0aC//8YSPwCdK+8u8okJHJigk6LGlm0pAueX2lWe1I/dUsGqx5N
+	SyFUmB2QUn4WlBMk7SFterGI2qnnaYKOsqBtu70DNMjtKuPcvmnTlnlvmev0H7wyehVY+0
+	HM8py9i91J4LWGOHwzan1AIYZw/Jopg=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1715607696;
+	s=susede2_ed25519; t=1715607697;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=jv6058otnH+uK/D6TMYgyXy8L3PlzLOlJi3KPN9MW6o=;
-	b=7HE3OQMpygvUyUhHq2kzt5qk9OJipVG1QL5pcyuj0by8rzEUcNv4KQLuijCvaIGnki+lvf
-	DPblRSs22o6rkNAA==
+	bh=XjOuq6k+UpFL6BOoWHjHlN/QO0POrewyeMCKLvGq9mY=;
+	b=cTov7oaU2nUcYWqILxvh0NkD0Nr3KxScREMNY/2vXP3q0P7Uw28JcDFpj7CGnyee3uvffG
+	5SD4s27K7Hi39QCA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E7E0513A6F;
-	Mon, 13 May 2024 13:41:35 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0735513A61;
+	Mon, 13 May 2024 13:41:37 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id unAoOI8YQmZaDwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Mon, 13 May 2024 13:41:35 +0000
+	id +ee5AZEYQmaTDwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Mon, 13 May 2024 13:41:37 +0000
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 31CBAA08DA; Sun, 12 May 2024 13:06:35 +0200 (CEST)
-Date: Sun, 12 May 2024 13:06:35 +0200
+	id 604EDA091B; Sun, 12 May 2024 23:51:47 +0200 (CEST)
+Date: Sun, 12 May 2024 23:51:47 +0200
 From: Jan Kara <jack@suse.cz>
-To: Kemeng Shi <shikemeng@huaweicloud.com>
-Cc: tytso@mit.edu, jack@suse.com, linux-ext4@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/9] jbd2: remove unnedded "need_copy_out" in
- jbd2_journal_write_metadata_buffer
-Message-ID: <20240512110635.qqllcn2q4dfyvmzr@quack3>
-References: <20240506141801.1165315-1-shikemeng@huaweicloud.com>
- <20240506141801.1165315-4-shikemeng@huaweicloud.com>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, tytso@mit.edu,
+	adilger.kernel@dilger.ca, jack@suse.cz, ritesh.list@gmail.com,
+	yi.zhang@huawei.com, chengzhihao1@huawei.com, yukuai3@huawei.com
+Subject: Re: [PATCH v3 10/10] ext4: make ext4_da_map_blocks() buffer_head
+ unaware
+Message-ID: <20240512215147.zfrp6x75xqdinjvj@quack3>
+References: <20240508061220.967970-1-yi.zhang@huaweicloud.com>
+ <20240508061220.967970-11-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,37 +92,53 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240506141801.1165315-4-shikemeng@huaweicloud.com>
+In-Reply-To: <20240508061220.967970-11-yi.zhang@huaweicloud.com>
 X-Spam-Level: 
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	DATE_IN_PAST(1.00)[26];
+X-Spamd-Result: default: False [-2.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	SUSPICIOUS_RECIPS(1.50)[];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
 	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	NEURAL_HAM_SHORT(-0.20)[-1.000];
 	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
-	FROM_EQ_ENVFROM(0.00)[];
+	MX_GOOD(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.com:email,suse.cz:email]
-X-Spam-Score: -2.80
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,mit.edu,dilger.ca,suse.cz,gmail.com,huawei.com];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	R_RATELIMIT(0.00)[to_ip_from(RLswiucb9kpekg6cnj18gdugi4)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,huawei.com:email,suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
+X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: 406735C0D8
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
 X-Spam-Flag: NO
+X-Spam-Score: -2.51
 
-On Mon 06-05-24 22:17:55, Kemeng Shi wrote:
-> As we only need to copy out when we should do escape, need_copy_out
-> could be simply replaced by "do_escape".
+On Wed 08-05-24 14:12:20, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
 > 
-> Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+> After calling the ext4_da_map_blocks(), a delalloc extent state could
+> be identified through the EXT4_MAP_DELAYED flag in map. So factor out
+> buffer_head related handles in ext4_da_map_blocks(), make this function
+> buffer_head unaware and becomes a common helper, and also update the
+> stale function commtents, preparing for the iomap da write path in the
+> future.
+> 
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 
 Looks good to me. Feel free to add:
 
@@ -128,42 +147,163 @@ Reviewed-by: Jan Kara <jack@suse.cz>
 								Honza
 
 > ---
->  fs/jbd2/journal.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
+>  fs/ext4/inode.c | 63 ++++++++++++++++++++++++-------------------------
+>  1 file changed, 31 insertions(+), 32 deletions(-)
 > 
-> diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-> index 068031f35aea..9a35d0c5b38c 100644
-> --- a/fs/jbd2/journal.c
-> +++ b/fs/jbd2/journal.c
-> @@ -327,7 +327,6 @@ int jbd2_journal_write_metadata_buffer(transaction_t *transaction,
->  				  struct buffer_head **bh_out,
->  				  sector_t blocknr)
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index c56386d1b10d..1dba5337382a 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -1745,36 +1745,32 @@ static int ext4_insert_delayed_blocks(struct inode *inode, ext4_lblk_t lblk,
+>  }
+>  
+>  /*
+> - * This function is grabs code from the very beginning of
+> - * ext4_map_blocks, but assumes that the caller is from delayed write
+> - * time. This function looks up the requested blocks and sets the
+> - * buffer delay bit under the protection of i_data_sem.
+> + * Looks up the requested blocks and sets the delalloc extent map.
+> + * First try to look up for the extent entry that contains the requested
+> + * blocks in the extent status tree without i_data_sem, then try to look
+> + * up for the ondisk extent mapping with i_data_sem in read mode,
+> + * finally hold i_data_sem in write mode, looks up again and add a
+> + * delalloc extent entry if it still couldn't find any extent. Pass out
+> + * the mapped extent through @map and return 0 on success.
+>   */
+> -static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
+> -			      struct buffer_head *bh)
+> +static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map)
 >  {
-> -	int need_copy_out = 0;
->  	int done_copy_out = 0;
->  	int do_escape = 0;
->  	char *mapped_data;
-> @@ -382,16 +381,14 @@ int jbd2_journal_write_metadata_buffer(transaction_t *transaction,
->  	/*
->  	 * Check for escaping
->  	 */
-> -	if (*((__be32 *)mapped_data) == cpu_to_be32(JBD2_MAGIC_NUMBER)) {
-> -		need_copy_out = 1;
-> +	if (*((__be32 *)mapped_data) == cpu_to_be32(JBD2_MAGIC_NUMBER))
->  		do_escape = 1;
-> -	}
->  	kunmap_local(mapped_data);
+>  	struct extent_status es;
+>  	int retval;
+> -	sector_t invalid_block = ~((sector_t) 0xffff);
+>  #ifdef ES_AGGRESSIVE_TEST
+>  	struct ext4_map_blocks orig_map;
+>  
+>  	memcpy(&orig_map, map, sizeof(*map));
+>  #endif
+>  
+> -	if (invalid_block < ext4_blocks_count(EXT4_SB(inode->i_sb)->s_es))
+> -		invalid_block = ~0;
+> -
+>  	map->m_flags = 0;
+>  	ext_debug(inode, "max_blocks %u, logical block %lu\n", map->m_len,
+>  		  (unsigned long) map->m_lblk);
+>  
+>  	/* Lookup extent status tree firstly */
+>  	if (ext4_es_lookup_extent(inode, map->m_lblk, NULL, &es)) {
+> -		retval = es.es_len - (map->m_lblk - es.es_lblk);
+> -		if (retval > map->m_len)
+> -			retval = map->m_len;
+> -		map->m_len = retval;
+> +		map->m_len = min_t(unsigned int, map->m_len,
+> +				   es.es_len - (map->m_lblk - es.es_lblk));
+>  
+>  		if (ext4_es_is_hole(&es))
+>  			goto add_delayed;
+> @@ -1784,10 +1780,8 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
+>  		 * Delayed extent could be allocated by fallocate.
+>  		 * So we need to check it.
+>  		 */
+> -		if (ext4_es_is_delayed(&es) && !ext4_es_is_unwritten(&es)) {
+> -			map_bh(bh, inode->i_sb, invalid_block);
+> -			set_buffer_new(bh);
+> -			set_buffer_delay(bh);
+> +		if (ext4_es_is_delonly(&es)) {
+> +			map->m_flags |= EXT4_MAP_DELAYED;
+>  			return 0;
+>  		}
+>  
+> @@ -1802,7 +1796,7 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
+>  #ifdef ES_AGGRESSIVE_TEST
+>  		ext4_map_blocks_es_recheck(NULL, inode, map, &orig_map, 0);
+>  #endif
+> -		return retval;
+> +		return 0;
+>  	}
 >  
 >  	/*
->  	 * Do we need to do a data copy?
->  	 */
-> -	if (need_copy_out && !done_copy_out) {
-> +	if (do_escape && !done_copy_out) {
->  		char *tmp;
+> @@ -1816,7 +1810,7 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
+>  		retval = ext4_map_query_blocks(NULL, inode, map);
+>  	up_read(&EXT4_I(inode)->i_data_sem);
+>  	if (retval)
+> -		return retval;
+> +		return retval < 0 ? retval : 0;
 >  
->  		spin_unlock(&jh_in->b_state_lock);
+>  add_delayed:
+>  	down_write(&EXT4_I(inode)->i_data_sem);
+> @@ -1828,10 +1822,8 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
+>  	 * the extent status tree.
+>  	 */
+>  	if (ext4_es_lookup_extent(inode, map->m_lblk, NULL, &es)) {
+> -		retval = es.es_len - (map->m_lblk - es.es_lblk);
+> -		if (retval > map->m_len)
+> -			retval = map->m_len;
+> -		map->m_len = retval;
+> +		map->m_len = min_t(unsigned int, map->m_len,
+> +				   es.es_len - (map->m_lblk - es.es_lblk));
+>  
+>  		if (!ext4_es_is_hole(&es)) {
+>  			up_write(&EXT4_I(inode)->i_data_sem);
+> @@ -1841,18 +1833,14 @@ static int ext4_da_map_blocks(struct inode *inode, struct ext4_map_blocks *map,
+>  		retval = ext4_map_query_blocks(NULL, inode, map);
+>  		if (retval) {
+>  			up_write(&EXT4_I(inode)->i_data_sem);
+> -			return retval;
+> +			return retval < 0 ? retval : 0;
+>  		}
+>  	}
+>  
+> +	map->m_flags |= EXT4_MAP_DELAYED;
+>  	retval = ext4_insert_delayed_blocks(inode, map->m_lblk, map->m_len);
+>  	up_write(&EXT4_I(inode)->i_data_sem);
+> -	if (retval)
+> -		return retval;
+>  
+> -	map_bh(bh, inode->i_sb, invalid_block);
+> -	set_buffer_new(bh);
+> -	set_buffer_delay(bh);
+>  	return retval;
+>  }
+>  
+> @@ -1872,11 +1860,15 @@ int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
+>  			   struct buffer_head *bh, int create)
+>  {
+>  	struct ext4_map_blocks map;
+> +	sector_t invalid_block = ~((sector_t) 0xffff);
+>  	int ret = 0;
+>  
+>  	BUG_ON(create == 0);
+>  	BUG_ON(bh->b_size != inode->i_sb->s_blocksize);
+>  
+> +	if (invalid_block < ext4_blocks_count(EXT4_SB(inode->i_sb)->s_es))
+> +		invalid_block = ~0;
+> +
+>  	map.m_lblk = iblock;
+>  	map.m_len = 1;
+>  
+> @@ -1885,10 +1877,17 @@ int ext4_da_get_block_prep(struct inode *inode, sector_t iblock,
+>  	 * preallocated blocks are unmapped but should treated
+>  	 * the same as allocated blocks.
+>  	 */
+> -	ret = ext4_da_map_blocks(inode, &map, bh);
+> -	if (ret <= 0)
+> +	ret = ext4_da_map_blocks(inode, &map);
+> +	if (ret < 0)
+>  		return ret;
+>  
+> +	if (map.m_flags & EXT4_MAP_DELAYED) {
+> +		map_bh(bh, inode->i_sb, invalid_block);
+> +		set_buffer_new(bh);
+> +		set_buffer_delay(bh);
+> +		return 0;
+> +	}
+> +
+>  	map_bh(bh, inode->i_sb, map.m_pblk);
+>  	ext4_update_bh_state(bh, map.m_flags);
+>  
 > -- 
-> 2.30.0
+> 2.39.2
 > 
 -- 
 Jan Kara <jack@suse.com>
