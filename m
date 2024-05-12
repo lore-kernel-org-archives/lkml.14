@@ -1,273 +1,100 @@
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4CE1CAB3
-	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 20:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8B710949
+	for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 20:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715544834; cv=none; b=IVKLOTzX8xPflx8qUnpsNiZegmvz2Tt5zaLHkeWtWCPCvelz2fsqLDkt7QyFp+YoMP4FIl1KwA3y3A/ezfSAa7Or2h85wrK68zkP5gooeueypJhj5E5ATvR+/AR7gH5MY9ygNCDDzDSi9/AVcWh2ltlkct9awQtr+je3VDiC61k=
+	t=1715545398; cv=none; b=hbA41ZwOFTPUVZGAQWzHpk3YcEXmHoxjUHNqGW3XaHyg7wn4zbZWbMSSyPajJpmFPFDDgUidoqv2zrRGrD/Fbu1kPYZobvJAwDZLuDDa0ofvwgdqV8uyKjki17qMQMD0i63LTgXtxnZPH0T9yF3YH7DcRcAQpEHeZBddTU/ixbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715544834; c=relaxed/simple;
-	bh=n8oA1xkjArMGOnYfZNb5Ry0+r1BBNJPH94yslSEDpB8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OT5J/nTfjLtqAEFwYiiTjcrn9qz6XVaLAnbXybOqRbOKL5W3juOrwdXoiJHTF03BEj3Oue5YzWswetvmSO8vBc7hFcEVq+mwVjQm4CN9ajaXAMbzjxnNiP4qdGxrmfdSOBYDmVHH8fDKgA7F3WWaEriV9elOcQGsqWoz7xUY3DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr; spf=pass smtp.mailfrom=ghiti.fr; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ghiti.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ghiti.fr
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 05C981BF203;
-	Sun, 12 May 2024 20:12:42 +0000 (UTC)
-Message-ID: <e46b2d43-fe4d-4e9b-95ad-1900779b8bed@ghiti.fr>
-Date: Sun, 12 May 2024 22:12:33 +0200
+	s=arc-20240116; t=1715545398; c=relaxed/simple;
+	bh=RnIpQ8Mc6XKFlcXZ/Etdg8chW5qvoLKfj4r+c2WSPnE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m8f1zdO5wBd20DmgQznhob6TML7CT0++AvVVAPgQCn2INNVg0GkXVVacOifCqpApWmbudne9Y9XwGPzRh+9XKl8vqQ5jgiCqkW1Kf6KPrY7GrDjV7Pm6ee9UneppDMxPuupk3u5In67GB54aWTH2eP9n4Y+L9vaRMAhq+MHkDCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ogbRgsH9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ogbRgsH9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CE33C116B1;
+	Sun, 12 May 2024 20:23:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715545397;
+	bh=RnIpQ8Mc6XKFlcXZ/Etdg8chW5qvoLKfj4r+c2WSPnE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ogbRgsH9gSeXeijruRkYvWjWfKKgtYPmWSdOFQZsNR7+LSvHZDt4tmtN158u+Nqb3
+	 vCV/9JZ3NzC5o3t4xBhGhNR3Hz+TD/sAOLqZL2KFuplqpkHY2x7aHDXqeHrExKd4rU
+	 luqKZAFlBzE0pVk0bPEfax2pCZXp+f5Wsz4BU1+73yAOELlshMa4U+lt9OhjxU0UpX
+	 L5q9aUZNrQW0LNZOk/wFt9nJZA/QD6yV8adRVUCi28XGuTD3pQeQR37FRsyGBf+YDU
+	 EAbib4Rk7lgX2vUEeEPMvqocZPt2jLFw5rfckJsplJy0xZFlBcWlXES0UBufbLWhu2
+	 rE3RQG+Aa9uKw==
+Date: Sun, 12 May 2024 16:23:15 -0400
+From: Paul Gortmaker <paulg@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	linux-kernel@vger.kernel.org,
+	Richard Purdie <richard.purdie@linuxfoundation.org>
+Subject: Re: Intermittent Qemu boot hang/regression traced back to INT 0x80
+ changes
+Message-ID: <20240512202315.GA79225@kernel.org>
+References: <20240424185806.GB101235@kernel.org>
+ <20240424195157.GGZili3b-AxmUDlipA@fat_crate.local>
+ <20240426122402.GA36092@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 07/12] riscv/mm: prepare shadow stack for init task
- for kernel cfi
-Content-Language: en-US
-To: Deepak Gupta <debug@rivosinc.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- nathan@kernel.org, ndesaulniers@google.com, morbo@google.com,
- justinstitt@google.com, andy.chiu@sifive.com, hankuan.chen@sifive.com,
- guoren@kernel.org, greentime.hu@sifive.com, samitolvanen@google.com,
- cleger@rivosinc.com, apatel@ventanamicro.com, ajones@ventanamicro.com,
- conor.dooley@microchip.com, mchitale@ventanamicro.com,
- dbarboza@ventanamicro.com, waylingii@gmail.com, sameo@rivosinc.com,
- alexghiti@rivosinc.com, akpm@linux-foundation.org,
- shikemeng@huaweicloud.com, rppt@kernel.org, charlie@rivosinc.com,
- xiao.w.wang@intel.com, willy@infradead.org, jszhang@kernel.org,
- leobras@redhat.com, songshuaishuai@tinylab.org, haxel@fzi.de,
- samuel.holland@sifive.com, namcaov@gmail.com, bjorn@rivosinc.com,
- cuiyunhui@bytedance.com, wangkefeng.wang@huawei.com, falcon@tinylab.org,
- viro@zeniv.linux.org.uk, bhe@redhat.com, chenjiahao16@huawei.com,
- hca@linux.ibm.com, arnd@arndb.de, kent.overstreet@linux.dev,
- boqun.feng@gmail.com, oleg@redhat.com, paulmck@kernel.org,
- broonie@kernel.org, rick.p.edgecombe@intel.com
-References: <20240409061043.3269676-1-debug@rivosinc.com>
- <20240409061043.3269676-8-debug@rivosinc.com>
-From: Alexandre Ghiti <alex@ghiti.fr>
-In-Reply-To: <20240409061043.3269676-8-debug@rivosinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: alex@ghiti.fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240426122402.GA36092@kernel.org>
 
+[Re: Intermittent Qemu boot hang/regression traced back to INT 0x80 changes] On 26/04/2024 (Fri 08:24) Paul Gortmaker wrote:
 
-On 09/04/2024 08:10, Deepak Gupta wrote:
-> Under CONFIG_SHADOW_CALL_STACK, shadow call stack goes into data section.
-> Although with CONFIG_DYNAMIC_SCS on riscv, hardware assisted shadow stack
-> are used. Hardware assisted shadow stack on riscv uses PTE.R=0, PTE.W=1 &
-> PTE.X=0 encodings. Without CONFIG_DYNAMIC_SCS, shadow stack for init is
-> placed in data section and thus regular read/write encodings are applied
-> to it. Although with with CONFIG_DYNAMIC_SCS, they need to go into
-> different section. This change places it into `.shadowstack` section.
-> As part of this change early boot code (`setup_vm`), applies appropriate
-> PTE encodings to shadow call stack for init placed in `.shadowstack`
-> section.
->
-> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> ---
->   arch/riscv/include/asm/pgtable.h     |  4 ++++
->   arch/riscv/include/asm/sections.h    | 22 +++++++++++++++++++++
->   arch/riscv/include/asm/thread_info.h | 10 ++++++++--
->   arch/riscv/kernel/vmlinux.lds.S      | 12 ++++++++++++
->   arch/riscv/mm/init.c                 | 29 +++++++++++++++++++++-------
->   5 files changed, 68 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-> index 9f8ea0e33eb1..3409b250390d 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -197,6 +197,10 @@ extern struct pt_alloc_ops pt_ops __initdata;
->   #define PAGE_KERNEL_READ_EXEC	__pgprot((_PAGE_KERNEL & ~_PAGE_WRITE) \
->   					 | _PAGE_EXEC)
->   
-> +#ifdef CONFIG_DYNAMIC_SCS
-> +#define PAGE_KERNEL_SHADOWSTACK __pgprot(_PAGE_KERNEL & ~(_PAGE_READ | _PAGE_EXEC))
-> +#endif
-> +
+> [Re: Intermittent Qemu boot hang/regression traced back to INT 0x80 changes] On 24/04/2024 (Wed 21:51) Borislav Petkov wrote:
+> 
+> > On Wed, Apr 24, 2024 at 02:58:06PM -0400, Paul Gortmaker wrote:
+> > ...
+> > > pci 0000:00:1d.0: [8086:2934] type 00 class 0x0c0300 conventional PCI endpoint
+> > > pci 0000:00:1d.0: BAR 4 [io  0xc080-0xc09f]
+> > > pci 0000:00:1d.1: [8086:2935] type 00 class 0x0c0300 conventional PCI endpoint
+> > > pci 0000:00:1d.1: BAR 4 [io  0xc0a0-0xc0bf]
+> > > pci 0000:00:1d.2: [8086:2936] type 00 class 0x0c0300 conventional PCI endpoint
+> > > <hang - not always exactly here, but always in this block of PCI printk>
+> > 
 
+[...]
 
-Not sure the ifdefs are necessary here, but I'll let others jump in. We 
-have a lot of them, so we should try not to add.
+> So I owe you guys an apology for pointing the finger at INT80.  I still
+> don't understand how the pseudo bisect on v6.6-stable seems so
+> "concrete".  The v6.6.6 worked "fine" (it seemed) and v6.6.7 died fairly
+> quickly.  The revert of INT80 on v6.6.7 seemed to "fix" it - but if so,
+> it was only because it perturbed something else.
 
+With hindsight, it is pretty clear the kernel image changes/alignment
+were doing exactly that - triggering a dormant issue in QEMU.
 
->   #define PAGE_TABLE		__pgprot(_PAGE_TABLE)
->   
->   #define _PAGE_IOREMAP	((_PAGE_KERNEL & ~_PAGE_MTMASK) | _PAGE_IO)
-> diff --git a/arch/riscv/include/asm/sections.h b/arch/riscv/include/asm/sections.h
-> index a393d5035c54..4c4154d0021e 100644
-> --- a/arch/riscv/include/asm/sections.h
-> +++ b/arch/riscv/include/asm/sections.h
-> @@ -14,6 +14,10 @@ extern char __init_data_begin[], __init_data_end[];
->   extern char __init_text_begin[], __init_text_end[];
->   extern char __alt_start[], __alt_end[];
->   extern char __exittext_begin[], __exittext_end[];
-> +#ifdef CONFIG_DYNAMIC_SCS
-> +extern char __init_shstk_start[], __init_shstk_end[];
-> +#endif
-> +extern char __end_srodata[];
->   
->   static inline bool is_va_kernel_text(uintptr_t va)
->   {
-> @@ -31,4 +35,22 @@ static inline bool is_va_kernel_lm_alias_text(uintptr_t va)
->   	return va >= start && va < end;
->   }
->   
-> +#ifdef CONFIG_DYNAMIC_SCS
-> +static inline bool is_va_init_shadow_stack_early(uintptr_t va)
-> +{
-> +	uintptr_t start = (uintptr_t)(kernel_mapping_pa_to_va(__init_shstk_start));
-> +	uintptr_t end = (uintptr_t)(kernel_mapping_pa_to_va(__init_shstk_end));
-> +
-> +	return va >= start && va < end;
-> +}
-> +
-> +static inline bool is_va_init_shadow_stack(uintptr_t va)
-> +{
-> +	uintptr_t start = (uintptr_t)(__init_shstk_start);
-> +	uintptr_t end = (uintptr_t)(__init_shstk_end);
-> +
-> +	return va >= start && va < end;
-> +}
-> +#endif
+> I want to try some of these things, but I also don't want to
+> accidentally lose the reproducer I have.  Maybe I'll see if I can
+> reproduce it at home, since I'll lose use of the current box in a week
+> anyoway...
 
+So I did reproduce it at home, and once I got off the shared server and
+onto my own stuff, I could prove Boris was right in suspecting QEMU.
 
-You could have used an early flag and have only one function but that's 
-up to you.
+> Again, sorry for the false positive.  I let the v6.6-stable testing bias
+> my mainline conclusions to where I didn't test underneath INT80.  I'll
+> follow up with more details once (if?) I manage to properly sort this.
 
+Turns out, with my own stuff, and dmesg not being locked down (annoying)
+I found that there was a 1:1 correlation between a PCI hang and this:
 
-> +
->   #endif /* __ASM_SECTIONS_H */
-> diff --git a/arch/riscv/include/asm/thread_info.h b/arch/riscv/include/asm/thread_info.h
-> index 5d473343634b..7ae28d627f84 100644
-> --- a/arch/riscv/include/asm/thread_info.h
-> +++ b/arch/riscv/include/asm/thread_info.h
-> @@ -63,12 +63,18 @@ struct thread_info {
->   };
->   
->   #ifdef CONFIG_SHADOW_CALL_STACK
-> +#ifdef CONFIG_DYNAMIC_SCS
->   #define INIT_SCS							\
-> -	.scs_base	= init_shadow_call_stack,			\
-> +	.scs_base	= init_shadow_call_stack,	\
-> +	.scs_sp		= &init_shadow_call_stack[SCS_SIZE / sizeof(long)],
-> +#else
-> +#define INIT_SCS							\
-> +	.scs_base	= init_shadow_call_stack,	\
->   	.scs_sp		= init_shadow_call_stack,
-> +#endif /* CONFIG_DYNAMIC_SCS */
->   #else
->   #define INIT_SCS
-> -#endif
-> +#endif /* CONFIG_SHADOW_CALL_STACK */
->   
->   /*
->    * macros/functions for gaining access to the thread information structure
-> diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-> index 002ca58dd998..cccc51f845ab 100644
-> --- a/arch/riscv/kernel/vmlinux.lds.S
-> +++ b/arch/riscv/kernel/vmlinux.lds.S
-> @@ -126,6 +126,18 @@ SECTIONS
->   		*(.srodata*)
->   	}
->   
-> +	. = ALIGN(SECTION_ALIGN);
-> +	__end_srodata = .;
-> +
-> +#ifdef CONFIG_DYNAMIC_SCS
-> +	.shadowstack : AT(ADDR(.shadowstack) - LOAD_OFFSET){
-> +		__init_shstk_start = .;
-> +		KEEP(*(.shadowstack..init))
-> +		. = __init_shstk_start + PAGE_SIZE;
-> +		__init_shstk_end = .;
-> +	}
-> +#endif
-> +
->   	. = ALIGN(SECTION_ALIGN);
->   	_data = .;
->   
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index fe8e159394d8..5b6f0cfa5719 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -713,14 +713,22 @@ static __init pgprot_t pgprot_from_va(uintptr_t va)
->   	if (IS_ENABLED(CONFIG_64BIT) && is_va_kernel_lm_alias_text(va))
->   		return PAGE_KERNEL_READ;
->   
-> +#ifdef CONFIG_DYNAMIC_SCS
-> +	/* If init task's shadow stack va, return write only page protections */
-> +	if (IS_ENABLED(CONFIG_64BIT) && is_va_init_shadow_stack(va)) {
-> +		pr_info("Shadow stack protections are being applied to for init\n");
-> +		return PAGE_KERNEL_SHADOWSTACK;
-> +	}
-> +#endif
+qemu-system-i38[758683]: segfault at 7f7378b02 ip 0000557a5051cec4 sp 00007f7383dfe0e0 error 4 in qemu-system-i386[557a5019e000+5b0000]
+Code: 84 00 00 00 00 00 41 55 49 89 cd 41 54 49 89 d4 55 48 89 fd 53 44 89 c3 48 83 ec 08 48 8b 07 48 85 c0 74 22 48 3b 47 38 74 1c <48> 83 78 08 00 48 8b 10 75 1e 48 8b 48 28 48 39 ce 0f 83 a5 
 
+...appearing in the dmesg output.  Pretty hard to argue against letting
+non-KVM QEMU own 100% of the blame for this one.
 
-To avoid the ifdef here, I would hide it inis_va_init_shadow_stack().
-
-
-> +
->   	return PAGE_KERNEL;
->   }
->   
->   void mark_rodata_ro(void)
->   {
-> -	set_kernel_memory(__start_rodata, _data, set_memory_ro);
-> +	set_kernel_memory(__start_rodata, __end_srodata, set_memory_ro);
->   	if (IS_ENABLED(CONFIG_64BIT))
-> -		set_kernel_memory(lm_alias(__start_rodata), lm_alias(_data),
-> +		set_kernel_memory(lm_alias(__start_rodata), lm_alias(__end_srodata),
->   				  set_memory_ro);
->   }
->   #else
-> @@ -913,14 +921,21 @@ static void __init create_kernel_page_table(pgd_t *pgdir,
->   static void __init create_kernel_page_table(pgd_t *pgdir, bool early)
->   {
->   	uintptr_t va, end_va;
-> +	pgprot_t prot;
->   
->   	end_va = kernel_map.virt_addr + kernel_map.size;
-> -	for (va = kernel_map.virt_addr; va < end_va; va += PMD_SIZE)
-> +	for (va = kernel_map.virt_addr; va < end_va; va += PMD_SIZE) {
-> +		prot = PAGE_KERNEL_EXEC;
-> +#ifdef CONFIG_DYNAMIC_SCS
-> +		if (early && is_va_init_shadow_stack_early(va))
-> +			prot = PAGE_KERNEL_SHADOWSTACK;
-> +#endif
-
-
-Ditto here to avoid the ifdef, hide it intois_va_init_shadow_stack_early().
-
-
->   		create_pgd_mapping(pgdir, va,
-> -				   kernel_map.phys_addr + (va - kernel_map.virt_addr),
-> -				   PMD_SIZE,
-> -				   early ?
-> -					PAGE_KERNEL_EXEC : pgprot_from_va(va));
-> +					kernel_map.phys_addr + (va - kernel_map.virt_addr),
-> +					PMD_SIZE,
-> +					early ?
-
-
-The 3 lines above are not modified, so no need to indent them.
-
-
-> +					prot : pgprot_from_va(va));
-> +	}
->   }
->   #endif
->   
-
-
-Apart from the nits above, you can add:
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-
-Thanks,
-
-Alex
-
+Paul.
+--
