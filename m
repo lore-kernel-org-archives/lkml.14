@@ -1,142 +1,196 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2074.outbound.protection.outlook.com [40.107.105.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C8C21C683;
-	Mon, 13 May 2024 12:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715602018; cv=none; b=hCRCDTVRnvpCxSfe/9GfIg2nLYn7fDyGjAyW0C2ZOlBIGX6wX6kZKSpj36no8Ro3mDKvIVCWb5JFv1FFJ6Pag4aZ+ZDD2X/iONLGYAN+fYKe9J5CLFhOjnhzq4yej+JYQE2p+k9FCejqGyH3qPUYrBHdXDMLDenGg1kJgNjlz2o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715602018; c=relaxed/simple;
-	bh=xsGQyMUhP00Zqt+lGxpgG0zKx7Cp/SFFHHzkQaew4Tw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XylMEOPoPIm5NwGGwYEZtWyg5HGkYiO17goYXzfKaDleIm3YqRQqiwV5DEYTdLVGEjLCh4tYnYJLGXsSyNrR8Wn9jMfgVk6lK6asx3PVVJ1purS+NEzx9ezxMxyfEIDip5Qofv7KrwsyvpDjW/C0kzDowsr7fvYCffbIQ31OErg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G7sxbp21; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0E114AD02;
+	Mon, 13 May 2024 12:13:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.105.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715602435; cv=fail; b=IkUjUWOfoJT+YDhdfCVCHgaNEAt7E1DdowfRabsAU04H6tQ/GxfS7P/WG4aBMrqCfp6IBDQTD+VT7o8KHY+qj6IV4ffTPkslA9Uzuwo5KnAAyZTEAdI2YANEmuBNSXYp1cmfrQsNB+27kSNQMQN3QXF5ePvK26FqaqssQHkRjYY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715602435; c=relaxed/simple;
+	bh=25CNK9ozuwLnn9ixmVLEPRQ9prY3nVebV9iMeWWTmqA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=u0tIlOBSEcNWwrn7igjByev2pgfYnIMnNCQSEfYU81X76+vZIlD6hDzfc/Yi9vY82HSj3an2aig+ZFBczFBudfcBvm9L2pY4uBRAOH6zKoCx3lE6HgJXuLSonr5omCK9HMPM0GVvgo8pJyJKV3638J+rt1B4jwyOZCEY3nJKTGA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk; spf=pass smtp.mailfrom=prevas.dk; dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b=Wf1eFSjt; arc=fail smtp.client-ip=40.107.105.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prevas.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7sxbp21"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6f44b390d5fso3636965b3a.3;
-        Mon, 13 May 2024 05:06:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715602016; x=1716206816; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fBSGhcRATGfWqcuw9ROtUQ71vyzWXEjjFm1V6NJTT0Y=;
-        b=G7sxbp21HgY1LTDbcJRH66MKoUEgrpgqH8tR3LAg6xR0iQOLW6PZZDN116bAuwCeE5
-         gzPieBqoi/Oa+yljXYB0TTgBQZPqIZwHMmzos1Enl6B1iARYZfgW+sfNTuTN4qHrbmbE
-         gPTIMxSJImVt+/AXtSlIN2brd9Wuorl5JrcRfbo+sjs+cKoNeNFBQNwBy6eucOVhiVO3
-         Pg5mRDLDZMnI8eEYWguoeiv1b/e36aamx+nISuLBflJg0qMTi/ivlT08ljvI+3IXsmEv
-         lXOJRw28eSH6YULrWQZnYUtgkeWNJKjYyU/oVqBaMwNBUxoa1OZXJ3fZMIofv0k2w+na
-         1f0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715602016; x=1716206816;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fBSGhcRATGfWqcuw9ROtUQ71vyzWXEjjFm1V6NJTT0Y=;
-        b=N+vXe2ghc2gp8A6i32bTBmpCMshK0BxQxue/YDPRTwx1LTR5Ml0ZYurv16UzTd3Xzb
-         i1ADsiyfZQJ1oeVrGMKg1dfzn2TkxGkcVD2Jjk39RC3jb02RMj8I2Sv6RHPxV2CSC0n5
-         OYqTOjiXPiwGvcZh+x/qwQRRHVcM9Qk9VpvbO4GyNCtlfc9bZ1tU6EyHA74Me8TJFc1T
-         v/GJBZBL2XtZ9ZjoAF3qNMkHE1PGmmIbN6bflNiFB2LfzuvQSifxZR4XM1aVRAPsFeWE
-         Xvo1Z2U6j+FYJxmuumCBXucvL6N6FZogqs+R3h/EB8Lfzc5jk2Rz6VA+Ss1tW7aFTP9l
-         Bzuw==
-X-Forwarded-Encrypted: i=1; AJvYcCWtMo4T/1rBNBSJXtdXOT9EjigNUnhJVnheZ+W1J86UPHrVinKjSmZTa/f2KgKttNsetTZeQKggYBgLRMYMZgRnisNBUfKt7OSjpBjGag==
-X-Gm-Message-State: AOJu0YxmJeb+gaWxAOzQNfmv/ED8n3IKnZdiYbICLZunpi2HU1CBr2vw
-	Av+RMRP/bJzO913pOsLnUTspOYKlHE20e6zd+0KGtl/DNzsaRdCG3k8xElJz
-X-Google-Smtp-Source: AGHT+IFiCkyceinqWjKp3qasZ/AZ4ESi/IBe1hBQMdHCVdIO0QRYINlrHJFq9+4IMlcIsS6y2bNYsg==
-X-Received: by 2002:a05:6a20:3c87:b0:1a3:dd15:dacb with SMTP id adf61e73a8af0-1afde1d913cmr12462779637.52.1715602016566;
-        Mon, 13 May 2024 05:06:56 -0700 (PDT)
-Received: from AHUANG12-3ZHH9X.lenovo.com (220-143-204-48.dynamic-ip.hinet.net. [220.143.204.48])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2af2b1esm7446131b3a.171.2024.05.13.05.06.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 05:06:56 -0700 (PDT)
-From: Adrian Huang <adrianhuang0701@gmail.com>
-X-Google-Original-From: Adrian Huang <ahuang12@lenovo.com>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	Jiwei Sun <sunjw10@lenovo.com>,
-	Adrian Huang <ahuang12@lenovo.com>
-Subject: [PATCH 2/2] genirq/proc: Refine percpu kstat_irqs access logic
-Date: Mon, 13 May 2024 20:05:48 +0800
-Message-Id: <20240513120548.14046-3-ahuang12@lenovo.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240513120548.14046-1-ahuang12@lenovo.com>
-References: <20240513120548.14046-1-ahuang12@lenovo.com>
+	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="Wf1eFSjt"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U7RzOBr2SSaz46MUWFcDUWTxPWdbs84xgJp/WsR48khbfehSZw3k7Q4Eupv9YMipfJd4sM6MYLI5hE0n/wIk3al/uulk5lcOUIXDwyQvvjmMnV6ShtvglSW/pkCK5FIemM+kQ1qO+AcZWjf7zuEaBfnkR35zQ3fYNjMVctFXVf6PJhbgb+ipESZsAUT8A+Gxpr0MVaqXckLdYkIOO2PXZwIJilIfgGzV5HORrBihVHwMR/0qZ2M1pbcZPJZOIHyb/t4BSF4TrEJ4rqln8Hb0kFRt8bLvx1BQUCjfXWizvgwkbekFeKiMSDmUyDNzDMPnTS+VGzfaviivFZO5jQOZkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QfwKxDL7jppSiDvnWDWjLj39lVp6UCWmSqklXW8Jtr4=;
+ b=H99J5QNrf2rULMomydgQc7eNlpEtpt/0+UBqg0CCCWau1cgyKDSmQFS5zz41K9KYHZP6T5V2uVei7kDAAvtWcBRZgOM406XRwkDqj0/DKdz9Pt/YLFFpxgoJ1AL7M9UgIzEhsI9ajIbLn2vXczB99Rp+dwmglbXpc2MVHhzEs7c7h9Ie5AbsEt5dkEyBg3kPxd+X8IhJzt5s6Vl2DdUaoxdReEPNauHsyanXi9F4iaivRNAr20UhkHn4/nBqz9Jyfj51DZenteQkgrdeX2cxoxAv0/202XCRSAzdwP5MkFjocHCc4AYsCNCId1TTYbktlhP3TEx356rtOxw1vJ0x9w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
+ dkim=pass header.d=prevas.dk; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QfwKxDL7jppSiDvnWDWjLj39lVp6UCWmSqklXW8Jtr4=;
+ b=Wf1eFSjtWi5deUA0v7SHkGOJfNCsk4jmxZ+FnMKgNNdeIB+is15fD2TfcSxhk0EESPfyTstmY+eVGiPagiUdDPPmWzBj3S/9CT9kcRwGINJ+Dk7Dlyk4+MJ/QxbmZq0onlJCTP836uLMR+IsGdYkVQ6J+/FXNLfPRXFgCKAXHT8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=prevas.dk;
+Received: from DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:45a::14)
+ by PAWPR10MB7344.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:2ea::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Mon, 13 May
+ 2024 12:13:48 +0000
+Received: from DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9fcc:5df3:197:6691]) by DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::9fcc:5df3:197:6691%3]) with mapi id 15.20.7544.052; Mon, 13 May 2024
+ 12:13:48 +0000
+Message-ID: <557d219a-dc00-4595-a3ff-a464908d5e03@prevas.dk>
+Date: Mon, 13 May 2024 14:13:45 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/17] clk: imx: pll14xx: Add constraint for fvco
+ frequency
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Abel Vesa <abelvesa@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>, Jacky Bai <ping.bai@nxp.com>,
+ Ye Li <ye.li@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>
+Cc: linux-clk@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ Abel Vesa <abel.vesa@linaro.org>, Peng Fan <peng.fan@nxp.com>,
+ Shengjiu Wang <shengjiu.wang@nxp.com>, Chancel Liu <chancel.liu@nxp.com>
+References: <20240510-imx-clk-v2-0-c998f315d29c@nxp.com>
+ <20240510-imx-clk-v2-5-c998f315d29c@nxp.com>
+Content-Language: en-US, da
+From: Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+In-Reply-To: <20240510-imx-clk-v2-5-c998f315d29c@nxp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MM0P280CA0003.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:190:a::14) To DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:45a::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DB9PR10MB7100:EE_|PAWPR10MB7344:EE_
+X-MS-Office365-Filtering-Correlation-Id: ed1a9ec9-98ee-49c8-c538-08dc734624a6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|7416005|366007|1800799015|921011;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SVBieFFLb3hUMkdRQWF4b281dlNERG1COWFGdjd0Y1ZxdXNKdVNHeDhqZWpi?=
+ =?utf-8?B?bldIYW5kYnR2TmFWZ2l3MjRMS2txRDNnQk9tMG50MW10Rm9neDUvZzJYSlAr?=
+ =?utf-8?B?YlhHLzcwcWNWajMrOGRPYjVYR09JWitSUTRvWjFRV01hdXNuVFZjUlFxNzd5?=
+ =?utf-8?B?blUrTnNKbENCUVp0MExhVVJQTlY1ZUVZYS9SeTNnTVdVVnlxQUZtcVFlYm1L?=
+ =?utf-8?B?ZmlQVS9rMC9XOGFQZmJ0UmRvZEVIRlBHdU1SKzlOcGkxWTZlUzBRSGtJUWNJ?=
+ =?utf-8?B?VVJ6dVl6T0V3MlpiY0RUU0tPMGMyN0JzM21ab1RYZjRFMDZzbk14SHJGd0Zo?=
+ =?utf-8?B?N2JvaHFRY2V4c3ZvcEtZcDJzYjZtSEkwWGpBMTNLUjZ6aWFtRWphY3VxUVVP?=
+ =?utf-8?B?NmRKTVQ0bk9KdUZ5YXh2TkJEMElaSEFVTHBZYWxvdXRWTkFyTzhiWGxCVnR1?=
+ =?utf-8?B?bUpIaGJaREVzM214VFFDMUlKOEpMQ0NoODVKdlNiMW1Lam8vWXBsVm8rRU1r?=
+ =?utf-8?B?dVNoK291RzVlZTRhRUp2RTVMYktRS1RoVUVyVU56Si85bHRxS20vamx2QXBS?=
+ =?utf-8?B?Tkkra2czbUhtbkhyemc4b0srdDBDY0RXa09NekFBTVlxNTlsMnNVVEZ4ZVFa?=
+ =?utf-8?B?K3pFeTRTVkluNzBGejlzYno5ZUU5bEhVSUtBMW90KzRjSjVBMzJNQnRxSGJz?=
+ =?utf-8?B?SUttSmNFdjJlYUdzUzg4cCtzWUlzMFN0d1JrSkx1cjJ6U2JSdy9KOEl0Z3Jk?=
+ =?utf-8?B?aE1LMGNnQ1VLaUh5d0diOUU0OTEzcGZ6RDRWTjFVdWd0MzRqQy9Zc0ROdUo2?=
+ =?utf-8?B?WXB2Q0ZVYm5mNE1SbGNqeklLbW5iRlJtQWVYcVdyVzNKaThxN2lnRHlWaVQx?=
+ =?utf-8?B?YUR4NUhYZDhaeHVlZjM5SnFNNkJxZi9CR21YQ0srUHkwMWkxMklCYThPMUUr?=
+ =?utf-8?B?cDA3U21hejVDNTVYSTlIb0MveXRIU1JMMGlwMTJqOW9sZFl5UlJHekNYUTV5?=
+ =?utf-8?B?dDN4eXdnQlRYZmVZR2o0T2RqcjdkZnZnUW1CUWM1NWFtZ2xzY1dCbEJJZUk0?=
+ =?utf-8?B?VC9vT3hPTHVNdnVTellxbW8yb29CZXZ5TkFxd1NDMGVZVnNnSmtDZ254TkxH?=
+ =?utf-8?B?WnZqK2FTVWxCWU14MXdoeGZLRlhSRjZNQlB5SWY2aFllVEsyZlpmbzl4bXpq?=
+ =?utf-8?B?SjcwbWFQRWJsckFCMWUxamxPUTNXNTlPWmRCZjgrV2Vtb2lFcVFQTU5FK1dS?=
+ =?utf-8?B?cGhEYWdIQmFhdXVJTWhXemE5Mzl1eG9UT1BzRnNBajBFT0JRMEZ5NzRMZUZj?=
+ =?utf-8?B?aGVxN0Z4TjBocnF5Qm5xbE8wUlpUVDRlNXB2a0d6L1ZFQ2t5eFF1dGJydkhl?=
+ =?utf-8?B?TWk0MmpCTHdZWmNKanUvcTZsaER5NExqWlVSc09qdFRZSkUvSmtSRHVMelRG?=
+ =?utf-8?B?TURBZGFKWDIrZzhKakhMbHlyMHZGTkxnOTdHM0t3UlFzY0Rmd2FkeHR1eURI?=
+ =?utf-8?B?R0xGVzJ0TkJPZUM3WExtWGpEdFNEUHJDRkJrLy9xMmFHZGdVWjhDSmc3aE41?=
+ =?utf-8?B?eThraUJ0R2U1RFF4cVVXTjVBUlVwWmsrcU9uYVFmdkRFZjFyNThTZUNhbmd2?=
+ =?utf-8?B?TzNaVXBrM3FyV2dsS0hEYTREWFN2eDc5V28vZGhweDhQOFBOOEw0UVRJVFpl?=
+ =?utf-8?B?ejlGVk1PMzJDY3hOVWhDS2YyMzhFUHBNQWs0dGdYL0pORmwwZzU5NEhuQnNP?=
+ =?utf-8?Q?vJRtU3TgfWqRmyqOi1O8NwVDRI2Wc3kUzaUIiUT?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(366007)(1800799015)(921011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SmcwSjllbE5NaFovNnEybi84QjMyMzZ4ZVd4a3JJNnhTbWdrUi9NNXY1N2xR?=
+ =?utf-8?B?UzRwa0piSjY1WUxkQjNYZEI2TzNKT2xLazBrTDI5bmR1QjNuK1FZTjRjTUhs?=
+ =?utf-8?B?dTdkS3UrVlFuTEsxWm9Dc0owWGxibjY3VjFSUHRDZjZ0QUE4cnV5Y0ZyRFBN?=
+ =?utf-8?B?VTVoekwxYUQzQ1FsRUFkSmVJcW5RaEpKWTBxM0NzNE9tN2dSNS9yME9KQTV6?=
+ =?utf-8?B?WGpzdEg3WjlGb1hCRnZDeVV1VWdKS0t0R1hnSGQ4eXY4cVlFNXhHeG9HMTZF?=
+ =?utf-8?B?UTZMYmNyNkhwU25ldXJES2tRekRMM25pWm5kbzBqbTNZSFlWQWlreHp4NnN2?=
+ =?utf-8?B?eG5ONUcvbEtaRDJsc2FVTHFiU2RXN2FBSjJsbjN3Rk1hTlF2dmUzc05rRExq?=
+ =?utf-8?B?dkhqak1obWFjbkNyUEhrM1B1ZWdUdVg3QXhJRUZVT01QS2ZKa1NjSzhnT21k?=
+ =?utf-8?B?K2NkcjBCdWpsWEN5clR3UlgzVE5DbXVJemhJazN4UEdRL1YrbnBmRDFiZmRm?=
+ =?utf-8?B?OUZpSHIrVEhmbFNKYnUvRXhMMmhBWFp1RnlzUjlqUkQ4Z1RHYnFyQUttUlMr?=
+ =?utf-8?B?b0Y1ZkFrUWlGVnk4TStOaWxVd1k4MmVvcXlIclQrSmhwak5BUDRXWWp6blBh?=
+ =?utf-8?B?aVBKTXB0Um0xa3lmKzI0Q1VHeWJRc0N3dTJwOHp1RXFqMVczdStvNlgxeGxO?=
+ =?utf-8?B?ODYzQjBKQ3B2Qy8raTdGMjRhSkFnZlFrOUFIYmk4cXVuKzFiQVNDcFJYQUZW?=
+ =?utf-8?B?djFSOVNzNkxCd0djSUVyc2pYdlBOK0o2WjlxaE01TEVxRmdyTnEvN0JJRUJU?=
+ =?utf-8?B?b1Q2QzR5V0lsRGpmTS8yazJ0d1BJVXBTUENMRTU5SmlrK2FtalZTRHJ4SUg4?=
+ =?utf-8?B?T2pMNUtvWkVUblNjWTJyUnJ2SDhCcVdlTVAzeEYwWXU5c1M3V0tZNTl6MXVi?=
+ =?utf-8?B?cE0rOGtSTlgxNGZkR1NvWHVjVjhxQU1CelJqdVYrQnFwVk5KWTNFZkFDaEZJ?=
+ =?utf-8?B?eUgvMnVRd1kyQjZNOXA2ZlIxOVpvTE9mK3lySHp2c0NSM1RuSERSaVBHd0h5?=
+ =?utf-8?B?VTB3amp0cE4xbEt3dEVZc0xzaFoxRCtqM3BGWlBCYWRvblNvUGhVa0p5clpp?=
+ =?utf-8?B?K3hEZEJXN1RvY1RQV29xRStKWCttei9XSFBLcmhvZHdSOXNmRFAvcmxQMUdP?=
+ =?utf-8?B?cDVSTkZ1S2xvdXpSK2pIbGM5c1dMNC95Mk9UVHFsTmVna0ZPODgxKzl3MWpC?=
+ =?utf-8?B?bWphL0prNlJwQ2JFYWF2NG15amdnOWl0b1hUQXZ3aE5zYzFMcWNwRGN6VWhY?=
+ =?utf-8?B?OFQzYVNBNUtqS2hhbGFMTFp1ZnVtVFZFbXVWL3N4eDI2UDYwSE52aDhJejEx?=
+ =?utf-8?B?NmNvaE5IbkdVWFRZT3hXTU9RSlBBc3AwZ3BmV2FwSEJnL0F4dUFTS0E1N0VL?=
+ =?utf-8?B?UDloMzZSbS9ac1hOQjMzaW0xTFZBN1RITHBVUW8wOFYwVzBQNi9mR1l3cFBD?=
+ =?utf-8?B?ckRGOTFlYmpYTEpBQWo0UjhvWGhmQktvTWpLQkUwa2Y1Tk5jQU8zZ0Z2b2Fz?=
+ =?utf-8?B?dUJWRmh0TURGc3J2SFdxb1JCUFpYamxNQXlPL01hS0tLUnNqSUpoWXJWdDRz?=
+ =?utf-8?B?U1g3TFV4ZFlMWE5BZ2RvTFBtcGsyTkUrQnBBdFcyVkNRUUZwZ09RQ1ljYWFl?=
+ =?utf-8?B?MjY0dmJpRmxRYXplaHhtbVJpVzFuZmQ0UEZrUFRBMTlrK2JQbWZwWTNxdU1h?=
+ =?utf-8?B?TExMMXEvNExZNmlOY1pCSllxZmtsSS9vSXdsSWl0RDFaL3hXNk4zOSttR1I2?=
+ =?utf-8?B?OE9XRjJpWllsUW5BR0d1R05Dcmh3MUJRSG56cXQwZkZFTUxwbzloZTNIeFg1?=
+ =?utf-8?B?L3lWdFIyOE5tMnREL055ZnVuaHU5OUhFd0V5RzROTXVtTTJFMjB2ZVNtdzNV?=
+ =?utf-8?B?blVSVU01UG45WWZQeHN5RTlWKy9PYW5zL2dENCs1UzFOS3ZWZUFzeU85d3g2?=
+ =?utf-8?B?YTFqdlgrZ25FSXZIMmtLOHU4SXlYbFVEckNWSW9FRXV2VlErck95M3FiK2JL?=
+ =?utf-8?B?UGVxa2VyNzVha25xa2FHbnI0WXlFbkl4T3NGM3lremJ2ZzE3Z1o3NkJmTnZH?=
+ =?utf-8?B?VGd2ZnRIcHl4R1J4NWxVYldqSHFmTVJaNlYvRFk1R1BqakxpRmhCaG5IM0Z5?=
+ =?utf-8?B?UXc9PQ==?=
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed1a9ec9-98ee-49c8-c538-08dc734624a6
+X-MS-Exchange-CrossTenant-AuthSource: DB9PR10MB7100.EURPRD10.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2024 12:13:48.0940
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: InY616YlwNtrZmCvUEY247KNVIszwaiuFk22hoj0+mKlsm8ztOoIg+bXT9yNcASxW9oxJU6bJAIwH2+OJNNVb7v5b/U91LNM25fkQ2qSIUk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR10MB7344
 
-From: Adrian Huang <ahuang12@lenovo.com>
+On 10/05/2024 11.19, Peng Fan (OSS) wrote:
+> From: Shengjiu Wang <shengjiu.wang@nxp.com>
+> 
+> The fvco frequency range is between 1600MHz and 3200MHz, without
+> this constraint the fvco may out of range, the real output
+> frequency is no accurate.
 
-There is no need to accumulate all CPUs' kstat_irqs to determine whether
-the corresponding irq should be printed. Instead, stop the iteration
-once one of kstat_irqs is nonzero.
+Could you please point everybody in the direction of where that
+requirement is stated? The imx8mp reference manual, for example, merely
+lists constraints for p, m, s and k.
 
-In addition, no need to check if kstat_irqs address is available
-for each iteration when printing each CPU irq statistic.
 
-Tested-by: Jiwei Sun <sunjw10@lenovo.com>
-Signed-off-by: Adrian Huang <ahuang12@lenovo.com>
----
- kernel/irq/proc.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+>  
+>  	/* First try if we can get the desired rate from one of the static entries */
+> @@ -193,6 +195,10 @@ static void imx_pll14xx_calc_settings(struct clk_pll14xx *pll, unsigned long rat
+>  			kdiv = pll1443x_calc_kdiv(mdiv, pdiv, sdiv, rate, prate);
+>  			fout = pll14xx_calc_rate(pll, mdiv, pdiv, sdiv, kdiv, prate);
+>  
+> +			fvco = fout << sdiv;
+> +
+> +			if (fvco < 1600000000 || fvco > 3200000000)
+> +				continue;
 
-diff --git a/kernel/irq/proc.c b/kernel/irq/proc.c
-index 623b8136e9af..bfa341fac687 100644
---- a/kernel/irq/proc.c
-+++ b/kernel/irq/proc.c
-@@ -461,7 +461,7 @@ int show_interrupts(struct seq_file *p, void *v)
- {
- 	static int prec;
- 
--	unsigned long flags, any_count = 0;
-+	unsigned long flags, print_irq = 1;
- 	int i = *(loff_t *) v, j;
- 	struct irqaction *action;
- 	struct irq_desc *desc;
-@@ -488,18 +488,28 @@ int show_interrupts(struct seq_file *p, void *v)
- 	if (!desc || irq_settings_is_hidden(desc))
- 		goto outsparse;
- 
--	if (desc->kstat_irqs) {
--		for_each_online_cpu(j)
--			any_count |= data_race(*per_cpu_ptr(desc->kstat_irqs, j));
-+	if ((!desc->action || irq_desc_is_chained(desc)) && desc->kstat_irqs) {
-+		print_irq = 0;
-+		for_each_online_cpu(j) {
-+			if (data_race(*per_cpu_ptr(desc->kstat_irqs, j))) {
-+				print_irq = 1;
-+				break;
-+			}
-+		}
- 	}
- 
--	if ((!desc->action || irq_desc_is_chained(desc)) && !any_count)
-+	if (!print_irq)
- 		goto outsparse;
- 
- 	seq_printf(p, "%*d: ", prec, i);
--	for_each_online_cpu(j)
--		seq_printf(p, "%10u ", desc->kstat_irqs ?
--					*per_cpu_ptr(desc->kstat_irqs, j) : 0);
-+
-+	if (desc->kstat_irqs) {
-+		for_each_online_cpu(j)
-+			seq_printf(p, "%10u ", *per_cpu_ptr(desc->kstat_irqs, j));
-+	} else {
-+		for_each_online_cpu(j)
-+			seq_printf(p, "%10u ", 0);
-+	}
- 
- 	raw_spin_lock_irqsave(&desc->lock, flags);
- 	if (desc->irq_data.chip) {
--- 
-2.25.1
+If this is really a necessary constraint, it seems that one could just
+up-front compute the only possible value of s, or at least change the
+logic so that one loops over a smaller range of possible values of s.
+
+Rasmus
 
