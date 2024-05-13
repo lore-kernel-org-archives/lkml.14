@@ -1,77 +1,70 @@
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be [195.130.132.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66D2159164
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 13:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D721514E5;
+	Mon, 13 May 2024 13:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715606470; cv=none; b=KkK5Oovw6ih9uB2RQVj3nLZzlLO8o+JWsInIfljH7lM3TKeItICXW7GGoKHEtljTPmnZGf0uhjiJZ8lgYGJ7fDCT4ySYsug4USy6PG1yizgy53X+59kSqlmXRXBJN6Hkro0FyR1Wkd0P1HLQG1nLxUwjEwiNxjH2auiymnRg6sc=
+	t=1715606568; cv=none; b=uOPmUh03J2FZ6pHhzmKgl3g6RMDOj5ygtf36pSBoV+6C8gX2WGbZY/LiQeNYRgl7CoOcPEOG5zQq8XiCA11ML0D6a11pT0aDFJDV/d7veItjy7pHdmM+0TngAUcBB3TBlxj3MFTD2QPJNnxkN5oPnymgzvDoxZ55XEktPBPpDWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715606470; c=relaxed/simple;
-	bh=p8vL6YoySFXtH7yBUGU4yZJWG0hMGXiTflCKpNQf50I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fFWS7UFxud1FNF61wSk8HvGAjyr370EFPlZjIxH6ETmnKYRub+m2gf5tKT3XgP5OTO04jGJQrJ6qI6H0qe/xFH9Z4pLSB4lK2bv/H97QzFkQjIUc7iMaTj+Mol+MLg+nRiw9JfCR97VWqOEFBNPKchwjrf6Am+3m3HXu5ivKRRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:c85e:4b6d:1f91:1410])
-	by baptiste.telenet-ops.be with bizsmtp
-	id NdM02C0065V4kqY01dM0nt; Mon, 13 May 2024 15:21:00 +0200
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1s6Vb7-00399h-RK;
-	Mon, 13 May 2024 15:21:00 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1s6Vbv-008tqO-U0;
-	Mon, 13 May 2024 15:20:59 +0200
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Yoshinori Sato <ysato@users.sourceforge.jp>,
-	Rich Felker <dalias@libc.org>,
-	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-	Arnd Bergmann <arnd@arndb.de>
-Cc: linux-sh@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/3] sh: Fix missing prototypes (part three)
-Date: Mon, 13 May 2024 15:20:52 +0200
-Message-Id: <cover.1715606232.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1715606568; c=relaxed/simple;
+	bh=lGR/JTEovinL3WNGbtd8OB9QpmQr1FfHG7dzJAzXTU4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=DLTRUi02Fi4YMfgXRAj0plzzI3/Y+TsGDn66npAX7rooZLnbMypyI4ehuo4TBmGQPnENHNWVnmmVcFGRDC5qqgawHew3CIoBH7j+EnZCf7aR3EV1N+nTKUgWkPSuLM9ICBPrHQO+ynAZoQxjR8HYS9mvGlHC8TZpwGIAbgA5sRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=lvJ2QozZ; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="lvJ2QozZ"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net ABDB947C38
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1715605990; bh=lpf6OUFZvm7ObQIuIT3AZZ2LQqZ6RrgRPjzd6o2GDF8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=lvJ2QozZIYvV7Jhup+iJxGOO0xSdy1/3hOb0/Wfx/N1jq/norVViXbs3WjUSXoi/Y
+	 S90RmL03HVEIgSwwvPum1L2qbWlrrdPk/q9ZIAlqzQCAMKQiV9m9Ex0FL3jrHQ5KhH
+	 ONV0eZxdIW7H/hh9GARRYGKOjvhT0J8iDW8vLZjzID6B7qg1z2QtTdWfLTbQybC1vg
+	 K0u5vAjBKjomM0ucp88hRQht/28ch80Hbu33+oQ3IP4ABz0VDMFMJ7i11Wxz/4NKKK
+	 DXP1NkIB6bcJKDtZLbGlLH/vZjRD8JV9h75Ah9VQ9n6lSg1U9xlUgMDuSUMfSvvQ1K
+	 /LO4ig5/NHBIA==
+Received: from localhost (mdns.lwn.net [45.79.72.68])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by ms.lwn.net (Postfix) with ESMTPSA id ABDB947C38;
+	Mon, 13 May 2024 13:13:10 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Diederik de Haas <didi.debian@cknow.org>, Dwaipayan Ray
+ <dwaipayanray1@gmail.com>, Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: Joe Perches <joe@perches.com>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Diederik de Haas <didi.debian@cknow.org>
+Subject: Re: [PATCH] docs: dev-tools: checkpatch: Add targets for checkpatch
+ tags
+In-Reply-To: <20240513102237.112376-1-didi.debian@cknow.org>
+References: <20240513102237.112376-1-didi.debian@cknow.org>
+Date: Mon, 13 May 2024 07:13:09 -0600
+Message-ID: <878r0dam8q.fsf@meer.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-	Hi all,
+Diederik de Haas <didi.debian@cknow.org> writes:
 
-This patch series fixes more "no previous prototype for <foo>" warnings
-when building a kernel for SuperH, namely when building j2_defconfig.
+> Make the tags directly linkable by defining targets for them.
+>
+> Closes: https://lore.kernel.org/r/8090211.0vHzs8tI1a@bagend/
+> Signed-off-by: Diederik de Haas <didi.debian@cknow.org>
+> ---
+>  Documentation/dev-tools/checkpatch.rst | 216 +++++++++++++++++++++++++
+>  1 file changed, 216 insertions(+)
 
-Thanks for your comments!
+In addition to the other comments, I have to add: you have said what you
+are doing but not *why*.  All of these labels clutter up the text; what
+use will be made of them to justify that?
 
-Geert Uytterhoeven (3):
-  sh: of-generic: Add missing #include <asm/clock.h>
-  sh: smp: Protect setup_profiling_timer() by CONFIG_PROFILING
-  sh: setup: Add missing forward declaration for sh_fdt_init()
+Thanks,
 
- arch/sh/boards/of-generic.c | 2 ++
- arch/sh/include/asm/setup.h | 1 +
- arch/sh/kernel/smp.c        | 2 ++
- 3 files changed, 5 insertions(+)
-
--- 
-2.34.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+jon
