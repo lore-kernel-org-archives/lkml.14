@@ -1,216 +1,161 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C63014D28C;
-	Mon, 13 May 2024 11:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB2614C58A;
+	Mon, 13 May 2024 11:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715600693; cv=none; b=tqNNf1PgwRO8JMSlfbxGhJy3V9IA1KRlmz8dEm23CU3D8PCpnACR2guKOXoqpqreCBpC4ZQkWI8AlpI35tZT6iSpzirU7J3rdtn3Fu5oLUnSwjGSxTxKC7jl6rE3gWvXG67XJzEFUXG82bN3s2fKt1EJxwiiutbx8SDKVpQn5es=
+	t=1715600701; cv=none; b=cHUBUa1lZ1n025/M3g0+schks1tyAUO/wcqKeO1mOclJgGaeXs2GN1XCorVxAP2NsdDPBkAtW3Ncopl7EWhk5XhcTXSk4W3BKEMQ35oJZD+zb/SG/PlxzoFSdpvGUQJzgBubB6HdHjlUtSv5882dWTXKrBCHX3KJAOx3O/f+7eo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715600693; c=relaxed/simple;
-	bh=1CuQwLvdXNIMjatSyuAeXJFxXLuB2HlU01UVZ00JRcw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Mi066UHY3BnTr9IwA+ZmmFmOZnPLqOSe65mpf5z6DddPDq1C8I0xAdrjL9m7lu5lSl7aWiU8O9TABjqUgRwoqXBGaW1qb6xJDGJXU3T6+rfve4WhRBOTqWuWSdtsYBvJHkGVlfyGPl2zxzMXactclunt3GZBNK95S1/KOnStUG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=BovhxuMu; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1715600701; c=relaxed/simple;
+	bh=P6YnmEhWSK1fGtRlqUQFTnOvu1mUBDpmWoFsKM/oklU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ER4QO+S0Uv311CB5Lq0Ot5DDA8j0SFKFHCBC5+2e4ItxPdqFDJXDN2+ntxIMKgeZh5XnQgyG+VEw25jbvlu/WWsb6eRxrKvuu8S9H8SCjRQRtDaEjeTizk8y6fcP2WW+viAr5yEj0BPEjRKGsLQOlkDTcuTiPI3M0pwvKkxsIvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ZG00S7Ib; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="BovhxuMu"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44D8Jhwc004753;
-	Mon, 13 May 2024 13:44:31 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	selector1; bh=GIy0RxbMTa08PqVo24zPZgrWF7BfaDEsPdaCzmdxk98=; b=Bo
-	vhxuMuV0hdNvP/zLegqNG36p/iA9JicOtZuRxlzlo6ccvBDDCyR8eC8pDSUVdqZT
-	RJE2qM0semhXJU3iPUaWzQlzojCpr+nbWfTb9Zvvu4OSSIW9Ys7oxzczfsjt6dxN
-	Bt/dC/AbFaletetPm+hbOJaQGg9uSv3YjiAc/HDfAgSF08AKpboImrlDmJiHLlY5
-	tlNDl6RCEOguCt/J1uNZsVFUIfnGn52Md4cQMkGomJ1+IsXV5qr9ylQKiSuAvLEp
-	neooNM63TQBlk1wg3nCMvDp8h7VoNYrmjlba/8RwucyLbAfY+xz7N6sLjNaGo8bY
-	L0i3rtlsXD2zurhG/LEg==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y2kmhm4cm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 May 2024 13:44:30 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 663054002D;
-	Mon, 13 May 2024 13:44:24 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 151A321860D;
-	Mon, 13 May 2024 13:43:47 +0200 (CEST)
-Received: from [10.130.76.233] (10.130.76.233) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 13 May
- 2024 13:43:46 +0200
-Message-ID: <a688b2f2-d972-450a-9bec-2b506b58a21f@foss.st.com>
-Date: Mon, 13 May 2024 13:43:46 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZG00S7Ib"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44DBir8K106181;
+	Mon, 13 May 2024 06:44:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1715600693;
+	bh=xLaxHkTgfKR3NuNoAwYQ0NKBtG4coec1Hji8POGoKYU=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=ZG00S7IbzcGliDZazsvN6cvujeajwhmB3m617PZ/WXnEdDWJc/+n67JPnUsRtUudF
+	 mcoCi6vEAwE8KTsZ5RQEJOlAjSU3kAZmMan/JeXbgt5QO/mSlUdIdGnPjegrJDa5fk
+	 YZiV63+Xkm0gxhP1S+2BNZu9c4BH9opA/sG9Jr1Y=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44DBiqaN020199
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 13 May 2024 06:44:53 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 13
+ May 2024 06:44:52 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 13 May 2024 06:44:52 -0500
+Received: from uda0500640.dal.design.ti.com (uda0500640.dhcp.ti.com [172.24.227.88])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44DBiiZh086026;
+	Mon, 13 May 2024 06:44:48 -0500
+From: Ravi Gunasekaran <r-gunasekaran@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <afd@ti.com>, <robh@kernel.org>,
+        <rogerq@kernel.org>
+CC: <kristo@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <srk@ti.com>, <r-gunasekaran@ti.com>, <s-vadapalli@ti.com>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/3] arm64: dts: ti: k3-j722s-main: Add support for SERDES0
+Date: Mon, 13 May 2024 17:14:41 +0530
+Message-ID: <20240513114443.16350-2-r-gunasekaran@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20240513114443.16350-1-r-gunasekaran@ti.com>
+References: <20240513114443.16350-1-r-gunasekaran@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 linux-next] media: i2c: st-mipid02: replace
- of_node_put() with __free
-To: R Sundar <prosunofficial@gmail.com>, <sylvain.petinot@foss.st.com>,
-        <mchehab@kernel.org>, <sakari.ailus@linux.intel.com>,
-        <laurent.pinchart@ideasonboard.com>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <skhan@linuxfoundation.org>, <javier.carrasco.cruz@gmail.com>,
-        Julia Lawall
-	<julia.lawall@inria.fr>
-References: <20240429163736.11544-1-prosunofficial@gmail.com>
-Content-Language: en-US
-From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-In-Reply-To: <20240429163736.11544-1-prosunofficial@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-13_08,2024-05-10_02,2023-05-22_02
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hi,
+AM62P's DT source files are reused for J722S inorder to
+avoid duplication of nodes. But J722S has additional
+peripherals that are not present in AM62P.
 
-I took sometime to reflect on this. Currently I favor drivers consistency.
-Merging this patch as is would introduce some differences between the
-vgxy61 and other drivers that follow the 'of_node_put' flow, which I
-think is not an improvement.
+Introduce a -main.dtsi to define such additional main
+domain peripherals and define the SERDES0 node.
 
-Now, this patch is certainly good. Would it be possible to extend it to
-all other drivers using the 'of_node_put' ?
+Signed-off-by: Ravi Gunasekaran <r-gunasekaran@ti.com>
+---
+Changes since v1:
+----------------
+* Newly introduced k3-j722s-main.dtsi to add main domain
+  peripherals that are additionally present in J722S
 
-That would the consistency issue while improving code quality at the
-same time.
+* Used generic node names - renamed "clock-cmnrefclk" to "clk-0",
+  "wiz@f000000" to "phy@f000000"
 
-Thank you.
+v1: https://lore.kernel.org/all/20240429120932.11456-1-r-gunasekaran@ti.com/
 
+ arch/arm64/boot/dts/ti/k3-j722s-main.dtsi | 64 +++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
 
-On 4/29/24 18:37, R Sundar wrote:
-> Use the new cleanup magic to replace of_node_put() with
-> __free(device_node) marking to auto release and to simplify the error
-> paths.
-> 
-> Suggested-by: Julia Lawall <julia.lawall@inria.fr>
-> Signed-off-by: R Sundar <prosunofficial@gmail.com>
-> ---
-> 
-> Changes since v1 - 
-> 
-> - Added missed out __free() marking in mipid02_parse_tx_ep().
-> - In mipid02_parse_tx_ep(), In error case, return value is always -EINVAL.  so
-> sending the -EINVAL instead of ret variable value. 
-> 
-> Link to v1 - https://lore.kernel.org/all/20240427095643.11486-1-prosunofficial@gmail.com/#t
-> 
->  drivers/media/i2c/st-mipid02.c | 37 +++++++++-------------------------
->  1 file changed, 9 insertions(+), 28 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
-> index f250640729ca..bd3cf94f8534 100644
-> --- a/drivers/media/i2c/st-mipid02.c
-> +++ b/drivers/media/i2c/st-mipid02.c
-> @@ -715,31 +715,28 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
->  	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_CSI2_DPHY };
->  	struct i2c_client *client = bridge->i2c_client;
->  	struct v4l2_async_connection *asd;
-> -	struct device_node *ep_node;
->  	int ret;
->  
->  	/* parse rx (endpoint 0) */
-> -	ep_node = of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node,
-> -						0, 0);
-> +	struct device_node *ep_node __free(device_node) =
-> +		of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node, 0, 0);
->  	if (!ep_node) {
->  		dev_err(&client->dev, "unable to find port0 ep");
-> -		ret = -EINVAL;
-> -		goto error;
-> +		return -EINVAL;
->  	}
->  
->  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), &ep);
->  	if (ret) {
->  		dev_err(&client->dev, "Could not parse v4l2 endpoint %d\n",
->  			ret);
-> -		goto error_of_node_put;
-> +		return ret;
->  	}
->  
->  	/* do some sanity checks */
->  	if (ep.bus.mipi_csi2.num_data_lanes > 2) {
->  		dev_err(&client->dev, "max supported data lanes is 2 / got %d",
->  			ep.bus.mipi_csi2.num_data_lanes);
-> -		ret = -EINVAL;
-> -		goto error_of_node_put;
-> +		return -EINVAL;
->  	}
->  
->  	/* register it for later use */
-> @@ -750,7 +747,6 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
->  	asd = v4l2_async_nf_add_fwnode_remote(&bridge->notifier,
->  					      of_fwnode_handle(ep_node),
->  					      struct v4l2_async_connection);
-> -	of_node_put(ep_node);
->  
->  	if (IS_ERR(asd)) {
->  		dev_err(&client->dev, "fail to register asd to notifier %ld",
-> @@ -764,46 +760,31 @@ static int mipid02_parse_rx_ep(struct mipid02_dev *bridge)
->  		v4l2_async_nf_cleanup(&bridge->notifier);
->  
->  	return ret;
-> -
-> -error_of_node_put:
-> -	of_node_put(ep_node);
-> -error:
-> -
-> -	return ret;
->  }
->  
->  static int mipid02_parse_tx_ep(struct mipid02_dev *bridge)
->  {
->  	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_PARALLEL };
->  	struct i2c_client *client = bridge->i2c_client;
-> -	struct device_node *ep_node;
->  	int ret;
->  
->  	/* parse tx (endpoint 2) */
-> -	ep_node = of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node,
-> -						2, 0);
-> +	struct device_node *ep_node __free(device_node) =
-> +		of_graph_get_endpoint_by_regs(bridge->i2c_client->dev.of_node, 2, 0);
->  	if (!ep_node) {
->  		dev_err(&client->dev, "unable to find port1 ep");
-> -		ret = -EINVAL;
-> -		goto error;
-> +		return -EINVAL;
->  	}
->  
->  	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), &ep);
->  	if (ret) {
->  		dev_err(&client->dev, "Could not parse v4l2 endpoint\n");
-> -		goto error_of_node_put;
-> +		return -EINVAL;
->  	}
->  
-> -	of_node_put(ep_node);
->  	bridge->tx = ep;
->  
->  	return 0;
-> -
-> -error_of_node_put:
-> -	of_node_put(ep_node);
-> -error:
-> -
-> -	return -EINVAL;
->  }
->  
->  static int mipid02_probe(struct i2c_client *client)
-
+diff --git a/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+new file mode 100644
+index 000000000000..1fd88cc8545f
+--- /dev/null
++++ b/arch/arm64/boot/dts/ti/k3-j722s-main.dtsi
+@@ -0,0 +1,64 @@
++// SPDX-License-Identifier: GPL-2.0-only OR MIT
++/*
++ * Device Tree file for the J722S main domain peripherals
++ * Copyright (C) 2023-2024 Texas Instruments Incorporated - https://www.ti.com/
++ */
++
++#include <dt-bindings/phy/phy-ti.h>
++
++/ {
++	serdes_refclk: clk-0 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <0>;
++	};
++};
++
++&cbass_main {
++	serdes_wiz0: phy@f000000 {
++		compatible = "ti,am64-wiz-10g";
++		ranges = <0x0f000000 0x0 0x0f000000 0x00010000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		power-domains = <&k3_pds 279 TI_SCI_PD_EXCLUSIVE>;
++		clocks = <&k3_clks 279 0>, <&k3_clks 279 1>, <&serdes_refclk>;
++		clock-names = "fck", "core_ref_clk", "ext_ref_clk";
++		num-lanes = <1>;
++		#reset-cells = <1>;
++		#clock-cells = <1>;
++
++		assigned-clocks = <&k3_clks 279 1>;
++		assigned-clock-parents = <&k3_clks 279 5>;
++
++		serdes0: serdes@f000000 {
++			compatible = "ti,j721e-serdes-10g";
++			reg = <0x0f000000 0x00010000>;
++			reg-names = "torrent_phy";
++			resets = <&serdes_wiz0 0>;
++			reset-names = "torrent_reset";
++			clocks = <&serdes_wiz0 TI_WIZ_PLL0_REFCLK>,
++				 <&serdes_wiz0 TI_WIZ_PHY_EN_REFCLK>;
++			clock-names = "refclk", "phy_en_refclk";
++			assigned-clocks = <&serdes_wiz0 TI_WIZ_PLL0_REFCLK>,
++					  <&serdes_wiz0 TI_WIZ_PLL1_REFCLK>,
++					  <&serdes_wiz0 TI_WIZ_REFCLK_DIG>;
++			assigned-clock-parents = <&k3_clks 279 1>,
++						 <&k3_clks 279 1>,
++						 <&k3_clks 279 1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			#clock-cells = <1>;
++
++			status = "disabled"; /* Needs lane config */
++		};
++	};
++};
++
++&main_conf {
++	serdes0_ln_ctrl: mux-controller@4080 {
++		compatible = "reg-mux";
++		reg = <0x4080 0x4>;
++		#mux-control-cells = <1>;
++		mux-reg-masks = <0x0 0x3>; /* SERDES0 lane0 select */
++	};
++};
 -- 
-Regards,
+2.17.1
 
-Benjamin
