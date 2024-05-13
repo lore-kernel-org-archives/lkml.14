@@ -1,217 +1,168 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F2011509A7
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 13:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC441509BA;
+	Mon, 13 May 2024 13:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715605770; cv=none; b=A0dY/bpVQB2d3hYtVwR+7jZJYpCslM07fRmvathvLJs3XjwBOLZTE1bCjEqPuALF3F70FbkGqXApjKcHEk/+BSUL4BXfKGeTwsdWkYkG8v0rDv5rVUQJ6I7ytC25Jlf4F0wrjv6sPXJFMGYYlpvf/fyLZan+yi6X2CfUKHcxCoQ=
+	t=1715605871; cv=none; b=V59x6bwchYjdG1lgKNO2UzvlWGOBQ7AOa8WBnfkBF/xRmQIgcfpphLTtlCQ2vro0/e08zFb1qJyF2dwfheYW5kOBvMnPHEkG2/4H6rB7+BOXHAekClmxCxk+W3Pe6IthqsAV4yMQBe7k14+3mTdmGZRdIQEL1oPuVXwUIGloHI0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715605770; c=relaxed/simple;
-	bh=zpZGnwRw0RonuhIC/M2/86imsc5RbcnkegqTXx4M9uk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XqJSX2mcQJj3zM1ACbHZFjmP4umLwl22M2TzmOdzPwlg8D8DNIjlWLjdhX1vo0FQT17h7gYtlqkNpx3LIrq+/a9vQg9FZV+obONzPeTBEYZX/oWALhURIUzJNG8jXJRYnTihp2zg2YRgm/O2fhA8vtUOiGb/K61IkF1sJlJn+6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=oIWNTRP8; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1715605871; c=relaxed/simple;
+	bh=vb6VU8I039xfs50EqqXBhoNIQO7NhR8KG4nRvOrcCHk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fpas70Nja9epKdTI0+Pll2Sp5T7UBG48ERuch86Jxsv3QgcObaBtCFTZ5rsH55sbi+NDwOQNhAsRDg5DcBq2kR4IZQJKSlz+U4oPleHJMy7SYPqo/6LR8vuSLwNWVnHg88iZyrApUPe31pR7TpqdYr0N0v+uAyWyxu62WZAqdpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=I32CpzZM; arc=none smtp.client-ip=46.235.227.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="oIWNTRP8"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a59cdd185b9so918761766b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 06:09:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715605767; x=1716210567; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5MKXjMChMNLDQEAHfT5KxNeT5FU7Py9gH+YOnRbraDE=;
-        b=oIWNTRP8SAX0NgR/uD+TIJzKATCaaMFzSHJ+PA7E8BLMewYu3rxPP49ebk9L0A5CN0
-         xBVOMnjSiKqfsCXXVHbPIPskRV/Zyuj7y+P7uViP4linF+aDvfrEveEhj3HbE1ChGtoQ
-         thiDKPrb6OoUw/bvxZfreqsiskOKai9vIiZ+E/fs/w3p43Uyc+2sV4YAnZ4MkKaPfU7q
-         weQV34JkQCcHq8DAbTsuRw/J5YTnuT1FFGLXbeiz5D2jxGQCyHn5F4WNxFGbQ9qncg2R
-         2v5iOUH6qcD2jspHpO7y4+yyHhMIMUyLsOiWqXWYGLSOp8odBBGc55Trcyhym/YaLC0f
-         DCvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715605767; x=1716210567;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5MKXjMChMNLDQEAHfT5KxNeT5FU7Py9gH+YOnRbraDE=;
-        b=wBBVv2DJMoLEflnwaYZ+1dKwHNPbaSunPUUjJuyhQTXYCZsNcQj5OJCjOp1YHsrthH
-         BsUXG37p2ZnE6tGDRndgxf2m5OtBRMry8f3HWU1yPEBo69JoJumcIar7gKtTq8Z6XLYL
-         PFIZ4hY5n8NiglAXBtJSKQEFJelFE4jwE53vUsyJX7T/syFe0jCoPlIHv5izLqUQ8e3K
-         Jvl25qypEcbnIbJ+I7oT3piY85CNvkbiBtLqCwDG/vvyycqLtzcexBDA+vTHNIns/un6
-         TFHfZQWIJjd/52MwDalYy/abLXGLmayWtqOAtlUqqomQAmBqIZGms3rrYiW+mbJbUJT2
-         Q+KQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVqiEYWMGJirWeuKNoH4cd+aE/gitSdH4Rfo9yHsTAUtSfWNHlc0JULj1HrMVmbiS0V2+H3HKDRD60HVb3RrJmavDUkqTadkSNu5gDt
-X-Gm-Message-State: AOJu0Ywla1najzoMVCrupa2xkeTlwkPU8DerZTtH3fxTEOF2eht3E8dr
-	cBFGTnSM0P5eXlotTKCDnHmWMEfuE29Q1NFDVpcAvv+Jd9fHtCJtwWUoxesZUouwc+clZWZygmS
-	aQOohDCfuqVnrnvtqTVZf7Qi/AEwLpSlk4PDcRw==
-X-Google-Smtp-Source: AGHT+IE2QlkBf1B/qIqHvwWeBSEoU1R5RwhfvNE59sMHl2qimtxCkyusw1APubthP2zoyId5MUd15f47oIJVMuD1t0A=
-X-Received: by 2002:a17:906:ca8e:b0:a5a:7b88:8672 with SMTP id
- a640c23a62f3a-a5a7b888747mr3863166b.16.1715605766892; Mon, 13 May 2024
- 06:09:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="I32CpzZM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1715605867;
+	bh=vb6VU8I039xfs50EqqXBhoNIQO7NhR8KG4nRvOrcCHk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=I32CpzZMSeEnyQQCPetjzV9Baf0RaDjXYyWuOQ7GalN+1Snmnyj2y5odmTtvsfEbn
+	 eY6qK+WoDRvy6NqqRZ1qi3OQw5Wug8y0FrgEwyHAiX3laIbkUf2WolxGx57mvVWnTM
+	 so1gyFQccRJL6+MiYYOGxyCvGrf3jMVbwuwAsFTB6X6WwIkXOfT/cWZEv+91soz08w
+	 IXZhG0wH/tSdB5mvWOG0kE0hkl82yBmMTB6PgyuDLcp2mbvajMZ17OflNB9Y0maGww
+	 Q92JrkYD8782MJcckvuL29IpeF35t5+Xp7JYHiKpfu2tJ8W7Tl6kspnb/EqRAzEQ3B
+	 kFp+dQgqwr5Hw==
+Received: from [IPV6:fd00::2a:39ce] (cola.collaboradmins.com [IPv6:2a01:4f8:1c1c:5717::1])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 7380A3782139;
+	Mon, 13 May 2024 13:11:05 +0000 (UTC)
+Message-ID: <ffa57617-3c87-47d7-8882-becfe40abc17@collabora.com>
+Date: Mon, 13 May 2024 15:11:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240508191931.46060-1-alexghiti@rivosinc.com>
- <20240508191931.46060-2-alexghiti@rivosinc.com> <CAGsJ_4xayC4D4y0d7SPXxCvuW4-rJQUCa_-OUDSsOGm_HyPm1w@mail.gmail.com>
-In-Reply-To: <CAGsJ_4xayC4D4y0d7SPXxCvuW4-rJQUCa_-OUDSsOGm_HyPm1w@mail.gmail.com>
-From: Alexandre Ghiti <alexghiti@rivosinc.com>
-Date: Mon, 13 May 2024 15:09:15 +0200
-Message-ID: <CAHVXubiOo3oe0=-qU2kBaFXebPJvmnc+-1UOPEHS2spcCeMzsw@mail.gmail.com>
-Subject: Re: [PATCH 01/12] mm, arm64: Rename ARM64_CONTPTE to THP_CONTPTE
-To: Barry Song <21cnbao@gmail.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>, 
-	Dmitry Vyukov <dvyukov@google.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Ard Biesheuvel <ardb@kernel.org>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com, 
-	linux-riscv@lists.infradead.org, linux-efi@vger.kernel.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] Add write DP phyd register from parse dts
+To: Liankun Yang <liankun.yang@mediatek.com>, chunkuang.hu@kernel.org,
+ p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
+ maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ chunfeng.yun@mediatek.com, vkoul@kernel.org, kishon@kernel.org,
+ matthias.bgg@gmail.com, jitao.shi@mediatek.com, mac.shen@mediatek.com,
+ Project_Global_Chrome_Upstream_Group@mediatek.com
+Cc: dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org
+References: <20240510110523.12524-1-liankun.yang@mediatek.com>
+ <20240510110523.12524-2-liankun.yang@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20240510110523.12524-2-liankun.yang@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Barry,
+Il 10/05/24 13:04, Liankun Yang ha scritto:
+> During the testing phase, screen flickering is observed when
+> using displayport for screen casting. Relevant SSC register parameters
+> are set in dts to address the screen flickering issue effectively and
+> improve compatibility with different devices by adjusting the SSC gear.
+> 
+> Obtaining the DPTX node, parsing the dts to obtain PHY register address
+> and value can adapt to settings of different manufacturers projects.
+> 
+> Changeds in v2:
+> - Optimized method of writing to DP PHY register
+> https://patchwork.kernel.org/project/linux-mediatek/patch/
+> 20240403040517.3279-1-liankun.yang@mediatek.com/
+> 
+> Signed-off-by: Liankun Yang <liankun.yang@mediatek.com>
 
-On Thu, May 9, 2024 at 2:46=E2=80=AFAM Barry Song <21cnbao@gmail.com> wrote=
-:
->
-> On Thu, May 9, 2024 at 7:20=E2=80=AFAM Alexandre Ghiti <alexghiti@rivosin=
-c.com> wrote:
-> >
-> > The ARM64_CONTPTE config represents the capability to transparently use
-> > contpte mappings for THP userspace mappings, which will be implemented
-> > in the next commits for riscv, so make this config more generic and mov=
-e
-> > it to mm.
-> >
-> > Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> > ---
-> >  arch/arm64/Kconfig               | 9 ---------
-> >  arch/arm64/include/asm/pgtable.h | 6 +++---
-> >  arch/arm64/mm/Makefile           | 2 +-
-> >  mm/Kconfig                       | 9 +++++++++
-> >  4 files changed, 13 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > index ac2f6d906cc3..9d823015b4e5 100644
-> > --- a/arch/arm64/Kconfig
-> > +++ b/arch/arm64/Kconfig
-> > @@ -2227,15 +2227,6 @@ config UNWIND_PATCH_PAC_INTO_SCS
-> >         select UNWIND_TABLES
-> >         select DYNAMIC_SCS
-> >
-> > -config ARM64_CONTPTE
-> > -       bool "Contiguous PTE mappings for user memory" if EXPERT
-> > -       depends on TRANSPARENT_HUGEPAGE
-> > -       default y
-> > -       help
-> > -         When enabled, user mappings are configured using the PTE cont=
-iguous
-> > -         bit, for any mappings that meet the size and alignment requir=
-ements.
-> > -         This reduces TLB pressure and improves performance.
-> > -
-> >  endmenu # "Kernel Features"
-> >
-> >  menu "Boot options"
-> > diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/=
-pgtable.h
-> > index 7c2938cb70b9..1758ce71fae9 100644
-> > --- a/arch/arm64/include/asm/pgtable.h
-> > +++ b/arch/arm64/include/asm/pgtable.h
-> > @@ -1369,7 +1369,7 @@ extern void ptep_modify_prot_commit(struct vm_are=
-a_struct *vma,
-> >                                     unsigned long addr, pte_t *ptep,
-> >                                     pte_t old_pte, pte_t new_pte);
-> >
-> > -#ifdef CONFIG_ARM64_CONTPTE
-> > +#ifdef CONFIG_THP_CONTPTE
->
-> Is it necessarily THP? can't be hugetlb or others? I feel THP_CONTPTE
-> isn't a good name.
+There's no devicetree support in this driver - infact, it's being probed by
+mtk-dp as a platform device.
 
-This does not target hugetlbfs (see my other patchset for that here
-https://lore.kernel.org/linux-riscv/7504a525-8211-48b3-becb-a6e838c1b42e@ar=
-m.com/T/#m57d273d680fc531b3aa1074e6f8558a52ba5badc).
+You keep sending untested stuff. Fourth time in a row.
 
-What could be "others" here?
+Please, TEST YOUR COMMITS upstream before sending!
 
-Thanks for your comment,
+Regards,
+Angelo
 
-Alex
+> ---
+>   drivers/phy/mediatek/phy-mtk-dp.c | 37 +++++++++++++++++++++++++++++++
+>   1 file changed, 37 insertions(+)
+> 
+> diff --git a/drivers/phy/mediatek/phy-mtk-dp.c b/drivers/phy/mediatek/phy-mtk-dp.c
+> index d7024a144335..ce78112d5938 100644
+> --- a/drivers/phy/mediatek/phy-mtk-dp.c
+> +++ b/drivers/phy/mediatek/phy-mtk-dp.c
+> @@ -28,6 +28,10 @@
+>   #define MTK_DP_PHY_DIG_SW_RST		(PHY_OFFSET + 0x38)
+>   #define DP_GLB_SW_RST_PHYD		BIT(0)
+>   
+> +#define MTK_DP_PHY_DIG_GLB_DA_REG_14	(PHY_OFFSET + 0xD8)
+> +#define XTP_GLB_TXPLL_SSC_DELTA_RBR_DEFAULT	GENMASK(15, 0)
+> +#define XTP_GLB_TXPLL_SSC_DELTA_HBR_DEFAULT	GENMASK(31, 16)
+> +
+>   #define MTK_DP_LANE0_DRIVING_PARAM_3		(PHY_OFFSET + 0x138)
+>   #define MTK_DP_LANE1_DRIVING_PARAM_3		(PHY_OFFSET + 0x238)
+>   #define MTK_DP_LANE2_DRIVING_PARAM_3		(PHY_OFFSET + 0x338)
+> @@ -78,10 +82,39 @@
+>   #define DRIVING_PARAM_8_DEFAULT	(XTP_LN_TX_LCTXCP1_SW2_PRE1_DEFAULT | \
+>   				 XTP_LN_TX_LCTXCP1_SW3_PRE0_DEFAULT)
+>   
+> +#define SSC_SETTING	"dp-ssc-setting"
+> +#define RG_XTP_GLB_TXPLL_SSC_DELTA_HBR	"ssc-delta-hbr"
+> +
+>   struct mtk_dp_phy {
+>   	struct regmap *regs;
+> +	struct device *dev;
+>   };
+>   
+> +static int mtk_dp_set_ssc_config(struct phy *phy, struct mtk_dp_phy *dp_phy)
+> +{
+> +	int ret;
+> +	u32 read_value = 0, reg_mask = 0;
+> +	struct device_node *ssc_node = NULL;
+> +
+> +	ssc_node = of_find_node_by_name(dp_phy->dev->of_node, SSC_SETTING);
+> +	if (!ssc_node) {
+> +		dev_err(&phy->dev, "SSC node is NULL\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = of_property_read_u32(ssc_node, RG_XTP_GLB_TXPLL_SSC_DELTA_HBR, &read_value);
+> +	if (ret < 0 || !read_value) {
+> +		dev_err(&phy->dev, "Read SSC vlaue fail!\n");
+> +		return -EINVAL;
+> +	}
+> +	read_value |= read_value << 16;
+> +	reg_mask |= XTP_GLB_TXPLL_SSC_DELTA_HBR_DEFAULT;
+> +
+> +	regmap_update_bits(dp_phy->regs, MTK_DP_PHY_DIG_GLB_DA_REG_14, reg_mask, read_value);
+> +
+> +	return 0;
+> +}
+> +
+>   static int mtk_dp_phy_init(struct phy *phy)
+>   {
+>   	struct mtk_dp_phy *dp_phy = phy_get_drvdata(phy);
+> @@ -137,6 +170,8 @@ static int mtk_dp_phy_configure(struct phy *phy, union phy_configure_opts *opts)
+>   	regmap_update_bits(dp_phy->regs, MTK_DP_PHY_DIG_PLL_CTL_1,
+>   			   TPLL_SSC_EN, opts->dp.ssc ? TPLL_SSC_EN : 0);
+>   
+> +	mtk_dp_set_ssc_config(phy, dp_phy);
+> +
+>   	return 0;
+>   }
+>   
+> @@ -186,6 +221,8 @@ static int mtk_dp_phy_probe(struct platform_device *pdev)
+>   	if (!dev->of_node)
+>   		phy_create_lookup(phy, "dp", dev_name(dev));
+>   
+> +	dp_phy->dev = dev;
+> +
+>   	return 0;
+>   }
+>   
 
->
-> >
-> >  /*
-> >   * The contpte APIs are used to transparently manage the contiguous bi=
-t in ptes
-> > @@ -1622,7 +1622,7 @@ static inline int ptep_set_access_flags(struct vm=
-_area_struct *vma,
-> >         return contpte_ptep_set_access_flags(vma, addr, ptep, entry, di=
-rty);
-> >  }
-> >
-> > -#else /* CONFIG_ARM64_CONTPTE */
-> > +#else /* CONFIG_THP_CONTPTE */
-> >
-> >  #define ptep_get                               __ptep_get
-> >  #define set_pte                                        __set_pte
-> > @@ -1642,7 +1642,7 @@ static inline int ptep_set_access_flags(struct vm=
-_area_struct *vma,
-> >  #define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
-> >  #define ptep_set_access_flags                  __ptep_set_access_flags
-> >
-> > -#endif /* CONFIG_ARM64_CONTPTE */
-> > +#endif /* CONFIG_THP_CONTPTE */
-> >
-> >  int find_num_contig(struct mm_struct *mm, unsigned long addr,
-> >                     pte_t *ptep, size_t *pgsize);
-> > diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
-> > index 60454256945b..52a1b2082627 100644
-> > --- a/arch/arm64/mm/Makefile
-> > +++ b/arch/arm64/mm/Makefile
-> > @@ -3,7 +3,7 @@ obj-y                           :=3D dma-mapping.o exta=
-ble.o fault.o init.o \
-> >                                    cache.o copypage.o flush.o \
-> >                                    ioremap.o mmap.o pgd.o mmu.o \
-> >                                    context.o proc.o pageattr.o fixmap.o
-> > -obj-$(CONFIG_ARM64_CONTPTE)    +=3D contpte.o
-> > +obj-$(CONFIG_THP_CONTPTE)      +=3D contpte.o
-> >  obj-$(CONFIG_HUGETLB_PAGE)     +=3D hugetlbpage.o
-> >  obj-$(CONFIG_PTDUMP_CORE)      +=3D ptdump.o
-> >  obj-$(CONFIG_PTDUMP_DEBUGFS)   +=3D ptdump_debugfs.o
-> > diff --git a/mm/Kconfig b/mm/Kconfig
-> > index c325003d6552..fd4de221a1c6 100644
-> > --- a/mm/Kconfig
-> > +++ b/mm/Kconfig
-> > @@ -984,6 +984,15 @@ config ARCH_HAS_CACHE_LINE_SIZE
-> >  config ARCH_HAS_CONTPTE
-> >         bool
-> >
-> > +config THP_CONTPTE
-> > +       bool "Contiguous PTE mappings for user memory" if EXPERT
-> > +       depends on ARCH_HAS_CONTPTE && TRANSPARENT_HUGEPAGE
-> > +       default y
-> > +       help
-> > +         When enabled, user mappings are configured using the PTE cont=
-iguous
-> > +         bit, for any mappings that meet the size and alignment requir=
-ements.
-> > +         This reduces TLB pressure and improves performance.
-> > +
-> >  config ARCH_HAS_CURRENT_STACK_POINTER
-> >         bool
-> >         help
-> > --
-> > 2.39.2
->
-> Thanks
-> Barry
+
