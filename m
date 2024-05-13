@@ -1,111 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B693B59164;
-	Mon, 13 May 2024 13:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8507C152185
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 13:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715606403; cv=none; b=czBROKtje/w+TeToV4DWk/+WeqdZjTccw6zk76AgRyatuA+nA82m9MISmADM6CUijNWqPJTH58vkRFOpRxRw1ts4XqDWKk8QhyLGnrW0iGyBxzdh/ipY4xKWOxa60MPHTgXxbHyPnNF1Bnamn55/GmEIdRhkU+xSZrvSU+pM1wA=
+	t=1715606464; cv=none; b=l89E81ZGkN6ysZ3jiX2JkqjJp6X5hc6qHhtR3C5d2mu23ShnFSyre8eWdp8w1IIAp4RF/RUtD6vqNwGWnn5pgx7oDyG13Qdmgo30qYjZZPK4pmjciwDKbJYBEtdNMEEDqh6VYiCUDrvGkFw4UElWBaHKc7HsceDg59+SsE5TWSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715606403; c=relaxed/simple;
-	bh=BjpNrBf8xUWY5HdIXv/CHqnmjNgz1AFEpMF+3oZD9OM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fj4mfUNWA846zvRnuT7CmAroO/j/0pgQc5rvEB74Y0YIJ+7NpjVDgHqZTGArMnz3lzNMADxTqcCX9bmaFAOO0pyQYE/6IhEqkUMym+WDOq2Y5sd5AxPKd2bMmmyL3HjLERlLe18bCTqRJHYOtv+Ssovfn6bv1tPqga6vzsWGujY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OjATwxOc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OjATwxOc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E700C113CC;
-	Mon, 13 May 2024 13:20:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715606403;
-	bh=BjpNrBf8xUWY5HdIXv/CHqnmjNgz1AFEpMF+3oZD9OM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OjATwxOcxE557ut6FtoTfM6PpRJDPrRlPU/al+dv5Klyw2dNvIZvdyKHXSYYkXY0/
-	 8bhBMvZSPvuej0IPQCbZ5pzM+FfuN/bDVQKHUEA7/eE/FLv+QF//U3kyt2ArZj+0Eu
-	 dSPmZC+LcMxapYSlFC1OuR+iVjCC35fDZknl9C0ydmBw0vv2AZqfhSaVwpABfJBhxu
-	 6jahv5FmUlAHo7BeVD75z0KrFib4iaHHvamocBJVvlY0ppofqSe1cPn/vZit3+C2sg
-	 kl/00P294uoj+B0lPpQj8QH3arjHPY52k7iBo/IAkapUSLnTaQjPKFbUu+wMtRqSf3
-	 +ok8tYJNY3BJQ==
-Date: Mon, 13 May 2024 08:20:01 -0500
-From: Rob Herring <robh@kernel.org>
-To: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Taniya Das <quic_tdas@quicinc.com>,
-	Jonathan Marek <jonathan@marek.ca>, linux-arm-msm@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+	s=arc-20240116; t=1715606464; c=relaxed/simple;
+	bh=pc/VJ1lCqkuIAuXgBQOqD4NDNJ806OYBSWFMiP8vFMo=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=KHDPHRu2Q+bPOH4S6G5/dokkurPqh3Xk8SZNj0Dt1n1LvSHPj/UFTtX57afQK2AbK1noswh2l8qgSnI49lvp3+E0rExiZAOwCyfgmc0pA+F8TB080CaiaCnfI/gbwEOETw0BbnEKSnVjnO6DqkPckb1kkJkkmtR2np2s/0PxrFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:c85e:4b6d:1f91:1410])
+	by laurent.telenet-ops.be with bizsmtp
+	id NdM02C0065V4kqY01dM0ZD; Mon, 13 May 2024 15:21:00 +0200
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1s6Vb7-00399m-Ry;
+	Mon, 13 May 2024 15:21:00 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1s6Vbv-008tqU-Vr;
+	Mon, 13 May 2024 15:20:59 +0200
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Yoshinori Sato <ysato@users.sourceforge.jp>,
+	Rich Felker <dalias@libc.org>,
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+	Arnd Bergmann <arnd@arndb.de>
+Cc: linux-sh@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-	Ajit Pandey <quic_ajipan@quicinc.com>,
-	Imran Shaik <quic_imrashai@quicinc.com>,
-	Jagadeesh Kona <quic_jkona@quicinc.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: clock: qcom: Add AHB clock for SM8150
-Message-ID: <20240513132001.GA2421461-robh@kernel.org>
-References: <20240509-videocc-sm8150-dt-node-v4-0-e9617f65e946@quicinc.com>
- <20240509-videocc-sm8150-dt-node-v4-1-e9617f65e946@quicinc.com>
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 2/3] sh: smp: Protect setup_profiling_timer() by CONFIG_PROFILING
+Date: Mon, 13 May 2024 15:20:54 +0200
+Message-Id: <effa5eecbd2389c6661974e91bb834db210989ea.1715606232.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1715606232.git.geert+renesas@glider.be>
+References: <cover.1715606232.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240509-videocc-sm8150-dt-node-v4-1-e9617f65e946@quicinc.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 09, 2024 at 03:54:03PM +0530, Satya Priya Kakitapalli wrote:
-> SM8150 videocc needs AHB clock, so update the bindings for sm8150
-> to add the AHB clock.
+arch/sh/kernel/smp.c:326:5: warning: no previous prototype for 'setup_profiling_timer' [-Wmissing-prototypes]
 
-Breaking the ABI is fine because ____.
+The function is unconditionally defined in smp.c, but conditionally
+declared in <linux/profile.h>.
 
-> 
-> Fixes: df3f61d2cdc9 ("dt-bindings: clock: add SM8150 QCOM video clock bindings")
-> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-> ---
->  .../devicetree/bindings/clock/qcom,videocc.yaml         | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml b/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-> index 6999e36ace1b..68bac801adb0 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-> @@ -75,7 +75,6 @@ allOf:
->            enum:
->              - qcom,sc7180-videocc
->              - qcom,sdm845-videocc
-> -            - qcom,sm8150-videocc
->      then:
->        properties:
->          clocks:
-> @@ -101,6 +100,22 @@ allOf:
->              - const: bi_tcxo
->              - const: bi_tcxo_ao
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - qcom,sm8150-videocc
-> +    then:
-> +      properties:
-> +        clocks:
-> +          items:
-> +            - description: AHB
-> +            - description: Board XO source
-> +        clock-names:
-> +          items:
-> +            - const: iface
-> +            - const: bi_tcxo
-> +
->    - if:
->        properties:
->          compatible:
-> 
-> -- 
-> 2.25.1
-> 
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/sh/kernel/smp.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/sh/kernel/smp.c b/arch/sh/kernel/smp.c
+index b3ea50aabba3d7f2..108d808767fa9984 100644
+--- a/arch/sh/kernel/smp.c
++++ b/arch/sh/kernel/smp.c
+@@ -322,11 +322,13 @@ void smp_message_recv(unsigned int msg)
+ 	}
+ }
+ 
++#ifdef CONFIG_PROFILING
+ /* Not really SMP stuff ... */
+ int setup_profiling_timer(unsigned int multiplier)
+ {
+ 	return 0;
+ }
++#endif
+ 
+ #ifdef CONFIG_MMU
+ 
+-- 
+2.34.1
+
