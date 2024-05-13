@@ -1,72 +1,89 @@
-Received: from mail.usk4.lublin.pl (mail.usk4.lublin.pl [94.230.25.92])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B6720DE7
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 06:35:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.230.25.92
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C40614265;
+	Mon, 13 May 2024 06:36:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715582120; cv=none; b=dKfolM/oCn+177/EVzuij6+O2PAaRUWuOPQ3er6xMfWe7/SBeP8vXA8XOFS8Fhr4Mo3INg99amS1cEMssI6fXHL4IoEkVuV9eRjUjJGyqmK35k2ef2ywRgfo4trQJCmGeEAnlDGbnuyr+cP7JuAbHwVu7RWZILKrpc64ChMr6A0=
+	t=1715582200; cv=none; b=hTKuiHRp2hCxT7SB31HgZU1jo4J1/TyEJZ2nsQCAMmBSeRMUFeOBcDZNKhIOrij/OVMNehr0UsariJ4vwH63mbjTGaRWHLNH+4S80VbNcCK6XCJM60x5abTLUgq34Mduv7LL4g8nDLFh342SZ8M0j6L3J56bfr2UtOCICBPrWKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715582120; c=relaxed/simple;
-	bh=jgnIKv8sELMl1Mm7eOGHnw/dPfkybicY98vD/ifLhkA=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P2TRL+CjxvJZOPpVMkj9GzojSp0sVr7ozfxUYknmZHP4Q7xM06C20nh4md56BdULIhdab+Y8L8iO6IzkZ8RWNo2KnnVkWoKIHUO9mfaaq6qLaZAfrSpNkTuJ7h8JkgrmwLKOiPnmNSpnFNBLgstn+Qn1qDGQP0MPhvlD1Z0Q01M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=usk4.lublin.pl; spf=pass smtp.mailfrom=usk4.lublin.pl; dkim=pass (2048-bit key) header.d=usk4.lublin.pl header.i=@usk4.lublin.pl header.b=ZNmQiES5; arc=none smtp.client-ip=94.230.25.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=usk4.lublin.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=usk4.lublin.pl
+	s=arc-20240116; t=1715582200; c=relaxed/simple;
+	bh=TbOvTyRXh66VompTcjMDwvYNM69rIo59zf33ZAIoC3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LIjdeOH36cMpBWmk5u8UJpYaZKQvnK4kpyEC36gaC/VEk3e2S6LW847kMBk23vM3CP0nufMU8GR/PlowD3OOzvh7S1c7NH8nF6RGIT4OFJFjQfGrFiLoOCj69P9HG9cZqBDSY3uUY+JGfkD59lh5qmznWTZhBfEU3nFo6XufPJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tTaxfkDW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=usk4.lublin.pl header.i=@usk4.lublin.pl header.b="ZNmQiES5"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.spsk4.lublin.pl (Postfix) with ESMTP id 8E97926C34
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:35:15 +0200 (CEST)
-Received: from mail.spsk4.lublin.pl ([127.0.0.1])
- by localhost (zimbra-mta.spsk4.lublin.pl [127.0.0.1]) (amavis, port 10032)
- with ESMTP id 7F49hk7u1RR5 for <linux-kernel@vger.kernel.org>;
- Mon, 13 May 2024 08:35:09 +0200 (CEST)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.spsk4.lublin.pl (Postfix) with ESMTP id AA90625166
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:35:09 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.spsk4.lublin.pl AA90625166
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=usk4.lublin.pl;
-	s=A89D793C-063F-11EF-AB86-9981EDAD7C0D; t=1715582109;
-	bh=qSLENA7SohRsCXFbqQq06JQ7CedKOuFZFwSQHq2OOq0=;
-	h=From:To:Date:Message-ID:MIME-Version;
-	b=ZNmQiES5nSvJl4w7v55OUFdZGR3AdW9hcam7Q+MDU8m9KbEn3jxXiS7nMGDJ0L2+9
-	 ff7A4IaPSHp3B3vw0biK4m5O4tTHWg8JbHZvYRvguWcPXQANGy6Y+IZ5LbkSx5Cs4E
-	 /tghleVjmoi7iYoyr+NTOaf2bLOxhLgbPPUEWH6BsRKbM77KDKwyKMX8O2NksLTHJJ
-	 rUozOFQQArjbB7PwmY5COAmzpxG1KevjfRrk2GPk6lUNCQ8jIebhFo5He+cmLchNvZ
-	 zcvIeTZp3z3C8xLackPnxm7hMoHfsdAV3l9EaC1akFjtvJZ8bh7yIximc+ql88l5DI
-	 z1wdzEX3liVgw==
-X-Virus-Scanned: amavis at 
-Received: from mail.spsk4.lublin.pl ([127.0.0.1])
- by localhost (zimbra-mta.spsk4.lublin.pl [127.0.0.1]) (amavis, port 10026)
- with ESMTP id zuvvmuSvdnQg for <linux-kernel@vger.kernel.org>;
- Mon, 13 May 2024 08:35:09 +0200 (CEST)
-Received: from usk4.lublin.pl (unknown [69.67.148.89])
-	by mail.spsk4.lublin.pl (Postfix) with ESMTPSA id 8CB6226BDB
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:34:53 +0200 (CEST)
-Reply-To: mitler.scott@freelance-stickr.com
-From: "Mitler Scott"<bozena.danys@usk4.lublin.pl>
-To: linux-kernel@vger.kernel.org
-Subject: Re: Auto Wrap
-Date: 13 May 2024 01:32:50 -0500
-Message-ID: <20240513013237.EDF5B6C8632D831D@usk4.lublin.pl>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tTaxfkDW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49A8EC113CC;
+	Mon, 13 May 2024 06:36:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715582199;
+	bh=TbOvTyRXh66VompTcjMDwvYNM69rIo59zf33ZAIoC3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tTaxfkDWkpFLHTwZC04kCtJkxNIENzZTmI5PYUKwkt1HRtZwwVBTYbFXCKWXcUsFE
+	 lu793V3wsQpVnnxhiyy4l3w5M3BManAyomm+xMwTAyNaim5rV90eGNn3mMiMpD8jsA
+	 UqfnBD4pUsnBApFDVrZ72bs8rFERvxkxKcnlGxScNmrpZTFJO+rliEnufnsu6y1QsJ
+	 jdnX14KSi0SrFalr1dugXSDJs67FWBNS2YuhD+3FL8+CiNOMhnAtTO7NBueFaBX95U
+	 Nzb7vZnq+/kTgT5lFs+P3Qv+b3a98AU3Lm85P6JH8vioKPHQYsZ7kJnumUdy3NbnRA
+	 DYkUpN6BPUoVA==
+Date: Sun, 12 May 2024 23:36:36 -0700
+From: Nathan Chancellor <nathan@kernel.org>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+	Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Florian Fainelli <f.fainelli@gmail.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	=?iso-8859-1?Q?K=F6ry?= Maincent <kory.maincent@bootlin.com>,
+	Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Piergiorgio Beruto <piergiorgio.beruto@gmail.com>,
+	Oleksij Rempel <o.rempel@pengutronix.de>,
+	=?iso-8859-1?Q?Nicol=F2?= Veronese <nicveronese@gmail.com>,
+	Simon Horman <horms@kernel.org>, mwojtas@chromium.org,
+	Antoine Tenart <atenart@kernel.org>
+Subject: Re: [PATCH net-next 0/2] Fix phy_link_topology initialization
+Message-ID: <20240513063636.GA652533@thelio-3990X>
+References: <20240507102822.2023826-1-maxime.chevallier@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240507102822.2023826-1-maxime.chevallier@bootlin.com>
 
-Hi,
+Hi Maxime,
 
-I am Mitler Scott, a freelance marketing agent for Stickr. Would=20
-you like to earn 400 dollars per week by wrapping your car in an=20
-ad? 
+On Tue, May 07, 2024 at 12:28:19PM +0200, Maxime Chevallier wrote:
+> Nathan and Heiner reported issues that occur when phylib and phy drivers
+> built as modules expect the phy_link_topology to be initialized, due to
+> wrong use of IS_REACHABLE.
+> 
+> This small fixup series addresses that by moving the initialization code
+> into net/core/dev.c, but at the same time implementing lazy
+> initialization to only allocate the topology upon the first PHY
+> insertion.
+> 
+> This needed some refactoring, namely pass the netdevice itself as a
+> parameter for phy_link_topology helpers.
+> 
+> Thanks Heiner for the help on untangling this, and Nathan for the
+> report.
 
-Best Regards,
+Are you able to prioritize getting this series merged? This has been a
+problem in -next for over a month now and the merge window is now open.
+I would hate to see this regress in mainline, as my main system may be
+affected by it (not sure, I got a new test machine that got bit by it in
+addition to the other two I noticed it on).
 
-Mitler Scott
-
+Cheers,
+Nathan
