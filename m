@@ -1,135 +1,171 @@
-Received: from mx0b-00823401.pphosted.com (mx0b-00823401.pphosted.com [148.163.152.46])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38AAE50279;
-	Mon, 13 May 2024 14:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A00A1E497
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 14:10:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715609379; cv=none; b=NN0J1RYtdTfhTo+cbZCGfV5nmH9byoyc7f2B60t79FPoT+Kc/Y9tZErD/OznRVLI3pHjCna6II6jTMw6j+gAAIlO2e8RqEQ6c6Rzk0gRMu7LDdulL4mFZpbwuf8cUzyUoGhA66F4QbUu6IGWyadALtvg2sm/0x7DJCWA/CcJCTw=
+	t=1715609411; cv=none; b=pLUPspOknSHMJ/LbYKibcNkvUJHCTgB74KRtMKel3NNEWZstFIx3Xu3XJGhco/AxI133ApW6V8dPXY/0DQ+h/tBoBBO2jLYk+zrscJxPyLpXrnek72+gLimaMyWQD95+uZ/2eDT8CiP1p+ouSYTDrGHM4FGRcJiZH8GiLSPxrvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715609379; c=relaxed/simple;
-	bh=FAfkXAwyjCo/QZMau5q8n1Mc9IC9NRMCuqxd0zsLphs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Qxst9cVJLYxzx62Zf8kSbM+oIV29TeW9f8tfiQCrSUhutZtZv9Dp5hgrTimfiCFc4pYV9ARuFZURZcyHkmeoB1y99V9RL2YtBCocNcJ38kzBmRQwqTALZzVaEDeHVnvbwZe4yFpiUecJg5Q+ZuEI+a7GWLVbPzmsiThK/o7dqMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com; spf=pass smtp.mailfrom=motorola.com; dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b=Fi2QihlK; arc=none smtp.client-ip=148.163.152.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=motorola.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=motorola.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=motorola.com header.i=@motorola.com header.b="Fi2QihlK"
-Received: from pps.filterd (m0355092.ppops.net [127.0.0.1])
-	by mx0b-00823401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44DBvq9a025305;
-	Mon, 13 May 2024 14:08:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=motorola.com; h=
-	date:from:to:cc:subject:message-id:mime-version:content-type; s=
-	DKIM202306; bh=/Pslq7UGfJig0rYvVspeuOhidIHs7ghS/8dTl5NO4KI=; b=F
-	i2QihlKnLCPsYrzL7yGGg3CowRYvNN8yahEZByVxoeIbC7mV/uu4K9+gg3vDLEcC
-	Qww4/HykhM1oxiM4Li2TSRdF5wh4YFfAL7abY9pGizw5sIAM4eazYJpH5CsglbcX
-	XZXY5AMA7IcIzA+1TgPAJe8NmBPyN8MZRdz4KLzCk0Z6iMu2QI/QPGc+RIfX0I5y
-	dQFBZ3Rt6+U4W8r2q/qm+wH3oGYsc11Q9M7Fs6ng6HzQxgN7ZIVe4Rb2gB6Cj9mR
-	1XO7XrE0opzFzd2VORDf1/jeUnjy7YgqNKePoOhnmBsid6boZAUqDBa7LBhqXjUz
-	RIqRFDp00ffDi/awxcPYQ==
-Received: from va32lpfpp04.lenovo.com ([104.232.228.24])
-	by mx0b-00823401.pphosted.com (PPS) with ESMTPS id 3y3d7ps0xv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 May 2024 14:08:47 +0000 (GMT)
-Received: from ilclmmrp01.lenovo.com (ilclmmrp01.mot.com [100.65.83.165])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by va32lpfpp04.lenovo.com (Postfix) with ESMTPS id 4VdLv31TGxzg1bp;
-	Mon, 13 May 2024 14:08:47 +0000 (UTC)
-Received: from ilclasset02 (ilclasset02.mot.com [100.64.49.13])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: mbland)
-	by ilclmmrp01.lenovo.com (Postfix) with ESMTPSA id 4VdLv26mbvz3nd87;
-	Mon, 13 May 2024 14:08:46 +0000 (UTC)
-Date: Mon, 13 May 2024 09:08:45 -0500
-From: Maxwell Bland <mbland@motorola.com>
-To: "open list:BPF [GENERAL] (Safe Dynamic Programs and Tools)" <bpf@vger.kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Zi Shen Lim <zlim.lnx@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Puranjay Mohan <puranjay12@gmail.com>
-Subject: [PATCH bpf-next v4 0/3]  Support kCFI + BPF on arm64
-Message-ID: <wtb6czzpvtqq23t4g6hf7on257dtxzdb4fa4nuq3dtq32odmli@xoyyrtthafar>
+	s=arc-20240116; t=1715609411; c=relaxed/simple;
+	bh=qOjzP0kyb4Onm7nt74kqRgFE7k/1ilB1V5UByHfoeHo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=BgWJT1HrLolkxUE4GEQfQbtfEckwkZ33N/dg3uRMpOsTjaY6bKrDqUZqPIym3WoV0aCWEwprVzoO2IYlvD3Wm1kQmRpNRU1yk08C3/PXc3n+BKSuODWxCbvFESpnCpjJl6cQDppQ4g045Q6wc+mBkarN06S+BpAV1gaR4xwNc+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4VdLtt43G7z1HBj4;
+	Mon, 13 May 2024 22:08:38 +0800 (CST)
+Received: from dggpemm500022.china.huawei.com (unknown [7.185.36.162])
+	by mail.maildlp.com (Postfix) with ESMTPS id E34961A016C;
+	Mon, 13 May 2024 22:10:00 +0800 (CST)
+Received: from [10.67.110.25] (10.67.110.25) by dggpemm500022.china.huawei.com
+ (7.185.36.162) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 13 May
+ 2024 22:10:00 +0800
+Message-ID: <1314703e-4251-f31f-3d43-ece5c1b68344@huawei.com>
+Date: Mon, 13 May 2024 22:10:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Proofpoint-ORIG-GUID: vkgeap01RG7LlgWIsm2nTryLwdxI0CEw
-X-Proofpoint-GUID: vkgeap01RG7LlgWIsm2nTryLwdxI0CEw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
- definitions=2024-05-13_10,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 malwarescore=0 suspectscore=0 mlxscore=0 bulkscore=0
- spamscore=0 impostorscore=0 clxscore=1015 mlxlogscore=400
- lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2405010000 definitions=main-2405130089
-
-For the BPF summit meeting tomorrow, I might as well have a mergable
-version. I took a look back on BPF-CFI patches to check the status and
-found that there had been no updates for around a month, so I went ahead
-and made the fixes suggested in v2.
-
-E.g.
-ffff80008021d5a4 <reuseport_array_lookup_elem>:   
-ffff80008021d5a4: d503245f      bti     c         
-
-Potentially this should be replaced by a proper paciasp + autiasp, but I
-suppose if we can assume the verifier provides back-edge integrity.
-
-Changes in v3->v4
-https://lore.kernel.org/all/fhdcjdzqdqnoehenxbipfaorseeamt3q7fbm7ghe6z5s2chif5@lrhtasolawud/
-- Fix authorship attribution
-
-Changes in v2->v3:
-https://lore.kernel.org/all/20240324211518.93892-1-puranjay12@gmail.com/
-- Simplify cfi_get_func_hash to avoid needless failure case
-- Use DEFINE_CFI_TYPE as suggested by Mark Rutland
-
-Changes in v1->v2:
-https://lore.kernel.org/bpf/20240227151115.4623-1-puranjay12@gmail.com/
-- Rebased on latest bpf-next/master
-
-Mark Rutland (1):
-  cfi: add C CFI type macro
-
-Maxwell Bland (1):
-  arm64/cfi,bpf: Use DEFINE_CFI_TYPE in arm64
-
-Puranjay Mohan (1):
-  arm64/cfi,bpf: Support kCFI + BPF on arm64
-
- arch/arm64/include/asm/cfi.h    | 23 ++++++++++++++++++++++
- arch/arm64/kernel/alternative.c | 18 +++++++++++++++++
- arch/arm64/net/bpf_jit_comp.c   | 18 +++++++++++++++--
- arch/riscv/kernel/cfi.c         | 34 ++------------------------------
- arch/x86/kernel/alternative.c   | 35 +++------------------------------
- include/linux/cfi_types.h       | 23 ++++++++++++++++++++++
- 6 files changed, 85 insertions(+), 66 deletions(-)
- create mode 100644 arch/arm64/include/asm/cfi.h
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.1.2
+Subject: Re: [bug report] WARNING: CPU: 0 PID: 49573 at kernel/sched/rt.c:802
+ rq_offline_rt+0x24d/0x260
+From: "zhaowenhui (A)" <zhaowenhui8@huawei.com>
+To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>, "open list:SCHEDULER"
+	<linux-kernel@vger.kernel.org>
+References: <47b4a790-9a27-2fc5-f2aa-f9981c6da015@huawei.com>
+In-Reply-To: <47b4a790-9a27-2fc5-f2aa-f9981c6da015@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm500022.china.huawei.com (7.185.36.162)
 
 
-base-commit: 329a6720a3ebbc041983b267981ab2cac102de93
--- 
-2.34.1
 
+在 2024/4/7 22:06, zhaowenhui (A) 写道:
 
+> More information:
+> 1. RT_RUNTIME_SHARE is enabled.
+> 2. We continuously create and remove cpu cgroups. We use cgexec to do 
+> some tasks like "tree" or "ps" in these cgroups and the rt_runtime_us in 
+> these cgroups are set to 2000~6000.
+> 3. There are frequent cpu offline/online operations, so it will trigger 
+> __disable_runtime.
+> 
+> Every time we run these operations after reboot, this warning will 
+> happen easily.
+> 
+
+--------reproduce shell scripts----------
+[1] on_off.sh
+#!/bin/bash
+
+let cpu_end=8
+
+while true
+do
+         for i in `seq 0 $cpu_end`
+         do
+                 echo $i
+                 let j=i+1
+                 echo 0 > /sys/devices/system/cpu/cpu${i}/online
+                 echo 0 > /sys/devices/system/cpu/cpu${j}/online
+                 sleep 0.5
+                 echo 1 > /sys/devices/system/cpu/cpu${i}/online
+                 echo 1 > /sys/devices/system/cpu/cpu${j}/online
+         done
+done
+
+[2] rt_test.sh
+#!/bin/bsh
+# set -x
+
+name=test$$
+cpu_dir=/sys/fs/cgroup/cpu/$name
+mkdir $cpu_dir
+echo $rt_runtime_us > $cpu_dir/cpu.rt_runtime_us  &>/dev/null
+
+function cg_change_rt_runtime_us()
+{
+         while true
+         do
+                 let tmp=2+RANDOM%4
+                 let quota=tmp*1000
+                 echo $quota > $cpu_dir/cpu.rt_runtime_us
+         done
+}
+
+function rt_test1()
+{
+         while true
+         do
+                 cgexec -g cpu:/${name} chrt 20 tree /sys/fs/cgroup/cpu 
+&>/dev/null
+         done
+}
+
+function rt_test2()
+{
+         while true
+         do
+                 cgexec -g cpu:/${name} chrt 30 ps aux  &>/dev/null
+         done
+}
+
+rt_test1 &
+rt_test2 &
+cg_change_rt_runtime_us &> /dev/null &
+
+[3] start_repro.sh
+function set_env(){
+     echo RT_RUNTIME_SHARE > /sys/kernel/debug/sched/features
+     echo RT_RUNTIME_SHARE > /sys/kernel/debug/sched_features
+}
+
+function run_test(){
+     for i in 0 1
+     do
+         nohup sh rt_test.sh &
+         nohup sh rt_test.sh &
+         nohup sh rt_test.sh &
+         nohup sh rt_test.sh &
+     done
+
+     nohup sh on_off.sh &>/dev/null &
+
+}
+set_env
+run_test
+
+--------reproduce shell scripts----------
+
+Running the start_repro.sh can easily reproduce this issue.
+And when I debug in __disable_runtime, I found that the rtrq have
+borrow some runtime, because rtrq->runtime is greater than 
+rtb->rt_runtime, but its span has only one cpu which is itself.
+[   43.686441] [__disable_runtime] begin, rq: ff3113087e5b4ec0 , cpu: 159
+[   43.686449] [__disable_runtime] rtrq: ff3112c9e9259800 , 
+rtrq->runtime :3037500
+[   43.686450] [__disable_runtime] rtb->period: 1000000000 , 
+rtb->rt_runtime: 3000000
+[   43.686451] [__disable_runtime] want original : -37500
+[   43.686451] [__disable_runtime] after get want, rtrq: 
+ff3112c9e9259800 , rtrq->runtime :3037500
+[   43.686453] [ERROR!] span have cpu: 159
+
+Do you have any idea about this? 😄
+
+---
+Regards
+Zhao Wenhui
