@@ -1,192 +1,243 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2080.outbound.protection.outlook.com [40.107.223.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B3F1CD06;
-	Mon, 13 May 2024 17:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715619995; cv=fail; b=rcL/8dyRtEpyiXrTrSvkBtX+zCWwwjWyxAXbZOvf5hvzKb+OPaisL8nCcyqxxMW5Dw1Z80U7iz2QpyZIq/kUYQ514LvDHQ7jvWdk8JroDYfaK10J0d0dYKfC4eb/u2P0gu7PlVHHL/iMDoadhrZjnrDGpNI2ZgvT+QBp5CGtPvI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715619995; c=relaxed/simple;
-	bh=FDuwsIcxe6g8UObrtEUApWLD5EAOx8Jm1kZwSamKDa4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FK8aNWEXKZxUJrJL/Amhcp+lQBtfPg89zNxeIrAnF239Skle/APqUYrGRlDAXlLF1MZIKKzYFdMhpWqWBF6tEnM34DjfFDfSVDh0Cwx0xp5c9NOrvahHVwhqJs9Xhtdreo90DrUaDzaPuH7t7Hc254QQ873hqWtfFcR68hpbCxg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=yvlxsQW6; arc=fail smtp.client-ip=40.107.223.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4BE1CF8D
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 17:08:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715620082; cv=none; b=FCKZ6rZ/0PLqvZkRIVE4HYrdyQOxf/SLdI4sXsdt5sEKK2VgEE7vtIZ5iWgUrsHSHoMGbiFoXgM0l6xhNSPQyLbMpsDmvQ2HnZF++Q2w2HuxxHq+/4AU5XC4fmpKRUVnxxXVWQP2ahnJ4YVRz43uzKeR15gkNpmhMn29Ssp7EnY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715620082; c=relaxed/simple;
+	bh=7/xkmDUbYU1LADb1hqA1THAmOqRq/hd0dIZkwWpfkJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JgOFfXsGM+5XS4BoFfeeVRHjKlrDTzo8J8CTaEUEq6R+3f1HcguzgJxQR/3Dv7vKiyiyr2SxS4aii47SNXgpVlalBO0K6/16BgbN0kIT5ibw9DaZLMLkCXqpH9ku7fWJeO+ZDTI0lGpETLYecMfzNGacEwbYBrJKzD+eeA+KUBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=qi94m12S; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="yvlxsQW6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bb6owMWsw0yRNdAdQq/4+e4w0IEKRDNc6vNf049tr2mgtzzDhS/pNpBs0zdx9ilY8yGKWR8jt2585ywsnNyTAoNKEVFDoAxozlNUyD/8L3GmAWjU3oUaO1ljXj/rjKQCm42XALUe2XVIsMgwhEDRiw/QGvwidIYnt9FlMnVLrZdO0rXOMHHdUHAiKKa91hTG1ouMeLUVPb9RRx32p79xAiR7co9eZz5dVB3JoCaS6hHQ7n+U3Im75ZNwpQWAmj6PqFQBVEQ7uTKLv7Nfx/YSxJ2WJEyOv8V77gGwB0ysm1ER5rd3vPHRg9+xHpM3eHEEQblSpRnpqaNTZqSh5F/T7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sITzv9lcjXpILnxzlA/PBY2E3gr/u/XgDbdJUDAB/WA=;
- b=aZEpXBMkhfFipTz2VVBdJ2M+iM2tLlNxxUg7vIhBMO14rq2gqS+UJLPXFZ/LlHHbyjNI8z8+pFk3on3glsCyfa+YLsez4oFe5WhfOqC8pjrV5aALZN6vCEd26srRkCeJyqXmkL5+HBI/aNK46SS0+JHh4wg1qxmdQcmDuyCEPGnV6ExBLh7g8EvUlEWZ6+zVe3uh2EhUT7jR4+uyJMXC/YKKRT74VAAHXTyEOqbFXWf20OC6z7jmo+iHTeJbqMuco7tOiu4OCQM6UZXjRHtC8W/QS80ENPZE0BgtnJut+t8hufOU8GB8FLq383l5I9/kWf27PvAoYnunTBobipxIGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sITzv9lcjXpILnxzlA/PBY2E3gr/u/XgDbdJUDAB/WA=;
- b=yvlxsQW6JVB4In0+AmkGwN189kQXzQiv2ZNZmBjpY2xysZw9rySTsJPR2HuZKDMBv6FlLEJljBGbdcAzV/lUNH4XHQnFOjQ9sQOYHeO7wi+T9HmahISggQT3ookT4j8205JM3dbkyWsl+bS9ZWm8+22hPlEUgZWVT7YLTF/kPbU=
-Received: from CH2PR08CA0007.namprd08.prod.outlook.com (2603:10b6:610:5a::17)
- by SJ2PR12MB9210.namprd12.prod.outlook.com (2603:10b6:a03:561::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Mon, 13 May
- 2024 17:06:28 +0000
-Received: from DS2PEPF00003439.namprd02.prod.outlook.com
- (2603:10b6:610:5a:cafe::9f) by CH2PR08CA0007.outlook.office365.com
- (2603:10b6:610:5a::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55 via Frontend
- Transport; Mon, 13 May 2024 17:06:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS2PEPF00003439.mail.protection.outlook.com (10.167.18.36) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7587.21 via Frontend Transport; Mon, 13 May 2024 17:06:28 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 13 May
- 2024 12:06:27 -0500
-Date: Mon, 13 May 2024 12:05:35 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-CC: Nathan Chancellor <nathan@kernel.org>, <kvm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Sean Christopherson <seanjc@google.com>,
-	<llvm@lists.linux.dev>
-Subject: Re: [PULL 18/19] KVM: SEV: Provide support for
- SNP_EXTENDED_GUEST_REQUEST NAE event
-Message-ID: <20240513170535.je74yhujxpogijga@amd.com>
-References: <20240510211024.556136-1-michael.roth@amd.com>
- <20240510211024.556136-19-michael.roth@amd.com>
- <20240513151920.GA3061950@thelio-3990X>
- <0ceafce9-0e08-4d47-813d-6b3f52ac5fd6@redhat.com>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="qi94m12S"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6f4e59191a1so2344658b3a.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 10:08:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715620080; x=1716224880; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=R03ALj5gMTI3HJczT8mvtLqpQZw1vQdw7W4zPWu4U5M=;
+        b=qi94m12SXQWlIw1irpiCADxa/u8RNZdQHbZlMYhpFTucz4IVy+pgoKS0+7kNAlVtlH
+         I/2kqpA20Ti7bt5rTxk1CWoxZkz/UwSC4eGp4y+7Xr4Gi60VlBmwZsUxoa/K0E4aHk7M
+         j8xTOy8rAUTZgkD9DCahmg9zQ902BA9a4/mWlfnIaLqE8wx7CD+yra1AnUvvWd9dzdeR
+         X66yyJ2ohcMl7OYHv4bIgN/ACwQZVJ1cJTYd7uvKPdGJ3BM3hlBM7aLmMoSKOY6Vns8h
+         nTr9mr3OdlcOqKSyFcCjyFXatSU4IBHeiX+uipG7MlFRossKvXs7XLudQVtCbFWpl8nu
+         Sr3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715620080; x=1716224880;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=R03ALj5gMTI3HJczT8mvtLqpQZw1vQdw7W4zPWu4U5M=;
+        b=jWmhvYvz7zPZCd/VvsJJDMLTPJme/7C5v70kIFfJ2smH9x4iPIp0LW1o6A3wBJGqxx
+         dskaQEXkVps58wQrdddfl9ctD9a89Ju0WwiQG6bUq8mF8NZx1T/7TI6M9lee/FBCtgKl
+         oFNo9TfkXyFzu4UQR433cv+CY4kwNbN2ipcuAt6dY9cXHnNKOTP75pQxF9juMX6+gjk4
+         yj60x8mFskLELcdZUBe9LXt4nKuGGYeB8BBMHLxMrA53LAvO+qeJ2FuD3MLbZftPJfT5
+         BXvdj1PFs6HVZUHgQ2BKVtWj1Iio0LBT7XkUXVwSeHlTpflyqvuufAfkBRT43WnL1Hwa
+         rcrA==
+X-Forwarded-Encrypted: i=1; AJvYcCWLCAKkv0YxdxhnaAthweathjoUZEvUGPTBgDIePBezHhqFqjVWuG0fZMJgvT3OYsBpix1VikDvwl+NTYNsXA2M20dofB4dUaEKkBS3
+X-Gm-Message-State: AOJu0YwBXhnpyerWmLzL0WE9upnyV5Qn59bttknyrCeY9qZv4p6xitlS
+	UfqU/5XSzAbuhnI7tgDLxLC3dPD4ojt+P4wcJq9+R7+pjcydvEhxNNuQn4NgycE=
+X-Google-Smtp-Source: AGHT+IGgitRfxdN9c/jkn+3dztyByZuJHDxryLBrfrJDLCggaquJnKcgfWgSQwb6qIcM1QjSPmZaxA==
+X-Received: by 2002:a05:6a20:431a:b0:1aa:43f4:3562 with SMTP id adf61e73a8af0-1afde0a98d8mr11383826637.11.1715620079928;
+        Mon, 13 May 2024 10:07:59 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2af2bccsm8222317b3a.170.2024.05.13.10.07.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 10:07:59 -0700 (PDT)
+Date: Mon, 13 May 2024 10:07:54 -0700
+From: Deepak Gupta <debug@rivosinc.com>
+To: Charlie Jenkins <charlie@rivosinc.com>
+Cc: paul.walmsley@sifive.com, rick.p.edgecombe@intel.com,
+	broonie@kernel.org, Szabolcs.Nagy@arm.com, kito.cheng@sifive.com,
+	keescook@chromium.org, ajones@ventanamicro.com,
+	conor.dooley@microchip.com, cleger@rivosinc.com,
+	atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com,
+	alexghiti@rivosinc.com, samuel.holland@sifive.com, conor@kernel.org,
+	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-mm@kvack.org, linux-arch@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, corbet@lwn.net, palmer@dabbelt.com,
+	aou@eecs.berkeley.edu, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com,
+	akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com,
+	Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com,
+	shuah@kernel.org, brauner@kernel.org, andy.chiu@sifive.com,
+	jerry.shih@sifive.com, hankuan.chen@sifive.com,
+	greentime.hu@sifive.com, evan@rivosinc.com, xiao.w.wang@intel.com,
+	apatel@ventanamicro.com, mchitale@ventanamicro.com,
+	dbarboza@ventanamicro.com, sameo@rivosinc.com,
+	shikemeng@huaweicloud.com, willy@infradead.org,
+	vincent.chen@sifive.com, guoren@kernel.org, samitolvanen@google.com,
+	songshuaishuai@tinylab.org, gerg@kernel.org, heiko@sntech.de,
+	bhe@redhat.com, jeeheng.sia@starfivetech.com, cyy@cyyself.name,
+	maskray@google.com, ancientmodern4@gmail.com,
+	mathis.salmen@matsal.de, cuiyunhui@bytedance.com,
+	bgray@linux.ibm.com, mpe@ellerman.id.au, baruch@tkos.co.il,
+	alx@kernel.org, david@redhat.com, catalin.marinas@arm.com,
+	revest@chromium.org, josh@joshtriplett.org, shr@devkernel.io,
+	deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
+	jhubbard@nvidia.com
+Subject: Re: [PATCH v3 27/29] riscv: Documentation for landing pad / indirect
+ branch tracking
+Message-ID: <ZkJI6lV8du1L+kE2@debug.ba.rivosinc.com>
+References: <20240403234054.2020347-1-debug@rivosinc.com>
+ <20240403234054.2020347-28-debug@rivosinc.com>
+ <Zj6D6FqfbnEhcfqs@ghost>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <0ceafce9-0e08-4d47-813d-6b3f52ac5fd6@redhat.com>
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF00003439:EE_|SJ2PR12MB9210:EE_
-X-MS-Office365-Filtering-Correlation-Id: f6dfc88a-fb7d-40c0-28c5-08dc736f077b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|1800799015|36860700004|376005|82310400017;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?E+1dH+vRN/5LXO7UOeCESPrx8+9JfVPki8rdh1XcQ2Y023hiJXEhU6orah8N?=
- =?us-ascii?Q?TVMQZPYmkVak/ugt6srw6bau21KgLB4D/Roh9sS2kA3WBti2udesd2DoscQL?=
- =?us-ascii?Q?h3KhHNyks6sCcYgFFik9JE+fo0H82UBML5bS+civqrzUeB2bPYRKSOawOcNt?=
- =?us-ascii?Q?oyixFsvrujs5wHg2JwizncvhaeJnk42JTkZ0YiWvyao+wFzici/pI+tMwddT?=
- =?us-ascii?Q?/E4APJ8oON0uxSYMD56X9wgZdsvkB5mWJ5m7WfLrET7HS5KQyW1r7CNKfrre?=
- =?us-ascii?Q?xbfns/JvlKz5B4wGCgs31kjkUk2s/8POjbVycDr4k2k72ERO4dmirMqn54lE?=
- =?us-ascii?Q?6dcA5O0b8n7/U7FE0paPkN6TsVqzGdC3eTTp/Iuj0DePUylwrPOyM24Om/UN?=
- =?us-ascii?Q?IgveMm//HKYjE3hafumyJU/QRDg2CSPfn9k3g3589GIeriMEOnXJdIZdSUmH?=
- =?us-ascii?Q?IOgcHK2o1mm70FHrbXH0ZAhI3bj3PdXkI1HEDgho4sZ2GkRUrAi57lS6jok2?=
- =?us-ascii?Q?3Xp79VralGriS35QM3W+dkjOuU96Yvsi36Aw0k56pszzcm8ClNpXeBky02eU?=
- =?us-ascii?Q?DWsRH9Sztk2OPqnL8YHx+arjHbNADQppbtAfU2JBcw06VHPeYP6GJHzo4c8x?=
- =?us-ascii?Q?Q/CuMykYIDfqhe2wqG8Z6WYiqw/rTeSTWBBy75q/72nNyyb3uRF6rMXof4hw?=
- =?us-ascii?Q?xKSUby7ov7LNkcRiXvzygMzW9UuwPaVfm7eZP0hhpTZDGzXYhXGcT9fLYKjt?=
- =?us-ascii?Q?rZLYeTsSZsqbzdjTEmMnF7r7PQVOWnaHoCKBi1rULoYm2cZ2Lwcj2RRxkE1m?=
- =?us-ascii?Q?U6ljvRZbSrdpLWij9moMtGxT6PNnjldqdQPI6JecmgJ5yQnzG8MsI15ySwDQ?=
- =?us-ascii?Q?b8Y2vgQqgYVRFXQNkPxsxWVrEoWSMT7a8ucmkvzd6KHxqiftVgqOrHDkmcWL?=
- =?us-ascii?Q?XDfoQkgaH//7HfKZq4PObAd56AWSwDQoju7f6hWtwvd+auuONAa3R2Uex+BI?=
- =?us-ascii?Q?ka7SaJjvnFnK1J7RCDi7y7Ty9SCLDup6BumMwsCTZ6N0mgSz6VQuVtolnT5F?=
- =?us-ascii?Q?3DXSdfh2HgREiZI2yLFNqn/fIEu/5/bjT8qZVZZzIDFFIqfQL2KkmVwoGA/T?=
- =?us-ascii?Q?HvI5YSimOQBKzzS9WgswrWCT1zqhdnR3s47OcbpoRSnSKC56oLubfz1SWeXu?=
- =?us-ascii?Q?9yGXiAIw1unNB2nzLXMvyrhLFU8By2xbLsRj0lJmICSOmCKDKwSIGn+xHnZW?=
- =?us-ascii?Q?a1YenqGtRIVUohO34fVs+ATYK5Elcjt47AnA/e0onapabq9FxPFCL9ZyjecZ?=
- =?us-ascii?Q?nUdHKAsBWeolMvKktRDRJS31?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(1800799015)(36860700004)(376005)(82310400017);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2024 17:06:28.3062
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6dfc88a-fb7d-40c0-28c5-08dc736f077b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF00003439.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB9210
+In-Reply-To: <Zj6D6FqfbnEhcfqs@ghost>
 
-On Mon, May 13, 2024 at 06:53:24PM +0200, Paolo Bonzini wrote:
-> On 5/13/24 17:19, Nathan Chancellor wrote:
-> > > +static int snp_begin_ext_guest_req(struct kvm_vcpu *vcpu)
-> > > +{
-> > > +	int vmm_ret = SNP_GUEST_VMM_ERR_GENERIC;
-> > > +	struct vcpu_svm *svm = to_svm(vcpu);
-> > > +	unsigned long data_npages;
-> > > +	sev_ret_code fw_err;
-> > > +	gpa_t data_gpa;
-> > > +
-> > > +	if (!sev_snp_guest(vcpu->kvm))
-> > > +		goto abort_request;
-> > > +
-> > > +	data_gpa = vcpu->arch.regs[VCPU_REGS_RAX];
-> > > +	data_npages = vcpu->arch.regs[VCPU_REGS_RBX];
-> > > +
-> > > +	if (!IS_ALIGNED(data_gpa, PAGE_SIZE))
-> > > +		goto abort_request;
-> > 
-> > [...]
-> > 
-> > > +abort_request:
-> > > +	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, SNP_GUEST_ERR(vmm_ret, fw_err));
-> > > +	return 1; /* resume guest */
-> > > +}
-> > 
-> > This patch is now in -next as commit 32fde9e18b3f ("KVM: SEV: Provide
-> > support for SNP_EXTENDED_GUEST_REQUEST NAE event"), where it causes a
-> > clang warning (or hard error when CONFIG_WERROR is enabled) [...]
-> > Seems legitimate to me. What was the intention here?
-> 
-> Mike, I think this should just be 0?
+On Fri, May 10, 2024 at 01:30:32PM -0700, Charlie Jenkins wrote:
+>On Wed, Apr 03, 2024 at 04:35:15PM -0700, Deepak Gupta wrote:
+>> Adding documentation on landing pad aka indirect branch tracking on riscv
+>> and kernel interfaces exposed so that user tasks can enable it.
+>>
+>> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+>> ---
+>>  Documentation/arch/riscv/zicfilp.rst | 104 +++++++++++++++++++++++++++
+>>  1 file changed, 104 insertions(+)
+>>  create mode 100644 Documentation/arch/riscv/zicfilp.rst
+>>
+>> diff --git a/Documentation/arch/riscv/zicfilp.rst b/Documentation/arch/riscv/zicfilp.rst
+>> new file mode 100644
+>> index 000000000000..3007c81f0465
+>> --- /dev/null
+>> +++ b/Documentation/arch/riscv/zicfilp.rst
+>> @@ -0,0 +1,104 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +:Author: Deepak Gupta <debug@rivosinc.com>
+>> +:Date:   12 January 2024
+>> +
+>> +====================================================
+>> +Tracking indirect control transfers on RISC-V Linux
+>> +====================================================
+>> +
+>> +This document briefly describes the interface provided to userspace by Linux
+>> +to enable indirect branch tracking for user mode applications on RISV-V
+>> +
+>> +1. Feature Overview
+>> +--------------------
+>> +
+>> +Memory corruption issues usually result in to crashes, however when in hands of
+>> +an adversary and if used creatively can result into variety security issues.
+>> +
+>> +One of those security issues can be code re-use attacks on program where adversary
+>> +can use corrupt function pointers and chain them together to perform jump oriented
+>> +programming (JOP) or call oriented programming (COP) and thus compromising control
+>> +flow integrity (CFI) of the program.
+>> +
+>> +Function pointers live in read-write memory and thus are susceptible to corruption
+>> +and allows an adversary to reach any program counter (PC) in address space. On
+>> +RISC-V zicfilp extension enforces a restriction on such indirect control transfers
+>> +
+>> +	- indirect control transfers must land on a landing pad instruction `lpad`.
+>> +	  There are two exception to this rule
+>> +		- rs1 = x1 or rs1 = x5, i.e. a return from a function and returns are
+>
+>What is a return that is not a return from a function?
+Those would be a jump or call (depending on convention of whether return is saved in x1/x5)
 
-Hi Paolo,
+>
+>> +		  protected using shadow stack (see zicfiss.rst)
+>> +
+>> +		- rs1 = x7. On RISC-V compiler usually does below to reach function
+>> +		  which is beyond the offset possible J-type instruction.
+>> +
+>> +			"auipc x7, <imm>"
+>> +			"jalr (x7)"
+>> +
+>> +		  Such form of indirect control transfer are still immutable and don't rely
+>> +		  on memory and thus rs1=x7 is exempted from tracking and considered software
+>> +		  guarded jumps.
+>> +
+>> +`lpad` instruction is pseudo of `auipc rd, <imm_20bit>` and is a HINT nop. `lpad`
+>
+>I think this should say "x0" or instead of "rd", or mention that rd=x0.
 
-Yes, I was just about to submit a patch that does just that:
+Yeah I missed that. will fix it.
 
-  https://github.com/mdroth/linux/commit/df55e9c5b97542fe037f5b5293c11a49f7c658ef
+>
+>> +instruction must be aligned on 4 byte boundary and compares 20 bit immediate with x7.
+>> +If `imm_20bit` == 0, CPU don't perform any comparision with x7. If `imm_20bit` != 0,
+>> +then `imm_20bit` must match x7 else CPU will raise `software check exception`
+>> +(cause=18)with `*tval = 2`.
+>> +
+>> +Compiler can generate a hash over function signatures and setup them (truncated
+>> +to 20bit) in x7 at callsites and function proglogs can have `lpad` with same
+>
+>"prologues" instead of "proglogs"
 
-Sorry for the breakage,
+Will fix it.
 
-Mike
-
-> 
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index c7a0971149f2..affb4fb47f91 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-> @@ -3911,7 +3911,6 @@ static int snp_begin_ext_guest_req(struct kvm_vcpu *vcpu)
->  	int vmm_ret = SNP_GUEST_VMM_ERR_GENERIC;
->  	struct vcpu_svm *svm = to_svm(vcpu);
->  	unsigned long data_npages;
-> -	sev_ret_code fw_err;
->  	gpa_t data_gpa;
->  	if (!sev_snp_guest(vcpu->kvm))
-> @@ -3938,7 +3937,7 @@ static int snp_begin_ext_guest_req(struct kvm_vcpu *vcpu)
->  	return 0; /* forward request to userspace */
->  abort_request:
-> -	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, SNP_GUEST_ERR(vmm_ret, fw_err));
-> +	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, SNP_GUEST_ERR(vmm_ret, 0));
->  	return 1; /* resume guest */
->  }
-> Paolo
-> 
-> 
+>
+>> +function hash. This further reduces number of program counters a call site can
+>> +reach.
+>> +
+>> +2. ELF and psABI
+>> +-----------------
+>> +
+>> +Toolchain sets up `GNU_PROPERTY_RISCV_FEATURE_1_FCFI` for property
+>> +`GNU_PROPERTY_RISCV_FEATURE_1_AND` in notes section of the object file.
+>> +
+>> +3. Linux enabling
+>> +------------------
+>> +
+>> +User space programs can have multiple shared objects loaded in its address space
+>> +and it's a difficult task to make sure all the dependencies have been compiled
+>> +with support of indirect branch. Thus it's left to dynamic loader to enable
+>> +indirect branch tracking for the program.
+>> +
+>> +4. prctl() enabling
+>> +--------------------
+>> +
+>> +`PR_SET_INDIR_BR_LP_STATUS` / `PR_GET_INDIR_BR_LP_STATUS` /
+>> +`PR_LOCK_INDIR_BR_LP_STATUS` are three prctls added to manage indirect branch
+>> +tracking. prctls are arch agnostic and returns -EINVAL on other arches.
+>> +
+>> +`PR_SET_INDIR_BR_LP_STATUS`: If arg1 `PR_INDIR_BR_LP_ENABLE` and if CPU supports
+>> +`zicfilp` then kernel will enabled indirect branch tracking for the task.
+>> +Dynamic loader can issue this `prctl` once it has determined that all the objects
+>> +loaded in address space support indirect branch tracking. Additionally if there is
+>> +a `dlopen` to an object which wasn't compiled with `zicfilp`, dynamic loader can
+>> +issue this prctl with arg1 set to 0 (i.e. `PR_INDIR_BR_LP_ENABLE` being clear)
+>> +
+>> +`PR_GET_INDIR_BR_LP_STATUS`: Returns current status of indirect branch tracking.
+>> +If enabled it'll return `PR_INDIR_BR_LP_ENABLE`
+>> +
+>> +`PR_LOCK_INDIR_BR_LP_STATUS`: Locks current status of indirect branch tracking on
+>> +the task. User space may want to run with strict security posture and wouldn't want
+>> +loading of objects without `zicfilp` support in it and thus would want to disallow
+>> +disabling of indirect branch tracking. In that case user space can use this prctl
+>> +to lock current settings.
+>> +
+>> +5. violations related to indirect branch tracking
+>> +--------------------------------------------------
+>> +
+>> +Pertaining to indirect branch tracking, CPU raises software check exception in
+>> +following conditions
+>> +	- missing `lpad` after indirect call / jmp
+>> +	- `lpad` not on 4 byte boundary
+>> +	- `imm_20bit` embedded in `lpad` instruction doesn't match with `x7`
+>> +
+>> +In all 3 cases, `*tval = 2` is captured and software check exception is raised
+>> +(cause=18)
+>> +
+>> +Linux kernel will treat this as `SIGSEV`` with code = `SEGV_CPERR` and follow
+>> +normal course of signal delivery.
+>> --
+>> 2.43.2
+>>
