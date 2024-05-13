@@ -1,90 +1,108 @@
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EE457CA7
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 15:46:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73F76153BF5;
+	Mon, 13 May 2024 15:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715615201; cv=none; b=YQmH+CVYLuncCe3JUCATY4447LUqX3uWxWarx677anbEAltG3UlAhXtheq+5d2W3B9zlNKVcSd/ERCaCkYNMwLJWrG1aHvZFdXlwRPLaQ4sXjINncN/q2wWo2DCvbklvFOBRcfmlDlLclIi+u+8MbbFjNKNd9cWnz3m2xB2NRpQ=
+	t=1715615319; cv=none; b=Fxyjwk/gTiPOFilbfUhXjlbDAgQ5kJTRcmShIX9rJuClW/9EJOxLaSgA5xPj6LbQqOcbWfqgp8yNw+Wd9akl/jZrXdHq3ypVFpRzmWNTiGt40JeXstrcsZ3n8mVdQ45mKFxvV5ZCyvSJAYe77iZAyq5RxbGbTz8hv7ibsCOPORo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715615201; c=relaxed/simple;
-	bh=c+2oQsWNq3Aqv4I7Lpotn6eMagm48oS8hV+rQgU/ngA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M66YTuLX8ywyH8OUHRxrVp/vHZuCi34zCahp1Vy/KZAysIpkI2Nf0F2+4HLkCx/z+ehE9EqzjL0CFclUbEDv/sNpkP4ZljtUhqYfWlv0TYa2V1ofh8EYiMUwFCe+Pbdjec0NcwfylZRFeeykLyhfKy261cDoa0oCqcusWac4YWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=WDMGE6gS; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
+	s=arc-20240116; t=1715615319; c=relaxed/simple;
+	bh=cy/xHMkRc7jqrmPrSj9BRAllfeNdujydY/6qQIY7t2g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XP3MHqnc+u3oqA1AGfH0DSR8n7HCYU821PgMNaKqv/3X6GLZq2yAMfDqUcTuNt2AFetzSEi/UuUnij/cnnTVw11odFK9JEvPoLbAv/q+JuVXDxTCZsA0OPqT4yfGxuX4uUDhZbqvZslC5qfqHzzvqrHI9byZNZPttWKkMAEwvXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kIJo+wxD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="WDMGE6gS"
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e576057c2bso32360331fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:46:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1715615198; x=1716219998; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yuVG90NynmI1kwhRkYjh8vkQweVo8xcJvLui61n/z84=;
-        b=WDMGE6gSOCRZE3Ch5PP7wF1IEl7GFtG+Z9XOjfotk5diWFKgxWXIAWEmblEspOwrWA
-         GnLe6p99UA9ugj3SK2Iy0e8vkzfOlAUxHlH7REPp2caHkIg0eFl/sXL/11RVVhcFHVA7
-         626HG1S8LTXLbjXvELwP2siqXyn75iuMPKml0lkWZP9OEEQs6S93T9tWx2vLykZ3drKu
-         gIVMG25Plg+k1Tx/1oHbEC+Xd5cQ+75BmPVQ42aTvrBrUIuA/Zjqnd323BZqV+M2KNvs
-         P+m3EuEpci80HD9fQivDsLXCvgFrzwHm2hC75FVIdG8PhTnc9SmLbLB2o3Hn+gZhan9n
-         jhfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715615198; x=1716219998;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yuVG90NynmI1kwhRkYjh8vkQweVo8xcJvLui61n/z84=;
-        b=HSUF6Krm74FppEl/o+5tEzQwd4ni0kk7RO1LcZsqRKOpTw/Y0WL6O26Xa/bA63Sdk9
-         GJvUOCHSStHh8q/VgMgHKCMFjUWlOiY8KRlDObcu4kuXPdKP1BLbIQ9dOldhdtVMoBTe
-         pX9xpIOsEVUqz57Nk6bQphIks9Q+78u+hCbLXUxoLQ7ALzpg1BTIXE7NabGIpHQ3gzUc
-         smQrtIhTgbLpSmftC4YxGUUgDLC4aCavJ5nt/eWarKg7dK7Htp5HmpDaw8A1Ojq02i5/
-         Lkwv49MTWd5m/CejIVU9AEqIwkkDEMv76JtdDIuScZG5N99rJqtK8vw/dEvWUmA9U4Td
-         IIEw==
-X-Gm-Message-State: AOJu0YwObKu3n02JKwN56u10rL3QbRfNAh8PVSWCMLG1Qlk6yAlRWEmw
-	d8n+jvG2fCu+djH0jvN9wC2MAqgHTCmcpsWaMoh6Y5aUkwFj/bZc3uhL7BP4wV4=
-X-Google-Smtp-Source: AGHT+IHox5zUZVsU5l4v1h5SltLOyIORY6g5v5FqoUKwpFMQjSqu8Ql3bjmUtKQSYqWeSRsyRa73lA==
-X-Received: by 2002:a2e:461a:0:b0:2e5:2414:a205 with SMTP id 38308e7fff4ca-2e52414a255mr70941681fa.27.1715615198036;
-        Mon, 13 May 2024 08:46:38 -0700 (PDT)
-Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5735a2490casm4923002a12.32.2024.05.13.08.46.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 08:46:37 -0700 (PDT)
-From: Thorsten Blum <thorsten.blum@toblux.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	Thorsten Blum <thorsten.blum@toblux.com>
-Subject: [PATCH] w1: Fix number of bytes in error message
-Date: Mon, 13 May 2024 17:43:56 +0200
-Message-ID: <20240513154354.185974-3-thorsten.blum@toblux.com>
-X-Mailer: git-send-email 2.45.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kIJo+wxD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCD10C113CC;
+	Mon, 13 May 2024 15:48:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715615319;
+	bh=cy/xHMkRc7jqrmPrSj9BRAllfeNdujydY/6qQIY7t2g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kIJo+wxDpj/KwHwzW0KlhbvGQOwnBWFNBlGH0EAR4HUb4LJQJCBOPR18slWzk4AHA
+	 HxJcM6sBnSmyu6I+kwEwW1Ssd09PBbazILJvRDaPXAHqPH8YlQ043C4A6VVf0FZ0JO
+	 Y5r4eHTCRxlfdBdVM90Vjz0qhZZHfo9CuopdzQbwtd+pgLbPSh9WsjfQm9LOrmjWs/
+	 9b8NNpzdEhYXqL/jYUn++kEQtVieM/3ouYe5mrDx3eE2z9kcKsFckdbnvHVFUzRfn8
+	 VXps67ZiPsxtjhDVzvCDyr93gEBRJRm0avxEk7QHG+MWs3fBr5Txi3ToRjso/4nkIj
+	 tQsvxBl0EXx4w==
+Date: Mon, 13 May 2024 16:48:33 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Dmitry Rokosov <ddrokosov@salutedevices.com>
+Cc: neil.armstrong@linaro.org, jbrunet@baylibre.com,
+	mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, khilman@baylibre.com,
+	martin.blumenstingl@googlemail.com, jian.hu@amlogic.com,
+	kernel@sberdevices.ru, rockosov@gmail.com,
+	linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/7] dt-bindings: clock: meson: a1: pll: introduce new
+ syspll bindings
+Message-ID: <20240513-epic-magnifier-8dd83db81c4c@spud>
+References: <20240510090933.19464-1-ddrokosov@salutedevices.com>
+ <20240510090933.19464-3-ddrokosov@salutedevices.com>
+ <20240511-secret-barcode-e25c722ddf1d@spud>
+ <20240513091735.l3uewwzfrdd6qwbl@CAB-WSD-L081021>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lAeSj6B3cXSZn8Gg"
+Content-Disposition: inline
+In-Reply-To: <20240513091735.l3uewwzfrdd6qwbl@CAB-WSD-L081021>
 
-Fix the number of bytes that failed to be allocated for a new w1 device.
 
-Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
----
- drivers/w1/w1_int.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--lAeSj6B3cXSZn8Gg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/w1/w1_int.c b/drivers/w1/w1_int.c
-index 3a71c5eb2f83..677e7167806c 100644
---- a/drivers/w1/w1_int.c
-+++ b/drivers/w1/w1_int.c
-@@ -34,7 +34,7 @@ static struct w1_master *w1_alloc_dev(u32 id, int slave_count, int slave_ttl,
- 	dev = kzalloc(sizeof(struct w1_master) + sizeof(struct w1_bus_master), GFP_KERNEL);
- 	if (!dev) {
- 		pr_err("Failed to allocate %zd bytes for new w1 device.\n",
--			sizeof(struct w1_master));
-+			sizeof(struct w1_master) + sizeof(struct w1_bus_master));
- 		return NULL;
- 	}
- 
--- 
-2.45.0
+On Mon, May 13, 2024 at 12:18:02PM +0300, Dmitry Rokosov wrote:
+> Hello Conor,
+>=20
+> Thank you for quick review!
+>=20
+> On Sat, May 11, 2024 at 02:08:03PM +0100, Conor Dooley wrote:
+> > On Fri, May 10, 2024 at 12:08:54PM +0300, Dmitry Rokosov wrote:
+> > > The 'syspll' PLL is a general-purpose PLL designed specifically for t=
+he
+> > > CPU clock. It is capable of producing output frequencies within the
+> > > range of 768MHz to 1536MHz.
+> > >=20
+> > > The clock source sys_pll_div16, being one of the GEN clock parents,
+> > > plays a crucial role and cannot be tagged as "optional". Unfortunatel=
+y,
+> > > it was not implemented earlier due to the cpu clock ctrl driver's
+> > > pending status on the TODO list.
+> >=20
+> > It's fine to not mark it optional in the binding, but it should be
+> > optional in the driver as otherwise backwards compatibility will be
+> > broken. Given this is an integral clock driver, sounds like it would
+> > quite likely break booting on these devices if the driver doesn't treat
+> > syspll_in as optional.
+> > A lesson perhaps in describing the hardware entirely, even if the
+> > drivers don't make use of all the information yet?
+>=20
+> Yes, it's definitely the right lesson for me. However, without syspll or
+> syspll_in, we cannot utilize CPU power management at all.
 
+That's the status-quo, right? The incorrect dts would continue to not
+support CPU power management and the new one with the correct description
+would?
+
+--lAeSj6B3cXSZn8Gg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkI2UQAKCRB4tDGHoIJi
+0tl8AP99J+IYSbMrqEfdb2ZfyxV07AxuPzRV6G7nL6Scs3gOZAD+NXFURLw56u7y
+ypHqhNg+eH/FeNmtrCAHj0jZEzJfbgI=
+=oOXC
+-----END PGP SIGNATURE-----
+
+--lAeSj6B3cXSZn8Gg--
