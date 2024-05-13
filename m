@@ -1,106 +1,120 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp441.webpack.hosteurope.de (wp441.webpack.hosteurope.de [80.237.133.210])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9E520DF4
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 17:34:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D91532C190;
+	Mon, 13 May 2024 17:34:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.133.210
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715621648; cv=none; b=Mlc/prgd2xgPSzp53OV3Lcm8NemGzqaDYsIcf4tHsN+q5od891kReE8S7wBsJrq/gRTNDwW5eXTxcR1QA9nQznJYqCU9pRphe/xSeNyp//E4aF4hyct7v/SrQkUskUbZCIJKrvuHOd4sgQW2c/c2007U+VXWF/KzYzOZ8zdN5G0=
+	t=1715621684; cv=none; b=hKcYx+Q6ItgkVqHOpuhsURyAPdR3S7txUCK/j1Yy/zBwS30ZUmE0xYrqkK+al1ekOtdVTeMi32Dv3qKnQ7a9yljyS1NXtQRQouQTAgePOCVh8IVPvpWbP17VklOMow75FT8PgF6grdCNWa9PvZpZ+vDwCDSnDzKhUkgXwKVui4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715621648; c=relaxed/simple;
-	bh=LGyj4luFEwyxCJutXStC46wb2QnlMbg8i3ELpfd0ioo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SiOMMssJyD56xClBNdYL987xKnNiuxqOar0Zb/59lah5xsS0TBGNz22mlZPSDh47bNtxg/74bE3r/Ccw+JSgXwMJZAD94O/ds/Z2qTmvvj91d5//UhCjDZbg9Vssfhy8PssEPSZ1/9oTAd/gqx65LPjGWhlZQbZinVj8CNdZVeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=EYHnu708; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1715621684; c=relaxed/simple;
+	bh=RjuB/bZTODZJ0KhRm7Wf7eYTPm6izVl1WgnIq448cKw=;
+	h=Message-Id:Subject:To:Date:Cc:In-Reply-To:From:MIME-Version:
+	 Content-Type; b=mQ1aeSHU8YjEQjWd3GQk1137fFHOso+WFBNExS+bPmyL/FGGpM7e+PPRlZDkXiXhrlPShkl9LjEbzX5GLOTvnrPtY6jr+aY/Gt0RxEFi8fcWQRpglCmBxAadoipkyJgQo61xhDhZB+OaCDbb5xm8xHh5G2mI/Edttccuy9CObe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ulrich-teichert.org; spf=pass smtp.mailfrom=ulrich-teichert.org; dkim=pass (2048-bit key) header.d=ulrich-teichert.org header.i=@ulrich-teichert.org header.b=mOlOjyy9; arc=none smtp.client-ip=80.237.133.210
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ulrich-teichert.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ulrich-teichert.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="EYHnu708"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a59a8f0d941so1135522466b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 10:34:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1715621644; x=1716226444; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gF7u5KTdydtGb+C4u/lKHMX/r20FiXVK70KMr4rQijg=;
-        b=EYHnu708blrHYqiCasfWEmHhSyyDZnDNseVnTvOjYMkmmNWCIVosphzkryeQRqVIf8
-         hNYefOiTXVrMZWP7lLqmQmj79gsX85vmKg6vxv9ZipZgj6GJE6/hEsqDgXU0pJ0WEpu6
-         ZQF7Ma53iDSG8NX5GHkvpNIhEskuMULhrpGHo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715621644; x=1716226444;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gF7u5KTdydtGb+C4u/lKHMX/r20FiXVK70KMr4rQijg=;
-        b=fTJ4YtHbUhFVfiWUOyAyiD7LP7C0DCxQO+I3bxu1JPzgK8ES4a2fzMA0iXhuw+hNOu
-         mnnKvxKiFgnU38enFXNJIoU28UjuYkvteXiSXwflLzu1dzsiC8tzgFkcF15fqySn9bVu
-         W2e0YFeKJ+CMBgSEkAtAg4UbLCB7/YAevhRJDrZvOrGHWnQvwH38rcZ9oaLpEHAHjgmC
-         B/SScduW8aWdGyB1r0+l81EDCfMESQ5W6fWBXBhZf76AzVUE53uCrj68/5P69E7n8PmQ
-         1lq4QJMwrTMcuyYqkdQmFDNN99vWZgcwpn1WvOjHLhZx4fRGEf+UoRpEjdioqMuslB5y
-         P0pg==
-X-Forwarded-Encrypted: i=1; AJvYcCWN3NnUW9+30o4jw5hDORBqqBL3gwJP94Q9oa4J8Shm4hAN5qEBj9FPSvoi/mkOI84kxPaR/4zx8hOlMfyQw092+jL2RsZKI3Pi0fLx
-X-Gm-Message-State: AOJu0YzShoc9CpfjkTpLj4x+AtbIrSEKCZh4M8Gz2koqbGRvCBnkTCur
-	8LVkNcRAx0BJFD1Vl2pCrhZOiFBmK7md/N70bP8l6JrxRKUboMccYR1nXNHh3GB2DoNORQ+aWww
-	mrYn+pw==
-X-Google-Smtp-Source: AGHT+IEw7N4kPiEMJOK0Yxp2x8PX+faIakoxUtUgYAbqB7khyrYqve9B/8vBFqUCkRYBixvMMQ9jBA==
-X-Received: by 2002:a17:906:22cc:b0:a59:c319:f1e3 with SMTP id a640c23a62f3a-a5a2d53ae7emr678818866b.12.1715621644509;
-        Mon, 13 May 2024 10:34:04 -0700 (PDT)
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com. [209.85.218.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1792228csm622585566b.92.2024.05.13.10.34.03
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 May 2024 10:34:04 -0700 (PDT)
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a59a8f0d941so1135511166b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 10:34:03 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW9PCvhhM/7o1szigHyuCo9ifNM9kwsSeoZcgL6c/nSz0/aIWfm6LkAvuJ+HUZ5a0vJLLLQPyk3oFBC3zeGZN/Gd+9HH/Nj+yXh4/xy
-X-Received: by 2002:a17:906:2298:b0:a5a:3579:b908 with SMTP id
- a640c23a62f3a-a5a3579bb63mr599168266b.38.1715621643624; Mon, 13 May 2024
- 10:34:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ulrich-teichert.org header.i=@ulrich-teichert.org header.b="mOlOjyy9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=ulrich-teichert.org; s=he219537; h=Content-Transfer-Encoding:Content-Type:
+	MIME-Version:From:In-Reply-To:Cc:Date:To:Subject:Message-Id:From:Sender:
+	Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=HTaf2Q1Js0w1JEG7adnW654h8ouqk/EoSw1gVBmO+yU=; t=1715621683;
+	x=1716053683; b=mOlOjyy95u9CBBZm+rH+6W3dbYAsyHGwOHDas++2n9K8JX3Nfx1gXH5MJk/Go
+	R5Cpat9HplezFVRnvybxkhA0QEmQBpWy6/FlhXhHeOXnxaLPmY9U4rYOpqBvD7LvkY2MCoTDKsFw7
+	ecj0aOI+agl7XPkfo8WB6cWXkQusz5ke0rLXmM0if6DrMsojJyZeh9LOGznmnPF/5WUvaLxJuMT3f
+	JIL2Mdgf9SpZt46mfMepPjk1DBuMY8w89q2X0lAC8bFpfQV3uvbo8awamNQgVlsDt8znV9QMlZUdf
+	/NT+fnL0OuBJp3OTHd+V0WjkwnAjrKA72Ts3ed6W2zMVdxk9iA==;
+Received: from [2a03:7846:b79f:101:21c:c4ff:fe1f:fd93] (helo=valdese.nms-ulrich-teichert.org); authenticated
+	by wp441.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	id 1s6YuY-0005eL-4Z; Mon, 13 May 2024 18:52:26 +0200
+Received: from valdese.nms-ulrich-teichert.org (localhost [127.0.0.1])
+	by valdese.nms-ulrich-teichert.org (8.15.2/8.15.2/Debian-14~deb10u1) with ESMTPS id 44DGqNBm007654
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Mon, 13 May 2024 18:52:23 +0200
+Received: (from ut@localhost)
+	by valdese.nms-ulrich-teichert.org (8.15.2/8.15.2/Submit) id 44DGqMjs007653;
+	Mon, 13 May 2024 18:52:22 +0200
+Message-Id: <202405131652.44DGqMjs007653@valdese.nms-ulrich-teichert.org>
+Subject: Re: [GIT PULL] alpha: cleanups and build fixes for 6.10
+To: akiyks@gmail.com (Akira Yokosawa)
+Date: Mon, 13 May 2024 18:52:22 +0200 (CEST)
+Cc: paulmck@kernel.org, arnd@arndb.de, glaubitz@physik.fu-berlin.de,
+        ink@jurassic.park.msu.ru, linux-alpha@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mattst88@gmail.com, richard.henderson@linaro.org,
+        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        krypton@ulrich-teichert.org (Ulrich Teichert),
+        akiyks@gmail.com (Akira Yokosawa)
+In-Reply-To: <99765904-3f35-4c78-998e-b444a6ab90e4@gmail.com>
+From: Ulrich Teichert <krypton@ulrich-teichert.org>
+X-Mailer: ELM [version 2.5 PL8]
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <587f5e6b-d543-4028-85c8-93cc8f581d02@suse.cz>
-In-Reply-To: <587f5e6b-d543-4028-85c8-93cc8f581d02@suse.cz>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 13 May 2024 10:33:46 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiZpyWvC-nh4CPhKkPLMwWb_W00NDMopuxVNTnGB7fYeg@mail.gmail.com>
-Message-ID: <CAHk-=wiZpyWvC-nh4CPhKkPLMwWb_W00NDMopuxVNTnGB7fYeg@mail.gmail.com>
-Subject: Re: [GIT PULL] slab updates for 6.10
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, 
-	Christoph Lameter <cl@linux.com>, Pekka Enberg <penberg@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	LKML <linux-kernel@vger.kernel.org>, patches@lists.linux.dev, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Hyeonggon Yoo <42.hyeyoo@gmail.com>, 
-	Chengming Zhou <chengming.zhou@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;ut@ulrich-teichert.org;1715621683;92f8b63b;
+X-HE-SMSGID: 1s6YuY-0005eL-4Z
 
-On Thu, 9 May 2024 at 07:25, Vlastimil Babka <vbabka@suse.cz> wrote:
->
->   To avoid affecting fast paths with another shared counter (attempted in the
->   past) or complex partial list traversal schemes that allow rescheduling, the
->   chosen solution resorts to approximation - when the partial list is over
->   10000 slabs long, we will only traverse first 5000 slabs from head and tail
->   each and use the average of those to estimate the whole list. Both head and
->   tail are used as the slabs near head to tend to have more free objects than
->   the slabs towards the tail.
+Hi,
 
-I suspect you could have cut this down by an order of magnitude, and
-made the limit be just 1k slabs rather than 10k slabs. Or even
-_another_ order of magnitude smaller.
+> On Sun, 12 May 2024 07:44:25 -0700, Paul E. McKenney wrote:
+> > On Sun, May 12, 2024 at 08:02:59AM +0200, John Paul Adrian Glaubitz wrote:
+> >> On Sat, 2024-05-11 at 18:26 -0700, Paul E. McKenney wrote:
+> >> > And that breaks things because it can clobber concurrent stores to
+> >> > other bytes in that enclosing machine word.
+> >> 
+> >> But pre-EV56 Alpha has always been like this. What makes it broken
+> >> all of a sudden?
+> > 
+> > I doubt if it was sudden.   Putting concurrently (but rarely) accessed
+> > small-value quantities into single bytes is a very natural thing to do,
+> > and I bet that there are quite a few places in the kernel where exactly
+> > this happens.  I happen to know of a specific instance that went into
+> > mainline about two years ago.
+> > 
+> > So why didn't the people running current mainline on pre-EV56 Alpha
+> > systems notice?  One possibility is that they are upgrading their
+> > kernels only occasionally.  Another possibility is that they are seeing
+> > the failures, but are not tracing the obtuse failure modes back to the
+> > change(s) in question.  Yet another possibility is that the resulting
+> > failures are very low probability, with mean times to failure that are
+> > so long that you won't notice anything on a single system.
+> 
+> Another possibility is that the Jensen system was booted into uni processer
+> mode.  Looking at the early boot log [1] provided by Ulrich (+CCed) back in
+> Sept. 2021, I see the following by running "grep -i cpu":
+> 
+> >> > [1] https://marc.info/?l=linux-alpha&m=163265555616841&w=2
+> 
+> [    0.000000] Memory: 90256K/131072K available (8897K kernel code, 9499K rwdata, \
+> 2704K rodata, 312K init, 437K bss, 40816K reserved, 0K cma-reserved) [    0.000000] \
+> random: get_random_u64 called from __kmem_cache_create+0x54/0x600 with crng_init=0 [  \
+> 0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1 [    0.000000]
+>                                                      ^^^^^^
+> 
+> Without any concurrent atomic updates, the "broken" atomic accesses won't
+> matter, I guess.
 
-Somebody was being a bit too worried about approximations, methinks -
-but I think the real worry goes the other way, where it's practically
-so hard to even hit the approximation situation that it gets no
-testing at all.
+I've probably disabled SMP in my test kernel, the jensen is a single CPU
+system. I never had the pleasure of owning an AlphaServer 2000 or 2100,
+which (according to https://en.wikipedia.org/wiki/AlphaServer and
+https://en.wikipedia.org/wiki/AlphaStation) are the only systems
+with EV4/EV45/EV5 multi-CPU setups (apart from the Cray T3{DE}), so
+the possibility of ever seeing an error concerning atomic concurrent
+updates is quite low.
 
-IOW, I suspect it's better to be explicit about approximations, and
-have people aware of it, rather than be overly cautious and have it be
-a special case that almost never triggers in any normal loads.
+Anybody out there with an AlphaServer 2000/2100 willing to try ?-)
 
-But pulled.
-
-              Linus
+CU,
+Uli
+-- 
+Dipl. Inf. Ulrich Teichert|e-mail: Ulrich.Teichert@gmx.de | Listening to:
+Stormweg 24               |The Hives: Two Kinds Of Trouble, The Chats: 6L GTR,
+24539 Neumuenster, Germany|La Fraction: Les Démons, Nightwatchers: On a Mission
