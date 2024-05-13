@@ -1,134 +1,175 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805432B9D1;
-	Mon, 13 May 2024 08:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E85F21487D0
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 09:00:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715590778; cv=none; b=eyQzHpXbT0b9UMbRHWn309NxzXoCgHK8STCcDPS6TO4WJUEpwZztmgVTvAOoQTJt307mMsat7L7WZYs6GRBN9KA3hspWarSIukEHmMQOuZcDyLyNjxujw+slBx/tJrPK9tHmA4CzYhSuSYv1IqeZGcx1xLaCDx1Ix/k0JGmtwf8=
+	t=1715590805; cv=none; b=uu9e396POmlqd4Hz/RsjWmdippT8krUPFj1UznDcMcAKc5gRNQsPoSEQQI8AY7VkvtRNMHRe//zgmVEtSJUnhTC9PGv4z1Lgm4hrL+bEugjcYE7TUL/LlFKcKOHLQt3zFbPplV0wNS5VIzgNuUFqwuww6+bOUiEgXeW6X7GNwrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715590778; c=relaxed/simple;
-	bh=GkcpnSXdP2QJe/nIK16ifPBaXDbWf1z8/BdrtfIYiB4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rtouipejJ/q8/BlJkof8Fj0dPLy6rm+2O0An9gWluhZR+mLhei+7LmH7rpvUydo17AOKi+M2syg3Uehkr1QQFEWEzn/4y808FFIX5Dmy8sswlKUGo8H7kABKP1WYXlY7uhHVDsF+2eEaVMD1eufuBKlPeE+c3kNE2Uefwnun89I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X396QGVl; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X396QGVl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715590777; x=1747126777;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=GkcpnSXdP2QJe/nIK16ifPBaXDbWf1z8/BdrtfIYiB4=;
-  b=X396QGVlWki4+XE0e5WT7nQThpZWED9yRuyf85sp7j3nfh/Zt8ccqV98
-   KJaCAqASXjY0GGE0pyXCE10/OxHRg9E0BRENXwar2g9sOeav4BhZJRW3Z
-   K2oTtDz5X3vvR81qBLhTqdrHf618jrxv4gqBM069w00jb4KzHZWhZR3qx
-   ovGSAa9e+nWaJ66RHTVY5txI58NJus9y4RzY/5W64XSf1dU0r3g/NGIZm
-   KA1nvj6ZlK/VJ4WTnTYEeYWY9DJ7XGieM46uHOUb76xXZ5Rb2q6qzzYzm
-   H6JdGCpdASIdcFuK2/HDBAwT+uwpHNnOJHPLJjPK4Nwckqopm9rjKEi9h
-   w==;
-X-CSE-ConnectionGUID: O3zR/S6xRiOz5++e9k/+rg==
-X-CSE-MsgGUID: FXn5DOJQQ0u+dKLJYIIirA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="11348033"
-X-IronPort-AV: E=Sophos;i="6.08,157,1712646000"; 
-   d="scan'208";a="11348033"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 01:59:36 -0700
-X-CSE-ConnectionGUID: sBHxFiuaQr2d8aTgX+3YPQ==
-X-CSE-MsgGUID: THqMi0FFSxSmVvRr4ukQKg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,157,1712646000"; 
-   d="scan'208";a="35149553"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 01:59:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1s6RWn-000000073rW-3Hnn;
-	Mon, 13 May 2024 11:59:25 +0300
-Date: Mon, 13 May 2024 11:59:25 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: Jani Nikula <jani.nikula@intel.com>, mchehab@kernel.org,
-	hverkuil-cisco@xs4all.nl, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, benjamin.gaignard@collabora.com,
-	sebastian.fricke@collabora.com, akpm@linux-foundation.org,
-	gregkh@linuxfoundation.org, adobriyan@gmail.com,
-	p.zabel@pengutronix.de, airlied@gmail.com, daniel@ffwll.ch,
-	dri-devel@lists.freedesktop.org, laurent.pinchart@ideasonboard.com,
-	praneeth@ti.com, nm@ti.com, vigneshr@ti.com, a-bhatia1@ti.com,
-	j-luthra@ti.com, b-brnich@ti.com, detheridge@ti.com,
-	p-mantena@ti.com, vijayp@ti.com, andrzej.p@collabora.com,
-	nicolas@ndufresne.ca
-Subject: Re: [PATCH v7 6/8] math.h Add macros to round to closest specified
- power of 2
-Message-ID: <ZkHWbS4raU_BPlpm@smile.fi.intel.com>
-References: <20240509183952.4064331-1-devarsht@ti.com>
- <Zj42vTpyH71TWeTk@smile.fi.intel.com>
- <87fruphf55.fsf@intel.com>
- <5ebcf480-81c6-4c2d-96e8-727d44f21ca9@ti.com>
+	s=arc-20240116; t=1715590805; c=relaxed/simple;
+	bh=/MX6rrnEoR/kypgxe6c7ubeCiw+US5Kh9gC7XtmMmzw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TnANiB5JKONmkoFSQjzuwos+H9ijOZT3ZD8lr/llNx7sH1HtHHoulZP68Y8oCWr2I3KhDAhsefHrjY+pRjPEj0F0WKwlZT3ExnOKbSpxWlxBP0AhYRck0dILMTgmewaej7u4wisq/PhVvZ2dKx34gLn4WLyQ9hNSZp0fgm2Gb9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5E1B1007;
+	Mon, 13 May 2024 02:00:27 -0700 (PDT)
+Received: from [10.57.68.95] (unknown [10.57.68.95])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A91963F762;
+	Mon, 13 May 2024 02:00:00 -0700 (PDT)
+Message-ID: <7504a525-8211-48b3-becb-a6e838c1b42e@arm.com>
+Date: Mon, 13 May 2024 09:59:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v2 0/9] Merge arm64/riscv hugetlbfs contpte support
+Content-Language: en-GB
+To: Alexandre Ghiti <alexghiti@rivosinc.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Andrew Morton
+ <akpm@linux-foundation.org>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-mm@kvack.org
+References: <20240508113419.18620-1-alexghiti@rivosinc.com>
+ <6d37f914-d139-48ea-be63-c428ac767cc1@arm.com>
+ <CAHVXubhmihZA50pdaek4=fx83ycdOyuYkRmVLPtZk59uKBoWPw@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAHVXubhmihZA50pdaek4=fx83ycdOyuYkRmVLPtZk59uKBoWPw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5ebcf480-81c6-4c2d-96e8-727d44f21ca9@ti.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sat, May 11, 2024 at 11:11:14PM +0530, Devarsh Thakkar wrote:
-> On 10/05/24 20:45, Jani Nikula wrote:
-
-[...]
-
-> > Moreover, I think the naming of round_up() and round_down() should have
-> > reflected the fact that they operate on powers of 2. It's unfortunate
-> > that the difference to roundup() and rounddown() is just the underscore!
-> > That's just a trap.
-> > 
-> > So let's perhaps not repeat the same with round_closest_up() and
-> > round_closest_down()?
+On 12/05/2024 18:25, Alexandre Ghiti wrote:
+> Hi Ryan,
 > 
-> Yes the naming is inspired by existing macros i.e. round_up, round_down
-> (which round up/down to next pow of 2) and DIV_ROUND_CLOSEST (which
-> round the divided value to closest value) and there are already a lot of
-> users for these API's :
+> On Fri, May 10, 2024 at 3:49 PM Ryan Roberts <ryan.roberts@arm.com> wrote:
+>>
+>> On 08/05/2024 12:34, Alexandre Ghiti wrote:
+>>> This patchset intends to merge the contiguous ptes hugetlbfs implementation
+>>> of arm64 and riscv.
+>>>
+>>> Both arm64 and riscv support the use of contiguous ptes to map pages that
+>>> are larger than the default page table size, respectively called contpte
+>>> and svnapot.
+>>>
+>>> The riscv implementation differs from the arm64's in that the LSBs of the
+>>> pfn of a svnapot pte are used to store the size of the mapping, allowing
+>>> for future sizes to be added (for now only 64KB is supported). That's an
+>>> issue for the core mm code which expects to find the *real* pfn a pte points
+>>> to. Patch 1 fixes that by always returning svnapot ptes with the real pfn
+>>> and restores the size of the mapping when it is written to a page table.
+>>>
+>>> The following patches are just merges of the 2 different implementations
+>>> that currently exist in arm64 and riscv which are very similar. It paves
+>>> the way to the reuse of the recent contpte THP work by Ryan [1] to avoid
+>>> reimplementing the same in riscv.
+>>
+>> Hi Alexandre,
+>>
+>> I've skimmed through this series and the one that moves contpte. I can see there
+>> is definitely value in sharing the implementation, and the rough shape of things
+>> seems appropriate. I had some minor concerns about making it harder to implement
+>> potential future arm64 errata workarounds but on reflection, most of the
+>> now-shared code is really just wrapping the primitives that are still arch-specific.
+>>
+>> I'm going to need to spend proper time reviewing it to give detailed feedback,
+>> but I'll be out on paternity leave for 3 weeks from end of Monday at the latest.
 > 
->   linux-next git:(heads/next-20240509) ✗ grep -nr round_up drivers | wc
->     730    4261   74775
+> Too bad, I expected to discuss that with you at LSF/MM...But congrats!
+> Hope your wife is fine :)
+
+Thanks! Yes its unfortunate timing - there are a few topics I would have liked
+to get involved with. There's always next year...
+
 > 
->   linux-next git:(heads/next-20240509) ✗ grep -nr round_down drivers | wc
->     226    1293   22194
+>> So realistically I won't be able to do the detailed review until at least the
+>> first week of June.
+>>
+>> Some high level thoughts:
+>>
+>>  - huge_ptep_* functions could be working on different sized huge ptes - arm64
+>> supports contpte, pmd, contpmd and pud. Is keeping them in contpte.c
+>> appropriate?
 > 
->  linux-next git:(heads/next-20240509) ✗ grep -nr DIV_ROUND_CLOSEST
-> drivers | wc
->    1207    7461  111822
-
-Side note, discover `git grep ...`: it's much much faster on Git index,
-than classic one on a working copy.
-
-> so I thought to align with existing naming convention assuming
-> developers are already familiar with this.
+> Hmm indeed, I'll see what I can do.
 > 
-> But if a wider consensus is to go with a newer naming convention then I
-> am open to it, although a challenge there would be to keep it short. For
-> e.g. this one is already 3 words, if we go with more explicit
-> "round_closest_up_pow_2" it looks quite long in my opinion :) .
+>> Perhaps it's better to keep huge_pte and contpte separate? Also, it
+>> only works on arm64 because we can get away with calling the lower-level pte
+>> functions even when the huge_pte is actually a contpmd/pmd/pud, because the
+>> format is the same. That might present challenges to other arches if the format
+>> is different?
+> 
+> Yes, but I think that if that happens, we could get away with it by
+> choosing the right function depending on the size of the mapping?
 
-You need properly name the macros. Again, round_up() / roundup() and
-roundup_pow_of_two() are three _different_ macros, and it's not clear
-why you can't use one of them in your case.
+Yes possibly. One potential future new user of this common code would be arm32
+(arch/arm), which also has the contig bit. But AIUI, the pmd an pte formats are
+quite different. It's likely that arm would want to opt-in to contpte but not
+huge_ptep, so separate selectors may be valuable.
 
-The patch that changes those to a new one are doubtful to begin with.
-I.e. need a careful review on the arithmetics side of the change
-including HW capabilities of handling "closest" results.
+> 
+>>
+>>  - It might be easier to review if the arm64 stuff is first moved (without
+>> changes) then modified to make it suitable for riscv, then for riscv to be
+>> hooked up. At the moment I'm trying to follow all 3 parts per-function.
+> 
+> Ok, let me give it a try during your paternity leave!
 
--- 
-With Best Regards,
-Andy Shevchenko
+Thanks! If it's too difficult then it's not a deal-breaker. Perhaps just an
+initial patch to move the existing arm functions to core-mm without change, then
+all your existing patches on top of that would do the job?
 
+> 
+>>
+>> Thanks,
+>> Ryan
+> 
+> Thanks,
+> 
+> Alex
+> 
+>>
+>>
+>>>
+>>> This patchset was tested by running the libhugetlbfs testsuite with 64KB
+>>> and 2MB pages on both architectures (on a 4KB base page size arm64 kernel).
+>>>
+>>> [1] https://lore.kernel.org/linux-arm-kernel/20240215103205.2607016-1-ryan.roberts@arm.com/
+>>>
+>>> Changes in v2:
+>>>   - Rebase on top of 6.9-rc3
+>>>
+>>> Alexandre Ghiti (9):
+>>>   riscv: Restore the pfn in a NAPOT pte when manipulated by core mm code
+>>>   riscv: Safely remove huge_pte_offset() when manipulating NAPOT ptes
+>>>   mm: Use common huge_ptep_get() function for riscv/arm64
+>>>   mm: Use common set_huge_pte_at() function for riscv/arm64
+>>>   mm: Use common huge_pte_clear() function for riscv/arm64
+>>>   mm: Use common huge_ptep_get_and_clear() function for riscv/arm64
+>>>   mm: Use common huge_ptep_set_access_flags() function for riscv/arm64
+>>>   mm: Use common huge_ptep_set_wrprotect() function for riscv/arm64
+>>>   mm: Use common huge_ptep_clear_flush() function for riscv/arm64
+>>>
+>>>  arch/arm64/Kconfig                  |   1 +
+>>>  arch/arm64/include/asm/pgtable.h    |  56 +++++-
+>>>  arch/arm64/mm/hugetlbpage.c         | 291 +---------------------------
+>>>  arch/riscv/Kconfig                  |   1 +
+>>>  arch/riscv/include/asm/hugetlb.h    |   2 +-
+>>>  arch/riscv/include/asm/pgtable-64.h |  11 ++
+>>>  arch/riscv/include/asm/pgtable.h    | 153 +++++++++++++--
+>>>  arch/riscv/mm/hugetlbpage.c         | 227 ----------------------
+>>>  arch/riscv/mm/pgtable.c             |   6 +-
+>>>  mm/Kconfig                          |   3 +
+>>>  mm/Makefile                         |   1 +
+>>>  mm/contpte.c                        | 272 ++++++++++++++++++++++++++
+>>>  12 files changed, 480 insertions(+), 544 deletions(-)
+>>>  create mode 100644 mm/contpte.c
+>>>
+>>
 
