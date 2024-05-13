@@ -1,115 +1,182 @@
-Received: from mail-oa1-f52.google.com (mail-oa1-f52.google.com [209.85.160.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10olkn2032.outbound.protection.outlook.com [40.92.40.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61397E765
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 20:03:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715630585; cv=none; b=tgUzhJBcYUuFR2NuplNv5TXcCCRAv9sfpspPMhH1oM0XO8WbTIb542tNvsN/8xGAaYa756bWkMLKgoR6X154DXJa8S5G9ukIjifaOqzT9GmRCoZjp0ZMVXOnw5t9QBLKdI1b+AqRgtv4rglkrypfBMVTJsx0TeRLG4VvBQS2DDY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715630585; c=relaxed/simple;
-	bh=s1hXVf6tyL8uq55NXv8OQrk/qgk5wctwVrIENTgbzus=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XEwcMTItx8bbZk8HWmYW/z072GJHMxkoUsRodXpof2UjESNE5yKhfir+5Te6cfZJvSlxoH/O6A4OPBbBpoGTWyH9YHeFNIIluepq47hmIkN1Wx1dg+2G/+qXPPIzlo5m5QjtU4ZpH4OM47n17u2njCAhVm/fSTfb9Qp5w+4h9ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=melexis.com; spf=pass smtp.mailfrom=melexis.com; dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b=RfVuyz35; arc=none smtp.client-ip=209.85.160.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=melexis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=melexis.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D23AB7BB12
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 20:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.40.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715630737; cv=fail; b=MvJS1GlBRJtps4NLNKKugbuBxgrKJtJgWxVVRI3CsxLKHLYXhGu0JN2pg2GeP3+Sfw1R97OY9ZOoLX9OPITaAUJdcJfatc44f24MUZspkrlfp5ZR19gQ333SzSwZjpN4zmlx5W4fmLN4LPcosfsv1M6B8nnCUwyzIES3JKlGBEg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715630737; c=relaxed/simple;
+	bh=WFA8QzbDosjDhfXNaD8S/L2oeOpAQ/spJ5B0elA86Ms=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Z1XVPdA9LxLOSFCQMTgnRYk5zGPjkFAAfAjRkHbTctbKNmWHDW4s+bd+Lh9m9VdVHQV2CDZo/261he3hFUZXhv0cummG0UJYrnZU9QA8T9ncXzEWUCrFt5y4TVo5x4DAptFeVCJFD/9gI5UQk+Xk4YLGCIOpD9vHVgNy5hw1XL8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=S4xW8+Q/; arc=fail smtp.client-ip=40.92.40.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=melexis.com header.i=@melexis.com header.b="RfVuyz35"
-Received: by mail-oa1-f52.google.com with SMTP id 586e51a60fabf-241ad94775eso1439827fac.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 13:03:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=melexis.com; s=google; t=1715630583; x=1716235383; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z/mC8iHyEmlHpwqktNUilmvaxLB5nXIdCTUQODGPwBk=;
-        b=RfVuyz35LfglAVOIwUtsA9iQZYEWDGQTmQEh6h2L4OPk2VqLbrWnDWFrE5heLsGTaJ
-         8mKkQnBoY5rttBzbfPUqmmggKu4gO4QbEcBKcu8zGWtTSuX9Qvj0K9j8rteqlkR1PB6o
-         y9FLJIpN4sBLLxUsMUn6Pcxq3h8CMmyTXRHTlM5uztiYsJSyXfo1O85tmdECBqdVmR+G
-         PtQG4Rkv/jLeVVcZfVfiONnYBlK4Tpjc8GGzK2pnGyUT1DOHDghAGYWJV2PxhiaaK61f
-         24GnvLpCXClUCfAC60XEQ/8JLYLrM9X/uD0FBZ+Py90j+WF73hoXPl5Cc1cAVRYSywaZ
-         9p1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715630583; x=1716235383;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z/mC8iHyEmlHpwqktNUilmvaxLB5nXIdCTUQODGPwBk=;
-        b=scLUVL68WlbJ3nU9OLaPxNEbFMpuLcbdPuAUNEn8dVZWGHzc7A0rQ6gVdR7DsRJR9p
-         ndRml2EYXUjYG2mRd9Uu48P2g/KNq+nr/LBGqwwQ47/q9ckUf02dDgssif4drN5tzKRy
-         BeO0f0YoreEO3+9nnK1XqQURNcKFFljLRNkJNctPuQA1FLWY5ohyH3cE8swNupuVX6VX
-         2qsE9318MTvTXOOLb+XD2ub1s4p8C8BL941bAT2wTcbC+x7jUHf63hrFSBOBo5reruV5
-         DHPIBOIY4RC7mK2GUgM28guwZ/YXXecqRwbDVTyF0KuLUUtDLf71C7eFOi4O3pt7n6fl
-         vKAA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNf70mBnjV4MCHsH2f6GX/zo0ufrFg0jLONPthYzdhc1a7wT3VB8J5Uj/ZPvKLC/V5yHgZ/qebIjhhp5XjXrp61VFGPWOqwkr4eETU
-X-Gm-Message-State: AOJu0YyeS2By94HMcVzrg/1dafNShexWJ3/vDfulfx8GekhN+z3+0ia5
-	juUDLqNiEWIDkT/6fTgZl6cGQdOVzory5eKcA1fbqP2hUpUUOcoCE/RYREeVNe+q1b9xv77M7K5
-	ru6vq8Gf+CA5K1nfBpqrRrPPUG0opJ6mU0MXa
-X-Google-Smtp-Source: AGHT+IHMvY4NwUqw059de60Gzl/JLpgWiP6Cdv3/1rHDK4v1S2yPxePJas+PW6SFNOzXbZEEw2kevniOpnmdQuaVQcA=
-X-Received: by 2002:a05:6871:b27:b0:244:bb9e:bdbc with SMTP id
- 586e51a60fabf-244bb9ed677mr6392251fac.10.1715630582870; Mon, 13 May 2024
- 13:03:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="S4xW8+Q/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ASIHy/Lxna9t0obTIXeuCMHj1O8sBc5IjuXfomnoaay0DhxfNeTDlINL7YA9YIv66hl5F8CapBM1biOxp+gQC3MVolUIeA7RPD3ExIOPY40Hhnq0gtDjKuKyv65UvzwhtJzM9BxseI3Jua8+KIrN1Hzns7wTQavEih4Pjfh9onHjQ1XRJEjoot1M49es6EoTlBAjaHNkPvt4Kcv/Zip2feXmHKs72Afw5XsT0JD6Wj7S1V/17nIxNlepsJ6UUjQMfUZGTqSoZqglOmYY5TVhWN4cH100GYwK1SjaX4v5Woe6rBfQwRYTvrj3Uw4Ki711QVWpff7o3qdtzdCSpRJWSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=12jBG8GeRw0MxBU1B8TsCob15P0mIFrddKloaOn0CXA=;
+ b=TQ1o8GjmpSUMZKkGBikZwoY3uVTxXR2jHTic5j8r+C6pfFln2UAlAWmvMG3FHZ2PqYBN2lffBef6KBG3iksHOYQa9jPzmrcRUAFvMHHny0H44w1Lsqbl9+uBV3xUjbeRkOJ86GI90L9JTp/I/+RFAd6Hg9wR+BtnxTFya4Eq0nzyAqNLS6daxfTtbkusdO4KQL6FwpsqF2TcAhiCvSBSInbZrKhvBzrEpU6S1oZyVYOvZJp4smcJsNglw6hPajC3V8C7DzXhgmr68I7EiFu8O/DphbTuD01bd/TzHWuOTw/UiJ9+Ww2zfHcNzvOObBFSrstFHA+Px5sJfVx17cMZEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=12jBG8GeRw0MxBU1B8TsCob15P0mIFrddKloaOn0CXA=;
+ b=S4xW8+Q/LVRU3HKF+t7nXsYyYFE5R5utkE80GjtdTrnFsmi5lmKAP1hiGn9CQI4zFPPURtXFdzxcpQlyOnKUkgsspcPziH+grrNA7R/Wgwgv6FQtV6VeH9yR3BMdcgYZRdSFMWqeLdxBllIrSRco2hCW8Ei4I+mWasGN3BhpPKf0vHYvDIMDitiXhYS2rva2WcrF3ckRxzcdqu8P0osBZIske1umQVhi96cALDjVErqblR3+iWy7TLZ6mP8wDCOdUMs6WW428aolSAxvLLlWU6fNg62kIcNXsED2621qLI4goR7H4YSJtzbEtnrno36zTVNHjtEXNYaQTMGFbK5IfA==
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
+ by CY8PR02MB9542.namprd02.prod.outlook.com (2603:10b6:930:78::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Mon, 13 May
+ 2024 20:05:32 +0000
+Received: from SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
+ ([fe80::cedd:1e64:8f61:b9df%2]) with mapi id 15.20.7544.052; Mon, 13 May 2024
+ 20:05:31 +0000
+From: Michael Kelley <mhklinux@outlook.com>
+To: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "joro@8bytes.org"
+	<joro@8bytes.org>
+CC: "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+	"vasant.hegde@amd.com" <vasant.hegde@amd.com>, "michael.roth@amd.com"
+	<michael.roth@amd.com>, "jon.grimm@amd.com" <jon.grimm@amd.com>,
+	"rientjes@google.com" <rientjes@google.com>
+Subject: RE: [PATCH 0/9] iommu/amd: Add AMD IOMMU emulation support for
+ SEV-SNP guest kernel
+Thread-Topic: [PATCH 0/9] iommu/amd: Add AMD IOMMU emulation support for
+ SEV-SNP guest kernel
+Thread-Index: AQHamxKg8G3tDdy39E2idvNw1Py2z7GVp95w
+Date: Mon, 13 May 2024 20:05:31 +0000
+Message-ID:
+ <SN6PR02MB4157E795C636EBE75CC806A1D4E22@SN6PR02MB4157.namprd02.prod.outlook.com>
+References: <20240430152430.4245-1-suravee.suthikulpanit@amd.com>
+In-Reply-To: <20240430152430.4245-1-suravee.suthikulpanit@amd.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-tmn: [Vq07iy0/LrUcj2bJVqhmCeLlQzacMhBo]
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CY8PR02MB9542:EE_
+x-ms-office365-filtering-correlation-id: 9d1bc4ee-85b2-443d-7627-08dc73880b10
+x-microsoft-antispam:
+ BCL:0;ARA:14566002|461199019|1602099003|102099023|440099019|3412199016;
+x-microsoft-antispam-message-info:
+ 9nLbprf/QGL/Rjo3T9eEwLxYcoOdUGiH2vhLa8MlEuiOkotZuc2W/vTu9C8GoCmTvuwm9k0s+3J77vwcYmic4kqWLPKsD0mE9juHlhDouJabiWX2yIxOsM3EiY0Ee9BocVhzJXgLutFuWQZJ+ljH7LNt509fmzIQvbcnpPWc9we4BG6IwrUUY03rXx+rur8uTnH5fql+WZgSV1p6sr/a//Id6zQ4JgoLH1+TJnY2LY5ZRK9olYXVCuRJ7GtpXihUJ8lBudeMisi0VRbfXhlkBqty5TSfHsLxhUoi0K22Tgb3XkcoSa+l9oON8cGYB4Cu7Ya8lCNxkFPKPCEGr4q2etgdloZTNFU+GdquZoP23+9uO1jM/GSbk4i79j9yzgiYU8SOa52uoiU7qbxKnU06UVCBr+HvQ9PTIuzavzNOhEgnnQCAyuHs0Ci3/EwGZrW+0Rm+go9+zniE6S1Kup0tE4D+UCuFyf2DBRgHcA8PF5SWMprySRaoC2uzzHAj5mpd4LihT9PBBjyi0L856tAlvmQBmjZdhGLIxff0apoWqjLk8ZXjHguQTktHw8HVfblRFGHDMJvSLqAOQKL2FWto6zpRHqnJuo2/hgjbLBR14pRpdz1PkEVPgpAltG9m2bl+yCqLPP4MtuvBi/qYyxahLL81HokjppowSVUHzbhv0yc=
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?BnRaeGBrw04GIJBYlbHlbXPKyBw0CDFGzRB/dBGn7qx9BZ6VagTSvLcWUUGx?=
+ =?us-ascii?Q?WBR6BOaT4vLA7wo6Mk2jOAEoYdzzzY+HH6j/83LqKY2ypxz2GB6uvEWOc5Q1?=
+ =?us-ascii?Q?ihMLWI4BHvdxNXjLDSTJpUcx2wQNzJCRyCx2FlPYqq6E+OB7sqnj8FI5vpDT?=
+ =?us-ascii?Q?ccktvCEQUQBPJhzoIqQigwq/krDto3KxP9ozWCmUq8TCmNMAnXszGFjd8aUf?=
+ =?us-ascii?Q?xAr6OL8iGYnF14sDNL/c2iZlfxC0jLA3Y9cAHz15OiJ6rclUu7DQNaYcU0W9?=
+ =?us-ascii?Q?Z29dQ+RoWRwZcjFqCEbWN8XOwy8dRyjHQVVtGw6/kgSYUVj6K7YKY/a1NAY6?=
+ =?us-ascii?Q?M0N6JV4GW16Up3Q7TxyZc2xZ4SOVyET6kZyJfFE3mLuUXXAuWjmd+1jQGuPK?=
+ =?us-ascii?Q?40rTjdT/j8kJ/2x+s4XN/GD0SuvBFjvoyuEJNwwQ/+Tj+NPXxLhaevYPnUeO?=
+ =?us-ascii?Q?tcGOjoUQtqyEQy3UxL0PkD1JNOjDSSqVdZgQPNSVTRhPvb35SgqYeKXCjQ7s?=
+ =?us-ascii?Q?0d8J0sQ3jUlyHI/SLpLo2JMHGJd0BDPs9jkysHJ02Djd1zZW6umGoL4nPWIK?=
+ =?us-ascii?Q?/X/ZjtNT39qxn3qBG/zWynqrJ6MbBMFDY9rt5uXpr7F2b8DUgmKePmlGDVja?=
+ =?us-ascii?Q?A5+ZMc6Ncl3uiFetxnnoFjKUPAgLjFQGZ9RTJ7oXjCXJkOmmHrczy7ZQu8dZ?=
+ =?us-ascii?Q?6Z2lVRz8jH+XS77PnNsx5WBH7AFSUPELyPo+L11Rj0hetnzfqBTI3QSA8U4i?=
+ =?us-ascii?Q?4TsshbFmhArq+OlzQODy/6AoF+pajHC2SjwRsoET13lLHom0fkqb6UCUlmRE?=
+ =?us-ascii?Q?/Zf/TPP+znaYlBJ156Y+sMPnz+Hszx4nCfC3eue5QqNviJgN/M8Kta4W94Mt?=
+ =?us-ascii?Q?EhIULM1HUTQmQ34nE4FaR3E4eD9zkBnF2gxIuA15tayNNADSdqd9DE9M0Gjb?=
+ =?us-ascii?Q?HGIS5RTtEDJ1ovh3u7fWr8cN7YKuUYwWfsCWiz/VqNqYaD6n+AahBeyvLjd6?=
+ =?us-ascii?Q?5voSxx3m0X4iHZd33PsUI4L+D82bq1LKYuq0zsVT8l/TreuNk4KdULfQFmEA?=
+ =?us-ascii?Q?6m5+XW29WZq9bOFWzV3oA9vgQWQPZd1jguIdn8POkqaQJMiTaa75RUzSYVEx?=
+ =?us-ascii?Q?xhbZikIJKAq7YtKi4gFv+09bo3tVYZ+J4IPhkzP4uxjsNA4TeSngS8bPcaG7?=
+ =?us-ascii?Q?OtC9u1cBwX+dazSEqy0drgO/ugWFauXv+rambS6CWy0QxAOAuRyeI4nmEt4?=
+ =?us-ascii?Q?=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240513184514.3200222-1-harshit.m.mogalapalli@oracle.com>
-In-Reply-To: <20240513184514.3200222-1-harshit.m.mogalapalli@oracle.com>
-From: Crt Mori <cmo@melexis.com>
-Date: Mon, 13 May 2024 22:02:26 +0200
-Message-ID: <CAKv63uvAe=RkZ6ytWfNkM5exy5ys5n2NwcJER=VMVAP+61-+rw@mail.gmail.com>
-Subject: Re: [PATCH] iio: temperature: mlx90635: Fix ERR_PTR dereference in mlx90635_probe()
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dan.carpenter@linaro.org, 
-	kernel-janitors@vger.kernel.org, error27@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d1bc4ee-85b2-443d-7627-08dc73880b10
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 May 2024 20:05:31.7758
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR02MB9542
 
-Hi,
-I agree it is is copy-paste error. Minor remark below and a few typo
-fixes in commit message. Thanks for your contribution.
+From: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com> Sent: Tuesday, =
+April 30, 2024 8:24 AM
+>=20
+> To boot a VM w/ x2APIC ID > 255, guest interrupt remapping emulation
+> is required.
 
-Reviewed-by: Crt Mori<cmo@melexis.com>
+Top-level question:  Is there a reason the MSI extended destination ID mech=
+anism is
+insufficient to avoid the need for interrupt remapping?  (see function poin=
+ter
+"msi_ext_dest_id").  I'm unclear on whether it is or not. If it is not suff=
+icient, perhaps
+you could explain why.
 
-On Mon, 13 May 2024 at 20:47, Harshit Mogalapalli
-<harshit.m.mogalapalli@oracle.com> wrote:
->
-> When devm_regmap_init_i2c() fails, ragmap_ee could be error pointer,
-When devm_regmap_init_i2c() fails, regmap_ee could be error pointer,
+> For SEV guest, this can be achieved using an emulated
+> AMD IOMMU.
 
-> instead of checking for IS_ERR(ragmap_ee), regmap is checked which looks
-instead of checking for IS_ERR(regmap_ee), regmap is checked which looks
-> like a copy paste error.
->
-> Fixes: a1d1ba5e1c28 ("iio: temperature: mlx90635 MLX90635 IR Temperature sensor")
-> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-> ---
-> This is found using smatch, only compile tested.
-> ---
->  drivers/iio/temperature/mlx90635.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/iio/temperature/mlx90635.c b/drivers/iio/temperature/mlx90635.c
-> index 1f5c962c1818..2b61489d5ee0 100644
-> --- a/drivers/iio/temperature/mlx90635.c
-> +++ b/drivers/iio/temperature/mlx90635.c
-> @@ -947,8 +947,8 @@ static int mlx90635_probe(struct i2c_client *client)
->                                      "failed to allocate regmap\n");
->
->         regmap_ee = devm_regmap_init_i2c(client, &mlx90635_regmap_ee);
-> -       if (IS_ERR(regmap))
-> -               return dev_err_probe(&client->dev, PTR_ERR(regmap),
-> +       if (IS_ERR(regmap_ee))
-> +               return dev_err_probe(&client->dev, PTR_ERR(regmap_ee),
->                                      "failed to allocate regmap\n");
+You've used "SEV" here and in several other places.  I think you intend thi=
+s to be
+the more specific "SEV-SNP", and exclude SEV and SEV-ES. For avoid any conf=
+usion,
+I'd suggest using "SEV-SNP" throughout if that's what you mean.
 
-Maybe fix her would also be to this regmap error message to include
-regmap EEPROM?
+Michael
 
->
->         mlx90635 = iio_priv(indio_dev);
+>=20
+> In order to support emulated AMD IOMMU in SEV guest, memory pages used
+> by the guest IOMMU data structures must be in decrypted mode. Also GPAs
+> for these pages must not have the memory encryption bit set.
+>=20
+> Testing:
+>   - Booting Linux SEV guest w/ 512 vcpus w/ QEMU emulated amd-iommu with
+>     qemu-system-x86_64 option: -device amd-iommu,intremap=3Don,xtsup=3Don
+>     (emulated devices only for now).
+>=20
+> GIT repos:
+> * https://github.com/AMDESE/linux-iommu/tree/iommu_next_sev-iommu-v1
+>=20
+> Thanks,
+> Suravee
+>=20
+> Suravee Suthikulpanit (9):
+>   iommu/amd: Introduce helper functions for managing IOMMU memory
+>   iommu/amd: Convert Device Table pointer to use struct amd_iommu_mem
+>   iommu/amd: Convert Command Buffer pointer to use struct amd_iommu_mem
+>   iommu/amd: Convert Completion-Wait Semaphore pointer to use struct
+>     amd_iommu_mem
+>   iommu/amd: Convert Event Log pointer to use struct amd_iommu_mem
+>   iommu/amd: Convert PPR Log pointer to use the struct amd_iommu_mem
+>   iommu/amd: Remove iommu_alloc_4k_pages() helper function
+>   iommu/amd: Decrypt interrupt remapping table for AMD IOMMU emulation
+>     in SEV guest
+>   iommu/amd: Set default domain to IDENTITY_DOMAIN when running in SEV
+>     guest
+>=20
+>  drivers/iommu/amd/amd_iommu.h       |  31 +++++-
+>  drivers/iommu/amd/amd_iommu_types.h |  28 ++++--
+>  drivers/iommu/amd/init.c            | 144 +++++++++++++++-------------
+>  drivers/iommu/amd/iommu.c           | 133 +++++++++++++++++++------
+>  drivers/iommu/amd/ppr.c             |  22 +++--
+>  5 files changed, 246 insertions(+), 112 deletions(-)
+>=20
 > --
-> 2.39.3
->
+> 2.34.1
+>=20
+
