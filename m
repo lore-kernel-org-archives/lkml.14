@@ -1,87 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C69141CA89;
-	Mon, 13 May 2024 16:46:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B1C1B815
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 16:47:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715618807; cv=none; b=nI4BNRiCmZ5Ziewxg4M/+lWInvTJpz3uTyghoMrd4sYC8sIFEN2mpVKMYkrye5ZcCBQ7MphECqqZi5jLNpXZ6U0rwp5mcXG6JlK1u8ZE13cRctk1e5gOO8d8jydPx54vNs7DBiBOcYa8VPKmiSDv8FZIJUhjfykoJW1A4gR4UGE=
+	t=1715618875; cv=none; b=QtS8ru0g5j0MpPeY1SsCD9knR4KAAuQRanANQfYf45Ja0Tci918ZhTsRXKd6WLwZ7dPytqeBhaCgLPG8vVQKh/W+wPSWJtWzxKideehYloOT6QT+jko9QTBqStT3hu8QumrIyyURLp6SNKysOlZQAAO0QVIrjk5VxwwhJaQeHw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715618807; c=relaxed/simple;
-	bh=MkWI0eSVp+S5LEhfZiAhhvdMwAvSY+rnKHO51GHLaDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gmCwHYrR33rL2vRyps4H74WhLYBqrn+qSQHFmWsJLMzfYqY0GNUBhsOpXoYdxhVLnHyxew4N9tclUYY7EenlOmNyF3x1A2X48UQCv6+YIJOiQDaw30L06A+QB4Gj7vuDSEtqbu3crcgb5D3v83XWsaNlRf+wXYDomnOyDVMKH7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LbAhzog5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715618875; c=relaxed/simple;
+	bh=s8IABxquNN82B4Xu9DV5YC8zIRR2xm8Fe3dsJQpGZVM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G35a6FnDz3ASeXI2xrMOPgVedxBQReaKjq55wZ2gEAwBqYZOSWp/or53v0AEE0n8yFp+dwiAcOz0vstnHbpqm86F9phK+xYuPyr5sjKe4GNjesM2ALjdoQ41QUSM9Dw85rs0qxE0j4ptOHkIWzfr2NvYm7Vy42SuY8UrMSYd+vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=CT6uWHye; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LbAhzog5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 449A7C113CC;
-	Mon, 13 May 2024 16:46:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715618807;
-	bh=MkWI0eSVp+S5LEhfZiAhhvdMwAvSY+rnKHO51GHLaDs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=LbAhzog5jaflLHu4HNwazc1VclE3Tv/XMW70rUi15/HyQf0RCFv8uTnnHQPOPw1ye
-	 HHchU9WY1h7qBwDJypMB90uNAAbIQrjRyjCwKp+/CI+lIHB/fa/map64Yh5z8gKXkL
-	 PCCCKv6WbMG1QSWGUcQ/nSsV7OVKZ+guEoRyz/UB49D9AWGGwSyrTOrRUHy9KVwOy7
-	 Y883rhR5lHaS2E9MH/tzfbm0FfmvGVEYuym9pupC+PKx8fcqb1p+eU5ZiRRHg4IsJ0
-	 d3esvv17JzNgLhq48kEtrRBKUl6xpRnCUWBW5wg2G9qc9KMMZxv46jVuaYnAb8llvk
-	 kxIJ4VICPxOyQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 3F7BFCE098A; Mon, 13 May 2024 09:46:45 -0700 (PDT)
-Date: Mon, 13 May 2024 09:46:45 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>, RCU <rcu@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Johannes Berg <johannes.berg@intel.com>,
-	Nikita Kiryushin <kiryushin@ancud.ru>, linke li <lilinke99@qq.com>,
-	Zqiang <qiang.zhang1211@gmail.com>,
-	Zenghui Yu <zenghui.yu@linux.dev>,
-	Neeraj upadhyay <Neeraj.Upadhyay@amd.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Joel Fernandes <joel@joelfernandes.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Oleksiy Avramchenko <oleksiy.avramchenko@sony.com>
-Subject: Re: [GIT PULL] RCU changes for v6.10
-Message-ID: <e35bf672-88d9-4a00-8237-99298392e55f@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240510183049.312477-1-urezki@gmail.com>
- <CAHk-=wh=HgEeyKVKGXTKiLdhvs-5t9pFxUkK6ED+zsby=quBdA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="CT6uWHye"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2b5f3e20615so4055104a91.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 09:47:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1715618873; x=1716223673; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s8IABxquNN82B4Xu9DV5YC8zIRR2xm8Fe3dsJQpGZVM=;
+        b=CT6uWHyeibfKOwqMaVBaC0WmPFy/VE5zWHqUnDudBURyGPEvgO2n7mzi039LivJiQJ
+         dqG9IzHMPxTVZwcslhmSw0cCXxHllbZQbjIbSAdOwGRjP5bgtEBw9J7UJfSBsrEtFvma
+         raftasaNJjXwjGgsWsUWkzC2jBIWu2zAwsZn8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715618873; x=1716223673;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=s8IABxquNN82B4Xu9DV5YC8zIRR2xm8Fe3dsJQpGZVM=;
+        b=quDsjz1OfDFv+QodSb2o04r2TEIDmDC8K1SRv2rXh5pwAyA8wcY5ogjyXhgSdAiV8/
+         17oK0zjisxLhAkDAq6ePpFFD6kKz4LhYXl9kpT0Z6RJZ74XwNaQUt1h/6hrszcXbOgiO
+         SWRZDj01Vpej8deGL3692K2LoYEMil6z49PZYHKjKEXrW2WQ4UqLegHeKSQjKQF+LFv9
+         U/+1Lq2JntLAjljVTiL5NQHJYhOGKKsLqJAhBbJ2BuSozYVdCev9nBb34VPNyDfCKNEC
+         BcAgIVd2r9w5to9floiTPqvfaWqIIRdYdIHQJVoluyxySbCCy76yiJs0pCGJSwc1gsVv
+         AfAA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7oq0Yy3g4EjU/R72vFQhz/YP9uEMknwiPBANAOzeHbGqaYU4IuB0/xhxEldwn+QN05QodRaO5gGYXIRpHfujyzhsLRf5oglG0qXuT
+X-Gm-Message-State: AOJu0YyqoRGIEdrQ3rtmFFSJItBnAgdCQa20lnaghlXjpC0VVz08Uryr
+	yNUdMd6T/KGNuuy9r6Ycc2OmqERQ62God0mmeBxiEaMCjlRFdlvgAkLvUvnTrDu/zYxY9qnHsD8
+	HcZpJkypuqDW/4qmFNEHQxeeoV9z9LgwUqsmm
+X-Google-Smtp-Source: AGHT+IGLX8YyMQWNC2w5RpKY7qMMS2Qj8enHy3NsQmRbp9Nky6fT7t9O5Kidzevyld4hoT1P6kK1OijrTCyqfgIWG1g=
+X-Received: by 2002:a17:90a:df91:b0:2b6:228a:213a with SMTP id
+ 98e67ed59e1d1-2b6cc14b7d5mr8862682a91.4.1715618873160; Mon, 13 May 2024
+ 09:47:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh=HgEeyKVKGXTKiLdhvs-5t9pFxUkK6ED+zsby=quBdA@mail.gmail.com>
+References: <20240510000331.154486-3-jitendra.vegiraju@broadcom.com>
+ <20240511015924.41457-1-jitendra.vegiraju@broadcom.com> <20240510190830.54671849@kernel.org>
+In-Reply-To: <20240510190830.54671849@kernel.org>
+From: Jitendra Vegiraju <jitendra.vegiraju@broadcom.com>
+Date: Mon, 13 May 2024 09:47:41 -0700
+Message-ID: <CAMdnO-JUKU_f9-weHpkOH=NTpp-ZV1mm6rvp0r91kz3M844tHA@mail.gmail.com>
+Subject: Re: [PATCH v2, net-next, 2/2] net: stmmac: PCI driver for BCM8958X SoC
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com, 
+	pabeni@redhat.com, bcm-kernel-feedback-list@broadcom.com, 
+	alexandre.torgue@foss.st.com, joabreu@synopsys.com, mcoquelin.stm32@gmail.com, 
+	richardcochran@gmail.com, linux-kernel@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 13, 2024 at 09:38:11AM -0700, Linus Torvalds wrote:
-> [ I should have reacted to this earlier, but I just put all the "for
-> 6.10" pull requests in the queue without looking closer ]
-> 
-> On Fri, 10 May 2024 at 11:30, Uladzislau Rezki (Sony) <urezki@gmail.com> wrote:
-> >
-> > Please pull the latest RCU git tree from:
-> >
-> > https://github.com/urezki/linux.git tags/rcu.next.v6.10
-> 
-> Hmm. I don't have your pgp key to check, but I do see that it's in the
-> kernel.org repo of pgp keys so I know where to get it.
-> 
-> HOWEVER - importantly - I also don't find any handoff emails from Paul
-> or Boqun giving a heads up that I should expect pull requests from
-> others.
-> 
-> Put another way: I really want to see proper heads-up and "yes, this
-> was all intentional, nothing odd going on" when seeing pull requests
-> from new people to core areas.
+Sorry, I will review the process before sending next patch update.
+Thank you for the link.
 
-My bad, and apologies!
-
-Yes, this is intentional, nothing odd is going on, and Uladzislau's pull
-request is legitimate.
-
-							Thanx, Paul
+On Fri, May 10, 2024 at 7:08=E2=80=AFPM Jakub Kicinski <kuba@kernel.org> wr=
+ote:
+>
+> On Fri, 10 May 2024 18:59:24 -0700 Jitendra Vegiraju wrote:
+> > v2: code cleanup to address patchwork reports.
+>
+> Please read:
+>
+> https://www.kernel.org/doc/html/next/process/maintainer-netdev.html
