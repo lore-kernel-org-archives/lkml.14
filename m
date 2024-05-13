@@ -1,82 +1,90 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D2C55695
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 15:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03EE457CA7
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 15:46:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715615131; cv=none; b=euU8/g8xOJZk6aJWC7u61vL8dIJ/xIWPKwJPCDe/U/f606mMbCWqQpkvVG8HAfoAIS3pW3PPsTAjcKVrpg98i45t+1OmnKLr9wLa7DmwJ6VdjBYQk89H+bg+Kx01vqEW49xt2SctRCno7ArVzmA8AfTGPfR1dXauxYHcQH5ChIw=
+	t=1715615201; cv=none; b=YQmH+CVYLuncCe3JUCATY4447LUqX3uWxWarx677anbEAltG3UlAhXtheq+5d2W3B9zlNKVcSd/ERCaCkYNMwLJWrG1aHvZFdXlwRPLaQ4sXjINncN/q2wWo2DCvbklvFOBRcfmlDlLclIi+u+8MbbFjNKNd9cWnz3m2xB2NRpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715615131; c=relaxed/simple;
-	bh=5S6kuG3VLf8S8sXUIaE2HzlJHcP1jTSqiOwWEckVbbE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GmitpHInnHN6CXb+rzRzXJqrJSmfgjdjGbVqQoGVBKYijXjuTo2jb4nKUHFTKF0QegEVOSCBYrqv9ub7FGvdtNg9R0CQPf5Dck+o2LQXrs9OtKFZSTGMy4u5TIbgw17PqNLCXSQMwCwude+I6lo7sLEfeql/yL+OyklCkw85dUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iOEtme0w; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715615201; c=relaxed/simple;
+	bh=c+2oQsWNq3Aqv4I7Lpotn6eMagm48oS8hV+rQgU/ngA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=M66YTuLX8ywyH8OUHRxrVp/vHZuCi34zCahp1Vy/KZAysIpkI2Nf0F2+4HLkCx/z+ehE9EqzjL0CFclUbEDv/sNpkP4ZljtUhqYfWlv0TYa2V1ofh8EYiMUwFCe+Pbdjec0NcwfylZRFeeykLyhfKy261cDoa0oCqcusWac4YWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com; spf=none smtp.mailfrom=toblux.com; dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b=WDMGE6gS; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toblux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toblux.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOEtme0w"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2df848f9325so57456251fa.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:45:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=toblux-com.20230601.gappssmtp.com header.i=@toblux-com.20230601.gappssmtp.com header.b="WDMGE6gS"
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2e576057c2bso32360331fa.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:46:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715615128; x=1716219928; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bDk9NS1x1gDHm5igG5CxTgjH+7qMZP0gDN2Ciqlm/w0=;
-        b=iOEtme0w6MVNU/kn6VKPyxEwqbGngF/SokA/xHmHR/Qilz1Wmhx/nN1LawQmCEKVpw
-         PVw4CNQM/+uYqrMVMGtzMx9FKV193wronYwrO8Sx7XDZ8YehuBWTPP8i5V6xPhEAjD2Z
-         4Y8Pa02v+F+CrId6vq3Hv7Lc/R+w3n1mqal4eKpPJWF97MFmWRuv2oTl02Fz97ggBzpm
-         lP3IBxZNyosQKwIdXg0wFTqwp5vIWmy/BLktBpERP5s0DLHs4S/uQ6Irnrnh+b1RQRth
-         0+DvbKMLLGyNyScFrimIheMszUSmZs4+wBEsblgVnJOPhBGMdTCs9fuKue8YrWuZctE0
-         6fGA==
+        d=toblux-com.20230601.gappssmtp.com; s=20230601; t=1715615198; x=1716219998; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yuVG90NynmI1kwhRkYjh8vkQweVo8xcJvLui61n/z84=;
+        b=WDMGE6gSOCRZE3Ch5PP7wF1IEl7GFtG+Z9XOjfotk5diWFKgxWXIAWEmblEspOwrWA
+         GnLe6p99UA9ugj3SK2Iy0e8vkzfOlAUxHlH7REPp2caHkIg0eFl/sXL/11RVVhcFHVA7
+         626HG1S8LTXLbjXvELwP2siqXyn75iuMPKml0lkWZP9OEEQs6S93T9tWx2vLykZ3drKu
+         gIVMG25Plg+k1Tx/1oHbEC+Xd5cQ+75BmPVQ42aTvrBrUIuA/Zjqnd323BZqV+M2KNvs
+         P+m3EuEpci80HD9fQivDsLXCvgFrzwHm2hC75FVIdG8PhTnc9SmLbLB2o3Hn+gZhan9n
+         jhfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715615128; x=1716219928;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bDk9NS1x1gDHm5igG5CxTgjH+7qMZP0gDN2Ciqlm/w0=;
-        b=b3KnpOGl6Hv2chHvT1B4viTKkQwP9Q5lIBIVJworS1EJy1sfSBkiMePK/If8lUL6uR
-         ng8uz4zVh0qw2kRuhWKWJljtND6O+XCm2qaDOCcf4Zr+z+m5K7vImwja+kCrZ5B9iZpZ
-         ciZNJ43C/oBuEybF1ApFoyV3sJ+gPXDCR2RXwQdqkkZMMevw9gvs0beE3EuXjCkdTiYO
-         I1DgIw1ytZoxJ6q2jKLZsLGsQO1hq+clcxG+NwxXCIiuwrdfgp5enEMMT4VdB1EmdCCw
-         e+iMPqphShudXt2EA/qrekd5mDUd37DcHg9dyGlnuTzOrJx5Dyy+X+7W0HmnrESsgDe6
-         l3jg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEWCEoRgsmhsGxNIHDfmUWk9iGHzvSPUiWWv5H0q/ay54RI/tkcDWth60XPTBQnC85KdJHtcpqJZEEgtLqxjl7M+TcEWxKwBIJvM4W
-X-Gm-Message-State: AOJu0YxhOuB5Yf6LmsuGzu7/6UzFmZsZm432/JYg/GLNOjbrs/QdcqWN
-	T3BgDvLVwz8/YGg6AwoYbyl4NBiMmrBmSn8X7yi1ahYu7KKOJPeoCFDqiHT+SxhPJSYlIdXJ0EW
-	hqS8+mm126nVaS4dy4MPDguhjP6I=
-X-Google-Smtp-Source: AGHT+IHQwnzhTPPIaUiSlkRTMgvdZKcG6Iqwi2h70ikl2XHsoI59tI3a5K7S+7FJ9UG5xTW/4UthZVCaFhkahT+oyFQ=
-X-Received: by 2002:a2e:2203:0:b0:2e4:14a0:4d15 with SMTP id
- 38308e7fff4ca-2e5204b1e41mr70681241fa.51.1715615127523; Mon, 13 May 2024
- 08:45:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715615198; x=1716219998;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yuVG90NynmI1kwhRkYjh8vkQweVo8xcJvLui61n/z84=;
+        b=HSUF6Krm74FppEl/o+5tEzQwd4ni0kk7RO1LcZsqRKOpTw/Y0WL6O26Xa/bA63Sdk9
+         GJvUOCHSStHh8q/VgMgHKCMFjUWlOiY8KRlDObcu4kuXPdKP1BLbIQ9dOldhdtVMoBTe
+         pX9xpIOsEVUqz57Nk6bQphIks9Q+78u+hCbLXUxoLQ7ALzpg1BTIXE7NabGIpHQ3gzUc
+         smQrtIhTgbLpSmftC4YxGUUgDLC4aCavJ5nt/eWarKg7dK7Htp5HmpDaw8A1Ojq02i5/
+         Lkwv49MTWd5m/CejIVU9AEqIwkkDEMv76JtdDIuScZG5N99rJqtK8vw/dEvWUmA9U4Td
+         IIEw==
+X-Gm-Message-State: AOJu0YwObKu3n02JKwN56u10rL3QbRfNAh8PVSWCMLG1Qlk6yAlRWEmw
+	d8n+jvG2fCu+djH0jvN9wC2MAqgHTCmcpsWaMoh6Y5aUkwFj/bZc3uhL7BP4wV4=
+X-Google-Smtp-Source: AGHT+IHox5zUZVsU5l4v1h5SltLOyIORY6g5v5FqoUKwpFMQjSqu8Ql3bjmUtKQSYqWeSRsyRa73lA==
+X-Received: by 2002:a2e:461a:0:b0:2e5:2414:a205 with SMTP id 38308e7fff4ca-2e52414a255mr70941681fa.27.1715615198036;
+        Mon, 13 May 2024 08:46:38 -0700 (PDT)
+Received: from fedora.fritz.box (aftr-62-216-208-100.dynamic.mnet-online.de. [62.216.208.100])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5735a2490casm4923002a12.32.2024.05.13.08.46.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 08:46:37 -0700 (PDT)
+From: Thorsten Blum <thorsten.blum@toblux.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org,
+	Thorsten Blum <thorsten.blum@toblux.com>
+Subject: [PATCH] w1: Fix number of bytes in error message
+Date: Mon, 13 May 2024 17:43:56 +0200
+Message-ID: <20240513154354.185974-3-thorsten.blum@toblux.com>
+X-Mailer: git-send-email 2.45.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHx5RXBfazB62qpbGGK3_YjwCFbiJbEXrgo88V6qHFdTW1CdRQ@mail.gmail.com>
- <338daebd-b4af-4a0c-951a-ad7f86dc4646@gmail.com> <CAHx5RXAOKBGXRgC8pqEyY3MZGXxj0-vrwnqg_WZqKreYp18dAg@mail.gmail.com>
- <7efffaa0-6330-4b01-b3d2-63eb063cbbb0@gmail.com>
-In-Reply-To: <7efffaa0-6330-4b01-b3d2-63eb063cbbb0@gmail.com>
-From: Stephen Langstaff <stephenlangstaff1@gmail.com>
-Date: Mon, 13 May 2024 16:45:16 +0100
-Message-ID: <CAHx5RXD8qFmbEytrPcd40Pj0VRo7uOvZjucrMj6Xxqw73YyS1Q@mail.gmail.com>
-Subject: Re: drivers/net/dsa/dsa_loop_bdinfo.c build problems
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: andrew@lunn.ch, linux-kernel@vger.kernel.org, 
-	"OlteanV@gmail.com" <OlteanV@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, May 13, 2024 at 4:40=E2=80=AFPM Florian Fainelli <f.fainelli@gmail.=
-com> wrote:
-> The Makefile has this:
->
-> obj-$(CONFIG_FIXED_PHY)         +=3D dsa_loop_bdinfo.o
->
-> so it follows the value of CONFIG_FIXED_PHY, what is this configuration
-> symbol is to in your kernel configuration?
+Fix the number of bytes that failed to be allocated for a new w1 device.
 
-CONFIG_FIXED_PHY=3Dy
+Signed-off-by: Thorsten Blum <thorsten.blum@toblux.com>
+---
+ drivers/w1/w1_int.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/w1/w1_int.c b/drivers/w1/w1_int.c
+index 3a71c5eb2f83..677e7167806c 100644
+--- a/drivers/w1/w1_int.c
++++ b/drivers/w1/w1_int.c
+@@ -34,7 +34,7 @@ static struct w1_master *w1_alloc_dev(u32 id, int slave_count, int slave_ttl,
+ 	dev = kzalloc(sizeof(struct w1_master) + sizeof(struct w1_bus_master), GFP_KERNEL);
+ 	if (!dev) {
+ 		pr_err("Failed to allocate %zd bytes for new w1 device.\n",
+-			sizeof(struct w1_master));
++			sizeof(struct w1_master) + sizeof(struct w1_bus_master));
+ 		return NULL;
+ 	}
+ 
+-- 
+2.45.0
+
