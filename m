@@ -1,154 +1,151 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66B9639FD0
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 18:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2EA137153
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 18:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715625237; cv=none; b=VF7C1FeM/yl/kxcx77ce4Tuw3yIhJHWHgiWWlzPpI5SQweL4p7DJKKHnBbzAT8WSzdQwrYGMplk8pAQhygzzxrRn4NHIF/MoIdjRy7fFS5VrWKwvoy/GpjcsHi8TGtjNi134p5n9sx3E1vo3GnYnKWGKiFtfg5jHTyuJ3O538Yw=
+	t=1715625263; cv=none; b=Kxr+1V9cH4V51GPbvENJ41xQ8YHSVqzCvBYPzIv5rjNDGvYcxQ1ZlAe/HZn9JYlrBZ9tJSkC0FNOBqme4CECcP8fOx8bDu0YTSjrCh4T+zrvrtpqlb/ZSZ0v5PeyHD3tN3PYjrPCzZF+nmrIWQ2J17GW5RjTCOY9gXzBpT6easw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715625237; c=relaxed/simple;
-	bh=ZhGoyOdOjcmUxuRvGYfZ21j9wUJSigWgiEp3GvOaARc=;
+	s=arc-20240116; t=1715625263; c=relaxed/simple;
+	bh=LMpgS9YUb5fP274F97/qNj06fpYzBLVeI1R6c6nW9QM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WMhpDktN57817lq1ufJafhcCPvaJibZ0+UwYcToBMnuH+1X3wF0JifCwhevOXd5x+GHorrV/QLVSqEKJPu/EiWJMhhNLnWsu3iYfPC7iXqoAB76LRve5zzk7N9w5cLLaPQcmLUqRwJ5Ocs3PnmVnhwGiJ0As62ObT/YVzND5gY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=cI219oHU; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GvGD9wkjUKcgHnP/vcftfw236pskHaUeGZBAHWHlLuPad4mo2rYYugHEKZYjegASQukGKj0wd3euNRJqVaeLKWOcuIU/RUF6M784N2PtNIyL5Bk/6NYJRj3mDFYcqrNmHyvtmXJGakRxbGCYhqWThRpQW8QH0RaPIAO2nouSLuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IRZbdAg5; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="cI219oHU"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1edf506b216so31653135ad.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 11:33:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IRZbdAg5"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1ee954e0aa6so35780945ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 11:34:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1715625236; x=1716230036; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1715625261; x=1716230061; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zIieT11BAyr5eCbucIfDMPYSpqd8uK7xxfWKvzozEyI=;
-        b=cI219oHUC0wtkNiVocTset+PBiDs5eJK3V6BFR6OirhH72CqstHXt7jWEfEu2iP12n
-         Vognay3eDO4jzFzjjCvw2kVOTt0AphWpimk1pLo8wpYp3g3HXLrPlqmjYVHk+5STmkzr
-         q+Uuy6dt5Wm2bmini1XluZ9s50wNg8OgPfguioN1Z90UAh2ekHFe3SUTLTTWIN+Dt0R1
-         cUPCDJ0sxs9Pje0nw66EU0Ml8LY2kpR6Z/sM9sxPpDLadlfjDtZJ4wcR5sDokIbZau2o
-         AAXE7gCaud4H6iJJGQYC4iwpvVYkwppI3yTd3k/NaBix+Hs/cBw/jWIvYbjUmhdA4+o2
-         Db2A==
+        bh=h++n7Qlyg3sgT4EiaSRCnOzzYyK0B8BDWAHRP3/F3N0=;
+        b=IRZbdAg5Fjfq1LlzW2OU3qJQiaF0Y36cLpUw+oWEwGb1ZbDoU98E6N8oHl/2rzWCHk
+         0J1HOQmi4/qvXT4+9oLUQs4sUJ2KF7lmn65JzzrEUIB/BXbV/B7gvwACHU3Oyso/lcv/
+         FGQOa0cTZ0i3NV+ABmzUpys6SdplIP6k+ErvY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715625236; x=1716230036;
+        d=1e100.net; s=20230601; t=1715625261; x=1716230061;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zIieT11BAyr5eCbucIfDMPYSpqd8uK7xxfWKvzozEyI=;
-        b=HWZAI/FkGbFSu5/plqc5CTwgn1DLVJCcERHh6x8PI8o/UxS4m4pjlTDadPiWPDrJv4
-         Tx+cAXEQaTk4k3ltPtlxwnGh7HJrJX7M1EJIk4hbipjauF8N6FIO99488o+x1aS2X7jO
-         r1Q6mAo6aCVAd3xQDjophH8jjEI+PUarOrny1+4ea+EmlYnDtd1YNVmeVwhLsH9PUcgr
-         9CiMD7FgqYWKPeh6IkvGOugcL4mBC/gxzTOEmbiXK5bVZjP5lhVkSMfuvmc9yT5AiSWM
-         CHKaoXZv0lXz/QEbmqlr+r6li/tsmO40g3U8lXCTQqU2g9WR1lfxnO15L0oNpV2ed4X5
-         +pXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVx93Tx6Bk0Tb+7atLQfFgGEXIvUIX5ChHTo9QZ7/XijJRjNtl4kv3rQHkR1XX5J/M/dbOWsHU1xL8ycFGPIFg17QuliX+tLLv+QpeN
-X-Gm-Message-State: AOJu0YwgvwOTepeBgOY3vgz/vpZVB1ZFZ/rLnxivVylcAASnQW2F5iQ7
-	0K7aN/HeioQS05WQaxXONgMY8Z3S8vHVD1x8IqPpAkyxRV27H6mKCAIH36FBuME=
-X-Google-Smtp-Source: AGHT+IFnbLXicXE+Y/UKuSVClJLtlfBWO7CdnrEkpjnDppDvuoBtNhLdA/briBDaFchoAw9tI2ob0A==
-X-Received: by 2002:a17:902:f68e:b0:1e4:c07b:a8e0 with SMTP id d9443c01a7336-1ef441a76fcmr123301465ad.66.1715625235664;
-        Mon, 13 May 2024 11:33:55 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf32b4dsm84209665ad.137.2024.05.13.11.33.51
+        bh=h++n7Qlyg3sgT4EiaSRCnOzzYyK0B8BDWAHRP3/F3N0=;
+        b=LGr/dWTs+NEqqZiHxi7fCyd9l653PU0zn2R95vAaLGgrXyhY2dTXrfvO4CMrNnqPuY
+         Ktgqpo4RQpWNXxZeg3ETEOz/j8zdP9pgQdrYWgjELFVWZPgbSODzdnSxo+zhmgO/1B8O
+         jAL9NPABQ5TjZF1pUD16es4nNVEdtIQqvnR2oB2oGYeL25kOSygho5Q6fRP2/Bq5J0TY
+         LdZ4EPmijCkdKWXShPDIxJYKO8b99WdgIbyC5B3mffvqFK/IeID4F0O8BB9y4bNXJcnS
+         zaXqko1gDhJWXXRpxkqGQJ+IzfqidmDSUPJWQe7Jdho6egdKcdB58EOZDCT141kAdeIm
+         Q1Vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUehz3E4ZOewgC4c4PCSbepNUQDTyq4VRKg8cUY3atdyBKRy8ocWQoz3Hx9suRinLizhoKcydg2wGEhIq6+9yKGDH8wtRBYHV0HEKHs
+X-Gm-Message-State: AOJu0YyAi6oFY9dofptpRr/T4BMLFQKdA4sclp3kSphFNbNqeYSaUVG7
+	tbxwttBtKq/pvWsEsR6tMr2HKuH45ZdDj5t2ejq4z7kCJFgWsm7BMe52ZoAN1g==
+X-Google-Smtp-Source: AGHT+IHCc1iDoDY8y7cN3McKpzD8GoP+zaGEka3xojOMmbdy8UwKg3X31LKvQDdXyzyN7fH2gRjLEA==
+X-Received: by 2002:a17:902:dac6:b0:1e0:b62a:c0a2 with SMTP id d9443c01a7336-1ef441613edmr122093915ad.51.1715625261157;
+        Mon, 13 May 2024 11:34:21 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c13908bsm82642315ad.265.2024.05.13.11.34.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 11:33:55 -0700 (PDT)
-Date: Mon, 13 May 2024 11:33:50 -0700
-From: Deepak Gupta <debug@rivosinc.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: paul.walmsley@sifive.com, rick.p.edgecombe@intel.com,
-	broonie@kernel.org, Szabolcs.Nagy@arm.com, kito.cheng@sifive.com,
-	keescook@chromium.org, ajones@ventanamicro.com,
-	conor.dooley@microchip.com, cleger@rivosinc.com,
-	atishp@atishpatra.org, alex@ghiti.fr, bjorn@rivosinc.com,
-	alexghiti@rivosinc.com, samuel.holland@sifive.com, conor@kernel.org,
-	linux-doc@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-mm@kvack.org, linux-arch@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, corbet@lwn.net, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, oleg@redhat.com,
-	akpm@linux-foundation.org, arnd@arndb.de, ebiederm@xmission.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, lstoakes@gmail.com,
-	shuah@kernel.org, brauner@kernel.org, andy.chiu@sifive.com,
-	jerry.shih@sifive.com, hankuan.chen@sifive.com,
-	greentime.hu@sifive.com, evan@rivosinc.com, xiao.w.wang@intel.com,
-	apatel@ventanamicro.com, mchitale@ventanamicro.com,
-	dbarboza@ventanamicro.com, sameo@rivosinc.com,
-	shikemeng@huaweicloud.com, willy@infradead.org,
-	vincent.chen@sifive.com, guoren@kernel.org, samitolvanen@google.com,
-	songshuaishuai@tinylab.org, gerg@kernel.org, heiko@sntech.de,
-	bhe@redhat.com, jeeheng.sia@starfivetech.com, cyy@cyyself.name,
-	maskray@google.com, ancientmodern4@gmail.com,
-	mathis.salmen@matsal.de, cuiyunhui@bytedance.com,
-	bgray@linux.ibm.com, mpe@ellerman.id.au, baruch@tkos.co.il,
-	alx@kernel.org, david@redhat.com, catalin.marinas@arm.com,
-	revest@chromium.org, josh@joshtriplett.org, shr@devkernel.io,
-	deller@gmx.de, omosnace@redhat.com, ojeda@kernel.org,
-	jhubbard@nvidia.com
-Subject: Re: [PATCH v3 02/29] riscv: define default value for envcfg for task
-Message-ID: <ZkJdDnfjm+DMzgEa@debug.ba.rivosinc.com>
-References: <20240403234054.2020347-1-debug@rivosinc.com>
- <20240403234054.2020347-3-debug@rivosinc.com>
- <Zj6gwFvj2gA04NJq@ghost>
+        Mon, 13 May 2024 11:34:20 -0700 (PDT)
+Date: Mon, 13 May 2024 11:34:20 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Martin Uecker <uecker@tugraz.at>, Justin Stitt <justinstitt@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev
+Subject: Re: [RFC] Mitigating unexpected arithmetic overflow
+Message-ID: <202405131047.A3861EC13@keescook>
+References: <202404291502.612E0A10@keescook>
+ <CAHk-=wi5YPwWA8f5RAf_Hi8iL0NhGJeL6MN6UFWwRMY8L6UDvQ@mail.gmail.com>
+ <202405081144.D5FCC44A@keescook>
+ <CAHk-=wjeiGb1UxCy6Q8aif50C=wWDX9Pgp+WbZYrO72+B1f_QA@mail.gmail.com>
+ <202405081354.B0A8194B3C@keescook>
+ <CAHk-=wgoE5EkH+sQwi4KhRhCZizUxwZAnC=+9RbZcw7g6016LQ@mail.gmail.com>
+ <59f731ab619673afec4956fce6832a1cd5324fb8.camel@tugraz.at>
+ <CAHk-=wjERv03yFU7-RUuqX1y89DYHcpdsuu++ako2nR41-EjYg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Zj6gwFvj2gA04NJq@ghost>
+In-Reply-To: <CAHk-=wjERv03yFU7-RUuqX1y89DYHcpdsuu++ako2nR41-EjYg@mail.gmail.com>
 
-On Fri, May 10, 2024 at 03:33:36PM -0700, Charlie Jenkins wrote:
->On Wed, Apr 03, 2024 at 04:34:50PM -0700, Deepak Gupta wrote:
->> Defines a base default value for envcfg per task. By default all tasks
->> should have cache zeroing capability. Any future base capabilities that
->> apply to all tasks can be turned on same way.
->>
->> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
->> ---
->>  arch/riscv/include/asm/csr.h | 2 ++
->>  arch/riscv/kernel/process.c  | 6 ++++++
->>  2 files changed, 8 insertions(+)
->>
->> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
->> index 2468c55933cd..bbd2207adb39 100644
->> --- a/arch/riscv/include/asm/csr.h
->> +++ b/arch/riscv/include/asm/csr.h
->> @@ -202,6 +202,8 @@
->>  #define ENVCFG_CBIE_FLUSH		_AC(0x1, UL)
->>  #define ENVCFG_CBIE_INV			_AC(0x3, UL)
->>  #define ENVCFG_FIOM			_AC(0x1, UL)
->> +/* by default all threads should be able to zero cache */
->> +#define ENVCFG_BASE			ENVCFG_CBZE
->>
->>  /* Smstateen bits */
->>  #define SMSTATEEN0_AIA_IMSIC_SHIFT	58
->> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
->> index 92922dbd5b5c..d3109557f951 100644
->> --- a/arch/riscv/kernel/process.c
->> +++ b/arch/riscv/kernel/process.c
->> @@ -152,6 +152,12 @@ void start_thread(struct pt_regs *regs, unsigned long pc,
->>  	else
->>  		regs->status |= SR_UXL_64;
->>  #endif
->> +	/*
->> +	 * read current envcfg settings, AND it with base settings applicable
->> +	 * for all the tasks. Base settings should've been set up during CPU
->> +	 * bring up.
->> +	 */
->> +	current->thread_info.envcfg = csr_read(CSR_ENVCFG) & ENVCFG_BASE;
->
->This needs to be gated on xlinuxenvcfg.
+On Sun, May 12, 2024 at 09:09:08AM -0700, Linus Torvalds wrote:
+>         unsigned char *p;
+>         u32 val;
+> 
+>         p[0] = val;
+>         p[1] = val >> 8;
+>         p[2] = val >> 16;
+>         p[3] = val >> 24;
+> 
+> kind of code is both traditional and correct, but obviously drops bits
+> very much intentionally on each of those assignments.
 
-You're right. This csr read should be gated on xlinuxenvcfg. Will fix it.
+The good news here is that the integer implicit truncation sanitizers
+are already split between "signed" and "unsigned". So the 2 cases of
+exploitable flaws mentioned earlier:
 
->
->- Charlie
->
->>  }
->>
->>  void flush_thread(void)
->> --
->> 2.43.2
->>
+	u8 num_elems;
+	...
+	num_elems++;		/* int promotion stored back to u8 */
+
+and
+
+	int size;
+	u16 read_size;
+	...
+	read_size = size;	/* large int stored to u16 */
+
+are both confusions across signed/unsigned types, which the signed
+sanitizer would catch. The signed sanitizer would entirely ignore
+the quoted example at the top: everything is unsigned and no int
+promotion is happening.
+
+So, I think we can start with just the "signed integer implicit
+truncation" sanitizer. The compiler will still need to deal with the
+issues I outlined in [1], where I think we need some consideration
+specifically on how to handle things like this (that have a
+smaller-than-int size and trip the sanitizer due to int promotion):
+
+u8 checksum(const u8 *buf)
+{
+	u8 sum = 0;
+
+	for (int i = 0; i < 4; i++)
+		sum += buf[i];		/* int promotion */
+	return sum;
+}
+
+We want "sum" to wrap. We could avoid the "implicit" truncation by
+explicitly truncating with something eye-bleedingly horrible like:
+
+		sum = (u8)(sum + buf[i]);
+
+Adding a wrapper for the calculation could work but repeats "sum", and
+needs to be explicitly typed, making it just as unfriendly:
+
+		sum = truncate(u8, sum + buf[i]);
+
+Part of the work I'd done in preparation for all this was making the
+verbosely named wrapping_assign_add() helper which handles all the
+types by examining the arguments and avoids repeating the destination
+argument. So this would become:
+
+		wrapping_assign_add(sum, buf[i]);
+
+Still not as clean as "+=", but at least more readable than the
+alternatives and leaves no question about wrapping intent.
+
+-Kees
+
+[1] https://lore.kernel.org/lkml/202405081949.0565810E46@keescook/
+
+-- 
+Kees Cook
