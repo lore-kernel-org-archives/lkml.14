@@ -1,137 +1,196 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4978146D79
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:49:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DC9145B30
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:50:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715586574; cv=none; b=Lce8DELpHS+qUfjcUmaSorI+GmYN3b97T0wvbCDeXkxGXqit3d/hySLBWD5BXVNEPp7UjsZKyb979cbtN6KP7exVvtGqRd6rFiFcdZLtcAGsRlVITKiNT8wSzsSzqGg040oMmAgXmcubWAeK3BI0w368IhQVcS5QSXNuKM6OWVA=
+	t=1715586637; cv=none; b=iAckzC1wMnSxjlIufVs51pEl/2d4JWnrYKpXCmWt3KqNUvwjg1Evne7s5t+PR8limC4Be/cXxVh68rarR6fDRVPP6rMLFnCfGb+MbVxl67fmLT1qFM7YknR0yteM93jc5KDwLg6PVV18+ABzGKvpzge+M8b9OxTKAlaacmaMsg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715586574; c=relaxed/simple;
-	bh=Z92BapNXqrD8mH8Lvn9VhbzXh/a0lrQadfg2Cq2n/08=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Utm9nIfBu627jarVC0edAneKi1G83n/cA4eHKm1kw7IT6BeIWieVj+Choo1XPAwdT40WRH677Q3e86oT3SavWMEuEKKGX+2LOVTKqpn4kzPTq0tu7nSc29HSiGHtAcChIT4cjgjeLF47Lx6ZaOZcBnDuuc2IPTF6gGOfgsNuw9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=T8/TG7AB; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1715586637; c=relaxed/simple;
+	bh=a1sckBM8E6wq3ndQUDNJANScNUrzo41l6q22HGf3lnU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=J73ibJmO4qZQuVIw4AEaPUXEa8UJI/ypT6DRSPntDRv/2z5sFccY/w3Kd8X8GKFvlHmHnmCvAcZpMCghs2NvDGVArjxUIKi9/om4xNYgPlE/7Tm2sl6lraGW3Ff5BObnEU03diK18Aoygpse80X8VRc9ErGVzYnVPyMzx87yolk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=fzLM/kG1; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="T8/TG7AB"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ecd9a81966so35088745ad.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 00:49:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1715586572; x=1716191372; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TEo/a1+oRG2cXEy6c+2coJnHGUNZUbI5ZqJs4KidFuk=;
-        b=T8/TG7AB4Gf7JWTnxoOD+VVRGuh0aPunURRASZ5pZCPx1BSrTSmQzDJnfvXe4PsJIH
-         qtwjIdGv2hotBHBdIqCPY62bhHW1bwZMTbvoPuyJkak6Cu9dQuYt7MC3BcNHxkOgbw37
-         JDUNfzY2e3QiCcSRSmathECIDfe4F36aRHXxmkp2fjQdMi5zAstmBFXWGYGdqST8ierI
-         7zwdmcNI3oXI7Y4juE4kNV2C0bITkjeEnFm5SpGjHBUJo9PBvuxRMXpKWThT7kKDtb/n
-         ZnSayqhgfagUnaM0D7rEq3mUwwJ07F/dKegxWpEm34JAtX5piEnt6xKCLdJGQnuTC7uS
-         aUjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715586572; x=1716191372;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TEo/a1+oRG2cXEy6c+2coJnHGUNZUbI5ZqJs4KidFuk=;
-        b=Q8eYiYcGpRngTdnKukBbujpUYN91NTcFTm4VcyiPCTAM4s2LfZHsbZfmVoc8eaD4jK
-         CUSqqZ6RNzn2ugqHUlrGCCF0bz0qJ+/jGzVxbAG8fylMUkDm+r+rUhujiFEdKIdHudEC
-         A/dtviI1MoJh2FGvo4rana+E7K7A1ODfpkWo/utJbyMKAoHs1eopm78lmbulKXFNJ16h
-         5GkPmvoUtVZ/wUIPyPlyEGdFOOD+eoFtJyxuwtjOnwl4Tnc4kZyHFE9bEIDdgJl/DZXa
-         OHaFM/6p7JrHbQP3GDuxXjkD+/n98mvgufiOpd+eG9v7o5KVDyafGHyE19SKg3fM4nrz
-         aXsw==
-X-Forwarded-Encrypted: i=1; AJvYcCWk4LT3RqGw2OzI7dTVTzlhjqlQT4bZarvbMmXBtr/lILkmRTFbduPyh1BsSIW/54ikPXE/2BD/C7OjrkbH5yj9E/GmWq4QbLrqGKV0
-X-Gm-Message-State: AOJu0YyKytzIbmPVE0khe3zSJesWF832EFpDmOTOjwyH6WYqFNMLvkID
-	8qX1WnXLrNi+pr+3tNZ1BGwTcGxwV7sEARqiNUkwGHKbqpWVwebTADmNPHPyDi4=
-X-Google-Smtp-Source: AGHT+IHoZtwtgD7hFchCDIQOTf44g03q4zF7Jb1rcy/3zG/BIayitweAZoAdp++6XuRxJ1Ft606/JQ==
-X-Received: by 2002:a17:902:f68f:b0:1e0:9964:76f4 with SMTP id d9443c01a7336-1ef42e6e646mr129350585ad.14.1715586572235;
-        Mon, 13 May 2024 00:49:32 -0700 (PDT)
-Received: from ubuntu20.04 ([203.208.189.12])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0badadacsm73396695ad.111.2024.05.13.00.49.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 00:49:31 -0700 (PDT)
-From: Yang Jihong <yangjihong@bytedance.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	james.clark@arm.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: yangjihong@bytedance.com
-Subject: [PATCH v2 2/2] perf build: Add libtraceevent lib64 to -L directory & rpath on 64-bit
-Date: Mon, 13 May 2024 15:49:10 +0800
-Message-Id: <20240513074910.1660373-3-yangjihong@bytedance.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240513074910.1660373-1-yangjihong@bytedance.com>
-References: <20240513074910.1660373-1-yangjihong@bytedance.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="fzLM/kG1"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 81FEA2000F;
+	Mon, 13 May 2024 07:50:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715586634;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=235lKbc5F9x8ehSN9onJwGNWhXHykU3vjNOA59kjvYQ=;
+	b=fzLM/kG1nHy57PGoffb07/y1ku9KeFzG56q9saqgr9gygEtRnlMTdEo+PQMU85L50iiZwY
+	zM37X7j1vCQawLvRq4L1WZJoqsg89vfQM/krA4BnCw93fCAu984b7GIe7qTOp1Z5LsGpeZ
+	a26ri71gTzKOCR7qhSwFfwB++kCKtSfDAGcRN3+XVkfBafRLbe8xY/UT+MjhA6vaYL+qNm
+	ZkqtjNDFf/OevW3zOhjBYpVw1jo3x0juJARrnHCIk4obicKJtaOv869IcVKU5FVd0JjB38
+	0zt49yZqMySmy9LWxbJ9ie290R9OqKtaLAgmlmVZqbD9/Q23pUr9hRTZxSRWVQ==
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+Date: Mon, 13 May 2024 09:50:22 +0200
+Subject: [PATCH v7 01/17] drm/vkms: Code formatting
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Message-Id: <20240513-yuv-v7-1-380e9ffec502@bootlin.com>
+References: <20240513-yuv-v7-0-380e9ffec502@bootlin.com>
+In-Reply-To: <20240513-yuv-v7-0-380e9ffec502@bootlin.com>
+To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
+ Melissa Wen <melissa.srw@gmail.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mairacanal@riseup.net>, 
+ Haneen Mohammed <hamohammed.sa@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, rdunlap@infradead.org, 
+ arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>, 
+ pekka.paalanen@haloniitty.fi
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
+ thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
+ nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>, 
+ Pekka Paalanen <pekka.paalanen@collabora.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4941;
+ i=louis.chauvet@bootlin.com; h=from:subject:message-id;
+ bh=a1sckBM8E6wq3ndQUDNJANScNUrzo41l6q22HGf3lnU=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmQcZBNRP3q+gkbtdeR5bk34JcfbC2yvwVSgHou
+ mOx+FUneQqJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkHGQQAKCRAgrS7GWxAs
+ 4vTeD/9KTjHvx4CgbeewMZecdFso8kna8nOd2XWZcJyNyOWzjii3AB5nk4FYY+00RRaPXOU8yzu
+ cfeLNxYXay7bdZxyPRbJr4SViTC1cnSh92ZFP3k7Ovfm7SJSawupsL1WFOd5TvbAeyrwEtXi9hY
+ mOBeWg7IQOigWjt5nep2edYldRraAZPfrvsUKbbOVSvtfRHnVO74/9xkqlBpaXz+wCxTEIHgoMV
+ bById7EKcsdYzTuwoHuSFeozWy3GAtQQL5z/xFDwnZK9zkg/r7Y2OO+7ZImsDS5m6dTZFqXHeat
+ 4Ym5Nfq+HhOFzqJSNdgxFhIRSDBp/Kqpkb81vlqYrSkzWiBEOtOklZfyr7tjTDYwGOKlQMYxdqu
+ aiOYWjWlD0Aau8YOzAt0Uc079fUo10eQKqLmgdvO6tT6cXZuGYWn8PGL57Hl3B3Fbe/6bovOQqL
+ AqOU4PGt8vequ4M41Npn72PH9e4VUvm0SQnBnaFzMlJ35kOAGPSqJONpbxanSwqXCUC92XuxcT/
+ X7oPrEAtwZldQwBj8e2MrKKBjFDZA/hkADxJQ6MZK0w34nSDhk71nc5OQeyzHSxr7uFHV3QSgvm
+ UoWuOUCLNuFJHM5d/yeviIxT8alR8dWiyAr8xnzq+FYGHHFQtuWJVUb4G4pnGlXrYNvd6mc89Mg
+ 6+0m0Wt9NtiIEZQ==
+X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
+ fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-For 64-bit system, libtraceevent will install these libraries into
-lib64 directory, so add it to the -L directory and rpath as well.
+Few no-op changes to remove double spaces and fix wrong alignments.
 
-build libtraceevent:
-  $ make EXTRA_CFLAGS="-O0 -g -fsanitize=address" DESTDIR=~/libtrace install
-
-Before:
-  $ rm -rf /tmp/perf; mkdir /tmp/perf; make -C tools/perf O=/tmp/perf DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame-pointer -fsanitize=address -Wno-error=unused-function" LIBTRACEEVENT_DIR=~/libtrace/usr/local 1>/dev/null
-  Makefile.config:1146: No alternatives command found, you need to set JDIR= to point to the root of your Java directory
-  Makefile.config:1196: *** ERROR: libtraceevent is missing. Please install libtraceevent-dev/libtraceevent-devel and/or set LIBTRACEEVENT_DIR or build with NO_LIBTRACEEVENT=1.  Stop.
-  make[1]: *** [Makefile.perf:264: sub-make] Error 2
-  make: *** [Makefile:70: all] Error 2
-
-After:
-  $ rm -rf /tmp/perf; mkdir /tmp/perf; make -C tools/perf O=/tmp/perf DEBUG=1 EXTRA_CFLAGS="-O0 -g -fno-omit-frame-pointer -fsanitize=address -Wno-error=unused-function" LIBTRACEEVENT_DIR=~/libtrace/usr/local 1>/dev/null
-  Makefile.config:1154: No alternatives command found, you need to set JDIR= to point to the root of your Java directory
-    PERF_VERSION = 6.9.0-rc5
-  $ echo $?
-  0
-  $ ldd /tmp/perf/perf
-  <SINP>
-  	libtraceevent.so.1 => /home/yangjihong/libtrace/usr/local/lib64/libtraceevent.so.1 (0x00007f08983d5000)
-  <SINP>
-
-Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+Reviewed-by: Pekka Paalanen <pekka.paalanen@collabora.com>
+Reviewed-by: Maíra Canal <mcanal@igalia.com>
+Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- tools/perf/Makefile.config | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/vkms/vkms_composer.c | 10 +++++-----
+ drivers/gpu/drm/vkms/vkms_crtc.c     |  6 ++----
+ drivers/gpu/drm/vkms/vkms_drv.c      |  3 +--
+ drivers/gpu/drm/vkms/vkms_plane.c    |  8 ++++----
+ 4 files changed, 12 insertions(+), 15 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a9a923358604..d632c85e6c4d 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -188,9 +188,17 @@ TRACEEVENTLIBS := -ltraceevent
- ifdef LIBTRACEEVENT_DIR
-   LIBTRACEEVENT_CFLAGS  := -I$(LIBTRACEEVENT_DIR)/include
-   LIBTRACEEVENT_LDFLAGS := -L$(LIBTRACEEVENT_DIR)/lib
-+  # libtraceevent install libraries into lib64 on 64-bit, so add it to -L directory as well
-+  ifeq (${IS_64_BIT}, 1)
-+    LIBTRACEEVENT_LDFLAGS += -L$(LIBTRACEEVENT_DIR)/lib64
-+  endif
-   # Specify rpath for asan/msan build. Generally, cross-compilation will not enable sanitizers.
-   ifeq ($(findstring -fsanitize=,${EXTRA_CFLAGS}),-fsanitize=)
-     LIBTRACEEVENT_LDFLAGS += -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib
-+    # libtraceevent install libraries into lib64 on 64-bit, so add it to rpath as well
-+    ifeq (${IS_64_BIT}, 1)
-+      LIBTRACEEVENT_LDFLAGS += -Wl,-rpath,$(LIBTRACEEVENT_DIR)/lib64
-+    endif
-   endif
- endif
- FEATURE_CHECK_CFLAGS-libtraceevent := $(LIBTRACEEVENT_CFLAGS)
+diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+index e7441b227b3c..c6d9b4a65809 100644
+--- a/drivers/gpu/drm/vkms/vkms_composer.c
++++ b/drivers/gpu/drm/vkms/vkms_composer.c
+@@ -96,7 +96,7 @@ static u16 lerp_u16(u16 a, u16 b, s64 t)
+ 	s64 a_fp = drm_int2fixp(a);
+ 	s64 b_fp = drm_int2fixp(b);
+ 
+-	s64 delta = drm_fixp_mul(b_fp - a_fp,  t);
++	s64 delta = drm_fixp_mul(b_fp - a_fp, t);
+ 
+ 	return drm_fixp2int(a_fp + delta);
+ }
+@@ -302,8 +302,8 @@ static int compose_active_planes(struct vkms_writeback_job *active_wb,
+ void vkms_composer_worker(struct work_struct *work)
+ {
+ 	struct vkms_crtc_state *crtc_state = container_of(work,
+-						struct vkms_crtc_state,
+-						composer_work);
++							  struct vkms_crtc_state,
++							  composer_work);
+ 	struct drm_crtc *crtc = crtc_state->base.crtc;
+ 	struct vkms_writeback_job *active_wb = crtc_state->active_writeback;
+ 	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
+@@ -328,7 +328,7 @@ void vkms_composer_worker(struct work_struct *work)
+ 		crtc_state->gamma_lut.base = (struct drm_color_lut *)crtc->state->gamma_lut->data;
+ 		crtc_state->gamma_lut.lut_length =
+ 			crtc->state->gamma_lut->length / sizeof(struct drm_color_lut);
+-		max_lut_index_fp = drm_int2fixp(crtc_state->gamma_lut.lut_length  - 1);
++		max_lut_index_fp = drm_int2fixp(crtc_state->gamma_lut.lut_length - 1);
+ 		crtc_state->gamma_lut.channel_value2index_ratio = drm_fixp_div(max_lut_index_fp,
+ 									       u16_max_fp);
+ 
+@@ -367,7 +367,7 @@ void vkms_composer_worker(struct work_struct *work)
+ 		drm_crtc_add_crc_entry(crtc, true, frame_start++, &crc32);
+ }
+ 
+-static const char * const pipe_crc_sources[] = {"auto"};
++static const char *const pipe_crc_sources[] = { "auto" };
+ 
+ const char *const *vkms_get_crc_sources(struct drm_crtc *crtc,
+ 					size_t *count)
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index 61e500b8c9da..7586ae2e1dd3 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -191,8 +191,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
+ 		return ret;
+ 
+ 	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
+-		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,
+-								  plane);
++		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state, plane);
+ 		WARN_ON(!plane_state);
+ 
+ 		if (!plane_state->visible)
+@@ -208,8 +207,7 @@ static int vkms_crtc_atomic_check(struct drm_crtc *crtc,
+ 
+ 	i = 0;
+ 	drm_for_each_plane_mask(plane, crtc->dev, crtc_state->plane_mask) {
+-		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state,
+-								  plane);
++		plane_state = drm_atomic_get_existing_plane_state(crtc_state->state, plane);
+ 
+ 		if (!plane_state->visible)
+ 			continue;
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+index dd0af086e7fa..83e6c9b9ff46 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.c
++++ b/drivers/gpu/drm/vkms/vkms_drv.c
+@@ -81,8 +81,7 @@ static void vkms_atomic_commit_tail(struct drm_atomic_state *old_state)
+ 	drm_atomic_helper_wait_for_flip_done(dev, old_state);
+ 
+ 	for_each_old_crtc_in_state(old_state, crtc, old_crtc_state, i) {
+-		struct vkms_crtc_state *vkms_state =
+-			to_vkms_crtc_state(old_crtc_state);
++		struct vkms_crtc_state *vkms_state = to_vkms_crtc_state(old_crtc_state);
+ 
+ 		flush_work(&vkms_state->composer_work);
+ 	}
+diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+index e5c625ab8e3e..5a8d295e65f2 100644
+--- a/drivers/gpu/drm/vkms/vkms_plane.c
++++ b/drivers/gpu/drm/vkms/vkms_plane.c
+@@ -117,10 +117,10 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
+ 	memcpy(&frame_info->map, &shadow_plane_state->data, sizeof(frame_info->map));
+ 	drm_framebuffer_get(frame_info->fb);
+ 	frame_info->rotation = drm_rotation_simplify(new_state->rotation, DRM_MODE_ROTATE_0 |
+-						     DRM_MODE_ROTATE_90 |
+-						     DRM_MODE_ROTATE_270 |
+-						     DRM_MODE_REFLECT_X |
+-						     DRM_MODE_REFLECT_Y);
++									  DRM_MODE_ROTATE_90 |
++									  DRM_MODE_ROTATE_270 |
++									  DRM_MODE_REFLECT_X |
++									  DRM_MODE_REFLECT_Y);
+ 
+ 	drm_rect_rotate(&frame_info->rotated, drm_rect_width(&frame_info->rotated),
+ 			drm_rect_height(&frame_info->rotated), frame_info->rotation);
+
 -- 
-2.25.1
+2.43.2
 
