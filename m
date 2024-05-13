@@ -1,60 +1,60 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5771147C88
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 09:05:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AFF2AD11
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 09:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715591161; cv=none; b=bBKj26uZu4c/W7MKD9puj/Fxpgz+j1pOfyw5yKPOQ9aPttQoHOuqKRR/kssCQOpR3o1Odzh/BJ8qbM3OaJicH5Puth9TBIQsNCA6BtP27IG0locirnxLK+M0qJmy1Eu88Q3pUH7rRD/ww8kYaw9+I3rYBWFpXQOoSYGTLeGZWlk=
+	t=1715591307; cv=none; b=dOK9LoRvy/OilI4SB/Urtz+SrHUU5j1Gnb+s8BTgu32ou6Z68mFl1J/G8MYQaXDTq2y/j5YNdOKQIYu7+7APtuWj4tFtmPnL8qWX4bKfZvhfuMcC80Qf+bRlT2yy0yO2LDkvuxr8OKbm5K/1m/JksvDeucLWGhWff1+CIJFqFx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715591161; c=relaxed/simple;
-	bh=kmoyKfLRf0lLPLChJFcw4nUh519Faw2jYhkUU+jqLig=;
+	s=arc-20240116; t=1715591307; c=relaxed/simple;
+	bh=wJlegJibZrOuODZy1Z5vIlKzz4S4bk5E4DsD++3f0rY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kX3OiRFIw7IEeH6/0BcPGrt3ND8If0XAWsHApRVvgkEyIR/uVAd1uHynQRKM0tV9YSCLH8f+FN4vhJhDq7NWqbJ3GLtJebBb7JzR2tnpCAC8vt29/kmCpEKgmLzykhGocV+BVVPWQngepUQAKvof1+etCD/G4j7oywswvKLPbzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Vi9+5xlY; arc=none smtp.client-ip=209.85.221.51
+	 In-Reply-To:Content-Type; b=XotH6pPmajHi/pDSYH776IJ5H7lvL4AovMBL/cJXnOyV96JSvos0HZvYz+0MDQTfES+xgElYazIUtpxdssZo26dMaskwH2carau3mL2cBwoH2jh0I3xXw97hhPg4fjioLpwZGdSnncowg8ACzPM0FkLejHjlvQxhuz45wOx965E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X0YCyVMI; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Vi9+5xlY"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-34dc129accaso3091737f8f.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 02:05:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X0YCyVMI"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-51f71e4970bso4753662e87.2
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 02:08:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715591158; x=1716195958; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1715591304; x=1716196104; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=YBzaaIEgHGuGeJGPiYUXItWhfV56AKE1pxOKn1aV1Sc=;
-        b=Vi9+5xlYLAuhBWIlZQm67rxDn5tArKU7L1N5FLROuD5viFEGalWOTYtq5cSqQ8FJYo
-         a3SXE7iMNW6jlZTDGXOw8Tj2GLTitn+Y0I91I3vbEom53zbHQr5sgmM/sxZ0n/tjJYoj
-         kg8Ol6E8QTB9joAlF2WLYVE4BnNSjwd/vCMScpE6FF3czGE11esXbVpvzTiMHwDEjJUi
-         owUgyjWkTXA9DjYvCKyPkZ/VNf6X3Y94ahfaqqs/WiXsuir533Gqn5VKvbB0EMWF8E5S
-         YSzFiHy/ThGt49kZ3nOzvQB0GhcICLRGQb6ijhuV4nvQtc3LMkWiB5xZeHri0DD8WpDK
-         m7Hg==
+        bh=f66bP5yWcXO8VJ2Ei1ffys4nlL9S3YNrZ/7wcV5bIAg=;
+        b=X0YCyVMI3q19Lwjd3Nh9bj49kYjrtHGSxpeYegNSc14wuAZNl6O8NxImLl0tL4fhNU
+         TSwUFHKhqC1TpfPxxq7zOAsnxltVEEJQkAwmGgDrpn/mIdxY5wb02792trOaYlXoEs+A
+         LMnHQqxmw+JwNkoXRFA/J6clyPxb/hACQzN5QXdUWsI02Ghjr+oUfczU0d5IAVcZVe4z
+         fzfDGMScKlmHXTusjbNfT/yqWStDD04Cre/gR3MoDF4DtbfXDMQjd7wo7sHAYyaSpK0w
+         LLQHoRA2XlJ0FpVmIbdJ94lcFFZHTHFz78j4omvfkf+AiFQAl46FATHpiNiaisvGzmVF
+         0MwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715591158; x=1716195958;
+        d=1e100.net; s=20230601; t=1715591304; x=1716196104;
         h=content-transfer-encoding:in-reply-to:autocrypt:content-language
          :from:references:cc:to:subject:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=YBzaaIEgHGuGeJGPiYUXItWhfV56AKE1pxOKn1aV1Sc=;
-        b=G7JQcf6W67wLj4pzpiWnhsiCv0STJ36zeUZEtbXmJhhVey411+SL8PnYvr1PWKzwrt
-         tB67dqBPTi22f60x+tHSm3auRCaQFg2osmQuL5WTM+gUxWRtkHVcXgiUiXF84QcgtfUD
-         tqFzMMhOYTOPnc7P9pfbR4fgGeqQ/5wWjHzC1Y8iu4FEYS0XoMD0oInEjv8QhPRY/0Pi
-         ivWLfxXUKaoWNcoONoVkoqOSL10OyZTBKcZK9NsIAYEhD5JSIjDfIo/oWH+FEZcXF8fq
-         hm15Pl/2B5jrX2K9DnJTj2ycx5TPv5ceb8gkWSg5BqFebBJmIuSLjKO2zI7/qwwKMhs+
-         KvYg==
-X-Forwarded-Encrypted: i=1; AJvYcCWKi0BhMcwdted3pl4QmZcGt8B6tO7M4S1eS/e66Y+hAzq9TPXNvUukuPUKUr5d7dRkwLf2Yvba9Mdp1dG1H50/KDeHpo5nhpJgYrcO
-X-Gm-Message-State: AOJu0Yx9WaCTMlcwYe50qoHZBmrhHeIolm3rwRR1jMKO4F3ao8NaJNA1
-	KxGGHzCWmn+J3uhJRRq0x2XhimxNqU7YiJXDN5QZ8oxiyB6zMDiaWDbUqdSZE94=
-X-Google-Smtp-Source: AGHT+IFWiNTtriwb0hOXOiFQhJA1JdMGMjCgGFLHrgH5ikEuPjXoDfYzRJf2hyA8Uth98uW6zujTnQ==
-X-Received: by 2002:adf:fe88:0:b0:34d:a75:3a44 with SMTP id ffacd0b85a97d-3504a96a3e3mr7408130f8f.54.1715591158188;
-        Mon, 13 May 2024 02:05:58 -0700 (PDT)
+        bh=f66bP5yWcXO8VJ2Ei1ffys4nlL9S3YNrZ/7wcV5bIAg=;
+        b=GMvexFbvXNrnST6BwMzhIXi/x9CFADkK/D2xJBZAB+2X2xthURfjLEdyFrj9nFN52F
+         eGVyV0KokGuojwi1S/sQazZjqEV4HZsTTMg7YDKEN+3aPYc2NgwZLS6otRk+lPL/bIzF
+         LPM7nYCTSogtzKXGMd/RdLaoW9lTsmu4UDru4Uqc31GJAauECq5XXS2C+5xU2DLHikTC
+         a1sl05dtH1Chcg9MC3+/aF7nqzDHfbWS4jAq4d7/YJxM35pq3iPLirHj7zscx1gWfVtr
+         wUVe1+XV00WNSEVNmymo6V/1k/g+GDqlb4nNaoWa93mnLLMl/tk4VhXW7eH5q6+PQ/Xd
+         +zNA==
+X-Forwarded-Encrypted: i=1; AJvYcCWnn3taOTuE6aUFb7bpk0Q5dMWrCXIPFrcOan1KsskAcO+JbnwU/Zhu61MuqHnz28dtqJadu4YSyJ9BejNZD0OCztZ5ZSoFLk8F6uFJ
+X-Gm-Message-State: AOJu0YwOhUX2h5MStTXHnw9xi1api++N1ulxbdNbebQZWaXmljx7iW4b
+	xXO6HjCexKtUuTbeGB5/h0hjARFDZG9Mro9CFNX2N54V57b85nSGOM2osGIdCM8=
+X-Google-Smtp-Source: AGHT+IESRsUQWY2w2KyzETz92L/H7RBUgdjoJuYewKcQQ77zs1GNuGxD3D9XmpksszCY4Kb0edZZKg==
+X-Received: by 2002:ac2:518d:0:b0:51c:d8f6:4e6f with SMTP id 2adb3069b0e04-5220fd7bd61mr7480130e87.40.1715591304170;
+        Mon, 13 May 2024 02:08:24 -0700 (PDT)
 Received: from [10.91.0.75] ([149.14.240.163])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b79bc6csm10565446f8f.21.2024.05.13.02.05.56
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502bbc5654sm10666072f8f.115.2024.05.13.02.08.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 May 2024 02:05:57 -0700 (PDT)
-Message-ID: <d5b179c0-67fb-4452-8e22-b3d5d713942d@linaro.org>
-Date: Mon, 13 May 2024 11:05:54 +0200
+        Mon, 13 May 2024 02:08:23 -0700 (PDT)
+Message-ID: <cd355424-9bc0-4df7-95a5-5d82e630d230@linaro.org>
+Date: Mon, 13 May 2024 11:08:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,26 +62,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/3] dt-bindings: mtd: amlogic,meson-nand: support
- fields for boot ROM code
-To: Arseniy Krasnov <avkrasnov@salutedevices.com>,
- Krasnov Arseniy <oxffffaa@gmail.com>, "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Vignesh Raghavendra <vigneshr@ti.com>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, devicetree@vger.kernel.org,
- Kevin Hilman <khilman@baylibre.com>, linux-mtd@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- linux-amlogic@lists.infradead.org, kernel@sberdevices.ru,
- Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh+dt@kernel.org>,
- linux-kernel@vger.kernel.org, Neil Armstrong <neil.armstrong@linaro.org>,
+Subject: Re: [PATCH v4 1/9] dt-bindings: clk: qcom,dispcc-sm8x50: describe
+ additional DP clocks
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-References: <20240507230903.3399594-1-avkrasnov@salutedevices.com>
- <20240507230903.3399594-2-avkrasnov@salutedevices.com>
- <171517732606.1572649.16193191353725811830.robh@kernel.org>
- <CAP_G_RUdN+6OcsQZUkqWQMYoH-ZvmPnskT3yONK_YssqUYhm9Q@mail.gmail.com>
- <418e29c7-9baf-ee4c-7a24-49c196ac89b2@salutedevices.com>
+ Conor Dooley <conor+dt@kernel.org>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
+References: <20240512-typec-fix-sm8250-v4-0-ad153c747a97@linaro.org>
+ <20240512-typec-fix-sm8250-v4-1-ad153c747a97@linaro.org>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Language: en-US
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
@@ -128,18 +120,37 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <418e29c7-9baf-ee4c-7a24-49c196ac89b2@salutedevices.com>
+In-Reply-To: <20240512-typec-fix-sm8250-v4-1-ad153c747a97@linaro.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 12/05/2024 19:26, Arseniy Krasnov wrote:
-> Sorry, sending from proper mail client again (not sure it was delivered sent from gmail client on 08.05) :)
-> 
-> R-b was removed, because this patch was updated
+On 12/05/2024 00:04, Dmitry Baryshkov wrote:
+> +    minItems: 7
+>      items:
+>        - const: bi_tcxo
+>        - const: dsi0_phy_pll_out_byteclk
+> @@ -45,6 +53,12 @@ properties:
+>        - const: dsi1_phy_pll_out_dsiclk
+>        - const: dp_phy_pll_link_clk
+>        - const: dp_phy_pll_vco_div_clk
+> +      - const: edp_phy_pll_link_clk
+> +      - const: edp_phy_pll_vco_div_clk
+> +      - const: dptx1_phy_pll_link_clk
+> +      - const: dptx1_phy_pll_vco_div_clk
+> +      - const: dptx2_phy_pll_link_clk
+> +      - const: dptx2_phy_pll_vco_div_clk
+>  
+>    '#clock-cells':
+>      const: 1
+> @@ -68,6 +82,20 @@ properties:
+>        A phandle to an OPP node describing required MMCX performance point.
+>      maxItems: 1
+>  
+> +allOf:
 
-Then, as Rob requested, explain what changed and why the tag was
-removed. There was nothing in this patch's changelog.
+This goes after required: block (like in example-schema). With this fixed:
 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
