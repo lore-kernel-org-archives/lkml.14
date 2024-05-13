@@ -1,147 +1,116 @@
-Received: from mail78-58.sinamail.sina.com.cn (mail78-58.sinamail.sina.com.cn [219.142.78.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001BA446BD
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 23:27:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=219.142.78.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1864B85284
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 23:28:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715642834; cv=none; b=pxBktJH7iTe+x8G08KukDXagZZyaKPpZAUdQ+lGCC3rC7XVLD/XdRBB68n2nRFpLHFHALx/ac7CBd76Dx8Ck9gwjEfMd8yoDIkCEjFwdE972+eti79c+jLQQlaoDATL06s4EAJtuR/opN11Uq/N/x11kb4XiQ7HIoCAeN8ezrGI=
+	t=1715642908; cv=none; b=uX8yVQ3C6u21ej1jpUHpYJxfkkrkdAT8g6cFRXD44aY63mY1s72Cn9o4UDWm0Aj0sWe1VBT9nGMwjYi7cQFYlZrGI82ncKJTjhn1d5oms7nc+g4P+jxei8xngtw+XyUzOxQTOamnx1liWu8ECNIuOXkA49hRzugDFVYd7oMn2LA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715642834; c=relaxed/simple;
-	bh=zMzkmfe/SImkrDD6F58Ahl/biyaLPosnlc2zhtCaLCo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cElcTaGOpxapTmIkjZ8DWW67aZCbmIS4lWLFFQ40UevL/+zIo2Du0fEAjCElIuTITWgMf1JqnMCCkIQoa4RQ54+FFjZzUHYTDaOQN+3ZZaSdPUKIbOKDZC67vIaxOv3XZk5NPuM1NtOenKxnL4DDS4Fm/Jfy1px4jcxr93inras=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=219.142.78.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
-X-SMAIL-HELO: localhost.localdomain
-Received: from unknown (HELO localhost.localdomain)([113.88.50.104])
-	by sina.com (172.16.235.25) with ESMTP
-	id 6642A1C600000526; Mon, 14 May 2024 07:27:04 +0800 (CST)
-X-Sender: hdanton@sina.com
-X-Auth-ID: hdanton@sina.com
-Authentication-Results: sina.com;
-	 spf=none smtp.mailfrom=hdanton@sina.com;
-	 dkim=none header.i=none;
-	 dmarc=none action=none header.from=hdanton@sina.com
-X-SMAIL-MID: 60530034210354
-X-SMAIL-UIID: F7BD05331E194D2091A55FB4A3CBD377-20240514-072704-1
-From: Hillf Danton <hdanton@sina.com>
-To: syzbot <syzbot+55cd5225f71c5cff7f6f@syzkaller.appspotmail.com>
-Cc: johan.hedberg@gmail.com,
-	linux-bluetooth@vger.kernel.org,
+	s=arc-20240116; t=1715642908; c=relaxed/simple;
+	bh=FK/pOlv8p257iH5M65SUDFW31ZwENP3sUAncbWrb2UM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Yv2RWZrwbvPjNimFNEpcJkBhyqVCP+78jPa5TQ1Af9T2e4r+iH3hT8/53vgvztpNPa1zulhfGOBVei6YdiQNv3D/mxp7WgMnavCbhUhCQrrn7ehdk10TI9tftENGwRDg/8n7cqx/SmJQoWAELGzS8a33HLqPSdf68MbV8w2C4zM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Iwklbf9+; arc=none smtp.client-ip=209.85.215.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Iwklbf9+"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-6333b2551ebso3330450a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 16:28:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1715642906; x=1716247706; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Alp79KUasntAH1xAOt+qh9t4wrzIhrRSX97PEjrZLDc=;
+        b=Iwklbf9+elmKMIJNZC5JlY5Dgm8Sqo6bOGVL2h+cjBGV0hwkHTOwKHWMQ7LrW92oh6
+         tX2cKiKifvFY+PnDbBdRlieMj3r2qJvtX035ZGqUfppuwZBfw3dpexgQf0lpdxrOc2xi
+         RXXuAOI6iSl+rSmIv//TvYamEErrIk2FtK+ms=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715642906; x=1716247706;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Alp79KUasntAH1xAOt+qh9t4wrzIhrRSX97PEjrZLDc=;
+        b=r0WcwK/erTj7+9ESU34ndBkgmJh6epSIHfa9vz8bHmUuOzmpzEvVqLC/+7NEbdcI6t
+         qmbsQOpCxe0AFwFkbOaWzu206evO646BQ+HvS1ZjTO8hJmMcSVtASU2troa56odOYoFQ
+         lGoNPFCDB48xI2assmMZSk3c6PWjWq/v11I/wNcwnNmL9X/UpYwd/LDvYiW3ANdGuMsJ
+         Y9Y3RR95eRThpsXUV4WAWnk1vKCHbA7EZOhZ/pXfcfGECOcmn72uqBIoCzsK4iCIjx1B
+         Lxm6+lasMUgyoKEB7ocgVsSaCkFGOoTof2mQwdPespqtKskKZK3qaqZcbDO5wYtIi3EG
+         Ku9A==
+X-Forwarded-Encrypted: i=1; AJvYcCW3ZXFUjkTRaE5yAVIF7HaegtB7v1iVT5Wk80sf/cbN+BfpTOVzXPzxV4Ij/4XLo19VE9gMr6RU0UDqHJ5iFjUHpoqSlbcjxH855aQm
+X-Gm-Message-State: AOJu0YzW/DTPx2pXDpg62YDeQW5bcxDzM01qI4jdFNw87DDiWxVJwQ5p
+	+jGHEsJWeKnIZZtWQaXy5e1kmG0e415HGtZnRPQcFEl4zE30A65D+ZdbKTHJTg==
+X-Google-Smtp-Source: AGHT+IEFgmE7chs18iM9GrKNc3YSJsTec4uS+kF7AHYYIMLhQ7Or1D9QN4CNuHbEiHbakVLBZ9zUHA==
+X-Received: by 2002:a17:90a:bf08:b0:2b2:7c65:f050 with SMTP id 98e67ed59e1d1-2b65effb9d4mr20481677a91.0.1715642906269;
+        Mon, 13 May 2024 16:28:26 -0700 (PDT)
+Received: from www.outflux.net ([198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b62863cd9dsm10304270a91.12.2024.05.13.16.28.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 16:28:25 -0700 (PDT)
+Date: Mon, 13 May 2024 16:28:25 -0700
+From: Kees Cook <keescook@chromium.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-arch@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	luiz.dentz@gmail.com,
-	marcel@holtmann.org,
-	Takashi Iwai <tiwai@suse.de>,
-	Nicolai Stange <nstange@suse.de>,
-	syzkaller-bugs@googlegroups.com
-Subject: [syzbot] [bluetooth?] BUG: sleeping function called from invalid context in lock_sock_nested (3)
-Date: Tue, 14 May 2024 07:26:52 +0800
-Message-Id: <20240513232652.3080-1-hdanton@sina.com>
-In-Reply-To: <0000000000009f2fe006185570d8@google.com>
-References: 
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	Alexander Potapenko <glider@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	Marco Elver <elver@google.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Peter Oberparleiter <oberpar@linux.ibm.com>,
+	Roberto Sassu <roberto.sassu@huaweicloud.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	kasan-dev@googlegroups.com, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH 0/3] kbuild: remove many tool coverage variables
+Message-ID: <202405131626.D61F8228@keescook>
+References: <20240506133544.2861555-1-masahiroy@kernel.org>
+ <202405131136.73E766AA8@keescook>
+ <CAK7LNARZuqxWyxn2peMCCt0gbsRdWjri=Pd9-HvpK7bcOB-9dA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK7LNARZuqxWyxn2peMCCt0gbsRdWjri=Pd9-HvpK7bcOB-9dA@mail.gmail.com>
 
-On Mon, 13 May 2024 05:58:21 -0700
-> syzbot found the following issue on:
+On Tue, May 14, 2024 at 07:39:31AM +0900, Masahiro Yamada wrote:
+> On Tue, May 14, 2024 at 3:48 AM Kees Cook <keescook@chromium.org> wrote:
+> > I am worried about the use of "guess" and "most", though. :) Before, we
+> > had some clear opt-out situations, and now it's more of a side-effect. I
+> > think this is okay, but I'd really like to know more about your testing.
 > 
-> HEAD commit:    1c9135d29e9e Merge branch 'for-next/core' into for-kernelci
-> git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10df1ea8980000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=7d2d53e64c7e6a4f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=55cd5225f71c5cff7f6f
-> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-> userspace arch: arm64
+> - defconfig for arc, hexagon, loongarch, microblaze, sh, xtensa
+> - allmodconfig for the other architectures
 > 
-> Unfortunately, I don't have any reproducer for this issue yet.
+> (IIRC, allmodconfig failed for the first case, for reasons unrelated
+> to this patch set, so I used defconfig instead.
+> I do not remember what errors I observed)
 > 
-> Downloadable assets:
-> disk image: https://storage.googleapis.com/syzbot-assets/52dd1b4921ab/disk-1c9135d2.raw.xz
-> vmlinux: https://storage.googleapis.com/syzbot-assets/1a4f1788dc25/vmlinux-1c9135d2.xz
-> kernel image: https://storage.googleapis.com/syzbot-assets/b8d8ebd42a80/Image-1c9135d2.gz.xz
-> 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+55cd5225f71c5cff7f6f@syzkaller.appspotmail.com
-> 
-> BUG: sleeping function called from invalid context at net/core/sock.c:3537
-> in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 6274, name: kworker/u9:3
-> preempt_count: 1, expected: 0
-> RCU nest depth: 0, expected: 0
-> 6 locks held by kworker/u9:3/6274:
->  #0: ffff0000d8c79948 ((wq_completion)hci0#2){+.+.}-{0:0}, at: process_one_work+0x668/0x15d4 kernel/workqueue.c:3241
->  #1: ffff8000a9cb7c20 ((work_completion)(&hdev->rx_work)){+.+.}-{0:0}, at: process_one_work+0x6b4/0x15d4 kernel/workqueue.c:3241
->  #2: ffff0000e8294078 (&hdev->lock){+.+.}-{3:3}, at: hci_sync_conn_complete_evt+0xa4/0x870 net/bluetooth/hci_event.c:5061
->  #3: ffff800091d51708 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_connect_cfm include/net/bluetooth/hci_core.h:2010 [inline]
->  #3: ffff800091d51708 (hci_cb_list_lock){+.+.}-{3:3}, at: hci_sync_conn_complete_evt+0x3d4/0x870 net/bluetooth/hci_event.c:5144
->  #4: ffff0000d0bf4420 (&conn->lock#2){+.+.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
->  #4: ffff0000d0bf4420 (&conn->lock#2){+.+.}-{2:2}, at: sco_conn_ready net/bluetooth/sco.c:1273 [inline]
->  #4: ffff0000d0bf4420 (&conn->lock#2){+.+.}-{2:2}, at: sco_connect_cfm+0x260/0x94c net/bluetooth/sco.c:1358
->  #5: ffff0000cd046258 (sk_lock-AF_BLUETOOTH-BTPROTO_SCO){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1673 [inline]
->  #5: ffff0000cd046258 (sk_lock-AF_BLUETOOTH-BTPROTO_SCO){+.+.}-{0:0}, at: sco_conn_ready net/bluetooth/sco.c:1286 [inline]
->  #5: ffff0000cd046258 (sk_lock-AF_BLUETOOTH-BTPROTO_SCO){+.+.}-{0:0}, at: sco_connect_cfm+0x3e8/0x94c net/bluetooth/sco.c:1358
-> Preemption disabled at:
-> [<ffff80008a0d70d4>] spin_lock include/linux/spinlock.h:351 [inline]
-> [<ffff80008a0d70d4>] sco_conn_ready net/bluetooth/sco.c:1273 [inline]
-> [<ffff80008a0d70d4>] sco_connect_cfm+0x260/0x94c net/bluetooth/sco.c:1358
+> I checked the diff of .*.cmd files.
 
-A known issue in 2021 [1]
+Ah-ha, perfect! Thanks. :)
 
-[1] Subject: Possible sleep-in-atomic in BT SCO code
-https://lore.kernel.org/lkml/s5hilz8n1an.wl-tiwai@suse.de/
+> > Did you find any cases where you found that instrumentation was _removed_
+> > where not expected?
+> 
+> See the commit log of 1/3.
 
-> CPU: 0 PID: 6274 Comm: kworker/u9:3 Not tainted 6.9.0-rc7-syzkaller-g1c9135d29e9e #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-> Workqueue: hci0 hci_rx_work
-> Call trace:
->  dump_backtrace+0x1b8/0x1e4 arch/arm64/kernel/stacktrace.c:317
->  show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:324
->  __dump_stack lib/dump_stack.c:88 [inline]
->  dump_stack_lvl+0xe4/0x150 lib/dump_stack.c:114
->  dump_stack+0x1c/0x28 lib/dump_stack.c:123
->  __might_resched+0x374/0x4d0 kernel/sched/core.c:10197
->  __might_sleep+0x90/0xe4 kernel/sched/core.c:10126
->  lock_sock_nested+0x6c/0x11c net/core/sock.c:3537
->  lock_sock include/net/sock.h:1673 [inline]
->  sco_conn_ready net/bluetooth/sco.c:1286 [inline]
->  sco_connect_cfm+0x3e8/0x94c net/bluetooth/sco.c:1358
->  hci_connect_cfm include/net/bluetooth/hci_core.h:2013 [inline]
->  hci_sync_conn_complete_evt+0x438/0x870 net/bluetooth/hci_event.c:5144
->  hci_event_func net/bluetooth/hci_event.c:7545 [inline]
->  hci_event_packet+0x740/0x1098 net/bluetooth/hci_event.c:7597
->  hci_rx_work+0x318/0xa78 net/bluetooth/hci_core.c:4171
->  process_one_work+0x7b8/0x15d4 kernel/workqueue.c:3267
->  process_scheduled_works kernel/workqueue.c:3348 [inline]
->  worker_thread+0x938/0xef4 kernel/workqueue.c:3429
->  kthread+0x288/0x310 kernel/kthread.c:388
->  ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:860
-> Bluetooth: hci0: command tx timeout
-> 
-> 
-> ---
-> This report is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this issue. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> 
-> If the report is already addressed, let syzbot know by replying with:
-> #syz fix: exact-commit-title
-> 
-> If you want to overwrite report's subsystems, reply with:
-> #syz set subsystems: new-subsystem
-> (See the list of subsystem names on the web dashboard)
-> 
-> If the report is a duplicate of another one, reply with:
-> #syz dup: exact-subject-of-another-report
-> 
-> If you want to undo deduplication, reply with:
-> #syz undup
-> 
+Okay, thanks. I wasn't sure if that was the complete set or just part of
+the "most" bit. :)
+
+Thanks! I think this should all be fine. I'm not aware of anything
+melting down yet from these changes being in -next, so:
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
