@@ -1,63 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6541E85923;
-	Mon, 13 May 2024 23:50:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27995129E7E;
+	Mon, 13 May 2024 23:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715644253; cv=none; b=scbP06GYBGi56dslBM772YGaA/nFXG5ZVkPgvttzcLi0Ud3Mhs/veUELqxfslUH4rSOfxabvk7t14+G4MmImbgH0ugp5Q2WVkOHay5MCMsptQ2FVy5NErc4ha1h9P2OftN3Tw6g6/+rHHO+KjrW78Fqk/ZZF/yJoI33GvEF7jtE=
+	t=1715644266; cv=none; b=E7dmGgIz7VyOovE8TIMSTQQgSIC3wFmjMSqvj5uFCU/ZMz9p7a5MxgooBNvI5mZB2Pnh7IAPSRb9ICXutqqbtNcUet410DBiTtQG8WQe8ALzdOW4NLq0pDcYAHqjvfNaDKQgCs5BV7s2IY82OiSTW6XKaM/b9/FDnSK9t/K4Q+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715644253; c=relaxed/simple;
-	bh=s8u0nvmNJOg1DS/o5uZYs29HJ+DuU4VAP3P3lQQpVSg=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=EyoPuHX6KCbQlSYxWly7F77qXofh87PBgo92odCO3NAIxxLHzwXYT2086+jKVYPcIGzlxlp5zDRQb8Vee+Po5XTrIfAmcgzE2q/m4Zc1MGPVHOL2tP+rM4I5q8oVbay9kLeFVDFHROW2wYUo7l+ilAzSuy74jvAiVLHh1cmeZBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p7j4u863; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715644266; c=relaxed/simple;
+	bh=8k7wY0dIyy5/im7vf9wz7CejUYZadSeVLOyq35oenu0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UFIWXUEHqR89Vue/bOz2pFp+/Dw2mmLhd6g8EtC4gxpi827Bnzb2nomh5ql6yJrJBMAN2a6/No54fM4o88HuO/E2F6upAkQTWOHGooN4cDhQVOdNhvK8kro9quhBiRlX8iheo3viDEUc6ko9ymVAQcik/7iUeRBZR83FRCaIdY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LjkzpoSI; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p7j4u863"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3F02FC32786;
-	Mon, 13 May 2024 23:50:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715644253;
-	bh=s8u0nvmNJOg1DS/o5uZYs29HJ+DuU4VAP3P3lQQpVSg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=p7j4u863B+ET8nVRl8rSHkWdBuVUrW66qssF1/KdHn267c5JxKlQ1tQZgdJxVro+C
-	 UbNUZMrTWX+G77iNlSEHLgy2Ian+KxxuT68NDNio6Bdutjwi3xVVnfNe/XdDLT6vCV
-	 9Rbk4qev220LTfOdFosYsA2Le95goBzZfcBEnZ64snFDY7YtblOTQO+CO7UK9NHHJT
-	 9j7BT4T49S6ZbBd19saCt0Itq8suyYQi602tEElVyakIsXjyTxGAOGIAvzHDc/773J
-	 Y5I0D1VDVdEcvsDtxakYaN4YQMXv7jF0/IaDNenqXFUfL1Yo0EppgsGh+TP2eSGslv
-	 be6sTj89ocuQA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 35853C433F2;
-	Mon, 13 May 2024 23:50:53 +0000 (UTC)
-Subject: Re: [GIT PULL] chrome-platform-firmware changes for v6.10
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ZkGWRmncTxuqnTon@google.com>
-References: <ZkGWRmncTxuqnTon@google.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ZkGWRmncTxuqnTon@google.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-firmware-for-v6.10
-X-PR-Tracked-Commit-Id: 7f20f21c22aa22e488530f66bf4fc168e427f5bd
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a7c840ba5fa78d7761b9fedc33d69cef44986d79
-Message-Id: <171564425321.32070.7729734414650999432.pr-tracker-bot@kernel.org>
-Date: Mon, 13 May 2024 23:50:53 +0000
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: torvalds@linux-foundation.org, briannorris@chromium.org, jwerner@chromium.org, groeck@chromium.org, tzungbi@kernel.org, linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LjkzpoSI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715644264; x=1747180264;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8k7wY0dIyy5/im7vf9wz7CejUYZadSeVLOyq35oenu0=;
+  b=LjkzpoSIFECDZ4ftKkZZVDFLiDUjLUQNTQP0IaMgAc1O8aI+QDCoQc0K
+   GMAE6QblmYZyQLEeLJth3FxP1Jgxw71Olr+nlAVYoXj6gHOHpz47Cuuh3
+   Qu6RO4Ki+aZRUQu9dlvXSBIQEKLxIo5TX+AZeAiTIBu1GRZh7+Dd3p7ZY
+   UIzpEi0qKxKnhKxrfENlnXa9F/n0KG2VyWdSzOArzhH/r4VtOk4U0976f
+   V9TOe1pzXCX46+yhMgWuN5nm/d6h+kiuTb6jcQfGQK8utZDX3h6jVc+3x
+   l5pqgZUAdqPP5IRX87/tZuI8ukvI66yrwkWAaLXaAQwzlq70f8hbT+KHl
+   Q==;
+X-CSE-ConnectionGUID: kHOrN815Qf2MB1x4mxI9oQ==
+X-CSE-MsgGUID: Ge/Bl8W9RhmQyzesPfyAwQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="29093954"
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="29093954"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 16:51:03 -0700
+X-CSE-ConnectionGUID: SX6aCGhPTHuCKaVvAbrmLA==
+X-CSE-MsgGUID: N0lPQVPlSMeeWOzne2Q0Sw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="30497746"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by fmviesa009.fm.intel.com with ESMTP; 13 May 2024 16:51:01 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s6fRa-000Ao7-1C;
+	Mon, 13 May 2024 23:50:58 +0000
+Date: Tue, 14 May 2024 07:50:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Gustavo Silva <gustavograzs@gmail.com>, jic23@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, lars@metafoo.de, christophe.jaillet@wanadoo.fr,
+	gerald.loacker@wolfvision.net, devicetree@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] iio: chemical: ens160: add triggered buffer support
+Message-ID: <202405140721.LuiSHRvx-lkp@intel.com>
+References: <20240512210444.30824-5-gustavograzs@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240512210444.30824-5-gustavograzs@gmail.com>
 
-The pull request you sent on Mon, 13 May 2024 12:25:42 +0800:
+Hi Gustavo,
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git tags/tag-chrome-platform-firmware-for-v6.10
+kernel test robot noticed the following build warnings:
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a7c840ba5fa78d7761b9fedc33d69cef44986d79
+[auto build test WARNING on 084eeee1d8da6b4712719264b01cb27b41307f54]
 
-Thank you!
+url:    https://github.com/intel-lab-lkp/linux/commits/Gustavo-Silva/dt-bindings-vendor-prefixes-add-ScioSense/20240513-050745
+base:   084eeee1d8da6b4712719264b01cb27b41307f54
+patch link:    https://lore.kernel.org/r/20240512210444.30824-5-gustavograzs%40gmail.com
+patch subject: [PATCH 4/6] iio: chemical: ens160: add triggered buffer support
+config: arc-randconfig-r123-20240514 (https://download.01.org/0day-ci/archive/20240514/202405140721.LuiSHRvx-lkp@intel.com/config)
+compiler: arceb-elf-gcc (GCC) 13.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20240514/202405140721.LuiSHRvx-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405140721.LuiSHRvx-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/iio/chemical/ens160_core.c:250:39: sparse: sparse: incorrect type in assignment (different base types) @@     expected unsigned short @@     got restricted __le16 [addressable] [usertype] val @@
+   drivers/iio/chemical/ens160_core.c:250:39: sparse:     expected unsigned short
+   drivers/iio/chemical/ens160_core.c:250:39: sparse:     got restricted __le16 [addressable] [usertype] val
+   drivers/iio/chemical/ens160_core.c: note: in included file (through include/linux/mmzone.h, include/linux/gfp.h, include/linux/xarray.h, ...):
+   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
+   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
+
+vim +250 drivers/iio/chemical/ens160_core.c
+
+   232	
+   233	static irqreturn_t ens160_trigger_handler(int irq, void *p)
+   234	{
+   235		struct iio_poll_func *pf = p;
+   236		struct iio_dev *indio_dev = pf->indio_dev;
+   237		struct ens160_data *data = iio_priv(indio_dev);
+   238		__le16 val;
+   239		int ret, i, j = 0;
+   240	
+   241		mutex_lock(&data->mutex);
+   242	
+   243		for_each_set_bit(i, indio_dev->active_scan_mask,
+   244				 indio_dev->masklength) {
+   245			ret = regmap_bulk_read(data->regmap,
+   246					       ENS160_REG_DATA_TVOC + 2 * i, &val, 2U);
+   247			if (ret)
+   248				goto err;
+   249	
+ > 250			data->scan.chans[j++] = val;
+   251		}
+   252	
+   253		iio_push_to_buffers_with_timestamp(indio_dev, &data->scan,
+   254						   pf->timestamp);
+   255	err:
+   256		mutex_unlock(&data->mutex);
+   257		iio_trigger_notify_done(indio_dev->trig);
+   258	
+   259		return IRQ_HANDLED;
+   260	}
+   261	
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
