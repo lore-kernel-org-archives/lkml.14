@@ -1,105 +1,122 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E801474A0
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:25:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42675146A77
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715585153; cv=none; b=XyejlzO5MSfaG5OrPHWPzq99mM8BEIgRqnE0VPFik+c4UguR2WUJ1Cc1v6XOuKjUor44IqDFqzilHuIWYR4ZKPxfNpSLcmmxeamioX8hrptWTPDxalEvCoHNrDM5Qb+X3fgptYKtV0f1UGH8AJJWu6+KiK26/MqmVLk3yDAlHw4=
+	t=1715585385; cv=none; b=Gch8GlYtFLB+6H57C3KO8ux9m5LYQOwj5HK8sehZPL6cxoE2T0b8MeQO81M98t1/92VtufM1a567dSnWf9pLNna1unEcAi0eiyzgt6AngYs4Z/0Ta9SO0Q1xN5piw78O3X8090mdRfYDcSR+WHGxg17V/yqOUm8F5ruwQV5EOHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715585153; c=relaxed/simple;
-	bh=wMEuAI0hnZW1lo/a7h1KVjA6PRjEKyLoM0M7DADEqcA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fg3PSqxlRU/euWI6uGjpaBBP+SwmEYyS/vSfQ6Yx7Ltw5q24wRPRQCQ8f9GFk5bn5e8Va2u4MZeCevKTtgFyoVDfqfCGd9CE55fTeZYtWK0XRCYB5QgWsxPHsEYycjm7v49g2KCII5p0p81Dm/INho7xYXXkznn9o3lntRfccWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MgYfy9Y9; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715585385; c=relaxed/simple;
+	bh=IzPgdw0K49eRhw5jtIZPmynlarK4dqQ229YsGJcycyE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q2dKY1KJYPKbaSSQ7v0pNyIGVYcXs/Xakgd4616xUf0wMj4ZWGhZ2ChbK+g3B0uVwtSgxtdaLwwZ1JAQuVuoaFLvU0FerSNXiffzTuiSRs6mHPpthFNguE2SVD0hfDfNerxFwxEB+w5fmJlGDGIUVC/8+PBiupTDMV12UKFexns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=so7U/oaT; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MgYfy9Y9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715585152; x=1747121152;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=wMEuAI0hnZW1lo/a7h1KVjA6PRjEKyLoM0M7DADEqcA=;
-  b=MgYfy9Y9g11Cah784Hk+WlIdRkfZQM0eiMDGhdnAkSzp89iNXySOZJru
-   yQVvF541+HGUFR5rhKpFySaLzrTLVSa9ENVXf3P3sVtPISufs1+yMGMlb
-   z1fx2tE7tbVFDreioIxjfuLNq/kZPwqk47oCC25HfloV2d+w+qRvG44Ka
-   Q8IRGfSms0AO2Zo1TTtvxLBf5EoMCkK+Y+M4zYRCjuOkrgGVVukfv8192
-   ymKhXGf034WHILqDXivolT7K6satuFlhLrX9s2goRWK5qww0jpKksw8ph
-   qmhUERN+PulRGSkElDgintGcp+HTnkKzEtnZi4xy5KUE2kR+CCoK6+/9C
-   Q==;
-X-CSE-ConnectionGUID: mEuip9srQ5WCHEGzJojjZA==
-X-CSE-MsgGUID: Xy0PrlOjSD+xq69pCpSS7A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="29019684"
-X-IronPort-AV: E=Sophos;i="6.08,157,1712646000"; 
-   d="scan'208";a="29019684"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 00:25:51 -0700
-X-CSE-ConnectionGUID: B0o9cwonRVSGhjNXnaLsSw==
-X-CSE-MsgGUID: VSbT3SNNQ2mbkjbrR83ESw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,157,1712646000"; 
-   d="scan'208";a="34761360"
-Received: from nirmoyda-mobl.ger.corp.intel.com (HELO [10.246.50.245]) ([10.246.50.245])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 00:25:50 -0700
-Message-ID: <ce1e1097-2e7d-475b-ac17-3b84aec473e2@linux.intel.com>
-Date: Mon, 13 May 2024 09:25:45 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="so7U/oaT"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5724736770cso8793a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 00:29:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1715585382; x=1716190182; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iAY4/lorGsuZXDngCKORi6jmMI4bRdFCzdsTXkDAPOg=;
+        b=so7U/oaTH/1My0EXDal3lNbOVdwa4Pb2lXxhCe1w/KPWh8LrWgdOyXwvyL+6gE5ZqP
+         aVVvwQAx8YxYKuKTgG+sxq0UDSkTK3VK7iWyTIVcnlBb6fTHSLFQo1z9TMljFTZxTtgZ
+         csIeaBVTqGwQC7Y5S7qXmNQpSUXSzFR1PZOItHZnikuHDJDJnFDKOIqNKoO2PFKi2LSD
+         2iLFrL40RGmDGFQ0DdUOnHyJsrIY4C9htfBT4B51/CAIY9HMiNXhx4IXfzD9cQ2A7rKq
+         Rg51rvqr22Cj3k5Hlt2vZjFU+wuYVl1ieiJ0YxDCV7UG0AhEQK5qRb+Y2BZt8lbppfKG
+         5UaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715585382; x=1716190182;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iAY4/lorGsuZXDngCKORi6jmMI4bRdFCzdsTXkDAPOg=;
+        b=xTibsM69oNYzcSHgqHZKQhs44VHML+/BgNvBg2yOWk/U/Lg2xJ3dP3X2ksaGTu12lr
+         Lgy43FAHv+pkXyxy09/haSgwBIzX1jDhCBpN06WUG2rNEr9RfhZx95/RybOxe9b8+Ixp
+         jGlIkCpKdRiEc9r25hFA22Ap0v2EjGoUNjOJoWzGyZ0flwkKPzn0NME0MKDjXp+QYjRY
+         8xnpdouzi/wbwaV8MD2atU+/O5A4H8lgn8ec3FCp1wvQszeaLX+g4rvHRglFgm37jaTG
+         V1QU4ki9zN+vrCPW24xskRwMRXZE0dJb2HlpUdZN+PQy9Rn5UnUCHQaZzEMKv688fIDI
+         UsMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRfRXAKSTqXjVShZJNIEFnhEpWn7Rf3fgSt9eNzx9T+cE3ZCiDeYJkclejLFI2EuibtWeAO4FcUvEE8W5wZMVm6w6HjyUQxaCWeXQO
+X-Gm-Message-State: AOJu0YxLmaDAq6Q9IAQSUfnbC1axQar8hGICwdfjdISY1FwCnI6GJ2GW
+	jOjGlZ6IfjIJtHSsC8eVz+OJ9n7UsXIafnqASEmoUijB3NZjWUXABsHYWS+3DbM+5KqfwwCYVMQ
+	8McTjIkowhOJPDDa1zFIwId/p13X662Rxs8k7
+X-Google-Smtp-Source: AGHT+IGhtol7Ka3Q9hALBhyjhXgfG9C+/LulSKbBCs7IbilYl6XQXtTboOY2HfvABdOkS/zVQlGEo51pnJ6tSHLdWqg=
+X-Received: by 2002:a05:6402:2228:b0:572:57d8:4516 with SMTP id
+ 4fb4d7f45d1cf-5743a09ba38mr227370a12.2.1715585382186; Mon, 13 May 2024
+ 00:29:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/i915: Correct error handler
-To: Jiasheng Jiang <jiashengjiangcool@outlook.com>,
- jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
- rodrigo.vivi@intel.com, tursulin@ursulin.net, airlied@gmail.com,
- daniel@ffwll.ch, chris@chris-wilson.co.uk
-Cc: intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org
-References: <BYAPR03MB41680146FAD88A8F26C3827BADE02@BYAPR03MB4168.namprd03.prod.outlook.com>
-Content-Language: en-US
-From: Nirmoy Das <nirmoy.das@linux.intel.com>
-In-Reply-To: <BYAPR03MB41680146FAD88A8F26C3827BADE02@BYAPR03MB4168.namprd03.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240513015127.961360-1-wei.fang@nxp.com>
+In-Reply-To: <20240513015127.961360-1-wei.fang@nxp.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 13 May 2024 09:29:28 +0200
+Message-ID: <CANn89i+EQDCFrhC3mN8g2k=KFpaKtrDusgaUo9zBvv0JCw8eYg@mail.gmail.com>
+Subject: Re: [PATCH net] net: fec: avoid lock evasion when reading pps_enable
+To: Wei Fang <wei.fang@nxp.com>
+Cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+	shenwei.wang@nxp.com, xiaoning.wang@nxp.com, richardcochran@gmail.com, 
+	andrew@lunn.ch, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 5/11/2024 5:48 PM, Jiasheng Jiang wrote:
-> Replace "slab_priorities" with "slab_dependencies" in the error handler to avoid memory leak.
-
-Nice catch. I would make the subject more like:
-
-drm/i915: Fix memory leak by correcting cache object name in error handler
-
+On Mon, May 13, 2024 at 4:02=E2=80=AFAM Wei Fang <wei.fang@nxp.com> wrote:
 >
-> Fixes: 32eb6bcfdda9 ("drm/i915: Make request allocation caches global")
-
-Also need Cc: <stable@vger.kernel.org> # v5.2+
-
-With those:
-
-Reviewed-by: Nirmoy Das <nirmoy.das@intel.com>
-
-
-Nirmoy
-
-> Signed-off-by: Jiasheng Jiang <jiashengjiangcool@outlook.com>
+> The assignment of pps_enable is protected by tmreg_lock, but the read
+> operation of pps_enable is not. So the Coverity tool reports a lock
+> evasion warning which may cause data race to occur when running in a
+> multithread environment. Although this issue is almost impossible to
+> occur, we'd better fix it, at least it seems more logically reasonable,
+> and it also prevents Coverity from continuing to issue warnings.
+>
+> Fixes: 278d24047891 ("net: fec: ptp: Enable PPS output based on ptp clock=
+")
+> Signed-off-by: Wei Fang <wei.fang@nxp.com>
 > ---
->   drivers/gpu/drm/i915/i915_scheduler.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/net/ethernet/freescale/fec_ptp.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
 >
-> diff --git a/drivers/gpu/drm/i915/i915_scheduler.c b/drivers/gpu/drm/i915/i915_scheduler.c
-> index 762127dd56c5..70a854557e6e 100644
-> --- a/drivers/gpu/drm/i915/i915_scheduler.c
-> +++ b/drivers/gpu/drm/i915/i915_scheduler.c
-> @@ -506,6 +506,6 @@ int __init i915_scheduler_module_init(void)
->   	return 0;
->   
->   err_priorities:
-> -	kmem_cache_destroy(slab_priorities);
-> +	kmem_cache_destroy(slab_dependencies);
->   	return -ENOMEM;
->   }
+> diff --git a/drivers/net/ethernet/freescale/fec_ptp.c b/drivers/net/ether=
+net/freescale/fec_ptp.c
+> index 181d9bfbee22..8d37274a3fb0 100644
+> --- a/drivers/net/ethernet/freescale/fec_ptp.c
+> +++ b/drivers/net/ethernet/freescale/fec_ptp.c
+> @@ -104,14 +104,16 @@ static int fec_ptp_enable_pps(struct fec_enet_priva=
+te *fep, uint enable)
+>         struct timespec64 ts;
+>         u64 ns;
+>
+> -       if (fep->pps_enable =3D=3D enable)
+> -               return 0;
+> -
+>         fep->pps_channel =3D DEFAULT_PPS_CHANNEL;
+>         fep->reload_period =3D PPS_OUPUT_RELOAD_PERIOD;
+
+Why are these writes left without the spinlock protection ?
+
+
+>
+>         spin_lock_irqsave(&fep->tmreg_lock, flags);
+>
+> +       if (fep->pps_enable =3D=3D enable) {
+> +               spin_unlock_irqrestore(&fep->tmreg_lock, flags);
+> +               return 0;
+> +       }
+> +
+>         if (enable) {
+>                 /* clear capture or output compare interrupt status if ha=
+ve.
+>                  */
+> --
+> 2.34.1
+>
