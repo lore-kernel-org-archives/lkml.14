@@ -1,342 +1,165 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from dggsgout12.his.huawei.com (unknown [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACB56146A8E;
-	Mon, 13 May 2024 07:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CB5E1465A7;
+	Mon, 13 May 2024 07:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715585437; cv=none; b=ZHHX4KWIw3ujHbnTnplJXDQJ3UsP3Jdb0lpSXq4DC+GYm+70Ma/a5TdkUj9H11PsKmP/jyu8WjpZjKs3wSSEFtA+z2IuN3nSVcFJO8h/Vrd16ZlXz8AjmchlPo8Tg3tJ2vrKfmcSDah/O27ZryOgbwP0568E9PB/f5dnmEGwKEE=
+	t=1715585514; cv=none; b=sgk8SZYDtFFUusCza0+dsgLw4mQQgDbdbuyBTOtuuZM7CLe6acjZfqDyruK3HXzgmaXj/DpLYlH4qwngqR32dPXX4SLmW08VZJdPwj1+2LFMDzy9wBmEfxM03CgzjuIEGJ0xZHK41m2wKMDPtgPetCpr0h9NjJj9iWSHDJv3JZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715585437; c=relaxed/simple;
-	bh=ESzWUWT7UdAigvgNqjCvp20f69P4NvbnvQBAmM94kpI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kvbbmgrZKHesRsd2I4JM2DfzhqSMZOpxVrR7RIfYcrrd3Y5BtpHMvClQrUoLMz2m6GGiFHqwPQptc/2YOjwdAhNL1bBOw9b+atxwe2644NhV9jI36lqKpQpcR5u5syEPKO8VEuijaPccncfJkB/OFc8460tq7w0Sz4cqmoJTRGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gnNGVw30; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gnNGVw30"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C336120015;
-	Mon, 13 May 2024 07:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715585433;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LbjmTJQmBDoiweHEq3SgUCBe2L/0nXtHCoGhZ/iLhzg=;
-	b=gnNGVw30rpMBsMDh6TW+A3Lu0G0hH3MoAQPMp6NP0S4LtIWjp1VTBUADgS3acoMcTSWQ8b
-	bs+7DfkUgKEw5yY134pSyPqfYP/jkL6sjWDEmZJCAaeHJe+2w3AwIUgbVl2ovrTlKAO0qE
-	xbuE3twIclcMn0jIZNdbTGu5wIt1A9PF5fFAmmgI/LP8NgmQHp8wfpDnUjCf3Az94/bEYQ
-	xdzWQPmR7CRjD8hSCtAwUguTV1sNiyPdLfqAuqj6irfslleDNtybEkdYJG+pClu5bjfzVt
-	fZLhxKaSLCvch8ZFsw/jsaE/mVTC2sHv5t1V9ayIxnZYziF5c8X0xo/O6mySXw==
-Date: Mon, 13 May 2024 09:30:29 +0200
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com, Andrew Lunn
- <andrew@lunn.ch>, Jakub Kicinski <kuba@kernel.org>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Russell King
- <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, Christophe
- Leroy <christophe.leroy@csgroup.eu>, Herve Codina
- <herve.codina@bootlin.com>, Florian Fainelli <f.fainelli@gmail.com>,
- Vladimir Oltean <vladimir.oltean@nxp.com>, =?UTF-8?B?S8O2cnk=?= Maincent
- <kory.maincent@bootlin.com>, Jesse Brandeburg <jesse.brandeburg@intel.com>,
- Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>, Piergiorgio Beruto
- <piergiorgio.beruto@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>,
- =?UTF-8?B?Tmljb2zDsg==?= Veronese <nicveronese@gmail.com>, Simon Horman
- <horms@kernel.org>, mwojtas@chromium.org, Nathan Chancellor
- <nathan@kernel.org>, Antoine Tenart <atenart@kernel.org>
-Subject: Re: [PATCH net-next 2/2] net: phy: phy_link_topology:
- Lazy-initialize the link topology
-Message-ID: <20240513093029.5df48163@device-28.home>
-In-Reply-To: <6cedd632-d555-4c17-81cb-984af73f2c08@gmail.com>
-References: <20240507102822.2023826-1-maxime.chevallier@bootlin.com>
-	<20240507102822.2023826-3-maxime.chevallier@bootlin.com>
-	<6cedd632-d555-4c17-81cb-984af73f2c08@gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1715585514; c=relaxed/simple;
+	bh=mP89frmnm1S7+Nm2icvcGrXsiMEAppOWG+koyBdlx9Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QKcl+i02hlq85xGz+0X/n5OhgSmGuOoTHDyd7cy26FOfhI0ZifXJbpWb6AwOF2EM0P39XfsJTB0frfIw/pwVpSGmZqoqNLHI6/fBUr7I0DoQqNzcOgCuOfpff+hElSjGeIEj0RREaNUYjgEP8jxGVY0dHoHgCu1qrCTDgv6c0fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4VdB4k24Pmz4f3jHV;
+	Mon, 13 May 2024 15:31:34 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id D000D1A0C87;
+	Mon, 13 May 2024 15:31:42 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.104.67])
+	by APP1 (Coremail) with SMTP id cCh0CgBnOBHYwUFm_f0hMg--.51716S4;
+	Mon, 13 May 2024 15:31:40 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-ext4@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz,
+	ritesh.list@gmail.com,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	chengzhihao1@huawei.com,
+	yukuai3@huawei.com
+Subject: [PATCH] ext4/jbd2: drop jbd2_transaction_committed()
+Date: Mon, 13 May 2024 15:21:19 +0800
+Message-Id: <20240513072119.2335346-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBnOBHYwUFm_f0hMg--.51716S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxCF4UKFW7Ww15Xw45uryDWrg_yoWrWryfpa
+	95Cr1xCryDZry8uw18Xr48ZFWjva18KayUWrWDC3Z3ta1UJwn2g3yUtw1avFyDtFZ5uw4U
+	XF1ruw4DG34jk37anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvY14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v2
+	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0J
+	UZa9-UUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-Hi Heiner,
+From: Zhang Yi <yi.zhang@huawei.com>
 
-On Wed, 8 May 2024 07:44:22 +0200
-Heiner Kallweit <hkallweit1@gmail.com> wrote:
+jbd2_transaction_committed() is used to check whether a transaction with
+the given tid has already committed, it hold j_state_lock in read mode
+and check the tid of current running transaction and committing
+transaction, but holding the j_state_lock is expensive.
 
-> On 07.05.2024 12:28, Maxime Chevallier wrote:
-> > Having the net_device's init path for the link_topology depend on
-> > IS_REACHABLE(PHYLIB)-protected helpers triggers errors when modules are being
-> > built with phylib as a module as-well, as they expect netdev->link_topo
-> > to be initialized.
-> > 
-> > Move the link_topo initialization at the first PHY insertion, which will
-> > both improve the memory usage, and make the behaviour more predicatble
-> > and robust.
-> > 
-> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> > Fixes: 6916e461e793 ("net: phy: Introduce ethernet link topology representation")
-> > Closes: https://lore.kernel.org/netdev/2e11b89d-100f-49e7-9c9a-834cc0b82f97@gmail.com/
-> > Closes: https://lore.kernel.org/netdev/20240409201553.GA4124869@dev-arch.thelio-3990X/
-> > ---
-> >  drivers/net/phy/phy_link_topology.c    | 31 ++++++---------------
-> >  include/linux/netdevice.h              |  2 ++
-> >  include/linux/phy_link_topology.h      | 23 ++++++++--------
-> >  include/linux/phy_link_topology_core.h | 23 +++-------------
-> >  net/core/dev.c                         | 38 ++++++++++++++++++++++----
-> >  5 files changed, 58 insertions(+), 59 deletions(-)
-> > 
-> > diff --git a/drivers/net/phy/phy_link_topology.c b/drivers/net/phy/phy_link_topology.c
-> > index 0e36bd7c15dc..b1aba9313e73 100644
-> > --- a/drivers/net/phy/phy_link_topology.c
-> > +++ b/drivers/net/phy/phy_link_topology.c
-> > @@ -12,29 +12,6 @@
-> >  #include <linux/rtnetlink.h>
-> >  #include <linux/xarray.h>
-> >  
-> > -struct phy_link_topology *phy_link_topo_create(struct net_device *dev)
-> > -{
-> > -	struct phy_link_topology *topo;
-> > -
-> > -	topo = kzalloc(sizeof(*topo), GFP_KERNEL);
-> > -	if (!topo)
-> > -		return ERR_PTR(-ENOMEM);
-> > -
-> > -	xa_init_flags(&topo->phys, XA_FLAGS_ALLOC1);
-> > -	topo->next_phy_index = 1;
-> > -
-> > -	return topo;
-> > -}
-> > -
-> > -void phy_link_topo_destroy(struct phy_link_topology *topo)
-> > -{
-> > -	if (!topo)
-> > -		return;
-> > -
-> > -	xa_destroy(&topo->phys);
-> > -	kfree(topo);
-> > -}
-> > -
-> >  int phy_link_topo_add_phy(struct net_device *dev,
-> >  			  struct phy_device *phy,
-> >  			  enum phy_upstream upt, void *upstream)
-> > @@ -43,6 +20,14 @@ int phy_link_topo_add_phy(struct net_device *dev,
-> >  	struct phy_device_node *pdn;
-> >  	int ret;
-> >  
-> > +	if (!topo) {
-> > +		ret = netdev_alloc_phy_link_topology(dev);  
-> 
-> This function is implemented in net core, but used only here.
-> So move the implementation here?
+We have already stored the sequence number of the most recently
+committed transaction in journal t->j_commit_sequence, we could do this
+check by comparing it with the given tid instead. If the given tid isn't
+smaller than j_commit_sequence, we can ensure that the given transaction
+has been committed. That way we could drop the expensive lock and
+achieve about 10% ~ 20% performance gains in concurrent DIOs on may
+virtual machine with 100G ramdisk.
 
-If it's OK not to have both helpers to alloc and destroy in different
-files, then I'll move it :)
+fio -filename=/mnt/foo -direct=1 -iodepth=10 -rw=$rw -ioengine=libaio \
+    -bs=4k -size=10G -numjobs=10 -runtime=60 -overwrite=1 -name=test \
+    -group_reporting
 
-> 
-> > +		if (ret)
-> > +			return ret;
-> > +
-> > +		topo = dev->link_topo;
-> > +	}
-> > +
-> >  	pdn = kzalloc(sizeof(*pdn), GFP_KERNEL);
-> >  	if (!pdn)
-> >  		return -ENOMEM;
-> > diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-> > index cf261fb89d73..25a0a77cfadc 100644
-> > --- a/include/linux/netdevice.h
-> > +++ b/include/linux/netdevice.h
-> > @@ -4569,6 +4569,8 @@ void __hw_addr_unsync_dev(struct netdev_hw_addr_list *list,
-> >  					const unsigned char *));
-> >  void __hw_addr_init(struct netdev_hw_addr_list *list);
-> >  
-> > +int netdev_alloc_phy_link_topology(struct net_device *dev);
-> > +
-> >  /* Functions used for device addresses handling */
-> >  void dev_addr_mod(struct net_device *dev, unsigned int offset,
-> >  		  const void *addr, size_t len);
-> > diff --git a/include/linux/phy_link_topology.h b/include/linux/phy_link_topology.h
-> > index 166a01710aa2..3501f9a9e932 100644
-> > --- a/include/linux/phy_link_topology.h
-> > +++ b/include/linux/phy_link_topology.h
-> > @@ -32,10 +32,12 @@ struct phy_device_node {
-> >  	struct phy_device *phy;
-> >  };
-> >  
-> > -struct phy_link_topology {
-> > -	struct xarray phys;
-> > -	u32 next_phy_index;
-> > -};
-> > +#if IS_ENABLED(CONFIG_PHYLIB)
-> > +int phy_link_topo_add_phy(struct net_device *dev,
-> > +			  struct phy_device *phy,
-> > +			  enum phy_upstream upt, void *upstream);
-> > +
-> > +void phy_link_topo_del_phy(struct net_device *dev, struct phy_device *phy);
-> >  
-> >  static inline struct phy_device
-> >  *phy_link_topo_get_phy(struct net_device *dev, u32 phyindex)
-> > @@ -53,13 +55,6 @@ static inline struct phy_device
-> >  	return NULL;
-> >  }
-> >  
-> > -#if IS_REACHABLE(CONFIG_PHYLIB)
-> > -int phy_link_topo_add_phy(struct net_device *dev,
-> > -			  struct phy_device *phy,
-> > -			  enum phy_upstream upt, void *upstream);
-> > -
-> > -void phy_link_topo_del_phy(struct net_device *dev, struct phy_device *phy);
-> > -
-> >  #else
-> >  static inline int phy_link_topo_add_phy(struct net_device *dev,
-> >  					struct phy_device *phy,
-> > @@ -72,6 +67,12 @@ static inline void phy_link_topo_del_phy(struct net_device *dev,
-> >  					 struct phy_device *phy)
-> >  {
-> >  }
-> > +
-> > +static inline struct phy_device *
-> > +phy_link_topo_get_phy(struct net_device *dev, u32 phyindex)
-> > +{
-> > +	return NULL;
-> > +}
-> >  #endif
-> >  
-> >  #endif /* __PHY_LINK_TOPOLOGY_H */
-> > diff --git a/include/linux/phy_link_topology_core.h b/include/linux/phy_link_topology_core.h
-> > index 0a6479055745..f9c0520806fb 100644
-> > --- a/include/linux/phy_link_topology_core.h
-> > +++ b/include/linux/phy_link_topology_core.h
-> > @@ -2,24 +2,9 @@
-> >  #ifndef __PHY_LINK_TOPOLOGY_CORE_H
-> >  #define __PHY_LINK_TOPOLOGY_CORE_H
-> >  
-> > -struct phy_link_topology;
-> > -
-> > -#if IS_REACHABLE(CONFIG_PHYLIB)
-> > -
-> > -struct phy_link_topology *phy_link_topo_create(struct net_device *dev);
-> > -void phy_link_topo_destroy(struct phy_link_topology *topo);
-> > -
-> > -#else
-> > -
-> > -static inline struct phy_link_topology *phy_link_topo_create(struct net_device *dev)
-> > -{
-> > -	return NULL;
-> > -}
-> > -
-> > -static inline void phy_link_topo_destroy(struct phy_link_topology *topo)
-> > -{
-> > -}
-> > -
-> > -#endif
-> > +struct phy_link_topology {
-> > +	struct xarray phys;
-> > +	u32 next_phy_index;
-> > +};
-> >    
-> This is all which is left in this header. As this header is public anyway,
-> better move this definition to phy_link_topology.h?
+Before:
+  overwrite       IOPS=88.2k, BW=344MiB/s
+  read            IOPS=95.7k, BW=374MiB/s
+  rand overwrite  IOPS=98.7k, BW=386MiB/s
+  randread        IOPS=102k, BW=397MiB/s
 
-Well I'll have to include the whole phy_link_topology.h in
-net/core/dev.c, and I was trying to avoid including that whole header,
-and keep the included content to a bare minimum.
+After:
+  verwrite:       IOPS=105k, BW=410MiB/s
+  read:           IOPS=112k, BW=436MiB/s
+  rand overwrite: IOPS=104k, BW=404MiB/s
+  randread:       IOPS=111k, BW=432MiB/s
 
-> 
-> >  #endif /* __PHY_LINK_TOPOLOGY_CORE_H */
-> > diff --git a/net/core/dev.c b/net/core/dev.c
-> > index d2ce91a334c1..1b4ffc273a04 100644
-> > --- a/net/core/dev.c
-> > +++ b/net/core/dev.c
-> > @@ -10256,6 +10256,35 @@ static void netdev_do_free_pcpu_stats(struct net_device *dev)
-> >  	}
-> >  }
-> >  
-> > +int netdev_alloc_phy_link_topology(struct net_device *dev)
-> > +{
-> > +	struct phy_link_topology *topo;
-> > +
-> > +	topo = kzalloc(sizeof(*topo), GFP_KERNEL);
-> > +	if (!topo)
-> > +		return -ENOMEM;
-> > +
-> > +	xa_init_flags(&topo->phys, XA_FLAGS_ALLOC1);
-> > +	topo->next_phy_index = 1;
-> > +
-> > +	dev->link_topo = topo;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(netdev_alloc_phy_link_topology);
-> > +
-> > +static void netdev_free_phy_link_topology(struct net_device *dev)
-> > +{
-> > +	struct phy_link_topology *topo = dev->link_topo;
-> > +
-> > +	if (!topo)
-> > +		return;
-> > +
-> > +	xa_destroy(&topo->phys);
-> > +	kfree(topo);
-> > +	dev->link_topo = NULL;  
-> 
-> Give the compiler a chance to remove this function if
-> CONFIG_PHYLIB isn't enabled.
-> 
-> if (IS_ENABLED(CONFIG_PHYLIB) && topo) {
-> 	xa_destroy(&topo->phys);
-> 	kfree(topo);
-> 	dev->link_topo = NULL;
-> }
+CC: Dave Chinner <david@fromorbit.com>
+Suggested-by: Dave Chinner <david@fromorbit.com>
+Link: https://lore.kernel.org/linux-ext4/493ab4c5-505c-a351-eefa-7d2677cdf800@huaweicloud.com/T/#m6a14df5d085527a188c5a151191e87a3252dc4e2
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+---
+ fs/ext4/inode.c      |  4 ++--
+ fs/jbd2/journal.c    | 17 -----------------
+ include/linux/jbd2.h |  1 -
+ 3 files changed, 2 insertions(+), 20 deletions(-)
 
-Well if we add more things to the link topology, then it's going to be
-easy to forget updating that without clear helpers for alloc/destroy,
-don't you think ?
-
-I can try to squeeze another iteration before net-next closes.
-
-Maxime
-
-> > +}
-> > +
-> >  /**
-> >   * register_netdevice() - register a network device
-> >   * @dev: device to register
-> > @@ -10998,11 +11027,6 @@ struct net_device *alloc_netdev_mqs(int sizeof_priv, const char *name,
-> >  #ifdef CONFIG_NET_SCHED
-> >  	hash_init(dev->qdisc_hash);
-> >  #endif
-> > -	dev->link_topo = phy_link_topo_create(dev);
-> > -	if (IS_ERR(dev->link_topo)) {
-> > -		dev->link_topo = NULL;
-> > -		goto free_all;
-> > -	}
-> >  
-> >  	dev->priv_flags = IFF_XMIT_DST_RELEASE | IFF_XMIT_DST_RELEASE_PERM;
-> >  	setup(dev);
-> > @@ -11092,7 +11116,9 @@ void free_netdev(struct net_device *dev)
-> >  	free_percpu(dev->xdp_bulkq);
-> >  	dev->xdp_bulkq = NULL;
-> >  
-> > -	phy_link_topo_destroy(dev->link_topo);
-> > +#if IS_ENABLED(CONFIG_PHYLIB)
-> > +	netdev_free_phy_link_topology(dev);
-> > +#endif
-> >    
-> Then the conditional compiling can be removed here.
-> 
-> >  	/*  Compatibility with error handling in drivers */
-> >  	if (dev->reg_state == NETREG_UNINITIALIZED ||  
-> 
-> 
-> 
-> 
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 537803250ca9..e8e2865bf9ac 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3199,8 +3199,8 @@ static bool ext4_inode_datasync_dirty(struct inode *inode)
+ 	journal_t *journal = EXT4_SB(inode->i_sb)->s_journal;
+ 
+ 	if (journal) {
+-		if (jbd2_transaction_committed(journal,
+-			EXT4_I(inode)->i_datasync_tid))
++		if (tid_geq(journal->j_commit_sequence,
++			    EXT4_I(inode)->i_datasync_tid))
+ 			return false;
+ 		if (test_opt2(inode->i_sb, JOURNAL_FAST_COMMIT))
+ 			return !list_empty(&EXT4_I(inode)->i_fc_list);
+diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
+index b6c114c11b97..73737cd1106f 100644
+--- a/fs/jbd2/journal.c
++++ b/fs/jbd2/journal.c
+@@ -786,23 +786,6 @@ int jbd2_fc_end_commit_fallback(journal_t *journal)
+ }
+ EXPORT_SYMBOL(jbd2_fc_end_commit_fallback);
+ 
+-/* Return 1 when transaction with given tid has already committed. */
+-int jbd2_transaction_committed(journal_t *journal, tid_t tid)
+-{
+-	int ret = 1;
+-
+-	read_lock(&journal->j_state_lock);
+-	if (journal->j_running_transaction &&
+-	    journal->j_running_transaction->t_tid == tid)
+-		ret = 0;
+-	if (journal->j_committing_transaction &&
+-	    journal->j_committing_transaction->t_tid == tid)
+-		ret = 0;
+-	read_unlock(&journal->j_state_lock);
+-	return ret;
+-}
+-EXPORT_SYMBOL(jbd2_transaction_committed);
+-
+ /*
+  * When this function returns the transaction corresponding to tid
+  * will be completed.  If the transaction has currently running, start
+diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+index 971f3e826e15..e15ae324169d 100644
+--- a/include/linux/jbd2.h
++++ b/include/linux/jbd2.h
+@@ -1643,7 +1643,6 @@ extern void	jbd2_clear_buffer_revoked_flags(journal_t *journal);
+ int jbd2_log_start_commit(journal_t *journal, tid_t tid);
+ int jbd2_journal_start_commit(journal_t *journal, tid_t *tid);
+ int jbd2_log_wait_commit(journal_t *journal, tid_t tid);
+-int jbd2_transaction_committed(journal_t *journal, tid_t tid);
+ int jbd2_complete_transaction(journal_t *journal, tid_t tid);
+ int jbd2_log_do_checkpoint(journal_t *journal);
+ int jbd2_trans_will_send_data_barrier(journal_t *journal, tid_t tid);
+-- 
+2.39.2
 
