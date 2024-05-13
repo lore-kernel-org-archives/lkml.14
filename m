@@ -1,96 +1,92 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA48249F5
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 17:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4871528371;
+	Mon, 13 May 2024 17:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715621783; cv=none; b=EJkGmX05RXsG+Q6smMssf64R+ylfuCCf/wkzg3FxPY3EZa/QFpJVz1NapqY6CAqS3Wqr5a8/rS8MCI79aiPC1WCxdHHTD4J6HeFrNvoXf/7NZKFFZ7nNDB4AAaGN1Wvdqliz8qCDIfqW2w7h4ZReUsc3WPtD8uK3xu2S5feKI74=
+	t=1715621869; cv=none; b=YPH0XydVavauXcL1GxRAxGcxDxS7RUm0UkNkGFBc6DfUL1QVJFbxpRV6PW7bpjpX9w8iFh5OyckmDkheNnDl/rWgwU06MJAExQQnzjriKa/Exwq2Kbtxtz3H8ecxYPF0OXd5viorOhoAVlX7M9OZgWTituVoJMchqtEhSkJA5MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715621783; c=relaxed/simple;
-	bh=oH3eGcg4uKDc8mJeYWQzOH+FxQ/v/Qtu4+nq1oVpYYs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jJTxn5LXu5Rq22OkcJVzafTXMvrOlZNNMNrU1jsyyPKXEZ1NDYefe1A8WfpvIIpRSNgutq5UPDzhABWRu9m/G14vG1/EmVruHZfks/WVr3bLdEyR0Uq7VkuWHwWk+A8NKgRB/F2CwApBQj8KIFcvzmf1CTM7tpQC9r+aaHDbc8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eSftEmFq; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1715621869; c=relaxed/simple;
+	bh=9OE/14Txm8aXh36Jq+hSFTjslOY8o75MZHgMuNfCtzE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=iN9Dzscn2YV2ZWgsKbTk/oYIyPtwknL2RIMEf7G3+pZ9TYQZK4m9WYgH3KxM8wUjxusZsDk5F9NG8w2YLckqCBBHUMfOT6v/yCM+tyy4nqpkIsHOqTMxpQ2nIOS7dVbqc3Rng4uqXNq8eAVRnWkg1rE+ULvLh6z0oM8jSM9Mx+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=gD8obcW1; arc=none smtp.client-ip=80.12.242.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eSftEmFq"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a59cdd185b9so975900366b.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 10:36:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715621780; x=1716226580; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pGKgSqj8FhjNUqw99/xj+RkQSPtYlnoIACWc6isu8ZY=;
-        b=eSftEmFqW1YChOo6/qPPW3uAfbbtzDNBC4yYrZUJrvxSKIZBdG9Z9NV7Z2zSj92oOK
-         0ZKZIxYypZyafV9L4h+4IDx7ne7mfiGKdN6dA/uMKwnUb1GIpoQYRd47L+a8MxE4VL+P
-         5dgkY7x7JWBT4vDArGWwBFwfUuIQcaO8sqO6XoMYI4xXzH4VQNSB4eCTnZ1CMWvzUZYH
-         Otbo79R3LWQbHPpG+PE4bso5db+UD+MQM608imPTn1SAAjM3ux1rVTOI7UlfMiSFTE9F
-         L9zWyO6/EH5f/kwO2WljmJSNWh4EJF3hQsbx51N9xnrZ14rUBJ03SsKzp0dasOE95kTa
-         eVew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715621780; x=1716226580;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pGKgSqj8FhjNUqw99/xj+RkQSPtYlnoIACWc6isu8ZY=;
-        b=mToiu72gBCHM0Ge3qT3YQQQ+CSY9IX6dRRH/GLrsfwqJuYZf397RezCXXBKjEGpXKd
-         CGbw/HI0hglSsfr9MrDElN7DyfHHHAk9JwgF9jBP27Ry1YYbqgaFEOnq2oHQnlq+2tqR
-         iHgeetUQNsXNhDGOO+yCUGW14JsnXQ5iUwmoOiDKUYYQMuQhQc1z3zkkMheSa7qL+Z7S
-         YEjMp0yeGh4EPMbMzS4cO5+j68gtKoA2Fc42XosvqDlqBHOHkZ46gFUg3e7e43Ajr3Xc
-         k2yeZEA1UkOS60J7UW5T437vz7m5rv1i03Tw6RVIRtp77ymHikwUUaMQKCCoQ6n5WcKB
-         rNjg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0xi5XDpBaRvzkuSM5KPk2qO+Jtr6wFmlWxsA1BtoWZGSRPZO6niO9Ur2SE/Szhqyyt3NIf2lr2hHScPrLJTt2UAaF+FjpV+HcBv7Z
-X-Gm-Message-State: AOJu0Yy2KU6HIgfhshnAtfJDyrGjoVpvIqtalEPLbVfAn2DIhNO9R6/i
-	UHFX6DxHfpr21pwjU34QHUsscPe2zNEnIxnEvIUA+465YJ2h1FFeljaHF+EM4N4=
-X-Google-Smtp-Source: AGHT+IFfJi77FO6AqB1W4z2DUhEJYPEilmrR9M0O/v09dQbgexMw/nftetnPR7hcLknwBCiCyqqT/A==
-X-Received: by 2002:a17:907:2d09:b0:a55:5520:f43f with SMTP id a640c23a62f3a-a5a115ef93dmr1376985466b.10.1715621778926;
-        Mon, 13 May 2024 10:36:18 -0700 (PDT)
-Received: from [10.1.3.28] ([149.14.240.163])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a17b01932sm618072366b.168.2024.05.13.10.36.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 May 2024 10:36:18 -0700 (PDT)
-Message-ID: <55ce4e31-4134-40fe-8e94-28392863886a@linaro.org>
-Date: Mon, 13 May 2024 18:36:16 +0100
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="gD8obcW1"
+Received: from localhost.localdomain ([86.243.17.157])
+	by smtp.orange.fr with ESMTPA
+	id 6ZcDs0lh7ME2z6ZcPsL82R; Mon, 13 May 2024 19:37:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1715621865;
+	bh=gwrzcGjxkeip9bzIrX/+Ukodp6IKjva1jKsX16KOX4Q=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=gD8obcW16mCMoDFz7RHcqZs7l87rOrifGN6K+j5KMXrj9kPV7yPVGw7fCKw8G2+vu
+	 p8Q9MUoLJoW6bv/CU2Cpz2KjWbbM7UApwJTa17j5I6BKlr1naAOAzi6Kr0aGoMvjxX
+	 kGqUU7uoQ2rewDsEnUHUWNoHAIk/7KTHcDceLosN5iW9EBl0hp3TedYZRsNOXGh1lq
+	 GrzDeqBOxx99uIXvMLZmYZP6QFZBAqeF6bxW1AVjsHrtvIfGCnBiAuAvFgnVUJuLC0
+	 8tiv0RNEM+pd6RHnaYwbQJr5hHVRCvkrwr0+CKHV3dZ0JFLqIFLFhyAdu0r4N4AxuY
+	 ipu2cmYzo+OhQ==
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 13 May 2024 19:37:45 +0200
+X-ME-IP: 86.243.17.157
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: lgirdwood@gmail.com,
+	broonie@kernel.org,
+	perex@perex.cz,
+	tiwai@suse.com,
+	cezary.rojewski@intel.com,
+	pierre-louis.bossart@linux.intel.com,
+	peter.ujfalusi@linux.intel.com,
+	yung-chuan.liao@linux.intel.com,
+	ranjani.sridharan@linux.intel.com,
+	kai.vehmanen@linux.intel.com,
+	srinivas.kandagatla@linaro.org,
+	bgoswami@quicinc.com,
+	daniel.baluta@nxp.com
+Cc: linux-sound@vger.kernel.org,
+	alsa-devel@alsa-project.org,
+	sound-open-firmware@alsa-project.org,
+	linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 6/6] const_structs.checkpatch: add snd_soc_tplg_ops
+Date: Mon, 13 May 2024 19:37:25 +0200
+Message-ID: <6936369a414077265c11115c98364ae21e3cbdda.1715526069.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.0
+In-Reply-To: <f2f983e791d7f941a95556bb147f426a345d84d4.1715526069.git.christophe.jaillet@wanadoo.fr>
+References: <f2f983e791d7f941a95556bb147f426a345d84d4.1715526069.git.christophe.jaillet@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/8] media: qcom: camss: Attach formats to VFE
- resources
-To: "Gjorgji Rosikopulos (Consultant)" <quic_grosikop@quicinc.com>,
- Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>, rfoss@kernel.org,
- todor.too@gmail.com, andersson@kernel.org, konrad.dybcio@linaro.org,
- mchehab@kernel.org
-Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, laurent.pinchart@ideasonboard.com,
- hverkuil-cisco@xs4all.nl, quic_hariramp@quicinc.com
-References: <20240411124543.199-1-quic_grosikop@quicinc.com>
- <20240411124543.199-3-quic_grosikop@quicinc.com>
- <c76957b9-d57d-469d-87c8-c9f59b4462b0@linaro.org>
- <9ac41841-9281-4867-a607-e3883f32db83@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <9ac41841-9281-4867-a607-e3883f32db83@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 13/05/2024 16:35, Gjorgji Rosikopulos (Consultant) wrote:
-> I agree but i would propose to have next series for cleanup up patches,
-> Otherwise we will have to many changes across the files.
+Now that the soc-topology can handle "const struct snd_soc_tplg_ops" make
+sure that new usages of the struct already enter the tree as const.
 
-So, I missed these plats in the code, thanks for spotting.
-
-I'd like to get the header SPDX and style stuff Vlad highlighted fixed 
-in a V4 of this series.
-
-However given the amount of effort required to verify these changes, I'd 
-rather avoid data-structure and/or logic changes at this stage.
-
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
-bod
+ scripts/const_structs.checkpatch | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/scripts/const_structs.checkpatch b/scripts/const_structs.checkpatch
+index fa96cfd16e99..bae41780bd39 100644
+--- a/scripts/const_structs.checkpatch
++++ b/scripts/const_structs.checkpatch
+@@ -78,6 +78,7 @@ snd_rawmidi_ops
+ snd_soc_component_driver
+ snd_soc_dai_ops
+ snd_soc_ops
++snd_soc_tplg_ops
+ soc_pcmcia_socket_ops
+ stacktrace_ops
+ sysfs_ops
+-- 
+2.45.0
+
