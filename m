@@ -1,131 +1,99 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from bedivere.hansenpartnership.com (bedivere.hansenpartnership.com [96.44.175.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E20D51A;
-	Mon, 13 May 2024 22:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C6B4F883;
+	Mon, 13 May 2024 22:33:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=96.44.175.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715639614; cv=none; b=fJxOIFnIOCHeKwM8ubbB9Vr4dB7U3mwpWA64X+GN7g7B/sumw2NOziSxUdcrQDaO0J1cLhp8Wh8WSDYwmb+6nNehcTC5T3299Ki7OZoiNW6XopeINC02bnaU9bxXg5+YrIRjLcGqO/s/zCKEVzPHJsyuE9g9uhyMJQypQiMdNB0=
+	t=1715639625; cv=none; b=QjbwMaujx0Z8msN0frV7H+4S2UJ1vc0q7rXAyb0CJS4P+EM17vgISJMy/mUx/cBXR7p6s71URsu3MwtBPo1lHKHMh24OU7XvU80aRBJ25uL6fL7TNZuAA4dKvMH7qqIDDYbzkR38DeEr5o9cbJnUTfKiGQY2t2ts5geOCmITyrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715639614; c=relaxed/simple;
-	bh=VF+xtnpj6iNd1cqa0mfpTf22R+BwsnEumpnvLM8BRJQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=B9QpbkzqigFjrO/O+LDR4sXoqC2cr0oowKOzaJx0Vjb9CyukENb0pStELyfJdxfZRxyJExPbvZjQ+BTvvSoOlSs5Bi7lHMoIPPkzgh2DkCf7NdkJap3tQXHhPKF4JywY8Md8RqGdIgSYjyin8OPclm55FDw1Hky3XNEBPjeGtVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=FRo/n1ej; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1715639625; c=relaxed/simple;
+	bh=VCTPQ8CjvvoriPIr3qUhR8Tme9pCRlLe8w6LPLPTQXo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=si/4xDCs924q8ecBruKhHzCaVK/rQK/XcvES9Ia+OUeSZdenJEegQALliVm/V+RaUobKBCwatelXBQ0SxyHmtmhLH14uWLIHzj91Kkljl0zpvtQPxMFqQTkkw1QBmnLUGk3TKHnL3Vu4ItunskWBZOgxWr8T785BIvJ31dlNxlw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=QHc/v/Dd; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=QHc/v/Dd; arc=none smtp.client-ip=96.44.175.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=HansenPartnership.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FRo/n1ej"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1715639607;
-	bh=866m8QdJ9ODjSr65zAIEiDVsaMx436FiNEjIN0mFDpo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=FRo/n1ejgW31yns0cGuJnHrvzwmey8W3h9K9i1iSVs5zX5Tdp+U6hpehuKHvcFB6w
-	 tOCQtZFlcIrJWMqR1FzgZk/t6Ct4Npq/J1FFYTLYoGOy6c5cJhg8cPTTq84alkh344
-	 B4GMyh2yi8j3Cte52+mhRDnc/pmdteFv/x4JJ4w5hvrPqEnzyobZz7y6TYn1QYs5A4
-	 AHAPORLboAtb5O0dJGanerZwiJ07bf5MqblXv3JERFWKcdTZJInL92c+VOnZ6sBl70
-	 REVn6WCepH/0W4gZ7bZtN9PMQHMNj/RpfrnMjKiLhxrjgpjiYKAxglqR9V7f3fcYsT
-	 tC1K2hZyrnk1w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="QHc/v/Dd";
+	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="QHc/v/Dd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1715639622;
+	bh=VCTPQ8CjvvoriPIr3qUhR8Tme9pCRlLe8w6LPLPTQXo=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=QHc/v/DdsDmJ2xXElFQP7TWQ+IsfpUeTJ1RtWB5BUu5tMwochUlZUVWw5ARQa72U6
+	 mJx29a5MeI0nQr8rXU89ZlYbgWhG9ElFNKBEj23oOf4KHjQ/CMcbxXZUPpf/hCcNjT
+	 kFW+oHVeg8oBIVTh24wPlxtu7ZwNojnZX4/e7kgk=
+Received: from localhost (localhost [127.0.0.1])
+	by bedivere.hansenpartnership.com (Postfix) with ESMTP id 6392612868FA;
+	Mon, 13 May 2024 18:33:42 -0400 (EDT)
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+ by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavis, port 10024)
+ with ESMTP id EGxPfShCTr4e; Mon, 13 May 2024 18:33:42 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+	d=hansenpartnership.com; s=20151216; t=1715639622;
+	bh=VCTPQ8CjvvoriPIr3qUhR8Tme9pCRlLe8w6LPLPTQXo=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:From;
+	b=QHc/v/DdsDmJ2xXElFQP7TWQ+IsfpUeTJ1RtWB5BUu5tMwochUlZUVWw5ARQa72U6
+	 mJx29a5MeI0nQr8rXU89ZlYbgWhG9ElFNKBEj23oOf4KHjQ/CMcbxXZUPpf/hCcNjT
+	 kFW+oHVeg8oBIVTh24wPlxtu7ZwNojnZX4/e7kgk=
+Received: from [172.21.4.27] (unknown [50.204.89.31])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4VdZ5M4PlJz4wb0;
-	Tue, 14 May 2024 08:33:27 +1000 (AEST)
-Date: Tue, 14 May 2024 08:33:04 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
- Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patches in the stm32 tree
-Message-ID: <20240514083304.0a8b368b@canb.auug.org.au>
-In-Reply-To: <20240430110428.30432b2f@canb.auug.org.au>
-References: <20240430110428.30432b2f@canb.auug.org.au>
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 9FDBD12868BA;
+	Mon, 13 May 2024 18:33:41 -0400 (EDT)
+Message-ID: <44cd50b60a0a4e376d01544d25187556b8badf94.camel@HansenPartnership.com>
+Subject: Re: [RFC PATCH 0/2] TPM derived keys
+From: James Bottomley <James.Bottomley@HansenPartnership.com>
+To: Ignat Korchagin <ignat@cloudflare.com>, Jarkko Sakkinen
+ <jarkko@kernel.org>,  Ben Boeckel <me@benboeckel.net>
+Cc: Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, 
+ Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+ serge@hallyn.com,  linux-integrity@vger.kernel.org,
+ keyrings@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ kernel-team@cloudflare.com
+Date: Mon, 13 May 2024 16:33:40 -0600
+In-Reply-To: <CALrw=nFLa5=bPbYKijNsEo0Kk77_TEpdPmPe3CJ3VJqGNMmBeg@mail.gmail.com>
+References: <20240503221634.44274-1-ignat@cloudflare.com>
+	 <D10FIGJ84Q71.2VT5MH1VUDP0R@kernel.org> <ZjY-UU8pROnwlTuH@farprobe>
+	 <D10Y0V64JXG8.1F6S3OZDACCGF@kernel.org>
+	 <D10YYQKT9P1S.25CE053K7MQKI@kernel.org>
+	 <CALrw=nFLa5=bPbYKijNsEo0Kk77_TEpdPmPe3CJ3VJqGNMmBeg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/y6KkD+C1uYVV+V_u2t3jAxg";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
 
---Sig_/y6KkD+C1uYVV+V_u2t3jAxg
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, 2024-05-13 at 18:09 +0100, Ignat Korchagin wrote:
+[...]
+> TPM derived keys attempt to address the above use cases by allowing
+> applications to deterministically derive unique cryptographic keys
+> for their own purposes directly from the TPM seed in the owner
+> hierarchy. The idea is that when an application requests a new key,
+> instead of generating a random key and wrapping it with the TPM, the
+> implementation generates a key via KDF(hierarchy seed, application
+> specific info). Therefore, the resulting keys will always be
+> cryptographically bound to the application itself and the device they
+> were generated on.
 
-Hi all,
+So I think what confuses me is what the expected cryptographic secrecy
+properties of the derived keys are.  I get they're a KDF of seed and
+deterministic properties, but if those mixing values are well known (as
+the path or binary checksum cases) then anyone with access to the TPM
+can derive the key from user space because they can easily obtain the
+mixing parameters and there's no protection to the TPM keyed hash
+operation.
 
-On Tue, 30 Apr 2024 11:04:28 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> The following commits are also in the arm-soc tree as different
-> commits (but the same patches):
->=20
->   0087ca056c73 ("arm64: dts: st: add all 8 i2c nodes on stm32mp251")
->   2886ab7437de ("arm64: dts: st: add rcc support for STM32MP25")
->   385ca8e3841f ("arm64: dts: st: add spi3 / spi8 properties on stm32mp257=
-f-ev1"
-> )
->   3e7d579c9fca ("ARM: dts: stm32: add ETZPC as a system bus for STM32MP15=
-x boar
-> ds")
->   4ef09379d765 ("arm64: dts: st: add i2c2 / i2c8 properties on stm32mp257=
-f-ev1"
-> )
->   5e6b388d7bcb ("ARM: dts: stm32: move can3 node from stm32f746 to stm32f=
-769")
->   7442597f90ba ("arm64: dts: st: add i2c2/i2c8 pins for stm32mp25")
->   7c12d95564a2 ("ARM: dts: stm32: add LTDC pinctrl on STM32MP13x SoC fami=
-ly")
->   7c3d4f99a920 ("ARM: dts: stm32: put ETZPC as an access controller for S=
-TM32MP
-> 15x boards")
->   808691f7389d ("media: dt-bindings: add access-controllers to STM32MP25 =
-video=20
-> codecs")
->   881bccce217e ("ARM: dts: stm32: add LTDC support for STM32MP13x SoC fam=
-ily")
->   8fe31699b83d ("bus: stm32_firewall: fix off by one in stm32_firewall_ge=
-t_firewall()")
->   9e716b41a2b5 ("arm64: dts: st: add RIFSC as an access controller for ST=
-M32MP25x boards")
->   a012bd75abf6 ("ARM: dts: stm32: enable display support on stm32mp135f-d=
-k board")
->   aee0ce48516c ("arm64: dts: st: add spi3/spi8 pins for stm32mp25")
->   be62e9c0c3fc ("bus: etzpc: introduce ETZPC firewall controller driver")
->   c7f2f2c0ace8 ("ARM: dts: stm32: add heartbeat led for stm32mp157c-ed1")
->   cab43766e000 ("ARM: dts: stm32: add ETZPC as a system bus for STM32MP13=
-x boards")
->   d3740a9fd78c ("dt-bindings: display: simple: allow panel-common propert=
-ies")
->   dccdbccb7045 ("arm64: dts: st: correct masks for GIC PPI interrupts on =
-stm32mp25")
->   de9b447d5678 ("ARM: dts: stm32: put ETZPC as an access controller for S=
-TM32MP13x boards")
->   ede58756bbe5 ("arm64: dts: st: add all 8 spi nodes on stm32mp251")
->   f798f7079233 ("ARM: dts: stm32: add PWR regulators support on stm32mp13=
-1")
+Consider the use case where two users are using derived keys on the
+same system (so same TPM).  Assuming they use them to protect sensitive
+information, what prevents user1 from simply deriving user2's key and
+getting the information, or am I missing the point of this?
 
-Those commits are now duplicates of commits in Linus' tree.
---=20
-Cheers,
-Stephen Rothwell
+James
 
---Sig_/y6KkD+C1uYVV+V_u2t3jAxg
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmZClSAACgkQAVBC80lX
-0GyhoQf/URZkgMxevy8lFmqX6G50N5iexA96Z3VwvTjMT197cyAyX/IuThQcZdf5
-uqR7htdMsIzIod2PoSCmkqHv4kuhFxhkhNB5aQMDdS2zDV+Z8R0q4Gem4ajMkKE1
-nccYyPVEnJEtuPqrWJKDb6/2e1DLo+v6KFhg+IEHVtNRvQb6g+wfaoWsuZJw/TsP
-1Gl4Ohxmxbxf24pstgd/Hhsyr/cqF5Irhq3SGbnHsuhQ7v80LQSWngxwdWT2/QQK
-efSZsBeEFqXVS0Eyg0vvJpz9sMHJyw2eN5FU1mQEr463+NOIx2rXuYafCKNIFAk/
-F62ppmuyc13dSjgYuTlEUtBkcKbIHQ==
-=arru
------END PGP SIGNATURE-----
-
---Sig_/y6KkD+C1uYVV+V_u2t3jAxg--
