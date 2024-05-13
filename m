@@ -1,91 +1,106 @@
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CA27D414
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 20:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB09D7E0FB;
+	Mon, 13 May 2024 20:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715631258; cv=none; b=t4F9Pb+3p0ARVX4+b1vf00dfAm2c+Y8vE6xvzVT7qIBFTsQYf6ATW7gZeK645u9t2jwRnZBP4wiJ+Ts85DrO1vIUp5i1H7WNhFmKtOnMTM/LfWf973HCG8bmoPV+3EIT9BCW99NwV/SupdRqy7gSOqAx2rZju9MulHUVQWFBpSE=
+	t=1715631481; cv=none; b=EmRaBT0TOUCTCtQa7U8wgmUFsVldHIY1xKbMdM7/GDFWWR2AnIWeaR/5lNXo26m9AeWl6zNvZ3iUxecsnfCyzbWvFZ5aSRckMDKXpKGUGKNJr58v0FqmrTPZ9lLyQ0RzpA0BQhgH8Rz/teLcscf1APyQ4z01Sx33mU/ow2EoEQk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715631258; c=relaxed/simple;
-	bh=55Wf+mAaH9z5EnP3Stxwcm/ef1ex9U3o3+2+2kyCC94=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vq3SQ1pRVEf0U8WxFr5JJ6K2VOIjz6O8VXbCwATjkzKmU4GY3Ufg5I/zKtBiyZOASYXvIRwD8QkBcEmRRMnttdJLp3aIkWB4bMWV/RMagfBCoCS2rq0LlBFh5lSwC9+YaLdCCOW/C8X4mhi4YykD+Obxv/7Ua78nWnPWz8yuVd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=kdo0IEK1; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1715631481; c=relaxed/simple;
+	bh=QPPucxNzMGci2VCLPJG4C88e7OqjvcCNvLSfh/GvPJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RY/FmrL0iz1KguJ6crl93GI8+16a/ArjAWQ+mSGJUdyicmuEKD5lFjTU7NopQi/DjuwCelV50FM8pe/qg5EjwqxbfqFHe7sya2ea7rkED2VJYP+Yw1psHp+jJMWHdIXDorMmYgEJdO1EdSw51BVr02FN19DXZhqgh8RNeW3Wc+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=Aqo9/W9Y; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="kdo0IEK1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=KRH5X+1HYEC761
-	1+i5xKKN04opWRJp5Kz9WR7lisqg0=; b=kdo0IEK1grh6ayBKMfTKflTiiICWC1
-	09xIzeBzFOmJCJ9JeaCjsEz76VDMedXuXoySUgiy7ncqBSWrgEZeTBGbMYDL5DfC
-	R3OSu2QhpOV9TUrgECCiGplQ6aTuAo+gYYtVsWjT79HlT1dYROAiX8yvCEruT8Tj
-	R3c6qE5nAg21zoqP4CePY74oGI37Grx3gjbHSpCEuCecfGiycQaq7f1XLB5VokII
-	la9yt/unHDYuZgJnpbqV73vowZElBgOXjrTTDZTAAVzCN+Y5sJ4GaTQvvBanrZ7a
-	GzhXubv8FRtdhgJFpveHkFVZ4nGwcDbpUdFec5a44wS1PHbRVnopC50w==
-Received: (qmail 2269724 invoked from network); 13 May 2024 22:14:10 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 May 2024 22:14:10 +0200
-X-UD-Smtp-Session: l3s3148p1@Z3A3h1sY4IdehhtP
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-i2c@vger.kernel.org
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	Peter Rosin <peda@axentia.se>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-	"Rob Herring (Arm)" <robh@kernel.org>,
-	linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] power: supply: sbs-manager: Remove class argument from i2c_mux_add_adapter()
-Date: Mon, 13 May 2024 22:11:16 +0200
-Message-ID: <20240513201400.16589-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Aqo9/W9Y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=nqxnckkmky72wratqJjxCB8HyiXkypohHfXZ7n/n1OE=; b=Aqo9/W9YcKQK58JqM5gceiv3OA
+	O7McD0Us4UBR9Wt3OtqfTkFTx5WhU26b2UENWil4GbLhCsw+Ducd7MSH9pyByfoZnRIGuFYzsVLEN
+	+oZ4F+aurC5YQekgLuoq3RDs9uKvuVK2g/97r7fJ5jEPllYvZVqDHSpqO8HKk/bgOU78=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1s6c7I-00FKip-6L; Mon, 13 May 2024 22:17:48 +0200
+Date: Mon, 13 May 2024 22:17:48 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: admiyo@os.amperecomputing.com
+Cc: Jeremy Kerr <jk@codeconstruct.com.au>,
+	Matt Johnston <matt@codeconstruct.com.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] mctp pcc: Implement MCTP over PCC Transport
+Message-ID: <48ef7972-4b8f-4027-a2ca-357e53dcdd0f@lunn.ch>
+References: <20240513173546.679061-1-admiyo@os.amperecomputing.com>
+ <20240513173546.679061-2-admiyo@os.amperecomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240513173546.679061-2-admiyo@os.amperecomputing.com>
 
-Commit 99a741aa7a2d ("i2c: mux: gpio: remove support for class-based
-device instantiation") removed the last call to i2c_mux_add_adapter()
-with a non-null class argument. Therefore the class argument can be
-removed.
+> +static struct mctp_pcc_packet *mctp_pcc_extract_data(struct sk_buff *old_skb,
+> +						     void *buffer, int outbox_index)
+> +{
+> +	struct mctp_pcc_packet *mpp;
+> +
+> +	mpp = buffer;
+> +	writel(PCC_MAGIC | outbox_index, &mpp->pcc_header.signature);
+> +	writel(0x1, &mpp->pcc_header.flags);
+> +	memcpy_toio(mpp->pcc_header.mctp_signature, MCTP_SIGNATURE, SIGNATURE_LENGTH);
+> +	writel(old_skb->len + SIGNATURE_LENGTH,  &mpp->pcc_header.length);
+> +	memcpy_toio(mpp->header_data,    old_skb->data, old_skb->len);
+> +	return mpp;
+> +}
 
-Note: Class-based device instantiation is a legacy mechanism which
-shouldn't be used in new code, so we can rule out that this argument
-may be needed again in the future.
+...
 
-This driver was forgotten by the patch in the Fixes tag.
+> +static netdev_tx_t mctp_pcc_tx(struct sk_buff *skb, struct net_device *ndev)
+> +{
+> +	unsigned char *buffer;
+> +	struct mctp_pcc_ndev *mpnd;
+> +	struct mctp_pcc_packet  *mpp;
+> +	unsigned long flags;
+> +	int rc;
+> +
+> +	netif_stop_queue(ndev);
+> +	ndev->stats.tx_bytes += skb->len;
+> +	mpnd = (struct mctp_pcc_ndev *)netdev_priv(ndev);
+> +	spin_lock_irqsave(&mpnd->lock, flags);
+> +	buffer =  mpnd->pcc_comm_outbox_addr;
+> +	mpp = mctp_pcc_extract_data(skb, mpnd->pcc_comm_outbox_addr, mpnd->hw_addr.outbox_index);
 
-Fixes: fec1982d7072 ("i2c: mux: Remove class argument from i2c_mux_add_adapter()")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
+I don't see any length checks here. How do you know the skb contains
+sizeof(struct mctp_pcc_packet)?
 
-The to-be-fixed patch is only in linux-next in my i2c/for-next tree. We
-want to remove this unneeded parameter in the next mergewindow. I
-suggest that I just put it on top of my branch to avoid the
-dependencies. A quick ack would be super-awesome! Thanks.
+> +static int create_mctp_pcc_netdev(struct acpi_device *acpi_dev,
+> +				  struct device *dev, int inbox_index,
+> +				  int outbox_index)
+> +{
+> +	int rc;
+> +	int mctp_pcc_mtu;
+> +	char name[32];
+> +	struct net_device *ndev;
+> +	struct mctp_pcc_ndev *mctp_pcc_dev;
+> +	struct mctp_pcc_hw_addr physical_link_addr;
 
- drivers/power/supply/sbs-manager.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Since this is networking code, you should be using reverse christmas
+tree for all your functions.
 
-diff --git a/drivers/power/supply/sbs-manager.c b/drivers/power/supply/sbs-manager.c
-index 9e4141cffbf9..933b04806d10 100644
---- a/drivers/power/supply/sbs-manager.c
-+++ b/drivers/power/supply/sbs-manager.c
-@@ -358,7 +358,7 @@ static int sbsm_probe(struct i2c_client *client)
- 	/* register muxed i2c channels. One for each supported battery */
- 	for (i = 0; i < SBSM_MAX_BATS; ++i) {
- 		if (data->supported_bats & BIT(i)) {
--			ret = i2c_mux_add_adapter(data->muxc, 0, i + 1, 0);
-+			ret = i2c_mux_add_adapter(data->muxc, 0, i + 1);
- 			if (ret)
- 				break;
- 		}
--- 
-2.43.0
+> +	snprintf(name, sizeof(name), "mctpipcc%x", inbox_index);
+> +	ndev = alloc_netdev(sizeof(struct mctp_pcc_ndev), name, NET_NAME_ENUM, mctp_pcc_setup);
 
+%x is very unusual for network device names.
+
+	Andrew
