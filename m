@@ -1,233 +1,97 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DCC14C5A3
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 12:58:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5DC1474BC;
+	Mon, 13 May 2024 12:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.23
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715605141; cv=none; b=Mdk4OLSJ5Lff7SRsmT1kECZs72qHPXCCLKHucVffjUdbtwiZtkvSrh6vUDO3qLtJC95OMO6ZhDZBaikdmM30Ka+1f7CBf6BcucTHtJWHqhtDwRNOXzc4MLy8J6ae9+tD8NDxvGNTVHaT58suZ56GSCCozi+hGsqBNJQsOVxWOZE=
+	t=1715605160; cv=none; b=gmB2+ENfnxubeEdb3i9N8KJ5xSWoGpvN//CyX+Bu8hpFTNFUaIyRuR8pOg+inHAsx7P3503QuMt62od9V7e78f/uXI1jLA/fmjq3K4e+D8KOsmrNVtTcj90n3Dz/2BQS0qJoXdEGuoVaVTzdWtrLAN5S2IzJCqgTLhZGohSOt2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715605141; c=relaxed/simple;
-	bh=QwEueKRKRRQmdEt4MPVWyq59oFXImtpq6ZU4/rug9MM=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=YY41vz94ToICr3i9kK6lj29I9pAS80EpbM0VF8CxE9zN78PQQjC8aODs8wFCy5I0oyFRLomz6tAh7Ues7frtoPyNRSINSvL/KkpYS78gmPx4hsHp5+JqyQkCmmZ3CwMwrvxAY2KoMW5dgcQMSTkrCxk4tEzrv/fKMWe6wCEEFdU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=JA7wIwTr; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="JA7wIwTr"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-34e667905d2so2929642f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 05:58:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1715605136; x=1716209936; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=+KHY/va/UiG2Na9MP8nc/w2XW81daquGbqT+2NhsgSg=;
-        b=JA7wIwTrB7/6moUKCC9J7mLc3TEA6KAZ1N611K17biVi/dE6zs++HtVcLH8pFu6bzI
-         GGYOuhp4UIp9QGGeMEMVBn2QlHDK/FV0Khf5p6oeJv1aWpHoTTNBMm+m9FpiVGEaSL9d
-         vRJb90WTWckBTd1ZzYuztJRGDBogqtrB5+6ldK3KsAAfAsqrd3FKLGEeAvUJOVHhK0wv
-         TpUE74gJpnrGbrD0IJmr2+VN2tZRhahP+9hvYs8LUEM20KarnClo0SZwYHj1tS1E/S0n
-         pczzLh3ydFHvhCtAr6In98Kn6hc0OA7BS1OScoPJ7xPSUgNutZQqrE0/jRhyet+or/pE
-         cNhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715605136; x=1716209936;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+KHY/va/UiG2Na9MP8nc/w2XW81daquGbqT+2NhsgSg=;
-        b=UpeSostTOrE+061tPz3EaAZ1sAJpG0ZMr2FB6AZSmveYu4CgYb3ZE5hmsYx3Oh8a4w
-         um4NX/Ajbu19HZuvDayTZOOtlJX5UOK4WqsvcMqA67ud6BacO17C5B+i0KxKYORtfvb8
-         c2SbJI6Ad85z+8ySoV223BYbenZZAV6zZPDg69YR6GnmikcyKEIUhSYKzRSvORjQIccT
-         wggQzms/eYo3EAbXUmCtvFONc3IzDFGJ+daorgePnXLb3s4O9ydMh5/t8/SZhpD7PsEy
-         ZLOLKSiiCASly0P6eJNLn8RAs7i+U39hI6iKc6pEodxzqf2LsxF+StowE8NIh/4VQ0Uu
-         kAfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXILCgut/+izTJAw0RuEBdpevzB3lSfi3CYxKdaYUpTVg3616/4Fam/dqnq4P3x9zBEnMevwVgSGQQf6XWBOO8EtbGL5BBurIB7vjMk
-X-Gm-Message-State: AOJu0YwzVVLjgHrhbAEAH7+QLpTDAnRF/YzgW9PK0Ccb/cffnaNYfW7U
-	kweckwy3F74JVmpLWXxq/SZIlzK/ZRaZB03NrOs0ud93ZMKY86uCaH/wb5+9Ps8=
-X-Google-Smtp-Source: AGHT+IHeRnTDN4SH3gn7w7eJ7nzHsxhbKa6Pl2AcPY9SrajcE/+4MjtBKCpMvS1sSqhDwJN1TAPHXQ==
-X-Received: by 2002:adf:fe04:0:b0:34f:f540:bdc9 with SMTP id ffacd0b85a97d-3504a63300amr6183580f8f.9.1715605136359;
-        Mon, 13 May 2024 05:58:56 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:5b77:3e5a:a808:339a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3502b8969fbsm11019601f8f.37.2024.05.13.05.58.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 05:58:55 -0700 (PDT)
-References: <20240510090933.19464-1-ddrokosov@salutedevices.com>
- <20240510090933.19464-4-ddrokosov@salutedevices.com>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Dmitry Rokosov <ddrokosov@salutedevices.com>
-Cc: neil.armstrong@linaro.org, jbrunet@baylibre.com,
- mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, khilman@baylibre.com,
- martin.blumenstingl@googlemail.com, jian.hu@amlogic.com,
- kernel@sberdevices.ru, rockosov@gmail.com,
- linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/7] clk: meson: a1: pll: support 'syspll'
- general-purpose PLL for CPU clock
-Date: Mon, 13 May 2024 14:48:58 +0200
-In-reply-to: <20240510090933.19464-4-ddrokosov@salutedevices.com>
-Message-ID: <1jbk59zx4g.fsf@starbuckisacylon.baylibre.com>
+	s=arc-20240116; t=1715605160; c=relaxed/simple;
+	bh=0yjd/sb4uh3W+XLlUFtH7oE6+l6oTatynFqvAd22PdU=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=C0+VbnlVznJJXSt1vAHDhj+vM19eJysyS/jUAOLQ69VCwOfFj8ReeT2ZjjHSMPQVaw1IGbleTjusKPopFL+ccCJpgmgPJJBpja54A5+pD135Mo89iUJ/DHdlDMlOMjeVIhXC4V5kGEnK7xIOPNv7i82k1lZMieslbw1jkrendkc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4VdJz11Fx4z9v7Hk;
+	Mon, 13 May 2024 20:42:05 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.47])
+	by mail.maildlp.com (Postfix) with ESMTP id 0518C140555;
+	Mon, 13 May 2024 20:59:02 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP1 (Coremail) with SMTP id LxC2BwD36hOKDkJmEmMYCA--.45732S2;
+	Mon, 13 May 2024 13:59:01 +0100 (CET)
+Message-ID: <dba181a54e76ba2916ecd4747f76e40e6fbbb757.camel@huaweicloud.com>
+Subject: Re: [PATCH] arch/x86/um: Disable UBSAN sanitization
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Johannes Berg <johannes@sipsolutions.net>, richard@nod.at, 
+	anton.ivanov@cambridgegreys.com, tglx@linutronix.de, mingo@redhat.com, 
+	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com
+Cc: x86@kernel.org, linux-um@lists.infradead.org,
+ linux-kernel@vger.kernel.org,  zohar@linux.ibm.com,
+ linux-integrity@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
+Date: Mon, 13 May 2024 14:58:46 +0200
+In-Reply-To: <f88384a305b90708db3b30012f9edf09690dc5ee.camel@sipsolutions.net>
+References: <20240513122754.1282833-1-roberto.sassu@huaweicloud.com>
+	 <d4f4666bf745e83ea00b466b7a7cfb5132b8c7b9.camel@sipsolutions.net>
+	 <096121b3e74a7971b5e6a3d77ca8889380de1885.camel@huaweicloud.com>
+	 <f88384a305b90708db3b30012f9edf09690dc5ee.camel@sipsolutions.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-CM-TRANSID:LxC2BwD36hOKDkJmEmMYCA--.45732S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7Xr4fXF4xJw48Xry8Zw4DCFg_yoWDGrXEva
+	s2yFW8K39xWF47A39Igr98Janrtr40krn8J34xGFnxtw1kAFWkGa4kArWSvwn5J3W8tF97
+	u34DtF1rGr1ayjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb7xYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x0267
+	AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
+	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
+	kEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x0E
+	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04
+	k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UWE__UUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQACBF1jj51CKgAAsD
 
+On Mon, 2024-05-13 at 14:52 +0200, Johannes Berg wrote:
+> On Mon, 2024-05-13 at 14:42 +0200, Roberto Sassu wrote:
+> > On Mon, 2024-05-13 at 14:29 +0200, Johannes Berg wrote:
+> > > On Mon, 2024-05-13 at 14:27 +0200, Roberto Sassu wrote:
+> > > > From: Roberto Sassu <roberto.sassu@huawei.com>
+> > > >=20
+> > > > Disable UBSAN sanitization on UML, since UML does not support it.
+> > > >=20
+> > >=20
+> > > Luckily, that isn't actually true, nor does it actually do this at al=
+l.
+> > > Please fix the commit message.
+> >=20
+> > Thanks, I was actually wondering. I based that statement based on
+> > ARCH_HAS_UBSAN=3Dn.
+> >=20
+> > Any other solution would be ok.
+>=20
+> Not sure I get it. What you're doing in the patch is perfectly fine and
+> almost certainly required, but you're definitely not disabling UBSAN on
+> ARCH=3Dum as you described in the commit message?
 
-On Fri 10 May 2024 at 12:08, Dmitry Rokosov <ddrokosov@salutedevices.com> wrote:
+Ok, I guess the right word is instrumentation (got it from commit
+d4be85d068b44). And the reason is that the vDSO is executing in user
+space. Will fix it.
 
-> The 'syspll' PLL, also known as the system PLL, is a general and
-> essential PLL responsible for generating the CPU clock frequency.
-> With its wide-ranging capabilities, it is designed to accommodate
-> frequencies within the range of 768MHz to 1536MHz.
->
-> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
-> ---
->  drivers/clk/meson/a1-pll.c | 79 ++++++++++++++++++++++++++++++++++++++
->  drivers/clk/meson/a1-pll.h |  6 +++
->  2 files changed, 85 insertions(+)
->
-> diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
-> index 60b2e53e7e51..af47ba308bbe 100644
-> --- a/drivers/clk/meson/a1-pll.c
-> +++ b/drivers/clk/meson/a1-pll.c
-> @@ -138,6 +138,82 @@ static struct clk_regmap hifi_pll = {
->  	},
->  };
->  
-> +static const struct pll_mult_range sys_pll_mult_range = {
-> +	.min = 32,
-> +	.max = 64,
-> +};
-> +
-> +static const struct reg_sequence sys_pll_init_regs[] = {
-> +	{ .reg = ANACTRL_SYSPLL_CTRL1, .def = 0x01800000 },
-> +	{ .reg = ANACTRL_SYSPLL_CTRL2, .def = 0x00001100 },
-> +	{ .reg = ANACTRL_SYSPLL_CTRL3, .def = 0x10022300 },
-> +	{ .reg = ANACTRL_SYSPLL_CTRL4, .def = 0x00300000 },
-> +	{ .reg = ANACTRL_SYSPLL_CTRL0, .def = 0x01f18432 },
-> +};
-> +
-> +static struct clk_regmap sys_pll = {
-> +	.data = &(struct meson_clk_pll_data){
-> +		.en = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> +			.shift   = 28,
-> +			.width   = 1,
-> +		},
-> +		.m = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> +			.shift   = 0,
-> +			.width   = 8,
-> +		},
-> +		.n = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> +			.shift   = 10,
-> +			.width   = 5,
-> +		},
-> +		.frac = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL1,
-> +			.shift   = 0,
-> +			.width   = 19,
-> +		},
-> +		.l = {
-> +			.reg_off = ANACTRL_SYSPLL_STS,
-> +			.shift   = 31,
-> +			.width   = 1,
-> +		},
-> +		.current_en = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL0,
-> +			.shift   = 26,
-> +			.width   = 1,
-> +		},
-> +		.l_detect = {
-> +			.reg_off = ANACTRL_SYSPLL_CTRL2,
-> +			.shift   = 6,
-> +			.width   = 1,
-> +		},
-> +		.range = &sys_pll_mult_range,
-> +		.init_regs = sys_pll_init_regs,
-> +		.init_count = ARRAY_SIZE(sys_pll_init_regs),
+Thanks
 
-Like other 'fishy' flags, I would like a clear comment why this flag is
-required so, 2y from now, we will know why it was put there and how we
-can deal with it.
+Roberto
 
-> +		.flags = CLK_MESON_PLL_INIT_ONCE,
-> +	},
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "sys_pll",
-> +		.ops = &meson_clk_pll_ops,
-> +		.parent_names = (const char *[]){ "syspll_in" },
-> +		.num_parents = 1,
-> +	},
-> +};
-> +
-> +static struct clk_fixed_factor sys_pll_div16 = {
-> +	.mult = 1,
-> +	.div = 16,
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "sys_pll_div16",
-> +		.ops = &clk_fixed_factor_ops,
-> +		.parent_hws = (const struct clk_hw *[]) {
-> +			&sys_pll.hw
-> +		},
-> +		.num_parents = 1,
-> +	},
-> +};
-
-Unlike the fdivs, this fixed divider is not part of the diagram
-describing the syspll clock.
-
-IMO, it could as well be in peripheral controller because it exists
-(from what I can see) just testing purposes, to make the sys pll
-observable through tst_out or gen_clk.
-
-It also looks less awkward in the bindings.
-
-> +
->  static struct clk_fixed_factor fclk_div2_div = {
->  	.mult = 1,
->  	.div = 2,
-> @@ -283,6 +359,8 @@ static struct clk_hw *a1_pll_hw_clks[] = {
->  	[CLKID_FCLK_DIV5]	= &fclk_div5.hw,
->  	[CLKID_FCLK_DIV7]	= &fclk_div7.hw,
->  	[CLKID_HIFI_PLL]	= &hifi_pll.hw,
-> +	[CLKID_SYS_PLL]		= &sys_pll.hw,
-> +	[CLKID_SYS_PLL_DIV16]	= &sys_pll_div16.hw,
->  };
->  
->  static struct clk_regmap *const a1_pll_regmaps[] = {
-> @@ -293,6 +371,7 @@ static struct clk_regmap *const a1_pll_regmaps[] = {
->  	&fclk_div5,
->  	&fclk_div7,
->  	&hifi_pll,
-> +	&sys_pll,
->  };
->  
->  static struct regmap_config a1_pll_regmap_cfg = {
-> diff --git a/drivers/clk/meson/a1-pll.h b/drivers/clk/meson/a1-pll.h
-> index 4be17b2bf383..666d9b2137e9 100644
-> --- a/drivers/clk/meson/a1-pll.h
-> +++ b/drivers/clk/meson/a1-pll.h
-> @@ -18,6 +18,12 @@
->  #define ANACTRL_FIXPLL_CTRL0	0x0
->  #define ANACTRL_FIXPLL_CTRL1	0x4
->  #define ANACTRL_FIXPLL_STS	0x14
-> +#define ANACTRL_SYSPLL_CTRL0	0x80
-> +#define ANACTRL_SYSPLL_CTRL1	0x84
-> +#define ANACTRL_SYSPLL_CTRL2	0x88
-> +#define ANACTRL_SYSPLL_CTRL3	0x8c
-> +#define ANACTRL_SYSPLL_CTRL4	0x90
-> +#define ANACTRL_SYSPLL_STS	0x94
->  #define ANACTRL_HIFIPLL_CTRL0	0xc0
->  #define ANACTRL_HIFIPLL_CTRL1	0xc4
->  #define ANACTRL_HIFIPLL_CTRL2	0xc8
-
-
--- 
-Jerome
