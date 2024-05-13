@@ -1,102 +1,154 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE977E777;
-	Mon, 13 May 2024 08:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFE9146D62;
+	Mon, 13 May 2024 08:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715587442; cv=none; b=aiZy4gOd4ywOKHEce4DBqivO/2K3q64wirBnm5AzKjNB2n3mbPJ1XeGf2nMyhxdD6+KThxKAxw1TRuo+HQY6qklYQfLnKfAXlrt9+f2ybz1SHdcT/m5V36JQQnN0n4D2pd2lHlkEk6ew6gALf2acpUoCCBUwuLDGxkQVnBiClOg=
+	t=1715587466; cv=none; b=qq0ZStQ7wH9LymqD2sPqjolJOFBpUHCtn9SRHMEKAjUHvWjFspAkt9zg8uAhjSH+XLXEFCGzH/ObeInuw3gJppjRD5EbaUjZfTMSTlhe7aaanKO4PHzhf+IoVA6T4Q6oa99iWXKnq5PyC8ubIEDR8ILAT+XRtURyck9k/VzehyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715587442; c=relaxed/simple;
-	bh=fN65sI7/R50fanyXFbOo8aZsXNpfT1Dm6SRRmg2Km1s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kfwwuhkCVNFLNoftdQymrdkChWKWYfxD1ebycoPAQN3tOXjCftQq39qPZdd/yiEHxnvvPXfzD+e39uVnTaixI4qlV7LGC+qis/JmmFZHNIcVY5kFSf3iFuDuv2I0KI2bb0IK1dvCyDMiR9E8ik3K7+5152Xe2rhsNzrDF62Z5oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4VdBk25BW5z1RJHb;
-	Mon, 13 May 2024 16:00:26 +0800 (CST)
-Received: from kwepemm600002.china.huawei.com (unknown [7.193.23.29])
-	by mail.maildlp.com (Postfix) with ESMTPS id EA83E14011B;
-	Mon, 13 May 2024 16:03:47 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- kwepemm600002.china.huawei.com (7.193.23.29) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Mon, 13 May 2024 16:03:47 +0800
-From: Devyn Liu <liudingyuan@huawei.com>
-To: <linus.walleij@linaro.org>, <brgl@bgdev.pl>
-CC: <f.fangjian@huawei.com>, <linux-gpio@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <mika.westerberg@linux.intel.com>,
-	<andriy.shevchenko@linux.intel.com>, <linux-acpi@vger.kernel.org>,
-	<jonathan.cameron@huawei.com>, <yangyicong@huawei.com>,
-	<yisen.zhuang@huawei.com>, <kong.kongxinwei@hisilicon.com>,
-	<liudingyuan@huawei.com>
-Subject: [PATCH] gpiolib: acpi: Fix failed in acpi_gpiochip_find() by adding parent node match
-Date: Mon, 13 May 2024 15:59:01 +0800
-Message-ID: <20240513075901.2030293-1-liudingyuan@huawei.com>
-X-Mailer: git-send-email 2.30.0
+	s=arc-20240116; t=1715587466; c=relaxed/simple;
+	bh=EAmiv7VSHmjNnLH+14OUNkI/+sQMsz87MSk2GKwM+/s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HV5/xVdDN4EBq2hWkXwsxmdsnYQ90GZiRNiCLnmyUimJe7d92ZyrJPZCo/hVdxJZxXShXTkYU511bOeiMRszi//ssvHB2JyDIyxDe0yAfpzZyIfKlC8QPG9N0/xpCyuefRxClcVubPcRGxTwT6W4tetQmfhxO/cgssPw7MOgsyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d3eYSRrU; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d3eYSRrU"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=trTboVybSpPr171+KCudUR4Obn/YpkzCtmzvOfCwqIY=; b=d3eYSRrUrt2qXEe99LIREdczLQ
+	pHtJ4aKB9ric91TLuOhYMaTSUOokSfB8DCnxWZLFkjBOU2UsH4wfTTGJF3pRmqIm2tFdgSeuqLnhl
+	9DlvPa3ZpMMPDqMx52jOvmLLRN+iH/aCk74HTtgGGzXm8+NwBjPokFqGC3ofcCBSyp8ZQT5HRDX+h
+	gCq5hqM86P0rAqBV5e6VdRPLToisLcrdTCUj0OZVZuU3PO+aUE1WHqA7+RhE5imb+rqwn3wueC6Cm
+	yrLezqNByK5C/b2t4yqhejx/qoCy4hTPx17L7pp9oOqSGBk/nyInjghxXfboiSLdBkYLv2WFRdGEC
+	lT2K6Grw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1s6QfA-00000007nhx-0qqq;
+	Mon, 13 May 2024 08:04:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 568513011E8; Mon, 13 May 2024 10:03:59 +0200 (CEST)
+Date: Mon, 13 May 2024 10:03:59 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Tejun Heo <tj@kernel.org>
+Cc: torvalds@linux-foundation.org, mingo@redhat.com, juri.lelli@redhat.com,
+	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+	bristot@redhat.com, vschneid@redhat.com, ast@kernel.org,
+	daniel@iogearbox.net, andrii@kernel.org, martin.lau@kernel.org,
+	joshdon@google.com, brho@google.com, pjt@google.com,
+	derkling@google.com, haoluo@google.com, dvernet@meta.com,
+	dschatzberg@meta.com, dskarlat@cs.cmu.edu, riel@surriel.com,
+	changwoo@igalia.com, himadrics@inria.fr, memxor@gmail.com,
+	andrea.righi@canonical.com, joel@joelfernandes.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	kernel-team@meta.com
+Subject: Re: [PATCHSET v6] sched: Implement BPF extensible scheduler class
+Message-ID: <20240513080359.GI30852@noisy.programming.kicks-ass.net>
+References: <20240501151312.635565-1-tj@kernel.org>
+ <20240502084800.GY30852@noisy.programming.kicks-ass.net>
+ <ZjPnb1vdt80FrksA@slm.duckdns.org>
+ <20240503085232.GC30852@noisy.programming.kicks-ass.net>
+ <ZjgWzhruwo8euPC0@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600002.china.huawei.com (7.193.23.29)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZjgWzhruwo8euPC0@slm.duckdns.org>
 
-Previous patch modified the standard used by acpi_gpiochip_find()
-to match device nodes. Using the device node set in gc->gpiodev->d-
-ev instead of gc->parent.
+On Sun, May 05, 2024 at 01:31:26PM -1000, Tejun Heo wrote:
 
-However, there is a situation in gpio-dwapb where the GPIO device
-driver will set gc->fwnode for each port corresponding to a child
-node under a GPIO device, so gc->gpiodev->dev will be assigned the
-value of each child node in gpiochip_add_data().
+> > You Google/Facebook are touting collaboration, collaborate on fixing it.
+> > Instead of re-posting this over and over. After all, your main
+> > motivation for starting this was the cpu-cgroup overhead.
+> 
+> The hierarchical scheduling overhead isn't the main motivation for us. We
+> can't use the CPU controller for all workloads and while it'd be nice to
+> improve that,
 
-gpio-dwapb.c:
-128,31 static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
-			       struct dwapb_port_property *pp,
-			       unsigned int offs);
-port->gc.fwnode = pp->fwnode;
+Hurmph, I had the impression from the earlier threads that this ~5%
+cgroup overhead was most definitely a problem and a motivator for all
+this.
 
-693,39 static int dwapb_gpio_probe;
-err = dwapb_gpio_add_port(gpio, &pdata->properties[i], i);
+The overhead was prohibitive, it was claimed, and you needed a solution.
+Did not previous versions use this very argument in order to push for
+all this?
 
-When other drivers request GPIO pin resources through the GPIO device
-node provided by ACPI (corresponding to the parent node), the change
-of the matching object to gc->gpiodev->dev in acpi_gpiochip_find()
-only allows finding the value of each port (child node), resulting
-in a failed request.
+By improving the cgroup mess -- I very much agree that the cgroup thing
+is not very nice. This whole argument goes away and we all get a better
+cgroup implementation.
 
-Reapply the condition of using gc->parent for match in acpi_gpio-
-chip_find() in the code can compatible with the problem of gpio-dwapb,
-and will not affect the two cases mentioned in the patch:
-1. There is no setting for gc->fwnode.
-2. The case that depends on using gc->fwnode for match.
+> This view works only if you assume that the entire world contains only a
+> handful of developers who can work on schedulers. The only way that would be
+> the case is if the barrier of entry is raised unreasonably high. Sometimes a
+> high barrier of entry can't be avoided or is beneficial. However, if it's
+> pushed up high enough to leave only a handful of people to work on an area
+> as large as scheduling, something probably is wrong.
 
-Fixes: 5062e4c14b75 ("gpiolib: acpi: use the fwnode in acpi_gpiochip_find()")
-Fixes: 067dbc1ea5ce ("gpiolib: acpi: Don't use GPIO chip fwnode in acpi_gpiochip_find()")
-Signed-off-by: Devyn Liu <liudingyuan@huawei.com>
----
- drivers/gpio/gpiolib-acpi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I've never really felt there were too few sched patches to stare at on
+any one day (quite the opposite on many days in fact).
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 7f140df40f35..6078fea3e021 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -128,7 +128,8 @@ static bool acpi_gpio_deferred_req_irqs_done;
- 
- static int acpi_gpiochip_find(struct gpio_chip *gc, const void *data)
- {
--	return device_match_acpi_handle(&gc->gpiodev->dev, data);
-+	return device_match_acpi_handle(&gc->gpiodev->dev, data) ||
-+		(gc->parent && device_match_acpi_handle(gc->parent, data));
- }
- 
- /**
--- 
-2.30.0
+There have also always been plenty out of tree scheduler patches --
+although I rarely if ever have time to look at them.
 
+Writing a custom scheduler isn't that hard, simply ripping out
+fair_sched_class and replacing it with something simple really isn't
+*that* hard.
+
+The only really hard requirement is respecting affinities, you'll crash
+and burn real hard if you get that wrong (think of all the per-cpu
+kthreads that hard rely on the per-cpu-ness of them).
+
+But you can easily ignore cgroups, uclamp and a ton of other stuff and
+still boot and play around.
+
+> I believe we agree that we want more people contributing to the scheduling
+> area. 
+
+I think therein lies the rub -- contribution. If we were to do this
+thing, random loadable BPF schedulers, then how do we ensure people will
+contribute back?
+
+That is, from where I am sitting I see $vendor mandate their $enterprise
+product needs their $BPF scheduler. At which point $vendor will have no
+incentive to ever contribute back.
+
+And customers of $vendor that want to run additional workloads on
+their machine are then stuck with that scheduler, irrespective of it
+being suitable for them or not. This is not a good experience.
+
+So I don't at all mind people playing around with schedulers -- they can
+do so today, there are a ton of out of tree patches to start or learn
+from, or like I said, it really isn't all that hard to just rip out fair
+and write something new.
+
+Open source, you get to do your own thing. Have at.
+
+But part of what made Linux work so well, is in my opinion the GPL. GPL
+forces people to contribute back -- to work on the shared project. And I
+see the whole BPF thing as a run-around on that.
+
+Even the large cloud vendors and service providers (Amazon, Google,
+Facebook etc.) contribute back because of rebase pain -- as you well
+know. The rebase pain offsets the 'TIVO hole'.
+
+But with the BPF muck; where is the motivation to help improve things?
+
+Keeping a rando github repo with BPF schedulers is not contributing.
+That's just a repo with multiple out of tree schedulers to be ignored.
+Who will put in the effort of upsteaming things if they can hack up a
+BPF and throw it over the wall?
+
+So yeah, I'm very much NOT supportive of this effort. From where I'm
+sitting there is simply not a single benefit. You're not making my life
+better, so why would I care?
+
+How does this BPF muck translate into better quality patches for me?
