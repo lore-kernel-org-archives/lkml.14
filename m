@@ -1,133 +1,117 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48F41C01
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 15:05:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C0C84C74;
+	Mon, 13 May 2024 15:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715612717; cv=none; b=e+/+LBpohLdPnJldSkCHCf1dpshQUxlQnPSjbYD0nLFsTjnYDLSV2Pt5ohc8v1nIhtAQ/d8iD8lF+NQD/POd5Ls2srMNZpD8itnx7MyKO9YEYsy46W7gUWeMSWs0aMysJNXUez5RnelEkDFFLL1GMYxxsxh5iPyZqgVyAqJvbEo=
+	t=1715612778; cv=none; b=LB1QVfKECiX/QKkfhXsM16/VgplOfgHVfry5S3aF9bdJiLisL9mOCwwYwFD6M2PmNv2XwcdRXiidelqvswqYcNgMGgEOKAVJkaSCdLuMpLX0wJBp+ee/7noqAN60EDTXaDuoAtd/mEhE371SGYZAXy5J3ew5X+Wkp/VlBJnDi5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715612717; c=relaxed/simple;
-	bh=kPaX16GAumoLkoxVvW9Riw3RfFqAgptTl67y6E6jEmE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T64Z5YUhukEdQsiSxKoJBqBAF8wCj5eITyU2uRoS2dmOeaKpgWq4MFAXnxPs3K6Lku8nGvRBKdnlyeIhcORPtQ3g6kdDsLbv1MDrXJ3wKmyWh3vBCPNIIP1Y643/h8BjIpUhTdz5sPCrpwMTdi2ybsJEduspC+rRnOu/jj58X2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WM99eoOK; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715612778; c=relaxed/simple;
+	bh=7g8daoEXZt8k98DEDlWw6v5vJ/eC5CX6uFPQnLRqmnY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GDqmIPZTX9la83nEyRw3RWw4YczCbOR/L+fyhvI5ifKQegoCobkavzXFxz+cEgNZls0Ca+0pBWZ/p/9YwVtYCjArtVV7OrZjeUuRa+5Uj8bl8C5qoaCQyPlIZJ7jNxUF/yaz3fwp+FsAihyuYn/cEZeUFKkVAxTTEUkbaYtWdvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A88V33pD; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WM99eoOK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715612714;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EyjE9PAfPntlI9F+E3R7TZESYJSzxOtguEEK1S0AZZk=;
-	b=WM99eoOK3jMGdtGpzRVZEz40Vu7nXWbXW1+ytAoji5MFMwC+MwX8LXz2uQKxulir6zVhrR
-	RSzalkqra8f04nZ9W3QRx9P3Q+hmvOwqk3lH5zM7krju5yoSJwWll+x+LSLjvMCRMd72Kk
-	odf+BhzAkGrSK9HxibQ8QMg9QNaUspY=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-441-HvNHvXloM2iajv0g93VnMA-1; Mon, 13 May 2024 11:03:52 -0400
-X-MC-Unique: HvNHvXloM2iajv0g93VnMA-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5206ef0d6fdso3992066e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:03:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A88V33pD"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2b273cbbdfdso3533051a91.1;
+        Mon, 13 May 2024 08:06:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715612776; x=1716217576; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yDMMOA9r4bNDAc4sPBmQOSV1c0DXlj0XJCl8jYHs2j0=;
+        b=A88V33pDZPpAhNJZDvCZlx5rc5g5rp+XBgMprV6JcPvRsTau9dI5yd48eykqSAu9hq
+         iCw9lVDURR4W2Gb+KpeTQFMBtGcyX7GGHZO55XkRkNOvlm+YE8ip2IueBR7lD/2yxonl
+         +9pb2zIrXDyqCFT6uHdPs3xhlbchEzf0sMqK1F+rklQ0MdDQV++45XvZqEsCKqXGXai9
+         uo96Gsws8em7A1mx1RP4EjPL2l3RlgXGqRZZ2nOrU61yusmH9PXUirjf6UIWzl6qme4c
+         HdV92s8upm4FP4PQuv0dBmkiBOlhTktUANIDpG3R8Xqg/8F+YuT3hRZojMSQuBmiB4Dg
+         u0aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715612628; x=1716217428;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EyjE9PAfPntlI9F+E3R7TZESYJSzxOtguEEK1S0AZZk=;
-        b=Es191bTb/h56AEZpny9DdAw4hi3lV9RBK5M/n4iNq/t9IXoa/ehHnWmb0uv9lURVIb
-         MEkpSNCfw5lqDULj+LNgjHYaIfnh3Cgj9lQNAqrAZjLVAhoZCCuL6VBl62GaFaLQPK9n
-         js6JszjGNt0rjLmZkX7XlYjHfZPL+1AsRD5Qjiw1t3N0l3ETLJc9Ur+mrrUUMcUTPUfH
-         SZB3rM4nwNy2icijkK+hCygy0nKWF1C27jXvG/+QFCAHgQBSflVIafWpvVNaZTN0U1I/
-         y8hYQEh+MuOvfRwEgigGK5j0WJNFPr3N4bnnp0feDddf6HV6/x57uQw4X5FoxQJenaD/
-         bNMA==
-X-Forwarded-Encrypted: i=1; AJvYcCVX9HuONjTFFX7VLsOmwhZT0SgUIYbtyr59YGPYmAgbsqT1twtYy4/3LNDsIPROlcUi5prAwxa7yoyifZ2fLUZPo/XLQOfds/jIcGVN
-X-Gm-Message-State: AOJu0YwpXSb4097dnrx9Duvy99pcWGJxUi7cxjADDHr+q8q9C3iR0WnZ
-	9e9S+KnbDUT+5UsY3Mq5SLRidlj/yqEWYUpnrzYqBIOuxErPN3Elpx0FbJ6xFODv3fkLyOiIYJV
-	5jtpaIt9RU9qK3afwSq0QWWG1SdZz+6QkBYZIQ/us10e5ri4ZId3h3PCaFESA0Q==
-X-Received: by 2002:ac2:46ca:0:b0:518:95b6:176f with SMTP id 2adb3069b0e04-5220fe7a008mr5844786e87.50.1715612627937;
-        Mon, 13 May 2024 08:03:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFPEzbJt9rhoLuAPJVxmbZBS5Is5DbsQzF5kOol2Qfa6kMaUpfMmI4ti7VSb0rQ3Q6ozKqv/A==
-X-Received: by 2002:ac2:46ca:0:b0:518:95b6:176f with SMTP id 2adb3069b0e04-5220fe7a008mr5844774e87.50.1715612627379;
-        Mon, 13 May 2024 08:03:47 -0700 (PDT)
-Received: from [10.40.98.157] ([78.108.130.194])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a5a1781d708sm606825666b.41.2024.05.13.08.03.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 May 2024 08:03:47 -0700 (PDT)
-Message-ID: <9df151e2-c4db-4114-a6fa-1d9c732efa16@redhat.com>
-Date: Mon, 13 May 2024 17:03:45 +0200
+        d=1e100.net; s=20230601; t=1715612776; x=1716217576;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yDMMOA9r4bNDAc4sPBmQOSV1c0DXlj0XJCl8jYHs2j0=;
+        b=Gj9fRcfqa9nna5j/mdcCo/7TmbteZcQnr8Jb5Eahr4btgSypxDc3Ggrj/8kxeMtR+J
+         Xqr4G2vYb1vhJv1GtQURxezSY33xae76PssVBwvV18xNkGnTJRnOwS/gdXGQkSxSGp1A
+         S7msNUq0YrJFiTqGu4giBYXoru4E2iGV6e8t+V7J8DhADOJZyP/WhSpgYm/vhchk9vmS
+         M1uX2aZhW8HgxVvvU54XRPIBwcXnFO1zyqsdtg0350hd2Fj2WEgVVK90CMCRa89I6Fkh
+         QPZrcFPCJCSRTp9ZkRFoXlFenH0aQllLGRsrSRVoX73d6WLjvgODw/DNcxCwviGu1T57
+         D+Ww==
+X-Forwarded-Encrypted: i=1; AJvYcCX5LKaVSnfwMU5Q6m8Sfawqxq2U8K+2v4zS6dQnoajfln5uJIWPQDfITvvTNUfJB7mdt8GEGwUxhs0C1ealNEwqRog+s7oYaFwtXNc4sZwpNHAhZkUP2QcpeoXVTvi9oy1EMYXLJs5774Moq2k=
+X-Gm-Message-State: AOJu0YwXTjWZc+07tVdbc736DzCT8CinZF2FoZ+txnSyDfOJdXhwJU5L
+	IdfyQ7ohav2t/+sZoVw4ihXStACejo06GiRwZgwxs+q5lLA6ToAD80kb1IIti0NeA0nqFE0hShO
+	uqbp8eiwC98id8eDgbb/HXCbWJbM=
+X-Google-Smtp-Source: AGHT+IHzCdww7ddjWBV+QCpI/YhQysJ5Rsmtsa1JlVcvlh3EXdR/MMP4mVEjJOc/jyz0IpmKLMqEKruJtuS/tyxoC9g=
+X-Received: by 2002:a17:90b:3808:b0:2a2:399f:60e7 with SMTP id
+ 98e67ed59e1d1-2b853c55c38mr6554334a91.23.1715612776431; Mon, 13 May 2024
+ 08:06:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] devm-helpers: Fix a misspelled cancellation in the
- comments
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- linux-kernel@vger.kernel.org
-Cc: Matti Vaittinen <mazziesaccount@gmail.com>
-References: <20240503173843.2922111-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Hans de Goede <hdegoede@redhat.com>
-In-Reply-To: <20240503173843.2922111-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <Zigj-lY5lnBSKuib@boqun-archlinux> <87cypvnpwn.ffs@tglx>
+In-Reply-To: <87cypvnpwn.ffs@tglx>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 13 May 2024 17:04:43 +0200
+Message-ID: <CANiq72nGHhgRjfMOhz=ss51q2egHYexPMVvWTr0RES9WAmMF=A@mail.gmail.com>
+Subject: Re: [PATCH 2/2] rust: time: Use wrapping_sub() for Ktime::sub()
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Wedson Almeida Filho <wedsonaf@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	bjorn3_gh@protonmail.com, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Kees Cook <keescook@chromium.org>, Mara Bos <m-ou.se@m-ou.se>, 
+	"Amanieu d'Antras" <amanieu@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, May 9, 2024 at 2:14=E2=80=AFPM Thomas Gleixner <tglx@linutronix.de>=
+ wrote:
+>
+> In principle ktime_sub() should not overflow for regular use cases.
+>
+> If the binder example overflows the substraction, then something is
+> seriously wrong. Though in that case as it's only for debug purposes
+> panicing would be totally counter productive. A warning might be
+> appropriate though.
 
-On 5/3/24 7:38 PM, Andy Shevchenko wrote:
-> Fix a misspelled cancellation in the comments.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Thanks for the clarification Thomas.
 
-Thank you for your patch, I've applied this patch to my review-hans 
-branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/pdx86/platform-drivers-x86.git/log/?h=review-hans
+Alice and I pinged about this in the RustNL Unconf, i.e. about having
+a way to customize what happens on integer overflow (and, in general,
+other panics too), which I had in:
 
-Note it will show up in my review-hans branch once I've pushed my
-local branch there, which might take a while.
+    https://github.com/Rust-for-Linux/linux/issues/354
 
-Once I've run some tests on this branch the patches there will be
-added to the platform-drivers-x86/for-next branch and eventually
-will be included in the pdx86 pull-request to Linus for the next
-merge-window.
+e.g. like UBSan that allows a "report and continue" option.
 
-Regards,
+We chatted with Mara and Amanieu, who were receptive. In particular,
+Mara posted right away:
 
-Hans
+    https://github.com/rust-lang/rfcs/pull/3632
 
+as a possible first step to eventually have that ability, mentioning
+Rust for Linux as a user.
 
+If we get the ability to customize those, then this could simply be a
+normal arithmetic operation, i.e. like any other. That is, considered
+to be a bug if it overflows.
 
-> ---
->  include/linux/devm-helpers.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/devm-helpers.h b/include/linux/devm-helpers.h
-> index 74891802200d..708ca9131402 100644
-> --- a/include/linux/devm-helpers.h
-> +++ b/include/linux/devm-helpers.h
-> @@ -41,7 +41,7 @@ static inline void devm_delayed_work_drop(void *res)
->   * detached. A few drivers need delayed work which must be cancelled before
->   * driver is detached to avoid accessing removed resources.
->   * devm_delayed_work_autocancel() can be used to omit the explicit
-> - * cancelleation when driver is detached.
-> + * cancellation when driver is detached.
->   */
->  static inline int devm_delayed_work_autocancel(struct device *dev,
->  					       struct delayed_work *w,
-> @@ -66,7 +66,7 @@ static inline void devm_work_drop(void *res)
->   * A few drivers need to queue work which must be cancelled before driver
->   * is detached to avoid accessing removed resources.
->   * devm_work_autocancel() can be used to omit the explicit
-> - * cancelleation when driver is detached.
-> + * cancellation when driver is detached.
->   */
->  static inline int devm_work_autocancel(struct device *dev,
->  				       struct work_struct *w,
+Meanwhile, one alternative is going with Boqun's approach, but I would
+just use the standard operator (i.e. what we do elsewhere) and try to
+get the customization happen as soon as possible since we will need it
+for everything else (plus we avoid to make the code uglier with
+changes that we will need to revert anyway; and it also allows us to
+easily test any new customization feature from the compiler/library).
 
+Cheers,
+Miguel
