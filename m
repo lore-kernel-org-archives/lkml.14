@@ -1,105 +1,133 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98B7446AE
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 19:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D3C54FB8;
+	Mon, 13 May 2024 19:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715627143; cv=none; b=PqJ3bZLM0tQyOysmE/gkemSO/o5WsSdcE0/qOd8uiKOm+Rt0f92uRezQ4SeQAmkWwQ6eV5kP/U5pTa9oFxj6pOeTnQm0SEmItdIKwgM6UJgZTjhWyLJoNkDRlJLKrI854VLgk+OaFsRvvp+urAWLVa4atMQT6O5wnUKt4fuyvls=
+	t=1715627150; cv=none; b=e2feHp8QMcuaKs4oll578pC+LDkQnVyP9q3XgMgYLZbuirFJcRj8i0iCw5ZWbE8BM7etpQJQt4Q0JtUxL8avx6s6PFWFB1k0oe44D6U7ls4VxcTw6AmDUOuVav0dlFGqFKGk30MEO52eKidrzzn/mv4NAF/5sdnBTuz9BqAwALc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715627143; c=relaxed/simple;
-	bh=RCInyTf7dR85Mi3yye7ngyof3uXWDGHs5UvX/c5fJTs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BEBZSbHyawBJ+IYG3ycU5/JAPV2iIj54zPeZzg8Fx31BtHsoRjIOgxlUTQc7kVR1QnRxJPh18M5jVFrg4u5D9475OQvbFbGbbLK/xU5/QZrztq5Jy8QCHCwicHNIpnESQPUcMxqs4VtbjDJLsN2BGHfJtpNI0Fc5+I+GoeU2chA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NApWZgbi; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715627150; c=relaxed/simple;
+	bh=X11Zb28Qgg4Meh/uCzRmFOrxVfytCsNy90Luv0dNZKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vGd2IiBW2nnfKGe4xgDkUzJa5Bz8AJ2/kL68pYAc9uRz6SsOHU6KwIUNalmY9RrAxSzzvJjpHMzcCsYpwi36sO4CDCqGFsnCyHW2qE2fmVExD0ilSs8h5FlLN+XqF2R1hxHw9dQoQq1aaOu/L4TP5/F9cVzsx14WeAMc8z9ps2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZIPavBLk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dgubL7wx; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZIPavBLk; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=dgubL7wx; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NApWZgbi"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a59a64db066so1199065066b.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 12:05:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715627140; x=1716231940; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CHVX7QXs7ZSa+q8I5S8KqDQd8wCAFFUEKhPAoKqf6Lk=;
-        b=NApWZgbi76AUB6Xriz5z9ICBmOqPT4l+ZFDfLiw2qKNkNuzjTy1VPyw2lOALErRlff
-         VEQ2P7qGjpVaGpxeYOkMT7gkry8zmtwqlyngoyvYi+6Cyu1ZssNIWRcxS3G6YCk56xaK
-         edHy2CKA77fgis4FgHfmoDn3YRrNxq1ticc+rqpGdE0Q4MuUc/XfqgcmzJl8D1klep9s
-         msNst9Ef5jWGqZRaUBJATwVlO0rEZ6ae17bC/6qfZSl50qcEoPuxYg7LA67ypUu2ZrR3
-         VIYTOGIYnXrSi/fS1qdkDoQZHvrMl8d3ahv8vAUVGUZuL2a/v5gPqWXvpLafErB+iRVn
-         /o1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715627140; x=1716231940;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CHVX7QXs7ZSa+q8I5S8KqDQd8wCAFFUEKhPAoKqf6Lk=;
-        b=JyH1FZ7BaxEXEC8rFYgFkVtknYJFeYEnTyM/DRt1OJOsDJLy6cw9M4NgDt4o2jeHlj
-         94KFmHohCddEDZC1I3RvZgpV6wxR1qHllrUEtnGDTLIkvaCap1arrv2LtLn4gOXGuONV
-         MUmtkklZMfCQGuQjyv1WsTRbAKGDvVDW5KbA0i1qiCj03qSc0vykQ+vPI55G5vrqUv8C
-         /XUzY/Utt+jyt2eAg/4BPEG8JS3t1Yze9iq8CdEyDE0NXaNHMMw7E0bhaNUef2UH4XXj
-         6Idak0mwglNNai/KHUzaJnuod83w0ZU4OTGAWaeLayHH7qCjjlP3F5v4H9WPBUwa50Nn
-         xhow==
-X-Forwarded-Encrypted: i=1; AJvYcCXbS/t3hhNUeex8cXi+SZZBmBY0nYnmHd0fo1JvaUUrcNBKb5SIDZHWThdxoaF9XmI+0FzZvRFqTsBHIy8xsNd4xPoHbWtIvfzCx7Nt
-X-Gm-Message-State: AOJu0YxAW2an5s2gOmHqOigsLiDTxevchHFoZmzzINBQi/eC9vkx6SB8
-	EX8qRCAa4u3vS49iv02pJjekaBrwQDs9+fJLdLGhKdfb3z0WWXQeQubzTrWwpw+ciIhEyTAPclW
-	yQtpqU8YJzr9E0Vv1P0EVYgXYHkc=
-X-Google-Smtp-Source: AGHT+IH4rmR4xsSXCatjltSOvwUNkDDuHMcxrgtq9uAeiRNRjJeeJdSe85j2T7CEAjDXKJvEXbnP/y5oVYem1LsioUw=
-X-Received: by 2002:a17:907:3f9f:b0:a59:cd46:fe89 with SMTP id
- a640c23a62f3a-a5a2d665690mr830382166b.59.1715627140010; Mon, 13 May 2024
- 12:05:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZIPavBLk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dgubL7wx";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZIPavBLk";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="dgubL7wx"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 444175CC3E;
+	Mon, 13 May 2024 19:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715627147;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iCivkb5dEggnfF6c49cGdN6dbXYInwCyfzA9Or7AmVs=;
+	b=ZIPavBLk3ptqm/mk50HNqvx5BrdOYgJHa2kr60mg9BH98agBTycly0YkJid8UUhAIPgG5Z
+	OHWmAuGWNd19v4dbk+hV6dAJylJVLGahuW/Yilz1aeeRTynAtfrxLhXFYEReg9uyYGwvdg
+	j9z/7FEYF+cd3ULRcY1HT1PrM/PN3Jw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715627147;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iCivkb5dEggnfF6c49cGdN6dbXYInwCyfzA9Or7AmVs=;
+	b=dgubL7wxTTdj0PFM1Y6QQ2ikoIjwb88KVMXngo1qma92aTpxh1SL/Ohh2FcSWQpH8BnmhY
+	afrfoT1pPvY9LJAw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1715627147;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iCivkb5dEggnfF6c49cGdN6dbXYInwCyfzA9Or7AmVs=;
+	b=ZIPavBLk3ptqm/mk50HNqvx5BrdOYgJHa2kr60mg9BH98agBTycly0YkJid8UUhAIPgG5Z
+	OHWmAuGWNd19v4dbk+hV6dAJylJVLGahuW/Yilz1aeeRTynAtfrxLhXFYEReg9uyYGwvdg
+	j9z/7FEYF+cd3ULRcY1HT1PrM/PN3Jw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1715627147;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iCivkb5dEggnfF6c49cGdN6dbXYInwCyfzA9Or7AmVs=;
+	b=dgubL7wxTTdj0PFM1Y6QQ2ikoIjwb88KVMXngo1qma92aTpxh1SL/Ohh2FcSWQpH8BnmhY
+	afrfoT1pPvY9LJAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 25C7413A52;
+	Mon, 13 May 2024 19:05:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id AD+6CItkQmasEAAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Mon, 13 May 2024 19:05:47 +0000
+Date: Mon, 13 May 2024 20:58:22 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Lu Yao <yaolu@kylinos.cn>
+Cc: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: scrub: fix a compilation warning
+Message-ID: <20240513185822.GD4449@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+References: <20240507023417.31796-1-yaolu@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240511144436754EiKfJM4xjMSTyCbEExwcL@zte.com.cn>
-In-Reply-To: <20240511144436754EiKfJM4xjMSTyCbEExwcL@zte.com.cn>
-From: Yang Shi <shy828301@gmail.com>
-Date: Mon, 13 May 2024 13:05:28 -0600
-Message-ID: <CAHbLzkqg=+Dq40-He5ZBCnzrXEJaBUfXtb2jjBoDKERpM-C07w@mail.gmail.com>
-Subject: Re:  [PATCH linux-next] mm/huge_memory: mark racy access on huge_anon_orders_always
-To: xu.xin16@zte.com.cn
-Cc: akpm@linux-foundation.org, david@redhat.com, willy@infradead.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, ziy@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240507023417.31796-1-yaolu@kylinos.cn>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Spam-Level: 
+X-Spamd-Result: default: False [-2.42 / 50.00];
+	BAYES_HAM(-1.42)[91.10%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:replyto];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_FIVE(0.00)[6]
+X-Spam-Score: -2.42
+X-Spam-Flag: NO
 
-On Sat, May 11, 2024 at 12:44=E2=80=AFAM <xu.xin16@zte.com.cn> wrote:
->
-> From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
->
-> huge_anon_orders_always and huge_anon_orders_always are accessed
-> lockless, it is better to use the READ_ONCE() wrapper.
-> This is not fixing any visible bug, hopefully this can cease some
-> KCSAN complains in the future.
-
-A little bit confused here. Did you see complaints from KCSAN?
-
-> Also do that for huge_anon_orders_madvise.
->
-> Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+On Tue, May 07, 2024 at 10:34:17AM +0800, Lu Yao wrote:
+> The following error message is displayed:
+>   ../fs/btrfs/scrub.c:2152:9: error: ‘ret’ may be used uninitialized
+>   in this function [-Werror=maybe-uninitialized]"
+> 
+> Signed-off-by: Lu Yao <yaolu@kylinos.cn>
 > ---
->  include/linux/huge_mm.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-> index de0c89105076..6573430ea600 100644
-> --- a/include/linux/huge_mm.h
-> +++ b/include/linux/huge_mm.h
-> @@ -122,8 +122,8 @@ static inline bool hugepage_flags_enabled(void)
->          * So we don't need to look at huge_anon_orders_inherit.
->          */
->         return hugepage_global_enabled() ||
-> -              huge_anon_orders_always ||
-> -              huge_anon_orders_madvise;
-> +                       READ_ONCE(huge_anon_orders_always) ||
-> +                       READ_ONCE(huge_anon_orders_madvise);
->  }
->
->  static inline int highest_order(unsigned long orders)
-> --
-> 2.15.2
+> gcc version: (Debian 10.2.1-6) 10.2.1 20210110
+
+The compiler version should be in the changelog as we want to know which
+version produces the warning, but otherwise ok. Patch added to for-next,
+thanks.
