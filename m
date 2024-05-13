@@ -1,139 +1,75 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF76539C;
-	Mon, 13 May 2024 15:19:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26A6539C
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 15:19:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715613563; cv=none; b=b0+48fHx4yuKKl580lU7Mn599b4BF0ySg+axJ8ewhDpXmJo/X4B1OpZ8Jo3GZP7/lvmgvCgtAf4hlGSfp4EZEMloE5575ww9scnEi2fXBhh5RP8FMDSKvPxvnv92jZaFKZ07fuSyO3ckN6Jn6tCR+635F7UrYTqhwJX0VnA4vIY=
+	t=1715613579; cv=none; b=r/qCuzZNa8+V9eFM4R/37DFZwLTN6rUQ+18n/iZ1v++6lKYKh9uC8bst+Yq+gP1xY+OP40McP4PQZmKWm505Vc0URhDMzpIhRMk8CxbBJHeWpVfC3ergFOX3pObiCgE79iMb2gWPDqPjqrOTG0xsq97Q/bLsSSAO/iCCmbYAO5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715613563; c=relaxed/simple;
-	bh=wHj1VNy0vMRh33TWNtQHJRbW6jcVnhuKzLbGW57DgDU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S0jzPJ3BgWrhj1ae43ifHXXVX63O4SJoTODb7c0GmamchGSo4O2DCelkdxsjP+rkBXkv5iWru2eD0XxN0lmvEEy4Ch9W8lX6rFAd34iO9WaPrBrl2E4j1wbQQ7FBqi5jzZ0/MEwzRs85p90mjerJhf6R61g+Aj7wWORLc8SNGZ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWKuGcoI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715613579; c=relaxed/simple;
+	bh=sPuS7EPTrz0qRzjB2FtezfNzBYa0BrXVt3jdkcELRN8=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=tZHSGwR/pSwpWJAwAqW4uGVxJanRk29nOCSAzGsokdtJuDcVEfoXrrE8UNpZablV6rWaEIEzLCsN5+prkWqUFLLGY6JuRpOSGrF2R+twL2my6jN0jFbVOq5/MQGVzHRDt2kXdQNuI5tXJiuNaxtM+X6khxEo6vzcMvs45skTq5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=PTw3Qwi3; arc=none smtp.client-ip=78.40.148.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWKuGcoI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 869AAC113CC;
-	Mon, 13 May 2024 15:19:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715613562;
-	bh=wHj1VNy0vMRh33TWNtQHJRbW6jcVnhuKzLbGW57DgDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CWKuGcoI+uzQLcGuTk4s9n/ib+KqkgH4AmATgPGB9VqtVKSUGaPwHGNAerJhgqu8V
-	 IqFSYYQNRyMi6FRj02UBx/xXPqUe2WUiCWefGBK0Ohn1jg+FEPM/+0UXWaf2kPnpWW
-	 aPwZUZsWEGWbMu5CWSOG8Q0GJuLDUhYnWXGWz06GI+fkYLezXNstuSmdLRNFwWZI7f
-	 ekJl4JI5JrsbUXVwxEOhky9Hb4G/08XMYtzr/lQ9eJCfy91aC4gKQG/JSIpI2liY3g
-	 XzC97YYKQneJOoZcRk/jdKmD4ExONKysrIX93rQH1pT1pQHGorsiwp0kG8udoMD2/+
-	 6WzefNR6Acfgw==
-Date: Mon, 13 May 2024 08:19:20 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Michael Roth <michael.roth@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sean Christopherson <seanjc@google.com>, llvm@lists.linux.dev
-Subject: Re: [PULL 18/19] KVM: SEV: Provide support for
- SNP_EXTENDED_GUEST_REQUEST NAE event
-Message-ID: <20240513151920.GA3061950@thelio-3990X>
-References: <20240510211024.556136-1-michael.roth@amd.com>
- <20240510211024.556136-19-michael.roth@amd.com>
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="PTw3Qwi3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
+	Content-Type:Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:
+	MIME-Version:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=o87U42jqnR9nQVj48Q2/0KYOkznU0Vujp/drf/oUq20=; b=PTw3Qwi3fgASGoRP0cbQORF/Gb
+	T+/gXNBNuBH0hYGO3KV8S6vEbz7zRFpegBkeQzhYumffofHtab/+/1I0YkKtTFZx4zQTPvwxgBFWh
+	b7lgxy3vyOsin/kU+0oR2/iVx6mG1b+rrDBX23oKz4elacSX26y3vP1Le2PMsjXzm1BaP+X/pxExM
+	SkaDaqFWcoKHrGvjpdVSStnmK/xeG52xVYC43WH4TzDMLZ5lO/7Pq0WzukcgdXe1HY+fC90ZaGuqq
+	eZx/7g8toEujg8lJjHUZjSY+6VdywtO8QA4g973UxYlVu+LGC+tkBMSBD4qKQp07Y0jczwlnKAcVf
+	D53yrMGA==;
+Received: from [78.40.148.178] (helo=webmail.codethink.co.uk)
+	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1s6XSI-002nuN-1p; Mon, 13 May 2024 16:19:10 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240510211024.556136-19-michael.roth@amd.com>
+Date: Mon, 13 May 2024 16:19:10 +0100
+From: Paul Sherwood <paul.sherwood@codethink.co.uk>
+To: Phil Auld <pauld@redhat.com>
+Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+ vincent.guittot@linaro.org, dietmar.eggemann@arm.com, rostedt@goodmis.org,
+ bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+ vschneid@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sched/deadline: Fix grammar and typos in comments
+In-Reply-To: <20240513135812.GA9998@lorien.usersys.redhat.com>
+References: <20240511082644.44757-1-paul.sherwood@codethink.co.uk>
+ <20240513135812.GA9998@lorien.usersys.redhat.com>
+Message-ID: <ef7021835015a5bdd5bf5404ee712853@codethink.co.uk>
+X-Sender: paul.sherwood@codethink.co.uk
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Sender: paul.sherwood@codethink.co.uk
 
-Hi Michael,
-
-On Fri, May 10, 2024 at 04:10:23PM -0500, Michael Roth wrote:
-> Version 2 of GHCB specification added support for the SNP Extended Guest
-> Request Message NAE event. This event serves a nearly identical purpose
-> to the previously-added SNP_GUEST_REQUEST event, but allows for
-> additional certificate data to be supplied via an additional
-> guest-supplied buffer to be used mainly for verifying the signature of
-> an attestation report as returned by firmware.
+On 2024-05-13 14:58, Phil Auld wrote:
+> On Sat, May 11, 2024 at 09:26:44AM +0100 Paul Sherwood wrote:
+>> - conjugate verb to match subject of sentence
+>> - s/a entity/an entity/g
+>> - s/this misbehave/this misbehaviour/
+>> - a few typos
+>> 
+>   - not starting all the lines of a commit message with "-", priceless.
 > 
-> This certificate data is supplied by userspace, so unlike with
-> SNP_GUEST_REQUEST events, SNP_EXTENDED_GUEST_REQUEST events are first
-> forwarded to userspace via a KVM_EXIT_VMGEXIT exit structure, and then
-> the firmware request is made after the certificate data has been fetched
-> from userspace.
+> Plus, you're just repeating what's in the actual patch.
 > 
-> Since there is a potential for race conditions where the
-> userspace-supplied certificate data may be out-of-sync relative to the
-> reported TCB or VLEK that firmware will use when signing attestation
-> reports, a hook is also provided so that userspace can be informed once
-> the attestation request is actually completed. See the updates to
-> Documentation/ for more details on these aspects.
-> 
-> Signed-off-by: Michael Roth <michael.roth@amd.com>
-> Message-ID: <20240501085210.2213060-20-michael.roth@amd.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-...
-> diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-> index 00d29d278f6e..398266bef2ca 100644
-> --- a/arch/x86/kvm/svm/sev.c
-> +++ b/arch/x86/kvm/svm/sev.c
-...
-> +static int snp_begin_ext_guest_req(struct kvm_vcpu *vcpu)
-> +{
-> +	int vmm_ret = SNP_GUEST_VMM_ERR_GENERIC;
-> +	struct vcpu_svm *svm = to_svm(vcpu);
-> +	unsigned long data_npages;
-> +	sev_ret_code fw_err;
-> +	gpa_t data_gpa;
-> +
-> +	if (!sev_snp_guest(vcpu->kvm))
-> +		goto abort_request;
-> +
-> +	data_gpa = vcpu->arch.regs[VCPU_REGS_RAX];
-> +	data_npages = vcpu->arch.regs[VCPU_REGS_RBX];
-> +
-> +	if (!IS_ALIGNED(data_gpa, PAGE_SIZE))
-> +		goto abort_request;
-> +
-> +	/*
-> +	 * Grab the certificates from userspace so that can be bundled with
-> +	 * attestation/guest requests.
-> +	 */
-> +	vcpu->run->exit_reason = KVM_EXIT_VMGEXIT;
-> +	vcpu->run->vmgexit.type = KVM_USER_VMGEXIT_REQ_CERTS;
-> +	vcpu->run->vmgexit.req_certs.data_gpa = data_gpa;
-> +	vcpu->run->vmgexit.req_certs.data_npages = data_npages;
-> +	vcpu->run->vmgexit.req_certs.flags = 0;
-> +	vcpu->run->vmgexit.req_certs.status = KVM_USER_VMGEXIT_REQ_CERTS_STATUS_PENDING;
-> +	vcpu->arch.complete_userspace_io = snp_complete_ext_guest_req;
-> +
-> +	return 0; /* forward request to userspace */
-> +
-> +abort_request:
-> +	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, SNP_GUEST_ERR(vmm_ret, fw_err));
-> +	return 1; /* resume guest */
-> +}
+> Otherwise, these changes themselves look good to me.
 
-This patch is now in -next as commit 32fde9e18b3f ("KVM: SEV: Provide
-support for SNP_EXTENDED_GUEST_REQUEST NAE event"), where it causes a
-clang warning (or hard error when CONFIG_WERROR is enabled):
+Thanks for the feedback - would you like me to re-submit without the 
+bullet-points, or without the text entirely?
 
-  arch/x86/kvm/svm/sev.c:4078:67: error: variable 'fw_err' is uninitialized when used here [-Werror,-Wuninitialized]
-   4078 |         ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, SNP_GUEST_ERR(vmm_ret, fw_err));
-        |                                                                          ^~~~~~
-  include/uapi/linux/sev-guest.h:94:24: note: expanded from macro 'SNP_GUEST_ERR'
-     94 |                                          SNP_GUEST_FW_ERR(fw_err))
-        |                                                           ^~~~~~
-  include/uapi/linux/sev-guest.h:92:32: note: expanded from macro 'SNP_GUEST_FW_ERR'
-     92 | #define SNP_GUEST_FW_ERR(x)             ((x) & SNP_GUEST_FW_ERR_MASK)
-        |                                           ^
-  arch/x86/kvm/svm/sev.c:4051:2: note: variable 'fw_err' is declared here
-   4051 |         sev_ret_code fw_err;
-        |         ^
-  1 error generated.
-
-Seems legitimate to me. What was the intention here?
-
-Cheers,
-Nathan
+br
+Paul
