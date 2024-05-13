@@ -1,66 +1,68 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2075.outbound.protection.outlook.com [40.107.244.75])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F322B37147;
-	Mon, 13 May 2024 17:28:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715621295; cv=fail; b=mYDjwY0fMsNrc44PSh1Flcc7+UlZ13q7OPGVV5nlWedmSr5+VnncXlUAFuBH2hf8ALFuWjUgoT8hdLc5db8uB7FFmquOataEXGbQsj8lhwmp2BTCj+/tq/wTlfHqk2gvBb8d2uxYZYMf15N6GJ2ZUOn5iNsFVJzJOvHwnN1NxNU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715621295; c=relaxed/simple;
-	bh=X2TyUZBpKE4CdsOK9sDAFR+FzRu+NGB2oRo1B2XkNA8=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Mtiw9dsqbKNBTWjQgEmh7laZRbqhdZKk8FQWvlfdtC9icB1ZyroLL3oJnC2i9RNFhBo16UeiL4UoHa+TImbRTctT05tqvRRrDaCQXltXQ4y7bH0aYTJ+g49dZbpm91b7JNldXAkoni2xopPvW/prBKywOM6dvzdHTMlg2IFXRXw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RktCxG5I; arc=fail smtp.client-ip=40.107.244.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA96020DE8
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 17:29:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715621358; cv=none; b=iKC2D7iyKT1jexhlL2xAs3GFzhx/Nl5z7DOKMBiEr6Lwf0oo6V5eowN0NH/6yB6dQs+s2RLKSdiQLqOrJtOtpnvjrJZ7aMlle1zTs4M/rEOiQa1MhU7AP6nwggQk13FK6d+9a8i0X6ks5PZVwzEGZeE9Sa5T+wULTWigsg8HlGI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715621358; c=relaxed/simple;
+	bh=pN6O9RfjQ/FO5k/EWvMYOp58I4huXHdbGsUOz2JADDo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PUHVtIjgkvGSFD2Yf9twOt9xswgZKEXrOe2Yy+ejrOoki0biTDPp2jt+jAWg17PkBBvkRjgwij1MGmL6wob2r9hbpo+tw2I4aRkqSCkGgDxqHaAIhiOe8S2EKr/WQqwivrNCLDEmIyeHXhxpofl7cu1hNPi+5qQE1fcy5XlC/Aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=IUK7X2dZ; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RktCxG5I"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bP5v+9+F4H92hHZUBO+ExCoDNgR5PokGZ8WhMD0GAFSU7+M0fAxpo9XiXn32x7x3mtT++8wq5YiAnjHV744n9Iv1+qCpNpTuM7sd/c23ei+fFOOLsS6qcYiIEKv4UP9o6EJV7CnWPS+rT0WUzZ1h7gwtgwFY7feD1FbeItxIPTq9WLmrOdRoLGjynglbapLXsGrkz1Yd3Nk10kG5wahSrUxu4SxyokDkCsEqITlVmJFBM70KFt7fstlU9rH4kjOQXUgiBHulW6cj7fnu4sTqW45IR/dhsq52jeHv/8OnNXPSFbQZL9L0ylwiQCRgMcmo+JSEEYjx4qWI5ZivJvrK5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3lKwFwiQMV+7KnOetMR3uIee8u0G7vmNTmBgib6N/LQ=;
- b=iUgLyO5OqIC7UbHdEdVWi45G+fIEIMXIdDfUC3GDK/8fQQ9TagSdV/rOxzP5pXaM8OIzbGzlZgnAhZeVUpWt5FOTAH/G9mxhYB+TrL0Y4s6UkkrD3F3uOz49Hei2Zewcuh5ZZUal5HBfJeiMu8jvLH2gdgfBb0lqQVqalDhpKvO5KN6+90Xc1jFnnpgcr+dukelIj5vVLWV67df+UhPWQfmfGO0o238URZZWCGGt5qSP8g6psIlj2jvKYcwTrbNd5iku2H62FL9ktXsgi4OyULWfVMuvJf4E5tGXKF1wTDHj/dO0bO9uFrdD2JdOoi7L2KZ6PyzPZDew3X1iBJcchQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3lKwFwiQMV+7KnOetMR3uIee8u0G7vmNTmBgib6N/LQ=;
- b=RktCxG5IbU22lg64dijKjgm9U+jbBotYx9cijI2exUvCvD0Wf0PsoPqs+0V0JPC0Yboq2jQMg3q5avKx7UsLrfMzVAlW3JtWQuEbLpxcTtUksxc6xpff/0RQovptjYgAb4r3k6vwJEyRl/lHf7znU7b2pgIt8IhONLQufOWMESA=
-Received: from DM6PR01CA0021.prod.exchangelabs.com (2603:10b6:5:296::26) by
- SN7PR12MB7882.namprd12.prod.outlook.com (2603:10b6:806:348::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Mon, 13 May
- 2024 17:28:12 +0000
-Received: from DS1PEPF00017090.namprd03.prod.outlook.com (2603:10b6:5:296::4)
- by DM6PR01CA0021.outlook.office365.com (2603:10b6:5:296::26) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7544.55 via Frontend Transport; Mon, 13 May 2024 17:28:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DS1PEPF00017090.mail.protection.outlook.com (10.167.17.132) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7587.21 via Frontend Transport; Mon, 13 May 2024 17:28:11 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 13 May
- 2024 12:28:10 -0500
-From: Michael Roth <michael.roth@amd.com>
-To: <kvm@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Paolo Bonzini <pbonzini@redhat.com>,
-	<linux-coco@lists.linux.dev>, Sean Christopherson <seanjc@google.com>, Nathan
- Chancellor <nathan@kernel.org>
-Subject: [PATCH] KVM: SEV: Fix uninitialized firmware error code
-Date: Mon, 13 May 2024 12:27:04 -0500
-Message-ID: <20240513172704.718533-1-michael.roth@amd.com>
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="IUK7X2dZ"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1edfc57ac0cso36742985ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 10:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1715621356; x=1716226156; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=twgvuS/AqKd4scTz7PH+7RQVZvRlqUMOD6Y6dp77Dms=;
+        b=IUK7X2dZGWd0C5bc+rw3tZtRurtAb0tAW4D8R2sBamiyVza1VR3AHJrM82nRwlKW31
+         w7YhfGZk+VpKieSjHAYe/lhgdHaQMQFAs5lxssNNc5DN6ygBPr6JcWRca/z6ObNxBrEc
+         hz70Eb4y0N9XHMc8ImTpwpF+sm7SnIg7R9vew=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715621356; x=1716226156;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=twgvuS/AqKd4scTz7PH+7RQVZvRlqUMOD6Y6dp77Dms=;
+        b=DMU6pPOv8yvNYZ4jy4NrcnogdDVLeiPOGu9c/E+MaWReGwTIaeiripgr/lOwqAn8wR
+         MpUWkM55QvllGEmWwaZzzi0HRSCv6L35R/WsnEOCCUMmDbSFp4g7B9fNabY19uimQO0C
+         aBwrcck8x2wihWITpu7+6ly/AzfzLQ6mwFbS28U+YPTy4SLhQX60jeOfYDCR8islYwrZ
+         hxc9bbyOdLoNGXlkJ8xtTsvNq8n7B/QxeE70tMFZwPDmqErruwo8cfn7i3mtuh/1xstC
+         j00WCGf57LMyOKtmn37fHB4shJtJ41imLQcHT3IL6mBZBkso931offAXXl3KRUPkTUuh
+         O9nQ==
+X-Gm-Message-State: AOJu0YwPn5nIaulqJDGBreszA2N5Uuz6ztj2SLVF71jvrjvdKqSfqgK2
+	5CGU9gXdrjcGGWVdlOEIuuhecocirNhoiHQD+cA7BNB8ogUREcbZd/C76XgCnatAb5eAksvaWoJ
+	8vJvQRIWATa4OLWqLCE8zRb6enFGL7ybjkw3QCkjwnOWsQqKNj5khbop14vq3khbtTvXEyHiGia
+	4e1pCowEHSfIEVjENCgEUNSbYP7WX2To7RhJNuFIH4E7E=
+X-Google-Smtp-Source: AGHT+IF1KOi9NoWRwBo6ktLp7HEDT+ysiiT2vuIUD8jN9HNskgTpIC61bmV+hGgRrfJOid6rrz8zBw==
+X-Received: by 2002:a17:902:c1cc:b0:1ee:b25c:1a8 with SMTP id d9443c01a7336-1ef43f4d1d5mr101159345ad.47.1715621355764;
+        Mon, 13 May 2024 10:29:15 -0700 (PDT)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d1663sm81948995ad.6.2024.05.13.10.29.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 10:29:15 -0700 (PDT)
+From: Joe Damato <jdamato@fastly.com>
+To: linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org
+Cc: mkarsten@uwaterloo.ca,
+	nalramli@fastly.com,
+	Joe Damato <jdamato@fastly.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	linux-rdma@vger.kernel.org (open list:MELLANOX MLX4 core VPI driver),
+	Paolo Abeni <pabeni@redhat.com>,
+	Tariq Toukan <tariqt@nvidia.com>
+Subject: [PATCH net-next v5 0/3] mlx4: Add support for netdev-genl API
+Date: Mon, 13 May 2024 17:29:05 +0000
+Message-Id: <20240513172909.473066-1-jdamato@fastly.com>
 X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -69,89 +71,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS1PEPF00017090:EE_|SN7PR12MB7882:EE_
-X-MS-Office365-Filtering-Correlation-Id: 575740f7-1b87-4731-3994-08dc73721023
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230031|376005|82310400017|36860700004|1800799015;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?A1O9bZZJK6zrpG6zNOwEN244jZ6U8FmC5cQhrYGSXTZLeXqft4MgRzseZ+D9?=
- =?us-ascii?Q?zwZUhYJ4rUxB8xsnDmnGj6Qd1h+2Tw2zYzN9ICAhJCvbLgRsycwaQoQAnZpT?=
- =?us-ascii?Q?25ZlVFZ2E6AGL6Dhk7TmUZVSITAbRl1nO+RZL6Xv+6uLWlnED+oP+enK+WmD?=
- =?us-ascii?Q?Tapeg3jaMNf2s5Jpx1WSyRslMhmlmtCj32XceyHTwbXwIJiD1lzlzCuf/Zsd?=
- =?us-ascii?Q?scrZm+54k7YKXloLKJ/6DSBmTKKkdYzzg7AMbCfi+WwGWpfoWBub7voelnUv?=
- =?us-ascii?Q?TGe7NYqEn2/rBgk47oT+meUlKHrfhRb7sohxlVXlB3QU8mkUCTlwtanCbHdj?=
- =?us-ascii?Q?DcnLu+3cpShu2/zNcsNpIJTxskJV5vGcspf1EQPJsw/trixVgZx7TMd71wNl?=
- =?us-ascii?Q?TM+Qhd9rzfj8dCx1NVz85F9mmSrkzZrKqPfFTuTXtVLFiE5H6J/B72eNWq4f?=
- =?us-ascii?Q?GWgo3eRw9vtrUqGhBh01hGGRib9PHOovT/jB6NW7G57E2MSWXTGwvZfSc5iE?=
- =?us-ascii?Q?lgzSlalm+u8nv90hKKm0saEzb0ALQhQgqh/17k3fLWxsTmfD6tivGncbkdYj?=
- =?us-ascii?Q?RvM6Z5NaOfNOPI/fs/OTaUluxTz3b+9Zb/+3hsQRDR8ypZewJoEEYiLOOLjP?=
- =?us-ascii?Q?RQQIBAOS0RyyAwlp410yN7nwdX5eqbRWIiOC3MSRRXoAwCe9K2eVXKAKE2ng?=
- =?us-ascii?Q?eIeOipqQPo9k21T4oW1xjS2tgf+erYgDLTcNFGLZYnj+AnM6oAiDQUCmdFZa?=
- =?us-ascii?Q?zye3NKx75bqhXqCkR1SflzZMsy4KqXeGe9G2jeYoZ0ybjU1DWsOgCdBujumu?=
- =?us-ascii?Q?dBq/i08lKh1Yxx/29LUYl0bshCnwO0DjxFXuBZeOmN0PRuZemYFoX8RFA7/H?=
- =?us-ascii?Q?JymQll9iSy3J8grd01WysMNxXilUs+JkSoGKBTefX1rK+VtucxKTHFKbSBNX?=
- =?us-ascii?Q?qYEQJ5ckoHS9ue/3a61X31mrpYfHhJQJaLG3nTOpwNi9WdbPC9S4PKvZaHKe?=
- =?us-ascii?Q?Ccf0HJCBUgC6/4VYgsbwvm7AuuKz27zvt3dTwKmuuy/wX/+jUgX6ouANzNRc?=
- =?us-ascii?Q?Pyk/TG0IeYrcBXuTrI0sxS4+6dq3eZeS3osMdEN57GzvTtWpdxecJjJJQ2OD?=
- =?us-ascii?Q?iSVvtguYsL9rUSo+Jl5EYzSwDzYlWxqJwaqugPHFpI8Co3KdV/vnzpopbktz?=
- =?us-ascii?Q?p3A/rf48tpCoE212oovSQIeuOshgbJ2Dye4XEWEFUJLhuI0DFPiSiWT45b/5?=
- =?us-ascii?Q?Tn22UfGPHbqSytnSPsMHeyAnfFJb68mYkR+6nFAzxo043k1nFxFlecQsv23V?=
- =?us-ascii?Q?CKY0SIkAFF+hBkQR319M0tXF?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(376005)(82310400017)(36860700004)(1800799015);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2024 17:28:11.3040
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 575740f7-1b87-4731-3994-08dc73721023
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS1PEPF00017090.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7882
 
-The current code triggers a clang warning due to passing back an
-uninitialized firmware return code in cases where an attestation request
-is aborted before getting sent to userspace. Since firmware has not been
-involved at this point the appropriate value is 0.
+Greetings:
 
-Reported-by: Nathan Chancellor <nathan@kernel.org>
-Closes: https://lore.kernel.org/kvm/20240513151920.GA3061950@thelio-3990X/
-Fixes: 32fde9e18b3f ("KVM: SEV: Provide support for SNP_EXTENDED_GUEST_REQUEST NAE event")
-Signed-off-by: Michael Roth <michael.roth@amd.com>
----
- arch/x86/kvm/svm/sev.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Welcome to v5.
 
-diff --git a/arch/x86/kvm/svm/sev.c b/arch/x86/kvm/svm/sev.c
-index 57c2c8025547..59c0d89a4d52 100644
---- a/arch/x86/kvm/svm/sev.c
-+++ b/arch/x86/kvm/svm/sev.c
-@@ -4048,7 +4048,6 @@ static int snp_begin_ext_guest_req(struct kvm_vcpu *vcpu)
- 	int vmm_ret = SNP_GUEST_VMM_ERR_GENERIC;
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 	unsigned long data_npages;
--	sev_ret_code fw_err;
- 	gpa_t data_gpa;
- 
- 	if (!sev_snp_guest(vcpu->kvm))
-@@ -4075,7 +4074,7 @@ static int snp_begin_ext_guest_req(struct kvm_vcpu *vcpu)
- 	return 0; /* forward request to userspace */
- 
- abort_request:
--	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, SNP_GUEST_ERR(vmm_ret, fw_err));
-+	ghcb_set_sw_exit_info_2(svm->sev_es.ghcb, SNP_GUEST_ERR(vmm_ret, 0));
- 	return 1; /* resume guest */
- }
- 
+Only very minor change to v4, see changelog below.
+
+This series adds support to mlx4 for the netdev-genl API which makes it
+much easier for users and user programs to map NAPI IDs back to
+ifindexes, queues, and IRQs. This is extremely useful for a number of
+use cases, including epoll-based busy poll.
+
+In addition, this series includes a patch to generate per-queue
+statistics using the netlink API, as well.
+
+To facilitate the stats, patch 1/3 adds a field "alloc_fail" to the ring
+structure. This is incremented by the driver in an appropriate place and
+used in patch 3/3 as alloc_fail.
+
+Please note: I do not have access to mlx4 hardware, but I've been
+working closely with Martin Karsten from University of Waterloo (CC'd)
+who has very graciously tested my patches on their mlx4 hardware (hence
+his Tested-by attribution in each commit). His latest research work is
+particularly interesting [1] and this series helps to support that (and
+future) work.
+
+Martin re-test v4 using Jakub's suggested tool [2] and the
+stats.pkt_byte_sum and stats.qstat_by_ifindex tests passed. He also
+adjusted the queue count and re-ran test to confirm it still passed even
+if the queue count was modified.
+
+v5 was not retested as the change to patch 1/3 was very minor.
+
+[1]: https://dl.acm.org/doi/pdf/10.1145/3626780
+[2]: https://lore.kernel.org/lkml/20240423175718.4ad4dc5a@kernel.org/
+
+Thanks,
+Joe
+
+v4 -> v5:
+ - Patch 1/3: Reset mlx4_en_rx_ring field alloc_fail to 0 in
+   mlx4_en_clear_stats.
+
+v3 -> v4:
+ - Patch 1/3: adds alloc_fail field to struct mlx4_en_rx_ring.
+   Increments this new field (instead of dropped as in the last version)
+   on ENOMEM in mlx4_en_alloc_frags.
+ - Patch 2/3: No changes.
+ - Patch 3/3:
+   - Removed Jakub's Reviewed-by since some number of changes were made.
+   - Removed checking the validity of 'i' from both
+     mlx4_get_queue_stats_[rt]x as the core code will ensure i is valid
+     for us.
+   - stats->alloc_fail now uses the new field added in patch 1/3
+     instead of dropped.
+
+v2 -> v3:
+ - Patch 1/3 no longer sets rx_missed_errors. dropped is still
+   incremented on -ENOMEM, though, and reported as alloc_fail in the
+   stats API introduced in patch 3/3.
+ - Patch 2/3: Added Jakub's Acked-by to the commit message, no
+   functional changes.
+ - Patch 3/3: Added Jakub's Reviewed-by to the commit message, no
+   functional changes.
+
+v1 -> v2:
+ - Patch 1/3 now initializes dropped to 0.
+ - Patch 2/3 fix use of uninitialized qtype warning.
+ - Patch 3/3 includes several changes:
+   - mlx4_get_queue_stats_rx and mlx4_get_queue_stats_tx check if i is
+     valid before proceeding.
+   - All initialization to 0xff for stats fields has been omit. The
+     network stack does this before calling into the driver functions, so
+     I've adjusted the driver functions to only set values if there is
+     data to set, leaving the network stack's 0xff in place if not.
+   - mlx4_get_base_stats set all stat fields to 0 individually if there
+     are RX and TX queues.
+
+Joe Damato (3):
+  net/mlx4: Track RX allocation failures in a stat
+  net/mlx4: link NAPI instances to queues and IRQs
+  net/mlx4: support per-queue statistics via netlink
+
+ drivers/net/ethernet/mellanox/mlx4/en_cq.c    | 14 ++++
+ .../net/ethernet/mellanox/mlx4/en_netdev.c    | 74 +++++++++++++++++++
+ drivers/net/ethernet/mellanox/mlx4/en_rx.c    |  4 +-
+ drivers/net/ethernet/mellanox/mlx4/mlx4_en.h  |  2 +
+ 4 files changed, 93 insertions(+), 1 deletion(-)
+
 -- 
 2.25.1
 
