@@ -1,55 +1,50 @@
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CA1539C
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 15:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24A36139;
+	Mon, 13 May 2024 15:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715613232; cv=none; b=H2T5uKbqZX1Sa+LVdEM7lJoiDfY+VHjo0b2YG19lNOiPn+vU9FAajdQM2Be7q6tSRt3sXghDxCf7qhBUq/Z/rvMlxV5VVZbmZdmqjsP9xYFJQjpBlCUQnvaEpHlYGfISYaTlJsilV6jCRQR/cxqfYfQqAMEVcFSlKeW1mQHxCNI=
+	t=1715613234; cv=none; b=chUaS71W28pzREBwvMcX8a500ERcdy7woOlt+hQsiZ2cJY8/VgWd4SY30DL6oAZ1kgz/u7h2N2J6GkxbEnq6zJxXrwBEb6788Jvpgxrw4vMLy9SRCufONJCZlqpZIBDUfAq+09o8gKx5IVoNwcLuxJQ7Dm3XLFJWxP7ebXHod64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715613232; c=relaxed/simple;
-	bh=bwxwLAiE81n3Z1yoB45RY2c8mTlYPK01k/Xno32pvA8=;
-	h=Content-Type:Message-ID:Date:MIME-Version:From:Subject:To:Cc; b=OaKElJeH4p02PV7lyn9bOULhMOhAWDLdXlxBDFw+C1zG4Yesr69aHcki/49bN+9T2c8qe5QSVZzPkQWlNLT3+LjNmIo+AHIoIiIPIzBdH04LJUHo+CWvn+CFycLTdCVoNFahAFSuLkKAWXwLVPocS807I7a/MEp6Yxyg2ByXTGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Ye0zy53A; arc=none smtp.client-ip=209.85.166.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1715613234; c=relaxed/simple;
+	bh=CMnuNvZMA1kW0txi/Z56FI+v7g+9xLk1T/sjMlSF6r0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=WivsX9Uqr/GTgqcgid/0kDk0phvr9q4sPdvPSGAhPCxUggiWEA+6JsaYscfkUiaVaNOiaw/coVDqNxaXlQWIW973N+bHGy1ft0K/O53eMZhjeK1kq7AXVit+RS4DqEL30AdFmX/PdJxs7cUYVUlh8MMFAFKfPGCuXpxNgjxrTpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=8HAe26MZ; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Ye0zy53A"
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-7e1e787d8d8so6049939f.2
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1715613229; x=1716218029; darn=vger.kernel.org;
-        h=cc:to:subject:from:content-language:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=q2Y34rp11DhTo88f7ZZG+euMgHjyfBULc8fRUELw0yg=;
-        b=Ye0zy53AexST0vE5fzyAuEvsIQ6EShzTVLz4mAK8Da7Fky+T+byEH5JsSD+PwqqVp/
-         tnQSM/V4U6SytPIUx9eJ1d3gxHUu9pLEb1gV/z9hdfcppnhy9GREMOrN9bVpIYLmS0tG
-         P/L+1DsIzolTSCBcERJajzX346teBVMl1iIyo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715613229; x=1716218029;
-        h=cc:to:subject:from:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q2Y34rp11DhTo88f7ZZG+euMgHjyfBULc8fRUELw0yg=;
-        b=UpC4oTlm92D0CUYGhk/tOVqPFuY8qWXF1w8naL3RVahLtk4CzYscZ/gcx3Xcs1Sx8M
-         q8neppaFc9cncY4M4oeuGmfummGkuwraHvgUDg3E/dWaNVwi+RDtdtO94iru5VsEaky/
-         1Vpt4/YNecNiSHxgQvY6qYvF42WNBt2GUldZvDWsTsNtmr4qt2PbSGQCnLR0sHhFhD5/
-         fUv1niTX+n7iXQAEMpBe0xV/gQ4xZPx4spI2oX+M9YtmEfDa0euVd0/nGqRiM8PGBCvv
-         65S6h4zDg4m011T0PhtJWOmr4hptot7GYjIFHa+P4W5wWXU3K544rjPQhTvRAMbO6HdK
-         MS4w==
-X-Forwarded-Encrypted: i=1; AJvYcCXvXn7Vhho2wz1R+Vjvl3ntHwY6Dq4kc8LxkMMTCQsG6UbdHnAjGqBKsENzpYK8SqCjVEtktLsvHpdSjLWFzQQaqx9o+m4j2JjzvvHy
-X-Gm-Message-State: AOJu0YySMPQ8of+qCES54PendgGZYbjvL4o9hlo7YHosxR8uEIwP+XZ9
-	2f79oRp2a71pJGQ0PgyxNUdluHPs+RxiXiVPk3UXLrttZS7r8/C7d8dCsJu+k4o=
-X-Google-Smtp-Source: AGHT+IGnry8IAGVge2SIgEV/sy1Si+t9AN9FCzHpGStigudBNYjWS+ogphd25zvvQ3M/+YqO1rpmAw==
-X-Received: by 2002:a6b:d203:0:b0:7e1:8bc8:8228 with SMTP id ca18e2360f4ac-7e1b501f23dmr1055809739f.0.1715613228793;
-        Mon, 13 May 2024 08:13:48 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-489375c0b23sm2508947173.96.2024.05.13.08.13.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 May 2024 08:13:48 -0700 (PDT)
-Content-Type: multipart/mixed; boundary="------------3h7oO02tp7Ub6Y8cOlsd370x"
-Message-ID: <ddb23594-c519-4436-9219-e2f76f8c38b2@linuxfoundation.org>
-Date: Mon, 13 May 2024 09:13:47 -0600
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="8HAe26MZ"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44DBp6pr031443;
+	Mon, 13 May 2024 17:13:17 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	selector1; bh=WnCypk5xq6HHOOx2jZdzw5WS7otaqKU1MDbXL+c2PRk=; b=8H
+	Ae26MZue27BGaHUkCpZdch6O0tZ3bO806wwLEpgQE1qHqOPCEKpbKc8DkSqS5E2y
+	E95sDxLYFmUxhcgEbewMAOcHtF2cbS1AwvGwioWHZDuobZ6j3kA6tT2iRN3Gf5Bx
+	TxsIDzm5A67KeRgVasGl7E0yLZqVUs2dI5aNuRa7i7/m+XUrM12bdJ0B+CdHaLy6
+	mNL3vZBYmrKofynpWiet6xxxRrY2FFAbmcYfoIi/rt1abj67Km6xpDpDT7YiXuh5
+	xwgBln0YmwvBhCoczBtl+YfTIP06j0pXsIH9RKTI2XxRBwuzv/yJ1fKsaUizg4BX
+	FaSdWLi3MNTtbxxz8ZRg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3y1yjb766r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 May 2024 17:13:17 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4EED240044;
+	Mon, 13 May 2024 17:13:11 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 81976222C9C;
+	Mon, 13 May 2024 17:11:56 +0200 (CEST)
+Received: from [10.48.86.164] (10.48.86.164) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 13 May
+ 2024 17:11:53 +0200
+Message-ID: <3137049f-eac8-4522-ad2e-b2b0d3537239@foss.st.com>
+Date: Mon, 13 May 2024 17:11:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,242 +52,223 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/11] net: stmmac: dwmac-stm32: update config
+ management for phy wo cristal
+To: Marek Vasut <marex@denx.de>, "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo
+ Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre
+ Torgue <alexandre.torgue@foss.st.com>,
+        Richard Cochran
+	<richardcochran@gmail.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+CC: <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20240426125707.585269-1-christophe.roullier@foss.st.com>
+ <20240426125707.585269-6-christophe.roullier@foss.st.com>
+ <b790f34e-8bfb-44f6-869d-798508008483@denx.de>
 Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-Subject: [GIT PULL] nolibc changes for Linux 6.10-rc1
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Willy Tarreau <w@1wt.eu>, =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?=
- <thomas@t-8ch.de>, "Paul E. McKenney" <paulmck@kernel.org>,
- =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Shuah Khan <skhan@linuxfoundation.org>, shuah <shuah@kernel.org>,
- "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-
-This is a multi-part message in MIME format.
---------------3h7oO02tp7Ub6Y8cOlsd370x
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Christophe ROULLIER <christophe.roullier@foss.st.com>
+In-Reply-To: <b790f34e-8bfb-44f6-869d-798508008483@denx.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-
-Hi Linus,
-
-Please pull the nolibc update for Linux 6.10-rc1.
-
-This nolibc update for Linux 6.10-rc1
-
-- adds support for uname(2)
-- removes open-coded strnlen()
-- exports strlen()
-- adds tests for strlcat() and strlcpy()
-- fixes memory error in realloc()
-- fixes strlcat() return code and size usage
-- fixes strlcpy() return code and size usage
-
-diff is attached.
-
-thanks,
--- Shuah
-
-----------------------------------------------------------------
-The following changes since commit 4cece764965020c22cff7665b18a012006359095:
-
-   Linux 6.9-rc1 (2024-03-24 14:10:05 -0700)
-
-are available in the Git repository at:
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest tags/linux_kselftest-nolibc-6.10-rc1
-
-for you to fetch changes up to 0adab2b6b7336fb6ee3c6456a432dad3b1d25647:
-
-   tools/nolibc: add support for uname(2) (2024-04-14 20:28:54 +0200)
-
-----------------------------------------------------------------
-linux_kselftest-nolibc-6.10-rc1
-
-This nolibc update for Linux 6.10-rc1
-
-- adds support for uname(2)
-- removes open-coded strnlen()
-- exports strlen()
-- adds tests for strlcat() and strlcpy()
-- fixes memory error in realloc()
-- fixes strlcat() return code and size usage
-- fixes strlcpy() return code and size usage
-
-----------------------------------------------------------------
-Brennan Xavier McManus (1):
-       tools/nolibc/stdlib: fix memory error in realloc()
-
-Rodrigo Campos (4):
-       tools/nolibc/string: export strlen()
-       tools/nolibc: Fix strlcat() return code and size usage
-       tools/nolibc: Fix strlcpy() return code and size usage
-       selftests/nolibc: Add tests for strlcat() and strlcpy()
-
-Thomas Weißschuh (2):
-       tools/nolibc/string: remove open-coded strnlen()
-       tools/nolibc: add support for uname(2)
-
-  tools/include/nolibc/stdlib.h                |  2 +-
-  tools/include/nolibc/string.h                | 46 +++++++++-------
-  tools/include/nolibc/sys.h                   | 27 +++++++++
-  tools/testing/selftests/nolibc/nolibc-test.c | 82 ++++++++++++++++++++++++++++
-  4 files changed, 136 insertions(+), 21 deletions(-)
-
-----------------------------------------------------------------
---------------3h7oO02tp7Ub6Y8cOlsd370x
-Content-Type: text/x-patch; charset=UTF-8;
- name="linux_kselftest-nolibc-6.10-rc1.diff"
-Content-Disposition: attachment;
- filename="linux_kselftest-nolibc-6.10-rc1.diff"
-Content-Transfer-Encoding: base64
-
-ZGlmZiAtLWdpdCBhL3Rvb2xzL2luY2x1ZGUvbm9saWJjL3N0ZGxpYi5oIGIvdG9vbHMvaW5j
-bHVkZS9ub2xpYmMvc3RkbGliLmgKaW5kZXggYmFjZmQzNWM1MTU2Li41YmU5ZDNjNzQzNWEg
-MTAwNjQ0Ci0tLSBhL3Rvb2xzL2luY2x1ZGUvbm9saWJjL3N0ZGxpYi5oCisrKyBiL3Rvb2xz
-L2luY2x1ZGUvbm9saWJjL3N0ZGxpYi5oCkBAIC0xODUsNyArMTg1LDcgQEAgdm9pZCAqcmVh
-bGxvYyh2b2lkICpvbGRfcHRyLCBzaXplX3QgbmV3X3NpemUpCiAJaWYgKF9fYnVpbHRpbl9l
-eHBlY3QoIXJldCwgMCkpCiAJCXJldHVybiBOVUxMOwogCi0JbWVtY3B5KHJldCwgaGVhcC0+
-dXNlcl9wLCBoZWFwLT5sZW4pOworCW1lbWNweShyZXQsIGhlYXAtPnVzZXJfcCwgdXNlcl9w
-X2xlbik7CiAJbXVubWFwKGhlYXAsIGhlYXAtPmxlbik7CiAJcmV0dXJuIHJldDsKIH0KZGlm
-ZiAtLWdpdCBhL3Rvb2xzL2luY2x1ZGUvbm9saWJjL3N0cmluZy5oIGIvdG9vbHMvaW5jbHVk
-ZS9ub2xpYmMvc3RyaW5nLmgKaW5kZXggYTAxYzY5ZGQ0OTVmLi5mOWFiMjg0MjFlNmQgMTAw
-NjQ0Ci0tLSBhL3Rvb2xzL2luY2x1ZGUvbm9saWJjL3N0cmluZy5oCisrKyBiL3Rvb2xzL2lu
-Y2x1ZGUvbm9saWJjL3N0cmluZy5oCkBAIC0xMjMsNyArMTIzLDcgQEAgY2hhciAqc3RyY3B5
-KGNoYXIgKmRzdCwgY29uc3QgY2hhciAqc3JjKQogICogdGh1cyBpdHNlbGYsIGhlbmNlIHRo
-ZSBhc20oKSBzdGF0ZW1lbnQgYmVsb3cgdGhhdCdzIG1lYW50IHRvIGRpc2FibGUgdGhpcwog
-ICogY29uZnVzaW5nIHByYWN0aWNlLgogICovCi1zdGF0aWMgX19hdHRyaWJ1dGVfXygodW51
-c2VkKSkKK19fYXR0cmlidXRlX18oKHdlYWssdW51c2VkLHNlY3Rpb24oIi50ZXh0Lm5vbGli
-Y19zdHJsZW4iKSkpCiBzaXplX3Qgc3RybGVuKGNvbnN0IGNoYXIgKnN0cikKIHsKIAlzaXpl
-X3QgbGVuOwpAQCAtMTg3LDIyICsxODcsMjYgQEAgY2hhciAqc3RybmR1cChjb25zdCBjaGFy
-ICpzdHIsIHNpemVfdCBtYXhsZW4pCiBzdGF0aWMgX19hdHRyaWJ1dGVfXygodW51c2VkKSkK
-IHNpemVfdCBzdHJsY2F0KGNoYXIgKmRzdCwgY29uc3QgY2hhciAqc3JjLCBzaXplX3Qgc2l6
-ZSkKIHsKLQlzaXplX3QgbGVuOwotCWNoYXIgYzsKLQotCWZvciAobGVuID0gMDsgZHN0W2xl
-bl07CWxlbisrKQotCQk7Ci0KLQlmb3IgKDs7KSB7Ci0JCWMgPSAqc3JjOwotCQlpZiAobGVu
-IDwgc2l6ZSkKLQkJCWRzdFtsZW5dID0gYzsKLQkJaWYgKCFjKQorCXNpemVfdCBsZW4gPSBz
-dHJubGVuKGRzdCwgc2l6ZSk7CisKKwkvKgorCSAqIFdlIHdhbnQgbGVuIDwgc2l6ZS0xLiBC
-dXQgYXMgc2l6ZSBpcyB1bnNpZ25lZCBhbmQgY2FuIHdyYXAKKwkgKiBhcm91bmQsIHdlIHVz
-ZSBsZW4gKyAxIGluc3RlYWQuCisJICovCisJd2hpbGUgKGxlbiArIDEgPCBzaXplKSB7CisJ
-CWRzdFtsZW5dID0gKnNyYzsKKwkJaWYgKCpzcmMgPT0gJ1wwJykKIAkJCWJyZWFrOwogCQls
-ZW4rKzsKIAkJc3JjKys7CiAJfQogCisJaWYgKGxlbiA8IHNpemUpCisJCWRzdFtsZW5dID0g
-J1wwJzsKKworCXdoaWxlICgqc3JjKyspCisJCWxlbisrOworCiAJcmV0dXJuIGxlbjsKIH0K
-IApAQCAtMjEwLDE2ICsyMTQsMTggQEAgc3RhdGljIF9fYXR0cmlidXRlX18oKHVudXNlZCkp
-CiBzaXplX3Qgc3RybGNweShjaGFyICpkc3QsIGNvbnN0IGNoYXIgKnNyYywgc2l6ZV90IHNp
-emUpCiB7CiAJc2l6ZV90IGxlbjsKLQljaGFyIGM7CiAKLQlmb3IgKGxlbiA9IDA7Oykgewot
-CQljID0gc3JjW2xlbl07Ci0JCWlmIChsZW4gPCBzaXplKQotCQkJZHN0W2xlbl0gPSBjOwot
-CQlpZiAoIWMpCi0JCQlicmVhazsKLQkJbGVuKys7CisJZm9yIChsZW4gPSAwOyBsZW4gPCBz
-aXplOyBsZW4rKykgeworCQlkc3RbbGVuXSA9IHNyY1tsZW5dOworCQlpZiAoIWRzdFtsZW5d
-KQorCQkJcmV0dXJuIGxlbjsKIAl9CisJaWYgKHNpemUpCisJCWRzdFtzaXplLTFdID0gJ1ww
-JzsKKworCXdoaWxlIChzcmNbbGVuXSkKKwkJbGVuKys7CisKIAlyZXR1cm4gbGVuOwogfQog
-CmRpZmYgLS1naXQgYS90b29scy9pbmNsdWRlL25vbGliYy9zeXMuaCBiL3Rvb2xzL2luY2x1
-ZGUvbm9saWJjL3N5cy5oCmluZGV4IGRkYTlkZmZkMWQ3NC4uN2I4MmJjM2NmMTA3IDEwMDY0
-NAotLS0gYS90b29scy9pbmNsdWRlL25vbGliYy9zeXMuaAorKysgYi90b29scy9pbmNsdWRl
-L25vbGliYy9zeXMuaApAQCAtMjIsNiArMjIsNyBAQAogI2luY2x1ZGUgPGxpbnV4L3N0YXQu
-aD4gIC8qIGZvciBzdGF0eCgpICovCiAjaW5jbHVkZSA8bGludXgvcHJjdGwuaD4KICNpbmNs
-dWRlIDxsaW51eC9yZXNvdXJjZS5oPgorI2luY2x1ZGUgPGxpbnV4L3V0c25hbWUuaD4KIAog
-I2luY2x1ZGUgImFyY2guaCIKICNpbmNsdWRlICJlcnJuby5oIgpAQCAtMTEzOSw2ICsxMTQw
-LDMyIEBAIGludCB1bW91bnQyKGNvbnN0IGNoYXIgKnBhdGgsIGludCBmbGFncykKIH0KIAog
-CisvKgorICogaW50IHVuYW1lKHN0cnVjdCB1dHNuYW1lICpidWYpOworICovCisKK3N0cnVj
-dCB1dHNuYW1lIHsKKwljaGFyIHN5c25hbWVbNjVdOworCWNoYXIgbm9kZW5hbWVbNjVdOwor
-CWNoYXIgcmVsZWFzZVs2NV07CisJY2hhciB2ZXJzaW9uWzY1XTsKKwljaGFyIG1hY2hpbmVb
-NjVdOworCWNoYXIgZG9tYWlubmFtZVs2NV07Cit9OworCitzdGF0aWMgX19hdHRyaWJ1dGVf
-XygodW51c2VkKSkKK2ludCBzeXNfdW5hbWUoc3RydWN0IHV0c25hbWUgKmJ1ZikKK3sKKwly
-ZXR1cm4gbXlfc3lzY2FsbDEoX19OUl91bmFtZSwgYnVmKTsKK30KKworc3RhdGljIF9fYXR0
-cmlidXRlX18oKHVudXNlZCkpCitpbnQgdW5hbWUoc3RydWN0IHV0c25hbWUgKmJ1ZikKK3sK
-KwlyZXR1cm4gX19zeXNyZXQoc3lzX3VuYW1lKGJ1ZikpOworfQorCisKIC8qCiAgKiBpbnQg
-dW5saW5rKGNvbnN0IGNoYXIgKnBhdGgpOwogICovCmRpZmYgLS1naXQgYS90b29scy90ZXN0
-aW5nL3NlbGZ0ZXN0cy9ub2xpYmMvbm9saWJjLXRlc3QuYyBiL3Rvb2xzL3Rlc3Rpbmcvc2Vs
-ZnRlc3RzL25vbGliYy9ub2xpYmMtdGVzdC5jCmluZGV4IDZiYTRmODI3NWFjNC4uOTRiYjZl
-MTFjMTZmIDEwMDY0NAotLS0gYS90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9ub2xpYmMvbm9s
-aWJjLXRlc3QuYworKysgYi90b29scy90ZXN0aW5nL3NlbGZ0ZXN0cy9ub2xpYmMvbm9saWJj
-LXRlc3QuYwpAQCAtMjcsNiArMjcsNyBAQAogI2luY2x1ZGUgPHN5cy9zeXNjYWxsLmg+CiAj
-aW5jbHVkZSA8c3lzL3N5c21hY3Jvcy5oPgogI2luY2x1ZGUgPHN5cy90aW1lLmg+CisjaW5j
-bHVkZSA8c3lzL3V0c25hbWUuaD4KICNpbmNsdWRlIDxzeXMvd2FpdC5oPgogI2luY2x1ZGUg
-PGRpcmVudC5oPgogI2luY2x1ZGUgPGVycm5vLmg+CkBAIC02MDAsNiArNjAxLDI1IEBAIGlu
-dCBleHBlY3Rfc3RybmUoY29uc3QgY2hhciAqZXhwciwgaW50IGxsZW4sIGNvbnN0IGNoYXIg
-KmNtcCkKIAlyZXR1cm4gcmV0OwogfQogCisjZGVmaW5lIEVYUEVDVF9TVFJCVUZFUShjb25k
-LCBleHByLCBidWYsIHZhbCwgY21wKQkJCQlcCisJZG8geyBpZiAoIShjb25kKSkgcmVzdWx0
-KGxsZW4sIFNLSVBQRUQpOyBlbHNlIHJldCArPSBleHBlY3Rfc3RyX2J1Zl9lcShleHByLCBi
-dWYsIHZhbCwgbGxlbiwgY21wKTsgfSB3aGlsZSAoMCkKKworc3RhdGljIF9fYXR0cmlidXRl
-X18oKHVudXNlZCkpCitpbnQgZXhwZWN0X3N0cl9idWZfZXEoc2l6ZV90IGV4cHIsIGNvbnN0
-IGNoYXIgKmJ1Ziwgc2l6ZV90IHZhbCwgaW50IGxsZW4sIGNvbnN0IGNoYXIgKmNtcCkKK3sK
-KwlsbGVuICs9IHByaW50ZigiID0gJWx1IDwlcz4gIiwgZXhwciwgYnVmKTsKKwlpZiAoc3Ry
-Y21wKGJ1ZiwgY21wKSAhPSAwKSB7CisJCXJlc3VsdChsbGVuLCBGQUlMKTsKKwkJcmV0dXJu
-IDE7CisJfQorCWlmIChleHByICE9IHZhbCkgeworCQlyZXN1bHQobGxlbiwgRkFJTCk7CisJ
-CXJldHVybiAxOworCX0KKworCXJlc3VsdChsbGVuLCBPSyk7CisJcmV0dXJuIDA7Cit9CiAK
-IC8qIGRlY2xhcmUgdGVzdHMgYmFzZWQgb24gbGluZSBudW1iZXJzLiBUaGVyZSBtdXN0IGJl
-IGV4YWN0bHkgb25lIHRlc3QgcGVyIGxpbmUuICovCiAjZGVmaW5lIENBU0VfVEVTVChuYW1l
-KSBcCkBAIC03NjEsNiArNzgxLDQ1IEBAIGludCB0ZXN0X3N0YXRfdGltZXN0YW1wcyh2b2lk
-KQogCXJldHVybiAwOwogfQogCitpbnQgdGVzdF91bmFtZSh2b2lkKQoreworCXN0cnVjdCB1
-dHNuYW1lIGJ1ZjsKKwljaGFyIG9zcmVsZWFzZVtzaXplb2YoYnVmLnJlbGVhc2UpXTsKKwlz
-c2l6ZV90IHI7CisJaW50IGZkOworCisJbWVtc2V0KCZidWYuZG9tYWlubmFtZSwgJ1AnLCBz
-aXplb2YoYnVmLmRvbWFpbm5hbWUpKTsKKworCWlmICh1bmFtZSgmYnVmKSkKKwkJcmV0dXJu
-IDE7CisKKwlpZiAoc3RybmNtcCgiTGludXgiLCBidWYuc3lzbmFtZSwgc2l6ZW9mKGJ1Zi5z
-eXNuYW1lKSkpCisJCXJldHVybiAxOworCisJZmQgPSBvcGVuKCIvcHJvYy9zeXMva2VybmVs
-L29zcmVsZWFzZSIsIE9fUkRPTkxZKTsKKwlpZiAoZmQgPT0gLTEpCisJCXJldHVybiAxOwor
-CisJciA9IHJlYWQoZmQsIG9zcmVsZWFzZSwgc2l6ZW9mKG9zcmVsZWFzZSkpOworCWlmIChy
-ID09IC0xKQorCQlyZXR1cm4gMTsKKworCWNsb3NlKGZkKTsKKworCWlmIChvc3JlbGVhc2Vb
-ciAtIDFdID09ICdcbicpCisJCXItLTsKKworCS8qIFZhbGlkYXRlIG9uZSBvZiB0aGUgbGF0
-ZXIgZmllbGRzIHRvIGVuc3VyZSBmaWVsZCBzaXplcyBhcmUgY29ycmVjdCAqLworCWlmIChz
-dHJuY21wKG9zcmVsZWFzZSwgYnVmLnJlbGVhc2UsIHIpKQorCQlyZXR1cm4gMTsKKworCS8q
-IEVuc3VyZSB0aGUgZmllbGQgZG9tYWlubmFtZSBpcyBzZXQsIGl0IGlzIG1pc3NpbmcgZnJv
-bSBzdHJ1Y3Qgb2xkX3V0c25hbWUgKi8KKwlpZiAoc3RybmxlbihidWYuZG9tYWlubmFtZSwg
-c2l6ZW9mKGJ1Zi5kb21haW5uYW1lKSkgPT0gc2l6ZW9mKGJ1Zi5kb21haW5uYW1lKSkKKwkJ
-cmV0dXJuIDE7CisKKwlyZXR1cm4gMDsKK30KKwogaW50IHRlc3RfbW1hcF9tdW5tYXAodm9p
-ZCkKIHsKIAlpbnQgcmV0LCBmZCwgaSwgcGFnZV9zaXplOwpAQCAtOTY2LDYgKzEwMjUsOCBA
-QCBpbnQgcnVuX3N5c2NhbGwoaW50IG1pbiwgaW50IG1heCkKIAkJQ0FTRV9URVNUKHN0YXRf
-ZmF1bHQpOyAgICAgICAgRVhQRUNUX1NZU0VSKDEsIHN0YXQoTlVMTCwgJnN0YXRfYnVmKSwg
-LTEsIEVGQVVMVCk7IGJyZWFrOwogCQlDQVNFX1RFU1Qoc3RhdF90aW1lc3RhbXBzKTsgICBF
-WFBFQ1RfU1lTWlIoMSwgdGVzdF9zdGF0X3RpbWVzdGFtcHMoKSk7IGJyZWFrOwogCQlDQVNF
-X1RFU1Qoc3ltbGlua19yb290KTsgICAgICBFWFBFQ1RfU1lTRVIoMSwgc3ltbGluaygiLyIs
-ICIvIiksIC0xLCBFRVhJU1QpOyBicmVhazsKKwkJQ0FTRV9URVNUKHVuYW1lKTsgICAgICAg
-ICAgICAgRVhQRUNUX1NZU1pSKHByb2MsIHRlc3RfdW5hbWUoKSk7IGJyZWFrOworCQlDQVNF
-X1RFU1QodW5hbWVfZmF1bHQpOyAgICAgICBFWFBFQ1RfU1lTRVIoMSwgdW5hbWUoTlVMTCks
-IC0xLCBFRkFVTFQpOyBicmVhazsKIAkJQ0FTRV9URVNUKHVubGlua19yb290KTsgICAgICAg
-RVhQRUNUX1NZU0VSKDEsIHVubGluaygiLyIpLCAtMSwgRUlTRElSKTsgYnJlYWs7CiAJCUNB
-U0VfVEVTVCh1bmxpbmtfYmxhaCk7ICAgICAgIEVYUEVDVF9TWVNFUigxLCB1bmxpbmsoIi9w
-cm9jL3NlbGYvYmxhaCIpLCAtMSwgRU5PRU5UKTsgYnJlYWs7CiAJCUNBU0VfVEVTVCh3YWl0
-X2NoaWxkKTsgICAgICAgIEVYUEVDVF9TWVNFUigxLCB3YWl0KCZ0bXApLCAtMSwgRUNISUxE
-KTsgYnJlYWs7CkBAIC05OTEsNiArMTA1MiwxNCBAQCBpbnQgcnVuX3N0ZGxpYihpbnQgbWlu
-LCBpbnQgbWF4KQogCWZvciAodGVzdCA9IG1pbjsgdGVzdCA+PSAwICYmIHRlc3QgPD0gbWF4
-OyB0ZXN0KyspIHsKIAkJaW50IGxsZW4gPSAwOyAvKiBsaW5lIGxlbmd0aCAqLwogCisJCS8q
-IEZvciBmdW5jdGlvbnMgdGhhdCB0YWtlIGEgbG9uZyBidWZmZXIsIGxpa2Ugc3RybGNhdCgp
-CisJCSAqIEFkZCBzb21lIG1vcmUgY2hhcnMgYWZ0ZXIgdGhlIFwwLCB0byB0ZXN0IGZ1bmN0
-aW9ucyB0aGF0IG92ZXJ3cml0ZSB0aGUgYnVmZmVyIHNldAorCQkgKiB0aGUgXDAgYXQgdGhl
-IGV4YWN0IHJpZ2h0IHBvc2l0aW9uLgorCQkgKi8KKwkJY2hhciBidWZbMTBdID0gInRlc3Qx
-MjM0NTYiOworCQlidWZbNF0gPSAnXDAnOworCisKIAkJLyogYXZvaWQgbGVhdmluZyBlbXB0
-eSBsaW5lcyBiZWxvdywgdGhpcyB3aWxsIGluc2VydCBob2xlcyBpbnRvCiAJCSAqIHRlc3Qg
-bnVtYmVycy4KIAkJICovCkBAIC0xMDA3LDYgKzEwNzYsMTkgQEAgaW50IHJ1bl9zdGRsaWIo
-aW50IG1pbiwgaW50IG1heCkKIAkJQ0FTRV9URVNUKHN0cmNocl9mb29iYXJfeik7ICAgIEVY
-UEVDVF9TVFJaUigxLCBzdHJjaHIoImZvb2JhciIsICd6JykpOyBicmVhazsKIAkJQ0FTRV9U
-RVNUKHN0cnJjaHJfZm9vYmFyX28pOyAgIEVYUEVDVF9TVFJFUSgxLCBzdHJyY2hyKCJmb29i
-YXIiLCAnbycpLCAib2JhciIpOyBicmVhazsKIAkJQ0FTRV9URVNUKHN0cnJjaHJfZm9vYmFy
-X3opOyAgIEVYUEVDVF9TVFJaUigxLCBzdHJyY2hyKCJmb29iYXIiLCAneicpKTsgYnJlYWs7
-CisjaWZkZWYgTk9MSUJDCisJCUNBU0VfVEVTVChzdHJsY2F0XzApOyAgICAgICAgICBFWFBF
-Q1RfU1RSQlVGRVEoMSwgc3RybGNhdChidWYsICJiYXIiLCAwKSwgYnVmLCAzLCAidGVzdCIp
-OyBicmVhazsKKwkJQ0FTRV9URVNUKHN0cmxjYXRfMSk7ICAgICAgICAgIEVYUEVDVF9TVFJC
-VUZFUSgxLCBzdHJsY2F0KGJ1ZiwgImJhciIsIDEpLCBidWYsIDQsICJ0ZXN0Iik7IGJyZWFr
-OworCQlDQVNFX1RFU1Qoc3RybGNhdF81KTsgICAgICAgICAgRVhQRUNUX1NUUkJVRkVRKDEs
-IHN0cmxjYXQoYnVmLCAiYmFyIiwgNSksIGJ1ZiwgNywgInRlc3QiKTsgYnJlYWs7CisJCUNB
-U0VfVEVTVChzdHJsY2F0XzYpOyAgICAgICAgICBFWFBFQ1RfU1RSQlVGRVEoMSwgc3RybGNh
-dChidWYsICJiYXIiLCA2KSwgYnVmLCA3LCAidGVzdGIiKTsgYnJlYWs7CisJCUNBU0VfVEVT
-VChzdHJsY2F0XzcpOyAgICAgICAgICBFWFBFQ1RfU1RSQlVGRVEoMSwgc3RybGNhdChidWYs
-ICJiYXIiLCA3KSwgYnVmLCA3LCAidGVzdGJhIik7IGJyZWFrOworCQlDQVNFX1RFU1Qoc3Ry
-bGNhdF84KTsgICAgICAgICAgRVhQRUNUX1NUUkJVRkVRKDEsIHN0cmxjYXQoYnVmLCAiYmFy
-IiwgOCksIGJ1ZiwgNywgInRlc3RiYXIiKTsgYnJlYWs7CisJCUNBU0VfVEVTVChzdHJsY3B5
-XzApOyAgICAgICAgICBFWFBFQ1RfU1RSQlVGRVEoMSwgc3RybGNweShidWYsICJiYXIiLCAw
-KSwgYnVmLCAzLCAidGVzdCIpOyBicmVhazsKKwkJQ0FTRV9URVNUKHN0cmxjcHlfMSk7ICAg
-ICAgICAgIEVYUEVDVF9TVFJCVUZFUSgxLCBzdHJsY3B5KGJ1ZiwgImJhciIsIDEpLCBidWYs
-IDMsICIiKTsgYnJlYWs7CisJCUNBU0VfVEVTVChzdHJsY3B5XzIpOyAgICAgICAgICBFWFBF
-Q1RfU1RSQlVGRVEoMSwgc3RybGNweShidWYsICJiYXIiLCAyKSwgYnVmLCAzLCAiYiIpOyBi
-cmVhazsKKwkJQ0FTRV9URVNUKHN0cmxjcHlfMyk7ICAgICAgICAgIEVYUEVDVF9TVFJCVUZF
-USgxLCBzdHJsY3B5KGJ1ZiwgImJhciIsIDMpLCBidWYsIDMsICJiYSIpOyBicmVhazsKKwkJ
-Q0FTRV9URVNUKHN0cmxjcHlfNCk7ICAgICAgICAgIEVYUEVDVF9TVFJCVUZFUSgxLCBzdHJs
-Y3B5KGJ1ZiwgImJhciIsIDQpLCBidWYsIDMsICJiYXIiKTsgYnJlYWs7CisjZW5kaWYKIAkJ
-Q0FTRV9URVNUKG1lbWNtcF8yMF8yMCk7ICAgICAgIEVYUEVDVF9FUSgxLCBtZW1jbXAoImFh
-YVx4MjAiLCAiYWFhXHgyMCIsIDQpLCAwKTsgYnJlYWs7CiAJCUNBU0VfVEVTVChtZW1jbXBf
-MjBfNjApOyAgICAgICBFWFBFQ1RfTFQoMSwgbWVtY21wKCJhYWFceDIwIiwgImFhYVx4NjAi
-LCA0KSwgMCk7IGJyZWFrOwogCQlDQVNFX1RFU1QobWVtY21wXzYwXzIwKTsgICAgICAgRVhQ
-RUNUX0dUKDEsIG1lbWNtcCgiYWFhXHg2MCIsICJhYWFceDIwIiwgNCksIDApOyBicmVhazsK
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
+ definitions=2024-05-13_10,2024-05-10_02,2023-05-22_02
 
 
---------------3h7oO02tp7Ub6Y8cOlsd370x--
+On 4/26/24 17:37, Marek Vasut wrote:
+> On 4/26/24 2:57 PM, Christophe Roullier wrote:
+>> Some cleaning because some Ethernet PHY configs do not need to add
+>> st,ext-phyclk property.
+>> Change print info message "No phy clock provided" only when debug.
+>>
+>> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+>> ---
+>>   .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 27 ++++++++++---------
+>>   1 file changed, 14 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c 
+>> b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+>> index 7529a8d15492..e648c4e790a7 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+>> @@ -55,17 +55,17 @@
+>>    *|         |        |      25MHz    |        50MHz 
+>> |                  |
+>>    * 
+>> ---------------------------------------------------------------------------
+>>    *|  MII    |     -   |     eth-ck    |          n/a |      
+>> n/a        |
+>> - *|         |        | st,ext-phyclk | |             |
+>> + *|         |        |                 | |             |
+>>    * 
+>> ---------------------------------------------------------------------------
+>>    *|  GMII   |     -   |     eth-ck    |          n/a |      
+>> n/a        |
+>> - *|         |        | st,ext-phyclk | |             |
+>> + *|         |        |               | |             |
+>>    * 
+>> ---------------------------------------------------------------------------
+>>    *| RGMII   |     -   |     eth-ck    |          n/a |      
+>> eth-ck      |
+>> - *|         |        | st,ext-phyclk |                    | 
+>> st,eth-clk-sel or|
+>> + *|         |        |               |                    | 
+>> st,eth-clk-sel or|
+>>    *|         |        |               |                    | 
+>> st,ext-phyclk    |
+>>    * 
+>> ---------------------------------------------------------------------------
+>>    *| RMII    |     -   |     eth-ck    |        eth-ck |      
+>> n/a        |
+>> - *|         |        | st,ext-phyclk | st,eth-ref-clk-sel 
+>> |             |
+>> + *|         |        |               | st,eth-ref-clk-sel 
+>> |             |
+>>    *|         |        |               | or st,ext-phyclk 
+>> |             |
+>>    * 
+>> ---------------------------------------------------------------------------
+>>    *
+>> @@ -174,23 +174,22 @@ static int stm32mp1_set_mode(struct 
+>> plat_stmmacenet_data *plat_dat)
+>>       dwmac->enable_eth_ck = false;
+>>       switch (plat_dat->mac_interface) {
+>>       case PHY_INTERFACE_MODE_MII:
+>> -        if (clk_rate == ETH_CK_F_25M && dwmac->ext_phyclk)
+>> +        if (clk_rate == ETH_CK_F_25M)
+>
+> I see two problems here.
+>
+> First, according to the table above, in MII mode, clk_rate cannot be 
+> anything else but 25 MHz, so the (clk_rate == ETH_CK_F_25M) condition 
+> is always true. Why not drop that condition ?
+Not agree, there is also "Normal" case MII (MII with quartz/cristal) 
+(first column in the table above), so need to keep this test to check 
+clk_rate 25MHz.
+>
+> The "dwmac->ext_phyclk" means "Ethernet PHY have no crystal", which 
+> means the clock are provided by the STM32 RCC clock IP instead, which 
+> means if the dwmac->ext_phyclk is true, dwmac->enable_eth_ck should be 
+> set to true, because dwmac->enable_eth_ck controls the enablement of 
+> these STM32 clock IP generated clock.
+Right
+>
+> Second, as far as I understand it, there is no way to operate this IP 
+> with external clock in MII mode, so this section should always be only:
+>
+> dwmac->enable_eth_ck = true;
+Not for case "Normal" MII :-)
+>
+>>               dwmac->enable_eth_ck = true;
+>>           val = dwmac->ops->pmcsetr.eth1_selmii;
+>>           pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
+>>           break;
+>>       case PHY_INTERFACE_MODE_GMII:
+>>           val = SYSCFG_PMCR_ETH_SEL_GMII;
+>> -        if (clk_rate == ETH_CK_F_25M &&
+>> -            (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
+>> +        if (clk_rate == ETH_CK_F_25M)
+>>               dwmac->enable_eth_ck = true;
+>> -            val |= dwmac->ops->pmcsetr.eth1_clk_sel;
+>> -        }
+>>           pr_debug("SYSCFG init : PHY_INTERFACE_MODE_GMII\n");
+>>           break;
+>>       case PHY_INTERFACE_MODE_RMII:
+>>           val = dwmac->ops->pmcsetr.eth1_sel_rmii | 
+>> dwmac->ops->pmcsetr.eth2_sel_rmii;
+>> -        if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_50M) &&
+>> +        if (clk_rate == ETH_CK_F_25M)
+>> +            dwmac->enable_eth_ck = true;
+>> +        if (clk_rate == ETH_CK_F_50M &&
+>>               (dwmac->eth_ref_clk_sel_reg || dwmac->ext_phyclk)) {
+>
+> This doesn't seem to be equivalent change to the previous code . Here, 
+> if the clock frequency is 25 MHz, the clock are unconditionally 
+> enabled. Before, the code enabled the clock only if clock frequency 
+> was 25 MHz AND one of the "dwmac->eth_ref_clk_sel_reg" or 
+> "dwmac->ext_phyclk" was set (i.e. clock provided by SoC RCC clock IP).
+
+You are right, but in STM32MP15/MP13 reference manual it is write that 
+we need to update SYSCFG (SYSCFG_PMCSETR) register only in "Ethernet 
+50MHz RMII clock selection":
+
+Bit 17 ETH_REF_CLK_SEL: Ethernet 50MHz RMII clock selection.
+
+     Set by software.
+
+       0: Writing '0' has no effect, reading '0' means External clock is 
+used. Need selection of AFMux. Could be used with all PHY
+
+       1: Writing '1' set this bit, reading '1' means Internal clock 
+ETH_CLK1 from RCC is used regardless AFMux. Could be used only with RMII PHY
+
+>
+> I think it might make this code easier if you drop all of the 
+> frequency test conditionals, which aren't really all that useful, and 
+> only enable the clock if either dwmac->ext_phyclk / 
+> dwmac->eth_clk_sel_reg / dwmac->eth_ref_clk_sel_reg is set , because 
+> effectively what this entire convoluted code is implementing is "if 
+> (clock supplied by clock IP i.e. RCC) enable the clock()" *, right ?
+>
+> * And it is also toggling the right clock mux bit in PMCSETR.
+>
+> So, for MII this would be plain:
+> dwmac->enable_eth_ck = true;
+>
+> For GMII/RGMII this would be:
+> if (dwmac->ext_phyclk || dwmac->eth_clk_sel_reg)
+>   dwmac->enable_eth_ck = true;
+>
+> For RMII this would be:
+> if (dwmac->ext_phyclk || dwmac->eth_ref_clk_sel_reg)
+>   dwmac->enable_eth_ck = true;
+>
+> Maybe the clock frequency validation can be retained, but done 
+> separately?
+As explained previously, need to keep check of clock frequency in this test.
+>
+>>               dwmac->enable_eth_ck = true;
+>>               val |= dwmac->ops->pmcsetr.eth1_ref_clk_sel;
+>> @@ -203,7 +202,9 @@ static int stm32mp1_set_mode(struct 
+>> plat_stmmacenet_data *plat_dat)
+>>       case PHY_INTERFACE_MODE_RGMII_RXID:
+>>       case PHY_INTERFACE_MODE_RGMII_TXID:
+>>           val = dwmac->ops->pmcsetr.eth1_sel_rgmii | 
+>> dwmac->ops->pmcsetr.eth2_sel_rgmii;
+>> -        if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_125M) &&
+>> +        if (clk_rate == ETH_CK_F_25M)
+>> +            dwmac->enable_eth_ck = true;
+>> +        if (clk_rate == ETH_CK_F_125M &&
+>>               (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
+>>               dwmac->enable_eth_ck = true;
+>>               val |= dwmac->ops->pmcsetr.eth1_clk_sel;
+>> @@ -219,7 +220,7 @@ static int stm32mp1_set_mode(struct 
+>> plat_stmmacenet_data *plat_dat)
+>>       }
+>>         /* Need to update PMCCLRR (clear register) */
+>> -    regmap_write(dwmac->regmap, reg + dwmac->ops->syscfg_clr_off,
+>> +    regmap_write(dwmac->regmap, dwmac->ops->syscfg_clr_off,
+>>                dwmac->mode_mask);
+>>         /* Update PMCSETR (set register) */
+>> @@ -328,7 +329,7 @@ static int stm32mp1_parse_data(struct stm32_dwmac 
+>> *dwmac,
+>>       /*  Get ETH_CLK clocks */
+>>       dwmac->clk_eth_ck = devm_clk_get(dev, "eth-ck");
+>>       if (IS_ERR(dwmac->clk_eth_ck)) {
+>> -        dev_info(dev, "No phy clock provided...\n");
+>> +        dev_dbg(dev, "No phy clock provided...\n");
+>>           dwmac->clk_eth_ck = NULL;
+>>       }
