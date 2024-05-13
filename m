@@ -1,46 +1,46 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE41149C4F;
-	Mon, 13 May 2024 09:08:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE931494B6;
+	Mon, 13 May 2024 09:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715591327; cv=none; b=FhEBCsPX852/EUBbLKk6QyxvCURx000Vkm6JNDTgkK3tEwOcQOmRpzOA/HJ6fygr2mfW3oRPa8qQ4G6FNzBx9aHOH5JiGtwIRXOVgcuUTcoaL2q/abs9kFdaOZhIbGVh+MfTUDZGeVjLl8bthbQ2sWDf+m3vzvOCOpaFoKPnrEw=
+	t=1715591328; cv=none; b=pVBqFLtFbHKKHVQJFIyY0LxbUBcSM37cvDzZzqFtk2frICP1f/hjYQV2NHmFHY5WIb6zwJ5bWB9ror/AzYEZUJXvYM0UTD3UiYByaNFU9CDwDDKuH6S4ICNrE1ZXmvfLwHA6b283zRs4ze3+q+i02T8ltrewjQBcjFGkV7Hps+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715591327; c=relaxed/simple;
-	bh=qlqjLL23VyMDj1WOAODqetm5Ivoy03njZ+jYFKFJjHw=;
+	s=arc-20240116; t=1715591328; c=relaxed/simple;
+	bh=sQHJpolK0p55WXrJf3wWupgTPy1InByJOMun9RHBVVU=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bOZ0AFCTMgNP6iIbKr9tT//FcSyG+8Vj9kWdj0+yGCMwnSRhWyPcW1YGAxR7QpHemidAUHcICxwrORLk6fem3oBC2J7Qyi7f0C1k8K7S5dIY4Msoer9IntOxu4qIlCw5Ar2PgrFF5aTBkl1ZkLT16K5AGaIxucO0cvtomowxQwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Tm+aTv7y; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version:Content-Type; b=Mc2wmw8Hhq49SbQwjaY/RYiIaqTZXke0zJ9kqshpCLwRUwVRgbuBIOXBeUdzXp6gAOyxeQWpofmPs9OBnJ5s+I0ZSXXPpTv59zRqAmhXfnnHMwCfAy8t6NFHpTGytVVwjVBt35sg9hMUjTskR39onALB1dlVZgm2Tgs5GyLKU9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=XXVe9UTW; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Tm+aTv7y"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="XXVe9UTW"
 Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44CNU4HV007620;
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 44CMvQGf012553;
 	Mon, 13 May 2024 09:08:28 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	from:to:cc:subject:date:message-id:in-reply-to:references
 	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=bczshZ/+ZN2E6C2aTZcD9h0Eu4d8eG9ITdt2YMJyB5o=; b=Tm
-	+aTv7yyRlAdMCJzk40yd0FLksc8+xMksGHrd6WMx0T4WgQrNFzZN1a9PImfNnlix
-	u4tL8Y4Y5i6hGods5v9nKkln6gUI2rIMtLpMTQzg8oVcg7tLW/vmb3RH3eMPaud8
-	whYH0SZbnYVstz7X/vRYYgjRXW2/WRwjm5bzXklhtun4tUWoXjch10cy/ybUiEPm
-	HMIIT+GLCBD1O7oS7H/oKiFBo/xCqTsh9j6NY0nbOfYaYbs+5CNVBn7irVV9XwIQ
-	rnSM8Of91G+Hcv97mdG5s+/PNBJMEsWeILOK/UiRn3gOJgEW1VdTTjoBVV/V5gyQ
-	8/Aivo5LwuYNhlrOhFlA==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y1y9mb4u2-1
+	qcppdkim1; bh=TpNcfO2xnYlam2lC1fswpwdjx3WYQ5jl7br/aggMbUM=; b=XX
+	Ve9UTW51hRMoLJzVPIoHJd4wvMve2OFZm4iYFBPdYzZRbQ4zJf/0JRDeAImIJUMn
+	Z3V+kDSj6WNttKYoOshcUL4XPdeSCSGvVHDvkv5Yt6eNSAvbYdx9rzjIU/YKRkZA
+	+nJ5RoS6FowXNiiBVpbly2IXHXYiVfNFrlBk+ZbroiK1Yow3n2F3O0P32krCUIqZ
+	b1+RcuiX45LcS9HMfFR1wuqicL3WWbXZJoPxXxVejoGj6AkhLvbafAzfn8WERN/q
+	KgwEgiife1PniqQwUyvXaE35zicJA1Mde8xldZIeUQqEeV2kz1MHofHZYkj8Lfah
+	BvdqXgo8mc+3mvorqLNQ==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3y1y9mb4u4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 May 2024 09:08:27 +0000 (GMT)
+	Mon, 13 May 2024 09:08:28 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44D98Q3H017602
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 44D98RVV000987
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 13 May 2024 09:08:26 GMT
+	Mon, 13 May 2024 09:08:27 GMT
 Received: from tengfan-gv.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 13 May 2024 02:08:11 -0700
+ 15.2.1544.9; Mon, 13 May 2024 02:08:19 -0700
 From: Tengfei Fan <quic_tengfan@quicinc.com>
 To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
         <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
@@ -48,10 +48,13 @@ To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>, <robh@kernel.org>,
 CC: <keescook@chromium.org>, <tony.luck@intel.com>, <gpiccoli@igalia.com>,
         <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>
-Subject: [PATCH v8 2/4] arm64: dts: qcom: qcs8550: introduce qcs8550 dtsi
-Date: Mon, 13 May 2024 17:07:33 +0800
-Message-ID: <20240513090735.1666142-3-quic_tengfan@quicinc.com>
+        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>,
+        Qiang Yu
+	<quic_qianyu@quicinc.com>,
+        Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Subject: [PATCH v8 4/4] arm64: dts: qcom: aim300: add AIM300 AIoT
+Date: Mon, 13 May 2024 17:07:35 +0800
+Message-ID: <20240513090735.1666142-5-quic_tengfan@quicinc.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240513090735.1666142-1-quic_tengfan@quicinc.com>
 References: <20240513090735.1666142-1-quic_tengfan@quicinc.com>
@@ -67,242 +70,393 @@ X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: PBLyN-FYoD-IKvu331eO0O_qkhSIaDkB
-X-Proofpoint-ORIG-GUID: PBLyN-FYoD-IKvu331eO0O_qkhSIaDkB
+X-Proofpoint-GUID: -VPBolCvrEPCrebKkm-RqaGmMF_xc7-y
+X-Proofpoint-ORIG-GUID: -VPBolCvrEPCrebKkm-RqaGmMF_xc7-y
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.650,FMLib:17.11.176.26
  definitions=2024-05-13_06,2024-05-10_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=962 adultscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
  priorityscore=1501 lowpriorityscore=0 spamscore=0 phishscore=0
  malwarescore=0 suspectscore=0 impostorscore=0 clxscore=1015 bulkscore=0
  mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2405010000 definitions=main-2405130056
 
-QCS8550 is derived from SM8550. The differnece between SM8550 and
-QCS8550 is QCS8550 doesn't have modem RF system. QCS8550 is mainly used
-in IoT scenarios.
-QCS8550 firmware has different memory map with SM8550 firmware. The
-memory map will be runtime added through bootloader.
-There are 3 types of reserved memory regions here:
-1. Firmware related regions which aren't shared with kernel.
-    The device tree source in kernel doesn't need to have node to indicate
-the firmware related reserved information. OS bootloader conveys the
-information by update device tree in runtime.
-    This will be described as: UEFI saves the physical address of the
-UEFI System Table to dts file's chosen node. Kernel read this table and
-add reserved memory regions to efi config table. Current reserved memory
-region may have reserved region which was not yet used, release note of
-the firmware have such kind of information.
-2. Firmware related memory regions which are shared with Kernel
-    Each region has a specific node with specific label name for later
-phandle reference from other driver dt node.
-3. PIL regions.
-    PIL regions will be reserved and then assigned to subsystem firmware
-later.
-Here is a reserved memory map for this platform:
-0x100000000 +------------------+
-            |                  |
-            | Firmware Related |
-            |                  |
- 0xd4d00000 +------------------+
-            |                  |
-            | Kernel Available |
-            |                  |
- 0xa7000000 +------------------+
-            |                  |
-            |    PIL Region    |
-            |                  |
- 0x8a800000 +------------------+
-            |                  |
-            | Firmware Related |
-            |                  |
- 0x80000000 +------------------+
-Note that:
-0xa7000000..0xA8000000 is used by bootloader, when kernel boot up,
-it is available for kernel usage. This region is not suggested to be
-used by kernel features like ramoops, suspend resume etc.
+Add AIM300 AIoT Carrier board DTS support, including usb, UART, PCIe,
+I2C functions support.
+Here is a diagram of AIM300 AIoT Carrie Board and SoM
+ +--------------------------------------------------+
+ |             AIM300 AIOT Carrier Board            |
+ |                                                  |
+ |           +-----------------+                    |
+ |power----->| Fixed regulator |---------+          |
+ |           +-----------------+         |          |
+ |                                       |          |
+ |                                       v VPH_PWR  |
+ | +----------------------------------------------+ |
+ | |                          AIM300 SOM |        | |
+ | |                                     |VPH_PWR | |
+ | |                                     v        | |
+ | |   +-------+       +--------+     +------+    | |
+ | |   | UFS   |       | QCS8550|     |PMIC  |    | |
+ | |   +-------+       +--------+     +------+    | |
+ | |                                              | |
+ | +----------------------------------------------+ |
+ |                                                  |
+ |                    +----+          +------+      |
+ |                    |USB |          | UART |      |
+ |                    +----+          +------+      |
+ +--------------------------------------------------+
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Co-developed-by: Qiang Yu <quic_qianyu@quicinc.com>
+Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
+Co-developed-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
 Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 ---
- arch/arm64/boot/dts/qcom/qcs8550.dtsi | 169 ++++++++++++++++++++++++++
- 1 file changed, 169 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/qcs8550.dtsi
+ arch/arm64/boot/dts/qcom/Makefile             |   1 +
+ .../boot/dts/qcom/qcs8550-aim300-aiot.dts     | 322 ++++++++++++++++++
+ 2 files changed, 323 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs8550.dtsi b/arch/arm64/boot/dts/qcom/qcs8550.dtsi
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index f63abb43e9fe..c46c10d85697 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -96,6 +96,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= qcm6490-idp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-1000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs404-evb-4000.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qcs6490-rb3gen2.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= qcs8550-aim300-aiot.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qdu1000-idp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qrb2210-rb1.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= qrb4210-rb2.dtb
+diff --git a/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts b/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
 new file mode 100644
-index 000000000000..a3ebf3d4e16d
+index 000000000000..49759274fb4a
 --- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/qcs8550.dtsi
-@@ -0,0 +1,169 @@
++++ b/arch/arm64/boot/dts/qcom/qcs8550-aim300-aiot.dts
+@@ -0,0 +1,322 @@
 +// SPDX-License-Identifier: BSD-3-Clause
 +/*
 + * Copyright (c) 2023-2024, Qualcomm Innovation Center, Inc. All rights reserved.
 + */
 +
-+#include "sm8550.dtsi"
++/dts-v1/;
 +
-+/delete-node/ &reserved_memory;
++#include <dt-bindings/leds/common.h>
++#include "qcs8550-aim300.dtsi"
++#include "pm8010.dtsi"
++#include "pmr735d_a.dtsi"
++#include "pmr735d_b.dtsi"
 +
 +/ {
-+	reserved_memory: reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
++	model = "Qualcomm Technologies, Inc. QCS8550 AIM300 AIOT";
++	compatible = "qcom,qcs8550-aim300-aiot", "qcom,qcs8550-aim300", "qcom,qcs8550",
++		     "qcom,sm8550";
 +
++	aliases {
++		serial0 = &uart7;
++	};
 +
-+		/* These are 3 types of reserved memory regions here:
-+		 * 1. Firmware related regions which aren't shared with kernel.
-+		 *     The device tree source in kernel doesn't need to have node to
-+		 * indicate the firmware related reserved information. OS bootloader
-+		 * conveys the information by update device tree in runtime.
-+		 *     This will be described as: UEFI saves the physical address of
-+		 * the UEFI System Table to dts file's chosen node. Kernel read this
-+		 * table and add reserved memory regions to efi config table. Current
-+		 * reserved memory region may have reserved region which was not yet
-+		 * used, release note of the firmware have such kind of information.
-+		 * 2. Firmware related memory regions which are shared with Kernel.
-+		 *     Each region has a specific node with specific label name for
-+		 * later phandle reference from other driver dt node.
-+		 * 3. PIL regions.
-+		 *     PIL regions will be reserved and then assigned to subsystem
-+		 * firmware later.
-+		 * Here is a reserved memory map for this platform:
-+		 * 0x100000000 +------------------+
-+		 *             |                  |
-+		 *             | Firmware Related |
-+		 *             |                  |
-+		 *  0xd4d00000 +------------------+
-+		 *             |                  |
-+		 *             | Kernel Available |
-+		 *             |                  |
-+		 *  0xa7000000 +------------------+
-+		 *             |                  |
-+		 *             |    PIL Region    |
-+		 *             |                  |
-+		 *  0x8a800000 +------------------+
-+		 *             |                  |
-+		 *             | Firmware Related |
-+		 *             |                  |
-+		 *  0x80000000 +------------------+
-+		 * Note that:
-+		 * 0xa7000000..0xA8000000 is used by bootloader, when kernel boot up,
-+		 * it is available for kernel usage. This region is not suggested to
-+		 * be used by kernel features like ramoops, suspend resume etc.
-+		 */
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
 +
-+		/*
-+		 * Firmware related regions, bootlader will possible reserve parts of
-+		 * region from 0x80000000..0x8a800000.
-+		 */
-+		aop_image_mem: aop-image-region@81c00000 {
-+			reg = <0x0 0x81c00000 0x0 0x60000>;
-+			no-map;
-+		};
++	gpio-keys {
++		compatible = "gpio-keys";
 +
-+		aop_cmd_db_mem: aop-cmd-db-region@81c60000 {
-+			compatible = "qcom,cmd-db";
-+			reg = <0x0 0x81c60000 0x0 0x20000>;
-+			no-map;
-+		};
++		pinctrl-0 = <&volume_up_n>;
++		pinctrl-names = "default";
 +
-+		aop_config_mem: aop-config-region@81c80000 {
-+			no-map;
-+			reg = <0x0 0x81c80000 0x0 0x20000>;
-+		};
-+
-+		smem_mem: smem-region@81d00000 {
-+			compatible = "qcom,smem";
-+			reg = <0x0 0x81d00000 0x0 0x200000>;
-+			hwlocks = <&tcsr_mutex 3>;
-+			no-map;
-+		};
-+
-+		adsp_mhi_mem: adsp-mhi-region@81f00000 {
-+			reg = <0x0 0x81f00000 0x0 0x20000>;
-+			no-map;
-+		};
-+
-+		/* PIL region */
-+		mpss_mem: mpss-region@8a800000 {
-+			reg = <0x0 0x8a800000 0x0 0x10800000>;
-+			no-map;
-+		};
-+
-+		q6_mpss_dtb_mem: q6-mpss-dtb-region@9b000000 {
-+			reg = <0x0 0x9b000000 0x0 0x80000>;
-+			no-map;
-+		};
-+
-+		ipa_fw_mem: ipa-fw-region@9b080000 {
-+			reg = <0x0 0x9b080000 0x0 0x10000>;
-+			no-map;
-+		};
-+
-+		ipa_gsi_mem: ipa-gsi-region@9b090000 {
-+			reg = <0x0 0x9b090000 0x0 0xa000>;
-+			no-map;
-+		};
-+
-+		gpu_micro_code_mem: gpu-micro-code-region@9b09a000 {
-+			reg = <0x0 0x9b09a000 0x0 0x2000>;
-+			no-map;
-+		};
-+
-+		spss_region_mem: spss-region@9b100000 {
-+			reg = <0x0 0x9b100000 0x0 0x180000>;
-+			no-map;
-+		};
-+
-+		spu_secure_shared_memory_mem: spu-secure-shared-memory-region@9b280000 {
-+			reg = <0x0 0x9b280000 0x0 0x80000>;
-+			no-map;
-+		};
-+
-+		camera_mem: camera-region@9b300000 {
-+			reg = <0x0 0x9b300000 0x0 0x800000>;
-+			no-map;
-+		};
-+
-+		video_mem: video-region@9bb00000 {
-+			reg = <0x0 0x9bb00000 0x0 0x700000>;
-+			no-map;
-+		};
-+
-+		cvp_mem: cvp-region@9c200000 {
-+			reg = <0x0 0x9c200000 0x0 0x700000>;
-+			no-map;
-+		};
-+
-+		cdsp_mem: cdsp-region@9c900000 {
-+			reg = <0x0 0x9c900000 0x0 0x2000000>;
-+			no-map;
-+		};
-+
-+		q6_cdsp_dtb_mem: q6-cdsp-dtb-region@9e900000 {
-+			reg = <0x0 0x9e900000 0x0 0x80000>;
-+			no-map;
-+		};
-+
-+		q6_adsp_dtb_mem: q6-adsp-dtb-region@9e980000 {
-+			reg = <0x0 0x9e980000 0x0 0x80000>;
-+			no-map;
-+		};
-+
-+		adspslpi_mem: adspslpi-region@9ea00000 {
-+			reg = <0x0 0x9ea00000 0x0 0x4080000>;
-+			no-map;
-+		};
-+
-+		/*
-+		 * Firmware related regions, bootlader will possible reserve parts of
-+		 * region from 0xd8000000..0x100000000.
-+		 */
-+		mpss_dsm_mem: mpss_dsm_region@d4d00000 {
-+			reg = <0x0 0xd4d00000 0x0 0x3300000>;
-+			no-map;
++		key-volume-up {
++			label = "Volume Up";
++			debounce-interval = <15>;
++			gpios = <&pm8550_gpios 6 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEUP>;
++			linux,can-disable;
++			wakeup-source;
 +		};
 +	};
++
++	pmic-glink {
++		compatible = "qcom,sm8550-pmic-glink", "qcom,pmic-glink";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		orientation-gpios = <&tlmm 11 GPIO_ACTIVE_HIGH>;
++
++		connector@0 {
++			compatible = "usb-c-connector";
++			reg = <0>;
++			power-role = "dual";
++			data-role = "dual";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++
++					pmic_glink_hs_in: endpoint {
++						remote-endpoint = <&usb_1_dwc3_hs>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++
++					pmic_glink_ss_in: endpoint {
++						remote-endpoint = <&redriver_ss_out>;
++					};
++				};
++
++				port@2 {
++					reg = <2>;
++
++					pmic_glink_sbu: endpoint {
++						remote-endpoint = <&fsa4480_sbu_mux>;
++					};
++				};
++			};
++		};
++	};
++
++	vph_pwr: regulator-vph-pwr {
++		compatible = "regulator-fixed";
++		regulator-name = "vph_pwr";
++		regulator-min-microvolt = <3700000>;
++		regulator-max-microvolt = <3700000>;
++
++		regulator-always-on;
++		regulator-boot-on;
++	};
++};
++
++&apps_rsc {
++	regulators-0 {
++		vdd-bob1-supply = <&vph_pwr>;
++		vdd-bob2-supply = <&vph_pwr>;
++	};
++
++	regulators-3 {
++		vdd-s4-supply = <&vph_pwr>;
++		vdd-s5-supply = <&vph_pwr>;
++	};
++
++	regulators-4 {
++		vdd-s4-supply = <&vph_pwr>;
++	};
++
++	regulators-5 {
++		vdd-s1-supply = <&vph_pwr>;
++		vdd-s2-supply = <&vph_pwr>;
++		vdd-s3-supply = <&vph_pwr>;
++		vdd-s4-supply = <&vph_pwr>;
++		vdd-s5-supply = <&vph_pwr>;
++		vdd-s6-supply = <&vph_pwr>;
++	};
++};
++
++&i2c_hub_2 {
++	status = "okay";
++
++	typec-mux@42 {
++		compatible = "fcs,fsa4480";
++		reg = <0x42>;
++
++		vcc-supply = <&vreg_bob1>;
++
++		mode-switch;
++		orientation-switch;
++
++		port {
++			fsa4480_sbu_mux: endpoint {
++				remote-endpoint = <&pmic_glink_sbu>;
++			};
++		};
++	};
++
++	typec-retimer@1c {
++		compatible = "onnn,nb7vpq904m";
++		reg = <0x1c>;
++
++		vcc-supply = <&vreg_l15b_1p8>;
++
++		orientation-switch;
++		retimer-switch;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++
++				redriver_ss_out: endpoint {
++					remote-endpoint = <&pmic_glink_ss_in>;
++				};
++			};
++
++			port@1 {
++				reg = <1>;
++
++				redriver_ss_in: endpoint {
++					data-lanes = <3 2 1 0>;
++					remote-endpoint = <&usb_dp_qmpphy_out>;
++				};
++			};
++		};
++	};
++};
++
++&mdss_dsi0 {
++	status = "okay";
++
++	panel@0 {
++		compatible = "visionox,vtdr6130";
++		reg = <0>;
++
++		pinctrl-0 = <&dsi_active>, <&te_active>;
++		pinctrl-1 = <&dsi_suspend>, <&te_suspend>;
++		pinctrl-names = "default", "sleep";
++
++		reset-gpios = <&tlmm 133 GPIO_ACTIVE_LOW>;
++
++		vci-supply = <&vreg_l13b_3p0>;
++		vdd-supply = <&vreg_l11b_1p2>;
++		vddio-supply = <&vreg_l12b_1p8>;
++
++		port {
++			panel0_in: endpoint {
++				remote-endpoint = <&mdss_dsi0_out>;
++			};
++		};
++	};
++};
++
++&mdss_dsi0_out {
++	remote-endpoint = <&panel0_in>;
++	data-lanes = <0 1 2 3>;
++};
++
++&mdss_dsi0_phy {
++	status = "okay";
++};
++
++&pcie0 {
++	status = "okay";
++};
++
++&pcie0_phy {
++	status = "okay";
++};
++
++&pcie1 {
++	status = "okay";
++};
++
++&pcie1_phy {
++	status = "okay";
++};
++
++&pm8550_gpios {
++	volume_up_n: volume-up-n-state {
++		pins = "gpio6";
++		function = "normal";
++		power-source = <1>;
++		bias-pull-up;
++		input-enable;
++	};
++};
++
++&pon_pwrkey {
++	status = "okay";
++};
++
++&pon_resin {
++	linux,code = <KEY_VOLUMEDOWN>;
++
++	status = "okay";
++};
++
++&qupv3_id_0 {
++	status = "okay";
++};
++
++&remoteproc_adsp {
++	firmware-name = "qcom/qcs8550/adsp.mbn",
++			"qcom/qcs8550/adsp_dtbs.elf";
++	status = "okay";
++};
++
++&remoteproc_cdsp {
++	firmware-name = "qcom/qcs8550/cdsp.mbn",
++			"qcom/qcs8550/cdsp_dtbs.elf";
++	status = "okay";
++};
++
++&swr1 {
++	status = "okay";
++};
++
++&swr2 {
++	status = "okay";
++};
++
++&tlmm {
++	gpio-reserved-ranges = <32 8>;
++
++	dsi_active: dsi-active-state {
++		pins = "gpio133";
++		function = "gpio";
++		drive-strength = <8>;
++		bias-disable;
++	};
++
++	dsi_suspend: dsi-suspend-state {
++		pins = "gpio133";
++		function = "gpio";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++
++	te_active: te-active-state {
++		pins = "gpio86";
++		function = "mdp_vsync";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++
++	te_suspend: te-suspend-state {
++		pins = "gpio86";
++		function = "mdp_vsync";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++};
++
++&uart7 {
++	status = "okay";
++};
++
++&usb_1 {
++	status = "okay";
++};
++
++&usb_1_dwc3_hs {
++	remote-endpoint = <&pmic_glink_hs_in>;
++};
++
++&usb_1_hsphy {
++	status = "okay";
++};
++
++&usb_dp_qmpphy {
++	status = "okay";
++};
++
++&usb_dp_qmpphy_out {
++	remote-endpoint = <&redriver_ss_in>;
 +};
 -- 
 2.25.1
