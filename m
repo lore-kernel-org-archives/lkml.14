@@ -1,159 +1,226 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE65250280;
-	Mon, 13 May 2024 05:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2D44C81
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 06:00:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715579800; cv=none; b=qtVU8UbVIRtipkAee+/2iyBeY+DYnxDf2txMLh7n2d4HDr/49NT7ThGyOyFqnEyglXfkhWoCZ2iSuFeIluEeIAihyptesWTSI4TNGYYbsmYiA7ktXewIkHZqwjoZqRSISRJqIPB5Lf06DsZc3wvu6Fsj5/i2WCx6kiS7tMQVwRg=
+	t=1715580036; cv=none; b=ljeHP2z2oxC+ETkBERXEbEd2zXNVjWGSYDBYjr2PfcgO0nvuzdG9dsIoSCdHwZz9kv6xWvxehTM2HvjWIX+iZj5hsfqM2YcgMWsv7PNh8NbTYQKzZhw6C4zx9j5T0LzR+6HbMigplgWoBx0wGRSaju+iuSqiZvohR9iq7kAEqCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715579800; c=relaxed/simple;
-	bh=G8iOywcAcBnScphNUsC6tyWcLR3GHdaAtCcIaphQd+o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S0pMAz57Xj9vTa0gwB0I+8zVW5qELJFnVuUxHKvLkiaqEp8TXMMoP3VZGwjd61ju7Pv0wgqRH4Ib+W/figtHFa7a/2Rbf91HdTGz/EnioMACcxedvf65+PPVrCUdkskL6oMBgR7RssUQrFCkXCDtSo4d0mAZsFiSgo5iIHgWZRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HIcQmUJZ; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1715580036; c=relaxed/simple;
+	bh=U6jyMIMYyMvRLZrQ+/DKHJ/d/UnO6SKxH0N3kkgzAGA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ihw7Gp/P3GwdFxnDRyoA3rqc1Wj5DWry6C5CMiZxUYgMO204NV8YcqfsqR7SAc+761oaWBmJYQgaM+EIK+Vr/VNzpT7/ZCCpFgHgNBQ8Bf6FGg8ckR4ocK/jlkDe9lWYJd0dXRyy/vae2sKWXjDfXvj1uWgnfAtyoGqTaiJDHg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BicIse0b; arc=none smtp.client-ip=209.85.210.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HIcQmUJZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715579798; x=1747115798;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=G8iOywcAcBnScphNUsC6tyWcLR3GHdaAtCcIaphQd+o=;
-  b=HIcQmUJZlh74GCYAgv8OmorAUq62cVP/OvvPA92YRRfVf37/J8nNeRP/
-   bMaOdoZJz0kovH8t0oWOK2eivbn5F4Yea8YJ+sSI+sIUkkkTlinL4oPKr
-   tVqBt278L36qLRDk2jS+Ul9/bbeivBupcTsdxbt+6iFQ1vRTD4fJT34cN
-   YxMtF7dR7PXhz7Y3IQfp9koeFWlCoWgXjQIvqM3yWa+NzMAAcTZVKvWQU
-   CC5Ib/aqje9x4B6g2Ob/jdeqCZCAvTZHHzQwhvyDLh56zAm4KHf0jZg+r
-   xHGGOmwpaKGYu3S6Cu62iez1zI2dSMd3Sh0/btwyKSB4PFUGZg/OCw7fk
-   A==;
-X-CSE-ConnectionGUID: E7Hc8rMBRme/3x5YkBRsbw==
-X-CSE-MsgGUID: GWpr7pstRJm1HRcElt4TuA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11071"; a="11715083"
-X-IronPort-AV: E=Sophos;i="6.08,157,1712646000"; 
-   d="scan'208";a="11715083"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2024 22:56:37 -0700
-X-CSE-ConnectionGUID: P6Zc/P7tTxOKeFH7mhe1SA==
-X-CSE-MsgGUID: q++dGDfOQOOXcbZF73pT7A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,157,1712646000"; 
-   d="scan'208";a="30787423"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.125.243.198]) ([10.125.243.198])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 May 2024 22:56:37 -0700
-Message-ID: <a7def4e2-34f0-45cf-8efa-eb063c85591f@intel.com>
-Date: Mon, 13 May 2024 13:56:33 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BicIse0b"
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-6f447260f9dso3095655b3a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 12 May 2024 23:00:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715580034; x=1716184834; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A+UWE13EKJKc2jsx12DqNcqiTCBkf/xDYNgDW2I4NGM=;
+        b=BicIse0bv15L/OaAXm0fyxAHUrl8BG+j1uUsoQ5zXzv5lui5wM/WndKgWuT6S8PY6T
+         NbRYzXU3Np3BNvPy2pIb1aIxPVxKPzN+vlIVa9E76ikyH6o7IP+W23YxaA0FyRKU6fln
+         5sRgQEAJ6gYsC/Zpv7RypZj3DFBTDTdbj2Lk/ywexLe20PNqS7vIWPYRHVJiqsNgV9NK
+         THHZZDx/JCw2mbAEYhw+FzExraZP0U2qJaljV5jQiPzvNsIE1wjIUzGyjn+TkFAfzxAw
+         s8SWrf/tVDoNLfNHW/U+kYpYlhlQlJ0ujd9gXaeKpV5JBSLOi+bDCJx5Bycw9jyqt6Nw
+         Yr0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715580034; x=1716184834;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=A+UWE13EKJKc2jsx12DqNcqiTCBkf/xDYNgDW2I4NGM=;
+        b=EEksMoEBB4SW6PhrT7szzHEw+1EbcAWanKA9y89su08ZL3n5HJOfGgcT/YsS63qowA
+         UYPXmTB3MghI1NdL1RUwZbMjUpfnBEKk+c+JCbx7ReDwhLwbfoqTBNiUELIZlSTv8BIs
+         IoDpn+lagKHgSFd6K7zkWDv7tkL59l4Nfr/n1jf47CdvkEkFcvIt7rZR+aiWwrm1cqcB
+         mr1EkrV0NcipB8reUsYvu8HYfV5uKziHgMA7Mi0Ygebo9D8NzKoC8p1MX0qHxqNptDmJ
+         M3lK6jDojoBp1KQSuLvUWgxZ3TnxiSlbzRGEJm2ttm6Sq4BXZndXm71cc2oHfz3iEtlh
+         fFUA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCSZXw41F7eAb3OOfWr2jNDIXp2ros3l8W6wBr/KF/GY+KEiIMV+9wPO8UCY4GZdD0DAkIGOa9km+pjEhDqCYs3mbHwy+BsS24pr1g
+X-Gm-Message-State: AOJu0Yyn9Y1f/6TcjtMs0wg9e6CBmlah6jKX+MQfUaKCzFDiFRZbp8t/
+	PABPAuOie2eB+JpI0h65Tt+H6USANwhFFoGmmeX1sYCG4hv/5rAn
+X-Google-Smtp-Source: AGHT+IFgXfG6zZft0seFQcj/0hGAntlM5b4QIRh98rM7ciwNpamlMxzfQnNQCIrlaVzeReaaX3tY9A==
+X-Received: by 2002:a05:6a20:12d4:b0:1a5:6a85:8ce9 with SMTP id adf61e73a8af0-1afde0a8da9mr9520068637.12.1715580034317;
+        Sun, 12 May 2024 23:00:34 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2b67105649fsm7106812a91.6.2024.05.12.23.00.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 May 2024 23:00:33 -0700 (PDT)
+From: xu xin <xu.xin.sc@gmail.com>
+X-Google-Original-From: xu xin <xu.xin16@zte.com.cn>
+To: chengming.zhou@linux.dev
+Cc: aarcange@redhat.com,
+	akpm@linux-foundation.org,
+	david@redhat.com,
+	hughd@google.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	shr@devkernel.io,
+	xu.xin16@zte.com.cn,
+	zhouchengming@bytedance.com,
+	si.hao@zte.com.cn
+Subject: Re: [PATCH v2 2/2] mm/ksm: fix ksm_zero_pages accounting
+Date: Mon, 13 May 2024 06:00:29 +0000
+Message-Id: <20240513060029.651050-1-xu.xin16@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240513-b4-ksm-counters-v2-2-f2520183a8ca@linux.dev>
+References: <20240513-b4-ksm-counters-v2-2-f2520183a8ca@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 07/17] KVM: x86/mmu: Use synthetic page fault error code
- to indicate private faults
-To: Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org
-Cc: Sean Christopherson <seanjc@google.com>
-References: <20240507155817.3951344-1-pbonzini@redhat.com>
- <20240507155817.3951344-8-pbonzini@redhat.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20240507155817.3951344-8-pbonzini@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/7/2024 11:58 PM, Paolo Bonzini wrote:
-> From: Sean Christopherson <seanjc@google.com>
-> 
-> Add and use a synthetic, KVM-defined page fault error code to indicate
-> whether a fault is to private vs. shared memory.  TDX and SNP have
-> different mechanisms for reporting private vs. shared, and KVM's
-> software-protected VMs have no mechanism at all.  Usurp an error code
-> flag to avoid having to plumb another parameter to kvm_mmu_page_fault()
-> and friends.
-> 
-> Alternatively, KVM could borrow AMD's PFERR_GUEST_ENC_MASK, i.e. set it
-> for TDX and software-protected VMs as appropriate, but that would require
-> *clearing* the flag for SEV and SEV-ES VMs, which support encrypted
-> memory at the hardware layer, but don't utilize private memory at the
-> KVM layer.
-> 
-> Opportunistically add a comment to call out that the logic for software-
-> protected VMs is (and was before this commit) broken for nested MMUs, i.e.
-> for nested TDP, as the GPA is an L2 GPA.  Punt on trying to play nice with
-> nested MMUs as there is a _lot_ of functionality that simply doesn't work
-> for software-protected VMs, e.g. all of the paths where KVM accesses guest
-> memory need to be updated to be aware of private vs. shared memory.
-> 
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> Message-Id: <20240228024147.41573-6-seanjc@google.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> We normally ksm_zero_pages++ in ksmd when page is merged with zero page,
+> but ksm_zero_pages-- is done from page tables side, which can't protected
+> by the ksmd mutex.
 
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+  "cant protected" -> "can't be protected".
 
+  But It's better to say  "where there is no any accessing protection of
+  ksm_zero_pages" because ksmd mutex is to protect the flag of ksm_run, not to
+  protect the counters of KSM.
+
+
+  Anyway, The following code looks OK to me.
+> 
+> So we can read very exceptional value of ksm_zero_pages in rare cases,
+> such as -1, which is very confusing to users.
+> 
+> Fix it by changing to use atomic_long_t, and the same case with the
+> mm->ksm_zero_pages.
+> 
+> Fixes: e2942062e01d ("ksm: count all zero pages placed by KSM")
+> Fixes: 6080d19f0704 ("ksm: add ksm zero pages for each process")
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Chengming Zhou <chengming.zhou@linux.dev>
 > ---
->   arch/x86/include/asm/kvm_host.h |  7 ++++++-
->   arch/x86/kvm/mmu/mmu.c          | 14 ++++++++++++++
->   arch/x86/kvm/mmu/mmu_internal.h |  2 +-
->   3 files changed, 21 insertions(+), 2 deletions(-)
+>  fs/proc/base.c           |  2 +-
+>  include/linux/ksm.h      | 17 ++++++++++++++---
+>  include/linux/mm_types.h |  2 +-
+>  mm/ksm.c                 | 11 +++++------
+>  4 files changed, 21 insertions(+), 11 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 12e727301262..0dc755a6dc0c 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -273,7 +273,12 @@ enum x86_intercept_stage;
->    * when emulating instructions that triggers implicit access.
->    */
->   #define PFERR_IMPLICIT_ACCESS	BIT_ULL(48)
-> -#define PFERR_SYNTHETIC_MASK	(PFERR_IMPLICIT_ACCESS)
-> +/*
-> + * PRIVATE_ACCESS is a KVM-defined flag us to indicate that a fault occurred
-> + * when the guest was accessing private memory.
-> + */
-> +#define PFERR_PRIVATE_ACCESS   BIT_ULL(49)
-> +#define PFERR_SYNTHETIC_MASK   (PFERR_IMPLICIT_ACCESS | PFERR_PRIVATE_ACCESS)
->   
->   #define PFERR_NESTED_GUEST_PAGE (PFERR_GUEST_PAGE_MASK |	\
->   				 PFERR_WRITE_MASK |		\
-> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> index 3609167ba30e..eb041acec2dc 100644
-> --- a/arch/x86/kvm/mmu/mmu.c
-> +++ b/arch/x86/kvm/mmu/mmu.c
-> @@ -5799,6 +5799,20 @@ int noinline kvm_mmu_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u64 err
->   	if (WARN_ON_ONCE(!VALID_PAGE(vcpu->arch.mmu->root.hpa)))
->   		return RET_PF_RETRY;
->   
-> +	/*
-> +	 * Except for reserved faults (emulated MMIO is shared-only), set the
-> +	 * PFERR_PRIVATE_ACCESS flag for software-protected VMs based on the gfn's
-> +	 * current attributes, which are the source of truth for such VMs.  Note,
-> +	 * this wrong for nested MMUs as the GPA is an L2 GPA, but KVM doesn't
-> +	 * currently supported nested virtualization (among many other things)
-> +	 * for software-protected VMs.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_KVM_SW_PROTECTED_VM) &&
-> +	    !(error_code & PFERR_RSVD_MASK) &&
-> +	    vcpu->kvm->arch.vm_type == KVM_X86_SW_PROTECTED_VM &&
-> +	    kvm_mem_is_private(vcpu->kvm, gpa_to_gfn(cr2_or_gpa)))
-> +		error_code |= PFERR_PRIVATE_ACCESS;
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index 18550c071d71..72a1acd03675 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -3214,7 +3214,7 @@ static int proc_pid_ksm_stat(struct seq_file *m, struct pid_namespace *ns,
+>  	mm = get_task_mm(task);
+>  	if (mm) {
+>  		seq_printf(m, "ksm_rmap_items %lu\n", mm->ksm_rmap_items);
+> -		seq_printf(m, "ksm_zero_pages %lu\n", mm->ksm_zero_pages);
+> +		seq_printf(m, "ksm_zero_pages %ld\n", mm_ksm_zero_pages(mm));
+>  		seq_printf(m, "ksm_merging_pages %lu\n", mm->ksm_merging_pages);
+>  		seq_printf(m, "ksm_process_profit %ld\n", ksm_process_profit(mm));
+>  		mmput(mm);
+> diff --git a/include/linux/ksm.h b/include/linux/ksm.h
+> index 52c63a9c5a9c..11690dacd986 100644
+> --- a/include/linux/ksm.h
+> +++ b/include/linux/ksm.h
+> @@ -33,16 +33,27 @@ void __ksm_exit(struct mm_struct *mm);
+>   */
+>  #define is_ksm_zero_pte(pte)	(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte))
+>  
+> -extern unsigned long ksm_zero_pages;
+> +extern atomic_long_t ksm_zero_pages;
 > +
->   	r = RET_PF_INVALID;
->   	if (unlikely(error_code & PFERR_RSVD_MASK)) {
->   		r = handle_mmio_page_fault(vcpu, cr2_or_gpa, direct);
-> diff --git a/arch/x86/kvm/mmu/mmu_internal.h b/arch/x86/kvm/mmu/mmu_internal.h
-> index 797b80f996a7..dfd9ff383663 100644
-> --- a/arch/x86/kvm/mmu/mmu_internal.h
-> +++ b/arch/x86/kvm/mmu/mmu_internal.h
-> @@ -306,7 +306,7 @@ static inline int kvm_mmu_do_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
->   		.max_level = KVM_MAX_HUGEPAGE_LEVEL,
->   		.req_level = PG_LEVEL_4K,
->   		.goal_level = PG_LEVEL_4K,
-> -		.is_private = kvm_mem_is_private(vcpu->kvm, cr2_or_gpa >> PAGE_SHIFT),
-> +		.is_private = err & PFERR_PRIVATE_ACCESS,
->   	};
->   	int r;
->   
-
+> +static inline void ksm_map_zero_page(struct mm_struct *mm)
+> +{
+> +	atomic_long_inc(&ksm_zero_pages);
+> +	atomic_long_inc(&mm->ksm_zero_pages);
+> +}
+>  
+>  static inline void ksm_might_unmap_zero_page(struct mm_struct *mm, pte_t pte)
+>  {
+>  	if (is_ksm_zero_pte(pte)) {
+> -		ksm_zero_pages--;
+> -		mm->ksm_zero_pages--;
+> +		atomic_long_dec(&ksm_zero_pages);
+> +		atomic_long_dec(&mm->ksm_zero_pages);
+>  	}
+>  }
+>  
+> +static inline long mm_ksm_zero_pages(struct mm_struct *mm)
+> +{
+> +	return atomic_long_read(&mm->ksm_zero_pages);
+> +}
+> +
+>  static inline int ksm_fork(struct mm_struct *mm, struct mm_struct *oldmm)
+>  {
+>  	if (test_bit(MMF_VM_MERGEABLE, &oldmm->flags))
+> diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+> index 24323c7d0bd4..af3a0256fa93 100644
+> --- a/include/linux/mm_types.h
+> +++ b/include/linux/mm_types.h
+> @@ -985,7 +985,7 @@ struct mm_struct {
+>  		 * Represent how many empty pages are merged with kernel zero
+>  		 * pages when enabling KSM use_zero_pages.
+>  		 */
+> -		unsigned long ksm_zero_pages;
+> +		atomic_long_t ksm_zero_pages;
+>  #endif /* CONFIG_KSM */
+>  #ifdef CONFIG_LRU_GEN_WALKS_MMU
+>  		struct {
+> diff --git a/mm/ksm.c b/mm/ksm.c
+> index 0f9c491552ff..6f461411d070 100644
+> --- a/mm/ksm.c
+> +++ b/mm/ksm.c
+> @@ -296,7 +296,7 @@ static bool ksm_use_zero_pages __read_mostly;
+>  static bool ksm_smart_scan = true;
+>  
+>  /* The number of zero pages which is placed by KSM */
+> -unsigned long ksm_zero_pages;
+> +atomic_long_t ksm_zero_pages = ATOMIC_LONG_INIT(0);
+>  
+>  /* The number of pages that have been skipped due to "smart scanning" */
+>  static unsigned long ksm_pages_skipped;
+> @@ -1429,8 +1429,7 @@ static int replace_page(struct vm_area_struct *vma, struct page *page,
+>  		 * the dirty bit in zero page's PTE is set.
+>  		 */
+>  		newpte = pte_mkdirty(pte_mkspecial(pfn_pte(page_to_pfn(kpage), vma->vm_page_prot)));
+> -		ksm_zero_pages++;
+> -		mm->ksm_zero_pages++;
+> +		ksm_map_zero_page(mm);
+>  		/*
+>  		 * We're replacing an anonymous page with a zero page, which is
+>  		 * not anonymous. We need to do proper accounting otherwise we
+> @@ -3373,7 +3372,7 @@ static void wait_while_offlining(void)
+>  #ifdef CONFIG_PROC_FS
+>  long ksm_process_profit(struct mm_struct *mm)
+>  {
+> -	return (long)(mm->ksm_merging_pages + mm->ksm_zero_pages) * PAGE_SIZE -
+> +	return (long)(mm->ksm_merging_pages + mm_ksm_zero_pages(mm)) * PAGE_SIZE -
+>  		mm->ksm_rmap_items * sizeof(struct ksm_rmap_item);
+>  }
+>  #endif /* CONFIG_PROC_FS */
+> @@ -3662,7 +3661,7 @@ KSM_ATTR_RO(pages_skipped);
+>  static ssize_t ksm_zero_pages_show(struct kobject *kobj,
+>  				struct kobj_attribute *attr, char *buf)
+>  {
+> -	return sysfs_emit(buf, "%ld\n", ksm_zero_pages);
+> +	return sysfs_emit(buf, "%ld\n", atomic_long_read(&ksm_zero_pages));
+>  }
+>  KSM_ATTR_RO(ksm_zero_pages);
+>  
+> @@ -3671,7 +3670,7 @@ static ssize_t general_profit_show(struct kobject *kobj,
+>  {
+>  	long general_profit;
+>  
+> -	general_profit = (ksm_pages_sharing + ksm_zero_pages) * PAGE_SIZE -
+> +	general_profit = (ksm_pages_sharing + atomic_long_read(&ksm_zero_pages)) * PAGE_SIZE -
+>  				ksm_rmap_items * sizeof(struct ksm_rmap_item);
+>  
+>  	return sysfs_emit(buf, "%ld\n", general_profit);
+> 
+> -- 
+> 2.45.0
+> 
