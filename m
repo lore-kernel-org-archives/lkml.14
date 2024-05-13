@@ -1,193 +1,186 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4262B52F9B
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:14:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3ED146A7A
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715584484; cv=none; b=Pt6eya7uiFz1Gzm1Cm4vOnIMFYpthlj72vphOQBooCScapITmfN762pSthrP2qSQfZgjy3Oc8BVgYJ5kUYjlnmHbv79CQM4MDxAyi5skeC+V1+6YFlIISLEvTgl2fapqOwpbRO5MmV+7g2pooGKcfB7RlKrtHqxPVL/2r1BaRJo=
+	t=1715584522; cv=none; b=MdOCLuMoM3PFHSLspfQvTnKBsSul3TorOOtMArc1GA+tYAdISwa/7Cx7BEBMjvQS7NRgSTuv20RngHoCWPHLcvFTrUNo3zq5yut24D3kTn++8LBea7hLcFm8WxuKFE4nlqGfVYfvQjAwhyRfQZJCK4eAILuMVQhaoXPDZXUvA18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715584484; c=relaxed/simple;
-	bh=suY7gdj5WEzlYkeyc21b5k/5NgIk2dmm7ryt+mMo7mg=;
+	s=arc-20240116; t=1715584522; c=relaxed/simple;
+	bh=88msEBMLN/fbEdNPwSEDb//wSAtROOjVjX88xosD0mM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WisnwQGNL98+eNRpDbvxSCxbrA9+Ai/LzQ5c0ODlQgPn7AjaOUH+mPg/WWQRdAicNKuKQtvuQ8BZPVLAeaaUVlogdwK1f4eiGa8DPXNI5s/bHXYtoibX/HG3TZhPFMOAsshBx5XtMuho++1N6tFq/Ym+OLjTFesYr3ytItCctws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1s6Pt9-0001Jd-LQ; Mon, 13 May 2024 09:14:23 +0200
-Received: from [2a0a:edc0:2:b01:1d::c5] (helo=pty.whiteo.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ore@pengutronix.de>)
-	id 1s6Pt7-0017rX-OP; Mon, 13 May 2024 09:14:21 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1s6Pt7-009OQ9-24;
-	Mon, 13 May 2024 09:14:21 +0200
-Date: Mon, 13 May 2024 09:14:21 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Shigeru Yoshida <syoshida@redhat.com>
-Cc: robin@protonic.nl, kernel@pengutronix.de, socketcan@hartkopp.net,
-	mkl@pengutronix.de, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, linux-can@vger.kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	syzbot+5681e40d297b30f5b513@syzkaller.appspotmail.com
-Subject: Re: [PATCH] can: j1939: Initialize unused data in j1939_send_one()
-Message-ID: <ZkG9zbYwd0BL7B2r@pengutronix.de>
-References: <20240512160307.2604215-1-syoshida@redhat.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=RWUbYfvBdEsnGv7CMo7nuzD1uE9zhlI1l6s60Pp9bIOLqeJKWds4c2jJ1T/HfvPLennNBSwE1CYSe6nlqq/bJuA5S8oXA7iXqWpyXkusmNHdwloiiVWKl9pF39bZgmHYF4toI0mKQPuF5//H/omnEW27qRIyqTNsSIAvXgwOvdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=i6Gwne/A; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="i6Gwne/A"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D80F01C0009;
+	Mon, 13 May 2024 07:15:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1715584518;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=q5dn2MPOf1PSIm7z/V3iIjqsAJYU1Za0Jzr7Ny6Sqvw=;
+	b=i6Gwne/A1aBtYIRnJIWVd1KlrxIch66paJ+HQmP5P2aG7NhH6IZTi3sIQSvpgq/kqVPNdQ
+	reThlQag28kLbi1mjSrCrEGPsMUBH0FrklljBp5Pvgxc13KHYKua56IZaHkzYn0ykbM8sI
+	lVKDo+Uf4crCjcbISZRc+DQJDrNixwCdD81waH8DX9Xpla0moKFzyDaCHx1O27cJ7Hr995
+	u3dmdKkWDFykQoAXryEjSN9E/19jAAOXWEdlm93mARKsWqGsOB5lDvcIcdXxU/rgtb8BJZ
+	MHLwkqd+KqvNdEmEZd1uNPsBdJjvbXLsXOrPaV3oRhxWxXzmx2v1pQAcKwg1HQ==
+Date: Mon, 13 May 2024 09:15:14 +0200
+From: Louis Chauvet <louis.chauvet@bootlin.com>
+To: Pekka Paalanen <pekka.paalanen@collabora.com>
+Cc: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, rdunlap@infradead.org,
+	arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+	thomas.petazzoni@bootlin.com, seanpaul@google.com,
+	marcheu@google.com, nicolejadeyee@google.com
+Subject: Re: [PATCH v6 09/17] drm/vkms: Introduce pixel_read_direction enum
+Message-ID: <ZkG-AjScoFvMSA1O@localhost.localdomain>
+Mail-Followup-To: Pekka Paalanen <pekka.paalanen@collabora.com>,
+	Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	=?iso-8859-1?Q?Ma=EDra?= Canal <mairacanal@riseup.net>,
+	Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, rdunlap@infradead.org,
+	arthurgrillo@riseup.net, Jonathan Corbet <corbet@lwn.net>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com,
+	thomas.petazzoni@bootlin.com, seanpaul@google.com,
+	marcheu@google.com, nicolejadeyee@google.com
+References: <20240409-yuv-v6-0-de1c5728fd70@bootlin.com>
+ <20240409-yuv-v6-9-de1c5728fd70@bootlin.com>
+ <20240422143918.098d3d09.pekka.paalanen@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240512160307.2604215-1-syoshida@redhat.com>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <20240422143918.098d3d09.pekka.paalanen@collabora.com>
+X-GND-Sasl: louis.chauvet@bootlin.com
 
-Hi,
+[...]
 
-On Mon, May 13, 2024 at 01:03:07AM +0900, Shigeru Yoshida wrote:
-> syzbot reported kernel-infoleak in raw_recvmsg() [1]. j1939_send_one()
-> creates full frame including unused data, but it doesn't initialize it.
-> This causes the kernel-infoleak issue. Fix this by initializing unused
-> data.
+> > +/**
+> > + * direction_for_rotation() - Get the correct reading direction for a given rotation
+> > + *
+> > + * @rotation: Rotation to analyze. It correspond the field @frame_info.rotation.
+> > + *
+> > + * This function will use the @rotation setting of a source plane to compute the reading
+> > + * direction in this plane which correspond to a "left to right writing" in the CRTC.
+> > + * For example, if the buffer is reflected on X axis, the pixel must be read from right to left
+> > + * to be written from left to right on the CRTC.
+> > + */
+> > +static enum pixel_read_direction direction_for_rotation(unsigned int rotation)
+> > +{
+> > +	struct drm_rect tmp_a, tmp_b;
+> > +	int x, y;
+> > +
+> > +	/*
+> > +	 * The direction is computed by rotating the vector AB (top-left to top-right) in a
+> > +	 * 1x1 square.
 > 
-> [1]
-> BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-> BUG: KMSAN: kernel-infoleak in copy_to_user_iter lib/iov_iter.c:24 [inline]
-> BUG: KMSAN: kernel-infoleak in iterate_ubuf include/linux/iov_iter.h:29 [inline]
-> BUG: KMSAN: kernel-infoleak in iterate_and_advance2 include/linux/iov_iter.h:245 [inline]
-> BUG: KMSAN: kernel-infoleak in iterate_and_advance include/linux/iov_iter.h:271 [inline]
-> BUG: KMSAN: kernel-infoleak in _copy_to_iter+0x366/0x2520 lib/iov_iter.c:185
->  instrument_copy_to_user include/linux/instrumented.h:114 [inline]
->  copy_to_user_iter lib/iov_iter.c:24 [inline]
->  iterate_ubuf include/linux/iov_iter.h:29 [inline]
->  iterate_and_advance2 include/linux/iov_iter.h:245 [inline]
->  iterate_and_advance include/linux/iov_iter.h:271 [inline]
->  _copy_to_iter+0x366/0x2520 lib/iov_iter.c:185
->  copy_to_iter include/linux/uio.h:196 [inline]
->  memcpy_to_msg include/linux/skbuff.h:4113 [inline]
->  raw_recvmsg+0x2b8/0x9e0 net/can/raw.c:1008
->  sock_recvmsg_nosec net/socket.c:1046 [inline]
->  sock_recvmsg+0x2c4/0x340 net/socket.c:1068
->  ____sys_recvmsg+0x18a/0x620 net/socket.c:2803
->  ___sys_recvmsg+0x223/0x840 net/socket.c:2845
->  do_recvmmsg+0x4fc/0xfd0 net/socket.c:2939
->  __sys_recvmmsg net/socket.c:3018 [inline]
->  __do_sys_recvmmsg net/socket.c:3041 [inline]
->  __se_sys_recvmmsg net/socket.c:3034 [inline]
->  __x64_sys_recvmmsg+0x397/0x490 net/socket.c:3034
->  x64_sys_call+0xf6c/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:300
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> Points A and B are depicted as zero-size rectangles on the CRTC.
+> The CRTC writing direction is from A to B. The plane reading direction
+> is discovered by inverse-transforming A and B.
 > 
-> Uninit was created at:
->  slab_post_alloc_hook mm/slub.c:3804 [inline]
->  slab_alloc_node mm/slub.c:3845 [inline]
->  kmem_cache_alloc_node+0x613/0xc50 mm/slub.c:3888
->  kmalloc_reserve+0x13d/0x4a0 net/core/skbuff.c:577
->  __alloc_skb+0x35b/0x7a0 net/core/skbuff.c:668
->  alloc_skb include/linux/skbuff.h:1313 [inline]
->  alloc_skb_with_frags+0xc8/0xbf0 net/core/skbuff.c:6504
->  sock_alloc_send_pskb+0xa81/0xbf0 net/core/sock.c:2795
->  sock_alloc_send_skb include/net/sock.h:1842 [inline]
->  j1939_sk_alloc_skb net/can/j1939/socket.c:878 [inline]
->  j1939_sk_send_loop net/can/j1939/socket.c:1142 [inline]
->  j1939_sk_sendmsg+0xc0a/0x2730 net/can/j1939/socket.c:1277
->  sock_sendmsg_nosec net/socket.c:730 [inline]
->  __sock_sendmsg+0x30f/0x380 net/socket.c:745
->  ____sys_sendmsg+0x877/0xb60 net/socket.c:2584
->  ___sys_sendmsg+0x28d/0x3c0 net/socket.c:2638
->  __sys_sendmsg net/socket.c:2667 [inline]
->  __do_sys_sendmsg net/socket.c:2676 [inline]
->  __se_sys_sendmsg net/socket.c:2674 [inline]
->  __x64_sys_sendmsg+0x307/0x4a0 net/socket.c:2674
->  x64_sys_call+0xc4b/0x3b50 arch/x86/include/generated/asm/syscalls_64.h:47
->  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->  do_syscall_64+0xcf/0x1e0 arch/x86/entry/common.c:83
->  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-> 
-> Bytes 12-15 of 16 are uninitialized
-> Memory access of size 16 starts at ffff888120969690
-> Data copied to user address 00000000200017c0
-> 
-> CPU: 1 PID: 5050 Comm: syz-executor198 Not tainted 6.9.0-rc5-syzkaller-00031-g71b1543c83d6 #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 03/27/2024
-> 
-> Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
-> Reported-and-tested-by: syzbot+5681e40d297b30f5b513@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=5681e40d297b30f5b513
-> Signed-off-by: Shigeru Yoshida <syoshida@redhat.com>
+> (If you want, you can add that to the comment.)
 
-Thank you for your investigation!
-
-> ---
->  net/can/j1939/main.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/net/can/j1939/main.c b/net/can/j1939/main.c
-> index a6fb89fa6278..df01628c6509 100644
-> --- a/net/can/j1939/main.c
-> +++ b/net/can/j1939/main.c
-> @@ -344,6 +344,9 @@ int j1939_send_one(struct j1939_priv *priv, struct sk_buff *skb)
->  	/* make it a full can frame again */
->  	skb_put(skb, J1939_CAN_FTR + (8 - dlc));
->  
-> +	/* initialize unused data  */
-> +	memset(cf->data + dlc, 0, 8 - dlc);
-> +
->  	canid = CAN_EFF_FLAG |
->  		(skcb->priority << 26) |
->  		(skcb->addr.pgn << 8) |
-> -- 
-> 2.44.0
-
-Can you please change it to:
-
---- a/net/can/j1939/main.c
-+++ b/net/can/j1939/main.c
-@@ -30,10 +30,6 @@ MODULE_ALIAS("can-proto-" __stringify(CAN_J1939));
- /* CAN_HDR: #bytes before can_frame data part */
- #define J1939_CAN_HDR (offsetof(struct can_frame, data))
+It is better, thanks!
  
--/* CAN_FTR: #bytes beyond data part */
--#define J1939_CAN_FTR (sizeof(struct can_frame) - J1939_CAN_HDR - \
--		 sizeof(((struct can_frame *)0)->data))
--
- /* lowest layer */
- static void j1939_can_recv(struct sk_buff *iskb, void *data)
- {
-@@ -342,7 +338,7 @@ int j1939_send_one(struct j1939_priv *priv, struct sk_buff *skb)
- 	memset(cf, 0, J1939_CAN_HDR);
- 
- 	/* make it a full can frame again */
--	skb_put(skb, J1939_CAN_FTR + (8 - dlc));
-+	skb_put_zero(skb, 8 - dlc);
- 
- 	canid = CAN_EFF_FLAG |
- 		(skcb->priority << 26) |
+> > +	 */
+> > +
+> > +	tmp_a = DRM_RECT_INIT(0, 0, 0, 0);
+> > +	tmp_b = DRM_RECT_INIT(1, 0, 0, 0);
+> > +	drm_rect_rotate_inv(&tmp_a, 1, 1, rotation);
+> > +	drm_rect_rotate_inv(&tmp_b, 1, 1, rotation);
+> > +
+> > +	x = tmp_b.x1 - tmp_a.x1;
+> > +	y = tmp_b.y1 - tmp_a.y1;
+> > +
+> > +	if (x == 1)
+> > +		return READ_LEFT_TO_RIGHT;
+> > +	else if (x == -1)
+> > +		return READ_RIGHT_TO_LEFT;
+> > +	else if (y == 1)
+> > +		return READ_TOP_TO_BOTTOM;
+> > +	else if (y == -1)
+> > +		return READ_BOTTOM_TO_TOP;
+> 
+> I find this code practically obvious. Excellent!
+> 
+> If you want to be more strict, each condition could also require the
+> other component to be zero.
 
-With this change included, you can add my:
-Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
+I will add it.
 
-Regards,
-Oleksij
+[...]
+
+> > + */
+> > +static int get_block_step_byte(struct drm_framebuffer *fb, enum pixel_read_direction direction,
+> > +			       int plane_index)
+> > +{
+> > +	switch (direction) {
+> > +	case READ_LEFT_TO_RIGHT:
+> > +		return fb->format->char_per_block[plane_index];
+> > +	case READ_RIGHT_TO_LEFT:
+> > +		return -fb->format->char_per_block[plane_index];
+> > +	case READ_TOP_TO_BOTTOM:
+> > +		return (int)fb->pitches[plane_index];
+> > +	case READ_BOTTOM_TO_TOP:
+> > +		return -(int)fb->pitches[plane_index];
+> 
+> I'm not sure if this is correct for formats with block_h > 1.
+> 
+> If a pitch is the theoretical count of bytes per line, then this should
+> return block_h * pitch. But I'm not exactly sure what is correct here.
+
+I think it is related to my answer to patch 07/17. If pitch is what you 
+describe, yes, the step should be block_h * DIV_ROUND_UP(fb_width / 
+block_w) (or something similar).
+
+If I take X0L2 with a buffer of 9x5 pixels, the step between two blocks 
+verticaly must be 40 bytes. Your formula and interpretation of pitch will 
+give only 36 bytes (a row only need 18 bytes). So a new "pitch" is needed.
+
+> Aside from this problem, looks good.
+> 
+> 
+> Thanks,
+> pq
+> 
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  /**
+> >   * packed_pixels_addr_1x1() - Get the pointer to the block containing the pixel at the given
+> >   * coordinates
+> > 
+> 
+
+
+
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Louis Chauvet, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
