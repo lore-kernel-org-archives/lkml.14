@@ -1,38 +1,39 @@
 Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8E1146D65
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8383A149C5C
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 07:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715586655; cv=none; b=tKgt7Sq0wq48ssyoeqrUoIpFeMKHV5FWkNAnLlNuH0UFQT5Ab0sy7UaLJaidZo7tpGF23NVtYX2rDbt9RsM+GmiRMOWnD/7kHesJ47kn3uQwbJv+vq3P0ywjIe8y8zD7styOXJjWNE5GlfG8y63uFMJYeIt0e8b2Lwb5/uj0knY=
+	t=1715586659; cv=none; b=e1jLfnNA5myXyka7D3q1wcXbLsSFmPK2InlInSFfywBvojijwnoF6CRs258ShwlRz55k+tah328ylK4z0ijtHc0ULLKrzkeQsWxiqrU6IkqtpKnaRA0JjSSwVHzCdUNcjTMzMSeMhqQ+QcDubEh9WOz8Bacdbrg4vjFA6n/Q3fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715586655; c=relaxed/simple;
-	bh=wUSBUJCSOtsms0zYAayKwF/xjzoMjd+l5I3zX1xUo2g=;
+	s=arc-20240116; t=1715586659; c=relaxed/simple;
+	bh=00TaNxDFR9SZbLsbWe3QGFAcvyDgRH7e8Np3vbzu6DU=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WETd12n/GJR4bQgr2kUs5WAktbmlz1SXZmq4bda2oxAnf8D5zdQTwHzSc39a4U1UAOxs2HNlBWg4NjA62hLatd+kFTh60d0FOG8nuknOTvUmPnwtJiDiFs6gtctSc9JOFPL7bKT1U/BnxcrvvqP3jKyKxrZIZiKeQTJ7DpaSQpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=nAt27+4x; arc=none smtp.client-ip=217.70.183.200
+	 In-Reply-To:To:Cc; b=ByWOXAO/He6tOza8xdXxhjlvhtCbOuv/eFJ0NMt3hdiI2FssUMAMxuiHwuzyJrEjghX7iZXzXJVnpRzC8Z1wfClA5mgo2r2N6T8+kdPCFz79k0rx9RpzLFsIvv4DB2uXLIm0K7qMK4souWn8Op/hkMJfvkXlHaTaNlgMVti+zoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Hf/aZe5h; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="nAt27+4x"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2F6AF20016;
-	Mon, 13 May 2024 07:50:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Hf/aZe5h"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6CF3D2000B;
+	Mon, 13 May 2024 07:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1715586652;
+	t=1715586655;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=z6QJBejRB4UIVVBulKVlIb1TBeEN2xAQAhfhefcDJuU=;
-	b=nAt27+4xF6kS9qKcoRQG30arhbc5tvm4lADaWLU0HXkgVy2Vwa0gZOFbh1N4i2QnAL3Qt+
-	RJ2m3VoBfbeRWjJbHSUMpgaIp0jg9uq4wu/9y4hiOrokYL7DaypDCQpmmWueOcy5CfYiYz
-	0SAM2Hf+Fqr1rRqXSRkOyb2CwIYrNcnDw6L8zoSjovjcHo5BqaJXntY59Cw//IFCZiPQKQ
-	gx3iPHhuwQvjb3aAZzAScsWYty22Bu6hWlKZMlxBHZKbrKhjbivmm31aVwIoqEm0m2ArwC
-	0+nKO8qGxr5v3Q9rOEELMrO9iIx4/OJzZReUN/CQ+041N3de/qHgyUqnm9Mqkw==
+	bh=5Rm+coOfyuVkQO9evbSIShb9ufh/OnsJJk+xovmjQ24=;
+	b=Hf/aZe5hL3EQ4+kgN8xM+O0eN7qmURT14NlpMkuOFlzsW7Tl+FnV2zlZsz1EPuGJkEmM1O
+	98W7SoRp+S8+7Ixexx4qcyzQKn42bEuM12MfJKfdG0teU0RkAb6qd25/TKVwkVgrLTgJ1O
+	m9bwJdEFO97iCpHNr6byubN+liV+KVmVYkmIP7bTZL4Mj7lyKuF0YKDLMr2GQ9pqMyNTuf
+	o2J20QL9zGVu9LSX01otlwJanwWG/6+X9mx3DaytLadz2rDeF/9DNpsIuMK84L62cRxUiG
+	6sIkBSy+bvFTeAhSafcj9E314CLHo5bdp2h0Y4GqNHGen8QBsBDTH+uVhcVfbg==
 From: Louis Chauvet <louis.chauvet@bootlin.com>
-Date: Mon, 13 May 2024 09:50:32 +0200
-Subject: [PATCH v7 11/17] drm/vkms: Remove useless drm_rotation_simplify
+Date: Mon, 13 May 2024 09:50:34 +0200
+Subject: [PATCH v7 13/17] drm/vkms: Add range and encoding properties to
+ the plane
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240513-yuv-v7-11-380e9ffec502@bootlin.com>
+Message-Id: <20240513-yuv-v7-13-380e9ffec502@bootlin.com>
 References: <20240513-yuv-v7-0-380e9ffec502@bootlin.com>
 In-Reply-To: <20240513-yuv-v7-0-380e9ffec502@bootlin.com>
 To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>, 
@@ -56,52 +57,59 @@ To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  jeremie.dautheribes@bootlin.com, miquel.raynal@bootlin.com, 
  thomas.petazzoni@bootlin.com, seanpaul@google.com, marcheu@google.com, 
- nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>
+ nicolejadeyee@google.com, Louis Chauvet <louis.chauvet@bootlin.com>, 
+ Pekka Paalanen <pekka.paalanen@collabora.com>
 X-Mailer: b4 0.14-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1084;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1253;
  i=louis.chauvet@bootlin.com; h=from:subject:message-id;
- bh=wUSBUJCSOtsms0zYAayKwF/xjzoMjd+l5I3zX1xUo2g=;
- b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmQcZD+LHWXLuD8UC/V2SidZJGkv8n0aUZiZbIL
- RxqTEZBxoqJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkHGQwAKCRAgrS7GWxAs
- 4oDgEADY87bjjEV2efg9Fo/rPkHxgg+fydezcZIl6O+9mBqI4g4dme4e0GynlaOiORH7N+0Xn+T
- zNRSK3w9Rms/z3w2Mf+P/dx+/ciq+gSpiZxWZlm1D3VBT3cJgwVoFmz8Z88yXUeSjR7QkFXMk3z
- DJahJ4dAPqtOOai9QBjWPHqhHuT7ivrvnJYOsQV/cJd5xnJ6UYNo2vJx9V6Ab0uveKMHSwK7ukr
- KE8xlfirD7aLbtae7Xi41WP5AICtfCUTSTjzdUJ3pqLqQPGOQe8DUdlpUluBeCDyj3kxa7snpGO
- P+zNIhBmzJQm3ELeWrxjYU6mcUb4Q4QRxJi5eXmRGuQUMp3nYJfjWJKYYICUsSMLdDrZB90E9DO
- Im8XsDFdoF4us9if+YonM065rthmG/7pLsC1MA9yLKdume1bH9GNcDiN5kPRFqo83LxJJSUapNq
- dB2bsyJD//LFlxgELcWY5WlKYLCpeHCwtt/hRKsF8hw/yDH5X+AuZL3pZUqIfyxpEOCq1vynF3i
- cBOe4p5zmUP5Gqh7sg/UA0rcwJwl2Hf/TAJq/ASAYypHMVoFBTsBh4q/TshRfGBXrW+YbBDvAaR
- VJoV9BqntwSlkeqefJ2gD9ulm6ThAIO+CS3mD6XneiHXYSbLnNJ+m6j1onwmSQT3teb6wjC2y7h
- VFc5RzrKPlfi1FA==
+ bh=5x6LmxTgmFsdwCLT6+4+DnviNaQ8VRiCYQVGWxE2tsU=;
+ b=owEBbQKS/ZANAwAIASCtLsZbECziAcsmYgBmQcZEu29XlTjUhTejDx76AyzVimAYORh5Fhh8a
+ F5pfj3zxJSJAjMEAAEIAB0WIQRPj7g/vng8MQxQWQQgrS7GWxAs4gUCZkHGRAAKCRAgrS7GWxAs
+ 4pajEACV3ZTBEg6tNVSeAgbW0wUJuEHIvejG0md6H6lu2VED4LhfmyW3SQd2qK/7K3T+D6xPH9K
+ bBkAo2nebhW03x+9Az6w8ON7wGRyNDZjkPadapJDauOr4hKt+0q8lQyqcCiEGQgUUkZNdGJDckH
+ x6WoNNq94dC+SCB80i1cppe8Hqwf5qtsI93Evy8SLA7w3mMmi0nATq3ZhfWswOKvE/FbVnDkZAS
+ Bt85vB3BwfQ0WED8FmjkNXd5JdmW7JTMkk3ZQzQX5E51vZr9eAafQAcwdYPKbpZMZmcJBF4mJgX
+ u6HmMIhMcQsSAnovkQcDCJ+KOA46NMS3QMzWjCjcOAeCWEk3ommOiiDMGZ1k0aAQfYDinJOKD5X
+ BRyAH6Gahjg56vVy5uQTwDz9jXkCLbautxeOCs/e9JYhzVW3Lg8iKtwUQbDphix87P08Pvf+U4C
+ h0w2DVD5cCxxQq8+Akbmk792dGb1Q1NBiAIIhb7eUWERnpH8v2+eJNeHy3Fy/SsYB9yS6lQIn4K
+ Y2YzjfxAU5T8iVtl/zOIHn8mnY10XLUJ+hpQWMFcQjmSK1hqVwU+59nPNG1TtCCyNNbv63QHUr7
+ 9/7qZIS59VK9xjocAKGTCtSGQ57hj3xwArMhMoXi0usWGFO7E13VBe/lY5ApNVz95bCQU+2GPWI
+ 6M41EbUpRp0f+CA==
 X-Developer-Key: i=louis.chauvet@bootlin.com; a=openpgp;
  fpr=8B7104AE9A272D6693F527F2EC1883F55E0B40A5
 X-GND-Sasl: louis.chauvet@bootlin.com
 
-As all the rotation are now supported by VKMS, this simplification does
-not make sense anymore, so remove it.
+From: Arthur Grillo <arthurgrillo@riseup.net>
 
+Now that the driver internally handles these quantization ranges and YUV
+encoding matrices, expose the UAPI for setting them.
+
+Signed-off-by: Arthur Grillo <arthurgrillo@riseup.net>
+[Louis Chauvet: retained only relevant parts, updated the commit message]
+Acked-by: Pekka Paalanen <pekka.paalanen@collabora.com>
 Signed-off-by: Louis Chauvet <louis.chauvet@bootlin.com>
 ---
- drivers/gpu/drm/vkms/vkms_plane.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/gpu/drm/vkms/vkms_plane.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-index 8875bed76410..5a028ee96c91 100644
+index d4e375913122..8f764a108b00 100644
 --- a/drivers/gpu/drm/vkms/vkms_plane.c
 +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-@@ -115,12 +115,7 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
- 	frame_info->fb = fb;
- 	memcpy(&frame_info->map, &shadow_plane_state->data, sizeof(frame_info->map));
- 	drm_framebuffer_get(frame_info->fb);
--	frame_info->rotation = drm_rotation_simplify(new_state->rotation, DRM_MODE_ROTATE_0 |
--									  DRM_MODE_ROTATE_90 |
--									  DRM_MODE_ROTATE_270 |
--									  DRM_MODE_REFLECT_X |
--									  DRM_MODE_REFLECT_Y);
--
-+	frame_info->rotation = new_state->rotation;
+@@ -218,5 +218,14 @@ struct vkms_plane *vkms_plane_init(struct vkms_device *vkmsdev,
+ 	drm_plane_create_rotation_property(&plane->base, DRM_MODE_ROTATE_0,
+ 					   DRM_MODE_ROTATE_MASK | DRM_MODE_REFLECT_MASK);
  
- 	vkms_plane_state->pixel_read_line = get_pixel_read_line_function(fmt);
++	drm_plane_create_color_properties(&plane->base,
++					  BIT(DRM_COLOR_YCBCR_BT601) |
++					  BIT(DRM_COLOR_YCBCR_BT709) |
++					  BIT(DRM_COLOR_YCBCR_BT2020),
++					  BIT(DRM_COLOR_YCBCR_LIMITED_RANGE) |
++					  BIT(DRM_COLOR_YCBCR_FULL_RANGE),
++					  DRM_COLOR_YCBCR_BT601,
++					  DRM_COLOR_YCBCR_FULL_RANGE);
++
+ 	return plane;
  }
 
 -- 
