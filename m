@@ -1,91 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C8687B3E5
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 19:47:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B22D77106
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 19:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715629648; cv=none; b=rHanTZyHCixtBNdVFHSRD/+MSetdVTFEGjHbBT6sc0hgU5tPcJCejb2GVK3le4JX8gsl4UhnrpqhG7Ms/qH5nIOIfF3vIUhm5l0IY3teJl1B3b2wFTj2dBp1WkPOmlK+tEUwPsjCXxQRyzy1i1ldQ33S1+OfQ+fvKPlhfr/ZhHA=
+	t=1715629671; cv=none; b=rowRoJswPhuVcZKY28e3s2KYnXnK39atwoej91xCRjAeo9efcjh1WIZH1pZ9Xgs9mwN87nU++uFLnhomhnI7vEBm28MD9b43gEO4mu7/ioCM0y6M4M7j7cQSHMC45cHlzEMBzZAhDKqrPDc41Mo0tNw+9GzsLIF5hdaTILMy49M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715629648; c=relaxed/simple;
-	bh=Dvx8jaCDpjzDrMlZNJiqVb8gud8gHINPXhVAMLsiDdE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MFkQk9FTA4AaSm1S2//ZEtHsqwhnXkl/ABAfXEqsKySs4XpoYFSQLHE9mCVezaD11/lK/v6JUcc5DBdjdmKRh8PUNZLlm0ivXqTWNIO19GeBoIHHVBOKvO59xjZyvzEIiBf/O/T0PJkeaWt8+2vzmL91/fOZMJVdEGpAXeumS3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XlxULuNR; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1715629671; c=relaxed/simple;
+	bh=z8Twj3N13mhdW7sEoJ5gZMRJ0MxEOmkRN+36+9pgaRE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JGbMTBVAiJifZ4Nnu5IN0JkoWJ/ytwx9oIW7ZwNH9SF/8CX5wD0x5g9JX8WnVVT8v3C+134AOeXH8iU5hR7lWW9puPe7e1RoDaiyIl34hgNg2dFclWF38cqv9QVGXG+5p+l7IrEcQ3oNM/A1Ysc0LeOdTH4qeRFULZNJyqOeuD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qw+C8GQZ; arc=none smtp.client-ip=209.85.128.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XlxULuNR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1715629646; x=1747165646;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=Dvx8jaCDpjzDrMlZNJiqVb8gud8gHINPXhVAMLsiDdE=;
-  b=XlxULuNR+bTTwqPb90K6hZaH1bmtAzNjv2rGU9S6Xjgt3OYRlfSIX7kX
-   yuAqgjfsoX+mJx7iaX1x8Uu7mDmTisadgMIWEFtQLjaturQiFG0dOlYEL
-   FCwopWAVQCU3Cx5+pIGSEklgGzYnhqRQQEluaV8+FDzW1q5VtipP+vz4+
-   bMXWH8IZ5KlyDhmp8zteehOjCStXqbjmrC37P5CsC+k8i7gxySuDaOBfh
-   7m1r3LCuBTfNR2JdVWROfJKzwgpeCc97Ccm4gIsrMsNtvQ+UseqMNu7oR
-   oe9lbU+d24LHsDoZ6Er3co+TFCzqmKSBUEr7LN1RV/fnLAdzeFBRxyKeL
-   Q==;
-X-CSE-ConnectionGUID: 2WXiPOltSP+ntqpB3lrF2g==
-X-CSE-MsgGUID: TEwMIwfWSAGzTEXjudalGw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="34097442"
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="34097442"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 12:47:26 -0700
-X-CSE-ConnectionGUID: G5HzDGFtSyWNMC1uluoecQ==
-X-CSE-MsgGUID: ojIQyldBT2ik3SdrWab4Bw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
-   d="scan'208";a="30502882"
-Received: from viggo.jf.intel.com (HELO ray2.amr.corp.intel.com) ([10.54.77.144])
-  by fmviesa010.fm.intel.com with ESMTP; 13 May 2024 12:47:26 -0700
-From: Dave Hansen <dave.hansen@linux.intel.com>
-To: torvalds@linux-foundation.org
-Cc: x86@kernel.org,
-	linux-kernel@vger.kernel.org,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Subject: [GIT PULL] x86/apic for 6.10
-Date: Mon, 13 May 2024 12:47:20 -0700
-Message-Id: <20240513194720.456299-1-dave.hansen@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qw+C8GQZ"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-61bee45d035so49364257b3.1
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 12:47:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1715629669; x=1716234469; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DUknfNXk78tNoNSV/FKbuOTqBHWDprugew7p/EYSaSg=;
+        b=Qw+C8GQZR1kRCheFb/tzuinNqtjxndae1jJV2IlZxLZpGFwyByfWdboBhSfjd0+oHO
+         ikkCEN5sol2iEij/ZR6hBQeVdAx0x/jp/M6MZtw/aopXSUHclN3VOgTa/1mHYPyX46IB
+         XfXwoCSFNdn5HYEAht3xnYEzDVYG6iFvNt9t0doukTC+Je6uX2G0FyJD7MJoS+iVxpXA
+         HueoN2BJMXtuwUjarm/049cypgeZDEDWwgunNoqv0uu+IdTS1gK8L1h7ODnV7Mx1qL92
+         AQ941Fwebiia9A7Kt8nYVTfVYTDYA+l5NDsE2r96fVpPURxOph0qDDoBP2g6W7Ts3XXn
+         HAmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715629669; x=1716234469;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DUknfNXk78tNoNSV/FKbuOTqBHWDprugew7p/EYSaSg=;
+        b=FObWktoFiDnYwgt3P22hP4YLRP4ZOd5HY+qG97MFum7medDtyDUyxDG+zVJQQ3h9FY
+         +QIG2W7vB6seyb8F5nRGwJC+Y3YmFSsWVPTsJUy+7pRQeEyjUnAWKD8uuvuMRKL1PZL7
+         z6AUzsZaDvXwsCuO06bbh9mxzcwQBohU+EKXdDXAWVPvIuMkd2219Q3R9xaFZZQIlZsa
+         WS5SkfB/f+uWNk4YAgzK345uVVJz5kCJ3ywzeiZlTzKgzQ+0UTnHQx2T2M54C3YTY/GK
+         n44xsRw95FRxb4R9sQrrpFV1c0J7GnwsytxfC/8m2qD27RDGRw6RtZ/Owd5ftVZwG56T
+         XAEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLR+/lTPmN1ZMaCnx9udW5ZduXeGR9/UhN8DkcdMVAwEeaU9dK+LUiSpX+DhD0ez1R3TUwICLDIuvytG/LHDYNRTkZnPZxNDZzXRHy
+X-Gm-Message-State: AOJu0YzSTKh7VvCYikHb4eCVX+MkHGmYY4mAS3iQC0IVOkCLSO+fAJUI
+	nH6lUuNhzc34G6tQFEFxv1E2dutv6pgJ9Y5bZw8U6p3VVIK+TSwbJDF4sYdi8N50k5r0okHQPvF
+	tn5b8ShNJW7UoyCVQmBP+9BjIGSLqdb4DNLkSXg==
+X-Google-Smtp-Source: AGHT+IGnYYmt0EOnAPY00AN8x9tLJNXpR+W6Srvl1WDn62aWdwxJ3ONetwGbkGS/UdOHkoVbG62q60/rx6bF8LH6+Ns=
+X-Received: by 2002:a25:f90e:0:b0:dc6:ff32:aae2 with SMTP id
+ 3f1490d57ef6-dee4f3356e2mr8656703276.63.1715629669087; Mon, 13 May 2024
+ 12:47:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240509-dt-bindings-dsi-panel-reg-v1-0-8b2443705be0@linaro.org> <20240509-dt-bindings-dsi-panel-reg-v1-3-8b2443705be0@linaro.org>
+In-Reply-To: <20240509-dt-bindings-dsi-panel-reg-v1-3-8b2443705be0@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 13 May 2024 21:47:38 +0200
+Message-ID: <CACRpkdaE0tMQ5=pSofT9pGVcSBLp=dm_7WedpO2EnkbP1w+08A@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: display: panel: constrain 'reg' in DSI panels
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Sam Ravnborg <sam@ravnborg.org>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chris Morgan <macromorgan@hotmail.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Konrad Dybcio <konradybcio@gmail.com>, 
+	Del Regno <angelogioacchino.delregno@somainline.org>, Heiko Stuebner <heiko@sntech.de>, 
+	Luca Weiss <luca.weiss@fairphone.com>, Dmitry Baryskov <dmitry.baryshkov@linaro.org>, 
+	Shawn Guo <shawn.guo@linaro.org>, dri-devel@lists.freedesktop.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+On Thu, May 9, 2024 at 11:43=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-Please pull a single x86/apic change for 6.10. Coccinelle complained
-about some 64-bit divisions, but the divisor was really just a 32-bit
-value being stored as 'unsigned long'. Fixing the types fixes the
-warning.
+> DSI-attached devices could respond to more than one virtual channel
+> number, thus their bindings are supposed to constrain the 'reg' property
+> to match hardware.  Add missing 'reg' constrain for DSI-attached display
+> panels, based on DTS sources in Linux kernel (assume all devices take
+> only one channel number).
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
---
+Looks right to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-The following changes since commit 39cd87c4eb2b893354f3b850f916353f2658ae6f:
-
-  Linux 6.9-rc2 (2024-03-31 14:32:39 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git tags/x86_apic_for_6.10
-
-for you to fetch changes up to 0049f04c7dfe977a0f8f6935071db3416e641837:
-
-  x86/apic: Improve data types to fix Coccinelle warnings (2024-04-03 08:32:04 -0700)
-
-----------------------------------------------------------------
-Improve data types to fix Coccinelle division warnings
-
-----------------------------------------------------------------
-Thorsten Blum (1):
-      x86/apic: Improve data types to fix Coccinelle warnings
-
- arch/x86/kernel/apic/apic.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Yours,
+Linus Walleij
