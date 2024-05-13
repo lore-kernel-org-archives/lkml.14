@@ -1,235 +1,100 @@
-Received: from ms-10.1blu.de (ms-10.1blu.de [178.254.4.101])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D5F7711C;
-	Mon, 13 May 2024 19:48:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.254.4.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A9F77107;
+	Mon, 13 May 2024 19:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715629697; cv=none; b=jJxqTs3od5CYYh+nZ+R+IoSFgQLu4PNOCHNUJEyy/ArkvP80jwankvQD9MU5yuDwP0+8ixGOoRCqVwLSzro9khjYu2sQRJJb3Y2wkNyR7I40oSeY0rNLwJr2YDUnQcdY2Fbbu0UGh/flOFGSdBbC0A2rlYeWUQU2q+oZgNYhtVQ=
+	t=1715629734; cv=none; b=TEjLScff29YDanoZswNrHiOdSqxhsCbOlnjbHVBE8Fcy5wsF+Y4t+L//f6THYYSSStPFdbq8yUhpdYYllM9yihT3p9uqmRYLScBASjNfNuVkxBWimuAq5aXI5Z8mqF46R63jP6Kjrow0jW3WLMNr+sGUi3z5QLa6Miub1w42ImU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715629697; c=relaxed/simple;
-	bh=WbFp/lJk/n40S3r/37qXNhy9l21/JyDq9ErRk3UrWzk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Avj6Bf0aIqXQLu+ZMTUTL/9qlXl6SH1jP5avTRHOV/LB4Dm6sIct9Oax4Q3Bp4qmTm6FaOL5Immb2gbK7JrDSKOL3h2Qq+2mbmCMQEpJOD8M92yxvxvJtTEHAv55pE3/OWEJW08PH8raOmLqHbGlsRKjiepS3zpmTSj2zGiHB3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mariuszachmann.de; spf=pass smtp.mailfrom=mariuszachmann.de; arc=none smtp.client-ip=178.254.4.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mariuszachmann.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mariuszachmann.de
-Received: from [2.211.228.80] (helo=marius.fritz.box)
-	by ms-10.1blu.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <mail@mariuszachmann.de>)
-	id 1s6beb-007gP9-LQ;
-	Mon, 13 May 2024 21:48:09 +0200
-From: Marius Zachmann <mail@mariuszachmann.de>
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Marius Zachmann <mail@mariuszachmann.de>,
-	Jean Delvare <jdelvare@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v5] hwmon: (corsair-cpro) Add firmware and bootloader information
-Date: Mon, 13 May 2024 21:47:34 +0200
-Message-ID: <20240513194734.43040-2-mail@mariuszachmann.de>
-X-Mailer: git-send-email 2.45.0
+	s=arc-20240116; t=1715629734; c=relaxed/simple;
+	bh=GWnloP3tT/YXXyk4QBq6IzLYt0yUwn9pk8D1SDfG4So=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a2+mXEth7QChItbvHU3ny4AkpaBxmTh5CS3rYXsqLuJuujlFrPgfd9IMslC/HQ7JPZuQ6o6V6LkATH4c873+LpViwtlQTPinQ/9DiEsRa99PER/GrViLXD5jC4qEa796VEgvS6qb4yVW+cdNz9LlIhREX5bS3dlOBaiGuxJJ3gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B3/TvDQb; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B3/TvDQb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715629733; x=1747165733;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GWnloP3tT/YXXyk4QBq6IzLYt0yUwn9pk8D1SDfG4So=;
+  b=B3/TvDQb229/Hm75qbULTKzVRU0FfCX9mNBSo8pmFCH8mAnL3p6MVXby
+   ehCfmQHIIxz9Y6VdwuVXqNgc9JziP4vw7JMptfX6eXvDeF+HObWVoeZsj
+   +gdNhxBEpGk7bwZldmdiRDeh/mDii3FoVTl+OaQJoT62KKiBk3RpkPnTp
+   /q7Uhzrt/lh8L1lUjGmm/ov0HbLQMJuY+Qx5TsDBCED1gE1clvkwIQj8C
+   OAgbYe4649BC/7MQgz+KWaeONYL9q7z0qn9bvLOJUvv4gu9+WxW+do5ja
+   YsXBj0H9iNXU6JF4r3Eni//D/vCpVpm5C53MwSZK1u2GsDU+jzyWQBKv9
+   A==;
+X-CSE-ConnectionGUID: 05owgKGfSt+70jjdh7jKsA==
+X-CSE-MsgGUID: 4figUi2uRWy8r3+cfFmAyQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11072"; a="29074350"
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="29074350"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 May 2024 12:48:52 -0700
+X-CSE-ConnectionGUID: XA58acsLS7aXmsJ6E+RhRw==
+X-CSE-MsgGUID: BDcvxECwSLyPGiiR4vN7zA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,159,1712646000"; 
+   d="scan'208";a="67912153"
+Received: from lkp-server01.sh.intel.com (HELO f8b243fe6e68) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 13 May 2024 12:48:51 -0700
+Received: from kbuild by f8b243fe6e68 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1s6bfE-000Ac9-04;
+	Mon, 13 May 2024 19:48:48 +0000
+Date: Tue, 14 May 2024 03:48:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linux-mips@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH] clocksource: Add node counter timer driver for
+ MIPS/Loongson64
+Message-ID: <202405140342.uKkbQKIJ-lkp@intel.com>
+References: <20240512-loongson_nodecnt-v1-1-2157b92ef8f8@flygoat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Con-Id: 241080
-X-Con-U: 0-mail
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240512-loongson_nodecnt-v1-1-2157b92ef8f8@flygoat.com>
 
-Add support for reporting firmware and bootloader version using debugfs.
-Update documentation accordingly.
+Hi Jiaxun,
 
-Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
----
-Changes in v5:
-- remove else in get_fw_version and get_bl_version in favor
-  of returning directly
+kernel test robot noticed the following build errors:
 
-Changes in v4:
-- split get_fw_version into get_fw_version and get_bl_version
-- only create debugfs file, when the reading succeeded
+[auto build test ERROR on 75fa778d74b786a1608d55d655d42b480a6fa8bd]
 
-Changes in v3:
-- use different debugfs directory name for each device
+url:    https://github.com/intel-lab-lkp/linux/commits/Jiaxun-Yang/clocksource-Add-node-counter-timer-driver-for-MIPS-Loongson64/20240512-200356
+base:   75fa778d74b786a1608d55d655d42b480a6fa8bd
+patch link:    https://lore.kernel.org/r/20240512-loongson_nodecnt-v1-1-2157b92ef8f8%40flygoat.com
+patch subject: [PATCH] clocksource: Add node counter timer driver for MIPS/Loongson64
+config: mips-loongson2k_defconfig (https://download.01.org/0day-ci/archive/20240514/202405140342.uKkbQKIJ-lkp@intel.com/config)
+compiler: mips64el-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240514/202405140342.uKkbQKIJ-lkp@intel.com/reproduce)
 
-Changes in v2:
-- better patch description
-- Documentation uses "Firmware version" and "Bootloader version"
-- removed conditional CONFIG_DEBUG_FS
-- get_fw_version gets called from ccp_debugfs_init
-- get_fw_version does print a hid_notice when an error occurs
-  instead of failing.
----
- Documentation/hwmon/corsair-cpro.rst |  8 +++
- drivers/hwmon/corsair-cpro.c         | 88 ++++++++++++++++++++++++++++
- 2 files changed, 96 insertions(+)
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202405140342.uKkbQKIJ-lkp@intel.com/
 
-diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
-index 751f95476b57..15077203a2f8 100644
---- a/Documentation/hwmon/corsair-cpro.rst
-+++ b/Documentation/hwmon/corsair-cpro.rst
-@@ -39,3 +39,11 @@ fan[1-6]_target		Sets fan speed target rpm.
- pwm[1-6]		Sets the fan speed. Values from 0-255. Can only be read if pwm
- 			was set directly.
- ======================= =====================================================================
-+
-+Debugfs entries
-+---------------
-+
-+======================= ===================
-+firmware_version	Firmware version
-+bootloader_version	Bootloader version
-+======================= ===================
-diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
-index 3e63666a61bd..e3300f3f4da6 100644
---- a/drivers/hwmon/corsair-cpro.c
-+++ b/drivers/hwmon/corsair-cpro.c
-@@ -10,11 +10,13 @@
- 
- #include <linux/bitops.h>
- #include <linux/completion.h>
-+#include <linux/debugfs.h>
- #include <linux/hid.h>
- #include <linux/hwmon.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
-+#include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
- #include <linux/types.h>
-@@ -28,6 +30,8 @@
- #define LABEL_LENGTH		11
- #define REQ_TIMEOUT		300
- 
-+#define CTL_GET_FW_VER		0x02	/* returns the firmware version in bytes 1-3 */
-+#define CTL_GET_BL_VER		0x06	/* returns the bootloader version in bytes 1-2 */
- #define CTL_GET_TMP_CNCT	0x10	/*
- 					 * returns in bytes 1-4 for each temp sensor:
- 					 * 0 not connected
-@@ -78,6 +82,7 @@
- struct ccp_device {
- 	struct hid_device *hdev;
- 	struct device *hwmon_dev;
-+	struct dentry *debugfs;
- 	/* For reinitializing the completion below */
- 	spinlock_t wait_input_report_lock;
- 	struct completion wait_input_report;
-@@ -88,6 +93,8 @@ struct ccp_device {
- 	DECLARE_BITMAP(temp_cnct, NUM_TEMP_SENSORS);
- 	DECLARE_BITMAP(fan_cnct, NUM_FANS);
- 	char fan_label[6][LABEL_LENGTH];
-+	u8 firmware_ver[3];
-+	u8 bootloader_ver[2];
- };
- 
- /* converts response error in buffer to errno */
-@@ -496,6 +503,83 @@ static int get_temp_cnct(struct ccp_device *ccp)
- 	return 0;
- }
- 
-+/* read firmware version */
-+static int get_fw_version(struct ccp_device *ccp)
-+{
-+	int ret;
-+
-+	ret = send_usb_cmd(ccp, CTL_GET_FW_VER, 0, 0, 0);
-+	if (ret) {
-+		hid_notice(ccp->hdev, "Failed to read firmware version.\n");
-+		return ret;
-+	}
-+	ccp->firmware_ver[0] = ccp->buffer[1];
-+	ccp->firmware_ver[1] = ccp->buffer[2];
-+	ccp->firmware_ver[2] = ccp->buffer[3];
-+
-+	return 0;
-+}
-+
-+/* read bootloader version */
-+static int get_bl_version(struct ccp_device *ccp)
-+{
-+	int ret;
-+
-+	ret = send_usb_cmd(ccp, CTL_GET_BL_VER, 0, 0, 0);
-+	if (ret) {
-+		hid_notice(ccp->hdev, "Failed to read bootloader version.\n");
-+		return ret;
-+	}
-+	ccp->bootloader_ver[0] = ccp->buffer[1];
-+	ccp->bootloader_ver[1] = ccp->buffer[2];
-+
-+	return 0;
-+}
-+
-+static int firmware_show(struct seq_file *seqf, void *unused)
-+{
-+	struct ccp_device *ccp = seqf->private;
-+
-+	seq_printf(seqf, "%d.%d.%d\n",
-+		   ccp->firmware_ver[0],
-+		   ccp->firmware_ver[1],
-+		   ccp->firmware_ver[2]);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(firmware);
-+
-+static int bootloader_show(struct seq_file *seqf, void *unused)
-+{
-+	struct ccp_device *ccp = seqf->private;
-+
-+	seq_printf(seqf, "%d.%d\n",
-+		   ccp->bootloader_ver[0],
-+		   ccp->bootloader_ver[1]);
-+
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(bootloader);
-+
-+static void ccp_debugfs_init(struct ccp_device *ccp)
-+{
-+	char name[32];
-+	int ret;
-+
-+	scnprintf(name, sizeof(name), "corsaircpro-%s", dev_name(&ccp->hdev->dev));
-+	ccp->debugfs = debugfs_create_dir(name, NULL);
-+
-+	ret = get_fw_version(ccp);
-+	if (!ret)
-+		debugfs_create_file("firmware_version", 0444,
-+				    ccp->debugfs, ccp, &firmware_fops);
-+
-+	ret = get_bl_version(ccp);
-+	if (!ret)
-+		debugfs_create_file("bootloader_version", 0444,
-+				    ccp->debugfs, ccp, &bootloader_fops);
-+}
-+
- static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
- {
- 	struct ccp_device *ccp;
-@@ -542,6 +626,9 @@ static int ccp_probe(struct hid_device *hdev, const struct hid_device_id *id)
- 	ret = get_fan_cnct(ccp);
- 	if (ret)
- 		goto out_hw_close;
-+
-+	ccp_debugfs_init(ccp);
-+
- 	ccp->hwmon_dev = hwmon_device_register_with_info(&hdev->dev, "corsaircpro",
- 							 ccp, &ccp_chip_info, NULL);
- 	if (IS_ERR(ccp->hwmon_dev)) {
-@@ -562,6 +649,7 @@ static void ccp_remove(struct hid_device *hdev)
- {
- 	struct ccp_device *ccp = hid_get_drvdata(hdev);
- 
-+	debugfs_remove_recursive(ccp->debugfs);
- 	hwmon_device_unregister(ccp->hwmon_dev);
- 	hid_hw_close(hdev);
- 	hid_hw_stop(hdev);
+All errors (new ones prefixed by >>):
+
+   mips64el-linux-ld: arch/mips/loongson64/time.o: in function `plat_time_init':
+>> time.c:(.init.text+0xb4): undefined reference to `nodecnt_clocksource_init'
+>> mips64el-linux-ld: time.c:(.init.text+0xcc): undefined reference to `nodecnt_clocksource_init'
+
 -- 
-2.45.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
