@@ -1,132 +1,138 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAF9147C7F
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 08:41:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9FB147C7F;
+	Mon, 13 May 2024 08:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715589663; cv=none; b=qBGaQS7g96dOOeV9xFREKor/yoNi7e5gPOEn1OLr2b9PFA5/ViUnO1KEu0cydDc8a3+sQrmsefuPZCjoZTj67kLhe9zpcLTMEbqEfBird6MtAu8N4pLavxp6zvXVL2v2pC4oFjOhVlrgZnzFRsmpXtzZ1EGvzB2pAgFJnMntOAU=
+	t=1715589775; cv=none; b=iMRatYZY/Q6mmz0mRaRbHHJvsMrgnPlAz3/Aa55298uDuTAD6z9vMozjz00uiBcXgHRrt7mZEctLgyOTn29M1B4i16Bk5lbKaTLk2Qp1O8Mh3Ob/aR6tOJBgWU4E4Lj6GYblakla9t60Gxv2lxYI6LAzfbInIsmDcOZobKteH10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715589663; c=relaxed/simple;
-	bh=6Qe+Z4SzpwQnD/xZduFUuZ+qeUgZmflyk3fkh5lZ93s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uu4LzNywYMI7ZCliGlerPit5BGgwLxgVh6qSfnn1Mhrr967abI8ZkvfQSgnf21T1MaAKngK9cbUvAUfH0DiQJ7WpoKb6Dn8DojwziPLBSxXevFWnwzGvsbUq+MDvmUfmHqT5Z+poJijziFXKZyOQ03mKi9CmY5AUiMEOqFjvGIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3VCcXT8/; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715589775; c=relaxed/simple;
+	bh=y7lPqf6Kbd8pfKb7R0gWDlNSm18f/VWp7Do2LxaEh3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=h5e3AKyGl3a0ECVAMz3sv3vk7mohDnmRiPg7FI5I+bC7lZIMdvurdkJSPkMf7NMPL3pVPv47IZcL4f31KoM12Y2gLfq2JsRHFBsW+KcLRiE9H3cs9+RabjQSci5l8GoPVEWUwOrQjrfxWxxOLQOJ3a88vGK09H5e3yFpVcHIQao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Syxg9neN; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3VCcXT8/"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-572f6c56cdaso14630a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 01:41:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Syxg9neN"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1ec69e3dbcfso30530475ad.0;
+        Mon, 13 May 2024 01:42:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715589660; x=1716194460; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iSDRwv7jk6IAgHWtX5wD76uWRnyIu2E9jN3RV77i0HQ=;
-        b=3VCcXT8/uQ5qKRowowrKsBuK0rDnIpewljbIwCzj6lgnZfLB8UC/cfoxOzNo51+8Ln
-         PXWMN5w5mISm/Qiey2V9CxpgDNZ3128DDReiKBjTBwmARoaL2PpqjVr2/lFz2yxRwong
-         fLp3NsCTR+TzrLCtI0bLTdima0Pg9/RY7YP1shMX/+LTKgYetS++xOMzDJCd5Ubo5uMx
-         TbnjUoMM6hw4OI4vRpIkyUpb+S5dEYwoLBaXk7et8bkXR7avQ++1eQ5UCjZNDBtIEHB2
-         lwvf2eBKYLgAivaFOaL/yu2Dw4UYvQkWttdMsAwNvR1ue3tlvqsri9d1FGbBgdST41Pa
-         uh/g==
+        d=gmail.com; s=20230601; t=1715589774; x=1716194574; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=y7lPqf6Kbd8pfKb7R0gWDlNSm18f/VWp7Do2LxaEh3w=;
+        b=Syxg9neNdLuft7fTZdu9MhWAWgirpHfemMYhZaber6dr6kfUuoZUd7W2FWBZyO1xxX
+         f1TAiHc3cNSRDtqFneqYdsIfisWW2vnT2nv4hLWPOW0m3Uwa+eDMYchBtTcr4NB9fzW9
+         HQJHjBD0nzJAEcd6Ca6+Kfn3UX3Kqgj7XUExfsQG1o8jcCiovp5C2/x8flkjCdRNnlyj
+         Osw1o3gukIBcYI1SYdf1dIsVTxJ3bAoCKbZ7j4Z/RLZNhpaTSkZxR9D22+GodM8VLJDS
+         JYG7PMI6oKH+rscTycPXXC8NV42sofTrHjX1aeP2A1+P0lXrbe6j88r+1IPwJ9+JDvj3
+         HDdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715589660; x=1716194460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iSDRwv7jk6IAgHWtX5wD76uWRnyIu2E9jN3RV77i0HQ=;
-        b=f5EigjT94FxN7jsnsDMsetpRis6pGxEwQOrn534dw5gHGeiyVNrA+qdYmSHGHTW9F7
-         IYOEDVufK83BT+R8kmi1agBHQCZ/k8wlJq5Q17Q1uOLIiHou56/+hZBO0VZdXuUxmtjR
-         9QBs6nJELGb7QxwaWJZ7RsL+XcmojhCJ30YkBbAJgj67bP7T48uX1EFS7uTxCP/3Dkq/
-         jrZriRPE2cbT9V5IpSqHfrQQLW1JInhOfeWfOVPY0tVEN2ROcBtXcxzJWxM/5UL5/ERt
-         v+y+K2EHxK5zKj1smTnoqdL31Au/wy/ke2OuTj9uBw7oM94irFffv8lExQ4uZH59KvBf
-         Oerg==
-X-Forwarded-Encrypted: i=1; AJvYcCWQKsSclL+tfntju8kNPZEncfEnE0BWBoj4fY6ZsRfZYfU+lMaO6Uacert+In1vi0shqJldXQ8xdNLNDhx5oCgT26Y5e3RJEbe8NkQf
-X-Gm-Message-State: AOJu0YxKWEMy382EFAhdmFzi8F3GdLPKm3wzMJO6mHdGNAjFw75zHylc
-	TOMiGU/ZBn7lQKTskFAL2wJqOAVU0UjjJifP/MLTfmdkd7J67tdTJCOLzTjwAM4WAzVadAMLMqE
-	58XevE7eaXLhuf07p+Cfo+eUEskBjDzLYWYLN
-X-Google-Smtp-Source: AGHT+IG57BWFXudd7m8JcDciNBmtXJbh5+hfFHuyw1l+yn/mpSNaGi+yGRv/Cgp0O9O0ywU03d4iur9Dsc9F5E9hlnM=
-X-Received: by 2002:a05:6402:2153:b0:572:5597:8f89 with SMTP id
- 4fb4d7f45d1cf-57443d30921mr260807a12.6.1715589660140; Mon, 13 May 2024
- 01:41:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1715589774; x=1716194574;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=y7lPqf6Kbd8pfKb7R0gWDlNSm18f/VWp7Do2LxaEh3w=;
+        b=pnE/ti4yMYa8bAE2oSzaqwpo/EkDWEGzI60Hyn74MJvDxCpe0okXYxsjlxsdsW2M3f
+         26bJqQJgq+jTiUCovb42XOklWFWun59rddpn7B5jdGcYcDrs9cU1AI984d7SZJryCvOB
+         b8+gfBVaVVRqio4D2YbO2GwkgyLHjFc5BMfBZyV45YwlB4lzzPoMBvfEMq3zseDUMMEF
+         E5JGdgciteH4NBeoP2m6ZPeuy0clleJe5WF9aEHqvrVrn2SxR6MbcD35aqXjw+w+25zb
+         HxYb8yQ1wd9BIoQSyE/kVIsLSXvkdtkjHn2VhEeFS3W2e37u1hghjO4SthtzXb7SAsUP
+         Vcsg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+9M9aD8/8yWTAioR0BJsaQtYYMxVcW3B2zfq9anTREunaL+p42o6Ep4/1FRieciOL5KhMXQeQw0tMCwp0eWCeKNXzvYqo
+X-Gm-Message-State: AOJu0YyZzrF9fRJeN8Ql/FGJ3m8Zob6+jbRLdK847cuAEq+ijyT15JaO
+	NFgGs61uj8oisqaBCjmmAgyPDBbN8lhGCuaTJZf9pXY5pAd39ugg
+X-Google-Smtp-Source: AGHT+IG75rkNOpcpo5GhLpsIDduIrQUEWF6yC924gDigs5v7pfDFIFCXraNZ7Di0/yOikq6t4XIz3Q==
+X-Received: by 2002:a17:903:1251:b0:1eb:5344:6a01 with SMTP id d9443c01a7336-1ef4404a25bmr103311395ad.44.1715589773717;
+        Mon, 13 May 2024 01:42:53 -0700 (PDT)
+Received: from archie.me ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf31a32sm75607045ad.123.2024.05.13.01.42.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 May 2024 01:42:53 -0700 (PDT)
+Received: by archie.me (Postfix, from userid 1000)
+	id EB5A2181C8FA4; Mon, 13 May 2024 15:42:50 +0700 (WIB)
+Date: Mon, 13 May 2024 15:42:50 +0700
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Regressions <regressions@lists.linux.dev>,
+	Linux Networking <netdev@vger.kernel.org>,
+	intel-wired-lan@lists.osuosl.org
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>,
+	Tony Nguyen <anthony.l.nguyen@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	lukas.probsthain@googlemail.com
+Subject: Regression of e1000e (I219-LM) from 6.1.90 to 6.6.30
+Message-ID: <ZkHSipExKpQC8bWJ@archie.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240513015127.961360-1-wei.fang@nxp.com> <CANn89i+EQDCFrhC3mN8g2k=KFpaKtrDusgaUo9zBvv0JCw8eYg@mail.gmail.com>
- <PAXPR04MB85100C1A06253C0AE1EB36C288E22@PAXPR04MB8510.eurprd04.prod.outlook.com>
-In-Reply-To: <PAXPR04MB85100C1A06253C0AE1EB36C288E22@PAXPR04MB8510.eurprd04.prod.outlook.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 13 May 2024 10:40:46 +0200
-Message-ID: <CANn89i+0xtG5hg2LsGvNOueCAkOac_UccXWq-Eeqt1a40EkqBA@mail.gmail.com>
-Subject: Re: [PATCH net] net: fec: avoid lock evasion when reading pps_enable
-To: Wei Fang <wei.fang@nxp.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "kuba@kernel.org" <kuba@kernel.org>, 
-	"pabeni@redhat.com" <pabeni@redhat.com>, Shenwei Wang <shenwei.wang@nxp.com>, 
-	Clark Wang <xiaoning.wang@nxp.com>, 
-	"richardcochran@gmail.com" <richardcochran@gmail.com>, "andrew@lunn.ch" <andrew@lunn.ch>, 
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "imx@lists.linux.dev" <imx@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2ae47ss+eiIbn41c"
+Content-Disposition: inline
+
+
+--2ae47ss+eiIbn41c
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 13, 2024 at 9:53=E2=80=AFAM Wei Fang <wei.fang@nxp.com> wrote:
->
-> > -----Original Message-----
-> > From: Eric Dumazet <edumazet@google.com>
-> > Sent: 2024=E5=B9=B45=E6=9C=8813=E6=97=A5 15:29
-> > To: Wei Fang <wei.fang@nxp.com>
-> > Cc: davem@davemloft.net; kuba@kernel.org; pabeni@redhat.com; Shenwei
-> > Wang <shenwei.wang@nxp.com>; Clark Wang <xiaoning.wang@nxp.com>;
-> > richardcochran@gmail.com; andrew@lunn.ch; netdev@vger.kernel.org;
-> > linux-kernel@vger.kernel.org; imx@lists.linux.dev
-> > Subject: Re: [PATCH net] net: fec: avoid lock evasion when reading pps_=
-enable
-> >
-> > On Mon, May 13, 2024 at 4:02=E2=80=AFAM Wei Fang <wei.fang@nxp.com> wro=
-te:
-> > >
-> > > The assignment of pps_enable is protected by tmreg_lock, but the read
-> > > operation of pps_enable is not. So the Coverity tool reports a lock
-> > > evasion warning which may cause data race to occur when running in a
-> > > multithread environment. Although this issue is almost impossible to
-> > > occur, we'd better fix it, at least it seems more logically
-> > > reasonable, and it also prevents Coverity from continuing to issue wa=
-rnings.
-> > >
-> > > Fixes: 278d24047891 ("net: fec: ptp: Enable PPS output based on ptp
-> > > clock")
-> > > Signed-off-by: Wei Fang <wei.fang@nxp.com>
-> > > ---
-> > >  drivers/net/ethernet/freescale/fec_ptp.c | 8 +++++---
-> > >  1 file changed, 5 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/net/ethernet/freescale/fec_ptp.c
-> > > b/drivers/net/ethernet/freescale/fec_ptp.c
-> > > index 181d9bfbee22..8d37274a3fb0 100644
-> > > --- a/drivers/net/ethernet/freescale/fec_ptp.c
-> > > +++ b/drivers/net/ethernet/freescale/fec_ptp.c
-> > > @@ -104,14 +104,16 @@ static int fec_ptp_enable_pps(struct
-> > fec_enet_private *fep, uint enable)
-> > >         struct timespec64 ts;
-> > >         u64 ns;
-> > >
-> > > -       if (fep->pps_enable =3D=3D enable)
-> > > -               return 0;
-> > > -
-> > >         fep->pps_channel =3D DEFAULT_PPS_CHANNEL;
-> > >         fep->reload_period =3D PPS_OUPUT_RELOAD_PERIOD;
-> >
-> > Why are these writes left without the spinlock protection ?
-> For fec driver, the pps_channel and the reload_period of PPS request
-> are always fixed, and they were also not protected by the lock in the
-> original code.
+Hi,
 
-If this is the case, please move this initialization elsewhere, so
-that we can be absolutely sure of the  claim.
+<lukas.probsthain@googlemail.com> reported on Bugzilla
+(https://bugzilla.kernel.org/show_bug.cgi?id=3D218826) regression on his Th=
+inkpad
+T480 with Intel I219-LM:
 
-I see fep->reload_period being overwritten in this file, I do not see
-clear evidence this is all safe.
+> After updating from kernel version 6.1.90 to 6.6.30, the e1000e driver ex=
+hibits a regression on a Lenovo Thinkpad T480 with an Intel I219-LM Etherne=
+t controller. The system experiences a freeze when an Ethernet cable is plu=
+gged in. The issue is not present in the previous kernel version 6.1.90.
+>=20
+> System Information:
+> - Model: Lenovo Thinkpad T480
+> - BIOS Version: N24ET76W (1.51) dated 02/27/2024
+> - Ethernet Controller: Intel Corporation Ethernet Connection (4) I219-LM =
+(rev 21)
+> - Kernel Module in Use: e1000e
+> - Operating System: Manjaro Linux, kernel version 6.6.30-1
+>=20
+> Steps to Reproduce:
+> 1. Boot system with kernel version 6.6.30.
+> 2. Connect the Ethernet cable to the laptop.
+> 3. Observe that the system freezes.
+>=20
+> Expected Behavior:
+> The system should remain stable and maintain network connectivity without=
+ freezing when the Ethernet cable is connected.
+>=20
+> Actual Behavior:
+> The system freezes immediately upon plugging in the Ethernet cable.
+>=20
+> Additional Information:
+> The regression seems to be introduced in one of the updates between kerne=
+l versions 6.1.90 and 6.6.30. The issue does not occur with the older kerne=
+l version 6.1.90.
+
+Thanks.
+
+--=20
+An old man doll... just what I always wanted! - Clara
+
+--2ae47ss+eiIbn41c
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZkHSigAKCRD2uYlJVVFO
+o0Z/AQCIkJz7plid8wPPU7db5xKtA7Ftq60HC/uJ7718jfmBkgEAtvtduKsDn2CB
+sliUh8IN6Cx7oNQTIYq+Il73paLXMAk=
+=lNxt
+-----END PGP SIGNATURE-----
+
+--2ae47ss+eiIbn41c--
