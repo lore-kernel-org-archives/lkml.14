@@ -1,39 +1,39 @@
 Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D834E4C7B;
-	Mon, 13 May 2024 15:06:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683F71DDC5;
+	Mon, 13 May 2024 15:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715612810; cv=none; b=XOgw8ynchpoawp3sy9X/Dk4mm//QUlBqCmEbssMyPg5xdb/BGPulurY7EPLZH6OZ7nQ8szzWEDywYno2JILfGxC23uur8r7PcVGzY+OdiJRJNwUzR6tO34UrItHtfeZtZZ4L1RlRlkdZqNW/bOqHQJWehyhr/04c+1uGED/BrE0=
+	t=1715612812; cv=none; b=OZsuWz7SeX8QefoCnop1sdgU9tTU+k9YSAIwLOf/e7vP2uX+D9KhInr9QLMiWQPANGBAo9WB9N3miRWVj7Sn0E7X71hDqhgLe4uEIBj3ng/oyB5re+KE5UGAwCDqJdXpxByhOYXJlPIesDW25wntykJlXXuNsRZpvRlX4FZxmVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715612810; c=relaxed/simple;
-	bh=8aYhnyESUx91UbZYjQFvpNe164Hwg9vkCST5TzdH/Ks=;
+	s=arc-20240116; t=1715612812; c=relaxed/simple;
+	bh=aWv4uhjr6Nqh1WTQMG3pOFjP+s2H/GrHjZ+pXgW3x7g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=c5riNHkIgQF3WOGOp9ijPUQ9fY/vENU18EeaBPw/esfNM8zaf0GOoyuXepmqhTQPvFOJ/C7It7r73lKFqtS95FhTwOKYvAuhAFngeVY01FDqOSS0zuQK6l5tfl1eb0fkRm97SfHS781stsNx+BHF/LWJerM52KzZ1yF5zI1JV08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=nVAyY1V/; arc=none smtp.client-ip=85.214.62.61
+	 In-Reply-To:Content-Type; b=qafXu10Svqa8X8H5wo5xQ21MH+rYoVXRfHwuz+aaTxVU6poJG27hFisOO3mJ7gTjQz4W03vTlM2Lh3FAWRSj6abLWFPpBEAFCk/a9Jk9kdfPaQFNWs3BaL5jMRUEzuA024M0vYszuF3bFp1KsufxFhEFm0EEFj8uPim3y9vnc68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=kUpaXSXm; arc=none smtp.client-ip=85.214.62.61
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="nVAyY1V/"
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="kUpaXSXm"
 Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
 	(No client certificate requested)
 	(Authenticated sender: marex@denx.de)
-	by phobos.denx.de (Postfix) with ESMTPSA id 587A987E50;
-	Mon, 13 May 2024 17:06:45 +0200 (CEST)
+	by phobos.denx.de (Postfix) with ESMTPSA id 42D9A882D8;
+	Mon, 13 May 2024 17:06:47 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
-	s=phobos-20191101; t=1715612807;
-	bh=D+kDYWZibEUugDcn49CQ+F1gtNp7/FJaDN/c69YDh5U=;
+	s=phobos-20191101; t=1715612808;
+	bh=dFRl+UyXsb6ZN6/Bsy1gYor7t7lvZznQLrqAhOOp/wg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nVAyY1V/Ba0HWbriExYe4dZLigqzqJP6GhBUECrwmBSYFXv4/UB//Cnsh7o9Eje1S
-	 FXLepTguU4p51QYDmAQGyLOSRczHQwmgbkJKoCJfcf32zQNlNs5hPrM6DMx0hQ5hgM
-	 dj0eHocM6PtpQmeLleEYPMQGoVxh3ysE3hzOlLZWC3kuPvUSgdXCL6uBAykn46wINk
-	 0xSxBLXt6izu1N5J27TjgAJokl5CRDudBrfymJtSJp0ACA9aClRnbMaIw94tHSheZ/
-	 SO3Wtb9gs0rTdBYVHTRKwaejQpU2bSbV8oAWj88qjoNLPHEIE+bnOTTdJwlJ6mVKfK
-	 mcjCcBwWUaCmg==
-Message-ID: <4096ae14-bbb7-446b-bd96-2498c7ee4057@denx.de>
-Date: Mon, 13 May 2024 16:16:24 +0200
+	b=kUpaXSXm2V5tAqWUzWOnUcr30a32u+LYIZ6BxWf97mYO/7FVS+xv7W5J0mELzqbg4
+	 v9aD/SOgXFxAb+RcLQxhgY3RzO8SA+TsV9IGSMWS3+HHKDNibtO0/nTCTxIY3/pDtb
+	 XYdMzRV2J96o6C2jwFSEoZgPdsdRhkHf3MNi06StgLhEL54ZUk7in+6CcnyngPGZTV
+	 tLbb+VdnVXOOSOWF2ffkr1LSL1pe0XQ5n6uf5D1qiKWTo+eoyYMGgzcuSAMl7bMAb3
+	 TL66NN8EzfcplXm6VcYiCgwoll9/7q0KYdFGD4vM13tEHN8kc5dcAix3Ch2WYxqaqN
+	 9DbYTedQtlvOg==
+Message-ID: <601550a5-da3b-4311-965d-ce65f6fdd337@denx.de>
+Date: Mon, 13 May 2024 16:20:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,50 +44,68 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 02/11] dt-bindings: net: add phy-supply property for
  stm32
 To: Christophe ROULLIER <christophe.roullier@foss.st.com>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Rob Herring <robh@kernel.org>
+Cc: "David S . Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
  Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
  Conor Dooley <conor+dt@kernel.org>,
  Maxime Coquelin <mcoquelin.stm32@gmail.com>,
  Alexandre Torgue <alexandre.torgue@foss.st.com>,
  Richard Cochran <richardcochran@gmail.com>, Jose Abreu
  <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com,
+ Mark Brown <broonie@kernel.org>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
  linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20240426125707.585269-1-christophe.roullier@foss.st.com>
  <20240426125707.585269-3-christophe.roullier@foss.st.com>
- <4e03e7a4-c52b-4c68-b7e5-a03721401cdf@denx.de>
- <0ef43ed5-24f5-4889-abb2-d01ee445a02d@foss.st.com>
+ <20240426153010.GA1910161-robh@kernel.org>
+ <a2a631a0-9a16-4068-aed2-6bdaa71e3953@foss.st.com>
 Content-Language: en-US
 From: Marek Vasut <marex@denx.de>
-In-Reply-To: <0ef43ed5-24f5-4889-abb2-d01ee445a02d@foss.st.com>
+In-Reply-To: <a2a631a0-9a16-4068-aed2-6bdaa71e3953@foss.st.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
 X-Virus-Status: Clean
 
-On 5/13/24 1:45 PM, Christophe ROULLIER wrote:
-> Hi,
-
-Hi,
-
-> On 4/26/24 16:47, Marek Vasut wrote:
->> On 4/26/24 2:56 PM, Christophe Roullier wrote:
+On 5/13/24 4:06 PM, Christophe ROULLIER wrote:
+> Hi
+> 
+> On 4/26/24 17:30, Rob Herring wrote:
+>> On Fri, Apr 26, 2024 at 02:56:58PM +0200, Christophe Roullier wrote:
 >>> Phandle to a regulator that provides power to the PHY. This
 >>> regulator will be managed during the PHY power on/off sequence.
 >>>
 >>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 >>> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+>>> ---
+>>>   Documentation/devicetree/bindings/net/stm32-dwmac.yaml | 3 +++
+>>>   1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml 
+>>> b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+>>> index b901a432dfa9..7c3aa181abcb 100644
+>>> --- a/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+>>> +++ b/Documentation/devicetree/bindings/net/stm32-dwmac.yaml
+>>> @@ -84,6 +84,9 @@ properties:
+>>>             - description: offset of the control register
+>>>             - description: field to set mask in register
+>>> +  phy-supply:
+>>> +    description: PHY regulator
+>> This is for which PHY? The serdes phy or ethernet phy? This only makes
+>> sense here if the phy is part of the MAC. Otherwise, it belongs in the
+>> phy node.
 >>
->> Maybe this entire regulator business should be separate series from 
->> the MP13 DWMAC ethernet series ?
-> I prefer push it with MP13 Ethernet series if possible.
+>> Rob
+> 
+> You are right, normally it should be managed in Ethernet PHY (Realtek, 
+> Microchip etc...)
+> 
+> Lots of glue manage this like this. Does it forbidden now ? if yes need 
+> to update PHY driver to manage this property.
 
-This is separate functionality, independent of the MP13 support and not 
-required for the MP13 support, correct ?
-
-If yes, move it into separate patch(set) to make both series easier to 
-review.
+If the regulator is connected to the PHY, then the supply should be 
+described in the PHY node and you wouldn't even need these PHY patches 
+(also see my comment that you should split the PHY regulator part of 
+this patchset into separate series).
