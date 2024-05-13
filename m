@@ -1,119 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597081C6A4
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 18:46:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868294207A
+	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 18:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715626014; cv=none; b=bTRUw6d4oCY2JkJGsSCT0pgpYHIzOA3WSF4PwtpIHQavufKDzZsXhqP65uvF9l0PhrzXngnJtO6IYgaPDWXaFc6H2W/TZOpci74iJikMtIE10CnJgWJgpSZQgmJ46opd9v4PRjvZGX3OLGLT16hiGFyh9k3Rxqc4ozpXxN9zD2k=
+	t=1715626023; cv=none; b=DB1SfcPkk9vYZJCKANlzHnOmICKIJbfxAgZdsdG76ROYM1nRFVnN3/zYluRxstLWQYKDZv2PfaqxxrflnBe5uTuoqA1Z6rdqEz1b5sAedCS+9Ke2jeZB782voyW0pvPgufgSu7HQkEX6ESwnRSWEEZcGgS+CsuSMQw6v+5wy6/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715626014; c=relaxed/simple;
-	bh=SisZcXZqgcbTdXFFIU8xWo+kq/drZzZdUZzdlkD8UKI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Sl7SiG0CBt3Q2c7R216jDvQQkzbZVgZ/Ey836Okampa+L4pZSloVPP+IpLUC1T9SQ3gtYC6XcDwie/y2TVQlyyaqXx25xh4W2XLhIgMk1whEOkgeIQj1tOjcCZFgBrBfOsTPqFq7kYo0hQyJOA3uwCFVT9TdzaKpL5KXb2nQSkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H0/WOs7K; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1715626023; c=relaxed/simple;
+	bh=1u9/b9gk/Tl5ozsdOKNx/td/R95i1KBWjQylrJWvc1k=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q2JzBlSf2k6Kvrl8Q8qbxGKShtogXKTfLuecymRGYZO8fTo975sFubL+qurSLzfVGJN/TFSYQqow7ilVZlJwMwa5k4vDxmduxjWnhLXckakUjtMMtA1BzoMF4oUK6cl4wHODSTrGpLQBqliaHZJ+HgpazjVD1UP7h8JJmsFBvzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=GZha+N5Y; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H0/WOs7K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1715626012;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BVIn2rWOpVhbTil8h2wwg1NNh+EXi/kd2LlnyPlZrH8=;
-	b=H0/WOs7KcrLqhQSfg0gRMbrr6oZYMMiUpzEp6YKXl8Hfru2lzFUH7yFoJQF3SgpS9dmN57
-	50InJTsX9A0gqclQ8taEymZO1O83lmMKe9AsM/Ucw97EDwuCkFQ21k4bDoojDrXlLWIrqF
-	tx2s7HiL33ddxQNiUdxW3F58DqjrzlE=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-125-Pe6TrLu5MZKnZIUa5vvWwg-1; Mon, 13 May 2024 14:40:46 -0400
-X-MC-Unique: Pe6TrLu5MZKnZIUa5vvWwg-1
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-43e1af4fbc4so13629941cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 11:40:46 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="GZha+N5Y"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1eeabda8590so33661105ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 11:47:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1715626021; x=1716230821; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4/YpgsmxEh7NnZ1zRADZ2HbHM07VTZzuSca8drjzUhU=;
+        b=GZha+N5Yez+iTz/TJMB89wFfdlYKZVoMOL6XtCKFwXwvnC9bK+icU4rmf7z0o5xRtI
+         YJhwmdcng42I136HEmlU6AhQpa5HJHx/uJTPh20EewuS+/5YCurgrqQ8/2rGf53Blzup
+         15FMB9VxAHNF0PugoirJhF4ti2jn+lJP92tcw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715625646; x=1716230446;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BVIn2rWOpVhbTil8h2wwg1NNh+EXi/kd2LlnyPlZrH8=;
-        b=iqX6Fs5OHMo5Ujhys3AFyT68di+WBnFspP9cLgAQVALUKgqSDTVrdwNhUub7DNDQeI
-         JinVtEnZENU8XnLHcByHMKmGwt1IAcrztN2LoWdjCslXEaxVRpfde9oS4BIQqm+3k7J1
-         hojUQ5mRnt+e/BpH6cOry6Wwon7iNK4yl/3Y98mxsGalXBWxV47QXr2E3i10jfk67b8D
-         CXcQqe11wVNOtWzUfpbQPOpeLB6O1dTKnBbsSP6kDID/YwZWS7oWppomIAzbCpKsxYqX
-         Nq1fzKBIm5FKYIhb66HxHfIUBox82f7Ri32sDqGToy5f6h10PTiIUo+f/32hf2EaW1jX
-         L1gA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0jBpadNi5Cjp8GI8T/tiIm/awTBxQdVauGWlGjuMIHE9xENBXgQGFjcA/4G4PbXpDw61sqQo3mMyT6FxiEeqPyMC1VVZBpa/tXb3s
-X-Gm-Message-State: AOJu0YzaxKv13dutSSo/YxAVphFAK6A8h6GYoVfU5gznQ6BFP7KrXoCm
-	F0drKOxwHKRFPcF7Ljq8twd+7CH89FOrP7CL3wHLbpbmD4MGmAjwbqFtu1Y2i2YMze3vHSudgPF
-	Nq4hK+tyjtJASojBSs2FuV3ZDula9iT8fBgp4aUDlHdgRRMkCSTBGUuwjkLty/A==
-X-Received: by 2002:ac8:7dd6:0:b0:43a:f7fb:bc4b with SMTP id d75a77b69052e-43dfdb0714amr109230421cf.14.1715625646259;
-        Mon, 13 May 2024 11:40:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGyEMwpDTnVPRtCr+Mg/v54BS100776/OI4rfOSjtaaCh2632huCZWaUGLfxNq0fFe9FHICXg==
-X-Received: by 2002:ac8:7dd6:0:b0:43a:f7fb:bc4b with SMTP id d75a77b69052e-43dfdb0714amr109230311cf.14.1715625645923;
-        Mon, 13 May 2024 11:40:45 -0700 (PDT)
-Received: from vschneid-thinkpadt14sgen2i.remote.csb (213-44-141-166.abo.bbox.fr. [213.44.141.166])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43e1115dd3esm25071211cf.19.2024.05.13.11.40.43
+        d=1e100.net; s=20230601; t=1715626021; x=1716230821;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4/YpgsmxEh7NnZ1zRADZ2HbHM07VTZzuSca8drjzUhU=;
+        b=Tph4P03MXM3AMtT5N9vCOZBJiQrirKUCXWrN0THzzL+oGY8hqfxc+KmOvBJwA8lRwH
+         m0JQ5TZW9DXXUI5NsXlBF44536Qna8Hvqzy7B+G/a5REyjMofjOo/Ssv0kWmEBdVGTNv
+         4U6Cxjg5WA28pDskQ7cnhiKryTvfJGxpb0wx4S8yhUXBiuE53GCPX6rTefPK7v+jwXC8
+         kDp/wJXPM9p41RN9UF1Y1dIogPFVA/oGiqZo0Nr0VnuDdZNGGIxaGz3rc+tpLrPQPsfF
+         rKzuXAxo2E58u7//0CQbhlEQ2gTDqiNCvk4OIkAZgS60hDmYw/JURdPGdRDTznJme8DR
+         dEvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUWbAVA+akgAp0XujdRh16bxteftWQ1yg2g+MizjggQqUvL5E7NE6F9b0gx/tXQR/PQuoMmF9hTe0x8EeeJEt9gvYFYwN2jw/PvoNJk
+X-Gm-Message-State: AOJu0Yx70KC5USDoB9pFbJkPv+xHaqsN7gzCExZHGeVNJ+YnbCicHitK
+	AtvUHVEatNA7FfpYSbpsta+43+zxojzpiLA1oRg97UaAS9aF2PSCwrqAoWUPiiI0DqX9s/q3XOy
+	kZac=
+X-Google-Smtp-Source: AGHT+IHbSrhUBqN1/ZWPPfyWlFBVdHyHLIR+khL/KKrN4dLXG5CPpLVAkZ3pgSvHmoFsy/dhzVKAsA==
+X-Received: by 2002:a17:902:f552:b0:1ed:1d37:267e with SMTP id d9443c01a7336-1ef43e281b0mr137384885ad.16.1715626020880;
+        Mon, 13 May 2024 11:47:00 -0700 (PDT)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0b9d168esm82664875ad.32.2024.05.13.11.46.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 11:40:45 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, "Paul E. McKenney"
- <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Neeraj
- Upadhyay <quic_neeraju@quicinc.com>, Joel Fernandes
- <joel@joelfernandes.org>, Josh Triplett <josh@joshtriplett.org>, Boqun
- Feng <boqun.feng@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan
- <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>
-Subject: Re: [PATCH v2 27/27] context_tracking, rcu: Rename rcu_dyntick
- trace event into rcu_watching
-In-Reply-To: <ZjuFUZXk4rYO4L2v@localhost.localdomain>
-References: <20240430091740.1826862-1-vschneid@redhat.com>
- <20240430091740.1826862-28-vschneid@redhat.com>
- <ZjuFUZXk4rYO4L2v@localhost.localdomain>
-Date: Mon, 13 May 2024 20:40:42 +0200
-Message-ID: <xhsmhr0e5h7x1.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+        Mon, 13 May 2024 11:47:00 -0700 (PDT)
+Date: Mon, 13 May 2024 11:46:57 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: Jakub Kicinski <kuba@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	zyjzyj2000@gmail.com, nalramli@fastly.com,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	"open list:MELLANOX MLX5 core VPI driver" <linux-rdma@vger.kernel.org>
+Subject: Re: [PATCH net-next v2 1/1] net/mlx5e: Add per queue netdev-genl
+ stats
+Message-ID: <ZkJgIe71mz12qCe1@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Jakub Kicinski <kuba@kernel.org>, Tariq Toukan <tariqt@nvidia.com>,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	zyjzyj2000@gmail.com, nalramli@fastly.com,
+	Saeed Mahameed <saeedm@nvidia.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	"open list:MELLANOX MLX5 core VPI driver" <linux-rdma@vger.kernel.org>
+References: <20240510041705.96453-1-jdamato@fastly.com>
+ <20240510041705.96453-2-jdamato@fastly.com>
+ <20240513075827.66d42cc1@kernel.org>
+ <ZkJO6BIhor3VEJA2@LQ3V64L9R2>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZkJO6BIhor3VEJA2@LQ3V64L9R2>
 
-On 08/05/24 15:59, Frederic Weisbecker wrote:
-> Le Tue, Apr 30, 2024 at 11:17:31AM +0200, Valentin Schneider a =C3=A9crit=
- :
->> @@ -228,7 +228,7 @@ void noinstr ct_nmi_exit(void)
->>      }
->>
->>      /* This NMI interrupted an RCU-idle CPU, restore RCU-idleness. */
->> -	trace_rcu_dyntick(TPS("Startirq"), ct_nmi_nesting(), 0, ct_rcu_watchin=
-g());
->> +	trace_rcu_watching(TPS("Endirq"), ct_nmi_nesting(), 0, ct_rcu_watching=
-());
->
-> Ah the initial string was wrong and you're fixing it, right?
->
-> Should be a seperate patch?
->
+On Mon, May 13, 2024 at 10:33:28AM -0700, Joe Damato wrote:
+> On Mon, May 13, 2024 at 07:58:27AM -0700, Jakub Kicinski wrote:
+> > On Fri, 10 May 2024 04:17:04 +0000 Joe Damato wrote:
+> > > Add functions to support the netdev-genl per queue stats API.
+> > > 
+> > > ./cli.py --spec netlink/specs/netdev.yaml \
+> > > --dump qstats-get --json '{"scope": "queue"}'
+> > > 
+> > > ...snip
+> > > 
+> > >  {'ifindex': 7,
+> > >   'queue-id': 62,
+> > >   'queue-type': 'rx',
+> > >   'rx-alloc-fail': 0,
+> > >   'rx-bytes': 105965251,
+> > >   'rx-packets': 179790},
+> > >  {'ifindex': 7,
+> > >   'queue-id': 0,
+> > >   'queue-type': 'tx',
+> > >   'tx-bytes': 9402665,
+> > >   'tx-packets': 17551},
+> > > 
+> > > ...snip
+> > > 
+> > > Also tested with the script tools/testing/selftests/drivers/net/stats.py
+> > > in several scenarios to ensure stats tallying was correct:
+> > > 
+> > > - on boot (default queue counts)
+> > > - adjusting queue count up or down (ethtool -L eth0 combined ...)
+> > > - adding mqprio TCs
+> > > 
+> > > Signed-off-by: Joe Damato <jdamato@fastly.com>
+> > 
+> > Tariq, could you take a look? Is it good enough to make 6.10? 
+> > Would be great to have it..
+> 
+> Thanks Jakub.
+> 
+> FYI: I've also sent a v5 of the mlx4 patches which is only a very minor
+> change from the v4 as suggested by Tariq (see the changelog in that cover
+> letter).
+> 
+> I am not trying to "rush" either in, to to speak, but if they both made it
+> to 6.10 it would be great to have the same support on both drivers in the
+> same kernel release :)
 
-No, I'm just creating confusion for everyone involved (including myself) :(
-Dynticks start when RCU stops watching, so the naming logic gets flipped on
-its head.
+Err, sorry, just going through emails now and saw that net-next was closed
+just before I sent the v5.
 
-If I take the original comment from
-bd2b879a1ca5 ("rcu: Add tracing to irq/NMI dyntick-idle transitions")
-"""
-as argument: "Start" for entering dyntick-idle mode, "Startirq" for
-entering it from irq/NMI
-"""
+My apologies for missing that announcement.
 
-So here "Startirq" means "start dyntick mode from IRQ". With the name
-change, it should be "Endirq", since RCU stops watching, from IRQ...
-
-I know, a lot of confusion for 0 functional change :(
-
+Do I need to re-send after net-next re-opens or will it automatically be in
+the queue for net-next?
