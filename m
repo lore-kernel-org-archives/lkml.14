@@ -1,130 +1,159 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4996252F9B;
-	Mon, 13 May 2024 06:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C9E52F9B;
+	Mon, 13 May 2024 06:40:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715582429; cv=none; b=gptM4lae07rV2oVo8QRjEJNL8OyiHpR2IDAnlS3EZ2qSLGyPXfTuXV88PzFfRdXiTIbiZxE24+gKa/H/smbsKq3z+52YUx07TlC3Wxh6ewydwYcOCnH7yEbRDpmevZ/GNLqGwI7zIPgaqMx3La3v6nnPddpRMz04LM1C+aVpJTI=
+	t=1715582437; cv=none; b=miIlUwV2raCMpekwBTZq9cASjYfLvQKH8H2xzDt1WVcSKJBLH8Ug+kcMbbw4k+sUKexYb1Y/YMdz5YtbdqVFbFyyrRNc4uDDjCRR+LVUyfYZ2zBN7r/8g1rxyWrOzFHERrlXUvu38kJD6yI2ZKdgG/JfTxp8H9FQij1y5dETQHQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715582429; c=relaxed/simple;
-	bh=s3KEVO2WVfNjujMY5GX/FpbgTHgOuPOWDdwQwaLheY0=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=JZTOY/BmlIuA8QeruT+KCd/y8ZarWCuO2VGsfgbzKRNn9gObi/KEVfm/HRwHuGiFLZ3IJL63uvXs9pN6V5FjfgR/fdhmx9Cxe/a7p05wXzrED/Qix+oUi5eUqlwY9sKAbVRJ4bv9IPzvxMx1inHq9AZPERDT7tjfHOwDjYmQB94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.24])
-	by gateway (Coremail) with SMTP id _____8Bx3+vZtUFmyRIMAA--.29783S3;
-	Mon, 13 May 2024 14:40:25 +0800 (CST)
-Received: from [10.20.42.24] (unknown [10.20.42.24])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8BxlFbXtUFmMqMcAA--.35005S3;
-	Mon, 13 May 2024 14:40:24 +0800 (CST)
-Subject: Re: [PATCH 1/2] docs: Add advanced extended IRQ model description
-To: Randy Dunlap <rdunlap@infradead.org>, chenhuacai@kernel.org,
- kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, siyanteng@loongson.cn
-Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240507122228.5288-1-zhangtianyang@loongson.cn>
- <c1f1b699-71ad-409a-a843-afe42640626a@infradead.org>
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-Message-ID: <a72f2d5b-ed6d-1b47-ac99-5c99f9cf257b@loongson.cn>
-Date: Mon, 13 May 2024 14:40:23 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1715582437; c=relaxed/simple;
+	bh=lqcEe4hZIzl0ewoaZ/vN2AJJvQPMQLnu4BDGTpFrGFM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=jIkXsIyaDBok2JOgSNv/vPylwCutYrdXA0BORqoMQM8rmz4y5K7z+9IBCyCLVNOy4JiUbjBju3G3NAHiXGGwzLpOICoT1Zww6IXTyMyWERhwlXMqiy7waVutGRVVP2ONZ9Ul5uqSSaWWX9QkS8WVOjvH8vaF/+9BTc907HU/Z1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=fz8SeCcn; arc=none smtp.client-ip=198.47.19.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fz8SeCcn"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44D6e52h010669;
+	Mon, 13 May 2024 01:40:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1715582405;
+	bh=EznlNRZRqFxgIXuvyRQEXYusN2dLWKllykgxYp3lDds=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=fz8SeCcnbcWfSGP42Pl8maqcPtERRwY5/QbwF3ekjMm++Nmp/Vb3DgfX5OE41gQxj
+	 Fxm+q3Z6jNGoNjXv5qUs5BC4wXl0ArxaC1WbVJsxpsLOIr4vyRCAzy+yPjb/fEdyxd
+	 J+6r6C8ZJNrgkJWX+kzbrmdTS+yN4jEWYHfucYEU=
+Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44D6e5ob021930
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Mon, 13 May 2024 01:40:05 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 13
+ May 2024 01:40:05 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Mon, 13 May 2024 01:40:05 -0500
+Received: from [10.24.69.25] (danish-tpc.dhcp.ti.com [10.24.69.25])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44D6dwwk076174;
+	Mon, 13 May 2024 01:39:58 -0500
+Message-ID: <7542d6ed-28aa-467d-a81a-ab44f82cef72@ti.com>
+Date: Mon, 13 May 2024 12:09:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <c1f1b699-71ad-409a-a843-afe42640626a@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v5] net: ti: icssg_prueth: add TAPRIO offload
+ support
 Content-Language: en-US
-X-CM-TRANSID:AQAAf8BxlFbXtUFmMqMcAA--.35005S3
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Kw13GrWxury7JF43tw18Zwc_yoW8try3pr
-	Z3GF9avFs7t343WF13Jr1UXr13Jw1fJanrKF1xKry8Xw1qvr1Dtr1UXrykXFWUG340yr1j
-	qFW5G34DCw1UA3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
-	1lc7I2V7IY0VAS07AlzVAYIcxG8wCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwCFI7km07C267AKxVWUtVW8ZwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26c
-	xKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAF
-	wI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jwBMNUUUUU=
+To: Paolo Abeni <pabeni@redhat.com>, Dan Carpenter <dan.carpenter@linaro.org>,
+        Andrew Lunn <andrew@lunn.ch>, Jan Kiszka <jan.kiszka@siemens.com>,
+        Simon
+ Horman <horms@kernel.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Randy
+ Dunlap <rdunlap@infradead.org>,
+        Diogo Ivo <diogo.ivo@siemens.com>,
+        Wolfram
+ Sang <wsa+renesas@sang-engineering.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Roger Quadros
+	<rogerq@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet
+	<edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC: <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <srk@ti.com>, <r-gunasekaran@ti.com>,
+        Roger
+ Quadros <rogerq@ti.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>
+References: <20240429103022.808161-1-danishanwar@ti.com>
+ <74be4e2e25644e0b65ac1894ccb9c2d0971bb643.camel@redhat.com>
+ <cc9eae8f17e3e0ad142c9efa3fe5dff7afe2554c.camel@redhat.com>
+From: MD Danish Anwar <danishanwar@ti.com>
+In-Reply-To: <cc9eae8f17e3e0ad142c9efa3fe5dff7afe2554c.camel@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
 
-在 2024/5/9 上午6:29, Randy Dunlap 写道:
-> Hi--
->
-> On 5/7/24 5:22 AM, Tianyang Zhang wrote:
->>  From 3C6000, Loongarch began to support advanced extended
->> interrupt mode, in which each CPU has an independent interrupt
->> vector number.This will enhance the architecture's ability
->> to support modern devices
+
+On 02/05/24 5:32 pm, Paolo Abeni wrote:
+> On Thu, 2024-05-02 at 13:59 +0200, Paolo Abeni wrote:
+>> On Mon, 2024-04-29 at 16:00 +0530, MD Danish Anwar wrote:
+>>> +static int emac_taprio_replace(struct net_device *ndev,
+>>> +			       struct tc_taprio_qopt_offload *taprio)
+>>> +{
+>>> +	struct prueth_emac *emac = netdev_priv(ndev);
+>>> +	struct tc_taprio_qopt_offload *est_new;
+>>> +	int ret;
+>>> +
+>>> +	if (taprio->cycle_time_extension) {
+>>> +		NL_SET_ERR_MSG_MOD(taprio->extack, "Cycle time extension not supported");
+>>> +		return -EOPNOTSUPP;
+>>> +	}
+>>> +
+>>> +	if (taprio->cycle_time < TAS_MIN_CYCLE_TIME) {
+>>> +		NL_SET_ERR_MSG_FMT_MOD(taprio->extack, "cycle_time %llu is less than min supported cycle_time %d",
+>>> +				       taprio->cycle_time, TAS_MIN_CYCLE_TIME);
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	if (taprio->num_entries > TAS_MAX_CMD_LISTS) {
+>>> +		NL_SET_ERR_MSG_FMT_MOD(taprio->extack, "num_entries %lu is more than max supported entries %d",
+>>> +				       taprio->num_entries, TAS_MAX_CMD_LISTS);
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	if (emac->qos.tas.taprio_admin)
+>>> +		devm_kfree(&ndev->dev, emac->qos.tas.taprio_admin);
 >>
->> Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
->> ---
->>   .../arch/loongarch/irq-chip-model.rst         | 33 +++++++++++++++++
->>   .../zh_CN/arch/loongarch/irq-chip-model.rst   | 37 +++++++++++++++++--
->>   2 files changed, 67 insertions(+), 3 deletions(-)
+>> it looks like 'qos.tas.taprio_admin' is initialized from
+>> taprio_offload_get(), so it should be free with taprio_offload_free(),
+>> right?
 >>
->> diff --git a/Documentation/arch/loongarch/irq-chip-model.rst b/Documentation/arch/loongarch/irq-chip-model.rst
->> index 7988f4192363..79228741d1b9 100644
->> --- a/Documentation/arch/loongarch/irq-chip-model.rst
->> +++ b/Documentation/arch/loongarch/irq-chip-model.rst
->> @@ -85,6 +85,39 @@ to CPUINTC directly::
->>       | Devices |
->>       +---------+
->>   
->> +Advanced Extended IRQ model
->> +=======================
-> The === underline line needs to be at least as long as the line above it.
-I will repair this problem
->> +
->> +In this model, IPI (Inter-Processor Interrupt) and CPU Local Timer interrupt go
->> +to CPUINTC directly, CPU UARTS interrupts go to LIOINTC, MSI interrupts go to AVEC,
->> +and then go to CPUINTC, Other devices interrupts go to PCH-PIC/PCH-LPC and gathered
->                    CPUINTC.
-Thank you for the reminder
->> +by EIOINTC, and then go to CPUINTC directly::
->> +
->> + +-----+     +--------------------------+     +-------+
->> + | IPI | --> |           CPUINTC        | <-- | Timer |
->> + +-----+     +--------------------------+     +-------+
->> +              ^        ^             ^
->> +              |        |             |
->> +      +--------+  +---------+ +---------+     +-------+
->> +      | AVEC   |  | EIOINTC | | LIOINTC | <-- | UARTs |
->> +      +--------+  +---------+ +---------+     +-------+
->> +           ^            ^
->> +           |            |
->> +         +---------+  +---------+
->> +         |   MSI   |  | PCH-PIC |
->> +         +---------+  +---------+
->> +            ^          ^       ^
->> +            |          |       |
->> +    +---------+ +---------+ +---------+
->> +    | Devices | | PCH-LPC | | Devices |
->> +    +---------+ +---------+ +---------+
->> +                     ^
->> +                     |
->> +                +---------+
->> +                | Devices |
->> +                +---------+
->> +
->> +
->>   ACPI-related definitions
->>   ========================
->>   
-> thanks.
+>>> +
+>>> +	est_new = devm_kzalloc(&ndev->dev,
+>>> +			       struct_size(est_new, entries, taprio->num_entries),
+>>> +			       GFP_KERNEL);
+>>> +	if (!est_new)
+>>> +		return -ENOMEM;
+>>
+>> Why are you allocating 'est_new'? it looks like it's not used
+>> anywhere?!? 
+>>
+>>> +
+>>> +	emac->qos.tas.taprio_admin = taprio_offload_get(taprio);
+>>> +	ret = tas_update_oper_list(emac);
+>>> +	if (ret)
+>>> +		return ret;
+>>
+>> Should the above clear 'taprio_admin' on error, as well? 
+> 
+> Side note: the patch itself is rather big, I guess it would be better
+> split it. You can make a small series putting the the struct definition
+> move in a separate patch. 
 
 
+Sure Paolo, I will split the "struct definition move" to a separate
+patch and post both the patches as a small series in v6.
 
+> 
+> Thanks,
+> 
+> Paolo
+> 
+
+-- 
+Thanks and Regards,
+Danish
