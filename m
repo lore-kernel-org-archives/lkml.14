@@ -1,89 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45275154454;
-	Mon, 13 May 2024 15:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF841552E8;
+	Mon, 13 May 2024 15:53:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715615549; cv=none; b=L8UdWHWTzyZ9Pb9nUWyqRZtTgiKpN3ciSWpJx7QzazSVWmGYvpys70oOyA2TUphThWFuj5JnQzl0osq/tTRi+7sutydzIVxjX3e6FJrqnxoy6LlmLHcuEXrXMRRXX7bVHQWVCE07Q+ZtU0l9qeZUFxLh8IoNxKaN1s3HBLmafYw=
+	t=1715615611; cv=none; b=he2nn+pxgIsg4bCrCbTF2SoL5OR4/G57602Ju793+5GaIVCtl78vBlShj/FtQ17mv1Gkgl3b20vh9Voirn4Om7/rpYuRfTLpk6vY+YrWMgeslZDKt+7keSmqQf7baHpJciZVBiNbi3iLPq6SrBxLPVHvQoA5+AQayW5LlQqYOs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715615549; c=relaxed/simple;
-	bh=75oUXoThArbKO9d+Z2VBTAalA0tvT0Hl3rs3i7zDhpo=;
+	s=arc-20240116; t=1715615611; c=relaxed/simple;
+	bh=QSJ9adYiyENvXrlQE+wO4TcEhBc9/Ph17/BE6YNfe6U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cLeU8tqnUPUejVam7XJci36zGcoLfiHS8noLV7yyNURcRplygSsYC/cIILY4Npjf+nh/l6I1gA/ygUi0aG4/TYhnai/x1lRMabd0T+Rkdq30ULaYQz8nHj49J0yKSZ84hiEukgFS76bIYGr2WReXuW9G1HETvmsjCNOjCWDoLVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q/ylobXw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=XYWGajgCxbPxmW33iGRvgKhWalmar3nvot3WPs/OM45BY4k8YppQKGarpBgTcVEtnugSxSub2lSZOea3XkfkJMIOPMtQNDnTiRjkGt/JDioJzhf1kPxOoXpKUR4RDWglJYqt1RDMHYHvMAK05SrsQq2aPU2JMv50RBFZGzGYjas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ieDlxfXp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q/ylobXw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A04C113CC;
-	Mon, 13 May 2024 15:52:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ieDlxfXp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25109C32782;
+	Mon, 13 May 2024 15:53:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715615548;
-	bh=75oUXoThArbKO9d+Z2VBTAalA0tvT0Hl3rs3i7zDhpo=;
+	s=k20201202; t=1715615611;
+	bh=QSJ9adYiyENvXrlQE+wO4TcEhBc9/Ph17/BE6YNfe6U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q/ylobXwd7VbMVe5SZijuHybR9/viyvDmLqnsjPI5wKdNrwYWOV9ldFMfbYgMjSW3
-	 CT1ar1NzJbZmkRAtbn5WLVNOxJKSJWm9n4yiHl75DDaX0eCqrgOR4+Jx2bq9/up9Nf
-	 frU78yhv9D+8CZwH8XqhNZcObRSxLJxqY096ijIm+pQ/SOaGG9xYrG8r1AYAjcl8Wk
-	 23yXpcQwUIuaYpr+1W0EzoxJbOSoQiDmgj1FAmXmpsJbPWjSXcPqb7glY1tevr3jHn
-	 hXMfdIP6cAEGP0zy8SpJyz5VoUIt+PlmlXmvhAB84ZEVOGBlQ4Al9k0s704R9UU3e1
-	 iAe6gIP0jxQqQ==
-Date: Mon, 13 May 2024 16:52:23 +0100
-From: Conor Dooley <conor@kernel.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: imx: Support i.MX91 IOMUXC
-Message-ID: <20240513-unmarked-lurk-70edc676de22@spud>
-References: <20240513-imx91-pinctrl-v1-0-c99a23c6843a@nxp.com>
- <20240513-imx91-pinctrl-v1-1-c99a23c6843a@nxp.com>
+	b=ieDlxfXpA9mxINnKrBrM2GCwrkLA9HNJPKbLm9C/lqpQFq0LO17JxHQ5uZA+KL6rT
+	 fJyNrr4u65gmS8FFm3lb5931uxXg2yS9xUTJoCWACUw6M/nAKyrIP8HaZmVGIvIaQ+
+	 bfOQZ2bKhDtjDd5XX23odoR30gx6gTCdsLQ3ZWzdH1SSBSKBM/fR7wTnddJ42JOgC+
+	 baHJi9lP2OF4w6InqIIQnayFq9bNTna2TackQajsyBnp0ql54m+U08BEocIAcTCzIX
+	 3c9N+3FvSE8SxUcuaUm0v3ONTToHAGatMO9OikwYDDGZhIaDGKNSwVOP+ZUQs1UGik
+	 E6oy83RDLePNg==
+Date: Mon, 13 May 2024 10:53:30 -0500
+From: Rob Herring <robh@kernel.org>
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: mturquette@baylibre.com, sboyd@kernel.org, p.zabel@pengutronix.de,
+	krzysztof.kozlowski+dt@linaro.org, tali.perry1@gmail.com,
+	joel@jms.id.au, venture@google.com, yuenn@google.com,
+	benjaminfair@google.com, openbmc@lists.ozlabs.org,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v24 4/4] dt-binding: clock: remove nuvoton npcm845-clk
+ bindings
+Message-ID: <20240513155330.GA2676859-robh@kernel.org>
+References: <20240509192411.2432066-1-tmaimon77@gmail.com>
+ <20240509192411.2432066-5-tmaimon77@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="IB6mHrhOGrSkI2CG"
-Content-Disposition: inline
-In-Reply-To: <20240513-imx91-pinctrl-v1-1-c99a23c6843a@nxp.com>
-
-
---IB6mHrhOGrSkI2CG
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240509192411.2432066-5-tmaimon77@gmail.com>
 
-On Mon, May 13, 2024 at 05:20:46PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
->=20
-> i.MX91 and i.MX93 share similar design. They could share same dt-binding
-> doc, so rename fsl,imx93-pinctrl.yaml to fsl,imx9-pinctrl.yaml and add
-> i.MX91 compatible string
->=20
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+On Thu, May 09, 2024 at 10:24:11PM +0300, Tomer Maimon wrote:
+> Remove nuvoton,npcm845-clk binding since the NPCM8xx clock driver
+> using the auxiliary device framework and not the device tree framework.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Again, this is an ABI break. Changing driver architecture for 1 OS is 
+not a reason to change DT.
 
-Cheers,
-Conor.
-
---IB6mHrhOGrSkI2CG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZkI3NwAKCRB4tDGHoIJi
-0pgzAQD3d1IeZ8b0wLTFJJ95fjJ2Q609ddPtd03Luv1hdENw4AEAsk0RA/+UlonM
-ssqf2EyqMRFAysuP6wxT2tTHB0c1RAY=
-=hAAr
------END PGP SIGNATURE-----
-
---IB6mHrhOGrSkI2CG--
+Rob
