@@ -1,152 +1,253 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from phobos.denx.de (phobos.denx.de [85.214.62.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E658A2B9D9
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 23:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D5F84D07;
+	Mon, 13 May 2024 23:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.62.61
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715642057; cv=none; b=kWmft7udRKaiqfumHSwQXLM47QqOn9yAJD0TXeEiFv8od56obrY3sfXjdt1WUa9BrT02Mdt9lsnTfEn5FfQH7tAPqgFmeVay8oH7gMFT/FqTRo4XnMn2r1kn99UbN8KmLgBDJ3bBd858CM8rxE2YpVEVZcilFHd3zXdo9fXsonI=
+	t=1715642139; cv=none; b=fty4U/JMuryfcDUbvTHSb12YY43EbZ12hP0oDk7hgTK9zi4J5SnhIq0jMVCK4qshZ8Rf/WFGR8kQvOFK6CbWlvzi5evD4+kgEn4ND1TI6TiGXaLRzbFmzS+MsIyCDPJOpBqmrG1x57gb/ic03BrMzDkBDPNPcL/Lmmanae1u9uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715642057; c=relaxed/simple;
-	bh=tx7E2f0GxPxvBaGc/bmN1M48jZl3m4a2E1TZi9bi+48=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lEYfnMZHEN7x7adDGzyxnHnRqc6mvOX7Fhuv9L8yvp/1630ocivEvdnCSQ2KYB8w8zwMfG2VdWeTeH3A1BQYH//B9N+1itnZdPrlqtAuui1Xa49jGy5tCOYg+cMAs8Srh/v9qlEUEI+VkFV4SHytCxyOQOPXQegNUmzqPovpDDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=RSyDMMCD; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715642139; c=relaxed/simple;
+	bh=loyZmoPtuDA5rMTG5lqXULUHGz/rf7HlgkI14OxieQA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A7jEYQaNb4Zwa9seJPtCqeI98gO1FO5gickNzBn/JCWFw5dXa1lDcoD4QdV1Nt1iw+qI+8lwJ/xJxG2b0yk2aq3rkekQn/uyxP596RuCVYz9q4D6mNaO1F0ZEq9yX6RkQmjn3kf7mz9GvXMRPUMzfShALpD1M+oGmxjPZFTWSO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=KDb1W5zf; arc=none smtp.client-ip=85.214.62.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RSyDMMCD"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1ed835f3c3cso43475405ad.3
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 16:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715642054; x=1716246854; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/UTWRBSAvd0X00gI81fMU/F+YZQ/Mige07NOxJW4aqM=;
-        b=RSyDMMCD5nJWAk1ycPhOdN252NggPYtW2tMN3j16n/mEn8sYJYeQGYo6Gi8KeJK6vI
-         oXlsVqAqf3r8UMInz41gQF1jUpCUCd6oCjaFh7C+CdJhNM/E4NaD2TICFllySo0MZXx3
-         8CtpH5/Uluv/nNPI8IwCkicH8LioC2/KPWJaE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715642054; x=1716246854;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/UTWRBSAvd0X00gI81fMU/F+YZQ/Mige07NOxJW4aqM=;
-        b=ImF8o84KrJQ0KXsL9TtDXAxhMxEuAJIBEmvbNGsj3mYINzqFVQ0Qm6KCEbPcWBSg3L
-         RjtNDSqPUdVt70QgboTmd6/jpGVHhA8+bNr4rYhw55y9KTPvKE2wvZVT5c/u1g9RNE3Y
-         kZAC9KeZHQWddfc4NXflqernpBSRb8+igaltmOAihGh4l58hAeEuIAaLiUNemz79hQQ9
-         vGGRZBMoTzjYadUPwG4wjFzfETP0SgxJh4PEnAUpi/EzlNgWic5pERMI0+7FBXLbF4Ke
-         5ZdYibIrYejiR3/vbTUFKMGQ0Kt5FulK3Py5qnHdTkMVxcUHYaWp9/mR8jXHZXD0fBhb
-         /0eA==
-X-Forwarded-Encrypted: i=1; AJvYcCX6v3/U3xugcUgqZfAFnmYt4Y+xJhdhj1uHp694tG69hllYWhgWo277tqrx8faxBry256Td4S+wLeBV8nYU+EKW/tmy8k8og6l7DvAN
-X-Gm-Message-State: AOJu0Yz5PHh8kW0gMX6/GlWixIubnmKEoIn9cDjyGQ3Uhuwg6Rr8ToES
-	6iw/+owgJ1ZT9sqHmwm22ArSXWDic0zcneTwHIVW/UOjN+PBw0pl1xlZjJf9gQ==
-X-Google-Smtp-Source: AGHT+IF8+sauERaqDzjL2bI/eirzDn0nfnNAe5M0xI+wO+jJKg/7dcYov0Rv8fpzNykL4ic967Yyvw==
-X-Received: by 2002:a17:903:1207:b0:1e7:b6f4:2d75 with SMTP id d9443c01a7336-1ef43d16e9amr162929375ad.6.1715642054153;
-        Mon, 13 May 2024 16:14:14 -0700 (PDT)
-Received: from dianders.sjc.corp.google.com ([2620:15c:9d:2:1165:227d:25c3:aee6])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0c160c63sm84391945ad.282.2024.05.13.16.14.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 16:14:13 -0700 (PDT)
-From: Douglas Anderson <dianders@chromium.org>
-To: Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>
-Cc: Stephen Boyd <swboyd@chromium.org>,
-	Douglas Anderson <dianders@chromium.org>,
-	Chen Lin <chen45464546@163.com>,
-	iommu@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] iommu/arm-smmu: Don't disable next-page prefetcher on devices it works on
-Date: Mon, 13 May 2024 16:13:47 -0700
-Message-ID: <20240513161343.1.I5db5530070a1335e6cc3c55e056c2a84b1031308@changeid>
-X-Mailer: git-send-email 2.45.0.rc1.225.g2a3ae87e7f-goog
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="KDb1W5zf"
+Received: from [127.0.0.1] (p578adb1c.dip0.t-ipconnect.de [87.138.219.28])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits))
+	(No client certificate requested)
+	(Authenticated sender: marex@denx.de)
+	by phobos.denx.de (Postfix) with ESMTPSA id AE06A87C75;
+	Tue, 14 May 2024 01:15:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de;
+	s=phobos-20191101; t=1715642135;
+	bh=y94VBu3rZqXoPf5qJmghmwP/Qu0OecNomu4N18OPJk8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KDb1W5zfmoUzuqSNQmrm2kabFQTBN/gm1zuaeWYez5y7rFnL1dy6ic3sgUfoasrKc
+	 8TgdCpee1r/OJis2LcSjW34EIsKO9z1Zwy3Ydhcs0Z57pJZWqRrhp3Bt5xvlOZOjuS
+	 URdcvQ0pnhBVgsaSDE/WxfO4501H3T1IfT7pLNZPRabvHYdospTWpEHzDxaYGJqagG
+	 hMag83m+X0lzF89Q8mqru018k0xEvdOaxCulH69/72NQAx4Q/12NCgVs36jmld4YY0
+	 J2fVqAmI068QXmNd0DdlW05QcOME83EsHYZ3qy+Gy4fLP9gAOY64dOHoSiXIKe+vDh
+	 ah4FSmqSe7aeA==
+Message-ID: <2d213010-7aae-4f5a-8332-54d7e69b862c@denx.de>
+Date: Tue, 14 May 2024 00:33:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 05/11] net: stmmac: dwmac-stm32: update config
+ management for phy wo cristal
+To: Christophe ROULLIER <christophe.roullier@foss.st.com>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Richard Cochran <richardcochran@gmail.com>, Jose Abreu
+ <joabreu@synopsys.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20240426125707.585269-1-christophe.roullier@foss.st.com>
+ <20240426125707.585269-6-christophe.roullier@foss.st.com>
+ <b790f34e-8bfb-44f6-869d-798508008483@denx.de>
+ <3137049f-eac8-4522-ad2e-b2b0d3537239@foss.st.com>
+Content-Language: en-US
+From: Marek Vasut <marex@denx.de>
+In-Reply-To: <3137049f-eac8-4522-ad2e-b2b0d3537239@foss.st.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Virus-Scanned: clamav-milter 0.103.8 at phobos.denx.de
+X-Virus-Status: Clean
 
-On sc7180 trogdor devices we get a scary warning at bootup:
-  arm-smmu 15000000.iommu:
-  Failed to disable prefetcher [errata #841119 and #826419], check ACR.CACHE_LOCK
+On 5/13/24 5:11 PM, Christophe ROULLIER wrote:
+> 
+> On 4/26/24 17:37, Marek Vasut wrote:
+>> On 4/26/24 2:57 PM, Christophe Roullier wrote:
+>>> Some cleaning because some Ethernet PHY configs do not need to add
+>>> st,ext-phyclk property.
+>>> Change print info message "No phy clock provided" only when debug.
+>>>
+>>> Signed-off-by: Christophe Roullier <christophe.roullier@foss.st.com>
+>>> ---
+>>>   .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 27 ++++++++++---------
+>>>   1 file changed, 14 insertions(+), 13 deletions(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c 
+>>> b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+>>> index 7529a8d15492..e648c4e790a7 100644
+>>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+>>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+>>> @@ -55,17 +55,17 @@
+>>>    *|         |        |      25MHz    |        50MHz 
+>>> |                  |
+>>>    * 
+>>> ---------------------------------------------------------------------------
+>>>    *|  MII    |     -   |     eth-ck    |          n/a | n/a        |
+>>> - *|         |        | st,ext-phyclk | |             |
+>>> + *|         |        |                 | |             |
+>>>    * 
+>>> ---------------------------------------------------------------------------
+>>>    *|  GMII   |     -   |     eth-ck    |          n/a | n/a        |
+>>> - *|         |        | st,ext-phyclk | |             |
+>>> + *|         |        |               | |             |
+>>>    * 
+>>> ---------------------------------------------------------------------------
+>>>    *| RGMII   |     -   |     eth-ck    |          n/a | eth-ck      |
+>>> - *|         |        | st,ext-phyclk |                    | 
+>>> st,eth-clk-sel or|
+>>> + *|         |        |               |                    | 
+>>> st,eth-clk-sel or|
+>>>    *|         |        |               |                    | 
+>>> st,ext-phyclk    |
+>>>    * 
+>>> ---------------------------------------------------------------------------
+>>>    *| RMII    |     -   |     eth-ck    |        eth-ck | n/a        |
+>>> - *|         |        | st,ext-phyclk | st,eth-ref-clk-sel 
+>>> |             |
+>>> + *|         |        |               | st,eth-ref-clk-sel 
+>>> |             |
+>>>    *|         |        |               | or st,ext-phyclk 
+>>> |             |
+>>>    * 
+>>> ---------------------------------------------------------------------------
+>>>    *
+>>> @@ -174,23 +174,22 @@ static int stm32mp1_set_mode(struct 
+>>> plat_stmmacenet_data *plat_dat)
+>>>       dwmac->enable_eth_ck = false;
+>>>       switch (plat_dat->mac_interface) {
+>>>       case PHY_INTERFACE_MODE_MII:
+>>> -        if (clk_rate == ETH_CK_F_25M && dwmac->ext_phyclk)
+>>> +        if (clk_rate == ETH_CK_F_25M)
+>>
+>> I see two problems here.
+>>
+>> First, according to the table above, in MII mode, clk_rate cannot be 
+>> anything else but 25 MHz, so the (clk_rate == ETH_CK_F_25M) condition 
+>> is always true. Why not drop that condition ?
+> Not agree, there is also "Normal" case MII (MII with quartz/cristal) 
+> (first column in the table above), so need to keep this test to check 
+> clk_rate 25MHz.
 
-We spent some time trying to figure out how we were going to fix these
-errata and whether we needed to do a firmware update. Upon closer
-inspection, however, we realized that the errata don't apply to us.
-Specifically, the errata document says that for these errata:
-* Found in: r0p0
-* Fixed in: r2p2
+What other rate is supported in the MII mode ? Isn't the rate always 25 
+MHz for MII , no matter whether it is generated by RCC or external Xtal ?
 
-...and trogdor devices appear to be running r2p4. That means that they
-are unaffected despite the scary warning.
+>> The "dwmac->ext_phyclk" means "Ethernet PHY have no crystal", which 
+>> means the clock are provided by the STM32 RCC clock IP instead, which 
+>> means if the dwmac->ext_phyclk is true, dwmac->enable_eth_ck should be 
+>> set to true, because dwmac->enable_eth_ck controls the enablement of 
+>> these STM32 clock IP generated clock.
+> Right
+>>
+>> Second, as far as I understand it, there is no way to operate this IP 
+>> with external clock in MII mode, so this section should always be only:
+>>
+>> dwmac->enable_eth_ck = true;
+> Not for case "Normal" MII :-)
 
-The issue is that the kernel unconditionally tries to disable the
-prefetcher even on unaffected devices and then warns when it's unable
-to.
+What happens if that external clock source is not an xtal, but an 
+oscillator with its own driver described in DT, and enabled e.g. using 
+GPIO (that's compatible "gpio-gate-clock" for that oscillator) . Then 
+you do need to enable those clock even in the "normal" (with external 
+clock source instead of RCC clock source) MII case.
 
-Let's change the kernel to only disable the prefetcher on affected
-devices, which will get rid of the scary warning on devices that are
-unaffected. As per the comment the prefetcher is
-"not-particularly-beneficial" but it shouldn't hurt to leave it on for
-devices where it doesn't cause problems.
+>>>               dwmac->enable_eth_ck = true;
+>>>           val = dwmac->ops->pmcsetr.eth1_selmii;
+>>>           pr_debug("SYSCFG init : PHY_INTERFACE_MODE_MII\n");
+>>>           break;
+>>>       case PHY_INTERFACE_MODE_GMII:
+>>>           val = SYSCFG_PMCR_ETH_SEL_GMII;
+>>> -        if (clk_rate == ETH_CK_F_25M &&
+>>> -            (dwmac->eth_clk_sel_reg || dwmac->ext_phyclk)) {
+>>> +        if (clk_rate == ETH_CK_F_25M)
+>>>               dwmac->enable_eth_ck = true;
+>>> -            val |= dwmac->ops->pmcsetr.eth1_clk_sel;
+>>> -        }
+>>>           pr_debug("SYSCFG init : PHY_INTERFACE_MODE_GMII\n");
+>>>           break;
+>>>       case PHY_INTERFACE_MODE_RMII:
+>>>           val = dwmac->ops->pmcsetr.eth1_sel_rmii | 
+>>> dwmac->ops->pmcsetr.eth2_sel_rmii;
+>>> -        if ((clk_rate == ETH_CK_F_25M || clk_rate == ETH_CK_F_50M) &&
+>>> +        if (clk_rate == ETH_CK_F_25M)
+>>> +            dwmac->enable_eth_ck = true;
+>>> +        if (clk_rate == ETH_CK_F_50M &&
+>>>               (dwmac->eth_ref_clk_sel_reg || dwmac->ext_phyclk)) {
+>>
+>> This doesn't seem to be equivalent change to the previous code . Here, 
+>> if the clock frequency is 25 MHz, the clock are unconditionally 
+>> enabled. Before, the code enabled the clock only if clock frequency 
+>> was 25 MHz AND one of the "dwmac->eth_ref_clk_sel_reg" or 
+>> "dwmac->ext_phyclk" was set (i.e. clock provided by SoC RCC clock IP).
+> 
+> You are right, but in STM32MP15/MP13 reference manual it is write that 
+> we need to update SYSCFG (SYSCFG_PMCSETR) register only in "Ethernet 
+> 50MHz RMII clock selection":
+> 
+> Bit 17 ETH_REF_CLK_SEL: Ethernet 50MHz RMII clock selection.
+> 
+>      Set by software.
+> 
+>        0: Writing '0' has no effect, reading '0' means External clock is 
+> used. Need selection of AFMux. Could be used with all PHY
+> 
+>        1: Writing '1' set this bit, reading '1' means Internal clock 
+> ETH_CLK1 from RCC is used regardless AFMux. Could be used only with RMII 
+> PHY
 
-Fixes: f87f6e5b4539 ("iommu/arm-smmu: Warn once when the perfetcher errata patch fails to apply")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
+Look at this:
+"
+RM0436 Rev 6 Reset and clock control (RCC)
+Clock distribution for Ethernet (ETH)
+Figure 83. Peripheral clock distribution for Ethernet
+Page 575
+"
+See the mux at bottom left side in the PKCS group.
 
- drivers/iommu/arm/arm-smmu/arm-smmu-impl.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+I suspect that no matter whether the clock are 25 MHz or 50 MHz, they 
+enter this mux, the mux selects the clock source from either RCC or from 
+external oscillator, and therefore the original code was correct.
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
-index 9dc772f2cbb2..d9b38b0db0d4 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu-impl.c
-@@ -109,7 +109,7 @@ static struct arm_smmu_device *cavium_smmu_impl_init(struct arm_smmu_device *smm
- 
- int arm_mmu500_reset(struct arm_smmu_device *smmu)
- {
--	u32 reg, major;
-+	u32 reg, major, minor;
- 	int i;
- 	/*
- 	 * On MMU-500 r2p0 onwards we need to clear ACR.CACHE_LOCK before
-@@ -118,6 +118,7 @@ int arm_mmu500_reset(struct arm_smmu_device *smmu)
- 	 */
- 	reg = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_ID7);
- 	major = FIELD_GET(ARM_SMMU_ID7_MAJOR, reg);
-+	minor = FIELD_GET(ARM_SMMU_ID7_MINOR, reg);
- 	reg = arm_smmu_gr0_read(smmu, ARM_SMMU_GR0_sACR);
- 	if (major >= 2)
- 		reg &= ~ARM_MMU500_ACR_CACHE_LOCK;
-@@ -131,14 +132,18 @@ int arm_mmu500_reset(struct arm_smmu_device *smmu)
- 	/*
- 	 * Disable MMU-500's not-particularly-beneficial next-page
- 	 * prefetcher for the sake of errata #841119 and #826419.
-+	 * These errata only affect r0p0 through r2p1 (fixed in r2p2).
- 	 */
--	for (i = 0; i < smmu->num_context_banks; ++i) {
--		reg = arm_smmu_cb_read(smmu, i, ARM_SMMU_CB_ACTLR);
--		reg &= ~ARM_MMU500_ACTLR_CPRE;
--		arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_ACTLR, reg);
--		reg = arm_smmu_cb_read(smmu, i, ARM_SMMU_CB_ACTLR);
--		if (reg & ARM_MMU500_ACTLR_CPRE)
--			dev_warn_once(smmu->dev, "Failed to disable prefetcher [errata #841119 and #826419], check ACR.CACHE_LOCK\n");
-+	if (major < 2 || (major == 2 && minor < 2)) {
-+		for (i = 0; i < smmu->num_context_banks; ++i) {
-+			reg = arm_smmu_cb_read(smmu, i, ARM_SMMU_CB_ACTLR);
-+			reg &= ~ARM_MMU500_ACTLR_CPRE;
-+			arm_smmu_cb_write(smmu, i, ARM_SMMU_CB_ACTLR, reg);
-+			reg = arm_smmu_cb_read(smmu, i, ARM_SMMU_CB_ACTLR);
-+			if (reg & ARM_MMU500_ACTLR_CPRE)
-+				dev_warn_once(smmu->dev,
-+					      "Failed to disable prefetcher [errata #841119 and #826419], check ACR.CACHE_LOCK\n");
-+		}
- 	}
- 
- 	return 0;
--- 
-2.45.0.rc1.225.g2a3ae87e7f-goog
+>> I think it might make this code easier if you drop all of the 
+>> frequency test conditionals, which aren't really all that useful, and 
+>> only enable the clock if either dwmac->ext_phyclk / 
+>> dwmac->eth_clk_sel_reg / dwmac->eth_ref_clk_sel_reg is set , because 
+>> effectively what this entire convoluted code is implementing is "if 
+>> (clock supplied by clock IP i.e. RCC) enable the clock()" *, right ?
+>>
+>> * And it is also toggling the right clock mux bit in PMCSETR.
+>>
+>> So, for MII this would be plain:
+>> dwmac->enable_eth_ck = true;
+>>
+>> For GMII/RGMII this would be:
+>> if (dwmac->ext_phyclk || dwmac->eth_clk_sel_reg)
+>>   dwmac->enable_eth_ck = true;
+>>
+>> For RMII this would be:
+>> if (dwmac->ext_phyclk || dwmac->eth_ref_clk_sel_reg)
+>>   dwmac->enable_eth_ck = true;
+>>
+>> Maybe the clock frequency validation can be retained, but done 
+>> separately?
+> As explained previously, need to keep check of clock frequency in this 
+> test.
 
+I sent 5 patches which split this code up, you were on CC:
+
+[net-next,RFC,PATCH 1/5] net: stmmac: dwmac-stm32: Separate out external 
+clock rate validation
+
+Maybe you can apply those, fix them up as needed, and then add this 
+series on top ? I think it would simplify this code a lot, since that 
+series splits up the clock rate validation / PMCR configuration / 
+external-internal clock selection into separate steps. What do you think ?
