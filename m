@@ -1,194 +1,195 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (mail-ve1eur01on2072.outbound.protection.outlook.com [40.107.14.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4467B1487EC
-	for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 09:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715591402; cv=none; b=Zhx4bMP22RXt1kazNjA8CMQWYhRp3TfG5yFmVXH/gmyj8uU51dcyZW9NoZuwpKOfgwEyLZ6KjAApXrZCssVV5atLpu4iqSevx1o2bA8Mr5pRzwPjIKiTNDMxfazm4R8lPkB+whTi7+9sJlt0OdqbiwSTqHExI75E1XmcKmFU1UE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715591402; c=relaxed/simple;
-	bh=MvnsIUTYIx86qi1UwqAPeXoIBqXgyya1HBN7fah5cvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a3XHgCaSZ4P/jWfrXbemLi1UAcdIm9M73t/lXVg7uJMGRZlZGCXwBlF7rkPf/1WJRs0nR79Tq7KVzW9ydTQOUxxYKXL9QMu5x0xRJMGeHq+MGxpTTmERV1gzq89Xg276O4tc8ofXmgX6OqOAR4qCoW5xBjnRwVsNqTR2PWZe0Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IBzkqIMn; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC9D11474A2;
+	Mon, 13 May 2024 09:12:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.14.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1715591579; cv=fail; b=UYF4ruU6hy6HzXMaml+Kzzv+3ppRUFauUzZMTu9fpNXF7cIPofS2gcxhXQQRNPM9/mL4Hm2lJA3p9ZWwkhTE0h28FduZXg3tM7XCC2ttjdRnc7St5DHtR6ECPiusM0vR2ooVD5MNdKt21t2Y0HrWESrk1fbULKO8EqHeJiHGf3g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1715591579; c=relaxed/simple;
+	bh=/Z76iyOQ1wIo8j9RKuLIbGGQezgHmTwO+JZ8P+lAPrQ=;
+	h=From:Subject:Date:Message-Id:Content-Type:To:Cc:MIME-Version; b=MPe10yJkFwoRMy6CM6oQYP4Pp0KJrL6QtIFqVZ/gqO28fSfYPgLV46mgDbzLPUkrCZL30SsLs3sSmmz7J8Vyt9jSdgzYfxYv5dADYnneSoCjG+RWx2m5PuXzdSQAW62TgsZSxutjvEy+yjSUEf8gA+huLQjuph5tkq8dO9SEyTk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=MIWsUMdr; arc=fail smtp.client-ip=40.107.14.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IBzkqIMn"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a5a2c05006aso358864066b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 13 May 2024 02:09:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715591398; x=1716196198; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ne5ALsr+uIXtyKGw+qnsLVKR96q7nxmFYmWh1as35WM=;
-        b=IBzkqIMnYqqFlZhlNh/MbsfN7tmIop8r2c5ZB2fqQFhMWIkEedI/wU2onzGHvZv4zN
-         UCX6q6wyPlo+XREoYhBhAfTIBYvZRzlNzazeOWvtg7gTWHgxM99+78SG1W/1iRTGL2pv
-         4V5np1FjdfT8KxeaAQjfVqhtKMQ8mDsYvbMc8Gt/t7ImZ0Qlf6Q3+1w1l+7rANEuHFyV
-         BzrIF2bi07IkmzMiX+OXlHnHllrdsRmyeui8v1Vm0Xmw+q+bS0oMwbN6nLP65ryor0oJ
-         VCfzYtquTbv4emXc0cq4TASiKoGCkDDuueH0n8XN2aORBcgbD0WbFSk0TaoSyo+HKpWl
-         bZWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715591398; x=1716196198;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ne5ALsr+uIXtyKGw+qnsLVKR96q7nxmFYmWh1as35WM=;
-        b=C2payEZQe/1wx/73u/6XNOqTTarwMOvwnAkLedCjRMkn0Ig7Z3EHPytNO1XG8dYgcr
-         Y5KySPUp1mSV+y3ixFcAFzlE+iN3VDrHmoQmQ9bbMYHQRf3FHHoynwqTS7WEcxcFs8Bu
-         HWGQZ7X/9zAWTbizuAXZIpgC6L3/jFX0k3yD/Hhar27mH6kybhwcViAOqwH0uiMKjMlx
-         NvXv1g3QPdaQB+AQ9Z6Bp0v9ZH6HowbzRghmu/MRCFh+YEIB9PrWfpPPUhIPVHj5yW50
-         KP80Dwo7xlIaswj7OYKCOuZIkrU5vaufaDK1bnRLJWc8tbAX5typkuWuOTTpDyhoRUkp
-         hBbA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/oHxJ6tMGWuB7b44aAEODPP41Zh2K1HXprYRGpGd7fFDgCAQI2an6YxNnewmFh1yFxLIyKbOeWBvovqkoyzF9QHf2AKTJZ1QTv2gm
-X-Gm-Message-State: AOJu0YxT4N7SG2nkmwX7uEwgl8GmuX/7ZENKfHm0q74buraAslcHBLR9
-	2ESG1Evhz/fwUh/vsOWPrBHC7KNbEawxbdOLxen2iO+eAdZ8PVeo
-X-Google-Smtp-Source: AGHT+IEjOZ30dgyV61if7skQEOVCWbrcvqK0pBdeCDB/c+X4WYQVxS4/Vof5T7wUfhrK+J9UK2sHSw==
-X-Received: by 2002:a50:8e59:0:b0:56e:10d3:85e3 with SMTP id 4fb4d7f45d1cf-5734d5c0f52mr7725760a12.13.1715591397977;
-        Mon, 13 May 2024 02:09:57 -0700 (PDT)
-Received: from gmail.com (1F2EF402.unconfigured.pool.telekom.hu. [31.46.244.2])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5733bea6592sm5933661a12.2.2024.05.13.02.09.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 May 2024 02:09:57 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Mon, 13 May 2024 11:09:55 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Daniel Bristot de Oliveira <bristot@redhat.com>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: Re: [GIT PULL] Scheduler changes for v6.10
-Message-ID: <ZkHY42pybndB1K+J@gmail.com>
-References: <ZkG0nxxBPB/03Q/l@gmail.com>
- <CAKfTPtB01UKskH_a1h1LtjoRq6O3NnqQuuh1L50O-yHRLQm-iw@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="MIWsUMdr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cGHZw2pnQmXCwU3WunGp3s9/7WlF3JdkjPrigzH2b/t7bo1m7JQpSBPVsBpW2g0dd25ChPBhXHDTM41mSESo13iXbnu+tuPasVrO3TfH3B6I/XGVYHxkKA8rcGQ0VLY+uDYEtRug+bVJHz8WfEganYtFhlSoWL57hA5o+Y7tJiudxR2mfjnHOJndUecZ35S3BMfd2R8gjYZySlmE4Pq/a9KjqaHd4JS76xVF95yY/b0zoKa5G3YzLHMdyL//pVBJ1h5eAI3acq2N9WFxmRMr3nkyHzYYWI+EXRVCsQpvvVe83/zxpuiMzaXBfAx7eiO/MhZ0TknNg+CyYC/cTFmZWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eQWJ3j11npIVkxd0lTNpftF0OmycudbkET0FkNKcUC4=;
+ b=T2+6fpUMLBLibygupfbFub11Xgi/V5N8Sg/X9R9DvpmGBNNqfTDVwtSRY5LpMXZC0VmbAjoRndDxCCpT62IagXmvW+94XQlFqR52dpUunFMFtBT7FOjpT6ZrnERkV45bfuUEIuj0Pe57R0exKfVGrr8RhBNC/j8j4S5J3TwqVOwniWbKUguVtrq21Ck4fjpQQ3OswRUf7OIwgVFiSZynUHpZfYr3VQar6+ZG1/6uFPnVBkVjVByjeEwZ+80JAXfVcdPW69zCOOrff42pNzzfG3DkFPNbUq6Bmkhe2m6PN4TBO7u7h40g96lBSt1a3ny7TFm670A0mnkgaX5dXtyyHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eQWJ3j11npIVkxd0lTNpftF0OmycudbkET0FkNKcUC4=;
+ b=MIWsUMdr7WKNhdGnoAaRb4H0KbXPPbwep5rdVWuhK7CD2pOF0y2xHuJZGtCL6tgv2cWyYIa/11fouzPvosYdW21QckNjiSFwcPz+Lx9BHdtRU+UfsA0zDPSXwLyFLWFzglKDqgaf/9WGLJ91qrrT4yN8ALCCcAonU0nIBKHU/Zo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by PAXPR04MB8910.eurprd04.prod.outlook.com (2603:10a6:102:20d::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7544.55; Mon, 13 May
+ 2024 09:12:53 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7544.052; Mon, 13 May 2024
+ 09:12:53 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Subject: [PATCH 0/2] pinctrl: freescale: support i.MX91 pinctrl
+Date: Mon, 13 May 2024 17:20:45 +0800
+Message-Id: <20240513-imx91-pinctrl-v1-0-c99a23c6843a@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAG3bQWYC/x3MQQqAIBBA0avErBNUNKirRIvSsQbKRCME8e5Jy
+ 7f4v0DCSJhg6gpEfCnR7RtE34E5Vr8jI9sMkkvFteCMrjwKFsibJ57MuAG1Quu03qA1IaKj/P/
+ mpdYPC7JrDl8AAAA=
+To: Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+ Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1715592058; l=793;
+ i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
+ bh=/Z76iyOQ1wIo8j9RKuLIbGGQezgHmTwO+JZ8P+lAPrQ=;
+ b=omOTFEjmX9wy5Lr8zmV5fFDOKcmqSA9U4Yff3RMpQA/+lbOI8y3rOUhFnQI4SMzi0+z5YhAyo
+ WPMhHAosXwUDlx2nTRU1Xb9HstUcGDCH0jMCOHUdoFmX1BbfmnAl/YU
+X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
+ pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
+X-ClientProxiedBy: SGXP274CA0001.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::13)
+ To DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKfTPtB01UKskH_a1h1LtjoRq6O3NnqQuuh1L50O-yHRLQm-iw@mail.gmail.com>
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|PAXPR04MB8910:EE_
+X-MS-Office365-Filtering-Correlation-Id: e555a884-b381-4cbc-475d-08dc732cde75
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230031|376005|7416005|52116005|1800799015|366007|921011|38350700005;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?QWRnc2Q1dmRBbVhFaGREQzY5ZVNOZWlwL0J6OTBVays1emQ2NUM2UkhZWXZO?=
+ =?utf-8?B?QW9MV0x3VFpLY3JaTUd4dFhGY3I2ZzJ2b1RhVnd3dXRJTDVKQ1RIV2ExZ3lY?=
+ =?utf-8?B?NXArL1dNdXRJSjlkLzVMWlM1TVZGS3lYVHVVM3ZWYjJjenByaW9zYmlmT2ZH?=
+ =?utf-8?B?am01OHR0TlhYSk4vdVBVTTVuSnRqVk5KK0dybEh0akJLTkdQMnVQdDdpMnQ0?=
+ =?utf-8?B?bXVaeFcvVXltUC9zYy9KcEFkcTJSRE9OMUovL0U0NDd1Y1BuT1hiU042WFU4?=
+ =?utf-8?B?eVM3MHE0S291T09hTm5YWnhiajZxWFRPQ20wT0RRbkY1Nm1xVFprc1lTN3JW?=
+ =?utf-8?B?RXJYb2IxRVArdDMxMGZJbTg1dmxBSitJL0NkVlpmUStZK3ZLV0NsYWFkOHVD?=
+ =?utf-8?B?ZTVscXorVXF0YW1ra2p0KzRabU9LMC9GZ01GbHBQQ0NOMElLOFEwUnIwWnNY?=
+ =?utf-8?B?TWRmckt1QXJnQjFibGFicXFHNEN0Z1cvT2VVZThnZHA4aG81YThNSCtScEl3?=
+ =?utf-8?B?cUlpTmtURHBiRlJ6aml1Sks2RGRaMVVJTkNFWXFXbFBmT0lGSVFtY1BkSW9m?=
+ =?utf-8?B?UWhjMlFPYURDTnBlV01sZ0hnSFZBYjF5WWI2WUczN0VnTXFoTWxtcEh2c3Nu?=
+ =?utf-8?B?MVNVd21UeEd1TWtFcjBXVk9mb0ZBenNRN1pUTTNJNVNtUGg1MkIvV3VJVGNW?=
+ =?utf-8?B?endoZjVoTWFKT3ZZNmRZRWdzQmlsUkRWQlh2UzB3QXpSVFd3cnlOUmh1SHgw?=
+ =?utf-8?B?a0greUVqTHZTZ282RVNQdi9hS2NWTmViTU5YN2hUT2RLWjBCVjIvdkFwaDM1?=
+ =?utf-8?B?eUhWd2NueFlVRHI2TDBycGN2UmVFcXNVVWNVa0k0Ym9UY0RvNlVxUzhweVha?=
+ =?utf-8?B?L3piODA3U0FPN3ptQnN6ejUwekFqWVBubWhnMTg5cEs4NFM1N1Bqd3cyaVl1?=
+ =?utf-8?B?RlVBa3JWeDVGZldQSm03RU5WQWhPQXJQS2FvNDhMTnRBMjJ6cndackcrMkNC?=
+ =?utf-8?B?TzFFQXRnV1I2RlBCekpsUlFuS29tb1I5NWMwUVI0eC81OWtZTnI4TENKMVBC?=
+ =?utf-8?B?dkJQWFd0R1dkMCtjOFVpb05hN0ZsMEVOYStDL3lwT3d6NjlGTTEvQkxSMWkx?=
+ =?utf-8?B?YUJLa1lwRHZEUHVFS1ZDZzdkUklCOElJZlR3ZXgvbm0rNWxKT2ZLWVRZMUxz?=
+ =?utf-8?B?ZUpoeUtRSUNzVnhJZ21zTmVBRXphSUsxVjFCdm04RUZTVS9Ud1NxUUJNR25L?=
+ =?utf-8?B?OHNnNi9uTk8zcVJ6b1J1RmVrU0hJdGRPQnI1bXIvVy9vaXBwUjdBK1ZTR3B4?=
+ =?utf-8?B?RXJNVTNzTXM4U2lMMkdoT0JKYSswM2hOa3RxNXdSdHFhazdzYkZaYjQ2Q3NY?=
+ =?utf-8?B?VUdCVldiS2xPS2NrSE5pSHdwMjVOZjVrV1FYRkY4Q3RFOEJWWWNYTnRrc0px?=
+ =?utf-8?B?TGdBa1RuSnRMZ2tHNURUUFFIT3VzTXhpRTRxZHJVOVJRQ2JrWEN1M1ZRQkFX?=
+ =?utf-8?B?RE9KZFdoK1hWcWJSR25OZmx6MCtCaEJWb2FUbkNuQ2JtY083bUxSQnhwaUx0?=
+ =?utf-8?B?L3B2QWs2VlJPM3FmZVJ4S0JsemZIT3BnQmRPaWhRbXRGMlYrbGMrVGZkL0Z0?=
+ =?utf-8?B?V1BvWktsMWtBcnRYNlFVTElmcmhYREFqZGtoVUVCc2hyNU5iejZxUUhoQTJa?=
+ =?utf-8?B?bGY0OEhmKzlIMVFnVWFLeHFUUHZvM01yMmxybWMxUFlPbTV4WitIWDhRbjNS?=
+ =?utf-8?B?cUtZWkJpT0ZES0IxZm5qVUJiVi9nNTZtazNJTE5pY0ZQM3pDRjBZcnc0SEcy?=
+ =?utf-8?B?cGU0eTAwNnMvS3ZCN3ZlUT09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(7416005)(52116005)(1800799015)(366007)(921011)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?Zmw3d3p4VE1qaTFwZmRWRWxvRDkweXk0ZEN3RnpiTlBuei8ycm9hWDlzRHh0?=
+ =?utf-8?B?TGh5T1lEMEh5ajd0WEc5bXlsb1VQb01ZOGZkWGlwMWx1NnF4cWhPVXBacHYy?=
+ =?utf-8?B?MHdhYkp3WlFUQTlqYnA3VGtXTGQxLzJnVTZibDUzR2phQmxWN082bWphRVRX?=
+ =?utf-8?B?Q2ZVOUZNL2NlZkJDZmlOSGZ3V3pYbFltMFZXS25DNjVWUGtBdWNPNmlTMDl4?=
+ =?utf-8?B?bDRkUVZZUXBKVkwzYjNFTVBTeEt6VHZhOXFja01McDMxRG11V3IxS2wzclNX?=
+ =?utf-8?B?aURjbmR2cFkvRFFTVzFtWllTR25COG51QSt0WnJCcS94ZjdSdVErTmVwdDVp?=
+ =?utf-8?B?NUM0eFluSUUyamJVV1VYam9JN1lacGM4cXptTktySXNnRUVBSjVrSGd3VzIw?=
+ =?utf-8?B?UWVZVm45eXF5cW1PSnpaMFJUTXkvMzJFaERoUmpYQytzZTEzWGM4WnV3ejhD?=
+ =?utf-8?B?azFiejlWdndQYWhjYWV6ZkFncHROSGhHZ2g1RFcrREEwcGs4enNQYXozdGlh?=
+ =?utf-8?B?TTd1QWlvVlluckRwKy9jak5Nbkx3RDhCUVFhNWx6UGlrTUkyL3dCZEptc29i?=
+ =?utf-8?B?N2RnTnlHblVvc2trNjdaRmlkQkZpS3ErOWJPRUZncHM3eE43WkIyMXdmWlRy?=
+ =?utf-8?B?UmR3UzRJZXBtK2YvOURVMlp5dnBZUktrd0FPZnh6QUw5TFRpZ1FQTEVlRFVu?=
+ =?utf-8?B?THcyU3FFdzVQRGFkT3ZZdlc0WjFSbHJXNm5wT0lCcm5oVWIxNml5MElrNTVP?=
+ =?utf-8?B?SExvcXphaStOaXR6SkVOQ3lDMU15WkdUVHN3ZVZEY1UyYjhzRUZwb0dScmhW?=
+ =?utf-8?B?UW5kRk8yTnk4VndzeGpPZzNLUFhxRWtjNlQ4Nzk4VWVEMVBWZkptS3pWV0xx?=
+ =?utf-8?B?TEVodWVWekJFS012V0RSOStJYUlMV0dlY0JsVEhHNE1GeE9kSEhhR0lFeXc4?=
+ =?utf-8?B?VDdPc3hHak4rZXhmektDRmFKSjBYZDBheTlQNVJEMDNoV0l5Vkp5SnU2SW9w?=
+ =?utf-8?B?aWRnalJXYmJQMWpEVXNZcW04UVI5eUQ2czdGZHFGdTVrR1d5d2dvNk5WMmZt?=
+ =?utf-8?B?bm9SZmg4RjhCczh1QTNPazhkdGJ2aThMb1Z5TkVRTDVMOVhqN3h3T0RhUTl0?=
+ =?utf-8?B?VElRK3dzczhvRFBNcjBaQnFOdzJDUzgwTDUwdWFIelVkZDgvWDZiMTlYQWd4?=
+ =?utf-8?B?TUpaRTdvV1hBdVN0NmRwYnR0OG9IRjA3NFFhUnppVTNJMXNXVTFEbXV5TkRJ?=
+ =?utf-8?B?aTVaVE80UnBpZ0czTTVuUXVkWkVJRjU4aGV4V0pnWDFZNjFNTFFHQWtRend5?=
+ =?utf-8?B?cXFLZHZJMERpM2pBZ1BQU0UveUN2ekhWMU9CcFZESitFU1NjNXhsSVJaRFZu?=
+ =?utf-8?B?cnhWbCtQbDIvc1U3bEtmcnBoUkIwSmtSaUZobUNTd3dLc1MzNjQyZkcweTQx?=
+ =?utf-8?B?amI1Zk1xUkU1bTA1Z0owODF6U3NLdDhCQ1dXVEtGdjh4ay93SE9QTGZPYml0?=
+ =?utf-8?B?ZEFyRmNnTWJ6ZVZ5Rk5LUUtTZEZMcDcwSkZVb0ZpNEdWUUd5R29aWDNYYmVv?=
+ =?utf-8?B?MmRlY0FrUlpqWjJ3QTB5OEVraTVmUmNPaEdHcDNQVlpCTVBTZllMMFN6bVNR?=
+ =?utf-8?B?bXVBdWNqcEYrRVVHSmxCd2FObzR1RkdFWms0aEcyQ25qclFtUCtFbkRRTkRR?=
+ =?utf-8?B?YkJqeEZJVldoTGkvc3I3QVBhd2NrZ3VJMWtucDhZLzdkVnlSSXdKczcycUtT?=
+ =?utf-8?B?aDZVR1FuaXJWRCszRTJNTkNkcURZTHNNLzZIeDBxL2x3Q0ZGU20xSnNMNHk4?=
+ =?utf-8?B?SkdhQnhxaDAzZGZPTTlyWHZDNjJiWWFQWHVuYkxBQ1JaOW02L0dUY3B3SFgr?=
+ =?utf-8?B?Y09HcjJ6T1d3ajhIYkpJYldqS1FnTUszVEhZOTYrdU90dlpFQ0V5dGgzdHUv?=
+ =?utf-8?B?SGg2QzhxZzJOM09GTnVGckpCQVBhdWZqVDNpQ2FCMGhKTnJxai9taTcxcUZE?=
+ =?utf-8?B?ZlIxN092TklRT2lMaG94YURNeDk4SS8reWNVak5sM29HMjNXNlBnU0ZhZzBY?=
+ =?utf-8?B?elBkVWRucTI5ZEFDNEdYOGVhTzNCZFQ5SnFwVU42cEJudXVHaFJObUw3dkRR?=
+ =?utf-8?Q?1HUU4wFYWJnf4FanHeBobXVv3?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e555a884-b381-4cbc-475d-08dc732cde75
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 May 2024 09:12:53.0732
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: wBKJ4nHBmhq72hfzKzdVbXoYe3Ds4t2J4np9co3SjbhXuJp4hmuZwCO5XfIf0nhDPODRwWTP9YvYwTIENOoTog==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8910
 
+Add i.MX91 IOMUXC binding doc and driver.
+i.MX91 IOMUXC has similar design as i.MX93 IOMUXC, so reuse the
+i.MX93 binding.
 
-* Vincent Guittot <vincent.guittot@linaro.org> wrote:
+Cc: 
 
-> Hi Ingo,
-> 
-> On Mon, 13 May 2024 at 08:35, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> > Linus,
-> >
-> > Please pull the latest sched/core Git tree from:
-> >
-> >    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched-core-2024-05-13
-> >
-> >    # HEAD: 97450eb909658573dcacc1063b06d3d08642c0c1 sched/pelt: Remove shift of thermal clock
-> >
-> > Scheduler changes for v6.10:
-> >
-> >  - Add cpufreq pressure feedback for the scheduler
-> >
-> >  - Rework misfit load-balancing wrt. affinity restrictions
-> >
-> >  - Clean up and simplify the code around ::overutilized and
-> >    ::overload access.
-> >
-> >  - Simplify sched_balance_newidle()
-> >
-> >  - Bump SCHEDSTAT_VERSION to 16 due to a cleanup of CPU_MAX_IDLE_TYPES
-> >    handling that changed the output.
-> >
-> >  - Rework & clean up <asm/vtime.h> interactions wrt. arch_vtime_task_switch()
-> >
-> >  - Reorganize, clean up and unify most of the higher level
-> >    scheduler balancing function names around the sched_balance_*()
-> >    prefix.
-> >
-> >  - Simplify the balancing flag code (sched_balance_running)
-> >
-> >  - Miscellaneous cleanups & fixes
-> >
-> >  Thanks,
-> >
-> >         Ingo
-> >
-> > ------------------>
-> > Alexander Gordeev (5):
-> >       sched/vtime: Remove confusing arch_vtime_task_switch() declaration
-> >       sched/vtime: Get rid of generic vtime_task_switch() implementation
-> >       s390/vtime: Remove unused __ARCH_HAS_VTIME_TASK_SWITCH leftover
-> >       s390/irq,nmi: Include <asm/vtime.h> header directly
-> >       sched/vtime: Do not include <asm/vtime.h> header
-> >
-> > Ingo Molnar (28):
-> >       sched/balancing: Switch the 'DEFINE_SPINLOCK(balancing)' spinlock into an 'atomic_t sched_balance_running' flag
-> >       sched/balancing: Change 'enum cpu_idle_type' to have more natural definitions
-> >       sched/debug: Increase SCHEDSTAT_VERSION to 16
-> >       sched/debug: Allow CONFIG_SCHEDSTATS even on !KERNEL_DEBUG kernels
-> >       sched/balancing: Change comment formatting to not overlap Git conflict marker lines
-> >       sched/balancing: Fix comments (trying to) refer to NOHZ_BALANCE_KICK
-> >       sched/balancing: Update run_rebalance_domains() comments
-> >       sched/balancing: Vertically align the comments of 'struct sg_lb_stats' and 'struct sd_lb_stats'
-> >       sched/balancing: Update comments in 'struct sg_lb_stats' and 'struct sd_lb_stats'
-> >       sched/balancing: Rename run_rebalance_domains() => sched_balance_softirq()
-> >       sched/balancing: Rename scheduler_tick() => sched_tick()
-> >       sched/balancing: Rename trigger_load_balance() => sched_balance_trigger()
-> >       sched/balancing: Rename rebalance_domains() => sched_balance_domains()
-> >       sched/balancing: Rename load_balance() => sched_balance_rq()
-> >       sched/balancing: Rename find_busiest_queue() => sched_balance_find_src_rq()
-> >       sched/balancing: Rename find_busiest_group() => sched_balance_find_src_group()
-> >       sched/balancing: Rename update_blocked_averages() => sched_balance_update_blocked_averages()
-> >       sched/balancing: Rename newidle_balance() => sched_balance_newidle()
-> >       sched/balancing: Rename find_idlest_group_cpu() => sched_balance_find_dst_group_cpu()
-> >       sched/balancing: Rename find_idlest_group() => sched_balance_find_dst_group()
-> >       sched/balancing: Rename find_idlest_cpu() => sched_balance_find_dst_cpu()
-> >       sched/balancing: Fix a couple of outdated function names in comments
-> >       sched/fair: Fix typos in comments
-> >       sched/fair: Rename root_domain::overload to ::overloaded
-> >       sched/fair: Rename {set|get}_rd_overload() to {set|get}_rd_overloaded()
-> >       sched/fair: Rename SG_OVERLOAD to SG_OVERLOADED
-> >       sched/fair: Rename set_rd_overutilized_status() to set_rd_overutilized()
-> >       sched/balancing: Simplify the sg_status bitmask and use separate ->overloaded and ->overutilized flags
-> >
-> > Qais Yousef (4):
-> >       sched/topology: Export asym_cap_list
-> >       sched/fair: Check if a task has a fitting CPU when updating misfit
-> >       sched/topology: Remove root_domain::max_cpu_capacity
-> >       sched/fair: Don't double balance_interval for migrate_misfit
-> >
-> > Shrikanth Hegde (7):
-> >       sched/balancing: Remove reliance on 'enum cpu_idle_type' ordering when iterating [CPU_MAX_IDLE_TYPES] arrays in show_schedstat()
-> >       sched/fair: Add EAS checks before updating root_domain::overutilized
-> >       sched/fair: Introduce is_rd_overutilized() helper function to access root_domain::overutilized
-> >       sched/fair: Simplify the continue_balancing logic in sched_balance_newidle()
-> >       sched/fair: Combine EAS check with root_domain::overutilized access
-> >       sched/fair: Check root_domain::overload value before update
-> >       sched/fair: Use helper functions to access root_domain::overload
-> >
-> > Vincent Guittot (6):
-> >       sched/fair: Fix update of rd->sg_overutilized
-> >       cpufreq: Add a cpufreq pressure feedback for the scheduler
-> >       sched/cpufreq: Take cpufreq feedback into account
-> >       thermal/cpufreq: Remove arch_update_thermal_pressure()
-> >       sched/cpufreq: Rename arch_update_thermal_pressure() => arch_update_hw_pressure()
-> 
-> There is a fix for the one above:
->  https://lore.kernel.org/lkml/20240425073709.379016-1-vincent.guittot@linaro.org/
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+Peng Fan (2):
+      dt-bindings: pinctrl: imx: Support i.MX91 IOMUXC
+      pinctrl: imx: Add pinctrl driver support for i.MX91
 
-So this is a cleanup in essence, so I delayed it for the next sched/urgent 
-pile - will apply it once Linus pulls sched/core.
+ ...sl,imx93-pinctrl.yaml => fsl,imx9-pinctrl.yaml} |   8 +-
+ drivers/pinctrl/freescale/Kconfig                  |   7 +
+ drivers/pinctrl/freescale/Makefile                 |   1 +
+ drivers/pinctrl/freescale/pinctrl-imx91.c          | 271 +++++++++++++++++++++
+ 4 files changed, 284 insertions(+), 3 deletions(-)
+---
+base-commit: 75fa778d74b786a1608d55d655d42b480a6fa8bd
+change-id: 20240510-imx91-pinctrl-cf6e54edf55b
 
-Thanks,
+Best regards,
+-- 
+Peng Fan <peng.fan@nxp.com>
 
-	Ingo
